@@ -5,6 +5,9 @@
 # SPDX-License-Identifier: Apache-2.0
 
 #add_library(STM32CUBE INTERFACE)
+
+zephyr_library()
+
 string(TOUPPER ${CONFIG_SOC} _STM32CUBE_CPU)
 string(REPLACE "X" "x" STM32CUBE_CPU ${_STM32CUBE_CPU})
 
