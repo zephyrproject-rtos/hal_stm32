@@ -205,6 +205,10 @@
  #include "stm32f0xx_hal_can.h"
 #endif /* HAL_CAN_MODULE_ENABLED */
 
+#ifdef HAL_CAN_LEGACY_MODULE_ENABLED
+  #include "Legacy/stm32f0xx_hal_can_legacy.h"
+#endif /* HAL_CAN_LEGACY_MODULE_ENABLED */
+
 #ifdef HAL_CEC_MODULE_ENABLED
  #include "stm32f0xx_hal_cec.h"
 #endif /* HAL_CEC_MODULE_ENABLED */
@@ -310,4 +314,3 @@
 
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
-
