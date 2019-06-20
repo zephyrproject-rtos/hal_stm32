@@ -6,29 +6,13 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; COPYRIGHT(c) 2017 STMicroelectronics</center></h2>
+  * <h2><center>&copy; Copyright (c) 2017 STMicroelectronics.
+  * All rights reserved.</center></h2>
   *
-  * Redistribution and use in source and binary forms, with or without modification,
-  * are permitted provided that the following conditions are met:
-  *   1. Redistributions of source code must retain the above copyright notice,
-  *      this list of conditions and the following disclaimer.
-  *   2. Redistributions in binary form must reproduce the above copyright notice,
-  *      this list of conditions and the following disclaimer in the documentation
-  *      and/or other materials provided with the distribution.
-  *   3. Neither the name of STMicroelectronics nor the names of its contributors
-  *      may be used to endorse or promote products derived from this software
-  *      without specific prior written permission.
-  *
-  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  * This software component is licensed by ST under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                       opensource.org/licenses/BSD-3-Clause
   *
   ******************************************************************************
   */
@@ -50,7 +34,8 @@
   * @{
   */
 
-/** @addtogroup SD
+/** @defgroup SD SD
+  * @brief SD HAL module driver
   * @{
   */
 
@@ -80,18 +65,17 @@ typedef enum
 /** @defgroup SD_Exported_Types_Group2 SD Card State enumeration structure
   * @{
   */
-typedef enum
-{
-  HAL_SD_CARD_READY                  = ((uint32_t)0x00000001U),  /*!< Card state is ready                     */
-  HAL_SD_CARD_IDENTIFICATION         = ((uint32_t)0x00000002U),  /*!< Card is in identification state         */
-  HAL_SD_CARD_STANDBY                = ((uint32_t)0x00000003U),  /*!< Card is in standby state                */
-  HAL_SD_CARD_TRANSFER               = ((uint32_t)0x00000004U),  /*!< Card is in transfer state               */
-  HAL_SD_CARD_SENDING                = ((uint32_t)0x00000005U),  /*!< Card is sending an operation            */
-  HAL_SD_CARD_RECEIVING              = ((uint32_t)0x00000006U),  /*!< Card is receiving operation information */
-  HAL_SD_CARD_PROGRAMMING            = ((uint32_t)0x00000007U),  /*!< Card is in programming state            */
-  HAL_SD_CARD_DISCONNECTED           = ((uint32_t)0x00000008U),  /*!< Card is disconnected                    */
-  HAL_SD_CARD_ERROR                  = ((uint32_t)0x000000FFU)   /*!< Card response Error                     */
-}HAL_SD_CardStateTypedef;
+typedef uint32_t HAL_SD_CardStateTypeDef;
+
+#define HAL_SD_CARD_READY          0x00000001U  /*!< Card state is ready                     */
+#define HAL_SD_CARD_IDENTIFICATION 0x00000002U  /*!< Card is in identification state         */
+#define HAL_SD_CARD_STANDBY        0x00000003U  /*!< Card is in standby state                */
+#define HAL_SD_CARD_TRANSFER       0x00000004U  /*!< Card is in transfer state               */
+#define HAL_SD_CARD_SENDING        0x00000005U  /*!< Card is sending an operation            */
+#define HAL_SD_CARD_RECEIVING      0x00000006U  /*!< Card is receiving operation information */
+#define HAL_SD_CARD_PROGRAMMING    0x00000007U  /*!< Card is in programming state            */
+#define HAL_SD_CARD_DISCONNECTED   0x00000008U  /*!< Card is disconnected                    */
+#define HAL_SD_CARD_ERROR          0x000000FFU  /*!< Card response Error                     */
 /**
   * @}
   */
@@ -133,7 +117,11 @@ typedef struct
 /**
   * @brief  SD handle Structure definition
   */
+#if defined (USE_HAL_SD_REGISTER_CALLBACKS) && (USE_HAL_SD_REGISTER_CALLBACKS == 1U)
 typedef struct __SD_HandleTypeDef
+#else
+typedef struct
+#endif /* USE_HAL_SD_REGISTER_CALLBACKS */
 {
   SD_TypeDef                   *Instance;        /*!< SD registers base address           */
 
@@ -168,7 +156,7 @@ typedef struct __SD_HandleTypeDef
 
   uint32_t                     CID[4];           /*!< SD card identification number table */
 
-#if (USE_HAL_SD_REGISTER_CALLBACKS == 1)
+#if defined (USE_HAL_SD_REGISTER_CALLBACKS) && (USE_HAL_SD_REGISTER_CALLBACKS == 1U)
   void (* TxCpltCallback)                 (struct __SD_HandleTypeDef *hsd);
   void (* RxCpltCallback)                 (struct __SD_HandleTypeDef *hsd);
   void (* ErrorCallback)                  (struct __SD_HandleTypeDef *hsd);
@@ -184,7 +172,7 @@ typedef struct __SD_HandleTypeDef
 
   void (* MspInitCallback)                (struct __SD_HandleTypeDef *hsd);
   void (* MspDeInitCallback)              (struct __SD_HandleTypeDef *hsd);
-#endif
+#endif /* USE_HAL_SD_REGISTER_CALLBACKS */
 }SD_HandleTypeDef;
 
 /**
@@ -233,8 +221,7 @@ typedef struct
   __IO uint8_t  ECC;                  /*!< ECC code                              */
   __IO uint8_t  CSD_CRC;              /*!< CSD CRC                               */
   __IO uint8_t  Reserved4;            /*!< Always 1                              */
-
-}HAL_SD_CardCSDTypedef;
+}HAL_SD_CardCSDTypeDef;
 /**
   * @}
   */
@@ -255,7 +242,7 @@ typedef struct
   __IO uint8_t  CID_CRC;         /*!< CID CRC               */
   __IO uint8_t  Reserved2;       /*!< Always 1              */
 
-}HAL_SD_CardCIDTypedef;
+}HAL_SD_CardCIDTypeDef;
 /**
   * @}
   */
@@ -275,13 +262,17 @@ typedef struct
   __IO uint16_t EraseSize;              /*!< Determines the number of AUs to be erased in one operation */
   __IO uint8_t  EraseTimeout;           /*!< Determines the timeout for any number of AU erase          */
   __IO uint8_t  EraseOffset;            /*!< Carries information about the erase offset                 */
-
-}HAL_SD_CardStatusTypedef;
+#if defined(STM32L4R5xx) || defined(STM32L4R7xx) || defined(STM32L4R9xx) || defined(STM32L4S5xx) || defined(STM32L4S7xx) || defined(STM32L4S9xx)
+  __IO uint8_t  UhsSpeedGrade;          /*!< Carries information about the speed grade of UHS card      */
+  __IO uint8_t  UhsAllocationUnitSize;  /*!< Carries information about the UHS card's allocation unit size  */
+  __IO uint8_t  VideoSpeedClass;        /*!< Carries information about the Video Speed Class of UHS card    */
+#endif
+}HAL_SD_CardStatusTypeDef;
 /**
   * @}
   */
 
-#if (USE_HAL_SD_REGISTER_CALLBACKS == 1)
+#if defined (USE_HAL_SD_REGISTER_CALLBACKS) && (USE_HAL_SD_REGISTER_CALLBACKS == 1U)
 /** @defgroup SD_Exported_Types_Group7 SD Callback ID enumeration definition
   * @{
   */
@@ -315,13 +306,13 @@ typedef void (*pSD_TransceiverCallbackTypeDef)(FlagStatus status);
 /**
   * @}
   */
-#endif
+#endif /* USE_HAL_SD_REGISTER_CALLBACKS */
 /**
   * @}
   */
 
 /* Exported constants --------------------------------------------------------*/
-/** @defgroup SD_Exported_Constants  Exported Constants
+/** @defgroup SD_Exported_Constants Exported Constants
   * @{
   */
 
@@ -330,47 +321,46 @@ typedef void (*pSD_TransceiverCallbackTypeDef)(FlagStatus status);
 /** @defgroup SD_Exported_Constansts_Group1 SD Error status enumeration Structure definition
   * @{
   */
-#define HAL_SD_ERROR_NONE                     SDMMC_ERROR_NONE                    /*!< No error                                                      */
-#define HAL_SD_ERROR_CMD_CRC_FAIL             SDMMC_ERROR_CMD_CRC_FAIL            /*!< Command response received (but CRC check failed)              */
-#define HAL_SD_ERROR_DATA_CRC_FAIL            SDMMC_ERROR_DATA_CRC_FAIL           /*!< Data block sent/received (CRC check failed)                   */
-#define HAL_SD_ERROR_CMD_RSP_TIMEOUT          SDMMC_ERROR_CMD_RSP_TIMEOUT         /*!< Command response timeout                                      */
-#define HAL_SD_ERROR_DATA_TIMEOUT             SDMMC_ERROR_DATA_TIMEOUT            /*!< Data timeout                                                  */
-#define HAL_SD_ERROR_TX_UNDERRUN              SDMMC_ERROR_TX_UNDERRUN             /*!< Transmit FIFO underrun                                        */
-#define HAL_SD_ERROR_RX_OVERRUN               SDMMC_ERROR_RX_OVERRUN              /*!< Receive FIFO overrun                                          */
-#define HAL_SD_ERROR_ADDR_MISALIGNED          SDMMC_ERROR_ADDR_MISALIGNED         /*!< Misaligned address                                            */
-#define HAL_SD_ERROR_BLOCK_LEN_ERR            SDMMC_ERROR_BLOCK_LEN_ERR           /*!< Transferred block length is not allowed for the card or the
-                                                                                       number of transferred bytes does not match the block length   */
-#define HAL_SD_ERROR_ERASE_SEQ_ERR            SDMMC_ERROR_ERASE_SEQ_ERR           /*!< An error in the sequence of erase command occurs              */
-#define HAL_SD_ERROR_BAD_ERASE_PARAM          SDMMC_ERROR_BAD_ERASE_PARAM         /*!< An invalid selection for erase groups                         */
-#define HAL_SD_ERROR_WRITE_PROT_VIOLATION     SDMMC_ERROR_WRITE_PROT_VIOLATION    /*!< Attempt to program a write protect block                      */
-#define HAL_SD_ERROR_LOCK_UNLOCK_FAILED       SDMMC_ERROR_LOCK_UNLOCK_FAILED      /*!< Sequence or password error has been detected in unlock
-                                                                                       command or if there was an attempt to access a locked card    */
-#define HAL_SD_ERROR_COM_CRC_FAILED           SDMMC_ERROR_COM_CRC_FAILED          /*!< CRC check of the previous command failed                      */
-#define HAL_SD_ERROR_ILLEGAL_CMD              SDMMC_ERROR_ILLEGAL_CMD             /*!< Command is not legal for the card state                       */
-#define HAL_SD_ERROR_CARD_ECC_FAILED          SDMMC_ERROR_CARD_ECC_FAILED         /*!< Card internal ECC was applied but failed to correct the data  */
-#define HAL_SD_ERROR_CC_ERR                   SDMMC_ERROR_CC_ERR                  /*!< Internal card controller error                                */
-#define HAL_SD_ERROR_GENERAL_UNKNOWN_ERR      SDMMC_ERROR_GENERAL_UNKNOWN_ERR     /*!< General or unknown error                                      */
-#define HAL_SD_ERROR_STREAM_READ_UNDERRUN     SDMMC_ERROR_STREAM_READ_UNDERRUN    /*!< The card could not sustain data reading in stream rmode       */
-#define HAL_SD_ERROR_STREAM_WRITE_OVERRUN     SDMMC_ERROR_STREAM_WRITE_OVERRUN    /*!< The card could not sustain data programming in stream mode    */
-#define HAL_SD_ERROR_CID_CSD_OVERWRITE        SDMMC_ERROR_CID_CSD_OVERWRITE       /*!< CID/CSD overwrite error                                       */
-#define HAL_SD_ERROR_WP_ERASE_SKIP            SDMMC_ERROR_WP_ERASE_SKIP           /*!< Only partial address space was erased                         */
-#define HAL_SD_ERROR_CARD_ECC_DISABLED        SDMMC_ERROR_CARD_ECC_DISABLED       /*!< Command has been executed without using internal ECC          */
-#define HAL_SD_ERROR_ERASE_RESET              SDMMC_ERROR_ERASE_RESET             /*!< Erase sequence was cleared before executing because an out
-                                                                                       of erase sequence command was received                        */
-#define HAL_SD_ERROR_AKE_SEQ_ERR              SDMMC_ERROR_AKE_SEQ_ERR             /*!< Error in sequence of authentication                           */
-#define HAL_SD_ERROR_INVALID_VOLTRANGE        SDMMC_ERROR_INVALID_VOLTRANGE       /*!< Error in case of invalid voltage range                        */
-#define HAL_SD_ERROR_ADDR_OUT_OF_RANGE        SDMMC_ERROR_ADDR_OUT_OF_RANGE       /*!< Error when addressed block is out of range                    */
-#define HAL_SD_ERROR_REQUEST_NOT_APPLICABLE   SDMMC_ERROR_REQUEST_NOT_APPLICABLE  /*!< Error when command request is not applicable                  */
-#define HAL_SD_ERROR_PARAM                    SDMMC_ERROR_INVALID_PARAMETER       /*!< the used parameter is not valid                               */
-#define HAL_SD_ERROR_UNSUPPORTED_FEATURE      SDMMC_ERROR_UNSUPPORTED_FEATURE     /*!< Error when feature is not insupported                         */
-#define HAL_SD_ERROR_BUSY                     SDMMC_ERROR_BUSY                    /*!< Error when transfer process is busy                           */
-#define HAL_SD_ERROR_DMA                      SDMMC_ERROR_DMA                     /*!< Error while DMA transfer                                      */
-#define HAL_SD_ERROR_TIMEOUT                  SDMMC_ERROR_TIMEOUT                 /*!< Timeout error                                                 */
+#define HAL_SD_ERROR_NONE                     SDMMC_ERROR_NONE                        /*!< No error                                                     */
+#define HAL_SD_ERROR_CMD_CRC_FAIL             SDMMC_ERROR_CMD_CRC_FAIL                /*!< Command response received (but CRC check failed)             */
+#define HAL_SD_ERROR_DATA_CRC_FAIL            SDMMC_ERROR_DATA_CRC_FAIL               /*!< Data block sent/received (CRC check failed)                  */
+#define HAL_SD_ERROR_CMD_RSP_TIMEOUT          SDMMC_ERROR_CMD_RSP_TIMEOUT             /*!< Command response timeout                                     */
+#define HAL_SD_ERROR_DATA_TIMEOUT             SDMMC_ERROR_DATA_TIMEOUT                /*!< Data timeout                                                 */
+#define HAL_SD_ERROR_TX_UNDERRUN              SDMMC_ERROR_TX_UNDERRUN                 /*!< Transmit FIFO underrun                                       */
+#define HAL_SD_ERROR_RX_OVERRUN               SDMMC_ERROR_RX_OVERRUN                  /*!< Receive FIFO overrun                                         */
+#define HAL_SD_ERROR_ADDR_MISALIGNED          SDMMC_ERROR_ADDR_MISALIGNED             /*!< Misaligned address                                           */
+#define HAL_SD_ERROR_BLOCK_LEN_ERR            SDMMC_ERROR_BLOCK_LEN_ERR               /*!< Transferred block length is not allowed for the card or the
+                                                                                          number of transferred bytes does not match the block length   */
+#define HAL_SD_ERROR_ERASE_SEQ_ERR            SDMMC_ERROR_ERASE_SEQ_ERR               /*!< An error in the sequence of erase command occurs             */
+#define HAL_SD_ERROR_BAD_ERASE_PARAM          SDMMC_ERROR_BAD_ERASE_PARAM             /*!< An invalid selection for erase groups                        */
+#define HAL_SD_ERROR_WRITE_PROT_VIOLATION     SDMMC_ERROR_WRITE_PROT_VIOLATION        /*!< Attempt to program a write protect block                     */
+#define HAL_SD_ERROR_LOCK_UNLOCK_FAILED       SDMMC_ERROR_LOCK_UNLOCK_FAILED          /*!< Sequence or password error has been detected in unlock
+                                                                                           command or if there was an attempt to access a locked card   */
+#define HAL_SD_ERROR_COM_CRC_FAILED           SDMMC_ERROR_COM_CRC_FAILED              /*!< CRC check of the previous command failed                     */
+#define HAL_SD_ERROR_ILLEGAL_CMD              SDMMC_ERROR_ILLEGAL_CMD                 /*!< Command is not legal for the card state                      */
+#define HAL_SD_ERROR_CARD_ECC_FAILED          SDMMC_ERROR_CARD_ECC_FAILED             /*!< Card internal ECC was applied but failed to correct the data */
+#define HAL_SD_ERROR_CC_ERR                   SDMMC_ERROR_CC_ERR                      /*!< Internal card controller error                               */
+#define HAL_SD_ERROR_GENERAL_UNKNOWN_ERR      SDMMC_ERROR_GENERAL_UNKNOWN_ERR         /*!< General or unknown error                                     */
+#define HAL_SD_ERROR_STREAM_READ_UNDERRUN     SDMMC_ERROR_STREAM_READ_UNDERRUN        /*!< The card could not sustain data reading in stream rmode      */
+#define HAL_SD_ERROR_STREAM_WRITE_OVERRUN     SDMMC_ERROR_STREAM_WRITE_OVERRUN        /*!< The card could not sustain data programming in stream mode   */
+#define HAL_SD_ERROR_CID_CSD_OVERWRITE        SDMMC_ERROR_CID_CSD_OVERWRITE           /*!< CID/CSD overwrite error                                      */
+#define HAL_SD_ERROR_WP_ERASE_SKIP            SDMMC_ERROR_WP_ERASE_SKIP               /*!< Only partial address space was erased                        */
+#define HAL_SD_ERROR_CARD_ECC_DISABLED        SDMMC_ERROR_CARD_ECC_DISABLED           /*!< Command has been executed without using internal ECC         */
+#define HAL_SD_ERROR_ERASE_RESET              SDMMC_ERROR_ERASE_RESET                 /*!< Erase sequence was cleared before executing because an out
+                                                                                           of erase sequence command was received                       */
+#define HAL_SD_ERROR_AKE_SEQ_ERR              SDMMC_ERROR_AKE_SEQ_ERR                 /*!< Error in sequence of authentication                          */
+#define HAL_SD_ERROR_INVALID_VOLTRANGE        SDMMC_ERROR_INVALID_VOLTRANGE           /*!< Error in case of invalid voltage range                       */
+#define HAL_SD_ERROR_ADDR_OUT_OF_RANGE        SDMMC_ERROR_ADDR_OUT_OF_RANGE           /*!< Error when addressed block is out of range                   */
+#define HAL_SD_ERROR_REQUEST_NOT_APPLICABLE   SDMMC_ERROR_REQUEST_NOT_APPLICABLE      /*!< Error when command request is not applicable                 */
+#define HAL_SD_ERROR_PARAM                    SDMMC_ERROR_INVALID_PARAMETER           /*!< the used parameter is not valid                              */
+#define HAL_SD_ERROR_UNSUPPORTED_FEATURE      SDMMC_ERROR_UNSUPPORTED_FEATURE         /*!< Error when feature is not insupported                        */
+#define HAL_SD_ERROR_BUSY                     SDMMC_ERROR_BUSY                        /*!< Error when transfer process is busy                          */
+#define HAL_SD_ERROR_DMA                      SDMMC_ERROR_DMA                         /*!< Error while DMA transfer                                     */
+#define HAL_SD_ERROR_TIMEOUT                  SDMMC_ERROR_TIMEOUT                     /*!< Timeout error                                                 */
 
-#if (USE_HAL_SD_REGISTER_CALLBACKS == 1)
+#if defined (USE_HAL_SD_REGISTER_CALLBACKS) && (USE_HAL_SD_REGISTER_CALLBACKS == 1U)
 #define HAL_SD_ERROR_INVALID_CALLBACK         SDMMC_ERROR_INVALID_PARAMETER       /*!< Invalid callback error                                        */
-#endif
-
+#endif /* USE_HAL_SD_REGISTER_CALLBACKS */
 /**
   * @}
   */
@@ -378,13 +368,13 @@ typedef void (*pSD_TransceiverCallbackTypeDef)(FlagStatus status);
 /** @defgroup SD_Exported_Constansts_Group2 SD context enumeration
   * @{
   */
-#define SD_CONTEXT_NONE                 ((uint32_t)0x00000000U)  /*!< None                             */
-#define SD_CONTEXT_READ_SINGLE_BLOCK    ((uint32_t)0x00000001U)  /*!< Read single block operation      */
-#define SD_CONTEXT_READ_MULTIPLE_BLOCK  ((uint32_t)0x00000002U)  /*!< Read multiple blocks operation   */
-#define SD_CONTEXT_WRITE_SINGLE_BLOCK   ((uint32_t)0x00000010U)  /*!< Write single block operation     */
-#define SD_CONTEXT_WRITE_MULTIPLE_BLOCK ((uint32_t)0x00000020U)  /*!< Write multiple blocks operation  */
-#define SD_CONTEXT_IT                   ((uint32_t)0x00000008U)  /*!< Process in Interrupt mode        */
-#define SD_CONTEXT_DMA                  ((uint32_t)0x00000080U)  /*!< Process in DMA mode              */
+#define   SD_CONTEXT_NONE                 ((uint32_t)0x00000000U)  /*!< None                             */
+#define   SD_CONTEXT_READ_SINGLE_BLOCK    ((uint32_t)0x00000001U)  /*!< Read single block operation      */
+#define   SD_CONTEXT_READ_MULTIPLE_BLOCK  ((uint32_t)0x00000002U)  /*!< Read multiple blocks operation   */
+#define   SD_CONTEXT_WRITE_SINGLE_BLOCK   ((uint32_t)0x00000010U)  /*!< Write single block operation     */
+#define   SD_CONTEXT_WRITE_MULTIPLE_BLOCK ((uint32_t)0x00000020U)  /*!< Write multiple blocks operation  */
+#define   SD_CONTEXT_IT                   ((uint32_t)0x00000008U)  /*!< Process in Interrupt mode        */
+#define   SD_CONTEXT_DMA                  ((uint32_t)0x00000080U)  /*!< Process in DMA mode              */
 
 /**
   * @}
@@ -394,14 +384,14 @@ typedef void (*pSD_TransceiverCallbackTypeDef)(FlagStatus status);
   * @{
   */
 #if defined(STM32L4R5xx) || defined(STM32L4R7xx) || defined(STM32L4R9xx) || defined(STM32L4S5xx) || defined(STM32L4S7xx) || defined(STM32L4S9xx)
-#define CARD_NORMAL_SPEED          ((uint32_t)0x00000000U)    /*!< Normal Speed Card <12.5Mo/s , Spec Version 1.01    */
-#define CARD_HIGH_SPEED            ((uint32_t)0x00000100U)    /*!< High Speed Card <25Mo/s , Spec version 2.00        */
-#define CARD_ULTRA_HIGH_SPEED      ((uint32_t)0x00000200U)    /*!< UHS-I SD Card <50Mo/s for SDR50, DDR5 Cards
-                                                                  and <104Mo/s for SDR104, Spec version 3.01          */
+#define CARD_NORMAL_SPEED        ((uint32_t)0x00000000U)    /*!< Normal Speed Card <12.5Mo/s , Spec Version 1.01    */
+#define CARD_HIGH_SPEED          ((uint32_t)0x00000100U)    /*!< High Speed Card <25Mo/s , Spec version 2.00        */
+#define CARD_ULTRA_HIGH_SPEED    ((uint32_t)0x00000200U)    /*!< UHS-I SD Card <50Mo/s for SDR50, DDR5 Cards
+                                                                 and <104Mo/s for SDR104, Spec version 3.01          */
 #endif /* STM32L4R5xx || STM32L4R7xx || STM32L4R9xx || STM32L4S5xx || STM32L4S7xx || STM32L4S9xx */
 
-#define CARD_SDSC                  ((uint32_t)0x00000000U)
-#define CARD_SDHC_SDXC             ((uint32_t)0x00000001U)
+#define CARD_SDSC                  ((uint32_t)0x00000000U)  /*!< SD Standard Capacity <2Go                          */
+#define CARD_SDHC_SDXC             ((uint32_t)0x00000001U)  /*!< SD High Capacity <32Go, SD Extended Capacity <2To  */
 #define CARD_SECURED               ((uint32_t)0x00000003U)
 
 /**
@@ -430,7 +420,7 @@ typedef void (*pSD_TransceiverCallbackTypeDef)(FlagStatus status);
   * @param  __HANDLE__ : SD handle.
   * @retval None
   */
-#if (USE_HAL_SD_REGISTER_CALLBACKS == 1)
+#if defined (USE_HAL_SD_REGISTER_CALLBACKS) && (USE_HAL_SD_REGISTER_CALLBACKS == 1U)
 #define __HAL_SD_RESET_HANDLE_STATE(__HANDLE__)           do {                                              \
                                                                (__HANDLE__)->State = HAL_SD_STATE_RESET; \
                                                                (__HANDLE__)->MspInitCallback = NULL;       \
@@ -438,7 +428,7 @@ typedef void (*pSD_TransceiverCallbackTypeDef)(FlagStatus status);
                                                              } while(0)
 #else
 #define __HAL_SD_RESET_HANDLE_STATE(__HANDLE__)           ((__HANDLE__)->State = HAL_SD_STATE_RESET)
-#endif
+#endif /* USE_HAL_SD_REGISTER_CALLBACKS */
 
 #if !defined(STM32L4R5xx) && !defined(STM32L4R7xx) && !defined(STM32L4R9xx) && !defined(STM32L4S5xx) && !defined(STM32L4S7xx) && !defined(STM32L4S9xx)
 /**
@@ -471,37 +461,36 @@ typedef void (*pSD_TransceiverCallbackTypeDef)(FlagStatus status);
   * @param  __HANDLE__: SD Handle
   * @param  __INTERRUPT__: specifies the SDMMC interrupt sources to be enabled.
   *         This parameter can be one or a combination of the following values:
-  *            @arg SDMMC_IT_CCRCFAIL: Command response received (CRC check failed) interrupt
-  *            @arg SDMMC_IT_DCRCFAIL: Data block sent/received (CRC check failed) interrupt
-  *            @arg SDMMC_IT_CTIMEOUT: Command response timeout interrupt
-  *            @arg SDMMC_IT_DTIMEOUT: Data timeout interrupt
-  *            @arg SDMMC_IT_TXUNDERR: Transmit FIFO underrun error interrupt
-  *            @arg SDMMC_IT_RXOVERR:  Received FIFO overrun error interrupt
-  *            @arg SDMMC_IT_CMDREND:  Command response received (CRC check passed) interrupt
-  *            @arg SDMMC_IT_CMDSENT:  Command sent (no response required) interrupt
-  *            @arg SDMMC_IT_DBCKEND:  Data block sent/received (CRC check passed) interrupt
-  *            @arg SDMMC_IT_TXFIFOHE: Transmit FIFO Half Empty interrupt
-  *            @arg SDMMC_IT_RXFIFOHF: Receive FIFO Half Full interrupt
-  *            @arg SDMMC_IT_TXFIFOF:  Transmit FIFO full interrupt
-  *            @arg SDMMC_IT_RXFIFOF:  Receive FIFO full interrupt
-  *            @arg SDMMC_IT_TXFIFOE:  Transmit FIFO empty interrupt
-  *            @arg SDMMC_IT_RXFIFOE:  Receive FIFO empty interrupt
-  *            @arg SDMMC_IT_SDIOIT:   SD I/O interrupt received interrupt
+  *            @arg SDMMC_IT_CCRCFAIL:   Command response received (CRC check failed) interrupt
+  *            @arg SDMMC_IT_DCRCFAIL:   Data block sent/received (CRC check failed) interrupt
+  *            @arg SDMMC_IT_CTIMEOUT:   Command response timeout interrupt
+  *            @arg SDMMC_IT_DTIMEOUT:   Data timeout interrupt
+  *            @arg SDMMC_IT_TXUNDERR:   Transmit FIFO underrun error interrupt
+  *            @arg SDMMC_IT_RXOVERR:    Received FIFO overrun error interrupt
+  *            @arg SDMMC_IT_CMDREND:    Command response received (CRC check passed) interrupt
+  *            @arg SDMMC_IT_CMDSENT:    Command sent (no response required) interrupt
   *            @arg SDMMC_IT_DATAEND:    Data end (data counter, DATACOUNT, is zero) interrupt
   *            @arg SDMMC_IT_DHOLD:      Data transfer Hold interrupt
+  *            @arg SDMMC_IT_DBCKEND:    Data block sent/received (CRC check passed) interrupt
   *            @arg SDMMC_IT_DABORT:     Data transfer aborted by CMD12 interrupt
+  *            @arg SDMMC_IT_CMDACT:     Command transfer in progress interrupt
+  *            @arg SDMMC_IT_TXACT:      Data transmit in progress interrupt
+  *            @arg SDMMC_IT_RXACT:      Data receive in progress interrupt
+  *            @arg SDMMC_IT_TXFIFOHE:   Transmit FIFO Half Empty interrupt
+  *            @arg SDMMC_IT_RXFIFOHF:   Receive FIFO Half Full interrupt
+  *            @arg SDMMC_IT_TXFIFOF:    Transmit FIFO full interrupt
+  *            @arg SDMMC_IT_RXFIFOF:    Receive FIFO full interrupt
+  *            @arg SDMMC_IT_TXFIFOE:    Transmit FIFO empty interrupt
+  *            @arg SDMMC_IT_RXFIFOE:    Receive FIFO empty interrupt
+  *            @arg SDMMC_IT_TXDAVL:     Data available in transmit FIFO interrupt
+  *            @arg SDMMC_IT_RXDAVL:     Data available in receive FIFO interrupt
   *            @arg SDMMC_IT_BUSYD0END:  End of SDMMC_D0 Busy following a CMD response detected interrupt
+  *            @arg SDMMC_IT_SDIOIT:     SDIO interrupt received interrupt
   *            @arg SDMMC_IT_ACKFAIL:    Boot Acknowledgment received interrupt
   *            @arg SDMMC_IT_ACKTIMEOUT: Boot Acknowledgment timeout interrupt
   *            @arg SDMMC_IT_VSWEND:     Voltage switch critical timing section completion interrupt
   *            @arg SDMMC_IT_CKSTOP:     SDMMC_CK stopped in Voltage switch procedure interrupt
   *            @arg SDMMC_IT_IDMABTC:    IDMA buffer transfer complete interrupt
-  *            @arg SDMMC_IT_DATAEND:  Data end (data counter, SDIDCOUNT, is zero) interrupt
-  *            @arg SDMMC_IT_CMDACT:   Command transfer in progress interrupt
-  *            @arg SDMMC_IT_TXACT:    Data transmit in progress interrupt
-  *            @arg SDMMC_IT_RXACT:    Data receive in progress interrupt
-  *            @arg SDMMC_IT_TXDAVL:   Data available in transmit FIFO interrupt
-  *            @arg SDMMC_IT_RXDAVL:   Data available in receive FIFO interrupt
   * @retval None
   */
 #define __HAL_SD_ENABLE_IT(__HANDLE__, __INTERRUPT__) __SDMMC_ENABLE_IT((__HANDLE__)->Instance, (__INTERRUPT__))
@@ -511,37 +500,36 @@ typedef void (*pSD_TransceiverCallbackTypeDef)(FlagStatus status);
   * @param  __HANDLE__: SD Handle
   * @param  __INTERRUPT__: specifies the SDMMC interrupt sources to be disabled.
   *          This parameter can be one or a combination of the following values:
-  *            @arg SDMMC_IT_CCRCFAIL: Command response received (CRC check failed) interrupt
-  *            @arg SDMMC_IT_DCRCFAIL: Data block sent/received (CRC check failed) interrupt
-  *            @arg SDMMC_IT_CTIMEOUT: Command response timeout interrupt
-  *            @arg SDMMC_IT_DTIMEOUT: Data timeout interrupt
-  *            @arg SDMMC_IT_TXUNDERR: Transmit FIFO underrun error interrupt
-  *            @arg SDMMC_IT_RXOVERR:  Received FIFO overrun error interrupt
-  *            @arg SDMMC_IT_CMDREND:  Command response received (CRC check passed) interrupt
-  *            @arg SDMMC_IT_CMDSENT:  Command sent (no response required) interrupt
-  *            @arg SDMMC_IT_DBCKEND:  Data block sent/received (CRC check passed) interrupt
-  *            @arg SDMMC_IT_TXFIFOHE: Transmit FIFO Half Empty interrupt
-  *            @arg SDMMC_IT_RXFIFOHF: Receive FIFO Half Full interrupt
-  *            @arg SDMMC_IT_TXFIFOF:  Transmit FIFO full interrupt
-  *            @arg SDMMC_IT_RXFIFOF:  Receive FIFO full interrupt
-  *            @arg SDMMC_IT_TXFIFOE:  Transmit FIFO empty interrupt
-  *            @arg SDMMC_IT_RXFIFOE:  Receive FIFO empty interrupt
-  *            @arg SDMMC_IT_SDIOIT:   SD I/O interrupt received interrupt
+  *            @arg SDMMC_IT_CCRCFAIL:   Command response received (CRC check failed) interrupt
+  *            @arg SDMMC_IT_DCRCFAIL:   Data block sent/received (CRC check failed) interrupt
+  *            @arg SDMMC_IT_CTIMEOUT:   Command response timeout interrupt
+  *            @arg SDMMC_IT_DTIMEOUT:   Data timeout interrupt
+  *            @arg SDMMC_IT_TXUNDERR:   Transmit FIFO underrun error interrupt
+  *            @arg SDMMC_IT_RXOVERR:    Received FIFO overrun error interrupt
+  *            @arg SDMMC_IT_CMDREND:    Command response received (CRC check passed) interrupt
+  *            @arg SDMMC_IT_CMDSENT:    Command sent (no response required) interrupt
   *            @arg SDMMC_IT_DATAEND:    Data end (data counter, DATACOUNT, is zero) interrupt
   *            @arg SDMMC_IT_DHOLD:      Data transfer Hold interrupt
+  *            @arg SDMMC_IT_DBCKEND:    Data block sent/received (CRC check passed) interrupt
   *            @arg SDMMC_IT_DABORT:     Data transfer aborted by CMD12 interrupt
+  *            @arg SDMMC_IT_CMDACT:     Command transfer in progress interrupt
+  *            @arg SDMMC_IT_TXACT:      Data transmit in progress interrupt
+  *            @arg SDMMC_IT_RXACT:      Data receive in progress interrupt
+  *            @arg SDMMC_IT_TXFIFOHE:   Transmit FIFO Half Empty interrupt
+  *            @arg SDMMC_IT_RXFIFOHF:   Receive FIFO Half Full interrupt
+  *            @arg SDMMC_IT_TXFIFOF:    Transmit FIFO full interrupt
+  *            @arg SDMMC_IT_RXFIFOF:    Receive FIFO full interrupt
+  *            @arg SDMMC_IT_TXFIFOE:    Transmit FIFO empty interrupt
+  *            @arg SDMMC_IT_RXFIFOE:    Receive FIFO empty interrupt
+  *            @arg SDMMC_IT_TXDAVL:     Data available in transmit FIFO interrupt
+  *            @arg SDMMC_IT_RXDAVL:     Data available in receive FIFO interrupt
   *            @arg SDMMC_IT_BUSYD0END:  End of SDMMC_D0 Busy following a CMD response detected interrupt
+  *            @arg SDMMC_IT_SDIOIT:     SDIO interrupt received interrupt
   *            @arg SDMMC_IT_ACKFAIL:    Boot Acknowledgment received interrupt
   *            @arg SDMMC_IT_ACKTIMEOUT: Boot Acknowledgment timeout interrupt
   *            @arg SDMMC_IT_VSWEND:     Voltage switch critical timing section completion interrupt
   *            @arg SDMMC_IT_CKSTOP:     SDMMC_CK stopped in Voltage switch procedure interrupt
   *            @arg SDMMC_IT_IDMABTC:    IDMA buffer transfer complete interrupt
-  *            @arg SDMMC_IT_DATAEND:  Data end (data counter, SDIDCOUNT, is zero) interrupt
-  *            @arg SDMMC_IT_CMDACT:   Command transfer in progress interrupt
-  *            @arg SDMMC_IT_TXACT:    Data transmit in progress interrupt
-  *            @arg SDMMC_IT_RXACT:    Data receive in progress interrupt
-  *            @arg SDMMC_IT_TXDAVL:   Data available in transmit FIFO interrupt
-  *            @arg SDMMC_IT_RXDAVL:   Data available in receive FIFO interrupt
   * @retval None
   */
 #define __HAL_SD_DISABLE_IT(__HANDLE__, __INTERRUPT__) __SDMMC_DISABLE_IT((__HANDLE__)->Instance, (__INTERRUPT__))
@@ -551,41 +539,40 @@ typedef void (*pSD_TransceiverCallbackTypeDef)(FlagStatus status);
   * @param  __HANDLE__: SD Handle
   * @param  __FLAG__: specifies the flag to check.
   *          This parameter can be one of the following values:
-  *            @arg SDMMC_FLAG_CCRCFAIL: Command response received (CRC check failed)
-  *            @arg SDMMC_FLAG_DCRCFAIL: Data block sent/received (CRC check failed)
-  *            @arg SDMMC_FLAG_CTIMEOUT: Command response timeout
-  *            @arg SDMMC_FLAG_DTIMEOUT: Data timeout
-  *            @arg SDMMC_FLAG_TXUNDERR: Transmit FIFO underrun error
-  *            @arg SDMMC_FLAG_RXOVERR:  Received FIFO overrun error
-  *            @arg SDMMC_FLAG_CMDREND:  Command response received (CRC check passed)
-  *            @arg SDMMC_FLAG_CMDSENT:  Command sent (no response required)
-  *            @arg SDMMC_FLAG_DBCKEND:  Data block sent/received (CRC check passed)
-  *            @arg SDMMC_FLAG_CMDACT:   Command transfer in progress
-  *            @arg SDMMC_FLAG_TXFIFOHE: Transmit FIFO Half Empty
-  *            @arg SDMMC_FLAG_RXFIFOHF: Receive FIFO Half Full
-  *            @arg SDMMC_FLAG_TXFIFOF:  Transmit FIFO full
-  *            @arg SDMMC_FLAG_RXFIFOF:  Receive FIFO full
-  *            @arg SDMMC_FLAG_TXFIFOE:  Transmit FIFO empty
-  *            @arg SDMMC_FLAG_RXFIFOE:  Receive FIFO empty
-  *            @arg SDMMC_FLAG_SDIOIT:   SD I/O interrupt received
+  *            @arg SDMMC_FLAG_CCRCFAIL:   Command response received (CRC check failed)
+  *            @arg SDMMC_FLAG_DCRCFAIL:   Data block sent/received (CRC check failed)
+  *            @arg SDMMC_FLAG_CTIMEOUT:   Command response timeout
+  *            @arg SDMMC_FLAG_DTIMEOUT:   Data timeout
+  *            @arg SDMMC_FLAG_TXUNDERR:   Transmit FIFO underrun error
+  *            @arg SDMMC_FLAG_RXOVERR:    Received FIFO overrun error
+  *            @arg SDMMC_FLAG_CMDREND:    Command response received (CRC check passed)
+  *            @arg SDMMC_FLAG_CMDSENT:    Command sent (no response required)
   *            @arg SDMMC_FLAG_DATAEND:    Data end (data counter, DATACOUNT, is zero)
   *            @arg SDMMC_FLAG_DHOLD:      Data transfer Hold
+  *            @arg SDMMC_FLAG_DBCKEND:    Data block sent/received (CRC check passed)
   *            @arg SDMMC_FLAG_DABORT:     Data transfer aborted by CMD12
-  *            @arg SDMMC_FLAG_CPSMACT:    Command path state machine active
   *            @arg SDMMC_FLAG_DPSMACT:    Data path state machine active
+  *            @arg SDMMC_FLAG_CPSMACT:    Command path state machine active
+  *            @arg SDMMC_FLAG_CMDACT:     Command transfer in progress
+  *            @arg SDMMC_FLAG_TXACT:      Data transmit in progress
+  *            @arg SDMMC_FLAG_RXACT:      Data receive in progress
+  *            @arg SDMMC_FLAG_TXFIFOHE:   Transmit FIFO Half Empty
+  *            @arg SDMMC_FLAG_RXFIFOHF:   Receive FIFO Half Full
+  *            @arg SDMMC_FLAG_TXFIFOF:    Transmit FIFO full
+  *            @arg SDMMC_FLAG_RXFIFOF:    Receive FIFO full
+  *            @arg SDMMC_FLAG_TXFIFOE:    Transmit FIFO empty
+  *            @arg SDMMC_FLAG_RXFIFOE:    Receive FIFO empty
   *            @arg SDMMC_FLAG_BUSYD0:     Inverted value of SDMMC_D0 line (Busy)
   *            @arg SDMMC_FLAG_BUSYD0END:  End of SDMMC_D0 Busy following a CMD response detected
+  *            @arg SDMMC_FLAG_TXDAVL:     Data available in transmit FIFO
+  *            @arg SDMMC_FLAG_RXDAVL:     Data available in receive FIFO
+  *            @arg SDMMC_FLAG_SDIOIT:     SDIO interrupt received
   *            @arg SDMMC_FLAG_ACKFAIL:    Boot Acknowledgment received
   *            @arg SDMMC_FLAG_ACKTIMEOUT: Boot Acknowledgment timeout
   *            @arg SDMMC_FLAG_VSWEND:     Voltage switch critical timing section completion
   *            @arg SDMMC_FLAG_CKSTOP:     SDMMC_CK stopped in Voltage switch procedure
   *            @arg SDMMC_FLAG_IDMATE:     IDMA transfer error
   *            @arg SDMMC_FLAG_IDMABTC:    IDMA buffer transfer complete
-  *            @arg SDMMC_FLAG_DATAEND:  Data end (data counter, SDIDCOUNT, is zero)
-  *            @arg SDMMC_FLAG_TXACT:    Data transmit in progress
-  *            @arg SDMMC_FLAG_RXACT:    Data receive in progress
-  *            @arg SDMMC_FLAG_TXDAVL:   Data available in transmit FIFO
-  *            @arg SDMMC_FLAG_RXDAVL:   Data available in receive FIFO
   * @retval The new state of SD FLAG (SET or RESET).
   */
 #define __HAL_SD_GET_FLAG(__HANDLE__, __FLAG__) __SDMMC_GET_FLAG((__HANDLE__)->Instance, (__FLAG__))
@@ -595,27 +582,26 @@ typedef void (*pSD_TransceiverCallbackTypeDef)(FlagStatus status);
   * @param  __HANDLE__: SD Handle
   * @param  __FLAG__: specifies the flag to clear.
   *          This parameter can be one or a combination of the following values:
-  *            @arg SDMMC_FLAG_CCRCFAIL: Command response received (CRC check failed)
-  *            @arg SDMMC_FLAG_DCRCFAIL: Data block sent/received (CRC check failed)
-  *            @arg SDMMC_FLAG_CTIMEOUT: Command response timeout
-  *            @arg SDMMC_FLAG_DTIMEOUT: Data timeout
-  *            @arg SDMMC_FLAG_TXUNDERR: Transmit FIFO underrun error
-  *            @arg SDMMC_FLAG_RXOVERR:  Received FIFO overrun error
-  *            @arg SDMMC_FLAG_CMDREND:  Command response received (CRC check passed)
-  *            @arg SDMMC_FLAG_CMDSENT:  Command sent (no response required)
-  *            @arg SDMMC_FLAG_DBCKEND:  Data block sent/received (CRC check passed)
-  *            @arg SDMMC_FLAG_SDIOIT:   SD I/O interrupt received
+  *            @arg SDMMC_FLAG_CCRCFAIL:   Command response received (CRC check failed)
+  *            @arg SDMMC_FLAG_DCRCFAIL:   Data block sent/received (CRC check failed)
+  *            @arg SDMMC_FLAG_CTIMEOUT:   Command response timeout
+  *            @arg SDMMC_FLAG_DTIMEOUT:   Data timeout
+  *            @arg SDMMC_FLAG_TXUNDERR:   Transmit FIFO underrun error
+  *            @arg SDMMC_FLAG_RXOVERR:    Received FIFO overrun error
+  *            @arg SDMMC_FLAG_CMDREND:    Command response received (CRC check passed)
+  *            @arg SDMMC_FLAG_CMDSENT:    Command sent (no response required)
   *            @arg SDMMC_FLAG_DATAEND:    Data end (data counter, DATACOUNT, is zero)
   *            @arg SDMMC_FLAG_DHOLD:      Data transfer Hold
+  *            @arg SDMMC_FLAG_DBCKEND:    Data block sent/received (CRC check passed)
   *            @arg SDMMC_FLAG_DABORT:     Data transfer aborted by CMD12
   *            @arg SDMMC_FLAG_BUSYD0END:  End of SDMMC_D0 Busy following a CMD response detected
+  *            @arg SDMMC_FLAG_SDIOIT:     SDIO interrupt received
   *            @arg SDMMC_FLAG_ACKFAIL:    Boot Acknowledgment received
   *            @arg SDMMC_FLAG_ACKTIMEOUT: Boot Acknowledgment timeout
   *            @arg SDMMC_FLAG_VSWEND:     Voltage switch critical timing section completion
   *            @arg SDMMC_FLAG_CKSTOP:     SDMMC_CK stopped in Voltage switch procedure
   *            @arg SDMMC_FLAG_IDMATE:     IDMA transfer error
   *            @arg SDMMC_FLAG_IDMABTC:    IDMA buffer transfer complete
-  *            @arg SDMMC_FLAG_DATAEND:  Data end (data counter, SDIDCOUNT, is zero)
   * @retval None
   */
 #define __HAL_SD_CLEAR_FLAG(__HANDLE__, __FLAG__) __SDMMC_CLEAR_FLAG((__HANDLE__)->Instance, (__FLAG__))
@@ -625,41 +611,36 @@ typedef void (*pSD_TransceiverCallbackTypeDef)(FlagStatus status);
   * @param  __HANDLE__: SD Handle
   * @param  __INTERRUPT__: specifies the SDMMC interrupt source to check.
   *          This parameter can be one of the following values:
-  *            @arg SDMMC_IT_CCRCFAIL: Command response received (CRC check failed) interrupt
-  *            @arg SDMMC_IT_DCRCFAIL: Data block sent/received (CRC check failed) interrupt
-  *            @arg SDMMC_IT_CTIMEOUT: Command response timeout interrupt
-  *            @arg SDMMC_IT_DTIMEOUT: Data timeout interrupt
-  *            @arg SDMMC_IT_TXUNDERR: Transmit FIFO underrun error interrupt
-  *            @arg SDMMC_IT_RXOVERR:  Received FIFO overrun error interrupt
-  *            @arg SDMMC_IT_CMDREND:  Command response received (CRC check passed) interrupt
-  *            @arg SDMMC_IT_CMDSENT:  Command sent (no response required) interrupt
-  *            @arg SDMMC_IT_DBCKEND:  Data block sent/received (CRC check passed) interrupt
-  *            @arg SDMMC_IT_CMDACT:   Command transfer in progress interrupt
-  *            @arg SDMMC_IT_TXFIFOHE: Transmit FIFO Half Empty interrupt
-  *            @arg SDMMC_IT_RXFIFOHF: Receive FIFO Half Full interrupt
-  *            @arg SDMMC_IT_TXFIFOF:  Transmit FIFO full interrupt
-  *            @arg SDMMC_IT_RXFIFOF:  Receive FIFO full interrupt
-  *            @arg SDMMC_IT_TXFIFOE:  Transmit FIFO empty interrupt
-  *            @arg SDMMC_IT_RXFIFOE:  Receive FIFO empty interrupt
-  *            @arg SDMMC_IT_SDIOIT:   SD I/O interrupt received interrupt
+  *            @arg SDMMC_IT_CCRCFAIL:   Command response received (CRC check failed) interrupt
+  *            @arg SDMMC_IT_DCRCFAIL:   Data block sent/received (CRC check failed) interrupt
+  *            @arg SDMMC_IT_CTIMEOUT:   Command response timeout interrupt
+  *            @arg SDMMC_IT_DTIMEOUT:   Data timeout interrupt
+  *            @arg SDMMC_IT_TXUNDERR:   Transmit FIFO underrun error interrupt
+  *            @arg SDMMC_IT_RXOVERR:    Received FIFO overrun error interrupt
+  *            @arg SDMMC_IT_CMDREND:    Command response received (CRC check passed) interrupt
+  *            @arg SDMMC_IT_CMDSENT:    Command sent (no response required) interrupt
   *            @arg SDMMC_IT_DATAEND:    Data end (data counter, DATACOUNT, is zero) interrupt
   *            @arg SDMMC_IT_DHOLD:      Data transfer Hold interrupt
+  *            @arg SDMMC_IT_DBCKEND:    Data block sent/received (CRC check passed) interrupt
   *            @arg SDMMC_IT_DABORT:     Data transfer aborted by CMD12 interrupt
-  *            @arg SDMMC_IT_DPSMACT:    Data path state machine active interrupt
-  *            @arg SDMMC_IT_CPSMACT:    Command path state machine active interrupt
-  *            @arg SDMMC_IT_BUSYD0:     Inverted value of SDMMC_D0 line (Busy)
+  *            @arg SDMMC_IT_CMDACT:     Command transfer in progress interrupt
+  *            @arg SDMMC_IT_TXACT:      Data transmit in progress interrupt
+  *            @arg SDMMC_IT_RXACT:      Data receive in progress interrupt
+  *            @arg SDMMC_IT_TXFIFOHE:   Transmit FIFO Half Empty interrupt
+  *            @arg SDMMC_IT_RXFIFOHF:   Receive FIFO Half Full interrupt
+  *            @arg SDMMC_IT_TXFIFOF:    Transmit FIFO full interrupt
+  *            @arg SDMMC_IT_RXFIFOF:    Receive FIFO full interrupt
+  *            @arg SDMMC_IT_TXFIFOE:    Transmit FIFO empty interrupt
+  *            @arg SDMMC_IT_RXFIFOE:    Receive FIFO empty interrupt
+  *            @arg SDMMC_IT_TXDAVL:     Data available in transmit FIFO interrupt
+  *            @arg SDMMC_IT_RXDAVL:     Data available in receive FIFO interrupt
   *            @arg SDMMC_IT_BUSYD0END:  End of SDMMC_D0 Busy following a CMD response detected interrupt
+  *            @arg SDMMC_IT_SDIOIT:     SDIO interrupt received interrupt
   *            @arg SDMMC_IT_ACKFAIL:    Boot Acknowledgment received interrupt
   *            @arg SDMMC_IT_ACKTIMEOUT: Boot Acknowledgment timeout interrupt
   *            @arg SDMMC_IT_VSWEND:     Voltage switch critical timing section completion interrupt
   *            @arg SDMMC_IT_CKSTOP:     SDMMC_CK stopped in Voltage switch procedure interrupt
-  *            @arg SDMMC_IT_IDMATE:     IDMA transfer error interrupt
   *            @arg SDMMC_IT_IDMABTC:    IDMA buffer transfer complete interrupt
-  *            @arg SDMMC_IT_DATAEND:  Data end (data counter, SDIDCOUNT, is zero) interrupt
-  *            @arg SDMMC_IT_TXACT:    Data transmit in progress interrupt
-  *            @arg SDMMC_IT_RXACT:    Data receive in progress interrupt
-  *            @arg SDMMC_IT_TXDAVL:   Data available in transmit FIFO interrupt
-  *            @arg SDMMC_IT_RXDAVL:   Data available in receive FIFO interrupt
   * @retval The new state of SD IT (SET or RESET).
   */
 #define __HAL_SD_GET_IT(__HANDLE__, __INTERRUPT__) __SDMMC_GET_IT((__HANDLE__)->Instance, (__INTERRUPT__))
@@ -669,27 +650,25 @@ typedef void (*pSD_TransceiverCallbackTypeDef)(FlagStatus status);
   * @param  __HANDLE__: SD Handle
   * @param  __INTERRUPT__: specifies the interrupt pending bit to clear.
   *          This parameter can be one or a combination of the following values:
-  *            @arg SDMMC_IT_CCRCFAIL: Command response received (CRC check failed) interrupt
-  *            @arg SDMMC_IT_DCRCFAIL: Data block sent/received (CRC check failed) interrupt
-  *            @arg SDMMC_IT_CTIMEOUT: Command response timeout interrupt
-  *            @arg SDMMC_IT_DTIMEOUT: Data timeout interrupt
-  *            @arg SDMMC_IT_TXUNDERR: Transmit FIFO underrun error interrupt
-  *            @arg SDMMC_IT_RXOVERR:  Received FIFO overrun error interrupt
-  *            @arg SDMMC_IT_CMDREND:  Command response received (CRC check passed) interrupt
-  *            @arg SDMMC_IT_CMDSENT:  Command sent (no response required) interrupt
-  *            @arg SDMMC_IT_SDIOIT:   SD I/O interrupt received interrupt
+  *            @arg SDMMC_IT_CCRCFAIL:   Command response received (CRC check failed) interrupt
+  *            @arg SDMMC_IT_DCRCFAIL:   Data block sent/received (CRC check failed) interrupt
+  *            @arg SDMMC_IT_CTIMEOUT:   Command response timeout interrupt
+  *            @arg SDMMC_IT_DTIMEOUT:   Data timeout interrupt
+  *            @arg SDMMC_IT_TXUNDERR:   Transmit FIFO underrun error interrupt
+  *            @arg SDMMC_IT_RXOVERR:    Received FIFO overrun error interrupt
+  *            @arg SDMMC_IT_CMDREND:    Command response received (CRC check passed) interrupt
+  *            @arg SDMMC_IT_CMDSENT:    Command sent (no response required) interrupt
   *            @arg SDMMC_IT_DATAEND:    Data end (data counter, DATACOUNT, is zero) interrupt
   *            @arg SDMMC_IT_DHOLD:      Data transfer Hold interrupt
   *            @arg SDMMC_IT_DBCKEND:    Data block sent/received (CRC check passed) interrupt
   *            @arg SDMMC_IT_DABORT:     Data transfer aborted by CMD12 interrupt
   *            @arg SDMMC_IT_BUSYD0END:  End of SDMMC_D0 Busy following a CMD response detected interrupt
+  *            @arg SDMMC_IT_SDIOIT:     SDIO interrupt received interrupt
   *            @arg SDMMC_IT_ACKFAIL:    Boot Acknowledgment received interrupt
   *            @arg SDMMC_IT_ACKTIMEOUT: Boot Acknowledgment timeout interrupt
   *            @arg SDMMC_IT_VSWEND:     Voltage switch critical timing section completion interrupt
   *            @arg SDMMC_IT_CKSTOP:     SDMMC_CK stopped in Voltage switch procedure interrupt
-  *            @arg SDMMC_IT_IDMATE:     IDMA transfer error interrupt
   *            @arg SDMMC_IT_IDMABTC:    IDMA buffer transfer complete interrupt
-  *            @arg SDMMC_IT_DATAEND:  Data end (data counter, SDMMC_DCOUNT, is zero) interrupt
   * @retval None
   */
 #define __HAL_SD_CLEAR_IT(__HANDLE__, __INTERRUPT__) __SDMMC_CLEAR_IT((__HANDLE__)->Instance, (__INTERRUPT__))
@@ -702,6 +681,7 @@ typedef void (*pSD_TransceiverCallbackTypeDef)(FlagStatus status);
 /* Include SD HAL Extension module */
 #include "stm32l4xx_hal_sd_ex.h"
 #endif /* STM32L4R5xx || STM32L4R7xx || STM32L4R9xx || STM32L4S5xx || STM32L4S7xx || STM32L4S9xx */
+
 /* Exported functions --------------------------------------------------------*/
 /** @defgroup SD_Exported_Functions SD Exported Functions
   * @{
@@ -741,7 +721,7 @@ void              HAL_SD_RxCpltCallback (SD_HandleTypeDef *hsd);
 void              HAL_SD_ErrorCallback  (SD_HandleTypeDef *hsd);
 void              HAL_SD_AbortCallback  (SD_HandleTypeDef *hsd);
 
-#if (USE_HAL_SD_REGISTER_CALLBACKS == 1)
+#if defined (USE_HAL_SD_REGISTER_CALLBACKS) && (USE_HAL_SD_REGISTER_CALLBACKS == 1U)
 /* SD callback registering/unregistering */
 HAL_StatusTypeDef HAL_SD_RegisterCallback  (SD_HandleTypeDef *hsd, HAL_SD_CallbackIDTypeDef CallbackID, pSD_CallbackTypeDef pCallback);
 HAL_StatusTypeDef HAL_SD_UnRegisterCallback(SD_HandleTypeDef *hsd, HAL_SD_CallbackIDTypeDef CallbackID);
@@ -750,7 +730,7 @@ HAL_StatusTypeDef HAL_SD_UnRegisterCallback(SD_HandleTypeDef *hsd, HAL_SD_Callba
 HAL_StatusTypeDef HAL_SD_RegisterTransceiverCallback  (SD_HandleTypeDef *hsd, pSD_TransceiverCallbackTypeDef pCallback);
 HAL_StatusTypeDef HAL_SD_UnRegisterTransceiverCallback(SD_HandleTypeDef *hsd);
 #endif
-#endif
+#endif /* USE_HAL_SD_REGISTER_CALLBACKS */
 
 /**
   * @}
@@ -760,6 +740,7 @@ HAL_StatusTypeDef HAL_SD_UnRegisterTransceiverCallback(SD_HandleTypeDef *hsd);
   * @{
   */
 HAL_StatusTypeDef HAL_SD_ConfigWideBusOperation(SD_HandleTypeDef *hsd, uint32_t WideMode);
+HAL_StatusTypeDef HAL_SD_ConfigSpeedBusOperation(SD_HandleTypeDef *hsd, uint32_t SpeedMode);
 /**
   * @}
   */
@@ -768,10 +749,10 @@ HAL_StatusTypeDef HAL_SD_ConfigWideBusOperation(SD_HandleTypeDef *hsd, uint32_t 
   * @{
   */
 HAL_StatusTypeDef       HAL_SD_SendSDStatus (SD_HandleTypeDef *hsd, uint32_t *pSDstatus);
-HAL_SD_CardStateTypedef HAL_SD_GetCardState (SD_HandleTypeDef *hsd);
-HAL_StatusTypeDef       HAL_SD_GetCardCID   (SD_HandleTypeDef *hsd, HAL_SD_CardCIDTypedef *pCID);
-HAL_StatusTypeDef       HAL_SD_GetCardCSD   (SD_HandleTypeDef *hsd, HAL_SD_CardCSDTypedef *pCSD);
-HAL_StatusTypeDef       HAL_SD_GetCardStatus(SD_HandleTypeDef *hsd, HAL_SD_CardStatusTypedef *pStatus);
+HAL_SD_CardStateTypeDef HAL_SD_GetCardState (SD_HandleTypeDef *hsd);
+HAL_StatusTypeDef       HAL_SD_GetCardCID   (SD_HandleTypeDef *hsd, HAL_SD_CardCIDTypeDef *pCID);
+HAL_StatusTypeDef       HAL_SD_GetCardCSD   (SD_HandleTypeDef *hsd, HAL_SD_CardCSDTypeDef *pCSD);
+HAL_StatusTypeDef       HAL_SD_GetCardStatus(SD_HandleTypeDef *hsd, HAL_SD_CardStatusTypeDef *pStatus);
 HAL_StatusTypeDef       HAL_SD_GetCardInfo  (SD_HandleTypeDef *hsd, HAL_SD_CardInfoTypeDef *pCardInfo);
 /**
   * @}

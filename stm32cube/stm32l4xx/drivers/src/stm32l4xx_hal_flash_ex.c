@@ -48,29 +48,13 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; COPYRIGHT(c) 2017 STMicroelectronics</center></h2>
+  * <h2><center>&copy; Copyright (c) 2017 STMicroelectronics.
+  * All rights reserved.</center></h2>
   *
-  * Redistribution and use in source and binary forms, with or without modification,
-  * are permitted provided that the following conditions are met:
-  *   1. Redistributions of source code must retain the above copyright notice,
-  *      this list of conditions and the following disclaimer.
-  *   2. Redistributions in binary form must reproduce the above copyright notice,
-  *      this list of conditions and the following disclaimer in the documentation
-  *      and/or other materials provided with the distribution.
-  *   3. Neither the name of STMicroelectronics nor the names of its contributors
-  *      may be used to endorse or promote products derived from this software
-  *      without specific prior written permission.
-  *
-  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  * This software component is licensed by ST under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                       opensource.org/licenses/BSD-3-Clause
   *
   ******************************************************************************
   */
@@ -93,22 +77,11 @@
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-/** @defgroup FLASHEx_Private_Variables FLASHEx Private Variables
- * @{
- */
-extern FLASH_ProcessTypeDef pFlash;
-/**
-  * @}
-  */
-
 /* Private function prototypes -----------------------------------------------*/
 /** @defgroup FLASHEx_Private_Functions FLASHEx Private Functions
  * @{
  */
-extern HAL_StatusTypeDef FLASH_WaitForLastOperation(uint32_t Timeout);
-void                     FLASH_PageErase(uint32_t Page, uint32_t Banks);
 static void              FLASH_MassErase(uint32_t Banks);
-void                     FLASH_FlushCaches(void);
 static HAL_StatusTypeDef FLASH_OB_WRPConfig(uint32_t WRPArea, uint32_t WRPStartOffset, uint32_t WRDPEndOffset);
 static HAL_StatusTypeDef FLASH_OB_RDPConfig(uint32_t RDPLevel);
 static HAL_StatusTypeDef FLASH_OB_UserConfig(uint32_t UserType, uint32_t UserConfig);
@@ -1268,7 +1241,7 @@ static void FLASH_OB_GetPCROP(uint32_t * PCROPConfig, uint32_t * PCROPStartAddr,
       *PCROPStartAddr = (reg_value << 4) + FLASH_BASE;
 
       reg_value     = (READ_REG(FLASH->PCROP1ER) & FLASH_PCROP1ER_PCROP1_END);
-      *PCROPEndAddr = (reg_value << 4) + FLASH_BASE;
+      *PCROPEndAddr = (reg_value << 4) + FLASH_BASE + 0xFU;
     }
     else if(((*PCROPConfig) & FLASH_BANK_BOTH) == FLASH_BANK_2)
     {
@@ -1276,7 +1249,7 @@ static void FLASH_OB_GetPCROP(uint32_t * PCROPConfig, uint32_t * PCROPStartAddr,
       *PCROPStartAddr = (reg_value << 4) + FLASH_BASE;
 
       reg_value     = (READ_REG(FLASH->PCROP2ER) & FLASH_PCROP2ER_PCROP2_END);
-      *PCROPEndAddr = (reg_value << 4) + FLASH_BASE;
+      *PCROPEndAddr = (reg_value << 4) + FLASH_BASE + 0xFU;;
     }
     else
     {
@@ -1292,7 +1265,7 @@ static void FLASH_OB_GetPCROP(uint32_t * PCROPConfig, uint32_t * PCROPStartAddr,
       *PCROPStartAddr = (reg_value << 3) + bank1_addr;
 
       reg_value     = (READ_REG(FLASH->PCROP1ER) & FLASH_PCROP1ER_PCROP1_END);
-      *PCROPEndAddr = (reg_value << 3) + bank1_addr;
+      *PCROPEndAddr = (reg_value << 3) + bank1_addr + 0x7U;
     }
 #if defined (STM32L471xx) || defined (STM32L475xx) || defined (STM32L476xx) || defined (STM32L485xx) || defined (STM32L486xx) || \
     defined (STM32L496xx) || defined (STM32L4A6xx) || \
@@ -1303,7 +1276,7 @@ static void FLASH_OB_GetPCROP(uint32_t * PCROPConfig, uint32_t * PCROPStartAddr,
       *PCROPStartAddr = (reg_value << 3) + bank2_addr;
 
       reg_value     = (READ_REG(FLASH->PCROP2ER) & FLASH_PCROP2ER_PCROP2_END);
-      *PCROPEndAddr = (reg_value << 3) + bank2_addr;
+      *PCROPEndAddr = (reg_value << 3) + bank2_addr + 0x7U;
     }
 #endif
     else

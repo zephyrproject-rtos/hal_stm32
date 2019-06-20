@@ -15,22 +15,23 @@
   ==============================================================================
                        ##### SDMMC peripheral features #####
   ==============================================================================
-    [..] The SD/SDMMC MMC card host interface (SDMMC) provides an interface between the APB2
+    [..] The SD/SDMMC MMC card host interface (SDMMC) provides an interface between the AHB
          peripheral bus and MultiMedia cards (MMCs), SD memory cards, SDMMC cards and CE-ATA
          devices.
 
     [..] The SDMMC features include the following:
-         (+) Full compliance with MultiMedia Card System Specification Version 4.2. Card support
-             for three different data bus modes: 1-bit (default), 4-bit and 8-bit
-         (+) Full compatibility with previous versions of MultiMedia Cards (forward compatibility)
-         (+) Full compliance with SD Memory Card Specifications Version 2.0
-         (+) Full compliance with SD I/O Card Specification Version 2.0: card support for two
-             different data bus modes: 1-bit (default) and 4-bit
-         (+) Full support of the CE-ATA features (full compliance with CE-ATA digital protocol
-             Rev1.1)
-         (+) Data transfer up to 48 MHz for the 8 bit mode
-         (+) Data and command output enable signals to control external bidirectional drivers.
-
+         (+) Full compliance with MultiMediaCard System Specification Version 4.51. Card support
+             for three different databus modes: 1-bit (default), 4-bit and 8-bit.
+         (+) Full compatibility with previous versions of MultiMediaCards (backward compatibility).
+         (+) Full compliance with SD memory card specifications version 4.1.
+             (SDR104 SDMMC_CK speed limited to maximum allowed IO speed, SPI mode and
+              UHS-II mode not supported).
+         (+) Full compliance with SDIO card specification version 4.0. Card support
+             for two different databus modes: 1-bit (default) and 4-bit.
+             (SDR104 SDMMC_CK speed limited to maximum allowed IO speed, SPI mode and
+              UHS-II mode not supported).
+         (+) Data transfer up to 208 Mbyte/s for the 8 bit mode. (depending maximum allowed IO speed).
+         (+) Data and command output enable signals to control external bidirectional drivers
 
                            ##### How to use this driver #####
   ==============================================================================
@@ -67,10 +68,15 @@
           and __SDMMC_DISABLE_IT(hSDMMC, IT) if you need to use interrupt mode.
 
       (+) When using the DMA mode
-          (++) Configure the DMA in the MSP layer of the external device
-          (++) Active the needed channel Request
-          (++) Enable the DMA using __SDMMC_DMA_ENABLE() macro or Disable it using the macro
-               __SDMMC_DMA_DISABLE().
+          (++) On STM32L4Rx/STM32L4Sxx devices
+               (+++) Configure the IDMA mode (Single buffer or double)
+               (+++) Configure the buffer address
+               (+++) Configure Data Path State Machine
+          (++) On other devices
+               (+++) Configure the DMA in the MSP layer of the external device
+               (+++) Active the needed channel Request
+               (+++) Enable the DMA using __SDMMC_DMA_ENABLE() macro or Disable it using the macro
+                     __SDMMC_DMA_DISABLE().
 
       (+) To control the CPSM (Command Path State Machine) and send
           commands to the card use the SDMMC_SendCommand(SDMMCx),
@@ -146,29 +152,13 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; COPYRIGHT(c) 2017 STMicroelectronics</center></h2>
+  * <h2><center>&copy; Copyright (c) 2017 STMicroelectronics.
+  * All rights reserved.</center></h2>
   *
-  * Redistribution and use in source and binary forms, with or without modification,
-  * are permitted provided that the following conditions are met:
-  *   1. Redistributions of source code must retain the above copyright notice,
-  *      this list of conditions and the following disclaimer.
-  *   2. Redistributions in binary form must reproduce the above copyright notice,
-  *      this list of conditions and the following disclaimer in the documentation
-  *      and/or other materials provided with the distribution.
-  *   3. Neither the name of STMicroelectronics nor the names of its contributors
-  *      may be used to endorse or promote products derived from this software
-  *      without specific prior written permission.
-  *
-  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  * This software component is licensed by ST under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                       opensource.org/licenses/BSD-3-Clause
   *
   ******************************************************************************
   */
@@ -187,7 +177,7 @@
   * @{
   */
 
-#if defined (HAL_SD_MODULE_ENABLED)
+#if defined (HAL_SD_MODULE_ENABLED) || defined (HAL_MMC_MODULE_ENABLED)
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -229,6 +219,8 @@ static uint32_t SDMMC_GetCmdResp6(SDMMC_TypeDef *SDMMCx, uint8_t SD_CMD, uint16_
   */
 HAL_StatusTypeDef SDMMC_Init(SDMMC_TypeDef *SDMMCx, SDMMC_InitTypeDef Init)
 {
+  uint32_t tmpreg = 0;
+
   /* Check the parameters */
   assert_param(IS_SDMMC_ALL_INSTANCE(SDMMCx));
   assert_param(IS_SDMMC_CLOCK_EDGE(Init.ClockEdge));
@@ -241,21 +233,18 @@ HAL_StatusTypeDef SDMMC_Init(SDMMC_TypeDef *SDMMCx, SDMMC_InitTypeDef Init)
   assert_param(IS_SDMMC_CLKDIV(Init.ClockDiv));
 
   /* Set SDMMC configuration parameters */
+#if !defined(STM32L4R5xx) && !defined(STM32L4R7xx) && !defined(STM32L4R9xx) && !defined(STM32L4S5xx) && !defined(STM32L4S7xx) && !defined(STM32L4S9xx)
+  tmpreg |= Init.ClockBypass;
+#endif
+  tmpreg |= (Init.ClockEdge           |\
+             Init.ClockPowerSave      |\
+             Init.BusWide             |\
+             Init.HardwareFlowControl |\
+             Init.ClockDiv
+             );
+
   /* Write to SDMMC CLKCR */
-#if defined(STM32L4R5xx) || defined(STM32L4R7xx) || defined(STM32L4R9xx) || defined(STM32L4S5xx) || defined(STM32L4S7xx) || defined(STM32L4S9xx)
-  MODIFY_REG(SDMMCx->CLKCR, CLKCR_CLEAR_MASK, Init.ClockEdge           |\
-                                              Init.ClockPowerSave      |\
-                                              Init.BusWide             |\
-                                              Init.HardwareFlowControl |\
-                                              Init.ClockDiv);
-#else
-  MODIFY_REG(SDMMCx->CLKCR, CLKCR_CLEAR_MASK, Init.ClockEdge           |\
-                                              Init.ClockBypass         |\
-                                              Init.ClockPowerSave      |\
-                                              Init.BusWide             |\
-                                              Init.HardwareFlowControl |\
-                                              Init.ClockDiv);
-#endif /* STM32L4R5xx || STM32L4R7xx || STM32L4R9xx || STM32L4S5xx || STM32L4S7xx || STM32L4S9xx */
+  MODIFY_REG(SDMMCx->CLKCR, CLKCR_CLEAR_MASK, tmpreg);
 
   return HAL_OK;
 }
@@ -334,11 +323,13 @@ HAL_StatusTypeDef SDMMC_PowerState_ON(SDMMC_TypeDef *SDMMCx)
   /* Set power state to ON */
 #if defined(STM32L4R5xx) || defined(STM32L4R7xx) || defined(STM32L4R9xx) || defined(STM32L4S5xx) || defined(STM32L4S7xx) || defined(STM32L4S9xx)
   SDMMCx->POWER |= SDMMC_POWER_PWRCTRL;
-
 #else
   SDMMCx->POWER = SDMMC_POWER_PWRCTRL;
-
 #endif /* STM32L4R5xx || STM32L4R7xx || STM32L4R9xx || STM32L4S5xx || STM32L4S7xx || STM32L4S9xx */
+
+  /* 1ms: required power up waiting time before starting the SD initialization
+  sequence */
+  HAL_Delay(2);
 
   return HAL_OK;
 }
@@ -368,10 +359,8 @@ HAL_StatusTypeDef SDMMC_PowerState_OFF(SDMMC_TypeDef *SDMMCx)
   /* Set power state to OFF */
 #if defined(STM32L4R5xx) || defined(STM32L4R7xx) || defined(STM32L4R9xx) || defined(STM32L4S5xx) || defined(STM32L4S7xx) || defined(STM32L4S9xx)
   SDMMCx->POWER &= ~(SDMMC_POWER_PWRCTRL);
-
 #else
   SDMMCx->POWER = (uint32_t)0x00000000;
-
 #endif /* STM32L4R5xx || STM32L4R7xx || STM32L4R9xx || STM32L4S5xx || STM32L4S7xx || STM32L4S9xx */
 
   return HAL_OK;
@@ -401,6 +390,8 @@ uint32_t SDMMC_GetPowerState(SDMMC_TypeDef *SDMMCx)
   */
 HAL_StatusTypeDef SDMMC_SendCommand(SDMMC_TypeDef *SDMMCx, SDMMC_CmdInitTypeDef *Command)
 {
+  uint32_t tmpreg = 0;
+
   /* Check the parameters */
   assert_param(IS_SDMMC_CMD_INDEX(Command->CmdIndex));
   assert_param(IS_SDMMC_RESPONSE(Command->Response));
@@ -411,11 +402,13 @@ HAL_StatusTypeDef SDMMC_SendCommand(SDMMC_TypeDef *SDMMCx, SDMMC_CmdInitTypeDef 
   SDMMCx->ARG = Command->Argument;
 
   /* Set SDMMC command parameters */
+  tmpreg |= (uint32_t)(Command->CmdIndex         |\
+                       Command->Response         |\
+                       Command->WaitForInterrupt |\
+                       Command->CPSM);
+
   /* Write to SDMMC CMD register */
-  MODIFY_REG(SDMMCx->CMD, CMD_CLEAR_MASK, Command->CmdIndex         |\
-                                          Command->Response         |\
-                                          Command->WaitForInterrupt |\
-                                          Command->CPSM);
+  MODIFY_REG(SDMMCx->CMD, CMD_CLEAR_MASK, tmpreg);
 
   return HAL_OK;
 }
@@ -465,6 +458,8 @@ uint32_t SDMMC_GetResponse(SDMMC_TypeDef *SDMMCx, uint32_t Response)
   */
 HAL_StatusTypeDef SDMMC_ConfigData(SDMMC_TypeDef *SDMMCx, SDMMC_DataInitTypeDef* Data)
 {
+  uint32_t tmpreg = 0;
+
   /* Check the parameters */
   assert_param(IS_SDMMC_DATA_LENGTH(Data->DataLength));
   assert_param(IS_SDMMC_BLOCK_SIZE(Data->DataBlockSize));
@@ -479,11 +474,13 @@ HAL_StatusTypeDef SDMMC_ConfigData(SDMMC_TypeDef *SDMMCx, SDMMC_DataInitTypeDef*
   SDMMCx->DLEN = Data->DataLength;
 
   /* Set the SDMMC data configuration parameters */
+  tmpreg |= (uint32_t)(Data->DataBlockSize |\
+                       Data->TransferDir   |\
+                       Data->TransferMode  |\
+                       Data->DPSM);
+
   /* Write to SDMMC DCTRL */
-  MODIFY_REG(SDMMCx->DCTRL, DCTRL_CLEAR_MASK, Data->DataBlockSize |\
-                                              Data->TransferDir   |\
-                                              Data->TransferMode  |\
-                                              Data->DPSM);
+  MODIFY_REG(SDMMCx->DCTRL, DCTRL_CLEAR_MASK, tmpreg);
 
   return HAL_OK;
 
@@ -775,7 +772,7 @@ uint32_t SDMMC_CmdErase(SDMMC_TypeDef *SDMMCx)
   uint32_t errorstate;
 
   /* Set Block Size for Card */
-  sdmmc_cmdinit.Argument         = 0;
+  sdmmc_cmdinit.Argument         = 0U;
   sdmmc_cmdinit.CmdIndex         = SDMMC_CMD_ERASE;
   sdmmc_cmdinit.Response         = SDMMC_RESPONSE_SHORT;
   sdmmc_cmdinit.WaitForInterrupt = SDMMC_WAIT_NO;
@@ -799,15 +796,25 @@ uint32_t SDMMC_CmdStopTransfer(SDMMC_TypeDef *SDMMCx)
   uint32_t errorstate;
 
   /* Send CMD12 STOP_TRANSMISSION  */
-  sdmmc_cmdinit.Argument         = 0;
+  sdmmc_cmdinit.Argument         = 0U;
   sdmmc_cmdinit.CmdIndex         = SDMMC_CMD_STOP_TRANSMISSION;
   sdmmc_cmdinit.Response         = SDMMC_RESPONSE_SHORT;
   sdmmc_cmdinit.WaitForInterrupt = SDMMC_WAIT_NO;
   sdmmc_cmdinit.CPSM             = SDMMC_CPSM_ENABLE;
+
+#if defined(STM32L4R5xx) || defined(STM32L4R7xx) || defined(STM32L4R9xx) || defined(STM32L4S5xx) || defined(STM32L4S7xx) || defined(STM32L4S9xx)
+  __SDMMC_CMDSTOP_ENABLE(SDMMCx);
+  __SDMMC_CMDTRANS_DISABLE(SDMMCx);
+#endif /* STM32L4R5xx || STM32L4R7xx || STM32L4R9xx || STM32L4S5xx || STM32L4S7xx || STM32L4S9xx */
+
   (void)SDMMC_SendCommand(SDMMCx, &sdmmc_cmdinit);
 
   /* Check for error conditions */
   errorstate = SDMMC_GetCmdResp1(SDMMCx, SDMMC_CMD_STOP_TRANSMISSION, SDMMC_STOPTRANSFERTIMEOUT);
+
+#if defined(STM32L4R5xx) || defined(STM32L4R7xx) || defined(STM32L4R9xx) || defined(STM32L4S5xx) || defined(STM32L4S7xx) || defined(STM32L4S9xx)
+  __SDMMC_CMDSTOP_DISABLE(SDMMCx);
+#endif /* STM32L4R5xx || STM32L4R7xx || STM32L4R9xx || STM32L4S5xx || STM32L4S7xx || STM32L4S9xx */
 
   return errorstate;
 }
@@ -847,7 +854,7 @@ uint32_t SDMMC_CmdGoIdleState(SDMMC_TypeDef *SDMMCx)
   SDMMC_CmdInitTypeDef  sdmmc_cmdinit;
   uint32_t errorstate;
 
-  sdmmc_cmdinit.Argument         = 0;
+  sdmmc_cmdinit.Argument         = 0U;
   sdmmc_cmdinit.CmdIndex         = SDMMC_CMD_GO_IDLE_STATE;
   sdmmc_cmdinit.Response         = SDMMC_RESPONSE_NO;
   sdmmc_cmdinit.WaitForInterrupt = SDMMC_WAIT_NO;
@@ -981,7 +988,7 @@ uint32_t SDMMC_CmdSendSCR(SDMMC_TypeDef *SDMMCx)
   uint32_t errorstate;
 
   /* Send CMD51 SD_APP_SEND_SCR */
-  sdmmc_cmdinit.Argument         = 0;
+  sdmmc_cmdinit.Argument         = 0U;
   sdmmc_cmdinit.CmdIndex         = SDMMC_CMD_SD_APP_SEND_SCR;
   sdmmc_cmdinit.Response         = SDMMC_RESPONSE_SHORT;
   sdmmc_cmdinit.WaitForInterrupt = SDMMC_WAIT_NO;
@@ -1005,7 +1012,7 @@ uint32_t SDMMC_CmdSendCID(SDMMC_TypeDef *SDMMCx)
   uint32_t errorstate;
 
   /* Send CMD2 ALL_SEND_CID */
-  sdmmc_cmdinit.Argument         = 0;
+  sdmmc_cmdinit.Argument         = 0U;
   sdmmc_cmdinit.CmdIndex         = SDMMC_CMD_ALL_SEND_CID;
   sdmmc_cmdinit.Response         = SDMMC_RESPONSE_LONG;
   sdmmc_cmdinit.WaitForInterrupt = SDMMC_WAIT_NO;
@@ -1055,7 +1062,7 @@ uint32_t SDMMC_CmdSetRelAdd(SDMMC_TypeDef *SDMMCx, uint16_t *pRCA)
   uint32_t errorstate;
 
   /* Send CMD3 SD_CMD_SET_REL_ADDR */
-  sdmmc_cmdinit.Argument         = 0;
+  sdmmc_cmdinit.Argument         = 0U;
   sdmmc_cmdinit.CmdIndex         = SDMMC_CMD_SET_REL_ADDR;
   sdmmc_cmdinit.Response         = SDMMC_RESPONSE_SHORT;
   sdmmc_cmdinit.WaitForInterrupt = SDMMC_WAIT_NO;
@@ -1102,7 +1109,7 @@ uint32_t SDMMC_CmdStatusRegister(SDMMC_TypeDef *SDMMCx)
   SDMMC_CmdInitTypeDef  sdmmc_cmdinit;
   uint32_t errorstate;
 
-  sdmmc_cmdinit.Argument         = 0;
+  sdmmc_cmdinit.Argument         = 0U;
   sdmmc_cmdinit.CmdIndex         = SDMMC_CMD_SD_APP_STATUS;
   sdmmc_cmdinit.Response         = SDMMC_RESPONSE_SHORT;
   sdmmc_cmdinit.WaitForInterrupt = SDMMC_WAIT_NO;
@@ -1118,7 +1125,7 @@ uint32_t SDMMC_CmdStatusRegister(SDMMC_TypeDef *SDMMCx)
 /**
   * @brief  Sends host capacity support information and activates the card's
   *         initialization process. Send SDMMC_CMD_SEND_OP_COND command
-  * @param  SDIOx: Pointer to SDIO register base
+  * @param  SDMMCx: Pointer to SDMMC register base
   * @parame Argument: Argument used for the command
   * @retval HAL status
   */
@@ -1142,7 +1149,7 @@ uint32_t SDMMC_CmdOpCondition(SDMMC_TypeDef *SDMMCx, uint32_t Argument)
 
 /**
   * @brief  Checks switchable function and switch card function. SDMMC_CMD_HS_SWITCH comand
-  * @param  SDIOx: Pointer to SDIO register base
+  * @param  SDMMCx: Pointer to SDMMC register base
   * @parame Argument: Argument used for the command
   * @retval HAL status
   */
@@ -1151,7 +1158,9 @@ uint32_t SDMMC_CmdSwitch(SDMMC_TypeDef *SDMMCx, uint32_t Argument)
   SDMMC_CmdInitTypeDef  sdmmc_cmdinit;
   uint32_t errorstate;
 
-  sdmmc_cmdinit.Argument         = Argument;
+  /* Send CMD6 to activate SDR50 Mode and Power Limit 1.44W */
+  /* CMD Response: R1 */
+  sdmmc_cmdinit.Argument         = Argument; /* SDMMC_SDR25_SWITCH_PATTERN;*/
   sdmmc_cmdinit.CmdIndex         = SDMMC_CMD_HS_SWITCH;
   sdmmc_cmdinit.Response         = SDMMC_RESPONSE_SHORT;
   sdmmc_cmdinit.WaitForInterrupt = SDMMC_WAIT_NO;
@@ -1188,8 +1197,32 @@ uint32_t SDMMC_CmdVoltageSwitch(SDMMC_TypeDef *SDMMCx)
 
   return errorstate;
 }
-#endif /* STM32L4R5xx || STM32L4R7xx || STM32L4R9xx || STM32L4S5xx || STM32L4S7xx || STM32L4S9xx */
 
+/**
+  * @brief  Send the Send EXT_CSD command and check the response.
+  * @param  SDMMCx: Pointer to SDMMC register base
+  * @param  Argument: Command Argument
+  * @retval HAL status
+  */
+uint32_t SDMMC_CmdSendEXTCSD(SDMMC_TypeDef *SDMMCx, uint32_t Argument)
+{
+  SDMMC_CmdInitTypeDef  sdmmc_cmdinit;
+  uint32_t errorstate;
+
+  /* Send CMD9 SEND_CSD */
+  sdmmc_cmdinit.Argument         = Argument;
+  sdmmc_cmdinit.CmdIndex         = SDMMC_CMD_HS_SEND_EXT_CSD;
+  sdmmc_cmdinit.Response         = SDMMC_RESPONSE_SHORT;
+  sdmmc_cmdinit.WaitForInterrupt = SDMMC_WAIT_NO;
+  sdmmc_cmdinit.CPSM             = SDMMC_CPSM_ENABLE;
+  (void)SDMMC_SendCommand(SDMMCx, &sdmmc_cmdinit);
+
+  /* Check for error conditions */
+  errorstate = SDMMC_GetCmdResp1(SDMMCx, SDMMC_CMD_HS_SEND_EXT_CSD,SDMMC_CMDTIMEOUT);
+
+  return errorstate;
+}
+#endif /* STM32L4R5xx || STM32L4R7xx || STM32L4R9xx || STM32L4S5xx || STM32L4S7xx || STM32L4S9xx */
 
 /**
   * @}
@@ -1235,9 +1268,7 @@ static uint32_t SDMMC_GetCmdError(SDMMC_TypeDef *SDMMCx)
 static uint32_t SDMMC_GetCmdResp1(SDMMC_TypeDef *SDMMCx, uint8_t SD_CMD, uint32_t Timeout)
 {
   uint32_t response_r1;
-  uint32_t flags;
-
-  flags = SDMMC_FLAG_CCRCFAIL | SDMMC_FLAG_CMDREND | SDMMC_FLAG_CTIMEOUT;
+  uint32_t sta_reg;
 
   /* 8 is the number of required instructions cycles for the below loop statement.
   The Timeout is expressed in ms */
@@ -1249,8 +1280,14 @@ static uint32_t SDMMC_GetCmdResp1(SDMMC_TypeDef *SDMMCx, uint8_t SD_CMD, uint32_
     {
       return SDMMC_ERROR_TIMEOUT;
     }
-
-  }while(!__SDMMC_GET_FLAG(SDMMCx, flags));
+    sta_reg = SDMMCx->STA;
+#if defined(STM32L4R5xx) || defined(STM32L4R7xx) || defined(STM32L4R9xx) || defined(STM32L4S5xx) || defined(STM32L4S7xx) || defined(STM32L4S9xx)
+  }while(((sta_reg & (SDMMC_FLAG_CCRCFAIL | SDMMC_FLAG_CMDREND | SDMMC_FLAG_CTIMEOUT | SDMMC_FLAG_BUSYD0END)) == 0U) ||
+         ((sta_reg & SDMMC_FLAG_CMDACT) != 0U ));
+#else
+  }while(((sta_reg & (SDMMC_FLAG_CCRCFAIL | SDMMC_FLAG_CMDREND | SDMMC_FLAG_CTIMEOUT)) == 0U) ||
+         ((sta_reg & SDMMC_FLAG_CMDACT) != 0U ));
+#endif /* STM32L4R5xx || STM32L4R7xx || STM32L4R9xx || STM32L4S5xx || STM32L4S7xx || STM32L4S9xx */
 
   if(__SDMMC_GET_FLAG(SDMMCx, SDMMC_FLAG_CTIMEOUT))
   {
@@ -1269,14 +1306,14 @@ static uint32_t SDMMC_GetCmdResp1(SDMMC_TypeDef *SDMMCx, uint8_t SD_CMD, uint32_
     /* Nothing to do */
   }
 
+  /* Clear all the static flags */
+  __SDMMC_CLEAR_FLAG(SDMMCx, SDMMC_STATIC_CMD_FLAGS);
+
   /* Check response received is of desired command */
   if(SDMMC_GetCommandResponse(SDMMCx) != SD_CMD)
   {
     return SDMMC_ERROR_CMD_CRC_FAIL;
   }
-
-  /* Clear all the static flags */
-  __SDMMC_CLEAR_FLAG(SDMMCx, SDMMC_STATIC_CMD_FLAGS);
 
   /* We have received response, retrieve it for analysis  */
   response_r1 = SDMMC_GetResponse(SDMMCx, SDMMC_RESP1);
@@ -1370,6 +1407,7 @@ static uint32_t SDMMC_GetCmdResp1(SDMMC_TypeDef *SDMMCx, uint8_t SD_CMD, uint32_
   */
 static uint32_t SDMMC_GetCmdResp2(SDMMC_TypeDef *SDMMCx)
 {
+  uint32_t sta_reg;
   /* 8 is the number of required instructions cycles for the below loop statement.
   The SDMMC_CMDTIMEOUT is expressed in ms */
   register uint32_t count = SDMMC_CMDTIMEOUT * (SystemCoreClock / 8U /1000U);
@@ -1380,8 +1418,9 @@ static uint32_t SDMMC_GetCmdResp2(SDMMC_TypeDef *SDMMCx)
     {
       return SDMMC_ERROR_TIMEOUT;
     }
-
-  }while(!__SDMMC_GET_FLAG(SDMMCx, SDMMC_FLAG_CCRCFAIL | SDMMC_FLAG_CMDREND | SDMMC_FLAG_CTIMEOUT));
+    sta_reg = SDMMCx->STA;
+  }while(((sta_reg & (SDMMC_FLAG_CCRCFAIL | SDMMC_FLAG_CMDREND | SDMMC_FLAG_CTIMEOUT)) == 0U) ||
+         ((sta_reg & SDMMC_FLAG_CMDACT) != 0U ));
 
   if (__SDMMC_GET_FLAG(SDMMCx, SDMMC_FLAG_CTIMEOUT))
   {
@@ -1412,6 +1451,7 @@ static uint32_t SDMMC_GetCmdResp2(SDMMC_TypeDef *SDMMCx)
   */
 static uint32_t SDMMC_GetCmdResp3(SDMMC_TypeDef *SDMMCx)
 {
+  uint32_t sta_reg;
   /* 8 is the number of required instructions cycles for the below loop statement.
   The SDMMC_CMDTIMEOUT is expressed in ms */
   register uint32_t count = SDMMC_CMDTIMEOUT * (SystemCoreClock / 8U /1000U);
@@ -1422,8 +1462,9 @@ static uint32_t SDMMC_GetCmdResp3(SDMMC_TypeDef *SDMMCx)
     {
       return SDMMC_ERROR_TIMEOUT;
     }
-
-  }while(!__SDMMC_GET_FLAG(SDMMCx, SDMMC_FLAG_CCRCFAIL | SDMMC_FLAG_CMDREND | SDMMC_FLAG_CTIMEOUT));
+    sta_reg = SDMMCx->STA;
+  }while(((sta_reg & (SDMMC_FLAG_CCRCFAIL | SDMMC_FLAG_CMDREND | SDMMC_FLAG_CTIMEOUT)) == 0U) ||
+         ((sta_reg & SDMMC_FLAG_CMDACT) != 0U ));
 
   if(__SDMMC_GET_FLAG(SDMMCx, SDMMC_FLAG_CTIMEOUT))
   {
@@ -1451,6 +1492,7 @@ static uint32_t SDMMC_GetCmdResp3(SDMMC_TypeDef *SDMMCx)
 static uint32_t SDMMC_GetCmdResp6(SDMMC_TypeDef *SDMMCx, uint8_t SD_CMD, uint16_t *pRCA)
 {
   uint32_t response_r1;
+  uint32_t sta_reg;
 
   /* 8 is the number of required instructions cycles for the below loop statement.
   The SDMMC_CMDTIMEOUT is expressed in ms */
@@ -1462,8 +1504,9 @@ static uint32_t SDMMC_GetCmdResp6(SDMMC_TypeDef *SDMMCx, uint8_t SD_CMD, uint16_
     {
       return SDMMC_ERROR_TIMEOUT;
     }
-
-  }while(!__SDMMC_GET_FLAG(SDMMCx, SDMMC_FLAG_CCRCFAIL | SDMMC_FLAG_CMDREND | SDMMC_FLAG_CTIMEOUT));
+    sta_reg = SDMMCx->STA;
+  }while(((sta_reg & (SDMMC_FLAG_CCRCFAIL | SDMMC_FLAG_CMDREND | SDMMC_FLAG_CTIMEOUT)) == 0U) ||
+         ((sta_reg & SDMMC_FLAG_CMDACT) != 0U ));
 
   if(__SDMMC_GET_FLAG(SDMMCx, SDMMC_FLAG_CTIMEOUT))
   {
@@ -1521,6 +1564,7 @@ static uint32_t SDMMC_GetCmdResp6(SDMMC_TypeDef *SDMMCx, uint8_t SD_CMD, uint16_
   */
 static uint32_t SDMMC_GetCmdResp7(SDMMC_TypeDef *SDMMCx)
 {
+  uint32_t sta_reg;
   /* 8 is the number of required instructions cycles for the below loop statement.
   The SDMMC_CMDTIMEOUT is expressed in ms */
   register uint32_t count = SDMMC_CMDTIMEOUT * (SystemCoreClock / 8U /1000U);
@@ -1531,8 +1575,9 @@ static uint32_t SDMMC_GetCmdResp7(SDMMC_TypeDef *SDMMCx)
     {
       return SDMMC_ERROR_TIMEOUT;
     }
-
-  }while(!__SDMMC_GET_FLAG(SDMMCx, SDMMC_FLAG_CCRCFAIL | SDMMC_FLAG_CMDREND | SDMMC_FLAG_CTIMEOUT));
+    sta_reg = SDMMCx->STA;
+  }while(((sta_reg & (SDMMC_FLAG_CCRCFAIL | SDMMC_FLAG_CMDREND | SDMMC_FLAG_CTIMEOUT)) == 0U) ||
+         ((sta_reg & SDMMC_FLAG_CMDACT) != 0U ));
 
   if(__SDMMC_GET_FLAG(SDMMCx, SDMMC_FLAG_CTIMEOUT))
   {
@@ -1568,11 +1613,7 @@ static uint32_t SDMMC_GetCmdResp7(SDMMC_TypeDef *SDMMCx)
   * @}
   */
 
-/**
-  * @}
-  */
-
-#endif /* (HAL_SD_MODULE_ENABLED) */
+#endif /* HAL_SD_MODULE_ENABLED || HAL_MMC_MODULE_ENABLED */
 /**
   * @}
   */
