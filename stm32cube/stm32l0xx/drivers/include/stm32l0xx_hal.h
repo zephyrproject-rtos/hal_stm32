@@ -7,29 +7,13 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; COPYRIGHT(c) 2016 STMicroelectronics</center></h2>
+  * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
+  * All rights reserved.</center></h2>
   *
-  * Redistribution and use in source and binary forms, with or without modification,
-  * are permitted provided that the following conditions are met:
-  *   1. Redistributions of source code must retain the above copyright notice,
-  *      this list of conditions and the following disclaimer.
-  *   2. Redistributions in binary form must reproduce the above copyright notice,
-  *      this list of conditions and the following disclaimer in the documentation
-  *      and/or other materials provided with the distribution.
-  *   3. Neither the name of STMicroelectronics nor the names of its contributors
-  *      may be used to endorse or promote products derived from this software
-  *      without specific prior written permission.
-  *
-  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  * This software component is licensed by ST under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
   *
   ******************************************************************************
   */
@@ -52,6 +36,9 @@
 /** @defgroup HAL HAL
   * @{
   */
+
+/* Exported types ------------------------------------------------------------*/
+/* Exported constants --------------------------------------------------------*/
 /** @defgroup HAL_Exported_Constants HAL Exported Constants
   * @{
   */
@@ -156,7 +143,8 @@
   * @}
   */
 
- /** @defgroup HAL_Exported_Macros HAL Exported Macros
+/* Exported macros -----------------------------------------------------------*/
+/** @defgroup HAL_Exported_Macros HAL Exported Macros
   * @{
   */
 
@@ -280,7 +268,7 @@
 #define __HAL_SYSCFG_REMAPMEMORY_SRAM()             MODIFY_REG(SYSCFG->CFGR1, SYSCFG_CFGR1_MEM_MODE, SYSCFG_CFGR1_MEM_MODE_0 | SYSCFG_CFGR1_MEM_MODE_1)
 
 /** @brief  Configuration of the DBG Low Power mode.
-  * @param  __DBGLPMODE__: bit field to indicate in wich Low Power mode DBG is still active.
+  * @param  __DBGLPMODE__ bit field to indicate in wich Low Power mode DBG is still active.
   *         This parameter can be a value of
   *         - DBGMCU_SLEEP
   *         - DBGMCU_STOP
@@ -294,7 +282,7 @@
 
 /** @brief  Macro to configure the VLCD Decoupling capacitance connection.
   *
-  * @param  __SYSCFG_VLCD_CAPA__: specifies the decoupling of LCD capacitance for rails connection on GPIO.
+  * @param  __SYSCFG_VLCD_CAPA__ specifies the decoupling of LCD capacitance for rails connection on GPIO.
   *          This parameter can be a combination of following values (when available):
   *            @arg SYSCFG_VLCD_PB2_EXT_CAPA_ON:  Connection on PB2
   *            @arg SYSCFG_VLCD_PB12_EXT_CAPA_ON: Connection on PB12
@@ -330,14 +318,14 @@
 
 
 /** @brief  Check whether the specified SYSCFG flag is set or not.
-  * @param  __FLAG__: specifies the flag to check.
+  * @param  __FLAG__ specifies the flag to check.
   *         The only parameter supported is SYSCFG_FLAG_VREFINT_READY
   * @retval The new state of __FLAG__ (TRUE or FALSE).
   */
 #define __HAL_SYSCFG_GET_FLAG(__FLAG__) (((SYSCFG->CFGR3) & (__FLAG__)) == (__FLAG__))
 
 /** @brief  Fast mode Plus driving capability enable macro
-  * @param __FASTMODEPLUS__: This parameter can be a value of :
+  * @param __FASTMODEPLUS__ This parameter can be a value of :
   *     @arg SYSCFG_FASTMODEPLUS_PB6
   *     @arg SYSCFG_FASTMODEPLUS_PB7
   *     @arg SYSCFG_FASTMODEPLUS_PB8
@@ -347,7 +335,7 @@
                                                                 SET_BIT(SYSCFG->CFGR2, (__FASTMODEPLUS__));                 \
                                                                }while(0)
 /** @brief  Fast mode Plus driving capability disable macro
-  * @param __FASTMODEPLUS__: This parameter can be a value of :
+  * @param __FASTMODEPLUS__ This parameter can be a value of :
   *     @arg SYSCFG_FASTMODEPLUS_PB6
   *     @arg SYSCFG_FASTMODEPLUS_PB7
   *     @arg SYSCFG_FASTMODEPLUS_PB8
@@ -362,6 +350,16 @@
   * @}
   */
 
+/* Exported variables --------------------------------------------------------*/
+/** @defgroup HAL_Exported_Variables HAL Exported Variables
+  * @{
+  */
+extern __IO uint32_t uwTick;
+/**
+  * @}
+  */
+
+/* Exported functions --------------------------------------------------------*/
 /** @defgroup HAL_Exported_Functions HAL Exported Functions
   * @{
   */
@@ -373,24 +371,35 @@ HAL_StatusTypeDef HAL_Init(void);
 HAL_StatusTypeDef HAL_DeInit(void);
 void HAL_MspInit(void);
 void HAL_MspDeInit(void);
-HAL_StatusTypeDef HAL_InitTick (uint32_t TickPriority);
+HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority);
 
 /**
   * @}
   */
 
- /** @defgroup HAL_Exported_Functions_Group2 Peripheral Control functions
-  *  @brief    Peripheral Control functions
+/** @defgroup HAL_Exported_Functions_Group2 Peripheral Control functions
+  * @brief    Peripheral Control functions
   * @{
   */
 void HAL_IncTick(void);
-void HAL_Delay(__IO uint32_t Delay);
+void HAL_Delay(uint32_t Delay);
 uint32_t HAL_GetTick(void);
 void HAL_SuspendTick(void);
 void HAL_ResumeTick(void);
 uint32_t HAL_GetHalVersion(void);
 uint32_t HAL_GetREVID(void);
 uint32_t HAL_GetDEVID(void);
+uint32_t HAL_GetUIDw0(void);
+uint32_t HAL_GetUIDw1(void);
+uint32_t HAL_GetUIDw2(void);
+/**
+  * @}
+  */
+
+/** @defgroup HAL_Exported_Functions_Group3 DBGMCU Peripheral Control functions
+  * @brief    DBGMCU Peripheral Control functions
+  * @{
+  */
 void HAL_DBGMCU_EnableDBGSleepMode(void);
 void HAL_DBGMCU_DisableDBGSleepMode(void);
 void HAL_DBGMCU_EnableDBGStopMode(void);
@@ -399,11 +408,18 @@ void HAL_DBGMCU_EnableDBGStandbyMode(void);
 void HAL_DBGMCU_DisableDBGStandbyMode(void);
 void HAL_DBGMCU_DBG_EnableLowPowerConfig(uint32_t Periph);
 void HAL_DBGMCU_DBG_DisableLowPowerConfig(uint32_t Periph);
+/**
+  * @}
+  */
+
+/** @defgroup HAL_Exported_Functions_Group4 SYSCFG Peripheral Control functions
+  * @brief    SYSCFG Peripheral Control functions
+  * @{
+  */
 uint32_t  HAL_SYSCFG_GetBootMode(void);
 void HAL_SYSCFG_Enable_Lock_VREFINT(void);
 void HAL_SYSCFG_Disable_Lock_VREFINT(void);
 void HAL_SYSCFG_VREFINT_OutputSelect(uint32_t SYSCFG_Vrefint_OUTPUT);
-
 /**
   * @}
   */
