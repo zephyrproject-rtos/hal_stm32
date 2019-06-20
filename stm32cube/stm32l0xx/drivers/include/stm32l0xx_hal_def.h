@@ -7,29 +7,13 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; COPYRIGHT(c) 2016 STMicroelectronics</center></h2>
+  * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
+  * All rights reserved.</center></h2>
   *
-  * Redistribution and use in source and binary forms, with or without modification,
-  * are permitted provided that the following conditions are met:
-  *   1. Redistributions of source code must retain the above copyright notice,
-  *      this list of conditions and the following disclaimer.
-  *   2. Redistributions in binary form must reproduce the above copyright notice,
-  *      this list of conditions and the following disclaimer in the documentation
-  *      and/or other materials provided with the distribution.
-  *   3. Neither the name of STMicroelectronics nor the names of its contributors
-  *      may be used to endorse or promote products derived from this software
-  *      without specific prior written permission.
-  *
-  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  * This software component is licensed by ST under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
   *
   ******************************************************************************
   */
@@ -45,7 +29,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm32l0xx.h"
 #include "Legacy/stm32_hal_legacy.h"
-#include <stdio.h>
+#include <stddef.h>
 
 /* Exported types ------------------------------------------------------------*/
 
@@ -71,12 +55,12 @@ typedef enum
 
 /* Exported macro ------------------------------------------------------------*/
 
-#define UNUSED(x) ((void)(x))
+#define UNUSED(X) (void)X      /* To avoid gcc/g++ warnings */
 
 #define HAL_MAX_DELAY      0xFFFFFFFFU
 
-#define HAL_IS_BIT_SET(REG, BIT)         (((REG) & (BIT)) != RESET)
-#define HAL_IS_BIT_CLR(REG, BIT)         (((REG) & (BIT)) == RESET)
+#define HAL_IS_BIT_SET(REG, BIT)         (((REG) & (BIT)) == (BIT))
+#define HAL_IS_BIT_CLR(REG, BIT)         (((REG) & (BIT)) == 0U)
 
 #define __HAL_LINKDMA(__HANDLE__, __PPP_DMA_FIELD__, __DMA_HANDLE__)             \
                         do{                                                    \
@@ -125,7 +109,7 @@ typedef enum
                                     }while (0)
 #endif /* USE_RTOS */
 
-#if  defined ( __GNUC__ )
+#if  defined ( __GNUC__ ) && !defined (__CC_ARM) /* GNU Compiler */
   #ifndef __weak
     #define __weak   __attribute__((weak))
   #endif /* __weak */
@@ -139,7 +123,7 @@ typedef enum
 
 
 /* Macro to get variable aligned on 4-bytes, for __ICCARM__ the directive "#pragma data_alignment=4" must be used instead */
-#if defined   (__GNUC__)        /* GNU Compiler */
+#if defined   (__GNUC__) && !defined (__CC_ARM) /* GNU Compiler */
   #ifndef __ALIGN_END
     #define __ALIGN_END    __attribute__ ((aligned (4)))
   #endif /* __ALIGN_END */
@@ -172,7 +156,7 @@ typedef enum
    Available memory areas are declared in the 'Target' tab of the 'Options for Target'
    dialog.
 */
-#define __RAM_FUNC HAL_StatusTypeDef
+#define __RAM_FUNC
 
 #define __NOINLINE __attribute__ ( (noinline) )
 
@@ -182,7 +166,7 @@ typedef enum
    ---------------
    RAM functions are defined using a specific toolchain keyword "__ramfunc".
 */
-#define __RAM_FUNC __ramfunc HAL_StatusTypeDef
+#define __RAM_FUNC __ramfunc
 
 #define __NOINLINE _Pragma("optimize = no_inline")
 
@@ -192,7 +176,7 @@ typedef enum
   RAM functions are defined using a specific toolchain attribute
    "__attribute__((section(".RamFunc")))".
 */
-#define __RAM_FUNC HAL_StatusTypeDef  __attribute__((section(".RamFunc")))
+#define __RAM_FUNC  __attribute__((section(".RamFunc")))
 
 #endif
 
