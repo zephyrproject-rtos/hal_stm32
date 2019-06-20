@@ -2,33 +2,17 @@
   ******************************************************************************
   * @file    stm32l4xx_ll_sdmmc.h
   * @author  MCD Application Team
-  * @brief   Header file of low layer SDMMC HAL module.
+  * @brief   Header file of SDMMC HAL module.
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; COPYRIGHT(c) 2017 STMicroelectronics</center></h2>
+  * <h2><center>&copy; Copyright (c) 2017 STMicroelectronics.
+  * All rights reserved.</center></h2>
   *
-  * Redistribution and use in source and binary forms, with or without modification,
-  * are permitted provided that the following conditions are met:
-  *   1. Redistributions of source code must retain the above copyright notice,
-  *      this list of conditions and the following disclaimer.
-  *   2. Redistributions in binary form must reproduce the above copyright notice,
-  *      this list of conditions and the following disclaimer in the documentation
-  *      and/or other materials provided with the distribution.
-  *   3. Neither the name of STMicroelectronics nor the names of its contributors
-  *      may be used to endorse or promote products derived from this software
-  *      without specific prior written permission.
-  *
-  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  * This software component is licensed by ST under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                       opensource.org/licenses/BSD-3-Clause
   *
   ******************************************************************************
   */
@@ -84,7 +68,7 @@ typedef struct
                                       This parameter can be a value of @ref SDMMC_LL_Hardware_Flow_Control      */
 
   uint32_t ClockDiv;             /*!< Specifies the clock frequency of the SDMMC controller.
-                                      This parameter can be a value between Min_Data = 0 and Max_Data = 255 */
+                                      This parameter can be a value between Min_Data = 0 and Max_Data = 1023   */
 
 #if defined(STM32L4R5xx) || defined(STM32L4R7xx) || defined(STM32L4R9xx) || defined(STM32L4S5xx) || defined(STM32L4S7xx) || defined(STM32L4S9xx)
   uint32_t Transceiver;          /*!< Specifies whether external Transceiver is enabled or disabled.
@@ -198,11 +182,11 @@ typedef struct
 #define SDMMC_CMD_SET_REL_ADDR                        ((uint8_t)3U)   /*!< Asks the card to publish a new relative address (RCA).                                   */
 #define SDMMC_CMD_SET_DSR                             ((uint8_t)4U)   /*!< Programs the DSR of all cards.                                                           */
 #define SDMMC_CMD_SDMMC_SEN_OP_COND                   ((uint8_t)5U)   /*!< Sends host capacity support information (HCS) and asks the accessed card to send its
-                                                                       operating condition register (OCR) content in the response on the CMD line.                  */
+                                                                           operating condition register (OCR) content in the response on the CMD line.                  */
 #define SDMMC_CMD_HS_SWITCH                           ((uint8_t)6U)   /*!< Checks switchable function (mode 0) and switch card function (mode 1).                   */
 #define SDMMC_CMD_SEL_DESEL_CARD                      ((uint8_t)7U)   /*!< Selects the card by its own relative address and gets deselected by any other address    */
 #define SDMMC_CMD_HS_SEND_EXT_CSD                     ((uint8_t)8U)   /*!< Sends SD Memory Card interface condition, which includes host supply voltage information
-                                                                       and asks the card whether card supports voltage.                                             */
+                                                                           and asks the card whether card supports voltage.                                             */
 #define SDMMC_CMD_SEND_CSD                            ((uint8_t)9U)   /*!< Addressed card sends its card specific data (CSD) on the CMD line.                       */
 #define SDMMC_CMD_SEND_CID                            ((uint8_t)10U)  /*!< Addressed card sends its card identification (CID) on the CMD line.                      */
 #if defined(STM32L4R5xx) || defined(STM32L4R7xx) || defined(STM32L4R9xx) || defined(STM32L4S5xx) || defined(STM32L4S7xx) || defined(STM32L4S9xx)
@@ -316,8 +300,10 @@ typedef struct
 #define SDMMC_HIGH_CAPACITY                ((uint32_t)0x40000000U)
 #define SDMMC_STD_CAPACITY                 ((uint32_t)0x00000000U)
 #define SDMMC_CHECK_PATTERN                ((uint32_t)0x000001AAU)
-#if defined(STM32L4R5xx) || defined(STM32L4R7xx) || defined(STM32L4R9xx) || defined(STM32L4S5xx) || defined(STM32L4S7xx) || defined(STM32L4S9xx)
 #define SD_SWITCH_1_8V_CAPACITY            ((uint32_t)0x01000000U)
+#if defined(STM32L4R5xx) || defined(STM32L4R7xx) || defined(STM32L4R9xx) || defined(STM32L4S5xx) || defined(STM32L4S7xx) || defined(STM32L4S9xx)
+#define SDMMC_DDR50_SWITCH_PATTERN         ((uint32_t)0x80FFFF04U)
+#define SDMMC_SDR104_SWITCH_PATTERN        ((uint32_t)0x80FF1F03U)
 #define SDMMC_SDR50_SWITCH_PATTERN         ((uint32_t)0x80FF1F02U)
 #define SDMMC_SDR25_SWITCH_PATTERN         ((uint32_t)0x80FFFF01U)
 #endif /* STM32L4R5xx || STM32L4R7xx || STM32L4R9xx || STM32L4S5xx || STM32L4S7xx || STM32L4S9xx */
@@ -359,7 +345,7 @@ typedef struct
 #define SDMMC_CLOCK_EDGE_FALLING              SDMMC_CLKCR_NEGEDGE
 
 #define IS_SDMMC_CLOCK_EDGE(EDGE) (((EDGE) == SDMMC_CLOCK_EDGE_RISING) || \
-                                  ((EDGE) == SDMMC_CLOCK_EDGE_FALLING))
+                                   ((EDGE) == SDMMC_CLOCK_EDGE_FALLING))
 /**
   * @}
   */
@@ -372,7 +358,7 @@ typedef struct
 #define SDMMC_CLOCK_BYPASS_ENABLE              SDMMC_CLKCR_BYPASS
 
 #define IS_SDMMC_CLOCK_BYPASS(BYPASS) (((BYPASS) == SDMMC_CLOCK_BYPASS_DISABLE) || \
-                                      ((BYPASS) == SDMMC_CLOCK_BYPASS_ENABLE))
+                                       ((BYPASS) == SDMMC_CLOCK_BYPASS_ENABLE))
 /**
   * @}
   */
@@ -385,7 +371,7 @@ typedef struct
 #define SDMMC_CLOCK_POWER_SAVE_ENABLE          SDMMC_CLKCR_PWRSAV
 
 #define IS_SDMMC_CLOCK_POWER_SAVE(SAVE) (((SAVE) == SDMMC_CLOCK_POWER_SAVE_DISABLE) || \
-                                        ((SAVE) == SDMMC_CLOCK_POWER_SAVE_ENABLE))
+                                         ((SAVE) == SDMMC_CLOCK_POWER_SAVE_ENABLE))
 /**
   * @}
   */
@@ -398,11 +384,32 @@ typedef struct
 #define SDMMC_BUS_WIDE_8B                      SDMMC_CLKCR_WIDBUS_1
 
 #define IS_SDMMC_BUS_WIDE(WIDE) (((WIDE) == SDMMC_BUS_WIDE_1B) || \
-                                ((WIDE) == SDMMC_BUS_WIDE_4B) || \
-                                ((WIDE) == SDMMC_BUS_WIDE_8B))
+                                 ((WIDE) == SDMMC_BUS_WIDE_4B) || \
+                                 ((WIDE) == SDMMC_BUS_WIDE_8B))
 /**
   * @}
   */
+
+#if defined(STM32L4R5xx) || defined(STM32L4R7xx) || defined(STM32L4R9xx) || defined(STM32L4S5xx) || defined(STM32L4S7xx) || defined(STM32L4S9xx)
+/** @defgroup SDMMC_LL_Speed_Mode
+  * @{
+  */
+#define SDMMC_SPEED_MODE_AUTO                  ((uint32_t)0x00000000U)
+#define SDMMC_SPEED_MODE_DEFAULT               ((uint32_t)0x00000001U)
+#define SDMMC_SPEED_MODE_HIGH                  ((uint32_t)0x00000002U)
+#define SDMMC_SPEED_MODE_ULTRA                 ((uint32_t)0x00000003U)
+#define SDMMC_SPEED_MODE_DDR                   ((uint32_t)0x00000004U)
+
+#define IS_SDMMC_SPEED_MODE(MODE) (((MODE) == SDMMC_SPEED_MODE_AUTO) || \
+                                ((MODE) == SDMMC_SPEED_MODE_DEFAULT) || \
+                                ((MODE) == SDMMC_SPEED_MODE_HIGH) || \
+                                ((MODE) == SDMMC_SPEED_MODE_ULTRA) || \
+                                ((MODE) == SDMMC_SPEED_MODE_DDR))
+
+/**
+  * @}
+  */
+#endif /* STM32L4R5xx || STM32L4R7xx || STM32L4R9xx || STM32L4S5xx || STM32L4S7xx || STM32L4S9xx */
 
 /** @defgroup SDMMC_LL_Hardware_Flow_Control Hardware Flow Control
   * @{
@@ -411,7 +418,7 @@ typedef struct
 #define SDMMC_HARDWARE_FLOW_CONTROL_ENABLE     SDMMC_CLKCR_HWFC_EN
 
 #define IS_SDMMC_HARDWARE_FLOW_CONTROL(CONTROL) (((CONTROL) == SDMMC_HARDWARE_FLOW_CONTROL_DISABLE) || \
-                                                ((CONTROL) == SDMMC_HARDWARE_FLOW_CONTROL_ENABLE))
+                                                 ((CONTROL) == SDMMC_HARDWARE_FLOW_CONTROL_ENABLE))
 /**
   * @}
   */
@@ -428,7 +435,6 @@ typedef struct
 /**
   * @}
   */
-
 
 #if defined(STM32L4R5xx) || defined(STM32L4R7xx) || defined(STM32L4R9xx) || defined(STM32L4S5xx) || defined(STM32L4S7xx) || defined(STM32L4S9xx)
 /** @defgroup SDMMC_LL_Transceiver Transceiver
@@ -460,8 +466,8 @@ typedef struct
 #define SDMMC_RESPONSE_LONG                  SDMMC_CMD_WAITRESP
 
 #define IS_SDMMC_RESPONSE(RESPONSE) (((RESPONSE) == SDMMC_RESPONSE_NO)    || \
-                                    ((RESPONSE) == SDMMC_RESPONSE_SHORT) || \
-                                    ((RESPONSE) == SDMMC_RESPONSE_LONG))
+                                     ((RESPONSE) == SDMMC_RESPONSE_SHORT) || \
+                                     ((RESPONSE) == SDMMC_RESPONSE_LONG))
 /**
   * @}
   */
@@ -474,8 +480,8 @@ typedef struct
 #define SDMMC_WAIT_PEND                      SDMMC_CMD_WAITPEND
 
 #define IS_SDMMC_WAIT(WAIT) (((WAIT) == SDMMC_WAIT_NO) || \
-                            ((WAIT) == SDMMC_WAIT_IT) || \
-                            ((WAIT) == SDMMC_WAIT_PEND))
+                             ((WAIT) == SDMMC_WAIT_IT) || \
+                             ((WAIT) == SDMMC_WAIT_PEND))
 /**
   * @}
   */
@@ -487,7 +493,7 @@ typedef struct
 #define SDMMC_CPSM_ENABLE                    SDMMC_CMD_CPSMEN
 
 #define IS_SDMMC_CPSM(CPSM) (((CPSM) == SDMMC_CPSM_DISABLE) || \
-                            ((CPSM) == SDMMC_CPSM_ENABLE))
+                             ((CPSM) == SDMMC_CPSM_ENABLE))
 /**
   * @}
   */
@@ -501,9 +507,9 @@ typedef struct
 #define SDMMC_RESP4                          ((uint32_t)0x0000000CU)
 
 #define IS_SDMMC_RESP(RESP) (((RESP) == SDMMC_RESP1) || \
-                            ((RESP) == SDMMC_RESP2) || \
-                            ((RESP) == SDMMC_RESP3) || \
-                            ((RESP) == SDMMC_RESP4))
+                             ((RESP) == SDMMC_RESP2) || \
+                             ((RESP) == SDMMC_RESP3) || \
+                             ((RESP) == SDMMC_RESP4))
 
 #if defined(STM32L4R5xx) || defined(STM32L4R7xx) || defined(STM32L4R9xx) || defined(STM32L4S5xx) || defined(STM32L4S7xx) || defined(STM32L4S9xx)
 /** @defgroup SDMMC_Internal_DMA_Mode  SDMMC Internal DMA Mode
@@ -518,9 +524,6 @@ typedef struct
   * @}
   */
 #endif /* STM32L4R5xx || STM32L4R7xx || STM32L4R9xx || STM32L4S5xx || STM32L4S7xx || STM32L4S9xx */
-/**
-  * @}
-  */
 
 /** @defgroup SDMMC_LL_Data_Length Data Lenght
   * @{
@@ -550,20 +553,20 @@ typedef struct
 #define SDMMC_DATABLOCK_SIZE_16384B           (SDMMC_DCTRL_DBLOCKSIZE_1|SDMMC_DCTRL_DBLOCKSIZE_2|SDMMC_DCTRL_DBLOCKSIZE_3)
 
 #define IS_SDMMC_BLOCK_SIZE(SIZE) (((SIZE) == SDMMC_DATABLOCK_SIZE_1B)    || \
-                                  ((SIZE) == SDMMC_DATABLOCK_SIZE_2B)    || \
-                                  ((SIZE) == SDMMC_DATABLOCK_SIZE_4B)    || \
-                                  ((SIZE) == SDMMC_DATABLOCK_SIZE_8B)    || \
-                                  ((SIZE) == SDMMC_DATABLOCK_SIZE_16B)   || \
-                                  ((SIZE) == SDMMC_DATABLOCK_SIZE_32B)   || \
-                                  ((SIZE) == SDMMC_DATABLOCK_SIZE_64B)   || \
-                                  ((SIZE) == SDMMC_DATABLOCK_SIZE_128B)  || \
-                                  ((SIZE) == SDMMC_DATABLOCK_SIZE_256B)  || \
-                                  ((SIZE) == SDMMC_DATABLOCK_SIZE_512B)  || \
-                                  ((SIZE) == SDMMC_DATABLOCK_SIZE_1024B) || \
-                                  ((SIZE) == SDMMC_DATABLOCK_SIZE_2048B) || \
-                                  ((SIZE) == SDMMC_DATABLOCK_SIZE_4096B) || \
-                                  ((SIZE) == SDMMC_DATABLOCK_SIZE_8192B) || \
-                                  ((SIZE) == SDMMC_DATABLOCK_SIZE_16384B))
+                                   ((SIZE) == SDMMC_DATABLOCK_SIZE_2B)    || \
+                                   ((SIZE) == SDMMC_DATABLOCK_SIZE_4B)    || \
+                                   ((SIZE) == SDMMC_DATABLOCK_SIZE_8B)    || \
+                                   ((SIZE) == SDMMC_DATABLOCK_SIZE_16B)   || \
+                                   ((SIZE) == SDMMC_DATABLOCK_SIZE_32B)   || \
+                                   ((SIZE) == SDMMC_DATABLOCK_SIZE_64B)   || \
+                                   ((SIZE) == SDMMC_DATABLOCK_SIZE_128B)  || \
+                                   ((SIZE) == SDMMC_DATABLOCK_SIZE_256B)  || \
+                                   ((SIZE) == SDMMC_DATABLOCK_SIZE_512B)  || \
+                                   ((SIZE) == SDMMC_DATABLOCK_SIZE_1024B) || \
+                                   ((SIZE) == SDMMC_DATABLOCK_SIZE_2048B) || \
+                                   ((SIZE) == SDMMC_DATABLOCK_SIZE_4096B) || \
+                                   ((SIZE) == SDMMC_DATABLOCK_SIZE_8192B) || \
+                                   ((SIZE) == SDMMC_DATABLOCK_SIZE_16384B))
 /**
   * @}
   */
@@ -575,7 +578,7 @@ typedef struct
 #define SDMMC_TRANSFER_DIR_TO_SDMMC            SDMMC_DCTRL_DTDIR
 
 #define IS_SDMMC_TRANSFER_DIR(DIR) (((DIR) == SDMMC_TRANSFER_DIR_TO_CARD) || \
-                                   ((DIR) == SDMMC_TRANSFER_DIR_TO_SDMMC))
+                                    ((DIR) == SDMMC_TRANSFER_DIR_TO_SDMMC))
 /**
   * @}
   */
@@ -591,7 +594,7 @@ typedef struct
 #endif /* STM32L4R5xx || STM32L4R7xx || STM32L4R9xx || STM32L4S5xx || STM32L4S7xx || STM32L4S9xx */
 
 #define IS_SDMMC_TRANSFER_MODE(MODE) (((MODE) == SDMMC_TRANSFER_MODE_BLOCK) || \
-                                     ((MODE) == SDMMC_TRANSFER_MODE_STREAM))
+                                      ((MODE) == SDMMC_TRANSFER_MODE_STREAM))
 /**
   * @}
   */
@@ -603,7 +606,7 @@ typedef struct
 #define SDMMC_DPSM_ENABLE                     SDMMC_DCTRL_DTEN
 
 #define IS_SDMMC_DPSM(DPSM) (((DPSM) == SDMMC_DPSM_DISABLE) ||\
-                            ((DPSM) == SDMMC_DPSM_ENABLE))
+                             ((DPSM) == SDMMC_DPSM_ENABLE))
 /**
   * @}
   */
@@ -623,38 +626,47 @@ typedef struct
 /** @defgroup SDMMC_LL_Interrupt_sources Interrupt Sources
   * @{
   */
-#define SDMMC_IT_CCRCFAIL                    SDMMC_MASK_CCRCFAILIE
-#define SDMMC_IT_DCRCFAIL                    SDMMC_MASK_DCRCFAILIE
-#define SDMMC_IT_CTIMEOUT                    SDMMC_MASK_CTIMEOUTIE
-#define SDMMC_IT_DTIMEOUT                    SDMMC_MASK_DTIMEOUTIE
-#define SDMMC_IT_TXUNDERR                    SDMMC_MASK_TXUNDERRIE
-#define SDMMC_IT_RXOVERR                     SDMMC_MASK_RXOVERRIE
-#define SDMMC_IT_CMDREND                     SDMMC_MASK_CMDRENDIE
-#define SDMMC_IT_CMDSENT                     SDMMC_MASK_CMDSENTIE
-#define SDMMC_IT_DATAEND                     SDMMC_MASK_DATAENDIE
-#define SDMMC_IT_DBCKEND                     SDMMC_MASK_DBCKENDIE
-#define SDMMC_IT_TXFIFOHE                    SDMMC_MASK_TXFIFOHEIE
-#define SDMMC_IT_RXFIFOHF                    SDMMC_MASK_RXFIFOHFIE
-#define SDMMC_IT_RXFIFOF                     SDMMC_MASK_RXFIFOFIE
-#define SDMMC_IT_TXFIFOE                     SDMMC_MASK_TXFIFOEIE
-#define SDMMC_IT_SDIOIT                      SDMMC_MASK_SDIOITIE
+#define SDMMC_IT_CCRCFAIL                  SDMMC_MASK_CCRCFAILIE
+#define SDMMC_IT_DCRCFAIL                  SDMMC_MASK_DCRCFAILIE
+#define SDMMC_IT_CTIMEOUT                  SDMMC_MASK_CTIMEOUTIE
+#define SDMMC_IT_DTIMEOUT                  SDMMC_MASK_DTIMEOUTIE
+#define SDMMC_IT_TXUNDERR                  SDMMC_MASK_TXUNDERRIE
+#define SDMMC_IT_RXOVERR                   SDMMC_MASK_RXOVERRIE
+#define SDMMC_IT_CMDREND                   SDMMC_MASK_CMDRENDIE
+#define SDMMC_IT_CMDSENT                   SDMMC_MASK_CMDSENTIE
+#define SDMMC_IT_DATAEND                   SDMMC_MASK_DATAENDIE
 #if defined(STM32L4R5xx) || defined(STM32L4R7xx) || defined(STM32L4R9xx) || defined(STM32L4S5xx) || defined(STM32L4S7xx) || defined(STM32L4S9xx)
-#define SDMMC_IT_DHOLD                       SDMMC_MASK_DHOLDIE
-#define SDMMC_IT_DABORT                      SDMMC_MASK_DABORTIE
-#define SDMMC_IT_BUSYD0END                   SDMMC_MASK_BUSYD0ENDIE
-#define SDMMC_IT_ACKFAIL                     SDMMC_MASK_ACKFAILIE
-#define SDMMC_IT_ACKTIMEOUT                  SDMMC_MASK_ACKTIMEOUTIE
-#define SDMMC_IT_VSWEND                      SDMMC_MASK_VSWENDIE
-#define SDMMC_IT_CKSTOP                      SDMMC_MASK_CKSTOPIE
-#define SDMMC_IT_IDMABTC                     SDMMC_MASK_IDMABTCIE
+#define SDMMC_IT_DHOLD                     SDMMC_MASK_DHOLDIE
+#endif
+#define SDMMC_IT_DBCKEND                   SDMMC_MASK_DBCKENDIE
+#if !defined(STM32L4R5xx) && !defined(STM32L4R7xx) && !defined(STM32L4R9xx) && !defined(STM32L4S5xx) && !defined(STM32L4S7xx) && !defined(STM32L4S9xx)
+#define SDMMC_IT_CMDACT                    SDMMC_MASK_CMDACTIE
+#define SDMMC_IT_TXACT                     SDMMC_MASK_TXACTIE
+#define SDMMC_IT_RXACT                     SDMMC_MASK_RXACTIE
 #else
-#define SDMMC_IT_CMDACT                      SDMMC_MASK_CMDACTIE
-#define SDMMC_IT_TXACT                       SDMMC_MASK_TXACTIE
-#define SDMMC_IT_RXACT                       SDMMC_MASK_RXACTIE
-#define SDMMC_IT_TXFIFOF                     SDMMC_MASK_TXFIFOFIE
+#define SDMMC_IT_DABORT                    SDMMC_MASK_DABORTIE
+#endif
+#define SDMMC_IT_TXFIFOHE                  SDMMC_MASK_TXFIFOHEIE
+#define SDMMC_IT_RXFIFOHF                  SDMMC_MASK_RXFIFOHFIE
+#if !defined(STM32L4R5xx) && !defined(STM32L4R7xx) && !defined(STM32L4R9xx) && !defined(STM32L4S5xx) && !defined(STM32L4S7xx) && !defined(STM32L4S9xx)
+#define SDMMC_IT_TXFIFOF                   SDMMC_MASK_TXFIFOFIE
+#endif
+#define SDMMC_IT_RXFIFOF                   SDMMC_MASK_RXFIFOFIE
+#define SDMMC_IT_TXFIFOE                   SDMMC_MASK_TXFIFOEIE
+#if defined(STM32L4R5xx) || defined(STM32L4R7xx) || defined(STM32L4R9xx) || defined(STM32L4S5xx) || defined(STM32L4S7xx) || defined(STM32L4S9xx)
+#define SDMMC_IT_BUSYD0END                 SDMMC_MASK_BUSYD0ENDIE
+#else
 #define SDMMC_IT_RXFIFOE                     SDMMC_MASK_RXFIFOEIE
 #define SDMMC_IT_TXDAVL                      SDMMC_MASK_TXDAVLIE
 #define SDMMC_IT_RXDAVL                      SDMMC_MASK_RXDAVLIE
+#endif
+#define SDMMC_IT_SDIOIT                    SDMMC_MASK_SDIOITIE
+#if defined(STM32L4R5xx) || defined(STM32L4R7xx) || defined(STM32L4R9xx) || defined(STM32L4S5xx) || defined(STM32L4S7xx) || defined(STM32L4S9xx)
+#define SDMMC_IT_ACKFAIL                   SDMMC_MASK_ACKFAILIE
+#define SDMMC_IT_ACKTIMEOUT                SDMMC_MASK_ACKTIMEOUTIE
+#define SDMMC_IT_VSWEND                    SDMMC_MASK_VSWENDIE
+#define SDMMC_IT_CKSTOP                    SDMMC_MASK_CKSTOPIE
+#define SDMMC_IT_IDMABTC                   SDMMC_MASK_IDMABTCIE
 #endif /* STM32L4R5xx || STM32L4R7xx || STM32L4R9xx || STM32L4S5xx || STM32L4S7xx || STM32L4S9xx */
 /**
   * @}
@@ -672,33 +684,40 @@ typedef struct
 #define SDMMC_FLAG_CMDREND                   SDMMC_STA_CMDREND
 #define SDMMC_FLAG_CMDSENT                   SDMMC_STA_CMDSENT
 #define SDMMC_FLAG_DATAEND                   SDMMC_STA_DATAEND
+#if defined(STM32L4R5xx) || defined(STM32L4R7xx) || defined(STM32L4R9xx) || defined(STM32L4S5xx) || defined(STM32L4S7xx) || defined(STM32L4S9xx)
+#define SDMMC_FLAG_DHOLD                     SDMMC_STA_DHOLD
+#endif
 #define SDMMC_FLAG_DBCKEND                   SDMMC_STA_DBCKEND
+#if defined(STM32L4R5xx) || defined(STM32L4R7xx) || defined(STM32L4R9xx) || defined(STM32L4S5xx) || defined(STM32L4S7xx) || defined(STM32L4S9xx)
+#define SDMMC_FLAG_DABORT                    SDMMC_STA_DABORT
+#define SDMMC_FLAG_DPSMACT                   SDMMC_STA_DPSMACT
+#define SDMMC_FLAG_CMDACT                    SDMMC_STA_CPSMACT
+#else
+#define SDMMC_FLAG_CMDACT                    SDMMC_STA_CMDACT
+#define SDMMC_FLAG_TXACT                     SDMMC_STA_TXACT
+#define SDMMC_FLAG_RXACT                     SDMMC_STA_RXACT
+#endif
 #define SDMMC_FLAG_TXFIFOHE                  SDMMC_STA_TXFIFOHE
 #define SDMMC_FLAG_RXFIFOHF                  SDMMC_STA_RXFIFOHF
 #define SDMMC_FLAG_TXFIFOF                   SDMMC_STA_TXFIFOF
 #define SDMMC_FLAG_RXFIFOF                   SDMMC_STA_RXFIFOF
 #define SDMMC_FLAG_TXFIFOE                   SDMMC_STA_TXFIFOE
 #define SDMMC_FLAG_RXFIFOE                   SDMMC_STA_RXFIFOE
-#define SDMMC_FLAG_SDIOIT                    SDMMC_STA_SDIOIT
 #if defined(STM32L4R5xx) || defined(STM32L4R7xx) || defined(STM32L4R9xx) || defined(STM32L4S5xx) || defined(STM32L4S7xx) || defined(STM32L4S9xx)
-#define SDMMC_FLAG_DHOLD                     SDMMC_STA_DHOLD
-#define SDMMC_FLAG_DABORT                    SDMMC_STA_DABORT
-#define SDMMC_FLAG_DPSMACT                   SDMMC_STA_DPSMACT
-#define SDMMC_FLAG_CMDACT                    SDMMC_STA_CPSMACT
 #define SDMMC_FLAG_BUSYD0                    SDMMC_STA_BUSYD0
 #define SDMMC_FLAG_BUSYD0END                 SDMMC_STA_BUSYD0END
+#else
+#define SDMMC_FLAG_TXDAVL                    SDMMC_STA_TXDAVL
+#define SDMMC_FLAG_RXDAVL                    SDMMC_STA_RXDAVL
+#endif
+#define SDMMC_FLAG_SDIOIT                    SDMMC_STA_SDIOIT
+#if defined(STM32L4R5xx) || defined(STM32L4R7xx) || defined(STM32L4R9xx) || defined(STM32L4S5xx) || defined(STM32L4S7xx) || defined(STM32L4S9xx)
 #define SDMMC_FLAG_ACKFAIL                   SDMMC_STA_ACKFAIL
 #define SDMMC_FLAG_ACKTIMEOUT                SDMMC_STA_ACKTIMEOUT
 #define SDMMC_FLAG_VSWEND                    SDMMC_STA_VSWEND
 #define SDMMC_FLAG_CKSTOP                    SDMMC_STA_CKSTOP
 #define SDMMC_FLAG_IDMATE                    SDMMC_STA_IDMATE
 #define SDMMC_FLAG_IDMABTC                   SDMMC_STA_IDMABTC
-#else
-#define SDMMC_FLAG_CMDACT                    SDMMC_STA_CMDACT
-#define SDMMC_FLAG_TXACT                     SDMMC_STA_TXACT
-#define SDMMC_FLAG_RXACT                     SDMMC_STA_RXACT
-#define SDMMC_FLAG_TXDAVL                    SDMMC_STA_TXDAVL
-#define SDMMC_FLAG_RXDAVL                    SDMMC_STA_RXDAVL
 #endif /* STM32L4R5xx || STM32L4R7xx || STM32L4R9xx || STM32L4S5xx || STM32L4S7xx || STM32L4S9xx */
 
 #if defined(STM32L4R5xx) || defined(STM32L4R7xx) || defined(STM32L4R9xx) || defined(STM32L4S5xx) || defined(STM32L4S7xx) || defined(STM32L4S9xx)
@@ -754,7 +773,9 @@ typedef struct
 #if defined(STM32L4R5xx) || defined(STM32L4R7xx) || defined(STM32L4R9xx) || defined(STM32L4S5xx) || defined(STM32L4S7xx) || defined(STM32L4S9xx)
 #define CLKCR_CLEAR_MASK         ((uint32_t)(SDMMC_CLKCR_CLKDIV  | SDMMC_CLKCR_PWRSAV |\
                                              SDMMC_CLKCR_WIDBUS |\
-                                             SDMMC_CLKCR_NEGEDGE | SDMMC_CLKCR_HWFC_EN))
+                                             SDMMC_CLKCR_NEGEDGE | SDMMC_CLKCR_HWFC_EN |\
+                                             SDMMC_CLKCR_DDR | SDMMC_CLKCR_BUSSPEED |\
+                                             SDMMC_CLKCR_SELCLKRX))
 #else
 #define CLKCR_CLEAR_MASK         ((uint32_t)(SDMMC_CLKCR_CLKDIV  | SDMMC_CLKCR_PWRSAV |\
                                              SDMMC_CLKCR_BYPASS  | SDMMC_CLKCR_WIDBUS |\
@@ -779,17 +800,23 @@ typedef struct
 #endif /* STM32L4R5xx || STM32L4R7xx || STM32L4R9xx || STM32L4S5xx || STM32L4S7xx || STM32L4S9xx */
 
 #if defined(STM32L4R5xx) || defined(STM32L4R7xx) || defined(STM32L4R9xx) || defined(STM32L4S5xx) || defined(STM32L4S7xx) || defined(STM32L4S9xx)
-/* SDMMC Initialization Frequency (400KHz max) */
-#define SDMMC_INIT_CLK_DIV ((uint8_t)0x3C)    /* 48MHz / (SDMMC_INIT_CLK_DIV * 2) < 400KHz */
+/* SDMMC Initialization Frequency (400KHz max) for Peripheral CLK 110MHz*/
+#define SDMMC_INIT_CLK_DIV ((uint8_t)0x8A)
+
+/* SDMMC Default Speed Frequency (25Mhz max) for Peripheral CLK 110MHz*/
+#define SDMMC_NSpeed_CLK_DIV ((uint8_t)0x3)
+
+/* SDMMC High Speed Frequency (50Mhz max) for Peripheral CLK 110MHz*/
+#define SDMMC_HSpeed_CLK_DIV ((uint8_t)0x2)
 
 /* SDMMC Data Transfer Frequency (25MHz max) */
-#define SDMMC_TRANSFER_CLK_DIV ((uint8_t)0x1) /* 48MHz / (SDMMC_TRANSFER_CLK_DIV * 2) < 25MHz */
+#define SDMMC_TRANSFER_CLK_DIV SDMMC_NSpeed_CLK_DIV
 #else
 /* SDMMC Initialization Frequency (400KHz max) */
-#define SDMMC_INIT_CLK_DIV ((uint8_t)0x76)    /* 48MHz / (SDMMC_INIT_CLK_DIV + 2) < 400KHz */
+#define SDMMC_INIT_CLK_DIV     ((uint8_t)0x76)    /* 48MHz / (SDMMC_INIT_CLK_DIV + 2) < 400KHz */
 
 /* SDMMC Data Transfer Frequency (25MHz max) */
-#define SDMMC_TRANSFER_CLK_DIV ((uint8_t)0x0) /* 48MHz / (SDMMC_TRANSFER_CLK_DIV + 2) < 25MHz */
+#define SDMMC_TRANSFER_CLK_DIV ((uint8_t)0x0)     /* 48MHz / (SDMMC_TRANSFER_CLK_DIV + 2) < 25MHz */
 #endif /* STM32L4R5xx || STM32L4R7xx || STM32L4R9xx || STM32L4S5xx || STM32L4S7xx || STM32L4S9xx */
 
 /**
@@ -822,6 +849,7 @@ typedef struct
   * @retval None
   */
 #define __SDMMC_DMA_ENABLE(__INSTANCE__)  ((__INSTANCE__)->DCTRL |= SDMMC_DCTRL_DMAEN)
+
 /**
   * @brief  Disable the SDMMC DMA transfer.
   * @param  __INSTANCE__: SDMMC Instance
@@ -832,118 +860,121 @@ typedef struct
 
 /**
   * @brief  Enable the SDMMC device interrupt.
-  * @param  __INSTANCE__: Pointer to SDMMC register base
-  * @param  __INTERRUPT__: specifies the SDMMC interrupt sources to be enabled.
+  * @param  __INSTANCE__ : Pointer to SDMMC register base
+  * @param  __INTERRUPT__ : specifies the SDMMC interrupt sources to be enabled.
   *         This parameter can be one or a combination of the following values:
-  *            @arg SDMMC_IT_CCRCFAIL: Command response received (CRC check failed) interrupt
-  *            @arg SDMMC_IT_DCRCFAIL: Data block sent/received (CRC check failed) interrupt
-  *            @arg SDMMC_IT_CTIMEOUT: Command response timeout interrupt
-  *            @arg SDMMC_IT_DTIMEOUT: Data timeout interrupt
-  *            @arg SDMMC_IT_TXUNDERR: Transmit FIFO underrun error interrupt
-  *            @arg SDMMC_IT_RXOVERR:  Received FIFO overrun error interrupt
-  *            @arg SDMMC_IT_CMDREND:  Command response received (CRC check passed) interrupt
-  *            @arg SDMMC_IT_CMDSENT:  Command sent (no response required) interrupt
-  *            @arg SDMMC_IT_DATAEND:  Data end (data counter, SDIDCOUNT, is zero) interrupt
-  *            @arg SDMMC_IT_DBCKEND:  Data block sent/received (CRC check passed) interrupt
-  *            @arg SDMMC_IT_CMDACT:   Command transfer in progress interrupt
-  *            @arg SDMMC_IT_TXFIFOHE: Transmit FIFO Half Empty interrupt
-  *            @arg SDMMC_IT_RXFIFOHF: Receive FIFO Half Full interrupt
-  *            @arg SDMMC_IT_TXFIFOF:  Transmit FIFO full interrupt
-  *            @arg SDMMC_IT_RXFIFOF:  Receive FIFO full interrupt
-  *            @arg SDMMC_IT_TXFIFOE:  Transmit FIFO empty interrupt
-  *            @arg SDMMC_IT_RXFIFOE:  Receive FIFO empty interrupt
-  *            @arg SDMMC_IT_SDIOIT:   SD I/O interrupt received interrupt
+  *            @arg SDMMC_IT_CCRCFAIL:   Command response received (CRC check failed) interrupt
+  *            @arg SDMMC_IT_DCRCFAIL:   Data block sent/received (CRC check failed) interrupt
+  *            @arg SDMMC_IT_CTIMEOUT:   Command response timeout interrupt
+  *            @arg SDMMC_IT_DTIMEOUT:   Data timeout interrupt
+  *            @arg SDMMC_IT_TXUNDERR:   Transmit FIFO underrun error interrupt
+  *            @arg SDMMC_IT_RXOVERR:    Received FIFO overrun error interrupt
+  *            @arg SDMMC_IT_CMDREND:    Command response received (CRC check passed) interrupt
+  *            @arg SDMMC_IT_CMDSENT:    Command sent (no response required) interrupt
+  *            @arg SDMMC_IT_DATAEND:    Data end (data counter, DATACOUNT, is zero) interrupt
   *            @arg SDMMC_IT_DHOLD:      Data transfer Hold interrupt
+  *            @arg SDMMC_IT_DBCKEND:    Data block sent/received (CRC check passed) interrupt
   *            @arg SDMMC_IT_DABORT:     Data transfer aborted by CMD12 interrupt
+  *            @arg SDMMC_IT_CMDACT:     Command transfer in progress interrupt
+  *            @arg SDMMC_IT_TXACT:      Data transmit in progress interrupt
+  *            @arg SDMMC_IT_RXACT:      Data receive in progress interrupt
+  *            @arg SDMMC_IT_TXFIFOHE:   Transmit FIFO Half Empty interrupt
+  *            @arg SDMMC_IT_RXFIFOHF:   Receive FIFO Half Full interrupt
+  *            @arg SDMMC_IT_TXFIFOF:    Transmit FIFO full interrupt
+  *            @arg SDMMC_IT_RXFIFOF:    Receive FIFO full interrupt
+  *            @arg SDMMC_IT_TXFIFOE:    Transmit FIFO empty interrupt
+  *            @arg SDMMC_IT_RXFIFOE:    Receive FIFO empty interrupt
+  *            @arg SDMMC_IT_TXDAVL:     Data available in transmit FIFO interrupt
+  *            @arg SDMMC_IT_RXDAVL:     Data available in receive FIFO interrupt
   *            @arg SDMMC_IT_BUSYD0END:  End of SDMMC_D0 Busy following a CMD response detected interrupt
+  *            @arg SDMMC_IT_SDIOIT:     SDIO interrupt received interrupt
   *            @arg SDMMC_IT_ACKFAIL:    Boot Acknowledgment received interrupt
   *            @arg SDMMC_IT_ACKTIMEOUT: Boot Acknowledgment timeout interrupt
   *            @arg SDMMC_IT_VSWEND:     Voltage switch critical timing section completion interrupt
   *            @arg SDMMC_IT_CKSTOP:     SDMMC_CK stopped in Voltage switch procedure interrupt
   *            @arg SDMMC_IT_IDMABTC:    IDMA buffer transfer complete interrupt
-  *            @arg SDMMC_IT_TXACT:      Data transmit in progress interrupt
-  *            @arg SDMMC_IT_RXACT:      Data receive in progress interrupt
-  *            @arg SDMMC_IT_TXDAVL:     Data available in transmit FIFO interrupt
-  *            @arg SDMMC_IT_RXDAVL:     Data available in receive FIFO interrupt
   * @retval None
   */
 #define __SDMMC_ENABLE_IT(__INSTANCE__, __INTERRUPT__)  ((__INSTANCE__)->MASK |= (__INTERRUPT__))
 
 /**
   * @brief  Disable the SDMMC device interrupt.
-  * @param  __INSTANCE__: Pointer to SDMMC register base
-  * @param  __INTERRUPT__: specifies the SDMMC interrupt sources to be disabled.
+  * @param  __INSTANCE__ : Pointer to SDMMC register base
+  * @param  __INTERRUPT__ : specifies the SDMMC interrupt sources to be disabled.
   *          This parameter can be one or a combination of the following values:
-  *            @arg SDMMC_IT_CCRCFAIL: Command response received (CRC check failed) interrupt
-  *            @arg SDMMC_IT_DCRCFAIL: Data block sent/received (CRC check failed) interrupt
-  *            @arg SDMMC_IT_CTIMEOUT: Command response timeout interrupt
-  *            @arg SDMMC_IT_DTIMEOUT: Data timeout interrupt
-  *            @arg SDMMC_IT_TXUNDERR: Transmit FIFO underrun error interrupt
-  *            @arg SDMMC_IT_RXOVERR:  Received FIFO overrun error interrupt
-  *            @arg SDMMC_IT_CMDREND:  Command response received (CRC check passed) interrupt
-  *            @arg SDMMC_IT_CMDSENT:  Command sent (no response required) interrupt
-  *            @arg SDMMC_IT_DATAEND:  Data end (data counter, SDIDCOUNT, is zero) interrupt
-  *            @arg SDMMC_IT_DBCKEND:  Data block sent/received (CRC check passed) interrupt
-  *            @arg SDMMC_IT_CMDACT:   Command transfer in progress interrupt
-  *            @arg SDMMC_IT_TXFIFOHE: Transmit FIFO Half Empty interrupt
-  *            @arg SDMMC_IT_RXFIFOHF: Receive FIFO Half Full interrupt
-  *            @arg SDMMC_IT_TXFIFOF:  Transmit FIFO full interrupt
-  *            @arg SDMMC_IT_RXFIFOF:  Receive FIFO full interrupt
-  *            @arg SDMMC_IT_TXFIFOE:  Transmit FIFO empty interrupt
-  *            @arg SDMMC_IT_RXFIFOE:  Receive FIFO empty interrupt
-  *            @arg SDMMC_IT_SDIOIT:   SD I/O interrupt received interrupt
+  *            @arg SDMMC_IT_CCRCFAIL:   Command response received (CRC check failed) interrupt
+  *            @arg SDMMC_IT_DCRCFAIL:   Data block sent/received (CRC check failed) interrupt
+  *            @arg SDMMC_IT_CTIMEOUT:   Command response timeout interrupt
+  *            @arg SDMMC_IT_DTIMEOUT:   Data timeout interrupt
+  *            @arg SDMMC_IT_TXUNDERR:   Transmit FIFO underrun error interrupt
+  *            @arg SDMMC_IT_RXOVERR:    Received FIFO overrun error interrupt
+  *            @arg SDMMC_IT_CMDREND:    Command response received (CRC check passed) interrupt
+  *            @arg SDMMC_IT_CMDSENT:    Command sent (no response required) interrupt
+  *            @arg SDMMC_IT_DATAEND:    Data end (data counter, DATACOUNT, is zero) interrupt
   *            @arg SDMMC_IT_DHOLD:      Data transfer Hold interrupt
+  *            @arg SDMMC_IT_DBCKEND:    Data block sent/received (CRC check passed) interrupt
   *            @arg SDMMC_IT_DABORT:     Data transfer aborted by CMD12 interrupt
+  *            @arg SDMMC_IT_CMDACT:     Command transfer in progress interrupt
+  *            @arg SDMMC_IT_TXACT:      Data transmit in progress interrupt
+  *            @arg SDMMC_IT_RXACT:      Data receive in progress interrupt
+  *            @arg SDMMC_IT_TXFIFOHE:   Transmit FIFO Half Empty interrupt
+  *            @arg SDMMC_IT_RXFIFOHF:   Receive FIFO Half Full interrupt
+  *            @arg SDMMC_IT_TXFIFOF:    Transmit FIFO full interrupt
+  *            @arg SDMMC_IT_RXFIFOF:    Receive FIFO full interrupt
+  *            @arg SDMMC_IT_TXFIFOE:    Transmit FIFO empty interrupt
+  *            @arg SDMMC_IT_RXFIFOE:    Receive FIFO empty interrupt
+  *            @arg SDMMC_IT_TXDAVL:     Data available in transmit FIFO interrupt
+  *            @arg SDMMC_IT_RXDAVL:     Data available in receive FIFO interrupt
   *            @arg SDMMC_IT_BUSYD0END:  End of SDMMC_D0 Busy following a CMD response detected interrupt
+  *            @arg SDMMC_IT_SDIOIT:     SDIO interrupt received interrupt
   *            @arg SDMMC_IT_ACKFAIL:    Boot Acknowledgment received interrupt
   *            @arg SDMMC_IT_ACKTIMEOUT: Boot Acknowledgment timeout interrupt
   *            @arg SDMMC_IT_VSWEND:     Voltage switch critical timing section completion interrupt
   *            @arg SDMMC_IT_CKSTOP:     SDMMC_CK stopped in Voltage switch procedure interrupt
   *            @arg SDMMC_IT_IDMABTC:    IDMA buffer transfer complete interrupt
-  *            @arg SDMMC_IT_TXACT:      Data transmit in progress interrupt
-  *            @arg SDMMC_IT_RXACT:      Data receive in progress interrupt
-  *            @arg SDMMC_IT_TXDAVL:     Data available in transmit FIFO interrupt
-  *            @arg SDMMC_IT_RXDAVL:     Data available in receive FIFO interrupt
   * @retval None
   */
 #define __SDMMC_DISABLE_IT(__INSTANCE__, __INTERRUPT__)  ((__INSTANCE__)->MASK &= ~(__INTERRUPT__))
 
 /**
   * @brief  Checks whether the specified SDMMC flag is set or not.
-  * @param  __INSTANCE__: Pointer to SDMMC register base
+  * @param  __INSTANCE__ : Pointer to SDMMC register base
   * @param  __FLAG__: specifies the flag to check.
   *          This parameter can be one of the following values:
-  *            @arg SDMMC_FLAG_CCRCFAIL: Command response received (CRC check failed)
-  *            @arg SDMMC_FLAG_DCRCFAIL: Data block sent/received (CRC check failed)
-  *            @arg SDMMC_FLAG_CTIMEOUT: Command response timeout
-  *            @arg SDMMC_FLAG_DTIMEOUT: Data timeout
-  *            @arg SDMMC_FLAG_TXUNDERR: Transmit FIFO underrun error
-  *            @arg SDMMC_FLAG_RXOVERR:  Received FIFO overrun error
-  *            @arg SDMMC_FLAG_CMDREND:  Command response received (CRC check passed)
-  *            @arg SDMMC_FLAG_CMDSENT:  Command sent (no response required)
-  *            @arg SDMMC_FLAG_DATAEND:  Data end (data counter, SDIDCOUNT, is zero)
-  *            @arg SDMMC_FLAG_DBCKEND:  Data block sent/received (CRC check passed)
-  *            @arg SDMMC_FLAG_CMDACT:   Command transfer in progress
-  *            @arg SDMMC_FLAG_TXFIFOHE: Transmit FIFO Half Empty
-  *            @arg SDMMC_FLAG_RXFIFOHF: Receive FIFO Half Full
-  *            @arg SDMMC_FLAG_TXFIFOF:  Transmit FIFO full
-  *            @arg SDMMC_FLAG_RXFIFOF:  Receive FIFO full
-  *            @arg SDMMC_FLAG_TXFIFOE:  Transmit FIFO empty
-  *            @arg SDMMC_FLAG_RXFIFOE:  Receive FIFO empty
-  *            @arg SDMMC_FLAG_SDIOIT:   SD I/O interrupt received
+  *            @arg SDMMC_FLAG_CCRCFAIL:   Command response received (CRC check failed)
+  *            @arg SDMMC_FLAG_DCRCFAIL:   Data block sent/received (CRC check failed)
+  *            @arg SDMMC_FLAG_CTIMEOUT:   Command response timeout
+  *            @arg SDMMC_FLAG_DTIMEOUT:   Data timeout
+  *            @arg SDMMC_FLAG_TXUNDERR:   Transmit FIFO underrun error
+  *            @arg SDMMC_FLAG_RXOVERR:    Received FIFO overrun error
+  *            @arg SDMMC_FLAG_CMDREND:    Command response received (CRC check passed)
+  *            @arg SDMMC_FLAG_CMDSENT:    Command sent (no response required)
+  *            @arg SDMMC_FLAG_DATAEND:    Data end (data counter, DATACOUNT, is zero)
   *            @arg SDMMC_FLAG_DHOLD:      Data transfer Hold
+  *            @arg SDMMC_FLAG_DBCKEND:    Data block sent/received (CRC check passed)
   *            @arg SDMMC_FLAG_DABORT:     Data transfer aborted by CMD12
+  *            @arg SDMMC_FLAG_DPSMACT:    Data path state machine active
+  *            @arg SDMMC_FLAG_CPSMACT:    Command path state machine active
+  *            @arg SDMMC_FLAG_CMDACT:     Command transfer in progress
+  *            @arg SDMMC_FLAG_TXACT:      Data transmit in progress
+  *            @arg SDMMC_FLAG_RXACT:      Data receive in progress
+  *            @arg SDMMC_FLAG_TXFIFOHE:   Transmit FIFO Half Empty
+  *            @arg SDMMC_FLAG_RXFIFOHF:   Receive FIFO Half Full
+  *            @arg SDMMC_FLAG_TXFIFOF:    Transmit FIFO full
+  *            @arg SDMMC_FLAG_RXFIFOF:    Receive FIFO full
+  *            @arg SDMMC_FLAG_TXFIFOE:    Transmit FIFO empty
+  *            @arg SDMMC_FLAG_RXFIFOE:    Receive FIFO empty
+  *            @arg SDMMC_FLAG_TXDAVL:     Data available in transmit FIFO
+  *            @arg SDMMC_FLAG_RXDAVL:     Data available in receive FIFO
+  *            @arg SDMMC_FLAG_BUSYD0:     Inverted value of SDMMC_D0 line (Busy)
   *            @arg SDMMC_FLAG_BUSYD0END:  End of SDMMC_D0 Busy following a CMD response detected
+  *            @arg SDMMC_FLAG_SDIOIT:     SDIO interrupt received
   *            @arg SDMMC_FLAG_ACKFAIL:    Boot Acknowledgment received
   *            @arg SDMMC_FLAG_ACKTIMEOUT: Boot Acknowledgment timeout
   *            @arg SDMMC_FLAG_VSWEND:     Voltage switch critical timing section completion
   *            @arg SDMMC_FLAG_CKSTOP:     SDMMC_CK stopped in Voltage switch procedure
   *            @arg SDMMC_FLAG_IDMATE:     IDMA transfer error
   *            @arg SDMMC_FLAG_IDMABTC:    IDMA buffer transfer complete
-  *            @arg SDMMC_FLAG_TXACT:      Data transmit in progress
-  *            @arg SDMMC_FLAG_RXACT:      Data receive in progress
-  *            @arg SDMMC_FLAG_TXDAVL:     Data available in transmit FIFO
-  *            @arg SDMMC_FLAG_RXDAVL:     Data available in receive FIFO
   * @retval The new state of SDMMC_FLAG (SET or RESET).
   */
 #define __SDMMC_GET_FLAG(__INSTANCE__, __FLAG__)  (((__INSTANCE__)->STA &(__FLAG__)) != 0U)
@@ -951,23 +982,23 @@ typedef struct
 
 /**
   * @brief  Clears the SDMMC pending flags.
-  * @param  __INSTANCE__: Pointer to SDMMC register base
+  * @param  __INSTANCE__ : Pointer to SDMMC register base
   * @param  __FLAG__: specifies the flag to clear.
   *          This parameter can be one or a combination of the following values:
-  *            @arg SDMMC_FLAG_CCRCFAIL: Command response received (CRC check failed)
-  *            @arg SDMMC_FLAG_DCRCFAIL: Data block sent/received (CRC check failed)
-  *            @arg SDMMC_FLAG_CTIMEOUT: Command response timeout
-  *            @arg SDMMC_FLAG_DTIMEOUT: Data timeout
-  *            @arg SDMMC_FLAG_TXUNDERR: Transmit FIFO underrun error
-  *            @arg SDMMC_FLAG_RXOVERR:  Received FIFO overrun error
-  *            @arg SDMMC_FLAG_CMDREND:  Command response received (CRC check passed)
-  *            @arg SDMMC_FLAG_CMDSENT:  Command sent (no response required)
-  *            @arg SDMMC_FLAG_DATAEND:  Data end (data counter, SDIDCOUNT, is zero)
-  *            @arg SDMMC_FLAG_DBCKEND:  Data block sent/received (CRC check passed)
-  *            @arg SDMMC_FLAG_SDIOIT:   SD I/O interrupt received
+  *            @arg SDMMC_FLAG_CCRCFAIL:   Command response received (CRC check failed)
+  *            @arg SDMMC_FLAG_DCRCFAIL:   Data block sent/received (CRC check failed)
+  *            @arg SDMMC_FLAG_CTIMEOUT:   Command response timeout
+  *            @arg SDMMC_FLAG_DTIMEOUT:   Data timeout
+  *            @arg SDMMC_FLAG_TXUNDERR:   Transmit FIFO underrun error
+  *            @arg SDMMC_FLAG_RXOVERR:    Received FIFO overrun error
+  *            @arg SDMMC_FLAG_CMDREND:    Command response received (CRC check passed)
+  *            @arg SDMMC_FLAG_CMDSENT:    Command sent (no response required)
+  *            @arg SDMMC_FLAG_DATAEND:    Data end (data counter, DATACOUNT, is zero)
   *            @arg SDMMC_FLAG_DHOLD:      Data transfer Hold
+  *            @arg SDMMC_FLAG_DBCKEND:    Data block sent/received (CRC check passed)
   *            @arg SDMMC_FLAG_DABORT:     Data transfer aborted by CMD12
   *            @arg SDMMC_FLAG_BUSYD0END:  End of SDMMC_D0 Busy following a CMD response detected
+  *            @arg SDMMC_FLAG_SDIOIT:     SDIO interrupt received
   *            @arg SDMMC_FLAG_ACKFAIL:    Boot Acknowledgment received
   *            @arg SDMMC_FLAG_ACKTIMEOUT: Boot Acknowledgment timeout
   *            @arg SDMMC_FLAG_VSWEND:     Voltage switch critical timing section completion
@@ -980,61 +1011,62 @@ typedef struct
 
 /**
   * @brief  Checks whether the specified SDMMC interrupt has occurred or not.
-  * @param  __INSTANCE__: Pointer to SDMMC register base
+  * @param  __INSTANCE__ : Pointer to SDMMC register base
   * @param  __INTERRUPT__: specifies the SDMMC interrupt source to check.
   *          This parameter can be one of the following values:
-  *            @arg SDMMC_IT_CCRCFAIL: Command response received (CRC check failed) interrupt
-  *            @arg SDMMC_IT_DCRCFAIL: Data block sent/received (CRC check failed) interrupt
-  *            @arg SDMMC_IT_CTIMEOUT: Command response timeout interrupt
-  *            @arg SDMMC_IT_DTIMEOUT: Data timeout interrupt
-  *            @arg SDMMC_IT_TXUNDERR: Transmit FIFO underrun error interrupt
-  *            @arg SDMMC_IT_RXOVERR:  Received FIFO overrun error interrupt
-  *            @arg SDMMC_IT_CMDREND:  Command response received (CRC check passed) interrupt
-  *            @arg SDMMC_IT_CMDSENT:  Command sent (no response required) interrupt
-  *            @arg SDMMC_IT_DATAEND:  Data end (data counter, SDIDCOUNT, is zero) interrupt
-  *            @arg SDMMC_IT_DBCKEND:  Data block sent/received (CRC check passed) interrupt
-  *            @arg SDMMC_IT_CMDACT:   Command transfer in progress interrupt
-  *            @arg SDMMC_IT_TXFIFOHE: Transmit FIFO Half Empty interrupt
-  *            @arg SDMMC_IT_RXFIFOHF: Receive FIFO Half Full interrupt
-  *            @arg SDMMC_IT_TXFIFOF:  Transmit FIFO full interrupt
-  *            @arg SDMMC_IT_RXFIFOF:  Receive FIFO full interrupt
-  *            @arg SDMMC_IT_TXFIFOE:  Transmit FIFO empty interrupt
-  *            @arg SDMMC_IT_RXFIFOE:  Receive FIFO empty interrupt
-  *            @arg SDMMC_IT_SDIOIT:   SD I/O interrupt received interrupt
+  *            @arg SDMMC_IT_CCRCFAIL:   Command response received (CRC check failed) interrupt
+  *            @arg SDMMC_IT_DCRCFAIL:   Data block sent/received (CRC check failed) interrupt
+  *            @arg SDMMC_IT_CTIMEOUT:   Command response timeout interrupt
+  *            @arg SDMMC_IT_DTIMEOUT:   Data timeout interrupt
+  *            @arg SDMMC_IT_TXUNDERR:   Transmit FIFO underrun error interrupt
+  *            @arg SDMMC_IT_RXOVERR:    Received FIFO overrun error interrupt
+  *            @arg SDMMC_IT_CMDREND:    Command response received (CRC check passed) interrupt
+  *            @arg SDMMC_IT_CMDSENT:    Command sent (no response required) interrupt
+  *            @arg SDMMC_IT_DATAEND:    Data end (data counter, DATACOUNT, is zero) interrupt
   *            @arg SDMMC_IT_DHOLD:      Data transfer Hold interrupt
+  *            @arg SDMMC_IT_DBCKEND:    Data block sent/received (CRC check passed) interrupt
   *            @arg SDMMC_IT_DABORT:     Data transfer aborted by CMD12 interrupt
+  *            @arg SDMMC_IT_CMDACT:     Command transfer in progress interrupt
+  *            @arg SDMMC_IT_TXACT:      Data transmit in progress interrupt
+  *            @arg SDMMC_IT_RXACT:      Data receive in progress interrupt
+  *            @arg SDMMC_IT_TXFIFOHE:   Transmit FIFO Half Empty interrupt
+  *            @arg SDMMC_IT_RXFIFOHF:   Receive FIFO Half Full interrupt
+  *            @arg SDMMC_IT_TXFIFOF:    Transmit FIFO full interrupt
+  *            @arg SDMMC_IT_RXFIFOF:    Receive FIFO full interrupt
+  *            @arg SDMMC_IT_TXFIFOE:    Transmit FIFO empty interrupt
+  *            @arg SDMMC_IT_RXFIFOE:    Receive FIFO empty interrupt
+  *            @arg SDMMC_IT_TXDAVL:     Data available in transmit FIFO interrupt
+  *            @arg SDMMC_IT_RXDAVL:     Data available in receive FIFO interrupt
   *            @arg SDMMC_IT_BUSYD0END:  End of SDMMC_D0 Busy following a CMD response detected interrupt
+  *            @arg SDMMC_IT_SDIOIT:     SDIO interrupt received interrupt
   *            @arg SDMMC_IT_ACKFAIL:    Boot Acknowledgment received interrupt
   *            @arg SDMMC_IT_ACKTIMEOUT: Boot Acknowledgment timeout interrupt
   *            @arg SDMMC_IT_VSWEND:     Voltage switch critical timing section completion interrupt
   *            @arg SDMMC_IT_CKSTOP:     SDMMC_CK stopped in Voltage switch procedure interrupt
   *            @arg SDMMC_IT_IDMABTC:    IDMA buffer transfer complete interrupt
-  *            @arg SDMMC_IT_TXACT:      Data transmit in progress interrupt
-  *            @arg SDMMC_IT_RXACT:      Data receive in progress interrupt
-  *            @arg SDMMC_IT_TXDAVL:     Data available in transmit FIFO interrupt
-  *            @arg SDMMC_IT_RXDAVL:     Data available in receive FIFO interrupt
   * @retval The new state of SDMMC_IT (SET or RESET).
   */
 #define __SDMMC_GET_IT(__INSTANCE__, __INTERRUPT__)  (((__INSTANCE__)->STA &(__INTERRUPT__)) == (__INTERRUPT__))
 
 /**
   * @brief  Clears the SDMMC's interrupt pending bits.
-  * @param  __INSTANCE__: Pointer to SDMMC register base
+  * @param  __INSTANCE__ : Pointer to SDMMC register base
   * @param  __INTERRUPT__: specifies the interrupt pending bit to clear.
   *          This parameter can be one or a combination of the following values:
-  *            @arg SDMMC_IT_CCRCFAIL: Command response received (CRC check failed) interrupt
-  *            @arg SDMMC_IT_DCRCFAIL: Data block sent/received (CRC check failed) interrupt
-  *            @arg SDMMC_IT_CTIMEOUT: Command response timeout interrupt
-  *            @arg SDMMC_IT_DTIMEOUT: Data timeout interrupt
-  *            @arg SDMMC_IT_TXUNDERR: Transmit FIFO underrun error interrupt
-  *            @arg SDMMC_IT_RXOVERR:  Received FIFO overrun error interrupt
-  *            @arg SDMMC_IT_CMDREND:  Command response received (CRC check passed) interrupt
-  *            @arg SDMMC_IT_CMDSENT:  Command sent (no response required) interrupt
-  *            @arg SDMMC_IT_DATAEND:  Data end (data counter, SDMMC_DCOUNT, is zero) interrupt
-  *            @arg SDMMC_IT_SDIOIT:   SD I/O interrupt received interrupt
+  *            @arg SDMMC_IT_CCRCFAIL:   Command response received (CRC check failed) interrupt
+  *            @arg SDMMC_IT_DCRCFAIL:   Data block sent/received (CRC check failed) interrupt
+  *            @arg SDMMC_IT_CTIMEOUT:   Command response timeout interrupt
+  *            @arg SDMMC_IT_DTIMEOUT:   Data timeout interrupt
+  *            @arg SDMMC_IT_TXUNDERR:   Transmit FIFO underrun error interrupt
+  *            @arg SDMMC_IT_RXOVERR:    Received FIFO overrun error interrupt
+  *            @arg SDMMC_IT_CMDREND:    Command response received (CRC check passed) interrupt
+  *            @arg SDMMC_IT_CMDSENT:    Command sent (no response required) interrupt
+  *            @arg SDMMC_IT_DATAEND:    Data end (data counter, DATACOUNT, is zero) interrupt
   *            @arg SDMMC_IT_DHOLD:      Data transfer Hold interrupt
+  *            @arg SDMMC_IT_DBCKEND:    Data block sent/received (CRC check passed) interrupt
   *            @arg SDMMC_IT_DABORT:     Data transfer aborted by CMD12 interrupt
   *            @arg SDMMC_IT_BUSYD0END:  End of SDMMC_D0 Busy following a CMD response detected interrupt
+  *            @arg SDMMC_IT_SDIOIT:     SDIO interrupt received interrupt
   *            @arg SDMMC_IT_ACKFAIL:    Boot Acknowledgment received interrupt
   *            @arg SDMMC_IT_ACKTIMEOUT: Boot Acknowledgment timeout interrupt
   *            @arg SDMMC_IT_VSWEND:     Voltage switch critical timing section completion interrupt
@@ -1046,49 +1078,49 @@ typedef struct
 
 /**
   * @brief  Enable Start the SD I/O Read Wait operation.
-  * @param  __INSTANCE__: Pointer to SDMMC register base
+  * @param  __INSTANCE__ : Pointer to SDMMC register base
   * @retval None
   */
 #define __SDMMC_START_READWAIT_ENABLE(__INSTANCE__)  ((__INSTANCE__)->DCTRL |= SDMMC_DCTRL_RWSTART)
 
 /**
   * @brief  Disable Start the SD I/O Read Wait operations.
-  * @param  __INSTANCE__: Pointer to SDMMC register base
+  * @param  __INSTANCE__ : Pointer to SDMMC register base
   * @retval None
   */
 #define __SDMMC_START_READWAIT_DISABLE(__INSTANCE__)  ((__INSTANCE__)->DCTRL &= ~SDMMC_DCTRL_RWSTART)
 
 /**
   * @brief  Enable Start the SD I/O Read Wait operation.
-  * @param  __INSTANCE__: Pointer to SDMMC register base
+  * @param  __INSTANCE__ : Pointer to SDMMC register base
   * @retval None
   */
 #define __SDMMC_STOP_READWAIT_ENABLE(__INSTANCE__)  ((__INSTANCE__)->DCTRL |= SDMMC_DCTRL_RWSTOP)
 
 /**
   * @brief  Disable Stop the SD I/O Read Wait operations.
-  * @param  __INSTANCE__: Pointer to SDMMC register base
+  * @param  __INSTANCE__ : Pointer to SDMMC register base
   * @retval None
   */
 #define __SDMMC_STOP_READWAIT_DISABLE(__INSTANCE__)  ((__INSTANCE__)->DCTRL &= ~SDMMC_DCTRL_RWSTOP)
 
 /**
   * @brief  Enable the SD I/O Mode Operation.
-  * @param  __INSTANCE__: Pointer to SDMMC register base
+  * @param  __INSTANCE__ : Pointer to SDMMC register base
   * @retval None
   */
 #define __SDMMC_OPERATION_ENABLE(__INSTANCE__)  ((__INSTANCE__)->DCTRL |= SDMMC_DCTRL_SDIOEN)
 
 /**
   * @brief  Disable the SD I/O Mode Operation.
-  * @param  __INSTANCE__: Pointer to SDMMC register base
+  * @param  __INSTANCE__ : Pointer to SDMMC register base
   * @retval None
   */
 #define __SDMMC_OPERATION_DISABLE(__INSTANCE__)  ((__INSTANCE__)->DCTRL &= ~SDMMC_DCTRL_SDIOEN)
 
 /**
   * @brief  Enable the SD I/O Suspend command sending.
-  * @param  __INSTANCE__: Pointer to SDMMC register base
+  * @param  __INSTANCE__ : Pointer to SDMMC register base
   * @retval None
   */
 #if !defined(STM32L4R5xx) && !defined(STM32L4R7xx) && !defined(STM32L4R9xx) && !defined(STM32L4S5xx) && !defined(STM32L4S7xx) && !defined(STM32L4S9xx)
@@ -1099,7 +1131,7 @@ typedef struct
 
 /**
   * @brief  Disable the SD I/O Suspend command sending.
-  * @param  __INSTANCE__: Pointer to SDMMC register base
+  * @param  __INSTANCE__ : Pointer to SDMMC register base
   * @retval None
   */
 #if !defined(STM32L4R5xx) && !defined(STM32L4R7xx) && !defined(STM32L4R9xx) && !defined(STM32L4S5xx) && !defined(STM32L4S7xx) && !defined(STM32L4S9xx)
@@ -1108,6 +1140,7 @@ typedef struct
 #define __SDMMC_SUSPEND_CMD_DISABLE(__INSTANCE__)  ((__INSTANCE__)->CMD &= ~SDMMC_CMD_CMDSUSPEND)
 #endif /* !STM32L4R5xx && !STM32L4R7xx && !STM32L4R9xx && !STM32L4S5xx && !STM32L4S7xx && !STM32L4S9xx */
 
+#if defined(STM32L4R5xx) || defined(STM32L4R7xx) || defined(STM32L4R9xx) || defined(STM32L4S5xx) || defined(STM32L4S7xx) || defined(STM32L4S9xx)
 /**
   * @brief  Enable the CMDTRANS mode.
   * @param  __INSTANCE__ : Pointer to SDMMC register base
@@ -1121,6 +1154,22 @@ typedef struct
   * @retval None
   */
 #define __SDMMC_CMDTRANS_DISABLE(__INSTANCE__)  ((__INSTANCE__)->CMD &= ~SDMMC_CMD_CMDTRANS)
+
+/**
+  * @brief  Enable the CMDSTOP mode.
+  * @param  __INSTANCE__ : Pointer to SDMMC register base
+  * @retval None
+  */
+#define __SDMMC_CMDSTOP_ENABLE(__INSTANCE__)  ((__INSTANCE__)->CMD |= SDMMC_CMD_CMDSTOP)
+
+/**
+  * @brief  Disable the CMDSTOP mode.
+  * @param  __INSTANCE__ : Pointer to SDMMC register base
+  * @retval None
+  */
+#define __SDMMC_CMDSTOP_DISABLE(__INSTANCE__)  ((__INSTANCE__)->CMD &= ~SDMMC_CMD_CMDSTOP)
+#endif /* STM32L4R5xx || STM32L4R7xx || STM32L4R9xx || STM32L4S5xx || STM32L4S7xx || STM32L4S9xx */
+
 /**
   * @}
   */
@@ -1201,10 +1250,13 @@ uint32_t SDMMC_CmdSendCSD(SDMMC_TypeDef *SDMMCx, uint32_t Argument);
 uint32_t SDMMC_CmdSetRelAdd(SDMMC_TypeDef *SDMMCx, uint16_t *pRCA);
 uint32_t SDMMC_CmdSendStatus(SDMMC_TypeDef *SDMMCx, uint32_t Argument);
 uint32_t SDMMC_CmdStatusRegister(SDMMC_TypeDef *SDMMCx);
+#if defined(STM32L4R5xx) || defined(STM32L4R7xx) || defined(STM32L4R9xx) || defined(STM32L4S5xx) || defined(STM32L4S7xx) || defined(STM32L4S9xx)
+uint32_t SDMMC_CmdVoltageSwitch(SDMMC_TypeDef *SDMMCx);
+#endif /* STM32L4R5xx || STM32L4R7xx || STM32L4R9xx || STM32L4S5xx || STM32L4S7xx || STM32L4S9xx */
 uint32_t SDMMC_CmdOpCondition(SDMMC_TypeDef *SDMMCx, uint32_t Argument);
 uint32_t SDMMC_CmdSwitch(SDMMC_TypeDef *SDMMCx, uint32_t Argument);
 #if defined(STM32L4R5xx) || defined(STM32L4R7xx) || defined(STM32L4R9xx) || defined(STM32L4S5xx) || defined(STM32L4S7xx) || defined(STM32L4S9xx)
-uint32_t SDMMC_CmdVoltageSwitch(SDMMC_TypeDef *SDMMCx);
+uint32_t SDMMC_CmdSendEXTCSD(SDMMC_TypeDef *SDMMCx, uint32_t Argument);
 #endif /* STM32L4R5xx || STM32L4R7xx || STM32L4R9xx || STM32L4S5xx || STM32L4S7xx || STM32L4S9xx */
 
 /**
@@ -1223,6 +1275,13 @@ uint32_t SDMMC_CmdVoltageSwitch(SDMMC_TypeDef *SDMMCx);
   * @}
   */
 
+  /**
+  * @}
+  */
+
+/**
+  * @}
+  */
 #endif /* SDMMC1 */
 
 #ifdef __cplusplus

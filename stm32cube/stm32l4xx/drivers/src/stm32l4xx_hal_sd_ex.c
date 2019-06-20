@@ -21,29 +21,13 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; COPYRIGHT(c) 2017 STMicroelectronics</center></h2>
+  * <h2><center>&copy; Copyright (c) 2017 STMicroelectronics.
+  * All rights reserved.</center></h2>
   *
-  * Redistribution and use in source and binary forms, with or without modification,
-  * are permitted provided that the following conditions are met:
-  *   1. Redistributions of source code must retain the above copyright notice,
-  *      this list of conditions and the following disclaimer.
-  *   2. Redistributions in binary form must reproduce the above copyright notice,
-  *      this list of conditions and the following disclaimer in the documentation
-  *      and/or other materials provided with the distribution.
-  *   3. Neither the name of STMicroelectronics nor the names of its contributors
-  *      may be used to endorse or promote products derived from this software
-  *      without specific prior written permission.
-  *
-  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  * This software component is licensed by ST under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                       opensource.org/licenses/BSD-3-Clause
   *
   ******************************************************************************
   */
@@ -58,7 +42,7 @@
   */
 
 /** @defgroup SDEx SDEx
-  * @brief SD HAL extended module driver
+  * @brief SD Extended HAL module driver
   * @{
   */
 
@@ -70,6 +54,7 @@
 /* Private variables ---------------------------------------------------------*/
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
+extern uint32_t SD_HighSpeed(SD_HandleTypeDef *hsd);
 /* Exported functions --------------------------------------------------------*/
 /** @addtogroup SDEx_Exported_Functions
   * @{
@@ -99,130 +84,7 @@
   */
 uint32_t HAL_SDEx_HighSpeed(SD_HandleTypeDef *hsd)
 {
-  uint32_t errorstate = HAL_SD_ERROR_NONE;
-  SDMMC_DataInitTypeDef sdmmc_datainitstructure;
-  uint8_t SD_hs[64]  = {0};
-  uint8_t *tempbuff = SD_hs;
-  uint32_t count, data;
-  uint32_t Timeout = HAL_GetTick();
-
-  if(hsd->SdCard.CardSpeed == CARD_NORMAL_SPEED)
-  {
-     /* Standard Speed Card <= 12.5Mhz  */
-     return HAL_SD_ERROR_REQUEST_NOT_APPLICABLE;
-  }
-
-  if((hsd->SdCard.CardSpeed == CARD_ULTRA_HIGH_SPEED) &&
-      (hsd->Init.Transceiver == SDMMC_TRANSCEIVER_ENABLE))
-  {
-    /* Initialize the Data control register */
-    hsd->Instance->DCTRL = 0;
-    errorstate = SDMMC_CmdBlockLength(hsd->Instance, 64);
-
-    if (errorstate != HAL_SD_ERROR_NONE)
-    {
-      return errorstate;
-    }
-
-    /* Configure the SD DPSM (Data Path State Machine) */
-    sdmmc_datainitstructure.DataTimeOut   = SDMMC_DATATIMEOUT;
-    sdmmc_datainitstructure.DataLength    = 64;
-    sdmmc_datainitstructure.DataBlockSize = SDMMC_DATABLOCK_SIZE_64B ;
-    sdmmc_datainitstructure.TransferDir   = SDMMC_TRANSFER_DIR_TO_SDMMC;
-    sdmmc_datainitstructure.TransferMode  = SDMMC_TRANSFER_MODE_BLOCK;
-    sdmmc_datainitstructure.DPSM          = SDMMC_DPSM_ENABLE;
-    (void)SDMMC_ConfigData(hsd->Instance, &sdmmc_datainitstructure);
-
-    errorstate = SDMMC_CmdSwitch(hsd->Instance, SDMMC_SDR25_SWITCH_PATTERN);
-    if(errorstate != HAL_SD_ERROR_NONE)
-    {
-      return errorstate;
-    }
-
-    while(!__HAL_SD_GET_FLAG(hsd, SDMMC_FLAG_RXOVERR | SDMMC_FLAG_DCRCFAIL | SDMMC_FLAG_DTIMEOUT | SDMMC_FLAG_DBCKEND| SDMMC_FLAG_DATAEND ))
-    {
-      if (__HAL_SD_GET_FLAG(hsd, SDMMC_FLAG_RXFIFOHF))
-      {
-        for (count = 0U; count < 8U; count++)
-        {
-          data = SDMMC_ReadFIFO(hsd->Instance);
-          *tempbuff = (uint8_t)(data & 0xFFU);
-          tempbuff++;
-          *tempbuff = (uint8_t)((data >> 8U) & 0xFFU);
-          tempbuff++;
-          *tempbuff = (uint8_t)((data >> 16U) & 0xFFU);
-          tempbuff++;
-          *tempbuff = (uint8_t)((data >> 24U) & 0xFFU);
-          tempbuff++;
-        }
-      }
-
-      if((HAL_GetTick()-Timeout) >=  SDMMC_DATATIMEOUT)
-      {
-        hsd->ErrorCode = HAL_SD_ERROR_TIMEOUT;
-        hsd->State= HAL_SD_STATE_READY;
-        return HAL_SD_ERROR_TIMEOUT;
-      }
-    }
-
-    if (__HAL_SD_GET_FLAG(hsd, SDMMC_FLAG_DTIMEOUT))
-    {
-      __HAL_SD_CLEAR_FLAG(hsd, SDMMC_FLAG_DTIMEOUT);
-
-      errorstate = 0;
-
-      return errorstate;
-    }
-    else if (__HAL_SD_GET_FLAG(hsd, SDMMC_FLAG_DCRCFAIL))
-    {
-      __HAL_SD_CLEAR_FLAG(hsd, SDMMC_FLAG_DCRCFAIL);
-
-      errorstate = SDMMC_ERROR_DATA_CRC_FAIL;
-
-      return errorstate;
-    }
-    else if (__HAL_SD_GET_FLAG(hsd, SDMMC_FLAG_RXOVERR))
-    {
-      __HAL_SD_CLEAR_FLAG(hsd, SDMMC_FLAG_RXOVERR);
-
-      errorstate = SDMMC_ERROR_RX_OVERRUN;
-
-      return errorstate;
-    }
-    else
-    {
-      /* No error flag set */
-    }
-
-    /* Clear all the static flags */
-    __HAL_SD_CLEAR_FLAG(hsd, SDMMC_STATIC_DATA_FLAGS);
-
-    /* Test if the switch mode HS is ok */
-    if ((SD_hs[13U] & 2U) == 0U)
-    {
-      errorstate = SDMMC_ERROR_UNSUPPORTED_FEATURE;
-      return errorstate;
-    }
-    else
-    {
-#if (USE_HAL_SD_REGISTER_CALLBACKS == 1)
-      hsd->DriveTransceiver_1_8V_Callback(SET);
-#else
-      HAL_SDEx_DriveTransceiver_1_8V_Callback(SET);
-#endif
-    }
-
-    /* Set Block Size for Card */
-    errorstate = SDMMC_CmdBlockLength(hsd->Instance, BLOCKSIZE);
-    if(errorstate != HAL_SD_ERROR_NONE)
-    {
-      hsd->State = HAL_SD_STATE_READY;
-      hsd->ErrorCode |= errorstate;
-      return errorstate;
-    }
-  }
-
-  return errorstate;
+  return SD_HighSpeed (hsd);
 }
 
 /**
@@ -271,9 +133,9 @@ HAL_StatusTypeDef HAL_SDEx_ConfigDMAMultiBuffer(SD_HandleTypeDef *hsd, uint32_t 
 {
   if(hsd->State == HAL_SD_STATE_READY)
   {
-    hsd->Instance->IDMABASE0 = (uint32_t) pDataBuffer0;
-    hsd->Instance->IDMABASE1 = (uint32_t) pDataBuffer1;
-    hsd->Instance->IDMABSIZE = (uint32_t) (BLOCKSIZE * BufferSize);
+    hsd->Instance->IDMABASE0= (uint32_t) pDataBuffer0;
+    hsd->Instance->IDMABASE1= (uint32_t) pDataBuffer1;
+    hsd->Instance->IDMABSIZE= (uint32_t) (BLOCKSIZE * BufferSize);
 
     return HAL_OK;
   }
@@ -316,6 +178,8 @@ HAL_StatusTypeDef HAL_SDEx_ReadBlocksDMAMultiBuffer(SD_HandleTypeDef *hsd, uint3
 
     /* Initialize data control register */
     hsd->Instance->DCTRL = 0;
+    /* Clear old Flags*/
+    __HAL_SD_CLEAR_FLAG(hsd, SDMMC_STATIC_DATA_FLAGS);
 
     hsd->ErrorCode = HAL_SD_ERROR_NONE;
     hsd->State = HAL_SD_STATE_BUSY;
@@ -323,6 +187,17 @@ HAL_StatusTypeDef HAL_SDEx_ReadBlocksDMAMultiBuffer(SD_HandleTypeDef *hsd, uint3
     if(hsd->SdCard.CardType != CARD_SDHC_SDXC)
     {
       add *= 512U;
+    }
+
+    /* Set Block Size for Card */
+    errorstate = SDMMC_CmdBlockLength(hsd->Instance, BLOCKSIZE);
+    if(errorstate != HAL_SD_ERROR_NONE)
+    {
+      /* Clear all the static flags */
+      __HAL_SD_CLEAR_FLAG(hsd, SDMMC_STATIC_FLAGS);
+      hsd->ErrorCode |= errorstate;
+      hsd->State = HAL_SD_STATE_READY;
+      return HAL_ERROR;
     }
 
     /* Configure the SD DPSM (Data Path State Machine) */
@@ -336,20 +211,11 @@ HAL_StatusTypeDef HAL_SDEx_ReadBlocksDMAMultiBuffer(SD_HandleTypeDef *hsd, uint3
 
     hsd->Instance->DCTRL |= SDMMC_DCTRL_FIFORST;
 
-    /* Set Block Size for Card */
-    errorstate = SDMMC_CmdBlockLength(hsd->Instance, BLOCKSIZE);
-    if(errorstate != HAL_SD_ERROR_NONE)
-    {
-      hsd->State = HAL_SD_STATE_READY;
-      hsd->ErrorCode |= errorstate;
-      return HAL_ERROR;
-    }
-
     __SDMMC_CMDTRANS_ENABLE( hsd->Instance);
 
     hsd->Instance->IDMACTRL = SDMMC_ENABLE_IDMA_DOUBLE_BUFF0;
 
-     __HAL_SD_ENABLE_IT(hsd, (SDMMC_IT_DCRCFAIL | SDMMC_IT_DTIMEOUT | SDMMC_IT_RXOVERR | SDMMC_IT_DATAEND | SDMMC_IT_IDMABTC));
+    __HAL_SD_ENABLE_IT(hsd, (SDMMC_IT_DCRCFAIL | SDMMC_IT_DTIMEOUT | SDMMC_IT_RXOVERR | SDMMC_IT_DATAEND | SDMMC_IT_IDMABTC));
 
     /* Read Blocks in DMA mode */
     hsd->Context = (SD_CONTEXT_READ_MULTIPLE_BLOCK | SD_CONTEXT_DMA);
@@ -415,6 +281,17 @@ HAL_StatusTypeDef HAL_SDEx_WriteBlocksDMAMultiBuffer(SD_HandleTypeDef *hsd, uint
       add *= 512U;
     }
 
+    /* Set Block Size for Card */
+    errorstate = SDMMC_CmdBlockLength(hsd->Instance, BLOCKSIZE);
+    if(errorstate != HAL_SD_ERROR_NONE)
+    {
+      /* Clear all the static flags */
+      __HAL_SD_CLEAR_FLAG(hsd, SDMMC_STATIC_FLAGS);
+      hsd->ErrorCode |= errorstate;
+      hsd->State = HAL_SD_STATE_READY;
+      return HAL_ERROR;
+    }
+
     /* Configure the SD DPSM (Data Path State Machine) */
     config.DataTimeOut   = SDMMC_DATATIMEOUT;
     config.DataLength    = BLOCKSIZE * NumberOfBlocks;
@@ -423,15 +300,6 @@ HAL_StatusTypeDef HAL_SDEx_WriteBlocksDMAMultiBuffer(SD_HandleTypeDef *hsd, uint
     config.TransferMode  = SDMMC_TRANSFER_MODE_BLOCK;
     config.DPSM          = SDMMC_DPSM_DISABLE;
     (void)SDMMC_ConfigData(hsd->Instance, &config);
-
-    /* Set Block Size for Card */
-    errorstate = SDMMC_CmdBlockLength(hsd->Instance, BLOCKSIZE);
-    if(errorstate != HAL_SD_ERROR_NONE)
-    {
-      hsd->State = HAL_SD_STATE_READY;
-      hsd->ErrorCode |= errorstate;
-      return HAL_ERROR;
-    }
 
     __SDMMC_CMDTRANS_ENABLE( hsd->Instance);
 
