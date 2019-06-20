@@ -216,13 +216,6 @@ HAL_StatusTypeDef HAL_DMA_Init(DMA_HandleTypeDef *hdma)
   /* Write to DMA Channel CR register */
   hdma->Instance->CCR = tmp;
 
-
-  /* Clean callbacks */
-  hdma->XferCpltCallback = NULL;
-  hdma->XferHalfCpltCallback = NULL;
-  hdma->XferErrorCallback = NULL;
-  hdma->XferAbortCallback = NULL;
-
   /* Initialise the error code */
   hdma->ErrorCode = HAL_DMA_ERROR_NONE;
 
@@ -289,10 +282,16 @@ HAL_StatusTypeDef HAL_DMA_DeInit(DMA_HandleTypeDef *hdma)
   /* Clear all flags */
   hdma->DmaBaseAddress->IFCR = (DMA_ISR_GIF1 << (hdma->ChannelIndex));
 
-  /* Initialize the error code */
+  /* Clean all callbacks */
+  hdma->XferCpltCallback = NULL;
+  hdma->XferHalfCpltCallback = NULL;
+  hdma->XferErrorCallback = NULL;
+  hdma->XferAbortCallback = NULL;
+
+  /* Reset the error code */
   hdma->ErrorCode = HAL_DMA_ERROR_NONE;
 
-  /* Initialize the DMA state */
+  /* Reset the DMA state */
   hdma->State = HAL_DMA_STATE_RESET;
 
   /* Release Lock */
