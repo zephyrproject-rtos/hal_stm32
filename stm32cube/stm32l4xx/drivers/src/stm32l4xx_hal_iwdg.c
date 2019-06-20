@@ -48,19 +48,19 @@
   ==============================================================================
   [..]
     (#) Use IWDG using HAL_IWDG_Init() function to :
-      (++) Enable instance by writing Start keyword in IWDG_KEY register. LSI
+      (+) Enable instance by writing Start keyword in IWDG_KEY register. LSI
            clock is forced ON and IWDG counter starts downcounting.
-      (++) Enable write access to configuration register: IWDG_PR, IWDG_RLR &
+      (+) Enable write access to configuration register: IWDG_PR, IWDG_RLR &
            IWDG_WINR.
-      (++) Configure the IWDG prescaler and counter reload value. This reload
+      (+) Configure the IWDG prescaler and counter reload value. This reload
            value will be loaded in the IWDG counter each time the watchdog is
            reloaded, then the IWDG will start counting down from this value.
-      (++) Wait for status flags to be reset
-      (++) Depending on window parameter:
-        (+++) If Window Init parameter is same as Window register value,
+      (+) wait for status flags to be reset
+      (+) Depending on window parameter:
+        (++) If Window Init parameter is same as Window register value,
              nothing more is done but reload counter value in order to exit
              function withy exact time base.
-        (+++) Else modify Window register. This will automatically reload
+        (++) Else modify Window register. This will automatically reload
              watchdog counter.
 
     (#) Then the application program must refresh the IWDG counter at regular
@@ -79,29 +79,13 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; COPYRIGHT(c) 2017 STMicroelectronics</center></h2>
+  * <h2><center>&copy; Copyright (c) 2017 STMicroelectronics.
+  * All rights reserved.</center></h2>
   *
-  * Redistribution and use in source and binary forms, with or without modification,
-  * are permitted provided that the following conditions are met:
-  *   1. Redistributions of source code must retain the above copyright notice,
-  *      this list of conditions and the following disclaimer.
-  *   2. Redistributions in binary form must reproduce the above copyright notice,
-  *      this list of conditions and the following disclaimer in the documentation
-  *      and/or other materials provided with the distribution.
-  *   3. Neither the name of STMicroelectronics nor the names of its contributors
-  *      may be used to endorse or promote products derived from this software
-  *      without specific prior written permission.
-  *
-  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  * This software component is licensed by ST under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
   *
   ******************************************************************************
   */
@@ -125,7 +109,7 @@
   * @{
   */
 /* Status register need 5 RC LSI divided by prescaler clock to be updated. With
-   higher prescaler (256), and according to HSI variation, we need to wait at
+   higher prescaler (256), and according to LSI variation, we need to wait at
    least 6 cycles so 48 ms. */
 #define HAL_IWDG_DEFAULT_TIMEOUT            48u
 /**
@@ -172,7 +156,7 @@ HAL_StatusTypeDef HAL_IWDG_Init(IWDG_HandleTypeDef *hiwdg)
   uint32_t tickstart;
 
   /* Check the IWDG handle allocation */
-  if(hiwdg == NULL)
+  if (hiwdg == NULL)
   {
     return HAL_ERROR;
   }
@@ -200,7 +184,7 @@ HAL_StatusTypeDef HAL_IWDG_Init(IWDG_HandleTypeDef *hiwdg)
   /* Wait for register to be updated */
   while (hiwdg->Instance->SR != 0x00u)
   {
-    if((HAL_GetTick() - tickstart ) > HAL_IWDG_DEFAULT_TIMEOUT)
+    if ((HAL_GetTick() - tickstart) > HAL_IWDG_DEFAULT_TIMEOUT)
     {
       return HAL_TIMEOUT;
     }
@@ -208,7 +192,7 @@ HAL_StatusTypeDef HAL_IWDG_Init(IWDG_HandleTypeDef *hiwdg)
 
   /* If window parameter is different than current value, modify window
   register */
-  if(hiwdg->Instance->WINR != hiwdg->Init.Window)
+  if (hiwdg->Instance->WINR != hiwdg->Init.Window)
   {
     /* Write to IWDG WINR the IWDG_Window value to compare with. In any case,
     even if window feature is disabled, Watchdog will be reloaded by writing
