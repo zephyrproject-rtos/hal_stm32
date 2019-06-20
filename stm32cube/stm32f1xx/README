@@ -68,3 +68,12 @@ Patch List:
       drivers/src/stm32f1xx_hal_tim.c
       drivers/src/stm32f1xx_hal_tim_ex.c
      ST Bug tracker ID: 63614
+
+   *Disable new CAN API and enable Legacy API
+     A new CAN API has been delivered on recent F1 stm32cube.
+     This new API breaks current CAN driver. Disable the new API and enable the
+     legacy API.
+     Disable related systematic warning message
+    Impacted files:
+     CMakeLists.txt
+     drivers/include/stm32f1xx_hal_conf.h
