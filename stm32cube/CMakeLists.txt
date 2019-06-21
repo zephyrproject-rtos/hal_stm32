@@ -26,6 +26,7 @@ set(stm_socs
   stm32f4x
   stm32f7x
   stm32g0x
+  stm32h7x
   stm32l0x
   stm32l1x
   stm32l4x
@@ -35,6 +36,8 @@ set(stm_socs
 
 if(CONFIG_CPU_CORTEX_M4)
   zephyr_compile_definitions( -DCORE_CM4 )
+elseif(CONFIG_CPU_CORTEX_M7)
+  zephyr_compile_definitions( -DCORE_CM7 )
 endif()
 
 foreach(stm_soc ${stm_socs})
