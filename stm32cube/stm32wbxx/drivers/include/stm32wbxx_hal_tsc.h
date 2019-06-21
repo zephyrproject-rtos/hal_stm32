@@ -561,7 +561,7 @@ typedef  void (*pTSC_CallbackTypeDef)(TSC_HandleTypeDef *htsc); /*!< pointer to 
   * @retval SET or RESET
   */
 #define __HAL_TSC_GET_GROUP_STATUS(__HANDLE__, __GX_INDEX__) \
-((((__HANDLE__)->Instance->IOGCSR & (1UL << (((__GX_INDEX__) & ((uint32_t)TSC_NB_OF_GROUPS)) + 16UL))) == (1UL << (((__GX_INDEX__) & ((uint32_t)TSC_NB_OF_GROUPS)) + 16UL))) ? TSC_GROUP_COMPLETED : TSC_GROUP_ONGOING)
+((((__HANDLE__)->Instance->IOGCSR & (uint32_t)(1UL << (((__GX_INDEX__) & 0xFUL) + 16UL))) == (uint32_t)(1UL << (((__GX_INDEX__) & 0xFUL) + 16UL))) ? TSC_GROUP_COMPLETED : TSC_GROUP_ONGOING)
 
 /**
   * @}
