@@ -54,3 +54,9 @@ Patch List:
       ext/hal/st/stm32cube/stm32mp1xx/README
       ext/hal/st/stm32cube/stm32mp1xx/drivers/include/stm32mp1xx_ll_rcc.h
     ST Bug tracker ID: BZ65410
+
+    * Add new API to get stm32 ipcc num of channel
+    allow to read the The IPCC peripheral HWCFGR register to get IPCC number of channels capability.
+    Impacted files:
+       ext/hal/st/stm32cube/stm32mp1xx/drivers/include/stm32mp1xx_ll_rcc.h
+    ST Bug tracker ID: 68247
