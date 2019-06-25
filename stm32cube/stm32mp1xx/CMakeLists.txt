@@ -50,6 +50,7 @@ zephyr_sources_ifdef(CONFIG_USE_STM32_HAL_WWDG drivers/src/stm32mp1xx_hal_wwdg.c
 zephyr_sources_ifdef(CONFIG_USE_STM32_LL_ADC drivers/src/stm32mp1xx_ll_adc.c)
 zephyr_sources_ifdef(CONFIG_USE_STM32_LL_EXTI drivers/src/stm32mp1xx_ll_exti.c)
 zephyr_sources_ifdef(CONFIG_USE_STM32_LL_GPIO drivers/src/stm32mp1xx_ll_gpio.c)
+zephyr_sources_ifdef(CONFIG_USE_STM32_LL_I2C drivers/src/stm32mp1xx_ll_i2c.c)
 zephyr_sources_ifdef(CONFIG_USE_STM32_LL_RCC drivers/src/stm32mp1xx_ll_rcc.c)
 zephyr_sources_ifdef(CONFIG_USE_STM32_LL_SDMMC drivers/src/stm32mp1xx_ll_sdmmc.c)
 zephyr_sources_ifdef(CONFIG_USE_STM32_LL_TIM drivers/src/stm32mp1xx_ll_tim.c)

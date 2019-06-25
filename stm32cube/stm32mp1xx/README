@@ -60,3 +60,12 @@ Patch List:
     Impacted files:
        ext/hal/st/stm32cube/stm32mp1xx/drivers/include/stm32mp1xx_ll_rcc.h
     ST Bug tracker ID: 68247
+
+    * Add stm32mp1 exti I2C driver
+    Add stm32mp1 I2C ll driver on top of stm32cubeMP1 version 1.0.0.
+    I2C driver should be part of next stm32cubeMP1 release (v1.1.0).
+    Impacted files:
+      ext/hal/st/stm32cube/stm32mp1xx/README
+      ext/hal/st/stm32cube/stm32mp1xx/drivers/include/stm32mp1xx_ll_i2c.h
+      ext/hal/st/stm32cube/stm32mp1xx/drivers/src/stm32mp1xx_ll_i2c.c
+    ST Bug tracker ID: None
