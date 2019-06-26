@@ -69,3 +69,17 @@ Patch List:
       ext/hal/st/stm32cube/stm32mp1xx/drivers/include/stm32mp1xx_ll_i2c.h
       ext/hal/st/stm32cube/stm32mp1xx/drivers/src/stm32mp1xx_ll_i2c.c
     ST Bug tracker ID: None
+
+    * Update CMSIS SPI registers definition
+    In order to add and use SPI HAL/LL, CMSIS SPI registers definitions must be
+    updated.
+    SPI registers definition update should be part of next STM32CubeMP1 release
+    (v1.1.0).
+    Impacted files:
+      ext/hal/st/stm32cube/stm32mp1xx/soc/stm32mp151axx_cm4.h
+      ext/hal/st/stm32cube/stm32mp1xx/soc/stm32mp151cxx_cm4.h
+      ext/hal/st/stm32cube/stm32mp1xx/soc/stm32mp153axx_cm4.h
+      ext/hal/st/stm32cube/stm32mp1xx/soc/stm32mp153cxx_cm4.h
+      ext/hal/st/stm32cube/stm32mp1xx/soc/stm32mp157axx_cm4.h
+      ext/hal/st/stm32cube/stm32mp1xx/soc/stm32mp157cxx_cm4.h
+    ST Bug tracker ID: None
