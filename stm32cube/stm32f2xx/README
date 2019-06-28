@@ -36,6 +36,14 @@ License Link:
 
 Patch List:
 
+   *Disable i2c HAL
+     Due to conflict with zephyr i2c.h (I2C_SPEED_STANDARD and I2C_SPEED_FAST
+     redefinition), deactivate STM32Cube I2C HAL. This raises no issue since
+     LL API is currently used for stm32 I2C driver.
+    Impacted files:
+     drivers/include/stm32f2xx_hal_conf.h
+    ST Bug tracker ID: NA. Not a stm32cube issue
+
    *Fix VBUS sensing deactivation
      The error is detected if USART1 TX configured to PA9 and RX to PA10.
      The serial cable removal stops the USB communication.

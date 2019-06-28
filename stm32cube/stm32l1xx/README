@@ -76,3 +76,11 @@ Patch List:
       ext/hal/st/stm32cube/stm32l1xx/soc/stm32l162xdx.h
       ext/hal/st/stm32cube/stm32l1xx/soc/stm32l162xe.h
      ST Bug tracker ID: 66029
+
+   *Disable i2c HAL
+     Due to conflict with zephyr i2c.h (I2C_SPEED_STANDARD and I2C_SPEED_FAST
+     redefinition), deactivate STM32Cube I2C HAL. This raises no issue since
+     LL API is currently used for stm32 I2C driver.
+    Impacted files:
+     drivers/include/stm32l1xx_hal_conf.h
+    ST Bug tracker ID: NA. Not a stm32cube issue
