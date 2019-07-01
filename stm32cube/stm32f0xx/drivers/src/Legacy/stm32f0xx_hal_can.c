@@ -111,9 +111,8 @@
 #error 'The HAL CAN driver cannot be used with its legacy, Please ensure to enable only one HAL CAN module at once in stm32f0xx_hal_conf.h file'
 #endif /* HAL_CAN_MODULE_ENABLED */
 
-#if 0 /* Disable systematic warning message */
 #warning 'Legacy HAL CAN driver is enabled! It can be used with known limitations, refer to the release notes. However it is recommended to use rather the new HAL CAN driver'
-#endif /* 0 */
+
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /** @defgroup CAN_Private_Constants CAN Private Constants

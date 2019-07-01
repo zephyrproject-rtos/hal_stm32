@@ -44,16 +44,6 @@ Patch List:
      drivers/include/stm32f4xx_hal_conf.h
     ST Bug tracker ID: NA. Not a stm32cube issue
 
-   *Disable new CAN API and enable Legacy API
-     A new CAN API has been delivered on recent F4 stm32cube.
-     This new API breaks current CAN driver. Disable the new API and enable the
-     legacy API.
-     Disable related systematic warning message
-    Impacted files:
-     CMakeLists.txt
-     drivers/include/stm32f4xx_hal_conf.h
-     drivers/src/Legacy/stm32f4_hal_can.c
-
     *Fix warnings for extraneous parentheses
       Using clang 7.0.1, if ((htim->State == HAL_TIM_STATE_BUSY))
       generates warnings.  Remove the extra parentheses
