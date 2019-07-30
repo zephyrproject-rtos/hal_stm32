@@ -40,6 +40,10 @@ elseif(CONFIG_CPU_CORTEX_M7)
   zephyr_compile_definitions( -DCORE_CM7 )
 endif()
 
+if(CONFIG_CLOCK_STM32_HSE_CLOCK)
+  zephyr_compile_definitions( -DHSE_VALUE=${CONFIG_CLOCK_STM32_HSE_CLOCK} )
+endif()
+
 foreach(stm_soc ${stm_socs})
   string(TOUPPER ${stm_soc} soc_to_upper)
   if(CONFIG_SOC_SERIES_${soc_to_upper})
