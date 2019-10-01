@@ -6,11 +6,11 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics. 
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
+  * the "License"; You may not use this file except in compliance with the 
   * License. You may obtain a copy of the License at:
   *                        opensource.org/licenses/BSD-3-Clause
   *
@@ -42,7 +42,9 @@
   * @{
   */
 #define UTILS_MAX_FREQUENCY_SCALE1  64000000U        /*!< Maximum frequency for system clock at power scale1, in Hz */
+#if defined(PWR_CR1_VOS)
 #define UTILS_MAX_FREQUENCY_SCALE2  16000000U        /*!< Maximum frequency for system clock at power scale2, in Hz */
+#endif
 
 /* Defines used for PLL range */
 #define UTILS_PLLVCO_INPUT_MIN      4000000U         /*!< Frequency min for PLLVCO input, in Hz   */
@@ -111,8 +113,12 @@
 
 #define IS_LL_UTILS_PLLVCO_OUTPUT(__VALUE__) ((UTILS_PLLVCO_OUTPUT_MIN <= (__VALUE__)) && ((__VALUE__) <= UTILS_PLLVCO_OUTPUT_MAX))
 
+#if defined(PWR_CR1_VOS)
 #define IS_LL_UTILS_PLL_FREQUENCY(__VALUE__) ((LL_PWR_GetRegulVoltageScaling() == LL_PWR_REGU_VOLTAGE_SCALE1) ? ((__VALUE__) <= UTILS_MAX_FREQUENCY_SCALE1) : \
                                              ((__VALUE__) <= UTILS_MAX_FREQUENCY_SCALE2))
+#else
+#define IS_LL_UTILS_PLL_FREQUENCY(__VALUE__) ((__VALUE__) <= UTILS_MAX_FREQUENCY_SCALE1)
+#endif
 
 #define IS_LL_UTILS_HSE_BYPASS(__STATE__) (((__STATE__) == LL_UTILS_HSEBYPASS_ON) \
                                         || ((__STATE__) == LL_UTILS_HSEBYPASS_OFF))
@@ -204,10 +210,10 @@ void LL_mDelay(uint32_t Delay)
     [..]
          System, HCLK1, HCLK2, AHBS, AHBRF and APB buses clocks configuration
 
-         (+) The maximum frequency of the SYSCLK, HCLK1, HCLK4, PCLK1 and PCLK2
+         (+) The maximum frequency of the SYSCLK, HCLK1, HCLK4, PCLK1 and PCLK2 
              is 640000000 Hz.
  ....... (+) The maximum frequency of the HCLK2 is 320000000 Hz.
-
+             
   @endverbatim
   @internal
              Depending on the device voltage range, the maximum frequency should be
@@ -230,7 +236,7 @@ void LL_mDelay(uint32_t Delay)
   @endinternal
   * @{
   */
-
+  
 /**
   * @brief  This function sets directly SystemCoreClock CMSIS variable.
   * @note   Variable can be calculated also through SystemCoreClockUpdate function.
@@ -300,7 +306,7 @@ ErrorStatus LL_PLL_ConfigSystemClock_MSI(LL_UTILS_PLLInitTypeDef *UTILS_PLLInitS
        Main PLL configuration and activation */
     if(status != ERROR)
     {
-      /* Calculate the new PLL output frequency & verify all PLL stages are correct (VCO input ranges,
+      /* Calculate the new PLL output frequency & verify all PLL stages are correct (VCO input ranges, 
          VCO output ranges & SYSCLK max) when assert activated */
       pllrfreq = UTILS_GetPLLOutputFrequency(__LL_RCC_CALC_MSI_FREQ(msi_range), UTILS_PLLInitStruct);
       hclk2freq = __LL_RCC_CALC_HCLK2_FREQ(pllrfreq, UTILS_ClkInitStruct->CPU2CLKDivider);
@@ -394,7 +400,7 @@ ErrorStatus LL_PLL_ConfigSystemClock_HSI(LL_UTILS_PLLInitTypeDef *UTILS_PLLInitS
       /* Configure PLL */
       LL_RCC_PLL_ConfigDomain_SYS(LL_RCC_PLLSOURCE_HSI, UTILS_PLLInitStruct->PLLM, UTILS_PLLInitStruct->PLLN,
                                   UTILS_PLLInitStruct->PLLR);
-
+    
       /* Enable PLL and switch system clock to PLL */
       status = UTILS_EnablePLLAndSwitchSystem(pllrfreq, UTILS_ClkInitStruct);
     }
@@ -522,9 +528,11 @@ static ErrorStatus UTILS_SetFlashLatency(uint32_t HCLK4_Frequency)
   /* Flash Clock source (HCLK4) range in MHz with a VCORE is range1 */
   const uint32_t UTILS_CLK_SRC_RANGE_VOS1[] = {18000000U, 36000000U, 54000000U, UTILS_MAX_FREQUENCY_SCALE1};
 
+  #if defined(PWR_CR1_VOS)
   /* Flash Clock source (HCLK4) range in MHz with a VCORE is range2 */
   const uint32_t UTILS_CLK_SRC_RANGE_VOS2[] = {6000000U, 12000000U, UTILS_MAX_FREQUENCY_SCALE2};
-
+  #endif
+  
   /* Flash Latency range */
   const uint32_t UTILS_LATENCY_RANGE[] = {LL_FLASH_LATENCY_0, LL_FLASH_LATENCY_1, LL_FLASH_LATENCY_2, LL_FLASH_LATENCY_3};
 
@@ -535,6 +543,7 @@ static ErrorStatus UTILS_SetFlashLatency(uint32_t HCLK4_Frequency)
   }
   else
   {
+    #if defined(PWR_CR1_VOS)
     if(LL_PWR_GetRegulVoltageScaling() == LL_PWR_REGU_VOLTAGE_SCALE1)
     {
       for(index = 0; index < countof(UTILS_CLK_SRC_RANGE_VOS1); index++)
@@ -557,6 +566,16 @@ static ErrorStatus UTILS_SetFlashLatency(uint32_t HCLK4_Frequency)
         }
       }
     }
+    #else
+    for(index = 0; index < countof(UTILS_CLK_SRC_RANGE_VOS1); index++)
+    {
+      if(HCLK4_Frequency <= UTILS_CLK_SRC_RANGE_VOS1[index])
+      {
+        latency = UTILS_LATENCY_RANGE[index];
+        break;
+      }
+    }
+    #endif
 
     LL_FLASH_SetLatency(latency);
 
@@ -617,12 +636,14 @@ static ErrorStatus UTILS_PLL_IsBusy(void)
     /* PLL configuration cannot be modified */
     status = ERROR;
   }
+#if defined(SAI1)
   /* Check if PLLSAI1 is busy*/
   if(LL_RCC_PLLSAI1_IsReady() != 0U)
   {
     /* PLLSAI1 configuration cannot be modified */
     status = ERROR;
   }
+#endif
 
   return status;
 }
@@ -686,7 +707,7 @@ static ErrorStatus UTILS_EnablePLLAndSwitchSystem(uint32_t SYSCLK_Frequency, LL_
     LL_RCC_SetAPB1Prescaler(UTILS_ClkInitStruct->APB1CLKDivider);
     LL_RCC_SetAPB2Prescaler(UTILS_ClkInitStruct->APB2CLKDivider);
   }
-
+    
   /* Decreasing the number of wait states because of lower CPU frequency */
   if(hclks_frequency_current > hclks_frequency_target)
   {

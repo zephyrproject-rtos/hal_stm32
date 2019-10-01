@@ -6,11 +6,11 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics. 
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
+  * the "License"; You may not use this file except in compliance with the 
   * License. You may obtain a copy of the License at:
   *                        opensource.org/licenses/BSD-3-Clause
   *
@@ -143,7 +143,7 @@ typedef struct
   * @}
   */
 
-/* Private define ------------------------------------------------------------*/
+/* Private define ------------------------------------------------------------*/ 
 /** @defgroup PWR_Private_Defines PWR Private Defines
   * @{
   */
@@ -206,12 +206,12 @@ typedef struct
   *            @arg @ref PWR_FLAG_SMPSBYPF  SMPS Bypass Flag
   *
   *            /--------------------------------SR2-------------------------------/
-  *            @arg @ref PWR_FLAG_REGLPS Low Power Regulator Started. Indicates whether or not the
+  *            @arg @ref PWR_FLAG_REGLPS Low Power Regulator Started. Indicates whether or not the 
   *                                      low-power regulator is ready.
-  *            @arg @ref PWR_FLAG_REGLPF Low Power Regulator Flag. Indicates whether the
-  *                                      regulator is ready in main mode or is in low-power mode.
+  *            @arg @ref PWR_FLAG_REGLPF Low Power Regulator Flag. Indicates whether the 
+  *                                      regulator is ready in main mode or is in low-power mode. 
   *
-  *            @arg @ref PWR_FLAG_VOSF   Voltage Scaling Flag. Indicates whether the regulator is ready
+  *            @arg @ref PWR_FLAG_VOSF   Voltage Scaling Flag. Indicates whether the regulator is ready 
   *                                      in the selected voltage range or is still changing to the required voltage level.
   *            @arg @ref PWR_FLAG_PVDO   Power Voltage Detector Output. Indicates whether VDD voltage is
   *                                      below or above the selected PVD threshold.
@@ -219,22 +219,22 @@ typedef struct
   *            @arg @ref PWR_FLAG_PVMO1 Peripheral Voltage Monitoring Output 1. Indicates whether VDDUSB voltage is
   *                                     is below or above PVM1 threshold (applicable when USB feature is supported).
   *            @arg @ref PWR_FLAG_PVMO3 Peripheral Voltage Monitoring Output 3. Indicates whether VDDA voltage is
-  *                                     is below or above PVM3 threshold.
+  *                                     is below or above PVM3 threshold. 
   *
   *           /----------------------------EXTSCR--------------------------/
   *            @arg @ref PWR_FLAG_STOP              System Stop Flag for CPU1.
-  *            @arg @ref PWR_FLAG_SB                System Standby Flag for CPU1.
+  *            @arg @ref PWR_FLAG_SB                System Standby Flag for CPU1.  
   *
   *            @arg @ref PWR_FLAG_C2STOP            System Stop Flag for CPU2.
-  *            @arg @ref PWR_FLAG_C2SB              System Standby Flag for CPU2.
+  *            @arg @ref PWR_FLAG_C2SB              System Standby Flag for CPU2.  
   *
-  *            @arg @ref PWR_FLAG_CRITICAL_RF_PHASE Critical radio system phase flag.
+  *            @arg @ref PWR_FLAG_CRITICAL_RF_PHASE Critical radio system phase flag.  
   *
   *            @arg @ref PWR_FLAG_C1DEEPSLEEP       CPU1 DeepSleep Flag.
-  *            @arg @ref PWR_FLAG_C2DEEPSLEEP       CPU2 DeepSleep Flag.
+  *            @arg @ref PWR_FLAG_C2DEEPSLEEP       CPU2 DeepSleep Flag.  
   *
   * @retval The new state of __FLAG__ (TRUE or FALSE).
-  */
+  */  
 #define __HAL_PWR_GET_FLAG(__FLAG__)  ( ((((uint8_t)(__FLAG__)) >> 5U) == 1U)  ?\
                                       (PWR->SR1 & (1U << ((__FLAG__) & 31U))) :\
                                       ((((((uint8_t)(__FLAG__)) >> 5U) == 2U)) ?\
@@ -271,14 +271,14 @@ typedef struct
   *
   *           /----------------------------EXTSCR--------------------------/
   *            @arg @ref PWR_FLAG_STOP      System Stop Flag for CPU1.
-  *            @arg @ref PWR_FLAG_SB        System Standby Flag for CPU1.
+  *            @arg @ref PWR_FLAG_SB        System Standby Flag for CPU1.  
   *
   *            @arg @ref PWR_FLAG_C2STOP    System Stop Flag for CPU2.
-  *            @arg @ref PWR_FLAG_C2SB      System Standby Flag for CPU2.
+  *            @arg @ref PWR_FLAG_C2SB      System Standby Flag for CPU2. 
   *
   *            @arg @ref PWR_FLAG_CRITICAL_RF_PHASE  RF phase Flag.
   *
-  * @retval None
+  * @retval None   
   */
 #define __HAL_PWR_CLEAR_FLAG(__FLAG__)   ( ((((uint8_t)(__FLAG__)) >> 5U) == 1U) ?\
                                          ( (((uint8_t)(__FLAG__)) == PWR_FLAG_WU) ?\
@@ -286,7 +286,7 @@ typedef struct
                                          ( (((uint8_t)(__FLAG__)) == PWR_FLAG_CRITICAL_RF_PHASE) ?\
                                          SET_BIT (PWR->EXTSCR, PWR_EXTSCR_CCRPF) : ( ((((uint8_t)((__FLAG__)) & 31U) <= PWR_EXTSCR_C1STOPF_Pos) ?\
                                          SET_BIT (PWR->EXTSCR, PWR_EXTSCR_C1CSSF): SET_BIT (PWR->EXTSCR, PWR_EXTSCR_C2CSSF)) ) ))
-
+                                       
 /**
   * @brief Enable the PVD Extended Interrupt C1 Line.
   * @retval None
@@ -390,7 +390,7 @@ typedef struct
 /**
   * @}
   */
-
+  
 
 /* Private macros --------------------------------------------------------*/
 /** @defgroup PWR_Private_Macros  PWR Private Macros
@@ -401,12 +401,12 @@ typedef struct
                                  ((LEVEL) == PWR_PVDLEVEL_2) || ((LEVEL) == PWR_PVDLEVEL_3)|| \
                                  ((LEVEL) == PWR_PVDLEVEL_4) || ((LEVEL) == PWR_PVDLEVEL_5)|| \
                                  ((LEVEL) == PWR_PVDLEVEL_6) || ((LEVEL) == PWR_PVDLEVEL_7))
-
+                                 
 #define IS_PWR_PVD_MODE(MODE)  (((MODE) == PWR_PVD_MODE_NORMAL)              ||\
                                 ((MODE) == PWR_PVD_MODE_IT_RISING)           ||\
                                 ((MODE) == PWR_PVD_MODE_IT_FALLING)          ||\
-                                ((MODE) == PWR_PVD_MODE_IT_RISING_FALLING))
-
+                                ((MODE) == PWR_PVD_MODE_IT_RISING_FALLING)) 
+                                
 
 
 #define IS_PWR_REGULATOR(REGULATOR)               (((REGULATOR) == PWR_MAINREGULATOR_ON)    || \
@@ -430,7 +430,7 @@ typedef struct
   * @{
   */
 
-/** @defgroup PWR_Exported_Functions_Group1  Initialization and de-initialization functions
+/** @defgroup PWR_Exported_Functions_Group1  Initialization and de-initialization functions 
   * @{
   */
 

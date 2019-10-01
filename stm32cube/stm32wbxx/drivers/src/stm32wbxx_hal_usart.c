@@ -124,11 +124,11 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics. 
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
+  * the "License"; You may not use this file except in compliance with the 
   * License. You may obtain a copy of the License at:
   *                        opensource.org/licenses/BSD-3-Clause
   *
@@ -743,7 +743,7 @@ HAL_StatusTypeDef HAL_USART_Transmit(USART_HandleTypeDef *husart, uint8_t *pTxDa
   uint8_t  *ptxdata8bits;
   uint16_t *ptxdata16bits;
   uint32_t tickstart;
-
+  
 
   if (husart->State == HAL_USART_STATE_READY)
   {
@@ -839,7 +839,7 @@ HAL_StatusTypeDef HAL_USART_Receive(USART_HandleTypeDef *husart, uint8_t *pRxDat
   uint16_t *prxdata16bits;
   uint16_t uhMask;
   uint32_t tickstart;
-
+  
 
   if (husart->State == HAL_USART_STATE_READY)
   {
@@ -1427,7 +1427,7 @@ HAL_StatusTypeDef HAL_USART_Transmit_DMA(USART_HandleTypeDef *husart, uint8_t *p
 
       /* Restore husart->State to ready */
       husart->State = HAL_USART_STATE_READY;
-
+      
       return HAL_ERROR;
     }
   }
@@ -1451,7 +1451,7 @@ HAL_StatusTypeDef HAL_USART_Receive_DMA(USART_HandleTypeDef *husart, uint8_t *pR
 {
   HAL_StatusTypeDef status = HAL_OK;
   uint32_t *tmp = (uint32_t *)&pRxData;
-
+  
 
   /* Check that a Rx process is not already ongoing */
   if (husart->State == HAL_USART_STATE_READY)
@@ -1531,7 +1531,7 @@ HAL_StatusTypeDef HAL_USART_Receive_DMA(USART_HandleTypeDef *husart, uint8_t *pR
       {
         status = HAL_DMA_Abort(husart->hdmarx);
       }
-
+ 
       /* No need to check on error code */
       UNUSED(status);
 
@@ -1566,7 +1566,7 @@ HAL_StatusTypeDef HAL_USART_TransmitReceive_DMA(USART_HandleTypeDef *husart, uin
 {
   HAL_StatusTypeDef status;
   uint32_t *tmp;
-
+  
 
   if (husart->State == HAL_USART_STATE_READY)
   {
@@ -1621,7 +1621,7 @@ HAL_StatusTypeDef HAL_USART_TransmitReceive_DMA(USART_HandleTypeDef *husart, uin
     {
       status = HAL_ERROR;
     }
-
+    
     if(status == HAL_OK)
     {
       /* Process Unlocked */
@@ -2823,6 +2823,7 @@ static HAL_StatusTypeDef USART_SetConfig(USART_HandleTypeDef *husart)
   HAL_StatusTypeDef ret                = HAL_OK;
   uint16_t brrtemp;
   uint32_t usartdiv                    = 0x00000000;
+  uint32_t pclk;
 
   /* Check the parameters */
   assert_param(IS_USART_POLARITY(husart->Init.CLKPolarity));
@@ -2869,13 +2870,15 @@ static HAL_StatusTypeDef USART_SetConfig(USART_HandleTypeDef *husart)
   switch (clocksource)
   {
     case USART_CLOCKSOURCE_PCLK2:
-      usartdiv = (uint32_t)(USART_DIV_SAMPLING8(HAL_RCC_GetPCLK2Freq(), husart->Init.BaudRate, husart->Init.ClockPrescaler));
+      pclk = HAL_RCC_GetPCLK2Freq();
+      usartdiv = (uint32_t)(USART_DIV_SAMPLING8(pclk, husart->Init.BaudRate, husart->Init.ClockPrescaler));
       break;
     case USART_CLOCKSOURCE_HSI:
       usartdiv = (uint32_t)(USART_DIV_SAMPLING8(HSI_VALUE, husart->Init.BaudRate, husart->Init.ClockPrescaler));
       break;
     case USART_CLOCKSOURCE_SYSCLK:
-      usartdiv = (uint32_t)(USART_DIV_SAMPLING8(HAL_RCC_GetSysClockFreq(), husart->Init.BaudRate, husart->Init.ClockPrescaler));
+      pclk = HAL_RCC_GetSysClockFreq();
+      usartdiv = (uint32_t)(USART_DIV_SAMPLING8(pclk, husart->Init.BaudRate, husart->Init.ClockPrescaler));
       break;
     case USART_CLOCKSOURCE_LSE:
       usartdiv = (uint32_t)(USART_DIV_SAMPLING8(LSE_VALUE, husart->Init.BaudRate, husart->Init.ClockPrescaler));

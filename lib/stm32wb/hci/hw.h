@@ -4,17 +4,17 @@
   * @author  MCD Application Team
   * @brief   Hardware
   ******************************************************************************
-  * @attention
- *
- * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
- * All rights reserved.</center></h2>
- *
+   * @attention
+  *
+  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * All rights reserved.</center></h2>
+  *
   * This software component is licensed by ST under BSD 3-Clause license,
   * the "License"; You may not use this file except in compliance with the
   * License. You may obtain a copy of the License at:
   *                        opensource.org/licenses/BSD-3-Clause
- *
- ******************************************************************************
+  *
+  ******************************************************************************
  */
 
 
@@ -37,6 +37,7 @@ extern "C" {
 #include "stm32wbxx_ll_cortex.h"
 #include "stm32wbxx_ll_utils.h"
 #include "stm32wbxx_ll_hsem.h"
+#include "stm32wbxx_ll_gpio.h"
 
 
 #ifdef  USE_STM32WBXX_USB_DONGLE
@@ -300,6 +301,15 @@ extern "C" {
   void HW_IPCC_MAC_802_15_4_SendAck( void );
   void HW_IPCC_MAC_802_15_4_CmdEvtNot( void );
   void HW_IPCC_MAC_802_15_4_EvtNot( void );
+
+  void HW_IPCC_ZIGBEE_Init( void );
+
+  void HW_IPCC_ZIGBEE_SendAppliCmd(void);
+  void HW_IPCC_ZIGBEE_AppliCmdNotification(void);
+
+  void HW_IPCC_ZIGBEE_AppliAsyncEvtNotification(void);
+  void HW_IPCC_ZIGBEE_SendAppliCmdAck(void);
+
 
 #ifdef __cplusplus
 }

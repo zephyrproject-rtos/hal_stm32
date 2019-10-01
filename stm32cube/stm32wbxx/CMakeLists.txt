@@ -2,6 +2,10 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
+#zephyr_compile_definitions(
+#  -DTHREAD_WB
+#  )
+
 zephyr_sources(soc/system_stm32wbxx.c)
 zephyr_sources(drivers/src/stm32wbxx_hal.c)
 zephyr_sources(drivers/src/stm32wbxx_hal_rcc.c)

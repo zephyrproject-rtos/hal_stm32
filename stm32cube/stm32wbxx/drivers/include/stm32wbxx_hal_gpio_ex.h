@@ -6,11 +6,11 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics. 
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
+  * the "License"; You may not use this file except in compliance with the 
   * License. You may obtain a copy of the License at:
   *                        opensource.org/licenses/BSD-3-Clause
   *
@@ -361,7 +361,7 @@
 
 /**
   * @}
-  */
+  */ 
 
 /**
   * @}
@@ -375,13 +375,18 @@
 /** @defgroup GPIOEx_Get_Port_Index GPIOEx Get Port Index
 * @{
   */
-
+#if defined (STM32WB55xx)
 #define GPIO_GET_INDEX(__GPIOx__)    (((__GPIOx__) == (GPIOA))? 0uL :\
                                       ((__GPIOx__) == (GPIOB))? 1uL :\
                                       ((__GPIOx__) == (GPIOC))? 2uL :\
                                       ((__GPIOx__) == (GPIOD))? 3uL :\
                                       ((__GPIOx__) == (GPIOE))? 4uL : 7uL)
-
+#else
+#define GPIO_GET_INDEX(__GPIOx__)    (((__GPIOx__) == (GPIOA))? 0uL :\
+                                      ((__GPIOx__) == (GPIOB))? 1uL :\
+                                      ((__GPIOx__) == (GPIOC))? 2uL :\
+                                      ((__GPIOx__) == (GPIOE))? 4uL : 7uL)
+#endif
  /**
   * @}
   */
@@ -390,7 +395,7 @@
   * @}
   */
 
-/* Exported functions --------------------------------------------------------*/
+/* Exported functions --------------------------------------------------------*/ 
 /**
   * @}
   */

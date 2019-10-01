@@ -6,11 +6,11 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics. 
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
+  * the "License"; You may not use this file except in compliance with the 
   * License. You may obtain a copy of the License at:
   *                        opensource.org/licenses/BSD-3-Clause
   *
@@ -95,15 +95,17 @@ ErrorStatus LL_PWR_DeInit(void)
   LL_PWR_WriteReg(PDCRB, PWR_PDCRB_RESET_VALUE);
   LL_PWR_WriteReg(PUCRC, PWR_PUCRC_RESET_VALUE);
   LL_PWR_WriteReg(PDCRC, PWR_PDCRC_RESET_VALUE);
+#if defined(GPIOD)
   LL_PWR_WriteReg(PUCRD, PWR_PUCRD_RESET_VALUE);
   LL_PWR_WriteReg(PDCRD, PWR_PDCRD_RESET_VALUE);
+#endif
   LL_PWR_WriteReg(PUCRE, PWR_PUCRE_RESET_VALUE);
   LL_PWR_WriteReg(PDCRE, PWR_PDCRE_RESET_VALUE);
   LL_PWR_WriteReg(PUCRH, PWR_PUCRH_RESET_VALUE);
   LL_PWR_WriteReg(PDCRH, PWR_PDCRH_RESET_VALUE);
   LL_PWR_WriteReg(C2CR1, PWR_C2CR1_RESET_VALUE);
   LL_PWR_WriteReg(C2CR3, PWR_C2CR3_RESET_VALUE);
-
+  
   /* Clear all flags */
   LL_PWR_WriteReg(SCR,
                     LL_PWR_SCR_CC2HF
@@ -112,17 +114,19 @@ ErrorStatus LL_PWR_DeInit(void)
                   | LL_PWR_SCR_CCRPEF
                   | LL_PWR_SCR_C802WUF
                   | LL_PWR_SCR_CBLEWUF
+#if defined(PWR_CR5_SMPSEN)
                   | LL_PWR_SCR_CBORHF
                   | LL_PWR_SCR_CSMPSFBF
+#endif
                   | LL_PWR_SCR_CWUF
                  );
-
+  
   LL_PWR_WriteReg(EXTSCR,
                     LL_PWR_EXTSCR_CCRPF
                   | LL_PWR_EXTSCR_C2CSSF
                   | LL_PWR_EXTSCR_C1CSSF
                  );
-
+  
   return SUCCESS;
 }
 

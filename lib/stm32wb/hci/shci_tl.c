@@ -4,17 +4,17 @@
  * @author  MCD Application Team
  * @brief   System HCI command implementation
  ******************************************************************************
- * @attention
- *
- * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
- * All rights reserved.</center></h2>
- *
+  * @attention
+  *
+  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * All rights reserved.</center></h2>
+  *
   * This software component is licensed by ST under BSD 3-Clause license,
   * the "License"; You may not use this file except in compliance with the
   * License. You may obtain a copy of the License at:
   *                        opensource.org/licenses/BSD-3-Clause
- *
- ******************************************************************************
+  *
+  ******************************************************************************
  */
 
 
@@ -38,11 +38,14 @@
 /**
  * START of Section SYSTEM_DRIVER_CONTEXT
  */
+//PLACE_IN_SECTION("SYSTEM_DRIVER_CONTEXT")
 static tListNode SHciAsynchEventQueue;
+//PLACE_IN_SECTION("SYSTEM_DRIVER_CONTEXT")
 static volatile SHCI_TL_CmdStatus_t SHCICmdStatus;
+//PLACE_IN_SECTION("SYSTEM_DRIVER_CONTEXT")
 static TL_CmdPacket_t *pCmdBuffer;
+//PLACE_IN_SECTION("SYSTEM_DRIVER_CONTEXT")
 SHCI_TL_UserEventFlowStatus_t SHCI_TL_UserEventFlow;
-
 /**
  * END of Section SYSTEM_DRIVER_CONTEXT
  */
@@ -116,16 +119,23 @@ void shci_resume_flow( void )
   return;
 }
 
-void shci_send( TL_CmdPacket_t * p_cmd, TL_EvtPacket_t * p_rsp )
+void shci_send( uint16_t cmd_code, uint8_t len_cmd_payload, uint8_t * p_cmd_payload, TL_EvtPacket_t * p_rsp )
 {
   Cmd_SetStatus(SHCI_TL_CmdBusy);
 
-  memcpy(&(pCmdBuffer->cmdserial), &(p_cmd->cmdserial), p_cmd->cmdserial.cmd.plen + TL_CMD_HDR_SIZE );
+  pCmdBuffer->cmdserial.cmd.cmdcode = cmd_code;
+  pCmdBuffer->cmdserial.cmd.plen = len_cmd_payload;
+
+  memcpy(pCmdBuffer->cmdserial.cmd.payload, p_cmd_payload, len_cmd_payload );
 
   shciContext.io.Send(0,0);
 
   shci_cmd_resp_wait(SHCI_TL_DEFAULT_TIMEOUT);
 
+  /**
+   * The command complete of a system command does not have the header
+   * It starts immediately with the evtserial field
+   */
   memcpy( &(p_rsp->evtserial), pCmdBuffer, ((TL_EvtSerial_t*)pCmdBuffer)->evt.plen + TL_EVT_HDR_SIZE );
 
   Cmd_SetStatus(SHCI_TL_CmdAvailable);
@@ -196,11 +206,3 @@ static void TlUserEvtReceived(TL_EvtPacket_t *shcievt)
   return;
 }
 
-// void shci_register_io_bus(tSHciIO* fops)
-// {
-//   /* Register IO bus services */
-//   fops->Init    = TL_SYS_Init;
-//   fops->Send    = TL_SYS_SendCmd;
-//
-//   return;
-// }

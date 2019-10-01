@@ -161,18 +161,18 @@
           GCM standard specifies that ciphertext has same bit length as the plaintext.
          (##) The last block is composed of the length of A (on 64 bits) and the length of ciphertext
           (on 64 bits)
-
-    [..]  A more detailed description of the GCM message structure is available below.
+          
+    [..]  A more detailed description of the GCM message structure is available below.         
 
     [..]  This section describe The AES Counter with Cipher Block Chaining-Message
           Authentication Code (CCM) supported by both CRYP1 and TinyAES peripheral:
       (#)  Specific parameters for CCM  :
 
          (##) B0 block  : follows NIST Special Publication 800-38C,
-         (##) B1 block (header)
+         (##) B1 block (header) 
          (##) CTRx block  : control blocks
-
-    [..]  A detailed description of the CCM message structure is available below.
+             
+    [..]  A detailed description of the CCM message structure is available below.             
 
       (#)  Four phases are performed in CCM for CRYP1 peripheral:
          (##) Init phase: peripheral prepares the GCM hash subkey (H) and do the IV processing

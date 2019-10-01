@@ -208,7 +208,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm32wbxx_hal.h"
 
-#if defined(QUADSPI) || defined(QUADSPI1) || defined(QUADSPI2)
+#if defined(QUADSPI)
 
 /** @addtogroup STM32WBxx_HAL_Driver
   * @{
@@ -340,7 +340,7 @@ HAL_StatusTypeDef HAL_QSPI_Init(QSPI_HandleTypeDef *hqspi)
 #endif
 
     /* Configure the default timeout for the QSPI memory access */
-    HAL_QSPI_SetTimeout(hqspi, HAL_QPSI_TIMEOUT_DEFAULT_VALUE);
+    HAL_QSPI_SetTimeout(hqspi, HAL_QSPI_TIMEOUT_DEFAULT_VALUE);
   }
 
   /* Configure QSPI FIFO Threshold */
@@ -720,7 +720,7 @@ void HAL_QSPI_IRQHandler(QSPI_HandleTypeDef *hqspi)
 
         /* Change state of QSPI */
         hqspi->State = HAL_QSPI_STATE_READY;
-
+        
         /* Error callback */
 #if (USE_HAL_QSPI_REGISTER_CALLBACKS == 1)
         hqspi->ErrorCallback(hqspi);
@@ -1349,10 +1349,10 @@ HAL_StatusTypeDef HAL_QSPI_Transmit_DMA(QSPI_HandleTypeDef *hqspi, uint8_t *pDat
         {
           /* Process unlocked */
           __HAL_UNLOCK(hqspi);
-
+          
           /* Enable the QSPI transfer error Interrupt */
           __HAL_QSPI_ENABLE_IT(hqspi, QSPI_IT_TE);
-
+          
           /* Enable the DMA transfer by setting the DMAEN bit in the QSPI CR register */
           SET_BIT(hqspi->Instance->CR, QUADSPI_CR_DMAEN);
         }
@@ -1497,10 +1497,10 @@ HAL_StatusTypeDef HAL_QSPI_Receive_DMA(QSPI_HandleTypeDef *hqspi, uint8_t *pData
 
           /* Process unlocked */
           __HAL_UNLOCK(hqspi);
-
+          
           /* Enable the QSPI transfer error Interrupt */
           __HAL_QSPI_ENABLE_IT(hqspi, QSPI_IT_TE);
-
+          
           /* Enable the DMA transfer by setting the DMAEN bit in the QSPI CR register */
           SET_BIT(hqspi->Instance->CR, QUADSPI_CR_DMAEN);
         }
@@ -2328,7 +2328,7 @@ HAL_StatusTypeDef HAL_QSPI_Abort_IT(QSPI_HandleTypeDef *hqspi)
       {
         /* Change state of QSPI */
         hqspi->State = HAL_QSPI_STATE_READY;
-
+        
         /* Abort Complete callback */
 #if (USE_HAL_QSPI_REGISTER_CALLBACKS == 1)
         hqspi->AbortCpltCallback(hqspi);
