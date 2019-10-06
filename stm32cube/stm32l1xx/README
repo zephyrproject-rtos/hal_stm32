@@ -84,3 +84,10 @@ Patch List:
     Impacted files:
      drivers/include/stm32l1xx_hal_conf.h
     ST Bug tracker ID: NA. Not a stm32cube issue
+
+   *stm32l151xb: add missing SPI_CR2_FRF definitions
+
+    The higher density parts correctly included the SPI_CR2_FRF definitions,
+    but these were missing for the low/medium density parts.  Without these
+    definitions, the zephyr SPI driver cannot be used on these parts.
+    ST Bug tracker ID: 73643

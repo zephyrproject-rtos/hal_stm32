@@ -5012,6 +5012,9 @@ typedef struct
 #define SPI_CR2_SSOE_Pos                    (2U)
 #define SPI_CR2_SSOE_Msk                    (0x1UL << SPI_CR2_SSOE_Pos)         /*!< 0x00000004 */
 #define SPI_CR2_SSOE                        SPI_CR2_SSOE_Msk                   /*!< SS Output Enable */
+#define SPI_CR2_FRF_Pos                     (4U)
+#define SPI_CR2_FRF_Msk                     (0x1UL << SPI_CR2_FRF_Pos)          /*!< 0x00000010 */
+#define SPI_CR2_FRF                         SPI_CR2_FRF_Msk                    /*!< Frame format */
 #define SPI_CR2_ERRIE_Pos                   (5U)
 #define SPI_CR2_ERRIE_Msk                   (0x1UL << SPI_CR2_ERRIE_Pos)        /*!< 0x00000020 */
 #define SPI_CR2_ERRIE                       SPI_CR2_ERRIE_Msk                  /*!< Error Interrupt Enable */
