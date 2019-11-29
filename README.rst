@@ -52,9 +52,8 @@ entry;
 
 	select USE_STM32_HAL_UART
 
-should be added to the Kconfig file. 
+should be added to the Kconfig file.
 And if the driver for example needs functions from the LL I2C C-files, the
 Kconfig file should include the following entry;
 
 	select USE_STM32_LL_I2C
-
