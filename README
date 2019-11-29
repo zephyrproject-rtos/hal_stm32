@@ -57,3 +57,29 @@ And if the driver for example needs functions from the LL I2C C-files, the
 Kconfig file should include the following entry;
 
 	select USE_STM32_LL_I2C
+
+Use STM32Cube in your application:
+==================================
+It may happen that you want to access STM32Cube APIs in your application,
+either because it is not available as a zephyr API or because you want to
+by-pass use of existing Zephyr API.
+In this case, you need to create a Kconfig file in your application which
+contains the following:
+
+.. code-block:: none
+
+   mainmenu "MYAPP"
+
+   source "Kconfig.zephyr"
+   config MYAPP_STM32
+     default y
+     bool
+     select USE_STM32_HAL_FOO
+     select USE_STM32_LL_BAR
+
+Additionally, you need to add the following includes:
+
+.. code-block:: c
+
+   #include <soc.h>
+   #include <stm32YYxx_ll_bar.h>
