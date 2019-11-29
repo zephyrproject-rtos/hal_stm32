@@ -1,6 +1,17 @@
+This module provides the required STM32cube packages and libraries needed to
+build a Zephyr application running on STM32 silicon.
+
+Packages and libraries are updated regularly in order for STM32 users to benefit
+from the latest STM32Cube versions, features and bug fixes. Updates are
+generally done once in each Zephyr release, preferably soon after the opening
+of the merge window to let time to users to report issues and get them fixed
+before the new version in released.
+
+STM32Cube packages
+******************
+
 How to introduce a new version of stm32cube:
 ============================================
-
 Original STM32Cube tree structure has been modified to a minimum
 structure for a better fit into Zephyr.
 STM32Cube is divided into drivers and soc section, with:
@@ -58,6 +69,7 @@ Kconfig file should include the following entry;
 
 	select USE_STM32_LL_I2C
 
+
 Use STM32Cube in your application:
 ==================================
 It may happen that you want to access STM32Cube APIs in your application,
@@ -83,3 +95,14 @@ Additionally, you need to add the following includes:
 
    #include <soc.h>
    #include <stm32YYxx_ll_bar.h>
+
+
+STM32Cube based libraries:
+**************************
+
+For some specific features, in order to benefit from already available and
+validated code. Libraries from STM32Cube packages are extracted and made
+available in this module under `lib` folder.
+
+No script is available for these libraries, so update is done manually, but
+it should follow the same rhythm than STM32Cube packages.
