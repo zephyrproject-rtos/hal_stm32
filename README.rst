@@ -4,8 +4,8 @@ build a Zephyr application running on STM32 silicon.
 Packages and libraries are updated regularly in order for STM32 users to benefit
 from the latest STM32Cube versions, features and bug fixes. Updates are
 generally done once in each Zephyr release, preferably soon after the opening
-of the merge window to let time to users to report issues and get them fixed
-before the new version in released.
+of the merge window to give time to users to use it, potentially report issues
+if some are faced and get them fixed before the new version in released.
 
 STM32Cube packages
 ******************
@@ -16,22 +16,20 @@ Original STM32Cube tree structure has been modified to a minimum
 structure for a better fit into Zephyr.
 STM32Cube is divided into drivers and soc section, with:
 
-drivers/
-       include/ contains Cube HAL/LL files from:
-       STM32Cube_FW_F1_VX.X.X/Drivers/STM32YYxx_HAL_Driver/Inc/*
-       src/ contains:
-       STM32Cube_FW_F1_VX.X.X/Drivers/STM32YYxx_HAL_Driver/Src/*
-soc/ contains STM32 CMSIS files from
-       *STM32Cube_FW_F1_VX.X.X/Drivers/CMSIS/Device/ST/STM32F1xx/Include/*
-       *STM32Cube_FW_F1_VX.X.X/Drivers/CMSIS/Device/ST/STM32F1xx/Source/Templates/system_stm32f1xx.c
+.. code-block:: none
 
-One file needs to be renamed:
-driver/include/stm32f1xx_hal_conf_template.h
-into:
-driver/include/stm32f1xx_hal_conf.h
+   drivers/
+       include/ contains Cube HAL/LL files from: Drivers/STM32YYxx_HAL_Driver/Inc/*
+       src/ contains: Drivers/STM32YYxx_HAL_Driver/Src/*
+   soc/ contains STM32 CMSIS files from
+       *Drivers/CMSIS/Device/ST/STM32F1xx/Include/*
+       *Drivers/CMSIS/Device/ST/STM32F1xx/Source/Templates/system_stm32f1xx.c
+
+Additionally ``driver/include/stm32f1xx_hal_conf_template.h`` is renamed into
+``driver/include/stm32f1xx_hal_conf.h``
 
 If there are changes in the number of *.c files the Kconfig file in the
-stm32cube directory and the CMakeLists.txt files in the stm32yyxx/ directories
+stm32cube directory and the ``CMakeLists.txt`` files in the stm32yyxx/ directories
 will have to be updated. If *.c have been removed drivers that used them will
 also have to be updated.
 
@@ -47,25 +45,35 @@ In case of doubt, contact Zephyr code owner for stm32cube.
 
 How to use STM32Cube:
 =====================
-In order to enjoy ST CMSIS definitions:
-    *CONFIG_HAS_STM32CUBE should be defined
-    *stm32yyxx.h should be included in soc.h
-       **E.g.: #include <stm32f1xx.h>
+In order to enjoy ST CMSIS definitions, ``CONFIG_HAS_STM32CUBE`` should be defined
+and ``stm32yyxx.h`` should be included in ``soc.h``
 
-Additionally, in order to use STM32Cube LL (when needed):
-    *include stm32yyxx_ll_usart.h in soc.h
-       **E.g.: #include <stm32f1xx_ll_usart.h>
+.. code-block:: c
+
+   #include <stm32f1xx.h>
+
+Additionally, in order to use STM32Cube LL, include ``stm32yyxx_ll_foo.h`` in ``soc.h``.
+
+.. code-block:: c
+
+   #include <stm32f1xx_ll_usart.h>
 
 Drivers and applications that need functions from the STM32Cube HAL/LL C-files
 will need to add the appropriate select entries in their Kconfig files.
-For example when functions from stm32f4xx_hal_uart.c are used, the following
-entry;
+For example when functions from ``stm32f4xx_hal_uart.c`` are used, the following
+entry should apear in driver's Kconfig file.
+
+.. code-block:: none
 
 	select USE_STM32_HAL_UART
 
 should be added to the Kconfig file.
+
+
 And if the driver for example needs functions from the LL I2C C-files, the
-Kconfig file should include the following entry;
+driver Kconfig file should include the following entry
+
+.. code-block:: none
 
 	select USE_STM32_LL_I2C
 
