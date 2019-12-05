@@ -6,7 +6,7 @@ Origin:
    http://www.st.com/en/embedded-software/stm32cubef1.html
 
 Status:
-   version 1.6.1
+   version 1.8.0
 
 Purpose:
    ST Microelectronics official MCU package for STM32F1 series.
@@ -23,7 +23,7 @@ URL:
    http://www.st.com/en/embedded-software/stm32cubef1.html
 
 commit:
-   version 1.6.1
+   version 1.8.0
 
 Maintained-by:
    External
@@ -47,24 +47,3 @@ Patch List:
      Impacted files:
       drivers/include/stm32f1xx_hal_conf.h
      ST Bug tracker ID: NA. Not a stm32cube issue
-
-    *Update LSI_VALUE to 40 KHz
-     Impacted files:
-      drivers/include/stm32f1xx_ll_rcc.h
-     ST Bug tracker ID: 37419
-
-    *Use of (__packed uint32_t *) produces warning
-      Using GNU 8.2.0, (__packed uint32_t *) generates warning.
-      Replace with CMSIS macros __UNALIGNED_UINT32_READ and
-      __UNALIGNED_UINT32_WRITE.
-     Impacted files:
-      drivers/include/stm32f1xx_ll_usb.c
-     ST Bug tracker ID: 61323
-
-    *Fix warnings for extraneous parentheses
-      Using clang 7.0.1, if ((htim->State == HAL_TIM_STATE_BUSY))
-      generates warnings.  Remove the extra parentheses
-     Impacted files:
-      drivers/src/stm32f1xx_hal_tim.c
-      drivers/src/stm32f1xx_hal_tim_ex.c
-     ST Bug tracker ID: 63614

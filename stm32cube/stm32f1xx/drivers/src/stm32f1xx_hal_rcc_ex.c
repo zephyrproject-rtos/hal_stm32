@@ -10,29 +10,13 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; COPYRIGHT(c) 2016 STMicroelectronics</center></h2>
+  * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
+  * All rights reserved.</center></h2>
   *
-  * Redistribution and use in source and binary forms, with or without modification,
-  * are permitted provided that the following conditions are met:
-  *   1. Redistributions of source code must retain the above copyright notice,
-  *      this list of conditions and the following disclaimer.
-  *   2. Redistributions in binary form must reproduce the above copyright notice,
-  *      this list of conditions and the following disclaimer in the documentation
-  *      and/or other materials provided with the distribution.
-  *   3. Neither the name of STMicroelectronics nor the names of its contributors
-  *      may be used to endorse or promote products derived from this software
-  *      without specific prior written permission.
-  *
-  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  * This software component is licensed by ST under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
   *
   ******************************************************************************
   */
@@ -134,13 +118,13 @@ HAL_StatusTypeDef HAL_RCCEx_PeriphCLKConfig(RCC_PeriphCLKInitTypeDef  *PeriphClk
     /* As soon as function is called to change RTC clock source, activation of the
        power domain is done. */
     /* Requires to enable write access to Backup Domain of necessary */
-    if(__HAL_RCC_PWR_IS_CLK_DISABLED())
+    if (__HAL_RCC_PWR_IS_CLK_DISABLED())
     {
-    __HAL_RCC_PWR_CLK_ENABLE();
+      __HAL_RCC_PWR_CLK_ENABLE();
       pwrclkchanged = SET;
     }
 
-    if(HAL_IS_BIT_CLR(PWR->CR, PWR_CR_DBP))
+    if (HAL_IS_BIT_CLR(PWR->CR, PWR_CR_DBP))
     {
       /* Enable write access to Backup domain */
       SET_BIT(PWR->CR, PWR_CR_DBP);
@@ -148,9 +132,9 @@ HAL_StatusTypeDef HAL_RCCEx_PeriphCLKConfig(RCC_PeriphCLKInitTypeDef  *PeriphClk
       /* Wait for Backup domain Write protection disable */
       tickstart = HAL_GetTick();
 
-      while(HAL_IS_BIT_CLR(PWR->CR, PWR_CR_DBP))
+      while (HAL_IS_BIT_CLR(PWR->CR, PWR_CR_DBP))
       {
-        if((HAL_GetTick() - tickstart) > RCC_DBP_TIMEOUT_VALUE)
+        if ((HAL_GetTick() - tickstart) > RCC_DBP_TIMEOUT_VALUE)
         {
           return HAL_TIMEOUT;
         }
@@ -159,7 +143,7 @@ HAL_StatusTypeDef HAL_RCCEx_PeriphCLKConfig(RCC_PeriphCLKInitTypeDef  *PeriphClk
 
     /* Reset the Backup domain only if the RTC Clock source selection is modified from reset value */
     temp_reg = (RCC->BDCR & RCC_BDCR_RTCSEL);
-    if((temp_reg != 0x00000000U) && (temp_reg != (PeriphClkInit->RTCClockSelection & RCC_BDCR_RTCSEL)))
+    if ((temp_reg != 0x00000000U) && (temp_reg != (PeriphClkInit->RTCClockSelection & RCC_BDCR_RTCSEL)))
     {
       /* Store the content of BDCR register before the reset of Backup Domain */
       temp_reg = (RCC->BDCR & ~(RCC_BDCR_RTCSEL));
@@ -176,9 +160,9 @@ HAL_StatusTypeDef HAL_RCCEx_PeriphCLKConfig(RCC_PeriphCLKInitTypeDef  *PeriphClk
         tickstart = HAL_GetTick();
 
         /* Wait till LSE is ready */
-        while(__HAL_RCC_GET_FLAG(RCC_FLAG_LSERDY) == RESET)
+        while (__HAL_RCC_GET_FLAG(RCC_FLAG_LSERDY) == RESET)
         {
-          if((HAL_GetTick() - tickstart) > RCC_LSE_TIMEOUT_VALUE)
+          if ((HAL_GetTick() - tickstart) > RCC_LSE_TIMEOUT_VALUE)
           {
             return HAL_TIMEOUT;
           }
@@ -188,14 +172,14 @@ HAL_StatusTypeDef HAL_RCCEx_PeriphCLKConfig(RCC_PeriphCLKInitTypeDef  *PeriphClk
     __HAL_RCC_RTC_CONFIG(PeriphClkInit->RTCClockSelection);
 
     /* Require to disable power clock if necessary */
-    if(pwrclkchanged == SET)
+    if (pwrclkchanged == SET)
     {
       __HAL_RCC_PWR_CLK_DISABLE();
     }
   }
 
   /*------------------------------ ADC clock Configuration ------------------*/
-  if(((PeriphClkInit->PeriphClockSelection) & RCC_PERIPHCLK_ADC) == RCC_PERIPHCLK_ADC)
+  if (((PeriphClkInit->PeriphClockSelection) & RCC_PERIPHCLK_ADC) == RCC_PERIPHCLK_ADC)
   {
     /* Check the parameters */
     assert_param(IS_RCC_ADCPLLCLK_DIV(PeriphClkInit->AdcClockSelection));
@@ -206,7 +190,7 @@ HAL_StatusTypeDef HAL_RCCEx_PeriphCLKConfig(RCC_PeriphCLKInitTypeDef  *PeriphClk
 
 #if defined(STM32F105xC) || defined(STM32F107xC)
   /*------------------------------ I2S2 Configuration ------------------------*/
-  if(((PeriphClkInit->PeriphClockSelection) & RCC_PERIPHCLK_I2S2) == RCC_PERIPHCLK_I2S2)
+  if (((PeriphClkInit->PeriphClockSelection) & RCC_PERIPHCLK_I2S2) == RCC_PERIPHCLK_I2S2)
   {
     /* Check the parameters */
     assert_param(IS_RCC_I2S2CLKSOURCE(PeriphClkInit->I2s2ClockSelection));
@@ -216,7 +200,7 @@ HAL_StatusTypeDef HAL_RCCEx_PeriphCLKConfig(RCC_PeriphCLKInitTypeDef  *PeriphClk
   }
 
   /*------------------------------ I2S3 Configuration ------------------------*/
-  if(((PeriphClkInit->PeriphClockSelection) & RCC_PERIPHCLK_I2S3) == RCC_PERIPHCLK_I2S3)
+  if (((PeriphClkInit->PeriphClockSelection) & RCC_PERIPHCLK_I2S3) == RCC_PERIPHCLK_I2S3)
   {
     /* Check the parameters */
     assert_param(IS_RCC_I2S3CLKSOURCE(PeriphClkInit->I2s3ClockSelection));
@@ -245,8 +229,8 @@ HAL_StatusTypeDef HAL_RCCEx_PeriphCLKConfig(RCC_PeriphCLKInitTypeDef  *PeriphClk
 
       /* Prediv2 can be written only when the PLL2 is disabled. */
       /* Return an error only if new value is different from the programmed value */
-      if (HAL_IS_BIT_SET(RCC->CR,RCC_CR_PLL2ON) && \
-        (__HAL_RCC_HSE_GET_PREDIV2() != PeriphClkInit->PLLI2S.HSEPrediv2Value))
+      if (HAL_IS_BIT_SET(RCC->CR, RCC_CR_PLL2ON) && \
+          (__HAL_RCC_HSE_GET_PREDIV2() != PeriphClkInit->PLLI2S.HSEPrediv2Value))
       {
         return HAL_ERROR;
       }
@@ -264,9 +248,9 @@ HAL_StatusTypeDef HAL_RCCEx_PeriphCLKConfig(RCC_PeriphCLKInitTypeDef  *PeriphClk
       tickstart = HAL_GetTick();
 
       /* Wait till PLLI2S is ready */
-      while(__HAL_RCC_GET_FLAG(RCC_FLAG_PLLI2SRDY)  == RESET)
+      while (__HAL_RCC_GET_FLAG(RCC_FLAG_PLLI2SRDY)  == RESET)
       {
-        if((HAL_GetTick() - tickstart ) > PLLI2S_TIMEOUT_VALUE)
+        if ((HAL_GetTick() - tickstart) > PLLI2S_TIMEOUT_VALUE)
         {
           return HAL_TIMEOUT;
         }
@@ -277,7 +261,7 @@ HAL_StatusTypeDef HAL_RCCEx_PeriphCLKConfig(RCC_PeriphCLKInitTypeDef  *PeriphClk
       /* Return an error only if user wants to change the PLLI2SMUL whereas PLLI2S is active */
       if (READ_BIT(RCC->CFGR2, RCC_CFGR2_PLL3MUL) != PeriphClkInit->PLLI2S.PLLI2SMUL)
       {
-          return HAL_ERROR;
+        return HAL_ERROR;
       }
     }
   }
@@ -287,7 +271,7 @@ HAL_StatusTypeDef HAL_RCCEx_PeriphCLKConfig(RCC_PeriphCLKInitTypeDef  *PeriphClk
  || defined(STM32F103xB) || defined(STM32F103xE) || defined(STM32F103xG)\
  || defined(STM32F105xC) || defined(STM32F107xC)
   /*------------------------------ USB clock Configuration ------------------*/
-  if(((PeriphClkInit->PeriphClockSelection) & RCC_PERIPHCLK_USB) == RCC_PERIPHCLK_USB)
+  if (((PeriphClkInit->PeriphClockSelection) & RCC_PERIPHCLK_USB) == RCC_PERIPHCLK_USB)
   {
     /* Check the parameters */
     assert_param(IS_RCC_USBPLLCLK_DIV(PeriphClkInit->UsbClockSelection));
@@ -426,13 +410,13 @@ uint32_t HAL_RCCEx_GetPeriphCLKFreq(uint32_t PeriphClk)
 #if defined(STM32F102x6) || defined(STM32F102xB) || defined(STM32F103x6)\
  || defined(STM32F103xB) || defined(STM32F103xE) || defined(STM32F103xG)\
  || defined(STM32F105xC) || defined(STM32F107xC)
-  case RCC_PERIPHCLK_USB:
+    case RCC_PERIPHCLK_USB:
     {
       /* Get RCC configuration ------------------------------------------------------*/
       temp_reg = RCC->CFGR;
 
       /* Check if PLL is enabled */
-      if (HAL_IS_BIT_SET(RCC->CR,RCC_CR_PLLON))
+      if (HAL_IS_BIT_SET(RCC->CR, RCC_CR_PLLON))
       {
         pllmul = aPLLMULFactorTable[(uint32_t)(temp_reg & RCC_CFGR_PLLMULL) >> RCC_CFGR_PLLMULL_Pos];
         if ((temp_reg & RCC_CFGR_PLLSRC) != RCC_PLLSOURCE_HSI_DIV2)
@@ -445,7 +429,7 @@ uint32_t HAL_RCCEx_GetPeriphCLKFreq(uint32_t PeriphClk)
 #endif /* STM32F105xC || STM32F107xC || STM32F100xB || STM32F100xE */
 
 #if defined(STM32F105xC) || defined(STM32F107xC)
-          if(HAL_IS_BIT_SET(RCC->CFGR2, RCC_CFGR2_PREDIV1SRC))
+          if (HAL_IS_BIT_SET(RCC->CFGR2, RCC_CFGR2_PREDIV1SRC))
           {
             /* PLL2 selected as Prediv1 source */
             /* PLLCLK = PLL2CLK / PREDIV1 * PLLMUL with PLL2CLK = HSE/PREDIV2 * PLL2MUL */
@@ -463,7 +447,7 @@ uint32_t HAL_RCCEx_GetPeriphCLKFreq(uint32_t PeriphClk)
           /* In this case need to divide pllclk by 2 */
           if (pllmul == aPLLMULFactorTable[(uint32_t)(RCC_CFGR_PLLMULL6_5) >> RCC_CFGR_PLLMULL_Pos])
           {
-              pllclk = pllclk / 2;
+            pllclk = pllclk / 2;
           }
 #else
           if ((temp_reg & RCC_CFGR_PLLSRC) != RCC_PLLSOURCE_HSI_DIV2)
@@ -510,7 +494,7 @@ uint32_t HAL_RCCEx_GetPeriphCLKFreq(uint32_t PeriphClk)
     }
 #endif /* STM32F102x6 || STM32F102xB || STM32F103x6 || STM32F103xB || STM32F103xE || STM32F103xG || STM32F105xC || STM32F107xC */
 #if defined(STM32F103xE) || defined(STM32F103xG) || defined(STM32F105xC) || defined(STM32F107xC)
-  case RCC_PERIPHCLK_I2S2:
+    case RCC_PERIPHCLK_I2S2:
     {
 #if defined(STM32F103xE) || defined(STM32F103xG)
       /* SYSCLK used as source clock for I2S2 */
@@ -523,7 +507,7 @@ uint32_t HAL_RCCEx_GetPeriphCLKFreq(uint32_t PeriphClk)
       }
       else
       {
-         /* Check if PLLI2S is enabled */
+        /* Check if PLLI2S is enabled */
         if (HAL_IS_BIT_SET(RCC->CR, RCC_CR_PLL3ON))
         {
           /* PLLI2SVCO = 2 * PLLI2SCLK = 2 * (HSE/PREDIV2 * PLL3MUL) */
@@ -535,7 +519,7 @@ uint32_t HAL_RCCEx_GetPeriphCLKFreq(uint32_t PeriphClk)
 #endif /* STM32F103xE || STM32F103xG */
       break;
     }
-  case RCC_PERIPHCLK_I2S3:
+    case RCC_PERIPHCLK_I2S3:
     {
 #if defined(STM32F103xE) || defined(STM32F103xG)
       /* SYSCLK used as source clock for I2S3 */
@@ -548,7 +532,7 @@ uint32_t HAL_RCCEx_GetPeriphCLKFreq(uint32_t PeriphClk)
       }
       else
       {
-         /* Check if PLLI2S is enabled */
+        /* Check if PLLI2S is enabled */
         if (HAL_IS_BIT_SET(RCC->CR, RCC_CR_PLL3ON))
         {
           /* PLLI2SVCO = 2 * PLLI2SCLK = 2 * (HSE/PREDIV2 * PLL3MUL) */
@@ -561,7 +545,7 @@ uint32_t HAL_RCCEx_GetPeriphCLKFreq(uint32_t PeriphClk)
       break;
     }
 #endif /* STM32F103xE || STM32F103xG || STM32F105xC || STM32F107xC */
-  case RCC_PERIPHCLK_RTC:
+    case RCC_PERIPHCLK_RTC:
     {
       /* Get RCC BDCR configuration ------------------------------------------------------*/
       temp_reg = RCC->BDCR;
@@ -583,21 +567,21 @@ uint32_t HAL_RCCEx_GetPeriphCLKFreq(uint32_t PeriphClk)
       /* Clock not enabled for RTC*/
       else
       {
-        frequency = 0U;
+        /* nothing to do: frequency already initialized to 0U */
       }
       break;
     }
-  case RCC_PERIPHCLK_ADC:
+    case RCC_PERIPHCLK_ADC:
     {
       frequency = HAL_RCC_GetPCLK2Freq() / (((__HAL_RCC_GET_ADC_SOURCE() >> RCC_CFGR_ADCPRE_Pos) + 1) * 2);
       break;
     }
-  default:
+    default:
     {
       break;
     }
   }
-  return(frequency);
+  return (frequency);
 }
 
 /**
@@ -639,8 +623,8 @@ HAL_StatusTypeDef HAL_RCCEx_EnablePLLI2S(RCC_PLLI2SInitTypeDef  *PLLI2SInit)
 
     /* Prediv2 can be written only when the PLL2 is disabled. */
     /* Return an error only if new value is different from the programmed value */
-    if (HAL_IS_BIT_SET(RCC->CR,RCC_CR_PLL2ON) && \
-      (__HAL_RCC_HSE_GET_PREDIV2() != PLLI2SInit->HSEPrediv2Value))
+    if (HAL_IS_BIT_SET(RCC->CR, RCC_CR_PLL2ON) && \
+        (__HAL_RCC_HSE_GET_PREDIV2() != PLLI2SInit->HSEPrediv2Value))
     {
       return HAL_ERROR;
     }
@@ -652,9 +636,9 @@ HAL_StatusTypeDef HAL_RCCEx_EnablePLLI2S(RCC_PLLI2SInitTypeDef  *PLLI2SInit)
     tickstart = HAL_GetTick();
 
     /* Wait till PLLI2S is ready */
-    while(__HAL_RCC_GET_FLAG(RCC_FLAG_PLLI2SRDY)  != RESET)
+    while (__HAL_RCC_GET_FLAG(RCC_FLAG_PLLI2SRDY)  != RESET)
     {
-      if((HAL_GetTick() - tickstart ) > PLLI2S_TIMEOUT_VALUE)
+      if ((HAL_GetTick() - tickstart) > PLLI2S_TIMEOUT_VALUE)
       {
         return HAL_TIMEOUT;
       }
@@ -674,9 +658,9 @@ HAL_StatusTypeDef HAL_RCCEx_EnablePLLI2S(RCC_PLLI2SInitTypeDef  *PLLI2SInit)
     tickstart = HAL_GetTick();
 
     /* Wait till PLLI2S is ready */
-    while(__HAL_RCC_GET_FLAG(RCC_FLAG_PLLI2SRDY)  == RESET)
+    while (__HAL_RCC_GET_FLAG(RCC_FLAG_PLLI2SRDY)  == RESET)
     {
-      if((HAL_GetTick() - tickstart ) > PLLI2S_TIMEOUT_VALUE)
+      if ((HAL_GetTick() - tickstart) > PLLI2S_TIMEOUT_VALUE)
       {
         return HAL_TIMEOUT;
       }
@@ -710,9 +694,9 @@ HAL_StatusTypeDef HAL_RCCEx_DisablePLLI2S(void)
     tickstart = HAL_GetTick();
 
     /* Wait till PLLI2S is ready */
-    while(__HAL_RCC_GET_FLAG(RCC_FLAG_PLLI2SRDY)  != RESET)
+    while (__HAL_RCC_GET_FLAG(RCC_FLAG_PLLI2SRDY)  != RESET)
     {
-      if((HAL_GetTick() - tickstart ) > PLLI2S_TIMEOUT_VALUE)
+      if ((HAL_GetTick() - tickstart) > PLLI2S_TIMEOUT_VALUE)
       {
         return HAL_TIMEOUT;
       }
@@ -758,9 +742,9 @@ HAL_StatusTypeDef HAL_RCCEx_EnablePLL2(RCC_PLL2InitTypeDef  *PLL2Init)
 
   /* This bit can not be cleared if the PLL2 clock is used indirectly as system
     clock (i.e. it is used as PLL clock entry that is used as system clock). */
-  if((__HAL_RCC_GET_PLL_OSCSOURCE() == RCC_PLLSOURCE_HSE) && \
-        (__HAL_RCC_GET_SYSCLK_SOURCE() == RCC_SYSCLKSOURCE_STATUS_PLLCLK) && \
-        ((READ_BIT(RCC->CFGR2,RCC_CFGR2_PREDIV1SRC)) == RCC_CFGR2_PREDIV1SRC_PLL2))
+  if ((__HAL_RCC_GET_PLL_OSCSOURCE() == RCC_PLLSOURCE_HSE) && \
+      (__HAL_RCC_GET_SYSCLK_SOURCE() == RCC_SYSCLKSOURCE_STATUS_PLLCLK) && \
+      ((READ_BIT(RCC->CFGR2, RCC_CFGR2_PREDIV1SRC)) == RCC_CFGR2_PREDIV1SRC_PLL2))
   {
     return HAL_ERROR;
   }
@@ -772,8 +756,8 @@ HAL_StatusTypeDef HAL_RCCEx_EnablePLL2(RCC_PLL2InitTypeDef  *PLL2Init)
 
     /* Prediv2 can be written only when the PLLI2S is disabled. */
     /* Return an error only if new value is different from the programmed value */
-    if (HAL_IS_BIT_SET(RCC->CR,RCC_CR_PLL3ON) && \
-      (__HAL_RCC_HSE_GET_PREDIV2() != PLL2Init->HSEPrediv2Value))
+    if (HAL_IS_BIT_SET(RCC->CR, RCC_CR_PLL3ON) && \
+        (__HAL_RCC_HSE_GET_PREDIV2() != PLL2Init->HSEPrediv2Value))
     {
       return HAL_ERROR;
     }
@@ -785,9 +769,9 @@ HAL_StatusTypeDef HAL_RCCEx_EnablePLL2(RCC_PLL2InitTypeDef  *PLL2Init)
     tickstart = HAL_GetTick();
 
     /* Wait till PLL2 is disabled */
-    while(__HAL_RCC_GET_FLAG(RCC_FLAG_PLL2RDY) != RESET)
+    while (__HAL_RCC_GET_FLAG(RCC_FLAG_PLL2RDY) != RESET)
     {
-      if((HAL_GetTick() - tickstart ) > PLL2_TIMEOUT_VALUE)
+      if ((HAL_GetTick() - tickstart) > PLL2_TIMEOUT_VALUE)
       {
         return HAL_TIMEOUT;
       }
@@ -806,9 +790,9 @@ HAL_StatusTypeDef HAL_RCCEx_EnablePLL2(RCC_PLL2InitTypeDef  *PLL2Init)
     tickstart = HAL_GetTick();
 
     /* Wait till PLL2 is ready */
-    while(__HAL_RCC_GET_FLAG(RCC_FLAG_PLL2RDY)  == RESET)
+    while (__HAL_RCC_GET_FLAG(RCC_FLAG_PLL2RDY)  == RESET)
     {
-      if((HAL_GetTick() - tickstart ) > PLL2_TIMEOUT_VALUE)
+      if ((HAL_GetTick() - tickstart) > PLL2_TIMEOUT_VALUE)
       {
         return HAL_TIMEOUT;
       }
@@ -829,9 +813,9 @@ HAL_StatusTypeDef HAL_RCCEx_DisablePLL2(void)
 
   /* This bit can not be cleared if the PLL2 clock is used indirectly as system
     clock (i.e. it is used as PLL clock entry that is used as system clock). */
-  if((__HAL_RCC_GET_PLL_OSCSOURCE() == RCC_PLLSOURCE_HSE) && \
-        (__HAL_RCC_GET_SYSCLK_SOURCE() == RCC_SYSCLKSOURCE_STATUS_PLLCLK) && \
-        ((READ_BIT(RCC->CFGR2,RCC_CFGR2_PREDIV1SRC)) == RCC_CFGR2_PREDIV1SRC_PLL2))
+  if ((__HAL_RCC_GET_PLL_OSCSOURCE() == RCC_PLLSOURCE_HSE) && \
+      (__HAL_RCC_GET_SYSCLK_SOURCE() == RCC_SYSCLKSOURCE_STATUS_PLLCLK) && \
+      ((READ_BIT(RCC->CFGR2, RCC_CFGR2_PREDIV1SRC)) == RCC_CFGR2_PREDIV1SRC_PLL2))
   {
     return HAL_ERROR;
   }
@@ -844,9 +828,9 @@ HAL_StatusTypeDef HAL_RCCEx_DisablePLL2(void)
     tickstart = HAL_GetTick();
 
     /* Wait till PLL2 is disabled */
-    while(__HAL_RCC_GET_FLAG(RCC_FLAG_PLL2RDY)  != RESET)
+    while (__HAL_RCC_GET_FLAG(RCC_FLAG_PLL2RDY)  != RESET)
     {
-      if((HAL_GetTick() - tickstart ) > PLL2_TIMEOUT_VALUE)
+      if ((HAL_GetTick() - tickstart) > PLL2_TIMEOUT_VALUE)
       {
         return HAL_TIMEOUT;
       }
