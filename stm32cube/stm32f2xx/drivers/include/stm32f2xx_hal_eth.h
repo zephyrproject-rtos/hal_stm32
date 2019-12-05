@@ -6,29 +6,13 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; COPYRIGHT(c) 2017 STMicroelectronics</center></h2>
+  * <h2><center>&copy; Copyright (c) 2017 STMicroelectronics.
+  * All rights reserved.</center></h2>
   *
-  * Redistribution and use in source and binary forms, with or without modification,
-  * are permitted provided that the following conditions are met:
-  *   1. Redistributions of source code must retain the above copyright notice,
-  *      this list of conditions and the following disclaimer.
-  *   2. Redistributions in binary form must reproduce the above copyright notice,
-  *      this list of conditions and the following disclaimer in the documentation
-  *      and/or other materials provided with the distribution.
-  *   3. Neither the name of STMicroelectronics nor the names of its contributors
-  *      may be used to endorse or promote products derived from this software
-  *      without specific prior written permission.
-  *
-  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  * This software component is licensed by ST under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
   *
   ******************************************************************************
   */
@@ -38,12 +22,13 @@
 #define __STM32F2xx_HAL_ETH_H
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
-#if defined(STM32F207xx) || defined(STM32F217xx)
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f2xx_hal_def.h"
+
+#if defined (ETH)
 
 /** @addtogroup STM32F2xx_HAL_Driver
   * @{
@@ -354,9 +339,9 @@
 
 /* ETHERNET Missed frames counter Shift */
 #define  ETH_DMA_RX_OVERFLOW_MISSEDFRAMES_COUNTERSHIFT     17U
- /**
-  * @}
-  */
+/**
+ * @}
+ */
 
 /* Exported types ------------------------------------------------------------*/
 /** @defgroup ETH_Exported_Types ETH Exported Types
@@ -378,7 +363,7 @@ typedef enum
   HAL_ETH_STATE_BUSY_RD           = 0x82U,    /*!< Read process is ongoing                            */
   HAL_ETH_STATE_TIMEOUT           = 0x03U,    /*!< Timeout state                                      */
   HAL_ETH_STATE_ERROR             = 0x04U     /*!< Reception process is ongoing                       */
-}HAL_ETH_StateTypeDef;
+} HAL_ETH_StateTypeDef;
 
 /**
   * @brief  ETH Init Structure definition
@@ -414,9 +399,9 @@ typedef struct
 } ETH_InitTypeDef;
 
 
- /**
-  * @brief  ETH MAC Configuration Structure definition
-  */
+/**
+ * @brief  ETH MAC Configuration Structure definition
+ */
 
 typedef struct
 {
@@ -527,7 +512,7 @@ typedef struct
 
 typedef struct
 {
- uint32_t              DropTCPIPChecksumErrorFrame; /*!< Selects or not the Dropping of TCP/IP Checksum Error Frames.
+  uint32_t              DropTCPIPChecksumErrorFrame; /*!< Selects or not the Dropping of TCP/IP Checksum Error Frames.
                                                              This parameter can be a value of @ref ETH_Drop_TCP_IP_Checksum_Error_Frame */
 
   uint32_t             ReceiveStoreForward;         /*!< Enables or disables the Receive store and forward mode.
@@ -627,7 +612,11 @@ typedef struct
   * @brief  ETH Handle Structure definition
   */
 
+#if (USE_HAL_ETH_REGISTER_CALLBACKS == 1)
+typedef struct __ETH_HandleTypeDef
+#else
 typedef struct
+#endif /* USE_HAL_ETH_REGISTER_CALLBACKS */
 {
   ETH_TypeDef                *Instance;     /*!< Register base address       */
 
@@ -645,11 +634,42 @@ typedef struct
 
   HAL_LockTypeDef            Lock;          /*!< ETH Lock                    */
 
+#if (USE_HAL_ETH_REGISTER_CALLBACKS == 1)
+
+  void (* TxCpltCallback)(struct __ETH_HandleTypeDef *heth);            /*!< ETH Tx Complete Callback   */
+  void (* RxCpltCallback)(struct __ETH_HandleTypeDef *heth);            /*!< ETH Rx  Complete Callback   */
+  void (* DMAErrorCallback)(struct __ETH_HandleTypeDef *heth);          /*!< DMA Error Callback      */
+  void (* MspInitCallback)(struct __ETH_HandleTypeDef *heth);           /*!< ETH Msp Init callback       */
+  void (* MspDeInitCallback)(struct __ETH_HandleTypeDef *heth);         /*!< ETH Msp DeInit callback     */
+
+#endif  /* USE_HAL_ETH_REGISTER_CALLBACKS */
+
 } ETH_HandleTypeDef;
 
- /**
-  * @}
+#if (USE_HAL_ETH_REGISTER_CALLBACKS == 1)
+/**
+  * @brief  HAL ETH Callback ID enumeration definition
   */
+typedef enum
+{
+  HAL_ETH_MSPINIT_CB_ID            = 0x00U,    /*!< ETH MspInit callback ID            */
+  HAL_ETH_MSPDEINIT_CB_ID          = 0x01U,    /*!< ETH MspDeInit callback ID          */
+  HAL_ETH_TX_COMPLETE_CB_ID        = 0x02U,    /*!< ETH Tx Complete Callback ID        */
+  HAL_ETH_RX_COMPLETE_CB_ID        = 0x03U,    /*!< ETH Rx Complete Callback ID        */
+  HAL_ETH_DMA_ERROR_CB_ID          = 0x04U,    /*!< ETH DMA Error Callback ID          */
+
+} HAL_ETH_CallbackIDTypeDef;
+
+/**
+  * @brief  HAL ETH Callback pointer definition
+  */
+typedef  void (*pETH_CallbackTypeDef)(ETH_HandleTypeDef *heth);  /*!< pointer to an ETH callback function */
+
+#endif /* USE_HAL_ETH_REGISTER_CALLBACKS */
+
+/**
+ * @}
+ */
 
 /* Exported constants --------------------------------------------------------*/
 /** @defgroup ETH_Exported_Constants ETH Exported Constants
@@ -668,62 +688,62 @@ typedef struct
 #define ETH_MAX_ETH_PAYLOAD        1500U    /*!< Maximum Ethernet payload size */
 #define ETH_JUMBO_FRAME_PAYLOAD    9000U    /*!< Jumbo frame payload size */
 
- /* Ethernet driver receive buffers are organized in a chained linked-list, when
-    an ethernet packet is received, the Rx-DMA will transfer the packet from RxFIFO
-    to the driver receive buffers memory.
+/* Ethernet driver receive buffers are organized in a chained linked-list, when
+   an ethernet packet is received, the Rx-DMA will transfer the packet from RxFIFO
+   to the driver receive buffers memory.
 
-    Depending on the size of the received ethernet packet and the size of
-    each ethernet driver receive buffer, the received packet can take one or more
-    ethernet driver receive buffer.
+   Depending on the size of the received ethernet packet and the size of
+   each ethernet driver receive buffer, the received packet can take one or more
+   ethernet driver receive buffer.
 
-    In below are defined the size of one ethernet driver receive buffer ETH_RX_BUF_SIZE
-    and the total count of the driver receive buffers ETH_RXBUFNB.
+   In below are defined the size of one ethernet driver receive buffer ETH_RX_BUF_SIZE
+   and the total count of the driver receive buffers ETH_RXBUFNB.
 
-    The configured value for ETH_RX_BUF_SIZE and ETH_RXBUFNB are only provided as
-    example, they can be reconfigured in the application layer to fit the application
-    needs */
+   The configured value for ETH_RX_BUF_SIZE and ETH_RXBUFNB are only provided as
+   example, they can be reconfigured in the application layer to fit the application
+   needs */
 
 /* Here we configure each Ethernet driver receive buffer to fit the Max size Ethernet
    packet */
 #ifndef ETH_RX_BUF_SIZE
- #define ETH_RX_BUF_SIZE         ETH_MAX_PACKET_SIZE
+#define ETH_RX_BUF_SIZE         ETH_MAX_PACKET_SIZE
 #endif
 
 /* 5 Ethernet driver receive buffers are used (in a chained linked list)*/
 #ifndef ETH_RXBUFNB
- #define ETH_RXBUFNB             5U     /*  5 Rx buffers of size ETH_RX_BUF_SIZE */
+#define ETH_RXBUFNB             5U     /*  5 Rx buffers of size ETH_RX_BUF_SIZE */
 #endif
 
 
- /* Ethernet driver transmit buffers are organized in a chained linked-list, when
-    an ethernet packet is transmitted, Tx-DMA will transfer the packet from the
-    driver transmit buffers memory to the TxFIFO.
+/* Ethernet driver transmit buffers are organized in a chained linked-list, when
+   an ethernet packet is transmitted, Tx-DMA will transfer the packet from the
+   driver transmit buffers memory to the TxFIFO.
 
-    Depending on the size of the Ethernet packet to be transmitted and the size of
-    each ethernet driver transmit buffer, the packet to be transmitted can take
-    one or more ethernet driver transmit buffer.
+   Depending on the size of the Ethernet packet to be transmitted and the size of
+   each ethernet driver transmit buffer, the packet to be transmitted can take
+   one or more ethernet driver transmit buffer.
 
-    In below are defined the size of one ethernet driver transmit buffer ETH_TX_BUF_SIZE
-    and the total count of the driver transmit buffers ETH_TXBUFNB.
+   In below are defined the size of one ethernet driver transmit buffer ETH_TX_BUF_SIZE
+   and the total count of the driver transmit buffers ETH_TXBUFNB.
 
-    The configured value for ETH_TX_BUF_SIZE and ETH_TXBUFNB are only provided as
-    example, they can be reconfigured in the application layer to fit the application
-    needs */
+   The configured value for ETH_TX_BUF_SIZE and ETH_TXBUFNB are only provided as
+   example, they can be reconfigured in the application layer to fit the application
+   needs */
 
 /* Here we configure each Ethernet driver transmit buffer to fit the Max size Ethernet
    packet */
 #ifndef ETH_TX_BUF_SIZE
- #define ETH_TX_BUF_SIZE         ETH_MAX_PACKET_SIZE
+#define ETH_TX_BUF_SIZE         ETH_MAX_PACKET_SIZE
 #endif
 
 /* 5 ethernet driver transmit buffers are used (in a chained linked list)*/
 #ifndef ETH_TXBUFNB
- #define ETH_TXBUFNB             5U      /* 5  Tx buffers of size ETH_TX_BUF_SIZE */
+#define ETH_TXBUFNB             5U      /* 5  Tx buffers of size ETH_TX_BUF_SIZE */
 #endif
 
- /**
-  * @}
-  */
+/**
+ * @}
+ */
 
 /** @defgroup ETH_DMA_TX_Descriptor ETH DMA TX Descriptor
   * @{
@@ -791,17 +811,17 @@ typedef struct
   */
 #define ETH_DMATXDESC_B2AP  0xFFFFFFFFU  /*!< Buffer2 Address Pointer */
 
-  /*---------------------------------------------------------------------------------------------
-  TDES6 |                         Transmit Time Stamp Low [31:0]                                 |
-  -----------------------------------------------------------------------------------------------
-  TDES7 |                         Transmit Time Stamp High [31:0]                                |
-  ----------------------------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------------------------
+TDES6 |                         Transmit Time Stamp Low [31:0]                                 |
+-----------------------------------------------------------------------------------------------
+TDES7 |                         Transmit Time Stamp High [31:0]                                |
+----------------------------------------------------------------------------------------------*/
 
 /* Bit definition of TDES6 register */
- #define ETH_DMAPTPTXDESC_TTSL  0xFFFFFFFFU  /* Transmit Time Stamp Low */
+#define ETH_DMAPTPTXDESC_TTSL  0xFFFFFFFFU  /* Transmit Time Stamp Low */
 
 /* Bit definition of TDES7 register */
- #define ETH_DMAPTPTXDESC_TTSH  0xFFFFFFFFU  /* Transmit Time Stamp High */
+#define ETH_DMAPTPTXDESC_TTSH  0xFFFFFFFFU  /* Transmit Time Stamp High */
 
 /**
   * @}
@@ -879,22 +899,22 @@ typedef struct
 #define ETH_DMAPTPRXDESC_PTPV     0x00002000U  /* PTP Version */
 #define ETH_DMAPTPRXDESC_PTPFT    0x00001000U  /* PTP Frame Type */
 #define ETH_DMAPTPRXDESC_PTPMT    0x00000F00U  /* PTP Message Type */
-  #define ETH_DMAPTPRXDESC_PTPMT_SYNC                      0x00000100U  /* SYNC message (all clock types) */
-  #define ETH_DMAPTPRXDESC_PTPMT_FOLLOWUP                  0x00000200U  /* FollowUp message (all clock types) */
-  #define ETH_DMAPTPRXDESC_PTPMT_DELAYREQ                  0x00000300U  /* DelayReq message (all clock types) */
-  #define ETH_DMAPTPRXDESC_PTPMT_DELAYRESP                 0x00000400U  /* DelayResp message (all clock types) */
-  #define ETH_DMAPTPRXDESC_PTPMT_PDELAYREQ_ANNOUNCE        0x00000500U  /* PdelayReq message (peer-to-peer transparent clock) or Announce message (Ordinary or Boundary clock) */
-  #define ETH_DMAPTPRXDESC_PTPMT_PDELAYRESP_MANAG          0x00000600U  /* PdelayResp message (peer-to-peer transparent clock) or Management message (Ordinary or Boundary clock)  */
-  #define ETH_DMAPTPRXDESC_PTPMT_PDELAYRESPFOLLOWUP_SIGNAL 0x00000700U  /* PdelayRespFollowUp message (peer-to-peer transparent clock) or Signaling message (Ordinary or Boundary clock) */
+#define ETH_DMAPTPRXDESC_PTPMT_SYNC                      0x00000100U  /* SYNC message (all clock types) */
+#define ETH_DMAPTPRXDESC_PTPMT_FOLLOWUP                  0x00000200U  /* FollowUp message (all clock types) */
+#define ETH_DMAPTPRXDESC_PTPMT_DELAYREQ                  0x00000300U  /* DelayReq message (all clock types) */
+#define ETH_DMAPTPRXDESC_PTPMT_DELAYRESP                 0x00000400U  /* DelayResp message (all clock types) */
+#define ETH_DMAPTPRXDESC_PTPMT_PDELAYREQ_ANNOUNCE        0x00000500U  /* PdelayReq message (peer-to-peer transparent clock) or Announce message (Ordinary or Boundary clock) */
+#define ETH_DMAPTPRXDESC_PTPMT_PDELAYRESP_MANAG          0x00000600U  /* PdelayResp message (peer-to-peer transparent clock) or Management message (Ordinary or Boundary clock)  */
+#define ETH_DMAPTPRXDESC_PTPMT_PDELAYRESPFOLLOWUP_SIGNAL 0x00000700U  /* PdelayRespFollowUp message (peer-to-peer transparent clock) or Signaling message (Ordinary or Boundary clock) */
 #define ETH_DMAPTPRXDESC_IPV6PR   0x00000080U  /* IPv6 Packet Received */
 #define ETH_DMAPTPRXDESC_IPV4PR   0x00000040U  /* IPv4 Packet Received */
 #define ETH_DMAPTPRXDESC_IPCB  0x00000020U  /* IP Checksum Bypassed */
 #define ETH_DMAPTPRXDESC_IPPE  0x00000010U  /* IP Payload Error */
 #define ETH_DMAPTPRXDESC_IPHE  0x00000008U  /* IP Header Error */
 #define ETH_DMAPTPRXDESC_IPPT  0x00000007U  /* IP Payload Type */
-  #define ETH_DMAPTPRXDESC_IPPT_UDP                 0x00000001U  /* UDP payload encapsulated in the IP datagram */
-  #define ETH_DMAPTPRXDESC_IPPT_TCP                 0x00000002U  /* TCP payload encapsulated in the IP datagram */
-  #define ETH_DMAPTPRXDESC_IPPT_ICMP                0x00000003U  /* ICMP payload encapsulated in the IP datagram */
+#define ETH_DMAPTPRXDESC_IPPT_UDP                 0x00000001U  /* UDP payload encapsulated in the IP datagram */
+#define ETH_DMAPTPRXDESC_IPPT_TCP                 0x00000002U  /* TCP payload encapsulated in the IP datagram */
+#define ETH_DMAPTPRXDESC_IPPT_ICMP                0x00000003U  /* ICMP payload encapsulated in the IP datagram */
 
 /* Bit definition of RDES6 register */
 #define ETH_DMAPTPRXDESC_RTSL  0xFFFFFFFFU  /* Receive Time Stamp Low */
@@ -904,9 +924,9 @@ typedef struct
 /**
   * @}
   */
- /** @defgroup ETH_AutoNegotiation ETH AutoNegotiation
-  * @{
-  */
+/** @defgroup ETH_AutoNegotiation ETH AutoNegotiation
+ * @{
+ */
 #define ETH_AUTONEGOTIATION_ENABLE     0x00000001U
 #define ETH_AUTONEGOTIATION_DISABLE    0x00000000U
 
@@ -1593,7 +1613,15 @@ typedef struct
   * @param  __HANDLE__ specifies the ETH handle.
   * @retval None
   */
+#if (USE_HAL_ETH_REGISTER_CALLBACKS == 1)
+#define __HAL_ETH_RESET_HANDLE_STATE(__HANDLE__)  do{                                                 \
+                                                       (__HANDLE__)->State = HAL_ETH_STATE_RESET;     \
+                                                       (__HANDLE__)->MspInitCallback = NULL;          \
+                                                       (__HANDLE__)->MspDeInitCallback = NULL;        \
+                                                     } while(0)
+#else
 #define __HAL_ETH_RESET_HANDLE_STATE(__HANDLE__) ((__HANDLE__)->State = HAL_ETH_STATE_RESET)
+#endif /*USE_HAL_ETH_REGISTER_CALLBACKS */
 
 /**
   * @brief  Checks whether the specified ETHERNET DMA Tx Desc flag is set or not.
@@ -2108,8 +2136,13 @@ HAL_StatusTypeDef HAL_ETH_Init(ETH_HandleTypeDef *heth);
 HAL_StatusTypeDef HAL_ETH_DeInit(ETH_HandleTypeDef *heth);
 void HAL_ETH_MspInit(ETH_HandleTypeDef *heth);
 void HAL_ETH_MspDeInit(ETH_HandleTypeDef *heth);
-HAL_StatusTypeDef HAL_ETH_DMATxDescListInit(ETH_HandleTypeDef *heth, ETH_DMADescTypeDef *DMATxDescTab, uint8_t* TxBuff, uint32_t TxBuffCount);
+HAL_StatusTypeDef HAL_ETH_DMATxDescListInit(ETH_HandleTypeDef *heth, ETH_DMADescTypeDef *DMATxDescTab, uint8_t *TxBuff, uint32_t TxBuffCount);
 HAL_StatusTypeDef HAL_ETH_DMARxDescListInit(ETH_HandleTypeDef *heth, ETH_DMADescTypeDef *DMARxDescTab, uint8_t *RxBuff, uint32_t RxBuffCount);
+/* Callbacks Register/UnRegister functions  ***********************************/
+#if (USE_HAL_ETH_REGISTER_CALLBACKS == 1)
+HAL_StatusTypeDef HAL_ETH_RegisterCallback(ETH_HandleTypeDef *heth, HAL_ETH_CallbackIDTypeDef CallbackID, pETH_CallbackTypeDef pCallback);
+HAL_StatusTypeDef HAL_ETH_UnRegisterCallback(ETH_HandleTypeDef *heth, HAL_ETH_CallbackIDTypeDef CallbackID);
+#endif /* USE_HAL_ETH_REGISTER_CALLBACKS */
 
 /**
   * @}
@@ -2159,7 +2192,6 @@ HAL_ETH_StateTypeDef HAL_ETH_GetState(ETH_HandleTypeDef *heth);
   * @}
   */
 
-#endif /* STM32F207xx || STM32F217xx */
 /**
   * @}
   */
@@ -2172,6 +2204,7 @@ HAL_ETH_StateTypeDef HAL_ETH_GetState(ETH_HandleTypeDef *heth);
   * @}
   */
 
+#endif /* ETH */
 
 #ifdef __cplusplus
 }
