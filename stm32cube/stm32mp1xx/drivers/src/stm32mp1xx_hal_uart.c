@@ -208,6 +208,7 @@ static void UART_DMATxAbortCallback(DMA_HandleTypeDef *hdma);
 static void UART_DMARxAbortCallback(DMA_HandleTypeDef *hdma);
 static void UART_DMATxOnlyAbortCallback(DMA_HandleTypeDef *hdma);
 static void UART_DMARxOnlyAbortCallback(DMA_HandleTypeDef *hdma);
+#ifdef HAL_MDMA_MODULE_ENABLED
 static void UART_MDMATransmitCplt(MDMA_HandleTypeDef *hmdma);
 static void UART_MDMAReceiveCplt(MDMA_HandleTypeDef *hmdma);
 static void UART_MDMAError(MDMA_HandleTypeDef *hmdma);
@@ -216,6 +217,7 @@ static void UART_MDMATxAbortCallback(MDMA_HandleTypeDef *hmdma);
 static void UART_MDMARxAbortCallback(MDMA_HandleTypeDef *hmdma);
 static void UART_MDMATxOnlyAbortCallback(MDMA_HandleTypeDef *hmdma);
 static void UART_MDMARxOnlyAbortCallback(MDMA_HandleTypeDef *hmdma);
+#endif
 static void UART_TxISR_8BIT(UART_HandleTypeDef *huart);
 static void UART_TxISR_16BIT(UART_HandleTypeDef *huart);
 static void UART_TxISR_8BIT_FIFOEN(UART_HandleTypeDef *huart);
@@ -1397,6 +1399,7 @@ HAL_StatusTypeDef HAL_UART_Transmit_DMA(UART_HandleTypeDef *huart, uint8_t *pDat
       /* Enable the UART transmit DMA channel */
       HAL_DMA_Start_IT(huart->hdmatx, (uint32_t)huart->pTxBuffPtr, (uint32_t)&huart->Instance->TDR, Size);
     }
+#ifdef HAL_MDMA_MODULE_ENABLED
     if (huart->hmdmatx != NULL)
     {
       /* Set the UART MDMA transfer complete callback */
@@ -1411,6 +1414,7 @@ HAL_StatusTypeDef HAL_UART_Transmit_DMA(UART_HandleTypeDef *huart, uint8_t *pDat
       /* Enable the UART transmit MDMA channel */
       HAL_MDMA_Start_IT(huart->hmdmatx, (uint32_t)huart->pTxBuffPtr, (uint32_t)&huart->Instance->TDR, Size, 1);
     }
+#endif
     /* Clear the TC flag in the ICR register */
     __HAL_UART_CLEAR_FLAG(huart, UART_CLEAR_TCF);
 
@@ -1474,6 +1478,7 @@ HAL_StatusTypeDef HAL_UART_Receive_DMA(UART_HandleTypeDef *huart, uint8_t *pData
       /* Enable the DMA channel */
       HAL_DMA_Start_IT(huart->hdmarx, (uint32_t)&huart->Instance->RDR, (uint32_t)huart->pRxBuffPtr, Size);
     }
+#ifdef HAL_MDMA_MODULE_ENABLED
     if (huart->hmdmarx != NULL)
     {
       /* Set the UART MDMA transfer complete callback */
@@ -1488,6 +1493,7 @@ HAL_StatusTypeDef HAL_UART_Receive_DMA(UART_HandleTypeDef *huart, uint8_t *pData
       /* Enable the MDMA channel */
       HAL_MDMA_Start_IT(huart->hmdmarx, (uint32_t)&huart->Instance->RDR, (uint32_t)huart->pRxBuffPtr, Size, 1);
     }
+#endif
     /* Process Unlocked */
     __HAL_UNLOCK(huart);
 
@@ -1601,11 +1607,13 @@ HAL_StatusTypeDef HAL_UART_DMAStop(UART_HandleTypeDef *huart)
     {
       HAL_DMA_Abort(huart->hdmatx);
     }
+#ifdef HAL_MDMA_MODULE_ENABLED
     /* Abort the UART MDMA Tx channel */
     if (huart->hmdmatx != NULL)
     {
       HAL_MDMA_Abort(huart->hmdmatx);
     }
+#endif
 
     UART_EndTxTransfer(huart);
   }
@@ -1621,11 +1629,13 @@ HAL_StatusTypeDef HAL_UART_DMAStop(UART_HandleTypeDef *huart)
     {
       HAL_DMA_Abort(huart->hdmarx);
     }
+#ifdef HAL_MDMA_MODULE_ENABLED
     /* Abort the UART MDMA Rx channel */
     if (huart->hmdmarx != NULL)
     {
       HAL_MDMA_Abort(huart->hmdmarx);
     }
+#endif
 
     UART_EndRxTransfer(huart);
   }
@@ -1665,6 +1675,7 @@ HAL_StatusTypeDef HAL_UART_Abort(UART_HandleTypeDef *huart)
 
       HAL_DMA_Abort(huart->hdmatx);
     }
+#ifdef HAL_MDMA_MODULE_ENABLED
     /* Abort the UART MDMA Tx channel : use blocking DMA Abort API (no callback) */
     if (huart->hmdmatx != NULL)
     {
@@ -1674,6 +1685,7 @@ HAL_StatusTypeDef HAL_UART_Abort(UART_HandleTypeDef *huart)
 
       HAL_MDMA_Abort(huart->hmdmatx);
     }
+#endif
   }
 
   /* Disable the UART DMA Rx request if enabled */
@@ -1690,6 +1702,7 @@ HAL_StatusTypeDef HAL_UART_Abort(UART_HandleTypeDef *huart)
 
       HAL_DMA_Abort(huart->hdmarx);
     }
+#ifdef HAL_MDMA_MODULE_ENABLED
     /* Abort the UART MDMA Rx channel : use blocking DMA Abort API (no callback) */
     if (huart->hmdmarx != NULL)
     {
@@ -1699,6 +1712,7 @@ HAL_StatusTypeDef HAL_UART_Abort(UART_HandleTypeDef *huart)
 
       HAL_MDMA_Abort(huart->hmdmarx);
     }
+#endif
   }
 
   /* Reset Tx and Rx transfer counters */
@@ -1759,6 +1773,7 @@ HAL_StatusTypeDef HAL_UART_AbortTransmit(UART_HandleTypeDef *huart)
 
       HAL_DMA_Abort(huart->hdmatx);
     }
+#ifdef HAL_MDMA_MODULE_ENABLED
     /* Abort the UART MDMA Tx channel : use blocking MDMA Abort API (no callback) */
     if (huart->hmdmatx != NULL)
     {
@@ -1768,6 +1783,7 @@ HAL_StatusTypeDef HAL_UART_AbortTransmit(UART_HandleTypeDef *huart)
 
       HAL_MDMA_Abort(huart->hmdmatx);
     }
+#endif
   }
 
   /* Reset Tx transfer counter */
@@ -1817,6 +1833,7 @@ HAL_StatusTypeDef HAL_UART_AbortReceive(UART_HandleTypeDef *huart)
 
       HAL_DMA_Abort(huart->hdmarx);
     }
+#ifdef HAL_MDMA_MODULE_ENABLED
     /* Abort the UART MDMA Rx channel : use blocking MDMA Abort API (no callback) */
     if (huart->hmdmarx != NULL)
     {
@@ -1826,6 +1843,7 @@ HAL_StatusTypeDef HAL_UART_AbortReceive(UART_HandleTypeDef *huart)
 
       HAL_MDMA_Abort(huart->hmdmarx);
     }
+#endif
   }
 
   /* Reset Rx transfer counter */
@@ -1895,6 +1913,7 @@ HAL_StatusTypeDef HAL_UART_Abort_IT(UART_HandleTypeDef *huart)
       huart->hdmarx->XferAbortCallback = NULL;
     }
   }
+#ifdef HAL_MDMA_MODULE_ENABLED
   /* MDMA Tx Handle is valid */
   if (huart->hmdmatx != NULL)
   {
@@ -1923,6 +1942,7 @@ HAL_StatusTypeDef HAL_UART_Abort_IT(UART_HandleTypeDef *huart)
       huart->hmdmarx->XferAbortCallback = NULL;
     }
   }
+#endif
 
   /* Disable the UART DMA Tx request if enabled */
   if (HAL_IS_BIT_SET(huart->Instance->CR3, USART_CR3_DMAT))
@@ -1946,6 +1966,7 @@ HAL_StatusTypeDef HAL_UART_Abort_IT(UART_HandleTypeDef *huart)
         abortcplt = 0U;
       }
     }
+#ifdef HAL_MDMA_MODULE_ENABLED
     /* Abort the UART MDMA Tx channel : use non blocking MDMA Abort API (callback) */
     if (huart->hmdmatx != NULL)
     {
@@ -1962,6 +1983,7 @@ HAL_StatusTypeDef HAL_UART_Abort_IT(UART_HandleTypeDef *huart)
         abortcplt = 0U;
       }
     }
+#endif
   }
 
   /* Disable the UART DMA Rx request if enabled */
@@ -1986,6 +2008,7 @@ HAL_StatusTypeDef HAL_UART_Abort_IT(UART_HandleTypeDef *huart)
         abortcplt = 0U;
       }
     }
+#ifdef HAL_MDMA_MODULE_ENABLED
     /* Abort the UART MDMA Rx channel : use non blocking MDMA Abort API (callback) */
     if (huart->hmdmarx != NULL)
     {
@@ -2003,6 +2026,7 @@ HAL_StatusTypeDef HAL_UART_Abort_IT(UART_HandleTypeDef *huart)
         abortcplt = 0U;
       }
     }
+#endif
   }
 
   /* if no DMA abort complete callback execution is required => call user Abort Complete callback */
@@ -2087,6 +2111,7 @@ HAL_StatusTypeDef HAL_UART_AbortTransmit_IT(UART_HandleTypeDef *huart)
         huart->hdmatx->XferAbortCallback(huart->hdmatx);
       }
     }
+#ifdef HAL_MDMA_MODULE_ENABLED
     /* Abort the UART MDMA Tx channel : use non blocking MDMA Abort API (callback) */
     else if (huart->hmdmatx != NULL)
     {
@@ -2101,6 +2126,7 @@ HAL_StatusTypeDef HAL_UART_AbortTransmit_IT(UART_HandleTypeDef *huart)
         huart->hmdmatx->XferAbortCallback(huart->hmdmatx);
       }
     }
+#endif
     else
     {
       /* Reset Tx transfer counter */
@@ -2191,6 +2217,7 @@ HAL_StatusTypeDef HAL_UART_AbortReceive_IT(UART_HandleTypeDef *huart)
         huart->hdmarx->XferAbortCallback(huart->hdmarx);
       }
     }
+#ifdef HAL_MDMA_MODULE_ENABLED
     /* Abort the UART MDMA Rx channel : use non blocking MDMA Abort API (callback) */
     else if (huart->hmdmarx != NULL)
     {
@@ -2205,6 +2232,7 @@ HAL_StatusTypeDef HAL_UART_AbortReceive_IT(UART_HandleTypeDef *huart)
         huart->hmdmarx->XferAbortCallback(huart->hmdmarx);
       }
     }
+#endif
     else
     {
       /* Reset Rx transfer counter */
@@ -2370,6 +2398,7 @@ void HAL_UART_IRQHandler(UART_HandleTypeDef *huart)
               huart->hdmarx->XferAbortCallback(huart->hdmarx);
             }
           }
+#ifdef HAL_MDMA_MODULE_ENABLED
           /* Abort the UART MDMA Rx channel */
           else if (huart->hmdmarx != NULL)
           {
@@ -2384,6 +2413,7 @@ void HAL_UART_IRQHandler(UART_HandleTypeDef *huart)
               huart->hmdmarx->XferAbortCallback(huart->hmdmarx);
             }
           }
+#endif
           else
           {
             /* Call user error callback */
@@ -3542,6 +3572,7 @@ static void UART_DMARxOnlyAbortCallback(DMA_HandleTypeDef *hdma)
   HAL_UART_AbortReceiveCpltCallback(huart);
 #endif /* USE_HAL_UART_REGISTER_CALLBACKS */
 }
+#ifdef HAL_MDMA_MODULE_ENABLED
 
 /**
   * @brief MDMA UART transmit process complete callback.
@@ -3812,6 +3843,7 @@ static void UART_MDMARxOnlyAbortCallback(MDMA_HandleTypeDef *hmdma)
   HAL_UART_AbortReceiveCpltCallback(huart);
 #endif /* USE_HAL_UART_REGISTER_CALLBACKS */
 }
+#endif
 
 /**
   * @brief TX interrrupt handler for 7 or 8 bits data word length .

@@ -1,0 +1,61 @@
+diff a/stm32cube/stm32mp1xx/soc/stm32mp153axx_cm4.h b/stm32cube/stm32mp1xx/soc/stm32mp153axx_cm4.h	(rejected hunks)
+@@ -21824,18 +21824,18 @@ peripheral. It shall be used to deallocate a peripheral from MCU */
+ #define SPI_IER_OVRIE_Pos           (6U)
+ #define SPI_IER_OVRIE_Msk           (0x1U << SPI_IER_OVRIE_Pos)                /*!< 0x00000040 */
+ #define SPI_IER_OVRIE               SPI_IER_OVRIE_Msk                          /*!<OVR interrupt enable 						*/
+-#define SPI_IER_CRCIE_Pos           (7U)
+-#define SPI_IER_CRCIE_Msk           (0x1U << SPI_IER_CRCIE_Pos)                /*!< 0x00000080 */
+-#define SPI_IER_CRCIE               SPI_IER_CRCIE_Msk                          /*!<CRC interrupt enable 						*/
++#define SPI_IER_CRCEIE_Pos           (7U)
++#define SPI_IER_CRCEIE_Msk           (0x1U << SPI_IER_CRCEIE_Pos)                /*!< 0x00000080 */
++#define SPI_IER_CRCEIE               SPI_IER_CRCEIE_Msk                          /*!<CRC interrupt enable 						*/
+ #define SPI_IER_TIFREIE_Pos         (8U)
+ #define SPI_IER_TIFREIE_Msk         (0x1U << SPI_IER_TIFREIE_Pos)              /*!< 0x00000100 */
+ #define SPI_IER_TIFREIE             SPI_IER_TIFREIE_Msk                        /*!<TI Frame Error interrupt enable */
+ #define SPI_IER_MODFIE_Pos          (9U)
+ #define SPI_IER_MODFIE_Msk          (0x1U << SPI_IER_MODFIE_Pos)               /*!< 0x00000200 */
+ #define SPI_IER_MODFIE              SPI_IER_MODFIE_Msk                         /*!<MODF interrupt enable 					*/
+-#define SPI_IER_TSERIE_Pos          (10U)
+-#define SPI_IER_TSERIE_Msk          (0x1U << SPI_IER_TSERIE_Pos)               /*!< 0x00000400 */
+-#define SPI_IER_TSERIE              SPI_IER_TSERIE_Msk                         /*!<TSER interrupt enable 					*/
++#define SPI_IER_TSERFIE_Pos          (10U)
++#define SPI_IER_TSERFIE_Msk          (0x1U << SPI_IER_TSERFIE_Pos)               /*!< 0x00000400 */
++#define SPI_IER_TSERFIE              SPI_IER_TSERFIE_Msk                         /*!<TSERF interrupt enable 				*/
+ 
+ /*******************  Bit definition for SPI_SR register  ********************/
+ #define SPI_SR_RXP_Pos              (0U)
+@@ -21939,9 +21939,9 @@ peripheral. It shall be used to deallocate a peripheral from MCU */
+ #define SPI_TXCRC_TXCRC             SPI_TXCRC_TXCRC_Msk                        /* CRCRegister for transmitter */
+ 
+ /*******************  Bit definition for SPI_RXCRC register  ********************/
+-#define SPI_TXCRC_RXCRC_Pos         (0U)                                       
+-#define SPI_TXCRC_RXCRC_Msk         (0xFFFFFFFFU << SPI_TXCRC_RXCRC_Pos)       /*!< 0xFFFFFFFF */
+-#define SPI_TXCRC_RXCRC             SPI_TXCRC_RXCRC_Msk                        /* CRCRegister for receiver */
++#define SPI_RXCRC_RXCRC_Pos         (0U)
++#define SPI_RXCRC_RXCRC_Msk         (0xFFFFFFFFU << SPI_RXCRC_RXCRC_Pos)       /*!< 0xFFFFFFFF */
++#define SPI_RXCRC_RXCRC             SPI_RXCRC_RXCRC_Msk                        /* CRCRegister for receiver */
+ 
+ /*******************  Bit definition for SPI_UDRDR register  ********************/
+ #define SPI_UDRDR_UDRDR_Pos         (0U)                                       
+@@ -21977,14 +21977,14 @@ peripheral. It shall be used to deallocate a peripheral from MCU */
+ #define SPI_I2SCFGR_CKPOL_Pos       (11U)
+ #define SPI_I2SCFGR_CKPOL_Msk       (0x1U << SPI_I2SCFGR_CKPOL_Pos)            /*!< 0x00000800 */
+ #define SPI_I2SCFGR_CKPOL           SPI_I2SCFGR_CKPOL_Msk                      /*!<Steady state clock polarity                       */
+-#define SPI_I2SCFGR_WSINV_Pos       (12U)                                      
+-#define SPI_I2SCFGR_WSINV_Msk       (0x1U << SPI_I2SCFGR_WSINV_Pos)            /*!< 0x00001000 */
+-#define SPI_I2SCFGR_WSINV           SPI_I2SCFGR_WSINV_Msk                      /*!<Word select inversion                             */
+-#define SPI_I2SCFGR_FIXCH_Pos       (13U)                                      
+-#define SPI_I2SCFGR_FIXCH_Msk       (0x1U << SPI_I2SCFGR_FIXCH_Pos)            /*!< 0x00002000 */
++#define SPI_I2SCFGR_FIXCH_Pos       (12U)
++#define SPI_I2SCFGR_FIXCH_Msk       (0x1U << SPI_I2SCFGR_FIXCH_Pos)            /*!< 0x00001000 */
+ #define SPI_I2SCFGR_FIXCH           SPI_I2SCFGR_FIXCH_Msk                      /*!<Fixed channel length in SLAVE                     */
+-#define SPI_I2SCFGR_DATFMT_Pos      (12U)                                      
+-#define SPI_I2SCFGR_DATFMT_Msk      (0x3U << SPI_I2SCFGR_DATFMT_Pos)           /*!< 0x00003000 */
++#define SPI_I2SCFGR_WSINV_Pos       (13U)
++#define SPI_I2SCFGR_WSINV_Msk       (0x1U << SPI_I2SCFGR_WSINV_Pos)            /*!< 0x00002000 */
++#define SPI_I2SCFGR_WSINV           SPI_I2SCFGR_WSINV_Msk                      /*!<Word select inversion                             */
++#define SPI_I2SCFGR_DATFMT_Pos      (14U)
++#define SPI_I2SCFGR_DATFMT_Msk      (0x1U << SPI_I2SCFGR_DATFMT_Pos)           /*!< 0x00003000 */
+ #define SPI_I2SCFGR_DATFMT          SPI_I2SCFGR_DATFMT_Msk                     /*!<Data format                                       */
+ #define SPI_I2SCFGR_I2SDIV_Pos      (16U)                                      
+ #define SPI_I2SCFGR_I2SDIV_Msk      (0xFFU << SPI_I2SCFGR_I2SDIV_Pos)          /*!< 0x00FF0000 */

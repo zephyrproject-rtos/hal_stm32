@@ -6,7 +6,7 @@ Origin:
    https://github.com/STMicroelectronics/STM32CubeMP1
 
 Status:
-   version 1.0.0
+   version 1.1.1
 
 Purpose:
    ST Microelectronics official MCU package for STM32MP1 series.
@@ -22,8 +22,8 @@ Dependencies:
 URL:
    https://github.com/STMicroelectronics/STM32CubeMP1
 
-commit:
-   version 1.0.0
+Commit:
+   27f45e3c6c56b41cd8e4e6a764879b541f0882c5
 
 Maintained-by:
    External
@@ -35,6 +35,7 @@ License Link:
    https://opensource.org/licenses/BSD-3-Clause
 
 Patch List:
+--> please check that the following list is still valid:
 
     * Initial version 1.0.0
 
@@ -91,3 +92,5 @@ Patch List:
       ext/hal/st/stm32cube/stm32mp1xx/drivers/include/stm32mp1xx_ll_spi.h
       ext/hal/st/stm32cube/stm32mp1xx/drivers/src/stm32mp1xx_ll_spi.c
     ST Bug tracker ID: None
+
+   See release_note.html from STM32Cube

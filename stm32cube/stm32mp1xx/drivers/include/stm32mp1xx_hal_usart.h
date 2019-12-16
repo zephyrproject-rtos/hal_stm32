@@ -156,9 +156,11 @@ typedef struct __USART_HandleTypeDef
 
   DMA_HandleTypeDef             *hdmarx;                 /*!< USART Rx DMA Handle parameters      */
 
+#ifdef HAL_MDMA_MODULE_ENABLED
   MDMA_HandleTypeDef            *hmdmatx;                /*!< USART Tx MDMA Handle parameters     */
 
   MDMA_HandleTypeDef            *hmdmarx;                /*!< USART Rx MDMA Handle parameters     */
+#endif
 
   HAL_LockTypeDef               Lock;                    /*!< Locking object                      */
 
@@ -723,7 +725,7 @@ typedef  void (*pUSART_CallbackTypeDef)(USART_HandleTypeDef *husart);  /*!< poin
     {                                                          \
       switch(__HAL_RCC_GET_USART1_SOURCE())                    \
       {                                                        \
-        case RCC_USART1CLKSOURCE_BCLK:                         \
+        case RCC_USART1CLKSOURCE_PCLK5:                        \
           (__CLOCKSOURCE__) = USART_CLOCKSOURCE_PCLK5;         \
           break;                                               \
         case RCC_USART1CLKSOURCE_PLL3:                         \
@@ -750,7 +752,7 @@ typedef  void (*pUSART_CallbackTypeDef)(USART_HandleTypeDef *husart);  /*!< poin
     {                                                          \
       switch(__HAL_RCC_GET_UART24_SOURCE())                    \
       {                                                        \
-        case RCC_UART24CLKSOURCE_BCLK:                         \
+        case RCC_UART24CLKSOURCE_PCLK1:                        \
           (__CLOCKSOURCE__) = USART_CLOCKSOURCE_PCLK1;         \
           break;                                               \
         case RCC_UART24CLKSOURCE_PLL4:                         \
@@ -774,7 +776,7 @@ typedef  void (*pUSART_CallbackTypeDef)(USART_HandleTypeDef *husart);  /*!< poin
     {                                                          \
       switch(__HAL_RCC_GET_UART35_SOURCE())                    \
       {                                                        \
-        case RCC_UART35CLKSOURCE_BCLK:                         \
+        case RCC_UART35CLKSOURCE_PCLK1:                        \
           (__CLOCKSOURCE__) = USART_CLOCKSOURCE_PCLK1;         \
           break;                                               \
         case RCC_UART35CLKSOURCE_PLL4:                         \
@@ -798,7 +800,7 @@ typedef  void (*pUSART_CallbackTypeDef)(USART_HandleTypeDef *husart);  /*!< poin
     {                                                          \
       switch(__HAL_RCC_GET_USART6_SOURCE())                    \
       {                                                        \
-        case RCC_USART6CLKSOURCE_BCLK:                         \
+        case RCC_USART6CLKSOURCE_PCLK2:                        \
           (__CLOCKSOURCE__) = USART_CLOCKSOURCE_PCLK2;         \
           break;                                               \
         case RCC_USART6CLKSOURCE_PLL4:                         \

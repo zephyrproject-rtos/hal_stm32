@@ -2098,7 +2098,7 @@ uint32_t HAL_RCCEx_GetPeriphCLKFreq(uint64_t PeriphClk)
 
       switch (clksource)
       {
-        case RCC_I2C12CLKSOURCE_BCLK:
+        case RCC_I2C12CLKSOURCE_PCLK1:
           frequency = HAL_RCC_GetPCLK1Freq();
           break;
 
@@ -2125,7 +2125,7 @@ uint32_t HAL_RCCEx_GetPeriphCLKFreq(uint64_t PeriphClk)
 
       switch (clksource)
       {
-        case RCC_I2C35CLKSOURCE_BCLK:
+        case RCC_I2C35CLKSOURCE_PCLK1:
           frequency = HAL_RCC_GetPCLK1Freq();
           break;
 
@@ -2152,7 +2152,7 @@ uint32_t HAL_RCCEx_GetPeriphCLKFreq(uint64_t PeriphClk)
 
       switch (clksource)
       {
-        case RCC_LPTIM1CLKSOURCE_BCLK:
+        case RCC_LPTIM1CLKSOURCE_PCLK1:
           frequency = HAL_RCC_GetPCLK1Freq();
           break;
 
@@ -2256,7 +2256,7 @@ uint32_t HAL_RCCEx_GetPeriphCLKFreq(uint64_t PeriphClk)
 
       switch (clksource)
       {
-        case RCC_UART24CLKSOURCE_BCLK:
+        case RCC_UART24CLKSOURCE_PCLK1:
           frequency = HAL_RCC_GetPCLK1Freq();
           break;
 
@@ -2291,7 +2291,7 @@ uint32_t HAL_RCCEx_GetPeriphCLKFreq(uint64_t PeriphClk)
 
       switch (clksource)
       {
-        case RCC_UART35CLKSOURCE_BCLK:
+        case RCC_UART35CLKSOURCE_PCLK1:
           frequency = HAL_RCC_GetPCLK1Freq();
           break;
 
@@ -2326,7 +2326,7 @@ uint32_t HAL_RCCEx_GetPeriphCLKFreq(uint64_t PeriphClk)
 
       switch (clksource)
       {
-        case RCC_UART78CLKSOURCE_BCLK:
+        case RCC_UART78CLKSOURCE_PCLK1:
           frequency = HAL_RCC_GetPCLK1Freq();
           break;
 
@@ -2553,7 +2553,7 @@ uint32_t HAL_RCCEx_GetPeriphCLKFreq(uint64_t PeriphClk)
 
       switch (clksource)
       {
-        case RCC_SPI45CLKSOURCE_BCLK:
+        case RCC_SPI45CLKSOURCE_PCLK2:
           frequency = HAL_RCC_GetPCLK2Freq();
           break;
 
@@ -2588,7 +2588,7 @@ uint32_t HAL_RCCEx_GetPeriphCLKFreq(uint64_t PeriphClk)
 
       switch (clksource)
       {
-        case RCC_USART6CLKSOURCE_BCLK:
+        case RCC_USART6CLKSOURCE_PCLK2:
           frequency = HAL_RCC_GetPCLK2Freq();
           break;
 
@@ -2622,7 +2622,7 @@ uint32_t HAL_RCCEx_GetPeriphCLKFreq(uint64_t PeriphClk)
 
       switch (clksource)
       {
-        case RCC_LPTIM23CLKSOURCE_BCLK:
+        case RCC_LPTIM23CLKSOURCE_PCLK3:
           frequency = HAL_RCC_GetPCLK3Freq();
           break;
 
@@ -2656,7 +2656,7 @@ uint32_t HAL_RCCEx_GetPeriphCLKFreq(uint64_t PeriphClk)
 
       switch (clksource)
       {
-        case RCC_LPTIM45CLKSOURCE_BCLK:
+        case RCC_LPTIM45CLKSOURCE_PCLK3:
           frequency = HAL_RCC_GetPCLK3Freq();
           break;
 
@@ -2846,7 +2846,7 @@ uint32_t HAL_RCCEx_GetPeriphCLKFreq(uint64_t PeriphClk)
 
       switch (clksource)
       {
-        case RCC_I2C46CLKSOURCE_BCLK:
+        case RCC_I2C46CLKSOURCE_PCLK5:
           frequency = HAL_RCC_GetPCLK5Freq();
           break;
 
@@ -2877,7 +2877,7 @@ uint32_t HAL_RCCEx_GetPeriphCLKFreq(uint64_t PeriphClk)
 
       switch (clksource)
       {
-        case RCC_SPI6CLKSOURCE_BCLK:
+        case RCC_SPI6CLKSOURCE_PCLK5:
           frequency = HAL_RCC_GetPCLK5Freq();
           break;
 
@@ -2916,7 +2916,7 @@ uint32_t HAL_RCCEx_GetPeriphCLKFreq(uint64_t PeriphClk)
 
       switch (clksource)
       {
-        case RCC_USART1CLKSOURCE_BCLK:
+        case RCC_USART1CLKSOURCE_PCLK5:
           frequency = HAL_RCC_GetPCLK5Freq();
           break;
 
@@ -2978,7 +2978,7 @@ uint32_t HAL_RCCEx_GetPeriphCLKFreq(uint64_t PeriphClk)
 
       switch (clksource)
       {
-        case RCC_QSPICLKSOURCE_BCLK:
+        case RCC_QSPICLKSOURCE_ACLK:
           frequency = HAL_RCC_GetACLKFreq();
           break;
 
@@ -3034,7 +3034,7 @@ uint32_t HAL_RCCEx_GetPeriphCLKFreq(uint64_t PeriphClk)
 
       switch (clksource)
       {
-        case RCC_FMCCLKSOURCE_BCLK:
+        case RCC_FMCCLKSOURCE_ACLK:
           frequency = HAL_RCC_GetACLKFreq();
           break;
 
@@ -3090,7 +3090,7 @@ uint32_t HAL_RCCEx_GetPeriphCLKFreq(uint64_t PeriphClk)
 
       switch (clksource)
       {
-        case RCC_SDMMC3CLKSOURCE_BCLK:
+        case RCC_SDMMC3CLKSOURCE_HCLK2:
           frequency = HAL_RCC_GetHCLK2Freq();
           break;
 
@@ -3106,6 +3106,7 @@ uint32_t HAL_RCCEx_GetPeriphCLKFreq(uint64_t PeriphClk)
 
         case RCC_SDMMC3CLKSOURCE_HSI:
           frequency = (HSI_VALUE >> __HAL_RCC_GET_HSI_DIV());
+          break;
 
         default:
           frequency = 0;
@@ -3122,8 +3123,8 @@ uint32_t HAL_RCCEx_GetPeriphCLKFreq(uint64_t PeriphClk)
       switch (clksource)
       {
         case RCC_ADCCLKSOURCE_PLL4:
-            HAL_RCC_GetPLL4ClockFreq(&pll4_clocks);
-            frequency = pll4_clocks.PLL4_R_Frequency;
+          HAL_RCC_GetPLL4ClockFreq(&pll4_clocks);
+          frequency = pll4_clocks.PLL4_R_Frequency;
           break;
 
         case RCC_ADCCLKSOURCE_PER:
@@ -3133,6 +3134,7 @@ uint32_t HAL_RCCEx_GetPeriphCLKFreq(uint64_t PeriphClk)
         case RCC_ADCCLKSOURCE_PLL3:
           HAL_RCC_GetPLL3ClockFreq(&pll3_clocks);
           frequency = pll3_clocks.PLL3_Q_Frequency;
+          break;
 
         default:
           frequency = 0;
@@ -3201,7 +3203,7 @@ uint32_t HAL_RCCEx_GetPeriphCLKFreq(uint64_t PeriphClk)
 
       switch (clksource)
       {
-        case RCC_SDMMC12CLKSOURCE_BCLK:
+        case RCC_SDMMC12CLKSOURCE_HCLK6:
           frequency = HAL_RCC_GetHCLK6Freq();
           break;
 

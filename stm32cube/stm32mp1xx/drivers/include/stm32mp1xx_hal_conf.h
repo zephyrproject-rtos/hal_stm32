@@ -43,6 +43,7 @@
 #define HAL_DCMI_MODULE_ENABLED
 #define HAL_DFSDM_MODULE_ENABLED
 #define HAL_DMA_MODULE_ENABLED
+#define HAL_EXTI_MODULE_ENABLED
 #define HAL_FDCAN_MODULE_ENABLED
 #define HAL_GPIO_MODULE_ENABLED
 #define HAL_HASH_MODULE_ENABLED
@@ -152,16 +153,6 @@
 #if !defined  (CSI_VALUE)
   #define CSI_VALUE    4000000U /*!< Value of the Internal oscillator in Hz*/
 #endif /* CSI_VALUE */
-
-/**
-  * @brief External clock source for I2S peripheral
-  *        This value is used by the I2S HAL module to compute the I2S clock source
-  *        frequency, this source is inserted directly through I2S_CKIN pad.
-  */
-#if !defined  (EXTERNAL_CLOCK_VALUE)
-  #define EXTERNAL_CLOCK_VALUE    12288000U /*!< Value of the External clock in Hz*/
-#endif /* EXTERNAL_CLOCK_VALUE */
-
 
 /* Tip: To avoid modifying this file each time you need to use different HSE,
    ===  you can define the HSE value in your toolchain compiler preprocessor. */

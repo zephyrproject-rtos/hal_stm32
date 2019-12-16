@@ -113,9 +113,12 @@ typedef struct
 
   DMA_HandleTypeDef                 *hdmaout;         /*!< CRYP Out DMA handle parameters */
 
+#ifdef HAL_MDMA_MODULE_ENABLED
   MDMA_HandleTypeDef                *hmdmain;         /*!< CRYP In MDMA handle parameters */
 
   MDMA_HandleTypeDef                *hmdmaout;        /*!< CRYP Out MDMA handle parameters */
+#endif
+
 
   HAL_LockTypeDef                   Lock;             /*!< CRYP locking object */
 

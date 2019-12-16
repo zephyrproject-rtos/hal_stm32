@@ -113,6 +113,10 @@ void HAL_I2CEx_DisableFastModePlus(uint32_t ConfigFastModePlus);
                                          (((__CONFIG__) & (I2C_FASTMODEPLUS_I2C4)) == I2C_FASTMODEPLUS_I2C4)    || \
                                          (((__CONFIG__) & (I2C_FASTMODEPLUS_I2C5)) == I2C_FASTMODEPLUS_I2C5)    || \
                                          (((__CONFIG__) & (I2C_FASTMODEPLUS_I2C6)) == I2C_FASTMODEPLUS_I2C6))
+
+
+
+
 /**
   * @}
   */

@@ -247,10 +247,12 @@ typedef struct __UART_HandleTypeDef
 
   DMA_HandleTypeDef        *hdmarx;                  /*!< UART Rx DMA Handle parameters      */
 
+#ifdef HAL_MDMA_MODULE_ENABLED
   MDMA_HandleTypeDef        *hmdmatx;                /*!< UART Tx MDMA Handle parameters      */
 
   MDMA_HandleTypeDef        *hmdmarx;                /*!< UART Rx MDMA Handle parameters      */
 
+#endif
   HAL_LockTypeDef           Lock;                    /*!< Locking object                     */
 
   __IO HAL_UART_StateTypeDef    gState;              /*!< UART state information related to global Handle management

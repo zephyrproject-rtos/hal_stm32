@@ -433,6 +433,18 @@ void LL_SPI_StructInit(LL_SPI_InitTypeDef *SPI_InitStruct)
   SPI_InitStruct->CRCPoly           = 7UL;
 }
 
+/**
+  * @}
+  */
+
+/**
+  * @}
+  */
+
+/**
+  * @}
+  */
+
 /** @addtogroup I2S_LL
   * @{
   */
@@ -722,18 +734,7 @@ void LL_I2S_ConfigPrescaler(SPI_TypeDef *SPIx, uint32_t PrescalerLinear, uint32_
   * @}
   */
 
-/**
-  * @}
-  */
-
-/**
-  * @}
-  */
 #endif /* defined(SPI1) || defined(SPI2) || defined(SPI3) || defined(SPI4) || defined(SPI5) || defined(SPI6) */
-
-/**
-  * @}
-  */
 
 /**
   * @}

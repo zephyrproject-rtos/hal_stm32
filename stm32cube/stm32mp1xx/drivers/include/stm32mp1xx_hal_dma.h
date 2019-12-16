@@ -136,7 +136,7 @@ typedef enum
   */
 typedef struct __DMA_HandleTypeDef
 {
-  void                            *Instance;                                                        /*!< Register base address                         */
+  DMA_Stream_TypeDef             *Instance;                                                         /*!< Register base address                         */
 
   DMA_InitTypeDef                 Init;                                                             /*!< DMA communication parameters                  */
 
@@ -504,8 +504,8 @@ typedef struct __DMA_HandleTypeDef
   * @brief    DMA flag definitions
   * @{
   */
-#define DMA_FLAG_FEIF0_4                    ((uint32_t)0x00800001U)
-#define DMA_FLAG_DMEIF0_4                   ((uint32_t)0x00800004U)
+#define DMA_FLAG_FEIF0_4                    ((uint32_t)0x00000001U)
+#define DMA_FLAG_DMEIF0_4                   ((uint32_t)0x00000004U)
 #define DMA_FLAG_TEIF0_4                    ((uint32_t)0x00000008U)
 #define DMA_FLAG_HTIF0_4                    ((uint32_t)0x00000010U)
 #define DMA_FLAG_TCIF0_4                    ((uint32_t)0x00000020U)
@@ -871,8 +871,7 @@ uint32_t             HAL_DMA_GetError(DMA_HandleTypeDef *hdma);
   * @brief    DMA private macros
   * @{
   */
-#define IS_DMA_REQUEST(REQUEST) (((REQUEST) <= DMA_REQUEST_GENERATOR3) ||\
-                                    ((REQUEST >= DMA_REQUEST_ADC1) && (REQUEST <= DMA_REQUEST_I2C5_TX)))
+#define IS_DMA_REQUEST(REQUEST) ((REQUEST) <= DMA_REQUEST_I2C5_TX)
 
 
 #define IS_DMA_INSTANCE(__HANDLE__) (((uint32_t)((__HANDLE__)->Instance) >= ((uint32_t)DMA1_Stream0)) && ((uint32_t)((__HANDLE__)->Instance) <= ((uint32_t)DMA2_Stream7)))

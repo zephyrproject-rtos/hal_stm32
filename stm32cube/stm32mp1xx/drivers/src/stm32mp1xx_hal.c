@@ -54,7 +54,7 @@
  * @brief STM32MP1xx HAL Driver version number
    */
 #define __STM32MP1xx_HAL_VERSION_MAIN   (0x01U) /*!< [31:24] main version */
-#define __STM32MP1xx_HAL_VERSION_SUB1   (0x00U) /*!< [23:16] sub1 version */
+#define __STM32MP1xx_HAL_VERSION_SUB1   (0x01U) /*!< [23:16] sub1 version */
 #define __STM32MP1xx_HAL_VERSION_SUB2   (0x00U) /*!< [15:8]  sub2 version */
 #define __STM32MP1xx_HAL_VERSION_RC     (0x00U) /*!< [7:0]  release candidate */
 #define __STM32MP1xx_HAL_VERSION         ((__STM32MP1xx_HAL_VERSION_MAIN << 24)\
@@ -68,20 +68,32 @@
   * @}
   */
 
+/** @defgroup HAL_Private_Constants HAL Private Constants
+  * @{
+  */
+#define SYSCFG_DEFAULT_TIMEOUT 100U
+/**
+  * @}
+  */
+
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-/** @defgroup HAL_Private_Variables HAL Private Variables
+/* Exported variables --------------------------------------------------------*/
+
+/** @defgroup HAL_Exported_Variables HAL Exported Variables
   * @{
   */
 __IO uint32_t uwTick;
 #if defined(CORE_CM4)
-static uint32_t uwTickPrio   = (1UL << __NVIC_PRIO_BITS); /* Invalid PRIO */
+uint32_t uwTickPrio   = (1UL << __NVIC_PRIO_BITS); /* Invalid PRIO */
+#else /* CA7 */
+uint32_t uwTickPrio   = (1UL << 4); /* Invalid PRIO */
 #endif
-static HAL_TickFreqTypeDef uwTickFreq = HAL_TICK_FREQ_DEFAULT;  /* 1KHz */
+HAL_TickFreqTypeDef uwTickFreq = HAL_TICK_FREQ_DEFAULT;  /* 1KHz */
 /**
   * @}
   */
-  
+
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
 
@@ -128,7 +140,7 @@ static HAL_TickFreqTypeDef uwTickFreq = HAL_TICK_FREQ_DEFAULT;  /* 1KHz */
   *         HAL function), it performs the following:
   *           Configures the SysTick to generate an interrupt each 1 millisecond,
   *           which is clocked by the HSI (at this stage, the clock is not yet
-  *           configured and thus the system is running from the internal HSI at 16 MHz).
+  *           configured and thus the system is running from the internal HSI at 64 MHz).
   *           Set NVIC Group Priority to 4.
   *           Calls the HAL_MspInit() callback function defined in user file
   *           "stm32mp1xx_hal_msp.c" to do the global low level hardware initialization
@@ -144,6 +156,9 @@ HAL_StatusTypeDef HAL_Init(void)
 #if defined (CORE_CM4)
   HAL_NVIC_SetPriorityGrouping(NVIC_PRIORITYGROUP_4);
 #endif
+
+  /* Update the SystemCoreClock global variable */
+  SystemCoreClock = HAL_RCC_GetSystemCoreClockFreq();
 
   /* Use systick as time base source and configure 1ms tick (default clock after Reset is HSI) */
   if(HAL_InitTick(TICK_INT_PRIORITY) != HAL_OK)
@@ -235,7 +250,15 @@ __weak HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
 
   /* Set timer priority to lowest (Only bit 7:3 are implemented in MP1 CA7 GIC) */
   /* TickPriority is based on 16 level priority (from MCUs) so set it in 7:4 and leave bit 3=0 */
-  IRQ_SetPriority(SecurePhysicalTimer_IRQn, TickPriority << 4);
+  if (TickPriority < (1UL << 4))
+  {
+    IRQ_SetPriority(SecurePhysicalTimer_IRQn, TickPriority << 4);
+    uwTickPrio = TickPriority;
+  }
+  else
+  {
+    return HAL_ERROR;
+  }
 
   /* Set edge-triggered IRQ */
   IRQ_SetMode(SecurePhysicalTimer_IRQn, IRQ_MODE_TRIG_EDGE);
@@ -258,6 +281,11 @@ __weak HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
 
 
 #if defined (CORE_CM4)
+  if ((uint32_t)uwTickFreq == 0U)
+  {
+    return HAL_ERROR;
+  }
+
   /* Configure the SysTick to have interrupt in 1ms time basis*/
   if (HAL_SYSTICK_Config(SystemCoreClock /(1000U / uwTickFreq)) > 0U)
   {
@@ -369,14 +397,25 @@ uint32_t HAL_GetTickPrio(void)
 HAL_StatusTypeDef HAL_SetTickFreq(HAL_TickFreqTypeDef Freq)
 {
   HAL_StatusTypeDef status  = HAL_OK;
+  HAL_TickFreqTypeDef prevTickFreq;
   assert_param(IS_TICKFREQ(Freq));
 
   if (uwTickFreq != Freq)
   {
+    /* Back up uwTickFreq frequency */
+    prevTickFreq = uwTickFreq;
+
+    /* Update uwTickFreq global variable used by HAL_InitTick() */
     uwTickFreq = Freq;
 
     /* Apply the new tick Freq  */
     status = HAL_InitTick(uwTickPrio);
+
+    if (status != HAL_OK)
+    {
+      /* Restore previous tick frequency */
+      uwTickFreq = prevTickFreq;
+    }
   }
 
   return status;
@@ -820,6 +859,60 @@ void HAL_SYSCFG_CompensationCodeConfig(uint32_t SYSCFG_PMOSCode, uint32_t SYSCFG
   assert_param(IS_SYSCFG_CODE_CONFIG(SYSCFG_PMOSCode));
   assert_param(IS_SYSCFG_CODE_CONFIG(SYSCFG_NMOSCode));
   MODIFY_REG(SYSCFG->CMPCR, SYSCFG_CMPCR_RANSRC|SYSCFG_CMPCR_RAPSRC, (((uint32_t)(SYSCFG_PMOSCode)<< 4)|(uint32_t)(SYSCFG_NMOSCode)) );
+}
+
+/**
+  * @brief  Disable IO compensation mechanism
+  *         E.g. before going into STOP
+  * @retval None
+  */
+void HAL_SYSCFG_DisableIOCompensation(void)
+{
+  /* Copy actual value of SYSCFG_CMPCR.APSRC[3:0]/ANSRC[3:0] in
+   * SYSCFG_CMPCR.RAPSRC[3:0]/RANSRC[3:0]
+   */
+  HAL_SYSCFG_CompensationCodeConfig(__HAL_SYSCFG_GET_PMOS_CMP(), __HAL_SYSCFG_GET_NMOS_CMP());
+
+  /* Set SYSCFG_CMPCR.SW_CTRL = 1 */
+  HAL_SYSCFG_CompensationCodeSelect(SYSCFG_REGISTER_CODE);
+
+  /* Disable the Compensation Cell */
+  HAL_DisableCompensationCell();
+}
+
+/**
+  * @brief  Enable IO compensation mechanism
+  *         By default the I/O compensation cell is not used. However when the
+  *         I/O output buffer speed is configured in 50 MHz mode and above, it
+  *         is recommended to use the compensation cell for a slew rate control
+  *         on I/O tf(IO)out/tr(IO)out commutation to reduce the I/O noise on
+  *         the power supply.
+  * @note   Use polling mode for timeout as code could be used on critical
+  *         section (IRQs disabled)
+  * @retval HAL_StatusTypeDef value
+  */
+HAL_StatusTypeDef HAL_SYSCFG_EnableIOCompensation(void)
+{
+  HAL_StatusTypeDef status = HAL_OK;
+  __IO uint32_t count = SYSCFG_DEFAULT_TIMEOUT * (SystemCoreClock / 20U / 1000U);
+
+  /* Set SYSCFG_CMPENSETR.MCU_EN */
+  HAL_EnableCompensationCell();
+
+  /* Wait SYSCFG_CMPCR.READY = 1 */
+  do
+  {
+    if (count-- == 0U)
+    {
+      return  HAL_TIMEOUT;
+    }
+  }
+  while (__HAL_SYSCFG_CMP_CELL_GET_FLAG() == 0U);
+
+  /* Set SYSCFG_CMPCR.SW_CTRL = 0 */
+  HAL_SYSCFG_CompensationCodeSelect(SYSCFG_CELL_CODE);
+
+  return status;
 }
   
 /**
