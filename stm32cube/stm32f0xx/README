@@ -6,7 +6,7 @@ Origin:
    http://www.st.com/en/embedded-software/stm32cubef0.html
 
 Status:
-   version 1.10.1
+   version v1.11.0
 
 Purpose:
    ST Microelectronics official MCU package for STM32F0 series.
@@ -20,10 +20,10 @@ Dependencies:
     None.
 
 URL:
-   http://www.st.com/en/embedded-software/stm32cubef0.html
+   https://github.com/STMicroelectronics/STM32CubeF0
 
-commit:
-   version 1.10.1
+Commit:
+   568c7255f77258c12ac876745f53ce76a682259f
 
 Maintained-by:
    External
@@ -35,6 +35,7 @@ License Link:
    https://opensource.org/licenses/BSD-3-Clause
 
 Patch List:
+--> please check that the following list is still valid:
 
    *Current implementation of LL_SPI_TransmitData16 on F0 family
     generates following warning:
@@ -43,8 +44,8 @@ Patch List:
     Besides being forbidden by rule, this cast is not needed, as register is
     16 bits wide. Modification has been tested on F0 SoC.
     stm32yyxx_ll_spi.h being included in soc.h file, warning is generated
-    at each compiled object, this commit allows a clean build.
-    Impacted files:
+Commit:
+   568c7255f77258c12ac876745f53ce76a682259f
       drivers/include/stm32f0xx_ll_spi.h
 
     *Fix warnings for extraneous parentheses
@@ -54,3 +55,5 @@ Patch List:
       drivers/src/stm32f0xx_hal_tim.c
       drivers/src/stm32f0xx_hal_tim_ex.c
      ST Bug tracker ID: 63613
+
+   See release_note.html from STM32Cube

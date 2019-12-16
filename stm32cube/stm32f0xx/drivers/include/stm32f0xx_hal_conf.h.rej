@@ -1,0 +1,6 @@
+diff a/stm32cube/stm32f0xx/drivers/include/stm32f0xx_hal_conf.h b/stm32cube/stm32f0xx/drivers/include/stm32f0xx_hal_conf.h	(rejected hunks)
+@@ -310,4 +314,3 @@
+ 
+ 
+ /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
+-
