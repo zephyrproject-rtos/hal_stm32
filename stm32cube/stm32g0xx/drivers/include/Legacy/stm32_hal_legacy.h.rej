@@ -1,0 +1,6 @@
+diff a/stm32cube/stm32g0xx/drivers/include/Legacy/stm32_hal_legacy.h b/stm32cube/stm32g0xx/drivers/include/Legacy/stm32_hal_legacy.h	(rejected hunks)
+@@ -3513,4 +3513,3 @@
+ #endif /* STM32_HAL_LEGACY */
+ 
+ /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
+-

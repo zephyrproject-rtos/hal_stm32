@@ -1,0 +1,6 @@
+diff a/stm32cube/stm32g0xx/drivers/include/stm32g0xx_hal_cortex.h b/stm32cube/stm32g0xx/drivers/include/stm32g0xx_hal_cortex.h	(rejected hunks)
+@@ -384,4 +384,3 @@ void HAL_MPU_ConfigRegion(MPU_Region_InitTypeDef *MPU_Init);
+ 
+ 
+ /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
+-

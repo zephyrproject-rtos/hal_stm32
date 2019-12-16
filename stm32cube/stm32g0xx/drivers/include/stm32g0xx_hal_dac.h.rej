@@ -1,0 +1,6 @@
+diff a/stm32cube/stm32g0xx/drivers/include/stm32g0xx_hal_dac.h b/stm32cube/stm32g0xx/drivers/include/stm32g0xx_hal_dac.h	(rejected hunks)
+@@ -530,4 +530,3 @@ void DAC_DMAHalfConvCpltCh1(DMA_HandleTypeDef *hdma);
+ #endif /*STM32G0xx_HAL_DAC_H */
+ 
+ /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
+-

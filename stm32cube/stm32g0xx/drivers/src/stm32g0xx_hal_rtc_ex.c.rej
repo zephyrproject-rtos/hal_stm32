@@ -1,0 +1,6 @@
+diff a/stm32cube/stm32g0xx/drivers/src/stm32g0xx_hal_rtc_ex.c b/stm32cube/stm32g0xx/drivers/src/stm32g0xx_hal_rtc_ex.c	(rejected hunks)
+@@ -1949,4 +1949,3 @@ uint32_t HAL_RTCEx_BKUPRead(RTC_HandleTypeDef *hrtc, uint32_t BackupRegister)
+   */
+ 
+ /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
+-

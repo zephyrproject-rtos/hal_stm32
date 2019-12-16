@@ -1,0 +1,6 @@
+diff a/stm32cube/stm32g0xx/drivers/src/stm32g0xx_ll_usart.c b/stm32cube/stm32g0xx/drivers/src/stm32g0xx_ll_usart.c	(rejected hunks)
+@@ -450,4 +450,3 @@ void LL_USART_ClockStructInit(LL_USART_ClockInitTypeDef *USART_ClockInitStruct)
+ #endif /* USE_FULL_LL_DRIVER */
+ 
+ /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
+-
