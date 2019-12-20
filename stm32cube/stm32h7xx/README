@@ -6,7 +6,7 @@ Origin:
    http://www.st.com/en/embedded-software/stm32cubeh7.html
 
 Status:
-   version 1.10.0
+   version 1.5.0
 
 Purpose:
    ST Microelectronics official MCU package for STM32H7 series.
@@ -23,7 +23,7 @@ URL:
    http://www.st.com/en/embedded-software/stm32cubeh7.html
 
 commit:
-   version 1.4.0
+   version 1.5.0
 
 Maintained-by:
    External
