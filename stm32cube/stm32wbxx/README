@@ -6,7 +6,7 @@ Origin:
    http://www.st.com/en/embedded-software/stm32cubewb.html
 
 Status:
-   version 1.1.1
+   version v1.3.0
 
 Purpose:
    ST Microelectronics official MCU package for STM32WB series.
@@ -20,10 +20,10 @@ Dependencies:
     None.
 
 URL:
-   http://www.st.com/en/embedded-software/stm32cubewb.html
+   https://github.com/STMicroelectronics/STM32CubeWB
 
-commit:
-   version 1.1.1
+Commit:
+   96abbb67db97bc53e38f9727adfae0e5c70b1498
 
 Maintained-by:
    External
@@ -35,5 +35,4 @@ License Link:
    https://opensource.org/licenses/BSD-3-Clause
 
 Patch List:
-
-        *Applied dos2unix
+   See release_note.html from STM32Cube
