@@ -1,4 +1,5 @@
 # Copyright (c) 2018 Endre Karlson <endre.karlson@gmail.com>
+# Copyright (c) 2019 STMicroelectronics.
 #
 # SPDX-License-Identifier: Apache-2.0
 

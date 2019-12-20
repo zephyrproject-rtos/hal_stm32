@@ -6,11 +6,11 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2018 STMicroelectronics. 
+  * <h2><center>&copy; Copyright (c) 2018 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the 
+  * the "License"; You may not use this file except in compliance with the
   * License. You may obtain a copy of the License at:
   *                        opensource.org/licenses/BSD-3-Clause
   *
@@ -164,6 +164,9 @@ extern "C" {
 #define LL_PWR_GPIO_B                      ((uint32_t)(&(PWR->PUCRB)))
 #define LL_PWR_GPIO_C                      ((uint32_t)(&(PWR->PUCRC)))
 #define LL_PWR_GPIO_D                      ((uint32_t)(&(PWR->PUCRD)))
+#if defined(GPIOE)
+#define LL_PWR_GPIO_E                      ((uint32_t)(&(PWR->PUCRE)))
+#endif
 #define LL_PWR_GPIO_F                      ((uint32_t)(&(PWR->PUCRF)))
 /**
   * @}
