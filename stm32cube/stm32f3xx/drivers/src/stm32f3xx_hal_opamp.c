@@ -92,6 +92,23 @@
       (++) Configure the opamp input AND output in analog mode using
           HAL_GPIO_Init() to map the opamp output to the GPIO pin.
 
+      (#) Registrate Callbacks
+      (++) The compilation define  USE_HAL_OPAMP_REGISTER_CALLBACKS when set to 1
+           allows the user to configure dynamically the driver callbacks.
+
+      (++) Use Functions @ref HAL_OPAMP_RegisterCallback() to register a user callback,
+           it allows to register following callbacks:
+      (+++) MspInitCallback         : OPAMP MspInit.
+      (+++) MspDeInitCallback       : OPAMP MspFeInit.
+           This function takes as parameters the HAL peripheral handle, the Callback ID
+           and a pointer to the user callback function.
+
+      (++) Use function @ref HAL_OPAMP_UnRegisterCallback() to reset a callback to the default
+           weak (surcharged) function. It allows to reset following callbacks:
+      (+++) MspInitCallback         : OPAMP MspInit.
+      (+++) MspDeInitCallback       : OPAMP MspdeInit.
+      (+++) All Callbacks
+
       (#) Configure the opamp using HAL_OPAMP_Init() function:
       (++) Select the mode
       (++) Select the inverting input
@@ -127,29 +144,13 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; COPYRIGHT(c) 2016 STMicroelectronics</center></h2>
+  * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
+  * All rights reserved.</center></h2>
   *
-  * Redistribution and use in source and binary forms, with or without modification,
-  * are permitted provided that the following conditions are met:
-  *   1. Redistributions of source code must retain the above copyright notice,
-  *      this list of conditions and the following disclaimer.
-  *   2. Redistributions in binary form must reproduce the above copyright notice,
-  *      this list of conditions and the following disclaimer in the documentation
-  *      and/or other materials provided with the distribution.
-  *   3. Neither the name of STMicroelectronics nor the names of its contributors
-  *      may be used to endorse or promote products derived from this software
-  *      without specific prior written permission.
-  *
-  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  * This software component is licensed by ST under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
   *
   ******************************************************************************
   */
@@ -195,10 +196,7 @@
 
 #ifdef HAL_OPAMP_MODULE_ENABLED
 
-#if defined(STM32F302xE) || defined(STM32F303xE) || defined(STM32F398xx) || \
-    defined(STM32F302xC) || defined(STM32F303xC) || defined(STM32F358xx) || \
-    defined(STM32F303x8) || defined(STM32F334x8) || defined(STM32F328xx) || \
-    defined(STM32F301x8) || defined(STM32F302x8) || defined(STM32F318xx)
+#if defined (OPAMP1) || defined (OPAMP2) || defined (OPAMP3) || defined (OPAMP4)
 
 /** @defgroup OPAMP OPAMP
   * @brief OPAMP HAL module driver
@@ -253,8 +251,15 @@ HAL_StatusTypeDef HAL_OPAMP_Init(OPAMP_HandleTypeDef *hopamp)
 
   /* Check the OPAMP handle allocation and lock status */
   /* Init not allowed if calibration is ongoing */
-  if((hopamp == NULL) || (hopamp->State == HAL_OPAMP_STATE_BUSYLOCKED) \
-                      || (hopamp->State == HAL_OPAMP_STATE_CALIBBUSY))
+  if (hopamp == NULL)
+  {
+    return HAL_ERROR;
+  }
+  else if (hopamp->State == HAL_OPAMP_STATE_BUSYLOCKED)
+  {
+    return HAL_ERROR;
+  }
+  else if (hopamp->State == HAL_OPAMP_STATE_CALIBBUSY)
   {
     return HAL_ERROR;
   }
@@ -267,6 +272,17 @@ HAL_StatusTypeDef HAL_OPAMP_Init(OPAMP_HandleTypeDef *hopamp)
     /* Set OPAMP parameters */
     assert_param(IS_OPAMP_FUNCTIONAL_NORMALMODE(hopamp->Init.Mode));
     assert_param(IS_OPAMP_NONINVERTING_INPUT(hopamp->Init.NonInvertingInput));
+
+    if (hopamp->State == HAL_OPAMP_STATE_RESET)
+    {
+#if (USE_HAL_OPAMP_REGISTER_CALLBACKS == 1)
+      if (hopamp->MspInitCallback == NULL)
+      {
+        hopamp->MspInitCallback = HAL_OPAMP_MspInit;
+      }
+#endif /* USE_HAL_OPAMP_REGISTER_CALLBACKS */
+    }
+
     if ((hopamp->Init.Mode) == OPAMP_STANDALONE_MODE)
     {
       assert_param(IS_OPAMP_INVERTING_INPUT(hopamp->Init.InvertingInput));
@@ -299,14 +315,18 @@ HAL_StatusTypeDef HAL_OPAMP_Init(OPAMP_HandleTypeDef *hopamp)
     /* Init SYSCFG and the low level hardware to access opamp */
     __HAL_RCC_SYSCFG_CLK_ENABLE();
 
-    if(hopamp->State == HAL_OPAMP_STATE_RESET)
+    if (hopamp->State == HAL_OPAMP_STATE_RESET)
     {
       /* Allocate lock resource and initialize it */
       hopamp->Lock = HAL_UNLOCKED;
     }
 
+#if (USE_HAL_OPAMP_REGISTER_CALLBACKS == 1)
+    hopamp->MspInitCallback(hopamp);
+#else
     /* Call MSP init function */
     HAL_OPAMP_MspInit(hopamp);
+#endif /* USE_HAL_OPAMP_REGISTER_CALLBACKS */
 
     /* Set OPAMP parameters */
     /*     Set  bits according to hopamp->hopamp->Init.Mode value                                 */
@@ -361,12 +381,12 @@ HAL_StatusTypeDef HAL_OPAMP_Init(OPAMP_HandleTypeDef *hopamp)
     if (hopamp->State == HAL_OPAMP_STATE_RESET)
     {
       /* From RESET state to READY State */
-    hopamp->State = HAL_OPAMP_STATE_READY;
+      hopamp->State = HAL_OPAMP_STATE_READY;
     }
     /* else: remain in READY or BUSY state (no update) */
 
     return status;
-    }
+  }
 }
 
 
@@ -383,7 +403,11 @@ HAL_StatusTypeDef HAL_OPAMP_DeInit(OPAMP_HandleTypeDef *hopamp)
 
   /* Check the OPAMP handle allocation */
   /* DeInit not allowed if calibration is ongoing */
-  if((hopamp == NULL) || (hopamp->State == HAL_OPAMP_STATE_CALIBBUSY))
+  if (hopamp == NULL)
+  {
+    status = HAL_ERROR;
+  }
+  else if (hopamp->State == HAL_OPAMP_STATE_CALIBBUSY)
   {
     status = HAL_ERROR;
   }
@@ -399,7 +423,18 @@ HAL_StatusTypeDef HAL_OPAMP_DeInit(OPAMP_HandleTypeDef *hopamp)
     /* When OPAMP is locked, unlocking can be achieved thanks to */
     /* __HAL_RCC_SYSCFG_CLK_DISABLE() call within HAL_OPAMP_MspDeInit */
     /* Note that __HAL_RCC_SYSCFG_CLK_DISABLE() also disables comparator */
+
+#if (USE_HAL_OPAMP_REGISTER_CALLBACKS == 1)
+    if (hopamp->MspDeInitCallback == NULL)
+    {
+      hopamp->MspDeInitCallback = HAL_OPAMP_MspDeInit;
+    }
+    /* DeInit the low level hardware */
+    hopamp->MspDeInitCallback(hopamp);
+#else
+    /* DeInit the low level hardware: GPIO, CLOCK and NVIC */
     HAL_OPAMP_MspDeInit(hopamp);
+#endif /* USE_HAL_OPAMP_REGISTER_CALLBACKS */
 
     if (OPAMP_CSR_RESET_VALUE == hopamp->Instance->CSR)
     {
@@ -436,7 +471,7 @@ __weak void HAL_OPAMP_MspInit(OPAMP_HandleTypeDef *hopamp)
             the HAL_OPAMP_MspInit could be implemented in the user file
    */
 
-   /* Example */
+  /* Example */
 }
 
 /**
@@ -487,7 +522,11 @@ HAL_StatusTypeDef HAL_OPAMP_Start(OPAMP_HandleTypeDef *hopamp)
 
   /* Check the OPAMP handle allocation */
   /* Check if OPAMP locked */
-  if((hopamp == NULL) || (hopamp->State == HAL_OPAMP_STATE_BUSYLOCKED))
+  if (hopamp == NULL)
+  {
+    status = HAL_ERROR;
+  }
+  else if (hopamp->State == HAL_OPAMP_STATE_BUSYLOCKED)
 
   {
     status = HAL_ERROR;
@@ -497,10 +536,10 @@ HAL_StatusTypeDef HAL_OPAMP_Start(OPAMP_HandleTypeDef *hopamp)
     /* Check the parameter */
     assert_param(IS_OPAMP_ALL_INSTANCE(hopamp->Instance));
 
-    if(hopamp->State == HAL_OPAMP_STATE_READY)
+    if (hopamp->State == HAL_OPAMP_STATE_READY)
     {
       /* Enable the selected opamp */
-      SET_BIT (hopamp->Instance->CSR, OPAMP_CSR_OPAMPxEN);
+      SET_BIT(hopamp->Instance->CSR, OPAMP_CSR_OPAMPxEN);
 
       /* Update the OPAMP state*/
       /* From HAL_OPAMP_STATE_READY to HAL_OPAMP_STATE_BUSY */
@@ -510,9 +549,7 @@ HAL_StatusTypeDef HAL_OPAMP_Start(OPAMP_HandleTypeDef *hopamp)
     {
       status = HAL_ERROR;
     }
-
-
-   }
+  }
   return status;
 }
 
@@ -528,8 +565,15 @@ HAL_StatusTypeDef HAL_OPAMP_Stop(OPAMP_HandleTypeDef *hopamp)
   /* Check the OPAMP handle allocation */
   /* Check if OPAMP locked */
   /* Check if OPAMP calibration ongoing */
-  if((hopamp == NULL) || (hopamp->State == HAL_OPAMP_STATE_BUSYLOCKED) \
-                      || (hopamp->State == HAL_OPAMP_STATE_CALIBBUSY))
+  if (hopamp == NULL)
+  {
+    status = HAL_ERROR;
+  }
+  else if (hopamp->State == HAL_OPAMP_STATE_BUSYLOCKED)
+  {
+    status = HAL_ERROR;
+  }
+  else if (hopamp->State == HAL_OPAMP_STATE_CALIBBUSY)
   {
     status = HAL_ERROR;
   }
@@ -538,10 +582,10 @@ HAL_StatusTypeDef HAL_OPAMP_Stop(OPAMP_HandleTypeDef *hopamp)
     /* Check the parameter */
     assert_param(IS_OPAMP_ALL_INSTANCE(hopamp->Instance));
 
-    if(hopamp->State == HAL_OPAMP_STATE_BUSY)
+    if (hopamp->State == HAL_OPAMP_STATE_BUSY)
     {
       /* Disable the selected opamp */
-      CLEAR_BIT (hopamp->Instance->CSR, OPAMP_CSR_OPAMPxEN);
+      CLEAR_BIT(hopamp->Instance->CSR, OPAMP_CSR_OPAMPxEN);
 
       /* Update the OPAMP state*/
       /* From  HAL_OPAMP_STATE_BUSY to HAL_OPAMP_STATE_READY*/
@@ -568,13 +612,17 @@ HAL_StatusTypeDef HAL_OPAMP_SelfCalibrate(OPAMP_HandleTypeDef *hopamp)
 
   HAL_StatusTypeDef status = HAL_OK;
 
-  uint32_t trimmingvaluen = 0U;
-  uint32_t trimmingvaluep = 0U;
+  uint32_t trimmingvaluen;
+  uint32_t trimmingvaluep;
   uint32_t delta;
 
   /* Check the OPAMP handle allocation */
   /* Check if OPAMP locked */
-  if((hopamp == NULL) || (hopamp->State == HAL_OPAMP_STATE_BUSYLOCKED))
+  if (hopamp == NULL)
+  {
+    status = HAL_ERROR;
+  }
+  else if (hopamp->State == HAL_OPAMP_STATE_BUSYLOCKED)
   {
     status = HAL_ERROR;
   }
@@ -582,7 +630,7 @@ HAL_StatusTypeDef HAL_OPAMP_SelfCalibrate(OPAMP_HandleTypeDef *hopamp)
   {
 
     /* Check if OPAMP in calibration mode and calibration not yet enable */
-    if(hopamp->State ==  HAL_OPAMP_STATE_READY)
+    if (hopamp->State ==  HAL_OPAMP_STATE_READY)
     {
       /* Check the parameter */
       assert_param(IS_OPAMP_ALL_INSTANCE(hopamp->Instance));
@@ -595,14 +643,14 @@ HAL_StatusTypeDef HAL_OPAMP_SelfCalibrate(OPAMP_HandleTypeDef *hopamp)
       SET_BIT(hopamp->Instance->CSR, OPAMP_CSR_USERTRIM);
 
       /* Enable calibration */
-      SET_BIT (hopamp->Instance->CSR, OPAMP_CSR_CALON);
+      SET_BIT(hopamp->Instance->CSR, OPAMP_CSR_CALON);
 
       /* 1st calibration - N */
       /* Select 90U% VREF */
       MODIFY_REG(hopamp->Instance->CSR, OPAMP_CSR_CALSEL, OPAMP_VREF_90VDDA);
 
       /* Enable the selected opamp */
-      SET_BIT (hopamp->Instance->CSR, OPAMP_CSR_OPAMPxEN);
+      SET_BIT(hopamp->Instance->CSR, OPAMP_CSR_OPAMPxEN);
 
       /* Init trimming counter */
       /* Medium value */
@@ -612,7 +660,7 @@ HAL_StatusTypeDef HAL_OPAMP_SelfCalibrate(OPAMP_HandleTypeDef *hopamp)
       while (delta != 0U)
       {
         /* Set candidate trimming */
-        MODIFY_REG(hopamp->Instance->CSR, OPAMP_CSR_TRIMOFFSETN, trimmingvaluen<<OPAMP_INPUT_INVERTING);
+        MODIFY_REG(hopamp->Instance->CSR, OPAMP_CSR_TRIMOFFSETN, trimmingvaluen << OPAMP_INPUT_INVERTING);
 
         /* OFFTRIMmax delay 2 ms as per datasheet (electrical characteristics */
         /* Offset trim time: during calibration, minimum time needed between */
@@ -635,19 +683,19 @@ HAL_StatusTypeDef HAL_OPAMP_SelfCalibrate(OPAMP_HandleTypeDef *hopamp)
 
       /* Still need to check if righ calibration is current value or un step below */
       /* Indeed the first value that causes the OUTCAL bit to change from 1 to 0  */
-      MODIFY_REG(hopamp->Instance->CSR, OPAMP_CSR_TRIMOFFSETN, trimmingvaluen<<OPAMP_INPUT_INVERTING);
+      MODIFY_REG(hopamp->Instance->CSR, OPAMP_CSR_TRIMOFFSETN, trimmingvaluen << OPAMP_INPUT_INVERTING);
 
-       /* OFFTRIMmax delay 2 ms as per datasheet (electrical characteristics */
-       /* Offset trim time: during calibration, minimum time needed between */
-       /* two steps to have 1 mV accuracy */
-       HAL_Delay(2U);
+      /* OFFTRIMmax delay 2 ms as per datasheet (electrical characteristics */
+      /* Offset trim time: during calibration, minimum time needed between */
+      /* two steps to have 1 mV accuracy */
+      HAL_Delay(2U);
 
       if ((hopamp->Instance->CSR & OPAMP_CSR_OUTCAL) != RESET)
       {
         /* OPAMP_CSR_OUTCAL is actually one value more */
         trimmingvaluen++;
         /* Set right trimming */
-        MODIFY_REG(hopamp->Instance->CSR, OPAMP_CSR_TRIMOFFSETN, trimmingvaluen<<OPAMP_INPUT_INVERTING);
+        MODIFY_REG(hopamp->Instance->CSR, OPAMP_CSR_TRIMOFFSETN, trimmingvaluen << OPAMP_INPUT_INVERTING);
       }
 
       /* 2nd calibration - P */
@@ -662,7 +710,7 @@ HAL_StatusTypeDef HAL_OPAMP_SelfCalibrate(OPAMP_HandleTypeDef *hopamp)
       while (delta != 0U)
       {
         /* Set candidate trimming */
-        MODIFY_REG(hopamp->Instance->CSR, OPAMP_CSR_TRIMOFFSETP, trimmingvaluep<<OPAMP_INPUT_NONINVERTING);
+        MODIFY_REG(hopamp->Instance->CSR, OPAMP_CSR_TRIMOFFSETP, trimmingvaluep << OPAMP_INPUT_NONINVERTING);
 
         /* OFFTRIMmax delay 2 ms as per datasheet (electrical characteristics */
         /* Offset trim time: during calibration, minimum time needed between */
@@ -685,26 +733,26 @@ HAL_StatusTypeDef HAL_OPAMP_SelfCalibrate(OPAMP_HandleTypeDef *hopamp)
       /* Still need to check if righ calibration is current value or un step below */
       /* Indeed the first value that causes the OUTCAL bit to change from 1 to 0U */
       /* Set candidate trimming */
-      MODIFY_REG(hopamp->Instance->CSR, OPAMP_CSR_TRIMOFFSETP, trimmingvaluep<<OPAMP_INPUT_NONINVERTING);
+      MODIFY_REG(hopamp->Instance->CSR, OPAMP_CSR_TRIMOFFSETP, trimmingvaluep << OPAMP_INPUT_NONINVERTING);
 
-       /* OFFTRIMmax delay 2 ms as per datasheet (electrical characteristics */
-       /* Offset trim time: during calibration, minimum time needed between */
-       /* two steps to have 1 mV accuracy */
-       HAL_Delay(2U);
+      /* OFFTRIMmax delay 2 ms as per datasheet (electrical characteristics */
+      /* Offset trim time: during calibration, minimum time needed between */
+      /* two steps to have 1 mV accuracy */
+      HAL_Delay(2U);
 
       if ((hopamp->Instance->CSR & OPAMP_CSR_OUTCAL) != RESET)
       {
         /* OPAMP_CSR_OUTCAL is actually one value more */
         trimmingvaluep++;
         /* Set right trimming */
-        MODIFY_REG(hopamp->Instance->CSR, OPAMP_CSR_TRIMOFFSETP, trimmingvaluep<<OPAMP_INPUT_NONINVERTING);
+        MODIFY_REG(hopamp->Instance->CSR, OPAMP_CSR_TRIMOFFSETP, trimmingvaluep << OPAMP_INPUT_NONINVERTING);
       }
 
       /* Disable calibration */
-      CLEAR_BIT (hopamp->Instance->CSR, OPAMP_CSR_CALON);
+      CLEAR_BIT(hopamp->Instance->CSR, OPAMP_CSR_CALON);
 
       /* Disable the OPAMP */
-      CLEAR_BIT (hopamp->Instance->CSR, OPAMP_CSR_OPAMPxEN);
+      CLEAR_BIT(hopamp->Instance->CSR, OPAMP_CSR_OPAMPxEN);
 
       /* Set operating mode  */
       /* Non-inverting input connected to calibration reference voltage. */
@@ -722,8 +770,8 @@ HAL_StatusTypeDef HAL_OPAMP_SelfCalibrate(OPAMP_HandleTypeDef *hopamp)
       /* Select user timming mode */
       /* And updated with calibrated settings */
       hopamp->Init.UserTrimming = OPAMP_TRIMMING_USER;
-      MODIFY_REG(hopamp->Instance->CSR, OPAMP_CSR_TRIMOFFSETP, trimmingvaluep<<OPAMP_INPUT_NONINVERTING);
-      MODIFY_REG(hopamp->Instance->CSR, OPAMP_CSR_TRIMOFFSETN, trimmingvaluen<<OPAMP_INPUT_INVERTING);
+      MODIFY_REG(hopamp->Instance->CSR, OPAMP_CSR_TRIMOFFSETP, trimmingvaluep << OPAMP_INPUT_NONINVERTING);
+      MODIFY_REG(hopamp->Instance->CSR, OPAMP_CSR_TRIMOFFSETN, trimmingvaluen << OPAMP_INPUT_INVERTING);
     }
 
     else
@@ -769,25 +817,24 @@ HAL_StatusTypeDef HAL_OPAMP_Lock(OPAMP_HandleTypeDef *hopamp)
   /* Check if OPAMP locked */
   /* OPAMP can be locked when enabled and running in normal mode */
   /*   It is meaningless otherwise */
-  if((hopamp == NULL) || (hopamp->State == HAL_OPAMP_STATE_RESET) \
-                      || (hopamp->State == HAL_OPAMP_STATE_READY) \
-                      || (hopamp->State == HAL_OPAMP_STATE_CALIBBUSY)\
-                      || (hopamp->State == HAL_OPAMP_STATE_BUSYLOCKED))
-
+  if (hopamp == NULL)
   {
     status = HAL_ERROR;
   }
-
-  else
+  else if (hopamp->State == HAL_OPAMP_STATE_BUSY)
   {
     /* Check the parameter */
     assert_param(IS_OPAMP_ALL_INSTANCE(hopamp->Instance));
 
-   /* Lock OPAMP */
-    SET_BIT (hopamp->Instance->CSR, OPAMP_CSR_LOCK);
+    /* Lock OPAMP */
+    SET_BIT(hopamp->Instance->CSR, OPAMP_CSR_LOCK);
 
-   /* OPAMP state changed to locked */
+    /* OPAMP state changed to locked */
     hopamp->State = HAL_OPAMP_STATE_BUSYLOCKED;
+  }
+  else
+  {
+    status = HAL_ERROR;
   }
   return status;
 }
@@ -819,7 +866,7 @@ HAL_StatusTypeDef HAL_OPAMP_Lock(OPAMP_HandleTypeDef *hopamp)
 HAL_OPAMP_StateTypeDef HAL_OPAMP_GetState(OPAMP_HandleTypeDef *hopamp)
 {
   /* Check the OPAMP handle allocation */
-  if(hopamp == NULL)
+  if (hopamp == NULL)
   {
     return HAL_OPAMP_STATE_RESET;
   }
@@ -838,28 +885,28 @@ HAL_OPAMP_StateTypeDef HAL_OPAMP_GetState(OPAMP_HandleTypeDef *hopamp)
   *         or OPAMP_FACTORYTRIMMING_DUMMY if trimming value is not available
  */
 
-OPAMP_TrimmingValueTypeDef HAL_OPAMP_GetTrimOffset (OPAMP_HandleTypeDef *hopamp, uint32_t trimmingoffset)
+OPAMP_TrimmingValueTypeDef HAL_OPAMP_GetTrimOffset(OPAMP_HandleTypeDef *hopamp, uint32_t trimmingoffset)
 {
   uint32_t oldusertrimming = 0U;
   OPAMP_TrimmingValueTypeDef  oldtrimmingvaluep = 0U, oldtrimmingvaluen = 0U, trimmingvalue = 0U;
 
   /* Check the OPAMP handle allocation */
   /* Value can be retrieved in HAL_OPAMP_STATE_READY state */
-  if((hopamp == NULL) || (hopamp->State == HAL_OPAMP_STATE_RESET) \
-                      || (hopamp->State == HAL_OPAMP_STATE_BUSY) \
-                      || (hopamp->State == HAL_OPAMP_STATE_CALIBBUSY)\
-                      || (hopamp->State == HAL_OPAMP_STATE_BUSYLOCKED))
+  if (hopamp == NULL)
   {
     return OPAMP_FACTORYTRIMMING_DUMMY;
   }
-  else
+
+  /* Check the OPAMP handle allocation */
+  /* Value can be retrieved in HAL_OPAMP_STATE_READY state */
+  if (hopamp->State == HAL_OPAMP_STATE_READY)
   {
     /* Check the parameter */
     assert_param(IS_OPAMP_ALL_INSTANCE(hopamp->Instance));
     assert_param(IS_OPAMP_FACTORYTRIMMING(trimmingoffset));
 
     /* Check the trimming mode */
-    if ((READ_BIT(hopamp->Instance->CSR,OPAMP_CSR_USERTRIM)) != RESET)
+    if ((READ_BIT(hopamp->Instance->CSR, OPAMP_CSR_USERTRIM)) != RESET)
     {
       /* User trimming is used */
       oldusertrimming = OPAMP_TRIMMING_USER;
@@ -869,13 +916,13 @@ OPAMP_TrimmingValueTypeDef HAL_OPAMP_GetTrimOffset (OPAMP_HandleTypeDef *hopamp,
     }
 
     /* Set factory timming mode */
-    CLEAR_BIT (hopamp->Instance->CSR, OPAMP_CSR_USERTRIM);
+    CLEAR_BIT(hopamp->Instance->CSR, OPAMP_CSR_USERTRIM);
 
     /* Get factory trimming  */
     if (trimmingoffset == OPAMP_FACTORYTRIMMING_P)
     {
       /* Return TrimOffsetP */
-     trimmingvalue = ((hopamp->Instance->CSR & OPAMP_CSR_TRIMOFFSETP) >> OPAMP_INPUT_NONINVERTING);
+      trimmingvalue = ((hopamp->Instance->CSR & OPAMP_CSR_TRIMOFFSETP) >> OPAMP_INPUT_NONINVERTING);
     }
     else
     {
@@ -888,10 +935,14 @@ OPAMP_TrimmingValueTypeDef HAL_OPAMP_GetTrimOffset (OPAMP_HandleTypeDef *hopamp,
     if (oldusertrimming == OPAMP_TRIMMING_USER)
     {
       /* Restore user trimming */
-      SET_BIT(hopamp->Instance->CSR,OPAMP_CSR_USERTRIM);
-      MODIFY_REG(hopamp->Instance->CSR, OPAMP_CSR_TRIMOFFSETP, oldtrimmingvaluep<<OPAMP_INPUT_NONINVERTING);
-      MODIFY_REG(hopamp->Instance->CSR, OPAMP_CSR_TRIMOFFSETN, oldtrimmingvaluen<<OPAMP_INPUT_INVERTING);
+      SET_BIT(hopamp->Instance->CSR, OPAMP_CSR_USERTRIM);
+      MODIFY_REG(hopamp->Instance->CSR, OPAMP_CSR_TRIMOFFSETP, oldtrimmingvaluep << OPAMP_INPUT_NONINVERTING);
+      MODIFY_REG(hopamp->Instance->CSR, OPAMP_CSR_TRIMOFFSETN, oldtrimmingvaluen << OPAMP_INPUT_INVERTING);
     }
+  }
+  else
+  {
+    return OPAMP_FACTORYTRIMMING_DUMMY;
   }
   return trimmingvalue;
 }
@@ -899,18 +950,150 @@ OPAMP_TrimmingValueTypeDef HAL_OPAMP_GetTrimOffset (OPAMP_HandleTypeDef *hopamp,
   * @}
   */
 
+#if (USE_HAL_OPAMP_REGISTER_CALLBACKS == 1)
 /**
-  * @}
+  * @brief  Register a User OPAMP Callback
+  *         To be used instead of the weak (surcharged) predefined callback
+  * @param hopamp : OPAMP handle
+  * @param CallbackId : ID of the callback to be registered
+  *        This parameter can be one of the following values:
+  *          @arg @ref HAL_OPAMP_MSP_INIT_CB_ID       OPAMP MspInit callback ID
+  *          @arg @ref HAL_OPAMP_MSP_DEINIT_CB_ID     OPAMP MspDeInit callback ID
+  * @param pCallback : pointer to the Callback function
+  * @retval status
   */
+HAL_StatusTypeDef HAL_OPAMP_RegisterCallback(OPAMP_HandleTypeDef *hopamp, HAL_OPAMP_CallbackIDTypeDef CallbackId, pOPAMP_CallbackTypeDef pCallback)
+{
+  HAL_StatusTypeDef status = HAL_OK;
+
+  if (pCallback == NULL)
+  {
+    return HAL_ERROR;
+  }
+
+  /* Process locked */
+  __HAL_LOCK(hopamp);
+
+  if (hopamp->State == HAL_OPAMP_STATE_READY)
+  {
+    switch (CallbackId)
+    {
+      case HAL_OPAMP_MSP_INIT_CB_ID :
+        hopamp->MspInitCallback = pCallback;
+        break;
+      case HAL_OPAMP_MSP_DEINIT_CB_ID :
+        hopamp->MspDeInitCallback = pCallback;
+        break;
+      default :
+        /* update return status */
+        status =  HAL_ERROR;
+        break;
+    }
+  }
+  else if (hopamp->State == HAL_OPAMP_STATE_RESET)
+  {
+    switch (CallbackId)
+    {
+      case HAL_OPAMP_MSP_INIT_CB_ID :
+        hopamp->MspInitCallback = pCallback;
+        break;
+      case HAL_OPAMP_MSP_DEINIT_CB_ID :
+        hopamp->MspDeInitCallback = pCallback;
+        break;
+      default :
+        /* update return status */
+        status =  HAL_ERROR;
+        break;
+    }
+  }
+  else
+  {
+    /* update return status */
+    status =  HAL_ERROR;
+  }
+
+  /* Release Lock */
+  __HAL_UNLOCK(hopamp);
+  return status;
+}
+
+/**
+  * @brief  Unregister a User OPAMP Callback
+  *         OPAMP Callback is redirected to the weak (surcharged) predefined callback
+  * @param hopamp : OPAMP handle
+  * @param CallbackId : ID of the callback to be unregistered
+  *        This parameter can be one of the following values:
+  *          @arg @ref HAL_OPAMP_MSP_INIT_CB_ID              OPAMP MSP Init Callback ID
+  *          @arg @ref HAL_OPAMP_MSP_DEINIT_CB_ID            OPAMP MSP DeInit Callback ID
+  *          @arg @ref HAL_OPAMP_ALL_CB_ID                   OPAMP All Callbacks
+  * @retval status
+  */
+
+HAL_StatusTypeDef HAL_OPAMP_UnRegisterCallback(OPAMP_HandleTypeDef *hopamp, HAL_OPAMP_CallbackIDTypeDef CallbackId)
+{
+  HAL_StatusTypeDef status = HAL_OK;
+
+  /* Process locked */
+  __HAL_LOCK(hopamp);
+
+  if (hopamp->State == HAL_OPAMP_STATE_READY)
+  {
+    switch (CallbackId)
+    {
+      case HAL_OPAMP_MSP_INIT_CB_ID :
+        hopamp->MspInitCallback = HAL_OPAMP_MspInit;
+        break;
+      case HAL_OPAMP_MSP_DEINIT_CB_ID :
+        hopamp->MspDeInitCallback = HAL_OPAMP_MspDeInit;
+        break;
+      case HAL_OPAMP_ALL_CB_ID :
+        hopamp->MspInitCallback = HAL_OPAMP_MspInit;
+        hopamp->MspDeInitCallback = HAL_OPAMP_MspDeInit;
+        break;
+      default :
+        /* update return status */
+        status =  HAL_ERROR;
+        break;
+    }
+  }
+  else if (hopamp->State == HAL_OPAMP_STATE_RESET)
+  {
+    switch (CallbackId)
+    {
+      case HAL_OPAMP_MSP_INIT_CB_ID :
+        hopamp->MspInitCallback = HAL_OPAMP_MspInit;
+        break;
+      case HAL_OPAMP_MSP_DEINIT_CB_ID :
+        hopamp->MspDeInitCallback = HAL_OPAMP_MspDeInit;
+        break;
+      default :
+        /* update return status */
+        status =  HAL_ERROR;
+        break;
+    }
+  }
+  else
+  {
+    /* update return status */
+    status =  HAL_ERROR;
+  }
+
+  /* Release Lock */
+  __HAL_UNLOCK(hopamp);
+  return status;
+}
+
+#endif /* USE_HAL_OPAMP_REGISTER_CALLBACKS */
 
 /**
   * @}
   */
 
-#endif /* STM32F302xE || STM32F303xE || STM32F398xx || */
-       /* STM32F302xC || STM32F303xC || STM32F358xx || */
-       /* STM32F303x8 || STM32F334x8 || STM32F328xx || */
-       /* STM32F301x8 || STM32F302x8 || STM32F318xx    */
+/**
+  * @}
+  */
+
+#endif /* OPAMP1 || OPAMP2 || OPAMP3 || OPAMP4 */
 
 #endif /* HAL_OPAMP_MODULE_ENABLED */
 /**
