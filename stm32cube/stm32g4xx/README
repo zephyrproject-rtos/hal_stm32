@@ -35,4 +35,10 @@ License Link:
    https://opensource.org/licenses/BSD-3-Clause
 
 Patch List:
-   none
+
+   *stm32g4xx: wrong clock setup
+    In case the actual value is AHB prescaler 1, it must be set, 
+    after setting the AHB prescaler to 2.
+    Impacted files:
+     drivers/src/stm32g4xx_ll_utils.c
+    ST Bug tracker ID: 78880
