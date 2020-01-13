@@ -3,10 +3,10 @@ STM32WB HCI
 
 Origin:
    ST Microelectronics
-   http://www.st.com/en/embedded-software/stm32cubewb.html
+   https://github.com/STMicroelectronics/STM32CubeWB
 
 Status:
-   version 1.0.0
+   version 1.3.0
 
 Purpose:
    This library is used on stm32wb series to enable HCI communication between
@@ -19,13 +19,13 @@ Description:
 
 Dependencies:
    This library depends on STM32Cube IPCC HAL API.
-   It is available in ext/hal/st/stm32cube/stm32wbxx/drivers
+   It is available in stm32cube/stm32wbxx/drivers
 
 URL:
-   http://www.st.com/en/embedded-software/stm32cubewb.html
+   https://github.com/STMicroelectronics/STM32CubeWB
 
 commit:
-   version 1.0.0
+   96abbb67db97bc53e38f9727adfae0e5c70b1498
 
 Maintained-by:
    External
@@ -37,6 +37,16 @@ License Link:
    opensource.org/licenses/BSD-3-Clause
 
 Patch List:
+
+        * Move some files license from ST SLA0044 to BSD-3 Clause
+            Following files are distributed under ST License SLA0044.
+            For Zephyr they are made available under BSD-3 Clause.
+            - hw_ipcc.c
+            - app_common.h
+            - stm32_wpan_common.h
+            - app_conf.h
+            - hw_conf.h
+            - tl_conf.h
 
         * Remove use of useless section SYSTEM_DRIVER_CONTEXT
             Section has no use. Remove it.
