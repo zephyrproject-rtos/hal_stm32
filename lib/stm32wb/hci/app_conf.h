@@ -1,8 +1,9 @@
 /**
  ******************************************************************************
   * File Name          : app_conf.h
-  * Description        : Application configuration file for BLE middleWare.
-  ******************************************************************************
+  * Description        : Application configuration file for STM32WPAN Middleware.
+  *
+ ******************************************************************************
   * @attention
   *
   * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
@@ -17,15 +18,56 @@
   */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef APP_CONFIG_H
-#define APP_CONFIG_H
+#ifndef APP_CONF_H
+#define APP_CONF_H
 
 #include "hw.h"
 #include "hw_conf.h"
+#include "hw_if.h"
 
 /******************************************************************************
  * Application Config
  ******************************************************************************/
+
+/**< generic parameters ******************************************************/
+
+/**
+ * Define Tx Power
+ */
+#define CFG_TX_POWER                      (0x18) /**< 0dbm */
+
+/**
+ * Define Advertising parameters
+ */
+#define CFG_ADV_BD_ADDRESS                (0x7257acd87a6c)
+
+/**
+ * Define IO Authentication
+ */
+#define CFG_BONDING_MODE                  (1)
+#define CFG_FIXED_PIN                     (111111)
+#define CFG_USED_FIXED_PIN                (0)
+#define CFG_ENCRYPTION_KEY_SIZE_MAX       (16)
+#define CFG_ENCRYPTION_KEY_SIZE_MIN       (8)
+
+/**
+ * Define IO capabilities
+ */
+#define CFG_IO_CAPABILITY_DISPLAY_ONLY       (0x00)
+#define CFG_IO_CAPABILITY_DISPLAY_YES_NO     (0x01)
+#define CFG_IO_CAPABILITY_KEYBOARD_ONLY      (0x02)
+#define CFG_IO_CAPABILITY_NO_INPUT_NO_OUTPUT (0x03)
+#define CFG_IO_CAPABILITY_KEYBOARD_DISPLAY   (0x04)
+
+#define CFG_IO_CAPABILITY             CFG_IO_CAPABILITY_DISPLAY_ONLY
+
+/**
+ * Define MITM modes
+ */
+#define CFG_MITM_PROTECTION_NOT_REQUIRED      (0x00)
+#define CFG_MITM_PROTECTION_REQUIRED          (0x01)
+
+#define CFG_MITM_PROTECTION             CFG_MITM_PROTECTION_REQUIRED
 
 /**
 *   Identity root key used to derive LTK and CSRK
@@ -37,26 +79,30 @@
 */
 #define CFG_BLE_ERK     {0xfe,0xdc,0xba,0x09,0x87,0x65,0x43,0x21,0xfe,0xdc,0xba,0x09,0x87,0x65,0x43,0x21}
 
+/* USER CODE BEGIN Generic_Parameters */
+/**
+ * SMPS supply
+ * SMPS not used when Set to 0
+ * SMPS used when Set to 1
+ */
+#define CFG_USE_SMPS    1
+/* USER CODE END Generic_Parameters */
+
 /**< specific parameters */
 /*****************************************************/
-#define PUSH_BUTTON_SW1_EXTI_IRQHandler                         EXTI4_IRQHandler
-
-/******************************************************************************
- * Information Table
- *
-  * Version
-  * [0:3]   = Build - 0: Untracked - 15:Released - x: Tracked version
-  * [4:7]   = branch - 0: Mass Market - x: ...
-  * [8:15]  = Subversion
-  * [16:23] = Version minor
-  * [24:31] = Version major
-  *
- ******************************************************************************/
-#define CFG_FW_MAJOR_VERSION      (0)
-#define CFG_FW_MINOR_VERSION      (0)
-#define CFG_FW_SUBVERSION         (1)
-#define CFG_FW_BRANCH             (0)
-#define CFG_FW_BUILD              (0)
+#define CFG_MAX_CONNECTION                      1
+#define UUID_128BIT_FORMAT                      1
+#define CFG_DEV_ID_P2P_SERVER1                  (0x83)
+#define CONN_L(x) ((int)((x)/0.625f))
+#define CONN_P(x) ((int)((x)/1.25f))
+#define SCAN_P (0x320)
+#define SCAN_L (0x320)
+#define CONN_P1   (CONN_P(50))
+#define CONN_P2   (CONN_P(100))
+#define SUPERV_TIMEOUT (0x1F4)
+#define CONN_L1   (CONN_L(10))
+#define CONN_L2   (CONN_L(10))
+#define OOB_DEMO                                1   /* Out Of Box Demo */
 
 /******************************************************************************
  * BLE Stack
@@ -137,7 +183,7 @@
  *  1 : internal RO
  *  0 : external crystal ( no calibration )
  */
-#define CFG_BLE_LSE_SOURCE  1
+#define CFG_BLE_LSE_SOURCE  0
 
 /**
  * Start up time of the high speed (16 or 32 MHz) crystal oscillator in units of 625/256 us (~2.44 us)
@@ -199,8 +245,8 @@
 /**
  * Select UART interfaces
  */
-#define CFG_UART_GUI          hw_uart1
-#define DBG_TRACE_UART_CFG
+#define CFG_DEBUG_TRACE_UART    hw_uart1
+#define CFG_CONSOLE_MENU
 /******************************************************************************
  * USB interface
  ******************************************************************************/
@@ -315,26 +361,17 @@ typedef enum
  * keep debugger enabled while in any low power mode when set to 1
  * should be set to 0 in production
  */
-#define CFG_DEBUGGER_SUPPORTED    0
+#define CFG_DEBUGGER_SUPPORTED    1
 
 /**
  * When set to 1, the traces are enabled in the BLE services
  */
-#define CFG_DEBUG_BLE_TRACE     0
+#define CFG_DEBUG_BLE_TRACE     1
 
 /**
  * Enable or Disable traces in application
  */
-#define CFG_DEBUG_APP_TRACE     0
-
-#if   defined ( __CC_ARM )     /* Keil */
-#undef CFG_DEBUG_BLE_TRACE
-#undef CFG_DEBUG_APP_TRACE
-#undef CFG_LPM_SUPPORTED
-#define CFG_DEBUG_BLE_TRACE     0
-#define CFG_DEBUG_APP_TRACE     0
-#define CFG_LPM_SUPPORTED   0
-#endif
+#define CFG_DEBUG_APP_TRACE     1
 
 #if (CFG_DEBUG_APP_TRACE != 0)
 #define APP_DBG_MSG                 PRINT_MESG_DBG
@@ -352,10 +389,47 @@ typedef enum
 #define CFG_LPM_SUPPORTED         0
 #define CFG_DEBUGGER_SUPPORTED      1
 #endif
+/**
+ * When CFG_DEBUG_TRACE_FULL is set to 1, the trace are output with the API name, the file name and the line number
+ * When CFG_DEBUG_TRACE_LIGHT is set to 1, only the debug message is output
+ *
+ * When both are set to 0, no trace are output
+ * When both are set to 1,  CFG_DEBUG_TRACE_FULL is selected
+ */
+#define CFG_DEBUG_TRACE_LIGHT     1
+#define CFG_DEBUG_TRACE_FULL      0
+
+#if (( CFG_DEBUG_TRACE != 0 ) && ( CFG_DEBUG_TRACE_LIGHT == 0 ) && (CFG_DEBUG_TRACE_FULL == 0))
+#undef CFG_DEBUG_TRACE_FULL
+#undef CFG_DEBUG_TRACE_LIGHT
+#define CFG_DEBUG_TRACE_FULL      0
+#define CFG_DEBUG_TRACE_LIGHT     1
+#endif
+
+#if ( CFG_DEBUG_TRACE == 0 )
+#undef CFG_DEBUG_TRACE_FULL
+#undef CFG_DEBUG_TRACE_LIGHT
+#define CFG_DEBUG_TRACE_FULL      0
+#define CFG_DEBUG_TRACE_LIGHT     0
+#endif
+
+/**
+ * When not set, the traces is looping on sending the trace over UART
+ */
+#define DBG_TRACE_USE_CIRCULAR_QUEUE 1
+
+/**
+ * max buffer Size to queue data traces and max data trace allowed.
+ * Only Used if DBG_TRACE_USE_CIRCULAR_QUEUE is defined
+ */
+#define DBG_TRACE_MSG_QUEUE_SIZE 4096
+#define MAX_DBG_TRACE_MSG_SIZE 1024
 
 /* USER CODE BEGIN Defines */
 #define CFG_LED_SUPPORTED         1
 #define CFG_BUTTON_SUPPORTED      1
+
+#define PUSH_BUTTON_SW1_EXTI_IRQHandler         EXTI4_IRQHandler
 /* USER CODE END Defines */
 
 /******************************************************************************
@@ -372,11 +446,12 @@ typedef enum
 /**< Add in that list all tasks that may send a ACI/HCI command */
 typedef enum
 {
-  CFG_TASK_BLE_HCI_CMD_ID,
-  CFG_TASK_SYS_HCI_CMD_ID,
-  CFG_TASK_HCI_ACL_DATA_ID,
-  CFG_TASK_SYS_LOCAL_CMD_ID,
-  CFG_TASK_TX_TO_HOST_ID,
+    CFG_TASK_START_SCAN_ID,
+    CFG_TASK_CONN_DEV_1_ID,
+    CFG_TASK_SEARCH_SERVICE_ID,
+    CFG_TASK_SW1_BUTTON_PUSHED_ID,
+    CFG_TASK_CONN_UPDATE_ID,
+    CFG_TASK_HCI_ASYNCH_EVT_ID,
 /* USER CODE BEGIN CFG_Task_Id_With_HCI_Cmd_t */
 
 /* USER CODE END CFG_Task_Id_With_HCI_Cmd_t */
@@ -410,6 +485,7 @@ typedef enum
  */
 typedef enum
 {
+    CFG_IDLEEVT_HCI_CMD_EVT_RSP_ID,
     CFG_IDLEEVT_SYSTEM_HCI_CMD_EVT_RSP_ID,
 } CFG_IdleEvt_Id_t;
 
@@ -423,8 +499,19 @@ typedef enum
 typedef enum
 {
     CFG_LPM_APP,
+    CFG_LPM_APP_BLE,
+  /* USER CODE BEGIN CFG_LPM_Id_t */
+
+  /* USER CODE END CFG_LPM_Id_t */
 } CFG_LPM_Id_t;
 
-#endif /*APP_CONFIG_H */
+/******************************************************************************
+ * OTP manager
+ ******************************************************************************/
+#define CFG_OTP_BASE_ADDRESS    OTP_AREA_BASE
+
+#define CFG_OTP_END_ADRESS      OTP_AREA_END_ADDR
+
+#endif /*APP_CONF_H */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

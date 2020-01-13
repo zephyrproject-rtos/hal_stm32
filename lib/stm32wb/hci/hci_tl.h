@@ -5,17 +5,17 @@
  * @brief   Constants and functions for HCI layer. See Bluetooth Core
  *          v 4.0, Vol. 2, Part E.
  ******************************************************************************
- * @attention
- *
- * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
- * All rights reserved.</center></h2>
- *
- * This software component is licensed by ST under BSD 3-Clause license,
- * the "License"; You may not use this file except in compliance with the
- * License. You may obtain a copy of the License at:
- *                        opensource.org/licenses/BSD-3-Clause
- *
- ******************************************************************************
+  * @attention
+  *
+  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by ST under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
  */
 
 
@@ -50,7 +50,7 @@ typedef struct
   int32_t (* Reset)   (void); /**< Pointer to HCI TL function for the IO Bus reset */
   int32_t (* Receive) (uint8_t*, uint16_t); /**< Pointer to HCI TL function for the IO Bus data reception */
   int32_t (* Send)    (uint8_t*, uint16_t); /**< Pointer to HCI TL function for the IO Bus data transmission */
-  int32_t (* DataAck) (uint8_t*, uint16_t* len); /**< Pointer to HCI TL function for the IO Bus data ack reception */
+  int32_t (* DataAck) (uint8_t*, uint16_t* len); /**< Pointer to HCI TL function for the IO Bus data ack reception */	
   int32_t (* GetTick) (void); /**< Pointer to BSP function for getting the HAL time base timestamp */
 } tHciIO;
 /**
@@ -87,9 +87,9 @@ typedef struct
 void hci_register_io_bus(tHciIO* fops);
 
 /**
- * @brief  Interrupt service routine that must be called when the BlueNRG
+ * @brief  Interrupt service routine that must be called when the BLE core
  *         reports a packet received or an event to the host through the
- *         BlueNRG-MS interrupt line.
+ *         related IPCC RX interrupt line.
  *
  * @param  pdata Packet or event pointer
  * @retval None
