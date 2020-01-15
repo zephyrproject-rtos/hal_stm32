@@ -22,7 +22,8 @@
 #define APP_CONF_H
 
 #include "hw.h"
-#include "hw_conf.h"
+/* hw_conf.h file is not used, remove the dependency */
+/* #include "hw_conf.h" */
 #include "hw_if.h"
 
 /******************************************************************************

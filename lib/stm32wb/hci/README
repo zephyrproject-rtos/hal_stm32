@@ -44,9 +44,11 @@ Patch List:
             - hw_ipcc.c
             - app_common.h
             - stm32_wpan_common.h
-            - app_conf.h
-            - hw_conf.h
-            - tl_conf.h
+
+        * Remove dependency to hw_conf.h
+            This file is not actually needed. Remove inclusion so we don't need
+            to include it in library.
+          Impacted file: app_conf.h
 
         * Remove use of useless section SYSTEM_DRIVER_CONTEXT
             Section has no use. Remove it.
