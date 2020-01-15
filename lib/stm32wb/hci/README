@@ -35,3 +35,14 @@ License:
 
 License Link:
    opensource.org/licenses/BSD-3-Clause
+
+Patch List:
+
+        * Remove use of useless section SYSTEM_DRIVER_CONTEXT
+            Section has no use. Remove it.
+          Impacted file: shci_tl.c
+
+        * Inform C-M0 that BLE host should not be used.
+            In case C-M0 binary includes BLE Host, inform that it should not be
+            used as, in Zephyr context, it is  running on C-M4 side.
+          Impacted file: app_conf.h
