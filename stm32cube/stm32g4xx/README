@@ -42,3 +42,8 @@ Patch List:
     Impacted files:
      drivers/src/stm32g4xx_ll_utils.c
     ST Bug tracker ID: 78880
+   *stm32g4xx: system clock value not update when > 80MHz
+    After AHB prescaler to 2 clock value is updated but not
+    once returned to 1 the clock value needs updated.
+    Impacted files:
+      drivers/src/stm32g4xx_ll_utils.c

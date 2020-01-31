@@ -329,6 +329,9 @@ ErrorStatus LL_PLL_ConfigSystemClock_HSI(LL_UTILS_PLLInitTypeDef *UTILS_PLLInitS
     {
       UTILS_ClkInitStruct->AHBCLKDivider = LL_RCC_SYSCLK_DIV_1;
       LL_RCC_SetAHBPrescaler(UTILS_ClkInitStruct->AHBCLKDivider);
+
+      /* Enable PLL and switch system clock to PLL */
+      status = UTILS_EnablePLLAndSwitchSystem(pllfreq, UTILS_ClkInitStruct);
     }
   }
   else
@@ -420,6 +423,9 @@ ErrorStatus LL_PLL_ConfigSystemClock_HSE(uint32_t HSEFrequency, uint32_t HSEBypa
     {
       UTILS_ClkInitStruct->AHBCLKDivider = LL_RCC_SYSCLK_DIV_1;
       LL_RCC_SetAHBPrescaler(UTILS_ClkInitStruct->AHBCLKDivider);
+
+      /* Enable PLL and switch system clock to PLL */
+      status = UTILS_EnablePLLAndSwitchSystem(pllfreq, UTILS_ClkInitStruct);
     }
   }
   else
