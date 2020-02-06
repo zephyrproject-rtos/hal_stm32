@@ -42,3 +42,10 @@ Patch List:
      Impacted files:
       drivers/src/stm32l0xx_hal_tim.c
      ST Bug tracker ID: 63619
+
+    *Fix warnings for extraneous parentheses
+      Using clang 9.0.0, if((sysclk_source == RCC_CFGR_SWS_MSI) )
+      generates warnings.  Remove the extra parentheses
+     Impacted files:
+      drivers/src/stm32l0xx_hal_rcc.c
+     ST Bug tracker ID: 80901
