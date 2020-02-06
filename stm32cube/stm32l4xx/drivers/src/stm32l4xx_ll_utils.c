@@ -390,10 +390,11 @@ ErrorStatus LL_PLL_ConfigSystemClock_MSI(LL_UTILS_PLLInitTypeDef *UTILS_PLLInitS
 
 #if defined(STM32L4R5xx) || defined(STM32L4R7xx) || defined(STM32L4R9xx) || defined(STM32L4S5xx) || defined(STM32L4S7xx) || defined(STM32L4S9xx)
       /* Apply definitive AHB prescaler value if necessary */
-      if((status == SUCCESS) && (hpre != 0U))
+      if((status == SUCCESS) && (hpre == LL_RCC_SYSCLK_DIV_1))
       {
         UTILS_ClkInitStruct->AHBCLKDivider = LL_RCC_SYSCLK_DIV_1;
         LL_RCC_SetAHBPrescaler(UTILS_ClkInitStruct->AHBCLKDivider);
+        status = UTILS_EnablePLLAndSwitchSystem(pllfreq, UTILS_ClkInitStruct);
       }
 #endif
     }
@@ -468,10 +469,11 @@ ErrorStatus LL_PLL_ConfigSystemClock_HSI(LL_UTILS_PLLInitTypeDef *UTILS_PLLInitS
 
 #if defined(STM32L4R5xx) || defined(STM32L4R7xx) || defined(STM32L4R9xx) || defined(STM32L4S5xx) || defined(STM32L4S7xx) || defined(STM32L4S9xx)
     /* Apply definitive AHB prescaler value if necessary */
-    if((status == SUCCESS) && (hpre != 0U))
+    if((status == SUCCESS) && (hpre == LL_RCC_SYSCLK_DIV_1))
     {
       UTILS_ClkInitStruct->AHBCLKDivider = LL_RCC_SYSCLK_DIV_1;
       LL_RCC_SetAHBPrescaler(UTILS_ClkInitStruct->AHBCLKDivider);
+      status = UTILS_EnablePLLAndSwitchSystem(pllfreq, UTILS_ClkInitStruct);
     }
 #endif
   }
@@ -564,10 +566,11 @@ ErrorStatus LL_PLL_ConfigSystemClock_HSE(uint32_t HSEFrequency, uint32_t HSEBypa
 
 #if defined(STM32L4R5xx) || defined(STM32L4R7xx) || defined(STM32L4R9xx) || defined(STM32L4S5xx) || defined(STM32L4S7xx) || defined(STM32L4S9xx)
     /* Apply definitive AHB prescaler value if necessary */
-    if((status == SUCCESS) && (hpre != 0U))
+    if((status == SUCCESS) && (hpre == LL_RCC_SYSCLK_DIV_1))
     {
       UTILS_ClkInitStruct->AHBCLKDivider = LL_RCC_SYSCLK_DIV_1;
       LL_RCC_SetAHBPrescaler(UTILS_ClkInitStruct->AHBCLKDivider);
+      status = UTILS_EnablePLLAndSwitchSystem(pllfreq, UTILS_ClkInitStruct);
     }
 #endif
   }

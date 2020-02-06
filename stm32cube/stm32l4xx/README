@@ -43,3 +43,10 @@ Patch List:
     Impacted files:
      drivers/include/stm32l4xx_ll_exti.h
     ST Bug tracker ID: 55275
+
+   *stm32l4xx: wrong clock setup
+    In case the actual value is AHB prescaler 1, it must be set, 
+    after setting the AHB prescaler to 2.
+    Impacted files:
+     drivers/src/stm32l4xx_ll_utils.c
+    ST Bug tracker ID: 78880
