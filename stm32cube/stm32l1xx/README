@@ -91,3 +91,10 @@ Patch List:
     but these were missing for the low/medium density parts.  Without these
     definitions, the zephyr SPI driver cannot be used on these parts.
     ST Bug tracker ID: 73643
+
+    *Fix warnings for extraneous parentheses
+      Using clang 9.0.0, if((sysclk_source == RCC_CFGR_SWS_MSI) )
+      generates warnings.  Remove the extra parentheses
+     Impacted files:
+      drivers/src/stm32l1xx_hal_rcc.c
+     ST Bug tracker ID: 80902

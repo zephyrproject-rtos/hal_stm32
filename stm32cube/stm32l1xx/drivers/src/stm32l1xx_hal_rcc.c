@@ -458,7 +458,7 @@ HAL_StatusTypeDef HAL_RCC_OscConfig(RCC_OscInitTypeDef  *RCC_OscInitStruct)
   if(((RCC_OscInitStruct->OscillatorType) & RCC_OSCILLATORTYPE_MSI) == RCC_OSCILLATORTYPE_MSI)
   {
     /* When the MSI is used as system clock it will not be disabled */
-    if((sysclk_source == RCC_CFGR_SWS_MSI) )
+    if(sysclk_source == RCC_CFGR_SWS_MSI)
     {
       if((__HAL_RCC_GET_FLAG(RCC_FLAG_MSIRDY) != 0U) && (RCC_OscInitStruct->MSIState == RCC_MSI_OFF))
       {
