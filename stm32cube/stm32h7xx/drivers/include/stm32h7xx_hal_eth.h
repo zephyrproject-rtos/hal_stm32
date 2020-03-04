@@ -25,6 +25,7 @@
  extern "C" {
 #endif
 
+#if defined(ETH)
 /* Includes ------------------------------------------------------------------*/
 #include "stm32h7xx_hal_def.h"
 
@@ -40,7 +41,7 @@
 #ifndef ETH_TX_DESC_CNT
  #define ETH_TX_DESC_CNT         4U
 #endif
-	
+
 #ifndef ETH_RX_DESC_CNT
  #define ETH_RX_DESC_CNT         4U
 #endif
@@ -222,7 +223,7 @@ typedef struct
   FunctionalState  CRCStripTypePacket;          /*!< Enables or disables the CRC stripping for Type packets.*/
 
   FunctionalState  AutomaticPadCRCStrip;        /*!< Enables or disables  the Automatic MAC Pad/CRC Stripping.*/
-																													
+
   FunctionalState  Watchdog;                    /*!< Enables or disables the Watchdog timer on Rx path
                                                            When enabled, the MAC allows no more then 2048 bytes to be received.
                                                            When disabled, the MAC can receive up to 16384 bytes. */
@@ -294,7 +295,7 @@ typedef struct
 
   FunctionalState  ReceiveFlowControl;          /*!< Enables or disables the MAC to decodes the received Pause packet
                                                   and disables its transmitter for a specified (Pause) time */
-																													                                                        	
+
   uint32_t         TransmitQueueMode;           /*!< Specifies the Transmit Queue operating mode.
                                                       This parameter can be a value of @ref ETH_Transmit_Mode */
 
@@ -1665,6 +1666,8 @@ uint32_t             HAL_ETH_GetMACWakeUpSource(ETH_HandleTypeDef *heth);
 /**
   * @}
   */
+
+#endif /* ETH */
 
 #ifdef __cplusplus
 }

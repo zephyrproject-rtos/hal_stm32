@@ -301,13 +301,6 @@ HAL_StatusTypeDef HAL_MDMA_DeInit(MDMA_HandleTypeDef *hmdma)
     return HAL_ERROR;
   }
 
-  /* Check the MDMA peripheral state */
-  if(hmdma->State == HAL_MDMA_STATE_BUSY)
-  {
-    hmdma->ErrorCode = HAL_MDMA_ERROR_BUSY;
-    return HAL_ERROR;
-  }
-
   /* Disable the selected MDMA Channelx */
   __HAL_MDMA_DISABLE(hmdma);
 
@@ -1297,7 +1290,7 @@ HAL_StatusTypeDef HAL_MDMA_Abort_IT(MDMA_HandleTypeDef *hmdma)
   {
     /* No transfer ongoing */
     hmdma->ErrorCode = HAL_MDMA_ERROR_NO_XFER;
-	
+
     return HAL_ERROR;
   }
   else
@@ -1644,7 +1637,7 @@ void HAL_MDMA_IRQHandler(MDMA_HandleTypeDef *hmdma)
         }
         return;
       }
-	
+
       /* Clear the Channel Transfer Complete flag */
       __HAL_MDMA_CLEAR_FLAG(hmdma, MDMA_FLAG_CTC);
 
