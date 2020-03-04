@@ -75,24 +75,26 @@
   */
 HAL_StatusTypeDef HAL_SPIEx_FlushRxFifo(SPI_HandleTypeDef *hspi)
 {
+  uint8_t  count  = 0;
+  uint32_t itflag = hspi->Instance->SR;
   __IO uint32_t tmpreg;
-  uint8_t  count = 0;
-  while ( ((hspi->Instance->SR & SPI_FLAG_FRLVL) !=  SPI_FRLVL_EMPTY) || ((hspi->Instance->SR & SPI_FLAG_RXWNE) ==  SPI_FLAG_RXWNE))
+
+  while (((hspi->Instance->SR & SPI_FLAG_FRLVL) !=  SPI_RX_FIFO_0PACKET) || ((itflag & SPI_FLAG_RXWNE) !=  0UL))
   {
-    count+=4;
+    count += (uint8_t)4UL;
     tmpreg = hspi->Instance->RXDR;
     UNUSED(tmpreg); /* To avoid GCC warning */
-    
+
     if (IS_SPI_HIGHEND_INSTANCE(hspi->Instance))
     {
-      if(count > SPI_HIGHEND_FIFO_SIZE)
+      if (count > SPI_HIGHEND_FIFO_SIZE)
       {
         return HAL_TIMEOUT;
       }
     }
     else
     {
-      if(count > SPI_LOWEND_FIFO_SIZE)
+      if (count > SPI_LOWEND_FIFO_SIZE)
       {
         return HAL_TIMEOUT;
       }
@@ -104,7 +106,7 @@ HAL_StatusTypeDef HAL_SPIEx_FlushRxFifo(SPI_HandleTypeDef *hspi)
 
 /**
   * @brief  Enable the Lock for the AF configuration of associated IOs
-  *         and write protect the Content of Configuartion register 2
+  *         and write protect the Content of Configuration register 2
   *         when SPI is enabled
   * @param  hspi: pointer to a SPI_HandleTypeDef structure that contains
   *               the configuration information for SPI module.
@@ -129,14 +131,14 @@ HAL_StatusTypeDef HAL_SPIEx_EnableLockConfiguration(SPI_HandleTypeDef *hspi)
   /* Check if the SPI is disabled to edit IOLOCK bit */
   if ((hspi->Instance->CR1 & SPI_CR1_SPE) != SPI_CR1_SPE)
   {
-    SET_BIT(hspi->Instance->CR1 , SPI_CR1_IOLOCK);
+    SET_BIT(hspi->Instance->CR1, SPI_CR1_IOLOCK);
   }
   else
   {
     /* Disable SPI peripheral */
     __HAL_SPI_DISABLE(hspi);
 
-    SET_BIT(hspi->Instance->CR1 , SPI_CR1_IOLOCK);
+    SET_BIT(hspi->Instance->CR1, SPI_CR1_IOLOCK);
 
     /* Enable SPI peripheral */
     __HAL_SPI_ENABLE(hspi);
@@ -157,7 +159,7 @@ HAL_StatusTypeDef HAL_SPIEx_EnableLockConfiguration(SPI_HandleTypeDef *hspi)
   * @param  UnderrunBehaviour : Behavior of slave transmitter at underrun condition
   *                             This parameter can be a value of @ref SPI_Underrun_Behaviour.
   * @retval None
-  */ 
+  */
 HAL_StatusTypeDef HAL_SPIEx_ConfigureUnderrun(SPI_HandleTypeDef *hspi, uint32_t UnderrunDetection, uint32_t UnderrunBehaviour)
 {
   HAL_StatusTypeDef errorcode = HAL_OK;

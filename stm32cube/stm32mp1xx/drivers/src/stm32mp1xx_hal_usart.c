@@ -190,12 +190,14 @@ static void USART_DMAError(DMA_HandleTypeDef *hdma);
 static void USART_DMAAbortOnError(DMA_HandleTypeDef *hdma);
 static void USART_DMATxAbortCallback(DMA_HandleTypeDef *hdma);
 static void USART_DMARxAbortCallback(DMA_HandleTypeDef *hdma);
+#ifdef HAL_MDMA_MODULE_ENABLED
 static void USART_MDMATransmitCplt(MDMA_HandleTypeDef *hmdma);
 static void USART_MDMAReceiveCplt(MDMA_HandleTypeDef *hmdma);
 static void USART_MDMAError(MDMA_HandleTypeDef *hmdma);
 static void USART_MDMAAbortOnError(MDMA_HandleTypeDef *hmdma);
 static void USART_MDMATxAbortCallback(MDMA_HandleTypeDef *hmdma);
 static void USART_MDMARxAbortCallback(MDMA_HandleTypeDef *hmdma);
+#endif
 static HAL_StatusTypeDef USART_WaitOnFlagUntilTimeout(USART_HandleTypeDef *husart, uint32_t Flag, FlagStatus Status, uint32_t Tickstart, uint32_t Timeout);
 static HAL_StatusTypeDef USART_SetConfig(USART_HandleTypeDef *husart);
 static HAL_StatusTypeDef USART_CheckIdleState(USART_HandleTypeDef *husart);
@@ -1402,6 +1404,7 @@ HAL_StatusTypeDef HAL_USART_Transmit_DMA(USART_HandleTypeDef *husart, uint8_t *p
       tmp = (uint32_t *)&pTxData;
       status = HAL_DMA_Start_IT(husart->hdmatx, *(uint32_t *)tmp, (uint32_t)&husart->Instance->TDR, Size);
     }
+#ifdef HAL_MDMA_MODULE_ENABLED
     if (husart->hmdmatx != NULL)
     {
       /* Set the USART MDMA transfer complete callback */
@@ -1414,6 +1417,7 @@ HAL_StatusTypeDef HAL_USART_Transmit_DMA(USART_HandleTypeDef *husart, uint8_t *p
       tmp = (uint32_t *)&pTxData;
       status = HAL_MDMA_Start_IT(husart->hmdmatx, *(uint32_t *)tmp, (uint32_t)&husart->Instance->TDR, Size, 1);
     }
+#endif
 
     if (status == HAL_OK)
     {
@@ -1497,6 +1501,7 @@ HAL_StatusTypeDef HAL_USART_Receive_DMA(USART_HandleTypeDef *husart, uint8_t *pR
       /* Enable the USART receive DMA channel */
       status = HAL_DMA_Start_IT(husart->hdmarx, (uint32_t)&husart->Instance->RDR, *(uint32_t *)tmp, Size);
     }
+#ifdef HAL_MDMA_MODULE_ENABLED
     if (husart->hmdmarx != NULL)
     {
       /* Set the USART MDMA Rx transfer complete callback */
@@ -1508,6 +1513,7 @@ HAL_StatusTypeDef HAL_USART_Receive_DMA(USART_HandleTypeDef *husart, uint8_t *pR
       /* Enable the USART receive DMA channel */
       status = HAL_MDMA_Start_IT(husart->hmdmarx, (uint32_t)&husart->Instance->RDR, *(uint32_t *)tmp, Size, 1);
     }
+#endif
 
     if ((status == HAL_OK) &&
         (husart->SlaveMode == USART_SLAVEMODE_DISABLE))
@@ -1524,12 +1530,14 @@ HAL_StatusTypeDef HAL_USART_Receive_DMA(USART_HandleTypeDef *husart, uint8_t *pR
         husart->hdmatx->XferCpltCallback = NULL;
         status = HAL_DMA_Start_IT(husart->hdmatx, *(uint32_t *)tmp, (uint32_t)&husart->Instance->TDR, Size);
       }
+#ifdef HAL_MDMA_MODULE_ENABLED
       if (husart->hmdmatx != NULL)
       {
         husart->hmdmatx->XferErrorCallback = NULL;
         husart->hmdmatx->XferCpltCallback = NULL;
         status = HAL_MDMA_Start_IT(husart->hmdmatx, *(uint32_t *)tmp, (uint32_t)&husart->Instance->TDR, Size, 1);
       }
+#endif
     }
 
     if (status == HAL_OK)
@@ -1559,10 +1567,12 @@ HAL_StatusTypeDef HAL_USART_Receive_DMA(USART_HandleTypeDef *husart, uint8_t *pR
       {
         status = HAL_DMA_Abort(husart->hdmarx);
       }
+#ifdef HAL_MDMA_MODULE_ENABLED
       if (husart->hmdmarx != NULL)
       {
         status = HAL_MDMA_Abort(husart->hmdmarx);
       }
+#endif
 
       /* No need to check on error code */
       UNUSED(status);
@@ -1653,6 +1663,7 @@ HAL_StatusTypeDef HAL_USART_TransmitReceive_DMA(USART_HandleTypeDef *husart, uin
       status = HAL_ERROR;
     }
 
+#ifdef HAL_MDMA_MODULE_ENABLED
     if ((husart->hmdmarx != NULL) || (husart->hmdmatx != NULL))
     {
       /* Set the USART MDMA Rx transfer complete callback */
@@ -1683,6 +1694,7 @@ HAL_StatusTypeDef HAL_USART_TransmitReceive_DMA(USART_HandleTypeDef *husart, uin
       status = HAL_ERROR;
     }
 
+#endif
     if (status == HAL_OK)
     {
       /* Process Unlocked */
@@ -1713,10 +1725,12 @@ HAL_StatusTypeDef HAL_USART_TransmitReceive_DMA(USART_HandleTypeDef *husart, uin
       {
         status = HAL_DMA_Abort(husart->hdmarx);
       }
+#ifdef HAL_MDMA_MODULE_ENABLED
       if (husart->hmdmarx != NULL)
       {
         status = HAL_MDMA_Abort(husart->hmdmarx);
       }
+#endif
 
       /* No need to check on error code */
       UNUSED(status);
@@ -1862,6 +1876,7 @@ HAL_StatusTypeDef HAL_USART_DMAStop(USART_HandleTypeDef *husart)
       }
     }
   }
+#ifdef HAL_MDMA_MODULE_ENABLED
   if (husart->hmdmatx != NULL)
   {
     if (HAL_MDMA_Abort(husart->hmdmatx) != HAL_OK)
@@ -1875,6 +1890,7 @@ HAL_StatusTypeDef HAL_USART_DMAStop(USART_HandleTypeDef *husart)
       }
     }
   }
+#endif
   /* Abort the USART DMA rx channel */
   if (husart->hdmarx != NULL)
   {
@@ -1889,6 +1905,7 @@ HAL_StatusTypeDef HAL_USART_DMAStop(USART_HandleTypeDef *husart)
       }
     }
   }
+#ifdef HAL_MDMA_MODULE_ENABLED
   if (husart->hmdmarx != NULL)
   {
     if (HAL_MDMA_Abort(husart->hmdmarx) != HAL_OK)
@@ -1902,6 +1919,7 @@ HAL_StatusTypeDef HAL_USART_DMAStop(USART_HandleTypeDef *husart)
       }
     }
   }
+#endif
 
   USART_EndTransfer(husart);
   husart->State = HAL_USART_STATE_READY;
@@ -1950,6 +1968,7 @@ HAL_StatusTypeDef HAL_USART_Abort(USART_HandleTypeDef *husart)
         }
       }
     }
+#ifdef HAL_MDMA_MODULE_ENABLED
     if (husart->hmdmatx != NULL)
     {
       /* Set the USART MDMA Abort callback to Null.
@@ -1967,6 +1986,7 @@ HAL_StatusTypeDef HAL_USART_Abort(USART_HandleTypeDef *husart)
         }
       }
     }
+#endif
   }
 
   /* Disable the USART DMA Rx request if enabled */
@@ -1992,6 +2012,7 @@ HAL_StatusTypeDef HAL_USART_Abort(USART_HandleTypeDef *husart)
         }
       }
     }
+#ifdef HAL_MDMA_MODULE_ENABLED
     if (husart->hmdmarx != NULL)
     {
       /* Set the USART MDMA Abort callback to Null.
@@ -2009,6 +2030,7 @@ HAL_StatusTypeDef HAL_USART_Abort(USART_HandleTypeDef *husart)
         }
       }
     }
+#endif
   }
 
   /* Reset Tx and Rx transfer counters */
@@ -2074,6 +2096,7 @@ HAL_StatusTypeDef HAL_USART_Abort_IT(USART_HandleTypeDef *husart)
       husart->hdmatx->XferAbortCallback = NULL;
     }
   }
+#ifdef HAL_MDMA_MODULE_ENABLED
   /* If MDMA Tx and/or MDMA Rx Handles are associated to USART Handle, MDMA Abort complete callbacks should be initialised
      before any call to MDMA Abort functions */
   /* MDMA Tx Handle is valid */
@@ -2090,6 +2113,7 @@ HAL_StatusTypeDef HAL_USART_Abort_IT(USART_HandleTypeDef *husart)
       husart->hmdmatx->XferAbortCallback = NULL;
     }
   }
+#endif
   /* DMA Rx Handle is valid */
   if (husart->hdmarx != NULL)
   {
@@ -2104,6 +2128,7 @@ HAL_StatusTypeDef HAL_USART_Abort_IT(USART_HandleTypeDef *husart)
       husart->hdmarx->XferAbortCallback = NULL;
     }
   }
+#ifdef HAL_MDMA_MODULE_ENABLED
   /* MDMA Rx Handle is valid */
   if (husart->hmdmarx != NULL)
   {
@@ -2118,6 +2143,7 @@ HAL_StatusTypeDef HAL_USART_Abort_IT(USART_HandleTypeDef *husart)
       husart->hmdmarx->XferAbortCallback = NULL;
     }
   }
+#endif
 
   /* Disable the USART DMA Tx request if enabled */
   if (HAL_IS_BIT_SET(husart->Instance->CR3, USART_CR3_DMAT))
@@ -2141,6 +2167,7 @@ HAL_StatusTypeDef HAL_USART_Abort_IT(USART_HandleTypeDef *husart)
         abortcplt = 0U;
       }
     }
+#ifdef HAL_MDMA_MODULE_ENABLED
     /* Abort the USART MDMA Tx channel : use non blocking MDMA Abort API (callback) */
     if (husart->hmdmatx != NULL)
     {
@@ -2157,6 +2184,7 @@ HAL_StatusTypeDef HAL_USART_Abort_IT(USART_HandleTypeDef *husart)
         abortcplt = 0U;
       }
     }
+#endif
   }
 
   /* Disable the USART DMA Rx request if enabled */
@@ -2181,6 +2209,7 @@ HAL_StatusTypeDef HAL_USART_Abort_IT(USART_HandleTypeDef *husart)
         abortcplt = 0U;
       }
     }
+#ifdef HAL_MDMA_MODULE_ENABLED
     /* Abort the USART MDMA Rx channel : use non blocking MDMA Abort API (callback) */
     if (husart->hmdmarx != NULL)
     {
@@ -2198,6 +2227,7 @@ HAL_StatusTypeDef HAL_USART_Abort_IT(USART_HandleTypeDef *husart)
         abortcplt = 0U;
       }
     }
+#endif
   }
 
   /* if no DMA abort complete callback execution is required => call user Abort Complete callback */
@@ -2364,6 +2394,7 @@ void HAL_USART_IRQHandler(USART_HandleTypeDef *husart)
             /* Abort DMA TX */
             (void)HAL_DMA_Abort_IT(husart->hdmatx);
           }
+#ifdef HAL_MDMA_MODULE_ENABLED
           /* Abort the USART MDMA Tx channel */
           if (husart->hmdmatx != NULL)
           {
@@ -2374,6 +2405,7 @@ void HAL_USART_IRQHandler(USART_HandleTypeDef *husart)
             /* Abort MDMA TX */
             (void)HAL_MDMA_Abort_IT(husart->hmdmatx);
           }
+#endif
 
           /* Abort the USART DMA Rx channel */
           if (husart->hdmarx != NULL)
@@ -2389,6 +2421,7 @@ void HAL_USART_IRQHandler(USART_HandleTypeDef *husart)
               husart->hdmarx->XferAbortCallback(husart->hdmarx);
             }
           }
+#ifdef HAL_MDMA_MODULE_ENABLED
           /* Abort the USART MDMA Rx channel */
           else if (husart->hmdmarx != NULL)
           {
@@ -2403,6 +2436,7 @@ void HAL_USART_IRQHandler(USART_HandleTypeDef *husart)
               husart->hmdmarx->XferAbortCallback(husart->hmdmarx);
             }
           }
+#endif
           else
           {
             /* Call user error callback */
@@ -2979,6 +3013,7 @@ static void USART_DMARxAbortCallback(DMA_HandleTypeDef *hdma)
 #endif /* USE_HAL_USART_REGISTER_CALLBACKS */
 }
 
+#ifdef HAL_MDMA_MODULE_ENABLED
 /**
   * @brief  MDMA USART transmit process complete callback.
   * @param  hmdma MDMA handle.
@@ -3199,6 +3234,7 @@ static void USART_MDMARxAbortCallback(MDMA_HandleTypeDef *hmdma)
   HAL_USART_AbortCpltCallback(husart);
 #endif
 }
+#endif
 
 /**
   * @brief  Handle USART Communication Timeout.

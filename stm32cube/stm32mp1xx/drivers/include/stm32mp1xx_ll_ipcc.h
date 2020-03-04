@@ -696,6 +696,17 @@ __STATIC_INLINE uint32_t LL_C2_IPCC_IsActiveFlag_CHx(IPCC_TypeDef  const *const 
 }
 
 /**
+  * @brief  Get the number of supported channels.
+  * @rmtoll HWCFGR        CHANNELS         LL_IPCC_GetChannelNumber
+  * @param  IPCCx IPCC Instance.
+  * @retval Number of supported channels.
+  */
+__STATIC_INLINE uint32_t LL_IPCC_GetChannelNumber(IPCC_TypeDef *IPCCx)
+{
+  return READ_BIT(IPCCx->HWCFGR, IPCC_HWCFGR_CHANNELS) >> IPCC_HWCFGR_CHANNELS_Pos;
+}
+
+/**
   * @brief  get channels configuration.
   * @rmtoll HWCFGR        CHANNELS         LL_IPCC_GetChannelConfig
   * @param  IPCCx IPCC Instance.

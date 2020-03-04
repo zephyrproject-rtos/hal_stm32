@@ -355,13 +355,13 @@ typedef struct
 /** @defgroup RCCEx_I2C12_Clock_Source  I2C12 Clock Source
   * @{
   */
-#define RCC_I2C12CLKSOURCE_BCLK         RCC_I2C12CKSELR_I2C12SRC_0
+#define RCC_I2C12CLKSOURCE_PCLK1        RCC_I2C12CKSELR_I2C12SRC_0
 #define RCC_I2C12CLKSOURCE_PLL4         RCC_I2C12CKSELR_I2C12SRC_1
 #define RCC_I2C12CLKSOURCE_HSI          RCC_I2C12CKSELR_I2C12SRC_2
 #define RCC_I2C12CLKSOURCE_CSI          RCC_I2C12CKSELR_I2C12SRC_3
 
 #define IS_RCC_I2C12CLKSOURCE(SOURCE) \
-                              (((SOURCE) == RCC_I2C12CLKSOURCE_BCLK)   || \
+                              (((SOURCE) == RCC_I2C12CLKSOURCE_PCLK1)  || \
                                ((SOURCE) == RCC_I2C12CLKSOURCE_PLL4)   || \
                                ((SOURCE) == RCC_I2C12CLKSOURCE_HSI)    || \
                                ((SOURCE) == RCC_I2C12CLKSOURCE_CSI))
@@ -372,13 +372,13 @@ typedef struct
 /** @defgroup RCCEx_I2C35_Clock_Source I2C35 Clock Source
   * @{
   */
-#define RCC_I2C35CLKSOURCE_BCLK         RCC_I2C35CKSELR_I2C35SRC_0
+#define RCC_I2C35CLKSOURCE_PCLK1        RCC_I2C35CKSELR_I2C35SRC_0
 #define RCC_I2C35CLKSOURCE_PLL4         RCC_I2C35CKSELR_I2C35SRC_1
 #define RCC_I2C35CLKSOURCE_HSI          RCC_I2C35CKSELR_I2C35SRC_2
 #define RCC_I2C35CLKSOURCE_CSI          RCC_I2C35CKSELR_I2C35SRC_3
 
 #define IS_RCC_I2C35CLKSOURCE(SOURCE) \
-                              (((SOURCE) == RCC_I2C35CLKSOURCE_BCLK)  || \
+                              (((SOURCE) == RCC_I2C35CLKSOURCE_PCLK1) || \
                                ((SOURCE) == RCC_I2C35CLKSOURCE_PLL4)  || \
                                ((SOURCE) == RCC_I2C35CLKSOURCE_HSI)   || \
                                ((SOURCE) == RCC_I2C35CLKSOURCE_CSI))
@@ -390,13 +390,13 @@ typedef struct
 /** @defgroup RCCEx_I2C46_Clock_Source I2C46 Clock Source
   * @{
   */
-#define RCC_I2C46CLKSOURCE_BCLK         RCC_I2C46CKSELR_I2C46SRC_0
+#define RCC_I2C46CLKSOURCE_PCLK5        RCC_I2C46CKSELR_I2C46SRC_0
 #define RCC_I2C46CLKSOURCE_PLL3         RCC_I2C46CKSELR_I2C46SRC_1
 #define RCC_I2C46CLKSOURCE_HSI          RCC_I2C46CKSELR_I2C46SRC_2
 #define RCC_I2C46CLKSOURCE_CSI          RCC_I2C46CKSELR_I2C46SRC_3
 
 #define IS_RCC_I2C46CLKSOURCE(SOURCE) \
-                              (((SOURCE) == RCC_I2C46CLKSOURCE_BCLK )  || \
+                              (((SOURCE) == RCC_I2C46CLKSOURCE_PCLK5)  || \
                                ((SOURCE) == RCC_I2C46CLKSOURCE_PLL3)   || \
                                ((SOURCE) == RCC_I2C46CLKSOURCE_HSI)    || \
                                ((SOURCE) == RCC_I2C46CLKSOURCE_CSI))
@@ -527,17 +527,17 @@ typedef struct
 /** @defgroup RCCEx_SPI45_Clock_Source SPI45 Clock Source
   * @{
   */
-#define RCC_SPI45CLKSOURCE_BCLK         RCC_SPI45CKSELR_SPI45SRC_0
+#define RCC_SPI45CLKSOURCE_PCLK2        RCC_SPI45CKSELR_SPI45SRC_0
 #define RCC_SPI45CLKSOURCE_PLL4         RCC_SPI45CKSELR_SPI45SRC_1
 #define RCC_SPI45CLKSOURCE_HSI          RCC_SPI45CKSELR_SPI45SRC_2
 #define RCC_SPI45CLKSOURCE_CSI          RCC_SPI45CKSELR_SPI45SRC_3
 #define RCC_SPI45CLKSOURCE_HSE          RCC_SPI45CKSELR_SPI45SRC_4
 
 #define IS_RCC_SPI45CLKSOURCE(__SOURCE__) \
-                              (((__SOURCE__) == RCC_SPI45CLKSOURCE_BCLK) || \
-                               ((__SOURCE__) == RCC_SPI45CLKSOURCE_PLL4) || \
-                               ((__SOURCE__) == RCC_SPI45CLKSOURCE_HSI)  || \
-                               ((__SOURCE__) == RCC_SPI45CLKSOURCE_CSI)  || \
+                              (((__SOURCE__) == RCC_SPI45CLKSOURCE_PCLK2) || \
+                               ((__SOURCE__) == RCC_SPI45CLKSOURCE_PLL4)  || \
+                               ((__SOURCE__) == RCC_SPI45CLKSOURCE_HSI)   || \
+                               ((__SOURCE__) == RCC_SPI45CLKSOURCE_CSI)   || \
                                ((__SOURCE__) == RCC_SPI45CLKSOURCE_HSE))
 /**
   * @}
@@ -546,7 +546,7 @@ typedef struct
 /** @defgroup RCCEx_SPI6_Clock_Source SPI6 Clock Source
   * @{
   */
-#define RCC_SPI6CLKSOURCE_BCLK          RCC_SPI6CKSELR_SPI6SRC_0
+#define RCC_SPI6CLKSOURCE_PCLK5         RCC_SPI6CKSELR_SPI6SRC_0
 #define RCC_SPI6CLKSOURCE_PLL4          RCC_SPI6CKSELR_SPI6SRC_1
 #define RCC_SPI6CLKSOURCE_HSI           RCC_SPI6CKSELR_SPI6SRC_2
 #define RCC_SPI6CLKSOURCE_CSI           RCC_SPI6CKSELR_SPI6SRC_3
@@ -554,7 +554,7 @@ typedef struct
 #define RCC_SPI6CLKSOURCE_PLL3          RCC_SPI6CKSELR_SPI6SRC_5
 
 #define IS_RCC_SPI6CLKSOURCE(__SOURCE__) \
-                             (((__SOURCE__) == RCC_SPI6CLKSOURCE_BCLK)  || \
+                             (((__SOURCE__) == RCC_SPI6CLKSOURCE_PCLK5) || \
                               ((__SOURCE__) == RCC_SPI6CLKSOURCE_PLL4)  || \
                               ((__SOURCE__) == RCC_SPI6CLKSOURCE_HSI)   || \
                               ((__SOURCE__) == RCC_SPI6CLKSOURCE_CSI)   || \
@@ -568,7 +568,7 @@ typedef struct
 /** @defgroup RCCEx_USART1_Clock_Source USART1 Clock Source
   * @{
   */
-#define RCC_USART1CLKSOURCE_BCLK        RCC_UART1CKSELR_UART1SRC_0
+#define RCC_USART1CLKSOURCE_PCLK5       RCC_UART1CKSELR_UART1SRC_0
 #define RCC_USART1CLKSOURCE_PLL3        RCC_UART1CKSELR_UART1SRC_1
 #define RCC_USART1CLKSOURCE_HSI         RCC_UART1CKSELR_UART1SRC_2
 #define RCC_USART1CLKSOURCE_CSI         RCC_UART1CKSELR_UART1SRC_3
@@ -576,7 +576,7 @@ typedef struct
 #define RCC_USART1CLKSOURCE_HSE         RCC_UART1CKSELR_UART1SRC_5
 
 #define IS_RCC_USART1CLKSOURCE(SOURCE) \
-                               (((SOURCE) == RCC_USART1CLKSOURCE_BCLK)  || \
+                               (((SOURCE) == RCC_USART1CLKSOURCE_PCLK5) || \
                                 ((SOURCE) == RCC_USART1CLKSOURCE_PLL3)  || \
                                 ((SOURCE) == RCC_USART1CLKSOURCE_HSI)   || \
                                 ((SOURCE) == RCC_USART1CLKSOURCE_CSI)   || \
@@ -589,14 +589,14 @@ typedef struct
 /** @defgroup RCCEx_UART24_Clock_Source UART24 Clock Source
   * @{
   */
-#define RCC_UART24CLKSOURCE_BCLK         RCC_UART24CKSELR_UART24SRC_0
+#define RCC_UART24CLKSOURCE_PCLK1        RCC_UART24CKSELR_UART24SRC_0
 #define RCC_UART24CLKSOURCE_PLL4         RCC_UART24CKSELR_UART24SRC_1
 #define RCC_UART24CLKSOURCE_HSI          RCC_UART24CKSELR_UART24SRC_2
 #define RCC_UART24CLKSOURCE_CSI          RCC_UART24CKSELR_UART24SRC_3
 #define RCC_UART24CLKSOURCE_HSE          RCC_UART24CKSELR_UART24SRC_4
 
 #define IS_RCC_UART24CLKSOURCE(SOURCE) \
-                               (((SOURCE) == RCC_UART24CLKSOURCE_BCLK)  || \
+                               (((SOURCE) == RCC_UART24CLKSOURCE_PCLK1) || \
                                 ((SOURCE) == RCC_UART24CLKSOURCE_PLL4)  || \
                                 ((SOURCE) == RCC_UART24CLKSOURCE_HSI)   || \
                                 ((SOURCE) == RCC_UART24CLKSOURCE_CSI)   || \
@@ -608,14 +608,14 @@ typedef struct
 /** @defgroup RCCEx_UART35_Clock_Source UART35 Clock Source
   * @{
   */
-#define RCC_UART35CLKSOURCE_BCLK         RCC_UART35CKSELR_UART35SRC_0
+#define RCC_UART35CLKSOURCE_PCLK1        RCC_UART35CKSELR_UART35SRC_0
 #define RCC_UART35CLKSOURCE_PLL4         RCC_UART35CKSELR_UART35SRC_1
 #define RCC_UART35CLKSOURCE_HSI          RCC_UART35CKSELR_UART35SRC_2
 #define RCC_UART35CLKSOURCE_CSI          RCC_UART35CKSELR_UART35SRC_3
 #define RCC_UART35CLKSOURCE_HSE          RCC_UART35CKSELR_UART35SRC_4
 
 #define IS_RCC_UART35CLKSOURCE(SOURCE) \
-                               (((SOURCE) == RCC_UART35CLKSOURCE_BCLK)  || \
+                               (((SOURCE) == RCC_UART35CLKSOURCE_PCLK1) || \
                                 ((SOURCE) == RCC_UART35CLKSOURCE_PLL4)  || \
                                 ((SOURCE) == RCC_UART35CLKSOURCE_HSI)   || \
                                 ((SOURCE) == RCC_UART35CLKSOURCE_CSI)   || \
@@ -627,14 +627,14 @@ typedef struct
 /** @defgroup RCCEx_USART6_Clock_Source USART6 Clock Source
   * @{
   */
-#define RCC_USART6CLKSOURCE_BCLK        RCC_UART6CKSELR_UART6SRC_0
+#define RCC_USART6CLKSOURCE_PCLK2       RCC_UART6CKSELR_UART6SRC_0
 #define RCC_USART6CLKSOURCE_PLL4        RCC_UART6CKSELR_UART6SRC_1
 #define RCC_USART6CLKSOURCE_HSI         RCC_UART6CKSELR_UART6SRC_2
 #define RCC_USART6CLKSOURCE_CSI         RCC_UART6CKSELR_UART6SRC_3
 #define RCC_USART6CLKSOURCE_HSE         RCC_UART6CKSELR_UART6SRC_4
 
 #define IS_RCC_USART6CLKSOURCE(SOURCE) \
-                               (((SOURCE) == RCC_USART6CLKSOURCE_BCLK)  || \
+                               (((SOURCE) == RCC_USART6CLKSOURCE_PCLK2) || \
                                 ((SOURCE) == RCC_USART6CLKSOURCE_PLL4)  || \
                                 ((SOURCE) == RCC_USART6CLKSOURCE_HSI)   || \
                                 ((SOURCE) == RCC_USART6CLKSOURCE_CSI)   || \
@@ -646,14 +646,14 @@ typedef struct
 /** @defgroup RCCEx_UART78_Clock_Source UART78 Clock Source
   * @{
   */
-#define RCC_UART78CLKSOURCE_BCLK         RCC_UART78CKSELR_UART78SRC_0
+#define RCC_UART78CLKSOURCE_PCLK1        RCC_UART78CKSELR_UART78SRC_0
 #define RCC_UART78CLKSOURCE_PLL4         RCC_UART78CKSELR_UART78SRC_1
 #define RCC_UART78CLKSOURCE_HSI          RCC_UART78CKSELR_UART78SRC_2
 #define RCC_UART78CLKSOURCE_CSI          RCC_UART78CKSELR_UART78SRC_3
 #define RCC_UART78CLKSOURCE_HSE          RCC_UART78CKSELR_UART78SRC_4
 
 #define IS_RCC_UART78CLKSOURCE(SOURCE) \
-                               (((SOURCE) == RCC_UART78CLKSOURCE_BCLK)  || \
+                               (((SOURCE) == RCC_UART78CLKSOURCE_PCLK1) || \
                                 ((SOURCE) == RCC_UART78CLKSOURCE_PLL4)  || \
                                 ((SOURCE) == RCC_UART78CLKSOURCE_HSI)   || \
                                 ((SOURCE) == RCC_UART78CLKSOURCE_CSI)   || \
@@ -665,13 +665,13 @@ typedef struct
 /** @defgroup RCCEx_SDMMC12_Clock_Source SDMMC12 Clock Source
   * @{
   */
-#define RCC_SDMMC12CLKSOURCE_BCLK        RCC_SDMMC12CKSELR_SDMMC12SRC_0
+#define RCC_SDMMC12CLKSOURCE_HCLK6       RCC_SDMMC12CKSELR_SDMMC12SRC_0
 #define RCC_SDMMC12CLKSOURCE_PLL3        RCC_SDMMC12CKSELR_SDMMC12SRC_1
 #define RCC_SDMMC12CLKSOURCE_PLL4        RCC_SDMMC12CKSELR_SDMMC12SRC_2
 #define RCC_SDMMC12CLKSOURCE_HSI         RCC_SDMMC12CKSELR_SDMMC12SRC_3
 
 #define IS_RCC_SDMMC12CLKSOURCE(SOURCE) \
-                                (((SOURCE) == RCC_SDMMC12CLKSOURCE_BCLK)  || \
+                                (((SOURCE) == RCC_SDMMC12CLKSOURCE_HCLK6) || \
                                  ((SOURCE) == RCC_SDMMC12CLKSOURCE_PLL3)  || \
                                  ((SOURCE) == RCC_SDMMC12CLKSOURCE_PLL4)  || \
                                  ((SOURCE) == RCC_SDMMC12CLKSOURCE_HSI))
@@ -682,13 +682,13 @@ typedef struct
 /** @defgroup RCCEx_SDMMC3_Clock_Source SDMMC3 Clock Source
   * @{
   */
-#define RCC_SDMMC3CLKSOURCE_BCLK       RCC_SDMMC3CKSELR_SDMMC3SRC_0
+#define RCC_SDMMC3CLKSOURCE_HCLK2      RCC_SDMMC3CKSELR_SDMMC3SRC_0
 #define RCC_SDMMC3CLKSOURCE_PLL3       RCC_SDMMC3CKSELR_SDMMC3SRC_1
 #define RCC_SDMMC3CLKSOURCE_PLL4       RCC_SDMMC3CKSELR_SDMMC3SRC_2
 #define RCC_SDMMC3CLKSOURCE_HSI        RCC_SDMMC3CKSELR_SDMMC3SRC_3
 
 #define IS_RCC_SDMMC3CLKSOURCE(SOURCE)  \
-                               (((SOURCE) == RCC_SDMMC3CLKSOURCE_BCLK)  || \
+                               (((SOURCE) == RCC_SDMMC3CLKSOURCE_HCLK2) || \
                                 ((SOURCE) == RCC_SDMMC3CLKSOURCE_PLL3)  || \
                                 ((SOURCE) == RCC_SDMMC3CLKSOURCE_PLL4)  || \
                                 ((SOURCE) == RCC_SDMMC3CLKSOURCE_HSI))
@@ -757,13 +757,13 @@ typedef struct
 /** @defgroup RCCEx_QSPI_Clock_Source QSPI Clock Source
   * @{
   */
-#define RCC_QSPICLKSOURCE_BCLK  RCC_QSPICKSELR_QSPISRC_0
+#define RCC_QSPICLKSOURCE_ACLK  RCC_QSPICKSELR_QSPISRC_0
 #define RCC_QSPICLKSOURCE_PLL3  RCC_QSPICKSELR_QSPISRC_1
 #define RCC_QSPICLKSOURCE_PLL4  RCC_QSPICKSELR_QSPISRC_2
 #define RCC_QSPICLKSOURCE_PER   RCC_QSPICKSELR_QSPISRC_3
 
 #define IS_RCC_QSPICLKSOURCE(SOURCE) \
-                             (((SOURCE) == RCC_QSPICLKSOURCE_BCLK) || \
+                             (((SOURCE) == RCC_QSPICLKSOURCE_ACLK) || \
                               ((SOURCE) == RCC_QSPICLKSOURCE_PLL3) || \
                               ((SOURCE) == RCC_QSPICLKSOURCE_PLL4) || \
                               ((SOURCE) == RCC_QSPICLKSOURCE_PER))
@@ -774,12 +774,12 @@ typedef struct
 /** @defgroup RCCEx_FMC_Clock_Source FMC Clock Source
   * @{
   */
-#define RCC_FMCCLKSOURCE_BCLK       RCC_FMCCKSELR_FMCSRC_0
+#define RCC_FMCCLKSOURCE_ACLK       RCC_FMCCKSELR_FMCSRC_0
 #define RCC_FMCCLKSOURCE_PLL3       RCC_FMCCKSELR_FMCSRC_1
 #define RCC_FMCCLKSOURCE_PLL4       RCC_FMCCKSELR_FMCSRC_2
 #define RCC_FMCCLKSOURCE_PER        RCC_FMCCKSELR_FMCSRC_3
 
-#define IS_RCC_FMCCLKSOURCE(SOURCE) (((SOURCE) == RCC_FMCCLKSOURCE_BCLK)  || \
+#define IS_RCC_FMCCLKSOURCE(SOURCE) (((SOURCE) == RCC_FMCCLKSOURCE_ACLK)  || \
                                      ((SOURCE) == RCC_FMCCLKSOURCE_PLL3)  || \
                                      ((SOURCE) == RCC_FMCCLKSOURCE_PLL4)  || \
                                      ((SOURCE) == RCC_FMCCLKSOURCE_PER))
@@ -966,7 +966,7 @@ typedef struct
 /** @defgroup RCCEx_LPTIM1_Clock_Source LPTIM1 Clock Source
   * @{
   */
-#define RCC_LPTIM1CLKSOURCE_BCLK        RCC_LPTIM1CKSELR_LPTIM1SRC_0
+#define RCC_LPTIM1CLKSOURCE_PCLK1       RCC_LPTIM1CKSELR_LPTIM1SRC_0
 #define RCC_LPTIM1CLKSOURCE_PLL4        RCC_LPTIM1CKSELR_LPTIM1SRC_1
 #define RCC_LPTIM1CLKSOURCE_PLL3        RCC_LPTIM1CKSELR_LPTIM1SRC_2
 #define RCC_LPTIM1CLKSOURCE_LSE         RCC_LPTIM1CKSELR_LPTIM1SRC_3
@@ -975,7 +975,7 @@ typedef struct
 #define RCC_LPTIM1CLKSOURCE_OFF         RCC_LPTIM1CKSELR_LPTIM1SRC_6
 
 #define IS_RCC_LPTIM1CLKSOURCE(SOURCE) \
-                               (((SOURCE) == RCC_LPTIM1CLKSOURCE_BCLK)  || \
+                               (((SOURCE) == RCC_LPTIM1CLKSOURCE_PCLK1) || \
                                 ((SOURCE) == RCC_LPTIM1CLKSOURCE_PLL4)  || \
                                 ((SOURCE) == RCC_LPTIM1CLKSOURCE_PLL3)  || \
                                 ((SOURCE) == RCC_LPTIM1CLKSOURCE_LSE)   || \
@@ -989,7 +989,7 @@ typedef struct
 /** @defgroup RCCEx_LPTIM23_Clock_Source LPTIM23 Clock Source
   * @{
   */
-#define RCC_LPTIM23CLKSOURCE_BCLK        RCC_LPTIM23CKSELR_LPTIM23SRC_0
+#define RCC_LPTIM23CLKSOURCE_PCLK3       RCC_LPTIM23CKSELR_LPTIM23SRC_0
 #define RCC_LPTIM23CLKSOURCE_PLL4        RCC_LPTIM23CKSELR_LPTIM23SRC_1
 #define RCC_LPTIM23CLKSOURCE_PER         RCC_LPTIM23CKSELR_LPTIM23SRC_2
 #define RCC_LPTIM23CLKSOURCE_LSE         RCC_LPTIM23CKSELR_LPTIM23SRC_3
@@ -998,7 +998,7 @@ typedef struct
 
 
 #define IS_RCC_LPTIM23CLKSOURCE(SOURCE) \
-                               (((SOURCE) == RCC_LPTIM23CLKSOURCE_BCLK)  || \
+                               (((SOURCE) == RCC_LPTIM23CLKSOURCE_PCLK3) || \
                                 ((SOURCE) == RCC_LPTIM23CLKSOURCE_PLL4)  || \
                                 ((SOURCE) == RCC_LPTIM23CLKSOURCE_PER)   || \
                                 ((SOURCE) == RCC_LPTIM23CLKSOURCE_LSE)   || \
@@ -1011,7 +1011,7 @@ typedef struct
 /** @defgroup RCCEx_LPTIM45_Clock_Source LPTIM45 Clock Source
   * @{
   */
-#define RCC_LPTIM45CLKSOURCE_BCLK       RCC_LPTIM45CKSELR_LPTIM45SRC_0
+#define RCC_LPTIM45CLKSOURCE_PCLK3      RCC_LPTIM45CKSELR_LPTIM45SRC_0
 #define RCC_LPTIM45CLKSOURCE_PLL4       RCC_LPTIM45CKSELR_LPTIM45SRC_1
 #define RCC_LPTIM45CLKSOURCE_PLL3       RCC_LPTIM45CKSELR_LPTIM45SRC_2
 #define RCC_LPTIM45CLKSOURCE_LSE        RCC_LPTIM45CKSELR_LPTIM45SRC_3
@@ -1022,7 +1022,7 @@ typedef struct
 
 
 #define IS_RCC_LPTIM45CLKSOURCE(SOURCE) \
-                                (((SOURCE) == RCC_LPTIM45CLKSOURCE_BCLK)  || \
+                                (((SOURCE) == RCC_LPTIM45CLKSOURCE_PCLK3) || \
                                  ((SOURCE) == RCC_LPTIM45CLKSOURCE_PLL4)  || \
                                  ((SOURCE) == RCC_LPTIM45CLKSOURCE_PLL3)  || \
                                  ((SOURCE) == RCC_LPTIM45CLKSOURCE_LSE)   || \
@@ -1084,7 +1084,7 @@ typedef struct
   *
   * @param  __I2C12CLKSource__: specifies the I2C12 clock source.
   *          This parameter can be one of the following values:
-  *            @arg RCC_I2C12CLKSOURCE_BCLK:   PCLK1 selected as I2C12 clock (default after reset)
+  *            @arg RCC_I2C12CLKSOURCE_PCLK1:  PCLK1 selected as I2C12 clock (default after reset)
   *            @arg RCC_I2C12CLKSOURCE_PLL4:   PLL4_R selected as I2C12 clock
   *            @arg RCC_I2C12CLKSOURCE_HSI:    HSI selected as I2C12 clock
   *            @arg RCC_I2C12CLKSOURCE_CSI:    CSI selected as I2C12 clock
@@ -1095,7 +1095,7 @@ typedef struct
 
 /** @brief  macro to get the I2C12 clock source.
   * @retval The clock source can be one of the following values:
-  *            @arg RCC_I2C12CLKSOURCE_BCLK:   PCLK1 selected as I2C12 clock
+  *            @arg RCC_I2C12CLKSOURCE_PCLK1:  PCLK1 selected as I2C12 clock
   *            @arg RCC_I2C12CLKSOURCE_PLL4:   PLL4_R selected as I2C12 clock
   *            @arg RCC_I2C12CLKSOURCE_HSI:    HSI selected as I2C12 clock
   *            @arg RCC_I2C12CLKSOURCE_CSI:    CSI selected as I2C12 clock
@@ -1106,7 +1106,7 @@ typedef struct
   *
   * @param  __I2C35CLKSource__: specifies the I2C35 clock source.
   *          This parameter can be one of the following values:
-  *            @arg RCC_I2C35CLKSOURCE_BCLK:   PCLK1 selected as I2C35 clock (default after reset)
+  *            @arg RCC_I2C35CLKSOURCE_PCLK1:  PCLK1 selected as I2C35 clock (default after reset)
   *            @arg RCC_I2C35CLKSOURCE_PLL4:   PLL4_R selected as I2C35 clock
   *            @arg RCC_I2C35CLKSOURCE_HSI:    HSI selected as I2C35 clock
   *            @arg RCC_I2C35CLKSOURCE_CSI:    CSI selected as I2C35 clock
@@ -1117,7 +1117,7 @@ typedef struct
 
 /** @brief  macro to get the I2C35 clock source.
   * @retval The clock source can be one of the following values:
-  *            @arg RCC_I2C35CLKSOURCE_BCLK:   PCLK1 selected as I2C35 clock
+  *            @arg RCC_I2C35CLKSOURCE_PCLK1:  PCLK1 selected as I2C35 clock
   *            @arg RCC_I2C35CLKSOURCE_PLL4:   PLL4_R selected as I2C35 clock
   *            @arg RCC_I2C35CLKSOURCE_HSI:    HSI selected as I2C35 clock
   *            @arg RCC_I2C35CLKSOURCE_CSI:    CSI selected as I2C35 clock
@@ -1128,7 +1128,7 @@ typedef struct
   *
   * @param  __I2C46CLKSource__: specifies the I2C46 clock source.
   *          This parameter can be one of the following values:
-  *            @arg RCC_I2C46CLKSOURCE_BCLK:   PCLK5 selected as I2C46 clock (default after reset)
+  *            @arg RCC_I2C46CLKSOURCE_PCLK5:  PCLK5 selected as I2C46 clock (default after reset)
   *            @arg RCC_I2C46CLKSOURCE_PLL3:   PLL3_Q selected as I2C46 clock
   *            @arg RCC_I2C46CLKSOURCE_HSI:    HSI selected as I2C46 clock
   *            @arg RCC_I2C46CLKSOURCE_CSI:    CSI selected as I2C46 clock
@@ -1139,7 +1139,7 @@ typedef struct
 
 /** @brief  macro to get the I2C46 clock source.
   * @retval The clock source can be one of the following values:
-  *            @arg RCC_I2C46CLKSOURCE_BCLK:   PCLK5 selected as I2C46 clock
+  *            @arg RCC_I2C46CLKSOURCE_PCLK5:  PCLK5 selected as I2C46 clock
   *            @arg RCC_I2C46CLKSOURCE_PLL3:   PLL3_Q selected as I2C46 clock
   *            @arg RCC_I2C46CLKSOURCE_HSI:    HSI selected as I2C46 clock
   *            @arg RCC_I2C46CLKSOURCE_CSI:    CSI selected as I2C46 clock
@@ -1301,7 +1301,7 @@ typedef struct
   * @brief  Macro to Configure the SPI45 clock source.
   * @param  __RCC_SPI45CLKSource__: defines the SPI45 clock source.
   *          This parameter can be one of the following values:
-  *             @arg RCC_SPI45CLKSOURCE_BCLK:    SPI45 clock = PCLK2
+  *             @arg RCC_SPI45CLKSOURCE_PCLK2:   SPI45 clock = PCLK2
   *             @arg RCC_SPI45CLKSOURCE_PLL4:    SPI45 clock = PLL4Q
   *             @arg RCC_SPI45CLKSOURCE_HSI:     SPI45 clock = HSI
   *             @arg RCC_SPI45CLKSOURCE_CSI:     SPI45 clock = CSI
@@ -1313,7 +1313,7 @@ typedef struct
 
 /** @brief  Macro to get the SPI45 clock source.
   * @retval The clock source can be one of the following values:
-  *             @arg RCC_SPI45CLKSOURCE_BCLK:    SPI45 clock = PCLK2
+  *             @arg RCC_SPI45CLKSOURCE_PCLK2:   SPI45 clock = PCLK2
   *             @arg RCC_SPI45CLKSOURCE_PLL4:    SPI45 clock = PLL4Q
   *             @arg RCC_SPI45CLKSOURCE_HSI:     SPI45 clock = HSI
   *             @arg RCC_SPI45CLKSOURCE_CSI:     SPI45 clock = CSI
@@ -1325,7 +1325,7 @@ typedef struct
   * @brief  Macro to Configure the SPI6 clock source.
   * @param  __RCC_SPI6CLKSource__: defines the SPI6 clock source.
   *          This parameter can be one of the following values:
-  *             @arg RCC_SPI6CLKSOURCE_BCLK:   SPI6 clock = PCLK5
+  *             @arg RCC_SPI6CLKSOURCE_PCLK5:  SPI6 clock = PCLK5
   *             @arg RCC_SPI6CLKSOURCE_PLL4:   SPI6 clock = PLL4Q
   *             @arg RCC_SPI6CLKSOURCE_HSI:    SPI6 clock = HSI
   *             @arg RCC_SPI6CLKSOURCE_CSI:    SPI6 clock = CSI
@@ -1338,7 +1338,7 @@ typedef struct
 
 /** @brief  Macro to get the SPI6 clock source.
   * @retval The clock source can be one of the following values:
-  *             @arg RCC_SPI6CLKSOURCE_BCLK:   SPI6 clock = PCLK5
+  *             @arg RCC_SPI6CLKSOURCE_PCLK5:  SPI6 clock = PCLK5
   *             @arg RCC_SPI6CLKSOURCE_PLL4:   SPI6 clock = PLL4Q
   *             @arg RCC_SPI6CLKSOURCE_HSI:    SPI6 clock = HSI
   *             @arg RCC_SPI6CLKSOURCE_CSI:    SPI6 clock = CSI
@@ -1352,7 +1352,7 @@ typedef struct
   *
   * @param  __USART1CLKSource__: specifies the USART1 clock source.
   *          This parameter can be one of the following values:
-  *            @arg RCC_USART1CLKSOURCE_BCLK:   PCLK5 Clock selected as USART1 clock (default after reset)
+  *            @arg RCC_USART1CLKSOURCE_PCLK5:  PCLK5 Clock selected as USART1 clock (default after reset)
   *            @arg RCC_USART1CLKSOURCE_PLL3:   PLL3_Q Clock selected as USART1 clock USART1
   *            @arg RCC_USART1CLKSOURCE_HSI:    HSI Clock selected as USART1 clock USART1
   *            @arg RCC_USART1CLKSOURCE_CSI:    CSI Clock selected as USART1 clock USART1
@@ -1365,7 +1365,7 @@ typedef struct
 
 /** @brief  macro to get the USART1 clock source.
   * @retval The clock source can be one of the following values:
-  *            @arg RCC_USART1CLKSOURCE_BCLK:   PCLK5 Clock selected as USART1 clock (default after reset)
+  *            @arg RCC_USART1CLKSOURCE_PCLK5:  PCLK5 Clock selected as USART1 clock (default after reset)
   *            @arg RCC_USART1CLKSOURCE_PLL3:   PLL3_Q Clock selected as USART1 clock
   *            @arg RCC_USART1CLKSOURCE_HSI:    HSI Clock selected as USART1 clock
   *            @arg RCC_USART1CLKSOURCE_CSI:    CSI Clock selected as USART1 clock
@@ -1378,12 +1378,12 @@ typedef struct
   *
   * @param  __UART24CLKSource__: specifies the UART24 clock source.
   *          This parameter can be one of the following values:
-  *            @arg RCC_UART24CLKSOURCE_BCLK: PCLK1 Clock selected as UART24
-  *                                           clock (default after reset)
-  *            @arg RCC_UART24CLKSOURCE_PLL4: PLL4_Q Clock selected as UART24 clock
-  *            @arg RCC_UART24CLKSOURCE_HSI:  HSI selected as UART24 clock
-  *            @arg RCC_UART24CLKSOURCE_CSI:  CSI Clock selected as UART24 clock
-  *            @arg RCC_UART24CLKSOURCE_HSE:  HSE selected as UART24 clock
+  *            @arg RCC_UART24CLKSOURCE_PCLK1: PCLK1 Clock selected as UART24
+  *                                            clock (default after reset)
+  *            @arg RCC_UART24CLKSOURCE_PLL4:  PLL4_Q Clock selected as UART24 clock
+  *            @arg RCC_UART24CLKSOURCE_HSI:   HSI selected as UART24 clock
+  *            @arg RCC_UART24CLKSOURCE_CSI:   CSI Clock selected as UART24 clock
+  *            @arg RCC_UART24CLKSOURCE_HSE:   HSE selected as UART24 clock
   * @retval None
   */
 #define __HAL_RCC_UART24_CONFIG(__UART24CLKSource__) \
@@ -1391,11 +1391,11 @@ typedef struct
 
 /** @brief  macro to get the UART24 clock source.
   * @retval The clock source can be one of the following values:
-  *            @arg RCC_UART24CLKSOURCE_BCLK: PCLK1 Clock selected as UART24 clock
-  *            @arg RCC_UART24CLKSOURCE_PLL4: PLL4_Q Clock selected as UART24 clock
-  *            @arg RCC_UART24CLKSOURCE_HSI:  HSI selected as UART24 clock
-  *            @arg RCC_UART24CLKSOURCE_CSI:  CSI Clock selected as UART24 clock
-  *            @arg RCC_UART24CLKSOURCE_HSE:  HSE selected as UART24 clock
+  *            @arg RCC_UART24CLKSOURCE_PCLK1: PCLK1 Clock selected as UART24 clock
+  *            @arg RCC_UART24CLKSOURCE_PLL4:  PLL4_Q Clock selected as UART24 clock
+  *            @arg RCC_UART24CLKSOURCE_HSI:   HSI selected as UART24 clock
+  *            @arg RCC_UART24CLKSOURCE_CSI:   CSI Clock selected as UART24 clock
+  *            @arg RCC_UART24CLKSOURCE_HSE:   HSE selected as UART24 clock
   */
 #define __HAL_RCC_GET_UART24_SOURCE() ((uint32_t)(READ_BIT(RCC->UART24CKSELR, RCC_UART24CKSELR_UART24SRC)))
 
@@ -1404,12 +1404,12 @@ typedef struct
   *
   * @param  __UART35CLKSource__: specifies the UART35 clock source.
   *          This parameter can be one of the following values:
-  *            @arg RCC_UART35CLKSOURCE_BCLK: PCLK1 Clock selected as UART35
-  *                                           clock (default after reset)
-  *            @arg RCC_UART35CLKSOURCE_PLL4: PLL4_Q Clock selected as UART35 clock
-  *            @arg RCC_UART35CLKSOURCE_HSI:  HSI selected as UART35 clock
-  *            @arg RCC_UART35CLKSOURCE_CSI:  CSI Clock selected as UART35 clock
-  *            @arg RCC_UART35CLKSOURCE_HSE:  HSE selected as UART35 clock
+  *            @arg RCC_UART35CLKSOURCE_PCLK1: PCLK1 Clock selected as UART35
+  *                                            clock (default after reset)
+  *            @arg RCC_UART35CLKSOURCE_PLL4:  PLL4_Q Clock selected as UART35 clock
+  *            @arg RCC_UART35CLKSOURCE_HSI:   HSI selected as UART35 clock
+  *            @arg RCC_UART35CLKSOURCE_CSI:   CSI Clock selected as UART35 clock
+  *            @arg RCC_UART35CLKSOURCE_HSE:   HSE selected as UART35 clock
   * @retval None
   */
 #define __HAL_RCC_UART35_CONFIG(__UART35CLKSource__) \
@@ -1417,11 +1417,11 @@ typedef struct
 
 /** @brief  macro to get the UART35 clock source.
   * @retval The clock source can be one of the following values:
-  *            @arg RCC_UART35CLKSOURCE_BCLK:  PCLK1 Clock selected as UART35 clock
-  *            @arg RCC_UART35CLKSOURCE_PLL4:  PLL4_Q Clock selected as UART35 clock
-  *            @arg RCC_UART35CLKSOURCE_HSI:   HSI selected as UART35 clock
-  *            @arg RCC_UART35CLKSOURCE_CSI:   CSI Clock selected as UART35 clock
-  *            @arg RCC_UART35CLKSOURCE_HSE:   HSE selected as UART35 clock
+  *            @arg RCC_UART35CLKSOURCE_PCLK1:  PCLK1 Clock selected as UART35 clock
+  *            @arg RCC_UART35CLKSOURCE_PLL4:   PLL4_Q Clock selected as UART35 clock
+  *            @arg RCC_UART35CLKSOURCE_HSI:    HSI selected as UART35 clock
+  *            @arg RCC_UART35CLKSOURCE_CSI:    CSI Clock selected as UART35 clock
+  *            @arg RCC_UART35CLKSOURCE_HSE:    HSE selected as UART35 clock
   */
 #define __HAL_RCC_GET_UART35_SOURCE() ((uint32_t)(READ_BIT(RCC->UART35CKSELR, RCC_UART35CKSELR_UART35SRC)))
 
@@ -1430,7 +1430,7 @@ typedef struct
   *
   * @param  __USART6CLKSource__: specifies the USART6 clock source.
   *          This parameter can be one of the following values:
-  *            @arg RCC_USART6CLKSOURCE_BCLK:  PCLK2 Clock selected as USART6 clock (default after reset)
+  *            @arg RCC_USART6CLKSOURCE_PCLK2: PCLK2 Clock selected as USART6 clock (default after reset)
   *            @arg RCC_USART6CLKSOURCE_PLL4:  PLL4_Q Clock selected as USART6 clock
   *            @arg RCC_USART6CLKSOURCE_HSI:   HSI selected as USART6 clock
   *            @arg RCC_USART6CLKSOURCE_CSI:   CSI Clock selected as USART6 clock
@@ -1442,7 +1442,7 @@ typedef struct
 
 /** @brief  macro to get the USART6 clock source.
   * @retval The clock source can be one of the following values:
-  *            @arg RCC_USART6CLKSOURCE_BCLK:  PCLK2 Clock selected as USART6 clock
+  *            @arg RCC_USART6CLKSOURCE_PCLK2: PCLK2 Clock selected as USART6 clock
   *            @arg RCC_USART6CLKSOURCE_PLL4:  PLL4_Q Clock selected as USART6 clock
   *            @arg RCC_USART6CLKSOURCE_HSI:   HSI selected as USART6 clock
   *            @arg RCC_USART6CLKSOURCE_CSI:   CSI Clock selected as USART6 clock
@@ -1454,7 +1454,7 @@ typedef struct
   *
   * @param  __UART78CLKSource__: specifies the UART78 clock source.
   *          This parameter can be one of the following values:
-  *            @arg RCC_UART78CLKSOURCE_BCLK:  PCLK1 Clock selected as UART78 clock (default after reset)
+  *            @arg RCC_UART78CLKSOURCE_PCLK1: PCLK1 Clock selected as UART78 clock (default after reset)
   *            @arg RCC_UART78CLKSOURCE_PLL4:  PLL4_Q Clock selected as UART78 clock
   *            @arg RCC_UART78CLKSOURCE_HSI:   HSI selected as UART78 clock
   *            @arg RCC_UART78CLKSOURCE_CSI:   CSI Clock selected as UART78 clock
@@ -1466,7 +1466,7 @@ typedef struct
 
 /** @brief  macro to get the UART78 clock source.
   * @retval The clock source can be one of the following values:
-  *            @arg RCC_UART78CLKSOURCE_BCLK:  PCLK1 Clock selected as UART78 clock
+  *            @arg RCC_UART78CLKSOURCE_PCLK1: PCLK1 Clock selected as UART78 clock
   *            @arg RCC_UART78CLKSOURCE_PLL4:  PLL4_Q Clock selected as UART78 clock
   *            @arg RCC_UART78CLKSOURCE_HSI:   HSI selected as UART78 clock
   *            @arg RCC_UART78CLKSOURCE_CSI:   CSI Clock selected as UART78 clock
@@ -1478,7 +1478,7 @@ typedef struct
   *
   * @param  __SDMMC12CLKSource__: specifies the SDMMC12 clock source.
   *          This parameter can be one of the following values:
-  *            @arg RCC_SDMMC12CLKSOURCE_BCLK:  HCLK6 Clock selected as SDMMC12 clock (default after reset)
+  *            @arg RCC_SDMMC12CLKSOURCE_HCLK6: HCLK6 Clock selected as SDMMC12 clock (default after reset)
   *            @arg RCC_SDMMC12CLKSOURCE_PLL3:  PLL3_R Clock selected as SDMMC12 clock
   *            @arg RCC_SDMMC12CLKSOURCE_PLL4:  PLL4_P selected as SDMMC12 clock
   *            @arg RCC_SDMMC12CLKSOURCE_HSI:   HSI selected as SDMMC12 clock
@@ -1489,7 +1489,7 @@ typedef struct
 
 /** @brief  macro to get the SDMMC12 clock source.
   * @retval The clock source can be one of the following values:
-  *            @arg RCC_SDMMC12CLKSOURCE_BCLK:  HCLK6 Clock selected as SDMMC12 clock (default after reset)
+  *            @arg RCC_SDMMC12CLKSOURCE_HCLK6: HCLK6 Clock selected as SDMMC12 clock (default after reset)
   *            @arg RCC_SDMMC12CLKSOURCE_PLL3:  PLL3_R Clock selected as SDMMC12 clock
   *            @arg RCC_SDMMC12CLKSOURCE_PLL4:  PLL4_P selected as SDMMC12 clock
   *            @arg RCC_SDMMC12CLKSOURCE_HSI:   HSI selected as SDMMC12 clock
@@ -1501,7 +1501,7 @@ typedef struct
   *
   * @param  __SDMMC3CLKSource__: specifies the SDMMC3 clock source.
   *          This parameter can be one of the following values:
-  *            @arg RCC_SDMMC3CLKSOURCE_BCLK:  HCLK2 Clock selected as SDMMC3 clock (default after reset)
+  *            @arg RCC_SDMMC3CLKSOURCE_HCLK2: HCLK2 Clock selected as SDMMC3 clock (default after reset)
   *            @arg RCC_SDMMC3CLKSOURCE_PLL3:  PLL3_R Clock selected as SDMMC3 clock
   *            @arg RCC_SDMMC3CLKSOURCE_PLL4:  PLL4_P selected as SDMMC3 clock
   *            @arg RCC_SDMMC3CLKSOURCE_HSI:   HSI selected as SDMMC3 clock
@@ -1513,7 +1513,7 @@ typedef struct
 
 /** @brief  macro to get the SDMMC3 clock source.
   * @retval The clock source can be one of the following values:
-  *            @arg RCC_SDMMC3CLKSOURCE_BCLK:  HCLK2 Clock selected as SDMMC3 clock (default after reset)
+  *            @arg RCC_SDMMC3CLKSOURCE_HCLK2: HCLK2 Clock selected as SDMMC3 clock (default after reset)
   *            @arg RCC_SDMMC3CLKSOURCE_PLL3:  PLL3_R Clock selected as SDMMC3 clock
   *            @arg RCC_SDMMC3CLKSOURCE_PLL4:  PLL4_P selected as SDMMC3 clock
   *            @arg RCC_SDMMC3CLKSOURCE_HSI:   HSI selected as SDMMC3 clock
@@ -1546,7 +1546,7 @@ typedef struct
   *
   * @param  __QSPICLKSource__: specifies the QSPI clock source.
   *          This parameter can be one of the following values:
-  *            @arg RCC_QSPICLKSOURCE_BCLK:  ACLK Clock selected as QSPI clock (default after reset)
+  *            @arg RCC_QSPICLKSOURCE_ACLK:  ACLK Clock selected as QSPI clock (default after reset)
   *            @arg RCC_QSPICLKSOURCE_PLL3:  PLL3_R Clock selected as QSPI clock
   *            @arg RCC_QSPICLKSOURCE_PLL4:  PLL4_P selected as QSPI clock
   *            @arg RCC_QSPICLKSOURCE_PER:   PER selected as QSPI clock
@@ -1557,7 +1557,7 @@ typedef struct
 
 /** @brief  macro to get the QSPI clock source.
   * @retval The clock source can be one of the following values:
-  *            @arg RCC_QSPICLKSOURCE_BCLK:  ACLK Clock selected as QSPI clock (default after reset)
+  *            @arg RCC_QSPICLKSOURCE_ACLK:  ACLK Clock selected as QSPI clock (default after reset)
   *            @arg RCC_QSPICLKSOURCE_PLL3:  PLL3_R Clock selected as QSPI clock
   *            @arg RCC_QSPICLKSOURCE_PLL4:  PLL4_P selected as QSPI clock
   *            @arg RCC_QSPICLKSOURCE_PER:   PER selected as QSPI clock
@@ -1569,7 +1569,7 @@ typedef struct
   *
   * @param  __FMCCLKSource__: specifies the FMC clock source.
   *          This parameter can be one of the following values:
-  *            @arg RCC_FMCCLKSOURCE_BCLK:  ACLK Clock selected as FMC clock (default after reset)
+  *            @arg RCC_FMCCLKSOURCE_ACLK:  ACLK Clock selected as FMC clock (default after reset)
   *            @arg RCC_FMCCLKSOURCE_PLL3:  PLL3_R Clock selected as FMC clock
   *            @arg RCC_FMCCLKSOURCE_PLL4:  PLL4_P selected as FMC clock
   *            @arg RCC_FMCCLKSOURCE_PER:   PER selected as FMC clock
@@ -1580,7 +1580,7 @@ typedef struct
 
 /** @brief  macro to get the FMC clock source.
   * @retval The clock source can be one of the following values:
-  *            @arg RCC_FMCCLKSOURCE_BCLK:  ACLK Clock selected as FMC clock (default after reset)
+  *            @arg RCC_FMCCLKSOURCE_ACLK:  ACLK Clock selected as FMC clock (default after reset)
   *            @arg RCC_FMCCLKSOURCE_PLL3:  PLL3_R Clock selected as FMC clock
   *            @arg RCC_FMCCLKSOURCE_PLL4:  PLL4_P selected as FMC clock
   *            @arg RCC_FMCCLKSOURCE_PER:   PER selected as FMC clock
@@ -1828,7 +1828,7 @@ typedef struct
   *
   * @param  __LPTIM1CLKSource__: specifies the LPTIM1 clock source.
   *          This parameter can be one of the following values:
-  *            @arg RCC_LPTIM1CLKSOURCE_BCLK:    PCLK1 Clock selected as LPTIM1 clock (default after reset)
+  *            @arg RCC_LPTIM1CLKSOURCE_PCLK1:   PCLK1 Clock selected as LPTIM1 clock (default after reset)
   *            @arg RCC_LPTIM1CLKSOURCE_PLL4:    PLL4_P Clock selected as LPTIM1 clock
   *            @arg RCC_LPTIM1CLKSOURCE_PLL3:    PLL3_Q Clock selected as LPTIM1 clock
   *            @arg RCC_LPTIM1CLKSOURCE_LSE:     LSE Clock selected as LPTIM1 clock
@@ -1843,7 +1843,7 @@ typedef struct
 
 /** @brief  macro to get the LPTIM1 clock source.
   * @retval The clock source can be one of the following values:
-  *            @arg RCC_LPTIM1CLKSOURCE_BCLK:    PCLK1 Clock selected as LPTIM1 clock (default after reset)
+  *            @arg RCC_LPTIM1CLKSOURCE_PCLK1:   PCLK1 Clock selected as LPTIM1 clock (default after reset)
   *            @arg RCC_LPTIM1CLKSOURCE_PLL4:    PLL4_P Clock selected as LPTIM1 clock
   *            @arg RCC_LPTIM1CLKSOURCE_PLL3:    PLL3_Q Clock selected as LPTIM1 clock
   *            @arg RCC_LPTIM1CLKSOURCE_LSE:     LSE Clock selected as LPTIM1 clock
@@ -1857,7 +1857,7 @@ typedef struct
   *
   * @param  __LPTIM23CLKSource__: specifies the LPTIM23 clock source.
   *          This parameter can be one of the following values:
-  *            @arg RCC_LPTIM23CLKSOURCE_BCLK:    PCLK3 Clock selected as LPTIM23 clock (default after reset)
+  *            @arg RCC_LPTIM23CLKSOURCE_PCLK3:   PCLK3 Clock selected as LPTIM23 clock (default after reset)
   *            @arg RCC_LPTIM23CLKSOURCE_PLL4:    PLL4_Q Clock selected as LPTIM23 clock
   *            @arg RCC_LPTIM23CLKSOURCE_PER:     PER Clock selected as LPTIM23 clock
   *            @arg RCC_LPTIM23CLKSOURCE_LSE:     LSE Clock selected as LPTIM23 clock
@@ -1870,7 +1870,7 @@ typedef struct
 
 /** @brief  macro to get the LPTIM23 clock source.
   * @retval The clock source can be one of the following values:
-  *            @arg RCC_LPTIM23CLKSOURCE_BCLK:    PCLK3 Clock selected as LPTIM23 clock (default after reset)
+  *            @arg RCC_LPTIM23CLKSOURCE_PCLK3:   PCLK3 Clock selected as LPTIM23 clock (default after reset)
   *            @arg RCC_LPTIM23CLKSOURCE_PLL4:    PLL4_Q Clock selected as LPTIM23 clock
   *            @arg RCC_LPTIM23CLKSOURCE_PER:     PER Clock selected as LPTIM23 clock
   *            @arg RCC_LPTIM23CLKSOURCE_LSE:     LSE Clock selected as LPTIM23 clock
@@ -1883,7 +1883,7 @@ typedef struct
   *
   * @param  __LPTIM45CLKSource__: specifies the LPTIM45 clock source.
   *          This parameter can be one of the following values:
-  *            @arg RCC_LPTIM45CLKSOURCE_BCLK:    PCLK3 Clock selected as LPTIM45 clock (default after reset)
+  *            @arg RCC_LPTIM45CLKSOURCE_PCLK3:   PCLK3 Clock selected as LPTIM45 clock (default after reset)
   *            @arg RCC_LPTIM45CLKSOURCE_PLL4:    PLL4_P Clock selected as LPTIM45 clock
   *            @arg RCC_LPTIM45CLKSOURCE_PLL3:    PLL3_Q Clock selected as LPTIM45 clock
   *            @arg RCC_LPTIM45CLKSOURCE_LSE:     LSE Clock selected as LPTIM45 clock
@@ -1897,7 +1897,7 @@ typedef struct
 
 /** @brief  macro to get the LPTIM45 clock source.
   * @retval The clock source can be one of the following values:
-  *            @arg RCC_LPTIM45CLKSOURCE_BCLK:    PCLK3 Clock selected as LPTIM45 clock (default after reset)
+  *            @arg RCC_LPTIM45CLKSOURCE_PCLK3:   PCLK3 Clock selected as LPTIM45 clock (default after reset)
   *            @arg RCC_LPTIM45CLKSOURCE_PLL4:    PLL4_P Clock selected as LPTIM45 clock
   *            @arg RCC_LPTIM45CLKSOURCE_PLL3:    PLL3_Q Clock selected as LPTIM45 clock
   *            @arg RCC_LPTIM45CLKSOURCE_LSE:     LSE Clock selected as LPTIM45 clock
