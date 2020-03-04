@@ -1784,7 +1784,7 @@ __STATIC_INLINE uint32_t LL_SPI_IsActiveFlag_SUSP(SPI_TypeDef *SPIx)
 }
 
 /**
-  * @brief  Get TXC flag
+  * @brief  Check if last TxFIFO or CRC frame transmission is completed
   * @rmtoll SR           TXC           LL_SPI_IsActiveFlag_TXC
   * @param  SPIx SPI Instance
   * @retval State of bit (1 or 0).
@@ -2425,12 +2425,7 @@ __STATIC_INLINE uint32_t LL_SPI_ReceiveData32(SPI_TypeDef *SPIx)
   */
 __STATIC_INLINE void LL_SPI_TransmitData8(SPI_TypeDef *SPIx, uint8_t TxData)
 {
-#if defined (__GNUC__)
-  __IO uint8_t *spitxdr = ((__IO uint8_t *)&SPIx->TXDR);
-  *spitxdr = TxData;
-#else
   *((__IO uint8_t *)&SPIx->TXDR) = TxData;
-#endif
 }
 
 /**
@@ -2547,7 +2542,9 @@ void        LL_SPI_StructInit(LL_SPI_InitTypeDef *SPI_InitStruct);
   * @}
   */
 #endif /* USE_FULL_LL_DRIVER */
-
+/**
+  * @}
+  */
 
 /** @defgroup I2S_LL I2S
   * @{
@@ -3271,6 +3268,10 @@ __STATIC_INLINE uint32_t LL_I2S_IsEnabledMasterClock(SPI_TypeDef *SPIx)
   return ((READ_BIT(SPIx->I2SCFGR, SPI_I2SCFGR_MCKOE) == (SPI_I2SCFGR_MCKOE)) ? 1UL : 0UL);
 }
 
+/**
+  * @}
+  */
+
 
 /** @defgroup I2S_LL_EF_FLAG_Management FLAG_Management
   * @{
@@ -3693,14 +3694,7 @@ void        LL_I2S_ConfigPrescaler(SPI_TypeDef *SPIx, uint32_t PrescalerLinear, 
   * @}
   */
 
-/**
-  * @}
-  */
 #endif /* defined(SPI1) || defined(SPI2) || defined(SPI3) || defined(SPI4) || defined(SPI5) || defined(SPI6) */
-
-/**
-  * @}
-  */
 
 /**
   * @}

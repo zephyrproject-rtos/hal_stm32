@@ -170,6 +170,23 @@ typedef enum
 
 #define IS_SYSCFG_CODE_CONFIG(CONFIG) ((CONFIG) < (0x10))
 
+/** @brief  Check SYSCFG Compensation Cell Ready flag is set or not.
+  * @retval State of bit (1 or 0)
+  */
+#define __HAL_SYSCFG_CMP_CELL_GET_FLAG() ((READ_BIT(SYSCFG->CMPCR, SYSCFG_CMPCR_READY) == (SYSCFG_CMPCR_READY)) ? 1U : 0U)
+
+/**
+  * @brief  Get I/O compensation cell value for PMOS transistors
+  * @retval The I/O compensation cell value for PMOS transistors
+  */
+#define __HAL_SYSCFG_GET_PMOS_CMP() (READ_BIT(SYSCFG->CMPCR, SYSCFG_CMPCR_APSRC))
+
+/**
+  * @brief  Get I/O compensation cell value for NMOS transistors
+  * @retval Returned value is the I/O compensation cell value for NMOS transistors
+  */
+#define __HAL_SYSCFG_GET_NMOS_CMP() (READ_BIT(SYSCFG->CMPCR, SYSCFG_CMPCR_ANSRC))
+
 /**
   * @}
   */
@@ -687,6 +704,18 @@ typedef enum
   * @}
   */
 
+/* Exported variables --------------------------------------------------------*/
+
+/** @addtogroup HAL_Exported_Variables
+  * @{
+  */
+extern __IO uint32_t uwTick;
+extern uint32_t uwTickPrio;
+extern HAL_TickFreqTypeDef uwTickFreq;
+/**
+  * @}
+  */
+
 /* Exported functions --------------------------------------------------------*/
 /** @defgroup HAL_Exported_Functions HAL Exported Functions
   * @{
@@ -733,6 +762,8 @@ void HAL_SYSCFG_EnableIOSpeedOptimize(uint32_t SYSCFG_HighSpeedSignal);
 void HAL_SYSCFG_DisableIOSpeedOptimize(uint32_t SYSCFG_HighSpeedSignal);
 void HAL_SYSCFG_CompensationCodeSelect(uint32_t SYSCFG_CompCode);
 void HAL_SYSCFG_CompensationCodeConfig(uint32_t SYSCFG_PMOSCode, uint32_t SYSCFG_NMOSCode);
+HAL_StatusTypeDef HAL_SYSCFG_EnableIOCompensation(void);
+void HAL_SYSCFG_DisableIOCompensation(void);
 void HAL_EnableDBGSleepMode(void);
 void HAL_DisableDBGSleepMode(void);
 void HAL_EnableDBGStopMode(void);

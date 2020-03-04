@@ -98,6 +98,10 @@ extern "C" {
   */
 
 /* Private macros ------------------------------------------------------------*/
+#if !defined (UNUSED)
+#define UNUSED(x) ((void)(x))
+#endif
+
 #if defined(USE_FULL_LL_DRIVER)
 /** @defgroup RCC_LL_Private_Macros RCC Private Macros
   * @{
@@ -785,6 +789,7 @@ typedef struct
   * @}
   */
 
+#if defined(FDCAN1)
 /** @defgroup RCC_LL_EC_FDCAN_CLKSOURCE  Peripheral FDCAN clock source selection
   * @{
   */
@@ -795,6 +800,7 @@ typedef struct
 /**
   * @}
   */
+#endif /*FDCAN1*/
 
 /** @defgroup RCC_LL_EC_SPDIFRX_CLKSOURCE  Peripheral SPDIFRX clock source selection
   * @{
@@ -872,6 +878,7 @@ typedef struct
   * @}
   */
 
+#if defined(DSI)
 /** @defgroup RCC_LL_EC_DSI_CLKSOURCE  Peripheral  DSI clock source selection
   * @{
   */
@@ -880,6 +887,7 @@ typedef struct
 /**
   * @}
   */
+#endif /*DSI*/
 
 /** @defgroup RCC_LL_EC_ADC_CLKSOURCE  Peripheral ADC clock source selection
   * @{
@@ -1029,6 +1037,7 @@ typedef struct
   * @}
   */
 
+#if defined(FDCAN1)
 /** @defgroup RCC_LL_EC_FDCAN  Peripheral FDCAN get clock source
   * @{
   */
@@ -1036,6 +1045,7 @@ typedef struct
 /**
   * @}
   */
+#endif /*FDCAN1*/
 
 /** @defgroup RCC_LL_EC_SPDIFRX  Peripheral SPDIFRX get clock source
   * @{
@@ -1094,6 +1104,7 @@ typedef struct
   * @}
   */
 
+#if defined(DSI)
 /** @defgroup RCC_LL_EC_DSI Peripheral  DSI get clock source
   * @{
   */
@@ -1101,6 +1112,7 @@ typedef struct
 /**
   * @}
   */
+#endif /*DSI*/
 
 /** @defgroup RCC_LL_EC_ADC Peripheral ADC get clock source
   * @{
@@ -2673,6 +2685,7 @@ __STATIC_INLINE void LL_RCC_SetFMCClockSource(uint32_t ClkSource)
   MODIFY_REG(RCC->FMCCKSELR, RCC_FMCCKSELR_FMCSRC, ClkSource);
 }
 
+#if defined(FDCAN1)
 /**
   * @brief  Configure FDCAN clock source
   * @rmtoll FDCANCKSELR      FDCANSRC      LL_RCC_SetFDCANClockSource
@@ -2687,6 +2700,7 @@ __STATIC_INLINE void LL_RCC_SetFDCANClockSource(uint32_t ClkSource)
 {
   MODIFY_REG(RCC->FDCANCKSELR, RCC_FDCANCKSELR_FDCANSRC, ClkSource);
 }
+#endif /*FDCAN1*/
 
 /**
   * @brief  Configure SPDIFRX clock source
@@ -2792,6 +2806,7 @@ __STATIC_INLINE void LL_RCC_SetSTGENClockSource(uint32_t ClkSource)
   MODIFY_REG(RCC->STGENCKSELR, RCC_STGENCKSELR_STGENSRC, ClkSource);
 }
 
+#if defined(DSI)
 /**
   * @brief  Configure DSI clock source
   * @rmtoll DSICKSELR      DSISRC      LL_RCC_SetDSIClockSource
@@ -2804,6 +2819,7 @@ __STATIC_INLINE void LL_RCC_SetDSIClockSource(uint32_t ClkSource)
 {
   MODIFY_REG(RCC->DSICKSELR, RCC_DSICKSELR_DSISRC, ClkSource);
 }
+#endif /*DSI*/
 
 /**
   * @brief  Configure ADC clock source
@@ -3221,6 +3237,8 @@ __STATIC_INLINE uint32_t LL_RCC_GetSDMMCClockSource(uint32_t Periph)
   */
 __STATIC_INLINE uint32_t LL_RCC_GetETHClockSource(uint32_t Periph)
 {
+  /* Prevent unused argument compilation warning */
+  UNUSED(Periph);
   return (uint32_t)(READ_BIT(RCC->ETHCKSELR, RCC_ETHCKSELR_ETHSRC));
 }
 
@@ -3237,6 +3255,8 @@ __STATIC_INLINE uint32_t LL_RCC_GetETHClockSource(uint32_t Periph)
   */
 __STATIC_INLINE uint32_t LL_RCC_GetQSPIClockSource(uint32_t Periph)
 {
+  /* Prevent unused argument compilation warning */
+  UNUSED(Periph);
   return (uint32_t)(READ_BIT(RCC->QSPICKSELR, RCC_QSPICKSELR_QSPISRC));
 }
 
@@ -3253,9 +3273,12 @@ __STATIC_INLINE uint32_t LL_RCC_GetQSPIClockSource(uint32_t Periph)
   */
 __STATIC_INLINE uint32_t LL_RCC_GetFMCClockSource(uint32_t Periph)
 {
+  /* Prevent unused argument compilation warning */
+  UNUSED(Periph);
   return (uint32_t)(READ_BIT(RCC->FMCCKSELR, RCC_FMCCKSELR_FMCSRC));
 }
 
+#if defined(FDCAN1)
 /**
   * @brief  Get FDCAN clock source
   * @rmtoll FDCANCKSELR      FDCANSRC      LL_RCC_GetFDCANClockSource
@@ -3269,8 +3292,11 @@ __STATIC_INLINE uint32_t LL_RCC_GetFMCClockSource(uint32_t Periph)
   */
 __STATIC_INLINE uint32_t LL_RCC_GetFDCANClockSource(uint32_t Periph)
 {
+  /* Prevent unused argument compilation warning */
+  UNUSED(Periph);
   return (uint32_t)(READ_BIT(RCC->FDCANCKSELR, RCC_FDCANCKSELR_FDCANSRC));
 }
+#endif /*FDCAN1*/
 
 /**
   * @brief  Get SPDIFRX clock source
@@ -3284,6 +3310,8 @@ __STATIC_INLINE uint32_t LL_RCC_GetFDCANClockSource(uint32_t Periph)
   */
 __STATIC_INLINE uint32_t LL_RCC_GetSPDIFRXClockSource(uint32_t Periph)
 {
+  /* Prevent unused argument compilation warning */
+  UNUSED(Periph);
   return (uint32_t)(READ_BIT(RCC->SPDIFCKSELR, RCC_SPDIFCKSELR_SPDIFSRC));
 }
 
@@ -3299,6 +3327,8 @@ __STATIC_INLINE uint32_t LL_RCC_GetSPDIFRXClockSource(uint32_t Periph)
   */
 __STATIC_INLINE uint32_t LL_RCC_GetCECClockSource(uint32_t Periph)
 {
+  /* Prevent unused argument compilation warning */
+  UNUSED(Periph);
   return (uint32_t)(READ_BIT(RCC->CECCKSELR, RCC_CECCKSELR_CECSRC));
 }
 
@@ -3314,6 +3344,8 @@ __STATIC_INLINE uint32_t LL_RCC_GetCECClockSource(uint32_t Periph)
   */
 __STATIC_INLINE uint32_t LL_RCC_GetUSBPHYClockSource(uint32_t Periph)
 {
+  /* Prevent unused argument compilation warning */
+  UNUSED(Periph);
   return (uint32_t)(READ_BIT(RCC->USBCKSELR, RCC_USBCKSELR_USBPHYSRC));
 }
 
@@ -3328,6 +3360,8 @@ __STATIC_INLINE uint32_t LL_RCC_GetUSBPHYClockSource(uint32_t Periph)
   */
 __STATIC_INLINE uint32_t LL_RCC_GetUSBOClockSource(uint32_t Periph)
 {
+  /* Prevent unused argument compilation warning */
+  UNUSED(Periph);
   return (uint32_t)(READ_BIT(RCC->USBCKSELR, RCC_USBCKSELR_USBOSRC));
 }
 
@@ -3366,6 +3400,8 @@ __STATIC_INLINE uint32_t LL_RCC_GetRNGClockSource(uint32_t Periph)
   */
 __STATIC_INLINE uint32_t LL_RCC_GetCKPERClockSource(uint32_t Periph)
 {
+  /* Prevent unused argument compilation warning */
+  UNUSED(Periph);
   return (uint32_t)(READ_BIT(RCC->CPERCKSELR, RCC_CPERCKSELR_CKPERSRC));
 }
 
@@ -3381,9 +3417,12 @@ __STATIC_INLINE uint32_t LL_RCC_GetCKPERClockSource(uint32_t Periph)
   */
 __STATIC_INLINE uint32_t LL_RCC_GetSTGENClockSource(uint32_t Periph)
 {
+  /* Prevent unused argument compilation warning */
+  UNUSED(Periph);
   return (uint32_t)(READ_BIT(RCC->STGENCKSELR, RCC_STGENCKSELR_STGENSRC));
 }
 
+#if defined(DSI)
 /**
   * @brief  Get DSI clock source
   * @rmtoll DSICKSELR      DSISRC      LL_RCC_GetDSIClockSource
@@ -3395,8 +3434,11 @@ __STATIC_INLINE uint32_t LL_RCC_GetSTGENClockSource(uint32_t Periph)
   */
 __STATIC_INLINE uint32_t LL_RCC_GetDSIClockSource(uint32_t Periph)
 {
+  /* Prevent unused argument compilation warning */
+  UNUSED(Periph);
   return (uint32_t)(READ_BIT(RCC->DSICKSELR, RCC_DSICKSELR_DSISRC));
 }
+#endif /*DSI*/
 
 /**
   * @brief  Get ADC clock source
@@ -3410,6 +3452,8 @@ __STATIC_INLINE uint32_t LL_RCC_GetDSIClockSource(uint32_t Periph)
   */
 __STATIC_INLINE uint32_t LL_RCC_GetADCClockSource(uint32_t Periph)
 {
+  /* Prevent unused argument compilation warning */
+  UNUSED(Periph);
   return (uint32_t)(READ_BIT(RCC->ADCCKSELR, RCC_ADCCKSELR_ADCSRC));
 }
 
@@ -5931,7 +5975,9 @@ uint32_t    LL_RCC_GetSDMMCClockFreq(uint32_t SDMMCxSource);
 uint32_t    LL_RCC_GetETHClockFreq(uint32_t ETHxSource);
 uint32_t    LL_RCC_GetQSPIClockFreq(uint32_t QSPIxSource);
 uint32_t    LL_RCC_GetFMCClockFreq(uint32_t FMCxSource);
+#if defined(FDCAN1)
 uint32_t    LL_RCC_GetFDCANClockFreq(uint32_t FDCANxSource);
+#endif /*FDCAN1*/
 uint32_t    LL_RCC_GetSPDIFRXClockFreq(uint32_t SPDIFRXxSource);
 uint32_t    LL_RCC_GetCECClockFreq(uint32_t CECxSource);
 uint32_t    LL_RCC_GetUSBPHYClockFreq(uint32_t USBPHYxSource);
@@ -5939,7 +5985,9 @@ uint32_t    LL_RCC_GetUSBOClockFreq(uint32_t USBOxSource);
 uint32_t    LL_RCC_GetRNGClockFreq(uint32_t RNGxSource);
 uint32_t    LL_RCC_GetCKPERClockFreq(uint32_t CKPERxSource);
 uint32_t    LL_RCC_GetSTGENClockFreq(uint32_t STGENxSource);
+#if defined(DSI)
 uint32_t    LL_RCC_GetDSIClockFreq(uint32_t DSIxSource);
+#endif /*DSI*/
 uint32_t    LL_RCC_GetADCClockFreq(uint32_t ADCxSource);
 uint32_t    LL_RCC_GetLPTIMClockFreq(uint32_t LPTIMxSource);
 uint32_t    LL_RCC_GetDFSDMClockFreq(uint32_t DFSDMxSource);

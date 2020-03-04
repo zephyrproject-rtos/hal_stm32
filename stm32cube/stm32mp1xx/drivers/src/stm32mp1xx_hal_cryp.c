@@ -325,10 +325,12 @@ static void CRYP_SetDMAConfig(CRYP_HandleTypeDef *hcryp, uint32_t inputaddr, uin
 static void CRYP_DMAInCplt(DMA_HandleTypeDef *hdma);
 static void CRYP_DMAOutCplt(DMA_HandleTypeDef *hdma);
 static void CRYP_DMAError(DMA_HandleTypeDef *hdma);
+#ifdef HAL_MDMA_MODULE_ENABLED
 static void CRYP_SetMDMAConfig(CRYP_HandleTypeDef *hcryp, uint32_t inputaddr, uint16_t Size, uint32_t outputaddr);
 static void CRYP_MDMAInCplt(MDMA_HandleTypeDef *hmdma);
 static void CRYP_MDMAOutCplt(MDMA_HandleTypeDef *hmdma);
 static void CRYP_MDMAError(MDMA_HandleTypeDef *hmdma);
+#endif
 static void CRYP_SetKey(CRYP_HandleTypeDef *hcryp, uint32_t KeySize);
 static void CRYP_AES_IT(CRYP_HandleTypeDef *hcryp);
 static HAL_StatusTypeDef CRYP_GCMCCM_SetHeaderPhase(CRYP_HandleTypeDef *hcryp, uint32_t Timeout);
@@ -1452,10 +1454,12 @@ HAL_StatusTypeDef HAL_CRYP_Encrypt_DMA(CRYP_HandleTypeDef *hcryp, uint32_t *Inpu
         {
           CRYP_SetDMAConfig(hcryp, (uint32_t)(hcryp->pCrypInBuffPtr), (hcryp->Size / 4U), (uint32_t)(hcryp->pCrypOutBuffPtr));
         }
+#ifdef HAL_MDMA_MODULE_ENABLED
         else if (hcryp->hmdmain != NULL)
         {
           CRYP_SetMDMAConfig(hcryp, (uint32_t)( hcryp->pCrypInBuffPtr), (hcryp->Size / 4U), (uint32_t)(hcryp->pCrypOutBuffPtr));
         }
+#endif
 
         break;
 
@@ -1483,10 +1487,12 @@ HAL_StatusTypeDef HAL_CRYP_Encrypt_DMA(CRYP_HandleTypeDef *hcryp, uint32_t *Inpu
         {
     	  CRYP_SetDMAConfig(hcryp, (uint32_t)(hcryp->pCrypInBuffPtr), (hcryp->Size / 4U), (uint32_t)(hcryp->pCrypOutBuffPtr));
         }
+#ifdef HAL_MDMA_MODULE_ENABLED
         else if (hcryp->hmdmain != NULL)
         {
     	  CRYP_SetMDMAConfig(hcryp, (uint32_t)( hcryp->pCrypInBuffPtr), (hcryp->Size / 4U), (uint32_t)(hcryp->pCrypOutBuffPtr));
         }
+#endif
         break;
 
       case CRYP_AES_GCM:
@@ -1598,10 +1604,12 @@ HAL_StatusTypeDef HAL_CRYP_Decrypt_DMA(CRYP_HandleTypeDef *hcryp, uint32_t *Inpu
       {
         CRYP_SetDMAConfig(hcryp, (uint32_t)( hcryp->pCrypInBuffPtr), (hcryp->Size/4), (uint32_t)(hcryp->pCrypOutBuffPtr));
       }
+#ifdef HAL_MDMA_MODULE_ENABLED
       else if (hcryp->hmdmain != NULL)
       {
     	CRYP_SetMDMAConfig(hcryp, (uint32_t)( hcryp->pCrypInBuffPtr), (hcryp->Size / 4U), (uint32_t)(hcryp->pCrypOutBuffPtr));
       }
+#endif
         break;
 
       case CRYP_AES_ECB:
@@ -2276,10 +2284,12 @@ static HAL_StatusTypeDef CRYP_AES_Decrypt_DMA(CRYP_HandleTypeDef *hcryp)
     {
       CRYP_SetDMAConfig(hcryp, (uint32_t)( hcryp->pCrypInBuffPtr), (hcryp->Size / 4U), (uint32_t)(hcryp->pCrypOutBuffPtr));
     }
+#ifdef HAL_MDMA_MODULE_ENABLED
     else if (hcryp->hmdmain != NULL)
     {
       CRYP_SetMDMAConfig(hcryp, (uint32_t)( hcryp->pCrypInBuffPtr), (hcryp->Size / 4U), (uint32_t)(hcryp->pCrypOutBuffPtr));
     }
+#endif
   }
   else
   {
@@ -2464,7 +2474,7 @@ static void CRYP_DMAError(DMA_HandleTypeDef *hdma)
   HAL_CRYP_ErrorCallback(hcryp);
 #endif /* USE_HAL_CRYP_REGISTER_CALLBACKS */
 }
-
+#ifdef HAL_MDMA_MODULE_ENABLED
 /**
   * @brief  MDMA CRYP input data process complete callback.
   * @param  hmdma: MDMA handle
@@ -2634,6 +2644,7 @@ static void CRYP_MDMAError(MDMA_HandleTypeDef *hmdma)
   HAL_CRYP_ErrorCallback(hcryp);
 #endif /* USE_HAL_CRYP_REGISTER_CALLBACKS */
 }
+#endif
 
 /**
   * @brief  Set the DMA configuration and start the DMA transfer
@@ -2695,6 +2706,7 @@ static void CRYP_SetDMAConfig(CRYP_HandleTypeDef *hcryp, uint32_t inputaddr, uin
   /* Enable In/Out DMA request */
   hcryp->Instance->DMACR = CRYP_DMACR_DOEN | CRYP_DMACR_DIEN;
 }
+#ifdef HAL_MDMA_MODULE_ENABLED
 /**
   * @brief  Set the MDMA configuration and start the MDMA transfer
   * @param  hcryp: pointer to a CRYP_HandleTypeDef structure that contains
@@ -2755,6 +2767,7 @@ static void CRYP_SetMDMAConfig(CRYP_HandleTypeDef *hcryp, uint32_t inputaddr, ui
   /* Enable In/Out DMA request */
   hcryp->Instance->DMACR = CRYP_DMACR_DOEN | CRYP_DMACR_DIEN;
 }
+#endif
 
 /**
   * @brief  Process Data: Write Input data in polling mode and used in AES functions.
@@ -3335,8 +3348,10 @@ static HAL_StatusTypeDef CRYP_AESGCM_Process_DMA(CRYP_HandleTypeDef *hcryp)
     /*DMA transfer */
     if (hcryp->hdmain != NULL)
       CRYP_SetDMAConfig(hcryp, (uint32_t)( hcryp->pCrypInBuffPtr), (uint16_t)wordsize, (uint32_t)(hcryp->pCrypOutBuffPtr));
+#ifdef HAL_MDMA_MODULE_ENABLED
     else if (hcryp->hmdmain != NULL)
       CRYP_SetMDMAConfig(hcryp, (uint32_t)( hcryp->pCrypInBuffPtr), (uint16_t)wordsize, (uint32_t)(hcryp->pCrypOutBuffPtr));
+#endif
   }
   else /* length of input data is < 16 */
   {
@@ -3797,8 +3812,10 @@ static HAL_StatusTypeDef CRYP_AESCCM_Process_DMA(CRYP_HandleTypeDef *hcryp)
     /*DMA transfer */
     if (hcryp->hdmain != NULL)
       CRYP_SetDMAConfig(hcryp, (uint32_t)(hcryp->pCrypInBuffPtr), (uint16_t)wordsize, (uint32_t)(hcryp->pCrypOutBuffPtr));
-    else if (hcryp->hmdmain != NULL)
+#ifdef HAL_MDMA_MODULE_ENABLED
+ else if (hcryp->hmdmain != NULL)
       CRYP_SetMDMAConfig(hcryp, (uint32_t)(hcryp->pCrypInBuffPtr), (uint16_t)wordsize, (uint32_t)(hcryp->pCrypOutBuffPtr));
+#endif
   }
   else /* length of input data is  < 16U */
   {

@@ -321,6 +321,24 @@ void HAL_GPIO_DeInit(GPIO_TypeDef  *GPIOx, uint32_t GPIO_Pin)
 
     if(iocurrent == ioposition)
     {
+      /*------------------------- EXTI Mode Configuration --------------------*/
+      tmp = EXTI->EXTICR[position >> 2];
+      tmp &= (((uint32_t)0xFF) << (8 * (position & 0x03)));
+      if(tmp == ((uint32_t)(GPIO_GET_INDEX(GPIOx)) << (8 * (position & 0x03))))
+      {
+        /* Clear EXTI line configuration for Current CPU */
+        EXTI_CurrentCPU->IMR1 &= ~((uint32_t)iocurrent);
+        EXTI_CurrentCPU->EMR1 &= ~((uint32_t)iocurrent);
+
+        /* Clear Rising Falling edge configuration */
+        EXTI->RTSR1 &= ~((uint32_t)iocurrent);
+        EXTI->FTSR1 &= ~((uint32_t)iocurrent);
+
+        /* Configure the External Interrupt or event for the current IO */
+        tmp = ((uint32_t)0xFF) << (8 * (position & 0x03));
+        EXTI->EXTICR[position >> 2] &= ~tmp;
+      }
+
       /*------------------------- GPIO Mode Configuration --------------------*/
       /* Configure IO in Analog Mode */
       GPIOx->MODER |= (GPIO_MODER_MODER0 << (position * 2));
@@ -336,24 +354,6 @@ void HAL_GPIO_DeInit(GPIO_TypeDef  *GPIOx, uint32_t GPIO_Pin)
 
       /* Deactivate the Pull-up and Pull-down resistor for the current IO */
       GPIOx->PUPDR &= ~(GPIO_PUPDR_PUPDR0 << (position * 2));
-
-      /*------------------------- EXTI Mode Configuration --------------------*/
-      tmp = EXTI->EXTICR[position >> 2];
-      tmp &= (((uint32_t)0xFF) << (8 * (position & 0x03)));
-      if(tmp == ((uint32_t)(GPIO_GET_INDEX(GPIOx)) << (8 * (position & 0x03))))
-      {
-        /* Configure the External Interrupt or event for the current IO */
-        tmp = ((uint32_t)0xFF) << (8 * (position & 0x03));
-        EXTI->EXTICR[position >> 2] &= ~tmp;
-
-        /* Clear EXTI line configuration for Current CPU */
-        EXTI_CurrentCPU->IMR1 &= ~((uint32_t)iocurrent);
-        EXTI_CurrentCPU->EMR1 &= ~((uint32_t)iocurrent);
-
-        /* Clear Rising Falling edge configuration */
-        EXTI->RTSR1 &= ~((uint32_t)iocurrent);
-        EXTI->FTSR1 &= ~((uint32_t)iocurrent);
-      }
     }
   }
 }
@@ -442,13 +442,13 @@ void HAL_GPIO_TogglePin(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin)
   /* Check the parameters */
   assert_param(IS_GPIO_PIN(GPIO_Pin));
 
-  if ((GPIOx->ODR & GPIO_Pin) == GPIO_Pin)
+  if ((GPIOx->ODR & GPIO_Pin) != 0x00u)
   {
-    GPIOx->BSRR = (uint32_t)GPIO_Pin << GPIO_NUMBER;
+    GPIOx->BRR = (uint32_t)GPIO_Pin;
   }
   else
   {
-    GPIOx->BSRR = GPIO_Pin;
+    GPIOx->BSRR = (uint32_t)GPIO_Pin;
   }
 }
 
@@ -479,10 +479,11 @@ HAL_StatusTypeDef HAL_GPIO_LockPin(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin)
   GPIOx->LCKR = GPIO_Pin;
   /* Set LCKx bit(s): LCKK='1' + LCK[15-0] */
   GPIOx->LCKR = tmp;
-  /* Read LCKK bit*/
+  /* Read LCKK register. This read is mandatory to complete key lock sequence */
   tmp = GPIOx->LCKR;
 
- if((GPIOx->LCKR & GPIO_LCKR_LCKK) != RESET)
+  /* Read again in order to confirm lock is active */
+  if((GPIOx->LCKR & GPIO_LCKR_LCKK) != RESET)
   {
     return HAL_OK;
   }
@@ -524,7 +525,7 @@ __weak void HAL_GPIO_EXTI_Rising_Callback(uint16_t GPIO_Pin)
   UNUSED(GPIO_Pin);
 
   /* NOTE: This function should not be modified, when the callback is needed,
-           the HAL_GPIO_EXTI_Callback could be implemented in the user file
+           the HAL_GPIO_EXTI_Rising_Callback could be implemented in the user file
    */
 }
 
@@ -539,7 +540,7 @@ __weak void HAL_GPIO_EXTI_Falling_Callback(uint16_t GPIO_Pin)
   UNUSED(GPIO_Pin);
 
   /* NOTE: This function should not be modified, when the callback is needed,
-           the HAL_GPIO_EXTI_Callback could be implemented in the user file
+           the HAL_GPIO_EXTI_Falling_Callback could be implemented in the user file
    */
 }
 

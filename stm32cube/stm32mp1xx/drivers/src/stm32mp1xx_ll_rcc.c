@@ -74,7 +74,9 @@
 
 #define IS_LL_RCC_FMC_CLKSOURCE(__VALUE__)      (((__VALUE__) == LL_RCC_FMC_CLKSOURCE))
 
+#if defined(FDCAN1)
 #define IS_LL_RCC_FDCAN_CLKSOURCE(__VALUE__)    (((__VALUE__) == LL_RCC_FDCAN_CLKSOURCE))
+#endif /*FDCAN1*/
 
 #define IS_LL_RCC_SPDIFRX_CLKSOURCE(__VALUE__)  (((__VALUE__) == LL_RCC_SPDIFRX_CLKSOURCE))
 
@@ -91,7 +93,9 @@
 
 #define IS_LL_RCC_STGEN_CLKSOURCE(__VALUE__)    (((__VALUE__) == LL_RCC_STGEN_CLKSOURCE))
 
+#if defined(DSI)
 #define IS_LL_RCC_DSI_CLKSOURCE(__VALUE__)      (((__VALUE__) == LL_RCC_DSI_CLKSOURCE))
+#endif /*DSI*/
 
 #define IS_LL_RCC_ADC_CLKSOURCE(__VALUE__)      (((__VALUE__) == LL_RCC_ADC_CLKSOURCE))
 
@@ -1331,6 +1335,7 @@ uint32_t LL_RCC_GetFMCClockFreq(uint32_t FMCxSource)
   return fmc_frequency;
 }
 
+#if defined(FDCAN1)
 /**
   * @brief  Return FDCANx clock frequency
   * @param  FDCANxSource This parameter can be one of the following values:
@@ -1386,6 +1391,7 @@ uint32_t LL_RCC_GetFDCANClockFreq(uint32_t FDCANxSource)
 
   return fdcan_frequency;
 }
+#endif /*FDCAN1*/
 
 /**
   * @brief  Return SPDIFRXx clock frequency
@@ -1708,6 +1714,7 @@ uint32_t LL_RCC_GetSTGENClockFreq(uint32_t STGENxSource)
   return stgen_frequency;
 }
 
+#if defined(DSI)
 /**
   * @brief  Return DSIx clock frequency
   * @param  DSIxSource This parameter can be one of the following values:
@@ -1747,6 +1754,7 @@ uint32_t LL_RCC_GetDSIClockFreq(uint32_t DSIxSource)
 
   return dsi_frequency;
 }
+#endif /*DSI*/
 
 /**
   * @brief  Return ADCx clock frequency

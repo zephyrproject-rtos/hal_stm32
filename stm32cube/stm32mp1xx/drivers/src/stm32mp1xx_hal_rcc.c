@@ -190,7 +190,7 @@ HAL_StatusTypeDef HAL_RCC_DeInit(void)
   /* Wait till HSI is ready */
   while ((RCC->OCRDYR & RCC_OCRDYR_HSIRDY) == 0U)
   {
-    if ((int32_t)(HAL_GetTick() - tickstart) > HSI_TIMEOUT_VALUE)
+    if ((HAL_GetTick() - tickstart) > HSI_TIMEOUT_VALUE)
     {
       return HAL_TIMEOUT;
     }
@@ -248,7 +248,7 @@ HAL_StatusTypeDef HAL_RCC_DeInit(void)
   /* Wait till PLL is disabled */
   while ((RCC->PLL1CR & RCC_PLL1CR_PLL1RDY) != 0U)
   {
-    if ((int32_t)(HAL_GetTick() - tickstart) > PLL_TIMEOUT_VALUE)
+    if ((HAL_GetTick() - tickstart) > PLL_TIMEOUT_VALUE)
     {
       return HAL_TIMEOUT;
     }
@@ -270,7 +270,7 @@ HAL_StatusTypeDef HAL_RCC_DeInit(void)
   /* Wait till PLL is disabled */
   while ((RCC->PLL2CR & RCC_PLL2CR_PLL2RDY) != 0U)
   {
-    if ((int32_t)(HAL_GetTick() - tickstart) > PLL_TIMEOUT_VALUE)
+    if ((HAL_GetTick() - tickstart) > PLL_TIMEOUT_VALUE)
     {
       return HAL_TIMEOUT;
     }
@@ -292,7 +292,7 @@ HAL_StatusTypeDef HAL_RCC_DeInit(void)
   /* Wait till PLL is disabled */
   while ((RCC->PLL3CR & RCC_PLL3CR_PLL3RDY) != 0U)
   {
-    if ((int32_t)(HAL_GetTick() - tickstart) > PLL_TIMEOUT_VALUE)
+    if ((HAL_GetTick() - tickstart) > PLL_TIMEOUT_VALUE)
     {
       return HAL_TIMEOUT;
     }
@@ -314,7 +314,7 @@ HAL_StatusTypeDef HAL_RCC_DeInit(void)
   /* Wait till PLL is disabled */
   while ((RCC->PLL4CR & RCC_PLL4CR_PLL4RDY) != 0U)
   {
-    if ((int32_t)(HAL_GetTick() - tickstart) > PLL_TIMEOUT_VALUE)
+    if ((HAL_GetTick() - tickstart) > PLL_TIMEOUT_VALUE)
     {
       return HAL_TIMEOUT;
     }
@@ -389,7 +389,7 @@ HAL_StatusTypeDef HAL_RCC_DeInit(void)
   /* Wait till HSIDIV is ready */
   while ((RCC->OCRDYR & RCC_OCRDYR_HSIDIVRDY) == 0U)
   {
-    if ((int32_t)(HAL_GetTick() - tickstart) > HSI_TIMEOUT_VALUE)
+    if ((HAL_GetTick() - tickstart) > HSI_TIMEOUT_VALUE)
     {
       return HAL_TIMEOUT;
     }
@@ -458,7 +458,7 @@ HAL_StatusTypeDef HAL_RCC_DeInit(void)
   SystemCoreClock = HSI_VALUE;
 
   /* Adapt Systick interrupt period */
-  if (HAL_InitTick(TICK_INT_PRIORITY) != HAL_OK)
+  if (HAL_InitTick(uwTickPrio) != HAL_OK)
   {
     return HAL_ERROR;
   }
@@ -563,7 +563,7 @@ __weak HAL_StatusTypeDef HAL_RCC_OscConfig(RCC_OscInitTypeDef  *RCC_OscInitStruc
         SystemCoreClock =  HAL_RCC_GetSystemCoreClockFreq();
 
         /* Adapt Systick interrupt period */
-        if (HAL_InitTick(TICK_INT_PRIORITY) != HAL_OK)
+        if (HAL_InitTick(uwTickPrio) != HAL_OK)
         {
           return HAL_ERROR;
         }
@@ -832,7 +832,7 @@ HAL_StatusTypeDef HAL_RCC_HSEConfig(uint32_t State)
   /* Wait till HSE is disabled */
   while (__HAL_RCC_GET_FLAG(RCC_FLAG_HSERDY) != RESET)
   {
-    if ((int32_t)(HAL_GetTick() - tickstart) > HSE_TIMEOUT_VALUE)
+    if ((HAL_GetTick() - tickstart) > HSE_TIMEOUT_VALUE)
     {
       return HAL_TIMEOUT;
     }
@@ -1354,7 +1354,6 @@ HAL_StatusTypeDef RCC_MPUConfig(RCC_MPUInitTypeDef *RCC_MPUInitStruct)
     default:
       /* This case is impossible */
       return HAL_ERROR;
-      break;
 
   }
 
@@ -1377,7 +1376,7 @@ HAL_StatusTypeDef RCC_MPUConfig(RCC_MPUInitTypeDef *RCC_MPUInitStruct)
   SystemCoreClock = HAL_RCC_GetSystemCoreClockFreq();
 
   /* Configure the source of time base considering new system clocks settings*/
-  HAL_InitTick(TICK_INT_PRIORITY);
+  HAL_InitTick(uwTickPrio);
 #endif
 
   return HAL_OK;
@@ -1557,7 +1556,7 @@ HAL_StatusTypeDef RCC_MCUConfig(RCC_MCUInitTypeDef *MCUInitStruct)
   SystemCoreClock = HAL_RCC_GetSystemCoreClockFreq();
 
   /* Configure the source of time base considering new system clocks settings*/
-  HAL_InitTick(TICK_INT_PRIORITY);
+  HAL_InitTick(uwTickPrio);
 #endif
 
   /* Set MCU division factor */
@@ -1579,7 +1578,7 @@ HAL_StatusTypeDef RCC_MCUConfig(RCC_MCUInitTypeDef *MCUInitStruct)
   SystemCoreClock = HAL_RCC_GetSystemCoreClockFreq();
 
   /* Configure the source of time base considering new system clocks settings*/
-  HAL_InitTick(TICK_INT_PRIORITY);
+  HAL_InitTick(uwTickPrio);
 #endif
 
   return HAL_OK;
@@ -1991,8 +1990,8 @@ __weak void HAL_RCC_GetPLL1ClockFreq(PLL1_ClocksTypeDef *PLL1_Clocks)
   pllsource = __HAL_RCC_GET_PLL12_SOURCE();
   pll1m = ((RCC->PLL1CFGR1 & RCC_PLL1CFGR1_DIVM1) >> RCC_PLL1CFGR1_DIVM1_Pos) + 1U;
   pll1fracen = (RCC->PLL1FRACR & RCC_PLL1FRACR_FRACLE) >> RCC_PLL1FRACR_FRACLE_Pos;
-  fracn1 = (pll1fracen * ((RCC->PLL1FRACR & RCC_PLL1FRACR_FRACV) >> RCC_PLL1FRACR_FRACV_Pos));
-  pll1vco = (((RCC->PLL1CFGR1 & RCC_PLL1CFGR1_DIVN) + 1U) + (fracn1 / 0x1FFF));//Intermediary value
+  fracn1 = (float)(pll1fracen * ((RCC->PLL1FRACR & RCC_PLL1FRACR_FRACV) >> RCC_PLL1FRACR_FRACV_Pos));
+  pll1vco = (float)((float)((RCC->PLL1CFGR1 & RCC_PLL1CFGR1_DIVN) + 1U) + (fracn1 / (float)0x1FFF));  //Intermediary value
   switch (pllsource)
   {
     case RCC_PLL12SOURCE_HSI:  /* HSI used as PLL clock source */
@@ -2000,16 +1999,16 @@ __weak void HAL_RCC_GetPLL1ClockFreq(PLL1_ClocksTypeDef *PLL1_Clocks)
       if (__HAL_RCC_GET_FLAG(RCC_FLAG_HSIDIVRDY) != 0U)
       {
         hsivalue = (HSI_VALUE >> __HAL_RCC_GET_HSI_DIV());
-        pll1vco *= (hsivalue / pll1m);
+        pll1vco *= (float)(hsivalue / pll1m);
       }
       else
       {
-        pll1vco *= (HSI_VALUE / pll1m);
+        pll1vco *= (float)(HSI_VALUE / pll1m);
       }
       break;
 
     case RCC_PLL12SOURCE_HSE:  /* HSE used as PLL clock source */
-      pll1vco *= (HSE_VALUE / pll1m);
+      pll1vco *= (float)(HSE_VALUE / pll1m);
       break;
 
     case RCC_PLL12SOURCE_OFF:  /* No clock source for PLL */
@@ -2021,9 +2020,9 @@ __weak void HAL_RCC_GetPLL1ClockFreq(PLL1_ClocksTypeDef *PLL1_Clocks)
       break;
   }
 
-  PLL1_Clocks->PLL1_P_Frequency = (uint32_t)(pll1vco / (((RCC->PLL1CFGR2 & RCC_PLL1CFGR2_DIVP) >> RCC_PLL1CFGR2_DIVP_Pos) + 1U));
-  PLL1_Clocks->PLL1_Q_Frequency = (uint32_t)(pll1vco / (((RCC->PLL1CFGR2 & RCC_PLL1CFGR2_DIVQ) >> RCC_PLL1CFGR2_DIVQ_Pos) + 1U));
-  PLL1_Clocks->PLL1_R_Frequency = (uint32_t)(pll1vco / (((RCC->PLL1CFGR2 & RCC_PLL1CFGR2_DIVR) >> RCC_PLL1CFGR2_DIVR_Pos) + 1U));
+  PLL1_Clocks->PLL1_P_Frequency = (uint32_t)(pll1vco / ((float)(((RCC->PLL1CFGR2 & RCC_PLL1CFGR2_DIVP) >> RCC_PLL1CFGR2_DIVP_Pos) + 1U)));
+  PLL1_Clocks->PLL1_Q_Frequency = (uint32_t)(pll1vco / ((float)(((RCC->PLL1CFGR2 & RCC_PLL1CFGR2_DIVQ) >> RCC_PLL1CFGR2_DIVQ_Pos) + 1U)));
+  PLL1_Clocks->PLL1_R_Frequency = (uint32_t)(pll1vco / ((float)(((RCC->PLL1CFGR2 & RCC_PLL1CFGR2_DIVR) >> RCC_PLL1CFGR2_DIVR_Pos) + 1U)));
 }
 
 
@@ -2049,24 +2048,24 @@ __weak void HAL_RCC_GetPLL2ClockFreq(PLL2_ClocksTypeDef *PLL2_Clocks)
   pllsource = __HAL_RCC_GET_PLL12_SOURCE();
   pll2m = ((RCC->PLL2CFGR1 & RCC_PLL2CFGR1_DIVM2) >> RCC_PLL2CFGR1_DIVM2_Pos) + 1U;
   pll2fracen = (RCC->PLL2FRACR & RCC_PLL2FRACR_FRACLE) >> RCC_PLL2FRACR_FRACLE_Pos;
-  fracn1 = (pll2fracen * ((RCC->PLL2FRACR & RCC_PLL2FRACR_FRACV) >> RCC_PLL2FRACR_FRACV_Pos));
-  pll2vco = (((RCC->PLL2CFGR1 & RCC_PLL2CFGR1_DIVN) + 1U) + (fracn1 / 0x1FFF)); //Intermediary value
+  fracn1 = (float)(pll2fracen * ((RCC->PLL2FRACR & RCC_PLL2FRACR_FRACV) >> RCC_PLL2FRACR_FRACV_Pos));
+  pll2vco = (float)((float)((RCC->PLL2CFGR1 & RCC_PLL2CFGR1_DIVN) + 1U) + (fracn1 / (float)0x1FFF));  //Intermediary value
   switch (pllsource)
   {
     case RCC_PLL12SOURCE_HSI:  /* HSI used as PLL clock source */
       if (__HAL_RCC_GET_FLAG(RCC_FLAG_HSIDIVRDY) != 0U)
       {
         hsivalue = (HSI_VALUE >> __HAL_RCC_GET_HSI_DIV());
-        pll2vco *= (hsivalue / pll2m);
+        pll2vco *= (float)(hsivalue / pll2m);
       }
       else
       {
-        pll2vco *= (HSI_VALUE / pll2m);
+        pll2vco *= (float)(HSI_VALUE / pll2m);
       }
       break;
 
     case RCC_PLL12SOURCE_HSE:  /* HSE used as PLL clock source */
-      pll2vco *= (HSE_VALUE / pll2m);
+      pll2vco *= (float)(HSE_VALUE / pll2m);
       break;
 
     case RCC_PLL12SOURCE_OFF:  /* No clock source for PLL */
@@ -2078,9 +2077,9 @@ __weak void HAL_RCC_GetPLL2ClockFreq(PLL2_ClocksTypeDef *PLL2_Clocks)
       break;
   }
 
-  PLL2_Clocks->PLL2_P_Frequency = (uint32_t)(pll2vco / (((RCC->PLL2CFGR2 & RCC_PLL2CFGR2_DIVP) >> RCC_PLL2CFGR2_DIVP_Pos) + 1U));
-  PLL2_Clocks->PLL2_Q_Frequency = (uint32_t)(pll2vco / (((RCC->PLL2CFGR2 & RCC_PLL2CFGR2_DIVQ) >> RCC_PLL2CFGR2_DIVQ_Pos) + 1U));
-  PLL2_Clocks->PLL2_R_Frequency = (uint32_t)(pll2vco / (((RCC->PLL2CFGR2 & RCC_PLL2CFGR2_DIVR) >> RCC_PLL2CFGR2_DIVR_Pos) + 1U));
+  PLL2_Clocks->PLL2_P_Frequency = (uint32_t)(pll2vco / ((float)(((RCC->PLL2CFGR2 & RCC_PLL2CFGR2_DIVP) >> RCC_PLL2CFGR2_DIVP_Pos) + 1U)));
+  PLL2_Clocks->PLL2_Q_Frequency = (uint32_t)(pll2vco / ((float)(((RCC->PLL2CFGR2 & RCC_PLL2CFGR2_DIVQ) >> RCC_PLL2CFGR2_DIVQ_Pos) + 1U)));
+  PLL2_Clocks->PLL2_R_Frequency = (uint32_t)(pll2vco / ((float)(((RCC->PLL2CFGR2 & RCC_PLL2CFGR2_DIVR) >> RCC_PLL2CFGR2_DIVR_Pos) + 1U)));
 }
 
 
@@ -2106,30 +2105,30 @@ __weak void HAL_RCC_GetPLL3ClockFreq(PLL3_ClocksTypeDef *PLL3_Clocks)
   pllsource = __HAL_RCC_GET_PLL3_SOURCE();
   pll3m = ((RCC->PLL3CFGR1 & RCC_PLL3CFGR1_DIVM3) >> RCC_PLL3CFGR1_DIVM3_Pos) + 1U;
   pll3fracen = (RCC->PLL3FRACR & RCC_PLL3FRACR_FRACLE) >> RCC_PLL3FRACR_FRACLE_Pos;
-  fracn1 = (pll3fracen * ((RCC->PLL3FRACR & RCC_PLL3FRACR_FRACV) >> RCC_PLL3FRACR_FRACV_Pos));
-  pll3vco = (((RCC->PLL3CFGR1 & RCC_PLL3CFGR1_DIVN) + 1U) + (fracn1 / 0x1FFF)); //Intermediary value
+  fracn1 = (float)(pll3fracen * ((RCC->PLL3FRACR & RCC_PLL3FRACR_FRACV) >> RCC_PLL3FRACR_FRACV_Pos));
+  pll3vco = (float)((float)((RCC->PLL3CFGR1 & RCC_PLL3CFGR1_DIVN) + 1U) + (fracn1 / (float) 0x1FFF));  //Intermediary value
   switch (pllsource)
   {
     case RCC_PLL3SOURCE_HSI:  /* HSI used as PLL clock source */
       if (__HAL_RCC_GET_FLAG(RCC_FLAG_HSIDIVRDY) != 0U)
       {
         hsivalue = (HSI_VALUE >> __HAL_RCC_GET_HSI_DIV());
-        pll3vco *= (hsivalue / pll3m);
+        pll3vco *= (float)(hsivalue / pll3m);
       }
       else
       {
-        pll3vco *= (HSI_VALUE / pll3m);
+        pll3vco *= (float)(HSI_VALUE / pll3m);
       }
       break;
 
     case RCC_PLL3SOURCE_HSE:  /* HSE used as PLL clock source */
-      pll3vco *= (HSE_VALUE / pll3m);
+      pll3vco *= (float)(HSE_VALUE / pll3m);
       break;
 
 
 
     case RCC_PLL3SOURCE_CSI:  /* CSI used as PLL clock source */
-      pll3vco *= (CSI_VALUE / pll3m);
+      pll3vco *= (float)(CSI_VALUE / pll3m);
       break;
 
     case RCC_PLL3SOURCE_OFF:  /* No clock source for PLL */
@@ -2137,9 +2136,9 @@ __weak void HAL_RCC_GetPLL3ClockFreq(PLL3_ClocksTypeDef *PLL3_Clocks)
       break;
   }
 
-  PLL3_Clocks->PLL3_P_Frequency = (uint32_t)(pll3vco / (((RCC->PLL3CFGR2 & RCC_PLL3CFGR2_DIVP) >> RCC_PLL3CFGR2_DIVP_Pos) + 1U));
-  PLL3_Clocks->PLL3_Q_Frequency = (uint32_t)(pll3vco / (((RCC->PLL3CFGR2 & RCC_PLL3CFGR2_DIVQ) >> RCC_PLL3CFGR2_DIVQ_Pos) + 1U));
-  PLL3_Clocks->PLL3_R_Frequency = (uint32_t)(pll3vco / (((RCC->PLL3CFGR2 & RCC_PLL3CFGR2_DIVR) >> RCC_PLL3CFGR2_DIVR_Pos) + 1U));
+  PLL3_Clocks->PLL3_P_Frequency = (uint32_t)(pll3vco / ((float)(((RCC->PLL3CFGR2 & RCC_PLL3CFGR2_DIVP) >> RCC_PLL3CFGR2_DIVP_Pos) + 1U)));
+  PLL3_Clocks->PLL3_Q_Frequency = (uint32_t)(pll3vco / ((float)(((RCC->PLL3CFGR2 & RCC_PLL3CFGR2_DIVQ) >> RCC_PLL3CFGR2_DIVQ_Pos) + 1U)));
+  PLL3_Clocks->PLL3_R_Frequency = (uint32_t)(pll3vco / ((float)(((RCC->PLL3CFGR2 & RCC_PLL3CFGR2_DIVR) >> RCC_PLL3CFGR2_DIVR_Pos) + 1U)));
 }
 
 
@@ -2165,38 +2164,38 @@ __weak void HAL_RCC_GetPLL4ClockFreq(PLL4_ClocksTypeDef *PLL4_Clocks)
   pllsource = __HAL_RCC_GET_PLL4_SOURCE();
   pll4m = ((RCC->PLL4CFGR1 & RCC_PLL4CFGR1_DIVM4) >> RCC_PLL4CFGR1_DIVM4_Pos) + 1U;
   pll4fracen = (RCC->PLL4FRACR & RCC_PLL4FRACR_FRACLE) >> RCC_PLL4FRACR_FRACLE_Pos;
-  fracn1 = (pll4fracen * ((RCC->PLL4FRACR & RCC_PLL4FRACR_FRACV) >> RCC_PLL4FRACR_FRACV_Pos));
-  pll4vco = (((RCC->PLL4CFGR1 & RCC_PLL4CFGR1_DIVN) + 1U) + (fracn1 / 0x1FFF)); //Intermediary value
+  fracn1 = (float)(pll4fracen * ((RCC->PLL4FRACR & RCC_PLL4FRACR_FRACV) >> RCC_PLL4FRACR_FRACV_Pos));
+  pll4vco = (float)((float)((RCC->PLL4CFGR1 & RCC_PLL4CFGR1_DIVN) + 1U) + (fracn1 / (float) 0x1FFF));  //Intermediary value
   switch (pllsource)
   {
     case RCC_PLL4SOURCE_HSI:  /* HSI used as PLL clock source */
       if (__HAL_RCC_GET_FLAG(RCC_FLAG_HSIDIVRDY) != 0U)
       {
         hsivalue = (HSI_VALUE >> __HAL_RCC_GET_HSI_DIV());
-        pll4vco *= (hsivalue / pll4m);
+        pll4vco *= (float)(hsivalue / pll4m);
       }
       else
       {
-        pll4vco *= (HSI_VALUE / pll4m);
+        pll4vco *= (float)(HSI_VALUE / pll4m);
       }
       break;
 
     case RCC_PLL4SOURCE_HSE:  /* HSE used as PLL clock source */
-      pll4vco *= (HSE_VALUE / pll4m);
+      pll4vco *= (float)(HSE_VALUE / pll4m);
       break;
 
     case RCC_PLL4SOURCE_CSI:  /* CSI used as PLL clock source */
-      pll4vco *= (CSI_VALUE / pll4m);
+      pll4vco *= (float)(CSI_VALUE / pll4m);
       break;
 
     case RCC_PLL4SOURCE_I2S_CKIN:  /* Signal I2S_CKIN used as reference clock */
-      pll4vco *= (EXTERNAL_CLOCK_VALUE / pll4m);
+      pll4vco *= (float)(EXTERNAL_CLOCK_VALUE / pll4m);
       break;
   }
 
-  PLL4_Clocks->PLL4_P_Frequency = (uint32_t)(pll4vco / (((RCC->PLL4CFGR2 & RCC_PLL4CFGR2_DIVP) >> RCC_PLL4CFGR2_DIVP_Pos) + 1U));
-  PLL4_Clocks->PLL4_Q_Frequency = (uint32_t)(pll4vco / (((RCC->PLL4CFGR2 & RCC_PLL4CFGR2_DIVQ) >> RCC_PLL4CFGR2_DIVQ_Pos) + 1U));
-  PLL4_Clocks->PLL4_R_Frequency = (uint32_t)(pll4vco / (((RCC->PLL4CFGR2 & RCC_PLL4CFGR2_DIVR) >> RCC_PLL4CFGR2_DIVR_Pos) + 1U));
+  PLL4_Clocks->PLL4_P_Frequency = (uint32_t)(pll4vco / ((float)(((RCC->PLL4CFGR2 & RCC_PLL4CFGR2_DIVP) >> RCC_PLL4CFGR2_DIVP_Pos) + 1U)));
+  PLL4_Clocks->PLL4_Q_Frequency = (uint32_t)(pll4vco / ((float)(((RCC->PLL4CFGR2 & RCC_PLL4CFGR2_DIVQ) >> RCC_PLL4CFGR2_DIVQ_Pos) + 1U)));
+  PLL4_Clocks->PLL4_R_Frequency = (uint32_t)(pll4vco / ((float)(((RCC->PLL4CFGR2 & RCC_PLL4CFGR2_DIVR) >> RCC_PLL4CFGR2_DIVR_Pos) + 1U)));
 }
 
 /**
@@ -2642,6 +2641,9 @@ void HAL_RCC_IRQHandler(void)
   */
 __weak void HAL_RCC_Callback(uint32_t Flags)
 {
+  /* Prevent unused argument compilation warning */
+  UNUSED(Flags);
+
   /* NOTE : This function Should not be modified, when the callback is needed,
             the HAL_RCC_Callback could be implemented in the user file
   */

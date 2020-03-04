@@ -86,10 +86,10 @@ ErrorStatus LL_EXTI_DeInit(void)
 {
   /* Rising Trigger selection register set to default reset values */
   LL_EXTI_WriteReg(RTSR1,  0x00000000U);
-  
+
   /* Falling Trigger selection register set to default reset values */
   LL_EXTI_WriteReg(FTSR1,  0x00000000U);
-  
+
   /* Raising Pending Register 1set to default reset values */
   LL_EXTI_WriteReg(RPR1, EXTI_PR1_Msk);
 
@@ -109,11 +109,11 @@ ErrorStatus LL_EXTI_DeInit(void)
   LL_EXTI_WriteReg(FPR3, EXTI_PR3_Msk);
 
   /* Interrupt mask register set to default reset values */
-  LL_EXTI_WriteReg(C2IMR1,0xFFFE0000);
-  
+  LL_EXTI_WriteReg(C2IMR1, 0xFFFE0000);
+
   /* Event mask register set to default reset values */
   LL_EXTI_WriteReg(C2EMR1, 0x00000000U);
-  
+
   /* Interrupt mask register 2 set to default reset values */
   LL_EXTI_WriteReg(C2IMR2, 0xFFFFFFFFU);
 
@@ -128,10 +128,17 @@ ErrorStatus LL_EXTI_DeInit(void)
 
 /**
   * @brief  Initialize the EXTI registers according to the specified parameters in EXTI_InitStruct.
+  * @note   When trying to apply a Trigger configuration to a Direct line or an
+  *         EVENT Mode to a line which does not support this/these
+  *         functionality(ies) will not return any error but change will not be
+  *         applied by HW. In any case avoid doing this.
+  *         Please note that for lines 32 to 63 only LL_EXTI_MODE_IT and
+  *         LL_EXTI_TRIGGER_NONE are allowed values, ERROR will be returned if
+  *         using other values.
   * @param  EXTI_InitStruct pointer to a @ref LL_EXTI_InitTypeDef structure.
   * @retval An ErrorStatus enumeration value:
   *          - SUCCESS: EXTI registers are initialized
-  *          - ERROR: not applicable
+  *          - ERROR: EXTI registers are not well initialized
   */
 ErrorStatus LL_EXTI_Init(LL_EXTI_InitTypeDef *EXTI_InitStruct)
 {

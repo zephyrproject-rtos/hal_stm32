@@ -6,13 +6,12 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
-  * All rights reserved.</center></h2>
+  * <h2><center>&copy; COPYRIGHT(c) 2017 STMicroelectronics</center></h2>
   *
   * This software component is licensed by ST under BSD 3-Clause license,
   * the "License"; You may not use this file except in compliance with the
   * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/BSD-3-Clause
+  *                       opensource.org/licenses/BSD-3-Clause
   *
   ******************************************************************************
   */
@@ -91,7 +90,11 @@ typedef enum
 /**
   * @brief  QSPI Handle Structure definition
   */
+#if (USE_HAL_QSPI_REGISTER_CALLBACKS == 1)
 typedef struct __QSPI_HandleTypeDef
+#else
+typedef struct
+#endif
 {
   QUADSPI_TypeDef            *Instance;        /* QSPI registers base address        */
   QSPI_InitTypeDef           Init;             /* QSPI communication parameters      */
