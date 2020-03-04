@@ -25,6 +25,8 @@
  extern "C" {
 #endif
 
+#if defined(ETH)
+
 /* Includes ------------------------------------------------------------------*/
 #include "stm32h7xx_hal_def.h"
 
@@ -63,8 +65,8 @@ typedef struct{
 	
   uint32_t VLANTypeCheck;                    /*!< Enable or Disable VLAN Type Check
                                                   This parameter can be a value of @ref ETHEx_VLAN_Type_Check */
-																				
-  FunctionalState VLANTagInverceMatch;       /*!< Enable or disable VLAN Tag Inverse Match */																			
+
+  FunctionalState VLANTagInverceMatch;       /*!< Enable or disable VLAN Tag Inverse Match */
 }ETH_RxVLANConfigTypeDef;
 /**
   *
@@ -343,6 +345,8 @@ uint32_t          HAL_ETHEx_GetMACLPIEvent(ETH_HandleTypeDef *heth);
 /**
   * @}
   */
+
+#endif /* ETH */
 
 #ifdef __cplusplus
 }
