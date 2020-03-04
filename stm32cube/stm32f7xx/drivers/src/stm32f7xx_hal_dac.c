@@ -110,7 +110,7 @@
        (+) To read the DAC last data output value, use the HAL_DAC_GetValue() function.
        (+) Stop the DAC peripheral using HAL_DAC_Stop()
 
-	
+
      *** DMA mode IO operation ***
      ==============================
      [..]

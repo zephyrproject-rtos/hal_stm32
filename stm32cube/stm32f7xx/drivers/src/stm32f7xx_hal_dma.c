@@ -492,7 +492,7 @@ HAL_StatusTypeDef HAL_DMA_Start_IT(DMA_HandleTypeDef *hdma, uint32_t SrcAddress,
   else
   {
     /* Process unlocked */
-    __HAL_UNLOCK(hdma);	
+    __HAL_UNLOCK(hdma);
 
     /* Return error status */
     status = HAL_BUSY;
