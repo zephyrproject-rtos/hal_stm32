@@ -28,6 +28,7 @@ extern "C" {
 /* Includes ------------------------------------------------------------------*/
 #include "stm32wbxx_hal_def.h"
 
+#if defined(IPCC)
 
 /** @addtogroup STM32WBxx_HAL_Driver
   * @{
@@ -253,6 +254,7 @@ void HAL_IPCC_RxCallback(IPCC_HandleTypeDef *hipcc, uint32_t ChannelIndex, IPCC_
 /**
   * @}
   */
+#endif /* IPCC */
 
 #ifdef __cplusplus
 }
