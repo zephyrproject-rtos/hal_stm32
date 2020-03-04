@@ -1,4 +1,7 @@
 # SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2020 STMicroelectronics
+#
+# SPDX-License-Identifier: Apache-2.0
 
 zephyr_library_sources(soc/system_stm32g4xx.c)
 zephyr_library_sources(drivers/src/stm32g4xx_hal.c)
@@ -39,6 +42,7 @@ zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_PCD_EX drivers/src/stm32g4xx_h
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_PWR drivers/src/stm32g4xx_hal_pwr.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_PWR_EX drivers/src/stm32g4xx_hal_pwr_ex.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_QSPI drivers/src/stm32g4xx_hal_qspi.c)
+zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_RCC drivers/src/stm32g4xx_hal_rcc.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_RCC_EX drivers/src/stm32g4xx_hal_rcc_ex.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_RNG drivers/src/stm32g4xx_hal_rng.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_RTC drivers/src/stm32g4xx_hal_rtc.c)
@@ -69,6 +73,7 @@ zephyr_library_sources_ifdef(CONFIG_USE_STM32_LL_EXTI drivers/src/stm32g4xx_ll_e
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_LL_FMAC drivers/src/stm32g4xx_ll_fmac.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_LL_FMC drivers/src/stm32g4xx_ll_fmc.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_LL_GPIO drivers/src/stm32g4xx_ll_gpio.c)
+zephyr_library_sources_ifdef(CONFIG_USE_STM32_LL_HRTIM drivers/src/stm32g4xx_ll_hrtim.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_LL_I2C drivers/src/stm32g4xx_ll_i2c.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_LL_LPTIM drivers/src/stm32g4xx_ll_lptim.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_LL_LPUART drivers/src/stm32g4xx_ll_lpuart.c)
@@ -79,7 +84,7 @@ zephyr_library_sources_ifdef(CONFIG_USE_STM32_LL_RNG drivers/src/stm32g4xx_ll_rn
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_LL_RTC drivers/src/stm32g4xx_ll_rtc.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_LL_SPI drivers/src/stm32g4xx_ll_spi.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_LL_TIM drivers/src/stm32g4xx_ll_tim.c)
-zephyr_library_sources_ifdef(CONFIG_USE_STM32_LL_USART drivers/src/stm32g4xx_ll_usart.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_LL_UCPD drivers/src/stm32g4xx_ll_ucpd.c)
+zephyr_library_sources_ifdef(CONFIG_USE_STM32_LL_USART drivers/src/stm32g4xx_ll_usart.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_LL_USB drivers/src/stm32g4xx_ll_usb.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_LL_UTILS drivers/src/stm32g4xx_ll_utils.c)
