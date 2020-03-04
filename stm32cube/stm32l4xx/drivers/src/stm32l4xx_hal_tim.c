@@ -2624,8 +2624,8 @@ HAL_StatusTypeDef HAL_TIM_Encoder_Init(TIM_HandleTypeDef *htim,  TIM_Encoder_Ini
   assert_param(IS_TIM_ENCODER_MODE(sConfig->EncoderMode));
   assert_param(IS_TIM_IC_SELECTION(sConfig->IC1Selection));
   assert_param(IS_TIM_IC_SELECTION(sConfig->IC2Selection));
-  assert_param(IS_TIM_IC_POLARITY(sConfig->IC1Polarity));
-  assert_param(IS_TIM_IC_POLARITY(sConfig->IC2Polarity));
+  assert_param(IS_TIM_ENCODERINPUT_POLARITY(sConfig->IC1Polarity));
+  assert_param(IS_TIM_ENCODERINPUT_POLARITY(sConfig->IC2Polarity));
   assert_param(IS_TIM_IC_PRESCALER(sConfig->IC1Prescaler));
   assert_param(IS_TIM_IC_PRESCALER(sConfig->IC2Prescaler));
   assert_param(IS_TIM_IC_FILTER(sConfig->IC1Filter));
@@ -3747,6 +3747,10 @@ HAL_StatusTypeDef HAL_TIM_PWM_ConfigChannel(TIM_HandleTypeDef *htim,
   *          This parameter can be one of the following values:
   *            @arg TIM_CHANNEL_1: TIM Channel 1 selected
   *            @arg TIM_CHANNEL_2: TIM Channel 2 selected
+  * @note  To output a waveform with a minimum delay user can enable the fast
+  *        mode by calling the @ref __HAL_TIM_ENABLE_OCxFAST macro. Then CCx
+  *        output is forced in response to the edge detection on TIx input,
+  *        without taking in account the comparison.
   * @retval HAL status
   */
 HAL_StatusTypeDef HAL_TIM_OnePulse_ConfigChannel(TIM_HandleTypeDef *htim,  TIM_OnePulse_InitTypeDef *sConfig,
@@ -3877,8 +3881,8 @@ HAL_StatusTypeDef HAL_TIM_OnePulse_ConfigChannel(TIM_HandleTypeDef *htim,  TIM_O
   *            @arg TIM_DMABASE_CCMR3
   *            @arg TIM_DMABASE_CCR5
   *            @arg TIM_DMABASE_CCR6
-  *            @arg TIM_DMABASE_OR2
-  *            @arg TIM_DMABASE_OR3
+  *            @arg TIM_DMABASE_AF1
+  *            @arg TIM_DMABASE_AF2
   * @param  BurstRequestSrc TIM DMA Request sources
   *         This parameter can be one of the following values:
   *            @arg TIM_DMA_UPDATE: TIM update Interrupt source
@@ -4148,8 +4152,8 @@ HAL_StatusTypeDef HAL_TIM_DMABurst_WriteStop(TIM_HandleTypeDef *htim, uint32_t B
   *            @arg TIM_DMABASE_CCMR3
   *            @arg TIM_DMABASE_CCR5
   *            @arg TIM_DMABASE_CCR6
-  *            @arg TIM_DMABASE_OR2
-  *            @arg TIM_DMABASE_OR3
+  *            @arg TIM_DMABASE_AF1
+  *            @arg TIM_DMABASE_AF2
   * @param  BurstRequestSrc TIM DMA Request sources
   *         This parameter can be one of the following values:
   *            @arg TIM_DMA_UPDATE: TIM update Interrupt source
