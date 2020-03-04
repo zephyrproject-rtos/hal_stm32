@@ -125,7 +125,7 @@ typedef struct
 #define LL_EXTI_LINE_30                EXTI_IMR1_IM30          /*!< Extended line 30 */
 #define LL_EXTI_LINE_31                EXTI_IMR1_IM31          /*!< Extended line 31 */
 #define LL_EXTI_LINE_ALL_0_31          0xFFEFFFFFU             /*!< All Extended line not reserved*/
-                                       
+
 #define LL_EXTI_LINE_32                EXTI_IMR2_IM32          /*!< Extended line 32 */
 #define LL_EXTI_LINE_33                EXTI_IMR2_IM33          /*!< Extended line 33 */
 
@@ -138,6 +138,7 @@ typedef struct
 #define LL_EXTI_LINE_42                EXTI_IMR2_IM42          /*!< Extended line 42 */
 #define LL_EXTI_LINE_43                EXTI_IMR2_IM43          /*!< Extended line 43 */
 #define LL_EXTI_LINE_44                EXTI_IMR2_IM44          /*!< Extended line 44 */
+
 #define LL_EXTI_LINE_47                EXTI_IMR2_IM47          /*!< Extended line 47 */
 #define LL_EXTI_LINE_48                EXTI_IMR2_IM48          /*!< Extended line 48 */
 
@@ -352,8 +353,7 @@ __STATIC_INLINE void LL_EXTI_EnableIT_0_31(uint32_t ExtiLine)
   *         @arg @ref LL_EXTI_LINE_42
   *         @arg @ref LL_EXTI_LINE_43
   *         @arg @ref LL_EXTI_LINE_44
-  *         @arg @ref LL_EXTI_LINE_45
-  *         @arg @ref LL_EXTI_LINE_46
+  *
   *         @arg @ref LL_EXTI_LINE_47
   *         @arg @ref LL_EXTI_LINE_48
   *
@@ -464,8 +464,7 @@ __STATIC_INLINE void LL_EXTI_DisableIT_0_31(uint32_t ExtiLine)
   *         @arg @ref LL_EXTI_LINE_42
   *         @arg @ref LL_EXTI_LINE_43
   *         @arg @ref LL_EXTI_LINE_44
-  *         @arg @ref LL_EXTI_LINE_45
-  *         @arg @ref LL_EXTI_LINE_46
+  *
   *         @arg @ref LL_EXTI_LINE_47
   *         @arg @ref LL_EXTI_LINE_48
   *
@@ -576,8 +575,7 @@ __STATIC_INLINE uint32_t LL_EXTI_IsEnabledIT_0_31(uint32_t ExtiLine)
   *         @arg @ref LL_EXTI_LINE_42
   *         @arg @ref LL_EXTI_LINE_43
   *         @arg @ref LL_EXTI_LINE_44
-  *         @arg @ref LL_EXTI_LINE_45
-  *         @arg @ref LL_EXTI_LINE_46
+  *
   *         @arg @ref LL_EXTI_LINE_47
   *         @arg @ref LL_EXTI_LINE_48
   *

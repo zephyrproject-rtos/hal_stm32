@@ -43,6 +43,7 @@
 #define HAL_DCMI_MODULE_ENABLED
 #define HAL_DFSDM_MODULE_ENABLED
 #define HAL_DMA_MODULE_ENABLED
+#define HAL_EXTI_MODULE_ENABLED
 #define HAL_FDCAN_MODULE_ENABLED
 #define HAL_GPIO_MODULE_ENABLED
 #define HAL_HASH_MODULE_ENABLED
@@ -55,6 +56,7 @@
 #define HAL_QSPI_MODULE_ENABLED
 #define HAL_RCC_MODULE_ENABLED
 #define HAL_RNG_MODULE_ENABLED
+#define HAL_RTC_MODULE_ENABLED
 #define HAL_SAI_MODULE_ENABLED
 #define HAL_SD_MODULE_ENABLED
 #define HAL_SMBUS_MODULE_ENABLED
@@ -161,7 +163,6 @@
 #if !defined  (EXTERNAL_CLOCK_VALUE)
   #define EXTERNAL_CLOCK_VALUE    12288000U /*!< Value of the External clock in Hz*/
 #endif /* EXTERNAL_CLOCK_VALUE */
-
 
 /* Tip: To avoid modifying this file each time you need to use different HSE,
    ===  you can define the HSE value in your toolchain compiler preprocessor. */
@@ -274,6 +275,10 @@
 #ifdef HAL_RNG_MODULE_ENABLED
  #include "stm32mp1xx_hal_rng.h"
 #endif /* HAL_RNG_MODULE_ENABLED */
+
+#ifdef HAL_RTC_MODULE_ENABLED
+ #include "stm32mp1xx_hal_rtc.h"
+#endif /* HAL_RTC_MODULE_ENABLED */
 
 #ifdef HAL_SAI_MODULE_ENABLED
  #include "stm32mp1xx_hal_sai.h"

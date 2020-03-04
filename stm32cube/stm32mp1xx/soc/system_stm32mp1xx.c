@@ -21,31 +21,17 @@
   *
   *
   ******************************************************************************
+  *
   * @attention
   *
-  * <h2><center>&copy; COPYRIGHT(c) 2017 STMicroelectronics</center></h2>
+  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * All rights reserved.</center></h2>
   *
-  * Redistribution and use in source and binary forms, with or without modification,
-  * are permitted provided that the following conditions are met:
-  *   1. Redistributions of source code must retain the above copyright notice,
-  *      this list of conditions and the following disclaimer.
-  *   2. Redistributions in binary form must reproduce the above copyright notice,
-  *      this list of conditions and the following disclaimer in the documentation
-  *      and/or other materials provided with the distribution.
-  *   3. Neither the name of STMicroelectronics nor the names of its contributors
-  *      may be used to endorse or promote products derived from this software
-  *      without specific prior written permission.
+  * This software component is licensed by ST under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                       opensource.org/licenses/BSD-3-Clause
   *
-  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   *
   ******************************************************************************
   */
@@ -91,7 +77,7 @@
      Internal SRAM. */
 /* #define VECT_TAB_SRAM */
 #define VECT_TAB_OFFSET  0x00 /*!< Vector Table base offset field. 
-                                   This value must be a multiple of 0x200. */
+                                   This value must be a multiple of 0x400. */
 /******************************************************************************/
 
 /**
@@ -167,7 +153,6 @@ void SystemInit (void)
 #else
 #error Please #define CORE_CM4
 #endif	                         
-  SystemCoreClockUpdate();
 }
 
 /**
@@ -239,30 +224,30 @@ void SystemCoreClockUpdate (void)
     pllsource = (RCC->RCK3SELR & RCC_RCK3SELR_PLL3SRC);
     pll3m = ((RCC->PLL3CFGR1 & RCC_PLL3CFGR1_DIVM3) >> RCC_PLL3CFGR1_DIVM3_Pos) + 1U;
     pll3fracen = (RCC->PLL3FRACR & RCC_PLL3FRACR_FRACLE) >> 16U;
-    fracn1 = (pll3fracen * ((RCC->PLL3FRACR & RCC_PLL3FRACR_FRACV) >> 3U));
-    pll3vco = (((RCC->PLL3CFGR1 & RCC_PLL3CFGR1_DIVN) + 1U) + (fracn1/0x1FFFU));
+    fracn1 = (float)(pll3fracen * ((RCC->PLL3FRACR & RCC_PLL3FRACR_FRACV) >> 3U));
+    pll3vco = (float)((float)((RCC->PLL3CFGR1 & RCC_PLL3CFGR1_DIVN) + 1U) + (fracn1 / (float) 0x1FFF));
 
     if (pll3m != 0U)
     {
       switch (pllsource)
       {
         case 0x00:  /* HSI used as PLL clock source */
-          pll3vco *= ((HSI_VALUE >> (RCC->HSICFGR & RCC_HSICFGR_HSIDIV)) / pll3m);
+          pll3vco *= (float)((HSI_VALUE >> (RCC->HSICFGR & RCC_HSICFGR_HSIDIV)) / pll3m);
           break;
 
         case 0x01:  /* HSE used as PLL clock source */
-          pll3vco *= (HSE_VALUE / pll3m);
+          pll3vco *= (float)(HSE_VALUE / pll3m);
           break;
 
         case 0x02:  /* CSI used as PLL clock source */
-          pll3vco *= (CSI_VALUE / pll3m);
+          pll3vco *= (float)(CSI_VALUE / pll3m);
           break;
 
         case 0x03:  /* No clock source for PLL */
-          pll3vco = 0U;
+          pll3vco = 0;
           break;
        }
-      SystemCoreClock = (uint32_t)(pll3vco/((RCC->PLL3CFGR2 & RCC_PLL3CFGR2_DIVP) + 1U));
+      SystemCoreClock = (uint32_t)(pll3vco/ ((float)((RCC->PLL3CFGR2 & RCC_PLL3CFGR2_DIVP) + 1U)));
     }
     else
     {
@@ -279,7 +264,7 @@ void SystemCoreClockUpdate (void)
 #ifdef DATA_IN_ExtSRAM
 /**
   * @brief  Setup the external memory controller.
-  *         Called in startup_stm32L4xx.s before jump to main.
+  *         Called in startup_stm32mp15xx.s before jump to main.
   *         This function configures the external SRAM mounted on Eval boards
   *         This SRAM will be used as program data memory (including heap and stack).
   * @param  None

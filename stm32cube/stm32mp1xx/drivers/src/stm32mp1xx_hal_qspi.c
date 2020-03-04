@@ -24,7 +24,7 @@
     [..]
       (#) As prerequisite, fill in the HAL_QSPI_MspInit() :
         (++) Enable QuadSPI clock interface with __HAL_RCC_QSPI_CLK_ENABLE().
-        (++) Reset QuadSPI IP with __HAL_RCC_QSPI_FORCE_RESET() and __HAL_RCC_QSPI_RELEASE_RESET().
+        (++) Reset QuadSPI Peripheral with __HAL_RCC_QSPI_FORCE_RESET() and __HAL_RCC_QSPI_RELEASE_RESET().
         (++) Enable the clocks for the QuadSPI GPIOS with __HAL_RCC_GPIOx_CLK_ENABLE().
         (++) Configure these QuadSPI pins in alternate mode using HAL_GPIO_Init().
         (++) If interrupt mode is used, enable and configure QuadSPI global
@@ -196,13 +196,12 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
-  * All rights reserved.</center></h2>
+  * <h2><center>&copy; COPYRIGHT(c) 2017 STMicroelectronics</center></h2>
   *
   * This software component is licensed by ST under BSD 3-Clause license,
   * the "License"; You may not use this file except in compliance with the
   * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/BSD-3-Clause
+  *                       opensource.org/licenses/BSD-3-Clause
   *
   ******************************************************************************
   */
@@ -1882,7 +1881,7 @@ __weak void HAL_QSPI_TimeOutCallback(QSPI_HandleTypeDef *hqspi)
   * @brief  Register a User QSPI Callback
   *         To be used instead of the weak (surcharged) predefined callback
   * @param hqspi : QSPI handle
-  * @param CallbackID : ID of the callback to be registered
+  * @param CallbackId : ID of the callback to be registered
   *        This parameter can be one of the following values:
   *          @arg @ref HAL_QSPI_ERROR_CB_ID          QSPI Error Callback ID
   *          @arg @ref HAL_QSPI_ABORT_CB_ID          QSPI Abort Callback ID
@@ -1996,7 +1995,7 @@ HAL_StatusTypeDef HAL_QSPI_RegisterCallback (QSPI_HandleTypeDef *hqspi, HAL_QSPI
   * @brief  Unregister a User QSPI Callback
   *         QSPI Callback is redirected to the weak (surcharged) predefined callback
   * @param hqspi : QSPI handle
-  * @param CallbackID : ID of the callback to be unregistered
+  * @param CallbackId : ID of the callback to be unregistered
   *        This parameter can be one of the following values:
   *          @arg @ref HAL_QSPI_ERROR_CB_ID          QSPI Error Callback ID
   *          @arg @ref HAL_QSPI_ABORT_CB_ID          QSPI Abort Callback ID
@@ -2400,21 +2399,8 @@ static void QSPI_DMAError(MDMA_HandleTypeDef *hmdma)
   CLEAR_BIT(hqspi->Instance->CR, QUADSPI_CR_DMAEN);
 
   /* Abort the QSPI */
-  if (HAL_QSPI_Abort_IT(hqspi) != HAL_OK)
-  {
-    /* Disable the QSPI FIFO Threshold, Transfer Error and Transfer complete Interrupts */
-    __HAL_QSPI_DISABLE_IT(hqspi, QSPI_IT_TC | QSPI_IT_TE | QSPI_IT_FT);
+  (void)HAL_QSPI_Abort_IT(hqspi);
 
-    /* Change state of QSPI */
-    hqspi->State = HAL_QSPI_STATE_READY;
-    
-    /* Error callback */
-#if (USE_HAL_QSPI_REGISTER_CALLBACKS == 1)
-    hqspi->ErrorCallback(hqspi);
-#else
-    HAL_QSPI_ErrorCallback(hqspi);
-#endif
-  }
 }
 
 /**

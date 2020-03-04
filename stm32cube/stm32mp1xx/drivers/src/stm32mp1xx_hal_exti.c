@@ -173,139 +173,139 @@ HAL_StatusTypeDef HAL_EXTI_SetConfigLine(EXTI_HandleTypeDef *hexti, EXTI_ConfigT
   linepos = (pExtiConfig->Line & EXTI_PIN_MASK);
   maskline = (1uL << linepos);
 
-    /* Configure triggers for configurable lines */
-    if ((pExtiConfig->Line & EXTI_CONFIG) != 0x00u)
+  /* Configure triggers for configurable lines */
+  if ((pExtiConfig->Line & EXTI_CONFIG) != 0x00u)
+  {
+    assert_param(IS_EXTI_TRIGGER(pExtiConfig->Trigger));
+
+    /* Configure rising trigger */
+    regaddr = (&EXTI->RTSR1 + (EXTI_CONFIG_OFFSET * offset));
+    regval = *regaddr;
+
+    /* Mask or set line */
+    if ((pExtiConfig->Trigger & EXTI_TRIGGER_RISING) != 0x00u)
     {
-      assert_param(IS_EXTI_TRIGGER(pExtiConfig->Trigger));
-
-      /* Configure rising trigger */
-      regaddr = (&EXTI->RTSR1 + (EXTI_CONFIG_OFFSET * offset));
-      regval = *regaddr;
-
-      /* Mask or set line */
-      if ((pExtiConfig->Trigger & EXTI_TRIGGER_RISING) != 0x00u)
-      {
-        regval |= maskline;
-      }
-      else
-      {
-        regval &= ~maskline;
-      }
-
-      /* Store rising trigger mode */
-      *regaddr = regval;
-
-      /* Configure falling trigger */
-      regaddr = (&EXTI->FTSR1 + (EXTI_CONFIG_OFFSET * offset));
-      regval = *regaddr;
-
-      /* Mask or set line */
-      if ((pExtiConfig->Trigger & EXTI_TRIGGER_FALLING) != 0x00u)
-      {
-        regval |= maskline;
-      }
-      else
-      {
-        regval &= ~maskline;
-      }
-
-      /* Store falling trigger mode */
-      *regaddr = regval;
-
-      /* Configure gpio port selection in case of gpio exti line */
-      if ((pExtiConfig->Line & EXTI_GPIO) == EXTI_GPIO)
-      {
-        assert_param(IS_EXTI_GPIO_PORT(pExtiConfig->GPIOSel));
-        assert_param(IS_EXTI_GPIO_PIN(linepos));
-
-        regval = EXTI->EXTICR[linepos >> 2u];
-        regval &= ~(EXTI_EXTICR1_EXTI0 << (EXTI_EXTICR1_EXTI1_Pos * (linepos & 0x03u)));
-        regval |= (pExtiConfig->GPIOSel << (EXTI_EXTICR1_EXTI1_Pos * (linepos & 0x03u)));
-        EXTI->EXTICR[linepos >> 2u] = regval;
-      }
+      regval |= maskline;
+    }
+    else
+    {
+      regval &= ~maskline;
     }
 
+    /* Store rising trigger mode */
+    *regaddr = regval;
+
+    /* Configure falling trigger */
+    regaddr = (&EXTI->FTSR1 + (EXTI_CONFIG_OFFSET * offset));
+    regval = *regaddr;
+
+    /* Mask or set line */
+    if ((pExtiConfig->Trigger & EXTI_TRIGGER_FALLING) != 0x00u)
+    {
+      regval |= maskline;
+    }
+    else
+    {
+      regval &= ~maskline;
+    }
+
+    /* Store falling trigger mode */
+    *regaddr = regval;
+
+    /* Configure gpio port selection in case of gpio exti line */
+    if ((pExtiConfig->Line & EXTI_GPIO) == EXTI_GPIO)
+    {
+      assert_param(IS_EXTI_GPIO_PORT(pExtiConfig->GPIOSel));
+      assert_param(IS_EXTI_GPIO_PIN(linepos));
+
+      regval = EXTI->EXTICR[linepos >> 2u];
+      regval &= ~(EXTI_EXTICR1_EXTI0 << (EXTI_EXTICR1_EXTI1_Pos * (linepos & 0x03u)));
+      regval |= (pExtiConfig->GPIOSel << (EXTI_EXTICR1_EXTI1_Pos * (linepos & 0x03u)));
+      EXTI->EXTICR[linepos >> 2u] = regval;
+    }
+  }
+
   /*Set Interrupt And Event Mask for Core 1 if configuration for Core 1 given into parameter mode */
- if ((pExtiConfig->Mode & EXTI_MODE_C1) != 0x00u)
- {
-   regaddr = (&EXTI->C1IMR1 + (EXTI_MODE_OFFSET * offset));
+  if ((pExtiConfig->Mode & EXTI_MODE_C1) != 0x00u)
+  {
+    regaddr = (&EXTI->C1IMR1 + (EXTI_MODE_OFFSET * offset));
 
-   regval = *regaddr;
+    regval = *regaddr;
 
-   /* Mask or set line */
-   if ((pExtiConfig->Mode & EXTI_MODE_INTERRUPT) != 0x00u)
-   {
-     regval |= maskline;
-   }
-   else
-   {
-     regval &= ~maskline;
-   }
+    /* Mask or set line */
+    if ((pExtiConfig->Mode & EXTI_MODE_INTERRUPT) != 0x00u)
+    {
+      regval |= maskline;
+    }
+    else
+    {
+      regval &= ~maskline;
+    }
 
-   /* Store interrupt mode */
-   *regaddr = regval;
+    /* Store interrupt mode */
+    *regaddr = regval;
 
-   /* The event mode cannot be configured if the line does not support it */
-   assert_param(((pExtiConfig->Line & EXTI_EVENT) == EXTI_EVENT) || ((pExtiConfig->Mode & EXTI_MODE_EVENT) != EXTI_MODE_EVENT));
+    /* The event mode cannot be configured if the line does not support it */
+    assert_param(((pExtiConfig->Line & EXTI_EVENT) == EXTI_EVENT) || ((pExtiConfig->Mode & EXTI_MODE_EVENT) != EXTI_MODE_EVENT));
 
-   regaddr = (&EXTI->C1EMR1 + (EXTI_MODE_OFFSET * offset));
+    regaddr = (&EXTI->C1EMR1 + (EXTI_MODE_OFFSET * offset));
 
-   regval = *regaddr;
+    regval = *regaddr;
 
-   /* Mask or set line */
-   if ((pExtiConfig->Mode & EXTI_MODE_EVENT) != 0x00u)
-   {
-     regval |= maskline;
-   }
-   else
-   {
-     regval &= ~maskline;
-   }
+    /* Mask or set line */
+    if ((pExtiConfig->Mode & EXTI_MODE_EVENT) != 0x00u)
+    {
+      regval |= maskline;
+    }
+    else
+    {
+      regval &= ~maskline;
+    }
 
-   /* Store event mode */
-   *regaddr = regval;
- }
+    /* Store event mode */
+    *regaddr = regval;
+  }
 
- /*Set Interrupt And Event Mask for Core 2 if configuration for Core 2 given into parameter mode  */
- if ((pExtiConfig->Mode & EXTI_MODE_C2) != 0x00u)
- {
-   regaddr = (&EXTI->C2IMR1 + (EXTI_MODE_OFFSET * offset));
+  /*Set Interrupt And Event Mask for Core 2 if configuration for Core 2 given into parameter mode  */
+  if ((pExtiConfig->Mode & EXTI_MODE_C2) != 0x00u)
+  {
+    regaddr = (&EXTI->C2IMR1 + (EXTI_MODE_OFFSET * offset));
 
-   regval = *regaddr;
+    regval = *regaddr;
 
-   /* Mask or set line */
-   if ((pExtiConfig->Mode & EXTI_MODE_INTERRUPT) != 0x00u)
-   {
-     regval |= maskline;
-   }
-   else
-   {
-     regval &= ~maskline;
-   }
+    /* Mask or set line */
+    if ((pExtiConfig->Mode & EXTI_MODE_INTERRUPT) != 0x00u)
+    {
+      regval |= maskline;
+    }
+    else
+    {
+      regval &= ~maskline;
+    }
 
-   /* Store interrupt mode */
-   *regaddr = regval;
+    /* Store interrupt mode */
+    *regaddr = regval;
 
-   /* The event mode cannot be configured if the line does not support it */
-   assert_param(((pExtiConfig->Line & EXTI_EVENT) == EXTI_EVENT) || ((pExtiConfig->Mode & EXTI_MODE_EVENT) != EXTI_MODE_EVENT));
+    /* The event mode cannot be configured if the line does not support it */
+    assert_param(((pExtiConfig->Line & EXTI_EVENT) == EXTI_EVENT) || ((pExtiConfig->Mode & EXTI_MODE_EVENT) != EXTI_MODE_EVENT));
 
-   regaddr = (&EXTI->C2EMR1 + (EXTI_MODE_OFFSET * offset));
+    regaddr = (&EXTI->C2EMR1 + (EXTI_MODE_OFFSET * offset));
 
-   regval = *regaddr;
+    regval = *regaddr;
 
-   /* Mask or set line */
-   if ((pExtiConfig->Mode & EXTI_MODE_EVENT) != 0x00u)
-   {
-     regval |= maskline;
-   }
-   else
-   {
-     regval &= ~maskline;
-   }
+    /* Mask or set line */
+    if ((pExtiConfig->Mode & EXTI_MODE_EVENT) != 0x00u)
+    {
+      regval |= maskline;
+    }
+    else
+    {
+      regval &= ~maskline;
+    }
 
-   /* Store event mode */
-   *regaddr = regval;
- }
+    /* Store event mode */
+    *regaddr = regval;
+  }
 
   return HAL_OK;
 }
@@ -484,29 +484,29 @@ HAL_StatusTypeDef HAL_EXTI_ClearConfigLine(EXTI_HandleTypeDef *hexti)
   regval = (*regaddr & ~maskline);
   *regaddr = regval;
 
-    /* 3] Clear triggers in case of configurable lines */
-    if ((hexti->Line & EXTI_CONFIG) != 0x00u)
+  /* 3] Clear triggers in case of configurable lines */
+  if ((hexti->Line & EXTI_CONFIG) != 0x00u)
+  {
+    regaddr = (&EXTI->RTSR1 + (EXTI_CONFIG_OFFSET * offset));
+    regval = (*regaddr & ~maskline);
+    *regaddr = regval;
+
+    regaddr = (&EXTI->FTSR1 + (EXTI_CONFIG_OFFSET * offset));
+    regval = (*regaddr & ~maskline);
+    *regaddr = regval;
+
+    /* Get Gpio port selection for gpio lines */
+    if ((hexti->Line & EXTI_GPIO) == EXTI_GPIO)
     {
-      regaddr = (&EXTI->RTSR1 + (EXTI_CONFIG_OFFSET * offset));
-      regval = (*regaddr & ~maskline);
-      *regaddr = regval;
+      assert_param(IS_EXTI_GPIO_PIN(linepos));
 
-      regaddr = (&EXTI->FTSR1 + (EXTI_CONFIG_OFFSET * offset));
-      regval = (*regaddr & ~maskline);
-      *regaddr = regval;
-
-      /* Get Gpio port selection for gpio lines */
-      if ((hexti->Line & EXTI_GPIO) == EXTI_GPIO)
-      {
-        assert_param(IS_EXTI_GPIO_PIN(linepos));
-
-        regval = EXTI->EXTICR[linepos >> 2u];
-        regval &= ~(EXTI_EXTICR1_EXTI0 << (EXTI_EXTICR1_EXTI1_Pos * (linepos & 0x03u)));
-        EXTI->EXTICR[linepos >> 2u] = regval;
-      }
+      regval = EXTI->EXTICR[linepos >> 2u];
+      regval &= ~(EXTI_EXTICR1_EXTI0 << (EXTI_EXTICR1_EXTI1_Pos * (linepos & 0x03u)));
+      EXTI->EXTICR[linepos >> 2u] = regval;
     }
+  }
 
-    return HAL_OK;
+  return HAL_OK;
 }
 
 
