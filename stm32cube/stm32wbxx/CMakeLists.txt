@@ -1,5 +1,5 @@
 # Copyright (c) 2019 Linaro Limited
-# Copyright (c) 2019 STMicroelectronics.
+# Copyright (c) 2020 STMicroelectronics
 #
 # SPDX-License-Identifier: Apache-2.0
 
@@ -23,6 +23,7 @@ zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_GPIO drivers/src/stm32wbxx_hal
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_HSEM drivers/src/stm32wbxx_hal_hsem.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_I2C drivers/src/stm32wbxx_hal_i2c.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_I2C_EX drivers/src/stm32wbxx_hal_i2c_ex.c)
+zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_I2S drivers/src/stm32wbxx_hal_i2s.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_IPCC drivers/src/stm32wbxx_hal_ipcc.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_IRDA drivers/src/stm32wbxx_hal_irda.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_IWDG drivers/src/stm32wbxx_hal_iwdg.c)

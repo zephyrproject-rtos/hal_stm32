@@ -55,6 +55,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm32wbxx_hal.h"
 
+#if defined(IPCC)
 /** @addtogroup STM32WBxx_HAL_Driver
   * @{
   */
@@ -742,5 +743,5 @@ void IPCC_Reset_Register(IPCC_CommonTypeDef *Instance)
 /**
   * @}
   */
-
+#endif /* IPCC */
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
