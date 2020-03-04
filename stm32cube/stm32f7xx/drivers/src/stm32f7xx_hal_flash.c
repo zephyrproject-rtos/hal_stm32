@@ -56,7 +56,7 @@
        (+) Reset the Instruction cache and the Data cache
        (+) Enable/Disable the FLASH interrupts
        (+) Monitor the FLASH flags status
-    [..]	
+    [..]
 	(@) For any Flash memory program operation (erase or program), the CPU clock frequency
         (HCLK) must be at least 1MHz.
 	(@) The contents of the Flash memory are not guaranteed if a device reset occurs during

@@ -77,21 +77,21 @@
                                    ((SIZE) == FMC_NAND_ECC_PAGE_SIZE_2048BYTE) || \
                                    ((SIZE) == FMC_NAND_ECC_PAGE_SIZE_4096BYTE) || \
                                    ((SIZE) == FMC_NAND_ECC_PAGE_SIZE_8192BYTE))
-								
+
 #define IS_FMC_SDMEMORY_WIDTH(WIDTH) (((WIDTH) == FMC_SDRAM_MEM_BUS_WIDTH_8)  || \
                                       ((WIDTH) == FMC_SDRAM_MEM_BUS_WIDTH_16) || \
                                       ((WIDTH) == FMC_SDRAM_MEM_BUS_WIDTH_32))
 
 #define IS_FMC_WRITE_PROTECTION(__WRITE__) (((__WRITE__) == FMC_SDRAM_WRITE_PROTECTION_DISABLE) || \
-                                            ((__WRITE__) == FMC_SDRAM_WRITE_PROTECTION_ENABLE))									
+                                            ((__WRITE__) == FMC_SDRAM_WRITE_PROTECTION_ENABLE))
 
 #define IS_FMC_SDCLOCK_PERIOD(__PERIOD__) (((__PERIOD__) == FMC_SDRAM_CLOCK_DISABLE)  || \
                                            ((__PERIOD__) == FMC_SDRAM_CLOCK_PERIOD_2) || \
                                            ((__PERIOD__) == FMC_SDRAM_CLOCK_PERIOD_3))
-										
+
 #define IS_FMC_READ_BURST(__RBURST__) (((__RBURST__) == FMC_SDRAM_RBURST_DISABLE) || \
                                        ((__RBURST__) == FMC_SDRAM_RBURST_ENABLE))
-									
+
 #define IS_FMC_READPIPE_DELAY(__DELAY__) (((__DELAY__) == FMC_SDRAM_RPIPE_DELAY_0) || \
                                           ((__DELAY__) == FMC_SDRAM_RPIPE_DELAY_1) || \
                                           ((__DELAY__) == FMC_SDRAM_RPIPE_DELAY_2))
@@ -106,8 +106,8 @@
 
 #define IS_FMC_COMMAND_TARGET(__TARGET__) (((__TARGET__) == FMC_SDRAM_CMD_TARGET_BANK1) || \
                                            ((__TARGET__) == FMC_SDRAM_CMD_TARGET_BANK2) || \
-                                           ((__TARGET__) == FMC_SDRAM_CMD_TARGET_BANK1_2)) 										
-						
+                                           ((__TARGET__) == FMC_SDRAM_CMD_TARGET_BANK1_2))
+
 /** @defgroup FMC_TCLR_Setup_Time FMC TCLR Setup Time
   * @{
   */
