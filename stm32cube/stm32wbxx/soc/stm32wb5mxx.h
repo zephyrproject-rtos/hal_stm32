@@ -1,10 +1,10 @@
 /**
   ******************************************************************************
-  * @file    stm32wb55xx.h
+  * @file    stm32wb5mxx.h
   * @author  MCD Application Team
   * @brief   CMSIS Cortex Device Peripheral Access Layer Header File.
   *          This file contains all the peripheral register's definitions, bits
-  *          definitions and memory mapping for stm32wb55xx devices.
+  *          definitions and memory mapping for stm32wb5mxx devices.
   *
   *          This file contains:
   *           - Data structures and the address mapping for all peripherals
@@ -29,12 +29,12 @@
   * @{
   */
 
-/** @addtogroup stm32wb55xx
+/** @addtogroup stm32wb5mxx
   * @{
   */
 
-#ifndef __STM32WB55xx_H
-#define __STM32WB55xx_H
+#ifndef __STM32WB5Mxx_H
+#define __STM32WB5Mxx_H
 
 #ifdef __cplusplus
  extern "C" {
@@ -61,7 +61,7 @@
   */
 
 /**
- * @brief stm32wb55xx Interrupt Number Definition, according to the selected device
+ * @brief stm32wb5mxx Interrupt Number Definition, according to the selected device
  *        in @ref Library_configuration_section
  */
 /*!< Interrupt Number Definition for M4 */
@@ -13664,7 +13664,7 @@ typedef struct
 }
 #endif /* __cplusplus */
 
-#endif /* __STM32WB55xx_H */
+#endif /* __STM32WB5Mxx_H */
 
 /**
   * @}
