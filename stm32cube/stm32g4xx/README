@@ -6,7 +6,7 @@ Origin:
    http://www.st.com/en/embedded-software/stm32cubeg4.html
 
 Status:
-   version 1.1.0
+   version v1.2.0
 
 Purpose:
    ST Microelectronics official MCU package for STM32G4 series.
@@ -20,10 +20,10 @@ Dependencies:
     None.
 
 URL:
-   http://www.st.com/en/embedded-software/stm32cubeg4.html
+   https://github.com/STMicroelectronics/STM32CubeG4
 
-commit:
-   version 1.1.0
+Commit:
+   21b2f2fa52ef813c38285abb6b04636910d367c9
 
 Maintained-by:
    External
@@ -35,15 +35,4 @@ License Link:
    https://opensource.org/licenses/BSD-3-Clause
 
 Patch List:
-
-   *stm32g4xx: wrong clock setup
-    In case the actual value is AHB prescaler 1, it must be set, 
-    after setting the AHB prescaler to 2.
-    Impacted files:
-     drivers/src/stm32g4xx_ll_utils.c
-    ST Bug tracker ID: 78880
-   *stm32g4xx: system clock value not update when > 80MHz
-    After AHB prescaler to 2 clock value is updated but not
-    once returned to 1 the clock value needs updated.
-    Impacted files:
-      drivers/src/stm32g4xx_ll_utils.c
+   See release_note.html from STM32Cube
