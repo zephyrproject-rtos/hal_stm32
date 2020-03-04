@@ -6,7 +6,7 @@ Origin:
    http://www.st.com/en/embedded-software/stm32cubel4.html
 
 Status:
-   version 1.14.0
+   version v1.15.1
 
 Purpose:
    ST Microelectronics official MCU package for STM32L4 series.
@@ -20,10 +20,10 @@ Dependencies:
     None.
 
 URL:
-   http://www.st.com/en/embedded-software/stm32cubel4.html
+   https://github.com/STMicroelectronics/STM32CubeL4
 
-commit:
-   version 1.14.0
+Commit:
+   285336eeffa12f9cee3a1784a6b60744bd43c0d9
 
 Maintained-by:
    External
@@ -35,18 +35,4 @@ License Link:
    https://opensource.org/licenses/BSD-3-Clause
 
 Patch List:
-
-   *Fix LL_EXTI_LINE_18 and LL_EXTI_LINE_20 declarations
-     LL_EXTI_LINE_18 and LL_EXTI_LINE_20 are declared in stm32l4xx_hal_pcd.h
-     and in stm32l4xx_ll_exti.h which generates warnings. Set #ifndef
-     in stm32l4xx_ll_exti.h around declarations.
-    Impacted files:
-     drivers/include/stm32l4xx_ll_exti.h
-    ST Bug tracker ID: 55275
-
-   *stm32l4xx: wrong clock setup
-    In case the actual value is AHB prescaler 1, it must be set, 
-    after setting the AHB prescaler to 2.
-    Impacted files:
-     drivers/src/stm32l4xx_ll_utils.c
-    ST Bug tracker ID: 78880
+   See release_note.html from STM32Cube
