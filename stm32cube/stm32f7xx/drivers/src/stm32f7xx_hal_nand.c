@@ -672,7 +672,7 @@ HAL_StatusTypeDef HAL_NAND_Read_Page_16b(NAND_HandleTypeDef *hnand, NAND_Address
 
   /* Page(s) read loop */
   while((NumPageToRead != 0) && (nandAddress < ((hnand->Config.BlockSize) * (hnand->Config.BlockNbr))))
-  {	
+  {
     /* update the buffer size */
     size = (hnand->Config.PageSize) + ((hnand->Config.PageSize) * numPagesRead);
 
@@ -1026,7 +1026,7 @@ HAL_StatusTypeDef HAL_NAND_Write_Page_16b(NAND_HandleTypeDef *hnand, NAND_Addres
 
 	/* Get tick */
     tickstart = HAL_GetTick();
-	
+
     /* Read status until NAND is ready */
     while(HAL_NAND_Read_Status(hnand) != NAND_READY)
     {
@@ -1618,7 +1618,7 @@ HAL_StatusTypeDef HAL_NAND_Write_SpareArea_16b(NAND_HandleTypeDef *hnand, NAND_A
 
     /* Get tick */
     tickstart = HAL_GetTick();
-	
+
     /* Read status until NAND is ready */
     while(HAL_NAND_Read_Status(hnand) != NAND_READY)
     {

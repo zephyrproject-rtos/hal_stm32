@@ -41,7 +41,7 @@
 /** @defgroup SDRAM_Exported_Types SDRAM Exported Types
   * @{
   */
-	
+
 /**
   * @brief  HAL SDRAM State structure definition
   */
