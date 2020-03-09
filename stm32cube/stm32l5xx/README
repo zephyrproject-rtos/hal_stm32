@@ -1,0 +1,39 @@
+STM32CubeL5
+###########
+
+Origin:
+   ST Microelectronics
+   http://www.st.com/en/embedded-software/stm32cubel5.html
+
+Status:
+   version v1.2.0
+
+Purpose:
+   ST Microelectronics official MCU package for STM32L5 series.
+
+Description:
+   This package is an extract of official STM32CubeL package written by ST Microelectronics.
+   It is composed of STM32Cube hardware abstraction layer (HAL) and low layer (LL) plus a set
+   of CMSIS headers files, one for each SoC in STM32L5 series.
+
+Dependencies:
+    None.
+
+URL:
+   https://github.com/STMicroelectronics/STM32CubeL5
+
+Commit:
+   2ca47b7feebb1852e49ff34752201999fe01eb53
+
+Maintained-by:
+   External
+
+License:
+   BSD-3-Clause
+
+License Link:
+   https://opensource.org/licenses/BSD-3-Clause
+
+Patch List:
+
+   See release_note.html from STM32Cube
