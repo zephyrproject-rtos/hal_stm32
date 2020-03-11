@@ -315,7 +315,7 @@ typedef struct
                                          @note The DFSDM2 audio gated by TIM3 OC4 can be injected on CKIN0 or CKIN4
                                          @note The DFSDM2 audio gated by TIM3 OC3 can be injected on CKIN1 or CKIN5
                                          @note The DFSDM2 audio gated by TIM3 OC2 can be injected on CKIN2 or CKIN6
-                                         @note The DFSDM2 audio gated by TIM3 OC1 can be injected on CKIN3 or CKIN7 */							
+                                         @note The DFSDM2 audio gated by TIM3 OC1 can be injected on CKIN3 or CKIN7 */
   uint32_t  DFSDM1DataDistribution;   /*!< Source selection for DatIn0 and DatIn2 of DFSDM1.
                                          This parameter can be a value of @ref DFSDM_1_DATA_DISTRIBUTION */
   uint32_t  DFSDM2DataDistribution;  /*!< Source selection for DatIn0, DatIn2, DatIn4 and DatIn6 of DFSDM2.

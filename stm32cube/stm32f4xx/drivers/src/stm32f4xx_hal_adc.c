@@ -467,7 +467,6 @@ HAL_StatusTypeDef HAL_ADC_DeInit(ADC_HandleTypeDef* hadc)
   *          @arg @ref HAL_ADC_LEVEL_OUT_OF_WINDOW_1_CB_ID    ADC analog watchdog 1 callback ID
   *          @arg @ref HAL_ADC_ERROR_CB_ID                    ADC error callback ID
   *          @arg @ref HAL_ADC_INJ_CONVERSION_COMPLETE_CB_ID  ADC group injected conversion complete callback ID
-  *          @arg @ref HAL_ADC_INJ_QUEUE_OVEFLOW_CB_ID        ADC group injected context queue overflow callback ID
   *          @arg @ref HAL_ADC_MSPINIT_CB_ID                  ADC Msp Init callback ID
   *          @arg @ref HAL_ADC_MSPDEINIT_CB_ID                ADC Msp DeInit callback ID
   * @param  pCallback pointer to the Callback function
@@ -571,7 +570,6 @@ HAL_StatusTypeDef HAL_ADC_RegisterCallback(ADC_HandleTypeDef *hadc, HAL_ADC_Call
   *          @arg @ref HAL_ADC_LEVEL_OUT_OF_WINDOW_1_CB_ID    ADC analog watchdog 1 callback ID
   *          @arg @ref HAL_ADC_ERROR_CB_ID                    ADC error callback ID
   *          @arg @ref HAL_ADC_INJ_CONVERSION_COMPLETE_CB_ID  ADC group injected conversion complete callback ID
-  *          @arg @ref HAL_ADC_INJ_QUEUE_OVEFLOW_CB_ID        ADC group injected context queue overflow callback ID
   *          @arg @ref HAL_ADC_MSPINIT_CB_ID                  ADC Msp Init callback ID
   *          @arg @ref HAL_ADC_MSPDEINIT_CB_ID                ADC Msp DeInit callback ID
   * @retval HAL status
@@ -1738,7 +1736,7 @@ HAL_StatusTypeDef HAL_ADC_ConfigChannel(ADC_HandleTypeDef* hadc, ADC_ChannelConf
   *         the configuration information for the specified ADC.
   * @param  AnalogWDGConfig  pointer to an ADC_AnalogWDGConfTypeDef structure
   *         that contains the configuration information of ADC analog watchdog.
-  * @retval HAL status	
+  * @retval HAL status
   */
 HAL_StatusTypeDef HAL_ADC_AnalogWDGConfig(ADC_HandleTypeDef* hadc, ADC_AnalogWDGConfTypeDef* AnalogWDGConfig)
 {
