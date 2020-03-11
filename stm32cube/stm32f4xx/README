@@ -6,7 +6,7 @@ Origin:
    http://www.st.com/en/embedded-software/stm32cubef4.html
 
 Status:
-   version 1.24.1
+   version v1.25.0
 
 Purpose:
    ST Microelectronics official MCU package for STM32F4 series.
@@ -20,10 +20,10 @@ Dependencies:
     None.
 
 URL:
-   http://www.st.com/en/embedded-software/stm32cubef4.html
+   https://github.com/STMicroelectronics/STM32CubeF4
 
-commit:
-   version 1.24.1
+Commit:
+   a86ecaa2fb63029596ba7dabadab2d9c2c139560
 
 Maintained-by:
    External
@@ -35,6 +35,7 @@ License Link:
    https://opensource.org/licenses/BSD-3-Clause
 
 Patch List:
+   See release_note.html from STM32Cube
 
    *Disable i2c HAL
      Due to conflict with zephyr i2c.h (I2C_SPEED_STANDARD and I2C_SPEED_FAST
@@ -43,11 +44,3 @@ Patch List:
     Impacted files:
      drivers/include/stm32f4xx_hal_conf.h
     ST Bug tracker ID: NA. Not a stm32cube issue
-
-    *Fix warnings for extraneous parentheses
-      Using clang 7.0.1, if ((htim->State == HAL_TIM_STATE_BUSY))
-      generates warnings.  Remove the extra parentheses
-     Impacted files:
-      drivers/src/stm32f4xx_hal_tim.c
-      drivers/src/stm32f4xx_hal_tim_ex.c
-     ST Bug tracker ID: 63617
