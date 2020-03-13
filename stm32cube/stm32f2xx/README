@@ -6,7 +6,7 @@ Origin:
    http://www.st.com/en/embedded-software/stm32cubef2.html
 
 Status:
-   version 1.8.0
+   version v1.9.0
 
 Purpose:
    ST Microelectronics official MCU package for STM32F2 series.
@@ -20,10 +20,10 @@ Dependencies:
     None.
 
 URL:
-   http://www.st.com/en/embedded-software/stm32cubef2.html
+   https://github.com/STMicroelectronics/STM32CubeF2
 
-commit:
-   version 1.8.0
+Commit:
+   42fc8bf966c04ef814bb0620dcd3e036e038b4a2
 
 Maintained-by:
    External
@@ -35,7 +35,6 @@ License Link:
    https://opensource.org/licenses/BSD-3-Clause
 
 Patch List:
-
    *Disable i2c HAL
      Due to conflict with zephyr i2c.h (I2C_SPEED_STANDARD and I2C_SPEED_FAST
      redefinition), deactivate STM32Cube I2C HAL. This raises no issue since
@@ -43,3 +42,5 @@ Patch List:
     Impacted files:
      drivers/include/stm32f2xx_hal_conf.h
     ST Bug tracker ID: NA. Not a stm32cube issue
+
+   See release_note.html from STM32Cube
