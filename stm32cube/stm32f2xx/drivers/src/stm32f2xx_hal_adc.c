@@ -1678,7 +1678,7 @@ HAL_StatusTypeDef HAL_ADC_ConfigChannel(ADC_HandleTypeDef* hadc, ADC_ChannelConf
   *         the configuration information for the specified ADC.
   * @param  AnalogWDGConfig pointer to an ADC_AnalogWDGConfTypeDef structure
   *         that contains the configuration information of ADC analog watchdog.
-  * @retval HAL status	
+  * @retval HAL status
   */
 HAL_StatusTypeDef HAL_ADC_AnalogWDGConfig(ADC_HandleTypeDef* hadc, ADC_AnalogWDGConfTypeDef* AnalogWDGConfig)
 {

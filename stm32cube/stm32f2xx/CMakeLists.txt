@@ -1,4 +1,5 @@
 # Copyright (c) 2018 qianfan Zhao <qianfanguijin@163.com>
+# Copyright (c) 2020 STMicroelectronics
 #
 # SPDX-License-Identifier: Apache-2.0
 
@@ -14,9 +15,11 @@ zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_CRYP drivers/src/stm32f2xx_hal
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_DAC drivers/src/stm32f2xx_hal_dac.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_DAC_EX drivers/src/stm32f2xx_hal_dac_ex.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_DCMI drivers/src/stm32f2xx_hal_dcmi.c)
+zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_DCMI_EX drivers/src/stm32f2xx_hal_dcmi_ex.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_DMA drivers/src/stm32f2xx_hal_dma.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_DMA_EX drivers/src/stm32f2xx_hal_dma_ex.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_ETH drivers/src/stm32f2xx_hal_eth.c)
+zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_EXTI drivers/src/stm32f2xx_hal_exti.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_FLASH drivers/src/stm32f2xx_hal_flash.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_FLASH_EX drivers/src/stm32f2xx_hal_flash_ex.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_GPIO drivers/src/stm32f2xx_hal_gpio.c)
@@ -34,6 +37,7 @@ zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_PCD drivers/src/stm32f2xx_hal_
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_PCD_EX drivers/src/stm32f2xx_hal_pcd_ex.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_PWR drivers/src/stm32f2xx_hal_pwr.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_PWR_EX drivers/src/stm32f2xx_hal_pwr_ex.c)
+zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_RCC drivers/src/stm32f2xx_hal_rcc.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_RCC_EX drivers/src/stm32f2xx_hal_rcc_ex.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_RNG drivers/src/stm32f2xx_hal_rng.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_RTC drivers/src/stm32f2xx_hal_rtc.c)
