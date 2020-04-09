@@ -41,6 +41,10 @@
  * Define Advertising parameters
  */
 #define CFG_ADV_BD_ADDRESS                (0x7257acd87a6c)
+#define CFG_FAST_CONN_ADV_INTERVAL_MIN    (0x80)   /**< 80ms */
+#define CFG_FAST_CONN_ADV_INTERVAL_MAX    (0xa0)  /**< 100ms */
+#define CFG_LP_CONN_ADV_INTERVAL_MIN      (0x640) /**< 1s */
+#define CFG_LP_CONN_ADV_INTERVAL_MAX      (0xfa0) /**< 2.5s */
 
 /**
  * Define IO Authentication
@@ -60,7 +64,7 @@
 #define CFG_IO_CAPABILITY_NO_INPUT_NO_OUTPUT (0x03)
 #define CFG_IO_CAPABILITY_KEYBOARD_DISPLAY   (0x04)
 
-#define CFG_IO_CAPABILITY             CFG_IO_CAPABILITY_DISPLAY_ONLY
+#define CFG_IO_CAPABILITY             CFG_IO_CAPABILITY_DISPLAY_YES_NO
 
 /**
  * Define MITM modes
@@ -69,6 +73,17 @@
 #define CFG_MITM_PROTECTION_REQUIRED          (0x01)
 
 #define CFG_MITM_PROTECTION             CFG_MITM_PROTECTION_REQUIRED
+
+/**
+ * Define PHY
+ */
+#define ALL_PHYS_PREFERENCE                             0x00
+#define RX_2M_PREFERRED                                 0x02
+#define TX_2M_PREFERRED                                 0x02
+#define TX_1M                                           0x01
+#define TX_2M                                           0x02
+#define RX_1M                                           0x01
+#define RX_2M                                           0x02
 
 /**
 *   Identity root key used to derive LTK and CSRK
@@ -91,19 +106,11 @@
 
 /**< specific parameters */
 /*****************************************************/
-#define CFG_MAX_CONNECTION                      1
-#define UUID_128BIT_FORMAT                      1
-#define CFG_DEV_ID_P2P_SERVER1                  (0x83)
-#define CONN_L(x) ((int)((x)/0.625f))
-#define CONN_P(x) ((int)((x)/1.25f))
-#define SCAN_P (0x320)
-#define SCAN_L (0x320)
-#define CONN_P1   (CONN_P(50))
-#define CONN_P2   (CONN_P(100))
-#define SUPERV_TIMEOUT (0x1F4)
-#define CONN_L1   (CONN_L(10))
-#define CONN_L2   (CONN_L(10))
-#define OOB_DEMO                                1   /* Out Of Box Demo */
+/**
+* AD Element - Group B Feature
+*/
+/* LSB - Second Byte */
+#define CFG_FEATURE_OTA_REBOOT                  (0x20)
 
 /******************************************************************************
  * BLE Stack
@@ -362,17 +369,17 @@ typedef enum
  * keep debugger enabled while in any low power mode when set to 1
  * should be set to 0 in production
  */
-#define CFG_DEBUGGER_SUPPORTED    1
+#define CFG_DEBUGGER_SUPPORTED    0
 
 /**
  * When set to 1, the traces are enabled in the BLE services
  */
-#define CFG_DEBUG_BLE_TRACE     1
+#define CFG_DEBUG_BLE_TRACE     0
 
 /**
  * Enable or Disable traces in application
  */
-#define CFG_DEBUG_APP_TRACE     1
+#define CFG_DEBUG_APP_TRACE     0
 
 #if (CFG_DEBUG_APP_TRACE != 0)
 #define APP_DBG_MSG                 PRINT_MESG_DBG
@@ -390,6 +397,7 @@ typedef enum
 #define CFG_LPM_SUPPORTED         0
 #define CFG_DEBUGGER_SUPPORTED      1
 #endif
+
 /**
  * When CFG_DEBUG_TRACE_FULL is set to 1, the trace are output with the API name, the file name and the line number
  * When CFG_DEBUG_TRACE_LIGHT is set to 1, only the debug message is output
@@ -427,10 +435,18 @@ typedef enum
 #define MAX_DBG_TRACE_MSG_SIZE 1024
 
 /* USER CODE BEGIN Defines */
-#define CFG_LED_SUPPORTED         1
+#define CFG_LED_SUPPORTED         0
 #define CFG_BUTTON_SUPPORTED      1
 
-#define PUSH_BUTTON_SW1_EXTI_IRQHandler         EXTI4_IRQHandler
+#ifdef LITTLE_DORY
+#define PUSH_BUTTON_SW1_EXTI_IRQHandler                         EXTI0_IRQHandler
+#define PUSH_BUTTON_SW2_EXTI_IRQHandler                         EXTI4_IRQHandler
+#define PUSH_BUTTON_SW3_EXTI_IRQHandler                         EXTI9_5_IRQHandler
+#else
+#define PUSH_BUTTON_SW1_EXTI_IRQHandler                         EXTI4_IRQHandler
+#define PUSH_BUTTON_SW2_EXTI_IRQHandler                         EXTI0_IRQHandler
+#define PUSH_BUTTON_SW3_EXTI_IRQHandler                         EXTI1_IRQHandler
+#endif
 /* USER CODE END Defines */
 
 /******************************************************************************
@@ -447,11 +463,8 @@ typedef enum
 /**< Add in that list all tasks that may send a ACI/HCI command */
 typedef enum
 {
-    CFG_TASK_START_SCAN_ID,
-    CFG_TASK_CONN_DEV_1_ID,
-    CFG_TASK_SEARCH_SERVICE_ID,
-    CFG_TASK_SW1_BUTTON_PUSHED_ID,
-    CFG_TASK_CONN_UPDATE_ID,
+    CFG_TASK_ADV_UPDATE_ID,
+    CFG_TASK_MEAS_REQ_ID,
     CFG_TASK_HCI_ASYNCH_EVT_ID,
 /* USER CODE BEGIN CFG_Task_Id_With_HCI_Cmd_t */
 

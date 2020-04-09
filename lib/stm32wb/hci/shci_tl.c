@@ -26,6 +26,12 @@
 
 
 /* Private typedef -----------------------------------------------------------*/
+typedef enum
+{
+  SHCI_TL_CMD_RESP_RELEASE,
+  SHCI_TL_CMD_RESP_WAIT,
+} SHCI_TL_CmdRespStatus_t;
+
 /* Private defines -----------------------------------------------------------*/
 /**
  * The default System HCI layer timeout is set to 33s
@@ -35,21 +41,30 @@
 /* Private macros ------------------------------------------------------------*/
 /* Public variables ---------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-/**
- * START of Section SYSTEM_DRIVER_CONTEXT
- */
-
-/* This section is unused and generates warning. Don't use. */
+#if 1
+/* SYSTEM_DRIVER_CONTEXT section is unused and generates useless warnings */
+/* Provide alterative definitions */
 static tListNode SHciAsynchEventQueue;
 static volatile SHCI_TL_CmdStatus_t SHCICmdStatus;
 static TL_CmdPacket_t *pCmdBuffer;
 SHCI_TL_UserEventFlowStatus_t SHCI_TL_UserEventFlow;
+#else
+/**
+ * START of Section SYSTEM_DRIVER_CONTEXT
+ */
+PLACE_IN_SECTION("SYSTEM_DRIVER_CONTEXT") static tListNode SHciAsynchEventQueue;
+PLACE_IN_SECTION("SYSTEM_DRIVER_CONTEXT") static volatile SHCI_TL_CmdStatus_t SHCICmdStatus;
+PLACE_IN_SECTION("SYSTEM_DRIVER_CONTEXT") static TL_CmdPacket_t *pCmdBuffer;
+PLACE_IN_SECTION("SYSTEM_DRIVER_CONTEXT") SHCI_TL_UserEventFlowStatus_t SHCI_TL_UserEventFlow;
 /**
  * END of Section SYSTEM_DRIVER_CONTEXT
  */
+#endif
 
 static tSHciContext shciContext;
 static void (* StatusNotCallBackFunction) (SHCI_TL_CmdStatus_t status);
+
+static volatile SHCI_TL_CmdRespStatus_t CmdRspStatusFlag;
 
 /* Private function prototypes -----------------------------------------------*/
 static void Cmd_SetStatus(SHCI_TL_CmdStatus_t shcicmdstatus);
@@ -93,13 +108,16 @@ void shci_user_evt_proc(void)
   {
     LST_remove_head ( &SHciAsynchEventQueue, (tListNode **)&phcievtbuffer );
 
-    SHCI_TL_UserEventFlow = SHCI_TL_UserEventFlow_Enable;
-
     if (shciContext.UserEvtRx != NULL)
     {
       UserEvtRxParam.pckt = phcievtbuffer;
+      UserEvtRxParam.status = SHCI_TL_UserEventFlow_Enable;
       shciContext.UserEvtRx((void *)&UserEvtRxParam);
       SHCI_TL_UserEventFlow = UserEvtRxParam.status;
+    }
+    else
+    {
+      SHCI_TL_UserEventFlow = SHCI_TL_UserEventFlow_Enable;
     }
 
     if(SHCI_TL_UserEventFlow != SHCI_TL_UserEventFlow_Disable)
@@ -211,6 +229,7 @@ static void Cmd_SetStatus(SHCI_TL_CmdStatus_t shcicmdstatus)
 
 static void TlCmdEvtReceived(TL_EvtPacket_t *shcievt)
 {
+  (void)(shcievt);
   shci_cmd_resp_release(0); /**< Notify the application the Cmd response has been received */
 
   return;
@@ -220,6 +239,26 @@ static void TlUserEvtReceived(TL_EvtPacket_t *shcievt)
 {
   LST_insert_tail(&SHciAsynchEventQueue, (tListNode *)shcievt);
   shci_notify_asynch_evt((void*) &SHciAsynchEventQueue); /**< Notify the application a full HCI event has been received */
+
+  return;
+}
+
+/* Weak implementation ----------------------------------------------------------------*/
+__WEAK void shci_cmd_resp_wait(uint32_t timeout)
+{
+  (void)timeout;
+
+  CmdRspStatusFlag = SHCI_TL_CMD_RESP_WAIT;
+  while(CmdRspStatusFlag != SHCI_TL_CMD_RESP_RELEASE);
+
+  return;
+}
+
+__WEAK void shci_cmd_resp_release(uint32_t flag)
+{
+  (void)flag;
+
+  CmdRspStatusFlag = SHCI_TL_CMD_RESP_RELEASE;
 
   return;
 }

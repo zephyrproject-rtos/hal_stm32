@@ -6,7 +6,7 @@ Origin:
    https://github.com/STMicroelectronics/STM32CubeWB
 
 Status:
-   version 1.3.0
+   version 1.5.0
 
 Purpose:
    This library is used on stm32wb series to enable HCI communication between
@@ -25,7 +25,7 @@ URL:
    https://github.com/STMicroelectronics/STM32CubeWB
 
 commit:
-   96abbb67db97bc53e38f9727adfae0e5c70b1498
+   2b2c57a80d71ffeec182cc520e5a72af7b94778d
 
 Maintained-by:
    External
