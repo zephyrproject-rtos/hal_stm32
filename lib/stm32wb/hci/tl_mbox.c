@@ -120,6 +120,9 @@ int32_t TL_BLE_Init( void* pConf )
 
 int32_t TL_BLE_SendCmd( uint8_t* buffer, uint16_t size )
 {
+  (void)(buffer);
+  (void)(size);
+
   ((TL_CmdPacket_t*)(TL_RefTable.p_ble_table->pcmd_buffer))->cmdserial.type = TL_BLECMD_PKT_TYPE;
 
   HW_IPCC_BLE_SendCmd();
@@ -143,6 +146,9 @@ void HW_IPCC_BLE_RxEvtNot(void)
 
 int32_t TL_BLE_SendAclData( uint8_t* buffer, uint16_t size )
 {
+  (void)(buffer);
+  (void)(size);
+
   ((TL_AclDataPacket_t *)(TL_RefTable.p_ble_table->phci_acl_data_buffer))->AclDataSerial.type = TL_ACL_DATA_PKT_TYPE;
 
   HW_IPCC_BLE_SendAclData();
@@ -181,6 +187,9 @@ int32_t TL_SYS_Init( void* pConf  )
 
 int32_t TL_SYS_SendCmd( uint8_t* buffer, uint16_t size )
 {
+  (void)(buffer);
+  (void)(size);
+
   ((TL_CmdPacket_t *)(TL_RefTable.p_sys_table->pcmd_buffer))->cmdserial.type = TL_SYSCMD_PKT_TYPE;
 
   HW_IPCC_SYS_SendCmd();
@@ -291,58 +300,55 @@ __WEAK void TL_THREAD_CliNotReceived( TL_EvtPacket_t * Notbuffer ){};
 #endif /* THREAD_WB */
 
 /******************************************************************************
- * LLD 802.15.4
+ * LLD TESTS
  ******************************************************************************/
-#ifdef LLD_802_15_4_WB
+#ifdef LLD_TESTS_WB
 void TL_LLDTESTS_Init( TL_LLD_tests_Config_t *p_Config )
 {
   MB_LldTestsTable_t  * p_lld_tests_table;
 
   p_lld_tests_table = TL_RefTable.p_lld_tests_table;
-
-  p_lld_tests_table->clicmdrsp_buffer = p_Config->p_LldTestsCliRspBuffer;
-  p_lld_tests_table->notack_buffer = p_Config->p_LldTestsNotAckBuffer;
-
+  p_lld_tests_table->clicmdrsp_buffer = p_Config->p_LldTestsCliCmdRspBuffer;
+  p_lld_tests_table->m0cmd_buffer = p_Config->p_LldTestsM0CmdBuffer;
   HW_IPCC_LLDTESTS_Init();
-
   return;
 }
 
-void TL_LLDTESTS_CliSendCmd( void )
+void TL_LLDTESTS_SendCliCmd( void )
 {
   ((TL_CmdPacket_t *)(TL_RefTable.p_lld_tests_table->clicmdrsp_buffer))->cmdserial.type = TL_CLICMD_PKT_TYPE;
-
-  HW_IPCC_LLDTESTS_CliSendCmd();
-
+  HW_IPCC_LLDTESTS_SendCliCmd();
   return;
 }
 
-void TL_LLDTESTS_CliSendAck ( void )
+void HW_IPCC_LLDTESTS_ReceiveCliRsp( void )
 {
-  ((TL_CmdPacket_t *)(TL_RefTable.p_lld_tests_table->notack_buffer))->cmdserial.type = TL_OTACK_PKT_TYPE;
-
-  HW_IPCC_LLDTESTS_CliSendAck();
-
+  TL_LLDTESTS_ReceiveCliRsp( (TL_CmdPacket_t*)(TL_RefTable.p_lld_tests_table->clicmdrsp_buffer) );
   return;
 }
 
-void HW_IPCC_LLDTESTS_EvtNot( void )
+void TL_LLDTESTS_SendCliRspAck( void )
 {
-  TL_LLDTESTS_NotReceived( (TL_EvtPacket_t*)(TL_RefTable.p_lld_tests_table->notack_buffer) );
-
+  HW_IPCC_LLDTESTS_SendCliRspAck();
   return;
 }
 
-void HW_IPCC_LLDTESTS_CliEvtNot( void )
+void HW_IPCC_LLDTESTS_ReceiveM0Cmd( void )
 {
-  TL_LLDTESTS_CliNotReceived( (TL_EvtPacket_t*)(TL_RefTable.p_lld_tests_table->clicmdrsp_buffer) );
-
+  TL_LLDTESTS_ReceiveM0Cmd( (TL_CmdPacket_t*)(TL_RefTable.p_lld_tests_table->m0cmd_buffer) );
   return;
 }
 
-__WEAK void TL_LLDTESTS_NotReceived( TL_EvtPacket_t * Notbuffer ){};
-__WEAK void TL_LLDTESTS_CliNotReceived( TL_EvtPacket_t * Notbuffer ){};
-#endif /* LLD_802_15_4_WB */
+
+void TL_LLDTESTS_SendM0CmdAck( void )
+{
+  HW_IPCC_LLDTESTS_SendM0CmdAck();
+  return;
+}
+
+__WEAK void TL_LLDTESTS_ReceiveCliRsp( TL_CmdPacket_t * Notbuffer ){};
+__WEAK void TL_LLDTESTS_ReceiveM0Cmd( TL_CmdPacket_t * Notbuffer ){};
+#endif /* LLD_TESTS_WB */
 
 #ifdef MAC_802_15_4_WB
 /******************************************************************************
@@ -404,68 +410,68 @@ __WEAK void TL_MAC_802_15_4_NotReceived( TL_EvtPacket_t * Notbuffer ){};
  ******************************************************************************/
 void TL_ZIGBEE_Init( TL_ZIGBEE_Config_t *p_Config )
 {
-
     MB_ZigbeeTable_t  * p_zigbee_table;
 
     p_zigbee_table = TL_RefTable.p_zigbee_table;
     p_zigbee_table->appliCmdM4toM0_buffer = p_Config->p_ZigbeeOtCmdRspBuffer;
     p_zigbee_table->notifM0toM4_buffer = p_Config->p_ZigbeeNotAckBuffer;
-    p_zigbee_table->loggingM0toM4_buffer = p_Config->p_ZigbeeLoggingBuffer;
+    p_zigbee_table->requestM0toM4_buffer = p_Config->p_ZigbeeNotifRequestBuffer;
 
     HW_IPCC_ZIGBEE_Init();
 
-  return;
+    return;
 }
 
-void TL_ZIGBEE_SendAppliCmdToM0( void )
+/* Zigbee M4 to M0 Request */
+void TL_ZIGBEE_SendM4RequestToM0( void )
 {
   ((TL_CmdPacket_t *)(TL_RefTable.p_zigbee_table->appliCmdM4toM0_buffer))->cmdserial.type = TL_OTCMD_PKT_TYPE;
 
-  HW_IPCC_ZIGBEE_SendAppliCmd();
-
-  return;
-}
-
-/* Send an ACK to the M0 */
-void TL_ZIGBEE_SendAckAfterAppliNotifFromM0 ( void )
-{
-  ((TL_CmdPacket_t *)(TL_RefTable.p_zigbee_table->notifM0toM4_buffer))->cmdserial.type = TL_OTACK_PKT_TYPE;
-
-  HW_IPCC_ZIGBEE_SendAppliCmdAck();
+  HW_IPCC_ZIGBEE_SendM4RequestToM0();
 
   return;
 }
 
 /* Used to receive an ACK from the M0 */
-void HW_IPCC_ZIGBEE_AppliCmdNotification(void)
+void HW_IPCC_ZIGBEE_RecvAppliAckFromM0(void)
 {
   TL_ZIGBEE_CmdEvtReceived( (TL_EvtPacket_t*)(TL_RefTable.p_zigbee_table->appliCmdM4toM0_buffer) );
 
   return;
 }
 
-/* Zigbee callback */
-void HW_IPCC_ZIGBEE_AppliAsyncEvtNotification( void )
+/* Zigbee notification from M0 to M4 */
+void HW_IPCC_ZIGBEE_RecvM0NotifyToM4( void )
 {
   TL_ZIGBEE_NotReceived( (TL_EvtPacket_t*)(TL_RefTable.p_zigbee_table->notifM0toM4_buffer) );
 
   return;
 }
 
-/* Zigbee logging */
-void HW_IPCC_ZIGBEE_AppliAsyncLoggingNotification( void )
+/* Send an ACK to the M0 for a Notification */
+void TL_ZIGBEE_SendM4AckToM0Notify ( void )
 {
-  TL_ZIGBEE_LoggingReceived( (TL_EvtPacket_t*)(TL_RefTable.p_zigbee_table->loggingM0toM4_buffer) );
+  ((TL_CmdPacket_t *)(TL_RefTable.p_zigbee_table->notifM0toM4_buffer))->cmdserial.type = TL_OTACK_PKT_TYPE;
+
+  HW_IPCC_ZIGBEE_SendM4AckToM0Notify();
 
   return;
 }
 
-/* Send a Logging ACK to the M0 */
-void TL_ZIGBEE_SendAckAfterAppliLoggingFromM0 ( void )
+/* Zigbee M0 to M4 Request */
+void HW_IPCC_ZIGBEE_RecvM0RequestToM4( void )
 {
-  ((TL_CmdPacket_t *)(TL_RefTable.p_zigbee_table->loggingM0toM4_buffer))->cmdserial.type = TL_OTACK_PKT_TYPE;
+  TL_ZIGBEE_M0RequestReceived( (TL_EvtPacket_t*)(TL_RefTable.p_zigbee_table->requestM0toM4_buffer) );
 
-  HW_IPCC_ZIGBEE_SendLoggingAck();
+  return;
+}
+
+/* Send an ACK to the M0 for a Request */
+void TL_ZIGBEE_SendM4AckToM0Request(void)
+{
+  ((TL_CmdPacket_t *)(TL_RefTable.p_zigbee_table->requestM0toM4_buffer))->cmdserial.type = TL_OTACK_PKT_TYPE;
+
+  HW_IPCC_ZIGBEE_SendM4AckToM0Request();
 
   return;
 }
@@ -550,6 +556,9 @@ void HW_IPCC_TRACES_EvtNot(void)
   return;
 }
 
-__WEAK void TL_TRACES_EvtReceived( TL_EvtPacket_t * hcievt ){};
+__WEAK void TL_TRACES_EvtReceived( TL_EvtPacket_t * hcievt )
+{
+    (void)(hcievt);
+}
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

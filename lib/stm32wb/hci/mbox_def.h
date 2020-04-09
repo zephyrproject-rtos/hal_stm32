@@ -96,15 +96,15 @@ extern "C" {
 
   typedef struct
   {
-    uint8_t   *notack_buffer;
     uint8_t   *clicmdrsp_buffer;
+    uint8_t   *m0cmd_buffer;
   } MB_LldTestsTable_t;
 
   typedef struct
   {
     uint8_t   *notifM0toM4_buffer;
     uint8_t   *appliCmdM4toM0_buffer;
-    uint8_t   *loggingM0toM4_buffer;
+    uint8_t   *requestM0toM4_buffer;
   } MB_ZigbeeTable_t;
   /**
    * msg
@@ -218,8 +218,9 @@ extern "C" {
 #define HW_IPCC_THREAD_OT_CMD_RSP_CHANNEL               LL_IPCC_CHANNEL_3
 #define HW_IPCC_ZIGBEE_CMD_APPLI_CHANNEL                LL_IPCC_CHANNEL_3
 #define HW_IPCC_MAC_802_15_4_CMD_RSP_CHANNEL            LL_IPCC_CHANNEL_3
-#define HW_IPCC_THREAD_CLI_CMD_CHANNEL                  LL_IPCC_CHANNEL_5
 #define HW_IPCC_MM_RELEASE_BUFFER_CHANNEL               LL_IPCC_CHANNEL_4
+#define HW_IPCC_THREAD_CLI_CMD_CHANNEL                  LL_IPCC_CHANNEL_5
+#define HW_IPCC_LLDTESTS_CLI_CMD_CHANNEL                LL_IPCC_CHANNEL_5
 #define HW_IPCC_HCI_ACL_DATA_CHANNEL                    LL_IPCC_CHANNEL_6
 
 /** CPU2 */
@@ -228,9 +229,11 @@ extern "C" {
 #define HW_IPCC_THREAD_NOTIFICATION_ACK_CHANNEL         LL_IPCC_CHANNEL_3
 #define HW_IPCC_ZIGBEE_APPLI_NOTIF_ACK_CHANNEL          LL_IPCC_CHANNEL_3
 #define HW_IPCC_MAC_802_15_4_NOTIFICATION_ACK_CHANNEL   LL_IPCC_CHANNEL_3
+#define HW_IPCC_LLDTESTS_M0_CMD_CHANNEL                 LL_IPCC_CHANNEL_3
 #define HW_IPCC_TRACES_CHANNEL                          LL_IPCC_CHANNEL_4
 #define HW_IPCC_THREAD_CLI_NOTIFICATION_ACK_CHANNEL     LL_IPCC_CHANNEL_5
-#define HW_IPCC_ZIGBEE_APPLI_LOGGING_CHANNEL            LL_IPCC_CHANNEL_5
+#define HW_IPCC_LLDTESTS_CLI_RSP_CHANNEL                LL_IPCC_CHANNEL_5
+#define HW_IPCC_ZIGBEE_M0_REQUEST_CHANNEL               LL_IPCC_CHANNEL_5
 #endif /*__MBOX_H */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
