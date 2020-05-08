@@ -4,7 +4,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-if(CONFIG_HAS_STLIB)
+if(CONFIG_HAS_STM32LIB)
   if(CONFIG_BT_STM32_IPM)
     zephyr_include_directories(stm32wb/hci)
     zephyr_sources(stm32wb/hci/shci.c)
