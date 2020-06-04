@@ -176,7 +176,6 @@
   */
 static uint32_t    UTILS_GetPLLOutputFrequency(uint32_t PLL_InputFrequency,
                                                LL_UTILS_PLLInitTypeDef *UTILS_PLLInitStruct);
-static ErrorStatus UTILS_SetFlashLatency(uint32_t HCLK_Frequency);
 static ErrorStatus UTILS_EnablePLLAndSwitchSystem(uint32_t SYSCLK_Frequency, LL_UTILS_ClkInitTypeDef *UTILS_ClkInitStruct);
 static ErrorStatus UTILS_PLL_IsBusy(void);
 /**
@@ -424,17 +423,6 @@ ErrorStatus LL_PLL_ConfigSystemClock_HSE(uint32_t HSEFrequency, uint32_t HSEBypa
 }
 
 /**
-  * @}
-  */
-
-/**
-  * @}
-  */
-
-/** @addtogroup UTILS_LL_Private_Functions
-  * @{
-  */
-/**
   * @brief  Update number of Flash wait states in line with new frequency and current
             voltage range.
   * @param  HCLK_Frequency  HCLK frequency
@@ -442,7 +430,7 @@ ErrorStatus LL_PLL_ConfigSystemClock_HSE(uint32_t HSEFrequency, uint32_t HSEBypa
   *          - SUCCESS: Latency has been modified
   *          - ERROR: Latency cannot be modified
   */
-static ErrorStatus UTILS_SetFlashLatency(uint32_t HCLK_Frequency)
+ErrorStatus LL_SetFlashLatency(uint32_t HCLK_Frequency)
 {
   ErrorStatus status = SUCCESS;
 
@@ -487,6 +475,17 @@ static ErrorStatus UTILS_SetFlashLatency(uint32_t HCLK_Frequency)
   return status;
 }
 
+/**
+  * @}
+  */
+
+/**
+  * @}
+  */
+
+/** @addtogroup UTILS_LL_Private_Functions
+  * @{
+  */
 /**
   * @brief  Function to check that PLL can be modified
   * @param  PLL_InputFrequency  PLL input frequency (in Hz)
@@ -570,7 +569,7 @@ static ErrorStatus UTILS_EnablePLLAndSwitchSystem(uint32_t SYSCLK_Frequency, LL_
   if(SystemCoreClock < hclk_frequency)
   {
     /* Set FLASH latency to highest latency */
-    status = UTILS_SetFlashLatency(hclk_frequency);
+    status = LL_SetFlashLatency(hclk_frequency);
   }
 
   /* Update system clock configuration */
@@ -600,7 +599,7 @@ static ErrorStatus UTILS_EnablePLLAndSwitchSystem(uint32_t SYSCLK_Frequency, LL_
   if(SystemCoreClock > hclk_frequency)
   {
     /* Set FLASH latency to lowest latency */
-    status = UTILS_SetFlashLatency(hclk_frequency);
+    status = LL_SetFlashLatency(hclk_frequency);
   }
 
   /* Update SystemCoreClock variable */

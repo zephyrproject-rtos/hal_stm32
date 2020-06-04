@@ -35,4 +35,13 @@ License Link:
    https://opensource.org/licenses/BSD-3-Clause
 
 Patch List:
+
+    *Extend public SetFlashLatency API to all families
+     The LL_SetFlashLatency public API is now defined for families
+     beyond G4, L4 and L5. The private function has been made public.
+    Impacted files:
+     drivers/include/stm32f0xx_ll_utils.h
+     drivers/src/stm32f0xx_ll_utils.c
+    ST Bug tracker ID: 76117
+
    See release_note.html from STM32Cube

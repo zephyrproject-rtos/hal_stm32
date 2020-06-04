@@ -35,6 +35,15 @@ License Link:
    https://opensource.org/licenses/BSD-3-Clause
 
 Patch List:
+
+    *Extend public SetFlashLatency API to all families
+     The LL_SetFlashLatency public API is now defined for families
+     beyond G4, L4 and L5. The private function has been made public.
+    Impacted files:
+     drivers/include/stm32f2xx_ll_utils.h
+     drivers/src/stm32f2xx_ll_utils.c
+    ST Bug tracker ID: 76119
+
    *Disable i2c HAL
      Due to conflict with zephyr i2c.h (I2C_SPEED_STANDARD and I2C_SPEED_FAST
      redefinition), deactivate STM32Cube I2C HAL. This raises no issue since

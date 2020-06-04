@@ -36,4 +36,12 @@ License Link:
 
 Patch List:
 
+    *Extend public SetFlashLatency API to all families
+     The LL_SetFlashLatency public API is now defined for families
+     beyond G4, L4 and L5. The private function has been made public.
+    Impacted files:
+     drivers/include/stm32f3xx_ll_utils.h
+     drivers/src/stm32f3xx_ll_utils.c
+    ST Bug tracker ID: 76120
+
    See release_note.html from STM32Cube

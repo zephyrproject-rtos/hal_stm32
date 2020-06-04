@@ -605,6 +605,28 @@ ErrorStatus LL_PLL_ConfigSystemClock_HSE(uint32_t HSEFrequency, uint32_t HSEBypa
 }
 
 /**
+  * @brief  Update number of Flash wait states in line with new frequency and current
+            voltage range.
+  * @param  HCLKFrequency  HCLK frequency
+  * @retval An ErrorStatus enumeration value:
+  *          - SUCCESS: Latency has been modified
+  *          - ERROR: Latency cannot be modified
+  */
+ErrorStatus LL_SetFlashLatency(uint32_t HCLKFrequency)
+{
+  ErrorStatus status;
+  uint32_t latency;
+
+  status = UTILS_CalculateFlashLatency(HCLKFrequency, &latency);
+
+  if(status == SUCCESS)
+  {
+    status = UTILS_SetFlashLatency(latency);
+  }
+  return status;
+}
+
+/**
   * @}
   */
 
