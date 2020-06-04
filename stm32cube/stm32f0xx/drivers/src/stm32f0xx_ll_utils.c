@@ -116,9 +116,6 @@
   */
 static uint32_t    UTILS_GetPLLOutputFrequency(uint32_t PLL_InputFrequency,
                                                LL_UTILS_PLLInitTypeDef *UTILS_PLLInitStruct);
-#if defined(FLASH_ACR_LATENCY)
-static ErrorStatus UTILS_SetFlashLatency(uint32_t Frequency);
-#endif /* FLASH_ACR_LATENCY */
 static ErrorStatus UTILS_EnablePLLAndSwitchSystem(uint32_t SYSCLK_Frequency, LL_UTILS_ClkInitTypeDef *UTILS_ClkInitStruct);
 static ErrorStatus UTILS_PLL_IsBusy(void);
 /**
@@ -426,17 +423,6 @@ ErrorStatus LL_PLL_ConfigSystemClock_HSE(uint32_t HSEFrequency, uint32_t HSEBypa
 }
 
 /**
-  * @}
-  */
-
-/**
-  * @}
-  */
-
-/** @addtogroup UTILS_LL_Private_Functions
-  * @{
-  */
-/**
   * @brief  Update number of Flash wait states in line with new frequency and current
             voltage range.
   * @param  Frequency  SYSCLK frequency
@@ -445,7 +431,7 @@ ErrorStatus LL_PLL_ConfigSystemClock_HSE(uint32_t HSEFrequency, uint32_t HSEBypa
   *          - ERROR: Latency cannot be modified
   */
 #if defined(FLASH_ACR_LATENCY)
-static ErrorStatus UTILS_SetFlashLatency(uint32_t Frequency)
+ErrorStatus LL_SetFlashLatency(uint32_t Frequency)
 {
   ErrorStatus status = SUCCESS;
 
@@ -478,6 +464,17 @@ static ErrorStatus UTILS_SetFlashLatency(uint32_t Frequency)
 }
 #endif /* FLASH_ACR_LATENCY */
 
+/**
+  * @}
+  */
+
+/**
+  * @}
+  */
+
+/** @addtogroup UTILS_LL_Private_Functions
+  * @{
+  */
 /**
   * @brief  Function to check that PLL can be modified
   * @param  PLL_InputFrequency  PLL input frequency (in Hz)
@@ -549,7 +546,7 @@ static ErrorStatus UTILS_EnablePLLAndSwitchSystem(uint32_t SYSCLK_Frequency, LL_
   if (sysclk_frequency_current < SYSCLK_Frequency)
   {
     /* Set FLASH latency to highest latency */
-    status = UTILS_SetFlashLatency(SYSCLK_Frequency);
+    status = LL_SetFlashLatency(SYSCLK_Frequency);
   }
 
   /* Update system clock configuration */
@@ -578,7 +575,7 @@ static ErrorStatus UTILS_EnablePLLAndSwitchSystem(uint32_t SYSCLK_Frequency, LL_
   if (sysclk_frequency_current > SYSCLK_Frequency)
   {
     /* Set FLASH latency to lowest latency */
-    status = UTILS_SetFlashLatency(SYSCLK_Frequency);
+    status = LL_SetFlashLatency(SYSCLK_Frequency);
   }
 
   /* Update SystemCoreClock variable */
