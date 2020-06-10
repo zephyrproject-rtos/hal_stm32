@@ -6,6 +6,7 @@
 zephyr_library_sources(soc/system_stm32h7xx.c)
 zephyr_library_sources(drivers/src/stm32h7xx_hal.c)
 zephyr_library_sources(drivers/src/stm32h7xx_hal_rcc.c)
+zephyr_library_sources(drivers/src/stm32h7xx_hal_rcc_ex.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_ADC drivers/src/stm32h7xx_hal_adc.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_ADC_EX drivers/src/stm32h7xx_hal_adc_ex.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_CEC drivers/src/stm32h7xx_hal_cec.c)
