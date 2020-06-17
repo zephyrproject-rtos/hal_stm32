@@ -6,7 +6,7 @@ Origin:
    http://www.st.com/en/embedded-software/stm32cubewb.html
 
 Status:
-   version v1.5.0
+   version v1.7.0
 
 Purpose:
    ST Microelectronics official MCU package for STM32WB series.
@@ -23,7 +23,7 @@ URL:
    https://github.com/STMicroelectronics/STM32CubeWB
 
 Commit:
-   2b2c57a80d71ffeec182cc520e5a72af7b94778d
+   6f39fbe2a5edac79006e4c4dc527c1573713dcfc
 
 Maintained-by:
    External
