@@ -1,0 +1,14 @@
+This file provides licensing information on the code provided in this repository.
+
+Two licenses are in use in this repository: Apache-2.0 and BSD-3-Clause.
+They are applied according to the following scheme:
+- All files imported from official STM32Cube repositories are subject to their
+  original license: BSD-3-Clause
+- All other files, which are put in place for adaptation to Zephyr RTOS
+  (CMakeLists.txt, ...) or available as utilities (scripts/) are subject to
+  usual Zephyr project license: Apache-2.0
+- Files missing explicit license information fall under the Apache-2.0
+
+You may obtain copy of these License at the following addresses
+- http://opensource.org/licenses/BSD-3-Clause
+- http://www.apache.org/licenses/LICENSE-2.0
