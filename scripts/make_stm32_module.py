@@ -1,5 +1,6 @@
 #!/usr/bin/python
 
+# SPDX-License-Identifier: Apache-2.0
 # Copyright (c) 2019 STMicroelectronics.
 # This script will build module, readme and CMakelists.txt files
 # to use with zephyr_module.py
@@ -158,7 +159,7 @@ def makelist(make_serie):
         make_file.close()
         os.remove(os.path.join('./stm32cube', make_seriexx, 'CMakeLists.txt'))
     else:
-        first_line = '' 
+        first_line = ''
 
     print 'Create a new CMakeLists.txt file'
 
