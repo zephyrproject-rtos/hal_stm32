@@ -1,5 +1,6 @@
 #!/usr/bin/python
 
+# SPDX-License-Identifier: Apache-2.0
 # Copyright (c) 2019 STMicroelectronics.
 # This script will update the stm32cube module for Zephyr
 # from the latest version on https://github.com/STMicroelectronics
@@ -283,7 +284,7 @@ if os.system(git_cmd):
     print "Error when applying patch to zephyr module: see "+os.path.join(module_path, module_log)
 else:
     option_force = True
- 
+
 # 7.3) add files but do not commit
 os.system('git add * && git reset -- *.patch && git reset -- *.log && git reset -- *.rej')
 print "README file : --> please check that the Patch list is still valid"
