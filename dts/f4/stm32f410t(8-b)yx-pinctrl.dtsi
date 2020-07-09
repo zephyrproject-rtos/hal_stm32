@@ -12,19 +12,19 @@
 		pinctrl: pin-controller@40020000 {
 			/* UART_TX */
 			usart2_tx_pa2: usart2_tx_pa2 {
-				pinmux = <STM32_PINMUX_Z(STM32_DT_PORT_a, 2, AF7)>;
+				pinmux = <STM32_PINMUX('A', 2, AF7)>;
 				drive-push-pull;
 				bias-pull-up;
 			};
 
 			usart1_tx_pa15: usart1_tx_pa15 {
-				pinmux = <STM32_PINMUX_Z(STM32_DT_PORT_a, 15, AF7)>;
+				pinmux = <STM32_PINMUX('A', 15, AF7)>;
 				drive-push-pull;
 				bias-pull-up;
 			};
 
 			usart1_tx_pb6: usart1_tx_pb6 {
-				pinmux = <STM32_PINMUX_Z(STM32_DT_PORT_b, 6, AF7)>;
+				pinmux = <STM32_PINMUX('B', 6, AF7)>;
 				drive-push-pull;
 				bias-pull-up;
 			};
@@ -32,24 +32,24 @@
 
 			/* UART_RX */
 			usart2_rx_pa3: usart2_rx_pa3 {
-				pinmux = <STM32_PINMUX_Z(STM32_DT_PORT_a, 3, AF7)>;
+				pinmux = <STM32_PINMUX('A', 3, AF7)>;
 				bias-disable;
 			};
 
 			usart1_rx_pb3: usart1_rx_pb3 {
-				pinmux = <STM32_PINMUX_Z(STM32_DT_PORT_b, 3, AF7)>;
+				pinmux = <STM32_PINMUX('B', 3, AF7)>;
 				bias-disable;
 			};
 
 			usart1_rx_pb7: usart1_rx_pb7 {
-				pinmux = <STM32_PINMUX_Z(STM32_DT_PORT_b, 7, AF7)>;
+				pinmux = <STM32_PINMUX('B', 7, AF7)>;
 				bias-disable;
 			};
 
 
 			/* UART_RTS */
 			usart1_rts_pa12: usart1_rts_pa12 {
-				pinmux = <STM32_PINMUX_Z(STM32_DT_PORT_a, 12, AF7)>;
+				pinmux = <STM32_PINMUX('A', 12, AF7)>;
 				drive-open-drain;
 				bias-pull-up;
 			};
