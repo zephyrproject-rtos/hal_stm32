@@ -48,7 +48,7 @@ PINCTRL_GROUP_TEMPLATE = "\t\t\t/* {group} */\n"
 """pinctrl group template."""
 
 PINCTRL_ENTRY_TEMPLATE = """\t\t\t{signal}_p{port}{pin}: {signal}_p{port}{pin} {{
-\t\t\t\tpinmux = <STM32_PINMUX_Z(STM32_DT_PORT_{port}, {pin}, AF{af})>;
+\t\t\t\tpinmux = <STM32_PINMUX('{PORT}', {pin}, AF{af})>;
 {drive}{bias}\t\t\t}};\n\n"""
 """pinctrl entry template."""
 
@@ -362,6 +362,7 @@ def main(cube_path, output):
                             entries[setting["name"]].append(
                                 {
                                     "port": pin_port,
+                                    "PORT": pin_port.upper(),
                                     "pin": pin_number,
                                     "signal": signal["name"].lower(),
                                     "af": signal["af"],
@@ -384,6 +385,7 @@ def main(cube_path, output):
                 for entry in sorted_group_entries:
                     formatted_entries += PINCTRL_ENTRY_TEMPLATE.format(
                         port=entry["port"],
+                        PORT=entry["PORT"],
                         pin=entry["pin"],
                         signal=entry["signal"],
                         af=entry["af"],
