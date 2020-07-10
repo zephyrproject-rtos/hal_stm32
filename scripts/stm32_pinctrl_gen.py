@@ -376,11 +376,15 @@ def main(cube_path, output):
 
             # format entries (grouped and sorted)
             formatted_entries = ""
-            for group, group_entries in entries.items():
+
+            for group, group_entries in sorted(entries.items()):
+
                 formatted_entries += PINCTRL_GROUP_TEMPLATE.format(group=group)
 
                 sorted_group_entries = sorted(
-                    group_entries, key=lambda entry: (entry["port"], entry["pin"])
+                    group_entries, key=lambda entry: (str(entry["signal"]).split("_")[0][-1],
+                                                      entry["port"],
+                                                      entry["pin"])
                 )
                 for entry in sorted_group_entries:
                     formatted_entries += PINCTRL_ENTRY_TEMPLATE.format(
