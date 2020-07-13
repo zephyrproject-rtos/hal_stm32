@@ -10,16 +10,18 @@
 / {
 	soc {
 		pinctrl: pin-controller@48000000 {
-			/* UART_TX */
-			usart1_tx_pa9: usart1_tx_pa9 {
-				pinmux = <STM32_PINMUX('A', 9, AF1)>;
-				drive-push-pull;
+			/* UART_CTS */
+			usart1_cts_pa11: usart1_cts_pa11 {
+				pinmux = <STM32_PINMUX('A', 11, AF1)>;
+				drive-open-drain;
 				bias-pull-up;
 			};
 
-			usart1_tx_pb6: usart1_tx_pb6 {
-				pinmux = <STM32_PINMUX('B', 6, AF0)>;
-				drive-push-pull;
+
+			/* UART_RTS */
+			usart1_rts_pa12: usart1_rts_pa12 {
+				pinmux = <STM32_PINMUX('A', 12, AF1)>;
+				drive-open-drain;
 				bias-pull-up;
 			};
 
@@ -36,18 +38,16 @@
 			};
 
 
-			/* UART_CTS */
-			usart1_cts_pa11: usart1_cts_pa11 {
-				pinmux = <STM32_PINMUX('A', 11, AF1)>;
-				drive-open-drain;
+			/* UART_TX */
+			usart1_tx_pa9: usart1_tx_pa9 {
+				pinmux = <STM32_PINMUX('A', 9, AF1)>;
+				drive-push-pull;
 				bias-pull-up;
 			};
 
-
-			/* UART_RTS */
-			usart1_rts_pa12: usart1_rts_pa12 {
-				pinmux = <STM32_PINMUX('A', 12, AF1)>;
-				drive-open-drain;
+			usart1_tx_pb6: usart1_tx_pb6 {
+				pinmux = <STM32_PINMUX('B', 6, AF0)>;
+				drive-push-pull;
 				bias-pull-up;
 			};
 

@@ -30,6 +30,26 @@
 			};
 
 
+			/* UART_RTS */
+			usart1_rts_pa12: usart1_rts_pa12 {
+				pinmux = <STM32_PINMUX('A', 12, AF7)>;
+				drive-open-drain;
+				bias-pull-up;
+			};
+
+			lpuart1_rts_pb1: lpuart1_rts_pb1 {
+				pinmux = <STM32_PINMUX('B', 1, AF8)>;
+				drive-open-drain;
+				bias-pull-up;
+			};
+
+			lpuart1_rts_pb1: lpuart1_rts_pb1 {
+				pinmux = <STM32_PINMUX('B', 1, AF8)>;
+				drive-open-drain;
+				bias-pull-up;
+			};
+
+
 			/* UART_RX */
 			lpuart1_rx_pa3: lpuart1_rx_pa3 {
 				pinmux = <STM32_PINMUX('A', 3, AF8)>;
@@ -59,26 +79,6 @@
 			usart1_rx_pb7: usart1_rx_pb7 {
 				pinmux = <STM32_PINMUX('B', 7, AF7)>;
 				bias-disable;
-			};
-
-
-			/* UART_RTS */
-			usart1_rts_pa12: usart1_rts_pa12 {
-				pinmux = <STM32_PINMUX('A', 12, AF7)>;
-				drive-open-drain;
-				bias-pull-up;
-			};
-
-			lpuart1_rts_pb1: lpuart1_rts_pb1 {
-				pinmux = <STM32_PINMUX('B', 1, AF8)>;
-				drive-open-drain;
-				bias-pull-up;
-			};
-
-			lpuart1_rts_pb1: lpuart1_rts_pb1 {
-				pinmux = <STM32_PINMUX('B', 1, AF8)>;
-				drive-open-drain;
-				bias-pull-up;
 			};
 
 

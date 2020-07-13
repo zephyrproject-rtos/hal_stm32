@@ -26,6 +26,18 @@
 			};
 
 
+			/* UART_RX */
+			usart2_rx_pa3: usart2_rx_pa3 {
+				pinmux = <STM32_PINMUX('A', 3, AF4)>;
+				bias-disable;
+			};
+
+			usart2_rx_pa15: usart2_rx_pa15 {
+				pinmux = <STM32_PINMUX('A', 15, AF4)>;
+				bias-disable;
+			};
+
+
 			/* UART_TX */
 			usart2_tx_pa2: usart2_tx_pa2 {
 				pinmux = <STM32_PINMUX('A', 2, AF4)>;
@@ -37,18 +49,6 @@
 				pinmux = <STM32_PINMUX('A', 14, AF4)>;
 				drive-push-pull;
 				bias-pull-up;
-			};
-
-
-			/* UART_RX */
-			usart2_rx_pa3: usart2_rx_pa3 {
-				pinmux = <STM32_PINMUX('A', 3, AF4)>;
-				bias-disable;
-			};
-
-			usart2_rx_pa15: usart2_rx_pa15 {
-				pinmux = <STM32_PINMUX('A', 15, AF4)>;
-				bias-disable;
 			};
 
 		};
