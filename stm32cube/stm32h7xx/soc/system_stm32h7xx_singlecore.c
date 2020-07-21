@@ -2,7 +2,9 @@
   ******************************************************************************
   * @file    system_stm32h7xx.c
   * @author  MCD Application Team
-  * @brief   CMSIS Cortex-Mx Device Peripheral Access Layer System Source File.
+  * @brief   CMSIS Cortex-M7 Device Peripheral Access Layer System Source File.
+  *          This provides system initialization template function is case of
+  *          an application using a single core STM32H7 device
   *
   *   This file provides two functions and one global variable to be called from
   *   user application:
@@ -10,7 +12,7 @@
   *                      before branch to main program. This call is made inside
   *                      the "startup_stm32h7xx.s" file.
   *
-  *      - SystemCoreClock variable: Contains the core clock, it can be used
+  *      - SystemCoreClock variable: Contains the core clock (HCLK), it can be used
   *                                  by the user application to setup the SysTick
   *                                  timer or configure other parameters.
   *
@@ -47,6 +49,7 @@
 
 #include "stm32h7xx.h"
 #include <math.h>
+
 #if !defined  (HSE_VALUE)
 #define HSE_VALUE    ((uint32_t)25000000) /*!< Value of the External oscillator in Hz */
 #endif /* HSE_VALUE */
@@ -205,7 +208,7 @@ void SystemInit (void)
   RCC->CIER = 0x00000000;
 
 #if (STM32H7_DEV_ID == 0x450UL)
-  /* dual core CM7 or single core line */
+  /* single core line */
   if((DBGMCU->IDCODE & 0xFFFF0000U) < 0x20000000U)
   {
     /* if stm32h7 revY*/
@@ -215,7 +218,7 @@ void SystemInit (void)
 #endif
 
 #if defined (DATA_IN_D2_SRAM)
-  /* in case of initialized data in D2 SRAM (AHB SRAM) , enable the D2 SRAM clock (AHB SRAM clock) */
+  /* in case of initialized data in D2 SRAM (AHB SRAM), enable the D2 SRAM clock (AHB SRAM clock) */
 #if defined(RCC_AHB2ENR_D2SRAM3EN)
   RCC->AHB2ENR |= (RCC_AHB2ENR_D2SRAM1EN | RCC_AHB2ENR_D2SRAM2EN | RCC_AHB2ENR_D2SRAM3EN);
 #elif defined(RCC_AHB2ENR_D2SRAM2EN)
@@ -223,29 +226,17 @@ void SystemInit (void)
 #else
   RCC->AHB2ENR |= (RCC_AHB2ENR_AHBSRAM1EN | RCC_AHB2ENR_AHBSRAM2EN);
 #endif /* RCC_AHB2ENR_D2SRAM3EN */
-
   tmpreg = RCC->AHB2ENR;
   (void) tmpreg;
 #endif /* DATA_IN_D2_SRAM */
 
-#if defined(DUAL_CORE) && defined(CORE_CM4)
-  /* Configure the Vector Table location add offset address for cortex-M4 ------------------*/
+  /* Configure the Vector Table location add offset address ------------------*/
 #ifdef VECT_TAB_SRAM
-  SCB->VTOR = D2_AHBSRAM_BASE | VECT_TAB_OFFSET; /* Vector Table Relocation in Internal SRAM */
+  SCB->VTOR = D1_AXISRAM_BASE  | VECT_TAB_OFFSET;       /* Vector Table Relocation in Internal AXI-RAM */
 #else
-  SCB->VTOR = FLASH_BANK2_BASE | VECT_TAB_OFFSET; /* Vector Table Relocation in Internal FLASH */
-#endif /* VECT_TAB_SRAM */
-
-#else
-
-  /* Configure the Vector Table location add offset address for cortex-M7 ------------------*/
-#ifdef VECT_TAB_SRAM
-  SCB->VTOR = D1_AXISRAM_BASE  | VECT_TAB_OFFSET; /* Vector Table Relocation in Internal AXI-RAM */
-#else
-  SCB->VTOR = FLASH_BANK1_BASE | VECT_TAB_OFFSET; /* Vector Table Relocation in Internal FLASH */
+  SCB->VTOR = FLASH_BANK1_BASE | VECT_TAB_OFFSET;       /* Vector Table Relocation in Internal FLASH */
 #endif
 
-#endif /*DUAL_CORE && CORE_CM4*/
 
 }
 
@@ -289,24 +280,23 @@ void SystemInit (void)
 void SystemCoreClockUpdate (void)
 {
   uint32_t pllp, pllsource, pllm, pllfracen, hsivalue, tmp;
-  uint32_t common_system_clock;
   float_t fracn1, pllvco;
-
 
   /* Get SYSCLK source -------------------------------------------------------*/
 
   switch (RCC->CFGR & RCC_CFGR_SWS)
   {
   case RCC_CFGR_SWS_HSI:  /* HSI used as system clock source */
-    common_system_clock = (uint32_t) (HSI_VALUE >> ((RCC->CR & RCC_CR_HSIDIV)>> 3));
+   SystemCoreClock = (uint32_t) (HSI_VALUE >> ((RCC->CR & RCC_CR_HSIDIV)>> 3));
+
     break;
 
   case RCC_CFGR_SWS_CSI:  /* CSI used as system clock  source */
-    common_system_clock = CSI_VALUE;
+    SystemCoreClock = CSI_VALUE;
     break;
 
   case RCC_CFGR_SWS_HSE:  /* HSE used as system clock  source */
-    common_system_clock = HSE_VALUE;
+    SystemCoreClock = HSE_VALUE;
     break;
 
   case RCC_CFGR_SWS_PLL1:  /* PLL1 used as system clock  source */
@@ -343,16 +333,16 @@ void SystemCoreClockUpdate (void)
         break;
       }
       pllp = (((RCC->PLL1DIVR & RCC_PLL1DIVR_P1) >>9) + 1U ) ;
-      common_system_clock =  (uint32_t)(float_t)(pllvco/(float_t)pllp);
+      SystemCoreClock =  (uint32_t)(float_t)(pllvco/(float_t)pllp);
     }
     else
     {
-      common_system_clock = 0U;
+      SystemCoreClock = 0U;
     }
     break;
 
   default:
-    common_system_clock = CSI_VALUE;
+    SystemCoreClock = CSI_VALUE;
     break;
   }
 
@@ -360,30 +350,19 @@ void SystemCoreClockUpdate (void)
 #if defined (RCC_D1CFGR_D1CPRE)
   tmp = D1CorePrescTable[(RCC->D1CFGR & RCC_D1CFGR_D1CPRE)>> RCC_D1CFGR_D1CPRE_Pos];
 
-  /* common_system_clock frequency : CM7 CPU frequency  */
-  common_system_clock >>= tmp;
+  /* SystemCoreClock frequency : CM7 CPU frequency  */
+  SystemCoreClock >>= tmp;
 
-  /* SystemD2Clock frequency : CM4 CPU, AXI and AHBs Clock frequency  */
-  SystemD2Clock = (common_system_clock >> ((D1CorePrescTable[(RCC->D1CFGR & RCC_D1CFGR_HPRE)>> RCC_D1CFGR_HPRE_Pos]) & 0x1FU));
-
+  /* SystemD2Clock frequency : AXI and AHBs Clock frequency  */
+  SystemD2Clock = (SystemCoreClock >> ((D1CorePrescTable[(RCC->D1CFGR & RCC_D1CFGR_HPRE)>> RCC_D1CFGR_HPRE_Pos]) & 0x1FU));
 #else
   tmp = D1CorePrescTable[(RCC->CDCFGR1 & RCC_CDCFGR1_CDCPRE)>> RCC_CDCFGR1_CDCPRE_Pos];
 
-  /* common_system_clock frequency : CM7 CPU frequency  */
-  common_system_clock >>= tmp;
-
+  SystemCoreClock >>= tmp;
   /* SystemD2Clock frequency : AXI and AHBs Clock frequency  */
-  SystemD2Clock = (common_system_clock >> ((D1CorePrescTable[(RCC->CDCFGR1 & RCC_CDCFGR1_HPRE)>> RCC_CDCFGR1_HPRE_Pos]) & 0x1FU));
-
+  SystemD2Clock = (SystemCoreClock >> ((D1CorePrescTable[(RCC->CDCFGR1 & RCC_CDCFGR1_HPRE)>> RCC_CDCFGR1_HPRE_Pos]) & 0x1FU));
 #endif
-
-#if defined(DUAL_CORE) && defined(CORE_CM4)
-  SystemCoreClock = SystemD2Clock;
-#else
-  SystemCoreClock = common_system_clock;
-#endif /* DUAL_CORE && CORE_CM4 */
 }
-
 
 /**
   * @}
