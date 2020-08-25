@@ -1,25 +1,26 @@
 /**
  ******************************************************************************
-  * File Name          : app_conf.h
-  * Description        : Application configuration file for STM32WPAN Middleware.
-  *
+ * @file    app_conf.h
+ * @author  MCD Application Team
+ * @brief   Application configuration file
  ******************************************************************************
-  * @attention
-  *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
-  * All rights reserved.</center></h2>
-  *
+ * @attention
+ *
+ * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+ * All rights reserved.</center></h2>
+ *
   * This software component is licensed by ST under BSD 3-Clause license,
   * the "License"; You may not use this file except in compliance with the
   * License. You may obtain a copy of the License at:
   *                        opensource.org/licenses/BSD-3-Clause
-  *
-  ******************************************************************************
-  */
+ *
+ ******************************************************************************
+ */
+
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef APP_CONF_H
-#define APP_CONF_H
+#ifndef __APP_CONFIG_H
+#define __APP_CONFIG_H
 
 #include "hw.h"
 /* hw_conf.h file is not used, remove the dependency */
@@ -27,24 +28,24 @@
 #include "hw_if.h"
 
 /******************************************************************************
- * Application Config
+ * OTA Application Config
  ******************************************************************************/
 
 /**< generic parameters ******************************************************/
 
 /**
  * Define Tx Power
- */
+ */   
 #define CFG_TX_POWER                      (0x18) /**< 0dbm */
 
 /**
  * Define Advertising parameters
  */
 #define CFG_ADV_BD_ADDRESS                (0x7257acd87a6c)
-#define CFG_FAST_CONN_ADV_INTERVAL_MIN    (0x80)   /**< 80ms */
-#define CFG_FAST_CONN_ADV_INTERVAL_MAX    (0xa0)  /**< 100ms */
+#define CFG_FAST_CONN_ADV_INTERVAL_MIN    (0x80)  /**< 80ms */
+#define CFG_FAST_CONN_ADV_INTERVAL_MAX    (0xA0)  /**< 100ms */
 #define CFG_LP_CONN_ADV_INTERVAL_MIN      (0x640) /**< 1s */
-#define CFG_LP_CONN_ADV_INTERVAL_MAX      (0xfa0) /**< 2.5s */
+#define CFG_LP_CONN_ADV_INTERVAL_MAX      (0xFA0) /**< 2.5s */
 
 /**
  * Define IO Authentication
@@ -64,7 +65,7 @@
 #define CFG_IO_CAPABILITY_NO_INPUT_NO_OUTPUT (0x03)
 #define CFG_IO_CAPABILITY_KEYBOARD_DISPLAY   (0x04)
 
-#define CFG_IO_CAPABILITY             CFG_IO_CAPABILITY_DISPLAY_YES_NO
+#define CFG_IO_CAPABILITY                     CFG_IO_CAPABILITY_DISPLAY_ONLY
 
 /**
  * Define MITM modes
@@ -72,18 +73,7 @@
 #define CFG_MITM_PROTECTION_NOT_REQUIRED      (0x00)
 #define CFG_MITM_PROTECTION_REQUIRED          (0x01)
 
-#define CFG_MITM_PROTECTION             CFG_MITM_PROTECTION_REQUIRED
-
-/**
- * Define PHY
- */
-#define ALL_PHYS_PREFERENCE                             0x00
-#define RX_2M_PREFERRED                                 0x02
-#define TX_2M_PREFERRED                                 0x02
-#define TX_1M                                           0x01
-#define TX_2M                                           0x02
-#define RX_1M                                           0x01
-#define RX_2M                                           0x02
+#define CFG_MITM_PROTECTION                   CFG_MITM_PROTECTION_REQUIRED
 
 /**
 *   Identity root key used to derive LTK and CSRK
@@ -104,13 +94,65 @@
 #define CFG_USE_SMPS    1
 /* USER CODE END Generic_Parameters */
 
+
 /**< specific parameters */
 /*****************************************************/
+#ifdef LITTLE_DORY
+#define PUSH_BUTTON_SW1_EXTI_IRQHandler                         EXTI0_IRQHandler
+#else
+#define PUSH_BUTTON_SW1_EXTI_IRQHandler                         EXTI4_IRQHandler
+#endif
+
+/******************************************************************************
+ * Information Table
+ *
+  * Version
+  * [0:3]   = Build - 0: Untracked - 15:Released - x: Tracked version
+  * [4:7]   = branch - 0: Mass Market - x: ...
+  * [8:15]  = Subversion
+  * [16:23] = Version minor
+  * [24:31] = Version major
+  *
+ ******************************************************************************/
+#define CFG_FW_MAJOR_VERSION      (0)
+#define CFG_FW_MINOR_VERSION      (0)
+#define CFG_FW_SUBVERSION         (1)
+#define CFG_FW_BRANCH             (0)
+#define CFG_FW_BUILD              (0)
+
+/**
+* AD Element - DEV ID
+*/
+#define CFG_DEV_ID_P2P_SERVER1                  (0x83)
+#define CFG_DEV_ID_P2P_SERVER2                  (0x84)
+#define CFG_DEV_ID_P2P_ROUTER                   (0x85)
+#define CFG_DEV_ID_OTA_FW_UPDATE                (0x86)
+
 /**
 * AD Element - Group B Feature
 */
-/* LSB - Second Byte */
-#define CFG_FEATURE_OTA_REBOOT                  (0x20)
+/* LSB - Firt Byte */
+#define CFG_FEATURE_OTA_SW                      (0x08)
+
+
+/**
+ * Define the start address where the application shall be located
+ */
+#define CFG_APP_START_SECTOR_INDEX          (7)
+
+/**
+ * Define list of reboot reason
+ */
+#define CFG_REBOOT_ON_FW_APP          (0x00)
+#define CFG_REBOOT_ON_BLE_OTA_APP     (0x01)
+#define CFG_REBOOT_ON_CPU2_UPGRADE    (0x02)
+
+/**
+ * Define mapping of OTA messages in SRAM
+ */
+#define CFG_OTA_REBOOT_VAL_MSG            (*(uint8_t*)(SRAM1_BASE+0))
+#define CFG_OTA_START_SECTOR_IDX_VAL_MSG  (*(uint8_t*)(SRAM1_BASE+1))
+#define CFG_OTA_NBR_OF_SECTOR_VAL_MSG     (*(uint8_t*)(SRAM1_BASE+2))
 
 /******************************************************************************
  * BLE Stack
@@ -216,6 +258,7 @@
  *  0 : LL + Host
  */
 #define CFG_BLE_LL_ONLY  1
+
 /******************************************************************************
  * Transport Layer
  ******************************************************************************/
@@ -233,6 +276,7 @@
  * to the application a HCI command did not receive its command event within 30s (Default HCI Timeout).
  */
 #define CFG_TLBLE_EVT_QUEUE_LENGTH 5
+
 /**
  * This parameter should be set to fit most events received by the HCI layer. It defines the buffer size of each element
  * allocated in the queue of received events and can be used to optimize the amount of RAM allocated by the Memory Manager.
@@ -246,6 +290,7 @@
 #define CFG_TLBLE_MOST_EVENT_PAYLOAD_SIZE 255   /**< Set to 255 with the memory manager and the mailbox */
 
 #define TL_BLE_EVENT_FRAME_SIZE ( TL_EVT_HDR_SIZE + CFG_TLBLE_MOST_EVENT_PAYLOAD_SIZE )
+
 /******************************************************************************
  * UART interfaces
  ******************************************************************************/
@@ -253,8 +298,9 @@
 /**
  * Select UART interfaces
  */
-#define CFG_DEBUG_TRACE_UART    hw_uart1
-#define CFG_CONSOLE_MENU
+#define CFG_DEBUG_TRACE_UART      hw_uart1
+#define CFG_CONSOLE_MENU		hw_lpuart1
+
 /******************************************************************************
  * USB interface
  ******************************************************************************/
@@ -262,7 +308,7 @@
 /**
  * Enable/Disable USB interface
  */
-#define CFG_USB_INTERFACE_ENABLE    0
+#define CFG_USB_INTERFACE_ENABLE        0
 
 /******************************************************************************
  * Low Power
@@ -271,7 +317,7 @@
  *  When set to 1, the low power mode is enable
  *  When set to 0, the device stays in RUN mode
  */
-#define CFG_LPM_SUPPORTED    1
+#define CFG_LPM_SUPPORTED   1
 
 /******************************************************************************
  * Timer Server
@@ -363,29 +409,33 @@ typedef enum
  * This shall be set to 0 in a final product
  *
  */
-#define CFG_HW_RESET_BY_FW         1
+#define CFG_HW_RESET_BY_FW        1
+
+#define CFG_LED_SUPPORTED         1
+#define CFG_BUTTON_SUPPORTED      1
 
 /**
  * keep debugger enabled while in any low power mode when set to 1
  * should be set to 0 in production
  */
-#define CFG_DEBUGGER_SUPPORTED    0
+#define CFG_DEBUGGER_SUPPORTED    1
 
 /**
  * When set to 1, the traces are enabled in the BLE services
  */
-#define CFG_DEBUG_BLE_TRACE     0
+#define CFG_DEBUG_BLE_TRACE     1
 
 /**
  * Enable or Disable traces in application
  */
-#define CFG_DEBUG_APP_TRACE     0
+#define CFG_DEBUG_APP_TRACE     1
 
 #if (CFG_DEBUG_APP_TRACE != 0)
 #define APP_DBG_MSG                 PRINT_MESG_DBG
 #else
 #define APP_DBG_MSG                 PRINT_NO_MESG
 #endif
+
 
 #if ( (CFG_DEBUG_BLE_TRACE != 0) || (CFG_DEBUG_APP_TRACE != 0) )
 #define CFG_DEBUG_TRACE             1
@@ -397,7 +447,6 @@ typedef enum
 #define CFG_LPM_SUPPORTED         0
 #define CFG_DEBUGGER_SUPPORTED      1
 #endif
-
 /**
  * When CFG_DEBUG_TRACE_FULL is set to 1, the trace are output with the API name, the file name and the line number
  * When CFG_DEBUG_TRACE_LIGHT is set to 1, only the debug message is output
@@ -434,21 +483,6 @@ typedef enum
 #define DBG_TRACE_MSG_QUEUE_SIZE 4096
 #define MAX_DBG_TRACE_MSG_SIZE 1024
 
-/* USER CODE BEGIN Defines */
-#define CFG_LED_SUPPORTED         0
-#define CFG_BUTTON_SUPPORTED      1
-
-#ifdef LITTLE_DORY
-#define PUSH_BUTTON_SW1_EXTI_IRQHandler                         EXTI0_IRQHandler
-#define PUSH_BUTTON_SW2_EXTI_IRQHandler                         EXTI4_IRQHandler
-#define PUSH_BUTTON_SW3_EXTI_IRQHandler                         EXTI9_5_IRQHandler
-#else
-#define PUSH_BUTTON_SW1_EXTI_IRQHandler                         EXTI4_IRQHandler
-#define PUSH_BUTTON_SW2_EXTI_IRQHandler                         EXTI0_IRQHandler
-#define PUSH_BUTTON_SW3_EXTI_IRQHandler                         EXTI1_IRQHandler
-#endif
-/* USER CODE END Defines */
-
 /******************************************************************************
  * Scheduler
  ******************************************************************************/
@@ -463,12 +497,8 @@ typedef enum
 /**< Add in that list all tasks that may send a ACI/HCI command */
 typedef enum
 {
-    CFG_TASK_ADV_UPDATE_ID,
-    CFG_TASK_MEAS_REQ_ID,
     CFG_TASK_HCI_ASYNCH_EVT_ID,
-/* USER CODE BEGIN CFG_Task_Id_With_HCI_Cmd_t */
 
-/* USER CODE END CFG_Task_Id_With_HCI_Cmd_t */
     CFG_LAST_TASK_ID_WITH_HCICMD,                                               /**< Shall be LAST in the list */
 } CFG_Task_Id_With_HCI_Cmd_t;
 
@@ -476,10 +506,9 @@ typedef enum
 typedef enum
 {
     CFG_FIRST_TASK_ID_WITH_NO_HCICMD = CFG_LAST_TASK_ID_WITH_HCICMD - 1,        /**< Shall be FIRST in the list */
-    CFG_TASK_SYSTEM_HCI_ASYNCH_EVT_ID,
-/* USER CODE BEGIN CFG_Task_Id_With_NO_HCI_Cmd_t */
 
-/* USER CODE END CFG_Task_Id_With_NO_HCI_Cmd_t */
+    CFG_TASK_SYSTEM_HCI_ASYNCH_EVT_ID,
+
     CFG_LAST_TASK_ID_WITHO_NO_HCICMD                                            /**< Shall be LAST in the list */
 } CFG_Task_Id_With_NO_HCI_Cmd_t;
 #define CFG_TASK_NBR    CFG_LAST_TASK_ID_WITHO_NO_HCICMD
@@ -526,6 +555,6 @@ typedef enum
 
 #define CFG_OTP_END_ADRESS      OTP_AREA_END_ADDR
 
-#endif /*APP_CONF_H */
+#endif /*__APP_CONFIG_H */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
