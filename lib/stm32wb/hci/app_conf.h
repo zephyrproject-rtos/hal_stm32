@@ -19,8 +19,8 @@
 
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __APP_CONFIG_H
-#define __APP_CONFIG_H
+#ifndef __APP_CONF_H
+#define __APP_CONF_H
 
 #include "hw.h"
 /* hw_conf.h file is not used, remove the dependency */
@@ -28,7 +28,7 @@
 #include "hw_if.h"
 
 /******************************************************************************
- * OTA Application Config
+ * Data Throughput Application Config
  ******************************************************************************/
 
 /**< generic parameters ******************************************************/
@@ -66,7 +66,7 @@
 #define CFG_IO_CAPABILITY_KEYBOARD_DISPLAY   (0x04)
 
 #define CFG_IO_CAPABILITY                     CFG_IO_CAPABILITY_DISPLAY_ONLY
-
+   
 /**
  * Define MITM modes
  */
@@ -75,6 +75,27 @@
 
 #define CFG_MITM_PROTECTION                   CFG_MITM_PROTECTION_REQUIRED
 
+/**
+ * Generic Access Appearance
+ */
+#define CFG_UNKNOWN_APPEARANCE                  (0)
+#define CFG_GAP_APPEARANCE                      (832)
+ 
+/**
+ * Define PHY
+ */
+#define ALL_PHYS_PREFERENCE                             0x00
+#define RX_2M_PREFERRED                                 0x02
+#define TX_2M_PREFERRED                                 0x02
+#define RX_1M_PREFERRED                                 0x01
+#define TX_1M_PREFERRED                                 0x01
+#define RX_ALL_PHY_PREFERRED                            0x03
+#define TX_ALL_PHY_PREFERRED                            0x03
+#define TX_1M                                           0x01
+#define TX_2M                                           0x02
+#define RX_1M                                           0x01
+#define RX_2M                                           0x02 
+   
 /**
 *   Identity root key used to derive LTK and CSRK
 */
@@ -94,66 +115,81 @@
 #define CFG_USE_SMPS    1
 /* USER CODE END Generic_Parameters */
 
+/**< specific parameters ********************************************************/
+/**
+ * Encryption enable when set to 1
+ * Encryption disabe when set to 0
+ */
+#define CFG_ENCRYPTION_ENABLE     0
 
-/**< specific parameters */
-/*****************************************************/
-#ifdef LITTLE_DORY
-#define PUSH_BUTTON_SW1_EXTI_IRQHandler                         EXTI0_IRQHandler
+/**
+ * Define the different role supported
+ * In this application
+ * When set to 1, the device is central
+ * When set to 0, the device is peripheral
+ */
+#define CFG_BLE_CENTRAL     1
+
+#define CFG_SERVER_ONLY     0
+/**
+ * in this specific application, the device is either central
+ * or peripheral but cannot be both
+ */
+#undef CFG_ADV_BD_ADDRESS
+#if (CFG_BLE_CENTRAL != 0 )
+#define CFG_BLE_PERIPHERAL  0
+#define CFG_ADV_BD_ADDRESS 0xFFEEDDCCBBAA
 #else
-#define PUSH_BUTTON_SW1_EXTI_IRQHandler                         EXTI4_IRQHandler
+#define CFG_ADV_BD_ADDRESS 0x222222333333
+#define CFG_BLE_PERIPHERAL  1
 #endif
 
-/******************************************************************************
- * Information Table
- *
-  * Version
-  * [0:3]   = Build - 0: Untracked - 15:Released - x: Tracked version
-  * [4:7]   = branch - 0: Mass Market - x: ...
-  * [8:15]  = Subversion
-  * [16:23] = Version minor
-  * [24:31] = Version major
-  *
- ******************************************************************************/
-#define CFG_FW_MAJOR_VERSION      (0)
-#define CFG_FW_MINOR_VERSION      (0)
-#define CFG_FW_SUBVERSION         (1)
-#define CFG_FW_BRANCH             (0)
-#define CFG_FW_BUILD              (0)
+#define PUSH_BUTTON_SW1_EXTI_IRQHandler     EXTI4_IRQHandler
+#define PUSH_BUTTON_SW2_EXTI_IRQHandler     EXTI0_IRQHandler
+
+#define CONN_L(x) ((int)(((float)x)/0.625f))
+#define CONN_P(x) ((int)(((float)x)/1.25f))
+#define SCAN_P (0x320)
+#define SCAN_L (0x320)
+
+#define CFG_DEV_ID_PERIPH_SERVER                    (0x88)
+#define CFG_FEATURE_DT                              (0x70)
+
+#define UUID_128BIT_FORMAT                          1
+
+#define MAX_HCI_CMD_EVENT_PAYLOAD_SIZE 255
+#define DATA_NOTIFICATION_MAX_PACKET_SIZE           240 
+
+#define CFG_MAX_CONNECTION                              1
 
 /**
-* AD Element - DEV ID
-*/
-#define CFG_DEV_ID_P2P_SERVER1                  (0x83)
-#define CFG_DEV_ID_P2P_SERVER2                  (0x84)
-#define CFG_DEV_ID_P2P_ROUTER                   (0x85)
-#define CFG_DEV_ID_OTA_FW_UPDATE                (0x86)
-
-/**
-* AD Element - Group B Feature
-*/
-/* LSB - Firt Byte */
-#define CFG_FEATURE_OTA_SW                      (0x08)
-
-
-/**
- * Define the start address where the application shall be located
+ * TX PHY configuration
+ * It shall be set to
+ * 0 if ignored
+ * 1 if 1M
+ * 2 if 2M
+ * 4 if LE_CODED
+ * or any combination of 1M | 2M | LE_CODED
  */
-#define CFG_APP_START_SECTOR_INDEX          (7)
+#define CFG_TX_PHY    1
 
 /**
- * Define list of reboot reason
+ * RX PHY configuration
+ * It shall be set to
+ * 0 if ignored
+ * 1 if 1M
+ * 2 if 2M
+ * 4 if LE_CODED
+ * or any combination of 1M | 2M | LE_CODED
  */
-#define CFG_REBOOT_ON_FW_APP          (0x00)
-#define CFG_REBOOT_ON_BLE_OTA_APP     (0x01)
-#define CFG_REBOOT_ON_CPU2_UPGRADE    (0x02)
+#define CFG_RX_PHY    1
 
 /**
- * Define mapping of OTA messages in SRAM
+ * ALL PHYS configuration
  */
-#define CFG_OTA_REBOOT_VAL_MSG            (*(uint8_t*)(SRAM1_BASE+0))
-#define CFG_OTA_START_SECTOR_IDX_VAL_MSG  (*(uint8_t*)(SRAM1_BASE+1))
-#define CFG_OTA_NBR_OF_SECTOR_VAL_MSG     (*(uint8_t*)(SRAM1_BASE+2))
-
+#define CFG_ALL_PHYS    ((!CFG_TX_PHY) + ((!CFG_RX_PHY)*2))
+#define L2CAP_SLAVE_LATENCY             0x0000
+#define L2CAP_TIMEOUT_MULTIPLIER        0x1F4
 /******************************************************************************
  * BLE Stack
  ******************************************************************************/
@@ -181,7 +217,7 @@
 /**
  * Maximum supported ATT_MTU size
  */
-#define CFG_BLE_MAX_ATT_MTU             (156)
+#define CFG_BLE_MAX_ATT_MTU             (250)
 
 /**
  * Size of the storage area for Attribute values
@@ -298,7 +334,8 @@
 /**
  * Select UART interfaces
  */
-#define CFG_DEBUG_TRACE_UART      hw_uart1
+#define CFG_UART_GUI            
+#define CFG_DEBUG_TRACE_UART		hw_uart1
 #define CFG_CONSOLE_MENU		hw_lpuart1
 
 /******************************************************************************
@@ -392,8 +429,8 @@
 #endif
 
 /** tick timer value in us */
-#define CFG_TS_TICK_VAL           DIVR( (CFG_RTCCLK_DIV * 1000000), LSE_VALUE )
-
+#define CFG_TS_TICK_VAL           DIVR( (CFG_RTCCLK_DIV * 1000000), HSE_VALUE/32 )
+//#define CFG_TS_TICK_VAL           DIVR( (CFG_RTCCLK_DIV * 1000000), LSE_VALUE )
 typedef enum
 {
     CFG_TIM_PROC_ID_ISR,
@@ -497,7 +534,17 @@ typedef enum
 /**< Add in that list all tasks that may send a ACI/HCI command */
 typedef enum
 {
-    CFG_TASK_HCI_ASYNCH_EVT_ID,
+  CFG_TASK_DATA_TRANSFER_UPDATE_ID,
+  CFG_TASK_DATA_WRITE_ID,
+  CFG_TASK_CONN_DEV_1_ID,
+  CFG_TASK_BUTTON_ID,
+  CFG_TASK_SW2_BUTTON_PUSHED_ID,
+  CFG_TASK_START_ADV_ID,
+  CFG_TASK_START_SCAN_ID,
+  CFG_TASK_LINK_CONFIG_ID,
+  CFG_TASK_APP_DATA_THROUGHPUT_ID,
+  CFG_TASK_CONN_UPDATE_ID,
+  CFG_TASK_HCI_ASYNCH_EVT_ID,
 
     CFG_LAST_TASK_ID_WITH_HCICMD,                                               /**< Shall be LAST in the list */
 } CFG_Task_Id_With_HCI_Cmd_t;
@@ -530,6 +577,8 @@ typedef enum
 {
     CFG_IDLEEVT_HCI_CMD_EVT_RSP_ID,
     CFG_IDLEEVT_SYSTEM_HCI_CMD_EVT_RSP_ID,
+    CFG_IDLEEVT_GAP_PROC_COMPLETE,
+    CFG_IDLEEVT_GATT_PROC_COMPLETE,
 } CFG_IdleEvt_Id_t;
 
 /******************************************************************************
@@ -555,6 +604,6 @@ typedef enum
 
 #define CFG_OTP_END_ADRESS      OTP_AREA_END_ADDR
 
-#endif /*__APP_CONFIG_H */
+#endif /*__APP_CONF_H */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

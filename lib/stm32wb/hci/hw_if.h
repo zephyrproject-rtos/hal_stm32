@@ -45,7 +45,11 @@ extern "C" {
 #include "stm32wbxx_usb_dongle.h"
 #endif
 #ifdef  USE_STM32WBXX_NUCLEO
-#include "stm32wbxx_nucleo.h"
+  #ifdef STM32WB35xx
+  #include "nucleo_wb35ce.h"
+  #else
+  #include "stm32wbxx_nucleo.h"
+  #endif
 #endif
 #ifdef  USE_X_NUCLEO_EPD
 #include "x_nucleo_epd.h"
