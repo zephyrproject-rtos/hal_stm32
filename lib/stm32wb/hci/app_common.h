@@ -1,30 +1,28 @@
 /**
-  ******************************************************************************
-  * @file    app_common.h
-  * @author  MCD Application Team
-  * @brief   Common
-  ******************************************************************************
+ ******************************************************************************
+  * File Name          : app_common.h
+  * Description        : App Common application configuration file for STM32WPAN Middleware.
+  *
+ ******************************************************************************
   * @attention
- *
- * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
- * All rights reserved.</center></h2>
- *
+  *
+  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * All rights reserved.</center></h2>
+  *
   * This software component is licensed by ST under BSD 3-Clause license,
   * the "License"; You may not use this file except in compliance with the
   * License. You may obtain a copy of the License at:
   *                        opensource.org/licenses/BSD-3-Clause
- *
- ******************************************************************************
- */
-
+  *
+  ******************************************************************************
+  */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __APP_COMMON_H
-#define __APP_COMMON_H
+#ifndef APP_COMMON_H
+#define APP_COMMON_H
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C"{
 #endif
 
 #include <stdint.h>
@@ -35,9 +33,9 @@ extern "C"
 
 #include "app_conf.h"
 
-/* -------------------------------- *
- *  Basic definitions               *
- * -------------------------------- */
+  /* -------------------------------- *
+   *  Basic definitions               *
+   * -------------------------------- */
 
 #undef NULL
 #define NULL                    0
@@ -55,17 +53,17 @@ extern "C"
 #define DISABLE_IRQ()       __disable_irq()
 #define RESTORE_PRIMASK()   __set_PRIMASK(primask_bit)
 
-/* -------------------------------- *
- *  Macro delimiters                *
- * -------------------------------- */
+  /* -------------------------------- *
+   *  Macro delimiters                *
+   * -------------------------------- */
 
 #define M_BEGIN     do {
 
 #define M_END       } while(0)
 
-/* -------------------------------- *
- *  Some useful macro definitions   *
- * -------------------------------- */
+  /* -------------------------------- *
+   *  Some useful macro definitions   *
+   * -------------------------------- */
 
 #define MAX( x, y )          (((x)>(y))?(x):(y))
 
@@ -79,9 +77,8 @@ extern "C"
 
 #define MODSUB( a, b, m )    MODADD( a, (m)-(b), m )
 
-
 #define PAUSE( t )           M_BEGIN \
-                               volatile int _i; \
+                               __IO int _i; \
                                for ( _i = t; _i > 0; _i -- ); \
                              M_END
 
@@ -108,11 +105,10 @@ extern "C"
 #define ALIGN(n)             __attribute__((aligned(n)))
 #endif
 
-
 #ifdef __cplusplus
-}
+} /* extern "C" */
 #endif
 
-#endif /*__APP_COMMON_H */
+#endif /*APP_COMMON_H */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
