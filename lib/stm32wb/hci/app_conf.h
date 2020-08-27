@@ -1,10 +1,10 @@
 /**
- ******************************************************************************
- * @file    app_conf.h
- * @author  MCD Application Team
- * @brief   Application configuration file
- ******************************************************************************
- * @attention
+  ******************************************************************************
+  * @file    app_conf.h
+  * @author  MCD Application Team
+  * @brief   Application configuration file
+  ******************************************************************************
+  * @attention
  *
  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
  * All rights reserved.</center></h2>
@@ -19,23 +19,24 @@
 
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __APP_CONF_H
-#define __APP_CONF_H
+#ifndef __APP_CONFIG_H
+#define __APP_CONFIG_H
 
 #include "hw.h"
 /* hw_conf.h file is not used, remove the dependency */
 /* #include "hw_conf.h" */
 #include "hw_if.h"
+#include "ble_bufsize.h"
 
 /******************************************************************************
- * Data Throughput Application Config
+ * Health Thermometer Application Config
  ******************************************************************************/
 
 /**< generic parameters ******************************************************/
 
 /**
  * Define Tx Power
- */   
+ */
 #define CFG_TX_POWER                      (0x18) /**< 0dbm */
 
 /**
@@ -66,7 +67,7 @@
 #define CFG_IO_CAPABILITY_KEYBOARD_DISPLAY   (0x04)
 
 #define CFG_IO_CAPABILITY                     CFG_IO_CAPABILITY_DISPLAY_ONLY
-   
+
 /**
  * Define MITM modes
  */
@@ -76,26 +77,22 @@
 #define CFG_MITM_PROTECTION                   CFG_MITM_PROTECTION_REQUIRED
 
 /**
- * Generic Access Appearance
- */
-#define CFG_UNKNOWN_APPEARANCE                  (0)
-#define CFG_GAP_APPEARANCE                      (832)
- 
-/**
  * Define PHY
  */
 #define ALL_PHYS_PREFERENCE                             0x00
 #define RX_2M_PREFERRED                                 0x02
 #define TX_2M_PREFERRED                                 0x02
-#define RX_1M_PREFERRED                                 0x01
-#define TX_1M_PREFERRED                                 0x01
-#define RX_ALL_PHY_PREFERRED                            0x03
-#define TX_ALL_PHY_PREFERRED                            0x03
 #define TX_1M                                           0x01
 #define TX_2M                                           0x02
 #define RX_1M                                           0x01
-#define RX_2M                                           0x02 
-   
+#define RX_2M                                           0x02
+
+/**
+ * Generic Access Appearance
+ */
+#define CFG_UNKNOWN_APPEARANCE                  (0)
+#define CFG_GAP_APPEARANCE                      (832)
+
 /**
 *   Identity root key used to derive LTK and CSRK
 */
@@ -116,80 +113,13 @@
 /* USER CODE END Generic_Parameters */
 
 /**< specific parameters ********************************************************/
-/**
- * Encryption enable when set to 1
- * Encryption disabe when set to 0
- */
-#define CFG_ENCRYPTION_ENABLE     0
+#define CFG_MAX_CONNECTION                    (8)
 
-/**
- * Define the different role supported
- * In this application
- * When set to 1, the device is central
- * When set to 0, the device is peripheral
- */
-#define CFG_BLE_CENTRAL     1
+#define CFG_DATA_ROLE_MODE                                                     2
 
-#define CFG_SERVER_ONLY     0
-/**
- * in this specific application, the device is either central
- * or peripheral but cannot be both
- */
-#undef CFG_ADV_BD_ADDRESS
-#if (CFG_BLE_CENTRAL != 0 )
-#define CFG_BLE_PERIPHERAL  0
-#define CFG_ADV_BD_ADDRESS 0xFFEEDDCCBBAA
-#else
-#define CFG_ADV_BD_ADDRESS 0x222222333333
-#define CFG_BLE_PERIPHERAL  1
-#endif
+#define PUSH_BUTTON_SW1_EXTI_IRQHandler                         EXTI4_IRQHandler
+#define PUSH_BUTTON_SW2_EXTI_IRQHandler                         EXTI0_IRQHandler
 
-#define PUSH_BUTTON_SW1_EXTI_IRQHandler     EXTI4_IRQHandler
-#define PUSH_BUTTON_SW2_EXTI_IRQHandler     EXTI0_IRQHandler
-
-#define CONN_L(x) ((int)(((float)x)/0.625f))
-#define CONN_P(x) ((int)(((float)x)/1.25f))
-#define SCAN_P (0x320)
-#define SCAN_L (0x320)
-
-#define CFG_DEV_ID_PERIPH_SERVER                    (0x88)
-#define CFG_FEATURE_DT                              (0x70)
-
-#define UUID_128BIT_FORMAT                          1
-
-#define MAX_HCI_CMD_EVENT_PAYLOAD_SIZE 255
-#define DATA_NOTIFICATION_MAX_PACKET_SIZE           240 
-
-#define CFG_MAX_CONNECTION                              1
-
-/**
- * TX PHY configuration
- * It shall be set to
- * 0 if ignored
- * 1 if 1M
- * 2 if 2M
- * 4 if LE_CODED
- * or any combination of 1M | 2M | LE_CODED
- */
-#define CFG_TX_PHY    1
-
-/**
- * RX PHY configuration
- * It shall be set to
- * 0 if ignored
- * 1 if 1M
- * 2 if 2M
- * 4 if LE_CODED
- * or any combination of 1M | 2M | LE_CODED
- */
-#define CFG_RX_PHY    1
-
-/**
- * ALL PHYS configuration
- */
-#define CFG_ALL_PHYS    ((!CFG_TX_PHY) + ((!CFG_RX_PHY)*2))
-#define L2CAP_SLAVE_LATENCY             0x0000
-#define L2CAP_TIMEOUT_MULTIPLIER        0x1F4
 /******************************************************************************
  * BLE Stack
  ******************************************************************************/
@@ -217,7 +147,7 @@
 /**
  * Maximum supported ATT_MTU size
  */
-#define CFG_BLE_MAX_ATT_MTU             (250)
+#define CFG_BLE_MAX_ATT_MTU             (156)
 
 /**
  * Size of the storage area for Attribute values
@@ -234,12 +164,12 @@
 /**
  * Prepare Write List size in terms of number of packet with ATT_MTU=23 bytes
  */
-#define CFG_BLE_PREPARE_WRITE_LIST_SIZE         ( 0x3A )
+#define CFG_BLE_PREPARE_WRITE_LIST_SIZE         BLE_PREP_WRITE_X_ATT(CFG_BLE_MAX_ATT_MTU)
 
 /**
  * Number of allocated memory blocks
  */
-#define CFG_BLE_MBLOCK_COUNT            ( 0x79 )
+#define CFG_BLE_MBLOCK_COUNT            (BLE_MBLOCKS_CALC(CFG_BLE_PREPARE_WRITE_LIST_SIZE, CFG_BLE_MAX_ATT_MTU, CFG_BLE_NUM_LINK))
 
 /**
  * Enable or disable the Extended Packet length feature. Valid values are 0 or 1.
@@ -331,12 +261,12 @@
  * UART interfaces
  ******************************************************************************/
 
-/**
+ /**
  * Select UART interfaces
  */
-#define CFG_UART_GUI            
-#define CFG_DEBUG_TRACE_UART		hw_uart1
-#define CFG_CONSOLE_MENU		hw_lpuart1
+#define CFG_UART_GUI
+#define CFG_DEBUG_TRACE_UART      /*hw_uart1*/hw_lpuart1
+#define CFG_CONSOLE_MENU	/*hw_lpuart1*/hw_uart1
 
 /******************************************************************************
  * USB interface
@@ -429,11 +359,11 @@
 #endif
 
 /** tick timer value in us */
-#define CFG_TS_TICK_VAL           DIVR( (CFG_RTCCLK_DIV * 1000000), HSE_VALUE/32 )
-//#define CFG_TS_TICK_VAL           DIVR( (CFG_RTCCLK_DIV * 1000000), LSE_VALUE )
+#define CFG_TS_TICK_VAL           DIVR( (CFG_RTCCLK_DIV * 1000000), LSE_VALUE )
+
 typedef enum
 {
-    CFG_TIM_PROC_ID_ISR,
+  CFG_TIM_PROC_ID_ISR,
 } CFG_TimProcID_t;
 
 /******************************************************************************
@@ -534,19 +464,12 @@ typedef enum
 /**< Add in that list all tasks that may send a ACI/HCI command */
 typedef enum
 {
-  CFG_TASK_DATA_TRANSFER_UPDATE_ID,
-  CFG_TASK_DATA_WRITE_ID,
-  CFG_TASK_CONN_DEV_1_ID,
-  CFG_TASK_BUTTON_ID,
-  CFG_TASK_SW2_BUTTON_PUSHED_ID,
-  CFG_TASK_START_ADV_ID,
-  CFG_TASK_START_SCAN_ID,
-  CFG_TASK_LINK_CONFIG_ID,
-  CFG_TASK_APP_DATA_THROUGHPUT_ID,
-  CFG_TASK_CONN_UPDATE_ID,
+  CFG_TASK_CONN_MGR_ID,
+  CFG_TASK_HID_UPDATE_REQ_ID,
+  CFG_TASK_HID_DISC_REQ_ID,
   CFG_TASK_HCI_ASYNCH_EVT_ID,
 
-    CFG_LAST_TASK_ID_WITH_HCICMD,                                               /**< Shall be LAST in the list */
+  CFG_LAST_TASK_ID_WITH_HCICMD,                                               /**< Shall be LAST in the list */
 } CFG_Task_Id_With_HCI_Cmd_t;
 
 /**< Add in that list all tasks that never send a ACI/HCI command */
@@ -566,8 +489,8 @@ typedef enum
  */
 typedef enum
 {
-    CFG_SCH_PRIO_0,
-    CFG_PRIO_NBR,
+  CFG_SCH_PRIO_0,
+  CFG_PRIO_NBR,
 } CFG_SCH_Prio_Id_t;
 
 /**
@@ -575,10 +498,8 @@ typedef enum
  */
 typedef enum
 {
-    CFG_IDLEEVT_HCI_CMD_EVT_RSP_ID,
-    CFG_IDLEEVT_SYSTEM_HCI_CMD_EVT_RSP_ID,
-    CFG_IDLEEVT_GAP_PROC_COMPLETE,
-    CFG_IDLEEVT_GATT_PROC_COMPLETE,
+  CFG_IDLEEVT_HCI_CMD_EVT_RSP_ID,
+  CFG_IDLEEVT_SYSTEM_HCI_CMD_EVT_RSP_ID,
 } CFG_IdleEvt_Id_t;
 
 /******************************************************************************
@@ -604,6 +525,6 @@ typedef enum
 
 #define CFG_OTP_END_ADRESS      OTP_AREA_END_ADDR
 
-#endif /*__APP_CONF_H */
+#endif /*__APP_CONFIG_H */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
