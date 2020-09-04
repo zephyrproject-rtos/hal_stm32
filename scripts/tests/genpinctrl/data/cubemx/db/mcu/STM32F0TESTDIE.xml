@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Mcu Family="STM32F0" RefName="STM32F0TESTDIE" xmlns="http://mcd.rou.st.com/modules.php?name=mcu">
+    <IP Name="GPIO" Version="STM32F0TESTIP"/>
+    <!-- Non I/O pin -->
+    <Pin Name="PZ0" Type="Power">
+    </Pin>
+    <!-- Pin with wrong name -->
+    <Pin Name="WRONG_NAME" Type="I/O">
+    </Pin>
+    <!-- Valid pin (not in IP) -->
+    <Pin Name="PA1" Type="I/O">
+    </Pin>
+    <!-- Valid pin -->
+    <Pin Name="PA0" Type="I/O">
+        <!-- Signal with GPIO name -->
+        <Signal Name="GPIO"/>
+        <!-- Signal without a name -->
+        <Signal/>
+        <!-- Valid signal -->
+        <Signal Name="UART1_TX"/>
+        <!-- Valid signal -->
+        <Signal Name="UART1_RX"/>
+        <!-- Valid signal (analog) -->
+        <Signal Name="ADC1_IN0"/>
+    </Pin>
+</Mcu>
