@@ -1,0 +1,146 @@
+# Configuration file for pinctrl generation (F1 series only).
+#
+# This file contains a list of pin configuration templates used to generate the
+# pinctrl files. Each entry can have the following fields:
+#
+#   - name (mandatory): This is the pin function name, e.g. UART_TX. It is used
+#     to group pin configurations alphabetically in the generated pinctrl files.
+#
+#   - match (mandatory): This is a regular expression used to match against
+#     STM32 xml database pin configuration names. The regular expression should
+#     be as precise as possible. Note that it needs to be escaped here in the
+#     configuration file.
+#
+#   - mode (mandatory): Mode setting (analog, alternate, input). Mode needs to
+#     be set according to the following rules:
+#       * Pin operates in analog configuration: analog
+#       * Pin operates in alternate function input configuration: input
+#       * Pin operates in alternate function output/bidirectional configuration:
+#         alternate
+#
+#   - bias (optional): Bias setting (disable, pull-up, pull-down). This setting
+#     only applies to "input" mode. Equivalent to "disable" (a.k.a floating) if
+#     not set.
+#
+#   - drive (optional): Drive setting (push-pull, open-drain). Equivalent to
+#     "push-pull" if not set.
+#
+#   - slew-rate (optional): Slew rate setting (max-speed-10mhz, max-speed-2mhz,
+#     max-speed-50mhz). Equivalent to "max-speed-10mhz" if not set.
+#
+#   - variant (optional): Defines an alternative pin configuration. This is used
+#     to provide multiple configurations of a pin function (slave, master,
+#     low-power, ...).
+#
+
+---
+- name: ADC_IN
+  match: "^ADC\\d+_IN\\d+$"
+  mode: analog
+
+- name: CAN_RX
+  match: "^CAN\\d+_RX$"
+  mode: input
+
+- name: CAN_TX
+  match: "^CAN\\d+_TX$"
+  mode: alternate
+
+- name: DAC_OUT
+  match: "^DAC_OUT\\d+$"
+  mode: analog
+
+- name: I2C_SCL
+  match: "^I2C\\d+_SCL$"
+  drive: open-drain
+  mode: alternate
+
+- name: I2C_SDA
+  match: "^I2C\\d+_SDA$"
+  drive: open-drain
+  mode: alternate
+
+- name: I2S_CK
+  match: "^I2S\\d+_CK$"
+  mode: alternate
+
+- name: I2S_WS
+  match: "^I2S\\d+_WS$"
+  mode: alternate
+
+- name: I2S_SD
+  match: "^I2S\\d+_SD$"
+  mode: alternate
+
+- name: SPI_MASTER_MISO
+  match: "^SPI\\d+_MISO$"
+  bias: pull-down
+  mode: input
+  variant: master
+
+- name: SPI_MASTER_MOSI
+  match: "^SPI\\d+_MOSI$"
+  mode: alternate
+  variant: master
+
+- name: SPI_MASTER_SCK
+  match: "^SPI\\d+_SCK$"
+  mode: alternate
+  variant: master
+
+- name: SPI_MASTER_NSS
+  match: "^SPI\\d+_NSS$"
+  mode: alternate
+  variant: master
+
+- name: SPI_SLAVE_MISO
+  match: "^SPI\\d+_MISO$"
+  mode: alternate
+  variant: slave
+
+- name: SPI_SLAVE_MOSI
+  match: "^SPI\\d+_MOSI$"
+  mode: input
+  variant: slave
+
+- name: SPI_SLAVE_SCK
+  match: "^SPI\\d+_SCK$"
+  mode: input
+  variant: slave
+
+- name: SPI_SLAVE_NSS
+  match: "^SPI\\d+_NSS$"
+  bias: pull-up
+  mode: input
+  variant: slave
+
+- name: TIM_CH_PWM / TIM_CHN_PWM
+  match: "^TIM\\d+_CH\\d+N?$"
+  mode: alternate
+  variant: pwm
+
+- name: UART_CTS / USART_CTS
+  match: "^US?ART\\d+_CTS$"
+  drive: open-drain
+  bias: pull-up
+  mode: input
+
+- name: UART_RTS / USART_RTS
+  match: "^US?ART\\d+_RTS$"
+  mode: alternate
+
+- name: UART_TX / USART_TX
+  match: "^US?ART\\d+_TX$"
+  mode: alternate
+
+- name: UART_RX / USART_RX
+  match: "^US?ART\\d+_RX$"
+  mode: input
+
+- name: USB_OTG_FS_DM
+  match: "^USB_OTG_FS_DM$"
+  mode: alternate
+
+- name: USB_OTG_FS_DP
+  match: "^USB_OTG_FS_DP$"
+  mode: alternate
