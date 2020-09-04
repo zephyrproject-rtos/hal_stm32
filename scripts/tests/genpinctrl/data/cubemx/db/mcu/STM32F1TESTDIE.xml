@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Mcu Family="STM32F1" RefName="STM32F1TESTDIE" xmlns="http://mcd.rou.st.com/modules.php?name=mcu">
+    <IP Name="GPIO" Version="STM32F1TESTIP"/>
+    <!-- Valid pin -->
+    <Pin Name="PA0" Type="I/O">
+        <!-- Valid signal -->
+        <Signal Name="UART1_TX"/>
+        <!-- Valid signal -->
+        <Signal Name="UART1_RX"/>
+        <!-- Valid signal (analog) -->
+        <Signal Name="ADC1_IN0"/>
+    </Pin>
+</Mcu>

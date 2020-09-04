@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<IP xmlns="http://mcd.rou.st.com/modules.php?name=mcu">
+    <GPIO_Pin PortName="PA" Name="PA0">
+        <!-- Signal without "SpecificParameter" entry -->
+        <PinSignal Name="TEST_SIGNAL_INVALID1">
+        </PinSignal>
+        <!-- Signal without "PossibleValue" entry -->
+        <PinSignal Name="TEST_SIGNAL_INVALID2">
+            <SpecificParameter Name="GPIO_AF">
+            </SpecificParameter>
+        </PinSignal>
+        <!-- Signal with invalid "PossibleValue" value -->
+        <PinSignal Name="TEST_SIGNAL_INVALID3">
+            <SpecificParameter Name="GPIO_AF">
+                <PossibleValue>WRONG_AF</PossibleValue>
+            </SpecificParameter>
+        </PinSignal>
+        <!-- Valid signal -->
+        <PinSignal Name="UART1_TX">
+            <SpecificParameter Name="GPIO_AF">
+                <PossibleValue>GPIO_AF0_TEST</PossibleValue>
+            </SpecificParameter>
+        </PinSignal>
+        <!-- Valid signal -->
+        <PinSignal Name="UART1_RX">
+            <SpecificParameter Name="GPIO_AF">
+                <PossibleValue>GPIO_AF1_TEST</PossibleValue>
+            </SpecificParameter>
+        </PinSignal>
+    </GPIO_Pin>
+</IP>

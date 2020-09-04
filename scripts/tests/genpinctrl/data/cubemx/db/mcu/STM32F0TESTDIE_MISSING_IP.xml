@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Mcu Family="STM32F0" RefName="STM32F0TESTDIE2" xmlns="http://mcd.rou.st.com/modules.php?name=mcu">
+    <!-- Non existing IP -->
+    <IP Name="GPIO" Version="NON_EXISTING_IP"/>
+</Mcu>

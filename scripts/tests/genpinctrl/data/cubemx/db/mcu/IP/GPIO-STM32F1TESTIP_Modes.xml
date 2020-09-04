@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<IP xmlns="http://mcd.rou.st.com/modules.php?name=mcu">
+    <GPIO_Pin PortName="PA" Name="PA0">
+        <!-- Invalid signal (no remaps) -->
+        <PinSignal Name="TEST_SIGNAL_INVALID1">
+        </PinSignal>
+        <!-- Invalid signal (invalid remap name) -->
+        <PinSignal Name="TEST_SIGNAL_INVALID2">
+            <RemapBlock Name="INVALID_REMAP_NAME" DefaultRemap="true" />
+        </PinSignal>
+        <!-- Valid signal (multiple remaps) -->
+        <PinSignal Name="UART1_TX">
+            <RemapBlock Name="UART1_REMAP0" DefaultRemap="true" />
+            <RemapBlock Name="UART1_REMAP1">
+            </RemapBlock>
+        </PinSignal>
+        <!-- Valid signal (single remap) -->
+        <PinSignal Name="UART1_RX">
+            <RemapBlock Name="UART1_REMAP1">
+            </RemapBlock>
+        </PinSignal>
+    </GPIO_Pin>
+</IP>

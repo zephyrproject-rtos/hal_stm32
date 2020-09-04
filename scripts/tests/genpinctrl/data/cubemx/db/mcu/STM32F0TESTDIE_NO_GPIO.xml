@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Mcu Family="TEST_FAMILY" RefName="STM32F0TESTDIE1" xmlns="http://mcd.rou.st.com/modules.php?name=mcu">
+    <!-- File without GPIO IP entry -->
+    <IP Name="X" Version="Y"/>
+</Mcu>
