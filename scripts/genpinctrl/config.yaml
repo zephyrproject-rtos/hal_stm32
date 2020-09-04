@@ -1,0 +1,138 @@
+# Configuration file for pinctrl generation (except F1 series).
+#
+# This file contains a list of pin configuration templates used to generate the
+# pinctrl files. Each entry can have the following fields:
+#
+#   - name (mandatory): This is the pin function name, e.g. UART_TX. It is used
+#     to group pin configurations alphabetically in the generated pinctrl files.
+#
+#   - match (mandatory): This is a regular expression used to match against
+#     STM32 xml database pin configuration names. The regular expression should
+#     be as precise as possible. Note that it needs to be escaped here in the
+#     configuration file.
+#
+#   - mode (mandatory): Mode setting (analog, alternate). Mode needs to
+#     be set according to the following rules:
+#       * Pin operates in analog configuration: analog
+#       * Pin operates in alternate function configuration: alternate
+#
+#   - bias (optional): Bias setting (disable, pull-up, pull-down). Equivalent to
+#     "disable" (a.k.a floating) if not set.
+#
+#   - drive (optional): Drive setting (push-pull, open-drain). Equivalent to
+#     "push-pull" if not set.
+#
+#   - slew-rate (optional): Slew rate setting (low-speed, medium-speed,
+#     high-speed, very-high-speed). Equivalent to "low-speed" if not set.
+#
+#   - variant (optional): Defines an alternative pin configuration. This is used
+#     to provide multiple configurations of a pin function (slave, master,
+#     low-power, ...).
+#
+
+---
+- name: ADC_IN / ADC_INN / ADC_INP
+  match: "^ADC(?:\\d+)?_IN[NP]?\\d+$"
+  mode: analog
+
+- name: CAN_RX
+  match: "^CAN\\d+_RX$"
+  mode: alternate
+  bias: pull-up
+
+- name: CAN_TX
+  match: "^CAN\\d+_TX$"
+  mode: alternate
+
+- name: DAC_OUT
+  match: "^DAC(?:\\d+)?_OUT\\d+$"
+  mode: analog
+
+- name: FDCAN_RX
+  match: "^FDCAN\\d+_RX$"
+  mode: alternate
+
+- name: FDCAN_TX
+  match: "^FDCAN\\d+_TX$"
+  mode: alternate
+
+- name: I2C_SCL
+  match: "^I2C\\d+_SCL$"
+  mode: alternate
+  drive: open-drain
+  bias: pull-up
+
+- name: I2C_SDA
+  match: "^I2C\\d+_SDA$"
+  mode: alternate
+  drive: open-drain
+  bias: pull-up
+
+- name: I2S_CK
+  match: "^I2S\\d+_CK$"
+  mode: alternate
+
+- name: I2S_WS
+  match: "^I2S\\d+_WS$"
+  mode: alternate
+
+- name: I2S_SD
+  match: "^I2S\\d+_SD$"
+  mode: alternate
+
+- name: SPI_MISO
+  match: "^SPI\\d+_MISO$"
+  mode: alternate
+  bias: pull-down
+
+- name: SPI_MOSI
+  match: "^SPI\\d+_MOSI$"
+  mode: alternate
+  bias: pull-down
+
+# NOTE: The SPI_SCK pins speed must be set to very-high-speed to avoid last data
+# bit corruption which is a known issue on multiple STM32F4 series SPI
+# peripheral (ref. ES0182 Rev 12, 2.5.12, p. 22).
+- name: SPI_SCK
+  match: "^SPI\\d+_SCK$"
+  mode: alternate
+  slew-rate: very-high-speed
+
+- name: SPI_NSS
+  match: "^SPI\\d+_NSS$"
+  mode: alternate
+  bias: pull-up
+
+- name: TIM_CH_PWM / TIM_CHN_PWM
+  match: "^TIM\\d+_CH\\d+N?$"
+  mode: alternate
+  variant: pwm
+
+- name: UART_CTS / USART_CTS / LPUART_CTS
+  match: "^(?:LP)?US?ART\\d+_CTS$"
+  mode: alternate
+  drive: open-drain
+  bias: pull-up
+
+- name: UART_RTS / USART_RTS / LPUART_RTS
+  match: "^(?:LP)?US?ART\\d+_RTS$"
+  mode: alternate
+  drive: open-drain
+  bias: pull-up
+
+- name: UART_TX / USART_TX / LPUART_TX
+  match: "^(?:LP)?US?ART\\d+_TX$"
+  mode: alternate
+  bias: pull-up
+
+- name: UART_RX / USART_RX / LPUART_RX
+  match: "^(?:LP)?US?ART\\d+_RX$"
+  mode: alternate
+
+- name: USB_OTG_FS_DM
+  match: "^USB_OTG_FS_DM$"
+  mode: alternate
+
+- name: USB_OTG_FS_DP
+  match: "^USB_OTG_FS_DP$"
+  mode: alternate
