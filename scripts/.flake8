@@ -1,0 +1,6 @@
+[flake8]
+exclude = 
+   # these scripts do not comply with PEP8 styleguide
+   make_stm32_module.py
+   update_stm32_package.py
+max-line-length = 88
