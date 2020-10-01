@@ -16,11 +16,23 @@
 				pinmux = <STM32_PINMUX('A', 0, ANALOG)>;
 			};
 
+			adc1_inn1_pa0: adc1_inn1_pa0 {
+				pinmux = <STM32_PINMUX('A', 0, ANALOG)>;
+			};
+
+			adc1_inp0_pa0: adc1_inp0_pa0 {
+				pinmux = <STM32_PINMUX('A', 0, ANALOG)>;
+			};
+
 			adc1_inn16_pa1: adc1_inn16_pa1 {
 				pinmux = <STM32_PINMUX('A', 1, ANALOG)>;
 			};
 
 			adc1_inp17_pa1: adc1_inp17_pa1 {
+				pinmux = <STM32_PINMUX('A', 1, ANALOG)>;
+			};
+
+			adc1_inp1_pa1: adc1_inp1_pa1 {
 				pinmux = <STM32_PINMUX('A', 1, ANALOG)>;
 			};
 
@@ -164,11 +176,23 @@
 				pinmux = <STM32_PINMUX('C', 2, ANALOG)>;
 			};
 
+			adc2_inn1_pc2: adc2_inn1_pc2 {
+				pinmux = <STM32_PINMUX('C', 2, ANALOG)>;
+			};
+
+			adc2_inp0_pc2: adc2_inp0_pc2 {
+				pinmux = <STM32_PINMUX('C', 2, ANALOG)>;
+			};
+
 			adc2_inn12_pc3: adc2_inn12_pc3 {
 				pinmux = <STM32_PINMUX('C', 3, ANALOG)>;
 			};
 
 			adc2_inp13_pc3: adc2_inp13_pc3 {
+				pinmux = <STM32_PINMUX('C', 3, ANALOG)>;
+			};
+
+			adc2_inp1_pc3: adc2_inp1_pc3 {
 				pinmux = <STM32_PINMUX('C', 3, ANALOG)>;
 			};
 

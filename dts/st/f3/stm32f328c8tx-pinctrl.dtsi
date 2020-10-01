@@ -224,6 +224,10 @@
 				pinmux = <STM32_PINMUX('C', 13, AF4)>;
 			};
 
+			tim1_ch3n_pwm_pf0: tim1_ch3n_pwm_pf0 {
+				pinmux = <STM32_PINMUX('F', 0, AF6)>;
+			};
+
 			tim2_ch1_pwm_pa0: tim2_ch1_pwm_pa0 {
 				pinmux = <STM32_PINMUX('A', 0, AF1)>;
 			};

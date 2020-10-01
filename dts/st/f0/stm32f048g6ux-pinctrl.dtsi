@@ -74,6 +74,12 @@
 				drive-open-drain;
 			};
 
+			i2c1_scl_pf1: i2c1_scl_pf1 {
+				pinmux = <STM32_PINMUX('F', 1, AF1)>;
+				bias-pull-up;
+				drive-open-drain;
+			};
+
 			/* I2C_SDA */
 
 			i2c1_sda_pa10: i2c1_sda_pa10 {
@@ -84,6 +90,12 @@
 
 			i2c1_sda_pb7: i2c1_sda_pb7 {
 				pinmux = <STM32_PINMUX('B', 7, AF1)>;
+				bias-pull-up;
+				drive-open-drain;
+			};
+
+			i2c1_sda_pf0: i2c1_sda_pf0 {
+				pinmux = <STM32_PINMUX('F', 0, AF1)>;
 				bias-pull-up;
 				drive-open-drain;
 			};
