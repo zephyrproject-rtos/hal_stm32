@@ -74,6 +74,12 @@
 				drive-open-drain;
 			};
 
+			i2c2_scl_pf1: i2c2_scl_pf1 {
+				pinmux = <STM32_PINMUX('F', 1, AF4)>;
+				bias-pull-up;
+				drive-open-drain;
+			};
+
 			i2c3_scl_pa8: i2c3_scl_pa8 {
 				pinmux = <STM32_PINMUX('A', 8, AF3)>;
 				bias-pull-up;
@@ -100,6 +106,12 @@
 				drive-open-drain;
 			};
 
+			i2c2_sda_pf0: i2c2_sda_pf0 {
+				pinmux = <STM32_PINMUX('F', 0, AF4)>;
+				bias-pull-up;
+				drive-open-drain;
+			};
+
 			i2c3_sda_pb5: i2c3_sda_pb5 {
 				pinmux = <STM32_PINMUX('B', 5, AF8)>;
 				bias-pull-up;
@@ -107,6 +119,10 @@
 			};
 
 			/* I2S_CK */
+
+			i2s2_ck_pf1: i2s2_ck_pf1 {
+				pinmux = <STM32_PINMUX('F', 1, AF5)>;
+			};
 
 			i2s3_ck_pb3: i2s3_ck_pb3 {
 				pinmux = <STM32_PINMUX('B', 3, AF6)>;
@@ -123,6 +139,10 @@
 			};
 
 			/* I2S_WS */
+
+			i2s2_ws_pf0: i2s2_ws_pf0 {
+				pinmux = <STM32_PINMUX('F', 0, AF5)>;
+			};
 
 			i2s3_ws_pa4: i2s3_ws_pa4 {
 				pinmux = <STM32_PINMUX('A', 4, AF6)>;
@@ -158,6 +178,11 @@
 
 			/* SPI_NSS */
 
+			spi2_nss_pf0: spi2_nss_pf0 {
+				pinmux = <STM32_PINMUX('F', 0, AF5)>;
+				bias-pull-up;
+			};
+
 			spi3_nss_pa4: spi3_nss_pa4 {
 				pinmux = <STM32_PINMUX('A', 4, AF6)>;
 				bias-pull-up;
@@ -169,6 +194,11 @@
 			};
 
 			/* SPI_SCK */
+
+			spi2_sck_pf1: spi2_sck_pf1 {
+				pinmux = <STM32_PINMUX('F', 1, AF5)>;
+				slew-rate = "very-high-speed";
+			};
 
 			spi3_sck_pb3: spi3_sck_pb3 {
 				pinmux = <STM32_PINMUX('B', 3, AF6)>;
@@ -211,6 +241,10 @@
 
 			tim1_ch3n_pwm_pb1: tim1_ch3n_pwm_pb1 {
 				pinmux = <STM32_PINMUX('B', 1, AF6)>;
+			};
+
+			tim1_ch3n_pwm_pf0: tim1_ch3n_pwm_pf0 {
+				pinmux = <STM32_PINMUX('F', 0, AF6)>;
 			};
 
 			tim2_ch1_pwm_pa0: tim2_ch1_pwm_pa0 {
