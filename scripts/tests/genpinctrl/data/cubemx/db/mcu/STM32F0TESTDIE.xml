@@ -8,7 +8,7 @@
     <Pin Name="WRONG_NAME" Type="I/O">
     </Pin>
     <!-- Valid pin (not in IP) -->
-    <Pin Name="PA1" Type="I/O">
+    <Pin Name="PA1 (TEST)" Type="I/O">
     </Pin>
     <!-- Valid pin -->
     <Pin Name="PA0" Type="I/O">
