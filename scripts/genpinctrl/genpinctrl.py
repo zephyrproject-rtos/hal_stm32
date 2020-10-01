@@ -374,7 +374,7 @@ def get_mcu_signals(cube_path, gpio_ip_afs):
 
             # obtain pin port (A, B, ...) and number (0, 1, ...)
             pin_name = pin.get("Name")
-            m = re.search(r"^P([A-Z])(\d+)$", pin_name)
+            m = re.search(r"^P([A-Z])(\d+).*$", pin_name)
             if not m:
                 continue
 
