@@ -444,8 +444,12 @@ def main(cube_path, output):
     mcu_signals = get_mcu_signals(cube_path, gpio_ip_afs)
 
     if os.path.exists(output):
-        shutil.rmtree(output)
-    os.makedirs(output)
+        for dirpath, dirnames, filenames in os.walk(output):
+            # Remove directories, ignore files (README)
+            for dirname in dirnames:
+                shutil.rmtree(os.path.join(dirpath, dirname))
+    else:
+        os.makedirs(output)
 
     for family, refs in mcu_signals.items():
         # obtain family pinctrl address
