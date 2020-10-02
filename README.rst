@@ -1,11 +1,12 @@
-This module provides the required STM32cube packages and libraries needed to
-build a Zephyr application running on STM32 silicon.
+This module provides the required STM32cube packages, dtsi files and libraries
+needed to build a Zephyr application running on STM32 silicon.
 
-Packages and libraries are updated regularly in order for STM32 users to benefit
-from the latest STM32Cube versions, features and bug fixes. Updates are
-generally done once in each Zephyr release, preferably soon after the opening
-of the merge window to give time to users to use it, potentially report issues
-if some are faced and get them fixed before the new version in released.
+Packages, dtsi files and libraries are updated regularly in order for STM32
+users to benefit from the latest STM32Cube versions, features and bug fixes.
+Updates are generally done once in each Zephyr release, preferably soon after
+the opening of the merge window to give time to users to use it, potentially
+report issues if some are faced and get them fixed before the new version in
+released.
 
 STM32Cube packages
 ******************
@@ -104,6 +105,17 @@ Additionally, you need to add the following includes:
    #include <soc.h>
    #include <stm32YYxx_ll_bar.h>
 
+.dtsi files
+***********
+
+In order to provide STM32 boards pin configuration using device tree,
+*-pinctrl.dtsi are made available under dts/st directory.
+For each STM32 SoC package a complete and correct -pcintrl.dtsi is available.
+These files are generated using generation scripts available in this repo
+under scripts/genpinctrl. Generation use as input STM32 SoC description database
+delivered with ST STM32CubeMX official tool.
+New set of -pinctrl.dtsi files could be generated following availability of
+new version of STM32CubeMx or change in generation script configuration files.
 
 STM32Cube based libraries:
 **************************
