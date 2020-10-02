@@ -17,10 +17,10 @@ Description:
    Each file matches a STM32 SoC package and contains, for each pin of the
    package the exhaustive list of pinctrl configurations depending on its
    capabilities and the various pin configurations described in
-   scripts/genpinctrl/config*.yaml files.
+   scripts/genpinctrl/stm32*-pinctrl-config.yaml files.
    New set of files could be generated based on:
    - new version of CubeMX
-   - new version of config*.yaml files
+   - new version of stm32*-pinctrl-config.yaml files
 
 Dependencies:
     * Official ST CubeMX tool. Only mcu database delivered with the tool is
