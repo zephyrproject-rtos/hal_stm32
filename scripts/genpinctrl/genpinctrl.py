@@ -29,10 +29,10 @@ logger = logging.getLogger(__name__)
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 """Script directory."""
 
-CONFIG_FILE = os.path.join(SCRIPT_DIR, "config.yaml")
+CONFIG_FILE = os.path.join(SCRIPT_DIR, "stm32-pinctrl-config.yaml")
 """Configuration file."""
 
-CONFIG_F1_FILE = os.path.join(SCRIPT_DIR, "config-f1.yaml")
+CONFIG_F1_FILE = os.path.join(SCRIPT_DIR, "stm32f1-pinctrl-config.yaml")
 """Configuration file for F1 series."""
 
 TEMPLATE_FILE = "pinctrl-template.j2"
