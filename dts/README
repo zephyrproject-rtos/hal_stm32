@@ -1,0 +1,47 @@
+*-pinctrl.dtsi generated files
+##############################
+
+Origin:
+   Generated
+
+Status:
+   Generated using CubeMX 5.6.1
+
+Purpose:
+   SoC package specific -pintrl.dtsi files
+
+Description:
+   This directory contains *-pcintrl.dtsi files generated using generation
+   script (available under scripts/genpinctrl) along with inputs from
+   STM32CubeMx database.
+   Each file matches a STM32 SoC package and contains, for each pin of the
+   package the exhaustive list of pinctrl configurations depending on its
+   capabilities and the various pin configurations described in
+   scripts/genpinctrl/config*.yaml files.
+   New set of files could be generated based on:
+   - new version of CubeMX
+   - new version of config*.yaml files
+
+Dependencies:
+    * Official ST CubeMX tool. Only mcu database delivered with the tool is
+      used (STM32CubeMX/db/mcu).
+    * Generation script available in current repo under scripts/genpinctrl
+      and configuration files.
+
+URL:
+   https://www.st.com/en/development-tools/stm32cubemx.html
+
+Commit:
+   Version 5.6.1
+
+Maintained-by:
+   External
+
+License:
+   Generated files fall under license Apache-2.0
+
+License Link:
+   https://www.apache.org/licenses/LICENSE-2.0
+
+Patch List:
+   None
