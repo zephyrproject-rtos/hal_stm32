@@ -1,0 +1,16 @@
+STM32CubeMX Generic LL Headers
+##############################
+
+This folder contains generic STM32CubeMX LL API headers that include the right
+LL API header based on the active series being used in a Zephyr application.
+
+The current headers have been generated using the versions found in the table
+below.
+
+=============== ===============
+Series          CubeMX version
+=============== ===============
+{% for series, version in versions.items() %}
+{{ "%-15s" | format(series) }} {{ version }}
+{% endfor %}
+=============== ===============
