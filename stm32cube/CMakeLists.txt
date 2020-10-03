@@ -61,3 +61,5 @@ foreach(stm_soc ${stm_socs})
     add_subdirectory(${stm_soc}x)
   endif()
 endforeach()
+
+zephyr_include_directories(common_ll/include)
