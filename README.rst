@@ -40,7 +40,9 @@ STM32Cube, as an external library, is not supposed to be modified.
 In practice, it might be required to patch it.
 When updating a STM32Cube package to a new version, please have a look
 to the patch list in dedicated README file, to make sure you don't overwrite
-some earlier modifications of the package.
+some earlier modifications of the package. Furthermore, make sure to run the
+``genllheaders.py`` script in order to make sure generic LL API headers are
+up-to-date.
 In case of doubt, contact Zephyr code owner for stm32cube.
 
 
@@ -53,11 +55,12 @@ and ``stm32yyxx.h`` should be included in ``soc.h``
 
    #include <stm32f1xx.h>
 
-Additionally, in order to use STM32Cube LL, include ``stm32yyxx_ll_foo.h`` in ``soc.h``.
+Additionally, in order to use STM32Cube LL, you should include the provided
+generic LL headers ``stm32_ll_foo.h`` directly in the file using the LL API:
 
 .. code-block:: c
 
-   #include <stm32f1xx_ll_usart.h>
+   #include <stm32_ll_usart.h>
 
 Drivers and applications that need functions from the STM32Cube HAL/LL C-files
 will need to add the appropriate select entries in their Kconfig files.
@@ -103,7 +106,7 @@ Additionally, you need to add the following includes:
 .. code-block:: c
 
    #include <soc.h>
-   #include <stm32YYxx_ll_bar.h>
+   #include <stm32_ll_bar.h>
 
 .dtsi files
 ***********
