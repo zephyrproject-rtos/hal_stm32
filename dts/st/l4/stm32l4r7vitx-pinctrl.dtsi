@@ -1043,6 +1043,13 @@
 				pinmux = <STM32_PINMUX('A', 12, AF10)>;
 			};
 
+			/* USB_OTG_FS_ID */
+
+			usb_otg_fs_id_pa10: usb_otg_fs_id_pa10 {
+				pinmux = <STM32_PINMUX('A', 10, AF10)>;
+				bias-pull-up;
+			};
+
 		};
 	};
 };
