@@ -136,11 +136,3 @@
 - name: UART_RX / USART_RX
   match: "^US?ART\\d+_RX$"
   mode: input
-
-- name: USB_OTG_FS_DM
-  match: "^USB_OTG_FS_DM$"
-  mode: alternate
-
-- name: USB_OTG_FS_DP
-  match: "^USB_OTG_FS_DP$"
-  mode: alternate
