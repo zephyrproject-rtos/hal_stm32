@@ -92,6 +92,18 @@
 				pinmux = <STM32F1_PINMUX('B', 1, ANALOG, NO_REMAP)>;
 			};
 
+			/* CAN_RX */
+
+			can_rx_pa11: can_rx_pa11 {
+				pinmux = <STM32F1_PINMUX('A', 11, GPIO_IN, NO_REMAP)>;
+			};
+
+			/* CAN_TX */
+
+			can_tx_pa12: can_tx_pa12 {
+				pinmux = <STM32F1_PINMUX('A', 12, ALTERNATE, NO_REMAP)>;
+			};
+
 			/* I2C_SCL */
 
 			i2c1_scl_pb6: i2c1_scl_pb6 {
