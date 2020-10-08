@@ -39,11 +39,11 @@
   mode: analog
 
 - name: CAN_RX
-  match: "^CAN\\d+_RX$"
+  match: "^CAN\\d*_RX$"
   mode: input
 
 - name: CAN_TX
-  match: "^CAN\\d+_TX$"
+  match: "^CAN\\d*_TX$"
   mode: alternate
 
 - name: DAC_OUT
