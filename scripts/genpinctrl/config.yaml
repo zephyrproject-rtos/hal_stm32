@@ -136,3 +136,8 @@
 - name: USB_OTG_FS_DP
   match: "^USB_OTG_FS_DP$"
   mode: alternate
+
+- name: USB_OTG_FS_ID
+  match: "^USB_OTG_FS_ID$"
+  mode: alternate
+  bias: pull-up
