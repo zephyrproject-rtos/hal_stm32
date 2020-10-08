@@ -48,6 +48,19 @@
 				pinmux = <STM32_PINMUX('A', 7, ANALOG)>;
 			};
 
+			/* CAN_RX */
+
+			can_rx_pa11: can_rx_pa11 {
+				pinmux = <STM32_PINMUX('A', 11, AF9)>;
+				bias-pull-up;
+			};
+
+			/* CAN_TX */
+
+			can_tx_pa12: can_tx_pa12 {
+				pinmux = <STM32_PINMUX('A', 12, AF9)>;
+			};
+
 			/* DAC_OUT */
 
 			dac1_out1_pa4: dac1_out1_pa4 {

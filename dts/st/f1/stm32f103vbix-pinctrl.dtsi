@@ -140,6 +140,34 @@
 				pinmux = <STM32F1_PINMUX('C', 5, ANALOG, NO_REMAP)>;
 			};
 
+			/* CAN_RX */
+
+			can_rx_pa11: can_rx_pa11 {
+				pinmux = <STM32F1_PINMUX('A', 11, GPIO_IN, NO_REMAP)>;
+			};
+
+			can_rx_pb8: can_rx_pb8 {
+				pinmux = <STM32F1_PINMUX('B', 8, GPIO_IN, REMAP_1)>;
+			};
+
+			can_rx_pd0: can_rx_pd0 {
+				pinmux = <STM32F1_PINMUX('D', 0, GPIO_IN, REMAP_2)>;
+			};
+
+			/* CAN_TX */
+
+			can_tx_pa12: can_tx_pa12 {
+				pinmux = <STM32F1_PINMUX('A', 12, ALTERNATE, NO_REMAP)>;
+			};
+
+			can_tx_pb9: can_tx_pb9 {
+				pinmux = <STM32F1_PINMUX('B', 9, ALTERNATE, REMAP_1)>;
+			};
+
+			can_tx_pd1: can_tx_pd1 {
+				pinmux = <STM32F1_PINMUX('D', 1, ALTERNATE, REMAP_2)>;
+			};
+
 			/* I2C_SCL */
 
 			i2c1_scl_pb6: i2c1_scl_pb6 {

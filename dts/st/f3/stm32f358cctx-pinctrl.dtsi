@@ -68,6 +68,28 @@
 				pinmux = <STM32_PINMUX('B', 15, ANALOG)>;
 			};
 
+			/* CAN_RX */
+
+			can_rx_pa11: can_rx_pa11 {
+				pinmux = <STM32_PINMUX('A', 11, AF9)>;
+				bias-pull-up;
+			};
+
+			can_rx_pb8: can_rx_pb8 {
+				pinmux = <STM32_PINMUX('B', 8, AF9)>;
+				bias-pull-up;
+			};
+
+			/* CAN_TX */
+
+			can_tx_pa12: can_tx_pa12 {
+				pinmux = <STM32_PINMUX('A', 12, AF9)>;
+			};
+
+			can_tx_pb9: can_tx_pb9 {
+				pinmux = <STM32_PINMUX('B', 9, AF9)>;
+			};
+
 			/* DAC_OUT */
 
 			dac_out1_pa4: dac_out1_pa4 {
