@@ -12,9 +12,8 @@ SPDX-License-Identifier: Apache-2.0
 
 import argparse
 from collections import OrderedDict
-import glob
 import logging
-import os
+from pathlib import Path
 import re
 import shutil
 import xml.etree.ElementTree as ET
@@ -26,13 +25,13 @@ import yaml
 logger = logging.getLogger(__name__)
 
 
-SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+SCRIPT_DIR = Path(__file__).absolute().parent
 """Script directory."""
 
-CONFIG_FILE = os.path.join(SCRIPT_DIR, "stm32-pinctrl-config.yaml")
+CONFIG_FILE = SCRIPT_DIR / "stm32-pinctrl-config.yaml"
 """Configuration file."""
 
-CONFIG_F1_FILE = os.path.join(SCRIPT_DIR, "stm32f1-pinctrl-config.yaml")
+CONFIG_F1_FILE = SCRIPT_DIR / "stm32f1-pinctrl-config.yaml"
 """Configuration file for F1 series."""
 
 TEMPLATE_FILE = "pinctrl-template.j2"
@@ -216,14 +215,14 @@ def get_gpio_ip_afs(cube_path):
         Dictionary of alternate functions.
     """
 
-    ip_path = os.path.join(cube_path, "db", "mcu", "IP")
-    if not os.path.exists(ip_path):
+    ip_path = cube_path / "db" / "mcu" / "IP"
+    if not ip_path.exists():
         raise FileNotFoundError(f"IP DB folder '{ip_path}' does not exist")
 
     results = dict()
 
-    for gpio_file in glob.glob(os.path.join(ip_path, "GPIO-*_Modes.xml")):
-        m = re.search(r"GPIO-(.*)_Modes.xml", gpio_file)
+    for gpio_file in ip_path.glob("GPIO-*_Modes.xml"):
+        m = re.search(r"GPIO-(.*)_Modes.xml", gpio_file.name)
         gpio_ip = m.group(1)
 
         gpio_ip_entries = dict()
@@ -327,13 +326,13 @@ def get_mcu_signals(cube_path, gpio_ip_afs):
         Dictionary with all MCU signals.
     """
 
-    mcus_path = os.path.join(cube_path, "db", "mcu")
-    if not os.path.exists(mcus_path):
+    mcus_path = cube_path / "db" / "mcu"
+    if not mcus_path.exists():
         raise FileNotFoundError(f"MCU DB folder '{mcus_path}' does not exist")
 
     results = dict()
 
-    for mcu_file in glob.glob(os.path.join(mcus_path, "STM32*.xml")):
+    for mcu_file in mcus_path.glob("STM32*.xml"):
         mcu_tree = ET.parse(mcu_file)
         mcu_root = mcu_tree.getroot()
 
@@ -443,13 +442,13 @@ def main(cube_path, output):
     gpio_ip_afs = get_gpio_ip_afs(cube_path)
     mcu_signals = get_mcu_signals(cube_path, gpio_ip_afs)
 
-    if os.path.exists(output):
-        for dirpath, dirnames, filenames in os.walk(output):
+    if output.exists():
+        for entry in output.iterdir():
             # Remove directories, ignore files (README)
-            for dirname in dirnames:
-                shutil.rmtree(os.path.join(dirpath, dirname))
+            if entry.is_dir():
+                shutil.rmtree(entry)
     else:
-        os.makedirs(output)
+        output.mkdir(parents=True)
 
     for family, refs in mcu_signals.items():
         # obtain family pinctrl address
@@ -459,9 +458,9 @@ def main(cube_path, output):
             continue
 
         # create directory for each family
-        family_dir = os.path.join(output, family.lower()[5:])
-        if not os.path.exists(family_dir):
-            os.makedirs(family_dir)
+        family_dir = output / family.lower()[5:]
+        if not family_dir.exists():
+            family_dir.mkdir()
 
         # process each reference
         for ref in refs:
@@ -518,7 +517,7 @@ def main(cube_path, output):
                 )
 
             # write pinctrl file
-            ref_file = os.path.join(family_dir, ref["name"].lower() + "-pinctrl.dtsi")
+            ref_file = family_dir / (ref["name"].lower() + "-pinctrl.dtsi")
             with open(ref_file, "w") as f:
                 f.write(
                     template.render(
@@ -529,8 +528,20 @@ def main(cube_path, output):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("-p", "--cube-path", required=True, help="CubeMX path")
-    parser.add_argument("-o", "--output", required=True, help="Output directory")
+    parser.add_argument(
+        "-p",
+        "--cube-path",
+        required=True,
+        type=Path,
+        help="CubeMX path",
+    )
+    parser.add_argument(
+        "-o",
+        "--output",
+        required=True,
+        type=Path,
+        help="Output directory",
+    )
     args = parser.parse_args()
 
     main(args.cube_path, args.output)

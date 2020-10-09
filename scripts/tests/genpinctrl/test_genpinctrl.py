@@ -1,4 +1,4 @@
-import os
+from pathlib import Path
 
 import pytest
 
@@ -219,10 +219,10 @@ def test_cubemx_missing():
     """Test that missing CubeMX folders is handled correctly by parsing functions."""
 
     with pytest.raises(FileNotFoundError):
-        get_gpio_ip_afs("MISSING_PATH")
+        get_gpio_ip_afs(Path("MISSING_PATH"))
 
     with pytest.raises(FileNotFoundError):
-        get_mcu_signals("MISSING_PATH", dict())
+        get_mcu_signals(Path("MISSING_PATH"), dict())
 
 
 def test_main(data, cubemx, tmp_path):
@@ -231,19 +231,19 @@ def test_main(data, cubemx, tmp_path):
     main(cubemx, tmp_path)
 
     # check f0 file
-    ref_pinctrl_file = os.path.join(data, "stm32f0testdie-pinctrl.dtsi")
-    gen_pinctrl_file = os.path.join(tmp_path, "f0", "stm32f0testdie-pinctrl.dtsi")
+    ref_pinctrl_file = data / "stm32f0testdie-pinctrl.dtsi"
+    gen_pinctrl_file = tmp_path / "f0" / "stm32f0testdie-pinctrl.dtsi"
 
-    assert os.path.exists(gen_pinctrl_file)
+    assert gen_pinctrl_file.exists()
 
     with open(ref_pinctrl_file) as ref, open(gen_pinctrl_file) as gen:
         assert ref.read() == gen.read()
 
     # check f1 file
-    ref_pinctrl_file = os.path.join(data, "stm32f1testdie-pinctrl.dtsi")
-    gen_pinctrl_file = os.path.join(tmp_path, "f1", "stm32f1testdie-pinctrl.dtsi")
+    ref_pinctrl_file = data / "stm32f1testdie-pinctrl.dtsi"
+    gen_pinctrl_file = tmp_path / "f1" / "stm32f1testdie-pinctrl.dtsi"
 
-    assert os.path.exists(gen_pinctrl_file)
+    assert gen_pinctrl_file.exists()
 
     with open(ref_pinctrl_file) as ref, open(gen_pinctrl_file) as gen:
         assert ref.read() == gen.read()
