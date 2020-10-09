@@ -3,7 +3,7 @@ Utility to autogenerate Zephyr DT pinctrl files for all STM32 microcontrollers.
 
 Usage::
 
-    python3 genpinctrl.py -p /path/to/STM32CubeMX -o /path/to/output_dir
+    python3 genpinctrl.py [-p /path/to/STM32CubeMX] [-o /path/to/output_dir]
 
 Copyright (c) 2020 Teslabs Engineering S.L.
 
@@ -27,6 +27,9 @@ logger = logging.getLogger(__name__)
 
 SCRIPT_DIR = Path(__file__).absolute().parent
 """Script directory."""
+
+REPO_ROOT = SCRIPT_DIR / ".." / ".."
+"""Repository root (used for defaults)."""
 
 CONFIG_FILE = SCRIPT_DIR / "stm32-pinctrl-config.yaml"
 """Configuration file."""
@@ -550,15 +553,15 @@ if __name__ == "__main__":
     parser.add_argument(
         "-p",
         "--cube-path",
-        required=True,
         type=Path,
+        default=Path.home() / "STM32CubeMX",
         help="CubeMX path",
     )
     parser.add_argument(
         "-o",
         "--output",
-        required=True,
         type=Path,
+        default=REPO_ROOT / "dts" / "st",
         help="Output directory",
     )
     args = parser.parse_args()
