@@ -35,6 +35,18 @@
 				pinmux = <STM32F1_PINMUX('A', 0, ALTERNATE, NO_REMAP)>;
 			};
 
+			uart1_tx_pa0: uart1_tx_pa0 {
+				pinmux = <STM32F1_PINMUX('A', 0, ALTERNATE, REMAP_1)>;
+			};
+
+			uart1_tx_pa0: uart1_tx_pa0 {
+				pinmux = <STM32F1_PINMUX('A', 0, ALTERNATE, REMAP_2)>;
+			};
+
+			uart1_tx_pa0: uart1_tx_pa0 {
+				pinmux = <STM32F1_PINMUX('A', 0, ALTERNATE, REMAP_FULL)>;
+			};
+
 		};
 	};
 };

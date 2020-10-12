@@ -13,6 +13,10 @@
             <RemapBlock Name="UART1_REMAP0" DefaultRemap="true" />
             <RemapBlock Name="UART1_REMAP1">
             </RemapBlock>
+            <RemapBlock Name="UART1_REMAP2">
+            </RemapBlock>
+            <RemapBlock Name="UART1_REMAP3">
+            </RemapBlock>
         </PinSignal>
         <!-- Valid signal (single remap) -->
         <PinSignal Name="UART1_RX">

@@ -183,7 +183,7 @@ def format_remap(remap):
     elif remap == 2:
         return "REMAP_2"
     elif remap == 3:
-        return "FULL_REMAP"
+        return "REMAP_FULL"
 
     raise ValueError(f"Unsupported remap: {remap}")
 
@@ -203,11 +203,20 @@ def get_gpio_ip_afs(cube_path):
                 },
                 ...
             },
+            "STM32F103x4_gpio_v1_0": {
+                "PB3": {
+                    "ADC1_IN2": "analog",
+                    "EVENTOUT": [0],
+                    "LPUART1_TX": [0, 1],
+                    ...
+                },
+                ...
+            },
             ...
         }
 
     Notes:
-        F1 series AF number corresponds to remap number.
+        F1 series AF number corresponds to remap numbers.
 
     Args:
         cube_path: Path to CubeMX package.
@@ -242,23 +251,26 @@ def get_gpio_ip_afs(cube_path):
                 signal_name = signal.get("Name")
 
                 if "STM32F1" in gpio_ip:
-                    # NOTE: only first remap is taken as in case of multiple remaps
-                    # they all map to the same pin
-                    remap_block = signal.find(NS + "RemapBlock")
-                    if remap_block is None:
+                    remap_blocks = signal.findall(NS + "RemapBlock")
+                    if remap_blocks is None:
                         logger.error(
                             f"Missing remaps for {signal_name} (ip: {gpio_ip})"
                         )
                         continue
 
-                    name = remap_block.get("Name")
-                    m = re.search(r"^[A-Z0-9]+_REMAP(\d+)", name)
-                    if not m:
-                        logger.error(f"Unexpected remap format: {name} (ip: {gpio_ip})")
-                        continue
+                    for remap_block in remap_blocks:
+                        name = remap_block.get("Name")
+                        m = re.search(r"^[A-Z0-9]+_REMAP(\d+)", name)
+                        if not m:
+                            logger.error(
+                                f"Unexpected remap format: {name} (ip: {gpio_ip})"
+                            )
+                            continue
 
-                    remap_num = int(m.group(1))
-                    pin_entries[signal_name] = remap_num
+                        remap_num = int(m.group(1))
+                        if signal_name not in pin_entries:
+                            pin_entries[signal_name] = list()
+                        pin_entries[signal_name].append(remap_num)
                 else:
                     param = signal.find(NS + "SpecificParameter")
                     if param is None:
@@ -407,16 +419,20 @@ def get_mcu_signals(cube_path, gpio_ip_afs):
                 if re.match(r"^ADC(?:\d+)?_IN[NP]?\d+$", signal_name) or re.match(
                     r"^DAC(?:\d+)?_OUT\d+$", signal_name
                 ):
-                    pin_af = None
+                    found_afs = [None]
                 elif signal_name in pin_afs:
                     pin_af = pin_afs[signal_name]
+                    if not isinstance(pin_af, list):
+                        pin_af = [pin_af]
+                    found_afs = pin_af
                 # STM32F1: assume NO_REMAP (af=0) if signal is not listed in pin_afs
                 elif family == "STM32F1":
-                    pin_af = 0
+                    found_afs = [0]
                 else:
                     continue
 
-                pin_signals.append({"name": signal_name, "af": pin_af})
+                for af in found_afs:
+                    pin_signals.append({"name": signal_name, "af": af})
 
     return results
 

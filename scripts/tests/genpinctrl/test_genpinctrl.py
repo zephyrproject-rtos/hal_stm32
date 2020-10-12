@@ -148,7 +148,7 @@ def test_format_remap():
     assert format_remap(0) == "NO_REMAP"
     assert format_remap(1) == "REMAP_1"
     assert format_remap(2) == "REMAP_2"
-    assert format_remap(3) == "FULL_REMAP"
+    assert format_remap(3) == "REMAP_FULL"
 
     with pytest.raises(ValueError):
         format_remap(5)
@@ -167,8 +167,8 @@ def test_get_gpio_ip_afs(cubemx):
         },
         "STM32F1TESTIP": {
             "PA0": {
-                "UART1_TX": 0,
-                "UART1_RX": 1,
+                "UART1_TX": [0, 1, 2, 3],
+                "UART1_RX": [1],
             }
         },
     }
@@ -205,6 +205,9 @@ def test_get_mcu_signals(cubemx):
                         "pin": 0,
                         "signals": [
                             {"name": "UART1_TX", "af": 0},
+                            {"name": "UART1_TX", "af": 1},
+                            {"name": "UART1_TX", "af": 2},
+                            {"name": "UART1_TX", "af": 3},
                             {"name": "UART1_RX", "af": 1},
                             {"name": "ADC1_IN0", "af": None},
                             {"name": "I2C2_SCL", "af": 0},
