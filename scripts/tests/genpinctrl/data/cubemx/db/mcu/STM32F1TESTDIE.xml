@@ -9,5 +9,7 @@
         <Signal Name="UART1_RX"/>
         <!-- Valid signal (analog) -->
         <Signal Name="ADC1_IN0"/>
+        <!-- Valid signal (not in GPIO IP file) -->
+        <Signal Name="I2C2_SCL"/>
     </Pin>
 </Mcu>

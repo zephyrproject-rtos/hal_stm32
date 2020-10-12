@@ -410,6 +410,9 @@ def get_mcu_signals(cube_path, gpio_ip_afs):
                     pin_af = None
                 elif signal_name in pin_afs:
                     pin_af = pin_afs[signal_name]
+                # STM32F1: assume NO_REMAP (af=0) if signal is not listed in pin_afs
+                elif family == "STM32F1":
+                    pin_af = 0
                 else:
                     continue
 
