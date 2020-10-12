@@ -207,6 +207,7 @@ def test_get_mcu_signals(cubemx):
                             {"name": "UART1_TX", "af": 0},
                             {"name": "UART1_RX", "af": 1},
                             {"name": "ADC1_IN0", "af": None},
+                            {"name": "I2C2_SCL", "af": 0},
                         ],
                     },
                 ],

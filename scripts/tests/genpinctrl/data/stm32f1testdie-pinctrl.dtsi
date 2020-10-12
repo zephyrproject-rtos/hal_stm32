@@ -16,6 +16,13 @@
 				pinmux = <STM32F1_PINMUX('A', 0, ANALOG, NO_REMAP)>;
 			};
 
+			/* I2C_SCL */
+
+			i2c2_scl_pa0: i2c2_scl_pa0 {
+				pinmux = <STM32F1_PINMUX('A', 0, ALTERNATE, NO_REMAP)>;
+				drive-open-drain;
+			};
+
 			/* UART_RX / USART_RX */
 
 			uart1_rx_pa0: uart1_rx_pa0 {
