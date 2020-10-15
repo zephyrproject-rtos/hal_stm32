@@ -272,6 +272,196 @@
 				pinmux = <STM32_PINMUX('A', 5, ANALOG)>;
 			};
 
+			/* ETH_COL */
+
+			eth_col_pa3: eth_col_pa3 {
+				pinmux = <STM32_PINMUX('A', 3, AF11)>;
+				slew-rate = "very-high-speed";
+			};
+
+			eth_col_ph3: eth_col_ph3 {
+				pinmux = <STM32_PINMUX('H', 3, AF11)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/* ETH_CRS */
+
+			eth_crs_pa0: eth_crs_pa0 {
+				pinmux = <STM32_PINMUX('A', 0, AF11)>;
+				slew-rate = "very-high-speed";
+			};
+
+			eth_crs_ph2: eth_crs_ph2 {
+				pinmux = <STM32_PINMUX('H', 2, AF11)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/* ETH_CRS_DV */
+
+			eth_crs_dv_pa7: eth_crs_dv_pa7 {
+				pinmux = <STM32_PINMUX('A', 7, AF11)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/* ETH_MDC */
+
+			eth_mdc_pc1: eth_mdc_pc1 {
+				pinmux = <STM32_PINMUX('C', 1, AF11)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/* ETH_MDIO */
+
+			eth_mdio_pa2: eth_mdio_pa2 {
+				pinmux = <STM32_PINMUX('A', 2, AF11)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/* ETH_PPS_OUT */
+
+			eth_pps_out_pb5: eth_pps_out_pb5 {
+				pinmux = <STM32_PINMUX('B', 5, AF11)>;
+				slew-rate = "very-high-speed";
+			};
+
+			eth_pps_out_pg8: eth_pps_out_pg8 {
+				pinmux = <STM32_PINMUX('G', 8, AF11)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/* ETH_REF_CLK */
+
+			eth_ref_clk_pa1: eth_ref_clk_pa1 {
+				pinmux = <STM32_PINMUX('A', 1, AF11)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/* ETH_RXD0 */
+
+			eth_rxd0_pc4: eth_rxd0_pc4 {
+				pinmux = <STM32_PINMUX('C', 4, AF11)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/* ETH_RXD1 */
+
+			eth_rxd1_pc5: eth_rxd1_pc5 {
+				pinmux = <STM32_PINMUX('C', 5, AF11)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/* ETH_RXD2 */
+
+			eth_rxd2_pb0: eth_rxd2_pb0 {
+				pinmux = <STM32_PINMUX('B', 0, AF11)>;
+				slew-rate = "very-high-speed";
+			};
+
+			eth_rxd2_ph6: eth_rxd2_ph6 {
+				pinmux = <STM32_PINMUX('H', 6, AF11)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/* ETH_RXD3 */
+
+			eth_rxd3_pb1: eth_rxd3_pb1 {
+				pinmux = <STM32_PINMUX('B', 1, AF11)>;
+				slew-rate = "very-high-speed";
+			};
+
+			eth_rxd3_ph7: eth_rxd3_ph7 {
+				pinmux = <STM32_PINMUX('H', 7, AF11)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/* ETH_RX_CLK */
+
+			eth_rx_clk_pa1: eth_rx_clk_pa1 {
+				pinmux = <STM32_PINMUX('A', 1, AF11)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/* ETH_RX_DV */
+
+			eth_rx_dv_pa7: eth_rx_dv_pa7 {
+				pinmux = <STM32_PINMUX('A', 7, AF11)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/* ETH_RX_ER */
+
+			eth_rx_er_pb10: eth_rx_er_pb10 {
+				pinmux = <STM32_PINMUX('B', 10, AF11)>;
+				slew-rate = "very-high-speed";
+			};
+
+			eth_rx_er_pi10: eth_rx_er_pi10 {
+				pinmux = <STM32_PINMUX('I', 10, AF11)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/* ETH_TXD0 */
+
+			eth_txd0_pb12: eth_txd0_pb12 {
+				pinmux = <STM32_PINMUX('B', 12, AF11)>;
+				slew-rate = "very-high-speed";
+			};
+
+			eth_txd0_pg13: eth_txd0_pg13 {
+				pinmux = <STM32_PINMUX('G', 13, AF11)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/* ETH_TXD1 */
+
+			eth_txd1_pb13: eth_txd1_pb13 {
+				pinmux = <STM32_PINMUX('B', 13, AF11)>;
+				slew-rate = "very-high-speed";
+			};
+
+			eth_txd1_pg14: eth_txd1_pg14 {
+				pinmux = <STM32_PINMUX('G', 14, AF11)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/* ETH_TXD2 */
+
+			eth_txd2_pc2: eth_txd2_pc2 {
+				pinmux = <STM32_PINMUX('C', 2, AF11)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/* ETH_TXD3 */
+
+			eth_txd3_pb8: eth_txd3_pb8 {
+				pinmux = <STM32_PINMUX('B', 8, AF11)>;
+				slew-rate = "very-high-speed";
+			};
+
+			eth_txd3_pe2: eth_txd3_pe2 {
+				pinmux = <STM32_PINMUX('E', 2, AF11)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/* ETH_TX_CLK */
+
+			eth_tx_clk_pc3: eth_tx_clk_pc3 {
+				pinmux = <STM32_PINMUX('C', 3, AF11)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/* ETH_TX_EN */
+
+			eth_tx_en_pb11: eth_tx_en_pb11 {
+				pinmux = <STM32_PINMUX('B', 11, AF11)>;
+				slew-rate = "very-high-speed";
+			};
+
+			eth_tx_en_pg11: eth_tx_en_pg11 {
+				pinmux = <STM32_PINMUX('G', 11, AF11)>;
+				slew-rate = "very-high-speed";
+			};
+
 			/* I2C_SCL */
 
 			i2c1_scl_pb6: i2c1_scl_pb6 {
