@@ -194,6 +194,158 @@
 				pinmux = <STM32F1_PINMUX('A', 5, ANALOG, NO_REMAP)>;
 			};
 
+			/* ETH_COL */
+
+			eth_col_pa3: eth_col_pa3 {
+				pinmux = <STM32F1_PINMUX('A', 3, GPIO_IN, NO_REMAP)>;
+			};
+
+			/* ETH_CRS */
+
+			eth_crs_pa0: eth_crs_pa0 {
+				pinmux = <STM32F1_PINMUX('A', 0, GPIO_IN, NO_REMAP)>;
+			};
+
+			/* ETH_CRS_DV */
+
+			eth_crs_dv_pa7: eth_crs_dv_pa7 {
+				pinmux = <STM32F1_PINMUX('A', 7, GPIO_IN, NO_REMAP)>;
+			};
+
+			eth_crs_dv_pd8: eth_crs_dv_pd8 {
+				pinmux = <STM32F1_PINMUX('D', 8, GPIO_IN, REMAP_1)>;
+			};
+
+			/* ETH_MDC */
+
+			eth_mdc_pc1: eth_mdc_pc1 {
+				pinmux = <STM32F1_PINMUX('C', 1, ALTERNATE, NO_REMAP)>;
+				slew-rate = "max-speed-50mhz";
+			};
+
+			/* ETH_MDIO */
+
+			eth_mdio_pa2: eth_mdio_pa2 {
+				pinmux = <STM32F1_PINMUX('A', 2, ALTERNATE, NO_REMAP)>;
+				slew-rate = "max-speed-50mhz";
+			};
+
+			/* ETH_PPS_OUT */
+
+			eth_pps_out_pb5: eth_pps_out_pb5 {
+				pinmux = <STM32F1_PINMUX('B', 5, ALTERNATE, NO_REMAP)>;
+				slew-rate = "max-speed-50mhz";
+			};
+
+			/* ETH_REF_CLK */
+
+			eth_ref_clk_pa1: eth_ref_clk_pa1 {
+				pinmux = <STM32F1_PINMUX('A', 1, GPIO_IN, NO_REMAP)>;
+			};
+
+			/* ETH_RXD0 */
+
+			eth_rxd0_pc4: eth_rxd0_pc4 {
+				pinmux = <STM32F1_PINMUX('C', 4, GPIO_IN, NO_REMAP)>;
+			};
+
+			eth_rxd0_pd9: eth_rxd0_pd9 {
+				pinmux = <STM32F1_PINMUX('D', 9, GPIO_IN, REMAP_1)>;
+			};
+
+			/* ETH_RXD1 */
+
+			eth_rxd1_pc5: eth_rxd1_pc5 {
+				pinmux = <STM32F1_PINMUX('C', 5, GPIO_IN, NO_REMAP)>;
+			};
+
+			eth_rxd1_pd10: eth_rxd1_pd10 {
+				pinmux = <STM32F1_PINMUX('D', 10, GPIO_IN, REMAP_1)>;
+			};
+
+			/* ETH_RXD2 */
+
+			eth_rxd2_pb0: eth_rxd2_pb0 {
+				pinmux = <STM32F1_PINMUX('B', 0, GPIO_IN, NO_REMAP)>;
+			};
+
+			eth_rxd2_pd11: eth_rxd2_pd11 {
+				pinmux = <STM32F1_PINMUX('D', 11, GPIO_IN, REMAP_1)>;
+			};
+
+			/* ETH_RXD3 */
+
+			eth_rxd3_pb1: eth_rxd3_pb1 {
+				pinmux = <STM32F1_PINMUX('B', 1, GPIO_IN, NO_REMAP)>;
+			};
+
+			eth_rxd3_pd12: eth_rxd3_pd12 {
+				pinmux = <STM32F1_PINMUX('D', 12, GPIO_IN, REMAP_1)>;
+			};
+
+			/* ETH_RX_CLK */
+
+			eth_rx_clk_pa1: eth_rx_clk_pa1 {
+				pinmux = <STM32F1_PINMUX('A', 1, GPIO_IN, NO_REMAP)>;
+			};
+
+			/* ETH_RX_DV */
+
+			eth_rx_dv_pa7: eth_rx_dv_pa7 {
+				pinmux = <STM32F1_PINMUX('A', 7, GPIO_IN, NO_REMAP)>;
+			};
+
+			eth_rx_dv_pd8: eth_rx_dv_pd8 {
+				pinmux = <STM32F1_PINMUX('D', 8, GPIO_IN, REMAP_1)>;
+			};
+
+			/* ETH_RX_ER */
+
+			eth_rx_er_pb10: eth_rx_er_pb10 {
+				pinmux = <STM32F1_PINMUX('B', 10, GPIO_IN, NO_REMAP)>;
+			};
+
+			/* ETH_TXD0 */
+
+			eth_txd0_pb12: eth_txd0_pb12 {
+				pinmux = <STM32F1_PINMUX('B', 12, ALTERNATE, NO_REMAP)>;
+				slew-rate = "max-speed-50mhz";
+			};
+
+			/* ETH_TXD1 */
+
+			eth_txd1_pb13: eth_txd1_pb13 {
+				pinmux = <STM32F1_PINMUX('B', 13, ALTERNATE, NO_REMAP)>;
+				slew-rate = "max-speed-50mhz";
+			};
+
+			/* ETH_TXD2 */
+
+			eth_txd2_pc2: eth_txd2_pc2 {
+				pinmux = <STM32F1_PINMUX('C', 2, ALTERNATE, NO_REMAP)>;
+				slew-rate = "max-speed-50mhz";
+			};
+
+			/* ETH_TXD3 */
+
+			eth_txd3_pb8: eth_txd3_pb8 {
+				pinmux = <STM32F1_PINMUX('B', 8, ALTERNATE, NO_REMAP)>;
+				slew-rate = "max-speed-50mhz";
+			};
+
+			/* ETH_TX_CLK */
+
+			eth_tx_clk_pc3: eth_tx_clk_pc3 {
+				pinmux = <STM32F1_PINMUX('C', 3, GPIO_IN, NO_REMAP)>;
+			};
+
+			/* ETH_TX_EN */
+
+			eth_tx_en_pb11: eth_tx_en_pb11 {
+				pinmux = <STM32F1_PINMUX('B', 11, ALTERNATE, NO_REMAP)>;
+				slew-rate = "max-speed-50mhz";
+			};
+
 			/* I2C_SCL */
 
 			i2c1_scl_pb6: i2c1_scl_pb6 {
