@@ -50,6 +50,94 @@
   match: "^DAC_OUT\\d+$"
   mode: analog
 
+- name: ETH_COL
+  match: "^ETH_COL$"
+  mode: input
+
+- name: ETH_CRS
+  match: "^ETH_CRS$"
+  mode: input
+
+- name: ETH_CRS_DV
+  match: "^ETH_CRS_DV$"
+  mode: input
+
+- name: ETH_MDC
+  match: "^ETH_MDC$"
+  mode: alternate
+  slew-rate: max-speed-50mhz
+
+- name: ETH_MDIO
+  match: "^ETH_MDIO$"
+  mode: alternate
+  slew-rate: max-speed-50mhz
+
+- name: ETH_PPS_OUT
+  match: "^ETH_PPS_OUT$"
+  mode: alternate
+  slew-rate: max-speed-50mhz
+
+- name: ETH_REF_CLK
+  match: "^ETH_REF_CLK$"
+  mode: input
+
+- name: ETH_RX_CLK
+  match: "^ETH_RX_CLK$"
+  mode: input
+
+- name: ETH_RX_DV
+  match: "^ETH_RX_DV$"
+  mode: input
+
+- name: ETH_RX_ER
+  match: "^ETH_RX_ER$"
+  mode: input
+
+- name: ETH_RXD0
+  match: "^ETH_RXD0$"
+  mode: input
+
+- name: ETH_RXD1
+  match: "^ETH_RXD1$"
+  mode: input
+
+- name: ETH_RXD2
+  match: "^ETH_RXD2$"
+  mode: input
+
+- name: ETH_RXD3
+  match: "^ETH_RXD3$"
+  mode: input
+
+- name: ETH_TX_CLK
+  match: "^ETH_TX_CLK$"
+  mode: input
+
+- name: ETH_TX_EN
+  match: "^ETH_TX_EN$"
+  mode: alternate
+  slew-rate: max-speed-50mhz
+
+- name: ETH_TXD0
+  match: "^ETH_TXD0$"
+  mode: alternate
+  slew-rate: max-speed-50mhz
+
+- name: ETH_TXD1
+  match: "^ETH_TXD1$"
+  mode: alternate
+  slew-rate: max-speed-50mhz
+
+- name: ETH_TXD2
+  match: "^ETH_TXD2$"
+  mode: alternate
+  slew-rate: max-speed-50mhz
+
+- name: ETH_TXD3
+  match: "^ETH_TXD3$"
+  mode: alternate
+  slew-rate: max-speed-50mhz
+
 - name: I2C_SCL
   match: "^I2C\\d+_SCL$"
   drive: open-drain
