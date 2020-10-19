@@ -129,15 +129,18 @@
   match: "^(?:LP)?US?ART\\d+_RX$"
   mode: alternate
 
-- name: USB_OTG_FS_DM
-  match: "^USB_OTG_FS_DM$"
+- name: USB_OTG_FS
+  match: "^USB_OTG_FS_(?:DM)?(?:DP)?(?:SOF)?(?:ID)?(?:VBUS)?$"
   mode: alternate
 
-- name: USB_OTG_FS_DP
-  match: "^USB_OTG_FS_DP$"
+- name: USB_OTG_HS
+  match: "^USB_OTG_HS_(?:DM)?(?:DP)?(?:SOF)?(?:ID)?(?:VBUS)?$"
   mode: alternate
 
-- name: USB_OTG_FS_ID
-  match: "^USB_OTG_FS_ID$"
+- name: USB_OTG_HS_ULPI
+  match: "^USB_OTG_HS_ULPI_(?:DIR)?(?:STP)?(?:NXT)?(?:D\\d+)?$"
   mode: alternate
-  bias: pull-up
+
+- name: USB
+  match: "^USB_(?:DM)?(?:DP)?(?:NOE)?$"
+  mode: alternate
