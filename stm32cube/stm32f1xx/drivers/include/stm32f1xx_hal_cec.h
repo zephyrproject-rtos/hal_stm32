@@ -147,7 +147,7 @@ typedef struct __CEC_HandleTypeDef
   void  (* MspInitCallback)        ( struct __CEC_HandleTypeDef * hcec);    /*!< CEC Msp Init callback              */
   void  (* MspDeInitCallback)      ( struct __CEC_HandleTypeDef * hcec);    /*!< CEC Msp DeInit callback            */
 
-#endif /* (USE_HAL_CEC_REGISTER_CALLBACKS) */											
+#endif /* (USE_HAL_CEC_REGISTER_CALLBACKS) */
 }CEC_HandleTypeDef;
 
 #if (USE_HAL_CEC_REGISTER_CALLBACKS == 1)
