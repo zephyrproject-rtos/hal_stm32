@@ -389,7 +389,7 @@ HAL_StatusTypeDef HAL_CAN_ConfigFilter(CAN_HandleTypeDef* hcan, CAN_FilterConfTy
 #if defined (CAN3)
   /* Check the CAN instance */
   if(hcan->Instance == CAN3)
-  {	
+  {
     can_ip = CAN3;
   }
   else
