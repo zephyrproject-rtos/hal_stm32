@@ -1,6 +1,6 @@
 # Copyright (c) 2017 Erwin Rol <erwin@erwinrol.com>
 # Copyright (c) 2020 STMicroelectronics
-
+#
 # SPDX-License-Identifier: Apache-2.0
 
 zephyr_library_sources(soc/system_stm32l4xx.c)
