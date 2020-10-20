@@ -100,7 +100,7 @@
   */
 
 /** @defgroup FLASHEx FLASHEx
-  * @brief FALSH Extended HAL module driver
+  * @brief FLASH Extended HAL module driver
   * @{
   */
 
@@ -140,12 +140,12 @@ static void     FLASH_OB_GetBootAddr(uint32_t BootAddrConfig, uint32_t * BootAdd
   * @{
   */
 
-/** @defgroup FLASHEx_Exported_Functions_Group1 Extended IO operation functions
- *  @brief   Extended IO operation functions
+/** @defgroup FLASHEx_Exported_Functions_Group1 Extended Programming Operation functions
+ *  @brief   Extended Programming Operation functions
  *
 @verbatim
  ===============================================================================
-                ##### Extended programming operation functions #####
+                ##### Extended Programming Operation functions #####
  ===============================================================================
     [..]
     This subsection provides a set of functions allowing to manage the Extended FLASH
@@ -154,6 +154,7 @@ static void     FLASH_OB_GetBootAddr(uint32_t BootAddrConfig, uint32_t * BootAdd
 @endverbatim
   * @{
   */
+
 /**
   * @brief  Perform a mass erase or erase the specified FLASH memory pages.
   * @param[in]  pEraseInit pointer to an FLASH_EraseInitTypeDef structure that
@@ -550,6 +551,25 @@ void HAL_FLASHEx_EnableSecHideProtection(uint32_t Banks)
   }
 }
 #endif
+
+/**
+  * @}
+  */
+
+/** @defgroup FLASHEx_Exported_Functions_Group2 Extended Peripheral Control functions
+ *  @brief   Extended Peripheral Control functions
+ *
+@verbatim
+ ===============================================================================
+                      ##### Extended Peripheral Control functions #####
+ ===============================================================================
+    [..]
+    This subsection provides a set of functions allowing to control the FLASH
+    memory operations.
+
+@endverbatim
+  * @{
+  */
 
 /**
   * @brief  Configuration of the privilege attribute.

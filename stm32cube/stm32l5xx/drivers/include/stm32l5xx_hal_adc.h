@@ -184,7 +184,7 @@ typedef struct
                                        This parameter can be a value of @ref ADC_HAL_EC_REG_DFSDM_TRANSFER.
                                        Note: This parameter can be modified only if there is no conversion is ongoing (both ADSTART and JADSTART cleared). */
 
-#endif
+#endif /* ADC_CFGR_DFSDMCFG */
 } ADC_InitTypeDef;
 
 /**
@@ -333,7 +333,7 @@ typedef struct
                                                               external trigger, low power auto power-on (if feature available), multimode ADC master control (if feature available)) */
 #define HAL_ADC_STATE_REG_EOC           (0x00000200UL)   /*!< Conversion data available on group regular */
 #define HAL_ADC_STATE_REG_OVR           (0x00000400UL)   /*!< Overrun occurrence */
-#define HAL_ADC_STATE_REG_EOSMP         (0x00000800UL)   /*!< Not available on this STM32 serie: End Of Sampling flag raised  */
+#define HAL_ADC_STATE_REG_EOSMP         (0x00000800UL)   /*!< Not available on this STM32 series: End Of Sampling flag raised  */
 
 /* States of ADC group injected */
 #define HAL_ADC_STATE_INJ_BUSY          (0x00001000UL)   /*!< A conversion on ADC group injected is ongoing or can occur (either by auto-injection mode,
@@ -360,7 +360,7 @@ typedef struct
 typedef struct __ADC_HandleTypeDef
 #else
 typedef struct
-#endif
+#endif /* USE_HAL_ADC_REGISTER_CALLBACKS */
 {
   ADC_TypeDef                   *Instance;              /*!< Register base address */
   ADC_InitTypeDef               Init;                   /*!< ADC initialization parameters and regular conversions setting */
@@ -475,7 +475,7 @@ typedef  void (*pADC_CallbackTypeDef)(ADC_HandleTypeDef *hadc); /*!< pointer to 
   * @{
   */
 #define ADC_DATAALIGN_RIGHT                (LL_ADC_DATA_ALIGN_RIGHT)/*!< ADC conversion data alignment: right aligned (alignment on data register LSB bit 0)*/
-#define ADC_DATAALIGN_LEFT                 (LL_ADC_DATA_ALIGN_LEFT)       /*!< ADC conversion data alignment: left aligned (aligment on data register MSB bit 15)*/
+#define ADC_DATAALIGN_LEFT                 (LL_ADC_DATA_ALIGN_LEFT)       /*!< ADC conversion data alignment: left aligned (alignment on data register MSB bit 15)*/
 /**
   * @}
   */
@@ -687,7 +687,6 @@ typedef  void (*pADC_CallbackTypeDef)(ADC_HandleTypeDef *hadc); /*!< pointer to 
 /**
   * @}
   */
-
 
 /** @defgroup ADC_Event_type ADC Event type
   * @{
@@ -1001,7 +1000,7 @@ typedef  void (*pADC_CallbackTypeDef)(ADC_HandleTypeDef *hadc); /*!< pointer to 
 #else
 #define __HAL_ADC_RESET_HANDLE_STATE(__HANDLE__)                               \
   ((__HANDLE__)->State = HAL_ADC_STATE_RESET)
-#endif
+#endif /* USE_HAL_ADC_REGISTER_CALLBACKS */
 
 /**
   * @brief Enable ADC interrupt.
@@ -1366,7 +1365,7 @@ typedef  void (*pADC_CallbackTypeDef)(ADC_HandleTypeDef *hadc); /*!< pointer to 
   */
 #define __HAL_ADC_MULTI_CONV_DATA_MASTER_SLAVE(__ADC_MULTI_MASTER_SLAVE__, __ADC_MULTI_CONV_DATA__)  \
   __LL_ADC_MULTI_CONV_DATA_MASTER_SLAVE((__ADC_MULTI_MASTER_SLAVE__), (__ADC_MULTI_CONV_DATA__))
-#endif
+#endif /* ADC_MULTIMODE_SUPPORT */
 
 /**
   * @brief  Helper macro to select the ADC common instance
@@ -1437,10 +1436,10 @@ typedef  void (*pADC_CallbackTypeDef)(ADC_HandleTypeDef *hadc); /*!< pointer to 
   */
 #define __HAL_ADC_CONVERT_DATA_RESOLUTION(__DATA__,\
                                           __ADC_RESOLUTION_CURRENT__,\
-                                          __ADC_RESOLUTION_TARGET__)            \
-  __LL_ADC_CONVERT_DATA_RESOLUTION((__DATA__),                                  \
-                                   (__ADC_RESOLUTION_CURRENT__),                \
-                                   (__ADC_RESOLUTION_TARGET__))
+                                          __ADC_RESOLUTION_TARGET__) \
+__LL_ADC_CONVERT_DATA_RESOLUTION((__DATA__),\
+                                 (__ADC_RESOLUTION_CURRENT__),\
+                                 (__ADC_RESOLUTION_TARGET__))
 
 /**
   * @brief  Helper macro to calculate the voltage (unit: mVolt)
@@ -1460,10 +1459,10 @@ typedef  void (*pADC_CallbackTypeDef)(ADC_HandleTypeDef *hadc); /*!< pointer to 
   */
 #define __HAL_ADC_CALC_DATA_TO_VOLTAGE(__VREFANALOG_VOLTAGE__,\
                                        __ADC_DATA__,\
-                                       __ADC_RESOLUTION__)                     \
-  __LL_ADC_CALC_DATA_TO_VOLTAGE((__VREFANALOG_VOLTAGE__),                      \
-                                (__ADC_DATA__),                                \
-                                (__ADC_RESOLUTION__))
+                                       __ADC_RESOLUTION__) \
+__LL_ADC_CALC_DATA_TO_VOLTAGE((__VREFANALOG_VOLTAGE__),\
+                              (__ADC_DATA__),\
+                              (__ADC_RESOLUTION__))
 
 /**
   * @brief  Helper macro to calculate analog reference voltage (Vref+)
@@ -1475,7 +1474,7 @@ typedef  void (*pADC_CallbackTypeDef)(ADC_HandleTypeDef *hadc); /*!< pointer to 
   *         connected to pin Vref+.
   *         On devices with small package, the pin Vref+ is not present
   *         and internally bonded to pin Vdda.
-  * @note   On this STM32 serie, calibration data of internal voltage reference
+  * @note   On this STM32 series, calibration data of internal voltage reference
   *         VrefInt corresponds to a resolution of 12 bits,
   *         this is the recommended ADC resolution to convert voltage of
   *         internal voltage reference VrefInt.
@@ -1491,9 +1490,9 @@ typedef  void (*pADC_CallbackTypeDef)(ADC_HandleTypeDef *hadc); /*!< pointer to 
   * @retval Analog reference voltage (unit: mV)
   */
 #define __HAL_ADC_CALC_VREFANALOG_VOLTAGE(__VREFINT_ADC_DATA__,\
-                                          __ADC_RESOLUTION__)                  \
-  __LL_ADC_CALC_VREFANALOG_VOLTAGE((__VREFINT_ADC_DATA__),                     \
-                                  (__ADC_RESOLUTION__))
+                                          __ADC_RESOLUTION__) \
+__LL_ADC_CALC_VREFANALOG_VOLTAGE((__VREFINT_ADC_DATA__),\
+                                 (__ADC_RESOLUTION__))
 
 /**
   * @brief  Helper macro to calculate the temperature (unit: degree Celsius)
@@ -1522,7 +1521,7 @@ typedef  void (*pADC_CallbackTypeDef)(ADC_HandleTypeDef *hadc); /*!< pointer to 
   * @note   Analog reference voltage (Vref+) must be either known from
   *         user board environment or can be calculated using ADC measurement
   *         and ADC helper macro @ref __LL_ADC_CALC_VREFANALOG_VOLTAGE().
-  * @note   On this STM32 serie, calibration data of temperature sensor
+  * @note   On this STM32 series, calibration data of temperature sensor
   *         corresponds to a resolution of 12 bits,
   *         this is the recommended ADC resolution to convert voltage of
   *         temperature sensor.
@@ -1542,10 +1541,10 @@ typedef  void (*pADC_CallbackTypeDef)(ADC_HandleTypeDef *hadc); /*!< pointer to 
   */
 #define __HAL_ADC_CALC_TEMPERATURE(__VREFANALOG_VOLTAGE__,\
                                    __TEMPSENSOR_ADC_DATA__,\
-                                   __ADC_RESOLUTION__)                         \
-  __LL_ADC_CALC_TEMPERATURE((__VREFANALOG_VOLTAGE__),                          \
-                            (__TEMPSENSOR_ADC_DATA__),                         \
-                            (__ADC_RESOLUTION__))
+                                   __ADC_RESOLUTION__) \
+__LL_ADC_CALC_TEMPERATURE((__VREFANALOG_VOLTAGE__),\
+                          (__TEMPSENSOR_ADC_DATA__),\
+                          (__ADC_RESOLUTION__))
 
 /**
   * @brief  Helper macro to calculate the temperature (unit: degree Celsius)
@@ -1596,13 +1595,13 @@ typedef  void (*pADC_CallbackTypeDef)(ADC_HandleTypeDef *hadc); /*!< pointer to 
                                               __TEMPSENSOR_CALX_TEMP__,\
                                               __VREFANALOG_VOLTAGE__,\
                                               __TEMPSENSOR_ADC_DATA__,\
-                                              __ADC_RESOLUTION__)              \
-  __LL_ADC_CALC_TEMPERATURE_TYP_PARAMS((__TEMPSENSOR_TYP_AVGSLOPE__),          \
-                                      (__TEMPSENSOR_TYP_CALX_V__),             \
-                                      (__TEMPSENSOR_CALX_TEMP__),              \
-                                      (__VREFANALOG_VOLTAGE__),                \
-                                      (__TEMPSENSOR_ADC_DATA__),               \
-                                      (__ADC_RESOLUTION__))
+                                              __ADC_RESOLUTION__) \
+__LL_ADC_CALC_TEMPERATURE_TYP_PARAMS((__TEMPSENSOR_TYP_AVGSLOPE__),\
+                                     (__TEMPSENSOR_TYP_CALX_V__),\
+                                     (__TEMPSENSOR_CALX_TEMP__),\
+                                     (__VREFANALOG_VOLTAGE__),\
+                                     (__TEMPSENSOR_ADC_DATA__),\
+                                     (__ADC_RESOLUTION__))
 
 /**
   * @}

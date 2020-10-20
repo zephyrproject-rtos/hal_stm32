@@ -225,6 +225,9 @@ HAL_StatusTypeDef HAL_TIMEx_HallSensor_Init(TIM_HandleTypeDef *htim, TIM_HallSen
   htim->Instance->CR2 &= ~TIM_CR2_MMS;
   htim->Instance->CR2 |= TIM_TRGO_OC2REF;
 
+  /* Initialize the DMA burst operation state */
+  htim->DMABurstState = HAL_DMA_BURST_STATE_READY;
+
   /* Initialize the TIM channels state */
   TIM_CHANNEL_STATE_SET(htim, TIM_CHANNEL_1, HAL_TIM_CHANNEL_STATE_READY);
   TIM_CHANNEL_STATE_SET(htim, TIM_CHANNEL_2, HAL_TIM_CHANNEL_STATE_READY);
@@ -263,6 +266,9 @@ HAL_StatusTypeDef HAL_TIMEx_HallSensor_DeInit(TIM_HandleTypeDef *htim)
   /* DeInit the low level hardware: GPIO, CLOCK, NVIC */
   HAL_TIMEx_HallSensor_MspDeInit(htim);
 #endif /* USE_HAL_TIM_REGISTER_CALLBACKS */
+
+  /* Change the DMA burst operation state */
+  htim->DMABurstState = HAL_DMA_BURST_STATE_RESET;
 
   /* Change the TIM channels state */
   TIM_CHANNEL_STATE_SET(htim, TIM_CHANNEL_1, HAL_TIM_CHANNEL_STATE_RESET);
@@ -345,8 +351,15 @@ HAL_StatusTypeDef HAL_TIMEx_HallSensor_Start(TIM_HandleTypeDef *htim)
   TIM_CCxChannelCmd(htim->Instance, TIM_CHANNEL_1, TIM_CCx_ENABLE);
 
   /* Enable the Peripheral, except in trigger mode where enable is automatically done with trigger */
-  tmpsmcr = htim->Instance->SMCR & TIM_SMCR_SMS;
-  if (!IS_TIM_SLAVEMODE_TRIGGER_ENABLED(tmpsmcr))
+  if (IS_TIM_SLAVE_INSTANCE(htim->Instance))
+  {
+    tmpsmcr = htim->Instance->SMCR & TIM_SMCR_SMS;
+    if (!IS_TIM_SLAVEMODE_TRIGGER_ENABLED(tmpsmcr))
+    {
+      __HAL_TIM_ENABLE(htim);
+    }
+  }
+  else
   {
     __HAL_TIM_ENABLE(htim);
   }
@@ -421,8 +434,15 @@ HAL_StatusTypeDef HAL_TIMEx_HallSensor_Start_IT(TIM_HandleTypeDef *htim)
   TIM_CCxChannelCmd(htim->Instance, TIM_CHANNEL_1, TIM_CCx_ENABLE);
 
   /* Enable the Peripheral, except in trigger mode where enable is automatically done with trigger */
-  tmpsmcr = htim->Instance->SMCR & TIM_SMCR_SMS;
-  if (!IS_TIM_SLAVEMODE_TRIGGER_ENABLED(tmpsmcr))
+  if (IS_TIM_SLAVE_INSTANCE(htim->Instance))
+  {
+    tmpsmcr = htim->Instance->SMCR & TIM_SMCR_SMS;
+    if (!IS_TIM_SLAVEMODE_TRIGGER_ENABLED(tmpsmcr))
+    {
+      __HAL_TIM_ENABLE(htim);
+    }
+  }
+  else
   {
     __HAL_TIM_ENABLE(htim);
   }
@@ -520,8 +540,15 @@ HAL_StatusTypeDef HAL_TIMEx_HallSensor_Start_DMA(TIM_HandleTypeDef *htim, uint32
   __HAL_TIM_ENABLE_DMA(htim, TIM_DMA_CC1);
 
   /* Enable the Peripheral, except in trigger mode where enable is automatically done with trigger */
-  tmpsmcr = htim->Instance->SMCR & TIM_SMCR_SMS;
-  if (!IS_TIM_SLAVEMODE_TRIGGER_ENABLED(tmpsmcr))
+  if (IS_TIM_SLAVE_INSTANCE(htim->Instance))
+  {
+    tmpsmcr = htim->Instance->SMCR & TIM_SMCR_SMS;
+    if (!IS_TIM_SLAVEMODE_TRIGGER_ENABLED(tmpsmcr))
+    {
+      __HAL_TIM_ENABLE(htim);
+    }
+  }
+  else
   {
     __HAL_TIM_ENABLE(htim);
   }
@@ -619,8 +646,15 @@ HAL_StatusTypeDef HAL_TIMEx_OCN_Start(TIM_HandleTypeDef *htim, uint32_t Channel)
   __HAL_TIM_MOE_ENABLE(htim);
 
   /* Enable the Peripheral, except in trigger mode where enable is automatically done with trigger */
-  tmpsmcr = htim->Instance->SMCR & TIM_SMCR_SMS;
-  if (!IS_TIM_SLAVEMODE_TRIGGER_ENABLED(tmpsmcr))
+  if (IS_TIM_SLAVE_INSTANCE(htim->Instance))
+  {
+    tmpsmcr = htim->Instance->SMCR & TIM_SMCR_SMS;
+    if (!IS_TIM_SLAVEMODE_TRIGGER_ENABLED(tmpsmcr))
+    {
+      __HAL_TIM_ENABLE(htim);
+    }
+  }
+  else
   {
     __HAL_TIM_ENABLE(htim);
   }
@@ -726,8 +760,15 @@ HAL_StatusTypeDef HAL_TIMEx_OCN_Start_IT(TIM_HandleTypeDef *htim, uint32_t Chann
   __HAL_TIM_MOE_ENABLE(htim);
 
   /* Enable the Peripheral, except in trigger mode where enable is automatically done with trigger */
-  tmpsmcr = htim->Instance->SMCR & TIM_SMCR_SMS;
-  if (!IS_TIM_SLAVEMODE_TRIGGER_ENABLED(tmpsmcr))
+  if (IS_TIM_SLAVE_INSTANCE(htim->Instance))
+  {
+    tmpsmcr = htim->Instance->SMCR & TIM_SMCR_SMS;
+    if (!IS_TIM_SLAVEMODE_TRIGGER_ENABLED(tmpsmcr))
+    {
+      __HAL_TIM_ENABLE(htim);
+    }
+  }
+  else
   {
     __HAL_TIM_ENABLE(htim);
   }
@@ -914,8 +955,15 @@ HAL_StatusTypeDef HAL_TIMEx_OCN_Start_DMA(TIM_HandleTypeDef *htim, uint32_t Chan
   __HAL_TIM_MOE_ENABLE(htim);
 
   /* Enable the Peripheral, except in trigger mode where enable is automatically done with trigger */
-  tmpsmcr = htim->Instance->SMCR & TIM_SMCR_SMS;
-  if (!IS_TIM_SLAVEMODE_TRIGGER_ENABLED(tmpsmcr))
+  if (IS_TIM_SLAVE_INSTANCE(htim->Instance))
+  {
+    tmpsmcr = htim->Instance->SMCR & TIM_SMCR_SMS;
+    if (!IS_TIM_SLAVEMODE_TRIGGER_ENABLED(tmpsmcr))
+    {
+      __HAL_TIM_ENABLE(htim);
+    }
+  }
+  else
   {
     __HAL_TIM_ENABLE(htim);
   }
@@ -1053,8 +1101,15 @@ HAL_StatusTypeDef HAL_TIMEx_PWMN_Start(TIM_HandleTypeDef *htim, uint32_t Channel
   __HAL_TIM_MOE_ENABLE(htim);
 
   /* Enable the Peripheral, except in trigger mode where enable is automatically done with trigger */
-  tmpsmcr = htim->Instance->SMCR & TIM_SMCR_SMS;
-  if (!IS_TIM_SLAVEMODE_TRIGGER_ENABLED(tmpsmcr))
+  if (IS_TIM_SLAVE_INSTANCE(htim->Instance))
+  {
+    tmpsmcr = htim->Instance->SMCR & TIM_SMCR_SMS;
+    if (!IS_TIM_SLAVEMODE_TRIGGER_ENABLED(tmpsmcr))
+    {
+      __HAL_TIM_ENABLE(htim);
+    }
+  }
+  else
   {
     __HAL_TIM_ENABLE(htim);
   }
@@ -1158,8 +1213,15 @@ HAL_StatusTypeDef HAL_TIMEx_PWMN_Start_IT(TIM_HandleTypeDef *htim, uint32_t Chan
   __HAL_TIM_MOE_ENABLE(htim);
 
   /* Enable the Peripheral, except in trigger mode where enable is automatically done with trigger */
-  tmpsmcr = htim->Instance->SMCR & TIM_SMCR_SMS;
-  if (!IS_TIM_SLAVEMODE_TRIGGER_ENABLED(tmpsmcr))
+  if (IS_TIM_SLAVE_INSTANCE(htim->Instance))
+  {
+    tmpsmcr = htim->Instance->SMCR & TIM_SMCR_SMS;
+    if (!IS_TIM_SLAVEMODE_TRIGGER_ENABLED(tmpsmcr))
+    {
+      __HAL_TIM_ENABLE(htim);
+    }
+  }
+  else
   {
     __HAL_TIM_ENABLE(htim);
   }
@@ -1347,8 +1409,15 @@ HAL_StatusTypeDef HAL_TIMEx_PWMN_Start_DMA(TIM_HandleTypeDef *htim, uint32_t Cha
   __HAL_TIM_MOE_ENABLE(htim);
 
   /* Enable the Peripheral, except in trigger mode where enable is automatically done with trigger */
-  tmpsmcr = htim->Instance->SMCR & TIM_SMCR_SMS;
-  if (!IS_TIM_SLAVEMODE_TRIGGER_ENABLED(tmpsmcr))
+  if (IS_TIM_SLAVE_INSTANCE(htim->Instance))
+  {
+    tmpsmcr = htim->Instance->SMCR & TIM_SMCR_SMS;
+    if (!IS_TIM_SLAVEMODE_TRIGGER_ENABLED(tmpsmcr))
+    {
+      __HAL_TIM_ENABLE(htim);
+    }
+  }
+  else
   {
     __HAL_TIM_ENABLE(htim);
   }
@@ -2051,10 +2120,10 @@ HAL_StatusTypeDef HAL_TIMEx_ConfigBreakInput(TIM_HandleTypeDef *htim,
 
       /* Set the break input polarity */
       if (sBreakInputConfig->Source != TIM_BREAKINPUTSOURCE_DFSDM1)
-      {
-        tmporx &= ~bkin_polarity_mask;
-        tmporx |= (sBreakInputConfig->Polarity << bkin_polarity_bitpos) & bkin_polarity_mask;
-      }
+        {
+          tmporx &= ~bkin_polarity_mask;
+          tmporx |= (sBreakInputConfig->Polarity << bkin_polarity_bitpos) & bkin_polarity_mask;
+        }
 
       /* Set TIMx_OR2 */
       htim->Instance->OR2 = tmporx;
@@ -2071,10 +2140,10 @@ HAL_StatusTypeDef HAL_TIMEx_ConfigBreakInput(TIM_HandleTypeDef *htim,
 
       /* Set the break input polarity */
       if (sBreakInputConfig->Source != TIM_BREAKINPUTSOURCE_DFSDM1)
-      {
-        tmporx &= ~bkin_polarity_mask;
-        tmporx |= (sBreakInputConfig->Polarity << bkin_polarity_bitpos) & bkin_polarity_mask;
-      }
+        {
+          tmporx &= ~bkin_polarity_mask;
+          tmporx |= (sBreakInputConfig->Polarity << bkin_polarity_bitpos) & bkin_polarity_mask;
+        }
 
       /* Set TIMx_OR3 */
       htim->Instance->OR3 = tmporx;
@@ -2171,7 +2240,7 @@ HAL_StatusTypeDef HAL_TIMEx_ConfigBreakInput(TIM_HandleTypeDef *htim,
   *
   *         For TIM17, the parameter can have the following values:
   *            @arg TIM_TIM17_TI1_GPIO:              TIM17 TI1 is connected to GPIO
-  *            @arg TIM_TIM17_TI1_MSI:               TIM17 TI1 is connected to MSI  (contraints: MSI clock < 1/4 TIM APB clock)
+  *            @arg TIM_TIM17_TI1_MSI:               TIM17 TI1 is connected to MSI  (constraints: MSI clock < 1/4 TIM APB clock)
   *            @arg TIM_TIM17_TI1_HSE_32:            TIM17 TI1 is connected to HSE div 32
   *            @arg TIM_TIM17_TI1_MCO:               TIM17 TI1 is connected to MCO
   *
@@ -2179,8 +2248,8 @@ HAL_StatusTypeDef HAL_TIMEx_ConfigBreakInput(TIM_HandleTypeDef *htim,
   */
 HAL_StatusTypeDef HAL_TIMEx_RemapConfig(TIM_HandleTypeDef *htim, uint32_t Remap)
 {
-  uint32_t tmpor1 = 0U;
-  uint32_t tmpor2 = 0U;
+  uint32_t tmpor1;
+  uint32_t tmpor2;
 
   __HAL_LOCK(htim);
 

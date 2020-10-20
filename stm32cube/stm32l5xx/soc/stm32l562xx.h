@@ -15,10 +15,10 @@
   * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
-  * This software component is licensed by ST under BSD 3-Clause license,
+  * This software component is licensed by ST under Apache License, Version 2.0,
   * the "License"; You may not use this file except in compliance with the
   * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/BSD-3-Clause
+  *                        opensource.org/licenses/Apache-2.0
   *
   ******************************************************************************
   */
@@ -1364,7 +1364,7 @@ typedef struct
 } WWDG_TypeDef;
 
 
-/*@}*/ /* end of group STM32L562xx_Peripherals */
+/*@}*/ /* end of group STM32L5xx_peripherals */
 
 
 /* --------  End of section using anonymous unions and disabling warnings  -------- */
@@ -3237,7 +3237,7 @@ typedef struct
 
 #define ADC_CFGR_ALIGN_Pos             (5U)
 #define ADC_CFGR_ALIGN_Msk             (0x1UL << ADC_CFGR_ALIGN_Pos)           /*!< 0x00000020 */
-#define ADC_CFGR_ALIGN                 ADC_CFGR_ALIGN_Msk                      /*!< ADC data alignement */
+#define ADC_CFGR_ALIGN                 ADC_CFGR_ALIGN_Msk                      /*!< ADC data alignment */
 
 #define ADC_CFGR_EXTSEL_Pos            (6U)
 #define ADC_CFGR_EXTSEL_Msk            (0xFUL << ADC_CFGR_EXTSEL_Pos)          /*!< 0x000003C0 */
@@ -4833,18 +4833,18 @@ typedef struct
 #define DBGMCU_IDCODE_REV_ID                   DBGMCU_IDCODE_REV_ID_Msk
 
 /********************  Bit definition for DBGMCU_CR register  *****************/
-#define DBGMCU_CR_DBG_SLEEP_Pos                (0U)
-#define DBGMCU_CR_DBG_SLEEP_Msk                (0x1UL << DBGMCU_CR_DBG_SLEEP_Pos)/*!< 0x00000001 */
-#define DBGMCU_CR_DBG_SLEEP                    DBGMCU_CR_DBG_SLEEP_Msk
 #define DBGMCU_CR_DBG_STOP_Pos                 (1U)
 #define DBGMCU_CR_DBG_STOP_Msk                 (0x1UL << DBGMCU_CR_DBG_STOP_Pos)/*!< 0x00000002 */
 #define DBGMCU_CR_DBG_STOP                     DBGMCU_CR_DBG_STOP_Msk
 #define DBGMCU_CR_DBG_STANDBY_Pos              (2U)
 #define DBGMCU_CR_DBG_STANDBY_Msk              (0x1UL << DBGMCU_CR_DBG_STANDBY_Pos)/*!< 0x00000004 */
 #define DBGMCU_CR_DBG_STANDBY                  DBGMCU_CR_DBG_STANDBY_Msk
-#define DBGMCU_CR_TRACE_IOEN_Pos               (5U)
-#define DBGMCU_CR_TRACE_IOEN_Msk               (0x1UL << DBGMCU_CR_TRACE_IOEN_Pos)/*!< 0x00000020 */
+#define DBGMCU_CR_TRACE_IOEN_Pos               (4U)
+#define DBGMCU_CR_TRACE_IOEN_Msk               (0x1UL << DBGMCU_CR_TRACE_IOEN_Pos)/*!< 0x00000010 */
 #define DBGMCU_CR_TRACE_IOEN                   DBGMCU_CR_TRACE_IOEN_Msk
+#define DBGMCU_CR_TRACE_EN_Pos                 (5U)
+#define DBGMCU_CR_TRACE_EN_Msk                 (0x1UL << DBGMCU_CR_TRACE_EN_Pos)/*!< 0x00000020 */
+#define DBGMCU_CR_TRACE_EN                     DBGMCU_CR_TRACE_EN_Msk
 
 #define DBGMCU_CR_TRACE_MODE_Pos               (6U)
 #define DBGMCU_CR_TRACE_MODE_Msk               (0x3UL << DBGMCU_CR_TRACE_MODE_Pos)/*!< 0x000000C0 */
@@ -7021,7 +7021,7 @@ typedef struct
 /*****************  Bit definition for FDCAN_ENDN register  *******************/
 #define FDCAN_ENDN_ETV_Pos        (0U)
 #define FDCAN_ENDN_ETV_Msk        (0xFFFFFFFFUL << FDCAN_ENDN_ETV_Pos)         /*!< 0xFFFFFFFF */
-#define FDCAN_ENDN_ETV            FDCAN_ENDN_ETV_Msk                           /*!<Endiannes Test Value                    */
+#define FDCAN_ENDN_ETV            FDCAN_ENDN_ETV_Msk                           /*!<Endianness Test Value                   */
 
 /*****************  Bit definition for FDCAN_DBTP register  *******************/
 #define FDCAN_DBTP_DSJW_Pos       (0U)
@@ -7933,7 +7933,7 @@ typedef struct
 /******************  Bit definition for FMC_BCR1 register  *******************/
 #define FMC_BCR1_CCLKEN_Pos        (20U)
 #define FMC_BCR1_CCLKEN_Msk        (0x1UL << FMC_BCR1_CCLKEN_Pos)              /*!< 0x00100000 */
-#define FMC_BCR1_CCLKEN            FMC_BCR1_CCLKEN_Msk                         /*!<Continous clock enable     */
+#define FMC_BCR1_CCLKEN            FMC_BCR1_CCLKEN_Msk                         /*!<Continuous clock enable    */
 #define FMC_BCR1_WFDIS_Pos         (21U)
 #define FMC_BCR1_WFDIS_Msk         (0x1UL << FMC_BCR1_WFDIS_Pos)               /*!< 0x00200000 */
 #define FMC_BCR1_WFDIS             FMC_BCR1_WFDIS_Msk                          /*!<Write FIFO Disable         */
@@ -9485,7 +9485,7 @@ typedef struct
 #define ICACHE_FCR_CBSYENDF            ICACHE_FCR_CBSYENDF_Msk                 /*!< Busy end flag clear */
 #define ICACHE_FCR_CERRF_Pos           (2U)
 #define ICACHE_FCR_CERRF_Msk           (0x1UL << ICACHE_FCR_CERRF_Pos)         /*!< 0x00000004 */
-#define ICACHE_FCR_CERRF               ICACHE_FCR_CERRF                        /*!< Cache error flag clear */
+#define ICACHE_FCR_CERRF               ICACHE_FCR_CERRF_Msk                    /*!< Cache error flag clear */
 
 /******************  Bit definition for ICACHE_HMONR register  ****************/
 #define ICACHE_HMONR_HITMON_Pos         (0U)
@@ -9696,7 +9696,7 @@ typedef struct
 
 #define LPTIM_CFGR_TIMOUT_Pos       (19U)
 #define LPTIM_CFGR_TIMOUT_Msk       (0x1UL << LPTIM_CFGR_TIMOUT_Pos)           /*!< 0x00080000 */
-#define LPTIM_CFGR_TIMOUT           LPTIM_CFGR_TIMOUT_Msk                      /*!< Timout enable */
+#define LPTIM_CFGR_TIMOUT           LPTIM_CFGR_TIMOUT_Msk                      /*!< Timeout enable */
 #define LPTIM_CFGR_WAVE_Pos         (20U)
 #define LPTIM_CFGR_WAVE_Msk         (0x1UL << LPTIM_CFGR_WAVE_Pos)             /*!< 0x00100000 */
 #define LPTIM_CFGR_WAVE             LPTIM_CFGR_WAVE_Msk                        /*!< Waveform shape */
@@ -10655,12 +10655,12 @@ typedef struct
 /* Arithmetic addition output data */
 #define PKA_ARITHMETIC_ADD_OUT_RESULT             ((0x0BD0UL - PKA_RAM_OFFSET)>>2)   /*!< Output result */
 
-/* Arithmetic substraction input data */
+/* Arithmetic subtraction input data */
 #define PKA_ARITHMETIC_SUB_NB_BITS                ((0x0404UL - PKA_RAM_OFFSET)>>2)   /*!< Input operand number of bits */
 #define PKA_ARITHMETIC_SUB_IN_OP1                 ((0x08B4UL - PKA_RAM_OFFSET)>>2)   /*!< Input operand op1 */
 #define PKA_ARITHMETIC_SUB_IN_OP2                 ((0x0A44UL - PKA_RAM_OFFSET)>>2)   /*!< Input operand op2 */
 
-/* Arithmetic substraction output data */
+/* Arithmetic subtraction output data */
 #define PKA_ARITHMETIC_SUB_OUT_RESULT             ((0x0BD0UL - PKA_RAM_OFFSET)>>2)   /*!< Output result */
 
 /* Arithmetic multiplication input data */
@@ -10696,13 +10696,13 @@ typedef struct
 /* Modular inversion output data */
 #define PKA_MODULAR_INV_OUT_RESULT                ((0x0BD0UL - PKA_RAM_OFFSET)>>2)   /*!< Output result */
 
-/* Modular substraction input data */
+/* Modular subtraction input data */
 #define PKA_MODULAR_SUB_NB_BITS                   ((0x0404UL - PKA_RAM_OFFSET)>>2)   /*!< Input operand number of bits */
 #define PKA_MODULAR_SUB_IN_OP1                    ((0x08B4UL - PKA_RAM_OFFSET)>>2)   /*!< Input operand op1 */
 #define PKA_MODULAR_SUB_IN_OP2                    ((0x0A44UL - PKA_RAM_OFFSET)>>2)   /*!< Input operand op2 */
 #define PKA_MODULAR_SUB_IN_OP3_MOD                ((0x0D5CUL - PKA_RAM_OFFSET)>>2)   /*!< Input operand op3 */
 
-/* Modular substraction output data */
+/* Modular subtraction output data */
 #define PKA_MODULAR_SUB_OUT_RESULT                ((0x0BD0UL - PKA_RAM_OFFSET)>>2)   /*!< Output result */
 
 /* Montgomery multiplication input data */
@@ -11743,18 +11743,10 @@ typedef struct
 #define RCC_CR_MSIRANGE_Pos                  (4U)
 #define RCC_CR_MSIRANGE_Msk                  (0xFUL << RCC_CR_MSIRANGE_Pos)    /*!< 0x000000F0 */
 #define RCC_CR_MSIRANGE                      RCC_CR_MSIRANGE_Msk               /*!< Internal Multi Speed oscillator (MSI) clock Range */
-#define RCC_CR_MSIRANGE_0                    (0x0UL << RCC_CR_MSIRANGE_Pos)    /*!< 0x00000000 */
-#define RCC_CR_MSIRANGE_1                    (0x1UL << RCC_CR_MSIRANGE_Pos)    /*!< 0x00000010 */
-#define RCC_CR_MSIRANGE_2                    (0x2UL << RCC_CR_MSIRANGE_Pos)    /*!< 0x00000020 */
-#define RCC_CR_MSIRANGE_3                    (0x3UL << RCC_CR_MSIRANGE_Pos)    /*!< 0x00000030 */
-#define RCC_CR_MSIRANGE_4                    (0x4UL << RCC_CR_MSIRANGE_Pos)    /*!< 0x00000040 */
-#define RCC_CR_MSIRANGE_5                    (0x5UL << RCC_CR_MSIRANGE_Pos)    /*!< 0x00000050 */
-#define RCC_CR_MSIRANGE_6                    (0x6UL << RCC_CR_MSIRANGE_Pos)    /*!< 0x00000060 */
-#define RCC_CR_MSIRANGE_7                    (0x7UL << RCC_CR_MSIRANGE_Pos)    /*!< 0x00000070 */
-#define RCC_CR_MSIRANGE_8                    (0x8UL << RCC_CR_MSIRANGE_Pos)    /*!< 0x00000080 */
-#define RCC_CR_MSIRANGE_9                    (0x9UL << RCC_CR_MSIRANGE_Pos)    /*!< 0x00000090 */
-#define RCC_CR_MSIRANGE_10                   (0xAUL << RCC_CR_MSIRANGE_Pos)    /*!< 0x000000A0 */
-#define RCC_CR_MSIRANGE_11                   (0xBUL << RCC_CR_MSIRANGE_Pos)    /*!< 0x000000B0 */
+#define RCC_CR_MSIRANGE_0                    (0x1UL << RCC_CR_MSIRANGE_Pos)    /*!< 0x00000010 */
+#define RCC_CR_MSIRANGE_1                    (0x2UL << RCC_CR_MSIRANGE_Pos)    /*!< 0x00000020 */
+#define RCC_CR_MSIRANGE_2                    (0x4UL << RCC_CR_MSIRANGE_Pos)    /*!< 0x00000040 */
+#define RCC_CR_MSIRANGE_3                    (0x8UL << RCC_CR_MSIRANGE_Pos)    /*!< 0x00000080 */
 
 #define RCC_CR_HSION_Pos                     (8U)
 #define RCC_CR_HSION_Msk                     (0x1UL << RCC_CR_HSION_Pos)       /*!< 0x00000100 */
@@ -11864,22 +11856,12 @@ typedef struct
 #define RCC_CFGR_SW_0                        (0x1UL << RCC_CFGR_SW_Pos)        /*!< 0x00000001 */
 #define RCC_CFGR_SW_1                        (0x2UL << RCC_CFGR_SW_Pos)        /*!< 0x00000002 */
 
-#define RCC_CFGR_SW_MSI                      (0x00000000UL)                    /*!< MSI oscillator selection as system clock */
-#define RCC_CFGR_SW_HSI                      (0x00000001UL)                    /*!< HSI16 oscillator selection as system clock */
-#define RCC_CFGR_SW_HSE                      (0x00000002UL)                    /*!< HSE oscillator selection as system clock */
-#define RCC_CFGR_SW_PLL                      (0x00000003UL)                    /*!< PLL selection as system clock */
-
 /*!< SWS configuration */
 #define RCC_CFGR_SWS_Pos                     (2U)
 #define RCC_CFGR_SWS_Msk                     (0x3UL << RCC_CFGR_SWS_Pos)       /*!< 0x0000000C */
 #define RCC_CFGR_SWS                         RCC_CFGR_SWS_Msk                  /*!< SWS[1:0] bits (System Clock Switch Status) */
 #define RCC_CFGR_SWS_0                       (0x1UL << RCC_CFGR_SWS_Pos)       /*!< 0x00000004 */
 #define RCC_CFGR_SWS_1                       (0x2UL << RCC_CFGR_SWS_Pos)       /*!< 0x00000008 */
-
-#define RCC_CFGR_SWS_MSI                     (0x00000000UL)                    /*!< MSI oscillator used as system clock */
-#define RCC_CFGR_SWS_HSI                     (0x00000004UL)                    /*!< HSI16 oscillator used as system clock */
-#define RCC_CFGR_SWS_HSE                     (0x00000008UL)                    /*!< HSE oscillator used as system clock */
-#define RCC_CFGR_SWS_PLL                     (0x0000000CUL)                    /*!< PLL used as system clock */
 
 /*!< HPRE configuration */
 #define RCC_CFGR_HPRE_Pos                    (4U)
@@ -11890,16 +11872,6 @@ typedef struct
 #define RCC_CFGR_HPRE_2                      (0x4UL << RCC_CFGR_HPRE_Pos)      /*!< 0x00000040 */
 #define RCC_CFGR_HPRE_3                      (0x8UL << RCC_CFGR_HPRE_Pos)      /*!< 0x00000080 */
 
-#define RCC_CFGR_HPRE_DIV1                   (0x00000000UL)                    /*!< SYSCLK not divided */
-#define RCC_CFGR_HPRE_DIV2                   (0x00000080UL)                    /*!< SYSCLK divided by 2 */
-#define RCC_CFGR_HPRE_DIV4                   (0x00000090UL)                    /*!< SYSCLK divided by 4 */
-#define RCC_CFGR_HPRE_DIV8                   (0x000000A0UL)                    /*!< SYSCLK divided by 8 */
-#define RCC_CFGR_HPRE_DIV16                  (0x000000B0UL)                    /*!< SYSCLK divided by 16 */
-#define RCC_CFGR_HPRE_DIV64                  (0x000000C0UL)                    /*!< SYSCLK divided by 64 */
-#define RCC_CFGR_HPRE_DIV128                 (0x000000D0UL)                    /*!< SYSCLK divided by 128 */
-#define RCC_CFGR_HPRE_DIV256                 (0x000000E0UL)                    /*!< SYSCLK divided by 256 */
-#define RCC_CFGR_HPRE_DIV512                 (0x000000F0UL)                    /*!< SYSCLK divided by 512 */
-
 /*!< PPRE1 configuration */
 #define RCC_CFGR_PPRE1_Pos                   (8U)
 #define RCC_CFGR_PPRE1_Msk                   (0x7UL << RCC_CFGR_PPRE1_Pos)     /*!< 0x00000700 */
@@ -11908,12 +11880,6 @@ typedef struct
 #define RCC_CFGR_PPRE1_1                     (0x2UL << RCC_CFGR_PPRE1_Pos)     /*!< 0x00000200 */
 #define RCC_CFGR_PPRE1_2                     (0x4UL << RCC_CFGR_PPRE1_Pos)     /*!< 0x00000400 */
 
-#define RCC_CFGR_PPRE1_DIV1                  (0x00000000UL)                    /*!< HCLK not divided */
-#define RCC_CFGR_PPRE1_DIV2                  (0x00000400UL)                    /*!< HCLK divided by 2 */
-#define RCC_CFGR_PPRE1_DIV4                  (0x00000500UL)                    /*!< HCLK divided by 4 */
-#define RCC_CFGR_PPRE1_DIV8                  (0x00000600UL)                    /*!< HCLK divided by 8 */
-#define RCC_CFGR_PPRE1_DIV16                 (0x00000700UL)                    /*!< HCLK divided by 16 */
-
 /*!< PPRE2 configuration */
 #define RCC_CFGR_PPRE2_Pos                   (11U)
 #define RCC_CFGR_PPRE2_Msk                   (0x7UL << RCC_CFGR_PPRE2_Pos)     /*!< 0x00003800 */
@@ -11921,12 +11887,6 @@ typedef struct
 #define RCC_CFGR_PPRE2_0                     (0x1UL << RCC_CFGR_PPRE2_Pos)     /*!< 0x00000800 */
 #define RCC_CFGR_PPRE2_1                     (0x2UL << RCC_CFGR_PPRE2_Pos)     /*!< 0x00001000 */
 #define RCC_CFGR_PPRE2_2                     (0x4UL << RCC_CFGR_PPRE2_Pos)     /*!< 0x00002000 */
-
-#define RCC_CFGR_PPRE2_DIV1                  (0x00000000UL)                    /*!< HCLK not divided */
-#define RCC_CFGR_PPRE2_DIV2                  (0x00002000UL)                    /*!< HCLK divided by 2 */
-#define RCC_CFGR_PPRE2_DIV4                  (0x00002800UL)                    /*!< HCLK divided by 4 */
-#define RCC_CFGR_PPRE2_DIV8                  (0x00003000UL)                    /*!< HCLK divided by 8 */
-#define RCC_CFGR_PPRE2_DIV16                 (0x00003800UL)                    /*!< HCLK divided by 16 */
 
 #define RCC_CFGR_STOPWUCK_Pos                (15U)
 #define RCC_CFGR_STOPWUCK_Msk                (0x1UL << RCC_CFGR_STOPWUCK_Pos)  /*!< 0x00008000 */
@@ -11948,28 +11908,12 @@ typedef struct
 #define RCC_CFGR_MCOPRE_1                    (0x2UL << RCC_CFGR_MCOPRE_Pos)    /*!< 0x20000000 */
 #define RCC_CFGR_MCOPRE_2                    (0x4UL << RCC_CFGR_MCOPRE_Pos)    /*!< 0x40000000 */
 
-#define RCC_CFGR_MCOPRE_DIV1                 (0x00000000UL)                    /*!< MCO is divided by 1 */
-#define RCC_CFGR_MCOPRE_DIV2                 (0x10000000UL)                    /*!< MCO is divided by 2 */
-#define RCC_CFGR_MCOPRE_DIV4                 (0x20000000UL)                    /*!< MCO is divided by 4 */
-#define RCC_CFGR_MCOPRE_DIV8                 (0x30000000UL)                    /*!< MCO is divided by 8 */
-#define RCC_CFGR_MCOPRE_DIV16                (0x40000000UL)                    /*!< MCO is divided by 16 */
-
 /********************  Bit definition for RCC_PLLCFGR register  ***************/
 #define RCC_PLLCFGR_PLLSRC_Pos               (0U)
 #define RCC_PLLCFGR_PLLSRC_Msk               (0x3UL << RCC_PLLCFGR_PLLSRC_Pos) /*!< 0x00000003 */
 #define RCC_PLLCFGR_PLLSRC                   RCC_PLLCFGR_PLLSRC_Msk
 #define RCC_PLLCFGR_PLLSRC_0                 (0x1UL << RCC_PLLCFGR_PLLSRC_Pos) /*!< 0x00000001 */
 #define RCC_PLLCFGR_PLLSRC_1                 (0x2UL << RCC_PLLCFGR_PLLSRC_Pos) /*!< 0x00000002 */
-
-#define RCC_PLLCFGR_PLLSRC_MSI_Pos           (0U)
-#define RCC_PLLCFGR_PLLSRC_MSI_Msk           (0x1UL << RCC_PLLCFGR_PLLSRC_MSI_Pos)/*!< 0x00000001 */
-#define RCC_PLLCFGR_PLLSRC_MSI               RCC_PLLCFGR_PLLSRC_MSI_Msk        /*!< MSI oscillator source clock selected */
-#define RCC_PLLCFGR_PLLSRC_HSI_Pos           (1U)
-#define RCC_PLLCFGR_PLLSRC_HSI_Msk           (0x1UL << RCC_PLLCFGR_PLLSRC_HSI_Pos)/*!< 0x00000002 */
-#define RCC_PLLCFGR_PLLSRC_HSI               RCC_PLLCFGR_PLLSRC_HSI_Msk        /*!< HSI16 oscillator source clock selected */
-#define RCC_PLLCFGR_PLLSRC_HSE_Pos           (0U)
-#define RCC_PLLCFGR_PLLSRC_HSE_Msk           (0x3UL << RCC_PLLCFGR_PLLSRC_HSE_Pos)/*!< 0x00000003 */
-#define RCC_PLLCFGR_PLLSRC_HSE               RCC_PLLCFGR_PLLSRC_HSE_Msk        /*!< HSE oscillator source clock selected */
 
 #define RCC_PLLCFGR_PLLM_Pos                 (4U)
 #define RCC_PLLCFGR_PLLM_Msk                 (0xFUL << RCC_PLLCFGR_PLLM_Pos)   /*!< 0x000000F0 */
@@ -12031,16 +11975,6 @@ typedef struct
 #define RCC_PLLSAI1CFGR_PLLSAI1SRC_0         (0x1UL << RCC_PLLSAI1CFGR_PLLSAI1SRC_Pos)/*!< 0x00000001 */
 #define RCC_PLLSAI1CFGR_PLLSAI1SRC_1         (0x2UL << RCC_PLLSAI1CFGR_PLLSAI1SRC_Pos)/*!< 0x00000002 */
 
-#define RCC_PLLSAI1CFGR_PLLSAI1SRC_MSI_Pos   (0U)
-#define RCC_PLLSAI1CFGR_PLLSAI1SRC_MSI_Msk   (0x1UL << RCC_PLLSAI1CFGR_PLLSAI1SRC_MSI_Pos)/*!< 0x00000001 */
-#define RCC_PLLSAI1CFGR_PLLSAI1SRC_MSI       RCC_PLLSAI1CFGR_PLLSAI1SRC_MSI_Msk           /*!< MSI oscillator source clock selected */
-#define RCC_PLLSAI1CFGR_PLLSAI1SRC_HSI_Pos   (1U)
-#define RCC_PLLSAI1CFGR_PLLSAI1SRC_HSI_Msk   (0x1UL << RCC_PLLSAI1CFGR_PLLSAI1SRC_HSI_Pos)/*!< 0x00000002 */
-#define RCC_PLLSAI1CFGR_PLLSAI1SRC_HSI       RCC_PLLSAI1CFGR_PLLSAI1SRC_HSI_Msk           /*!< HSI16 oscillator source clock selected */
-#define RCC_PLLSAI1CFGR_PLLSAI1SRC_HSE_Pos   (0U)
-#define RCC_PLLSAI1CFGR_PLLSAI1SRC_HSE_Msk   (0x3UL << RCC_PLLSAI1CFGR_PLLSAI1SRC_HSE_Pos)/*!< 0x00000003 */
-#define RCC_PLLSAI1CFGR_PLLSAI1SRC_HSE       RCC_PLLSAI1CFGR_PLLSAI1SRC_HSE_Msk           /*!< HSE oscillator source clock selected */
-
 #define RCC_PLLSAI1CFGR_PLLSAI1M_Pos         (4U)
 #define RCC_PLLSAI1CFGR_PLLSAI1M_Msk         (0xFUL << RCC_PLLSAI1CFGR_PLLSAI1M_Pos)/*!< 0x000000F0 */
 #define RCC_PLLSAI1CFGR_PLLSAI1M             RCC_PLLSAI1CFGR_PLLSAI1M_Msk
@@ -12100,16 +12034,6 @@ typedef struct
 #define RCC_PLLSAI2CFGR_PLLSAI2SRC           RCC_PLLSAI2CFGR_PLLSAI2SRC_Msk
 #define RCC_PLLSAI2CFGR_PLLSAI2SRC_0         (0x1UL << RCC_PLLSAI2CFGR_PLLSAI2SRC_Pos)/*!< 0x00000001 */
 #define RCC_PLLSAI2CFGR_PLLSAI2SRC_1         (0x2UL << RCC_PLLSAI2CFGR_PLLSAI2SRC_Pos)/*!< 0x00000002 */
-
-#define RCC_PLLSAI2CFGR_PLLSAI2SRC_MSI_Pos   (0U)
-#define RCC_PLLSAI2CFGR_PLLSAI2SRC_MSI_Msk   (0x1UL << RCC_PLLSAI2CFGR_PLLSAI2SRC_MSI_Pos)/*!< 0x00000001 */
-#define RCC_PLLSAI2CFGR_PLLSAI2SRC_MSI       RCC_PLLSAI2CFGR_PLLSAI2SRC_MSI_Msk           /*!< MSI oscillator source clock selected */
-#define RCC_PLLSAI2CFGR_PLLSAI2SRC_HSI_Pos   (1U)
-#define RCC_PLLSAI2CFGR_PLLSAI2SRC_HSI_Msk   (0x1UL << RCC_PLLSAI2CFGR_PLLSAI2SRC_HSI_Pos)/*!< 0x00000002 */
-#define RCC_PLLSAI2CFGR_PLLSAI2SRC_HSI       RCC_PLLSAI2CFGR_PLLSAI2SRC_HSI_Msk           /*!< HSI16 oscillator source clock selected */
-#define RCC_PLLSAI2CFGR_PLLSAI2SRC_HSE_Pos   (0U)
-#define RCC_PLLSAI2CFGR_PLLSAI2SRC_HSE_Msk   (0x3UL << RCC_PLLSAI2CFGR_PLLSAI2SRC_HSE_Pos)/*!< 0x00000003 */
-#define RCC_PLLSAI2CFGR_PLLSAI2SRC_HSE       RCC_PLLSAI2CFGR_PLLSAI2SRC_HSE_Msk           /*!< HSE oscillator source clock selected */
 
 #define RCC_PLLSAI2CFGR_PLLSAI2M_Pos         (4U)
 #define RCC_PLLSAI2CFGR_PLLSAI2M_Msk         (0xFUL << RCC_PLLSAI2CFGR_PLLSAI2M_Pos)/*!< 0x000000F0 */
@@ -13005,10 +12929,10 @@ typedef struct
 #define RCC_CSR_MSISRANGE_Pos                (8U)
 #define RCC_CSR_MSISRANGE_Msk                (0xFUL << RCC_CSR_MSISRANGE_Pos)  /*!< 0x00000F00 */
 #define RCC_CSR_MSISRANGE                    RCC_CSR_MSISRANGE_Msk
-#define RCC_CSR_MSISRANGE_1                  (0x4UL << RCC_CSR_MSISRANGE_Pos)  /*!< 0x00000400 */
-#define RCC_CSR_MSISRANGE_2                  (0x5UL << RCC_CSR_MSISRANGE_Pos)  /*!< 0x00000500 */
-#define RCC_CSR_MSISRANGE_4                  (0x6UL << RCC_CSR_MSISRANGE_Pos)  /*!< 0x00000600 */
-#define RCC_CSR_MSISRANGE_8                  (0x7UL << RCC_CSR_MSISRANGE_Pos)  /*!< 0x00000700 */
+#define RCC_CSR_MSISRANGE_0                  (0x1UL << RCC_CSR_MSISRANGE_Pos)  /*!< 0x00000100 */
+#define RCC_CSR_MSISRANGE_1                  (0x2UL << RCC_CSR_MSISRANGE_Pos)  /*!< 0x00000200 */
+#define RCC_CSR_MSISRANGE_2                  (0x4UL << RCC_CSR_MSISRANGE_Pos)  /*!< 0x00000400 */
+#define RCC_CSR_MSISRANGE_3                  (0x8UL << RCC_CSR_MSISRANGE_Pos)  /*!< 0x00000800 */
 
 #define RCC_CSR_RMVF_Pos                     (23U)
 #define RCC_CSR_RMVF_Msk                     (0x1UL << RCC_CSR_RMVF_Pos)       /*!< 0x00800000 */
