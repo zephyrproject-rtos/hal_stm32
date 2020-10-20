@@ -6,7 +6,7 @@ Origin:
    http://www.st.com/en/embedded-software/stm32cubewb.html
 
 Status:
-   version v1.5.0
+   version v1.9.0
 
 Purpose:
    ST Microelectronics official MCU package for STM32WB series.
@@ -23,7 +23,7 @@ URL:
    https://github.com/STMicroelectronics/STM32CubeWB
 
 Commit:
-   2b2c57a80d71ffeec182cc520e5a72af7b94778d
+   e3d0473c1588f1379ff0e4d7d1c78d081c352518
 
 Maintained-by:
    External
@@ -36,12 +36,8 @@ License Link:
 
 Patch List:
 
-    *Extend public SetFlashLatency API to all families
-     The LL_SetFlashLatency public API is now defined for families
-     beyond G4, L4 and L5. The private function has been made public.
-    Impacted files:
-     drivers/include/stm32wbxx_ll_utils.h
-     drivers/src/stm32wbxx_ll_utils.c
-    ST Bug tracker ID: 76130
+   *Changes from official delivery:
+    -dos2unix applied
+    -trailing white spaces removed
 
    See release_note.html from STM32Cube
