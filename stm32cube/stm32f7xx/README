@@ -6,7 +6,7 @@ Origin:
    http://www.st.com/en/embedded-software/stm32cubef7.html
 
 Status:
-   version 1.15.0
+   version v1.16.0
 
 Purpose:
    ST Microelectronics official MCU package for STM32F7 series.
@@ -20,10 +20,10 @@ Dependencies:
     None.
 
 URL:
-   http://www.st.com/en/embedded-software/stm32cubef7.html
+   https://github.com/STMicroelectronics/STM32CubeF7
 
-commit:
-   version 1.15.0
+Commit:
+   79acbf8ec060d3ec751f2eaba6ee050269995357
 
 Maintained-by:
    External
@@ -35,7 +35,10 @@ License Link:
    https://opensource.org/licenses/BSD-3-Clause
 
 Patch List:
-   See release_note.html from STM32Cube
+
+   *Changes from official delivery:
+    -dos2unix applied
+    -trailing white spaces removed
 
     *Extend public SetFlashLatency API to all families
      The LL_SetFlashLatency public API is now defined for families
@@ -52,3 +55,5 @@ Patch List:
     Impacted files:
      drivers/include/stm32f7xx_ll_exti.h
     ST Bug tracker ID: 55274
+
+   See release_note.html from STM32Cube
