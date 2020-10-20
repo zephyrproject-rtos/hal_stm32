@@ -6,7 +6,7 @@ Origin:
    http://www.st.com/en/embedded-software/stm32cubel0.html
 
 Status:
-   version 1.11.2
+   version v1.11.3
 
 Purpose:
    ST Microelectronics official MCU package for STM32L0 series.
@@ -20,10 +20,10 @@ Dependencies:
     None.
 
 URL:
-   http://www.st.com/en/embedded-software/stm32cubel0.html
+   https://github.com/STMicroelectronics/STM32CubeL0
 
-commit:
-   version 1.11.2
+Commit:
+   8b26821a5b4831fc85df5c450c81568a744a1027
 
 Maintained-by:
    External
@@ -35,6 +35,10 @@ License Link:
    https://opensource.org/licenses/BSD-3-Clause
 
 Patch List:
+
+   *Changes from official delivery:
+    -dos2unix applied
+    -trailing white spaces removed
 
     *Extend public SetFlashLatency API to all families
      The LL_SetFlashLatency public API is now defined for families
@@ -57,3 +61,5 @@ Patch List:
      Impacted files:
       drivers/src/stm32l0xx_hal_rcc.c
      ST Bug tracker ID: 80901
+
+   See release_note.html from STM32Cube
