@@ -757,7 +757,7 @@ void HAL_RTCEx_WakeUpTimerIRQHandler(RTC_HandleTypeDef *hrtc)
 {
   if ((RTC->SMISR & RTC_SMISR_WUTMF) != 0u)
   {
-    /* Immediatly clear flags */
+    /* Immediately clear flags */
     WRITE_REG(RTC->SCR, RTC_SCR_CWUTF);
 #if (USE_HAL_RTC_REGISTER_CALLBACKS == 1)
     /* Call wake up timer registered Callback */
@@ -1987,7 +1987,7 @@ void HAL_RTCEx_TamperIRQHandler(RTC_HandleTypeDef *hrtc)
   /* Get secure interrupt status */
   tmp = READ_REG(TAMP->SMISR);
 
-  /* Immediatly clear flags */
+  /* Immediately clear flags */
   WRITE_REG(TAMP->SCR, tmp);
 
   /* Check Tamper1 status */

@@ -472,7 +472,16 @@ HAL_StatusTypeDef HAL_SD_InitCard(SD_HandleTypeDef *hsd)
   Init.ClockPowerSave      = SDMMC_CLOCK_POWER_SAVE_DISABLE;
   Init.BusWide             = SDMMC_BUS_WIDE_1B;
   Init.HardwareFlowControl = SDMMC_HARDWARE_FLOW_CONTROL_DISABLE;
-  Init.ClockDiv            = SDMMC_INIT_CLK_DIV;
+
+  /* Init Clock should be less or equal to 400Khz*/
+  sdmmc_clk     = HAL_RCCEx_GetPeriphCLKFreq(RCC_PERIPHCLK_SDMMC1);
+  if (sdmmc_clk == 0U)
+  {
+      hsd->State = HAL_SD_STATE_READY;
+      hsd->ErrorCode = SDMMC_ERROR_INVALID_PARAMETER;
+      return HAL_ERROR;
+  }
+  Init.ClockDiv = sdmmc_clk/(2U*400000U);
 
 #if (USE_SD_TRANSCEIVER != 0U)
   if (hsd->Init.TranceiverPresent == SDMMC_TRANSCEIVER_PRESENT)
@@ -493,16 +502,8 @@ HAL_StatusTypeDef HAL_SD_InitCard(SD_HandleTypeDef *hsd)
 
   /* wait 74 Cycles: required power up waiting time before starting
      the SD initialization sequence */
-  sdmmc_clk = HAL_RCCEx_GetPeriphCLKFreq(RCC_PERIPHCLK_SDMMC1)/(2U*SDMMC_INIT_CLK_DIV);
-
-  if(sdmmc_clk != 0U)
-  {
-    HAL_Delay(1U+ (74U*1000U/(sdmmc_clk)));
-  }
-  else
-  {
-    HAL_Delay(2U);
-  }
+  sdmmc_clk = sdmmc_clk/(2U*Init.ClockDiv);
+  HAL_Delay(1U+ (74U*1000U/(sdmmc_clk)));
 
   /* Identify card operating voltage */
   errorstate = SD_PowerON(hsd);
@@ -555,7 +556,7 @@ HAL_StatusTypeDef HAL_SD_DeInit(SD_HandleTypeDef *hsd)
   hsd->State = HAL_SD_STATE_BUSY;
 
 #if (USE_SD_TRANSCEIVER != 0U)
-  /* Desactivate the 1.8V Mode */
+  /* Deactivate the 1.8V Mode */
   if (hsd->Init.TranceiverPresent == SDMMC_TRANSCEIVER_PRESENT)
   {
 #if defined (USE_HAL_SD_REGISTER_CALLBACKS) && (USE_HAL_SD_REGISTER_CALLBACKS == 1U)

@@ -11,7 +11,7 @@
   *
  @verbatim
   ==============================================================================
-                        ##### FLASH peripheral features #####
+                        ##### Flash peripheral features #####
   ==============================================================================
 
   [..] The Flash memory interface manages CPU AHB C-Bus accesses
@@ -131,12 +131,12 @@ static void FLASH_Program_DoubleWord(uint32_t Address, uint64_t Data);
   * @{
   */
 
-/** @defgroup FLASH_Exported_Functions_Group1 Programming operation functions
- *  @brief   Programming operation functions
+/** @defgroup FLASH_Exported_Functions_Group1 Programming Operation functions
+ *  @brief   Programming Operation functions
  *
 @verbatim
  ===============================================================================
-                  ##### Programming operation functions #####
+                  ##### Programming Operation functions #####
  ===============================================================================
     [..]
     This subsection provides a set of functions allowing to manage the FLASH
@@ -356,11 +356,11 @@ void HAL_FLASH_IRQHandler(void)
 
 /**
   * @brief  FLASH end of operation interrupt callback.
-  * @param  ReturnValue The value saved in this parameter depends on the ongoing procedure
-  *                  Mass Erase: Bank number which has been requested to erase
-  *                  Page Erase: Page which has been erased
-  *                    (if 0xFFFFFFFF, it means that all the selected pages have been erased)
-  *                  Program: Address which was selected for data program
+  * @param  ReturnValue The value saved in this parameter depends on the ongoing procedure :
+  *                  @arg Mass Erase: Bank number which has been requested to erase
+  *                  @arg Page Erase: Page which has been erased
+  *                       (if 0xFFFFFFFF, it means that all the selected pages have been erased)
+  *                  @arg Program: Address which was selected for data program
   * @retval None
   */
 __weak void HAL_FLASH_EndOfOperationCallback(uint32_t ReturnValue)
@@ -375,10 +375,10 @@ __weak void HAL_FLASH_EndOfOperationCallback(uint32_t ReturnValue)
 
 /**
   * @brief  FLASH operation error interrupt callback.
-  * @param  ReturnValue The value saved in this parameter depends on the ongoing procedure
-  *                 Mass Erase: Bank number which has been requested to erase
-  *                 Page Erase: Page number which returned an error
-  *                 Program: Address which was selected for data program
+  * @param  ReturnValue The value saved in this parameter depends on the ongoing procedure :
+  *                 @arg Mass Erase: Bank number which has been requested to erase
+  *                 @arg Page Erase: Page number which returned an error
+  *                 @arg Program: Address which was selected for data program
   * @retval None
   */
 __weak void HAL_FLASH_OperationErrorCallback(uint32_t ReturnValue)
