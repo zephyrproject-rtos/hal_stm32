@@ -1,5 +1,5 @@
 # Copyright (c) 2017 Erwin Rol <erwin@erwinrol.com>
-# Copyright (c) 2019 STMicroelectronics.
+# Copyright (c) 2020 STMicroelectronics
 #
 # SPDX-License-Identifier: Apache-2.0
 
