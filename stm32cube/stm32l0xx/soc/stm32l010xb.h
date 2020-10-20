@@ -4744,7 +4744,7 @@ typedef struct
 #define TIM_TIM2_REMAP_HSI48_SUPPORT     /*!<Support remap HSI48 on TIM2 */
 #else
 #define TIM_TIM2_REMAP_HSI48_SUPPORT     /*!<Support remap HSI48 on TIM2 */
-#endif	
+#endif
 
 /*******************  Bit definition for TIM_CR1 register  ********************/
 #define TIM_CR1_CEN_Pos           (0U)
