@@ -1253,7 +1253,7 @@ static void HCD_HC_IN_IRQHandler(HCD_HandleTypeDef *hhcd, uint8_t chnum)
     {
       /* ... */
     }
-    hhcd->hc[ch_num].toggle_in ^= 1U;
+      hhcd->hc[ch_num].toggle_in ^= 1U;
 
   }
   else if ((USBx_HC(ch_num)->HCINT & USB_OTG_HCINT_CHH) == USB_OTG_HCINT_CHH)

@@ -1015,6 +1015,7 @@ HAL_StatusTypeDef HAL_SD_ReadBlocks_IT(SD_HandleTypeDef *hsd, uint8_t *pData, ui
       __HAL_SD_CLEAR_FLAG(hsd, SDMMC_STATIC_FLAGS);
       hsd->ErrorCode |= errorstate;
       hsd->State = HAL_SD_STATE_READY;
+      hsd->Context = SD_CONTEXT_NONE;
       return HAL_ERROR;
     }
 
