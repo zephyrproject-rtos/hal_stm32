@@ -6,7 +6,7 @@ Origin:
    http://www.st.com/en/embedded-software/stm32cubef0.html
 
 Status:
-   version v1.11.0
+   version v1.11.1
 
 Purpose:
    ST Microelectronics official MCU package for STM32F0 series.
@@ -23,7 +23,7 @@ URL:
    https://github.com/STMicroelectronics/STM32CubeF0
 
 Commit:
-   568c7255f77258c12ac876745f53ce76a682259f
+   7b44872c87d4ef209386bb6bebe821f4b526b576
 
 Maintained-by:
    External
@@ -35,6 +35,10 @@ License Link:
    https://opensource.org/licenses/BSD-3-Clause
 
 Patch List:
+
+   *Changes from official delivery:
+    -dos2unix applied
+    -trailing white spaces removed
 
     *Extend public SetFlashLatency API to all families
      The LL_SetFlashLatency public API is now defined for families
