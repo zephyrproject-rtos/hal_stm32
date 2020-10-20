@@ -1,4 +1,5 @@
 # Copyright (c) 2017 Erwin Rol <erwin@erwinrol.com>
+# Copyright (c) 2020 STMicroelectronics
 #
 # SPDX-License-Identifier: Apache-2.0
 
@@ -15,6 +16,7 @@ zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_DAC drivers/src/stm32f1xx_hal_
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_DAC_EX drivers/src/stm32f1xx_hal_dac_ex.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_DMA drivers/src/stm32f1xx_hal_dma.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_ETH drivers/src/stm32f1xx_hal_eth.c)
+zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_EXTI drivers/src/stm32f1xx_hal_exti.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_FLASH drivers/src/stm32f1xx_hal_flash.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_FLASH_EX drivers/src/stm32f1xx_hal_flash_ex.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_GPIO drivers/src/stm32f1xx_hal_gpio.c)
@@ -31,13 +33,13 @@ zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_PCCARD drivers/src/stm32f1xx_h
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_PCD drivers/src/stm32f1xx_hal_pcd.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_PCD_EX drivers/src/stm32f1xx_hal_pcd_ex.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_PWR drivers/src/stm32f1xx_hal_pwr.c)
+zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_RCC drivers/src/stm32f1xx_hal_rcc.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_RCC_EX drivers/src/stm32f1xx_hal_rcc_ex.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_RTC drivers/src/stm32f1xx_hal_rtc.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_RTC_EX drivers/src/stm32f1xx_hal_rtc_ex.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_SD drivers/src/stm32f1xx_hal_sd.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_SMARTCARD drivers/src/stm32f1xx_hal_smartcard.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_SPI drivers/src/stm32f1xx_hal_spi.c)
-zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_SPI_EX drivers/src/stm32f1xx_hal_spi_ex.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_SRAM drivers/src/stm32f1xx_hal_sram.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_TIM drivers/src/stm32f1xx_hal_tim.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_TIM_EX drivers/src/stm32f1xx_hal_tim_ex.c)
@@ -61,4 +63,3 @@ zephyr_library_sources_ifdef(CONFIG_USE_STM32_LL_TIM drivers/src/stm32f1xx_ll_ti
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_LL_USART drivers/src/stm32f1xx_ll_usart.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_LL_USB drivers/src/stm32f1xx_ll_usb.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_LL_UTILS drivers/src/stm32f1xx_ll_utils.c)
-

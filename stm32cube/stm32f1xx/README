@@ -6,7 +6,7 @@ Origin:
    http://www.st.com/en/embedded-software/stm32cubef1.html
 
 Status:
-   version 1.8.0
+   version v1.8.2
 
 Purpose:
    ST Microelectronics official MCU package for STM32F1 series.
@@ -20,10 +20,10 @@ Dependencies:
     None.
 
 URL:
-   http://www.st.com/en/embedded-software/stm32cubef1.html
+   https://github.com/STMicroelectronics/STM32CubeF1
 
-commit:
-   version 1.8.0
+Commit:
+   003dfc9e6c2e424c19a25df3934afaf7fce660d6
 
 Maintained-by:
    External
@@ -36,14 +36,6 @@ License Link:
 
 Patch List:
 
-    *Extend public SetFlashLatency API to all families
-     The LL_SetFlashLatency public API is now defined for families
-     beyond G4, L4 and L5. The private function has been made public.
-    Impacted files:
-     drivers/include/stm32f1xx_ll_utils.h
-     drivers/src/stm32f1xx_ll_utils.c
-    ST Bug tracker ID: 76118
-
    *Changes from official delivery:
     -dos2unix applied
     -trailing white spaces removed
@@ -55,3 +47,5 @@ Patch List:
      Impacted files:
       drivers/include/stm32f1xx_hal_conf.h
      ST Bug tracker ID: NA. Not a stm32cube issue
+
+   See release_note.html from STM32Cube
