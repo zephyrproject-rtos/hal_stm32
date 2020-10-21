@@ -1934,6 +1934,12 @@
 				bias-pull-up;
 			};
 
+			/* USB_OTG_HS */
+
+			usb_otg_hs_sof_pa8: usb_otg_hs_sof_pa8 {
+				pinmux = <STM32_PINMUX('A', 8, AF10)>;
+			};
+
 		};
 	};
 };

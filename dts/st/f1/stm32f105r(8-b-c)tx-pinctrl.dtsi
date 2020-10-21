@@ -754,6 +754,28 @@
 				pinmux = <STM32F1_PINMUX('C', 12, ALTERNATE, NO_REMAP)>;
 			};
 
+			/* USB_OTG_FS */
+
+			usb_otg_fs_sof_pa8: usb_otg_fs_sof_pa8 {
+				pinmux = <STM32F1_PINMUX('A', 8, GPIO_IN, NO_REMAP)>;
+			};
+
+			usb_otg_fs_vbus_pa9: usb_otg_fs_vbus_pa9 {
+				pinmux = <STM32F1_PINMUX('A', 9, GPIO_IN, NO_REMAP)>;
+			};
+
+			usb_otg_fs_id_pa10: usb_otg_fs_id_pa10 {
+				pinmux = <STM32F1_PINMUX('A', 10, GPIO_IN, NO_REMAP)>;
+			};
+
+			usb_otg_fs_dm_pa11: usb_otg_fs_dm_pa11 {
+				pinmux = <STM32F1_PINMUX('A', 11, GPIO_IN, NO_REMAP)>;
+			};
+
+			usb_otg_fs_dp_pa12: usb_otg_fs_dp_pa12 {
+				pinmux = <STM32F1_PINMUX('A', 12, GPIO_IN, NO_REMAP)>;
+			};
+
 		};
 	};
 };

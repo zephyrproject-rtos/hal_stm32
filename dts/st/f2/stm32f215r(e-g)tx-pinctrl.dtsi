@@ -785,23 +785,90 @@
 				bias-pull-up;
 			};
 
-			/* USB_OTG_FS_DM */
+			/* USB_OTG_FS */
+
+			usb_otg_fs_sof_pa8: usb_otg_fs_sof_pa8 {
+				pinmux = <STM32_PINMUX('A', 8, AF10)>;
+			};
+
+			usb_otg_fs_id_pa10: usb_otg_fs_id_pa10 {
+				pinmux = <STM32_PINMUX('A', 10, AF10)>;
+			};
 
 			usb_otg_fs_dm_pa11: usb_otg_fs_dm_pa11 {
 				pinmux = <STM32_PINMUX('A', 11, AF10)>;
 			};
 
-			/* USB_OTG_FS_DP */
-
 			usb_otg_fs_dp_pa12: usb_otg_fs_dp_pa12 {
 				pinmux = <STM32_PINMUX('A', 12, AF10)>;
 			};
 
-			/* USB_OTG_FS_ID */
+			/* USB_OTG_HS */
 
-			usb_otg_fs_id_pa10: usb_otg_fs_id_pa10 {
-				pinmux = <STM32_PINMUX('A', 10, AF10)>;
-				bias-pull-up;
+			usb_otg_hs_sof_pa4: usb_otg_hs_sof_pa4 {
+				pinmux = <STM32_PINMUX('A', 4, AF12)>;
+			};
+
+			usb_otg_hs_id_pb12: usb_otg_hs_id_pb12 {
+				pinmux = <STM32_PINMUX('B', 12, AF12)>;
+			};
+
+			usb_otg_hs_vbus_pb13: usb_otg_hs_vbus_pb13 {
+				pinmux = <STM32_PINMUX('B', 13, AF12)>;
+			};
+
+			usb_otg_hs_dm_pb14: usb_otg_hs_dm_pb14 {
+				pinmux = <STM32_PINMUX('B', 14, AF12)>;
+			};
+
+			usb_otg_hs_dp_pb15: usb_otg_hs_dp_pb15 {
+				pinmux = <STM32_PINMUX('B', 15, AF12)>;
+			};
+
+			/* USB_OTG_HS_ULPI */
+
+			usb_otg_hs_ulpi_d0_pa3: usb_otg_hs_ulpi_d0_pa3 {
+				pinmux = <STM32_PINMUX('A', 3, AF10)>;
+			};
+
+			usb_otg_hs_ulpi_d1_pb0: usb_otg_hs_ulpi_d1_pb0 {
+				pinmux = <STM32_PINMUX('B', 0, AF10)>;
+			};
+
+			usb_otg_hs_ulpi_d2_pb1: usb_otg_hs_ulpi_d2_pb1 {
+				pinmux = <STM32_PINMUX('B', 1, AF10)>;
+			};
+
+			usb_otg_hs_ulpi_d7_pb5: usb_otg_hs_ulpi_d7_pb5 {
+				pinmux = <STM32_PINMUX('B', 5, AF10)>;
+			};
+
+			usb_otg_hs_ulpi_d3_pb10: usb_otg_hs_ulpi_d3_pb10 {
+				pinmux = <STM32_PINMUX('B', 10, AF10)>;
+			};
+
+			usb_otg_hs_ulpi_d4_pb11: usb_otg_hs_ulpi_d4_pb11 {
+				pinmux = <STM32_PINMUX('B', 11, AF10)>;
+			};
+
+			usb_otg_hs_ulpi_d5_pb12: usb_otg_hs_ulpi_d5_pb12 {
+				pinmux = <STM32_PINMUX('B', 12, AF10)>;
+			};
+
+			usb_otg_hs_ulpi_d6_pb13: usb_otg_hs_ulpi_d6_pb13 {
+				pinmux = <STM32_PINMUX('B', 13, AF10)>;
+			};
+
+			usb_otg_hs_ulpi_stp_pc0: usb_otg_hs_ulpi_stp_pc0 {
+				pinmux = <STM32_PINMUX('C', 0, AF10)>;
+			};
+
+			usb_otg_hs_ulpi_dir_pc2: usb_otg_hs_ulpi_dir_pc2 {
+				pinmux = <STM32_PINMUX('C', 2, AF10)>;
+			};
+
+			usb_otg_hs_ulpi_nxt_pc3: usb_otg_hs_ulpi_nxt_pc3 {
+				pinmux = <STM32_PINMUX('C', 3, AF10)>;
 			};
 
 		};

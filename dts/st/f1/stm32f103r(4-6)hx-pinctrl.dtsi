@@ -482,6 +482,16 @@
 				pinmux = <STM32F1_PINMUX('A', 2, ALTERNATE, NO_REMAP)>;
 			};
 
+			/* USB */
+
+			usb_dm_pa11: usb_dm_pa11 {
+				pinmux = <STM32F1_PINMUX('A', 11, GPIO_IN, NO_REMAP)>;
+			};
+
+			usb_dp_pa12: usb_dp_pa12 {
+				pinmux = <STM32F1_PINMUX('A', 12, GPIO_IN, NO_REMAP)>;
+			};
+
 		};
 	};
 };
