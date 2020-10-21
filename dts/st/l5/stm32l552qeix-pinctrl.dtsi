@@ -1216,6 +1216,24 @@
 				bias-pull-up;
 			};
 
+			/* USB */
+
+			usb_dm_pa11: usb_dm_pa11 {
+				pinmux = <STM32_PINMUX('A', 11, AF10)>;
+			};
+
+			usb_dp_pa12: usb_dp_pa12 {
+				pinmux = <STM32_PINMUX('A', 12, AF10)>;
+			};
+
+			usb_noe_pa13: usb_noe_pa13 {
+				pinmux = <STM32_PINMUX('A', 13, AF10)>;
+			};
+
+			usb_noe_pc9: usb_noe_pc9 {
+				pinmux = <STM32_PINMUX('C', 9, AF10)>;
+			};
+
 		};
 	};
 };
