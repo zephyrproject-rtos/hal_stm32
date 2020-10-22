@@ -56,10 +56,8 @@ parser.add_argument(
 args = parser.parse_args()
 
 
-########################
-# Update all STM32Cubes
-#
 def update_cubes():
+    """Update all STM32Cubes"""
     module_path = (
         Path(os.getenv("ZEPHYR_BASE")).absolute()
         / r".."
