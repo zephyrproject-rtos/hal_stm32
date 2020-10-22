@@ -40,4 +40,7 @@ Patch List:
     -dos2unix applied
     -trailing white spaces removed
 
+   *Remove any reference to i2s in stm32wbxx_hal_conf.h
+    This is a know issue which will be fixed in V1.10.0
+
    See release_note.html from STM32Cube
