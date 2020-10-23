@@ -164,34 +164,42 @@
 
 			i2s1_ck_pa5: i2s1_ck_pa5 {
 				pinmux = <STM32_PINMUX('A', 5, AF5)>;
+				slew-rate = "very-high-speed";
 			};
 
 			i2s1_ck_pa12: i2s1_ck_pa12 {
 				pinmux = <STM32_PINMUX('A', 12, AF6)>;
+				slew-rate = "very-high-speed";
 			};
 
 			i2s1_ck_pb3: i2s1_ck_pb3 {
 				pinmux = <STM32_PINMUX('B', 3, AF5)>;
+				slew-rate = "very-high-speed";
 			};
 
 			i2s2_ck_pa8: i2s2_ck_pa8 {
 				pinmux = <STM32_PINMUX('A', 8, AF5)>;
+				slew-rate = "very-high-speed";
 			};
 
 			i2s2_ck_pb8: i2s2_ck_pb8 {
 				pinmux = <STM32_PINMUX('B', 8, AF5)>;
+				slew-rate = "very-high-speed";
 			};
 
 			i2s2_ck_pd8: i2s2_ck_pd8 {
 				pinmux = <STM32_PINMUX('D', 8, AF5)>;
+				slew-rate = "very-high-speed";
 			};
 
 			i2s3_ck_pa1: i2s3_ck_pa1 {
 				pinmux = <STM32_PINMUX('A', 1, AF6)>;
+				slew-rate = "very-high-speed";
 			};
 
 			i2s3_ck_pb3: i2s3_ck_pb3 {
 				pinmux = <STM32_PINMUX('B', 3, AF6)>;
+				slew-rate = "very-high-speed";
 			};
 
 			/* I2S_SD */
