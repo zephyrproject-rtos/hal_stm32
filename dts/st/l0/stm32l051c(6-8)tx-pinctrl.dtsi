@@ -108,6 +108,7 @@
 
 			i2s2_ck_pb13: i2s2_ck_pb13 {
 				pinmux = <STM32_PINMUX('B', 13, AF0)>;
+				slew-rate = "very-high-speed";
 			};
 
 			/* I2S_SD */
