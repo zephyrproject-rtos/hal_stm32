@@ -171,6 +171,7 @@
 - name: I2S_CK
   match: "^I2S\\d+_CK$"
   mode: alternate
+  slew-rate: very-high-speed
 
 - name: I2S_WS
   match: "^I2S\\d+_WS$"
