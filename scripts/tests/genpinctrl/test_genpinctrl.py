@@ -26,10 +26,10 @@ def test_validate_config_entry():
     with pytest.raises(ValueError):
         validate_config_entry(entry, "")
 
-    # no mode
+    # no mode: F1 error only
     entry = {"name": "TEST", "match": "TEST"}
     with pytest.raises(ValueError):
-        validate_config_entry(entry, "")
+        validate_config_entry(entry, "STM32F1")
 
     # invalid mode
     entry = {"name": "TEST", "match": "TEST"}
@@ -209,7 +209,7 @@ def test_get_mcu_signals(cubemx):
                             {"name": "UART1_TX", "af": 2},
                             {"name": "UART1_TX", "af": 3},
                             {"name": "UART1_RX", "af": 1},
-                            {"name": "ADC1_IN0", "af": None},
+                            {"name": "ADC1_IN0", "af": 0},
                             {"name": "I2C2_SCL", "af": 0},
                         ],
                     },
