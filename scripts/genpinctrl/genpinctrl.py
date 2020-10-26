@@ -80,15 +80,15 @@ def validate_config_entry(entry, family):
     if not entry.get("match"):
         raise ValueError(f"Missing entry match for {entry['name']}")
 
-    if not entry.get("mode"):
-        raise ValueError(f"Missing entry mode for {entry['name']}")
-
     if family == "STM32F1":
+        if not entry.get("mode"):
+            raise ValueError(f"Missing entry mode for {entry['name']}")
         if entry["mode"] not in ("analog", "input", "alternate"):
             raise ValueError(f"Invalid mode for {entry['name']}: {entry['mode']}")
     else:
-        if entry["mode"] not in ("analog", "alternate"):
-            raise ValueError(f"Invalid mode for {entry['name']}: {entry['mode']}")
+        if entry.get("mode"):
+            if entry["mode"] not in ("analog", "alternate"):
+                raise ValueError(f"Invalid mode for {entry['name']}: {entry['mode']}")
 
     if entry.get("bias"):
         if entry["bias"] not in ("disable", "pull-up", "pull-down"):
@@ -418,11 +418,7 @@ def get_mcu_signals(cube_path, gpio_ip_afs):
                 if signal_name is None:
                     continue
 
-                if re.match(r"^ADC(?:\d+)?_IN[NP]?\d+$", signal_name) or re.match(
-                    r"^DAC(?:\d+)?_OUT\d+$", signal_name
-                ):
-                    found_afs = [None]
-                elif signal_name in pin_afs:
+                if signal_name in pin_afs:
                     pin_af = pin_afs[signal_name]
                     if not isinstance(pin_af, list):
                         pin_af = [pin_af]
@@ -430,8 +426,9 @@ def get_mcu_signals(cube_path, gpio_ip_afs):
                 # STM32F1: assume NO_REMAP (af=0) if signal is not listed in pin_afs
                 elif family == "STM32F1":
                     found_afs = [0]
+                # Non STM32F1: No alternate function found, mode is analog
                 else:
-                    continue
+                    found_afs = [None]
 
                 for af in found_afs:
                     pin_signals.append({"name": signal_name, "af": af})
@@ -507,13 +504,24 @@ def main(cube_path, output):
                         if af["name"] not in entries:
                             entries[af["name"]] = list()
 
+                        # Define the signal mode using, by priority order:
+                        # 1- the config mode (ie: "af["mode"]")
+                        # 2- the inferred mode (an alternate function was found)
+                        if af.get("mode") or family == "STM32F1":
+                            signal["mode"] = af["mode"]
+                        else:
+                            if signal["af"] is not None:
+                                signal["mode"] = "alternate"
+                            else:
+                                signal["mode"] = "analog"
+
                         entries[af["name"]].append(
                             {
                                 "port": pin["port"],
                                 "pin": pin["pin"],
                                 "signal": signal["name"].lower(),
                                 "af": signal["af"],
-                                "mode": af["mode"],
+                                "mode": signal["mode"],
                                 "drive": af.get("drive"),
                                 "bias": af.get("bias"),
                                 "slew-rate": af.get("slew-rate"),
