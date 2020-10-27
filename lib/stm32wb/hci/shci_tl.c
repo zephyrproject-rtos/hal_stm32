@@ -6,11 +6,11 @@
  ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics. 
+  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the 
+  * the "License"; You may not use this file except in compliance with the
   * License. You may obtain a copy of the License at:
   *                        opensource.org/licenses/BSD-3-Clause
   *
@@ -23,31 +23,7 @@
 
 #include "stm_list.h"
 #include "shci_tl.h"
-
-/**
- * These traces are not yet supported in an usual way in the delivery package
- * They can enabled by adding the definition of TL_SHCI_CMD_DBG_EN and/or TL_SHCI_EVT_DBG_EN in the preprocessor option in the IDE
- */
-#if ( (TL_SHCI_CMD_DBG_EN != 0) || (TL_SHCI_EVT_DBG_EN != 0) )
-#include "app_conf.h"
-#include "dbg_trace.h"
-#endif
-
-#if (TL_SHCI_CMD_DBG_EN != 0)
-#define TL_SHCI_CMD_DBG_MSG             PRINT_MESG_DBG
-#define TL_SHCI_CMD_DBG_BUF             PRINT_LOG_BUFF_DBG
-#else
-#define TL_SHCI_CMD_DBG_MSG(...)
-#define TL_SHCI_CMD_DBG_BUF(...)
-#endif
-
-#if (TL_SHCI_EVT_DBG_EN != 0)
-#define TL_SHCI_EVT_DBG_MSG             PRINT_MESG_DBG
-#define TL_SHCI_EVT_DBG_BUF             PRINT_LOG_BUFF_DBG
-#else
-#define TL_SHCI_EVT_DBG_MSG(...)
-#define TL_SHCI_EVT_DBG_BUF(...)
-#endif
+#include "tl_dbg_conf.h"
 
 /* Private typedef -----------------------------------------------------------*/
 typedef enum
@@ -356,5 +332,3 @@ __WEAK void shci_cmd_resp_release(uint32_t flag)
 
   return;
 }
-
-
