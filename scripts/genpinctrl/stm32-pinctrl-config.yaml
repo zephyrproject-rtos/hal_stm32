@@ -209,10 +209,9 @@
   mode: alternate
   bias: pull-up
 
-- name: TIM_CH_PWM / TIM_CHN_PWM
+- name: TIM_CH / TIM_CHN
   match: "^TIM\\d+_CH\\d+N?$"
   mode: alternate
-  variant: pwm
 
 - name: UART_CTS / USART_CTS / LPUART_CTS
   match: "^(?:LP)?US?ART\\d+_CTS$"
