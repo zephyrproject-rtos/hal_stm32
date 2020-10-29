@@ -84,25 +84,25 @@
 				slew-rate = "very-high-speed";
 			};
 
-			/* TIM_CH_PWM / TIM_CHN_PWM */
+			/* TIM_CH / TIM_CHN */
 
-			tim21_ch2_pwm_pa9: tim21_ch2_pwm_pa9 {
+			tim21_ch2_pa9: tim21_ch2_pa9 {
 				pinmux = <STM32_PINMUX('A', 9, AF5)>;
 			};
 
-			tim21_ch1_pwm_pa10: tim21_ch1_pwm_pa10 {
+			tim21_ch1_pa10: tim21_ch1_pa10 {
 				pinmux = <STM32_PINMUX('A', 10, AF0)>;
 			};
 
-			tim2_ch1_pwm_pa0: tim2_ch1_pwm_pa0 {
+			tim2_ch1_pa0: tim2_ch1_pa0 {
 				pinmux = <STM32_PINMUX('A', 0, AF2)>;
 			};
 
-			tim2_ch2_pwm_pa1: tim2_ch2_pwm_pa1 {
+			tim2_ch2_pa1: tim2_ch2_pa1 {
 				pinmux = <STM32_PINMUX('A', 1, AF2)>;
 			};
 
-			tim2_ch3_pwm_pa10: tim2_ch3_pwm_pa10 {
+			tim2_ch3_pa10: tim2_ch3_pa10 {
 				pinmux = <STM32_PINMUX('A', 10, AF5)>;
 			};
 
