@@ -132,6 +132,12 @@
 - name: FDCAN_TX
   match: "^FDCAN\\d+_TX$"
 
+- name: FMC
+  match: "^FMC_(?:NL|NADV|CLK|NBL[0-3]|A\\d+|D\\d+|NE[1-4]|NOE|NWE|NWAIT|NCE|INT|SDCLK|SDNWE|SDCKE[0-1]|SDNE[0-1]|SDNRAS|SDNCAS)$"
+  mode: alternate
+  bias: pull-up
+  slew-rate: very-high-speed
+
 - name: I2C_SCL
   match: "^I2C\\d+_SCL$"
   drive: open-drain
