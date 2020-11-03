@@ -1698,8 +1698,20 @@
 				pinmux = <STM32_PINMUX('A', 8, AF10)>;
 			};
 
+			usb_otg_hs_vbus_pa9: usb_otg_hs_vbus_pa9 {
+				pinmux = <STM32_PINMUX('A', 9, ANALOG)>;
+			};
+
 			usb_otg_hs_id_pa10: usb_otg_hs_id_pa10 {
 				pinmux = <STM32_PINMUX('A', 10, AF10)>;
+			};
+
+			usb_otg_hs_dm_pa11: usb_otg_hs_dm_pa11 {
+				pinmux = <STM32_PINMUX('A', 11, ANALOG)>;
+			};
+
+			usb_otg_hs_dp_pa12: usb_otg_hs_dp_pa12 {
+				pinmux = <STM32_PINMUX('A', 12, ANALOG)>;
 			};
 
 			/* USB_OTG_HS_ULPI */

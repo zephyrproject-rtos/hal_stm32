@@ -852,6 +852,18 @@
 				drive-open-drain;
 			};
 
+			uart4_cts_pb7: uart4_cts_pb7 {
+				pinmux = <STM32_PINMUX('B', 7, ANALOG)>;
+				bias-pull-up;
+				drive-open-drain;
+			};
+
+			uart5_cts_pb5: uart5_cts_pb5 {
+				pinmux = <STM32_PINMUX('B', 5, ANALOG)>;
+				bias-pull-up;
+				drive-open-drain;
+			};
+
 			/* UART_RTS / USART_RTS / LPUART_RTS */
 
 			usart1_rts_pa12: usart1_rts_pa12 {

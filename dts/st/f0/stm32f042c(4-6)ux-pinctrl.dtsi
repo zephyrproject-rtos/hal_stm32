@@ -106,6 +106,12 @@
 				drive-open-drain;
 			};
 
+			i2c1_scl_pb13: i2c1_scl_pb13 {
+				pinmux = <STM32_PINMUX('B', 13, ANALOG)>;
+				bias-pull-up;
+				drive-open-drain;
+			};
+
 			i2c1_scl_pf1: i2c1_scl_pf1 {
 				pinmux = <STM32_PINMUX('F', 1, AF1)>;
 				bias-pull-up;
@@ -140,6 +146,12 @@
 
 			i2c1_sda_pb11: i2c1_sda_pb11 {
 				pinmux = <STM32_PINMUX('B', 11, AF1)>;
+				bias-pull-up;
+				drive-open-drain;
+			};
+
+			i2c1_sda_pb14: i2c1_sda_pb14 {
+				pinmux = <STM32_PINMUX('B', 14, ANALOG)>;
 				bias-pull-up;
 				drive-open-drain;
 			};
@@ -470,6 +482,14 @@
 
 			usb_noe_pa4: usb_noe_pa4 {
 				pinmux = <STM32_PINMUX('A', 4, AF2)>;
+			};
+
+			usb_dm_pa11: usb_dm_pa11 {
+				pinmux = <STM32_PINMUX('A', 11, ANALOG)>;
+			};
+
+			usb_dp_pa12: usb_dp_pa12 {
+				pinmux = <STM32_PINMUX('A', 12, ANALOG)>;
 			};
 
 			usb_noe_pa13: usb_noe_pa13 {
