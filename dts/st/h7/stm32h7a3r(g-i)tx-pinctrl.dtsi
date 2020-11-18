@@ -236,12 +236,6 @@
 				drive-open-drain;
 			};
 
-			i2c2_scl_pb10: i2c2_scl_pb10 {
-				pinmux = <STM32_PINMUX('B', 10, AF4)>;
-				bias-pull-up;
-				drive-open-drain;
-			};
-
 			i2c3_scl_pa8: i2c3_scl_pa8 {
 				pinmux = <STM32_PINMUX('A', 8, AF4)>;
 				bias-pull-up;
