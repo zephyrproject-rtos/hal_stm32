@@ -64,10 +64,6 @@
 				pinmux = <STM32_PINMUX('B', 2, ANALOG)>;
 			};
 
-			adc1_in11_pb7: adc1_in11_pb7 {
-				pinmux = <STM32_PINMUX('B', 7, ANALOG)>;
-			};
-
 			adc1_in11_pb10: adc1_in11_pb10 {
 				pinmux = <STM32_PINMUX('B', 10, ANALOG)>;
 			};

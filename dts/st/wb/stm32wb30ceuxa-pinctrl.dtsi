@@ -111,11 +111,6 @@
 
 			/* SPI_MOSI */
 
-			spi1_mosi_pa5: spi1_mosi_pa5 {
-				pinmux = <STM32_PINMUX('A', 5, AF4)>;
-				bias-pull-down;
-			};
-
 			spi1_mosi_pa7: spi1_mosi_pa7 {
 				pinmux = <STM32_PINMUX('A', 7, AF5)>;
 				bias-pull-down;
@@ -123,11 +118,6 @@
 
 			spi1_mosi_pa12: spi1_mosi_pa12 {
 				pinmux = <STM32_PINMUX('A', 12, AF5)>;
-				bias-pull-down;
-			};
-
-			spi1_mosi_pa13: spi1_mosi_pa13 {
-				pinmux = <STM32_PINMUX('A', 13, AF5)>;
 				bias-pull-down;
 			};
 
@@ -143,11 +133,6 @@
 				bias-pull-up;
 			};
 
-			spi1_nss_pa14: spi1_nss_pa14 {
-				pinmux = <STM32_PINMUX('A', 14, AF5)>;
-				bias-pull-up;
-			};
-
 			spi1_nss_pa15: spi1_nss_pa15 {
 				pinmux = <STM32_PINMUX('A', 15, AF5)>;
 				bias-pull-up;
@@ -155,11 +140,6 @@
 
 			spi1_nss_pb2: spi1_nss_pb2 {
 				pinmux = <STM32_PINMUX('B', 2, AF5)>;
-				bias-pull-up;
-			};
-
-			spi1_nss_pb6: spi1_nss_pb6 {
-				pinmux = <STM32_PINMUX('B', 6, AF5)>;
 				bias-pull-up;
 			};
 

@@ -5,7 +5,7 @@ Origin:
    Generated
 
 Status:
-   Generated using CubeMX 5.6.1
+   Generated using CubeMX 6.1.0
 
 Purpose:
    SoC package specific -pintrl.dtsi files
@@ -32,7 +32,7 @@ URL:
    https://www.st.com/en/development-tools/stm32cubemx.html
 
 Commit:
-   Version 5.6.1
+   Version 6.1.0
 
 Maintained-by:
    External

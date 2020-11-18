@@ -459,12 +459,6 @@
 				drive-open-drain;
 			};
 
-			lpuart1_rts_pb1: lpuart1_rts_pb1 {
-				pinmux = <STM32_PINMUX('B', 1, AF8)>;
-				bias-pull-up;
-				drive-open-drain;
-			};
-
 			usart1_rts_pb3: usart1_rts_pb3 {
 				pinmux = <STM32_PINMUX('B', 3, AF7)>;
 				bias-pull-up;
