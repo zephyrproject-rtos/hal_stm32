@@ -5,7 +5,7 @@ Origin:
    Generated
 
 Status:
-   Generated using CubeMX 6.1.0
+   Generated using STM32 Open Pin Data
 
 Purpose:
    SoC package specific -pintrl.dtsi files
@@ -13,26 +13,25 @@ Purpose:
 Description:
    This directory contains *-pcintrl.dtsi files generated using generation
    script (available under scripts/genpinctrl) along with inputs from
-   STM32CubeMx database.
+   STM32 Open Pin Data database.
    Each file matches a STM32 SoC package and contains, for each pin of the
    package the exhaustive list of pinctrl configurations depending on its
    capabilities and the various pin configurations described in
    scripts/genpinctrl/stm32*-pinctrl-config.yaml files.
    New set of files could be generated based on:
-   - new version of CubeMX
+   - new version of STM32 Open Pin Data
    - new version of stm32*-pinctrl-config.yaml files
 
 Dependencies:
-    * Official ST CubeMX tool. Only mcu database delivered with the tool is
-      used (STM32CubeMX/db/mcu).
+    * STM32 Open Pin Data
     * Generation script available in current repo under scripts/genpinctrl
       and configuration files.
 
 URL:
-   https://www.st.com/en/development-tools/stm32cubemx.html
+   https://github.com/STMicroelectronics/STM32_open_pin_data
 
 Commit:
-   Version 6.1.0
+   ad799fa8fb84bcaf28aff35110f42451c044b998
 
 Maintained-by:
    External
