@@ -3,7 +3,8 @@ Utility to autogenerate Zephyr DT pinctrl files for all STM32 microcontrollers.
 
 Usage::
 
-    python3 genpinctrl.py [-p /path/to/STM32CubeMX] [-o /path/to/output_dir]
+    python3 genpinctrl.py -p /path/to/stm32-open-pin-data-repository
+                          [-o /path/to/output_dir]
 
 Copyright (c) 2020 Teslabs Engineering S.L.
 
@@ -16,6 +17,7 @@ import logging
 from pathlib import Path
 import re
 import shutil
+from subprocess import check_output
 import xml.etree.ElementTree as ET
 
 from jinja2 import Environment, FileSystemLoader
@@ -37,10 +39,13 @@ CONFIG_FILE = SCRIPT_DIR / "stm32-pinctrl-config.yaml"
 CONFIG_F1_FILE = SCRIPT_DIR / "stm32f1-pinctrl-config.yaml"
 """Configuration file for F1 series."""
 
-TEMPLATE_FILE = "pinctrl-template.j2"
+PINCTRL_TEMPLATE = "pinctrl-template.j2"
 """pinctrl template file."""
 
-NS = "{http://mcd.rou.st.com/modules.php?name=mcu}"
+README_TEMPLATE = "readme-template.j2"
+"""Readme template file."""
+
+NS = "{http://dummy.com}"
 """MCU XML namespace."""
 
 PINCTRL_ADDRESSES = {
@@ -190,7 +195,7 @@ def format_remap(remap):
     raise ValueError(f"Unsupported remap: {remap}")
 
 
-def get_gpio_ip_afs(cube_path):
+def get_gpio_ip_afs(data_path):
     """Obtain all GPIO IP alternate functions.
 
     Example output::
@@ -221,13 +226,13 @@ def get_gpio_ip_afs(cube_path):
         F1 series AF number corresponds to remap numbers.
 
     Args:
-        cube_path: Path to CubeMX package.
+        data_path: STM32 Open Pin Data repository path.
 
     Returns:
         Dictionary of alternate functions.
     """
 
-    ip_path = cube_path / "db" / "mcu" / "IP"
+    ip_path = data_path / "mcu" / "IP"
     if not ip_path.exists():
         raise FileNotFoundError(f"IP DB folder '{ip_path}' does not exist")
 
@@ -301,7 +306,7 @@ def get_gpio_ip_afs(cube_path):
     return results
 
 
-def get_mcu_signals(cube_path, gpio_ip_afs):
+def get_mcu_signals(data_path, gpio_ip_afs):
     """Obtain all MCU signals.
 
     Example output::
@@ -334,14 +339,14 @@ def get_mcu_signals(cube_path, gpio_ip_afs):
         }
 
     Args:
-        cube_path: Path to CubeMX.
+        data_path: STM32 Open Pin Data repository path.
         gpio_ip_afs: GPIO IP alternate functions.
 
     Returns:
         Dictionary with all MCU signals.
     """
 
-    mcus_path = cube_path / "db" / "mcu"
+    mcus_path = data_path / "mcu"
     if not mcus_path.exists():
         raise FileNotFoundError(f"MCU DB folder '{mcus_path}' does not exist")
 
@@ -436,11 +441,11 @@ def get_mcu_signals(cube_path, gpio_ip_afs):
     return results
 
 
-def main(cube_path, output):
+def main(data_path, output):
     """Entry point.
 
     Args:
-        cube_path: CubeMX path.
+        data_path: STM32 Open Pin Data repository path.
         output: Output directory.
     """
 
@@ -456,18 +461,15 @@ def main(cube_path, output):
     env.filters["format_mode"] = format_mode
     env.filters["format_mode_f1"] = format_mode_f1
     env.filters["format_remap"] = format_remap
-    template = env.get_template(TEMPLATE_FILE)
+    pinctrl_template = env.get_template(PINCTRL_TEMPLATE)
+    readme_template = env.get_template(README_TEMPLATE)
 
-    gpio_ip_afs = get_gpio_ip_afs(cube_path)
-    mcu_signals = get_mcu_signals(cube_path, gpio_ip_afs)
+    gpio_ip_afs = get_gpio_ip_afs(data_path)
+    mcu_signals = get_mcu_signals(data_path, gpio_ip_afs)
 
     if output.exists():
-        for entry in output.iterdir():
-            # Remove directories, ignore files (README)
-            if entry.is_dir():
-                shutil.rmtree(entry)
-    else:
-        output.mkdir(parents=True)
+        shutil.rmtree(output)
+    output.mkdir(parents=True)
 
     for family, refs in mcu_signals.items():
         # obtain family pinctrl address
@@ -477,9 +479,9 @@ def main(cube_path, output):
             continue
 
         # create directory for each family
-        family_dir = output / family.lower()[5:]
+        family_dir = output / "st" / family.lower()[5:]
         if not family_dir.exists():
-            family_dir.mkdir()
+            family_dir.mkdir(parents=True)
 
         # process each reference
         for ref in refs:
@@ -550,28 +552,34 @@ def main(cube_path, output):
             ref_file = family_dir / (ref["name"].lower() + "-pinctrl.dtsi")
             with open(ref_file, "w") as f:
                 f.write(
-                    template.render(
+                    pinctrl_template.render(
                         family=family, pinctrl_addr=pinctrl_addr, entries=entries
                     )
                 )
+
+    # write readme file
+    commit_raw = check_output(["git", "rev-parse", "HEAD"], cwd=data_path)
+    commit = commit_raw.decode("utf-8").strip()
+    with open(output / "README.md", "w") as f:
+        f.write(readme_template.render(commit=commit))
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "-p",
-        "--cube-path",
+        "--data-path",
         type=Path,
-        default=Path.home() / "STM32CubeMX",
-        help="CubeMX path",
+        required=True,
+        help="Path to STM32 Open Pin Data repository",
     )
     parser.add_argument(
         "-o",
         "--output",
         type=Path,
-        default=REPO_ROOT / "dts" / "st",
+        default=REPO_ROOT / "dts",
         help="Output directory",
     )
     args = parser.parse_args()
 
-    main(args.cube_path, args.output)
+    main(args.data_path, args.output)
