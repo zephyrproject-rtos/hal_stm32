@@ -15,6 +15,6 @@ def data():
 
 
 @pytest.fixture()
-def cubemx(data):
-    """Pytest fixture to load test CubeMX files"""
-    return data / "cubemx"
+def pindata(data):
+    """Pytest fixture to load test STM32 Open Pin Data files"""
+    return data / "pindata"
