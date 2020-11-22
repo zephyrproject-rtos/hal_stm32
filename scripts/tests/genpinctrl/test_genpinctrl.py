@@ -154,10 +154,12 @@ def test_format_remap():
         format_remap(5)
 
 
-def test_get_gpio_ip_afs(cubemx):
-    """Test that IP AF files part of test CubeMX files are parsed correctly."""
+def test_get_gpio_ip_afs(pindata):
+    """Test that IP AF files part of test STM32 Open Pin Data files are parsed
+       correctly.
+    """
 
-    afs = get_gpio_ip_afs(cubemx)
+    afs = get_gpio_ip_afs(pindata)
     assert afs == {
         "STM32F0TESTIP": {
             "PA0": {
@@ -174,11 +176,11 @@ def test_get_gpio_ip_afs(cubemx):
     }
 
 
-def test_get_mcu_signals(cubemx):
-    """Test that MCU files part of test CubeMX are parsed correctly."""
+def test_get_mcu_signals(pindata):
+    """Test that MCU files part of test STM32 Open Pin Data are parsed correctly."""
 
-    afs = get_gpio_ip_afs(cubemx)
-    signals = get_mcu_signals(cubemx, afs)
+    afs = get_gpio_ip_afs(pindata)
+    signals = get_mcu_signals(pindata, afs)
     assert signals == {
         "STM32F0": [
             {
@@ -219,8 +221,10 @@ def test_get_mcu_signals(cubemx):
     }
 
 
-def test_cubemx_missing():
-    """Test that missing CubeMX folders is handled correctly by parsing functions."""
+def test_folders_missing():
+    """Test that missing STM32 Open Pin Data folders is handled correctly by
+       parsing functions.
+    """
 
     with pytest.raises(FileNotFoundError):
         get_gpio_ip_afs(Path("MISSING_PATH"))
@@ -229,14 +233,25 @@ def test_cubemx_missing():
         get_mcu_signals(Path("MISSING_PATH"), dict())
 
 
-def test_main(data, cubemx, tmp_path):
+def test_main(data, pindata, tmp_path, mocker):
     """Test that DTS files are generated correctly."""
 
-    main(cubemx, tmp_path)
+    mocker.patch("genpinctrl.check_output", return_value=b"TEST")
+
+    main(pindata, tmp_path)
+
+    # check readme file
+    ref_readme_file = data / "README.md"
+    gen_readme_file = tmp_path / "README.md"
+
+    assert gen_readme_file.exists()
+
+    with open(ref_readme_file) as ref, open(gen_readme_file) as gen:
+        assert ref.read() == gen.read()
 
     # check f0 file
     ref_pinctrl_file = data / "stm32f0testdie-pinctrl.dtsi"
-    gen_pinctrl_file = tmp_path / "f0" / "stm32f0testdie-pinctrl.dtsi"
+    gen_pinctrl_file = tmp_path / "st" / "f0" / "stm32f0testdie-pinctrl.dtsi"
 
     assert gen_pinctrl_file.exists()
 
@@ -245,7 +260,7 @@ def test_main(data, cubemx, tmp_path):
 
     # check f1 file
     ref_pinctrl_file = data / "stm32f1testdie-pinctrl.dtsi"
-    gen_pinctrl_file = tmp_path / "f1" / "stm32f1testdie-pinctrl.dtsi"
+    gen_pinctrl_file = tmp_path / "st" / "f1" / "stm32f1testdie-pinctrl.dtsi"
 
     assert gen_pinctrl_file.exists()
 

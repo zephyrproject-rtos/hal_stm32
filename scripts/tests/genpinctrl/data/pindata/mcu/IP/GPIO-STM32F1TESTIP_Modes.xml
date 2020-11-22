@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<IP xmlns="http://mcd.rou.st.com/modules.php?name=mcu">
+<IP xmlns="http://dummy.com">
     <GPIO_Pin PortName="PA" Name="PA0">
         <!-- Invalid signal (no remaps) -->
         <PinSignal Name="TEST_SIGNAL_INVALID1">
