@@ -134,7 +134,6 @@
 
 - name: FMC
   match: "^FMC_(?:NL|NADV|CLK|NBL[0-3]|A\\d+|D\\d+|NE[1-4]|NOE|NWE|NWAIT|NCE|INT|SDCLK|SDNWE|SDCKE[0-1]|SDNE[0-1]|SDNRAS|SDNCAS)$"
-  mode: alternate
   bias: pull-up
   slew-rate: very-high-speed
 
