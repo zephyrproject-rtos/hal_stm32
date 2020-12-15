@@ -1,5 +1,5 @@
 # Copyright (c) 2018 Endre Karlson <endre.karlson@gmail.com>
-# Copyright (c) 2019 STMicroelectronics.
+# Copyright (c) 2020 STMicroelectronics
 #
 # SPDX-License-Identifier: Apache-2.0
 
@@ -21,15 +21,19 @@ zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_DAC_EX drivers/src/stm32g0xx_h
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_DMA drivers/src/stm32g0xx_hal_dma.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_DMA_EX drivers/src/stm32g0xx_hal_dma_ex.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_EXTI drivers/src/stm32g0xx_hal_exti.c)
+zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_FDCAN drivers/src/stm32g0xx_hal_fdcan.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_FLASH drivers/src/stm32g0xx_hal_flash.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_FLASH_EX drivers/src/stm32g0xx_hal_flash_ex.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_GPIO drivers/src/stm32g0xx_hal_gpio.c)
+zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_HCD drivers/src/stm32g0xx_hal_hcd.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_I2C drivers/src/stm32g0xx_hal_i2c.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_I2C_EX drivers/src/stm32g0xx_hal_i2c_ex.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_I2S drivers/src/stm32g0xx_hal_i2s.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_IRDA drivers/src/stm32g0xx_hal_irda.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_IWDG drivers/src/stm32g0xx_hal_iwdg.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_LPTIM drivers/src/stm32g0xx_hal_lptim.c)
+zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_PCD drivers/src/stm32g0xx_hal_pcd.c)
+zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_PCD_EX drivers/src/stm32g0xx_hal_pcd_ex.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_PWR drivers/src/stm32g0xx_hal_pwr.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_PWR_EX drivers/src/stm32g0xx_hal_pwr_ex.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_RNG drivers/src/stm32g0xx_hal_rng.c)
@@ -50,6 +54,7 @@ zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_WWDG drivers/src/stm32g0xx_hal
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_LL_ADC drivers/src/stm32g0xx_ll_adc.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_LL_COMP drivers/src/stm32g0xx_ll_comp.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_LL_CRC drivers/src/stm32g0xx_ll_crc.c)
+zephyr_library_sources_ifdef(CONFIG_USE_STM32_LL_CRS drivers/src/stm32g0xx_ll_crs.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_LL_DAC drivers/src/stm32g0xx_ll_dac.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_LL_DMA drivers/src/stm32g0xx_ll_dma.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_LL_EXTI drivers/src/stm32g0xx_ll_exti.c)
@@ -65,4 +70,5 @@ zephyr_library_sources_ifdef(CONFIG_USE_STM32_LL_SPI drivers/src/stm32g0xx_ll_sp
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_LL_TIM drivers/src/stm32g0xx_ll_tim.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_LL_UCPD drivers/src/stm32g0xx_ll_ucpd.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_LL_USART drivers/src/stm32g0xx_ll_usart.c)
+zephyr_library_sources_ifdef(CONFIG_USE_STM32_LL_USB drivers/src/stm32g0xx_ll_usb.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_LL_UTILS drivers/src/stm32g0xx_ll_utils.c)
