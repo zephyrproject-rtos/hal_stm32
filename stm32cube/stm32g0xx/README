@@ -39,5 +39,6 @@ Patch List:
    *Changes from official delivery:
     -dos2unix applied
     -trailing white spaces removed
+    -added include guards to stm32g0xx_hal_hcd.h(STM32CubeG0 GH issue: 13)
 
    See release_note.html from STM32Cube
