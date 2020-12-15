@@ -8,6 +8,8 @@
 
 #if defined(CONFIG_SOC_SERIES_STM32F0X)
 #include <stm32f0xx_ll_crs.h>
+#elif defined(CONFIG_SOC_SERIES_STM32G0X)
+#include <stm32g0xx_ll_crs.h>
 #elif defined(CONFIG_SOC_SERIES_STM32G4X)
 #include <stm32g4xx_ll_crs.h>
 #elif defined(CONFIG_SOC_SERIES_STM32H7X)
