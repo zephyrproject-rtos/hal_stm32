@@ -6,7 +6,7 @@ Origin:
    http://www.st.com/en/embedded-software/stm32cubeg0.html
 
 Status:
-   version v1.3.0
+   version v1.4.0
 
 Purpose:
    ST Microelectronics official MCU package for STM32G0 series.
@@ -23,7 +23,7 @@ URL:
    https://github.com/STMicroelectronics/STM32CubeG0
 
 Commit:
-   2447e18b9505b881c926e8d6c6fc60d065d85ebc
+   c6cb8664ae0542c33f81046d735ee9492d5df0f3
 
 Maintained-by:
    External
@@ -36,12 +36,8 @@ License Link:
 
 Patch List:
 
-    *Extend public SetFlashLatency API to all families
-     The LL_SetFlashLatency public API is now defined for families
-     beyond G4, L4 and L5. The private function has been made public.
-    Impacted files:
-     drivers/include/stm32g0xx_ll_utils.h
-     drivers/src/stm32g0xx_ll_utils.c
-    ST Bug tracker ID: 76033
+   *Changes from official delivery:
+    -dos2unix applied
+    -trailing white spaces removed
 
    See release_note.html from STM32Cube

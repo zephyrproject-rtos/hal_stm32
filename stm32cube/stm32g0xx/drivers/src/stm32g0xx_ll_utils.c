@@ -368,49 +368,67 @@ ErrorStatus LL_PLL_ConfigSystemClock_HSE(uint32_t HSEFrequency, uint32_t HSEBypa
 
 /**
   * @brief  Update number of Flash wait states in line with new frequency and current
-            voltage range.
-  * @param  HCLK_Frequency  HCLK frequency
+  *         voltage range.
+  * @param  HCLKFrequency  HCLK frequency
   * @retval An ErrorStatus enumeration value:
   *          - SUCCESS: Latency has been modified
   *          - ERROR: Latency cannot be modified
   */
-ErrorStatus LL_SetFlashLatency(uint32_t HCLK_Frequency)
+ErrorStatus LL_SetFlashLatency(uint32_t HCLKFrequency)
 {
-  ErrorStatus status = SUCCESS;
+  uint32_t timeout;
+  uint32_t getlatency;
+  uint32_t latency;
+  ErrorStatus status;
 
-  uint32_t latency = LL_FLASH_LATENCY_0;  /* default value 0WS */
-
-  /* Frequency cannot be equal to 0 */
-  if (HCLK_Frequency == 0U)
+  /* Frequency cannot be equal to 0 or greater than max clock */
+  if ((HCLKFrequency == 0U) || (HCLKFrequency > UTILS_SCALE1_LATENCY3_FREQ))
   {
     status = ERROR;
   }
   else
   {
-    if (HCLK_Frequency > UTILS_SCALE1_LATENCY2_FREQ)
+    if (HCLKFrequency > UTILS_SCALE1_LATENCY2_FREQ)
     {
       /* 48 < HCLK <= 64 => 2WS (3 CPU cycles) */
       latency = LL_FLASH_LATENCY_2;
     }
     else
     {
-      if (HCLK_Frequency > UTILS_SCALE1_LATENCY1_FREQ)
+      if (HCLKFrequency > UTILS_SCALE1_LATENCY1_FREQ)
       {
         /* 24 < HCLK <= 48 => 1WS (2 CPU cycles) */
         latency = LL_FLASH_LATENCY_1;
       }
-      /* else HCLK_Frequency < 24MHz default LL_FLASH_LATENCY_0 0WS */
+      else
+      {
+        /* else HCLKFrequency < 24MHz default LL_FLASH_LATENCY_0 0WS */
+        latency = LL_FLASH_LATENCY_0;
+      }
     }
 
     LL_FLASH_SetLatency(latency);
 
     /* Check that the new number of wait states is taken into account to access the Flash
        memory by reading the FLASH_ACR register */
-    if (LL_FLASH_GetLatency() != latency)
+    timeout = 2u;
+    do
+    {
+      /* Wait for Flash latency to be updated */
+      getlatency = LL_FLASH_GetLatency();
+      timeout--;
+    } while ((getlatency != latency) && (timeout > 0u));
+
+    if(getlatency != latency)
     {
       status = ERROR;
     }
+    else
+    {
+      status = SUCCESS;
+    }
   }
+
   return status;
 }
 
@@ -425,6 +443,7 @@ ErrorStatus LL_SetFlashLatency(uint32_t HCLK_Frequency)
 /** @addtogroup UTILS_LL_Private_Functions
   * @{
   */
+
 /**
   * @brief  Function to check that PLL can be modified
   * @param  PLL_InputFrequency  PLL input frequency (in Hz)
