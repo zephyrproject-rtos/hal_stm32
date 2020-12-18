@@ -164,6 +164,73 @@
 				drive-open-drain;
 			};
 
+			/* QUADSPI */
+
+			quadspi_bk1_ncs_pa2: quadspi_bk1_ncs_pa2 {
+				pinmux = <STM32_PINMUX('A', 2, AF10)>;
+				slew-rate = "very-high-speed";
+			};
+
+			quadspi_clk_pa3: quadspi_clk_pa3 {
+				pinmux = <STM32_PINMUX('A', 3, AF10)>;
+				slew-rate = "very-high-speed";
+			};
+
+			quadspi_bk1_io3_pa6: quadspi_bk1_io3_pa6 {
+				pinmux = <STM32_PINMUX('A', 6, AF10)>;
+				slew-rate = "very-high-speed";
+			};
+
+			quadspi_bk1_io2_pa7: quadspi_bk1_io2_pa7 {
+				pinmux = <STM32_PINMUX('A', 7, AF10)>;
+				slew-rate = "very-high-speed";
+			};
+
+			quadspi_bk1_io1_pb8: quadspi_bk1_io1_pb8 {
+				pinmux = <STM32_PINMUX('B', 8, AF10)>;
+				slew-rate = "very-high-speed";
+			};
+
+			quadspi_bk1_io0_pb9: quadspi_bk1_io0_pb9 {
+				pinmux = <STM32_PINMUX('B', 9, AF10)>;
+				slew-rate = "very-high-speed";
+			};
+
+			quadspi_clk_pb10: quadspi_clk_pb10 {
+				pinmux = <STM32_PINMUX('B', 10, AF10)>;
+				slew-rate = "very-high-speed";
+			};
+
+			quadspi_bk1_ncs_pb11: quadspi_bk1_ncs_pb11 {
+				pinmux = <STM32_PINMUX('B', 11, AF10)>;
+				slew-rate = "very-high-speed";
+			};
+
+			quadspi_bk1_ncs_pd3: quadspi_bk1_ncs_pd3 {
+				pinmux = <STM32_PINMUX('D', 3, AF10)>;
+				slew-rate = "very-high-speed";
+			};
+
+			quadspi_bk1_io0_pd4: quadspi_bk1_io0_pd4 {
+				pinmux = <STM32_PINMUX('D', 4, AF10)>;
+				slew-rate = "very-high-speed";
+			};
+
+			quadspi_bk1_io1_pd5: quadspi_bk1_io1_pd5 {
+				pinmux = <STM32_PINMUX('D', 5, AF10)>;
+				slew-rate = "very-high-speed";
+			};
+
+			quadspi_bk1_io2_pd6: quadspi_bk1_io2_pd6 {
+				pinmux = <STM32_PINMUX('D', 6, AF10)>;
+				slew-rate = "very-high-speed";
+			};
+
+			quadspi_bk1_io3_pd7: quadspi_bk1_io3_pd7 {
+				pinmux = <STM32_PINMUX('D', 7, AF10)>;
+				slew-rate = "very-high-speed";
+			};
+
 			/* SPI_MISO */
 
 			spi1_miso_pa6: spi1_miso_pa6 {
