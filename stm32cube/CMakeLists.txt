@@ -37,6 +37,7 @@ set(stm_socs
   stm32l5x
   stm32mp1x
   stm32wbx
+  stm32wlx
   )
 
 if(CONFIG_CPU_CORTEX_M4)
