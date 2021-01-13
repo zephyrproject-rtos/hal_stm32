@@ -137,6 +137,18 @@
   bias: pull-up
   slew-rate: very-high-speed
 
+- name: HRTIM_CH
+  match: "^HRTIM\\d+_CH[A-F]\\d+$"
+
+- name: HRTIM_EEV
+  match: "^HRTIM\\d+_EEV\\d+$"
+
+- name: HRTIM_FLT
+  match: "^HRTIM\\d+_FLT[A-F]\\d+$"
+
+- name: HRTIM_SCIN / HRTIM_SCOUT
+  match: "^HRTIM\\d+_SC(IN|OUT)$"
+
 - name: I2C_SCL
   match: "^I2C\\d+_SCL$"
   drive: open-drain
