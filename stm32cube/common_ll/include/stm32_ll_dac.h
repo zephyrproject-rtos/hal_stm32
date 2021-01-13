@@ -32,4 +32,6 @@
 #include <stm32l4xx_ll_dac.h>
 #elif defined(CONFIG_SOC_SERIES_STM32L5X)
 #include <stm32l5xx_ll_dac.h>
+#elif defined(CONFIG_SOC_SERIES_STM32WLX)
+#include <stm32wlxx_ll_dac.h>
 #endif

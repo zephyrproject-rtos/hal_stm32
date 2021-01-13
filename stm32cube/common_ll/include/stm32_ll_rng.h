@@ -26,4 +26,6 @@
 #include <stm32l5xx_ll_rng.h>
 #elif defined(CONFIG_SOC_SERIES_STM32WBX)
 #include <stm32wbxx_ll_rng.h>
+#elif defined(CONFIG_SOC_SERIES_STM32WLX)
+#include <stm32wlxx_ll_rng.h>
 #endif

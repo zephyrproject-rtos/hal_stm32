@@ -10,4 +10,6 @@
 #include <stm32mp1xx_ll_ipcc.h>
 #elif defined(CONFIG_SOC_SERIES_STM32WBX)
 #include <stm32wbxx_ll_ipcc.h>
+#elif defined(CONFIG_SOC_SERIES_STM32WLX)
+#include <stm32wlxx_ll_ipcc.h>
 #endif
