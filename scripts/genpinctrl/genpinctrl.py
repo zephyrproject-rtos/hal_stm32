@@ -456,7 +456,7 @@ def main(data_path, output):
         config_f1 = yaml.load(f, Loader=yaml.Loader)
 
     env = Environment(
-        trim_blocks=True, lstrip_blocks=True, loader=FileSystemLoader(SCRIPT_DIR)
+        trim_blocks=True, lstrip_blocks=True, loader=FileSystemLoader(str(SCRIPT_DIR))
     )
     env.filters["format_mode"] = format_mode
     env.filters["format_mode_f1"] = format_mode_f1
