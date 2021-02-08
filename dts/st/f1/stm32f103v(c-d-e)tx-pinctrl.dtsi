@@ -768,38 +768,47 @@
 
 			usart1_rx_pa10: usart1_rx_pa10 {
 				pinmux = <STM32F1_PINMUX('A', 10, GPIO_IN, NO_REMAP)>;
+				bias-pull-up;
 			};
 
 			usart1_rx_pb7: usart1_rx_pb7 {
 				pinmux = <STM32F1_PINMUX('B', 7, GPIO_IN, REMAP_1)>;
+				bias-pull-up;
 			};
 
 			usart2_rx_pa3: usart2_rx_pa3 {
 				pinmux = <STM32F1_PINMUX('A', 3, GPIO_IN, NO_REMAP)>;
+				bias-pull-up;
 			};
 
 			usart2_rx_pd6: usart2_rx_pd6 {
 				pinmux = <STM32F1_PINMUX('D', 6, GPIO_IN, REMAP_1)>;
+				bias-pull-up;
 			};
 
 			usart3_rx_pb11: usart3_rx_pb11 {
 				pinmux = <STM32F1_PINMUX('B', 11, GPIO_IN, NO_REMAP)>;
+				bias-pull-up;
 			};
 
 			usart3_rx_pc11: usart3_rx_pc11 {
 				pinmux = <STM32F1_PINMUX('C', 11, GPIO_IN, REMAP_1)>;
+				bias-pull-up;
 			};
 
 			usart3_rx_pd9: usart3_rx_pd9 {
 				pinmux = <STM32F1_PINMUX('D', 9, GPIO_IN, REMAP_2)>;
+				bias-pull-up;
 			};
 
 			uart4_rx_pc11: uart4_rx_pc11 {
 				pinmux = <STM32F1_PINMUX('C', 11, GPIO_IN, NO_REMAP)>;
+				bias-pull-up;
 			};
 
 			uart5_rx_pd2: uart5_rx_pd2 {
 				pinmux = <STM32F1_PINMUX('D', 2, GPIO_IN, NO_REMAP)>;
+				bias-pull-up;
 			};
 
 			/* UART_TX / USART_TX */

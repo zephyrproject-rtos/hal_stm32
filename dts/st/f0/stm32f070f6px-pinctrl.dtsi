@@ -182,13 +182,11 @@
 
 			usart1_rts_pa12: usart1_rts_pa12 {
 				pinmux = <STM32_PINMUX('A', 12, AF1)>;
-				bias-pull-up;
 				drive-open-drain;
 			};
 
 			usart2_rts_pa1: usart2_rts_pa1 {
 				pinmux = <STM32_PINMUX('A', 1, AF1)>;
-				bias-pull-up;
 				drive-open-drain;
 			};
 
@@ -196,27 +194,26 @@
 
 			usart1_rx_pa10: usart1_rx_pa10 {
 				pinmux = <STM32_PINMUX('A', 10, AF1)>;
+				bias-pull-up;
 			};
 
 			usart2_rx_pa3: usart2_rx_pa3 {
 				pinmux = <STM32_PINMUX('A', 3, AF1)>;
+				bias-pull-up;
 			};
 
 			/* UART_TX / USART_TX / LPUART_TX */
 
 			usart1_tx_pa9: usart1_tx_pa9 {
 				pinmux = <STM32_PINMUX('A', 9, AF1)>;
-				bias-pull-up;
 			};
 
 			usart2_tx_pa2: usart2_tx_pa2 {
 				pinmux = <STM32_PINMUX('A', 2, AF1)>;
-				bias-pull-up;
 			};
 
 			usart2_tx_pa14: usart2_tx_pa14 {
 				pinmux = <STM32_PINMUX('A', 14, AF1)>;
-				bias-pull-up;
 			};
 
 			/* USB */

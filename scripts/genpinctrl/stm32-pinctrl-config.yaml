@@ -195,14 +195,13 @@
 - name: UART_RTS / USART_RTS / LPUART_RTS
   match: "^(?:LP)?US?ART\\d+_RTS$"
   drive: open-drain
-  bias: pull-up
 
 - name: UART_TX / USART_TX / LPUART_TX
   match: "^(?:LP)?US?ART\\d+_TX$"
-  bias: pull-up
 
 - name: UART_RX / USART_RX / LPUART_RX
   match: "^(?:LP)?US?ART\\d+_RX$"
+  bias: pull-up
 
 - name: USB_OTG_FS
   match: "^USB_OTG_FS_(?:DM)?(?:DP)?(?:SOF)?(?:ID)?(?:VBUS)?$"
