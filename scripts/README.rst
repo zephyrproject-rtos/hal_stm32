@@ -18,6 +18,8 @@ Alternatively, in order to update STM32CubeXX versions one by one, run for examp
 
     $ python3 ./update_stm32_package.py -s stm32f1
 
+Note: This requires $ZEPHYR_BASE is set in your environment.
+
 Check STM32CubeXX changes
 =========================
 
