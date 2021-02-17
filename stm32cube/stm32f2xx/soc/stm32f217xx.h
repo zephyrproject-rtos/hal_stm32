@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * @file    stm32f217xx.h
+  * @file    stm32f205xx.h
   * @author  MCD Application Team
-  * @brief   CMSIS STM32F217xx Device Peripheral Access Layer Header File.
+  * @brief   CMSIS STM32F205xx Device Peripheral Access Layer Header File.
   *
   *          This file contains :
   *           - Data structures and the address mapping for all peripherals
@@ -15254,7 +15254,6 @@ USB_OTG_HostChannelTypeDef;
 }
 #endif /* __cplusplus */
 
-#endif /* __STM32F217xx_H */
+#endif /* __STM32F205xx_H */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
-

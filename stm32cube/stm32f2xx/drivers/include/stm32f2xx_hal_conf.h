@@ -33,12 +33,6 @@
 /* ########################## Module Selection ############################## */
 /**
   * @brief This is the list of modules to be used in the HAL driver
-  *
-  *     Note:
-  *     	HAL_I2C_MODULE_ENABLED had to be disabled due to the HAL
-  *     	redefining I2C_SPEED_STANDARD and I2C_SPEED_FAST when the
-  *     	I2C LL driver was enabled.
-  *
   */
 #define HAL_MODULE_ENABLED
 #define HAL_ADC_MODULE_ENABLED

@@ -13966,4 +13966,3 @@ USB_OTG_HostChannelTypeDef;
 #endif /* __STM32F215xx_H */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
-
