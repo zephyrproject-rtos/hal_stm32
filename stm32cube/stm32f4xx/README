@@ -6,7 +6,7 @@ Origin:
    http://www.st.com/en/embedded-software/stm32cubef4.html
 
 Status:
-   version v1.25.1
+   version v1.25.2
 
 Purpose:
    ST Microelectronics official MCU package for STM32F4 series.
@@ -23,7 +23,7 @@ URL:
    https://github.com/STMicroelectronics/STM32CubeF4
 
 Commit:
-   9f5ea7421d22c724516d00218b350d1e09a54a2c
+   2d5b78e2da98fb44e028d87f4ff815427991affc
 
 Maintained-by:
    External
