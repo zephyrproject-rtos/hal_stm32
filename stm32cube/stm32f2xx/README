@@ -6,7 +6,7 @@ Origin:
    http://www.st.com/en/embedded-software/stm32cubef2.html
 
 Status:
-   version v1.9.1
+   version v1.9.2
 
 Purpose:
    ST Microelectronics official MCU package for STM32F2 series.
@@ -23,7 +23,7 @@ URL:
    https://github.com/STMicroelectronics/STM32CubeF2
 
 Commit:
-   779848644f491336c7990e98031663ecadab2cc9
+   edfdc17943f4d0ffd1e30596b122005d86e6fde5
 
 Maintained-by:
    External
@@ -39,14 +39,6 @@ Patch List:
    *Changes from official delivery:
     -dos2unix applied
     -trailing white spaces removed
-
-    *Extend public SetFlashLatency API to all families
-     The LL_SetFlashLatency public API is now defined for families
-     beyond G4, L4 and L5. The private function has been made public.
-    Impacted files:
-     drivers/include/stm32f2xx_ll_utils.h
-     drivers/src/stm32f2xx_ll_utils.c
-    ST Bug tracker ID: 76119
 
    *Disable i2c HAL
      Due to conflict with zephyr i2c.h (I2C_SPEED_STANDARD and I2C_SPEED_FAST
