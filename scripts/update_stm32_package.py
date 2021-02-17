@@ -70,7 +70,7 @@ def update_cubes():
         raise Exception("Error: cannot find ./zephyr project")
 
     for stmyyxx in module_path.iterdir():
-        if stmyyxx.is_dir():
+        if stmyyxx.is_dir() and "common_ll" not in stmyyxx.name:
             logging.info("updating module " + stmyyxx.name)
             # Force the commit for each serie
             update_serie = serie_update.Stm32SerieUpdate(
