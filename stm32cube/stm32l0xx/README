@@ -6,7 +6,7 @@ Origin:
    http://www.st.com/en/embedded-software/stm32cubel0.html
 
 Status:
-   version v1.11.3
+   version v1.12.0
 
 Purpose:
    ST Microelectronics official MCU package for STM32L0 series.
@@ -23,7 +23,7 @@ URL:
    https://github.com/STMicroelectronics/STM32CubeL0
 
 Commit:
-   8b26821a5b4831fc85df5c450c81568a744a1027
+   a7b74aed35ecb7baeadeb16107aa8fddb6823589
 
 Maintained-by:
    External
@@ -39,27 +39,5 @@ Patch List:
    *Changes from official delivery:
     -dos2unix applied
     -trailing white spaces removed
-
-    *Extend public SetFlashLatency API to all families
-     The LL_SetFlashLatency public API is now defined for families
-     beyond G4, L4 and L5. The private function has been made public.
-    Impacted files:
-     drivers/include/stm32l0xx_ll_utils.h
-     drivers/src/stm32l0xx_ll_utils.c
-    ST Bug tracker ID: 76125
-
-    *Fix warnings for extraneous parentheses
-      Using clang 7.0.1, if ((htim->State == HAL_TIM_STATE_BUSY))
-      generates warnings.  Remove the extra parentheses
-     Impacted files:
-      drivers/src/stm32l0xx_hal_tim.c
-     ST Bug tracker ID: 63619
-
-    *Fix warnings for extraneous parentheses
-      Using clang 9.0.0, if((sysclk_source == RCC_CFGR_SWS_MSI) )
-      generates warnings.  Remove the extra parentheses
-     Impacted files:
-      drivers/src/stm32l0xx_hal_rcc.c
-     ST Bug tracker ID: 80901
 
    See release_note.html from STM32Cube
