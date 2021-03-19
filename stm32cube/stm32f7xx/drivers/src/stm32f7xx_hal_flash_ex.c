@@ -944,7 +944,7 @@ static HAL_StatusTypeDef FLASH_OB_BootAddressConfig(uint32_t BootOption, uint32_
   if(status == HAL_OK)
   {
     if(BootOption == OPTIONBYTE_BOOTADDR_0)
-    {			
+    {
       MODIFY_REG(FLASH->OPTCR1, FLASH_OPTCR1_BOOT_ADD0, Address);
     }
     else
@@ -1021,7 +1021,7 @@ static uint32_t FLASH_OB_GetBootAddress(uint32_t BootOption)
 
 	/* Return the Boot base Address */
   if(BootOption == OPTIONBYTE_BOOTADDR_0)
-  {			
+  {
     Address = FLASH->OPTCR1 & FLASH_OPTCR1_BOOT_ADD0;
 	}
   else

@@ -41,7 +41,7 @@
 /** @addtogroup PWR_Private_Constants
   * @{
   */
-	
+
 /** @defgroup PWR_PVD_Mode_Mask PWR PVD Mode Mask
   * @{
   */
@@ -339,7 +339,7 @@ void HAL_PWR_EnableWakeUpPin(uint32_t WakeUpPinPolarity)
 
   /* Enable wake-up pin */
   SET_BIT(PWR->CSR2, (PWR_EWUP_MASK & WakeUpPinPolarity));
-	
+
   /* Specifies the Wake-Up pin polarity for the event detection
     (rising or falling edge) */
   MODIFY_REG(PWR->CR2, (PWR_EWUP_MASK & WakeUpPinPolarity), (WakeUpPinPolarity >> 0x06));

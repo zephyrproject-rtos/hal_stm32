@@ -40,20 +40,4 @@ Patch List:
     -dos2unix applied
     -trailing white spaces removed
 
-    *Extend public SetFlashLatency API to all families
-     The LL_SetFlashLatency public API is now defined for families
-     beyond G4, L4 and L5. The private function has been made public.
-    Impacted files:
-     drivers/include/stm32f7xx_ll_utils.h
-     drivers/src/stm32f7xx_ll_utils.c
-    ST Bug tracker ID: 76122
-
-   *Fix LL_EXTI_LINE_18 and LL_EXTI_LINE_20 declarations
-     LL_EXTI_LINE_18 and LL_EXTI_LINE_20 are declared in stm32f7xx_hal_pcd.h
-     and in stm32f7xx_ll_exti.h which generates warnings. Set #ifndef
-     in stm32f7xx_ll_exti.h around declarations.
-    Impacted files:
-     drivers/include/stm32f7xx_ll_exti.h
-    ST Bug tracker ID: 55274
-
    See release_note.html from STM32Cube
