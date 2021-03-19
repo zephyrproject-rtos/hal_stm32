@@ -253,7 +253,7 @@ typedef struct
   */
 #define OB_RDP_LEVEL_0            0xAAU
 #define OB_RDP_LEVEL_1            0xBBU
-#define OB_RDP_LEVEL_2            0xCCU                    /*!< Warning: When enabling read protection level 2 
+#define OB_RDP_LEVEL_2            0xCCU                    /*!< Warning: When enabling read protection level 2
                                                                 it's no more possible to go back to level 1 or 0 */
 /**
   * @}
@@ -272,6 +272,9 @@ typedef struct
 #if defined (FLASH_OPTR_DBANK)
 #define OB_USER_BFB2              0x00000080U              /*!< Dual-bank boot */
 #define OB_USER_DBANK             0x00000100U              /*!< Single bank with 128-bits data or two banks with 64-bits data */
+#endif
+#if defined (FLASH_OPTR_PB4_PUPEN)
+#define OB_USER_PB4_PUPEN         0x00000100U              /*!< USB power delivery dead-battery/TDI pull-up */
 #endif
 #define OB_USER_nBOOT1            0x00000200U              /*!< Boot configuration */
 #define OB_USER_SRAM_PE           0x00000400U              /*!< SRAM parity check enable (first 32kB of SRAM1 + CCM SRAM) */
@@ -380,6 +383,17 @@ typedef struct
   */
 #endif
 
+#if defined (FLASH_OPTR_PB4_PUPEN)
+/** @defgroup FLASH_OB_USER_PB4_PUPEN FLASH Option Bytes User PB4 PUPEN bit
+  * @{
+  */
+#define OB_PB4_PUPEN_DISABLE      0x00000000U              /*!< USB power delivery dead-battery enabled/ TDI pull-up deactivated */
+#define OB_PB4_PUPEN_ENABLE       FLASH_OPTR_PB4_PUPEN     /*!< USB power delivery dead-battery disabled/ TDI pull-up activated */
+/**
+  * @}
+  */
+#endif
+
 /** @defgroup FLASH_OB_USER_nBOOT1 FLASH Option Bytes User BOOT1 Type
   * @{
   */
@@ -447,9 +461,9 @@ typedef struct
 /** @defgroup FLASH_OB_PCROP_RDP FLASH Option Bytes PCROP On RDP Level Type
   * @{
   */
-#define OB_PCROP_RDP_NOT_ERASE    0x00000000U              /*!< PCROP area is not erased when the RDP level 
+#define OB_PCROP_RDP_NOT_ERASE    0x00000000U              /*!< PCROP area is not erased when the RDP level
                                                                 is decreased from Level 1 to Level 0 */
-#define OB_PCROP_RDP_ERASE        FLASH_PCROP1ER_PCROP_RDP /*!< PCROP area is erased when the RDP level is 
+#define OB_PCROP_RDP_ERASE        FLASH_PCROP1ER_PCROP_RDP /*!< PCROP area is erased when the RDP level is
                                                                 decreased from Level 1 to Level 0 (full mass erase) */
 /**
   * @}
@@ -482,15 +496,15 @@ typedef struct
   * @{
   */
 #define FLASH_KEY1                0x45670123U              /*!< Flash key1 */
-#define FLASH_KEY2                0xCDEF89ABU              /*!< Flash key2: used with FLASH_KEY1 
+#define FLASH_KEY2                0xCDEF89ABU              /*!< Flash key2: used with FLASH_KEY1
                                                                 to unlock the FLASH registers access */
 
 #define FLASH_PDKEY1              0x04152637U              /*!< Flash power down key1 */
-#define FLASH_PDKEY2              0xFAFBFCFDU              /*!< Flash power down key2: used with FLASH_PDKEY1 
+#define FLASH_PDKEY2              0xFAFBFCFDU              /*!< Flash power down key2: used with FLASH_PDKEY1
                                                                 to unlock the RUN_PD bit in FLASH_ACR */
 
 #define FLASH_OPTKEY1             0x08192A3BU              /*!< Flash option byte key1 */
-#define FLASH_OPTKEY2             0x4C5D6E7FU              /*!< Flash option byte key2: used with FLASH_OPTKEY1 
+#define FLASH_OPTKEY2             0x4C5D6E7FU              /*!< Flash option byte key2: used with FLASH_OPTKEY1
                                                                 to allow option bytes operations */
 /**
   * @}
@@ -950,6 +964,10 @@ HAL_StatusTypeDef  FLASH_WaitForLastOperation(uint32_t Timeout);
 #define IS_OB_USER_BFB2(VALUE)             (((VALUE) == OB_BFB2_DISABLE) || ((VALUE) == OB_BFB2_ENABLE))
 
 #define IS_OB_USER_DBANK(VALUE)            (((VALUE) == OB_DBANK_128_BITS) || ((VALUE) == OB_DBANK_64_BITS))
+#endif
+
+#if defined (FLASH_OPTR_PB4_PUPEN)
+#define IS_OB_USER_PB4_PUPEN(VALUE)        (((VALUE) == OB_PB4_PUPEN_DISABLE) || ((VALUE) == OB_PB4_PUPEN_ENABLE))
 #endif
 
 #define IS_OB_USER_BOOT1(VALUE)            (((VALUE) == OB_BOOT1_SRAM) || ((VALUE) == OB_BOOT1_SYSTEM))
