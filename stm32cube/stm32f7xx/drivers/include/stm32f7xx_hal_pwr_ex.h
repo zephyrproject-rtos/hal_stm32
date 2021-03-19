@@ -66,7 +66,7 @@
 /**
   * @}
   */
-	
+
 /** @defgroup PWREx_Regulator_state_in_UnderDrive_mode PWREx Regulator state in UnderDrive mode
   * @{
   */
@@ -85,7 +85,7 @@
 /**
   * @}
   */
-	
+
 /** @defgroup PWREx_Wakeup_Pins_Flag PWREx Wake Up Pin Flags
   * @{
   */
@@ -145,7 +145,7 @@
 
 /** @brief Clear the Under-Drive Ready flag.
   */
-#define __HAL_PWR_CLEAR_ODRUDR_FLAG() (PWR->CSR1 |= PWR_FLAG_UDRDY)
+#define __HAL_PWR_CLEAR_ODRUDR_FLAG() (PWR->CSR1 |= (PWR_FLAG_UDRDY | PWR_CSR1_EIWUP))
 
 /** @brief  Check Wake Up flag is set or not.
   * @param  __WUFLAG__ specifies the Wake Up flag to check.

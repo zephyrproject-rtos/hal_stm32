@@ -808,7 +808,7 @@ typedef struct
 /**
   * @}
   */
-	
+
 /** @defgroup FMC_Access_Mode FMC Access Mode
   * @{
   */
