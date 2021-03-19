@@ -6,7 +6,7 @@ Origin:
    http://www.st.com/en/embedded-software/stm32cubel5.html
 
 Status:
-   version v1.3.1
+   version v1.4.0
 
 Purpose:
    ST Microelectronics official MCU package for STM32L5 series.
@@ -23,7 +23,7 @@ URL:
    https://github.com/STMicroelectronics/STM32CubeL5
 
 Commit:
-   c9a55ef9a841f24549e424a2338496681754332b
+   1a04696d5732626c678dea940eda2f33b320ab15
 
 Maintained-by:
    External
