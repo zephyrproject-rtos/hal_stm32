@@ -78,7 +78,7 @@ typedef struct __ETH_BufferTypeDef
 
   uint32_t len;                   /*<! buffer length */
 
-  struct __ETH_BufferTypeDef *next; /*<! Pointer to the next buffer in the list */	
+  struct __ETH_BufferTypeDef *next; /*<! Pointer to the next buffer in the list */
 }ETH_BufferTypeDef;
 /**
   *
@@ -89,10 +89,15 @@ typedef struct __ETH_BufferTypeDef
   */
 typedef struct
 {
-  uint32_t  TxDesc[ETH_TX_DESC_CNT];     /*<! Tx DMA descriptors addresses */
+  uint32_t  TxDesc[ETH_TX_DESC_CNT];        /*<! Tx DMA descriptors addresses */
 
-  uint32_t  CurTxDesc;               /*<! Current Tx descriptor index for packet transmission */
+  uint32_t  CurTxDesc;                      /*<! Current Tx descriptor index for packet transmission */
 
+  uint32_t* PacketAddress[ETH_TX_DESC_CNT];  /*<! Ethernet packet addresses array */
+
+  uint32_t* CurrentPacketAddress;           /*<! Current transmit NX_PACKET addresses */
+
+  uint32_t BuffersInUse;                   /*<! Buffers in Use */
 }ETH_TxDescListTypeDef;
 /**
   *
@@ -278,7 +283,7 @@ typedef struct
                                                            This parameter can be a value from 0x0 to 0xFF */
 
   FunctionalState  ProgrammableWatchdog;        /*!< Enable or disables the Programmable Watchdog.*/
-	
+
   uint32_t         WatchdogTimeout;             /*!< This field is used as watchdog timeout for a received packet
                                                         This parameter can be a value of @ref ETH_Watchdog_Timeout */
 
@@ -334,10 +339,10 @@ typedef struct
    FunctionalState PBLx8Mode;               /*!< Enables or disables the PBL multiplication by eight. */
 
    uint32_t        TxDMABurstLength;        /*!< Indicates the maximum number of beats to be transferred in one Tx DMA transaction.
-                                                     This parameter can be a value of @ref ETH_Tx_DMA_Burst_Length */	
+                                                     This parameter can be a value of @ref ETH_Tx_DMA_Burst_Length */
 
    FunctionalState SecondPacketOperate;     /*!< Enables or disables the Operate on second Packet mode, which allows the DMA to process a second
-                                                      Packet of Transmit data even before obtaining the status for the first one. */	
+                                                      Packet of Transmit data even before obtaining the status for the first one. */
 
    uint32_t        RxDMABurstLength;        /*!< Indicates the maximum number of beats to be transferred in one Rx DMA transaction.
                                                     This parameter can be a value of @ref ETH_Rx_DMA_Burst_Length */
@@ -372,7 +377,7 @@ typedef struct
 {
 
   uint8_t                     *MACAddr;                  /*!< MAC Address of used Hardware: must be pointer on an array of 6 bytes */
-  	
+
   ETH_MediaInterfaceTypeDef   MediaInterface;            /*!< Selects the MII interface or the RMII interface. */
 
   ETH_DMADescTypeDef          *TxDesc;                   /*!< Provides the address of the first DMA Tx descriptor in the list */
@@ -406,10 +411,10 @@ typedef struct
   ETH_TypeDef                *Instance;                 /*!< Register base address       */
 
   ETH_InitTypeDef            Init;                      /*!< Ethernet Init Configuration */
-	
+
   ETH_TxDescListTypeDef      TxDescList;                /*!< Tx descriptor wrapper: holds all Tx descriptors list
                                                             addresses and current descriptor index  */
-		
+
   ETH_RxDescListTypeDef      RxDescList;                /*!< Rx descriptor wrapper: holds all Rx descriptors list
                                                             addresses and current descriptor index  */
 
@@ -465,7 +470,7 @@ typedef enum
 {
   HAL_ETH_MSPINIT_CB_ID            = 0x00U,    /*!< ETH MspInit callback ID           */
   HAL_ETH_MSPDEINIT_CB_ID          = 0x01U,    /*!< ETH MspDeInit callback ID         */
-	
+
   HAL_ETH_TX_COMPLETE_CB_ID        = 0x02U,    /*!< ETH Tx Complete Callback ID       */
   HAL_ETH_RX_COMPLETE_CB_ID        = 0x03U,    /*!< ETH Rx Complete Callback ID       */
   HAL_ETH_DMA_ERROR_CB_ID          = 0x04U,    /*!< ETH DMA Error Callback ID         */
@@ -526,7 +531,7 @@ typedef struct{
   FunctionalState GlobalUnicast;    /*!< Enable or Disable Global unicast packet detection in power down mode */
 
   FunctionalState WakeUpForward;    /*!< Enable or Disable Forwarding Wake up packets */
-  	
+
 }ETH_PowerDownConfigTypeDef;
 /**
   *
@@ -546,7 +551,7 @@ typedef struct{
   */
 
 /*
-   DMA Tx Normal Desciptor Read Format
+   DMA Tx Normal Descriptor Read Format
   -----------------------------------------------------------------------------------------------
   TDES0 |                         Buffer1 or Header Address  [31:0]                              |
   -----------------------------------------------------------------------------------------------
@@ -659,7 +664,7 @@ typedef struct{
 
 
 /*
-   DMA Tx Context Desciptor
+   DMA Tx Context Descriptor
   -----------------------------------------------------------------------------------------------
   TDES0 |                               Timestamp Low                                            |
   -----------------------------------------------------------------------------------------------
@@ -1071,7 +1076,7 @@ typedef struct{
 /**
   * @}
   */
-	
+
 /** @defgroup ETH_Tx_DMA_Burst_Length ETH Tx DMA Burst Length
   * @{
   */
@@ -1096,11 +1101,11 @@ typedef struct{
 #define ETH_RXDMABURSTLENGTH_32BEAT         ETH_DMACRCR_RPBL_32PBL
 /**
   * @}
-  */	
-	
+  */
+
 /** @defgroup ETH_DMA_Interrupts ETH DMA Interrupts
   * @{
-  */	
+  */
 #define ETH_DMA_NORMAL_IT                 ETH_DMACIER_NIE
 #define ETH_DMA_ABNORMAL_IT               ETH_DMACIER_AIE
 #define ETH_DMA_CONTEXT_DESC_ERROR_IT     ETH_DMACIER_CDEE
@@ -1120,7 +1125,7 @@ typedef struct{
 
 /** @defgroup ETH_DMA_Status_Flags ETH DMA Status Flags
   * @{
-  */	
+  */
 #define ETH_DMA_RX_NO_ERROR_FLAG                 ((uint32_t)0x00000000U)
 #define ETH_DMA_RX_DESC_READ_ERROR_FLAG          (ETH_DMACSR_REB_BIT_2 | ETH_DMACSR_REB_BIT_1 | ETH_DMACSR_REB_BIT_0)
 #define ETH_DMA_RX_DESC_WRITE_ERROR_FLAG         (ETH_DMACSR_REB_BIT_2 | ETH_DMACSR_REB_BIT_1)
@@ -1140,8 +1145,8 @@ typedef struct{
 #define ETH_DMA_TX_PROCESS_STOPPED_FLAG           ETH_DMACSR_TPS
 /**
   * @}
-  */	
-	
+  */
+
 /** @defgroup ETH_Transmit_Mode ETH Transmit Mode
   * @{
   */
@@ -1169,7 +1174,7 @@ typedef struct{
 /**
   * @}
   */
-	
+
 /** @defgroup ETH_Pause_Low_Threshold  ETH Pause Low Threshold
   * @{
   */
@@ -1182,7 +1187,7 @@ typedef struct{
 /**
   * @}
   */
-	
+
 /** @defgroup ETH_Watchdog_Timeout ETH Watchdog Timeout
   * @{
   */
@@ -1237,7 +1242,7 @@ typedef struct{
 /**
   * @}
   */
-	
+
 /** @defgroup ETH_Back_Off_Limit ETH Back Off Limit
   * @{
   */
@@ -1281,7 +1286,7 @@ typedef struct{
 /**
   * @}
   */
-	
+
 /** @defgroup ETH_VLAN_Tag_Comparison ETH VLAN Tag Comparison
   * @{
   */
@@ -1304,7 +1309,7 @@ typedef struct{
 
 /** @defgroup ETH_MAC_Interrupts ETH MAC Interrupts
   * @{
-  */	
+  */
 #define ETH_MAC_RX_STATUS_IT     ETH_MACIER_RXSTSIE
 #define ETH_MAC_TX_STATUS_IT     ETH_MACIER_TXSTSIE
 #define ETH_MAC_TIMESTAMP_IT     ETH_MACIER_TSIE
@@ -1317,7 +1322,7 @@ typedef struct{
 
 /** @defgroup ETH_MAC_Wake_Up_Event ETH MAC Wake Up Event
   * @{
-  */	
+  */
 #define ETH_WAKEUP_PACKET_RECIEVED    ETH_MACPCSR_RWKPRCVD
 #define ETH_MAGIC_PACKET_RECIEVED     ETH_MACPCSR_MGKPRCVD
 /**
@@ -1333,7 +1338,7 @@ typedef struct{
 #define ETH_EXECESSIVE_DEFERRAL             ETH_MACRXTXSR_EXDEF
 #define ETH_LOSS_OF_CARRIER                 ETH_MACRXTXSR_LCARR
 #define ETH_NO_CARRIER                      ETH_MACRXTXSR_NCARR
-#define ETH_TRANSMIT_JABBR_TIMEOUT          ETH_MACRXTXSR_TJT  	
+#define ETH_TRANSMIT_JABBR_TIMEOUT          ETH_MACRXTXSR_TJT
 /**
   * @}
   */

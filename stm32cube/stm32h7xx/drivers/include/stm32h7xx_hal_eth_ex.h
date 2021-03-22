@@ -48,21 +48,21 @@
   */
 typedef struct{
   FunctionalState InnerVLANTagInStatus;      /*!< Enables or disables Inner VLAN Tag in Rx Status  */
-	
+
   uint32_t StripInnerVLANTag;                /*!< Sets the Inner VLAN Tag Stripping on Receive
                                                   This parameter can be a value of @ref ETHEx_Rx_Inner_VLAN_Tag_Stripping */
-	
+
   FunctionalState InnerVLANTag;              /*!< Enables or disables Inner VLAN Tag */
 
   FunctionalState DoubleVLANProcessing;      /*!< Enable or Disable double VLAN processing */
-	
+
   FunctionalState VLANTagHashTableMatch;     /*!< Enable or Disable VLAN Tag Hash Table Match */
-	
+
   FunctionalState VLANTagInStatus;           /*!< Enable or Disable VLAN Tag in Rx status */
-	
+
   uint32_t StripVLANTag;                     /*!< Set the VLAN Tag Stripping on Receive
                                                   This parameter can be a value of @ref ETHEx_Rx_VLAN_Tag_Stripping */
-	
+
   uint32_t VLANTypeCheck;                    /*!< Enable or Disable VLAN Type Check
                                                   This parameter can be a value of @ref ETHEx_VLAN_Type_Check */
 
@@ -79,7 +79,7 @@ typedef struct{
   FunctionalState SourceTxDesc;   /*!< Enable or Disable VLAN tag source from DMA tx descriptors */
 
   FunctionalState SVLANType;      /*!< Enable or Disable insertion of SVLAN type */
-	
+
   uint32_t VLANTagControl;        /*!< Sets the VLAN tag control in tx packets
                                       This parameter can be a value of @ref ETHEx_VLAN_Tag_Control */
 }ETH_TxVLANConfigTypeDef;
@@ -136,7 +136,7 @@ typedef struct{
                                         This parameter must be a value from 0x0 to 0xFFFF */
 
   uint32_t DestinationPort;        /*!< Sets the L4 filter destination port
-                                        This parameter must be a value from 0x0 to 0xFFFF */	
+                                        This parameter must be a value from 0x0 to 0xFFFF */
 }ETH_L4FilterConfigTypeDef;
 /**
   *
@@ -153,7 +153,7 @@ typedef struct{
 
 /** @defgroup ETHEx_LPI_Event ETHEx LPI Event
   * @{
-  */	
+  */
 #define ETH_TX_LPI_ENTRY    ETH_MACLCSR_TLPIEN
 #define ETH_TX_LPI_EXIT     ETH_MACLCSR_TLPIEX
 #define ETH_RX_LPI_ENTRY    ETH_MACLCSR_RLPIEN
@@ -198,7 +198,7 @@ typedef struct{
 /**
   * @}
   */
-	
+
 /** @defgroup ETHEx_L3_Destination_Match ETHEx L3 Destination Match
   * @{
   */
@@ -208,7 +208,7 @@ typedef struct{
 /**
   * @}
   */
-	
+
 /** @defgroup ETHEx_L4_Protocol ETHEx L4 Protocol
   * @{
   */
@@ -217,7 +217,7 @@ typedef struct{
 /**
   * @}
   */
-	
+
 /** @defgroup ETHEx_L4_Source_Match ETHEx L4 Source Match
   * @{
   */
@@ -227,7 +227,7 @@ typedef struct{
 /**
   * @}
   */
-	
+
 /** @defgroup ETHEx_L4_Destination_Match ETHEx L4 Destination Match
   * @{
   */
@@ -279,7 +279,7 @@ typedef struct{
 #define ETH_VLANTAGCONTROL_REPLACE    (ETH_MACVIR_VLP | ETH_MACVIR_VLC_VLANTAGREPLACE)
 /**
   * @}
-  */	
+  */
 
 /** @defgroup ETHEx_Tx_VLAN_Tag ETHEx Tx VLAN Tag
   * @{
