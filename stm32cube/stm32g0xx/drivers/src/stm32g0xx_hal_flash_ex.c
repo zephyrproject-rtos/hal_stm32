@@ -851,8 +851,8 @@ static void FLASH_OB_PCROP1AConfig(uint32_t PCROPConfig, uint32_t PCROP1AStartAd
   assert_param(IS_OB_PCROP_CONFIG(PCROPConfig));
 
 #if defined(FLASH_DBANK_SUPPORT)
-  /* Check if banks are swapped */
-  if ((FLASH->OPTR & FLASH_OPTR_nSWAP_BANK) != FLASH_OPTR_nSWAP_BANK)
+  /* Check if banks are swapped (valid if only one bank) */
+  if (((FLASH->OPTR & FLASH_OPTR_nSWAP_BANK) != FLASH_OPTR_nSWAP_BANK) && (FLASH_BANK_NB == 2U))
   {
     /* Check the parameters */
     assert_param(IS_FLASH_MAIN_SECONDHALF_MEM_ADDRESS(PCROP1AStartAddr));
@@ -920,8 +920,8 @@ static void FLASH_OB_PCROP1BConfig(uint32_t PCROP1BStartAddr, uint32_t PCROP1BEn
   uint32_t ropbase;
 
 #if defined(FLASH_DBANK_SUPPORT)
-  /* Check if banks are swapped */
-  if ((FLASH->OPTR & FLASH_OPTR_nSWAP_BANK) != FLASH_OPTR_nSWAP_BANK)
+  /* Check if banks are swapped (valid if only one bank) */
+  if (((FLASH->OPTR & FLASH_OPTR_nSWAP_BANK) != FLASH_OPTR_nSWAP_BANK) && (FLASH_BANK_NB == 2U))
   {
     /* Check the parameters */
     assert_param(IS_FLASH_MAIN_SECONDHALF_MEM_ADDRESS(PCROP1BStartAddr));
@@ -966,8 +966,8 @@ static void FLASH_OB_GetPCROP1A(uint32_t *PCROPConfig, uint32_t *PCROP1AStartAdd
   uint32_t ropbase;
 
 #if defined(FLASH_DBANK_SUPPORT)
-  /* Check if banks are swapped */
-  if ((FLASH->OPTR & FLASH_OPTR_nSWAP_BANK) != FLASH_OPTR_nSWAP_BANK)
+  /* Check if banks are swapped (valid if only one bank) */
+  if (((FLASH->OPTR & FLASH_OPTR_nSWAP_BANK) != FLASH_OPTR_nSWAP_BANK) && (FLASH_BANK_NB == 2U))
   {
     /* Bank swap, bank 1 read only protection is on second half of Flash */
     ropbase = (FLASH_BASE + FLASH_BANK_SIZE);
@@ -1005,8 +1005,8 @@ static void FLASH_OB_GetPCROP1B(uint32_t *PCROP1BStartAddr, uint32_t *PCROP1BEnd
   uint32_t ropbase;
 
 #if defined(FLASH_DBANK_SUPPORT)
-  /* Check if banks are swapped */
-  if ((FLASH->OPTR & FLASH_OPTR_nSWAP_BANK) != FLASH_OPTR_nSWAP_BANK)
+  /* Check if banks are swapped (valid if only one bank) */
+  if (((FLASH->OPTR & FLASH_OPTR_nSWAP_BANK) != FLASH_OPTR_nSWAP_BANK) && (FLASH_BANK_NB == 2U))
   {
     /* Bank swap, bank 1 read only protection is on second half of Flash */
     ropbase = (FLASH_BASE + FLASH_BANK_SIZE);
@@ -1217,7 +1217,11 @@ static void FLASH_OB_SecMemConfig(uint32_t BootEntry, uint32_t SecSize, uint32_t
   /* Check the parameters */
   assert_param(IS_OB_SEC_BOOT_LOCK(BootEntry));
   assert_param(IS_OB_SEC_SIZE(SecSize));
-  assert_param(IS_OB_SEC_SIZE(SecSize2));
+
+  if ((FLASH_BANK_NB == 2U))
+  {
+    assert_param(IS_OB_SEC_SIZE(SecSize2));
+  }
 
   /* Set securable memory area configuration */
   secmem = (FLASH->SECR & ~(FLASH_SECR_BOOT_LOCK | FLASH_SECR_SEC_SIZE | FLASH_SECR_SEC_SIZE2));
