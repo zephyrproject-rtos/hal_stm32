@@ -30,6 +30,7 @@ def os_cmd(cmd, cwd=None, shell=False):
     Args:
         cmd: string command to execute.
         cwd: directory where to run command
+        shell: boolean to enable command interpretation by the shell
 
     Returns:
         return the returncode of the command after execution.
@@ -147,7 +148,8 @@ class Stm32SerieUpdate:
         # with the most recent one created being the last entry.
         os_cmd(("git", "checkout", branch), cwd=self.stm32cube_serie_path)
         self.version_tag = subprocess.check_output(
-            "git tag -l", cwd=self.stm32cube_serie_path
+            ("git", "tag", "-l"),
+            cwd=self.stm32cube_serie_path
         ).splitlines()
         self.version_tag = [x.decode("utf-8") for x in self.version_tag]
         # Set latest version
@@ -275,11 +277,12 @@ class Stm32SerieUpdate:
         )
         os_cmd(
             (
-                "cp",
-                "-r",
-                str(stm32cube_drivers_src_path) + "/*.*",
-                str(temp_drivers_src_path),
-            )
+                "cp " +
+                "-r " +
+                str(stm32cube_drivers_src_path) + "/*.* " +
+                str(temp_drivers_src_path)
+            ),
+            shell=True,
         )
 
     def build_from_current_cube_version(self):
@@ -342,18 +345,10 @@ class Stm32SerieUpdate:
             "Building patch from " + self.current_version + " to current module"
         )
         os_cmd(
-            (
-                "git",
-                "diff",
-                "--ignore-space-at-eol",
-                "HEAD~1",
-                ">>",
-                "module.patch",
-            ),
+            "git diff --ignore-space-at-eol HEAD~1 >> module.patch",
             shell=True,
             cwd=self.stm32cube_temp,
         )
-
         os_cmd(("dos2unix", "module.patch"), cwd=self.stm32cube_temp)
 
         hal_conf = (
@@ -366,13 +361,13 @@ class Stm32SerieUpdate:
         if hal_conf.exists():
             os_cmd(
                 (
-                    "git",
-                    "diff",
-                    "HEAD@{1}",
-                    "--",
-                    str(hal_conf),
-                    ">>",
-                    str(hal_conf_patch),
+                    "git " +
+                    "diff " +
+                    "HEAD@{1} " +
+                    "-- " +
+                    str(hal_conf) +
+                    " >> " +
+                    str(hal_conf_patch)
                 ),
                 shell=True,
                 cwd=self.stm32cube_temp,
@@ -542,7 +537,8 @@ class Stm32SerieUpdate:
 
         # Get the commit id of this latest version
         self.latest_commit = subprocess.check_output(
-            "git rev-parse HEAD", cwd=self.stm32cube_serie_path
+            ("git", "rev-parse", "HEAD"),
+            cwd=self.stm32cube_serie_path
         ).decode("utf-8")
 
         # clear previous version content before populating with latest version
@@ -605,7 +601,7 @@ class Stm32SerieUpdate:
         # Generate a patch for each file in the module
 
         os_cmd(
-            ("git", "diff", "HEAD~1", ">>", "new_version.patch"),
+            "git diff HEAD~1 >> new_version.patch",
             shell=True,
             cwd=self.stm32cube_temp,
         )
