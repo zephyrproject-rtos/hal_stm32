@@ -207,7 +207,7 @@
 			};
 
 			tim2_ch1_pa0: tim2_ch1_pa0 {
-				pinmux = <STM32_PINMUX('A', 0, ANALOG)>;
+				pinmux = <STM32_PINMUX('A', 0, AF2)>;
 			};
 
 			tim2_ch2_pa1: tim2_ch2_pa1 {
@@ -293,7 +293,7 @@
 			};
 
 			usart2_cts_pa0: usart2_cts_pa0 {
-				pinmux = <STM32_PINMUX('A', 0, ANALOG)>;
+				pinmux = <STM32_PINMUX('A', 0, AF4)>;
 				bias-pull-up;
 				drive-open-drain;
 			};
