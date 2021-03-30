@@ -106,7 +106,7 @@
     When the compilation define USE_HAL_DCMI_REGISTER_CALLBACKS is set to 0 or
     not defined, the callback registering feature is not available
     and weak (surcharged) callbacks are used.
-	
+
   @endverbatim
   ******************************************************************************
   * @attention
@@ -959,7 +959,7 @@ HAL_StatusTypeDef HAL_DCMI_RegisterCallback(DCMI_HandleTypeDef *hdcmi, HAL_DCMI_
         /* update return status */
         status = HAL_ERROR;
         break;
-      }		
+      }
     }
     else
     {
@@ -1037,7 +1037,7 @@ HAL_StatusTypeDef HAL_DCMI_UnRegisterCallback(DCMI_HandleTypeDef *hdcmi, HAL_DCM
       /* update return status */
       status = HAL_ERROR;
       break;
-    }		
+    }
   }
   else
   {
