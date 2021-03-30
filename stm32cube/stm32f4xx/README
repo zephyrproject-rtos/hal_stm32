@@ -6,7 +6,7 @@ Origin:
    http://www.st.com/en/embedded-software/stm32cubef4.html
 
 Status:
-   version v1.25.2
+   version v1.26.0
 
 Purpose:
    ST Microelectronics official MCU package for STM32F4 series.
@@ -23,7 +23,7 @@ URL:
    https://github.com/STMicroelectronics/STM32CubeF4
 
 Commit:
-   2d5b78e2da98fb44e028d87f4ff815427991affc
+   d599a824dfe257bee2aeff403caf592da816b126
 
 Maintained-by:
    External
@@ -35,6 +35,7 @@ License Link:
    https://opensource.org/licenses/BSD-3-Clause
 
 Patch List:
+--> please check that the following list is still valid:
 
    *Changes from official delivery:
     -dos2unix applied
