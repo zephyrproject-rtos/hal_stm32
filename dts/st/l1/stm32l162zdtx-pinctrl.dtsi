@@ -621,7 +621,7 @@
 			};
 
 			tim9_ch2_pe6: tim9_ch2_pe6 {
-				pinmux = <STM32_PINMUX('E', 6, ANALOG)>;
+				pinmux = <STM32_PINMUX('E', 6, AF3)>;
 			};
 
 			/* UART_CTS / USART_CTS / LPUART_CTS */

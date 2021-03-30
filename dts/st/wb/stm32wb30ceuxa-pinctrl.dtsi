@@ -219,27 +219,27 @@
 			};
 
 			tim16_ch1_pa6: tim16_ch1_pa6 {
-				pinmux = <STM32_PINMUX('A', 6, AF14)>;
+				pinmux = <STM32_PINMUX('A', 6, ANALOG)>;
 			};
 
 			tim16_ch1n_pb6: tim16_ch1n_pb6 {
-				pinmux = <STM32_PINMUX('B', 6, AF14)>;
+				pinmux = <STM32_PINMUX('B', 6, ANALOG)>;
 			};
 
 			tim16_ch1_pb8: tim16_ch1_pb8 {
-				pinmux = <STM32_PINMUX('B', 8, AF14)>;
+				pinmux = <STM32_PINMUX('B', 8, ANALOG)>;
 			};
 
 			tim17_ch1_pa7: tim17_ch1_pa7 {
-				pinmux = <STM32_PINMUX('A', 7, AF14)>;
+				pinmux = <STM32_PINMUX('A', 7, ANALOG)>;
 			};
 
 			tim17_ch1n_pb7: tim17_ch1n_pb7 {
-				pinmux = <STM32_PINMUX('B', 7, AF14)>;
+				pinmux = <STM32_PINMUX('B', 7, ANALOG)>;
 			};
 
 			tim17_ch1_pb9: tim17_ch1_pb9 {
-				pinmux = <STM32_PINMUX('B', 9, AF14)>;
+				pinmux = <STM32_PINMUX('B', 9, ANALOG)>;
 			};
 
 			/* UART_CTS / USART_CTS / LPUART_CTS */
