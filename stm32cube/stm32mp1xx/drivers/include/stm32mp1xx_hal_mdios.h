@@ -28,7 +28,7 @@
 #endif
 
 #if defined (MDIOS)
-   
+
 /* Includes ------------------------------------------------------------------*/
 #include "stm32mp1xx_hal_def.h"
 
@@ -38,13 +38,13 @@
 
 /** @addtogroup MDIOS
   * @{
-  */ 
+  */
 
 /* Exported types ------------------------------------------------------------*/
 /** @defgroup MDIOS_Exported_Types MDIOS Exported Types
   * @{
   */
-   
+
 /** @defgroup MDIOS_Exported_Types_Group1 MDIOS State structures definition
   * @{
   */
@@ -57,7 +57,7 @@ typedef enum
   HAL_MDIOS_STATE_ERROR             = 0x04U     /*!< Reception process is ongoing                       */
 }HAL_MDIOS_StateTypeDef;
 
-/** 
+/**
   * @}
   */
 
@@ -67,13 +67,13 @@ typedef enum
 
 typedef struct
 {
-  uint32_t PortAddress;           /*!< Specifies the MDIOS port address.   
+  uint32_t PortAddress;           /*!< Specifies the MDIOS port address.
                                        This parameter can be a value from 0 to 31 */
-  uint32_t PreambleCheck;         /*!< Specifies whether the preamble check is enabled or disabled.   
-                                       This parameter can be a value of @ref MDIOS_Preamble_Check */   
+  uint32_t PreambleCheck;         /*!< Specifies whether the preamble check is enabled or disabled.
+                                       This parameter can be a value of @ref MDIOS_Preamble_Check */
 }MDIOS_InitTypeDef;
 
-/** 
+/**
   * @}
   */
 
@@ -84,19 +84,19 @@ typedef struct
 typedef struct
 {
   MDIOS_TypeDef                *Instance;     /*!< Register base address       */
-  
+
   MDIOS_InitTypeDef            Init;          /*!< MDIOS Init Structure        */
-  
+
   __IO HAL_MDIOS_StateTypeDef  State;         /*!< MDIOS communication state   */
-  
+
   HAL_LockTypeDef              Lock;          /*!< MDIOS Lock                  */
 }MDIOS_HandleTypeDef;
 
-/** 
+/**
   * @}
   */
 
-/** 
+/**
   * @}
   */
 
@@ -109,7 +109,7 @@ typedef struct
   * @{
   */
 #define MDIOS_PREAMBLE_CHECK_ENABLE      ((uint32_t)0x00000000U)
-#define MDIOS_PREAMBLE_CHECK_DISABLE     MDIOS_CR_DPC  
+#define MDIOS_PREAMBLE_CHECK_DISABLE     MDIOS_CR_DPC
 /**
   * @}
   */
@@ -151,7 +151,7 @@ typedef struct
 #define MDIOS_REG31                     ((uint32_t)0x0000001FU)
 /**
   * @}
-  */ 
+  */
 
 /** @defgroup MDIOS_Registers_Flags  MDIOS Registers Flags
   * @{
@@ -220,7 +220,7 @@ typedef struct
 /**
   * @}
   */
-  
+
 /**
   * @}
   */
@@ -251,7 +251,7 @@ typedef struct
   *         This parameter can be one or a combination of the following values:
   *            @arg MDIOS_IT_WRITE: Register write interrupt
   *            @arg MDIOS_IT_READ: Register read interrupt
-  *            @arg MDIOS_IT_ERROR: Error interrupt 
+  *            @arg MDIOS_IT_ERROR: Error interrupt
   * @retval None
   */
 #define __HAL_MDIOS_ENABLE_IT(__HANDLE__, __INTERRUPT__)  ((__HANDLE__)->Instance->CR |= (__INTERRUPT__))
@@ -263,7 +263,7 @@ typedef struct
   *         This parameter can be one or a combination of the following values:
   *            @arg MDIOS_IT_WRITE: Register write interrupt
   *            @arg MDIOS_IT_READ: Register read interrupt
-  *            @arg MDIOS_IT_ERROR: Error interrupt 
+  *            @arg MDIOS_IT_ERROR: Error interrupt
   * @retval None
   */
 #define __HAL_MDIOS_DISABLE_IT(__HANDLE__, __INTERRUPT__)  ((__HANDLE__)->Instance->CR &= ~(__INTERRUPT__))
@@ -288,7 +288,7 @@ typedef struct
   *         This parameter can be one or a combination of the following values:
   *            @arg MDIOS_TURNARROUND_ERROR_FLAG: Register write interrupt
   *            @arg MDIOS_START_ERROR_FLAG: Register read interrupt
-  *            @arg MDIOS_PREAMBLE_ERROR_FLAG: Error interrupt 
+  *            @arg MDIOS_PREAMBLE_ERROR_FLAG: Error interrupt
   * @retval The state of the error flag
   */
 #define __HAL_MDIOS_GET_ERROR_FLAG(__HANDLE__, __FLAG__)       ((__HANDLE__)->Instance->SR &  (__FLAG__))
@@ -299,7 +299,7 @@ typedef struct
   *         This parameter can be one or a combination of the following values:
   *            @arg MDIOS_TURNARROUND_ERROR_FLAG: Register write interrupt
   *            @arg MDIOS_START_ERROR_FLAG: Register read interrupt
-  *            @arg MDIOS_PREAMBLE_ERROR_FLAG: Error interrupt 
+  *            @arg MDIOS_PREAMBLE_ERROR_FLAG: Error interrupt
   * @retval none
   */
 #define __HAL_MDIOS_CLEAR_ERROR_FLAG(__HANDLE__, __FLAG__)       ((__HANDLE__)->Instance->CLRFR) |= (__FLAG__)
@@ -311,7 +311,7 @@ typedef struct
   *            This parameter can be one or a combination of the following values:
   *            @arg MDIOS_IT_WRITE: Register write interrupt
   *            @arg MDIOS_IT_READ: Register read interrupt
-  *            @arg MDIOS_IT_ERROR: Error interrupt 
+  *            @arg MDIOS_IT_ERROR: Error interrupt
   * @retval The state of the interrupt source
   */
 #define __HAL_MDIOS_GET_IT_SOURCE(__HANDLE__, __INTERRUPT__) ((__HANDLE__)->Instance->CR & (__INTERRUPT__))
@@ -320,7 +320,7 @@ typedef struct
   * @brief Enable the MDIOS WAKEUP Exti Line.
   * @param  __EXTI_LINE__: specifies the MDIOS WAKEUP Exti sources to be enabled.
   * This parameter can be:
-  *   @arg MDIOS_WAKEUP_EXTI_LINE     
+  *   @arg MDIOS_WAKEUP_EXTI_LINE
   * @retval None.
   */
 #define __HAL_MDIOS_WAKEUP_EXTI_ENABLE_IT(__EXTI_LINE__)   (EXTI_D1->IMR2 |= (__EXTI_LINE__))
@@ -329,16 +329,16 @@ typedef struct
   * @brief Enable the MDIOS WAKEUP Exti Line by Domain2.
   * @param  __EXTILINE__: specifies the MDIOS WAKEUP Exti sources to be enabled.
   * This parameter can be:
-  *   @arg MDIOS_WAKEUP_EXTI_LINE     
+  *   @arg MDIOS_WAKEUP_EXTI_LINE
   * @retval None.
   */
-#define __HAL_MDIOS_WAKEUP_EXTID2_ENABLE_IT(__EXTI_LINE__)   (EXTI_D2->IMR2 |= (__EXTI_LINE__)) 
+#define __HAL_MDIOS_WAKEUP_EXTID2_ENABLE_IT(__EXTI_LINE__)   (EXTI_D2->IMR2 |= (__EXTI_LINE__))
 
 /**
   * @brief checks whether the specified MDIOS WAKEUP Exti interrupt flag is set or not.
   * @param  __EXTILINE__: specifies the MDIOS WAKEUP Exti sources to be cleared.
   * This parameter can be:
-  *   @arg MDIOS_WAKEUP_EXTI_LINE  
+  *   @arg MDIOS_WAKEUP_EXTI_LINE
   * @retval EXTI MDIOS WAKEUP Line Status.
   */
 #define __HAL_MDIOS_WAKEUP_EXTI_GET_FLAG(__EXTI_LINE__)  (EXTI_D1->PR2 & (__EXTI_LINE__))
@@ -347,7 +347,7 @@ typedef struct
   * @brief checks whether the specified MDIOS WAKEUP Exti interrupt flag is set or not.
   * @param  __EXTILINE__: specifies the MDIOS WAKEUP Exti sources to be cleared.
   * This parameter can be:
-  *   @arg MDIOS_WAKEUP_EXTI_LINE  
+  *   @arg MDIOS_WAKEUP_EXTI_LINE
   * @retval EXTI MDIOS WAKEUP Line Status.
   */
 #define __HAL_MDIOS_WAKEUP_EXTID2_GET_FLAG(__EXTI_LINE__)  (EXTI_D2->PR2 & (__EXTI_LINE__))
@@ -356,7 +356,7 @@ typedef struct
   * @brief Clear the MDIOS WAKEUP Exti flag.
   * @param  __EXTILINE__: specifies the MDIOS WAKEUP Exti sources to be cleared.
   * This parameter can be:
-  *   @arg MDIOS_WAKEUP_EXTI_LINE  
+  *   @arg MDIOS_WAKEUP_EXTI_LINE
   * @retval None.
   */
 #define __HAL_MDIOS_WAKEUP_EXTI_CLEAR_FLAG(__EXTI_LINE__) (EXTI_D1->PR2 = (__EXTI_LINE__))
@@ -365,7 +365,7 @@ typedef struct
   * @brief Clear the MDIOS WAKEUP Exti flag.
   * @param  __EXTILINE__: specifies the MDIOS WAKEUP Exti sources to be cleared.
   * This parameter can be:
-  *   @arg MDIOS_WAKEUP_EXTI_LINE  
+  *   @arg MDIOS_WAKEUP_EXTI_LINE
   * @retval None.
   */
 #define __HAL_MDIOS_WAKEUP_EXTID2_CLEAR_FLAG(__EXTI_LINE__) (EXTI_D2->PR2 = (__EXTI_LINE__))
@@ -378,7 +378,7 @@ typedef struct
   * @retval None
   */
 #define __HAL_MDIOS_WAKEUP_EXTI_ENABLE_RISING_EDGE(__EXTI_LINE__) (EXTI->FTSR2 &= ~(__EXTI_LINE__)); \
-                                                                   (EXTI->RTSR2 |= (__EXTI_LINE__)) 
+                                                                   (EXTI->RTSR2 |= (__EXTI_LINE__))
 
 /**
   * @brief  enable falling edge interrupt on selected EXTI line.
@@ -407,7 +407,7 @@ typedef struct
   *  @arg MDIOS_WAKEUP_EXTI_LINE
   * @retval None
   */
-#define __HAL_MDIOS_WAKEUP_EXTI_GENERATE_SWIT(__EXTI_LINE__) (EXTI->SWIER2 |= (__EXTI_LINE__))   
+#define __HAL_MDIOS_WAKEUP_EXTI_GENERATE_SWIT(__EXTI_LINE__) (EXTI->SWIER2 |= (__EXTI_LINE__))
 
 /**
   * @}
@@ -470,7 +470,7 @@ HAL_MDIOS_StateTypeDef HAL_MDIOS_GetState(MDIOS_HandleTypeDef *hmdios);
 
 /**
   * @}
-  */ 
+  */
 
 /* Private variables ---------------------------------------------------------*/
 /** @defgroup MDIOS_Private_Variables MDIOS Private Variables
@@ -505,7 +505,7 @@ HAL_MDIOS_StateTypeDef HAL_MDIOS_GetState(MDIOS_HandleTypeDef *hmdios);
  /**
   * @}
   */
-  
+
 /* Private functions ---------------------------------------------------------*/
 /** @defgroup MDIOS_Private_Functions MDIOS Private Functions
   * @{

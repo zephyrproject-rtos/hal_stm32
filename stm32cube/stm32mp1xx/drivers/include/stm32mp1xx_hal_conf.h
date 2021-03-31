@@ -15,7 +15,7 @@
   *                        opensource.org/licenses/BSD-3-Clause
   *
   ******************************************************************************
-  */ 
+  */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef STM32MP1xx_HAL_CONF_H
@@ -30,7 +30,7 @@
 
 /* ########################## Module Selection ############################## */
 /**
-  * @brief This is the list of modules to be used in the HAL driver 
+  * @brief This is the list of modules to be used in the HAL driver
   */
 
 #define HAL_MODULE_ENABLED
@@ -59,9 +59,11 @@
 #define HAL_RTC_MODULE_ENABLED
 #define HAL_SAI_MODULE_ENABLED
 #define HAL_SD_MODULE_ENABLED
+#define HAL_SMARTCARD_MODULE_ENABLED
 #define HAL_SMBUS_MODULE_ENABLED
 #define HAL_SPDIFRX_MODULE_ENABLED
 #define HAL_SPI_MODULE_ENABLED
+#define HAL_SRAM_MODULE_ENABLED
 #define HAL_TIM_MODULE_ENABLED
 #define HAL_UART_MODULE_ENABLED
 #define HAL_USART_MODULE_ENABLED
@@ -77,6 +79,7 @@
 #define USE_HAL_I2C_REGISTER_CALLBACKS    0u
 #define USE_HAL_RNG_REGISTER_CALLBACKS    0u
 #define USE_HAL_SPI_REGISTER_CALLBACKS    0u
+#define USE_HAL_SRAM_REGISTER_CALLBACKS   0U
 #define USE_HAL_UART_REGISTER_CALLBACKS   0u
 #define USE_HAL_USART_REGISTER_CALLBACKS  0u
 #define USE_HAL_WWDG_REGISTER_CALLBACKS   0u
@@ -93,15 +96,15 @@
 /**
   * @brief Adjust the value of External High Speed oscillator (HSE) used in your application.
   *        This value is used by the RCC HAL module to compute the system frequency
-  *        (when HSE is used as system clock source, directly or through the PLL).  
+  *        (when HSE is used as system clock source, directly or through the PLL).
   */
-#if !defined  (HSE_VALUE) 
+#if !defined  (HSE_VALUE)
   #define HSE_VALUE            24000000U  /*!< Value of the External oscillator in Hz */
 #endif /* HSE_VALUE */
 
 /**
-  * @brief In the following line adjust the External High Speed oscillator (HSE) Startup 
-  *        Timeout value 
+  * @brief In the following line adjust the External High Speed oscillator (HSE) Startup
+  *        Timeout value
   */
 #if !defined  (HSE_STARTUP_TIMEOUT)
   #define HSE_STARTUP_TIMEOUT  100U      /*!< Time out for HSE start up, in ms */
@@ -110,25 +113,25 @@
 /**
   * @brief Internal High Speed oscillator (HSI) value.
   *        This value is used by the RCC HAL module to compute the system frequency
-  *        (when HSI is used as system clock source, directly or through the PLL). 
+  *        (when HSI is used as system clock source, directly or through the PLL).
   */
 #if !defined  (HSI_VALUE)
   #define HSI_VALUE            64000000U  /*!< Value of the Internal oscillator in Hz*/
 #endif /* HSI_VALUE */
 
 /**
-  * @brief In the following line adjust the Internal High Speed oscillator (HSI) Startup 
-  *        Timeout value 
+  * @brief In the following line adjust the Internal High Speed oscillator (HSI) Startup
+  *        Timeout value
   */
-#if !defined  (HSI_STARTUP_TIMEOUT) 
+#if !defined  (HSI_STARTUP_TIMEOUT)
   #define HSI_STARTUP_TIMEOUT  5000U     /*!< Time out for HSI start up */
-#endif /* HSI_STARTUP_TIMEOUT */  
+#endif /* HSI_STARTUP_TIMEOUT */
 
 
 /**
   * @brief Internal Low Speed oscillator (LSI) value.
   */
-#if !defined  (LSI_VALUE) 
+#if !defined  (LSI_VALUE)
   #define LSI_VALUE            32000U
 #endif /* LSI_VALUE */                   /*!< Value of the Internal Low Speed oscillator in Hz
                                              The real value may vary depending on the variations
@@ -170,8 +173,8 @@
 /* ########################### System Configuration ######################### */
 /**
   * @brief This is the HAL system configuration section
-  */     
-#define  VDD_VALUE                    3300U  /*!< Value of VDD in mv */           
+  */
+#define  VDD_VALUE                    3300U  /*!< Value of VDD in mv */
 #define  TICK_INT_PRIORITY            ((uint32_t)(1U<<4U) - 1U) /*!< tick interrupt priority (lowest by default)             */
                                                                               /*  Warning: Must be set to higher priority for HAL_Delay()  */
                                                                               /*  and HAL_GetTick() usage under interrupt context          */
@@ -182,14 +185,14 @@
 
 /* ########################## Assert Selection ############################## */
 /**
-  * @brief Uncomment the line below to expanse the "assert_param" macro in the 
+  * @brief Uncomment the line below to expanse the "assert_param" macro in the
   *        HAL drivers code
   */
 /*#define USE_FULL_ASSERT    1*/
 
 /* Includes ------------------------------------------------------------------*/
 /**
-  * @brief Include module's header file 
+  * @brief Include module's header file
   */
 
 #ifdef HAL_RCC_MODULE_ENABLED
@@ -288,6 +291,10 @@
  #include "stm32mp1xx_hal_sd.h"
 #endif /* HAL_SD_MODULE_ENABLED */
 
+#ifdef HAL_SMARTCARD_MODULE_ENABLED
+ #include "stm32mp1xx_hal_smartcard.h"
+#endif /* HAL_SMARTCARD_MODULE_ENABLED */
+
 #ifdef HAL_SMBUS_MODULE_ENABLED
  #include "stm32mp1xx_hal_smbus.h"
 #endif /* HAL_SMBUS_MODULE_ENABLED */
@@ -299,6 +306,10 @@
 #ifdef HAL_SPI_MODULE_ENABLED
  #include "stm32mp1xx_hal_spi.h"
 #endif /* HAL_SPI_MODULE_ENABLED */
+
+#ifdef HAL_SRAM_MODULE_ENABLED
+  #include "stm32mp1xx_hal_sram.h"
+#endif /* HAL_SRAM_MODULE_ENABLED */
 
 #ifdef HAL_TIM_MODULE_ENABLED
  #include "stm32mp1xx_hal_tim.h"
@@ -322,7 +333,7 @@
   * @brief  The assert_param macro is used for function's parameters check.
   * @param  expr: If expr is false, it calls assert_failed function
   *         which reports the name of the source file and the source
-  *         line number of the call that failed. 
+  *         line number of the call that failed.
   *         If expr is true, it returns no value.
   * @retval None
   */
@@ -331,8 +342,8 @@
   void assert_failed(uint8_t* file, uint32_t line);
 #else
   #define assert_param(expr) ((void)0U)
-#endif /* USE_FULL_ASSERT */    
-    
+#endif /* USE_FULL_ASSERT */
+
 #ifdef __cplusplus
 }
 #endif
