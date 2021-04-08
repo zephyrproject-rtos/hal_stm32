@@ -2392,6 +2392,13 @@
 				bias-pull-up;
 			};
 
+            /* UART_DE / USART_DE / LPUART_DE */
+
+            uart2_de_pd4: uart2_de_pd4 {
+                pinmux = <STM32_PINMUX('D', 4, AF7)>;
+                bias-pull-down;
+            };
+
 			/* USB_OTG_FS */
 
 			usb_otg_fs_sof_pa8: usb_otg_fs_sof_pa8 {
