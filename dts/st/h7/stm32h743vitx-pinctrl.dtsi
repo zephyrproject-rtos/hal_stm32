@@ -1917,6 +1917,13 @@
 				bias-pull-up;
 			};
 
+            /* UART_DE / USART_DE / LPUART_DE */
+
+            uart2_de_pd4: uart2_de_pd4 {
+                pinmux = <STM32_PINMUX('D', 4, AF7)>;
+                bias-pull-down;
+            };
+
 			/* USB_OTG_FS */
 
 			usb_otg_fs_sof_pa8: usb_otg_fs_sof_pa8 {
@@ -2006,6 +2013,18 @@
 			usb_otg_hs_ulpi_nxt_pc3: usb_otg_hs_ulpi_nxt_pc3 {
 				pinmux = <STM32_PINMUX('C', 3, AF10)>;
 			};
+
+            /* MCO */
+
+            mco1_pa8: mco1_pa8 {
+                pinmux = <STM32_PINMUX('A', 8, AF0)>;
+                slew-rate = "very-high-speed";
+            };
+
+            mco2_pc9: mco2_pc9 {
+                pinmux = <STM32_PINMUX('C', 9, AF0)>;
+                slew-rate = "very-high-speed";
+            };
 
 		};
 	};
