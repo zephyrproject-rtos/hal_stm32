@@ -235,26 +235,31 @@
 
 			spi1_sck_pa1: spi1_sck_pa1 {
 				pinmux = <STM32_PINMUX('A', 1, AF0)>;
+				bias-pull-down;
 				slew-rate = "very-high-speed";
 			};
 
 			spi1_sck_pa5: spi1_sck_pa5 {
 				pinmux = <STM32_PINMUX('A', 5, AF0)>;
+				bias-pull-down;
 				slew-rate = "very-high-speed";
 			};
 
 			spi2_sck_pa0: spi2_sck_pa0 {
 				pinmux = <STM32_PINMUX('A', 0, AF0)>;
+				bias-pull-down;
 				slew-rate = "very-high-speed";
 			};
 
 			spi2_sck_pb8: spi2_sck_pb8 {
 				pinmux = <STM32_PINMUX('B', 8, AF1)>;
+				bias-pull-down;
 				slew-rate = "very-high-speed";
 			};
 
 			spi2_sck_pd1: spi2_sck_pd1 {
 				pinmux = <STM32_PINMUX('D', 1, AF1)>;
+				bias-pull-down;
 				slew-rate = "very-high-speed";
 			};
 

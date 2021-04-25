@@ -94,6 +94,7 @@
 
 			spi1_sck_pa5: spi1_sck_pa5 {
 				pinmux = <STM32_PINMUX('A', 5, AF0)>;
+				bias-pull-down;
 				slew-rate = "very-high-speed";
 			};
 

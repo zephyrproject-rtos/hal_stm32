@@ -1554,101 +1554,121 @@
 
 			spi1_sck_pa5: spi1_sck_pa5 {
 				pinmux = <STM32_PINMUX('A', 5, AF5)>;
+				bias-pull-down;
 				slew-rate = "very-high-speed";
 			};
 
 			spi1_sck_pb3: spi1_sck_pb3 {
 				pinmux = <STM32_PINMUX('B', 3, AF5)>;
+				bias-pull-down;
 				slew-rate = "very-high-speed";
 			};
 
 			spi1_sck_pg11: spi1_sck_pg11 {
 				pinmux = <STM32_PINMUX('G', 11, AF5)>;
+				bias-pull-down;
 				slew-rate = "very-high-speed";
 			};
 
 			spi2_sck_pa9: spi2_sck_pa9 {
 				pinmux = <STM32_PINMUX('A', 9, AF5)>;
+				bias-pull-down;
 				slew-rate = "very-high-speed";
 			};
 
 			spi2_sck_pa12: spi2_sck_pa12 {
 				pinmux = <STM32_PINMUX('A', 12, AF5)>;
+				bias-pull-down;
 				slew-rate = "very-high-speed";
 			};
 
 			spi2_sck_pb10: spi2_sck_pb10 {
 				pinmux = <STM32_PINMUX('B', 10, AF5)>;
+				bias-pull-down;
 				slew-rate = "very-high-speed";
 			};
 
 			spi2_sck_pb13: spi2_sck_pb13 {
 				pinmux = <STM32_PINMUX('B', 13, AF5)>;
+				bias-pull-down;
 				slew-rate = "very-high-speed";
 			};
 
 			spi2_sck_pd3: spi2_sck_pd3 {
 				pinmux = <STM32_PINMUX('D', 3, AF5)>;
+				bias-pull-down;
 				slew-rate = "very-high-speed";
 			};
 
 			spi2_sck_pi1: spi2_sck_pi1 {
 				pinmux = <STM32_PINMUX('I', 1, AF5)>;
+				bias-pull-down;
 				slew-rate = "very-high-speed";
 			};
 
 			spi3_sck_pb3: spi3_sck_pb3 {
 				pinmux = <STM32_PINMUX('B', 3, AF6)>;
+				bias-pull-down;
 				slew-rate = "very-high-speed";
 			};
 
 			spi3_sck_pc10: spi3_sck_pc10 {
 				pinmux = <STM32_PINMUX('C', 10, AF6)>;
+				bias-pull-down;
 				slew-rate = "very-high-speed";
 			};
 
 			spi4_sck_pe2: spi4_sck_pe2 {
 				pinmux = <STM32_PINMUX('E', 2, AF5)>;
+				bias-pull-down;
 				slew-rate = "very-high-speed";
 			};
 
 			spi4_sck_pe12: spi4_sck_pe12 {
 				pinmux = <STM32_PINMUX('E', 12, AF5)>;
+				bias-pull-down;
 				slew-rate = "very-high-speed";
 			};
 
 			spi5_sck_pf7: spi5_sck_pf7 {
 				pinmux = <STM32_PINMUX('F', 7, AF5)>;
+				bias-pull-down;
 				slew-rate = "very-high-speed";
 			};
 
 			spi5_sck_ph6: spi5_sck_ph6 {
 				pinmux = <STM32_PINMUX('H', 6, AF5)>;
+				bias-pull-down;
 				slew-rate = "very-high-speed";
 			};
 
 			spi5_sck_pk0: spi5_sck_pk0 {
 				pinmux = <STM32_PINMUX('K', 0, AF5)>;
+				bias-pull-down;
 				slew-rate = "very-high-speed";
 			};
 
 			spi6_sck_pa5: spi6_sck_pa5 {
 				pinmux = <STM32_PINMUX('A', 5, AF8)>;
+				bias-pull-down;
 				slew-rate = "very-high-speed";
 			};
 
 			spi6_sck_pb3: spi6_sck_pb3 {
 				pinmux = <STM32_PINMUX('B', 3, AF8)>;
+				bias-pull-down;
 				slew-rate = "very-high-speed";
 			};
 
 			spi6_sck_pc12: spi6_sck_pc12 {
 				pinmux = <STM32_PINMUX('C', 12, AF5)>;
+				bias-pull-down;
 				slew-rate = "very-high-speed";
 			};
 
 			spi6_sck_pg13: spi6_sck_pg13 {
 				pinmux = <STM32_PINMUX('G', 13, AF5)>;
+				bias-pull-down;
 				slew-rate = "very-high-speed";
 			};
 
