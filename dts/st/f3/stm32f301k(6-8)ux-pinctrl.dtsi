@@ -195,11 +195,13 @@
 
 			spi2_sck_pf1: spi2_sck_pf1 {
 				pinmux = <STM32_PINMUX('F', 1, AF5)>;
+				bias-pull-down;
 				slew-rate = "very-high-speed";
 			};
 
 			spi3_sck_pb3: spi3_sck_pb3 {
 				pinmux = <STM32_PINMUX('B', 3, AF6)>;
+				bias-pull-down;
 				slew-rate = "very-high-speed";
 			};
 
