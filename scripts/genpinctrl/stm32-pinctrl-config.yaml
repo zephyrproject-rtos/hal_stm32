@@ -191,6 +191,7 @@
 - name: SPI_SCK
   match: "^SPI\\d+_SCK$"
   slew-rate: very-high-speed
+  bias: pull-down
 
 - name: SPI_NSS
   match: "^SPI\\d+_NSS$"
