@@ -118,13 +118,23 @@ class Stm32SerieUpdate:
 
     def clone_cube_repo(self):
         """Clone or fetch a stm32 serie repo"""
+        # check whether master branch exist, otherwise use main branch
+        master_branch_exist = subprocess.check_output(
+            "git ls-remote --heads origin master", cwd=self.stm32cube_serie_path
+        ).decode("utf-8")
+        if master_branch_exist:
+            branch = "master"
+        else:
+            branch = "main"
+        logging.info("Branch used:" + branch)
+
         if self.stm32cube_serie_path.exists():
             logging.info("fetching repo " + str(self.stm32cube_serie_path))
             # if already exists, then just clean and fetch
             os_cmd(("git", "clean", "-fdx"), cwd=self.stm32cube_serie_path)
             os_cmd(("git", "fetch"), cwd=self.stm32cube_serie_path)
             os_cmd(
-                ("git", "reset", "--hard", "master"),
+                ("git", "reset", "--hard", branch),
                 cwd=self.stm32cube_serie_path,
             )
         else:
@@ -135,7 +145,7 @@ class Stm32SerieUpdate:
 
         # get the latest version of cube,
         # with the most recent one created being the last entry.
-        os_cmd(("git", "checkout", "master"), cwd=self.stm32cube_serie_path)
+        os_cmd(("git", "checkout", branch), cwd=self.stm32cube_serie_path)
         self.version_tag = subprocess.check_output(
             "git tag -l", cwd=self.stm32cube_serie_path
         ).splitlines()
