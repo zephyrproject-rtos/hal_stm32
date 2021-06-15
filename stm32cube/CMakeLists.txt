@@ -63,4 +63,8 @@ foreach(stm_soc ${stm_socs})
   endif()
 endforeach()
 
+if(CONFIG_USE_STM32_ASSERT)
+	zephyr_compile_definitions( -DUSE_FULL_ASSERT )
+endif()
+
 zephyr_include_directories(common_ll/include)
