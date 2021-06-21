@@ -82,6 +82,16 @@ driver Kconfig file should include the following entry
 	select USE_STM32_LL_I2C
 
 
+Similar to Zephyr, STM32Cube HAL and LL APIs embed asserts which are
+provided for parameters checking. You can benefit from these by enabling
+the following symbols:
+
+.. code-block:: none
+
+     CONFIG_USE_STM32_ASSERT=y
+     CONFIG_ASSERT=y
+
+
 Use STM32Cube in your application:
 ==================================
 It may happen that you want to access STM32Cube APIs in your application,

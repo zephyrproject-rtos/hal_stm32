@@ -41,4 +41,8 @@ Patch List:
     -trailing white spaces removed
     -added include guards to stm32g0xx_hal_hcd.h(STM32CubeG0 GH issue: 13)
 
+   *Provision to enable hal & ll asserts added
+    -Added stm32cube/stm32g0xx/drivers/include/stm32_assert.h
+    -Removed unused stm32cube/stm32g0xx/drivers/include/stm32_assert_template.h
+
    See release_note.html from STM32Cube

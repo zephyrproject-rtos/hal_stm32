@@ -40,4 +40,8 @@ Patch List:
     -dos2unix applied
     -trailing white spaces removed
 
+   *Provision to enable hal & ll asserts added
+    -Added stm32cube/stm32l5xx/drivers/include/stm32_assert.h
+    -Removed unused stm32cube/stm32l5xx/drivers/include/stm32_assert_template.h
+
    See release_note.html from STM32Cube
