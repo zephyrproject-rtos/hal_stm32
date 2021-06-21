@@ -40,4 +40,7 @@ Patch List:
     -dos2unix applied
     -trailing white spaces removed
 
+   *Provision to enable hal & ll asserts added
+    -Modified stm32cube/stm32mp1xx/drivers/include/stm32_assert.h
+
    See release_note.html from STM32Cube

@@ -48,4 +48,8 @@ Patch List:
       drivers/include/stm32f1xx_hal_conf.h
      ST Bug tracker ID: NA. Not a stm32cube issue
 
+   *Provision to enable hal & ll asserts added
+    -Added stm32cube/stm32f1xx/drivers/include/stm32_assert.h
+    -Removed unused stm32cube/stm32f1xx/drivers/include/stm32_assert_template.h
+
    See release_note.html from STM32Cube
