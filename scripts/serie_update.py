@@ -82,6 +82,9 @@ class Stm32SerieUpdate:
         if not self.stm32cube_repo_path.exists():
             self.stm32cube_repo_path.mkdir()
 
+        if not os.getenv("ZEPHYR_BASE"):
+            raise Exception("ZEPHYR_BASE Not defined")
+
         self.zephyr_hal_stm32_path = (
             Path(os.getenv("ZEPHYR_BASE")).absolute()
             / ".."
