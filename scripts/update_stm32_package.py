@@ -87,7 +87,16 @@ if args.repo:
 else:
     repo_path = Path(os.getenv("HOME")) / "STM32Cube_repo"
 
+
+if not args.noclean:
+    print("Do you want to clean downloaded repo (" + str(repo_path) + ") at the end of updates?")
+    while ( res:=input("(Enter y/n) ").lower() ) not in {"y", "n"}: pass
+    if res=="n":
+        logging.info("Add option --noclean")
+        args.noclean=True
+
 if args.stm32_serie:
+    logging.info(args.noclean)
     update = serie_update.Stm32SerieUpdate(
         args.stm32_serie, repo_path, args.force, args.noclean
     )
