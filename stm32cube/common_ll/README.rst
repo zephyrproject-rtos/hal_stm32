@@ -24,6 +24,7 @@ stm32l1xx       1.9.0
 stm32l4xx       1.17.0
 stm32l5xx       1.4.0
 stm32mp1xx      1.4.0
+stm32u5xx       1.0.0.
 stm32wbxx       1.9.0
 stm32wlxx       1.0.0
 =============== ===============
