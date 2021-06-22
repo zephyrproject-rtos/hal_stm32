@@ -117,23 +117,25 @@ class Stm32SerieUpdate:
         self.latest_version = ""
         self.latest_commit = ""
 
-    def clone_cube_repo(self):
-        """Clone or fetch a stm32 serie repo"""
+    def major_branch(self):
         # check whether master branch exist, otherwise use main branch
         master_branch_exist = subprocess.check_output(
-            "git ls-remote --heads origin master", cwd=self.stm32cube_serie_path
+            ("git", "ls-remote", "--heads", "origin", "master"),
+            cwd=self.stm32cube_serie_path,
         ).decode("utf-8")
         if master_branch_exist:
-            branch = "master"
+            return "master"
         else:
-            branch = "main"
-        logging.info("Branch used:" + branch)
+            return "main"
 
+    def clone_cube_repo(self):
+        """Clone or fetch a stm32 serie repo"""
         if self.stm32cube_serie_path.exists():
             logging.info("fetching repo " + str(self.stm32cube_serie_path))
             # if already exists, then just clean and fetch
             os_cmd(("git", "clean", "-fdx"), cwd=self.stm32cube_serie_path)
             os_cmd(("git", "fetch"), cwd=self.stm32cube_serie_path)
+            branch = self.major_branch()
             os_cmd(
                 ("git", "reset", "--hard", branch),
                 cwd=self.stm32cube_serie_path,
@@ -143,6 +145,9 @@ class Stm32SerieUpdate:
                 ("git", "clone", STM32_CUBE_REPO_BASE + self.serie + ".git"),
                 cwd=self.stm32cube_repo_path,
             )
+            branch = self.major_branch()
+
+        logging.info("Branch used: %s", branch)
 
         # get the latest version of cube,
         # with the most recent one created being the last entry.
