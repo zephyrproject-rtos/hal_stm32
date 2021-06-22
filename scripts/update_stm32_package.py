@@ -87,6 +87,9 @@ if args.repo:
 else:
     repo_path = Path(os.getenv("HOME")) / "STM32Cube_repo"
 
+if not os.getenv("ZEPHYR_BASE"):
+    raise Exception("ZEPHYR_BASE Not defined")
+
 if args.stm32_serie:
     update = serie_update.Stm32SerieUpdate(
         args.stm32_serie, repo_path, args.force, args.noclean
