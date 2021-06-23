@@ -151,6 +151,7 @@
 - name: I2S_CK
   match: "^I2S\\d+_CK$"
   mode: alternate
+  slew-rate: max-speed-50mhz
 
 - name: I2S_WS
   match: "^I2S\\d+_WS$"
@@ -175,6 +176,7 @@
   match: "^SPI\\d+_SCK$"
   mode: alternate
   variant: master
+  slew-rate: max-speed-50mhz
 
 - name: SPI_MASTER_NSS
   match: "^SPI\\d+_NSS$"
@@ -195,6 +197,7 @@
   match: "^SPI\\d+_SCK$"
   mode: input
   variant: slave
+  slew-rate: max-speed-50mhz
 
 - name: SPI_SLAVE_NSS
   match: "^SPI\\d+_NSS$"

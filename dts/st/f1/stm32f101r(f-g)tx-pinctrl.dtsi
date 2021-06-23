@@ -182,18 +182,22 @@
 
 			spi1_sck_master_pa5: spi1_sck_master_pa5 {
 				pinmux = <STM32F1_PINMUX('A', 5, ALTERNATE, NO_REMAP)>;
+				slew-rate = "max-speed-50mhz";
 			};
 
 			spi1_sck_master_pb3: spi1_sck_master_pb3 {
 				pinmux = <STM32F1_PINMUX('B', 3, ALTERNATE, REMAP_1)>;
+				slew-rate = "max-speed-50mhz";
 			};
 
 			spi2_sck_master_pb13: spi2_sck_master_pb13 {
 				pinmux = <STM32F1_PINMUX('B', 13, ALTERNATE, NO_REMAP)>;
+				slew-rate = "max-speed-50mhz";
 			};
 
 			spi3_sck_master_pb3: spi3_sck_master_pb3 {
 				pinmux = <STM32F1_PINMUX('B', 3, ALTERNATE, NO_REMAP)>;
+				slew-rate = "max-speed-50mhz";
 			};
 
 			/* SPI_SLAVE_MISO */
@@ -258,18 +262,22 @@
 
 			spi1_sck_slave_pa5: spi1_sck_slave_pa5 {
 				pinmux = <STM32F1_PINMUX('A', 5, GPIO_IN, NO_REMAP)>;
+				slew-rate = "max-speed-50mhz";
 			};
 
 			spi1_sck_slave_pb3: spi1_sck_slave_pb3 {
 				pinmux = <STM32F1_PINMUX('B', 3, GPIO_IN, REMAP_1)>;
+				slew-rate = "max-speed-50mhz";
 			};
 
 			spi2_sck_slave_pb13: spi2_sck_slave_pb13 {
 				pinmux = <STM32F1_PINMUX('B', 13, GPIO_IN, NO_REMAP)>;
+				slew-rate = "max-speed-50mhz";
 			};
 
 			spi3_sck_slave_pb3: spi3_sck_slave_pb3 {
 				pinmux = <STM32F1_PINMUX('B', 3, GPIO_IN, NO_REMAP)>;
+				slew-rate = "max-speed-50mhz";
 			};
 
 			/* TIM_CH_PWM / TIM_CHN_PWM */
