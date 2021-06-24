@@ -13,6 +13,7 @@ import subprocess
 import re
 from pathlib import Path
 import logging
+from jinja2 import Environment, FileSystemLoader
 
 STM32_CUBE_REPO_BASE = "https://github.com/STMicroelectronics/STM32Cube"
 
@@ -525,6 +526,38 @@ class Stm32SerieUpdate:
                     )
         os_cmd(("dos2unix", str(cmakelists_path)))
 
+    def generate_assert_file(self):
+        """Remove stm32_assert_template.h file and create stm32_assert.h file"""
+        # remove stm32_assert_template.h
+        stm32_assert_template = (
+            self.stm32cube_temp_serie
+            / "drivers"
+            / "include"
+            / "stm32_assert_template.h"
+        )
+        if stm32_assert_template.exists():
+            stm32_assert_template.unlink()
+
+        # create stm32_assert.h from Jinja2 template
+        # Create the jinja2 environment.
+        templates_dir = self.zephyr_hal_stm32_path / "scripts"
+        j2_env = Environment(
+            loader=FileSystemLoader(str(templates_dir)),
+            trim_blocks=True,
+            lstrip_blocks=True,
+        )
+        stm32_assert_j2_template = j2_env.get_template(
+            "stm32_assert_template.txt"
+        )
+        stm32_assert_h = (
+            self.stm32cube_temp_serie / "drivers" / "include" / "stm32_assert.h"
+        )
+
+        with open(stm32_assert_h, "w") as stm32_assert_file:
+            stm32_assert_file.write(
+                stm32_assert_j2_template.render(stm32serie=self.stm32_serie)
+            )
+
     def build_from_latest_version(self):
         """Build a commit in temporary dir with STM32Cube version
         corresponding to zephyr latest hal version
@@ -582,6 +615,9 @@ class Stm32SerieUpdate:
                 cwd=self.stm32cube_temp,
             )
             os.remove("hal_conf.patch")
+
+        # remove stm32_assert_template.h and create stm32_assert.h
+        self.generate_assert_file()
 
         # Commit files except log or patch files
         os_cmd(("git", "add", "*"), cwd=self.stm32cube_temp)
