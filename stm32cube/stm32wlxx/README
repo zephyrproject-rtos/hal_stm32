@@ -44,4 +44,10 @@ Patch List:
     -Added stm32cube/stm32wlxx/drivers/include/stm32_assert.h
     -Removed unused stm32cube/stm32wlxx/drivers/include/stm32_assert_template.h
 
+   *Disable SUBGHZ HAL
+    -Disable the SUBGHZ HAL module to avoid conflict with the Zephyr sx1262
+     register definitions.
+    Impacted files:
+     drivers/include/stm32wlxx_hal_conf.h
+
    See release_note.html from STM32Cube
