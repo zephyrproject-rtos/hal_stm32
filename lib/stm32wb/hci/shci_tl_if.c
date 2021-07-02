@@ -1,9 +1,9 @@
 /**
-  ******************************************************************************
-  * @file    tl_if.c
-  * @author  MCD Application Team
-  * @brief   Transport layer interface to BLE
-  ******************************************************************************
+ ******************************************************************************
+ * @file    shci_tl_if.c
+ * @author  MCD Application Team
+ * @brief   Transport layer interface to the system channel
+ ******************************************************************************
   * @attention
   *
   * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
@@ -15,23 +15,10 @@
   *                        opensource.org/licenses/BSD-3-Clause
   *
   ******************************************************************************
-  */
-
-#include "app_common.h"
-
-#include "hci_tl.h"
+ */
 #include "shci_tl.h"
 #include "tl.h"
 
-
-void hci_register_io_bus(tHciIO* fops)
-{
-  /* Register IO bus services */
-  fops->Init    = TL_BLE_Init;
-  fops->Send    = TL_BLE_SendCmd;
-
-  return;
-}
 
 void shci_register_io_bus(tSHciIO* fops)
 {
@@ -42,6 +29,4 @@ void shci_register_io_bus(tSHciIO* fops)
   return;
 }
 
-
-
-/******************* (C) COPYRIGHT 2019 STMicroelectronics *****END OF FILE****/
+/******************* (C) COPYRIGHT 2011 STMicroelectronics *****END OF FILE****/
