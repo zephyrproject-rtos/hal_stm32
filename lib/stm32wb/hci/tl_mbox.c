@@ -27,21 +27,6 @@
 #include "mbox_def.h"
 #include "tl_dbg_conf.h"
 
-/**
- * These traces are not yet supported in an usual way in the delivery package
- * They can enabled by adding the definition of TL_MM_DBG_EN in the preprocessor option in the IDE
- */
-#if(TL_MM_DBG_EN != 0)
-#include "app_conf.h"
-#include "dbg_trace.h"
-#endif
-
-#if (TL_MM_DBG_EN != 0)
-#define TL_MM_DBG__MSG             PRINT_MESG_DBG
-#else
-#define TL_MM_DBG__MSG(...)
-#endif
-
 /* Private typedef -----------------------------------------------------------*/
 typedef enum
 {
