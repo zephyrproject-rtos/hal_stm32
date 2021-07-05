@@ -224,6 +224,7 @@
 - name: UART_RX / USART_RX
   match: "^US?ART\\d+_RX$"
   mode: input
+  bias: pull-up
 
 - name: USB_OTG_FS
   match: "^USB_OTG_FS_(?:DM)?(?:DP)?(?:SOF)?(?:ID)?(?:VBUS)?$"
