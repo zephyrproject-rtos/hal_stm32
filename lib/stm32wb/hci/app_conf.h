@@ -23,11 +23,11 @@
 #define __APP_CONFIG_H
 
 #include "hw.h"
-/* hw_conf.h file is not used, remove the dependency */
+/* Z-WB-1: hw_conf.h file is not used, remove the dependency */
 /* #include "hw_conf.h" */
 #include "hw_if.h"
+/* Z-WB-4: Add ble_bufsize header inclusion */
 #include "ble_bufsize.h"
-
 /******************************************************************************
  * Health Thermometer Application Config
  ******************************************************************************/
@@ -77,6 +77,29 @@
 #define CFG_MITM_PROTECTION                   CFG_MITM_PROTECTION_REQUIRED
 
 /**
+ * Define Secure Connections Support
+ */
+#define CFG_SECURE_NOT_SUPPORTED       (0x00)
+#define CFG_SECURE_OPTIONAL            (0x01)
+#define CFG_SECURE_MANDATORY           (0x02)
+
+#define CFG_SC_SUPPORT                 CFG_SECURE_NOT_SUPPORTED
+
+/**
+ * Define Keypress Notification Support
+ */
+#define CFG_KEYPRESS_NOT_SUPPORTED      (0x00)
+#define CFG_KEYPRESS_SUPPORTED          (0x01)
+
+#define CFG_KEYPRESS_NOTIFICATION_SUPPORT             CFG_KEYPRESS_NOT_SUPPORTED
+
+/**
+ * Numeric Comparison Answers
+ */
+#define YES (0x01)
+#define NO  (0x00)
+
+/**
  * Define PHY
  */
 #define ALL_PHYS_PREFERENCE                             0x00
@@ -92,6 +115,7 @@
  */
 #define CFG_UNKNOWN_APPEARANCE                  (0)
 #define CFG_GAP_APPEARANCE                      (832)
+#define BLE_APPEARANCE_HID_MOUSE                (962)
 
 /**
 *   Identity root key used to derive LTK and CSRK
@@ -127,7 +151,7 @@
  * Maximum number of simultaneous connections that the device will support.
  * Valid values are from 1 to 8
  */
-#define CFG_BLE_NUM_LINK            8
+#define CFG_BLE_NUM_LINK            2
 
 /**
  * Maximum number of Services that can be stored in the GATT database.
@@ -223,7 +247,8 @@
  *  1 : LL Only
  *  0 : LL + Host
  */
-#define CFG_BLE_LL_ONLY  1
+#define CFG_BLE_LL_ONLY  1 /* Z-WB-3 */
+
 
 /******************************************************************************
  * Transport Layer

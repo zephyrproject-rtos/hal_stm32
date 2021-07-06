@@ -18,11 +18,12 @@
   */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef APP_COMMON_H
-#define APP_COMMON_H
+#ifndef __APP_COMMON_H
+#define __APP_COMMON_H
 
 #ifdef __cplusplus
-extern "C"{
+extern "C"
+{
 #endif
 
 #include <stdint.h>
@@ -33,9 +34,9 @@ extern "C"{
 
 #include "app_conf.h"
 
-  /* -------------------------------- *
-   *  Basic definitions               *
-   * -------------------------------- */
+/* -------------------------------- *
+ *  Basic definitions               *
+ * -------------------------------- */
 
 #undef NULL
 #define NULL                    0
@@ -53,21 +54,25 @@ extern "C"{
 #define DISABLE_IRQ()       __disable_irq()
 #define RESTORE_PRIMASK()   __set_PRIMASK(primask_bit)
 
-  /* -------------------------------- *
-   *  Macro delimiters                *
-   * -------------------------------- */
+/* -------------------------------- *
+ *  Macro delimiters                *
+ * -------------------------------- */
 
 #define M_BEGIN     do {
 
 #define M_END       } while(0)
 
-  /* -------------------------------- *
-   *  Some useful macro definitions   *
-   * -------------------------------- */
+/* -------------------------------- *
+ *  Some useful macro definitions   *
+ * -------------------------------- */
 
+#ifndef MAX
 #define MAX( x, y )          (((x)>(y))?(x):(y))
+#endif
 
+#ifndef MIN
 #define MIN( x, y )          (((x)<(y))?(x):(y))
+#endif
 
 #define MODINC( a, m )       M_BEGIN  (a)++;  if ((a)>=(m)) (a)=0;  M_END
 
@@ -76,6 +81,7 @@ extern "C"{
 #define MODADD( a, b, m )    M_BEGIN  (a)+=(b);  if ((a)>=(m)) (a)-=(m);  M_END
 
 #define MODSUB( a, b, m )    MODADD( a, (m)-(b), m )
+
 
 #define PAUSE( t )           M_BEGIN \
                                volatile int _i; \
@@ -105,10 +111,11 @@ extern "C"{
 #define ALIGN(n)             __attribute__((aligned(n)))
 #endif
 
+
 #ifdef __cplusplus
-} /* extern "C" */
+}
 #endif
 
-#endif /*APP_COMMON_H */
+#endif /*__APP_COMMON_H */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
