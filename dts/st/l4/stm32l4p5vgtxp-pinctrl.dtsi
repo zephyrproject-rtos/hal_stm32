@@ -485,146 +485,175 @@
 
 			sdmmc1_ckin_pb8: sdmmc1_ckin_pb8 {
 				pinmux = <STM32_PINMUX('B', 8, AF8)>;
+				bias-pull-up;
 				slew-rate = "very-high-speed";
 			};
 
 			sdmmc1_d4_pb8: sdmmc1_d4_pb8 {
 				pinmux = <STM32_PINMUX('B', 8, AF12)>;
+				bias-pull-up;
 				slew-rate = "very-high-speed";
 			};
 
 			sdmmc1_cdir_pb9: sdmmc1_cdir_pb9 {
 				pinmux = <STM32_PINMUX('B', 9, AF8)>;
+				bias-pull-up;
 				slew-rate = "very-high-speed";
 			};
 
 			sdmmc1_d5_pb9: sdmmc1_d5_pb9 {
 				pinmux = <STM32_PINMUX('B', 9, AF12)>;
+				bias-pull-up;
 				slew-rate = "very-high-speed";
 			};
 
 			sdmmc1_cmd_pc0: sdmmc1_cmd_pc0 {
 				pinmux = <STM32_PINMUX('C', 0, AF12)>;
+				bias-pull-up;
 				slew-rate = "very-high-speed";
 			};
 
 			sdmmc1_d0dir_pc6: sdmmc1_d0dir_pc6 {
 				pinmux = <STM32_PINMUX('C', 6, AF8)>;
+				bias-pull-up;
 				slew-rate = "very-high-speed";
 			};
 
 			sdmmc1_d6_pc6: sdmmc1_d6_pc6 {
 				pinmux = <STM32_PINMUX('C', 6, AF12)>;
+				bias-pull-up;
 				slew-rate = "very-high-speed";
 			};
 
 			sdmmc1_d123dir_pc7: sdmmc1_d123dir_pc7 {
 				pinmux = <STM32_PINMUX('C', 7, AF8)>;
+				bias-pull-up;
 				slew-rate = "very-high-speed";
 			};
 
 			sdmmc1_d7_pc7: sdmmc1_d7_pc7 {
 				pinmux = <STM32_PINMUX('C', 7, AF12)>;
+				bias-pull-up;
 				slew-rate = "very-high-speed";
 			};
 
 			sdmmc1_d0_pc8: sdmmc1_d0_pc8 {
 				pinmux = <STM32_PINMUX('C', 8, AF12)>;
+				bias-pull-up;
 				slew-rate = "very-high-speed";
 			};
 
 			sdmmc1_d1_pc9: sdmmc1_d1_pc9 {
 				pinmux = <STM32_PINMUX('C', 9, AF12)>;
+				bias-pull-up;
 				slew-rate = "very-high-speed";
 			};
 
 			sdmmc1_d2_pc10: sdmmc1_d2_pc10 {
 				pinmux = <STM32_PINMUX('C', 10, AF12)>;
+				bias-pull-up;
 				slew-rate = "very-high-speed";
 			};
 
 			sdmmc1_d3_pc11: sdmmc1_d3_pc11 {
 				pinmux = <STM32_PINMUX('C', 11, AF12)>;
+				bias-pull-up;
 				slew-rate = "very-high-speed";
 			};
 
 			sdmmc1_ck_pc12: sdmmc1_ck_pc12 {
 				pinmux = <STM32_PINMUX('C', 12, AF12)>;
+				bias-pull-up;
 				slew-rate = "very-high-speed";
 			};
 
 			sdmmc1_cmd_pd2: sdmmc1_cmd_pd2 {
 				pinmux = <STM32_PINMUX('D', 2, AF12)>;
+				bias-pull-up;
 				slew-rate = "very-high-speed";
 			};
 
 			sdmmc2_cmd_pa1: sdmmc2_cmd_pa1 {
 				pinmux = <STM32_PINMUX('A', 1, AF12)>;
+				bias-pull-up;
 				slew-rate = "very-high-speed";
 			};
 
 			sdmmc2_d2_pb3: sdmmc2_d2_pb3 {
 				pinmux = <STM32_PINMUX('B', 3, AF12)>;
+				bias-pull-up;
 				slew-rate = "very-high-speed";
 			};
 
 			sdmmc2_d3_pb4: sdmmc2_d3_pb4 {
 				pinmux = <STM32_PINMUX('B', 4, AF12)>;
+				bias-pull-up;
 				slew-rate = "very-high-speed";
 			};
 
 			sdmmc2_d4_pb8: sdmmc2_d4_pb8 {
 				pinmux = <STM32_PINMUX('B', 8, AF7)>;
+				bias-pull-up;
 				slew-rate = "very-high-speed";
 			};
 
 			sdmmc2_d5_pb9: sdmmc2_d5_pb9 {
 				pinmux = <STM32_PINMUX('B', 9, AF7)>;
+				bias-pull-up;
 				slew-rate = "very-high-speed";
 			};
 
 			sdmmc2_ck_pb12: sdmmc2_ck_pb12 {
 				pinmux = <STM32_PINMUX('B', 12, AF12)>;
+				bias-pull-up;
 				slew-rate = "very-high-speed";
 			};
 
 			sdmmc2_d0_pb14: sdmmc2_d0_pb14 {
 				pinmux = <STM32_PINMUX('B', 14, AF11)>;
+				bias-pull-up;
 				slew-rate = "very-high-speed";
 			};
 
 			sdmmc2_d1_pb15: sdmmc2_d1_pb15 {
 				pinmux = <STM32_PINMUX('B', 15, AF11)>;
+				bias-pull-up;
 				slew-rate = "very-high-speed";
 			};
 
 			sdmmc2_ckin_pc0: sdmmc2_ckin_pc0 {
 				pinmux = <STM32_PINMUX('C', 0, AF7)>;
+				bias-pull-up;
 				slew-rate = "very-high-speed";
 			};
 
 			sdmmc2_d6_pc6: sdmmc2_d6_pc6 {
 				pinmux = <STM32_PINMUX('C', 6, AF7)>;
+				bias-pull-up;
 				slew-rate = "very-high-speed";
 			};
 
 			sdmmc2_d7_pc7: sdmmc2_d7_pc7 {
 				pinmux = <STM32_PINMUX('C', 7, AF7)>;
+				bias-pull-up;
 				slew-rate = "very-high-speed";
 			};
 
 			sdmmc2_ckin_pd4: sdmmc2_ckin_pd4 {
 				pinmux = <STM32_PINMUX('D', 4, AF8)>;
+				bias-pull-up;
 				slew-rate = "very-high-speed";
 			};
 
 			sdmmc2_ck_pd6: sdmmc2_ck_pd6 {
 				pinmux = <STM32_PINMUX('D', 6, AF8)>;
+				bias-pull-up;
 				slew-rate = "very-high-speed";
 			};
 
 			sdmmc2_cmd_pd7: sdmmc2_cmd_pd7 {
 				pinmux = <STM32_PINMUX('D', 7, AF8)>;
+				bias-pull-up;
 				slew-rate = "very-high-speed";
 			};
 
