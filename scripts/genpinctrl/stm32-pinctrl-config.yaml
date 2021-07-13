@@ -177,6 +177,11 @@
   match: "^SDMMC\\d+_(?:CK)?(?:CKIN)?(?:CDIR)?(?:CMD)?(?:D\\d+)?(?:D0DIR)?(?:D123DIR)?$"
   slew-rate: very-high-speed
 
+- name: SDIO
+  match: "^SDIO_(?:CK)?(?:CKIN)?(?:CDIR)?(?:CMD)?(?:D\\d+)?(?:D0DIR)?(?:D123DIR)?$"
+  slew-rate: very-high-speed
+  bias: pull-up
+
 - name: SPI_MISO
   match: "^SPI\\d+_MISO$"
   bias: pull-down
