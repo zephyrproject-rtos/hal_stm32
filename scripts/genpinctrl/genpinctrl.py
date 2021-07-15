@@ -63,6 +63,7 @@ PINCTRL_ADDRESSES = {
     "stm32l4": 0x48000000,
     "stm32l5": 0x42020000,
     "stm32mp1": 0x50002000,
+    "stm32u5": 0x42020000,
     "stm32wb": 0x48000000,
     "stm32wl": 0x48000000,
 }
