@@ -793,28 +793,6 @@
 				bias-pull-up;
 			};
 
-			/* USB */
-
-			usb_noe_pa4: usb_noe_pa4 {
-				pinmux = <STM32_PINMUX('A', 4, AF2)>;
-			};
-
-			usb_dm_pa11: usb_dm_pa11 {
-				pinmux = <STM32_PINMUX('A', 11, ANALOG)>;
-			};
-
-			usb_dp_pa12: usb_dp_pa12 {
-				pinmux = <STM32_PINMUX('A', 12, ANALOG)>;
-			};
-
-			usb_noe_pa13: usb_noe_pa13 {
-				pinmux = <STM32_PINMUX('A', 13, AF2)>;
-			};
-
-			usb_noe_pa15: usb_noe_pa15 {
-				pinmux = <STM32_PINMUX('A', 15, AF6)>;
-			};
-
 		};
 	};
 };
