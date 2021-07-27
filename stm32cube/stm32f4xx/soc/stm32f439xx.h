@@ -1375,6 +1375,14 @@ typedef struct
   * @{
   */
 
+/** @addtogroup Hardware_Constant_Definition
+  * @{
+  */
+#define LSI_STARTUP_TIME                40U /*!< LSI Maximum startup time in us */
+/**
+  * @}
+  */
+
   /** @addtogroup Peripheral_Registers_Bits_Definition
   * @{
   */
@@ -5972,9 +5980,6 @@ typedef struct
 #define DCMI_CR_FCRC_1             0x00000200U
 #define DCMI_CR_EDM_0              0x00000400U
 #define DCMI_CR_EDM_1              0x00000800U
-#define DCMI_CR_CRE_Pos            (12U)
-#define DCMI_CR_CRE_Msk            (0x1UL << DCMI_CR_CRE_Pos)                   /*!< 0x00001000 */
-#define DCMI_CR_CRE                DCMI_CR_CRE_Msk
 #define DCMI_CR_ENABLE_Pos         (14U)
 #define DCMI_CR_ENABLE_Msk         (0x1UL << DCMI_CR_ENABLE_Pos)                /*!< 0x00004000 */
 #define DCMI_CR_ENABLE             DCMI_CR_ENABLE_Msk
@@ -7396,6 +7401,9 @@ typedef struct
 #define FLASH_CR_EOPIE_Pos             (24U)
 #define FLASH_CR_EOPIE_Msk             (0x1UL << FLASH_CR_EOPIE_Pos)            /*!< 0x01000000 */
 #define FLASH_CR_EOPIE                 FLASH_CR_EOPIE_Msk
+#define FLASH_CR_ERRIE_Pos             (25U)
+#define FLASH_CR_ERRIE_Msk             (0x1UL << FLASH_CR_ERRIE_Pos)
+#define FLASH_CR_ERRIE                 FLASH_CR_ERRIE_Msk
 #define FLASH_CR_LOCK_Pos              (31U)
 #define FLASH_CR_LOCK_Msk              (0x1UL << FLASH_CR_LOCK_Pos)             /*!< 0x80000000 */
 #define FLASH_CR_LOCK                  FLASH_CR_LOCK_Msk
