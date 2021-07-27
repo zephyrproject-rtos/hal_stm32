@@ -18868,16 +18868,6 @@ typedef struct
                                     ((__INSTANCE__) == UART7)  || \
                                     ((__INSTANCE__) == UART8))
 
-/*********************** UART Instances : Wake-up from Stop mode ***************************/
-#define IS_UART_WAKEUP_FROMSTOP_INSTANCE(__INSTANCE__)   (((__INSTANCE__) == USART1) || \
-                                    ((__INSTANCE__) == USART2) || \
-                                    ((__INSTANCE__) == USART3) || \
-                                    ((__INSTANCE__) == UART4)  || \
-                                    ((__INSTANCE__) == UART5)  || \
-                                    ((__INSTANCE__) == USART6) || \
-                                    ((__INSTANCE__) == UART7)  || \
-                                    ((__INSTANCE__) == UART8))
-
 /********************* UART Instances : Smart card mode ***********************/
 #define IS_SMARTCARD_INSTANCE(__INSTANCE__) (((__INSTANCE__) == USART1) || \
                                          ((__INSTANCE__) == USART2) || \
