@@ -5,7 +5,7 @@
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>Release Notes for STM32CubeF2 Firmware Package</title>
-  <style>
+  <style type="text/css">
       code{white-space: pre-wrap;}
       span.smallcaps{font-variant: small-caps;}
       span.underline{text-decoration: underline;}
@@ -63,13 +63,575 @@
 <div class="col-sm-12 col-lg-8">
 <h1 id="update-history">Update History</h1>
 <div class="collapse">
-<input type="checkbox" id="collapse-section8" aria-hidden="true"> <label for="collapse-section8" aria-hidden="true"><strong>V1.9.0 / 31-December-2019</strong></label>
+<input type="checkbox" id="collapse-section1_9_3" aria-hidden="true"> <label for="collapse-section1_9_3" aria-hidden="true"><strong>V1.9.3 / 21-May-2021</strong></label>
 <div>
 <h1 id="maintenance-release">Maintenance release</h1>
 <h2 id="main-changes">Main Changes</h2>
 <ul>
-<li><p>General updates to fix known defects and enhancements implementation</p></li>
+<li><p>Patch release of STM32CubeF2 Firmware Package.</p></li>
+<li><strong>CMSIS</strong> updates
+<ul>
+<li>Improve GCC startup files robustness.</li>
+<li>Add LSI maximum startup time datasheet value: LSI_STARTUP_TIME.</li>
+<li>Add atomic register access macros.</li>
+</ul></li>
+<li><strong>HAL</strong> updates
+<ul>
+<li><strong>HAL/LL ADC</strong> driver
+<ul>
+<li>Update timeout mechanism to avoid false timeout detection in case of preemption.</li>
+<li>Update HAL ADC driver to add include of the LL ADC driver.</li>
+<li>Update LL_ADC_DeInit() API to clear missing SQR3 register.</li>
+</ul></li>
+<li><strong>HAL CAN</strong> driver
+<ul>
+<li>Update HAL_CAN_Init() API to be aligned with reference manual and to avoid timeout error:
+<ul>
+<li>Update CAN Initialization sequence to set “request initialization” bit before exit from sleep mode.</li>
+</ul></li>
+</ul></li>
+<li><strong>HAL GPIO</strong> driver
+<ul>
+<li>Update HAL_GPIO_Init() API to avoid the configuration of PUPDR register when Analog mode is selected.</li>
+</ul></li>
+<li><strong>LL FMC</strong> driver
+<ul>
+<li>Fix compilation warning with gcc -Wpedantic compiler option.</li>
+</ul></li>
+<li><strong>HAL NAND</strong> driver
+<ul>
+<li>Update implementation of “HAL_NAND_Write_Page_16b” and “HAL_NAND_Read_Page_16b” APIs implementation to fix an issue with the page calculation of 8 bits memories.</li>
+<li>Update functions HAL_NAND_Read_SpareArea_16b() and HAL_NAND_Write_SpareArea_16b() to fix column address calculation issue.</li>
+</ul></li>
+<li><strong>HAL SDMMC</strong> driver
+<ul>
+<li>Update the definition of SDMMC_DATATIMEOUT constant in order to allow the user to redefine it in his proper application.</li>
+<li>SD_FindSCR() updated to resolve an issue with FIFO blocking when reading.</li>
+<li>Update the definition of SDMMC_DATATIMEOUT constant in order to allow the user to redefine it in his proper application.</li>
+<li>Add the block size settings in the initialization functions and remove it from read/write transactions to avoid repeated and inefficient reconfiguration.</li>
+<li>Update read/write functions in DMA mode in order to force the DMA direction.</li>
+<li>Deploy new functions MMC_ReadExtCSD() and SDMMC_CmdSendEXTCSD () that read and check the sectors number of the device in order to resolve the issue of wrongly reading big memory size.</li>
+</ul></li>
+<li><strong>HAL/LL SPI</strong> driver
+<ul>
+<li>Update to fix MISRA-C 2012 Rule-13.2.</li>
+<li>Update LL_SPI_TransmitData8() API to avoid casting the result to 8 bits.</li>
+</ul></li>
+<li><strong>HAL IRDA</strong> driver
+<ul>
+<li>Fixed typos in the IRDA State definition description.</li>
+</ul></li>
+<li><strong>HAL IWDG</strong> driver
+<ul>
+<li>Updated HAL_IWDG_Init() API in order to fix HAL_GetTick() timeout vulnerability issue.</li>
+<li>Add LSI startup time in default IWDG timeout calculation (HAL_IWDG_DEFAULT_TIMEOUT).</li>
+</ul></li>
+<li><strong>HAL/LL RTC</strong> driver
+<ul>
+<li>New APIs to subtract or add one hour to the calendar in one single operation without going through the initialization procedure (Daylight Saving):
+<ul>
+<li>Add HAL_RTC_DST_Add1Hour()</li>
+<li>HAL_RTC_DST_Sub1Hour()</li>
+<li>HAL_RTC_DST_SetStoreOperation()</li>
+<li>HAL_RTC_DST_ClearStoreOperation()</li>
+<li>HAL_RTC_DST_ReadStoreOperation()</li>
+</ul></li>
+<li>Update __HAL_RTC_…(__HANDLE__, …) macros to access registers through (__HANDLE__)-&gt;Instance pointer and avoid “unused variable” warnings.</li>
+<li>Correct month management in IS_LL_RTC_MONTH() macro.</li>
+</ul></li>
+<li><strong>HAL DMA</strong> driver
+<ul>
+<li>Update HAL_DMA_IRQHandler() API to set the DMA state before unlocking access to the DMA handle.</li>
+</ul></li>
+<li><strong>HAL EXTI</strong> driver
+<ul>
+<li>Update macros using LINE as a macro parameter in order to use EXTI_LINE instead to resolve parameter conflicts with standard C usage.</li>
+<li>Update HAL_EXTI_GetConfigLine() API to set default configuration value of Trigger and GPIOSel before checking each corresponding registers.</li>
+</ul></li>
+<li><strong>HAL SMARTCARD</strong> driver
+<ul>
+<li>Fixed typos in the SMARTCARD State definition description.</li>
+</ul></li>
+<li><strong>HAL/LL TIM</strong> driver
+<ul>
+<li>Made TIM_DMADelayPulseCplt callback as a private function.</li>
+<li>Update HAL_TIMEx_OnePulseN_Start and HAL_TIMEx_OnePulseN_Stop (pooling and IT mode) to take into consideration all OutputChannel parameters.</li>
+<li>Update input capture measurement in DMA mode to avoid zero return values at high frequencies.</li>
+<li>Updated LL_TIM_GetCounterMode() API to return the correct counter mode.</li>
+<li>Corrected reversed description of TIM_LL_EC_ONEPULSEMODE One Pulse Mode.</li>
+</ul></li>
+<li><strong>HAL I2C</strong> driver
+<ul>
+<li>Update to prevent several calls of Start bit:
+<ul>
+<li>Update I2C_MemoryTransmit_TXE_BTF() API to increment EventCount.</li>
+</ul></li>
+<li>Update to avoid I2C interrupt in endless loop:
+<ul>
+<li>Update HAL_I2C_Master_Transmit_IT(), HAL_I2C_Master_Receive_IT(), HAL_I2C_Master_Transmit_DMA() and HAL_I2C_Master_Receive_DMA() APIs to unlock the I2C peripheral before generating the start.</li>
+</ul></li>
+<li>Update to use the right macro to clear I2C ADDR flag inside I2C_Slave_ADDR() API as it’s indicated in the reference manual.</li>
+<li>Update HAL_I2C_EV_IRQHandler() and I2C_MasterTransmit_BTF() APIs to fix an issue where the transfer of the first few bytes to an I2C memory fails.</li>
+</ul></li>
+<li><strong>HAL RNG</strong> driver
+<ul>
+<li>Update timeout mechanism to avoid false timeout detection in case of preemption.</li>
+</ul></li>
+<li><strong>HAL UART</strong> driver
+<ul>
+<li>Enhance reception for idle services (ReceptionToIdle):
+<ul>
+<li>Add a new field (HAL_UART_RxTypeTypeDef) to the UART_HandleTypeDef structure to identify the type of ongoing reception.</li>
+<li>Add UART Reception Event Callback registration.</li>
+</ul></li>
+<li>Add reception specific APIs specific to reception for Idle transfer in different modes:
+<ul>
+<li>HAL_UARTEx_ReceiveToIdle(): Receive an amount of data in blocking mode until either the expected number of data is received or an IDLE event occurs.</li>
+<li>HAL_UARTEx_ReceiveToIdle_IT(): Receive an amount of data in interrupt mode until either the expected number of data is received or an IDLE event occurs.</li>
+<li>HAL_UARTEx_ReceiveToIdle_DMA(): Receive an amount of data in DMA mode until either the expected number of data is received or an IDLE event occurs.</li>
+</ul></li>
+<li>Update HAL_UART_Receive(), HAL_UART_Receive_IT() and HAL_UART_Receive_DMA() APIs to support the new enhancement of ReceptionToIdle.</li>
+<li>Fix wrong comment related to RX pin configuration within the description section.</li>
+<li>Correction on UART ReceptionType management in case of ReceptionToIdle API are called from RxEvent callback.</li>
+</ul></li>
+<li><strong>LL USART</strong> driver
+<ul>
+<li>Remove useless check on maximum BRR value by removing IS_LL_USART_BRR_MAX() macro.</li>
+</ul></li>
+</ul></li>
+<li><strong>Projects</strong> updates
+<ul>
+<li>Fix include path on some SW4STM32 Projects.</li>
+</ul></li>
+</ul>
+<h2 id="contents">Contents</h2>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Name</th>
+<th style="text-align: center;">Version</th>
+<th style="text-align: center;">Licence</th>
+<th style="text-align: center;">Release note</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>STM32F2xx CMSIS</strong></td>
+<td style="text-align: center;"><strong>V2.2.5</strong></td>
+<td style="text-align: center;"><a href="https://opensource.org/licenses/Apache-2.0">Apache License 2.0</a></td>
+<td style="text-align: center;"><a href="Drivers/CMSIS/Device/ST/STM32F2xx/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>STM32F2xx HAL</strong></td>
+<td style="text-align: center;"><strong>V1.2.7</strong></td>
+<td style="text-align: center;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
+<td style="text-align: center;"><a href="Drivers/STM32F2xx_HAL_Driver/Release_Notes.html">release notes</a></td>
+</tr>
+</tbody>
+</table>
+<h2 id="known-limitations">Known Limitations</h2>
+<ul>
+<li>Warnings detected with LibJPEG applications are related to the Libjpeg third party MW stack V8d with System Workbench for STM32 (SW4STM32) V2.9:
+<ul>
+<li>No impact of these warnings on the functional behavior</li>
+</ul></li>
+</ul>
+<h2 id="development-toolchains-and-compilers">Development Toolchains and Compilers</h2>
+<ul>
+<li>IAR Embedded Workbench for ARM (EWARM) toolchain <strong>V8.40.2</strong>+ ST-Link</li>
+<li>RealView Microcontroller Development Kit (MDK-ARM) toolchain <strong>V5.31</strong> + ST-LINK</li>
+<li>System Workbench for STM32 (SW4STM32) toolchain V2.9 + ST-Link</li>
+</ul>
+<h2 id="supported-devices-and-eval-boards">Supported Devices and EVAL boards</h2>
+<ul>
+<li>STM32F217xx/215xx/207xx/205xx devices and STM322xG_EVAL board RevC</li>
+<li>STM32F207ZG and STM32F207ZG-Nucleo board RevB</li>
+</ul>
+<h2 id="backward-compatibility">Backward Compatibility</h2>
+<ul>
+<li>None</li>
+</ul>
+<h2 id="dependencies">Dependencies</h2>
+<ul>
+<li>None</li>
+</ul>
+</div>
+</div>
+<div class="collapse">
+<input type="checkbox" id="collapse-section11" aria-hidden="true"> <label for="collapse-section11" aria-hidden="true"><strong>V1.9.2 / 22-October-2020</strong></label>
+<div>
+<h1 id="maintenance-release-1">Maintenance release</h1>
+<h2 id="main-changes-1">Main Changes</h2>
+<ul>
+<li><p>Patch release of STM32CubeF2 Firmware Package.</p></li>
 <li><p><strong>HAL</strong></p>
+<ul>
+<li><strong>HAL/LL I2C</strong> driver
+<ul>
+<li>Update to fix hardfault issue with HAL_I2C_Mem_Write_DMA() API:
+<ul>
+<li>Abort the right ongoing DMA transfer when memory write access request operation failed: fix typo “hdmarx” replaced by “hdmatx”</li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul>
+<h2 id="contents-1">Contents</h2>
+<table>
+<caption>Drivers</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Name</th>
+<th style="text-align: center;">Version</th>
+<th style="text-align: center;">Licence</th>
+<th style="text-align: center;">Release note</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>STM32F2xx HAL</strong></td>
+<td style="text-align: center;"><strong>V1.2.6</strong></td>
+<td style="text-align: center;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
+<td style="text-align: center;"><a href="Drivers/STM32F2xx_HAL_Driver/Release_Notes.html">release notes</a></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="collapse">
+<input type="checkbox" id="collapse-section10" aria-hidden="true"> <label for="collapse-section10" aria-hidden="true"><strong>V1.9.1 / 09-September-2020</strong></label>
+<div>
+<h1 id="maintenance-release-2">Maintenance release</h1>
+<h2 id="main-changes-2">Main Changes</h2>
+<ul>
+<li><p>General updates to fix known defects and enhancements implementation</p></li>
+<li><strong>HAL</strong>
+<ul>
+<li><strong>HAL</strong> driver
+<ul>
+<li>Enhance HAL_SetTickFreq() API robustness:
+<ul>
+<li>HAL_SetTickFreq(): update to restore the previous tick frequency when HAL_InitTick() configuration failed.</li>
+</ul></li>
+<li>Add new defines for ARM compiler V6:
+<ul>
+<li>__weak</li>
+<li>__packed</li>
+<li>__NOINLINE</li>
+</ul></li>
+<li>Update HAL_Init_Tick() API to proporely store the priority when using the non-default time base.</li>
+</ul></li>
+<li><strong>HAL/LL ADC</strong> driver
+<ul>
+<li>Update the type for the following ADC parameters in ADC_InitTypeDef structure to fix MISRA-C 2012 Rule-10.4 error
+<ul>
+<li><strong>uint32_t</strong> ContinuousConvMode to <strong>FunctionalState</strong> ContinuousConvMode</li>
+<li><strong>uint32_t</strong> DiscontinuousConvMode to <strong>FunctionalState</strong> DiscontinuousConvMode</li>
+<li><strong>uint32_t</strong> DMAContinuousRequests to <strong>FunctionalState</strong> DMAContinuousRequests</li>
+</ul></li>
+<li>Update the following APIs to set status HAL_ADC_STATE_ERROR_INTERNAL and error code HAL_ADC_ERROR_INTERNAL when error occurs:
+<ul>
+<li>HAL_ADC_Start()</li>
+<li>HAL_ADC_Start_IT()</li>
+<li>HAL_ADC_Start_DMA()</li>
+<li>HAL_ADCEx_InjectedStart()</li>
+<li>HAL_ADCEx_InjectedStart_IT()</li>
+<li>HAL_ADCEx_MultiModeStart_DMA()</li>
+</ul></li>
+<li>Update HAL_ADC_Stop_DMA() API to check if DMA state is Busy before calling HAL_DMA_Abort() API to avoid DMA internal error.</li>
+<li>Update LL_ADC_REG_Init() API to avoid enabling continuous mode and discontinuous mode simultaneously.</li>
+</ul></li>
+<li><strong>HAL/LL GPIO</strong> driver
+<ul>
+<li>Update HAL_GPIO_TogglePin() API to allow multi Pin’s toggling.</li>
+<li>Update LL_GPIO_TogglePin() API to improve robustness: use BSRR register instead of ODR register.</li>
+</ul></li>
+<li><strong>HAL/LL RCC</strong> driver
+<ul>
+<li>Add new HAL interfaces allowing to control the activation or deactivation of PLLI2S:
+<ul>
+<li>HAL_RCCEx_EnablePLLI2S()</li>
+<li>HAL_RCCEx_DisablePLLI2S()</li>
+</ul></li>
+<li>Add new HAL macros
+<ul>
+<li>__HAL_RCC_GET_RTC_SOURCE()allowing to get the RTC clock source</li>
+<li>__HAL_RCC_GET_RTC_HSE_PRESCALER()allowing to get the HSE clock divider for RTC peripheral.</li>
+</ul></li>
+<li>Update HAL_RCC_OscConfig() API to avoid overwriting a reserved bit
+<ul>
+<li>Update to use MODIFY_REG instead of WRITE_REG.</li>
+</ul></li>
+</ul></li>
+<li><strong>HAL/LL HASH</strong> driver
+<ul>
+<li>Fix Misra-C 2012 Rule-5.1 warning on identifiers to be distinct in the first 31 characters in renaming all <strong>HAL_HASH_xxx_Accumulate_yy()</strong> and <strong>HAL_HASHEx_xxx_Accumulate_yy()</strong> APIs respectively into <strong>HAL_HASH_xxx_Accmlt_yy()</strong> and <strong>HAL_HASHEx_xxx_Accmlt_yy()</strong></li>
+<li>Correct phase management issue when performing two successive hash operations on two different buffers</li>
+<li>Create new APIs to initialize the HASH peripheral then processes pInBuffer in interruption mode.
+<ul>
+<li>HASH_Accumulate_IT()</li>
+<li>HAL_HASH_SHA1_Accmlt_IT()</li>
+<li>HAL_HASH_MD5_Accmlt_IT()</li>
+</ul></li>
+<li>Create new APIs to wrap-up multi-buffer hashing processing in polling and interrupt modes
+<ul>
+<li>HAL_HASH_MD5_Accmlt_End()</li>
+<li>HAL_HASH_SHA1_Accmlt_End()</li>
+<li>HAL_HASH_MD5_Accmlt_End_IT()</li>
+<li>HAL_HASH_SHA1_Accmlt_End_IT()</li>
+</ul></li>
+<li>Ensure processing suspension flag is reset to HAL_HASH_SUSPEND_NONE value in HAL_HASH_Init() API</li>
+<li>Add comments to describe case of message made of several parts, not all with length multiple of 4 bytes.</li>
+<li>HASH_DMAXferCplt() callback API state improperly set to READY instead of BUSY fixed.</li>
+</ul></li>
+<li><strong>HAL NOR</strong> driver
+<ul>
+<li>Correct MISRA-C 2012-Rule-10.4_a / 14.4_d / 18.4 warnings in HAL NOR drivers</li>
+<li>Update address calculation in HAL_NOR_ProgramBuffer()</li>
+<li>Add new commands operations:
+<ul>
+<li>NOR_CMD_READ_ARRAY</li>
+<li>NOR_CMD_WORD_PROGRAM<br />
+</li>
+<li>NOR_CMD_BUFFERED_PROGRAM</li>
+<li>NOR_CMD_CONFIRM<br />
+</li>
+<li>NOR_CMD_BLOCK_ERASE<br />
+</li>
+<li>NOR_CMD_BLOCK_UNLOCK<br />
+</li>
+<li>NOR_CMD_READ_STATUS_REG</li>
+<li>NOR_CMD_CLEAR_STATUS_REG</li>
+</ul></li>
+<li>Apply adequate commands according to the command set field value
+<ul>
+<li>command set 1 for Micron JS28F512P33</li>
+<li>command set 2 for Micron M29W128G and Cypress S29GL128P</li>
+</ul></li>
+<li>Update some APIs in order to be compliant for memories with another command set.
+<ul>
+<li>HAL_NOR_Init()</li>
+<li>HAL_NOR_Read_ID()</li>
+<li>HAL_NOR_ReturnToReadMode()</li>
+<li>HAL_NOR_Read()</li>
+<li>HAL_NOR_Program()</li>
+<li>HAL_NOR_ReadBuffer()</li>
+<li>HAL_NOR_ProgramBuffer()</li>
+<li>HAL_NOR_Erase_Block()</li>
+<li>HAL_NOR_Erase_Chip()</li>
+<li>HAL_NOR_GetStatus()</li>
+</ul></li>
+</ul></li>
+<li><strong>HAL SRAM</strong> driver
+<ul>
+<li>General update to enhance HAL SRAM driver robustness
+<ul>
+<li>Update HAL_SRAM_Init() API to avoid activation of burst access for SRAM</li>
+</ul></li>
+</ul></li>
+<li><strong>LL FSMC</strong> driver
+<ul>
+<li>Remove useless casts.</li>
+<li>Update FSMC_NORSRAM_Init() API in order to resolve compilation issue with Microsoft Visual Studio 2017.</li>
+<li>Update FSMC_NORSRAM_Extended_Timing_Init() API in order to manage Bus turnaround phase duration FSMC_BWTR1_BUSTURN availability.</li>
+</ul></li>
+<li><strong>HAL/LL IWDG</strong> driver
+<ul>
+<li>Update HAL_IWDG_DEFAULT_TIMEOUT define value to consider LSI value instead of hardcoded value</li>
+</ul></li>
+<li><strong>HAL/LL I2C</strong> update
+<ul>
+<li>Update I2C_MasterReceiveRXNE() static API to avoid set the STOP bit again after the bit clearing by Hardware during the masking operation
+<ul>
+<li>Add new API I2C_WaitOnSTOPRequestThroughIT() to wait for stop bit.</li>
+</ul></li>
+<li>Update sequential APIs to avoid requesting a START when a STOP condition is not fully treated
+<ul>
+<li>Wait the end of STOP treatment by polling (with a timeout) the STOP bit on Control register CR1</li>
+</ul></li>
+<li>Update HAL_I2C_ER_IRQHandler() API to fix acknowledge failure issue with I2C memory IT processes
+<ul>
+<li>Add stop condition generation when NACK occurs.</li>
+</ul></li>
+</ul></li>
+<li><strong>HAL/LL I2S</strong> driver
+<ul>
+<li>Update HAL_I2S_DMAStop() API to be more safe
+<ul>
+<li>Add a check on BSY, TXE and RXNE flags before disabling the I2S</li>
+</ul></li>
+<li>Update HAL_I2S_DMAStop() API to fix multi-call transfer issue(to avoid re-initializing the I2S for the next transfer).
+<ul>
+<li>Add __HAL_I2SEXT_FLUSH_RX_DR() and __HAL_I2S_FLUSH_RX_DR() macros to flush the remaining data inside DR registers.</li>
+<li>Add new ErrorCode define: HAL_I2S_ERROR_BUSY_LINE_RX</li>
+</ul></li>
+</ul></li>
+<li><strong>HAL/LL SPI</strong> driver
+<ul>
+<li>Update SPI_DMAReceiveCplt() API to handle efficiently the repeated transfers.
+<ul>
+<li>Disable TX DMA request only in bidirectional receive mode</li>
+</ul></li>
+<li>Update HAL_SPI_Init() API
+<ul>
+<li>To avoid setting the BaudRatePrescaler in case of Slave Motorola Mode</li>
+<li>Use the bit-mask for SPI configuration</li>
+</ul></li>
+<li>Update Transmit/Receive processes in half-duplex mode
+<ul>
+<li>Disable the SPI instance before setting BDIOE bit</li>
+</ul></li>
+<li>Fix wrong timeout management
+<ul>
+<li>Calculate Timeout based on a software loop to avoid blocking issue if Systick is disabled</li>
+</ul></li>
+</ul></li>
+<li><strong>HAL/LL UART</strong> driver
+<ul>
+<li>Update UART BRR calculation for ROM size gain</li>
+<li>Update UART polling and interruption processes to fix issues related to accesses out of user specified buffer.
+<ul>
+<li>Update UART_Transmit_IT(), UART_Receive_IT(), HAL_UART_Transmit() and HAL_UART_Receive() APIs.</li>
+</ul></li>
+</ul></li>
+<li><strong>HAL SMARTCARD</strong> driver
+<ul>
+<li>Update SMARTCARD transmission and reception APIs to handle memory corruption
+<ul>
+<li>HAL_SMARTCARD_Transmit(), HAL_SMARTCARD_Receive(), HAL_SMARTCARD_Transmit_IT() and HAL_SMARTCARD_Receive_IT()</li>
+</ul></li>
+</ul></li>
+<li><strong>HAL/LL TIM</strong> driver
+<ul>
+<li>Align HAL/LL TIM driver with latest updates and enhancements</li>
+<li>Update Encoder interface mode to keep TIM_CCER_CCxNP bits low
+<ul>
+<li>Add TIM_ENCODERINPUTPOLARITY_RISING and TIM_ENCODERINPUTPOLARITY_FALLING definitions to determine encoder input polarity.</li>
+<li>Add IS_TIM_ENCODERINPUT_POLARITY() macro to check the encoder input polarity.</li>
+<li>Update HAL_TIM_Encoder_Init() API</li>
+<li>Replace IS_TIM_IC_POLARITY() macro by IS_TIM_ENCODERINPUT_POLARITY() macro.</li>
+</ul></li>
+<li>Fix bug when using multiple DMA request to different channels of same timer
+<ul>
+<li>Introduce DMA burst state management mechanism
+<ul>
+<li>Add a new structure for DMA Burst States definition : HAL_TIM_DMABurstStateTypeDef</li>
+<li>Update __HAL_TIM_RESET_HANDLE_STATE to support DMABurstState</li>
+<li>Add a new API HAL_TIM_DMABurstState() to get the actual state of a DMA burst operation</li>
+<li>Add DMABurstState, the DMA burst operation state, in the TIM_HandleTypeDef structure</li>
+<li>Add new API TIM_DMAErrorCCxN() for TIM DMA error callback (complementary channel)</li>
+<li>Add new API TIM_DMADelayPulseNCplt() for TIM DMA Delay Pulse complete callback (complementary channel)</li>
+</ul></li>
+</ul></li>
+<li>Implement TIM channel state management mechanism
+<ul>
+<li>Add new macro
+<ul>
+<li>TIM_CHANNEL_STATE_SET_ALL and TIM_CHANNEL_N_STATE_SET_ALL</li>
+<li>TIM_CHANNEL_STATE_SET and TIM_CHANNEL_N_STATE_SET</li>
+<li>TIM_CHANNEL_STATE_GET and TIM_CHANNEL_N_STATE_GET</li>
+</ul></li>
+</ul></li>
+<li>Add new API HAL_TIM_GetActiveChannel()</li>
+<li>Add new API HAL_TIM_GetChannelState() to get actual state of the TIM channel</li>
+<li>Add a new structure for TIM channel States definition : HAL_TIM_ChannelStateTypeDef</li>
+<li>Update __HAL_TIM_RESET_HANDLE_STATE to support ChannelState and ChannelNState</li>
+<li>Add a new element in the TIM_HandleTypeDef structure : ChannelState to manage TIM channel operation state</li>
+<li>Add a new element in the TIM_HandleTypeDef structure : ChannelNState to manage TIM complementary channel operation state</li>
+<li>Update HAL_TIMEx_MasterConfigSynchronization() API to avoid functional errors and assert fails when using some TIM instances as input trigger.
+<ul>
+<li>Replace IS_TIM_SYNCHRO_INSTANCE() macro by IS_TIM_MASTER_INSTANCE() macro.</li>
+<li>Add IS_TIM_SLAVE_INSTANCE() macro to check on TIM_SMCR_MSM bit.</li>
+</ul></li>
+<li>Remove ‘register’ storage class specifier from LL TIM driver.</li>
+<li>Add new API HAL_TIM_DMABurst_MultiWriteStart() allowing to configure the DMA Burst to transfer multiple Data from the memory to the TIM peripheral</li>
+<li>Add new API HAL_TIM_DMABurst_MultiReadStart() allowing to configure the DMA Burst to transfer Data from the TIM peripheral to the memory</li>
+</ul></li>
+<li><strong>HAL/LL USB</strong> driver
+<ul>
+<li>Bug fix: USB_ReadPMA() and USB_WritePMA() by ensuring 16-bits access to USB PMA memory</li>
+<li>Bug fix: correct USB RX count calculation</li>
+<li>Fix USB Bulk transfer double buffer mode</li>
+<li>Remove register keyword from USB defined macros as no more supported by C++ compiler</li>
+<li>Minor rework on USBD_Start() and USBD_Stop() APIs: stopping device will be handled by HAL_PCD_DeInit() API.</li>
+<li>Remove non used API for USB device mode.</li>
+</ul></li>
+<li><strong>LL UTILS</strong> driver
+<ul>
+<li>UTILS_SetFlashLatency() API renamed to LL_SetFlashLatency() and set exportable.</li>
+</ul></li>
+</ul></li>
+<li><strong>CMSIS</strong>
+<ul>
+<li>All header files
+<ul>
+<li>Remove unused IS_TIM_SYNCHRO_INSTANCE() assert macro</li>
+</ul></li>
+<li>Protect Vector table modification following SRAM or FLASH preprocessor directive by a generic preprocessor directive : USER_VECT_TAB_ADDRESS</li>
+<li>system_stm32f2xx.h
+<ul>
+<li>SystemInit(): update to don’t reset RCC registers to its reset values.</li>
+</ul></li>
+</ul></li>
+<li><p>For the complete list of changes, please refer to the release notes of each firmware component</p></li>
+</ul>
+<h2 id="contents-2">Contents</h2>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Name</th>
+<th style="text-align: center;">Version</th>
+<th style="text-align: center;">Licence</th>
+<th style="text-align: center;">Release note</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>STM32F2xx CMSIS</strong></td>
+<td style="text-align: center;"><strong>V2.2.4</strong></td>
+<td style="text-align: center;"><a href="https://opensource.org/licenses/Apache-2.0">Apache License 2.0</a></td>
+<td style="text-align: center;"><a href="Drivers/CMSIS/Device/ST/STM32F2xx/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>STM32F2xx HAL</strong></td>
+<td style="text-align: center;"><strong>V1.2.5</strong></td>
+<td style="text-align: center;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
+<td style="text-align: center;"><a href="Drivers/STM32F2xx_HAL_Driver/Release_Notes.html">release notes</a></td>
+</tr>
+</tbody>
+</table>
+<h2 id="known-limitations-1">Known Limitations</h2>
+<ul>
+<li>None</li>
+</ul>
+<h2 id="development-toolchains-and-compilers-1">Development Toolchains and Compilers</h2>
+<ul>
+<li>IAR Embedded Workbench for ARM (EWARM) toolchain <strong>V8.20.2</strong>+ ST-Link</li>
+<li>RealView Microcontroller Development Kit (MDK-ARM) toolchain <strong>V5.26</strong> + ST-LINK</li>
+<li>System Workbench for STM32 (SW4STM32) toolchain <strong>V2.9</strong> + ST-Link</li>
+</ul>
+<h2 id="supported-devices-and-eval-boards-1">Supported Devices and EVAL boards</h2>
+<ul>
+<li>STM32F217xx/215xx/207xx/205xx devices and STM322xG_EVAL board RevC</li>
+<li>STM32F207ZG and STM32F207ZG-Nucleo board RevB</li>
+</ul>
+<h2 id="backward-compatibility-1">Backward Compatibility</h2>
+<ul>
+<li>None</li>
+</ul>
+<h2 id="dependencies-1">Dependencies</h2>
+<ul>
+<li>None</li>
+</ul>
+</div>
+</div>
+<div class="collapse">
+<input type="checkbox" id="collapse-section9" aria-hidden="true"> <label for="collapse-section9" aria-hidden="true"><strong>V1.9.0 / 31-December-2019</strong></label>
+<div>
+<h1 id="maintenance-release-3">Maintenance release</h1>
+<h2 id="main-changes-3">Main Changes</h2>
+<ul>
+<li><p>General updates to fix known defects and enhancements implementation</p></li>
+<li><strong>HAL</strong>
 <ul>
 <li><strong>HAL/LL GPIO</strong> update
 <ul>
@@ -97,13 +659,13 @@
 </ul></li>
 </ul></li>
 </ul></li>
-<li><p><strong>Middleware</strong></p>
+<li><strong>Middleware</strong>
 <ul>
 <li>Update to use new version of PDM Library <strong>V3.2.0</strong></li>
 </ul></li>
 <li><p>For the complete list of changes, please refer to the release notes of each firmware component</p></li>
 </ul>
-<h2 id="contents">Contents</h2>
+<h2 id="contents-3">Contents</h2>
 <table>
 <thead>
 <tr class="header">
@@ -292,29 +854,29 @@
 </tr>
 </tbody>
 </table>
-<h2 id="known-limitations">Known Limitations</h2>
+<h2 id="known-limitations-2">Known Limitations</h2>
 <ul>
 <li>Warnings detected with LibJPEG applications are related to the Libjpeg third party MW stack V8d with System Workbench for STM32 (SW4STM32) V2.9:
 <ul>
 <li>No impact of these warnings on the functional behavior</li>
 </ul></li>
 </ul>
-<h2 id="development-toolchains-and-compilers">Development Toolchains and Compilers</h2>
+<h2 id="development-toolchains-and-compilers-2">Development Toolchains and Compilers</h2>
 <ul>
 <li>IAR Embedded Workbench for ARM (EWARM) toolchain <strong>V8.20.2</strong>+ ST-Link</li>
 <li>RealView Microcontroller Development Kit (MDK-ARM) toolchain <strong>V5.26</strong> + ST-LINK</li>
 <li>System Workbench for STM32 (SW4STM32) toolchain <strong>V2.9</strong> + ST-Link</li>
 </ul>
-<h2 id="supported-devices-and-eval-boards">Supported Devices and EVAL boards</h2>
+<h2 id="supported-devices-and-eval-boards-2">Supported Devices and EVAL boards</h2>
 <ul>
 <li>STM32F217xx/215xx/207xx/205xx devices and STM322xG_EVAL board RevC</li>
 <li>STM32F207ZG and STM32F207ZG-Nucleo board RevB</li>
 </ul>
-<h2 id="backward-compatibility">Backward Compatibility</h2>
+<h2 id="backward-compatibility-2">Backward Compatibility</h2>
 <ul>
 <li>None</li>
 </ul>
-<h2 id="dependencies">Dependencies</h2>
+<h2 id="dependencies-2">Dependencies</h2>
 <ul>
 <li>None</li>
 </ul>
@@ -323,13 +885,13 @@
 <div class="collapse">
 <input type="checkbox" id="collapse-section8" aria-hidden="true"> <label for="collapse-section8" aria-hidden="true"><strong>V1.8.0 / 26-June-2019</strong></label>
 <div>
-<h1 id="maintenance-release-1">Maintenance release</h1>
-<h2 id="main-changes-1">Main Changes</h2>
+<h1 id="maintenance-release-4">Maintenance release</h1>
+<h2 id="main-changes-4">Main Changes</h2>
 <ul>
-<li><p>General updates to fix known defects and enhancements implementation</p></li>
-<li><p>General updates to fix CodeSonar compilation warnings</p></li>
-<li><p>General updates to fix the user manual .chm files</p></li>
-<li><p><strong>The following changes done on the HAL drivers require an update on the application code based on older HAL versions</strong></p>
+<li>General updates to fix known defects and enhancements implementation</li>
+<li>General updates to fix CodeSonar compilation warnings</li>
+<li>General updates to fix the user manual .chm files</li>
+<li><strong>The following changes done on the HAL drivers require an update on the application code based on older HAL versions</strong>
 <ul>
 <li>Add support of <strong>HAL callback registration</strong> feature
 <ul>
@@ -360,7 +922,7 @@
 </ul></li>
 </ul></li>
 <li><p>Demonstrations binaries are no more delivered within the STM32CubeF2 MCU package. They are available for download, in addition to their required media files if any, in a standalone package accessible through each hardware board official web page. Please refer to the corresponding demonstration binary readme.txt to get web page for each board.</p></li>
-<li><p><strong>HAL</strong></p>
+<li><strong>HAL</strong>
 <ul>
 <li>Add support of HAL callback registration feature</li>
 <li>Add new <strong>HAL EXTI</strong> driver</li>
@@ -390,12 +952,12 @@
 </ul></li>
 </ul></li>
 </ul></li>
-<li><p><strong>CMSIS</strong></p>
+<li><strong>CMSIS</strong>
 <ul>
 <li>Fix known defects and several implementation enhancement</li>
 <li>Align ErrorStatus typedef to common error handling</li>
 </ul></li>
-<li><p><strong>Middleware</strong></p>
+<li><strong>Middleware</strong>
 <ul>
 <li>Update to use FreeRTOS <strong>10.0.1</strong> ST modified <strong>20190329</strong></li>
 <li>Update to use STemWin <strong>V5.44</strong> ST modified <strong>20180322</strong></li>
@@ -406,7 +968,7 @@
 <li>Update to use mbedTLS <strong>V2.14.1</strong> ST modified <strong>20190329</strong></li>
 <li>Update to use LibJPEG <strong>v8d</strong> ST modified <strong>20190201</strong></li>
 </ul></li>
-<li><p><strong>Projects</strong></p>
+<li><strong>Projects</strong>
 <ul>
 <li>Update CAN examples to support new HAL CAN driver.</li>
 <li>Update HAL CRYP examples to be aligned with new HAL CRYP drivers</li>
@@ -447,7 +1009,7 @@
 </ul></li>
 <li><p>For the complete list of changes, please refer to the release notes of each firmware component</p></li>
 </ul>
-<h2 id="contents-1">Contents</h2>
+<h2 id="contents-4">Contents</h2>
 <table>
 <thead>
 <tr class="header">
@@ -636,29 +1198,29 @@
 </tr>
 </tbody>
 </table>
-<h2 id="known-limitations-1">Known Limitations</h2>
+<h2 id="known-limitations-3">Known Limitations</h2>
 <ul>
 <li>Warnings detected with LibJPEG applications are related to the Libjpeg third party MW stack V8d with System Workbench for STM32 (SW4STM32) V2.9:
 <ul>
 <li>No impact of these warnings on the functional behavior</li>
 </ul></li>
 </ul>
-<h2 id="development-toolchains-and-compilers-1">Development Toolchains and Compilers</h2>
+<h2 id="development-toolchains-and-compilers-3">Development Toolchains and Compilers</h2>
 <ul>
 <li>IAR Embedded Workbench for ARM (EWARM) toolchain <strong>V8.20.2</strong>+ ST-Link</li>
 <li>RealView Microcontroller Development Kit (MDK-ARM) toolchain <strong>V5.26</strong> + ST-LINK</li>
 <li>System Workbench for STM32 (SW4STM32) toolchain <strong>V2.9</strong> + ST-Link</li>
 </ul>
-<h2 id="supported-devices-and-eval-boards-1">Supported Devices and EVAL boards</h2>
+<h2 id="supported-devices-and-eval-boards-3">Supported Devices and EVAL boards</h2>
 <ul>
 <li>STM32F217xx/215xx/207xx/205xx devices and STM322xG_EVAL board RevC</li>
 <li>STM32F207ZG and STM32F207ZG-Nucleo board RevB</li>
 </ul>
-<h2 id="backward-compatibility-1">Backward Compatibility</h2>
+<h2 id="backward-compatibility-3">Backward Compatibility</h2>
 <ul>
 <li>None</li>
 </ul>
-<h2 id="dependencies-1">Dependencies</h2>
+<h2 id="dependencies-3">Dependencies</h2>
 <ul>
 <li>None</li>
 </ul>
@@ -667,34 +1229,34 @@
 <div class="collapse">
 <input type="checkbox" id="collapse-section7" aria-hidden="true"> <label for="collapse-section7" aria-hidden="true"><strong>V1.7.0 / 29-September-2017</strong></label>
 <div>
-<h1 id="maintenance-release-2">Maintenance release</h1>
-<h2 id="main-changes-2">Main Changes</h2>
+<h1 id="maintenance-release-5">Maintenance release</h1>
+<h2 id="main-changes-5">Main Changes</h2>
 <ul>
-<li><p>General updates to be compliant with Linux platforms</p></li>
-<li><p>General update to fix known defects and several implementations enhancement</p></li>
-<li><p>Remove support of TrueSTUDIO tool chain</p></li>
+<li>General updates to be compliant with Linux platforms</li>
+<li>General update to fix known defects and several implementations enhancement</li>
+<li>Remove support of TrueSTUDIO tool chain</li>
 <li><p>Remove Date and version from all header files</p></li>
-<li><p><strong>HAL</strong></p>
+<li><strong>HAL</strong>
 <ul>
 <li>General updates to fix known defects and enhancements implementation</li>
 <li>stm32f2xx_hal_mmc.c: Fix compilation warning with GCC compiler</li>
 </ul></li>
-<li><p><strong>CMSIS</strong></p>
+<li><strong>CMSIS</strong>
 <ul>
 <li>General updates to fix known defects and enhancements implementation</li>
 </ul></li>
-<li><p><strong>BSP</strong></p>
+<li><strong>BSP</strong>
 <ul>
 <li>General updates to fix known defects and enhancements implementation</li>
 <li>stm322xg_eval_lcd.c: Fix LCD compilation errors with GCC compiler</li>
 </ul></li>
-<li><p><strong>Projects</strong></p>
+<li><strong>Projects</strong>
 <ul>
 <li>Fix MDK-ARM limitation with STemWin sample demo application on STM322xG_EVAL.</li>
 </ul></li>
 <li><p>For the complete list of changes, please refer to the release notes of each firmware component</p></li>
 </ul>
-<h2 id="contents-2">Contents</h2>
+<h2 id="contents-5">Contents</h2>
 <table>
 <caption>Drivers</caption>
 <thead>
@@ -884,26 +1446,26 @@
 </tr>
 </tbody>
 </table>
-<h2 id="known-limitations-2">Known Limitations</h2>
+<h2 id="known-limitations-4">Known Limitations</h2>
 <ul>
 <li>None</li>
 </ul>
-<h2 id="development-toolchains-and-compilers-2">Development Toolchains and Compilers</h2>
+<h2 id="development-toolchains-and-compilers-4">Development Toolchains and Compilers</h2>
 <ul>
 <li>IAR Embedded Workbench for ARM (EWARM) toolchain V7.80.4 + ST-Link</li>
 <li>RealView Microcontroller Development Kit (MDK-ARM) toolchain V5.23 + ST-LINK</li>
 <li>System Workbench for STM32 (SW4STM32) toolchain V1.14 + ST-Link</li>
 </ul>
-<h2 id="supported-devices-and-eval-boards-2">Supported Devices and EVAL boards</h2>
+<h2 id="supported-devices-and-eval-boards-4">Supported Devices and EVAL boards</h2>
 <ul>
 <li>STM32F217xx/215xx/207xx/205xx devices and STM322xG_EVAL board RevC</li>
 <li>STM32F207ZG and STM32F207ZG-Nucleo board RevB</li>
 </ul>
-<h2 id="backward-compatibility-2">Backward Compatibility</h2>
+<h2 id="backward-compatibility-4">Backward Compatibility</h2>
 <ul>
 <li>None</li>
 </ul>
-<h2 id="dependencies-2">Dependencies</h2>
+<h2 id="dependencies-4">Dependencies</h2>
 <ul>
 <li>None</li>
 </ul>
@@ -912,11 +1474,11 @@
 <div class="collapse">
 <input type="checkbox" id="collapse-section6" aria-hidden="true"> <label for="collapse-section6" aria-hidden="true"><strong>V1.6.0 / 14-April-2017</strong></label>
 <div>
-<h1 id="maintenance-release-3">Maintenance release</h1>
-<h2 id="main-changes-3">Main Changes</h2>
+<h1 id="maintenance-release-6">Maintenance release</h1>
+<h2 id="main-changes-6">Main Changes</h2>
 <ul>
 <li><p>General update to fix known defects and several implementations enhancement</p></li>
-<li><p><strong>HAL</strong></p>
+<li><strong>HAL</strong>
 <ul>
 <li><strong>HAL CONF Template</strong> update
 <ul>
@@ -932,7 +1494,7 @@
 </ul></li>
 </ul></li>
 </ul>
-<h2 id="contents-3">Contents</h2>
+<h2 id="contents-6">Contents</h2>
 <table>
 <caption>Drivers</caption>
 <thead>
@@ -1122,27 +1684,27 @@
 </tr>
 </tbody>
 </table>
-<h2 id="known-limitations-3">Known Limitations</h2>
+<h2 id="known-limitations-5">Known Limitations</h2>
 <ul>
 <li>STemWin sample demo application on STM322xG_EVAL is not fully functional with MDK-ARM toolchain: the application doesn’t run successfully after the second hit of the Hide Button. in fact when pressing the button again while the progress bar displays the next steps, pressing Hide or Next Buttons are not working anymore.</li>
 </ul>
-<h2 id="development-toolchains-and-compilers-3">Development Toolchains and Compilers</h2>
+<h2 id="development-toolchains-and-compilers-5">Development Toolchains and Compilers</h2>
 <ul>
 <li>IAR Embedded Workbench for ARM (EWARM) toolchain V7.80.1</li>
 <li>RealView Microcontroller Development Kit (MDK-ARM) toolchain V5.23</li>
 <li>Atollic TrueSTUDIO STM32 (TrueSTUDIO) toolchain v7.0.0</li>
 <li>System Workbench for STM32 (SW4STM32) toolchain V1.14</li>
 </ul>
-<h2 id="supported-devices-and-eval-boards-3">Supported Devices and EVAL boards</h2>
+<h2 id="supported-devices-and-eval-boards-5">Supported Devices and EVAL boards</h2>
 <ul>
 <li>STM32F217xx/215xx/207xx/205xx devices and STM322xG_EVAL board RevC</li>
 <li>STM32F207ZG and STM32F207ZG-Nucleo board RevB</li>
 </ul>
-<h2 id="backward-compatibility-3">Backward Compatibility</h2>
+<h2 id="backward-compatibility-5">Backward Compatibility</h2>
 <ul>
 <li>None</li>
 </ul>
-<h2 id="dependencies-3">Dependencies</h2>
+<h2 id="dependencies-5">Dependencies</h2>
 <ul>
 <li>None</li>
 </ul>
@@ -1151,19 +1713,19 @@
 <div class="collapse">
 <input type="checkbox" id="collapse-section5" aria-hidden="true"> <label for="collapse-section5" aria-hidden="true"><strong>V1.5.0 / 17-March-2017</strong></label>
 <div>
-<h1 id="maintenance-release-4">Maintenance release</h1>
-<h2 id="main-changes-4">Main Changes</h2>
+<h1 id="maintenance-release-7">Maintenance release</h1>
+<h2 id="main-changes-7">Main Changes</h2>
 <ul>
-<li><p>Add Low Layer drivers under Drivers32F2xx_HAL_Driver</p>
+<li>Add Low Layer drivers under Drivers32F2xx_HAL_Driver
 <ul>
 <li>Low Layer drivers allow performance and memory footprint optimization</li>
 <li>Low Layer drivers APIs provide register level programming: they require deep knowledge of peripherals described in STM32F2xx Reference Manuals</li>
-<li>Low Layer drivers are available for: ADC, Cortex, CRC, DAC, DMA, EXTI, GPIO, I2C, IWDG, PWR, RCC, RNG, RTC, SPI, TIM, USART, WWDG peripherals and additionnal Low Level Bus, System and Utilities APIs.</li>
+<li>Low Layer drivers are available for: ADC, Cortex, CRC, DAC, DMA, EXTI, GPIO, I2C, IWDG, PWR, RCC, RNG, RTC, SPI, TIM, USART, WWDG peripherals and additional Low Level Bus, System and Utilities APIs.</li>
 <li>Low Layer drivers APIs are implemented as static inline function in new Inc/stm32f2xx_ll_ppp.h files for PPP peripherals, there is no configuration file and each stm32f2xx_ll_ppp.h file must be included in user code.</li>
 <li>Refer to <a href="http://www.st.com/st-web-ui/static/active/en/resource/technical/document/user_manual/DM00111485.pdf">UM1739</a> for Low Layer presentation and <a href="http://www.st.com/st-web-ui/static/active/en/resource/technical/document/user_manual/DM00223149.pdf">UM1940</a> for API list</li>
 </ul></li>
 <li><p>General update to fix known defects and several implementations enhancement</p></li>
-<li><p><strong>HAL</strong></p>
+<li><strong>HAL</strong>
 <ul>
 <li>Add Low Layer drivers under Drivers32F2xx_HAL_Driver</li>
 <li>Add new HAL driver for <strong>MMC</strong></li>
@@ -1182,12 +1744,12 @@
 <li>Add new HAL_NAND_ConfigDevice API</li>
 </ul></li>
 </ul></li>
-<li><p><strong>CMSIS</strong></p>
+<li><strong>CMSIS</strong>
 <ul>
 <li>Use _Pos and _Mask macros for all Bit Definitions</li>
 <li>Fix known defects and several implementation enhancement</li>
 </ul></li>
-<li><p><strong>Middleware</strong></p>
+<li><strong>Middleware</strong>
 <ul>
 <li>Upgrade to use new version of LwIP V2.0.0
 <ul>
@@ -1205,14 +1767,14 @@
 </ul></li>
 <li>Update STemWin Library V5.32 with a new build with EWARM V7.70</li>
 </ul></li>
-<li><p><strong>Projects</strong></p>
+<li><strong>Projects</strong>
 <ul>
 <li>Add Low Layer examples and MIX examples on the STM32F207ZG-Nucleo board</li>
 <li>Add new mbedTLS applications to replace PolarSSL middleware applications</li>
 <li>Update overall projects to be aligned with latest version of HAL, BSP and Middleware drivers</li>
 </ul></li>
 </ul>
-<h2 id="contents-4">Contents</h2>
+<h2 id="contents-7">Contents</h2>
 <table>
 <caption>Drivers</caption>
 <thead>
@@ -1402,27 +1964,27 @@
 </tr>
 </tbody>
 </table>
-<h2 id="known-limitations-4">Known Limitations</h2>
+<h2 id="known-limitations-6">Known Limitations</h2>
 <ul>
 <li>STemWin sample demo application on STM322xG_EVAL is not fully functional with MDK-ARM toolchain: the application doesn’t run successfully after the second hit of the Hide Button. in fact when pressing the button again while the progress bar displays the next steps, pressing Hide or Next Buttons are not working anymore.</li>
 </ul>
-<h2 id="development-toolchains-and-compilers-4">Development Toolchains and Compilers</h2>
+<h2 id="development-toolchains-and-compilers-6">Development Toolchains and Compilers</h2>
 <ul>
 <li>IAR Embedded Workbench for ARM (EWARM) toolchain V7.80.1</li>
 <li>RealView Microcontroller Development Kit (MDK-ARM) toolchain V5.23</li>
 <li>Atollic TrueSTUDIO STM32 (TrueSTUDIO) toolchain v7.0.0</li>
 <li>System Workbench for STM32 (SW4STM32) toolchain V1.14</li>
 </ul>
-<h2 id="supported-devices-and-eval-boards-4">Supported Devices and EVAL boards</h2>
+<h2 id="supported-devices-and-eval-boards-6">Supported Devices and EVAL boards</h2>
 <ul>
 <li>STM32F217xx/215xx/207xx/205xx devices and STM322xG_EVAL board RevC</li>
 <li>STM32F207ZG and STM32F207ZG-Nucleo board RevB</li>
 </ul>
-<h2 id="backward-compatibility-4">Backward Compatibility</h2>
+<h2 id="backward-compatibility-6">Backward Compatibility</h2>
 <ul>
 <li>None</li>
 </ul>
-<h2 id="dependencies-4">Dependencies</h2>
+<h2 id="dependencies-6">Dependencies</h2>
 <ul>
 <li>None</li>
 </ul>
@@ -1431,11 +1993,11 @@
 <div class="collapse">
 <input type="checkbox" id="collapse-section4" aria-hidden="true"> <label for="collapse-section4" aria-hidden="true"><strong>V1.4.0 / 01-July-2016</strong></label>
 <div>
-<h1 id="maintenance-release-5">Maintenance release</h1>
-<h2 id="main-changes-5">Main Changes</h2>
+<h1 id="maintenance-release-8">Maintenance release</h1>
+<h2 id="main-changes-8">Main Changes</h2>
 <ul>
 <li><p>Maintenance release to fix known defects and several enhancements implementation</p></li>
-<li><p><strong>HAL</strong></p>
+<li><strong>HAL</strong>
 <ul>
 <li>General updates to fix known defects and enhancements implementation</li>
 <li>stm32f2xx_hal_conf_template.h
@@ -1459,11 +2021,11 @@
 <li>Overall HAL IWDG and WWDG drivers rework</li>
 </ul></li>
 </ul></li>
-<li><p><strong>CMSIS</strong></p>
+<li><strong>CMSIS</strong>
 <ul>
 <li>General updates to fix known defects and enhancements implementation</li>
 </ul></li>
-<li><p><strong>Middlewares</strong></p>
+<li><strong>Middlewares</strong>
 <ul>
 <li>Update to STemWin 5.32 version</li>
 <li>Updated USB Device V2.4.2: Fix known defects and enhancement implementation</li>
@@ -1473,11 +2035,11 @@
 <li><strong>Note:</strong> Updated architecture having impact on application based on previous version LwIP V1.4.1 ST modified 20140619</li>
 </ul></li>
 </ul></li>
-<li><p><strong>BSP</strong></p>
+<li><strong>BSP</strong>
 <ul>
 <li>General updates to fix known defects and enhancements implementation</li>
 </ul></li>
-<li><p><strong>Projects</strong></p>
+<li><strong>Projects</strong>
 <ul>
 <li>General updates to fix known defects and enhancements implementation</li>
 <li>Update applications and demonstrations related to STemWin library in order to support the latest STemWin version</li>
@@ -1487,7 +2049,7 @@
 </ul></li>
 <li><p>For the complete list of changes, please refer to the release notes of each firmware component</p></li>
 </ul>
-<h2 id="contents-5">Contents</h2>
+<h2 id="contents-8">Contents</h2>
 <table>
 <caption>Drivers</caption>
 <thead>
@@ -1677,27 +2239,27 @@
 </tr>
 </tbody>
 </table>
-<h2 id="known-limitations-5">Known Limitations</h2>
+<h2 id="known-limitations-7">Known Limitations</h2>
 <ul>
 <li>STemWin sample demo application on STM322xG_EVAL is not fully functional with MDK-ARM toolchain: the application doesn’t run successfully after the second hit of the Hide Button. in fact when pressing the button again while the progress bar displays the next steps, pressing Hide or Next Buttons are not working anymore.</li>
 </ul>
-<h2 id="development-toolchains-and-compilers-5">Development Toolchains and Compilers</h2>
+<h2 id="development-toolchains-and-compilers-7">Development Toolchains and Compilers</h2>
 <ul>
 <li>IAR Embedded Workbench for ARM (EWARM) toolchain v7.60.1</li>
 <li>RealView Microcontroller Development Kit (MDK-ARM) toolchain v5.20</li>
 <li>Atollic TrueSTUDIO STM32 (TrueSTUDIO) toolchain v5.5.2</li>
 <li>System Workbench for STM32 (SW4STM32) toolchain V1.9</li>
 </ul>
-<h2 id="supported-devices-and-eval-boards-5">Supported Devices and EVAL boards</h2>
+<h2 id="supported-devices-and-eval-boards-7">Supported Devices and EVAL boards</h2>
 <ul>
 <li>STM32F217xx/215xx/207xx/205xx devices and STM322xG_EVAL board RevC</li>
 <li><strong>STM32F207ZG and STM32F207ZG-Nucleo board RevB</strong></li>
 </ul>
-<h2 id="backward-compatibility-5">Backward Compatibility</h2>
+<h2 id="backward-compatibility-7">Backward Compatibility</h2>
 <ul>
 <li>None</li>
 </ul>
-<h2 id="dependencies-5">Dependencies</h2>
+<h2 id="dependencies-7">Dependencies</h2>
 <ul>
 <li>None</li>
 </ul>
@@ -1706,12 +2268,12 @@
 <div class="collapse">
 <input type="checkbox" id="collapse-section3" aria-hidden="true"> <label for="collapse-section3" aria-hidden="true"><strong>V1.3.1 / 11-December-2015</strong></label>
 <div>
-<h1 id="maintenance-release-6">Maintenance release</h1>
-<h2 id="main-changes-6">Main Changes</h2>
+<h1 id="maintenance-release-9">Maintenance release</h1>
+<h2 id="main-changes-9">Main Changes</h2>
 <ul>
 <li><strong>Patch release to fix issue in Ethernet HAL driver </strong></li>
 </ul>
-<h2 id="contents-6">Contents</h2>
+<h2 id="contents-9">Contents</h2>
 <table>
 <caption>Drivers</caption>
 <thead>
@@ -1731,27 +2293,27 @@
 </tr>
 </tbody>
 </table>
-<h2 id="known-limitations-6">Known Limitations</h2>
+<h2 id="known-limitations-8">Known Limitations</h2>
 <ul>
 <li>None</li>
 </ul>
-<h2 id="development-toolchains-and-compilers-6">Development Toolchains and Compilers</h2>
+<h2 id="development-toolchains-and-compilers-8">Development Toolchains and Compilers</h2>
 <ul>
 <li>IAR Embedded Workbench for ARM (EWARM) toolchain V7.40.1</li>
 <li>RealView Microcontroller Development Kit (MDK-ARM) toolchain V5.16</li>
 <li>Atollic TrueSTUDIO STM32 (TrueSTUDIO) toolchain v5.3.1</li>
 <li>System Workbench for STM32 (SW4STM32) toolchain V1.3.0</li>
 </ul>
-<h2 id="supported-devices-and-eval-boards-6">Supported Devices and EVAL boards</h2>
+<h2 id="supported-devices-and-eval-boards-8">Supported Devices and EVAL boards</h2>
 <ul>
 <li>STM32F217xx/215xx/207xx/205xx devices and STM322xG_EVAL board RevC</li>
 <li><strong>STM32F207ZG and STM32F207ZG-Nucleo board RevB</strong></li>
 </ul>
-<h2 id="backward-compatibility-6">Backward Compatibility</h2>
+<h2 id="backward-compatibility-8">Backward Compatibility</h2>
 <ul>
 <li>None</li>
 </ul>
-<h2 id="dependencies-6">Dependencies</h2>
+<h2 id="dependencies-8">Dependencies</h2>
 <ul>
 <li>None</li>
 </ul>
@@ -1760,12 +2322,12 @@
 <div class="collapse">
 <input type="checkbox" id="collapse-section2" aria-hidden="true"> <label for="collapse-section2" aria-hidden="true"><strong>V1.3.0 / 20-November-2015</strong></label>
 <div>
-<h1 id="maintenance-release-7">Maintenance release</h1>
-<h2 id="main-changes-7">Main Changes</h2>
+<h1 id="maintenance-release-10">Maintenance release</h1>
+<h2 id="main-changes-10">Main Changes</h2>
 <ul>
-<li><p><strong>Support new board: STM32F207ZG NUCLEO144</strong></p></li>
+<li><strong>Support new board: STM32F207ZG NUCLEO144</strong></li>
 <li><p><strong>Fix known defects and enhancements implementation</strong></p></li>
-<li><p><strong>HAL</strong></p>
+<li><strong>HAL</strong>
 <ul>
 <li>General updates to fix known defects and enhancements implementation</li>
 <li><strong>One change done on the HAL CRYP requires an update on the application code based on HAL V1.1.0</strong>
@@ -1774,30 +2336,30 @@
 </ul></li>
 <li>HSE_STARTUP_TIMEOUT constant has been corrected in stm32f2xx_hal_conf_template.h file, its value changed from 5000 to 100.</li>
 </ul></li>
-<li><p><strong>CMSIS</strong></p>
+<li><strong>CMSIS</strong>
 <ul>
 <li>General updates to fix known defects and enhancements implementation</li>
 </ul></li>
-<li><p><strong>Middlewares</strong></p>
+<li><strong>Middlewares</strong>
 <ul>
 <li>No changes</li>
 </ul></li>
-<li><p><strong>BSP</strong></p>
+<li><strong>BSP</strong>
 <ul>
 <li>Add new BPS drivers for STM32F2xx_Nucleo_144 boards</li>
 </ul></li>
-<li><p><strong>Utilities</strong></p>
+<li><strong>Utilities</strong>
 <ul>
 <li>Use latest version of STM32CubeUpdater V4.10.0</li>
 </ul></li>
-<li><p><strong>Projects</strong></p>
+<li><strong>Projects</strong>
 <ul>
 <li>General updates to fix known defects and enhancements implementation</li>
 <li><strong>Add 34 projects for STM32F207ZG NUCLEO144 boards</strong></li>
 </ul></li>
 <li><p>For the complete list of changes, please refer to the release notes of each firmware component</p></li>
 </ul>
-<h2 id="contents-7">Contents</h2>
+<h2 id="contents-10">Contents</h2>
 <table>
 <caption>Drivers</caption>
 <thead>
@@ -1987,27 +2549,27 @@
 </tr>
 </tbody>
 </table>
-<h2 id="known-limitations-7">Known Limitations</h2>
+<h2 id="known-limitations-9">Known Limitations</h2>
 <ul>
 <li>None</li>
 </ul>
-<h2 id="development-toolchains-and-compilers-7">Development Toolchains and Compilers</h2>
+<h2 id="development-toolchains-and-compilers-9">Development Toolchains and Compilers</h2>
 <ul>
 <li>IAR Embedded Workbench for ARM (EWARM) toolchain V7.40.1</li>
 <li>RealView Microcontroller Development Kit (MDK-ARM) toolchain V5.16</li>
 <li>Atollic TrueSTUDIO STM32 (TrueSTUDIO) toolchain v5.3.1</li>
 <li>System Workbench for STM32 (SW4STM32) toolchain V1.3.0</li>
 </ul>
-<h2 id="supported-devices-and-eval-boards-7">Supported Devices and EVAL boards</h2>
+<h2 id="supported-devices-and-eval-boards-9">Supported Devices and EVAL boards</h2>
 <ul>
 <li>STM32F217xx/215xx/207xx/205xx devices and STM322xG_EVAL board RevC</li>
 <li><strong>STM32F207ZG and STM32F207ZG-Nucleo board RevB</strong></li>
 </ul>
-<h2 id="backward-compatibility-7">Backward Compatibility</h2>
+<h2 id="backward-compatibility-9">Backward Compatibility</h2>
 <ul>
 <li>None</li>
 </ul>
-<h2 id="dependencies-7">Dependencies</h2>
+<h2 id="dependencies-9">Dependencies</h2>
 <ul>
 <li>None</li>
 </ul>
@@ -2016,11 +2578,11 @@
 <div class="collapse">
 <input type="checkbox" id="collapse-section1" aria-hidden="true"> <label for="collapse-section1" aria-hidden="true"><strong>V1.2.0 / 09-October-2015</strong></label>
 <div>
-<h1 id="maintenance-release-8">Maintenance release</h1>
-<h2 id="main-changes-8">Main Changes</h2>
+<h1 id="maintenance-release-11">Maintenance release</h1>
+<h2 id="main-changes-11">Main Changes</h2>
 <ul>
 <li><p><strong>Maintenance release to fix known defects and several enhancements implementation</strong></p></li>
-<li><p><strong>HAL</strong></p>
+<li><strong>HAL</strong>
 <ul>
 <li>Macros and literals renaming to ensure full compatibility across STM32 series, backward compatibility with HAL V1.0.1 maintained thanks to new added file stm32_hal_legacy.h under /Inc/Legacy</li>
 <li>Fix known defects and several enhancements implementation. <strong>Four changes done on the HAL requires an update on the application code based on HAL V1.0.1</strong>
@@ -2038,25 +2600,25 @@
 <li>Several update on source code formatting, for better UM generation (i.e. Doxygen tags updated)</li>
 <li>Add *.chm UM for all drivers, a UM is provided for each superset RPN</li>
 </ul></li>
-<li><p><strong>CMSIS</strong></p></li>
+<li><strong>CMSIS</strong></li>
 <li><p>General updates to fix known defects and enhancements implementation</p></li>
-<li><p><strong>Middlewares</strong></p>
+<li><strong>Middlewares</strong>
 <ul>
 <li>Updated USB Device V2.4.1: fix known defects and several enhancement implementation</li>
 <li>Updated USB Host V3.2.2: fix known defects and several enhancement implementation</li>
 </ul></li>
-<li><p><strong>BSP</strong></p>
+<li><strong>BSP</strong>
 <ul>
 <li>Update STM322xG-EVAL BSP driver to support the cs43l22 audio codec component</li>
 </ul></li>
-<li><p><strong>Projects</strong></p>
+<li><strong>Projects</strong>
 <ul>
 <li>Add more Examples and Applications for STM322xG_EVAL board (47 in total)</li>
 <li>Add the support of System Workbench for STM32 (SW4STM32) toolchain</li>
 </ul></li>
 <li><p>For the complete list of changes, please refer to the release notes of each firmware components</p></li>
 </ul>
-<h2 id="contents-8">Contents</h2>
+<h2 id="contents-11">Contents</h2>
 <table>
 <caption>Drivers</caption>
 <thead>
@@ -2234,26 +2796,26 @@
 </tr>
 </tbody>
 </table>
-<h2 id="known-limitations-8">Known Limitations</h2>
+<h2 id="known-limitations-10">Known Limitations</h2>
 <ul>
 <li>None</li>
 </ul>
-<h2 id="development-toolchains-and-compilers-8">Development Toolchains and Compilers</h2>
+<h2 id="development-toolchains-and-compilers-10">Development Toolchains and Compilers</h2>
 <ul>
 <li>IAR Embedded Workbench for ARM (EWARM) toolchain v7.40.1</li>
 <li>RealView Microcontroller Development Kit (MDK-ARM) toolchain v5.16</li>
 <li>Atollic TrueSTUDIO STM32 (TrueSTUDIO) toolchain v5.3.1</li>
 <li>System Workbench for STM32 (SW4STM32) toolchain V1.3.0</li>
 </ul>
-<h2 id="supported-devices-and-eval-boards-8">Supported Devices and EVAL boards</h2>
+<h2 id="supported-devices-and-eval-boards-10">Supported Devices and EVAL boards</h2>
 <ul>
 <li>STM32F217xx/215xx/207xx/205xx devices and STM322xG_EVAL board RevC</li>
 </ul>
-<h2 id="backward-compatibility-8">Backward Compatibility</h2>
+<h2 id="backward-compatibility-10">Backward Compatibility</h2>
 <ul>
 <li>None</li>
 </ul>
-<h2 id="dependencies-8">Dependencies</h2>
+<h2 id="dependencies-10">Dependencies</h2>
 <ul>
 <li>None</li>
 </ul>
@@ -2262,8 +2824,8 @@
 <div class="collapse">
 <input type="checkbox" id="collapse-section0" aria-hidden="true"> <label for="collapse-section0" aria-hidden="true"><strong>V1.1.0 / 13-March-2014</strong></label>
 <div>
-<h1 id="maintenance-release-9">Maintenance release</h1>
-<h2 id="main-changes-9">Main Changes</h2>
+<h1 id="maintenance-release-12">Maintenance release</h1>
+<h2 id="main-changes-12">Main Changes</h2>
 <ul>
 <li>Added LCD ili9320 component</li>
 <li>BSP ili9320 V1.0.0 <a href="Drivers/BSP/Components/ili9320/Release_Notes.html">release notes</a></li>
@@ -2273,12 +2835,12 @@
 <div class="collapse">
 <input type="checkbox" id="collapse-section" aria-hidden="true"> <label for="collapse-section" aria-hidden="true"><strong>V1.0.0 / 07-March-2014</strong></label>
 <div>
-<h1 id="maintenance-release-10">Maintenance release</h1>
-<h2 id="main-changes-10">Main Changes</h2>
+<h1 id="maintenance-release-13">Maintenance release</h1>
+<h2 id="main-changes-13">Main Changes</h2>
 <ul>
 <li><strong>First official release of STM32CubeF2 (STM32Cube for STM32F2 Series)</strong></li>
 </ul>
-<h2 id="contents-9">Contents</h2>
+<h2 id="contents-12">Contents</h2>
 <table>
 <caption>Drivers</caption>
 <thead>
@@ -2448,16 +3010,16 @@
 <li>TrueSTUDIO projects are not provided for a few Applications</li>
 <li>The LCD ili9320 mounted on previous versions of the STM322xG_EVAL board will be supported in a future version of the STM32Cube F2 FW package (V1.1.0)</li>
 </ul>
-<h2 id="development-toolchains-and-compilers-9">Development Toolchains and Compilers</h2>
+<h2 id="development-toolchains-and-compilers-11">Development Toolchains and Compilers</h2>
 <ul>
 <li>IAR Embedded Workbench for ARM (EWARM) toolchain V6.70.2 + ST-Link</li>
 <li>RealView Microcontroller Development Kit (MDK-ARM toolchain v4.73)</li>
 <li>Atollic TrueSTUDIO STM32 (TrueSTUDIO) tool</li>
 </ul>
-<h2 id="supported-devices-and-eval-boards-9">Supported Devices and EVAL boards</h2>
+<h2 id="supported-devices-and-eval-boards-11">Supported Devices and EVAL boards</h2>
 <ul>
 <li>STM32F217xx/215xx/207xx/205xx devices and STM322xG_EVAL board</li>
-<li>This package contains the list of components mentionned above but the current FW package Examples and Applications have used only the following components
+<li>This package contains the list of components mentioned above but the current FW package Examples and Applications have used only the following components
 <ul>
 <li>LCD ili9325</li>
 <li>Audio Codec cs43l22</li>
@@ -2470,11 +3032,11 @@
 </ul></li>
 </ul></li>
 </ul>
-<h2 id="backward-compatibility-9">Backward Compatibility</h2>
+<h2 id="backward-compatibility-11">Backward Compatibility</h2>
 <ul>
 <li>None</li>
 </ul>
-<h2 id="dependencies-9">Dependencies</h2>
+<h2 id="dependencies-11">Dependencies</h2>
 <ul>
 <li>None</li>
 </ul>

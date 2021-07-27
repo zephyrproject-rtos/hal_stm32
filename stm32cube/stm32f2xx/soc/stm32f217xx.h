@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * @file    stm32f205xx.h
+  * @file    stm32f217xx.h
   * @author  MCD Application Team
-  * @brief   CMSIS STM32F205xx Device Peripheral Access Layer Header File.
+  * @brief   CMSIS STM32F217xx Device Peripheral Access Layer Header File.
   *
   *          This file contains :
   *           - Data structures and the address mapping for all peripherals
@@ -190,7 +190,7 @@ typedef struct
   __IO uint32_t SQR1;   /*!< ADC regular sequence register 1,             Address offset: 0x2C */
   __IO uint32_t SQR2;   /*!< ADC regular sequence register 2,             Address offset: 0x30 */
   __IO uint32_t SQR3;   /*!< ADC regular sequence register 3,             Address offset: 0x34 */
-  __IO uint32_t JSQR;   /*!< ADC injected sequence register,              Address offset: 0x38*/
+  __IO uint32_t JSQR;   /*!< ADC injected sequence register,              Address offset: 0x38 */
   __IO uint32_t JDR1;   /*!< ADC injected data register 1,                Address offset: 0x3C */
   __IO uint32_t JDR2;   /*!< ADC injected data register 2,                Address offset: 0x40 */
   __IO uint32_t JDR3;   /*!< ADC injected data register 3,                Address offset: 0x44 */
@@ -1204,6 +1204,14 @@ USB_OTG_HostChannelTypeDef;
 
 /** @addtogroup Exported_constants
   * @{
+  */
+
+  /** @addtogroup Hardware_Constant_Definition
+  * @{
+  */
+#define LSI_STARTUP_TIME                40U /*!< LSI Maximum startup time in us */
+/**
+  * @}
   */
 
   /** @addtogroup Peripheral_Registers_Bits_Definition
@@ -15254,6 +15262,6 @@ USB_OTG_HostChannelTypeDef;
 }
 #endif /* __cplusplus */
 
-#endif /* __STM32F205xx_H */
+#endif /* __STM32F217xx_H */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
