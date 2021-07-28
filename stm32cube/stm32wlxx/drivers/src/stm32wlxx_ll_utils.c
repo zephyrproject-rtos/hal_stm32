@@ -581,7 +581,14 @@ ErrorStatus LL_PLL_ConfigSystemClock_HSE(LL_UTILS_PLLInitTypeDef *UTILS_PLLInitS
   if (UTILS_PLL_IsBusy() == SUCCESS)
   {
     /* Calculate the new PLL output frequency */
-    pllrfreq = UTILS_GetPLLOutputFrequency(HSE_VALUE, UTILS_PLLInitStruct);
+    if (!LL_RCC_HSE_IsEnabledDiv2()) {
+      pllrfreq = UTILS_GetPLLOutputFrequency(HSE_VALUE, UTILS_PLLInitStruct);
+    }
+    else
+    {
+      /* HSE Pre is set */
+      pllrfreq = UTILS_GetPLLOutputFrequency(HSE_VALUE/2, UTILS_PLLInitStruct);
+    }
 
 #if defined(DUAL_CORE)
     hclk2freq = __LL_RCC_CALC_HCLK2_FREQ(pllrfreq, UTILS_ClkInitStruct->CPU2CLKDivider);

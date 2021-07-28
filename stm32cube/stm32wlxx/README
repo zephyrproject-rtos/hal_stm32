@@ -50,4 +50,9 @@ Patch List:
     Impacted files:
      drivers/include/stm32wlxx_hal_conf.h
 
+   *Take into account HSEPRE value when configuring HSE as PLL input
+    Impacted file:
+     stm32cube/stm32wlxx/drivers/src/stm32wlxx_ll_utils.c
+    ST Internal reference: 111260
+
    See release_note.html from STM32Cube
