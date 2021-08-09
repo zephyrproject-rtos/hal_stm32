@@ -54,6 +54,13 @@ parser.add_argument(
     type=str,
     help="Allows to provide path where STM32Cube repo " + "are stored",
 )
+parser.add_argument(
+    "-v",
+    "--version",
+    default="",
+    type=str,
+    help="select to which version to update.\n",
+)
 args = parser.parse_args()
 
 
@@ -75,7 +82,11 @@ def update_cubes():
             logging.info("updating module " + stmyyxx.name)
             # Force the commit for each serie
             update_serie = serie_update.Stm32SerieUpdate(
-                stmyyxx.name[:-2], repo_path, force=True, noclean=args.noclean
+                stmyyxx.name[:-2],
+                repo_path,
+                force=True,
+                noclean=args.noclean,
+                version_update="",
             )
             update_serie.update_stm32_hal_serie()
 
@@ -106,7 +117,11 @@ if not args.noclean:
 
 if args.stm32_serie:
     update = serie_update.Stm32SerieUpdate(
-        args.stm32_serie, repo_path, args.force, args.noclean
+        args.stm32_serie,
+        repo_path,
+        args.force,
+        args.noclean,
+        args.version,
     )
     update.update_stm32_hal_serie()
 else:
