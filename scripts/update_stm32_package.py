@@ -18,6 +18,7 @@ import argparse
 from pathlib import Path
 import serie_update
 import logging
+from genllheaders import genllheaders
 
 logging.basicConfig(level=logging.INFO)
 
@@ -112,3 +113,13 @@ else:
     update_cubes()
 
 logging.info("The end")
+
+print("Do you want to autogenerate generic LL HAL headers (genllheaders.py) ?")
+res = input("(Enter y/n) ").lower()
+while res not in ("y", "n"):
+    res = input("(Enter y/n) ").lower()
+if res == "y":
+    genllheaders.main(
+        genllheaders.REPO_ROOT / "stm32cube",
+        genllheaders.REPO_ROOT / "stm32cube" / "common_ll",
+    )
