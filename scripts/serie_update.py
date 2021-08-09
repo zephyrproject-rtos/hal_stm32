@@ -40,10 +40,25 @@ def os_cmd(cmd, cwd=None, shell=False):
     return subprocess.check_call(cmd, shell=shell, cwd=cwd)
 
 
+def version_tuple(version):
+    """Remove 'v' in front of version and convert it to tuple,
+    so that versions can be compared
+    """
+    v = re.sub("v", r"", version)
+    return tuple(map(int, (v.split("."))))
+
+
 class Stm32SerieUpdate:
     """class Stm32SerieUpdate"""
 
-    def __init__(self, stm32_serie, stm32cube_repo_path, force, noclean):
+    def __init__(
+        self,
+        stm32_serie,
+        stm32cube_repo_path,
+        force,
+        noclean,
+        version_update,
+    ):
         """Class Stm32SerieUpdate constructor
 
         Args:
@@ -51,6 +66,7 @@ class Stm32SerieUpdate:
             stm32cube_repo_path: directory path where to fetch github repo
             force: boolean to force or not git commit after applying update
             noclean: boolean to clean or not github repo after update done
+            version_update: string to force a specified version to be updated
 
         Returns:
             return previous zephyr cube version.
@@ -74,6 +90,7 @@ class Stm32SerieUpdate:
         self.serie = self.stm32_serie_upper[5:]
         self.force = force
         self.noclean = noclean
+        self.version_update = version_update
 
         # #####  3 root directories to work with ########
         # 1: STM32Cube repo Default $HOME/STM32Cube_repo
@@ -115,8 +132,7 @@ class Stm32SerieUpdate:
         self.readme_file_path = self.zephyr_module_serie_path / "README"
         self.version_tag = []
         self.current_version = ""
-        self.latest_version = ""
-        self.latest_commit = ""
+        self.update_commit = ""
 
     def major_branch(self):
         # check whether master branch exist, otherwise use main branch
@@ -157,8 +173,12 @@ class Stm32SerieUpdate:
             ("git", "tag", "-l"), cwd=self.stm32cube_serie_path
         ).splitlines()
         self.version_tag = [x.decode("utf-8") for x in self.version_tag]
-        # Set latest version
-        self.latest_version = self.version_tag[-1]
+        # Search latest version
+        if self.version_update == "":
+            self.version_update = self.version_tag[0]
+            for tag in self.version_tag:
+                if version_tuple(tag) > version_tuple(self.version_update):
+                    self.version_update = tag
 
     def get_zephyr_current_version(self):
         """Look for current zephyr hal version
@@ -549,18 +569,18 @@ class Stm32SerieUpdate:
                 stm32_assert_j2_template.render(stm32serie=self.stm32_serie)
             )
 
-    def build_from_latest_version(self):
+    def build_from_version_update(self):
         """Build a commit in temporary dir with STM32Cube version
         corresponding to zephyr latest hal version
         """
         # reset the STM32Cube repo to this latest version
         os_cmd(
-            ("git", "reset", "--hard", self.latest_version),
+            ("git", "reset", "--hard", self.version_update),
             cwd=self.stm32cube_serie_path,
         )
 
         # Get the commit id of this latest version
-        self.latest_commit = subprocess.check_output(
+        self.update_commit = subprocess.check_output(
             ("git", "rev-parse", "HEAD"), cwd=self.stm32cube_serie_path
         ).decode("utf-8")
 
@@ -585,16 +605,16 @@ class Stm32SerieUpdate:
         os_cmd(("git", "reset", "--", "*.patch"), cwd=self.stm32cube_serie_path)
         os_cmd(("git", "reset", "--", "*.log"), cwd=self.stm32cube_serie_path)
         os_cmd(
-            ("git", "commit", "-am", '"module' + self.latest_version + '"'),
+            ("git", "commit", "-am", '"module' + self.version_update + '"'),
             cwd=self.stm32cube_temp_serie,
         )
 
     def apply_zephyr_patch(self):
         """Apply zephyr stm32 patch to latest stm32Cube version"""
-        logging.info("Apply zephyr patches to " + self.latest_version)
+        logging.info("Apply zephyr patches to " + self.version_update)
 
         # Update README and CMakeList, copy release note
-        self.update_readme(self.latest_version, self.latest_commit)
+        self.update_readme(self.version_update, self.update_commit)
         self.update_cmakelist()
         self.copy_release_note()
 
@@ -614,7 +634,7 @@ class Stm32SerieUpdate:
         os_cmd(("git", "reset", "--", "*.patch"), cwd=self.stm32cube_temp)
         os_cmd(("git", "reset", "--", "*.log"), cwd=self.stm32cube_temp)
         os_cmd(
-            ("git", "commit", "-am", '"module' + self.latest_version + '"'),
+            ("git", "commit", "-am", '"module' + self.version_update + '"'),
             cwd=self.stm32cube_temp,
         )
 
@@ -690,7 +710,7 @@ class Stm32SerieUpdate:
                     "stm32cube: update "
                     + self.stm32_serie
                     + " to version "
-                    + self.latest_version.upper()
+                    + self.version_update.upper()
                     + "\n"
                 )
 
@@ -703,7 +723,7 @@ class Stm32SerieUpdate:
                 )
                 commit.write("on https://github.com/STMicroelectronics" + "\n")
                 commit.write("from version " + self.current_version + "\n")
-                commit.write("to version " + self.latest_version + "\n")
+                commit.write("to version " + self.version_update + "\n")
             os_cmd(
                 ("git", "commit", "-as", "-F", commit_file_path),
                 cwd=self.zephyr_module_serie_path,
@@ -759,8 +779,8 @@ class Stm32SerieUpdate:
         )
 
         # do not process if versions are similar
-        if (self.current_version in self.latest_version) or (
-            self.latest_version in self.current_version
+        if (self.current_version in self.version_update) or (
+            self.version_update in self.current_version
         ):
             logging.warning("Versions are identical: abandoned")
             self.clean_files()
@@ -773,7 +793,7 @@ class Stm32SerieUpdate:
         self.build_patch_from_current_zephyr_version()
 
         # 6) build the module from this latest version
-        self.build_from_latest_version()
+        self.build_from_version_update()
 
         # 7) apply zephyr patch : in the zephyr module repo
         self.apply_zephyr_patch()
