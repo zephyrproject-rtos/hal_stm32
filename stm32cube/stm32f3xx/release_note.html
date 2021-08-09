@@ -60,90 +60,123 @@
 <div class="col-sm-12 col-lg-8">
 <h1 id="update-history">Update History</h1>
 <div class="collapse">
-<input type="checkbox" id="collapse-section11" aria-hidden="true"> <label for="collapse-section11" aria-hidden="true"><strong>V1.11.0 / 12-September-2019</strong></label>
+<input type="checkbox" id="collapse-section11_3" aria-hidden="true"> <label for="collapse-section11_3" aria-hidden="true"><strong>V1.11.3 / 23-July-2021</strong></label>
 <div>
 <h1 id="maintenance-release">Maintenance release</h1>
 <h2 id="main-changes">Main Changes</h2>
 <ul>
-<li>General updates to fix known defects and enhancements implementation</li>
-<li>Add support of HAL callback registration feature</li>
-<li>Add new <strong>HAL EXTI</strong> driver</li>
-<li><strong>The following changes done on the HAL drivers require an update on the application code based on older HAL versions</strong>
+<li><p>Patch release to fix known defects and enhancements implementation.</p></li>
+<li><strong>CMSIS</strong> updates
 <ul>
-<li><strong>HAL/LL Generic</strong> update
+<li>Added new atomic register access macros in stm32f3xx.h file.</li>
+<li>Add LSI maximum startup time datasheet value: LSI_STARTUP_TIME.</li>
+<li>STM32F334x8 updates
 <ul>
-<li>Add support of <strong>HAL callback registration</strong> feature
-<ul>
-<li>The feature disabled by default is available for the following HAL drivers:
-<ul>
-<li><strong>ADC, CAN, COMP, CEC, DAC, SMBUS, HRTIM, I2C, UART, USART, SRAM, NAND, NOR, PCCARD, WWDG, OPAMP, RTC, SDADC, SPI, SMARTCARD, IrDA, I2S, TIM, TSC and PCD</strong></li>
+<li>HRTIM: Add missing defines to reset all Slave Timer X</li>
 </ul></li>
-<li>The feature may be enabled individually per HAL PPP driver by setting the corresponding definition USE_HAL_PPP_REGISTER_CALLBACKS to 1U in stm32f3xx_hal_conf.h project configuration file (template file stm32f3xx_hal_conf_template.h available from Drivers/STM32F3xx_HAL_Driver/Inc)</li>
-<li>Once enabled , the user application may resort to HAL_PPP_RegisterCallback() to register specific callback function(s) and unregister it(them) with HAL_PPP_UnRegisterCallback()</li>
+<li>STM32F373xC/ STM32F378xx updates
+<ul>
+<li>Start-up files update to call COMP_IRQHandler instead of COMP1_2_IRQHandler</li>
 </ul></li>
 </ul></li>
-</ul></li>
-<li><p>Demonstrations binaries are no more delivered within the STM32CubeF3 MCU package. They are available for download, in addition to their required media files if any, in a standalone package accessible through each hardware board official web page. Please refer to the corresponding demonstration binary readme.txt to get web page for each board.</p></li>
-<li><strong>HAL</strong>
+<li><strong>HAL</strong> updates
 <ul>
-<li>Add support of HAL callback registration feature</li>
-<li>Add new <strong>HAL EXTI</strong> driver</li>
-<li><strong>Here below the new features introduced on HAL drivers</strong>
+<li><strong>HAL GPIO</strong> driver
 <ul>
-<li>Add support of I2C repeated start feature in DMA Mode With the following new APIs
+<li>Update HAL_GPIO_Init() API to avoid the configuration of PUPDR register when Analog mode is selected.</li>
+</ul></li>
+<li><strong>HAL EXTI</strong> update
 <ul>
-<li>HAL_I2C_Master_Seq_Transmit_DMA()</li>
-<li>HAL_I2C_Master_Seq_Receive_DMA()</li>
-<li>HAL_I2C_Slave_Seq_Transmit_DMA()</li>
-<li>HAL_I2C_Slave_Seq_Receive_DMA()</li>
+<li>Update HAL_EXTI_GetConfigLine() API to set default configuration value of Trigger and GPIOSel before checking each corresponding registers.</li>
 </ul></li>
-</ul></li>
-</ul></li>
-<li><strong>CMSIS</strong>
+<li><strong>LL/HAL ADC</strong> update
 <ul>
-<li>Fix known defects and several implementation enhancement</li>
+<li>Update LL_ADC_DMA_GetRegAddr() API to prevent unused argument compilation warning.</li>
+<li>Update HAL timeout mechanism to avoid false timeout detection in case of preemption.</li>
 </ul></li>
-<li><strong>BSP</strong>
+<li><strong>LL/HAL DAC</strong> update
 <ul>
-<li>Add support of new <strong>HX8347I</strong> component</li>
-<li>Update stm32373c_eval_lcd.c to support new <strong>HX8347I</strong> component</li>
+<li>Remove ‘register’ storage class specifier from LL DAC driver.</li>
 </ul></li>
-<li><strong>Middleware</strong>
+<li><strong>LL/HAL TIM</strong> update
 <ul>
-<li>Update to use FreeRTOS <strong>V10.0.1</strong> ST modified <strong>20190329</strong></li>
-<li>Update to use TouchSensing Library <strong>V2.2.4</strong></li>
-<li>Update to use STemWin <strong>V5.44</strong> ST modified <strong>20180322</strong></li>
-<li>Update to use USB Device Library <strong>V2.5.3</strong></li>
+<li>Corrected reversed description of TIM_LL_EC_ONEPULSEMODE One Pulse Mode.</li>
+<li>Update HAL_TIMEx_OnePulseN_Start and HAL_TIMEx_OnePulseN_Stop (pooling and IT mode) to take into consideration all OutputChannel parameters.</li>
+<li>Update input capture measurement in DMA mode to avoid zero return values at high frequencies.</li>
 </ul></li>
-<li><strong>Projects</strong>
+<li><strong>HAL I2C</strong> update
 <ul>
-<li>Update HAL I2C examples to be compliant with new I2C API</li>
-<li>Update HAL TIM examples to be compliant with new TIM API</li>
-<li>Update HAL IWDG examples to be compliant with new HAL_TIMEx_RemapConfig() API</li>
-<li>Update HAL HRTIM examples to be compliant with new HRTIM API</li>
-<li>Update STemWin applications to be compliant with new STemWin architecture</li>
-<li>Update USB Device projects to be compliant with USB Device <strong>V2.5.3</strong>
+<li>Updated I2C_IsAcknowledgeFailed() API to avoid I2C in busy state if NACK received after transmitting register address.</li>
+</ul></li>
+<li><strong>HAL UART</strong> update
 <ul>
-<li>Update USB device applications by adding a UNUSED() macro in the followings API on file usbd_desc.c files in order to avoid compilation warnings with EWARM 8.30
+<li>Fix erroneous UART’s handle state in case of error returned after DMA reception start within UART_Start_Receive_DMA().</li>
+<li>Correction on UART ReceptionType management in case of ReceptionToIdle API are called from RxEvent callback</li>
+<li>Handling of UART concurrent register access in case of race condition between Tx and Rx transfers (HAL UART and LL LPUART)</li>
+</ul></li>
+<li><strong>HAL CAN</strong> update
 <ul>
-<li>USBD_DFU_DeviceDescriptor()</li>
-<li>USBD_DFU_LangIDStrDescriptor()</li>
-<li>USBD_DFU_ManufacturerStrDescriptor()</li>
-<li>USBD_DFU_SerialStrDescriptor()</li>
-</ul></li>
-<li>Remove useless setting of ep0_mps in usbd_conf.c file for USB device applications</li>
-<li>Remove led toggle behavior inside systick handler API</li>
-</ul></li>
-<li>Update FreeRTOS applications to be compliant with FreeRTOS V10.0.1
+<li>Update HAL_CAN_Init() API to be aligned with STM32F3 documentation and to avoid timeout error:
 <ul>
-<li>update to use new FreeRTOSConfig.h template file</li>
+<li>Update CAN Initialization sequence to set “request initialization” bit before exit from sleep mode.</li>
 </ul></li>
-<li>Update TouchSensing applications to be compliant with new TouchSensing version
+</ul></li>
+<li><strong>LL FMC</strong> update
 <ul>
-<li>tsl_user.c: Add error management in tsl_user_Exec() API</li>
+<li>Fix compilation warning with gcc -Wpedantic compiler option.</li>
+</ul></li>
+<li><strong>HAL SPI</strong> update
+<ul>
+<li>Updated to fix MISRA-C 2012 Rule-13.2.</li>
+<li>Updated to set the FRXTH bit for 8bit data in LL_SPI_Init() API.</li>
+<li>Update LL_SPI_TransmitData8() API to avoid casting the result to 8 bits.</li>
+</ul></li>
+<li><strong>HAL I2S</strong> update
+<ul>
+<li>Update I2SEx APIs to correctly support circular transfers:
+<ul>
+<li>Update I2SEx_TxRxDMACplt() API to manage DMA circular mode.</li>
+<li>Update HAL_I2SEx_TransmitReceive_DMA() to enhance HAL I2S driver robustness:
+<ul>
+<li>Remove DMA TX transfer complete and half complete callback initialization.</li>
 </ul></li>
 </ul></li>
-<li><p>For the complete list of changes, please refer to the release notes of each firmware component</p></li>
+</ul></li>
+<li><strong>HAL IWDG</strong> update
+<ul>
+<li>Updated HAL_IWDG_Init() API in order to fix HAL_GetTick() timeout vulnerability issue.</li>
+</ul></li>
+<li><strong>HAL RTC</strong> update
+<ul>
+<li>Update __HAL_RTC_…(__HANDLE__, …) macros to access registers through (__HANDLE__)-&gt;Instance pointer and avoid “unused variable” warnings.</li>
+<li>Correct month management in IS_LL_RTC_MONTH() macro</li>
+</ul></li>
+<li><strong>LL USART</strong> update
+<ul>
+<li>Remove useless check on maximum BRR value by removing IS_LL_USART_BRR_MAX() macro.</li>
+<li>Handling of UART concurrent register access in case of race condition between Tx and Rx transfers (HAL UART and LL LPUART)</li>
+</ul></li>
+<li><strong>HAL NAND</strong> update
+<ul>
+<li>Update implementation of “HAL_NAND_Read_SpareArea_16b” and “HAL_NAND_Write_SpareArea_16b” to fix an issue with the spare area Column address calculation</li>
+<li>Update implementation of “HAL_NAND_Write_Page_16b” and “HAL_NAND_Read_Page_16b” APIs implementation to fix an issue with the page calculation of 8 bits memories</li>
+</ul></li>
+<li><strong>HAL USB_FS</strong> update
+<ul>
+<li>HAL PCD: add fix transfer complete for IN Interrupt transaction in single buffer mode</li>
+<li>Race condition in USB PCD control endpoint receive ISR.</li>
+</ul></li>
+</ul></li>
+<li><strong>Project</strong> update
+<ul>
+<li>General updates to fix compilation warnings with gcc v9.</li>
+<li>Updated examples and applications to avoid clearing DMA using global flag GIFx.</li>
+</ul></li>
+<li><strong>BSP</strong> update
+<ul>
+<li>Add License.md file required for GitHub publication.</li>
+<li>Add Release Note resource: htmresc folder.</li>
+</ul></li>
 </ul>
 <h2 id="contents">Contents</h2>
 <ul>
@@ -240,7 +273,1085 @@
 <tr class="header">
 <th style="text-align: left;">Name</th>
 <th style="text-align: center;">Version</th>
-<th style="text-align: center;">Licence</th>
+<th style="text-align: center;">License</th>
+<th style="text-align: center;">Release note</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>STM32F3xx CMSIS</strong></td>
+<td style="text-align: center;"><strong>V2.3.6</strong></td>
+<td style="text-align: center;"><a href="https://opensource.org/licenses/Apache-2.0">Apache License 2.0</a></td>
+<td style="text-align: center;"><a href="Drivers/CMSIS/Device/ST/STM32F3xx/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>STM32F3xx HAL</strong></td>
+<td style="text-align: center;"><strong>V1.5.6</strong></td>
+<td style="text-align: center;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
+<td style="text-align: center;"><a href="Drivers/STM32F3xx_HAL_Driver/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>BSP STM32303C_EVAL</strong></td>
+<td style="text-align: center;"><strong>V2.1.3</strong></td>
+<td style="text-align: center;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
+<td style="text-align: center;"><a href="Drivers/BSP/STM32303C_EVAL/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>BSP STM32303E_EVAL</strong></td>
+<td style="text-align: center;"><strong>V2.1.3</strong></td>
+<td style="text-align: center;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
+<td style="text-align: center;"><a href="Drivers/BSP/STM32303E_EVAL/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>BSP STM32373C_EVAL</strong></td>
+<td style="text-align: center;"><strong>V2.2.3</strong></td>
+<td style="text-align: center;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
+<td style="text-align: center;"><a href="Drivers/BSP/STM32373C_EVAL/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>BSP STM32F3-Discovery</strong></td>
+<td style="text-align: center;"><strong>V2.1.6</strong></td>
+<td style="text-align: center;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
+<td style="text-align: center;"><a href="Drivers/BSP/STM32F3-Discovery/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>BSP STM32F3348-Discovery</strong></td>
+<td style="text-align: center;"><strong>V2.0.5</strong></td>
+<td style="text-align: center;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
+<td style="text-align: center;"><a href="Drivers/BSP/STM32F3348-Discovery/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>BSP STM32F3xx-Nucleo</strong></td>
+<td style="text-align: center;"><strong>V1.1.5</strong></td>
+<td style="text-align: center;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
+<td style="text-align: center;"><a href="Drivers/BSP/STM32F3xx-Nucleo/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>BSP STM32F3xx_Nucleo_32</strong></td>
+<td style="text-align: center;"><strong>V1.0.5</strong></td>
+<td style="text-align: center;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
+<td style="text-align: center;"><a href="Drivers/BSP/STM32F3xx_Nucleo_32/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>BSP STM32F3xx_Nucleo_144</strong></td>
+<td style="text-align: center;"><strong>V1.0.4</strong></td>
+<td style="text-align: center;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
+<td style="text-align: center;"><a href="Drivers/BSP/STM32F3xx_Nucleo_144/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BSP i3g4250d</td>
+<td style="text-align: center;">V1.0.0</td>
+<td style="text-align: center;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
+<td style="text-align: center;"><a href="Drivers/BSP/Components/i3g4250d/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BSP lsm303agr</td>
+<td style="text-align: center;">V1.0.1</td>
+<td style="text-align: center;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
+<td style="text-align: center;"><a href="Drivers/BSP/Components/lsm303agr/Release_Notes.html">release notes</a></td>
+</tr>
+</tbody>
+</table></li>
+</ul>
+</div>
+</div>
+<div class="collapse">
+<input type="checkbox" id="collapse-section11_2" aria-hidden="true"> <label for="collapse-section11_2" aria-hidden="true"><strong>V1.11.2 / 10-November-2020</strong></label>
+<div>
+<h1 id="maintenance-release-1">Maintenance release</h1>
+<h2 id="main-changes-1">Main Changes</h2>
+<ul>
+<li>Patch release to fix known defects and enhancements implementation.</li>
+<li>Remove “register” keyword to be compliant with new C++ rules:
+<ul>
+<li>The register storage class specifier was deprecated in C++11 and removed in C++17</li>
+</ul></li>
+<li><p>Updates to fix MISRA C / Code Sonar rules compliance.</p></li>
+<li><strong>CMSIS</strong>
+<ul>
+<li>system_stm32f3xx.c
+<ul>
+<li>Protect Vector table modification following SRAM or FLASH preprocessor directive by a generic preprocessor directive : USER_VECT_TAB_ADDRESS<br />
+</li>
+</ul></li>
+<li>Add License.md and Readme.md files required for GitHub publication</li>
+<li>Improve GCC startup files robustness.</li>
+</ul></li>
+<li><strong>HAL</strong>
+<ul>
+<li><strong>HAL</strong> driver update
+<ul>
+<li>Update hal_def.h to support new ARM compiler Keil V6.</li>
+<li>Update HAL TimeBase TIM, RTC alarm and RTC WakeUp templates for more robustness
+<ul>
+<li>Update HAL_InitTick() API to properly store the priority when using the non-default time base.</li>
+</ul></li>
+<li>Add new defines for ARM compiler V6:
+<ul>
+<li>__weak</li>
+<li>__packed</li>
+<li>__NOINLINE</li>
+</ul></li>
+<li>Remove compile switch “USE_HAL_LEGACY” on #include “Legacy/stm32_hal_legacy.h”</li>
+</ul></li>
+<li><strong>HAL/LL ADC</strong> update
+<ul>
+<li>Update HAL_ADC_IRQHandler() API for case of injected conversion with software trigger and end of conversion or sequence triggered
+<ul>
+<li>disable interruption and update state machine.</li>
+</ul></li>
+<li>Update HAL_ADC_Stop_DMA() API to check if DMA state is Busy before calling HAL_DMA_Abort() API to avoid DMA internal error.</li>
+<li>Update LL_ADC_REG_Init() API to avoid enabling continuous mode and discontinuous mode simultaneously.</li>
+<li>Support missing trigger Timer 2 Capture Compare 2 of regular source for STM32F301, STM32F302 and STM32F318:
+<ul>
+<li>Add LL_ADC_REG_TRIG_EXT_TIM2_CH2 in LL driver and ADC_EXTERNALTRIGCONV_T2_CC2 in HAL driver</li>
+</ul></li>
+<li>fix codesonar warning: “Negative Shift Amount”
+<ul>
+<li>impacted API:
+<ul>
+<li>LL_ADC_REG_SetSequencerRanks</li>
+<li>LL_ADC_REG_GetSequencerRanks</li>
+<li>LL_ADC_INJ_SetSequencerRanks</li>
+<li>LL_ADC_INJ_GetSequencerRanks</li>
+</ul></li>
+</ul></li>
+<li>Update comment to clarify the “How to use low power mode”</li>
+</ul></li>
+<li><strong>LL COMP</strong> update
+<ul>
+<li>Fix wrong Value for:
+<ul>
+<li>LL_COMP_OUTPUT_TIM3_IC1_COMP2</li>
+<li>LL_COMP_OUTPUT_TIM3_IC1_COMP1_2</li>
+</ul></li>
+</ul></li>
+<li><strong>LL OPAMP</strong> update
+<ul>
+<li>fix wrong description comments for:
+<ul>
+<li>LL_OPAMP_INPUT_NONINVERT_IO2</li>
+<li>LL_OPAMP_INPUT_NONINVERT_IO3</li>
+</ul></li>
+</ul></li>
+<li><strong>HAL CEC</strong> update
+<ul>
+<li>Update HAL_CEC_IRQHandler() API to avoid appending an extra byte to the end of message.</li>
+</ul></li>
+<li><strong>HAL RTC</strong> update
+<ul>
+<li>Update to support Daylight Saving Time (DST) feature:
+<ul>
+<li>Subtract or add one hour to the calendar can now be handled outside HAL_RTC_SetTime() thanks to new APIs.
+<ul>
+<li>HAL_RTC_DST_Add1Hour() API to add one hour to the calendar</li>
+<li>HAL_RTC_DST_Sub1Hour() API to subtract one hour from the calendar</li>
+<li>HAL_RTC_DST_SetStoreOperation() API to set the store operation bit</li>
+<li>HAL_RTC_DST_ClearStoreOperation() API to clear the store operation bit</li>
+<li>HAL_RTC_DST_ReadStoreOperation() API to read the store operation bit</li>
+</ul></li>
+<li>DayLightSaving and StoreOperation interfaces from RTC_TimeTypeDef type are now deprecated.</li>
+</ul></li>
+</ul></li>
+<li><strong>HAL/LL SPI</strong> update
+<ul>
+<li>Update Transmit/Receive processes in half-duplex mode</li>
+<li>Disable the SPI instance before setting BDIOE bit</li>
+<li>Disable TX DMA request only in bidirectional receive mode</li>
+<li>Fix wrong timeout management
+<ul>
+<li>Calculate Timeout based on a software loop to avoid blocking issue if Systick is disabled</li>
+</ul></li>
+<li>Update HAL_SPI_Init() API
+<ul>
+<li>To avoid setting the BaudRatePrescaler in case of Slave Motorola Mode</li>
+<li>Use the bit-mask for SPI configuration</li>
+</ul></li>
+</ul></li>
+<li><strong>LL I2S</strong> update
+<ul>
+<li>Update LL_I2S_Init() API to correctly calculate sourceclock which used for bitrate calculation.</li>
+<li>Update HAL_I2S_DMAStop() API to be more safe
+<ul>
+<li>Add a check on BSY, TXE and RXNE flags before disabling the I2S</li>
+</ul></li>
+<li>Update HAL_I2S_DMAStop() API to fix multi-call transfer issue(to avoid re-initializing the I2S for the next transfer).
+<ul>
+<li>Add __HAL_I2SEXT_FLUSH_RX_DR() and __HAL_I2S_FLUSH_RX_DR() macros to flush the remaining data inside DR registers.</li>
+<li>Add new ErrorCode define: HAL_I2S_ERROR_BUSY_LINE_RX</li>
+</ul></li>
+</ul></li>
+<li><strong>HAL NOR</strong> update
+<ul>
+<li>Update address calculation in HAL_NOR_ProgramBuffer()</li>
+<li>Apply adequate commands according to the command set field value
+<ul>
+<li>command set 1 for Micron JS28F512P33</li>
+<li>command set 2 for Micron M29W128G and Cypress S29GL128P</li>
+</ul></li>
+<li>Add new commands operations:
+<ul>
+<li>NOR_CMD_READ_ARRAY</li>
+<li>NOR_CMD_WORD_PROGRAM</li>
+<li>NOR_CMD_BUFFERED_PROGRAM</li>
+<li>NOR_CMD_CONFIRM</li>
+<li>NOR_CMD_BLOCK_ERASE</li>
+<li>NOR_CMD_BLOCK_UNLOCK</li>
+<li>NOR_CMD_READ_STATUS_REG</li>
+<li>NOR_CMD_CLEAR_STATUS_REG</li>
+</ul></li>
+<li>Update some APIs in order to be compliant for memories with another command set.
+<ul>
+<li>HAL_NOR_Init()</li>
+<li>HAL_NOR_Read_ID()</li>
+<li>HAL_NOR_ReturnToReadMode()</li>
+<li>HAL_NOR_Read()</li>
+<li>HAL_NOR_Program()</li>
+<li>HAL_NOR_ReadBuffer()</li>
+<li>HAL_NOR_ProgramBuffer()</li>
+<li>HAL_NOR_Erase_Block()</li>
+<li>HAL_NOR_Erase_Chip()</li>
+<li>HAL_NOR_GetStatus()</li>
+</ul></li>
+</ul></li>
+<li><strong>HAL HRTIM</strong> update
+<ul>
+<li>Update HAL_HRTIM_DLLCalibrationStart() and HAL_HRTIM_DLLCalibrationStart_IT() to set the handler state back to “READY” before exiting.</li>
+</ul></li>
+<li><strong>HAL TSC</strong> update
+<ul>
+<li>Update the HAL_TSC_Init() API to add new check condition on “PulseGeneratorPrescaler” Parameter.</li>
+</ul></li>
+<li><strong>HAL/LL TIM</strong> update
+<ul>
+<li>Update Encoder input interface to don’t allow both input polarity configuration
+<ul>
+<li>Replace IS_TIM_IC_POLARITY() macro by IS_TIM_ENCODERINPUT_POLARITY() macro.</li>
+</ul></li>
+<li>Update to allow multiple DMA request with different channels in parallel:
+<ul>
+<li>Implement DMA burst state management mechanism</li>
+<li>Implement TIM channel state management mechanism</li>
+</ul></li>
+<li>Correct inverted values of LL_TIM_COUNTERMODE_CENTER_DOWN and LL_TIM_COUNTERMODE_CENTER_UP</li>
+<li>Update LL_TIM_GetCounterMode() API to return right counter mode.</li>
+<li>Add LL_TIM_IsActiveUIFCPY inline function to indicate whether update interrupt flag (UIF) copy is set or not.</li>
+</ul></li>
+<li><strong>HAL/LL SMARTCARD</strong> update
+<ul>
+<li>Update smartcard transmit processes to be able to handle data retransmission when NACK is received in smartcard T=0</li>
+</ul></li>
+<li><strong>HAL/LL IRDA</strong> update
+<ul>
+<li>Fix typos in IRDA State definition description</li>
+</ul></li>
+<li><strong>HAL/LL UART</strong> update
+<ul>
+<li>Update to enhance reception to idle services (ReceptionToIdle):
+<ul>
+<li>Add a new field HAL_UART_RxTypeTypeDef structure to the UART_HandleTypeDef structure to identify the type of ongoing Reception</li>
+<li>Add UART Reception Event Callback registration features</li>
+<li>Add a set of APIs specific to Reception to Idle transfer in different mode
+<ul>
+<li>Add HAL_UARTEx_ReceiveToIdle API to receive an amount of data in blocking mode till either the expected number of data is received or an IDLE event occurs.</li>
+<li>Add HAL_UARTEx_ReceiveToIdle_IT() API to receive an amount of data in interrupt mode till either the expected number of data is received or an IDLE event occurs.</li>
+<li>Add HAL_UARTEx_ReceiveToIdle_DMA() API to receive an amount of data in DMA mode till either the expected number of data is received or an IDLE event occurs.</li>
+</ul></li>
+<li>Update HAL_UART_Receive(), HAL_UART_Receive_IT() and HAL_UART_Receive_DMA() APIs to support the new enhancement of ReceptionToIdle</li>
+</ul></li>
+<li>Update HAL_UART_IRQHandler() to handle receiver timeout interruption</li>
+<li>Update UART receive processes (IT &amp; DMA) to handle the UART receive timeout interruption</li>
+<li>Move the process unlock at the top of the HAL_UART_Receive() and HAL_UART_Transmit() API.</li>
+<li>Fix typos in UART State definition description</li>
+</ul></li>
+<li><strong>HAL/LL USART</strong> update
+<ul>
+<li>Add RTO (Receiver Time Out) support to USART HAL flags and IT management
+<ul>
+<li>Add HAL_USART_ERROR_RTO define of Receiver Timeout error to the USART Error Definition section</li>
+<li>Add USART_FLAG_RTOF define of Receiver Timeout flag to the USART Flags section</li>
+<li>Add USART_CLEAR_RTOF define of Receiver Timeout clear flag to the USART Clear Flags section</li>
+<li>Update HAL_USART_IRQHandler to add support to the Receiver Timeout Interruption</li>
+</ul></li>
+</ul></li>
+<li><strong>HAL IWDG</strong> update
+<ul>
+<li>Update HAL_IWDG_DEFAULT_TIMEOUT define value to consider LSI value instead of hardcoded value.</li>
+</ul></li>
+<li><strong>LL UTILS</strong> update
+<ul>
+<li>UTILS_SetFlashLatency() API renamed to LL_SetFlashLatency() and set exportable.</li>
+</ul></li>
+</ul></li>
+<li><strong>BSP</strong>
+<ul>
+<li>Add new <strong>MEMS I3G4250D</strong> component support for STM32F3-Discovery board.</li>
+<li>Add new <strong>MEMS LSM303AGR</strong> component support for STM32F3-Discovery board.</li>
+<li>Update stm32f3_discovery_accelerometer driver to support new <strong>LSM303AGR</strong> component.</li>
+<li>Update stm32f3_discovery_gyroscope to support new <strong>I3G4250D</strong> component.</li>
+</ul></li>
+<li><strong>Projects</strong>
+<ul>
+<li>STM32F3-Discovery:
+<ul>
+<li>Update Demo and BSP example to support new MEMS I3G4250D and LSM303AGR.</li>
+</ul></li>
+<li>Update All MDK-ARM Templates projects to support new ARM compiler V6.</li>
+</ul></li>
+</ul>
+<h2 id="contents-1">Contents</h2>
+<ul>
+<li>The STM32CubeF3 Firmware package comes with a rich set of examples running on STMicroelectronics boards, organized by board and provided with pre-configured projects for the main supported toolchains. The exhaustive list of projects is provided in this table <a href="Projects/STM32CubeProjectsList.html">STM32CubeProjectsList.html</a>.</li>
+<li>Projects release notes
+<ul>
+<li>STM32F3-Discovery
+<ul>
+<li>Applications <a href="Projects\STM32F3-Discovery\Applications\Release_Notes.html">release notes</a></li>
+<li>Demonstrations <a href="Projects\STM32F3-Discovery\Demonstrations\Release_Notes.html">release notes</a></li>
+<li>Examples <a href="Projects\STM32F3-Discovery\Examples\Release_Notes.html">release notes</a></li>
+<li>Templates <a href="Projects\STM32F3-Discovery\Templates\Release_Notes.html">release notes</a></li>
+<li>Templates_LL <a href="Projects\STM32F3-Discovery\Templates_LL\Release_Notes.html">release notes</a></li>
+</ul></li>
+<li>STM32F302R8-Nucleo
+<ul>
+<li>Applications <a href="Projects\STM32F302R8-Nucleo\Applications\Release_Notes.html">release notes</a></li>
+<li>Demonstrations <a href="Projects\STM32F302R8-Nucleo\Demonstrations\Release_Notes.html">release notes</a></li>
+<li>Examples <a href="Projects\STM32F302R8-Nucleo\Examples\Release_Notes.html">release notes</a></li>
+<li>Examples_LL <a href="Projects\STM32F302R8-Nucleo\Examples_LL\Release_Notes.html">release notes</a></li>
+<li>Examples_MIX <a href="Projects\STM32F302R8-Nucleo\Examples_MIX\Release_Notes.html">release notes</a></li>
+<li>Templates <a href="Projects\STM32F302R8-Nucleo\Templates\Release_Notes.html">release notes</a></li>
+<li>Templates_LL <a href="Projects\STM32F302R8-Nucleo\Templates_LL\Release_Notes.html">release notes</a></li>
+</ul></li>
+<li>STM32F303RE-Nucleo
+<ul>
+<li>Applications <a href="Projects\STM32F303RE-Nucleo\Applications\Release_Notes.html">release notes</a></li>
+<li>Demonstrations <a href="Projects\STM32F303RE-Nucleo\Demonstrations\Release_Notes.html">release notes</a></li>
+<li>Examples <a href="Projects\STM32F303RE-Nucleo\Examples\Release_Notes.html">release notes</a></li>
+<li>Templates <a href="Projects\STM32F303RE-Nucleo\Templates\Release_Notes.html">release notes</a></li>
+<li>Templates_LL <a href="Projects\STM32F303RE-Nucleo\Templates_LL\Release_Notes.html">release notes</a></li>
+</ul></li>
+<li>STM32F334R8-Nucleo
+<ul>
+<li>Applications <a href="Projects\STM32F334R8-Nucleo\Applications\Release_Notes.html">release notes</a></li>
+<li>Demonstrations <a href="Projects\STM32F334R8-Nucleo\Demonstrations\Release_Notes.html">release notes</a></li>
+<li>Examples <a href="Projects\STM32F334R8-Nucleo\Examples\Release_Notes.html">release notes</a></li>
+<li>Examples_LL <a href="Projects\STM32F334R8-Nucleo\Examples_LL\Release_Notes.html">release notes</a></li>
+<li>Examples_MIX <a href="Projects\STM32F334R8-Nucleo\Examples_MIX\Release_Notes.html">release notes</a></li>
+<li>Templates <a href="Projects\STM32F334R8-Nucleo\Templates\Release_Notes.html">release notes</a></li>
+<li>Templates_LL <a href="Projects\STM32F334R8-Nucleo\Templates_LL\Release_Notes.html">release notes</a></li>
+</ul></li>
+<li>STM32F3348-Discovery
+<ul>
+<li>Applications <a href="Projects\STM32F3348-Discovery\Applications\Release_Notes.html">release notes</a></li>
+<li>Demonstrations <a href="Projects\STM32F3348-Discovery\Demonstrations\Release_Notes.html">release notes</a></li>
+<li>Examples <a href="Projects\STM32F3348-Discovery\Examples\Release_Notes.html">release notes</a></li>
+<li>Examples_LL <a href="Projects\STM32F3348-Discovery\Examples_LL\Release_Notes.html">release notes</a></li>
+<li>Templates <a href="Projects\STM32F3348-Discovery\Templates\Release_Notes.html">release notes</a></li>
+<li>Templates_LL <a href="Projects\STM32F3348-Discovery\Templates_LL\Release_Notes.html">release notes</a></li>
+</ul></li>
+<li>STM32303C_EVAL
+<ul>
+<li>Applications <a href="Projects\STM32303C_EVAL\Applications\Release_Notes.html">release notes</a></li>
+<li>Examples <a href="Projects\STM32303C_EVAL\Examples\Release_Notes.html">release notes</a></li>
+<li>Templates <a href="Projects\STM32303C_EVAL\Templates\Release_Notes.html">release notes</a></li>
+<li>Templates_LL <a href="Projects\STM32303C_EVAL\Templates_LL\Release_Notes.html">release notes</a></li>
+</ul></li>
+<li>STM32303E_EVAL
+<ul>
+<li>Applications <a href="Projects\STM32303E_EVAL\Applications\Release_Notes.html">release notes</a></li>
+<li>Examples <a href="Projects\STM32303E_EVAL\Examples\Release_Notes.html">release notes</a></li>
+<li>Templates <a href="Projects\STM32303E_EVAL\Templates\Release_Notes.html">release notes</a></li>
+<li>Templates_LL <a href="Projects\STM32303E_EVAL\Templates_LL\Release_Notes.html">release notes</a></li>
+</ul></li>
+<li>STM32373C_EVAL
+<ul>
+<li>Applications <a href="Projects\STM32373C_EVAL\Applications\Release_Notes.html">release notes</a></li>
+<li>Examples <a href="Projects\STM32373C_EVAL\Examples\Release_Notes.html">release notes</a></li>
+<li>Templates <a href="Projects\STM32373C_EVAL\Templates\Release_Notes.html">release notes</a></li>
+<li>Templates_LL <a href="Projects\STM32373C_EVAL\Templates_LL\Release_Notes.html">release notes</a></li>
+</ul></li>
+<li>STM32F303K8-Nucleo
+<ul>
+<li>Applications <a href="Projects\STM32F303K8-Nucleo\Applications\Release_Notes.html">release notes</a></li>
+<li>Demonstrations <a href="Projects\STM32F303K8-Nucleo\Demonstrations\Release_Notes.html">release notes</a></li>
+<li>Examples <a href="Projects\STM32F303K8-Nucleo\Examples\Release_Notes.html">release notes</a></li>
+<li>Templates <a href="Projects\STM32F303K8-Nucleo\Templates\Release_Notes.html">release notes</a></li>
+<li>Templates_LL <a href="Projects\STM32F303K8-Nucleo\Templates_LL\Release_Notes.html">release notes</a></li>
+</ul></li>
+<li>STM32F303ZE-Nucleo
+<ul>
+<li>Applications <a href="Projects\STM32F303ZE-Nucleo\Applications\Release_Notes.html">release notes</a></li>
+<li>Demonstrations <a href="Projects\STM32F303ZE-Nucleo\Demonstrations\Release_Notes.html">release notes</a></li>
+<li>Examples <a href="Projects\STM32F303ZE-Nucleo\Examples\Release_Notes.html">release notes</a></li>
+<li>Examples_LL <a href="Projects\STM32F303ZE-Nucleo\Examples_LL\Release_Notes.html">release notes</a></li>
+<li>Templates <a href="Projects\STM32F303ZE-Nucleo\Templates\Release_Notes.html">release notes</a></li>
+<li>Templates_LL <a href="Projects\STM32F303ZE-Nucleo\Templates_LL\Release_Notes.html">release notes</a></li>
+</ul></li>
+</ul>
+<table>
+<caption>Drivers</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Name</th>
+<th style="text-align: center;">Version</th>
+<th style="text-align: center;">License</th>
+<th style="text-align: center;">Release note</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>STM32F3xx CMSIS</strong></td>
+<td style="text-align: center;"><strong>V2.3.5</strong></td>
+<td style="text-align: center;"><a href="https://opensource.org/licenses/Apache-2.0">Apache License 2.0</a></td>
+<td style="text-align: center;"><a href="Drivers/CMSIS/Device/ST/STM32F3xx/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>STM32F3xx HAL</strong></td>
+<td style="text-align: center;"><strong>V1.5.5</strong></td>
+<td style="text-align: center;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
+<td style="text-align: center;"><a href="Drivers/STM32F3xx_HAL_Driver/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>BSP STM32F3-Discovery</strong></td>
+<td style="text-align: center;"><strong>V2.1.6</strong></td>
+<td style="text-align: center;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
+<td style="text-align: center;"><a href="Drivers/BSP/STM32F3-Discovery/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>BSP i3g4250d</strong></td>
+<td style="text-align: center;"><strong>V1.0.0</strong></td>
+<td style="text-align: center;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
+<td style="text-align: center;"><a href="Drivers/BSP/Components/i3g4250d/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>BSP lsm303agr</strong></td>
+<td style="text-align: center;"><strong>V1.0.1</strong></td>
+<td style="text-align: center;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
+<td style="text-align: center;"><a href="Drivers/BSP/Components/lsm303agr/Release_Notes.html">release notes</a></td>
+</tr>
+</tbody>
+</table></li>
+</ul>
+<h2 id="known-limitations">Known Limitations</h2>
+<ul>
+<li>None</li>
+</ul>
+<h2 id="development-toolchains-and-compilers">Development Toolchains and Compilers</h2>
+<ul>
+<li>IAR Embedded Workbench for ARM (EWARM) toolchain V8.22.2 + ST-LINK</li>
+<li>RealView Microcontroller Development Kit (MDK-ARM) toolchain V5.26 + ST-LINK</li>
+<li>System Workbench for STM32 (SW4STM32) toolchain V2.9 + ST-LINK</li>
+</ul>
+<h2 id="supported-devices-and-eval-boards">Supported Devices and EVAL boards</h2>
+<ul>
+<li>All STM32F3x1, STM32F3x2, STM32F3x3, STM32F3x4 and STM32F3x8 product lines devices are supported.</li>
+<li>Discovery boards: STM32F3-Discovery (RevB), STM32F3348-Discovery (RevB)</li>
+<li>Nucleo boards: STM32F302R8-Nucleo, STM32F334R8-Nucleo (RevC), STM32F303RE-Nucleo</li>
+<li>Evaluation boards: STM32303C-EVAL (RevC), STM32373C-EVAL (RevB), STM32303E-EVAL</li>
+<li>Nucleo32 boards: STM32F303K8-Nucleo</li>
+<li>Nucleo144 boards: STM32F303ZE-Nucleo</li>
+</ul>
+<h2 id="backward-compatibility">Backward Compatibility</h2>
+<ul>
+<li>None</li>
+</ul>
+<h2 id="dependencies">Dependencies</h2>
+<ul>
+<li>None</li>
+</ul>
+</div>
+</div>
+<div class="collapse">
+<input type="checkbox" id="collapse-section11_1" aria-hidden="true"> <label for="collapse-section11_1" aria-hidden="true"><strong>V1.11.1 / 23-July-2020</strong></label>
+<div>
+<h1 id="maintenance-release-2">Maintenance release</h1>
+<h2 id="main-changes-2">Main Changes</h2>
+<ul>
+<li><p>General updates to fix known defects and enhancements implementation.</p></li>
+<li><strong>HAL</strong>
+<ul>
+<li><strong>HAL/LL GPIO</strong> update
+<ul>
+<li>Update GPIO initialization sequence to avoid unwanted pulse on GPIO Pin’s.</li>
+<li>Update HAL_GPIO_TogglePin() API to allow the toggling of many pins.</li>
+<li>HAL_GPIO_TogglePin reentrancy robustness improvement by using BSRR register instead of ODR register.</li>
+</ul></li>
+<li><strong>HAL/LL I2C</strong> update
+<ul>
+<li>Update HAL_I2C_ER_IRQHandler() API to fix acknowledge failure issue with I2C memory IT processes
+<ul>
+<li>Add stop condition generation when NACK occurs.</li>
+</ul></li>
+<li>Update I2C_DMAXferCplt(), I2C_DMAError() and I2C_DMAAbort() APIs to fix hardfault issue when hdmatx and hdmarx parameters in i2c handle aren’t initialized (NULL pointer).
+<ul>
+<li>Add additional check on hi2c-&gt;hdmtx and hi2c-&gt;hdmarx before resetting DMA Tx/Rx complete callbacks</li>
+</ul></li>
+<li>Update Sequential transfer APIs to adjust xfermode condition.
+<ul>
+<li>Replace hi2c-&gt;XferCount &lt; MAX_NBYTE_SIZE by hi2c-&gt;XferCount &lt;= MAX_NBYTE_SIZE which corresponds to a case without reload</li>
+</ul></li>
+</ul></li>
+<li><strong>HAL/LL USB</strong> driver
+<ul>
+<li>Bug fix: USB_ReadPMA() and USB_WritePMA() by ensuring 16-bits access to USB PMA memory</li>
+<li>Bug fix: correct USB RX count calculation</li>
+<li>Fix USB Bulk transfer double buffer mode</li>
+<li>Remove register keyword from USB defined macros as no more supported by C++ compiler</li>
+<li>Minor rework on USBD_Start() and USBD_Stop() APIs: stopping device will be handled by HAL_PCD_DeInit() API.</li>
+<li>Remove non used API for USB device mode.</li>
+</ul></li>
+</ul></li>
+</ul>
+<h2 id="contents-2">Contents</h2>
+<ul>
+<li>The STM32CubeF3 Firmware package comes with a rich set of examples running on STMicroelectronics boards, organized by board and provided with pre-configured projects for the main supported toolchains. The exhaustive list of projects is provided in this table <a href="Projects/STM32CubeProjectsList.html">STM32CubeProjectsList.html</a>.</li>
+<li>Projects release notes
+<ul>
+<li>STM32F3-Discovery
+<ul>
+<li>Applications <a href="Projects\STM32F3-Discovery\Applications\Release_Notes.html">release notes</a></li>
+<li>Demonstrations <a href="Projects\STM32F3-Discovery\Demonstrations\Release_Notes.html">release notes</a></li>
+<li>Examples <a href="Projects\STM32F3-Discovery\Examples\Release_Notes.html">release notes</a></li>
+<li>Templates <a href="Projects\STM32F3-Discovery\Templates\Release_Notes.html">release notes</a></li>
+<li>Templates_LL <a href="Projects\STM32F3-Discovery\Templates_LL\Release_Notes.html">release notes</a></li>
+</ul></li>
+<li>STM32F302R8-Nucleo
+<ul>
+<li>Applications <a href="Projects\STM32F302R8-Nucleo\Applications\Release_Notes.html">release notes</a></li>
+<li>Demonstrations <a href="Projects\STM32F302R8-Nucleo\Demonstrations\Release_Notes.html">release notes</a></li>
+<li>Examples <a href="Projects\STM32F302R8-Nucleo\Examples\Release_Notes.html">release notes</a></li>
+<li>Examples_LL <a href="Projects\STM32F302R8-Nucleo\Examples_LL\Release_Notes.html">release notes</a></li>
+<li>Examples_MIX <a href="Projects\STM32F302R8-Nucleo\Examples_MIX\Release_Notes.html">release notes</a></li>
+<li>Templates <a href="Projects\STM32F302R8-Nucleo\Templates\Release_Notes.html">release notes</a></li>
+<li>Templates_LL <a href="Projects\STM32F302R8-Nucleo\Templates_LL\Release_Notes.html">release notes</a></li>
+</ul></li>
+<li>STM32F303RE-Nucleo
+<ul>
+<li>Applications <a href="Projects\STM32F303RE-Nucleo\Applications\Release_Notes.html">release notes</a></li>
+<li>Demonstrations <a href="Projects\STM32F303RE-Nucleo\Demonstrations\Release_Notes.html">release notes</a></li>
+<li>Examples <a href="Projects\STM32F303RE-Nucleo\Examples\Release_Notes.html">release notes</a></li>
+<li>Templates <a href="Projects\STM32F303RE-Nucleo\Templates\Release_Notes.html">release notes</a></li>
+<li>Templates_LL <a href="Projects\STM32F303RE-Nucleo\Templates_LL\Release_Notes.html">release notes</a></li>
+</ul></li>
+<li>STM32F334R8-Nucleo
+<ul>
+<li>Applications <a href="Projects\STM32F334R8-Nucleo\Applications\Release_Notes.html">release notes</a></li>
+<li>Demonstrations <a href="Projects\STM32F334R8-Nucleo\Demonstrations\Release_Notes.html">release notes</a></li>
+<li>Examples <a href="Projects\STM32F334R8-Nucleo\Examples\Release_Notes.html">release notes</a></li>
+<li>Examples_LL <a href="Projects\STM32F334R8-Nucleo\Examples_LL\Release_Notes.html">release notes</a></li>
+<li>Examples_MIX <a href="Projects\STM32F334R8-Nucleo\Examples_MIX\Release_Notes.html">release notes</a></li>
+<li>Templates <a href="Projects\STM32F334R8-Nucleo\Templates\Release_Notes.html">release notes</a></li>
+<li>Templates_LL <a href="Projects\STM32F334R8-Nucleo\Templates_LL\Release_Notes.html">release notes</a></li>
+</ul></li>
+<li>STM32F3348-Discovery
+<ul>
+<li>Applications <a href="Projects\STM32F3348-Discovery\Applications\Release_Notes.html">release notes</a></li>
+<li>Demonstrations <a href="Projects\STM32F3348-Discovery\Demonstrations\Release_Notes.html">release notes</a></li>
+<li>Examples <a href="Projects\STM32F3348-Discovery\Examples\Release_Notes.html">release notes</a></li>
+<li>Examples_LL <a href="Projects\STM32F3348-Discovery\Examples_LL\Release_Notes.html">release notes</a></li>
+<li>Templates <a href="Projects\STM32F3348-Discovery\Templates\Release_Notes.html">release notes</a></li>
+<li>Templates_LL <a href="Projects\STM32F3348-Discovery\Templates_LL\Release_Notes.html">release notes</a></li>
+</ul></li>
+<li>STM32303C_EVAL
+<ul>
+<li>Applications <a href="Projects\STM32303C_EVAL\Applications\Release_Notes.html">release notes</a></li>
+<li>Examples <a href="Projects\STM32303C_EVAL\Examples\Release_Notes.html">release notes</a></li>
+<li>Templates <a href="Projects\STM32303C_EVAL\Templates\Release_Notes.html">release notes</a></li>
+<li>Templates_LL <a href="Projects\STM32303C_EVAL\Templates_LL\Release_Notes.html">release notes</a></li>
+</ul></li>
+<li>STM32303E_EVAL
+<ul>
+<li>Applications <a href="Projects\STM32303E_EVAL\Applications\Release_Notes.html">release notes</a></li>
+<li>Examples <a href="Projects\STM32303E_EVAL\Examples\Release_Notes.html">release notes</a></li>
+<li>Templates <a href="Projects\STM32303E_EVAL\Templates\Release_Notes.html">release notes</a></li>
+<li>Templates_LL <a href="Projects\STM32303E_EVAL\Templates_LL\Release_Notes.html">release notes</a></li>
+</ul></li>
+<li>STM32373C_EVAL
+<ul>
+<li>Applications <a href="Projects\STM32373C_EVAL\Applications\Release_Notes.html">release notes</a></li>
+<li>Examples <a href="Projects\STM32373C_EVAL\Examples\Release_Notes.html">release notes</a></li>
+<li>Templates <a href="Projects\STM32373C_EVAL\Templates\Release_Notes.html">release notes</a></li>
+<li>Templates_LL <a href="Projects\STM32373C_EVAL\Templates_LL\Release_Notes.html">release notes</a></li>
+</ul></li>
+<li>STM32F303K8-Nucleo
+<ul>
+<li>Applications <a href="Projects\STM32F303K8-Nucleo\Applications\Release_Notes.html">release notes</a></li>
+<li>Demonstrations <a href="Projects\STM32F303K8-Nucleo\Demonstrations\Release_Notes.html">release notes</a></li>
+<li>Examples <a href="Projects\STM32F303K8-Nucleo\Examples\Release_Notes.html">release notes</a></li>
+<li>Templates <a href="Projects\STM32F303K8-Nucleo\Templates\Release_Notes.html">release notes</a></li>
+<li>Templates_LL <a href="Projects\STM32F303K8-Nucleo\Templates_LL\Release_Notes.html">release notes</a></li>
+</ul></li>
+<li>STM32F303ZE-Nucleo
+<ul>
+<li>Applications <a href="Projects\STM32F303ZE-Nucleo\Applications\Release_Notes.html">release notes</a></li>
+<li>Demonstrations <a href="Projects\STM32F303ZE-Nucleo\Demonstrations\Release_Notes.html">release notes</a></li>
+<li>Examples <a href="Projects\STM32F303ZE-Nucleo\Examples\Release_Notes.html">release notes</a></li>
+<li>Examples_LL <a href="Projects\STM32F303ZE-Nucleo\Examples_LL\Release_Notes.html">release notes</a></li>
+<li>Templates <a href="Projects\STM32F303ZE-Nucleo\Templates\Release_Notes.html">release notes</a></li>
+<li>Templates_LL <a href="Projects\STM32F303ZE-Nucleo\Templates_LL\Release_Notes.html">release notes</a></li>
+</ul></li>
+</ul>
+<table>
+<caption>Drivers</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Name</th>
+<th style="text-align: center;">Version</th>
+<th style="text-align: center;">License</th>
+<th style="text-align: center;">Release note</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Cortex-M CMSIS</td>
+<td style="text-align: center;">V5.4.0</td>
+<td style="text-align: center;"><a href="Drivers/CMSIS/LICENSE.txt">Apache License 2.0</a></td>
+<td style="text-align: center;"><a href="Drivers/CMSIS/docs/General/html/index.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>STM32F3xx CMSIS</strong></td>
+<td style="text-align: center;">V2.3.4</td>
+<td style="text-align: center;"><a href="https://opensource.org/licenses/Apache-2.0">Apache License 2.0</a></td>
+<td style="text-align: center;"><a href="Drivers/CMSIS/Device/ST/STM32F3xx/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>STM32F3xx HAL</strong></td>
+<td style="text-align: center;"><strong>V1.5.4</strong></td>
+<td style="text-align: center;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
+<td style="text-align: center;"><a href="Drivers/STM32F3xx_HAL_Driver/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BSP STM32303C_EVAL</td>
+<td style="text-align: center;">V2.1.2</td>
+<td style="text-align: center;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
+<td style="text-align: center;"><a href="Drivers/BSP/STM32303C_EVAL/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BSP STM32303E_EVAL</td>
+<td style="text-align: center;">V2.1.2</td>
+<td style="text-align: center;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
+<td style="text-align: center;"><a href="Drivers/BSP/STM32303E_EVAL/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>BSP STM32373C_EVAL</strong></td>
+<td style="text-align: center;">V2.2.2</td>
+<td style="text-align: center;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
+<td style="text-align: center;"><a href="Drivers/BSP/STM32373C_EVAL/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BSP STM32F3-Discovery</td>
+<td style="text-align: center;">V2.1.5</td>
+<td style="text-align: center;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
+<td style="text-align: center;"><a href="Drivers/BSP/STM32F3-Discovery/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BSP STM32F3348-Discovery</td>
+<td style="text-align: center;">V2.0.4</td>
+<td style="text-align: center;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
+<td style="text-align: center;"><a href="Drivers/BSP/STM32F3348-Discovery/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BSP STM32F3xx-Nucleo</td>
+<td style="text-align: center;">V1.1.4</td>
+<td style="text-align: center;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
+<td style="text-align: center;"><a href="Drivers/BSP/STM32F3xx-Nucleo/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BSP STM32F3xx_Nucleo_32</td>
+<td style="text-align: center;">V1.0.4</td>
+<td style="text-align: center;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
+<td style="text-align: center;"><a href="Drivers/BSP/STM32F3xx_Nucleo_32/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BSP STM32F3xx_Nucleo_144</td>
+<td style="text-align: center;">V1.0.3</td>
+<td style="text-align: center;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
+<td style="text-align: center;"><a href="Drivers/BSP/STM32F3xx_Nucleo_144/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BSP Adafruit Shield</td>
+<td style="text-align: center;">V2.0.1</td>
+<td style="text-align: center;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
+<td style="text-align: center;"><a href="Drivers/BSP/Adafruit_Shield/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BSP Common</td>
+<td style="text-align: center;">V4.0.1</td>
+<td style="text-align: center;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
+<td style="text-align: center;"><a href="Drivers/BSP/Components/Common/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BSP l3gd20</td>
+<td style="text-align: center;">V2.0.0</td>
+<td style="text-align: center;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
+<td style="text-align: center;"><a href="Drivers/BSP/Components/l3gd20/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BSP lsm303dlhc</td>
+<td style="text-align: center;">V2.0.0</td>
+<td style="text-align: center;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
+<td style="text-align: center;"><a href="Drivers/BSP/Components/lsm303dlhc/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BSP cs43l22</td>
+<td style="text-align: center;">V2.0.2</td>
+<td style="text-align: center;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
+<td style="text-align: center;"><a href="Drivers/BSP/Components/cs43l22/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BSP hx8347d</td>
+<td style="text-align: center;">V1.1.1</td>
+<td style="text-align: center;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
+<td style="text-align: center;"><a href="Drivers/BSP/Components/hx8347d/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BSP hx8347g</td>
+<td style="text-align: center;">V1.1.0</td>
+<td style="text-align: center;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
+<td style="text-align: center;"><a href="Drivers/BSP/Components/hx8347g/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>BSP hx8347i</strong></td>
+<td style="text-align: center;">V1.0.1</td>
+<td style="text-align: center;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
+<td style="text-align: center;"><a href="Drivers/BSP/Components/hx8347i/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BSP ili9328</td>
+<td style="text-align: center;">V1.1.0</td>
+<td style="text-align: center;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
+<td style="text-align: center;"><a href="Drivers/BSP/Components/ili9328/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BSP spfd5408</td>
+<td style="text-align: center;">V1.1.1</td>
+<td style="text-align: center;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
+<td style="text-align: center;"><a href="Drivers/BSP/Components/spfd5408/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BSP stts751</td>
+<td style="text-align: center;">V1.0.1</td>
+<td style="text-align: center;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
+<td style="text-align: center;"><a href="Drivers/BSP/Components/stts751/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BSP cs42l52</td>
+<td style="text-align: center;">V2.0.0</td>
+<td style="text-align: center;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
+<td style="text-align: center;"><a href="Drivers/BSP/Components/cs42l52/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BSP stlm75</td>
+<td style="text-align: center;">V1.0.1</td>
+<td style="text-align: center;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
+<td style="text-align: center;"><a href="Drivers/BSP/Components/stlm75/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BSP st7735</td>
+<td style="text-align: center;">V1.1.1</td>
+<td style="text-align: center;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
+<td style="text-align: center;"><a href="Drivers/BSP/Components/st7735/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BSP ili9320</td>
+<td style="text-align: center;">V1.2.2</td>
+<td style="text-align: center;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
+<td style="text-align: center;"><a href="Drivers/BSP/Components/ili9320/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BSP ili9325</td>
+<td style="text-align: center;">V1.2.2</td>
+<td style="text-align: center;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
+<td style="text-align: center;"><a href="Drivers/BSP/Components/stlm75/Release_Notes.html">release notes</a></td>
+</tr>
+</tbody>
+</table>
+<table>
+<caption>Middlewares</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Name</th>
+<th style="text-align: center;">Version</th>
+<th style="text-align: center;">License</th>
+<th style="text-align: center;">Release note</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>STM32 USB Device Library</strong></td>
+<td style="text-align: center;">V2.5.3</td>
+<td style="text-align: center;"><a href="http://www.st.com/SLA0044">SLA0044</a></td>
+<td style="text-align: center;"><a href="Middlewares/ST/STM32_USB_Device_Library/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>STM32 TouchSensing Library</strong></td>
+<td style="text-align: center;">V2.2.4</td>
+<td style="text-align: center;"><a href="http://www.st.com/SLA0044">SLA0044</a></td>
+<td style="text-align: center;"><a href="Middlewares/ST/STM32_TouchSensing_Library/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">FatFS</td>
+<td style="text-align: center;">R0.11</td>
+<td style="text-align: center;"><a href="Middlewares/Third_Party/FatFs/doc/en/appnote.html#license">BSD-3-Clause</a></td>
+<td style="text-align: center;"><a href="Middlewares/Third_Party/FatFs/doc/updates.txt">release notes</a> ST modified 20150508 <a href="Middlewares/Third_Party/FatFs/src/st_readme.txt">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>FreeRTOS</strong></td>
+<td style="text-align: center;">v10.0.1</td>
+<td style="text-align: center;"><a href="Middlewares/Third_Party/FreeRTOS/License/license.txt">MIT</a></td>
+<td style="text-align: center;"><a href="Middlewares/Third_Party/FreeRTOS/Source/readme.txt">release notes</a> <strong>ST modified 20190329</strong> <a href="Middlewares/Third_Party/FreeRTOS/Source/st_readme.txt">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>STemWin Library</strong></td>
+<td style="text-align: center;">5.44</td>
+<td style="text-align: center;"><a href="http://www.st.com/SLA0044">SLA0044</a></td>
+<td style="text-align: center;"><a href="Middlewares/ST/STemWin/Release_Notes.html">release notes</a> <strong>ST modified 20180322</strong></td>
+</tr>
+</tbody>
+</table>
+<table>
+<caption>Utilities</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Name</th>
+<th style="text-align: center;">Version</th>
+<th style="text-align: center;">License</th>
+<th style="text-align: center;">Release note</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">CPU</td>
+<td style="text-align: center;">V1.1.0</td>
+<td style="text-align: center;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
+<td style="text-align: center;"><a href="Utilities/CPU/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Fonts</td>
+<td style="text-align: center;">V1.0.0</td>
+<td style="text-align: center;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
+<td style="text-align: center;"><a href="Utilities/Fonts/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Log</td>
+<td style="text-align: center;">V1.0.0</td>
+<td style="text-align: center;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
+<td style="text-align: center;"><a href="Utilities/Log/Release_Notes.html">release notes</a></td>
+</tr>
+</tbody>
+</table></li>
+</ul>
+<h2 id="known-limitations-1">Known Limitations</h2>
+<ul>
+<li>None</li>
+</ul>
+<h2 id="development-toolchains-and-compilers-1">Development Toolchains and Compilers</h2>
+<ul>
+<li>IAR Embedded Workbench for ARM (EWARM) toolchain <strong>V8.22.2</strong> + ST-LINK</li>
+<li>RealView Microcontroller Development Kit (MDK-ARM) toolchain <strong>V5.26</strong> + ST-LINK</li>
+<li>System Workbench for STM32 (SW4STM32) toolchain <strong>V2.9</strong> + ST-LINK</li>
+</ul>
+<h2 id="supported-devices-and-eval-boards-1">Supported Devices and EVAL boards</h2>
+<ul>
+<li>All STM32F3x1, STM32F3x2, STM32F3x3, STM32F3x4 and STM32F3x8 product lines devices are supported.</li>
+<li>Discovery boards: STM32F3-Discovery (RevB), STM32F3348-Discovery (RevB)</li>
+<li>Nucleo boards: STM32F302R8-Nucleo, STM32F334R8-Nucleo (RevC), STM32F303RE-Nucleo</li>
+<li>Evaluation boards: STM32303C-EVAL (RevC), STM32373C-EVAL (RevB), STM32303E-EVAL</li>
+<li>Nucleo32 boards: STM32F303K8-Nucleo</li>
+<li>Nucleo144 boards: STM32F303ZE-Nucleo</li>
+</ul>
+<h2 id="backward-compatibility-1">Backward Compatibility</h2>
+<ul>
+<li>None</li>
+</ul>
+<h2 id="dependencies-1">Dependencies</h2>
+<ul>
+<li>None</li>
+</ul>
+</div>
+</div>
+<div class="collapse">
+<input type="checkbox" id="collapse-section11" aria-hidden="true"> <label for="collapse-section11" aria-hidden="true"><strong>V1.11.0 / 12-September-2019</strong></label>
+<div>
+<h1 id="maintenance-release-3">Maintenance release</h1>
+<h2 id="main-changes-3">Main Changes</h2>
+<ul>
+<li>General updates to fix known defects and enhancements implementation</li>
+<li>Add support of HAL callback registration feature</li>
+<li>Add new <strong>HAL EXTI</strong> driver</li>
+<li><strong>The following changes done on the HAL drivers require an update on the application code based on older HAL versions</strong>
+<ul>
+<li><strong>HAL/LL Generic</strong> update
+<ul>
+<li>Add support of <strong>HAL callback registration</strong> feature
+<ul>
+<li>The feature disabled by default is available for the following HAL drivers:
+<ul>
+<li><strong>ADC, CAN, COMP, CEC, DAC, SMBUS, HRTIM, I2C, UART, USART, SRAM, NAND, NOR, PCCARD, WWDG, OPAMP, RTC, SDADC, SPI, SMARTCARD, IrDA, I2S, TIM, TSC and PCD</strong></li>
+</ul></li>
+<li>The feature may be enabled individually per HAL PPP driver by setting the corresponding definition USE_HAL_PPP_REGISTER_CALLBACKS to 1U in stm32f3xx_hal_conf.h project configuration file (template file stm32f3xx_hal_conf_template.h available from Drivers/STM32F3xx_HAL_Driver/Inc)</li>
+<li>Once enabled , the user application may resort to HAL_PPP_RegisterCallback() to register specific callback function(s) and unregister it(them) with HAL_PPP_UnRegisterCallback()</li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li><p>Demonstrations binaries are no more delivered within the STM32CubeF3 MCU package. They are available for download, in addition to their required media files if any, in a standalone package accessible through each hardware board official web page. Please refer to the corresponding demonstration binary readme.txt to get web page for each board.</p></li>
+<li><strong>HAL</strong>
+<ul>
+<li>Add support of HAL callback registration feature</li>
+<li>Add new <strong>HAL EXTI</strong> driver</li>
+<li><strong>Here below the new features introduced on HAL drivers</strong>
+<ul>
+<li>Add support of I2C repeated start feature in DMA Mode With the following new APIs
+<ul>
+<li>HAL_I2C_Master_Seq_Transmit_DMA()</li>
+<li>HAL_I2C_Master_Seq_Receive_DMA()</li>
+<li>HAL_I2C_Slave_Seq_Transmit_DMA()</li>
+<li>HAL_I2C_Slave_Seq_Receive_DMA()</li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li><strong>CMSIS</strong>
+<ul>
+<li>Fix known defects and several implementation enhancement</li>
+</ul></li>
+<li><strong>BSP</strong>
+<ul>
+<li>Add support of new <strong>HX8347I</strong> component</li>
+<li>Update stm32373c_eval_lcd.c to support new <strong>HX8347I</strong> component</li>
+</ul></li>
+<li><strong>Middleware</strong>
+<ul>
+<li>Update to use FreeRTOS <strong>V10.0.1</strong> ST modified <strong>20190329</strong></li>
+<li>Update to use TouchSensing Library <strong>V2.2.4</strong></li>
+<li>Update to use STemWin <strong>V5.44</strong> ST modified <strong>20180322</strong></li>
+<li>Update to use USB Device Library <strong>V2.5.3</strong></li>
+</ul></li>
+<li><strong>Projects</strong>
+<ul>
+<li>Update HAL I2C examples to be compliant with new I2C API</li>
+<li>Update HAL TIM examples to be compliant with new TIM API</li>
+<li>Update HAL IWDG examples to be compliant with new HAL_TIMEx_RemapConfig() API</li>
+<li>Update HAL HRTIM examples to be compliant with new HRTIM API</li>
+<li>Update STemWin applications to be compliant with new STemWin architecture</li>
+<li>Update USB Device projects to be compliant with USB Device <strong>V2.5.3</strong>
+<ul>
+<li>Update USB device applications by adding a UNUSED() macro in the following API on file usbd_desc.c files in order to avoid compilation warnings with EWARM 8.30
+<ul>
+<li>USBD_DFU_DeviceDescriptor()</li>
+<li>USBD_DFU_LangIDStrDescriptor()</li>
+<li>USBD_DFU_ManufacturerStrDescriptor()</li>
+<li>USBD_DFU_SerialStrDescriptor()</li>
+</ul></li>
+<li>Remove useless setting of ep0_mps in usbd_conf.c file for USB device applications</li>
+<li>Remove led toggle behavior inside systick handler API</li>
+</ul></li>
+<li>Update FreeRTOS applications to be compliant with FreeRTOS V10.0.1
+<ul>
+<li>update to use new FreeRTOSConfig.h template file</li>
+</ul></li>
+<li>Update TouchSensing applications to be compliant with new TouchSensing version
+<ul>
+<li>tsl_user.c: Add error management in tsl_user_Exec() API</li>
+</ul></li>
+</ul></li>
+<li><p>For the complete list of changes, please refer to the release notes of each firmware component</p></li>
+</ul>
+<h2 id="contents-3">Contents</h2>
+<ul>
+<li>The STM32CubeF3 Firmware package comes with a rich set of examples running on STMicroelectronics boards, organized by board and provided with pre-configured projects for the main supported toolchains. The exhaustive list of projects is provided in this table <a href="Projects/STM32CubeProjectsList.html">STM32CubeProjectsList.html</a>.</li>
+<li>Projects release notes
+<ul>
+<li>STM32F3-Discovery
+<ul>
+<li>Applications <a href="Projects\STM32F3-Discovery\Applications\Release_Notes.html">release notes</a></li>
+<li>Demonstrations <a href="Projects\STM32F3-Discovery\Demonstrations\Release_Notes.html">release notes</a></li>
+<li>Examples <a href="Projects\STM32F3-Discovery\Examples\Release_Notes.html">release notes</a></li>
+<li>Templates <a href="Projects\STM32F3-Discovery\Templates\Release_Notes.html">release notes</a></li>
+<li>Templates_LL <a href="Projects\STM32F3-Discovery\Templates_LL\Release_Notes.html">release notes</a></li>
+</ul></li>
+<li>STM32F302R8-Nucleo
+<ul>
+<li>Applications <a href="Projects\STM32F302R8-Nucleo\Applications\Release_Notes.html">release notes</a></li>
+<li>Demonstrations <a href="Projects\STM32F302R8-Nucleo\Demonstrations\Release_Notes.html">release notes</a></li>
+<li>Examples <a href="Projects\STM32F302R8-Nucleo\Examples\Release_Notes.html">release notes</a></li>
+<li>Examples_LL <a href="Projects\STM32F302R8-Nucleo\Examples_LL\Release_Notes.html">release notes</a></li>
+<li>Examples_MIX <a href="Projects\STM32F302R8-Nucleo\Examples_MIX\Release_Notes.html">release notes</a></li>
+<li>Templates <a href="Projects\STM32F302R8-Nucleo\Templates\Release_Notes.html">release notes</a></li>
+<li>Templates_LL <a href="Projects\STM32F302R8-Nucleo\Templates_LL\Release_Notes.html">release notes</a></li>
+</ul></li>
+<li>STM32F303RE-Nucleo
+<ul>
+<li>Applications <a href="Projects\STM32F303RE-Nucleo\Applications\Release_Notes.html">release notes</a></li>
+<li>Demonstrations <a href="Projects\STM32F303RE-Nucleo\Demonstrations\Release_Notes.html">release notes</a></li>
+<li>Examples <a href="Projects\STM32F303RE-Nucleo\Examples\Release_Notes.html">release notes</a></li>
+<li>Templates <a href="Projects\STM32F303RE-Nucleo\Templates\Release_Notes.html">release notes</a></li>
+<li>Templates_LL <a href="Projects\STM32F303RE-Nucleo\Templates_LL\Release_Notes.html">release notes</a></li>
+</ul></li>
+<li>STM32F334R8-Nucleo
+<ul>
+<li>Applications <a href="Projects\STM32F334R8-Nucleo\Applications\Release_Notes.html">release notes</a></li>
+<li>Demonstrations <a href="Projects\STM32F334R8-Nucleo\Demonstrations\Release_Notes.html">release notes</a></li>
+<li>Examples <a href="Projects\STM32F334R8-Nucleo\Examples\Release_Notes.html">release notes</a></li>
+<li>Examples_LL <a href="Projects\STM32F334R8-Nucleo\Examples_LL\Release_Notes.html">release notes</a></li>
+<li>Examples_MIX <a href="Projects\STM32F334R8-Nucleo\Examples_MIX\Release_Notes.html">release notes</a></li>
+<li>Templates <a href="Projects\STM32F334R8-Nucleo\Templates\Release_Notes.html">release notes</a></li>
+<li>Templates_LL <a href="Projects\STM32F334R8-Nucleo\Templates_LL\Release_Notes.html">release notes</a></li>
+</ul></li>
+<li>STM32F3348-Discovery
+<ul>
+<li>Applications <a href="Projects\STM32F3348-Discovery\Applications\Release_Notes.html">release notes</a></li>
+<li>Demonstrations <a href="Projects\STM32F3348-Discovery\Demonstrations\Release_Notes.html">release notes</a></li>
+<li>Examples <a href="Projects\STM32F3348-Discovery\Examples\Release_Notes.html">release notes</a></li>
+<li>Examples_LL <a href="Projects\STM32F3348-Discovery\Examples_LL\Release_Notes.html">release notes</a></li>
+<li>Templates <a href="Projects\STM32F3348-Discovery\Templates\Release_Notes.html">release notes</a></li>
+<li>Templates_LL <a href="Projects\STM32F3348-Discovery\Templates_LL\Release_Notes.html">release notes</a></li>
+</ul></li>
+<li>STM32303C_EVAL
+<ul>
+<li>Applications <a href="Projects\STM32303C_EVAL\Applications\Release_Notes.html">release notes</a></li>
+<li>Examples <a href="Projects\STM32303C_EVAL\Examples\Release_Notes.html">release notes</a></li>
+<li>Templates <a href="Projects\STM32303C_EVAL\Templates\Release_Notes.html">release notes</a></li>
+<li>Templates_LL <a href="Projects\STM32303C_EVAL\Templates_LL\Release_Notes.html">release notes</a></li>
+</ul></li>
+<li>STM32303E_EVAL
+<ul>
+<li>Applications <a href="Projects\STM32303E_EVAL\Applications\Release_Notes.html">release notes</a></li>
+<li>Examples <a href="Projects\STM32303E_EVAL\Examples\Release_Notes.html">release notes</a></li>
+<li>Templates <a href="Projects\STM32303E_EVAL\Templates\Release_Notes.html">release notes</a></li>
+<li>Templates_LL <a href="Projects\STM32303E_EVAL\Templates_LL\Release_Notes.html">release notes</a></li>
+</ul></li>
+<li>STM32373C_EVAL
+<ul>
+<li>Applications <a href="Projects\STM32373C_EVAL\Applications\Release_Notes.html">release notes</a></li>
+<li>Examples <a href="Projects\STM32373C_EVAL\Examples\Release_Notes.html">release notes</a></li>
+<li>Templates <a href="Projects\STM32373C_EVAL\Templates\Release_Notes.html">release notes</a></li>
+<li>Templates_LL <a href="Projects\STM32373C_EVAL\Templates_LL\Release_Notes.html">release notes</a></li>
+</ul></li>
+<li>STM32F303K8-Nucleo
+<ul>
+<li>Applications <a href="Projects\STM32F303K8-Nucleo\Applications\Release_Notes.html">release notes</a></li>
+<li>Demonstrations <a href="Projects\STM32F303K8-Nucleo\Demonstrations\Release_Notes.html">release notes</a></li>
+<li>Examples <a href="Projects\STM32F303K8-Nucleo\Examples\Release_Notes.html">release notes</a></li>
+<li>Templates <a href="Projects\STM32F303K8-Nucleo\Templates\Release_Notes.html">release notes</a></li>
+<li>Templates_LL <a href="Projects\STM32F303K8-Nucleo\Templates_LL\Release_Notes.html">release notes</a></li>
+</ul></li>
+<li>STM32F303ZE-Nucleo
+<ul>
+<li>Applications <a href="Projects\STM32F303ZE-Nucleo\Applications\Release_Notes.html">release notes</a></li>
+<li>Demonstrations <a href="Projects\STM32F303ZE-Nucleo\Demonstrations\Release_Notes.html">release notes</a></li>
+<li>Examples <a href="Projects\STM32F303ZE-Nucleo\Examples\Release_Notes.html">release notes</a></li>
+<li>Examples_LL <a href="Projects\STM32F303ZE-Nucleo\Examples_LL\Release_Notes.html">release notes</a></li>
+<li>Templates <a href="Projects\STM32F303ZE-Nucleo\Templates\Release_Notes.html">release notes</a></li>
+<li>Templates_LL <a href="Projects\STM32F303ZE-Nucleo\Templates_LL\Release_Notes.html">release notes</a></li>
+</ul></li>
+</ul>
+<table>
+<caption>Drivers</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Name</th>
+<th style="text-align: center;">Version</th>
+<th style="text-align: center;">License</th>
 <th style="text-align: center;">Release note</th>
 </tr>
 </thead>
@@ -484,17 +1595,17 @@
 </tbody>
 </table></li>
 </ul>
-<h2 id="known-limitations">Known Limitations</h2>
+<h2 id="known-limitations-2">Known Limitations</h2>
 <ul>
 <li>None</li>
 </ul>
-<h2 id="development-toolchains-and-compilers">Development Toolchains and Compilers</h2>
+<h2 id="development-toolchains-and-compilers-2">Development Toolchains and Compilers</h2>
 <ul>
 <li>IAR Embedded Workbench for ARM (EWARM) toolchain <strong>V8.22.2</strong> + ST-LINK</li>
 <li>RealView Microcontroller Development Kit (MDK-ARM) toolchain <strong>V5.26</strong> + ST-LINK</li>
 <li>System Workbench for STM32 (SW4STM32) toolchain <strong>V2.9</strong> + ST-LINK</li>
 </ul>
-<h2 id="supported-devices-and-eval-boards">Supported Devices and EVAL boards</h2>
+<h2 id="supported-devices-and-eval-boards-2">Supported Devices and EVAL boards</h2>
 <ul>
 <li>All STM32F3x1, STM32F3x2, STM32F3x3, STM32F3x4 and STM32F3x8 product lines devices are supported.</li>
 <li>Discovery boards: STM32F3-Discovery (RevB), STM32F3348-Discovery (RevB)</li>
@@ -503,11 +1614,11 @@
 <li>Nucleo32 boards: STM32F303K8-Nucleo</li>
 <li>Nucleo144 boards: STM32F303ZE-Nucleo</li>
 </ul>
-<h2 id="backward-compatibility">Backward Compatibility</h2>
+<h2 id="backward-compatibility-2">Backward Compatibility</h2>
 <ul>
 <li>None</li>
 </ul>
-<h2 id="dependencies">Dependencies</h2>
+<h2 id="dependencies-2">Dependencies</h2>
 <ul>
 <li>None</li>
 </ul>
@@ -516,8 +1627,8 @@
 <div class="collapse">
 <input type="checkbox" id="collapse-section10" aria-hidden="true"> <label for="collapse-section10" aria-hidden="true"><strong>V1.10.0 / 12-June-2018</strong></label>
 <div>
-<h1 id="maintenance-release-1">Maintenance release</h1>
-<h2 id="main-changes-1">Main Changes</h2>
+<h1 id="maintenance-release-4">Maintenance release</h1>
+<h2 id="main-changes-4">Main Changes</h2>
 <ul>
 <li><strong>The following changes done on the HAL drivers require an update on the application code based on older HAL versions</strong>
 <ul>
@@ -544,7 +1655,7 @@
 </ul></li>
 <li>For the complete list of changes, please refer to the release notes of each firmware component</li>
 </ul>
-<h2 id="contents-1">Contents</h2>
+<h2 id="contents-4">Contents</h2>
 <ul>
 <li>The STM32CubeF3 Firmware package comes with a rich set of examples running on STMicroelectronics boards, organized by board and provided with pre-configured projects for the main supported toolchains. The exhaustive list of projects is provided in this table <a href="Projects/STM32CubeProjectsList.html">STM32CubeProjectsList.html</a>.</li>
 <li>Projects release notes
@@ -639,7 +1750,7 @@
 <tr class="header">
 <th style="text-align: left;">Name</th>
 <th style="text-align: center;">Version</th>
-<th style="text-align: center;">Licence</th>
+<th style="text-align: center;">License</th>
 <th style="text-align: center;">Release note</th>
 </tr>
 </thead>
@@ -877,17 +1988,17 @@
 </tbody>
 </table></li>
 </ul>
-<h2 id="known-limitations-1">Known Limitations</h2>
+<h2 id="known-limitations-3">Known Limitations</h2>
 <ul>
 <li>None</li>
 </ul>
-<h2 id="development-toolchains-and-compilers-1">Development Toolchains and Compilers</h2>
+<h2 id="development-toolchains-and-compilers-3">Development Toolchains and Compilers</h2>
 <ul>
 <li>IAR Embedded Workbench for ARM (EWARM) toolchain V7.80.4 + ST-LINK</li>
 <li>RealView Microcontroller Development Kit (MDK-ARM) toolchain V5.23 + ST-LINK</li>
 <li>System Workbench for STM32 (SW4STM32) toolchain V2.0 + ST-LINK</li>
 </ul>
-<h2 id="supported-devices-and-eval-boards-1">Supported Devices and EVAL boards</h2>
+<h2 id="supported-devices-and-eval-boards-3">Supported Devices and EVAL boards</h2>
 <ul>
 <li>All STM32F3x1, STM32F3x2, STM32F3x3, STM32F3x4 and STM32F3x8 product lines devices are supported.</li>
 <li>Discovery boards: STM32F3-Discovery (RevB), STM32F3348-Discovery (RevB)</li>
@@ -896,11 +2007,11 @@
 <li>Nucleo32 boards: STM32F303K8-Nucleo</li>
 <li>Nucleo144 boards: STM32F303ZE-Nucleo</li>
 </ul>
-<h2 id="backward-compatibility-1">Backward Compatibility</h2>
+<h2 id="backward-compatibility-3">Backward Compatibility</h2>
 <ul>
 <li>None</li>
 </ul>
-<h2 id="dependencies-1">Dependencies</h2>
+<h2 id="dependencies-3">Dependencies</h2>
 <ul>
 <li>None</li>
 </ul>
@@ -909,19 +2020,19 @@
 <div class="collapse">
 <input type="checkbox" id="collapse-section191" aria-hidden="true"> <label for="collapse-section191" aria-hidden="true"><strong>V1.9.1 / 11-May-2018</strong></label>
 <div>
-<h1 id="maintenance-release-2">Maintenance release</h1>
-<h2 id="main-changes-2">Main Changes</h2>
+<h1 id="maintenance-release-5">Maintenance release</h1>
+<h2 id="main-changes-5">Main Changes</h2>
 <ul>
 <li><strong>Patch release to fix issues in HAL/LL drivers</strong></li>
 </ul>
-<h2 id="contents-2">Contents</h2>
+<h2 id="contents-5">Contents</h2>
 <table>
 <caption>Drivers</caption>
 <thead>
 <tr class="header">
 <th style="text-align: left;">Name</th>
 <th style="text-align: center;">Version</th>
-<th style="text-align: center;">Licence</th>
+<th style="text-align: center;">License</th>
 <th style="text-align: center;">Release note</th>
 </tr>
 </thead>
@@ -939,18 +2050,18 @@
 <div class="collapse">
 <input type="checkbox" id="collapse-section9" aria-hidden="true"> <label for="collapse-section9" aria-hidden="true"><strong>V1.9.0 / 23-June-2017</strong></label>
 <div>
-<h1 id="maintenance-release-3">Maintenance release</h1>
-<h2 id="main-changes-3">Main Changes</h2>
+<h1 id="maintenance-release-6">Maintenance release</h1>
+<h2 id="main-changes-6">Main Changes</h2>
 <ul>
 <li><strong>Drivers</strong>
 <ul>
 <li>Fix known defects and several enhancements implementation. Major ones are :
 <ul>
-<li>MISRA C / Code Sonar rules compliancy.</li>
+<li>MISRA C / Code Sonar rules compliance.</li>
 <li>NAND : overall driver rework in order to support NAND flash memories with higher capacities.</li>
 <li>TIMER : improvement of TIM DMA burst mode.</li>
 <li>I2S : fix full duplex I2S with circular DMA issues.</li>
-<li>CAN : overall driver rework to fix several issues (transmission abort when timeout, message lost issue with specific sequence…) and provide improvements : Extend SET_BIT, CLEAR_BIT macro usage, Add managment of overrun error.</li>
+<li>CAN : overall driver rework to fix several issues (transmission abort when timeout, message lost issue with specific sequence…) and provide improvements : Extend SET_BIT, CLEAR_BIT macro usage, Add management of overrun error.</li>
 </ul></li>
 <li>The following changes done on the HAL drivers require an update on the application code based on HAL V1.4.0
 <ul>
@@ -970,7 +2081,7 @@
 <li>Change assert_failed() prototype to be compliant with MISRA C rule 11.4</li>
 </ul></li>
 </ul>
-<h2 id="contents-3">Contents</h2>
+<h2 id="contents-6">Contents</h2>
 <ul>
 <li>The STM32CubeF3 Firmware package comes with a rich set of examples running on STMicroelectronics boards, organized by board and provided with pre-configured projects for the main supported toolchains. The exhaustive list of projects is provided in this table <a href="Projects/STM32CubeProjectsList.html">STM32CubeProjectsList.html</a>.</li>
 <li>Projects release notes
@@ -1065,7 +2176,7 @@
 <tr class="header">
 <th style="text-align: left;">Name</th>
 <th style="text-align: center;">Version</th>
-<th style="text-align: center;">Licence</th>
+<th style="text-align: center;">License</th>
 <th style="text-align: center;">Release note</th>
 </tr>
 </thead>
@@ -1303,17 +2414,17 @@
 </tbody>
 </table></li>
 </ul>
-<h2 id="known-limitations-2">Known Limitations</h2>
+<h2 id="known-limitations-4">Known Limitations</h2>
 <ul>
 <li>None</li>
 </ul>
-<h2 id="development-toolchains-and-compilers-2">Development Toolchains and Compilers</h2>
+<h2 id="development-toolchains-and-compilers-4">Development Toolchains and Compilers</h2>
 <ul>
 <li>IAR Embedded Workbench for ARM (EWARM) toolchain V7.80.4 + ST-LINK</li>
 <li>RealView Microcontroller Development Kit (MDK-ARM) toolchain V5.23 + ST-LINK</li>
 <li>System Workbench for STM32 (SW4STM32) toolchain V2.0 + ST-LINK</li>
 </ul>
-<h2 id="supported-devices-and-eval-boards-2">Supported Devices and EVAL boards</h2>
+<h2 id="supported-devices-and-eval-boards-4">Supported Devices and EVAL boards</h2>
 <ul>
 <li>All STM32F3x1, STM32F3x2, STM32F3x3, STM32F3x4 and STM32F3x8 product lines devices are supported.</li>
 <li>Discovery boards: STM32F3-Discovery (RevB), STM32F3348-Discovery (RevB)</li>
@@ -1322,11 +2433,11 @@
 <li>Nucleo32 boards: STM32F303K8-Nucleo</li>
 <li>Nucleo144 boards: STM32F303ZE-Nucleo</li>
 </ul>
-<h2 id="backward-compatibility-2">Backward Compatibility</h2>
+<h2 id="backward-compatibility-4">Backward Compatibility</h2>
 <ul>
 <li>None</li>
 </ul>
-<h2 id="dependencies-2">Dependencies</h2>
+<h2 id="dependencies-4">Dependencies</h2>
 <ul>
 <li>None</li>
 </ul>
@@ -1335,8 +2446,8 @@
 <div class="collapse">
 <input type="checkbox" id="collapse-section8" aria-hidden="true"> <label for="collapse-section8" aria-hidden="true"><strong>V1.8.0 / 14-April-2017</strong></label>
 <div>
-<h1 id="maintenance-release-4">Maintenance release</h1>
-<h2 id="main-changes-4">Main Changes</h2>
+<h1 id="maintenance-release-7">Maintenance release</h1>
+<h2 id="main-changes-7">Main Changes</h2>
 <ul>
 <li><strong>Middlewares FreeRTOS</strong>
 <ul>
@@ -1344,7 +2455,7 @@
 <li>Update CMSIS-RTOS drivers to support both CMSIS Core V4.x and V5.x.</li>
 </ul></li>
 </ul>
-<h2 id="contents-4">Contents</h2>
+<h2 id="contents-7">Contents</h2>
 <ul>
 <li>The STM32CubeF3 Firmware package comes with a rich set of examples running on STMicroelectronics boards, organized by board and provided with pre-configured projects for the main supported toolchains. The exhaustive list of projects is provided in this table <a href="Projects/STM32CubeProjectsList.html">STM32CubeProjectsList.html</a>.</li>
 <li>Projects release notes
@@ -1439,7 +2550,7 @@
 <tr class="header">
 <th style="text-align: left;">Name</th>
 <th style="text-align: center;">Version</th>
-<th style="text-align: center;">Licence</th>
+<th style="text-align: center;">License</th>
 <th style="text-align: center;">Release note</th>
 </tr>
 </thead>
@@ -1677,18 +2788,18 @@
 </tbody>
 </table></li>
 </ul>
-<h2 id="known-limitations-3">Known Limitations</h2>
+<h2 id="known-limitations-5">Known Limitations</h2>
 <ul>
 <li>None</li>
 </ul>
-<h2 id="development-toolchains-and-compilers-3">Development Toolchains and Compilers</h2>
+<h2 id="development-toolchains-and-compilers-5">Development Toolchains and Compilers</h2>
 <ul>
 <li>IAR Embedded Workbench for ARM (EWARM) toolchain V7.80.4 + ST-LINK</li>
 <li>RealView Microcontroller Development Kit (MDK-ARM) toolchain V5.23 + ST-LINK</li>
 <li>Atollic TrueSTUDIO STM32 (TrueSTUDIO) toolchain V5.4.2 + ST-LINK</li>
 <li>System Workbench for STM32 (SW4STM32) toolchain V1.13.1 + ST-LINK</li>
 </ul>
-<h2 id="supported-devices-and-eval-boards-3">Supported Devices and EVAL boards</h2>
+<h2 id="supported-devices-and-eval-boards-5">Supported Devices and EVAL boards</h2>
 <ul>
 <li>All STM32F3x1, STM32F3x2, STM32F3x3, STM32F3x4 and STM32F3x8 product lines devices are supported.</li>
 <li>Discovery boards: STM32F3-Discovery (RevB), STM32F3348-Discovery (RevB)</li>
@@ -1697,11 +2808,11 @@
 <li>Nucleo32 boards: STM32F303K8-Nucleo</li>
 <li>Nucleo144 boards: STM32F303ZE-Nucleo</li>
 </ul>
-<h2 id="backward-compatibility-3">Backward Compatibility</h2>
+<h2 id="backward-compatibility-5">Backward Compatibility</h2>
 <ul>
 <li>None</li>
 </ul>
-<h2 id="dependencies-3">Dependencies</h2>
+<h2 id="dependencies-5">Dependencies</h2>
 <ul>
 <li>None</li>
 </ul>
@@ -1710,8 +2821,8 @@
 <div class="collapse">
 <input type="checkbox" id="collapse-section7" aria-hidden="true"> <label for="collapse-section7" aria-hidden="true"><strong>V1.7.0 / 16-December-2016</strong></label>
 <div>
-<h1 id="maintenance-release-5">Maintenance release</h1>
-<h2 id="main-changes-5">Main Changes</h2>
+<h1 id="maintenance-release-8">Maintenance release</h1>
+<h2 id="main-changes-8">Main Changes</h2>
 <ul>
 <li><strong>Drivers</strong>
 <ul>
@@ -1726,7 +2837,7 @@
 <ul>
 <li>Remove HAL CEC polling Process functions: HAL_CEC_Transmit() and HAL_CEC_Receive()</li>
 <li>Remove HAL CEC receive interrupt process function HAL_CEC_Receive_IT() and enable the “receive” mode during the Init phase</li>
-<li>Rename HAL_CEC_GetReceivedFrameSize() funtion to HAL_CEC_GetLastReceivedFrameSize()</li>
+<li>Rename HAL_CEC_GetReceivedFrameSize() API to HAL_CEC_GetLastReceivedFrameSize()</li>
 <li>Add new HAL APIs: HAL_CEC_SetDeviceAddress() and HAL_CEC_ChangeRxBuffer()</li>
 <li>Remove the ‘InitiatorAddress’ field from the CEC_InitTypeDef structure and manage it as a parameter in the HAL_CEC_Transmit_IT() function</li>
 <li>Add new parameter ‘RxFrameSize’ in HAL_CEC_RxCpltCallback() function</li>
@@ -1756,7 +2867,7 @@
 <li>Upgrade to use FreeRTOS V9.0.0 (ST Modified 20160930)</li>
 </ul></li>
 </ul>
-<h2 id="contents-5">Contents</h2>
+<h2 id="contents-8">Contents</h2>
 <ul>
 <li>The STM32CubeF3 Firmware package comes with a rich set of examples running on STMicroelectronics boards, organized by board and provided with pre-configured projects for the main supported toolchains. The exhaustive list of projects is provided in this table <a href="Projects/STM32CubeProjectsList.html">STM32CubeProjectsList.html</a>.</li>
 <li>Projects release notes
@@ -1851,7 +2962,7 @@
 <tr class="header">
 <th style="text-align: left;">Name</th>
 <th style="text-align: center;">Version</th>
-<th style="text-align: center;">Licence</th>
+<th style="text-align: center;">License</th>
 <th style="text-align: center;">Release note</th>
 </tr>
 </thead>
@@ -2089,18 +3200,18 @@
 </tbody>
 </table></li>
 </ul>
-<h2 id="known-limitations-4">Known Limitations</h2>
+<h2 id="known-limitations-6">Known Limitations</h2>
 <ul>
 <li>None</li>
 </ul>
-<h2 id="development-toolchains-and-compilers-4">Development Toolchains and Compilers</h2>
+<h2 id="development-toolchains-and-compilers-6">Development Toolchains and Compilers</h2>
 <ul>
 <li>IAR Embedded Workbench for ARM (EWARM) toolchain V7.60.4 + ST-LINK</li>
 <li>RealView Microcontroller Development Kit (MDK-ARM) toolchain V5.21 + ST-LINK</li>
 <li>Atollic TrueSTUDIO STM32 (TrueSTUDIO) toolchain V5.4.2 + ST-LINK</li>
 <li>System Workbench for STM32 (SW4STM32) toolchain V1.10 + ST-LINK</li>
 </ul>
-<h2 id="supported-devices-and-eval-boards-4">Supported Devices and EVAL boards</h2>
+<h2 id="supported-devices-and-eval-boards-6">Supported Devices and EVAL boards</h2>
 <ul>
 <li>All STM32F3x1, STM32F3x2, STM32F3x3, STM32F3x4 and STM32F3x8 product lines devices are supported.</li>
 <li>Discovery boards: STM32F3-Discovery (RevB), STM32F3348-Discovery (RevB)</li>
@@ -2109,11 +3220,11 @@
 <li>Nucleo32 boards: STM32F303K8-Nucleo</li>
 <li>Nucleo144 boards: STM32F303ZE-Nucleo</li>
 </ul>
-<h2 id="backward-compatibility-4">Backward Compatibility</h2>
+<h2 id="backward-compatibility-6">Backward Compatibility</h2>
 <ul>
 <li>None</li>
 </ul>
-<h2 id="dependencies-4">Dependencies</h2>
+<h2 id="dependencies-6">Dependencies</h2>
 <ul>
 <li>None</li>
 </ul>
@@ -2122,10 +3233,10 @@
 <div class="collapse">
 <input type="checkbox" id="collapse-section6" aria-hidden="true"> <label for="collapse-section6" aria-hidden="true"><strong>V1.6.0 / 01-July-2016</strong></label>
 <div>
-<h1 id="maintenance-release-6">Maintenance release</h1>
-<h2 id="main-changes-6">Main Changes</h2>
+<h1 id="maintenance-release-9">Maintenance release</h1>
+<h2 id="main-changes-9">Main Changes</h2>
 <ul>
-<li><strong>First official release introducing the STM32Cube LL (Low Layer) APIs for the STM32F3xx serie :</strong>
+<li><strong>First official release introducing the STM32Cube LL (Low Layer) APIs for the STM32F3xx series :</strong>
 <ul>
 <li>Low Layer drivers APIs allow performance and memory footprint optimization, with register access level programming.</li>
 <li>Examples available on the STM32F302R8-Nucleo, STM32F334R8-Nucleo, STM32F303ZE-Nucleo and STM32F3348-Discovery Boards are provided in order to describe how to use the Low Level drivers.</li>
@@ -2144,7 +3255,7 @@
 </ul></li>
 </ul></li>
 </ul>
-<h2 id="contents-6">Contents</h2>
+<h2 id="contents-9">Contents</h2>
 <ul>
 <li>The STM32CubeF3 Firmware package comes with a rich set of examples running on STMicroelectronics boards, organized by board and provided with pre-configured projects for the main supported toolchains. The exhaustive list of projects is provided in this table <a href="Projects/STM32CubeProjectsList.html">STM32CubeProjectsList.html</a>.</li>
 <li>Projects release notes
@@ -2229,7 +3340,7 @@
 <tr class="header">
 <th style="text-align: left;">Name</th>
 <th style="text-align: center;">Version</th>
-<th style="text-align: center;">Licence</th>
+<th style="text-align: center;">License</th>
 <th style="text-align: center;">Release note</th>
 </tr>
 </thead>
@@ -2467,18 +3578,18 @@
 </tbody>
 </table></li>
 </ul>
-<h2 id="known-limitations-5">Known Limitations</h2>
+<h2 id="known-limitations-7">Known Limitations</h2>
 <ul>
 <li>None</li>
 </ul>
-<h2 id="development-toolchains-and-compilers-5">Development Toolchains and Compilers</h2>
+<h2 id="development-toolchains-and-compilers-7">Development Toolchains and Compilers</h2>
 <ul>
 <li>IAR Embedded Workbench for ARM (EWARM) toolchain V7.60.1 + ST-LINK</li>
 <li>RealView Microcontroller Development Kit (MDK-ARM) toolchain V5.17 + ST-LINK</li>
 <li>Atollic TrueSTUDIO STM32 (TrueSTUDIO) toolchain V5.4.2 + ST-LINK</li>
 <li>System Workbench for STM32 (SW4STM32) toolchain V1.8.0 + ST-LINK</li>
 </ul>
-<h2 id="supported-devices-and-eval-boards-5">Supported Devices and EVAL boards</h2>
+<h2 id="supported-devices-and-eval-boards-7">Supported Devices and EVAL boards</h2>
 <ul>
 <li>All STM32F3x1, STM32F3x2, STM32F3x3, STM32F3x4 and STM32F3x8 product lines devices are supported.</li>
 <li>Discovery boards: STM32F3-Discovery (RevB), STM32F3348-Discovery (RevB)</li>
@@ -2487,11 +3598,11 @@
 <li>Nucleo32 boards: STM32F303K8-Nucleo</li>
 <li>Nucleo144 boards: STM32F303ZE-Nucleo</li>
 </ul>
-<h2 id="backward-compatibility-5">Backward Compatibility</h2>
+<h2 id="backward-compatibility-7">Backward Compatibility</h2>
 <ul>
 <li>None</li>
 </ul>
-<h2 id="dependencies-5">Dependencies</h2>
+<h2 id="dependencies-7">Dependencies</h2>
 <ul>
 <li>None</li>
 </ul>
@@ -2500,8 +3611,8 @@
 <div class="collapse">
 <input type="checkbox" id="collapse-section5" aria-hidden="true"> <label for="collapse-section5" aria-hidden="true"><strong>V1.5.0 / 29-April-2016</strong></label>
 <div>
-<h1 id="maintenance-release-7">Maintenance release</h1>
-<h2 id="main-changes-7">Main Changes</h2>
+<h1 id="maintenance-release-10">Maintenance release</h1>
+<h2 id="main-changes-10">Main Changes</h2>
 <ul>
 <li><strong>HAL</strong>
 <ul>
@@ -2542,7 +3653,7 @@
 <li>Provided fixes for minor issues in cmsis_os.c and FreeRTOS.h files.</li>
 </ul></li>
 </ul>
-<h2 id="contents-7">Contents</h2>
+<h2 id="contents-10">Contents</h2>
 <ul>
 <li>The STM32CubeF3 Firmware package comes with a rich set of examples running on STMicroelectronics boards, organized by board and provided with pre-configured projects for the main supported toolchains. The exhaustive list of projects is provided in this table <a href="Projects/STM32CubeProjectsList.html">STM32CubeProjectsList.html</a>.</li>
 <li>Projects release notes
@@ -2623,7 +3734,7 @@
 <tr class="header">
 <th style="text-align: left;">Name</th>
 <th style="text-align: center;">Version</th>
-<th style="text-align: center;">Licence</th>
+<th style="text-align: center;">License</th>
 <th style="text-align: center;">Release note</th>
 </tr>
 </thead>
@@ -2861,18 +3972,18 @@
 </tbody>
 </table></li>
 </ul>
-<h2 id="known-limitations-6">Known Limitations</h2>
+<h2 id="known-limitations-8">Known Limitations</h2>
 <ul>
 <li>None</li>
 </ul>
-<h2 id="development-toolchains-and-compilers-6">Development Toolchains and Compilers</h2>
+<h2 id="development-toolchains-and-compilers-8">Development Toolchains and Compilers</h2>
 <ul>
 <li>IAR Embedded Workbench for ARM (EWARM) toolchain V7.50.1 + ST-LINK</li>
 <li>RealView Microcontroller Development Kit (MDK-ARM) toolchain V5.17 + ST-LINK</li>
 <li>Atollic TrueSTUDIO STM32 (TrueSTUDIO) toolchain V5.4.2 + ST-LINK</li>
 <li>System Workbench for STM32 (SW4STM32) toolchain V1.8.0 + ST-LINK</li>
 </ul>
-<h2 id="supported-devices-and-eval-boards-6">Supported Devices and EVAL boards</h2>
+<h2 id="supported-devices-and-eval-boards-8">Supported Devices and EVAL boards</h2>
 <ul>
 <li>All STM32F3x1, STM32F3x2, STM32F3x3, STM32F3x4 and STM32F3x8 product lines devices are supported.</li>
 <li>Discovery boards: STM32F3-Discovery (RevB), STM32F3348-Discovery (RevB)</li>
@@ -2881,11 +3992,11 @@
 <li>Nucleo32 boards: STM32F303K8-Nucleo</li>
 <li>Nucleo144 boards: STM32F303ZE-Nucleo</li>
 </ul>
-<h2 id="backward-compatibility-6">Backward Compatibility</h2>
+<h2 id="backward-compatibility-8">Backward Compatibility</h2>
 <ul>
 <li>None</li>
 </ul>
-<h2 id="dependencies-6">Dependencies</h2>
+<h2 id="dependencies-8">Dependencies</h2>
 <ul>
 <li>None</li>
 </ul>
@@ -2894,8 +4005,8 @@
 <div class="collapse">
 <input type="checkbox" id="collapse-section4" aria-hidden="true"> <label for="collapse-section4" aria-hidden="true"><strong>V1.4.0 / 13-November-2015</strong></label>
 <div>
-<h1 id="maintenance-release-8">Maintenance release</h1>
-<h2 id="main-changes-8">Main Changes</h2>
+<h1 id="maintenance-release-11">Maintenance release</h1>
+<h2 id="main-changes-11">Main Changes</h2>
 <ul>
 <li><strong>All projects updated following changes in latest version of HAL and Middlewares.</strong></li>
 <li><strong>Fix known defects and several enhancements implementation.</strong></li>
@@ -2962,7 +4073,7 @@
 <li>CMSIS-CORE 4.10.0. Maintenance release adding SAI CMSIS-Driver and fixing defects.</li>
 </ul></li>
 </ul>
-<h2 id="contents-8">Contents</h2>
+<h2 id="contents-11">Contents</h2>
 <ul>
 <li>The STM32CubeF3 Firmware package comes with a rich set of examples running on STMicroelectronics boards, organized by board and provided with pre-configured projects for the main supported toolchains. The exhaustive list of projects is provided in this table <a href="Projects/STM32CubeProjectsList.html">STM32CubeProjectsList.html</a>.</li>
 <li>Projects release notes
@@ -3041,7 +4152,7 @@
 <tr class="header">
 <th style="text-align: left;">Name</th>
 <th style="text-align: center;">Version</th>
-<th style="text-align: center;">Licence</th>
+<th style="text-align: center;">License</th>
 <th style="text-align: center;">Release note</th>
 </tr>
 </thead>
@@ -3279,18 +4390,18 @@
 </tbody>
 </table></li>
 </ul>
-<h2 id="known-limitations-7">Known Limitations</h2>
+<h2 id="known-limitations-9">Known Limitations</h2>
 <ul>
 <li>None</li>
 </ul>
-<h2 id="development-toolchains-and-compilers-7">Development Toolchains and Compilers</h2>
+<h2 id="development-toolchains-and-compilers-9">Development Toolchains and Compilers</h2>
 <ul>
 <li>IAR Embedded Workbench for ARM (EWARM) toolchain V7.40.1 + ST-LINK</li>
 <li>RealView Microcontroller Development Kit (MDK-ARM) toolchain V5.16 + ST-LINK</li>
 <li>Atollic TrueSTUDIO STM32 (TrueSTUDIO) toolchain V5.1.1 + ST-LINK</li>
 <li>System Workbench for STM32 (SW4STM32) toolchain V1.4.0 + ST-LINK</li>
 </ul>
-<h2 id="supported-devices-and-eval-boards-7">Supported Devices and EVAL boards</h2>
+<h2 id="supported-devices-and-eval-boards-9">Supported Devices and EVAL boards</h2>
 <ul>
 <li>All STM32F3x1, STM32F3x2, STM32F3x3, STM32F3x4 and STM32F3x8 product lines devices are supported.</li>
 <li>Discovery boards: STM32F3-Discovery (RevB), STM32F3348-Discovery (RevB)</li>
@@ -3299,11 +4410,11 @@
 <li><strong>Nucleo32 boards: STM32F303K8-Nucleo</strong></li>
 <li><strong>Nucleo144 boards: STM32F303ZE-Nucleo</strong></li>
 </ul>
-<h2 id="backward-compatibility-7">Backward Compatibility</h2>
+<h2 id="backward-compatibility-9">Backward Compatibility</h2>
 <ul>
 <li>None</li>
 </ul>
-<h2 id="dependencies-7">Dependencies</h2>
+<h2 id="dependencies-9">Dependencies</h2>
 <ul>
 <li>None</li>
 </ul>
@@ -3312,8 +4423,8 @@
 <div class="collapse">
 <input type="checkbox" id="collapse-section3" aria-hidden="true"> <label for="collapse-section3" aria-hidden="true"><strong>V1.3.0 / 04-September-2015</strong></label>
 <div>
-<h1 id="maintenance-release-9">Maintenance release</h1>
-<h2 id="main-changes-9">Main Changes</h2>
+<h1 id="maintenance-release-12">Maintenance release</h1>
+<h2 id="main-changes-12">Main Changes</h2>
 <ul>
 <li><strong>Add support of Nucleo32 Board (STM32F303K8-NUCLEO).</strong></li>
 <li><strong>BSP</strong>
@@ -3327,7 +4438,7 @@
 <li>A demonstration using the Gravitech 7segments 4digits shield is added to provide sample code on how to display a counter on this shield.</li>
 </ul></li>
 </ul>
-<h2 id="contents-9">Contents</h2>
+<h2 id="contents-12">Contents</h2>
 <ul>
 <li><p>The STM32CubeF3 Firmware package comes with a rich set of examples running on STMicroelectronics boards, organized by board and provided with pre-configured projects for the main supported toolchains. The exhaustive list of projects is provided in this table <a href="Projects/STM32CubeProjectsList.html">STM32CubeProjectsList.html</a>.</p>
 <table>
@@ -3336,7 +4447,7 @@
 <tr class="header">
 <th style="text-align: left;">Name</th>
 <th style="text-align: center;">Version</th>
-<th style="text-align: center;">Licence</th>
+<th style="text-align: center;">License</th>
 <th style="text-align: center;">Release note</th>
 </tr>
 </thead>
@@ -3556,18 +4667,18 @@
 </tbody>
 </table></li>
 </ul>
-<h2 id="known-limitations-8">Known Limitations</h2>
+<h2 id="known-limitations-10">Known Limitations</h2>
 <ul>
 <li>None</li>
 </ul>
-<h2 id="development-toolchains-and-compilers-8">Development Toolchains and Compilers</h2>
+<h2 id="development-toolchains-and-compilers-10">Development Toolchains and Compilers</h2>
 <ul>
 <li>IAR Embedded Workbench for ARM (EWARM) toolchain V7.30.1 + ST-LINK</li>
 <li>RealView Microcontroller Development Kit (MDK-ARM) toolchain V5.11 + ST-LINK</li>
 <li>Atollic TrueSTUDIO STM32 (TrueSTUDIO) toolchain V5.1.1 + ST-LINK</li>
 <li>System Workbench for STM32 (SW4STM32) toolchain V1.2.0 + ST-LINK</li>
 </ul>
-<h2 id="supported-devices-and-eval-boards-8">Supported Devices and EVAL boards</h2>
+<h2 id="supported-devices-and-eval-boards-10">Supported Devices and EVAL boards</h2>
 <ul>
 <li>All STM32F3x1, STM32F3x2, STM32F3x3, STM32F3x4 and STM32F3x8 product lines devices are supported.</li>
 <li>Discovery boards: STM32F3-Discovery (RevB), STM32F3348-Discovery (RevB)</li>
@@ -3577,11 +4688,11 @@
 <li>STM32303E-EVAL</li>
 <li><strong>STM32F303K8-Nucleo</strong></li>
 </ul>
-<h2 id="backward-compatibility-8">Backward Compatibility</h2>
+<h2 id="backward-compatibility-10">Backward Compatibility</h2>
 <ul>
 <li>None</li>
 </ul>
-<h2 id="dependencies-8">Dependencies</h2>
+<h2 id="dependencies-10">Dependencies</h2>
 <ul>
 <li>None</li>
 </ul>
@@ -3590,8 +4701,8 @@
 <div class="collapse">
 <input type="checkbox" id="collapse-section2" aria-hidden="true"> <label for="collapse-section2" aria-hidden="true"><strong>V1.2.0 / 19-June-2015</strong></label>
 <div>
-<h1 id="maintenance-release-10">Maintenance release</h1>
-<h2 id="main-changes-10">Main Changes</h2>
+<h1 id="maintenance-release-13">Maintenance release</h1>
+<h2 id="main-changes-13">Main Changes</h2>
 <ul>
 <li><strong>Add support of System Workbench for STM32 (SW4STM32) toolchain.</strong></li>
 <li><strong>HAL</strong>
@@ -3611,7 +4722,7 @@
 <li>Add projects for SW4STM32 toolchain.</li>
 </ul></li>
 </ul>
-<h2 id="contents-10">Contents</h2>
+<h2 id="contents-13">Contents</h2>
 <ul>
 <li><p>The STM32CubeF3 Firmware package comes with a rich set of examples running on STMicroelectronics boards, organized by board and provided with pre-configured projects for the main supported toolchains. The exhaustive list of projects is provided in this table <a href="Projects/STM32CubeProjectsList.html">STM32CubeProjectsList.html</a>.</p>
 <table>
@@ -3620,7 +4731,7 @@
 <tr class="header">
 <th style="text-align: left;">Name</th>
 <th style="text-align: center;">Version</th>
-<th style="text-align: center;">Licence</th>
+<th style="text-align: center;">License</th>
 <th style="text-align: center;">Release note</th>
 </tr>
 </thead>
@@ -3834,18 +4945,18 @@
 </tbody>
 </table></li>
 </ul>
-<h2 id="known-limitations-9">Known Limitations</h2>
+<h2 id="known-limitations-11">Known Limitations</h2>
 <ul>
 <li>None</li>
 </ul>
-<h2 id="development-toolchains-and-compilers-9">Development Toolchains and Compilers</h2>
+<h2 id="development-toolchains-and-compilers-11">Development Toolchains and Compilers</h2>
 <ul>
 <li>IAR Embedded Workbench for ARM (EWARM) toolchain V7.30 + ST-LINK</li>
 <li>RealView Microcontroller Development Kit (MDK-ARM) toolchain V5.11 + ST-LINK</li>
 <li>Atollic TrueSTUDIO STM32 (TrueSTUDIO) toolchain V5.1.1 + ST-LINK</li>
 <li>System Workbench for STM32 (SW4STM32) toolchain V1.2.0 + ST-LINK</li>
 </ul>
-<h2 id="supported-devices-and-eval-boards-9">Supported Devices and EVAL boards</h2>
+<h2 id="supported-devices-and-eval-boards-11">Supported Devices and EVAL boards</h2>
 <ul>
 <li>All STM32F3x1, STM32F3x2, STM32F3x3, STM32F3x4 and STM32F3x8 product lines devices are supported.</li>
 <li>Discovery boards: STM32F3-Discovery (RevB), STM32F3348-Discovery (RevB)</li>
@@ -3854,11 +4965,11 @@
 <li>STM32F303RE-Nucleo</li>
 <li>STM32303E-EVAL</li>
 </ul>
-<h2 id="backward-compatibility-9">Backward Compatibility</h2>
+<h2 id="backward-compatibility-11">Backward Compatibility</h2>
 <ul>
 <li>None</li>
 </ul>
-<h2 id="dependencies-9">Dependencies</h2>
+<h2 id="dependencies-11">Dependencies</h2>
 <ul>
 <li>None</li>
 </ul>
@@ -3867,8 +4978,8 @@
 <div class="collapse">
 <input type="checkbox" id="collapse-section1_1_1" aria-hidden="true"> <label for="collapse-section1_1_1" aria-hidden="true"><strong>V1.1.1 / 30-December-2014</strong></label>
 <div>
-<h1 id="maintenance-release-11">Maintenance release</h1>
-<h2 id="main-changes-11">Main Changes</h2>
+<h1 id="maintenance-release-14">Maintenance release</h1>
+<h2 id="main-changes-14">Main Changes</h2>
 <ul>
 <li><strong>Patch release to fix BSP drivers compilation issue under Linux, this is done by changing “" by”/" in the include path</strong></li>
 <li>This package contains a fixed version of the impacted BSP drivers, user needs simply to overwrite the old folders with the new ones:
@@ -3892,14 +5003,14 @@
 <li>BSP STM32F3-Discovery</li>
 </ul></li>
 </ul>
-<h2 id="contents-11">Contents</h2>
+<h2 id="contents-14">Contents</h2>
 <table>
 <caption>Drivers</caption>
 <thead>
 <tr class="header">
 <th style="text-align: left;">Name</th>
 <th style="text-align: center;">Version</th>
-<th style="text-align: center;">Licence</th>
+<th style="text-align: center;">License</th>
 <th style="text-align: center;">Release note</th>
 </tr>
 </thead>
@@ -4008,18 +5119,18 @@
 </tr>
 </tbody>
 </table>
-<h2 id="known-limitations-10">Known Limitations</h2>
+<h2 id="known-limitations-12">Known Limitations</h2>
 <ul>
 <li>None</li>
 </ul>
-<h2 id="development-toolchains-and-compilers-10">Development Toolchains and Compilers</h2>
+<h2 id="development-toolchains-and-compilers-12">Development Toolchains and Compilers</h2>
 <ul>
 <li>IAR Embedded Workbench for ARM (EWARM) toolchain V7.30 + ST-LINK</li>
 <li>RealView Microcontroller Development Kit (MDK-ARM) toolchain V5.11 + ST-LINK</li>
 <li>Atollic TrueSTUDIO STM32 (TrueSTUDIO) toolchain V5.1.1 + ST-LINK</li>
 <li>System Workbench for STM32 (SW4STM32) toolchain V1.2.0 + ST-LINK</li>
 </ul>
-<h2 id="supported-devices-and-eval-boards-10">Supported Devices and EVAL boards</h2>
+<h2 id="supported-devices-and-eval-boards-12">Supported Devices and EVAL boards</h2>
 <ul>
 <li>All STM32F3x1, STM32F3x2, STM32F3x3, STM32F3x4 and STM32F3x8 product lines devices are supported.</li>
 <li>Discovery boards: STM32F3-Discovery (RevB), STM32F3348-Discovery (RevB)</li>
@@ -4028,11 +5139,11 @@
 <li>STM32F303RE-Nucleo</li>
 <li>STM32303E-EVAL</li>
 </ul>
-<h2 id="backward-compatibility-10">Backward Compatibility</h2>
+<h2 id="backward-compatibility-12">Backward Compatibility</h2>
 <ul>
 <li>None</li>
 </ul>
-<h2 id="dependencies-10">Dependencies</h2>
+<h2 id="dependencies-12">Dependencies</h2>
 <ul>
 <li>None</li>
 </ul>
@@ -4041,19 +5152,19 @@
 <div class="collapse">
 <input type="checkbox" id="collapse-section1_1_0" aria-hidden="true"> <label for="collapse-section1_1_0" aria-hidden="true"><strong>V1.1.0 / 12-September-2014</strong></label>
 <div>
-<h1 id="maintenance-release-12">Maintenance release</h1>
-<h2 id="main-changes-12">Main Changes</h2>
+<h1 id="maintenance-release-15">Maintenance release</h1>
+<h2 id="main-changes-15">Main Changes</h2>
 <ul>
 <li><strong>Official release of STM32CubeF3 (added STM32F302xE/STM32F303xE/STM32F398xx)</strong></li>
 </ul>
-<h2 id="contents-12">Contents</h2>
+<h2 id="contents-15">Contents</h2>
 <table>
 <caption>Drivers</caption>
 <thead>
 <tr class="header">
 <th style="text-align: left;">Name</th>
 <th style="text-align: center;">Version</th>
-<th style="text-align: center;">Licence</th>
+<th style="text-align: center;">License</th>
 <th style="text-align: center;">Release note</th>
 </tr>
 </thead>
@@ -4260,17 +5371,17 @@
 </tr>
 </tbody>
 </table>
-<h2 id="known-limitations-11">Known Limitations</h2>
+<h2 id="known-limitations-13">Known Limitations</h2>
 <ul>
 <li>None</li>
 </ul>
-<h2 id="development-toolchains-and-compilers-11">Development Toolchains and Compilers</h2>
+<h2 id="development-toolchains-and-compilers-13">Development Toolchains and Compilers</h2>
 <ul>
 <li>IAR Embedded Workbench for ARM (EWARM) toolchain V7.10 + ST-LINK</li>
 <li>RealView Microcontroller Development Kit (MDK-ARM) toolchain V5.10 + ST-LINK</li>
 <li>Atollic TrueSTUDIO STM32 (TrueSTUDIO) toolchain V5.1.1 + ST-LINK</li>
 </ul>
-<h2 id="supported-devices-and-eval-boards-11">Supported Devices and EVAL boards</h2>
+<h2 id="supported-devices-and-eval-boards-13">Supported Devices and EVAL boards</h2>
 <ul>
 <li>All STM32F3x1, STM32F3x2, STM32F3x3, STM32F3x4 and STM32F3x8 product lines devices are supported.</li>
 <li>Discovery boards: STM32F3-Discovery (RevB), STM32F3348-Discovery (RevB)</li>
@@ -4279,11 +5390,11 @@
 <li>STM32F303RE-Nucleo</li>
 <li>STM32303E-EVAL</li>
 </ul>
-<h2 id="backward-compatibility-11">Backward Compatibility</h2>
+<h2 id="backward-compatibility-13">Backward Compatibility</h2>
 <ul>
 <li>None</li>
 </ul>
-<h2 id="dependencies-11">Dependencies</h2>
+<h2 id="dependencies-13">Dependencies</h2>
 <ul>
 <li>None</li>
 </ul>
@@ -4292,19 +5403,19 @@
 <div class="collapse">
 <input type="checkbox" id="collapse-section1" aria-hidden="true"> <label for="collapse-section1" aria-hidden="true"><strong>V1.0.0 / 18-June-2014</strong></label>
 <div>
-<h1 id="maintenance-release-13">Maintenance release</h1>
-<h2 id="main-changes-13">Main Changes</h2>
+<h1 id="maintenance-release-16">Maintenance release</h1>
+<h2 id="main-changes-16">Main Changes</h2>
 <ul>
 <li><strong>Official release of STM32CubeF3 (added STM32F302xE/STM32F303xE/STM32F398xx)</strong></li>
 </ul>
-<h2 id="contents-13">Contents</h2>
+<h2 id="contents-16">Contents</h2>
 <table>
 <caption>Drivers</caption>
 <thead>
 <tr class="header">
 <th style="text-align: left;">Name</th>
 <th style="text-align: center;">Version</th>
-<th style="text-align: center;">Licence</th>
+<th style="text-align: center;">License</th>
 <th style="text-align: center;">Release note</th>
 </tr>
 </thead>
@@ -4511,11 +5622,11 @@
 </tr>
 </tbody>
 </table>
-<h2 id="known-limitations-12">Known Limitations</h2>
+<h2 id="known-limitations-14">Known Limitations</h2>
 <ul>
 <li>None</li>
 </ul>
-<h2 id="development-toolchains-and-compilers-12">Development Toolchains and Compilers</h2>
+<h2 id="development-toolchains-and-compilers-14">Development Toolchains and Compilers</h2>
 <ul>
 <li>IAR Embedded Workbench for ARM (EWARM) toolchain V7.10 + ST-LINK</li>
 <li>RealView Microcontroller Development Kit (MDK-ARM) toolchain V5.10 + ST-LINK
@@ -4524,18 +5635,18 @@
 </ul></li>
 <li>Atollic TrueSTUDIO STM32 (TrueSTUDIO) toolchain V5.0.0 + ST-LINK</li>
 </ul>
-<h2 id="supported-devices-and-eval-boards-12">Supported Devices and EVAL boards</h2>
+<h2 id="supported-devices-and-eval-boards-14">Supported Devices and EVAL boards</h2>
 <ul>
 <li>All STM32F3x1, STM32F3x2, STM32F3x3, STM32F3x4 and STM32F3x8 product lines devices are supported.</li>
 <li>Discovery boards: STM32F3-Discovery (RevB), STM32F3348-Discovery RevB</li>
 <li>Nucleo boards: STM32F302R8-Nucleo, STM32F334R8-Nucleo RevC</li>
 <li>Evaluation boards: STM32303C-EVAL (RevC), STM32373C-EVAL RevB</li>
 </ul>
-<h2 id="backward-compatibility-12">Backward Compatibility</h2>
+<h2 id="backward-compatibility-14">Backward Compatibility</h2>
 <ul>
 <li>None</li>
 </ul>
-<h2 id="dependencies-12">Dependencies</h2>
+<h2 id="dependencies-14">Dependencies</h2>
 <ul>
 <li>None</li>
 </ul>
