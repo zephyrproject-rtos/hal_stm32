@@ -1106,12 +1106,12 @@ uint32_t HAL_RCC_GetSysClockFreq(void)
       if (__HAL_RCC_GET_PLL_OSCSOURCE() != RCC_PLLSOURCE_HSI)
       {
         /* HSE used as PLL clock source */
-        pllvco = (HSE_VALUE * pllm) / plld;
+        pllvco = (uint32_t)(((uint64_t)HSE_VALUE * (uint64_t)pllm) / (uint64_t)plld);
       }
       else
       {
         /* HSI used as PLL clock source */
-        pllvco = (HSI_VALUE * pllm) / plld;
+        pllvco = (uint32_t)(((uint64_t)HSI_VALUE * (uint64_t)pllm) / (uint64_t)plld);
       }
       sysclockfreq = pllvco;
       break;
