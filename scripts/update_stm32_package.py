@@ -91,7 +91,11 @@ if not os.getenv("ZEPHYR_BASE"):
     raise Exception("ZEPHYR_BASE Not defined")
 
 if not args.noclean:
-    print("Do you want to clean downloaded repo (" + str(repo_path) + ") at the end of updates?")
+    print(
+        "Do you want to clean downloaded repo ("
+        + str(repo_path)
+        + ") at the end of updates?"
+    )
     res = input("(Enter y/n) ").lower()
     while res not in ("y", "n"):
         res = input("(Enter y/n) ").lower()

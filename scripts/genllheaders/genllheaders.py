@@ -34,9 +34,7 @@ HEADER_TEMPLATE_FILE = "header-template.j2"
 REPO_ROOT = SCRIPT_DIR / ".." / ".."
 """Repository root (used for input/output default folders)."""
 
-LL_API_IGNORE = [
-    "usb"
-]
+LL_API_IGNORE = ["usb"]
 """List of LL APIs to be ignored."""
 
 
