@@ -16,6 +16,13 @@ import logging
 from jinja2 import Environment, FileSystemLoader
 
 STM32_CUBE_REPO_BASE = "https://github.com/STMicroelectronics/STM32Cube"
+"""GitHub URL to get STM32Cube"""
+
+SCRIPT_DIR = Path(__file__).absolute().parent
+"""Script directory."""
+
+REPO_ROOT = SCRIPT_DIR / ".."
+"""Repository root (used for input/output default folders)."""
 
 
 def remove_readonly(func, path, _):
@@ -87,13 +94,7 @@ class Stm32SerieUpdate:
         if not self.stm32cube_repo_path.exists():
             self.stm32cube_repo_path.mkdir()
 
-        self.zephyr_hal_stm32_path = (
-            Path(os.getenv("ZEPHYR_BASE")).absolute()
-            / ".."
-            / "modules"
-            / "hal"
-            / "stm32"
-        )
+        self.zephyr_hal_stm32_path = REPO_ROOT
         if not self.zephyr_hal_stm32_path.exists():
             raise FileNotFoundError("Error: cannot find zephyr project")
 

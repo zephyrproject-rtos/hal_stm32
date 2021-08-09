@@ -13,6 +13,7 @@ basic usage for all serie update at once:
 """
 
 import os
+import sys
 import subprocess
 import argparse
 from pathlib import Path
@@ -68,17 +69,16 @@ parser.add_argument(
 )
 args = parser.parse_args()
 
+SCRIPT_DIR = Path(__file__).absolute().parent
+"""Script directory."""
+
+REPO_ROOT = SCRIPT_DIR / ".."
+"""Repository root (used for input/output default folders)."""
+
 
 def update_cubes():
     """Update all STM32Cubes"""
-    module_path = (
-        Path(os.getenv("ZEPHYR_BASE")).absolute()
-        / r".."
-        / "modules"
-        / "hal"
-        / "stm32"
-        / "stm32cube"
-    )
+    module_path = REPO_ROOT / "stm32cube"
     if not module_path.exists():
         raise Exception("Error: cannot find ./zephyr project")
 
@@ -108,9 +108,6 @@ if args.repo:
 else:
     repo_path = Path(os.getenv("HOME")) / "STM32Cube_repo"
 
-if not os.getenv("ZEPHYR_BASE"):
-    raise Exception("ZEPHYR_BASE Not defined")
-
 if args.debug:
     print("Debug")
     logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.DEBUG)
@@ -127,6 +124,33 @@ if not args.noclean:
     if res == "n":
         logging.info("%s", "Add option --noclean")
         args.noclean = True
+
+# prevent losing data in an unclean repo
+git_status = subprocess.check_output(
+    ("git", "status", "-s"),
+    cwd=SCRIPT_DIR,
+).splitlines()
+# status = [x.decode("utf-8") for x in git_status]
+for status in git_status:
+    if not status.decode("utf-8").startswith("?") and not status.decode(
+        "utf-8"
+    ).startswith("!"):
+        logging.error(
+            "%s",
+            "It seems that script repo "
+            + str(SCRIPT_DIR)
+            + "\n           is not clean:\n           git status -s:"
+            + status.decode("utf-8"),
+        )
+        logging.error("%s", "It is suggested to clean your repo first.")
+
+        print("Do you want to continue update ?")
+        res = input("(Enter y/n) ").lower()
+        while res not in ("y", "n"):
+            res = input("(Enter y/n) ").lower()
+        if res == "n":
+            sys.exit()
+        break
 
 if args.stm32_serie:
     update = serie_update.Stm32SerieUpdate(
@@ -149,7 +173,7 @@ while res not in ("y", "n"):
     res = input("(Enter y/n) ").lower()
 if res == "y":
     genllheaders.main(
-        genllheaders.REPO_ROOT / "stm32cube",
-        genllheaders.REPO_ROOT / "stm32cube" / "common_ll",
+        REPO_ROOT / "stm32cube",
+        REPO_ROOT / "stm32cube" / "common_ll",
     )
     logging.info("%s", "LL HAL header update: Done")
