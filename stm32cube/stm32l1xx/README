@@ -6,7 +6,7 @@ Origin:
    http://www.st.com/en/embedded-software/stm32cubel1.html
 
 Status:
-   version 1.9.0
+   version v1.10.3
 
 Purpose:
    ST Microelectronics official MCU package for STM32L1 series.
@@ -20,10 +20,10 @@ Dependencies:
     None.
 
 URL:
-   http://www.st.com/en/embedded-software/stm32cubel1.html
+   https://github.com/STMicroelectronics/STM32CubeL1
 
-commit:
-   version 1.9.0
+Commit:
+   5641cb07a1d78d7e9649d056136e513bb273fcca
 
 Maintained-by:
    External
@@ -35,6 +35,7 @@ License Link:
    https://opensource.org/licenses/BSD-3-Clause
 
 Patch List:
+--> please check that the following list is still valid:
 
     *Extend public SetFlashLatency API to all families
      The LL_SetFlashLatency public API is now defined for families
@@ -106,3 +107,5 @@ Patch List:
      Impacted files:
       drivers/src/stm32l1xx_hal_rcc.c
      ST Bug tracker ID: 80902
+
+   See release_note.html from STM32Cube
