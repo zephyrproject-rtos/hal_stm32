@@ -37,7 +37,7 @@
     [..]
     Setup SysTick Timer for time base.
 
-   (+) The HAL_SYSTICK_Config()function calls the SysTick_Config() function which
+   (+) The HAL_SYSTICK_Config() function calls the SysTick_Config() function which
        is a CMSIS function that:
         (++) Configures the SysTick Reload register with value passed as function parameter.
         (++) Configures the SysTick IRQ priority to the lowest value (0x03).
@@ -71,7 +71,7 @@
   * This software component is licensed by ST under BSD 3-Clause license,
   * the "License"; You may not use this file except in compliance with the
   * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/BSD-3-Clause
+  *                       opensource.org/licenses/BSD-3-Clause
   *
   ******************************************************************************
   */
@@ -93,7 +93,7 @@
 /* Private variables ---------------------------------------------------------*/
 /* Private constants ---------------------------------------------------------*/
 /* Private macros ------------------------------------------------------------*/
-/* Private function prototypes -----------------------------------------------*/
+/* Private functions ---------------------------------------------------------*/
 /* Exported functions --------------------------------------------------------*/
 
 /** @addtogroup CORTEX_Exported_Functions
@@ -102,15 +102,15 @@
 
 
 /** @addtogroup CORTEX_Exported_Functions_Group1
- *  @brief    Initialization and Configuration functions
- *
+  *  @brief    Initialization and Configuration functions
+  *
 @verbatim
   ==============================================================================
               ##### Initialization and Configuration functions #####
   ==============================================================================
     [..]
       This section provides the CORTEX HAL driver functions allowing to configure Interrupts
-      Systick functionalities
+      SysTick functionalities
 
 @endverbatim
   * @{
@@ -119,7 +119,7 @@
 /**
   * @brief  Set the priority grouping field (pre-emption priority and subpriority)
   *         using the required unlock sequence.
-  * @param PriorityGroup The priority grouping bits length.
+  * @param  PriorityGroup The priority grouping bits length.
   *         This parameter can be one of the following values:
   *         @arg NVIC_PRIORITYGROUP_0: 0 bit  for pre-emption priority,
   *                                    4 bits for subpriority
@@ -221,15 +221,15 @@ void HAL_NVIC_SystemReset(void)
   */
 uint32_t HAL_SYSTICK_Config(uint32_t TicksNumb)
 {
-   return SysTick_Config(TicksNumb);
+  return SysTick_Config(TicksNumb);
 }
 /**
   * @}
   */
 
 /** @addtogroup CORTEX_Exported_Functions_Group2
- *  @brief   Cortex control functions
- *
+  *  @brief   Cortex control functions
+  *
 @verbatim
   ==============================================================================
                       ##### Peripheral Control functions #####
@@ -279,7 +279,7 @@ void HAL_NVIC_GetPriority(IRQn_Type IRQn, uint32_t PriorityGroup, uint32_t *pPre
 {
   /* Check the parameters */
   assert_param(IS_NVIC_PRIORITY_GROUP(PriorityGroup));
- /* Get priority for Cortex-M system or device specific interrupts */
+  /* Get priority for Cortex-M system or device specific interrupts */
   NVIC_DecodePriority(NVIC_GetPriority(IRQn), PriorityGroup, pPreemptPriority, pSubPriority);
 }
 
@@ -406,7 +406,7 @@ void HAL_MPU_Disable(void)
 void HAL_MPU_Enable(uint32_t MPU_Control)
 {
   /* Enable the MPU */
-  MPU->CTRL = MPU_Control | MPU_CTRL_ENABLE_Msk;
+  MPU->CTRL = (MPU_Control | MPU_CTRL_ENABLE_Msk);
 
   /* Enable fault exceptions */
   SCB->SHCSR |= SCB_SHCSR_MEMFAULTENA_Msk;

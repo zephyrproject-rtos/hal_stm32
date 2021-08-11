@@ -70,7 +70,6 @@
 #define USE_HAL_COMP_REGISTER_CALLBACKS      0u
 #define USE_HAL_CRYP_REGISTER_CALLBACKS      0u
 #define USE_HAL_I2C_REGISTER_CALLBACKS       0u
-#define USE_HAL_I2C_REGISTER_CALLBACKS       0u
 #define USE_HAL_IRDA_REGISTER_CALLBACKS      0u
 #define USE_HAL_LPTIM_REGISTER_CALLBACKS     0u
 #define USE_HAL_PCD_REGISTER_CALLBACKS       0u
@@ -87,6 +86,8 @@
 #define USE_HAL_UART_REGISTER_CALLBACKS      0u
 #define USE_HAL_USART_REGISTER_CALLBACKS     0u
 #define USE_HAL_WWDG_REGISTER_CALLBACKS      0u
+
+#define USE_HAL_CRYP_SUSPEND_RESUME 0u
 
 /* ########################## Oscillator Values adaptation ####################*/
 /**

@@ -145,7 +145,11 @@ extern "C" {
 #undef PACKED_STRUCT
 
 #if defined ( __CC_ARM )
-  #if defined (__ARMCC_VERSION) && (__ARMCC_VERSION >= 6010050U)
+  #if defined ( __GNUC__ )
+    /* GNU extension */
+    #define PACKED__ __attribute__((packed))
+    #define PACKED_STRUCT struct PACKED__
+  #elif defined (__ARMCC_VERSION) && (__ARMCC_VERSION >= 6010050U)
     #define PACKED__ __attribute__((packed))
     #define PACKED_STRUCT struct PACKED__
   #else
@@ -157,7 +161,7 @@ extern "C" {
   #define PACKED_STRUCT struct PACKED__
 #elif defined (__ICCARM__)
   #define PACKED_STRUCT __packed struct
-#elif
+#else
   #define PACKED_STRUCT __packed struct
 #endif
 
