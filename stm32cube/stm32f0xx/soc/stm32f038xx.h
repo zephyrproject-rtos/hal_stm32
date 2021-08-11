@@ -40,7 +40,7 @@
  extern "C" {
 #endif /* __cplusplus */
 
-  /** @addtogroup Configuration_section_for_CMSIS
+/** @addtogroup Configuration_section_for_CMSIS
   * @{
   */
 /**
@@ -64,7 +64,7 @@
  *        in @ref Library_configuration_section
  */
 
- /*!< Interrupt Number Definition */
+/*!< Interrupt Number Definition */
 typedef enum
 {
 /******  Cortex-M0 Processor Exceptions Numbers **************************************************************/
@@ -534,7 +534,16 @@ typedef struct
   * @{
   */
 
-  /** @addtogroup Peripheral_Registers_Bits_Definition
+/** @addtogroup Hardware_Constant_Definition
+  * @{
+  */
+#define LSI_STARTUP_TIME 85U /*!< LSI Maximum startup time in us */
+
+/**
+  * @}
+  */
+
+/** @addtogroup Peripheral_Registers_Bits_Definition
   * @{
   */
 
@@ -5643,7 +5652,7 @@ typedef struct
   * @}
   */
 
-  /**
+/**
   * @}
   */
 
