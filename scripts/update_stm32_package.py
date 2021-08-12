@@ -111,8 +111,10 @@ else:
 if args.debug:
     print("Debug")
     logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.DEBUG)
+    std_dest = None
 else:
     logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.INFO)
+    std_dest = subprocess.DEVNULL
 
 if not args.noclean:
     print(
@@ -176,4 +178,28 @@ if res == "y":
         REPO_ROOT / "stm32cube",
         REPO_ROOT / "stm32cube" / "common_ll",
     )
+
+    genllheaders.main(REPO_ROOT / "stm32cube", REPO_ROOT / "stm32cube" / "common_ll")
+
+    # commit autogenerate generic LL HAL headers
+    if args.force:
+        commit_file_path = REPO_ROOT / "commit.msg"
+        with open(commit_file_path, "w") as commit:
+            commit.write("stm32cube: common_ll: Regeneration after cube updates\n")
+            commit.write("\n")
+            commit.write("Re - generate common_ll headers after Cube updates\n")
+
+        subprocess.check_call(
+            ("git", "commit", "-as", "-F", commit_file_path),
+            cwd=REPO_ROOT,
+        )
+
+        subprocess.check_call(
+            ("git", "rebase", "--whitespace=fix", "HEAD~1"),
+            stdout=std_dest,
+            stderr=std_dest,
+            cwd=REPO_ROOT,
+        )
+        Path(commit_file_path).unlink()
+
     logging.info("%s", "LL HAL header update: Done")
