@@ -7752,19 +7752,19 @@ typedef struct
 
 /*******************  Bit definition for SCB_CFSR register  *******************/
 /*!< MFSR */
-#define SCB_CFSR_IACCVIOL_Pos              (SCB_SHCSR_MEMFAULTACT_Pos + 0U)    /*!< SCB CFSR (MMFSR): IACCVIOL Position */
+#define SCB_CFSR_IACCVIOL_Pos              (SCB_CFSR_MEMFAULTSR_Pos + 0U)      /*!< SCB CFSR (MMFSR): IACCVIOL Position */
 #define SCB_CFSR_IACCVIOL_Msk              (1UL /*<< SCB_CFSR_IACCVIOL_Pos*/)  /*!< SCB CFSR (MMFSR): IACCVIOL Mask */
 #define SCB_CFSR_IACCVIOL                   SCB_CFSR_IACCVIOL_Msk              /*!< Instruction access violation */
-#define SCB_CFSR_DACCVIOL_Pos              (SCB_SHCSR_MEMFAULTACT_Pos + 1U)    /*!< SCB CFSR (MMFSR): DACCVIOL Position */
+#define SCB_CFSR_DACCVIOL_Pos              (SCB_CFSR_MEMFAULTSR_Pos + 1U)      /*!< SCB CFSR (MMFSR): DACCVIOL Position */
 #define SCB_CFSR_DACCVIOL_Msk              (1UL << SCB_CFSR_DACCVIOL_Pos)      /*!< SCB CFSR (MMFSR): DACCVIOL Mask */
 #define SCB_CFSR_DACCVIOL                   SCB_CFSR_DACCVIOL_Msk              /*!< Data access violation */
-#define SCB_CFSR_MUNSTKERR_Pos             (SCB_SHCSR_MEMFAULTACT_Pos + 3U)    /*!< SCB CFSR (MMFSR): MUNSTKERR Position */
+#define SCB_CFSR_MUNSTKERR_Pos             (SCB_CFSR_MEMFAULTSR_Pos + 3U)      /*!< SCB CFSR (MMFSR): MUNSTKERR Position */
 #define SCB_CFSR_MUNSTKERR_Msk             (1UL << SCB_CFSR_MUNSTKERR_Pos)     /*!< SCB CFSR (MMFSR): MUNSTKERR Mask */
 #define SCB_CFSR_MUNSTKERR                  SCB_CFSR_MUNSTKERR_Msk             /*!< Unstacking error */
-#define SCB_CFSR_MSTKERR_Pos               (SCB_SHCSR_MEMFAULTACT_Pos + 4U)    /*!< SCB CFSR (MMFSR): MSTKERR Position */
+#define SCB_CFSR_MSTKERR_Pos               (SCB_CFSR_MEMFAULTSR_Pos + 4U)      /*!< SCB CFSR (MMFSR): MSTKERR Position */
 #define SCB_CFSR_MSTKERR_Msk               (1UL << SCB_CFSR_MSTKERR_Pos)       /*!< SCB CFSR (MMFSR): MSTKERR Mask */
 #define SCB_CFSR_MSTKERR                    SCB_CFSR_MSTKERR_Msk               /*!< Stacking error */
-#define SCB_CFSR_MMARVALID_Pos             (SCB_SHCSR_MEMFAULTACT_Pos + 7U)    /*!< SCB CFSR (MMFSR): MMARVALID Position */
+#define SCB_CFSR_MMARVALID_Pos             (SCB_CFSR_MEMFAULTSR_Pos + 7U)      /*!< SCB CFSR (MMFSR): MMARVALID Position */
 #define SCB_CFSR_MMARVALID_Msk             (1UL << SCB_CFSR_MMARVALID_Pos)     /*!< SCB CFSR (MMFSR): MMARVALID Mask */
 #define SCB_CFSR_MMARVALID                  SCB_CFSR_MMARVALID_Msk             /*!< Memory Manage Address Register address valid flag */
 /*!< BFSR */
