@@ -870,7 +870,6 @@ HAL_StatusTypeDef HAL_QSPI_Command(QSPI_HandleTypeDef *hqspi, QSPI_CommandTypeDe
 HAL_StatusTypeDef HAL_QSPI_Command_IT(QSPI_HandleTypeDef *hqspi, QSPI_CommandTypeDef *cmd)
 {
   HAL_StatusTypeDef status;
-  uint32_t tickstart = HAL_GetTick();
 
   /* Check the parameters */
   assert_param(IS_QSPI_INSTRUCTION_MODE(cmd->InstructionMode));

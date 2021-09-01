@@ -52,4 +52,11 @@ Patch List:
     -Added stm32cube/stm32f4xx/drivers/include/stm32_assert.h
     -Removed unused stm32cube/stm32f4xx/drivers/include/stm32_assert_template.h
 
+   *Unused variable in HAL_QSPI_Command_IT
+    -removed tickstart variable declaration
+    Impacted files:
+     drivers/src/stm32f4xx_hal_qspi.c
+    ST Bug tracker ID: 112664
+
+
    See release_note.html from STM32Cube
