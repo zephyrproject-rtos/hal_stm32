@@ -1074,6 +1074,7 @@ uint8_t HAL_ETH_IsRxDataAvailable(ETH_HandleTypeDef *heth)
   ETH_DMADescTypeDef *dmarxdesc = (ETH_DMADescTypeDef *)dmarxdesclist->RxDesc[descidx];
   uint32_t descscancnt = 0;
   uint32_t appdesccnt = 0, firstappdescidx = 0;
+  uint8_t expectctx = 0;
 
   if(dmarxdesclist->AppDescNbr != 0U)
   {
@@ -1097,12 +1098,32 @@ uint8_t HAL_ETH_IsRxDataAvailable(ETH_HandleTypeDef *heth)
         WRITE_REG(firstappdescidx, descidx);
       }
 
+      /* Check whether we should expect context descriptor based on TSA bit */
+      if(READ_BIT(dmarxdesc->DESC1, ETH_DMARXNDESCWBF_TSA) != (uint32_t)RESET)
+      {
+        expectctx = 1U;
+      }
+
       /* Increment current rx descriptor index */
       INCR_RX_DESC_INDEX(descidx, 1U);
 
       /* Check for Context descriptor */
       /* Get current descriptor address */
       dmarxdesc = (ETH_DMADescTypeDef *)dmarxdesclist->RxDesc[descidx];
+
+      /*
+       * If we expect context descriptor, we might need to wait for it due to
+       * interrupts triggered by normal descriptors. Failure to wait here
+       * results in leaked descriptors.
+       */
+      if(expectctx)
+      {
+        while(READ_BIT(dmarxdesc->DESC3, ETH_DMARXNDESCWBF_OWN) != (uint32_t)RESET ||
+              READ_BIT(dmarxdesc->DESC3, ETH_DMARXNDESCWBF_CTXT) == (uint32_t)RESET)
+        {
+          /* Spin */
+        }
+      }
 
       if(READ_BIT(dmarxdesc->DESC3,  ETH_DMARXNDESCWBF_OWN)  == (uint32_t)RESET)
       {
