@@ -6238,10 +6238,22 @@ __STATIC_INLINE uint32_t LL_ADC_GetOverSamplingDiscont(ADC_TypeDef *ADCx)
   *         ADC state:
   *         ADC must be disabled or enabled without conversion on going
   *         on either groups regular or injected.
+  * @note   Caution: Oversampling Ratio is dependent to ADC instance and IP version:
+  *         For STM32H72x/3x: ADC3 has 3-bit OVSR, and 9-bit OVSR for ADC1/ADC2
+  *         For Rest of STM32H7xxx All ADCs have 9-bit OVSR.
   * @rmtoll CFGR2    OVSS           LL_ADC_ConfigOverSamplingRatioShift\n
   *         CFGR2    OVSR           LL_ADC_ConfigOverSamplingRatioShift
   * @param  ADCx ADC instance
-  * @param  Ratio This parameter can be in the range from 1 to 1024.
+  * @param  Ratio This parameter can be in the range from 1 to 1024 or ...
+  *         one of the following values, in case of ADC3 of ADC_VER_V5_V90 :
+  *         @arg @ref LL_ADC_OVS_RATIO_2
+  *         @arg @ref LL_ADC_OVS_RATIO_4
+  *         @arg @ref LL_ADC_OVS_RATIO_8
+  *         @arg @ref LL_ADC_OVS_RATIO_16
+  *         @arg @ref LL_ADC_OVS_RATIO_32
+  *         @arg @ref LL_ADC_OVS_RATIO_64
+  *         @arg @ref LL_ADC_OVS_RATIO_128
+  *         @arg @ref LL_ADC_OVS_RATIO_256
   * @param  Shift This parameter can be one of the following values:
   *         @arg @ref LL_ADC_OVS_SHIFT_NONE
   *         @arg @ref LL_ADC_OVS_SHIFT_RIGHT_1
@@ -6259,19 +6271,48 @@ __STATIC_INLINE uint32_t LL_ADC_GetOverSamplingDiscont(ADC_TypeDef *ADCx)
   */
 __STATIC_INLINE void LL_ADC_ConfigOverSamplingRatioShift(ADC_TypeDef *ADCx, uint32_t Ratio, uint32_t Shift)
 {
-  MODIFY_REG(ADCx->CFGR2, (ADC_CFGR2_OVSS | ADC_CFGR2_OVSR), (Shift | (((Ratio - 1UL) << ADC_CFGR2_OVSR_Pos))));
+    /* ADC channels ratio shift oversampling */
+#if defined(ADC_VER_V5_V90)
+    if (ADCx == ADC3)
+    {
+        MODIFY_REG(ADCx->CFGR2, (ADC_CFGR2_OVSS | ADC3_CFGR2_OVSR), (Shift | Ratio));
+    } else
+#endif /* ADC_VER_V5_V90 */
+    {
+        MODIFY_REG(ADCx->CFGR2, (ADC_CFGR2_OVSS | ADC_CFGR2_OVSR), (Shift | (((Ratio - 1UL) << ADC_CFGR2_OVSR_Pos))));
+    }
 }
 
 /**
   * @brief  Get ADC oversampling ratio
   *        (impacting both ADC groups regular and injected)
+  * @note   Caution: Oversampling Ratio is dependent to ADC instance and IP version:
+  *         For STM32H72x/3x: ADC3 has 3-bit OVSR, and 9-bit OVSR for ADC1/ADC2
+  *         For Rest of STM32H7xxx All ADCs have 9-bit OVSR.
   * @rmtoll CFGR2    OVSR           LL_ADC_GetOverSamplingRatio
   * @param  ADCx ADC instance
-  * @retval Ratio This parameter can be in the from 1 to 1024.
+  * @retval Ratio This parameter can be a value from 1 to 1024 or ...
+  *         one of the following values, in case of ADC3 of ADC_VER_V5_V90 :
+  *         @arg @ref LL_ADC_OVS_RATIO_2
+  *         @arg @ref LL_ADC_OVS_RATIO_4
+  *         @arg @ref LL_ADC_OVS_RATIO_8
+  *         @arg @ref LL_ADC_OVS_RATIO_16
+  *         @arg @ref LL_ADC_OVS_RATIO_32
+  *         @arg @ref LL_ADC_OVS_RATIO_64
+  *         @arg @ref LL_ADC_OVS_RATIO_128
+  *         @arg @ref LL_ADC_OVS_RATIO_256
 */
 __STATIC_INLINE uint32_t LL_ADC_GetOverSamplingRatio(ADC_TypeDef *ADCx)
 {
-  return (((uint32_t)(READ_BIT(ADCx->CFGR2, ADC_CFGR2_OVSR)) + (1UL << ADC_CFGR2_OVSR_Pos)) >> ADC_CFGR2_OVSR_Pos);
+#if defined(ADC_VER_V5_V90)
+    if (ADCx == ADC3)
+    {
+        return (uint32_t)(READ_BIT(ADCx->CFGR2, ADC3_CFGR2_OVSR));
+    } else
+#endif /* ADC_VER_V5_V90 */
+    {
+        return (((uint32_t)(READ_BIT(ADCx->CFGR2, ADC_CFGR2_OVSR)) + (1UL << ADC_CFGR2_OVSR_Pos)) >> ADC_CFGR2_OVSR_Pos);
+    }
 }
 
 /**
