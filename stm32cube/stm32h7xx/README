@@ -36,6 +36,12 @@ License Link:
 
 Patch List:
 
+   *LL_ADC_ConfigOverSamplingRatioShift
+    -ADC3 oversampling Ratio incorrectly set
+    Impacted files:
+     drivers/include/stm32h7xx_ll_adc.h
+    ST Bug tracker ID: 113809
+
    *Changes from official delivery:
     -dos2unix applied
     -trailing white spaces removed
