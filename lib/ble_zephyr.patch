@@ -1,0 +1,158 @@
+diff --git a/lib/stm32wb/hci/ble_bufsize.h
+index bf9ea29f..91dd8fef 100644
+--- a/lib/stm32wb/hci/ble_bufsize.h
++++ b/lib/stm32wb/hci/ble_bufsize.h
+@@ -8,9 +8,9 @@
+  * All rights reserved.</center></h2>
+  *
+- * This software component is licensed by ST under Ultimate Liberty license
+- * SLA0044, the "License"; You may not use this file except in compliance with
+- * the License. You may obtain a copy of the License at:
+- *                             www.st.com/SLA0044
++ * This software component is licensed by ST under BSD 3-Clause license,
++ * the "License"; You may not use this file except in compliance with the
++ * License. You may obtain a copy of the License at:
++ *                        opensource.org/licenses/BSD-3-Clause
+  *
+  *****************************************************************************
+  */
+diff --git a/lib/stm32wb/hci/ble_thread/tl/shci_tl.c
+index f20d7c81..e035b654 100644
+--- a/lib/stm32wb/hci/shci_tl.c
++++ b/lib/stm32wb/hci/shci_tl.c
+@@ -40,6 +40,14 @@ typedef enum
+ /* Private macros ------------------------------------------------------------*/
+ /* Public variables ---------------------------------------------------------*/
+ /* Private variables ---------------------------------------------------------*/
++#if 1 /* Z-WB-2 */
++/* SYSTEM_DRIVER_CONTEXT section is unused and generates useless warnings */
++/* Provide alterative definitions */
++static tListNode SHciAsynchEventQueue;
++static volatile SHCI_TL_CmdStatus_t SHCICmdStatus;
++static TL_CmdPacket_t *pCmdBuffer;
++SHCI_TL_UserEventFlowStatus_t SHCI_TL_UserEventFlow;
++#else
+ /**
+  * START of Section SYSTEM_DRIVER_CONTEXT
+  */
+@@ -50,6 +58,7 @@ PLACE_IN_SECTION("SYSTEM_DRIVER_CONTEXT") SHCI_TL_UserEventFlowStatus_t SHCI_TL_
+ /**
+  * END of Section SYSTEM_DRIVER_CONTEXT
+  */
++#endif
+ 
+ static tSHciContext shciContext;
+ static void (* StatusNotCallBackFunction) (SHCI_TL_CmdStatus_t status);
+diff --git a/lib/stm32wb/hci/stm32_wpan_common.h
+index cad9026d..0f0aa875 100644
+--- a/lib/stm32wb/hci/stm32_wpan_common.h
++++ b/lib/stm32wb/hci/stm32_wpan_common.h
+@@ -9,10 +9,10 @@
+  * <h2><center>&copy; Copyright (c) 2018 STMicroelectronics.
+  * All rights reserved.</center></h2>
+  *
+- * This software component is licensed by ST under Ultimate Liberty license
+- * SLA0044, the "License"; You may not use this file except in compliance with
+- * the License. You may obtain a copy of the License at:
+- *                             www.st.com/SLA0044
++ * This software component is licensed by ST under BSD 3-Clause license,
++ * the "License"; You may not use this file except in compliance with the
++ * License. You may obtain a copy of the License at:
++ *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  */
+diff --git a/lib/stm32wb/hci/app_common.h
+index d580f036..3efc3e63 100644
+--- a/lib/stm32wb/hci/app_common.h
++++ b/lib/stm32wb/hci/app_common.h
+@@ -9,10 +9,10 @@
+  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * All rights reserved.</center></h2>
+  *
+- * This software component is licensed by ST under Ultimate Liberty license
+- * SLA0044, the "License"; You may not use this file except in compliance with
+- * the License. You may obtain a copy of the License at:
+- *                             www.st.com/SLA0044
++  * This software component is licensed by ST under BSD 3-Clause license,
++  * the "License"; You may not use this file except in compliance with the
++  * License. You may obtain a copy of the License at:
++  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  */
+diff --git a/lib/stm32wb/hci/app_conf.h
+--- a/lib/stm32wb/hci/app_conf.h
++++ b/lib/stm32wb/hci/app_conf.h
+@@ -9,10 +9,10 @@
+  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * All rights reserved.</center></h2>
+  *
+- * This software component is licensed by ST under Ultimate Liberty license
+- * SLA0044, the "License"; You may not use this file except in compliance with
+- * the License. You may obtain a copy of the License at:
+- *                             www.st.com/SLA0044
++  * This software component is licensed by ST under BSD 3-Clause license,
++  * the "License"; You may not use this file except in compliance with the
++  * License. You may obtain a copy of the License at:
++  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  */
+@@ -23,7 +23,8 @@
+ #define __APP_CONFIG_H
+ 
+ #include "hw.h"
+-#include "hw_conf.h"
++/* Z-WB-1: hw_conf.h file is not used, remove the dependency */
++/* #include "hw_conf.h" */
+ #include "hw_if.h"
+ #include "ble_bufsize.h"
+ 
+@@ -265,7 +265,7 @@
+  *          0: LE Power Classe 2-3
+  * other bits: reserved (shall be set to 0)
+  */
+-#define CFG_BLE_OPTIONS  SHCI_C2_BLE_INIT_OPTIONS_LL_HOST
++#define CFG_BLE_OPTIONS  SHCI_C2_BLE_INIT_OPTIONS_LL_ONLY /* Z-WB-3 */
+ 
+ #define CFG_BLE_MAX_COC_INITIATOR_NBR   (32)
+ 
+diff --git a/lib/stm32wb/hci/hw_if.h
+index 271a222a..caf7253e 100644
+--- a/lib/stm32wb/hci/hw_if.h
++++ b/lib/stm32wb/hci/hw_if.h
+@@ -10,10 +10,10 @@
+   * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+   * All rights reserved.</center></h2>
+   *
+-  * This software component is licensed by ST under Ultimate Liberty license
+-  * SLA0044, the "License"; You may not use this file except in compliance with
+-  * the License. You may obtain a copy of the License at:
+-  *                             www.st.com/SLA0044
++  * This software component is licensed by ST under BSD 3-Clause license,
++  * the "License"; You may not use this file except in compliance with the
++  * License. You may obtain a copy of the License at:
++  *                        opensource.org/licenses/BSD-3-Clause
+   *
+   ******************************************************************************
+   */
+diff --git a/lib/stm32wb/hci/STM32_WPAN/Target/hw_ipcc.c
+index e7049681..7180a189 100644
+--- a/lib/stm32wb/hci/hw_ipcc.c
++++ b/lib/stm32wb/hci/hw_ipcc.c
+@@ -9,10 +9,10 @@
+   * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+   * All rights reserved.</center></h2>
+   *
+-  * This software component is licensed by ST under Ultimate Liberty license
+-  * SLA0044, the "License"; You may not use this file except in compliance with
+-  * the License. You may obtain a copy of the License at:
+-  *                             www.st.com/SLA0044
++ * This software component is licensed by ST under BSD 3-Clause license,
++ * the "License"; You may not use this file except in compliance with the
++ * License. You may obtain a copy of the License at:
++ *                        opensource.org/licenses/BSD-3-Clause
+   *
+   ******************************************************************************
+   */

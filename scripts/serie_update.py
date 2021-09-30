@@ -14,6 +14,7 @@ import re
 from pathlib import Path
 import logging
 from jinja2 import Environment, FileSystemLoader
+import ble_library
 
 STM32_CUBE_REPO_BASE = "https://github.com/STMicroelectronics/STM32Cube"
 """GitHub URL to get STM32Cube"""
@@ -799,6 +800,15 @@ class Stm32SerieUpdate:
 
         # 7) apply zephyr patch : in the zephyr module repo
         self.apply_zephyr_patch()
+
+        # 7.1) In case of stm32wb, update ble library
+        if self.stm32_serie == "stm32wb":
+            ble_library.update(
+                self.stm32cube_serie_path,
+                Path(self.zephyr_hal_stm32_path / "lib"),
+                self.version_update,
+                self.update_commit,
+            )
 
         # 8) merge and commit if needed
         self.merge_commit()

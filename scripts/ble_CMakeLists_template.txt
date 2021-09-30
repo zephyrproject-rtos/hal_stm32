@@ -1,0 +1,12 @@
+# Makefile - STLIB SDK
+#
+# Copyright (c) 2016 Linaro Limited
+#
+# SPDX-License-Identifier: Apache-2.0
+
+if(CONFIG_HAS_STM32LIB)
+  if(CONFIG_BT_STM32_IPM)
+{{include_dir_list}}
+{{source_file_list}}
+  endif()
+endif()
