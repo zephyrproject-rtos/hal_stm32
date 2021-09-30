@@ -64,9 +64,7 @@ class Stm32SerieUpdate:
         """
         if not stm32_serie.startswith("stm32"):
             raise ValueError(
-                "Error: Unknown stm32 serie: "
-                + stm32_serie
-                + ". Must start with 'stm32'"
+                f"Error: Unknown stm32 serie: {stm32_serie}. Must start with 'stm32'"
             )
 
         # Set serie variables
@@ -139,7 +137,7 @@ class Stm32SerieUpdate:
         Returns:
             return the returncode of the command after execution.
         """
-        logging.debug("%s", str(cmd) + "      cwd:" + str(cwd))
+        logging.debug("%s", f"{str(cmd)}      cwd:{str(cwd)}")
 
         return subprocess.check_call(
             cmd,
@@ -179,7 +177,7 @@ class Stm32SerieUpdate:
             )
             branch = self.major_branch()
 
-        logging.info("%s", "Branch used: %s" + branch)
+        logging.info("%s", f"Branch used: {branch}")
 
         # get the latest version of cube,
         # with the most recent one created being the last entry.
@@ -225,7 +223,7 @@ class Stm32SerieUpdate:
         else:
             self.clean_files()
             raise ValueError(
-                "Error: cannot find version " + previous_version + " in STM32Cube_repo"
+                f"Error: cannot find version {previous_version} in STM32Cube_repo"
             )
 
     def extract_source(self):
@@ -434,17 +432,17 @@ class Stm32SerieUpdate:
                 # change version nb
                 if "status" in LineItem.lower():
                     readme_file.write("Status:\n")
-                    readme_file.write("   version {0}\n".format(make_version))
+                    readme_file.write(f"   version {make_version}\n")
                     next(lines)  # skip next line
                 elif "commit" in LineItem.lower():
                     readme_file.write("Commit:\n")
-                    readme_file.write("   {0}".format(make_commit))
+                    readme_file.write(f"   {make_commit}")
                     next(lines)  # skip next line
                 elif "URL" in LineItem.upper():
                     readme_file.write("URL:\n")
                     readme_file.write(
                         "   https://github.com/STMicroelectronics/"
-                        + "STM32Cube{0}\n".format(self.serie)
+                        + f"STM32Cube{self.serie}\n"
                     )
                     next(lines)  # skip next line
                 # change patch list with a link to the release_note.html
@@ -457,7 +455,7 @@ class Stm32SerieUpdate:
                 else:
                     if "See release_note.html from STM32Cube" in LineItem:
                         see_release_note = False
-                    readme_file.write("{0}\n".format(LineItem))
+                    readme_file.write(f"{LineItem}\n")
 
             # at the very end of the file :
             if see_release_note:
@@ -503,20 +501,17 @@ class Stm32SerieUpdate:
             source_files.sort()
 
             cmakelists_new.write(
-                "zephyr_library_sources(soc/system_" + self.stm32_seriexx + ".c)\n"
+                f"zephyr_library_sources(soc/system_{self.stm32_seriexx}.c)\n"
             )
             cmakelists_new.write(
-                "zephyr_library_sources(drivers/src/" + self.stm32_seriexx + "_hal.c)\n"
+                f"zephyr_library_sources(drivers/src/{self.stm32_seriexx}_hal.c)\n"
+            )
+            cmakelists_new.write(
+                f"zephyr_library_sources(drivers/src/{self.stm32_seriexx}_hal_rcc.c)\n"
             )
             cmakelists_new.write(
                 "zephyr_library_sources(drivers/src/"
-                + self.stm32_seriexx
-                + "_hal_rcc.c)\n"
-            )
-            cmakelists_new.write(
-                "zephyr_library_sources(drivers/src/"
-                + self.stm32_seriexx
-                + "_hal_rcc_ex.c)\n"
+                + f"{self.stm32_seriexx}_hal_rcc_ex.c)\n"
             )
 
             for filename in source_files:
@@ -694,10 +689,9 @@ class Stm32SerieUpdate:
                     "%s",
                     "##########################  "
                     + "ERROR when applying patch to zephyr module: "
-                    + "###########################\n           see "
-                    + str(module_log_path)
-                    + "\npatch file:"
-                    + str(self.stm32cube_temp / "module.patch"),
+                    + "###########################\n"
+                    + f"           see {str(module_log_path)}\n"
+                    + f"patch file:{str(self.stm32cube_temp / 'module.patch')}",
                 )
 
                 # Print list of conflicting file
@@ -709,9 +703,8 @@ class Stm32SerieUpdate:
                             conflict_file = line.split(":")[2]
                             if conflict_file != previous_conflict_file:
                                 previous_conflict_file = conflict_file
-                                conflict = (
-                                    conflict + "                " + conflict_file + "\n"
-                                )
+                                conflict = f"{conflict}               {conflict_file}\n"
+
                 logging.error("%s", conflict)
 
                 # save patch file so that it can be analysed in case of error
@@ -732,7 +725,7 @@ class Stm32SerieUpdate:
         self.os_cmd(("git", "reset", "--", "*.rej"), cwd=self.zephyr_hal_stm32_path)
         logging.warning(
             "%s",
-            "README file : --> please check that the Patch list " + "is still valid",
+            "README file : --> please check that the Patch list is still valid",
         )
 
     def merge_commit(self):
@@ -761,8 +754,8 @@ class Stm32SerieUpdate:
                     + "\n"
                 )
                 commit.write("on https://github.com/STMicroelectronics" + "\n")
-                commit.write("from version " + self.current_version + "\n")
-                commit.write("to version " + self.version_update + "\n")
+                commit.write(f"from version {self.current_version}\n")
+                commit.write(f"to version {self.version_update}\n")
             self.os_cmd(
                 ("git", "commit", "-as", "-F", commit_file_path),
                 cwd=self.zephyr_module_serie_path,
@@ -811,9 +804,7 @@ class Stm32SerieUpdate:
         # 3) get the version of cube which is in the zephyr module
         self.current_version = self.get_zephyr_current_version()
         logging.info(
-            "Version "
-            + self.current_version
-            + " is the zephyr version for "
+            f"Version {self.current_version} is the current zephyr version for "
             + self.zephyr_module_serie_path.name
         )
 
@@ -823,9 +814,7 @@ class Stm32SerieUpdate:
         ):
             logging.warning(
                 "%s",
-                " *** Update abandoned: versions are identical "
-                + self.version_update
-                + " ***\n",
+                f"*** Update abandoned: identical versions {self.version_update} ***\n",
             )
             self.clean_files()
             return
@@ -847,4 +836,4 @@ class Stm32SerieUpdate:
 
         # 9) clean
         self.clean_files()
-        logging.info("%s", "Done " + self.stm32_serie + "\n")
+        logging.info("%s", f"Done {self.stm32_serie}\n")

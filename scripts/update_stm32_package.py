@@ -50,7 +50,7 @@ parser.add_argument(
     "-r",
     "--repo",
     type=str,
-    help="Allows to provide path where STM32Cube repo " + "are stored",
+    help="Allows to provide path where STM32Cube repo are stored",
 )
 parser.add_argument(
     "-v",
@@ -86,9 +86,7 @@ def update_cubes():
         if stmyyxx.is_dir() and "common_ll" not in stmyyxx.name:
             logging.info(
                 "%s",
-                "***************  updating module "
-                + stmyyxx.name
-                + "*****************",
+                f"***************  updating module {stmyyxx.name} *****************",
             )
             # Force the commit for each serie
             update_serie = serie_update.Stm32SerieUpdate(
@@ -121,9 +119,7 @@ else:
 
 if not args.noclean:
     print(
-        "Do you want to clean downloaded repo ("
-        + str(repo_path)
-        + ") at the end of updates?"
+        f"Do you want to clean downloaded repo {str(repo_path)} at the end of updates?"
     )
     res = input("(Enter y/n) ").lower()
     while res not in ("y", "n"):
