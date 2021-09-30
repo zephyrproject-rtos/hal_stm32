@@ -24,6 +24,14 @@ SCRIPT_DIR = Path(__file__).absolute().parent
 REPO_ROOT = SCRIPT_DIR / ".."
 """Repository root (used for input/output default folders)."""
 
+# list of created files. It is necessary to remove all of them
+# as they are fully created when applying zephyr patch
+zephyr_file_created = [
+    "CMakeLists.txt",
+    "README",
+    "drivers/include/stm32_assert.h",
+]
+
 
 def remove_readonly(func, path, _):
     """Remove read only protection"""
@@ -147,6 +155,23 @@ class Stm32SerieUpdate:
             stderr=self.std_dest,
             cwd=cwd,
         )
+
+    def rename_conf_template(self, path):
+        """renames hal_conf_template.h to hal_conf.h ...
+        Args:
+            path: path where to apply the files processing
+        """
+        # except for _hal_conf_template.h which is renamed
+        hal_conf_template_fullpath = Path(
+            path / (self.stm32_seriexx + "_hal_conf_template.h")
+        )
+        if hal_conf_template_fullpath.is_file():
+            hal_conf_fullpath = Path(
+                re.sub("_template", r"", str(hal_conf_template_fullpath))
+            )
+            if hal_conf_fullpath.exists():
+                hal_conf_fullpath.unlink()
+            hal_conf_template_fullpath.rename(hal_conf_fullpath)
 
     def major_branch(self):
         # check whether master branch exist, otherwise use main branch
@@ -286,16 +311,7 @@ class Stm32SerieUpdate:
         )
 
         # except for _hal_conf_template.h which is renamed
-        hal_conf_template_fullpath = Path(
-            temp_drivers_include_path / (self.stm32_seriexx + "_hal_conf_template.h")
-        )
-        if hal_conf_template_fullpath.is_file():
-            hal_conf_fullpath = Path(
-                re.sub("_template", r"", str(hal_conf_template_fullpath))
-            )
-            if hal_conf_fullpath.exists():
-                hal_conf_fullpath.unlink()
-            hal_conf_template_fullpath.rename(hal_conf_fullpath)
+        self.rename_conf_template(temp_drivers_include_path)
 
         temp_drivers_src_path = self.stm32cube_temp_serie / "drivers" / "src"
         temp_drivers_src_path.mkdir()
@@ -385,32 +401,6 @@ class Stm32SerieUpdate:
         )
         self.os_cmd(("dos2unix", "module.patch"), cwd=self.stm32cube_temp)
 
-        hal_conf = (
-            self.stm32cube_temp_serie
-            / "drivers"
-            / "include"
-            / Path(self.stm32_seriexx + "_hal_conf.h")
-        )
-        hal_conf_patch = self.stm32cube_temp / "hal_conf.patch"
-        if hal_conf.exists():
-            self.os_cmd(
-                (
-                    "git "
-                    + "diff "
-                    + "HEAD@{1} "
-                    + "-- "
-                    + str(hal_conf)
-                    + " >> "
-                    + str(hal_conf_patch)
-                ),
-                shell=True,
-                cwd=self.stm32cube_temp,
-            )
-            if hal_conf_patch.stat().st_size == 0:
-                hal_conf_patch.unlink()
-            else:
-                self.os_cmd(("dos2unix", str(hal_conf_patch)))
-
     def update_readme(self, make_version, make_commit):
         """Update README file
 
@@ -420,7 +410,7 @@ class Stm32SerieUpdate:
         """
         see_release_note = True
 
-        readme_path = self.stm32cube_temp_serie / "README"
+        readme_path = self.zephyr_module_serie_path / "README"
 
         with readme_path.open(mode="r") as readme_prev:
             lines = (x for x in readme_prev.read().splitlines())
@@ -477,7 +467,7 @@ class Stm32SerieUpdate:
 
     def update_cmakelist(self):
         """Update CMakeLists.txt file"""
-        cmakelists_path = self.stm32cube_temp_serie / "CMakeLists.txt"
+        cmakelists_path = self.zephyr_module_serie_path / "CMakeLists.txt"
         if cmakelists_path.exists():
             # build new CMakeLists.txt
             with cmakelists_path.open("r") as cmakelists_old:
@@ -603,16 +593,6 @@ class Stm32SerieUpdate:
         # populate temporary directory with latest version
         self.extract_source()
 
-        # include README and CMakelists files from current zephyr module
-        shutil.copy(
-            str(self.readme_file_path),
-            str(self.stm32cube_temp_serie / "README"),
-        )
-        shutil.copy(
-            str(self.zephyr_module_serie_path / "CMakeLists.txt"),
-            str(self.stm32cube_temp_serie / "CMakeLists.txt"),
-        )
-
         # Commit files except log or patch files
         self.os_cmd(("git", "add", "*"), cwd=self.stm32cube_serie_path)
         self.os_cmd(("git", "reset", "--", "*.patch"), cwd=self.stm32cube_serie_path)
@@ -625,37 +605,6 @@ class Stm32SerieUpdate:
     def apply_zephyr_patch(self):
         """Apply zephyr stm32 patch to latest stm32Cube version"""
         logging.info("%s", "Apply zephyr patches to " + self.version_update)
-
-        # Update README and CMakeList, copy release note
-        self.update_readme(self.version_update, self.update_commit)
-        self.update_cmakelist()
-        self.copy_release_note()
-
-        # Apply previous patch on hal_conf.h file
-        if os.path.exists("hal_conf.patch"):
-            self.os_cmd(
-                ("git", "apply", "--recount", "--3way", "./hal_conf.patch"),
-                cwd=self.stm32cube_temp,
-            )
-            os.remove("hal_conf.patch")
-
-        # remove stm32_assert_template.h and create stm32_assert.h
-        self.generate_assert_file()
-
-        # Commit files except log or patch files
-        self.os_cmd(("git", "add", "*"), cwd=self.stm32cube_temp)
-        self.os_cmd(("git", "reset", "--", "*.patch"), cwd=self.stm32cube_temp)
-        self.os_cmd(("git", "reset", "--", "*.log"), cwd=self.stm32cube_temp)
-        self.os_cmd(
-            ("git", "commit", "-am", '"module' + self.version_update + '"'),
-            cwd=self.stm32cube_temp,
-        )
-
-        # Remove trailing spaces
-        self.os_cmd(
-            ("git", "rebase", "--whitespace=fix", "HEAD~1"),
-            cwd=self.stm32cube_temp,
-        )
 
         # Copy from stm32cube_temp
         shutil.rmtree(
@@ -670,6 +619,17 @@ class Stm32SerieUpdate:
                 str(self.zephyr_module_serie_path),
             )
         )
+
+        # apply dos2unix to whole zephyr hal serie sub directory
+        for child in self.zephyr_module_serie_path.glob("**/*"):
+            if child.is_file:
+                self.os_cmd(("dos2unix", child), cwd=self.zephyr_module_serie_path)
+
+        # Remove file that will be fully created by zephyr patch
+        # (otherwise applying patch will report error)
+        for file in zephyr_file_created:
+            if Path(self.zephyr_module_serie_path, file).exists():
+                Path(self.zephyr_module_serie_path, file).unlink()
 
         # Apply patch from new repo
         module_log_path = self.zephyr_hal_stm32_path / Path(
@@ -718,6 +678,14 @@ class Stm32SerieUpdate:
                         / Path("module_" + self.stm32_serie + ".patch"),
                     )
                 )
+
+        # Update README and CMakeList, copy release note
+        self.update_readme(self.version_update, self.update_commit)
+        self.update_cmakelist()
+        self.copy_release_note()
+
+        # remove stm32_assert_template.h and create stm32_assert.h
+        self.generate_assert_file()
 
         # Add files but do not commit
         self.os_cmd(("git", "add", "*"), cwd=self.zephyr_hal_stm32_path)
