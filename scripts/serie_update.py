@@ -17,27 +17,12 @@ from jinja2 import Environment, FileSystemLoader
 
 STM32_CUBE_REPO_BASE = "https://github.com/STMicroelectronics/STM32Cube"
 
-logging.basicConfig(level=logging.INFO)
-
 
 def remove_readonly(func, path, _):
     """Remove read only protection"""
     os.chmod(path, stat.S_IWRITE)
     func(path)
 
-
-def os_cmd(cmd, cwd=None, shell=False):
-    """Execute a command with subprocess.check_call()
-    Args:
-        cmd: string command to execute.
-        cwd: directory where to run command
-        shell: boolean to enable command interpretation by the shell
-
-    Returns:
-        return the returncode of the command after execution.
-    """
-    logging.info(cmd)
-    return subprocess.check_call(cmd, shell=shell, cwd=cwd)
 
 
 def version_tuple(version):
@@ -58,6 +43,7 @@ class Stm32SerieUpdate:
         force,
         noclean,
         version_update,
+        debug,
     ):
         """Class Stm32SerieUpdate constructor
 
@@ -67,6 +53,7 @@ class Stm32SerieUpdate:
             force: boolean to force or not git commit after applying update
             noclean: boolean to clean or not github repo after update done
             version_update: string to force a specified version to be updated
+            debug: boolean to set log debug level
 
         Returns:
             return previous zephyr cube version.
@@ -91,6 +78,7 @@ class Stm32SerieUpdate:
         self.force = force
         self.noclean = noclean
         self.version_update = version_update
+        self.debug = debug
 
         # #####  3 root directories to work with ########
         # 1: STM32Cube repo Default $HOME/STM32Cube_repo
@@ -134,6 +122,33 @@ class Stm32SerieUpdate:
         self.current_version = ""
         self.update_commit = ""
 
+        if self.debug:
+            logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.DEBUG)
+            self.std_dest = None
+        else:
+            logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.INFO)
+            self.std_dest = subprocess.DEVNULL
+
+    def os_cmd(self, cmd, cwd=None, shell=False):
+        """Execute a command with subprocess.check_call()
+        Args:
+            cmd: string command to execute.
+            cwd: directory where to run command
+            shell: boolean to enable command interpretation by the shell
+
+        Returns:
+            return the returncode of the command after execution.
+        """
+        logging.debug("%s", str(cmd) + "      cwd:" + str(cwd))
+
+        return subprocess.check_call(
+            cmd,
+            shell=shell,
+            stdout=self.std_dest,
+            stderr=self.std_dest,
+            cwd=cwd,
+        )
+
     def major_branch(self):
         # check whether master branch exist, otherwise use main branch
         master_branch_exist = subprocess.check_output(
@@ -148,27 +163,27 @@ class Stm32SerieUpdate:
     def clone_cube_repo(self):
         """Clone or fetch a stm32 serie repo"""
         if self.stm32cube_serie_path.exists():
-            logging.info("fetching repo " + str(self.stm32cube_serie_path))
+            logging.info("%s", "fetching repo " + str(self.stm32cube_serie_path))
             # if already exists, then just clean and fetch
-            os_cmd(("git", "clean", "-fdx"), cwd=self.stm32cube_serie_path)
-            os_cmd(("git", "fetch"), cwd=self.stm32cube_serie_path)
+            self.os_cmd(("git", "clean", "-fdx"), cwd=self.stm32cube_serie_path)
+            self.os_cmd(("git", "fetch"), cwd=self.stm32cube_serie_path)
             branch = self.major_branch()
-            os_cmd(
+            self.os_cmd(
                 ("git", "reset", "--hard", branch),
                 cwd=self.stm32cube_serie_path,
             )
         else:
-            os_cmd(
+            self.os_cmd(
                 ("git", "clone", STM32_CUBE_REPO_BASE + self.serie + ".git"),
                 cwd=self.stm32cube_repo_path,
             )
             branch = self.major_branch()
 
-        logging.info("Branch used: %s", branch)
+        logging.info("%s", "Branch used: %s" + branch)
 
         # get the latest version of cube,
         # with the most recent one created being the last entry.
-        os_cmd(("git", "checkout", branch), cwd=self.stm32cube_serie_path)
+        self.os_cmd(("git", "checkout", branch), cwd=self.stm32cube_serie_path)
         self.version_tag = subprocess.check_output(
             ("git", "tag", "-l"), cwd=self.stm32cube_serie_path
         ).splitlines()
@@ -229,7 +244,7 @@ class Stm32SerieUpdate:
             / self.stm32_seriexx_upper
             / "Include"
         )
-        os_cmd(
+        self.os_cmd(
             (
                 "cp",
                 "-r",
@@ -262,7 +277,7 @@ class Stm32SerieUpdate:
             / Path(self.stm32_seriexx_upper + "_HAL_Driver")
             / "Inc"
         )
-        os_cmd(
+        self.os_cmd(
             (
                 "cp",
                 "-r",
@@ -271,13 +286,10 @@ class Stm32SerieUpdate:
             )
         )
 
-        # except for _hal_conf_template.h
-        hal_conf_template = [
-            f
-            for f in temp_drivers_include_path.iterdir()
-            if "hal_conf_template.h" in f.name
-        ][0]
-        hal_conf_template_fullpath = temp_drivers_include_path / hal_conf_template
+        # except for _hal_conf_template.h which is renamed
+        hal_conf_template_fullpath = Path(
+            temp_drivers_include_path / (self.stm32_seriexx + "_hal_conf_template.h")
+        )
         if hal_conf_template_fullpath.is_file():
             hal_conf_fullpath = Path(
                 re.sub("_template", r"", str(hal_conf_template_fullpath))
@@ -294,7 +306,7 @@ class Stm32SerieUpdate:
             / Path(self.stm32_seriexx_upper + "_HAL_Driver")
             / "Src"
         )
-        os_cmd(
+        self.os_cmd(
             (
                 "cp "
                 + "-r "
@@ -310,23 +322,25 @@ class Stm32SerieUpdate:
         corresponding to zephyr current hal version
         """
         # reset the STM32Cube repo to this current version
-        os_cmd(
+        self.os_cmd(
             ("git", "reset", "--hard", self.current_version),
             cwd=self.stm32cube_serie_path,
         )
 
         # build the zephyr module from the stm32cube
         self.extract_source()
-        logging.info("Building module from STM32Cube_repo " + self.current_version)
+        logging.info(
+            "%s", "Building module from STM32Cube_repo " + self.current_version
+        )
 
         if not self.stm32cube_temp_serie.parent.exists():
             self.stm32cube_temp_serie.parent.mkdir(parents=True)
 
-        os_cmd(
+        self.os_cmd(
             ("git", "add", "-A", "stm32cube/" + self.stm32_seriexx + "/*"),
             cwd=self.stm32cube_temp,
         )
-        os_cmd(
+        self.os_cmd(
             ("git", "commit", "-am", '"module' + self.current_version + '"'),
             cwd=self.stm32cube_temp,
         )
@@ -339,7 +353,7 @@ class Stm32SerieUpdate:
         shutil.rmtree(str(self.stm32cube_temp_serie), onerror=remove_readonly)
 
         # populate the new repo with this current zephyr module
-        os_cmd(
+        self.os_cmd(
             (
                 "cp",
                 "-rf",
@@ -349,25 +363,28 @@ class Stm32SerieUpdate:
         )
 
         # commit this current version module
-        os_cmd(("git", "add", "*"), cwd=self.stm32cube_temp)
-        os_cmd(("git", "commit", "-am", '"module"'), cwd=self.stm32cube_temp)
+        self.os_cmd(("git", "add", "*"), cwd=self.stm32cube_temp)
+        self.os_cmd(("git", "commit", "-am", '"module"'), cwd=self.stm32cube_temp)
 
         # Remove trailing space
-        os_cmd(
+        self.os_cmd(
             ("git", "rebase", "--whitespace=fix", "HEAD~1"),
             cwd=self.stm32cube_temp,
         )
 
         # generate a patch for files and _hal.conf.h file in the module
         logging.info(
-            "Building patch from " + self.current_version + " to current module"
+            "%s",
+            "Building patch from official "
+            + self.current_version
+            + " to current zephyr module",
         )
-        os_cmd(
+        self.os_cmd(
             "git diff --ignore-space-at-eol HEAD~1 >> module.patch",
             shell=True,
             cwd=self.stm32cube_temp,
         )
-        os_cmd(("dos2unix", "module.patch"), cwd=self.stm32cube_temp)
+        self.os_cmd(("dos2unix", "module.patch"), cwd=self.stm32cube_temp)
 
         hal_conf = (
             self.stm32cube_temp_serie
@@ -377,7 +394,7 @@ class Stm32SerieUpdate:
         )
         hal_conf_patch = self.stm32cube_temp / "hal_conf.patch"
         if hal_conf.exists():
-            os_cmd(
+            self.os_cmd(
                 (
                     "git "
                     + "diff "
@@ -393,7 +410,7 @@ class Stm32SerieUpdate:
             if hal_conf_patch.stat().st_size == 0:
                 hal_conf_patch.unlink()
             else:
-                os_cmd(("dos2unix", str(hal_conf_patch)))
+                self.os_cmd(("dos2unix", str(hal_conf_patch)))
 
     def update_readme(self, make_version, make_commit):
         """Update README file
@@ -447,7 +464,7 @@ class Stm32SerieUpdate:
                 readme_file.write("\n   See release_note.html from STM32Cube\n")
             readme_file.flush()
 
-        os_cmd(("dos2unix", str(readme_path)))
+        self.os_cmd(("dos2unix", str(readme_path)))
 
     def copy_release_note(self):
         """Copy release_note.html file from STM32Cube to zephyr"""
@@ -457,7 +474,7 @@ class Stm32SerieUpdate:
             release_note_dst.unlink()
         if release_note_src.exists:
             release_note_src.rename(release_note_dst)
-            os_cmd(("dos2unix", str(release_note_dst)))
+            self.os_cmd(("dos2unix", str(release_note_dst)))
 
     def update_cmakelist(self):
         """Update CMakeLists.txt file"""
@@ -471,7 +488,7 @@ class Stm32SerieUpdate:
         else:
             first_line = ""
 
-        logging.info("Create a new CMakeLists.txt file")
+        logging.info("%s", "Create a new CMakeLists.txt file")
 
         with cmakelists_path.open("w") as cmakelists_new:
             if first_line:
@@ -537,7 +554,7 @@ class Stm32SerieUpdate:
                         + filename.name
                         + ")\n"
                     )
-        os_cmd(("dos2unix", str(cmakelists_path)))
+        self.os_cmd(("dos2unix", str(cmakelists_path)))
 
     def generate_assert_file(self):
         """Remove stm32_assert_template.h file and create stm32_assert.h file"""
@@ -574,7 +591,7 @@ class Stm32SerieUpdate:
         corresponding to zephyr latest hal version
         """
         # reset the STM32Cube repo to this latest version
-        os_cmd(
+        self.os_cmd(
             ("git", "reset", "--hard", self.version_update),
             cwd=self.stm32cube_serie_path,
         )
@@ -601,17 +618,17 @@ class Stm32SerieUpdate:
         )
 
         # Commit files except log or patch files
-        os_cmd(("git", "add", "*"), cwd=self.stm32cube_serie_path)
-        os_cmd(("git", "reset", "--", "*.patch"), cwd=self.stm32cube_serie_path)
-        os_cmd(("git", "reset", "--", "*.log"), cwd=self.stm32cube_serie_path)
-        os_cmd(
+        self.os_cmd(("git", "add", "*"), cwd=self.stm32cube_serie_path)
+        self.os_cmd(("git", "reset", "--", "*.patch"), cwd=self.stm32cube_serie_path)
+        self.os_cmd(("git", "reset", "--", "*.log"), cwd=self.stm32cube_serie_path)
+        self.os_cmd(
             ("git", "commit", "-am", '"module' + self.version_update + '"'),
             cwd=self.stm32cube_temp_serie,
         )
 
     def apply_zephyr_patch(self):
         """Apply zephyr stm32 patch to latest stm32Cube version"""
-        logging.info("Apply zephyr patches to " + self.version_update)
+        logging.info("%s", "Apply zephyr patches to " + self.version_update)
 
         # Update README and CMakeList, copy release note
         self.update_readme(self.version_update, self.update_commit)
@@ -620,7 +637,7 @@ class Stm32SerieUpdate:
 
         # Apply previous patch on hal_conf.h file
         if os.path.exists("hal_conf.patch"):
-            os_cmd(
+            self.os_cmd(
                 ("git", "apply", "--recount", "--3way", "./hal_conf.patch"),
                 cwd=self.stm32cube_temp,
             )
@@ -630,41 +647,31 @@ class Stm32SerieUpdate:
         self.generate_assert_file()
 
         # Commit files except log or patch files
-        os_cmd(("git", "add", "*"), cwd=self.stm32cube_temp)
-        os_cmd(("git", "reset", "--", "*.patch"), cwd=self.stm32cube_temp)
-        os_cmd(("git", "reset", "--", "*.log"), cwd=self.stm32cube_temp)
-        os_cmd(
+        self.os_cmd(("git", "add", "*"), cwd=self.stm32cube_temp)
+        self.os_cmd(("git", "reset", "--", "*.patch"), cwd=self.stm32cube_temp)
+        self.os_cmd(("git", "reset", "--", "*.log"), cwd=self.stm32cube_temp)
+        self.os_cmd(
             ("git", "commit", "-am", '"module' + self.version_update + '"'),
             cwd=self.stm32cube_temp,
         )
 
         # Remove trailing spaces
-        os_cmd(
+        self.os_cmd(
             ("git", "rebase", "--whitespace=fix", "HEAD~1"),
             cwd=self.stm32cube_temp,
         )
 
-        # Generate a patch for each file in the module
-
-        os_cmd(
-            "git diff HEAD~1 >> new_version.patch",
-            shell=True,
-            cwd=self.stm32cube_temp,
-        )
-
-        os_cmd(("dos2unix", "new_version.patch"), cwd=self.stm32cube_temp)
-
         # Copy from stm32cube_temp
         shutil.rmtree(
-            str(self.zephyr_hal_stm32_path / "stm32cube" / self.stm32_seriexx),
+            str(self.zephyr_module_serie_path),
             onerror=remove_readonly,
         )
-        os_cmd(
+        self.os_cmd(
             (
                 "cp",
                 "-r",
                 str(self.stm32cube_temp_serie),
-                str(self.zephyr_hal_stm32_path / "stm32cube" / self.stm32_seriexx),
+                str(self.zephyr_module_serie_path),
             )
         )
 
@@ -673,6 +680,7 @@ class Stm32SerieUpdate:
             "module_" + self.stm32_serie + ".log"
         )
 
+        # Apply patch
         cmd = (
             "git",
             "apply",
@@ -683,24 +691,55 @@ class Stm32SerieUpdate:
         with open(module_log_path, "w") as output_log:
             if subprocess.call(cmd, stderr=output_log, cwd=self.zephyr_hal_stm32_path):
                 logging.error(
-                    "Error when applying patch to zephyr module: see "
+                    "%s",
+                    "##########################  "
+                    + "ERROR when applying patch to zephyr module: "
+                    + "###########################\n           see "
                     + str(module_log_path)
+                    + "\npatch file:"
+                    + str(self.stm32cube_temp / "module.patch"),
+                )
+
+                # Print list of conflicting file
+                conflict = "Potential merge conflict:\n"
+                with open(str(module_log_path), "r") as f:
+                    previous_conflict_file = ""
+                    for line in f:
+                        if line.startswith("error: patch failed:"):
+                            conflict_file = line.split(":")[2]
+                            if conflict_file != previous_conflict_file:
+                                previous_conflict_file = conflict_file
+                                conflict = (
+                                    conflict + "                " + conflict_file + "\n"
+                                )
+                logging.error("%s", conflict)
+
+                # save patch file so that it can be analysed in case of error
+                self.os_cmd(
+                    (
+                        "cp",
+                        "-r",
+                        str(self.stm32cube_temp / "module.patch"),
+                        self.zephyr_hal_stm32_path
+                        / Path("module_" + self.stm32_serie + ".patch"),
+                    )
                 )
 
         # Add files but do not commit
-        os_cmd(("git", "add", "*"), cwd=self.zephyr_hal_stm32_path)
-        os_cmd(("git", "reset", "--", "*.patch"), cwd=self.zephyr_hal_stm32_path)
-        os_cmd(("git", "reset", "--", "*.log"), cwd=self.zephyr_hal_stm32_path)
-        os_cmd(("git", "reset", "--", "*.rej"), cwd=self.zephyr_hal_stm32_path)
-        logging.info(
-            "README file : --> please check that the Patch list " + "is still valid"
+        self.os_cmd(("git", "add", "*"), cwd=self.zephyr_hal_stm32_path)
+        self.os_cmd(("git", "reset", "--", "*.patch"), cwd=self.zephyr_hal_stm32_path)
+        self.os_cmd(("git", "reset", "--", "*.log"), cwd=self.zephyr_hal_stm32_path)
+        self.os_cmd(("git", "reset", "--", "*.rej"), cwd=self.zephyr_hal_stm32_path)
+        logging.warning(
+            "%s",
+            "README file : --> please check that the Patch list " + "is still valid",
         )
 
     def merge_commit(self):
         """Apply zephyr stm32 patch to latest stm32Cube version"""
         # Merge & commit if needed
         if self.force:
-            logging.info("Force commit module ")
+            logging.info("%s", "Force commit module ")
             # to clean the .rej files, uncomment line: reject()
             # reject()
 
@@ -724,11 +763,11 @@ class Stm32SerieUpdate:
                 commit.write("on https://github.com/STMicroelectronics" + "\n")
                 commit.write("from version " + self.current_version + "\n")
                 commit.write("to version " + self.version_update + "\n")
-            os_cmd(
+            self.os_cmd(
                 ("git", "commit", "-as", "-F", commit_file_path),
                 cwd=self.zephyr_module_serie_path,
             )
-            os_cmd(
+            self.os_cmd(
                 ("git", "rebase", "--whitespace=fix", "HEAD~1"),
                 cwd=self.zephyr_module_serie_path,
             )
@@ -743,7 +782,7 @@ class Stm32SerieUpdate:
 
     def cleanup_stm32cube_repo(self):
         """clean the STM32Cube repo"""
-        os_cmd(("git", "reset", "--hard", "HEAD"), cwd=self.stm32cube_serie_path)
+        self.os_cmd(("git", "reset", "--hard", "HEAD"), cwd=self.stm32cube_serie_path)
 
     def clean_files(self):
         """Clean repo file if required"""
@@ -756,7 +795,7 @@ class Stm32SerieUpdate:
             self.cleanup_stm32cube_repo()
             shutil.rmtree(str(self.stm32cube_repo_path), onerror=remove_readonly)
         else:
-            os_cmd(
+            self.os_cmd(
                 ("git", "reset", "--hard", "HEAD"),
                 cwd=self.stm32cube_serie_path,
             )
@@ -767,14 +806,14 @@ class Stm32SerieUpdate:
         self.clone_cube_repo()
 
         # 2) prepare a repo where to store module versions
-        os_cmd(("git", "init"), cwd=self.stm32cube_temp)
+        self.os_cmd(("git", "init"), cwd=self.stm32cube_temp)
 
         # 3) get the version of cube which is in the zephyr module
         self.current_version = self.get_zephyr_current_version()
         logging.info(
             "Version "
             + self.current_version
-            + " is the original version for "
+            + " is the zephyr version for "
             + self.zephyr_module_serie_path.name
         )
 
@@ -782,14 +821,19 @@ class Stm32SerieUpdate:
         if (self.current_version in self.version_update) or (
             self.version_update in self.current_version
         ):
-            logging.warning("Versions are identical: abandoned")
+            logging.warning(
+                "%s",
+                " *** Update abandoned: versions are identical "
+                + self.version_update
+                + " ***\n",
+            )
             self.clean_files()
             return
 
         # 4) build the module from this previous version
         self.build_from_current_cube_version()
 
-        # 5) build the module from the current version
+        # 5) build the patch from the current zephyr version
         self.build_patch_from_current_zephyr_version()
 
         # 6) build the module from this latest version
@@ -803,4 +847,4 @@ class Stm32SerieUpdate:
 
         # 9) clean
         self.clean_files()
-        logging.info("Done " + self.stm32_serie)
+        logging.info("%s", "Done " + self.stm32_serie + "\n")
