@@ -20,8 +20,6 @@ import serie_update
 import logging
 from genllheaders import genllheaders
 
-logging.basicConfig(level=logging.INFO)
-
 parser = argparse.ArgumentParser()
 parser.add_argument(
     "-s",
@@ -61,6 +59,13 @@ parser.add_argument(
     type=str,
     help="select to which version to update.\n",
 )
+parser.add_argument(
+    "-d",
+    "--debug",
+    action="store_true",
+    default=False,
+    help="select to which version to update.\n",
+)
 args = parser.parse_args()
 
 
@@ -79,13 +84,19 @@ def update_cubes():
 
     for stmyyxx in module_path.iterdir():
         if stmyyxx.is_dir() and "common_ll" not in stmyyxx.name:
-            logging.info("updating module " + stmyyxx.name)
+            logging.info(
+                "%s",
+                "***************  updating module "
+                + stmyyxx.name
+                + "*****************",
+            )
             # Force the commit for each serie
             update_serie = serie_update.Stm32SerieUpdate(
                 stmyyxx.name[:-2],
                 repo_path,
                 force=True,
                 noclean=args.noclean,
+                debug=args.debug,
                 version_update="",
             )
             update_serie.update_stm32_hal_serie()
@@ -102,6 +113,12 @@ else:
 if not os.getenv("ZEPHYR_BASE"):
     raise Exception("ZEPHYR_BASE Not defined")
 
+if args.debug:
+    print("Debug")
+    logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.DEBUG)
+else:
+    logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.INFO)
+
 if not args.noclean:
     print(
         "Do you want to clean downloaded repo ("
@@ -112,7 +129,7 @@ if not args.noclean:
     while res not in ("y", "n"):
         res = input("(Enter y/n) ").lower()
     if res == "n":
-        logging.info("Add option --noclean")
+        logging.info("%s", "Add option --noclean")
         args.noclean = True
 
 if args.stm32_serie:
@@ -122,12 +139,13 @@ if args.stm32_serie:
         args.force,
         args.noclean,
         args.version,
+        args.debug,
     )
     update.update_stm32_hal_serie()
 else:
     update_cubes()
 
-logging.info("The end")
+logging.info("%s", "Cube update: Done")
 
 print("Do you want to autogenerate generic LL HAL headers (genllheaders.py) ?")
 res = input("(Enter y/n) ").lower()
@@ -138,3 +156,4 @@ if res == "y":
         genllheaders.REPO_ROOT / "stm32cube",
         genllheaders.REPO_ROOT / "stm32cube" / "common_ll",
     )
+    logging.info("%s", "LL HAL header update: Done")
