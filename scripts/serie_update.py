@@ -473,7 +473,8 @@ class Stm32SerieUpdate:
             # build new CMakeLists.txt
             with cmakelists_path.open("r") as cmakelists_old:
                 # this line is the copyright line
-                first_line = cmakelists_old.readline()
+                if "STMicroelectronics" not in first_line:
+                    first_line = cmakelists_old.readline()
             cmakelists_path.unlink()
         else:
             first_line = ""
