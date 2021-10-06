@@ -15,6 +15,7 @@ from pathlib import Path
 import logging
 from jinja2 import Environment, FileSystemLoader
 import ble_library
+from common_utils import common_utils
 
 STM32_CUBE_REPO_BASE = "https://github.com/STMicroelectronics/STM32Cube"
 """GitHub URL to get STM32Cube"""
@@ -92,6 +93,7 @@ class Stm32SerieUpdate:
         self.noclean = noclean
         self.version_update = version_update
         self.debug = debug
+        self.module_patch = f"module_{self.stm32_serie}.patch"
 
         # #####  3 root directories to work with ########
         # 1: STM32Cube repo Default $HOME/STM32Cube_repo
@@ -368,12 +370,15 @@ class Stm32SerieUpdate:
             + self.current_version
             + " to current zephyr module",
         )
+
+        # For unclear reason, using tuple ("git", "diff", ...) is failing on Linux
+        # especially for this command. Keep a single string.
         self.os_cmd(
-            "git diff --ignore-space-at-eol HEAD~1 >> module.patch",
+            ("git diff --ignore-space-at-eol HEAD~1 >> " + self.module_patch),
             shell=True,
             cwd=self.stm32cube_temp,
         )
-        self.os_cmd(("dos2unix", "module.patch"), cwd=self.stm32cube_temp)
+        self.os_cmd(("dos2unix", self.module_patch), cwd=self.stm32cube_temp)
 
     def update_readme(self, make_version, make_commit):
         """Update README file
@@ -601,49 +606,15 @@ class Stm32SerieUpdate:
                 Path(self.zephyr_module_serie_path, file).unlink()
 
         # Apply patch from new repo
-        module_log_path = self.zephyr_hal_stm32_path / Path(
-            "module_" + self.stm32_serie + ".log"
+        common_utils.apply_patch(
+            str(self.stm32cube_temp / self.module_patch), self.zephyr_hal_stm32_path
         )
 
-        # Apply patch
-        cmd = (
-            "git",
-            "apply",
-            "--recount",
-            "--reject",
-            str(self.stm32cube_temp / "module.patch"),
-        )
-        with open(module_log_path, "w") as output_log:
-            if subprocess.call(cmd, stderr=output_log, cwd=self.zephyr_hal_stm32_path):
-                logging.error(
-                    "%s",
-                    "##########################  "
-                    + "ERROR when applying patch to zephyr module: "
-                    + "###########################\n"
-                    + f"           see {str(module_log_path)}\n"
-                    + f"patch file:{str(self.stm32cube_temp / 'module.patch')}",
-                )
-
-                # Print list of conflicting file
-                conflict = "Potential merge conflict:\n"
-                with open(str(module_log_path), "r") as f:
-                    previous_conflict_file = ""
-                    for line in f:
-                        if line.startswith("error: patch failed:"):
-                            conflict_file = line.split(":")[2]
-                            if conflict_file != previous_conflict_file:
-                                previous_conflict_file = conflict_file
-                                conflict = f"{conflict}               {conflict_file}\n"
-
-                logging.error("%s", conflict)
-
-                # save patch file so that it can be analysed in case of error
-                patch_path = self.zephyr_hal_stm32_path / Path(
-                    "module_" + self.stm32_serie + ".patch"
-                )
-                if patch_path.exists():
-                    os.remove(patch_path)
-                shutil.copy(str(self.stm32cube_temp / "module.patch"), patch_path)
+        # save patch file so that it can be analysed in case of error
+        patch_path = self.zephyr_hal_stm32_path / self.module_patch
+        if patch_path.exists():
+            os.remove(patch_path)
+        shutil.copy(str(self.stm32cube_temp / self.module_patch), patch_path)
 
         # Update README and CMakeList, copy release note
         self.update_readme(self.version_update, self.update_commit)
