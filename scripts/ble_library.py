@@ -11,6 +11,7 @@ import shutil
 from pathlib import Path
 import logging
 from jinja2 import Environment, FileSystemLoader
+from common_utils import common_utils
 
 include_dir = ["stm32wb/hci"]
 
@@ -58,44 +59,6 @@ def copy_hci_files(src_repo_path, dest_lib_path):
             logging.error(f"File : {file_path} not found")
             logging.error("Abort")
             sys.exit()
-
-
-def apply_ble_patches(dest_lib_path):
-    """Copy sources files from Cube Firmware to zephyr"""
-    patch_file = str(dest_lib_path / "ble_zephyr.patch")
-
-    # Apply patch
-    cmd = (
-        "git",
-        "apply",
-        "--recount",
-        "--reject",
-        patch_file,
-    )
-    ble_log_path = dest_lib_path / "ble_patch.log"
-    with open(ble_log_path, "w") as output_log:
-        if subprocess.call(cmd, stderr=output_log, cwd=dest_lib_path):
-            logging.error(
-                "##########################  "
-                + "ERROR when applying ble library patch to zephyr: "
-                + "###########################\n"
-                + f"           see str(ble_log_path)\n"
-                + f"patch file:{patch_file}"
-            )
-
-            # Print list of conflicting file
-            conflict = "Potential merge conflict:\n"
-            with open(str(ble_log_path), "r") as f:
-                previous_conflict_file = ""
-                for line in f:
-                    if line.startswith("error: patch failed:"):
-                        conflict_file = line.split(":")[2]
-                        if conflict_file != previous_conflict_file:
-                            previous_conflict_file = conflict_file
-                            conflict = (
-                                conflict + "                " + conflict_file + "\n"
-                            )
-            logging.error(conflict)
 
 
 def create_ble_lib_readme(dest_lib_path, version, commit):
@@ -165,7 +128,7 @@ def update(src_repo_path, dest_lib_path, version, commit):
     """Update ble library"""
     logging.info(" ... Updating ble library ...")
     copy_hci_files(src_repo_path, dest_lib_path)
-    apply_ble_patches(dest_lib_path)
+    common_utils.apply_patch(str(dest_lib_path / "ble_zephyr.patch"), dest_lib_path)
     create_ble_lib_readme(dest_lib_path, version, commit)
     create_ble_lib_cmakelist(dest_lib_path)
 
