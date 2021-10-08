@@ -6,6 +6,8 @@ This script updates ble library
 """
 
 import sys
+import os
+import shutil
 from pathlib import Path
 import logging
 from jinja2 import Environment, FileSystemLoader
@@ -42,26 +44,16 @@ file_list = [
 def copy_hci_files(src_repo_path, dest_lib_path):
     """Copy sources files from Cube Firmware to zephyr"""
     # remove existing *.c and *.h files
-    subprocess.check_call(
-        ("rm", "*.c", "*.h"),
-        shell=False,
-        cwd=Path(dest_lib_path / "stm32wb" / "hci"),
-    )
+    for item in os.listdir(Path(dest_lib_path / "stm32wb" / "hci")):
+        if item.endswith(".c") or item.endswith(".h"):
+            os.remove(Path(dest_lib_path / "stm32wb" / "hci" / item))
 
     for file in file_list:
         file_path = Path(src_repo_path / file)
         file_name = file_path.name
         if file_path.exists:
             # copy each file to destination
-            subprocess.check_call(
-                (
-                    "cp",
-                    file_path,
-                    Path(dest_lib_path / "stm32wb" / "hci" / file_name),
-                ),
-                shell=False,
-                cwd=dest_lib_path,
-            )
+            shutil.copy(file_path, Path(dest_lib_path / "stm32wb" / "hci" / file_name))
         else:
             logging.error(f"File : {file_path} not found")
             logging.error("Abort")
