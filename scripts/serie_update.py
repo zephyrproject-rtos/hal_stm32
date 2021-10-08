@@ -40,7 +40,6 @@ def remove_readonly(func, path, _):
     func(path)
 
 
-
 def version_tuple(version):
     """Remove 'v' in front of version and convert it to tuple,
     so that versions can be compared
@@ -269,14 +268,8 @@ class Stm32SerieUpdate:
             / self.stm32_seriexx_upper
             / "Include"
         )
-        self.os_cmd(
-            (
-                "cp",
-                "-r",
-                str(stm32cube_cmsis_include_path),
-                str(temp_cmsis_soc_path),
-            )
-        )
+        shutil.rmtree(temp_cmsis_soc_path, onerror=remove_readonly)
+        shutil.copytree(stm32cube_cmsis_include_path, temp_cmsis_soc_path)
 
         stm32cube_cmsis_templates_path = (
             self.stm32cube_serie_path
@@ -302,14 +295,9 @@ class Stm32SerieUpdate:
             / Path(self.stm32_seriexx_upper + "_HAL_Driver")
             / "Inc"
         )
-        self.os_cmd(
-            (
-                "cp",
-                "-r",
-                str(stm32cube_driver_inc),
-                str(temp_drivers_include_path),
-            )
-        )
+        if temp_drivers_include_path.exists():
+            shutil.rmtree(temp_drivers_include_path, onerror=remove_readonly)
+        shutil.copytree(stm32cube_driver_inc, temp_drivers_include_path)
 
         # except for _hal_conf_template.h which is renamed
         self.rename_conf_template(temp_drivers_include_path)
@@ -322,16 +310,8 @@ class Stm32SerieUpdate:
             / Path(self.stm32_seriexx_upper + "_HAL_Driver")
             / "Src"
         )
-        self.os_cmd(
-            (
-                "cp "
-                + "-r "
-                + str(stm32cube_drivers_src_path)
-                + "/*.* "
-                + str(temp_drivers_src_path)
-            ),
-            shell=True,
-        )
+        shutil.rmtree(temp_drivers_src_path, onerror=remove_readonly)
+        shutil.copytree(stm32cube_drivers_src_path, temp_drivers_src_path)
 
     def build_from_current_cube_version(self):
         """Build a commit in temporary dir with STM32Cube version
@@ -369,14 +349,7 @@ class Stm32SerieUpdate:
         shutil.rmtree(str(self.stm32cube_temp_serie), onerror=remove_readonly)
 
         # populate the new repo with this current zephyr module
-        self.os_cmd(
-            (
-                "cp",
-                "-rf",
-                str(self.zephyr_module_serie_path),
-                str(self.stm32cube_temp_serie),
-            )
-        )
+        shutil.copytree(self.zephyr_module_serie_path, self.stm32cube_temp_serie)
 
         # commit this current version module
         self.os_cmd(("git", "add", "*"), cwd=self.stm32cube_temp)
@@ -473,8 +446,9 @@ class Stm32SerieUpdate:
             # build new CMakeLists.txt
             with cmakelists_path.open("r") as cmakelists_old:
                 # this line is the copyright line
-                if "STMicroelectronics" not in first_line:
-                    first_line = cmakelists_old.readline()
+                first_line = cmakelists_old.readline()
+                if "STMicroelectronics" in first_line:
+                    first_line = ""
             cmakelists_path.unlink()
         else:
             first_line = ""
@@ -613,14 +587,7 @@ class Stm32SerieUpdate:
             str(self.zephyr_module_serie_path),
             onerror=remove_readonly,
         )
-        self.os_cmd(
-            (
-                "cp",
-                "-r",
-                str(self.stm32cube_temp_serie),
-                str(self.zephyr_module_serie_path),
-            )
-        )
+        shutil.copytree(self.stm32cube_temp_serie, self.zephyr_module_serie_path)
 
         # apply dos2unix to whole zephyr hal serie sub directory
         for child in self.zephyr_module_serie_path.glob("**/*"):
@@ -671,15 +638,12 @@ class Stm32SerieUpdate:
                 logging.error("%s", conflict)
 
                 # save patch file so that it can be analysed in case of error
-                self.os_cmd(
-                    (
-                        "cp",
-                        "-r",
-                        str(self.stm32cube_temp / "module.patch"),
-                        self.zephyr_hal_stm32_path
-                        / Path("module_" + self.stm32_serie + ".patch"),
-                    )
+                patch_path = self.zephyr_hal_stm32_path / Path(
+                    "module_" + self.stm32_serie + ".patch"
                 )
+                if patch_path.exists():
+                    os.remove(patch_path)
+                shutil.copy(str(self.stm32cube_temp / "module.patch"), patch_path)
 
         # Update README and CMakeList, copy release note
         self.update_readme(self.version_update, self.update_commit)
