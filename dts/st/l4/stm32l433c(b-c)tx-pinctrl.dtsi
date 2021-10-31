@@ -160,6 +160,104 @@
 				drive-open-drain;
 			};
 
+			/* LCD */
+
+			lcd_seg0_pa1: lcd_seg0_pa1 {
+				pinmux = <STM32_PINMUX('A', 1, AF11)>;
+			};
+
+			lcd_seg1_pa2: lcd_seg1_pa2 {
+				pinmux = <STM32_PINMUX('A', 2, AF11)>;
+			};
+
+			lcd_seg2_pa3: lcd_seg2_pa3 {
+				pinmux = <STM32_PINMUX('A', 3, AF11)>;
+			};
+
+			lcd_seg3_pa6: lcd_seg3_pa6 {
+				pinmux = <STM32_PINMUX('A', 6, AF11)>;
+			};
+
+			lcd_seg4_pa7: lcd_seg4_pa7 {
+				pinmux = <STM32_PINMUX('A', 7, AF11)>;
+			};
+
+			lcd_com0_pa8: lcd_com0_pa8 {
+				pinmux = <STM32_PINMUX('A', 8, AF11)>;
+			};
+
+			lcd_com1_pa9: lcd_com1_pa9 {
+				pinmux = <STM32_PINMUX('A', 9, AF11)>;
+			};
+
+			lcd_com2_pa10: lcd_com2_pa10 {
+				pinmux = <STM32_PINMUX('A', 10, AF11)>;
+			};
+
+			lcd_seg17_pa15: lcd_seg17_pa15 {
+				pinmux = <STM32_PINMUX('A', 15, AF11)>;
+			};
+
+			lcd_seg5_pb0: lcd_seg5_pb0 {
+				pinmux = <STM32_PINMUX('B', 0, AF11)>;
+			};
+
+			lcd_seg6_pb1: lcd_seg6_pb1 {
+				pinmux = <STM32_PINMUX('B', 1, AF11)>;
+			};
+
+			lcd_vlcd_pb2: lcd_vlcd_pb2 {
+				pinmux = <STM32_PINMUX('B', 2, AF11)>;
+			};
+
+			lcd_seg7_pb3: lcd_seg7_pb3 {
+				pinmux = <STM32_PINMUX('B', 3, AF11)>;
+			};
+
+			lcd_seg8_pb4: lcd_seg8_pb4 {
+				pinmux = <STM32_PINMUX('B', 4, AF11)>;
+			};
+
+			lcd_seg9_pb5: lcd_seg9_pb5 {
+				pinmux = <STM32_PINMUX('B', 5, AF11)>;
+			};
+
+			lcd_seg21_pb7: lcd_seg21_pb7 {
+				pinmux = <STM32_PINMUX('B', 7, AF11)>;
+			};
+
+			lcd_seg16_pb8: lcd_seg16_pb8 {
+				pinmux = <STM32_PINMUX('B', 8, AF11)>;
+			};
+
+			lcd_com3_pb9: lcd_com3_pb9 {
+				pinmux = <STM32_PINMUX('B', 9, AF11)>;
+			};
+
+			lcd_seg10_pb10: lcd_seg10_pb10 {
+				pinmux = <STM32_PINMUX('B', 10, AF11)>;
+			};
+
+			lcd_seg11_pb11: lcd_seg11_pb11 {
+				pinmux = <STM32_PINMUX('B', 11, AF11)>;
+			};
+
+			lcd_seg12_pb12: lcd_seg12_pb12 {
+				pinmux = <STM32_PINMUX('B', 12, AF11)>;
+			};
+
+			lcd_seg13_pb13: lcd_seg13_pb13 {
+				pinmux = <STM32_PINMUX('B', 13, AF11)>;
+			};
+
+			lcd_seg14_pb14: lcd_seg14_pb14 {
+				pinmux = <STM32_PINMUX('B', 14, AF11)>;
+			};
+
+			lcd_seg15_pb15: lcd_seg15_pb15 {
+				pinmux = <STM32_PINMUX('B', 15, AF11)>;
+			};
+
 			/* QUADSPI */
 
 			quadspi_bk1_ncs_pa2: quadspi_bk1_ncs_pa2 {
