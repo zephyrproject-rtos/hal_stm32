@@ -234,3 +234,6 @@
 
 - name: USB
   match: "^USB_(?:DM)?(?:DP)?(?:NOE)?$"
+
+- name: LCD
+  match: "^LCD\\d*_(?:SEG|COM|VLCD)?\\d*$"
