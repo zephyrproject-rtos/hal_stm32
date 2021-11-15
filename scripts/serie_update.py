@@ -188,8 +188,15 @@ class Stm32SerieUpdate:
 
     def clone_cube_repo(self):
         """Clone or fetch a stm32 serie repo"""
+        repo_name = STM32_CUBE_REPO_BASE + self.serie + ".git"
+        logging.info(
+            "%s",
+            "Cloning/fetching repo "
+            + repo_name
+            + " in "
+            + str(self.stm32cube_serie_path),
+        )
         if self.stm32cube_serie_path.exists():
-            logging.info("%s", "fetching repo " + str(self.stm32cube_serie_path))
             # if already exists, then just clean and fetch
             self.os_cmd(("git", "clean", "-fdx"), cwd=self.stm32cube_serie_path)
             self.os_cmd(("git", "fetch"), cwd=self.stm32cube_serie_path)
@@ -200,7 +207,7 @@ class Stm32SerieUpdate:
             )
         else:
             self.os_cmd(
-                ("git", "clone", STM32_CUBE_REPO_BASE + self.serie + ".git"),
+                ("git", "clone", repo_name),
                 cwd=self.stm32cube_repo_path,
             )
             branch = self.major_branch()
@@ -724,6 +731,10 @@ class Stm32SerieUpdate:
             )
             self.clean_files()
             return
+        logging.info(
+            f"*** Updating zephyr {self.stm32_serie} "
+            + f"from version {self.current_version} to {self.version_update}"
+        )
 
         # 4) build the module from this previous version
         self.build_from_current_cube_version()
