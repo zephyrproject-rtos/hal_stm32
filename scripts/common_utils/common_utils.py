@@ -25,7 +25,9 @@ def apply_patch(patch_file, dest_path):
 
             # Print list of conflicting file
             conflict = "Potential merge conflict:\n"
-            with open(str(log_path), "r") as f:
+
+            with open(str(log_path), "r", encoding="utf8", errors="ignore") as f:
+                # ignore lines with non UTF-8 characters
                 previous_conflict_file = ""
                 for line in f:
                     if line.startswith("error: patch failed:"):
