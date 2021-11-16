@@ -349,6 +349,11 @@ class Stm32SerieUpdate:
             ("git", "commit", "-am", '"module' + self.current_version + '"'),
             cwd=self.stm32cube_temp,
         )
+        # Remove trailing whitespaces
+        self.os_cmd(
+            ("git", "rebase", "--whitespace=fix", "HEAD~1"),
+            cwd=self.stm32cube_temp,
+        )
 
     def build_patch_from_current_zephyr_version(self):
         """Build patch between zephyr current hal version and
@@ -713,6 +718,10 @@ class Stm32SerieUpdate:
 
         # 2) prepare a repo where to store module versions
         self.os_cmd(("git", "init"), cwd=self.stm32cube_temp)
+        self.os_cmd(
+            ("git", "commit", "--allow-empty", "-m", "'Trigger notification'"),
+            cwd=self.stm32cube_temp
+        )
 
         # 3) get the version of cube which is in the zephyr module
         self.current_version = self.get_zephyr_current_version()
