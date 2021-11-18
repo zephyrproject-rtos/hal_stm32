@@ -176,23 +176,19 @@ def format_mode_f1(mode):
 
 
 def format_remap(remap):
-    """Format remap number for DT.
+    """Format remap value for DT.
 
     Args:
-        remap: Remap number (0..3).
+        remap: Remap definition.
 
     Returns:
         DT remap definition.
     """
 
-    if remap is None or remap == 0:
+    if remap == 0:
         return "NO_REMAP"
-    elif remap == 1:
-        return "REMAP_1"
-    elif remap == 2:
-        return "REMAP_2"
-    elif remap == 3:
-        return "REMAP_FULL"
+    elif remap is not None:
+        return remap
 
     raise ValueError(f"Unsupported remap: {remap}")
 
@@ -276,10 +272,9 @@ def get_gpio_ip_afs(data_path):
                             )
                             continue
 
-                        remap_num = int(m.group(1))
                         if signal_name not in pin_entries:
                             pin_entries[signal_name] = list()
-                        pin_entries[signal_name].append(remap_num)
+                        pin_entries[signal_name].append(name)
                 else:
                     param = signal.find(NS + "SpecificParameter")
                     if param is None:
