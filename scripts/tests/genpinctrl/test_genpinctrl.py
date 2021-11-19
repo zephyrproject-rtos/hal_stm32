@@ -144,14 +144,11 @@ def test_format_mode_f1():
 def test_format_remap():
     """Test that format_remap works."""
 
-    assert format_remap(None) == "NO_REMAP"
+    assert format_remap("UART1_REMAP1") == "UART1_REMAP1"
     assert format_remap(0) == "NO_REMAP"
-    assert format_remap(1) == "REMAP_1"
-    assert format_remap(2) == "REMAP_2"
-    assert format_remap(3) == "REMAP_FULL"
 
     with pytest.raises(ValueError):
-        format_remap(5)
+        format_remap(None)
 
 
 def test_get_gpio_ip_afs(pindata):
@@ -169,8 +166,11 @@ def test_get_gpio_ip_afs(pindata):
         },
         "STM32F1TESTIP": {
             "PA0": {
-                "UART1_TX": [0, 1, 2, 3],
-                "UART1_RX": [1],
+                "UART1_TX": ["UART1_REMAP0",
+                             "UART1_REMAP1",
+                             "UART1_REMAP2",
+                             "UART1_REMAP3"],
+                "UART1_RX": ["UART1_REMAP1"],
             }
         },
     }
@@ -206,11 +206,11 @@ def test_get_mcu_signals(pindata):
                         "port": "a",
                         "pin": 0,
                         "signals": [
-                            {"name": "UART1_TX", "af": 0},
-                            {"name": "UART1_TX", "af": 1},
-                            {"name": "UART1_TX", "af": 2},
-                            {"name": "UART1_TX", "af": 3},
-                            {"name": "UART1_RX", "af": 1},
+                            {"name": "UART1_TX", "af": "UART1_REMAP0"},
+                            {"name": "UART1_TX", "af": "UART1_REMAP1"},
+                            {"name": "UART1_TX", "af": "UART1_REMAP2"},
+                            {"name": "UART1_TX", "af": "UART1_REMAP3"},
+                            {"name": "UART1_RX", "af": "UART1_REMAP1"},
                             {"name": "ADC1_IN0", "af": 0},
                             {"name": "I2C2_SCL", "af": 0},
                         ],
