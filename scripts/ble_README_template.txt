@@ -38,7 +38,7 @@ License Link:
    opensource.org/licenses/BSD-3-Clause
 
 Patch List:
-
+--> please check that the following list
         * Move some files license from ST SLA0044 to BSD-3 Clause
             Following files are distributed under ST License SLA0044.
             For Zephyr they are made available under BSD-3 Clause.
@@ -48,6 +48,7 @@ Patch List:
             - app_conf.h
             - stm32_wpan_common.h
             - ble_bufsize.h
+            - tl_dbg_conf.h
 
         *  (Z-WB-1) Remove dependency to hw_conf.h
             This file is not actually needed. Remove inclusion so we don't need

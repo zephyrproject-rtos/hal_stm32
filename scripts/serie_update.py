@@ -7,7 +7,6 @@ to be used by update_stm32_package.py
 """
 
 import os
-import stat
 import shutil
 import subprocess
 import re
@@ -33,12 +32,6 @@ zephyr_file_created = [
     "README",
     "drivers/include/stm32_assert.h",
 ]
-
-
-def remove_readonly(func, path, _):
-    """Remove read only protection"""
-    os.chmod(path, stat.S_IWRITE)
-    func(path)
 
 
 def version_tuple(version):
@@ -110,7 +103,9 @@ class Stm32SerieUpdate:
 
         self.stm32cube_temp = self.stm32cube_repo_path / "temp_stm32xx_update"
         if self.stm32cube_temp.exists():
-            shutil.rmtree(str(self.stm32cube_temp), onerror=remove_readonly)
+            shutil.rmtree(
+                str(self.stm32cube_temp), onerror=common_utils.remove_readonly
+            )
         self.stm32cube_temp.mkdir()
 
         # subdir specific to a stm32 serie
@@ -123,7 +118,7 @@ class Stm32SerieUpdate:
         self.stm32cube_temp_serie = (
             self.stm32cube_temp / "stm32cube" / self.stm32_seriexx
         )
-        shutil.rmtree(str(self.stm32cube_temp), onerror=remove_readonly)
+        shutil.rmtree(str(self.stm32cube_temp), onerror=common_utils.remove_readonly)
         self.stm32cube_temp_serie.mkdir(parents=True)
 
         self.readme_file_path = self.zephyr_module_serie_path / "README"
@@ -277,7 +272,7 @@ class Stm32SerieUpdate:
             / self.stm32_seriexx_upper
             / "Include"
         )
-        shutil.rmtree(temp_cmsis_soc_path, onerror=remove_readonly)
+        shutil.rmtree(temp_cmsis_soc_path, onerror=common_utils.remove_readonly)
         shutil.copytree(stm32cube_cmsis_include_path, temp_cmsis_soc_path)
 
         stm32cube_cmsis_templates_path = (
@@ -305,7 +300,9 @@ class Stm32SerieUpdate:
             / "Inc"
         )
         if temp_drivers_include_path.exists():
-            shutil.rmtree(temp_drivers_include_path, onerror=remove_readonly)
+            shutil.rmtree(
+                temp_drivers_include_path, onerror=common_utils.remove_readonly
+            )
         shutil.copytree(stm32cube_driver_inc, temp_drivers_include_path)
 
         # except for _hal_conf_template.h which is renamed
@@ -319,7 +316,7 @@ class Stm32SerieUpdate:
             / Path(self.stm32_seriexx_upper + "_HAL_Driver")
             / "Src"
         )
-        shutil.rmtree(temp_drivers_src_path, onerror=remove_readonly)
+        shutil.rmtree(temp_drivers_src_path, onerror=common_utils.remove_readonly)
         shutil.copytree(stm32cube_drivers_src_path, temp_drivers_src_path)
 
     def build_from_current_cube_version(self):
@@ -360,7 +357,9 @@ class Stm32SerieUpdate:
         corresponding official STM32Cube version
         """
         # clean-up the module
-        shutil.rmtree(str(self.stm32cube_temp_serie), onerror=remove_readonly)
+        shutil.rmtree(
+            str(self.stm32cube_temp_serie), onerror=common_utils.remove_readonly
+        )
 
         # populate the new repo with this current zephyr module
         shutil.copytree(self.zephyr_module_serie_path, self.stm32cube_temp_serie)
@@ -386,7 +385,7 @@ class Stm32SerieUpdate:
         # For unclear reason, using tuple ("git", "diff", ...) is failing on Linux
         # especially for this command. Keep a single string.
         self.os_cmd(
-            ("git diff --ignore-space-at-eol HEAD~1 >> " + self.module_patch),
+            ("git diff --ignore-space-at-eol HEAD~1 --output=" + self.module_patch),
             shell=True,
             cwd=self.stm32cube_temp,
         )
@@ -581,7 +580,9 @@ class Stm32SerieUpdate:
         ).decode("utf-8")
 
         # clear previous version content before populating with latest version
-        shutil.rmtree(str(self.stm32cube_temp_serie), onerror=remove_readonly)
+        shutil.rmtree(
+            str(self.stm32cube_temp_serie), onerror=common_utils.remove_readonly
+        )
 
         # populate temporary directory with latest version
         self.extract_source()
@@ -602,7 +603,7 @@ class Stm32SerieUpdate:
         # Copy from stm32cube_temp
         shutil.rmtree(
             str(self.zephyr_module_serie_path),
-            onerror=remove_readonly,
+            onerror=common_utils.remove_readonly,
         )
         shutil.copytree(self.stm32cube_temp_serie, self.zephyr_module_serie_path)
 
@@ -646,20 +647,26 @@ class Stm32SerieUpdate:
             "README file : --> please check that the Patch list is still valid",
         )
 
-    def merge_commit(self):
+    def merge_commit(self, lib=False):
         """Apply zephyr stm32 patch to latest stm32Cube version"""
         # Merge & commit if needed
         if self.force:
-            logging.info("%s", "Force commit module ")
             # to clean the .rej files, uncomment line: reject()
             # reject()
+            if lib:
+                logging.info("%s", "commit BLE library update")
+                commit_msg = "lib/stm32: "
+            else:
+                logging.info("%s", "commit HAL/LL Cube update ")
+                commit_msg = "stm32cube: "
 
             commit_file_path = self.zephyr_module_serie_path / "commit.msg"
             with open(commit_file_path, "w") as commit:
                 commit.write(
-                    "stm32cube: update "
+                    commit_msg
+                    + "update "
                     + self.stm32_serie
-                    + " to version "
+                    + " to cube version "
                     + self.version_update.upper()
                     + "\n"
                 )
@@ -699,12 +706,14 @@ class Stm32SerieUpdate:
         """Clean repo file if required"""
         # Remove temporary files unconditionally
         os.chdir(os.getenv("HOME"))
-        shutil.rmtree(str(self.stm32cube_temp), onerror=remove_readonly)
+        shutil.rmtree(str(self.stm32cube_temp), onerror=common_utils.remove_readonly)
 
         # remove STM32Cube repo only if required
         if not self.noclean:
             self.cleanup_stm32cube_repo()
-            shutil.rmtree(str(self.stm32cube_repo_path), onerror=remove_readonly)
+            shutil.rmtree(
+                str(self.stm32cube_repo_path), onerror=common_utils.remove_readonly
+            )
         else:
             self.os_cmd(
                 ("git", "reset", "--hard", "HEAD"),
@@ -720,7 +729,7 @@ class Stm32SerieUpdate:
         self.os_cmd(("git", "init"), cwd=self.stm32cube_temp)
         self.os_cmd(
             ("git", "commit", "--allow-empty", "-m", "'Trigger notification'"),
-            cwd=self.stm32cube_temp
+            cwd=self.stm32cube_temp,
         )
 
         # 3) get the version of cube which is in the zephyr module
@@ -756,18 +765,19 @@ class Stm32SerieUpdate:
 
         # 7) apply zephyr patch : in the zephyr module repo
         self.apply_zephyr_patch()
+        self.merge_commit()
 
-        # 7.1) In case of stm32wb, update ble library
+        # 8) In case of stm32wb, update ble library
         if self.stm32_serie == "stm32wb":
             ble_library.update(
                 self.stm32cube_serie_path,
                 Path(self.zephyr_hal_stm32_path / "lib"),
+                self.stm32cube_temp,
+                self.current_version,
                 self.version_update,
                 self.update_commit,
             )
-
-        # 8) merge and commit if needed
-        self.merge_commit()
+            self.merge_commit(lib=True)
 
         # 9) clean
         self.clean_files()
