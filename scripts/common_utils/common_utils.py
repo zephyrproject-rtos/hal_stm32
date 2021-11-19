@@ -1,4 +1,6 @@
 import subprocess
+import os
+import stat
 from pathlib import Path
 import logging
 
@@ -36,3 +38,9 @@ def apply_patch(patch_file, dest_path):
                             previous_conflict_file = conflict_file
                             conflict = f"{conflict}               {conflict_file}\n"
             logging.error(conflict)
+
+
+def remove_readonly(func, path, _):
+    """Remove read only protection"""
+    os.chmod(path, stat.S_IWRITE)
+    func(path)
