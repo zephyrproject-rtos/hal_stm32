@@ -3,6 +3,17 @@
   * @file    stm32mp1xx_ll_cortex.h
   * @author  MCD Application Team
   * @brief   Header file of CORTEX LL module.
+  ******************************************************************************
+  * @attention
+  *
+  * Copyright (c) 2019 STMicroelectronics.
+  * All rights reserved.
+  *
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
+  *
+  ******************************************************************************
   @verbatim
   ==============================================================================
                      ##### How to use this driver #####
@@ -16,8 +27,6 @@
       (+) API to access to MCU info (CPUID register)
 
   @endverbatim
-  ******************************************************************************
-$LICENSE$
   ******************************************************************************
   */
 
@@ -307,5 +316,3 @@ __STATIC_INLINE uint32_t LL_CPUID_GetRevision(void)
 #endif
 
 #endif /* __STM32MP1xx_LL_CORTEX_H */
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

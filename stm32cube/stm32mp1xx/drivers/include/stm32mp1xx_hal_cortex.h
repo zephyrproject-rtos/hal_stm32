@@ -6,13 +6,12 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
-  * All rights reserved.</center></h2>
+  * Copyright (c) 2019 STMicroelectronics.
+  * All rights reserved.
   *
-  * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
-  * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/BSD-3-Clause
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
   *
   ******************************************************************************
   */
@@ -22,7 +21,7 @@
 #define __STM32MP1xx_HAL_CORTEX_H
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
@@ -68,7 +67,7 @@ typedef struct
                                                      This parameter can be a value of @ref CORTEX_MPU_Access_Cacheable              */
   uint8_t                IsBufferable;          /*!< Specifies the bufferable status of the protected region.
                                                      This parameter can be a value of @ref CORTEX_MPU_Access_Bufferable             */
-}MPU_Region_InitTypeDef;
+} MPU_Region_InitTypeDef;
 /**
   * @}
   */
@@ -266,7 +265,7 @@ uint32_t HAL_SYSTICK_Config(uint32_t TicksNumb);
 void HAL_MPU_ConfigRegion(MPU_Region_InitTypeDef *MPU_Init);
 #endif /* __MPU_PRESENT */
 uint32_t HAL_NVIC_GetPriorityGrouping(void);
-void HAL_NVIC_GetPriority(IRQn_Type IRQn, uint32_t PriorityGroup, uint32_t* pPreemptPriority, uint32_t* pSubPriority);
+void HAL_NVIC_GetPriority(IRQn_Type IRQn, uint32_t PriorityGroup, uint32_t *pPreemptPriority, uint32_t *pSubPriority);
 uint32_t HAL_NVIC_GetPendingIRQ(IRQn_Type IRQn);
 void HAL_NVIC_SetPendingIRQ(IRQn_Type IRQn);
 void HAL_NVIC_ClearPendingIRQ(IRQn_Type IRQn);
@@ -436,6 +435,3 @@ __STATIC_INLINE void HAL_MPU_Enable(uint32_t MPU_Control)
 #endif
 
 #endif /* __STM32MP1xx_HAL_CORTEX_H */
-
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
