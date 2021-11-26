@@ -49,7 +49,6 @@ class Stm32SerieUpdate:
         self,
         stm32_serie,
         stm32cube_repo_path,
-        force,
         noclean,
         version_update,
         debug,
@@ -59,7 +58,6 @@ class Stm32SerieUpdate:
         Args:
             stm32_serie: stm32 serie ex:stm32f3xx
             stm32cube_repo_path: directory path where to fetch github repo
-            force: boolean to force or not git commit after applying update
             noclean: boolean to clean or not github repo after update done
             version_update: string to force a specified version to be updated
             debug: boolean to set log debug level
@@ -82,7 +80,6 @@ class Stm32SerieUpdate:
         self.stm32_serie_upper = stm32_serie.upper()  # ex:STM32F3
         self.stm32_seriexx_upper = self.stm32_serie_upper + "xx"  # ex:STM32F3xx
         self.serie = self.stm32_serie_upper[5:]
-        self.force = force
         self.noclean = noclean
         self.version_update = version_update
         self.debug = debug
@@ -649,47 +646,43 @@ class Stm32SerieUpdate:
 
     def merge_commit(self, lib=False):
         """Apply zephyr stm32 patch to latest stm32Cube version"""
-        # Merge & commit if needed
-        if self.force:
-            # to clean the .rej files, uncomment line: reject()
-            # reject()
-            if lib:
-                logging.info("%s", "commit BLE library update")
-                commit_msg = "lib/stm32: "
-            else:
-                logging.info("%s", "commit HAL/LL Cube update ")
-                commit_msg = "stm32cube: "
+        # Merge & commit
+        # to clean the .rej files, uncomment line: reject()
+        # reject()
+        if lib:
+            logging.info("%s", "commit BLE library update")
+            commit_msg = "lib/stm32: "
+        else:
+            logging.info("%s", "commit HAL/LL Cube update ")
+            commit_msg = "stm32cube: "
 
-            commit_file_path = self.zephyr_module_serie_path / "commit.msg"
-            with open(commit_file_path, "w") as commit:
-                commit.write(
-                    commit_msg
-                    + "update "
-                    + self.stm32_serie
-                    + " to cube version "
-                    + self.version_update.upper()
-                    + "\n"
-                )
+        commit_file_path = self.zephyr_module_serie_path / "commit.msg"
+        with open(commit_file_path, "w") as commit:
+            commit.write(
+                commit_msg
+                + "update "
+                + self.stm32_serie
+                + " to cube version "
+                + self.version_update.upper()
+                + "\n"
+            )
 
-                commit.write("\n")
-                commit.write(
-                    "Update Cube version for "
-                    + self.stm32_seriexx_upper
-                    + " series"
-                    + "\n"
-                )
-                commit.write("on https://github.com/STMicroelectronics" + "\n")
-                commit.write(f"from version {self.current_version}\n")
-                commit.write(f"to version {self.version_update}\n")
-            self.os_cmd(
-                ("git", "commit", "-as", "-F", commit_file_path),
-                cwd=self.zephyr_module_serie_path,
+            commit.write("\n")
+            commit.write(
+                "Update Cube version for " + self.stm32_seriexx_upper + " series" + "\n"
             )
-            self.os_cmd(
-                ("git", "rebase", "--whitespace=fix", "HEAD~1"),
-                cwd=self.zephyr_module_serie_path,
-            )
-            Path(commit_file_path).unlink()
+            commit.write("on https://github.com/STMicroelectronics" + "\n")
+            commit.write(f"from version {self.current_version}\n")
+            commit.write(f"to version {self.version_update}\n")
+        self.os_cmd(
+            ("git", "commit", "-as", "-F", commit_file_path),
+            cwd=self.zephyr_module_serie_path,
+        )
+        self.os_cmd(
+            ("git", "rebase", "--whitespace=fix", "HEAD~1"),
+            cwd=self.zephyr_module_serie_path,
+        )
+        Path(commit_file_path).unlink()
 
     def reject(self):
         """Clean *.rej files"""
