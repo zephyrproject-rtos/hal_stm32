@@ -38,16 +38,6 @@ parser.add_argument(
     help="Do NOT clean the STM32Cube repo directory",
 )
 parser.add_argument(
-    "-f",
-    "--force",
-    action="store_true",
-    default=False,
-    help="Forces the merge except .rej files \n"
-    + "applicable only with -s option. "
-    + "Otrherwise merge is forced systematically "
-    + "for each serie",
-)
-parser.add_argument(
     "-r",
     "--repo",
     type=str,
@@ -92,7 +82,6 @@ def update_cubes():
             update_serie = serie_update.Stm32SerieUpdate(
                 stmyyxx.name[:-2],
                 repo_path,
-                force=True,
                 noclean=args.noclean,
                 debug=args.debug,
                 version_update="",
@@ -158,7 +147,6 @@ if args.stm32_serie:
     update = serie_update.Stm32SerieUpdate(
         args.stm32_serie,
         repo_path,
-        args.force,
         args.noclean,
         args.version,
         args.debug,
@@ -182,24 +170,23 @@ if res == "y":
     genllheaders.main(REPO_ROOT / "stm32cube", REPO_ROOT / "stm32cube" / "common_ll")
 
     # commit autogenerate generic LL HAL headers
-    if args.force:
-        commit_file_path = REPO_ROOT / "commit.msg"
-        with open(commit_file_path, "w") as commit:
-            commit.write("stm32cube: common_ll: Regeneration after cube updates\n")
-            commit.write("\n")
-            commit.write("Re - generate common_ll headers after Cube updates\n")
+    commit_file_path = REPO_ROOT / "commit.msg"
+    with open(commit_file_path, "w") as commit:
+        commit.write("stm32cube: common_ll: Regeneration after cube updates\n")
+        commit.write("\n")
+        commit.write("Re - generate common_ll headers after Cube updates\n")
 
-        subprocess.check_call(
-            ("git", "commit", "-as", "-F", commit_file_path),
-            cwd=REPO_ROOT,
-        )
+    subprocess.check_call(
+        ("git", "commit", "-as", "-F", commit_file_path),
+        cwd=REPO_ROOT,
+    )
 
-        subprocess.check_call(
-            ("git", "rebase", "--whitespace=fix", "HEAD~1"),
-            stdout=std_dest,
-            stderr=std_dest,
-            cwd=REPO_ROOT,
-        )
-        Path(commit_file_path).unlink()
+    subprocess.check_call(
+        ("git", "rebase", "--whitespace=fix", "HEAD~1"),
+        stdout=std_dest,
+        stderr=std_dest,
+        cwd=REPO_ROOT,
+    )
+    Path(commit_file_path).unlink()
 
     logging.info("%s", "LL HAL header update: Done")
