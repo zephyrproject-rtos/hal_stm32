@@ -1,4 +1,3 @@
-/* USER CODE BEGIN Header */
 /**
   ******************************************************************************
   * @file    hw_if.h
@@ -7,17 +6,15 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
-  * All rights reserved.</center></h2>
+  * Copyright (c) 2019-2021 STMicroelectronics.
+  * All rights reserved.
   *
-  * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
-  * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/BSD-3-Clause
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
   *
   ******************************************************************************
   */
-/* USER CODE END Header */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef HW_IF_H
@@ -147,7 +144,7 @@ extern "C" {
    * @param  pTimerId: Timer Id returned to the user to request operation (start, stop, delete)
    * @param  TimerMode: Mode of the virtual timer (Single shot or repeated)
    * @param  pTimerCallBack: Callback when the virtual timer expires
-   * @retval HW_TS_ReturnStatus_t: Return whether the creation is sucessfull or not
+   * @retval HW_TS_ReturnStatus_t: Return whether the creation is successful or not
    */
   HW_TS_ReturnStatus_t HW_TS_Create(uint32_t TimerProcessID, uint8_t *pTimerId, HW_TS_Mode_t TimerMode, HW_TS_pTimerCb_t pTimerCallBack);
 
@@ -246,5 +243,3 @@ extern "C" {
 #endif
 
 #endif /*HW_IF_H */
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
