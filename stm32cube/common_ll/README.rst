@@ -23,8 +23,8 @@ stm32l0xx       1.12.1
 stm32l1xx       1.10.3
 stm32l4xx       1.17.0
 stm32l5xx       1.4.0
-stm32mp1xx      1.4.0
-stm32u5xx       1.0.0
-stm32wbxx       1.12.0
+stm32mp1xx      1.5.0
+stm32u5xx       1.0.2
+stm32wbxx       1.13.0
 stm32wlxx       1.1.0
 =============== ===============
