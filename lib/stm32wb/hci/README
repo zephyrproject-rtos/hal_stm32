@@ -6,7 +6,7 @@ Origin:
    https://github.com/STMicroelectronics/STM32CubeWB
 
 Status:
-   version v1.12.0
+   version v1.13.0
 
 Purpose:
    This library is used on stm32wb series to enable HCI communication between
@@ -48,7 +48,7 @@ URL:
    https://github.com/STMicroelectronics/STM32CubeWB
 
 commit:
-   95f19205e36f1e26409b88e302537cbc8918f7e9
+   11042898d71249ed9c698355fd7b7812b741a161
 
 Maintained-by:
    External
@@ -61,15 +61,8 @@ License Link:
 
 Patch List:
 
-        * Move some files license from ST SLA0044 to BSD-3 Clause
-            Following files are distributed under ST License SLA0044.
-            For Zephyr they are made available under BSD-3 Clause.
-            - hw_if.h
-            - hw_ipcc.c
-            - app_common.h
-            - app_conf.h
-            - stm32_wpan_common.h
-            - ble_bufsize.h
+        * all files are now are distributed under BSD-3 Clause.
+            which terms are available at hal/stm32 directory
 
         *  (Z-WB-1) Remove dependency to hw_conf.h
             This file is not actually needed. Remove inclusion so we don't need
