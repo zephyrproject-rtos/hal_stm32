@@ -333,4 +333,3 @@ ErrorStatus LL_SetFlashLatency(uint32_t HCLK_Frequency);
 
 #endif /* __STM32U5xx_LL_UTILS_H */
 
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
