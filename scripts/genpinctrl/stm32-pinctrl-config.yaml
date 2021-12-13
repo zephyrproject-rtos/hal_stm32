@@ -170,7 +170,7 @@
   match: "^I2S\\d+_SD$"
 
 - name: QUADSPI
-  match: "^QUADSPI_(?:CLK|NCS|BK1_NCS|BK1_IO[0-3]|BK2_NCS|BK2_IO[0-3])$"
+  match: "^QUADSPI(\\d+)?_(?:CLK|NCS|BK1_NCS|BK1_IO[0-3]|BK2_NCS|BK2_IO[0-3])$"
   slew-rate: very-high-speed
 
 - name: SDMMC
