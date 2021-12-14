@@ -146,9 +146,7 @@ def test_format_remap():
 
     assert format_remap("UART1_REMAP1") == "UART1_REMAP1"
     assert format_remap(0) == "NO_REMAP"
-
-    with pytest.raises(ValueError):
-        format_remap(None)
+    assert format_remap(None) == "NO_REMAP"
 
 
 def test_get_gpio_ip_afs(pindata):
