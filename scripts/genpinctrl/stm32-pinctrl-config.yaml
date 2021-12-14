@@ -10,6 +10,8 @@
 #     STM32 xml database pin configuration names. The regular expression should
 #     be as precise as possible. Note that it needs to be escaped here in the
 #     configuration file.
+#     Note: Specific "ANALOG" value allows generation of analog pins
+#     configuration
 #
 #   - mode (optional): Mode setting (analog, alternate). Mode needs to
 #     be set according to the following rules:
@@ -33,6 +35,10 @@
 #
 
 ---
+- name: Analog
+  match: "ANALOG"
+  mode: analog
+
 - name: ADC_IN / ADC_INN / ADC_INP
   match: "^ADC(?:\\d+)?_IN[NP]?\\d+$"
 

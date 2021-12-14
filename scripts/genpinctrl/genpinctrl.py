@@ -185,12 +185,10 @@ def format_remap(remap):
         DT remap definition.
     """
 
-    if remap == 0:
+    if remap == 0 or remap is None:
         return "NO_REMAP"
-    elif remap is not None:
+    else:
         return remap
-
-    raise ValueError(f"Unsupported remap: {remap}")
 
 
 def get_gpio_ip_afs(data_path):
@@ -414,6 +412,8 @@ def get_mcu_signals(data_path, gpio_ip_afs):
             # process all pin signals
             for signal in pin.findall(NS + "Signal"):
                 if signal.get("Name") == "GPIO":
+                    if signal.get("IOModes") and "Analog" in signal.get("IOModes"):
+                        pin_signals.append({"name": "ANALOG", "af": None})
                     continue
 
                 signal_name = signal.get("Name")
