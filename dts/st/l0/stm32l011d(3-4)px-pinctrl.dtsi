@@ -28,6 +28,48 @@
 				pinmux = <STM32_PINMUX('A', 7, ANALOG)>;
 			};
 
+			/* Analog */
+
+			analog_pa0: analog_pa0 {
+				pinmux = <STM32_PINMUX('A', 0, ANALOG)>;
+			};
+
+			analog_pa1: analog_pa1 {
+				pinmux = <STM32_PINMUX('A', 1, ANALOG)>;
+			};
+
+			analog_pa4: analog_pa4 {
+				pinmux = <STM32_PINMUX('A', 4, ANALOG)>;
+			};
+
+			analog_pa7: analog_pa7 {
+				pinmux = <STM32_PINMUX('A', 7, ANALOG)>;
+			};
+
+			analog_pa9: analog_pa9 {
+				pinmux = <STM32_PINMUX('A', 9, ANALOG)>;
+			};
+
+			analog_pa10: analog_pa10 {
+				pinmux = <STM32_PINMUX('A', 10, ANALOG)>;
+			};
+
+			analog_pa13: analog_pa13 {
+				pinmux = <STM32_PINMUX('A', 13, ANALOG)>;
+			};
+
+			analog_pa14: analog_pa14 {
+				pinmux = <STM32_PINMUX('A', 14, ANALOG)>;
+			};
+
+			analog_pc14: analog_pc14 {
+				pinmux = <STM32_PINMUX('C', 14, ANALOG)>;
+			};
+
+			analog_pc15: analog_pc15 {
+				pinmux = <STM32_PINMUX('C', 15, ANALOG)>;
+			};
+
 			/* I2C_SCL */
 
 			i2c1_scl_pa4: i2c1_scl_pa4 {

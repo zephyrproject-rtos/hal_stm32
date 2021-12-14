@@ -76,6 +76,392 @@
 				pinmux = <STM32_PINMUX('C', 5, ANALOG)>;
 			};
 
+			/* Analog */
+
+			analog_pa0: analog_pa0 {
+				pinmux = <STM32_PINMUX('A', 0, ANALOG)>;
+			};
+
+			analog_pa1: analog_pa1 {
+				pinmux = <STM32_PINMUX('A', 1, ANALOG)>;
+			};
+
+			analog_pa2: analog_pa2 {
+				pinmux = <STM32_PINMUX('A', 2, ANALOG)>;
+			};
+
+			analog_pa3: analog_pa3 {
+				pinmux = <STM32_PINMUX('A', 3, ANALOG)>;
+			};
+
+			analog_pa4: analog_pa4 {
+				pinmux = <STM32_PINMUX('A', 4, ANALOG)>;
+			};
+
+			analog_pa5: analog_pa5 {
+				pinmux = <STM32_PINMUX('A', 5, ANALOG)>;
+			};
+
+			analog_pa6: analog_pa6 {
+				pinmux = <STM32_PINMUX('A', 6, ANALOG)>;
+			};
+
+			analog_pa7: analog_pa7 {
+				pinmux = <STM32_PINMUX('A', 7, ANALOG)>;
+			};
+
+			analog_pa8: analog_pa8 {
+				pinmux = <STM32_PINMUX('A', 8, ANALOG)>;
+			};
+
+			analog_pa9: analog_pa9 {
+				pinmux = <STM32_PINMUX('A', 9, ANALOG)>;
+			};
+
+			analog_pa9: analog_pa9 {
+				pinmux = <STM32_PINMUX('A', 9, ANALOG)>;
+			};
+
+			analog_pa10: analog_pa10 {
+				pinmux = <STM32_PINMUX('A', 10, ANALOG)>;
+			};
+
+			analog_pa10: analog_pa10 {
+				pinmux = <STM32_PINMUX('A', 10, ANALOG)>;
+			};
+
+			analog_pa11: analog_pa11 {
+				pinmux = <STM32_PINMUX('A', 11, ANALOG)>;
+			};
+
+			analog_pa12: analog_pa12 {
+				pinmux = <STM32_PINMUX('A', 12, ANALOG)>;
+			};
+
+			analog_pa13: analog_pa13 {
+				pinmux = <STM32_PINMUX('A', 13, ANALOG)>;
+			};
+
+			analog_pa14: analog_pa14 {
+				pinmux = <STM32_PINMUX('A', 14, ANALOG)>;
+			};
+
+			analog_pa15: analog_pa15 {
+				pinmux = <STM32_PINMUX('A', 15, ANALOG)>;
+			};
+
+			analog_pb0: analog_pb0 {
+				pinmux = <STM32_PINMUX('B', 0, ANALOG)>;
+			};
+
+			analog_pb1: analog_pb1 {
+				pinmux = <STM32_PINMUX('B', 1, ANALOG)>;
+			};
+
+			analog_pb2: analog_pb2 {
+				pinmux = <STM32_PINMUX('B', 2, ANALOG)>;
+			};
+
+			analog_pb3: analog_pb3 {
+				pinmux = <STM32_PINMUX('B', 3, ANALOG)>;
+			};
+
+			analog_pb4: analog_pb4 {
+				pinmux = <STM32_PINMUX('B', 4, ANALOG)>;
+			};
+
+			analog_pb5: analog_pb5 {
+				pinmux = <STM32_PINMUX('B', 5, ANALOG)>;
+			};
+
+			analog_pb6: analog_pb6 {
+				pinmux = <STM32_PINMUX('B', 6, ANALOG)>;
+			};
+
+			analog_pb7: analog_pb7 {
+				pinmux = <STM32_PINMUX('B', 7, ANALOG)>;
+			};
+
+			analog_pb8: analog_pb8 {
+				pinmux = <STM32_PINMUX('B', 8, ANALOG)>;
+			};
+
+			analog_pb9: analog_pb9 {
+				pinmux = <STM32_PINMUX('B', 9, ANALOG)>;
+			};
+
+			analog_pb10: analog_pb10 {
+				pinmux = <STM32_PINMUX('B', 10, ANALOG)>;
+			};
+
+			analog_pb11: analog_pb11 {
+				pinmux = <STM32_PINMUX('B', 11, ANALOG)>;
+			};
+
+			analog_pb12: analog_pb12 {
+				pinmux = <STM32_PINMUX('B', 12, ANALOG)>;
+			};
+
+			analog_pb13: analog_pb13 {
+				pinmux = <STM32_PINMUX('B', 13, ANALOG)>;
+			};
+
+			analog_pb14: analog_pb14 {
+				pinmux = <STM32_PINMUX('B', 14, ANALOG)>;
+			};
+
+			analog_pb15: analog_pb15 {
+				pinmux = <STM32_PINMUX('B', 15, ANALOG)>;
+			};
+
+			analog_pc0: analog_pc0 {
+				pinmux = <STM32_PINMUX('C', 0, ANALOG)>;
+			};
+
+			analog_pc1: analog_pc1 {
+				pinmux = <STM32_PINMUX('C', 1, ANALOG)>;
+			};
+
+			analog_pc2: analog_pc2 {
+				pinmux = <STM32_PINMUX('C', 2, ANALOG)>;
+			};
+
+			analog_pc3: analog_pc3 {
+				pinmux = <STM32_PINMUX('C', 3, ANALOG)>;
+			};
+
+			analog_pc4: analog_pc4 {
+				pinmux = <STM32_PINMUX('C', 4, ANALOG)>;
+			};
+
+			analog_pc5: analog_pc5 {
+				pinmux = <STM32_PINMUX('C', 5, ANALOG)>;
+			};
+
+			analog_pc6: analog_pc6 {
+				pinmux = <STM32_PINMUX('C', 6, ANALOG)>;
+			};
+
+			analog_pc7: analog_pc7 {
+				pinmux = <STM32_PINMUX('C', 7, ANALOG)>;
+			};
+
+			analog_pc8: analog_pc8 {
+				pinmux = <STM32_PINMUX('C', 8, ANALOG)>;
+			};
+
+			analog_pc9: analog_pc9 {
+				pinmux = <STM32_PINMUX('C', 9, ANALOG)>;
+			};
+
+			analog_pc10: analog_pc10 {
+				pinmux = <STM32_PINMUX('C', 10, ANALOG)>;
+			};
+
+			analog_pc11: analog_pc11 {
+				pinmux = <STM32_PINMUX('C', 11, ANALOG)>;
+			};
+
+			analog_pc12: analog_pc12 {
+				pinmux = <STM32_PINMUX('C', 12, ANALOG)>;
+			};
+
+			analog_pc13: analog_pc13 {
+				pinmux = <STM32_PINMUX('C', 13, ANALOG)>;
+			};
+
+			analog_pc14: analog_pc14 {
+				pinmux = <STM32_PINMUX('C', 14, ANALOG)>;
+			};
+
+			analog_pc15: analog_pc15 {
+				pinmux = <STM32_PINMUX('C', 15, ANALOG)>;
+			};
+
+			analog_pd0: analog_pd0 {
+				pinmux = <STM32_PINMUX('D', 0, ANALOG)>;
+			};
+
+			analog_pd1: analog_pd1 {
+				pinmux = <STM32_PINMUX('D', 1, ANALOG)>;
+			};
+
+			analog_pd2: analog_pd2 {
+				pinmux = <STM32_PINMUX('D', 2, ANALOG)>;
+			};
+
+			analog_pd3: analog_pd3 {
+				pinmux = <STM32_PINMUX('D', 3, ANALOG)>;
+			};
+
+			analog_pd4: analog_pd4 {
+				pinmux = <STM32_PINMUX('D', 4, ANALOG)>;
+			};
+
+			analog_pd5: analog_pd5 {
+				pinmux = <STM32_PINMUX('D', 5, ANALOG)>;
+			};
+
+			analog_pd6: analog_pd6 {
+				pinmux = <STM32_PINMUX('D', 6, ANALOG)>;
+			};
+
+			analog_pd7: analog_pd7 {
+				pinmux = <STM32_PINMUX('D', 7, ANALOG)>;
+			};
+
+			analog_pd8: analog_pd8 {
+				pinmux = <STM32_PINMUX('D', 8, ANALOG)>;
+			};
+
+			analog_pd9: analog_pd9 {
+				pinmux = <STM32_PINMUX('D', 9, ANALOG)>;
+			};
+
+			analog_pd10: analog_pd10 {
+				pinmux = <STM32_PINMUX('D', 10, ANALOG)>;
+			};
+
+			analog_pd11: analog_pd11 {
+				pinmux = <STM32_PINMUX('D', 11, ANALOG)>;
+			};
+
+			analog_pd12: analog_pd12 {
+				pinmux = <STM32_PINMUX('D', 12, ANALOG)>;
+			};
+
+			analog_pd13: analog_pd13 {
+				pinmux = <STM32_PINMUX('D', 13, ANALOG)>;
+			};
+
+			analog_pd14: analog_pd14 {
+				pinmux = <STM32_PINMUX('D', 14, ANALOG)>;
+			};
+
+			analog_pd15: analog_pd15 {
+				pinmux = <STM32_PINMUX('D', 15, ANALOG)>;
+			};
+
+			analog_pe0: analog_pe0 {
+				pinmux = <STM32_PINMUX('E', 0, ANALOG)>;
+			};
+
+			analog_pe1: analog_pe1 {
+				pinmux = <STM32_PINMUX('E', 1, ANALOG)>;
+			};
+
+			analog_pe2: analog_pe2 {
+				pinmux = <STM32_PINMUX('E', 2, ANALOG)>;
+			};
+
+			analog_pe3: analog_pe3 {
+				pinmux = <STM32_PINMUX('E', 3, ANALOG)>;
+			};
+
+			analog_pe4: analog_pe4 {
+				pinmux = <STM32_PINMUX('E', 4, ANALOG)>;
+			};
+
+			analog_pe5: analog_pe5 {
+				pinmux = <STM32_PINMUX('E', 5, ANALOG)>;
+			};
+
+			analog_pe6: analog_pe6 {
+				pinmux = <STM32_PINMUX('E', 6, ANALOG)>;
+			};
+
+			analog_pe7: analog_pe7 {
+				pinmux = <STM32_PINMUX('E', 7, ANALOG)>;
+			};
+
+			analog_pe8: analog_pe8 {
+				pinmux = <STM32_PINMUX('E', 8, ANALOG)>;
+			};
+
+			analog_pe9: analog_pe9 {
+				pinmux = <STM32_PINMUX('E', 9, ANALOG)>;
+			};
+
+			analog_pe10: analog_pe10 {
+				pinmux = <STM32_PINMUX('E', 10, ANALOG)>;
+			};
+
+			analog_pe11: analog_pe11 {
+				pinmux = <STM32_PINMUX('E', 11, ANALOG)>;
+			};
+
+			analog_pe12: analog_pe12 {
+				pinmux = <STM32_PINMUX('E', 12, ANALOG)>;
+			};
+
+			analog_pe13: analog_pe13 {
+				pinmux = <STM32_PINMUX('E', 13, ANALOG)>;
+			};
+
+			analog_pe14: analog_pe14 {
+				pinmux = <STM32_PINMUX('E', 14, ANALOG)>;
+			};
+
+			analog_pe15: analog_pe15 {
+				pinmux = <STM32_PINMUX('E', 15, ANALOG)>;
+			};
+
+			analog_pf0: analog_pf0 {
+				pinmux = <STM32_PINMUX('F', 0, ANALOG)>;
+			};
+
+			analog_pf1: analog_pf1 {
+				pinmux = <STM32_PINMUX('F', 1, ANALOG)>;
+			};
+
+			analog_pf2: analog_pf2 {
+				pinmux = <STM32_PINMUX('F', 2, ANALOG)>;
+			};
+
+			analog_pf3: analog_pf3 {
+				pinmux = <STM32_PINMUX('F', 3, ANALOG)>;
+			};
+
+			analog_pf4: analog_pf4 {
+				pinmux = <STM32_PINMUX('F', 4, ANALOG)>;
+			};
+
+			analog_pf5: analog_pf5 {
+				pinmux = <STM32_PINMUX('F', 5, ANALOG)>;
+			};
+
+			analog_pf6: analog_pf6 {
+				pinmux = <STM32_PINMUX('F', 6, ANALOG)>;
+			};
+
+			analog_pf7: analog_pf7 {
+				pinmux = <STM32_PINMUX('F', 7, ANALOG)>;
+			};
+
+			analog_pf8: analog_pf8 {
+				pinmux = <STM32_PINMUX('F', 8, ANALOG)>;
+			};
+
+			analog_pf9: analog_pf9 {
+				pinmux = <STM32_PINMUX('F', 9, ANALOG)>;
+			};
+
+			analog_pf10: analog_pf10 {
+				pinmux = <STM32_PINMUX('F', 10, ANALOG)>;
+			};
+
+			analog_pf11: analog_pf11 {
+				pinmux = <STM32_PINMUX('F', 11, ANALOG)>;
+			};
+
+			analog_pf12: analog_pf12 {
+				pinmux = <STM32_PINMUX('F', 12, ANALOG)>;
+			};
+
+			analog_pf13: analog_pf13 {
+				pinmux = <STM32_PINMUX('F', 13, ANALOG)>;
+			};
+
 			/* DAC_OUT */
 
 			dac1_out1_pa4: dac1_out1_pa4 {
