@@ -1459,6 +1459,12 @@
 				pinmux = <STM32_PINMUX('A', 15, AF6)>;
 			};
 
+			/* LTDC */
+
+			ltdc_r2_pa1: ltdc_r2_pa1 {
+				pinmux = <STM32_PINMUX('A', 1, AF14)>;
+			};
+
 			/* QUADSPI */
 
 			quadspi_bk1_io3_pa1: quadspi_bk1_io3_pa1 {
