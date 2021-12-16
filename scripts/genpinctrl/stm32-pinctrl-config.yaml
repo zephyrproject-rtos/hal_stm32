@@ -169,6 +169,9 @@
 - name: I2S_SD
   match: "^I2S\\d+_SD$"
 
+- name: LTDC
+  match: "^LTDC_(?:DE|CLK|HSYNC|VSYNC|R[0-7]|G[0-7]|B[0-7])$"
+
 - name: QUADSPI
   match: "^QUADSPI(\\d+)?_(?:CLK|NCS|BK1_NCS|BK1_IO[0-3]|BK2_NCS|BK2_IO[0-3])$"
   slew-rate: very-high-speed
