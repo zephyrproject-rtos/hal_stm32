@@ -225,6 +225,10 @@
   drive: open-drain
   bias: pull-up
 
+- name: UART_DE / USART_DE / LPUART_DE
+  match: "^(?:LP)?US?ART\\d+_DE$"
+  drive: push-pull
+
 - name: UART_TX / USART_TX / LPUART_TX
   match: "^(?:LP)?US?ART\\d+_TX$"
   bias: pull-up
