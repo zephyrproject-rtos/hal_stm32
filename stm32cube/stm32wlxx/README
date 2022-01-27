@@ -55,4 +55,9 @@ Patch List:
      stm32cube/stm32wlxx/drivers/src/stm32wlxx_ll_utils.c
     ST Internal reference: 111260
 
+   *Fix LL_SYSCFG_GetEXTISource which was not returning correct port
+    Impacted file:
+     stm32cube/stm32wlxx/drivers/src/stm32wlxx_ll_gpio.c
+    ST Internal reference: 121649
+
    See release_note.html from STM32Cube
