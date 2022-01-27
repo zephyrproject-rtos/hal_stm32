@@ -44,4 +44,8 @@ Patch List:
     -Added stm32cube/stm32u5xx/drivers/include/stm32_assert.h
     -Removed unused stm32cube/stm32u5xx/drivers/include/stm32_assert_template.h
 
+   *Fix utils_ll.c definitions
+    -Added stm32cube/stm32u5xx/drivers/include/stm32_assert.h
+    Internal reference: 116963
+
    See release_note.html from STM32Cube
