@@ -2878,6 +2878,78 @@
 				drive-open-drain;
 			};
 
+			/* UART_DE / USART_DE / LPUART_DE */
+
+			lpuart1_de_pa12: lpuart1_de_pa12 {
+				pinmux = <STM32_PINMUX('A', 12, AF3)>;
+				drive-push-pull;
+			};
+
+			usart1_de_pa12: usart1_de_pa12 {
+				pinmux = <STM32_PINMUX('A', 12, AF7)>;
+				drive-push-pull;
+			};
+
+			usart2_de_pa1: usart2_de_pa1 {
+				pinmux = <STM32_PINMUX('A', 1, AF7)>;
+				drive-push-pull;
+			};
+
+			usart2_de_pd4: usart2_de_pd4 {
+				pinmux = <STM32_PINMUX('D', 4, AF7)>;
+				drive-push-pull;
+			};
+
+			usart3_de_pb14: usart3_de_pb14 {
+				pinmux = <STM32_PINMUX('B', 14, AF7)>;
+				drive-push-pull;
+			};
+
+			usart3_de_pd12: usart3_de_pd12 {
+				pinmux = <STM32_PINMUX('D', 12, AF7)>;
+				drive-push-pull;
+			};
+
+			uart4_de_pa15: uart4_de_pa15 {
+				pinmux = <STM32_PINMUX('A', 15, AF8)>;
+				drive-push-pull;
+			};
+
+			uart4_de_pb14: uart4_de_pb14 {
+				pinmux = <STM32_PINMUX('B', 14, AF8)>;
+				drive-push-pull;
+			};
+
+			uart5_de_pc8: uart5_de_pc8 {
+				pinmux = <STM32_PINMUX('C', 8, AF8)>;
+				drive-push-pull;
+			};
+
+			usart6_de_pg8: usart6_de_pg8 {
+				pinmux = <STM32_PINMUX('G', 8, AF7)>;
+				drive-push-pull;
+			};
+
+			usart6_de_pg12: usart6_de_pg12 {
+				pinmux = <STM32_PINMUX('G', 12, AF7)>;
+				drive-push-pull;
+			};
+
+			uart7_de_pe9: uart7_de_pe9 {
+				pinmux = <STM32_PINMUX('E', 9, AF7)>;
+				drive-push-pull;
+			};
+
+			uart7_de_pf8: uart7_de_pf8 {
+				pinmux = <STM32_PINMUX('F', 8, AF7)>;
+				drive-push-pull;
+			};
+
+			uart8_de_pd15: uart8_de_pd15 {
+				pinmux = <STM32_PINMUX('D', 15, AF8)>;
+				drive-push-pull;
+			};
+
 			/* UART_RTS / USART_RTS / LPUART_RTS */
 
 			lpuart1_rts_pa12: lpuart1_rts_pa12 {

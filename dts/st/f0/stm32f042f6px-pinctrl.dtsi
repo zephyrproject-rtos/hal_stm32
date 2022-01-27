@@ -240,6 +240,13 @@
 				drive-open-drain;
 			};
 
+			/* UART_DE / USART_DE / LPUART_DE */
+
+			usart2_de_pa1: usart2_de_pa1 {
+				pinmux = <STM32_PINMUX('A', 1, AF1)>;
+				drive-push-pull;
+			};
+
 			/* UART_RTS / USART_RTS / LPUART_RTS */
 
 			usart2_rts_pa1: usart2_rts_pa1 {
