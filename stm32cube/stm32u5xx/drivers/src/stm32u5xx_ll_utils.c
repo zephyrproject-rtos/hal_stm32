@@ -66,9 +66,9 @@
 #define UTILS_SCALE2_LATENCY1_FREQ    (50000000U)      /*!< HCLK frequency to set FLASH latency 1 in power scale 2 */
 #define UTILS_SCALE2_LATENCY2_FREQ    (75000000U)      /*!< HCLK frequency to set FLASH latency 2 in power scale 2 */
 #define UTILS_SCALE2_LATENCY3_FREQ    (100000000U)     /*!< HCLK frequency to set FLASH latency 3 in power scale 2 */
-#define UTILS_SCALE3_LATENCY0_FREQ    (12.5000000)    /*!< HCLK frequency to set FLASH latency 0 in power scale 3 */
+#define UTILS_SCALE3_LATENCY0_FREQ    (12500000U)      /*!< HCLK frequency to set FLASH latency 0 in power scale 3 */
 #define UTILS_SCALE3_LATENCY1_FREQ    (25000000U)      /*!< HCLK frequency to set FLASH latency 1 in power scale 3 */
-#define UTILS_SCALE3_LATENCY2_FREQ    (37.5000000)    /*!< HCLK frequency to set FLASH latency 2 in power scale 3 */
+#define UTILS_SCALE3_LATENCY2_FREQ    (37500000U)      /*!< HCLK frequency to set FLASH latency 2 in power scale 3 */
 #define UTILS_SCALE3_LATENCY3_FREQ    (50000000U)      /*!< HCLK frequency to set FLASH latency 3 in power scale 3 */
 #define UTILS_SCALE4_LATENCY0_FREQ    (8000000U)       /*!< HCLK frequency to set FLASH latency 0 in power scale 4 */
 #define UTILS_SCALE4_LATENCY1_FREQ    (16000000U)      /*!< HCLK frequency to set FLASH latency 1 in power scale 4 */
