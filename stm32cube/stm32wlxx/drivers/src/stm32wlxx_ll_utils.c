@@ -386,7 +386,7 @@ ErrorStatus LL_PLL_ConfigSystemClock_MSI(LL_UTILS_PLLInitTypeDef *UTILS_PLLInitS
   if (UTILS_PLL_IsBusy() == SUCCESS)
   {
     /* Get the current MSI range */
-    if (LL_RCC_MSI_IsEnabledRangeSelect()  == 0U)
+    if (LL_RCC_MSI_IsEnabledRangeSelect()  != 0U)
     {
       msi_range =  LL_RCC_MSI_GetRange();
       switch (msi_range)
