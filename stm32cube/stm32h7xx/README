@@ -6,7 +6,7 @@ Origin:
    http://www.st.com/en/embedded-software/stm32cubeh7.html
 
 Status:
-   version v1.9.0
+   version v1.10.0
 
 Purpose:
    ST Microelectronics official MCU package for STM32H7 series.
@@ -23,7 +23,7 @@ URL:
    https://github.com/STMicroelectronics/STM32CubeH7
 
 Commit:
-   ccb11556044540590ca6e45056e6b65cdca2deb2
+   b340b13929e36a3427b8d94e8b1006022f82273f
 
 Maintained-by:
    External
@@ -44,8 +44,12 @@ Patch List:
     -Added stm32cube/stm32h7xx/drivers/include/stm32_assert.h
     -Removed unused stm32cube/stm32h7xx/drivers/include/stm32_assert_template.h
 
-   *Fix context descriptor leak 
+   *Fix context descriptor leak
     - Impacted file: stm32h7xx_hal_eth.c
     - Internal reference: Not available. Will be fixed as part of a new eth hal implementation
+
+   *Enable legacy ethernet driver using HAL_ETH_LEGACY_MODULE_ENABLED
+    This will have to be removed once Zephyr driver is magrated ot the new
+    Cube HAL ethernet API.
 
    See release_note.html from STM32Cube
