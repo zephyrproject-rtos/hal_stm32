@@ -60,4 +60,10 @@ Patch List:
      stm32cube/stm32wlxx/drivers/src/stm32wlxx_ll_gpio.c
     ST Internal reference: 121649
 
+   *Fix LL_PLL_ConfigSystemClock_MSI function which does not test correctly
+    the LL_RCC_MSI_IsEnabledRangeSelect when getting the MSI range
+    Impacted file: 
+     stm32cube/stm32wlxx/drivers/src/stm32wlxx_ll_util.c
+    ST Internal reference: 124139
+
    See release_note.html from STM32Cube
