@@ -52,4 +52,9 @@ Patch List:
     This will have to be removed once Zephyr driver is magrated ot the new
     Cube HAL ethernet API.
 
+   *New LL_SPI_ReceiveData16 implementation generates strict-aliasing Warning
+    Keep previous implementation for now.
+    Impacted file: drivers/include/stm32h7xx_ll_spi.h
+    Internal reference: 124484
+
    See release_note.html from STM32Cube
