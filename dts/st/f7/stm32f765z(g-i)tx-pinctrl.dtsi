@@ -2874,6 +2874,10 @@
 				pinmux = <STM32_PINMUX('A', 3, AF10)>;
 			};
 
+			usb_otg_hs_ulpi_ck_pa5: usb_otg_hs_ulpi_ck_pa5 {
+				pinmux = <STM32_PINMUX('A', 5, AF10)>;
+			};
+
 			usb_otg_hs_ulpi_d1_pb0: usb_otg_hs_ulpi_d1_pb0 {
 				pinmux = <STM32_PINMUX('B', 0, AF10)>;
 			};
