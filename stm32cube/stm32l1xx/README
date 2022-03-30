@@ -35,7 +35,6 @@ License Link:
    https://opensource.org/licenses/BSD-3-Clause
 
 Patch List:
---> please check that the following list is still valid:
 
     *Extend public SetFlashLatency API to all families
      The LL_SetFlashLatency public API is now defined for families
