@@ -58,5 +58,8 @@ Patch List:
      drivers/src/stm32f4xx_hal_qspi.c
     ST Bug tracker ID: 112664
 
+   *Enable legacy ethernet driver using HAL_ETH_LEGACY_MODULE_ENABLED
+    This will have to be removed once Zephyr driver is migrated ot the new
+    Cube HAL ethernet API.
 
    See release_note.html from STM32Cube
