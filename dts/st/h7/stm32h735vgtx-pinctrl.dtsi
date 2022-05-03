@@ -2058,12 +2058,6 @@
 				drive-open-drain;
 			};
 
-			uart8_cts_pd14: uart8_cts_pd14 {
-				pinmux = <STM32_PINMUX('D', 14, AF8)>;
-				bias-pull-up;
-				drive-open-drain;
-			};
-
 			uart9_cts_pd0: uart9_cts_pd0 {
 				pinmux = <STM32_PINMUX('D', 0, AF11)>;
 				bias-pull-up;
@@ -2114,11 +2108,6 @@
 
 			uart5_de_pc8: uart5_de_pc8 {
 				pinmux = <STM32_PINMUX('C', 8, AF8)>;
-				drive-push-pull;
-			};
-
-			uart8_de_pd15: uart8_de_pd15 {
-				pinmux = <STM32_PINMUX('D', 15, AF8)>;
 				drive-push-pull;
 			};
 
@@ -2179,12 +2168,6 @@
 
 			uart5_rts_pc8: uart5_rts_pc8 {
 				pinmux = <STM32_PINMUX('C', 8, AF8)>;
-				bias-pull-up;
-				drive-open-drain;
-			};
-
-			uart8_rts_pd15: uart8_rts_pd15 {
-				pinmux = <STM32_PINMUX('D', 15, AF8)>;
 				bias-pull-up;
 				drive-open-drain;
 			};

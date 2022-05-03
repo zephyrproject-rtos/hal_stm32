@@ -907,6 +907,11 @@
 				slew-rate = "very-high-speed";
 			};
 
+			eth_crs_pa0: eth_crs_pa0 {
+				pinmux = <STM32_PINMUX('A', 0, AF11)>;
+				slew-rate = "very-high-speed";
+			};
+
 			eth_crs_ph2: eth_crs_ph2 {
 				pinmux = <STM32_PINMUX('H', 2, AF11)>;
 				slew-rate = "very-high-speed";
@@ -952,6 +957,11 @@
 				slew-rate = "very-high-speed";
 			};
 
+			eth_ref_clk_pa1: eth_ref_clk_pa1 {
+				pinmux = <STM32_PINMUX('A', 1, AF11)>;
+				slew-rate = "very-high-speed";
+			};
+
 			/* ETH_RXD0 */
 
 			eth_rxd0_pc4: eth_rxd0_pc4 {
@@ -991,6 +1001,11 @@
 			};
 
 			/* ETH_RX_CLK */
+
+			eth_rx_clk_pa1: eth_rx_clk_pa1 {
+				pinmux = <STM32_PINMUX('A', 1, AF11)>;
+				slew-rate = "very-high-speed";
+			};
 
 			eth_rx_clk_pa1: eth_rx_clk_pa1 {
 				pinmux = <STM32_PINMUX('A', 1, AF11)>;
@@ -1047,6 +1062,11 @@
 				slew-rate = "very-high-speed";
 			};
 
+			eth_txd2_pc2: eth_txd2_pc2 {
+				pinmux = <STM32_PINMUX('C', 2, AF11)>;
+				slew-rate = "very-high-speed";
+			};
+
 			/* ETH_TXD3 */
 
 			eth_txd3_pb8: eth_txd3_pb8 {
@@ -1063,6 +1083,11 @@
 
 			eth_tx_clk_pc3: eth_tx_clk_pc3 {
 				pinmux = <STM32_PINMUX('C', 3, ANALOG)>;
+				slew-rate = "very-high-speed";
+			};
+
+			eth_tx_clk_pc3: eth_tx_clk_pc3 {
+				pinmux = <STM32_PINMUX('C', 3, AF11)>;
 				slew-rate = "very-high-speed";
 			};
 
@@ -1162,6 +1187,12 @@
 				slew-rate = "very-high-speed";
 			};
 
+			fmc_a19_pa0: fmc_a19_pa0 {
+				pinmux = <STM32_PINMUX('A', 0, AF12)>;
+				bias-pull-up;
+				slew-rate = "very-high-speed";
+			};
+
 			fmc_d8_pa4: fmc_d8_pa4 {
 				pinmux = <STM32_PINMUX('A', 4, AF12)>;
 				bias-pull-up;
@@ -1234,8 +1265,20 @@
 				slew-rate = "very-high-speed";
 			};
 
+			fmc_sdne0_pc2: fmc_sdne0_pc2 {
+				pinmux = <STM32_PINMUX('C', 2, AF12)>;
+				bias-pull-up;
+				slew-rate = "very-high-speed";
+			};
+
 			fmc_sdcke0_pc3: fmc_sdcke0_pc3 {
 				pinmux = <STM32_PINMUX('C', 3, ANALOG)>;
+				bias-pull-up;
+				slew-rate = "very-high-speed";
+			};
+
+			fmc_sdcke0_pc3: fmc_sdcke0_pc3 {
+				pinmux = <STM32_PINMUX('C', 3, AF12)>;
 				bias-pull-up;
 				slew-rate = "very-high-speed";
 			};
@@ -2024,6 +2067,10 @@
 				pinmux = <STM32_PINMUX('A', 0, AF5)>;
 			};
 
+			i2s6_ws_pa0: i2s6_ws_pa0 {
+				pinmux = <STM32_PINMUX('A', 0, AF5)>;
+			};
+
 			i2s6_ws_pa4: i2s6_ws_pa4 {
 				pinmux = <STM32_PINMUX('A', 4, AF8)>;
 			};
@@ -2037,6 +2084,10 @@
 			};
 
 			/* LTDC */
+
+			ltdc_r2_pa1: ltdc_r2_pa1 {
+				pinmux = <STM32_PINMUX('A', 1, AF14)>;
+			};
 
 			ltdc_r2_pa1: ltdc_r2_pa1 {
 				pinmux = <STM32_PINMUX('A', 1, AF14)>;
@@ -2456,6 +2507,12 @@
 				slew-rate = "very-high-speed";
 			};
 
+			sdmmc2_cmd_pa0: sdmmc2_cmd_pa0 {
+				pinmux = <STM32_PINMUX('A', 0, AF9)>;
+				bias-pull-up;
+				slew-rate = "very-high-speed";
+			};
+
 			sdmmc2_d2_pb3: sdmmc2_d2_pb3 {
 				pinmux = <STM32_PINMUX('B', 3, AF9)>;
 				bias-pull-up;
@@ -2591,6 +2648,11 @@
 				bias-pull-down;
 			};
 
+			spi2_miso_pc2: spi2_miso_pc2 {
+				pinmux = <STM32_PINMUX('C', 2, AF5)>;
+				bias-pull-down;
+			};
+
 			spi3_miso_pb4: spi3_miso_pb4 {
 				pinmux = <STM32_PINMUX('B', 4, AF6)>;
 				bias-pull-down;
@@ -2665,6 +2727,11 @@
 
 			spi2_mosi_pc3: spi2_mosi_pc3 {
 				pinmux = <STM32_PINMUX('C', 3, ANALOG)>;
+				bias-pull-down;
+			};
+
+			spi2_mosi_pc3: spi2_mosi_pc3 {
+				pinmux = <STM32_PINMUX('C', 3, AF5)>;
 				bias-pull-down;
 			};
 
@@ -2787,6 +2854,11 @@
 
 			spi5_nss_ph5: spi5_nss_ph5 {
 				pinmux = <STM32_PINMUX('H', 5, AF5)>;
+				bias-pull-up;
+			};
+
+			spi6_nss_pa0: spi6_nss_pa0 {
+				pinmux = <STM32_PINMUX('A', 0, AF5)>;
 				bias-pull-up;
 			};
 
@@ -2994,6 +3066,14 @@
 				pinmux = <STM32_PINMUX('A', 0, AF1)>;
 			};
 
+			tim2_ch1_pa0: tim2_ch1_pa0 {
+				pinmux = <STM32_PINMUX('A', 0, AF1)>;
+			};
+
+			tim2_ch2_pa1: tim2_ch2_pa1 {
+				pinmux = <STM32_PINMUX('A', 1, AF1)>;
+			};
+
 			tim2_ch2_pa1: tim2_ch2_pa1 {
 				pinmux = <STM32_PINMUX('A', 1, AF1)>;
 			};
@@ -3194,6 +3274,18 @@
 				pinmux = <STM32_PINMUX('A', 0, AF2)>;
 			};
 
+			tim5_ch1_pa0: tim5_ch1_pa0 {
+				pinmux = <STM32_PINMUX('A', 0, AF2)>;
+			};
+
+			tim15_ch1n_pa1: tim15_ch1n_pa1 {
+				pinmux = <STM32_PINMUX('A', 1, AF4)>;
+			};
+
+			tim5_ch2_pa1: tim5_ch2_pa1 {
+				pinmux = <STM32_PINMUX('A', 1, AF2)>;
+			};
+
 			tim15_ch1n_pa1: tim15_ch1n_pa1 {
 				pinmux = <STM32_PINMUX('A', 1, AF4)>;
 			};
@@ -3356,6 +3448,12 @@
 				drive-open-drain;
 			};
 
+			usart2_cts_pa0: usart2_cts_pa0 {
+				pinmux = <STM32_PINMUX('A', 0, AF7)>;
+				bias-pull-up;
+				drive-open-drain;
+			};
+
 			usart2_cts_pd3: usart2_cts_pd3 {
 				pinmux = <STM32_PINMUX('D', 3, AF7)>;
 				bias-pull-up;
@@ -3450,6 +3548,11 @@
 				drive-push-pull;
 			};
 
+			usart2_de_pa1: usart2_de_pa1 {
+				pinmux = <STM32_PINMUX('A', 1, AF7)>;
+				drive-push-pull;
+			};
+
 			usart2_de_pd4: usart2_de_pd4 {
 				pinmux = <STM32_PINMUX('D', 4, AF7)>;
 				drive-push-pull;
@@ -3526,6 +3629,12 @@
 
 			usart1_rts_pa12: usart1_rts_pa12 {
 				pinmux = <STM32_PINMUX('A', 12, AF7)>;
+				bias-pull-up;
+				drive-open-drain;
+			};
+
+			usart2_rts_pa1: usart2_rts_pa1 {
+				pinmux = <STM32_PINMUX('A', 1, AF7)>;
 				bias-pull-up;
 				drive-open-drain;
 			};
@@ -3662,6 +3771,10 @@
 				pinmux = <STM32_PINMUX('A', 1, AF8)>;
 			};
 
+			uart4_rx_pa1: uart4_rx_pa1 {
+				pinmux = <STM32_PINMUX('A', 1, AF8)>;
+			};
+
 			uart4_rx_pa11: uart4_rx_pa11 {
 				pinmux = <STM32_PINMUX('A', 11, AF6)>;
 			};
@@ -3789,6 +3902,11 @@
 
 			usart3_tx_pd8: usart3_tx_pd8 {
 				pinmux = <STM32_PINMUX('D', 8, AF7)>;
+				bias-pull-up;
+			};
+
+			uart4_tx_pa0: uart4_tx_pa0 {
+				pinmux = <STM32_PINMUX('A', 0, AF8)>;
 				bias-pull-up;
 			};
 
@@ -3950,8 +4068,16 @@
 				pinmux = <STM32_PINMUX('C', 2, ANALOG)>;
 			};
 
+			usb_otg_hs_ulpi_dir_pc2: usb_otg_hs_ulpi_dir_pc2 {
+				pinmux = <STM32_PINMUX('C', 2, AF10)>;
+			};
+
 			usb_otg_hs_ulpi_nxt_pc3: usb_otg_hs_ulpi_nxt_pc3 {
 				pinmux = <STM32_PINMUX('C', 3, ANALOG)>;
+			};
+
+			usb_otg_hs_ulpi_nxt_pc3: usb_otg_hs_ulpi_nxt_pc3 {
+				pinmux = <STM32_PINMUX('C', 3, AF10)>;
 			};
 
 			usb_otg_hs_ulpi_nxt_ph4: usb_otg_hs_ulpi_nxt_ph4 {

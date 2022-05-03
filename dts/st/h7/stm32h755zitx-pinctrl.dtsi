@@ -196,10 +196,6 @@
 				pinmux = <STM32_PINMUX('C', 3, ANALOG)>;
 			};
 
-			adc3_inn4_pf6: adc3_inn4_pf6 {
-				pinmux = <STM32_PINMUX('F', 6, ANALOG)>;
-			};
-
 			adc3_inp8_pf6: adc3_inp8_pf6 {
 				pinmux = <STM32_PINMUX('F', 6, ANALOG)>;
 			};
