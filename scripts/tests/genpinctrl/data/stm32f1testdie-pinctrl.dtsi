@@ -12,38 +12,38 @@
 
 			/* ADC_IN */
 
-			adc1_in0_pa0: adc1_in0_pa0 {
+			/omit-if-no-ref/ adc1_in0_pa0: adc1_in0_pa0 {
 				pinmux = <STM32F1_PINMUX('A', 0, ANALOG, NO_REMAP)>;
 			};
 
 			/* I2C_SCL */
 
-			i2c2_scl_pa0: i2c2_scl_pa0 {
+			/omit-if-no-ref/ i2c2_scl_pa0: i2c2_scl_pa0 {
 				pinmux = <STM32F1_PINMUX('A', 0, ALTERNATE, NO_REMAP)>;
 				drive-open-drain;
 			};
 
 			/* UART_RX / USART_RX */
 
-			uart1_rx_pa0: uart1_rx_pa0 {
+			/omit-if-no-ref/ uart1_rx_pa0: uart1_rx_pa0 {
 				pinmux = <STM32F1_PINMUX('A', 0, GPIO_IN, UART1_REMAP1)>;
 			};
 
 			/* UART_TX / USART_TX */
 
-			uart1_tx_pa0: uart1_tx_pa0 {
+			/omit-if-no-ref/ uart1_tx_pa0: uart1_tx_pa0 {
 				pinmux = <STM32F1_PINMUX('A', 0, ALTERNATE, UART1_REMAP0)>;
 			};
 
-			uart1_tx_pa0: uart1_tx_pa0 {
+			/omit-if-no-ref/ uart1_tx_pa0: uart1_tx_pa0 {
 				pinmux = <STM32F1_PINMUX('A', 0, ALTERNATE, UART1_REMAP1)>;
 			};
 
-			uart1_tx_pa0: uart1_tx_pa0 {
+			/omit-if-no-ref/ uart1_tx_pa0: uart1_tx_pa0 {
 				pinmux = <STM32F1_PINMUX('A', 0, ALTERNATE, UART1_REMAP2)>;
 			};
 
-			uart1_tx_pa0: uart1_tx_pa0 {
+			/omit-if-no-ref/ uart1_tx_pa0: uart1_tx_pa0 {
 				pinmux = <STM32F1_PINMUX('A', 0, ALTERNATE, UART1_REMAP3)>;
 			};
 

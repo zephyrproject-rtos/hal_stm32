@@ -20,7 +20,7 @@
 			{% for entry in group_entries %}
 			{% set variant = "_" + entry["variant"] if entry["variant"] else "" %}
 			{% set name = "%s%s_p%s%d" | format(entry["signal"], variant, entry["port"], entry["pin"]) %}
-			{{ name }}: {{ name }} {
+			/omit-if-no-ref/ {{ name }}: {{ name }} {
 				{% if family == "STM32F1" %}
 				pinmux = <STM32F1_PINMUX('{{ entry["port"] | upper }}', {{ entry["pin"] }}, {{ entry["mode"] | format_mode_f1 }}, {{ entry["af"] | format_remap }})>;
 				{% else %}
