@@ -798,6 +798,168 @@
 				drive-open-drain;
 			};
 
+			/* OCTOSPI */
+
+			octospim_p2_ncs_pa0: octospim_p2_ncs_pa0 {
+				pinmux = <STM32_PINMUX('A', 0, AF10)>;
+				slew-rate = "very-high-speed";
+			};
+
+			octospim_p1_dqs_pa1: octospim_p1_dqs_pa1 {
+				pinmux = <STM32_PINMUX('A', 1, AF10)>;
+				slew-rate = "very-high-speed";
+			};
+
+			octospim_p1_ncs_pa2: octospim_p1_ncs_pa2 {
+				pinmux = <STM32_PINMUX('A', 2, AF10)>;
+				slew-rate = "very-high-speed";
+			};
+
+			octospim_p1_clk_pa3: octospim_p1_clk_pa3 {
+				pinmux = <STM32_PINMUX('A', 3, AF10)>;
+				slew-rate = "very-high-speed";
+			};
+
+			octospim_p1_ncs_pa4: octospim_p1_ncs_pa4 {
+				pinmux = <STM32_PINMUX('A', 4, AF3)>;
+				slew-rate = "very-high-speed";
+			};
+
+			octospim_p1_io3_pa6: octospim_p1_io3_pa6 {
+				pinmux = <STM32_PINMUX('A', 6, AF10)>;
+				slew-rate = "very-high-speed";
+			};
+
+			octospim_p1_io2_pa7: octospim_p1_io2_pa7 {
+				pinmux = <STM32_PINMUX('A', 7, AF10)>;
+				slew-rate = "very-high-speed";
+			};
+
+			octospim_p2_ncs_pa12: octospim_p2_ncs_pa12 {
+				pinmux = <STM32_PINMUX('A', 12, AF6)>;
+				slew-rate = "very-high-speed";
+			};
+
+			octospim_p1_io1_pb0: octospim_p1_io1_pb0 {
+				pinmux = <STM32_PINMUX('B', 0, AF10)>;
+				slew-rate = "very-high-speed";
+			};
+
+			octospim_p1_io0_pb1: octospim_p1_io0_pb1 {
+				pinmux = <STM32_PINMUX('B', 1, AF10)>;
+				slew-rate = "very-high-speed";
+			};
+
+			octospim_p1_dqs_pb2: octospim_p1_dqs_pb2 {
+				pinmux = <STM32_PINMUX('B', 2, AF10)>;
+				slew-rate = "very-high-speed";
+			};
+
+			octospim_p1_nclk_pb5: octospim_p1_nclk_pb5 {
+				pinmux = <STM32_PINMUX('B', 5, AF3)>;
+				slew-rate = "very-high-speed";
+			};
+
+			octospim_p1_clk_pb10: octospim_p1_clk_pb10 {
+				pinmux = <STM32_PINMUX('B', 10, AF10)>;
+				slew-rate = "very-high-speed";
+			};
+
+			octospim_p1_ncs_pb11: octospim_p1_ncs_pb11 {
+				pinmux = <STM32_PINMUX('B', 11, AF10)>;
+				slew-rate = "very-high-speed";
+			};
+
+			octospim_p1_io7_pc0: octospim_p1_io7_pc0 {
+				pinmux = <STM32_PINMUX('C', 0, AF3)>;
+				slew-rate = "very-high-speed";
+			};
+
+			octospim_p1_io4_pc1: octospim_p1_io4_pc1 {
+				pinmux = <STM32_PINMUX('C', 1, AF10)>;
+				slew-rate = "very-high-speed";
+			};
+
+			octospim_p1_io5_pc2: octospim_p1_io5_pc2 {
+				pinmux = <STM32_PINMUX('C', 2, AF10)>;
+				slew-rate = "very-high-speed";
+			};
+
+			octospim_p1_io6_pc3: octospim_p1_io6_pc3 {
+				pinmux = <STM32_PINMUX('C', 3, AF10)>;
+				slew-rate = "very-high-speed";
+			};
+
+			octospim_p1_ncs_pc11: octospim_p1_ncs_pc11 {
+				pinmux = <STM32_PINMUX('C', 11, AF5)>;
+				slew-rate = "very-high-speed";
+			};
+
+			octospim_p2_ncs_pd3: octospim_p2_ncs_pd3 {
+				pinmux = <STM32_PINMUX('D', 3, AF10)>;
+				slew-rate = "very-high-speed";
+			};
+
+			octospim_p1_io4_pd4: octospim_p1_io4_pd4 {
+				pinmux = <STM32_PINMUX('D', 4, AF10)>;
+				slew-rate = "very-high-speed";
+			};
+
+			octospim_p1_io5_pd5: octospim_p1_io5_pd5 {
+				pinmux = <STM32_PINMUX('D', 5, AF10)>;
+				slew-rate = "very-high-speed";
+			};
+
+			octospim_p1_io6_pd6: octospim_p1_io6_pd6 {
+				pinmux = <STM32_PINMUX('D', 6, AF10)>;
+				slew-rate = "very-high-speed";
+			};
+
+			octospim_p1_io7_pd7: octospim_p1_io7_pd7 {
+				pinmux = <STM32_PINMUX('D', 7, AF10)>;
+				slew-rate = "very-high-speed";
+			};
+
+			octospim_p1_dqs_pe3: octospim_p1_dqs_pe3 {
+				pinmux = <STM32_PINMUX('E', 3, AF3)>;
+				slew-rate = "very-high-speed";
+			};
+
+			octospim_p1_nclk_pe9: octospim_p1_nclk_pe9 {
+				pinmux = <STM32_PINMUX('E', 9, AF10)>;
+				slew-rate = "very-high-speed";
+			};
+
+			octospim_p1_clk_pe10: octospim_p1_clk_pe10 {
+				pinmux = <STM32_PINMUX('E', 10, AF10)>;
+				slew-rate = "very-high-speed";
+			};
+
+			octospim_p1_ncs_pe11: octospim_p1_ncs_pe11 {
+				pinmux = <STM32_PINMUX('E', 11, AF10)>;
+				slew-rate = "very-high-speed";
+			};
+
+			octospim_p1_io0_pe12: octospim_p1_io0_pe12 {
+				pinmux = <STM32_PINMUX('E', 12, AF10)>;
+				slew-rate = "very-high-speed";
+			};
+
+			octospim_p1_io1_pe13: octospim_p1_io1_pe13 {
+				pinmux = <STM32_PINMUX('E', 13, AF10)>;
+				slew-rate = "very-high-speed";
+			};
+
+			octospim_p1_io2_pe14: octospim_p1_io2_pe14 {
+				pinmux = <STM32_PINMUX('E', 14, AF10)>;
+				slew-rate = "very-high-speed";
+			};
+
+			octospim_p1_io3_pe15: octospim_p1_io3_pe15 {
+				pinmux = <STM32_PINMUX('E', 15, AF10)>;
+				slew-rate = "very-high-speed";
+			};
+
 			/* SDMMC */
 
 			/omit-if-no-ref/ sdmmc1_ckin_pb8: sdmmc1_ckin_pb8 {
