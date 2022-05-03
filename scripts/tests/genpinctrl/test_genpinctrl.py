@@ -239,8 +239,8 @@ def test_main(data, pindata, tmp_path, mocker):
     main(pindata, tmp_path)
 
     # check readme file
-    ref_readme_file = data / "README.md"
-    gen_readme_file = tmp_path / "README.md"
+    ref_readme_file = data / "README.rst"
+    gen_readme_file = tmp_path / "README.rst"
 
     assert gen_readme_file.exists()
 

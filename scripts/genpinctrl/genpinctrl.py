@@ -557,7 +557,7 @@ def main(data_path, output):
     # write readme file
     commit_raw = check_output(["git", "rev-parse", "HEAD"], cwd=data_path)
     commit = commit_raw.decode("utf-8").strip()
-    with open(output / "README.md", "w") as f:
+    with open(output / "README.rst", "w") as f:
         f.write(readme_template.render(commit=commit))
 
 
