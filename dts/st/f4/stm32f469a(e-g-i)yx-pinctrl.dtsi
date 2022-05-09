@@ -1038,7 +1038,19 @@
 				slew-rate = "very-high-speed";
 			};
 
+			/omit-if-no-ref/ fmc_ba0_pg4: fmc_ba0_pg4 {
+				pinmux = <STM32_PINMUX('G', 4, AF12)>;
+				bias-pull-up;
+				slew-rate = "very-high-speed";
+			};
+
 			/omit-if-no-ref/ fmc_a15_pg5: fmc_a15_pg5 {
+				pinmux = <STM32_PINMUX('G', 5, AF12)>;
+				bias-pull-up;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ fmc_ba1_pg5: fmc_ba1_pg5 {
 				pinmux = <STM32_PINMUX('G', 5, AF12)>;
 				bias-pull-up;
 				slew-rate = "very-high-speed";
