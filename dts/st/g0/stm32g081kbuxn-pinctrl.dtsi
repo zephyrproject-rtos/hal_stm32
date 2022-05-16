@@ -770,6 +770,24 @@
 				bias-pull-up;
 			};
 
+			/* UCPD */
+
+			/omit-if-no-ref/ ucpd1_cc1_pa8: ucpd1_cc1_pa8 {
+				pinmux = <STM32_PINMUX('A', 8, ANALOG)>;
+			};
+
+			/omit-if-no-ref/ ucpd1_cc2_pb15: ucpd1_cc2_pb15 {
+				pinmux = <STM32_PINMUX('B', 15, ANALOG)>;
+			};
+
+			/omit-if-no-ref/ ucpd2_cc1_pd0: ucpd2_cc1_pd0 {
+				pinmux = <STM32_PINMUX('D', 0, ANALOG)>;
+			};
+
+			/omit-if-no-ref/ ucpd2_cc2_pd2: ucpd2_cc2_pd2 {
+				pinmux = <STM32_PINMUX('D', 2, ANALOG)>;
+			};
+
 		};
 	};
 };
