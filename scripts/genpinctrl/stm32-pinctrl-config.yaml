@@ -240,6 +240,10 @@
 - name: UART_RX / USART_RX / LPUART_RX
   match: "^(?:LP)?US?ART\\d+_RX$"
 
+- name: UCPD
+  match: "^UCPD\\d+_CC\\d+N?$"
+  mode: analog
+
 - name: USB_OTG_FS
   match: "^USB_OTG_FS_(?:DM)?(?:DP)?(?:SOF)?(?:ID)?(?:VBUS)?$"
 
