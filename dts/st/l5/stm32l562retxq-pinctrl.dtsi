@@ -1234,6 +1234,16 @@
 				bias-pull-up;
 			};
 
+			/* UCPD */
+
+			/omit-if-no-ref/ ucpd1_cc1_pa15: ucpd1_cc1_pa15 {
+				pinmux = <STM32_PINMUX('A', 15, ANALOG)>;
+			};
+
+			/omit-if-no-ref/ ucpd1_cc2_pb15: ucpd1_cc2_pb15 {
+				pinmux = <STM32_PINMUX('B', 15, ANALOG)>;
+			};
+
 			/* USB */
 
 			/omit-if-no-ref/ usb_dm_pa11: usb_dm_pa11 {
