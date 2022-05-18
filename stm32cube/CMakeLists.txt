@@ -51,6 +51,11 @@ if(CONFIG_CLOCK_STM32_HSE_CLOCK)
   zephyr_compile_definitions( -DHSE_VALUE=${CONFIG_CLOCK_STM32_HSE_CLOCK} )
 endif()
 
+if(CONFIG_ETH_STM32_HAL_API_V2)
+  zephyr_compile_definitions_ifdef(CONFIG_PTP_CLOCK_STM32_HAL
+    -DHAL_ETH_USE_PTP)
+endif()
+
 foreach(stm_soc ${stm_socs})
   string(TOUPPER ${stm_soc} soc_to_upper)
   if(CONFIG_SOC_SERIES_${soc_to_upper})
