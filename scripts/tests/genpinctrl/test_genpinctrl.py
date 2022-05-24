@@ -7,6 +7,7 @@ from genpinctrl import (
     format_mode,
     format_mode_f1,
     format_remap,
+    format_remap_name,
     get_gpio_ip_afs,
     get_mcu_signals,
     main,
@@ -147,6 +148,16 @@ def test_format_remap():
     assert format_remap("UART1_REMAP1") == "UART1_REMAP1"
     assert format_remap(0) == "NO_REMAP"
     assert format_remap(None) == "NO_REMAP"
+
+
+def test_format_remap_name():
+    """Test that format_remap_name works."""
+
+    assert format_remap_name("UART1_REMAP3") == "_remap3"
+    assert format_remap_name("UART1_REMAP2") == "_remap2"
+    assert format_remap_name("UART1_REMAP1") == "_remap1"
+    assert format_remap_name("UART1_REMAP0") == ""
+    assert format_remap_name(None) == ""
 
 
 def test_get_gpio_ip_afs(pindata):
