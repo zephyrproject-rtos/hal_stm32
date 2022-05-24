@@ -191,6 +191,30 @@ def format_remap(remap):
         return remap
 
 
+def format_remap_name(remap):
+    """Format remap value for DT node name
+
+    Args:
+        remap: Remap definition.
+
+    Returns:
+        DT remap definition in lower caps
+    """
+
+    if remap == 0 or remap is None:
+        return ""
+    elif "REMAP0" in remap:
+        return ""
+    elif "REMAP1" in remap:
+        return "_remap1"
+    elif "REMAP2" in remap:
+        return "_remap2"
+    elif "REMAP3" in remap:
+        return "_remap3"
+    else:
+        return ""
+
+
 def get_gpio_ip_afs(data_path):
     """Obtain all GPIO IP alternate functions.
 
@@ -458,6 +482,7 @@ def main(data_path, output):
     env.filters["format_mode"] = format_mode
     env.filters["format_mode_f1"] = format_mode_f1
     env.filters["format_remap"] = format_remap
+    env.filters["format_remap_name"] = format_remap_name
     pinctrl_template = env.get_template(PINCTRL_TEMPLATE)
     readme_template = env.get_template(README_TEMPLATE)
 
