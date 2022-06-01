@@ -28,6 +28,8 @@
 #include <stm32l5xx_ll_comp.h>
 #elif defined(CONFIG_SOC_SERIES_STM32U5X)
 #include <stm32u5xx_ll_comp.h>
+#elif defined(CONFIG_SOC_SERIES_STM32WBAX)
+#include <stm32wbaxx_ll_comp.h>
 #elif defined(CONFIG_SOC_SERIES_STM32WBX)
 #include <stm32wbxx_ll_comp.h>
 #elif defined(CONFIG_SOC_SERIES_STM32WLX)
