@@ -12,4 +12,6 @@
 #include <stm32l5xx_ll_icache.h>
 #elif defined(CONFIG_SOC_SERIES_STM32U5X)
 #include <stm32u5xx_ll_icache.h>
+#elif defined(CONFIG_SOC_SERIES_STM32WBAX)
+#include <stm32wbaxx_ll_icache.h>
 #endif
