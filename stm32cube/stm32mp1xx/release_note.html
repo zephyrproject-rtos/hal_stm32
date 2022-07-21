@@ -46,13 +46,198 @@
 <div class="col-sm-12 col-lg-8">
 <h1 id="update-history">Update history</h1>
 <div class="collapse">
-<input type="checkbox" id="collapse-section0" checked aria-hidden="true"> <label for="collapse-section0" aria-hidden="true"><strong>V1.5.0 / 04-November-2021</strong></label>
+<input type="checkbox" id="collapse-section0" checked aria-hidden="true"> <label for="collapse-section0" aria-hidden="true"><strong>V1.6.0 / 02-June-2022</strong></label>
 <div>
 <h2 id="main-changes">Main changes</h2>
 <p>This release is a <strong>Maintenance Release</strong> for STM32MP15 Series</p>
 <h2 id="contents">Contents</h2>
 <p><small>The Project categories flagged by “<span class="icon-st-update"></span>” have changed since the previous release. “<span class="icon-st-add"></span>” are new.</small></p>
 <h3 id="projects"><strong>Projects</strong></h3>
+<p>The <strong>STM32CubeMP15</strong> Firmware package comes with template running on STMicroelectronics boards, organized by board and provided with preconfigured projects for the main supported toolchains. The exhaustive list of projects is provided in this table <a href="Projects/STM32CubeProjectsList.html">STM32CubeProjectsList.html</a></p>
+<p>This release contains almost HAL drivers, BSP drivers, templates, projects and examples.</p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Name</th>
+<th style="text-align: center;">Version</th>
+<th style="text-align: center;">Release notes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Projects STM32MP157C-EV1 and DK2</td>
+<td style="text-align: center;">V1.6.0</td>
+<td style="text-align: center;"><a href="Projects/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">- Applications</td>
+<td style="text-align: center;"><span class="icon-st-update"></span></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">- Demonstrations</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">- Examples</td>
+<td style="text-align: center;"><span class="icon-st-update"></span></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">- Templates</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+</tbody>
+</table>
+<h3 id="components"><strong>Components</strong></h3>
+<p><small>The components flagged by “<span class="icon-st-update"></span>” have changed since the previous release. “<span class="icon-st-add"></span>” are new.</small></p>
+<table>
+<caption><strong>Drivers</strong></caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Name</th>
+<th style="text-align: center;">Version</th>
+<th style="text-align: left;">Release note</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Cortex-M CMSIS</td>
+<td style="text-align: center;">V5.6.0</td>
+<td style="text-align: left;"><a href="Drivers/CMSIS/docs/General/html/index.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">STM32MP1xx CMSIS</td>
+<td style="text-align: center;">V1.6.0 <span class="icon-st-update"></span></td>
+<td style="text-align: left;"><a href="Drivers/CMSIS/Device/ST/STM32MP1xx/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">STM32MP1xx HAL</td>
+<td style="text-align: center;">V1.6.0 <span class="icon-st-update"></span></td>
+<td style="text-align: left;"><a href="Drivers/STM32MP1xx_HAL_Driver/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BSP STM32MP1xx DISCO</td>
+<td style="text-align: center;">V1.6.0 <span class="icon-st-update"></span></td>
+<td style="text-align: left;"><a href="Drivers/BSP/STM32MP15xx_DISCO/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BSP STM32MP1xx EVAL</td>
+<td style="text-align: center;">V1.6.0 <span class="icon-st-update"></span></td>
+<td style="text-align: left;"><a href="Drivers/BSP/STM32MP15xx_EVAL/Release_Notes.html">release notes</a></td>
+</tr>
+</tbody>
+</table>
+<table>
+<caption><strong>Middlewares</strong></caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Name</th>
+<th style="text-align: center;">Version</th>
+<th style="text-align: center;">Release note</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">FreeRTOS</td>
+<td style="text-align: center;">V10.2.1</td>
+<td style="text-align: center;"><a href="Middlewares/Third_Party/FreeRTOS/Source/readme.txt">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: center;">ST modified _20190719</td>
+<td style="text-align: center;"><a href="Middlewares/Third_Party/FreeRTOS/Source/st_readme.txt">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">OpenAMP</td>
+<td style="text-align: center;">v2021.10 <span class="icon-st-update"></span></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">- libmetal</td>
+<td style="text-align: center;">ST modified _20220118 <span class="icon-st-update"></span></td>
+<td style="text-align: center;"><a href="Middlewares/Third_Party/OpenAMP/libmetal/st_readme.txt">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">- open-amp</td>
+<td style="text-align: center;">ST modified _20220118 <span class="icon-st-update"></span></td>
+<td style="text-align: center;"><a href="Middlewares/Third_Party/OpenAMP/open-amp/st_readme.txt">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">- mw_if</td>
+<td style="text-align: center;">ST modified _20220118 <span class="icon-st-update"></span></td>
+<td style="text-align: center;"><a href="Middlewares/Third_Party/OpenAMP/mw_if/st_readme.txt">release notes</a></td>
+</tr>
+</tbody>
+</table>
+<table>
+<caption><strong>Utilities</strong></caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Name</th>
+<th style="text-align: center;">Version</th>
+<th style="text-align: left;">Release note</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">ResourceManager</td>
+<td style="text-align: center;">mp1/v1.11.0</td>
+<td style="text-align: left;"><a href="Utilities/ResourcesManager/Release_Notes.html">release notes</a></td>
+</tr>
+</tbody>
+</table>
+<h2 id="development-toolchains-and-compilers">Development toolchains and compilers</h2>
+<ul>
+<li><strong>The current default IDE = STM32CubeIDE</strong>
+<ul>
+<li>All-in-one multi-OS development tool STM32CubeIDE: <strong>v1.10.0</strong>: <span style="font-color: blue;"><a href="https://www.st.com/en/development-tools/stm32cubeide.html">link</a></span> <span class="icon-st-update"></span></li>
+<li>gcc toolchain version = 10.3-2021.10 <span class="icon-st-update"></span></li>
+</ul></li>
+<li>Other IDE’s supporting STM32MP1 devices (portage for all projects not completed):
+<ul>
+<li>IAR Embedded Workbench for ARM (EWARM) toolchain: <strong>v8.40.1</strong>: <span style="font-color: blue;"><a href="https://www.iar.com/iar-embedded-workbench/">link</a></span></li>
+<li>RealView Microcontroller Development Kit (MDK-ARM) toolchain <strong>v5.27</strong>: <span style="font-color: blue;"><a href="http://www.keil.com/appnotes/docs/apnt_319.asp">link</a></span></li>
+</ul></li>
+</ul>
+<h2 id="supported-devices-and-hw-boards">Supported Devices and HW boards</h2>
+<ul>
+<li>The delivery provided support the following devices :
+<ul>
+<li>STM32MP157Cxx, STM32MP157Axx, STM32MP157Dxx, STM32MP157Fxx</li>
+<li>STM32MP153Cxx, STM32MP153Axx, STM32MP153Dxx, STM32MP153Fxx</li>
+<li>STM32MP151Cxx, STM32MP151Axx, STM32MP151Dxx, STM32MP151Fxx</li>
+</ul></li>
+<li>Boards supported; :
+<ul>
+<li>STM32MP157C-EV1, STM32MP157A-EV1, STM32MP157F-EV1, STM32MP157D-EV1</li>
+<li>STM32MP157C-DK2, STM32MP157F-DK2</li>
+<li>STM32MP157A-DK1, STM32MP157D-DK1</li>
+</ul></li>
+</ul>
+<h2 id="known-limitations">Known Limitations</h2>
+<ul>
+<li>OpenAMP compilation issue with MDK-ARM when code generated through CubeMx :
+<ul>
+<li>To avoid compiling errors in OpenAMP when compiling in MDK-ARM IDE, you have to disable the « Use MicroLIB » in « Target » tab.</li>
+</ul></li>
+</ul>
+<h2 id="backward-compatibility">Backward compatibility</h2>
+<ul>
+<li>None</li>
+</ul>
+</div>
+</div>
+<div class="collapse">
+<input type="checkbox" id="collapse-section6" aria-hidden="true"> <label for="collapse-section6" aria-hidden="true"><strong>V1.5.0 / 04-November-2021</strong></label>
+<div>
+<h2 id="main-changes-1">Main changes</h2>
+<p>This release is a <strong>Maintenance Release</strong> for STM32MP15 Series</p>
+<h2 id="contents-1">Contents</h2>
+<p><small>The Project categories flagged by “<span class="icon-st-update"></span>” have changed since the previous release. “<span class="icon-st-add"></span>” are new.</small></p>
+<h3 id="projects-1"><strong>Projects</strong></h3>
 <p>The <strong>STM32CubeMP15</strong> Firmware package comes with template running on STMicroelectronics boards, organized by board and provided with preconfigured projects for the main supported toolchains. The exhaustive list of projects is provided in this table <a href="Projects/STM32CubeProjectsList.html">STM32CubeProjectsList.html</a></p>
 <p>This release contains almost HAL drivers, BSP drivers, templates, projects and examples.</p>
 <table>
@@ -91,7 +276,7 @@
 </tr>
 </tbody>
 </table>
-<h3 id="components"><strong>Components</strong></h3>
+<h3 id="components-1"><strong>Components</strong></h3>
 <p><small>The components flagged by “<span class="icon-st-update"></span>” have changed since the previous release. “<span class="icon-st-add"></span>” are new.</small></p>
 <table>
 <caption><strong>Drivers</strong></caption>
@@ -189,11 +374,12 @@
 </tr>
 </tbody>
 </table>
-<h2 id="development-toolchains-and-compilers">Development toolchains and compilers</h2>
+<h2 id="development-toolchains-and-compilers-1">Development toolchains and compilers</h2>
 <ul>
 <li><strong>The current default IDE = STM32CubeIDE</strong>
 <ul>
 <li>All-in-one multi-OS development tool STM32CubeIDE: <strong>v1.7.0</strong>: <span style="font-color: blue;"><a href="https://www.st.com/en/development-tools/stm32cubeide.html">link</a></span></li>
+<li>gcc toolchain version = 9_2020_q2_update</li>
 </ul></li>
 <li>Other IDE’s supporting STM32MP1 devices (portage for all projects not completed):
 <ul>
@@ -201,7 +387,7 @@
 <li>RealView Microcontroller Development Kit (MDK-ARM) toolchain <strong>v5.27</strong>: <span style="font-color: blue;"><a href="http://www.keil.com/appnotes/docs/apnt_319.asp">link</a></span></li>
 </ul></li>
 </ul>
-<h2 id="supported-devices-and-hw-boards">Supported Devices and HW boards</h2>
+<h2 id="supported-devices-and-hw-boards-1">Supported Devices and HW boards</h2>
 <ul>
 <li>The delivery provided support the following devices :
 <ul>
@@ -216,14 +402,14 @@
 <li>STM32MP157A-DK1, STM32MP157D-DK1</li>
 </ul></li>
 </ul>
-<h2 id="known-limitations">Known Limitations</h2>
+<h2 id="known-limitations-1">Known Limitations</h2>
 <ul>
 <li>OpenAMP compilation issue with MDK-ARM when code generated through CubeMx :
 <ul>
 <li>To avoid compiling errors in OpenAMP when compiling in MDK-ARM IDE, you have to disable the « Use MicroLIB » in « Target » tab.</li>
 </ul></li>
 </ul>
-<h2 id="backward-compatibility">Backward compatibility</h2>
+<h2 id="backward-compatibility-1">Backward compatibility</h2>
 <ul>
 <li>None</li>
 </ul>
@@ -232,11 +418,11 @@
 <div class="collapse">
 <input type="checkbox" id="collapse-section5" aria-hidden="true"> <label for="collapse-section5" aria-hidden="true"><strong>V1.4.0 / 27-January-2021</strong></label>
 <div>
-<h2 id="main-changes-1">Main changes</h2>
+<h2 id="main-changes-2">Main changes</h2>
 <p>This release is a <strong>Maintenance Release</strong> for STM32MP15 Series</p>
-<h2 id="contents-1">Contents</h2>
+<h2 id="contents-2">Contents</h2>
 <p><small>The Project categories flagged by “<span class="icon-st-update"></span>” have changed since the previous release. “<span class="icon-st-add"></span>” are new.</small></p>
-<h3 id="projects-1"><strong>Projects</strong></h3>
+<h3 id="projects-2"><strong>Projects</strong></h3>
 <p>The <strong>STM32CubeMP15</strong> Firmware package comes with template running on STMicroelectronics boards, organized by board and provided with preconfigured projects for the main supported toolchains. The exhaustive list of projects is provided in this table <a href="Projects/STM32CubeProjectsList.html">STM32CubeProjectsList.html</a></p>
 <ul>
 <li>Port all EV1 projects on STM32CubeIDE <span class="icon-st-add"></span></li>
@@ -279,7 +465,7 @@
 </tr>
 </tbody>
 </table>
-<h3 id="components-1"><strong>Components</strong></h3>
+<h3 id="components-2"><strong>Components</strong></h3>
 <p><small>The components flagged by “<span class="icon-st-update"></span>” have changed since the previous release. “<span class="icon-st-add"></span>” are new.</small></p>
 <table>
 <caption><strong>Drivers</strong></caption>
@@ -377,7 +563,7 @@
 </tr>
 </tbody>
 </table>
-<h2 id="development-toolchains-and-compilers-1">Development toolchains and compilers</h2>
+<h2 id="development-toolchains-and-compilers-2">Development toolchains and compilers</h2>
 <ul>
 <li><strong>The current default IDE = STM32CubeIDE</strong>
 <ul>
@@ -389,7 +575,7 @@
 <li>RealView Microcontroller Development Kit (MDK-ARM) toolchain <strong>v5.27</strong>: <span style="font-color: blue;"><a href="http://www.keil.com/appnotes/docs/apnt_319.asp">link</a></span></li>
 </ul></li>
 </ul>
-<h2 id="supported-devices-and-hw-boards-1">Supported Devices and HW boards</h2>
+<h2 id="supported-devices-and-hw-boards-2">Supported Devices and HW boards</h2>
 <ul>
 <li>The delivery provided support the following devices :
 <ul>
@@ -404,7 +590,7 @@
 <li>STM32MP157A-DK1, STM32MP157D-DK1</li>
 </ul></li>
 </ul>
-<h2 id="known-limitations-1">Known Limitations</h2>
+<h2 id="known-limitations-2">Known Limitations</h2>
 <ul>
 <li>OpenAMP compilation issue with MDK-ARM when code generated through CubeMx :
 <ul>
@@ -415,7 +601,7 @@
 <li>For projects examples still in SW4STM32 format ( deprecated), you can easily import them in STM32CubeIDE.</li>
 </ul></li>
 </ul>
-<h2 id="backward-compatibility-1">Backward compatibility</h2>
+<h2 id="backward-compatibility-2">Backward compatibility</h2>
 <ul>
 <li>None</li>
 </ul>
@@ -424,11 +610,11 @@
 <div class="collapse">
 <input type="checkbox" id="collapse-section4" aria-hidden="true"> <label for="collapse-section4" aria-hidden="true"><strong>V1.3.0 / 20-October-2020</strong></label>
 <div>
-<h2 id="main-changes-2">Main changes</h2>
+<h2 id="main-changes-3">Main changes</h2>
 <p>This release is a <strong>Maintenance Release</strong> for STM32MP15 Series</p>
-<h2 id="contents-2">Contents</h2>
+<h2 id="contents-3">Contents</h2>
 <p><small>The Project categories flagged by “<span class="icon-st-update"></span>” have changed since the previous release. “<span class="icon-st-add"></span>” are new.</small></p>
-<h3 id="projects-2"><strong>Projects</strong></h3>
+<h3 id="projects-3"><strong>Projects</strong></h3>
 <p>The <strong>STM32CubeMP15</strong> Firmware package comes with template running on STMicroelectronics boards, organized by board and provided with preconfigured projects for the main supported toolchains. The exhaustive list of projects is provided in this table <a href="Projects/STM32CubeProjectsList.html">STM32CubeProjectsList.html</a></p>
 <ul>
 <li>Fix ADC resolution ( ADC specification indicates clock speed range) <span class="icon-st-update"></span></li>
@@ -470,7 +656,7 @@
 </tr>
 </tbody>
 </table>
-<h3 id="components-2"><strong>Components</strong></h3>
+<h3 id="components-3"><strong>Components</strong></h3>
 <p><small>The components flagged by “<span class="icon-st-update"></span>” have changed since the previous release. “<span class="icon-st-add"></span>” are new.</small></p>
 <table>
 <caption><strong>Drivers</strong></caption>
@@ -568,7 +754,7 @@
 </tr>
 </tbody>
 </table>
-<h2 id="development-toolchains-and-compilers-2">Development toolchains and compilers</h2>
+<h2 id="development-toolchains-and-compilers-3">Development toolchains and compilers</h2>
 <ul>
 <li><strong>The current default IDE = STM32CubeIDE</strong>
 <ul>
@@ -581,7 +767,7 @@
 <li>System Workbench for STM32 (SW4STM32) toolchain: v2.9</li>
 </ul></li>
 </ul>
-<h2 id="supported-devices-and-hw-boards-2">Supported Devices and HW boards</h2>
+<h2 id="supported-devices-and-hw-boards-3">Supported Devices and HW boards</h2>
 <ul>
 <li>The delivery provided support the following devices :
 <ul>
@@ -596,7 +782,7 @@
 <li>STM32MP157A-DK1, STM32MP157D-DK1</li>
 </ul></li>
 </ul>
-<h2 id="known-limitations-2">Known Limitations</h2>
+<h2 id="known-limitations-3">Known Limitations</h2>
 <ul>
 <li>OpenAMP compilation issue with MDK-ARM when code generated through CubeMx :
 <ul>
@@ -607,7 +793,7 @@
 <li>For projects examples still in SW4STM32 format ( deprecated), you can easily import them in STM32CubeIDE.</li>
 </ul></li>
 </ul>
-<h2 id="backward-compatibility-2">Backward compatibility</h2>
+<h2 id="backward-compatibility-3">Backward compatibility</h2>
 <ul>
 <li>None</li>
 </ul>
@@ -616,11 +802,11 @@
 <div class="collapse">
 <input type="checkbox" id="collapse-section3" aria-hidden="true"> <label for="collapse-section3" aria-hidden="true"><strong>V1.2.0 / 03-February-2020</strong></label>
 <div>
-<h2 id="main-changes-3">Main changes</h2>
+<h2 id="main-changes-4">Main changes</h2>
 <p>This release is a <strong>Maintenance Release</strong> for STM32MP15 Series</p>
-<h2 id="contents-3">Contents</h2>
+<h2 id="contents-4">Contents</h2>
 <p><small>The Project categories flagged by “<span class="icon-st-update"></span>” have changed since the previous release. “<span class="icon-st-add"></span>” are new.</small></p>
-<h3 id="projects-3"><strong>Projects</strong></h3>
+<h3 id="projects-4"><strong>Projects</strong></h3>
 <p>The <strong>STM32CubeMP15</strong> Firmware package comes with template running on STMicroelectronics boards, organized by board and provided with preconfigured projects for the main supported toolchains. The exhaustive list of projects is provided in this table <a href="Projects/STM32CubeProjectsList.html">STM32CubeProjectsList.html</a></p>
 <ul>
 <li>Implement new projects :
@@ -676,7 +862,7 @@
 </tr>
 </tbody>
 </table>
-<h3 id="components-3"><strong>Components</strong></h3>
+<h3 id="components-4"><strong>Components</strong></h3>
 <p><small>The components flagged by “<span class="icon-st-update"></span>” have changed since the previous release. “<span class="icon-st-add"></span>” are new.</small></p>
 <table>
 <caption><strong>Drivers</strong></caption>
@@ -774,7 +960,7 @@
 </tr>
 </tbody>
 </table>
-<h2 id="development-toolchains-and-compilers-3">Development toolchains and compilers</h2>
+<h2 id="development-toolchains-and-compilers-4">Development toolchains and compilers</h2>
 <ul>
 <li><strong>The current default IDE = STM32CubeIDE</strong>
 <ul>
@@ -787,14 +973,14 @@
 <li>System Workbench for STM32 (SW4STM32) toolchain: v2.9</li>
 </ul></li>
 </ul>
-<h2 id="supported-devices-and-hw-boards-3">Supported Devices and HW boards</h2>
+<h2 id="supported-devices-and-hw-boards-4">Supported Devices and HW boards</h2>
 <ul>
 <li>STM32MP157C-EV1 RevC</li>
 <li>STM32MP157C-DK2 RevC</li>
 </ul>
-<h2 id="known-limitations-3">Known Limitations</h2>
+<h2 id="known-limitations-4">Known Limitations</h2>
 <p>-NA</p>
-<h2 id="backward-compatibility-3">Backward compatibility</h2>
+<h2 id="backward-compatibility-4">Backward compatibility</h2>
 <ul>
 <li>None</li>
 </ul>
@@ -803,11 +989,11 @@
 <div class="collapse">
 <input type="checkbox" id="collapse-section2" aria-hidden="true"> <label for="collapse-section2" aria-hidden="true"><strong>V1.1.0 / 10-September-2019</strong></label>
 <div>
-<h2 id="main-changes-4">Main changes</h2>
+<h2 id="main-changes-5">Main changes</h2>
 <p>This release is the <strong>First Maintenance Release</strong> for STM32MP15 Series</p>
-<h2 id="contents-4">Contents</h2>
+<h2 id="contents-5">Contents</h2>
 <p><small>The Project categories flagged by “<span class="icon-st-update"></span>” have changed since the previous release. “<span class="icon-st-add"></span>” are new.</small></p>
-<h3 id="projects-4"><strong>Projects</strong></h3>
+<h3 id="projects-5"><strong>Projects</strong></h3>
 <p>The <strong>STM32CubeMP15</strong> Firmware package comes with template running on STMicroelectronics boards, organized by board and provided with preconfigured projects for the main supported toolchains. The exhaustive list of projects is provided in this table <a href="Projects/STM32CubeProjectsList.html">STM32CubeProjectsList.html</a></p>
 <ul>
 <li>Implement new projects :
@@ -870,7 +1056,7 @@
 </tr>
 </tbody>
 </table>
-<h3 id="components-4"><strong>Components</strong></h3>
+<h3 id="components-5"><strong>Components</strong></h3>
 <p><small>The components flagged by “<span class="icon-st-update"></span>” have changed since the previous release. “<span class="icon-st-add"></span>” are new.</small></p>
 <table>
 <caption><strong>Drivers</strong></caption>
@@ -968,7 +1154,7 @@
 </tr>
 </tbody>
 </table>
-<h2 id="development-toolchains-and-compilers-4">Development toolchains and compilers</h2>
+<h2 id="development-toolchains-and-compilers-5">Development toolchains and compilers</h2>
 <ul>
 <li><strong>The current default IDE </strong>
 <ul>
@@ -981,14 +1167,14 @@
 <li>All-in-one multi-OS development tool STM32CubeIDE: <strong>v1.1.0</strong>: <span style="font-color: blue;"><a href="https://www.st.com/en/development-tools/stm32cubeide.html">link</a></span></li>
 </ul></li>
 </ul>
-<h2 id="supported-devices-and-hw-boards-4">Supported Devices and HW boards</h2>
+<h2 id="supported-devices-and-hw-boards-5">Supported Devices and HW boards</h2>
 <ul>
 <li>STM32MP157C-EV1 RevC</li>
 <li>STM32MP157C-DK2 RevC</li>
 </ul>
-<h2 id="known-limitations-4">Known Limitations</h2>
+<h2 id="known-limitations-5">Known Limitations</h2>
 <p>-NA</p>
-<h2 id="backward-compatibility-4">Backward compatibility</h2>
+<h2 id="backward-compatibility-5">Backward compatibility</h2>
 <ul>
 <li>None</li>
 </ul>
@@ -997,11 +1183,11 @@
 <div class="collapse">
 <input type="checkbox" id="collapse-section1" aria-hidden="true"> <label for="collapse-section1" aria-hidden="true"><strong>V1.0.0 / 25-January-2019</strong></label>
 <div>
-<h2 id="main-changes-5">Main changes</h2>
+<h2 id="main-changes-6">Main changes</h2>
 <p>This release is the <strong>First Official Release</strong> for STM32MP15 Series</p>
-<h2 id="contents-5">Contents</h2>
+<h2 id="contents-6">Contents</h2>
 <p><small>The Project categories flagged by “<span class="icon-st-update"></span>” have changed since the previous release. “<span class="icon-st-add"></span>” are new.</small></p>
-<h3 id="projects-5"><strong>Projects</strong></h3>
+<h3 id="projects-6"><strong>Projects</strong></h3>
 <p>The <strong>STM32CubeMP15</strong> Firmware package comes with template running on STMicroelectronics boards, organized by board and provided with preconfigured projects for the main supported toolchains. The exhaustive list of projects is provided in this table <a href="Projects/STM32CubeProjectsList.html">STM32CubeProjectsList.html</a></p>
 <p>This release contains almost HAL drivers, BSP drivers, templates, projects and examples.</p>
 <table>
@@ -1040,7 +1226,7 @@
 </tr>
 </tbody>
 </table>
-<h3 id="components-5"><strong>Components</strong></h3>
+<h3 id="components-6"><strong>Components</strong></h3>
 <p><small>The components flagged by “<span class="icon-st-update"></span>” have changed since the previous release. “<span class="icon-st-add"></span>” are new.</small></p>
 <table>
 <caption><strong>Drivers</strong></caption>
@@ -1138,21 +1324,21 @@
 </tr>
 </tbody>
 </table>
-<h2 id="development-toolchains-and-compilers-5">Development toolchains and compilers</h2>
+<h2 id="development-toolchains-and-compilers-6">Development toolchains and compilers</h2>
 <ul>
 <li><strong>The current default IDE </strong>
 <ul>
 <li>System Workbench for STM32 (SW4STM32) toolchain: <strong>v2.8</strong></li>
 </ul></li>
 </ul>
-<h2 id="supported-devices-and-hw-boards-5">Supported Devices and HW boards</h2>
+<h2 id="supported-devices-and-hw-boards-6">Supported Devices and HW boards</h2>
 <ul>
 <li>STM32MP157C-EV1 RevC</li>
 <li>STM32MP157C-DK2 RevC</li>
 </ul>
-<h2 id="known-limitations-5">Known Limitations</h2>
+<h2 id="known-limitations-6">Known Limitations</h2>
 <p>-NA</p>
-<h2 id="backward-compatibility-5">Backward compatibility</h2>
+<h2 id="backward-compatibility-6">Backward compatibility</h2>
 <ul>
 <li>None</li>
 </ul>
