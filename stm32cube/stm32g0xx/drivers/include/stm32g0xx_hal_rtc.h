@@ -6,13 +6,12 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2018 STMicroelectronics.
-  * All rights reserved.</center></h2>
+  * Copyright (c) 2018 STMicroelectronics.
+  * All rights reserved.
   *
-  * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
-  * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/BSD-3-Clause
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
   *
   ******************************************************************************
   */
@@ -564,6 +563,13 @@ typedef  void (*pRTC_CallbackTypeDef)(RTC_HandleTypeDef * hrtc); /*!< pointer to
                           } while(0U)
 
 /**
+  * @brief  Check whether the RTC Calendar is initialized.
+  * @param  __HANDLE__ specifies the RTC handle.
+  * @retval None
+  */
+#define __HAL_RTC_IS_CALENDAR_INITIALIZED(__HANDLE__)  (((((__HANDLE__)->Instance->ICSR) & (RTC_ICSR_INITS)) == RTC_ICSR_INITS) ? 1U : 0U)
+
+/**
   * @brief  Add 1 hour (summer time change).
   * @note   This interface is deprecated.
   *         To manage Daylight Saving Time, please use HAL_RTC_DST_xxx functions
@@ -972,4 +978,3 @@ uint8_t            RTC_Bcd2ToByte(uint8_t Value);
 
 #endif /* STM32G0xx_HAL_RTC_H */
 
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
