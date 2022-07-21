@@ -146,7 +146,7 @@
 #define  TICK_INT_PRIORITY            0x0FU /*!< tick interrupt priority */
 #define  USE_RTOS                     0U
 #define  PREFETCH_ENABLE              1U /* To enable prefetch */
-#define  ART_ACCLERATOR_ENABLE        1U /* To enable ART Accelerator */
+#define  ART_ACCELERATOR_ENABLE       1U /* To enable ART Accelerator */
 
 #define  USE_HAL_ADC_REGISTER_CALLBACKS         0U /* ADC register callback disabled       */
 #define  USE_HAL_CAN_REGISTER_CALLBACKS         0U /* CAN register callback disabled       */
@@ -207,8 +207,8 @@
 #define MAC_ADDR5   0U
 
 /* Definition of the Ethernet driver buffers size and count */
-#define ETH_RX_BUF_SIZE                ETH_MAX_PACKET_SIZE /* buffer size for receive               */
-#define ETH_TX_BUF_SIZE                ETH_MAX_PACKET_SIZE /* buffer size for transmit              */
+#define ETH_RX_BUF_SIZE                1528U    /* ETH Max buffer size for receive               */
+#define ETH_TX_BUF_SIZE                1528U    /* ETH Max buffer size for transmit              */
 #define ETH_RXBUFNB                    4U       /* 4 Rx buffers of size ETH_RX_BUF_SIZE  */
 #define ETH_TXBUFNB                    4U       /* 4 Tx buffers of size ETH_TX_BUF_SIZE  */
 
@@ -489,6 +489,5 @@
 #endif
 
 #endif /* __STM32F7xx_HAL_CONF_H */
-
 
 
