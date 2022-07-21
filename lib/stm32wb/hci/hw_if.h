@@ -242,4 +242,4 @@ extern "C" {
 }
 #endif
 
-#endif /*HW_IF_H */
+#endif /* HW_IF_H */
