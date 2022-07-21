@@ -741,4 +741,3 @@ __STATIC_INLINE uint32_t LL_IPCC_GetChannelConfig(IPCC_TypeDef *IPCCx)
 
 #endif /* STM32MP1xx_LL_IPCC_H */
 
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
