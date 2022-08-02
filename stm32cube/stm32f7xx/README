@@ -44,4 +44,7 @@ Patch List:
     -Added stm32cube/stm32f7xx/drivers/include/stm32_assert.h
     -Removed unused stm32cube/stm32f7xx/drivers/include/stm32_assert_template.h
 
+   *Enable legacy ethernet driver using HAL_ETH_LEGACY_MODULE_ENABLED
+    This will have to be removed once Zephyr driver is migrated ot the new
+    Cube HAL ethernet API.
    See release_note.html from STM32Cube
