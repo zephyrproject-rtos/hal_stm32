@@ -2,3 +2,18 @@ build:
   cmake: .
   settings:
     dts_root: .
+blobs:
+  - path: stm32wba/lib/LinkLayer_BLE_Full_lib.a
+    sha256: 92f5f3c7c5cb6a98a9fd9bd61db656a47569d1267999987cfc859d7357021e16
+    type: lib
+    version: '1.2.0'
+    license-path: zephyr/blobs/stm32wba/lib/license.md
+    url: https://github.com/STMicroelectronics/STM32CubeWBA/raw/v1.2.0/Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/lib/LinkLayer_BLE_Full_lib.a
+    description: "Binary Link Layer library for the STM32WBA Bluetooth subsystem"
+  - path: stm32wba/lib/stm32wba_ble_stack_llo.a
+    sha256: d7f6053331539bc1353d2d9abf682caac89690bd480e1a637b29b94744132943
+    type: lib
+    version: '1.2.0'
+    license-path: zephyr/blobs/stm32wba/lib/license.md
+    url: https://github.com/STMicroelectronics/STM32CubeWBA/raw/v1.2.0/Middlewares/ST/STM32_WPAN/ble/stack/lib/stm32wba_ble_stack_llo.a
+    description: "Binary Stack library for the STM32WBA Bluetooth subsystem"
