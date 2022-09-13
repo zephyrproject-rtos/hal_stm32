@@ -16,4 +16,51 @@ if(CONFIG_HAS_STM32LIB)
     zephyr_sources(stm32wb/hci/tl_mbox.c)
 
   endif()
+
+  if(CONFIG_BT_STM32WBA)
+
+    if(DEFINED CONFIG_BOARD_NUCLEO_WBA52CG)
+      message(FATAL_ERROR "BLE library is not compatible with nucleo_wba52cg")
+    endif()
+
+    zephyr_compile_definitions( -DBLE )
+
+    zephyr_include_directories(stm32wba/hci)
+    zephyr_include_directories(stm32wba/hci/ll)
+
+    zephyr_sources(stm32wba/hci/ll_sys_cs.c)
+    zephyr_sources(stm32wba/hci/ll_sys_intf.c)
+    zephyr_sources(stm32wba/hci/ll_sys_dp_slp.c)
+    zephyr_sources(stm32wba/hci/ll_sys_startup.c)
+    zephyr_sources(stm32wba/hci/RTDebug.c)
+    zephyr_sources(stm32wba/hci/hw_pka.c)
+    zephyr_sources(stm32wba/hci/pka_p256.c)
+    zephyr_sources(stm32wba/hci/bpka.c)
+    zephyr_sources(stm32wba/hci/power_table.c)
+    zephyr_sources(stm32wba/hci/scm.c)
+
+    set(STM32WBA_BLE_LIB_DIR     ${CMAKE_CURRENT_SOURCE_DIR}/../zephyr/blobs/stm32wba/lib)
+    set(STM32WBA_BLE_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/stm32wba/hci)
+
+    add_library(stm32wba_ble_lib STATIC IMPORTED GLOBAL)
+    add_library(stm32wba_ll_lib STATIC IMPORTED GLOBAL)
+
+    add_dependencies(
+      stm32wba_ble_lib
+      stm32wba_ll_lib
+    )
+    set_target_properties(
+      stm32wba_ble_lib PROPERTIES IMPORTED_LOCATION ${STM32WBA_BLE_LIB_DIR}/stm32wba_ble_stack_llo.a
+    )
+    set_target_properties(
+      stm32wba_ll_lib PROPERTIES IMPORTED_LOCATION ${STM32WBA_BLE_LIB_DIR}/LinkLayer_BLE_Full_lib.a
+    )
+
+    set_target_properties(stm32wba_ble_lib PROPERTIES INTERFACE_INCLUDE_DIRECTORIES ${STM32WBA_BLE_INCLUDE_DIR})
+    set_target_properties(stm32wba_ll_lib PROPERTIES INTERFACE_INCLUDE_DIRECTORIES ${STM32WBA_BLE_INCLUDE_DIR})
+
+    target_link_libraries(app PUBLIC stm32wba_ble_lib)
+    target_link_libraries(app PUBLIC stm32wba_ll_lib)
+
+  endif()
 endif()
