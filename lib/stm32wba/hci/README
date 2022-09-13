@@ -46,12 +46,20 @@ Description:
       Projects/NUCLEO-WBA52CG/Applications/BLE/BLE_HeartRate/Core/Inc/app_entry.h
       Projects/NUCLEO-WBA52CG/Applications/BLE/BLE_HeartRate/Core/Inc/utilities_conf.h
       Projects/NUCLEO-WBA52CG/Applications/BLE/BLE_HeartRate/Core/Inc/main.h
+      Projects/NUCLEO-WBA52CG/Applications/BLE/BLE_HeartRate/System/Modules/Flash/rf_timing_synchro.c
+      Projects/NUCLEO-WBA52CG/Applications/BLE/BLE_HeartRate/System/Modules/Flash/rf_timing_synchro.h
+      Projects/NUCLEO-WBA52CG/Applications/BLE/BLE_HeartRate/System/Modules/Flash/flash_driver.c
+      Projects/NUCLEO-WBA52CG/Applications/BLE/BLE_HeartRate/System/Modules/Flash/flash_driver.h
+      Projects/NUCLEO-WBA52CG/Applications/BLE/BLE_HeartRate/System/Modules/Flash/flash_manager.c
+      Projects/NUCLEO-WBA52CG/Applications/BLE/BLE_HeartRate/System/Modules/Flash/flash_manager.h
       Projects/NUCLEO-WBA52CG/Applications/BLE/BLE_HeartRate/System/Modules/RTDebug/debug_signals.h
       Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_HeartRate/System/Modules/RTDebug/RTDebug.c
       Projects/NUCLEO-WBA52CG/Applications/BLE/BLE_HeartRate/System/Modules/RTDebug/RTDebug.h
       Projects/NUCLEO-WBA52CG/Applications/BLE/BLE_HeartRate/System/Modules/RTDebug/local_debug_tables.h
       Projects/NUCLEO-WBA52CG/Applications/BLE/BLE_HeartRate/System/Modules/scm.c
       Projects/NUCLEO-WBA52CG/Applications/BLE/BLE_HeartRate/System/Modules/scm.h
+      Projects/NUCLEO-WBA52CG/Applications/BLE/BLE_HeartRate/System/Modules/stm_list.c
+      Projects/NUCLEO-WBA52CG/Applications/BLE/BLE_HeartRate/System/Modules/stm_list.h
       Projects/NUCLEO-WBA52CG/Applications/BLE/BLE_HeartRate/System/Modules/utilities_common.h
       Projects/NUCLEO-WBA52CG/Applications/BLE/BLE_HeartRate/System/Interfaces/hw.h
       Projects/NUCLEO-WBA52CG/Applications/BLE/BLE_HeartRate/System/Interfaces/hw_aes.c
