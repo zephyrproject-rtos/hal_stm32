@@ -3974,10 +3974,15 @@ extern "C" {
   * @}
   */
 
+#if defined(STM32U5)
+#define LL_PWR_EnableVddUSB		LL_PWR_EnableVDDUSB
+#define LL_PWR_DisableVddUSB		LL_PWR_DisableVDDUSB
+#define LL_PWR_EnableVddIO2		LL_PWR_EnableVDDIO2
+#define LL_PWR_DisableVddIO2		LL_PWR_DisableVDDIO2
+#endif /* STM32U5 */
+
 #ifdef __cplusplus
 }
 #endif
 
 #endif /* STM32_HAL_LEGACY */
-
-
