@@ -44,4 +44,9 @@ Patch List:
     -Added stm32cube/stm32u5xx/drivers/include/stm32_assert.h
     -Removed unused stm32cube/stm32u5xx/drivers/include/stm32_assert_template.h
 
+   *Fix LL_PWR_Enable/DisableVDD* functions:
+    -Align definition on other STM32 series
+   Impacted files: drivers/include/Legacy/stm32_hal_legacy.h
+   Internal reference: 134618
+
    See release_note.html from STM32Cube
