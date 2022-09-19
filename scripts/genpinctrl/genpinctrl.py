@@ -416,6 +416,10 @@ def get_mcu_signals(data_path, gpio_ip_afs):
             if family == "STM32G0" and pin_name in ("PA9", "PA10"):
                 continue
 
+            # skip pins with analog switch (Pxy_C) (not supported)
+            if pin_name.endswith("_C"):
+                continue
+
             # obtain pin port (A, B, ...) and number (0, 1, ...)
             m = re.search(r"^P([A-Z])(\d+).*$", pin_name)
             if not m:
