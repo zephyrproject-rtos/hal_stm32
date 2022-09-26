@@ -69,6 +69,11 @@ PINCTRL_ADDRESSES = {
 }
 """pinctrl peripheral addresses for each family."""
 
+PIN_MODS = [
+    "_C",  # Pins with analog switch (H7)
+]
+"""Allowed pin modifiers"""
+
 
 def validate_config_entry(entry, family):
     """Validates pin configuration entry.
@@ -338,6 +343,7 @@ def get_mcu_signals(data_path, gpio_ip_afs):
                         {
                             "port": "a",
                             "number": 0,
+                            "mod": "",
                             "signals" : [
                                 {
                                     "name": "ADC1_IN5",
@@ -416,17 +422,14 @@ def get_mcu_signals(data_path, gpio_ip_afs):
             if family == "STM32G0" and pin_name in ("PA9", "PA10"):
                 continue
 
-            # skip pins with analog switch (Pxy_C) (not supported)
-            if pin_name.endswith("_C"):
-                continue
-
-            # obtain pin port (A, B, ...) and number (0, 1, ...)
-            m = re.search(r"^P([A-Z])(\d+).*$", pin_name)
+            # obtain pin port (A, B, ...), number (0, 1, ...) and modifier
+            m = re.search(r"^P([A-Z])(\d+)(.*)$", pin_name)
             if not m:
                 continue
 
             pin_port = m.group(1).lower()
             pin_number = int(m.group(2))
+            pin_mod = m.group(3).lower() if m.group(3) in PIN_MODS else ""
 
             if pin_name not in gpio_ip:
                 continue
@@ -438,6 +441,7 @@ def get_mcu_signals(data_path, gpio_ip_afs):
                 {
                     "port": pin_port,
                     "pin": pin_number,
+                    "mod": pin_mod,
                     "signals": pin_signals,
                 }
             )
@@ -552,6 +556,7 @@ def main(data_path, output):
                             {
                                 "port": pin["port"],
                                 "pin": pin["pin"],
+                                "mod": pin["mod"],
                                 "signal": signal["name"].lower(),
                                 "af": signal["af"],
                                 "mode": signal["mode"],

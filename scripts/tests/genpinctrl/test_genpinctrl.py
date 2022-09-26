@@ -198,6 +198,7 @@ def test_get_mcu_signals(pindata):
                     {
                         "port": "a",
                         "pin": 0,
+                        "mod": "",
                         "signals": [
                             {"name": "UART1_TX", "af": 0},
                             {"name": "UART1_RX", "af": 1},
@@ -214,6 +215,7 @@ def test_get_mcu_signals(pindata):
                     {
                         "port": "a",
                         "pin": 0,
+                        "mod": "",
                         "signals": [
                             {"name": "UART1_TX", "af": "UART1_REMAP0"},
                             {"name": "UART1_TX", "af": "UART1_REMAP1"},
