@@ -107,4 +107,11 @@ Patch List:
       drivers/src/stm32l1xx_hal_rcc.c
      ST Bug tracker ID: 80902
 
+   *Wrap define UNUSED with an ifndef
+     This will prevent a compiler warning for the case the UNUSED macro
+     is already defined elsewhere in the project
+     Impacted files:
+      drivers/include/stm32l1xx_hal_def.h
+     ST Internal Reference: 136825
+
    See release_note.html from STM32Cube

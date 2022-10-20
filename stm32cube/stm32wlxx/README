@@ -66,4 +66,11 @@ Patch List:
      stm32cube/stm32wlxx/drivers/src/stm32wlxx_ll_util.c
     ST Internal reference: 124139
 
+   *Wrap define UNUSED with an ifndef
+     This will prevent a compiler warning for the case the UNUSED macro
+     is already defined elsewhere in the project
+     Impacted files:
+      drivers/include/stm32wlxx_hal_def.h
+     ST Internal Reference: 136825
+
    See release_note.html from STM32Cube

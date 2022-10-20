@@ -47,4 +47,12 @@ Patch List:
    *Enable legacy ethernet driver using HAL_ETH_LEGACY_MODULE_ENABLED
     This will have to be removed once Zephyr driver is migrated ot the new
     Cube HAL ethernet API.
+
+   *Wrap define UNUSED with an ifndef
+     This will prevent a compiler warning for the case the UNUSED macro
+     is already defined elsewhere in the project
+     Impacted files:
+      drivers/include/stm32f7xx_hal_def.h
+     ST Internal Reference: 136825
+
    See release_note.html from STM32Cube

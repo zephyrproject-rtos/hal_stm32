@@ -43,4 +43,11 @@ Patch List:
    *Provision to enable hal & ll asserts added
     -Modified stm32cube/stm32mp1xx/drivers/include/stm32_assert.h
 
+   *Wrap define UNUSED with an ifndef
+     This will prevent a compiler warning for the case the UNUSED macro
+     is already defined elsewhere in the project
+     Impacted files:
+      drivers/include/stm32mp1xx_hal_def.h
+     ST Internal Reference: 136825
+
    See release_note.html from STM32Cube

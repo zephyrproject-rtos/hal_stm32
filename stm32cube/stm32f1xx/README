@@ -52,4 +52,11 @@ Patch List:
     -Added stm32cube/stm32f1xx/drivers/include/stm32_assert.h
     -Removed unused stm32cube/stm32f1xx/drivers/include/stm32_assert_template.h
 
+   *Wrap define UNUSED with an ifndef
+     This will prevent a compiler warning for the case the UNUSED macro
+     is already defined elsewhere in the project
+     Impacted files:
+      drivers/include/stm32f1xx_hal_def.h
+     ST Internal Reference: 136825
+
    See release_note.html from STM32Cube
