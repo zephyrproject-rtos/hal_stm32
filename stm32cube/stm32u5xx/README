@@ -49,4 +49,11 @@ Patch List:
    Impacted files: drivers/include/Legacy/stm32_hal_legacy.h
    Internal reference: 134618
 
+   *Wrap define UNUSED with an ifndef
+     This will prevent a compiler warning for the case the UNUSED macro
+     is already defined elsewhere in the project
+     Impacted files:
+      drivers/include/stm32u5xx_hal_def.h
+     ST Internal Reference: 136825
+
    See release_note.html from STM32Cube

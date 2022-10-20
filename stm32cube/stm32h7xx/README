@@ -57,4 +57,11 @@ Patch List:
     Impacted file: drivers/include/stm32h7xx_ll_spi.h
     Internal reference: 124484
 
+   *Wrap define UNUSED with an ifndef
+     This will prevent a compiler warning for the case the UNUSED macro
+     is already defined elsewhere in the project
+     Impacted files:
+      drivers/include/stm32h7xx_hal_def.h
+     ST Internal Reference: 136825
+
    See release_note.html from STM32Cube
