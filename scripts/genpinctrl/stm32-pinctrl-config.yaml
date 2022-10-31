@@ -191,6 +191,11 @@
   slew-rate: very-high-speed
   bias: pull-up
 
+- name: SAI
+  match: "^SAI\\d+_(?:MCLK_[A-B]|SCK_[A-B]|FS_[A-B]|SD_[A-B])$"
+  mode: alternate
+  slew-rate: very-high-speed
+
 - name: SDIO
   match: "^SDIO_(?:CK)?(?:CKIN)?(?:CDIR)?(?:CMD)?(?:D\\d+)?(?:D0DIR)?(?:D123DIR)?$"
   slew-rate: very-high-speed
