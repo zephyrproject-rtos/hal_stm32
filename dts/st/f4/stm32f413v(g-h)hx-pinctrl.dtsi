@@ -860,6 +860,78 @@
 				slew-rate = "very-high-speed";
 			};
 
+			/* SAI */
+
+			/omit-if-no-ref/ sai1_sd_b_pa3: sai1_sd_b_pa3 {
+				pinmux = <STM32_PINMUX('A', 3, AF10)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ sai1_mclk_a_pa15: sai1_mclk_a_pa15 {
+				pinmux = <STM32_PINMUX('A', 15, AF10)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ sai1_sd_a_pb3: sai1_sd_a_pb3 {
+				pinmux = <STM32_PINMUX('B', 3, AF10)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ sai1_sck_a_pb4: sai1_sck_a_pb4 {
+				pinmux = <STM32_PINMUX('B', 4, AF10)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ sai1_fs_a_pb5: sai1_fs_a_pb5 {
+				pinmux = <STM32_PINMUX('B', 5, AF10)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ sai1_mclk_b_pc0: sai1_mclk_b_pc0 {
+				pinmux = <STM32_PINMUX('C', 0, AF7)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ sai1_sd_b_pc1: sai1_sd_b_pc1 {
+				pinmux = <STM32_PINMUX('C', 1, AF7)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ sai1_sck_b_pc2: sai1_sck_b_pc2 {
+				pinmux = <STM32_PINMUX('C', 2, AF7)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ sai1_fs_b_pc3: sai1_fs_b_pc3 {
+				pinmux = <STM32_PINMUX('C', 3, AF7)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ sai1_mclk_a_pe2: sai1_mclk_a_pe2 {
+				pinmux = <STM32_PINMUX('E', 2, AF7)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ sai1_sd_b_pe3: sai1_sd_b_pe3 {
+				pinmux = <STM32_PINMUX('E', 3, AF7)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ sai1_sd_a_pe4: sai1_sd_a_pe4 {
+				pinmux = <STM32_PINMUX('E', 4, AF7)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ sai1_sck_a_pe5: sai1_sck_a_pe5 {
+				pinmux = <STM32_PINMUX('E', 5, AF7)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ sai1_fs_a_pe6: sai1_fs_a_pe6 {
+				pinmux = <STM32_PINMUX('E', 6, AF7)>;
+				slew-rate = "very-high-speed";
+			};
+
 			/* SDIO */
 
 			/omit-if-no-ref/ sdio_cmd_pa6: sdio_cmd_pa6 {
