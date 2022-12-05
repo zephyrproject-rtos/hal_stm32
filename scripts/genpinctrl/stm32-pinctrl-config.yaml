@@ -252,6 +252,7 @@
 
 - name: USB_OTG_HS_ULPI
   match: "^USB_OTG_HS_ULPI_(?:CK)?(?:DIR)?(?:STP)?(?:NXT)?(?:D\\d+)?$"
+  slew-rate: high-speed
 
 - name: USB
   match: "^USB_(?:DM)?(?:DP)?(?:NOE)?$"
