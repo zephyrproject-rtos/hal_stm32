@@ -6,7 +6,7 @@ Origin:
    http://www.st.com/en/embedded-software/stm32cubewb.html
 
 Status:
-   version v1.1.0
+   version v1.3.0
 
 Purpose:
    ST Microelectronics official MCU package for STM32WL series.
@@ -23,7 +23,7 @@ URL:
    https://github.com/STMicroelectronics/STM32CubeWL
 
 Commit:
-   1555f88ae1c5898c239bd8a8520203a776ab4995
+   378e461e469ef9826e857f8eda3346cea525b2fa
 
 Maintained-by:
    External
@@ -35,7 +35,6 @@ License Link:
    https://opensource.org/licenses/BSD-3-Clause
 
 Patch List:
-
    *Changes from official delivery:
     -dos2unix applied
     -trailing white spaces removed
@@ -49,22 +48,6 @@ Patch List:
      register definitions.
     Impacted files:
      drivers/include/stm32wlxx_hal_conf.h
-
-   *Take into account HSEPRE value when configuring HSE as PLL input
-    Impacted file:
-     stm32cube/stm32wlxx/drivers/src/stm32wlxx_ll_utils.c
-    ST Internal reference: 111260
-
-   *Fix LL_SYSCFG_GetEXTISource which was not returning correct port
-    Impacted file:
-     stm32cube/stm32wlxx/drivers/src/stm32wlxx_ll_gpio.c
-    ST Internal reference: 121649
-
-   *Fix LL_PLL_ConfigSystemClock_MSI function which does not test correctly
-    the LL_RCC_MSI_IsEnabledRangeSelect when getting the MSI range
-    Impacted file: 
-     stm32cube/stm32wlxx/drivers/src/stm32wlxx_ll_util.c
-    ST Internal reference: 124139
 
    *Wrap define UNUSED with an ifndef
      This will prevent a compiler warning for the case the UNUSED macro
