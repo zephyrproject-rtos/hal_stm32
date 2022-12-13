@@ -18,13 +18,13 @@ stm32f4xx       1.27.1
 stm32f7xx       1.17.0
 stm32g0xx       1.6.1
 stm32g4xx       1.5.1
-stm32h7xx       1.10.0
+stm32h7xx       1.11.0
 stm32l0xx       1.12.1
 stm32l1xx       1.10.3
 stm32l4xx       1.17.2
-stm32l5xx       1.4.0
+stm32l5xx       1.5.0
 stm32mp1xx      1.6.0
 stm32u5xx       1.1.1
 stm32wbxx       1.14.0
-stm32wlxx       1.1.0
+stm32wlxx       1.3.0
 =============== ===============
