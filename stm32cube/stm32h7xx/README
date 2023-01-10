@@ -47,6 +47,16 @@ Patch List:
     - Impacted file: stm32h7xx_hal_eth.c
     - Internal reference: Not available. Will be fixed as part of a new eth hal implementation
 
+   *fix to the V2 HAL API to get PTP to work
+     In the HAL_ETH_ReadData function where it checks for the last descriptor, 
+     we added a checked if the TSA bit was set in DESC1
+     If the TSA bit is set then have a peak at the context descriptor which should be the one 
+     after the last descriptor
+     If the CTXT bit is set in the context descriptor then extract the timestamps
+     Impacted files:
+     drivers/src/stm32h7xx_hal_eth.c
+     ST Internal Reference: 142115
+    
    *Enable legacy ethernet driver using HAL_ETH_LEGACY_MODULE_ENABLED
     This will have to be removed once Zephyr driver is magrated ot the new
     Cube HAL ethernet API.
