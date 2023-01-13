@@ -573,7 +573,7 @@ ErrorStatus LL_I2S_Init(SPI_TypeDef *SPIx, LL_I2S_InitTypeDef *I2S_InitStruct)
   uint32_t packetlength = 1UL;
   uint32_t ispcm = 0UL;
   uint32_t tmp;
-  uint32_t sourceclock;
+  uint32_t sourceclock = 0;
 
   ErrorStatus status = ERROR;
 

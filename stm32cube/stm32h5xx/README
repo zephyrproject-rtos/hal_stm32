@@ -48,4 +48,10 @@ Patch List:
       . renamed stm32h5xx_hal_timebase_rtc_wakeup_template. c to stm32h5xx_hal_timebase_rtc_wakeup.c
       . renamed stm32h5xx_hal_timebase_tim_template. c to stm32h5xx_hal_timebase_tim.c
 
+   *Var init in LL_I2S_Init
+    - In the LL_I2S_Init function, initialisation of the sourceclock to avoid compilation warning.
+      Impacted files:
+       drivers/include/stm32h5xx_ll_spi.h
+      ST internal bug : 147754
+
    See release_note.html from STM32Cube
