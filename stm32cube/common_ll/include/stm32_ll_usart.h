@@ -6,7 +6,9 @@
 
 #include <autoconf.h>
 
-#if defined(CONFIG_SOC_SERIES_STM32F0X)
+#if defined(CONFIG_SOC_SERIES_STM32C0X)
+#include <stm32c0xx_ll_usart.h>
+#elif defined(CONFIG_SOC_SERIES_STM32F0X)
 #include <stm32f0xx_ll_usart.h>
 #elif defined(CONFIG_SOC_SERIES_STM32F1X)
 #include <stm32f1xx_ll_usart.h>

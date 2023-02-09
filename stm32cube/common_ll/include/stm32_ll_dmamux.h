@@ -6,7 +6,9 @@
 
 #include <autoconf.h>
 
-#if defined(CONFIG_SOC_SERIES_STM32G0X)
+#if defined(CONFIG_SOC_SERIES_STM32C0X)
+#include <stm32c0xx_ll_dmamux.h>
+#elif defined(CONFIG_SOC_SERIES_STM32G0X)
 #include <stm32g0xx_ll_dmamux.h>
 #elif defined(CONFIG_SOC_SERIES_STM32G4X)
 #include <stm32g4xx_ll_dmamux.h>
