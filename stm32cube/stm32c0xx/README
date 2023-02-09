@@ -39,3 +39,10 @@ Patch List:
    *Provision to enable hal & ll asserts added
     -Added stm32cube/stm32g0xx/drivers/include/stm32_assert.h
     -Removed unused stm32cube/stm32g0xx/drivers/include/stm32_assert_template.h
+
+   *Add missing LL function for setting flash latency
+     This will allow the C0 series to use the STM32 common
+     clock control driver.
+     Impacted files:
+      drivers/include/stm32c0xx_ll_utils.h
+     ST Internal Reference: 146704

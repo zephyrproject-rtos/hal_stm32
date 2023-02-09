@@ -242,6 +242,10 @@ void        LL_mDelay(uint32_t Delay);
   */
 void        LL_SetSystemCoreClock(uint32_t HCLKFrequency);
 ErrorStatus UTILS_SetFlashLatency(uint32_t HCLK_Frequency);
+inline ErrorStatus LL_SetFlashLatency(uint32_t HCLK_Frequency)
+{
+  return UTILS_SetFlashLatency(HCLK_Frequency);
+}
 /**
   * @}
   */
