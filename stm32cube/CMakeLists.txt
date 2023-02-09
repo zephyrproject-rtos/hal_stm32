@@ -22,6 +22,7 @@ zephyr_compile_definitions(
   )
 
 set(stm_socs
+  stm32c0x
   stm32f0x
   stm32f1x
   stm32f2x

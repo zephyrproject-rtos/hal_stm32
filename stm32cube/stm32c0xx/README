@@ -1,0 +1,41 @@
+STM32CubeC0
+###########
+
+Origin:
+   ST Microelectronics
+   http://www.st.com/en/embedded-software/stm32cubec0.html
+
+Status:
+   version 1.0.1
+
+Purpose:
+   ST Microelectronics official MCU package for STM32C0 series.
+
+Description:
+   This package is an extract of official STM32CubeC0 package written by ST Microelectronics.
+   It is composed of STM32Cube hardware abstraction layer (HAL) and low layer (LL) plus a set
+   of CMSIS headers files, one for each SoC in STM32C0 series.
+
+Dependencies:
+    None.
+
+URL:
+   https://github.com/STMicroelectronics/STM32CubeC0
+
+commit:
+   965b587c0a5cafa99f7afbbcd17eb692e82de18f
+
+Maintained-by:
+   External
+
+License:
+   BSD-3-Clause
+
+License Link:
+   https://opensource.org/licenses/BSD-3-Clause
+
+Patch List:
+
+   *Provision to enable hal & ll asserts added
+    -Added stm32cube/stm32g0xx/drivers/include/stm32_assert.h
+    -Removed unused stm32cube/stm32g0xx/drivers/include/stm32_assert_template.h
