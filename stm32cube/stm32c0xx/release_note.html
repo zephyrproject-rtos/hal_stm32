@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Release Notes for STM32CubeC0 Firmware Package</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="_htmresc/mini-st_2020.css" />
+  <link rel="icon" type="image/x-icon" href="_htmresc/favicon.png" />
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<div class="row">
+<div class="col-sm-12 col-lg-4">
+<center>
+<h1 id="release-notes-for-stm32cubec0-firmware-package">Release Notes
+for <mark> STM32CubeC0 Firmware Package </mark></h1>
+<p>Copyright © 2022 STMicroelectronics<br />
+</p>
+<a href="https://www.st.com" class="logo"><img
+src="_htmresc/st_logo_2020.png" alt="ST logo" /></a>
+</center>
+<h1 id="purpose">Purpose</h1>
+<p><span style="font-weight: bold;">STMCube is an STMicroelectronics
+original initiative to ease developers life by reducing development
+efforts, time and cost.</span></p>
+<p>STM32Cube covers STM32 portfolio.</p>
+<p>STM32Cube Version 1.x includes:</p>
+<ul>
+<li><p>The STM32CubeMX, a graphical software configuration tool that
+allows to generate C initialization code using graphical
+wizards.</p></li>
+<li><p>A comprehensive embedded software platform, delivered per series
+(such as STM32CubeC0 for STM32C0 series)</p>
+<ul>
+<li><p>The STM32Cube HAL, an STM32 abstraction layer embedded software,
+ensuring maximized portability across STM32 portfolio</p></li>
+<li><p>A consistent set of middleware components such as ThreadX and
+LevelX]</p></li>
+</ul></li>
+</ul>
+<p>The STM32Cube firmware solution offers a straightforward API with a
+modular architecture, making it simple to fine tune custom applications
+and scalable to fit most requirements.</p>
+<p>Both the HAL and LL APIs are production–ready, checked with
+CodeSonar® static analysis tool, and developed in compliance with MISRA
+C® guidelines, following a process certified according to IEC 61508
+systematic capability 2 level (SC2). Reports are available on
+demand.</p>
+<figure>
+<img src="_htmresc/STM32Cube.bmp" alt="STM32Cube" />
+<figcaption aria-hidden="true">STM32Cube</figcaption>
+</figure>
+<p>The <strong>drivers</strong> provided within this package
+<strong>support</strong> the <strong>STM32C031/STM32C011
+lines.</strong></p>
+</div>
+<section id="update-history" class="col-sm-12 col-lg-8">
+<h2><strong>Update History</strong></h2>
+<div class="collapse">
+<input type="checkbox" id="collapse-section2" checked aria-hidden="true">
+<label for="collapse-section2" checked aria-hidden="true"><strong>V1.0.1
+/ 12-January-2023</strong></label>
+<div>
+<h2 id="main-changes">Main Changes</h2>
+<ul>
+<li><p>Patch Release of <span
+style="font-weight: bold;">STM32CubeC0</span> Firmware Package</p>
+<ul>
+<li><p>Update ADC HAL driver with proper internal sensor calibration
+implementation</p></li>
+<li><p>“NUCLEO-C031C6/Examples/ADC/ADC_MultiChannelSingleConversion”
+example is updated to use
+“__LL_ADC_CALC_TEMPERATURE_TYP_PARAMS()”</p></li>
+<li><p>Update RCC LL driver by adding missing AHB Prescaler.</p></li>
+</ul></li>
+</ul>
+<h2 id="contents">Contents</h2>
+<h3 id="projects"><strong>Projects</strong></h3>
+<p>The <strong>STM32CubeC0</strong> Firmware package comes with template
+running on STMicroelectronics boards, organized by board and provided
+with preconfigured projects for the main supported toolchains. The
+exhaustive list of projects is provided in this table <a
+href="Projects/STM32CubeProjectsList.html">STM32CubeProjectsList.html</a></p>
+<p>This release contains almost HAL drivers, LL drivers, BSP drivers,
+templates, projects and examples.</p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Version</th>
+<th style="text-align: left;">Release notes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Projects <span
+class="icon-st-update"></span></td>
+<td style="text-align: left;">V1.0.1</td>
+<td style="text-align: left;"><a
+href="Projects/Release_Notes.html">release notes</a></td>
+</tr>
+</tbody>
+</table>
+<h3 id="components"><strong>Components</strong></h3>
+<p><small>The Project categories flagged by “<span
+class="icon-st-update"></span>” have changed since the previous release.
+“<span class="icon-st-add"></span>” are new.</small></p>
+<table>
+<caption><strong>Drivers</strong></caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Version</th>
+<th style="text-align: left;">Release note</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Cortex-M CMSIS</td>
+<td style="text-align: left;">V5.6.0_cm0</td>
+<td style="text-align: left;"><a
+href="Drivers/CMSIS/docs/General/html/index.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">STM32C0xx CMSIS</td>
+<td style="text-align: left;">V1.0.0</td>
+<td style="text-align: left;"><a
+href="Drivers/CMSIS/Device/ST/STM32C0xx/Release_Notes.html">release
+notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">STM32C0xx HAL/LL <span
+class="icon-st-update"></span></td>
+<td style="text-align: left;">V1.0.1</td>
+<td style="text-align: left;"><a
+href="Drivers/STM32C0xx_HAL_Driver/Release_Notes.html">release
+notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BSP STM32C0xx NUCLEO</td>
+<td style="text-align: left;">V1.0.0</td>
+<td style="text-align: left;"><a
+href="Drivers/BSP/STM32C0xx_Nucleo/Release_Notes.html">release
+notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BSP STM32C0316-DK</td>
+<td style="text-align: left;">V1.0.0</td>
+<td style="text-align: left;"><a
+href="Drivers/BSP/STM32C0316-DK/Release_Notes.html">release
+notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BSP STM32C0116-DK</td>
+<td style="text-align: left;">V1.0.0</td>
+<td style="text-align: left;"><a
+href="Drivers/BSP/STM32C0116-DK/Release_Notes.html">release
+notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BSP Components</td>
+<td style="text-align: left;">V7.1.0</td>
+<td style="text-align: left;"><a
+href="Drivers/BSP/Components/Common/Release_Notes.html">release
+notes</a></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Version</th>
+<th style="text-align: left;">Release note</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">OpenBootloader</td>
+<td style="text-align: left;">V6.0.0</td>
+<td style="text-align: left;"><a
+href="Middlewares/ST/OpenBootloader/Release_Notes.html">release
+notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Azure RTOS ThreadX</td>
+<td style="text-align: left;">threadx-6.1.9.220128</td>
+<td style="text-align: left;"><a
+href="https://github.com/azure-rtos/threadx/releases/tag/v6.1.9_rel">release
+notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Azure RTOS FileX</td>
+<td style="text-align: left;">filex-6.1.8.220128</td>
+<td style="text-align: left;"><a
+href="https://github.com/azure-rtos/filex/releases/tag/r6.1.8_rel">release
+notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Azure RTOS LeveLX</td>
+<td style="text-align: left;">levelx-6.1.9.220128</td>
+<td style="text-align: left;"><a
+href="https://github.com/azure-rtos/levelx/releases/tag/v6.1.9_rel">release
+notes</a></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="collapse">
+<input type="checkbox" id="collapse-section1"  aria-hidden="true">
+<label for="collapse-section1" checked aria-hidden="true"><strong>V1.0.0
+/ 09-February-2022</strong></label>
+<div>
+<h2 id="main-changes-1">Main Changes</h2>
+<ul>
+<li>First Official Release of <span
+style="font-weight: bold;">STM32CubeC0</span> Firmware Package</li>
+</ul>
+<h2 id="contents-1">Contents</h2>
+<h3 id="projects-1"><strong>Projects</strong></h3>
+<p>The <strong>STM32CubeC0</strong> Firmware package comes with template
+running on STMicroelectronics boards, organized by board and provided
+with preconfigured projects for the main supported toolchains. The
+exhaustive list of projects is provided in this table <a
+href="Projects/STM32CubeProjectsList.html">STM32CubeProjectsList.html</a></p>
+<p>This release contains almost HAL drivers, LL drivers, BSP drivers,
+templates, projects and examples.</p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Version</th>
+<th style="text-align: left;">Release notes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Projects</td>
+<td style="text-align: left;">V1.0.0</td>
+<td style="text-align: left;"><a
+href="Projects/Release_Notes.html">release notes</a></td>
+</tr>
+</tbody>
+</table>
+<h3 id="components-1"><strong>Components</strong></h3>
+<table>
+<caption><strong>Drivers</strong></caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Version</th>
+<th style="text-align: left;">Release note</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Cortex-M CMSIS</td>
+<td style="text-align: left;">V5.6.0_cm0</td>
+<td style="text-align: left;"><a
+href="Drivers/CMSIS/docs/General/html/index.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">STM32C0xx CMSIS</td>
+<td style="text-align: left;">V1.0.0</td>
+<td style="text-align: left;"><a
+href="Drivers/CMSIS/Device/ST/STM32C0xx/Release_Notes.html">release
+notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">STM32C0xx HAL/LL</td>
+<td style="text-align: left;">V1.0.0</td>
+<td style="text-align: left;"><a
+href="Drivers/STM32C0xx_HAL_Driver/Release_Notes.html">release
+notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BSP STM32C0xx NUCLEO</td>
+<td style="text-align: left;">V1.0.0</td>
+<td style="text-align: left;"><a
+href="Drivers/BSP/STM32C0xx_Nucleo/Release_Notes.html">release
+notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BSP STM32C0316-DK</td>
+<td style="text-align: left;">V1.0.0</td>
+<td style="text-align: left;"><a
+href="Drivers/BSP/STM32C0316-DK/Release_Notes.html">release
+notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BSP STM32C0116-DK</td>
+<td style="text-align: left;">V1.0.0</td>
+<td style="text-align: left;"><a
+href="Drivers/BSP/STM32C0116-DK/Release_Notes.html">release
+notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BSP Components</td>
+<td style="text-align: left;">V7.1.0</td>
+<td style="text-align: left;"><a
+href="Drivers/BSP/Components/Common/Release_Notes.html">release
+notes</a></td>
+</tr>
+</tbody>
+</table>
+<table>
+<caption><strong>Middlewares</strong></caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Version</th>
+<th style="text-align: left;">Release note</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">OpenBootloader</td>
+<td style="text-align: left;">V6.0.0</td>
+<td style="text-align: left;"><a
+href="Middlewares/ST/OpenBootloader/Release_Notes.html">release
+notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Azure RTOS ThreadX</td>
+<td style="text-align: left;">threadx-6.1.9.220128</td>
+<td style="text-align: left;"><a
+href="https://github.com/azure-rtos/threadx/releases/tag/v6.1.9_rel">release
+notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Azure RTOS FileX</td>
+<td style="text-align: left;">filex-6.1.8.220128</td>
+<td style="text-align: left;"><a
+href="https://github.com/azure-rtos/filex/releases/tag/r6.1.8_rel">release
+notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Azure RTOS LeveLX</td>
+<td style="text-align: left;">levelx-6.1.9.220128</td>
+<td style="text-align: left;"><a
+href="https://github.com/azure-rtos/levelx/releases/tag/v6.1.9_rel">release
+notes</a></td>
+</tr>
+</tbody>
+</table>
+<h2 id="development-toolchains-and-compilers">Development Toolchains and
+Compilers</h2>
+<ul>
+<li>IAR Embedded Workbench for ARM (EWARM) toolchain V8.50.9 + ST-LINK,
+patch available here:
+<ul>
+<li><a
+href="Utilities\PC_Software\IDEs_Patches\EWARM\EWARMv8_STM32C01x-03x_V1.0.zip">Utilities\PC_Software\IDEs_Patches\EWARM\EWARMv8_STM32C01x-03x_V1.0.zip</a></li>
+<li>This patch supports <strong>STM32C031 and STM32C011</strong>
+devices</li>
+</ul></li>
+<li>RealView Microcontroller Development Kit (MDK-ARM) toolchain V5.36 +
+ST-LINK, patch available here:
+<ul>
+<li><a
+href="Utilities\PC_Software\IDEs_Patches\MDK-ARM\Keil.STM32C0xx_DFP.1.0.0.zip">Utilities\PC_Software\IDEs_Patches\MDK-ARM\Keil.STM32C0xx_DFP.1.0.0.zip</a></li>
+<li>This patch supports <strong>STM32C031/011</strong> devices</li>
+</ul></li>
+<li>STM32CubeIDE v1.9.0 using GCC10</li>
+</ul>
+<h2 id="supported-devices-and-boards">Supported Devices and boards</h2>
+<ul>
+<li>STM32C031 and STM32C011 devices Rev A</li>
+<li>NUCLEO-C031C6 board rev.B</li>
+<li>STM32C0116-DK board rev.B</li>
+<li>STM32C0316-DK board rev.B</li>
+</ul>
+<h2 id="dependencies">Dependencies</h2>
+<ul>
+<li>STM32CubeMX V6.5.0
+<ul>
+<li>Projects (Examples and Applications) are generated using STM32CubeMX
+version V6.5.0.</li>
+</ul></li>
+</ul>
+<h2 id="known-limitations">Known Limitations</h2>
+<ul>
+<li>None</li>
+</ul>
+<h2 id="backward-compatibility">Backward Compatibility</h2>
+<ul>
+<li>Not applicable</li>
+</ul>
+</div>
+</div>
+</section>
+</div>
+<footer class="sticky">
+<p>For complete documentation on STM32 Microcontrollers </mark> , visit:
+<span style="font-color: blue;"><a
+href="http://www.st.com/stm32">www.st.com/stm32</a></span></p>
+This release note uses up to date web standards and, for this reason,
+should not be opened with Internet Explorer but preferably with popular
+browsers such as Google Chrome, Mozilla Firefox, Opera or Microsoft
+Edge.
+</footer>
+</body>
+</html>
