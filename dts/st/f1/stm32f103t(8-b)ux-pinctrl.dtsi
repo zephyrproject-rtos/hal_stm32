@@ -308,137 +308,271 @@
 				pinmux = <STM32F1_PINMUX('B', 3, GPIO_IN, SPI1_REMAP1)>;
 			};
 
-			/* TIM_CH_PWM / TIM_CHN_PWM */
+			/* TIM_CH_PWM_IN / TIM_CHN_PWM_IN */
 
-			/omit-if-no-ref/ tim1_ch1n_remap1_pwm_pa7: tim1_ch1n_remap1_pwm_pa7 {
+			/omit-if-no-ref/ tim1_ch1n_remap1_pwm_in_pa7: tim1_ch1n_remap1_pwm_in_pa7 {
+				pinmux = <STM32F1_PINMUX('A', 7, GPIO_IN, TIM1_REMAP1)>;
+			};
+
+			/omit-if-no-ref/ tim1_ch1_pwm_in_pa8: tim1_ch1_pwm_in_pa8 {
+				pinmux = <STM32F1_PINMUX('A', 8, GPIO_IN, TIM1_REMAP0)>;
+			};
+
+			/omit-if-no-ref/ tim1_ch1_remap1_pwm_in_pa8: tim1_ch1_remap1_pwm_in_pa8 {
+				pinmux = <STM32F1_PINMUX('A', 8, GPIO_IN, TIM1_REMAP1)>;
+			};
+
+			/omit-if-no-ref/ tim1_ch2_pwm_in_pa9: tim1_ch2_pwm_in_pa9 {
+				pinmux = <STM32F1_PINMUX('A', 9, GPIO_IN, TIM1_REMAP0)>;
+			};
+
+			/omit-if-no-ref/ tim1_ch2_remap1_pwm_in_pa9: tim1_ch2_remap1_pwm_in_pa9 {
+				pinmux = <STM32F1_PINMUX('A', 9, GPIO_IN, TIM1_REMAP1)>;
+			};
+
+			/omit-if-no-ref/ tim1_ch3_pwm_in_pa10: tim1_ch3_pwm_in_pa10 {
+				pinmux = <STM32F1_PINMUX('A', 10, GPIO_IN, TIM1_REMAP0)>;
+			};
+
+			/omit-if-no-ref/ tim1_ch3_remap1_pwm_in_pa10: tim1_ch3_remap1_pwm_in_pa10 {
+				pinmux = <STM32F1_PINMUX('A', 10, GPIO_IN, TIM1_REMAP1)>;
+			};
+
+			/omit-if-no-ref/ tim1_ch4_pwm_in_pa11: tim1_ch4_pwm_in_pa11 {
+				pinmux = <STM32F1_PINMUX('A', 11, GPIO_IN, TIM1_REMAP0)>;
+			};
+
+			/omit-if-no-ref/ tim1_ch4_remap1_pwm_in_pa11: tim1_ch4_remap1_pwm_in_pa11 {
+				pinmux = <STM32F1_PINMUX('A', 11, GPIO_IN, TIM1_REMAP1)>;
+			};
+
+			/omit-if-no-ref/ tim1_ch2n_remap1_pwm_in_pb0: tim1_ch2n_remap1_pwm_in_pb0 {
+				pinmux = <STM32F1_PINMUX('B', 0, GPIO_IN, TIM1_REMAP1)>;
+			};
+
+			/omit-if-no-ref/ tim1_ch3n_remap1_pwm_in_pb1: tim1_ch3n_remap1_pwm_in_pb1 {
+				pinmux = <STM32F1_PINMUX('B', 1, GPIO_IN, TIM1_REMAP1)>;
+			};
+
+			/omit-if-no-ref/ tim2_ch1_pwm_in_pa0: tim2_ch1_pwm_in_pa0 {
+				pinmux = <STM32F1_PINMUX('A', 0, GPIO_IN, TIM2_REMAP0)>;
+			};
+
+			/omit-if-no-ref/ tim2_ch1_remap2_pwm_in_pa0: tim2_ch1_remap2_pwm_in_pa0 {
+				pinmux = <STM32F1_PINMUX('A', 0, GPIO_IN, TIM2_REMAP2)>;
+			};
+
+			/omit-if-no-ref/ tim2_ch2_pwm_in_pa1: tim2_ch2_pwm_in_pa1 {
+				pinmux = <STM32F1_PINMUX('A', 1, GPIO_IN, TIM2_REMAP0)>;
+			};
+
+			/omit-if-no-ref/ tim2_ch2_remap2_pwm_in_pa1: tim2_ch2_remap2_pwm_in_pa1 {
+				pinmux = <STM32F1_PINMUX('A', 1, GPIO_IN, TIM2_REMAP2)>;
+			};
+
+			/omit-if-no-ref/ tim2_ch3_pwm_in_pa2: tim2_ch3_pwm_in_pa2 {
+				pinmux = <STM32F1_PINMUX('A', 2, GPIO_IN, TIM2_REMAP0)>;
+			};
+
+			/omit-if-no-ref/ tim2_ch3_remap1_pwm_in_pa2: tim2_ch3_remap1_pwm_in_pa2 {
+				pinmux = <STM32F1_PINMUX('A', 2, GPIO_IN, TIM2_REMAP1)>;
+			};
+
+			/omit-if-no-ref/ tim2_ch4_pwm_in_pa3: tim2_ch4_pwm_in_pa3 {
+				pinmux = <STM32F1_PINMUX('A', 3, GPIO_IN, TIM2_REMAP0)>;
+			};
+
+			/omit-if-no-ref/ tim2_ch4_remap1_pwm_in_pa3: tim2_ch4_remap1_pwm_in_pa3 {
+				pinmux = <STM32F1_PINMUX('A', 3, GPIO_IN, TIM2_REMAP1)>;
+			};
+
+			/omit-if-no-ref/ tim2_ch1_remap1_pwm_in_pa15: tim2_ch1_remap1_pwm_in_pa15 {
+				pinmux = <STM32F1_PINMUX('A', 15, GPIO_IN, TIM2_REMAP1)>;
+			};
+
+			/omit-if-no-ref/ tim2_ch1_remap3_pwm_in_pa15: tim2_ch1_remap3_pwm_in_pa15 {
+				pinmux = <STM32F1_PINMUX('A', 15, GPIO_IN, TIM2_REMAP3)>;
+			};
+
+			/omit-if-no-ref/ tim2_ch2_remap1_pwm_in_pb3: tim2_ch2_remap1_pwm_in_pb3 {
+				pinmux = <STM32F1_PINMUX('B', 3, GPIO_IN, TIM2_REMAP1)>;
+			};
+
+			/omit-if-no-ref/ tim2_ch2_remap3_pwm_in_pb3: tim2_ch2_remap3_pwm_in_pb3 {
+				pinmux = <STM32F1_PINMUX('B', 3, GPIO_IN, TIM2_REMAP3)>;
+			};
+
+			/omit-if-no-ref/ tim3_ch1_pwm_in_pa6: tim3_ch1_pwm_in_pa6 {
+				pinmux = <STM32F1_PINMUX('A', 6, GPIO_IN, TIM3_REMAP0)>;
+			};
+
+			/omit-if-no-ref/ tim3_ch2_pwm_in_pa7: tim3_ch2_pwm_in_pa7 {
+				pinmux = <STM32F1_PINMUX('A', 7, GPIO_IN, TIM3_REMAP0)>;
+			};
+
+			/omit-if-no-ref/ tim3_ch3_pwm_in_pb0: tim3_ch3_pwm_in_pb0 {
+				pinmux = <STM32F1_PINMUX('B', 0, GPIO_IN, TIM3_REMAP0)>;
+			};
+
+			/omit-if-no-ref/ tim3_ch3_remap1_pwm_in_pb0: tim3_ch3_remap1_pwm_in_pb0 {
+				pinmux = <STM32F1_PINMUX('B', 0, GPIO_IN, TIM3_REMAP1)>;
+			};
+
+			/omit-if-no-ref/ tim3_ch4_pwm_in_pb1: tim3_ch4_pwm_in_pb1 {
+				pinmux = <STM32F1_PINMUX('B', 1, GPIO_IN, TIM3_REMAP0)>;
+			};
+
+			/omit-if-no-ref/ tim3_ch4_remap1_pwm_in_pb1: tim3_ch4_remap1_pwm_in_pb1 {
+				pinmux = <STM32F1_PINMUX('B', 1, GPIO_IN, TIM3_REMAP1)>;
+			};
+
+			/omit-if-no-ref/ tim3_ch1_remap1_pwm_in_pb4: tim3_ch1_remap1_pwm_in_pb4 {
+				pinmux = <STM32F1_PINMUX('B', 4, GPIO_IN, TIM3_REMAP1)>;
+			};
+
+			/omit-if-no-ref/ tim3_ch2_remap1_pwm_in_pb5: tim3_ch2_remap1_pwm_in_pb5 {
+				pinmux = <STM32F1_PINMUX('B', 5, GPIO_IN, TIM3_REMAP1)>;
+			};
+
+			/omit-if-no-ref/ tim4_ch1_pwm_in_pb6: tim4_ch1_pwm_in_pb6 {
+				pinmux = <STM32F1_PINMUX('B', 6, GPIO_IN, TIM4_REMAP0)>;
+			};
+
+			/omit-if-no-ref/ tim4_ch2_pwm_in_pb7: tim4_ch2_pwm_in_pb7 {
+				pinmux = <STM32F1_PINMUX('B', 7, GPIO_IN, TIM4_REMAP0)>;
+			};
+
+			/* TIM_CH_PWM_OUT / TIM_CHN_PWM_OUT */
+
+			/omit-if-no-ref/ tim1_ch1n_remap1_pwm_out_pa7: tim1_ch1n_remap1_pwm_out_pa7 {
 				pinmux = <STM32F1_PINMUX('A', 7, ALTERNATE, TIM1_REMAP1)>;
 			};
 
-			/omit-if-no-ref/ tim1_ch1_pwm_pa8: tim1_ch1_pwm_pa8 {
+			/omit-if-no-ref/ tim1_ch1_pwm_out_pa8: tim1_ch1_pwm_out_pa8 {
 				pinmux = <STM32F1_PINMUX('A', 8, ALTERNATE, TIM1_REMAP0)>;
 			};
 
-			/omit-if-no-ref/ tim1_ch1_remap1_pwm_pa8: tim1_ch1_remap1_pwm_pa8 {
+			/omit-if-no-ref/ tim1_ch1_remap1_pwm_out_pa8: tim1_ch1_remap1_pwm_out_pa8 {
 				pinmux = <STM32F1_PINMUX('A', 8, ALTERNATE, TIM1_REMAP1)>;
 			};
 
-			/omit-if-no-ref/ tim1_ch2_pwm_pa9: tim1_ch2_pwm_pa9 {
+			/omit-if-no-ref/ tim1_ch2_pwm_out_pa9: tim1_ch2_pwm_out_pa9 {
 				pinmux = <STM32F1_PINMUX('A', 9, ALTERNATE, TIM1_REMAP0)>;
 			};
 
-			/omit-if-no-ref/ tim1_ch2_remap1_pwm_pa9: tim1_ch2_remap1_pwm_pa9 {
+			/omit-if-no-ref/ tim1_ch2_remap1_pwm_out_pa9: tim1_ch2_remap1_pwm_out_pa9 {
 				pinmux = <STM32F1_PINMUX('A', 9, ALTERNATE, TIM1_REMAP1)>;
 			};
 
-			/omit-if-no-ref/ tim1_ch3_pwm_pa10: tim1_ch3_pwm_pa10 {
+			/omit-if-no-ref/ tim1_ch3_pwm_out_pa10: tim1_ch3_pwm_out_pa10 {
 				pinmux = <STM32F1_PINMUX('A', 10, ALTERNATE, TIM1_REMAP0)>;
 			};
 
-			/omit-if-no-ref/ tim1_ch3_remap1_pwm_pa10: tim1_ch3_remap1_pwm_pa10 {
+			/omit-if-no-ref/ tim1_ch3_remap1_pwm_out_pa10: tim1_ch3_remap1_pwm_out_pa10 {
 				pinmux = <STM32F1_PINMUX('A', 10, ALTERNATE, TIM1_REMAP1)>;
 			};
 
-			/omit-if-no-ref/ tim1_ch4_pwm_pa11: tim1_ch4_pwm_pa11 {
+			/omit-if-no-ref/ tim1_ch4_pwm_out_pa11: tim1_ch4_pwm_out_pa11 {
 				pinmux = <STM32F1_PINMUX('A', 11, ALTERNATE, TIM1_REMAP0)>;
 			};
 
-			/omit-if-no-ref/ tim1_ch4_remap1_pwm_pa11: tim1_ch4_remap1_pwm_pa11 {
+			/omit-if-no-ref/ tim1_ch4_remap1_pwm_out_pa11: tim1_ch4_remap1_pwm_out_pa11 {
 				pinmux = <STM32F1_PINMUX('A', 11, ALTERNATE, TIM1_REMAP1)>;
 			};
 
-			/omit-if-no-ref/ tim1_ch2n_remap1_pwm_pb0: tim1_ch2n_remap1_pwm_pb0 {
+			/omit-if-no-ref/ tim1_ch2n_remap1_pwm_out_pb0: tim1_ch2n_remap1_pwm_out_pb0 {
 				pinmux = <STM32F1_PINMUX('B', 0, ALTERNATE, TIM1_REMAP1)>;
 			};
 
-			/omit-if-no-ref/ tim1_ch3n_remap1_pwm_pb1: tim1_ch3n_remap1_pwm_pb1 {
+			/omit-if-no-ref/ tim1_ch3n_remap1_pwm_out_pb1: tim1_ch3n_remap1_pwm_out_pb1 {
 				pinmux = <STM32F1_PINMUX('B', 1, ALTERNATE, TIM1_REMAP1)>;
 			};
 
-			/omit-if-no-ref/ tim2_ch1_pwm_pa0: tim2_ch1_pwm_pa0 {
+			/omit-if-no-ref/ tim2_ch1_pwm_out_pa0: tim2_ch1_pwm_out_pa0 {
 				pinmux = <STM32F1_PINMUX('A', 0, ALTERNATE, TIM2_REMAP0)>;
 			};
 
-			/omit-if-no-ref/ tim2_ch1_remap2_pwm_pa0: tim2_ch1_remap2_pwm_pa0 {
+			/omit-if-no-ref/ tim2_ch1_remap2_pwm_out_pa0: tim2_ch1_remap2_pwm_out_pa0 {
 				pinmux = <STM32F1_PINMUX('A', 0, ALTERNATE, TIM2_REMAP2)>;
 			};
 
-			/omit-if-no-ref/ tim2_ch2_pwm_pa1: tim2_ch2_pwm_pa1 {
+			/omit-if-no-ref/ tim2_ch2_pwm_out_pa1: tim2_ch2_pwm_out_pa1 {
 				pinmux = <STM32F1_PINMUX('A', 1, ALTERNATE, TIM2_REMAP0)>;
 			};
 
-			/omit-if-no-ref/ tim2_ch2_remap2_pwm_pa1: tim2_ch2_remap2_pwm_pa1 {
+			/omit-if-no-ref/ tim2_ch2_remap2_pwm_out_pa1: tim2_ch2_remap2_pwm_out_pa1 {
 				pinmux = <STM32F1_PINMUX('A', 1, ALTERNATE, TIM2_REMAP2)>;
 			};
 
-			/omit-if-no-ref/ tim2_ch3_pwm_pa2: tim2_ch3_pwm_pa2 {
+			/omit-if-no-ref/ tim2_ch3_pwm_out_pa2: tim2_ch3_pwm_out_pa2 {
 				pinmux = <STM32F1_PINMUX('A', 2, ALTERNATE, TIM2_REMAP0)>;
 			};
 
-			/omit-if-no-ref/ tim2_ch3_remap1_pwm_pa2: tim2_ch3_remap1_pwm_pa2 {
+			/omit-if-no-ref/ tim2_ch3_remap1_pwm_out_pa2: tim2_ch3_remap1_pwm_out_pa2 {
 				pinmux = <STM32F1_PINMUX('A', 2, ALTERNATE, TIM2_REMAP1)>;
 			};
 
-			/omit-if-no-ref/ tim2_ch4_pwm_pa3: tim2_ch4_pwm_pa3 {
+			/omit-if-no-ref/ tim2_ch4_pwm_out_pa3: tim2_ch4_pwm_out_pa3 {
 				pinmux = <STM32F1_PINMUX('A', 3, ALTERNATE, TIM2_REMAP0)>;
 			};
 
-			/omit-if-no-ref/ tim2_ch4_remap1_pwm_pa3: tim2_ch4_remap1_pwm_pa3 {
+			/omit-if-no-ref/ tim2_ch4_remap1_pwm_out_pa3: tim2_ch4_remap1_pwm_out_pa3 {
 				pinmux = <STM32F1_PINMUX('A', 3, ALTERNATE, TIM2_REMAP1)>;
 			};
 
-			/omit-if-no-ref/ tim2_ch1_remap1_pwm_pa15: tim2_ch1_remap1_pwm_pa15 {
+			/omit-if-no-ref/ tim2_ch1_remap1_pwm_out_pa15: tim2_ch1_remap1_pwm_out_pa15 {
 				pinmux = <STM32F1_PINMUX('A', 15, ALTERNATE, TIM2_REMAP1)>;
 			};
 
-			/omit-if-no-ref/ tim2_ch1_remap3_pwm_pa15: tim2_ch1_remap3_pwm_pa15 {
+			/omit-if-no-ref/ tim2_ch1_remap3_pwm_out_pa15: tim2_ch1_remap3_pwm_out_pa15 {
 				pinmux = <STM32F1_PINMUX('A', 15, ALTERNATE, TIM2_REMAP3)>;
 			};
 
-			/omit-if-no-ref/ tim2_ch2_remap1_pwm_pb3: tim2_ch2_remap1_pwm_pb3 {
+			/omit-if-no-ref/ tim2_ch2_remap1_pwm_out_pb3: tim2_ch2_remap1_pwm_out_pb3 {
 				pinmux = <STM32F1_PINMUX('B', 3, ALTERNATE, TIM2_REMAP1)>;
 			};
 
-			/omit-if-no-ref/ tim2_ch2_remap3_pwm_pb3: tim2_ch2_remap3_pwm_pb3 {
+			/omit-if-no-ref/ tim2_ch2_remap3_pwm_out_pb3: tim2_ch2_remap3_pwm_out_pb3 {
 				pinmux = <STM32F1_PINMUX('B', 3, ALTERNATE, TIM2_REMAP3)>;
 			};
 
-			/omit-if-no-ref/ tim3_ch1_pwm_pa6: tim3_ch1_pwm_pa6 {
+			/omit-if-no-ref/ tim3_ch1_pwm_out_pa6: tim3_ch1_pwm_out_pa6 {
 				pinmux = <STM32F1_PINMUX('A', 6, ALTERNATE, TIM3_REMAP0)>;
 			};
 
-			/omit-if-no-ref/ tim3_ch2_pwm_pa7: tim3_ch2_pwm_pa7 {
+			/omit-if-no-ref/ tim3_ch2_pwm_out_pa7: tim3_ch2_pwm_out_pa7 {
 				pinmux = <STM32F1_PINMUX('A', 7, ALTERNATE, TIM3_REMAP0)>;
 			};
 
-			/omit-if-no-ref/ tim3_ch3_pwm_pb0: tim3_ch3_pwm_pb0 {
+			/omit-if-no-ref/ tim3_ch3_pwm_out_pb0: tim3_ch3_pwm_out_pb0 {
 				pinmux = <STM32F1_PINMUX('B', 0, ALTERNATE, TIM3_REMAP0)>;
 			};
 
-			/omit-if-no-ref/ tim3_ch3_remap1_pwm_pb0: tim3_ch3_remap1_pwm_pb0 {
+			/omit-if-no-ref/ tim3_ch3_remap1_pwm_out_pb0: tim3_ch3_remap1_pwm_out_pb0 {
 				pinmux = <STM32F1_PINMUX('B', 0, ALTERNATE, TIM3_REMAP1)>;
 			};
 
-			/omit-if-no-ref/ tim3_ch4_pwm_pb1: tim3_ch4_pwm_pb1 {
+			/omit-if-no-ref/ tim3_ch4_pwm_out_pb1: tim3_ch4_pwm_out_pb1 {
 				pinmux = <STM32F1_PINMUX('B', 1, ALTERNATE, TIM3_REMAP0)>;
 			};
 
-			/omit-if-no-ref/ tim3_ch4_remap1_pwm_pb1: tim3_ch4_remap1_pwm_pb1 {
+			/omit-if-no-ref/ tim3_ch4_remap1_pwm_out_pb1: tim3_ch4_remap1_pwm_out_pb1 {
 				pinmux = <STM32F1_PINMUX('B', 1, ALTERNATE, TIM3_REMAP1)>;
 			};
 
-			/omit-if-no-ref/ tim3_ch1_remap1_pwm_pb4: tim3_ch1_remap1_pwm_pb4 {
+			/omit-if-no-ref/ tim3_ch1_remap1_pwm_out_pb4: tim3_ch1_remap1_pwm_out_pb4 {
 				pinmux = <STM32F1_PINMUX('B', 4, ALTERNATE, TIM3_REMAP1)>;
 			};
 
-			/omit-if-no-ref/ tim3_ch2_remap1_pwm_pb5: tim3_ch2_remap1_pwm_pb5 {
+			/omit-if-no-ref/ tim3_ch2_remap1_pwm_out_pb5: tim3_ch2_remap1_pwm_out_pb5 {
 				pinmux = <STM32F1_PINMUX('B', 5, ALTERNATE, TIM3_REMAP1)>;
 			};
 
-			/omit-if-no-ref/ tim4_ch1_pwm_pb6: tim4_ch1_pwm_pb6 {
+			/omit-if-no-ref/ tim4_ch1_pwm_out_pb6: tim4_ch1_pwm_out_pb6 {
 				pinmux = <STM32F1_PINMUX('B', 6, ALTERNATE, TIM4_REMAP0)>;
 			};
 
-			/omit-if-no-ref/ tim4_ch2_pwm_pb7: tim4_ch2_pwm_pb7 {
+			/omit-if-no-ref/ tim4_ch2_pwm_out_pb7: tim4_ch2_pwm_out_pb7 {
 				pinmux = <STM32F1_PINMUX('B', 7, ALTERNATE, TIM4_REMAP0)>;
 			};
 
