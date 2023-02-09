@@ -208,10 +208,15 @@
   mode: input
   variant: slave
 
-- name: TIM_CH_PWM / TIM_CHN_PWM
+- name: TIM_CH_PWM_OUT / TIM_CHN_PWM_OUT
   match: "^TIM\\d+_CH\\d+N?$"
   mode: alternate
-  variant: pwm
+  variant: pwm_out
+
+- name: TIM_CH_PWM_IN / TIM_CHN_PWM_IN
+  match: "^TIM\\d+_CH\\d+N?$"
+  mode: input
+  variant: pwm_in
 
 - name: UART_CTS / USART_CTS
   match: "^US?ART\\d+_CTS$"
