@@ -49,6 +49,7 @@ NS = "{http://dummy.com}"
 """MCU XML namespace."""
 
 PINCTRL_ADDRESSES = {
+    "stm32c0": 0x50000000,
     "stm32f0": 0x48000000,
     "stm32f1": 0x40010800,
     "stm32f2": 0x40020000,
