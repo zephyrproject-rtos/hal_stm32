@@ -249,6 +249,23 @@
 				slew-rate = "very-high-speed";
 			};
 
+			/* I2S_MCK */
+
+			/omit-if-no-ref/ i2s1_mck_pa6: i2s1_mck_pa6 {
+				pinmux = <STM32_PINMUX('A', 6, AF0)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ i2s1_mck_pa11: i2s1_mck_pa11 {
+				pinmux = <STM32_PINMUX('A', 11, AF0)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ i2s1_mck_pb4: i2s1_mck_pb4 {
+				pinmux = <STM32_PINMUX('B', 4, AF0)>;
+				slew-rate = "very-high-speed";
+			};
+
 			/* I2S_SD */
 
 			/omit-if-no-ref/ i2s1_sd_pa2: i2s1_sd_pa2 {
