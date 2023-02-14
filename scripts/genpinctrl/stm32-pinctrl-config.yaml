@@ -165,6 +165,10 @@
   drive: open-drain
   bias: pull-up
 
+- name: I2S_MCK
+  match: "^I2S\\d+_MCK$"
+  slew-rate: very-high-speed
+
 - name: I2S_CK
   match: "^I2S\\d+_CK$"
   slew-rate: very-high-speed
