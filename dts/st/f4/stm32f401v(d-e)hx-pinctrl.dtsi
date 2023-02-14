@@ -493,6 +493,18 @@
 				slew-rate = "very-high-speed";
 			};
 
+			/* I2S_MCK */
+
+			/omit-if-no-ref/ i2s2_mck_pc6: i2s2_mck_pc6 {
+				pinmux = <STM32_PINMUX('C', 6, AF5)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ i2s3_mck_pc7: i2s3_mck_pc7 {
+				pinmux = <STM32_PINMUX('C', 7, AF6)>;
+				slew-rate = "very-high-speed";
+			};
+
 			/* I2S_SD */
 
 			/omit-if-no-ref/ i2s2_sd_pb15: i2s2_sd_pb15 {
