@@ -419,8 +419,8 @@ def get_mcu_signals(data_path, gpio_ip_afs):
 
             pin_name = pin.get("Name")
 
-            # skip duplicate remappable entries in some G0 files
-            if family == "STM32G0" and pin_name in ("PA9", "PA10"):
+            # skip duplicate remappable entries in some C0 and G0 files
+            if family in ("STM32C0", "STM32G0") and pin_name in ("PA9", "PA10"):
                 continue
 
             # obtain pin port (A, B, ...), number (0, 1, ...) and modifier
