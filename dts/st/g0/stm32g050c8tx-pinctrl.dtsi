@@ -44,14 +44,6 @@
 				pinmux = <STM32_PINMUX('A', 7, ANALOG)>;
 			};
 
-			/omit-if-no-ref/ adc1_in15_pa11: adc1_in15_pa11 {
-				pinmux = <STM32_PINMUX('A', 11, ANALOG)>;
-			};
-
-			/omit-if-no-ref/ adc1_in16_pa12: adc1_in16_pa12 {
-				pinmux = <STM32_PINMUX('A', 12, ANALOG)>;
-			};
-
 			/omit-if-no-ref/ adc1_in17_pa13: adc1_in17_pa13 {
 				pinmux = <STM32_PINMUX('A', 13, ANALOG)>;
 			};
@@ -70,10 +62,6 @@
 
 			/omit-if-no-ref/ adc1_in10_pb2: adc1_in10_pb2 {
 				pinmux = <STM32_PINMUX('B', 2, ANALOG)>;
-			};
-
-			/omit-if-no-ref/ adc1_in11_pb7: adc1_in11_pb7 {
-				pinmux = <STM32_PINMUX('B', 7, ANALOG)>;
 			};
 
 			/omit-if-no-ref/ adc1_in11_pb10: adc1_in11_pb10 {

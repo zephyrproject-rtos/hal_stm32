@@ -242,10 +242,6 @@
 				pinmux = <STM32_PINMUX('F', 1, ANALOG)>;
 			};
 
-			/omit-if-no-ref/ analog_pf2: analog_pf2 {
-				pinmux = <STM32_PINMUX('F', 2, ANALOG)>;
-			};
-
 			/* I2C_SCL */
 
 			/omit-if-no-ref/ i2c1_scl_pa9: i2c1_scl_pa9 {

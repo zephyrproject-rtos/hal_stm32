@@ -142,6 +142,14 @@
 				pinmux = <STM32_PINMUX('A', 15, ANALOG)>;
 			};
 
+			/omit-if-no-ref/ analog_pb0: analog_pb0 {
+				pinmux = <STM32_PINMUX('B', 0, ANALOG)>;
+			};
+
+			/omit-if-no-ref/ analog_pb1: analog_pb1 {
+				pinmux = <STM32_PINMUX('B', 1, ANALOG)>;
+			};
+
 			/omit-if-no-ref/ analog_pb2: analog_pb2 {
 				pinmux = <STM32_PINMUX('B', 2, ANALOG)>;
 			};
@@ -807,6 +815,11 @@
 				drive-push-pull;
 			};
 
+			/omit-if-no-ref/ lpuart1_de_pb1: lpuart1_de_pb1 {
+				pinmux = <STM32_PINMUX('B', 1, AF8)>;
+				drive-push-pull;
+			};
+
 			/omit-if-no-ref/ usart1_de_pb3: usart1_de_pb3 {
 				pinmux = <STM32_PINMUX('B', 3, AF7)>;
 				drive-push-pull;
@@ -821,6 +834,12 @@
 
 			/omit-if-no-ref/ usart1_rts_pa12: usart1_rts_pa12 {
 				pinmux = <STM32_PINMUX('A', 12, AF7)>;
+				bias-pull-up;
+				drive-open-drain;
+			};
+
+			/omit-if-no-ref/ lpuart1_rts_pb1: lpuart1_rts_pb1 {
+				pinmux = <STM32_PINMUX('B', 1, AF8)>;
 				bias-pull-up;
 				drive-open-drain;
 			};
