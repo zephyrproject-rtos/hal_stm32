@@ -6,7 +6,9 @@
 
 #include <autoconf.h>
 
-#if defined(CONFIG_SOC_SERIES_STM32L5X)
+#if defined(CONFIG_SOC_SERIES_STM32H5X)
+#include <stm32h5xx_ll_icache.h>
+#elif defined(CONFIG_SOC_SERIES_STM32L5X)
 #include <stm32l5xx_ll_icache.h>
 #elif defined(CONFIG_SOC_SERIES_STM32U5X)
 #include <stm32u5xx_ll_icache.h>

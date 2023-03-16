@@ -10,6 +10,8 @@
 #include <stm32g0xx_ll_ucpd.h>
 #elif defined(CONFIG_SOC_SERIES_STM32G4X)
 #include <stm32g4xx_ll_ucpd.h>
+#elif defined(CONFIG_SOC_SERIES_STM32H5X)
+#include <stm32h5xx_ll_ucpd.h>
 #elif defined(CONFIG_SOC_SERIES_STM32L5X)
 #include <stm32l5xx_ll_ucpd.h>
 #elif defined(CONFIG_SOC_SERIES_STM32U5X)
