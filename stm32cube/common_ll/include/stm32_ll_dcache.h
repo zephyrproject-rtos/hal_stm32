@@ -6,6 +6,8 @@
 
 #include <autoconf.h>
 
-#if defined(CONFIG_SOC_SERIES_STM32U5X)
+#if defined(CONFIG_SOC_SERIES_STM32H5X)
+#include <stm32h5xx_ll_dcache.h>
+#elif defined(CONFIG_SOC_SERIES_STM32U5X)
 #include <stm32u5xx_ll_dcache.h>
 #endif
