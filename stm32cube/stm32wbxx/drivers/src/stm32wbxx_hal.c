@@ -52,20 +52,20 @@
   * @{
   */
 /**
- * @brief STM32WBxx HAL Driver version number
+  * @brief STM32WBxx HAL Driver version number
    */
 #define __STM32WBxx_HAL_VERSION_MAIN   (0x01U) /*!< [31:24] main version */
-#define __STM32WBxx_HAL_VERSION_SUB1   (0x0BU) /*!< [23:16] sub1 version */
+#define __STM32WBxx_HAL_VERSION_SUB1   (0x0DU) /*!< [23:16] sub1 version */
 #define __STM32WBxx_HAL_VERSION_SUB2   (0x00U) /*!< [15:8]  sub2 version */
 #define __STM32WBxx_HAL_VERSION_RC     (0x00U) /*!< [7:0]  release candidate */
 #define __STM32WBxx_HAL_VERSION         ((__STM32WBxx_HAL_VERSION_MAIN << 24U)\
-                                        |(__STM32WBxx_HAL_VERSION_SUB1 << 16U)\
-                                        |(__STM32WBxx_HAL_VERSION_SUB2 << 8U )\
-                                        |(__STM32WBxx_HAL_VERSION_RC))
+                                         |(__STM32WBxx_HAL_VERSION_SUB1 << 16U)\
+                                         |(__STM32WBxx_HAL_VERSION_SUB2 << 8U )\
+                                         |(__STM32WBxx_HAL_VERSION_RC))
 
 #if defined(VREFBUF)
 #define VREFBUF_TIMEOUT_VALUE     10U   /* 10 ms */
-#endif
+#endif /* VREFBUF */
 
 /**
   * @}
@@ -91,8 +91,8 @@ HAL_TickFreqTypeDef uwTickFreq = HAL_TICK_FREQ_DEFAULT;  /* 1KHz */
   */
 
 /** @addtogroup HAL_Exported_Functions_Group1
- *  @brief    HAL Initialization and Configuration functions
- *
+  *  @brief    HAL Initialization and Configuration functions
+  *
 @verbatim
  ===============================================================================
            ##### HAL Initialization and Configuration functions #####
@@ -148,11 +148,11 @@ HAL_StatusTypeDef HAL_Init(void)
   /* - Instruction cache enabled                             */
   /* - Data cache enabled                                    */
 #if (INSTRUCTION_CACHE_ENABLE == 0U)
-   __HAL_FLASH_INSTRUCTION_CACHE_DISABLE();
+  __HAL_FLASH_INSTRUCTION_CACHE_DISABLE();
 #endif /* INSTRUCTION_CACHE_ENABLE */
 
 #if (DATA_CACHE_ENABLE == 0U)
-   __HAL_FLASH_DATA_CACHE_DISABLE();
+  __HAL_FLASH_DATA_CACHE_DISABLE();
 #endif /* DATA_CACHE_ENABLE */
 
 #if (PREFETCH_ENABLE != 0U)
@@ -255,7 +255,7 @@ __weak HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
   if ((uint32_t)uwTickFreq != 0U)
   {
     /*Configure the SysTick to have interrupt in 1ms time basis*/
-    if (HAL_SYSTICK_Config(HAL_RCC_GetHCLKFreq()/ (1000U / (uint32_t)uwTickFreq)) == 0U)
+    if (HAL_SYSTICK_Config(HAL_RCC_GetHCLKFreq() / (1000U / (uint32_t)uwTickFreq)) == 0U)
     {
       /* Configure the SysTick IRQ priority */
       if (TickPriority < (1UL << __NVIC_PRIO_BITS))
@@ -287,8 +287,8 @@ __weak HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
   */
 
 /** @addtogroup HAL_Exported_Functions_Group2
- *  @brief    HAL Control functions
- *
+  *  @brief    HAL Control functions
+  *
 @verbatim
  ===============================================================================
                       ##### HAL Control functions #####
@@ -312,7 +312,7 @@ __weak HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
   *        used as application time base.
   * @note In the default implementation, this variable is incremented each 1ms
   *       in SysTick ISR.
- * @note This function is declared as __weak to be overwritten in case of other
+  * @note This function is declared as __weak to be overwritten in case of other
   *      implementations in user file.
   * @retval None
   */
@@ -360,7 +360,7 @@ HAL_StatusTypeDef HAL_SetTickFreq(HAL_TickFreqTypeDef Freq)
     /* Update uwTickFreq global variable used by HAL_InitTick() */
     uwTickFreq = Freq;
 
-    /* Apply the new tick Freq  */
+    /* Apply the new tick Freq */
     status = HAL_InitTick(uwTickPrio);
 
     if (status != HAL_OK)
@@ -393,21 +393,21 @@ HAL_TickFreqTypeDef HAL_GetTickFreq(void)
   * @param Delay  specifies the delay time length, in milliseconds.
   * @retval None
   */
-  __weak void HAL_Delay(uint32_t Delay)
+__weak void HAL_Delay(uint32_t Delay)
+{
+  uint32_t tickstart = HAL_GetTick();
+  uint32_t wait = Delay;
+
+  /* Add a freq to guarantee minimum wait */
+  if (wait < HAL_MAX_DELAY)
   {
-    uint32_t tickstart = HAL_GetTick();
-    uint32_t wait = Delay;
-
-    /* Add a freq to guarantee minimum wait */
-    if (wait < HAL_MAX_DELAY)
-    {
-      wait += (uint32_t)(uwTickFreq);
-    }
-
-    while ((HAL_GetTick() - tickstart) < wait)
-    {
-    }
+    wait += (uint32_t)(uwTickFreq);
   }
+
+  while ((HAL_GetTick() - tickstart) < wait)
+  {
+  }
+}
 
 
 /**
@@ -423,7 +423,7 @@ HAL_TickFreqTypeDef HAL_GetTickFreq(void)
 __weak void HAL_SuspendTick(void)
 {
   /* Disable SysTick Interrupt */
-  CLEAR_BIT(SysTick->CTRL,SysTick_CTRL_TICKINT_Msk);
+  CLEAR_BIT(SysTick->CTRL, SysTick_CTRL_TICKINT_Msk);
 }
 
 /**
@@ -439,7 +439,7 @@ __weak void HAL_SuspendTick(void)
 __weak void HAL_ResumeTick(void)
 {
   /* Enable SysTick Interrupt */
-  SET_BIT(SysTick->CTRL,SysTick_CTRL_TICKINT_Msk);
+  SET_BIT(SysTick->CTRL, SysTick_CTRL_TICKINT_Msk);
 }
 
 /**
@@ -448,7 +448,7 @@ __weak void HAL_ResumeTick(void)
   */
 uint32_t HAL_GetHalVersion(void)
 {
- return __STM32WBxx_HAL_VERSION;
+  return __STM32WBxx_HAL_VERSION;
 }
 
 /**
@@ -457,7 +457,7 @@ uint32_t HAL_GetHalVersion(void)
   */
 uint32_t HAL_GetREVID(void)
 {
-   return(LL_DBGMCU_GetRevisionID());
+  return (LL_DBGMCU_GetRevisionID());
 }
 
 /**
@@ -466,7 +466,7 @@ uint32_t HAL_GetREVID(void)
   */
 uint32_t HAL_GetDEVID(void)
 {
-   return(LL_DBGMCU_GetDeviceID());
+  return (LL_DBGMCU_GetDeviceID());
 }
 
 /**
@@ -475,7 +475,7 @@ uint32_t HAL_GetDEVID(void)
   */
 uint32_t HAL_GetUIDw0(void)
 {
-  return(READ_REG(*((uint32_t *)UID_BASE)));
+  return (READ_REG(*((uint32_t *)UID_BASE)));
 }
 
 /**
@@ -484,7 +484,7 @@ uint32_t HAL_GetUIDw0(void)
   */
 uint32_t HAL_GetUIDw1(void)
 {
-  return(READ_REG(*((uint32_t *)(UID_BASE + 4U))));
+  return (READ_REG(*((uint32_t *)(UID_BASE + 4U))));
 }
 
 /**
@@ -493,7 +493,7 @@ uint32_t HAL_GetUIDw1(void)
   */
 uint32_t HAL_GetUIDw2(void)
 {
-  return(READ_REG(*((uint32_t *)(UID_BASE + 8U))));
+  return (READ_REG(*((uint32_t *)(UID_BASE + 8U))));
 }
 
 /**
@@ -501,8 +501,8 @@ uint32_t HAL_GetUIDw2(void)
   */
 
 /** @addtogroup HAL_Exported_Functions_Group3
- *  @brief    HAL Debug functions
- *
+  *  @brief    HAL Debug functions
+  *
 @verbatim
  ===============================================================================
                       ##### HAL Debug functions #####
@@ -575,8 +575,8 @@ void HAL_DBGMCU_DisableDBGStandbyMode(void)
   */
 
 /** @defgroup HAL_Exported_Functions_Group4 HAL System Configuration functions
- *  @brief    HAL System Configuration functions
- *
+  *  @brief    HAL System Configuration functions
+  *
 @verbatim
  ===============================================================================
                  ##### HAL system configuration functions #####
@@ -653,11 +653,11 @@ void HAL_SYSCFG_VREFBUF_VoltageScalingConfig(uint32_t VoltageScaling)
   /* Restrieve Calibration data and store them into trimming field */
   if (VoltageScaling == SYSCFG_VREFBUF_VOLTAGE_SCALE0)
   {
-    TrimmingValue = ((uint32_t) *VREFBUF_SC0_CAL_ADDR) & 0x3FU;
+    TrimmingValue = ((uint32_t) * VREFBUF_SC0_CAL_ADDR) & 0x3FU;
   }
   else
   {
-    TrimmingValue = ((uint32_t) *VREFBUF_SC1_CAL_ADDR) & 0x3FU;
+    TrimmingValue = ((uint32_t) * VREFBUF_SC1_CAL_ADDR) & 0x3FU;
   }
   assert_param(IS_SYSCFG_VREFBUF_TRIMMING(TrimmingValue));
 
@@ -716,9 +716,9 @@ HAL_StatusTypeDef HAL_SYSCFG_EnableVREFBUF(void)
   tickstart = HAL_GetTick();
 
   /* Wait for VRR bit  */
-  while(READ_BIT(VREFBUF->CSR, VREFBUF_CSR_VRR) == 0U)
+  while (READ_BIT(VREFBUF->CSR, VREFBUF_CSR_VRR) == 0U)
   {
-    if((HAL_GetTick() - tickstart) > VREFBUF_TIMEOUT_VALUE)
+    if ((HAL_GetTick() - tickstart) > VREFBUF_TIMEOUT_VALUE)
     {
       return HAL_TIMEOUT;
     }
