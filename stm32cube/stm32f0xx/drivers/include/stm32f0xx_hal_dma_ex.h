@@ -6,13 +6,12 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
-  * All rights reserved.</center></h2>
+  * Copyright (c) 2016 STMicroelectronics.
+  * All rights reserved.
   *
-  * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
-  * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/BSD-3-Clause
+  * This software is licensed under terms that can be found in the LICENSE file in
+  * the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
   *
   ******************************************************************************
   */
@@ -22,7 +21,7 @@
 #define __STM32F0xx_HAL_DMA_EX_H
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
@@ -43,19 +42,19 @@
 /** @defgroup DMAEx_Exported_Constants DMAEx Exported Constants
   * @{
   */
-#define DMA1_CHANNEL1_RMP                                     0x00000000 /*!< Internal define for remaping on STM32F09x/30xC */
-#define DMA1_CHANNEL2_RMP                                     0x10000000 /*!< Internal define for remaping on STM32F09x/30xC */
-#define DMA1_CHANNEL3_RMP                                     0x20000000 /*!< Internal define for remaping on STM32F09x/30xC */
-#define DMA1_CHANNEL4_RMP                                     0x30000000 /*!< Internal define for remaping on STM32F09x/30xC */
-#define DMA1_CHANNEL5_RMP                                     0x40000000 /*!< Internal define for remaping on STM32F09x/30xC */
+#define DMA1_CHANNEL1_RMP                                     0x00000000 /*!< Internal define for remapping on STM32F09x/30xC */
+#define DMA1_CHANNEL2_RMP                                     0x10000000 /*!< Internal define for remapping on STM32F09x/30xC */
+#define DMA1_CHANNEL3_RMP                                     0x20000000 /*!< Internal define for remapping on STM32F09x/30xC */
+#define DMA1_CHANNEL4_RMP                                     0x30000000 /*!< Internal define for remapping on STM32F09x/30xC */
+#define DMA1_CHANNEL5_RMP                                     0x40000000 /*!< Internal define for remapping on STM32F09x/30xC */
 #if !defined(STM32F030xC)
-#define DMA1_CHANNEL6_RMP                                     0x50000000 /*!< Internal define for remaping on STM32F09x/30xC */
-#define DMA1_CHANNEL7_RMP                                     0x60000000 /*!< Internal define for remaping on STM32F09x/30xC */
-#define DMA2_CHANNEL1_RMP                                     0x00000000 /*!< Internal define for remaping on STM32F09x/30xC */
-#define DMA2_CHANNEL2_RMP                                     0x10000000 /*!< Internal define for remaping on STM32F09x/30xC */
-#define DMA2_CHANNEL3_RMP                                     0x20000000 /*!< Internal define for remaping on STM32F09x/30xC */
-#define DMA2_CHANNEL4_RMP                                     0x30000000 /*!< Internal define for remaping on STM32F09x/30xC */
-#define DMA2_CHANNEL5_RMP                                     0x40000000 /*!< Internal define for remaping on STM32F09x/30xC */
+#define DMA1_CHANNEL6_RMP                                     0x50000000 /*!< Internal define for remapping on STM32F09x/30xC */
+#define DMA1_CHANNEL7_RMP                                     0x60000000 /*!< Internal define for remapping on STM32F09x/30xC */
+#define DMA2_CHANNEL1_RMP                                     0x00000000 /*!< Internal define for remapping on STM32F09x/30xC */
+#define DMA2_CHANNEL2_RMP                                     0x10000000 /*!< Internal define for remapping on STM32F09x/30xC */
+#define DMA2_CHANNEL3_RMP                                     0x20000000 /*!< Internal define for remapping on STM32F09x/30xC */
+#define DMA2_CHANNEL4_RMP                                     0x30000000 /*!< Internal define for remapping on STM32F09x/30xC */
+#define DMA2_CHANNEL5_RMP                                     0x40000000 /*!< Internal define for remapping on STM32F09x/30xC */
 #endif /* !defined(STM32F030xC) */
 
 /****************** DMA1 remap bit field definition********************/
@@ -808,4 +807,3 @@
 
 #endif /* __STM32F0xx_HAL_DMA_EX_H */
 
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
