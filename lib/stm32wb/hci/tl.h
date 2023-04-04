@@ -84,29 +84,32 @@ typedef PACKED_STRUCT
 } TL_CsEvt_t;
 
 /**
- * This the payload of TL_Evt_t for a command complete event
+ * This the payload of TL_Evt_t for a command complete event, only used a pointer
  */
 typedef PACKED_STRUCT
 {
   uint8_t   numcmd;
   uint16_t  cmdcode;
-  uint8_t   payload[1];
+  uint8_t   payload[255];
 } TL_CcEvt_t;
 
 /**
- * This the payload of TL_Evt_t for an asynchronous event
+ * This the payload of TL_Evt_t for an asynchronous event, only used a pointer
  */
 typedef PACKED_STRUCT
 {
   uint16_t  subevtcode;
-  uint8_t   payload[1];
+  uint8_t   payload[255];
 } TL_AsynchEvt_t;
 
+/**
+ * This the payload of TL_Evt_t, only used a pointer
+ */
 typedef PACKED_STRUCT
 {
   uint8_t   evtcode;
   uint8_t   plen;
-  uint8_t   payload[1];
+  uint8_t   payload[255];
 } TL_Evt_t;
 
 typedef PACKED_STRUCT
@@ -234,6 +237,43 @@ typedef struct
   void (* IoBusCallBackUserEvt) (TL_EvtPacket_t *phcievt);
   uint8_t *p_cmdbuffer;
 } TL_SYS_InitConf_t;
+
+/*****************************************************************************************
+ * Event type copied from ble_legacy.h
+ */
+
+typedef PACKED_STRUCT
+{
+  uint8_t type;
+  uint8_t data[1];
+} hci_uart_pckt;
+
+typedef PACKED_STRUCT
+{
+  uint8_t         evt;
+  uint8_t         plen;
+  uint8_t         data[1];
+} hci_event_pckt;
+
+typedef PACKED_STRUCT
+{
+  uint8_t         subevent;
+  uint8_t         data[1];
+} evt_le_meta_event;
+
+/**
+ * Vendor specific event for BLE core.
+ */
+typedef PACKED_STRUCT
+{
+  uint16_t ecode; /**< One of the BLE core event codes. */
+  uint8_t  data[1];
+} evt_blecore_aci;
+
+/* Bluetooth 48 bit address (in little-endian order).
+ */
+typedef	uint8_t	tBDAddr[6];
+
 
 /* Exported constants --------------------------------------------------------*/
 /* External variables --------------------------------------------------------*/
