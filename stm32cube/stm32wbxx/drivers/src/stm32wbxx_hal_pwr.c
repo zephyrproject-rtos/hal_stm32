@@ -70,7 +70,7 @@
   * @}
   */
 
- /**
+/**
   * @}
   */
 
@@ -116,7 +116,7 @@ void HAL_PWR_DeInit(void)
 #if defined(GPIOD)
   LL_PWR_WriteReg(PUCRD, PWR_PUCRD_RESET_VALUE);
   LL_PWR_WriteReg(PDCRD, PWR_PDCRD_RESET_VALUE);
-#endif
+#endif /* GPIOD */
   LL_PWR_WriteReg(PUCRE, PWR_PUCRE_RESET_VALUE);
   LL_PWR_WriteReg(PDCRE, PWR_PDCRE_RESET_VALUE);
   LL_PWR_WriteReg(PUCRH, PWR_PUCRH_RESET_VALUE);
@@ -126,23 +126,23 @@ void HAL_PWR_DeInit(void)
 
   /* Clear all flags */
   LL_PWR_WriteReg(SCR,
-                    LL_PWR_SCR_CC2HF
+                  LL_PWR_SCR_CC2HF
                   | LL_PWR_SCR_CBLEAF
                   | LL_PWR_SCR_CCRPEF
 #if defined(PWR_CR3_E802A)
                   | LL_PWR_SCR_C802AF
                   | LL_PWR_SCR_C802WUF
-#endif
+#endif /* PWR_CR3_E802A */
                   | LL_PWR_SCR_CBLEWUF
 #if defined(PWR_CR5_SMPSEN)
                   | LL_PWR_SCR_CBORHF
                   | LL_PWR_SCR_CSMPSFBF
-#endif
+#endif /* PWR_CR5_SMPSEN */
                   | LL_PWR_SCR_CWUF
                  );
 
   LL_PWR_WriteReg(EXTSCR,
-                    LL_PWR_EXTSCR_CCRPF
+                  LL_PWR_EXTSCR_CCRPF
                   | LL_PWR_EXTSCR_C2CSSF
                   | LL_PWR_EXTSCR_C1CSSF
                  );
@@ -383,19 +383,19 @@ HAL_StatusTypeDef HAL_PWR_ConfigPVD(PWR_PVDTypeDef *sConfigPVD)
   __HAL_PWR_PVD_EXTI_DISABLE_FALLING_EDGE();
 
   /* Configure interrupt mode */
-  if((sConfigPVD->Mode & PVD_MODE_IT) == PVD_MODE_IT)
+  if ((sConfigPVD->Mode & PVD_MODE_IT) == PVD_MODE_IT)
   {
     /* Set CPU1 as wakeup target */
     __HAL_PWR_PVD_EXTI_ENABLE_IT();
   }
 
   /* Configure the edge */
-  if((sConfigPVD->Mode & PVD_RISING_EDGE) == PVD_RISING_EDGE)
+  if ((sConfigPVD->Mode & PVD_RISING_EDGE) == PVD_RISING_EDGE)
   {
     __HAL_PWR_PVD_EXTI_ENABLE_RISING_EDGE();
   }
 
-  if((sConfigPVD->Mode & PVD_FALLING_EDGE) == PVD_FALLING_EDGE)
+  if ((sConfigPVD->Mode & PVD_FALLING_EDGE) == PVD_FALLING_EDGE)
   {
     __HAL_PWR_PVD_EXTI_ENABLE_FALLING_EDGE();
   }
@@ -528,7 +528,7 @@ void HAL_PWR_EnterSLEEPMode(uint32_t Regulator, uint8_t SLEEPEntry)
   CLEAR_BIT(SCB->SCR, ((uint32_t)SCB_SCR_SLEEPDEEP_Msk));
 
   /* Select SLEEP mode entry -------------------------------------------------*/
-  if(SLEEPEntry == PWR_SLEEPENTRY_WFI)
+  if (SLEEPEntry == PWR_SLEEPENTRY_WFI)
   {
     /* Request Wait For Interrupt */
     __WFI();
@@ -582,7 +582,7 @@ void HAL_PWR_EnterSTOPMode(uint32_t Regulator, uint8_t STOPEntry)
   /* Check the parameters */
   assert_param(IS_PWR_REGULATOR(Regulator));
 
-  if(Regulator == PWR_LOWPOWERREGULATOR_ON)
+  if (Regulator == PWR_LOWPOWERREGULATOR_ON)
   {
     HAL_PWREx_EnterSTOP1Mode(STOPEntry);
   }
@@ -621,10 +621,10 @@ void HAL_PWR_EnterSTANDBYMode(void)
   /* Set SLEEPDEEP bit of Cortex System Control Register */
   SET_BIT(SCB->SCR, ((uint32_t)SCB_SCR_SLEEPDEEP_Msk));
 
-/* This option is used to ensure that store operations are completed */
-#if defined ( __CC_ARM)
+  /* This option is used to ensure that store operations are completed */
+#if defined (__CC_ARM)
   __force_stores();
-#endif
+#endif /* __CC_ARM */
 
   /* Request Wait For Interrupt */
   __WFI();

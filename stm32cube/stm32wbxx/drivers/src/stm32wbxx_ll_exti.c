@@ -23,7 +23,7 @@
 #include "stm32_assert.h"
 #else
 #define assert_param(expr) ((void)0U)
-#endif
+#endif /* USE_FULL_ASSERT */
 
 /** @addtogroup STM32WBxx_LL_Driver
   * @{
@@ -47,14 +47,14 @@
 #define IS_LL_EXTI_LINE_32_63(__VALUE__)             (((__VALUE__) & ~LL_EXTI_LINE_ALL_32_63) == 0x00000000U)
 
 #define IS_LL_EXTI_MODE(__VALUE__)                   (((__VALUE__) == LL_EXTI_MODE_IT)            \
-                                                   || ((__VALUE__) == LL_EXTI_MODE_EVENT)         \
-                                                   || ((__VALUE__) == LL_EXTI_MODE_IT_EVENT))
+                                                      || ((__VALUE__) == LL_EXTI_MODE_EVENT)      \
+                                                      || ((__VALUE__) == LL_EXTI_MODE_IT_EVENT))
 
 
 #define IS_LL_EXTI_TRIGGER(__VALUE__)                (((__VALUE__) == LL_EXTI_TRIGGER_NONE)       \
-                                                   || ((__VALUE__) == LL_EXTI_TRIGGER_RISING)     \
-                                                   || ((__VALUE__) == LL_EXTI_TRIGGER_FALLING)    \
-                                                   || ((__VALUE__) == LL_EXTI_TRIGGER_RISING_FALLING))
+                                                      || ((__VALUE__) == LL_EXTI_TRIGGER_RISING)  \
+                                                      || ((__VALUE__) == LL_EXTI_TRIGGER_FALLING) \
+                                                      || ((__VALUE__) == LL_EXTI_TRIGGER_RISING_FALLING))
 
 /**
   * @}

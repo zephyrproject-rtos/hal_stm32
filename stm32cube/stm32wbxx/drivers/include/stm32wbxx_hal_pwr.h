@@ -21,7 +21,7 @@
 #define STM32WBxx_HAL_PWR_H
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
@@ -55,7 +55,7 @@ typedef struct
 
   uint32_t Mode;           /*!< Mode: Specifies the operating mode for the selected pins.
                                 This parameter can be a value of @ref PWR_PVD_Mode. */
-}PWR_PVDTypeDef;
+} PWR_PVDTypeDef;
 
 /**
   * @}
@@ -106,7 +106,7 @@ typedef struct
 #define PWR_LOWPOWERMODE_STOP1              (PWR_CR1_LPMS_0)                      /*!< Stop 1: stop mode with low power regulator */
 #if defined(PWR_SUPPORT_STOP2)
 #define PWR_LOWPOWERMODE_STOP2              (PWR_CR1_LPMS_1)                      /*!< Stop 2: stop mode with low power regulator and VDD12I interruptible digital core domain supply OFF (less peripherals activated than low power mode stop 1 to reduce power consumption)*/
-#endif
+#endif /* PWR_SUPPORT_STOP2 */
 #define PWR_LOWPOWERMODE_STANDBY            (PWR_CR1_LPMS_0 | PWR_CR1_LPMS_1)     /*!< Standby mode */
 #define PWR_LOWPOWERMODE_SHUTDOWN           (PWR_CR1_LPMS_2)                      /*!< Shutdown mode */
 /**
@@ -238,19 +238,19 @@ typedef struct
   */
 #define __HAL_PWR_GET_FLAG(__FLAG__)  ((((__FLAG__) & PWR_FLAG_REG_MASK) == PWR_FLAG_REG_SR1) ?   \
                                        (                                                          \
-                                        PWR->SR1 & (1UL << ((__FLAG__) & 31UL))                   \
+                                           PWR->SR1 & (1UL << ((__FLAG__) & 31UL))                \
                                        )                                                          \
                                        :                                                          \
                                        (                                                          \
-                                        (((__FLAG__) & PWR_FLAG_REG_MASK) == PWR_FLAG_REG_SR2) ? \
-                                        (                                                        \
-                                         PWR->SR2 & (1UL << ((__FLAG__) & 31UL))                 \
-                                        )                                                        \
-                                        :                                                        \
-                                        (                                                        \
-                                         PWR->EXTSCR & (1UL << ((__FLAG__) & 31UL))              \
-                                        )                                                        \
-                                       )                                                          \
+                                           (((__FLAG__) & PWR_FLAG_REG_MASK) == PWR_FLAG_REG_SR2) ? \
+                                           (                                                        \
+                                               PWR->SR2 & (1UL << ((__FLAG__) & 31UL))              \
+                                           )                                                        \
+                                           :                                                        \
+                                           (                                                        \
+                                               PWR->EXTSCR & (1UL << ((__FLAG__) & 31UL))           \
+                                           )                                                        \
+                                       )                                                            \
                                       )
 
 /** @brief  Clear a specific PWR flag.
@@ -291,16 +291,16 @@ typedef struct
   *
   * @retval None
   */
-#define __HAL_PWR_CLEAR_FLAG(__FLAG__)   ((((__FLAG__) & PWR_FLAG_REG_MASK) == PWR_FLAG_REG_EXTSCR) ?                                  \
-                                          (                                                                                            \
-                                           PWR->EXTSCR = (1UL << (((__FLAG__) & PWR_FLAG_EXTSCR_CLR_MASK) >> PWR_FLAG_EXTSCR_CLR_POS)) \
-                                          )                                                                                            \
-                                          :                                                                                            \
-                                          (                                                                                            \
-                                           (((__FLAG__)) == PWR_FLAG_WU) ?                                                             \
-                                           (PWR->SCR = PWR_SCR_CWUF) :                                                                 \
-                                           (PWR->SCR = (1UL << ((__FLAG__) & 31UL)))                                                   \
-                                          )                                                                                            \
+#define __HAL_PWR_CLEAR_FLAG(__FLAG__)   ((((__FLAG__) & PWR_FLAG_REG_MASK) == PWR_FLAG_REG_EXTSCR) ?                                     \
+                                          (                                                                                               \
+                                              PWR->EXTSCR = (1UL << (((__FLAG__) & PWR_FLAG_EXTSCR_CLR_MASK) >> PWR_FLAG_EXTSCR_CLR_POS)) \
+                                          )                                                                                               \
+                                          :                                                                                               \
+                                          (                                                                                               \
+                                              (((__FLAG__)) == PWR_FLAG_WU) ?                                                             \
+                                              (PWR->SCR = PWR_SCR_CWUF) :                                                                 \
+                                              (PWR->SCR = (1UL << ((__FLAG__) & 31UL)))                                                   \
+                                          )                                                                                               \
                                          )
 
 /**
