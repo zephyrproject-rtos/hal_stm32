@@ -86,5 +86,19 @@ Patch List:
             used as, in Zephyr context, it is  running on C-M4 side.
           Impacted file: app_conf.h
 
+         *  (Z-WB-4) Change payload size of several structure defined in tl.h
+             from 255 to 2 (TL_CcEvt_t, TL_AsynchEvt_t and TL_Evt_t).
+             Rename TL_BLEEVT_CS_BUFFER_SIZE to TL_BLEEVT_CC_BUFFER_SIZE and
+             TL_BLEEVT_CS_PACKET_SIZE to TL_BLEEVT_CC_PACKET_SIZE and changing
+             its value to use sizeof(TL_CcEvt_t) instead of sizeof(TL_CsEvt_t).
+             In shci.c, for all declaration of local_buffer, change the size
+             from TL_BLEEVT_CS_BUFFER_SIZE to TL_BLEEVT_CC_BUFFER_SIZE.
+             The goal of all that is to prevent a GCC warning in most function
+             returns of shci.c: warning: array subscript 'TL_CcEvt_t[0]' is
+             partly outside array bounds of 'uint8_t[15]' {aka 'unsigned
+             char[15]'} [-Warray-bounds].
+             This is expected to be fixed in release 1.17.0
+             Internal reference: 142283
+          Impacted files: tl.h, shci.c
 
 	* Remove trailing whitespaces
