@@ -9,22 +9,20 @@
   *          This file contains:
   *           - Data structures and the address mapping for all peripherals
   *           - Peripheral's registers declarations and bits definition
-  *           - Macros to access peripheral’s registers hardware
+  *           - Macros to access peripheral's registers hardware
   *
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
-  * All rights reserved.</center></h2>
+  * Copyright (c) 2016 STMicroelectronics.
+  * All rights reserved.
   *
-  * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
-  * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/BSD-3-Clause
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
   *
   ******************************************************************************
   */
-
 /** @addtogroup CMSIS
   * @{
   */
@@ -70,7 +68,7 @@ typedef enum
 /******  Cortex-M0 Processor Exceptions Numbers **************************************************************/
   NonMaskableInt_IRQn         = -14,    /*!< 2 Non Maskable Interrupt                                        */
   HardFault_IRQn              = -13,    /*!< 3 Cortex-M0 Hard Fault Interrupt                                */
-  SVC_IRQn                    = -5,     /*!< 11 Cortex-M0 SV Call Interrupt                                  */
+  SVCall_IRQn                 = -5,     /*!< 11 Cortex-M0 SV Call Interrupt                                  */
   PendSV_IRQn                 = -2,     /*!< 14 Cortex-M0 Pend SV Interrupt                                  */
   SysTick_IRQn                = -1,     /*!< 15 Cortex-M0 System Tick Interrupt                              */
 
@@ -785,7 +783,7 @@ typedef struct
 /******************************************************************************/
 
 /*
- * @brief Specific device feature definitions (not present on all devices in the STM32F0 serie)
+ * @brief Specific device feature definitions (not present on all devices in the STM32F0 series)
  */
 #define ADC_CHANNEL_VBAT_SUPPORT                       /*!< ADC feature available only on specific devices: ADC internal channel Vbat */
 
@@ -873,7 +871,7 @@ typedef struct
 
 #define ADC_CFGR1_ALIGN_Pos       (5U)
 #define ADC_CFGR1_ALIGN_Msk       (0x1UL << ADC_CFGR1_ALIGN_Pos)                /*!< 0x00000020 */
-#define ADC_CFGR1_ALIGN           ADC_CFGR1_ALIGN_Msk                          /*!< ADC data alignement */
+#define ADC_CFGR1_ALIGN           ADC_CFGR1_ALIGN_Msk                          /*!< ADC data alignment */
 
 #define ADC_CFGR1_EXTSEL_Pos      (6U)
 #define ADC_CFGR1_EXTSEL_Msk      (0x7UL << ADC_CFGR1_EXTSEL_Pos)               /*!< 0x000001C0 */
@@ -4798,10 +4796,13 @@ typedef struct
 #define CEC_TXDR_TXD             CEC_TXDR_TXD_Msk                              /*!< CEC Tx Data                        */
 
 /*******************  Bit definition for CEC_RXDR register  *******************/
-#define CEC_TXDR_RXD_Pos         (0U)
-#define CEC_TXDR_RXD_Msk         (0xFFUL << CEC_TXDR_RXD_Pos)                   /*!< 0x000000FF */
-#define CEC_TXDR_RXD             CEC_TXDR_RXD_Msk                              /*!< CEC Rx Data                        */
-
+#define CEC_RXDR_RXD_Pos         (0U)
+#define CEC_RXDR_RXD_Msk         (0xFFUL << CEC_RXDR_RXD_Pos)                   /*!< 0x000000FF */
+#define CEC_RXDR_RXD             CEC_RXDR_RXD_Msk                              /*!< CEC Rx Data                        */
+/* Legacy aliases */
+#define CEC_TXDR_RXD_Pos         CEC_RXDR_RXD_Pos
+#define CEC_TXDR_RXD_Msk         CEC_RXDR_RXD_Msk
+#define CEC_TXDR_RXD             CEC_RXDR_RXD
 /*******************  Bit definition for CEC_ISR register  ********************/
 #define CEC_ISR_RXBR_Pos         (0U)
 #define CEC_ISR_RXBR_Msk         (0x1UL << CEC_ISR_RXBR_Pos)                    /*!< 0x00000001 */
@@ -5009,7 +5010,7 @@ typedef struct
 /******************************************************************************/
 
 /*
-* @brief Specific device feature definitions (not present on all devices in the STM32F0 serie)
+* @brief Specific device feature definitions (not present on all devices in the STM32F0 series)
 */
 
 /* Support of Programmable Polynomial size and value feature */
@@ -5157,7 +5158,7 @@ typedef struct
 /******************************************************************************/
 
 /*
- * @brief Specific device feature definitions (not present on all devices in the STM32F0 serie)
+ * @brief Specific device feature definitions (not present on all devices in the STM32F0 series)
  */
 #define DAC_CHANNEL2_SUPPORT                       /*!< DAC feature available only on specific devices: availability of DAC channel 2 */
 
@@ -7926,7 +7927,7 @@ typedef struct
 /*                                                                           */
 /*****************************************************************************/
 /*
-* @brief Specific device feature definitions  (not present on all devices in the STM32F0 serie)
+* @brief Specific device feature definitions  (not present on all devices in the STM32F0 series)
 */
 #define RCC_HSI48_SUPPORT           /*!< HSI48 feature support */
 #define RCC_PLLSRC_PREDIV1_SUPPORT  /*!< PREDIV support used as PLL source input  */
@@ -8659,7 +8660,7 @@ typedef struct
 /*                                                                           */
 /*****************************************************************************/
 /*
-* @brief Specific device feature definitions  (not present on all devices in the STM32F0 serie)
+* @brief Specific device feature definitions  (not present on all devices in the STM32F0 series)
 */
 #define RTC_TAMPER1_SUPPORT  /*!< TAMPER 1 feature support */
 #define RTC_TAMPER2_SUPPORT  /*!< TAMPER 2 feature support */
@@ -9182,7 +9183,7 @@ typedef struct
 /*****************************************************************************/
 
 /*
- * @brief Specific device feature definitions (not present on all devices in the STM32F0 serie)
+ * @brief Specific device feature definitions (not present on all devices in the STM32F0 series)
  */
 #define SPI_I2S_SUPPORT                       /*!< I2S support */
 
@@ -10962,7 +10963,7 @@ typedef struct
 /******************************************************************************/
 
 /*
-* @brief Specific device feature definitions (not present on all devices in the STM32F0 serie)
+* @brief Specific device feature definitions (not present on all devices in the STM32F0 series)
 */
 
 /* Support of 7 bits data length feature */
@@ -11826,6 +11827,7 @@ typedef struct
 #define USART3_6_IRQn            USART3_8_IRQn
 #define USART3_4_IRQn            USART3_8_IRQn
 
+#define SVC_IRQn                 SVCall_IRQn
 
 /* Aliases for __IRQHandler */
 #define ADC1_IRQHandler                ADC1_COMP_IRQHandler
@@ -11839,7 +11841,6 @@ typedef struct
 #define TIM6_IRQHandler                TIM6_DAC_IRQHandler
 #define USART3_6_IRQHandler            USART3_8_IRQHandler
 #define USART3_4_IRQHandler            USART3_8_IRQHandler
-
 
 #ifdef __cplusplus
 }
@@ -11855,4 +11856,3 @@ typedef struct
   * @}
   */
 
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
