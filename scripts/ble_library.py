@@ -11,7 +11,6 @@ import shutil
 import subprocess
 from pathlib import Path
 import logging
-from jinja2 import Environment, FileSystemLoader
 from common_utils import common_utils
 
 include_dir = ["stm32wb/hci"]
@@ -89,69 +88,45 @@ def copy_hci_files(src_repo_path, dest_lib_path):
             sys.exit()
 
 
-def create_ble_lib_readme(dest_lib_path, version, commit):
-    """Create README for ble library """
+def update_ble_lib_readme(lib_path, make_version, make_commit):
+    """Update README file
 
-    # prepare variables for jinja2 template
-    extracted_file_list = ""
-    for file in file_list:
-        extracted_file_list = extracted_file_list + "     " + file + "\n"
+    Args:
+        dest_lib_path: library path
+        make_version: latest STM32Cube version.
+        make_commit: Commit corresponding to latest STM32Cube version.
+    """
 
-    # Create file from Jinja2 template
-    templates_dir = dest_lib_path / ".." / "scripts"
-    j2_env = Environment(
-        loader=FileSystemLoader(str(templates_dir)),
-        trim_blocks=True,
-        lstrip_blocks=True,
-    )
-    readme_j2_template = j2_env.get_template("ble_README_template.txt")
-    readme_path = dest_lib_path / "stm32wb" / "hci" / "README"
-    with open(readme_path, "w") as readme:
-        readme.write(
-            readme_j2_template.render(
-                version=version,
-                extracted_file_list=extracted_file_list,
-                commit=commit,
-            )
-        )
+    readme_path = Path(lib_path / "stm32wb" / "hci" / "README")
 
+    with readme_path.open(mode="r") as readme_prev:
+        lines = (x for x in readme_prev.read().splitlines())
 
-def create_ble_lib_cmakelist(dest_lib_path):
-    """Create CMakeLists.txt for ble library """
-    # remove CMakeLists.txt file before re-creating it
-    cmakelist_path = Path(dest_lib_path / "CMakeLists.txt")
-    cmakelist_path.unlink()
+    readme_path.unlink()
 
-    # prepare variables for jinja2 template
-    include_dir_list = ""
-    source_file_list = ""
-    for directory in include_dir:
-        include_dir_list = (
-            f"{include_dir_list}    zephyr_include_directories({directory})\n"
-        )
-    for child in Path(dest_lib_path / "stm32wb" / "hci").iterdir():
-        if child.is_file and child.suffix == ".c":
-            source_file_list = (
-                f"{source_file_list}    "
-                + f"zephyr_sources(stm32wb/hci/{str(child.name)})\n"
-            )
+    # Write README from previous one if exists
+    with open(str(readme_path), "w") as readme_file:
+        for LineItem in lines:
+            # change version nb
+            if "status" in LineItem.lower():
+                readme_file.write("Status:\n")
+                readme_file.write(f"   version {make_version}\n")
+                next(lines)  # skip next line
+            elif "commit" in LineItem.lower():
+                readme_file.write("Commit:\n")
+                readme_file.write(f"   {make_commit}")
+                next(lines)  # skip next line
+            # change patch list with a link to the release_note.html
+            elif "Patch List" in LineItem:
+                readme_file.write("Patch List:\n")
+                readme_file.write(
+                    "--> please check that the following list "
+                    + "is still valid:\n"
+                )
+            else:
+                readme_file.write(f"{LineItem}\n")
 
-    # Create file from Jinja2 template
-    templates_dir = dest_lib_path / ".." / "scripts"
-    j2_env = Environment(
-        loader=FileSystemLoader(str(templates_dir)),
-        trim_blocks=True,
-        lstrip_blocks=True,
-    )
-    cmakelists_j2_template = j2_env.get_template("ble_CMakeLists_template.txt")
-    cmakelists_txt = dest_lib_path / "CMakeLists.txt"
-    with open(cmakelists_txt, "w") as cmakelists:
-        cmakelists.write(
-            cmakelists_j2_template.render(
-                include_dir_list=include_dir_list,
-                source_file_list=source_file_list,
-            )
-        )
+        readme_file.flush()
 
 
 def build_patch_from_current_zephyr_version(
@@ -250,8 +225,7 @@ def update(
     )
     copy_hci_files(src_repo_path, dest_lib_path)
     common_utils.apply_patch(dest_lib_path / "ble_zephyr.patch", dest_lib_path)
-    create_ble_lib_readme(dest_lib_path, update_version, commit)
-    create_ble_lib_cmakelist(dest_lib_path)
+    update_ble_lib_readme(dest_lib_path, update_version, commit)
 
 
 if __name__ == "__main__":
