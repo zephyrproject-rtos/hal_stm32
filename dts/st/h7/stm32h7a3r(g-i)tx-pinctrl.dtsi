@@ -1251,6 +1251,40 @@
 				slew-rate = "very-high-speed";
 			};
 
+			/* TIM_BKIN */
+
+			/omit-if-no-ref/ tim1_bkin_pa6: tim1_bkin_pa6 {
+				pinmux = <STM32_PINMUX('A', 6, AF1)>;
+			};
+
+			/omit-if-no-ref/ tim1_bkin_pb12: tim1_bkin_pb12 {
+				pinmux = <STM32_PINMUX('B', 12, AF1)>;
+			};
+
+			/omit-if-no-ref/ tim15_bkin_pa0: tim15_bkin_pa0 {
+				pinmux = <STM32_PINMUX('A', 0, AF4)>;
+			};
+
+			/omit-if-no-ref/ tim15_bkin_pd2: tim15_bkin_pd2 {
+				pinmux = <STM32_PINMUX('D', 2, AF4)>;
+			};
+
+			/omit-if-no-ref/ tim16_bkin_pb4: tim16_bkin_pb4 {
+				pinmux = <STM32_PINMUX('B', 4, AF1)>;
+			};
+
+			/omit-if-no-ref/ tim17_bkin_pb5: tim17_bkin_pb5 {
+				pinmux = <STM32_PINMUX('B', 5, AF1)>;
+			};
+
+			/omit-if-no-ref/ tim8_bkin_pa6: tim8_bkin_pa6 {
+				pinmux = <STM32_PINMUX('A', 6, AF3)>;
+			};
+
+			/omit-if-no-ref/ tim8_bkin2_pa8: tim8_bkin2_pa8 {
+				pinmux = <STM32_PINMUX('A', 8, AF3)>;
+			};
+
 			/* TIM_CH / TIM_CHN */
 
 			/omit-if-no-ref/ tim1_ch1n_pa7: tim1_ch1n_pa7 {

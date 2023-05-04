@@ -896,6 +896,24 @@
 				pinmux = <STM32F1_PINMUX('B', 3, GPIO_IN, SPI3_REMAP0)>;
 			};
 
+			/* TIM_BKIN */
+
+			/omit-if-no-ref/ tim1_bkin_remap1_pa6: tim1_bkin_remap1_pa6 {
+				pinmux = <STM32F1_PINMUX('A', 6, GPIO_IN, TIM1_REMAP1)>;
+			};
+
+			/omit-if-no-ref/ tim1_bkin_pb12: tim1_bkin_pb12 {
+				pinmux = <STM32F1_PINMUX('B', 12, GPIO_IN, TIM1_REMAP0)>;
+			};
+
+			/omit-if-no-ref/ tim1_bkin_remap2_pe15: tim1_bkin_remap2_pe15 {
+				pinmux = <STM32F1_PINMUX('E', 15, GPIO_IN, TIM1_REMAP2)>;
+			};
+
+			/omit-if-no-ref/ tim8_bkin_pa6: tim8_bkin_pa6 {
+				pinmux = <STM32F1_PINMUX('A', 6, GPIO_IN, NO_REMAP)>;
+			};
+
 			/* TIM_CH_PWM_IN / TIM_CHN_PWM_IN */
 
 			/omit-if-no-ref/ tim10_ch1_pwm_in_pb8: tim10_ch1_pwm_in_pb8 {

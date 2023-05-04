@@ -1311,6 +1311,24 @@
 				slew-rate = "very-high-speed";
 			};
 
+			/* TIM_BKIN */
+
+			/omit-if-no-ref/ tim1_bkin_pa6: tim1_bkin_pa6 {
+				pinmux = <STM32_PINMUX('A', 6, AF1)>;
+			};
+
+			/omit-if-no-ref/ tim1_bkin_pb12: tim1_bkin_pb12 {
+				pinmux = <STM32_PINMUX('B', 12, AF1)>;
+			};
+
+			/omit-if-no-ref/ tim1_bkin_pe15: tim1_bkin_pe15 {
+				pinmux = <STM32_PINMUX('E', 15, AF1)>;
+			};
+
+			/omit-if-no-ref/ tim8_bkin_pa6: tim8_bkin_pa6 {
+				pinmux = <STM32_PINMUX('A', 6, AF3)>;
+			};
+
 			/* TIM_CH / TIM_CHN */
 
 			/omit-if-no-ref/ tim10_ch1_pb8: tim10_ch1_pb8 {
