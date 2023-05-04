@@ -278,6 +278,10 @@
 				pinmux = <STM32_PINMUX('B', 10, ANALOG)>;
 			};
 
+			/omit-if-no-ref/ analog_pb11: analog_pb11 {
+				pinmux = <STM32_PINMUX('B', 11, ANALOG)>;
+			};
+
 			/omit-if-no-ref/ analog_pb12: analog_pb12 {
 				pinmux = <STM32_PINMUX('B', 12, ANALOG)>;
 			};
@@ -584,6 +588,10 @@
 
 			/omit-if-no-ref/ analog_pg13: analog_pg13 {
 				pinmux = <STM32_PINMUX('G', 13, ANALOG)>;
+			};
+
+			/omit-if-no-ref/ analog_pg14: analog_pg14 {
+				pinmux = <STM32_PINMUX('G', 14, ANALOG)>;
 			};
 
 			/omit-if-no-ref/ analog_pg15: analog_pg15 {
@@ -987,6 +995,12 @@
 				slew-rate = "very-high-speed";
 			};
 
+			/omit-if-no-ref/ fmc_a25_pg14: fmc_a25_pg14 {
+				pinmux = <STM32_PINMUX('G', 14, AF12)>;
+				bias-pull-up;
+				slew-rate = "very-high-speed";
+			};
+
 			/* I2C_SCL */
 
 			/omit-if-no-ref/ i2c1_scl_pb6: i2c1_scl_pb6 {
@@ -997,6 +1011,12 @@
 
 			/omit-if-no-ref/ i2c1_scl_pb8: i2c1_scl_pb8 {
 				pinmux = <STM32_PINMUX('B', 8, AF4)>;
+				bias-pull-up;
+				drive-open-drain;
+			};
+
+			/omit-if-no-ref/ i2c1_scl_pg14: i2c1_scl_pg14 {
+				pinmux = <STM32_PINMUX('G', 14, AF4)>;
 				bias-pull-up;
 				drive-open-drain;
 			};
@@ -1087,6 +1107,12 @@
 				drive-open-drain;
 			};
 
+			/omit-if-no-ref/ i2c2_sda_pb11: i2c2_sda_pb11 {
+				pinmux = <STM32_PINMUX('B', 11, AF4)>;
+				bias-pull-up;
+				drive-open-drain;
+			};
+
 			/omit-if-no-ref/ i2c2_sda_pb14: i2c2_sda_pb14 {
 				pinmux = <STM32_PINMUX('B', 14, AF4)>;
 				bias-pull-up;
@@ -1125,6 +1151,12 @@
 
 			/omit-if-no-ref/ i2c4_sda_pb7: i2c4_sda_pb7 {
 				pinmux = <STM32_PINMUX('B', 7, AF5)>;
+				bias-pull-up;
+				drive-open-drain;
+			};
+
+			/omit-if-no-ref/ i2c4_sda_pb11: i2c4_sda_pb11 {
+				pinmux = <STM32_PINMUX('B', 11, AF3)>;
 				bias-pull-up;
 				drive-open-drain;
 			};
@@ -1181,6 +1213,11 @@
 
 			/omit-if-no-ref/ quadspi_clk_pb10: quadspi_clk_pb10 {
 				pinmux = <STM32_PINMUX('B', 10, AF10)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ quadspi_bk1_ncs_pb11: quadspi_bk1_ncs_pb11 {
+				pinmux = <STM32_PINMUX('B', 11, AF10)>;
 				slew-rate = "very-high-speed";
 			};
 
@@ -1689,6 +1726,10 @@
 				pinmux = <STM32_PINMUX('B', 10, AF1)>;
 			};
 
+			/omit-if-no-ref/ tim2_ch4_pb11: tim2_ch4_pb11 {
+				pinmux = <STM32_PINMUX('B', 11, AF1)>;
+			};
+
 			/omit-if-no-ref/ tim3_ch1_pa6: tim3_ch1_pa6 {
 				pinmux = <STM32_PINMUX('A', 6, AF2)>;
 			};
@@ -2192,6 +2233,10 @@
 				pinmux = <STM32_PINMUX('D', 6, AF7)>;
 			};
 
+			/omit-if-no-ref/ usart3_rx_pb11: usart3_rx_pb11 {
+				pinmux = <STM32_PINMUX('B', 11, AF7)>;
+			};
+
 			/omit-if-no-ref/ usart3_rx_pc5: usart3_rx_pc5 {
 				pinmux = <STM32_PINMUX('C', 5, AF7)>;
 			};
@@ -2230,6 +2275,11 @@
 
 			/omit-if-no-ref/ usart1_tx_pb6: usart1_tx_pb6 {
 				pinmux = <STM32_PINMUX('B', 6, AF7)>;
+				bias-pull-up;
+			};
+
+			/omit-if-no-ref/ lpuart1_tx_pb11: lpuart1_tx_pb11 {
+				pinmux = <STM32_PINMUX('B', 11, AF8)>;
 				bias-pull-up;
 			};
 

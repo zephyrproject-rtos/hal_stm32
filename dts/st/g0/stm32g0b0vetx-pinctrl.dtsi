@@ -406,10 +406,6 @@
 				pinmux = <STM32_PINMUX('F', 1, ANALOG)>;
 			};
 
-			/omit-if-no-ref/ analog_pf2: analog_pf2 {
-				pinmux = <STM32_PINMUX('F', 2, ANALOG)>;
-			};
-
 			/omit-if-no-ref/ analog_pf3: analog_pf3 {
 				pinmux = <STM32_PINMUX('F', 3, ANALOG)>;
 			};

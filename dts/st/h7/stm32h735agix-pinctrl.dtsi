@@ -1206,7 +1206,7 @@
 			};
 
 			/omit-if-no-ref/ fmc_sdne0_pc2: fmc_sdne0_pc2 {
-				pinmux = <STM32_PINMUX('C', 2, ANALOG)>;
+				pinmux = <STM32_PINMUX('C', 2, AF12)>;
 				bias-pull-up;
 				slew-rate = "very-high-speed";
 			};
@@ -1218,7 +1218,7 @@
 			};
 
 			/omit-if-no-ref/ fmc_sdcke0_pc3: fmc_sdcke0_pc3 {
-				pinmux = <STM32_PINMUX('C', 3, ANALOG)>;
+				pinmux = <STM32_PINMUX('C', 3, AF12)>;
 				bias-pull-up;
 				slew-rate = "very-high-speed";
 			};
@@ -2395,12 +2395,12 @@
 			};
 
 			/omit-if-no-ref/ octospim_p1_io2_pc2: octospim_p1_io2_pc2 {
-				pinmux = <STM32_PINMUX('C', 2, ANALOG)>;
+				pinmux = <STM32_PINMUX('C', 2, AF9)>;
 				slew-rate = "very-high-speed";
 			};
 
 			/omit-if-no-ref/ octospim_p1_io5_pc2: octospim_p1_io5_pc2 {
-				pinmux = <STM32_PINMUX('C', 2, ANALOG)>;
+				pinmux = <STM32_PINMUX('C', 2, AF4)>;
 				slew-rate = "very-high-speed";
 			};
 
@@ -2415,12 +2415,12 @@
 			};
 
 			/omit-if-no-ref/ octospim_p1_io0_pc3: octospim_p1_io0_pc3 {
-				pinmux = <STM32_PINMUX('C', 3, ANALOG)>;
+				pinmux = <STM32_PINMUX('C', 3, AF9)>;
 				slew-rate = "very-high-speed";
 			};
 
 			/omit-if-no-ref/ octospim_p1_io6_pc3: octospim_p1_io6_pc3 {
-				pinmux = <STM32_PINMUX('C', 3, ANALOG)>;
+				pinmux = <STM32_PINMUX('C', 3, AF4)>;
 				slew-rate = "very-high-speed";
 			};
 
@@ -2879,7 +2879,7 @@
 			};
 
 			/omit-if-no-ref/ spi2_miso_pc2: spi2_miso_pc2 {
-				pinmux = <STM32_PINMUX('C', 2, ANALOG)>;
+				pinmux = <STM32_PINMUX('C', 2, AF5)>;
 				bias-pull-down;
 			};
 
@@ -2956,7 +2956,7 @@
 			};
 
 			/omit-if-no-ref/ spi2_mosi_pc3: spi2_mosi_pc3 {
-				pinmux = <STM32_PINMUX('C', 3, ANALOG)>;
+				pinmux = <STM32_PINMUX('C', 3, AF5)>;
 				bias-pull-down;
 			};
 
