@@ -220,6 +220,9 @@
   match: "^SPI\\d+_NSS$"
   bias: pull-up
 
+- name: TIM_BKIN
+  match: "^TIM\\d+_BKIN\\d?$"
+
 - name: TIM_CH / TIM_CHN
   match: "^TIM\\d+_CH\\d+N?$"
 
