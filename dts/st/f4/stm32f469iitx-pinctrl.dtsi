@@ -986,6 +986,12 @@
 
 			/* FMC */
 
+			/omit-if-no-ref/ fmc_sdnwe_pa7: fmc_sdnwe_pa7 {
+				pinmux = <STM32_PINMUX('A', 7, AF12)>;
+				bias-pull-up;
+				slew-rate = "very-high-speed";
+			};
+
 			/omit-if-no-ref/ fmc_sdcke1_pb5: fmc_sdcke1_pb5 {
 				pinmux = <STM32_PINMUX('B', 5, AF12)>;
 				bias-pull-up;
