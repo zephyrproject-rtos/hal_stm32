@@ -208,6 +208,10 @@
   mode: input
   variant: slave
 
+- name: TIM_BKIN
+  match: "^TIM\\d+_BKIN$"
+  mode: input
+
 - name: TIM_CH_PWM_OUT / TIM_CHN_PWM_OUT
   match: "^TIM\\d+_CH\\d+N?$"
   mode: alternate
