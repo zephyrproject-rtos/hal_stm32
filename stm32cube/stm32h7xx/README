@@ -68,4 +68,12 @@ Patch List:
       drivers/include/stm32h7xx_hal_def.h
      ST Internal Reference: 136825
 
+   *Fix to use transmit timestamp when it is valid
+    Read timestamp only when status flag is set in Tx descriptor.
+    Fire transmit timestamp callbacks only when there is a valid
+    non-zero timestamp.
+    Impacted files:
+     drivers/src/stm32h7xx_hal_eth.c
+    ST Internal Reference: 157129
+
    See release_note.html from STM32Cube
