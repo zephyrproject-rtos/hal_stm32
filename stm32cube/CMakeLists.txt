@@ -39,6 +39,7 @@ set(stm_socs
   stm32l5x
   stm32mp1x
   stm32u5x
+  stm32wbax
   stm32wbx
   stm32wlx
   )
