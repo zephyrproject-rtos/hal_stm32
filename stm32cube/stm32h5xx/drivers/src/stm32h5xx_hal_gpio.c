@@ -169,7 +169,7 @@
   * @note   If GPIOx peripheral pin is used in EXTI_MODE and the pin is secure in case
   *         the system implements the security (TZEN=1), it is up to the secure application to
   *         insure that the corresponding EXTI line is set secure.
-  * @param  GPIOx: where x can be (A..I) for stm32h56xxx and stm32h57xxx family lines and 
+  * @param  GPIOx: where x can be (A..I) for stm32h56xxx and stm32h57xxx family lines and
   *         (A..D or H) for stm32h503xx family line to select the GPIO peripheral for STM32H5 family
   * @param  pGPIO_Init: pointer to a GPIO_InitTypeDef structure that contains
   *         the configuration information for the specified GPIO peripheral.
@@ -300,7 +300,7 @@ void HAL_GPIO_Init(GPIO_TypeDef  *GPIOx, const GPIO_InitTypeDef *pGPIO_Init)
 
 /**
   * @brief  De-initialize the GPIOx peripheral registers to their default reset values.
-  * @param  GPIOx: where x can be (A..I) for stm32h56xxx and stm32h57xxx family lines and 
+  * @param  GPIOx: where x can be (A..I) for stm32h56xxx and stm32h57xxx family lines and
   *         (A..D or H) for stm32h503xx family line to select the GPIO peripheral for STM32H5 family
   * @param  GPIO_Pin: specifies the port bit to be written.
   *         This parameter can be one of GPIO_PIN_x where x can be (0..15).
@@ -381,7 +381,7 @@ void HAL_GPIO_DeInit(GPIO_TypeDef  *GPIOx, uint32_t GPIO_Pin)
 
 /**
   * @brief  Read the specified input port pin.
-  * @param  GPIOx: where x can be (A..I) for stm32h56xxx and stm32h57xxx family lines and 
+  * @param  GPIOx: where x can be (A..I) for stm32h56xxx and stm32h57xxx family lines and
   *         (A..D or H) for stm32h503xx family line to select the GPIO peripheral for STM32H5 family
   * @param  GPIO_Pin: specifies the port bit to read.
   *         This parameter can be GPIO_PIN_x where x can be (0..15).
@@ -412,7 +412,7 @@ GPIO_PinState HAL_GPIO_ReadPin(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin)
   *         accesses. In this way, there is no risk of an IRQ occurring between
   *         the read and the modify access.
   *
-  * @param  GPIOx: where x can be (A..I) for stm32h56xxx and stm32h57xxx family lines and 
+  * @param  GPIOx: where x can be (A..I) for stm32h56xxx and stm32h57xxx family lines and
   *         (A..D or H) for stm32h503xx family line to select the GPIO peripheral for STM32H5 family
   * @param  GPIO_Pin: specifies the port bit to be written.
   *         This parameter can be one of GPIO_PIN_x where x can be (0..15).
@@ -442,7 +442,7 @@ void HAL_GPIO_WritePin(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin, GPIO_PinState Pin
   * @brief  Set and clear several pins of a dedicated port in same cycle.
   * @note   This function uses GPIOx_BSRR and GPIOx_BRR registers to allow atomic read/modify
   *         accesses.
-  * @param  GPIOx: where x can be (A..I) for stm32h56xxx and stm32h57xxx family lines and 
+  * @param  GPIOx: where x can be (A..I) for stm32h56xxx and stm32h57xxx family lines and
   *         (A..D or H) for stm32h503xx family line to select the GPIO peripheral for STM32H5 family
   * @param  PinReset specifies the port bits to be reset
   *         This parameter can be any combination of GPIO_Pin_x where x can be (0..15) or zero.
@@ -492,7 +492,7 @@ void HAL_GPIO_TogglePin(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin)
   *         GPIOx_PUPDR, GPIOx_AFRL and GPIOx_AFRH.
   * @note   The configuration of the locked GPIO pins can no longer be modified
   *         until the next reset.
-  * @param  GPIOx: where x can be (A..I) for stm32h56xxx and stm32h57xxx family lines and 
+  * @param  GPIOx: where x can be (A..I) for stm32h56xxx and stm32h57xxx family lines and
   *         (A..D or H) for stm32h503xx family line to select the GPIO peripheral for STM32H5 family
   * @param  GPIO_Pin: specifies the port bits to be locked.
   *         This parameter can be any combination of GPIO_Pin_x where x can be (0..15).
@@ -531,7 +531,7 @@ HAL_StatusTypeDef HAL_GPIO_LockPin(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin)
   *         datasheet for the list of I/Os supporting this feature. Other I/Os HSLV configuration must
   *         be kept at reset value.
   * @note   It must be used only if the I/O supply voltage is below 2.7 V.
-  * @param  GPIOx: where x can be (A..I) for stm32h56xxx and stm32h57xxx family lines and 
+  * @param  GPIOx: where x can be (A..I) for stm32h56xxx and stm32h57xxx family lines and
   *         (A..D or H) for stm32h503xx family line to select the GPIO peripheral for STM32H5 family
   * @param  GPIO_Pin: specifies the port bit to be written.
   *         This parameter can be any combination of GPIO_Pin_x where x can be (0..15).
@@ -553,7 +553,7 @@ void HAL_GPIO_EnableHighSPeedLowVoltage(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin)
   *         datasheet for the list of I/Os supporting this feature. Other I/Os HSLV configuration must
   *         be kept at reset value.
   * @note   It must be used only if the I/O supply voltage is below 2.7 V.
-  * @param  GPIOx: where x can be (A..I) for stm32h56xxx and stm32h57xxx family lines and 
+  * @param  GPIOx: where x can be (A..I) for stm32h56xxx and stm32h57xxx family lines and
   *         (A..D or H) for stm32h503xx family line to select the GPIO peripheral for STM32H5 family
   * @param  GPIO_Pin: specifies the port bit to be written.
   *         This parameter can be any combination of GPIO_Pin_x where x can be (0..15).
@@ -642,7 +642,7 @@ __weak void HAL_GPIO_EXTI_Falling_Callback(uint16_t GPIO_Pin)
   * @brief  Configure the GPIO pins attributes.
   * @note   Available attributes are to secure GPIO pin(s), so this function is
   *         only available in secure
-  * @param  GPIOx: where x can be (A..I) for stm32h56xxx and stm32h57xxx family lines and 
+  * @param  GPIOx: where x can be (A..I) for stm32h56xxx and stm32h57xxx family lines and
   *         (A..D or H) for stm32h503xx family line to select the GPIO peripheral for STM32H5 family
   * @param  GPIO_Pin: specifies the pin(s) to configure the secure attribute
   * @param  PinAttributes: specifies the pin(s) to be set in secure mode, other being set non secured.
@@ -684,7 +684,7 @@ void HAL_GPIO_ConfigPinAttributes(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin, uint32
   * @brief  Get the GPIO pins attributes.
   * @note   Available attributes are to secure GPIO pin(s), so this function is
   *         only available in secure
-  * @param  GPIOx: where x can be (A..I) for stm32h56xxx and stm32h57xxx family lines and 
+  * @param  GPIOx: where x can be (A..I) for stm32h56xxx and stm32h57xxx family lines and
   *         (A..D or H) for stm32h503xx family line to select the GPIO peripheral for STM32H5 family
   * @param  GPIO_Pin: specifies the single pin to get the secure attribute from
   * @param  pPinAttributes: pointer to return the pin attributes.

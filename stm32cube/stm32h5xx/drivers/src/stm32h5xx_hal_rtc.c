@@ -2315,4 +2315,3 @@ uint8_t RTC_Bcd2ToByte(uint8_t Value)
 /**
   * @}
   */
-

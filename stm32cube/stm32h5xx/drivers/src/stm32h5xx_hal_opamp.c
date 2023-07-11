@@ -1087,7 +1087,7 @@ HAL_StatusTypeDef HAL_OPAMP_RegisterCallback(OPAMP_HandleTypeDef *hopamp, HAL_OP
 /**
   * @brief Unregister a User OPAMP Callback
   *        OPAMP Callback is redirected to the weak (surcharged) predefined callback
-  * @note  The HAL_OPAMP_UnRegisterCallback() may be called before HAL_OPAMP_Init() in HAL_OPAMP_STATE_RESET to un-register 
+  * @note  The HAL_OPAMP_UnRegisterCallback() may be called before HAL_OPAMP_Init() in HAL_OPAMP_STATE_RESET to un-register
   *        callbacks for HAL_OPAMP_MSPINIT_CB_ID and HAL_OPAMP_MSPDEINIT_CB_ID
   * @param hopamp  OPAMP handle
   * @param CallbackId  ID of the callback to be unregistered

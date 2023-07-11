@@ -1016,11 +1016,11 @@ typedef struct
 #define LL_TIM_ETR_FILTER_FDIV2_N8             (TIM_SMCR_ETF_2 | TIM_SMCR_ETF_0)                    /*!< fSAMPLING=fDTS/2, N=8 */
 #define LL_TIM_ETR_FILTER_FDIV4_N6             (TIM_SMCR_ETF_2 | TIM_SMCR_ETF_1)                    /*!< fSAMPLING=fDTS/4, N=6 */
 #define LL_TIM_ETR_FILTER_FDIV4_N8             (TIM_SMCR_ETF_2 | TIM_SMCR_ETF_1 | TIM_SMCR_ETF_0)   /*!< fSAMPLING=fDTS/4, N=8 */
-#define LL_TIM_ETR_FILTER_FDIV8_N6             TIM_SMCR_ETF_3                                       /*!< fSAMPLING=fDTS/8, N=8 */
-#define LL_TIM_ETR_FILTER_FDIV8_N8             (TIM_SMCR_ETF_3 | TIM_SMCR_ETF_0)                    /*!< fSAMPLING=fDTS/16, N=5 */
-#define LL_TIM_ETR_FILTER_FDIV16_N5            (TIM_SMCR_ETF_3 | TIM_SMCR_ETF_1)                    /*!< fSAMPLING=fDTS/16, N=6 */
-#define LL_TIM_ETR_FILTER_FDIV16_N6            (TIM_SMCR_ETF_3 | TIM_SMCR_ETF_1 | TIM_SMCR_ETF_0)   /*!< fSAMPLING=fDTS/16, N=8 */
-#define LL_TIM_ETR_FILTER_FDIV16_N8            (TIM_SMCR_ETF_3 | TIM_SMCR_ETF_2)                    /*!< fSAMPLING=fDTS/16, N=5 */
+#define LL_TIM_ETR_FILTER_FDIV8_N6             TIM_SMCR_ETF_3                                       /*!< fSAMPLING=fDTS/8, N=6 */
+#define LL_TIM_ETR_FILTER_FDIV8_N8             (TIM_SMCR_ETF_3 | TIM_SMCR_ETF_0)                    /*!< fSAMPLING=fDTS/16, N=8 */
+#define LL_TIM_ETR_FILTER_FDIV16_N5            (TIM_SMCR_ETF_3 | TIM_SMCR_ETF_1)                    /*!< fSAMPLING=fDTS/16, N=5 */
+#define LL_TIM_ETR_FILTER_FDIV16_N6            (TIM_SMCR_ETF_3 | TIM_SMCR_ETF_1 | TIM_SMCR_ETF_0)   /*!< fSAMPLING=fDTS/16, N=6 */
+#define LL_TIM_ETR_FILTER_FDIV16_N8            (TIM_SMCR_ETF_3 | TIM_SMCR_ETF_2)                    /*!< fSAMPLING=fDTS/16, N=8 */
 #define LL_TIM_ETR_FILTER_FDIV32_N5            (TIM_SMCR_ETF_3 | TIM_SMCR_ETF_2 | TIM_SMCR_ETF_0)   /*!< fSAMPLING=fDTS/32, N=5 */
 #define LL_TIM_ETR_FILTER_FDIV32_N6            (TIM_SMCR_ETF_3 | TIM_SMCR_ETF_2 | TIM_SMCR_ETF_1)   /*!< fSAMPLING=fDTS/32, N=6 */
 #define LL_TIM_ETR_FILTER_FDIV32_N8            TIM_SMCR_ETF                                         /*!< fSAMPLING=fDTS/32, N=8 */
@@ -1062,7 +1062,7 @@ typedef struct
 #define LL_TIM_TIM2_ETRSOURCE_TIM5_ETR    (TIM1_AF1_ETRSEL_0 | TIM1_AF1_ETRSEL_1| TIM1_AF1_ETRSEL_3 ) /*!< ETR input is connected to TIM5 ETR */
 #endif /* TIM5 */
 #if defined(ETH_NS)
-#define LL_TIM_TIM2_ETRSOURCE_ETH_PPS     (TIM1_AF1_ETRSEL_0 | TIM1_AF1_ETRSEL_1 | TIM1_AF1_ETRSEL_2 | TIM1_AF1_ETRSEL_3 ) /*!< ETR input is connected to ETH PPS */
+#define LL_TIM_TIM2_ETRSOURCE_ETH_PPS     (TIM1_AF1_ETRSEL_1 | TIM1_AF1_ETRSEL_2 | TIM1_AF1_ETRSEL_3 ) /*!< ETR input is connected to ETH PPS */
 #endif /* ETH_NS */
 /**
   * @}
@@ -1083,7 +1083,7 @@ typedef struct
 #define LL_TIM_TIM3_ETRSOURCE_TIM5_ETR    (TIM1_AF1_ETRSEL_3 | TIM1_AF1_ETRSEL_1| TIM1_AF1_ETRSEL_0)  /*!< ETR input is connected to TIM5 ETR */
 #endif /* TIM5 */
 #if defined(ETH_NS)
-#define LL_TIM_TIM3_ETRSOURCE_ETH_PPS     (TIM1_AF1_ETRSEL_0 | TIM1_AF1_ETRSEL_1 | TIM1_AF1_ETRSEL_2 | TIM1_AF1_ETRSEL_3 ) /*!< ETR input is connected to ETH PPS */
+#define LL_TIM_TIM3_ETRSOURCE_ETH_PPS     (TIM1_AF1_ETRSEL_1 | TIM1_AF1_ETRSEL_2 | TIM1_AF1_ETRSEL_3 ) /*!< ETR input is connected to ETH PPS */
 #endif /* ETH_NS */
 /**
   * @}
@@ -1094,8 +1094,8 @@ typedef struct
   * @{
   */
 #define LL_TIM_TIM4_ETRSOURCE_GPIO         0x00000000U                                                 /*!< ETR input is connected to GPIO */
-#define LL_TIM_TIM4_ETRSOURCE_TIM3_ETR     TIM1_AF1_ETRSEL_3                                           /*!< ETR input is connected to TIM3 ETR */
-#define LL_TIM_TIM4_ETRSOURCE_TIM4_ETR     (TIM1_AF1_ETRSEL_3 | TIM1_AF1_ETRSEL_0)                     /*!< ETR input is connected to TIM4 ETR */
+#define LL_TIM_TIM4_ETRSOURCE_TIM2_ETR     TIM1_AF1_ETRSEL_3                                           /*!< ETR input is connected to TIM3 ETR */
+#define LL_TIM_TIM4_ETRSOURCE_TIM3_ETR     (TIM1_AF1_ETRSEL_3 | TIM1_AF1_ETRSEL_0)                     /*!< ETR input is connected to TIM4 ETR */
 #define LL_TIM_TIM4_ETRSOURCE_TIM5_ETR     (TIM1_AF1_ETRSEL_3 | TIM1_AF1_ETRSEL_1| TIM1_AF1_ETRSEL_0)  /*!< ETR input is connected to TIM5 ETR */
 /**
   * @}
@@ -1320,7 +1320,7 @@ typedef struct
 #define LL_TIM_DMABURST_LENGTH_23TRANSFERS     (TIM_DCR_DBL_4 | TIM_DCR_DBL_2 | TIM_DCR_DBL_1)                 /*!< Transfer is done to 23 registers starting from the DMA burst base address */
 #define LL_TIM_DMABURST_LENGTH_24TRANSFERS     (TIM_DCR_DBL_4 | TIM_DCR_DBL_2 | TIM_DCR_DBL_1 | TIM_DCR_DBL_0) /*!< Transfer is done to 24 registers starting from the DMA burst base address */
 #define LL_TIM_DMABURST_LENGTH_25TRANSFERS     (TIM_DCR_DBL_4 | TIM_DCR_DBL_3)                                 /*!< Transfer is done to 25 registers starting from the DMA burst base address */
-#define LL_TIM_DMABURST_LENGTH_26TRANSFERS     (TIM_DCR_DBL_4 |  TIM_DCR_DBL_3 |  TIM_DCR_DBL_0)               /*!< Transfer is done to 26 registers starting from the DMA burst base address */
+#define LL_TIM_DMABURST_LENGTH_26TRANSFERS     (TIM_DCR_DBL_4 | TIM_DCR_DBL_3 | TIM_DCR_DBL_0)                 /*!< Transfer is done to 26 registers starting from the DMA burst base address */
 /**
   * @}
   */

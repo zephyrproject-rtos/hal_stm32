@@ -226,4 +226,3 @@ typedef enum
 #endif /* __cplusplus */
 
 #endif /* ___STM32H5xx_HAL_DEF */
-

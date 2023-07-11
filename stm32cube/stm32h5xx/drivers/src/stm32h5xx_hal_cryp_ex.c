@@ -367,6 +367,10 @@ HAL_StatusTypeDef HAL_CRYPEx_WrapKey(CRYP_HandleTypeDef *hcryp, uint32_t *pInput
         /* AES decryption */
         status = CRYPEx_KeyEncrypt(hcryp, Timeout);
         break;
+      case CRYP_AES_CTR:
+        /* AES Key generation */
+        status = CRYPEx_KeyGeneration(hcryp, Timeout);
+        break;
       default:
         hcryp->ErrorCode |= HAL_CRYP_ERROR_NOT_SUPPORTED;
         status = HAL_ERROR;
@@ -387,7 +391,7 @@ HAL_StatusTypeDef HAL_CRYPEx_WrapKey(CRYP_HandleTypeDef *hcryp, uint32_t *pInput
   * @brief  Unwrap (Decrypt) application keys.
   * @param  hcryp pointer to a CRYP_HandleTypeDef structure that contains
   *         the configuration information for CRYP module
-  * @param  pInput Pointer to the Key buffer to decrypt in case of ECB or CBC.
+  * @param  pInput Pointer to the Key buffer to decrypt or generated key in case of CTR.
   * @param  Timeout Specify Timeout value
   * @retval HAL status
   */
@@ -459,7 +463,7 @@ HAL_StatusTypeDef HAL_CRYPEx_UnwrapKey(CRYP_HandleTypeDef *hcryp, uint32_t *pInp
   ==============================================================================
                       ##### Encrypt and Decrypt Shared key functions #####
   ==============================================================================
-    [..]  This section provides API allowing to Encrypt/Decrypt Shared key
+    [..]  This section provides API allowing to Encrypt and Decrypt Shared key
 
 @endverbatim
   * @{
@@ -511,6 +515,10 @@ HAL_StatusTypeDef HAL_CRYPEx_EncryptSharedKey(CRYP_HandleTypeDef *hcryp, uint32_
       case CRYP_AES_CBC:
         /* AES decryption */
         status = CRYPEx_KeyEncrypt(hcryp, Timeout);
+        break;
+      case CRYP_AES_CTR:
+        /* AES CTR key generation */
+        status = CRYPEx_KeyGeneration(hcryp, Timeout);
         break;
       default:
         hcryp->ErrorCode |= HAL_CRYP_ERROR_NOT_SUPPORTED;
@@ -571,6 +579,10 @@ HAL_StatusTypeDef HAL_CRYPEx_DecryptSharedKey(CRYP_HandleTypeDef *hcryp, uint32_
       case CRYP_AES_CBC:
         /* AES decryption */
         status = CRYPEx_KeyDecrypt(hcryp, Timeout);
+        break;
+      case CRYP_AES_CTR:
+        /* AES CTR key generation */
+        status = CRYPEx_KeyGeneration(hcryp, Timeout);
         break;
       default:
         hcryp->ErrorCode |= HAL_CRYP_ERROR_NOT_SUPPORTED;

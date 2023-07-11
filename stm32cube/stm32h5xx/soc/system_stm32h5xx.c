@@ -398,4 +398,3 @@ void SystemCoreClockUpdate(void)
 /**
   * @}
   */
-

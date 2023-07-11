@@ -24,6 +24,7 @@
 extern "C" {
 #endif
 
+#if defined(FMC_Bank5_6_R)
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32h5xx_ll_fmc.h"
@@ -228,6 +229,7 @@ HAL_SDRAM_StateTypeDef  HAL_SDRAM_GetState(SDRAM_HandleTypeDef *hsdram);
   * @}
   */
 
+#endif /* FMC_Bank5_6_R */
 
 #ifdef __cplusplus
 }

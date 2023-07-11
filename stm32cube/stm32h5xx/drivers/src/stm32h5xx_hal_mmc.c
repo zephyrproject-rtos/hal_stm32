@@ -251,6 +251,7 @@
   * @{
   */
 
+#if defined (SDMMC1) || defined (SDMMC2)
 #ifdef HAL_MMC_MODULE_ENABLED
 
 /* Private typedef -----------------------------------------------------------*/
@@ -1859,8 +1860,8 @@ __weak void HAL_MMC_AbortCallback(MMC_HandleTypeDef *hmmc)
 /**
   * @brief  Register a User MMC Callback
   *         To be used instead of the weak (surcharged) predefined callback
-  * @note   The HAL_MMC_RegisterCallback() may be called before HAL_MMC_Init() in 
-  *         HAL_MMC_STATE_RESET to register callbacks for HAL_MMC_MSP_INIT_CB_ID 
+  * @note   The HAL_MMC_RegisterCallback() may be called before HAL_MMC_Init() in
+  *         HAL_MMC_STATE_RESET to register callbacks for HAL_MMC_MSP_INIT_CB_ID
   *         and HAL_MMC_MSP_DEINIT_CB_ID.
   * @param hmmc : MMC handle
   * @param CallbackId : ID of the callback to be registered
@@ -1956,8 +1957,8 @@ HAL_StatusTypeDef HAL_MMC_RegisterCallback(MMC_HandleTypeDef *hmmc, HAL_MMC_Call
 /**
   * @brief  Unregister a User MMC Callback
   *         MMC Callback is redirected to the weak (surcharged) predefined callback
-  * @note   The HAL_MMC_UnRegisterCallback() may be called before HAL_MMC_Init() in 
-  *         HAL_MMC_STATE_RESET to register callbacks for HAL_MMC_MSP_INIT_CB_ID 
+  * @note   The HAL_MMC_UnRegisterCallback() may be called before HAL_MMC_Init() in
+  *         HAL_MMC_STATE_RESET to register callbacks for HAL_MMC_MSP_INIT_CB_ID
   *         and HAL_MMC_MSP_DEINIT_CB_ID.
   * @param hmmc : MMC handle
   * @param CallbackId : ID of the callback to be unregistered
@@ -4293,6 +4294,7 @@ __weak void HAL_MMCEx_Write_DMALnkLstBufCpltCallback(MMC_HandleTypeDef *hmmc)
   */
 
 #endif /* HAL_MMC_MODULE_ENABLED */
+#endif /* SDMMC1 || SDMMC2 */
 
 /**
   * @}

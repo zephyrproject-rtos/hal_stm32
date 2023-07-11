@@ -208,8 +208,8 @@ typedef void (*pDCMI_CallbackTypeDef)(DCMI_HandleTypeDef *hdcmi); /*!< pointer t
   */
 #define DCMI_MODE_CONTINUOUS           (0x00000000U)          /*!< The received data are transferred continuously
                                                                    into the destination memory through the DMA    */
-#define DCMI_MODE_SNAPSHOT             ((uint32_t)DCMI_CR_CM) /*!< Once activated, the interface waits for the start of 
-                                                                   frame and then transfers a single frame 
+#define DCMI_MODE_SNAPSHOT             ((uint32_t)DCMI_CR_CM) /*!< Once activated, the interface waits for the start of
+                                                                   frame and then transfers a single frame
                                                                    through the DMA */
 /**
   * @}
@@ -220,7 +220,7 @@ typedef void (*pDCMI_CallbackTypeDef)(DCMI_HandleTypeDef *hdcmi); /*!< pointer t
   */
 #define DCMI_SYNCHRO_HARDWARE        (0x00000000U)   /*!< Hardware synchronization data capture (frame/line start/stop)
                                                           is synchronized with the HSYNC/VSYNC signals               */
-#define DCMI_SYNCHRO_EMBEDDED        ((uint32_t)DCMI_CR_ESS)  /*!< Embedded synchronization data capture is synchronized 
+#define DCMI_SYNCHRO_EMBEDDED        ((uint32_t)DCMI_CR_ESS)  /*!< Embedded synchronization data capture is synchronized
                                                                  with synchronization codes embedded in the data flow */
 
 /**
@@ -328,9 +328,9 @@ typedef void (*pDCMI_CallbackTypeDef)(DCMI_HandleTypeDef *hdcmi); /*!< pointer t
 /**
   * @brief   DCMI SR register
   */
-#define DCMI_FLAG_HSYNC     ((uint32_t)DCMI_SR_INDEX|DCMI_SR_HSYNC) /*!< HSYNC pin state (active line / synchronization 
+#define DCMI_FLAG_HSYNC     ((uint32_t)DCMI_SR_INDEX|DCMI_SR_HSYNC) /*!< HSYNC pin state (active line / synchronization
                                                                          between lines)   */
-#define DCMI_FLAG_VSYNC     ((uint32_t)DCMI_SR_INDEX|DCMI_SR_VSYNC) /*!< VSYNC pin state (active frame / synchronization 
+#define DCMI_FLAG_VSYNC     ((uint32_t)DCMI_SR_INDEX|DCMI_SR_VSYNC) /*!< VSYNC pin state (active frame / synchronization
                                                                          between frames) */
 #define DCMI_FLAG_FNE       ((uint32_t)DCMI_SR_INDEX|DCMI_SR_FNE)   /*!< FIFO not empty flag                          */
 /**
@@ -344,7 +344,7 @@ typedef void (*pDCMI_CallbackTypeDef)(DCMI_HandleTypeDef *hdcmi); /*!< pointer t
 /**
   * @brief   DCMI MIS register
   */
-#define DCMI_FLAG_FRAMEMI    ((uint32_t)DCMI_MIS_INDEX|DCMI_MIS_FRAME_MIS)  /*!< DCMI Frame capture complete masked 
+#define DCMI_FLAG_FRAMEMI    ((uint32_t)DCMI_MIS_INDEX|DCMI_MIS_FRAME_MIS)  /*!< DCMI Frame capture complete masked
                                    interrupt status */
 #define DCMI_FLAG_OVRMI      ((uint32_t)DCMI_MIS_INDEX|DCMI_MIS_OVR_MIS  )  /*!< DCMI Overrun masked interrupt status                */
 #define DCMI_FLAG_ERRMI      ((uint32_t)DCMI_MIS_INDEX|DCMI_MIS_ERR_MIS  )  /*!< DCMI Synchronization error masked interrupt status  */
@@ -358,7 +358,7 @@ typedef void (*pDCMI_CallbackTypeDef)(DCMI_HandleTypeDef *hdcmi); /*!< pointer t
   * @{
   */
 #define DCMI_BSM_ALL                 (0x00000000U)             /*!< Interface captures all received data */
-#define DCMI_BSM_OTHER               ((uint32_t)DCMI_CR_BSM_0) /*!< Interface captures every other byte 
+#define DCMI_BSM_OTHER               ((uint32_t)DCMI_CR_BSM_0) /*!< Interface captures every other byte
                                                                     from the received data */
 #define DCMI_BSM_ALTERNATE_4         ((uint32_t)DCMI_CR_BSM_1) /*!< Interface captures one byte out of four */
 #define DCMI_BSM_ALTERNATE_2         ((uint32_t)(DCMI_CR_BSM_0 |\
@@ -371,9 +371,9 @@ typedef void (*pDCMI_CallbackTypeDef)(DCMI_HandleTypeDef *hdcmi); /*!< pointer t
 /** @defgroup DCMI_Byte_Select_Start DCMI Byte Select Start
   * @{
   */
-#define DCMI_OEBS_ODD               (0x00000000U) /*!< Interface captures first data from the frame/line start, 
+#define DCMI_OEBS_ODD               (0x00000000U) /*!< Interface captures first data from the frame/line start,
                                                        second one being dropped */
-#define DCMI_OEBS_EVEN              ((uint32_t)DCMI_CR_OEBS) /*!< Interface captures second data from 
+#define DCMI_OEBS_EVEN              ((uint32_t)DCMI_CR_OEBS) /*!< Interface captures second data from
                                                                   the frame/line start, first one being dropped */
 
 /**

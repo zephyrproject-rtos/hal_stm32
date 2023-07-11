@@ -131,6 +131,12 @@ HAL_StatusTypeDef HAL_DACEx_DualStart(DAC_HandleTypeDef *hdac)
   uint32_t tmp_swtrig = 0UL;
   __IO uint32_t wait_loop_index;
 
+  /* Check the DAC peripheral handle */
+  if (hdac == NULL)
+  {
+    return HAL_ERROR;
+  }
+
 
   /* Process locked */
   __HAL_LOCK(hdac);
@@ -182,6 +188,12 @@ HAL_StatusTypeDef HAL_DACEx_DualStart(DAC_HandleTypeDef *hdac)
   */
 HAL_StatusTypeDef HAL_DACEx_DualStop(DAC_HandleTypeDef *hdac)
 {
+  /* Check the DAC peripheral handle */
+  if (hdac == NULL)
+  {
+    return HAL_ERROR;
+  }
+
 
   /* Disable the Peripheral */
   __HAL_DAC_DISABLE(hdac, DAC_CHANNEL_1);
@@ -218,6 +230,12 @@ HAL_StatusTypeDef HAL_DACEx_DualStart_DMA(DAC_HandleTypeDef *hdac, uint32_t Chan
   uint32_t tmpreg = 0UL;
   __IO uint32_t wait_loop_index;
   uint32_t LengthInBytes;
+
+  /* Check the DAC peripheral handle */
+  if (hdac == NULL)
+  {
+    return HAL_ERROR;
+  }
 
   /* Check the parameters */
   assert_param(IS_DAC_CHANNEL(Channel));
@@ -394,6 +412,12 @@ HAL_StatusTypeDef HAL_DACEx_DualStop_DMA(DAC_HandleTypeDef *hdac, uint32_t Chann
 {
   HAL_StatusTypeDef status;
 
+  /* Check the DAC peripheral handle */
+  if (hdac == NULL)
+  {
+    return HAL_ERROR;
+  }
+
 
   /* Disable the selected DAC channel DMA request */
   CLEAR_BIT(hdac->Instance->CR, DAC_CR_DMAEN2 | DAC_CR_DMAEN1);
@@ -465,6 +489,12 @@ HAL_StatusTypeDef HAL_DACEx_DualStop_DMA(DAC_HandleTypeDef *hdac, uint32_t Chann
   */
 HAL_StatusTypeDef HAL_DACEx_TriangleWaveGenerate(DAC_HandleTypeDef *hdac, uint32_t Channel, uint32_t Amplitude)
 {
+  /* Check the DAC peripheral handle */
+  if (hdac == NULL)
+  {
+    return HAL_ERROR;
+  }
+
   /* Check the parameters */
   assert_param(IS_DAC_CHANNEL(Channel));
   assert_param(IS_DAC_LFSR_UNMASK_TRIANGLE_AMPLITUDE(Amplitude));
@@ -515,6 +545,12 @@ HAL_StatusTypeDef HAL_DACEx_TriangleWaveGenerate(DAC_HandleTypeDef *hdac, uint32
   */
 HAL_StatusTypeDef HAL_DACEx_NoiseWaveGenerate(DAC_HandleTypeDef *hdac, uint32_t Channel, uint32_t Amplitude)
 {
+  /* Check the DAC peripheral handle */
+  if (hdac == NULL)
+  {
+    return HAL_ERROR;
+  }
+
   /* Check the parameters */
   assert_param(IS_DAC_CHANNEL(Channel));
   assert_param(IS_DAC_LFSR_UNMASK_TRIANGLE_AMPLITUDE(Amplitude));
@@ -559,6 +595,12 @@ HAL_StatusTypeDef HAL_DACEx_DualSetValue(DAC_HandleTypeDef *hdac, uint32_t Align
 {
   uint32_t data;
   uint32_t tmp;
+
+  /* Check the DAC peripheral handle */
+  if (hdac == NULL)
+  {
+    return HAL_ERROR;
+  }
 
   /* Check the parameters */
   assert_param(IS_DAC_ALIGN(Alignment));
@@ -667,7 +709,6 @@ HAL_StatusTypeDef HAL_DACEx_SelfCalibrate(DAC_HandleTypeDef *hdac, DAC_ChannelCo
 {
   HAL_StatusTypeDef status = HAL_OK;
 
-  __IO uint32_t tmp;
   uint32_t trimmingvalue;
   uint32_t delta;
   __IO uint32_t wait_loop_index;
@@ -680,7 +721,7 @@ HAL_StatusTypeDef HAL_DACEx_SelfCalibrate(DAC_HandleTypeDef *hdac, DAC_ChannelCo
 
   /* Check the DAC handle allocation */
   /* Check if DAC running */
-  if (hdac == NULL)
+  if ((hdac == NULL) || (sConfig == NULL))
   {
     status = HAL_ERROR;
   }
@@ -703,20 +744,6 @@ HAL_StatusTypeDef HAL_DACEx_SelfCalibrate(DAC_HandleTypeDef *hdac, DAC_ChannelCo
 
     /* Set mode in MCR  for calibration */
     MODIFY_REG(hdac->Instance->MCR, (DAC_MCR_MODE1 << (Channel & 0x10UL)), 0U);
-
-    /* Set DAC Channel1 DHR register to the middle value */
-    tmp = (uint32_t)hdac->Instance;
-
-    if (Channel == DAC_CHANNEL_1)
-    {
-      tmp += DAC_DHR12R1_ALIGNMENT(DAC_ALIGN_12B_R);
-    }
-    else
-    {
-      tmp += DAC_DHR12R2_ALIGNMENT(DAC_ALIGN_12B_R);
-    }
-
-    *(__IO uint32_t *) tmp = 0x0800UL;
 
     /* Enable the selected DAC channel calibration */
     /* i.e. set DAC_CR_CENx bit */
@@ -815,8 +842,8 @@ HAL_StatusTypeDef HAL_DACEx_SetUserTrimming(DAC_HandleTypeDef *hdac, DAC_Channel
   assert_param(IS_DAC_CHANNEL(Channel));
   assert_param(IS_DAC_NEWTRIMMINGVALUE(NewTrimmingValue));
 
-  /* Check the DAC handle allocation */
-  if (hdac == NULL)
+  /* Check the DAC handle and channel configuration struct allocation */
+  if ((hdac == NULL) || (sConfig == NULL))
   {
     status = HAL_ERROR;
   }

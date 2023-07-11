@@ -1081,4 +1081,3 @@ uint32_t HAL_RAMCFG_GetError(RAMCFG_HandleTypeDef *hramcfg)
 /**
   * @}
   */
-

@@ -691,4 +691,3 @@ void HAL_GTZC_TZIC_Callback(uint32_t PeriphId);
 #endif
 
 #endif /* STM32H5xx_HAL_GTZC_H */
-

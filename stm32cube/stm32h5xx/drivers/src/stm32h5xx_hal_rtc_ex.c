@@ -48,8 +48,8 @@
     (+) CALIB: 512Hz or 1Hz clock output (with an LSE frequency of 32.768kHz).
         To enable the CALIB, use the HAL_RTCEx_SetCalibrationOutPut() function.
     (+) TAMPALRM: This output is the OR between rtc_tamp_evt and ALARM signals.
-        ALARM is enabled by configuring the OSEL[1:0] bits in the RTC_CR register 
-        which select the alarm A, alarm B or wakeup outputs. 
+        ALARM is enabled by configuring the OSEL[1:0] bits in the RTC_CR register
+        which select the alarm A, alarm B or wakeup outputs.
         rtc_tamp_evt is enabled by setting the TAMPOE bit
         in the RTC_CR register which selects the tamper event outputs.
 
@@ -63,10 +63,10 @@
   *** RTC synchronization ***
   ================================================
   [..]
-    (+) The RTC can be finely adjusted using HAL_RTCEx_SetSynchroShift() function. 
+    (+) The RTC can be finely adjusted using HAL_RTCEx_SetSynchroShift() function.
         Writing to RTC_SHIFTR can shift (either delay or advance) the clock with
         a resolution of 1 ck_apre period.
-        The shift operation consists in adding the SUBFS[14:0] value to the synchronous 
+        The shift operation consists in adding the SUBFS[14:0] value to the synchronous
         prescaler counter SS[15:0]: this delays the clock.
 
   *** Bypass shadow registers ***
@@ -75,16 +75,16 @@
     (+) Enable bypass shadow registers using the HAL_RTCEx_EnableBypassShadow().
         When the Bypass Shadow is enabled the calendar value are taken directly
         from the Calendar counter.
-        Thus eliminating the need to wait for the RSF bit to be set. 
-        This is especially useful after exiting from low-power modes (Stop or Standby), 
+        Thus eliminating the need to wait for the RSF bit to be set.
+        This is especially useful after exiting from low-power modes (Stop or Standby),
         since the shadow registers are not updated during these modes.
 
   *** RTC ultra-low-power mode ***
   ================================================
   [..]
     (+) Configure the RTC ultra-low-power mode using HAL_RTCEx_SetLowPowerCalib() function.
-        In this case, the calibration mechanism is applied on ck_apre instead of RTCCLK. 
-        The resulting accuracy is the same, but the calibration is performed during a 
+        In this case, the calibration mechanism is applied on ck_apre instead of RTCCLK.
+        The resulting accuracy is the same, but the calibration is performed during a
         calibration cycle of about 220 x PREDIV_A x RTCCLK pulses instead of 220 RTCCLK pulses.
 
   *** TimeStamp configuration ***
@@ -132,7 +132,7 @@
          function.
          The backup registers from TAMP_BKP0R to TAMP_BKP7R cannot be accessed neither in
          read nor in write (they are read as 0 and write ignore).
-     (+) Configure the erase of the Device Secerts using HAL_RTCEx_Erase_SecretDev_Conf() 
+     (+) Configure the erase of the Device Secerts using HAL_RTCEx_Erase_SecretDev_Conf()
          function.
      (+) Block the access to the RTC Backup registers and all the device secrets
          using HAL_RTCEx_BKUPBlock_Enable() function.
@@ -148,18 +148,18 @@
   *** RTC & TAMP secure protection modes ***
   ================================================
   [..]
-     (+) Set the security level of the RTC/TAMP/Backup registers using HAL_RTCEx_SecureModeSet() 
+     (+) Set the security level of the RTC/TAMP/Backup registers using HAL_RTCEx_SecureModeSet()
          function.
-      +) Get the security level of the RTC/TAMP/Backup registers using HAL_RTCEx_SecureModeGet() 
-         function.  
+      +) Get the security level of the RTC/TAMP/Backup registers using HAL_RTCEx_SecureModeGet()
+         function.
 
   *** RTC & TAMP privilege protection modes ***
   ================================================
   [..]
-     (+) Set the privilege level of the RTC/TAMP/Backup registers using HAL_RTCEx_PrivilegeModeSet() 
+     (+) Set the privilege level of the RTC/TAMP/Backup registers using HAL_RTCEx_PrivilegeModeSet()
          function.
-      +) Get the privilege level of the RTC/TAMP/Backup registers using HAL_RTCEx_PrivilegeModeGet() 
-         function.  
+      +) Get the privilege level of the RTC/TAMP/Backup registers using HAL_RTCEx_PrivilegeModeGet()
+         function.
 
   @endverbatim
   */
@@ -3517,4 +3517,3 @@ HAL_StatusTypeDef HAL_RTCEx_PrivilegeModeGet(RTC_HandleTypeDef *hrtc, RTC_Privil
 /**
   * @}
   */
-

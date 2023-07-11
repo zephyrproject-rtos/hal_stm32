@@ -1849,4 +1849,3 @@ __weak void HAL_GTZC_TZIC_Callback(uint32_t PeriphId)
 /**
   * @}
   */
-

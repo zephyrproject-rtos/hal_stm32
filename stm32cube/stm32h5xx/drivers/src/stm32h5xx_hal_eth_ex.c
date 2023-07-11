@@ -575,4 +575,3 @@ uint32_t HAL_ETHEx_GetMACLPIEvent(const ETH_HandleTypeDef *heth)
 /**
   * @}
   */
-

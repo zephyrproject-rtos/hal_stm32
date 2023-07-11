@@ -732,11 +732,11 @@ typedef struct
 #define ETH_DMATXNDESCRF_CIC_DISABLE                         0x00000000U  /*!< Do Nothing: Checksum Engine is disabled */
 #define ETH_DMATXNDESCRF_CIC_IPHDR_INSERT                    0x00010000U  /*!< Only IP header checksum calculation and insertion are enabled. */
 #define ETH_DMATXNDESCRF_CIC_IPHDR_PAYLOAD_INSERT            0x00020000U  /*!< IP header checksum and payload checksum calculation and insertion are
-                                                                                        enabled, but pseudo header 
+                                                                                        enabled, but pseudo header
                                                                                         checksum is not
                                                                                         calculated in hardware */
 #define ETH_DMATXNDESCRF_CIC_IPHDR_PAYLOAD_INSERT_PHDR_CALC  0x00030000U  /*!< IP Header checksum and payload checksum calculation and insertion are
-                                                                                        enabled, and pseudo header 
+                                                                                        enabled, and pseudo header
                                                                                         checksum is
                                                                                         calculated in hardware. */
 #define ETH_DMATXNDESCRF_TPL                                 0x0003FFFFU  /*!< TCP Payload Length */
@@ -1820,5 +1820,3 @@ uint32_t             HAL_ETH_GetMACWakeUpSource(ETH_HandleTypeDef *heth);
 #endif
 
 #endif /* STM32H5xx_HAL_ETH_H */
-
-

@@ -366,7 +366,7 @@
   */
 HAL_StatusTypeDef HAL_DAC_Init(DAC_HandleTypeDef *hdac)
 {
-  /* Check DAC handle */
+  /* Check the DAC peripheral handle */
   if (hdac == NULL)
   {
     return HAL_ERROR;
@@ -427,7 +427,7 @@ HAL_StatusTypeDef HAL_DAC_Init(DAC_HandleTypeDef *hdac)
   */
 HAL_StatusTypeDef HAL_DAC_DeInit(DAC_HandleTypeDef *hdac)
 {
-  /* Check DAC handle */
+  /* Check the DAC peripheral handle */
   if (hdac == NULL)
   {
     return HAL_ERROR;
@@ -531,6 +531,13 @@ __weak void HAL_DAC_MspDeInit(DAC_HandleTypeDef *hdac)
 HAL_StatusTypeDef HAL_DAC_Start(DAC_HandleTypeDef *hdac, uint32_t Channel)
 {
   __IO uint32_t wait_loop_index;
+
+  /* Check the DAC peripheral handle */
+  if (hdac == NULL)
+  {
+    return HAL_ERROR;
+  }
+
   /* Check the parameters */
   assert_param(IS_DAC_CHANNEL(Channel));
 
@@ -595,6 +602,12 @@ HAL_StatusTypeDef HAL_DAC_Start(DAC_HandleTypeDef *hdac, uint32_t Channel)
   */
 HAL_StatusTypeDef HAL_DAC_Stop(DAC_HandleTypeDef *hdac, uint32_t Channel)
 {
+  /* Check the DAC peripheral handle */
+  if (hdac == NULL)
+  {
+    return HAL_ERROR;
+  }
+
   /* Check the parameters */
   assert_param(IS_DAC_CHANNEL(Channel));
 
@@ -633,6 +646,12 @@ HAL_StatusTypeDef HAL_DAC_Start_DMA(DAC_HandleTypeDef *hdac, uint32_t Channel, c
   uint32_t LengthInBytes;
   DMA_NodeConfTypeDef node_conf;
   __IO uint32_t wait_loop_index;
+
+  /* Check the DAC peripheral handle */
+  if (hdac == NULL)
+  {
+    return HAL_ERROR;
+  }
 
   /* Check the parameters */
   assert_param(IS_DAC_CHANNEL(Channel));
@@ -902,6 +921,12 @@ HAL_StatusTypeDef HAL_DAC_Start_DMA(DAC_HandleTypeDef *hdac, uint32_t Channel, c
   */
 HAL_StatusTypeDef HAL_DAC_Stop_DMA(DAC_HandleTypeDef *hdac, uint32_t Channel)
 {
+  /* Check the DAC peripheral handle */
+  if (hdac == NULL)
+  {
+    return HAL_ERROR;
+  }
+
   /* Check the parameters */
   assert_param(IS_DAC_CHANNEL(Channel));
 
@@ -1028,6 +1053,12 @@ HAL_StatusTypeDef HAL_DAC_SetValue(DAC_HandleTypeDef *hdac, uint32_t Channel, ui
 {
   __IO uint32_t tmp = 0UL;
 
+  /* Check the DAC peripheral handle */
+  if (hdac == NULL)
+  {
+    return HAL_ERROR;
+  }
+
   /* Check the parameters */
   assert_param(IS_DAC_CHANNEL(Channel));
   assert_param(IS_DAC_ALIGN(Alignment));
@@ -1151,7 +1182,10 @@ __weak void HAL_DAC_DMAUnderrunCallbackCh1(DAC_HandleTypeDef *hdac)
   */
 uint32_t HAL_DAC_GetValue(const DAC_HandleTypeDef *hdac, uint32_t Channel)
 {
-  uint32_t result = 0;
+  uint32_t result;
+
+  /* Check the DAC peripheral handle */
+  assert_param(hdac != NULL);
 
   /* Check the parameters */
   assert_param(IS_DAC_CHANNEL(Channel));
@@ -1195,6 +1229,12 @@ HAL_StatusTypeDef HAL_DAC_ConfigChannel(DAC_HandleTypeDef *hdac,
   uint32_t tickstart;
   uint32_t hclkfreq;
   uint32_t connectOnChip;
+
+  /* Check the DAC peripheral handle and channel configuration struct */
+  if ((hdac == NULL) || (sConfig == NULL))
+  {
+    return HAL_ERROR;
+  }
 
   /* Check the DAC parameters */
   assert_param(IS_DAC_HIGH_FREQUENCY_MODE(sConfig->DAC_HighFrequency));
@@ -1312,18 +1352,18 @@ HAL_StatusTypeDef HAL_DAC_ConfigChannel(DAC_HandleTypeDef *hdac,
 #if !defined(TIM8)
 /* Devices STM32H503xx */
   /* On STM32H503EB (package WLCSP25) DAC channel 1 connection to GPIO is not available and should not be configured.
-     Package information is stored at the address PACKAGE_BASE, WLCSP25 correspond to the value 0xF (For more 
+     Package information is stored at the address PACKAGE_BASE, WLCSP25 correspond to the value 0xF (For more
      information, please refer to the Reference Manual) */
   __IO uint32_t* tmp_package = (uint32_t*)PACKAGE_BASE;
   if ( (*(tmp_package) & 0x1FUL) == 0x0FUL)
   {
-    if ( (Channel == DAC_CHANNEL_1) 
+    if ( (Channel == DAC_CHANNEL_1)
       && ( (sConfig->DAC_ConnectOnChipPeripheral == DAC_CHIPCONNECT_EXTERNAL)
          || (sConfig->DAC_ConnectOnChipPeripheral == DAC_CHIPCONNECT_BOTH)) )
       {
         /* Update return status */
         status = HAL_ERROR;
-        
+
         /* Change the DAC state */
         hdac->State = HAL_DAC_STATE_ERROR;
 
@@ -1480,7 +1520,7 @@ uint32_t HAL_DAC_GetError(const DAC_HandleTypeDef *hdac)
 /**
   * @brief  Register a User DAC Callback
   *         To be used instead of the weak (surcharged) predefined callback
-  * @note   The HAL_DAC_RegisterCallback() may be called before HAL_DAC_Init() in HAL_DAC_STATE_RESET to register 
+  * @note   The HAL_DAC_RegisterCallback() may be called before HAL_DAC_Init() in HAL_DAC_STATE_RESET to register
   *         callbacks for HAL_DAC_MSPINIT_CB_ID and HAL_DAC_MSPDEINIT_CB_ID
   * @param  hdac DAC handle
   * @param  CallbackID ID of the callback to be registered
@@ -1504,6 +1544,12 @@ HAL_StatusTypeDef HAL_DAC_RegisterCallback(DAC_HandleTypeDef *hdac, HAL_DAC_Call
                                            pDAC_CallbackTypeDef pCallback)
 {
   HAL_StatusTypeDef status = HAL_OK;
+
+  /* Check the DAC peripheral handle */
+  if (hdac == NULL)
+  {
+    return HAL_ERROR;
+  }
 
   if (pCallback == NULL)
   {
@@ -1588,7 +1634,7 @@ HAL_StatusTypeDef HAL_DAC_RegisterCallback(DAC_HandleTypeDef *hdac, HAL_DAC_Call
 /**
   * @brief  Unregister a User DAC Callback
   *         DAC Callback is redirected to the weak (surcharged) predefined callback
-  * @note   The HAL_DAC_UnRegisterCallback() may be called before HAL_DAC_Init() in HAL_DAC_STATE_RESET to un-register 
+  * @note   The HAL_DAC_UnRegisterCallback() may be called before HAL_DAC_Init() in HAL_DAC_STATE_RESET to un-register
   *         callbacks for HAL_DAC_MSPINIT_CB_ID and HAL_DAC_MSPDEINIT_CB_ID
   * @param  hdac DAC handle
   * @param  CallbackID ID of the callback to be unregistered
@@ -1609,6 +1655,12 @@ HAL_StatusTypeDef HAL_DAC_RegisterCallback(DAC_HandleTypeDef *hdac, HAL_DAC_Call
 HAL_StatusTypeDef HAL_DAC_UnRegisterCallback(DAC_HandleTypeDef *hdac, HAL_DAC_CallbackIDTypeDef CallbackID)
 {
   HAL_StatusTypeDef status = HAL_OK;
+
+  /* Check the DAC peripheral handle */
+  if (hdac == NULL)
+  {
+    return HAL_ERROR;
+  }
 
   if (hdac->State == HAL_DAC_STATE_READY)
   {

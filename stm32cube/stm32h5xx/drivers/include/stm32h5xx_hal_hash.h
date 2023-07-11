@@ -260,7 +260,7 @@ typedef  void (*pHASH_CallbackTypeDef)(HASH_HandleTypeDef *hhash);  /*!< pointer
 /** @defgroup HASH_flags_definition  HASH flags definitions
   * @{
   */
-#define HASH_FLAG_DINIS            HASH_SR_DINIS  /*!< 16 locations are free in the DIN : new block can be entered 
+#define HASH_FLAG_DINIS            HASH_SR_DINIS  /*!< 16 locations are free in the DIN : new block can be entered
                                                        in the Peripheral */
 #define HASH_FLAG_DCIS             HASH_SR_DCIS   /*!< Digest calculation complete                                    */
 #define HASH_FLAG_DMAS             HASH_SR_DMAS   /*!< DMA interface is enabled (DMAE=1) or a transfer is ongoing     */
