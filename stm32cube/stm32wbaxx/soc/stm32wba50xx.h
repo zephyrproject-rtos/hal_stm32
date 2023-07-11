@@ -607,9 +607,9 @@ typedef struct
   __IO uint32_t PRIVCFGR;       /*!< RCC privilege configuration register                   Address offset: 0x114 */
   uint32_t      RESERVED13[58]; /*!< Reserved                                                      0x118 -- 0x1FC */
   __IO uint32_t CFGR4;          /*!< RCC clock configuration register 4                     Address offset: 0x200 */
-  uint32_t      RESERVED14;     /*!< Reserved                                               Address offset: 0x204 */
+  uint32_t      RESERVED15;     /*!< Reserved                                               Address offset: 0x204 */
   __IO uint32_t RADIOENR;       /*!< RCC RADIO peripheral clock enable register             Address offset: 0x208 */
-  uint32_t      RESERVED15;     /*!< Reserved                                               Address offset: 0x20C */
+  uint32_t      RESERVED16;     /*!< Reserved                                               Address offset: 0x20C */
   __IO uint32_t ECSCR1;         /*!< RCC external clock sources calibration register 1      Address offset: 0x210 */
 } RCC_TypeDef;
 
@@ -1041,11 +1041,11 @@ typedef struct
 #define WWDG_NS                         ((WWDG_TypeDef *) WWDG_BASE_NS)
 
 /*!< Memory base addresses for Non secure peripherals */
-#define FLASH_BASE                     FLASH_BASE_NS
-#define SRAM1_BASE                     SRAM1_BASE_NS
-#define SRAM2_BASE                     SRAM2_BASE_NS
-#define SRAM6_BASE                     SRAM6_BASE_NS
-#define SEQSRAM_BASE                   SEQSRAM_BASE_NS
+#define FLASH_BASE                      FLASH_BASE_NS
+#define SRAM1_BASE                      SRAM1_BASE_NS
+#define SRAM2_BASE                      SRAM2_BASE_NS
+#define SRAM6_BASE                      SRAM6_BASE_NS
+#define SEQSRAM_BASE                    SEQSRAM_BASE_NS
 
 /*!< Instance aliases and base addresses for Non secure peripherals */
 #define ADC4                            ADC4_NS
@@ -6192,7 +6192,6 @@ typedef struct
 #define RCC_APB1RSTR1_TIM2RST_Msk           (0x1UL << RCC_APB1RSTR1_TIM2RST_Pos)    /*!< 0x00000001 */
 #define RCC_APB1RSTR1_TIM2RST               RCC_APB1RSTR1_TIM2RST_Msk
 
-
 /********************  Bit definition for RCC_APB2RSTR register  **************/
 #define RCC_APB2RSTR_TIM1RST_Pos            (11U)
 #define RCC_APB2RSTR_TIM1RST_Msk            (0x1UL << RCC_APB2RSTR_TIM1RST_Pos)     /*!< 0x00000800 */
@@ -6293,7 +6292,6 @@ typedef struct
 #define RCC_APB1ENR1_WWDGEN_Pos             (11U)
 #define RCC_APB1ENR1_WWDGEN_Msk             (0x1UL << RCC_APB1ENR1_WWDGEN_Pos)      /*!< 0x00000800 */
 #define RCC_APB1ENR1_WWDGEN                 RCC_APB1ENR1_WWDGEN_Msk
-
 
 /********************  Bit definition for RCC_APB2ENR register  **************/
 #define RCC_APB2ENR_TIM1EN_Pos              (11U)
@@ -6398,7 +6396,6 @@ typedef struct
 #define RCC_APB1SMENR1_WWDGSMEN_Pos         (11U)
 #define RCC_APB1SMENR1_WWDGSMEN_Msk         (0x1UL << RCC_APB1SMENR1_WWDGSMEN_Pos)  /*!< 0x00000800 */
 #define RCC_APB1SMENR1_WWDGSMEN             RCC_APB1SMENR1_WWDGSMEN_Msk
-
 
 /********************  Bit definition for RCC_APB2SMENR register  **************/
 #define RCC_APB2SMENR_TIM1SMEN_Pos          (11U)

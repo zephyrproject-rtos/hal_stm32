@@ -22,7 +22,7 @@
   **********************************************************************************************************************
   @verbatim
   ======================================================================================================================
-                                 ##### How to use this driver #####
+                       ##### How to use this driver #####
   ======================================================================================================================
 
     [..]
@@ -251,7 +251,7 @@ HAL_StatusTypeDef HAL_DMA_Init(DMA_HandleTypeDef *const hdma)
   /* Check the parameters */
   assert_param(IS_DMA_ALL_INSTANCE(hdma->Instance));
   assert_param(IS_DMA_DIRECTION(hdma->Init.Direction));
-  if ((hdma->Init.Direction == DMA_MEMORY_TO_PERIPH) || (hdma->Init.Direction == DMA_MEMORY_TO_MEMORY))
+  if (hdma->Init.Direction != DMA_MEMORY_TO_MEMORY)
   {
     assert_param(IS_DMA_REQUEST(hdma->Init.Request));
   }

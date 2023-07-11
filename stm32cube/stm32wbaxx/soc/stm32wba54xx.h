@@ -723,11 +723,23 @@ typedef struct
   uint32_t      RESERVED12[5];  /*!< Reserved                                                     0x0FC -- 0x010C */
   __IO uint32_t SECCFGR;        /*!< RCC secure configuration register                      Address offset: 0x110 */
   __IO uint32_t PRIVCFGR;       /*!< RCC privilege configuration register                   Address offset: 0x114 */
+#if !defined (STM32WBAXX_SI_CUT1_0)
+  uint32_t      RESERVED13[42]; /*!< Reserved                                                      0x118 -- 0x1BC */
+  __IO uint32_t ASCR;           /*!< RCC privilege configuration register                   Address offset: 0x1C0 */
+  __IO uint32_t ASIER;          /*!< RCC privilege configuration register                   Address offset: 0x1C4 */
+  __IO uint32_t ASSR;           /*!< RCC privilege configuration register                   Address offset: 0x1C8 */
+  __IO uint32_t ASCNTR;         /*!< RCC privilege configuration register                   Address offset: 0x1CC */
+  __IO uint32_t ASARR;          /*!< RCC privilege configuration register                   Address offset: 0x1D0 */
+  __IO uint32_t ASCAR;          /*!< RCC privilege configuration register                   Address offset: 0x1D4 */
+  __IO uint32_t ASCOR;          /*!< RCC privilege configuration register                   Address offset: 0x1D8 */
+  uint32_t      RESERVED14[9];  /*!< Reserved                                                      0x1DC -- 0x1FC */
+#else
   uint32_t      RESERVED13[58]; /*!< Reserved                                                      0x118 -- 0x1FC */
+#endif
   __IO uint32_t CFGR4;          /*!< RCC clock configuration register 4                     Address offset: 0x200 */
-  uint32_t      RESERVED14;     /*!< Reserved                                               Address offset: 0x204 */
+  uint32_t      RESERVED15;     /*!< Reserved                                               Address offset: 0x204 */
   __IO uint32_t RADIOENR;       /*!< RCC RADIO peripheral clock enable register             Address offset: 0x208 */
-  uint32_t      RESERVED15;     /*!< Reserved                                               Address offset: 0x20C */
+  uint32_t      RESERVED16;     /*!< Reserved                                               Address offset: 0x20C */
   __IO uint32_t ECSCR1;         /*!< RCC external clock sources calibration register 1      Address offset: 0x210 */
 } RCC_TypeDef;
 
@@ -1131,11 +1143,11 @@ typedef struct
 #define LPUART1_BASE_NS                 (APB7PERIPH_BASE_NS + 0x2400UL)
 #define I2C3_BASE_NS                    (APB7PERIPH_BASE_NS + 0x2800UL)
 #define LPTIM1_BASE_NS                  (APB7PERIPH_BASE_NS + 0x4400UL)
-#define RTC_BASE_NS                     (APB7PERIPH_BASE_NS + 0x7800UL)
-#define TAMP_BASE_NS                    (APB7PERIPH_BASE_NS + 0x7C00UL)
 #define COMP12_BASE_NS                  (APB7PERIPH_BASE_NS + 0x5400UL)
 #define COMP1_BASE_NS                   (COMP12_BASE_NS)
 #define COMP2_BASE_NS                   (COMP12_BASE_NS + 0x04UL)
+#define RTC_BASE_NS                     (APB7PERIPH_BASE_NS + 0x7800UL)
+#define TAMP_BASE_NS                    (APB7PERIPH_BASE_NS + 0x7C00UL)
 
 /*!< AHB4 Non secure peripherals */
 #define PWR_BASE_NS                     (AHB4PERIPH_BASE_NS + 0x0800UL)
@@ -1233,11 +1245,11 @@ typedef struct
 #define LPUART1_BASE_S                  (APB7PERIPH_BASE_S + 0x2400UL)
 #define I2C3_BASE_S                     (APB7PERIPH_BASE_S + 0x2800UL)
 #define LPTIM1_BASE_S                   (APB7PERIPH_BASE_S + 0x4400UL)
-#define RTC_BASE_S                      (APB7PERIPH_BASE_S + 0x7800UL)
-#define TAMP_BASE_S                     (APB7PERIPH_BASE_S + 0x7C00UL)
 #define COMP12_BASE_S                   (APB7PERIPH_BASE_S + 0x5400UL)
 #define COMP1_BASE_S                    (COMP12_BASE_S)
 #define COMP2_BASE_S                    (COMP12_BASE_S + 0x04UL)
+#define RTC_BASE_S                      (APB7PERIPH_BASE_S + 0x7800UL)
+#define TAMP_BASE_S                     (APB7PERIPH_BASE_S + 0x7C00UL)
 
 /*!< AHB4 Secure peripherals */
 #define PWR_BASE_S                      (AHB4PERIPH_BASE_S + 0x0800UL)
@@ -10614,6 +10626,11 @@ typedef struct
 #define RCC_CCIPR2_RNGSEL                   RCC_CCIPR2_RNGSEL_Msk
 #define RCC_CCIPR2_RNGSEL_0                 (0x1UL << RCC_CCIPR2_RNGSEL_Pos)        /*!< 0x00100000 */
 #define RCC_CCIPR2_RNGSEL_1                 (0x2UL << RCC_CCIPR2_RNGSEL_Pos)        /*!< 0x00200000 */
+#if !defined (STM32WBAXX_SI_CUT1_0)
+#define RCC_CCIPR2_ASSEL_Pos                (30U)
+#define RCC_CCIPR2_ASSEL_Msk                (0x1UL << RCC_CCIPR2_ASSEL_Pos)         /*!< 0x40000000 */
+#define RCC_CCIPR2_ASSEL                    RCC_CCIPR2_ASSEL_Msk
+#endif
 
 /********************  Bit definition for RCC_CCIPR3 register  ***************/
 #define RCC_CCIPR3_LPUART1SEL_Pos           (0U)
@@ -10788,6 +10805,61 @@ typedef struct
 #define RCC_PRIVCFGR_NSPRIV_Msk             (0x1UL << RCC_PRIVCFGR_NSPRIV_Pos)      /*!< 0x00000002 */
 #define RCC_PRIVCFGR_NSPRIV                 RCC_PRIVCFGR_NSPRIV_Msk
 
+#if !defined (STM32WBAXX_SI_CUT1_0)
+/********************  Bit definition for RCC_ASCR register  **************/
+#define RCC_ASCR_CEN_Pos                    (0U)
+#define RCC_ASCR_CEN                        RCC_ASCR_CEN_Msk
+#define RCC_ASCR_CEN_Msk                    (0x1UL << RCC_ASCR_CEN_Pos)             /*!< 0x00000001 */
+#define RCC_ASCR_PSC_Pos                    (8U)
+#define RCC_ASCR_PSC_Msk                    (0x7FUL << RCC_ASCR_PSC_Pos)            /*!< 0x00007F00 */
+#define RCC_ASCR_PSC                        RCC_ASCR_PSC_Msk
+#define RCC_ASCR_CPS_Pos                    (16U)
+#define RCC_ASCR_CPS_Msk                    (0x7FUL << RCC_ASCR_CPS_Pos)            /*!< 0x007F0000 */
+#define RCC_ASCR_CPS                        RCC_ASCR_CPS_Msk
+
+/********************  Bit definition for RCC_ASIER register  **************/
+#define RCC_ASIER_CAIE_Pos                  (0U)
+#define RCC_ASIER_CAIE                      RCC_ASIER_CAIE_Msk
+#define RCC_ASIER_CAIE_Msk                  (0x1UL << RCC_ASIER_CAIE_Pos)           /*!< 0x00000001 */
+#define RCC_ASIER_COIE_Pos                  (1U)
+#define RCC_ASIER_COIE_Msk                  (0x1UL << RCC_ASIER_COIE_Pos)           /*!< 0x00000002 */
+#define RCC_ASIER_COIE                      RCC_ASIER_COIE_Msk
+#define RCC_ASIER_CAEIE_Pos                 (2U)
+#define RCC_ASIER_CAEIE_Msk                 (0x1UL << RCC_ASIER_CAEIE_Pos)          /*!< 0x00000004 */
+#define RCC_ASIER_CAEIE                      RCC_ASIER_CAEIE_Msk
+
+/********************  Bit definition for RCC_ASSR register  **************/
+#define RCC_ASSR_CAF_Pos                    (0U)
+#define RCC_ASSR_CAF                        RCC_ASSR_CAF_Msk
+#define RCC_ASSR_CAF_Msk                    (0x1UL << RCC_ASSR_CAF_Pos)             /*!< 0x00000001 */
+#define RCC_ASSR_COF_Pos                    (1U)
+#define RCC_ASSR_COF_Msk                    (0x1UL << RCC_ASSR_COF_Pos)             /*!< 0x00000002 */
+#define RCC_ASSR_COF                        RCC_ASSR_COF_Msk
+#define RCC_ASSR_CAEF_Pos                   (2U)
+#define RCC_ASSR_CAEF_Msk                   (0x1UL << RCC_ASSR_CAEF_Pos)            /*!< 0x00000004 */
+#define RCC_ASSR_CAEF                       RCC_ASSR_CAEF_Msk
+
+/********************  Bit definition for RCC_ASCNTR register  **************/
+#define RCC_ASCNTR_CNT_Pos                  (0U)
+#define RCC_ASCNTR_CNT                      RCC_ASCNTR_CNT_Msk
+#define RCC_ASCNTR_CNT_Msk                  (0xFFFFFUL << RCC_ASCNTR_CNT_Pos)       /*!< 0x000FFFFF */
+
+/********************  Bit definition for RCC_ASARR register  **************/
+#define RCC_ASARR_AR_Pos                    (0U)
+#define RCC_ASARR_AR                        RCC_ASARR_AR_Msk
+#define RCC_ASARR_AR_Msk                    (0xFFFFFUL << RCC_ASARR_AR_Pos)         /*!< 0x000FFFFF */
+
+/********************  Bit definition for RCC_ASCAR register  **************/
+#define RCC_ASCAR_CA_Pos                    (0U)
+#define RCC_ASCAR_CA                        RCC_ASCAR_CA_Msk
+#define RCC_ASCAR_CA_Msk                    (0x7FFFFFFUL << RCC_ASCAR_CA_Pos)       /*!< 0x07FFFFFF */
+
+/********************  Bit definition for RCC_ASCOR register  **************/
+#define RCC_ASCOR_CO_Pos                    (0U)
+#define RCC_ASCOR_CO                        RCC_ASCOR_CO_Msk
+#define RCC_ASCOR_CO_Msk                    (0xFFFFFUL << RCC_ASCOR_CO_Pos)         /*!< 0x000FFFFF */
+
+#endif
 /********************  Bit definition for RCC_CFGR4 register  *******************/
 #define RCC_CFGR4_HPRE5_Pos                 (0U)
 #define RCC_CFGR4_HPRE5_Msk                 (0x7UL << RCC_CFGR4_HPRE5_Pos)          /*!< 0x00000007 */

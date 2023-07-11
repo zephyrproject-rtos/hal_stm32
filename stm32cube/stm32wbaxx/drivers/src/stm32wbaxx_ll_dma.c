@@ -131,9 +131,17 @@
 #define IS_LL_DMA_BLKHW_REQUEST(__VALUE__)                (((__VALUE__) == LL_DMA_HWREQUEST_SINGLEBURST) || \
                                                            ((__VALUE__) == LL_DMA_HWREQUEST_BLK))
 
-#define IS_LL_DMA_TRIGGER_SELECTION(__VALUE__)             ((__VALUE__) <= LL_GPDMA1_TRIGGER_TIM2_TRGO)
+#if defined (TIM3)
+#define IS_LL_DMA_TRIGGER_SELECTION(__VALUE__)             ((__VALUE__) <= LL_GPDMA1_TRIGGER_TIM3_TRGO)
+#else
+#define IS_LL_DMA_TRIGGER_SELECTION(__VALUE__)             ((__VALUE__) <= LL_GPDMA1_TRIGGER_ADC4_AWD1)
+#endif /* defined (TIM3) */
 
-#define IS_LL_DMA_REQUEST_SELECTION(__VALUE__)             ((__VALUE__) <= 51U)
+#if defined (LPTIM2)
+#define IS_LL_DMA_REQUEST_SELECTION(__VALUE__)             ((__VALUE__) <= LL_GPDMA1_REQUEST_LPTIM2_UE)
+#else
+#define IS_LL_DMA_REQUEST_SELECTION(__VALUE__)             ((__VALUE__) <= LL_GPDMA1_REQUEST_LPTIM1_UE)
+#endif /* defined (LPTIM2) */
 
 #define IS_LL_DMA_TRANSFER_EVENT_MODE(__VALUE__)          (((__VALUE__) == LL_DMA_TCEM_BLK_TRANSFER)         || \
                                                            ((__VALUE__) == LL_DMA_TCEM_RPT_BLK_TRANSFER)     || \
@@ -191,6 +199,7 @@
 
 #define IS_LL_DMA_CHANNEL_DEST_SEC(__VALUE__)             (((__VALUE__) == LL_DMA_CHANNEL_DEST_NSEC) || \
                                                            ((__VALUE__) == LL_DMA_CHANNEL_DEST_SEC))
+
 #endif /* defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U) */
 /**
   * @}

@@ -102,7 +102,8 @@ static HAL_StatusTypeDef CRYPEx_KeyGeneration(CRYP_HandleTypeDef *hcryp, uint32_
   * @param  Timeout Timeout duration
   * @retval HAL status
   */
-HAL_StatusTypeDef HAL_CRYPEx_AESGCM_GenerateAuthTAG(CRYP_HandleTypeDef *hcryp, const uint32_t *pAuthTag, uint32_t Timeout)
+HAL_StatusTypeDef HAL_CRYPEx_AESGCM_GenerateAuthTAG(CRYP_HandleTypeDef *hcryp, const uint32_t *pAuthTag,
+                                                    uint32_t Timeout)
 {
   /* Assume first Init.HeaderSize is in words */
   uint64_t headerlength = (uint64_t)hcryp->Init.HeaderSize * 32U; /* Header length in bits */
@@ -213,7 +214,8 @@ HAL_StatusTypeDef HAL_CRYPEx_AESGCM_GenerateAuthTAG(CRYP_HandleTypeDef *hcryp, c
   * @param  Timeout Timeout duration
   * @retval HAL status
   */
-HAL_StatusTypeDef HAL_CRYPEx_AESCCM_GenerateAuthTAG(CRYP_HandleTypeDef *hcryp, const uint32_t *pAuthTag, uint32_t Timeout)
+HAL_StatusTypeDef HAL_CRYPEx_AESCCM_GenerateAuthTAG(CRYP_HandleTypeDef *hcryp, const uint32_t *pAuthTag,
+                                                    uint32_t Timeout)
 {
   uint32_t tagaddr = (uint32_t)pAuthTag;
   uint32_t i;
@@ -370,10 +372,10 @@ HAL_StatusTypeDef HAL_CRYPEx_WrapKey(CRYP_HandleTypeDef *hcryp, uint32_t *pInput
         /* AES decryption */
         status = CRYPEx_KeyEncrypt(hcryp, Timeout);
         break;
-    case CRYP_AES_CTR:
-      /* AES Key generation */
-      status = CRYPEx_KeyGeneration(hcryp, Timeout);
-      break;
+      case CRYP_AES_CTR:
+        /* AES Key generation */
+        status = CRYPEx_KeyGeneration(hcryp, Timeout);
+        break;
       default:
         hcryp->ErrorCode |= HAL_CRYP_ERROR_NOT_SUPPORTED;
         status = HAL_ERROR;
@@ -394,7 +396,7 @@ HAL_StatusTypeDef HAL_CRYPEx_WrapKey(CRYP_HandleTypeDef *hcryp, uint32_t *pInput
   * @brief  Unwrap (Decrypt) application keys.
   * @param  hcryp pointer to a CRYP_HandleTypeDef structure that contains
   *         the configuration information for CRYP module
-    * @param  pInput Pointer to the Key buffer to decrypt or generated key in case of CTR.
+  * @param  pInput Pointer to the Key buffer to decrypt or generated key in case of CTR.
   * @param  Timeout Specify Timeout value
   * @retval HAL status
   */

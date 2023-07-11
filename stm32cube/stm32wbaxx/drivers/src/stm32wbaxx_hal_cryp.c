@@ -641,9 +641,9 @@ HAL_StatusTypeDef HAL_CRYP_SetConfig(CRYP_HandleTypeDef *hcryp, CRYP_ConfigTypeD
     hcryp->Init.KeyIVConfigSkip = pConf->KeyIVConfigSkip;
 
 #if !defined(SAES)
-  /* Set the key size, data type, AlgoMode and operating mode */
-  MODIFY_REG(hcryp->Instance->CR, AES_CR_DATATYPE | AES_CR_KEYSIZE | AES_CR_CHMOD,
-             hcryp->Init.DataType | hcryp->Init.KeySize | hcryp->Init.Algorithm);
+    /* Set the key size, data type, AlgoMode and operating mode */
+    MODIFY_REG(hcryp->Instance->CR, AES_CR_DATATYPE | AES_CR_KEYSIZE | AES_CR_CHMOD,
+               hcryp->Init.DataType | hcryp->Init.KeySize | hcryp->Init.Algorithm);
 #else
     if (hcryp->Instance == AES)
     {
@@ -1361,6 +1361,12 @@ HAL_StatusTypeDef HAL_CRYP_Encrypt(CRYP_HandleTypeDef *hcryp, uint32_t *pInput, 
 {
   uint32_t algo;
   HAL_StatusTypeDef status;
+#ifdef  USE_FULL_ASSERT
+  uint32_t algo_assert = (hcryp->Instance->CR) & AES_CR_CHMOD;
+
+  /* Check input buffer size */
+  assert_param(IS_CRYP_BUFFERSIZE(algo_assert, hcryp->Init.DataWidthUnit, Size));
+#endif /* USE_FULL_ASSERT */
 
   if (hcryp->State == HAL_CRYP_STATE_READY)
   {
@@ -1458,6 +1464,12 @@ HAL_StatusTypeDef HAL_CRYP_Decrypt(CRYP_HandleTypeDef *hcryp, uint32_t *pInput, 
 {
   HAL_StatusTypeDef status;
   uint32_t algo;
+#ifdef  USE_FULL_ASSERT
+  uint32_t algo_assert = (hcryp->Instance->CR) & AES_CR_CHMOD;
+
+  /* Check input buffer size */
+  assert_param(IS_CRYP_BUFFERSIZE(algo_assert, hcryp->Init.DataWidthUnit, Size));
+#endif /* USE_FULL_ASSERT */
 
   if (hcryp->State == HAL_CRYP_STATE_READY)
   {
@@ -1542,6 +1554,12 @@ HAL_StatusTypeDef HAL_CRYP_Encrypt_IT(CRYP_HandleTypeDef *hcryp, uint32_t *pInpu
 {
   HAL_StatusTypeDef status;
   uint32_t algo;
+#ifdef  USE_FULL_ASSERT
+  uint32_t algo_assert = (hcryp->Instance->CR) & AES_CR_CHMOD;
+
+  /* Check input buffer size */
+  assert_param(IS_CRYP_BUFFERSIZE(algo_assert, hcryp->Init.DataWidthUnit, Size));
+#endif /* USE_FULL_ASSERT */
 
   if (hcryp->State == HAL_CRYP_STATE_READY)
   {
@@ -1640,6 +1658,12 @@ HAL_StatusTypeDef HAL_CRYP_Decrypt_IT(CRYP_HandleTypeDef *hcryp, uint32_t *pInpu
 {
   HAL_StatusTypeDef status;
   uint32_t algo;
+#ifdef  USE_FULL_ASSERT
+  uint32_t algo_assert = (hcryp->Instance->CR) & AES_CR_CHMOD;
+
+  /* Check input buffer size */
+  assert_param(IS_CRYP_BUFFERSIZE(algo_assert, hcryp->Init.DataWidthUnit, Size));
+#endif /* USE_FULL_ASSERT */
 
   if (hcryp->State == HAL_CRYP_STATE_READY)
   {
@@ -1740,6 +1764,12 @@ HAL_StatusTypeDef HAL_CRYP_Encrypt_DMA(CRYP_HandleTypeDef *hcryp, uint32_t *pInp
 #endif /* SAES */
   uint32_t algo;
   uint32_t dokeyivconfig = 1U; /* By default, carry out peripheral Key and IV configuration */
+#ifdef  USE_FULL_ASSERT
+  uint32_t algo_assert = (hcryp->Instance->CR) & AES_CR_CHMOD;
+
+  /* Check input buffer size */
+  assert_param(IS_CRYP_BUFFERSIZE(algo_assert, hcryp->Init.DataWidthUnit, Size));
+#endif /* USE_FULL_ASSERT */
 
   if (hcryp->State == HAL_CRYP_STATE_READY)
   {
@@ -1899,6 +1929,12 @@ HAL_StatusTypeDef HAL_CRYP_Decrypt_DMA(CRYP_HandleTypeDef *hcryp, uint32_t *pInp
 {
   HAL_StatusTypeDef status;
   uint32_t algo;
+#ifdef  USE_FULL_ASSERT
+  uint32_t algo_assert = (hcryp->Instance->CR) & AES_CR_CHMOD;
+
+  /* Check input buffer size */
+  assert_param(IS_CRYP_BUFFERSIZE(algo_assert, hcryp->Init.DataWidthUnit, Size));
+#endif /* USE_FULL_ASSERT */
 
   if (hcryp->State == HAL_CRYP_STATE_READY)
   {
@@ -2054,7 +2090,7 @@ void HAL_CRYP_IRQHandler(CRYP_HandleTypeDef *hcryp)
   *                 the configuration information for the  CRYP peripheral
   * @retval CRYP error code
   */
-uint32_t HAL_CRYP_GetError(CRYP_HandleTypeDef *hcryp)
+uint32_t HAL_CRYP_GetError(const CRYP_HandleTypeDef *hcryp)
 {
   return hcryp->ErrorCode;
 }
@@ -2065,7 +2101,7 @@ uint32_t HAL_CRYP_GetError(CRYP_HandleTypeDef *hcryp)
   *         the configuration information for CRYP module.
   * @retval HAL state
   */
-HAL_CRYP_STATETypeDef HAL_CRYP_GetState(CRYP_HandleTypeDef *hcryp)
+HAL_CRYP_STATETypeDef HAL_CRYP_GetState(const CRYP_HandleTypeDef *hcryp)
 {
   return hcryp->State;
 }
@@ -2168,7 +2204,7 @@ static HAL_StatusTypeDef CRYP_AES_Encrypt(CRYP_HandleTypeDef *hcryp, uint32_t Ti
         (hcryp->Init.KeyIVConfigSkip == CRYP_KEYIVCONFIG_ALWAYS))
     {
 #if !defined(SAES)
-    CRYP_SetKey(hcryp, hcryp->Init.KeySize);
+      CRYP_SetKey(hcryp, hcryp->Init.KeySize);
 #else
       if (hcryp->Instance == AES)
       {
@@ -2370,10 +2406,6 @@ static HAL_StatusTypeDef CRYP_AES_Encrypt_IT(CRYP_HandleTypeDef *hcryp)
 
   if (hcryp->Size != 0U)
   {
-
-    /* Enable computation complete flag and Key, Read and Write error interrupts */
-    __HAL_CRYP_ENABLE_IT(hcryp, CRYP_IT_CCFIE | CRYP_IT_RWEIE | CRYP_IT_KEIE);
-
     /* Enable CRYP */
     __HAL_CRYP_ENABLE(hcryp);
 
@@ -2386,6 +2418,9 @@ static HAL_StatusTypeDef CRYP_AES_Encrypt_IT(CRYP_HandleTypeDef *hcryp)
     hcryp->CrypInCount++;
     hcryp->Instance->DINR  = *(uint32_t *)(hcryp->pCrypInBuffPtr + hcryp->CrypInCount);
     hcryp->CrypInCount++;
+
+    /* Enable computation complete flag and Key, Read and Write error interrupts */
+    __HAL_CRYP_ENABLE_IT(hcryp, CRYP_IT_CCFIE | CRYP_IT_RWEIE | CRYP_IT_KEIE);
   }
   else
   {
@@ -2856,9 +2891,6 @@ static HAL_StatusTypeDef CRYP_AES_Decrypt_IT(CRYP_HandleTypeDef *hcryp)
   hcryp->Phase = CRYP_PHASE_PROCESS;
   if (hcryp->Size != 0U)
   {
-    /* Enable computation complete flag and error interrupts */
-    __HAL_CRYP_ENABLE_IT(hcryp, CRYP_IT_CCFIE | CRYP_IT_RWEIE | CRYP_IT_KEIE);
-
     /* Enable CRYP */
     __HAL_CRYP_ENABLE(hcryp);
 
@@ -2871,6 +2903,9 @@ static HAL_StatusTypeDef CRYP_AES_Decrypt_IT(CRYP_HandleTypeDef *hcryp)
     hcryp->CrypInCount++;
     hcryp->Instance->DINR  = *(uint32_t *)(hcryp->pCrypInBuffPtr + hcryp->CrypInCount);
     hcryp->CrypInCount++;
+
+    /* Enable computation complete flag and error interrupts */
+    __HAL_CRYP_ENABLE_IT(hcryp, CRYP_IT_CCFIE | CRYP_IT_RWEIE | CRYP_IT_KEIE);
   }
   else
   {
@@ -2922,7 +2957,7 @@ static HAL_StatusTypeDef CRYP_AES_Decrypt_DMA(CRYP_HandleTypeDef *hcryp)
       /* Set the Key */
       if (hcryp->Init.KeyIVConfigSkip != CRYP_KEYNOCONFIG)
       {
-          CRYP_SetKey(hcryp, hcryp->Init.KeySize);
+        CRYP_SetKey(hcryp, hcryp->Init.KeySize);
       }
 
       /* Enable CRYP */
@@ -5585,10 +5620,10 @@ static HAL_StatusTypeDef CRYP_GCMCCM_SetHeaderPhase(CRYP_HandleTypeDef *hcryp, u
   uint32_t loopcounter;
   uint32_t size_in_bytes;
   uint32_t tmp;
-  uint32_t mask[12] = {0x0U, 0xFF000000U, 0xFFFF0000U, 0xFFFFFF00U,  /* 32-bit data type */
-                       0x0U, 0x0000FF00U, 0x0000FFFFU, 0xFF00FFFFU,  /* 16-bit data type */
-                       0x0U, 0x000000FFU, 0x0000FFFFU, 0x00FFFFFFU
-                      }; /*  8-bit data type */
+  const uint32_t mask[12] = {0x0U, 0xFF000000U, 0xFFFF0000U, 0xFFFFFF00U,  /* 32-bit data type */
+                             0x0U, 0x0000FF00U, 0x0000FFFFU, 0xFF00FFFFU,  /* 16-bit data type */
+                             0x0U, 0x000000FFU, 0x0000FFFFU, 0x00FFFFFFU
+                            }; /*  8-bit data type */
 
   /***************************** Header phase for GCM/GMAC or CCM *********************************/
   if (hcryp->Init.HeaderWidthUnit == CRYP_HEADERWIDTHUNIT_WORD)
@@ -5719,10 +5754,10 @@ static HAL_StatusTypeDef CRYP_GCMCCM_SetHeaderPhase_DMA(CRYP_HandleTypeDef *hcry
   uint32_t loopcounter;
   uint32_t headersize_in_bytes;
   uint32_t tmp;
-  uint32_t mask[12] = {0x0U, 0xFF000000U, 0xFFFF0000U, 0xFFFFFF00U,  /* 32-bit data type */
-                       0x0U, 0x0000FF00U, 0x0000FFFFU, 0xFF00FFFFU,  /* 16-bit data type */
-                       0x0U, 0x000000FFU, 0x0000FFFFU, 0x00FFFFFFU
-                      }; /*  8-bit data type */
+  const uint32_t mask[12] = {0x0U, 0xFF000000U, 0xFFFF0000U, 0xFFFFFF00U,  /* 32-bit data type */
+                             0x0U, 0x0000FF00U, 0x0000FFFFU, 0xFF00FFFFU,  /* 16-bit data type */
+                             0x0U, 0x000000FFU, 0x0000FFFFU, 0x00FFFFFFU
+                            }; /*  8-bit data type */
 
   /***************************** Header phase for GCM/GMAC or CCM *********************************/
   if (hcryp->Init.HeaderWidthUnit == CRYP_HEADERWIDTHUNIT_WORD)
@@ -5841,10 +5876,10 @@ static void CRYP_GCMCCM_SetHeaderPhase_IT(CRYP_HandleTypeDef *hcryp)
   uint32_t mode;
   uint32_t headersize_in_bytes;
   uint32_t tmp;
-  uint32_t mask[12] = {0x0U, 0xFF000000U, 0xFFFF0000U, 0xFFFFFF00U,  /* 32-bit data type */
-                       0x0U, 0x0000FF00U, 0x0000FFFFU, 0xFF00FFFFU,  /* 16-bit data type */
-                       0x0U, 0x000000FFU, 0x0000FFFFU, 0x00FFFFFFU
-                      }; /*  8-bit data type */
+  const uint32_t mask[12] = {0x0U, 0xFF000000U, 0xFFFF0000U, 0xFFFFFF00U,  /* 32-bit data type */
+                             0x0U, 0x0000FF00U, 0x0000FFFFU, 0xFF00FFFFU,  /* 16-bit data type */
+                             0x0U, 0x000000FFU, 0x0000FFFFU, 0x00FFFFFFU
+                            }; /*  8-bit data type */
 
   if (hcryp->Init.HeaderWidthUnit == CRYP_HEADERWIDTHUNIT_WORD)
   {

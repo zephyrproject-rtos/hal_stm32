@@ -460,8 +460,8 @@ void HAL_HASH_IRQHandler(HASH_HandleTypeDef *hhash);
 void HAL_HASH_InCpltCallback(HASH_HandleTypeDef *hhash);
 void HAL_HASH_DgstCpltCallback(HASH_HandleTypeDef *hhash);
 void HAL_HASH_ErrorCallback(HASH_HandleTypeDef *hhash);
-HAL_HASH_StateTypeDef HAL_HASH_GetState(HASH_HandleTypeDef *hhash);
-uint32_t HAL_HASH_GetError(HASH_HandleTypeDef *hhash);
+HAL_HASH_StateTypeDef HAL_HASH_GetState(const HASH_HandleTypeDef *hhash);
+uint32_t HAL_HASH_GetError(const HASH_HandleTypeDef *hhash);
 
 /**
   * @}

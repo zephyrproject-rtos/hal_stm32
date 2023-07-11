@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Release Notes for STM32WBA Firmware Package</title>
+  <style type="text/css">
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
+  </style>
+  <link rel="stylesheet" href="_htmresc/mini-st_2020.css" />
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+  <link rel="icon" type="image/x-icon" href="_htmresc/favicon.png" />
+</head>
+<body>
+<div class="row">
+<div class="col-sm-12 col-lg-4">
+<center>
+<h1 id="release-notes-for">Release Notes for</h1>
+<h1 id="stm32cubewba-firmware-package"><mark>STM32CubeWBA Firmware Package</mark></h1>
+<p>Copyright © 2022 STMicroelectronics<br />
+</p>
+<a href="https://www.st.com" class="logo"><img src="_htmresc/st_logo_2020.png" alt="ST logo" /></a>
+</center>
+<h1 id="purpose">Purpose</h1>
+<p><strong>STM32Cube is an STMicroelectronics original initiative to ease developers life by reducing development efforts, time and cost.</mark></strong></p>
+<p>STM32Cube covers STM32 portfolio.</p>
+<p>STM32Cube Version 1.x includes:</p>
+<ul>
+<li><p>The STM32CubeMX, a graphical software configuration tool that allows to generate C initialization code using graphical wizards.</p></li>
+<li><p>A comprehensive embedded software platform, delivered per series (such as STM32CubeWBA for STM32WBA series)</p>
+<ul>
+<li><p>The STM32Cube HAL, an STM32 abstraction layer embedded software, ensuring maximized portability across STM32 portfolio.</p></li>
+<li><p>Low-layer APIs (LL) offering a fast light-weight expert-oriented layer which is closer to the hardware than the HAL.</p></li>
+<li><p>A consistent set of middleware components such as STM32WPAN.</p></li>
+</ul></li>
+</ul>
+<p>All embedded software utilities, delivered with a full set of examples.</p>
+<p>The STM32Cube firmware solution offers a straightforward API with a modular architecture, making it simple to fine tune custom applications and scalable to fit most requirements.</p>
+<p>Both the HAL and LL APIs are production-ready, checked with CodeSonar static analysis tool, and developed in compliance with MISRA C guidelines. Reports are available on demand.</p>
+<figure>
+<img src="_htmresc/STM32Cube_2020.bmp" alt="STM32Cube" /><figcaption>STM32Cube</figcaption>
+</figure>
+<p><br />
+</p>
+<p>The <strong>HAL/LL drivers</strong> provided within this package <strong>support</strong> the STM32WBA52xx product.</p>
+<p>For quick getting started with the STM32CubeWBA firmware package, you can refer to UM3131 and download firmware updates and all the latest documentation from <a href="https://www.st.com/stm32cubefw">www.st.com/stm32cubefw</a></p>
+<p>Here is the list of references to user documents:</p>
+<ul>
+<li><a href="Documentation/STM32CubeWBAGettingStarted.pdf">UM3131:</a> Getting started with STM32CubeWBA for STM32WBA Series</li>
+<li><a href="https://www.st.com/resource/en/application_note/an5928-how-to-build-a-short-range-wireless-application-with-stm32wba-mcus-stmicroelectronics.pdf">AN5928:</a> How to build a short range wireless application with STM32WBA MCUs</li>
+<li><a href="https://www.st.com/resource/en/user_manual/DM00951513.pdf">UM3140:</a> Description of STM32WBAxx HAL and LL drivers</li>
+<li><a href="https://www.st.com/resource/en/application_note/DM00948092.pdf">AN5929:</a> STM32Cube MCU Package examples for STM32WBA series</li>
+</ul>
+</div>
+<div class="col-sm-12 col-lg-8">
+<h1 id="update-history">Update History</h1>
+<div class="collapse">
+<input type="checkbox" id="collapse-section5" checked aria-hidden="true"> <label for="collapse-section5" aria-hidden="true"><strong>V1.1.0 / 06-June-2023</strong></label>
+<div>
+<h2 id="main-changes">Main Changes</h2>
+<h3 id="official-release-of-stm32cubewba-firmware-package-supporting-stm32wba52xx-devices">Official Release of <strong>STM32CubeWBA</strong> Firmware package supporting <strong>STM32WBA52xx</strong> devices</h3>
+<p>In the STM32CubeWBA MCU Package, examples and applications projects are generated with the STM32CubeMX tool to initialize the system, peripherals and middleware stacks. User can open the provided ioc file in STM32CubeMX to modify the settings, add additional peripherals and/or middleware, to build his final application.</p>
+<p><br />
+</p>
+<h2 id="connectivity">Connectivity</h2>
+<ul>
+<li>Maximum number of simultaneous connections supported by the device is now 20.</li>
+<li>PHY Calibration improvements:
+<ul>
+<li>Temperature based calibration now supporting standby mode</li>
+<li>Periodic calibration stability improved</li>
+</ul></li>
+<li>Fix for EMC FCC certification to support 10dBm level.</li>
+</ul>
+<p><br />
+</p>
+<h2 id="contents">Contents</h2>
+<ul>
+<li><strong>CMSIS</strong> updates
+<ul>
+<li>Support of <strong>CMSIS version 5.9.0</strong></li>
+</ul></li>
+<li><strong>CMSIS Devices Drivers</strong> updates
+<ul>
+<li>Support of <strong>STM32WBA52xx</strong> devices</li>
+<li>Update CMSIS devices to include latest corrections</li>
+</ul></li>
+<li><strong>HAL/LL Drivers</strong> updates
+<ul>
+<li>HAL and LL drivers are available for all peripherals:
+<ul>
+<li><strong>HAL</strong>: ADC, CORTEX, CRC, CRYP, DMA, EXTI, FLASH, GPIO, GTZC, HASH, HSEM, I2C, ICACHE, IRDA, IWDG, LPTIM, PKA, PWR, RAMCFG, RCC, RNG, RTC, SMARTCARD, SMBUS, SPI, TIM, TSC, UART, USART, WWDG</li>
+<li><strong>LL</strong>: ADC, CRC, DMA, EXTI, GPIO, I2C, ICACHE, LPTIM, LPUART, PKA, PWR, RCC, RNG, RTC, SPI, TIM, USART, UTILS</li>
+</ul></li>
+<li>Update HAL/LL drivers to include latest corrections</li>
+</ul></li>
+</ul>
+<p><br />
+</p>
+<ul>
+<li><strong>Middlewares</strong> ST updates
+<ul>
+<li><strong>MW AzureRTOS</strong> V6.2.0 support
+<ul>
+<li>Add Azure RTOS MW initialization support to ThreadX and FileX</li>
+</ul></li>
+</ul></li>
+<li><strong>Middlewares</strong> Third Party updates
+<ul>
+<li><strong>MW SBSFU/TFM</strong> support
+<ul>
+<li>mbed-crypto V2.28.0.1</li>
+<li>mcuboot V1.7.2.10</li>
+<li>tfm V1.3.0.8</li>
+</ul></li>
+</ul></li>
+</ul>
+<p><br />
+</p>
+<ul>
+<li><strong>Projects</strong> updates
+<ul>
+<li>Update Applications demonstrating Bluetooth Low Energy capabilities with STM32WBA52xx</li>
+<li>Update Examples HAL/LL/MIX demonstrating IP peripherals to include latest corrections</li>
+<li>Add new Examples HAL/LL for ADC, HASH, I2C, IWDG, PKA, PWR, SPI, TIM and UART IP peripherals</li>
+<li>Update Applications AzureRTOS supporting AzureRTOS 6.2.0</li>
+<li>Update Applications SBSFU/TFM</li>
+</ul></li>
+</ul>
+<p><br />
+</p>
+<h2 id="projects">Projects</h2>
+<ul>
+<li>The STM32CubeWBA Firmware package comes with a rich set of examples running on STMicroelectronics boards, organized by board and provided with preconfigured projects for the main supported toolchains.</li>
+<li>The exhaustive list of projects and their short description is provided in this table (<a href="Projects/STM32CubeProjectsList.html">STM32CubeProjectsList.html</a>).</li>
+<li>The STM32CubeWBA Firmware offers full scope of Examples &amp; Applications targeted, developed using STM32CubeMx and ported on 3 toolchains</li>
+</ul>
+<table>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Version</th>
+<th style="text-align: left;">Release notes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Projects</td>
+<td>V1.1.0 <span class="icon-st-update"></span></td>
+<td style="text-align: left;"><a href="Projects/Release_Notes.html">release notes</a></td>
+</tr>
+</tbody>
+</table>
+<p><br />
+</p>
+<h2 id="components">Components</h2>
+<p><small>The components flagged by “<span class="icon-st-update"></span>” have changed since the previous release. “<span class="icon-st-add"></span>” are new.</small></p>
+<p><br />
+</p>
+<p><strong>Drivers</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Version</th>
+<th style="text-align: left;">Release notes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">CMSIS</td>
+<td style="text-align: left;">V5.9.0 <span class="icon-st-update"></span></td>
+<td style="text-align: left;"><a href="Drivers/CMSIS/Documentation/General/html/index.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">STM32WBAxx CMSIS</td>
+<td style="text-align: left;">V1.1.0 <span class="icon-st-update"></span></td>
+<td style="text-align: left;"><a href="Drivers/CMSIS/Device/ST/STM32WBAxx/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">STM32WBAxx_HAL_Driver</td>
+<td style="text-align: left;">V1.1.0 <span class="icon-st-update"></span></td>
+<td style="text-align: left;"><a href="Drivers/STM32WBAxx_HAL_Driver/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">STM32WBAxx_Nucleo</td>
+<td style="text-align: left;">V1.0.0</td>
+<td style="text-align: left;"><a href="Drivers/BSP/STM32WBAxx_Nucleo/Release_Notes.html">release notes</a></td>
+</tr>
+</tbody>
+</table>
+<p><br />
+</p>
+<p><strong>Middlewares</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Version</th>
+<th style="text-align: left;">Release notes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">STM32_WPAN</td>
+<td style="text-align: left;">V2.1.0 <span class="icon-st-update"></span></td>
+<td style="text-align: left;"><a href="Middlewares/ST/STM32_WPAN/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">mbed-crypto</td>
+<td style="text-align: left;">V2.28.0.1</td>
+<td style="text-align: left;"><a href="Middlewares/Third_Party/mbed-crypto/README.md">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><a href="Middlewares/Third_Party/mbed-crypto/st_readme.txt">ST release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">mcuboot</td>
+<td style="text-align: left;">V1.7.2.10 <span class="icon-st-update"></span></td>
+<td style="text-align: left;"><a href="Middlewares/Third_Party/mcuboot/README.md">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><a href="Middlewares/Third_Party/mcuboot/st_readme.txt">ST release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">trustedfirmware</td>
+<td style="text-align: left;">V1.3.0.8</td>
+<td style="text-align: left;"><a href="Middlewares/Third_Party/trustedfirmware/readme.rst">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><a href="Middlewares/Third_Party/trustedfirmware/st_readme.txt">ST release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">STM32 TouchSensing Library</td>
+<td style="text-align: left;">V2.2.10 <span class="icon-st-update"></span></td>
+<td style="text-align: left;"><a href="Middlewares/ST/STM32_TouchSensing_Library/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">STM32 OpenBootloader</td>
+<td style="text-align: left;">V6.1.0</td>
+<td style="text-align: left;"><a href="Middlewares/ST/OpenBootloader/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ThreadX</td>
+<td style="text-align: left;">V6.2.0</td>
+<td style="text-align: left;"><a href="Middlewares/ST/threadx/README.md">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">ST modified 221223</td>
+<td style="text-align: left;"><a href="Middlewares/ST/threadx/st_readme.txt">ST release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">NetXduo</td>
+<td style="text-align: left;">V6.2.0</td>
+<td style="text-align: left;"><a href="Middlewares/ST/netxduo/README.md">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">ST modified 221223</td>
+<td style="text-align: left;"><a href="Middlewares/ST/netxduo/st_readme.txt">ST release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">LevelX</td>
+<td style="text-align: left;">V6.2.0</td>
+<td style="text-align: left;"><a href="Middlewares/ST/levelx/README.md">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">ST modified 221223</td>
+<td style="text-align: left;"><a href="Middlewares/ST/levelx/st_readme.txt">ST release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">FileX</td>
+<td style="text-align: left;">V6.2.0</td>
+<td style="text-align: left;"><a href="Middlewares/ST/filex/README.md">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">ST modified 221223</td>
+<td style="text-align: left;"><a href="Middlewares/ST/filex/st_readme.txt">ST release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">USBX</td>
+<td style="text-align: left;">V6.2.0</td>
+<td style="text-align: left;"><a href="Middlewares/ST/usbx/README.md">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">ST modified 221223</td>
+<td style="text-align: left;"><a href="Middlewares/ST/usbx/st_readme.txt">ST release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">CMSIS RTOS ThreadX</td>
+<td style="text-align: left;">V1.2.0 <span class="icon-st-update"></span></td>
+<td style="text-align: left;"><a href="Middlewares/ST/cmsis_rtos_threadx/Release_Notes.html">release notes</a></td>
+</tr>
+</tbody>
+</table>
+<p><br />
+</p>
+<p><strong>Utilities</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Version</th>
+<th>Release note</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">CPU</td>
+<td style="text-align: left;">V1.1.3</td>
+<td><a href="Utilities/CPU/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Fonts</td>
+<td style="text-align: left;">V2.0.3</td>
+<td><a href="Utilities/Fonts/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">conf</td>
+<td style="text-align: left;">V1.6.1</td>
+<td><a href="Utilities/conf/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">tiny_lpm</td>
+<td style="text-align: left;">V1.4.2</td>
+<td><a href="Utilities/lpm/tiny_lpm/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">sequencer</td>
+<td style="text-align: left;">V1.7.0 <span class="icon-st-update"></span></td>
+<td><a href="Utilities/sequencer/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">LCD</td>
+<td style="text-align: left;">V2.0.2</td>
+<td><a href="Utilities/LCD/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Lcd_Trace</td>
+<td style="text-align: left;">V2.0.1</td>
+<td><a href="Utilities/Lcd_Trace/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">adv_trace</td>
+<td style="text-align: left;">V1.3.0</td>
+<td><a href="Utilities/trace/adv_trace/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">misc</td>
+<td style="text-align: left;">V1.1.1</td>
+<td><a href="Utilities/misc/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">tim_serv</td>
+<td style="text-align: left;">V1.3.0</td>
+<td><a href="Utilities/tim_serv/Release_Notes.html">release notes</a></td>
+</tr>
+</tbody>
+</table>
+<p><br />
+</p>
+<h2 id="development-toolchains-and-compilers">Development Toolchains and Compilers</h2>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Toolchain + ST-Link</th>
+<th>Version</th>
+<th style="text-align: left;">Patch (if available)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">IAR Embedded Workbench for ARM (EWARM)</td>
+<td>V9.20.1</td>
+<td style="text-align: left;"><a href="Utilities/PC_Software/EWARMv8_STM32WBAx_V1.3.zip">Patch EWARM</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">RealView Microcontroller Development Kit (MDK-ARM)</td>
+<td>V5.37</td>
+<td style="text-align: left;"><a href="Utilities/PC_Software/Keil.STM32WBAx_DFP.1.0.1.zip">Patch MDK-ARM</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">STM32CubeIDE V1.12.0 (GCC11)</td>
+<td>V1.12.0</td>
+<td style="text-align: left;"></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Support of ARM Compiler 6 (AC-5 like warnings) for HAL/LL/BSP drivers and STMicroelectronics Middleware components</li>
+<li>To enable GCC11 with STM32CubeIDE, please refer STM32CubeIDE user guide (UM2609 - chapter “Toolchain manager”)</li>
+</ul>
+<p><br />
+</p>
+<h2 id="supported-devices-and-boards">Supported Devices and boards</h2>
+<ul>
+<li>STM32WBA52xx devices</li>
+<li>NUCLEO-WBA52CG board</li>
+</ul>
+<p><br />
+</p>
+<h2 id="known-limitations">Known Limitations</h2>
+<ul>
+<li>BLE Applications:
+<ul>
+<li>Applications based on ThreadX do not currently support Standby mode</li>
+<li>STM32CubeIDE support: The “debug” configuration optimization level has to be set to -Os</li>
+</ul></li>
+</ul>
+<p><br />
+</p>
+<h2 id="dependencies">Dependencies</h2>
+<ul>
+<li>STM32CubeMX V6.9.0
+<ul>
+<li>Projects (Applications and Examples) are generated using STM32CubeMX version V6.9.0.</li>
+</ul></li>
+</ul>
+<p><br />
+</p>
+<h2 id="backward-compatibility">Backward compatibility</h2>
+<ul>
+<li>Not applicable</li>
+</ul>
+<h2 id="notes">Notes</h2>
+<ul>
+<li>None</li>
+</ul>
+<p><br />
+</p>
+</div>
+</div>
+<div class="collapse">
+<input type="checkbox" id="collapse-section4" aria-hidden="true"> <label for="collapse-section4" aria-hidden="true"><strong>V1.0.0 / 08-February-2023</strong></label>
+<div>
+<h2 id="main-changes-1">Main Changes</h2>
+<h3 id="first-official-release-of-stm32cubewba-firmware-package-supporting-stm32wba52xx-devices">First Official Release of <strong>STM32CubeWBA</strong> Firmware package supporting <strong>STM32WBA52xx</strong> devices</h3>
+<p>In the STM32CubeWBA MCU Package, examples and applications projects are generated with the STM32CubeMX tool to initialize the system, peripherals and middleware stacks. User can open the provided ioc file in STM32CubeMX to modify the settings, add additional peripherals and/or middleware, to build his final application.</p>
+<p><br />
+</p>
+<h2 id="connectivity-1">Connectivity</h2>
+<ul>
+<li>The Bluetooth Low Energy is 5.3 compliant and supports the following features:
+<ul>
+<li>Advertising</li>
+<li>Scanning</li>
+<li>Master / Slave Connection</li>
+<li>Data length extension</li>
+<li>Privacy</li>
+<li>LE Encryption</li>
+<li>Legacy Pairing, LE secure connections</li>
+<li>2Mbit</li>
+<li>Long Range</li>
+<li>Channel Selection Algorithm #2</li>
+<li>Direct Test Mode</li>
+<li>GATT Client / Server</li>
+<li>Extended Advertising/Scanning</li>
+<li>Periodic Advertising/Synchronisation</li>
+<li>Periodic Sync Transfer</li>
+<li>GATT Caching</li>
+<li>LE L2CAP Connection Oriented channel</li>
+</ul></li>
+<li>The connectivity supports of IC’s low power mode.</li>
+<li>The non volatile memory feature is supported (based on flash memory).</li>
+<li>The random number generation service is supported.</li>
+</ul>
+<p><br />
+</p>
+<h2 id="contents-1">Contents</h2>
+<ul>
+<li><strong>CMSIS Devices Drivers</strong>
+<ul>
+<li>Support of <strong>STM32WBA52xx</strong> devices</li>
+</ul></li>
+<li><strong>HAL/LL Drivers</strong>
+<ul>
+<li>HAL and LL drivers are available for all peripherals:
+<ul>
+<li><strong>HAL</strong>: ADC, CORTEX, CRC, CRYP, DMA, EXTI, FLASH, GPIO, GTZC, HASH, HSEM, I2C, ICACHE, IRDA, IWDG, LPTIM, PKA, PWR, RAMCFG, RCC, RNG, RTC, SMARTCARD, SMBUS, SPI, TIM, TSC, UART, USART, WWDG</li>
+<li><strong>LL</strong>: ADC, CRC, DMA, EXTI, GPIO, I2C, ICACHE, LPTIM, LPUART, PKA, PWR, RCC, RNG, RTC, SPI, TIM, USART, UTILS</li>
+</ul></li>
+</ul></li>
+<li><strong>BSP Drivers</strong>
+<ul>
+<li>Support of board drivers for <strong>NUCLEO-WBA52CG board</strong></li>
+</ul></li>
+</ul>
+<p><br />
+</p>
+<ul>
+<li><strong>Middlewares</strong> ST updates
+<ul>
+<li><strong>MW OpenBootloader</strong> V6.1.0 support</li>
+<li><strong>MW AzureRTOS</strong> V6.2.0 support
+<ul>
+<li>ThreadX V6.2.0</li>
+<li>NetXduo V6.2.0</li>
+<li>LevelX V6.2.0</li>
+<li>FileX V6.2.0</li>
+<li>USBX V6.2.0</li>
+</ul></li>
+</ul></li>
+<li><strong>Middlewares</strong> Third Party updates
+<ul>
+<li><strong>MW SBSFU/TFM</strong> support
+<ul>
+<li>mbed-crypto V2.28.0.1</li>
+<li>mcuboot V1.7.2.8</li>
+<li>tfm V1.3.0.8</li>
+</ul></li>
+</ul></li>
+</ul>
+<p><br />
+</p>
+<ul>
+<li><strong>Projects</strong>
+<ul>
+<li>Applications to demonstrate Bluetooth Low Energy capabilities with STM32WBA52xx</li>
+<li>Templates (TrustZone Disabled/Enabled) and Templates_LL projects based on HAL/LL APIs</li>
+<li>Examples HAL/LL/MIX for all IP peripherals (TrustZone Disabled/Enabled)</li>
+<li>Applications SBSFU/TFM</li>
+<li>Application OpenBootloader</li>
+<li>Applications AzureRTOS supporting AzureRTOS 6.2.0</li>
+<li>Applications to demonstrate Utilities</li>
+</ul></li>
+</ul>
+<p><br />
+</p>
+<h2 id="projects-1">Projects</h2>
+<ul>
+<li>The STM32CubeWBA Firmware package comes with a rich set of examples running on STMicroelectronics boards, organized by board and provided with preconfigured projects for the main supported toolchains.</li>
+<li>The exhaustive list of projects and their short description is provided in this table (<a href="Projects/STM32CubeProjectsList.html">STM32CubeProjectsList.html</a>).</li>
+<li>The STM32CubeWBA Firmware offers full scope of Examples &amp; Applications targeted, developed using STM32CubeMx and ported on 3 toolchains</li>
+</ul>
+<table>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Version</th>
+<th style="text-align: left;">Release notes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Projects</td>
+<td>V1.0.0</td>
+<td style="text-align: left;"><a href="Projects/Release_Notes.html">release notes</a></td>
+</tr>
+</tbody>
+</table>
+<p><br />
+</p>
+<h2 id="components-1">Components</h2>
+<p><small>The components flagged by “<span class="icon-st-update"></span>” have changed since the previous release. “<span class="icon-st-add"></span>” are new.</small></p>
+<p><br />
+</p>
+<p><strong>Drivers</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Version</th>
+<th style="text-align: left;">Release notes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">CMSIS</td>
+<td style="text-align: left;">V5.6.0_cm33</td>
+<td style="text-align: left;"><a href="Drivers/CMSIS/docs/General/html/index.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">STM32WBAxx CMSIS</td>
+<td style="text-align: left;">V1.0.0</td>
+<td style="text-align: left;"><a href="Drivers/CMSIS/Device/ST/STM32WBAxx/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">STM32WBAxx_HAL_Driver</td>
+<td style="text-align: left;">V1.0.0</td>
+<td style="text-align: left;"><a href="Drivers/STM32WBAxx_HAL_Driver/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">STM32WBAxx_Nucleo</td>
+<td style="text-align: left;">V1.0.0</td>
+<td style="text-align: left;"><a href="Drivers/BSP/STM32WBAxx_Nucleo/Release_Notes.html">release notes</a></td>
+</tr>
+</tbody>
+</table>
+<p><br />
+</p>
+<p><strong>Middlewares</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Version</th>
+<th style="text-align: left;">Release notes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">STM32_WPAN</td>
+<td style="text-align: left;">V2.0.0</td>
+<td style="text-align: left;"><a href="Middlewares/ST/STM32_WPAN/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">mbed-crypto</td>
+<td style="text-align: left;">V2.28.0.1</td>
+<td style="text-align: left;"><a href="Middlewares/Third_Party/mbed-crypto/README.md">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><a href="Middlewares/Third_Party/mbed-crypto/st_readme.txt">ST release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">mcuboot</td>
+<td style="text-align: left;">V1.7.2.8</td>
+<td style="text-align: left;"><a href="Middlewares/Third_Party/mcuboot/README.md">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><a href="Middlewares/Third_Party/mcuboot/st_readme.txt">ST release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">trustedfirmware</td>
+<td style="text-align: left;">V1.3.0.8</td>
+<td style="text-align: left;"><a href="Middlewares/Third_Party/trustedfirmware/readme.rst">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><a href="Middlewares/Third_Party/trustedfirmware/st_readme.txt">ST release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">STM32 TouchSensing Library</td>
+<td style="text-align: left;">V2.2.6</td>
+<td style="text-align: left;"><a href="Middlewares/ST/STM32_TouchSensing_Library/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">STM32 OpenBootloader</td>
+<td style="text-align: left;">V6.1.0</td>
+<td style="text-align: left;"><a href="Middlewares/ST/OpenBootloader/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ThreadX</td>
+<td style="text-align: left;">V6.2.0</td>
+<td style="text-align: left;"><a href="Middlewares/ST/threadx/README.md">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">ST modified 221223</td>
+<td style="text-align: left;"><a href="Middlewares/ST/threadx/st_readme.txt">ST release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">NetXduo</td>
+<td style="text-align: left;">V6.2.0</td>
+<td style="text-align: left;"><a href="Middlewares/ST/netxduo/README.md">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">ST modified 221223</td>
+<td style="text-align: left;"><a href="Middlewares/ST/netxduo/st_readme.txt">ST release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">LevelX</td>
+<td style="text-align: left;">V6.2.0</td>
+<td style="text-align: left;"><a href="Middlewares/ST/levelx/README.md">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">ST modified 221223</td>
+<td style="text-align: left;"><a href="Middlewares/ST/levelx/st_readme.txt">ST release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">FileX</td>
+<td style="text-align: left;">V6.2.0</td>
+<td style="text-align: left;"><a href="Middlewares/ST/filex/README.md">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">ST modified 221223</td>
+<td style="text-align: left;"><a href="Middlewares/ST/filex/st_readme.txt">ST release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">USBX</td>
+<td style="text-align: left;">V6.2.0</td>
+<td style="text-align: left;"><a href="Middlewares/ST/usbx/README.md">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">ST modified 221223</td>
+<td style="text-align: left;"><a href="Middlewares/ST/usbx/st_readme.txt">ST release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">CMSIS RTOS ThreadX</td>
+<td style="text-align: left;">V1.1.0</td>
+<td style="text-align: left;"><a href="Middlewares/ST/cmsis_rtos_threadx/Release_Notes.html">release notes</a></td>
+</tr>
+</tbody>
+</table>
+<p><br />
+</p>
+<p><strong>Utilities</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Version</th>
+<th>Release note</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">CPU</td>
+<td style="text-align: left;">V1.1.3</td>
+<td><a href="Utilities/CPU/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Fonts</td>
+<td style="text-align: left;">V2.0.3</td>
+<td><a href="Utilities/Fonts/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">conf</td>
+<td style="text-align: left;">V1.6.1</td>
+<td><a href="Utilities/conf/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">tiny_lpm</td>
+<td style="text-align: left;">V1.4.2</td>
+<td><a href="Utilities/lpm/tiny_lpm/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">sequencer</td>
+<td style="text-align: left;">V1.6.0</td>
+<td><a href="Utilities/sequencer/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">LCD</td>
+<td style="text-align: left;">V2.0.2</td>
+<td><a href="Utilities/LCD/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Lcd_Trace</td>
+<td style="text-align: left;">V2.0.1</td>
+<td><a href="Utilities/Lcd_Trace/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">adv_trace</td>
+<td style="text-align: left;">V1.3.0</td>
+<td><a href="Utilities/trace/adv_trace/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">misc</td>
+<td style="text-align: left;">V1.1.1</td>
+<td><a href="Utilities/misc/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">tim_serv</td>
+<td style="text-align: left;">V1.3.0</td>
+<td><a href="Utilities/tim_serv/Release_Notes.html">release notes</a></td>
+</tr>
+</tbody>
+</table>
+<p><br />
+</p>
+<h2 id="development-toolchains-and-compilers-1">Development Toolchains and Compilers</h2>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Toolchain + ST-Link</th>
+<th>Version</th>
+<th style="text-align: left;">Patch (if available)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">IAR Embedded Workbench for ARM (EWARM)</td>
+<td>V9.20.1</td>
+<td style="text-align: left;"><a href="Utilities/PC_Software/EWARMv8_STM32WBAx_V1.2.zip">Patch EWARM</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">RealView Microcontroller Development Kit (MDK-ARM)</td>
+<td>V5.37</td>
+<td style="text-align: left;"><a href="Utilities/PC_Software/Keil.STM32WBAx_DFP.1.0.0.zip">Patch MDK-ARM</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">STM32CubeIDE V1.12.0 (GCC11)</td>
+<td>V1.12.0</td>
+<td style="text-align: left;"></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Support of ARM Compiler 6 (AC-5 like warnings) for HAL/LL/BSP drivers and STMicroelectronics Middleware components</li>
+<li>To enable GCC11 with STM32CubeIDE, please refer STM32CubeIDE user guide (UM2609 - chapter “Toolchain manager”)</li>
+</ul>
+<p><br />
+</p>
+<h2 id="supported-devices-and-boards-1">Supported Devices and boards</h2>
+<ul>
+<li>STM32WBA52xx devices</li>
+<li>NUCLEO-WBA52CG board</li>
+</ul>
+<p><br />
+</p>
+<h2 id="known-limitations-1">Known Limitations</h2>
+<ul>
+<li>BLE Applications:
+<ul>
+<li>Applications based on ThreadX do not currently support Standby mode</li>
+<li>System Clock Manager (scm) : PLL is not supported with BLE applications</li>
+<li>Systick is not currently supported in Standby mode in delivered BLE applications</li>
+<li>STM32CubeIDE support: The “debug” configuration optimization level has to be set to -Os</li>
+</ul></li>
+</ul>
+<p><br />
+</p>
+<h2 id="dependencies-1">Dependencies</h2>
+<ul>
+<li>STM32CubeMX V6.8.0
+<ul>
+<li>Projects (Applications and Examples) are generated using STM32CubeMX version V6.8.0.</li>
+</ul></li>
+</ul>
+<p><br />
+</p>
+<h2 id="backward-compatibility-1">Backward compatibility</h2>
+<ul>
+<li>Not applicable</li>
+</ul>
+<h2 id="notes-1">Notes</h2>
+<ul>
+<li>None</li>
+</ul>
+<p><br />
+</p>
+</div>
+</div>
+</div>
+</div>
+<footer class="sticky">
+<div class="columns">
+<div class="column" style="width:95%;">
+<p>For complete documentation on STM32WBAxx, visit: <a href="http://www.st.com/stm32wba">www.st.com/stm32wba</a></p>
+<p><em>This release note uses up to date web standards and, for this reason, should not be opened with Internet Explorer but preferably with popular browsers such as Google Chrome, Mozilla Firefox, Opera or Microsoft Edge.</em></p>
+</div><div class="column" style="width:5%;">
+<p><abbr title="Based on template cx566953 version 2.0">Info</abbr></p>
+</div>
+</div>
+</footer>
+</body>
+</html>

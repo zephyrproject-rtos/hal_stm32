@@ -155,7 +155,7 @@ typedef struct
   * @{
   */
 #define  MPU_ACCESS_NOT_SHAREABLE        0U
-#define  MPU_ACCESS_OUTER_SHAREABLE      1U
+#define  MPU_ACCESS_OUTER_SHAREABLE      2U
 #define  MPU_ACCESS_INNER_SHAREABLE      3U
 /**
   * @}
@@ -221,9 +221,6 @@ typedef struct
 #define  MPU_W_ALLOCATE             0x1U  /* Normal memory, write allocate.      */
 #define  MPU_R_ALLOCATE             0x2U  /* Normal memory, read allocate.       */
 #define  MPU_RW_ALLOCATE            0x3U  /* Normal memory, read/write allocate. */
-
-#define OUTER(__ATTR__)        ((__ATTR__) << 4U)
-#define INNER_OUTER(__ATTR__)  ((__ATTR__) | ((__ATTR__) << 4U))
 /**
   * @}
   */
@@ -238,7 +235,17 @@ typedef struct
 /** @defgroup CORTEX_Exported_Macros CORTEX Exported Macros
   * @{
   */
-
+#if (__MPU_PRESENT == 1)
+/** @defgroup CORTEX_MPU_Normal_Memory_Attributes CORTEX MPU Normal Memory Attributes
+  * @{
+  */
+/* __ATTR__ being a combination of MPU Normal memory attributes */
+#define OUTER(__ATTR__)        ((__ATTR__) << 4U)
+#define INNER_OUTER(__ATTR__)  ((__ATTR__) | ((__ATTR__) << 4U))
+/**
+  * @}
+  */
+#endif /* __MPU_PRESENT */
 /**
   * @}
   */

@@ -699,9 +699,9 @@ typedef struct
   __IO uint32_t PRIVCFGR;       /*!< RCC privilege configuration register                   Address offset: 0x114 */
   uint32_t      RESERVED13[58]; /*!< Reserved                                                      0x118 -- 0x1FC */
   __IO uint32_t CFGR4;          /*!< RCC clock configuration register 4                     Address offset: 0x200 */
-  uint32_t      RESERVED14;     /*!< Reserved                                               Address offset: 0x204 */
+  uint32_t      RESERVED15;     /*!< Reserved                                               Address offset: 0x204 */
   __IO uint32_t RADIOENR;       /*!< RCC RADIO peripheral clock enable register             Address offset: 0x208 */
-  uint32_t      RESERVED15;     /*!< Reserved                                               Address offset: 0x20C */
+  uint32_t      RESERVED16;     /*!< Reserved                                               Address offset: 0x20C */
   __IO uint32_t ECSCR1;         /*!< RCC external clock sources calibration register 1      Address offset: 0x210 */
 } RCC_TypeDef;
 

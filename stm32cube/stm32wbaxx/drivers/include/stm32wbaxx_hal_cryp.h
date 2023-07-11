@@ -364,10 +364,15 @@ typedef  void (*pCRYP_CallbackTypeDef)(CRYP_HandleTypeDef *hcryp);    /*!< point
   * @{
   */
 
-#define CRYP_NO_SWAP         0x00000000U             /*!< 32-bit data type (no swapping)        */
-#define CRYP_HALFWORD_SWAP   AES_CR_DATATYPE_0       /*!< 16-bit data type (half-word swapping) */
-#define CRYP_BYTE_SWAP       AES_CR_DATATYPE_1       /*!< 8-bit data type (byte swapping)       */
-#define CRYP_BIT_SWAP        AES_CR_DATATYPE         /*!< 1-bit data type (bit swapping)        */
+#define CRYP_DATATYPE_32B      0x00000000U
+#define CRYP_DATATYPE_16B      AES_CR_DATATYPE_0
+#define CRYP_DATATYPE_8B       AES_CR_DATATYPE_1
+#define CRYP_DATATYPE_1B       AES_CR_DATATYPE
+
+#define CRYP_NO_SWAP           CRYP_DATATYPE_32B      /*!< 32-bit data type (no swapping)        */
+#define CRYP_HALFWORD_SWAP     CRYP_DATATYPE_16B      /*!< 16-bit data type (half-word swapping) */
+#define CRYP_BYTE_SWAP         CRYP_DATATYPE_8B       /*!< 8-bit data type (byte swapping)       */
+#define CRYP_BIT_SWAP          CRYP_DATATYPE_1B       /*!< 1-bit data type (bit swapping)        */
 
 /**
   * @}
@@ -613,11 +618,11 @@ HAL_StatusTypeDef HAL_CRYP_Decrypt_DMA(CRYP_HandleTypeDef *hcryp, uint32_t *pInp
   */
 /* Interrupt Handler functions  **********************************************/
 void HAL_CRYP_IRQHandler(CRYP_HandleTypeDef *hcryp);
-HAL_CRYP_STATETypeDef HAL_CRYP_GetState(CRYP_HandleTypeDef *hcryp);
+HAL_CRYP_STATETypeDef HAL_CRYP_GetState(const CRYP_HandleTypeDef *hcryp);
 void HAL_CRYP_InCpltCallback(CRYP_HandleTypeDef *hcryp);
 void HAL_CRYP_OutCpltCallback(CRYP_HandleTypeDef *hcryp);
 void HAL_CRYP_ErrorCallback(CRYP_HandleTypeDef *hcryp);
-uint32_t HAL_CRYP_GetError(CRYP_HandleTypeDef *hcryp);
+uint32_t HAL_CRYP_GetError(const CRYP_HandleTypeDef *hcryp);
 
 /**
   * @}
@@ -654,6 +659,14 @@ uint32_t HAL_CRYP_GetError(CRYP_HandleTypeDef *hcryp);
                              ((CONFIG) == CRYP_KEYNOCONFIG)  || \
                              ((CONFIG) == CRYP_IVCONFIG_ONCE)  || \
                              ((CONFIG) == CRYP_KEYIVCONFIG_ONCE))
+
+#define IS_CRYP_BUFFERSIZE(ALGO, DATAWIDTH, SIZE)                                             \
+  (((((ALGO) == CRYP_AES_CTR)) &&                                             \
+    ((((DATAWIDTH) == CRYP_DATAWIDTHUNIT_WORD) && (((SIZE) % 4U) == 0U))           || \
+     (((DATAWIDTH) == CRYP_DATAWIDTHUNIT_BYTE) && (((SIZE) % 16U) == 0U))))        || \
+   (((ALGO) == CRYP_AES_ECB) || ((ALGO) == CRYP_AES_CBC)                  || \
+    ((ALGO)== CRYP_AES_GCM_GMAC) || ((ALGO) == CRYP_AES_CCM)))
+
 
 /**
   * @}
