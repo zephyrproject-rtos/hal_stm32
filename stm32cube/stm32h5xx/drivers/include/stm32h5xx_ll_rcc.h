@@ -6071,4 +6071,3 @@ uint32_t    LL_RCC_GetCLKPClockFreq(uint32_t CLKPxSource);
 #endif
 
 #endif /* __STM32H5xx_LL_RCC_H */
-

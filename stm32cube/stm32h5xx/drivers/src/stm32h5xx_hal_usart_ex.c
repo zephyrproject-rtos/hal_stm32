@@ -538,4 +538,3 @@ static void USARTEx_SetNbDataToProcess(USART_HandleTypeDef *husart)
 /**
   * @}
   */
-

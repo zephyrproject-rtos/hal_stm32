@@ -3310,4 +3310,3 @@ uint32_t RCC_PLL1_GetFreqSystem(void)
   */
 
 #endif /* USE_FULL_LL_DRIVER */
-

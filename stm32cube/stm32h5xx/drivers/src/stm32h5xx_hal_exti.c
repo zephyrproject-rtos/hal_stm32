@@ -101,7 +101,7 @@
   * @{
   */
 #define EXTI_MODE_OFFSET                    0x04U   /* 0x10: byte offset between: IMR1/EMR1 and IMR2/EMR2 registers */
-#define EXTI_CONFIG_OFFSET                  0x08U   /* 0x20: byte offset between Rising1/Falling1 and Rising2/Falling2 
+#define EXTI_CONFIG_OFFSET                  0x08U   /* 0x20: byte offset between Rising1/Falling1 and Rising2/Falling2
                                                              configuration registers */
 #define EXTI_PRIVCFGR_OFFSET                0x08U   /* 0x20: byte offset between PRIVCFGR1 and PRIVCFGR2 registers */
 #define EXTI_SECCFGR_OFFSET                 0x08U   /* 0x20: byte offset between SECCFGR1 and SECCFGR2 registers */

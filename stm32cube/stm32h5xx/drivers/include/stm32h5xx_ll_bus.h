@@ -2806,4 +2806,3 @@ __STATIC_INLINE void LL_APB3_GRP1_DisableClockSleep(uint32_t Periphs)
 #endif
 
 #endif /* __STM32H5xx_LL_BUS_H */
-

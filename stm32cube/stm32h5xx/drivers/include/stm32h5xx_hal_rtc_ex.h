@@ -634,14 +634,15 @@ typedef struct
 /** @defgroup RTCEx_ActiveTamper_Async_prescaler RTCEx Active_Tamper_Asynchronous_Prescaler clock Definitions
   * @{
   */
-#define RTC_ATAMP_ASYNCPRES_RTCCLK         0u                                                                   /*!< RTCCLK     */
-#define RTC_ATAMP_ASYNCPRES_RTCCLK_2       TAMP_ATCR1_ATCKSEL_0                                                 /*!< RTCCLK/2   */
-#define RTC_ATAMP_ASYNCPRES_RTCCLK_4       TAMP_ATCR1_ATCKSEL_1                                                 /*!< RTCCLK/4   */
-#define RTC_ATAMP_ASYNCPRES_RTCCLK_8       (TAMP_ATCR1_ATCKSEL_1 | TAMP_ATCR1_ATCKSEL_0)                        /*!< RTCCLK/8   */
-#define RTC_ATAMP_ASYNCPRES_RTCCLK_16      TAMP_ATCR1_ATCKSEL_2                                                 /*!< RTCCLK/16  */
-#define RTC_ATAMP_ASYNCPRES_RTCCLK_32      (TAMP_ATCR1_ATCKSEL_2 | TAMP_ATCR1_ATCKSEL_0)                        /*!< RTCCLK/32  */
-#define RTC_ATAMP_ASYNCPRES_RTCCLK_64      (TAMP_ATCR1_ATCKSEL_2 | TAMP_ATCR1_ATCKSEL_1)                        /*!< RTCCLK/64  */
-#define RTC_ATAMP_ASYNCPRES_RTCCLK_128     (TAMP_ATCR1_ATCKSEL_2 | TAMP_ATCR1_ATCKSEL_1 | TAMP_ATCR1_ATCKSEL_0) /*!< RTCCLK/128 */
+#define RTC_ATAMP_ASYNCPRES_RTCCLK         0U                                                                   /*!< RTCCLK      */
+#define RTC_ATAMP_ASYNCPRES_RTCCLK_2       TAMP_ATCR1_ATCKSEL_0                                                 /*!< RTCCLK/2    */
+#define RTC_ATAMP_ASYNCPRES_RTCCLK_4       TAMP_ATCR1_ATCKSEL_1                                                 /*!< RTCCLK/4    */
+#define RTC_ATAMP_ASYNCPRES_RTCCLK_8       (TAMP_ATCR1_ATCKSEL_1 | TAMP_ATCR1_ATCKSEL_0)                        /*!< RTCCLK/8    */
+#define RTC_ATAMP_ASYNCPRES_RTCCLK_16      TAMP_ATCR1_ATCKSEL_2                                                 /*!< RTCCLK/16   */
+#define RTC_ATAMP_ASYNCPRES_RTCCLK_32      (TAMP_ATCR1_ATCKSEL_2 | TAMP_ATCR1_ATCKSEL_0)                        /*!< RTCCLK/32   */
+#define RTC_ATAMP_ASYNCPRES_RTCCLK_64      (TAMP_ATCR1_ATCKSEL_2 | TAMP_ATCR1_ATCKSEL_1)                        /*!< RTCCLK/64   */
+#define RTC_ATAMP_ASYNCPRES_RTCCLK_128     (TAMP_ATCR1_ATCKSEL_2 | TAMP_ATCR1_ATCKSEL_1 | TAMP_ATCR1_ATCKSEL_0) /*!< RTCCLK/128  */
+#define RTC_ATAMP_ASYNCPRES_RTCCLK_2048    (TAMP_ATCR1_ATCKSEL_3 | TAMP_ATCR1_ATCKSEL_1 | TAMP_ATCR1_ATCKSEL_0) /*!< RTCCLK/2048 */
 /**
   * @}
   */
@@ -1803,7 +1804,8 @@ HAL_StatusTypeDef HAL_RTCEx_PrivilegeModeGet(RTC_HandleTypeDef *hrtc, RTC_Privil
                                                               ((__PRESCALER__) == RTC_ATAMP_ASYNCPRES_RTCCLK_16)    || \
                                                               ((__PRESCALER__) == RTC_ATAMP_ASYNCPRES_RTCCLK_32)    || \
                                                               ((__PRESCALER__) == RTC_ATAMP_ASYNCPRES_RTCCLK_64)    || \
-                                                              ((__PRESCALER__) == RTC_ATAMP_ASYNCPRES_RTCCLK_128))
+                                                              ((__PRESCALER__) == RTC_ATAMP_ASYNCPRES_RTCCLK_128)   || \
+                                                              ((__PRESCALER__) == RTC_ATAMP_ASYNCPRES_RTCCLK_2048))
 
 
 #define IS_RTC_BKP(__BKP__)   ((__BKP__) < RTC_BKP_NUMBER)
@@ -1890,4 +1892,3 @@ HAL_StatusTypeDef HAL_RTCEx_PrivilegeModeGet(RTC_HandleTypeDef *hrtc, RTC_Privil
 #endif
 
 #endif /* STM32H5xx_HAL_RTC_EX_H */
-

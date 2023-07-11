@@ -447,7 +447,7 @@
 //   <o.28> UART4_IRQn            <0=> Secure state <1=> Non-Secure state
 //   <o.29> UART5_IRQn            <0=> Secure state <1=> Non-Secure state
 //   <o.30> LPUART1_IRQn          <0=> Secure state <1=> Non-Secure state
-//   <o.31> LPTIM1_IRQn           <0=> Secure state <1=> Non-Secure state 
+//   <o.31> LPTIM1_IRQn           <0=> Secure state <1=> Non-Secure state
 */
 #define NVIC_INIT_ITNS1_VAL      0x00000000
 

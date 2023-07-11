@@ -3797,4 +3797,3 @@ void              HAL_RCCEx_CRS_ErrorCallback(uint32_t Error);
 #endif
 
 #endif /* __STM32H5xx_HAL_RCC_EX_H */
-

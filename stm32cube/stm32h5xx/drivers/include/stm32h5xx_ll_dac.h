@@ -561,12 +561,10 @@ typedef struct
   *         @arg @ref LL_DAC_RESOLUTION_8B
   * @retval DAC conversion data (unit: digital value)
   */
-#define __LL_DAC_CALC_VOLTAGE_TO_DATA(__VREFANALOG_VOLTAGE__,\
-                                      __DAC_VOLTAGE__,\
-                                      __DAC_RESOLUTION__)                      \
-((__DAC_VOLTAGE__) * __LL_DAC_DIGITAL_SCALE(__DAC_RESOLUTION__)              \
- / (__VREFANALOG_VOLTAGE__)                                                  \
-)
+#define __LL_DAC_CALC_VOLTAGE_TO_DATA(__VREFANALOG_VOLTAGE__, __DAC_VOLTAGE__, __DAC_RESOLUTION__)   \
+  ((__DAC_VOLTAGE__) * __LL_DAC_DIGITAL_SCALE(__DAC_RESOLUTION__)                                      \
+   / (__VREFANALOG_VOLTAGE__)                                                                          \
+  )
 
 /**
   * @}
@@ -728,7 +726,7 @@ __STATIC_INLINE uint32_t LL_DAC_GetTrimmingValue(const DAC_TypeDef *DACx, uint32
   *         @arg @ref LL_DAC_TRIG_EXT_LPTIM1_CH1
   *         @arg @ref LL_DAC_TRIG_EXT_LPTIM2_CH1
   *         @arg @ref LL_DAC_TRIG_EXT_EXTI_LINE9
-  * 
+  *
   *         (1) On this STM32 series, parameter not available on all devices.
   *          Only available on STM32H503xx (refer to device reference manual for supported features list)
   *         (2) On this STM32 series, parameter not available on all devices.
@@ -768,7 +766,7 @@ __STATIC_INLINE void LL_DAC_SetTriggerSource(DAC_TypeDef *DACx, uint32_t DAC_Cha
   *         @arg @ref LL_DAC_TRIG_EXT_LPTIM1_CH1
   *         @arg @ref LL_DAC_TRIG_EXT_LPTIM2_CH1
   *         @arg @ref LL_DAC_TRIG_EXT_EXTI_LINE9
-  * 
+  *
   *         (1) On this STM32 series, parameter not available on all devices.
   *          Only available on STM32H503xx (refer to device reference manual for supported features list)
   *         (2) On this STM32 series, parameter not available on all devices.
@@ -2049,4 +2047,3 @@ void        LL_DAC_StructInit(LL_DAC_InitTypeDef *DAC_InitStruct);
 #endif
 
 #endif /* STM32H5xx_LL_DAC_H */
-

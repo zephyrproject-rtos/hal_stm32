@@ -113,8 +113,8 @@ extern "C" {
 /* To select into literal LL_ADC_REG_TRIG_x the relevant bits for:            */
 /* - regular trigger source                                                   */
 /* - regular trigger edge                                                     */
-#define ADC_REG_TRIG_EXT_EDGE_DEFAULT      (ADC_CFGR_EXTEN_0) /* Trigger edge set to rising edge (default setting for 
-                                                                 compatibility with some ADC on other STM32 series 
+#define ADC_REG_TRIG_EXT_EDGE_DEFAULT      (ADC_CFGR_EXTEN_0) /* Trigger edge set to rising edge (default setting for
+                                                                 compatibility with some ADC on other STM32 series
                                                                  having this setting set by HW default value) */
 
 /* Mask containing trigger source masks for each of possible                  */
@@ -143,8 +143,8 @@ extern "C" {
 /* To select into literal LL_ADC_INJ_TRIG_x the relevant bits for:            */
 /* - injected trigger source                                                  */
 /* - injected trigger edge                                                    */
-#define ADC_INJ_TRIG_EXT_EDGE_DEFAULT      (ADC_JSQR_JEXTEN_0) /* Trigger edge set to rising edge (default setting for 
-                                                                  compatibility with some ADC on other STM32 series 
+#define ADC_INJ_TRIG_EXT_EDGE_DEFAULT      (ADC_JSQR_JEXTEN_0) /* Trigger edge set to rising edge (default setting for
+                                                                  compatibility with some ADC on other STM32 series
                                                                   having this setting set by HW default value) */
 
 /* Mask containing trigger source masks for each of possible                  */
@@ -192,7 +192,7 @@ extern "C" {
 /* Channel differentiation between external and internal channels */
 #define ADC_CHANNEL_ID_INTERNAL_CH         (0x80000000UL) /* Marker of internal channel */
 #define ADC_CHANNEL_ID_INTERNAL_CH_2       (0x00080000UL) /* Marker of internal channel for other ADC instances, in case
-                                                             of different ADC internal channels mapped on same channel 
+                                                             of different ADC internal channels mapped on same channel
                                                              number on different ADC instances */
 #define ADC_CHANNEL_ID_INTERNAL_CH_MASK    (ADC_CHANNEL_ID_INTERNAL_CH | ADC_CHANNEL_ID_INTERNAL_CH_2)
 
@@ -205,7 +205,7 @@ extern "C" {
                                                                in ADC_CHANNEL_SMPRX_REGOFFSET_MASK */
 
 #define ADC_CHANNEL_SMPx_BITOFFSET_MASK    (0x01F00000UL)
-#define ADC_CHANNEL_SMPx_BITOFFSET_POS     (20UL)           /* Equivalent to bitfield "ADC_CHANNEL_SMPx_BITOFFSET_MASK" 
+#define ADC_CHANNEL_SMPx_BITOFFSET_POS     (20UL)           /* Equivalent to bitfield "ADC_CHANNEL_SMPx_BITOFFSET_MASK"
                                                                position in register */
 
 /* Definition of channels ID number information to be inserted into           */
@@ -377,16 +377,16 @@ extern "C" {
                                            with which VrefInt has been calibrated in production
                                            (tolerance: +-10 mV) (unit: mV). */
 /* Temperature sensor */
-#define TEMPSENSOR_CAL1_ADDR               ((uint16_t*) (0x08FFF814UL)) /* Address of parameter TS_CAL1: On STM32H7,
+#define TEMPSENSOR_CAL1_ADDR               ((uint16_t*) (0x08FFF814UL)) /* Address of parameter TS_CAL1: On STM32H5,
                                            temperature sensor ADC raw data acquired at temperature  30 DegC
                                            (tolerance: +-5 DegC), Vref+ = 3.3 V (tolerance: +-10 mV). */
-#define TEMPSENSOR_CAL2_ADDR               ((uint16_t*) (0x08FFF818UL)) /* Address of parameter TS_CAL2: On STM32H7,
-                                           temperature sensor ADC raw data acquired at temperature 110 DegC
+#define TEMPSENSOR_CAL2_ADDR               ((uint16_t*) (0x08FFF818UL)) /* Address of parameter TS_CAL2: On STM32H5,
+                                           temperature sensor ADC raw data acquired at temperature 130 DegC
                                            (tolerance: +-5 DegC), Vref+ = 3.3 V (tolerance: +-10 mV). */
 #define TEMPSENSOR_CAL1_TEMP               (30L)                        /* Temperature at which temperature sensor
                                            has been calibrated in production for data into TEMPSENSOR_CAL1_ADDR
                                            (tolerance: +-5 DegC) (unit: DegC). */
-#define TEMPSENSOR_CAL2_TEMP               (110L)                       /* Temperature at which temperature sensor
+#define TEMPSENSOR_CAL2_TEMP               (130L)                       /* Temperature at which temperature sensor
                                            has been calibrated in production for data into TEMPSENSOR_CAL2_ADDR
                                            (tolerance: +-5 DegC) (unit: DegC). */
 #define TEMPSENSOR_CAL_VREFANALOG          (3300UL)                     /* Analog voltage reference (Vref+) value
@@ -1814,7 +1814,7 @@ typedef struct
   */
 #define LL_ADC_AWD_FILTERING_NONE          (0x00000000UL)                          /*!< ADC analog watchdog no filtering,
                                            one out-of-window sample is needed to raise flag or interrupt */
-#define LL_ADC_AWD_FILTERING_2SAMPLES      (ADC_TR1_AWDFILT_0)                     /*!< ADC analog watchdog 2 
+#define LL_ADC_AWD_FILTERING_2SAMPLES      (ADC_TR1_AWDFILT_0)                     /*!< ADC analog watchdog 2
                                            out-of-window samples are needed to raise flag or interrupt */
 #define LL_ADC_AWD_FILTERING_3SAMPLES      (ADC_TR1_AWDFILT_1)                     /*!< ADC analog watchdog 3
                                            consecutives out-of-window samples are needed to raise flag or interrupt */
@@ -1965,20 +1965,20 @@ typedef struct
                                              conversions are transferred by DMA: each ADC uses its own DMA channel,
                                              with its individual DMA transfer settings */
 #define LL_ADC_MULTI_REG_DMA_LIMIT_RES12_10B (ADC_CCR_MDMA_1)                  /*!< ADC multimode group regular
-                                             conversions are transferred by DMA, one DMA channel for both ADC(DMA of 
+                                             conversions are transferred by DMA, one DMA channel for both ADC(DMA of
                                              ADC master), in limited mode (one shot mode): DMA transfer requests
                                              are stopped when number of DMA data transfers (number of ADC conversions)
                                              is reached. This ADC mode is intended to be used with DMA mode
                                              non-circular. Setting for ADC resolution of 12 and 10 bits */
 #define LL_ADC_MULTI_REG_DMA_LIMIT_RES8_6B   (ADC_CCR_MDMA_1 | ADC_CCR_MDMA_0) /*!< ADC multimode group regular
-                                             conversions are transferred by DMA, one DMA channel for both ADC(DMA of 
+                                             conversions are transferred by DMA, one DMA channel for both ADC(DMA of
                                              ADC master), in limited mode (one shot mode): DMA transfer requests
                                              are stopped when number of DMA data transfers (number of ADC conversions)
                                              is reached. This ADC mode is intended to be used with DMA mode
                                              non-circular. Setting for ADC resolution of 8 and 6 bits */
 #define LL_ADC_MULTI_REG_DMA_UNLMT_RES12_10B (ADC_CCR_DMACFG | ADC_CCR_MDMA_1) /*!< ADC multimode group regular
-                                             conversions are transferred by DMA, one DMA channel for both ADC(DMA of 
-                                             ADC master), in unlimited mode: DMA transfer requests are unlimited, 
+                                             conversions are transferred by DMA, one DMA channel for both ADC(DMA of
+                                             ADC master), in unlimited mode: DMA transfer requests are unlimited,
                                              whatever number of DMA data transferred (number of ADC conversions).
                                              This ADC mode is intended to be used with DMA mode circular.
                                              Setting for ADC resolution of 12 and 10 bits */
@@ -2029,7 +2029,7 @@ typedef struct
 /** @defgroup ADC_LL_EC_MULTI_MASTER_SLAVE  Multimode - ADC master or slave
   * @{
   */
-#define LL_ADC_MULTI_MASTER                (ADC_CDR_RDATA_MST) /*!< In multimode, selection among several ADC 
+#define LL_ADC_MULTI_MASTER                (ADC_CDR_RDATA_MST) /*!< In multimode, selection among several ADC
                                            instances: ADC master */
 #define LL_ADC_MULTI_SLAVE                 (ADC_CDR_RDATA_SLV) /*!< In multimode, selection among several ADC
                                            instances: ADC slave */
@@ -2098,8 +2098,8 @@ typedef struct
 /* Literal set to maximum value (refer to device datasheet,                   */
 /* parameter "tSTART").                                                       */
 /* Unit: us                                                                   */
-#define LL_ADC_DELAY_TEMPSENSOR_STAB_US        (120UL)        /*!< Delay for temperature sensor stabilization time */
-#define LL_ADC_DELAY_TEMPSENSOR_BUFFER_STAB_US ( 15UL)        /*!< Delay for temperature sensor buffer stabilization
+#define LL_ADC_DELAY_TEMPSENSOR_STAB_US        ( 26UL)        /*!< Delay for temperature sensor stabilization time */
+#define LL_ADC_DELAY_TEMPSENSOR_BUFFER_STAB_US ( 26UL)        /*!< Delay for temperature sensor buffer stabilization
                                                                    time (starting from ADC enable, refer to
                                                                    @ref LL_ADC_Enable()) */
 

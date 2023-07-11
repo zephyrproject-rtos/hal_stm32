@@ -77,7 +77,7 @@
   *         RNG_ConfigTypeDef.
   * @param  hrng pointer to a RNG_HandleTypeDef structure that contains
   *          the configuration information for RNG.
-  * @param  pConf: pointer to a RNG_ConfigTypeDef structure that contains
+  * @param  pConf pointer to a RNG_ConfigTypeDef structure that contains
   *         the configuration information for RNG module
 
   * @retval HAL status
@@ -173,7 +173,7 @@ HAL_StatusTypeDef HAL_RNGEx_SetConfig(RNG_HandleTypeDef *hrng, RNG_ConfigTypeDef
   *         RNG_ConfigTypeDef.
   * @param  hrng pointer to a RNG_HandleTypeDef structure that contains
   *          the configuration information for RNG.
-  * @param  pConf: pointer to a RNG_ConfigTypeDef structure that contains
+  * @param  pConf pointer to a RNG_ConfigTypeDef structure that contains
   *         the configuration information for RNG module
 
   * @retval HAL status
@@ -336,4 +336,3 @@ HAL_StatusTypeDef HAL_RNGEx_RecoverSeedError(RNG_HandleTypeDef *hrng)
 /**
   * @}
   */
-

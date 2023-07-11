@@ -24,6 +24,7 @@
 extern "C" {
 #endif
 
+#if defined(FMC_BANK1)
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32h5xx_ll_fmc.h"
@@ -233,7 +234,7 @@ HAL_StatusTypeDef HAL_NOR_WriteOperation_Disable(NOR_HandleTypeDef *hnor);
   */
 
 /* NOR State functions ********************************************************/
-HAL_NOR_StateTypeDef  HAL_NOR_GetState(NOR_HandleTypeDef *hnor);
+HAL_NOR_StateTypeDef  HAL_NOR_GetState(const NOR_HandleTypeDef *hnor);
 HAL_NOR_StatusTypeDef HAL_NOR_GetStatus(NOR_HandleTypeDef *hnor, uint32_t Address, uint32_t Timeout);
 /**
   * @}
@@ -316,6 +317,7 @@ HAL_NOR_StatusTypeDef HAL_NOR_GetStatus(NOR_HandleTypeDef *hnor, uint32_t Addres
   * @}
   */
 
+#endif /* FMC_BANK1 */
 
 #ifdef __cplusplus
 }

@@ -144,7 +144,7 @@ typedef struct __USART_HandleTypeDef
 
   uint16_t                      NbTxDataToProcess;       /*!< Number of data to process during TX ISR execution */
 
-  uint32_t                      SlaveMode;               /*!< Enable/Disable UART SPI Slave Mode. This parameter can be a value
+  uint32_t                      SlaveMode;               /*!< Enable/Disable USART SPI Slave Mode. This parameter can be a value
                                                               of @ref USARTEx_Slave_Mode */
 
   uint32_t                      FifoMode;                /*!< Specifies if the FIFO mode will be used. This parameter can be a value
@@ -1172,4 +1172,3 @@ uint32_t               HAL_USART_GetError(const USART_HandleTypeDef *husart);
 #endif
 
 #endif /* STM32H5xx_HAL_USART_H */
-

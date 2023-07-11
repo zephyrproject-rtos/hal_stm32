@@ -386,4 +386,3 @@ HAL_StatusTypeDef RNG_RecoverSeedError(RNG_HandleTypeDef *hrng);
 
 
 #endif /* STM32H5xx_HAL_RNG_H */
-

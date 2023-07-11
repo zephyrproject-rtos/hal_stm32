@@ -202,7 +202,7 @@
 #define ETH_MACRFCR_MASK              0x00000003U
 #define ETH_MTLTQOMR_MASK             0x00000072U
 #define ETH_MTLRQOMR_MASK             0x0000007BU
-							          
+
 #define ETH_DMAMR_MASK                0x00007802U
 #define ETH_DMASBMR_MASK              0x0000D001U
 #define ETH_DMACCR_MASK               0x00013FFFU
@@ -3323,4 +3323,3 @@ static void ETH_InitCallbacksToDefault(ETH_HandleTypeDef *heth)
 /**
   * @}
   */
-

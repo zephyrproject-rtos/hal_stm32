@@ -226,7 +226,7 @@ typedef  void (*pCOMP_CallbackTypeDef)(COMP_HandleTypeDef *hcomp); /*!< pointer 
   * @{
   */
 #define COMP_OUTPUTPOL_NONINVERTED     (0x00000000UL)          /*!< COMP output level is not inverted (comparator output
-                                                                    is high when the input plus is at a higher voltage 
+                                                                    is high when the input plus is at a higher voltage
                                                                     than the input minus) */
 #define COMP_OUTPUTPOL_INVERTED        (COMP_CFGR1_POLARITY)   /*!< COMP output level is inverted (comparator output is
                                                                     low when the input plus is at a higher voltage than
@@ -278,7 +278,7 @@ typedef  void (*pCOMP_CallbackTypeDef)(COMP_HandleTypeDef *hcomp); /*!< pointer 
                                                COMP_EXTI_RISING |\
                                                COMP_EXTI_FALLING)     /*!< Comparator output triggering interrupt
                                               on rising and falling edges.
-                                              Note: Specific to comparator of this STM32 series: comparator output 
+                                              Note: Specific to comparator of this STM32 series: comparator output
                                                     triggers interruption on high level. HAL_COMP_Start_x functions
                                                     can change output polarity depending on initial output level. */
 /**
