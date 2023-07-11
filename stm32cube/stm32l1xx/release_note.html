@@ -5,36 +5,27 @@
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>Release Notes for STM32CubeL1 Firmware Package</title>
-  <style>
-    code{white-space: pre-wrap;}
-    span.smallcaps{font-variant: small-caps;}
-    span.underline{text-decoration: underline;}
-    div.column{display: inline-block; vertical-align: top; width: 50%;}
-    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-    ul.task-list{list-style: none;}
-    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  <style type="text/css">
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
   </style>
-  <link rel="stylesheet" href="_htmresc/mini-st.css" />
+  <link rel="stylesheet" href="_htmresc/mini-st_2020.css" />
   <!--[if lt IE 9]>
     <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
   <![endif]-->
+  <link rel="icon" type="image/x-icon" href="_htmresc/favicon.png" />
 </head>
 <body>
 <div class="row">
 <div class="col-sm-12 col-lg-4">
-<div class="card fluid">
-<div class="sectione dark">
 <center>
-<h1 id="release-notes-for-stm32cubel1-firmware-package"><small>Release Notes for</small> <mark>STM32CubeL1 Firmware Package</mark></h1>
+<h1 id="release-notes-forstm32cubel1-firmware-package"><small>Release Notes for</small><mark>STM32CubeL1 Firmware Package</mark></h1>
 <p>Copyright © 2017 STMicroelectronics<br />
 </p>
-<a href="https://www.st.com" class="logo"><img src="_htmresc/st_logo.png" alt="ST logo" /></a>
+<a href="https://www.st.com" class="logo"><img src="_htmresc/st_logo_2020.png" alt="ST logo" /></a>
 </center>
-</div>
-</div>
-<h1 id="license">License</h1>
-<p>Licensed by ST under ST license SLA0048 (the "License"). You may not use this package except in compliance with the License. You may obtain a copy of the License at:</p>
-<p><a href="http://www.st.com/SLA0048">http://www.st.com/SLA0048</a></p>
 <h1 id="purpose">Purpose</h1>
 <p><span style="font-weight: bold;">STMCube is an STMicroelectronics original initiative to ease developers life by reducing development efforts, time and cost.</span></p>
 <p>STM32Cube covers STM32 portfolio.</p>
@@ -50,7 +41,7 @@
 <p>All embedded software utilities come with a full set of examples.</p>
 <p>The STM32Cube firmware solution offers a straightforward API with a modular architecture, making it simple to fine tune custom applications and scalable to fit most requirements.</p>
 <figure>
-<img src="_htmresc/STM32Cube.bmp" alt="STM32Cube" /><figcaption aria-hidden="true">STM32Cube</figcaption>
+<img src="_htmresc/STM32Cube.bmp" alt="STM32Cube" /><figcaption>STM32Cube</figcaption>
 </figure>
 <p>The <span style="font-weight: bold;">drivers</span> provided within this package <span style="font-weight: bold;">support</span> the following <span style="font-weight: bold;">STM32L100xB, STM32L100xBA, STM32L100xC, STM32L151xB, STM32L151xBA, STM32L151xC, STM32L151xCA, STM32L151xD, STM32L151xDX, STM32L151xE, STM32L152xB, STM32L152xBA, STM32L152xC, STM32L152xCA, STM32L152xD, STM32L152xDX, STM32L152xE, STM32L162xC, STM32L162xCA, STM32L162xD, STM32L162xDX, and STM32L162xE devices.</span></p>
 <p>For a quick start on the STM32CubeL1 firmware package, refer to <a href="Documentation/STM32CubeL1GettingStarted.pdf">UM1802</a> and download the firmware updates and all the latest documentation from <a href="http://www.st.com/stm32cubefw">www.st.com/stm32cubefw</a></p>
@@ -64,12 +55,259 @@
 <li><p><a href="http://www.st.com/st-web-ui/static/active/en/resource/technical/document/user_manual/DM00105262.pdf">UM1722</a>: Developing Applications on STM32Cube with RTOS</p></li>
 </ul>
 </div>
-<section id="update-history" class="col-sm-12 col-lg-8">
-<h1>Update History</h1>
+<div class="col-sm-12 col-lg-8">
+<h1 id="update-history">Update History</h1>
 <div class="collapse">
-<input type="checkbox" id="collapse-section15" checked aria-hidden="true"> <label for="collapse-section15" aria-hidden="true">V1.10.3 / 21-May-2021</label>
+<input type="checkbox" id="collapse-section16" checked aria-hidden="true"> <label for="collapse-section15" aria-hidden="true">V1.10.4 / 07-April-2023</label>
 <div>
 <h2 id="main-changes">Main Changes</h2>
+<ul>
+<li>Patch release to fix known defects and enhancements implementation.</li>
+<li>All source files: update disclaimer to add reference to the new license agreement.</li>
+</ul>
+<h2 id="content">Content</h2>
+<ul>
+<li><strong>CMSIS</strong> updates
+<ul>
+<li>Update define value of HSI_VALUE to 16 Mhz to be aligned with reference manual.</li>
+<li>Align USART_BRR_DIV_Fraction and USART_BRR_DIV_Mantissa bits definitions with the reference manual.</li>
+<li>Add definitions for channel 27, 28 and 29 in the ADC sample time register1 in stm32l151xc.h file.</li>
+<li>Update the GCC startup file to be aligned to IAR/Keil IDE.</li>
+</ul></li>
+<li><strong>HAL</strong> updates
+<ul>
+<li>Add support of HAL SMBUS module.</li>
+<li>HAL code quality enhancement for MISRA-C Rule-8.13 by adding const qualifiers.</li>
+<li><strong>HAL Generic</strong> update
+<ul>
+<li>Allow redefinition of macro UNUSED(x).</li>
+<li>Update stm32l1xx_hal_conf_template.h template file to add support of HAL SMBUS module.</li>
+</ul></li>
+<li><strong>HAL GPIO</strong> update
+<ul>
+<li>Reorder EXTI configuration sequence in order to avoid unexpected level detection.</li>
+</ul></li>
+<li><strong>HAL EXTI</strong> update
+<ul>
+<li>Fix computation of pExtiConfig-&gt;GPIOSel in HAL_EXTI_GetConfigLine().</li>
+</ul></li>
+<li><strong>HAL PWR</strong> update
+<ul>
+<li>Updated HAL_PWR_EnterSLEEPMode() to add NOP() instruction to ensure all pending instructions are flushed before entering sleep mode.</li>
+</ul></li>
+<li><strong>HAL FLASH</strong> update
+<ul>
+<li>Fix wrong defined Flash pages max number value “FLASH_NBPAGES_MAX” for STM32L1 with 256K flash part numbers.</li>
+<li>Update FLASH_SIZE value calculation</li>
+</ul></li>
+<li><strong>HAL ADC</strong> update
+<ul>
+<li>Better performance by removing multiple volatile reads or writes in interrupt handler.</li>
+<li>Add missing LL_ADC_REG_SEQ_SCAN_ENABLE_xxRANKS defines from RANK 17 to RANK 28.</li>
+</ul></li>
+<li><strong>HAL OPAMP</strong> update
+<ul>
+<li>LL_OPAMP_SetTrimmingValue()/LL_OPAMP_GetTrimmingValue(): redefinition of registers address MUST be volatile (_IO).</li>
+</ul></li>
+<li><strong>HAL/LL TIM</strong> update
+<ul>
+<li>Manage configuration of the Capture/compare DMA request source:
+<ul>
+<li>Add related new exported constants (TIM_CCDMAREQUEST_CC, TIM_CCDMAREQUEST_UPDATE).</li>
+<li>Create a new macro __HAL_TIM_SELECT_CCDMAREQUEST() allowing to program the TIMx_CR2.CCDS bitfield.</li>
+</ul></li>
+<li>Update __LL_TIM_CALC_PSC() macro to round up the evaluated value when the fractional part of the division is greater than 0.5.</li>
+<li>Remove tag ‘/** <span class="citation" data-cites="defgroup">@defgroup</span> TIM_LL_EM_Exported_Macros Exported_Macros’ as redundant with tag ‘/** <span class="citation" data-cites="defgroup">@defgroup</span> TIM_LL_Exported_Macros TIM Exported Macros’.</li>
+<li>Fix HAL_TIMEx_RemapConfig() lock issue: __HAL_LOCK is called before calls to assert_param().</li>
+<li>Improved driver robustness against wrong period values.</li>
+<li>Improved driver robustness against wrong DMA related parameters.</li>
+<li>Improved period configuration parameter check.</li>
+<li>Removed lock management from calback management functions.</li>
+</ul></li>
+<li><strong>HAL RTC BKP</strong> update
+<ul>
+<li>Use bits definitions from CMSIS Device header file instead of hard-coded values.</li>
+<li>Wrap comments to be 80-character long and correct typos.</li>
+<li>Move constants RTC_IT_TAMP from hal_rtc.h to hal_rtc_ex.h.</li>
+<li>Gather all instructions related to exiting the “init” mode into new function RTC_ExitInitMode().</li>
+<li>Add new macro assert_param(IS_RTC_TAMPER_FILTER_CONFIG_CORRECT(sTamper-&gt;Filter, sTamper-&gt;Trigger)) to check tamper filtering is disabled in case tamper events are triggered on signal edges.</li>
+<li>Rework functions HAL_RTCEx_SetTamper() and HAL_RTCEx_SetTamper_IT() to:
+<ul>
+<li>Write in TAFCR register in one single access instead of two.</li>
+<li>Avoid modifying user structure sTamper.</li>
+</ul></li>
+<li>Check if the RTC calendar has been previously initialized before entering initialization mode.</li>
+<li>Remove macro __HAL_RTC_TAMPER_GET_IT() as it is redundant with macro __HAL_RTC_TAMPER_GET_FLAG() and create an alias into the hal_legacy.h file</li>
+</ul></li>
+<li><strong>HAL CRYP</strong> update
+<ul>
+<li>Update Crypt/Decrypt IT processes to avoid Computation Completed IRQ fires before the DINR pointer increment.</li>
+</ul></li>
+<li><strong>HAL UART</strong> update
+<ul>
+<li>Handling of UART concurrent register access in case of race condition between Tx and Rx transfers.</li>
+<li>Improve header description of UART_WaitOnFlagUntilTimeout() function.</li>
+<li>Add a check on the UART parity before enabling the parity error interruption.</li>
+<li>Fix typo in UART_IT_TXE bit description.</li>
+<li>Removal of HAL_LOCK/HAL_UNLOCK calls in HAL UART Tx and Rx APIs.</li>
+<li>Add a new API HAL_UARTEx_GetRxEventType that could be used to retrieve the type of event that has led the RxEventCallback execution.</li>
+<li>Remove __HAL_LOCK() from HAL_xxx_RegisterCallback()/HAL_xxx_UnRegisterCallback().</li>
+</ul></li>
+<li><strong>HAL SMARTCARD</strong> update
+<ul>
+<li>Improve header description of SMARTCARD_WaitOnFlagUntilTimeout() function.</li>
+<li>Remove __HAL_LOCK() from HAL_xxx_RegisterCallback()/HAL_xxx_UnRegisterCallback().</li>
+</ul></li>
+<li><strong>HAL NOR</strong> update
+<ul>
+<li>Align HAL_NOR_Init() API with core of the function when write operation is disabled to avoid HardFault.</li>
+<li>FMC_WRITE_OPERATION_DISABLE for NOR cause Hardfault for Read operations.</li>
+</ul></li>
+<li><strong>HAL IRDA</strong> update
+<ul>
+<li>Improve header description of IRDA_WaitOnFlagUntilTimeout() function.</li>
+<li>Add a check on the IRDA parity before enabling the parity error interrupt.</li>
+<li>Remove __HAL_LOCK() from HAL_xxx_RegisterCallback()/HAL_xxx_UnRegisterCallback().</li>
+</ul></li>
+<li><strong>HAL/LL USART</strong> update
+<ul>
+<li>Improve header description of USART_WaitOnFlagUntilTimeout() function.</li>
+<li>Add a check on the USART parity before enabling the parity error interrupt.</li>
+<li>Handle concurrent register access in case of race condition between Tx and Rx transfers.</li>
+<li>Remove __HAL_LOCK() from HAL_xxx_RegisterCallback()/HAL_xxx_UnRegisterCallback().</li>
+</ul></li>
+<li><strong>HAL I2C</strong> update
+<ul>
+<li>Add new HAL driver for SMBUS module.</li>
+<li>Update HAL_I2C_Mem_Write_DMA() and HAL_I2C_Mem_Read_DMA() APIs to add initialization of Devaddress, Memaddress and EventCount parameters.</li>
+<li>Update I2C_MasterReceive_RXNE() process to safe manage data N= 2 and N= 3, disable BUF interrupt if nothing to do.</li>
+<li>Clear ACK bit once 3 bytes to read remain to be able to send the NACK once the transfer ends.</li>
+<li>Duplicate the test condition after timeout detection to avoid false timeout detection.</li>
+<li>Update HAL_I2C_Master_Transmit_IT to return HAL_BUSY instead of HAL_ERROR when timeout occur and I2C_FLAG_BUSY is SET.</li>
+</ul></li>
+<li><strong>HAL SPI</strong> update
+<ul>
+<li>Fix driver to don’t update state in case of error. (HAL_SPI_STATE_READY will be set only in case of HAL_TIMEOUT).</li>
+</ul></li>
+<li><strong>HAL USB</strong> update
+<ul>
+<li>Add function to abort current USB endpoint transfer.</li>
+<li>PCD: add supporting multi packets transfer on Interrupt endpoint.</li>
+<li>PCD: software correction added to avoid unexpected STALL condition during EP0 multi packet OUT transfer.</li>
+<li>Add a mask for USB RX bytes count.</li>
+</ul></li>
+</ul></li>
+<li><strong>Project</strong> updates
+<ul>
+<li>Update CRC LL examples to fix incorrect bytes stream handling.</li>
+</ul></li>
+<li><strong>BSP</strong> updates
+<ul>
+<li><strong>STM32L152D_EVAL :</strong>
+<ul>
+<li>Update to initialize LCD page size.</li>
+</ul></li>
+</ul></li>
+</ul>
+<table>
+<caption><strong>Projects</strong></caption>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th style="text-align: left;">Version</th>
+<th style="text-align: left;">Release notes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Projects</td>
+<td style="text-align: left;">see Projects Release note for details</td>
+<td style="text-align: left;"><a href="Projects/Release_Notes.html">release notes</a></td>
+</tr>
+</tbody>
+</table>
+<h2 id="components">Components</h2>
+<table>
+<caption><strong>Drivers</strong></caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Version</th>
+<th style="text-align: left;">Release note</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>STM32L1xx CMSIS</strong></td>
+<td style="text-align: left;"><strong>V2.3.3</strong></td>
+<td style="text-align: left;"><a href="Drivers/CMSIS/Device/ST/STM32L1xx/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>STM32L1xx HAL</strong></td>
+<td style="text-align: left;"><strong>V1.4.5</strong></td>
+<td style="text-align: left;"><a href="Drivers/STM32L1xx_HAL_Driver/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>BSP STM32L1xx_Nucleo</strong></td>
+<td style="text-align: left;"><strong>V1.1.4</strong></td>
+<td style="text-align: left;"><a href="Drivers/BSP/STM32L1xx_Nucleo/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>BSP STM32L100C-Discovery</strong></td>
+<td style="text-align: left;"><strong>V1.0.6</strong></td>
+<td style="text-align: left;"><a href="Drivers/BSP/STM32L100C-Discovery/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>BSP STM32L152C-Discovery</strong></td>
+<td style="text-align: left;"><strong>V1.0.6</strong></td>
+<td style="text-align: left;"><a href="Drivers/BSP/STM32L152C-Discovery/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>BSP STM32L152D_EVAL</strong></td>
+<td style="text-align: left;"><strong>V2.1.1</strong></td>
+<td style="text-align: left;"><a href="Drivers/BSP/STM32L152D_EVAL/Release_Notes.html">release notes</a></td>
+</tr>
+</tbody>
+</table>
+<table>
+<caption><strong>Utilities</strong></caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Version</th>
+<th style="text-align: left;">Release note</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>CPU</strong></td>
+<td style="text-align: left;"><strong>V1.1.4</strong></td>
+<td style="text-align: left;"><a href="Utilities/CPU/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Fonts</strong></td>
+<td style="text-align: left;"><strong>V1.0.3</strong></td>
+<td style="text-align: left;"><a href="Utilities/Fonts/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Log</strong></td>
+<td style="text-align: left;"><strong>V1.0.4</strong></td>
+<td style="text-align: left;"><a href="Utilities/Log/Release_Notes.html">release notes</a></td>
+</tr>
+</tbody>
+</table>
+<h2 id="development-toolchains-and-compilers">Development Toolchains and Compilers</h2>
+<ul>
+<li>IAR Embedded Workbench for ARM (EWARM) toolchain <strong>V8.40.2</strong> + ST-Link</li>
+<li>RealView Microcontroller Development Kit (MDK-ARM) toolchain <strong>V5.31</strong> + ST-Link</li>
+<li>System Workbench for STM32 (SW4STM32) (7-2018-q2-update) toolchain <strong>V2.9.0</strong> + ST-Link</li>
+</ul>
+</div>
+</div>
+<div class="collapse">
+<input type="checkbox" id="collapse-section15"  aria-hidden="true"> <label for="collapse-section15" aria-hidden="true">V1.10.3 / 21-May-2021</label>
+<div>
+<h2 id="main-changes-1">Main Changes</h2>
 <ul>
 <li>Patch release to to fix known defects and enhancements implementation.</li>
 </ul>
@@ -91,7 +329,7 @@
 <ul>
 <li>Update HAL TimeBase TIM template for more robustness
 <ul>
-<li>Update Hal_Init_Tick() API to propoerty store the priority when using the non-default time base.</li>
+<li>Update Hal_Init_Tick() API to property store the priority when using the non-default time base.</li>
 </ul></li>
 </ul></li>
 <li><strong>HAL/LL TIM</strong> update
@@ -189,12 +427,10 @@
 <li>Update I2C_MemoryTransmit_TXE_BTF() API to increment EventCount.</li>
 </ul></li>
 <li>Update to use the right macro to clear I2C ADDR flag inside I2C_Slave_ADDR() API as it’s indicated in the reference manual.</li>
-<li>Update HAL_I2C_EV_IRQHandler() and I2C_MasterTransmit_BTF() APIs to fix an issue where the transfer of the first few bytes to an I2C memory fails.</li>
 </ul></li>
 <li><strong>HAL/LL ADC</strong> update
 <ul>
 <li>Update HAL_ADC_Stop_DMA() API to check if DMA state is Busy before calling HAL_DMA_Abort() API to avoid DMA internal error.</li>
-<li>Update HAL ADC driver to add include of the LL ADC driver.</li>
 <li>Update timeout mechanism to avoid false timeout detection in case of preemption.</li>
 <li>Update LL_ADC_REG_Init() API to avoid enabling continuous mode and discontinuous mode simultaneously.</li>
 </ul></li>
@@ -227,14 +463,13 @@
 </ul></li>
 </ul></li>
 </ul>
-<h2 id="components">Components</h2>
+<h2 id="components-1">Components</h2>
 <table>
 <caption><strong>Drivers</strong></caption>
 <thead>
 <tr class="header">
 <th style="text-align: left;">Name</th>
 <th style="text-align: left;">Version</th>
-<th style="text-align: left;">License</th>
 <th style="text-align: left;">Release note</th>
 </tr>
 </thead>
@@ -242,18 +477,16 @@
 <tr class="odd">
 <td style="text-align: left;"><strong>STM32L1xx CMSIS</strong></td>
 <td style="text-align: left;"><strong>V2.3.2</strong></td>
-<td style="text-align: left;"><a href="Drivers/CMSIS/LICENSE.txt">Apache License v2.0</a></td>
 <td style="text-align: left;"><a href="Drivers/CMSIS/Device/ST/STM32L1xx/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"><strong>STM32L1xx HAL</strong></td>
 <td style="text-align: left;"><strong>V1.4.4</strong></td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/STM32L1xx_HAL_Driver/Release_Notes.html">release notes</a></td>
 </tr>
 </tbody>
 </table>
-<h2 id="development-toolchains-and-compilers">Development Toolchains and Compilers</h2>
+<h2 id="development-toolchains-and-compilers-1">Development Toolchains and Compilers</h2>
 <ul>
 <li>IAR Embedded Workbench for ARM (EWARM) toolchain <strong>V8.40.2</strong> + ST-Link</li>
 <li>RealView Microcontroller Development Kit (MDK-ARM) toolchain <strong>V5.31</strong> + ST-Link</li>
@@ -264,7 +497,7 @@
 <div class="collapse">
 <input type="checkbox" id="collapse-section14" aria-hidden="true"> <label for="collapse-section14" aria-hidden="true">V1.10.2 / 22-October-2020</label>
 <div>
-<h2 id="main-changes-1">Main Changes</h2>
+<h2 id="main-changes-2">Main Changes</h2>
 <ul>
 <li>Patch release to fix issue in I2C HAL driver</li>
 </ul>
@@ -281,14 +514,13 @@
 </ul></li>
 </ul></li>
 </ul>
-<h2 id="components-1">Components</h2>
+<h2 id="components-2">Components</h2>
 <table>
 <caption><strong>Drivers</strong></caption>
 <thead>
 <tr class="header">
 <th style="text-align: left;">Name</th>
 <th style="text-align: left;">Version</th>
-<th style="text-align: left;">License</th>
 <th style="text-align: left;">Release note</th>
 </tr>
 </thead>
@@ -296,12 +528,11 @@
 <tr class="odd">
 <td style="text-align: left;"><strong>STM32L1xx HAL</strong></td>
 <td style="text-align: left;"><strong>V1.4.3</strong></td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/STM32L1xx_HAL_Driver/Release_Notes.html">release notes</a></td>
 </tr>
 </tbody>
 </table>
-<h2 id="development-toolchains-and-compilers-1">Development Toolchains and Compilers</h2>
+<h2 id="development-toolchains-and-compilers-2">Development Toolchains and Compilers</h2>
 <ul>
 <li>IAR Embedded Workbench for ARM (EWARM) toolchain V8.40.1 + ST-Link</li>
 <li>RealView Microcontroller Development Kit (MDK-ARM) toolchain V5.29 + ST-Link</li>
@@ -312,7 +543,7 @@
 <div class="collapse">
 <input type="checkbox" id="collapse-section13" aria-hidden="true"> <label for="collapse-section13" aria-hidden="true">V1.10.1 / 28-August-2020</label>
 <div>
-<h2 id="main-changes-2">Main Changes</h2>
+<h2 id="main-changes-3">Main Changes</h2>
 <ul>
 <li>Patch release to fix issue in I2C HAL driver</li>
 </ul>
@@ -329,14 +560,13 @@
 </ul></li>
 </ul></li>
 </ul>
-<h2 id="components-2">Components</h2>
+<h2 id="components-3">Components</h2>
 <table>
 <caption><strong>Drivers</strong></caption>
 <thead>
 <tr class="header">
 <th style="text-align: left;">Name</th>
 <th style="text-align: left;">Version</th>
-<th style="text-align: left;">License</th>
 <th style="text-align: left;">Release note</th>
 </tr>
 </thead>
@@ -344,12 +574,11 @@
 <tr class="odd">
 <td style="text-align: left;"><strong>STM32L1xx HAL</strong></td>
 <td style="text-align: left;"><strong>V1.4.2</strong></td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/STM32L1xx_HAL_Driver/Release_Notes.html">release notes</a></td>
 </tr>
 </tbody>
 </table>
-<h2 id="development-toolchains-and-compilers-2">Development Toolchains and Compilers</h2>
+<h2 id="development-toolchains-and-compilers-3">Development Toolchains and Compilers</h2>
 <ul>
 <li>IAR Embedded Workbench for ARM (EWARM) toolchain V8.40.1 + ST-Link</li>
 <li>RealView Microcontroller Development Kit (MDK-ARM) toolchain V5.29 + ST-Link</li>
@@ -360,7 +589,7 @@
 <div class="collapse">
 <input type="checkbox" id="collapse-section12" aria-hidden="true"> <label for="collapse-section12" aria-hidden="true">V1.10.0 / 24-June-2020</label>
 <div>
-<h2 id="main-changes-3">Main Changes</h2>
+<h2 id="main-changes-4">Main Changes</h2>
 <ul>
 <li>Add new HAL EXTI driver</li>
 <li>General updates to fix known defects and enhancements implementation</li>
@@ -368,9 +597,9 @@
 <h3 id="major-maintenance-release">Major Maintenance release</h3>
 <h2 id="contents-3">Contents</h2>
 <ul>
-<li><p>Add new HAL EXTI driver</p></li>
+<li>Add new HAL EXTI driver</li>
 <li><p>General updates to fix known defects and enhancements implementation</p></li>
-<li><p><strong>CMSIS Device</strong> updates</p>
+<li><strong>CMSIS Device</strong> updates
 <ul>
 <li>All header files
 <ul>
@@ -390,7 +619,7 @@
 <li>Update SystemInit() API to don’t reset RCC registers to its reset values</li>
 </ul></li>
 </ul></li>
-<li><p><strong>HAL / LL Drivers</strong> updates</p>
+<li><strong>HAL / LL Drivers</strong> updates
 <ul>
 <li><strong>HAL</strong> driver
 <ul>
@@ -585,7 +814,6 @@
 <tr class="header">
 <th>Name</th>
 <th style="text-align: left;">Version</th>
-<th style="text-align: left;">License</th>
 <th style="text-align: left;">Release notes</th>
 </tr>
 </thead>
@@ -593,14 +821,13 @@
 <tr class="odd">
 <td>Projects</td>
 <td style="text-align: left;">see Projects Release note for details</td>
-<td style="text-align: left;">see Projects Release note for details</td>
 <td style="text-align: left;"><a href="Projects/Release_Notes.html">release notes</a></td>
 </tr>
 </tbody>
 </table>
 <p><br />
 </p>
-<h2 id="components-3">Components</h2>
+<h2 id="components-4">Components</h2>
 <p>Note: in the tables below, components in <span style="font-weight: bold;">bold</span> have changed since previous release</p>
 <table>
 <caption><strong>Drivers</strong></caption>
@@ -608,105 +835,88 @@
 <tr class="header">
 <th style="text-align: left;">Name</th>
 <th style="text-align: left;">Version</th>
-<th style="text-align: left;">License</th>
 <th style="text-align: left;">Release note</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">Cortex-M CMSIS</td>
+<td style="text-align: left;">CMSIS</td>
 <td style="text-align: left;">V5.4.0</td>
-<td style="text-align: left;"><a href="Drivers/CMSIS/LICENSE.txt">Apache License v2.0</a></td>
 <td style="text-align: left;"><a href="Drivers/CMSIS/README.md">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"><strong>STM32L1xx CMSIS</strong></td>
 <td style="text-align: left;"><strong>V2.3.1</strong></td>
-<td style="text-align: left;"><a href="Drivers/CMSIS/LICENSE.txt">Apache License v2.0</a></td>
 <td style="text-align: left;"><a href="Drivers/CMSIS/Device/ST/STM32L1xx/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;"><strong>STM32L1xx HAL</strong></td>
 <td style="text-align: left;"><strong>V1.4.1</strong></td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/STM32L1xx_HAL_Driver/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">BSP STM32L152D_EVAL</td>
 <td style="text-align: left;">V2.1.0</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/STM32L152D_EVAL/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">BSP STM32L152C-Discovery</td>
 <td style="text-align: left;">V1.0.5</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/STM32L152C-Discovery/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">BSP STM32L100C-Discovery</td>
 <td style="text-align: left;">V1.0.5</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/STM32L100C-Discovery/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">BSP STM32L1xx_Nucleo</td>
 <td style="text-align: left;">V1.1.3</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/STM32L1xx_Nucleo/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">BSP Adafruit Shield</td>
 <td style="text-align: left;">V2.0.1</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Adafruit_Shield/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">BSP Common</td>
 <td style="text-align: left;">V5.1.2</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/Common/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">BSP cs43l22</td>
 <td style="text-align: left;">V2.0.4</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/cs43l22/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">BSP hx8347d</td>
 <td style="text-align: left;">V1.1.1</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/hx8347d/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">BSP ili9325</td>
 <td style="text-align: left;">V1.2.2</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/ili9325/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">BSP ili9320</td>
 <td style="text-align: left;">V1.2.2</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/ili9320/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">BSP spfd5408</td>
 <td style="text-align: left;">V1.1.1</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/spfd5408/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">BSP stlm75</td>
 <td style="text-align: left;">V2.0.2</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/stlm75/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">BSP st7735</td>
 <td style="text-align: left;">V1.1.5</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/st7735/Release_Notes.html">release notes</a></td>
 </tr>
 </tbody>
@@ -717,7 +927,6 @@
 <tr class="header">
 <th style="text-align: left;">Name</th>
 <th style="text-align: left;">Version</th>
-<th style="text-align: left;">License</th>
 <th style="text-align: left;">Release note</th>
 </tr>
 </thead>
@@ -725,43 +934,36 @@
 <tr class="odd">
 <td style="text-align: left;">STM32 USB Device Library</td>
 <td style="text-align: left;">V2.5.2</td>
-<td style="text-align: left;"><a href="http://www.st.com/SLA0044">SLA0044</a></td>
 <td style="text-align: left;"><a href="Middlewares/ST/STM32_USB_Device_Library/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">STM32 TouchSensing Library</td>
 <td style="text-align: left;">V2.2.3</td>
-<td style="text-align: left;"><a href="http://www.st.com/SLA0044">SLA0044</a></td>
 <td style="text-align: left;"><a href="Middlewares/ST/STM32_TouchSensing_Library/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">FatFS</td>
 <td style="text-align: left;">R0.12c</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Middlewares/Third_Party/FatFs/src/00history.txt">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"></td>
 <td style="text-align: left;">ST modified 20190329</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Middlewares/Third_Party/FatFs/src/st_readme.txt">release notes ST</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">FreeRTOS</td>
 <td style="text-align: left;">V10.0.1</td>
-<td style="text-align: left;"><a href="Middlewares/Third_Party/FreeRTOS/License/license.txt">MIT</a></td>
 <td style="text-align: left;"><a href="Middlewares/Third_Party/FreeRTOS/Source/readme.txt">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"></td>
 <td style="text-align: left;">ST modified 20190329</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Middlewares/Third_Party/FreeRTOS/Source/st_readme.txt">release notes ST</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">STemWin</td>
 <td style="text-align: left;">STemWinLibrary 5.44</td>
-<td style="text-align: left;"><a href="http://www.st.com/SLA0044">SLA0044</a></td>
 <td style="text-align: left;"><a href="Middlewares/ST/STemWin/Release_Notes.html">release notes</a></td>
 </tr>
 </tbody>
@@ -772,7 +974,6 @@
 <tr class="header">
 <th style="text-align: left;">Name</th>
 <th style="text-align: left;">Version</th>
-<th style="text-align: left;">License</th>
 <th style="text-align: left;">Release note</th>
 </tr>
 </thead>
@@ -780,19 +981,16 @@
 <tr class="odd">
 <td style="text-align: left;">CPU</td>
 <td style="text-align: left;">V1.1.1</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Utilities/CPU/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Fonts</td>
 <td style="text-align: left;">V1.0.1</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Utilities/Fonts/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Log</td>
 <td style="text-align: left;">V1.0.2</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Utilities/Log/Release_Notes.html">release notes</a></td>
 </tr>
 </tbody>
@@ -805,7 +1003,7 @@
 </ul>
 <p><br />
 </p>
-<h2 id="development-toolchains-and-compilers-3">Development Toolchains and Compilers</h2>
+<h2 id="development-toolchains-and-compilers-4">Development Toolchains and Compilers</h2>
 <ul>
 <li>IAR Embedded Workbench for ARM (EWARM) toolchain <strong>V8.40.1</strong> + ST-Link</li>
 <li>RealView Microcontroller Development Kit (MDK-ARM) toolchain <strong>V5.29</strong> + ST-Link</li>
@@ -837,26 +1035,26 @@
 <div class="collapse">
 <input type="checkbox" id="collapse-section11" aria-hidden="true"> <label for="collapse-section11" aria-hidden="true">V1.9.0 / 05-April-2019</label>
 <div>
-<h2 id="main-changes-4">Main Changes</h2>
+<h2 id="main-changes-5">Main Changes</h2>
 <h3 id="major-maintenance-release-1">Major Maintenance release</h3>
 <h2 id="contents-4">Contents</h2>
 <ul>
-<li><p><strong>CMSIS Core</strong> updates</p>
+<li><strong>CMSIS Core</strong> updates
 <ul>
 <li>Update to new version <strong>V5.4.0</strong></li>
 </ul></li>
-<li><p><strong>CMSIS Device</strong> updates</p>
+<li><strong>CMSIS Device</strong> updates
 <ul>
 <li>Update CMSIS device description files according to latest version of HAL/LL drivers</li>
 <li>Refer to <a href="Drivers/CMSIS/Device/ST/STM32L1xx/Release_Notes.html">release notes</a> for further details</li>
 </ul></li>
-<li><p><strong>HAL / LL Drivers</strong> updates</p>
+<li><strong>HAL / LL Drivers</strong> updates
 <ul>
 <li>Add support of HAL callback registration feature</li>
 <li>Fix known defects and add several enhancements implementation</li>
 <li>Refer to <a href="Drivers/STM32L1xx_HAL_Driver/Release_Notes.html">release notes</a> for further details</li>
 </ul></li>
-<li><p><strong>Middlewares</strong> updates</p>
+<li><strong>Middlewares</strong> updates
 <ul>
 <li>Update to new version of <strong>FreeRTOS V10.0.1 (ST modified 20190329)</strong></li>
 <li>Update to new version of <strong>FatFS R0.12c (ST modified 20190329)</strong></li>
@@ -877,7 +1075,6 @@
 <tr class="header">
 <th>Name</th>
 <th style="text-align: left;">Version</th>
-<th style="text-align: left;">License</th>
 <th style="text-align: left;">Release notes</th>
 </tr>
 </thead>
@@ -885,14 +1082,13 @@
 <tr class="odd">
 <td>Projects</td>
 <td style="text-align: left;">see Projects Release note for details</td>
-<td style="text-align: left;">see Projects Release note for details</td>
 <td style="text-align: left;"><a href="Projects/Release_Notes.html">release notes</a></td>
 </tr>
 </tbody>
 </table>
 <p><br />
 </p>
-<h2 id="components-4">Components</h2>
+<h2 id="components-5">Components</h2>
 <p>Note: in the tables below, components in <span style="font-weight: bold;">bold</span> have changed since previous release</p>
 <table>
 <caption><strong>Drivers</strong></caption>
@@ -900,105 +1096,88 @@
 <tr class="header">
 <th style="text-align: left;">Name</th>
 <th style="text-align: left;">Version</th>
-<th style="text-align: left;">License</th>
 <th style="text-align: left;">Release note</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;"><strong>Cortex-M CMSIS</strong></td>
+<td style="text-align: left;"><strong>CMSIS</strong></td>
 <td style="text-align: left;"><strong>V5.4.0</strong></td>
-<td style="text-align: left;"><a href="Drivers/CMSIS/LICENSE.txt">Apache License v2.0</a></td>
 <td style="text-align: left;"><a href="Drivers/CMSIS/README.md">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"><strong>STM32L1xx CMSIS</strong></td>
 <td style="text-align: left;"><strong>V2.3.0</strong></td>
-<td style="text-align: left;"><a href="Drivers/CMSIS/LICENSE.txt">Apache License v2.0</a></td>
 <td style="text-align: left;"><a href="Drivers/CMSIS/Device/ST/STM32L1xx/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;"><strong>STM32L1xx HAL</strong></td>
 <td style="text-align: left;"><strong>V1.4.0</strong></td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/STM32L1xx_HAL_Driver/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"><strong>BSP STM32L152D_EVAL</strong></td>
 <td style="text-align: left;"><strong>V2.1.0</strong></td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/STM32L152D_EVAL/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;"><strong>BSP STM32L152C-Discovery</strong></td>
 <td style="text-align: left;"><strong>V1.0.5</strong></td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/STM32L152C-Discovery/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"><strong>BSP STM32L100C-Discovery</strong></td>
 <td style="text-align: left;"><strong>V1.0.5</strong></td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/STM32L100C-Discovery/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;"><strong>BSP STM32L1xx_Nucleo</strong></td>
 <td style="text-align: left;"><strong>V1.1.3</strong></td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/STM32L1xx_Nucleo/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">BSP Adafruit Shield</td>
 <td style="text-align: left;">V2.0.1</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Adafruit_Shield/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;"><strong>BSP Common</strong></td>
 <td style="text-align: left;"><strong>V5.1.2</strong></td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/Common/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"><strong>BSP cs43l22</strong></td>
 <td style="text-align: left;"><strong>V2.0.4</strong></td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/cs43l22/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">BSP hx8347d</td>
 <td style="text-align: left;">V1.1.1</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/hx8347d/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">BSP ili9325</td>
 <td style="text-align: left;">V1.2.2</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/ili9325/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">BSP ili9320</td>
 <td style="text-align: left;">V1.2.2</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/ili9320/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">BSP spfd5408</td>
 <td style="text-align: left;">V1.1.1</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/spfd5408/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;"><strong>BSP stlm75</strong></td>
 <td style="text-align: left;"><strong>V2.0.2</strong></td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/stlm75/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"><strong>BSP st7735</strong></td>
 <td style="text-align: left;"><strong>V1.1.5</strong></td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/st7735/Release_Notes.html">release notes</a></td>
 </tr>
 </tbody>
@@ -1009,7 +1188,6 @@
 <tr class="header">
 <th style="text-align: left;">Name</th>
 <th style="text-align: left;">Version</th>
-<th style="text-align: left;">License</th>
 <th style="text-align: left;">Release note</th>
 </tr>
 </thead>
@@ -1017,43 +1195,36 @@
 <tr class="odd">
 <td style="text-align: left;"><strong>STM32 USB Device Library</strong></td>
 <td style="text-align: left;"><strong>V2.5.2</strong></td>
-<td style="text-align: left;"><a href="http://www.st.com/SLA0044">SLA0044</a></td>
 <td style="text-align: left;"><a href="Middlewares/ST/STM32_USB_Device_Library/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"><strong>STM32 TouchSensing Library</strong></td>
 <td style="text-align: left;"><strong>V2.2.3</strong></td>
-<td style="text-align: left;"><a href="http://www.st.com/SLA0044">SLA0044</a></td>
 <td style="text-align: left;"><a href="Middlewares/ST/STM32_TouchSensing_Library/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;"><strong>FatFS</strong></td>
 <td style="text-align: left;"><strong>R0.12c</strong></td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Middlewares/Third_Party/FatFs/src/00history.txt">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"></td>
 <td style="text-align: left;"><strong>ST modified 20190329</strong></td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Middlewares/Third_Party/FatFs/src/st_readme.txt">release notes ST</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;"><strong>FreeRTOS</strong></td>
 <td style="text-align: left;"><strong>V10.0.1</strong></td>
-<td style="text-align: left;"><a href="Middlewares/Third_Party/FreeRTOS/License/license.txt">MIT</a></td>
 <td style="text-align: left;"><a href="Middlewares/Third_Party/FreeRTOS/Source/readme.txt">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"></td>
 <td style="text-align: left;"><strong>ST modified 20190329</strong></td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Middlewares/Third_Party/FreeRTOS/Source/st_readme.txt">release notes ST</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;"><strong>STemWin</strong></td>
 <td style="text-align: left;"><strong>STemWinLibrary 5.44</strong></td>
-<td style="text-align: left;"><a href="http://www.st.com/SLA0044">SLA0044</a></td>
 <td style="text-align: left;"><a href="Middlewares/ST/STemWin/Release_Notes.html">release notes</a></td>
 </tr>
 </tbody>
@@ -1064,7 +1235,6 @@
 <tr class="header">
 <th style="text-align: left;">Name</th>
 <th style="text-align: left;">Version</th>
-<th style="text-align: left;">License</th>
 <th style="text-align: left;">Release note</th>
 </tr>
 </thead>
@@ -1072,19 +1242,16 @@
 <tr class="odd">
 <td style="text-align: left;"><strong>CPU</strong></td>
 <td style="text-align: left;"><strong>V1.1.1</strong></td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Utilities/CPU/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"><strong>Fonts</strong></td>
 <td style="text-align: left;"><strong>V1.0.1</strong></td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Utilities/Fonts/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;"><strong>Log</strong></td>
 <td style="text-align: left;"><strong>V1.0.2</strong></td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Utilities/Log/Release_Notes.html">release notes</a></td>
 </tr>
 </tbody>
@@ -1097,7 +1264,7 @@
 </ul>
 <p><br />
 </p>
-<h2 id="development-toolchains-and-compilers-4">Development Toolchains and Compilers</h2>
+<h2 id="development-toolchains-and-compilers-5">Development Toolchains and Compilers</h2>
 <ul>
 <li>IAR Embedded Workbench for ARM (EWARM) toolchain V8.20.2 + ST-Link</li>
 <li>RealView Microcontroller Development Kit (MDK-ARM) toolchain V5.25 + ST-Link</li>
@@ -1129,7 +1296,7 @@
 <div class="collapse">
 <input type="checkbox" id="collapse-section10" aria-hidden="true"> <label for="collapse-section10" aria-hidden="true">V1.8.1 / 12-January-2018</label>
 <div>
-<h2 id="main-changes-5">Main Changes</h2>
+<h2 id="main-changes-6">Main Changes</h2>
 <h3 id="patch-release">Patch release</h3>
 <h2 id="contents-5">Contents</h2>
 <ul>
@@ -1148,7 +1315,6 @@
 <tr class="header">
 <th>Name</th>
 <th style="text-align: left;">Version</th>
-<th style="text-align: left;">License</th>
 <th style="text-align: left;">Release notes</th>
 </tr>
 </thead>
@@ -1156,14 +1322,13 @@
 <tr class="odd">
 <td>Projects</td>
 <td style="text-align: left;">see Projects Release note for details</td>
-<td style="text-align: left;">see Projects Release note for details</td>
 <td style="text-align: left;"><a href="Projects/Release_Notes.html">release notes</a></td>
 </tr>
 </tbody>
 </table>
 <p><br />
 </p>
-<h2 id="components-5">Components</h2>
+<h2 id="components-6">Components</h2>
 <p>Note: in the tables below, components in <span style="font-weight: bold;">bold</span> have changed since previous release</p>
 <table>
 <caption><strong>Drivers</strong></caption>
@@ -1171,105 +1336,88 @@
 <tr class="header">
 <th style="text-align: left;">Name</th>
 <th style="text-align: left;">Version</th>
-<th style="text-align: left;">License</th>
 <th style="text-align: left;">Release note</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">Cortex-M CMSIS</td>
+<td style="text-align: left;">CMSIS</td>
 <td style="text-align: left;">V4.5</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/CMSIS/index.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"><strong>STM32L1xx CMSIS</strong></td>
 <td style="text-align: left;"><strong>V2.2.3</strong></td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/CMSIS/Device/ST/STM32L1xx/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">STM32L1xx HAL</td>
 <td style="text-align: left;">V1.3.1</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/STM32L1xx_HAL_Driver/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">BSP STM32L152D_EVAL</td>
 <td style="text-align: left;">V2.0.7</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/STM32L152D_EVAL/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">BSP STM32L152C-Discovery</td>
 <td style="text-align: left;">V1.0.4</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/STM32L152C-Discovery/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">BSP STM32L100C-Discovery</td>
 <td style="text-align: left;">V1.0.4</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/STM32L100C-Discovery/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">BSP STM32L1xx_Nucleo</td>
 <td style="text-align: left;">V1.1.2</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/STM32L1xx_Nucleo/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">BSP Adafruit Shield</td>
 <td style="text-align: left;">V2.0.1</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Adafruit_Shield/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">BSP Common</td>
 <td style="text-align: left;">V4.0.1</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/Common/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">BSP cs43l22</td>
 <td style="text-align: left;">V2.0.2</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/cs43l22/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">BSP hx8347d</td>
 <td style="text-align: left;">V1.1.1</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/hx8347d/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">BSP ili9325</td>
 <td style="text-align: left;">V1.2.2</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/ili9325/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">BSP ili9320</td>
 <td style="text-align: left;">V1.2.2</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/ili9320/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">BSP spfd5408</td>
 <td style="text-align: left;">V1.1.1</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/spfd5408/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">BSP stlm75</td>
 <td style="text-align: left;">V1.0.1</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/stlm75/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">BSP st7735</td>
 <td style="text-align: left;">V1.1.1</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/st7735/Release_Notes.html">release notes</a></td>
 </tr>
 </tbody>
@@ -1280,7 +1428,6 @@
 <tr class="header">
 <th style="text-align: left;">Name</th>
 <th style="text-align: left;">Version</th>
-<th style="text-align: left;">License</th>
 <th style="text-align: left;">Release note</th>
 </tr>
 </thead>
@@ -1288,43 +1435,36 @@
 <tr class="odd">
 <td style="text-align: left;">STM32 USB Device Library</td>
 <td style="text-align: left;">V2.4.2</td>
-<td style="text-align: left;"><a href="http://www.st.com/SLA0044">SLA0044</a></td>
 <td style="text-align: left;"><a href="Middlewares/ST/STM32_USB_Device_Library/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">STM32 TouchSensing Library</td>
 <td style="text-align: left;">V2.1.1</td>
-<td style="text-align: left;"><a href="http://www.st.com/SLA0044">SLA0044</a></td>
 <td style="text-align: left;"><a href="Middlewares/ST/STM32_TouchSensing_Library/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">FatFS</td>
 <td style="text-align: left;">R0.11</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Middlewares/Third_Party/FatFs/src/00history.txt">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"></td>
 <td style="text-align: left;">ST modified 20150508</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Middlewares/Third_Party/FatFs/src/st_readme.txt">release notes ST</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">FreeRTOS</td>
 <td style="text-align: left;">V9.0.0</td>
-<td style="text-align: left;"><a href="Middlewares/Third_Party/FreeRTOS/License/license.txt">MIT</a></td>
 <td style="text-align: left;"><a href="Middlewares/Third_Party/FreeRTOS/Source/readme.txt">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"></td>
 <td style="text-align: left;">ST modified 20170303</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Middlewares/Third_Party/FreeRTOS/Source/st_readme.txt">release notes ST</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">STemWin</td>
 <td style="text-align: left;">STemWinLibrary 5.32</td>
-<td style="text-align: left;"><a href="http://www.st.com/SLA0044">SLA0044</a></td>
 <td style="text-align: left;"><a href="Middlewares/ST/STemWin/Release_Notes.html">release notes</a></td>
 </tr>
 </tbody>
@@ -1335,7 +1475,6 @@
 <tr class="header">
 <th style="text-align: left;">Name</th>
 <th style="text-align: left;">Version</th>
-<th style="text-align: left;">License</th>
 <th style="text-align: center;">Release note</th>
 </tr>
 </thead>
@@ -1343,26 +1482,23 @@
 <tr class="odd">
 <td style="text-align: left;">CPU</td>
 <td style="text-align: left;">V1.1.0</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: center;"><a href="Utilities/CPU/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Fonts</td>
 <td style="text-align: left;">V1.0.0</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: center;"><a href="Utilities/Fonts/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Log</td>
 <td style="text-align: left;">V1.0.0</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: center;"><a href="Utilities/Log/Release_Notes.html">release notes</a></td>
 </tr>
 </tbody>
 </table>
 <p><br />
 </p>
-<h2 id="development-toolchains-and-compilers-5">Development Toolchains and Compilers</h2>
+<h2 id="development-toolchains-and-compilers-6">Development Toolchains and Compilers</h2>
 <ul>
 <li>IAR Embedded Workbench for ARM (EWARM) toolchain V7.80.4 + ST-LINK</li>
 <li>RealView Microcontroller Development Kit (MDK-ARM) toolchain V5.24 + ST-LINK</li>
@@ -1395,7 +1531,7 @@
 <div class="collapse">
 <input type="checkbox" id="collapse-section9" aria-hidden="true"> <label for="collapse-section9" aria-hidden="true">V1.8.0 / 25-August-2017</label>
 <div>
-<h2 id="main-changes-6">Main Changes</h2>
+<h2 id="main-changes-7">Main Changes</h2>
 <h3 id="maintenance-release">Maintenance release</h3>
 <h2 id="contents-6">Contents</h2>
 <ul>
@@ -1411,7 +1547,6 @@
 <tr class="header">
 <th>Name</th>
 <th style="text-align: left;">Version</th>
-<th style="text-align: left;">License</th>
 <th style="text-align: left;">Release notes</th>
 </tr>
 </thead>
@@ -1419,14 +1554,13 @@
 <tr class="odd">
 <td>Projects</td>
 <td style="text-align: left;">see Projects Release note for details</td>
-<td style="text-align: left;">see Projects Release note for details</td>
 <td style="text-align: left;"><a href="Projects/Release_Notes.html">release notes</a></td>
 </tr>
 </tbody>
 </table>
 <p><br />
 </p>
-<h2 id="components-6">Components</h2>
+<h2 id="components-7">Components</h2>
 <p>Note: in the tables below, components in <span style="font-weight: bold;">bold</span> have changed since previous release</p>
 <table>
 <caption><strong>Drivers</strong></caption>
@@ -1434,105 +1568,88 @@
 <tr class="header">
 <th style="text-align: left;">Name</th>
 <th style="text-align: left;">Version</th>
-<th style="text-align: left;">License</th>
 <th style="text-align: left;">Release note</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">Cortex-M CMSIS</td>
+<td style="text-align: left;">CMSIS</td>
 <td style="text-align: left;">V4.5</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/CMSIS/index.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"><strong>STM32L1xx CMSIS</strong></td>
 <td style="text-align: left;"><strong>V2.2.2</strong></td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/CMSIS/Device/ST/STM32L1xx/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;"><strong>STM32L1xx HAL</strong></td>
 <td style="text-align: left;"><strong>V1.3.1</strong></td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/STM32L1xx_HAL_Driver/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"><strong>BSP STM32L152D_EVAL</strong></td>
 <td style="text-align: left;"><strong>V2.0.7</strong></td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/STM32L152D_EVAL/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;"><strong>BSP STM32L152C-Discovery</strong></td>
 <td style="text-align: left;"><strong>V1.0.4</strong></td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/STM32L152C-Discovery/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"><strong>BSP STM32L100C-Discovery</strong></td>
 <td style="text-align: left;"><strong>V1.0.4</strong></td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/STM32L100C-Discovery/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;"><strong>BSP STM32L1xx_Nucleo</strong></td>
 <td style="text-align: left;"><strong>V1.1.2</strong></td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/STM32L1xx_Nucleo/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">BSP Adafruit Shield</td>
 <td style="text-align: left;">V2.0.1</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Adafruit_Shield/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">BSP Common</td>
 <td style="text-align: left;">V4.0.1</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/Common/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">BSP cs43l22</td>
 <td style="text-align: left;">V2.0.2</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/cs43l22/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">BSP hx8347d</td>
 <td style="text-align: left;">V1.1.1</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/hx8347d/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">BSP ili9325</td>
 <td style="text-align: left;">V1.2.2</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/ili9325/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">BSP ili9320</td>
 <td style="text-align: left;">V1.2.2</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/ili9320/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">BSP spfd5408</td>
 <td style="text-align: left;">V1.1.1</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/spfd5408/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">BSP stlm75</td>
 <td style="text-align: left;">V1.0.1</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/stlm75/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">BSP st7735</td>
 <td style="text-align: left;">V1.1.1</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/st7735/Release_Notes.html">release notes</a></td>
 </tr>
 </tbody>
@@ -1543,7 +1660,6 @@
 <tr class="header">
 <th style="text-align: left;">Name</th>
 <th style="text-align: left;">Version</th>
-<th style="text-align: left;">License</th>
 <th style="text-align: left;">Release note</th>
 </tr>
 </thead>
@@ -1551,43 +1667,36 @@
 <tr class="odd">
 <td style="text-align: left;">STM32 USB Device Library</td>
 <td style="text-align: left;">V2.4.2</td>
-<td style="text-align: left;"><a href="http://www.st.com/SLA0044">SLA0044</a></td>
 <td style="text-align: left;"><a href="Middlewares/ST/STM32_USB_Device_Library/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">STM32 TouchSensing Library</td>
 <td style="text-align: left;">V2.1.1</td>
-<td style="text-align: left;"><a href="http://www.st.com/SLA0044">SLA0044</a></td>
 <td style="text-align: left;"><a href="Middlewares/ST/STM32_TouchSensing_Library/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">FatFS</td>
 <td style="text-align: left;">R0.11</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Middlewares/Third_Party/FatFs/src/00history.txt">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"></td>
 <td style="text-align: left;">ST modified 20150508</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Middlewares/Third_Party/FatFs/src/st_readme.txt">release notes ST</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">FreeRTOS</td>
 <td style="text-align: left;">V9.0.0</td>
-<td style="text-align: left;"><a href="Middlewares/Third_Party/FreeRTOS/License/license.txt">MIT</a></td>
 <td style="text-align: left;"><a href="Middlewares/Third_Party/FreeRTOS/Source/readme.txt">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"></td>
 <td style="text-align: left;">ST modified 20170303</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Middlewares/Third_Party/FreeRTOS/Source/st_readme.txt">release notes ST</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">STemWin</td>
 <td style="text-align: left;">STemWinLibrary 5.32</td>
-<td style="text-align: left;"><a href="http://www.st.com/SLA0044">SLA0044</a></td>
 <td style="text-align: left;"><a href="Middlewares/ST/STemWin/Release_Notes.html">release notes</a></td>
 </tr>
 </tbody>
@@ -1598,7 +1707,6 @@
 <tr class="header">
 <th style="text-align: left;">Name</th>
 <th style="text-align: left;">Version</th>
-<th style="text-align: left;">License</th>
 <th style="text-align: center;">Release note</th>
 </tr>
 </thead>
@@ -1606,26 +1714,23 @@
 <tr class="odd">
 <td style="text-align: left;">CPU</td>
 <td style="text-align: left;">V1.1.0</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: center;"><a href="Utilities/CPU/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Fonts</td>
 <td style="text-align: left;">V1.0.0</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: center;"><a href="Utilities/Fonts/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Log</td>
 <td style="text-align: left;">V1.0.0</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: center;"><a href="Utilities/Log/Release_Notes.html">release notes</a></td>
 </tr>
 </tbody>
 </table>
 <p><br />
 </p>
-<h2 id="development-toolchains-and-compilers-6">Development Toolchains and Compilers</h2>
+<h2 id="development-toolchains-and-compilers-7">Development Toolchains and Compilers</h2>
 <ul>
 <li>IAR Embedded Workbench for ARM (EWARM) toolchain V7.80.4 + ST-LINK</li>
 <li>RealView Microcontroller Development Kit (MDK-ARM) toolchain V5.24 + ST-LINK</li>
@@ -1658,11 +1763,11 @@
 <div class="collapse">
 <input type="checkbox" id="collapse-section8" aria-hidden="true"> <label for="collapse-section8" aria-hidden="true">V1.7.0 / 21-April-2017</label>
 <div>
-<h2 id="main-changes-7">Main Changes</h2>
+<h2 id="main-changes-8">Main Changes</h2>
 <h3 id="maintenance-release-1">Maintenance release</h3>
 <h2 id="contents-7">Contents</h2>
 <ul>
-<li><p><strong>HAL / LL Drivers</strong> updates</p>
+<li><strong>HAL / LL Drivers</strong> updates
 <ul>
 <li>Fixed known defects and several enhancements implementation.</li>
 <li>Enhanced HAL delay and time base implementation:
@@ -1676,7 +1781,7 @@
 </ul></li>
 <li>Refer to <a href="Drivers/STM32L1xx_HAL_Driver/Release_Notes.html">release notes</a> for further details</li>
 </ul></li>
-<li><p><strong>Middlewares</strong> updates</p>
+<li><strong>Middlewares</strong> updates
 <ul>
 <li>Upgrade to new version of <strong>STemWin Library 5.32 (build 20160205)</strong>
 <ul>
@@ -1696,9 +1801,9 @@
 <li><p><strong>Projects</strong> updates</p>
 <ul>
 <li><p>The STM32CubeL1 Firmware package comes with a rich set of examples running on STMicroelectronics boards, organized by board and provided with preconfigured projects for the main supported toolchains. The exhaustive list of projects is provided in this table (<a href="Projects/STM32CubeProjectsList.html">STM32CubeProjectsList.html</a>).</p></li>
-<li><p>Update of FW projects following changes in latest version of HAL/LL and Middlewares</p></li>
-<li><p>Add new projects Templates_LL to provide a reference project through the LL API that can be used to build any firmware application.</p></li>
-<li><p>Add new project HAL_TimeBase to illustrate how to customize the HAL time base driver :</p>
+<li>Update of FW projects following changes in latest version of HAL/LL and Middlewares</li>
+<li>Add new projects Templates_LL to provide a reference project through the LL API that can be used to build any firmware application.</li>
+<li>Add new project HAL_TimeBase to illustrate how to customize the HAL time base driver :
 <ul>
 <li>HAL/HAL_Timebase_TIM (modified and renamed previous HAL_TimeBase)</li>
 </ul></li>
@@ -1711,7 +1816,6 @@
 <tr class="header">
 <th>Name</th>
 <th style="text-align: left;">Version</th>
-<th style="text-align: left;">License</th>
 <th style="text-align: left;">Release notes</th>
 </tr>
 </thead>
@@ -1719,14 +1823,13 @@
 <tr class="odd">
 <td>Projects</td>
 <td style="text-align: left;">see Projects Release note for details</td>
-<td style="text-align: left;">see Projects Release note for details</td>
 <td style="text-align: left;"><a href="Projects/Release_Notes.html">release notes</a></td>
 </tr>
 </tbody>
 </table>
 <p><br />
 </p>
-<h2 id="components-7">Components</h2>
+<h2 id="components-8">Components</h2>
 <p>Note: in the tables below, components in <span style="font-weight: bold;">bold</span> have changed since previous release</p>
 <table>
 <caption><strong>Drivers</strong></caption>
@@ -1734,105 +1837,88 @@
 <tr class="header">
 <th style="text-align: left;">Name</th>
 <th style="text-align: left;">Version</th>
-<th style="text-align: left;">License</th>
 <th style="text-align: left;">Release note</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">Cortex-M CMSIS</td>
+<td style="text-align: left;">CMSIS</td>
 <td style="text-align: left;">V4.5</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/CMSIS/index.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"><strong>STM32L1xx CMSIS</strong></td>
 <td style="text-align: left;"><strong>V2.2.1</strong></td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/CMSIS/Device/ST/STM32L1xx/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;"><strong>STM32L1xx HAL</strong></td>
 <td style="text-align: left;"><strong>V1.3.0</strong></td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/STM32L1xx_HAL_Driver/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"><strong>BSP STM32L152D_EVAL</strong></td>
 <td style="text-align: left;"><strong>V2.0.6</strong></td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/STM32L152D_EVAL/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;"><strong>BSP STM32L152C-Discovery</strong></td>
 <td style="text-align: left;"><strong>V1.0.3</strong></td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/STM32L152C-Discovery/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"><strong>BSP STM32L100C-Discovery</strong></td>
 <td style="text-align: left;"><strong>V1.0.3</strong></td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/STM32L100C-Discovery/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;"><strong>BSP STM32L1xx_Nucleo</strong></td>
 <td style="text-align: left;"><strong>V1.1.1</strong></td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/STM32L1xx_Nucleo/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">BSP Adafruit Shield</td>
 <td style="text-align: left;">V2.0.1</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Adafruit_Shield/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">BSP Common</td>
 <td style="text-align: left;">V4.0.1</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/Common/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">BSP cs43l22</td>
 <td style="text-align: left;">V2.0.2</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/cs43l22/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">BSP hx8347d</td>
 <td style="text-align: left;">V1.1.1</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/hx8347d/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">BSP ili9325</td>
 <td style="text-align: left;">V1.2.2</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/ili9325/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">BSP ili9320</td>
 <td style="text-align: left;">V1.2.2</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/ili9320/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">BSP spfd5408</td>
 <td style="text-align: left;">V1.1.1</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/spfd5408/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">BSP stlm75</td>
 <td style="text-align: left;">V1.0.1</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/stlm75/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">BSP st7735</td>
 <td style="text-align: left;">V1.1.1</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/st7735/Release_Notes.html">release notes</a></td>
 </tr>
 </tbody>
@@ -1843,7 +1929,6 @@
 <tr class="header">
 <th style="text-align: left;">Name</th>
 <th style="text-align: left;">Version</th>
-<th style="text-align: left;">License</th>
 <th style="text-align: left;">Release note</th>
 </tr>
 </thead>
@@ -1851,43 +1936,36 @@
 <tr class="odd">
 <td style="text-align: left;">STM32 USB Device Library</td>
 <td style="text-align: left;">V2.4.2</td>
-<td style="text-align: left;"><a href="http://www.st.com/SLA0044">SLA0044</a></td>
 <td style="text-align: left;"><a href="Middlewares/ST/STM32_USB_Device_Library/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">STM32 TouchSensing Library</td>
 <td style="text-align: left;">V2.1.1</td>
-<td style="text-align: left;"><a href="http://www.st.com/SLA0044">SLA0044</a></td>
 <td style="text-align: left;"><a href="Middlewares/ST/STM32_TouchSensing_Library/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">FatFS</td>
 <td style="text-align: left;">R0.11</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Middlewares/Third_Party/FatFs/src/00history.txt">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"></td>
 <td style="text-align: left;">ST modified 20150508</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Middlewares/Third_Party/FatFs/src/st_readme.txt">release notes ST</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;"><strong>FreeRTOS</strong></td>
 <td style="text-align: left;"><strong>V9.0.0</strong></td>
-<td style="text-align: left;"><a href="Middlewares/Third_Party/FreeRTOS/License/license.txt">MIT</a></td>
 <td style="text-align: left;"><a href="Middlewares/Third_Party/FreeRTOS/Source/readme.txt">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"></td>
 <td style="text-align: left;"><strong>ST modified 20170303</strong></td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Middlewares/Third_Party/FreeRTOS/Source/st_readme.txt">release notes ST</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;"><strong>STemWin</strong></td>
 <td style="text-align: left;"><strong>STemWinLibrary 5.32</strong></td>
-<td style="text-align: left;"><a href="http://www.st.com/SLA0044">SLA0044</a></td>
 <td style="text-align: left;"><a href="Middlewares/ST/STemWin/Release_Notes.html">release notes</a></td>
 </tr>
 </tbody>
@@ -1898,7 +1976,6 @@
 <tr class="header">
 <th style="text-align: left;">Name</th>
 <th style="text-align: left;">Version</th>
-<th style="text-align: left;">License</th>
 <th style="text-align: center;">Release note</th>
 </tr>
 </thead>
@@ -1906,26 +1983,23 @@
 <tr class="odd">
 <td style="text-align: left;">CPU</td>
 <td style="text-align: left;">V1.1.0</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: center;"><a href="Utilities/CPU/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Fonts</td>
 <td style="text-align: left;">V1.0.0</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: center;"><a href="Utilities/Fonts/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Log</td>
 <td style="text-align: left;">V1.0.0</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: center;"><a href="Utilities/Log/Release_Notes.html">release notes</a></td>
 </tr>
 </tbody>
 </table>
 <p><br />
 </p>
-<h2 id="development-toolchains-and-compilers-7">Development Toolchains and Compilers</h2>
+<h2 id="development-toolchains-and-compilers-8">Development Toolchains and Compilers</h2>
 <ul>
 <li>IAR Embedded Workbench for ARM (EWARM) toolchain V7.80.4 + ST-LINK</li>
 <li>RealView Microcontroller Development Kit (MDK-ARM) toolchain V5.23 + ST-LINK</li>
@@ -1958,17 +2032,17 @@
 <div class="collapse">
 <input type="checkbox" id="collapse-section7" aria-hidden="true"> <label for="collapse-section7" aria-hidden="true">V1.6.0 / 01-July-2016</label>
 <div>
-<h2 id="main-changes-8">Main Changes</h2>
+<h2 id="main-changes-9">Main Changes</h2>
 <h3 id="maintenance-release-2">Maintenance release</h3>
 <ul>
-<li>First official release introducing the STM32Cube LL (Low Layer) APIs for the STM32L1xx serie :
+<li>First official release introducing the STM32Cube LL (Low Layer) APIs for the STM32L1xx series :
 <ul>
 <li>Low Layer drivers APIs allow performance and memory footprint optimization, with register access level programming</li>
 </ul></li>
 </ul>
 <h2 id="contents-8">Contents</h2>
 <ul>
-<li><p><strong>CMSIS Device</strong> updates</p>
+<li><strong>CMSIS Device</strong> updates
 <ul>
 <li>Maintenance release to fix known defects</li>
 <li>Add macros _Pos and _Msk for each constants
@@ -1986,7 +2060,7 @@
 </ul></li>
 <li>Refer to <a href="Drivers/CMSIS/Device/ST/STM32L1xx/Release_Notes.html">release notes</a> for further details</li>
 </ul></li>
-<li><p><strong>HAL / LL Drivers</strong> updates</p>
+<li><strong>HAL / LL Drivers</strong> updates
 <ul>
 <li>Maintenance release to fix known defects.</li>
 <li>Low Layer drivers APIs provide register level programming: they require deep knowledge of peripherals described in STM32L1xx Reference Manual.</li>
@@ -2006,7 +2080,6 @@
 <tr class="header">
 <th>Name</th>
 <th style="text-align: left;">Version</th>
-<th style="text-align: left;">License</th>
 <th style="text-align: left;">Release notes</th>
 </tr>
 </thead>
@@ -2014,14 +2087,13 @@
 <tr class="odd">
 <td>Projects</td>
 <td style="text-align: left;">see Projects Release note for details</td>
-<td style="text-align: left;">see Projects Release note for details</td>
 <td style="text-align: left;"><a href="Projects/Release_Notes.html">release notes</a></td>
 </tr>
 </tbody>
 </table>
 <p><br />
 </p>
-<h2 id="components-8">Components</h2>
+<h2 id="components-9">Components</h2>
 <p>Note: in the tables below, components in <span style="font-weight: bold;">bold</span> have changed since previous release</p>
 <table>
 <caption><strong>Drivers</strong></caption>
@@ -2029,105 +2101,88 @@
 <tr class="header">
 <th style="text-align: left;">Name</th>
 <th style="text-align: left;">Version</th>
-<th style="text-align: left;">License</th>
 <th style="text-align: left;">Release note</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">Cortex-M CMSIS</td>
+<td style="text-align: left;">CMSIS</td>
 <td style="text-align: left;">V4.5</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/CMSIS/index.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"><strong>STM32L1xx CMSIS</strong></td>
 <td style="text-align: left;"><strong>V2.2.0</strong></td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/CMSIS/Device/ST/STM32L1xx/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;"><strong>STM32L1xx HAL</strong></td>
 <td style="text-align: left;"><strong>V1.2.0</strong></td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/STM32L1xx_HAL_Driver/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">BSP STM32L152D_EVAL</td>
 <td style="text-align: left;">V2.0.5</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/STM32L152D_EVAL/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">BSP STM32L152C-Discovery</td>
 <td style="text-align: left;">V1.0.2</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/STM32L152C-Discovery/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">BSP STM32L100C-Discovery</td>
 <td style="text-align: left;">V1.0.2</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/STM32L100C-Discovery/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">BSP STM32L1xx_Nucleo</td>
 <td style="text-align: left;">V1.1.0</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/STM32L1xx_Nucleo/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">BSP Adafruit Shield</td>
 <td style="text-align: left;">V2.0.1</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Adafruit_Shield/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">BSP Common</td>
 <td style="text-align: left;">V4.0.1</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/Common/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">BSP cs43l22</td>
 <td style="text-align: left;">V2.0.2</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/cs43l22/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">BSP hx8347d</td>
 <td style="text-align: left;">V1.1.1</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/hx8347d/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">BSP ili9325</td>
 <td style="text-align: left;">V1.2.2</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/ili9325/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">BSP ili9320</td>
 <td style="text-align: left;">V1.2.2</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/ili9320/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">BSP spfd5408</td>
 <td style="text-align: left;">V1.1.1</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/spfd5408/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">BSP stlm75</td>
 <td style="text-align: left;">V1.0.1</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/stlm75/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">BSP st7735</td>
 <td style="text-align: left;">V1.1.1</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/st7735/Release_Notes.html">release notes</a></td>
 </tr>
 </tbody>
@@ -2138,7 +2193,6 @@
 <tr class="header">
 <th style="text-align: left;">Name</th>
 <th style="text-align: left;">Version</th>
-<th style="text-align: left;">License</th>
 <th style="text-align: left;">Release note</th>
 </tr>
 </thead>
@@ -2146,43 +2200,36 @@
 <tr class="odd">
 <td style="text-align: left;">STM32 USB Device Library</td>
 <td style="text-align: left;">V2.4.2</td>
-<td style="text-align: left;"><a href="http://www.st.com/SLA0044">SLA0044</a></td>
 <td style="text-align: left;"><a href="Middlewares/ST/STM32_USB_Device_Library/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">STM32 TouchSensing Library</td>
 <td style="text-align: left;">V2.1.1</td>
-<td style="text-align: left;"><a href="http://www.st.com/SLA0044">SLA0044</a></td>
 <td style="text-align: left;"><a href="Middlewares/ST/STM32_TouchSensing_Library/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">FatFS</td>
 <td style="text-align: left;">R0.11</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Middlewares/Third_Party/FatFs/src/00history.txt">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"></td>
 <td style="text-align: left;">ST modified 20150508</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Middlewares/Third_Party/FatFs/src/st_readme.txt">release notes ST</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">FreeRTOS</td>
 <td style="text-align: left;">V8.2.3</td>
-<td style="text-align: left;"><a href="Middlewares/Third_Party/FreeRTOS/License/license.txt">MIT</a></td>
 <td style="text-align: left;"><a href="Middlewares/Third_Party/FreeRTOS/Source/readme.txt">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"></td>
 <td style="text-align: left;">ST modified 20160122</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Middlewares/Third_Party/FreeRTOS/Source/st_readme.txt">release notes ST</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">STemWin</td>
 <td style="text-align: left;">STemWinLibrary 5.32</td>
-<td style="text-align: left;"><a href="http://www.st.com/SLA0044">SLA0044</a></td>
 <td style="text-align: left;"><a href="Middlewares/ST/STemWin/Release_Notes.html">release notes</a></td>
 </tr>
 </tbody>
@@ -2193,7 +2240,6 @@
 <tr class="header">
 <th style="text-align: left;">Name</th>
 <th style="text-align: left;">Version</th>
-<th style="text-align: left;">License</th>
 <th style="text-align: center;">Release note</th>
 </tr>
 </thead>
@@ -2201,26 +2247,23 @@
 <tr class="odd">
 <td style="text-align: left;">CPU</td>
 <td style="text-align: left;">V1.1.0</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: center;"><a href="Utilities/CPU/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Fonts</td>
 <td style="text-align: left;">V1.0.0</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: center;"><a href="Utilities/Fonts/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Log</td>
 <td style="text-align: left;">V1.0.0</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: center;"><a href="Utilities/Log/Release_Notes.html">release notes</a></td>
 </tr>
 </tbody>
 </table>
 <p><br />
 </p>
-<h2 id="development-toolchains-and-compilers-8">Development Toolchains and Compilers</h2>
+<h2 id="development-toolchains-and-compilers-9">Development Toolchains and Compilers</h2>
 <ul>
 <li>IAR Embedded Workbench for ARM (EWARM) toolchain V7.60.1 + ST-LINK</li>
 <li>RealView Microcontroller Development Kit (MDK-ARM) toolchain V5.20 + ST-LINK</li>
@@ -2253,16 +2296,16 @@
 <div class="collapse">
 <input type="checkbox" id="collapse-section6" aria-hidden="true"> <label for="collapse-section6" aria-hidden="true">V1.5.0 / 04-March-2016</label>
 <div>
-<h2 id="main-changes-9">Main Changes</h2>
+<h2 id="main-changes-10">Main Changes</h2>
 <h3 id="maintenance-release-3">Maintenance release</h3>
 <h2 id="contents-9">Contents</h2>
 <ul>
-<li><p><strong>CMSIS Device</strong> updates</p>
+<li><strong>CMSIS Device</strong> updates
 <ul>
 <li>Update CMSIS device description files according to latest version of HAL/LL drivers</li>
 <li>Refer to <a href="Drivers/CMSIS/Device/ST/STM32L1xx/Release_Notes.html">release notes</a> for further details</li>
 </ul></li>
-<li><p><strong>HAL / LL Drivers</strong> updates</p>
+<li><strong>HAL / LL Drivers</strong> updates
 <ul>
 <li>Fix known defects and add several enhancements implementation</li>
 <li>Split aAPBAHBPrescTable into aAHBPrescTable and aAPBPrescTable</li>
@@ -2271,14 +2314,14 @@
 <li>Optimize HAL_RCC_ClockConfig</li>
 <li>Refer to <a href="Drivers/STM32L1xx_HAL_Driver/Release_Notes.html">release notes</a> for further details</li>
 </ul></li>
-<li><p><strong>Middlewares</strong> updates</p>
+<li><strong>Middlewares</strong> updates
 <ul>
 <li>STM32 USB Device Library
 <ul>
 <li>usbd_cdc.c: change #include “USBD_CDC.h” by #include “usbd_cdc.h”</li>
 </ul></li>
 </ul></li>
-<li><p><strong>BSP Drivers</strong> updates</p>
+<li><strong>BSP Drivers</strong> updates
 <ul>
 <li>STM32L1xx-Nucleo
 <ul>
@@ -2292,8 +2335,8 @@
 <li><p><strong>Projects</strong> updates</p>
 <ul>
 <li><p>The STM32CubeL1 Firmware package comes with a rich set of examples running on STMicroelectronics boards, organized by board and provided with preconfigured projects for the main supported toolchains. The exhaustive list of projects is provided in this table (<a href="Projects/STM32CubeProjectsList.html">STM32CubeProjectsList.html</a>).</p></li>
-<li><p>Update of FW projects following changes in latest version of HAL/LL and Middlewares</p></li>
-<li><p>The applications and demonstrations now use the “Ultimate Liberty” license instead of “Liberty” license</p></li>
+<li>Update of FW projects following changes in latest version of HAL/LL and Middlewares</li>
+<li>The applications and demonstrations now use the “Ultimate Liberty” license instead of “Liberty” license</li>
 <li><p>Update some include path to be compatible with GNU/Linux-based platform</p></li>
 </ul></li>
 </ul>
@@ -2303,7 +2346,6 @@
 <tr class="header">
 <th>Name</th>
 <th style="text-align: left;">Version</th>
-<th style="text-align: left;">License</th>
 <th style="text-align: left;">Release notes</th>
 </tr>
 </thead>
@@ -2311,14 +2353,13 @@
 <tr class="odd">
 <td>Projects</td>
 <td style="text-align: left;">see Projects Release note for details</td>
-<td style="text-align: left;">see Projects Release note for details</td>
 <td style="text-align: left;"><a href="Projects/Release_Notes.html">release notes</a></td>
 </tr>
 </tbody>
 </table>
 <p><br />
 </p>
-<h2 id="components-9">Components</h2>
+<h2 id="components-10">Components</h2>
 <p>Note: in the tables below, components in <span style="font-weight: bold;">bold</span> have changed since previous release</p>
 <table>
 <caption><strong>Drivers</strong></caption>
@@ -2326,105 +2367,88 @@
 <tr class="header">
 <th style="text-align: left;">Name</th>
 <th style="text-align: left;">Version</th>
-<th style="text-align: left;">License</th>
 <th style="text-align: left;">Release note</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;"><strong>Cortex-M CMSIS</strong></td>
+<td style="text-align: left;"><strong>CMSIS</strong></td>
 <td style="text-align: left;"><strong>V4.5</strong></td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/CMSIS/index.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"><strong>STM32L1xx CMSIS</strong></td>
 <td style="text-align: left;"><strong>V2.1.3</strong></td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/CMSIS/Device/ST/STM32L1xx/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;"><strong>STM32L1xx HAL</strong></td>
 <td style="text-align: left;"><strong>V1.1.3</strong></td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/STM32L1xx_HAL_Driver/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"><strong>BSP STM32L152D_EVAL</strong></td>
 <td style="text-align: left;"><strong>V2.0.5</strong></td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/STM32L152D_EVAL/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">BSP STM32L152C-Discovery</td>
 <td style="text-align: left;">V1.0.2</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/STM32L152C-Discovery/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">BSP STM32L100C-Discovery</td>
 <td style="text-align: left;">V1.0.2</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/STM32L100C-Discovery/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;"><strong>BSP STM32L1xx_Nucleo</strong></td>
 <td style="text-align: left;"><strong>V1.1.0</strong></td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/STM32L1xx_Nucleo/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"><strong>BSP Adafruit Shield</strong></td>
 <td style="text-align: left;"><strong>V2.0.1</strong></td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Adafruit_Shield/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;"><strong>BSP Common</strong></td>
 <td style="text-align: left;"><strong>V4.0.1</strong></td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/Common/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"><strong>BSP cs43l22</strong></td>
 <td style="text-align: left;"><strong>V2.0.2</strong></td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/cs43l22/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">BSP hx8347d</td>
 <td style="text-align: left;">V1.1.1</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/hx8347d/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"><strong>BSP ili9325</strong></td>
 <td style="text-align: left;"><strong>V1.2.2</strong></td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/ili9325/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;"><strong>BSP ili9320</strong></td>
 <td style="text-align: left;"><strong>V1.2.2</strong></td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/ili9320/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">BSP spfd5408</td>
 <td style="text-align: left;">V1.1.1</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/spfd5408/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">BSP stlm75</td>
 <td style="text-align: left;">V1.0.1</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/stlm75/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">BSP st7735</td>
 <td style="text-align: left;">V1.1.1</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/st7735/Release_Notes.html">release notes</a></td>
 </tr>
 </tbody>
@@ -2435,7 +2459,6 @@
 <tr class="header">
 <th style="text-align: left;">Name</th>
 <th style="text-align: left;">Version</th>
-<th style="text-align: left;">License</th>
 <th style="text-align: left;">Release note</th>
 </tr>
 </thead>
@@ -2443,43 +2466,36 @@
 <tr class="odd">
 <td style="text-align: left;"><strong>STM32 USB Device Library</strong></td>
 <td style="text-align: left;"><strong>V2.4.2</strong></td>
-<td style="text-align: left;"><a href="http://www.st.com/SLA0044">SLA0044</a></td>
 <td style="text-align: left;"><a href="Middlewares/ST/STM32_USB_Device_Library/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">STM32 TouchSensing Library</td>
 <td style="text-align: left;">V2.1.1</td>
-<td style="text-align: left;"><a href="http://www.st.com/SLA0044">SLA0044</a></td>
 <td style="text-align: left;"><a href="Middlewares/ST/STM32_TouchSensing_Library/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">FatFS</td>
 <td style="text-align: left;">R0.11</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Middlewares/Third_Party/FatFs/src/00history.txt">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"></td>
 <td style="text-align: left;">ST modified 20150508</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Middlewares/Third_Party/FatFs/src/st_readme.txt">release notes ST</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;"><strong>FreeRTOS</strong></td>
 <td style="text-align: left;"><strong>V8.2.3</strong></td>
-<td style="text-align: left;"><a href="Middlewares/Third_Party/FreeRTOS/License/license.txt">MIT</a></td>
 <td style="text-align: left;"><a href="Middlewares/Third_Party/FreeRTOS/Source/readme.txt">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"></td>
 <td style="text-align: left;"><strong>ST modified 20160122</strong></td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Middlewares/Third_Party/FreeRTOS/Source/st_readme.txt">release notes ST</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">STemWin</td>
 <td style="text-align: left;">STemWinLibrary 5.32</td>
-<td style="text-align: left;"><a href="http://www.st.com/SLA0044">SLA0044</a></td>
 <td style="text-align: left;"><a href="Middlewares/ST/STemWin/Release_Notes.html">release notes</a></td>
 </tr>
 </tbody>
@@ -2490,7 +2506,6 @@
 <tr class="header">
 <th style="text-align: left;">Name</th>
 <th style="text-align: left;">Version</th>
-<th style="text-align: left;">License</th>
 <th style="text-align: center;">Release note</th>
 </tr>
 </thead>
@@ -2498,26 +2513,23 @@
 <tr class="odd">
 <td style="text-align: left;">CPU</td>
 <td style="text-align: left;">V1.1.0</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: center;"><a href="Utilities/CPU/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Fonts</td>
 <td style="text-align: left;">V1.0.0</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: center;"><a href="Utilities/Fonts/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Log</td>
 <td style="text-align: left;">V1.0.0</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: center;"><a href="Utilities/Log/Release_Notes.html">release notes</a></td>
 </tr>
 </tbody>
 </table>
 <p><br />
 </p>
-<h2 id="development-toolchains-and-compilers-9">Development Toolchains and Compilers</h2>
+<h2 id="development-toolchains-and-compilers-10">Development Toolchains and Compilers</h2>
 <ul>
 <li>IAR Embedded Workbench for ARM (EWARM) toolchain V7.20 + ST-LINK</li>
 <li>RealView Microcontroller Development Kit (MDK-ARM) toolchain V5.17 + ST-LINK</li>
@@ -2550,7 +2562,7 @@
 <div class="collapse">
 <input type="checkbox" id="collapse-section5" aria-hidden="true"> <label for="collapse-section5" aria-hidden="true">V1.4.0 / 09-October-2015</label>
 <div>
-<h2 id="main-changes-10">Main Changes</h2>
+<h2 id="main-changes-11">Main Changes</h2>
 <h3 id="maintenance-release-4">Maintenance release</h3>
 <ul>
 <li>Fix known defects and enhancements implementation</li>
@@ -2558,7 +2570,7 @@
 </ul>
 <h2 id="contents-10">Contents</h2>
 <ul>
-<li><p><strong>CMSIS</strong> updates</p>
+<li><strong>CMSIS</strong> updates
 <ul>
 <li>CMSIS-Core V4.10
 <ul>
@@ -2580,12 +2592,12 @@
 </ul></li>
 <li>CMSIS-RTOS V1.02 (unchanged)</li>
 </ul></li>
-<li><p><strong>HAL / LL Drivers</strong> updates</p>
+<li><strong>HAL / LL Drivers</strong> updates
 <ul>
 <li>Fix known defects and add several enhancements implementation</li>
 <li>Refer to <a href="Drivers/STM32L1xx_HAL_Driver/Release_Notes.html">release notes</a> for further details</li>
 </ul></li>
-<li><p><strong>Middlewares</strong> updates</p>
+<li><strong>Middlewares</strong> updates
 <ul>
 <li>STM32 USB Device Library
 <ul>
@@ -2610,8 +2622,8 @@
 <li><p><strong>Projects</strong> updates</p>
 <ul>
 <li><p>The STM32CubeL1 Firmware package comes with a rich set of examples running on STMicroelectronics boards, organized by board and provided with preconfigured projects for the main supported toolchains. The exhaustive list of projects is provided in this table (<a href="Projects/STM32CubeProjectsList.html">STM32CubeProjectsList.html</a>).</p></li>
-<li><p>Update of FW projects following changes in latest version of HAL/LL and Middlewares</p></li>
-<li><p>Adding new projects to introduce the FreeRTOS V8.2.1</p>
+<li>Update of FW projects following changes in latest version of HAL/LL and Middlewares</li>
+<li>Adding new projects to introduce the FreeRTOS V8.2.1
 <ul>
 <li>FreeRTOS_SignalFromISR (thread signaling from an interrupt)</li>
 <li>FreeRTOS_Signal (thread signaling)</li>
@@ -2625,7 +2637,6 @@
 <tr class="header">
 <th>Name</th>
 <th style="text-align: left;">Version</th>
-<th style="text-align: left;">License</th>
 <th style="text-align: left;">Release notes</th>
 </tr>
 </thead>
@@ -2633,14 +2644,13 @@
 <tr class="odd">
 <td>Projects</td>
 <td style="text-align: left;">see Projects Release note for details</td>
-<td style="text-align: left;">see Projects Release note for details</td>
 <td style="text-align: left;"><a href="Projects/Release_Notes.html">release notes</a></td>
 </tr>
 </tbody>
 </table>
 <p><br />
 </p>
-<h2 id="components-10">Components</h2>
+<h2 id="components-11">Components</h2>
 <p>Note: in the tables below, components in <span style="font-weight: bold;">bold</span> have changed since previous release</p>
 <table>
 <caption><strong>Drivers</strong></caption>
@@ -2648,105 +2658,88 @@
 <tr class="header">
 <th style="text-align: left;">Name</th>
 <th style="text-align: left;">Version</th>
-<th style="text-align: left;">License</th>
 <th style="text-align: left;">Release note</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;"><strong>Cortex-M CMSIS</strong></td>
+<td style="text-align: left;"><strong>CMSIS</strong></td>
 <td style="text-align: left;"><strong>V4.3</strong></td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/CMSIS/index.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"><strong>STM32L1xx CMSIS</strong></td>
 <td style="text-align: left;"><strong>V2.1.2</strong></td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/CMSIS/Device/ST/STM32L1xx/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;"><strong>STM32L1xx HAL</strong></td>
 <td style="text-align: left;"><strong>V1.1.2</strong></td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/STM32L1xx_HAL_Driver/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"><strong>BSP STM32L152D_EVAL</strong></td>
 <td style="text-align: left;"><strong>V2.0.3</strong></td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/STM32L152D_EVAL/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;"><strong>BSP STM32L152C-Discovery</strong></td>
 <td style="text-align: left;"><strong>V1.0.2</strong></td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/STM32L152C-Discovery/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"><strong>BSP STM32L100C-Discovery</strong></td>
 <td style="text-align: left;"><strong>V1.0.2</strong></td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/STM32L100C-Discovery/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;"><strong>BSP STM32L1xx_Nucleo</strong></td>
 <td style="text-align: left;"><strong>V1.0.2</strong></td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/STM32L1xx_Nucleo/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">BSP Adafruit Shield</td>
 <td style="text-align: left;">V1.1.1</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Adafruit_Shield/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">BSP Common</td>
 <td style="text-align: left;">V1.2.1</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/Common/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">BSP cs43l22</td>
 <td style="text-align: left;">V1.0.1</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/cs43l22/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">BSP hx8347d</td>
 <td style="text-align: left;">V1.1.1</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/hx8347d/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">BSP ili9325</td>
 <td style="text-align: left;">V1.1.2</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/ili9325/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">BSP ili9320</td>
 <td style="text-align: left;">V1.1.2</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/ili9320/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">BSP spfd5408</td>
 <td style="text-align: left;">V1.1.1</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/spfd5408/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">BSP stlm75</td>
 <td style="text-align: left;">V1.0.1</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/stlm75/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">BSP st7735</td>
 <td style="text-align: left;">V1.1.1</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/st7735/Release_Notes.html">release notes</a></td>
 </tr>
 </tbody>
@@ -2757,7 +2750,6 @@
 <tr class="header">
 <th style="text-align: left;">Name</th>
 <th style="text-align: left;">Version</th>
-<th style="text-align: left;">License</th>
 <th style="text-align: left;">Release note</th>
 </tr>
 </thead>
@@ -2765,43 +2757,36 @@
 <tr class="odd">
 <td style="text-align: left;"><strong>STM32 USB Device Library</strong></td>
 <td style="text-align: left;"><strong>V2.4.1</strong></td>
-<td style="text-align: left;"><a href="http://www.st.com/SLA0044">SLA0044</a></td>
 <td style="text-align: left;"><a href="Middlewares/ST/STM32_USB_Device_Library/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">STM32 TouchSensing Library</td>
 <td style="text-align: left;">V2.1.1</td>
-<td style="text-align: left;"><a href="http://www.st.com/SLA0044">SLA0044</a></td>
 <td style="text-align: left;"><a href="Middlewares/ST/STM32_TouchSensing_Library/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;"><strong>FatFS</strong></td>
 <td style="text-align: left;"><strong>R0.11</strong></td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Middlewares/Third_Party/FatFs/src/00history.txt">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"></td>
 <td style="text-align: left;"><strong>ST modified 20150508</strong></td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Middlewares/Third_Party/FatFs/src/st_readme.txt">release notes ST</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;"><strong>FreeRTOS</strong></td>
 <td style="text-align: left;"><strong>V8.2.1</strong></td>
-<td style="text-align: left;"><a href="Middlewares/Third_Party/FreeRTOS/License/license.txt">MIT</a></td>
 <td style="text-align: left;"><a href="Middlewares/Third_Party/FreeRTOS/Source/readme.txt">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"></td>
 <td style="text-align: left;"><strong>ST modified 20150327</strong></td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Middlewares/Third_Party/FreeRTOS/Source/st_readme.txt">release notes ST</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;"><strong>STemWin</strong></td>
 <td style="text-align: left;"><strong>STemWinLibrary 5.28</strong></td>
-<td style="text-align: left;"><a href="http://www.st.com/SLA0044">SLA0044</a></td>
 <td style="text-align: left;"><a href="Middlewares/ST/STemWin/Release_Notes.html">release notes</a></td>
 </tr>
 </tbody>
@@ -2812,7 +2797,6 @@
 <tr class="header">
 <th style="text-align: left;">Name</th>
 <th style="text-align: left;">Version</th>
-<th style="text-align: left;">License</th>
 <th style="text-align: center;">Release note</th>
 </tr>
 </thead>
@@ -2820,26 +2804,23 @@
 <tr class="odd">
 <td style="text-align: left;">CPU</td>
 <td style="text-align: left;">V1.1.0</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: center;"><a href="Utilities/CPU/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Fonts</td>
 <td style="text-align: left;">V1.0.0</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: center;"><a href="Utilities/Fonts/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Log</td>
 <td style="text-align: left;">V1.0.0</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: center;"><a href="Utilities/Log/Release_Notes.html">release notes</a></td>
 </tr>
 </tbody>
 </table>
 <p><br />
 </p>
-<h2 id="development-toolchains-and-compilers-10">Development Toolchains and Compilers</h2>
+<h2 id="development-toolchains-and-compilers-11">Development Toolchains and Compilers</h2>
 <ul>
 <li>IAR Embedded Workbench for ARM (EWARM) toolchain V7.20 + ST-LINK</li>
 <li>RealView Microcontroller Development Kit (MDK-ARM) toolchain V5.16 + ST-LINK</li>
@@ -2872,7 +2853,7 @@
 <div class="collapse">
 <input type="checkbox" id="collapse-section4" aria-hidden="true"> <label for="collapse-section4" aria-hidden="true">V1.3.0 / 03-July-2015</label>
 <div>
-<h2 id="main-changes-11">Main Changes</h2>
+<h2 id="main-changes-12">Main Changes</h2>
 <h3 id="maintenance-release-5">Maintenance release</h3>
 <ul>
 <li>Add support of <strong>System Workbench for STM32</strong> (SW4STM32) toolchain</li>
@@ -2891,7 +2872,6 @@
 <tr class="header">
 <th>Name</th>
 <th style="text-align: left;">Version</th>
-<th style="text-align: left;">License</th>
 <th style="text-align: left;">Release notes</th>
 </tr>
 </thead>
@@ -2899,14 +2879,13 @@
 <tr class="odd">
 <td>Projects</td>
 <td style="text-align: left;">see Projects Release note for details</td>
-<td style="text-align: left;">see Projects Release note for details</td>
 <td style="text-align: left;"><a href="Projects/Release_Notes.html">release notes</a></td>
 </tr>
 </tbody>
 </table>
 <p><br />
 </p>
-<h2 id="components-11">Components</h2>
+<h2 id="components-12">Components</h2>
 <p>Note: in the tables below, components in <span style="font-weight: bold;">bold</span> have changed since previous release</p>
 <table>
 <caption><strong>Drivers</strong></caption>
@@ -2914,105 +2893,88 @@
 <tr class="header">
 <th style="text-align: left;">Name</th>
 <th style="text-align: left;">Version</th>
-<th style="text-align: left;">License</th>
 <th style="text-align: left;">Release note</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">Cortex-M CMSIS</td>
+<td style="text-align: left;">CMSIS</td>
 <td style="text-align: left;">V4.20</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/CMSIS/index.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">STM32L1xx CMSIS</td>
 <td style="text-align: left;">V2.1.1</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/CMSIS/Device/ST/STM32L1xx/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">STM32L1xx HAL</td>
 <td style="text-align: left;">V1.1.1</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/STM32L1xx_HAL_Driver/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">BSP STM32L152D_EVAL</td>
 <td style="text-align: left;">V2.0.2</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/STM32L152D_EVAL/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">BSP STM32L152C-Discovery</td>
 <td style="text-align: left;">V1.0.1</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/STM32L152C-Discovery/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">BSP STM32L100C-Discovery</td>
 <td style="text-align: left;">V1.0.1</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/STM32L100C-Discovery/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">BSP STM32L1xx_Nucleo</td>
 <td style="text-align: left;">V1.0.1</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/STM32L1xx_Nucleo/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">BSP Adafruit Shield</td>
 <td style="text-align: left;">V1.1.1</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Adafruit_Shield/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">BSP Common</td>
 <td style="text-align: left;">V1.2.1</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/Common/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">BSP cs43l22</td>
 <td style="text-align: left;">V1.0.1</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/cs43l22/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">BSP hx8347d</td>
 <td style="text-align: left;">V1.1.1</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/hx8347d/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">BSP ili9325</td>
 <td style="text-align: left;">V1.1.2</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/ili9325/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">BSP ili9320</td>
 <td style="text-align: left;">V1.1.2</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/ili9320/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">BSP spfd5408</td>
 <td style="text-align: left;">V1.1.1</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/spfd5408/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">BSP stlm75</td>
 <td style="text-align: left;">V1.0.1</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/stlm75/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">BSP st7735</td>
 <td style="text-align: left;">V1.1.1</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/st7735/Release_Notes.html">release notes</a></td>
 </tr>
 </tbody>
@@ -3023,7 +2985,6 @@
 <tr class="header">
 <th style="text-align: left;">Name</th>
 <th style="text-align: left;">Version</th>
-<th style="text-align: left;">License</th>
 <th style="text-align: left;">Release note</th>
 </tr>
 </thead>
@@ -3031,43 +2992,36 @@
 <tr class="odd">
 <td style="text-align: left;">STM32 USB Device Library</td>
 <td style="text-align: left;">V2.4.0</td>
-<td style="text-align: left;"><a href="http://www.st.com/SLA0044">SLA0044</a></td>
 <td style="text-align: left;"><a href="Middlewares/ST/STM32_USB_Device_Library/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">STM32 TouchSensing Library</td>
 <td style="text-align: left;">V2.1.1</td>
-<td style="text-align: left;"><a href="http://www.st.com/SLA0044">SLA0044</a></td>
 <td style="text-align: left;"><a href="Middlewares/ST/STM32_TouchSensing_Library/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">FatFS</td>
 <td style="text-align: left;">R0.10b</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Middlewares/Third_Party/FatFs/src/00history.txt">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"></td>
 <td style="text-align: left;">ST modified 20141120</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Middlewares/Third_Party/FatFs/src/st_readme.txt">release notes ST</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">FreeRTOS</td>
 <td style="text-align: left;">V8.1.2</td>
-<td style="text-align: left;"><a href="Middlewares/Third_Party/FreeRTOS/License/license.txt">MIT</a></td>
 <td style="text-align: left;"><a href="Middlewares/Third_Party/FreeRTOS/Source/readme.txt">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"></td>
 <td style="text-align: left;">ST modified 20141225</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Middlewares/Third_Party/FreeRTOS/Source/st_readme.txt">release notes ST</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">STemWin</td>
 <td style="text-align: left;">STemWinLibrary 5.26</td>
-<td style="text-align: left;"><a href="http://www.st.com/SLA0044">SLA0044</a></td>
 <td style="text-align: left;"><a href="Middlewares/ST/STemWin/Release_Notes.html">release notes</a></td>
 </tr>
 </tbody>
@@ -3078,7 +3032,6 @@
 <tr class="header">
 <th style="text-align: left;">Name</th>
 <th style="text-align: left;">Version</th>
-<th style="text-align: left;">License</th>
 <th style="text-align: center;">Release note</th>
 </tr>
 </thead>
@@ -3086,26 +3039,23 @@
 <tr class="odd">
 <td style="text-align: left;">CPU</td>
 <td style="text-align: left;">V1.1.0</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: center;"><a href="Utilities/CPU/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Fonts</td>
 <td style="text-align: left;">V1.0.0</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: center;"><a href="Utilities/Fonts/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Log</td>
 <td style="text-align: left;">V1.0.0</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: center;"><a href="Utilities/Log/Release_Notes.html">release notes</a></td>
 </tr>
 </tbody>
 </table>
 <p><br />
 </p>
-<h2 id="development-toolchains-and-compilers-11">Development Toolchains and Compilers</h2>
+<h2 id="development-toolchains-and-compilers-12">Development Toolchains and Compilers</h2>
 <ul>
 <li>IAR Embedded Workbench for ARM (EWARM) toolchain V7.20 + ST-LINK</li>
 <li>RealView Microcontroller Development Kit (MDK-ARM) toolchain V5.11 + ST-LINK
@@ -3142,14 +3092,14 @@
 <div class="collapse">
 <input type="checkbox" id="collapse-section3" aria-hidden="true"> <label for="collapse-section3" aria-hidden="true">V1.2.0 / 31-March-2015</label>
 <div>
-<h2 id="main-changes-12">Main Changes</h2>
+<h2 id="main-changes-13">Main Changes</h2>
 <h3 id="maintenance-release-6">Maintenance release</h3>
 <ul>
 <li>Fix known defects and several enhancements implementation</li>
 </ul>
 <h2 id="contents-12">Contents</h2>
 <ul>
-<li><p><strong>HAL / LL Drivers</strong> updates</p>
+<li><strong>HAL / LL Drivers</strong> updates
 <ul>
 <li>Update drivers to be C++ compliant</li>
 <li>Add interfaces to access MPU features (refer to stm32l1xx_hal_cortex.h)</li>
@@ -3170,7 +3120,7 @@
 </ul></li>
 <li>Refer to <a href="Drivers/STM32L1xx_HAL_Driver/Release_Notes.html">release notes</a> for further details</li>
 </ul></li>
-<li><p><strong>Middlewares</strong> updates</p>
+<li><strong>Middlewares</strong> updates
 <ul>
 <li>USB Device V2.4.0: backward compatible with previous used version V2.3.0</li>
 <li>STemWin V5.26: project based on previous version V5.24 need to be updated following the change in the binary name</li>
@@ -3178,7 +3128,7 @@
 <li>FatFs R0.10b: project based on previous version R0.10 need to update ffconf.h file (for more details please refer the associated release notes)</li>
 <li>FreeRTOS V8.1.2: project based on previous version V7.6.0 needs some update to work with version V8.1.2 (for more details please refer the associated release notes)</li>
 </ul></li>
-<li><p><strong>BSP Drivers</strong> updates</p>
+<li><strong>BSP Drivers</strong> updates
 <ul>
 <li>Align BSP drivers with version V1.1.0 of HAL peripheral drivers</li>
 </ul></li>
@@ -3194,7 +3144,6 @@
 <tr class="header">
 <th>Name</th>
 <th style="text-align: left;">Version</th>
-<th style="text-align: left;">License</th>
 <th style="text-align: left;">Release notes</th>
 </tr>
 </thead>
@@ -3202,14 +3151,13 @@
 <tr class="odd">
 <td>Projects</td>
 <td style="text-align: left;">see Projects Release note for details</td>
-<td style="text-align: left;">see Projects Release note for details</td>
 <td style="text-align: left;"><a href="Projects/Release_Notes.html">release notes</a></td>
 </tr>
 </tbody>
 </table>
 <p><br />
 </p>
-<h2 id="components-12">Components</h2>
+<h2 id="components-13">Components</h2>
 <p>Note: in the tables below, components in <span style="font-weight: bold;">bold</span> have changed since previous release</p>
 <table>
 <caption><strong>Drivers</strong></caption>
@@ -3217,105 +3165,88 @@
 <tr class="header">
 <th style="text-align: left;">Name</th>
 <th style="text-align: left;">Version</th>
-<th style="text-align: left;">License</th>
 <th style="text-align: left;">Release note</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;"><strong>Cortex-M CMSIS</strong></td>
+<td style="text-align: left;"><strong>CMSIS</strong></td>
 <td style="text-align: left;"><strong>V4.20</strong></td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/CMSIS/index.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"><strong>STM32L1xx CMSIS</strong></td>
 <td style="text-align: left;"><strong>V2.1.1</strong></td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/CMSIS/Device/ST/STM32L1xx/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;"><strong>STM32L1xx HAL</strong></td>
 <td style="text-align: left;"><strong>V1.1.1</strong></td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/STM32L1xx_HAL_Driver/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"><strong>BSP STM32L152D_EVAL</strong></td>
 <td style="text-align: left;"><strong>V2.0.2</strong></td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/STM32L152D_EVAL/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;"><strong>BSP STM32L152C-Discovery</strong></td>
 <td style="text-align: left;"><strong>V1.0.1</strong></td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/STM32L152C-Discovery/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"><strong>BSP STM32L100C-Discovery</strong></td>
 <td style="text-align: left;"><strong>V1.0.1</strong></td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/STM32L100C-Discovery/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;"><strong>BSP STM32L1xx_Nucleo</strong></td>
 <td style="text-align: left;"><strong>V1.0.1</strong></td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/STM32L1xx_Nucleo/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">BSP Adafruit Shield</td>
 <td style="text-align: left;">V1.1.1</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Adafruit_Shield/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">BSP Common</td>
 <td style="text-align: left;">V1.2.1</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/Common/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">BSP cs43l22</td>
 <td style="text-align: left;">V1.0.1</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/cs43l22/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">BSP hx8347d</td>
 <td style="text-align: left;">V1.1.1</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/hx8347d/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">BSP ili9325</td>
 <td style="text-align: left;">V1.1.2</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/ili9325/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">BSP ili9320</td>
 <td style="text-align: left;">V1.1.2</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/ili9320/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">BSP spfd5408</td>
 <td style="text-align: left;">V1.1.1</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/spfd5408/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">BSP stlm75</td>
 <td style="text-align: left;">V1.0.1</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/stlm75/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">BSP st7735</td>
 <td style="text-align: left;">V1.1.1</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/st7735/Release_Notes.html">release notes</a></td>
 </tr>
 </tbody>
@@ -3326,7 +3257,6 @@
 <tr class="header">
 <th style="text-align: left;">Name</th>
 <th style="text-align: left;">Version</th>
-<th style="text-align: left;">License</th>
 <th style="text-align: left;">Release note</th>
 </tr>
 </thead>
@@ -3334,43 +3264,36 @@
 <tr class="odd">
 <td style="text-align: left;"><strong>STM32 USB Device Library</strong></td>
 <td style="text-align: left;"><strong>V2.4.0</strong></td>
-<td style="text-align: left;"><a href="http://www.st.com/SLA0044">SLA0044</a></td>
 <td style="text-align: left;"><a href="Middlewares/ST/STM32_USB_Device_Library/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">STM32 TouchSensing Library</td>
 <td style="text-align: left;">V2.1.1</td>
-<td style="text-align: left;"><a href="http://www.st.com/SLA0044">SLA0044</a></td>
 <td style="text-align: left;"><a href="Middlewares/ST/STM32_TouchSensing_Library/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;"><strong>FatFS</strong></td>
 <td style="text-align: left;"><strong>R0.10b</strong></td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Middlewares/Third_Party/FatFs/src/00history.txt">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"></td>
 <td style="text-align: left;"><strong>ST modified 20141120</strong></td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Middlewares/Third_Party/FatFs/src/st_readme.txt">release notes ST</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;"><strong>FreeRTOS</strong></td>
 <td style="text-align: left;"><strong>V8.1.2</strong></td>
-<td style="text-align: left;"><a href="Middlewares/Third_Party/FreeRTOS/License/license.txt">MIT</a></td>
 <td style="text-align: left;"><a href="Middlewares/Third_Party/FreeRTOS/Source/readme.txt">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"></td>
 <td style="text-align: left;"><strong>ST modified 20141225</strong></td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Middlewares/Third_Party/FreeRTOS/Source/st_readme.txt">release notes ST</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;"><strong>STemWin</strong></td>
 <td style="text-align: left;"><strong>STemWinLibrary 5.26</strong></td>
-<td style="text-align: left;"><a href="http://www.st.com/SLA0044">SLA0044</a></td>
 <td style="text-align: left;"><a href="Middlewares/ST/STemWin/Release_Notes.html">release notes</a></td>
 </tr>
 </tbody>
@@ -3381,7 +3304,6 @@
 <tr class="header">
 <th style="text-align: left;">Name</th>
 <th style="text-align: left;">Version</th>
-<th style="text-align: left;">License</th>
 <th style="text-align: center;">Release note</th>
 </tr>
 </thead>
@@ -3389,26 +3311,23 @@
 <tr class="odd">
 <td style="text-align: left;"><strong>CPU</strong></td>
 <td style="text-align: left;"><strong>V1.1.0</strong></td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: center;"><a href="Utilities/CPU/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Fonts</td>
 <td style="text-align: left;">V1.0.0</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: center;"><a href="Utilities/Fonts/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Log</td>
 <td style="text-align: left;">V1.0.0</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: center;"><a href="Utilities/Log/Release_Notes.html">release notes</a></td>
 </tr>
 </tbody>
 </table>
 <p><br />
 </p>
-<h2 id="development-toolchains-and-compilers-12">Development Toolchains and Compilers</h2>
+<h2 id="development-toolchains-and-compilers-13">Development Toolchains and Compilers</h2>
 <ul>
 <li>IAR Embedded Workbench for ARM (EWARM) toolchain V7.20 + ST-LINK</li>
 <li>RealView Microcontroller Development Kit (MDK-ARM) toolchain V5.11 + ST-LINK
@@ -3443,7 +3362,7 @@
 <div class="collapse">
 <input type="checkbox" id="collapse-section2" aria-hidden="true"> <label for="collapse-section2" aria-hidden="true">V1.1.0 / 06-February-2015</label>
 <div>
-<h2 id="main-changes-13">Main Changes</h2>
+<h2 id="main-changes-14">Main Changes</h2>
 <h3 id="maintenance-release-7">Maintenance release</h3>
 <ul>
 <li><strong>Official release for new STM32L1xxxDX (eXtended) devices</strong></li>
@@ -3463,248 +3382,12 @@
 <tr class="header">
 <th>Name</th>
 <th style="text-align: left;">Version</th>
-<th style="text-align: left;">License</th>
 <th style="text-align: left;">Release notes</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td>Projects</td>
-<td style="text-align: left;">see Projects Release note for details</td>
-<td style="text-align: left;">see Projects Release note for details</td>
-<td style="text-align: left;"><a href="Projects/Release_Notes.html">release notes</a></td>
-</tr>
-</tbody>
-</table>
-<p><br />
-</p>
-<h2 id="components-13">Components</h2>
-<p>Note: in the tables below, components in <span style="font-weight: bold;">bold</span> have changed since previous release</p>
-<table>
-<caption><strong>Drivers</strong></caption>
-<thead>
-<tr class="header">
-<th style="text-align: left;">Name</th>
-<th style="text-align: left;">Version</th>
-<th style="text-align: left;">License</th>
-<th style="text-align: left;">Release note</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">Cortex-M CMSIS</td>
-<td style="text-align: left;">V3.20</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
-<td style="text-align: left;"><a href="Drivers/CMSIS/index.html">release notes</a></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">STM32L1xx CMSIS</td>
-<td style="text-align: left;">V2.1.0</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
-<td style="text-align: left;"><a href="Drivers/CMSIS/Device/ST/STM32L1xx/Release_Notes.html">release notes</a></td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">STM32L1xx HAL</td>
-<td style="text-align: left;">V1.1.0</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
-<td style="text-align: left;"><a href="Drivers/STM32L1xx_HAL_Driver/Release_Notes.html">release notes</a></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">BSP STM32L152D_EVAL</td>
-<td style="text-align: left;">V2.0.1</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
-<td style="text-align: left;"><a href="Drivers/BSP/STM32L152D_EVAL/Release_Notes.html">release notes</a></td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">BSP STM32L152C-Discovery</td>
-<td style="text-align: left;">V1.0.0</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
-<td style="text-align: left;"><a href="Drivers/BSP/STM32L152C-Discovery/Release_Notes.html">release notes</a></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">BSP STM32L100C-Discovery</td>
-<td style="text-align: left;">V1.0.0</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
-<td style="text-align: left;"><a href="Drivers/BSP/STM32L100C-Discovery/Release_Notes.html">release notes</a></td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">BSP STM32L1xx_Nucleo</td>
-<td style="text-align: left;">V1.0.0</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
-<td style="text-align: left;"><a href="Drivers/BSP/STM32L1xx_Nucleo/Release_Notes.html">release notes</a></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">BSP Adafruit Shield</td>
-<td style="text-align: left;">V1.1.1</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
-<td style="text-align: left;"><a href="Drivers/BSP/Adafruit_Shield/Release_Notes.html">release notes</a></td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">BSP Common</td>
-<td style="text-align: left;">V1.2.1</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
-<td style="text-align: left;"><a href="Drivers/BSP/Components/Common/Release_Notes.html">release notes</a></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">BSP cs43l22</td>
-<td style="text-align: left;">V1.0.1</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
-<td style="text-align: left;"><a href="Drivers/BSP/Components/cs43l22/Release_Notes.html">release notes</a></td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">BSP hx8347d</td>
-<td style="text-align: left;">V1.1.1</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
-<td style="text-align: left;"><a href="Drivers/BSP/Components/hx8347d/Release_Notes.html">release notes</a></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">BSP ili9325</td>
-<td style="text-align: left;">V1.1.2</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
-<td style="text-align: left;"><a href="Drivers/BSP/Components/ili9325/Release_Notes.html">release notes</a></td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">BSP ili9320</td>
-<td style="text-align: left;">V1.1.2</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
-<td style="text-align: left;"><a href="Drivers/BSP/Components/ili9320/Release_Notes.html">release notes</a></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">BSP spfd5408</td>
-<td style="text-align: left;">V1.1.1</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
-<td style="text-align: left;"><a href="Drivers/BSP/Components/spfd5408/Release_Notes.html">release notes</a></td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">BSP stlm75</td>
-<td style="text-align: left;">V1.0.1</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
-<td style="text-align: left;"><a href="Drivers/BSP/Components/stlm75/Release_Notes.html">release notes</a></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">BSP st7735</td>
-<td style="text-align: left;">V1.1.1</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
-<td style="text-align: left;"><a href="Drivers/BSP/Components/st7735/Release_Notes.html">release notes</a></td>
-</tr>
-</tbody>
-</table>
-<table>
-<caption><strong>Middlewares</strong></caption>
-<thead>
-<tr class="header">
-<th style="text-align: left;">Name</th>
-<th style="text-align: left;">Version</th>
-<th style="text-align: left;">License</th>
-<th style="text-align: left;">Release note</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">STM32 USB Device Library</td>
-<td style="text-align: left;">V2.2.0</td>
-<td style="text-align: left;"><a href="http://www.st.com/SLA0044">SLA0044</a></td>
-<td style="text-align: left;"><a href="Middlewares/ST/STM32_USB_Device_Library/Release_Notes.html">release notes</a></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">STM32 TouchSensing Library</td>
-<td style="text-align: left;">V2.1.1</td>
-<td style="text-align: left;"><a href="http://www.st.com/SLA0044">SLA0044</a></td>
-<td style="text-align: left;"><a href="Middlewares/ST/STM32_TouchSensing_Library/Release_Notes.html">release notes</a></td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">FatFS</td>
-<td style="text-align: left;">R0.10</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
-<td style="text-align: left;"><a href="Middlewares/Third_Party/FatFs/src/00history.txt">release notes</a></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;"></td>
-<td style="text-align: left;">ST modified 20140422</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
-<td style="text-align: left;"><a href="Middlewares/Third_Party/FatFs/src/st_readme.txt">release notes ST</a></td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">FreeRTOS</td>
-<td style="text-align: left;">V7.6.0</td>
-<td style="text-align: left;"><a href="Middlewares/Third_Party/FreeRTOS/License/license.txt">MIT</a></td>
-<td style="text-align: left;"><a href="Middlewares/Third_Party/FreeRTOS/Source/readme.txt">release notes</a></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;"></td>
-<td style="text-align: left;">ST modified 20140613</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
-<td style="text-align: left;"><a href="Middlewares/Third_Party/FreeRTOS/Source/st_readme.txt">release notes ST</a></td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">STemWin</td>
-<td style="text-align: left;">STemWinLibrary 5.24b</td>
-<td style="text-align: left;"><a href="http://www.st.com/SLA0044">SLA0044</a></td>
-<td style="text-align: left;"><a href="Middlewares/ST/STemWin/Release_Notes.html">release notes</a></td>
-</tr>
-</tbody>
-</table>
-<table>
-<caption><strong>Utilities</strong></caption>
-<thead>
-<tr class="header">
-<th style="text-align: left;">Name</th>
-<th style="text-align: left;">Version</th>
-<th style="text-align: left;">License</th>
-<th style="text-align: center;">Release note</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">CPU</td>
-<td style="text-align: left;">V1.0.0</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
-<td style="text-align: center;"><a href="Utilities/CPU/Release_Notes.html">release notes</a></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Fonts</td>
-<td style="text-align: left;">V1.0.0</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
-<td style="text-align: center;"><a href="Utilities/Fonts/Release_Notes.html">release notes</a></td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Log</td>
-<td style="text-align: left;">V1.0.0</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
-<td style="text-align: center;"><a href="Utilities/Log/Release_Notes.html">release notes</a></td>
-</tr>
-</tbody>
-</table>
-<p><br />
-</p>
-</div>
-</div>
-<div class="collapse">
-<input type="checkbox" id="collapse-section1" aria-hidden="true"> <label for="collapse-section1" aria-hidden="true">V1.0.0 / 05-September-2014</label>
-<div>
-<h2 id="main-changes-14">Main Changes</h2>
-<h3 id="first-official-release-of-stm32cubel1-stm32cube-for-stm32l1-series"><strong>First official release of STM32CubeL1 (STM32Cube for STM32L1 Series)</strong></h3>
-<h2 id="contents-14">Contents</h2>
-<ul>
-<li><p>Projects updates</p>
-<ul>
-<li>The STM32CubeL1 Firmware package comes with a rich set of examples running on STMicroelectronics boards, organized by board and provided with preconfigured projects for the main supported toolchains. The exhaustive list of projects is provided in this table (<a href="Projects/STM32CubeProjectsList.html">STM32CubeProjectsList.html</a>).</li>
-</ul></li>
-</ul>
-<table>
-<caption><strong>Projects</strong></caption>
-<thead>
-<tr class="header">
-<th>Name</th>
-<th style="text-align: left;">Version</th>
-<th style="text-align: left;">License</th>
-<th style="text-align: left;">Release notes</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Projects</td>
-<td style="text-align: left;">see Projects Release note for details</td>
 <td style="text-align: left;">see Projects Release note for details</td>
 <td style="text-align: left;"><a href="Projects/Release_Notes.html">release notes</a></td>
 </tr>
@@ -3720,105 +3403,88 @@
 <tr class="header">
 <th style="text-align: left;">Name</th>
 <th style="text-align: left;">Version</th>
-<th style="text-align: left;">License</th>
 <th style="text-align: left;">Release note</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">Cortex-M CMSIS</td>
+<td style="text-align: left;">CMSIS</td>
 <td style="text-align: left;">V3.20</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/CMSIS/index.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">STM32L1xx CMSIS</td>
-<td style="text-align: left;">V2.0.0</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
+<td style="text-align: left;">V2.1.0</td>
 <td style="text-align: left;"><a href="Drivers/CMSIS/Device/ST/STM32L1xx/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">STM32L1xx HAL</td>
-<td style="text-align: left;">V1.0.0</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
+<td style="text-align: left;">V1.1.0</td>
 <td style="text-align: left;"><a href="Drivers/STM32L1xx_HAL_Driver/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">BSP STM32L152D_EVAL</td>
-<td style="text-align: left;">V2.0.0</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
+<td style="text-align: left;">V2.0.1</td>
 <td style="text-align: left;"><a href="Drivers/BSP/STM32L152D_EVAL/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">BSP STM32L152C-Discovery</td>
 <td style="text-align: left;">V1.0.0</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/STM32L152C-Discovery/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">BSP STM32L100C-Discovery</td>
 <td style="text-align: left;">V1.0.0</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/STM32L100C-Discovery/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">BSP STM32L1xx_Nucleo</td>
 <td style="text-align: left;">V1.0.0</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Drivers/BSP/STM32L1xx_Nucleo/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">BSP Adafruit Shield</td>
-<td style="text-align: left;">V1.1.0</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
+<td style="text-align: left;">V1.1.1</td>
 <td style="text-align: left;"><a href="Drivers/BSP/Adafruit_Shield/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">BSP Common</td>
-<td style="text-align: left;">V1.2.0</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
+<td style="text-align: left;">V1.2.1</td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/Common/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">BSP cs43l22</td>
-<td style="text-align: left;">V1.0.0</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
+<td style="text-align: left;">V1.0.1</td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/cs43l22/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">BSP hx8347d</td>
-<td style="text-align: left;">V1.1.0</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
+<td style="text-align: left;">V1.1.1</td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/hx8347d/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">BSP ili9325</td>
-<td style="text-align: left;">V1.1.1</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
+<td style="text-align: left;">V1.1.2</td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/ili9325/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">BSP ili9320</td>
-<td style="text-align: left;">V1.1.1</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
+<td style="text-align: left;">V1.1.2</td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/ili9320/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">BSP spfd5408</td>
-<td style="text-align: left;">V1.1.0</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
+<td style="text-align: left;">V1.1.1</td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/spfd5408/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">BSP stlm75</td>
-<td style="text-align: left;">V1.0.0</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
+<td style="text-align: left;">V1.0.1</td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/stlm75/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">BSP st7735</td>
-<td style="text-align: left;">V1.0.0</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
+<td style="text-align: left;">V1.1.1</td>
 <td style="text-align: left;"><a href="Drivers/BSP/Components/st7735/Release_Notes.html">release notes</a></td>
 </tr>
 </tbody>
@@ -3829,7 +3495,6 @@
 <tr class="header">
 <th style="text-align: left;">Name</th>
 <th style="text-align: left;">Version</th>
-<th style="text-align: left;">License</th>
 <th style="text-align: left;">Release note</th>
 </tr>
 </thead>
@@ -3837,43 +3502,36 @@
 <tr class="odd">
 <td style="text-align: left;">STM32 USB Device Library</td>
 <td style="text-align: left;">V2.2.0</td>
-<td style="text-align: left;"><a href="http://www.st.com/SLA0044">SLA0044</a></td>
 <td style="text-align: left;"><a href="Middlewares/ST/STM32_USB_Device_Library/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">STM32 TouchSensing Library</td>
 <td style="text-align: left;">V2.1.1</td>
-<td style="text-align: left;"><a href="http://www.st.com/SLA0044">SLA0044</a></td>
 <td style="text-align: left;"><a href="Middlewares/ST/STM32_TouchSensing_Library/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">FatFS</td>
 <td style="text-align: left;">R0.10</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Middlewares/Third_Party/FatFs/src/00history.txt">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"></td>
 <td style="text-align: left;">ST modified 20140422</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Middlewares/Third_Party/FatFs/src/st_readme.txt">release notes ST</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">FreeRTOS</td>
 <td style="text-align: left;">V7.6.0</td>
-<td style="text-align: left;"><a href="Middlewares/Third_Party/FreeRTOS/License/license.txt">MIT</a></td>
 <td style="text-align: left;"><a href="Middlewares/Third_Party/FreeRTOS/Source/readme.txt">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"></td>
 <td style="text-align: left;">ST modified 20140613</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: left;"><a href="Middlewares/Third_Party/FreeRTOS/Source/st_readme.txt">release notes ST</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">STemWin</td>
 <td style="text-align: left;">STemWinLibrary 5.24b</td>
-<td style="text-align: left;"><a href="http://www.st.com/SLA0044">SLA0044</a></td>
 <td style="text-align: left;"><a href="Middlewares/ST/STemWin/Release_Notes.html">release notes</a></td>
 </tr>
 </tbody>
@@ -3884,7 +3542,6 @@
 <tr class="header">
 <th style="text-align: left;">Name</th>
 <th style="text-align: left;">Version</th>
-<th style="text-align: left;">License</th>
 <th style="text-align: center;">Release note</th>
 </tr>
 </thead>
@@ -3892,26 +3549,226 @@
 <tr class="odd">
 <td style="text-align: left;">CPU</td>
 <td style="text-align: left;">V1.0.0</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: center;"><a href="Utilities/CPU/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Fonts</td>
 <td style="text-align: left;">V1.0.0</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: center;"><a href="Utilities/Fonts/Release_Notes.html">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Log</td>
 <td style="text-align: left;">V1.0.0</td>
-<td style="text-align: left;"><a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause</a></td>
 <td style="text-align: center;"><a href="Utilities/Log/Release_Notes.html">release notes</a></td>
 </tr>
 </tbody>
 </table>
 <p><br />
 </p>
-<h2 id="development-toolchains-and-compilers-13">Development Toolchains and Compilers</h2>
+</div>
+</div>
+<div class="collapse">
+<input type="checkbox" id="collapse-section1" aria-hidden="true"> <label for="collapse-section1" aria-hidden="true">V1.0.0 / 05-September-2014</label>
+<div>
+<h2 id="main-changes-15">Main Changes</h2>
+<h3 id="first-official-release-of-stm32cubel1-stm32cube-for-stm32l1-series"><strong>First official release of STM32CubeL1 (STM32Cube for STM32L1 Series)</strong></h3>
+<h2 id="contents-14">Contents</h2>
+<ul>
+<li><p>Projects updates</p>
+<ul>
+<li>The STM32CubeL1 Firmware package comes with a rich set of examples running on STMicroelectronics boards, organized by board and provided with preconfigured projects for the main supported toolchains. The exhaustive list of projects is provided in this table (<a href="Projects/STM32CubeProjectsList.html">STM32CubeProjectsList.html</a>).</li>
+</ul></li>
+</ul>
+<table>
+<caption><strong>Projects</strong></caption>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th style="text-align: left;">Version</th>
+<th style="text-align: left;">Release notes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Projects</td>
+<td style="text-align: left;">see Projects Release note for details</td>
+<td style="text-align: left;"><a href="Projects/Release_Notes.html">release notes</a></td>
+</tr>
+</tbody>
+</table>
+<p><br />
+</p>
+<h2 id="components-15">Components</h2>
+<p>Note: in the tables below, components in <span style="font-weight: bold;">bold</span> have changed since previous release</p>
+<table>
+<caption><strong>Drivers</strong></caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Version</th>
+<th style="text-align: left;">Release note</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">CMSIS</td>
+<td style="text-align: left;">V3.20</td>
+<td style="text-align: left;"><a href="Drivers/CMSIS/index.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">STM32L1xx CMSIS</td>
+<td style="text-align: left;">V2.0.0</td>
+<td style="text-align: left;"><a href="Drivers/CMSIS/Device/ST/STM32L1xx/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">STM32L1xx HAL</td>
+<td style="text-align: left;">V1.0.0</td>
+<td style="text-align: left;"><a href="Drivers/STM32L1xx_HAL_Driver/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BSP STM32L152D_EVAL</td>
+<td style="text-align: left;">V2.0.0</td>
+<td style="text-align: left;"><a href="Drivers/BSP/STM32L152D_EVAL/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BSP STM32L152C-Discovery</td>
+<td style="text-align: left;">V1.0.0</td>
+<td style="text-align: left;"><a href="Drivers/BSP/STM32L152C-Discovery/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BSP STM32L100C-Discovery</td>
+<td style="text-align: left;">V1.0.0</td>
+<td style="text-align: left;"><a href="Drivers/BSP/STM32L100C-Discovery/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BSP STM32L1xx_Nucleo</td>
+<td style="text-align: left;">V1.0.0</td>
+<td style="text-align: left;"><a href="Drivers/BSP/STM32L1xx_Nucleo/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BSP Adafruit Shield</td>
+<td style="text-align: left;">V1.1.0</td>
+<td style="text-align: left;"><a href="Drivers/BSP/Adafruit_Shield/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BSP Common</td>
+<td style="text-align: left;">V1.2.0</td>
+<td style="text-align: left;"><a href="Drivers/BSP/Components/Common/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BSP cs43l22</td>
+<td style="text-align: left;">V1.0.0</td>
+<td style="text-align: left;"><a href="Drivers/BSP/Components/cs43l22/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BSP hx8347d</td>
+<td style="text-align: left;">V1.1.0</td>
+<td style="text-align: left;"><a href="Drivers/BSP/Components/hx8347d/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BSP ili9325</td>
+<td style="text-align: left;">V1.1.1</td>
+<td style="text-align: left;"><a href="Drivers/BSP/Components/ili9325/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BSP ili9320</td>
+<td style="text-align: left;">V1.1.1</td>
+<td style="text-align: left;"><a href="Drivers/BSP/Components/ili9320/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BSP spfd5408</td>
+<td style="text-align: left;">V1.1.0</td>
+<td style="text-align: left;"><a href="Drivers/BSP/Components/spfd5408/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BSP stlm75</td>
+<td style="text-align: left;">V1.0.0</td>
+<td style="text-align: left;"><a href="Drivers/BSP/Components/stlm75/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BSP st7735</td>
+<td style="text-align: left;">V1.0.0</td>
+<td style="text-align: left;"><a href="Drivers/BSP/Components/st7735/Release_Notes.html">release notes</a></td>
+</tr>
+</tbody>
+</table>
+<table>
+<caption><strong>Middlewares</strong></caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Version</th>
+<th style="text-align: left;">Release note</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">STM32 USB Device Library</td>
+<td style="text-align: left;">V2.2.0</td>
+<td style="text-align: left;"><a href="Middlewares/ST/STM32_USB_Device_Library/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">STM32 TouchSensing Library</td>
+<td style="text-align: left;">V2.1.1</td>
+<td style="text-align: left;"><a href="Middlewares/ST/STM32_TouchSensing_Library/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">FatFS</td>
+<td style="text-align: left;">R0.10</td>
+<td style="text-align: left;"><a href="Middlewares/Third_Party/FatFs/src/00history.txt">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">ST modified 20140422</td>
+<td style="text-align: left;"><a href="Middlewares/Third_Party/FatFs/src/st_readme.txt">release notes ST</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">FreeRTOS</td>
+<td style="text-align: left;">V7.6.0</td>
+<td style="text-align: left;"><a href="Middlewares/Third_Party/FreeRTOS/Source/readme.txt">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">ST modified 20140613</td>
+<td style="text-align: left;"><a href="Middlewares/Third_Party/FreeRTOS/Source/st_readme.txt">release notes ST</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">STemWin</td>
+<td style="text-align: left;">STemWinLibrary 5.24b</td>
+<td style="text-align: left;"><a href="Middlewares/ST/STemWin/Release_Notes.html">release notes</a></td>
+</tr>
+</tbody>
+</table>
+<table>
+<caption><strong>Utilities</strong></caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Version</th>
+<th style="text-align: center;">Release note</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">CPU</td>
+<td style="text-align: left;">V1.0.0</td>
+<td style="text-align: center;"><a href="Utilities/CPU/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Fonts</td>
+<td style="text-align: left;">V1.0.0</td>
+<td style="text-align: center;"><a href="Utilities/Fonts/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Log</td>
+<td style="text-align: left;">V1.0.0</td>
+<td style="text-align: center;"><a href="Utilities/Log/Release_Notes.html">release notes</a></td>
+</tr>
+</tbody>
+</table>
+<p><br />
+</p>
+<h2 id="development-toolchains-and-compilers-14">Development Toolchains and Compilers</h2>
 <ul>
 <li>IAR Embedded Workbench for ARM (EWARM) toolchain V7.10 + ST-LINK</li>
 <li>RealView Microcontroller Development Kit (MDK-ARM) toolchain V5.10 + ST-LINK</li>
@@ -3939,7 +3796,7 @@
 </p>
 </div>
 </div>
-</section>
+</div>
 </div>
 <footer class="sticky">
 For complete documentation on <mark>STM32 Microcontrollers</mark> , visit: <a href="http://www.st.com/STM32">http://www.st.com/STM32</a>
