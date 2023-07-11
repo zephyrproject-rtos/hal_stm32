@@ -1,4 +1,5 @@
 # Copyright (c) 2023 Benjamin Björnsson <benjamin.bjornsson@gmail.com>
+# Copyright (c) 2023 STMicroelectronics
 #
 # SPDX-License-Identifier: Apache-2.0
 
@@ -12,7 +13,7 @@ zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_CORTEX drivers/src/stm32c0xx_h
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_CRC drivers/src/stm32c0xx_hal_crc.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_CRC_EX drivers/src/stm32c0xx_hal_crc_ex.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_DMA drivers/src/stm32c0xx_hal_dma.c)
-zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_DMA drivers/src/stm32c0xx_hal_dma_ex.c)
+zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_DMA_EX drivers/src/stm32c0xx_hal_dma_ex.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_EXTI drivers/src/stm32c0xx_hal_exti.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_FLASH drivers/src/stm32c0xx_hal_flash.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_FLASH_EX drivers/src/stm32c0xx_hal_flash_ex.c)
@@ -29,7 +30,7 @@ zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_RTC_EX drivers/src/stm32c0xx_h
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_SMARTCARD drivers/src/stm32c0xx_hal_smartcard.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_SMARTCARD_EX drivers/src/stm32c0xx_hal_smartcard_ex.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_SMBUS drivers/src/stm32c0xx_hal_smbus.c)
-zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_SMBUS drivers/src/stm32c0xx_hal_smbus_ex.c)
+zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_SMBUS_EX drivers/src/stm32c0xx_hal_smbus_ex.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_SPI drivers/src/stm32c0xx_hal_spi.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_SPI_EX drivers/src/stm32c0xx_hal_spi_ex.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_TIM drivers/src/stm32c0xx_hal_tim.c)

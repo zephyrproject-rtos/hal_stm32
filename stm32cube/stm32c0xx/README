@@ -6,7 +6,7 @@ Origin:
    http://www.st.com/en/embedded-software/stm32cubec0.html
 
 Status:
-   version 1.0.1
+   version v1.1.0
 
 Purpose:
    ST Microelectronics official MCU package for STM32C0 series.
@@ -22,8 +22,8 @@ Dependencies:
 URL:
    https://github.com/STMicroelectronics/STM32CubeC0
 
-commit:
-   965b587c0a5cafa99f7afbbcd17eb692e82de18f
+Commit:
+   8731fa98190b337c01e2a4c3d3a725fe6bf3c04a
 
 Maintained-by:
    External
@@ -40,9 +40,8 @@ Patch List:
     -Added stm32cube/stm32c0xx/drivers/include/stm32_assert.h
     -Removed unused stm32cube/stm32c0xx/drivers/include/stm32_assert_template.h
 
-   *Add missing LL function for setting flash latency
-     This will allow the C0 series to use the STM32 common
-     clock control driver.
-     Impacted files:
-      drivers/include/stm32c0xx_ll_utils.h
-     ST Internal Reference: 146704
+   *Renamed LL_RCC_HCLK_DIV_X to LL_RCC_SYSCLK_DIV_X
+    Impacted files drivers/include/stm32c0xx_ll_rcc.h
+    Internal reference 157185.
+
+   See release_note.html from STM32Cube
