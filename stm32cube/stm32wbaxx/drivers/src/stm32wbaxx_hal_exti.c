@@ -339,8 +339,7 @@ HAL_StatusTypeDef HAL_EXTI_GetConfigLine(EXTI_HandleTypeDef *hexti, EXTI_ConfigT
       assert_param(IS_EXTI_GPIO_PIN(linepos));
 
       regval = EXTI->EXTICR[(linepos >> 2U) & 0x03UL];
-      pExtiConfig->GPIOSel = ((regval << (EXTI_EXTICR1_EXTI1_Pos * (((32U / EXTI_EXTICR1_EXTI1_Pos) - 1U)
-                                          - (linepos & 0x03U)))) >> (32U - EXTI_EXTICR1_EXTI1_Pos));
+      pExtiConfig->GPIOSel = (regval >> (EXTI_EXTICR1_EXTI1_Pos * (linepos & 0x03U))) & EXTI_EXTICR1_EXTI1_Pos;
     }
     else
     {

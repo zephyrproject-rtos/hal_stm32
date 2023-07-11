@@ -847,6 +847,17 @@ __STATIC_INLINE void LL_RCC_HSE_EnablePrescaler(void)
 }
 
 /**
+  * @brief  Check if HSE clock prescaler for sysclk is enabled
+  * @rmtoll CR           HSEPRE        LL_RCC_HSE_IsEnabledPrescaler
+  * @note   Check if the HSE32 clock for sysclk is divided by 2 or not
+  * @retval State of bit (1 or 0).
+  */
+__STATIC_INLINE uint32_t LL_RCC_HSE_IsEnabledPrescaler(void)
+{
+  return ((READ_BIT(RCC->CR, RCC_CR_HSEPRE) == RCC_CR_HSEPRE) ? 1UL : 0UL);
+}
+
+/**
   * @brief  Disable HSE clock prescaler for sysclk
   * @rmtoll CR           HSEPRE        LL_RCC_HSE_DisablePrescaler
   * @note   Control the division factor of the HSE32 clock for sysclk

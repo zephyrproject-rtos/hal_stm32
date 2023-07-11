@@ -452,8 +452,8 @@ void HAL_PWR_DisablePVD(void)
 
 /**
   * @brief  Enable the wake up line functionality.
-  * @note   Wake up lines are used to wake up the system from Stop 3, Standby and
-  *         Shutdown modes.
+  * @note   Wake up lines are used to wake up the system from Sleep, Stop 0-1 and
+  *         Standby modes.
   * @param  WakeUpPin : Specifies which wake up line to enable. This parameter
   *                     can be one of PWR_WakeUp_Pins_High_Polarity define
   *                     group where every param select the wake up line, the
@@ -676,11 +676,6 @@ void HAL_PWR_EnterSTANDBYMode(void)
 
   /* Set SLEEPDEEP bit of Cortex System Control Register */
   SET_BIT(SCB->SCR, SCB_SCR_SLEEPDEEP_Msk);
-
-  /* This option is used to ensure that store operations are completed */
-#if defined (__ARMCC_VERSION) && (__ARMCC_VERSION >= 6010050)
-  __force_stores();
-#endif /*(__ARMCC_VERSION) && (__ARMCC_VERSION >= 6010050) */
 
   /* Wait For Interrupt Request */
   __WFI();

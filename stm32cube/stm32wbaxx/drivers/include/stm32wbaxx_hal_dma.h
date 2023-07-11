@@ -258,9 +258,11 @@ typedef struct __DMA_HandleTypeDef
 #endif /* defined (SPI1) */
 #define GPDMA1_REQUEST_SPI3_RX         3U     /*!< GPDMA1 HW request is SPI3_RX       */
 #define GPDMA1_REQUEST_SPI3_TX         4U     /*!< GPDMA1 HW request is SPI3_TX       */
+#if defined (I2C1)
 #define GPDMA1_REQUEST_I2C1_RX         5U     /*!< GPDMA1 HW request is I2C1_RX       */
 #define GPDMA1_REQUEST_I2C1_TX         6U     /*!< GPDMA1 HW request is I2C1_TX       */
 #define GPDMA1_REQUEST_I2C1_EVC        7U     /*!< GPDMA1 HW request is I2C1_EVC      */
+#endif /* defined (I2C1) */
 #define GPDMA1_REQUEST_I2C3_RX         8U     /*!< GPDMA1 HW request is I2C3_RX       */
 #define GPDMA1_REQUEST_I2C3_TX         9U     /*!< GPDMA1 HW request is I2C3_TX       */
 #define GPDMA1_REQUEST_I2C3_EVC       10U     /*!< GPDMA1 HW request is I2C3_EVC      */
@@ -272,8 +274,10 @@ typedef struct __DMA_HandleTypeDef
 #endif /* defined (USART2) */
 #define GPDMA1_REQUEST_LPUART1_RX     15U     /*!< GPDMA1 HW request is LPUART1_RX    */
 #define GPDMA1_REQUEST_LPUART1_TX     16U     /*!< GPDMA1 HW request is LPUART1_TX    */
+#if defined (SAI1)
 #define GPDMA1_REQUEST_SAI1_A         17U     /*!< GPDMA1 HW request is SAI1_A        */
 #define GPDMA1_REQUEST_SAI1_B         18U     /*!< GPDMA1 HW request is SAI1_B        */
+#endif /* defined (SAI1) */
 #define GPDMA1_REQUEST_TIM1_CH1       19U     /*!< GPDMA1 HW request is TIM1_CH1      */
 #define GPDMA1_REQUEST_TIM1_CH2       20U     /*!< GPDMA1 HW request is TIM1_CH2      */
 #define GPDMA1_REQUEST_TIM1_CH3       21U     /*!< GPDMA1 HW request is TIM1_CH3      */
@@ -300,8 +304,10 @@ typedef struct __DMA_HandleTypeDef
 #define GPDMA1_REQUEST_TIM17_CH1      39U     /*!< GPDMA1 HW request is TIM17_CH1     */
 #define GPDMA1_REQUEST_TIM17_UP       40U     /*!< GPDMA1 HW request is TIM17_UP      */
 #endif /* defined (TIM17) */
+#if defined (AES)
 #define GPDMA1_REQUEST_AES_IN         41U     /*!< GPDMA1 HW request is AES_IN        */
 #define GPDMA1_REQUEST_AES_OUT        42U     /*!< GPDMA1 HW request is AES_OUT       */
+#endif /* defined (AES) */
 #define GPDMA1_REQUEST_HASH_IN        43U     /*!< GPDMA1 HW request is HASH_IN       */
 #if defined (SAES)
 #define GPDMA1_REQUEST_SAES_IN        44U     /*!< GPDMA1 HW request is SAES_IN       */
@@ -757,9 +763,15 @@ HAL_StatusTypeDef HAL_DMA_GetLockChannelAttributes(DMA_HandleTypeDef const *cons
 #define  IS_DMA_TRANSFER_ALLOCATED_PORT(ALLOCATED_PORT) \
   (((ALLOCATED_PORT) & (~(DMA_CTR1_SAP | DMA_CTR1_DAP))) == 0U)
 
+#if defined (LPTIM2)
 #define IS_DMA_REQUEST(REQUEST)     \
   (((REQUEST) == DMA_REQUEST_SW) || \
-   ((REQUEST) <= 51U))
+   ((REQUEST) <= GPDMA1_REQUEST_LPTIM2_UE))
+#else
+#define IS_DMA_REQUEST(REQUEST)     \
+  (((REQUEST) == DMA_REQUEST_SW) || \
+   ((REQUEST) <= GPDMA1_REQUEST_LPTIM1_UE))
+#endif /* defined (LPTIM2) */
 
 #define IS_DMA_BLOCK_HW_REQUEST(MODE)   \
   (((MODE) == DMA_BREQ_SINGLE_BURST) || \

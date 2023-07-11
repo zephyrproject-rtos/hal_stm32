@@ -71,52 +71,6 @@ typedef struct
 } DMA_TriggerConfTypeDef;
 
 /**
-  * @brief DMAEx Repeated Block Configuration Structure Definition.
-  */
-typedef struct
-{
-  uint32_t RepeatCount;      /*!< Specifies the DMA channel repeat count (the number of repetitions of block).
-                                  This parameter can be a value between 1 and 2048                                    */
-
-  int32_t SrcAddrOffset;     /*!< Specifies the DMA channel single/burst source address offset :
-                                  This parameter can be a value between -8191 and 8191.
-                                  * If source address offset > 0 => Increment the source address by offset from where
-                                    the last single/burst transfer ends.
-                                  * If source address offset < 0 => Decrement the source address by offset from where
-                                    the last single/burst transfer ends.
-                                  * If source address offset == 0 => The next single/burst source address starts from
-                                    where the last transfer ends                                                      */
-
-  int32_t DestAddrOffset;    /*!< Specifies the DMA channel single/burst destination address offset signed value :
-                                  This parameter can be a value between -8191 and 8191.
-                                  * If destination address offset > 0 => Increment the destination address by offset
-                                    from where the last single/burst transfer ends.
-                                  * If destination address offset < 0 => Decrement the destination address by offset
-                                    from where the last single/burst transfer ends.
-                                  * If destination address offset == 0 => The next single/burst destination address
-                                    starts from where the last transfer ends.                                         */
-
-  int32_t BlkSrcAddrOffset;  /*!< Specifies the DMA channel block source address offset signed value :
-                                  This parameter can be a value between -65535 and 65535.
-                                  * If block source address offset > 0 => Increment the block source address by offset
-                                    from where the last block ends.
-                                  * If block source address offset < 0 => Decrement the next block source address by
-                                    offset from where the last block ends.
-                                  * If block source address offset == 0 =>  the next block source address starts from
-                                    where the last block ends                                                         */
-
-  int32_t BlkDestAddrOffset; /*!< Specifies the DMA channel block destination address offset signed value :
-                                  This parameter can be a value between -65535 and 65535.
-                                  * If block destination address offset > 0 => Increment the block destination address
-                                    by offset from where the last block ends.
-                                  * If block destination address offset < 0 => Decrement the next block destination
-                                    address by offset from where the last block ends.
-                                  * If block destination address offset == 0 =>  the next block destination address
-                                    starts from where the last block ends                                             */
-
-} DMA_RepeatBlockConfTypeDef;
-
-/**
   * @brief DMAEx Queue State Enumeration Definition.
   */
 typedef enum
@@ -141,8 +95,6 @@ typedef struct
 
   DMA_TriggerConfTypeDef      TriggerConfig;      /*!< Specifies the DMA channel trigger configuration                */
 
-  DMA_RepeatBlockConfTypeDef  RepeatBlockConfig;  /*!< Specifies the DMA channel repeated block configuration         */
-
   uint32_t                    SrcAddress;         /*!< Specifies the source memory address                            */
   uint32_t                    DstAddress;         /*!< Specifies the destination memory address                       */
   uint32_t                    DataSize;           /*!< Specifies the source data size in bytes                        */
@@ -159,7 +111,7 @@ typedef struct
   */
 typedef struct
 {
-  uint32_t LinkRegisters[8U]; /*!< Physical Node register description */
+  uint32_t LinkRegisters[6U]; /*!< Physical Node register description */
   uint32_t NodeInfo;          /*!< Node information                   */
 
 } DMA_NodeTypeDef;
@@ -319,7 +271,9 @@ typedef struct __DMA_QListTypeDef
 #define GPDMA1_TRIGGER_GPDMA1_CH7_TCF    27U      /*!< GPDMA1 HW Trigger signal is GPDMA1_CH7_TCF  */
 #define GPDMA1_TRIGGER_TIM2_TRGO         28U      /*!< GPDMA1 HW Trigger signal is TIM2_TRGO       */
 #define GPDMA1_TRIGGER_ADC4_AWD1         29U      /*!< GPDMA1 HW Trigger signal is ADC4_ADW1       */
-
+#if defined (TIM3)
+#define GPDMA1_TRIGGER_TIM3_TRGO         30U      /*!< GPDMA1 HW Trigger signal is TIM3_TRGO       */
+#endif /* defined (TIM3) */
 /**
   * @}
   */
@@ -514,7 +468,7 @@ typedef struct
 #define NODE_CLLR_IDX                   (0x0700U) /* DMA channel node CLLR index mask      */
 #define NODE_CLLR_IDX_POS               (0x0008U) /* DMA channel node CLLR index position  */
 
-#define NODE_MAXIMUM_SIZE               (0x0008U) /* Amount of registers of the node       */
+#define NODE_MAXIMUM_SIZE               (0x0006U) /* Amount of registers of the node       */
 
 #define NODE_STATIC_FORMAT              (0x0000U) /* DMA channel node static format        */
 #define NODE_DYNAMIC_FORMAT             (0x0001U) /* DMA channel node dynamic format       */
@@ -593,8 +547,13 @@ typedef struct
    ((POLARITY) == DMA_TRIG_POLARITY_RISING) || \
    ((POLARITY) == DMA_TRIG_POLARITY_FALLING))
 
+#if defined (TIM3)
+#define IS_DMA_TRIGGER_SELECTION(TRIGGER) \
+  ((TRIGGER) <= GPDMA1_TRIGGER_TIM3_TRGO)
+#else
 #define IS_DMA_TRIGGER_SELECTION(TRIGGER) \
   ((TRIGGER) <= GPDMA1_TRIGGER_ADC4_AWD1)
+#endif /* defined (TIM3) */
 
 #define IS_DMA_NODE_TYPE(TYPE)          \
   ((TYPE) == DMA_GPDMA_LINEAR_NODE)

@@ -114,6 +114,8 @@
   * @{
   */
 #define HASH_TIMEOUTVALUE                         1000U  /*!< Time-out value  */
+#define BLOCK_64B                                 64U    /*!< block Size equal to 64 bytes */
+#define BLOCK_128B                                128U   /*!< block Size equal to 128 bytes */
 /**
   * @}
   */
@@ -133,7 +135,7 @@
 /** @defgroup HASH_Private_Functions HASH Private Functions
   * @{
   */
-static void HASH_GetDigest(HASH_HandleTypeDef *hhash, uint8_t *pMsgDigest, uint8_t Size);
+static void HASH_GetDigest(const HASH_HandleTypeDef *hhash, const uint8_t *pMsgDigest, uint8_t Size);
 static void HASH_WriteData(HASH_HandleTypeDef *hhash, const uint8_t *pInBuffer, uint32_t Size);
 static HAL_StatusTypeDef HASH_WriteData_IT(HASH_HandleTypeDef *hhash);
 static void HASH_DMAXferCplt(DMA_HandleTypeDef *hdma);
@@ -431,15 +433,15 @@ __weak void HAL_HASH_MspDeInit(HASH_HandleTypeDef *hhash)
 #if (USE_HAL_HASH_REGISTER_CALLBACKS == 1)
 /**
   * @brief  Register a User HASH Callback
-  *         To be used instead of the weak (surcharged) predefined callback
+  *         To be used instead of the weak (overridden) predefined callback
   * @param hhash HASH handle
   * @param CallbackID ID of the callback to be registered
   *        This parameter can be one of the following values:
-  *          @arg @ref HAL_HASH_INPUTCPLT_CB_ID HASH input completion Callback ID
-  *          @arg @ref HAL_HASH_DGSTCPLT_CB_ID HASH digest computation completion Callback ID
-  *          @arg @ref HAL_HASH_ERROR_CB_ID HASH error Callback ID
-  *          @arg @ref HAL_HASH_MSPINIT_CB_ID HASH MspInit callback ID
-  *          @arg @ref HAL_HASH_MSPDEINIT_CB_ID HASH MspDeInit callback ID
+  *          @arg HAL_HASH_INPUTCPLT_CB_ID input completion callback ID
+  *          @arg HAL_HASH_DGSTCPLT_CB_ID digest computation completion callback ID
+  *          @arg HAL_HASH_ERROR_CB_ID error callback ID
+  *          @arg HAL_HASH_MSPINIT_CB_ID MspInit callback ID
+  *          @arg HAL_HASH_MSPDEINIT_CB_ID MspDeInit callback ID
   * @param pCallback pointer to the Callback function
   * @retval status
   */
@@ -520,15 +522,15 @@ HAL_StatusTypeDef HAL_HASH_RegisterCallback(HASH_HandleTypeDef *hhash, HAL_HASH_
 
 /**
   * @brief  Unregister a HASH Callback
-  *         HASH Callback is redirected to the weak (surcharged) predefined callback
+  *         HASH Callback is redirected to the weak (overridden) predefined callback
   * @param hhash HASH handle
   * @param CallbackID ID of the callback to be unregistered
   *        This parameter can be one of the following values:
-  *          @arg @ref HAL_HASH_INPUTCPLT_CB_ID HASH input completion Callback ID
-  *          @arg @ref HAL_HASH_DGSTCPLT_CB_ID HASH digest computation completion Callback ID
-  *          @arg @ref HAL_HASH_ERROR_CB_ID HASH error Callback ID
-  *          @arg @ref HAL_HASH_MSPINIT_CB_ID HASH MspInit callback ID
-  *          @arg @ref HAL_HASH_MSPDEINIT_CB_ID HASH MspDeInit callback ID
+  *          @arg HAL_HASH_INPUTCPLT_CB_ID HASH input completion Callback ID
+  *          @arg HAL_HASH_DGSTCPLT_CB_ID HASH digest computation completion Callback ID
+  *          @arg HAL_HASH_ERROR_CB_ID HASH error Callback ID
+  *          @arg HAL_HASH_MSPINIT_CB_ID HASH MspInit callback ID
+  *          @arg HAL_HASH_MSPDEINIT_CB_ID HASH MspDeInit callback ID
   * @retval status
   */
 HAL_StatusTypeDef HAL_HASH_UnRegisterCallback(HASH_HandleTypeDef *hhash, HAL_HASH_CallbackIDTypeDef CallbackID)
@@ -1494,7 +1496,7 @@ HAL_StatusTypeDef HAL_HASH_HMAC_Start(HASH_HandleTypeDef *hhash, const uint8_t *
     hhash->HashInCount =  0U;
     hhash->Size = Size;
 
-    blocksize = 64U;
+    blocksize = BLOCK_64B;
     if (hhash->Init.KeySize > blocksize)
     {
       MODIFY_REG(hhash->Instance->CR, HASH_CR_LKEY | HASH_CR_MODE | HASH_CR_INIT,
@@ -1619,7 +1621,7 @@ HAL_StatusTypeDef HAL_HASH_HMAC_Accumulate(HASH_HandleTypeDef *hhash, const uint
       /* Reset HashInCount parameter */
       hhash->HashInCount =  0U;
       /* Check if key size is larger than 64 bytes, accordingly set LKEY and the other setting bits */
-      blocksize = 64U;
+      blocksize = BLOCK_64B;
       if (hhash->Init.KeySize > blocksize)
       {
         MODIFY_REG(hhash->Instance->CR, HASH_CR_LKEY | HASH_CR_MODE | HASH_CR_INIT,
@@ -1803,7 +1805,7 @@ HAL_StatusTypeDef HAL_HASH_HMAC_Start_IT(HASH_HandleTypeDef *hhash, const uint8_
     hhash->Size = Size;
 
     /* Check if key size is larger than block size of the algorithm, accordingly set LKEY and the other setting bits */
-    blocksize = 64U;
+    blocksize = BLOCK_64B;
     if (hhash->Init.KeySize > blocksize)
     {
       MODIFY_REG(hhash->Instance->CR, HASH_CR_LKEY | HASH_CR_MODE | HASH_CR_INIT,
@@ -1886,7 +1888,7 @@ HAL_StatusTypeDef HAL_HASH_HMAC_Accumulate_IT(HASH_HandleTypeDef *hhash, const u
     if (hhash->Phase == HAL_HASH_PHASE_READY)
     {
       /* Check if key size is larger than block size of the algorithm, accordingly set LKEY and the other setting */
-      blocksize = 64U;
+      blocksize = BLOCK_64B;
       if (hhash->Init.KeySize > blocksize)
       {
         MODIFY_REG(hhash->Instance->CR, HASH_CR_LKEY | HASH_CR_MODE | HASH_CR_INIT,
@@ -2016,7 +2018,7 @@ HAL_StatusTypeDef HAL_HASH_HMAC_Start_DMA(HASH_HandleTypeDef *hhash, const uint8
     if (hhash->Phase == HAL_HASH_PHASE_READY)
     {
       /* Check if key size is larger than block size of the algorithm, accordingly set LKEY and the other setting */
-      blocksize = 64U;
+      blocksize = BLOCK_64B;
       if (hhash->Init.KeySize > blocksize)
       {
         MODIFY_REG(hhash->Instance->CR, HASH_CR_LKEY | HASH_CR_MODE | HASH_CR_INIT,
@@ -2173,9 +2175,11 @@ HAL_StatusTypeDef HAL_HASH_HMAC_Start_DMA(HASH_HandleTypeDef *hhash, const uint8
 void HAL_HASH_IRQHandler(HASH_HandleTypeDef *hhash)
 {
   HAL_StatusTypeDef status;
+  uint32_t itsource = hhash->Instance->IMR;
+  uint32_t itflag   = hhash->Instance->SR;
 
   /* If digest is ready */
-  if (__HAL_HASH_GET_FLAG(hhash, HASH_FLAG_DCIS))
+  if ((itflag & HASH_FLAG_DCIS) == HASH_FLAG_DCIS)
   {
     /* Read the digest */
     HASH_GetDigest(hhash, hhash->pHashOutBuffPtr, HASH_DIGEST_LENGTH(hhash));
@@ -2197,9 +2201,9 @@ void HAL_HASH_IRQHandler(HASH_HandleTypeDef *hhash)
 
   }
   /* If Peripheral ready to accept new data */
-  if (__HAL_HASH_GET_FLAG(hhash, HASH_FLAG_DINIS))
+  if ((itflag & HASH_FLAG_DINIS) == HASH_FLAG_DINIS)
   {
-    if (__HAL_HASH_GET_IT_SOURCE(hhash, HASH_IT_DINI))
+    if ((itsource & HASH_IT_DINI) == HASH_IT_DINI)
     {
       status = HASH_WriteData_IT(hhash);
       if (status != HAL_OK)
@@ -2279,7 +2283,7 @@ __weak void HAL_HASH_ErrorCallback(HASH_HandleTypeDef *hhash)
   * @param  hhash HASH handle.
   * @retval HAL HASH state
   */
-HAL_HASH_StateTypeDef HAL_HASH_GetState(HASH_HandleTypeDef *hhash)
+HAL_HASH_StateTypeDef HAL_HASH_GetState(const HASH_HandleTypeDef *hhash)
 {
   return hhash->State;
 }
@@ -2289,7 +2293,7 @@ HAL_HASH_StateTypeDef HAL_HASH_GetState(HASH_HandleTypeDef *hhash)
   * @param  hhash pointer to a HASH_HandleTypeDef structure.
   * @retval HASH Error Code
   */
-uint32_t HAL_HASH_GetError(HASH_HandleTypeDef *hhash)
+uint32_t HAL_HASH_GetError(const HASH_HandleTypeDef *hhash)
 {
   /* Return HASH Error Code */
   return hhash->ErrorCode;
@@ -2887,7 +2891,7 @@ static HAL_StatusTypeDef HASH_WriteData_IT(HASH_HandleTypeDef *hhash)
   * @param  Size message digest size in bytes.
   * @retval None
   */
-static void HASH_GetDigest(HASH_HandleTypeDef *hhash, uint8_t *pMsgDigest, uint8_t Size)
+static void HASH_GetDigest(const HASH_HandleTypeDef *hhash, const uint8_t *pMsgDigest, uint8_t Size)
 {
   uint32_t msgdigest = (uint32_t)pMsgDigest;
 

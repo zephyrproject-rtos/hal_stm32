@@ -1922,6 +1922,10 @@ mode.
                                             ((__PRESCALER__) == TIM_ICPSC_DIV4) || \
                                             ((__PRESCALER__) == TIM_ICPSC_DIV8))
 
+#define IS_TIM_CCX_CHANNEL(__INSTANCE__, __CHANNEL__) (IS_TIM_CCX_INSTANCE(__INSTANCE__, __CHANNEL__) && \
+                                                       ((__CHANNEL__) != (TIM_CHANNEL_5)) && \
+                                                       ((__CHANNEL__) != (TIM_CHANNEL_6)))
+
 #define IS_TIM_OPM_MODE(__MODE__)          (((__MODE__) == TIM_OPMODE_SINGLE) || \
                                             ((__MODE__) == TIM_OPMODE_REPETITIVE))
 

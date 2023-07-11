@@ -630,6 +630,7 @@ typedef struct
                                                     UNUSED(tmpreg); \
                                                   } while(0)
 
+
 #define __HAL_RCC_GPIOH_CLK_ENABLE()           do { \
                                                     __IO uint32_t tmpreg; \
                                                     SET_BIT(RCC->AHB2ENR, RCC_AHB2ENR_GPIOHEN); \
@@ -637,6 +638,7 @@ typedef struct
                                                     tmpreg = READ_BIT(RCC->AHB2ENR, RCC_AHB2ENR_GPIOHEN); \
                                                     UNUSED(tmpreg); \
                                                   } while(0)
+
 
 #define __HAL_RCC_AES_CLK_ENABLE()             do { \
                                                     __IO uint32_t tmpreg; \
@@ -802,6 +804,7 @@ typedef struct
                                                   } while(0)
 #endif /* TIM3 */
 
+
 #define __HAL_RCC_WWDG_CLK_ENABLE()            do { \
                                                     __IO uint32_t tmpreg; \
                                                     SET_BIT(RCC->APB1ENR1, RCC_APB1ENR1_WWDGEN); \
@@ -809,6 +812,7 @@ typedef struct
                                                     tmpreg = READ_BIT(RCC->APB1ENR1, RCC_APB1ENR1_WWDGEN); \
                                                     UNUSED(tmpreg); \
                                                   } while(0)
+
 
 #if defined(USART2)
 #define __HAL_RCC_USART2_CLK_ENABLE()          do { \
@@ -820,6 +824,7 @@ typedef struct
                                                   } while(0)
 #endif /* USART2 */
 
+
 #if defined(I2C1)
 #define  __HAL_RCC_I2C1_CLK_ENABLE()           do { \
                                                     __IO uint32_t tmpreg; \
@@ -829,6 +834,8 @@ typedef struct
                                                     UNUSED(tmpreg); \
                                                   } while(0)
 #endif /* I2C1 */
+
+
 
 #if defined(LPTIM2)
 #define __HAL_RCC_LPTIM2_CLK_ENABLE()          do { \
@@ -988,6 +995,7 @@ typedef struct
                                                     tmpreg = READ_BIT(RCC->APB7ENR, RCC_APB7ENR_LPTIM1EN); \
                                                     UNUSED(tmpreg); \
                                                   } while(0)
+
 
 #define __HAL_RCC_RTCAPB_CLK_ENABLE()          do { \
                                                     __IO uint32_t tmpreg; \

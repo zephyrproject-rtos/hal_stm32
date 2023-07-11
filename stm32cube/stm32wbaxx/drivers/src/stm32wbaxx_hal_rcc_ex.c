@@ -74,13 +74,14 @@
   *         contains a field PeriphClockSelection which can be a combination of the following values:
   *            @arg @ref RCC_PERIPHCLK_USART1 USART1 peripheral clock
   *            @arg @ref RCC_PERIPHCLK_USART2 USART2 peripheral clock (*)
-  *            @arg @ref RCC_PERIPHCLK_I2C1 I2C1 peripheral clock (1)
+  *            @arg @ref RCC_PERIPHCLK_I2C1 I2C1 peripheral clock (*)
   *            @arg @ref RCC_PERIPHCLK_LPTIM2 LPTIM2 peripheral clock (*)
   *            @arg @ref RCC_PERIPHCLK_SPI1 SPI1 peripheral clock (*)
   *            @arg @ref RCC_PERIPHCLK_SYSTICK SYSTICK peripheral clock
   *            @arg @ref RCC_PERIPHCLK_TIMIC TIMIC peripheral clock
   *            @arg @ref RCC_PERIPHCLK_SAI1 SAI1 peripheral clock (*)
   *            @arg @ref RCC_PERIPHCLK_RNG RNG peripheral clock
+  *            @arg @ref RCC_PERIPHCLK_AUDIOSYNC AUDIOSYNC peripheral clock (*)
   *            @arg @ref RCC_PERIPHCLK_LPUART1 LPUART1 peripheral clock
   *            @arg @ref RCC_PERIPHCLK_SPI3 SPI3 peripheral clock
   *            @arg @ref RCC_PERIPHCLK_I2C3 I2C3 peripheral clock
@@ -123,6 +124,7 @@ HAL_StatusTypeDef HAL_RCCEx_PeriphCLKConfig(const RCC_PeriphCLKInitTypeDef *Peri
   }
 #endif
 
+
 #if defined (I2C1)
   /*-------------------------- I2C1 clock source configuration ---------------------*/
   if (((PeriphClkInit->PeriphClockSelection) & RCC_PERIPHCLK_I2C1) == RCC_PERIPHCLK_I2C1)
@@ -134,6 +136,9 @@ HAL_StatusTypeDef HAL_RCCEx_PeriphCLKConfig(const RCC_PeriphCLKInitTypeDef *Peri
     __HAL_RCC_I2C1_CONFIG(PeriphClkInit->I2c1ClockSelection);
   }
 #endif
+
+
+
 
 #if defined (LPTIM2)
   /*-------------------------- LPTIM2 clock source configuration -------------------*/
@@ -221,6 +226,19 @@ HAL_StatusTypeDef HAL_RCCEx_PeriphCLKConfig(const RCC_PeriphCLKInitTypeDef *Peri
       __HAL_RCC_PLL1CLKOUT_ENABLE(RCC_PLL1_QCLK);
     }
   }
+
+
+#if defined (RCC_CCIPR2_ASSEL)
+  /*-------------------------- AS clock source configuration -------------------*/
+  if (((PeriphClkInit->PeriphClockSelection) & RCC_PERIPHCLK_AUDIOSYNC) == RCC_PERIPHCLK_AUDIOSYNC)
+  {
+    /* Check the parameters */
+    assert_param(IS_RCC_ASCLKSOURCE(PeriphClkInit->AudioSyncClockSelection));
+
+    /* Configure the AS clock source */
+    __HAL_RCC_AUDIOSYNC_CONFIG(PeriphClkInit->AudioSyncClockSelection);
+  }
+#endif
 
   /*-------------------------- LPUART1 clock source configuration ------------------*/
   if (((PeriphClkInit->PeriphClockSelection) & RCC_PERIPHCLK_LPUART1) == RCC_PERIPHCLK_LPUART1)
@@ -380,12 +398,10 @@ HAL_StatusTypeDef HAL_RCCEx_PeriphCLKConfig(const RCC_PeriphCLKInitTypeDef *Peri
 
 
 /**
-  * @brief  Get the RCC_ClkInitStruct according to the internal RCC configuration registers.
+  * @brief  Get the peripheral kernel clock configuration.
   * @param  PeriphClkInit  pointer to an RCC_PeriphCLKInitTypeDef structure that
-  *         returns the configuration information for the Extended Peripherals
-  *         clocks (USART1, USART2, I2C1, LPTIM2, SPI1, SYSTICK, TIMIC, SAI1, RNG, LPUART1,
-  *         SPI3, I2C3, LPTIM1, ADC, RTC, RADIOST) (1)
-  * @note   (1) Peripherals are not available on all devices
+  *         returns the configuration information for all existing peripheral kernel clocks. (*)
+  * @note   (*) Peripherals are not available on all devices
   * @retval None
   */
 void HAL_RCCEx_GetPeriphCLKConfig(RCC_PeriphCLKInitTypeDef  *PeriphClkInit)
@@ -408,6 +424,10 @@ void HAL_RCCEx_GetPeriphCLKConfig(RCC_PeriphCLKInitTypeDef  *PeriphClkInit)
   /* Get the USART2 clock source ---------------------------------------------*/
   PeriphClkInit->Usart2ClockSelection = (tmpreg & RCC_CCIPR1_USART2SEL);
 #endif
+
+
+
+
 
 #if defined (I2C1)
   /* Get the I2C1 clock source -----------------------------------------------*/
@@ -440,6 +460,12 @@ void HAL_RCCEx_GetPeriphCLKConfig(RCC_PeriphCLKInitTypeDef  *PeriphClkInit)
 
   /* Get the RNG clock source ------------------------------------------------*/
   PeriphClkInit->RngClockSelection = (tmpreg & RCC_CCIPR2_RNGSEL);
+
+
+#if defined (RCC_CCIPR2_ASSEL)
+  /* Get the Audio sync clock source -----------------------------------------*/
+  PeriphClkInit->AudioSyncClockSelection = (tmpreg & RCC_CCIPR2_ASSEL);
+#endif
 
   /* Get CCIPR3 register value */
   tmpreg = RCC->CCIPR3;
@@ -484,6 +510,7 @@ void HAL_RCCEx_GetPeriphCLKConfig(RCC_PeriphCLKInitTypeDef  *PeriphClkInit)
   *            @arg @ref RCC_PERIPHCLK_TIMIC TIMIC peripheral clock
   *            @arg @ref RCC_PERIPHCLK_SAI1 SAI1 peripheral clock (*)
   *            @arg @ref RCC_PERIPHCLK_RNG RNG peripheral clock
+  *            @arg @ref RCC_PERIPHCLK_AUDIOSYNC AUDIOSYNC peripheral clock (*)
   *            @arg @ref RCC_PERIPHCLK_LPUART1 LPUART1 peripheral clock
   *            @arg @ref RCC_PERIPHCLK_SPI3 SPI3 peripheral clock
   *            @arg @ref RCC_PERIPHCLK_I2C3 I2C3 peripheral clock
@@ -561,6 +588,7 @@ uint32_t HAL_RCCEx_GetPeriphCLKFreq(uint32_t PeriphClk)
       break;
 #endif
 
+
 #if defined(I2C1)
     case RCC_PERIPHCLK_I2C1:
       /* Get the current I2C1 source */
@@ -587,6 +615,8 @@ uint32_t HAL_RCCEx_GetPeriphCLKFreq(uint32_t PeriphClk)
       }
       break;
 #endif
+
+
 
 #if defined(LPTIM2)
     case RCC_PERIPHCLK_LPTIM2:
@@ -807,6 +837,23 @@ uint32_t HAL_RCCEx_GetPeriphCLKFreq(uint32_t PeriphClk)
         frequency = HAL_RCC_GetPLL1QFreq();
       }
       break;
+
+
+#if defined (RCC_CCIPR2_ASSEL)
+    case RCC_PERIPHCLK_AUDIOSYNC:
+      /* Get the current Audio Sync source */
+      srcclk = __HAL_RCC_GET_AUDIOSYNC_SOURCE();
+
+      if (srcclk == RCC_ASCLKSOURCE_PLL1P)
+      {
+        frequency = HAL_RCC_GetPLL1PFreq();
+      }
+      else
+      {
+        frequency = HAL_RCC_GetPLL1QFreq();
+      }
+      break;
+#endif
 
     case RCC_PERIPHCLK_LPUART1:
       /* Get the current LPUART1 source */

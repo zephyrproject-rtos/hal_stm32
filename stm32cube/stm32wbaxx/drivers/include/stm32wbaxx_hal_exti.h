@@ -334,6 +334,10 @@ uint32_t          HAL_EXTI_GetLockAttributes(void);
   * @}
   */
 
+/**
+  * @}
+  */
+
 #ifdef __cplusplus
 }
 #endif

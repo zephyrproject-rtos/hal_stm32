@@ -58,66 +58,76 @@ typedef struct
   */
 typedef struct
 {
-  uint32_t PeriphClockSelection;   /*!< The Extended Clock to be configured.
-                                        This parameter can be a value of @ref RCCEx_Periph_Clock_Selection */
+  uint32_t PeriphClockSelection;      /*!< The Extended Clock to be configured.
+                                           This parameter can be a value of @ref RCCEx_Periph_Clock_Selection */
 
-  uint32_t Usart1ClockSelection;   /*!< Specifies USART1 clock source.
-                                        This parameter can be a value of @ref RCCEx_USART1_Clock_Source */
+  uint32_t Usart1ClockSelection;      /*!< Specifies USART1 clock source.
+                                           This parameter can be a value of @ref RCCEx_USART1_Clock_Source */
 
 #if defined (USART2)
-  uint32_t Usart2ClockSelection;   /*!< Specifies USART2 clock source.
-                                        This parameter can be a value of @ref RCCEx_USART2_Clock_Source */
+  uint32_t Usart2ClockSelection;      /*!< Specifies USART2 clock source.
+                                           This parameter can be a value of @ref RCCEx_USART2_Clock_Source */
 #endif
+
 
 #if defined (I2C1)
-  uint32_t I2c1ClockSelection;     /*!< Specifies I2C1 clock source.
-                                        This parameter can be a value of @ref RCCEx_I2C1_Clock_Source */
+  uint32_t I2c1ClockSelection;        /*!< Specifies I2C1 clock source.
+                                           This parameter can be a value of @ref RCCEx_I2C1_Clock_Source */
 #endif
 
+
+
+
 #if defined (LPTIM2)
-  uint32_t Lptim2ClockSelection;   /*!< Specifies LPTIM2 clock source.
-                                        This parameter can be a value of @ref RCCEx_LPTIM2_Clock_Source */
+  uint32_t Lptim2ClockSelection;      /*!< Specifies LPTIM2 clock source.
+                                           This parameter can be a value of @ref RCCEx_LPTIM2_Clock_Source */
 #endif
 
 #if defined (SPI1)
-  uint32_t Spi1ClockSelection;     /*!< Specifies SPI1 clock source
-                                        This parameter can be a value of @ref RCCEx_SPI1_Clock_Source    */
+  uint32_t Spi1ClockSelection;        /*!< Specifies SPI1 clock source
+                                           This parameter can be a value of @ref RCCEx_SPI1_Clock_Source */
 #endif
 
-  uint32_t SystickClockSelection;  /*!< Specifies SYSTICK clock source.
-                                        This parameter can be a value of @ref RCCEx_SYSTICK_Clock_Source */
+  uint32_t SystickClockSelection;     /*!< Specifies SYSTICK clock source.
+                                           This parameter can be a value of @ref RCCEx_SYSTICK_Clock_Source */
 
-  uint32_t TimIcClockSelection;    /*!< Specifies TIMIC clock source.
-                                        This parameter can be a value of @ref RCCEx_TIMIC_Clock_Source */
+  uint32_t TimIcClockSelection;       /*!< Specifies TIMIC clock source.
+                                           This parameter can be a value of @ref RCCEx_TIMIC_Clock_Source */
 
 #if defined (SAI1)
-  uint32_t Sai1ClockSelection;     /*!< Specifies SAI1 clock source.
-                                        This parameter can be a value of @ref RCCEx_SAI1_Clock_Source */
+  uint32_t Sai1ClockSelection;        /*!< Specifies SAI1 clock source.
+                                           This parameter can be a value of @ref RCCEx_SAI1_Clock_Source */
 #endif
 
-  uint32_t RngClockSelection;      /*!< Specifies RNG clock source
-                                        This parameter can be a value of @ref RCCEx_RNG_Clock_Source  */
+  uint32_t RngClockSelection;         /*!< Specifies RNG clock source
+                                           This parameter can be a value of @ref RCCEx_RNG_Clock_Source */
 
-  uint32_t Lpuart1ClockSelection;  /*!< Specifies LPUART1 clock source.
-                                        This parameter can be a value of @ref RCCEx_LPUART1_Clock_Source */
 
-  uint32_t Spi3ClockSelection;     /*!< Specifies SPI3 clock source
-                                      This parameter can be a value of @ref RCCEx_SPI3_Clock_Source    */
+#if defined (RCC_CCIPR2_ASSEL)
+  uint32_t AudioSyncClockSelection;   /*!< Specifies Audio Sync clock source.
+                                           This parameter can be a value of @ref RCCEx_AudioSync_Clock_Source */
+#endif
 
-  uint32_t I2c3ClockSelection;     /*!< Specifies I2C3 clock source.
-                                        This parameter can be a value of @ref RCCEx_I2C3_Clock_Source */
+  uint32_t Lpuart1ClockSelection;     /*!< Specifies LPUART1 clock source.
+                                           This parameter can be a value of @ref RCCEx_LPUART1_Clock_Source */
 
-  uint32_t Lptim1ClockSelection;   /*!< Specifies LPTIM1 clock source.
-                                     This parameter can be a value of @ref RCCEx_LPTIM1_Clock_Source */
+  uint32_t Spi3ClockSelection;        /*!< Specifies SPI3 clock source
+                                           This parameter can be a value of @ref RCCEx_SPI3_Clock_Source */
 
-  uint32_t AdcClockSelection;      /*!< Specifies ADC4 interface clock source.
-                                        This parameter can be a value of @ref RCCEx_ADC_Clock_Source */
+  uint32_t I2c3ClockSelection;        /*!< Specifies I2C3 clock source.
+                                           This parameter can be a value of @ref RCCEx_I2C3_Clock_Source */
 
-  uint32_t RTCClockSelection;      /*!< Specifies RTC clock source.
-                                        This parameter can be a value of @ref RCC_RTC_Clock_Source */
+  uint32_t Lptim1ClockSelection;      /*!< Specifies LPTIM1 clock source.
+                                           This parameter can be a value of @ref RCCEx_LPTIM1_Clock_Source */
 
-  uint32_t RadioSlpTimClockSelection;   /*!< Specifies Radio Sleep Timer clock source.
-                                             This parameter can be a value of @ref RCC_RadioSleepTimer_Clock_Source */
+  uint32_t AdcClockSelection;         /*!< Specifies ADC4 interface clock source.
+                                           This parameter can be a value of @ref RCCEx_ADC_Clock_Source */
+
+  uint32_t RTCClockSelection;         /*!< Specifies RTC clock source.
+                                           This parameter can be a value of @ref RCC_RTC_Clock_Source */
+
+  uint32_t RadioSlpTimClockSelection; /*!< Specifies Radio Sleep Timer clock source.
+                                           This parameter can be a value of @ref RCC_RadioSleepTimer_Clock_Source */
 } RCC_PeriphCLKInitTypeDef;
 /**
   * @}
@@ -158,6 +168,9 @@ typedef struct
 #define RCC_PERIPHCLK_ADC                   0x00002000U
 #define RCC_PERIPHCLK_RTC                   0x00004000U
 #define RCC_PERIPHCLK_RADIOST               0x00008000U
+#if defined (RCC_CCIPR2_ASSEL)
+#define RCC_PERIPHCLK_AUDIOSYNC             0x00200000U
+#endif
 /**
   * @}
   */
@@ -186,6 +199,7 @@ typedef struct
   */
 #endif
 
+
 #if defined (I2C1)
 /** @defgroup RCCEx_I2C1_Clock_Source I2C1 Clock Source
   * @{
@@ -197,6 +211,9 @@ typedef struct
   * @}
   */
 #endif
+
+
+
 
 #if defined (LPTIM2)
 /** @defgroup RCCEx_LPTIM2_Clock_Source LPTIM2 Clock Source
@@ -266,6 +283,18 @@ typedef struct
 /**
   * @}
   */
+
+
+#if defined (RCC_CCIPR2_ASSEL)
+/** @defgroup RCCEx_AudioSync_Clock_Source Audio Sync Clock Source
+  * @{
+  */
+#define RCC_ASCLKSOURCE_PLL1P               0x00000000U
+#define RCC_ASCLKSOURCE_PLL1Q               RCC_CCIPR2_ASSEL
+/**
+  * @}
+  */
+#endif
 
 /** @defgroup RCCEx_LPUART1_Clock_Source LPUART1 Clock Source
   * @{
@@ -437,6 +466,7 @@ typedef struct
 #define __HAL_RCC_GET_USART2_SOURCE()       READ_BIT(RCC->CCIPR1, RCC_CCIPR1_USART2SEL)
 #endif
 
+
 #if defined (I2C1)
 /** @brief  Macro to configure the I2C1 clock (I2C1CLK).
   * @param  __I2C1_CLKSOURCE__ specifies the I2C1 clock source.
@@ -457,6 +487,9 @@ typedef struct
   */
 #define __HAL_RCC_GET_I2C1_SOURCE()         READ_BIT(RCC->CCIPR1, RCC_CCIPR1_I2C1SEL)
 #endif
+
+
+
 
 #if defined (LPTIM2)
 /** @brief  Macro to configure the LPTIM2 clock (LPTIM2CLK).
@@ -506,6 +539,7 @@ typedef struct
   *            @arg RCC_SYSTICKCLKSOURCE_HCLK_DIV8 : HCLK divided by 8 Clock selected as SYSTICK clock
   *            @arg RCC_SYSTICKCLKSOURCE_LSI : LSI Clock selected as SYSTICK clock
   *            @arg RCC_SYSTICKCLKSOURCE_LSE : LSE Clock selected as SYSTICK clock
+  * @note   (1) Source is not available on all devices
   */
 #define __HAL_RCC_SYSTICK_CONFIG(__SYSTICK_CLKSOURCE__) \
   MODIFY_REG(RCC->CCIPR1, RCC_CCIPR1_SYSTICKSEL, (__SYSTICK_CLKSOURCE__))
@@ -515,6 +549,8 @@ typedef struct
   *            @arg RCC_SYSTICKCLKSOURCE_HCLK_DIV8 : HCLK divided by 8 Clock selected as SYSTICK clock
   *            @arg RCC_SYSTICKCLKSOURCE_LSI : LSI Clock selected as SYSTICK clock
   *            @arg RCC_SYSTICKCLKSOURCE_LSE : LSE Clock selected as SYSTICK clock
+  *            @arg RCC_SYSTICKCLKSOURCE_HSI : LSI Clock selected as SYSTICK clock (1)
+  * @note   (1) Source is not available on all devices
   */
 #define __HAL_RCC_GET_SYSTICK_SOURCE()      READ_BIT(RCC->CCIPR1, RCC_CCIPR1_SYSTICKSEL)
 
@@ -558,6 +594,24 @@ typedef struct
   *             @arg @ref RCC_SAI1CLKSOURCE_HSI  SAI1 clock = HSI16
   */
 #define __HAL_RCC_GET_SAI1_SOURCE()         READ_BIT(RCC->CCIPR2, RCC_CCIPR2_SAI1SEL)
+#endif
+
+
+#if defined (RCC_CCIPR2_ASSEL)
+/** @brief  macro to configure the Audio Sync clock source.
+  * @param  __AS_CLKSOURCE__ specifies the Audio Sync clock source.
+  *            @arg RCC_ASCLKSOURCE_PLL1P : PLL1P Clock selected as Audio Sync clock
+  *            @arg RCC_ASCLKSOURCE_PLL1Q : PLL1Q Clock selected as Audio Sync clock
+  */
+#define __HAL_RCC_AUDIOSYNC_CONFIG(__AS_CLKSOURCE__) \
+  MODIFY_REG(RCC->CCIPR2, RCC_CCIPR2_ASSEL, (__AS_CLKSOURCE__))
+
+/** @brief  macro to get the Audio Sync clock source.
+  * @retval The clock source can be one of the following values:
+  *            @arg RCC_ASCLKSOURCE_PLL1P : PLL1P Clock selected as Audio Sync clock
+  *            @arg RCC_ASCLKSOURCE_PLL1Q : PLL1Q Clock selected as Audio Sync clock
+  */
+#define __HAL_RCC_GET_AUDIOSYNC_SOURCE()        READ_BIT(RCC->CCIPR2, RCC_CCIPR2_ASSEL)
 #endif
 
 /** @brief macro to configure the RNG clock (RNGCLK).
@@ -762,12 +816,21 @@ uint32_t          HAL_RCCEx_GetRadioBusClockReadiness(void);
   */
 /* Define used for IS_RCC_* macros below */
 #if defined (STM32WBA54xx) || defined (STM32WBA55xx)
+#if !defined (STM32WBAXX_SI_CUT1_0)
+#define RCC_PERIPHCLOCK_ALL             (RCC_PERIPHCLK_USART1  | RCC_PERIPHCLK_USART2 | RCC_PERIPHCLK_I2C1    | \
+                                         RCC_PERIPHCLK_LPTIM2  | RCC_PERIPHCLK_SPI1   | RCC_PERIPHCLK_SYSTICK | \
+                                         RCC_PERIPHCLK_TIMIC   | RCC_PERIPHCLK_SAI1   | RCC_PERIPHCLK_RNG     | \
+                                         RCC_PERIPHCLK_LPUART1 | RCC_PERIPHCLK_SPI3   | RCC_PERIPHCLK_I2C3    | \
+                                         RCC_PERIPHCLK_LPTIM1  | RCC_PERIPHCLK_ADC    | RCC_PERIPHCLK_RTC     | \
+                                         RCC_PERIPHCLK_RADIOST | RCC_PERIPHCLK_AUDIOSYNC)
+#else
 #define RCC_PERIPHCLOCK_ALL             (RCC_PERIPHCLK_USART1  | RCC_PERIPHCLK_USART2 | RCC_PERIPHCLK_I2C1    | \
                                          RCC_PERIPHCLK_LPTIM2  | RCC_PERIPHCLK_SPI1   | RCC_PERIPHCLK_SYSTICK | \
                                          RCC_PERIPHCLK_TIMIC   | RCC_PERIPHCLK_SAI1   | RCC_PERIPHCLK_RNG     | \
                                          RCC_PERIPHCLK_LPUART1 | RCC_PERIPHCLK_SPI3   | RCC_PERIPHCLK_I2C3    | \
                                          RCC_PERIPHCLK_LPTIM1  | RCC_PERIPHCLK_ADC    | RCC_PERIPHCLK_RTC     | \
                                          RCC_PERIPHCLK_RADIOST)
+#endif
 #elif defined (STM32WBA52xx)
 #define RCC_PERIPHCLOCK_ALL             (RCC_PERIPHCLK_USART1  | RCC_PERIPHCLK_USART2 | RCC_PERIPHCLK_I2C1    | \
                                          RCC_PERIPHCLK_LPTIM2  | RCC_PERIPHCLK_SPI1   | RCC_PERIPHCLK_SYSTICK | \
@@ -782,7 +845,7 @@ uint32_t          HAL_RCCEx_GetRadioBusClockReadiness(void);
                                          RCC_PERIPHCLK_LPUART1 | RCC_PERIPHCLK_SPI3   | RCC_PERIPHCLK_I2C3    | \
                                          RCC_PERIPHCLK_LPTIM1  | RCC_PERIPHCLK_ADC    | RCC_PERIPHCLK_RTC     | \
                                          RCC_PERIPHCLK_RADIOST)
-#endif /* STM32WBA54xx || STM32WBA55xx */
+#endif
 /**
   * @}
   */
@@ -806,11 +869,15 @@ uint32_t          HAL_RCCEx_GetRadioBusClockReadiness(void);
                                                    ((__SOURCE__) == RCC_USART2CLKSOURCE_LSE))
 #endif
 
+
 #if defined(I2C1)
 #define IS_RCC_I2C1CLKSOURCE(__SOURCE__)          (((__SOURCE__) == RCC_I2C1CLKSOURCE_PCLK1)  || \
                                                    ((__SOURCE__) == RCC_I2C1CLKSOURCE_SYSCLK) || \
                                                    ((__SOURCE__) == RCC_I2C1CLKSOURCE_HSI))
 #endif
+
+
+
 
 #if defined (LPTIM2)
 #define IS_RCC_LPTIM2CLKSOURCE(__SOURCE__)        (((__SOURCE__) == RCC_LPTIM2CLKSOURCE_PCLK1) || \
@@ -849,6 +916,12 @@ uint32_t          HAL_RCCEx_GetRadioBusClockReadiness(void);
                                                    ((__SOURCE__) == RCC_RNGCLKSOURCE_LSI)   || \
                                                    ((__SOURCE__) == RCC_RNGCLKSOURCE_HSI)   || \
                                                    ((__SOURCE__) == RCC_RNGCLKSOURCE_PLL1Q))
+
+
+#if defined (RCC_CCIPR2_ASSEL)
+#define IS_RCC_ASCLKSOURCE(__SOURCE__)            (((__SOURCE__) == RCC_ASCLKSOURCE_PLL1P)  || \
+                                                   ((__SOURCE__) == RCC_ASCLKSOURCE_PLL1Q))
+#endif
 
 #define IS_RCC_LPUART1CLKSOURCE(__SOURCE__)       (((__SOURCE__) == RCC_LPUART1CLKSOURCE_PCLK7)  || \
                                                    ((__SOURCE__) == RCC_LPUART1CLKSOURCE_SYSCLK) || \

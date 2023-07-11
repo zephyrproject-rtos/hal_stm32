@@ -3696,7 +3696,6 @@ static void DMA_List_GetNodeConfig(DMA_NodeConfTypeDef *const pNodeConfig,
   /* Get CBR1 fields **************************************************************************************************/
   pNodeConfig->DataSize = pNode->LinkRegisters[NODE_CBR1_DEFAULT_OFFSET] & DMA_CBR1_BNDT;
 
-  pNodeConfig->RepeatBlockConfig.RepeatCount = 1U;
   /*********************************************************************************** CBR1 fields values are updated */
 
 
@@ -4010,7 +4009,7 @@ static void DMA_List_ConvertNodeToDynamic(uint32_t ContextNodeAddr,
   DMA_NodeTypeDef *context_node = (DMA_NodeTypeDef *)ContextNodeAddr;
   DMA_NodeTypeDef *current_node = (DMA_NodeTypeDef *)CurrentNodeAddr;
   uint32_t update_link[NODE_MAXIMUM_SIZE] = {DMA_CLLR_UT1, DMA_CLLR_UT2, DMA_CLLR_UB1, DMA_CLLR_USA,
-                                             DMA_CLLR_UDA, DMA_CLLR_ULL, DMA_CLLR_ULL, DMA_CLLR_ULL
+                                             DMA_CLLR_UDA, DMA_CLLR_ULL
                                             };
 
   /* Update ULL position according to register number */
@@ -4075,7 +4074,7 @@ static void DMA_List_ConvertNodeToStatic(uint32_t ContextNodeAddr,
   DMA_NodeTypeDef *context_node = (DMA_NodeTypeDef *)ContextNodeAddr;
   DMA_NodeTypeDef *current_node = (DMA_NodeTypeDef *)CurrentNodeAddr;
   uint32_t update_link[NODE_MAXIMUM_SIZE] = {DMA_CLLR_UT1, DMA_CLLR_UT2, DMA_CLLR_UB1, DMA_CLLR_USA,
-                                             DMA_CLLR_UDA, DMA_CLLR_ULL, DMA_CLLR_ULL, DMA_CLLR_ULL
+                                             DMA_CLLR_UDA, DMA_CLLR_ULL
                                             };
 
   /* Update ULL position according to register number */

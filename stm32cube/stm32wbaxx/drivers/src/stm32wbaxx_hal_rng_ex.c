@@ -77,12 +77,12 @@
   *         RNG_ConfigTypeDef.
   * @param  hrng pointer to a RNG_HandleTypeDef structure that contains
   *          the configuration information for RNG.
-  * @param  pConf: pointer to a RNG_ConfigTypeDef structure that contains
+  * @param  pConf pointer to a RNG_ConfigTypeDef structure that contains
   *         the configuration information for RNG module
 
   * @retval HAL status
   */
-HAL_StatusTypeDef HAL_RNGEx_SetConfig(RNG_HandleTypeDef *hrng, RNG_ConfigTypeDef *pConf)
+HAL_StatusTypeDef HAL_RNGEx_SetConfig(RNG_HandleTypeDef *hrng, const RNG_ConfigTypeDef *pConf)
 {
   uint32_t tickstart;
   uint32_t cr_value;
@@ -123,7 +123,7 @@ HAL_StatusTypeDef HAL_RNGEx_SetConfig(RNG_HandleTypeDef *hrng, RNG_ConfigTypeDef
                           | (pConf->Config3 << RNG_CR_RNG_CONFIG3_Pos));
 
     MODIFY_REG(hrng->Instance->CR, RNG_CR_NISTC | RNG_CR_CLKDIV | RNG_CR_RNG_CONFIG1
-               | RNG_CR_RNG_CONFIG2 | RNG_CR_RNG_CONFIG3,
+               | RNG_CR_RNG_CONFIG2 | RNG_CR_RNG_CONFIG3 | RNG_CR_ARDIS,
                (uint32_t)(RNG_CR_CONDRST | cr_value));
 
     /* RNG health test control in accordance with NIST */
@@ -173,7 +173,7 @@ HAL_StatusTypeDef HAL_RNGEx_SetConfig(RNG_HandleTypeDef *hrng, RNG_ConfigTypeDef
   *         RNG_ConfigTypeDef.
   * @param  hrng pointer to a RNG_HandleTypeDef structure that contains
   *          the configuration information for RNG.
-  * @param  pConf: pointer to a RNG_ConfigTypeDef structure that contains
+  * @param  pConf pointer to a RNG_ConfigTypeDef structure that contains
   *         the configuration information for RNG module
 
   * @retval HAL status
