@@ -794,6 +794,16 @@ void HAL_OSPI_IRQHandler(OSPI_HandleTypeDef *hospi)
 }
 
 /**
+  * @brief  Check whether the flash is in MemoryMap or not.
+  * @param  hospi   : OSPI handle
+  * @retval Status (0: disabled, 1: enabled)
+  */
+uint32_t HAL_OSPI_IsMemoryMapped(OSPI_HandleTypeDef *hospi)
+{
+  return ((READ_BIT(hospi->Instance->CR, OCTOSPI_CR_FMODE) == OCTOSPI_CR_FMODE) ? 1UL : 0UL);
+}
+
+/**
   * @brief  Set the command configuration.
   * @param  hospi   : OSPI handle
   * @param  cmd     : structure that contains the command configuration information
