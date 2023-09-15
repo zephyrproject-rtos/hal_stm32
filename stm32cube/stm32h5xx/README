@@ -54,4 +54,13 @@ Patch List:
        drivers/include/stm32h5xx_ll_spi.h
       ST internal bug : 147754
 
+ *fix to the V2 HAL API to get PTP to work
+     impacted file : stm32h5xx_hal_eth.c
+     In the HAL_ETH_ReadData function where it checks for the last descriptor, 
+     we added a checked if the TSA bit was set in DESC1
+     If the TSA bit is set then have a peak at the context descriptor which should be the one 
+     after the last descriptor
+     If the CTXT bit is set in the context descriptor then extract the timestamps
+     ST internal bug : 161504
+
    See release_note.html from STM32Cube
