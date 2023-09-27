@@ -598,6 +598,7 @@ HAL_StatusTypeDef     HAL_QSPI_AutoPolling_IT(QSPI_HandleTypeDef *hqspi, QSPI_Co
 
 /* QSPI memory-mapped mode */
 HAL_StatusTypeDef     HAL_QSPI_MemoryMapped(QSPI_HandleTypeDef *hqspi, QSPI_CommandTypeDef *cmd, QSPI_MemoryMappedTypeDef *cfg);
+uint32_t HAL_QSPI_IsMemoryMapped(QSPI_HandleTypeDef *hqspi);
 
 /* Callback functions in non-blocking modes ***********************************/
 void                  HAL_QSPI_ErrorCallback        (QSPI_HandleTypeDef *hqspi);

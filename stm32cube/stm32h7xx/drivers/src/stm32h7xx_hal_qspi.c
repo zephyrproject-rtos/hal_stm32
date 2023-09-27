@@ -1778,6 +1778,16 @@ HAL_StatusTypeDef HAL_QSPI_MemoryMapped(QSPI_HandleTypeDef *hqspi, QSPI_CommandT
 }
 
 /**
+  * @brief  Check whether the flash is in MemoryMap or not.
+  * @param  hqspi   : QSPI handle
+  * @retval Status (0: disabled, 1: enabled)
+  */
+uint32_t HAL_QSPI_IsMemoryMapped(QSPI_HandleTypeDef *hqspi)
+{
+  return ((READ_BIT(hqspi->Instance->CCR, QUADSPI_CCR_FMODE) == QUADSPI_CCR_FMODE) ? 1UL : 0UL);
+}
+
+/**
   * @brief  Transfer Error callback.
   * @param  hqspi QSPI handle
   * @retval None
