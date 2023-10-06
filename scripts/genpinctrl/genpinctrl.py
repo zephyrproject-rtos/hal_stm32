@@ -560,7 +560,7 @@ def main(data_path, output):
                                 "port": pin["port"],
                                 "pin": pin["pin"],
                                 "mod": pin["mod"],
-                                "signal": signal["name"].lower(),
+                                "signal": signal["name"].lower().replace("-", "_"),
                                 "af": signal["af"],
                                 "mode": signal["mode"],
                                 "drive": af.get("drive"),
