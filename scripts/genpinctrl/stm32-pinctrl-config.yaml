@@ -267,3 +267,6 @@
 
 - name: USB
   match: "^USB_(?:DM)?(?:DP)?(?:NOE)?$"
+
+- name: JTAG PORT
+  match: ^(SYS|DEBUG)_((JTMS-)?SWDIO|(JTCK-)?SWCLK|JTDI|JTDO(-TRACESWO|-SWO)?|(NJ)?JTRST)$
