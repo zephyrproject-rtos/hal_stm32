@@ -31,6 +31,8 @@ extern "C" {
   * @{
   */
 
+#if defined (DCACHE1)
+
 /** @addtogroup DCACHE
   * @{
   */
@@ -317,6 +319,8 @@ uint32_t HAL_DCACHE_GetError(DCACHE_HandleTypeDef *hdcache);
 /**
   * @}
   */
+
+#endif /* DCACHE1 */
 
 /**
   * @}
