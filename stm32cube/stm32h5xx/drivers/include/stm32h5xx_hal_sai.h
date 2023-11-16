@@ -31,6 +31,8 @@ extern "C" {
   * @{
   */
 
+#if defined(SAI1_Block_A) || defined(SAI1_Block_B)
+
 /** @addtogroup SAI
   * @{
   */
@@ -956,6 +958,8 @@ uint32_t HAL_SAI_GetError(const SAI_HandleTypeDef *hsai);
 /**
   * @}
   */
+
+#endif /* SAI1_Block_A || SAI1_Block_B */
 
 /**
   * @}
