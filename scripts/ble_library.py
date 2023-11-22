@@ -136,9 +136,9 @@ def build_patch_from_current_zephyr_version(
 
     temp_source_lib_path = Path(temp_source_path / "lib")
 
-    # reset the STM32Cube repo to this current version
+    # Checkout the current Zephyr version of the STM32Cube repo
     os_cmd(
-        ("git", "reset", "--hard", version),
+        ("git", "checkout", "-f", "--recurse-submodules", version),
         cwd=src_repo_path,
     )
 
@@ -218,9 +218,9 @@ def update(
     build_patch_from_current_zephyr_version(
         src_repo_path, temp_source_path, dest_lib_path, current_version
     )
-    # reset the STM32Cube repo to this update version
+    # Checkout the latest version of the STM32Cube repo
     os_cmd(
-        ("git", "reset", "--hard", update_version),
+        ("git", "checkout", "-f", "--recurse-submodules", update_version),
         cwd=src_repo_path,
     )
     copy_hci_files(src_repo_path, dest_lib_path)
