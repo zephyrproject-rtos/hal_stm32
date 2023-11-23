@@ -6,7 +6,7 @@ Origin:
    http://www.st.com/en/embedded-software/stm32cubef7.html
 
 Status:
-   version v1.17.0
+   version v1.17.1
 
 Purpose:
    ST Microelectronics official MCU package for STM32F7 series.
@@ -23,7 +23,7 @@ URL:
    https://github.com/STMicroelectronics/STM32CubeF7
 
 Commit:
-   f8bda023e34ce9935cb4efb9d1c299860137b6f3
+   c20e6dd15bd2a90e19f28cadc703aeb26825d211
 
 Maintained-by:
    External
@@ -45,7 +45,7 @@ Patch List:
     -Removed unused stm32cube/stm32f7xx/drivers/include/stm32_assert_template.h
 
    *Enable legacy ethernet driver using HAL_ETH_LEGACY_MODULE_ENABLED
-    This will have to be removed once Zephyr driver is migrated ot the new
+    This will have to be removed once Zephyr driver is migrated to the new
     Cube HAL ethernet API.
 
    *Wrap define UNUSED with an ifndef
