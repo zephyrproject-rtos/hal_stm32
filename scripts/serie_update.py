@@ -192,22 +192,14 @@ class Stm32SerieUpdate:
             # if already exists, then just clean and fetch
             self.os_cmd(("git", "clean", "-fdx"), cwd=self.stm32cube_serie_path)
             self.os_cmd(("git", "fetch"), cwd=self.stm32cube_serie_path)
-            # this is useful when HAL drivers submodules are not aleardy
-            # present locally, otherwise "git fetch" is sufficient
-            self.os_cmd(("git", "submodule", "update", "--init"),
-                        cwd=self.stm32cube_serie_path)
             branch = self.major_branch()
             self.os_cmd(
                 ("git", "reset", "--hard", branch),
                 cwd=self.stm32cube_serie_path,
             )
         else:
-            # HAL drivers are now included as git submodules in upstream
-            # STM32Cube repositories
-            # So, we need to add --recursive or --recurse-submodules to
-            # "git clone" to fetch them
             self.os_cmd(
-                ("git", "clone", "--recursive", repo_name),
+                ("git", "clone", repo_name),
                 cwd=self.stm32cube_repo_path,
             )
             branch = self.major_branch()
