@@ -14,7 +14,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -886,8 +886,6 @@ HAL_StatusTypeDef HAL_CORDIC_Calculate_DMA(CORDIC_HandleTypeDef *hcordic, const 
 {
   uint32_t sizeinbuff;
   uint32_t sizeoutbuff;
-  uint32_t inputaddr;
-  uint32_t outputaddr;
 
   /* Check the parameters */
   assert_param(IS_CORDIC_DMA_DIRECTION(DMADirection));
@@ -964,10 +962,9 @@ HAL_StatusTypeDef HAL_CORDIC_Calculate_DMA(CORDIC_HandleTypeDef *hcordic, const 
          This is necessary as the DMA handles the data at byte-level. */
       sizeoutbuff = 4U * sizeoutbuff;
 
-      outputaddr = (uint32_t)pOutBuff;
-
       /* Enable the DMA stream managing CORDIC output data read */
-      if (HAL_DMA_Start_IT(hcordic->hdmaOut, (uint32_t)&hcordic->Instance->RDATA, outputaddr, sizeoutbuff) != HAL_OK)
+      if (HAL_DMA_Start_IT(hcordic->hdmaOut, (uint32_t)&hcordic->Instance->RDATA, (uint32_t) pOutBuff, sizeoutbuff)
+          != HAL_OK)
       {
         /* Update the error code */
         hcordic->ErrorCode |= HAL_CORDIC_ERROR_DMA;
@@ -1003,10 +1000,9 @@ HAL_StatusTypeDef HAL_CORDIC_Calculate_DMA(CORDIC_HandleTypeDef *hcordic, const 
          This is necessary as the DMA handles the data at byte-level. */
       sizeinbuff = 4U * sizeinbuff;
 
-      inputaddr  = (uint32_t)pInBuff;
-
       /* Enable the DMA stream managing CORDIC input data write */
-      if (HAL_DMA_Start_IT(hcordic->hdmaIn, inputaddr, (uint32_t)&hcordic->Instance->WDATA, sizeinbuff) != HAL_OK)
+      if (HAL_DMA_Start_IT(hcordic->hdmaIn, (uint32_t) pInBuff, (uint32_t)&hcordic->Instance->WDATA, sizeinbuff)
+          != HAL_OK)
       {
         /* Update the error code */
         hcordic->ErrorCode |= HAL_CORDIC_ERROR_DMA;

@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -393,7 +393,7 @@ ErrorStatus LL_USART_Init(USART_TypeDef *USARTx, const LL_USART_InitTypeDef *USA
 #if defined(UART12)
     else if (USARTx == UART12)
     {
-      periphclk = LL_RCC_GetUSARTClockFreq(LL_RCC_UART12_CLKSOURCE);
+      periphclk = LL_RCC_GetUARTClockFreq(LL_RCC_UART12_CLKSOURCE);
     }
 #endif /* UART12 */
     else

@@ -13,7 +13,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -77,8 +77,8 @@ static void HCD_HC_IN_IRQHandler(HCD_HandleTypeDef *hhcd, uint8_t chnum);
 static void HCD_HC_OUT_IRQHandler(HCD_HandleTypeDef *hhcd, uint8_t chnum);
 static void HCD_Port_IRQHandler(HCD_HandleTypeDef *hhcd);
 static void HAL_HCD_ClearPhyChannel(HCD_HandleTypeDef *hhcd);
-static uint8_t HAL_HCD_GetLogical_Channel(HCD_HandleTypeDef *hhcd, uint8_t phy_chnum, uint8_t dir);
-static uint8_t HAL_HCD_Check_usedChannel(HCD_HandleTypeDef *hhcd, uint8_t ch_num);
+static uint8_t HAL_HCD_GetLogical_Channel(HCD_HandleTypeDef const *hhcd, uint8_t phy_chnum, uint8_t dir);
+static uint8_t HAL_HCD_Check_usedChannel(HCD_HandleTypeDef const *hhcd, uint8_t ch_num);
 static uint8_t HAL_HCD_Get_FreePhyChannel(HCD_HandleTypeDef *hhcd, uint8_t ch_num, uint8_t epnum, uint8_t ep_type);
 
 #if (USE_USB_DOUBLE_BUFFER == 1U)
@@ -156,6 +156,9 @@ HAL_StatusTypeDef HAL_HCD_Init(HCD_HandleTypeDef *hhcd)
 
   /* Disable the Interrupts */
   (void)__HAL_HCD_DISABLE(hhcd);
+
+  /* Dma not supported, force to zero */
+  hhcd->Init.dma_enable = 0U;
 
   /* Init the Core (common init.) */
   (void)USB_CoreInit(hhcd->Instance, hhcd->Init);
@@ -1429,7 +1432,7 @@ and the data flow.
   * @param  hhcd HCD handle
   * @retval HAL state
   */
-HCD_StateTypeDef HAL_HCD_GetState(HCD_HandleTypeDef *hhcd)
+HCD_StateTypeDef HAL_HCD_GetState(HCD_HandleTypeDef const *hhcd)
 {
   return hhcd->State;
 }
@@ -1448,7 +1451,7 @@ HCD_StateTypeDef HAL_HCD_GetState(HCD_HandleTypeDef *hhcd)
   *            URB_ERROR/
   *            URB_STALL
   */
-HCD_URBStateTypeDef HAL_HCD_HC_GetURBState(HCD_HandleTypeDef *hhcd, uint8_t chnum)
+HCD_URBStateTypeDef HAL_HCD_HC_GetURBState(HCD_HandleTypeDef const *hhcd, uint8_t chnum)
 {
   return hhcd->hc[chnum].urb_state;
 }
@@ -1461,7 +1464,7 @@ HCD_URBStateTypeDef HAL_HCD_HC_GetURBState(HCD_HandleTypeDef *hhcd, uint8_t chnu
   *         This parameter can be a value from 1 to 15
   * @retval last transfer size in byte
   */
-uint32_t HAL_HCD_HC_GetXferCount(HCD_HandleTypeDef *hhcd, uint8_t chnum)
+uint32_t HAL_HCD_HC_GetXferCount(HCD_HandleTypeDef const *hhcd, uint8_t chnum)
 {
   return hhcd->hc[chnum].xfer_count;
 }
@@ -1483,7 +1486,7 @@ uint32_t HAL_HCD_HC_GetXferCount(HCD_HandleTypeDef *hhcd, uint8_t chnum)
   *            HC_BBLERR/
   *            HC_DATATGLERR
   */
-HCD_HCStateTypeDef  HAL_HCD_HC_GetState(HCD_HandleTypeDef *hhcd, uint8_t chnum)
+HCD_HCStateTypeDef  HAL_HCD_HC_GetState(HCD_HandleTypeDef const *hhcd, uint8_t chnum)
 {
   return hhcd->hc[chnum].state;
 }
@@ -1509,6 +1512,40 @@ uint32_t HAL_HCD_GetCurrentFrame(HCD_HandleTypeDef *hhcd)
 uint32_t HAL_HCD_GetCurrentSpeed(HCD_HandleTypeDef *hhcd)
 {
   return (USB_GetHostSpeed(hhcd->Instance));
+}
+
+/**
+  * @brief  Set host channel Hub Information.
+  * @param  hhcd HCD handle
+  * @param  ch_num Channel number.
+  *         This parameter can be a value from 1 to 8
+  * @param  addr Hub address
+  * @param  PortNbr Hub port number
+  * @retval HAL status
+  */
+HAL_StatusTypeDef HAL_HCD_HC_SetHubInfo(HCD_HandleTypeDef *hhcd, uint8_t ch_num,
+                                        uint8_t addr, uint8_t PortNbr)
+{
+  hhcd->hc[ch_num].hub_addr = addr;
+  hhcd->hc[ch_num].hub_port_nbr = PortNbr;
+
+  return HAL_OK;
+}
+
+
+/**
+  * @brief  Clear host channel hub information.
+  * @param  hhcd HCD handle
+  * @param  ch_num Channel number.
+  *         This parameter can be a value from 1 to 8
+  * @retval HAL status
+  */
+HAL_StatusTypeDef HAL_HCD_HC_ClearHubInfo(HCD_HandleTypeDef *hhcd, uint8_t ch_num)
+{
+  hhcd->hc[ch_num].hub_addr = 0U;
+  hhcd->hc[ch_num].hub_port_nbr = 0U;
+
+  return HAL_OK;
 }
 
 #if (USE_USB_DOUBLE_BUFFER == 1U)
@@ -2237,7 +2274,7 @@ static void HCD_Port_IRQHandler(HCD_HandleTypeDef *hhcd)
   *         This parameter can be a value from 1 to 15
   * @retval HAL status
   */
-static uint8_t HAL_HCD_Check_usedChannel(HCD_HandleTypeDef *hhcd, uint8_t ch_num)
+static uint8_t HAL_HCD_Check_usedChannel(HCD_HandleTypeDef const *hhcd, uint8_t ch_num)
 {
   uint8_t idx;
 
@@ -2271,7 +2308,7 @@ static uint8_t HAL_HCD_Check_usedChannel(HCD_HandleTypeDef *hhcd, uint8_t ch_num
   *         -1 IN_Channel
   * @retval HAL status
   */
-static uint8_t HAL_HCD_GetLogical_Channel(HCD_HandleTypeDef *hhcd,
+static uint8_t HAL_HCD_GetLogical_Channel(HCD_HandleTypeDef const *hhcd,
                                           uint8_t phy_chnum, uint8_t dir)
 {
   /* Out Channel Direction */

@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -147,20 +147,20 @@ ErrorStatus LL_RTC_DeInit(RTC_TypeDef *RTCx)
   /* Set Initialization mode */
   if (LL_RTC_EnterInitMode(RTCx) != ERROR)
   {
-    WRITE_REG(RTCx->TR,       0x00000000U);
+    WRITE_REG(RTCx->TR,       0U);
     WRITE_REG(RTCx->DR, (RTC_DR_WDU_0 | RTC_DR_MU_0 | RTC_DR_DU_0));
-    WRITE_REG(RTCx->CR,       0x00000000U);
+    WRITE_REG(RTCx->CR,       0U);
     WRITE_REG(RTCx->WUTR,     RTC_WUTR_WUT);
     WRITE_REG(RTCx->PRER, (RTC_PRER_PREDIV_A | RTC_SYNCH_PRESC_DEFAULT));
-    WRITE_REG(RTCx->ALRMAR,   0x00000000U);
-    WRITE_REG(RTCx->ALRMBR,   0x00000000U);
-    WRITE_REG(RTCx->SHIFTR,   0x00000000U);
-    WRITE_REG(RTCx->CALR,     0x00000000U);
-    WRITE_REG(RTCx->ALRMASSR, 0x00000000U);
-    WRITE_REG(RTCx->ALRMBSSR, 0x00000000U);
-    WRITE_REG(RTCx->PRIVCFGR, 0x00000000U);
+    WRITE_REG(RTCx->ALRMAR,   0U);
+    WRITE_REG(RTCx->ALRMBR,   0U);
+    WRITE_REG(RTCx->SHIFTR,   0U);
+    WRITE_REG(RTCx->CALR,     0U);
+    WRITE_REG(RTCx->ALRMASSR, 0U);
+    WRITE_REG(RTCx->ALRMBSSR, 0U);
+    WRITE_REG(RTCx->PRIVCFGR, 0U);
 #if defined (RTC_SECCFGR_SEC)
-    WRITE_REG(RTCx->SECCFGR,    0x00000000U);
+    WRITE_REG(RTCx->SECCFGR,  0U);
 #endif /* RTC_SECCFGR_SEC */
 
     /* Clear some bits of RTC_ICSR and exit Initialization mode */
@@ -174,17 +174,17 @@ ErrorStatus LL_RTC_DeInit(RTC_TypeDef *RTCx)
   LL_RTC_EnableWriteProtection(RTCx);
 
   /* DeInitialization of the TAMP registers */
-  WRITE_REG(TAMP->CR1,        0x00000000U);
-  WRITE_REG(TAMP->CR2,        0x00000000U);
-  WRITE_REG(TAMP->CR3,        0x00000000U);
+  WRITE_REG(TAMP->CR1,        0U);
+  WRITE_REG(TAMP->CR2,        0U);
+  WRITE_REG(TAMP->CR3,        0U);
 #if defined (TAMP_SECCFGR_TAMPSEC)
-  WRITE_REG(TAMP->SECCFGR,    0x00000000U);
+  WRITE_REG(TAMP->SECCFGR,    0U);
 #endif /* TAMP_SECCFGR_TAMPSEC */
-  WRITE_REG(TAMP->PRIVCFGR,   0x00000000U);
-  WRITE_REG(TAMP->FLTCR,      0x00000000U);
+  WRITE_REG(TAMP->PRIVCFGR,   0U);
+  WRITE_REG(TAMP->FLTCR,      0U);
   WRITE_REG(TAMP->ATCR1,      0x00070000U);
-  WRITE_REG(TAMP->ATCR2,      0x00000000U);
-  WRITE_REG(TAMP->IER,        0x00000000U);
+  WRITE_REG(TAMP->ATCR2,      0U);
+  WRITE_REG(TAMP->IER,        0U);
   WRITE_REG(TAMP->SCR,        0xFFFFFFFFU);
 
   return status;
@@ -293,7 +293,7 @@ ErrorStatus LL_RTC_TIME_Init(RTC_TypeDef *RTCx, uint32_t RTC_Format, LL_RTC_Time
     }
     else
     {
-      RTC_TimeStruct->TimeFormat = 0x00U;
+      RTC_TimeStruct->TimeFormat = 0U;
       assert_param(IS_LL_RTC_HOUR24(__LL_RTC_CONVERT_BCD2BIN(RTC_TimeStruct->Hours)));
     }
     assert_param(IS_LL_RTC_MINUTES(__LL_RTC_CONVERT_BCD2BIN(RTC_TimeStruct->Minutes)));

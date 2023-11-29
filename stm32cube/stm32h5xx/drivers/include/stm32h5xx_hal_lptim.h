@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -233,10 +233,10 @@ typedef struct
   void (* UpdateEventCallback)(struct __LPTIM_HandleTypeDef *hlptim);        /*!< Update event detection Callback              */
   void (* RepCounterWriteCallback)(struct __LPTIM_HandleTypeDef *hlptim);    /*!< Repetition counter register write complete Callback */
   void (* UpdateEventHalfCpltCallback)(struct __LPTIM_HandleTypeDef *hlptim);/*!< Update event half complete detection Callback */
+  void (* ErrorCallback)(struct __LPTIM_HandleTypeDef *hlptim);              /*!< LPTIM Error Callback                         */
   void (* IC_CaptureCallback)(struct __LPTIM_HandleTypeDef *hlptim);         /*!< Input capture Callback                       */
   void (* IC_CaptureHalfCpltCallback)(struct __LPTIM_HandleTypeDef *htim);   /*!< Input Capture half complete Callback         */
   void (* IC_OverCaptureCallback)(struct __LPTIM_HandleTypeDef *hlptim);     /*!< Over capture Callback                        */
-  void (* ErrorCallback)(struct __LPTIM_HandleTypeDef *hlptim);              /*!< LPTIM Error Callback                         */
 #endif /* USE_HAL_LPTIM_REGISTER_CALLBACKS */
 } LPTIM_HandleTypeDef;
 
@@ -258,10 +258,10 @@ typedef enum
   HAL_LPTIM_UPDATE_EVENT_CB_ID      = 0x09U,   /*!< Update event detection Callback ID               */
   HAL_LPTIM_REP_COUNTER_WRITE_CB_ID = 0x0AU,   /*!< Repetition counter register write complete Callback ID */
   HAL_LPTIM_UPDATE_EVENT_HALF_CB_ID = 0x0BU,   /*!< Update event half complete detection Callback ID */
-  HAL_LPTIM_IC_CAPTURE_CB_ID        = 0x0CU,   /*!< Input capture Callback ID                        */
-  HAL_LPTIM_IC_CAPTURE_HALF_CB_ID   = 0x0DU,   /*!< Input capture half complete Callback ID          */
-  HAL_LPTIM_OVER_CAPTURE_CB_ID      = 0x0EU,   /*!< Over capture Callback ID                         */
-  HAL_LPTIM_ERROR_CB_ID             = 0x0FU,   /*!< LPTIM Error Callback ID                          */
+  HAL_LPTIM_ERROR_CB_ID             = 0x0CU,   /*!< LPTIM Error Callback ID                          */
+  HAL_LPTIM_IC_CAPTURE_CB_ID        = 0x0DU,   /*!< Input capture Callback ID                        */
+  HAL_LPTIM_IC_CAPTURE_HALF_CB_ID   = 0x0EU,   /*!< Input capture half complete Callback ID          */
+  HAL_LPTIM_OVER_CAPTURE_CB_ID      = 0x0FU,   /*!< Over capture Callback ID                         */
 } HAL_LPTIM_CallbackIDTypeDef;
 
 /**
@@ -997,7 +997,7 @@ HAL_StatusTypeDef HAL_LPTIM_UnRegisterCallback(LPTIM_HandleTypeDef *lphtim, HAL_
   * @{
   */
 /* Peripheral State functions  ************************************************/
-HAL_LPTIM_StateTypeDef HAL_LPTIM_GetState(LPTIM_HandleTypeDef *hlptim);
+HAL_LPTIM_StateTypeDef HAL_LPTIM_GetState(const LPTIM_HandleTypeDef *hlptim);
 /**
   * @}
   */

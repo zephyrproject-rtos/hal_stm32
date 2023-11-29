@@ -6,7 +6,7 @@
   **********************************************************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -17,16 +17,16 @@
   */
 
 /* Define to prevent recursive inclusion -----------------------------------------------------------------------------*/
-#ifndef __STM32H5xx_HAL_DTS_H
-#define __STM32H5xx_HAL_DTS_H
+#ifndef STM32H5xx_HAL_DTS_H
+#define STM32H5xx_HAL_DTS_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#if defined(DTS)
 /* Includes ----------------------------------------------------------------------------------------------------------*/
 #include "stm32h5xx_hal_def.h"
+#if defined(DTS)
 
 /** @addtogroup STM32H5xx_HAL_Driver
   * @{
@@ -445,7 +445,7 @@ HAL_StatusTypeDef HAL_DTS_GetTemperature(DTS_HandleTypeDef *hdts, int32_t *Tempe
 HAL_StatusTypeDef HAL_DTS_Start_IT(DTS_HandleTypeDef *hdts);
 HAL_StatusTypeDef HAL_DTS_Stop_IT(DTS_HandleTypeDef *hdts);
 void              HAL_DTS_IRQHandler(DTS_HandleTypeDef *hdts);
-HAL_DTS_StateTypeDef HAL_DTS_GetState(DTS_HandleTypeDef *hdts);
+HAL_DTS_StateTypeDef HAL_DTS_GetState(const DTS_HandleTypeDef *hdts);
 
 /* Callback in Interrupt mode */
 void HAL_DTS_EndCallback(DTS_HandleTypeDef *hdts);
@@ -454,6 +454,10 @@ void HAL_DTS_HighCallback(DTS_HandleTypeDef *hdts);
 void HAL_DTS_AsyncEndCallback(DTS_HandleTypeDef *hdts);
 void HAL_DTS_AsyncLowCallback(DTS_HandleTypeDef *hdts);
 void HAL_DTS_AsyncHighCallback(DTS_HandleTypeDef *hdts);
+/**
+  * @}
+  */
+
 /**
   * @}
   */
@@ -544,4 +548,4 @@ void HAL_DTS_AsyncHighCallback(DTS_HandleTypeDef *hdts);
 }
 #endif
 
-#endif /* __STM32H5xx_HAL_DTS_H */
+#endif /* STM32H5xx_HAL_DTS_H */

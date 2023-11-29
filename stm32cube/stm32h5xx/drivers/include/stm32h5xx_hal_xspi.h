@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -909,13 +909,13 @@ HAL_StatusTypeDef     HAL_XSPI_UnRegisterCallback(XSPI_HandleTypeDef *hxspi, HAL
 HAL_StatusTypeDef     HAL_XSPI_Abort(XSPI_HandleTypeDef *hxspi);
 HAL_StatusTypeDef     HAL_XSPI_Abort_IT(XSPI_HandleTypeDef *hxspi);
 HAL_StatusTypeDef     HAL_XSPI_SetFifoThreshold(XSPI_HandleTypeDef *hxspi, uint32_t Threshold);
-uint32_t              HAL_XSPI_GetFifoThreshold(XSPI_HandleTypeDef *hxspi);
+uint32_t              HAL_XSPI_GetFifoThreshold(const XSPI_HandleTypeDef *hxspi);
 HAL_StatusTypeDef     HAL_XSPI_SetMemoryType(XSPI_HandleTypeDef *hxspi, uint32_t Type);
 HAL_StatusTypeDef     HAL_XSPI_SetDeviceSize(XSPI_HandleTypeDef *hxspi, uint32_t Size);
 HAL_StatusTypeDef     HAL_XSPI_SetClockPrescaler(XSPI_HandleTypeDef *hxspi, uint32_t Prescaler);
 HAL_StatusTypeDef     HAL_XSPI_SetTimeout(XSPI_HandleTypeDef *hxspi, uint32_t Timeout);
-uint32_t              HAL_XSPI_GetError(XSPI_HandleTypeDef *hxspi);
-uint32_t              HAL_XSPI_GetState(XSPI_HandleTypeDef *hxspi);
+uint32_t              HAL_XSPI_GetError(const XSPI_HandleTypeDef *hxspi);
+uint32_t              HAL_XSPI_GetState(const XSPI_HandleTypeDef *hxspi);
 
 /**
   * @}
@@ -1169,4 +1169,4 @@ HAL_StatusTypeDef      HAL_XSPI_DLYB_GetClockPeriod(XSPI_HandleTypeDef *hxspi,
 }
 #endif
 
-#endif /* STM32U5xx_HAL_XSPI_H */
+#endif /* STM32H5xx_HAL_XSPI_H */

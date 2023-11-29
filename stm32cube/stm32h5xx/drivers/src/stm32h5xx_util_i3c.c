@@ -1,32 +1,37 @@
 /**
-  ******************************************************************************
+  **********************************************************************************************************************
   * @file    stm32h5xx_util_i3c.c
   * @author  MCD Application Team
   * @brief   This utility help to calculate the different I3C Timing.
-  ******************************************************************************
+  **********************************************************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
   * in the root directory of this software component.
   * If no LICENSE file comes with this software, it is provided AS-IS.
   *
-  ******************************************************************************
+  **********************************************************************************************************************
   */
 
-/* Includes ------------------------------------------------------------------*/
+/* Includes ----------------------------------------------------------------------------------------------------------*/
 #include "stm32h5xx_util_i3c.h"
 
-/** @addtogroup I3C_Utility
+/** @addtogroup STM32H5xx_UTIL_Driver
   * @{
   */
 
-/* Private macros ------------------------------------------------------------*/
-#define DIV_ROUND_CLOSEST(x, d) (((x) + ((d) / 2U)) / (d))
+/** @addtogroup I3C
+  * @{
+  */
 
-/* Private Constants ---------------------------------------------------------*/
+/* Private typedef ---------------------------------------------------------------------------------------------------*/
+/* Private define ----------------------------------------------------------------------------------------------------*/
+/** @defgroup I3C_UTIL_Private_Define I3C Utility Private Define
+  * @{
+  */
 #define SEC210PSEC              (uint64_t)100000000000 /*!< 10ps, to take two decimal float of ns calculation */
 #define TI3CH_MIN               3200U    /*!< Open drain & push pull SCL high min, 32ns */
 #define TI3CH_OD_MAX            4100U    /*!< Open drain SCL high max, 41 ns */
@@ -35,31 +40,42 @@
 #define TFML_OD_MIN             130000U  /*!< Fast Mode Open drain SCL low min, 1300 ns */
 #define TFM_MIN                 250000U  /*!< Fast Mode, period min for ti3cclk, 2.5us */
 #define TSM_MIN                 1000000U /*!< Standard Mode, period min for ti3cclk, 10us */
-#define TI3C_CAS_MIN            3840U    /*!< time SCL after START min, 38.4 ns */
-#define TCAPA                   35000U   /*!< capacitor effect Value measure on Nucleo around 350ns */
+#define TI3C_CAS_MIN            3840U    /*!< Time SCL after START min, 38.4 ns */
+#define TCAPA                   35000U   /*!< Capacitor effect Value measure on Nucleo around 350ns */
+/**
+  * @}
+  */
 
-#define BUS_I2Cx_FREQUENCY      100000U /*!< Frequency of I2Cn = 100 KHz*/
-/* Private Types -------------------------------------------------------------*/
-/* Private Private Constants -------------------------------------------------*/
-/* Private variables ---------------------------------------------------------*/
-/* Private function prototypes -----------------------------------------------*/
-/* Exported functions ------------------------------------------------------- */
+/* Private macro -----------------------------------------------------------------------------------------------------*/
+/** @defgroup I3C_UTIL_Private_Macro I3C Utility Private Macro
+  * @{
+  */
+#define DIV_ROUND_CLOSEST(x, d) (((x) + ((d) / 2U)) / (d))
+/**
+  * @}
+  */
+
+/* Private function prototypes ---------------------------------------------------------------------------------------*/
+/* Exported functions ------------------------------------------------------------------------------------------------*/
+/** @defgroup I3C_UTIL_Exported_Functions I3C Utility Exported Functions
+  * @{
+  */
+
+/** @defgroup I3C_UTIL_EF_Computation Computation
+  * @{
+  */
 /**
   * @brief  Calculate the I3C Controller timing according current I3C clock source and required I3C bus clock.
-  * @param  pConfig             : [OUT]  Pointer to an LL_I3C_CtrlBusConfTypeDef structure that contains
-  *                                      the configuration information for the specified I3C.
-  * @param  clockSrcFreq        : [IN] I3C clock source in Hz.
-  * @param  i3cFreq             : [IN] I3C required bus clock in Hz.
-  * @param  i2cFreq             : [IN] I2C required bus clock in Hz.
-  * @param  dutyCycle           : [IN] I3C duty cycle for Pure I3C bus or I2C duty cycle for Mixed bus in purcent
-  *                                    Duty cycle must be lower or equal 50 purcent.
-  * @param  busType             : [IN] Bus configuration type. It can be one value of @ref I3C_BUS_TYPE.
+  * @param  pInputTiming    : [IN]  Pointer to an I3C_CtrlTimingTypeDef structure that contains
+  *                                 the required parameter for I3C timing computation.
+  * @param  pOutputConfig   : [OUT]  Pointer to an LL_I3C_CtrlBusConfTypeDef structure that contains
+  *                                  the configuration information for the specified I3C.
   * @retval An ErrorStatus enumeration value:
   *          - SUCCESS: Timing calculation successfully
   *          - ERROR: Parameters or timing calculation error
   */
-ErrorStatus I3C_CtrlTimingComputation(LL_I3C_CtrlBusConfTypeDef *pConfig, uint32_t clockSrcFreq, uint32_t i3cFreq,
-                                      uint32_t i2cFreq, uint32_t dutyCycle, uint32_t busType)
+ErrorStatus I3C_CtrlTimingComputation(const I3C_CtrlTimingTypeDef *pInputTiming,
+                                      LL_I3C_CtrlBusConfTypeDef *pOutputConfig)
 {
   ErrorStatus status = SUCCESS;
 
@@ -112,12 +128,14 @@ ErrorStatus I3C_CtrlTimingComputation(LL_I3C_CtrlBusConfTypeDef *pConfig, uint32
   uint32_t sdahold;
 
   /* Verify Parameters */
-  if (((clockSrcFreq == 0U) || (i3cFreq == 0U)) && (busType == I3C_PURE_I3C_BUS))
+  if (((pInputTiming->clockSrcFreq == 0U) || (pInputTiming->i3cPPFreq == 0U)) &&
+      (pInputTiming->busType == I3C_PURE_I3C_BUS))
   {
     status = ERROR;
   }
 
-  if (((clockSrcFreq == 0U) || (i3cFreq == 0U) || (i2cFreq == 0U)) && (busType == I3C_MIXED_BUS))
+  if (((pInputTiming->clockSrcFreq == 0U) || (pInputTiming->i3cPPFreq == 0U) || (pInputTiming->i2cODFreq == 0U)) &&
+      (pInputTiming->busType == I3C_MIXED_BUS))
   {
     status = ERROR;
   }
@@ -125,9 +143,10 @@ ErrorStatus I3C_CtrlTimingComputation(LL_I3C_CtrlBusConfTypeDef *pConfig, uint32
   if (status == SUCCESS)
   {
     /* Period Clock source */
-    ti3cclk = (uint32_t)((SEC210PSEC + ((uint64_t)clockSrcFreq / (uint64_t)2)) / (uint64_t)clockSrcFreq);
+    ti3cclk = (uint32_t)((SEC210PSEC + ((uint64_t)pInputTiming->clockSrcFreq / (uint64_t)2)) /
+                         (uint64_t)pInputTiming->clockSrcFreq);
 
-    if ((dutyCycle > 50U) || (ti3cclk == 0U))
+    if ((pInputTiming->dutyCycle > 50U) || (ti3cclk == 0U))
     {
       status = ERROR;
     }
@@ -136,12 +155,14 @@ ErrorStatus I3C_CtrlTimingComputation(LL_I3C_CtrlBusConfTypeDef *pConfig, uint32
   if ((status == SUCCESS) && (ti3cclk != 0U))
   {
     /* I3C: Push pull period */
-    ti3c_pp_min = (uint32_t)((SEC210PSEC + ((uint64_t)i3cFreq / (uint64_t)2)) / (uint64_t)i3cFreq);
+    ti3c_pp_min = (uint32_t)((SEC210PSEC + ((uint64_t)pInputTiming->i3cPPFreq / (uint64_t)2)) /
+                             (uint64_t)pInputTiming->i3cPPFreq);
 
     /* I2C: Open drain period */
-    ti2c_od_min = (uint32_t)((SEC210PSEC + ((uint64_t)i2cFreq / (uint64_t)2)) / (uint64_t)i2cFreq);
+    ti2c_od_min = (uint32_t)((SEC210PSEC + ((uint64_t)pInputTiming->i2cODFreq / (uint64_t)2)) /
+                             (uint64_t)pInputTiming->i2cODFreq);
 
-    if ((busType != I3C_PURE_I3C_BUS) && (ti2c_od_min > tsm_min))
+    if ((pInputTiming->busType != I3C_PURE_I3C_BUS) && (ti2c_od_min > tsm_min))
     {
       status = ERROR;
     }
@@ -151,9 +172,9 @@ ErrorStatus I3C_CtrlTimingComputation(LL_I3C_CtrlBusConfTypeDef *pConfig, uint32
   if ((status == SUCCESS) && (ti3cclk != 0U))
   {
     /* I3C SCL high level (push-pull & open drain) */
-    if (busType == I3C_PURE_I3C_BUS)
+    if (pInputTiming->busType == I3C_PURE_I3C_BUS)
     {
-      sclhi3c = DIV_ROUND_CLOSEST(DIV_ROUND_CLOSEST(ti3c_pp_min * dutyCycle, ti3cclk), 100U) - 1U;
+      sclhi3c = DIV_ROUND_CLOSEST(DIV_ROUND_CLOSEST(ti3c_pp_min * pInputTiming->dutyCycle, ti3cclk), 100U) - 1U;
 
       /* Check if sclhi3c < ti3ch_min, in that case calculate sclhi3c based on ti3ch_min */
       if (((sclhi3c + 1U) * ti3cclk) < ti3ch_min)
@@ -170,7 +191,7 @@ ErrorStatus I3C_CtrlTimingComputation(LL_I3C_CtrlBusConfTypeDef *pConfig, uint32
       }
       else
       {
-        sclhi3c = DIV_ROUND_CLOSEST(DIV_ROUND_CLOSEST(ti3c_pp_min * dutyCycle, ti3cclk), 100U) - 1U;
+        sclhi3c = DIV_ROUND_CLOSEST(DIV_ROUND_CLOSEST(ti3c_pp_min * pInputTiming->dutyCycle, ti3cclk), 100U) - 1U;
 
         /* Check if sclhi3c < ti3ch_min */
         if (((sclhi3c + 1U) * ti3cclk) < ti3ch_min)
@@ -178,7 +199,7 @@ ErrorStatus I3C_CtrlTimingComputation(LL_I3C_CtrlBusConfTypeDef *pConfig, uint32
           sclhi3c += 1U;
         }
 
-        scllpp  = DIV_ROUND_CLOSEST(DIV_ROUND_CLOSEST(ti3c_pp_min * (100U - dutyCycle), ti3cclk), 100U) - 1U;
+        scllpp  = DIV_ROUND_CLOSEST((ti3c_pp_min - ((sclhi3c + 1U) * ti3cclk) + (ti3cclk / 2U)), ti3cclk) - 1U;
       }
 
     }
@@ -221,7 +242,7 @@ ErrorStatus I3C_CtrlTimingComputation(LL_I3C_CtrlBusConfTypeDef *pConfig, uint32
     }
 
     /* I3C SCL low level (pure I3C bus) */
-    if (busType == I3C_PURE_I3C_BUS)
+    if (pInputTiming->busType == I3C_PURE_I3C_BUS)
     {
       if (ti3c_pp_min < ti3cl_od_min)
       {
@@ -249,7 +270,8 @@ ErrorStatus I3C_CtrlTimingComputation(LL_I3C_CtrlBusConfTypeDef *pConfig, uint32
     /* I2C SCL high level (mixed bus with I2C) */
     else
     {
-      scllod  = DIV_ROUND_CLOSEST(DIV_ROUND_CLOSEST(ti2c_od_min * (100U - dutyCycle), ti3cclk), 100U) - 1U;
+      scllod  = DIV_ROUND_CLOSEST(DIV_ROUND_CLOSEST(ti2c_od_min * (100U - pInputTiming->dutyCycle),
+                                                    ti3cclk), 100U) - 1U;
 
       /* Mix Bus Fast Mode plus */
       if (ti2c_od_min < tfm_min)
@@ -274,7 +296,7 @@ ErrorStatus I3C_CtrlTimingComputation(LL_I3C_CtrlBusConfTypeDef *pConfig, uint32
     /* Clock After Start computation */
 
     /* I3C pure bus: (Tcas + tcapa)/2 */
-    if (busType == I3C_PURE_I3C_BUS)
+    if (pInputTiming->busType == I3C_PURE_I3C_BUS)
     {
       free = DIV_ROUND_CLOSEST((ti3c_cas_min + tcapa), (2U * ti3cclk)) + 1U;
     }
@@ -298,7 +320,7 @@ ErrorStatus I3C_CtrlTimingComputation(LL_I3C_CtrlBusConfTypeDef *pConfig, uint32
     /* 1 microsecond reference */
     oneus = DIV_ROUND_CLOSEST(100000U, ti3cclk) - 2U;
 
-    if ((scllpp > 0xFFU) || (sclhi3c > 0xFFU) || (scllod > 0xFFU) || (sclhi2c > 0xFFU) || \
+    if ((scllpp > 0xFFU) || (sclhi3c > 0xFFU) || (scllod > 0xFFU) || (sclhi2c > 0xFFU) ||
         (free > 0xFFU) || (oneus > 0xFFU))
     {
       /* Case of value is over 8bits, issue may be due to clocksource have a rate too high for bus clock request */
@@ -308,15 +330,15 @@ ErrorStatus I3C_CtrlTimingComputation(LL_I3C_CtrlBusConfTypeDef *pConfig, uint32
     else
     {
       /* SCL configuration */
-      pConfig->SCLPPLowDuration = (uint8_t)scllpp;
-      pConfig->SCLI3CHighDuration = (uint8_t)sclhi3c;
-      pConfig->SCLODLowDuration = (uint8_t)scllod;
-      pConfig->SCLI2CHighDuration = (uint8_t)sclhi2c;
+      pOutputConfig->SCLPPLowDuration = (uint8_t)scllpp;
+      pOutputConfig->SCLI3CHighDuration = (uint8_t)sclhi3c;
+      pOutputConfig->SCLODLowDuration = (uint8_t)scllod;
+      pOutputConfig->SCLI2CHighDuration = (uint8_t)sclhi2c;
 
       /* Free, Idle and SDA hold time configuration */
-      pConfig->BusFreeDuration = (uint8_t)free;
-      pConfig->BusIdleDuration = (uint8_t)oneus;
-      pConfig->SDAHoldTime = (uint32_t)(sdahold << I3C_TIMINGR1_SDA_HD_Pos);
+      pOutputConfig->BusFreeDuration = (uint8_t)free;
+      pOutputConfig->BusIdleDuration = (uint8_t)oneus;
+      pOutputConfig->SDAHoldTime = (uint32_t)(sdahold << I3C_TIMINGR1_SDA_HD_Pos);
     }
   }
 
@@ -325,21 +347,23 @@ ErrorStatus I3C_CtrlTimingComputation(LL_I3C_CtrlBusConfTypeDef *pConfig, uint32
 
 /**
   * @brief  Calculate the I3C Controller timing according current I3C clock source and required I3C bus clock.
-  * @param  pConfig             : [OUT]  Pointer to an LL_I3C_TgtBusConfTypeDef structure that contains
+  * @param  pInputTiming    : [IN]  Pointer to an I3C_TgtTimingTypeDef structure that contains
+  *                                 the required parameter for I3C timing computation.
+  * @param  pOutputConfig   : [OUT]  Pointer to an LL_I3C_TgtBusConfTypeDef structure that contains
   *                                      the configuration information for the specified I3C.
-  * @param  clockSrcFreq        : [IN] I3C clock source in Hz.
   * @retval An ErrorStatus enumeration value:
   *          - SUCCESS: Timing calculation successfully
   *          - ERROR: Parameters or timing calculation error
   */
-ErrorStatus I3C_TgtTimingComputation(LL_I3C_TgtBusConfTypeDef *pConfig, uint32_t clockSrcFreq)
+ErrorStatus I3C_TgtTimingComputation(const I3C_TgtTimingTypeDef *pInputTiming,
+                                     LL_I3C_TgtBusConfTypeDef *pOutputConfig)
 {
   ErrorStatus status = SUCCESS;
   uint32_t oneus;
   uint32_t ti3cclk = 0U;
 
   /* Verify Parameters */
-  if (clockSrcFreq == 0U)
+  if (pInputTiming->clockSrcFreq == 0U)
   {
     status = ERROR;
   }
@@ -347,7 +371,8 @@ ErrorStatus I3C_TgtTimingComputation(LL_I3C_TgtBusConfTypeDef *pConfig, uint32_t
   if (status == SUCCESS)
   {
     /* Period Clock source */
-    ti3cclk = (uint32_t)((SEC210PSEC + ((uint64_t)clockSrcFreq / (uint64_t)2)) / (uint64_t)clockSrcFreq);
+    ti3cclk = (uint32_t)((SEC210PSEC + ((uint64_t)pInputTiming->clockSrcFreq / (uint64_t)2)) /
+                         (uint64_t)pInputTiming->clockSrcFreq);
 
     /* Verify Parameters */
     if (ti3cclk == 0U)
@@ -362,12 +387,23 @@ ErrorStatus I3C_TgtTimingComputation(LL_I3C_TgtBusConfTypeDef *pConfig, uint32_t
     oneus =  DIV_ROUND_CLOSEST(100000U, ti3cclk) - 2U;
 
     /* Bus available time configuration */
-    pConfig->BusAvailableDuration = (uint8_t)oneus;
+    pOutputConfig->BusAvailableDuration = (uint8_t)oneus;
   }
 
   return status;
 }
+/**
+  * @}
+  */
+/**
+  * @}
+  */
+
 /* Private functions ---------------------------------------------------------*/
+/**
+  * @}
+  */
+
 /**
   * @}
   */

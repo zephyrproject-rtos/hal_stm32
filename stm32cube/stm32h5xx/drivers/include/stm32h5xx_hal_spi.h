@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -179,9 +179,11 @@ typedef struct __SPI_HandleTypeDef
 
   void (*TxISR)(struct __SPI_HandleTypeDef *hspi);         /*!< function pointer on Tx ISR               */
 
+#if defined(HAL_DMA_MODULE_ENABLED)
   DMA_HandleTypeDef          *hdmatx;                      /*!< SPI Tx DMA Handle parameters             */
 
   DMA_HandleTypeDef          *hdmarx;                      /*!< SPI Rx DMA Handle parameters             */
+#endif /* HAL_DMA_MODULE_ENABLED */
 
   HAL_LockTypeDef            Lock;                         /*!< Locking object                           */
 
@@ -259,7 +261,9 @@ typedef  void (*pSPI_CallbackTypeDef)(SPI_HandleTypeDef *hspi); /*!< pointer to 
 #define HAL_SPI_ERROR_CRC                             (0x00000002UL)   /*!< CRC error                              */
 #define HAL_SPI_ERROR_OVR                             (0x00000004UL)   /*!< OVR error                              */
 #define HAL_SPI_ERROR_FRE                             (0x00000008UL)   /*!< FRE error                              */
+#if defined(HAL_DMA_MODULE_ENABLED)
 #define HAL_SPI_ERROR_DMA                             (0x00000010UL)   /*!< DMA transfer error                     */
+#endif /* HAL_DMA_MODULE_ENABLED */
 #define HAL_SPI_ERROR_FLAG                            (0x00000020UL)   /*!< Error on RXP/TXP/DXP/FTLVL/FRLVL Flag  */
 #define HAL_SPI_ERROR_ABORT                           (0x00000040UL)   /*!< Error during SPI Abort procedure       */
 #define HAL_SPI_ERROR_UDR                             (0x00000080UL)   /*!< Underrun error                         */
@@ -850,15 +854,19 @@ HAL_StatusTypeDef HAL_SPI_Receive_IT(SPI_HandleTypeDef *hspi, uint8_t *pData, ui
 HAL_StatusTypeDef HAL_SPI_TransmitReceive_IT(SPI_HandleTypeDef *hspi, const uint8_t *pTxData, uint8_t *pRxData,
                                              uint16_t Size);
 
+#if defined(HAL_DMA_MODULE_ENABLED)
 HAL_StatusTypeDef HAL_SPI_Transmit_DMA(SPI_HandleTypeDef *hspi, const uint8_t *pData, uint16_t Size);
 HAL_StatusTypeDef HAL_SPI_Receive_DMA(SPI_HandleTypeDef *hspi, uint8_t *pData, uint16_t Size);
 HAL_StatusTypeDef HAL_SPI_TransmitReceive_DMA(SPI_HandleTypeDef *hspi, const uint8_t *pTxData, uint8_t *pRxData,
                                               uint16_t Size);
+#endif /* HAL_DMA_MODULE_ENABLED */
 
 
+#if defined(HAL_DMA_MODULE_ENABLED)
 HAL_StatusTypeDef HAL_SPI_DMAPause(SPI_HandleTypeDef *hspi);
 HAL_StatusTypeDef HAL_SPI_DMAResume(SPI_HandleTypeDef *hspi);
 HAL_StatusTypeDef HAL_SPI_DMAStop(SPI_HandleTypeDef *hspi);
+#endif /* HAL_DMA_MODULE_ENABLED */
 
 /* Transfer Abort functions */
 HAL_StatusTypeDef HAL_SPI_Abort(SPI_HandleTypeDef *hspi);

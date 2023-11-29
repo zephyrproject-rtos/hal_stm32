@@ -18,7 +18,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -75,7 +75,7 @@ extern "C" {
   * @{
   */
 
-/** @defgroup SYSTEM_LL_EC_FASTMODEPLUS SBS FASTMODEPLUS
+/** @defgroup SYSTEM_LL_SBS_EC_FASTMODEPLUS SBS FASTMODEPLUS
   * @{
   */
 #define LL_SBS_FASTMODEPLUS_PB6     SBS_PMCR_PB6_FMP    /*!< Enable Fast Mode Plus on PB6 */
@@ -88,7 +88,7 @@ extern "C" {
   * @}
   */
 
-/** @defgroup SYSTEM_LL_EC_CS1 SBS Vdd compensation cell Code selection
+/** @defgroup SYSTEM_LL_SBS_EC_CS1 SBS Vdd compensation cell Code selection
   * @{
   */
 #define LL_SBS_VDD_CELL_CODE                  0x0UL            /*!< VDD I/Os code from the cell (available in the SBS_CCVALR) */
@@ -97,7 +97,7 @@ extern "C" {
   * @}
   */
 
-/** @defgroup SYSTEM_LL_EC_CS2 SBS VddIO compensation cell Code selection
+/** @defgroup SYSTEM_LL_SBS_EC_CS2 SBS VddIO compensation cell Code selection
   * @{
   */
 #define LL_SBS_VDDIO_CELL_CODE                0x0UL            /*!< VDDIO I/Os code from the cell (available in the SBS_CCVALR)*/
@@ -107,7 +107,7 @@ extern "C" {
   */
 
 #if defined(SBS_PMCR_ETH_SEL_PHY)
-/** @defgroup SYSTEM_LL_ETHERNET_CONFIG  ETHENET CONFIG
+/** @defgroup SYSTEM_LL_SBS_ETHERNET_CONFIG  ETHENET CONFIG
   * @{
   */
 #define LL_SBS_ETH_MII                   0x0UL                    /*!< Select the Media Independent Interface (MII) or GMII  */
@@ -117,16 +117,6 @@ extern "C" {
   * @}
   */
 #endif /* SBS_PMCR_ETH_SEL_PHY */
-
-/** @defgroup SYSTEM_LL_BOOSTVDD_SEL  Boost VDD Selection
-  * @{
-  */
-#define LL_SBS_BOOSTVDDSEL_VDDA          0x0UL                  /*!< Select VDDA as analog switch supply voltage (when BOOSTEN bit is cleared) */
-#define LL_SBS_BOOSTVDDSEL_VDD           SBS_PMCR_BOOSTVDDSEL   /*!< Select VDD  as analog switch supply voltage (regardless of BOOSTEN bit) */
-
-/**
-  * @}
-  */
 
 /** @defgroup SYSTEM_Memories_Erase_Flag_Status  Memories Erase Flags Status
   * @{
@@ -139,7 +129,7 @@ extern "C" {
   * @}
   */
 
-/** @defgroup SYSTEM_LL_EC_TIMBREAK SBS TIMER BREAK
+/** @defgroup SYSTEM_LL_SBS_EC_TIMBREAK SBS TIMER BREAK
   * @{
   */
 #define LL_SBS_TIMBREAK_ECC             SBS_CFGR2_ECCL    /*!< Enables and locks the Flash ECC double error signal
@@ -156,7 +146,7 @@ extern "C" {
   */
 
 
-/** @defgroup SYSTEM_LL_EPOCH_Selection  EPOCH Selection
+/** @defgroup SYSTEM_LL_SBS_EPOCH_Selection  EPOCH Selection
   * @{
   */
 #define LL_SBS_EPOCH_SEL_SECURE         0x0UL                         /*!< EPOCH secure selected */
@@ -189,7 +179,7 @@ extern "C" {
   * @}
   */
 
-/** @defgroup SYSTEM_LL_NS_Lock_items Lock items
+/** @defgroup SYSTEM_LL_SBS_NS_Lock_items Lock items
   * @brief SBS non secure items to set lock on
   * @{
   */
@@ -201,7 +191,7 @@ extern "C" {
   */
 
 #if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
-/** @defgroup SYSTEM_LL_S_Lock_items SBS Lock items
+/** @defgroup SYSTEM_LL_SBS_S_Lock_items SBS Lock items
   * @brief SBS secure items to set lock on
   * @{
   */
@@ -213,7 +203,7 @@ extern "C" {
   * @}
   */
 
-/** @defgroup SYSTEM_LL_EC_SECURE_ATTRIBUTES Secure attributes
+/** @defgroup SYSTEM_LL_SBS_EC_SECURE_ATTRIBUTES Secure attributes
   * @note Only available when system implements security (TZEN=1)
   * @{
   */
@@ -230,7 +220,7 @@ extern "C" {
   */
 #endif /* __ARM_FEATURE_CMSE */
 
-/** @defgroup SYSTEM_LL_EC_TRACE DBGMCU TRACE Pin Assignment
+/** @defgroup SYSTEM_LL_DBGMCU_EC_TRACE DBGMCU TRACE Pin Assignment
   * @{
   */
 #define LL_DBGMCU_TRACE_NONE               0x00000000U                                     /*!< TRACE pins not assigned (default state) */
@@ -242,7 +232,7 @@ extern "C" {
   * @}
   */
 
-/** @defgroup SYSTEM_LL_EC_APB1_GRP1_STOP_IP DBGMCU APB1 GRP1 STOP IP
+/** @defgroup SYSTEM_LL_DBGMCU_EC_APB1_GRP1_STOP_IP DBGMCU APB1 GRP1 STOP IP
   * @{
   */
 #define LL_DBGMCU_APB1_GRP1_TIM2_STOP      DBGMCU_APB1FZR1_DBG_TIM2_STOP   /*!< The counter clock of TIM2 is stopped when the core is halted*/
@@ -273,7 +263,7 @@ extern "C" {
   * @}
   */
 
-/** @defgroup SYSTEM_LL_EC_APB1_GRP2_STOP_IP DBGMCU APB1 GRP2 STOP IP
+/** @defgroup SYSTEM_LL_DBGMCU_EC_APB1_GRP2_STOP_IP DBGMCU APB1 GRP2 STOP IP
   * @{
   */
 #define LL_DBGMCU_APB1_GRP2_LPTIM2_STOP    DBGMCU_APB1FZR2_DBG_LPTIM2_STOP /*!< The counter clock of LPTIM2 is stopped when the core is halted*/
@@ -281,7 +271,7 @@ extern "C" {
   * @}
   */
 
-/** @defgroup SYSTEM_LL_EC_APB2_GRP1_STOP_IP DBGMCU APB2 GRP1 STOP IP
+/** @defgroup SYSTEM_LL_DBGMCU_EC_APB2_GRP1_STOP_IP DBGMCU APB2 GRP1 STOP IP
   * @{
   */
 #define LL_DBGMCU_APB2_GRP1_TIM1_STOP      DBGMCU_APB2FZR_DBG_TIM1_STOP    /*!< The counter clock of TIM1 is stopped when the core is halted*/
@@ -301,7 +291,7 @@ extern "C" {
   * @}
   */
 
-/** @defgroup SYSTEM_LL_EC_APB3_GRP1_STOP_IP DBGMCU APB3 GRP1 STOP IP
+/** @defgroup SYSTEM_LL_DBGMCU_EC_APB3_GRP1_STOP_IP DBGMCU APB3 GRP1 STOP IP
   * @{
   */
 #if defined(I2C3)
@@ -333,7 +323,7 @@ extern "C" {
 
 
 #if defined(VREFBUF)
-/** @defgroup SYSTEM_LL_EC_VOLTAGE VREFBUF VOLTAGE
+/** @defgroup SYSTEM_LL_VREFBUF_EC_VOLTAGE VREFBUF VOLTAGE
   * @{
   */
 #define LL_VREFBUF_VOLTAGE_SCALE0          ((uint32_t)0x00000000)                     /*!< Voltage reference scale 0 (VREF_OUT1) */
@@ -345,7 +335,7 @@ extern "C" {
   */
 #endif /* VREFBUF */
 
-/** @defgroup SYSTEM_LL_EC_LATENCY FLASH LATENCY
+/** @defgroup SYSTEM_LL_FLASH_EC_LATENCY FLASH LATENCY
   * @{
   */
 #define LL_FLASH_LATENCY_0                 FLASH_ACR_LATENCY_0WS   /*!< FLASH zero wait state */
@@ -409,60 +399,6 @@ __STATIC_INLINE uint32_t LL_SBS_GetPHYInterface(void)
   return (uint32_t)(READ_BIT(SBS->PMCR, SBS_PMCR_ETH_SEL_PHY));
 }
 #endif /* SBS_PMCR_ETH_SEL_PHY */
-
-/**
-  * @brief  Enable I/O analog switch voltage booster.
-  * @note   When voltage booster is enabled, I/O analog switches are supplied
-  *         by a dedicated voltage booster, from VDD power domain. This is
-  *         the recommended configuration with low VDDA voltage operation.
-  * @note   The I/O analog switch voltage booster is relevant for peripherals
-  *         using I/O in analog input: ADC, COMP, OPAMP.
-  *         However, COMP and OPAMP inputs have a high impedance and
-  *         voltage booster do not impact performance significantly.
-  *         Therefore, the voltage booster is mainly intended for
-  *         usage with ADC.
-  * @rmtoll PMCR     BOOSTEN       LL_SBS_EnableAnalogBooster
-  * @retval None
-  */
-__STATIC_INLINE void LL_SBS_EnableAnalogBooster(void)
-{
-  SET_BIT(SBS->PMCR, SBS_PMCR_BOOSTEN);
-}
-
-
-/**
-  * @brief  Analog switch supply voltage selection (VDD/VDDA/booster)
-  * @rmtoll PMCR    SBS_PMCR_BOOSTVDDSEL    LL_SBS_AnalogSwitchSupplyVoltageSelection
-  * @param  BoostVddSelection: Selects the Analog switch supply voltage (VDD/VDDA/booster)
-  *   This parameter can be one of the following values:
-  *   @arg LL_SBS_BOOSTVDDSEL_VDDA : Select the VDDA as analog switch supply voltage (when BOOSTEN bit is cleared).
-  *   @arg LL_SBS_BOOSTVDDSEL_VDD: Select the VDD as analog switch supply voltage.
-  * @retval None
-  */
-__STATIC_INLINE void LL_SBS_AnalogSwitchSupplyVoltageSelection(uint32_t BoostVddSelection)
-{
-  MODIFY_REG(SBS->PMCR, SBS_PMCR_BOOSTVDDSEL, BoostVddSelection);
-}
-
-
-/**
-  * @brief  Disable I/O analog switch voltage booster.
-  * @note   When voltage booster is enabled, I/O analog switches are supplied
-  *         by a dedicated voltage booster, from VDD power domain. This is
-  *         the recommended configuration with low VDDA voltage operation.
-  * @note   The I/O analog switch voltage booster is relevant for peripherals
-  *         using I/O in analog input: ADC, COMP, OPAMP.
-  *         However, COMP and OPAMP inputs have a high impedance and
-  *         voltage booster do not impact performance significantly.
-  *         Therefore, the voltage booster is mainly intended for
-  *         usage with ADC.
-  * @rmtoll PMCR     BOOSTEN       LL_SBS_DisableAnalogBooster
-  * @retval None
-  */
-__STATIC_INLINE void LL_SBS_DisableAnalogBooster(void)
-{
-  CLEAR_BIT(SBS->PMCR, SBS_PMCR_BOOSTEN);
-}
 
 /**
   * @brief  Enable the fast mode plus driving capability.
@@ -686,7 +622,7 @@ __STATIC_INLINE uint32_t LL_SBS_IsEnabledIT_FPU_IXC(void)
   *         where non selected TIMBREAK input is disconnected.
   *         @arg @ref LL_SBS_TIMBREAK_ECC
   *         @arg @ref LL_SBS_TIMBREAK_PVD
-  *         @arg @ref LL_SBS_TIMBREAK_SRAM_ECC_LOCK
+  *         @arg @ref LL_SBS_TIMBREAK_SRAM_ECC
   *         @arg @ref LL_SBS_TIMBREAK_LOCKUP
   * @retval None
   */
@@ -704,7 +640,7 @@ __STATIC_INLINE void LL_SBS_SetTIMBreakInputs(uint32_t Break)
   * @retval Returned value can be a combination of the following values:
   *         @arg @ref LL_SBS_TIMBREAK_ECC
   *         @arg @ref LL_SBS_TIMBREAK_PVD
-  *         @arg @ref LL_SBS_TIMBREAK_SRAM_ECC_LOCK
+  *         @arg @ref LL_SBS_TIMBREAK_SRAM_ECC
   *         @arg @ref LL_SBS_TIMBREAK_LOCKUP
   */
 __STATIC_INLINE uint32_t LL_SBS_GetTIMBreakInputs(void)
@@ -731,7 +667,6 @@ __STATIC_INLINE void LL_SBS_EPOCHSelection(uint32_t Epoch_Selection)
 /**
   * @brief  Get EPOCH security selection
   * @rmtoll EPOCHSELCR     EPOCH_SEL      LL_SBS_GetEPOCHSelection
-  * @param  none
   * @retval Returned value can be one of the following values:
   *         @arg LL_SBS_EPOCH_SEL_SECURE    : EPOCH secure selected.
   *         @arg LL_SBS_EPOCH_SEL_NONSECURE : EPOCH non secure selected.
@@ -746,7 +681,6 @@ __STATIC_INLINE uint32_t LL_SBS_GetEPOCHSelection(void)
 /**
   * @brief  Disable the NMI in case of double ECC error in FLASH Interface.
   * @rmtoll ECCNMIR     SBS_ECCNMIR_ECCNMI_MASK_EN      LL_SBS_FLASH_DisableECCNMI
-  * @param  none
   * @retval None
   */
 __STATIC_INLINE  void LL_SBS_FLASH_DisableECCNMI(void)
@@ -757,7 +691,6 @@ __STATIC_INLINE  void LL_SBS_FLASH_DisableECCNMI(void)
 /**
   * @brief  Enable the NMI in case of double ECC error in FLASH Interface.
   * @rmtoll ECCNMIR     SBS_ECCNMIR_ECCNMI_MASK_EN      LL_SBS_FLASH_EnableECCNMI
-  * @param  none
   * @retval None
   */
 __STATIC_INLINE  void LL_SBS_FLASH_EnableECCNMI(void)
@@ -765,14 +698,13 @@ __STATIC_INLINE  void LL_SBS_FLASH_EnableECCNMI(void)
   CLEAR_BIT(SBS->ECCNMIR, SBS_ECCNMIR_ECCNMI_MASK_EN);
 }
 
-/** @defgroup SBS_LL_EF_SBS_HDPL_Management HDPL Management
+/** @defgroup SYSTEM_LL_SBS_EF_HDPL_Management HDPL Management
   * @{
   */
 
 /**
   * @brief  Increment by 1 the HDPL value
   * @rmtoll HDPLCR     HDPL_INCR      LL_SBS_IncrementHDPLValue
-  * @param  None
   * @retval None
   */
 __STATIC_INLINE void LL_SBS_IncrementHDPLValue(void)
@@ -783,7 +715,6 @@ __STATIC_INLINE void LL_SBS_IncrementHDPLValue(void)
 /**
   * @brief  Get the HDPL Value.
   * @rmtoll HDPLSR     HDPL      LL_SBS_GetHDPLValue
-  * @param  None
   * @retval  Returns the HDPL value
   *          This return value can be one of the following values:
   *           @arg LL_SBS_HDPL_VALUE_0: HDPL0
@@ -800,7 +731,7 @@ __STATIC_INLINE uint32_t LL_SBS_GetHDPLValue(void)
 /**
   * @brief  Set the OBK-HDPL Value.
   * @rmtoll NEXTHDPLCR     NEXTHDPL      LL_SBS_SetOBKHDPL
-  * @param  Set the increment to add to HDPL value to generate the OBK-HDPL.
+  * @param  OBKHDPL_Value Value of increment to add to HDPL value to generate the OBK-HDPL.
   *         This parameter can be one of the following values:
   *         @arg LL_SBS_OBKHDPL_INCR_0 : HDPL
   *         @arg LL_SBS_OBKHDPL_INCR_1 : HDPL + 1
@@ -986,7 +917,6 @@ __STATIC_INLINE void LL_SBS_NonSecureLock(uint32_t Item)
   * @note   Getting lock(s) depends on privilege mode in secure/non-secure code
   * @rmtoll CNSLCKR     LOCKNSVTOR     LL_SBS_NonSecureLock\n
   *         CNSLCKR     LOCKNSMPU      LL_SBS_NonSecureLock
-  * @param  none
   * @retval the return value can be one of the following values :
   *          @arg LL_SBS_VTOR_NSEC : VTOR_NS register lock
   *          @arg LL_SBS_MPU_NSEC : Non-secure MPU registers lock
@@ -1022,10 +952,9 @@ __STATIC_INLINE void LL_SBS_SecureLock(uint32_t Item)
 /**
   * @brief  Get the secure lock state of System items.
   * @note   Getting lock(s) depends on privilege mode in secure code
-  * @rmtoll CSLCKR     LOCKSVTAIRCR     HAL_SBS_GetSecureLock\n
-  *         CSLCKR     LOCKSMPU         HAL_SBS_GetSecureLock\n
-  *         CSLCKR     LOCKSAU          HAL_SBS_GetSecureLock
-  * @param  none
+  * @rmtoll CSLCKR     LOCKSVTAIRCR     LL_SBS_GetSecureLock\n
+  *         CSLCKR     LOCKSMPU         LL_SBS_GetSecureLock\n
+  *         CSLCKR     LOCKSAU          LL_SBS_GetSecureLock
   * @retval the return value is a combination  of the following values :
   *          @arg LL_SBS_VTOR_AIRCR_SEC : VTOR_S and AIRCR registers lock
   *          @arg LL_SBS_MPU_SEC : Secure MPU registers lock
@@ -1042,7 +971,7 @@ __STATIC_INLINE uint32_t LL_SBS_GetSecureLock(void)
   * @}
   */
 
-/** @defgroup SYSTEM_LL_EF_SBS_Secure_Management Secure Management
+/** @defgroup SYSTEM_LL_SBS_EF_Secure_Management Secure Management
   * @{
   */
 
@@ -1096,7 +1025,7 @@ __STATIC_INLINE uint32_t LL_SBS_GetConfigSecure(void)
   * @}
   */
 
-/** @defgroup SYSTEM_LL_EF_COMPENSATION
+/** @defgroup SYSTEM_LL_SBS_EF_COMPENSATION Compensation Cell Control
   * @{
   */
 
@@ -1213,7 +1142,7 @@ __STATIC_INLINE uint32_t LL_SBS_GetNMOSVddCompensationCode(void)
 /**
   * @brief  Set the compensation cell code of the GPIO NMOS transistor supplied by VDDIO
   * @rmtoll CCSWCR    NCC2  LL_SBS_SetNMOSVddIOCompensationCode
-  * @param  PMOSCode PMOS compensation cell code
+  * @param  NMOSCode NMOS compensation cell code
   *         This code is applied to the NMOS compensation cell when the CS2 bit of the
   *         SBS_CCCSR is set
   * @retval None
@@ -1379,7 +1308,7 @@ __STATIC_INLINE uint32_t LL_SBS_GetVddIOCellCompensationCode(void)
   * @}
   */
 
-/** @defgroup SYSTEM_LL_EF_DBGMCU DBGMCU
+/** @defgroup SYSTEM_LL_DBGMCU_EF DBGMCU
   * @{
   */
 
@@ -1650,7 +1579,7 @@ __STATIC_INLINE void LL_DBGMCU_APB3_GRP1_UnFreezePeriph(uint32_t Periphs)
   */
 
 #if defined(VREFBUF)
-/** @defgroup SYSTEM_LL_EF_VREFBUF VREFBUF
+/** @defgroup SYSTEM_LL_VREFBUF_EF VREFBUF
   * @{
   */
 
@@ -1759,7 +1688,7 @@ __STATIC_INLINE void LL_VREFBUF_SetTrimming(uint32_t Value)
   */
 #endif /* VREFBUF */
 
-/** @defgroup SYSTEM_LL_EF_FLASH FLASH
+/** @defgroup SYSTEM_LL_FLASH_EF FLASH
   * @{
   */
 /**
@@ -1820,7 +1749,7 @@ __STATIC_INLINE uint32_t LL_FLASH_GetLatency(void)
   */
 
 
-/** @defgroup SYSTEM_LL_EF_ERASE_MEMORIE_STATUS_CLEAR
+/** @defgroup SYSTEM_LL_SBS_EF_ERASE_MEMORY_STATUS_CLEAR  Erase Memory Status
   * @{
   */
 

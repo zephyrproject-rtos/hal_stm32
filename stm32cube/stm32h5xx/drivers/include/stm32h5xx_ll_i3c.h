@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -4375,7 +4375,7 @@ __STATIC_INLINE void LL_I3C_ClearFlag_GRP(I3C_TypeDef *I3Cx)
   */
 
 ErrorStatus LL_I3C_Init(I3C_TypeDef *I3Cx, LL_I3C_InitTypeDef *I3C_InitStruct, uint32_t Mode);
-ErrorStatus LL_I3C_DeInit(I3C_TypeDef *I3Cx);
+ErrorStatus LL_I3C_DeInit(const I3C_TypeDef *I3Cx);
 void LL_I3C_StructInit(LL_I3C_InitTypeDef *I3C_InitStruct);
 
 /**

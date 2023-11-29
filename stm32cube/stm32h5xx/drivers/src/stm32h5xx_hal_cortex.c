@@ -11,7 +11,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -675,8 +675,8 @@ static void MPU_ConfigRegion(MPU_Type *MPUx, const MPU_Region_InitTypeDef *const
   }
   else
   {
-    MPUx->RBAR = 0U;
     MPUx->RLAR = 0U;
+    MPUx->RBAR = 0U;
   }
 }
 

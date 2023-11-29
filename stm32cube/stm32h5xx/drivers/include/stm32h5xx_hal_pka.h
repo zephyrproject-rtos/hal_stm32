@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -626,8 +626,8 @@ void HAL_PKA_IRQHandler(PKA_HandleTypeDef *hpka);
   * @{
   */
 /* Peripheral State and Error functions ***************************************/
-HAL_PKA_StateTypeDef HAL_PKA_GetState(PKA_HandleTypeDef *hpka);
-uint32_t             HAL_PKA_GetError(PKA_HandleTypeDef *hpka);
+HAL_PKA_StateTypeDef HAL_PKA_GetState(const PKA_HandleTypeDef *hpka);
+uint32_t             HAL_PKA_GetError(const PKA_HandleTypeDef *hpka);
 /**
   * @}
   */

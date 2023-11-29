@@ -6,7 +6,7 @@
   **********************************************************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -609,6 +609,8 @@ typedef struct
 #define NODE_TYPE_MASK                  (0x00FFU) /* DMA channel node type                 */
 #define NODE_CLLR_IDX                   (0x0700U) /* DMA channel node CLLR index mask      */
 #define NODE_CLLR_IDX_POS               (0x0008U) /* DMA channel node CLLR index position  */
+
+#define NODE_MAXIMUM_SIZE               (0x0008U) /* Amount of registers of the node       */
 
 #define NODE_STATIC_FORMAT              (0x0000U) /* DMA channel node static format        */
 #define NODE_DYNAMIC_FORMAT             (0x0001U) /* DMA channel node dynamic format       */

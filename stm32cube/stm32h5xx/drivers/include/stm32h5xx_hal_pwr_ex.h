@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -288,7 +288,7 @@ typedef struct
   */
 
 #define __HAL_PWR_PVD_AVD_EXTI_GET_RISING_FLAG() ((READ_BIT(EXTI->RPR1, PWR_EXTI_LINE_AVD)\
-                                               == PWR_EXTI_LINE_AVD) ? 1UL : 0UL)
+                                                   == PWR_EXTI_LINE_AVD) ? 1UL : 0UL)
 
 /**
   * @brief Check whether the specified AVD EXTI Falling interrupt flag is set or not.
@@ -296,7 +296,7 @@ typedef struct
   */
 
 #define __HAL_PWR_PVD_AVD_EXTI_GET_FALLING_FLAG() ((READ_BIT(EXTI->FPR1, PWR_EXTI_LINE_AVD)\
-                                                == PWR_EXTI_LINE_AVD) ? 1UL : 0UL)
+                                                    == PWR_EXTI_LINE_AVD) ? 1UL : 0UL)
 
 /**
   * @brief  Clear the AVD EXTI flag.
@@ -323,16 +323,16 @@ typedef struct
   * @param  __REGULATOR__ : Specifies the regulator output voltage to achieve a
   *                         tradeoff between performance and power consumption.
   *                         This parameter can be one of the following values :
-  *                         @arg @ref PWR_REGULATOR_VOLTAGE_SCALE1 : Regulator voltage output scale 1.
+  *                         @arg @ref PWR_REGULATOR_VOLTAGE_SCALE0 : Regulator voltage output scale 0.
   *                                                                  Provides a typical output voltage at 1.2 V.
   *                                                                  Used when system clock frequency is up to 160 MHz.
-  *                         @arg @ref PWR_REGULATOR_VOLTAGE_SCALE2 : Regulator voltage output scale 2.
+  *                         @arg @ref PWR_REGULATOR_VOLTAGE_SCALE1 : Regulator voltage output scale 1.
   *                                                                  Provides a typical output voltage at 1.1 V.
   *                                                                  Used when system clock frequency is up to 100 MHz.
-  *                         @arg @ref PWR_REGULATOR_VOLTAGE_SCALE3 : Regulator voltage output scale 3.
+  *                         @arg @ref PWR_REGULATOR_VOLTAGE_SCALE2 : Regulator voltage output scale 2.
   *                                                                  Provides a typical output voltage at 1.0 V.
   *                                                                  Used when system clock frequency is up to 50 MHz.
-  *                         @arg @ref PWR_REGULATOR_VOLTAGE_SCALE4 : Regulator voltage output scale 4.
+  *                         @arg @ref PWR_REGULATOR_VOLTAGE_SCALE3 : Regulator voltage output scale 3.
   *                                                                  Provides a typical output voltage at 0.9 V.
   *                                                                  Used when system clock frequency is up to 24 MHz.
   * @retval None.
@@ -443,11 +443,11 @@ typedef struct
   * @}
   */
 
-/** @addtogroup PWREx_Exported_Functions PWR Extended Exported Functions
+/** @addtogroup PWREx_Exported_Functions
   * @{
   */
 
-/** @addtogroup PWREx_Exported_Functions_Group1 Power Supply Control Functions
+/** @addtogroup PWREx_Exported_Functions_Group1
   * @{
   */
 HAL_StatusTypeDef HAL_PWREx_ConfigSupply(uint32_t SupplySource);
@@ -461,7 +461,7 @@ uint32_t          HAL_PWREx_GetStopModeVoltageRange(void);
   * @}
   */
 
-/** @addtogroup PWREx_Exported_Functions_Group2 Voltage Monitoring Functions
+/** @addtogroup PWREx_Exported_Functions_Group2
   * @{
   */
 void HAL_PWREx_ConfigAVD(const PWREx_AVDTypeDef *sConfigAVD);
@@ -491,7 +491,7 @@ void HAL_PWREx_PVD_AVD_Falling_Callback(void);
   * @}
   */
 
-/** @addtogroup PWREx_Exported_Functions_Group3 Wakeup Pins configuration functions
+/** @addtogroup PWREx_Exported_Functions_Group3
   * @{
   */
 
@@ -502,7 +502,7 @@ void HAL_PWREx_DisableWakeUpPin(uint32_t WakeUpPinx);
   * @}
   */
 
-/** @addtogroup PWREx_Exported_Functions_Group4 Memories Retention Functions
+/** @addtogroup PWREx_Exported_Functions_Group4
   * @{
   */
 void HAL_PWREx_EnableFlashPowerDown(void);
@@ -516,7 +516,7 @@ void HAL_PWREx_DisableBkupRAMRetention(void);
   * @}
   */
 
-/** @addtogroup PWREx_Exported_Functions_Group5 IO/JTAG Retention Functions
+/** @addtogroup PWREx_Exported_Functions_Group5
   * @{
   */
 void HAL_PWREx_EnableStandbyIORetention(void);

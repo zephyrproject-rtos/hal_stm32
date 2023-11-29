@@ -12,7 +12,7 @@
   **********************************************************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -35,6 +35,8 @@
   */
 
 #ifdef HAL_OPAMP_MODULE_ENABLED
+
+#if defined (OPAMP1)
 
 /* Private typedef ---------------------------------------------------------------------------------------------------*/
 /* Private define ----------------------------------------------------------------------------------------------------*/
@@ -110,5 +112,7 @@ HAL_StatusTypeDef HAL_OPAMPEx_Unlock(OPAMP_HandleTypeDef *hopamp)
 /**
   * @}
   */
+
+#endif /* OPAMP1 */
 
 #endif /* HAL_OPAMP_MODULE_ENABLED */

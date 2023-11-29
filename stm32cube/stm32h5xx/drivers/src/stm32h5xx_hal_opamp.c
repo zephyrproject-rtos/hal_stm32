@@ -16,7 +16,7 @@
   **********************************************************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -129,7 +129,7 @@
            and a pointer to the user callback function.
 
       (++) Use function HAL_OPAMP_UnRegisterCallback() to reset a callback to the default
-           weak (surcharged) function. It allows to reset following callbacks:
+           weak (overridden) function. It allows to reset following callbacks:
       (+++) MspInitCallback         : OPAMP MspInit.
       (+++) MspDeInitCallback       : OPAMP MspDeInit.
       (+++) All Callbacks
@@ -226,6 +226,8 @@
   */
 
 #ifdef HAL_OPAMP_MODULE_ENABLED
+
+#if defined (OPAMP1)
 
 /* Private types -----------------------------------------------------------------------------------------------------*/
 /* Private variables -------------------------------------------------------------------------------------------------*/
@@ -917,7 +919,7 @@ HAL_OPAMP_TrimmingValueTypeDef HAL_OPAMP_GetTrimOffset(const OPAMP_HandleTypeDef
   HAL_OPAMP_TrimmingValueTypeDef trimmingvalue;
 
   /* Selection of register of trimming depending on power mode: OTR or LPOTR */
-  __IO uint32_t *tmp_opamp_reg_trimming;
+  __IO const uint32_t *tmp_opamp_reg_trimming;
 
   /* Check the OPAMP handle allocation */
   /* Value can be retrieved in HAL_OPAMP_STATE_READY state */
@@ -1022,7 +1024,7 @@ HAL_OPAMP_StateTypeDef HAL_OPAMP_GetState(const OPAMP_HandleTypeDef *hopamp)
 #if (USE_HAL_OPAMP_REGISTER_CALLBACKS == 1U)
 /**
   * @brief Register a User OPAMP Callback
-  *        To be used instead of the weak (surcharged) predefined callback
+  *        To be used instead of the weak (overridden) predefined callback
   * @note  The HAL_OPAMP_RegisterCallback() may be called before HAL_OPAMP_Init() in HAL_OPAMP_STATE_RESET to register
   *        callbacks for HAL_OPAMP_MSPINIT_CB_ID and HAL_OPAMP_MSPDEINIT_CB_ID
   * @param hopamp  OPAMP handle
@@ -1086,9 +1088,9 @@ HAL_StatusTypeDef HAL_OPAMP_RegisterCallback(OPAMP_HandleTypeDef *hopamp, HAL_OP
 
 /**
   * @brief Unregister a User OPAMP Callback
-  *        OPAMP Callback is redirected to the weak (surcharged) predefined callback
-  * @note  The HAL_OPAMP_UnRegisterCallback() may be called before HAL_OPAMP_Init() in HAL_OPAMP_STATE_RESET to un-register
-  *        callbacks for HAL_OPAMP_MSPINIT_CB_ID and HAL_OPAMP_MSPDEINIT_CB_ID
+  *        OPAMP Callback is redirected to the weak (overridden) predefined callback
+  * @note  The HAL_OPAMP_UnRegisterCallback() may be called before HAL_OPAMP_Init() in HAL_OPAMP_STATE_RESET to
+  *        un-register callbacks for HAL_OPAMP_MSPINIT_CB_ID and HAL_OPAMP_MSPDEINIT_CB_ID
   * @param hopamp  OPAMP handle
   * @param CallbackId  ID of the callback to be unregistered
   *        This parameter can be one of the following values:
@@ -1154,6 +1156,9 @@ HAL_StatusTypeDef HAL_OPAMP_UnRegisterCallback(OPAMP_HandleTypeDef *hopamp, HAL_
 /**
   * @}
   */
+
+#endif /* OPAMP1 */
+
 #endif /* HAL_OPAMP_MODULE_ENABLED */
 /**
   * @}

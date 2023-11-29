@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -237,7 +237,7 @@
   *          - SUCCESS: SPI registers are de-initialized
   *          - ERROR: SPI registers are not de-initialized
   */
-ErrorStatus LL_SPI_DeInit(SPI_TypeDef *SPIx)
+ErrorStatus LL_SPI_DeInit(const SPI_TypeDef *SPIx)
 {
   ErrorStatus status = ERROR;
 
@@ -548,7 +548,7 @@ void LL_SPI_StructInit(LL_SPI_InitTypeDef *SPI_InitStruct)
   *          - SUCCESS: SPI registers are de-initialized
   *          - ERROR: SPI registers are not de-initialized
   */
-ErrorStatus LL_I2S_DeInit(SPI_TypeDef *SPIx)
+ErrorStatus LL_I2S_DeInit(const SPI_TypeDef *SPIx)
 {
   return LL_SPI_DeInit(SPIx);
 }
@@ -636,24 +636,18 @@ ErrorStatus LL_I2S_Init(SPI_TypeDef *SPIx, LL_I2S_InitTypeDef *I2S_InitStruct)
       }
 
       /* Get the I2S (SPI) source clock value */
-#if defined(SPI1)
       if (SPIx == SPI1)
       {
         sourceclock = LL_RCC_GetSPIClockFreq(LL_RCC_SPI1_CLKSOURCE);
       }
-#endif /* SPI1 */
-#if defined(SPI2)
-      if (SPIx == SPI2)
+      else if (SPIx == SPI2)
       {
         sourceclock = LL_RCC_GetSPIClockFreq(LL_RCC_SPI2_CLKSOURCE);
       }
-#endif /* SPI2 */
-#if defined(SPI3)
-      if (SPIx == SPI3)
+      else /* SPI3 */
       {
         sourceclock = LL_RCC_GetSPIClockFreq(LL_RCC_SPI3_CLKSOURCE);
       }
-#endif /* SPI3 */
 
       /* Compute the Real divider depending on the MCLK output state with a fixed point */
       if (I2S_InitStruct->MCLKOutput == LL_I2S_MCLK_OUTPUT_ENABLE)

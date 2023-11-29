@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -31,6 +31,12 @@ extern "C" {
   * @{
   */
 #if defined(PSSI)
+
+#ifndef USE_HAL_PSSI_REGISTER_CALLBACKS
+/* For backward compatibility, if USE_HAL_PSSI_REGISTER_CALLBACKS not defined, define it to 1*/
+#define USE_HAL_PSSI_REGISTER_CALLBACKS 0U
+#endif /* USE_HAL_PSSI_REGISTER_CALLBACKS */
+
 /** @addtogroup PSSI PSSI
   * @brief PSSI HAL module driver
   * @{
@@ -76,7 +82,11 @@ typedef enum
 /**
   * @brief  PSSI handle Structure definition
   */
+#if (USE_HAL_PSSI_REGISTER_CALLBACKS == 1)
 typedef struct __PSSI_HandleTypeDef
+#else
+typedef struct
+#endif /* USE_HAL_PSSI_REGISTER_CALLBACKS */
 {
   PSSI_TypeDef         *Instance;    /*!< PSSI register base address.    */
   PSSI_InitTypeDef      Init;        /*!< PSSI Initialization Structure. */
@@ -87,6 +97,8 @@ typedef struct __PSSI_HandleTypeDef
   DMA_HandleTypeDef    *hdmatx;      /*!< PSSI Tx DMA Handle parameters  */
   DMA_HandleTypeDef    *hdmarx;      /*!< PSSI Rx DMA Handle parameters  */
 #endif /*HAL_DMA_MODULE_ENABLED*/
+
+#if (USE_HAL_PSSI_REGISTER_CALLBACKS == 1)
   void (* TxCpltCallback)(struct __PSSI_HandleTypeDef *hpssi);    /*!< PSSI transfer complete callback. */
   void (* RxCpltCallback)(struct __PSSI_HandleTypeDef *hpssi);    /*!< PSSI transfer complete callback. */
   void (* ErrorCallback)(struct __PSSI_HandleTypeDef *hpssi);     /*!< PSSI transfer complete callback. */
@@ -94,6 +106,7 @@ typedef struct __PSSI_HandleTypeDef
 
   void (* MspInitCallback)(struct __PSSI_HandleTypeDef *hpssi);   /*!< PSSI Msp Init callback.          */
   void (* MspDeInitCallback)(struct __PSSI_HandleTypeDef *hpssi); /*!< PSSI Msp DeInit callback.        */
+#endif /* USE_HAL_PSSI_REGISTER_CALLBACKS */
 
   HAL_LockTypeDef             Lock;                               /*!< PSSI lock.                       */
   __IO HAL_PSSI_StateTypeDef State;                               /*!< PSSI transfer state.             */
@@ -101,7 +114,7 @@ typedef struct __PSSI_HandleTypeDef
 
 } PSSI_HandleTypeDef;
 
-
+#if (USE_HAL_PSSI_REGISTER_CALLBACKS == 1)
 /**
   * @brief  HAL PSSI Callback pointer definition
   */
@@ -121,7 +134,7 @@ typedef enum
   HAL_PSSI_MSPDEINIT_CB_ID   = 0x06U  /*!< PSSI Msp DeInit callback ID             */
 
 } HAL_PSSI_CallbackIDTypeDef;
-
+#endif /* USE_HAL_PSSI_REGISTER_CALLBACKS */
 
 /**
   * @}
@@ -141,8 +154,9 @@ typedef enum
 #define HAL_PSSI_ERROR_OVER_RUN         0x00000004U /*!< FIFO Over-run  error    */
 #define HAL_PSSI_ERROR_DMA              0x00000008U /*!< Dma     error           */
 #define HAL_PSSI_ERROR_TIMEOUT          0x00000010U /*!< Timeout error           */
+#if (USE_HAL_PSSI_REGISTER_CALLBACKS == 1)
 #define HAL_PSSI_ERROR_INVALID_CALLBACK 0x00000020U /*!< Invalid callback error  */
-
+#endif /* USE_HAL_PSSI_REGISTER_CALLBACKS */
 
 /**
   * @}
@@ -273,12 +287,15 @@ typedef enum
   * @param  __HANDLE__ specifies the PSSI handle.
   * @retval None
   */
-
+#if (USE_HAL_PSSI_REGISTER_CALLBACKS == 1)
 #define HAL_PSSI_RESET_HANDLE_STATE(__HANDLE__) do{                                            \
                                                       (__HANDLE__)->State = HAL_PSSI_STATE_RESET;\
                                                       (__HANDLE__)->MspInitCallback = NULL;       \
                                                       (__HANDLE__)->MspDeInitCallback = NULL;     \
                                                      }while(0)
+#else
+#define HAL_PSSI_RESET_HANDLE_STATE(__HANDLE__) ((__HANDLE__)->State = HAL_PSSI_STATE_RESET)
+#endif /* USE_HAL_PSSI_REGISTER_CALLBACKS */
 
 
 /**
@@ -435,11 +452,11 @@ HAL_StatusTypeDef HAL_PSSI_DeInit(PSSI_HandleTypeDef *hpssi);
 void              HAL_PSSI_MspInit(PSSI_HandleTypeDef *hpssi);
 void              HAL_PSSI_MspDeInit(PSSI_HandleTypeDef *hpssi);
 /* Callbacks Register/UnRegister functions  ***********************************/
-
+#if (USE_HAL_PSSI_REGISTER_CALLBACKS == 1)
 HAL_StatusTypeDef HAL_PSSI_RegisterCallback(PSSI_HandleTypeDef *hpssi, HAL_PSSI_CallbackIDTypeDef CallbackID,
                                             pPSSI_CallbackTypeDef pCallback);
 HAL_StatusTypeDef HAL_PSSI_UnRegisterCallback(PSSI_HandleTypeDef *hpssi, HAL_PSSI_CallbackIDTypeDef CallbackID);
-
+#endif /* USE_HAL_PSSI_REGISTER_CALLBACKS */
 
 /**
   * @}
@@ -468,8 +485,8 @@ HAL_StatusTypeDef HAL_PSSI_Abort_DMA(PSSI_HandleTypeDef *hpssi);
   */
 
 /* Peripheral State functions ***************************************************/
-HAL_PSSI_StateTypeDef HAL_PSSI_GetState(PSSI_HandleTypeDef *hpssi);
-uint32_t               HAL_PSSI_GetError(PSSI_HandleTypeDef *hpssi);
+HAL_PSSI_StateTypeDef HAL_PSSI_GetState(const PSSI_HandleTypeDef *hpssi);
+uint32_t               HAL_PSSI_GetError(const PSSI_HandleTypeDef *hpssi);
 
 /**
   * @}

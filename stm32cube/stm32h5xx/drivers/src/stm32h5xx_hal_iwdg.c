@@ -11,7 +11,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -430,7 +430,7 @@ HAL_StatusTypeDef HAL_IWDG_Refresh(IWDG_HandleTypeDef *hiwdg)
   *           @arg @ref IWDG_STATUS_DISABLE
   *           @arg @ref IWDG_STATUS_ENABLE
   */
-uint32_t HAL_IWDG_GetActiveStatus(IWDG_HandleTypeDef *hiwdg)
+uint32_t HAL_IWDG_GetActiveStatus(const IWDG_HandleTypeDef *hiwdg)
 {
   uint32_t status;
 

@@ -23,7 +23,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -65,7 +65,7 @@ extern "C" {
   * @{
   */
 
-/** @defgroup BUS_LL_AHB_BRANCH_CLK_AHBx
+/** @defgroup BUS_LL_AHB_BRANCH_CLK_AHBx  BRANCH CLK AHBx
   * @{
   */
 #define LL_AHB_BRANCH_CLK_AHB1          RCC_CFGR2_AHB1DIS
@@ -77,7 +77,7 @@ extern "C" {
   * @}
   */
 
-/** @defgroup BUS_LL_APB_BRANCH_CLK_APBx
+/** @defgroup BUS_LL_APB_BRANCH_CLK_APBx  BRANCH CLK APBx
   * @{
   */
 #define LL_APB_BRANCH_CLK_APB1          RCC_CFGR2_APB1DIS
@@ -331,7 +331,7 @@ extern "C" {
 #if defined(SPI5)
 #define LL_APB3_GRP1_PERIPH_ALL           0x0030F9E2U
 #else
-#define LL_APB3_GRP1_PERIPH_ALL           0x00300A42U
+#define LL_APB3_GRP1_PERIPH_ALL           0x00200A42U
 #endif /* SPI5 */
 #define LL_APB3_GRP1_PERIPH_SBS           RCC_APB3ENR_SBSEN
 #if defined(SPI5)
@@ -376,7 +376,7 @@ extern "C" {
   * @{
   */
 
-/** @defgroup BUS_LL_EF_AHBx AHBx
+/** @defgroup BUS_LL_EF_AHBx AHBx Branch
   * @{
   */
 /**
@@ -441,7 +441,7 @@ __STATIC_INLINE uint32_t LL_AHB_IsDisabledClock(uint32_t AHBx)
   * @}
   */
 
-/** @defgroup BUS_LL_EF_APBx APBx
+/** @defgroup BUS_LL_EF_APBx APBx Branch
   * @{
   */
 /**
@@ -450,9 +450,9 @@ __STATIC_INLINE uint32_t LL_AHB_IsDisabledClock(uint32_t AHBx)
   *         CFGR2    APB2DIS     LL_APB_DisableClock\n
   *         CFGR2    APB3DIS     LL_APB_DisableClock
   * @param  APBx This parameter can be a combination of the following values:
-  *         @arg @ref LL_APB_BRANCH_CLOCK_APB1
-  *         @arg @ref LL_APB_BRANCH_CLOCK_APB2
-  *         @arg @ref LL_APB_BRANCH_CLOCK_APB3
+  *         @arg @ref LL_APB_BRANCH_CLK_APB1
+  *         @arg @ref LL_APB_BRANCH_CLK_APB2
+  *         @arg @ref LL_APB_BRANCH_CLK_APB3
   * @retval None
   */
 __STATIC_INLINE void LL_APB_DisableClock(uint32_t APBx)
@@ -466,9 +466,9 @@ __STATIC_INLINE void LL_APB_DisableClock(uint32_t APBx)
   *         CFGR2    APB2DIS     LL_APB_EnableClock\n
   *         CFGR2    APB3DIS     LL_APB_EnableClock
   * @param  APBx This parameter can be a combination of the following values:
-  *         @arg @ref LL_APB_BRANCH_CLOCK_APB1
-  *         @arg @ref LL_APB_BRANCH_CLOCK_APB2
-  *         @arg @ref LL_APB_BRANCH_CLOCK_APB3
+  *         @arg @ref LL_APB_BRANCH_CLK_APB1
+  *         @arg @ref LL_APB_BRANCH_CLK_APB2
+  *         @arg @ref LL_APB_BRANCH_CLK_APB3
   * @retval None
   */
 __STATIC_INLINE void LL_APB_EnableClock(uint32_t APBx)
@@ -500,7 +500,11 @@ __STATIC_INLINE uint32_t LL_APB_IsDisabledClock(uint32_t APBx)
   * @}
   */
 
-/** @defgroup BUS_LL_EF_AHB1 AHB1
+/**
+  * @}
+  */
+
+/** @defgroup BUS_LL_EF_AHB1 AHB1 Peripherals
   * @{
   */
 /**
@@ -533,7 +537,7 @@ __STATIC_INLINE uint32_t LL_APB_IsDisabledClock(uint32_t APBx)
   *         @arg @ref LL_AHB1_GRP1_PERIPH_ETHRX (*)
   *         @arg @ref LL_AHB1_GRP1_PERIPH_GTZC1
   *         @arg @ref LL_AHB1_GRP1_PERIPH_BKPSRAM
-  *         @arg @ref LL_AHB1_GRP1_PERIPH_DCACHE (*)
+  *         @arg @ref LL_AHB1_GRP1_PERIPH_DCACHE1 (*)
   *         @arg @ref LL_AHB1_GRP1_PERIPH_SRAM1
   *
   *  (*)  : Not available for all stm32h5xxxx family lines.
@@ -578,7 +582,7 @@ __STATIC_INLINE void LL_AHB1_GRP1_EnableClock(uint32_t Periphs)
   *         @arg @ref LL_AHB1_GRP1_PERIPH_ETHRX (*)
   *         @arg @ref LL_AHB1_GRP1_PERIPH_GTZC1
   *         @arg @ref LL_AHB1_GRP1_PERIPH_BKPSRAM
-  *         @arg @ref LL_AHB1_GRP1_PERIPH_DCACHE (*)
+  *         @arg @ref LL_AHB1_GRP1_PERIPH_DCACHE1 (*)
   *         @arg @ref LL_AHB1_GRP1_PERIPH_SRAM1
   *
   *  (*)  : Not available for all stm32h5xxxx family lines.
@@ -619,7 +623,7 @@ __STATIC_INLINE uint32_t LL_AHB1_GRP1_IsEnabledClock(uint32_t Periphs)
   *         @arg @ref LL_AHB1_GRP1_PERIPH_ETHRX (*)
   *         @arg @ref LL_AHB1_GRP1_PERIPH_GTZC1
   *         @arg @ref LL_AHB1_GRP1_PERIPH_BKPSRAM
-  *         @arg @ref LL_AHB1_GRP1_PERIPH_DCACHE (*)
+  *         @arg @ref LL_AHB1_GRP1_PERIPH_DCACHE1 (*)
   *         @arg @ref LL_AHB1_GRP1_PERIPH_SRAM1
   *
   *  (*)  : Not available for all stm32h5xxxx family lines.
@@ -718,7 +722,7 @@ __STATIC_INLINE void LL_AHB1_GRP1_ReleaseReset(uint32_t Periphs)
   *         @arg @ref LL_AHB1_GRP1_PERIPH_ETHRX (*)
   *         @arg @ref LL_AHB1_GRP1_PERIPH_GTZC1
   *         @arg @ref LL_AHB1_GRP1_PERIPH_BKPSRAM
-  *         @arg @ref LL_AHB1_GRP1_PERIPH_DCACHE (*)
+  *         @arg @ref LL_AHB1_GRP1_PERIPH_DCACHE1 (*)
   *         @arg @ref LL_AHB1_GRP1_PERIPH_SRAM1
   *
   *  (*)  : Not available for all stm32h5xxxx family lines.
@@ -763,7 +767,7 @@ __STATIC_INLINE void LL_AHB1_GRP1_EnableClockSleep(uint32_t Periphs)
   *         @arg @ref LL_AHB1_GRP1_PERIPH_ETHRX (*)
   *         @arg @ref LL_AHB1_GRP1_PERIPH_GTZC1
   *         @arg @ref LL_AHB1_GRP1_PERIPH_BKPSRAM
-  *         @arg @ref LL_AHB1_GRP1_PERIPH_DCACHE (*)
+  *         @arg @ref LL_AHB1_GRP1_PERIPH_DCACHE1 (*)
   *         @arg @ref LL_AHB1_GRP1_PERIPH_SRAM1
   *
   *  (*)  : Not available for all stm32h5xxxx family lines.
@@ -804,7 +808,7 @@ __STATIC_INLINE uint32_t LL_AHB1_GRP1_IsEnabledClockSleep(uint32_t Periphs)
   *         @arg @ref LL_AHB1_GRP1_PERIPH_ETHRX (*)
   *         @arg @ref LL_AHB1_GRP1_PERIPH_GTZC1
   *         @arg @ref LL_AHB1_GRP1_PERIPH_BKPSRAM
-  *         @arg @ref LL_AHB1_GRP1_PERIPH_DCACHE (*)
+  *         @arg @ref LL_AHB1_GRP1_PERIPH_DCACHE1 (*)
   *         @arg @ref LL_AHB1_GRP1_PERIPH_SRAM1
   *
   *  (*)  : Not available for all stm32h5xxxx family lines.
@@ -819,7 +823,7 @@ __STATIC_INLINE void LL_AHB1_GRP1_DisableClockSleep(uint32_t Periphs)
   * @}
   */
 
-/** @defgroup BUS_LL_EF_AHB2 AHB2
+/** @defgroup BUS_LL_EF_AHB2 AHB2 Peripherals
   * @{
   */
 /**
@@ -1235,7 +1239,7 @@ __STATIC_INLINE void LL_AHB2_GRP1_DisableClockSleep(uint32_t Periphs)
   */
 
 #if defined(AHB4PERIPH_BASE)
-/** @defgroup BUS_LL_EF_AHB4 AHB4
+/** @defgroup BUS_LL_EF_AHB4 AHB4 Peripherals
   * @{
   */
 /**
@@ -1421,7 +1425,7 @@ __STATIC_INLINE void LL_AHB4_GRP1_DisableClockSleep(uint32_t Periphs)
   */
 #endif /* AHB4PERIPH_BASE */
 
-/** @defgroup BUS_LL_EF_APB1 APB1
+/** @defgroup BUS_LL_EF_APB1 APB1 Peripherals
   * @{
   */
 
@@ -2012,29 +2016,29 @@ __STATIC_INLINE uint32_t LL_APB1_GRP1_IsEnabledClockSleep(uint32_t Periphs)
 
 /**
   * @brief  Disable APB1 peripheral clocks in Sleep mode
-  * @rmtoll APB1LLPENR     TIM2LPEN        LL_APB1_GRP1_DisableClockStopSleep\n
-  *         APB1LLPENR     TIM3LPEN        LL_APB1_GRP1_DisableClockStopSleep\n
-  *         APB1LLPENR     TIM4LPEN        LL_APB1_GRP1_DisableClockStopSleep\n
-  *         APB1LLPENR     TIM5LPEN        LL_APB1_GRP1_DisableClockStopSleep\n
-  *         APB1LLPENR     TIM6LPEN        LL_APB1_GRP1_DisableClockStopSleep\n
-  *         APB1LLPENR     TIM7LPEN        LL_APB1_GRP1_DisableClockStopSleep\n
-  *         APB1LLPENR     WWDGLPEN        LL_APB1_GRP1_DisableClockStopSleep\n
-  *         APB1LLPENR     SPI2LPEN        LL_APB1_GRP1_DisableClockStopSleep\n
-  *         APB1LLPENR     SPI3LPEN        LL_APB1_GRP1_DisableClockStopSleep\n
-  *         APB1LLPENR     USART2LPEN      LL_APB1_GRP1_DisableClockStopSleep\n
-  *         APB1LLPENR     USART3LPEN      LL_APB1_GRP1_DisableClockStopSleep\n
-  *         APB1LLPENR     UART4LPEN       LL_APB1_GRP1_DisableClockStopSleep\n
-  *         APB1LLPENR     UART5LPEN       LL_APB1_GRP1_DisableClockStopSleep\n
-  *         APB1LLPENR     I2C1LPEN        LL_APB1_GRP1_DisableClockStopSleep\n
-  *         APB1LLPENR     I2C2LPEN        LL_APB1_GRP1_DisableClockStopSleep\n
-  *         APB1LLPENR     I3C1LPEN        LL_APB1_GRP1_DisableClockStopSleep\n
-  *         APB1LLPENR     CRSLPEN         LL_APB1_GRP1_DisableClockStopSleep\n
-  *         APB1LLPENR     USART6LPEN      LL_APB1_GRP1_DisableClockStopSleep\n
-  *         APB1LLPENR     USART10LPEN     LL_APB1_GRP1_DisableClockStopSleep\n
-  *         APB1LLPENR     USART11LPEN     LL_APB1_GRP1_DisableClockStopSleep\n
-  *         APB1LLPENR     CECLPEN         LL_APB1_GRP1_DisableClockStopSleep\n
-  *         APB1LLPENR     UART7LPEN       LL_APB1_GRP1_DisableClockStopSleep\n
-  *         APB1LLPENR     UART8LPEN       LL_APB1_GRP1_DisableClockStopSleep
+  * @rmtoll APB1LLPENR     TIM2LPEN        LL_APB1_GRP1_DisableClockSleep\n
+  *         APB1LLPENR     TIM3LPEN        LL_APB1_GRP1_DisableClockSleep\n
+  *         APB1LLPENR     TIM4LPEN        LL_APB1_GRP1_DisableClockSleep\n
+  *         APB1LLPENR     TIM5LPEN        LL_APB1_GRP1_DisableClockSleep\n
+  *         APB1LLPENR     TIM6LPEN        LL_APB1_GRP1_DisableClockSleep\n
+  *         APB1LLPENR     TIM7LPEN        LL_APB1_GRP1_DisableClockSleep\n
+  *         APB1LLPENR     WWDGLPEN        LL_APB1_GRP1_DisableClockSleep\n
+  *         APB1LLPENR     SPI2LPEN        LL_APB1_GRP1_DisableClockSleep\n
+  *         APB1LLPENR     SPI3LPEN        LL_APB1_GRP1_DisableClockSleep\n
+  *         APB1LLPENR     USART2LPEN      LL_APB1_GRP1_DisableClockSleep\n
+  *         APB1LLPENR     USART3LPEN      LL_APB1_GRP1_DisableClockSleep\n
+  *         APB1LLPENR     UART4LPEN       LL_APB1_GRP1_DisableClockSleep\n
+  *         APB1LLPENR     UART5LPEN       LL_APB1_GRP1_DisableClockSleep\n
+  *         APB1LLPENR     I2C1LPEN        LL_APB1_GRP1_DisableClockSleep\n
+  *         APB1LLPENR     I2C2LPEN        LL_APB1_GRP1_DisableClockSleep\n
+  *         APB1LLPENR     I3C1LPEN        LL_APB1_GRP1_DisableClockSleep\n
+  *         APB1LLPENR     CRSLPEN         LL_APB1_GRP1_DisableClockSleep\n
+  *         APB1LLPENR     USART6LPEN      LL_APB1_GRP1_DisableClockSleep\n
+  *         APB1LLPENR     USART10LPEN     LL_APB1_GRP1_DisableClockSleep\n
+  *         APB1LLPENR     USART11LPEN     LL_APB1_GRP1_DisableClockSleep\n
+  *         APB1LLPENR     CECLPEN         LL_APB1_GRP1_DisableClockSleep\n
+  *         APB1LLPENR     UART7LPEN       LL_APB1_GRP1_DisableClockSleep\n
+  *         APB1LLPENR     UART8LPEN       LL_APB1_GRP1_DisableClockSleep
   * @param  Periphs This parameter can be a combination of the following values:
   *         @arg @ref LL_APB1_GRP1_PERIPH_ALL
   *         @arg @ref LL_APB1_GRP1_PERIPH_TIM2
@@ -2089,8 +2093,7 @@ __STATIC_INLINE void LL_APB1_GRP1_DisableClockSleep(uint32_t Periphs)
   *         @arg @ref LL_APB1_GRP2_PERIPH_UART12 (*)
   *         @arg @ref LL_APB1_GRP2_PERIPH_DTS
   *         @arg @ref LL_APB1_GRP2_PERIPH_LPTIM2
-  *         @arg @ref LL_APB1_GRP2_PERIPH_FDCAN12 (*)
-  *         @arg @ref LL_APB1_GRP2_PERIPH_FDCAN1  (*)
+  *         @arg @ref LL_APB1_GRP2_PERIPH_FDCAN
   *         @arg @ref LL_APB1_GRP2_PERIPH_UCPD1
   *
   *  (*)  : Not available for all stm32h5xxxx family lines.
@@ -2120,8 +2123,7 @@ __STATIC_INLINE void LL_APB1_GRP2_EnableClockSleep(uint32_t Periphs)
   *         @arg @ref LL_APB1_GRP2_PERIPH_UART12 (*)
   *         @arg @ref LL_APB1_GRP2_PERIPH_DTS
   *         @arg @ref LL_APB1_GRP2_PERIPH_LPTIM2
-  *         @arg @ref LL_APB1_GRP2_PERIPH_FDCAN12 (*)
-  *         @arg @ref LL_APB1_GRP2_PERIPH_FDCAN1  (*)
+  *         @arg @ref LL_APB1_GRP2_PERIPH_FDCAN
   *         @arg @ref LL_APB1_GRP2_PERIPH_UCPD1
   *
   *  (*)  : Not available for all stm32h5xxxx family lines.
@@ -2147,8 +2149,7 @@ __STATIC_INLINE uint32_t LL_APB1_GRP2_IsEnabledClockSleep(uint32_t Periphs)
   *         @arg @ref LL_APB1_GRP2_PERIPH_UART12 (*)
   *         @arg @ref LL_APB1_GRP2_PERIPH_DTS
   *         @arg @ref LL_APB1_GRP2_PERIPH_LPTIM2
-  *         @arg @ref LL_APB1_GRP2_PERIPH_FDCAN12 (*)
-  *         @arg @ref LL_APB1_GRP2_PERIPH_FDCAN1  (*)
+  *         @arg @ref LL_APB1_GRP2_PERIPH_FDCAN
   *         @arg @ref LL_APB1_GRP2_PERIPH_UCPD1
   *
   *  (*)  : Not available for all stm32h5xxxx family lines.
@@ -2163,7 +2164,7 @@ __STATIC_INLINE void LL_APB1_GRP2_DisableClockSleep(uint32_t Periphs)
   * @}
   */
 
-/** @defgroup BUS_LL_EF_APB2 APB2
+/** @defgroup BUS_LL_EF_APB2 APB2 Peripherals
   * @{
   */
 
@@ -2477,8 +2478,7 @@ __STATIC_INLINE void LL_APB2_GRP1_DisableClockSleep(uint32_t Periphs)
   */
 
 
-/** @defgroup BUS_LL_EF_APB3 APB3
-  * @{
+/** @defgroup BUS_LL_EF_APB3 APB3 Peripherals
   */
 
 /**

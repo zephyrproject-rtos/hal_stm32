@@ -12,7 +12,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -42,16 +42,10 @@
   * @{
   */
 #define PLL1_TIMEOUT_VALUE     ((uint32_t)2U)          /* 2 ms (minimum Tick + 1) */
-#define PLL2_TIMEOUT_VALUE     ((uint32_t)/*8U*/2U)    /* 2 ms (minimum Tick + 1) */
+#define PLL2_TIMEOUT_VALUE     ((uint32_t)2U)          /* 2 ms (minimum Tick + 1) */
 #if defined(RCC_CR_PLL3ON)
-#define PLL3_TIMEOUT_VALUE     ((uint32_t)/*8U*/2U)    /* 2 ms (minimum Tick + 1) */
+#define PLL3_TIMEOUT_VALUE     ((uint32_t)2U)          /* 2 ms (minimum Tick + 1) */
 #endif /* RCC_CR_PLL3ON */
-
-#define __LSCO_CLK_ENABLE()    __HAL_RCC_GPIOB_CLK_ENABLE()
-
-#define LSCO_GPIO_PORT         GPIOB
-
-#define LSCO_PIN               GPIO_PIN_2
 
 /**
   * @}
@@ -64,9 +58,9 @@
   * @{
   */
 static HAL_StatusTypeDef RCCEx_PLLSource_Enable(uint32_t PllSource);
-static HAL_StatusTypeDef RCCEx_PLL2_Config(RCC_PLL2InitTypeDef *Pll2);
+static HAL_StatusTypeDef RCCEx_PLL2_Config(const RCC_PLL2InitTypeDef *Pll2);
 #if defined(RCC_CR_PLL3ON)
-static HAL_StatusTypeDef RCCEx_PLL3_Config(RCC_PLL3InitTypeDef *Pll3);
+static HAL_StatusTypeDef RCCEx_PLL3_Config(const RCC_PLL3InitTypeDef *Pll3);
 #endif /* RCC_CR_PLL3ON */
 /**
   * @}
@@ -126,8 +120,7 @@ static HAL_StatusTypeDef RCCEx_PLL3_Config(RCC_PLL3InitTypeDef *Pll3);
   *            @arg @ref RCC_PERIPHCLK_SAI1    SAI1 peripheral clock (*)
   *            @arg @ref RCC_PERIPHCLK_SAI2    SAI2 peripheral clock (*)
   *            @arg @ref RCC_PERIPHCLK_ADCDAC  ADCDAC peripheral clock
-  *            @arg @ref RCC_PERIPHCLK_ADC1    ADC1 peripheral clock
-  *            @arg @ref RCC_PERIPHCLK_ADC2    ADC2 peripheral clock
+  *            @arg @ref RCC_PERIPHCLK_ADC     ADC peripheral clock
   *            @arg @ref RCC_PERIPHCLK_SDMMC1  SDMMC1 peripheral clock (*)
   *            @arg @ref RCC_PERIPHCLK_SDMMC2  SDMMC2 peripheral clock (**)
   *            @arg @ref RCC_PERIPHCLK_CKPER   CKPER peripheral clock
@@ -159,7 +152,7 @@ static HAL_StatusTypeDef RCCEx_PLL3_Config(RCC_PLL3InitTypeDef *Pll3);
   *  (**)  : For stm32h563xx and stm32h57xxx family lines only.
   *  (***) : For stm32h503xx family line only.
   */
-HAL_StatusTypeDef HAL_RCCEx_PeriphCLKConfig(RCC_PeriphCLKInitTypeDef  *pPeriphClkInit)
+HAL_StatusTypeDef HAL_RCCEx_PeriphCLKConfig(const RCC_PeriphCLKInitTypeDef  *pPeriphClkInit)
 {
   uint32_t tmpregister;
   uint32_t tickstart;
@@ -3192,8 +3185,7 @@ void HAL_RCCEx_GetPLL3ClockFreq(PLL3_ClocksTypeDef *pPLL3_Clocks)
   *            @arg @ref RCC_PERIPHCLK_SAI1    SAI1 peripheral clock (*)
   *            @arg @ref RCC_PERIPHCLK_SAI2    SAI2 peripheral clock (*)
   *            @arg @ref RCC_PERIPHCLK_ADCDAC  ADCDAC peripheral clock
-  *            @arg @ref RCC_PERIPHCLK_ADC1    ADC1 peripheral clock
-  *            @arg @ref RCC_PERIPHCLK_ADC2    ADC2 peripheral clock
+  *            @arg @ref RCC_PERIPHCLK_ADC     ADC peripheral clock
   *            @arg @ref RCC_PERIPHCLK_SDMMC1  SDMMC1 peripheral clock (*)
   *            @arg @ref RCC_PERIPHCLK_SDMMC2  SDMMC2 peripheral clock (**)
   *            @arg @ref RCC_PERIPHCLK_CKPER   CKPER peripheral clock
@@ -5600,21 +5592,10 @@ __weak void HAL_RCCEx_LSECSS_Callback(void)
   */
 void HAL_RCCEx_EnableLSCO(uint32_t LSCOSource)
 {
-  GPIO_InitTypeDef GPIO_InitStruct;
   FlagStatus       backupchanged = RESET;
 
   /* Check the parameters */
   assert_param(IS_RCC_LSCOSOURCE(LSCOSource));
-
-  /* LSCO Pin Clock Enable */
-  __LSCO_CLK_ENABLE();
-
-  /* Configure the LSCO pin in analog mode */
-  GPIO_InitStruct.Pin = LSCO_PIN;
-  GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(LSCO_GPIO_PORT, &GPIO_InitStruct);
 
   /* Update LSCOSEL clock source in Backup Domain control register */
   if (HAL_IS_BIT_CLR(PWR->DBPCR, PWR_DBPCR_DBP))
@@ -5732,7 +5713,7 @@ void HAL_RCCEx_DisableLSCO(void)
   * @param  pInit Pointer on RCC_CRSInitTypeDef structure
   * @retval None
   */
-void HAL_RCCEx_CRSConfig(RCC_CRSInitTypeDef *pInit)
+void HAL_RCCEx_CRSConfig(const RCC_CRSInitTypeDef *pInit)
 {
   uint32_t value;
 
@@ -6039,7 +6020,7 @@ static HAL_StatusTypeDef RCCEx_PLLSource_Enable(uint32_t PllSource)
 
   switch (PllSource)
   {
-    case RCC_PLLSOURCE_CSI:
+    case RCC_PLL1_SOURCE_CSI:
       /* Check whether CSI in not ready and enable it */
       if (READ_BIT(RCC->CR, RCC_CR_CSIRDY) == 0U)
       {
@@ -6052,7 +6033,7 @@ static HAL_StatusTypeDef RCCEx_PLLSource_Enable(uint32_t PllSource)
         /* Wait till CSI is ready */
         while (READ_BIT(RCC->CR, RCC_CR_CSIRDY) == 0U)
         {
-          if ((HAL_GetTick() - tickstart) > CSI_TIMEOUT_VALUE)
+          if ((HAL_GetTick() - tickstart) > RCC_CSI_TIMEOUT_VALUE)
           {
             status = HAL_TIMEOUT;
             break;
@@ -6061,7 +6042,7 @@ static HAL_StatusTypeDef RCCEx_PLLSource_Enable(uint32_t PllSource)
       }
       break;
 
-    case RCC_PLLSOURCE_HSI:
+    case RCC_PLL1_SOURCE_HSI:
       /* Check whether HSI in not ready and enable it */
       if (READ_BIT(RCC->CR, RCC_CR_HSIRDY) == 0U)
       {
@@ -6074,7 +6055,7 @@ static HAL_StatusTypeDef RCCEx_PLLSource_Enable(uint32_t PllSource)
         /* Wait till HSI is ready */
         while (READ_BIT(RCC->CR, RCC_CR_HSIRDY) == 0U)
         {
-          if ((HAL_GetTick() - tickstart) > HSI_TIMEOUT_VALUE)
+          if ((HAL_GetTick() - tickstart) > RCC_HSI_TIMEOUT_VALUE)
           {
             status = HAL_TIMEOUT;
             break;
@@ -6083,7 +6064,7 @@ static HAL_StatusTypeDef RCCEx_PLLSource_Enable(uint32_t PllSource)
       }
       break;
 
-    case RCC_PLLSOURCE_HSE:
+    case RCC_PLL1_SOURCE_HSE:
       /* Check whether HSE in not ready and enable it */
       if (READ_BIT(RCC->CR, RCC_CR_HSERDY) == 0U)
       {
@@ -6096,7 +6077,7 @@ static HAL_StatusTypeDef RCCEx_PLLSource_Enable(uint32_t PllSource)
         /* Wait till HSE is ready */
         while (READ_BIT(RCC->CR, RCC_CR_HSERDY) == 0U)
         {
-          if ((HAL_GetTick() - tickstart) > HSE_TIMEOUT_VALUE)
+          if ((HAL_GetTick() - tickstart) > RCC_HSE_TIMEOUT_VALUE)
           {
             status = HAL_TIMEOUT;
             break;
@@ -6120,7 +6101,7 @@ static HAL_StatusTypeDef RCCEx_PLLSource_Enable(uint32_t PllSource)
   * @note   PLL2 is temporary disabled to apply new parameters
   * @retval HAL status
   */
-static HAL_StatusTypeDef RCCEx_PLL2_Config(RCC_PLL2InitTypeDef *pll2)
+static HAL_StatusTypeDef RCCEx_PLL2_Config(const RCC_PLL2InitTypeDef *pll2)
 {
 
   uint32_t tickstart;
@@ -6165,16 +6146,16 @@ static HAL_StatusTypeDef RCCEx_PLL2_Config(RCC_PLL2InitTypeDef *pll2)
   __HAL_RCC_PLL2_VCORANGE(pll2->PLL2VCOSEL);
 
   /* Configure the PLL2 Clock output(s) */
-  __HAL_RCC_PLL2CLKOUT_ENABLE(pll2->PLL2ClockOut);
+  __HAL_RCC_PLL2_CLKOUT_ENABLE(pll2->PLL2ClockOut);
 
   /* Disable PLL2FRACN . */
-  __HAL_RCC_PLL2FRACN_DISABLE();
+  __HAL_RCC_PLL2_FRACN_DISABLE();
 
   /* Configures PLL2 clock Fractional Part Of The Multiplication Factor */
-  __HAL_RCC_PLL2FRACN_CONFIG(pll2->PLL2FRACN);
+  __HAL_RCC_PLL2_FRACN_CONFIG(pll2->PLL2FRACN);
 
   /* Enable PLL2FRACN . */
-  __HAL_RCC_PLL2FRACN_ENABLE();
+  __HAL_RCC_PLL2_FRACN_ENABLE();
 
   /* Enable  PLL2. */
   __HAL_RCC_PLL2_ENABLE();
@@ -6202,7 +6183,7 @@ static HAL_StatusTypeDef RCCEx_PLL2_Config(RCC_PLL2InitTypeDef *pll2)
   * @note   PLL3 is temporary disabled to apply new parameters
   * @retval HAL status.
   */
-static HAL_StatusTypeDef RCCEx_PLL3_Config(RCC_PLL3InitTypeDef *pll3)
+static HAL_StatusTypeDef RCCEx_PLL3_Config(const RCC_PLL3InitTypeDef *pll3)
 {
 
   uint32_t tickstart;
@@ -6247,16 +6228,16 @@ static HAL_StatusTypeDef RCCEx_PLL3_Config(RCC_PLL3InitTypeDef *pll3)
   __HAL_RCC_PLL3_VCORANGE(pll3->PLL3VCOSEL);
 
   /* Configure the PLL3 Clock output(s) */
-  __HAL_RCC_PLL3CLKOUT_ENABLE(pll3->PLL3ClockOut);
+  __HAL_RCC_PLL3_CLKOUT_ENABLE(pll3->PLL3ClockOut);
 
   /* Disable PLL3FRACN . */
-  __HAL_RCC_PLL3FRACN_DISABLE();
+  __HAL_RCC_PLL3_FRACN_DISABLE();
 
   /* Configures PLL3 clock Fractional Part Of The Multiplication Factor */
-  __HAL_RCC_PLL3FRACN_CONFIG(pll3->PLL3FRACN);
+  __HAL_RCC_PLL3_FRACN_CONFIG(pll3->PLL3FRACN);
 
   /* Enable PLL3FRACN . */
-  __HAL_RCC_PLL3FRACN_ENABLE();
+  __HAL_RCC_PLL3_FRACN_ENABLE();
 
   /* Enable  PLL3. */
   __HAL_RCC_PLL3_ENABLE();

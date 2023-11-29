@@ -10,7 +10,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -23,7 +23,6 @@
                       ##### How to use this driver #####
   ==============================================================================
     [..]
-
      *** Dual mode IO operation ***
      ==============================
      [..]
@@ -45,7 +44,6 @@
           Use HAL_DACEx_DualGetValue() to get digital data to be converted and use
           HAL_DACEx_DualSetValue() to set digital value to converted simultaneously in
           Channel 1 and Channel 2.
-
      *** Signal generation operation ***
      ===================================
      [..]
@@ -387,7 +385,7 @@ HAL_StatusTypeDef HAL_DACEx_DualStart_DMA(DAC_HandleTypeDef *hdac, uint32_t Chan
     while (wait_loop_index != 0UL)
     {
       wait_loop_index--;
-  }
+    }
   }
   else
   {
@@ -763,7 +761,7 @@ HAL_StatusTypeDef HAL_DACEx_SelfCalibrate(DAC_HandleTypeDef *hdac, DAC_ChannelCo
       /* Note: Variable divided by 2 to compensate partially CPU processing cycles, scaling in us split to not exceed */
       /*       32 bits register capacity and handle low frequency. */
       wait_loop_index = ((DAC_DELAY_TRIM_US / 10UL) * ((SystemCoreClock / (100000UL * 2UL)) + 1UL));
-      while(wait_loop_index != 0UL)
+      while (wait_loop_index != 0UL)
       {
         wait_loop_index--;
       }
@@ -791,7 +789,7 @@ HAL_StatusTypeDef HAL_DACEx_SelfCalibrate(DAC_HandleTypeDef *hdac, DAC_ChannelCo
     /* Note: Variable divided by 2 to compensate partially CPU processing cycles, scaling in us split to not exceed */
     /*       32 bits register capacity and handle low frequency. */
     wait_loop_index = ((DAC_DELAY_TRIM_US / 10UL) * ((SystemCoreClock / (100000UL * 2UL)) + 1UL));
-    while(wait_loop_index != 0UL)
+    while (wait_loop_index != 0UL)
     {
       wait_loop_index--;
     }

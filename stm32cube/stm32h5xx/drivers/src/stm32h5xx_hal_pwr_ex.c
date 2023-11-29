@@ -6,14 +6,14 @@
   *          This file provides firmware functions to manage the following
   *          functionalities of the Power Controller extension peripheral :
   *           + Power Supply Control Functions
-  *           + Low Power Control Functions
   *           + Voltage Monitoring Functions
+  *           + Wakeup Pins configuration Functions
   *           + Memories Retention Functions
-  *           + I/O Pull-Up Pull-Down Configuration Functions
+  *           + IO and JTAG Retention Functions
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -167,7 +167,7 @@ HAL_StatusTypeDef HAL_PWREx_ControlVoltageScaling(uint32_t VoltageScaling)
   assert_param(IS_PWR_VOLTAGE_SCALING_RANGE(VoltageScaling));
 
   /* Get the voltage scaling  */
-  if ((PWR->VOSSR & PWR_VOSSR_ACTVOS) == (VoltageScaling<<10U))
+  if ((PWR->VOSSR & PWR_VOSSR_ACTVOS) == (VoltageScaling << 10U))
   {
     /* Old and new voltage scaling configuration match : nothing to do */
     return HAL_OK;
@@ -551,12 +551,12 @@ __weak void HAL_PWREx_PVD_AVD_Falling_Callback(void)
   * @}
   */
 
-/** @defgroup PWREx_Exported_Functions_Group3 Wakeup Pins configuration functions
-  * @brief    Low power control functions
+/** @defgroup PWREx_Exported_Functions_Group3 Wakeup Pins configuration Functions
+  * @brief    Wakeup Pins configuration functions
   *
 @verbatim
  ===============================================================================
-                     ##### Wakeup Pins configuration functions #####
+                     ##### Wakeup Pins configuration Functions #####
  ===============================================================================
     [..]
 @endverbatim
@@ -741,12 +741,12 @@ void HAL_PWREx_DisableBkupRAMRetention(void)
   * @}
   */
 
-/** @defgroup PWREx_Exported_Functions_Group5 IO/JTAG Retention Functions
-  * @brief    IO/JTAG Retention Functions
+/** @defgroup PWREx_Exported_Functions_Group5 IO and JTAG Retention Functions
+  * @brief    IO and JTAG Retention functions
   *
 @verbatim
  ===============================================================================
-                     ##### IO/JTAG Retention Functions #####
+                     ##### IO and JTAG Retention Functions #####
  ===============================================================================
     [..]
       In the Standby mode, the I/Os are by default in floating state. If the IORETEN bit in the
@@ -810,6 +810,10 @@ void HAL_PWREx_DisableStandbyJTAGIORetention(void)
   * @}
   */
 #endif /* defined (HAL_PWR_MODULE_ENABLED) */
+
+/**
+  * @}
+  */
 
 /**
   * @}

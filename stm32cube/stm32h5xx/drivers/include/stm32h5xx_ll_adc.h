@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -2552,8 +2552,8 @@ typedef struct
   *         @arg @ref LL_ADC_AWD_CH_VBAT_INJ             (0)(2)
   *         @arg @ref LL_ADC_AWD_CH_VBAT_REG_INJ            (2)
   *         @arg @ref LL_ADC_AWD_CH_VDDCORE_REG          (0)(2)
-  *         @arg @ref LL_ADC_AWD_CH_VDDORE_INJ           (0)(2)
-  *         @arg @ref LL_ADC_AWD_CH_VDDORE_REG_INJ          (2)
+  *         @arg @ref LL_ADC_AWD_CH_VDDCORE_INJ          (0)(2)
+  *         @arg @ref LL_ADC_AWD_CH_VDDCORE_REG_INJ         (2)
   *
   *         (0) On STM32H5, parameter available only on analog watchdog number: AWD1.\n
   *         (1) On STM32H563xx/573xx, parameter available only on ADC instance: ADC1.
@@ -5812,8 +5812,8 @@ __STATIC_INLINE uint32_t LL_ADC_GetChannelSingleDiff(const ADC_TypeDef *ADCx, ui
   *         @arg @ref LL_ADC_AWD_CH_VBAT_INJ             (0)(2)
   *         @arg @ref LL_ADC_AWD_CH_VBAT_REG_INJ            (2)
   *         @arg @ref LL_ADC_AWD_CH_VDDCORE_REG          (0)(2)
-  *         @arg @ref LL_ADC_AWD_CH_VDDORE_INJ           (0)(2)
-  *         @arg @ref LL_ADC_AWD_CH_VDDORE_REG_INJ          (2)
+  *         @arg @ref LL_ADC_AWD_CH_VDDCORE_INJ          (0)(2)
+  *         @arg @ref LL_ADC_AWD_CH_VDDCORE_REG_INJ         (2)
   *
   *         (0) On STM32H5, parameter available only on analog watchdog number: AWD1.\n
   *         (1) On STM32H563xx/573xx, parameter available only on ADC instance: ADC1.
@@ -8270,7 +8270,7 @@ __STATIC_INLINE uint32_t LL_ADC_IsEnabledIT_AWD3(const ADC_TypeDef *ADCx)
   */
 
 /* Initialization of some features of ADC common parameters and multimode */
-ErrorStatus LL_ADC_CommonDeInit(ADC_Common_TypeDef *ADCxy_COMMON);
+ErrorStatus LL_ADC_CommonDeInit(const ADC_Common_TypeDef *ADCxy_COMMON);
 ErrorStatus LL_ADC_CommonInit(ADC_Common_TypeDef *ADCxy_COMMON, const LL_ADC_CommonInitTypeDef *pADC_CommonInitStruct);
 void        LL_ADC_CommonStructInit(LL_ADC_CommonInitTypeDef *pADC_CommonInitStruct);
 

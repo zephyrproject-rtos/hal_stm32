@@ -14,7 +14,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -115,7 +115,7 @@ void TimeBase_RTCEx_WakeUpTimerEventCallback(RTC_HandleTypeDef *hrtc);
   */
 HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
 {
-  HAL_StatusTypeDef  Status;
+  HAL_StatusTypeDef  status;
 
   RCC_OscInitTypeDef        RCC_OscInitStruct;
   RCC_PeriphCLKInitTypeDef  PeriphClkInitStruct;
@@ -153,15 +153,15 @@ HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
 #error Please select the RTC Clock source
 #endif /* RTC_CLOCK_SOURCE_LSE */
 
-  Status = HAL_RCC_OscConfig(&RCC_OscInitStruct);
+  status = HAL_RCC_OscConfig(&RCC_OscInitStruct);
 
-  if (Status == HAL_OK)
+  if (status == HAL_OK)
   {
     PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_RTC;
-    Status = HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct);
+    status = HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct);
   }
 
-  if (Status == HAL_OK)
+  if (status == HAL_OK)
   {
     hRTC_Handle.Instance = RTC;
     hRTC_Handle.Init.HourFormat     = RTC_HOURFORMAT_24;
@@ -172,16 +172,16 @@ HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
     hRTC_Handle.Init.OutPutType     = RTC_OUTPUT_TYPE_OPENDRAIN;
     hRTC_Handle.Init.BinMode        = RTC_BINARY_NONE;
 
-    Status = HAL_RTC_Init(&hRTC_Handle);
+    status = HAL_RTC_Init(&hRTC_Handle);
 
 #if (USE_HAL_RTC_REGISTER_CALLBACKS == 1U)
     HAL_RTC_RegisterCallback(&hRTC_Handle, HAL_RTC_WAKEUPTIMER_EVENT_CB_ID, TimeBase_RTCEx_WakeUpTimerEventCallback);
 #endif /* USE_HAL_RTC_REGISTER_CALLBACKS */
   }
 
-  if (Status == HAL_OK)
+  if (status == HAL_OK)
   {
-    Status = HAL_RTCEx_SetWakeUpTimer_IT(&hRTC_Handle, 0, RTC_WAKEUPCLOCK_CK_SPRE_16BITS, 0);
+    status = HAL_RTCEx_SetWakeUpTimer_IT(&hRTC_Handle, 0, RTC_WAKEUPCLOCK_CK_SPRE_16BITS, 0);
   }
 
   if (TickPriority < (1UL << __NVIC_PRIO_BITS))
@@ -192,12 +192,12 @@ HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
   }
   else
   {
-    Status = HAL_ERROR;
+    status = HAL_ERROR;
   }
 
   HAL_NVIC_EnableIRQ(RTC_IRQn);
 
-  return Status;
+  return status;
 }
 
 /**

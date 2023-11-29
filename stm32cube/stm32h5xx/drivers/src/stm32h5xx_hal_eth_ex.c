@@ -7,7 +7,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -32,7 +32,6 @@
   * @brief ETH HAL Extended module driver
   * @{
   */
-
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -91,6 +90,7 @@
   *         the configuration information for ETHERNET module
   * @retval None
   */
+
 void HAL_ETHEx_EnableARPOffload(ETH_HandleTypeDef *heth)
 {
   SET_BIT(heth->Instance->MACCR, ETH_MACCR_ARP);
@@ -571,7 +571,6 @@ uint32_t HAL_ETHEx_GetMACLPIEvent(const ETH_HandleTypeDef *heth)
 #endif /* ETH */
 
 #endif /* HAL_ETH_MODULE_ENABLED */
-
 /**
   * @}
   */

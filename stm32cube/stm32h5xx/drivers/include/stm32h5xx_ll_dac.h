@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -613,6 +613,7 @@ __STATIC_INLINE uint32_t LL_DAC_GetHighFrequencyMode(const DAC_TypeDef *DACx)
 /**
   * @}
   */
+
 
 /** @defgroup DAC_LL_EF_Configuration Configuration of DAC channels
   * @{
@@ -2019,7 +2020,7 @@ __STATIC_INLINE uint32_t LL_DAC_IsEnabledIT_DMAUDR2(const DAC_TypeDef *DACx)
   * @{
   */
 
-ErrorStatus LL_DAC_DeInit(DAC_TypeDef *DACx);
+ErrorStatus LL_DAC_DeInit(const DAC_TypeDef *DACx);
 ErrorStatus LL_DAC_Init(DAC_TypeDef *DACx, uint32_t DAC_Channel, const LL_DAC_InitTypeDef *DAC_InitStruct);
 void        LL_DAC_StructInit(LL_DAC_InitTypeDef *DAC_InitStruct);
 

@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -254,6 +254,7 @@ typedef struct
   * @}
   */
 
+
 /* Exported functions --------------------------------------------------------*/
 
 /** @defgroup RAMCFG_Exported_Functions RAMCFG Exported Functions
@@ -281,10 +282,10 @@ HAL_StatusTypeDef HAL_RAMCFG_StartECC(RAMCFG_HandleTypeDef *hramcfg);
 HAL_StatusTypeDef HAL_RAMCFG_StopECC(RAMCFG_HandleTypeDef *hramcfg);
 HAL_StatusTypeDef HAL_RAMCFG_EnableNotification(RAMCFG_HandleTypeDef *hramcfg, uint32_t Notifications);
 HAL_StatusTypeDef HAL_RAMCFG_DisableNotification(RAMCFG_HandleTypeDef *hramcfg, uint32_t Notifications);
-uint32_t HAL_RAMCFG_IsECCSingleErrorDetected(RAMCFG_HandleTypeDef *hramcfg);
-uint32_t HAL_RAMCFG_IsECCDoubleErrorDetected(RAMCFG_HandleTypeDef *hramcfg);
-uint32_t HAL_RAMCFG_GetSingleErrorAddress(RAMCFG_HandleTypeDef *hramcfg);
-uint32_t HAL_RAMCFG_GetDoubleErrorAddress(RAMCFG_HandleTypeDef *hramcfg);
+uint32_t HAL_RAMCFG_IsECCSingleErrorDetected(const RAMCFG_HandleTypeDef *hramcfg);
+uint32_t HAL_RAMCFG_IsECCDoubleErrorDetected(const RAMCFG_HandleTypeDef *hramcfg);
+uint32_t HAL_RAMCFG_GetSingleErrorAddress(const RAMCFG_HandleTypeDef *hramcfg);
+uint32_t HAL_RAMCFG_GetDoubleErrorAddress(const RAMCFG_HandleTypeDef *hramcfg);
 /**
   * @}
   */
@@ -328,8 +329,8 @@ HAL_StatusTypeDef HAL_RAMCFG_UnRegisterCallback(RAMCFG_HandleTypeDef *hramcfg, H
   * @brief    State and Error Functions
   * @{
   */
-uint32_t HAL_RAMCFG_GetError(RAMCFG_HandleTypeDef *hramcfg);
-HAL_RAMCFG_StateTypeDef HAL_RAMCFG_GetState(RAMCFG_HandleTypeDef *hramcfg);
+uint32_t HAL_RAMCFG_GetError(const RAMCFG_HandleTypeDef *hramcfg);
+HAL_RAMCFG_StateTypeDef HAL_RAMCFG_GetState(const RAMCFG_HandleTypeDef *hramcfg);
 /**
   * @}
   */

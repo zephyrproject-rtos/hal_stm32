@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -27,11 +27,11 @@ extern "C" {
 /* Includes ------------------------------------------------------------------*/
 #include "stm32h5xx_hal_def.h"
 
+#if defined(SAI1)
+
 /** @addtogroup STM32H5xx_HAL_Driver
   * @{
   */
-
-#if defined(SAI1_Block_A) || defined(SAI1_Block_B)
 
 /** @addtogroup SAI
   * @{
@@ -959,11 +959,11 @@ uint32_t HAL_SAI_GetError(const SAI_HandleTypeDef *hsai);
   * @}
   */
 
-#endif /* SAI1_Block_A || SAI1_Block_B */
-
 /**
   * @}
   */
+
+#endif /* SAI1 */
 
 #ifdef __cplusplus
 }

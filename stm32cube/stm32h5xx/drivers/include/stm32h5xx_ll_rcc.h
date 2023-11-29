@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -2373,12 +2373,12 @@ __STATIC_INLINE uint32_t LL_RCC_GetClkAfterWakeFromStop(void)
   *         @arg @ref LL_RCC_MCO1SOURCE_HSI
   *         @arg @ref LL_RCC_MCO1SOURCE_LSE
   *         @arg @ref LL_RCC_MCO1SOURCE_HSE
-  *         @arg @ref LL_RCC_MCO1SOURCE_PLL1QCLK
+  *         @arg @ref LL_RCC_MCO1SOURCE_PLL1Q
   *         @arg @ref LL_RCC_MCO1SOURCE_HSI48
   *         @arg @ref LL_RCC_MCO2SOURCE_SYSCLK
-  *         @arg @ref LL_RCC_MCO2SOURCE_PLL2PCLK
+  *         @arg @ref LL_RCC_MCO2SOURCE_PLL2P
   *         @arg @ref LL_RCC_MCO2SOURCE_HSE
-  *         @arg @ref LL_RCC_MCO2SOURCE_PLL1PCLK
+  *         @arg @ref LL_RCC_MCO2SOURCE_PLL1P
   *         @arg @ref LL_RCC_MCO2SOURCE_CSI
   *         @arg @ref LL_RCC_MCO2SOURCE_LSI
   * @param  MCOxPrescaler This parameter can be one of the following values:
@@ -2516,13 +2516,13 @@ __STATIC_INLINE void LL_RCC_ConfigMCO(uint32_t MCOxSource, uint32_t MCOxPrescale
   *         @arg @ref LL_RCC_LPUART1_CLKSOURCE_CSI
   *         @arg @ref LL_RCC_LPUART1_CLKSOURCE_LSE
   *         @arg @ref LL_RCC_I2C1_CLKSOURCE_PCLK1
-  *         @arg @ref LL_RCC_I2C1_CLKSOURCE_PLL3R
-  *         @arg @ref LL_RCC_I2C1_CLKSOURCE_PLL2R
+  *         @arg @ref LL_RCC_I2C1_CLKSOURCE_PLL3R (*)
+  *         @arg @ref LL_RCC_I2C1_CLKSOURCE_PLL2R (*)
   *         @arg @ref LL_RCC_I2C1_CLKSOURCE_HSI
   *         @arg @ref LL_RCC_I2C1_CLKSOURCE_CSI
   *         @arg @ref LL_RCC_I2C2_CLKSOURCE_PCLK1
-  *         @arg @ref LL_RCC_I2C2_CLKSOURCE_PLL3R
-  *         @arg @ref LL_RCC_I2C2_CLKSOURCE_PLL2R
+  *         @arg @ref LL_RCC_I2C2_CLKSOURCE_PLL3R (*)
+  *         @arg @ref LL_RCC_I2C2_CLKSOURCE_PLL2R (*)
   *         @arg @ref LL_RCC_I2C2_CLKSOURCE_HSI
   *         @arg @ref LL_RCC_I2C2_CLKSOURCE_CSI
   *         @arg @ref LL_RCC_I2C3_CLKSOURCE_PCLK3 (*)
@@ -2635,9 +2635,6 @@ __STATIC_INLINE void LL_RCC_SetClockSource(uint32_t ClkSource)
   MODIFY_REG(*pReg, LL_CLKSOURCE_MASK(ClkSource), LL_CLKSOURCE_CONFIG(ClkSource));
 }
 
-/** @defgroup RCC_LL_EF_Peripheral_Clock_Source Peripheral Clock Source
-  * @{
-  */
 
 /**
   * @brief  Configure USARTx kernel clock source
@@ -2844,9 +2841,9 @@ __STATIC_INLINE void LL_RCC_SetI3CClockSource(uint32_t I3CxSource)
   *         @arg @ref LL_RCC_SPI2_CLKSOURCE_PLL3P (*)
   *         @arg @ref LL_RCC_SPI2_CLKSOURCE_PIN
   *         @arg @ref LL_RCC_SPI2_CLKSOURCE_CLKP
-  *         @arg @ref LL_RCC_SPI3_CLKSOURCE_PLL1P
-  *         @arg @ref LL_RCC_SPI3_CLKSOURCE_PLL2Q
-  *         @arg @ref LL_RCC_SPI3_CLKSOURCE_PLL3Q  (*)
+  *         @arg @ref LL_RCC_SPI3_CLKSOURCE_PLL1Q
+  *         @arg @ref LL_RCC_SPI3_CLKSOURCE_PLL2P
+  *         @arg @ref LL_RCC_SPI3_CLKSOURCE_PLL3P  (*)
   *         @arg @ref LL_RCC_SPI3_CLKSOURCE_PIN
   *         @arg @ref LL_RCC_SPI3_CLKSOURCE_CLKP
   *         @arg @ref LL_RCC_SPI4_CLKSOURCE_PCLK2 (*)
@@ -3097,6 +3094,7 @@ __STATIC_INLINE void LL_RCC_SetCLKPClockSource(uint32_t ClkSource)
   MODIFY_REG(RCC->CCIPR5, RCC_CCIPR5_CKERPSEL, ClkSource);
 }
 
+
 /**
   * @brief  Get periph clock source
   * @rmtoll CCIPR1      *     LL_RCC_GetClockSource\n
@@ -3219,8 +3217,8 @@ __STATIC_INLINE void LL_RCC_SetCLKPClockSource(uint32_t ClkSource)
   *         @arg @ref LL_RCC_LPUART1_CLKSOURCE_CSI
   *         @arg @ref LL_RCC_LPUART1_CLKSOURCE_LSE
   *         @arg @ref LL_RCC_I2C1_CLKSOURCE_PCLK1
-  *         @arg @ref LL_RCC_I2C1_CLKSOURCE_PLL3R
-  *         @arg @ref LL_RCC_I2C1_CLKSOURCE_PLL2R
+  *         @arg @ref LL_RCC_I2C1_CLKSOURCE_PLL3R (*)
+  *         @arg @ref LL_RCC_I2C1_CLKSOURCE_PLL2R (*)
   *         @arg @ref LL_RCC_I2C1_CLKSOURCE_HSI
   *         @arg @ref LL_RCC_I2C1_CLKSOURCE_CSI
   *         @arg @ref LL_RCC_I2C2_CLKSOURCE_PCLK1
@@ -3408,7 +3406,7 @@ __STATIC_INLINE uint32_t LL_RCC_GetUSARTClockSource(uint32_t USARTx)
   *         CCIPR1       UART8SEL     LL_RCC_GetUARTClockSource\n
   *         CCIPR1       UART9SEL     LL_RCC_GetUARTClockSource\n
   *         CCIPR2       UART12SEL    LL_RCC_GetUARTClockSource
-  * @param  USARTx This parameter can be one of the following values:
+  * @param  UARTx This parameter can be one of the following values:
   *         @arg @ref LL_RCC_UART4_CLKSOURCE
   *         @arg @ref LL_RCC_UART5_CLKSOURCE
   *         @arg @ref LL_RCC_UART7_CLKSOURCE
@@ -3570,9 +3568,9 @@ __STATIC_INLINE uint32_t LL_RCC_GetI3CClockSource(uint32_t I3Cx)
   *         @arg @ref LL_RCC_SPI2_CLKSOURCE_PLL3P (*)
   *         @arg @ref LL_RCC_SPI2_CLKSOURCE_PIN
   *         @arg @ref LL_RCC_SPI2_CLKSOURCE_CLKP
-  *         @arg @ref LL_RCC_SPI3_CLKSOURCE_PLL1P
-  *         @arg @ref LL_RCC_SPI3_CLKSOURCE_PLL2Q
-  *         @arg @ref LL_RCC_SPI3_CLKSOURCE_PLL3Q  (*)
+  *         @arg @ref LL_RCC_SPI3_CLKSOURCE_PLL1Q
+  *         @arg @ref LL_RCC_SPI3_CLKSOURCE_PLL2P
+  *         @arg @ref LL_RCC_SPI3_CLKSOURCE_PLL3P  (*)
   *         @arg @ref LL_RCC_SPI3_CLKSOURCE_PIN
   *         @arg @ref LL_RCC_SPI3_CLKSOURCE_CLKP
   *         @arg @ref LL_RCC_SPI4_CLKSOURCE_PCLK2 (*)
@@ -3688,8 +3686,8 @@ __STATIC_INLINE void LL_RCC_TIMIC_Disable(void)
   *         @arg @ref LL_RCC_FDCAN_CLKSOURCE
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_RCC_FDCAN_CLKSOURCE_HSE
-  *         @arg @ref LL_RCC_FDCAN_CLKSOURCE_PLL1
-  *         @arg @ref LL_RCC_FDCAN_CLKSOURCE_PLL2
+  *         @arg @ref LL_RCC_FDCAN_CLKSOURCE_PLL1Q
+  *         @arg @ref LL_RCC_FDCAN_CLKSOURCE_PLL2Q
   */
 __STATIC_INLINE uint32_t LL_RCC_GetFDCANClockSource(uint32_t FDCANx)
 {
@@ -4327,9 +4325,9 @@ __STATIC_INLINE void LL_RCC_PLL1_ConfigDomain_SYS(uint32_t Source, uint32_t PLL1
   *         @arg @ref LL_RCC_PLL1SOURCE_HSE
   * @retval None
   */
-__STATIC_INLINE void LL_RCC_PLL1_SetSource(uint32_t PLLSource)
+__STATIC_INLINE void LL_RCC_PLL1_SetSource(uint32_t PLL1Source)
 {
-  MODIFY_REG(RCC->PLL1CFGR, RCC_PLL1CFGR_PLL1SRC, PLLSource);
+  MODIFY_REG(RCC->PLL1CFGR, RCC_PLL1CFGR_PLL1SRC, PLL1Source);
 }
 
 /**
@@ -4349,7 +4347,7 @@ __STATIC_INLINE uint32_t LL_RCC_PLL1_GetSource(void)
 /**
   * @brief  Set Main PLL1 multiplication factor for VCO
   * @rmtoll PLL1CFGR      PLL1N          LL_RCC_PLL1_SetN
-  * @param PLLN parameter can be a value between 4 and 512
+  * @param PLL1N parameter can be a value between 4 and 512
   */
 __STATIC_INLINE void LL_RCC_PLL1_SetN(uint32_t PLL1N)
 {
@@ -4370,7 +4368,7 @@ __STATIC_INLINE uint32_t LL_RCC_PLL1_GetN(void)
   * @brief  Set Main PLL1 division factor for PLL1P
   * @note Used for System clock
   * @rmtoll PLL1CFGR      PLL1P       LL_RCC_PLL1_SetP
-  * @param PLLP parameter can be a value between 2 and 128 (odd value not allowed)
+  * @param PLL1P parameter can be a value between 2 and 128 (odd value not allowed)
   */
 __STATIC_INLINE void LL_RCC_PLL1_SetP(uint32_t PLL1P)
 {
@@ -4393,7 +4391,7 @@ __STATIC_INLINE uint32_t LL_RCC_PLL1_GetP(void)
   * @brief  Set PLL1 division factor for PLL1Q
   * @note Used for peripherals clocks
   * @rmtoll PLLCFGR      PLL1Q          LL_RCC_PLL1_SetQ
-  * @param PLLQ parameter can be a value between 1 and 128
+  * @param PLL1Q parameter can be a value between 1 and 128
   */
 __STATIC_INLINE void LL_RCC_PLL1_SetQ(uint32_t PLL1Q)
 {
@@ -4415,7 +4413,7 @@ __STATIC_INLINE uint32_t LL_RCC_PLL1_GetQ(void)
   * @brief  Set PLL1 division factor for PLL1R
   * @note Used for trace
   * @rmtoll PLL1DIVR      PLL1R          LL_RCC_PLL1_SetR
-  * @param PLLQ parameter can be a value between 1 and 128
+  * @param PLL1R parameter can be a value between 1 and 128
   */
 __STATIC_INLINE void LL_RCC_PLL1_SetR(uint32_t PLL1R)
 {
@@ -4522,7 +4520,7 @@ __STATIC_INLINE void LL_RCC_PLL1_SetVCOInputRange(uint32_t InputRange)
 /**
   * @brief  Set PLL1 VCO OutputRange
   * @note   This API shall be called only when PLL1 is disabled.
-  * @rmtoll PLLCFGR        PLL1VCOSEL       LL_RCC_PLL1_SetVCOOuputRange
+  * @rmtoll PLLCFGR        PLL1VCOSEL       LL_RCC_PLL1_SetVCOOutputRange
   * @param  VCORange This parameter can be one of the following values:
   *         @arg @ref LL_RCC_PLLVCORANGE_WIDE
   *         @arg @ref LL_RCC_PLLVCORANGE_MEDIUM
@@ -4873,7 +4871,7 @@ __STATIC_INLINE void LL_RCC_PLL2_SetVCOInputRange(uint32_t InputRange)
 /**
   * @brief  Set PLL2 VCO OutputRange
   * @note   This API shall be called only when PLL2 is disabled.
-  * @rmtoll PLL2CFGR        PLL2VCOSEL       LL_RCC_PLL2_SetVCOOuputRange
+  * @rmtoll PLL2CFGR        PLL2VCOSEL       LL_RCC_PLL2_SetVCOOutputRange
   * @param  VCORange This parameter can be one of the following values:
   *         @arg @ref LL_RCC_PLLVCORANGE_WIDE
   *         @arg @ref LL_RCC_PLLVCORANGE_MEDIUM
@@ -5224,7 +5222,7 @@ __STATIC_INLINE void LL_RCC_PLL3_SetVCOInputRange(uint32_t InputRange)
 /**
   * @brief  Set PLL3 VCO OutputRange
   * @note   This API shall be called only when PLL3 is disabled.
-  * @rmtoll PLL3CFGR        PLL3VCOSEL       LL_RCC_PLL3_SetVCOOuputRange
+  * @rmtoll PLL3CFGR        PLL3VCOSEL       LL_RCC_PLL3_SetVCOOutputRange
   * @param  VCORange This parameter can be one of the following values:
   *         @arg @ref LL_RCC_PLLVCORANGE_WIDE
   *         @arg @ref LL_RCC_PLLVCORANGE_MEDIUM
@@ -5945,7 +5943,7 @@ __STATIC_INLINE uint32_t LL_RCC_IsEnabledIT_PLL3RDY(void)
   *         @arg @ref LL_RCC_PLL3_SEC or LL_RCC_PLL3_NSEC
   *         @arg @ref LL_RCC_HSI48_SEC or LL_RCC_HSI48_NSEC
   *         @arg @ref LL_RCC_RESET_FLAGS_SEC or LL_RCC_RESET_FLAGS_NSEC
-  *         @arg @ref LL_RCC_CKPER_SEC or LL_RCC_CKPER_NSEC
+  *         @arg @ref LL_RCC_CKPERSEL_SEC or LL_RCC_CKPERSEL_NSEC
   * @retval None
   */
 __STATIC_INLINE void LL_RCC_ConfigSecure(uint32_t Configuration)
@@ -5985,7 +5983,7 @@ __STATIC_INLINE void LL_RCC_ConfigSecure(uint32_t Configuration)
   *         @arg @ref LL_RCC_PLL3_SEC or LL_RCC_PLL3_NSEC
   *         @arg @ref LL_RCC_HSI48_SEC or LL_RCC_HSI48_NSEC
   *         @arg @ref LL_RCC_RESET_FLAGS_SEC or LL_RCC_RESET_FLAGS_NSEC
-  *         @arg @ref LL_RCC_CKPER_SEC or LL_RCC_CKPER_NSEC
+  *         @arg @ref LL_RCC_CKPERSEL_SEC or LL_RCC_CKPERSEL_NSEC
   * @retval None
   */
 __STATIC_INLINE uint32_t LL_RCC_GetConfigSecure(void)

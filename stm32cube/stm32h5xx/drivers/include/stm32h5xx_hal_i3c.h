@@ -6,7 +6,7 @@
   **********************************************************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -1176,8 +1176,9 @@ HAL_StatusTypeDef HAL_I3C_Tgt_ControlRoleReq(I3C_HandleTypeDef *hi3c, uint32_t t
 HAL_StatusTypeDef HAL_I3C_Tgt_ControlRoleReq_IT(I3C_HandleTypeDef *hi3c);
 HAL_StatusTypeDef HAL_I3C_Tgt_HotJoinReq(I3C_HandleTypeDef *hi3c, uint8_t *pAddress, uint32_t timeout);
 HAL_StatusTypeDef HAL_I3C_Tgt_HotJoinReq_IT(I3C_HandleTypeDef *hi3c);
-HAL_StatusTypeDef HAL_I3C_Tgt_IBIReq(I3C_HandleTypeDef *hi3c, uint8_t *pPayload, uint8_t payloadSize, uint32_t timeout);
-HAL_StatusTypeDef HAL_I3C_Tgt_IBIReq_IT(I3C_HandleTypeDef *hi3c, uint8_t *pPayload, uint8_t payloadSize);
+HAL_StatusTypeDef HAL_I3C_Tgt_IBIReq(I3C_HandleTypeDef *hi3c, const uint8_t *pPayload,
+                                     uint8_t payloadSize, uint32_t timeout);
+HAL_StatusTypeDef HAL_I3C_Tgt_IBIReq_IT(I3C_HandleTypeDef *hi3c, const uint8_t *pPayload, uint8_t payloadSize);
 /**
   * @}
   */
@@ -1186,9 +1187,9 @@ HAL_StatusTypeDef HAL_I3C_Tgt_IBIReq_IT(I3C_HandleTypeDef *hi3c, uint8_t *pPaylo
   * @{
   */
 HAL_StatusTypeDef HAL_I3C_Abort_IT(I3C_HandleTypeDef *hi3c);
-HAL_I3C_StateTypeDef HAL_I3C_GetState(I3C_HandleTypeDef *hi3c);
-HAL_I3C_ModeTypeDef HAL_I3C_GetMode(I3C_HandleTypeDef *hi3c);
-uint32_t HAL_I3C_GetError(I3C_HandleTypeDef *hi3c);
+HAL_I3C_StateTypeDef HAL_I3C_GetState(const I3C_HandleTypeDef *hi3c);
+HAL_I3C_ModeTypeDef HAL_I3C_GetMode(const I3C_HandleTypeDef *hi3c);
+uint32_t HAL_I3C_GetError(const I3C_HandleTypeDef *hi3c);
 HAL_StatusTypeDef HAL_I3C_GetCCCInfo(I3C_HandleTypeDef *hi3c,
                                      uint32_t notifyId,
                                      I3C_CCCInfoTypeDef *pCCCInfo);

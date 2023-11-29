@@ -114,6 +114,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm32h5xx_hal.h"
 
+#if defined(FMC_Bank5_6_R)
 
 /** @addtogroup STM32H5xx_HAL_Driver
   * @{
@@ -1426,3 +1427,5 @@ static void SDRAM_DMAError(DMA_HandleTypeDef *hdma)
 /**
   * @}
   */
+
+#endif /* FMC_Bank5_6_R */

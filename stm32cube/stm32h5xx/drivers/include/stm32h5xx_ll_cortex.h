@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -630,7 +630,7 @@ __STATIC_INLINE void LL_MPU_EnableRegion(uint32_t Region)
 
 /**
   * @brief  Check if MPU region is enabled or not
-  * @rmtoll MPU_RNR     ENABLE        LL_MPU_IsEnabledRegion
+  * @rmtoll MPU_RNR     ENABLE        LL_MPU_IsEnabled_Region
   * @param  Region This parameter can be one of the following values:
   *         @arg @ref LL_MPU_REGION_NUMBER0
   *         @arg @ref LL_MPU_REGION_NUMBER1
@@ -684,7 +684,7 @@ __STATIC_INLINE void LL_MPU_EnableRegion_NS(uint32_t Region)
 
 /**
   * @brief  Check if non-secure MPU region is enabled or not
-  * @rmtoll MPU_RNR     ENABLE        LL_MPU_IsEnableRegion_NS
+  * @rmtoll MPU_RNR     ENABLE        LL_MPU_IsEnabled_Region_NS
   * @param  Region This parameter can be one of the following values:
   *         @arg @ref LL_MPU_REGION_NUMBER0
   *         @arg @ref LL_MPU_REGION_NUMBER1

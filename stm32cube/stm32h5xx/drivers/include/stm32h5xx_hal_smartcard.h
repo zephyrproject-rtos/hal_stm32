@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -229,8 +229,8 @@ typedef struct __SMARTCARD_HandleTypeDef
   DMA_HandleTypeDef                 *hdmatx;               /*!< SmartCard Tx DMA Handle parameters                    */
 
   DMA_HandleTypeDef                 *hdmarx;               /*!< SmartCard Rx DMA Handle parameters                    */
-#endif /* HAL_DMA_MODULE_ENABLED */
 
+#endif /* HAL_DMA_MODULE_ENABLED */
   HAL_LockTypeDef                   Lock;                  /*!< Locking object                                        */
 
   __IO HAL_SMARTCARD_StateTypeDef   gState;                /*!< SmartCard state information related to global

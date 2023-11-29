@@ -18,7 +18,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -126,7 +126,7 @@ typedef struct
                         @ref LL_RCC_PLL1_SetVCOInputRange(). */
 
   uint32_t VCO_Output;  /*!< PLL clock Output range.
-                        This parameter can be a value of @ref RCC_LL_EC_PLLVCORANGE
+                        This parameter can be a value of @ref RCC_LL_EC_PLLOUTPUTRANGE
 
                       This feature can be modified afterwards using unitary function
                       @ref LL_RCC_PLL1_SetVCOOutputRange(). */
@@ -138,11 +138,11 @@ typedef struct
   */
 typedef struct
 {
-  uint32_t SYSCLKDivider;         /*!< The System clock (SYSCLK) divider. This clock is derived from the PLL output.
-                                     This parameter can be a value of @ref RCC_LL_EC_SYSCLK_DIV
+  uint32_t SYSCLKDivider;         /*!< The System clock (SYSCLK) divider. This clock is derived from the System clock.
+                                       This parameter can be a value of @ref RCC_LL_EC_SYSCLK_DIV
 
-                                     This feature can be modified afterwards using unitary function
-                                     @ref LL_RCC_SetSysPrescaler(). */
+                                       This feature can be modified afterwards using unitary function
+                                       @ref LL_RCC_SetAHBPrescaler(). */
 
   uint32_t APB1CLKDivider;        /*!< The APB1 clock (PCLK1) divider. This clock is derived from the AHB clock (HCLK).
                                        This parameter can be a value of @ref RCC_LL_EC_APB1_DIV

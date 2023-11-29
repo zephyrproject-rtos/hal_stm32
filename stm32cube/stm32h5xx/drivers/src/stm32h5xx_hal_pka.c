@@ -12,7 +12,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -294,9 +294,9 @@ static uint32_t   modulussize;
 /** @defgroup PKA_Private_Functions PKA Private Functions
   * @{
   */
-uint32_t PKA_GetMode(PKA_HandleTypeDef *hpka);
-HAL_StatusTypeDef PKA_PollEndOfOperation(PKA_HandleTypeDef *hpka, uint32_t Timeout, uint32_t Tickstart);
-uint32_t PKA_CheckError(PKA_HandleTypeDef *hpka, uint32_t mode);
+uint32_t PKA_GetMode(const PKA_HandleTypeDef *hpka);
+HAL_StatusTypeDef PKA_PollEndOfOperation(const PKA_HandleTypeDef *hpka, uint32_t Timeout, uint32_t Tickstart);
+uint32_t PKA_CheckError(const PKA_HandleTypeDef *hpka, uint32_t mode);
 uint32_t PKA_GetBitSize_u8(uint32_t byteNumber);
 uint32_t PKA_GetOptBitSize_u8(uint32_t byteNumber, uint8_t msb);
 uint32_t PKA_GetBitSize_u32(uint32_t wordNumber);
@@ -324,7 +324,7 @@ void PKA_ECCProjective2Affine_Set(PKA_HandleTypeDef *hpka, PKA_ECCProjective2Aff
 void PKA_ECCCompleteAddition_Set(PKA_HandleTypeDef *hpka, PKA_ECCCompleteAdditionInTypeDef *in);
 HAL_StatusTypeDef PKA_WaitOnFlagUntilTimeout(PKA_HandleTypeDef *hpka, uint32_t Flag, FlagStatus Status,
                                              uint32_t Tickstart, uint32_t Timeout);
-uint32_t PKA_Result_GetSize(PKA_HandleTypeDef *hpka, uint32_t Startindex, uint32_t Maxsize);
+uint32_t PKA_Result_GetSize(const PKA_HandleTypeDef *hpka, uint32_t Startindex, uint32_t Maxsize);
 /**
   * @}
   */
@@ -1861,7 +1861,7 @@ __weak void HAL_PKA_ErrorCallback(PKA_HandleTypeDef *hpka)
   * @param  hpka PKA handle
   * @retval HAL status
   */
-HAL_PKA_StateTypeDef HAL_PKA_GetState(PKA_HandleTypeDef *hpka)
+HAL_PKA_StateTypeDef HAL_PKA_GetState(const PKA_HandleTypeDef *hpka)
 {
   /* Return PKA handle state */
   return hpka->State;
@@ -1872,7 +1872,7 @@ HAL_PKA_StateTypeDef HAL_PKA_GetState(PKA_HandleTypeDef *hpka)
   * @param  hpka PKA handle
   * @retval PKA error code
   */
-uint32_t HAL_PKA_GetError(PKA_HandleTypeDef *hpka)
+uint32_t HAL_PKA_GetError(const PKA_HandleTypeDef *hpka)
 {
   /* Return PKA handle error code */
   return hpka->ErrorCode;
@@ -1895,7 +1895,7 @@ uint32_t HAL_PKA_GetError(PKA_HandleTypeDef *hpka)
   * @param  hpka PKA handle
   * @retval Return the current mode
   */
-uint32_t PKA_GetMode(PKA_HandleTypeDef *hpka)
+uint32_t PKA_GetMode(const PKA_HandleTypeDef *hpka)
 {
   /* return the shifted PKA_CR_MODE value */
   return (uint32_t)(READ_BIT(hpka->Instance->CR, PKA_CR_MODE) >> PKA_CR_MODE_Pos);
@@ -1908,7 +1908,7 @@ uint32_t PKA_GetMode(PKA_HandleTypeDef *hpka)
   * @param  Tickstart Tick start value
   * @retval HAL status
   */
-HAL_StatusTypeDef PKA_PollEndOfOperation(PKA_HandleTypeDef *hpka, uint32_t Timeout, uint32_t Tickstart)
+HAL_StatusTypeDef PKA_PollEndOfOperation(const PKA_HandleTypeDef *hpka, uint32_t Timeout, uint32_t Tickstart)
 {
   /* Wait for the end of operation or timeout */
   while ((hpka->Instance->SR & PKA_SR_PROCENDF) == 0UL)
@@ -1931,7 +1931,7 @@ HAL_StatusTypeDef PKA_PollEndOfOperation(PKA_HandleTypeDef *hpka, uint32_t Timeo
   * @param  mode PKA operating mode
   * @retval error code
   */
-uint32_t PKA_CheckError(PKA_HandleTypeDef *hpka, uint32_t mode)
+uint32_t PKA_CheckError(const PKA_HandleTypeDef *hpka, uint32_t mode)
 {
   uint32_t err = HAL_PKA_ERROR_NONE;
 
@@ -2363,8 +2363,8 @@ void PKA_ModExpProtectMode_Set(PKA_HandleTypeDef *hpka, PKA_ModExpProtectModeInT
   * @brief  Set input parameters.
   * @param  hpka PKA handle
   * @param  in Input information
-  * @note   If the modulus size is bigger than the hash size (with a curve SECP521R1 when using a SHA256 hash for example)
-  *         the hash value should be written at the end of the buffer with zeros padding at beginning.
+  * @note   If the modulus size is bigger than the hash size (with a curve SECP521R1 when using a SHA256 hash
+  *         for example)the hash value should be written at the end of the buffer with zeros padding at beginning.
   */
 void PKA_ECDSASign_Set(PKA_HandleTypeDef *hpka, PKA_ECDSASignInTypeDef *in)
 {
@@ -2932,7 +2932,7 @@ HAL_StatusTypeDef PKA_WaitOnFlagUntilTimeout(PKA_HandleTypeDef *hpka, uint32_t F
   * @param  Maxsize        Specifies the possible max size of the result in words
   * @retval size
   */
-uint32_t PKA_Result_GetSize(PKA_HandleTypeDef *hpka, uint32_t Startindex, uint32_t Maxsize)
+uint32_t PKA_Result_GetSize(const PKA_HandleTypeDef *hpka, uint32_t Startindex, uint32_t Maxsize)
 {
   uint32_t size;
   uint32_t current_index = Maxsize - 1UL;

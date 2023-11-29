@@ -12,7 +12,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -1953,7 +1953,7 @@ typedef struct
 
 /*!< Root Secure Service Library */
 /************ RSSLIB SAU system Flash region definition constants *************/
-#define RSSLIB_SYS_FLASH_NS_PFUNC_START   (0xBF9FB78UL)
+#define RSSLIB_SYS_FLASH_NS_PFUNC_START   (0xBF9FB68UL)
 #define RSSLIB_SYS_FLASH_NS_PFUNC_END     (0xBF9FB84UL)
 
 /************ RSSLIB function return constants ********************************/
@@ -1961,7 +1961,7 @@ typedef struct
 #define RSSLIB_SUCCESS (0xEAEAEAEAUL)
 
 /*!< RSSLIB  pointer function structure address definition */
-#define RSSLIB_PFUNC_BASE (0xBF9FB78UL)
+#define RSSLIB_PFUNC_BASE (0xBF9FB68UL)
 #define RSSLIB_PFUNC      ((RSSLIB_pFunc_TypeDef *)RSSLIB_PFUNC_BASE)
 
 /**
@@ -2008,6 +2008,28 @@ typedef uint32_t (*RSSLIB_S_JumpHDPlvl3_TypeDef)(uint32_t VectorTableAddr, uint3
 typedef uint32_t (*RSSLIB_S_JumpHDPlvl3NS_TypeDef)(uint32_t VectorTableAddr);
 
 /**
+  * @brief Input parameter definition of RSSLIB_DataProvisioning
+  */
+typedef struct
+{
+  uint32_t *pSource;        /*!< Address of the Data to be provisioned, shall be in SRAM3 */
+  uint32_t *pDestination;   /*!< Address in OBKeys sections where to provision Data */
+  uint32_t Size;            /*!< Size in bytes of the Data to be provisioned*/
+  uint32_t DoEncryption;    /*!< Notifies RSSLIB_DataProvisioning to encrypt or not Data*/
+  uint32_t Crc;             /*!< CRC over full Data buffer and previous field in the structure*/
+} RSSLIB_DataProvisioningConf_t;
+
+/**
+  * @brief  Prototype of RSSLIB Data Provisioning Function
+  * @detail This function write Data within OBKeys sections.
+  * @param  pointer on the structure defining Data to be provisioned and where to
+  * provision them within OBKeys sections.
+  * @retval RSSLIB_RSS_ERROR on error on input parameter, otherwise does not return.
+  */
+typedef uint32_t (*RSSLIB_NSC_DataProvisioning_TypeDef)(RSSLIB_DataProvisioningConf_t *pConfig);
+
+
+/**
   * @brief RSSLib secure callable function pointer structure
   */
 typedef struct
@@ -2017,12 +2039,21 @@ typedef struct
   __IM RSSLIB_S_JumpHDPlvl3NS_TypeDef JumpHDPLvl3NS;
 } S_pFuncTypeDef;
 
+/**
+  * @brief RSSLib Non-secure callable function pointer structure
+  */
+typedef struct
+{
+  __IM RSSLIB_NSC_DataProvisioning_TypeDef DataProvisioning;
+} NSC_pFuncTypeDef;
 
 /**
   * @brief RSSLib function pointer structure
   */
 typedef struct
 {
+  NSC_pFuncTypeDef NSC;
+  uint32_t RESERVED1[3];
   S_pFuncTypeDef S;
 }RSSLIB_pFunc_TypeDef;
 
@@ -16788,12 +16819,6 @@ typedef struct
 #define SBS_EPOCHSELCR_EPOCH_SEL_1        (0x2UL << SBS_EPOCHSELCR_EPOCH_SEL_Pos)    /*!< 0x00000002 */
 
 /******************  Bit definition for SBS_PMCR register  ****************/
-#define SBS_PMCR_BOOSTEN_Pos              (8U)
-#define SBS_PMCR_BOOSTEN_Msk              (0x1UL << SBS_PMCR_BOOSTEN_Pos)            /*!< 0x00000100 */
-#define SBS_PMCR_BOOSTEN                  SBS_PMCR_BOOSTEN_Msk                       /*!< I/O analog switch voltage booster enable */
-#define SBS_PMCR_BOOSTVDDSEL_Pos          (9U)
-#define SBS_PMCR_BOOSTVDDSEL_Msk          (0x1UL << SBS_PMCR_BOOSTVDDSEL_Pos)        /*!< 0x00000200 */
-#define SBS_PMCR_BOOSTVDDSEL              SBS_PMCR_BOOSTVDDSEL_Msk                   /*!< GPIO analog switch control voltage selection */
 #define SBS_PMCR_PB6_FMP_Pos              (16U)
 #define SBS_PMCR_PB6_FMP_Msk              (0x1UL << SBS_PMCR_PB6_FMP_Pos)            /*!< 0x00010000 */
 #define SBS_PMCR_PB6_FMP                  SBS_PMCR_PB6_FMP_Msk                       /*!< Fast-mode Plus command on PB(6) */

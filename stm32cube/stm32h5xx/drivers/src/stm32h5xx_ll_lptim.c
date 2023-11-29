@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -90,7 +90,7 @@
   *          - SUCCESS: LPTIMx registers are de-initialized
   *          - ERROR: invalid LPTIMx instance
   */
-ErrorStatus LL_LPTIM_DeInit(LPTIM_TypeDef *LPTIMx)
+ErrorStatus LL_LPTIM_DeInit(const LPTIM_TypeDef *LPTIMx)
 {
   ErrorStatus result = SUCCESS;
 

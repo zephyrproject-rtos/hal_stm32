@@ -77,6 +77,7 @@
 
 /* ----------------------- FMC registers bit mask --------------------------- */
 
+#if defined(FMC_BANK1)
 /* --- BCR Register ---*/
 /* BCR register clear mask */
 
@@ -92,6 +93,8 @@
 #define BWTR_CLEAR_MASK   ((uint32_t)(FMC_BWTRx_ADDSET | FMC_BWTRx_ADDHLD  |\
                                       FMC_BWTRx_DATAST | FMC_BWTRx_BUSTURN |\
                                       FMC_BWTRx_ACCMOD | FMC_BWTRx_DATAHLD))
+#endif /* FMC_BANK1 */
+#if defined(FMC_BANK3)
 
 /* --- PCR Register ---*/
 /* PCR register clear mask */
@@ -109,6 +112,8 @@
 #define PATT_CLEAR_MASK   ((uint32_t)(FMC_PATT_ATTSET  | FMC_PATT_ATTWAIT |\
                                       FMC_PATT_ATTHOLD | FMC_PATT_ATTHIZ))
 
+#endif /* FMC_BANK3 */
+#if defined(FMC_Bank5_6_R)
 
 /* --- SDCR Register ---*/
 /* SDCR register clear mask */
@@ -124,6 +129,7 @@
                                       FMC_SDTRx_TRAS  | FMC_SDTRx_TRC    | \
                                       FMC_SDTRx_TWR   | FMC_SDTRx_TRP    | \
                                       FMC_SDTRx_TRCD))
+#endif /* FMC_Bank5_6_R */
 
 /**
   * @}
@@ -138,6 +144,7 @@
   * @{
   */
 
+#if defined(FMC_BANK1)
 
 /** @defgroup FMC_LL_Exported_Functions_NORSRAM FMC Low Layer NOR SRAM Exported Functions
   * @brief  NORSRAM Controller functions
@@ -522,7 +529,9 @@ HAL_StatusTypeDef FMC_NORSRAM_WriteOperation_Disable(FMC_NORSRAM_TypeDef *Device
 /**
   * @}
   */
+#endif /* FMC_BANK1 */
 
+#if defined(FMC_BANK3)
 
 /** @defgroup FMC_LL_Exported_Functions_NAND FMC Low Layer NAND Exported Functions
   * @brief    NAND Controller functions
@@ -795,8 +804,10 @@ HAL_StatusTypeDef FMC_NAND_GetECC(FMC_NAND_TypeDef *Device, uint32_t *ECCval, ui
 /**
   * @}
   */
+#endif /* FMC_BANK3 */
 
 
+#if defined(FMC_Bank5_6_R)
 
 /** @defgroup FMC_LL_SDRAM
   * @brief    SDRAM Controller functions
@@ -1102,7 +1113,7 @@ HAL_StatusTypeDef FMC_SDRAM_SetAutoRefreshNumber(FMC_SDRAM_TypeDef *Device,
   *         FMC_SDRAM_NORMAL_MODE, FMC_SDRAM_SELF_REFRESH_MODE or
   *         FMC_SDRAM_POWER_DOWN_MODE.
   */
-uint32_t FMC_SDRAM_GetModeStatus(FMC_SDRAM_TypeDef *Device, uint32_t Bank)
+uint32_t FMC_SDRAM_GetModeStatus(const FMC_SDRAM_TypeDef *Device, uint32_t Bank)
 {
   uint32_t tmpreg;
 
@@ -1132,6 +1143,7 @@ uint32_t FMC_SDRAM_GetModeStatus(FMC_SDRAM_TypeDef *Device, uint32_t Bank)
   * @}
   */
 
+#endif /* FMC_Bank5_6_R */
 
 /**
   * @}

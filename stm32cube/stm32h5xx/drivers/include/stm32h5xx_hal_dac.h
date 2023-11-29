@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -224,7 +224,6 @@ typedef void (*pDAC_CallbackTypeDef)(DAC_HandleTypeDef *hdac);
 #define DAC_TRIGGER_T5_TRGO             (                 DAC_CR_TSEL1_2                                   | DAC_CR_TEN1) /*!< TIM5 TRGO selected as external conversion trigger for DAC channel */
 #define DAC_TRIGGER_T8_TRGO             (                 DAC_CR_TSEL1_2 | DAC_CR_TSEL1_1 | DAC_CR_TSEL1_0 | DAC_CR_TEN1) /*!< TIM8 TRGO selected as external conversion trigger for DAC channel */
 #define DAC_TRIGGER_T15_TRGO            (DAC_CR_TSEL1_3                                                    | DAC_CR_TEN1) /*!< TIM15 TRGO selected as external conversion trigger for DAC channel */
-
 #else
 /* Devices STM32H503xx */
 #define DAC_TRIGGER_T3_TRGO              (                                DAC_CR_TSEL1_1  | DAC_CR_TSEL1_0 | DAC_CR_TEN1) /*!< TIM3 TRGO selected as external conversion trigger for DAC channel */

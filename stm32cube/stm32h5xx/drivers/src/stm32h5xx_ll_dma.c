@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -86,7 +86,6 @@
                                                              ((Channel)  == LL_DMA_CHANNEL_7)     || \
                                                              ((Channel)  == LL_DMA_CHANNEL_ALL))))
 
-
 #define IS_LL_GPDMA_CHANNEL_INSTANCE(INSTANCE, Channel)   ((((INSTANCE) == GPDMA1)                && \
                                                             (((Channel)  == LL_DMA_CHANNEL_0)     || \
                                                              ((Channel)  == LL_DMA_CHANNEL_1)     || \
@@ -112,6 +111,9 @@
                                                            (((INSTANCE) == GPDMA2)                && \
                                                             (((Channel)  == LL_DMA_CHANNEL_6)     || \
                                                              ((Channel)  == LL_DMA_CHANNEL_7))))
+
+#define IS_LL_DMA_MODE(__VALUE__)                         (((__VALUE__) == LL_DMA_NORMAL) || \
+                                                           ((__VALUE__) == LL_DMA_PFCTRL))
 
 #define IS_LL_DMA_DIRECTION(__VALUE__)                    (((__VALUE__) == LL_DMA_DIRECTION_MEMORY_TO_MEMORY) || \
                                                            ((__VALUE__) == LL_DMA_DIRECTION_PERIPH_TO_MEMORY) || \
@@ -260,14 +262,6 @@
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
-  *         @arg @ref LL_DMA_CHANNEL_8
-  *         @arg @ref LL_DMA_CHANNEL_9
-  *         @arg @ref LL_DMA_CHANNEL_10
-  *         @arg @ref LL_DMA_CHANNEL_11
-  *         @arg @ref LL_DMA_CHANNEL_12
-  *         @arg @ref LL_DMA_CHANNEL_13
-  *         @arg @ref LL_DMA_CHANNEL_14
-  *         @arg @ref LL_DMA_CHANNEL_15
   * @retval An ErrorStatus enumeration value:
   *          - SUCCESS : DMA registers are de-initialized.
   *          - ERROR   : DMA registers are not de-initialized.
@@ -349,6 +343,7 @@ uint32_t LL_DMA_DeInit(DMA_TypeDef *DMAx, uint32_t Channel)
 
     /* Reset DMAx_Channely attribute */
     LL_DMA_DisableChannelPrivilege(DMAx, Channel);
+
 #if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
     LL_DMA_DisableChannelSecure(DMAx, Channel);
 #endif /* defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U) */
@@ -377,14 +372,6 @@ uint32_t LL_DMA_DeInit(DMA_TypeDef *DMAx, uint32_t Channel)
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
-  *         @arg @ref LL_DMA_CHANNEL_8
-  *         @arg @ref LL_DMA_CHANNEL_9
-  *         @arg @ref LL_DMA_CHANNEL_10
-  *         @arg @ref LL_DMA_CHANNEL_11
-  *         @arg @ref LL_DMA_CHANNEL_12
-  *         @arg @ref LL_DMA_CHANNEL_13
-  *         @arg @ref LL_DMA_CHANNEL_14
-  *         @arg @ref LL_DMA_CHANNEL_15
   * @param  DMA_InitStruct pointer to a @ref LL_DMA_InitTypeDef structure.
   * @retval An ErrorStatus enumeration value:
   *          - SUCCESS : DMA registers are initialized.
@@ -417,6 +404,7 @@ uint32_t LL_DMA_Init(DMA_TypeDef *DMAx, uint32_t Channel, LL_DMA_InitTypeDef *DM
   assert_param(IS_LL_DMA_LINK_STEP_MODE(DMA_InitStruct->LinkStepMode));
   assert_param(IS_LL_DMA_LINK_BASEADDR(DMA_InitStruct->LinkedListBaseAddr));
   assert_param(IS_LL_DMA_LINK_ADDR_OFFSET(DMA_InitStruct->LinkedListAddrOffset));
+  assert_param(IS_LL_DMA_MODE(DMA_InitStruct->Mode));
 
   /* Check DMA instance */
   if (IS_LL_GPDMA_CHANNEL_INSTANCE(DMAx, Channel) != 0U)
@@ -461,7 +449,6 @@ uint32_t LL_DMA_Init(DMA_TypeDef *DMAx, uint32_t Channel, LL_DMA_InitTypeDef *DM
   /*-------------------------- DMAx CCR Configuration --------------------------
    * Configure the control parameter :
    * - LinkAllocatedPort:                              DMA_CCR_LAP bit
-   *   LinkAllocatedPort field is not supported by LPDMA channels.
    * - LinkStepMode:                                   DMA_CCR_LSM bit
    * - Priority:                                       DMA_CCR_PRIO [23:22] bits
    */
@@ -472,25 +459,17 @@ uint32_t LL_DMA_Init(DMA_TypeDef *DMAx, uint32_t Channel, LL_DMA_InitTypeDef *DM
   /*-------------------------- DMAx CTR1 Configuration -------------------------
    * Configure the Data transfer  parameter :
    * - DestAllocatedPort:                         DMA_CTR1_DAP bit
-   *   DestAllocatedPort field is not supported by LPDMA channels.
    * - DestHWordExchange:                         DMA_CTR1_DHX bit
-   *   DestHWordExchange field is not supported by LPDMA channels.
    * - DestByteExchange:                          DMA_CTR1_DBX bit
-   *   DestByteExchange field is not supported by LPDMA channels.
    * - DestIncMode:                               DMA_CTR1_DINC bit
    * - DestDataWidth:                             DMA_CTR1_DDW_LOG2 [17:16] bits
    * - SrcAllocatedPort:                          DMA_CTR1_SAP bit
-   *   SrcAllocatedPort field is not supported by LPDMA channels.
    * - SrcByteExchange:                           DMA_CTR1_SBX bit
-   *   SrcByteExchange field is not supported by LPDMA channels.
    * - DataAlignment:                             DMA_CTR1_PAM [12:11] bits
-   *   DataAlignment field is reduced to one bit by LPDMA channels.
    * - SrcIncMode:                                DMA_CTR1_SINC bit
    * - SrcDataWidth:                              DMA_CTR1_SDW_LOG2 [1:0] bits
    * - SrcBurstLength:                            DMA_CTR1_SBL_1 [9:4] bits
-   *   SrcBurstLength field is not supported by LPDMA channels.
    * - DestBurstLength:                           DMA_CTR1_DBL_1 [25:20] bits
-   *   DestBurstLength field is not supported by LPDMA channels.
    */
   LL_DMA_ConfigTransfer(DMAx, Channel, DMA_InitStruct->DestAllocatedPort | \
                         DMA_InitStruct->DestHWordExchange                | \
@@ -515,17 +494,16 @@ uint32_t LL_DMA_Init(DMA_TypeDef *DMAx, uint32_t Channel, LL_DMA_InitTypeDef *DM
    * - TriggerPolarity:                            DMA_CTR2_TRIGPOL [25:24] bits
    * - TriggerMode:                                DMA_CTR2_TRIGM  [15:14] bits
    * - BlkHWRequest:                               DMA_CTR2_BREQ bit
+   * - Mode:                                       DMA_CTR2_PFREQ bit
    * - Direction:                                  DMA_CTR2_DREQ bit
    * - Direction:                                  DMA_CTR2_SWREQ bit
-   *   Direction field is reduced to one bit for LPDMA channels (SWREQ).
    * - TriggerSelection:                           DMA_CTR2_TRIGSEL [21:16] bits
-   *   TriggerSelection field is reduced to 5 bits for LPDMA channels.
    * - Request:                                    DMA_CTR2_REQSEL [6:0] bits
-   *   Request field is reduced to 5 bits for LPDMA channels.
    */
   LL_DMA_ConfigChannelTransfer(DMAx, Channel, DMA_InitStruct->TransferEventMode | \
                                DMA_InitStruct->TriggerPolarity                  | \
                                DMA_InitStruct->BlkHWRequest                     | \
+                               DMA_InitStruct->Mode                             | \
                                DMA_InitStruct->Direction);
 
   /* Check direction */
@@ -627,6 +605,7 @@ void LL_DMA_StructInit(LL_DMA_InitTypeDef *DMA_InitStruct)
   DMA_InitStruct->DestIncMode              = LL_DMA_DEST_FIXED;
   DMA_InitStruct->Priority                 = LL_DMA_LOW_PRIORITY_LOW_WEIGHT;
   DMA_InitStruct->BlkDataLength            = 0x00000000U;
+  DMA_InitStruct->Mode                     = LL_DMA_NORMAL;
   DMA_InitStruct->BlkRptCount              = 0x00000000U;
   DMA_InitStruct->TriggerMode              = LL_DMA_TRIGM_BLK_TRANSFER;
   DMA_InitStruct->TriggerPolarity          = LL_DMA_TRIG_POLARITY_MASKED;
@@ -684,14 +663,6 @@ void LL_DMA_ListStructInit(LL_DMA_InitLinkedListTypeDef *DMA_InitLinkedListStruc
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
-  *         @arg @ref LL_DMA_CHANNEL_8
-  *         @arg @ref LL_DMA_CHANNEL_9
-  *         @arg @ref LL_DMA_CHANNEL_10
-  *         @arg @ref LL_DMA_CHANNEL_11
-  *         @arg @ref LL_DMA_CHANNEL_12
-  *         @arg @ref LL_DMA_CHANNEL_13
-  *         @arg @ref LL_DMA_CHANNEL_14
-  *         @arg @ref LL_DMA_CHANNEL_15
   * @retval An ErrorStatus enumeration value:
   *          - SUCCESS : DMA registers are de-initialized.
   *          - ERROR   : DMA registers are not de-initialized.
@@ -719,14 +690,6 @@ uint32_t LL_DMA_List_DeInit(DMA_TypeDef *DMAx, uint32_t Channel)
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
-  *         @arg @ref LL_DMA_CHANNEL_8
-  *         @arg @ref LL_DMA_CHANNEL_9
-  *         @arg @ref LL_DMA_CHANNEL_10
-  *         @arg @ref LL_DMA_CHANNEL_11
-  *         @arg @ref LL_DMA_CHANNEL_12
-  *         @arg @ref LL_DMA_CHANNEL_13
-  *         @arg @ref LL_DMA_CHANNEL_14
-  *         @arg @ref LL_DMA_CHANNEL_15
   * @param  DMA_InitLinkedListStruct pointer to
   *         a @ref LL_DMA_InitLinkedListTypeDef structure.
   * @retval An ErrorStatus enumeration value:
@@ -857,6 +820,7 @@ uint32_t LL_DMA_CreateLinkNode(LL_DMA_InitNodeTypeDef *DMA_InitNodeStruct, LL_DM
   assert_param(IS_LL_DMA_BLKHW_REQUEST(DMA_InitNodeStruct->BlkHWRequest));
   assert_param(IS_LL_DMA_TRANSFER_EVENT_MODE(DMA_InitNodeStruct->TransferEventMode));
   assert_param(IS_LL_DMA_LINK_UPDATE_REGISTERS(DMA_InitNodeStruct->UpdateRegisters));
+  assert_param(IS_LL_DMA_MODE(DMA_InitNodeStruct->Mode));
 
 #if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
   assert_param(IS_LL_DMA_CHANNEL_SRC_SEC(DMA_InitNodeStruct->SrcSecure));
@@ -902,25 +866,17 @@ uint32_t LL_DMA_CreateLinkNode(LL_DMA_InitNodeTypeDef *DMA_InitNodeStruct, LL_DM
     /*-------------------------- DMAx CTR1 Configuration -----------------------
     * Configure the Data transfer  parameter :
     * - DestAllocatedPort:                        DMA_CTR1_DAP bit
-    *   DestAllocatedPort field is not supported by LPDMA channels.
     * - DestHWordExchange:                        DMA_CTR1_DHX bit
-    *   DestHWordExchange field is not supported by LPDMA channels.
     * - DestByteExchange:                         DMA_CTR1_DBX bit
-    *   DestByteExchange field is not supported by LPDMA channels.
     * - DestIncMode:                              DMA_CTR1_DINC bit
     * - DestDataWidth:                            DMA_CTR1_DDW_LOG2 [17:16] bits
     * - SrcAllocatedPort:                         DMA_CTR1_SAP bit
-    *   SrcAllocatedPort field is not supported by LPDMA channels.
     * - SrcByteExchange:                          DMA_CTR1_SBX bit
-    *   SrcByteExchange field is not supported by LPDMA channels.
     * - DataAlignment:                            DMA_CTR1_PAM [12:11] bits
-    *   DataAlignment field is reduced to one bit for LPDMA channels.
     * - SrcIncMode:                               DMA_CTR1_SINC bit
     * - SrcDataWidth:                             DMA_CTR1_SDW_LOG2 [1:0] bits
     * - SrcBurstLength:                           DMA_CTR1_SBL_1 [9:4] bits
-    *   SrcBurstLength field is not supported by LPDMA channels.
     * - DestBurstLength:                          DMA_CTR1_DBL_1 [25:20] bits
-    *   DestBurstLength field is not supported by LPDMA channels.
     */
 
     pNode->LinkRegisters[reg_counter] = (DMA_InitNodeStruct->DestIncMode   | \
@@ -934,7 +890,7 @@ uint32_t LL_DMA_CreateLinkNode(LL_DMA_InitNodeTypeDef *DMA_InitNodeStruct, LL_DM
                                           DMA_InitNodeStruct->SrcSecure);
 #endif /* defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U) */
 
-    /* Update CTR1 register fields for not LPDMA channels */
+    /* Update CTR1 register fields */
     pNode->LinkRegisters[reg_counter] |= (DMA_InitNodeStruct->DestAllocatedPort                              | \
                                           DMA_InitNodeStruct->DestHWordExchange                              | \
                                           DMA_InitNodeStruct->DestByteExchange                               | \
@@ -956,18 +912,17 @@ uint32_t LL_DMA_CreateLinkNode(LL_DMA_InitNodeTypeDef *DMA_InitNodeStruct, LL_DM
      * - TransferEventMode:                        DMA_CTR2_TCEM [31:30] bits
      * - TriggerPolarity:                          DMA_CTR2_TRIGPOL [25:24] bits
      * - TriggerMode:                              DMA_CTR2_TRIGM  [15:14] bits
+     * - Mode:                                     DMA_CTR2_PFREQ bit
      * - BlkHWRequest:                             DMA_CTR2_BREQ bit
      * - Direction:                                DMA_CTR2_DREQ bit
      * - Direction:                                DMA_CTR2_SWREQ bit
-     *   Direction field is reduced to one bit for LPDMA channels (SWREQ).
      * - TriggerSelection:                         DMA_CTR2_TRIGSEL [21:16] bits
-     *   DataAlignment field is reduced to 5 bits for LPDMA channels.
      * - Request:                                  DMA_CTR2_REQSEL [6:0] bits
-     *   DataAlignment field is reduced to 5 bits for LPDMA channels.
      */
     pNode->LinkRegisters[reg_counter] = (DMA_InitNodeStruct->TransferEventMode | \
                                          DMA_InitNodeStruct->TriggerPolarity   | \
                                          DMA_InitNodeStruct->BlkHWRequest      | \
+                                         DMA_InitNodeStruct->Mode              | \
                                          DMA_InitNodeStruct->Direction);
 
     /* Check direction */
@@ -987,7 +942,6 @@ uint32_t LL_DMA_CreateLinkNode(LL_DMA_InitNodeTypeDef *DMA_InitNodeStruct, LL_DM
     /* Increment counter for the next register */
     reg_counter++;
   }
-
 
   /* Check if CBR1 register update is enabled */
   if ((DMA_InitNodeStruct->UpdateRegisters & LL_DMA_UPDATE_CBR1) == LL_DMA_UPDATE_CBR1)
@@ -1021,7 +975,6 @@ uint32_t LL_DMA_CreateLinkNode(LL_DMA_InitNodeTypeDef *DMA_InitNodeStruct, LL_DM
     /* Increment counter for the next register */
     reg_counter++;
   }
-
 
   /* Check if CSAR register update is enabled */
   if ((DMA_InitNodeStruct->UpdateRegisters & LL_DMA_UPDATE_CSAR) == LL_DMA_UPDATE_CSAR)

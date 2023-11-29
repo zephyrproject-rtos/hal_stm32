@@ -6,7 +6,7 @@
   **********************************************************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -30,6 +30,7 @@ extern "C" {
 /** @addtogroup STM32H5xx_HAL_Driver
   * @{
   */
+#if defined (OPAMP1)
 
 /** @addtogroup OPAMPEx
   * @{
@@ -58,6 +59,8 @@ HAL_StatusTypeDef HAL_OPAMPEx_Unlock(OPAMP_HandleTypeDef *hopamp);
 /**
   * @}
   */
+
+#endif /* OPAMP1 */
 
 /**
   * @}

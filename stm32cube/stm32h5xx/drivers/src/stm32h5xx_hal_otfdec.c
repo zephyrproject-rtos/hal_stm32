@@ -13,7 +13,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -693,7 +693,7 @@ HAL_StatusTypeDef HAL_OTFDEC_RegionSetMode(OTFDEC_HandleTypeDef *hotfdec, uint32
   * @retval HAL state
   */
 HAL_StatusTypeDef HAL_OTFDEC_RegionConfig(OTFDEC_HandleTypeDef *hotfdec, uint32_t RegionIndex,
-                                          OTFDEC_RegionConfigTypeDef *Config, uint32_t lock)
+                                          const OTFDEC_RegionConfigTypeDef *Config, uint32_t lock)
 {
   OTFDEC_Region_TypeDef *region;
   uint32_t address;
@@ -780,16 +780,16 @@ HAL_StatusTypeDef HAL_OTFDEC_ConfigAttributes(OTFDEC_HandleTypeDef *hotfdec, uin
   * @param  pKey pointer at set of keys
   * @retval CRC value
   */
-uint32_t HAL_OTFDEC_KeyCRCComputation(uint32_t *pKey)
+uint32_t HAL_OTFDEC_KeyCRCComputation(const uint32_t *pKey)
 {
   uint8_t crc7_poly = 0x7;
-  uint32_t key_strobe[4] = {0xAA55AA55U, 0x3U, 0x18U, 0xC0U};
+  const uint32_t key_strobe[4] = {0xAA55AA55U, 0x3U, 0x18U, 0xC0U};
   uint8_t  i;
   uint8_t crc = 0;
   uint32_t  j;
   uint32_t  keyval;
   uint32_t  k;
-  uint32_t *temp = pKey;
+  const uint32_t *temp = pKey;
 
   for (j = 0U; j < 4U; j++)
   {
@@ -879,11 +879,11 @@ HAL_StatusTypeDef HAL_OTFDEC_DisableEnciphering(OTFDEC_HandleTypeDef *hotfdec)
   * @retval HAL state
   */
 HAL_StatusTypeDef HAL_OTFDEC_Cipher(OTFDEC_HandleTypeDef *hotfdec, uint32_t RegionIndex,
-                                    uint32_t *input, uint32_t *output, uint32_t size, uint32_t start_address)
+                                    const uint32_t *input, uint32_t *output, uint32_t size, uint32_t start_address)
 {
   uint32_t j;
   __IO uint32_t *extMem_ptr = (uint32_t *)start_address;
-  uint32_t *in_ptr = input;
+  const uint32_t *in_ptr = input;
   uint32_t *out_ptr = output;
 
   /* Check the parameters */
@@ -1022,7 +1022,7 @@ HAL_StatusTypeDef HAL_OTFDEC_RegionDisable(OTFDEC_HandleTypeDef *hotfdec, uint32
   *         the configuration information for OTFDEC module
   * @retval HAL state
   */
-HAL_OTFDEC_StateTypeDef HAL_OTFDEC_GetState(OTFDEC_HandleTypeDef *hotfdec)
+HAL_OTFDEC_StateTypeDef HAL_OTFDEC_GetState(const OTFDEC_HandleTypeDef *hotfdec)
 {
   return hotfdec->State;
 }
@@ -1061,9 +1061,9 @@ HAL_StatusTypeDef HAL_OTFDEC_GetConfigAttributes(OTFDEC_HandleTypeDef *hotfdec, 
   * @param  RegionIndex index of region the keys CRC of which is read
   * @retval Key CRC
   */
-uint32_t HAL_OTFDEC_RegionGetKeyCRC(OTFDEC_HandleTypeDef *hotfdec, uint32_t RegionIndex)
+uint32_t HAL_OTFDEC_RegionGetKeyCRC(const OTFDEC_HandleTypeDef *hotfdec, uint32_t RegionIndex)
 {
-  OTFDEC_Region_TypeDef *region;
+  const OTFDEC_Region_TypeDef *region;
   uint32_t address;
   uint32_t keycrc;
 

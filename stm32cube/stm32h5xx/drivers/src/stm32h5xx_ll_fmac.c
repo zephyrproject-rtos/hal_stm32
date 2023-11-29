@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -90,7 +90,7 @@ ErrorStatus LL_FMAC_Init(FMAC_TypeDef *FMACx)
   *          - SUCCESS: FMAC registers are de-initialized
   *          - ERROR: FMAC registers are not de-initialized
   */
-ErrorStatus LL_FMAC_DeInit(FMAC_TypeDef *FMACx)
+ErrorStatus LL_FMAC_DeInit(const FMAC_TypeDef *FMACx)
 {
   ErrorStatus status = SUCCESS;
 

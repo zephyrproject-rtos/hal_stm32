@@ -12,7 +12,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -265,6 +265,7 @@ HAL_StatusTypeDef HAL_PSSI_Init(PSSI_HandleTypeDef *hpssi)
     /* Allocate lock resource and initialize it */
     hpssi->Lock = HAL_UNLOCKED;
 
+#if (USE_HAL_PSSI_REGISTER_CALLBACKS == 1)
     /* Init the PSSI Callback settings */
     hpssi->TxCpltCallback = HAL_PSSI_TxCpltCallback; /* Legacy weak TxCpltCallback */
     hpssi->RxCpltCallback = HAL_PSSI_RxCpltCallback; /* Legacy weak RxCpltCallback */
@@ -278,7 +279,10 @@ HAL_StatusTypeDef HAL_PSSI_Init(PSSI_HandleTypeDef *hpssi)
 
     /* Init the low level hardware : GPIO, CLOCK, CORTEX...etc */
     hpssi->MspInitCallback(hpssi);
-
+#else
+    /* Init the low level hardware : GPIO, CLOCK, CORTEX...etc */
+    HAL_PSSI_MspInit(hpssi);
+#endif /*USE_HAL_PSSI_REGISTER_CALLBACKS*/
   }
 
   hpssi->State = HAL_PSSI_STATE_BUSY;
@@ -321,6 +325,7 @@ HAL_StatusTypeDef HAL_PSSI_DeInit(PSSI_HandleTypeDef *hpssi)
   /* Disable the PSSI Peripheral Clock */
   HAL_PSSI_DISABLE(hpssi);
 
+#if (USE_HAL_PSSI_REGISTER_CALLBACKS == 1)
   if (hpssi->MspDeInitCallback == NULL)
   {
     hpssi->MspDeInitCallback = HAL_PSSI_MspDeInit; /* Legacy weak MspDeInit  */
@@ -328,6 +333,10 @@ HAL_StatusTypeDef HAL_PSSI_DeInit(PSSI_HandleTypeDef *hpssi)
 
   /* DeInit the low level hardware: GPIO, CLOCK, NVIC */
   hpssi->MspDeInitCallback(hpssi);
+#else
+  /* DeInit the low level hardware: GPIO, CLOCK, NVIC */
+  HAL_PSSI_MspDeInit(hpssi);
+#endif /*USE_HAL_PSSI_REGISTER_CALLBACKS*/
 
   hpssi->ErrorCode = HAL_PSSI_ERROR_NONE;
   hpssi->State = HAL_PSSI_STATE_RESET;
@@ -370,6 +379,7 @@ __weak void HAL_PSSI_MspDeInit(PSSI_HandleTypeDef *hpssi)
    */
 }
 
+#if (USE_HAL_PSSI_REGISTER_CALLBACKS == 1)
 /**
   * @brief  Register a User PSSI Callback
   *         To be used instead of the weak predefined callback
@@ -563,6 +573,8 @@ HAL_StatusTypeDef HAL_PSSI_UnRegisterCallback(PSSI_HandleTypeDef *hpssi, HAL_PSS
 
   return status;
 }
+
+#endif /* USE_HAL_I2C_REGISTER_CALLBACKS */
 
 /**
   * @}
@@ -950,17 +962,17 @@ HAL_StatusTypeDef HAL_PSSI_Transmit_DMA(PSSI_HandleTypeDef *hpssi, uint32_t *pDa
 
         /* Configure BusWidth */
         if (hpssi->hdmatx->Init.DestDataWidth == DMA_DEST_DATAWIDTH_BYTE)
-          {
-            MODIFY_REG(hpssi->Instance->CR, PSSI_CR_DMAEN | PSSI_CR_OUTEN | PSSI_CR_CKPOL,
-                       PSSI_CR_DMA_ENABLE | PSSI_CR_OUTEN_OUTPUT |
-                       ((hpssi->Init.ClockPolarity == HAL_PSSI_RISING_EDGE) ? 0U : PSSI_CR_CKPOL));
-          }
-          else
-          {
-            MODIFY_REG(hpssi->Instance->CR, PSSI_CR_DMAEN | PSSI_CR_OUTEN | PSSI_CR_CKPOL,
-                       PSSI_CR_DMA_ENABLE | hpssi->Init.BusWidth | PSSI_CR_OUTEN_OUTPUT |
-                       ((hpssi->Init.ClockPolarity == HAL_PSSI_RISING_EDGE) ? 0U : PSSI_CR_CKPOL));
-          }
+        {
+          MODIFY_REG(hpssi->Instance->CR, PSSI_CR_DMAEN | PSSI_CR_OUTEN | PSSI_CR_CKPOL,
+                     PSSI_CR_DMA_ENABLE | PSSI_CR_OUTEN_OUTPUT |
+                     ((hpssi->Init.ClockPolarity == HAL_PSSI_RISING_EDGE) ? 0U : PSSI_CR_CKPOL));
+        }
+        else
+        {
+          MODIFY_REG(hpssi->Instance->CR, PSSI_CR_DMAEN | PSSI_CR_OUTEN | PSSI_CR_CKPOL,
+                     PSSI_CR_DMA_ENABLE | hpssi->Init.BusWidth | PSSI_CR_OUTEN_OUTPUT |
+                     ((hpssi->Init.ClockPolarity == HAL_PSSI_RISING_EDGE) ? 0U : PSSI_CR_CKPOL));
+        }
 
         /* Set the PSSI DMA transfer complete callback */
         hpssi->hdmatx->XferCpltCallback = PSSI_DMATransmitCplt;
@@ -1111,16 +1123,16 @@ HAL_StatusTypeDef HAL_PSSI_Receive_DMA(PSSI_HandleTypeDef *hpssi, uint32_t *pDat
       {
         /* Configure BusWidth */
         if (hpssi->hdmatx->Init.SrcDataWidth == DMA_SRC_DATAWIDTH_BYTE)
-          {
-            MODIFY_REG(hpssi->Instance->CR, PSSI_CR_DMAEN | PSSI_CR_OUTEN | PSSI_CR_CKPOL, PSSI_CR_DMA_ENABLE |
-                       ((hpssi->Init.ClockPolarity == HAL_PSSI_RISING_EDGE) ? PSSI_CR_CKPOL : 0U));
-          }
-          else
-          {
-            MODIFY_REG(hpssi->Instance->CR, PSSI_CR_DMAEN | PSSI_CR_OUTEN | PSSI_CR_CKPOL,
-                       PSSI_CR_DMA_ENABLE | hpssi->Init.BusWidth |
-                       ((hpssi->Init.ClockPolarity == HAL_PSSI_RISING_EDGE) ? PSSI_CR_CKPOL : 0U));
-          }
+        {
+          MODIFY_REG(hpssi->Instance->CR, PSSI_CR_DMAEN | PSSI_CR_OUTEN | PSSI_CR_CKPOL, PSSI_CR_DMA_ENABLE |
+                     ((hpssi->Init.ClockPolarity == HAL_PSSI_RISING_EDGE) ? PSSI_CR_CKPOL : 0U));
+        }
+        else
+        {
+          MODIFY_REG(hpssi->Instance->CR, PSSI_CR_DMAEN | PSSI_CR_OUTEN | PSSI_CR_CKPOL,
+                     PSSI_CR_DMA_ENABLE | hpssi->Init.BusWidth |
+                     ((hpssi->Init.ClockPolarity == HAL_PSSI_RISING_EDGE) ? PSSI_CR_CKPOL : 0U));
+        }
 
         /* Set the PSSI DMA transfer complete callback */
         hpssi->hdmarx->XferCpltCallback = PSSI_DMAReceiveCplt;
@@ -1283,8 +1295,13 @@ HAL_StatusTypeDef HAL_PSSI_Abort_DMA(PSSI_HandleTypeDef *hpssi)
     }
     else
     {
+
       /* Call the error callback */
+#if (USE_HAL_PSSI_REGISTER_CALLBACKS == 1)
       hpssi->ErrorCallback(hpssi);
+#else
+      HAL_PSSI_ErrorCallback(hpssi);
+#endif /* USE_HAL_PSSI_REGISTER_CALLBACKS */
     }
   }
 
@@ -1380,8 +1397,12 @@ void HAL_PSSI_IRQHandler(PSSI_HandleTypeDef *hpssi)
       }
       else
       {
+#if (USE_HAL_PSSI_REGISTER_CALLBACKS == 1)
         /* Call the corresponding callback to inform upper layer of the error */
         hpssi->ErrorCallback(hpssi);
+#else
+        HAL_PSSI_ErrorCallback(hpssi);
+#endif /* USE_HAL_PSSI_REGISTER_CALLBACKS */
       }
     }
 #endif /*HAL_DMA_MODULE_ENABLED*/
@@ -1394,8 +1415,12 @@ void HAL_PSSI_IRQHandler(PSSI_HandleTypeDef *hpssi)
       /* Process Unlocked */
       __HAL_UNLOCK(hpssi);
 
+#if (USE_HAL_PSSI_REGISTER_CALLBACKS == 1)
       /* Call the corresponding callback to inform upper layer of End of Transfer */
       hpssi->AbortCpltCallback(hpssi);
+#else
+      HAL_PSSI_AbortCpltCallback(hpssi);
+#endif /* USE_HAL_PSSI_REGISTER_CALLBACKS */
     }
     else
     {
@@ -1404,8 +1429,12 @@ void HAL_PSSI_IRQHandler(PSSI_HandleTypeDef *hpssi)
       /* Process Unlocked */
       __HAL_UNLOCK(hpssi);
 
+#if (USE_HAL_PSSI_REGISTER_CALLBACKS == 1)
       /* Call the corresponding callback to inform upper layer of End of Transfer */
       hpssi->ErrorCallback(hpssi);
+#else
+      HAL_PSSI_ErrorCallback(hpssi);
+#endif /* USE_HAL_PSSI_REGISTER_CALLBACKS */
     }
   }
 }
@@ -1499,7 +1528,7 @@ __weak void HAL_PSSI_AbortCpltCallback(PSSI_HandleTypeDef *hpssi)
   *                the configuration information for the specified PSSI.
   * @retval HAL state
   */
-HAL_PSSI_StateTypeDef HAL_PSSI_GetState(PSSI_HandleTypeDef *hpssi)
+HAL_PSSI_StateTypeDef HAL_PSSI_GetState(const PSSI_HandleTypeDef *hpssi)
 {
   /* Return PSSI handle state */
   return hpssi->State;
@@ -1511,7 +1540,7 @@ HAL_PSSI_StateTypeDef HAL_PSSI_GetState(PSSI_HandleTypeDef *hpssi)
   *              the configuration information for the specified PSSI.
   * @retval PSSI Error Code
   */
-uint32_t HAL_PSSI_GetError(PSSI_HandleTypeDef *hpssi)
+uint32_t HAL_PSSI_GetError(const PSSI_HandleTypeDef *hpssi)
 {
   return hpssi->ErrorCode;
 }
@@ -1608,8 +1637,11 @@ static void PSSI_Error(PSSI_HandleTypeDef *hpssi, uint32_t ErrorCode)
     __HAL_UNLOCK(hpssi);
 
     /* Call the corresponding callback to inform upper layer of End of Transfer */
-
+#if (USE_HAL_PSSI_REGISTER_CALLBACKS == 1)
     hpssi->AbortCpltCallback(hpssi);
+#else
+    HAL_PSSI_AbortCpltCallback(hpssi);
+#endif /* USE_HAL_PSSI_REGISTER_CALLBACKS */
   }
   else
   {
@@ -1620,7 +1652,11 @@ static void PSSI_Error(PSSI_HandleTypeDef *hpssi, uint32_t ErrorCode)
     __HAL_UNLOCK(hpssi);
 
     /* Call the corresponding callback to inform upper layer of End of Transfer */
+#if (USE_HAL_PSSI_REGISTER_CALLBACKS == 1)
     hpssi->ErrorCallback(hpssi);
+#else
+    HAL_PSSI_ErrorCallback(hpssi);
+#endif /* USE_HAL_PSSI_REGISTER_CALLBACKS */
   }
 }
 
@@ -1658,8 +1694,11 @@ void PSSI_DMATransmitCplt(DMA_HandleTypeDef *hdma)
     __HAL_UNLOCK(hpssi);
 
     /* Call the corresponding callback to inform upper layer of End of Transfer */
-
+#if (USE_HAL_PSSI_REGISTER_CALLBACKS == 1)
     hpssi->TxCpltCallback(hpssi);
+#else
+    HAL_PSSI_TxCpltCallback(hpssi);
+#endif /* USE_HAL_PSSI_REGISTER_CALLBACKS */
   }
 }
 
@@ -1696,7 +1735,11 @@ void PSSI_DMAReceiveCplt(DMA_HandleTypeDef *hdma)
     __HAL_UNLOCK(hpssi);
 
     /* Call the corresponding callback to inform upper layer of End of Transfer */
+#if (USE_HAL_PSSI_REGISTER_CALLBACKS == 1)
     hpssi->RxCpltCallback(hpssi);
+#else
+    HAL_PSSI_RxCpltCallback(hpssi);
+#endif /* USE_HAL_PSSI_REGISTER_CALLBACKS */
   }
 }
 
@@ -1721,13 +1764,20 @@ void PSSI_DMAAbort(DMA_HandleTypeDef *hdma)
     hpssi->State = HAL_PSSI_STATE_READY;
 
     /* Call the corresponding callback to inform upper layer of End of Transfer */
-
+#if (USE_HAL_PSSI_REGISTER_CALLBACKS == 1)
     hpssi->AbortCpltCallback(hpssi);
+#else
+    HAL_PSSI_AbortCpltCallback(hpssi);
+#endif /* USE_HAL_PSSI_REGISTER_CALLBACKS */
   }
   else
   {
     /* Call the corresponding callback to inform upper layer of End of Transfer */
+#if (USE_HAL_PSSI_REGISTER_CALLBACKS == 1)
     hpssi->ErrorCallback(hpssi);
+#else
+    HAL_PSSI_ErrorCallback(hpssi);
+#endif /* USE_HAL_PSSI_REGISTER_CALLBACKS */
   }
 }
 #endif /*HAL_DMA_MODULE_ENABLED*/
@@ -1796,7 +1846,11 @@ void PSSI_DMAError(DMA_HandleTypeDef *hdma)
     __HAL_UNLOCK(hpssi);
 
     /* Call the corresponding callback to inform upper layer of End of Transfer */
+#if (USE_HAL_PSSI_REGISTER_CALLBACKS == 1)
     hpssi->ErrorCallback(hpssi);
+#else
+    HAL_PSSI_ErrorCallback(hpssi);
+#endif /* USE_HAL_PSSI_REGISTER_CALLBACKS */
   }
 }
 #endif /*HAL_DMA_MODULE_ENABLED*/
