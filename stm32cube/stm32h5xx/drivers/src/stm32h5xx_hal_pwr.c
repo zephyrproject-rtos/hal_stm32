@@ -12,7 +12,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -514,13 +514,13 @@ __weak void HAL_PWR_PVDCallback(void)
   * @note   Available attributes are security and privilege protection.
   * @note   Security attribute can only be set only by secure access.
   * @note   Privilege attribute for secure items can be managed only by a secure
-  *         priliged access.
+  *         privileged access.
   * @note   Privilege attribute for nsecure items can be managed  by a secure
-  *         priliged access or by a nsecure priliged access.
+  *         privileged access or by a nsecure privileged access.
   * @param  Item       : Specifies the item(s) to set attributes on.
-  *                      This parameter can be a combination of @ref PWR_ITEMS.
+  *                      This parameter can be a combination of @ref PWR_Items.
   * @param  Attributes : Specifies the available attribute(s).
-  *                      This parameter can be one of @ref PWR_ATTRIBUTES.
+  *                      This parameter can be one of @ref PWR_Attributes.
   * @retval None.
   */
 void HAL_PWR_ConfigAttributes(uint32_t Item, uint32_t Attributes)
@@ -601,9 +601,9 @@ void HAL_PWR_ConfigAttributes(uint32_t Item, uint32_t Attributes)
 /**
   * @brief  Get attribute(s) of a PWR item.
   * @param  Item        : Specifies the item(s) to set attributes on.
-  *                       This parameter can be one of @ref PWR_ITEMS.
+  *                       This parameter can be one of @ref PWR_Items.
   * @param  pAttributes : Pointer to return attribute(s).
-  *                       Returned value could be on of @ref PWR_ATTRIBUTES.
+  *                       Returned value could be on of @ref PWR_Attributes.
   * @retval HAL Status.
   */
 HAL_StatusTypeDef HAL_PWR_GetConfigAttributes(uint32_t Item, uint32_t *pAttributes)

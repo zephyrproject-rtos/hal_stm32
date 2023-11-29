@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -538,6 +538,15 @@ uint32_t HAL_I2S_GetError(const I2S_HandleTypeDef *hi2s);
   * @{
   */
 
+/**
+  * @}
+  */
+
+/* Private Functions ---------------------------------------------------------*/
+/** @defgroup I2S_Private_Functions I2S Private Functions
+  * @{
+  */
+/* Private functions are defined in stm32h7xx_hal_i2S.c file */
 /**
   * @}
   */

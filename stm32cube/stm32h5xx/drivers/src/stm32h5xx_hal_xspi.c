@@ -17,7 +17,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -199,7 +199,7 @@
 
     [..]
      Use function HAL_XSPI_UnRegisterCallback() to reset a callback to the default
-     weak (surcharged) function. It allows to reset following callbacks:
+     weak (overridden) function. It allows to reset following callbacks:
      (+) ErrorCallback : callback when error occurs.
      (+) AbortCpltCallback : callback when abort is completed.
      (+) FifoThresholdCallback : callback when the fifo threshold is reached.
@@ -217,9 +217,9 @@
 
     [..]
      By default, after the HAL_XSPI_Init() and if the state is HAL_XSPI_STATE_RESET
-     all callbacks are reset to the corresponding legacy weak (surcharged) functions.
+     all callbacks are reset to the corresponding legacy weak (overridden) functions.
      Exception done for MspInit and MspDeInit callbacks that are respectively
-     reset to the legacy weak (surcharged) functions in the HAL_XSPI_Init()
+     reset to the legacy weak (overridden) functions in the HAL_XSPI_Init()
      and HAL_XSPI_DeInit() only when these callbacks are null (not registered beforehand).
      If not, MspInit or MspDeInit are not null, the HAL_XSPI_Init() and HAL_XSPI_DeInit()
      keep and use the user MspInit/MspDeInit callbacks (registered beforehand)
@@ -236,7 +236,7 @@
     [..]
      When The compilation define USE_HAL_XSPI_REGISTER_CALLBACKS is set to 0 or
      not defined, the callback registering feature is not available
-     and weak (surcharged) callbacks are used.
+     and weak (overridden) callbacks are used.
 
   @endverbatim
   ******************************************************************************
@@ -2153,7 +2153,7 @@ __weak void HAL_XSPI_TimeOutCallback(XSPI_HandleTypeDef *hxspi)
 #if defined (USE_HAL_XSPI_REGISTER_CALLBACKS) && (USE_HAL_XSPI_REGISTER_CALLBACKS == 1U)
 /**
   * @brief  Register a User XSPI Callback
-  *         To be used instead of the weak (surcharged) predefined callback
+  *         To be used to override the weak predefined callback
   * @param hxspi : XSPI handle
   * @param CallbackID : ID of the callback to be registered
   *        This parameter can be one of the following values:
@@ -2263,7 +2263,7 @@ HAL_StatusTypeDef HAL_XSPI_RegisterCallback(XSPI_HandleTypeDef *hxspi, HAL_XSPI_
 
 /**
   * @brief  Unregister a User XSPI Callback
-  *         XSPI Callback is redirected to the weak (surcharged) predefined callback
+  *         XSPI Callback is redirected to the weak predefined callback
   * @param hxspi : XSPI handle
   * @param CallbackID : ID of the callback to be unregistered
   *        This parameter can be one of the following values:
@@ -2580,7 +2580,7 @@ HAL_StatusTypeDef HAL_XSPI_SetFifoThreshold(XSPI_HandleTypeDef *hxspi, uint32_t 
   * @param  hxspi : XSPI handle.
   * @retval Fifo threshold
   */
-uint32_t HAL_XSPI_GetFifoThreshold(XSPI_HandleTypeDef *hxspi)
+uint32_t HAL_XSPI_GetFifoThreshold(const XSPI_HandleTypeDef *hxspi)
 {
   return ((READ_BIT(hxspi->Instance->CR, XSPI_CR_FTHRES) >> XSPI_CR_FTHRES_Pos) + 1U);
 }
@@ -2689,7 +2689,7 @@ HAL_StatusTypeDef HAL_XSPI_SetTimeout(XSPI_HandleTypeDef *hxspi, uint32_t Timeou
   * @param  hxspi : XSPI handle
   * @retval XSPI Error Code
   */
-uint32_t HAL_XSPI_GetError(XSPI_HandleTypeDef *hxspi)
+uint32_t HAL_XSPI_GetError(const XSPI_HandleTypeDef *hxspi)
 {
   return hxspi->ErrorCode;
 }
@@ -2699,7 +2699,7 @@ uint32_t HAL_XSPI_GetError(XSPI_HandleTypeDef *hxspi)
   * @param  hxspi : XSPI handle
   * @retval HAL state
   */
-uint32_t HAL_XSPI_GetState(XSPI_HandleTypeDef *hxspi)
+uint32_t HAL_XSPI_GetState(const XSPI_HandleTypeDef *hxspi)
 {
   /* Return XSPI handle state */
   return hxspi->State;

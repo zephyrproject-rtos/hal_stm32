@@ -51,26 +51,16 @@ Patch List:
    *Var init in LL_I2S_Init
     - In the LL_I2S_Init function, initialisation of the sourceclock to avoid compilation warning.
       Impacted files:
-       drivers/include/stm32h5xx_ll_spi.h
+       drivers/include/stm32h5xx_ll_spi.c
       ST internal bug : 147754
 
    *fix to the V2 HAL API to get PTP to work
      impacted file : stm32h5xx_hal_eth.c
-     In the HAL_ETH_ReadData function where it checks for the last descriptor, 
+     In the HAL_ETH_ReadData function where it checks for the last descriptor,
      we added a checked if the TSA bit was set in DESC1
-     If the TSA bit is set then have a peak at the context descriptor which should be the one 
+     If the TSA bit is set then have a peak at the context descriptor which should be the one
      after the last descriptor
      If the CTXT bit is set in the context descriptor then extract the timestamps
      ST internal bug : 161504
-
-   *fix compilation error when instance does not exist on stm32h50x devices
-    - Include the stm32h5xx_ll_dlyb.h only if the stm32h5 device has a SDMMC BLYB or OCTOSPI BLYB
-    - Include the stm32h5xx_hal_dcache.h only if the stm32h5 device has a DCACHE
-    - Include the stm32h5xx_hal_sai.h only if the stm32h5 device has a SAI block A or B
-      Impacted files:
-       drivers/include/stm32h5xx_ll_dlyb.h
-       drivers/include/stm32h5xx_hal_dcache.h
-       drivers/include/stm32h5xx_hal_sai.h
-      ST internal bug : 166551 166552 166553
 
    See release_note.html from STM32Cube

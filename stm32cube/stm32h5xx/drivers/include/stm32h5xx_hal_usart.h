@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -158,8 +158,8 @@ typedef struct __USART_HandleTypeDef
   DMA_HandleTypeDef             *hdmatx;                 /*!< USART Tx DMA Handle parameters      */
 
   DMA_HandleTypeDef             *hdmarx;                 /*!< USART Rx DMA Handle parameters      */
-#endif /* HAL_DMA_MODULE_ENABLED */
 
+#endif /* HAL_DMA_MODULE_ENABLED */
   HAL_LockTypeDef               Lock;                    /*!< Locking object                      */
 
   __IO HAL_USART_StateTypeDef   State;                   /*!< USART communication state           */

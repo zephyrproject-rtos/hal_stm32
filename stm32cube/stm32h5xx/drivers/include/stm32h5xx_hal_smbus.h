@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -749,8 +749,8 @@ void HAL_SMBUS_ErrorCallback(SMBUS_HandleTypeDef *hsmbus);
   */
 
 /* Peripheral State and Errors functions  **************************************************/
-uint32_t HAL_SMBUS_GetState(SMBUS_HandleTypeDef *hsmbus);
-uint32_t HAL_SMBUS_GetError(SMBUS_HandleTypeDef *hsmbus);
+uint32_t HAL_SMBUS_GetState(const SMBUS_HandleTypeDef *hsmbus);
+uint32_t HAL_SMBUS_GetError(const SMBUS_HandleTypeDef *hsmbus);
 
 /**
   * @}

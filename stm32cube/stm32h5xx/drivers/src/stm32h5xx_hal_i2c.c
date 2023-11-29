@@ -12,7 +12,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -400,11 +400,17 @@
   * @}
   */
 
-/* Private macro -------------------------------------------------------------*/
+/* Private macros ------------------------------------------------------------*/
+/** @addtogroup I2C_Private_Macro
+  * @{
+  */
 #if defined(HAL_DMA_MODULE_ENABLED)
 /* Macro to get remaining data to transfer on DMA side */
 #define I2C_GET_DMA_REMAIN_DATA(__HANDLE__)     (__HAL_DMA_GET_COUNTER(__HANDLE__) + HAL_DMAEx_GetFifoLevel(__HANDLE__))
 #endif /* HAL_DMA_MODULE_ENABLED */
+/**
+  * @}
+  */
 
 /* Private variables ---------------------------------------------------------*/
 /* Private function prototypes -----------------------------------------------*/
@@ -4848,7 +4854,7 @@ HAL_StatusTypeDef HAL_I2C_Master_Abort_IT(I2C_HandleTypeDef *hi2c, uint16_t DevA
   *                the configuration information for the specified I2C.
   * @retval None
   */
-void HAL_I2C_EV_IRQHandler(I2C_HandleTypeDef *hi2c)
+void HAL_I2C_EV_IRQHandler(I2C_HandleTypeDef *hi2c) /* Derogation MISRAC2012-Rule-8.13 */
 {
   /* Get current IT Flags and IT sources value */
   uint32_t itflags   = READ_REG(hi2c->Instance->ISR);
@@ -5101,7 +5107,7 @@ __weak void HAL_I2C_AbortCpltCallback(I2C_HandleTypeDef *hi2c)
   *                the configuration information for the specified I2C.
   * @retval HAL state
   */
-HAL_I2C_StateTypeDef HAL_I2C_GetState(I2C_HandleTypeDef *hi2c)
+HAL_I2C_StateTypeDef HAL_I2C_GetState(const I2C_HandleTypeDef *hi2c)
 {
   /* Return I2C handle state */
   return hi2c->State;
@@ -5113,7 +5119,7 @@ HAL_I2C_StateTypeDef HAL_I2C_GetState(I2C_HandleTypeDef *hi2c)
   *         the configuration information for I2C module
   * @retval HAL mode
   */
-HAL_I2C_ModeTypeDef HAL_I2C_GetMode(I2C_HandleTypeDef *hi2c)
+HAL_I2C_ModeTypeDef HAL_I2C_GetMode(const I2C_HandleTypeDef *hi2c)
 {
   return hi2c->Mode;
 }
@@ -5124,7 +5130,7 @@ HAL_I2C_ModeTypeDef HAL_I2C_GetMode(I2C_HandleTypeDef *hi2c)
   *              the configuration information for the specified I2C.
   * @retval I2C Error Code
   */
-uint32_t HAL_I2C_GetError(I2C_HandleTypeDef *hi2c)
+uint32_t HAL_I2C_GetError(const I2C_HandleTypeDef *hi2c)
 {
   return hi2c->ErrorCode;
 }
@@ -7171,13 +7177,16 @@ static HAL_StatusTypeDef I2C_WaitOnFlagUntilTimeout(I2C_HandleTypeDef *hi2c, uin
     {
       if (((HAL_GetTick() - Tickstart) > Timeout) || (Timeout == 0U))
       {
-        hi2c->ErrorCode |= HAL_I2C_ERROR_TIMEOUT;
-        hi2c->State = HAL_I2C_STATE_READY;
-        hi2c->Mode = HAL_I2C_MODE_NONE;
+        if ((__HAL_I2C_GET_FLAG(hi2c, Flag) == Status))
+        {
+          hi2c->ErrorCode |= HAL_I2C_ERROR_TIMEOUT;
+          hi2c->State = HAL_I2C_STATE_READY;
+          hi2c->Mode = HAL_I2C_MODE_NONE;
 
-        /* Process Unlocked */
-        __HAL_UNLOCK(hi2c);
-        return HAL_ERROR;
+          /* Process Unlocked */
+          __HAL_UNLOCK(hi2c);
+          return HAL_ERROR;
+        }
       }
     }
   }
@@ -7208,14 +7217,17 @@ static HAL_StatusTypeDef I2C_WaitOnTXISFlagUntilTimeout(I2C_HandleTypeDef *hi2c,
     {
       if (((HAL_GetTick() - Tickstart) > Timeout) || (Timeout == 0U))
       {
-        hi2c->ErrorCode |= HAL_I2C_ERROR_TIMEOUT;
-        hi2c->State = HAL_I2C_STATE_READY;
-        hi2c->Mode = HAL_I2C_MODE_NONE;
+        if ((__HAL_I2C_GET_FLAG(hi2c, I2C_FLAG_TXIS) == RESET))
+        {
+          hi2c->ErrorCode |= HAL_I2C_ERROR_TIMEOUT;
+          hi2c->State = HAL_I2C_STATE_READY;
+          hi2c->Mode = HAL_I2C_MODE_NONE;
 
-        /* Process Unlocked */
-        __HAL_UNLOCK(hi2c);
+          /* Process Unlocked */
+          __HAL_UNLOCK(hi2c);
 
-        return HAL_ERROR;
+          return HAL_ERROR;
+        }
       }
     }
   }
@@ -7244,14 +7256,17 @@ static HAL_StatusTypeDef I2C_WaitOnSTOPFlagUntilTimeout(I2C_HandleTypeDef *hi2c,
     /* Check for the Timeout */
     if (((HAL_GetTick() - Tickstart) > Timeout) || (Timeout == 0U))
     {
-      hi2c->ErrorCode |= HAL_I2C_ERROR_TIMEOUT;
-      hi2c->State = HAL_I2C_STATE_READY;
-      hi2c->Mode = HAL_I2C_MODE_NONE;
+      if ((__HAL_I2C_GET_FLAG(hi2c, I2C_FLAG_STOPF) == RESET))
+      {
+        hi2c->ErrorCode |= HAL_I2C_ERROR_TIMEOUT;
+        hi2c->State = HAL_I2C_STATE_READY;
+        hi2c->Mode = HAL_I2C_MODE_NONE;
 
-      /* Process Unlocked */
-      __HAL_UNLOCK(hi2c);
+        /* Process Unlocked */
+        __HAL_UNLOCK(hi2c);
 
-      return HAL_ERROR;
+        return HAL_ERROR;
+      }
     }
   }
   return HAL_OK;
@@ -7318,13 +7333,16 @@ static HAL_StatusTypeDef I2C_WaitOnRXNEFlagUntilTimeout(I2C_HandleTypeDef *hi2c,
     /* Check for the Timeout */
     if (((HAL_GetTick() - Tickstart) > Timeout) || (Timeout == 0U))
     {
-      hi2c->ErrorCode |= HAL_I2C_ERROR_TIMEOUT;
-      hi2c->State = HAL_I2C_STATE_READY;
+      if ((__HAL_I2C_GET_FLAG(hi2c, I2C_FLAG_RXNE) == RESET))
+      {
+        hi2c->ErrorCode |= HAL_I2C_ERROR_TIMEOUT;
+        hi2c->State = HAL_I2C_STATE_READY;
 
-      /* Process Unlocked */
-      __HAL_UNLOCK(hi2c);
+        /* Process Unlocked */
+        __HAL_UNLOCK(hi2c);
 
-      return HAL_ERROR;
+        return HAL_ERROR;
+      }
     }
   }
   return HAL_OK;
@@ -7518,7 +7536,7 @@ static void I2C_Enable_IRQ(I2C_HandleTypeDef *hi2c, uint16_t InterruptRequest)
   {
     if ((InterruptRequest & I2C_XFER_LISTEN_IT) == I2C_XFER_LISTEN_IT)
     {
-      /* Enable ERR, STOP, NACK, and ADDR interrupts */
+      /* Enable ERR, STOP, NACK and ADDR interrupts */
       tmpisr |= I2C_IT_ADDRI | I2C_IT_STOPI | I2C_IT_NACKI | I2C_IT_ERRI;
     }
 
@@ -7593,7 +7611,6 @@ static void I2C_Enable_IRQ(I2C_HandleTypeDef *hi2c, uint16_t InterruptRequest)
   /* all interrupts requested done */
   __HAL_I2C_ENABLE_IT(hi2c, tmpisr);
 }
-
 
 /**
   * @brief  Manage the disabling of Interrupts.

@@ -13,7 +13,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -336,6 +336,7 @@ HAL_StatusTypeDef HAL_ETH_Init(ETH_HandleTypeDef *heth)
 
   __HAL_RCC_SBS_CLK_ENABLE();
 
+
   if (heth->Init.MediaInterface == HAL_ETH_MII_MODE)
   {
     HAL_SBS_ETHInterfaceSelect(SBS_ETH_MII);
@@ -506,7 +507,6 @@ HAL_StatusTypeDef HAL_ETH_RegisterCallback(ETH_HandleTypeDef *heth, HAL_ETH_Call
   {
     /* Update the error code */
     heth->ErrorCode |= HAL_ETH_ERROR_INVALID_CALLBACK;
-
     return HAL_ERROR;
   }
 
@@ -791,7 +791,6 @@ HAL_StatusTypeDef HAL_ETH_Start_IT(ETH_HandleTypeDef *heth)
 
     /* Clear Tx and Rx process stopped flags */
     heth->Instance->DMACSR |= (ETH_DMACSR_TPS | ETH_DMACSR_RPS);
-
     /* Enable ETH DMA interrupts:
     - Tx complete interrupt
     - Rx complete interrupt
@@ -821,6 +820,7 @@ HAL_StatusTypeDef HAL_ETH_Stop(ETH_HandleTypeDef *heth)
   {
     /* Set the ETH peripheral state to BUSY */
     heth->gState = HAL_ETH_STATE_BUSY;
+
     /* Disable the DMA transmission */
     CLEAR_BIT(heth->Instance->DMACTCR, ETH_DMACTCR_ST);
 
@@ -879,6 +879,7 @@ HAL_StatusTypeDef HAL_ETH_Stop_IT(ETH_HandleTypeDef *heth)
 
     /* Disable the MAC reception */
     CLEAR_BIT(heth->Instance->MACCR, ETH_MACCR_RE);
+
     /* Set the Flush Transmit FIFO bit */
     SET_BIT(heth->Instance->MTLTQOMR, ETH_MTLTQOMR_FTQ);
 
@@ -1042,7 +1043,6 @@ HAL_StatusTypeDef HAL_ETH_ReadData(ETH_HandleTypeDef *heth, void **pAppBuff)
   uint32_t desccntmax;
   uint32_t bufflength;
   uint8_t rxdataready = 0U;
-
 
   if (pAppBuff == NULL)
   {
@@ -1217,7 +1217,7 @@ static void ETH_UpdateDescriptor(ETH_HandleTypeDef *heth)
   if (heth->RxDescList.RxBuildDescCnt != desccount)
   {
     /* Set the Tail pointer address */
-    WRITE_REG(heth->Instance->DMACRDTPR, 0);
+    WRITE_REG(heth->Instance->DMACRDTPR, 0U);
 
     heth->RxDescList.RxBuildDescIdx = descidx;
     heth->RxDescList.RxBuildDescCnt = desccount;
@@ -1277,7 +1277,7 @@ __weak void HAL_ETH_RxAllocateCallback(uint8_t **buff)
 /**
   * @brief  Rx Link callback.
   * @param  pStart: pointer to packet start
-  * @param  pStart: pointer to packet end
+  * @param  pEnd: pointer to packet end
   * @param  buff: pointer to received data
   * @param  Length: received data length
   * @retval None
@@ -1841,6 +1841,7 @@ __weak void HAL_ETH_TxPtpCallback(uint32_t *buff, ETH_TimeStampTypeDef *timestam
 void HAL_ETH_IRQHandler(ETH_HandleTypeDef *heth)
 {
   uint32_t macirqenable;
+
   /* Packet received */
   if (__HAL_ETH_DMA_GET_IT(heth, ETH_DMACSR_RI))
   {
@@ -1877,14 +1878,12 @@ void HAL_ETH_IRQHandler(ETH_HandleTypeDef *heth)
     }
   }
 
-
   /* ETH DMA Error */
   if (__HAL_ETH_DMA_GET_IT(heth, ETH_DMACSR_AIS))
   {
     if (__HAL_ETH_DMA_GET_IT_SOURCE(heth, ETH_DMACIER_AIE))
     {
       heth->ErrorCode |= HAL_ETH_ERROR_DMA;
-
       /* if fatal bus error occurred */
       if (__HAL_ETH_DMA_GET_IT(heth, ETH_DMACSR_FBE))
       {
@@ -1937,7 +1936,6 @@ void HAL_ETH_IRQHandler(ETH_HandleTypeDef *heth)
     /* Ethernet Error callback */
     HAL_ETH_ErrorCallback(heth);
 #endif  /* USE_HAL_ETH_REGISTER_CALLBACKS */
-
     heth->MACErrorCode = (uint32_t)(0x0U);
   }
 
@@ -2145,7 +2143,7 @@ HAL_StatusTypeDef HAL_ETH_ReadPHYRegister(ETH_HandleTypeDef *heth, uint32_t PHYA
   * @param  RegValue: the value to write
   * @retval HAL status
   */
-HAL_StatusTypeDef HAL_ETH_WritePHYRegister(ETH_HandleTypeDef *heth, uint32_t PHYAddr, uint32_t PHYReg,
+HAL_StatusTypeDef HAL_ETH_WritePHYRegister(const ETH_HandleTypeDef *heth, uint32_t PHYAddr, uint32_t PHYReg,
                                            uint32_t RegValue)
 {
   uint32_t tickstart;
@@ -2170,7 +2168,6 @@ HAL_StatusTypeDef HAL_ETH_WritePHYRegister(ETH_HandleTypeDef *heth, uint32_t PHY
   MODIFY_REG(tmpreg, ETH_MACMDIOAR_RDA, (PHYReg << 16));
   MODIFY_REG(tmpreg, ETH_MACMDIOAR_MOC, ETH_MACMDIOAR_MOC_WR);
   SET_BIT(tmpreg, ETH_MACMDIOAR_MB);
-
 
   /* Give the value to the MII data register */
   WRITE_REG(ETH->MACMDIODR, (uint16_t)RegValue);
@@ -2259,7 +2256,6 @@ HAL_StatusTypeDef HAL_ETH_GetMACConfig(ETH_HandleTypeDef *heth, ETH_MACConfigTyp
                                     ? ENABLE : DISABLE;
   macconf->ExtendedInterPacketGapVal = READ_BIT(heth->Instance->MACECR, ETH_MACECR_EIPG) >> 25;
 
-
   macconf->ProgrammableWatchdog = ((READ_BIT(heth->Instance->MACWTR, ETH_MACWTR_PWE) >> 8) > 0U) ? ENABLE : DISABLE;
   macconf->WatchdogTimeout = READ_BIT(heth->Instance->MACWTR, ETH_MACWTR_WTO);
 
@@ -2267,8 +2263,6 @@ HAL_StatusTypeDef HAL_ETH_GetMACConfig(ETH_HandleTypeDef *heth, ETH_MACConfigTyp
   macconf->ZeroQuantaPause = ((READ_BIT(heth->Instance->MACTFCR, ETH_MACTFCR_DZPQ) >> 7) == 0U) ? ENABLE : DISABLE;
   macconf->PauseLowThreshold = READ_BIT(heth->Instance->MACTFCR, ETH_MACTFCR_PLT);
   macconf->PauseTime = (READ_BIT(heth->Instance->MACTFCR, ETH_MACTFCR_PT) >> 16);
-
-
   macconf->ReceiveFlowControl = (READ_BIT(heth->Instance->MACRFCR, ETH_MACRFCR_RFE) > 0U) ? ENABLE : DISABLE;
   macconf->UnicastPausePacketDetect = ((READ_BIT(heth->Instance->MACRFCR, ETH_MACRFCR_UP) >> 1) > 0U)
                                       ? ENABLE : DISABLE;
@@ -2315,6 +2309,8 @@ HAL_StatusTypeDef HAL_ETH_GetDMAConfig(ETH_HandleTypeDef *heth, ETH_DMAConfigTyp
   dmaconf->SecondPacketOperate = ((READ_BIT(heth->Instance->DMACTCR, ETH_DMACTCR_OSP) >> 4) > 0U) ? ENABLE : DISABLE;
   dmaconf->TCPSegmentation = ((READ_BIT(heth->Instance->DMACTCR, ETH_DMACTCR_TSE) >> 12) > 0U) ? ENABLE : DISABLE;
   dmaconf->TxDMABurstLength = READ_BIT(heth->Instance->DMACTCR, ETH_DMACTCR_TPBL);
+
+
   return HAL_OK;
 }
 
@@ -2413,10 +2409,15 @@ void HAL_ETH_SetMDIOClockRange(ETH_HandleTypeDef *heth)
     /* CSR Clock Range between 100-150 MHz */
     tmpreg |= (uint32_t)ETH_MACMDIOAR_CR_DIV62;
   }
-  else /* (hclk >= 150000000)&&(hclk <= 200000000) */
+  else if ((hclk >= 150000000U) && (hclk <= 250000000U))
   {
     /* CSR Clock Range between 150-200 MHz */
     tmpreg |= (uint32_t)ETH_MACMDIOAR_CR_DIV102;
+  }
+  else /*(hclk >= 250000000U) && (hclk <= 300000000U)*/
+  {
+    /* CSR Clock Range between 250-300 MHz */
+    tmpreg |= (uint32_t)(ETH_MACMDIOAR_CR_DIV124);
   }
 
   /* Configure the CSR Clock Range */
@@ -2431,7 +2432,7 @@ void HAL_ETH_SetMDIOClockRange(ETH_HandleTypeDef *heth)
   *         the configuration of the ETH MAC filters.
   * @retval HAL status
   */
-HAL_StatusTypeDef HAL_ETH_SetMACFilterConfig(ETH_HandleTypeDef *heth, ETH_MACFilterConfigTypeDef *pFilterConfig)
+HAL_StatusTypeDef HAL_ETH_SetMACFilterConfig(ETH_HandleTypeDef *heth, const ETH_MACFilterConfigTypeDef *pFilterConfig)
 {
   uint32_t filterconfig;
 
@@ -2502,7 +2503,8 @@ HAL_StatusTypeDef HAL_ETH_GetMACFilterConfig(ETH_HandleTypeDef *heth, ETH_MACFil
   * @param  pMACAddr: Pointer to MAC address buffer data (6 bytes)
   * @retval HAL status
   */
-HAL_StatusTypeDef HAL_ETH_SetSourceMACAddrMatch(ETH_HandleTypeDef *heth, uint32_t AddrNbr, uint8_t *pMACAddr)
+HAL_StatusTypeDef HAL_ETH_SetSourceMACAddrMatch(const ETH_HandleTypeDef *heth, uint32_t AddrNbr,
+                                                const uint8_t *pMACAddr)
 {
   uint32_t macaddrlr;
   uint32_t macaddrhr;
@@ -2581,7 +2583,7 @@ void HAL_ETH_SetRxVLANIdentifier(ETH_HandleTypeDef *heth, uint32_t ComparisonBit
   *         that contains the Power Down configuration
   * @retval None.
   */
-void HAL_ETH_EnterPowerDownMode(ETH_HandleTypeDef *heth, ETH_PowerDownConfigTypeDef *pPowerDownConfig)
+void HAL_ETH_EnterPowerDownMode(ETH_HandleTypeDef *heth, const ETH_PowerDownConfigTypeDef *pPowerDownConfig)
 {
   uint32_t powerdownconfig;
 
@@ -2676,7 +2678,7 @@ HAL_StatusTypeDef HAL_ETH_SetWakeUpFilter(ETH_HandleTypeDef *heth, uint32_t *pFi
   *         the configuration information for ETHERNET module
   * @retval HAL state
   */
-HAL_ETH_StateTypeDef HAL_ETH_GetState(ETH_HandleTypeDef *heth)
+HAL_ETH_StateTypeDef HAL_ETH_GetState(const ETH_HandleTypeDef *heth)
 {
   return heth->gState;
 }
@@ -2687,7 +2689,7 @@ HAL_ETH_StateTypeDef HAL_ETH_GetState(ETH_HandleTypeDef *heth)
   *         the configuration information for ETHERNET module
   * @retval ETH Error Code
   */
-uint32_t HAL_ETH_GetError(ETH_HandleTypeDef *heth)
+uint32_t HAL_ETH_GetError(const ETH_HandleTypeDef *heth)
 {
   return heth->ErrorCode;
 }
@@ -2698,7 +2700,7 @@ uint32_t HAL_ETH_GetError(ETH_HandleTypeDef *heth)
   *         the configuration information for ETHERNET module
   * @retval ETH DMA Error Code
   */
-uint32_t HAL_ETH_GetDMAError(ETH_HandleTypeDef *heth)
+uint32_t HAL_ETH_GetDMAError(const ETH_HandleTypeDef *heth)
 {
   return heth->DMAErrorCode;
 }
@@ -2709,7 +2711,7 @@ uint32_t HAL_ETH_GetDMAError(ETH_HandleTypeDef *heth)
   *         the configuration information for ETHERNET module
   * @retval ETH MAC Error Code
   */
-uint32_t HAL_ETH_GetMACError(ETH_HandleTypeDef *heth)
+uint32_t HAL_ETH_GetMACError(const ETH_HandleTypeDef *heth)
 {
   return heth->MACErrorCode;
 }
@@ -2720,7 +2722,7 @@ uint32_t HAL_ETH_GetMACError(ETH_HandleTypeDef *heth)
   *         the configuration information for ETHERNET module
   * @retval ETH MAC WakeUp event source
   */
-uint32_t HAL_ETH_GetMACWakeUpSource(ETH_HandleTypeDef *heth)
+uint32_t HAL_ETH_GetMACWakeUpSource(const ETH_HandleTypeDef *heth)
 {
   return heth->MACWakeUpEvent;
 }
@@ -2785,6 +2787,7 @@ static void ETH_SetMACConfig(ETH_HandleTypeDef *heth,  ETH_MACConfigTypeDef *mac
   /* Write to MACWTR */
   MODIFY_REG(heth->Instance->MACWTR, ETH_MACWTR_MASK, macregval);
 
+
   /*------------------------ MACTFCR Configuration --------------------*/
   macregval = (((uint32_t)macconf->TransmitFlowControl << 1) |
                macconf->PauseLowThreshold |
@@ -2832,7 +2835,6 @@ static void ETH_SetDMAConfig(ETH_HandleTypeDef *heth,  ETH_DMAConfigTypeDef *dma
   /*------------------------ DMACCR Configuration --------------------*/
   dmaregval = (((uint32_t)dmaconf->PBLx8Mode << 16) |
                dmaconf->MaximumSegmentSize);
-
   MODIFY_REG(heth->Instance->DMACCR, ETH_DMACCR_MASK, dmaregval);
 
   /*------------------------ DMACTCR Configuration --------------------*/
@@ -2874,17 +2876,17 @@ static void ETH_MACDMAConfig(ETH_HandleTypeDef *heth)
   macDefaultConf.DropTCPIPChecksumErrorPacket = ENABLE;
   macDefaultConf.DuplexMode = ETH_FULLDUPLEX_MODE;
   macDefaultConf.ExtendedInterPacketGap = DISABLE;
-  macDefaultConf.ExtendedInterPacketGapVal = 0x0;
+  macDefaultConf.ExtendedInterPacketGapVal = 0x0U;
   macDefaultConf.ForwardRxErrorPacket = DISABLE;
   macDefaultConf.ForwardRxUndersizedGoodPacket = DISABLE;
-  macDefaultConf.GiantPacketSizeLimit = 0x618;
+  macDefaultConf.GiantPacketSizeLimit = 0x618U;
   macDefaultConf.GiantPacketSizeLimitControl = DISABLE;
   macDefaultConf.InterPacketGapVal = ETH_INTERPACKETGAP_96BIT;
   macDefaultConf.Jabber = ENABLE;
   macDefaultConf.JumboPacket = DISABLE;
   macDefaultConf.LoopbackMode = DISABLE;
   macDefaultConf.PauseLowThreshold = ETH_PAUSELOWTHRESHOLD_MINUS_4;
-  macDefaultConf.PauseTime = 0x0;
+  macDefaultConf.PauseTime = 0x0U;
   macDefaultConf.PreambleLength = ETH_PREAMBLELENGTH_7;
   macDefaultConf.ProgrammableWatchdog = DISABLE;
   macDefaultConf.ReceiveFlowControl = DISABLE;
@@ -2941,10 +2943,10 @@ static void ETH_DMATxDescListInit(ETH_HandleTypeDef *heth)
   {
     dmatxdesc = heth->Init.TxDesc + i;
 
-    WRITE_REG(dmatxdesc->DESC0, 0x0);
-    WRITE_REG(dmatxdesc->DESC1, 0x0);
-    WRITE_REG(dmatxdesc->DESC2, 0x0);
-    WRITE_REG(dmatxdesc->DESC3, 0x0);
+    WRITE_REG(dmatxdesc->DESC0, 0x0U);
+    WRITE_REG(dmatxdesc->DESC1, 0x0U);
+    WRITE_REG(dmatxdesc->DESC2, 0x0U);
+    WRITE_REG(dmatxdesc->DESC3, 0x0U);
 
     WRITE_REG(heth->TxDescList.TxDesc[i], (uint32_t)dmatxdesc);
 
@@ -2978,12 +2980,12 @@ static void ETH_DMARxDescListInit(ETH_HandleTypeDef *heth)
   {
     dmarxdesc =  heth->Init.RxDesc + i;
 
-    WRITE_REG(dmarxdesc->DESC0, 0x0);
-    WRITE_REG(dmarxdesc->DESC1, 0x0);
-    WRITE_REG(dmarxdesc->DESC2, 0x0);
-    WRITE_REG(dmarxdesc->DESC3, 0x0);
-    WRITE_REG(dmarxdesc->BackupAddr0, 0x0);
-    WRITE_REG(dmarxdesc->BackupAddr1, 0x0);
+    WRITE_REG(dmarxdesc->DESC0, 0x0U);
+    WRITE_REG(dmarxdesc->DESC1, 0x0U);
+    WRITE_REG(dmarxdesc->DESC2, 0x0U);
+    WRITE_REG(dmarxdesc->DESC3, 0x0U);
+    WRITE_REG(dmarxdesc->BackupAddr0, 0x0U);
+    WRITE_REG(dmarxdesc->BackupAddr1, 0x0U);
 
 
     /* Set Rx descritors addresses */
@@ -2991,11 +2993,11 @@ static void ETH_DMARxDescListInit(ETH_HandleTypeDef *heth)
 
   }
 
-  WRITE_REG(heth->RxDescList.RxDescIdx, 0);
-  WRITE_REG(heth->RxDescList.RxDescCnt, 0);
-  WRITE_REG(heth->RxDescList.RxBuildDescIdx, 0);
-  WRITE_REG(heth->RxDescList.RxBuildDescCnt, 0);
-  WRITE_REG(heth->RxDescList.ItMode, 0);
+  WRITE_REG(heth->RxDescList.RxDescIdx, 0U);
+  WRITE_REG(heth->RxDescList.RxDescCnt, 0U);
+  WRITE_REG(heth->RxDescList.RxBuildDescIdx, 0U);
+  WRITE_REG(heth->RxDescList.RxBuildDescCnt, 0U);
+  WRITE_REG(heth->RxDescList.ItMode, 0U);
 
   /* Set Receive Descriptor Ring Length */
   WRITE_REG(heth->Instance->DMACRDRLR, ((uint32_t)(ETH_RX_DESC_CNT - 1U)));
@@ -3125,7 +3127,7 @@ static uint32_t ETH_Prepare_Tx_Descriptors(ETH_HandleTypeDef *heth, ETH_TxPacket
   }
   else
   {
-    WRITE_REG(dmatxdesc->DESC1, 0x0);
+    WRITE_REG(dmatxdesc->DESC1, 0x0U);
     /* Set buffer 2 Length */
     MODIFY_REG(dmatxdesc->DESC2, ETH_DMATXNDESCRF_B2L, 0x0U);
   }
@@ -3233,7 +3235,7 @@ static uint32_t ETH_Prepare_Tx_Descriptors(ETH_HandleTypeDef *heth, ETH_TxPacket
     }
     else
     {
-      WRITE_REG(dmatxdesc->DESC1, 0x0);
+      WRITE_REG(dmatxdesc->DESC1, 0x0U);
       /* Set buffer 2 Length */
       MODIFY_REG(dmatxdesc->DESC2, ETH_DMATXNDESCRF_B2L, 0x0U);
     }
@@ -3284,7 +3286,6 @@ static uint32_t ETH_Prepare_Tx_Descriptors(ETH_HandleTypeDef *heth, ETH_TxPacket
   dmatxdesclist->PacketAddress[descidx] = dmatxdesclist->CurrentPacketAddress;
 
   dmatxdesclist->CurTxDesc = descidx;
-
   /* disable the interrupt */
   __disable_irq();
 

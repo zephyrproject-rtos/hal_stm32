@@ -11,7 +11,7 @@
   **********************************************************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -796,7 +796,7 @@ HAL_StatusTypeDef HAL_COMP_Start_IT_OneShot(COMP_HandleTypeDef *hcomp)
 
       /* Enable comparator interruption */
       hcomp->InterruptAutoRearm = 0U;
-      __HAL_COMP_CLEAR_FLAG( COMP_CLEAR_C1IF);
+      __HAL_COMP_CLEAR_FLAG(COMP_CLEAR_C1IF);
       SET_BIT(hcomp->Instance->CFGR1, COMP_CFGR1_ITEN);
     }
     else
@@ -887,7 +887,7 @@ HAL_StatusTypeDef HAL_COMP_Start_IT_AutoRearm(COMP_HandleTypeDef *hcomp)
 
       /* Enable comparator interruption */
       hcomp->InterruptAutoRearm = 1U;
-      __HAL_COMP_CLEAR_FLAG( COMP_CLEAR_C1IF);
+      __HAL_COMP_CLEAR_FLAG(COMP_CLEAR_C1IF);
       SET_BIT(hcomp->Instance->CFGR1, COMP_CFGR1_ITEN);
     }
     else

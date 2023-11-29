@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -72,7 +72,7 @@
   *          - SUCCESS: I3C registers are de-initialized
   *          - ERROR: I3C registers are not de-initialized
   */
-ErrorStatus LL_I3C_DeInit(I3C_TypeDef *I3Cx)
+ErrorStatus LL_I3C_DeInit(const I3C_TypeDef *I3Cx)
 {
   ErrorStatus status = SUCCESS;
 

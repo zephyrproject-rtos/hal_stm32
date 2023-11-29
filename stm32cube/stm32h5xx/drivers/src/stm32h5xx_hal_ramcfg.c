@@ -15,7 +15,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -509,7 +509,7 @@ HAL_StatusTypeDef HAL_RAMCFG_DisableNotification(RAMCFG_HandleTypeDef *hramcfg, 
   *                         specified RAMCFG instance.
   * @retval State of bit (1 or 0).
   */
-uint32_t HAL_RAMCFG_IsECCSingleErrorDetected(RAMCFG_HandleTypeDef *hramcfg)
+uint32_t HAL_RAMCFG_IsECCSingleErrorDetected(const RAMCFG_HandleTypeDef *hramcfg)
 {
   /* Check the parameters */
   assert_param(IS_RAMCFG_ECC_INSTANCE(hramcfg->Instance));
@@ -525,7 +525,7 @@ uint32_t HAL_RAMCFG_IsECCSingleErrorDetected(RAMCFG_HandleTypeDef *hramcfg)
   *                         specified RAMCFG instance.
   * @retval State of bit (1 or 0).
   */
-uint32_t HAL_RAMCFG_IsECCDoubleErrorDetected(RAMCFG_HandleTypeDef *hramcfg)
+uint32_t HAL_RAMCFG_IsECCDoubleErrorDetected(const RAMCFG_HandleTypeDef *hramcfg)
 {
   /* Check the parameters */
   assert_param(IS_RAMCFG_ECC_INSTANCE(hramcfg->Instance));
@@ -541,7 +541,7 @@ uint32_t HAL_RAMCFG_IsECCDoubleErrorDetected(RAMCFG_HandleTypeDef *hramcfg)
   *                         specified RAMCFG instance.
   * @retval Single error address offset.
   */
-uint32_t HAL_RAMCFG_GetSingleErrorAddress(RAMCFG_HandleTypeDef *hramcfg)
+uint32_t HAL_RAMCFG_GetSingleErrorAddress(const RAMCFG_HandleTypeDef *hramcfg)
 {
   /* Check the parameters */
   assert_param(IS_RAMCFG_ECC_INSTANCE(hramcfg->Instance));
@@ -556,7 +556,7 @@ uint32_t HAL_RAMCFG_GetSingleErrorAddress(RAMCFG_HandleTypeDef *hramcfg)
   *                         specified RAMCFG instance.
   * @retval Double error address offset.
   */
-uint32_t HAL_RAMCFG_GetDoubleErrorAddress(RAMCFG_HandleTypeDef *hramcfg)
+uint32_t HAL_RAMCFG_GetDoubleErrorAddress(const RAMCFG_HandleTypeDef *hramcfg)
 {
   /* Check the parameters */
   assert_param(IS_RAMCFG_ECC_INSTANCE(hramcfg->Instance));
@@ -1040,7 +1040,7 @@ HAL_StatusTypeDef HAL_RAMCFG_UnRegisterCallback(RAMCFG_HandleTypeDef *hramcfg, H
   *                         specified RAMCFG instance.
   * @retval RAMCFG state.
   */
-HAL_RAMCFG_StateTypeDef HAL_RAMCFG_GetState(RAMCFG_HandleTypeDef *hramcfg)
+HAL_RAMCFG_StateTypeDef HAL_RAMCFG_GetState(const RAMCFG_HandleTypeDef *hramcfg)
 {
   /* Check the parameters */
   assert_param(IS_RAMCFG_ALL_INSTANCE(hramcfg->Instance));
@@ -1056,7 +1056,7 @@ HAL_RAMCFG_StateTypeDef HAL_RAMCFG_GetState(RAMCFG_HandleTypeDef *hramcfg)
   *                         specified RAMCFG instance.
   * @retval RAMCFG error code.
   */
-uint32_t HAL_RAMCFG_GetError(RAMCFG_HandleTypeDef *hramcfg)
+uint32_t HAL_RAMCFG_GetError(const RAMCFG_HandleTypeDef *hramcfg)
 {
   /* Check the parameters */
   assert_param(IS_RAMCFG_ALL_INSTANCE(hramcfg->Instance));

@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -87,7 +87,7 @@
   *          - SUCCESS: PKA registers are de-initialized
   *          - ERROR: PKA registers are not de-initialized
   */
-ErrorStatus LL_PKA_DeInit(PKA_TypeDef *PKAx)
+ErrorStatus LL_PKA_DeInit(const PKA_TypeDef *PKAx)
 {
   ErrorStatus status = SUCCESS;
 

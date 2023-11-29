@@ -6,7 +6,7 @@
   **********************************************************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -672,8 +672,8 @@ typedef struct __DMA_HandleTypeDef
   * @brief    DMA Block Request
   * @{
   */
-#define DMA_BREQ_SINGLE_BURST 0x00000000U   /*!< Hardware request protocol at a single / burst level */
-#define DMA_BREQ_BLOCK        DMA_CTR2_BREQ /*!< Hardware request protocol at a block level          */
+#define DMA_BREQ_SINGLE_BURST          0x00000000U     /*!< Hardware request protocol at a single / burst level */
+#define DMA_BREQ_BLOCK                 DMA_CTR2_BREQ   /*!< Hardware request protocol at a block level          */
 /**
   * @}
   */
@@ -682,9 +682,9 @@ typedef struct __DMA_HandleTypeDef
   * @brief    DMA transfer direction
   * @{
   */
-#define DMA_PERIPH_TO_MEMORY 0x00000000U    /*!< Peripheral to memory direction */
-#define DMA_MEMORY_TO_PERIPH DMA_CTR2_DREQ  /*!< Memory to peripheral direction */
-#define DMA_MEMORY_TO_MEMORY DMA_CTR2_SWREQ /*!< Memory to memory direction     */
+#define DMA_PERIPH_TO_MEMORY 0x00000000U             /*!< Peripheral to memory direction */
+#define DMA_MEMORY_TO_PERIPH DMA_CTR2_DREQ           /*!< Memory to peripheral direction */
+#define DMA_MEMORY_TO_MEMORY DMA_CTR2_SWREQ          /*!< Memory to memory direction     */
 /**
   * @}
   */
@@ -713,9 +713,9 @@ typedef struct __DMA_HandleTypeDef
   * @brief    DMA Source Data Width
   * @{
   */
-#define DMA_SRC_DATAWIDTH_BYTE     0x00000000U         /*!< Source data width : Byte     */
-#define DMA_SRC_DATAWIDTH_HALFWORD DMA_CTR1_SDW_LOG2_0 /*!< Source data width : HalfWord */
-#define DMA_SRC_DATAWIDTH_WORD     DMA_CTR1_SDW_LOG2_1 /*!< Source data width : Word     */
+#define DMA_SRC_DATAWIDTH_BYTE       0x00000000U           /*!< Source data width : Byte       */
+#define DMA_SRC_DATAWIDTH_HALFWORD   DMA_CTR1_SDW_LOG2_0   /*!< Source data width : HalfWord   */
+#define DMA_SRC_DATAWIDTH_WORD       DMA_CTR1_SDW_LOG2_1   /*!< Source data width : Word       */
 /**
   * @}
   */
@@ -724,9 +724,10 @@ typedef struct __DMA_HandleTypeDef
   * @brief    DMA destination Data Width
   * @{
   */
-#define DMA_DEST_DATAWIDTH_BYTE     0x00000000U         /*!< Destination data width : Byte     */
-#define DMA_DEST_DATAWIDTH_HALFWORD DMA_CTR1_DDW_LOG2_0 /*!< Destination data width : HalfWord */
-#define DMA_DEST_DATAWIDTH_WORD     DMA_CTR1_DDW_LOG2_1 /*!< Destination data width : Word     */
+#define DMA_DEST_DATAWIDTH_BYTE       0x00000000U          /*!< Destination data width : Byte       */
+#define DMA_DEST_DATAWIDTH_HALFWORD   DMA_CTR1_DDW_LOG2_0  /*!< Destination data width : HalfWord   */
+#define DMA_DEST_DATAWIDTH_WORD       DMA_CTR1_DDW_LOG2_1  /*!< Destination data width : Word       */
+
 /**
   * @}
   */
@@ -778,7 +779,8 @@ typedef struct __DMA_HandleTypeDef
   * @brief    DMA Transfer Mode
   * @{
   */
-#define DMA_NORMAL (0x00U) /*!< Normal DMA transfer */
+#define DMA_NORMAL                           (0x00U)     /*!< Normal DMA transfer                    */
+#define DMA_PFCTRL                    DMA_CTR2_PFREQ     /*!< HW request peripheral flow control mode */
 /**
   * @}
   */
@@ -803,6 +805,8 @@ typedef struct __DMA_HandleTypeDef
 /**
   * @}
   */
+
+
 
 /**
   * @}
@@ -1004,16 +1008,19 @@ uint32_t             HAL_DMA_GetError(DMA_HandleTypeDef const *const hdma);
   * @brief    DMA Attributes Functions
   * @{
   */
+
 HAL_StatusTypeDef HAL_DMA_ConfigChannelAttributes(DMA_HandleTypeDef *const hdma,
                                                   uint32_t ChannelAttributes);
 HAL_StatusTypeDef HAL_DMA_GetConfigChannelAttributes(DMA_HandleTypeDef const *const hdma,
                                                      uint32_t *const pChannelAttributes);
+
 #if defined (DMA_RCFGLOCKR_LOCK0)
 #if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
 HAL_StatusTypeDef HAL_DMA_LockChannelAttributes(DMA_HandleTypeDef const *const hdma);
 #endif /* defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U) */
 HAL_StatusTypeDef HAL_DMA_GetLockChannelAttributes(DMA_HandleTypeDef const *const hdma,
                                                    uint32_t *const pLockState);
+
 #endif /* defined (DMA_RCFGLOCKR_LOCK0) */
 
 /**
@@ -1059,7 +1066,8 @@ HAL_StatusTypeDef HAL_DMA_GetLockChannelAttributes(DMA_HandleTypeDef const *cons
   ((((uint32_t)((__HANDLE__)->Instance) & HAL_DMA_OFFSET_MASK) - HAL_DMA_CHANNEL_START) / HAL_DMA_CHANNEL_SIZE)
 
 #define IS_DMA_MODE(MODE) \
-  ((MODE) == DMA_NORMAL)
+  (((MODE) == DMA_NORMAL) || \
+   ((MODE) == DMA_PFCTRL))
 
 #define IS_DMA_DIRECTION(DIRECTION)         \
   (((DIRECTION) == DMA_PERIPH_TO_MEMORY) || \
@@ -1137,6 +1145,7 @@ HAL_StatusTypeDef HAL_DMA_GetLockChannelAttributes(DMA_HandleTypeDef const *cons
 #endif /* defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U) */
 #define IS_DMA_GLOBAL_ACTIVE_FLAG_NS(INSTANCE, GLOBAL_FLAG) \
   (((INSTANCE)->MISR & (GLOBAL_FLAG)))
+
 /**
   * @}
   */

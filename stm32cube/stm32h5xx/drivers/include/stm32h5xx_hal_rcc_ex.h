@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -343,11 +343,11 @@ typedef struct
 
 #if defined(CEC)
   uint32_t CecClockSelection;      /*!< Specifies CEC clock source.
-                                        This parameter can be a value of @ref RCC_CEC_Clock_Source */
+                                        This parameter can be a value of @ref RCCEx_CEC_Clock_Source */
 #endif /* CEC */
 
   uint32_t UsbClockSelection;      /*!< Specifies USB clock source.
-                                        This parameter can be a value of @ref RCC_USB_Clock_Source */
+                                        This parameter can be a value of @ref RCCEx_USB_Clock_Source */
 
   uint32_t TimPresSelection;       /*!< Specifies TIM Clock Prescalers Selection.
                                        This parameter can be a value of @ref RCCEx_TIM_Prescaler_Selection */
@@ -1159,7 +1159,7 @@ typedef struct
   */
 
 #if defined(SDMMC1)
-/** @defgroup RCCEx_SDMMC_Clock_Source SDMMC1 Clock Source
+/** @defgroup RCCEx_SDMMC1_Clock_Source SDMMC1 Clock Source
   * @{
   */
 #define RCC_SDMMC1CLKSOURCE_PLL1Q     ((uint32_t)0x00000000U)
@@ -1170,7 +1170,7 @@ typedef struct
 #endif /* SDMMC1 */
 
 #if defined(SDMMC2)
-/** @defgroup RCCEx_SDMMC_Clock_Source SDMMC2 Clock Source
+/** @defgroup RCCEx_SDMMC2_Clock_Source SDMMC2 Clock Source
   * @{
   */
 #define RCC_SDMMC2CLKSOURCE_PLL1Q     ((uint32_t)0x00000000U)
@@ -2537,7 +2537,7 @@ typedef struct
 
 /** @brief  Macro to get the USART6 clock source.
   * @retval The clock source can be one of the following values:
-  *            @arg @ref RCC_USART6CLKSOURCE_PCLK2  PCLK2 selected as USART6 clock
+  *            @arg @ref RCC_USART6CLKSOURCE_PCLK1  PCLK1 selected as USART6 clock
   *            @arg @ref RCC_USART6CLKSOURCE_PLL2Q  PLL2Q selected as USART6 clock
   *            @arg @ref RCC_USART6CLKSOURCE_PLL3Q  PLL3Q selected as USART6 clock
   *            @arg @ref RCC_USART6CLKSOURCE_HSI  HSI selected as USART6 clock
@@ -3725,7 +3725,7 @@ typedef struct
   * @{
   */
 
-HAL_StatusTypeDef HAL_RCCEx_PeriphCLKConfig(RCC_PeriphCLKInitTypeDef  *pPeriphClkInit);
+HAL_StatusTypeDef HAL_RCCEx_PeriphCLKConfig(const RCC_PeriphCLKInitTypeDef  *pPeriphClkInit);
 void              HAL_RCCEx_GetPeriphCLKConfig(RCC_PeriphCLKInitTypeDef  *pPeriphClkInit);
 uint32_t          HAL_RCCEx_GetPeriphCLKFreq(uint64_t PeriphClk);
 void     HAL_RCCEx_GetPLL1ClockFreq(PLL1_ClocksTypeDef *pPLL1_Clocks);
@@ -3765,7 +3765,7 @@ void              HAL_RCCEx_DisableLSCO(void);
 /** @addtogroup RCCEx_Exported_Functions_Group3
   * @{
   */
-void              HAL_RCCEx_CRSConfig(RCC_CRSInitTypeDef *pInit);
+void              HAL_RCCEx_CRSConfig(const RCC_CRSInitTypeDef *pInit);
 void              HAL_RCCEx_CRSSoftwareSynchronizationGenerate(void);
 void              HAL_RCCEx_CRSGetSynchronizationInfo(RCC_CRSSynchroInfoTypeDef *pSynchroInfo);
 uint32_t          HAL_RCCEx_CRSWaitSynchronization(uint32_t Timeout);

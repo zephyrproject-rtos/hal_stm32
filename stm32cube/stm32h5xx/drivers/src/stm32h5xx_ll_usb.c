@@ -14,7 +14,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -790,7 +790,7 @@ HAL_StatusTypeDef  USB_DevDisconnect(USB_DRD_TypeDef *USBx)
   * @param  USBx Selected device
   * @retval USB Global Interrupt status
   */
-uint32_t USB_ReadInterrupts(USB_DRD_TypeDef *USBx)
+uint32_t USB_ReadInterrupts(USB_DRD_TypeDef const *USBx)
 {
   uint32_t tmpreg;
 
@@ -830,7 +830,7 @@ HAL_StatusTypeDef USB_DeActivateRemoteWakeup(USB_DRD_TypeDef *USBx)
   * @param   wNBytes no. of bytes to be copied.
   * @retval None
   */
-void USB_WritePMA(USB_DRD_TypeDef *USBx, uint8_t *pbUsrBuf, uint16_t wPMABufAddr, uint16_t wNBytes)
+void USB_WritePMA(USB_DRD_TypeDef const *USBx, uint8_t *pbUsrBuf, uint16_t wPMABufAddr, uint16_t wNBytes)
 {
   UNUSED(USBx);
   uint32_t WrVal;
@@ -887,7 +887,7 @@ void USB_WritePMA(USB_DRD_TypeDef *USBx, uint8_t *pbUsrBuf, uint16_t wPMABufAddr
   * @param   wNBytes no. of bytes to be copied.
   * @retval None
   */
-void USB_ReadPMA(USB_DRD_TypeDef *USBx, uint8_t *pbUsrBuf, uint16_t wPMABufAddr, uint16_t wNBytes)
+void USB_ReadPMA(USB_DRD_TypeDef const *USBx, uint8_t *pbUsrBuf, uint16_t wPMABufAddr, uint16_t wNBytes)
 {
   UNUSED(USBx);
   uint32_t count;
@@ -1001,7 +1001,7 @@ HAL_StatusTypeDef USB_ResetPort(USB_DRD_TypeDef *USBx)
   *            @arg USB_DRD_SPEED_FS Full speed mode
   *            @arg USB_DRD_SPEED_LS Low speed mode
   */
-uint32_t USB_GetHostSpeed(USB_DRD_TypeDef *USBx)
+uint32_t USB_GetHostSpeed(USB_DRD_TypeDef const *USBx)
 {
   if ((USBx->ISTR & USB_ISTR_LS_DCONN) != 0U)
   {
@@ -1018,7 +1018,7 @@ uint32_t USB_GetHostSpeed(USB_DRD_TypeDef *USBx)
   * @param  USBx Selected device
   * @retval current frame number
   */
-uint32_t USB_GetCurrentFrame(USB_DRD_TypeDef *USBx)
+uint32_t USB_GetCurrentFrame(USB_DRD_TypeDef const *USBx)
 {
   return USBx->FNR & 0x7FFU;
 }

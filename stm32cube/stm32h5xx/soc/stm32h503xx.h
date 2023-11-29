@@ -12,7 +12,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -1017,15 +1017,6 @@ typedef struct
 
 
 /**
-  * @brief VREFBUF
-  */
-typedef struct
-{
-  __IO uint32_t CSR;         /*!< VREFBUF control and status register,         Address offset: 0x00 */
-  __IO uint32_t CCR;         /*!< VREFBUF calibration and control register,    Address offset: 0x04 */
-} VREFBUF_TypeDef;
-
-/**
   * @brief ADC
   */
 typedef struct
@@ -1282,7 +1273,6 @@ typedef struct
 #define LPUART1_BASE_NS          (APB3PERIPH_BASE_NS + 0x2400UL)
 #define I3C2_BASE_NS             (APB3PERIPH_BASE_NS + 0x3000UL)
 #define LPTIM1_BASE_NS           (APB3PERIPH_BASE_NS + 0x4400UL)
-#define VREFBUF_BASE_NS          (APB3PERIPH_BASE_NS + 0x7400UL)
 #define RTC_BASE_NS              (APB3PERIPH_BASE_NS + 0x7800UL)
 #define TAMP_BASE_NS             (APB3PERIPH_BASE_NS + 0x7C00UL)
 
@@ -1456,7 +1446,6 @@ typedef struct
 #define LPUART1_NS             ((USART_TypeDef *) LPUART1_BASE_NS)
 #define I3C2_NS                ((I3C_TypeDef *) I3C2_BASE_NS)
 #define LPTIM1_NS              ((LPTIM_TypeDef *) LPTIM1_BASE_NS)
-#define VREFBUF_NS             ((VREFBUF_TypeDef *) VREFBUF_BASE_NS)
 #define RTC_NS                 ((RTC_TypeDef *) RTC_BASE_NS)
 #define TAMP_NS                ((TAMP_TypeDef *) TAMP_BASE_NS)
 
@@ -1471,8 +1460,6 @@ typedef struct
 
 /*!< Memory base addresses for Non secure peripherals */
 #define FLASH_BASE                     FLASH_BASE_NS
-#define FLASH_OBK_BASE                 FLASH_OBK_BASE_NS
-#define FLASH_EDATA_BASE               FLASH_EDATA_BASE_NS
 #define FLASH_SYSTEM_BASE              FLASH_SYSTEM_BASE_NS
 #define SRAM1_BASE                     SRAM1_BASE_NS
 #define SRAM2_BASE                     SRAM2_BASE_NS
@@ -1679,9 +1666,6 @@ typedef struct
 
 #define SBS                            SBS_NS
 #define SBS_BASE                       SBS_BASE_NS
-
-#define VREFBUF                        VREFBUF_NS
-#define VREFBUF_BASE                   VREFBUF_BASE_NS
 
 #define USB_DRD_FS                     USB_DRD_FS_NS
 #define USB_DRD_FS_BASE                USB_DRD_BASE_NS
@@ -6062,7 +6046,6 @@ typedef struct
 #define FLASH_WRPR_WRPSG_Msk                (0x000000FFUL << FLASH_WRPR_WRPSG_Pos) /*!< 0x000000FF */
 #define FLASH_WRPR_WRPSG                    FLASH_WRPR_WRPSG_Msk  /*!< Sector group protection option status */
 
-/*****************  Bits definition for FLASH_EDATA register  ********************/
 
 /*****************  Bits definition for FLASH_HDPR register  ********************/
 #define FLASH_HDPR_HDP_STRT_Pos             (0U)
@@ -9279,9 +9262,6 @@ typedef struct
 #define RCC_APB3RSTR_LPTIM1RST_Pos          (11U)
 #define RCC_APB3RSTR_LPTIM1RST_Msk          (0x1UL << RCC_APB3RSTR_LPTIM1RST_Pos)   /*!< 0x00000800 */
 #define RCC_APB3RSTR_LPTIM1RST              RCC_APB3RSTR_LPTIM1RST_Msk
-#define RCC_APB3RSTR_VREFRST_Pos            (20U)
-#define RCC_APB3RSTR_VREFRST_Msk            (0x1UL << RCC_APB3RSTR_VREFRST_Pos)     /*!< 0x00100000 */
-#define RCC_APB3RSTR_VREFRST                RCC_APB3RSTR_VREFRST_Msk
 
 /********************  Bit definition for RCC_AHB1ENR register  **************/
 #define RCC_AHB1ENR_GPDMA1EN_Pos            (0U)
@@ -9426,9 +9406,6 @@ typedef struct
 #define RCC_APB3ENR_LPTIM1EN_Pos            (11U)
 #define RCC_APB3ENR_LPTIM1EN_Msk            (0x1UL << RCC_APB3ENR_LPTIM1EN_Pos)     /*!< 0x00000800 */
 #define RCC_APB3ENR_LPTIM1EN                RCC_APB3ENR_LPTIM1EN_Msk
-#define RCC_APB3ENR_VREFEN_Pos              (20U)
-#define RCC_APB3ENR_VREFEN_Msk              (0x1UL << RCC_APB3ENR_VREFEN_Pos)       /*!< 0x00100000 */
-#define RCC_APB3ENR_VREFEN                  RCC_APB3ENR_VREFEN_Msk
 #define RCC_APB3ENR_RTCAPBEN_Pos            (21U)
 #define RCC_APB3ENR_RTCAPBEN_Msk            (0x1UL << RCC_APB3ENR_RTCAPBEN_Pos)     /*!< 0x00200000 */
 #define RCC_APB3ENR_RTCAPBEN                RCC_APB3ENR_RTCAPBEN_Msk
@@ -9579,9 +9556,6 @@ typedef struct
 #define RCC_APB3LPENR_LPTIM1LPEN_Pos        (11U)
 #define RCC_APB3LPENR_LPTIM1LPEN_Msk        (0x1UL << RCC_APB3LPENR_LPTIM1LPEN_Pos) /*!< 0x00000800 */
 #define RCC_APB3LPENR_LPTIM1LPEN            RCC_APB3LPENR_LPTIM1LPEN_Msk
-#define RCC_APB3LPENR_VREFLPEN_Pos          (20U)
-#define RCC_APB3LPENR_VREFLPEN_Msk          (0x1UL << RCC_APB3LPENR_VREFLPEN_Pos)   /*!< 0x00100000 */
-#define RCC_APB3LPENR_VREFLPEN              RCC_APB3LPENR_VREFLPEN_Msk
 #define RCC_APB3LPENR_RTCAPBLPEN_Pos        (21U)
 #define RCC_APB3LPENR_RTCAPBLPEN_Msk        (0x1UL << RCC_APB3LPENR_RTCAPBLPEN_Pos) /*!< 0x00200000 */
 #define RCC_APB3LPENR_RTCAPBLPEN            RCC_APB3LPENR_RTCAPBLPEN_Msk
@@ -11092,12 +11066,6 @@ typedef struct
 #define SBS_DBGLOCKR_DBGCFG_LOCK          SBS_DBGLOCKR_DBGCFG_LOCK_Msk             /*!< SBS_DBGLOCKR_DBGCFG_LOCK value. */
 
 /******************  Bit definition for SBS_PMCR register  ****************/
-#define SBS_PMCR_BOOSTEN_Pos              (8U)
-#define SBS_PMCR_BOOSTEN_Msk              (0x1UL << SBS_PMCR_BOOSTEN_Pos)            /*!< 0x00000100 */
-#define SBS_PMCR_BOOSTEN                  SBS_PMCR_BOOSTEN_Msk                       /*!< I/O analog switch voltage booster enable */
-#define SBS_PMCR_BOOSTVDDSEL_Pos          (9U)
-#define SBS_PMCR_BOOSTVDDSEL_Msk          (0x1UL << SBS_PMCR_BOOSTVDDSEL_Pos)        /*!< 0x00000200 */
-#define SBS_PMCR_BOOSTVDDSEL              SBS_PMCR_BOOSTVDDSEL_Msk                   /*!< GPIO analog switch control voltage selection */
 #define SBS_PMCR_PB6_FMP_Pos              (16U)
 #define SBS_PMCR_PB6_FMP_Msk              (0x1UL << SBS_PMCR_PB6_FMP_Pos)            /*!< 0x00010000 */
 #define SBS_PMCR_PB6_FMP                  SBS_PMCR_PB6_FMP_Msk                       /*!< Fast-mode Plus command on PB(6) */
@@ -11288,8 +11256,6 @@ typedef struct
 #define GTZC_CFGR2_LPTIM1_Msk               (0x01UL << GTZC_CFGR2_LPTIM1_Pos)
 
 /***************  Bits definition for register x=3 (TZSC1) *************/
-#define GTZC_CFGR3_VREFBUF_Pos              (1U)
-#define GTZC_CFGR3_VREFBUF_Msk              (0x01UL << GTZC_CFGR3_VREFBUF_Pos)
 #define GTZC_CFGR3_I3C2_Pos                 (2U)
 #define GTZC_CFGR3_I3C2_Msk                 (0x01UL << GTZC_CFGR3_I3C2_Pos)
 #define GTZC_CFGR3_CRC_Pos                  (8U)
@@ -11389,8 +11355,6 @@ typedef struct
 #define GTZC_TZSC1_PRIVCFGR2_LPTIM1_Msk         GTZC_CFGR2_LPTIM1_Msk
 
 /*******************  Bits definition for GTZC_TZSC_PRIVCFGR3 register  ***************/
-#define GTZC_TZSC1_PRIVCFGR3_VREFBUF_Pos        GTZC_CFGR3_VREFBUF_Pos
-#define GTZC_TZSC1_PRIVCFGR3_VREFBUF_Msk        GTZC_CFGR3_VREFBUF_Msk
 #define GTZC_TZSC1_PRIVCFGR3_CRC_Pos            GTZC_CFGR3_CRC_Pos
 #define GTZC_TZSC1_PRIVCFGR3_CRC_Msk            GTZC_CFGR3_CRC_Msk
 #define GTZC_TZSC1_PRIVCFGR3_ICACHE_REG_Pos     GTZC_CFGR3_ICACHE_REG_Pos
@@ -13257,33 +13221,6 @@ typedef struct
 #define SPI_I2SCFGR_MCKOE_Pos       (25U)
 #define SPI_I2SCFGR_MCKOE_Msk       (0x1UL << SPI_I2SCFGR_MCKOE_Pos)           /*!< 0x02000000 */
 #define SPI_I2SCFGR_MCKOE           SPI_I2SCFGR_MCKOE_Msk                      /*!<Master Clock Output Enable */
-
-/******************************************************************************/
-/*                                                                            */
-/*                                 VREFBUF                                    */
-/*                                                                            */
-/******************************************************************************/
-/*******************  Bit definition for VREFBUF_CSR register  ****************/
-#define VREFBUF_CSR_ENVR_Pos    (0U)
-#define VREFBUF_CSR_ENVR_Msk    (0x1UL << VREFBUF_CSR_ENVR_Pos)                     /*!< 0x00000001 */
-#define VREFBUF_CSR_ENVR        VREFBUF_CSR_ENVR_Msk                                /*!<Voltage reference buffer enable */
-#define VREFBUF_CSR_HIZ_Pos     (1U)
-#define VREFBUF_CSR_HIZ_Msk     (0x1UL << VREFBUF_CSR_HIZ_Pos)                      /*!< 0x00000002 */
-#define VREFBUF_CSR_HIZ         VREFBUF_CSR_HIZ_Msk                                 /*!<High impedance mode             */
-#define VREFBUF_CSR_VRR_Pos     (3U)
-#define VREFBUF_CSR_VRR_Msk     (0x1UL << VREFBUF_CSR_VRR_Pos)                      /*!< 0x00000008 */
-#define VREFBUF_CSR_VRR         VREFBUF_CSR_VRR_Msk                                 /*!<Voltage reference buffer ready  */
-#define VREFBUF_CSR_VRS_Pos     (4U)
-#define VREFBUF_CSR_VRS_Msk     (0x7UL << VREFBUF_CSR_VRS_Pos)                      /*!< 0x00000070 */
-#define VREFBUF_CSR_VRS         VREFBUF_CSR_VRS_Msk                                 /*!<Voltage reference scale         */
-#define VREFBUF_CSR_VRS_0       (0x01UL<< VREFBUF_CSR_VRS_Pos)                      /*!< 0x000O0010 */
-#define VREFBUF_CSR_VRS_1       (0x02UL<< VREFBUF_CSR_VRS_Pos)                      /*!< 0x00000020 */
-#define VREFBUF_CSR_VRS_2       (0x04UL<< VREFBUF_CSR_VRS_Pos)                      /*!< 0x00000040 */
-
-/*******************  Bit definition for VREFBUF_CCR register  ******************/
-#define VREFBUF_CCR_TRIM_Pos                (0U)
-#define VREFBUF_CCR_TRIM_Msk                (0x3FUL << VREFBUF_CCR_TRIM_Pos)        /*!< 0x0000003F */
-#define VREFBUF_CCR_TRIM                    VREFBUF_CCR_TRIM_Msk                    /*!<TRIM[5:0] bits (Trimming code)  */
 
 
 /******************************************************************************/

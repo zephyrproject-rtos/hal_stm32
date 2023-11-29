@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -40,7 +40,7 @@
 /** @addtogroup UTILS_LL_Private_Constants
   * @{
   */
-#define UTILS_MAX_FREQUENCY_SCALE0  240000000U         /*!< Maximum frequency for system clock at power scale0, in Hz */
+#define UTILS_MAX_FREQUENCY_SCALE0  250000000U         /*!< Maximum frequency for system clock at power scale0, in Hz */
 #define UTILS_MAX_FREQUENCY_SCALE1  180000000U         /*!< Maximum frequency for system clock at power scale1, in Hz */
 #define UTILS_MAX_FREQUENCY_SCALE2  130000000U         /*!< Maximum frequency for system clock at power scale2, in Hz */
 #define UTILS_MAX_FREQUENCY_SCALE3   80000000U         /*!< Maximum frequency for system clock at power scale3, in Hz */
@@ -69,7 +69,7 @@
 #define UTILS_SCALE0_LATENCY2_FREQ    114000000U       /*!< HCLK frequency to set FLASH latency 2 in power scale 0 */
 #define UTILS_SCALE0_LATENCY3_FREQ    152000000U       /*!< HCLK frequency to set FLASH latency 3 in power scale 0 */
 #define UTILS_SCALE0_LATENCY4_FREQ    190000000U       /*!< HCLK frequency to set FLASH latency 4 in power scale 0 */
-#define UTILS_SCALE0_LATENCY5_FREQ    240000000U       /*!< HCLK frequency to set FLASH latency 5 in power scale 0 */
+#define UTILS_SCALE0_LATENCY5_FREQ    250000000U       /*!< HCLK frequency to set FLASH latency 5 in power scale 0 */
 
 #define UTILS_SCALE1_LATENCY0_FREQ     32000000U       /*!< HCLK frequency to set FLASH latency 0 in power scale 1 */
 #define UTILS_SCALE1_LATENCY1_FREQ     64000000U       /*!< HCLK frequency to set FLASH latency 1 in power scale 1 */
@@ -183,7 +183,7 @@
   * @{
   */
 static uint32_t    UTILS_GetPLLOutputFrequency(uint32_t PLL_InputFrequency,
-                                               LL_UTILS_PLLInitTypeDef *UTILS_PLLInitStruct);
+                                               const LL_UTILS_PLLInitTypeDef *UTILS_PLLInitStruct);
 static ErrorStatus UTILS_EnablePLLAndSwitchSystem(uint32_t SYSCLK_Frequency,
                                                   LL_UTILS_ClkInitTypeDef *UTILS_ClkInitStruct);
 static ErrorStatus UTILS_PLL_IsBusy(void);
@@ -262,8 +262,8 @@ void LL_mDelay(uint32_t Delay)
     [..]
          System, AHB and APB buses clocks configuration
 
-         (+) The maximum frequency of the SYSCLK is 240 MHz and HCLK is 240 MHz.
-         (+) The maximum frequency of the PCLK1, PCLK2 and PCLK3 is 240 MHz.
+         (+) The maximum frequency of the SYSCLK is 250 MHz and HCLK is 250 MHz.
+         (+) The maximum frequency of the PCLK1, PCLK2 and PCLK3 is 250 MHz.
   @endverbatim
   @internal
              Depending on the device voltage range, the maximum frequency should be
@@ -286,7 +286,7 @@ void LL_mDelay(uint32_t Delay)
              (++) |-----------------|-------------------|------------------|------------------|-------------------|
              (++) |4WS(5 CPU cycles)|  152 < HCLK <= 190| 128 < HCLK <= 160| 106 < HCLK <= 130| 65 < HCLK <= 80   |
              (++) |-----------------|-------------------|------------------|------------------|-------------------|
-             (++) |5WS(6 CPU cycles)|  190 < HCLK <= 240| 160 < HCLK <= 180|        NA        |         NA        |
+             (++) |5WS(6 CPU cycles)|  190 < HCLK <= 250| 160 < HCLK <= 180|        NA        |         NA        |
              (++) +-----------------+-------------------+------------------+------------------+-------------------+
 
   @endinternal
@@ -313,7 +313,7 @@ void LL_SetSystemCoreClock(uint32_t HCLKFrequency)
   *         - PLL1M: ensure that the VCO input frequency ranges from 1 to 16 MHz (PLL1VCO_input = CSI frequency / PLL1M)
   *         - PLL1N: ensure that the VCO output frequency is between 192 and 836 MHz
   *          (PLL1VCO_output = PLL1VCO_input * PLL1N)
-  *         - PLL1P: ensure that max frequency at 240 MHz is reached (PLL1VCO_output / PLL1P)
+  *         - PLL1P: ensure that max frequency at 250 MHz is reached (PLL1VCO_output / PLL1P)
   * @param  UTILS_PLLInitStruct pointer to a @ref LL_UTILS_PLLInitTypeDef structure that contains
   *                             the configuration information for the PLL.
   * @param  UTILS_ClkInitStruct pointer to a @ref LL_UTILS_ClkInitTypeDef structure that contains
@@ -325,7 +325,7 @@ void LL_SetSystemCoreClock(uint32_t HCLKFrequency)
 ErrorStatus LL_PLL_ConfigSystemClock_CSI(LL_UTILS_PLLInitTypeDef *UTILS_PLLInitStruct,
                                          LL_UTILS_ClkInitTypeDef *UTILS_ClkInitStruct)
 {
-  ErrorStatus status = SUCCESS;
+  ErrorStatus status;
 #ifdef  USE_FULL_ASSERT
   uint32_t vcoinput_freq;
   uint32_t vcooutput_freq;
@@ -401,7 +401,7 @@ ErrorStatus LL_PLL_ConfigSystemClock_CSI(LL_UTILS_PLLInitTypeDef *UTILS_PLLInitS
   *         - PLL1M: ensure that the VCO input frequency ranges from 1 to 16 MHz (PLL1VCO_input = HSI frequency / PLL1M)
   *         - PLL1N: ensure that the VCO output frequency is between 150 and 836 MHz
   *          (PLL1VCO_output = PLL1VCO_input * PLL1N)
-  *         - PLL1P: ensure that max frequency at 240 MHz is reach (PLL1VCO_output / PLL1P)
+  *         - PLL1P: ensure that max frequency at 250 MHz is reach (PLL1VCO_output / PLL1P)
   * @param  UTILS_PLLInitStruct pointer to a @ref LL_UTILS_PLLInitTypeDef structure that contains
   *                             the configuration information for the PLL1.
   * @param  UTILS_ClkInitStruct pointer to a @ref LL_UTILS_ClkInitTypeDef structure that contains
@@ -415,7 +415,7 @@ ErrorStatus LL_PLL_ConfigSystemClock_CSI(LL_UTILS_PLLInitTypeDef *UTILS_PLLInitS
 ErrorStatus LL_PLL_ConfigSystemClock_HSI(LL_UTILS_PLLInitTypeDef *UTILS_PLLInitStruct,
                                          LL_UTILS_ClkInitTypeDef *UTILS_ClkInitStruct)
 {
-  ErrorStatus status = SUCCESS;
+  ErrorStatus status;
 #ifdef  USE_FULL_ASSERT
   uint32_t vcoinput_freq;
   uint32_t vcooutput_freq;
@@ -493,7 +493,7 @@ ErrorStatus LL_PLL_ConfigSystemClock_HSI(LL_UTILS_PLLInitTypeDef *UTILS_PLLInitS
   *         - PLL1M: ensure that the VCO input frequency ranges from 1 to 16 MHz (PLL1VCO_input = HSE frequency / PLL1M)
   *         - PLL1N: ensure that the VCO output frequency is between 192 and 836 MHz
   *          (PLL1VCO_output = PLL1VCO_input * PLL1N)
-  *         - PLL1P: ensure that max frequency at 240 MHz is reached (PLL1VCO_output / PLL1P)
+  *         - PLL1P: ensure that max frequency at 250 MHz is reached (PLL1VCO_output / PLL1P)
   * @param  HSEFrequency Value between Min_Data = 4000000 and Max_Data = 50000000
   * @param  HSEBypass This parameter can be one of the following values:
   *         @arg @ref LL_UTILS_HSEBYPASS_ON
@@ -510,7 +510,7 @@ ErrorStatus LL_PLL_ConfigSystemClock_HSE(uint32_t HSEFrequency, uint32_t HSEBypa
                                          LL_UTILS_PLLInitTypeDef *UTILS_PLLInitStruct,
                                          LL_UTILS_ClkInitTypeDef *UTILS_ClkInitStruct)
 {
-  ErrorStatus status = SUCCESS;
+  ErrorStatus status;
 #ifdef  USE_FULL_ASSERT
   uint32_t vcoinput_freq;
   uint32_t vcooutput_freq;
@@ -654,7 +654,7 @@ ErrorStatus LL_SetFlashLatency(uint32_t HCLK_Frequency)
       }
       else if (HCLK_Frequency <= UTILS_SCALE0_LATENCY5_FREQ)
       {
-        /* 190 < HCLK <= 240 => 5WS (6 CPU cycles) */
+        /* 190 < HCLK <= 250 => 5WS (6 CPU cycles) */
         latency = LL_FLASH_LATENCY_5;
       }
       else
@@ -794,7 +794,8 @@ ErrorStatus LL_SetFlashLatency(uint32_t HCLK_Frequency)
   *                             the configuration information for the PLL.
   * @retval PLL output frequency (in Hz)
   */
-static uint32_t UTILS_GetPLLOutputFrequency(uint32_t PLL_InputFrequency, LL_UTILS_PLLInitTypeDef *UTILS_PLLInitStruct)
+static uint32_t UTILS_GetPLLOutputFrequency(uint32_t PLL_InputFrequency,
+                                            const LL_UTILS_PLLInitTypeDef *UTILS_PLLInitStruct)
 {
   uint32_t pllfreq;
 

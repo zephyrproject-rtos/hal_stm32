@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -191,7 +191,7 @@ typedef void (*pWWDG_CallbackTypeDef)(WWDG_HandleTypeDef *hppp);  /*!< pointer t
 
 /**
   * @brief  Enable the WWDG early wakeup interrupt.
-  * @param  __HANDLE__     WWDG handle
+  * @param  __HANDLE__  WWDG handle
   * @param  __INTERRUPT__  specifies the interrupt to enable.
   *         This parameter can be one of the following values:
   *            @arg WWDG_IT_EWI: Early wakeup interrupt

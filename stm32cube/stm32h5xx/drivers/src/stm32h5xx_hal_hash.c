@@ -8,7 +8,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -114,6 +114,8 @@
   * @{
   */
 #define HASH_TIMEOUTVALUE                         1000U  /*!< Time-out value  */
+#define BLOCK_64B                                 64U    /*!< block Size equal to 64 bytes */
+#define BLOCK_128B                                128U   /*!< block Size equal to 128 bytes */
 /**
   * @}
   */
@@ -137,7 +139,7 @@
 /** @defgroup HASH_Private_Functions HASH Private Functions
   * @{
   */
-static void HASH_GetDigest(HASH_HandleTypeDef *hhash, uint8_t *pMsgDigest, uint8_t Size);
+static void HASH_GetDigest(const HASH_HandleTypeDef *hhash, const uint8_t *pMsgDigest, uint8_t Size);
 static void HASH_WriteData(HASH_HandleTypeDef *hhash, const uint8_t *pInBuffer, uint32_t Size);
 static HAL_StatusTypeDef HASH_WriteData_IT(HASH_HandleTypeDef *hhash);
 static void HASH_DMAXferCplt(DMA_HandleTypeDef *hdma);
@@ -298,7 +300,7 @@ HAL_StatusTypeDef HAL_HASH_DeInit(HASH_HandleTypeDef *hhash)
 /**
   * @brief  Configure the HASH according to the specified
   *         parameters in the HASH_ConfigTypeDef
-  * @param  hcryp pointer to a HASH_HandleTypeDef structure
+  * @param  hhash pointer to a HASH_HandleTypeDef structure
   * @param  pConf pointer to a HASH_ConfigTypeDef structure that contains
   *         the configuration information for HASH module
   * @retval HAL status
@@ -435,7 +437,7 @@ __weak void HAL_HASH_MspDeInit(HASH_HandleTypeDef *hhash)
 #if (USE_HAL_HASH_REGISTER_CALLBACKS == 1)
 /**
   * @brief  Register a User HASH Callback
-  *         To be used instead of the weak (surcharged) predefined callback
+  *         To be used instead of the weak (overridden) predefined callback
   * @param hhash HASH handle
   * @param CallbackID ID of the callback to be registered
   *        This parameter can be one of the following values:
@@ -524,7 +526,7 @@ HAL_StatusTypeDef HAL_HASH_RegisterCallback(HASH_HandleTypeDef *hhash, HAL_HASH_
 
 /**
   * @brief  Unregister a HASH Callback
-  *         HASH Callback is redirected to the weak (surcharged) predefined callback
+  *         HASH Callback is redirected to the weak (overridden) predefined callback
   * @param hhash HASH handle
   * @param CallbackID ID of the callback to be unregistered
   *        This parameter can be one of the following values:
@@ -1503,11 +1505,11 @@ HAL_StatusTypeDef HAL_HASH_HMAC_Start(HASH_HandleTypeDef *hhash, const uint8_t *
         (hhash->Init.Algorithm == HASH_ALGOSELECTION_SHA224) ||
         (hhash->Init.Algorithm == HASH_ALGOSELECTION_SHA256))
     {
-      blocksize = 64U;
+      blocksize = BLOCK_64B;
     }
     else
     {
-      blocksize = 128U;
+      blocksize = BLOCK_128B;
     }
     if (hhash->Init.KeySize > blocksize)
     {
@@ -1638,11 +1640,11 @@ HAL_StatusTypeDef HAL_HASH_HMAC_Accumulate(HASH_HandleTypeDef *hhash, const uint
           (hhash->Init.Algorithm == HASH_ALGOSELECTION_SHA224) ||
           (hhash->Init.Algorithm == HASH_ALGOSELECTION_SHA256))
       {
-        blocksize = 64U;
+        blocksize = BLOCK_64B;
       }
       else
       {
-        blocksize = 128U;
+        blocksize = BLOCK_128B;
       }
       if (hhash->Init.KeySize > blocksize)
       {
@@ -1831,11 +1833,11 @@ HAL_StatusTypeDef HAL_HASH_HMAC_Start_IT(HASH_HandleTypeDef *hhash, const uint8_
         (hhash->Init.Algorithm == HASH_ALGOSELECTION_SHA224) ||
         (hhash->Init.Algorithm == HASH_ALGOSELECTION_SHA256))
     {
-      blocksize = 64U;
+      blocksize = BLOCK_64B;
     }
     else
     {
-      blocksize = 128U;
+      blocksize = BLOCK_128B;
     }
     if (hhash->Init.KeySize > blocksize)
     {
@@ -1923,11 +1925,11 @@ HAL_StatusTypeDef HAL_HASH_HMAC_Accumulate_IT(HASH_HandleTypeDef *hhash, const u
           (hhash->Init.Algorithm == HASH_ALGOSELECTION_SHA224) ||
           (hhash->Init.Algorithm == HASH_ALGOSELECTION_SHA256))
       {
-        blocksize = 64U;
+        blocksize = BLOCK_64B;
       }
       else
       {
-        blocksize = 128U;
+        blocksize = BLOCK_128B;
       }
       if (hhash->Init.KeySize > blocksize)
       {
@@ -2062,11 +2064,11 @@ HAL_StatusTypeDef HAL_HASH_HMAC_Start_DMA(HASH_HandleTypeDef *hhash, const uint8
           (hhash->Init.Algorithm == HASH_ALGOSELECTION_SHA224) ||
           (hhash->Init.Algorithm == HASH_ALGOSELECTION_SHA256))
       {
-        blocksize = 64U;
+        blocksize = BLOCK_64B;
       }
       else
       {
-        blocksize = 128U;
+        blocksize = BLOCK_128B;
       }
       if (hhash->Init.KeySize > blocksize)
       {
@@ -2332,7 +2334,7 @@ __weak void HAL_HASH_ErrorCallback(HASH_HandleTypeDef *hhash)
   * @param  hhash HASH handle.
   * @retval HAL HASH state
   */
-HAL_HASH_StateTypeDef HAL_HASH_GetState(HASH_HandleTypeDef *hhash)
+HAL_HASH_StateTypeDef HAL_HASH_GetState(const HASH_HandleTypeDef *hhash)
 {
   return hhash->State;
 }
@@ -2342,7 +2344,7 @@ HAL_HASH_StateTypeDef HAL_HASH_GetState(HASH_HandleTypeDef *hhash)
   * @param  hhash pointer to a HASH_HandleTypeDef structure.
   * @retval HASH Error Code
   */
-uint32_t HAL_HASH_GetError(HASH_HandleTypeDef *hhash)
+uint32_t HAL_HASH_GetError(const HASH_HandleTypeDef *hhash)
 {
   /* Return HASH Error Code */
   return hhash->ErrorCode;
@@ -2940,7 +2942,7 @@ static HAL_StatusTypeDef HASH_WriteData_IT(HASH_HandleTypeDef *hhash)
   * @param  Size message digest size in bytes.
   * @retval None
   */
-static void HASH_GetDigest(HASH_HandleTypeDef *hhash, uint8_t *pMsgDigest, uint8_t Size)
+static void HASH_GetDigest(const HASH_HandleTypeDef *hhash, const uint8_t *pMsgDigest, uint8_t Size)
 {
   uint32_t msgdigest = (uint32_t)pMsgDigest;
 

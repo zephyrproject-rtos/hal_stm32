@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -309,27 +309,27 @@ typedef struct
   */
 #if defined (PWR_WUSR_WUF6)
 #define __HAL_PWR_GET_FLAG(__FLAG__)                                                                           \
- (((__FLAG__) == PWR_FLAG_STOPF)     ? (READ_BIT(PWR->PMSR, PWR_PMSR_STOPF)           == PWR_PMSR_STOPF)      : \
-  ((__FLAG__) == PWR_FLAG_SBF)       ? (READ_BIT(PWR->PMSR, PWR_PMSR_SBF)             == PWR_PMSR_SBF)        : \
-  ((__FLAG__) == PWR_FLAG_VOSRDY)    ? (READ_BIT(PWR->VOSSR, PWR_VOSSR_VOSRDY)        == PWR_VOSSR_VOSRDY)    : \
-  ((__FLAG__) == PWR_FLAG_ACTVOSRDY) ? (READ_BIT(PWR->VOSSR, PWR_VOSSR_ACTVOSRDY)     == PWR_VOSSR_ACTVOSRDY) : \
-  ((__FLAG__) == PWR_FLAG_BRR)       ? (READ_BIT(PWR->BDSR, PWR_BDSR_BRRDY)           == PWR_BDSR_BRRDY)      : \
-  ((__FLAG__) == PWR_FLAG_VBATL)     ? (READ_BIT(PWR->BDSR, PWR_BDSR_VBATL)           == PWR_BDSR_VBATL)      : \
-  ((__FLAG__) == PWR_FLAG_VBATH)     ? (READ_BIT(PWR->BDSR, PWR_BDSR_VBATH)           == PWR_BDSR_VBATH)      : \
-  ((__FLAG__) == PWR_FLAG_TEMPL)     ? (READ_BIT(PWR->BDSR, PWR_BDSR_TEMPL)           == PWR_BDSR_TEMPL)      : \
-  ((__FLAG__) == PWR_FLAG_TEMPH)     ? (READ_BIT(PWR->BDSR, PWR_BDSR_TEMPH)           == PWR_BDSR_TEMPH)      : \
-  ((__FLAG__) == PWR_FLAG_AVDO)      ? (READ_BIT(PWR->VMSR, PWR_VMSR_AVDO)            == PWR_VMSR_AVDO)       : \
-  ((__FLAG__) == PWR_FLAG_VDDIO2RDY) ? (READ_BIT(PWR->VMSR, PWR_VMSR_VDDIO2RDY)       == PWR_VMSR_VDDIO2RDY)  : \
-  ((__FLAG__) == PWR_FLAG_PVDO)      ? (READ_BIT(PWR->VMSR, PWR_VMSR_PVDO)            == PWR_VMSR_PVDO)       : \
-  ((__FLAG__) == PWR_FLAG_USB33RDY)  ? (READ_BIT(PWR->VMSR, PWR_VMSR_USB33RDY)        == PWR_VMSR_USB33RDY)   : \
-  ((__FLAG__) == PWR_WAKEUP_FLAG1)   ? (READ_BIT(PWR->WUSR, PWR_WUSR_WUF1)            == PWR_WUSR_WUF1)       : \
-  ((__FLAG__) == PWR_WAKEUP_FLAG2)   ? (READ_BIT(PWR->WUSR, PWR_WUSR_WUF2)            == PWR_WUSR_WUF2)       : \
-  ((__FLAG__) == PWR_WAKEUP_FLAG3)   ? (READ_BIT(PWR->WUSR, PWR_WUSR_WUF3)            == PWR_WUSR_WUF3)       : \
-  ((__FLAG__) == PWR_WAKEUP_FLAG4)   ? (READ_BIT(PWR->WUSR, PWR_WUSR_WUF4)            == PWR_WUSR_WUF4)       : \
-  ((__FLAG__) == PWR_WAKEUP_FLAG5)   ? (READ_BIT(PWR->WUSR, PWR_WUSR_WUF5)            == PWR_WUSR_WUF5)       : \
-  ((__FLAG__) == PWR_WAKEUP_FLAG6)   ? (READ_BIT(PWR->WUSR, PWR_WUSR_WUF6)            == PWR_WUSR_WUF6)       : \
-  ((__FLAG__) == PWR_WAKEUP_FLAG7)   ? (READ_BIT(PWR->WUSR, PWR_WUSR_WUF7)            == PWR_WUSR_WUF7)       : \
-  (READ_BIT(PWR->WUSR, PWR_WUSR_WUF8) == PWR_WUSR_WUF8))
+  (((__FLAG__) == PWR_FLAG_STOPF)     ? (READ_BIT(PWR->PMSR, PWR_PMSR_STOPF)           == PWR_PMSR_STOPF)      : \
+   ((__FLAG__) == PWR_FLAG_SBF)       ? (READ_BIT(PWR->PMSR, PWR_PMSR_SBF)             == PWR_PMSR_SBF)        : \
+   ((__FLAG__) == PWR_FLAG_VOSRDY)    ? (READ_BIT(PWR->VOSSR, PWR_VOSSR_VOSRDY)        == PWR_VOSSR_VOSRDY)    : \
+   ((__FLAG__) == PWR_FLAG_ACTVOSRDY) ? (READ_BIT(PWR->VOSSR, PWR_VOSSR_ACTVOSRDY)     == PWR_VOSSR_ACTVOSRDY) : \
+   ((__FLAG__) == PWR_FLAG_BRR)       ? (READ_BIT(PWR->BDSR, PWR_BDSR_BRRDY)           == PWR_BDSR_BRRDY)      : \
+   ((__FLAG__) == PWR_FLAG_VBATL)     ? (READ_BIT(PWR->BDSR, PWR_BDSR_VBATL)           == PWR_BDSR_VBATL)      : \
+   ((__FLAG__) == PWR_FLAG_VBATH)     ? (READ_BIT(PWR->BDSR, PWR_BDSR_VBATH)           == PWR_BDSR_VBATH)      : \
+   ((__FLAG__) == PWR_FLAG_TEMPL)     ? (READ_BIT(PWR->BDSR, PWR_BDSR_TEMPL)           == PWR_BDSR_TEMPL)      : \
+   ((__FLAG__) == PWR_FLAG_TEMPH)     ? (READ_BIT(PWR->BDSR, PWR_BDSR_TEMPH)           == PWR_BDSR_TEMPH)      : \
+   ((__FLAG__) == PWR_FLAG_AVDO)      ? (READ_BIT(PWR->VMSR, PWR_VMSR_AVDO)            == PWR_VMSR_AVDO)       : \
+   ((__FLAG__) == PWR_FLAG_VDDIO2RDY) ? (READ_BIT(PWR->VMSR, PWR_VMSR_VDDIO2RDY)       == PWR_VMSR_VDDIO2RDY)  : \
+   ((__FLAG__) == PWR_FLAG_PVDO)      ? (READ_BIT(PWR->VMSR, PWR_VMSR_PVDO)            == PWR_VMSR_PVDO)       : \
+   ((__FLAG__) == PWR_FLAG_USB33RDY)  ? (READ_BIT(PWR->VMSR, PWR_VMSR_USB33RDY)        == PWR_VMSR_USB33RDY)   : \
+   ((__FLAG__) == PWR_WAKEUP_FLAG1)   ? (READ_BIT(PWR->WUSR, PWR_WUSR_WUF1)            == PWR_WUSR_WUF1)       : \
+   ((__FLAG__) == PWR_WAKEUP_FLAG2)   ? (READ_BIT(PWR->WUSR, PWR_WUSR_WUF2)            == PWR_WUSR_WUF2)       : \
+   ((__FLAG__) == PWR_WAKEUP_FLAG3)   ? (READ_BIT(PWR->WUSR, PWR_WUSR_WUF3)            == PWR_WUSR_WUF3)       : \
+   ((__FLAG__) == PWR_WAKEUP_FLAG4)   ? (READ_BIT(PWR->WUSR, PWR_WUSR_WUF4)            == PWR_WUSR_WUF4)       : \
+   ((__FLAG__) == PWR_WAKEUP_FLAG5)   ? (READ_BIT(PWR->WUSR, PWR_WUSR_WUF5)            == PWR_WUSR_WUF5)       : \
+   ((__FLAG__) == PWR_WAKEUP_FLAG6)   ? (READ_BIT(PWR->WUSR, PWR_WUSR_WUF6)            == PWR_WUSR_WUF6)       : \
+   ((__FLAG__) == PWR_WAKEUP_FLAG7)   ? (READ_BIT(PWR->WUSR, PWR_WUSR_WUF7)            == PWR_WUSR_WUF7)       : \
+   (READ_BIT(PWR->WUSR, PWR_WUSR_WUF8) == PWR_WUSR_WUF8))
 #else
 #define __HAL_PWR_GET_FLAG(__FLAG__)                                                                           \
   (((__FLAG__) == PWR_FLAG_STOPF)     ? (READ_BIT(PWR->PMSR, PWR_PMSR_STOPF)           == PWR_PMSR_STOPF)      : \
@@ -356,7 +356,7 @@ typedef struct
   *                    This parameter can be one of the following values :
   *                    @arg @ref PWR_FLAG_STOPF     : STOP flag.
   *                                                   Indicates that the device was resumed from STOP mode.
-  *                    @arg @ref PWR_FLAG_STANDBY   : STANDBY flag.
+  *                    @arg @ref PWR_FLAG_SBF       : STANDBY flag.
   *                                                   Indicates that the device was resumed from STANDBY mode.
   *                    @arg @ref PWR_WAKEUP_FLAG1   : Wakeup flag 1.
   *                                                   Indicates that a wakeup event was received from the WKUP line 1.
@@ -520,7 +520,7 @@ typedef struct
 
 /* Private constants ---------------------------------------------------------*/
 
-/** @addtogroup PWR_Private_Constants PWR Private Constants
+/** @defgroup PWR_Private_Constants PWR Private Constants
   * @{
   */
 /* Define PVD extended interrupts and event line */
@@ -538,7 +538,7 @@ typedef struct
 
 /* Private macros ------------------------------------------------------------*/
 
-/** @addtogroup PWR_Private_Macros PWR Private Macros
+/** @defgroup PWR_Private_Macros PWR Private Macros
   * @{
   */
 #if defined(PWR_WUCR_WUPEN6)
@@ -617,11 +617,11 @@ typedef struct
 
 /* Exported functions --------------------------------------------------------*/
 
-/** @addtogroup PWR_Exported_Functions PWR Exported Functions
+/** @addtogroup PWR_Exported_Functions
   * @{
   */
 
-/** @addtogroup PWR_Exported_Functions_Group1 Initialization and De-Initialization Functions
+/** @addtogroup PWR_Exported_Functions_Group1
   * @{
   */
 /* Initialization and de-initialization functions *****************************/
@@ -632,7 +632,7 @@ void HAL_PWR_DisableBkUpAccess(void);
   * @}
   */
 
-/** @addtogroup PWR_Exported_Functions_Group2 Peripheral Control functions
+/** @addtogroup PWR_Exported_Functions_Group2
   * @{
   */
 /* Programmable voltage detector functions ************************************/
@@ -662,7 +662,7 @@ void HAL_PWR_PVDCallback(void);
   * @}
   */
 
-/** @addtogroup PWR_Exported_Functions_Group3 Peripheral Security functions
+/** @addtogroup PWR_Exported_Functions_Group3
   * @{
   */
 /* Privileges and security configuration functions ****************************/

@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -1126,7 +1126,6 @@ out-of-window sample to raise flag or interrupt */
 
 /**
   * @brief Verify the ADC regular conversions external trigger.
-  * @param __HANDLE__ ADC handle
   * @param __REGTRIG__ programmed ADC regular conversions external trigger.
   * @retval SET (__REGTRIG__ is a valid value) or RESET (__REGTRIG__ is invalid)
   */

@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -408,7 +408,7 @@ typedef struct
 /** @defgroup LPTIM_EC_LPTIM1_IC1_RMP LPTIM1 Input Ch1 Remap
   * @{
   */
-#define LL_LPTIM_LPTIM1_IC1_RMP_GPIO     0x00000000UL                 /*!< IC1 connected to GPIO */
+#define LL_LPTIM_LPTIM1_IC1_RMP_GPIO       0x00000000UL                /*!< IC1 connected to GPIO */
 #if defined(STM32H503xx)
 #define LL_LPTIM_LPTIM1_IC1_RMP_COMP1      LPTIM_CFGR2_IC1SEL_0        /*!< IC1 connected to COMP1 */
 #define LL_LPTIM_LPTIM1_IC1_RMP_EVENTOUT   LPTIM_CFGR2_IC1SEL_1        /*!< IC1 connected to EVENTOUT */
@@ -434,7 +434,7 @@ typedef struct
 /** @defgroup LPTIM_EC_LPTIM2_IC1_RMP LPTIM2 Input Ch1 Remap
   * @{
   */
-#define LL_LPTIM_LPTIM2_IC1_RMP_GPIO     0x00000000UL                 /*!< IC1 connected to GPIO */
+#define LL_LPTIM_LPTIM2_IC1_RMP_GPIO       0x00000000UL                /*!< IC1 connected to GPIO */
 #if defined(STM32H503xx)
 #define LL_LPTIM_LPTIM2_IC1_RMP_COMP1      LPTIM_CFGR2_IC1SEL_0        /*!< IC1 connected to COMP1 */
 #define LL_LPTIM_LPTIM2_IC1_RMP_EVENTOUT   LPTIM_CFGR2_IC1SEL_1        /*!< IC1 connected to EVENTOUT */
@@ -447,10 +447,10 @@ typedef struct
 /** @defgroup LPTIM_EC_LPTIM2_IC2_RMP LPTIM2 Input Ch2 Remap
   * @{
   */
-#define LL_LPTIM_LPTIM2_IC2_RMP_GPIO     0x00000000UL                                  /*!< IC2 connected to GPIO */
+#define LL_LPTIM_LPTIM2_IC2_RMP_GPIO      0x00000000UL                                  /*!< IC2 connected to GPIO */
 #define LL_LPTIM_LPTIM2_IC2_RMP_HSI_1024  LPTIM_CFGR2_IC2SEL_0                          /*!< IC2 connected to HSI/1024 */
 #define LL_LPTIM_LPTIM2_IC2_RMP_CSI_128   LPTIM_CFGR2_IC2SEL_1                          /*!< IC2 connected to CSI/128 */
-#define LL_LPTIM_LPTIM2_IC2_RMP_CSI_HSI_8 (LPTIM_CFGR2_IC2SEL_0 | LPTIM_CFGR2_IC2SEL_1) /*!< IC2 connected to HSI/8 */
+#define LL_LPTIM_LPTIM2_IC2_RMP_HSI_8     (LPTIM_CFGR2_IC2SEL_0 | LPTIM_CFGR2_IC2SEL_1) /*!< IC2 connected to HSI/8 */
 /**
   * @}
   */
@@ -594,7 +594,7 @@ typedef struct
   * @{
   */
 
-ErrorStatus LL_LPTIM_DeInit(LPTIM_TypeDef *LPTIMx);
+ErrorStatus LL_LPTIM_DeInit(const LPTIM_TypeDef *LPTIMx);
 void LL_LPTIM_StructInit(LL_LPTIM_InitTypeDef *LPTIM_InitStruct);
 ErrorStatus LL_LPTIM_Init(LPTIM_TypeDef *LPTIMx, const LL_LPTIM_InitTypeDef *LPTIM_InitStruct);
 /**
@@ -1066,11 +1066,11 @@ __STATIC_INLINE uint32_t LL_LPTIM_GetPrescaler(const LPTIM_TypeDef *LPTIMx)
   * @param  LPTIMx Low-Power Timer instance
   * @param  Src This parameter can be one of the following values:
   *         @arg @ref LL_LPTIM_INPUT1_SRC_GPIO
-  *         @arg @ref LL_LPTIM_INPUT1_SRC_COMP1
-  *         @arg @ref LL_LPTIM_INPUT1_SRC_GPIO
+  @if STM32H503xx
   *         @arg @ref LL_LPTIM_INPUT1_SRC_COMP1 (*)
   *         @arg @ref LL_LPTIM_INPUT1SOURCE_LPTIM2_CH1 (*)
   *         @arg @ref LL_LPTIM_INPUT1SOURCE_LPTIM1_CH2 (*)
+  @endif
   *         (*) Value not defined for all devices
   * @retval None
   */
@@ -1099,21 +1099,24 @@ __STATIC_INLINE void LL_LPTIM_SetInput2Src(LPTIM_TypeDef *LPTIMx, uint32_t Src)
   * @param  LPTIMx Low-Power Timer instance
   * @param  Src This parameter can be one of the following values:
   *         @arg @ref LL_LPTIM_LPTIM1_IC1_RMP_GPIO
+  @if STM32H503xx
   *         @arg @ref LL_LPTIM_LPTIM1_IC1_RMP_COMP1 (*)
   *         @arg @ref LL_LPTIM_LPTIM1_IC1_RMP_EVENTOUT (*)
   *         @arg @ref LL_LPTIM_LPTIM1_IC1_RMP_MCO1 (*)
+  @endif
   *         @arg @ref LL_LPTIM_LPTIM1_IC2_RMP_GPIO
+  @if STM32H503xx
   *         @arg @ref LL_LPTIM_LPTIM1_IC2_RMP_LSI (*)
   *         @arg @ref LL_LPTIM_LPTIM1_IC2_RMP_LSE (*)
   *         @arg @ref LL_LPTIM_LPTIM1_IC2_RMP_HSE_1M (*)
+  @endif
   *         @arg @ref LL_LPTIM_LPTIM2_IC1_RMP_GPIO
+  @if STM32H503xx
   *         @arg @ref LL_LPTIM_LPTIM2_IC1_RMP_COMP1 (*)
-  *         @arg @ref LL_LPTIM_LPTIM2_IC1_RMPE_VENTOUT (*)
+  *         @arg @ref LL_LPTIM_LPTIM2_IC1_RMP_EVENTOUT (*)
   *         @arg @ref LL_LPTIM_LPTIM2_IC1_RMP_MCO2 (*)
+  @endif
   *         @arg @ref LL_LPTIM_LPTIM2_IC2_RMP_GPIO
-  *         @arg @ref LL_LPTIM_LPTIM2_IC2_RMP_HSI
-  *         @arg @ref LL_LPTIM_LPTIM2_IC2_RMP_MSI_1024
-  *         @arg @ref LL_LPTIM_LPTIM2_IC2_RMP_MSI_4
   *         @arg @ref LL_LPTIM_LPTIM2_IC2_RMP_HSI_1024
   *         @arg @ref LL_LPTIM_LPTIM2_IC2_RMP_CSI_128
   *         @arg @ref LL_LPTIM_LPTIM2_IC2_RMP_HSI_8
@@ -1396,7 +1399,9 @@ __STATIC_INLINE void LL_LPTIM_TrigSw(LPTIM_TypeDef *LPTIMx)
   *         @arg @ref LL_LPTIM_TRIG_SOURCE_RTCALARMB
   *         @arg @ref LL_LPTIM_TRIG_SOURCE_RTCTAMP1
   *         @arg @ref LL_LPTIM_TRIG_SOURCE_RTCTAMP2
+  @if STM32H503xx
   *         @arg @ref LL_LPTIM_TRIG_SOURCE_COMP1 (*)
+  @endif
   *
   *         (*)  Value not defined in all devices. \n
   *
@@ -1426,7 +1431,9 @@ __STATIC_INLINE void LL_LPTIM_ConfigTrigger(LPTIM_TypeDef *LPTIMx, uint32_t Sour
   *         @arg @ref LL_LPTIM_TRIG_SOURCE_RTCALARMB
   *         @arg @ref LL_LPTIM_TRIG_SOURCE_RTCTAMP1
   *         @arg @ref LL_LPTIM_TRIG_SOURCE_RTCTAMP2
+  @if STM32H503xx
   *         @arg @ref LL_LPTIM_TRIG_SOURCE_COMP1 (*)
+  @endif
   *
   *         (*)  Value not defined in all devices. \n
   *

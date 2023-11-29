@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -91,6 +91,9 @@ typedef struct
   uint32_t Host_channels;           /*!< Host Channels number.
                                          This parameter Depends on the used USB core.
                                          This parameter must be a number between Min_Data = 1 and Max_Data = 15 */
+
+  uint32_t dma_enable;              /*!< USB DMA state.
+                                         If DMA is not supported this parameter shall be set by default to zero */
 
   uint32_t speed;                   /*!< USB Core speed.
                                          This parameter can be any value of @ref PCD_Speed/HCD_Speed
@@ -178,6 +181,9 @@ typedef struct
   uint8_t   speed;              /*!< USB Host Channel speed.
                                      This parameter can be any value of @ref HCD_Device_Speed:
                                                                              (HCD_DEVICE_SPEED_xxx)             */
+
+  uint8_t   hub_port_nbr;       /*!< USB HUB port number                                                        */
+  uint8_t   hub_addr;           /*!< USB HUB address                                                            */
 
   uint8_t   ep_type;            /*!< Endpoint Type.
                                      This parameter can be any value of @ref USB_LL_EP_Type                     */
@@ -853,7 +859,7 @@ HAL_StatusTypeDef USB_SetDevAddress(USB_DRD_TypeDef *USBx, uint8_t address);
 HAL_StatusTypeDef USB_DevConnect(USB_DRD_TypeDef *USBx);
 HAL_StatusTypeDef USB_DevDisconnect(USB_DRD_TypeDef *USBx);
 HAL_StatusTypeDef USB_StopDevice(USB_DRD_TypeDef *USBx);
-uint32_t          USB_ReadInterrupts(USB_DRD_TypeDef *USBx);
+uint32_t          USB_ReadInterrupts(USB_DRD_TypeDef const *USBx);
 
 HAL_StatusTypeDef USB_ResetPort(USB_DRD_TypeDef *USBx);
 HAL_StatusTypeDef USB_HostInit(USB_DRD_TypeDef *USBx, USB_DRD_CfgTypeDef cfg);
@@ -861,8 +867,8 @@ HAL_StatusTypeDef USB_HC_IN_Halt(USB_DRD_TypeDef *USBx, uint8_t phy_ch);
 HAL_StatusTypeDef USB_HC_OUT_Halt(USB_DRD_TypeDef *USBx, uint8_t phy_ch);
 HAL_StatusTypeDef USB_HC_StartXfer(USB_DRD_TypeDef *USBx, USB_DRD_HCTypeDef *hc);
 
-uint32_t          USB_GetHostSpeed(USB_DRD_TypeDef *USBx);
-uint32_t          USB_GetCurrentFrame(USB_DRD_TypeDef *USBx);
+uint32_t          USB_GetHostSpeed(USB_DRD_TypeDef const *USBx);
+uint32_t          USB_GetCurrentFrame(USB_DRD_TypeDef const *USBx);
 HAL_StatusTypeDef USB_StopHost(USB_DRD_TypeDef *USBx);
 HAL_StatusTypeDef USB_HC_DoubleBuffer(USB_DRD_TypeDef *USBx, uint8_t phy_ch_num, uint8_t db_state);
 HAL_StatusTypeDef USB_HC_Init(USB_DRD_TypeDef *USBx, uint8_t phy_ch_num, uint8_t epnum,
@@ -871,10 +877,10 @@ HAL_StatusTypeDef USB_HC_Init(USB_DRD_TypeDef *USBx, uint8_t phy_ch_num, uint8_t
 HAL_StatusTypeDef USB_ActivateRemoteWakeup(USB_DRD_TypeDef *USBx);
 HAL_StatusTypeDef USB_DeActivateRemoteWakeup(USB_DRD_TypeDef *USBx);
 
-void              USB_WritePMA(USB_DRD_TypeDef *USBx, uint8_t *pbUsrBuf,
+void              USB_WritePMA(USB_DRD_TypeDef const *USBx, uint8_t *pbUsrBuf,
                                uint16_t wPMABufAddr, uint16_t wNBytes);
 
-void              USB_ReadPMA(USB_DRD_TypeDef *USBx, uint8_t *pbUsrBuf,
+void              USB_ReadPMA(USB_DRD_TypeDef const *USBx, uint8_t *pbUsrBuf,
                               uint16_t wPMABufAddr, uint16_t wNBytes);
 
 /**

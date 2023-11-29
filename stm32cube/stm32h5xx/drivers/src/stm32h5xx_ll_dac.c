@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -157,7 +157,7 @@
   *          - SUCCESS: DAC registers are de-initialized
   *          - ERROR: not applicable
   */
-ErrorStatus LL_DAC_DeInit(DAC_TypeDef *DACx)
+ErrorStatus LL_DAC_DeInit(const DAC_TypeDef *DACx)
 {
   /* Check the parameters */
   assert_param(IS_DAC_ALL_INSTANCE(DACx));

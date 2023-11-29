@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -704,12 +704,6 @@ __STATIC_INLINE void LL_EXTI_DisableEvent_0_31(uint32_t ExtiLine)
   *         @arg @ref LL_EXTI_LINE_55
   *         @arg @ref LL_EXTI_LINE_56
   *         @arg @ref LL_EXTI_LINE_57 (*)
-  *         @arg @ref LL_EXTI_LINE_58
-  *         @arg @ref LL_EXTI_LINE_59 (*)
-  *         @arg @ref LL_EXTI_LINE_60
-  *         @arg @ref LL_EXTI_LINE_61
-  *         @arg @ref LL_EXTI_LINE_62
-  *         @arg @ref LL_EXTI_LINE_63
   *         @arg @ref LL_EXTI_LINE_ALL_32_63
   *
   *         (*) value not defined in all devices.

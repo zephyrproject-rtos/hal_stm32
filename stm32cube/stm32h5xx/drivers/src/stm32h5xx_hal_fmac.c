@@ -14,7 +14,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -1527,7 +1527,7 @@ void HAL_FMAC_IRQHandler(FMAC_HandleTypeDef *hfmac)
   *         the configuration information for FMAC module.
   * @retval HAL_FMAC_StateTypeDef FMAC state
   */
-HAL_FMAC_StateTypeDef HAL_FMAC_GetState(FMAC_HandleTypeDef *hfmac)
+HAL_FMAC_StateTypeDef HAL_FMAC_GetState(const FMAC_HandleTypeDef *hfmac)
 {
   /* Return FMAC state */
   return hfmac->State;
@@ -1540,7 +1540,7 @@ HAL_FMAC_StateTypeDef HAL_FMAC_GetState(FMAC_HandleTypeDef *hfmac)
   * @note   The returned error is a bit-map combination of possible errors.
   * @retval uint32_t Error bit-map based on @ref FMAC_Error_Code
   */
-uint32_t HAL_FMAC_GetError(FMAC_HandleTypeDef *hfmac)
+uint32_t HAL_FMAC_GetError(const FMAC_HandleTypeDef *hfmac)
 {
   /* Return FMAC error code */
   return hfmac->ErrorCode;

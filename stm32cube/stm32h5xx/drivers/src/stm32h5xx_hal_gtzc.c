@@ -14,7 +14,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -1017,8 +1017,8 @@ HAL_StatusTypeDef HAL_GTZC_MPCBB_GetConfigMem(uint32_t MemBaseAddress,
   * @param  NbBlocks Number of blocks to configure
   *         (Block size is 512 Bytes).
   * @param  pMemAttributes pointer to an array (containing "NbBlocks" elements),
-  *         with each element must be GTZC_MCPBB_BLOCK_NSEC or GTZC_MCPBB_BLOCK_SEC,
-  *         and GTZC_MCPBB_BLOCK_NPRIV or GTZC_MCPBB_BLOCK_PRIV.
+  *         with each element must be GTZC_MPCBB_BLOCK_NSEC or GTZC_MPCBB_BLOCK_SEC,
+  *         and GTZC_MPCBB_BLOCK_NPRIV or GTZC_MPCBB_BLOCK_PRIV.
   * @retval HAL status.
   */
 HAL_StatusTypeDef HAL_GTZC_MPCBB_ConfigMemAttributes(uint32_t MemAddress,
@@ -1101,13 +1101,13 @@ HAL_StatusTypeDef HAL_GTZC_MPCBB_ConfigMemAttributes(uint32_t MemAddress,
 
 #if defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
     /* secure configuration */
-    if ((pMemAttributes[i] & GTZC_MCPBB_BLOCK_SEC) == GTZC_MCPBB_BLOCK_SEC)
+    if ((pMemAttributes[i] & GTZC_MPCBB_BLOCK_SEC) == GTZC_MPCBB_BLOCK_SEC)
     {
       SET_BIT(mpcbb_ptr->SECCFGR[offset_reg_start],
               1UL << (offset_bit_start % 32U));
       do_attr_change = 1U;
     }
-    else if ((pMemAttributes[i] & GTZC_MCPBB_BLOCK_NSEC) == GTZC_MCPBB_BLOCK_NSEC)
+    else if ((pMemAttributes[i] & GTZC_MPCBB_BLOCK_NSEC) == GTZC_MPCBB_BLOCK_NSEC)
     {
       CLEAR_BIT(mpcbb_ptr->SECCFGR[offset_reg_start],
                 1UL << (offset_bit_start % 32U));
@@ -1120,12 +1120,12 @@ HAL_StatusTypeDef HAL_GTZC_MPCBB_ConfigMemAttributes(uint32_t MemAddress,
 #endif /* defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U) */
 
     /* privilege configuration */
-    if ((pMemAttributes[i] & GTZC_MCPBB_BLOCK_PRIV) == GTZC_MCPBB_BLOCK_PRIV)
+    if ((pMemAttributes[i] & GTZC_MPCBB_BLOCK_PRIV) == GTZC_MPCBB_BLOCK_PRIV)
     {
       SET_BIT(mpcbb_ptr->PRIVCFGR[offset_reg_start],
               1UL << (offset_bit_start % 32U));
     }
-    else if ((pMemAttributes[i] & GTZC_MCPBB_BLOCK_NPRIV) == GTZC_MCPBB_BLOCK_NPRIV)
+    else if ((pMemAttributes[i] & GTZC_MPCBB_BLOCK_NPRIV) == GTZC_MPCBB_BLOCK_NPRIV)
     {
       CLEAR_BIT(mpcbb_ptr->PRIVCFGR[offset_reg_start],
                 1UL << (offset_bit_start % 32U));
@@ -1163,8 +1163,8 @@ HAL_StatusTypeDef HAL_GTZC_MPCBB_ConfigMemAttributes(uint32_t MemAddress,
   *         (must be 512 Bytes aligned).
   * @param  NbBlocks Number of blocks to get configuration.
   * @param  pMemAttributes pointer to an array (containing "NbBlocks" elements),
-  *         with each element will be GTZC_MCPBB_BLOCK_NSEC or GTZC_MCPBB_BLOCK_SEC,
-  *         and GTZC_MCPBB_BLOCK_NPRIV or GTZC_MCPBB_BLOCK_PRIV.
+  *         with each element will be GTZC_MPCBB_BLOCK_NSEC or GTZC_MPCBB_BLOCK_SEC,
+  *         and GTZC_MPCBB_BLOCK_NPRIV or GTZC_MPCBB_BLOCK_PRIV.
   * @retval HAL status.
   */
 HAL_StatusTypeDef HAL_GTZC_MPCBB_GetConfigMemAttributes(uint32_t MemAddress,
@@ -1270,8 +1270,8 @@ HAL_StatusTypeDef HAL_GTZC_MPCBB_GetConfigMemAttributes(uint32_t MemAddress,
   * @param  pLockAttributes pointer to an array (containing "NbSuperBlocks" elements),
   *         with for each element:
   *         value 0 super-block is unlocked, value 1 super-block is locked
-  *         (corresponds to GTZC_MCPBB_SUPERBLOCK_UNLOCKED and
-  *         GTZC_MCPBB_SUPERBLOCK_LOCKED values).
+  *         (corresponds to GTZC_MPCBB_SUPERBLOCK_UNLOCKED and
+  *         GTZC_MPCBB_SUPERBLOCK_LOCKED values).
   * @retval HAL status.
   */
 HAL_StatusTypeDef HAL_GTZC_MPCBB_LockConfig(uint32_t MemAddress,
@@ -1330,11 +1330,11 @@ HAL_StatusTypeDef HAL_GTZC_MPCBB_LockConfig(uint32_t MemAddress,
 
   for (i = 0U; i < NbSuperBlocks; i++)
   {
-    if (pLockAttributes[i] == GTZC_MCPBB_SUPERBLOCK_LOCKED)
+    if (pLockAttributes[i] == GTZC_MPCBB_SUPERBLOCK_LOCKED)
     {
       SET_BIT(*reg_mpcbb, 1UL << (offset_bit_start % 32U));
     }
-    else if (pLockAttributes[i] == GTZC_MCPBB_SUPERBLOCK_UNLOCKED)
+    else if (pLockAttributes[i] == GTZC_MPCBB_SUPERBLOCK_UNLOCKED)
     {
       CLEAR_BIT(*reg_mpcbb, 1UL << (offset_bit_start % 32U));
     }
@@ -1363,8 +1363,8 @@ HAL_StatusTypeDef HAL_GTZC_MPCBB_LockConfig(uint32_t MemAddress,
   * @param  pLockAttributes pointer to an array (containing "NbSuperBlocks" elements),
   *         with for each element:
   *         value 0 super-block is unlocked, value 1 super-block is locked
-  *         (corresponds to GTZC_MCPBB_SUPERBLOCK_UNLOCKED and
-  *         GTZC_MCPBB_SUPERBLOCK_LOCKED values).
+  *         (corresponds to GTZC_MPCBB_SUPERBLOCK_UNLOCKED and
+  *         GTZC_MPCBB_SUPERBLOCK_LOCKED values).
   * @retval HAL status.
   */
 HAL_StatusTypeDef HAL_GTZC_MPCBB_GetLockConfig(uint32_t MemAddress,
@@ -1464,7 +1464,7 @@ HAL_StatusTypeDef HAL_GTZC_MPCBB_Lock(uint32_t MemBaseAddress)
 /**
   * @brief  Get MPCBB configuration lock state on the SRAM base address passed as parameter.
   * @param  MemBaseAddress MPCBB identifier.
-  * @param  pLockState pointer to Lock State (GTZC_MCPBB_LOCK_OFF or GTZC_MCPBB_LOCK_ON).
+  * @param  pLockState pointer to Lock State (GTZC_MPCBB_LOCK_OFF or GTZC_MPCBB_LOCK_ON).
   * @retval HAL status.
   */
 HAL_StatusTypeDef HAL_GTZC_MPCBB_GetLock(uint32_t MemBaseAddress,

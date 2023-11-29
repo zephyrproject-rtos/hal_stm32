@@ -12,7 +12,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -361,7 +361,7 @@ void HAL_FLASH_IRQHandler(void)
   uint32_t errorflag;
   __IO uint32_t *reg_cr;
   __IO uint32_t *reg_ccr;
-  __IO uint32_t *reg_sr;
+  const __IO uint32_t *reg_sr;
 
   /* Access to CR, CCR and SR registers depends on operation type */
 #if defined (FLASH_OPTSR2_TZEN)
@@ -728,7 +728,7 @@ HAL_StatusTypeDef FLASH_WaitForLastOperation(uint32_t Timeout)
      flag will be set */
 
   uint32_t errorflag;
-  __IO uint32_t *reg_sr;
+  const __IO uint32_t *reg_sr;
   __IO uint32_t *reg_ccr;
 
   uint32_t tickstart = HAL_GetTick();

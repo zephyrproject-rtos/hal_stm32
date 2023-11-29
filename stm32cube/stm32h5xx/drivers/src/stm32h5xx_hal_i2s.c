@@ -11,7 +11,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -192,7 +192,13 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
+/** @defgroup I2S_Private_Define I2S Private Define
+  * @{
+  */
 #define I2S_TIMEOUT 0xFFFFUL
+/**
+  * @}
+  */
 
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
@@ -2300,7 +2306,13 @@ uint32_t HAL_I2S_GetError(const I2S_HandleTypeDef *hi2s)
   * @}
   */
 
+/**
+  * @}
+  */
 
+/** @addtogroup I2S_Private_Functions
+  * @{
+  */
 /**
   * @brief  DMA I2S transmit process complete callback
   * @param  hdma pointer to a DMA_HandleTypeDef structure that contains

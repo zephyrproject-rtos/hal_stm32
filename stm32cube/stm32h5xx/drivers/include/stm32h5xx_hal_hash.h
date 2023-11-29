@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -437,7 +437,7 @@ HAL_StatusTypeDef HAL_HASH_Accumulate_IT(HASH_HandleTypeDef *hhash, const uint8_
   * @}
   */
 
-/** @addtogroup HASH_Exported_Functions_Group3 HMAC processing functions in interrupt mode
+/** @addtogroup HASH_Exported_Functions_Group3 HMAC processing functions
   * @{
   */
 HAL_StatusTypeDef HAL_HASH_HMAC_Start(HASH_HandleTypeDef *hhash, const uint8_t *const pInBuffer, uint32_t Size,
@@ -467,8 +467,8 @@ void HAL_HASH_IRQHandler(HASH_HandleTypeDef *hhash);
 void HAL_HASH_InCpltCallback(HASH_HandleTypeDef *hhash);
 void HAL_HASH_DgstCpltCallback(HASH_HandleTypeDef *hhash);
 void HAL_HASH_ErrorCallback(HASH_HandleTypeDef *hhash);
-HAL_HASH_StateTypeDef HAL_HASH_GetState(HASH_HandleTypeDef *hhash);
-uint32_t HAL_HASH_GetError(HASH_HandleTypeDef *hhash);
+HAL_HASH_StateTypeDef HAL_HASH_GetState(const HASH_HandleTypeDef *hhash);
+uint32_t HAL_HASH_GetError(const HASH_HandleTypeDef *hhash);
 
 /**
   * @}

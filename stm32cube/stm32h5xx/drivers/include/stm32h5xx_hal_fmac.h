@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -700,8 +700,8 @@ void HAL_FMAC_IRQHandler(FMAC_HandleTypeDef *hfmac);
   * @{
   */
 /* Peripheral State functions *************************************************/
-HAL_FMAC_StateTypeDef HAL_FMAC_GetState(FMAC_HandleTypeDef *hfmac);
-uint32_t HAL_FMAC_GetError(FMAC_HandleTypeDef *hfmac);
+HAL_FMAC_StateTypeDef HAL_FMAC_GetState(const FMAC_HandleTypeDef *hfmac);
+uint32_t HAL_FMAC_GetError(const FMAC_HandleTypeDef *hfmac);
 /**
   * @}
   */

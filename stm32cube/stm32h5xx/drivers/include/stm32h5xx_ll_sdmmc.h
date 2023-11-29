@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -330,6 +330,8 @@ typedef struct
 #define SDMMC_HALFFIFO                     ((uint32_t)0x00000008U)
 #define SDMMC_HALFFIFOBYTES                ((uint32_t)0x00000020U)
 
+/* SDMMC FIFO Size */
+#define SDMMC_FIFO_SIZE 32U
 /**
   * @brief  Command Class supported
   */
@@ -1036,7 +1038,7 @@ HAL_StatusTypeDef SDMMC_Init(SDMMC_TypeDef *SDMMCx, SDMMC_InitTypeDef Init);
 /** @addtogroup HAL_SDMMC_LL_Group2
   * @{
   */
-uint32_t          SDMMC_ReadFIFO(SDMMC_TypeDef *SDMMCx);
+uint32_t          SDMMC_ReadFIFO(const SDMMC_TypeDef *SDMMCx);
 HAL_StatusTypeDef SDMMC_WriteFIFO(SDMMC_TypeDef *SDMMCx, uint32_t *pWriteData);
 /**
   * @}
@@ -1049,17 +1051,17 @@ HAL_StatusTypeDef SDMMC_WriteFIFO(SDMMC_TypeDef *SDMMCx, uint32_t *pWriteData);
 HAL_StatusTypeDef SDMMC_PowerState_ON(SDMMC_TypeDef *SDMMCx);
 HAL_StatusTypeDef SDMMC_PowerState_Cycle(SDMMC_TypeDef *SDMMCx);
 HAL_StatusTypeDef SDMMC_PowerState_OFF(SDMMC_TypeDef *SDMMCx);
-uint32_t          SDMMC_GetPowerState(SDMMC_TypeDef *SDMMCx);
+uint32_t          SDMMC_GetPowerState(const SDMMC_TypeDef *SDMMCx);
 
 /* Command path state machine (CPSM) management functions */
 HAL_StatusTypeDef SDMMC_SendCommand(SDMMC_TypeDef *SDMMCx, SDMMC_CmdInitTypeDef *Command);
-uint8_t           SDMMC_GetCommandResponse(SDMMC_TypeDef *SDMMCx);
-uint32_t          SDMMC_GetResponse(SDMMC_TypeDef *SDMMCx, uint32_t Response);
+uint8_t           SDMMC_GetCommandResponse(const SDMMC_TypeDef *SDMMCx);
+uint32_t          SDMMC_GetResponse(const SDMMC_TypeDef *SDMMCx, uint32_t Response);
 
 /* Data path state machine (DPSM) management functions */
 HAL_StatusTypeDef SDMMC_ConfigData(SDMMC_TypeDef *SDMMCx, SDMMC_DataInitTypeDef *Data);
-uint32_t          SDMMC_GetDataCounter(SDMMC_TypeDef *SDMMCx);
-uint32_t          SDMMC_GetFIFOCount(SDMMC_TypeDef *SDMMCx);
+uint32_t          SDMMC_GetDataCounter(const SDMMC_TypeDef *SDMMCx);
+uint32_t          SDMMC_GetFIFOCount(const SDMMC_TypeDef *SDMMCx);
 
 /* SDMMC Cards mode management functions */
 HAL_StatusTypeDef SDMMC_SetSDMMCReadWaitMode(SDMMC_TypeDef *SDMMCx, uint32_t SDMMC_ReadWaitMode);

@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -629,10 +629,10 @@ __STATIC_INLINE uint32_t LL_PWR_IsEnabledETHERNETRAMShutOff(void)
   * @brief  Set the regulator supply output voltage.
   * @rmtoll VOSCR          VOS           LL_PWR_SetRegulVoltageScaling
   * @param  VoltageScaling This parameter can be one of the following values:
+  *         @arg @ref LL_PWR_REGU_VOLTAGE_SCALE0
   *         @arg @ref LL_PWR_REGU_VOLTAGE_SCALE1
   *         @arg @ref LL_PWR_REGU_VOLTAGE_SCALE2
   *         @arg @ref LL_PWR_REGU_VOLTAGE_SCALE3
-  *         @arg @ref LL_PWR_REGU_VOLTAGE_SCALE4
   * @retval None
   */
 __STATIC_INLINE void LL_PWR_SetRegulVoltageScaling(uint32_t VoltageScaling)
@@ -644,10 +644,10 @@ __STATIC_INLINE void LL_PWR_SetRegulVoltageScaling(uint32_t VoltageScaling)
   * @brief  Get the regulator supply output voltage.
   * @rmtoll VOSCR          VOS           LL_PWR_GetRegulVoltageScaling
   * @retval Returned value can be one of the following values:
+  *         @arg @ref LL_PWR_REGU_VOLTAGE_SCALE0
   *         @arg @ref LL_PWR_REGU_VOLTAGE_SCALE1
   *         @arg @ref LL_PWR_REGU_VOLTAGE_SCALE2
   *         @arg @ref LL_PWR_REGU_VOLTAGE_SCALE3
-  *         @arg @ref LL_PWR_REGU_VOLTAGE_SCALE4
   */
 __STATIC_INLINE uint32_t LL_PWR_GetRegulVoltageScaling(void)
 {
@@ -658,10 +658,10 @@ __STATIC_INLINE uint32_t LL_PWR_GetRegulVoltageScaling(void)
   * @brief  Get currently voltage scaling applied to VCORE.
   * @rmtoll VOSSR            ACTVOS[1:0]          LL_PWR_GetCurrentVOS
   * @retval Returned value can be one of the following values:
+  *         @arg @ref LL_PWR_REGU_VOLTAGE_SCALE0
   *         @arg @ref LL_PWR_REGU_VOLTAGE_SCALE1
   *         @arg @ref LL_PWR_REGU_VOLTAGE_SCALE2
   *         @arg @ref LL_PWR_REGU_VOLTAGE_SCALE3
-  *         @arg @ref LL_PWR_REGU_VOLTAGE_SCALE4
   */
 __STATIC_INLINE uint32_t LL_PWR_GetCurrentVOS(void)
 {
@@ -768,7 +768,7 @@ __STATIC_INLINE uint32_t LL_PWR_IsEnabledBatteryCharging(void)
   * @rmtoll BDCR          VBRS          LL_PWR_SetBattChargResistor
   * @param  Resistor This parameter can be one of the following values:
   *         @arg @ref LL_PWR_BATT_CHARG_RESISTOR_5K
-  *         @arg @ref LL_PWR_BATT_CHARGRESISTOR_1_5K
+  *         @arg @ref LL_PWR_BATT_CHARG_RESISTOR_1_5K
   * @retval None
   */
 __STATIC_INLINE void LL_PWR_SetBattChargResistor(uint32_t Resistor)
@@ -781,7 +781,7 @@ __STATIC_INLINE void LL_PWR_SetBattChargResistor(uint32_t Resistor)
   * @rmtoll BDCR          VBRS          LL_PWR_GetBattChargResistor
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_PWR_BATT_CHARG_RESISTOR_5K
-  *         @arg @ref LL_PWR_BATT_CHARGRESISTOR_1_5K
+  *         @arg @ref LL_PWR_BATT_CHARG_RESISTOR_1_5K
   */
 __STATIC_INLINE uint32_t LL_PWR_GetBattChargResistor(void)
 {

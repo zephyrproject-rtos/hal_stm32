@@ -11,7 +11,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -53,11 +53,11 @@
 /* Private functions  --------------------------------------------------------*/
 /* Exported functions --------------------------------------------------------*/
 
-/** @addtogroup RNG_Ex_Exported_Functions
+/** @defgroup RNG_Ex_Exported_Functions RNG_Ex Exported Functions
   * @{
   */
 
-/** @addtogroup RNG_Ex_Exported_Functions_Group1
+/** @defgroup RNG_Ex_Exported_Functions_Group1 Configuration and lock functions
   *  @brief   Configuration functions
   *
 @verbatim
@@ -82,7 +82,7 @@
 
   * @retval HAL status
   */
-HAL_StatusTypeDef HAL_RNGEx_SetConfig(RNG_HandleTypeDef *hrng, RNG_ConfigTypeDef *pConf)
+HAL_StatusTypeDef HAL_RNGEx_SetConfig(RNG_HandleTypeDef *hrng, const RNG_ConfigTypeDef *pConf)
 {
   uint32_t tickstart;
   uint32_t cr_value;
@@ -123,7 +123,7 @@ HAL_StatusTypeDef HAL_RNGEx_SetConfig(RNG_HandleTypeDef *hrng, RNG_ConfigTypeDef
                           | (pConf->Config3 << RNG_CR_RNG_CONFIG3_Pos));
 
     MODIFY_REG(hrng->Instance->CR, RNG_CR_NISTC | RNG_CR_CLKDIV | RNG_CR_RNG_CONFIG1
-               | RNG_CR_RNG_CONFIG2 | RNG_CR_RNG_CONFIG3,
+               | RNG_CR_RNG_CONFIG2 | RNG_CR_RNG_CONFIG3 | RNG_CR_ARDIS,
                (uint32_t)(RNG_CR_CONDRST | cr_value));
 
     /* RNG health test control in accordance with NIST */
@@ -269,12 +269,12 @@ HAL_StatusTypeDef HAL_RNGEx_LockConfig(RNG_HandleTypeDef *hrng)
   * @}
   */
 
-/** @addtogroup RNG_Ex_Exported_Functions_Group2
+/** @defgroup RNG_Ex_Exported_Functions_Group2 Recover from seed error function
   *  @brief   Recover from seed error function
   *
 @verbatim
  ===============================================================================
-          ##### Configuration and lock functions #####
+          ##### Recover from seed error function #####
  ===============================================================================
     [..]  This section provide function allowing to:
       (+) Recover from a seed error

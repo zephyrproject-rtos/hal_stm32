@@ -12,7 +12,7 @@
   **********************************************************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -1481,7 +1481,7 @@ void HAL_I3C_ER_IRQHandler(I3C_HandleTypeDef *hi3c)
   *                      for the specified I3C.
   * @retval None
   */
-void HAL_I3C_EV_IRQHandler(I3C_HandleTypeDef *hi3c)
+void HAL_I3C_EV_IRQHandler(I3C_HandleTypeDef *hi3c) /* Derogation MISRAC2012-Rule-8.13 */
 {
   uint32_t it_flags   = READ_REG(hi3c->Instance->EVR);
   uint32_t it_sources = READ_REG(hi3c->Instance->IER);
@@ -6264,7 +6264,8 @@ HAL_StatusTypeDef HAL_I3C_Tgt_HotJoinReq_IT(I3C_HandleTypeDef *hi3c)
   * @param  timeout     : [IN]  Timeout duration in millisecond.
   * @retval HAL Status  :       Value from HAL_StatusTypeDef enumeration.
   */
-HAL_StatusTypeDef HAL_I3C_Tgt_IBIReq(I3C_HandleTypeDef *hi3c, uint8_t *pPayload, uint8_t payloadSize, uint32_t timeout)
+HAL_StatusTypeDef HAL_I3C_Tgt_IBIReq(I3C_HandleTypeDef *hi3c, const uint8_t *pPayload,
+                                     uint8_t payloadSize, uint32_t timeout)
 {
   uint32_t tickstart;
   uint32_t payload_value = 0U;
@@ -6394,7 +6395,7 @@ HAL_StatusTypeDef HAL_I3C_Tgt_IBIReq(I3C_HandleTypeDef *hi3c, uint8_t *pPayload,
   * @param  payloadSize : [IN]  Payload buffer size in bytes.
   * @retval HAL Status  :       Value from HAL_StatusTypeDef enumeration.
   */
-HAL_StatusTypeDef HAL_I3C_Tgt_IBIReq_IT(I3C_HandleTypeDef *hi3c, uint8_t *pPayload, uint8_t payloadSize)
+HAL_StatusTypeDef HAL_I3C_Tgt_IBIReq_IT(I3C_HandleTypeDef *hi3c, const uint8_t *pPayload, uint8_t payloadSize)
 {
   uint32_t payload_value = 0U;
   HAL_I3C_StateTypeDef handle_state;
@@ -6586,7 +6587,7 @@ HAL_StatusTypeDef HAL_I3C_Abort_IT(I3C_HandleTypeDef *hi3c)
   *                           information for the specified I3C.
   * @retval HAL State : [OUT] Value from HAL_I3C_StateTypeDef enumeration.
   */
-HAL_I3C_StateTypeDef HAL_I3C_GetState(I3C_HandleTypeDef *hi3c)
+HAL_I3C_StateTypeDef HAL_I3C_GetState(const I3C_HandleTypeDef *hi3c)
 {
   return hi3c->State;
 }
@@ -6597,7 +6598,7 @@ HAL_I3C_StateTypeDef HAL_I3C_GetState(I3C_HandleTypeDef *hi3c)
   *                          information for the specified I3C.
   * @retval HAL Mode : [OUT] Value from HAL_I3C_ModeTypeDef enumeration.
   */
-HAL_I3C_ModeTypeDef HAL_I3C_GetMode(I3C_HandleTypeDef *hi3c)
+HAL_I3C_ModeTypeDef HAL_I3C_GetMode(const I3C_HandleTypeDef *hi3c)
 {
   return hi3c->Mode;
 }
@@ -6608,7 +6609,7 @@ HAL_I3C_ModeTypeDef HAL_I3C_GetMode(I3C_HandleTypeDef *hi3c)
   *                                information for the specified I3C.
   * @retval I3C Error Code : [OUT] Value from @ref I3C_ERROR_CODE_DEFINITION.
   */
-uint32_t HAL_I3C_GetError(I3C_HandleTypeDef *hi3c)
+uint32_t HAL_I3C_GetError(const I3C_HandleTypeDef *hi3c)
 {
   return hi3c->ErrorCode;
 }
@@ -8131,7 +8132,6 @@ static HAL_StatusTypeDef I3C_WaitOnDAAUntilTimeout(I3C_HandleTypeDef *hi3c, uint
 static void I3C_TransmitByteTreatment(I3C_HandleTypeDef *hi3c)
 {
   /* Check TX FIFO not full flag */
-
   while ((__HAL_I3C_GET_FLAG(hi3c, HAL_I3C_FLAG_TXFNFF) == SET) && (hi3c->TxXferCount > 0U))
   {
     /* Write Tx buffer data to transmit register */
@@ -8154,7 +8154,7 @@ static void I3C_TransmitByteTreatment(I3C_HandleTypeDef *hi3c)
 static void I3C_TransmitWordTreatment(I3C_HandleTypeDef *hi3c)
 {
   /* Check TX FIFO not full flag */
-  if (__HAL_I3C_GET_FLAG(hi3c, HAL_I3C_FLAG_TXFNFF) == SET)
+  while (__HAL_I3C_GET_FLAG(hi3c, HAL_I3C_FLAG_TXFNFF) == SET)
   {
     /* Write Tx buffer data to transmit register */
     LL_I3C_TransmitData32(hi3c->Instance, *((uint32_t *)hi3c->pXferData->TxBuf.pBuffer));
@@ -8205,7 +8205,7 @@ static void I3C_ReceiveByteTreatment(I3C_HandleTypeDef *hi3c)
 static void I3C_ReceiveWordTreatment(I3C_HandleTypeDef *hi3c)
 {
   /* Check RX FIFO not empty flag */
-  if (__HAL_I3C_GET_FLAG(hi3c, HAL_I3C_FLAG_RXFNEF) == SET)
+  while (__HAL_I3C_GET_FLAG(hi3c, HAL_I3C_FLAG_RXFNEF) == SET)
   {
     /* Store received bytes in the Rx buffer */
     *((uint32_t *)hi3c->pXferData->RxBuf.pBuffer) = LL_I3C_ReceiveData32(hi3c->Instance);
@@ -8727,29 +8727,39 @@ static HAL_StatusTypeDef I3C_ControlBuffer_PriorPreparation(I3C_HandleTypeDef *h
         /* Set remaining control buffer data counter */
         hi3c->ControlXferCount = (uint32_t)counter;
 
-        /* Check on transfer direction */
-        if (hi3c->pPrivateDesc->Direction == HAL_I3C_DIRECTION_READ)
-        {
-          nb_data_bytes = hi3c->pPrivateDesc->RxBuf.Size;
-        }
-        else
-        {
-          nb_data_bytes = hi3c->pPrivateDesc->TxBuf.Size;
-        }
-
         /* For loop on the number of devices */
         for (index = 0U; index < ((uint32_t)counter - 1U); index++)
         {
+          /* Check on transfer direction */
+          if (hi3c->pPrivateDesc[index].Direction == HAL_I3C_DIRECTION_READ)
+          {
+            nb_data_bytes = hi3c->pPrivateDesc[index].RxBuf.Size;
+          }
+          else
+          {
+            nb_data_bytes = hi3c->pPrivateDesc[index].TxBuf.Size;
+          }
+
           /* Update control buffer value */
           hi3c->pXferData->CtrlBuf.pBuffer[index] =
-            (nb_data_bytes | hi3c->pPrivateDesc->Direction                      |
+            (nb_data_bytes | hi3c->pPrivateDesc[index].Direction                |
              ((uint32_t)hi3c->pPrivateDesc[index].TargetAddr << I3C_CR_ADD_Pos) |
              (option & I3C_OPERATION_TYPE_MASK) | stop_condition);
         }
 
+        /* Check on transfer direction */
+        if (hi3c->pPrivateDesc[index].Direction == HAL_I3C_DIRECTION_READ)
+        {
+          nb_data_bytes = hi3c->pPrivateDesc[index].RxBuf.Size;
+        }
+        else
+        {
+          nb_data_bytes = hi3c->pPrivateDesc[index].TxBuf.Size;
+        }
+
         /* At the last device we should generate a stop condition */
         hi3c->pXferData->CtrlBuf.pBuffer[index] =
-          (nb_data_bytes | hi3c->pPrivateDesc->Direction                      |
+          (nb_data_bytes | hi3c->pPrivateDesc[index].Direction                |
            ((uint32_t)hi3c->pPrivateDesc[index].TargetAddr << I3C_CR_ADD_Pos) |
            (option & I3C_OPERATION_TYPE_MASK) | LL_I3C_GENERATE_STOP);
       }

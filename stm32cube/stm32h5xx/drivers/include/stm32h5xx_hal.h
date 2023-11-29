@@ -7,7 +7,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -105,6 +105,7 @@ extern HAL_TickFreqTypeDef      uwTickFreq;
   * @}
   */
 
+#if defined(VREFBUF)
 /** @defgroup VREFBUF_VoltageScale VREFBUF Voltage Scale
   * @{
   */
@@ -127,6 +128,7 @@ extern HAL_TickFreqTypeDef      uwTickFreq;
 /**
   * @}
   */
+#endif /* VREFBUF */
 
 /** @defgroup SBS_FastModePlus_GPIO Fast-mode Plus on GPIO
   * @{
@@ -159,22 +161,6 @@ extern HAL_TickFreqTypeDef      uwTickFreq;
   * @}
   */
 #endif /* SBS_PMCR_ETH_SEL_PHY */
-
-/** @defgroup SBS_Boostvddsel_Selection  Boost VDD Selection
-  * @{
-  */
-#define SBS_BOOSTVDDSEL_VDDA             ((uint32_t)0x00000000) /*!< Select VDDA as analog switch supply voltage
-                                                                     (when BOOSTEN bit is cleared) */
-#define SBS_BOOSTVDDSEL_VDD              SBS_PMCR_BOOSTVDDSEL   /*!< Select VDD  as analog switch supply voltage
-                                                                     (regardless of BOOSTEN bit) */
-
-#define IS_SBS_BOOSTVDD_SELECTION(BOOSTVDDSEL) (((BOOSTVDDSEL) == SBS_BOOSTVDDSEL_VDDA)        || \
-                                                ((BOOSTVDDSEL) == SBS_BOOSTVDDSEL_VDD))
-
-/**
-  * @}
-  */
-
 
 /** @defgroup SBS_Memories_Erase_Flag_Status  Memory Erase Flags Status
   * @{
@@ -647,6 +633,7 @@ extern HAL_TickFreqTypeDef      uwTickFreq;
                                             ((__CONFIG__) == SBS_BREAK_SRAM_ECC)   || \
                                             ((__CONFIG__) == SBS_BREAK_LOCKUP))
 
+#if defined(VREFBUF)
 #define IS_VREFBUF_VOLTAGE_SCALE(__SCALE__)  (((__SCALE__) == VREFBUF_VOLTAGE_SCALE0) || \
                                               ((__SCALE__) == VREFBUF_VOLTAGE_SCALE1) || \
                                               ((__SCALE__) == VREFBUF_VOLTAGE_SCALE2) || \
@@ -656,6 +643,7 @@ extern HAL_TickFreqTypeDef      uwTickFreq;
                                                ((__VALUE__) == VREFBUF_HIGH_IMPEDANCE_ENABLE))
 
 #define IS_VREFBUF_TRIMMING(__VALUE__)  (((__VALUE__) > 0U) && ((__VALUE__) <= VREFBUF_CCR_TRIM))
+#endif /* VREFBUF*/
 
 #if defined(SBS_FASTMODEPLUS_PB9)
 #define IS_SBS_FASTMODEPLUS(__PIN__)    ((((__PIN__) & SBS_FASTMODEPLUS_PB6) == SBS_FASTMODEPLUS_PB6) || \

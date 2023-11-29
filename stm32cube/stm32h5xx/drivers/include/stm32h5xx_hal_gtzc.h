@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -41,19 +41,19 @@ extern "C" {
   */
 
 /*!< Values needed for MPCBB_Attribute_ConfigTypeDef structure sizing */
-#define GTZC_MCPBB_NB_VCTR_REG_MAX      (32U)
-#define GTZC_MCPBB_NB_LCK_VCTR_REG_MAX  (1U)
+#define GTZC_MPCBB_NB_VCTR_REG_MAX      (32U)
+#define GTZC_MPCBB_NB_LCK_VCTR_REG_MAX  (1U)
 typedef struct
 {
-  uint32_t MPCBB_SecConfig_array[GTZC_MCPBB_NB_VCTR_REG_MAX];  /*!< Each element specifies secure access mode for
+  uint32_t MPCBB_SecConfig_array[GTZC_MPCBB_NB_VCTR_REG_MAX];  /*!< Each element specifies secure access mode for
                                                                     a super-block. Each bit corresponds to a block
                                                                     inside the super-block. 0 means non-secure,
                                                                     1 means secure */
-  uint32_t MPCBB_PrivConfig_array[GTZC_MCPBB_NB_VCTR_REG_MAX]; /*!< Each element specifies privilege access mode for
+  uint32_t MPCBB_PrivConfig_array[GTZC_MPCBB_NB_VCTR_REG_MAX]; /*!< Each element specifies privilege access mode for
                                                                     a super-block. Each bit corresponds to a block
                                                                     inside the super-block. 0 means non-privilege,
                                                                     1 means privilege */
-  uint32_t MPCBB_LockConfig_array[GTZC_MCPBB_NB_LCK_VCTR_REG_MAX]; /*!< Each bit specifies the lock configuration of
+  uint32_t MPCBB_LockConfig_array[GTZC_MPCBB_NB_LCK_VCTR_REG_MAX]; /*!< Each bit specifies the lock configuration of
                                                                         a super-block (32 blocks). 0 means unlocked,
                                                                         1 means locked */
 } MPCBB_Attribute_ConfigTypeDef;
@@ -308,7 +308,9 @@ typedef struct
 #if defined (LPTIM6)
 #define GTZC_PERIPH_LPTIM6        (GTZC1_PERIPH_REG3 | GTZC_CFGR3_LPTIM6_Pos)
 #endif /* defined (LPTIM6) */
+#if defined (VREFBUF)
 #define GTZC_PERIPH_VREFBUF       (GTZC1_PERIPH_REG3 | GTZC_CFGR3_VREFBUF_Pos)
+#endif /* defined (VREFBUF) */
 #if defined (I3C2)
 #define GTZC_PERIPH_I3C2          (GTZC1_PERIPH_REG3 | GTZC_CFGR3_I3C2_Pos)
 #endif /* defined (I3C2) */
@@ -480,17 +482,17 @@ typedef struct
 /* user-oriented definitions for MPCBB */
 #define GTZC_MPCBB_BLOCK_SIZE           0x200U                        /* 512 Bytes */
 #define GTZC_MPCBB_SUPERBLOCK_SIZE      (GTZC_MPCBB_BLOCK_SIZE * 32U) /* 16 KBytes */
-#define GTZC_MCPBB_SUPERBLOCK_UNLOCKED  (0U)
-#define GTZC_MCPBB_SUPERBLOCK_LOCKED    (1U)
+#define GTZC_MPCBB_SUPERBLOCK_UNLOCKED  (0U)
+#define GTZC_MPCBB_SUPERBLOCK_LOCKED    (1U)
 
-#define GTZC_MCPBB_BLOCK_NSEC           (GTZC_ATTR_SEC_MASK  | 0U)
-#define GTZC_MCPBB_BLOCK_SEC            (GTZC_ATTR_SEC_MASK  | 1U)
-#define GTZC_MCPBB_BLOCK_NPRIV          (GTZC_ATTR_PRIV_MASK | 0U)
-#define GTZC_MCPBB_BLOCK_PRIV           (GTZC_ATTR_PRIV_MASK | 2U)
+#define GTZC_MPCBB_BLOCK_NSEC           (GTZC_ATTR_SEC_MASK  | 0U)
+#define GTZC_MPCBB_BLOCK_SEC            (GTZC_ATTR_SEC_MASK  | 1U)
+#define GTZC_MPCBB_BLOCK_NPRIV          (GTZC_ATTR_PRIV_MASK | 0U)
+#define GTZC_MPCBB_BLOCK_PRIV           (GTZC_ATTR_PRIV_MASK | 2U)
 
 /* user-oriented definitions for HAL_GTZC_MPCBB_GetLock() returned value */
-#define GTZC_MCPBB_LOCK_OFF  (0U)
-#define GTZC_MCPBB_LOCK_ON   (1U)
+#define GTZC_MPCBB_LOCK_OFF  (0U)
+#define GTZC_MPCBB_LOCK_ON   (1U)
 
 /**
   * @}

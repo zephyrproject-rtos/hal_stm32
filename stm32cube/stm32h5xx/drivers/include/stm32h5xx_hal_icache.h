@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -27,6 +27,7 @@ extern "C" {
 /* Includes -----------------------------------------------------------------*/
 #include "stm32h5xx_hal_def.h"
 
+#if defined(ICACHE)
 /** @addtogroup STM32H5xx_HAL_Driver
   * @{
   */
@@ -290,6 +291,7 @@ HAL_StatusTypeDef HAL_ICACHE_DisableRemapRegion(uint32_t Region);
 /**
   * @}
   */
+#endif /* ICACHE */
 
 #ifdef __cplusplus
 }

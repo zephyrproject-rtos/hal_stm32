@@ -21,7 +21,7 @@
   **********************************************************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -360,7 +360,8 @@ HAL_StatusTypeDef HAL_SetTickFreq(HAL_TickFreqTypeDef Freq)
 
 /**
   * @brief Return tick frequency.
-  * @retval tick period in Hz
+  * @retval Tick frequency.
+  *         Value of @ref HAL_TickFreqTypeDef.
   */
 HAL_TickFreqTypeDef HAL_GetTickFreq(void)
 {
@@ -459,7 +460,7 @@ uint32_t HAL_GetDEVID(void)
   */
 uint32_t HAL_GetUIDw0(void)
 {
-  return(READ_REG(*((uint32_t *)UID_BASE)));
+  return (READ_REG(*((uint32_t *)UID_BASE)));
 }
 
 /**
@@ -468,7 +469,7 @@ uint32_t HAL_GetUIDw0(void)
   */
 uint32_t HAL_GetUIDw1(void)
 {
-  return(READ_REG(*((uint32_t *)(UID_BASE + 4U))));
+  return (READ_REG(*((uint32_t *)(UID_BASE + 4U))));
 }
 
 /**
@@ -477,7 +478,7 @@ uint32_t HAL_GetUIDw1(void)
   */
 uint32_t HAL_GetUIDw2(void)
 {
-  return(READ_REG(*((uint32_t *)(UID_BASE + 8U))));
+  return (READ_REG(*((uint32_t *)(UID_BASE + 8U))));
 }
 
 /**
@@ -540,7 +541,6 @@ void HAL_DBGMCU_DisableDBGStandbyMode(void)
   * @}
   */
 
-#if defined(VREFBUF)
 /** @defgroup HAL_Exported_Functions_Group4 HAL VREFBUF Control functions
   *  @brief    HAL VREFBUF Control functions
   *
@@ -551,12 +551,12 @@ void HAL_DBGMCU_DisableDBGStandbyMode(void)
     [..]  This section provides functions allowing to:
       (+) Configure the Voltage reference buffer
       (+) Enable/Disable the Voltage reference buffer
-      (+) Enable/Disable the I/O analog switch voltage booster
 
 @endverbatim
   * @{
   */
 
+#if defined(VREFBUF)
 /**
   * @brief Configure the internal voltage reference buffer voltage scale.
   * @param  VoltageScaling: specifies the output voltage to achieve
@@ -685,42 +685,6 @@ void HAL_SBS_ETHInterfaceSelect(uint32_t SBS_ETHInterface)
 #endif /* SBS_PMCR_ETH_SEL_PHY */
 
 /**
-  * @brief  Enable the I/O analog switch voltage booster
-  *
-  * @retval None
-  */
-void HAL_SBS_EnableIOAnalogSwitchBooster(void)
-{
-  SET_BIT(SBS->PMCR, SBS_PMCR_BOOSTEN);
-}
-
-/**
-  * @brief  Disable the I/O analog switch voltage booster
-  *
-  * @retval None
-  */
-void HAL_SBS_DisableIOAnalogSwitchBooster(void)
-{
-  CLEAR_BIT(SBS->PMCR, SBS_PMCR_BOOSTEN);
-}
-
-/**
-  * @brief  Analog switch supply voltage selection (VDD/VDDA/booster)
-  * @param  SBS_BOOSTVDDSEL: Selects the Analog switch supply voltage (VDD/VDDA/booster)
-  *         This parameter can be one of the following values:
-  *           @arg SBS_BOOSTVDDSEL_VDDA : Select the VDDA as analog switch supply voltage (when BOOSTEN bit is cleared).
-  *           @arg SBS_BOOSTVDDSEL_VDD: Select the VDD as analog switch supply voltage.
-  * @retval None
-  */
-void HAL_SBS_AnalogSwitchSupplyVoltageSelection(uint32_t SBS_BOOSTVDDSEL)
-{
-  /* Check the parameter */
-  assert_param(IS_SBS_BOOSTVDD_SELECTION(SBS_BOOSTVDDSEL));
-
-  MODIFY_REG(SBS->PMCR, SBS_PMCR_BOOSTVDDSEL, (uint32_t)(SBS_BOOSTVDDSEL));
-}
-
-/**
   * @brief  Enables the VDD I/Os Compensation Cell.
   * @note   The I/O compensation cell can be used only when the device supply
   *         voltage ranges from 2.4 to 3.6 V.
@@ -796,7 +760,6 @@ void HAL_SBS_VDDIOCompensationCodeSelect(uint32_t SBS_CompCode)
 
 /**
   * @brief  VDDIO1 I/O Compensation cell get ready flag status
-  * @param  None
   * @retval State of bit (1 or 0).
   */
 uint32_t HAL_SBS_GetVddIO1CompensationCellReadyFlag(void)
@@ -806,7 +769,6 @@ uint32_t HAL_SBS_GetVddIO1CompensationCellReadyFlag(void)
 
 /**
   * @brief  VDDIO2 I/O Compensation cell get ready flag status
-  * @param  None
   * @retval State of bit (1 or 0).
   */
 uint32_t HAL_SBS_GetVddIO2CompensationCellReadyFlag(void)
@@ -854,7 +816,6 @@ void HAL_SBS_VDDIOCompensationCodeConfig(uint32_t SBS_PMOSCode, uint32_t SBS_NMO
 
 /**
   * @brief  Get NMOS compensation value of the I/Os supplied by VDD
-  * @param  None
   * @retval None
   */
 uint32_t HAL_SBS_GetNMOSVddCompensationValue(void)
@@ -864,7 +825,6 @@ uint32_t HAL_SBS_GetNMOSVddCompensationValue(void)
 
 /**
   * @brief  Get PMOS compensation value of the I/Os supplied by VDD
-  * @param  None
   * @retval None
   */
 uint32_t HAL_SBS_GetPMOSVddCompensationValue(void)
@@ -874,7 +834,6 @@ uint32_t HAL_SBS_GetPMOSVddCompensationValue(void)
 
 /**
   * @brief  Get NMOS compensation value of the I/Os supplied by VDDIO2
-  * @param  None
   * @retval None
   */
 uint32_t HAL_SBS_GetNMOSVddIO2CompensationValue(void)
@@ -885,7 +844,6 @@ uint32_t HAL_SBS_GetNMOSVddIO2CompensationValue(void)
 
 /**
   * @brief  Get PMOS compensation value of the I/Os supplied by VDDIO2
-  * @param  None
   * @retval None
   */
 uint32_t HAL_SBS_GetPMOSVddIO2CompensationValue(void)
@@ -944,7 +902,6 @@ uint32_t HAL_SBS_FLASH_ECCNMI_IsDisabled(void)
 
 /**
   * @brief  Increment by 1 the HDPL value
-  * @param  None
   * @retval None
   */
 void HAL_SBS_IncrementHDPLValue(void)
@@ -1007,7 +964,6 @@ void HAL_SBS_EPOCHSelection(uint32_t Epoch_Selection)
 
 /**
   * @brief  Get EPOCH security selection
-  * @param  none
   * @retval Returned value can be one of the following values:
   *           @arg SBS_EPOCH_SEL_SECURE    : EPOCH secure selected.
   *           @arg SBS_EPOCH_SEL_NONSECURE : EPOCH non secure selected.
@@ -1022,7 +978,7 @@ uint32_t HAL_SBS_GetEPOCHSelection(void)
 #if defined(SBS_NEXTHDPLCR_NEXTHDPL)
 /**
   * @brief  Set the OBK-HDPL Value.
-  * @param  Set the increment to add to HDPL value to generate the OBK-HDPL.
+  * @param  OBKHDPL_Value Value of the increment to add to HDPL value to generate the OBK-HDPL.
   *         This parameter can be one of the following values:
   *           @arg SBS_OBKHDPL_INCR_0 : HDPL
   *           @arg SBS_OBKHDPL_INCR_1 : HDPL + 1

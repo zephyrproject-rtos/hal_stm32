@@ -12,7 +12,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -45,30 +45,30 @@
      The ICACHE HAL driver can be used as follows:
 
     (#) Optionally configure the Instruction Cache mode with
-        @ref HAL_ICACHE_ConfigAssociativityMode() if the default configuration
+        HAL_ICACHE_ConfigAssociativityMode() if the default configuration
         does not suit the application requirements.
 
     (#) Enable and disable the Instruction Cache with respectively
-        @ref HAL_ICACHE_Enable() and @ref HAL_ICACHE_Disable().
-        Use @ref HAL_ICACHE_IsEnabled() to get the Instruction Cache status.
+        HAL_ICACHE_Enable() and HAL_ICACHE_Disable().
+        Use HAL_ICACHE_IsEnabled() to get the Instruction Cache status.
 
     (#) Initiate the cache maintenance invalidation procedure with either
-        @ref HAL_ICACHE_Invalidate() (blocking mode) or @ref HAL_ICACHE_Invalidate_IT()
+        HAL_ICACHE_Invalidate() (blocking mode) or HAL_ICACHE_Invalidate_IT()
         (interrupt mode). When interrupt mode is used, the callback function
-        @ref HAL_ICACHE_InvalidateCompleteCallback() is called when the invalidate
-        procedure is complete. The function @ref HAL_ICACHE_WaitForInvalidateComplete()
+        HAL_ICACHE_InvalidateCompleteCallback() is called when the invalidate
+        procedure is complete. The function HAL_ICACHE_WaitForInvalidateComplete()
         may be called to wait for the end of the invalidate procedure automatically
-        initiated when disabling the Instruction Cache with @ref HAL_ICACHE_Disable().
+        initiated when disabling the Instruction Cache with HAL_ICACHE_Disable().
         The cache operation is bypassed during the invalidation procedure.
 
     (#) Use the performance monitoring counters for Hit and Miss with the following
-        functions: @ref HAL_ICACHE_Monitor_Start(), @ref HAL_ICACHE_Monitor_Stop(),
-        @ref HAL_ICACHE_Monitor_Reset(), @ref HAL_ICACHE_Monitor_GetHitValue() and
-        @ref HAL_ICACHE_Monitor_GetMissValue()
+        functions: HAL_ICACHE_Monitor_Start(), HAL_ICACHE_Monitor_Stop(),
+        HAL_ICACHE_Monitor_Reset(), HAL_ICACHE_Monitor_GetHitValue() and
+        HAL_ICACHE_Monitor_GetMissValue()
 
     (#) Enable and disable up to four regions to remap input address from external
         memories to the internal Code region for execution with
-        @ref HAL_ICACHE_EnableRemapRegion() and @ref HAL_ICACHE_DisableRemapRegion()
+        HAL_ICACHE_EnableRemapRegion() and HAL_ICACHE_DisableRemapRegion()
 
   @endverbatim
   */
@@ -84,7 +84,7 @@
   * @brief HAL ICACHE module driver
   * @{
   */
-#ifdef HAL_ICACHE_MODULE_ENABLED
+#if defined(ICACHE) && defined (HAL_ICACHE_MODULE_ENABLED)
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private constants ---------------------------------------------------------*/
@@ -648,7 +648,7 @@ HAL_StatusTypeDef  HAL_ICACHE_DisableRemapRegion(uint32_t Region)
   * @}
   */
 
-#endif /* HAL_ICACHE_MODULE_ENABLED */
+#endif /* ICACHE && HAL_ICACHE_MODULE_ENABLED */
 
 /**
   * @}
