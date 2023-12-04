@@ -1578,11 +1578,11 @@ void HAL_RCC_NMI_IRQHandler(void)
   /* Check RCC CSSF interrupt flag  */
   if (__HAL_RCC_GET_IT(RCC_IT_CSS))
   {
-    /* RCC Clock Security System interrupt user callback */
-    HAL_RCC_CSSCallback();
-
     /* Clear RCC CSS pending bit */
     __HAL_RCC_CLEAR_IT(RCC_IT_CSS);
+
+    /* RCC Clock Security System interrupt user callback */
+    HAL_RCC_CSSCallback();
   }
 }
 

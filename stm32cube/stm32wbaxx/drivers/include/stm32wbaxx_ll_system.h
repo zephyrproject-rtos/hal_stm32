@@ -24,6 +24,7 @@
       (+) Some of the FLASH features need to be handled in the SYSTEM file.
       (+) Access to DBGCMU registers
       (+) Access to SYSCFG registers
+      (+) Access to VREFBUF registers (not available on all devices)
   @endverbatim
   */
 
@@ -52,7 +53,7 @@ extern "C" {
 /* Private variables ---------------------------------------------------------*/
 
 /* Private constants ---------------------------------------------------------*/
-/** @defgroup SYSTEM_LL_Private_Constants SYSTEM Private Constants
+/** @defgroup SYSTEM_LL_Private_Constants SYSTEM LL Private Constants
   * @{
   */
 
@@ -60,27 +61,8 @@ extern "C" {
   * @brief Power-down in Run mode Flash key
   */
 #define FLASH_PDKEY1_1                 0x04152637U /*!< Flash power down key1 */
-#define FLASH_PDKEY1_2                 0xFAFBFCFDU /*!< Flash power down key2: used with FLASH_PDKEY1
-                                                       to unlock the RUN_PD bit in FLASH_ACR */
-/**
-  * @}
-  */
-
-/** @defgroup SYSTEM_LL_EC_CS1 SYSCFG Vdd compensation cell Code selection
-  * @{
-  */
-#define LL_SYSCFG_VDD_CELL_CODE                  0U               /*VDD I/Os code from the cell (available in the SYSCFG_CCVR)*/
-#define LL_SYSCFG_VDD_REGISTER_CODE              SYSCFG_CCCSR_CS1 /*VDD I/Os code from the SYSCFG compensation cell code register (SYSCFG_CCCR)*/
-/**
-  * @}
-  */
-
-
-/** @defgroup SYSTEM_LL_EC_ERASE_MEMORIES_STATUS SYSCFG MEMORIES ERASE
-  * @{
-  */
-#define LL_SYSCFG_MEMORIES_ERASE_ON_GOING         0U               /*Memory erase on going*/
-#define LL_SYSCFG_MEMORIES_ERASE_ENDED            SYSCFG_MESR_MCLR /*Memory erase done */
+#define FLASH_PDKEY1_2                 0xFAFBFCFDU /*!< Flash power down key2: used with FLASH_PDKEYR
+                                                       to unlock the PDREQ bit in FLASH_ACR */
 /**
   * @}
   */
@@ -91,6 +73,24 @@ extern "C" {
 /* Exported constants --------------------------------------------------------*/
 /** @defgroup SYSTEM_LL_Exported_Constants SYSTEM Exported Constants
   * @{
+  */
+
+/** @defgroup SYSTEM_LL_EC_CS1 SYSCFG SYSCFG Vdd compensation cell Code selection
+  * @{
+  */
+#define LL_SYSCFG_VDD_CELL_CODE                  0U               /*VDD I/Os code from the cell (available in the SYSCFG_CCVR)*/
+#define LL_SYSCFG_VDD_REGISTER_CODE              SYSCFG_CCCSR_CS1 /*VDD I/Os code from the SYSCFG compensation cell code register (SYSCFG_CCCR)*/
+/**
+  * @}
+  */
+
+/** @defgroup SYSTEM_LL_EC_ERASE_MEMORIES_STATUS SYSCFG MEMORIES ERASE
+  * @{
+  */
+#define LL_SYSCFG_MEMORIES_ERASE_ON_GOING         0U               /*Memory erase on going*/
+#define LL_SYSCFG_MEMORIES_ERASE_ENDED            SYSCFG_MESR_MCLR /*Memory erase done */
+/**
+  * @}
   */
 
 /** @defgroup SYSTEM_LL_EC_I2C_FASTMODEPLUS SYSCFG I2C FASTMODEPLUS
@@ -178,7 +178,6 @@ extern "C" {
   * @}
   */
 
-
 /** @defgroup SYSTEM_LL_EC_LATENCY FLASH LATENCY
   * @{
   */
@@ -201,6 +200,7 @@ extern "C" {
 /**
   * @}
   */
+
 
 /**
   * @}
@@ -552,11 +552,59 @@ __STATIC_INLINE uint32_t LL_SYSCFG_GetConfigSecure(void)
   * @}
   */
 
+/** @defgroup SYSTEM_LL_EF_SYSCFG_ERASE_MEMORIE_STATUS SYSCFG ERASE MEMORIE STATUS
+  * @{
+  */
+
+/**
+  * @brief  Clear Status of End of Erase for ICACHE and PKA RAMs
+  * @rmtoll MESR   IPMEE    LL_SYSCFG_ClearEraseEndStatus
+  * @retval None
+  */
+__STATIC_INLINE void LL_SYSCFG_ClearEraseEndStatus(void)
+{
+  SET_BIT(SYSCFG->MESR, SYSCFG_MESR_IPMEE);
+}
+
+/**
+  * @brief  Get Status of End of Erase for ICACHE and PKA RAMs
+  * @rmtoll MESR   IPMEE    LL_SYSCFG_GetEraseEndStatus
+  * @retval Returned value can be one of the following values:
+  *   @arg LL_SYSCFG_MEMORIES_ERASE_ON_GOING : Erase of memories not yet done
+  *   @arg LL_SYSCFG_MEMORIES_ERASE_ENDED: Erase of memories ended
+  */
+__STATIC_INLINE uint32_t LL_SYSCFG_GetEraseEndStatus(void)
+{
+  return (uint32_t)(READ_BIT(SYSCFG->MESR, SYSCFG_MESR_IPMEE));
+}
+
+
+/**
+  * @brief  Clear Status of End of Erase after reset  for SRAM2, BKPRAM, ICACHE, DCACHE,PKA rams
+  * @rmtoll MESR   MCLR    LL_SYSCFG_ClearEraseAfterResetStatus
+  * @retval None
+  */
+__STATIC_INLINE void LL_SYSCFG_ClearEraseAfterResetStatus(void)
+{
+  SET_BIT(SYSCFG->MESR, SYSCFG_MESR_MCLR);
+}
+
+/**
+  * @brief  Get Status of End of Erase after reset  for SRAM2, BKPRAM, ICACHE, DCACHE,PKA rams
+  * @rmtoll MESR   MCLR    LL_SYSCFG_GetEraseAfterResetStatus
+  * @retval Returned value can be one of the following values:
+  *   @arg LL_SYSCFG_MEMORIES_ERASE_ON_GOING : Erase of memories not yet done
+  *   @arg LL_SYSCFG_MEMORIES_ERASE_ENDED: Erase of memories ended
+  */
+__STATIC_INLINE uint32_t LL_SYSCFG_GetEraseAfterResetStatus(void)
+{
+  return (uint32_t)(READ_BIT(SYSCFG->MESR, SYSCFG_MESR_MCLR));
+}
 /**
   * @}
   */
 
-/** @defgroup SYSTEM_LL_EF_COMPENSATION SYSCFG COMPENSATION
+/** @defgroup SYSTEM_LL_EF_SYSCFG_COMPENSATION SYSCFG COMPENSATION
   * @{
   */
 
@@ -579,7 +627,6 @@ __STATIC_INLINE uint32_t LL_SYSCFG_GetNMOSVddCompensationValue(void)
 {
   return (uint32_t)(READ_BIT(SYSCFG->CCVR, SYSCFG_CCVR_NCV1));
 }
-
 
 
 /**
@@ -702,6 +749,10 @@ __STATIC_INLINE uint32_t LL_SYSCFG_GetVddCellCompensationCode(void)
   * @}
   */
 
+/**
+  * @}
+  */
+
 /** @defgroup SYSTEM_LL_EF_DBGMCU DBGMCU
   * @{
   */
@@ -773,9 +824,13 @@ __STATIC_INLINE void LL_DBGMCU_DisableDBGStandbyMode(void)
   * @param  Periphs This parameter can be a combination of the following values:
   *         @arg @ref LL_DBGMCU_APB1_GRP1_TIM2_STOP
   *         @arg @ref LL_DBGMCU_APB1_GRP1_TIM3_STOP
+  *         @arg @ref LL_DBGMCU_APB1_GRP1_TIM4_STOP (*)
   *         @arg @ref LL_DBGMCU_APB1_GRP1_WWDG_STOP
   *         @arg @ref LL_DBGMCU_APB1_GRP1_IWDG_STOP
   *         @arg @ref LL_DBGMCU_APB1_GRP1_I2C1_STOP
+  *         @arg @ref LL_DBGMCU_APB1_GRP1_I2C2_STOP (*)
+  *
+  *         (*) value not defined in all devices.
   * @retval None
   */
 __STATIC_INLINE void LL_DBGMCU_APB1_GRP1_FreezePeriph(uint32_t Periphs)
@@ -787,7 +842,10 @@ __STATIC_INLINE void LL_DBGMCU_APB1_GRP1_FreezePeriph(uint32_t Periphs)
   * @brief  Freeze APB1 peripherals (group2 peripherals)
   * @rmtoll DBGMCU_APB1HFZR DBG_xxxx_STOP  LL_DBGMCU_APB1_GRP2_FreezePeriph
   * @param  Periphs This parameter can be a combination of the following values:
+  *         @arg @ref LL_DBGMCU_APB1_GRP2_I2C4_STOP (*)
   *         @arg @ref LL_DBGMCU_APB1_GRP2_LPTIM2_STOP
+  *
+  *         (*) value not defined in all devices.
   * @retval None
   */
 __STATIC_INLINE void LL_DBGMCU_APB1_GRP2_FreezePeriph(uint32_t Periphs)
@@ -801,9 +859,13 @@ __STATIC_INLINE void LL_DBGMCU_APB1_GRP2_FreezePeriph(uint32_t Periphs)
   * @param  Periphs This parameter can be a combination of the following values:
   *         @arg @ref LL_DBGMCU_APB1_GRP1_TIM2_STOP
   *         @arg @ref LL_DBGMCU_APB1_GRP1_TIM3_STOP
+  *         @arg @ref LL_DBGMCU_APB1_GRP1_TIM4_STOP (*)
   *         @arg @ref LL_DBGMCU_APB1_GRP1_WWDG_STOP
   *         @arg @ref LL_DBGMCU_APB1_GRP1_IWDG_STOP
   *         @arg @ref LL_DBGMCU_APB1_GRP1_I2C1_STOP
+  *         @arg @ref LL_DBGMCU_APB1_GRP1_I2C2_STOP (*)
+  *
+  *         (*) value not defined in all devices.
   * @retval None
   */
 __STATIC_INLINE void LL_DBGMCU_APB1_GRP1_UnFreezePeriph(uint32_t Periphs)
@@ -815,7 +877,10 @@ __STATIC_INLINE void LL_DBGMCU_APB1_GRP1_UnFreezePeriph(uint32_t Periphs)
   * @brief  Unfreeze APB1 peripherals (group2 peripherals)
   * @rmtoll DBGMCU_APB1HFZR DBG_xxxx_STOP  LL_DBGMCU_APB1_GRP2_UnFreezePeriph
   * @param  Periphs This parameter can be a combination of the following values:
+  *         @arg @ref LL_DBGMCU_APB1_GRP2_I2C4_STOP (*)
   *         @arg @ref LL_DBGMCU_APB1_GRP2_LPTIM2_STOP
+  *
+  *         (*) value not defined in all devices.
   * @retval None
   */
 __STATIC_INLINE void LL_DBGMCU_APB1_GRP2_UnFreezePeriph(uint32_t Periphs)
@@ -948,14 +1013,14 @@ __STATIC_INLINE uint32_t LL_FLASH_GetLatency(void)
   * @note Flash must not be accessed when power down is enabled
   * @note Flash must not be put in power-down while a program or an erase operation
   *       is on-going
-  * @rmtoll FLASH_ACR    RUN_PD        LL_FLASH_EnableRunPowerDown\n
+  * @rmtoll FLASH_ACR    PDREQ         LL_FLASH_EnableRunPowerDown\n
   *         FLASH_PDKEYR PDKEY1_1      LL_FLASH_EnableRunPowerDown\n
   *         FLASH_PDKEYR PDKEY1_2      LL_FLASH_EnableRunPowerDown
   * @retval None
   */
 __STATIC_INLINE void LL_FLASH_EnableRunPowerDown(void)
 {
-  /* Following values must be written consecutively to unlock the RUN_PD bit in
+  /* Following values must be written consecutively to unlock the PDREQ bit in
   FLASH_ACR */
   WRITE_REG(FLASH->PDKEYR, FLASH_PDKEY1_1);
   WRITE_REG(FLASH->PDKEYR, FLASH_PDKEY1_2);
@@ -1019,57 +1084,6 @@ __STATIC_INLINE uint32_t LL_FLASH_GetSTCompanyID(void)
   */
 
 
-/** @defgroup SYSTEM_LL_EF_ERASE_MEMORIE_STATUS SYSCFG ERASE MEMORIE STATUS
-  * @{
-  */
-
-/**
-  * @brief  Clear Status of End of Erase for ICACHE and PKA RAMs
-  * @rmtoll MESR   IPMEE    LL_SYSCFG_ClearEraseEndStatus
-  * @retval None
-  */
-__STATIC_INLINE void LL_SYSCFG_ClearEraseEndStatus(void)
-{
-  SET_BIT(SYSCFG->MESR, SYSCFG_MESR_IPMEE);
-}
-
-/**
-  * @brief  Get Status of End of Erase for ICACHE and PKA RAMs
-  * @rmtoll MESR   IPMEE    LL_SYSCFG_GetEraseEndStatus
-  * @retval Returned value can be one of the following values:
-  *   @arg LL_SYSCFG_MEMORIES_ERASE_ON_GOING : Erase of memories not yet done
-  *   @arg LL_SYSCFG_MEMORIES_ERASE_ENDED: Erase of memories ended
-  */
-__STATIC_INLINE uint32_t LL_SYSCFG_GetEraseEndStatus(void)
-{
-  return (uint32_t)(READ_BIT(SYSCFG->MESR, SYSCFG_MESR_IPMEE));
-}
-
-
-/**
-  * @brief  Clear Status of End of Erase after reset  for SRAM2, BKPRAM, ICACHE, DCACHE,PKA rams
-  * @rmtoll MESR   MCLR    LL_SYSCFG_ClearEraseAfterResetStatus
-  * @retval None
-  */
-__STATIC_INLINE void LL_SYSCFG_ClearEraseAfterResetStatus(void)
-{
-  SET_BIT(SYSCFG->MESR, SYSCFG_MESR_MCLR);
-}
-
-/**
-  * @brief  Get Status of End of Erase after reset  for SRAM2, BKPRAM, ICACHE, DCACHE,PKA rams
-  * @rmtoll MESR   MCLR    LL_SYSCFG_GetEraseAfterResetStatus
-  * @retval Returned value can be one of the following values:
-  *   @arg LL_SYSCFG_MEMORIES_ERASE_ON_GOING : Erase of memories not yet done
-  *   @arg LL_SYSCFG_MEMORIES_ERASE_ENDED: Erase of memories ended
-  */
-__STATIC_INLINE uint32_t LL_SYSCFG_GetEraseAfterResetStatus(void)
-{
-  return (uint32_t)(READ_BIT(SYSCFG->MESR, SYSCFG_MESR_MCLR));
-}
-/**
-  * @}
-  */
 
 /**
   * @}

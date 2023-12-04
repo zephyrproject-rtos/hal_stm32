@@ -110,8 +110,8 @@ HAL_TickFreqTypeDef uwTickFreq = HAL_TICK_FREQ_DEFAULT;  /* 1KHz */
   * @note   HAL_Init() function is called at the beginning of program after reset and before
   *         the clock configuration.
   *
-  * @note   In the default implementation the System Timer (Systick) is used as source of time base.
-  *         The Systick configuration is based on HSI clock, as HSI is the clock
+  * @note   In the default implementation the System Timer (SysTick) is used as source of time base.
+  *         The SysTick configuration is based on HSI clock, as HSI is the clock
   *         used after a system Reset and the NVIC configuration is set to Priority group 4.
   *         Once done, time base tick starts incrementing: the tick variable counter is incremented
   *         each 1ms in the SysTick_Handler() interrupt handler.
@@ -130,6 +130,9 @@ HAL_StatusTypeDef HAL_Init(void)
 
   /* Ensure time base clock coherency */
   SystemCoreClockUpdate();
+
+  /* Select HCLK as SysTick clock source */
+  HAL_SYSTICK_CLKSourceConfig(SYSTICK_CLKSOURCE_HCLK);
 
   /* Initialize 1ms tick time base (default SysTick based on HSI clock after Reset) */
   if (HAL_InitTick(TICK_INT_PRIORITY) != HAL_OK)
@@ -220,28 +223,59 @@ __weak void HAL_MspDeInit(void)
   */
 __weak HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
 {
+  uint32_t ticknumber = 0U;
+  uint32_t systicksel;
+
   /* Check uwTickFreq for MisraC 2012 (even if uwTickFreq is a enum type that don't take the value zero)*/
   if ((uint32_t)uwTickFreq == 0UL)
   {
     return HAL_ERROR;
   }
 
-  /* Configure the SysTick to have interrupt in 1ms time basis*/
-  if (HAL_SYSTICK_Config(SystemCoreClock / (1000UL / (uint32_t)uwTickFreq)) > 0U)
+  /* Check Clock source to calculate the tickNumber */
+  if(READ_BIT(SysTick->CTRL, SysTick_CTRL_CLKSOURCE_Msk) == SysTick_CTRL_CLKSOURCE_Msk)
+  {
+    /* HCLK selected as SysTick clock source */
+    ticknumber = SystemCoreClock / (1000UL / (uint32_t)uwTickFreq);
+  }
+  else
+  {
+    systicksel = __HAL_RCC_GET_SYSTICK_SOURCE();
+    switch (systicksel)
+    {
+      /* HCLK_DIV8 selected as SysTick clock source */
+      case RCC_SYSTICKCLKSOURCE_HCLK_DIV8:
+        /* Calculate tick value */
+        ticknumber = (SystemCoreClock / (8000UL / (uint32_t)uwTickFreq));
+        break;
+
+      /* LSI selected as SysTick clock source */
+      case RCC_SYSTICKCLKSOURCE_LSI:
+        /* Calculate tick value */
+        ticknumber = (LSI_VALUE / (1000UL / (uint32_t)uwTickFreq));
+        break;
+
+      /* LSE selected as SysTick clock source */
+      case RCC_SYSTICKCLKSOURCE_LSE:
+        /* Calculate tick value */
+        ticknumber = (LSE_VALUE / (1000UL / (uint32_t)uwTickFreq));
+        break;
+
+      default:
+        /* Nothing to do */
+        break;
+    }
+  }
+
+  /* Configure the SysTick */
+  if (HAL_SYSTICK_Config(ticknumber) > 0U)
   {
     return HAL_ERROR;
   }
 
   /* Configure the SysTick IRQ priority */
-  if (TickPriority < (1UL << __NVIC_PRIO_BITS))
-  {
-    HAL_NVIC_SetPriority(SysTick_IRQn, TickPriority, 0U);
-    uwTickPrio = TickPriority;
-  }
-  else
-  {
-    return HAL_ERROR;
-  }
+  HAL_NVIC_SetPriority(SysTick_IRQn, TickPriority, 0U);
+  uwTickPrio = TickPriority;
 
   /* Return function status */
   return HAL_OK;
@@ -278,7 +312,7 @@ __weak HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
   * @brief This function is called to increment a global variable "uwTick"
   *        used as application time base.
   * @note In the default implementation, this variable is incremented each 1ms
-  *       in Systick ISR.
+  *       in SysTick ISR.
   * @note This function is declared as __weak to be overwritten in case of other
   *      implementations in user file.
   * @retval None
@@ -620,9 +654,8 @@ HAL_StatusTypeDef HAL_SYSCFG_GetLock(uint32_t *pItem)
   * @}
   */
 
-#if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
 
-
+#if defined(SYSCFG_SECCFGR_SYSCFGSEC)
 /** @defgroup HAL_Exported_Functions_Group6 HAL SYSCFG attributes management functions
   *  @brief SYSCFG attributes management functions.
   *
@@ -635,6 +668,7 @@ HAL_StatusTypeDef HAL_SYSCFG_GetLock(uint32_t *pItem)
   * @{
   */
 
+#if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
 /**
   * @brief  Configure the SYSCFG item attribute(s).
   * @note   Available attributes are to secure SYSCFG items, so this function is
@@ -668,6 +702,8 @@ void HAL_SYSCFG_ConfigAttributes(uint32_t Item, uint32_t Attributes)
   SYSCFG_S->SECCFGR = tmp;
 }
 
+#endif /* __ARM_FEATURE_CMSE */
+
 /**
   * @brief  Get the attribute of a SYSCFG item.
   * @note   Available attributes are to secure SYSCFG items, so this function is
@@ -685,10 +721,10 @@ HAL_StatusTypeDef HAL_SYSCFG_GetConfigAttributes(uint32_t Item, uint32_t *pAttri
   }
 
   /* Check the parameters */
-  assert_param(IS_SYSCFG_ITEMS_ATTRIBUTES(Item));
+  assert_param(IS_SYSCFG_SINGLE_ITEMS_ATTRIBUTES(Item));
 
   /* Get the secure attribute state */
-  if ((SYSCFG_S->SECCFGR & Item) != 0U)
+  if ((SYSCFG->SECCFGR & Item) != 0U)
   {
     *pAttributes = SYSCFG_SEC;
   }
@@ -704,7 +740,7 @@ HAL_StatusTypeDef HAL_SYSCFG_GetConfigAttributes(uint32_t Item, uint32_t *pAttri
   * @}
   */
 
-#endif /* __ARM_FEATURE_CMSE */
+#endif /* SYSCFG_SECCFGR_SYSCFGSEC */
 
 /**
   * @}

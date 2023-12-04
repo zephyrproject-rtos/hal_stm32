@@ -21,8 +21,9 @@
     [..]
     The LL CORTEX driver contains a set of generic APIs that can be
     used by user:
-      (+) SYSTICK configuration used by LL_mDelay and LL_Init1msTick
-          functions
+      (+)  SysTick configuration used by LL_mDelay and LL_Init1msTick with
+           HCLK source or LL_Init1msTick_HCLK_Div8 or LL_Init1msTick_LSI or
+           LL_Init1msTick_LSE with external source
       (+) Low power mode configuration (SCB register of Cortex-MCU)
       (+) API to access to MCU info (CPUID register)
       (+) API to enable fault handler (SHCSR accesses)
@@ -74,13 +75,18 @@ extern "C" {
 /** @defgroup CORTEX_LL_EC_CLKSOURCE_HCLK SYSTICK Clock Source
   * @{
   */
-#define LL_SYSTICK_CLKSOURCE_HCLK_DIV8     0x00000000U                 /*!< AHB clock divided by 8 selected as SysTick
-                                                                            clock source */
+#define LL_SYSTICK_CLKSOURCE_EXTERNAL      0x00000000U                 /*!< External clock source selected as
+                                                                            SysTick clock source */
 #define LL_SYSTICK_CLKSOURCE_HCLK          SysTick_CTRL_CLKSOURCE_Msk  /*!< AHB clock selected as SysTick
                                                                             clock source */
+
+/** Legacy definitions for compatibility purpose
+@cond 0
+*/
+#define LL_SYSTICK_CLKSOURCE_HCLK_DIV8    LL_SYSTICK_CLKSOURCE_EXTERNAL
 /**
-  * @}
-  */
+@endcond
+*/
 
 /** @defgroup CORTEX_LL_EC_FAULT Handler Fault type
   * @{
@@ -227,7 +233,7 @@ __STATIC_INLINE uint32_t LL_SYSTICK_IsActiveCounterFlag(void)
   * @brief  Configures the SysTick clock source
   * @rmtoll STK_CTRL     CLKSOURCE     LL_SYSTICK_SetClkSource
   * @param  Source This parameter can be one of the following values:
-  *         @arg @ref LL_SYSTICK_CLKSOURCE_HCLK_DIV8
+  *         @arg @ref LL_SYSTICK_CLKSOURCE_EXTERNAL
   *         @arg @ref LL_SYSTICK_CLKSOURCE_HCLK
   * @retval None
   */
@@ -247,7 +253,7 @@ __STATIC_INLINE void LL_SYSTICK_SetClkSource(uint32_t Source)
   * @brief  Get the SysTick clock source
   * @rmtoll STK_CTRL     CLKSOURCE     LL_SYSTICK_GetClkSource
   * @retval Returned value can be one of the following values:
-  *         @arg @ref LL_SYSTICK_CLKSOURCE_HCLK_DIV8
+  *         @arg @ref LL_SYSTICK_CLKSOURCE_EXTERNAL
   *         @arg @ref LL_SYSTICK_CLKSOURCE_HCLK
   */
 __STATIC_INLINE uint32_t LL_SYSTICK_GetClkSource(void)

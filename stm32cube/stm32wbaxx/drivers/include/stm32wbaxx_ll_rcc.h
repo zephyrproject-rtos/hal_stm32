@@ -446,7 +446,7 @@ typedef struct
 #define LL_RCC_SPI1_CLKSOURCE_SYSCLK    ((RCC_OFFSET_CCIPR1 << 24U) | (RCC_CCIPR1_SPI1SEL_Pos << 16U) | (RCC_CCIPR1_SPI1SEL_0 >> RCC_CCIPR1_SPI1SEL_Pos)) /*!< SYSCLK clock used as SPI1 clock source */
 #define LL_RCC_SPI1_CLKSOURCE_HSI       ((RCC_OFFSET_CCIPR1 << 24U) | (RCC_CCIPR1_SPI1SEL_Pos << 16U) | (RCC_CCIPR1_SPI1SEL_1 >> RCC_CCIPR1_SPI1SEL_Pos)) /*!< HSI clock used as SPI1 clock source */
 #endif /* SPI1 */
-#define LL_RCC_SPI3_CLKSOURCE_PCLK7     ((RCC_OFFSET_CCIPR3 << 24U) | (RCC_CCIPR3_SPI3SEL_Pos << 16U))                                                    /*!< PCLK3 clock used as SPI3 clock source */
+#define LL_RCC_SPI3_CLKSOURCE_PCLK7     ((RCC_OFFSET_CCIPR3 << 24U) | (RCC_CCIPR3_SPI3SEL_Pos << 16U))                                                    /*!< PCLK7 clock used as SPI3 clock source */
 #define LL_RCC_SPI3_CLKSOURCE_SYSCLK    ((RCC_OFFSET_CCIPR3 << 24U) | (RCC_CCIPR3_SPI3SEL_Pos << 16U) | (RCC_CCIPR3_SPI3SEL_0 >> RCC_CCIPR3_SPI3SEL_Pos)) /*!< SYSCLK clock used as SPI3 clock source */
 #define LL_RCC_SPI3_CLKSOURCE_HSI       ((RCC_OFFSET_CCIPR3 << 24U) | (RCC_CCIPR3_SPI3SEL_Pos << 16U) | (RCC_CCIPR3_SPI3SEL_1 >> RCC_CCIPR3_SPI3SEL_Pos)) /*!< HSI clock used as SPI3 clock source */
 /**
@@ -491,15 +491,22 @@ typedef struct
 #define LL_RCC_RNG_CLKSOURCE_LSE        0U                     /*!< LSE clock used as RNG clock source */
 #define LL_RCC_RNG_CLKSOURCE_LSI        RCC_CCIPR2_RNGSEL_0    /*!< LSI clock used as RNG clock source */
 #define LL_RCC_RNG_CLKSOURCE_HSI        RCC_CCIPR2_RNGSEL_1    /*!< HSI clock used as RNG clock source */
-#define LL_RCC_RNG_CLKSOURCE_PLL1Q      (RCC_CCIPR2_RNGSEL_1 | RCC_CCIPR2_RNGSEL_0)    /*!< PLL1Q clock used as RNG clock source */
+#define LL_RCC_RNG_CLKSOURCE_PLL1Q_DIV2 (RCC_CCIPR2_RNGSEL_1 | RCC_CCIPR2_RNGSEL_0)    /*!< PLL1Q/2 clock used as RNG clock source */
 /**
   * @}
+  */
+/** Legacy definitions for compatibility purpose
+@cond 0
+  */
+#define LL_RCC_RNG_CLKSOURCE_PLL1Q      LL_RCC_RNG_CLKSOURCE_PLL1Q_DIV2
+/**
+@endcond
   */
 
 /** @defgroup RCC_LL_EC_ADC_CLKSOURCE  Peripheral ADC4 clock source selection
   * @{
   */
-#define LL_RCC_ADC_CLKSOURCE_HCLK       0U                                    /*!< HCLK1 clock used as ADC4 clock source */
+#define LL_RCC_ADC_CLKSOURCE_HCLK       0U                                             /*!< HCLK1 clock used as ADC4 clock source */
 #define LL_RCC_ADC_CLKSOURCE_SYSCLK     RCC_CCIPR3_ADCSEL_0                            /*!< SYSCLK clock used as ADC4 clock source */
 #define LL_RCC_ADC_CLKSOURCE_PLL1P      RCC_CCIPR3_ADCSEL_1                            /*!< PLL1P clock used as ADC4 clock source */
 #define LL_RCC_ADC_CLKSOURCE_HSI        RCC_CCIPR3_ADCSEL_2                            /*!< HSI clock used as ADC4 clock source */
@@ -509,11 +516,12 @@ typedef struct
   */
 
 
+
 /** @defgroup RCC_LL_EC_TIM_INPUT_CAPTURE_CLOCKSource TIM Input capture clock source selection
   * @{
   */
-#define LL_RCC_TIMIC_CLKSOURCE_NONE       0U                     /*!< No clock available for TIM16/TIM17 and LPTIM2 input capture */
-#define LL_RCC_TIMIC_CLKSOURCE_HSI_DIV256 RCC_CCIPR1_TIMICSEL             /*!< HSI/256 selected for TIM16/TIM17 and LPTIM2 input capture */
+#define LL_RCC_TIMIC_CLKSOURCE_NONE       0U                       /*!< No clock available for TIM16/TIM17 and LPTIM2 input capture */
+#define LL_RCC_TIMIC_CLKSOURCE_HSI_DIV256 RCC_CCIPR1_TIMICSEL      /*!< HSI/256 selected for TIM16/TIM17 and LPTIM2 input capture */
 /**
   * @}
   */
@@ -596,6 +604,7 @@ typedef struct
 /**
   * @}
   */
+
 
 /** @defgroup RCC_LL_EC_PLL1SOURCE  PLL1 entry clock source
   * @{
@@ -1912,12 +1921,12 @@ __STATIC_INLINE void LL_RCC_SetSAIClockSource(uint32_t SAIxSource)
 
 /**
   * @brief  Configure RNG clock source
-  * @rmtoll CCIPR2       RNGSEL      LL_RCC_SetRNGClockSource
+  * @rmtoll CCIPR2       RNGSEL        LL_RCC_SetRNGClockSource
   * @param  RNGxSource This parameter can be one of the following values:
   *         @arg @ref LL_RCC_RNG_CLKSOURCE_LSE
   *         @arg @ref LL_RCC_RNG_CLKSOURCE_LSI
   *         @arg @ref LL_RCC_RNG_CLKSOURCE_HSI
-  *         @arg @ref LL_RCC_RNG_CLKSOURCE_PLL1Q
+  *         @arg @ref LL_RCC_RNG_CLKSOURCE_PLL1Q_DIV2
   * @retval None
   */
 __STATIC_INLINE void LL_RCC_SetRNGClockSource(uint32_t RNGxSource)
@@ -1940,7 +1949,6 @@ __STATIC_INLINE void LL_RCC_SetADCClockSource(uint32_t ADC4Source)
 {
   MODIFY_REG(RCC->CCIPR3, RCC_CCIPR3_ADCSEL, ADC4Source);
 }
-
 
 
 /**
@@ -2099,7 +2107,7 @@ __STATIC_INLINE uint32_t LL_RCC_GetSAIClockSource(uint32_t SAIx)
   *         @arg @ref LL_RCC_RNG_CLKSOURCE_LSE
   *         @arg @ref LL_RCC_RNG_CLKSOURCE_LSI
   *         @arg @ref LL_RCC_RNG_CLKSOURCE_HSI
-  *         @arg @ref LL_RCC_RNG_CLKSOURCE_PLL1Q
+  *         @arg @ref LL_RCC_RNG_CLKSOURCE_PLL1Q_DIV2
   */
 __STATIC_INLINE uint32_t LL_RCC_GetRNGClockSource(uint32_t RNGx)
 {
@@ -2122,6 +2130,7 @@ __STATIC_INLINE uint32_t LL_RCC_GetADCClockSource(uint32_t ADCx)
 {
   return (uint32_t)(READ_BIT(RCC->CCIPR3, ADCx));
 }
+
 
 /**
   * @}

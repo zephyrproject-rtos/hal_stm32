@@ -43,17 +43,19 @@ extern "C" {
   */
 
 /*!< Values needed for MPCBB_Attribute_ConfigTypeDef structure sizing */
-#define GTZC_MCPBB_NB_VCTR_REG_MAX      (4U)
-#define GTZC_MCPBB_NB_LCK_VCTR_REG_MAX  (1U)
+#if defined (STM32WBA52xx) || defined (STM32WBA54xx) || defined (STM32WBA55xx)
+#define GTZC_MPCBB_NB_VCTR_REG_MAX      4U  /*!< Maximum number of superblocks */
+#endif
+#define GTZC_MPCBB_NB_LCK_VCTR_REG_MAX  1U  /*!< Maximum number of 32-bit registers to lock superblocks */
 typedef struct
 {
-  uint32_t MPCBB_SecConfig_array[GTZC_MCPBB_NB_VCTR_REG_MAX];  /*!< Each element specifies secure access mode for a super-block.
+  uint32_t MPCBB_SecConfig_array[GTZC_MPCBB_NB_VCTR_REG_MAX];  /*!< Each element specifies secure access mode for a super-block.
                                                                     Each bit corresponds to a block inside the super-block.
                                                                     0 means non-secure, 1 means secure */
-  uint32_t MPCBB_PrivConfig_array[GTZC_MCPBB_NB_VCTR_REG_MAX]; /*!< Each element specifies privilege access mode for a super-block.
+  uint32_t MPCBB_PrivConfig_array[GTZC_MPCBB_NB_VCTR_REG_MAX]; /*!< Each element specifies privilege access mode for a super-block.
                                                                     Each bit corresponds to a block inside the super-block.
                                                                     0 means non-privilege, 1 means privilege */
-  uint32_t MPCBB_LockConfig_array[GTZC_MCPBB_NB_LCK_VCTR_REG_MAX]; /*!< Each bit specifies the lock configuration of a super-block (32 blocks).
+  uint32_t MPCBB_LockConfig_array[GTZC_MPCBB_NB_LCK_VCTR_REG_MAX]; /*!< Each bit specifies the lock configuration of a super-block (32 blocks).
                                                                         0 means unlocked, 1 means locked */
 } MPCBB_Attribute_ConfigTypeDef;
 
@@ -127,8 +129,8 @@ typedef struct
   * @{
   */
 
-#define GTZC_MPCBB_SRWILADIS_ENABLE  (0U)
-#define GTZC_MPCBB_SRWILADIS_DISABLE (GTZC_MPCBB_CR_SRWILADIS_Msk)
+#define GTZC_MPCBB_SRWILADIS_ENABLE  0U
+#define GTZC_MPCBB_SRWILADIS_DISABLE GTZC_MPCBB_CR_SRWILADIS_Msk
 
 /**
   * @}
@@ -138,8 +140,8 @@ typedef struct
   * @{
   */
 
-#define GTZC_MPCBB_INVSECSTATE_NOT_INVERTED  (0U)
-#define GTZC_MPCBB_INVSECSTATE_INVERTED      (GTZC_MPCBB_CR_INVSECSTATE_Msk)
+#define GTZC_MPCBB_INVSECSTATE_NOT_INVERTED  0U
+#define GTZC_MPCBB_INVSECSTATE_INVERTED      GTZC_MPCBB_CR_INVSECSTATE_Msk
 
 /**
   * @}
@@ -162,16 +164,16 @@ typedef struct
 #define GTZC_PERIPH_USART1        (GTZC_PERIPH_REG2 | GTZC_CFGR2_USART1_Pos)
 #define GTZC_PERIPH_TIM16         (GTZC_PERIPH_REG2 | GTZC_CFGR2_TIM16_Pos)
 #define GTZC_PERIPH_TIM17         (GTZC_PERIPH_REG2 | GTZC_CFGR2_TIM17_Pos)
-#if defined (STM32WBA54xx) || defined (STM32WBA55xx)
+#if defined (SAI1)
 #define GTZC_PERIPH_SAI1          (GTZC_PERIPH_REG2 | GTZC_CFGR2_SAI1_Pos)
-#endif /* STM32WBA54xx || STM32WBA55xx */
+#endif /* SAI1 */
 #define GTZC_PERIPH_SPI3          (GTZC_PERIPH_REG2 | GTZC_CFGR2_SPI3_Pos)
 #define GTZC_PERIPH_LPUART1       (GTZC_PERIPH_REG2 | GTZC_CFGR2_LPUART1_Pos)
 #define GTZC_PERIPH_I2C3          (GTZC_PERIPH_REG2 | GTZC_CFGR2_I2C3_Pos)
 #define GTZC_PERIPH_LPTIM1        (GTZC_PERIPH_REG2 | GTZC_CFGR2_LPTIM1_Pos)
-#if defined (STM32WBA54xx) || defined (STM32WBA55xx)
+#if defined (COMP1)
 #define GTZC_PERIPH_COMP          (GTZC_PERIPH_REG2 | GTZC_CFGR2_COMP_Pos)
-#endif /* STM32WBA54xx || STM32WBA55xx */
+#endif /* COMP1 */
 #define GTZC_PERIPH_ADC4          (GTZC_PERIPH_REG2 | GTZC_CFGR2_ADC4_Pos)
 
 #define GTZC_PERIPH_CRC           (GTZC_PERIPH_REG3 | GTZC_CFGR3_CRC_Pos)
@@ -248,7 +250,7 @@ typedef struct
   */
 
 /* user-oriented definitions for HAL_GTZC_TZSC_GetLock() returned value */
-#define GTZC_TZSC_LOCK_OFF  (0U)
+#define GTZC_TZSC_LOCK_OFF  0U
 #define GTZC_TZSC_LOCK_ON   GTZC_TZSC_CR_LCK_Msk
 
 /**
@@ -262,8 +264,8 @@ typedef struct
 /* user-oriented definitions for MPCBB */
 #define GTZC_MPCBB_BLOCK_SIZE           0x200U                        /* 512 Bytes */
 #define GTZC_MPCBB_SUPERBLOCK_SIZE      (GTZC_MPCBB_BLOCK_SIZE * 32U) /* 16 KBytes */
-#define GTZC_MCPBB_SUPERBLOCK_UNLOCKED  (0U)
-#define GTZC_MCPBB_SUPERBLOCK_LOCKED    (1U)
+#define GTZC_MCPBB_SUPERBLOCK_UNLOCKED  0U
+#define GTZC_MCPBB_SUPERBLOCK_LOCKED    1U
 
 #define GTZC_MCPBB_BLOCK_NSEC           (GTZC_ATTR_SEC_MASK  | 0U)
 #define GTZC_MCPBB_BLOCK_SEC            (GTZC_ATTR_SEC_MASK  | 1U)
@@ -271,8 +273,8 @@ typedef struct
 #define GTZC_MCPBB_BLOCK_PRIV           (GTZC_ATTR_PRIV_MASK | 2U)
 
 /* user-oriented definitions for HAL_GTZC_MPCBB_GetLock() returned value */
-#define GTZC_MCPBB_LOCK_OFF  (0U)
-#define GTZC_MCPBB_LOCK_ON   (1U)
+#define GTZC_MCPBB_LOCK_OFF  0U
+#define GTZC_MCPBB_LOCK_ON   1U
 
 /**
   * @}
@@ -283,8 +285,8 @@ typedef struct
   */
 
 /* user-oriented definitions for HAL_GTZC_TZIC_GetFlag() flag parameter */
-#define GTZC_TZIC_NO_ILA_EVENT       (0U)
-#define GTZC_TZIC_ILA_EVENT_PENDING  (1U)
+#define GTZC_TZIC_NO_ILA_EVENT       0U
+#define GTZC_TZIC_ILA_EVENT_PENDING  1U
 
 /**
   * @}

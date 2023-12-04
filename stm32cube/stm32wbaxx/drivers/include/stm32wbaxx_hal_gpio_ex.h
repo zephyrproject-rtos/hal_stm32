@@ -350,6 +350,8 @@ extern "C" {
 #define IS_GPIO_AF(AF)         ((AF) <= (uint8_t)0x0F)
 
 #endif /* defined(STM32WBA50xx) */
+
+
 /**
   * @}
   */

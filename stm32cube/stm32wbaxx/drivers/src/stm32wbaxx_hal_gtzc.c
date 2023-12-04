@@ -113,44 +113,28 @@
 
 /* Definitions for GTZC TZSC & TZIC ALL register values */
 /* TZSC1 / TZIC1 instances */
-#define TZSC1_SECCFGR1_ALL       (0x000222C3UL)
 #if defined (STM32WBA54xx) || defined (STM32WBA55xx)
+#define TZSC1_SECCFGR1_ALL       (0x000222C3UL)
 #define TZSC1_SECCFGR2_ALL       (0x018F00EBUL)
 #define TZSC1_SECCFGR3_ALL       (0x01C17858UL)
+#define TZIC1_IER4_ALL           (0xC3C0EF87UL)
 #else
+#define TZSC1_SECCFGR1_ALL       (0x000222C3UL)
 #define TZSC1_SECCFGR2_ALL       (0x010F006BUL)
 #define TZSC1_SECCFGR3_ALL       (0x00C17858UL)
-#endif /* STM32WBA54xx || STM32WBA55xx */
-
-#define TZSC1_PRIVCFGR1_ALL      (0x000222C3UL)
-#if defined (STM32WBA54xx) || defined (STM32WBA55xx)
-#define TZSC1_PRIVCFGR2_ALL      (0x018F00EBUL)
-#define TZSC1_PRIVCFGR3_ALL      (0x01C17858UL)
-#else
-#define TZSC1_PRIVCFGR2_ALL      (0x010F006BUL)
-#define TZSC1_PRIVCFGR3_ALL      (0x00C17858UL)
-#endif /* STM32WBA54xx || STM32WBA55xx */
-
-#define TZIC1_IER1_ALL           (0x000222C3UL)
-#if defined (STM32WBA54xx) || defined (STM32WBA55xx)
-#define TZIC1_IER2_ALL           (0x018F00EBUL)
-#define TZIC1_IER3_ALL           (0x01C1F858UL)
-#else
-#define TZIC1_IER2_ALL           (0x010F006BUL)
-#define TZIC1_IER3_ALL           (0x00C1F858UL)
-#endif /* STM32WBA54xx || STM32WBA55xx */
 #define TZIC1_IER4_ALL           (0xC3C0EF87UL)
-
-#define TZIC1_FCR1_ALL           (0x000222C3UL)
-#if defined (STM32WBA54xx) || defined (STM32WBA55xx)
-#define TZIC1_FCR2_ALL           (0x018F00EBUL)
-#define TZIC1_FCR3_ALL           (0x01C1F858UL)
-#else
-#define TZIC1_FCR2_ALL           (0x010F006BUL)
-#define TZIC1_FCR3_ALL           (0x00C1F858UL)
 #endif /* STM32WBA54xx || STM32WBA55xx */
-#define TZIC1_FCR4_ALL           (0xC3C0EF87UL)
 
+#define TZSC1_PRIVCFGR1_ALL      TZSC1_SECCFGR1_ALL
+#define TZSC1_PRIVCFGR2_ALL      TZSC1_SECCFGR2_ALL
+#define TZSC1_PRIVCFGR3_ALL      TZSC1_SECCFGR3_ALL
+#define TZIC1_IER1_ALL           TZSC1_SECCFGR1_ALL
+#define TZIC1_IER2_ALL           TZSC1_SECCFGR2_ALL
+#define TZIC1_IER3_ALL           TZSC1_SECCFGR3_ALL
+#define TZIC1_FCR1_ALL           TZIC1_IER1_ALL
+#define TZIC1_FCR2_ALL           TZIC1_IER2_ALL
+#define TZIC1_FCR3_ALL           TZIC1_IER3_ALL
+#define TZIC1_FCR4_ALL           TZIC1_IER4_ALL
 /**
   * @}
   */

@@ -39,7 +39,7 @@ extern "C" {
 /** @defgroup FLASHEx_Private_Constants FLASH Extended Private Constants
   * @{
   */
-#if defined(FLASH_SECBBR1_SECBB0) || defined(FLASH_PRIVBBR1_PRIVBB0)
+#if defined(FLASH_SECBBR1_SECBB0) || defined(FLASH_PRIVBBR1_PRIVBB0) || defined(FLASH_SECBB1R1_SECBB0) || defined(FLASH_PRIVBB1R1_PRIVBB0)
 #define FLASH_BLOCKBASED_NB_REG (4U) /*!< Number of block-based registers available */
 #endif /* FLASH_SECBBR1_SECBB0 || FLASH_PRIVBBR1_PRIVBB0 */
 /**
@@ -51,7 +51,7 @@ extern "C" {
   * @{
   */
 
-#if defined(FLASH_SECBBR1_SECBB0) || defined(FLASH_PRIVBBR1_PRIVBB0)
+#if defined(FLASH_SECBBR1_SECBB0) || defined(FLASH_PRIVBBR1_PRIVBB0) || defined(FLASH_SECBB1R1_SECBB0) || defined(FLASH_PRIVBB1R1_PRIVBB0)
 /**
   * @brief  FLASHEx Block-based attributes structure definition
   */
@@ -77,6 +77,19 @@ typedef struct
   uint32_t Address;          /*!< Flash operation Address offset.
                                   This parameter is given by bank, and must be a value between 0x0 and 0xFFFF0 */
 } FLASH_OperationTypeDef;
+
+/**
+  * @brief  FLASH ECC information structure definition
+  */
+typedef struct
+{
+  uint32_t Area;        /*!< Area from which an ECC was detected.
+                             This parameter can be a value of @ref FLASHEx_ECC_Area  */
+  uint32_t Address;     /*!< Flash address from which en ECC error was detected.
+                             This parameter must be a value between begin address and end address of the Flash */
+  uint32_t MasterID;    /*!< Master that initiated transfer on which error was detected
+                             This parameter can be a value of @ref FLASHEx_ECC_Master */
+} FLASH_EccInfoTypeDef;
 
 /**
   * @}
@@ -121,7 +134,7 @@ typedef struct
   * @}
   */
 
-#if defined(FLASH_SECBBR1_SECBB0) || defined(FLASH_PRIVBBR1_PRIVBB0)
+#if defined(FLASH_SECBBR1_SECBB0) || defined(FLASH_PRIVBBR1_PRIVBB0) || defined(FLASH_SECBB1R1_SECBB0) || defined(FLASH_PRIVBB1R1_PRIVBB0)
 /** @defgroup FLASHEx_BB_Attributes FLASH Block-Based Attributes
   * @{
   */
@@ -141,6 +154,23 @@ typedef struct
 #define FLASH_OPERATION_TYPE_PAGEERASE    (FLASH_OPSR_CODE_OP_1 | FLASH_OPSR_CODE_OP_0) /*!< Page erase operation    */
 #define FLASH_OPERATION_TYPE_MASSERASE    (FLASH_OPSR_CODE_OP_2 | FLASH_OPSR_CODE_OP_0) /*!< Mass erase operation    */
 #define FLASH_OPERATION_TYPE_OPTIONCHANGE (FLASH_OPSR_CODE_OP_2 | FLASH_OPSR_CODE_OP_1) /*!< Option change operation */
+/**
+  * @}
+  */
+
+/** @defgroup FLASHEx_ECC_Area FLASH ECC Area
+  * @{
+  */
+#define FLASH_ECC_AREA_USER_BANK1  0x00000000U          /*!< FLASH bank 1 area */
+#define FLASH_ECC_AREA_SYSTEM      FLASH_ECCR_SYSF_ECC  /*!< System FLASH area */
+/**
+  * @}
+  */
+
+/** @defgroup FLASHEx_ECC_Master FLASH ECC Master
+  * @{
+  */
+#define FLASH_ECC_MASTER_CPU1     0x00000000U  /*!< ECC error occurs on a CPU1 transaction */
 /**
   * @}
   */
@@ -196,7 +226,7 @@ HAL_StatusTypeDef HAL_FLASHEx_Erase(FLASH_EraseInitTypeDef *pEraseInit, uint32_t
 HAL_StatusTypeDef HAL_FLASHEx_Erase_IT(FLASH_EraseInitTypeDef *pEraseInit);
 HAL_StatusTypeDef HAL_FLASHEx_OBProgram(FLASH_OBProgramInitTypeDef *pOBInit);
 void              HAL_FLASHEx_OBGetConfig(FLASH_OBProgramInitTypeDef *pOBInit);
-#if defined(FLASH_SECBBR1_SECBB0) || defined(FLASH_PRIVBBR1_PRIVBB0)
+#if defined(FLASH_SECBBR1_SECBB0) || defined(FLASH_PRIVBBR1_PRIVBB0) || defined(FLASH_SECBB1R1_SECBB0) || defined(FLASH_PRIVBB1R1_PRIVBB0)
 HAL_StatusTypeDef HAL_FLASHEx_ConfigBBAttributes(FLASH_BBAttributesTypeDef *pBBAttributes);
 void              HAL_FLASHEx_GetConfigBBAttributes(FLASH_BBAttributesTypeDef *pBBAttributes);
 #endif /* FLASH_SECBBR1_SECBB0 || FLASH_PRIVBBR1_PRIVBB0 */
@@ -225,6 +255,19 @@ HAL_StatusTypeDef HAL_FLASHEx_EnablePowerDown(void);
 HAL_StatusTypeDef HAL_FLASHEx_ConfigLowPowerRead(uint32_t ConfigLPM);
 uint32_t          HAL_FLASHEx_GetLowPowerRead(void);
 void              HAL_FLASHEx_GetOperation(FLASH_OperationTypeDef *pFlashOperation);
+/**
+  * @}
+  */
+
+/** @addtogroup FLASHEx_Exported_Functions_Group3
+  * @{
+  */
+void              HAL_FLASHEx_EnableEccCorrectionInterrupt(void);
+void              HAL_FLASHEx_DisableEccCorrectionInterrupt(void);
+void              HAL_FLASHEx_GetEccInfo(FLASH_EccInfoTypeDef *pData);
+void              HAL_FLASHEx_ECCD_IRQHandler(void);
+__weak void       HAL_FLASHEx_EccDetectionCallback(void);
+__weak void       HAL_FLASHEx_EccCorrectionCallback(void);
 /**
   * @}
   */

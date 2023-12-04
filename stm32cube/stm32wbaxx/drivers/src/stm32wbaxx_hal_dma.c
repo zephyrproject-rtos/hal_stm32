@@ -95,8 +95,7 @@
               (++) can be a value of DMA_Transfer_Event_Mode
 
           (+) Mode                  : Specifies the transfer mode for the DMA channel
-              (++) can be a value of DMA_Transfer_Mode
-
+              (++) can be DMA_NORMAL
 
     *** Polling mode IO operation ***
     =================================
@@ -321,7 +320,7 @@ HAL_StatusTypeDef HAL_DMA_DeInit(DMA_HandleTypeDef *const hdma)
 {
 #if defined (DMA_PRIVCFGR_PRIV0)
   DMA_TypeDef *p_dma_instance;
-#endif /* defined (DMA_PRIVCFGR_PRIV0) */
+#endif /* DMA_PRIVCFGR_PRIV0 */
   uint32_t tickstart = HAL_GetTick();
 
   /* Check the DMA peripheral handle parameter */
@@ -335,7 +334,7 @@ HAL_StatusTypeDef HAL_DMA_DeInit(DMA_HandleTypeDef *const hdma)
 #if defined (DMA_PRIVCFGR_PRIV0)
   /* Get DMA instance */
   p_dma_instance = GET_DMA_INSTANCE(hdma);
-#endif /* defined (DMA_PRIVCFGR_PRIV0) */
+#endif /* DMA_PRIVCFGR_PRIV0 */
   /* Disable the selected DMA Channel */
   __HAL_DMA_DISABLE(hdma);
 
@@ -367,11 +366,11 @@ HAL_StatusTypeDef HAL_DMA_DeInit(DMA_HandleTypeDef *const hdma)
 #if defined (DMA_PRIVCFGR_PRIV0)
   /* Clear privilege attribute */
   CLEAR_BIT(p_dma_instance->PRIVCFGR, (1UL << (GET_DMA_CHANNEL(hdma) & 0x1FU)));
-#endif /* defined (DMA_PRIVCFGR_PRIV0) */
+#endif /* DMA_PRIVCFGR_PRIV0 */
 #if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
   /* Clear secure attribute */
   CLEAR_BIT(p_dma_instance->SECCFGR, (1UL << (GET_DMA_CHANNEL(hdma) & 0x1FU)));
-#endif /* defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U) */
+#endif /* (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U) */
 
   /* Clear all flags */
   __HAL_DMA_CLEAR_FLAG(hdma, (DMA_FLAG_TC | DMA_FLAG_HT | DMA_FLAG_DTE | DMA_FLAG_ULE | DMA_FLAG_USE | DMA_FLAG_SUSP |
@@ -884,14 +883,14 @@ void HAL_DMA_IRQHandler(DMA_HandleTypeDef *const hdma)
   uint32_t global_active_flag_ns = IS_DMA_GLOBAL_ACTIVE_FLAG_NS(p_dma_instance, global_it_flag);
 #if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
   uint32_t global_active_flag_s = IS_DMA_GLOBAL_ACTIVE_FLAG_S(p_dma_instance, global_it_flag);
-#endif /* defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U) */
+#endif /* (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U) */
 
   /* Global Interrupt Flag management *********************************************************************************/
 #if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
   if ((global_active_flag_s == 0U) && (global_active_flag_ns == 0U))
 #else
   if (global_active_flag_ns == 0U)
-#endif /* defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U) */
+#endif /* (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U) */
   {
     return; /* the global interrupt flag for the current channel is down , nothing to do */
   }
@@ -988,16 +987,8 @@ void HAL_DMA_IRQHandler(DMA_HandleTypeDef *const hdma)
         /* Reset the channel internal state and reset the FIFO */
         hdma->Instance->CCR |= DMA_CCR_RESET;
 
-        if ((hdma->Instance->CCR & DMA_CCR_EN) != 0U)
-        {
-          /* Update the DMA channel state */
-          hdma->State = HAL_DMA_STATE_ERROR;
-        }
-        else
-        {
-          /* Update the DMA channel state */
-          hdma->State = HAL_DMA_STATE_READY;
-        }
+        /* Update the DMA channel state */
+        hdma->State = HAL_DMA_STATE_READY;
 
         /* Check DMA channel transfer mode */
         if ((hdma->Mode & DMA_LINKEDLIST) == DMA_LINKEDLIST)
@@ -1089,16 +1080,8 @@ void HAL_DMA_IRQHandler(DMA_HandleTypeDef *const hdma)
     /* Reset the channel internal state and reset the FIFO */
     hdma->Instance->CCR |= DMA_CCR_RESET;
 
-    if ((hdma->Instance->CCR & DMA_CCR_EN) != 0U)
-    {
-      /* Update the DMA channel state */
-      hdma->State = HAL_DMA_STATE_ERROR;
-    }
-    else
-    {
-      /* Update the DMA channel state */
-      hdma->State = HAL_DMA_STATE_READY;
-    }
+    /* Update the DMA channel state */
+    hdma->State = HAL_DMA_STATE_READY;
 
     /* Check DMA channel transfer mode */
     if ((hdma->Mode & DMA_LINKEDLIST) == DMA_LINKEDLIST)
@@ -1448,7 +1431,7 @@ HAL_StatusTypeDef HAL_DMA_ConfigChannelAttributes(DMA_HandleTypeDef *const hdma,
       hdma->Instance->CTR1 &= (~DMA_CTR1_DSEC);
     }
   }
-#endif /* defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U) */
+#endif /* (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U) */
 
   return HAL_OK;
 }
@@ -1482,7 +1465,7 @@ HAL_StatusTypeDef HAL_DMA_GetConfigChannelAttributes(DMA_HandleTypeDef const *co
   /* Get DMA channel privilege attribute */
   attributes = ((p_dma_instance->PRIVCFGR & channel_idx) == 0U) ? DMA_CHANNEL_NPRIV : DMA_CHANNEL_PRIV;
 
-#if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
+#if defined (DMA_SECCFGR_SEC0)
   /* Get DMA channel security attribute */
   attributes |= ((p_dma_instance->SECCFGR & channel_idx) == 0U) ? DMA_CHANNEL_NSEC : DMA_CHANNEL_SEC;
 
@@ -1491,14 +1474,14 @@ HAL_StatusTypeDef HAL_DMA_GetConfigChannelAttributes(DMA_HandleTypeDef const *co
 
   /* Get DMA channel destination security attribute */
   attributes |= ((hdma->Instance->CTR1 & DMA_CTR1_DSEC) == 0U) ? DMA_CHANNEL_DEST_NSEC : DMA_CHANNEL_DEST_SEC;
+#endif /* DMA_SECCFGR_SEC0 */
 
-#endif /* defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U) */
   /* return value */
   *pChannelAttributes = attributes;
 
   return HAL_OK;
 }
-#endif /* defined (DMA_PRIVCFGR_PRIV0) */
+#endif /* DMA_PRIVCFGR_PRIV0 */
 #if defined (DMA_RCFGLOCKR_LOCK0)
 #if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
 /**
@@ -1529,7 +1512,7 @@ HAL_StatusTypeDef HAL_DMA_LockChannelAttributes(DMA_HandleTypeDef const *const h
 
   return HAL_OK;
 }
-#endif /* defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U) */
+#endif /* (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U) */
 
 /**
   * @brief  Get the security and privilege attribute lock state of a DMA channel.
@@ -1562,7 +1545,7 @@ HAL_StatusTypeDef HAL_DMA_GetLockChannelAttributes(DMA_HandleTypeDef const *cons
 
   return HAL_OK;
 }
-#endif /* defined (DMA_RCFGLOCKR_LOCK0) */
+#endif /* DMA_RCFGLOCKR_LOCK0 */
 /**
   * @}
   */
@@ -1638,7 +1621,7 @@ static void DMA_Init(DMA_HandleTypeDef const *const hdma)
   MODIFY_REG(hdma->Instance->CTR1, ~(DMA_CTR1_SSEC | DMA_CTR1_DSEC), tmpreg);
 #else
   WRITE_REG(hdma->Instance->CTR1, tmpreg);
-#endif /* defined (DMA_CTR1_SSEC) */
+#endif /* DMA_CTR1_SSEC */
 
   /* Prepare DMA Channel Transfer Register 2 (CTR2) value *************************************************************/
   tmpreg = hdma->Init.BlkHWRequest | (hdma->Init.Request & DMA_CTR2_REQSEL) | hdma->Init.TransferEventMode;

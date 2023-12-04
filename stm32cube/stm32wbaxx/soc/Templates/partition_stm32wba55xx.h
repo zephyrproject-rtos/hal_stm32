@@ -14,13 +14,22 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
-  * All rights reserved.
+  * Copyright (c) 2009-2019 Arm Limited. All rights reserved.
+  * Copyright (c) 2022 STMicroelectronics. All rights reserved.
   *
-  * This software is licensed under terms that can be found in the LICENSE file
-  * in the root directory of this software component.
-  * If no LICENSE file comes with this software, it is provided AS-IS.
+  * SPDX-License-Identifier: Apache-2.0
   *
+  * Licensed under the Apache License, Version 2.0 (the License); you may
+  * not use this file except in compliance with the License.
+  * You may obtain a copy of the License at
+  *
+  * www.apache.org/licenses/LICENSE-2.0
+  *
+  * Unless required by applicable law or agreed to in writing, software
+  * distributed under the License is distributed on an AS IS BASIS, WITHOUT
+  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  * See the License for the specific language governing permissions and
+  * limitations under the License.
   ******************************************************************************
  */
 
@@ -461,11 +470,14 @@
 
 /*
 // Interrupts 64..95
-//   <o.0>  ICACHE_IRQn            <0=> Secure state <1=> Non-Secure state
-//   <o.1>  ADC4_IRQn            <0=> Secure state <1=> Non-Secure state
-//   <o.2>  RADIO_IRQn          <0=> Secure state <1=> Non-Secure state
-//   <o.3>  HSEM_IRQn           <0=> Secure state <1=> Non-Secure state
-//   <o.4>  HSEM_S_IRQn           <0=> Secure state <1=> Non-Secure state
+//   <o.0>  ICACHE_IRQn           <0=> Secure state <1=> Non-Secure state
+//   <o.1>  ADC4_IRQn             <0=> Secure state <1=> Non-Secure state
+//   <o.2>  RADIO_IRQn            <0=> Secure state <1=> Non-Secure state
+//   <o.3>  WKUP_IRQn             <0=> Secure state <1=> Non-Secure state
+//   <o.4>  HSEM_IRQn             <0=> Secure state <1=> Non-Secure state
+//   <o.5>  HSEM_S_IRQn           <0=> Secure state <1=> Non-Secure state
+//   <o.6>  WKUP_S_IRQn           <0=> Secure state <1=> Non-Secure state
+//   <o.7>  RCC_AUDIOSYNC_IRQn    <0=> Secure state <1=> Non-Secure state
 */
 #define NVIC_INIT_ITNS2_VAL      0x00000000
 

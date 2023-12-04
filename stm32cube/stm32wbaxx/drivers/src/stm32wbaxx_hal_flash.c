@@ -297,7 +297,7 @@ void HAL_FLASH_IRQHandler(void)
   uint32_t param = 0U;
   uint32_t error;
   __IO uint32_t *reg_cr;
-  __IO uint32_t type;
+  uint32_t type;
   __IO uint32_t *reg_sr;
 
   type = (pFlash.ProcedureOnGoing & ~(FLASH_NON_SECURE_MASK));
@@ -328,13 +328,17 @@ void HAL_FLASH_IRQHandler(void)
   {
     param = pFlash.Address;
   }
+  else if (type == FLASH_TYPEPROGRAM_BURST)
+  {
+    param = pFlash.Address;
+  }
   else
   {
     /* Empty statement (to be compliant MISRA 15.7) */
   }
 
   /* Clear operation bit on the on-going procedure */
-  CLEAR_BIT((*reg_cr), (pFlash.ProcedureOnGoing & ~(FLASH_NON_SECURE_MASK)));
+  CLEAR_BIT((*reg_cr), (type | FLASH_NSCR1_PNB));
 
   /* Check FLASH operation error flags */
   if (error != 0U)
@@ -400,6 +404,16 @@ void HAL_FLASH_IRQHandler(void)
 
     /* Process Unlocked */
     __HAL_UNLOCK(&pFlash);
+  }
+
+  /* Check ECC Correction Error */
+  if ((FLASH->ECCR & (FLASH_ECCR_ECCC | FLASH_ECCR_ECCIE)) == (FLASH_ECCR_ECCC | FLASH_ECCR_ECCIE))
+  {
+    /* Call User callback */
+    HAL_FLASHEx_EccCorrectionCallback();
+
+    /* Clear ECC correction flag in order to allow new ECC error record */
+    SET_BIT(FLASH->ECCR, FLASH_ECCR_ECCC);
   }
 }
 

@@ -133,17 +133,17 @@ typedef struct
 /** @defgroup PWR_Flags PWR Flags
   * @{
   */
-#define PWR_FLAG_VOSRDY               (0x01U) /*!< Voltage scaling ready flag                                      */
-#define PWR_FLAG_STOPF                (0x02U) /*!< Stop flag                                                       */
-#define PWR_FLAG_SBF                  (0x03U) /*!< Standby flag                                                    */
-#define PWR_FLAG_ACTVOSRDY            (0x04U) /*!< Currently applied VOS ready flag                                */
-#define PWR_FLAG_PVDO                 (0x05U) /*!< VDD voltage detector output flag                                */
+#define PWR_FLAG_VOSRDY               (1U)  /*!< Voltage scaling ready flag                                      */
+#define PWR_FLAG_STOPF                (2U)  /*!< Stop flag                                                       */
+#define PWR_FLAG_SBF                  (3U)  /*!< Standby flag                                                    */
+#define PWR_FLAG_ACTVOSRDY            (4U)  /*!< Currently applied VOS ready flag                                */
+#define PWR_FLAG_PVDO                 (5U)  /*!< VDD voltage detector output flag                                */
 #if defined(PWR_SVMSR_REGS)
-#define PWR_FLAG_REGS                 (0x06U) /*!< Regulator selection flag                                        */
+#define PWR_FLAG_REGS                 (6U)  /*!< Regulator selection flag                                        */
 #endif /* defined(PWR_SVMSR_REGS) */
-#define PWR_FLAG_REGPARDYVDDRFPA      (0x07U) /*!< Ready bit for VDDHPA voltage level when selecting VDDRFPA input */
+#define PWR_FLAG_REGPARDYVDDRFPA      (7U)  /*!< Ready bit for VDDHPA voltage level when selecting VDDRFPA input */
 #if defined(PWR_RADIOSCR_REGPARDYV11)
-#define PWR_FLAG_REGPARDYV11          (0x08U) /*!< Ready bit for VDDHPA voltage level when selecting VDD11 input   */
+#define PWR_FLAG_REGPARDYV11          (8U)  /*!< Ready bit for VDDHPA voltage level when selecting VDD11 input   */
 #endif /* defined(PWR_RADIOSCR_REGPARDYV11) */
 /**
   * @}
@@ -173,9 +173,9 @@ typedef struct
   * @{
   */
 #define PWR_WAKEUP_PIN1_HIGH_0 (PWR_WUCR1_WUPEN1 | PWR_WAKEUP1_SOURCE_SELECTION_0) /*!< PA0  : Wakeup pin 1 (high polarity) */
-#if defined (STM32WBA52xx) || defined (STM32WBA54xx) || defined (STM32WBA55xx)
+#if defined(STM32WBA52xx) || defined(STM32WBA54xx) || defined(STM32WBA55xx)
 #define PWR_WAKEUP_PIN1_HIGH_1 (PWR_WUCR1_WUPEN1 | PWR_WAKEUP1_SOURCE_SELECTION_1) /*!< PB2  : Wakeup pin 1 (high polarity) */
-#endif /* defined (STM32WBA52xx) || defined (STM32WBA54xx) || defined (STM32WBA55xx) */
+#endif /* defined(STM32WBA52xx) || defined(STM32WBA54xx) || defined(STM32WBA55xx) */
 
 #if defined(PWR_WUCR1_WUPEN2)
 #define PWR_WAKEUP_PIN2_HIGH_0 (PWR_WUCR1_WUPEN2 | PWR_WAKEUP2_SOURCE_SELECTION_0) /*!< PA4  : Wakeup pin 2 (high polarity) */
@@ -183,14 +183,14 @@ typedef struct
 #endif /* defined(PWR_WUCR1_WUPEN2) */
 
 #define PWR_WAKEUP_PIN3_HIGH_1 (PWR_WUCR1_WUPEN3 | PWR_WAKEUP3_SOURCE_SELECTION_1) /*!< PA1  : Wakeup pin 3 (high polarity) */
-#if defined (STM32WBA52xx) || defined (STM32WBA54xx) || defined (STM32WBA55xx)
+#if defined(STM32WBA52xx) || defined(STM32WBA54xx) || defined(STM32WBA55xx)
 #define PWR_WAKEUP_PIN3_HIGH_2 (PWR_WUCR1_WUPEN3 | PWR_WAKEUP3_SOURCE_SELECTION_2) /*!< PB6  : Wakeup pin 3 (high polarity) */
-#endif /* defined (STM32WBA52xx) || defined (STM32WBA54xx) || defined (STM32WBA55xx) */
+#endif /* defined(STM32WBA52xx) || defined(STM32WBA54xx) || defined(STM32WBA55xx) */
 
 #define PWR_WAKEUP_PIN4_HIGH_0 (PWR_WUCR1_WUPEN4 | PWR_WAKEUP4_SOURCE_SELECTION_0) /*!< PA2  : Wakeup pin 4 (high polarity) */
-#if defined (STM32WBA52xx) || defined (STM32WBA54xx) || defined (STM32WBA55xx)
+#if defined(STM32WBA52xx) || defined(STM32WBA54xx) || defined(STM32WBA55xx)
 #define PWR_WAKEUP_PIN4_HIGH_1 (PWR_WUCR1_WUPEN4 | PWR_WAKEUP4_SOURCE_SELECTION_1) /*!< PB1  : Wakeup pin 4 (high polarity) */
-#endif /* defined (STM32WBA52xx) || defined (STM32WBA54xx) || defined (STM32WBA55xx) */
+#endif /* defined(STM32WBA52xx) || defined(STM32WBA54xx) || defined(STM32WBA55xx) */
 
 #if defined(PWR_WUCR1_WUPEN5)
 #define PWR_WAKEUP_PIN5_HIGH_1 (PWR_WUCR1_WUPEN5 | PWR_WAKEUP5_SOURCE_SELECTION_1) /*!< PA3  : Wakeup pin 5 (high polarity) */
@@ -201,9 +201,9 @@ typedef struct
 #define PWR_WAKEUP_PIN6_HIGH_1 (PWR_WUCR1_WUPEN6 | PWR_WAKEUP6_SOURCE_SELECTION_1) /*!< PA5  : Wakeup pin 6 (high polarity) */
 #define PWR_WAKEUP_PIN6_HIGH_3 (PWR_WUCR1_WUPEN6 | PWR_WAKEUP6_SOURCE_SELECTION_3) /*!< RTC  : Wakeup pin 6 (high polarity) */
 
-#if defined (STM32WBA52xx) || defined (STM32WBA54xx) || defined (STM32WBA55xx)
+#if defined(STM32WBA52xx) || defined(STM32WBA54xx) || defined(STM32WBA55xx)
 #define PWR_WAKEUP_PIN7_HIGH_0 (PWR_WUCR1_WUPEN7 | PWR_WAKEUP7_SOURCE_SELECTION_0) /*!< PB14 : Wakeup pin 7 (high polarity) */
-#endif /* defined (STM32WBA52xx) || defined (STM32WBA54xx) || defined (STM32WBA55xx) */
+#endif /* defined(STM32WBA52xx) || defined(STM32WBA54xx) || defined(STM32WBA55xx) */
 #define PWR_WAKEUP_PIN7_HIGH_1 (PWR_WUCR1_WUPEN7 | PWR_WAKEUP7_SOURCE_SELECTION_1) /*!< PA6  : Wakeup pin 7 (high polarity) */
 #define PWR_WAKEUP_PIN7_HIGH_3 (PWR_WUCR1_WUPEN7 | PWR_WAKEUP7_SOURCE_SELECTION_3) /*!< RTC  : Wakeup pin 7 (high polarity) */
 
@@ -218,9 +218,9 @@ typedef struct
   * @{
   */
 #define PWR_WAKEUP_PIN1_LOW_0 (PWR_WUCR1_WUPEN1 | PWR_WAKEUP1_POLARITY_LOW | PWR_WAKEUP1_SOURCE_SELECTION_0) /*!< PA0  : Wakeup pin 1 (low polarity) */
-#if defined (STM32WBA52xx) || defined (STM32WBA54xx) || defined (STM32WBA55xx)
+#if defined(STM32WBA52xx) || defined(STM32WBA54xx) || defined(STM32WBA55xx)
 #define PWR_WAKEUP_PIN1_LOW_1 (PWR_WUCR1_WUPEN1 | PWR_WAKEUP1_POLARITY_LOW | PWR_WAKEUP1_SOURCE_SELECTION_1) /*!< PB2  : Wakeup pin 1 (low polarity) */
-#endif /* defined (STM32WBA52xx) || defined (STM32WBA54xx) || defined (STM32WBA55xx) */
+#endif /* defined(STM32WBA52xx) || defined(STM32WBA54xx) || defined(STM32WBA55xx) */
 
 #if defined(PWR_WUCR1_WUPEN2)
 #define PWR_WAKEUP_PIN2_LOW_0 (PWR_WUCR1_WUPEN2 | PWR_WAKEUP2_POLARITY_LOW | PWR_WAKEUP2_SOURCE_SELECTION_0) /*!< PA4  : Wakeup pin 2 (low polarity) */
@@ -228,14 +228,14 @@ typedef struct
 #endif /* defined(PWR_WUCR1_WUPEN2) */
 
 #define PWR_WAKEUP_PIN3_LOW_1 (PWR_WUCR1_WUPEN3 | PWR_WAKEUP3_POLARITY_LOW | PWR_WAKEUP3_SOURCE_SELECTION_1) /*!< PA1  : Wakeup pin 3 (low polarity) */
-#if defined (STM32WBA52xx) || defined (STM32WBA54xx) || defined (STM32WBA55xx)
+#if defined(STM32WBA52xx) || defined(STM32WBA54xx) || defined(STM32WBA55xx)
 #define PWR_WAKEUP_PIN3_LOW_2 (PWR_WUCR1_WUPEN3 | PWR_WAKEUP3_POLARITY_LOW | PWR_WAKEUP3_SOURCE_SELECTION_2) /*!< PB6  : Wakeup pin 3 (low polarity) */
-#endif /* defined (STM32WBA52xx) || defined (STM32WBA54xx) || defined (STM32WBA55xx) */
+#endif /* defined(STM32WBA52xx) || defined(STM32WBA54xx) || defined(STM32WBA55xx) */
 
 #define PWR_WAKEUP_PIN4_LOW_0 (PWR_WUCR1_WUPEN4 | PWR_WAKEUP4_POLARITY_LOW | PWR_WAKEUP4_SOURCE_SELECTION_0) /*!< PA2  : Wakeup pin 4 (low polarity) */
-#if defined (STM32WBA52xx) || defined (STM32WBA54xx) || defined (STM32WBA55xx)
+#if defined(STM32WBA52xx) || defined(STM32WBA54xx) || defined(STM32WBA55xx)
 #define PWR_WAKEUP_PIN4_LOW_1 (PWR_WUCR1_WUPEN4 | PWR_WAKEUP4_POLARITY_LOW | PWR_WAKEUP4_SOURCE_SELECTION_1) /*!< PB1  : Wakeup pin 4 (low polarity) */
-#endif /* defined (STM32WBA52xx) || defined (STM32WBA54xx) || defined (STM32WBA55xx) */
+#endif /* defined(STM32WBA52xx) || defined(STM32WBA54xx) || defined(STM32WBA55xx) */
 
 #if defined(PWR_WUCR1_WUPEN5)
 #define PWR_WAKEUP_PIN5_LOW_1 (PWR_WUCR1_WUPEN5 | PWR_WAKEUP5_POLARITY_LOW | PWR_WAKEUP5_SOURCE_SELECTION_1) /*!< PA3  : Wakeup pin 5 (low polarity) */
@@ -246,9 +246,9 @@ typedef struct
 #define PWR_WAKEUP_PIN6_LOW_1 (PWR_WUCR1_WUPEN6 | PWR_WAKEUP6_POLARITY_LOW | PWR_WAKEUP6_SOURCE_SELECTION_1) /*!< PA5  : Wakeup pin 6 (low polarity) */
 #define PWR_WAKEUP_PIN6_LOW_3 (PWR_WUCR1_WUPEN6 | PWR_WAKEUP6_POLARITY_LOW | PWR_WAKEUP6_SOURCE_SELECTION_3) /*!< RTC  : Wakeup pin 6 (low polarity) */
 
-#if defined (STM32WBA52xx) || defined (STM32WBA54xx) || defined (STM32WBA55xx)
+#if defined(STM32WBA52xx) || defined(STM32WBA54xx) || defined(STM32WBA55xx)
 #define PWR_WAKEUP_PIN7_LOW_0 (PWR_WUCR1_WUPEN7 | PWR_WAKEUP7_POLARITY_LOW | PWR_WAKEUP7_SOURCE_SELECTION_0) /*!< PB14 : Wakeup pin 7 (low polarity) */
-#endif /* defined (STM32WBA52xx) || defined (STM32WBA54xx) || defined (STM32WBA55xx) */
+#endif /* defined(STM32WBA52xx) || defined(STM32WBA54xx) || defined(STM32WBA55xx) */
 #define PWR_WAKEUP_PIN7_LOW_1 (PWR_WUCR1_WUPEN7 | PWR_WAKEUP7_POLARITY_LOW | PWR_WAKEUP7_SOURCE_SELECTION_1) /*!< PA6  : Wakeup pin 7 (low polarity) */
 #define PWR_WAKEUP_PIN7_LOW_3 (PWR_WUCR1_WUPEN7 | PWR_WAKEUP7_POLARITY_LOW | PWR_WAKEUP7_SOURCE_SELECTION_3) /*!< RTC  : Wakeup pin 7 (low polarity) */
 
@@ -642,9 +642,9 @@ typedef struct
 
 /* Defines wake up lines selection */
 #define PWR_WAKEUP1_SOURCE_SELECTION_0 (0U)
-#if defined (STM32WBA52xx) || defined (STM32WBA54xx) || defined (STM32WBA55xx)
+#if defined(STM32WBA52xx) || defined(STM32WBA54xx) || defined(STM32WBA55xx)
 #define PWR_WAKEUP1_SOURCE_SELECTION_1 (PWR_WUCR3_WUSEL1_0 << PWR_WUP_SELECT_SIGNAL_SHIFT)                        /*!< Internal constant used to retrieve wakeup signal selection */
-#endif /* defined (STM32WBA52xx) || defined (STM32WBA54xx) || defined (STM32WBA55xx) */
+#endif /* defined(STM32WBA52xx) || defined(STM32WBA54xx) || defined(STM32WBA55xx) */
 
 #if defined(PWR_WUCR1_WUPEN2)
 #define PWR_WAKEUP2_SOURCE_SELECTION_0 (0U)                                                                       /*!< Internal constant used to retrieve wakeup signal selection */
@@ -652,14 +652,14 @@ typedef struct
 #endif /* defined(PWR_WUCR1_WUPEN2) */
 
 #define PWR_WAKEUP3_SOURCE_SELECTION_1 (PWR_WUCR3_WUSEL3_0 << PWR_WUP_SELECT_SIGNAL_SHIFT)                        /*!< Internal constant used to retrieve wakeup signal selection */
-#if defined (STM32WBA52xx) || defined (STM32WBA54xx) || defined (STM32WBA55xx)
+#if defined(STM32WBA52xx) || defined(STM32WBA54xx) || defined(STM32WBA55xx)
 #define PWR_WAKEUP3_SOURCE_SELECTION_2 (PWR_WUCR3_WUSEL3_1 << PWR_WUP_SELECT_SIGNAL_SHIFT)                        /*!< Internal constant used to retrieve wakeup signal selection */
-#endif /* defined (STM32WBA52xx) || defined (STM32WBA54xx) || defined (STM32WBA55xx) */
+#endif /* defined(STM32WBA52xx) || defined(STM32WBA54xx) || defined(STM32WBA55xx) */
 
 #define PWR_WAKEUP4_SOURCE_SELECTION_0 (0U)                                                                       /*!< Internal constant used to retrieve wakeup signal selection */
-#if defined (STM32WBA52xx) || defined (STM32WBA54xx) || defined (STM32WBA55xx)
+#if defined(STM32WBA52xx) || defined(STM32WBA54xx) || defined(STM32WBA55xx)
 #define PWR_WAKEUP4_SOURCE_SELECTION_1 (PWR_WUCR3_WUSEL4_0 << PWR_WUP_SELECT_SIGNAL_SHIFT)                        /*!< Internal constant used to retrieve wakeup signal selection */
-#endif /* defined (STM32WBA52xx) || defined (STM32WBA54xx) || defined (STM32WBA55xx) */
+#endif /* defined(STM32WBA52xx) || defined(STM32WBA54xx) || defined(STM32WBA55xx) */
 
 #if defined(PWR_WUCR1_WUPEN5)
 #define PWR_WAKEUP5_SOURCE_SELECTION_1 (PWR_WUCR3_WUSEL5_0 << PWR_WUP_SELECT_SIGNAL_SHIFT)                        /*!< Internal constant used to retrieve wakeup signal selection */
@@ -670,9 +670,9 @@ typedef struct
 #define PWR_WAKEUP6_SOURCE_SELECTION_1 (PWR_WUCR3_WUSEL6_0 << PWR_WUP_SELECT_SIGNAL_SHIFT)                        /*!< Internal constant used to retrieve wakeup signal selection */
 #define PWR_WAKEUP6_SOURCE_SELECTION_3 ((PWR_WUCR3_WUSEL6_0 | PWR_WUCR3_WUSEL6_1) << PWR_WUP_SELECT_SIGNAL_SHIFT) /*!< Internal constant used to retrieve wakeup signal selection */
 
-#if defined (STM32WBA52xx) || defined (STM32WBA54xx) || defined (STM32WBA55xx)
+#if defined(STM32WBA52xx) || defined(STM32WBA54xx) || defined(STM32WBA55xx)
 #define PWR_WAKEUP7_SOURCE_SELECTION_0 (0U)                                                                       /*!< Internal constant used to retrieve wakeup signal selection */
-#endif /* defined (STM32WBA52xx) || defined (STM32WBA54xx) || defined (STM32WBA55xx) */
+#endif /* defined(STM32WBA52xx) || defined(STM32WBA54xx) || defined(STM32WBA55xx) */
 #define PWR_WAKEUP7_SOURCE_SELECTION_1 (PWR_WUCR3_WUSEL7_0 << PWR_WUP_SELECT_SIGNAL_SHIFT)                        /*!< Internal constant used to retrieve wakeup signal selection */
 #define PWR_WAKEUP7_SOURCE_SELECTION_3 ((PWR_WUCR3_WUSEL7_0 | PWR_WUCR3_WUSEL7_1) << PWR_WUP_SELECT_SIGNAL_SHIFT) /*!< Internal constant used to retrieve wakeup signal selection */
 
@@ -708,8 +708,8 @@ typedef struct
   */
 
 /* Stop mode entry check macro */
-#define IS_PWR_REGULATOR(REGULATOR)  (((REGULATOR) == PWR_MAINREGULATOR_ON) || \
-                                      ((REGULATOR) == PWR_LOWPOWERREGULATOR_ON))
+#define IS_PWR_REGULATOR(REGULATOR)  (((REGULATOR) == PWR_LOWPOWERMODE_STOP0) || \
+                                      ((REGULATOR) == PWR_LOWPOWERMODE_STOP1))
 
 /* Wake up pins check macro */
 #if defined(PWR_WUCR1_WUPEN2) && defined(PWR_WUCR1_WUPEN5)
@@ -815,7 +815,7 @@ typedef struct
 #define IS_PWR_ITEMS_ATTRIBUTES(ITEM) ((((ITEM) & (~PWR_ALL)) == 0U) && ((ITEM) != 0U))
 
 #if defined(PWR_PRIVCFGR_SPRIV)
-#if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
+#if defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
 /* PWR attribute check macro (Secure) */
 #define IS_PWR_ATTRIBUTES(ATTRIBUTES) ((((~(((ATTRIBUTES)& \
                                              0xF0U) >> 4U)) & ((ATTRIBUTES) & 0x0FU)) == 0U) && \
@@ -883,14 +883,14 @@ void HAL_PWR_PVD_Rising_Callback(void);
 void HAL_PWR_PVD_Falling_Callback(void);
 void HAL_PWR_WKUP_IRQHandler(void);
 void HAL_PWR_WKUP1_Callback(void);
-#if defined (PWR_WUCR1_WUPEN2)
+#if defined(PWR_WUCR1_WUPEN2)
 void HAL_PWR_WKUP2_Callback(void);
-#endif /* defined (PWR_WUCR1_WUPEN2) */
+#endif /* defined(PWR_WUCR1_WUPEN2) */
 void HAL_PWR_WKUP3_Callback(void);
 void HAL_PWR_WKUP4_Callback(void);
-#if defined (PWR_WUCR1_WUPEN5)
+#if defined(PWR_WUCR1_WUPEN5)
 void HAL_PWR_WKUP5_Callback(void);
-#endif /* defined (PWR_WUCR1_WUPEN5) */
+#endif /* defined(PWR_WUCR1_WUPEN5) */
 void HAL_PWR_WKUP6_Callback(void);
 void HAL_PWR_WKUP7_Callback(void);
 void HAL_PWR_WKUP8_Callback(void);
