@@ -52,11 +52,11 @@ extern "C" {
   * @{
   */
 /* SRAM1 pages retention defines */
-#define PWR_SRAM1_FULL_STOP_RETENTION     PWR_CR2_SRAM1PDS1     /*!< SRAM1 full retention in Stop modes (Stop 0, 1)  */
+#define PWR_SRAM1_FULL_STOP_RETENTION        PWR_CR2_SRAM1PDS1     /*!< SRAM1 full retention in Stop modes */
 /* SRAM2 pages retention defines */
-#define PWR_SRAM2_FULL_STOP_RETENTION     PWR_CR2_SRAM2PDS1     /*!< SRAM2 full retention in Stop modes (Stop 0, 1)  */
+#define PWR_SRAM2_FULL_STOP_RETENTION        PWR_CR2_SRAM2PDS1     /*!< SRAM2 full retention in Stop modes */
 /* Cache RAMs retention defines */
-#define PWR_ICACHE_FULL_STOP_RETENTION    PWR_CR2_ICRAMPDS      /*!< ICACHE SRAM retention in Stop modes (Stop 0, 1) */
+#define PWR_ICACHE_FULL_STOP_RETENTION       PWR_CR2_ICRAMPDS      /*!< ICACHE SRAM retention in Stop modes */
 /**
   * @}
   */
@@ -65,9 +65,8 @@ extern "C" {
 /** @defgroup PWREx_RAM_Contents_Standby_Retention PWR Extended SRAM Contents Standby Retention
   * @{
   */
-#if defined(PWR_CR1_R1RSB1)
 #define PWR_SRAM1_FULL_STANDBY_RETENTION        PWR_CR1_R1RSB1      /*!< SRAM1 full retention in Standby mode      */
-#endif /* defined(PWR_CR1_R1RSB1) */
+
 #define PWR_SRAM2_FULL_STANDBY_RETENTION        PWR_CR1_R2RSB1      /*!< SRAM2 full retention in Standby mode      */
 #define PWR_RADIOSRAM_FULL_STANDBY_RETENTION    PWR_CR1_RADIORSB    /*!< 2.4GHz RADIO SRAMs (TXRX and Sequence)
                                                                          and Sleep clock retention in Standby mode */
@@ -219,16 +218,12 @@ extern "C" {
   * @{
   */
 
-
 /* All available RAM retention in Stop mode define */
 #define PWR_ALL_RAM_STOP_RETENTION_MASK (PWR_SRAM1_FULL_STOP_RETENTION | PWR_SRAM2_FULL_STOP_RETENTION  | \
                                          PWR_ICACHE_FULL_STOP_RETENTION )
+
 /* All available RAM retention in Standby mode define */
-#if defined(PWR_CR1_R1RSB1)
 #define PWR_ALL_RAM_STANDBY_RETENTION_MASK (PWR_SRAM1_FULL_STANDBY_RETENTION | PWR_SRAM2_FULL_STANDBY_RETENTION)
-#else
-#define PWR_ALL_RAM_STANDBY_RETENTION_MASK  PWR_SRAM2_FULL_STANDBY_RETENTION
-#endif /* defined(PWR_CR1_R1RSB1) */
 /**
   * @}
   */
@@ -258,10 +253,8 @@ extern "C" {
 #define IS_PWR_GPIO_PIN_MASK(BIT_MASK)           ((((BIT_MASK) & PWR_GPIO_PIN_MASK) != 0U) &&\
                                                   ((BIT_MASK) <= PWR_GPIO_PIN_MASK))
 
-#if defined(PWR_CR1_R1RSB1)
 /* SRAM1 retention in Standby mode check macro */
 #define IS_PWR_SRAM1_STANDBY_RETENTION(CONTENT)  ((CONTENT) == PWR_SRAM1_FULL_STANDBY_RETENTION)
-#endif /* defined(PWR_CR1_R1RSB1) */
 
 /* SRAM2 retention in Standby mode check macro */
 #define IS_PWR_SRAM2_STANDBY_RETENTION(CONTENT)  ((CONTENT) == PWR_SRAM2_FULL_STANDBY_RETENTION)
@@ -317,10 +310,8 @@ void              HAL_PWREx_EnableSRAM2ContentStandbyRetention(uint32_t SRAM2Pag
 void              HAL_PWREx_DisableSRAM2ContentStandbyRetention(void);
 void              HAL_PWREx_EnableRadioSRAMClockStandbyRetention(uint32_t RadioSRAM);
 void              HAL_PWREx_DisableRadioSRAMClockStandbyRetention(void);
-#if defined(PWR_CR1_R1RSB1)
 void              HAL_PWREx_EnableSRAM1ContentStandbyRetention(uint32_t SRAM1Pages);
 void              HAL_PWREx_DisableSRAM1ContentStandbyRetention(void);
-#endif /* defined(PWR_CR1_R1RSB1) */
 void              HAL_PWREx_EnableRAMsContentStopRetention(uint32_t RAMSelection);
 void              HAL_PWREx_DisableRAMsContentStopRetention(uint32_t RAMSelection);
 void              HAL_PWREx_EnableFlashFastWakeUp(void);
@@ -329,12 +320,12 @@ void              HAL_PWREx_DisableFlashFastWakeUp(void);
   * @}
   */
 
-/** @addtogroup PWREx_Exported_Functions_Group5 I/O Pull-Up Pull-Down Configuration Functions
+/** @addtogroup PWREx_Exported_Functions_Group5 I/O Retention Functions
   * @{
   */
 HAL_StatusTypeDef HAL_PWREx_EnableStandbyIORetention(uint32_t GPIO_Port, uint32_t GPIO_Pin);
 HAL_StatusTypeDef HAL_PWREx_DisableStandbyIORetention(uint32_t GPIO_Port, uint32_t GPIO_Pin);
-uint32_t HAL_PWREx_GetStandbyIORetentionStatus(uint32_t GPIO_Port);
+uint32_t          HAL_PWREx_GetStandbyIORetentionStatus(uint32_t GPIO_Port);
 HAL_StatusTypeDef HAL_PWREx_DisableStandbyRetainedIOState(uint32_t GPIO_Port, uint32_t GPIO_Pin);
 /**
   * @}

@@ -211,13 +211,13 @@ typedef struct
   * @{
   */
 #if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
-#define FLASH_TYPEERASE_PAGES        FLASH_SECCR1_PER                           /*!< Secure pages erase activation */
-#define FLASH_TYPEERASE_PAGES_NS     (FLASH_NSCR1_PER  | FLASH_NON_SECURE_MASK) /*!< Non-secure pages erase activation */
-#define FLASH_TYPEERASE_MASSERASE    FLASH_SECCR1_MER                           /*!< Secure flash mass erase activation */
-#define FLASH_TYPEERASE_MASSERASE_NS (FLASH_NSCR1_MER  | FLASH_NON_SECURE_MASK) /*!< Non-secure flash mass erase activation */
+#define FLASH_TYPEERASE_PAGES        FLASH_SECCR1_PER                                              /*!< Secure pages erase activation */
+#define FLASH_TYPEERASE_PAGES_NS     (FLASH_NSCR1_PER  | FLASH_NON_SECURE_MASK)                    /*!< Non-secure pages erase activation */
+#define FLASH_TYPEERASE_MASSERASE    FLASH_SECCR1_MER                                              /*!< Secure flash mass erase activation */
+#define FLASH_TYPEERASE_MASSERASE_NS (FLASH_NSCR1_MER  | FLASH_NON_SECURE_MASK)                     /*!< Non-secure flash mass erase activation */
 #else
-#define FLASH_TYPEERASE_PAGES        FLASH_NSCR1_PER                            /*!< Pages erase activation */
-#define FLASH_TYPEERASE_MASSERASE    FLASH_NSCR1_MER                            /*!< Flash mass erase activation */
+#define FLASH_TYPEERASE_PAGES        FLASH_NSCR1_PER                                                /*!< Pages erase activation */
+#define FLASH_TYPEERASE_MASSERASE    FLASH_NSCR1_MER                                                /*!< Flash mass erase activation */
 #endif /* __ARM_FEATURE_CMSE */
 /**
   * @}
@@ -226,7 +226,8 @@ typedef struct
 /** @defgroup FLASH_Banks FLASH Banks
   * @{
   */
-#define FLASH_BANK_1      0x00000001U                   /*!< Bank 1   */
+#define FLASH_BANK_1      FLASH_NSCR1_MER                  /*!< Bank 1 */
+#define FLASH_BANK_BOTH   FLASH_BANK_1                     /*!< Bank 1 */
 /**
   * @}
   */
@@ -297,20 +298,20 @@ typedef struct
 /** @defgroup FLASH_OB_USER_Type FLASH Option Bytes User Type
   * @{
   */
-#define OB_USER_BOR_LEV      FLASH_OPTR_BOR_LEV    /*!< BOR reset Level */
-#define OB_USER_nRST_STOP    FLASH_OPTR_nRST_STOP  /*!< Reset generated when entering the stop mode */
-#define OB_USER_nRST_STDBY   FLASH_OPTR_nRST_STDBY /*!< Reset generated when entering the standby mode */
-#define OB_USER_SRAM1_RST    FLASH_OPTR_SRAM1_RST  /*!< SRAM1 erase upon system reset */
-#define OB_USER_IWDG_SW      FLASH_OPTR_IWDG_SW    /*!< Independent watchdog selection */
-#define OB_USER_IWDG_STOP    FLASH_OPTR_IWDG_STOP  /*!< Independent watchdog counter freeze in stop mode */
-#define OB_USER_IWDG_STDBY   FLASH_OPTR_IWDG_STDBY /*!< Independent watchdog counter freeze in standby mode */
-#define OB_USER_WWDG_SW      FLASH_OPTR_WWDG_SW    /*!< Window watchdog selection */
-#define OB_USER_SRAM2_PE     FLASH_OPTR_SRAM2_PE   /*!< SRAM2 parity error enable */
-#define OB_USER_SRAM2_RST    FLASH_OPTR_SRAM2_RST  /*!< SRAM2 Erase when system reset */
-#define OB_USER_nSWBOOT0     FLASH_OPTR_nSWBOOT0   /*!< Software BOOT0 */
-#define OB_USER_nBOOT0       FLASH_OPTR_nBOOT0     /*!< nBOOT0 option bit */
+#define OB_USER_BOR_LEV      FLASH_OPTR_BOR_LEV     /*!< BOR reset Level */
+#define OB_USER_nRST_STOP    FLASH_OPTR_nRST_STOP   /*!< Reset generated when entering the stop mode */
+#define OB_USER_nRST_STDBY   FLASH_OPTR_nRST_STDBY  /*!< Reset generated when entering the standby mode */
+#define OB_USER_SRAM1_RST    FLASH_OPTR_SRAM1_RST   /*!< SRAM1 erase upon system reset */
+#define OB_USER_IWDG_SW      FLASH_OPTR_IWDG_SW     /*!< Independent watchdog selection */
+#define OB_USER_IWDG_STOP    FLASH_OPTR_IWDG_STOP   /*!< Independent watchdog counter freeze in stop mode */
+#define OB_USER_IWDG_STDBY   FLASH_OPTR_IWDG_STDBY  /*!< Independent watchdog counter freeze in standby mode */
+#define OB_USER_WWDG_SW      FLASH_OPTR_WWDG_SW     /*!< Window watchdog selection */
+#define OB_USER_SRAM2_PE     FLASH_OPTR_SRAM2_PE    /*!< SRAM2 parity error enable */
+#define OB_USER_SRAM2_RST    FLASH_OPTR_SRAM2_RST   /*!< SRAM2 Erase when system reset */
+#define OB_USER_nSWBOOT0     FLASH_OPTR_nSWBOOT0    /*!< Software BOOT0 */
+#define OB_USER_nBOOT0       FLASH_OPTR_nBOOT0      /*!< nBOOT0 option bit */
 #if defined(FLASH_OPTR_TZEN)
-#define OB_USER_TZEN         FLASH_OPTR_TZEN       /*!< Global TrustZone enable */
+#define OB_USER_TZEN         FLASH_OPTR_TZEN        /*!< Global TrustZone enable */
 #endif /* FLASH_OPTR_TZEN */
 
 #if defined(FLASH_OPTR_TZEN)
@@ -404,6 +405,7 @@ typedef struct
   * @}
   */
 
+
 /** @defgroup FLASH_OB_USER_SRAM2_PAR FLASH Option Bytes User SRAM2 Parity error enable
   * @{
   */
@@ -439,6 +441,7 @@ typedef struct
 /**
   * @}
   */
+
 
 #if defined(FLASH_OPTR_TZEN)
 /** @defgroup FLASH_OB_USER_TZEN FLASH Option Bytes User Global TrustZone
@@ -999,6 +1002,7 @@ HAL_StatusTypeDef FLASH_WaitForLastOperation(uint32_t Timeout);
 
 #define IS_OB_USER_WWDG(VALUE)             (((VALUE) == OB_WWDG_HW) || ((VALUE) == OB_WWDG_SW))
 
+
 #define IS_OB_USER_SRAM2_PARITY(VALUE)     (((VALUE) == OB_SRAM2_PARITY_ENABLE) || ((VALUE) == OB_SRAM2_PARITY_DISABLE))
 
 #define IS_OB_USER_SRAM2_RST(VALUE)        (((VALUE) == OB_SRAM2_RST_ERASE) || ((VALUE) == OB_SRAM2_RST_NOT_ERASE))
@@ -1006,6 +1010,7 @@ HAL_StatusTypeDef FLASH_WaitForLastOperation(uint32_t Timeout);
 #define IS_OB_USER_SWBOOT0(VALUE)          (((VALUE) == OB_BOOT0_FROM_OB) || ((VALUE) == OB_BOOT0_FROM_PIN))
 
 #define IS_OB_USER_BOOT0(VALUE)            (((VALUE) == OB_nBOOT0_RESET) || ((VALUE) == OB_nBOOT0_SET))
+
 
 #define IS_OB_USER_TZEN(VALUE)             (((VALUE) == OB_TZEN_DISABLE) || ((VALUE) == OB_TZEN_ENABLE))
 

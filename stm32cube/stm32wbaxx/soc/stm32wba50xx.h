@@ -145,7 +145,6 @@ typedef enum
 #endif
 
 /* --------  Configuration of the STM32WBAxx System On Chip ------ */
-#define STM32WBAXX_SI_CUT1_0
 
 /* --------  Configuration of the Cortex-M33 Processor and Core Peripherals  ------ */
 #define __CM33_REV                0x0000U   /* Core revision r0p1 */
@@ -313,33 +312,33 @@ typedef struct
   */
 typedef struct
 {
-  __IO uint32_t ACR;              /*!< FLASH access control register,                  Address offset: 0x00 */
-       uint32_t RESERVED0;        /*!< RESERVED1,                                      Address offset: 0x04 */
-  __IO uint32_t NSKEYR;           /*!< FLASH non-secure key register,                  Address offset: 0x08 */
-       uint32_t RESERVED1;        /*!< Reserved1,                                      Address offset: 0x0C */
-  __IO uint32_t OPTKEYR;          /*!< FLASH option key register,                      Address offset: 0x10 */
-       uint32_t RESERVED2;        /*!< Reserved2,                                      Address offset: 0x14 */
-  __IO uint32_t PDKEYR;           /*!< FLASH Bank power-down key register,             Address offset: 0x18 */
-       uint32_t RESERVED3;        /*!< Reserved3,                                      Address offset: 0x1C */
-  __IO uint32_t NSSR;             /*!< FLASH non-secure status register,               Address offset: 0x20 */
-       uint32_t RESERVED4;        /*!< Reserved4,                                      Address offset: 0x24 */
-  __IO uint32_t NSCR1;            /*!< FLASH non-secure control register,              Address offset: 0x28 */
-       uint32_t RESERVED5;        /*!< Reserved5,                                      Address offset: 0x2C */
-  __IO uint32_t ECCR;             /*!< FLASH ECC register,                             Address offset: 0x30 */
-  __IO uint32_t OPSR;             /*!< FLASH OPSR register,                            Address offset: 0x34 */
-  __IO uint32_t NSCR2;            /*!< FLASH non-secure control register,              Address offset: 0x38 */
-       uint32_t RESERVED6;        /*!< Reserved6,                                      Address offset: 0x3C */
-  __IO uint32_t OPTR;             /*!< FLASH option control register,                  Address offset: 0x40 */
-  __IO uint32_t NSBOOTADD0R;      /*!< FLASH non-secure boot address 0 register,       Address offset: 0x44 */
-  __IO uint32_t NSBOOTADD1R;      /*!< FLASH non-secure boot address 1 register,       Address offset: 0x48 */
-       uint32_t RESERVED7[3];     /*!< Reserved7,                                      Address offset: 0x4C-0x54 */
-  __IO uint32_t WRPAR;            /*!< FLASH WRP area A address register,              Address offset: 0x58 */
-  __IO uint32_t WRPBR;            /*!< FLASH WRP area B address register,              Address offset: 0x5C */
-       uint32_t RESERVED8[4];     /*!< Reserved3,                                      Address offset: 0x60-0x6C */
-  __IO uint32_t OEM1KEYR1;        /*!< FLASH OEM1 key register 1,                      Address offset: 0x70 */
-  __IO uint32_t OEM1KEYR2;        /*!< FLASH OEM1 key register 2,                      Address offset: 0x74 */
-  __IO uint32_t OEM2KEYR1;        /*!< FLASH OEM2 key register 1,                      Address offset: 0x78 */
-  __IO uint32_t OEM2KEYR2;        /*!< FLASH OEM2 key register 2,                      Address offset: 0x7C */
+  __IO uint32_t ACR;              /*!< FLASH access control register,                      Address offset: 0x00 */
+       uint32_t RESERVED0;        /*!< RESERVED1,                                          Address offset: 0x04 */
+  __IO uint32_t NSKEYR;           /*!< FLASH non-secure key register,                      Address offset: 0x08 */
+       uint32_t RESERVED1;        /*!< Reserved1,                                          Address offset: 0x0C */
+  __IO uint32_t OPTKEYR;          /*!< FLASH option key register,                          Address offset: 0x10 */
+       uint32_t RESERVED2;        /*!< Reserved2,                                          Address offset: 0x14 */
+  __IO uint32_t PDKEYR;           /*!< FLASH Bank power-down key register,                 Address offset: 0x18 */
+       uint32_t RESERVED3;        /*!< Reserved3,                                          Address offset: 0x1C */
+  __IO uint32_t NSSR;             /*!< FLASH non-secure status register,                   Address offset: 0x20 */
+       uint32_t RESERVED4;        /*!< Reserved4,                                          Address offset: 0x24 */
+  __IO uint32_t NSCR1;            /*!< FLASH non-secure control register,                  Address offset: 0x28 */
+       uint32_t RESERVED5;        /*!< Reserved5,                                          Address offset: 0x2C */
+  __IO uint32_t ECCR;             /*!< FLASH ECC register,                                 Address offset: 0x30 */
+  __IO uint32_t OPSR;             /*!< FLASH OPSR register,                                Address offset: 0x34 */
+  __IO uint32_t NSCR2;            /*!< FLASH non-secure control register,                  Address offset: 0x38 */
+       uint32_t RESERVED6;        /*!< Reserved6,                                          Address offset: 0x3C */
+  __IO uint32_t OPTR;             /*!< FLASH option control register,                      Address offset: 0x40 */
+  __IO uint32_t NSBOOTADD0R;      /*!< FLASH non-secure boot address 0 register,           Address offset: 0x44 */
+  __IO uint32_t NSBOOTADD1R;      /*!< FLASH non-secure boot address 1 register,           Address offset: 0x48 */
+       uint32_t RESERVED7[3];     /*!< Reserved7,                                          Address offset: 0x4C-0x54 */
+  __IO uint32_t WRPAR;            /*!< FLASH WRP area A address register,                  Address offset: 0x58 */
+  __IO uint32_t WRPBR;            /*!< FLASH WRP area B address register,                  Address offset: 0x5C */
+       uint32_t RESERVED8[4];     /*!< Reserved3,                                          Address offset: 0x60-0x6C */
+  __IO uint32_t OEM1KEYR1;        /*!< FLASH OEM1 key register 1,                          Address offset: 0x70 */
+  __IO uint32_t OEM1KEYR2;        /*!< FLASH OEM1 key register 2,                          Address offset: 0x74 */
+  __IO uint32_t OEM2KEYR1;        /*!< FLASH OEM2 key register 1,                          Address offset: 0x78 */
+  __IO uint32_t OEM2KEYR2;        /*!< FLASH OEM2 key register 2,                          Address offset: 0x7C */
 } FLASH_TypeDef;
 
 /**
@@ -517,12 +516,12 @@ typedef struct
   __IO uint32_t IORETENRA;     /*!< PWR Port A IO retention in Standby register,         Address offset: 0x50 */
   __IO uint32_t IORETRA;       /*!< PWR Port A IO retention status in Standby register,  Address offset: 0x54 */
   __IO uint32_t IORETENRB;     /*!< PWR Port B IO retention in Standby register,         Address offset: 0x58 */
-  __IO uint32_t IORETRB;       /*!< PWR Port A IO retention status in Standby register,  Address offset: 0x5C */
+  __IO uint32_t IORETRB;       /*!< PWR Port B IO retention status in Standby register,  Address offset: 0x5C */
   __IO uint32_t IORETENRC;     /*!< PWR Port C IO retention in Standby register,         Address offset: 0x60 */
-  __IO uint32_t IORETRC;       /*!< PWR Port A IO retention status in Standby register,  Address offset: 0x64 */
+  __IO uint32_t IORETRC;       /*!< PWR Port C IO retention status in Standby register,  Address offset: 0x64 */
        uint32_t RESERVED3[8];  /*!< Reserved,                                            Address offset: 0x68 -- 0x84 */
   __IO uint32_t IORETENRH;     /*!< PWR Port H IO retention in Standby register,         Address offset: 0x88 */
-  __IO uint32_t IORETRH;       /*!< PWR Port A IO retention status in Standby register,  Address offset: 0x8C */
+  __IO uint32_t IORETRH;       /*!< PWR Port H IO retention status in Standby register,  Address offset: 0x8C */
        uint32_t RESERVED4[28]; /*!< Reserved,                                            Address offset: 0x90 -- 0xFC */
   __IO uint32_t RADIOSCR;      /*!< PWR 2.4 GHZ radio status and control register,       Address offset: 0x100 */
 } PWR_TypeDef;
@@ -3032,7 +3031,6 @@ typedef struct
 #define FLASH_NSCR2_ES_Msk                  (0x1UL << FLASH_NSCR2_ES_Pos)           /*!< 0x00000002 */
 #define FLASH_NSCR2_ES                      FLASH_NSCR2_ES_Msk                      /*!< Erase suspend request */
 
-
 /*******************  Bits definition for FLASH_OPTR register  ***************/
 #define FLASH_OPTR_RDP_Pos                  (0U)
 #define FLASH_OPTR_RDP_Msk                  (0xFFUL << FLASH_OPTR_RDP_Pos)          /*!< 0x000000FF */
@@ -3065,8 +3063,8 @@ typedef struct
 #define FLASH_OPTR_WWDG_SW_Msk              (0x1UL << FLASH_OPTR_WWDG_SW_Pos)       /*!< 0x00080000 */
 #define FLASH_OPTR_WWDG_SW                  FLASH_OPTR_WWDG_SW_Msk                  /*!< Window watchdog selection */
 #define FLASH_OPTR_SRAM2_PE_Pos             (24U)
-#define FLASH_OPTR_SRAM2_PE_Msk             (0x1UL << FLASH_OPTR_SRAM2_PE_Pos)     /*!< 0x01000000 */
-#define FLASH_OPTR_SRAM2_PE                 FLASH_OPTR_SRAM2_PE_Msk                /*!< SRAM2 ECC detection and correction enable*/
+#define FLASH_OPTR_SRAM2_PE_Msk             (0x1UL << FLASH_OPTR_SRAM2_PE_Pos)      /*!< 0x01000000 */
+#define FLASH_OPTR_SRAM2_PE                 FLASH_OPTR_SRAM2_PE_Msk                 /*!< SRAM2 ECC detection and correction enable*/
 #define FLASH_OPTR_SRAM2_RST_Pos            (25U)
 #define FLASH_OPTR_SRAM2_RST_Msk            (0x1UL << FLASH_OPTR_SRAM2_RST_Pos)     /*!< 0x02000000 */
 #define FLASH_OPTR_SRAM2_RST                FLASH_OPTR_SRAM2_RST_Msk                /*!< SRAM2 erase when system reset */
@@ -3086,7 +3084,6 @@ typedef struct
 #define FLASH_NSBOOTADD1R_NSBOOTADD1_Pos    (7U)
 #define FLASH_NSBOOTADD1R_NSBOOTADD1_Msk    (0x1FFFFFFUL << FLASH_NSBOOTADD1R_NSBOOTADD1_Pos) /*!< 0xFFFFFF80 */
 #define FLASH_NSBOOTADD1R_NSBOOTADD1        FLASH_NSBOOTADD1R_NSBOOTADD1_Msk        /*!< Non-secure boot address 1 */
-
 
 /******************  Bits definition for FLASH_WRPAR register  ***************/
 #define FLASH_WRPAR_WRPA_PSTRT_Pos          (0U)
@@ -3129,8 +3126,6 @@ typedef struct
 #define FLASH_OEM2KEYR2_OEM2KEY_Pos         (0U)
 #define FLASH_OEM2KEYR2_OEM2KEY_Msk         (0xFFFFFFFFUL << FLASH_OEM2KEYR2_OEM2KEY_Pos)  /*!< 0xFFFFFFFFF */
 #define FLASH_OEM2KEYR2_OEM2KEY             FLASH_OEM2KEYR2_OEM2KEY_Msk                    /*!< OEM2 most significant bytes key */
-
-
 
 /******************************************************************************/
 /*                                                                            */
@@ -5286,21 +5281,21 @@ typedef struct
 #define PWR_CR1_RADIORSB                    PWR_CR1_RADIORSB_Msk                    /*!< 2.4GHz RADIO SRAMs (TXRX and Sequence) and Sleep clock retention in Standby mode */
 #define PWR_CR1_R1RSB1_Pos                  (12U)
 #define PWR_CR1_R1RSB1_Msk                  (0x1UL << PWR_CR1_R1RSB1_Pos)            /*!< 0x00001000 */
-#define PWR_CR1_R1RSB1                      PWR_CR1_R1RSB1_Msk                       /*!< SRAM1 Retention in Standby */
+#define PWR_CR1_R1RSB1                      PWR_CR1_R1RSB1_Msk                       /*!< SRAM1 Page 1 Retention in Standby */
 
 /********************  Bit definition for PWR_CR2 register  *******************/
 #define PWR_CR2_SRAM1PDS1_Pos               (0U)
 #define PWR_CR2_SRAM1PDS1_Msk               (0x1UL << PWR_CR2_SRAM1PDS1_Pos)        /*!< 0x00000001 */
-#define PWR_CR2_SRAM1PDS1                   PWR_CR2_SRAM1PDS1_Msk                   /*!< SRAM1  power-down in Stop modes (Stop 0, 1) */
+#define PWR_CR2_SRAM1PDS1                   PWR_CR2_SRAM1PDS1_Msk                   /*!< SRAM1 Page 1 power-down in Stop modes */
 #define PWR_CR2_SRAM2PDS1_Pos               (4U)
 #define PWR_CR2_SRAM2PDS1_Msk               (0x1UL << PWR_CR2_SRAM2PDS1_Pos)        /*!< 0x00000010 */
-#define PWR_CR2_SRAM2PDS1                   PWR_CR2_SRAM2PDS1_Msk                   /*!< SRAM2 power-down in Stop modes (Stop 0, 1) */
+#define PWR_CR2_SRAM2PDS1                   PWR_CR2_SRAM2PDS1_Msk                   /*!< SRAM2 power-down in Stop modes */
 #define PWR_CR2_ICRAMPDS_Pos                (8U)
 #define PWR_CR2_ICRAMPDS_Msk                (0x1UL << PWR_CR2_ICRAMPDS_Pos)         /*!< 0x00000100 */
-#define PWR_CR2_ICRAMPDS                    PWR_CR2_ICRAMPDS_Msk                    /*!< ICACHE SRAM power-down in Stop modes (Stop 0, 1) */
+#define PWR_CR2_ICRAMPDS                    PWR_CR2_ICRAMPDS_Msk                    /*!< ICACHE SRAM power-down in Stop modes */
 #define PWR_CR2_FLASHFWU_Pos                (14U)
 #define PWR_CR2_FLASHFWU_Msk                (0x1UL << PWR_CR2_FLASHFWU_Pos)         /*!< 0x00004000 */
-#define PWR_CR2_FLASHFWU                    PWR_CR2_FLASHFWU_Msk                    /*!< Flash low-power mode in Stop modes (Stop0, 1) */
+#define PWR_CR2_FLASHFWU                    PWR_CR2_FLASHFWU_Msk                    /*!< Flash low-power mode in Stop modes */
 
 /********************  Bit definition for PWR_CR3 register  *******************/
 #define PWR_CR3_FSTEN_Pos                   (2U)
@@ -5472,159 +5467,159 @@ typedef struct
 #define PWR_WUSCR_CWUF                      PWR_WUSCR_CWUF_Msk                      /*!< all Wakeup clear flag */
 
 /********************  Bit definition for PWR_IORETENRA register  *****************/
-#define PWR_IORETENRA_EN0_Pos                  (0U)
-#define PWR_IORETENRA_EN0_Msk                  (0x1UL << PWR_IORETENRA_EN0_Pos)           /*!< 0x00000001 */
-#define PWR_IORETENRA_EN0                      PWR_IORETENRA_EN0_Msk                      /*!< Standby GPIO retention enable for PA0  */
-#define PWR_IORETENRA_EN1_Pos                  (1U)
-#define PWR_IORETENRA_EN1_Msk                  (0x1UL << PWR_IORETENRA_EN1_Pos)           /*!< 0x00000002 */
-#define PWR_IORETENRA_EN1                      PWR_IORETENRA_EN1_Msk                      /*!< Standby GPIO retention enable for PA1  */
-#define PWR_IORETENRA_EN2_Pos                  (2U)
-#define PWR_IORETENRA_EN2_Msk                  (0x1UL << PWR_IORETENRA_EN2_Pos)           /*!< 0x00000004 */
-#define PWR_IORETENRA_EN2                      PWR_IORETENRA_EN2_Msk                      /*!< Standby GPIO retention enable for PA2  */
-#define PWR_IORETENRA_EN5_Pos                  (5U)
-#define PWR_IORETENRA_EN5_Msk                  (0x1UL << PWR_IORETENRA_EN5_Pos)           /*!< 0x00000020 */
-#define PWR_IORETENRA_EN5                      PWR_IORETENRA_EN5_Msk                      /*!< Standby GPIO retention enable for PA5  */
-#define PWR_IORETENRA_EN6_Pos                  (6U)
-#define PWR_IORETENRA_EN6_Msk                  (0x1UL << PWR_IORETENRA_EN6_Pos)           /*!< 0x00000040 */
-#define PWR_IORETENRA_EN6                      PWR_IORETENRA_EN6_Msk                      /*!< Standby GPIO retention enable for PA6  */
-#define PWR_IORETENRA_EN7_Pos                  (7U)
-#define PWR_IORETENRA_EN7_Msk                  (0x1UL << PWR_IORETENRA_EN7_Pos)           /*!< 0x00000080 */
-#define PWR_IORETENRA_EN7                      PWR_IORETENRA_EN7_Msk                      /*!< Standby GPIO retention enable for PA7  */
-#define PWR_IORETENRA_EN8_Pos                  (8U)
-#define PWR_IORETENRA_EN8_Msk                  (0x1UL << PWR_IORETENRA_EN8_Pos)           /*!< 0x00000100 */
-#define PWR_IORETENRA_EN8                      PWR_IORETENRA_EN8_Msk                      /*!< Standby GPIO retention enable for PA8  */
-#define PWR_IORETENRA_EN12_Pos                 (12U)
-#define PWR_IORETENRA_EN12_Msk                 (0x1UL << PWR_IORETENRA_EN12_Pos)          /*!< 0x00001000 */
-#define PWR_IORETENRA_EN12                     PWR_IORETENRA_EN12_Msk                     /*!< Standby GPIO retention enable for PA12 */
-#define PWR_IORETENRA_EN13_Pos                 (13U)
-#define PWR_IORETENRA_EN13_Msk                 (0x1UL << PWR_IORETENRA_EN13_Pos)          /*!< 0x00002000 */
-#define PWR_IORETENRA_EN13                     PWR_IORETENRA_EN13_Msk                     /*!< Standby GPIO retention enable for PA13 */
-#define PWR_IORETENRA_EN14_Pos                 (14U)
-#define PWR_IORETENRA_EN14_Msk                 (0x1UL << PWR_IORETENRA_EN14_Pos)          /*!< 0x00004000 */
-#define PWR_IORETENRA_EN14                     PWR_IORETENRA_EN14_Msk                     /*!< Standby GPIO retention enable for PA14 */
-#define PWR_IORETENRA_EN15_Pos                 (15U)
-#define PWR_IORETENRA_EN15_Msk                 (0x1UL << PWR_IORETENRA_EN15_Pos)          /*!< 0x00008000 */
-#define PWR_IORETENRA_EN15                     PWR_IORETENRA_EN15_Msk                     /*!< Standby GPIO retention enable for PA15 */
+#define PWR_IORETENRA_EN0_Pos               (0U)
+#define PWR_IORETENRA_EN0_Msk               (0x1UL << PWR_IORETENRA_EN0_Pos)           /*!< 0x00000001 */
+#define PWR_IORETENRA_EN0                   PWR_IORETENRA_EN0_Msk                      /*!< Standby GPIO retention enable for PA0  */
+#define PWR_IORETENRA_EN1_Pos               (1U)
+#define PWR_IORETENRA_EN1_Msk               (0x1UL << PWR_IORETENRA_EN1_Pos)           /*!< 0x00000002 */
+#define PWR_IORETENRA_EN1                   PWR_IORETENRA_EN1_Msk                      /*!< Standby GPIO retention enable for PA1  */
+#define PWR_IORETENRA_EN2_Pos               (2U)
+#define PWR_IORETENRA_EN2_Msk               (0x1UL << PWR_IORETENRA_EN2_Pos)           /*!< 0x00000004 */
+#define PWR_IORETENRA_EN2                   PWR_IORETENRA_EN2_Msk                      /*!< Standby GPIO retention enable for PA2  */
+#define PWR_IORETENRA_EN5_Pos               (5U)
+#define PWR_IORETENRA_EN5_Msk               (0x1UL << PWR_IORETENRA_EN5_Pos)           /*!< 0x00000020 */
+#define PWR_IORETENRA_EN5                   PWR_IORETENRA_EN5_Msk                      /*!< Standby GPIO retention enable for PA5  */
+#define PWR_IORETENRA_EN6_Pos               (6U)
+#define PWR_IORETENRA_EN6_Msk               (0x1UL << PWR_IORETENRA_EN6_Pos)           /*!< 0x00000040 */
+#define PWR_IORETENRA_EN6                   PWR_IORETENRA_EN6_Msk                      /*!< Standby GPIO retention enable for PA6  */
+#define PWR_IORETENRA_EN7_Pos               (7U)
+#define PWR_IORETENRA_EN7_Msk               (0x1UL << PWR_IORETENRA_EN7_Pos)           /*!< 0x00000080 */
+#define PWR_IORETENRA_EN7                   PWR_IORETENRA_EN7_Msk                      /*!< Standby GPIO retention enable for PA7  */
+#define PWR_IORETENRA_EN8_Pos               (8U)
+#define PWR_IORETENRA_EN8_Msk               (0x1UL << PWR_IORETENRA_EN8_Pos)           /*!< 0x00000100 */
+#define PWR_IORETENRA_EN8                   PWR_IORETENRA_EN8_Msk                      /*!< Standby GPIO retention enable for PA8  */
+#define PWR_IORETENRA_EN12_Pos              (12U)
+#define PWR_IORETENRA_EN12_Msk              (0x1UL << PWR_IORETENRA_EN12_Pos)          /*!< 0x00001000 */
+#define PWR_IORETENRA_EN12                  PWR_IORETENRA_EN12_Msk                     /*!< Standby GPIO retention enable for PA12 */
+#define PWR_IORETENRA_EN13_Pos              (13U)
+#define PWR_IORETENRA_EN13_Msk              (0x1UL << PWR_IORETENRA_EN13_Pos)          /*!< 0x00002000 */
+#define PWR_IORETENRA_EN13                  PWR_IORETENRA_EN13_Msk                     /*!< Standby GPIO retention enable for PA13 */
+#define PWR_IORETENRA_EN14_Pos              (14U)
+#define PWR_IORETENRA_EN14_Msk              (0x1UL << PWR_IORETENRA_EN14_Pos)          /*!< 0x00004000 */
+#define PWR_IORETENRA_EN14                  PWR_IORETENRA_EN14_Msk                     /*!< Standby GPIO retention enable for PA14 */
+#define PWR_IORETENRA_EN15_Pos              (15U)
+#define PWR_IORETENRA_EN15_Msk              (0x1UL << PWR_IORETENRA_EN15_Pos)          /*!< 0x00008000 */
+#define PWR_IORETENRA_EN15                  PWR_IORETENRA_EN15_Msk                     /*!< Standby GPIO retention enable for PA15 */
 
 /********************  Bit definition for PWR_IORETRA register  *****************/
-#define PWR_IORETRA_RET0_Pos                   (0U)
-#define PWR_IORETRA_RET0_Msk                   (0x1UL << PWR_IORETRA_RET0_Pos)            /*!< 0x00000001 */
-#define PWR_IORETRA_RET0                       PWR_IORETRA_RET0_Msk                       /*!< Standby GPIO retention status for PA0  */
-#define PWR_IORETRA_RET1_Pos                   (1U)
-#define PWR_IORETRA_RET1_Msk                   (0x1UL << PWR_IORETRA_RET1_Pos)            /*!< 0x00000002 */
-#define PWR_IORETRA_RET1                       PWR_IORETRA_RET1_Msk                       /*!< Standby GPIO retention status for PA1  */
-#define PWR_IORETRA_RET2_Pos                   (2U)
-#define PWR_IORETRA_RET2_Msk                   (0x1UL << PWR_IORETRA_RET2_Pos)            /*!< 0x00000004 */
-#define PWR_IORETRA_RET2                       PWR_IORETRA_RET2_Msk                       /*!< Standby GPIO retention status for PA2  */
-#define PWR_IORETRA_RET5_Pos                   (5U)
-#define PWR_IORETRA_RET5_Msk                   (0x1UL << PWR_IORETRA_RET5_Pos)            /*!< 0x00000020 */
-#define PWR_IORETRA_RET5                       PWR_IORETRA_RET5_Msk                       /*!< Standby GPIO retention status for PA5  */
-#define PWR_IORETRA_RET6_Pos                   (6U)
-#define PWR_IORETRA_RET6_Msk                   (0x1UL << PWR_IORETRA_RET6_Pos)            /*!< 0x00000040 */
-#define PWR_IORETRA_RET6                       PWR_IORETRA_RET6_Msk                       /*!< Standby GPIO retention status for PA6  */
-#define PWR_IORETRA_RET7_Pos                   (7U)
-#define PWR_IORETRA_RET7_Msk                   (0x1UL << PWR_IORETRA_RET7_Pos)            /*!< 0x00000080 */
-#define PWR_IORETRA_RET7                       PWR_IORETRA_RET7_Msk                       /*!< Standby GPIO retention status for PA7  */
-#define PWR_IORETRA_RET8_Pos                   (8U)
-#define PWR_IORETRA_RET8_Msk                   (0x1UL << PWR_IORETRA_RET8_Pos)            /*!< 0x00000100 */
-#define PWR_IORETRA_RET8                       PWR_IORETRA_RET8_Msk                       /*!< Standby GPIO retention status for PA8  */
-#define PWR_IORETRA_RET12_Pos                  (12U)
-#define PWR_IORETRA_RET12_Msk                  (0x1UL << PWR_IORETRA_RET12_Pos)           /*!< 0x00001000 */
-#define PWR_IORETRA_RET12                      PWR_IORETRA_RET12_Msk                      /*!< Standby GPIO retention status for PA12 */
-#define PWR_IORETRA_RET13_Pos                  (13U)
-#define PWR_IORETRA_RET13_Msk                  (0x1UL << PWR_IORETRA_RET13_Pos)           /*!< 0x00002000 */
-#define PWR_IORETRA_RET13                      PWR_IORETRA_RET13_Msk                      /*!< Standby GPIO retention status for PA13 */
-#define PWR_IORETRA_RET14_Pos                  (14U)
-#define PWR_IORETRA_RET14_Msk                  (0x1UL << PWR_IORETRA_RET14_Pos)           /*!< 0x00004000 */
-#define PWR_IORETRA_RET14                      PWR_IORETRA_RET14_Msk                      /*!< Standby GPIO retention status for PA14 */
-#define PWR_IORETRA_RET15_Pos                  (15U)
-#define PWR_IORETRA_RET15_Msk                  (0x1UL << PWR_IORETRA_RET15_Pos)           /*!< 0x00008000 */
-#define PWR_IORETRA_RET15                      PWR_IORETRA_RET15_Msk                      /*!< Standby GPIO retention status for PA15 */
+#define PWR_IORETRA_RET0_Pos                (0U)
+#define PWR_IORETRA_RET0_Msk                (0x1UL << PWR_IORETRA_RET0_Pos)            /*!< 0x00000001 */
+#define PWR_IORETRA_RET0                    PWR_IORETRA_RET0_Msk                       /*!< Standby GPIO retention status for PA0  */
+#define PWR_IORETRA_RET1_Pos                (1U)
+#define PWR_IORETRA_RET1_Msk                (0x1UL << PWR_IORETRA_RET1_Pos)            /*!< 0x00000002 */
+#define PWR_IORETRA_RET1                    PWR_IORETRA_RET1_Msk                       /*!< Standby GPIO retention status for PA1  */
+#define PWR_IORETRA_RET2_Pos                (2U)
+#define PWR_IORETRA_RET2_Msk                (0x1UL << PWR_IORETRA_RET2_Pos)            /*!< 0x00000004 */
+#define PWR_IORETRA_RET2                    PWR_IORETRA_RET2_Msk                       /*!< Standby GPIO retention status for PA2  */
+#define PWR_IORETRA_RET5_Pos                (5U)
+#define PWR_IORETRA_RET5_Msk                (0x1UL << PWR_IORETRA_RET5_Pos)            /*!< 0x00000020 */
+#define PWR_IORETRA_RET5                    PWR_IORETRA_RET5_Msk                       /*!< Standby GPIO retention status for PA5  */
+#define PWR_IORETRA_RET6_Pos                (6U)
+#define PWR_IORETRA_RET6_Msk                (0x1UL << PWR_IORETRA_RET6_Pos)            /*!< 0x00000040 */
+#define PWR_IORETRA_RET6                    PWR_IORETRA_RET6_Msk                       /*!< Standby GPIO retention status for PA6  */
+#define PWR_IORETRA_RET7_Pos                (7U)
+#define PWR_IORETRA_RET7_Msk                (0x1UL << PWR_IORETRA_RET7_Pos)            /*!< 0x00000080 */
+#define PWR_IORETRA_RET7                    PWR_IORETRA_RET7_Msk                       /*!< Standby GPIO retention status for PA7  */
+#define PWR_IORETRA_RET8_Pos                (8U)
+#define PWR_IORETRA_RET8_Msk                (0x1UL << PWR_IORETRA_RET8_Pos)            /*!< 0x00000100 */
+#define PWR_IORETRA_RET8                    PWR_IORETRA_RET8_Msk                       /*!< Standby GPIO retention status for PA8  */
+#define PWR_IORETRA_RET12_Pos               (12U)
+#define PWR_IORETRA_RET12_Msk               (0x1UL << PWR_IORETRA_RET12_Pos)           /*!< 0x00001000 */
+#define PWR_IORETRA_RET12                   PWR_IORETRA_RET12_Msk                      /*!< Standby GPIO retention status for PA12 */
+#define PWR_IORETRA_RET13_Pos               (13U)
+#define PWR_IORETRA_RET13_Msk               (0x1UL << PWR_IORETRA_RET13_Pos)           /*!< 0x00002000 */
+#define PWR_IORETRA_RET13                   PWR_IORETRA_RET13_Msk                      /*!< Standby GPIO retention status for PA13 */
+#define PWR_IORETRA_RET14_Pos               (14U)
+#define PWR_IORETRA_RET14_Msk               (0x1UL << PWR_IORETRA_RET14_Pos)           /*!< 0x00004000 */
+#define PWR_IORETRA_RET14                   PWR_IORETRA_RET14_Msk                      /*!< Standby GPIO retention status for PA14 */
+#define PWR_IORETRA_RET15_Pos               (15U)
+#define PWR_IORETRA_RET15_Msk               (0x1UL << PWR_IORETRA_RET15_Pos)           /*!< 0x00008000 */
+#define PWR_IORETRA_RET15                   PWR_IORETRA_RET15_Msk                      /*!< Standby GPIO retention status for PA15 */
 
 /********************  Bit definition for PWR_IORETENRB register  *****************/
-#define PWR_IORETENRB_EN3_Pos                  (3U)
-#define PWR_IORETENRB_EN3_Msk                  (0x1UL << PWR_IORETENRB_EN3_Pos)           /*!< 0x00000008 */
-#define PWR_IORETENRB_EN3                      PWR_IORETENRB_EN3_Msk                      /*!< Standby GPIO retention enable for PB3  */
-#define PWR_IORETENRB_EN4_Pos                  (4U)
-#define PWR_IORETENRB_EN4_Msk                  (0x1UL << PWR_IORETENRB_EN4_Pos)           /*!< 0x00000010 */
-#define PWR_IORETENRB_EN4                      PWR_IORETENRB_EN4_Msk                      /*!< Standby GPIO retention enable for PB4  */
-#define PWR_IORETENRB_EN8_Pos                  (8U)
-#define PWR_IORETENRB_EN8_Msk                  (0x1UL << PWR_IORETENRB_EN8_Pos)           /*!< 0x00000100 */
-#define PWR_IORETENRB_EN8                      PWR_IORETENRB_EN8_Msk                      /*!< Standby GPIO retention enable for PB8  */
-#define PWR_IORETENRB_EN9_Pos                  (9U)
-#define PWR_IORETENRB_EN9_Msk                  (0x1UL << PWR_IORETENRB_EN9_Pos)           /*!< 0x00000200 */
-#define PWR_IORETENRB_EN9                      PWR_IORETENRB_EN9_Msk                      /*!< Standby GPIO retention enable for PB9  */
-#define PWR_IORETENRB_EN12_Pos                 (12U)
-#define PWR_IORETENRB_EN12_Msk                 (0x1UL << PWR_IORETENRB_EN12_Pos)          /*!< 0x00001000 */
-#define PWR_IORETENRB_EN12                     PWR_IORETENRB_EN12_Msk                     /*!< Standby GPIO retention enable for PB12 */
-#define PWR_IORETENRB_EN15_Pos                 (15U)
-#define PWR_IORETENRB_EN15_Msk                 (0x1UL << PWR_IORETENRB_EN15_Pos)          /*!< 0x00008000 */
-#define PWR_IORETENRB_EN15                     PWR_IORETENRB_EN15_Msk                     /*!< Standby GPIO retention enable for PB15 */
+#define PWR_IORETENRB_EN3_Pos               (3U)
+#define PWR_IORETENRB_EN3_Msk               (0x1UL << PWR_IORETENRB_EN3_Pos)           /*!< 0x00000008 */
+#define PWR_IORETENRB_EN3                   PWR_IORETENRB_EN3_Msk                      /*!< Standby GPIO retention enable for PB3  */
+#define PWR_IORETENRB_EN4_Pos               (4U)
+#define PWR_IORETENRB_EN4_Msk               (0x1UL << PWR_IORETENRB_EN4_Pos)           /*!< 0x00000010 */
+#define PWR_IORETENRB_EN4                   PWR_IORETENRB_EN4_Msk                      /*!< Standby GPIO retention enable for PB4  */
+#define PWR_IORETENRB_EN8_Pos               (8U)
+#define PWR_IORETENRB_EN8_Msk               (0x1UL << PWR_IORETENRB_EN8_Pos)           /*!< 0x00000100 */
+#define PWR_IORETENRB_EN8                   PWR_IORETENRB_EN8_Msk                      /*!< Standby GPIO retention enable for PB8  */
+#define PWR_IORETENRB_EN9_Pos               (9U)
+#define PWR_IORETENRB_EN9_Msk               (0x1UL << PWR_IORETENRB_EN9_Pos)           /*!< 0x00000200 */
+#define PWR_IORETENRB_EN9                   PWR_IORETENRB_EN9_Msk                      /*!< Standby GPIO retention enable for PB9  */
+#define PWR_IORETENRB_EN12_Pos              (12U)
+#define PWR_IORETENRB_EN12_Msk              (0x1UL << PWR_IORETENRB_EN12_Pos)          /*!< 0x00001000 */
+#define PWR_IORETENRB_EN12                  PWR_IORETENRB_EN12_Msk                     /*!< Standby GPIO retention enable for PB12 */
+#define PWR_IORETENRB_EN15_Pos              (15U)
+#define PWR_IORETENRB_EN15_Msk              (0x1UL << PWR_IORETENRB_EN15_Pos)          /*!< 0x00008000 */
+#define PWR_IORETENRB_EN15                  PWR_IORETENRB_EN15_Msk                     /*!< Standby GPIO retention enable for PB15 */
 
 /********************  Bit definition for PWR_IORETRB register  *****************/
-#define PWR_IORETRB_RET3_Pos                   (3U)
-#define PWR_IORETRB_RET3_Msk                   (0x1UL << PWR_IORETRB_RET3_Pos)            /*!< 0x00000008 */
-#define PWR_IORETRB_RET3                       PWR_IORETRB_RET3_Msk                       /*!< Standby GPIO retention status for PB3  */
-#define PWR_IORETRB_RET4_Pos                   (4U)
-#define PWR_IORETRB_RET4_Msk                   (0x1UL << PWR_IORETRB_RET4_Pos)            /*!< 0x00000010 */
-#define PWR_IORETRB_RET4                       PWR_IORETRB_RET4_Msk                       /*!< Standby GPIO retention status for PB4  */
-#define PWR_IORETRB_RET8_Pos                   (8U)
-#define PWR_IORETRB_RET8_Msk                   (0x1UL << PWR_IORETRB_RET8_Pos)            /*!< 0x00000100 */
-#define PWR_IORETRB_RET8                       PWR_IORETRB_RET8_Msk                       /*!< Standby GPIO retention status for PB8  */
-#define PWR_IORETRB_RET9_Pos                   (9U)
-#define PWR_IORETRB_RET9_Msk                   (0x1UL << PWR_IORETRB_RET9_Pos)            /*!< 0x00000200 */
-#define PWR_IORETRB_RET9                       PWR_IORETRB_RET9_Msk                       /*!< Standby GPIO retention status for PB9  */
-#define PWR_IORETRB_RET12_Pos                  (12U)
-#define PWR_IORETRB_RET12_Msk                  (0x1UL << PWR_IORETRB_RET12_Pos)           /*!< 0x00001000 */
-#define PWR_IORETRB_RET12                      PWR_IORETRB_RET12_Msk                      /*!< Standby GPIO retention status for PB12 */
-#define PWR_IORETRB_RET15_Pos                  (15U)
-#define PWR_IORETRB_RET15_Msk                  (0x1UL << PWR_IORETRB_RET15_Pos)           /*!< 0x00008000 */
-#define PWR_IORETRB_RET15                      PWR_IORETRB_RET15_Msk                      /*!< Standby GPIO retention status for PB15 */
+#define PWR_IORETRB_RET3_Pos                (3U)
+#define PWR_IORETRB_RET3_Msk                (0x1UL << PWR_IORETRB_RET3_Pos)            /*!< 0x00000008 */
+#define PWR_IORETRB_RET3                    PWR_IORETRB_RET3_Msk                       /*!< Standby GPIO retention status for PB3  */
+#define PWR_IORETRB_RET4_Pos                (4U)
+#define PWR_IORETRB_RET4_Msk                (0x1UL << PWR_IORETRB_RET4_Pos)            /*!< 0x00000010 */
+#define PWR_IORETRB_RET4                    PWR_IORETRB_RET4_Msk                       /*!< Standby GPIO retention status for PB4  */
+#define PWR_IORETRB_RET8_Pos                (8U)
+#define PWR_IORETRB_RET8_Msk                (0x1UL << PWR_IORETRB_RET8_Pos)            /*!< 0x00000100 */
+#define PWR_IORETRB_RET8                    PWR_IORETRB_RET8_Msk                       /*!< Standby GPIO retention status for PB8  */
+#define PWR_IORETRB_RET9_Pos                (9U)
+#define PWR_IORETRB_RET9_Msk                (0x1UL << PWR_IORETRB_RET9_Pos)            /*!< 0x00000200 */
+#define PWR_IORETRB_RET9                    PWR_IORETRB_RET9_Msk                       /*!< Standby GPIO retention status for PB9  */
+#define PWR_IORETRB_RET12_Pos               (12U)
+#define PWR_IORETRB_RET12_Msk               (0x1UL << PWR_IORETRB_RET12_Pos)           /*!< 0x00001000 */
+#define PWR_IORETRB_RET12                   PWR_IORETRB_RET12_Msk                      /*!< Standby GPIO retention status for PB12 */
+#define PWR_IORETRB_RET15_Pos               (15U)
+#define PWR_IORETRB_RET15_Msk               (0x1UL << PWR_IORETRB_RET15_Pos)           /*!< 0x00008000 */
+#define PWR_IORETRB_RET15                   PWR_IORETRB_RET15_Msk                      /*!< Standby GPIO retention status for PB15 */
 
 /********************  Bit definition for PWR_IORETENRC register  *****************/
-#define PWR_IORETENRC_EN14_Pos                 (14U)
-#define PWR_IORETENRC_EN14_Msk                 (0x1UL << PWR_IORETENRC_EN14_Pos)          /*!< 0x00004000 */
-#define PWR_IORETENRC_EN14                     PWR_IORETENRC_EN14_Msk                     /*!< Standby GPIO retention enable for PC14 */
-#define PWR_IORETENRC_EN15_Pos                 (15U)
-#define PWR_IORETENRC_EN15_Msk                 (0x1UL << PWR_IORETENRC_EN15_Pos)          /*!< 0x00008000 */
-#define PWR_IORETENRC_EN15                     PWR_IORETENRC_EN15_Msk                     /*!< Standby GPIO retention enable for PC15 */
+#define PWR_IORETENRC_EN14_Pos              (14U)
+#define PWR_IORETENRC_EN14_Msk              (0x1UL << PWR_IORETENRC_EN14_Pos)          /*!< 0x00004000 */
+#define PWR_IORETENRC_EN14                  PWR_IORETENRC_EN14_Msk                     /*!< Standby GPIO retention enable for PC14 */
+#define PWR_IORETENRC_EN15_Pos              (15U)
+#define PWR_IORETENRC_EN15_Msk              (0x1UL << PWR_IORETENRC_EN15_Pos)          /*!< 0x00008000 */
+#define PWR_IORETENRC_EN15                  PWR_IORETENRC_EN15_Msk                     /*!< Standby GPIO retention enable for PC15 */
 
 /********************  Bit definition for PWR_IORETRC register  *****************/
-#define PWR_IORETRC_RET14_Pos                  (14U)
-#define PWR_IORETRC_RET14_Msk                  (0x1UL << PWR_IORETRC_RET14_Pos)           /*!< 0x00004000 */
-#define PWR_IORETRC_RET14                      PWR_IORETRC_RET14_Msk                      /*!< Standby GPIO retention status for PC14 */
-#define PWR_IORETRC_RET15_Pos                  (15U)
-#define PWR_IORETRC_RET15_Msk                  (0x1UL << PWR_IORETRC_RET15_Pos)           /*!< 0x00008000 */
-#define PWR_IORETRC_RET15                      PWR_IORETRC_RET15_Msk                      /*!< Standby GPIO retention status for PC15 */
+#define PWR_IORETRC_RET14_Pos               (14U)
+#define PWR_IORETRC_RET14_Msk               (0x1UL << PWR_IORETRC_RET14_Pos)           /*!< 0x00004000 */
+#define PWR_IORETRC_RET14                   PWR_IORETRC_RET14_Msk                      /*!< Standby GPIO retention status for PC14 */
+#define PWR_IORETRC_RET15_Pos               (15U)
+#define PWR_IORETRC_RET15_Msk               (0x1UL << PWR_IORETRC_RET15_Pos)           /*!< 0x00008000 */
+#define PWR_IORETRC_RET15                   PWR_IORETRC_RET15_Msk                      /*!< Standby GPIO retention status for PC15 */
 
 /********************  Bit definition for PWR_IORETENRH register  *****************/
-#define PWR_IORETENRH_EN3_Pos                  (3U)
-#define PWR_IORETENRH_EN3_Msk                  (0x1UL << PWR_IORETENRH_EN3_Pos)           /*!< 0x00000008 */
-#define PWR_IORETENRH_EN3                      PWR_IORETENRH_EN3_Msk                      /*!< Standby GPIO retention enable for PH3 */
+#define PWR_IORETENRH_EN3_Pos               (3U)
+#define PWR_IORETENRH_EN3_Msk               (0x1UL << PWR_IORETENRH_EN3_Pos)           /*!< 0x00000008 */
+#define PWR_IORETENRH_EN3                   PWR_IORETENRH_EN3_Msk                      /*!< Standby GPIO retention enable for PH3 */
 
 /********************  Bit definition for PWR_IORETRH register  *****************/
-#define PWR_IORETRH_RET3_Pos                   (3U)
-#define PWR_IORETRH_RET3_Msk                   (0x1UL << PWR_IORETRH_RET3_Pos)            /*!< 0x00000008 */
-#define PWR_IORETRH_RET3                       PWR_IORETRH_RET3_Msk                       /*!< Standby GPIO retention status for PH3 */
+#define PWR_IORETRH_RET3_Pos                (3U)
+#define PWR_IORETRH_RET3_Msk                (0x1UL << PWR_IORETRH_RET3_Pos)            /*!< 0x00000008 */
+#define PWR_IORETRH_RET3                    PWR_IORETRH_RET3_Msk                       /*!< Standby GPIO retention status for PH3 */
 
 /********************  Bit definition for PWR_RADIOSCR register  *****************/
-#define PWR_RADIOSCR_MODE_Pos                  (0U)
-#define PWR_RADIOSCR_MODE_Msk                  (0x3UL << PWR_RADIOSCR_MODE_Pos)            /*!< 0x00000003 */
-#define PWR_RADIOSCR_MODE                      PWR_RADIOSCR_MODE_Msk                       /*!< 2.4 GHz RADIO operating mode */
-#define PWR_RADIOSCR_MODE_0                    (0x1UL << PWR_RADIOSCR_MODE_Pos)            /*!< 0x00000001 */
-#define PWR_RADIOSCR_MODE_1                    (0x2UL << PWR_RADIOSCR_MODE_Pos)            /*!< 0x00000002 */
-#define PWR_RADIOSCR_PHYMODE_Pos               (2U)
-#define PWR_RADIOSCR_PHYMODE_Msk               (0x1UL << PWR_RADIOSCR_PHYMODE_Pos)         /*!< 0x00000004 */
-#define PWR_RADIOSCR_PHYMODE                   PWR_RADIOSCR_PHYMODE_Msk                    /*!< 2.4 GHz RADIO PHY operating mode */
-#define PWR_RADIOSCR_ENCMODE_Pos               (3U)
-#define PWR_RADIOSCR_ENCMODE_Msk               (0x1UL << PWR_RADIOSCR_ENCMODE_Pos)         /*!< 0x00000008 */
-#define PWR_RADIOSCR_ENCMODE                   PWR_RADIOSCR_ENCMODE_Msk                    /*!< 2.4 GHz RADIO encryption function operating mode */
-#define PWR_RADIOSCR_RFVDDHPA_Pos              (8U)
-#define PWR_RADIOSCR_RFVDDHPA_Msk              (0x1FUL << PWR_RADIOSCR_RFVDDHPA_Pos)       /*!< 0x00001F00 */
-#define PWR_RADIOSCR_RFVDDHPA                  PWR_RADIOSCR_RFVDDHPA_Msk                   /*!< 2.4 GHz RADIO VDDHPA control word */
-#define PWR_RADIOSCR_REGPARDYVDDRFPA_Pos       (15U)
-#define PWR_RADIOSCR_REGPARDYVDDRFPA_Msk       (0x1UL << PWR_RADIOSCR_REGPARDYVDDRFPA_Pos) /*!< 0x00008000 */
-#define PWR_RADIOSCR_REGPARDYVDDRFPA           PWR_RADIOSCR_REGPARDYVDDRFPA_Msk            /*!< Ready bit for VDDHPA voltage level when selecting VDDRFPA input */
+#define PWR_RADIOSCR_MODE_Pos               (0U)
+#define PWR_RADIOSCR_MODE_Msk               (0x3UL << PWR_RADIOSCR_MODE_Pos)            /*!< 0x00000003 */
+#define PWR_RADIOSCR_MODE                   PWR_RADIOSCR_MODE_Msk                       /*!< 2.4 GHz RADIO operating mode */
+#define PWR_RADIOSCR_MODE_0                 (0x1UL << PWR_RADIOSCR_MODE_Pos)            /*!< 0x00000001 */
+#define PWR_RADIOSCR_MODE_1                 (0x2UL << PWR_RADIOSCR_MODE_Pos)            /*!< 0x00000002 */
+#define PWR_RADIOSCR_PHYMODE_Pos            (2U)
+#define PWR_RADIOSCR_PHYMODE_Msk            (0x1UL << PWR_RADIOSCR_PHYMODE_Pos)         /*!< 0x00000004 */
+#define PWR_RADIOSCR_PHYMODE                PWR_RADIOSCR_PHYMODE_Msk                    /*!< 2.4 GHz RADIO PHY operating mode */
+#define PWR_RADIOSCR_ENCMODE_Pos            (3U)
+#define PWR_RADIOSCR_ENCMODE_Msk            (0x1UL << PWR_RADIOSCR_ENCMODE_Pos)         /*!< 0x00000008 */
+#define PWR_RADIOSCR_ENCMODE                PWR_RADIOSCR_ENCMODE_Msk                    /*!< 2.4 GHz RADIO encryption function operating mode */
+#define PWR_RADIOSCR_RFVDDHPA_Pos           (8U)
+#define PWR_RADIOSCR_RFVDDHPA_Msk           (0x1FUL << PWR_RADIOSCR_RFVDDHPA_Pos)       /*!< 0x00001F00 */
+#define PWR_RADIOSCR_RFVDDHPA               PWR_RADIOSCR_RFVDDHPA_Msk                   /*!< 2.4 GHz RADIO VDDHPA control word */
+#define PWR_RADIOSCR_REGPARDYVDDRFPA_Pos    (15U)
+#define PWR_RADIOSCR_REGPARDYVDDRFPA_Msk    (0x1UL << PWR_RADIOSCR_REGPARDYVDDRFPA_Pos) /*!< 0x00008000 */
+#define PWR_RADIOSCR_REGPARDYVDDRFPA        PWR_RADIOSCR_REGPARDYVDDRFPA_Msk            /*!< Ready bit for VDDHPA voltage level when selecting VDDRFPA input */
 
 
 /******************************************************************************/

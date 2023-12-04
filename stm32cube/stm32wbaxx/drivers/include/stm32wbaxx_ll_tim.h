@@ -671,10 +671,10 @@ typedef struct
 /** @defgroup TIM_LL_EC_COUNTERMODE Counter Mode
   * @{
   */
-#define LL_TIM_COUNTERMODE_UP                  0x00000000U          /*!<Counter used as upcounter */
+#define LL_TIM_COUNTERMODE_UP                  0x00000000U          /*!< Counter used as upcounter */
 #define LL_TIM_COUNTERMODE_DOWN                TIM_CR1_DIR          /*!< Counter used as downcounter */
 #define LL_TIM_COUNTERMODE_CENTER_DOWN         TIM_CR1_CMS_0        /*!< The counter counts up and down alternatively. Output compare interrupt flags of output channels  are set only when the counter is counting down. */
-#define LL_TIM_COUNTERMODE_CENTER_UP           TIM_CR1_CMS_1        /*!<The counter counts up and down alternatively. Output compare interrupt flags of output channels  are set only when the counter is counting up */
+#define LL_TIM_COUNTERMODE_CENTER_UP           TIM_CR1_CMS_1        /*!< The counter counts up and down alternatively. Output compare interrupt flags of output channels  are set only when the counter is counting up */
 #define LL_TIM_COUNTERMODE_CENTER_UP_DOWN      TIM_CR1_CMS          /*!< The counter counts up and down alternatively. Output compare interrupt flags of output channels  are set only when the counter is counting up or down. */
 /**
   * @}
@@ -1050,7 +1050,6 @@ typedef struct
 #endif /* COMP1 && COMP2 */
 #define LL_TIM_TIM3_ETRSOURCE_HSI          TIM_AF1_ETRSEL_2                                          /*!< ETR input is connected to HSI */
 #define LL_TIM_TIM3_ETRSOURCE_TIM2_ETR     TIM_AF1_ETRSEL_3                                          /*!< ETR input is connected to TIM2 ETR */
-#define LL_TIM_TIM3_ETRSOURCE_TIM4_ETR     (TIM_AF1_ETRSEL_3 | TIM_AF1_ETRSEL_0)                     /*!< ETR input is connected to TIM4 ETR */
 #define LL_TIM_TIM3_ETRSOURCE_ADC4_AWD1    (TIM_AF1_ETRSEL_3 | TIM_AF1_ETRSEL_1 | TIM_AF1_ETRSEL_0)  /*!< ADC1 analog watchdog 1 */
 #define LL_TIM_TIM3_ETRSOURCE_ADC4_AWD2    (TIM_AF1_ETRSEL_3 | TIM_AF1_ETRSEL_2)                     /*!< ADC1 analog watchdog 2 */
 #define LL_TIM_TIM3_ETRSOURCE_ADC4_AWD3    (TIM_AF1_ETRSEL_3 | TIM_AF1_ETRSEL_2 | TIM_AF1_ETRSEL_0)  /*!< ADC1 analog watchdog 3 */
@@ -1186,6 +1185,15 @@ typedef struct
 #define LL_TIM_BREAK2_AFMODE_BIDIRECTIONAL     TIM_BDTR_BK2BID         /*!< Break2 input BRK2 in bidirectional mode */
 /**
   * @}
+  */
+
+/** Legacy definitions for compatibility purpose
+@cond 0
+  */
+#define LL_TIM_ReArmBRK(_PARAM_)
+#define LL_TIM_ReArmBRK2(_PARAM_)
+/**
+@endcond
   */
 
 /** @defgroup TIM_LL_EC_DMABURST_BASEADDR DMA Burst Base Address
@@ -2110,6 +2118,17 @@ __STATIC_INLINE void LL_TIM_CC_EnablePreload(TIM_TypeDef *TIMx)
 __STATIC_INLINE void LL_TIM_CC_DisablePreload(TIM_TypeDef *TIMx)
 {
   CLEAR_BIT(TIMx->CR2, TIM_CR2_CCPC);
+}
+
+/**
+  * @brief  Indicates whether the capture/compare control bits (CCxE, CCxNE and OCxM) preload is enabled.
+  * @rmtoll CR2          CCPC          LL_TIM_CC_IsEnabledPreload
+  * @param  TIMx Timer instance
+  * @retval State of bit (1 or 0).
+  */
+__STATIC_INLINE uint32_t LL_TIM_CC_IsEnabledPreload(const TIM_TypeDef *TIMx)
+{
+  return ((READ_BIT(TIMx->CR2, TIM_CR2_CCPC) == (TIM_CR2_CCPC)) ? 1UL : 0UL);
 }
 
 /**
@@ -3795,7 +3814,6 @@ __STATIC_INLINE void LL_TIM_ConfigETR(TIM_TypeDef *TIMx, uint32_t ETRPolarity, u
   *            @arg @ref LL_TIM_TIM3_ETRSOURCE_COMP2   (*)
   *            @arg @ref LL_TIM_TIM3_ETRSOURCE_HSI
   *            @arg @ref LL_TIM_TIM3_ETRSOURCE_TIM2_ETR
-  *            @arg @ref LL_TIM_TIM3_ETRSOURCE_TIM4_ETR
   *            @arg @ref LL_TIM_TIM3_ETRSOURCE_ADC4_AWD1
   *            @arg @ref LL_TIM_TIM3_ETRSOURCE_ADC4_AWD2
   *            @arg @ref LL_TIM_TIM3_ETRSOURCE_ADC4_AWD3
@@ -3975,18 +3993,6 @@ __STATIC_INLINE void LL_TIM_DisarmBRK(TIM_TypeDef *TIMx)
 }
 
 /**
-  * @brief  Re-arm the break input (when it operates in bidirectional mode).
-  * @note  The Break input is automatically armed as soon as MOE bit is set.
-  * @rmtoll BDTR         BKDSRM        LL_TIM_ReArmBRK
-  * @param  TIMx Timer instance
-  * @retval None
-  */
-__STATIC_INLINE void LL_TIM_ReArmBRK(TIM_TypeDef *TIMx)
-{
-  CLEAR_BIT(TIMx->BDTR, TIM_BDTR_BKDSRM);
-}
-
-/**
   * @brief  Enable the break 2 function.
   * @note Macro IS_TIM_BKIN2_INSTANCE(TIMx) can be used to check whether or not
   *       a timer instance provides a second break input.
@@ -4073,18 +4079,6 @@ __STATIC_INLINE void LL_TIM_ConfigBRK2(TIM_TypeDef *TIMx, uint32_t Break2Polarit
 __STATIC_INLINE void LL_TIM_DisarmBRK2(TIM_TypeDef *TIMx)
 {
   SET_BIT(TIMx->BDTR, TIM_BDTR_BK2DSRM);
-}
-
-/**
-  * @brief  Re-arm the break 2 input (when it operates in bidirectional mode).
-  * @note  The Break 2 input is automatically armed as soon as MOE bit is set.
-  * @rmtoll BDTR         BK2DSRM       LL_TIM_ReArmBRK2
-  * @param  TIMx Timer instance
-  * @retval None
-  */
-__STATIC_INLINE void LL_TIM_ReArmBRK2(TIM_TypeDef *TIMx)
-{
-  CLEAR_BIT(TIMx->BDTR, TIM_BDTR_BK2DSRM);
 }
 
 /**

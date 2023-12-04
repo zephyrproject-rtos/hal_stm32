@@ -99,16 +99,16 @@ extern "C" {
   * @}
   */
 
-/** @defgroup PWR_LL_EC_SRAM1_SB_CONTENTS_RETENTION PWR SRAM1 Content Retention in Standby Mode
+/** @defgroup PWR_LL_EC_SRAM1_SB_RETENTION PWR SRAM1 Retention in Standby Mode
   * @{
   */
-#define LL_PWR_SRAM1_SB_NO_RETENTION    0U              /*!< SRAM1 no retention in Standby mode             */
-#define LL_PWR_SRAM1_SB_FULL_RETENTION  PWR_CR1_R1RSB1  /*!< SRAM1 all pages retention in Standby mode      */
+#define LL_PWR_SRAM1_SB_NO_RETENTION          0U               /*!< SRAM1 no retention in Standby mode             */
+#define LL_PWR_SRAM1_SB_FULL_RETENTION        PWR_CR1_R1RSB1   /*!< SRAM1 all pages retention in Standby mode      */
 /**
   * @}
   */
 
-/** @defgroup PWR_LL_EC_SRAM2_SB_CONTENTS_RETENTION PWR SRAM2 Content Retention in Standby Mode
+/** @defgroup PWR_LL_EC_SRAM2_SB_RETENTION PWR SRAM2 Retention in Standby Mode
   * @{
   */
 #define LL_PWR_SRAM2_SB_NO_RETENTION    0U              /*!< SRAM2 no retention in Standby mode             */
@@ -117,7 +117,7 @@ extern "C" {
   * @}
   */
 
-/** @defgroup PWR_LL_EC_RADIO_SB_CONTENTS_RETENTION PWR RADIO SRAMs and Sleep Clock Retention in Standby Mode
+/** @defgroup PWR_LL_EC_RADIO_SB_RETENTION PWR RADIO SRAMs and Sleep Clock Retention in Standby Mode
   * @{
   */
 #define LL_PWR_RADIO_SB_NO_RETENTION    0U                /*!< 2.4 GHz RADIO SRAMs and sleep timer content not retained in Standby mode */
@@ -126,29 +126,29 @@ extern "C" {
   * @}
   */
 
-/** @defgroup PWR_LL_EC_SRAM1_STOP_CONTENTS_RETENTION PWR SRAM1 Content Retention in Stop Mode
+/** @defgroup PWR_LL_EC_SRAM1_STOP_RETENTION PWR SRAM1 Retention in Stop Mode
   * @{
   */
-#define LL_PWR_SRAM1_STOP_NO_RETENTION    0U                  /*!< SRAM1 no retention in Stop mode (Stop 0, 1)             */
-#define LL_PWR_SRAM1_STOP_FULL_RETENTION  PWR_CR2_SRAM1PDS1   /*!< SRAM1 all pages retention in Stop mode (Stop 0, 1)      */
+#define LL_PWR_SRAM1_STOP_NO_RETENTION       0U                   /*!< SRAM1 no retention in Stop mode        */
+#define LL_PWR_SRAM1_STOP_FULL_RETENTION  PWR_CR2_SRAM1PDS1   /*!< SRAM1 all pages retention in Stop mode */
 /**
   * @}
   */
 
-/** @defgroup PWR_LL_EC_SRAM2_STOP_CONTENTS_RETENTION PWR SRAM2 Content Retention in Stop Mode
+/** @defgroup PWR_LL_EC_SRAM2_STOP_RETENTION PWR SRAM2 Retention in Stop Mode
   * @{
   */
-#define LL_PWR_SRAM2_STOP_NO_RETENTION    0U                  /*!< SRAM2 no retention in Stop mode (Stop 0, 1)        */
-#define LL_PWR_SRAM2_STOP_FULL_RETENTION  PWR_CR2_SRAM2PDS1   /*!< SRAM2 all pages retention in Stop mode (Stop 0, 1) */
+#define LL_PWR_SRAM2_STOP_NO_RETENTION    0U                  /*!< SRAM2 no retention in Stop mode        */
+#define LL_PWR_SRAM2_STOP_FULL_RETENTION  PWR_CR2_SRAM2PDS1   /*!< SRAM2 all pages retention in Stop mode */
 /**
   * @}
   */
 
-/** @defgroup PWR_LL_EC_ICACHERAM_STOP_CONTENTS_RETENTION PWR ICACHE SRAM Content Retention in Stop Mode
+/** @defgroup PWR_LL_EC_ICACHERAM_STOP_RETENTION PWR ICACHE SRAM Retention in Stop Mode
   * @{
   */
-#define LL_PWR_ICACHERAM_STOP_NO_RETENTION    0U                  /*!< ICACHE SRAM no retention in Stop mode (Stop 0, 1)        */
-#define LL_PWR_ICACHERAM_STOP_FULL_RETENTION  PWR_CR2_ICRAMPDS    /*!< ICACHE SRAM all pages retention in Stop mode (Stop 0, 1) */
+#define LL_PWR_ICACHERAM_STOP_NO_RETENTION    0U                  /*!< ICACHE SRAM no retention in Stop mode    */
+#define LL_PWR_ICACHERAM_STOP_FULL_RETENTION  PWR_CR2_ICRAMPDS    /*!< ICACHE SRAM full retention in Stop mode */
 /**
   * @}
   */
@@ -373,7 +373,7 @@ extern "C" {
 
 /**
   * @brief  Set system power mode.
-  * @rmtoll CR1              LPMS          LL_PWR_SetPowerMode
+  * @rmtoll CR1           LPMS            LL_PWR_SetPowerMode
   * @param  Mode  This parameter can be one of the following values:
   *         @arg @ref LL_PWR_MODE_STOP0
   *         @arg @ref LL_PWR_MODE_STOP1
@@ -387,7 +387,7 @@ __STATIC_INLINE void LL_PWR_SetPowerMode(uint32_t Mode)
 
 /**
   * @brief  Get system power mode.
-  * @rmtoll CR1              LPMS          LL_PWR_GetPowerMode
+  * @rmtoll CR1           LPMS            LL_PWR_GetPowerMode
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_PWR_MODE_STOP0
   *         @arg @ref LL_PWR_MODE_STOP1
@@ -400,7 +400,7 @@ __STATIC_INLINE uint32_t LL_PWR_GetPowerMode(void)
 
 /**
   * @brief  Set the SRAM2 page(s) retention in Standby mode.
-  * @rmtoll CR1    R2RSB1       LL_PWR_SetSRAM2SBRetention
+  * @rmtoll CR1           R2RSB1          LL_PWR_SetSRAM2SBRetention
   * @param  SRAM2PageRetention  This parameter can be one of the following values:
   *                              @arg @ref LL_PWR_SRAM2_SB_NO_RETENTION
   *                              @arg @ref LL_PWR_SRAM2_SB_FULL_RETENTION
@@ -413,7 +413,7 @@ __STATIC_INLINE void LL_PWR_SetSRAM2SBRetention(uint32_t SRAM2PageRetention)
 
 /**
   * @brief  Get the SRAM2 page(s) retention in Standby mode.
-  * @rmtoll CR1    R2RSB1       LL_PWR_GetSRAM2SBRetention
+  * @rmtoll CR1           R2RSB1          LL_PWR_GetSRAM2SBRetention
   * @retval Returned value can be one of the following values:
   *                              @arg @ref LL_PWR_SRAM2_SB_NO_RETENTION
   *                              @arg @ref LL_PWR_SRAM2_SB_FULL_RETENTION
@@ -425,7 +425,7 @@ __STATIC_INLINE uint32_t LL_PWR_GetSRAM2SBRetention(void)
 
 /**
   * @brief  Set the SRAM1 page(s) retention in Standby mode.
-  * @rmtoll CR1    R1RSB1       LL_PWR_SetSRAM1SBRetention
+  * @rmtoll CR1           R1RSB1          LL_PWR_SetSRAM1SBRetention
   * @param  SRAM1PageRetention  This parameter can be one of the following values:
   *                              @arg @ref LL_PWR_SRAM1_SB_NO_RETENTION
   *                              @arg @ref LL_PWR_SRAM1_SB_FULL_RETENTION
@@ -438,7 +438,7 @@ __STATIC_INLINE void LL_PWR_SetSRAM1SBRetention(uint32_t SRAM1PageRetention)
 
 /**
   * @brief  Get the SRAM1 page(s) retention in Standby mode.
-  * @rmtoll CR1    R1RSB1       LL_PWR_GetSRAM1SBRetention
+  * @rmtoll CR1           R1RSB1          LL_PWR_GetSRAM1SBRetention
   * @retval Returned value can be one of the following values:
   *                              @arg @ref LL_PWR_SRAM1_SB_NO_RETENTION
   *                              @arg @ref LL_PWR_SRAM1_SB_FULL_RETENTION
@@ -450,7 +450,7 @@ __STATIC_INLINE uint32_t LL_PWR_GetSRAM1SBRetention(void)
 
 /**
   * @brief  Set the Radio retention in Standby mode.
-  * @rmtoll CR1    RADIORSB       LL_PWR_SetRadioSBRetention
+  * @rmtoll CR1           RADIORSB        LL_PWR_SetRadioSBRetention
   * @param  RadioRetention  This parameter can be one of the following values:
   *                              @arg @ref LL_PWR_RADIO_SB_NO_RETENTION
   *                              @arg @ref LL_PWR_RADIO_SB_FULL_RETENTION
@@ -463,7 +463,7 @@ __STATIC_INLINE void LL_PWR_SetRadioSBRetention(uint32_t RadioRetention)
 
 /**
   * @brief  Get the Radio retention in Standby mode.
-  * @rmtoll CR1    RADIORSB       LL_PWR_GetRadioSBRetention
+  * @rmtoll CR1           RADIORSB        LL_PWR_GetRadioSBRetention
   * @retval Returned value can be one of the following values:
   *                              @arg @ref LL_PWR_RADIO_SB_NO_RETENTION
   *                              @arg @ref LL_PWR_RADIO_SB_FULL_RETENTION
@@ -475,7 +475,7 @@ __STATIC_INLINE uint32_t LL_PWR_GetRadioSBRetention(void)
 
 /**
   * @brief  Enable BOR ultra low power mode.
-  * @rmtoll CR1          UPLMEN        LL_PWR_EnableUltraLowPowerMode
+  * @rmtoll CR1           UPLMEN          LL_PWR_EnableUltraLowPowerMode
   * @retval None
   */
 __STATIC_INLINE void LL_PWR_EnableUltraLowPowerMode(void)
@@ -485,7 +485,7 @@ __STATIC_INLINE void LL_PWR_EnableUltraLowPowerMode(void)
 
 /**
   * @brief  Disable BOR ultra low-power mode.
-  * @rmtoll CR1          UPLMEN        LL_PWR_DisableUltraLowPowerMode
+  * @rmtoll CR1           UPLMEN          LL_PWR_DisableUltraLowPowerMode
   * @retval None
   */
 __STATIC_INLINE void LL_PWR_DisableUltraLowPowerMode(void)
@@ -495,7 +495,7 @@ __STATIC_INLINE void LL_PWR_DisableUltraLowPowerMode(void)
 
 /**
   * @brief  Check if BOR ultra low power mode is enabled.
-  * @rmtoll CR1          UPLMEN        LL_PWR_IsEnabledUltraLowPowerMode
+  * @rmtoll CR1           UPLMEN          LL_PWR_IsEnabledUltraLowPowerMode
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_PWR_IsEnabledUltraLowPowerMode(void)
@@ -506,7 +506,7 @@ __STATIC_INLINE uint32_t LL_PWR_IsEnabledUltraLowPowerMode(void)
 
 /**
   * @brief  Set the SRAM1 page(s) retention in Stop mode.
-  * @rmtoll CR2    SRAM1PDS1       LL_PWR_SetSRAM1StopRetention
+  * @rmtoll CR2           SRAM1PDS1       LL_PWR_SetSRAM1StopRetention
   * @param  SRAM1PageRetention  This parameter can be one of the following values:
   *         @arg @ref LL_PWR_SRAM1_STOP_NO_RETENTION
   *         @arg @ref LL_PWR_SRAM1_STOP_FULL_RETENTION
@@ -519,7 +519,7 @@ __STATIC_INLINE void LL_PWR_SetSRAM1StopRetention(uint32_t SRAM1PageRetention)
 
 /**
   * @brief  Get the SRAM1 page(s) retention in Stop mode.
-  * @rmtoll CR2    SRAM1PDS1       LL_PWR_GetSRAM1StopRetention
+  * @rmtoll CR2           SRAM1PDS1       LL_PWR_GetSRAM1StopRetention
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_PWR_SRAM1_STOP_NO_RETENTION
   *         @arg @ref LL_PWR_SRAM1_STOP_FULL_RETENTION
@@ -531,7 +531,7 @@ __STATIC_INLINE uint32_t LL_PWR_GetSRAM1StopRetention(void)
 
 /**
   * @brief  Set the SRAM2 page(s) retention in Stop mode.
-  * @rmtoll CR2    SRAM2PDS1       LL_PWR_SetSRAM2StopRetention
+  * @rmtoll CR2           SRAM2PDS1       LL_PWR_SetSRAM2StopRetention
   * @param  SRAM2PageRetention  This parameter can be one of the following values:
   *         @arg @ref LL_PWR_SRAM2_STOP_NO_RETENTION
   *         @arg @ref LL_PWR_SRAM2_STOP_FULL_RETENTION
@@ -544,7 +544,7 @@ __STATIC_INLINE void LL_PWR_SetSRAM2StopRetention(uint32_t SRAM2PageRetention)
 
 /**
   * @brief  Get the SRAM2 page(s) retention in Stop mode.
-  * @rmtoll CR2    SRAM2PDS1       LL_PWR_GetSRAM2StopRetention
+  * @rmtoll CR2           SRAM2PDS1       LL_PWR_GetSRAM2StopRetention
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_PWR_SRAM2_STOP_NO_RETENTION
   *         @arg @ref LL_PWR_SRAM2_STOP_FULL_RETENTION
@@ -556,9 +556,11 @@ __STATIC_INLINE uint32_t LL_PWR_GetSRAM2StopRetention(void)
 
 /**
   * @brief  Set the ICACHE SRAM page(s) retention in Stop mode.
-  * @rmtoll CR2    ICRAMPDS       LL_PWR_SetICacheRAMStopRetention
+  * @rmtoll CR2           ICRAMPDS        LL_PWR_SetICacheRAMStopRetention
+#if defined(STM32WBAXX_SI_CUT1_0)
   * @note   On Silicon Cut 1.0, it is mandatory to disable the ICACHE before going into
   *         stop modes otherwise an hard fault may occur when waking up from stop modes.
+#endif
   * @param  ICRAMPageRetention  This parameter can be one of the following values:
   *         @arg @ref LL_PWR_ICACHERAM_STOP_NO_RETENTION
   *         @arg @ref LL_PWR_ICACHERAM_STOP_FULL_RETENTION
@@ -572,7 +574,7 @@ __STATIC_INLINE void LL_PWR_SetICacheRAMStopRetention(uint32_t ICRAMPageRetentio
 
 /**
   * @brief  Get the ICACHE SRAM page(s) retention in Stop mode.
-  * @rmtoll CR2    ICRAMPDS       LL_PWR_GetICacheRAMStopRetention
+  * @rmtoll CR2           ICRAMPDS        LL_PWR_GetICacheRAMStopRetention
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_PWR_ICACHERAM_STOP_NO_RETENTION
   *         @arg @ref LL_PWR_ICACHERAM_STOP_FULL_RETENTION
@@ -584,7 +586,7 @@ __STATIC_INLINE uint32_t LL_PWR_GetICacheRAMStopRetention(void)
 
 /**
   * @brief  Enable the flash memory fast wakeup from Stop mode (Stop 0, 1).
-  * @rmtoll CR2    FLASHFWU       LL_PWR_EnableFlashFastWakeUp
+  * @rmtoll CR2           FLASHFWU        LL_PWR_EnableFlashFastWakeUp
   * @retval None
   */
 __STATIC_INLINE void LL_PWR_EnableFlashFastWakeUp(void)
@@ -594,7 +596,7 @@ __STATIC_INLINE void LL_PWR_EnableFlashFastWakeUp(void)
 
 /**
   * @brief  Disable the flash memory fast wakeup from Stop mode (Stop 0, 1).
-  * @rmtoll CR2    FLASHFWU       LL_PWR_DisableFlashFastWakeUp
+  * @rmtoll CR2           FLASHFWU        LL_PWR_DisableFlashFastWakeUp
   * @retval None
   */
 __STATIC_INLINE void LL_PWR_DisableFlashFastWakeUp(void)
@@ -603,9 +605,8 @@ __STATIC_INLINE void LL_PWR_DisableFlashFastWakeUp(void)
 }
 
 /**
-  * @brief  Check if the flash memory fast wakeup from Stop mode (Stop 0, 1)
-  *         is enabled.
-  * @rmtoll CR2    FLASHFWU       LL_PWR_IsEnabledFlashFastWakeUp
+  * @brief  Check if the flash memory fast wakeup from Stop mode (Stop 0, 1) is enabled.
+  * @rmtoll CR2           FLASHFWU        LL_PWR_IsEnabledFlashFastWakeUp
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_PWR_IsEnabledFlashFastWakeUp(void)
@@ -616,7 +617,7 @@ __STATIC_INLINE uint32_t LL_PWR_IsEnabledFlashFastWakeUp(void)
 #if defined(PWR_CR3_REGSEL)
 /**
   * @brief  Set the VCore regulator supply.
-  * @rmtoll CR3    REGSEL       LL_PWR_SetRegulatorSupply
+  * @rmtoll CR3           REGSEL          LL_PWR_SetRegulatorSupply
   * @param  RegulatorSupply This parameter can be one of the following values:
   *         @arg @ref LL_PWR_LDO_SUPPLY
   *         @arg @ref LL_PWR_SMPS_SUPPLY
@@ -629,7 +630,7 @@ __STATIC_INLINE void LL_PWR_SetRegulatorSupply(uint32_t RegulatorSupply)
 
 /**
   * @brief  Get the VCore regulator supply.
-  * @rmtoll CR3    REGSEL       LL_PWR_GetRegulatorSupply
+  * @rmtoll CR3           REGSEL          LL_PWR_GetRegulatorSupply
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_PWR_LDO_SUPPLY
   *         @arg @ref LL_PWR_SMPS_SUPPLY
@@ -643,7 +644,7 @@ __STATIC_INLINE uint32_t LL_PWR_GetRegulatorSupply(void)
 #if defined(PWR_CR2_FPWM)
 /**
   * @brief  Enable the SMPS PWM mode.
-  * @rmtoll CR2    FPWM      LL_PWR_EnableSMPSPWMMode
+  * @rmtoll CR2           FPWM            LL_PWR_EnableSMPSPWMMode
   * @retval None
   */
 __STATIC_INLINE void LL_PWR_EnableSMPSPWMMode(void)
@@ -653,7 +654,7 @@ __STATIC_INLINE void LL_PWR_EnableSMPSPWMMode(void)
 
 /**
   * @brief  Disable the SMPS PWM mode.
-  * @rmtoll CR2    FPWM       LL_PWR_DisableSMPSPWMMode
+  * @rmtoll CR2           FPWM            LL_PWR_DisableSMPSPWMMode
   * @retval None
   */
 __STATIC_INLINE void LL_PWR_DisableSMPSPWMMode(void)
@@ -663,7 +664,7 @@ __STATIC_INLINE void LL_PWR_DisableSMPSPWMMode(void)
 
 /**
   * @brief  Check if the SMPS PWM mode is enabled.
-  * @rmtoll CR2    FPWM       LL_PWR_IsEnabledSMPSPWMMode
+  * @rmtoll CR2           FPWM            LL_PWR_IsEnabledSMPSPWMMode
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_PWR_IsEnabledSMPSPWMMode(void)
@@ -674,7 +675,7 @@ __STATIC_INLINE uint32_t LL_PWR_IsEnabledSMPSPWMMode(void)
 
 /**
   * @brief  Enable the fast soft start for selected regulator.
-  * @rmtoll CR3    FSTEN       LL_PWR_EnableFastSoftStart
+  * @rmtoll CR3           FSTEN           LL_PWR_EnableFastSoftStart
   * @retval None
   */
 __STATIC_INLINE void LL_PWR_EnableFastSoftStart(void)
@@ -684,7 +685,7 @@ __STATIC_INLINE void LL_PWR_EnableFastSoftStart(void)
 
 /**
   * @brief  Disable the fast soft start for selected regulator.
-  * @rmtoll CR3    FSTEN       LL_PWR_DisableFastSoftStart
+  * @rmtoll CR3           FSTEN           LL_PWR_DisableFastSoftStart
   * @retval None
   */
 __STATIC_INLINE void LL_PWR_DisableFastSoftStart(void)
@@ -694,7 +695,7 @@ __STATIC_INLINE void LL_PWR_DisableFastSoftStart(void)
 
 /**
   * @brief  Check if the fast soft start for selected regulator is enabled.
-  * @rmtoll CR3    FSTEN       LL_PWR_IsEnabledFastSoftStart
+  * @rmtoll CR3           FSTEN           LL_PWR_IsEnabledFastSoftStart
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_PWR_IsEnabledFastSoftStart(void)
@@ -704,7 +705,7 @@ __STATIC_INLINE uint32_t LL_PWR_IsEnabledFastSoftStart(void)
 
 /**
   * @brief  Set the regulator supply output voltage.
-  * @rmtoll VOSR          VOS           LL_PWR_SetRegulVoltageScaling
+  * @rmtoll VOSR          VOS             LL_PWR_SetRegulVoltageScaling
   * @param  VoltageScaling This parameter can be one of the following values:
   *         @arg @ref LL_PWR_REGU_VOLTAGE_SCALE1
   *         @arg @ref LL_PWR_REGU_VOLTAGE_SCALE2
@@ -717,7 +718,7 @@ __STATIC_INLINE void LL_PWR_SetRegulVoltageScaling(uint32_t VoltageScaling)
 
 /**
   * @brief  Get the regulator supply output voltage.
-  * @rmtoll VOSR          VOS           LL_PWR_GetRegulVoltageScaling
+  * @rmtoll VOSR          VOS             LL_PWR_GetRegulVoltageScaling
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_PWR_REGU_VOLTAGE_SCALE1
   *         @arg @ref LL_PWR_REGU_VOLTAGE_SCALE2
@@ -729,7 +730,7 @@ __STATIC_INLINE uint32_t LL_PWR_GetRegulVoltageScaling(void)
 
 /**
   * @brief  Set the Power voltage detector level.
-  * @rmtoll SVMCR    PVDLS         LL_PWR_SetPVDLevel
+  * @rmtoll SVMCR         PVDLS           LL_PWR_SetPVDLevel
   * @param  PVDLevel This parameter can be one of the following values:
   *         @arg @ref LL_PWR_PVDLEVEL_0
   *         @arg @ref LL_PWR_PVDLEVEL_1
@@ -748,7 +749,7 @@ __STATIC_INLINE void LL_PWR_SetPVDLevel(uint32_t PVDLevel)
 
 /**
   * @brief  Get the Power voltage detector level.
-  * @rmtoll SVMCR    PVDLS         LL_PWR_GetPVDLevel
+  * @rmtoll SVMCR         PVDLS           LL_PWR_GetPVDLevel
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_PWR_PVDLEVEL_0
   *         @arg @ref LL_PWR_PVDLEVEL_1
@@ -766,7 +767,7 @@ __STATIC_INLINE uint32_t LL_PWR_GetPVDLevel(void)
 
 /**
   * @brief  Enable the power voltage detector.
-  * @rmtoll SVMCR          PVDE          LL_PWR_EnablePVD
+  * @rmtoll SVMCR         PVDE            LL_PWR_EnablePVD
   * @retval None
   */
 __STATIC_INLINE void LL_PWR_EnablePVD(void)
@@ -776,7 +777,7 @@ __STATIC_INLINE void LL_PWR_EnablePVD(void)
 
 /**
   * @brief  Disable the power voltage detector.
-  * @rmtoll SVMCR          PVDE          LL_PWR_DisablePVD
+  * @rmtoll SVMCR         PVDE            LL_PWR_DisablePVD
   * @retval None
   */
 __STATIC_INLINE void LL_PWR_DisablePVD(void)
@@ -786,7 +787,7 @@ __STATIC_INLINE void LL_PWR_DisablePVD(void)
 
 /**
   * @brief  Check if the power voltage detector is enabled.
-  * @rmtoll SVMCR          PVDE          LL_PWR_IsEnabledPVD
+  * @rmtoll SVMCR         PVDE            LL_PWR_IsEnabledPVD
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_PWR_IsEnabledPVD(void)
@@ -796,7 +797,7 @@ __STATIC_INLINE uint32_t LL_PWR_IsEnabledPVD(void)
 
 /**
   * @brief  Enable the wake up pin_x.
-  * @rmtoll WUCR1    WUPENx       LL_PWR_EnableWakeUpPin
+  * @rmtoll WUCR1         WUPENx          LL_PWR_EnableWakeUpPin
   * @param  WakeUpPin This parameter can be a combination of the following values:
   *         @arg @ref LL_PWR_WAKEUP_PIN1
   *         @arg @ref LL_PWR_WAKEUP_PIN2
@@ -815,7 +816,7 @@ __STATIC_INLINE void LL_PWR_EnableWakeUpPin(uint32_t WakeUpPin)
 
 /**
   * @brief  Disable the wake up pin_x.
-  * @rmtoll WUCR1    WUPENx       LL_PWR_DisableWakeUpPin
+  * @rmtoll WUCR1         WUPENx          LL_PWR_DisableWakeUpPin
   * @param  WakeUpPin This parameter can be a combination of the following values:
   *         @arg @ref LL_PWR_WAKEUP_PIN1
   *         @arg @ref LL_PWR_WAKEUP_PIN2
@@ -834,7 +835,7 @@ __STATIC_INLINE void LL_PWR_DisableWakeUpPin(uint32_t WakeUpPin)
 
 /**
   * @brief  Check if the wake up pin_x is enabled.
-  * @rmtoll WUCR1    WUPENx       LL_PWR_IsEnabledWakeUpPin
+  * @rmtoll WUCR1         WUPENx          LL_PWR_IsEnabledWakeUpPin
   * @param  WakeUpPin This parameter can be one of the following values:
   *         @arg @ref LL_PWR_WAKEUP_PIN1
   *         @arg @ref LL_PWR_WAKEUP_PIN2
@@ -853,7 +854,7 @@ __STATIC_INLINE uint32_t LL_PWR_IsEnabledWakeUpPin(uint32_t WakeUpPin)
 
 /**
   * @brief  Set the wake up pin polarity low for the event detection.
-  * @rmtoll WUCR2          WUPPx       LL_PWR_SetWakeUpPinPolarityLow
+  * @rmtoll WUCR2         WUPPx           LL_PWR_SetWakeUpPinPolarityLow
   * @param  WakeUpPin This parameter can be a combination of the following values:
   *         @arg @ref LL_PWR_WAKEUP_PIN1
   *         @arg @ref LL_PWR_WAKEUP_PIN2
@@ -872,7 +873,7 @@ __STATIC_INLINE void LL_PWR_SetWakeUpPinPolarityLow(uint32_t WakeUpPin)
 
 /**
   * @brief  Set the wake up pin polarity high for the event detection.
-  * @rmtoll WUCR2          WUPPx       LL_PWR_SetWakeUpPinPolarityHigh
+  * @rmtoll WUCR2         WUPPx           LL_PWR_SetWakeUpPinPolarityHigh
   * @param  WakeUpPin This parameter can be a combination of the following values:
   *         @arg @ref LL_PWR_WAKEUP_PIN1
   *         @arg @ref LL_PWR_WAKEUP_PIN2
@@ -891,7 +892,7 @@ __STATIC_INLINE void LL_PWR_SetWakeUpPinPolarityHigh(uint32_t WakeUpPin)
 
 /**
   * @brief  Get the wake up pin polarity for the event detection.
-  * @rmtoll WUCR2          WUPPx       LL_PWR_GetWakeUpPinPolarity
+  * @rmtoll WUCR2         WUPPx           LL_PWR_GetWakeUpPinPolarity
   * @param  WakeUpPin This parameter can be one of the following values:
   *         @arg @ref LL_PWR_WAKEUP_PIN1
   *         @arg @ref LL_PWR_WAKEUP_PIN2
@@ -910,7 +911,7 @@ __STATIC_INLINE uint32_t LL_PWR_GetWakeUpPinPolarity(uint32_t WakeUpPin)
 
 /**
   * @brief  Set the wakeup pin_x selection 0.
-  * @rmtoll WUCR3          WUSELx          LL_PWR_SetWakeUpPinSignal0Selection
+  * @rmtoll WUCR3         WUSELx          LL_PWR_SetWakeUpPinSignal0Selection
   * @param  WakeUpPin This parameter can be one of the following values:
   *         @arg @ref LL_PWR_WAKEUP_PIN1
   *         @arg @ref LL_PWR_WAKEUP_PIN2
@@ -930,7 +931,7 @@ __STATIC_INLINE void LL_PWR_SetWakeUpPinSignal0Selection(uint32_t WakeUpPin)
 
 /**
   * @brief  Set the wakeup pin_x selection 1.
-  * @rmtoll WUCR3          WUSELx          LL_PWR_SetWakeUpPinSignal1Selection
+  * @rmtoll WUCR3         WUSELx          LL_PWR_SetWakeUpPinSignal1Selection
   * @param  WakeUpPin This parameter can be one of the following values:
   *         @arg @ref LL_PWR_WAKEUP_PIN1
   *         @arg @ref LL_PWR_WAKEUP_PIN2
@@ -950,7 +951,7 @@ __STATIC_INLINE void LL_PWR_SetWakeUpPinSignal1Selection(uint32_t WakeUpPin)
 
 /**
   * @brief  Set the wakeup pin_x selection 2.
-  * @rmtoll WUCR3          WUSELx          LL_PWR_SetWakeUpPinSignal2Selection
+  * @rmtoll WUCR3         WUSELx          LL_PWR_SetWakeUpPinSignal2Selection
   * @param  WakeUpPin This parameter can be one of the following values:
   *         @arg @ref LL_PWR_WAKEUP_PIN1
   *         @arg @ref LL_PWR_WAKEUP_PIN2
@@ -970,7 +971,7 @@ __STATIC_INLINE void LL_PWR_SetWakeUpPinSignal2Selection(uint32_t WakeUpPin)
 
 /**
   * @brief  Set the wakeup pin_x selection 3.
-  * @rmtoll WUCR3          WUSELx          LL_PWR_SetWakeUpPinSignal3Selection
+  * @rmtoll WUCR3         WUSELx          LL_PWR_SetWakeUpPinSignal3Selection
   * @param  WakeUpPin This parameter can be one of the following values:
   *         @arg @ref LL_PWR_WAKEUP_PIN1
   *         @arg @ref LL_PWR_WAKEUP_PIN2
@@ -990,7 +991,7 @@ __STATIC_INLINE void LL_PWR_SetWakeUpPinSignal3Selection(uint32_t WakeUpPin)
 
 /**
   * @brief  Get the wakeup pin_x selection.
-  * @rmtoll WUCR3          WUSELx          LL_PWR_GetWakeUpPinSignalSelection
+  * @rmtoll WUCR3         WUSELx          LL_PWR_GetWakeUpPinSignalSelection
   * @param  WakeUpPin This parameter can be one of the following values:
   *         @arg @ref LL_PWR_WAKEUP_PIN1
   *         @arg @ref LL_PWR_WAKEUP_PIN2
@@ -1006,12 +1007,9 @@ __STATIC_INLINE uint32_t LL_PWR_GetWakeUpPinSignalSelection(uint32_t WakeUpPin)
   return (READ_BIT(PWR->WUCR3, (3UL << (POSITION_VAL(WakeUpPin) * 2U))));
 }
 
-
-
-
 /**
   * @brief  Enable access to the backup domain.
-  * @rmtoll DBPR    DBP       LL_PWR_EnableBkUpAccess
+  * @rmtoll DBPR          DBP             LL_PWR_EnableBkUpAccess
   * @retval None
   */
 __STATIC_INLINE void LL_PWR_EnableBkUpAccess(void)
@@ -1021,7 +1019,7 @@ __STATIC_INLINE void LL_PWR_EnableBkUpAccess(void)
 
 /**
   * @brief  Disable access to the backup domain.
-  * @rmtoll DBPR    DBP       LL_PWR_DisableBkUpAccess
+  * @rmtoll DBPR          DBP             LL_PWR_DisableBkUpAccess
   * @retval None
   */
 __STATIC_INLINE void LL_PWR_DisableBkUpAccess(void)
@@ -1031,7 +1029,7 @@ __STATIC_INLINE void LL_PWR_DisableBkUpAccess(void)
 
 /**
   * @brief  Check if the access to backup domain is enabled.
-  * @rmtoll DBPR    DBP       LL_PWR_IsEnabledBkUpAccess
+  * @rmtoll DBPR          DBP             LL_PWR_IsEnabledBkUpAccess
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_PWR_IsEnabledBkUpAccess(void)
@@ -1039,12 +1037,9 @@ __STATIC_INLINE uint32_t LL_PWR_IsEnabledBkUpAccess(void)
   return ((READ_BIT(PWR->DBPR, PWR_DBPR_DBP) == (PWR_DBPR_DBP)) ? 1UL : 0UL);
 }
 
-
-
-
 /**
   * @brief  Enable GPIO retention in Standby mode
-  * @rmtoll IORETENRx        ENx        LL_PWR_EnableGPIOStandbyRetention
+  * @rmtoll IORETENRx     ENx             LL_PWR_EnableGPIOStandbyRetention
   * @param  GPIOPort This parameter can be one of the following values:
   *         @arg @ref LL_PWR_GPIO_STATE_RETENTION_ENABLE_PORTA
   *         @arg @ref LL_PWR_GPIO_STATE_RETENTION_ENABLE_PORTB
@@ -1074,10 +1069,9 @@ __STATIC_INLINE void LL_PWR_EnableGPIOStandbyRetention(uint32_t GPIOPort, uint32
   SET_BIT(*((__IO uint32_t *)GPIOPort), GPIOPin);
 }
 
-
 /**
   * @brief  Disable GPIO retention in Standby mode
-  * @rmtoll IORETENRx        ENx        LL_PWR_DisableGPIOStandbyRetention
+  * @rmtoll IORETENRx     ENx             LL_PWR_DisableGPIOStandbyRetention
   * @param  GPIOPort This parameter can be one of the following values:
   *         @arg @ref LL_PWR_GPIO_STATE_RETENTION_ENABLE_PORTA
   *         @arg @ref LL_PWR_GPIO_STATE_RETENTION_ENABLE_PORTB
@@ -1107,11 +1101,9 @@ __STATIC_INLINE void LL_PWR_DisableGPIOStandbyRetention(uint32_t GPIOPort, uint3
   CLEAR_BIT(*((__IO uint32_t *)GPIOPort), GPIOPin);
 }
 
-
-
 /**
   * @brief  Check if GPIO retention is enabled in Standby mode
-  * @rmtoll IORETENRx        ENx        LL_PWR_IsEnabledGPIOStandbyRetention
+  * @rmtoll IORETENRx     ENx             LL_PWR_IsEnabledGPIOStandbyRetention
   * @param  GPIOPort This parameter can be one of the following values:
   *         @arg @ref LL_PWR_GPIO_STATE_RETENTION_ENABLE_PORTA
   *         @arg @ref LL_PWR_GPIO_STATE_RETENTION_ENABLE_PORTB
@@ -1143,7 +1135,7 @@ __STATIC_INLINE uint32_t LL_PWR_IsEnabledGPIOStandbyRetention(uint32_t GPIOPort,
 
 /**
   * @brief  Check if GPIO state was retained after Standby mode entry
-  * @rmtoll IORETRx        RETx        LL_PWR_IsGPIOStandbyStateRetained
+  * @rmtoll IORETRx       RETx            LL_PWR_IsGPIOStandbyStateRetained
   * @param  GPIOPort This parameter can be one of the following values:
   *         @arg @ref LL_PWR_GPIO_STATE_RETENTION_STATUS_PORTA
   *         @arg @ref LL_PWR_GPIO_STATE_RETENTION_STATUS_PORTB
@@ -1175,7 +1167,7 @@ __STATIC_INLINE uint32_t LL_PWR_IsGPIOStandbyStateRetained(uint32_t GPIOPort, ui
 
 /**
   * @brief  Clear GPIO state retention status after Standby mode entry
-  * @rmtoll IORETRx        RETx        LL_PWR_ClearGPIOStandbyRetentionStatus
+  * @rmtoll IORETRx       RETx            LL_PWR_ClearGPIOStandbyRetentionStatus
   * @param  GPIOPort This parameter can be one of the following values:
   *         @arg @ref LL_PWR_GPIO_STATE_RETENTION_STATUS_PORTA
   *         @arg @ref LL_PWR_GPIO_STATE_RETENTION_STATUS_PORTB
@@ -1207,7 +1199,7 @@ __STATIC_INLINE void LL_PWR_ClearGPIOStandbyRetentionStatus(uint32_t GPIOPort, u
 
 /**
   * @brief  Get currently voltage scaling applied to VCORE.
-  * @rmtoll SVMSR            ACTVOS          LL_PWR_GetRegulCurrentVOS
+  * @rmtoll SVMSR         ACTVOS          LL_PWR_GetRegulCurrentVOS
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_PWR_REGU_VOLTAGE_SCALE1
   *         @arg @ref LL_PWR_REGU_VOLTAGE_SCALE2
@@ -1228,7 +1220,7 @@ __STATIC_INLINE uint32_t LL_PWR_GetRegulCurrentVOS(void)
 #if defined(PWR_RADIOSCR_REGPABYPEN)
 /**
   * @brief  Enable regulator REG_VDDHPA bypass.
-  * @rmtoll RADIOSCR          REGPABYPEN        LL_PWR_EnableREGVDDHPABypass
+  * @rmtoll RADIOSCR      REGPABYPEN      LL_PWR_EnableREGVDDHPABypass
   * @note  This bit shall only be written when the VDDHPA regulator is not used (When REGPASEL = 0)
   * @retval None
   */
@@ -1239,7 +1231,7 @@ __STATIC_INLINE void LL_PWR_EnableREGVDDHPABypass(void)
 
 /**
   * @brief  Disable regulator REG_VDDHPA bypass.
-  * @rmtoll RADIOSCR          REGPABYPEN        LL_PWR_DisableREGVDDHPABypass
+  * @rmtoll RADIOSCR      REGPABYPEN      LL_PWR_DisableREGVDDHPABypass
   * @retval None
   */
 __STATIC_INLINE void LL_PWR_DisableREGVDDHPABypass(void)
@@ -1249,7 +1241,7 @@ __STATIC_INLINE void LL_PWR_DisableREGVDDHPABypass(void)
 
 /**
   * @brief  Check if regulator REG_VDDHPA bypass is enabled.
-  * @rmtoll RADIOSCR          REGPABYPEN        LL_PWR_IsEnabledREGVDDHPABypass
+  * @rmtoll RADIOSCR      REGPABYPEN      LL_PWR_IsEnabledREGVDDHPABypass
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_PWR_IsEnabledREGVDDHPABypass(void)
@@ -1261,7 +1253,7 @@ __STATIC_INLINE uint32_t LL_PWR_IsEnabledREGVDDHPABypass(void)
 #if defined(PWR_RADIOSCR_REGPASEL)
 /**
   * @brief  Set regulator REG_VDDHPA input supply.
-  * @rmtoll RADIOSCR          REGPASEL        LL_PWR_SetREGVDDHPAInputSupply
+  * @rmtoll RADIOSCR      REGPASEL        LL_PWR_SetREGVDDHPAInputSupply
   * @note  This bit shall only be written when the VDDHPA regulator is not used (When REGPASEL = 0)
   *         @arg @ref LL_PWR_REG_VDDHPA_VDDRFPA_PIN
   *         @arg @ref LL_PWR_REG_VDDHPA_VDDRFPA_VDD11
@@ -1274,7 +1266,7 @@ __STATIC_INLINE void LL_PWR_SetREGVDDHPAInputSupply(uint32_t InputSupply)
 
 /**
   * @brief  Get regulator REG_VDDHPA input supply.
-  * @rmtoll RADIOSCR          REGPASEL          LL_PWR_GetREGVDDHPAInputSupply
+  * @rmtoll RADIOSCR      REGPASEL        LL_PWR_GetREGVDDHPAInputSupply
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_PWR_REG_VDDHPA_VDDRFPA_PIN
   *         @arg @ref LL_PWR_REG_VDDHPA_VDDRFPA_VDD11
@@ -1287,7 +1279,7 @@ __STATIC_INLINE uint32_t LL_PWR_GetREGVDDHPAInputSupply(void)
 
 /**
   * @brief  Indicate whether the VDDHPA voltage output is ready when selecting VDDRFPA input.
-  * @rmtoll RADIOSCR          REGPARDYVDDRFPA          LL_PWR_IsActiveFlag_REGPARDYVDDRFPA
+  * @rmtoll RADIOSCR      REGPARDYVDDRFPA LL_PWR_IsActiveFlag_REGPARDYVDDRFPA
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_PWR_IsActiveFlag_REGPARDYVDDRFPA(void)
@@ -1298,7 +1290,7 @@ __STATIC_INLINE uint32_t LL_PWR_IsActiveFlag_REGPARDYVDDRFPA(void)
 #if defined(PWR_RADIOSCR_REGPARDYV11)
 /**
   * @brief  Indicate whether the VDDHPA voltage output is ready when selecting VDD11 input.
-  * @rmtoll RADIOSCR          REGPARDYV11          LL_PWR_IsActiveFlag_REGPARDYV11
+  * @rmtoll RADIOSCR      REGPARDYV11     LL_PWR_IsActiveFlag_REGPARDYV11
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_PWR_IsActiveFlag_REGPARDYV11(void)
@@ -1309,7 +1301,7 @@ __STATIC_INLINE uint32_t LL_PWR_IsActiveFlag_REGPARDYV11(void)
 
 /**
   * @brief  Get 2.4 GHz RADIO VDDHPA control word.
-  * @rmtoll RADIOSCR          RFVDDHPA          LL_PWR_GetRadioVDDHPAControlWord
+  * @rmtoll RADIOSCR      RFVDDHPA        LL_PWR_GetRadioVDDHPAControlWord
   * @retval 4-bit control word.
   */
 __STATIC_INLINE uint32_t LL_PWR_GetRadioVDDHPAControlWord(void)
@@ -1319,7 +1311,7 @@ __STATIC_INLINE uint32_t LL_PWR_GetRadioVDDHPAControlWord(void)
 
 /**
   * @brief  Indicate whether the 2.4 GHz RADIO encryption function is enabled
-  * @rmtoll RADIOSCR          ENCMODE          LL_PWR_IsEnabledRadioEncryption
+  * @rmtoll RADIOSCR      ENCMODE         LL_PWR_IsEnabledRadioEncryption
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_PWR_IsEnabledRadioEncryption(void)
@@ -1329,7 +1321,7 @@ __STATIC_INLINE uint32_t LL_PWR_IsEnabledRadioEncryption(void)
 
 /**
   * @brief  Get 2.4 GHz RADIO PHY operating mode.
-  * @rmtoll RADIOSCR          PHYMODE          LL_PWR_GetRadioPhyMode
+  * @rmtoll RADIOSCR      PHYMODE         LL_PWR_GetRadioPhyMode
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_PWR_RADIO_PHY_SLEEP_MODE
   *         @arg @ref LL_PWR_RADIO_PHY_STANDBY_MODE
@@ -1341,7 +1333,7 @@ __STATIC_INLINE uint32_t LL_PWR_GetRadioPhyMode(void)
 
 /**
   * @brief  Get 2.4 GHz RADIO operating mode.
-  * @rmtoll RADIOSCR          MODE          LL_PWR_GetRadioMode
+  * @rmtoll RADIOSCR      MODE            LL_PWR_GetRadioMode
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_PWR_RADIO_DEEP_SLEEP_MODE
   *         @arg @ref LL_PWR_RADIO_SLEEP_MODE
@@ -1358,14 +1350,15 @@ __STATIC_INLINE uint32_t LL_PWR_GetRadioMode(void)
     return (READ_BIT(PWR->RADIOSCR, PWR_RADIOSCR_MODE_0));
   }
 }
-
 /**
   * @}
   */
 
+
 /** @defgroup PWR_LL_EF_FLAG_MANAGEMENT PWR FLAG Management
   * @{
   */
+
 /**
   * @brief  Indicate whether the regulator voltage output is above voltage
   *         scaling range or not.
@@ -1377,9 +1370,10 @@ __STATIC_INLINE uint32_t LL_PWR_IsActiveFlag_VOS(void)
   return ((READ_BIT(PWR->VOSR, PWR_VOSR_VOSRDY) == (PWR_VOSR_VOSRDY)) ? 1UL : 0UL);
 }
 
+
 /**
   * @brief  Indicate whether the system was in standby mode or not.
-  * @rmtoll SR          SBF          LL_PWR_IsActiveFlag_SB
+  * @rmtoll SR            SBF             LL_PWR_IsActiveFlag_SB
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_PWR_IsActiveFlag_SB(void)
@@ -1389,7 +1383,7 @@ __STATIC_INLINE uint32_t LL_PWR_IsActiveFlag_SB(void)
 
 /**
   * @brief  Indicate whether the system was in stop mode or not.
-  * @rmtoll SR          STOPF          LL_PWR_IsActiveFlag_STOP
+  * @rmtoll SR            STOPF           LL_PWR_IsActiveFlag_STOP
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_PWR_IsActiveFlag_STOP(void)
@@ -1397,10 +1391,11 @@ __STATIC_INLINE uint32_t LL_PWR_IsActiveFlag_STOP(void)
   return ((READ_BIT(PWR->SR, PWR_SR_STOPF) == (PWR_SR_STOPF)) ? 1UL : 0UL);
 }
 
+
 #if defined(PWR_SVMSR_REGS)
 /**
   * @brief  Indicate whether the regulator supply is LDO or SMPS.
-  * @rmtoll SVMSR          REGS          LL_PWR_IsActiveFlag_REGULATOR
+  * @rmtoll SVMSR         REGS            LL_PWR_IsActiveFlag_REGULATOR
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_PWR_IsActiveFlag_REGULATOR(void)
@@ -1411,7 +1406,7 @@ __STATIC_INLINE uint32_t LL_PWR_IsActiveFlag_REGULATOR(void)
 
 /**
   * @brief  Indicate whether the VDD voltage is below the threshold or not.
-  * @rmtoll SVMSR          PVDO          LL_PWR_IsActiveFlag_PVDO
+  * @rmtoll SVMSR         PVDO            LL_PWR_IsActiveFlag_PVDO
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_PWR_IsActiveFlag_PVDO(void)
@@ -1422,7 +1417,7 @@ __STATIC_INLINE uint32_t LL_PWR_IsActiveFlag_PVDO(void)
 /**
   * @brief  Indicate whether the regulator voltage output is equal to current
   *         used voltage scaling range or not.
-  * @rmtoll SVMSR          ACTVOSRDY          LL_PWR_IsActiveFlag_ACTVOS
+  * @rmtoll SVMSR         ACTVOSRDY       LL_PWR_IsActiveFlag_ACTVOS
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_PWR_IsActiveFlag_ACTVOS(void)
@@ -1430,11 +1425,9 @@ __STATIC_INLINE uint32_t LL_PWR_IsActiveFlag_ACTVOS(void)
   return ((READ_BIT(PWR->SVMSR, PWR_SVMSR_ACTVOSRDY) == (PWR_SVMSR_ACTVOSRDY)) ? 1UL : 0UL);
 }
 
-
-
 /**
   * @brief  Indicate whether a wakeup event is detected on wake up pin 1.
-  * @rmtoll WUSR          WUF1          LL_PWR_IsActiveFlag_WU1
+  * @rmtoll WUSR          WUF1            LL_PWR_IsActiveFlag_WU1
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_PWR_IsActiveFlag_WU1(void)
@@ -1445,7 +1438,7 @@ __STATIC_INLINE uint32_t LL_PWR_IsActiveFlag_WU1(void)
 #if defined(PWR_WUSR_WUF2)
 /**
   * @brief  Indicate whether a wakeup event is detected on wake up pin 2.
-  * @rmtoll WUSR          WUF2          LL_PWR_IsActiveFlag_WU2
+  * @rmtoll WUSR          WUF2            LL_PWR_IsActiveFlag_WU2
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_PWR_IsActiveFlag_WU2(void)
@@ -1456,7 +1449,7 @@ __STATIC_INLINE uint32_t LL_PWR_IsActiveFlag_WU2(void)
 
 /**
   * @brief  Indicate whether a wakeup event is detected on wake up pin 3.
-  * @rmtoll WUSR          WUF3          LL_PWR_IsActiveFlag_WU3
+  * @rmtoll WUSR          WUF3            LL_PWR_IsActiveFlag_WU3
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_PWR_IsActiveFlag_WU3(void)
@@ -1466,7 +1459,7 @@ __STATIC_INLINE uint32_t LL_PWR_IsActiveFlag_WU3(void)
 
 /**
   * @brief  Indicate whether a wakeup event is detected on wake up pin 4.
-  * @rmtoll WUSR          WUF4          LL_PWR_IsActiveFlag_WU4
+  * @rmtoll WUSR          WUF4            LL_PWR_IsActiveFlag_WU4
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_PWR_IsActiveFlag_WU4(void)
@@ -1477,7 +1470,7 @@ __STATIC_INLINE uint32_t LL_PWR_IsActiveFlag_WU4(void)
 #if defined(PWR_WUSR_WUF5)
 /**
   * @brief  Indicate whether a wakeup event is detected on wake up pin 5.
-  * @rmtoll WUSR          WUF5          LL_PWR_IsActiveFlag_WU5
+  * @rmtoll WUSR          WUF5            LL_PWR_IsActiveFlag_WU5
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_PWR_IsActiveFlag_WU5(void)
@@ -1488,7 +1481,7 @@ __STATIC_INLINE uint32_t LL_PWR_IsActiveFlag_WU5(void)
 
 /**
   * @brief  Indicate whether a wakeup event is detected on wake up pin 6.
-  * @rmtoll WUSR          WUF6          LL_PWR_IsActiveFlag_WU6
+  * @rmtoll WUSR          WUF6            LL_PWR_IsActiveFlag_WU6
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_PWR_IsActiveFlag_WU6(void)
@@ -1498,7 +1491,7 @@ __STATIC_INLINE uint32_t LL_PWR_IsActiveFlag_WU6(void)
 
 /**
   * @brief  Indicate whether a wakeup event is detected on wake up pin 7.
-  * @rmtoll WUSR          WUF7          LL_PWR_IsActiveFlag_WU7
+  * @rmtoll WUSR          WUF7            LL_PWR_IsActiveFlag_WU7
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_PWR_IsActiveFlag_WU7(void)
@@ -1508,7 +1501,7 @@ __STATIC_INLINE uint32_t LL_PWR_IsActiveFlag_WU7(void)
 
 /**
   * @brief  Indicate whether a wakeup event is detected on wake up pin 8.
-  * @rmtoll WUSR          WUF8          LL_PWR_IsActiveFlag_WU8
+  * @rmtoll WUSR          WUF8            LL_PWR_IsActiveFlag_WU8
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_PWR_IsActiveFlag_WU8(void)
@@ -1516,9 +1509,10 @@ __STATIC_INLINE uint32_t LL_PWR_IsActiveFlag_WU8(void)
   return ((READ_BIT(PWR->WUSR, PWR_WUSR_WUF8) == (PWR_WUSR_WUF8)) ? 1UL : 0UL);
 }
 
+
 /**
   * @brief  Clear stop flag.
-  * @rmtoll SR          CSSF          LL_PWR_ClearFlag_STOP
+  * @rmtoll SR            CSSF            LL_PWR_ClearFlag_STOP
   * @retval None
   */
 __STATIC_INLINE void LL_PWR_ClearFlag_STOP(void)
@@ -1526,9 +1520,10 @@ __STATIC_INLINE void LL_PWR_ClearFlag_STOP(void)
   WRITE_REG(PWR->SR, PWR_SR_CSSF);
 }
 
+
 /**
   * @brief  Clear standby flag.
-  * @rmtoll SR          CSSF          LL_PWR_ClearFlag_SB
+  * @rmtoll SR            CSSF            LL_PWR_ClearFlag_SB
   * @retval None
   */
 __STATIC_INLINE void LL_PWR_ClearFlag_SB(void)
@@ -1538,7 +1533,7 @@ __STATIC_INLINE void LL_PWR_ClearFlag_SB(void)
 
 /**
   * @brief  Clear wake up flag 1.
-  * @rmtoll WUSCR          CWUF1         LL_PWR_ClearFlag_WU1
+  * @rmtoll WUSCR         CWUF1           LL_PWR_ClearFlag_WU1
   * @retval None
   */
 __STATIC_INLINE void LL_PWR_ClearFlag_WU1(void)
@@ -1549,7 +1544,7 @@ __STATIC_INLINE void LL_PWR_ClearFlag_WU1(void)
 #if defined(PWR_WUSCR_CWUF2)
 /**
   * @brief  Clear wake up flag 2.
-  * @rmtoll WUSCR          CWUF2         LL_PWR_ClearFlag_WU2
+  * @rmtoll WUSCR         CWUF2           LL_PWR_ClearFlag_WU2
   * @retval None
   */
 __STATIC_INLINE void LL_PWR_ClearFlag_WU2(void)
@@ -1560,7 +1555,7 @@ __STATIC_INLINE void LL_PWR_ClearFlag_WU2(void)
 
 /**
   * @brief  Clear wake up flag 3.
-  * @rmtoll WUSCR          CWUF3         LL_PWR_ClearFlag_WU3
+  * @rmtoll WUSCR         CWUF3           LL_PWR_ClearFlag_WU3
   * @retval None
   */
 __STATIC_INLINE void LL_PWR_ClearFlag_WU3(void)
@@ -1570,7 +1565,7 @@ __STATIC_INLINE void LL_PWR_ClearFlag_WU3(void)
 
 /**
   * @brief  Clear wake up flag 4.
-  * @rmtoll WUSCR          CWUF4         LL_PWR_ClearFlag_WU4
+  * @rmtoll WUSCR         CWUF4           LL_PWR_ClearFlag_WU4
   * @retval None
   */
 __STATIC_INLINE void LL_PWR_ClearFlag_WU4(void)
@@ -1581,7 +1576,7 @@ __STATIC_INLINE void LL_PWR_ClearFlag_WU4(void)
 #if defined(PWR_WUSCR_CWUF5)
 /**
   * @brief  Clear wake up flag 5.
-  * @rmtoll WUSCR          CWUF5         LL_PWR_ClearFlag_WU5
+  * @rmtoll WUSCR         CWUF5           LL_PWR_ClearFlag_WU5
   * @retval None
   */
 __STATIC_INLINE void LL_PWR_ClearFlag_WU5(void)
@@ -1592,7 +1587,7 @@ __STATIC_INLINE void LL_PWR_ClearFlag_WU5(void)
 
 /**
   * @brief  Clear wake up flag 6.
-  * @rmtoll WUSCR          CWUF6         LL_PWR_ClearFlag_WU6
+  * @rmtoll WUSCR         CWUF6           LL_PWR_ClearFlag_WU6
   * @retval None
   */
 __STATIC_INLINE void LL_PWR_ClearFlag_WU6(void)
@@ -1602,7 +1597,7 @@ __STATIC_INLINE void LL_PWR_ClearFlag_WU6(void)
 
 /**
   * @brief  Clear wake up flag 7.
-  * @rmtoll WUSCR          CWUF7         LL_PWR_ClearFlag_WU7
+  * @rmtoll WUSCR         CWUF7           LL_PWR_ClearFlag_WU7
   * @retval None
   */
 __STATIC_INLINE void LL_PWR_ClearFlag_WU7(void)
@@ -1612,7 +1607,7 @@ __STATIC_INLINE void LL_PWR_ClearFlag_WU7(void)
 
 /**
   * @brief  Clear wake up flag 8.
-  * @rmtoll WUSCR          CWUF8         LL_PWR_ClearFlag_WU8
+  * @rmtoll WUSCR         CWUF8           LL_PWR_ClearFlag_WU8
   * @retval None
   */
 __STATIC_INLINE void LL_PWR_ClearFlag_WU8(void)
@@ -1622,13 +1617,14 @@ __STATIC_INLINE void LL_PWR_ClearFlag_WU8(void)
 
 /**
   * @brief  Clear all wake up flags.
-  * @rmtoll WUSCR          CWUF         LL_PWR_ClearFlag_WU
+  * @rmtoll WUSCR         CWUF            LL_PWR_ClearFlag_WU
   * @retval None
   */
 __STATIC_INLINE void LL_PWR_ClearFlag_WU(void)
 {
   WRITE_REG(PWR->WUSCR, PWR_WUSCR_CWUF);
 }
+
 /**
   * @}
   */
@@ -1640,7 +1636,7 @@ __STATIC_INLINE void LL_PWR_ClearFlag_WU(void)
 #if defined(PWR_PRIVCFGR_NSPRIV)
 /**
   * @brief  Enable privileged mode for nsecure items.
-  * @rmtoll PRIVCFGR     NSPRIV        LL_PWR_EnableNSecurePrivilege
+  * @rmtoll PRIVCFGR      NSPRIV          LL_PWR_EnableNSecurePrivilege
   * @retval None
   */
 __STATIC_INLINE void LL_PWR_EnableNSecurePrivilege(void)
@@ -1650,7 +1646,7 @@ __STATIC_INLINE void LL_PWR_EnableNSecurePrivilege(void)
 
 /**
   * @brief  Disable privileged mode for nsecure items.
-  * @rmtoll PRIVCFGR     NSPRIV          LL_PWR_DisableNSecurePrivilege
+  * @rmtoll PRIVCFGR      NSPRIV          LL_PWR_DisableNSecurePrivilege
   * @retval None
   */
 __STATIC_INLINE void LL_PWR_DisableNSecurePrivilege(void)
@@ -1660,7 +1656,7 @@ __STATIC_INLINE void LL_PWR_DisableNSecurePrivilege(void)
 
 /**
   * @brief  Check if privileged mode for nsecure items is enabled.
-  * @rmtoll PRIVCFGR     NSPRIV          LL_PWR_IsEnabledNSecurePrivilege
+  * @rmtoll PRIVCFGR      NSPRIV          LL_PWR_IsEnabledNSecurePrivilege
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_PWR_IsEnabledNSecurePrivilege(void)
@@ -1672,7 +1668,7 @@ __STATIC_INLINE uint32_t LL_PWR_IsEnabledNSecurePrivilege(void)
 #if defined (__ARM_FEATURE_CMSE) &&  (__ARM_FEATURE_CMSE == 3U)
 /**
   * @brief  Enable privileged mode for secure items.
-  * @rmtoll PRIVCFGR     SPRIV        LL_PWR_EnableSecurePrivilege
+  * @rmtoll PRIVCFGR      SPRIV           LL_PWR_EnableSecurePrivilege
   * @retval None
   */
 __STATIC_INLINE void LL_PWR_EnableSecurePrivilege(void)
@@ -1682,7 +1678,7 @@ __STATIC_INLINE void LL_PWR_EnableSecurePrivilege(void)
 
 /**
   * @brief  Disable privileged mode for secure items.
-  * @rmtoll PRIVCFGR     SPRIV          LL_PWR_DisableSecurePrivilege
+  * @rmtoll PRIVCFGR      SPRIV           LL_PWR_DisableSecurePrivilege
   * @retval None
   */
 __STATIC_INLINE void LL_PWR_DisableSecurePrivilege(void)
@@ -1694,7 +1690,7 @@ __STATIC_INLINE void LL_PWR_DisableSecurePrivilege(void)
 #if defined(PWR_PRIVCFGR_NSPRIV)
 /**
   * @brief  Check if privileged mode for secure items is enabled.
-  * @rmtoll PRIVCFGR     SPRIV          LL_PWR_IsEnabledSecurePrivilege
+  * @rmtoll PRIVCFGR      SPRIV           LL_PWR_IsEnabledSecurePrivilege
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_PWR_IsEnabledSecurePrivilege(void)
@@ -1707,17 +1703,17 @@ __STATIC_INLINE uint32_t LL_PWR_IsEnabledSecurePrivilege(void)
 /**
   * @brief  Configure secure attribute mode.
   * @note   This API can be executed only by CPU in secure mode.
-  * @rmtoll SECCFGR     WUP1SEC       LL_PWR_ConfigSecure\n
-  *         SECCFGR     WUP2SEC       LL_PWR_ConfigSecure\n
-  *         SECCFGR     WUP3SEC       LL_PWR_ConfigSecure\n
-  *         SECCFGR     WUP4SEC       LL_PWR_ConfigSecure\n
-  *         SECCFGR     WUP5SEC       LL_PWR_ConfigSecure\n
-  *         SECCFGR     WUP6SEC       LL_PWR_ConfigSecure\n
-  *         SECCFGR     WUP7SEC       LL_PWR_ConfigSecure\n
-  *         SECCFGR     WUP8SEC       LL_PWR_ConfigSecure\n
-  *         SECCFGR     LPMSEC        LL_PWR_ConfigSecure\n
-  *         SECCFGR     VDMSEC        LL_PWR_ConfigSecure\n
-  *         SECCFGR     VBSEC         LL_PWR_ConfigSecure
+  * @rmtoll SECCFGR       WUP1SEC         LL_PWR_ConfigSecure\n
+  *         SECCFGR       WUP2SEC         LL_PWR_ConfigSecure\n
+  *         SECCFGR       WUP3SEC         LL_PWR_ConfigSecure\n
+  *         SECCFGR       WUP4SEC         LL_PWR_ConfigSecure\n
+  *         SECCFGR       WUP5SEC         LL_PWR_ConfigSecure\n
+  *         SECCFGR       WUP6SEC         LL_PWR_ConfigSecure\n
+  *         SECCFGR       WUP7SEC         LL_PWR_ConfigSecure\n
+  *         SECCFGR       WUP8SEC         LL_PWR_ConfigSecure\n
+  *         SECCFGR       LPMSEC          LL_PWR_ConfigSecure\n
+  *         SECCFGR       VDMSEC          LL_PWR_ConfigSecure\n
+  *         SECCFGR       VBSEC           LL_PWR_ConfigSecure
   * @param  SecureConfig This parameter can be the full combination
   *         of the following values:
   *         @arg @ref LL_PWR_WAKEUP_PIN1_NSEC or LL_PWR_WAKEUP_PIN1_SEC
@@ -1741,17 +1737,17 @@ __STATIC_INLINE void LL_PWR_ConfigSecure(uint32_t SecureConfig)
 /**
   * @brief  Get secure attribute configuration.
   * @note   This API can be executed only by CPU in secure mode.
-  * @rmtoll SECCFGR     WUP1SEC       LL_PWR_GetConfigSecure\n
-  *         SECCFGR     WUP2SEC       LL_PWR_GetConfigSecure\n
-  *         SECCFGR     WUP3SEC       LL_PWR_GetConfigSecure\n
-  *         SECCFGR     WUP4SEC       LL_PWR_GetConfigSecure\n
-  *         SECCFGR     WUP5SEC       LL_PWR_GetConfigSecure\n
-  *         SECCFGR     WUP6SEC       LL_PWR_GetConfigSecure\n
-  *         SECCFGR     WUP7SEC       LL_PWR_GetConfigSecure\n
-  *         SECCFGR     WUP8SEC       LL_PWR_GetConfigSecure\n
-  *         SECCFGR     LPMSEC        LL_PWR_GetConfigSecure\n
-  *         SECCFGR     VDMSEC        LL_PWR_GetConfigSecure\n
-  *         SECCFGR     VBSEC         LL_PWR_GetConfigSecure
+  * @rmtoll SECCFGR       WUP1SEC         LL_PWR_GetConfigSecure\n
+  *         SECCFGR       WUP2SEC         LL_PWR_GetConfigSecure\n
+  *         SECCFGR       WUP3SEC         LL_PWR_GetConfigSecure\n
+  *         SECCFGR       WUP4SEC         LL_PWR_GetConfigSecure\n
+  *         SECCFGR       WUP5SEC         LL_PWR_GetConfigSecure\n
+  *         SECCFGR       WUP6SEC         LL_PWR_GetConfigSecure\n
+  *         SECCFGR       WUP7SEC         LL_PWR_GetConfigSecure\n
+  *         SECCFGR       WUP8SEC         LL_PWR_GetConfigSecure\n
+  *         SECCFGR       LPMSEC          LL_PWR_GetConfigSecure\n
+  *         SECCFGR       VDMSEC          LL_PWR_GetConfigSecure\n
+  *         SECCFGR       VBSEC           LL_PWR_GetConfigSecure
   * @retval Returned value is the combination of the following values:
   *         @arg @ref LL_PWR_WAKEUP_PIN1_NSEC or LL_PWR_WAKEUP_PIN1_SEC
   *         @arg @ref LL_PWR_WAKEUP_PIN2_NSEC or LL_PWR_WAKEUP_PIN2_SEC

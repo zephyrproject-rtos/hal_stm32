@@ -636,7 +636,7 @@ HAL_StatusTypeDef HAL_DMAEx_List_DeInit(DMA_HandleTypeDef *const hdma)
 #if defined (DMA_PRIVCFGR_PRIV0)
   /* Get DMA instance */
   DMA_TypeDef *p_dma_instance;
-#endif /* defined (DMA_PRIVCFGR_PRIV0) */
+#endif /* DMA_PRIVCFGR_PRIV0 */
 
   /* Get tick number */
   uint32_t tickstart = HAL_GetTick();
@@ -653,7 +653,7 @@ HAL_StatusTypeDef HAL_DMAEx_List_DeInit(DMA_HandleTypeDef *const hdma)
 #if defined (DMA_PRIVCFGR_PRIV0)
   /* Get DMA instance */
   p_dma_instance = GET_DMA_INSTANCE(hdma);
-#endif /* defined (DMA_PRIVCFGR_PRIV0) */
+#endif /* DMA_PRIVCFGR_PRIV0 */
 
   /* Disable the selected DMA Channel */
   __HAL_DMA_DISABLE(hdma);
@@ -687,12 +687,12 @@ HAL_StatusTypeDef HAL_DMAEx_List_DeInit(DMA_HandleTypeDef *const hdma)
 #if defined (DMA_PRIVCFGR_PRIV0)
   /* Clear privilege attribute */
   CLEAR_BIT(p_dma_instance->PRIVCFGR, (1UL << (GET_DMA_CHANNEL(hdma) & 0x1FU)));
-#endif /* defined (DMA_PRIVCFGR_PRIV0) */
+#endif /* DMA_PRIVCFGR_PRIV0 */
 
 #if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
   /* Clear secure attribute */
   CLEAR_BIT(p_dma_instance->SECCFGR, (1UL << (GET_DMA_CHANNEL(hdma) & 0x1FU)));
-#endif /* defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U) */
+#endif /* (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U) */
 
   /* Clear all flags */
   __HAL_DMA_CLEAR_FLAG(hdma, (DMA_FLAG_TC | DMA_FLAG_HT | DMA_FLAG_DTE | DMA_FLAG_ULE | DMA_FLAG_USE | DMA_FLAG_SUSP |
@@ -1043,7 +1043,7 @@ HAL_StatusTypeDef HAL_DMAEx_List_BuildNode(DMA_NodeConfTypeDef const *const pNod
 #if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
   assert_param(IS_DMA_ATTRIBUTES(pNodeConfig->SrcSecure));
   assert_param(IS_DMA_ATTRIBUTES(pNodeConfig->DestSecure));
-#endif /* defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U) */
+#endif /* (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U) */
 
   /* Build the DMA channel node */
   DMA_List_BuildNode(pNodeConfig, pNode);
@@ -3538,7 +3538,7 @@ static void DMA_List_BuildNode(DMA_NodeConfTypeDef const *const pNodeConfig,
   {
     pNode->LinkRegisters[NODE_CTR1_DEFAULT_OFFSET] |= DMA_CTR1_DSEC;
   }
-#endif /* defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U) */
+#endif /* (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U) */
 
   /* Add parameters related to DMA configuration */
   if ((pNodeConfig->NodeType & DMA_CHANNEL_TYPE_GPDMA) == DMA_CHANNEL_TYPE_GPDMA)
@@ -3660,7 +3660,7 @@ static void DMA_List_GetNodeConfig(DMA_NodeConfTypeDef *const pNodeConfig,
   {
     pNodeConfig->DestSecure = DMA_CHANNEL_DEST_NSEC;
   }
-#endif /* defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U) */
+#endif /* (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U) */
   /*********************************************************************************** CTR1 fields values are updated */
 
 

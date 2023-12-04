@@ -1236,7 +1236,8 @@ __STATIC_INLINE uint32_t LL_SPI_GetNSSPolarity(const SPI_TypeDef *SPIx)
   * @brief  Set Baudrate Prescaler
   * @note   This configuration can not be changed when SPI is enabled.
   *         SPI BaudRate = fPCLK/Pescaler.
-  * @rmtoll CFG1         MBR BPASS    LL_SPI_SetBaudRatePrescaler
+  * @rmtoll CFG1         MBR            LL_SPI_SetBaudRatePrescaler\n
+  *         CFG1         BPASS          LL_SPI_SetBaudRatePrescaler
   * @param  SPIx SPI Instance
   * @param  Baudrate This parameter can be one of the following values:
   *         @arg @ref LL_SPI_BAUDRATEPRESCALER_BYPASS
@@ -1257,7 +1258,8 @@ __STATIC_INLINE void LL_SPI_SetBaudRatePrescaler(SPI_TypeDef *SPIx, uint32_t Bau
 
 /**
   * @brief  Get Baudrate Prescaler
-  * @rmtoll CFG1         MBR BPASS    LL_SPI_GetBaudRatePrescaler
+  * @rmtoll CFG1         MBR           LL_SPI_GetBaudRatePrescaler\n
+  *         CFG1         BPASS         LL_SPI_GetBaudRatePrescaler
   * @param  SPIx SPI Instance
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_SPI_BAUDRATEPRESCALER_BYPASS

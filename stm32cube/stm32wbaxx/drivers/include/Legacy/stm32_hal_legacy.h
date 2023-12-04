@@ -1595,6 +1595,8 @@ extern "C" {
 #define ETH_MAC_SMALL_FIFO_RW_ACTIVE          0x00000006U  /* MAC small FIFO read / write controllers active */
 #define ETH_MAC_MII_RECEIVE_PROTOCOL_ACTIVE   0x00000001U  /* MAC MII receive protocol engine active */
 
+#define ETH_TxPacketConfig                    ETH_TxPacketConfig_t  /* Transmit Packet Configuration structure definition */
+
 /**
   * @}
   */
@@ -3929,7 +3931,8 @@ extern "C" {
 
 #if defined (STM32F0) || defined (STM32F2) || defined (STM32F3) || defined (STM32F4) || defined (STM32F7) || \
     defined (STM32H7) || \
-    defined (STM32L0) || defined (STM32L1)
+    defined (STM32L0) || defined (STM32L1) || \
+    defined (STM32WB)
 #define __HAL_RTC_TAMPER_GET_IT                   __HAL_RTC_TAMPER_GET_FLAG
 #endif
 

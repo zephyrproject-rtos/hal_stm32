@@ -196,8 +196,10 @@
 
 void SystemInit(void)
 {
+#if defined(STM32WBAXX_SI_CUT1_0)
   __IO uint32_t timeout_cpu_cycles;
   __IO uint32_t tmpreg;
+#endif
 
   /* SAU/IDAU, FPU and Interrupts secure/non-secure allocation settings */
   TZ_SAU_Setup();

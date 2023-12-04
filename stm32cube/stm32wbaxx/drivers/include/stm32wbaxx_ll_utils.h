@@ -261,6 +261,9 @@ __STATIC_INLINE void LL_InitTick(uint32_t HCLKFrequency, uint32_t Ticks)
 }
 
 void        LL_Init1msTick(uint32_t HCLKFrequency);
+void        LL_Init1msTick_HCLK_Div8(uint32_t HCLKFrequency);
+void        LL_Init1msTick_LSE(void);
+void        LL_Init1msTick_LSI(void);
 void        LL_mDelay(uint32_t Delay);
 
 /**

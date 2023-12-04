@@ -102,7 +102,7 @@ typedef struct
 #if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
   uint32_t                    SrcSecure;          /*!< Specifies the source security attribute                        */
   uint32_t                    DestSecure;         /*!< Specifies the destination security attribute                   */
-#endif /* defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U) */
+#endif /* (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U) */
 
 } DMA_NodeConfTypeDef;
 
@@ -187,11 +187,9 @@ typedef struct __DMA_QListTypeDef
                                                            => Left Aligned Right Truncated down to the
                                                               destination data width                             */
 #define DMA_DATA_PACK                  DMA_CTR1_PAM_1 /*!< If source data width < destination data width
-                                                           => Packed at the destination data width
-                                                              (Available only for GPDMA)                         */
+                                                           => Packed at the destination data width               */
 #define DMA_DATA_UNPACK                DMA_CTR1_PAM_1 /*!< If source data width > destination data width
-                                                           => Unpacked at the destination data width
-                                                              (Available only for GPDMA)                         */
+                                                           => Unpacked at the destination data width             */
 /**
   * @}
   */
@@ -251,13 +249,13 @@ typedef struct __DMA_QListTypeDef
 #if defined (LPTIM2)
 #define GPDMA1_TRIGGER_LPTIM2_CH1        13U      /*!< GPDMA1 HW Trigger signal is LPTIM2_CH1      */
 #define GPDMA1_TRIGGER_LPTIM2_CH2        14U      /*!< GPDMA1 HW Trigger signal is LPTIM2_CH2      */
-#endif /* defined (LPTIM2) */
+#endif /* LPTIM2 */
 #if defined (COMP1)
 #define GPDMA1_TRIGGER_COMP1_OUT         15U      /*!< GPDMA1 HW Trigger signal is COMP1_OUT       */
-#endif /* defined (COMP1) */
+#endif /* COMP1 */
 #if defined (COMP2)
 #define GPDMA1_TRIGGER_COMP2_OUT         16U      /*!< GPDMA1 HW Trigger signal is COMP2_OUT       */
-#endif /* defined (COMP2) */
+#endif /* COMP2 */
 #define GPDMA1_TRIGGER_RTC_ALRA_TRG      17U      /*!< GPDMA1 HW Trigger signal is RTC_ALRA_TRG    */
 #define GPDMA1_TRIGGER_RTC_ALRB_TRG      18U      /*!< GPDMA1 HW Trigger signal is RTC_ALRB_TRG    */
 #define GPDMA1_TRIGGER_RTC_WUT_TRG       19U      /*!< GPDMA1 HW Trigger signal is RTC_WUT_TRG     */
@@ -273,7 +271,7 @@ typedef struct __DMA_QListTypeDef
 #define GPDMA1_TRIGGER_ADC4_AWD1         29U      /*!< GPDMA1 HW Trigger signal is ADC4_ADW1       */
 #if defined (TIM3)
 #define GPDMA1_TRIGGER_TIM3_TRGO         30U      /*!< GPDMA1 HW Trigger signal is TIM3_TRGO       */
-#endif /* defined (TIM3) */
+#endif /* TIM3 */
 /**
   * @}
   */
@@ -553,7 +551,7 @@ typedef struct
 #else
 #define IS_DMA_TRIGGER_SELECTION(TRIGGER) \
   ((TRIGGER) <= GPDMA1_TRIGGER_ADC4_AWD1)
-#endif /* defined (TIM3) */
+#endif /* TIM3 */
 
 #define IS_DMA_NODE_TYPE(TYPE)          \
   ((TYPE) == DMA_GPDMA_LINEAR_NODE)

@@ -9,7 +9,7 @@
   *           + Low Power Control Functions
   *           + Voltage Monitoring Functions
   *           + Memories Retention Functions
-  *           + I/O Pull-Up Pull-Down Configuration Functions
+  *           + I/O Retention Functions
   ******************************************************************************
   * @attention
   *
@@ -101,7 +101,7 @@
   * @{
   */
 
-#if defined (HAL_PWR_MODULE_ENABLED)
+#if defined(HAL_PWR_MODULE_ENABLED)
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -109,21 +109,20 @@
 /** @defgroup PWR_Extended_Private_Defines PWR Extended Private Defines
   * @{
   */
-#if defined (STM32WBA52xx) || defined (STM32WBA54xx) || defined (STM32WBA55xx)
+#if defined(STM32WBA52xx) || defined(STM32WBA54xx) || defined(STM32WBA55xx)
 #define PWR_PORTA_AVAILABLE_PINS  (0x0FFFFU)
 #define PWR_PORTB_AVAILABLE_PINS  (0x0FFFFU)
 #define PWR_PORTC_AVAILABLE_PINS  (0x0E000U)
 #define PWR_PORTH_AVAILABLE_PINS  (0x00008U)
-#elif defined (STM32WBA50xx)
+#elif defined(STM32WBA50xx)
 #define PWR_PORTA_AVAILABLE_PINS  (0x0F1E3U)
 #define PWR_PORTB_AVAILABLE_PINS  (0x09318U)
 #define PWR_PORTC_AVAILABLE_PINS  (0x0C000U)
 #define PWR_PORTH_AVAILABLE_PINS  (0x00008U)
-#endif /* defined (STM32WBA52xx) || defined (STM32WBA54xx) || defined (STM32WBA55xx) */
+#endif /* defined(STM32WBA52xx) || defined(STM32WBA54xx) || defined(STM32WBA55xx) */
 /*!< Time out value of flags setting */
 #define PWR_VOSF_SETTING_DELAY_VALUE (0x32U) /*!< Time out value for VOSF flag setting */
 #define PWR_MODE_CHANGE_DELAY_VALUE  (0x32U) /*!< Time out for step down converter operating mode */
-
 /**
   * @}
   */
@@ -376,7 +375,6 @@ void HAL_PWREx_DisableFastSoftStart(void)
   * @}
   */
 
-
 /** @defgroup PWREx_Exported_Functions_Group2 Low Power Control Functions
   * @brief    Low power control functions
   */
@@ -403,8 +401,6 @@ void HAL_PWREx_DisableUltraLowPowerMode(void)
 {
   CLEAR_BIT(PWR->CR1, PWR_CR1_ULPMEN);
 }
-
-
 /**
   * @}
   */
@@ -420,7 +416,7 @@ void HAL_PWREx_DisableUltraLowPowerMode(void)
  ===============================================================================
     [..]
       Several STM32WBA devices RAMs are configurable to retain or lose RAMs content
-      during Stop mode (Stop 0/1).
+      during Stop mode.
        (+) Retained content RAMs in Stop modes are :
              (++) SRAM1
              (++) SRAM2
@@ -437,13 +433,12 @@ void HAL_PWREx_DisableUltraLowPowerMode(void)
   * @{
   */
 
-#if defined(PWR_CR1_R1RSB1)
 /**
   * @brief  Enable SRAM1 content retention in Standby mode.
   * @note   When R1RSB1 bit is set, SRAM1 is powered by the low-power regulator in
   *         Standby mode and its content is kept.
   * @param  SRAM1Pages : Specifies the SRAM1 area
-  *                      This parameter can be one of the following values :
+  *                      This parameter can be combination of the following values :
   *                      @arg PWR_SRAM1_FULL_STANDBY_RETENTION  : full SRAM1 retention.
   * @retval None.
   */
@@ -467,7 +462,6 @@ void HAL_PWREx_DisableSRAM1ContentStandbyRetention(void)
   /* Clear R1RSB1 bit */
   CLEAR_BIT(PWR->CR1, PWR_SRAM1_FULL_STANDBY_RETENTION);
 }
-#endif /* defined(PWR_CR1_R1RSB1) */
 
 /**
   * @brief  Enable SRAM2 content retention in Standby mode.
@@ -531,17 +525,16 @@ void HAL_PWREx_DisableRadioSRAMClockStandbyRetention(void)
 }
 
 /**
-  * @brief  Enable RAMs content retention in Stop mode (Stop 0, 1).
+  * @brief  Enable RAMs content retention in Stop modes.
   * @note   When enabling content retention for a given ram, memory is kept powered
   *         on in Stop mode. (Consumption is not optimized)
   * @note   On Silicon Cut 1.0, it is mandatory to disable the ICACHE before going into
   *         stop modes otherwise an hard fault may occur when waking up from stop modes.
   * @param RAMSelection: Specifies RAMs content to be retained in Stop mode.
-  *                      This parameter can be one or a combination of the values
-  *                      @ref PWREx_RAM_Contents_Stop_Retention.
-  *                      @arg PWR_SRAM1_FULL_STOP_RETENTION  : full SRAM1 retention when available.
+  *                      This parameter can be one or a combination of the values:
+  *                      @arg PWR_SRAM1_FULL_STOP_RETENTION  : full SRAM1 retention .
   *                      @arg PWR_SRAM2_FULL_STOP_RETENTION  : full SRAM2 retention.
-  *                      @arg PWR_ICACHE_FULL_STOP_RETENTION : full I-CACHE RAM retention.
+  *                      @arg PWR_ICACHE_FULL_STOP_RETENTION : I-CACHE SRAM retention.
   * @retval None.
   */
 void HAL_PWREx_EnableRAMsContentStopRetention(uint32_t RAMSelection)
@@ -554,15 +547,14 @@ void HAL_PWREx_EnableRAMsContentStopRetention(uint32_t RAMSelection)
 }
 
 /**
-  * @brief Disable RAMs content retention in Stop mode (Stop 0, 1).
+  * @brief Disable RAMs content retention in Stop modes.
   * @note  When disabling content retention for a given RAM, memory is
   *        powered down in Stop mode. (Consumption is optimized)
   * @param RAMSelection: Specifies RAMs content to be lost in Stop mode.
-  *                      This parameter can be one or a combination of
-  *                      @ref PWREx_RAM_Contents_Stop_Retention.
-  *                      @arg PWR_SRAM1_FULL_STOP_RETENTION  : full SRAM1 retention when available.
+  *                      This parameter can be one or a combination of the values:
+  *                      @arg PWR_SRAM1_FULL_STOP_RETENTION  : full SRAM1 retention .
   *                      @arg PWR_SRAM2_FULL_STOP_RETENTION  : full SRAM2 retention.
-  *                      @arg PWR_ICACHE_FULL_STOP_RETENTION : full I-CACHE RAM retention.
+  *                      @arg PWR_ICACHE_FULL_STOP_RETENTION : I-CACHE SRAM retention.
   * @retval None.
   */
 void HAL_PWREx_DisableRAMsContentStopRetention(uint32_t RAMSelection)
@@ -605,12 +597,12 @@ void HAL_PWREx_DisableFlashFastWakeUp(void)
   * @}
   */
 
-/** @defgroup PWREx_Exported_Functions_Group5 I/O Pull-Up Pull-Down Configuration Functions
-  * @brief    I/O pull-up / pull-down configuration functions
+/** @defgroup PWREx_Exported_Functions_Group5 I/O Retention Functions
+  * @brief    I/O retention functions
   *
 @verbatim
  ===============================================================================
-                     ##### IOs configuration functions #####
+                     ##### IOs retention functions #####
  ===============================================================================
     [..]
       In Standby mode, the GPIOs are by default in floating state. If Standby GPIO
@@ -1046,7 +1038,7 @@ void HAL_PWREx_DisableREGVDDHPABypass(void)
   * @}
   */
 
-#endif /* defined (HAL_PWR_MODULE_ENABLED) */
+#endif /* defined(HAL_PWR_MODULE_ENABLED) */
 
 /**
   * @}

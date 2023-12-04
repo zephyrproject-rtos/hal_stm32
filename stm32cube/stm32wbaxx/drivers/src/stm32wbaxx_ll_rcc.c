@@ -42,42 +42,51 @@
   * @{
   */
 #if defined(USART2)
-#define IS_LL_RCC_USART_CLKSOURCE(__VALUE__)  (((__VALUE__) == LL_RCC_USART1_CLKSOURCE) \
-                                               || ((__VALUE__) == LL_RCC_USART2_CLKSOURCE))
+#define IS_LL_RCC_USART2_CLKSOURCE(__VALUE__) ((__VALUE__) == LL_RCC_USART2_CLKSOURCE)
 #else
-#define IS_LL_RCC_USART_CLKSOURCE(__VALUE__)  ((__VALUE__) == LL_RCC_USART1_CLKSOURCE)
+#define IS_LL_RCC_USART2_CLKSOURCE(__VALUE__) (0)
 #endif
+
+#define IS_LL_RCC_USART_CLKSOURCE(__VALUE__) (((__VALUE__) == LL_RCC_USART1_CLKSOURCE) \
+                                               || IS_LL_RCC_USART2_CLKSOURCE(__VALUE__))
+
+#if defined(I2C1)
+#define IS_LL_RCC_I2C1_CLKSOURCE(__VALUE__) ((__VALUE__) == LL_RCC_I2C1_CLKSOURCE)
+#else
+#define IS_LL_RCC_I2C1_CLKSOURCE(__VALUE__) (0)
+#endif
+
+#define IS_LL_RCC_I2C_CLKSOURCE(__VALUE__) (((__VALUE__) == LL_RCC_I2C3_CLKSOURCE) \
+                                             || IS_LL_RCC_I2C1_CLKSOURCE(__VALUE__))
+
+#if defined(SPI1)
+#define IS_LL_RCC_SPI1_CLKSOURCE(__VALUE__) ((__VALUE__) == LL_RCC_SPI1_CLKSOURCE)
+#else
+#define IS_LL_RCC_SPI1_CLKSOURCE(__VALUE__) (0)
+#endif
+
+#define IS_LL_RCC_SPI_CLKSOURCE(__VALUE__) (((__VALUE__) == LL_RCC_SPI3_CLKSOURCE) \
+                                             || IS_LL_RCC_SPI1_CLKSOURCE(__VALUE__))
+
+#if defined(LPTIM2)
+#define IS_LL_RCC_LPTIM2_CLKSOURCE(__VALUE__) ((__VALUE__) == LL_RCC_LPTIM2_CLKSOURCE)
+#else
+#define IS_LL_RCC_LPTIM2_CLKSOURCE(__VALUE__) (0)
+#endif
+
+#define IS_LL_RCC_LPTIM_CLKSOURCE(__VALUE__) (((__VALUE__) == LL_RCC_LPTIM1_CLKSOURCE) \
+                                               || IS_LL_RCC_LPTIM2_CLKSOURCE(__VALUE__))
 
 #define IS_LL_RCC_LPUART_CLKSOURCE(__VALUE__) ((__VALUE__) == LL_RCC_LPUART1_CLKSOURCE)
 
-#if defined(I2C1)
-#define IS_LL_RCC_I2C_CLKSOURCE(__VALUE__)    (((__VALUE__) == LL_RCC_I2C1_CLKSOURCE) \
-                                               || ((__VALUE__) == LL_RCC_I2C3_CLKSOURCE))
-#else
-#define IS_LL_RCC_I2C_CLKSOURCE(__VALUE__)    ((__VALUE__) == LL_RCC_I2C3_CLKSOURCE)
-#endif
-
-#if defined(SPI1)
-#define IS_LL_RCC_SPI_CLKSOURCE(__VALUE__)    (((__VALUE__) == LL_RCC_SPI1_CLKSOURCE) \
-                                               || ((__VALUE__) == LL_RCC_SPI3_CLKSOURCE))
-#else
-#define IS_LL_RCC_SPI_CLKSOURCE(__VALUE__)    ((__VALUE__) == LL_RCC_SPI3_CLKSOURCE)
-#endif
-
-#if defined(LPTIM2)
-#define IS_LL_RCC_LPTIM_CLKSOURCE(__VALUE__)  (((__VALUE__) == LL_RCC_LPTIM1_CLKSOURCE) \
-                                               || ((__VALUE__) == LL_RCC_LPTIM2_CLKSOURCE))
-#else
-#define IS_LL_RCC_LPTIM_CLKSOURCE(__VALUE__)  ((__VALUE__) == LL_RCC_LPTIM1_CLKSOURCE)
-#endif
-
 #if defined(SAI1)
 #define IS_LL_RCC_SAI_CLKSOURCE(__VALUE__)    ((__VALUE__) == LL_RCC_SAI1_CLKSOURCE)
-#endif
+#endif /* SAI1 */
 
 #define IS_LL_RCC_RNG_CLKSOURCE(__VALUE__)    ((__VALUE__) == LL_RCC_RNG_CLKSOURCE)
 
 #define IS_LL_RCC_ADC_CLKSOURCE(__VALUE__)    ((__VALUE__) == LL_RCC_ADC_CLKSOURCE)
+
 /**
   * @}
   */
@@ -740,12 +749,12 @@ uint32_t LL_RCC_GetRNGClockFreq(uint32_t RNGxSource)
       }
       break;
 
-    case LL_RCC_RNG_CLKSOURCE_PLL1Q:        /* PLL1Q clock used as RNG clock source */
+    case LL_RCC_RNG_CLKSOURCE_PLL1Q_DIV2:     /* PLL1Q/2 clock used as RNG clock source */
       if (LL_RCC_PLL1_IsReady() != 0U)
       {
         if (LL_RCC_PLL1_IsEnabledDomain_PLL1Q() != 0U)
         {
-          rng_frequency = RCC_PLL1Q_GetFreqDomain();
+          rng_frequency = RCC_PLL1Q_GetFreqDomain()/2U;
         }
       }
       break;
@@ -814,6 +823,7 @@ uint32_t LL_RCC_GetADCClockFreq(uint32_t ADCxSource)
 
   return adc_frequency;
 }
+
 
 
 /**

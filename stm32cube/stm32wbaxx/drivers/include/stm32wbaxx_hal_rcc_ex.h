@@ -539,7 +539,6 @@ typedef struct
   *            @arg RCC_SYSTICKCLKSOURCE_HCLK_DIV8 : HCLK divided by 8 Clock selected as SYSTICK clock
   *            @arg RCC_SYSTICKCLKSOURCE_LSI : LSI Clock selected as SYSTICK clock
   *            @arg RCC_SYSTICKCLKSOURCE_LSE : LSE Clock selected as SYSTICK clock
-  * @note   (1) Source is not available on all devices
   */
 #define __HAL_RCC_SYSTICK_CONFIG(__SYSTICK_CLKSOURCE__) \
   MODIFY_REG(RCC->CCIPR1, RCC_CCIPR1_SYSTICKSEL, (__SYSTICK_CLKSOURCE__))
@@ -549,8 +548,6 @@ typedef struct
   *            @arg RCC_SYSTICKCLKSOURCE_HCLK_DIV8 : HCLK divided by 8 Clock selected as SYSTICK clock
   *            @arg RCC_SYSTICKCLKSOURCE_LSI : LSI Clock selected as SYSTICK clock
   *            @arg RCC_SYSTICKCLKSOURCE_LSE : LSE Clock selected as SYSTICK clock
-  *            @arg RCC_SYSTICKCLKSOURCE_HSI : LSI Clock selected as SYSTICK clock (1)
-  * @note   (1) Source is not available on all devices
   */
 #define __HAL_RCC_GET_SYSTICK_SOURCE()      READ_BIT(RCC->CCIPR1, RCC_CCIPR1_SYSTICKSEL)
 

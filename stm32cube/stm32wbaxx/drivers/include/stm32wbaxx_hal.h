@@ -79,7 +79,7 @@ extern HAL_TickFreqTypeDef      uwTickFreq;
   * @brief STM32WBAxx HAL Driver version number
   */
 #define __STM32WBAxx_HAL_VERSION_MAIN   (0x01U) /*!< [31:24] main version */
-#define __STM32WBAxx_HAL_VERSION_SUB1   (0x01U) /*!< [23:16] sub1 version */
+#define __STM32WBAxx_HAL_VERSION_SUB1   (0x02U) /*!< [23:16] sub1 version */
 #define __STM32WBAxx_HAL_VERSION_SUB2   (0x00U) /*!< [15:8]  sub2 version */
 #define __STM32WBAxx_HAL_VERSION_RC     (0x00U) /*!< [7:0]  release candidate */
 #define __STM32WBAxx_HAL_VERSION    ((__STM32WBAxx_HAL_VERSION_MAIN << 24U)\
@@ -113,6 +113,7 @@ extern HAL_TickFreqTypeDef      uwTickFreq;
 #define SYSCFG_IT_FPU_OFC              SYSCFG_FPUIMR_FPU_IE_3  /*!< Floating Point Unit Overflow Interrupt */
 #define SYSCFG_IT_FPU_IDC              SYSCFG_FPUIMR_FPU_IE_4  /*!< Floating Point Unit Input denormal Interrupt */
 #define SYSCFG_IT_FPU_IXC              SYSCFG_FPUIMR_FPU_IE_5  /*!< Floating Point Unit Inexact Interrupt */
+#define SYSCFG_IT_FPU_ALL              (SYSCFG_IT_FPU_IOC|SYSCFG_IT_FPU_DZC|SYSCFG_IT_FPU_UFC|SYSCFG_IT_FPU_OFC|SYSCFG_IT_FPU_IDC|SYSCFG_IT_FPU_IXC)  /*!< All */
 
 /**
   * @}
@@ -139,6 +140,7 @@ extern HAL_TickFreqTypeDef      uwTickFreq;
 #define SYSCFG_FASTMODEPLUS_PA7        SYSCFG_CFGR1_PA7_FMP   /*!< Enable Fast-mode Plus on PA7  */
 #define SYSCFG_FASTMODEPLUS_PA15       SYSCFG_CFGR1_PA15_FMP  /*!< Enable Fast-mode Plus on PA15 */
 #define SYSCFG_FASTMODEPLUS_PB3        SYSCFG_CFGR1_PB3_FMP   /*!< Enable Fast-mode Plus on PB3  */
+#define SYSCFG_FASTMODEPLUS_ALL        (SYSCFG_FASTMODEPLUS_PA6|SYSCFG_FASTMODEPLUS_PA7|SYSCFG_FASTMODEPLUS_PA15|SYSCFG_FASTMODEPLUS_PB3)  /*!< All */
 
 /**
   * @}
@@ -162,8 +164,7 @@ extern HAL_TickFreqTypeDef      uwTickFreq;
   * @}
   */
 
-#if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
-
+#if defined (SYSCFG_SECCFGR_SYSCFGSEC)
 /** @defgroup SYSCFG_Attributes_items SYSCFG Attributes items
   * @brief SYSCFG items to configure secure or non-secure attributes on
   * @{
@@ -175,6 +176,7 @@ extern HAL_TickFreqTypeDef      uwTickFreq;
 /**
   * @}
   */
+#endif /* SYSCFG_SECCFGR_SYSCFGSEC */
 
 /** @defgroup SYSCFG_attributes SYSCFG attributes
   * @brief SYSCFG secure or non-secure attributes
@@ -185,8 +187,6 @@ extern HAL_TickFreqTypeDef      uwTickFreq;
 /**
   * @}
   */
-
-#endif /* __ARM_FEATURE_CMSE */
 
 /**
   * @}
@@ -388,48 +388,37 @@ extern HAL_TickFreqTypeDef      uwTickFreq;
   * @{
   */
 
-#define IS_SYSCFG_FPU_INTERRUPT(__INTERRUPT__) ((((__INTERRUPT__) & SYSCFG_IT_FPU_IOC) == SYSCFG_IT_FPU_IOC) || \
-                                                (((__INTERRUPT__) & SYSCFG_IT_FPU_DZC) == SYSCFG_IT_FPU_DZC) || \
-                                                (((__INTERRUPT__) & SYSCFG_IT_FPU_UFC) == SYSCFG_IT_FPU_UFC) || \
-                                                (((__INTERRUPT__) & SYSCFG_IT_FPU_OFC) == SYSCFG_IT_FPU_OFC) || \
-                                                (((__INTERRUPT__) & SYSCFG_IT_FPU_IDC) == SYSCFG_IT_FPU_IDC) || \
-                                                (((__INTERRUPT__) & SYSCFG_IT_FPU_IXC) == SYSCFG_IT_FPU_IXC))
+#define IS_SYSCFG_FPU_INTERRUPT(__INTERRUPT__) ((((__INTERRUPT__) & SYSCFG_IT_FPU_ALL) != 0x00U) && \
+                                                (((__INTERRUPT__) & ~SYSCFG_IT_FPU_ALL) == 0x00U))
 
 #define IS_SYSCFG_BREAK_CONFIG(__CONFIG__) (((__CONFIG__) == SYSCFG_BREAK_ECC)           || \
                                             ((__CONFIG__) == SYSCFG_BREAK_PVD)           || \
                                             ((__CONFIG__) == SYSCFG_BREAK_SRAM2_PARITY)  || \
                                             ((__CONFIG__) == SYSCFG_BREAK_LOCKUP))
 
-#define IS_SYSCFG_FASTMODEPLUS(__PIN__) ((((__PIN__) & SYSCFG_FASTMODEPLUS_PA6) == SYSCFG_FASTMODEPLUS_PA6) || \
-                                         (((__PIN__) & SYSCFG_FASTMODEPLUS_PA7) == SYSCFG_FASTMODEPLUS_PA7) || \
-                                         (((__PIN__) & SYSCFG_FASTMODEPLUS_PA15) == SYSCFG_FASTMODEPLUS_PA15) || \
-                                         (((__PIN__) & SYSCFG_FASTMODEPLUS_PB3) == SYSCFG_FASTMODEPLUS_PB3))
+#define IS_SYSCFG_FASTMODEPLUS(__PIN__) ((((__PIN__) & SYSCFG_FASTMODEPLUS_ALL) != 0x00U) && \
+                                         (((__PIN__) & ~SYSCFG_FASTMODEPLUS_ALL) == 0x00U))
 
 #if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
 
 #define IS_SYSCFG_ATTRIBUTES(__ATTRIBUTES__) (((__ATTRIBUTES__) == SYSCFG_SEC)  ||\
                                               ((__ATTRIBUTES__) == SYSCFG_NSEC))
 
-#define IS_SYSCFG_ITEMS_ATTRIBUTES(__ITEM__) ((((__ITEM__) & SYSCFG_CLK)    == SYSCFG_CLK)    || \
-                                              (((__ITEM__) & SYSCFG_CLASSB) == SYSCFG_CLASSB) || \
-                                              (((__ITEM__) & SYSCFG_FPU)    == SYSCFG_FPU)    || \
-                                              (((__ITEM__) & ~(SYSCFG_ALL)) == 0U))
-
-#define IS_SYSCFG_LOCK_ITEMS(__ITEM__) ((((__ITEM__) & SYSCFG_MPU_NSEC)       == SYSCFG_MPU_NSEC)       || \
-                                        (((__ITEM__) & SYSCFG_VTOR_NSEC)      == SYSCFG_VTOR_NSEC)      || \
-                                        (((__ITEM__) & SYSCFG_SAU)            == SYSCFG_SAU)            || \
-                                        (((__ITEM__) & SYSCFG_MPU_SEC)        == SYSCFG_MPU_SEC)        || \
-                                        (((__ITEM__) & SYSCFG_VTOR_AIRCR_SEC) == SYSCFG_VTOR_AIRCR_SEC) || \
-                                        (((__ITEM__) & ~(SYSCFG_LOCK_ALL)) == 0U))
-
-#else
-
-#define IS_SYSCFG_LOCK_ITEMS(__ITEM__) ((((__ITEM__) & SYSCFG_MPU_NSEC)  == SYSCFG_MPU_NSEC)    || \
-                                        (((__ITEM__) & SYSCFG_VTOR_NSEC) == SYSCFG_VTOR_NSEC)   || \
-                                        (((__ITEM__) & ~(SYSCFG_LOCK_ALL)) == 0U))
-
+#define IS_SYSCFG_ITEMS_ATTRIBUTES(__ITEM__) ((((__ITEM__) & SYSCFG_ALL) != 0x00U) && \
+                                              (((__ITEM__) & ~SYSCFG_ALL) == 0x00U))
 
 #endif /* __ARM_FEATURE_CMSE */
+
+#if defined (SYSCFG_SECCFGR_SYSCFGSEC)
+#define IS_SYSCFG_SINGLE_ITEMS_ATTRIBUTES(__ITEM__) (((__ITEM__) == (SYSCFG_CLK))    || \
+                                                     ((__ITEM__) == (SYSCFG_CLASSB)) || \
+                                                     ((__ITEM__) == (SYSCFG_FPU)))
+#endif /* SYSCFG_SECCFGR_SYSCFGSEC */
+
+#define IS_SYSCFG_LOCK_ITEMS(__ITEM__) ((((__ITEM__) & SYSCFG_LOCK_ALL) != 0x00U) && \
+                                        (((__ITEM__) & ~SYSCFG_LOCK_ALL) == 0x00U))
+
+
 /**
   * @}
   */
@@ -527,21 +516,22 @@ HAL_StatusTypeDef HAL_SYSCFG_GetLock(uint32_t *pItem);
   * @}
   */
 
-#if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
 
 /** @addtogroup HAL_Exported_Functions_Group6
   * @{
   */
 
+#if defined (SYSCFG_SECCFGR_SYSCFGSEC)
 /* SYSCFG Attributes functions ********************************************/
+#if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
 void              HAL_SYSCFG_ConfigAttributes(uint32_t Item, uint32_t Attributes);
+#endif /* __ARM_FEATURE_CMSE */
 HAL_StatusTypeDef HAL_SYSCFG_GetConfigAttributes(uint32_t Item, uint32_t *pAttributes);
+#endif /* SYSCFG_SECCFGR_SYSCFGSEC */
 
 /**
   * @}
   */
-
-#endif /* __ARM_FEATURE_CMSE */
 
 /**
   * @}

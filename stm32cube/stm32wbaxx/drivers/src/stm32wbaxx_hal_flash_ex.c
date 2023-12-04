@@ -239,7 +239,7 @@ HAL_StatusTypeDef HAL_FLASHEx_Erase(FLASH_EraseInitTypeDef *pEraseInit, uint32_t
     }
 
     /* If the erase operation is completed, disable the associated bits */
-    CLEAR_BIT((*reg_cr), (pEraseInit->TypeErase) & (~(FLASH_NON_SECURE_MASK)));
+    CLEAR_BIT((*reg_cr), (((pEraseInit->TypeErase) & (~(FLASH_NON_SECURE_MASK))) | FLASH_NSCR1_PNB));
   }
 
   /* Process Unlocked */
@@ -306,7 +306,7 @@ HAL_StatusTypeDef HAL_FLASHEx_Erase_IT(FLASH_EraseInitTypeDef *pEraseInit)
       pFlash.Page = pEraseInit->Page;
 
       /* Erase first page and wait for IT */
-      FLASH_PageErase(pEraseInit->Page);
+        FLASH_PageErase(pEraseInit->Page);
     }
   }
 
@@ -466,7 +466,7 @@ void HAL_FLASHEx_OBGetConfig(FLASH_OBProgramInitTypeDef *pOBInit)
   }
 }
 
-#if defined(FLASH_SECBBR1_SECBB0) || defined(FLASH_PRIVBBR1_PRIVBB0)
+#if defined(FLASH_SECBBR1_SECBB0) || defined(FLASH_PRIVBBR1_PRIVBB0) || defined(FLASH_SECBB1R1_SECBB0) || defined(FLASH_PRIVBB1R1_PRIVBB0)
 /**
   * @brief  Configure the block-based secure area.
   *
@@ -852,6 +852,124 @@ void HAL_FLASHEx_GetOperation(FLASH_OperationTypeDef *pFlashOperation)
   * @}
   */
 
+/** @defgroup FLASHEx_Exported_Functions_Group3 Extended ECC operation functions
+  *  @brief   Extended ECC operation functions
+  *
+@verbatim
+ ===============================================================================
+                  ##### Extended ECC operation functions #####
+ ===============================================================================
+    [..]
+    This subsection provides a set of functions allowing to manage the Extended FLASH
+    ECC Operations.
+
+@endverbatim
+  * @{
+  */
+/**
+  * @brief  Enable ECC correction interrupt
+  * @note   ECC detection does not need to be enabled as directly linked to
+  *         Non-Maskable Interrupt (NMI)
+  * @retval None
+  */
+void HAL_FLASHEx_EnableEccCorrectionInterrupt(void)
+{
+  __HAL_FLASH_ENABLE_IT(FLASH_IT_ECCC);
+}
+
+/**
+  * @brief  Disable ECC correction interrupt
+  * @retval None
+  */
+void HAL_FLASHEx_DisableEccCorrectionInterrupt(void)
+{
+  __HAL_FLASH_DISABLE_IT(FLASH_IT_ECCC);
+}
+
+/**
+  * @brief  Get the ECC error information.
+  * @param  pData Pointer to an FLASH_EccInfoTypeDef structure that contains the
+  *         ECC error information.
+  * @note   This function should be called before ECC bit is cleared
+  *         (in callback function)
+  * @retval None
+  */
+void HAL_FLASHEx_GetEccInfo(FLASH_EccInfoTypeDef *pData)
+{
+  uint32_t eccr;
+  /* Check Null pointer */
+  assert_param(pData != NULL);
+
+  /* Get back information from ECC register */
+  eccr = FLASH->ECCR;
+
+  /* Retrieve and sort information */
+  pData->Area = (eccr & FLASH_ECCR_SYSF_ECC);
+  pData->Address = ((eccr & FLASH_ECCR_ADDR_ECC) << 3U);
+
+  /* Add Base address depending on targeted area */
+  if (pData->Area == FLASH_ECC_AREA_USER_BANK1)
+  {
+    pData->Address |= FLASH_BASE;
+  }
+  else
+  {
+#if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
+    pData->Address |= SYSTEM_FLASH_BASE_S;
+#else
+    pData->Address |= SYSTEM_FLASH_BASE_NS;
+#endif /* __ARM_FEATURE_CMSE */
+  }
+
+  /* Set Master which initiates transaction. On WBA, it's necessary CPU1 */
+  pData->MasterID = FLASH_ECC_MASTER_CPU1;
+}
+
+/**
+  * @brief  Handle Flash ECC Detection interrupt request.
+  * @note   On STM32WBA, this Irq Handler should be called in Non-Maskable Interrupt (NMI)
+  *         interrupt subroutine.
+  * @retval None
+  */
+void HAL_FLASHEx_ECCD_IRQHandler(void)
+{
+  /* Check ECC Detection Error */
+  if ((FLASH->ECCR & FLASH_ECCR_ECCD) != 0U)
+  {
+    /* Call User callback */
+    HAL_FLASHEx_EccDetectionCallback();
+
+    /* Clear ECC detection flag in order to allow new ECC error record */
+    SET_BIT(FLASH->ECCR, FLASH_ECCR_ECCD);
+  }
+}
+
+/**
+  * @brief  FLASH ECC Correction interrupt callback.
+  * @retval None
+  */
+__weak void HAL_FLASHEx_EccCorrectionCallback(void)
+{
+  /* NOTE : This function should not be modified, when the callback is needed,
+            the HAL_FLASHEx_EccCorrectionCallback could be implemented in the user file
+   */
+}
+
+/**
+  * @brief  FLASH ECC Detection interrupt callback.
+  * @retval None
+  */
+__weak void HAL_FLASHEx_EccDetectionCallback(void)
+{
+  /* NOTE : This function should not be modified, when the callback is needed,
+            the HAL_FLASHEx_EccDetectionCallback could be implemented in the user file
+   */
+}
+
+/**
+  * @}
+  */
+
 /**
   * @}
   */
@@ -868,6 +986,7 @@ void HAL_FLASHEx_GetOperation(FLASH_OperationTypeDef *pFlashOperation)
 static void FLASH_MassErase()
 {
   __IO uint32_t *reg_cr;
+
 
   /* Access to SECCR1 or NSCR1 registers depends on operation type */
 #if defined(FLASH_SECCR1_LOCK)
@@ -899,6 +1018,7 @@ void FLASH_PageErase(uint32_t Page)
 #else
   reg_cr = &(FLASH_NS->NSCR1);
 #endif /* FLASH_SECCR1_LOCK */
+
 
   /* Proceed to erase the page */
   MODIFY_REG((*reg_cr), (FLASH_NSCR1_PNB | FLASH_NSCR1_PER | FLASH_NSCR1_STRT), ((Page << FLASH_NSCR1_PNB_Pos) | FLASH_NSCR1_PER | FLASH_NSCR1_STRT));
@@ -1127,6 +1247,7 @@ static void FLASH_OB_UserConfig(uint32_t UserType, uint32_t UserConfig)
     optr_reg_mask |= FLASH_OPTR_WWDG_SW;
   }
 
+
   if ((UserType & OB_USER_SRAM2_PE) != 0U)
   {
     /* SRAM2_PAR option byte should be modified */
@@ -1166,6 +1287,7 @@ static void FLASH_OB_UserConfig(uint32_t UserType, uint32_t UserConfig)
     optr_reg_val |= (UserConfig & FLASH_OPTR_nBOOT0);
     optr_reg_mask |= FLASH_OPTR_nBOOT0;
   }
+
 
 #if defined(FLASH_OPTR_TZEN)
   if ((UserType & OB_USER_TZEN) != 0U)

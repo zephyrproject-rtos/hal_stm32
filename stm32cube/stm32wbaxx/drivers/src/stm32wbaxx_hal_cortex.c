@@ -48,29 +48,25 @@
     [..]
     Setup SysTick Timer for time base.
 
-   (+) The HAL_SYSTICK_Config() function calls the SysTick_Config() function which
-       is a CMSIS function that:
-        (++) Configures the SysTick Reload register with value passed as function parameter.
-        (++) Configures the SysTick IRQ priority to the lowest value (0x0F).
+   (+) The SysTick clock source shall be configured with HAL_SYSTICK_CLKSourceConfig().
+
+   (+) The SysTick IRQ priority shall be configured with HAL_NVIC_SetPriority(SysTick_IRQn,...).
+       The HAL_NVIC_SetPriority() calls the CMSIS NVIC_SetPriority() function.
+
+   (+) The HAL_SYSTICK_Config() function:
+        (++) Configures the SysTick Reload register with the value passed as function parameter.
         (++) Resets the SysTick Counter register.
-        (++) Configures the SysTick Counter clock source to be Core Clock Source (HCLK).
         (++) Enables the SysTick Interrupt.
         (++) Starts the SysTick Counter.
-
-   (+) You can change the SysTick Clock source to be HCLK_Div8 by calling the macro
-       __HAL_CORTEX_SYSTICKCLK_CONFIG(SYSTICK_CLKSOURCE_HCLK_DIV8) just after the
-       HAL_SYSTICK_Config() function call. The __HAL_CORTEX_SYSTICKCLK_CONFIG() macro is defined
-       inside the stm32wbaxx_hal_cortex.h file.
-
-   (+) You can change the SysTick IRQ priority by calling the
-       HAL_NVIC_SetPriority(SysTick_IRQn,...) function just after the HAL_SYSTICK_Config() function
-       call. The HAL_NVIC_SetPriority() call the NVIC_SetPriority() function which is a CMSIS function.
 
    (+) To adjust the SysTick time base, use the following formula:
 
        Reload Value = SysTick Counter Clock (Hz) x  Desired Time base (s)
        (++) Reload Value is the parameter to be passed for HAL_SYSTICK_Config() function
        (++) Reload Value should not exceed 0xFFFFFF
+
+   (+) In case the HAL time base is the SysTick Timer, the HAL time base configuration must be completed
+       by calling the HAL_InitTick() function.
 
   @endverbatim
   ******************************************************************************
@@ -188,11 +184,11 @@ void HAL_NVIC_SetPriority(IRQn_Type IRQn, uint32_t PreemptPriority, uint32_t Sub
 {
   uint32_t prioritygroup;
 
-  /* Check the parameters */
-  assert_param(IS_NVIC_SUB_PRIORITY(SubPriority));
-  assert_param(IS_NVIC_PREEMPTION_PRIORITY(PreemptPriority));
+  prioritygroup = (NVIC_GetPriorityGrouping() & 0x7U);
 
-  prioritygroup = NVIC_GetPriorityGrouping();
+  /* Check the parameters */
+  assert_param(IS_NVIC_SUB_PRIORITY(SubPriority, prioritygroup));
+  assert_param(IS_NVIC_PREEMPTION_PRIORITY(PreemptPriority, prioritygroup));
 
   NVIC_SetPriority(IRQn, NVIC_EncodePriority(prioritygroup, PreemptPriority, SubPriority));
 }
@@ -250,7 +246,23 @@ void HAL_NVIC_SystemReset(void)
   */
 uint32_t HAL_SYSTICK_Config(uint32_t TicksNumb)
 {
-  return SysTick_Config(TicksNumb);
+  if ((TicksNumb - 1UL) > SysTick_LOAD_RELOAD_Msk)
+  {
+    /* Reload value impossible */
+    return (1UL);
+  }
+
+  /* Set reload register */
+  WRITE_REG(SysTick->LOAD, (uint32_t)(TicksNumb - 1UL));
+
+  /* Load the SysTick Counter Value */
+  WRITE_REG(SysTick->VAL, 0UL);
+
+  /* Enable SysTick IRQ and SysTick Timer */
+  SET_BIT(SysTick->CTRL, (SysTick_CTRL_TICKINT_Msk | SysTick_CTRL_ENABLE_Msk));
+
+  /* Function successful */
+  return (0UL);
 }
 /**
   * @}
@@ -408,6 +420,45 @@ void HAL_SYSTICK_CLKSourceConfig(uint32_t CLKSource)
 }
 
 /**
+  * @brief  Get the SysTick clock source configuration.
+  * @retval  SysTick clock source that can be one of the following values:
+  *             @arg SYSTICK_CLKSOURCE_LSI: LSI clock selected as SysTick clock source.
+  *             @arg SYSTICK_CLKSOURCE_LSE: LSE clock selected as SysTick clock source.
+  *             @arg SYSTICK_CLKSOURCE_HCLK: AHB clock selected as SysTick clock source.
+  *             @arg SYSTICK_CLKSOURCE_HCLK_DIV8: AHB clock divided by 8 selected as SysTick clock source.
+  */
+uint32_t HAL_SYSTICK_GetCLKSourceConfig(void)
+{
+  uint32_t systick_source;
+
+  /* Read SysTick->CTRL register for internal or external clock source */
+  if(READ_BIT(SysTick->CTRL, SysTick_CTRL_CLKSOURCE_Msk) != 0U)
+  {
+    /* Internal clock source */
+    systick_source = SYSTICK_CLKSOURCE_HCLK;
+  }
+  else
+  {
+    /* External clock source, check the selected one in RCC */
+    switch (__HAL_RCC_GET_SYSTICK_SOURCE())
+    {
+      case RCC_SYSTICKCLKSOURCE_LSI:
+        systick_source = SYSTICK_CLKSOURCE_LSI;
+        break;
+
+      case RCC_SYSTICKCLKSOURCE_LSE:
+        systick_source = SYSTICK_CLKSOURCE_LSE;
+        break;
+
+      default: /* RCC_SYSTICKCLKSOURCE_HCLK_DIV8 */
+        systick_source = SYSTICK_CLKSOURCE_HCLK_DIV8;
+        break;
+    }
+  }
+  return systick_source;
+}
+
+/**
   * @brief  Handle SYSTICK interrupt request.
   * @retval None
   */
@@ -426,8 +477,6 @@ __weak void HAL_SYSTICK_Callback(void)
             the HAL_SYSTICK_Callback could be implemented in the user file
    */
 }
-
-#if (__MPU_PRESENT == 1)
 
 /**
   * @brief  Enable the MPU.
@@ -634,8 +683,6 @@ static void MPU_ConfigMemoryAttributes(MPU_Type *MPUx, MPU_Attributes_InitTypeDe
   attr_values &=  ~(0xFFU << (attr_number * 8U));
   *(mair) = attr_values | ((uint32_t)MPU_AttributesInit->Attributes << (attr_number * 8U));
 }
-
-#endif /* __MPU_PRESENT */
 
 /**
   * @}

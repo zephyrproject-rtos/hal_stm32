@@ -8,7 +8,6 @@
   *           + Initialization/De-Initialization Functions.
   *           + Peripheral Control Functions.
   *           + PWR Attributes Functions.
-  *
   ******************************************************************************
   * @attention
   *
@@ -129,7 +128,7 @@
   * @{
   */
 
-#if defined (HAL_PWR_MODULE_ENABLED)
+#if defined(HAL_PWR_MODULE_ENABLED)
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -594,7 +593,7 @@ void HAL_PWR_EnterSLEEPMode(uint32_t Regulator, uint8_t SLEEPEntry)
   *         the content of SRAM and registers. All clocks in the VCORE domain
   *         are stopped. The PLL, HSI16 and HSE32 oscillators are disabled.
   *         The LSE or LSI is still running.
-  * @note   When exiting Stop 0 or Stop 1 mode by issuing an interrupt or a
+  * @note   When exiting Stop mode by issuing an interrupt or a
   *         wakeup event, the HSI16 oscillator is selected as system clock
   *         The MCU is in Run mode same range as before entering Stop mode.
   * @note   On STM32WBAXX_SI_CUT1_0 :
@@ -612,8 +611,8 @@ void HAL_PWR_EnterSLEEPMode(uint32_t Regulator, uint8_t SLEEPEntry)
   *         HSEON, HSION and SYSCLK selection.
   * @param  Regulator : Specifies the regulator state in Stop mode
   *         This parameter can be one of the following values:
-  *            @arg @ref PWR_MAINREGULATOR_ON  Stop 0 mode (main regulator ON)
-  *            @arg @ref PWR_LOWPOWERREGULATOR_ON  Stop 1 mode (low power regulator ON)
+  *            @arg @ref PWR_LOWPOWERMODE_STOP0  Stop 0 mode (main regulator ON)
+  *            @arg @ref PWR_LOWPOWERMODE_STOP1  Stop 1 mode (low power regulator ON)
   * @param  STOPEntry : Specifies if Stop mode is entered with WFI or WFE
   *                     instruction.
   *                     This parameter can be one of the following values :
@@ -810,13 +809,13 @@ void HAL_PWR_WKUP_IRQHandler(void)
     /* PWR WKUP1 interrupt user callback */
     HAL_PWR_WKUP1_Callback();
   }
-#if defined (PWR_WUCR1_WUPEN2)
+#if defined(PWR_WUCR1_WUPEN2)
   if ((wakeuppin & PWR_WUSR_WUF2) != 0U)
   {
     /* PWR WKUP2 interrupt user callback */
     HAL_PWR_WKUP2_Callback();
   }
-#endif /* defined (PWR_WUCR1_WUPEN2) */
+#endif /* defined(PWR_WUCR1_WUPEN2) */
   if ((wakeuppin & PWR_WUSR_WUF3) != 0U)
   {
     /* PWR WKUP3 interrupt user callback */
@@ -828,13 +827,13 @@ void HAL_PWR_WKUP_IRQHandler(void)
     /* PWR WKUP4 interrupt user callback */
     HAL_PWR_WKUP4_Callback();
   }
-#if defined (PWR_WUCR1_WUPEN5)
+#if defined(PWR_WUCR1_WUPEN5)
   if ((wakeuppin & PWR_WUSR_WUF5) != 0U)
   {
     /* PWR WKUP5 interrupt user callback */
     HAL_PWR_WKUP5_Callback();
   }
-#endif /* defined (PWR_WUCR1_WUPEN5) */
+#endif /* defined(PWR_WUCR1_WUPEN5) */
   if ((wakeuppin & PWR_WUSR_WUF6) != 0U)
   {
     /* PWR WKUP6 interrupt user callback */
@@ -863,7 +862,7 @@ __weak void HAL_PWR_WKUP1_Callback(void)
   */
 }
 
-#if defined (PWR_WUCR1_WUPEN2)
+#if defined(PWR_WUCR1_WUPEN2)
 /**
   * @brief PWR WKUP2 interrupt callback.
   * @retval None.
@@ -874,7 +873,7 @@ __weak void HAL_PWR_WKUP2_Callback(void)
             the HAL_PWR_WKUP2Callback can be implemented in the user file
   */
 }
-#endif /* defined (PWR_WUCR1_WUPEN2) */
+#endif /* defined(PWR_WUCR1_WUPEN2) */
 
 /**
   * @brief PWR WKUP3 interrupt callback.
@@ -898,7 +897,7 @@ __weak void HAL_PWR_WKUP4_Callback(void)
   */
 }
 
-#if defined (PWR_WUCR1_WUPEN5)
+#if defined(PWR_WUCR1_WUPEN5)
 /**
   * @brief PWR WKUP5 interrupt callback.
   * @retval None.
@@ -909,7 +908,7 @@ __weak void HAL_PWR_WKUP5_Callback(void)
             the HAL_PWR_WKUP5Callback can be implemented in the user file
   */
 }
-#endif /* defined (PWR_WUCR1_WUPEN5) */
+#endif /* defined(PWR_WUCR1_WUPEN5) */
 
 /**
   * @brief PWR WKUP6 interrupt callback.
@@ -1039,7 +1038,7 @@ void HAL_PWR_ConfigAttributes(uint32_t Item, uint32_t Attributes)
   assert_param(IS_PWR_ITEMS_ATTRIBUTES(Item));
   assert_param(IS_PWR_ATTRIBUTES(Attributes));
 
-#if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
+#if defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
   /* Secure item management (TZEN = 1) */
   if ((Attributes & PWR_ITEM_ATTR_SEC_PRIV_MASK) == PWR_ITEM_ATTR_SEC_PRIV_MASK)
   {
@@ -1109,7 +1108,7 @@ HAL_StatusTypeDef HAL_PWR_GetConfigAttributes(uint32_t Item, uint32_t *pAttribut
   /* Check the parameter */
   assert_param(IS_PWR_ITEMS_ATTRIBUTES(Item));
 
-#if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
+#if defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
   /* Check item security */
   if ((PWR->SECCFGR & Item) == Item)
   {
@@ -1140,7 +1139,7 @@ HAL_StatusTypeDef HAL_PWR_GetConfigAttributes(uint32_t Item, uint32_t *pAttribut
   * @}
   */
 
-#endif /* defined (HAL_PWR_MODULE_ENABLED) */
+#endif /* defined(HAL_PWR_MODULE_ENABLED) */
 /**
   * @}
   */

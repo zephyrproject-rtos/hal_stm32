@@ -40,7 +40,6 @@ extern "C" {
   * @{
   */
 
-#if (__MPU_PRESENT == 1)
 /** @defgroup CORTEX_MPU_Region_Initialization_Structure_definition MPU Region Initialization Structure Definition
   * @{
   */
@@ -81,8 +80,6 @@ typedef struct
   * @}
   */
 
-#endif /* __MPU_PRESENT */
-
 /**
   * @}
   */
@@ -121,7 +118,6 @@ typedef struct
   * @}
   */
 
-#if (__MPU_PRESENT == 1)
 /** @defgroup CORTEX_MPU_HFNMI_PRIVDEF_Control CORTEX MPU HFNMI and PRIVILEGED Access control
   * @{
   */
@@ -225,8 +221,6 @@ typedef struct
   * @}
   */
 
-#endif /* __MPU_PRESENT */
-
 /**
   * @}
   */
@@ -235,7 +229,7 @@ typedef struct
 /** @defgroup CORTEX_Exported_Macros CORTEX Exported Macros
   * @{
   */
-#if (__MPU_PRESENT == 1)
+
 /** @defgroup CORTEX_MPU_Normal_Memory_Attributes CORTEX MPU Normal Memory Attributes
   * @{
   */
@@ -245,7 +239,7 @@ typedef struct
 /**
   * @}
   */
-#endif /* __MPU_PRESENT */
+
 /**
   * @}
   */
@@ -282,10 +276,10 @@ void HAL_NVIC_SetPendingIRQ(IRQn_Type IRQn);
 void HAL_NVIC_ClearPendingIRQ(IRQn_Type IRQn);
 uint32_t HAL_NVIC_GetActive(IRQn_Type IRQn);
 void HAL_SYSTICK_CLKSourceConfig(uint32_t CLKSource);
+uint32_t HAL_SYSTICK_GetCLKSourceConfig(void);
 void HAL_SYSTICK_IRQHandler(void);
 void HAL_SYSTICK_Callback(void);
 
-#if (__MPU_PRESENT == 1)
 void HAL_MPU_Enable(uint32_t MPU_Control);
 void HAL_MPU_Disable(void);
 void HAL_MPU_ConfigRegion(MPU_Region_InitTypeDef *MPU_RegionInit);
@@ -296,7 +290,6 @@ void HAL_MPU_Disable_NS(void);
 void HAL_MPU_ConfigRegion_NS(MPU_Region_InitTypeDef *MPU_RegionInit);
 void HAL_MPU_ConfigMemoryAttributes_NS(MPU_Attributes_InitTypeDef *MPU_AttributesInit);
 #endif /* MPU_NS */
-#endif /* __MPU_PRESENT */
 /**
   * @}
   */
@@ -318,9 +311,13 @@ void HAL_MPU_ConfigMemoryAttributes_NS(MPU_Attributes_InitTypeDef *MPU_Attribute
                                        ((GROUP) == NVIC_PRIORITYGROUP_3) || \
                                        ((GROUP) == NVIC_PRIORITYGROUP_4))
 
-#define IS_NVIC_PREEMPTION_PRIORITY(PRIORITY)  ((PRIORITY) < (1UL<<__NVIC_PRIO_BITS))
+#define IS_NVIC_PREEMPTION_PRIORITY(PRIORITY, GROUP) (((0x07U - (GROUP)) < __NVIC_PRIO_BITS) ?\
+                                                      ((PRIORITY) < (0x1UL << (0x07U - (GROUP)))) :\
+                                                      ((PRIORITY) < (0x1UL << __NVIC_PRIO_BITS)))
 
-#define IS_NVIC_SUB_PRIORITY(PRIORITY)         ((PRIORITY) < (1UL<<__NVIC_PRIO_BITS))
+#define IS_NVIC_SUB_PRIORITY(PRIORITY, GROUP) (((GROUP) < (0x07U - __NVIC_PRIO_BITS)) ?\
+                                               ((PRIORITY) < (0x1UL)): \
+                                               ((PRIORITY) < (0x1UL << ((GROUP) - (0x07U - __NVIC_PRIO_BITS)))))
 
 #define IS_NVIC_DEVICE_IRQ(IRQ)                ((IRQ) > SysTick_IRQn)
 
@@ -329,7 +326,6 @@ void HAL_MPU_ConfigMemoryAttributes_NS(MPU_Attributes_InitTypeDef *MPU_Attribute
                                        ((SOURCE) == SYSTICK_CLKSOURCE_HCLK)|| \
                                        ((SOURCE) == SYSTICK_CLKSOURCE_HCLK_DIV8))
 
-#if (__MPU_PRESENT == 1)
 #define IS_MPU_REGION_ENABLE(STATE) (((STATE) == MPU_REGION_ENABLE) || \
                                      ((STATE) == MPU_REGION_DISABLE))
 
@@ -362,8 +358,6 @@ void HAL_MPU_ConfigMemoryAttributes_NS(MPU_Attributes_InitTypeDef *MPU_Attribute
                                            ((NUMBER) == MPU_ATTRIBUTES_NUMBER5) || \
                                            ((NUMBER) == MPU_ATTRIBUTES_NUMBER6) || \
                                            ((NUMBER) == MPU_ATTRIBUTES_NUMBER7))
-
-#endif /* __MPU_PRESENT */
 
 /**
   * @}
