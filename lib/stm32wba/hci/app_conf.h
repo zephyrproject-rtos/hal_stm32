@@ -442,7 +442,7 @@ typedef enum
 #define NEXT_EVENT_SCHEDULING_FROM_ISR      (1)
 
 /* Link Layer uses temperature based calibration (0 --> NO ; 1 --> YES) */
-#define USE_TEMPERATURE_BASED_RADIO_CALIBRATION  (1)
+#define USE_TEMPERATURE_BASED_RADIO_CALIBRATION  (0)
 
 #define RADIO_INTR_NUM                      RADIO_IRQn     /* 2.4GHz RADIO global interrupt */
 #define RADIO_INTR_PRIO_HIGH                (0)            /* 2.4GHz RADIO interrupt priority when radio is Active */

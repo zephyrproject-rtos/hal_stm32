@@ -93,4 +93,11 @@ License Link:
 
 Patch List:
 
-	* NA
+	* Disable Temperature based radio calibration:
+	  Impacted file: app_conf.h
+
+	* Minimize dependency list
+	  Impacted files: stm_list.h
+			  main.h
+			  app_conf.h
+			  scm.c
