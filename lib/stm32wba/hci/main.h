@@ -29,9 +29,9 @@ extern "C" {
 /* Includes ------------------------------------------------------------------*/
 #include "stm32wbaxx_hal.h"
 #include "app_conf.h"
-#include "app_entry.h"
+/* #include "app_entry.h" */
 #include "app_common.h"
-#include "app_debug.h"
+/* #include "app_debug.h" */
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */

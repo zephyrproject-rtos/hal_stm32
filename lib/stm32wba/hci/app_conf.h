@@ -25,7 +25,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "hw_if.h"
 #include "utilities_conf.h"
-#include "log_module.h"
+/* #include "log_module.h" */
 
 /* USER CODE BEGIN Includes */
 
