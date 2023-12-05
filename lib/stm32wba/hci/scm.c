@@ -20,9 +20,11 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "scm.h"
+#if (RT_DEBUG_GPIO_MODULE==1)
 #include "RTDebug.h"
+#endif
 
-#if (CFG_SCM_SUPPORTED == 1)
+#if (CFG_SCM_SUPPORTED==1)
 
 __weak void SCM_HSI_CLK_ON(void)
 {
@@ -89,8 +91,9 @@ static scm_clockconfig_t scm_getmaxfreq(void)
 
 static void scm_systemclockconfig(void)
 {
+#if (RT_DEBUG_GPIO_MODULE==1)
   SYSTEM_DEBUG_SIGNAL_SET(SCM_SYSTEM_CLOCK_CONFIG);
-
+#endif
   switch (scm_system_clock_config.targeted_clock_freq)
   {
     case HSE_16MHZ:
@@ -165,8 +168,9 @@ static void scm_systemclockconfig(void)
     default:
       break;
   }
-
+#if (RT_DEBUG_GPIO_MODULE==1)
   SYSTEM_DEBUG_SIGNAL_RESET(SCM_SYSTEM_CLOCK_CONFIG);
+#endif
 }
 
 static void SwitchHsePre(scm_hse_hsepre_t hse_pre)
@@ -424,8 +428,9 @@ void scm_init()
   */
 void scm_setup(void)
 {
+  #if (RT_DEBUG_GPIO_MODULE==1)
   SYSTEM_DEBUG_SIGNAL_SET(SCM_SETUP);
-
+#endif
   /* System clock is now on HSI 16Mhz, as it exits from stop mode */
 
   /* Start HSE */
@@ -479,7 +484,9 @@ void scm_setup(void)
       __HAL_RCC_ENABLE_IT(RCC_IT_HSERDY);
     }
   }
+  #if (RT_DEBUG_GPIO_MODULE==1)
   SYSTEM_DEBUG_SIGNAL_RESET(SCM_SETUP);
+  #endif
 }
 
 /**
@@ -710,8 +717,9 @@ void scm_setwaitstates(const scm_ws_lp_t ws_lp_config)
   */
 void scm_hserdy_isr(void)
 {
+  #if (RT_DEBUG_GPIO_MODULE==1)
   SYSTEM_DEBUG_SIGNAL_SET(SCM_HSERDY_ISR);
-
+#endif
   if(LL_RCC_GetSysClkSource() == LL_RCC_SYS_CLKSOURCE_STATUS_HSI)
   {
     /* Wait until VOS has changed */
@@ -764,8 +772,9 @@ void scm_hserdy_isr(void)
     /* Ensure time base clock coherency */
     SystemCoreClockUpdate();
   }
-
+#if (RT_DEBUG_GPIO_MODULE==1)
   SYSTEM_DEBUG_SIGNAL_RESET(SCM_HSERDY_ISR);
+#endif
 }
 
 /**
