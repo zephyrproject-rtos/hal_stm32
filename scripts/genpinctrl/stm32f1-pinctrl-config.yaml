@@ -154,6 +154,10 @@
   drive: open-drain
   mode: alternate
 
+- name: I2C_SMBA
+  match: "^I2C\\d+_SMBA$"
+  mode: alternate
+
 - name: I2S_CK
   match: "^I2S\\d+_CK$"
   mode: alternate
