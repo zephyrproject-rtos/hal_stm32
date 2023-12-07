@@ -480,6 +480,23 @@
 				drive-open-drain;
 			};
 
+			/* I2C_SMBA */
+
+			/omit-if-no-ref/ i2c1_smba_pb5: i2c1_smba_pb5 {
+				pinmux = <STM32_PINMUX('B', 5, AF4)>;
+				bias-pull-up;
+			};
+
+			/omit-if-no-ref/ i2c2_smba_pb12: i2c2_smba_pb12 {
+				pinmux = <STM32_PINMUX('B', 12, AF4)>;
+				bias-pull-up;
+			};
+
+			/omit-if-no-ref/ i2c3_smba_pa9: i2c3_smba_pa9 {
+				pinmux = <STM32_PINMUX('A', 9, AF4)>;
+				bias-pull-up;
+			};
+
 			/* I2S_MCK */
 
 			/omit-if-no-ref/ i2s2_mck_pc6: i2s2_mck_pc6 {

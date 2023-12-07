@@ -318,6 +318,16 @@
 				drive-open-drain;
 			};
 
+			/* I2C_SMBA */
+
+			/omit-if-no-ref/ i2c1_smba_pb5: i2c1_smba_pb5 {
+				pinmux = <STM32F1_PINMUX('B', 5, ALTERNATE, NO_REMAP)>;
+			};
+
+			/omit-if-no-ref/ i2c2_smba_pb12: i2c2_smba_pb12 {
+				pinmux = <STM32F1_PINMUX('B', 12, ALTERNATE, NO_REMAP)>;
+			};
+
 			/* SPI_MASTER_MISO */
 
 			/omit-if-no-ref/ spi1_miso_master_pa6: spi1_miso_master_pa6 {

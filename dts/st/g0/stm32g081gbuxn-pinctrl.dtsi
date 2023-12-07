@@ -218,6 +218,13 @@
 				drive-open-drain;
 			};
 
+			/* I2C_SMBA */
+
+			/omit-if-no-ref/ i2c1_smba_pa1: i2c1_smba_pa1 {
+				pinmux = <STM32_PINMUX('A', 1, AF6)>;
+				bias-pull-up;
+			};
+
 			/* I2S_CK */
 
 			/omit-if-no-ref/ i2s1_ck_pa1: i2s1_ck_pa1 {
