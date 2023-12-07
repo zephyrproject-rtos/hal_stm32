@@ -913,11 +913,6 @@
 
 			/* ETH_TXD1 */
 
-			/omit-if-no-ref/ eth_txd1_pb13: eth_txd1_pb13 {
-				pinmux = <STM32_PINMUX('B', 13, AF11)>;
-				slew-rate = "very-high-speed";
-			};
-
 			/omit-if-no-ref/ eth_txd1_pb15: eth_txd1_pb15 {
 				pinmux = <STM32_PINMUX('B', 15, AF11)>;
 				slew-rate = "very-high-speed";
@@ -963,11 +958,6 @@
 
 			/omit-if-no-ref/ eth_tx_en_pb11: eth_tx_en_pb11 {
 				pinmux = <STM32_PINMUX('B', 11, AF11)>;
-				slew-rate = "very-high-speed";
-			};
-
-			/omit-if-no-ref/ eth_tx_en_pb14: eth_tx_en_pb14 {
-				pinmux = <STM32_PINMUX('B', 14, AF11)>;
 				slew-rate = "very-high-speed";
 			};
 

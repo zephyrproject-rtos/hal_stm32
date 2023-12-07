@@ -3552,6 +3552,10 @@
 				pinmux = <STM32_PINMUX('A', 12, ANALOG)>;
 			};
 
+			/omit-if-no-ref/ usb_otg_hs_sof_pa14: usb_otg_hs_sof_pa14 {
+				pinmux = <STM32_PINMUX('A', 14, AF10)>;
+			};
+
 		};
 	};
 };
