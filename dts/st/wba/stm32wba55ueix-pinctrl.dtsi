@@ -246,6 +246,18 @@
 				drive-open-drain;
 			};
 
+			/* I2C_SMBA */
+
+			/omit-if-no-ref/ i2c1_smba_pb15: i2c1_smba_pb15 {
+				pinmux = <STM32_PINMUX('B', 15, AF4)>;
+				bias-pull-up;
+			};
+
+			/omit-if-no-ref/ i2c3_smba_pb15: i2c3_smba_pb15 {
+				pinmux = <STM32_PINMUX('B', 15, AF6)>;
+				bias-pull-up;
+			};
+
 			/* SPI_MISO */
 
 			/omit-if-no-ref/ spi1_miso_pb3: spi1_miso_pb3 {
