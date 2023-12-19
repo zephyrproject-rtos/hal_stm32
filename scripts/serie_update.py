@@ -87,7 +87,7 @@ class Stm32SerieUpdate:
 
         # #####  3 root directories to work with ########
         # 1: STM32Cube repo Default $HOME/STM32Cube_repo
-        # 2: zephyr stm32 path  : ex: .../zephyr_project/module/hal/stm32
+        # 2 : zephyr stm32 path  : ex: .../zephyr_project/module/hal/stm32
         # 3: Temporary directory to construct the update
         # (within STM32Cube repo dir)
         self.stm32cube_repo_path = stm32cube_repo_path
@@ -192,26 +192,14 @@ class Stm32SerieUpdate:
             # if already exists, then just clean and fetch
             self.os_cmd(("git", "clean", "-fdx"), cwd=self.stm32cube_serie_path)
             self.os_cmd(("git", "fetch"), cwd=self.stm32cube_serie_path)
-            # this is useful when HAL/CMSIS Device drivers submodules are not
-            # already present locally, otherwise "git fetch" is sufficient
-            self.os_cmd(("git", "submodule", "update", "--init"),
-                        cwd=self.stm32cube_serie_path)
             branch = self.major_branch()
-            # "Using --recurse-submodules will update the content of all active
-            # submodules according to the commit recorded in the superproject.
-            # If local modifications in a submodule would be overwritten the
-            # checkout will fail unless -f is used."
-            # https://git-scm.com/docs/git-checkout
             self.os_cmd(
-                ("git", "checkout", "-f", "--recurse-submodules", branch),
+                ("git", "reset", "--hard", branch),
                 cwd=self.stm32cube_serie_path,
             )
         else:
-            # HAL & CMSIS Device drivers are now included as git submodules in
-            # upstream STM32Cube GitHub repositories
-            # So to get them too, --recursive or --recurse-submodules is needed
             self.os_cmd(
-                ("git", "clone", "--recursive", repo_name),
+                ("git", "clone", repo_name),
                 cwd=self.stm32cube_repo_path,
             )
             branch = self.major_branch()
@@ -272,7 +260,6 @@ class Stm32SerieUpdate:
         # for CMSIS files
         temp_cmsis_soc_path = self.stm32cube_temp_serie / "soc"
         Path.mkdir(temp_cmsis_soc_path, parents=True)
-
         stm32cube_cmsis_include_path = (
             self.stm32cube_serie_path
             / "Drivers"
@@ -303,7 +290,6 @@ class Stm32SerieUpdate:
         # for hal and ll drivers
         temp_drivers_include_path = self.stm32cube_temp_serie / "drivers" / "include"
         temp_drivers_include_path.parent.mkdir(parents=True)
-
         stm32cube_driver_inc = (
             self.stm32cube_serie_path
             / "Drivers"
@@ -334,9 +320,9 @@ class Stm32SerieUpdate:
         """Build a commit in temporary dir with STM32Cube version
         corresponding to zephyr current hal version
         """
-        # Checkout the current Zephyr version of the STM32Cube repo
+        # reset the STM32Cube repo to this current version
         self.os_cmd(
-            ("git", "checkout", "-f", "--recurse-submodules", self.current_version),
+            ("git", "reset", "--hard", self.current_version),
             cwd=self.stm32cube_serie_path,
         )
 
@@ -579,9 +565,9 @@ class Stm32SerieUpdate:
         """Build a commit in temporary dir with STM32Cube version
         corresponding to zephyr latest hal version
         """
-        # Checkout the latest version of the upstream STM32Cube repo
+        # reset the STM32Cube repo to this latest version
         self.os_cmd(
-            ("git", "checkout", "-f", "--recurse-submodules", self.version_update),
+            ("git", "reset", "--hard", self.version_update),
             cwd=self.stm32cube_serie_path,
         )
 
@@ -707,8 +693,7 @@ class Stm32SerieUpdate:
 
     def cleanup_stm32cube_repo(self):
         """clean the STM32Cube repo"""
-        self.os_cmd(("git", "checkout", "-f", "--recurse-submodules", "HEAD"),
-                    cwd=self.stm32cube_serie_path)
+        self.os_cmd(("git", "reset", "--hard", "HEAD"), cwd=self.stm32cube_serie_path)
 
     def clean_files(self):
         """Clean repo file if required"""
@@ -724,7 +709,7 @@ class Stm32SerieUpdate:
             )
         else:
             self.os_cmd(
-                ("git", "checkout", "-f", "--recurse-submodules", "HEAD"),
+                ("git", "reset", "--hard", "HEAD"),
                 cwd=self.stm32cube_serie_path,
             )
 
