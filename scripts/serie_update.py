@@ -1,7 +1,7 @@
 #!/usr/bin/python
 """
 SPDX-License-Identifier: Apache-2.0
-Copyright (c) 2019 STMicroelectronics.
+Copyright (c) 2024 STMicroelectronics.
 This script define Stm32SerieUpdate class
 to be used by update_stm32_package.py
 """
@@ -779,14 +779,28 @@ class Stm32SerieUpdate:
         if self.stm32_serie == "stm32wb":
             ble_library.update(
                 self.stm32cube_serie_path,
-                Path(self.zephyr_hal_stm32_path / "lib"),
+                Path(self.zephyr_hal_stm32_path / "lib" / "stm32wb"),
                 self.stm32cube_temp,
                 self.current_version,
                 self.version_update,
                 self.update_commit,
+                self.stm32_serie
             )
             self.merge_commit(lib=True)
 
-        # 9) clean
+        # 9) In case of stm32wba, update hci library
+        elif self.stm32_serie == "stm32wba":
+            ble_library.update(
+                self.stm32cube_serie_path,
+                Path(self.zephyr_hal_stm32_path / "lib" / "stm32wba"),
+                self.stm32cube_temp,
+                self.current_version,
+                self.version_update,
+                self.update_commit,
+                self.stm32_serie
+            )
+            self.merge_commit(lib=True)
+
+        # 10) clean
         self.clean_files()
         logging.info("%s", f"Done {self.stm32_serie}\n")
