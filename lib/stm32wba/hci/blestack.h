@@ -61,25 +61,25 @@ enum
 /*
  * This structure contains memory and low level hardware configuration data
  * for the device
-*/ 
+*/
 typedef struct
 {
 
   /* Start address of the RAM buffer allocated for BLE stack library.
    * It must be a 32bit aligned RAM area.
-   */ 
+   */
   uint8_t* bleStartRamAddress;
 
   /* Size of the RAM buffer allocated for BLE stack library.
    * (could be filled with BLE_TOTAL_BUFFER_SIZE return value)
    */
-  uint32_t total_buffer_size;       
+  uint32_t total_buffer_size;
 
   /* Start address of the RAM buffer allocated for GATT database.
    * It must be a 32bit aligned RAM area.
-   */ 
+   */
   uint8_t* bleStartRamAddress_GATT;
-  
+
   /* Size of the RAM buffer allocated for GATT database.
    * (could be filled with BLE_TOTAL_BUFFER_SIZE_GATT return value)
    */
@@ -101,7 +101,7 @@ typedef struct
    * used in the calculation of BLE_TOTAL_BUFFER_SIZE_GATT)
    */
   uint16_t numAttrServ;
-  
+
   /* Size of the storage area for Attribute values (ATT_VALUE_ARRAY_SIZE used
    * in the calculation of BLE_TOTAL_BUFFER_SIZE_GATT)
    * This value depends on the number of attributes used by application. In
@@ -156,7 +156,7 @@ typedef struct
    * - bit 1:   1: no service change desc.   0: with service change desc.
    * - bit 2:   1: device name Read-Only     0: device name R/W
    * - bit 3:   1: extended adv supported    0: extended adv not supported
-   * - bit 5:   1: Reduced GATT db in NVM    0: Full GATT db in NVM 
+   * - bit 5:   1: Reduced GATT db in NVM    0: Full GATT db in NVM
    * - bit 6:   1: GATT caching is used      0: GATT caching is not used
    * - bit 7:   1: LE Power Class 1          0: LE Power Class 2-3
    * - bit 8:   1: appearance Writable       0: appearance Read-Only
@@ -192,9 +192,9 @@ extern tBleStatus BleStack_Init( const BleStack_init_t* init_params_p );
  * It has to be executed regularly to process incoming Link Layer packets and
  * to process Host Layers procedures. All stack callbacks are called by this
  * function.
- * 
+ *
  * No BLE stack function must be called while the BleStack_Process is running.
- * For example, if a BLE stack function may be called inside an 
+ * For example, if a BLE stack function may be called inside an
  * interrupt routine, that interrupt must be disabled during the execution of
  * BleStack_Process().
  *

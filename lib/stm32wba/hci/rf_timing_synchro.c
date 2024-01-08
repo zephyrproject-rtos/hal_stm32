@@ -202,4 +202,3 @@ static uint32_t event_started_callback(ext_evnt_hndl_t evnt_hndl, uint32_t slot_
   RFTS_WindowAllowed_Callback();
   return 0;
 }
-

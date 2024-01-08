@@ -47,7 +47,7 @@
 #define PRIORITY_LEVEL_MASK 0x0F
 
 /**
- * This macros specify the different combinations that can be used to enable or disable 
+ * This macros specify the different combinations that can be used to enable or disable
  * a specific ISR
  */
 
@@ -516,7 +516,7 @@ void bsp_switch_to_lw_isr(uint8_t priority);
 void bsp_wait_for_busclkrdy(void);
 /**
  * @brief used to start temperature calculations
- * if the upper layer has informed the link layer by the existence of temperature sensor through @ref ll_intf_set_temperature_sensor_stat() or llhwc_cmn_set_temperature_sensor_stat()  . 
+ * if the upper layer has informed the link layer by the existence of temperature sensor through @ref ll_intf_set_temperature_sensor_stat() or llhwc_cmn_set_temperature_sensor_stat()  .
  * New temperature will be requested in the following cases:
  * 1- at initialization when the @ref ll_intf_set_temperature_sensor_state or llhwc_cmn_set_temperature_sensor_stat is called
  * 2- before any radio event

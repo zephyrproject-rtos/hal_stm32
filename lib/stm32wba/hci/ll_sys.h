@@ -21,7 +21,7 @@
 
 #include "ll_intf.h"
 #include "hci.h"
-#include "cmsis_compiler.h" 
+#include "cmsis_compiler.h"
 #include <stdint.h>
 
 #define LL_DP_SLP_NO_WAKEUP                 ((uint32_t) ~(0) )
@@ -55,7 +55,7 @@ typedef enum
 typedef enum
 {
   LL_SYS_DP_SLP_DISABLED = 0x00,
-  LL_SYS_DP_SLP_ENABLED, 
+  LL_SYS_DP_SLP_ENABLED,
 } ll_sys_dp_slp_state_t;
 
 /* Link Layer system interface general module functions  ************************************************/

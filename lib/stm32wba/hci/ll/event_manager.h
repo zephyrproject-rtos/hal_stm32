@@ -349,4 +349,3 @@ uint8_t emngr_process_conditional_event( uint8_t id, uint8_t only_one_event,
  */
 
 #endif /* INCLUDE_EVENT_MANAGER_H_ */
-
