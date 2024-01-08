@@ -94,5 +94,3 @@ int8_t ble_memcmp(
  * @}
  */
 #endif /* MEM_INTF_H */
-
-

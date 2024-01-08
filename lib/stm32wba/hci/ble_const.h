@@ -41,8 +41,8 @@
  * To change the size of commands and events parameters used in the
  * auto-generated files, you need to update 2 defines:
  *
- *  - BLE_CMD_MAX_PARAM_LEN          
- *  - BLE_EVT_MAX_PARAM_LEN          
+ *  - BLE_CMD_MAX_PARAM_LEN
+ *  - BLE_EVT_MAX_PARAM_LEN
  *
  * These 2 defines are set below with default values and can be changed.
  *

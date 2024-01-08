@@ -106,7 +106,7 @@ extern void LINKLAYER_PLAT_DisableIRQ(void);
   *         This parameter can be one of the following:
   *         @arg LL_HIGH_ISR_ONLY: enable link layer high priority ISR.
   *         @arg LL_LOW_ISR_ONLY: enable link layer SW low priority ISR.
-  *         @arg SYS_LOW_ISR: unmask interrupts for all the other system ISR with 
+  *         @arg SYS_LOW_ISR: unmask interrupts for all the other system ISR with
   *              lower priority that link layer SW low interrupt.
   * @retval None
   */
@@ -118,7 +118,7 @@ extern void LINKLAYER_PLAT_EnableSpecificIRQ(uint8_t isr_type);
   *         This parameter can be one of the following:
   *         @arg LL_HIGH_ISR_ONLY: disable link layer high priority ISR.
   *         @arg LL_LOW_ISR_ONLY: disable link layer SW low priority ISR.
-  *         @arg SYS_LOW_ISR: mask interrupts for all the other system ISR with 
+  *         @arg SYS_LOW_ISR: mask interrupts for all the other system ISR with
   *              lower priority that link layer SW low interrupt.
   * @retval None
   */

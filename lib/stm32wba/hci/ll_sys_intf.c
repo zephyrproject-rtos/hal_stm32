@@ -28,7 +28,7 @@
   */
 void ll_sys_init()
 {
-  LINKLAYER_PLAT_ClockInit();	
+  LINKLAYER_PLAT_ClockInit();
 }
 
 /**
@@ -93,7 +93,7 @@ void ll_sys_setup_radio_intr(void (*intr_cb)())
 
 /**
   * @brief  Initialize the radio SW low interrupt
-  * @param  intr_cb    radio SW low interrupt interrupt callback to link 
+  * @param  intr_cb    radio SW low interrupt interrupt callback to link
   *                    with the defined interrupt vector
   * @retval None
   */
@@ -123,7 +123,7 @@ void ll_sys_radio_evt_not(uint8_t start)
   {
     LINKLAYER_PLAT_StartRadioEvt();
   }
-  
+
   else
   {
     LINKLAYER_PLAT_StopRadioEvt();
@@ -148,10 +148,10 @@ void ll_sys_request_temperature(void)
 void ll_sys_bg_process(void)
 {
   if(emngr_can_mcu_sleep() == 0)
-  {        
+  {
     ll_sys_dp_slp_exit();
     emngr_handle_all_events();
-    
+
     HostStack_Process();
   }
 
@@ -168,5 +168,5 @@ void ll_sys_schldr_timing_update_not(Evnt_timing_t * p_evnt_timing)
 
 __WEAK void HostStack_Process(void)
 {
-	
+
 }

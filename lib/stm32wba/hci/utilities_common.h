@@ -141,4 +141,3 @@ extern "C" {
            } while(0)
 
 #endif /* UTILITIES_COMMON_H */
-

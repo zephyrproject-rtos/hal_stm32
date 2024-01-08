@@ -40,7 +40,7 @@ ll_sys_dp_slp_state_t linklayer_dp_slp_state = LL_SYS_DP_SLP_DISABLED;
 ll_sys_status_t ll_sys_dp_slp_init(void)
 {
   ll_sys_status_t return_status = LL_SYS_ERROR;
-  
+
   /* Create link layer timer for handling IP DEEP SLEEP mode */
   radio_dp_slp_tmr_id = os_timer_create((t_timer_callbk)ll_sys_dp_slp_wakeup_evt_clbk, os_timer_once, NULL);
 
@@ -48,7 +48,7 @@ ll_sys_status_t ll_sys_dp_slp_init(void)
   {
     return_status = LL_SYS_OK;
   }
-  
+
   return return_status;
 }
 
@@ -71,20 +71,20 @@ ll_sys_status_t ll_sys_dp_slp_enter(uint32_t dp_slp_duration){
   ble_stat_t cmd_status = GENERAL_FAILURE;
   int32_t os_status = GENERAL_FAILURE;
   ll_sys_status_t return_status = LL_SYS_ERROR;
-  
+
   /* Check if deep sleep timer has to be started */
   if(dp_slp_duration < LL_DP_SLP_NO_WAKEUP)
   {
     /* Start deep sleep timer */
     os_status = os_timer_start(radio_dp_slp_tmr_id, LL_INTERNAL_TMR_US_TO_STEPS(dp_slp_duration));
   }
-  
-  else 
+
+  else
   {
     /* No timer started */
     os_status = SUCCESS;
   }
-  
+
   if(os_status == SUCCESS)
   {
     /* Switch Link Layer IP to DEEP SLEEP mode */
@@ -132,7 +132,7 @@ ll_sys_status_t ll_sys_dp_slp_exit(void){
     {
       os_timer_stop(radio_dp_slp_tmr_id);
     }
-    
+
     /* Switch Link Layer IP to SLEEP mode (by deactivate DEEP SLEEP mode) */
 #if defined(BLE)
     /* BLE & Concurrent use case */
@@ -151,10 +151,10 @@ ll_sys_status_t ll_sys_dp_slp_exit(void){
       return_status = LL_SYS_OK;
     }
   }
-  
+
   /* Re-enable radio interrupt */
   LINKLAYER_PLAT_EnableRadioIT();
-  
+
   return return_status;
 }
 
