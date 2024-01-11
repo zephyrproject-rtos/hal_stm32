@@ -1394,6 +1394,24 @@
 				pinmux = <STM32_PINMUX('D', 10, AF5)>;
 			};
 
+			/* JTAG PORT */
+
+			/omit-if-no-ref/ debug_jtck_swclk_pf14: debug_jtck_swclk_pf14 {
+				pinmux = <STM32_PINMUX('F', 14, ANALOG)>;
+			};
+
+			/omit-if-no-ref/ debug_jtms_swdio_pf15: debug_jtms_swdio_pf15 {
+				pinmux = <STM32_PINMUX('F', 15, ANALOG)>;
+			};
+
+			/omit-if-no-ref/ debug_jtdi_ph4: debug_jtdi_ph4 {
+				pinmux = <STM32_PINMUX('H', 4, ANALOG)>;
+			};
+
+			/omit-if-no-ref/ debug_jtdo_swo_ph5: debug_jtdo_swo_ph5 {
+				pinmux = <STM32_PINMUX('H', 5, ANALOG)>;
+			};
+
 			/* QUADSPI */
 
 			/omit-if-no-ref/ quadspi_bk1_ncs_pb2: quadspi_bk1_ncs_pb2 {

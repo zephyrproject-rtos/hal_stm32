@@ -1162,6 +1162,28 @@
 				bias-pull-up;
 			};
 
+			/* JTAG PORT */
+
+			/omit-if-no-ref/ debug_jtms_swdio_pa13: debug_jtms_swdio_pa13 {
+				pinmux = <STM32_PINMUX('A', 13, AF0)>;
+			};
+
+			/omit-if-no-ref/ debug_jtck_swclk_pa14: debug_jtck_swclk_pa14 {
+				pinmux = <STM32_PINMUX('A', 14, AF0)>;
+			};
+
+			/omit-if-no-ref/ debug_jtdi_pa15: debug_jtdi_pa15 {
+				pinmux = <STM32_PINMUX('A', 15, AF0)>;
+			};
+
+			/omit-if-no-ref/ debug_jtdo_swo_pb3: debug_jtdo_swo_pb3 {
+				pinmux = <STM32_PINMUX('B', 3, AF0)>;
+			};
+
+			/omit-if-no-ref/ debug_jtrst_pb4: debug_jtrst_pb4 {
+				pinmux = <STM32_PINMUX('B', 4, AF0)>;
+			};
+
 			/* OCTOSPI */
 
 			/omit-if-no-ref/ octospi1_dqs_pa1: octospi1_dqs_pa1 {
