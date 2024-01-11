@@ -206,6 +206,16 @@
 				pinmux = <STM32_PINMUX('A', 14, AF8)>;
 			};
 
+			/* JTAG PORT */
+
+			/omit-if-no-ref/ debug_swdio_pa13: debug_swdio_pa13 {
+				pinmux = <STM32_PINMUX('A', 13, AF0)>;
+			};
+
+			/omit-if-no-ref/ debug_swclk_pa14: debug_swclk_pa14 {
+				pinmux = <STM32_PINMUX('A', 14, AF0)>;
+			};
+
 			/* SPI_MISO */
 
 			/omit-if-no-ref/ spi1_miso_pa11: spi1_miso_pa11 {
