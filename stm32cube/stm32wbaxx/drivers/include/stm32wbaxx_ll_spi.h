@@ -1973,6 +1973,17 @@ __STATIC_INLINE void LL_SPI_ClearFlag_SUSP(SPI_TypeDef *SPIx)
   */
 
 /**
+  * @brief  Enable IT by setting corresponding bit in IER register
+  * @param  SPIx SPI Instance
+  * @param  EnableBits Enable bits
+  * @retval None
+  */
+__STATIC_INLINE void LL_SPI_EnableIT(SPI_TypeDef *SPIx, uint32_t EnableBits)
+{
+  SET_BIT(SPIx->IER, EnableBits);
+}
+
+/**
   * @brief  Enable Rx Packet available IT
   * @rmtoll IER          RXPIE         LL_SPI_EnableIT_RXP
   * @param  SPIx SPI Instance
@@ -2080,6 +2091,17 @@ __STATIC_INLINE void LL_SPI_EnableIT_FRE(SPI_TypeDef *SPIx)
 __STATIC_INLINE void LL_SPI_EnableIT_MODF(SPI_TypeDef *SPIx)
 {
   SET_BIT(SPIx->IER, SPI_IER_MODFIE);
+}
+
+/**
+  * @brief  Disable IT by setting corresponding bit in IER register
+  * @param  SPIx SPI Instance
+  * @param  DisableBits Disable bits
+  * @retval None
+  */
+__STATIC_INLINE void LL_SPI_DisableIT(SPI_TypeDef *SPIx, uint32_t DisableBits)
+{
+  CLEAR_BIT(SPIx->IER, DisableBits);
 }
 
 /**
