@@ -1877,6 +1877,17 @@ __STATIC_INLINE uint32_t LL_SPI_GetRxFIFOPackingLevel(const SPI_TypeDef *SPIx)
 }
 
 /**
+  * @brief  Clear interrupt/status flag by setting corresponding bit in IFCR register
+  * @param  SPIx SPI Instance
+  * @param  ClearBits Clear bits
+  * @retval None
+  */
+__STATIC_INLINE void LL_SPI_ClearFlag(SPI_TypeDef *SPIx, uint32_t ClearBits)
+{
+  WRITE_REG(SPIx->IFCR, ClearBits);
+}
+
+/**
   * @brief  Clear End Of Transfer flag
   * @rmtoll IFCR         EOTC          LL_SPI_ClearFlag_EOT
   * @param  SPIx SPI Instance
