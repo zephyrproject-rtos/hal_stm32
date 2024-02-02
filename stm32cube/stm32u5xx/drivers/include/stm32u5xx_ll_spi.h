@@ -1887,7 +1887,7 @@ __STATIC_INLINE uint32_t LL_SPI_GetRxFIFOPackingLevel(const SPI_TypeDef *SPIx)
   */
 __STATIC_INLINE void LL_SPI_ClearFlag_EOT(SPI_TypeDef *SPIx)
 {
-  SET_BIT(SPIx->IFCR, SPI_IFCR_EOTC);
+  WRITE_REG(SPIx->IFCR, SPI_IFCR_EOTC);
 }
 
 /**
@@ -1898,7 +1898,7 @@ __STATIC_INLINE void LL_SPI_ClearFlag_EOT(SPI_TypeDef *SPIx)
   */
 __STATIC_INLINE void LL_SPI_ClearFlag_TXTF(SPI_TypeDef *SPIx)
 {
-  SET_BIT(SPIx->IFCR, SPI_IFCR_TXTFC);
+  WRITE_REG(SPIx->IFCR, SPI_IFCR_TXTFC);
 }
 
 /**
@@ -1909,7 +1909,7 @@ __STATIC_INLINE void LL_SPI_ClearFlag_TXTF(SPI_TypeDef *SPIx)
   */
 __STATIC_INLINE void LL_SPI_ClearFlag_UDR(SPI_TypeDef *SPIx)
 {
-  SET_BIT(SPIx->IFCR, SPI_IFCR_UDRC);
+  WRITE_REG(SPIx->IFCR, SPI_IFCR_UDRC);
 }
 
 /**
@@ -1920,7 +1920,7 @@ __STATIC_INLINE void LL_SPI_ClearFlag_UDR(SPI_TypeDef *SPIx)
   */
 __STATIC_INLINE void LL_SPI_ClearFlag_OVR(SPI_TypeDef *SPIx)
 {
-  SET_BIT(SPIx->IFCR, SPI_IFCR_OVRC);
+  WRITE_REG(SPIx->IFCR, SPI_IFCR_OVRC);
 }
 
 /**
@@ -1931,7 +1931,7 @@ __STATIC_INLINE void LL_SPI_ClearFlag_OVR(SPI_TypeDef *SPIx)
   */
 __STATIC_INLINE void LL_SPI_ClearFlag_CRCERR(SPI_TypeDef *SPIx)
 {
-  SET_BIT(SPIx->IFCR, SPI_IFCR_CRCEC);
+  WRITE_REG(SPIx->IFCR, SPI_IFCR_CRCEC);
 }
 
 /**
@@ -1942,7 +1942,7 @@ __STATIC_INLINE void LL_SPI_ClearFlag_CRCERR(SPI_TypeDef *SPIx)
   */
 __STATIC_INLINE void LL_SPI_ClearFlag_MODF(SPI_TypeDef *SPIx)
 {
-  SET_BIT(SPIx->IFCR, SPI_IFCR_MODFC);
+  WRITE_REG(SPIx->IFCR, SPI_IFCR_MODFC);
 }
 
 /**
@@ -1953,7 +1953,7 @@ __STATIC_INLINE void LL_SPI_ClearFlag_MODF(SPI_TypeDef *SPIx)
   */
 __STATIC_INLINE void LL_SPI_ClearFlag_FRE(SPI_TypeDef *SPIx)
 {
-  SET_BIT(SPIx->IFCR, SPI_IFCR_TIFREC);
+  WRITE_REG(SPIx->IFCR, SPI_IFCR_TIFREC);
 }
 
 /**
@@ -1964,7 +1964,7 @@ __STATIC_INLINE void LL_SPI_ClearFlag_FRE(SPI_TypeDef *SPIx)
   */
 __STATIC_INLINE void LL_SPI_ClearFlag_SUSP(SPI_TypeDef *SPIx)
 {
-  SET_BIT(SPIx->IFCR, SPI_IFCR_SUSPC);
+  WRITE_REG(SPIx->IFCR, SPI_IFCR_SUSPC);
 }
 
 /**
