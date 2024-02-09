@@ -203,7 +203,7 @@
 #define  USE_HAL_LTDC_REGISTER_CALLBACKS    0U /* LTDC register callback disabled    */
 #define  USE_HAL_MDIOS_REGISTER_CALLBACKS   0U /* MDIO register callback disabled    */
 #define  USE_HAL_MMC_REGISTER_CALLBACKS     0U /* MMC register callback disabled     */
-#define  USE_HAL_OPAMP_REGISTER_CALLBACKS   0U /* MDIO register callback disabled    */
+#define  USE_HAL_OPAMP_REGISTER_CALLBACKS   0U /* OPAMP register callback disabled    */
 #define  USE_HAL_OSPI_REGISTER_CALLBACKS    0U /* OSPI register callback disabled    */
 #define  USE_HAL_OTFDEC_REGISTER_CALLBACKS  0U /* OTFDEC register callback disabled  */
 #define  USE_HAL_PCD_REGISTER_CALLBACKS     0U /* PCD register callback disabled     */
