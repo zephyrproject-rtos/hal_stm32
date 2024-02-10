@@ -1738,6 +1738,32 @@
 				slew-rate = "very-high-speed";
 			};
 
+			/* RCC_MCO */
+
+			/omit-if-no-ref/ rcc_mco_1_pa8: rcc_mco_1_pa8 {
+				pinmux = <STM32_PINMUX('A', 8, AF0)>;
+			};
+
+			/omit-if-no-ref/ rcc_mco_1_pa13: rcc_mco_1_pa13 {
+				pinmux = <STM32_PINMUX('A', 13, AF2)>;
+			};
+
+			/omit-if-no-ref/ rcc_mco_2_pa14: rcc_mco_2_pa14 {
+				pinmux = <STM32_PINMUX('A', 14, AF2)>;
+			};
+
+			/omit-if-no-ref/ rcc_mco_1_pd7: rcc_mco_1_pd7 {
+				pinmux = <STM32_PINMUX('D', 7, AF0)>;
+			};
+
+			/omit-if-no-ref/ rcc_mco_2_pe6: rcc_mco_2_pe6 {
+				pinmux = <STM32_PINMUX('E', 6, AF0)>;
+			};
+
+			/omit-if-no-ref/ rcc_mco_2_pg2: rcc_mco_2_pg2 {
+				pinmux = <STM32_PINMUX('G', 2, AF1)>;
+			};
+
 			/* SDMMC */
 
 			/omit-if-no-ref/ sdmmc1_d123dir_pb3: sdmmc1_d123dir_pb3 {
