@@ -170,6 +170,10 @@
   match: "^I2S\\d+_SD$"
   mode: alternate
 
+- name: RCC_MCO
+  match: "^RCC_MCO_?(\\d+)?$"
+  mode: alternate
+
 - name: SPI_MASTER_MISO
   match: "^SPI\\d+_MISO$"
   bias: pull-down
