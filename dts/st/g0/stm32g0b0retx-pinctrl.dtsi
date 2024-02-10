@@ -687,6 +687,28 @@
 				pinmux = <STM32_PINMUX('A', 14, AF0)>;
 			};
 
+			/* RCC_MCO */
+
+			/omit-if-no-ref/ rcc_mco_pa8: rcc_mco_pa8 {
+				pinmux = <STM32_PINMUX('A', 8, AF0)>;
+			};
+
+			/omit-if-no-ref/ rcc_mco_pa9: rcc_mco_pa9 {
+				pinmux = <STM32_PINMUX('A', 9, AF0)>;
+			};
+
+			/omit-if-no-ref/ rcc_mco_2_pa10: rcc_mco_2_pa10 {
+				pinmux = <STM32_PINMUX('A', 10, AF3)>;
+			};
+
+			/omit-if-no-ref/ rcc_mco_2_pa15: rcc_mco_2_pa15 {
+				pinmux = <STM32_PINMUX('A', 15, AF3)>;
+			};
+
+			/omit-if-no-ref/ rcc_mco_2_pb2: rcc_mco_2_pb2 {
+				pinmux = <STM32_PINMUX('B', 2, AF3)>;
+			};
+
 			/* SPI_MISO */
 
 			/omit-if-no-ref/ spi1_miso_pa6: spi1_miso_pa6 {
