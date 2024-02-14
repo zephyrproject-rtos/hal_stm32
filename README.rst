@@ -143,5 +143,5 @@ For some specific features, in order to benefit from already available and
 validated code. Libraries from STM32Cube packages are extracted and made
 available in this module under `lib` folder.
 
-No script is available for these libraries, so update is done manually, but
-it should follow the same rhythm than STM32Cube packages.
+These libraries are updated automatically by the ``ble_library.py`` script in a separate commit
+directly after their STM32Cube package.
