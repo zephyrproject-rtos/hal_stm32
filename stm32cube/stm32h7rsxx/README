@@ -1,0 +1,79 @@
+STM32CubeH7
+###########
+
+Origin:
+   ST Microelectronics
+   http://www.st.com/en/embedded-software/stm32cubeh7.html
+
+Status:
+   version v1.11.1
+
+Purpose:
+   ST Microelectronics official MCU package for STM32H7 series.
+
+Description:
+   This package is an extract of official STM32CubeH7 package written by ST Microelectronics.
+   It is composed of STM32Cube hardware abstraction layer (HAL) and low layer (LL) plus a set
+   of CMSIS headers files, one for each SoC in STM32H7 series.
+
+Dependencies:
+    None.
+
+URL:
+   https://github.com/STMicroelectronics/STM32CubeH7
+
+Commit:
+   ed7d3d4a8e0961ad2bcb21ba7681d5443964253c
+
+Maintained-by:
+   External
+
+License:
+   BSD-3-Clause
+
+License Link:
+   https://opensource.org/licenses/BSD-3-Clause
+
+Patch List:
+   *Changes from official delivery:
+    -dos2unix applied
+    -trailing white spaces removed
+
+   *Provision to enable hal & ll asserts added
+    -Added stm32cube/stm32h7xx/drivers/include/stm32_assert.h
+    -Removed unused stm32cube/stm32h7xx/drivers/include/stm32_assert_template.h
+
+   *Fix context descriptor leak
+    - Impacted file: stm32h7xx_hal_eth.c
+    - Internal reference: Not available. Will be fixed as part of a new eth hal implementation
+
+   *fix to the V2 HAL API to get PTP to work
+     In the HAL_ETH_ReadData function where it checks for the last descriptor,
+     we added a checked if the TSA bit was set in DESC1
+     If the TSA bit is set then have a peak at the context descriptor which should be the one
+     after the last descriptor
+     If the CTXT bit is set in the context descriptor then extract the timestamps
+     Impacted files:
+     drivers/src/stm32h7xx_hal_eth.c
+     ST Internal Reference: 142115
+
+   *Enable legacy ethernet driver using HAL_ETH_LEGACY_MODULE_ENABLED
+    This will have to be removed once Zephyr driver is magrated ot the new
+    Cube HAL ethernet API.
+
+   *Wrap define UNUSED with an ifndef
+     This will prevent a compiler warning for the case the UNUSED macro
+     is already defined elsewhere in the project
+     Impacted files:
+      drivers/include/stm32h7xx_hal_def.h
+     ST Internal Reference: 136825
+
+   *Fix to use transmit timestamp when it is valid
+    Read timestamp only when status flag is set in Tx descriptor.
+    Fire transmit timestamp callbacks only when there is a valid
+    non-zero timestamp.
+    Impacted files:
+     drivers/src/stm32h7xx_hal_eth.c
+    ST Internal Reference: 157129
+
+   See release_note.html from STM32Cube
