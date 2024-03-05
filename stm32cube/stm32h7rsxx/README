@@ -43,4 +43,8 @@ Patch List:
     -Added stm32cube/stm32h7rsxx/drivers/include/stm32_assert.h
     -Removed unused stm32cube/stm32h7rsxx/drivers/include/stm32_assert_template.h
 
+   *configure the SMPS on the stm32h7s7 so that power config is possible
+    on the stm32h7s78 disco kit
+    -internal ticket 175303
+
    See release_note.html from STM32Cube
