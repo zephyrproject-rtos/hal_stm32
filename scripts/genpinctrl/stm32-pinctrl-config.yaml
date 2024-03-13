@@ -210,6 +210,10 @@
   match: "^QUADSPI(\\d+)?_(?:CLK|NCS|BK1_NCS|BK1_IO[0-3]|BK2_NCS|BK2_IO[0-3])$"
   slew-rate: very-high-speed
 
+- name: XSPIM
+  match: "^XSPIM(.*)(?:CLK|NCS[0-1]|DQS[0-1]|IO[0-7])$"
+  slew-rate: very-high-speed
+
 - name: SDMMC
   match: "^SDMMC\\d+_(?:CK)?(?:CKIN)?(?:CDIR)?(?:CMD)?(?:D\\d+)?(?:D0DIR)?(?:D123DIR)?$"
   slew-rate: very-high-speed
