@@ -183,6 +183,14 @@
 - name: I2S_SD
   match: "^I2S\\d+_SD$"
 
+- name: I3C_SCL
+  match: "^I3C\\d+_SCL$"
+  slew-rate: very-high-speed
+
+- name: I3C_SDA
+  match: "^I3C\\d+_SDA$"
+  slew-rate: very-high-speed
+
 - name: LTDC
   match: "^LTDC_(?:DE|CLK|HSYNC|VSYNC|R[0-7]|G[0-7]|B[0-7])$"
 
