@@ -567,6 +567,65 @@
 				pinmux = <STM32_PINMUX('B', 10, AF6)>;
 			};
 
+			/* I3C_SCL */
+
+			/omit-if-no-ref/ i3c1_scl_pb6: i3c1_scl_pb6 {
+				pinmux = <STM32_PINMUX('B', 6, AF3)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ i3c1_scl_pb8: i3c1_scl_pb8 {
+				pinmux = <STM32_PINMUX('B', 8, AF3)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ i3c2_scl_pb3: i3c2_scl_pb3 {
+				pinmux = <STM32_PINMUX('B', 3, AF3)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ i3c2_scl_pb5: i3c2_scl_pb5 {
+				pinmux = <STM32_PINMUX('B', 5, AF3)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ i3c2_scl_pb10: i3c2_scl_pb10 {
+				pinmux = <STM32_PINMUX('B', 10, AF10)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/* I3C_SDA */
+
+			/omit-if-no-ref/ i3c1_sda_pb5: i3c1_sda_pb5 {
+				pinmux = <STM32_PINMUX('B', 5, AF10)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ i3c1_sda_pb7: i3c1_sda_pb7 {
+				pinmux = <STM32_PINMUX('B', 7, AF3)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ i3c1_sda_pb10: i3c1_sda_pb10 {
+				pinmux = <STM32_PINMUX('B', 10, AF8)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ i3c2_sda_pb4: i3c2_sda_pb4 {
+				pinmux = <STM32_PINMUX('B', 4, AF3)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ i3c2_sda_pb8: i3c2_sda_pb8 {
+				pinmux = <STM32_PINMUX('B', 8, AF10)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ i3c2_sda_pb13: i3c2_sda_pb13 {
+				pinmux = <STM32_PINMUX('B', 13, AF10)>;
+				slew-rate = "very-high-speed";
+			};
+
 			/* JTAG PORT */
 
 			/omit-if-no-ref/ debug_jtms_swdio_pa13: debug_jtms_swdio_pa13 {
