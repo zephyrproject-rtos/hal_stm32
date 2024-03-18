@@ -8,6 +8,8 @@
 
 #if defined(CONFIG_SOC_SERIES_STM32H5X)
 #include <stm32h5xx_ll_dlyb.h>
+#elif defined(CONFIG_SOC_SERIES_STM32H7RSX)
+#include <stm32h7rsxx_ll_dlyb.h>
 #elif defined(CONFIG_SOC_SERIES_STM32U5X)
 #include <stm32u5xx_ll_dlyb.h>
 #endif
