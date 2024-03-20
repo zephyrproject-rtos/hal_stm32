@@ -171,6 +171,12 @@
 				pinmux = <STM32_PINMUX('B', 4, AF0)>;
 			};
 
+			/* RCC_MCO */
+
+			/omit-if-no-ref/ rcc_mco_pa8: rcc_mco_pa8 {
+				pinmux = <STM32_PINMUX('A', 8, AF0)>;
+			};
+
 			/* SPI_MISO */
 
 			/omit-if-no-ref/ spi3_miso_pb9: spi3_miso_pb9 {
