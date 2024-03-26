@@ -16,6 +16,8 @@
 #include <stm32f7xx_ll_sdmmc.h>
 #elif defined(CONFIG_SOC_SERIES_STM32H5X)
 #include <stm32h5xx_ll_sdmmc.h>
+#elif defined(CONFIG_SOC_SERIES_STM32H7RSX)
+#include <stm32h7rsxx_ll_sdmmc.h>
 #elif defined(CONFIG_SOC_SERIES_STM32H7X)
 #include <stm32h7xx_ll_sdmmc.h>
 #elif defined(CONFIG_SOC_SERIES_STM32L1X)

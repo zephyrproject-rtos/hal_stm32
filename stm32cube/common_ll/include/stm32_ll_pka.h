@@ -8,6 +8,8 @@
 
 #if defined(CONFIG_SOC_SERIES_STM32H5X)
 #include <stm32h5xx_ll_pka.h>
+#elif defined(CONFIG_SOC_SERIES_STM32H7RSX)
+#include <stm32h7rsxx_ll_pka.h>
 #elif defined(CONFIG_SOC_SERIES_STM32L4X)
 #include <stm32l4xx_ll_pka.h>
 #elif defined(CONFIG_SOC_SERIES_STM32L5X)
