@@ -143,6 +143,7 @@ for status in git_status:
             sys.exit()
         break
 
+logging.info("%s", args.stm32_serie)
 if args.stm32_serie:
     update = serie_update.Stm32SerieUpdate(
         args.stm32_serie,
