@@ -8,6 +8,8 @@
 
 #if defined(CONFIG_SOC_SERIES_STM32H5X)
 #include <stm32h5xx_ll_icache.h>
+#elif defined(CONFIG_SOC_SERIES_STM32H7RSX)
+#include <stm32h7rsxx_ll_icache.h>
 #elif defined(CONFIG_SOC_SERIES_STM32L5X)
 #include <stm32l5xx_ll_icache.h>
 #elif defined(CONFIG_SOC_SERIES_STM32U5X)
