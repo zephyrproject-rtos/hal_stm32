@@ -101,29 +101,15 @@ void LST_remove_node (tListNode * node)
 
 void LST_remove_head (tListNode * listHead, tListNode ** node )
 {
-  uint32_t primask_bit;
-
-  primask_bit = __get_PRIMASK();  /**< backup PRIMASK bit */
-  __disable_irq();                  /**< Disable all interrupts by setting PRIMASK bit on Cortex*/
-
   *node = listHead->next;
   LST_remove_node (listHead->next);
-
-  __set_PRIMASK(primask_bit);     /**< Restore PRIMASK bit*/
 }
 
 
 void LST_remove_tail (tListNode * listHead, tListNode ** node )
 {
-  uint32_t primask_bit;
-
-  primask_bit = __get_PRIMASK();  /**< backup PRIMASK bit */
-  __disable_irq();                  /**< Disable all interrupts by setting PRIMASK bit on Cortex*/
-
   *node = listHead->prev;
   LST_remove_node (listHead->prev);
-
-  __set_PRIMASK(primask_bit);     /**< Restore PRIMASK bit*/
 }
 
 
