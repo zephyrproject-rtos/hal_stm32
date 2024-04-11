@@ -6,7 +6,7 @@ Origin:
    http://www.st.com/en/embedded-software/stm32cubel5.html
 
 Status:
-   version v1.5.0
+   version v1.5.1
 
 Purpose:
    ST Microelectronics official MCU package for STM32L5 series.
@@ -23,7 +23,7 @@ URL:
    https://github.com/STMicroelectronics/STM32CubeL5
 
 Commit:
-   7c246fa2db069d306dd660bb00ca55b3d8b8198e
+   7e904f8a9fc3483a01019a9b041a38098f341774
 
 Maintained-by:
    External
@@ -42,12 +42,5 @@ Patch List:
    *Provision to enable hal & ll asserts added
     -Added stm32cube/stm32l5xx/drivers/include/stm32_assert.h
     -Removed unused stm32cube/stm32l5xx/drivers/include/stm32_assert_template.h
-
-   *Wrap define UNUSED with an ifndef
-     This will prevent a compiler warning for the case the UNUSED macro
-     is already defined elsewhere in the project
-     Impacted files:
-      drivers/include/stm32l5xx_hal_def.h
-     ST Internal Reference: 136825
 
    See release_note.html from STM32Cube
