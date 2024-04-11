@@ -657,6 +657,7 @@ typedef struct
   * @retval None
   */
 #define __FMC_DISABLE()  (FMC_Bank1_R->BTCR[0] &= ~FMC_BCR1_FMCEN)
+#if defined(FMC_BANK1)
 /** @defgroup FMC_LL_NOR_Macros FMC NOR/SRAM Macros
   * @brief macros to handle NOR device enable/disable and read/write operations
   * @{
