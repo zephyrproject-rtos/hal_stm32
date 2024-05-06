@@ -194,6 +194,10 @@
 - name: LTDC
   match: "^LTDC_(?:DE|CLK|HSYNC|VSYNC|R[0-7]|G[0-7]|B[0-7])$"
 
+- name: RCC_MCO_1
+  match: "^RCC_MCO_1$"
+  slew-rate: very-high-speed
+
 - name: OCTOSPI
   match: "^OCTOSPI(.*)(?:CLK|NCS|DQS|IO[0-7])$"
   slew-rate: very-high-speed
