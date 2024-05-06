@@ -52,6 +52,10 @@
 - name: DAC_OUT
   match: "^DAC(?:\\d+)?_OUT\\d+$"
 
+- name: DCMI
+  match: "^DCMI_(?:HSYNC|PIXCLK|VSYNC|D[0-7])$"
+  slew-rate: very-high-speed
+
 - name: ETH_COL
   match: "^ETH_COL$"
   slew-rate: very-high-speed
