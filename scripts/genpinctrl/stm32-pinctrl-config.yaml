@@ -42,6 +42,9 @@
 - name: ADC_IN / ADC_INN / ADC_INP
   match: "^ADC(?:\\d+)?_IN[NP]?\\d+$"
 
+- name: ADC_VINM / ADC_VINP
+  match: "^ADC(?:\\d+)?_VIN[PM]\\d+$"
+
 - name: CAN_RX
   match: "^CAN\\d*_RX$"
   bias: pull-up
