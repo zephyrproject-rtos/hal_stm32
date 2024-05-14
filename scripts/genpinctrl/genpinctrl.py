@@ -70,6 +70,7 @@ PINCTRL_ADDRESSES = {
     "stm32u5": 0x42020000,
     "stm32wba": 0x42020000,
     "stm32wb": 0x48000000,
+    "stm32wb0": 0x48000000,
     "stm32wl": 0x48000000,
 }
 """pinctrl peripheral addresses for each family."""
