@@ -65,7 +65,6 @@ foreach(stm_soc ${stm_socs})
     zephyr_include_directories(
 	  ${stm_soc}x/soc
 	  ${stm_soc}x/drivers/include
-	  ${stm_soc}x/drivers/include/Legacy
 	  )
 
     add_subdirectory(${stm_soc}x)
