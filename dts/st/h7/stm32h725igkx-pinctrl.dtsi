@@ -344,10 +344,6 @@
 				pinmux = <STM32_PINMUX('H', 5, ANALOG)>;
 			};
 
-			/omit-if-no-ref/ adc3_inp16_ph5: adc3_inp16_ph5 {
-				pinmux = <STM32_PINMUX('H', 5, ANALOG)>;
-			};
-
 			/* Analog */
 
 			/omit-if-no-ref/ analog_pa0: analog_pa0 {

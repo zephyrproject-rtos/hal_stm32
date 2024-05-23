@@ -627,7 +627,7 @@
 			};
 
 			/omit-if-no-ref/ tim3_ch3_pc8: tim3_ch3_pc8 {
-				pinmux = <STM32_PINMUX('C', 8, AF1)>;
+				pinmux = <STM32_PINMUX('C', 8, AF0)>;
 			};
 
 			/omit-if-no-ref/ tim3_ch4_pc9: tim3_ch4_pc9 {
