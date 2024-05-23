@@ -931,11 +931,11 @@
 			/* USB */
 
 			/omit-if-no-ref/ usb_dm_pa11: usb_dm_pa11 {
-				pinmux = <STM32_PINMUX('A', 11, AF10)>;
+				pinmux = <STM32_PINMUX('A', 11, ANALOG)>;
 			};
 
 			/omit-if-no-ref/ usb_dp_pa12: usb_dp_pa12 {
-				pinmux = <STM32_PINMUX('A', 12, AF10)>;
+				pinmux = <STM32_PINMUX('A', 12, ANALOG)>;
 			};
 
 			/omit-if-no-ref/ usb_noe_pa13: usb_noe_pa13 {
