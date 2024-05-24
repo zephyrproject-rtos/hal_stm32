@@ -4,8 +4,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-#include <autoconf.h>
-
 #if defined(CONFIG_SOC_SERIES_STM32F0X)
 #include <stm32f0xx_ll_crs.h>
 #elif defined(CONFIG_SOC_SERIES_STM32G0X)
