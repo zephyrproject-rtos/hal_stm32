@@ -56,6 +56,11 @@
   match: "^DCMI_(?:HSYNC|PIXCLK|VSYNC|D[0-7])$"
   slew-rate: very-high-speed
 
+- name: DFSDM
+  match: "^DFSDM[1-2]_(DATIN[0-7]|CKIN[0-7]|CKOUT)$"
+  slew-rate: very-high-speed
+  mode: alternate
+
 - name: ETH_COL
   match: "^ETH_COL$"
   slew-rate: very-high-speed
