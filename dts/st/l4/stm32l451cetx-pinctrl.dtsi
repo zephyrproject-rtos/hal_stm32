@@ -252,6 +252,63 @@
 				pinmux = <STM32_PINMUX('A', 4, ANALOG)>;
 			};
 
+			/* DFSDM */
+
+			/omit-if-no-ref/ dfsdm1_ckout_pa5: dfsdm1_ckout_pa5 {
+				pinmux = <STM32_PINMUX('A', 5, AF6)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ dfsdm1_datin0_pa7: dfsdm1_datin0_pa7 {
+				pinmux = <STM32_PINMUX('A', 7, AF6)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ dfsdm1_ckin1_pa8: dfsdm1_ckin1_pa8 {
+				pinmux = <STM32_PINMUX('A', 8, AF6)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ dfsdm1_datin1_pa9: dfsdm1_datin1_pa9 {
+				pinmux = <STM32_PINMUX('A', 9, AF6)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ dfsdm1_ckin0_pb0: dfsdm1_ckin0_pb0 {
+				pinmux = <STM32_PINMUX('B', 0, AF6)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ dfsdm1_datin0_pb1: dfsdm1_datin0_pb1 {
+				pinmux = <STM32_PINMUX('B', 1, AF6)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ dfsdm1_ckin0_pb2: dfsdm1_ckin0_pb2 {
+				pinmux = <STM32_PINMUX('B', 2, AF6)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ dfsdm1_datin1_pb12: dfsdm1_datin1_pb12 {
+				pinmux = <STM32_PINMUX('B', 12, AF6)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ dfsdm1_ckin1_pb13: dfsdm1_ckin1_pb13 {
+				pinmux = <STM32_PINMUX('B', 13, AF6)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ dfsdm1_datin2_pb14: dfsdm1_datin2_pb14 {
+				pinmux = <STM32_PINMUX('B', 14, AF6)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ dfsdm1_ckin2_pb15: dfsdm1_ckin2_pb15 {
+				pinmux = <STM32_PINMUX('B', 15, AF6)>;
+				slew-rate = "very-high-speed";
+			};
+
 			/* I2C_SCL */
 
 			/omit-if-no-ref/ i2c1_scl_pa9: i2c1_scl_pa9 {

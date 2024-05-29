@@ -1385,6 +1385,16 @@
 				pinmux = <STM32_PINMUX('G', 1, AF13)>;
 			};
 
+			/* RCC_MCO */
+
+			/omit-if-no-ref/ rcc_mco_1_pa8: rcc_mco_1_pa8 {
+				pinmux = <STM32_PINMUX('A', 8, AF0)>;
+			};
+
+			/omit-if-no-ref/ rcc_mco_2_pc9: rcc_mco_2_pc9 {
+				pinmux = <STM32_PINMUX('C', 9, AF0)>;
+			};
+
 			/* SDMMC */
 
 			/omit-if-no-ref/ sdmmc2_cmd_pa0: sdmmc2_cmd_pa0 {
