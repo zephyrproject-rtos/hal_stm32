@@ -449,7 +449,7 @@ typedef enum
 
 #if (USE_RADIO_LOW_ISR == 1)
 #define RADIO_SW_LOW_INTR_NUM               HASH_IRQn      /* Selected interrupt vector for 2.4GHz RADIO low ISR */
-#define RADIO_SW_LOW_INTR_PRIO              (15)           /* 2.4GHz RADIO low ISR priority */
+#define RADIO_SW_LOW_INTR_PRIO              (14)           /* 2.4GHz RADIO low ISR priority */
 #endif /* USE_RADIO_LOW_ISR */
 
 /* Link Layer supported number of antennas */
