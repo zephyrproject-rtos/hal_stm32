@@ -1,4 +1,4 @@
-/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/1.30a-SOW05PatchV6/firmware/public_inc/event_manager.h#1 $*/
+/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/1.30a-SOW05Patchv6_2/firmware/public_inc/event_manager.h#1 $*/
 /**
  ********************************************************************************
  * @file    event_manager.h
@@ -80,8 +80,8 @@ typedef enum {
 	BIS_TERM_EVENT,
 #if(SUPPORT_SYNC_ISOCHRONOUS)
 	BIS_SYNC_TIMEOUT_EVENT,
-#endif /* SUPPORT_EXPLCT_OBSERVER_ROLE */
-#endif /* SUPPORT_BROADCAST_ISOCHRONOUS */
+#endif /* SUPPORT_SYNC_ISOCHRONOUS */
+#endif /* SUPPORT_BRD_ISOCHRONOUS || SUPPORT_SYNC_ISOCHRONOUS */
 #endif /*SUPPORT_BLE*/
 #if ((SUPPORT_BLE)||(SUPPORT_MAC_HCI_UART)||(SUPPORT_ANT_HCI_UART) || (SUPPORT_AUG_MAC_HCI_UART))
 	HCI_HANDLER, /* handler for the HCI events; handling events from Host to HCI*/
@@ -91,8 +91,10 @@ typedef enum {
 	ADV_TIMEOUT_EVENT, 	/*handler for advertising extended timeout feature */
 	SCN_DURATION_EVENT,	/*handler for extended scanning duration */
 	SCN_PERIOD_EVENT, 	/*handler for extended scanning period */
-	PRDC_SCAN_TIMEOUT_EVENT, /*handler for periodoc scan sync timeout */
+#if SUPPORT_LE_PERIODIC_ADVERTISING
+	PRDC_SCAN_TIMEOUT_EVENT, /*handler for periodic scan sync timeout */
 	PRDC_SCAN_CANCEL_EVENT,
+#endif /* SUPPORT_LE_PERIODIC_ADVERTISING */
 #endif /* SUPPORT_LE_EXTENDED_ADVERTISING */
 #endif /*SUPPORT_BLE*/
 #if SUPPORT_COEXISTENCE

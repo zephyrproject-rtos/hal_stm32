@@ -1,4 +1,4 @@
-/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/1.30a-SOW05PatchV6/firmware/public_inc/ll_intf.h#1 $*/
+/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/1.30a-SOW05Patchv6_2/firmware/public_inc/ll_intf.h#1 $*/
 /**
  ********************************************************************************
  * @file    ll_intf_cmds.h
@@ -215,7 +215,7 @@ typedef struct _ble_intf_extended_adv_rprt_data_st {
 	uint8_t *ptr_direct_address;
 	uint8_t data_length;
 	ble_buff_hdr_t *ptr_data;
-	uint8_t rmv_adv_rprt;
+	uint8_t rmv_adv_rprt; /* set to mark duplicate packet */
 	uint8_t address [ADDRESS_SIZE];
 } ble_intf_extended_adv_rprt_data_st;
 
@@ -224,15 +224,15 @@ typedef struct _ble_intf_extended_adv_rprt_data_st {
  * @brief Structure containing the advertising sync transfer report to be reported to the host
  */
 typedef struct _ble_intf_prdc_adv_sync_transfer_report_st {
-	uint8_t status;                    /* Periodic advertising sync successful/failed */
+	uint8_t* ptr_advertiser_address;   /* Pointer to advertiser address */
 	uint16_t conn_handle;			   /* Used to identify connection */
 	uint16_t service_data;			   /* A value provided by the peer device */
 	uint16_t sync_handle;			   /* Used to identify the periodic advertiser */
+	uint16_t periodic_advertising_interval; /* Periodic advertising interval */
+	uint8_t status;                    /* Periodic advertising sync successful/failed */
 	uint8_t advertising_sid;           /* Value of the Advertising SID subfield in the ADI field of the PDU */
 	uint8_t advertiser_address_type;   /* Advertiser address type */
-	uint8_t* ptr_advertiser_address;   /* Pointer to advertiser address */
 	uint8_t advertiser_phy;            /* Advertiser PHY */
-	uint16_t periodic_advertising_interval; /* Periodic advertising interval */
 	uint8_t advertiser_clock_accuracy; /* Clock accuracy used by advertise */
 } ble_intf_prdc_adv_sync_transfer_report_st ;
 #endif /* SUPPORT_PERIODIC_SYNC_TRANSFER */
@@ -496,6 +496,19 @@ typedef struct _le_subrate_change_evnt_st{
 		uint8_t status;
 }le_subrate_change_evnt_st;
 #endif /* SUPPORT_LE_ENHANCED_CONN_UPDATE */
+
+typedef enum _enum_ext_create_conn_verison
+{
+	EXT_CREATE_CONN_VER_1,
+	EXT_CREATE_CONN_VER_2,
+}enum_ext_create_conn_ver;
+
+typedef enum _enum_prdc_adv_param_ver
+{
+	PRDC_ADV_PARAM_VER_1,
+	PRDC_ADV_PARAM_VER_2,
+}enum_prdc_adv_param_ver;
+
 /**
  * @brief Data contained in extended create connection command for each PHY.
  *
@@ -511,6 +524,63 @@ typedef struct _ble_intf_ext_create_conn_st {
 	uint16_t minimum_ce_length; /* minimum connection event length for each PHY. */
 	uint16_t maximum_ce_length;
 } st_ble_intf_ext_create_conn;
+
+typedef struct _ble_intf_ext_create_conn_cmd_st
+{
+	st_ble_intf_ext_create_conn* ptr_ext_create_conn; /* ptr to extended create connection parameters */
+	uint8_t* ptr_peer_address; /* ptr to the Peer address*/
+	uint8_t initiator_filter_policy; /* used to determine whether the Filter Accept List is used */
+	uint8_t own_address_type; /* indicates the type of address used in the connection request packets */
+	uint8_t peer_address_type; /* indicates the type of address used in the connectable advertisement sent by the peer */
+	uint8_t initiating_phys; /* indicates the PHY(s) on which the advertising packets should be received */
+}ble_intf_ext_create_conn_cmd_st;
+
+typedef struct _ble_set_prdc_adv_param_st
+{
+	uint16_t prdc_adv_intrvl_min;/* Minimum advertising interval for periodic advertising */
+	uint16_t prdc_adv_intrvl_max;/* Maximum advertising interval for periodic advertising */
+	uint16_t prdc_adv_prpts; /* Include TxPower in the advertising PDU */
+}ble_set_prdc_adv_param_st;
+
+typedef struct _ble_enhanced_conn_cmplt_evnt_st
+{
+	ble_stat_t status; /*Connection Status*/
+	uint8_t *ptr_peer_addr;/*Public Device Address, or Random Device Address, Public Identity Address or Random (static) Identity Address of the device to be connected.*/
+	uint8_t *ptr_local_resolvable_prvt_addr;/*Resolvable Private Address being used by the local device for this connection.*/
+	uint8_t *ptr_peer_resolvable_prvt_addr;/*Resolvable Private Address being used by the peer device for this connection.*/
+	ble_conn_role_e role;/*Connection type (Master or Slave)*/
+	uint16_t conn_handle_id;/*Connection_Handle to be used to identify a connection between two Bluetooth devices.*/
+	uint16_t conn_intrvl;/*Connection interval used on this connection.*/
+	uint16_t slave_ltncy;/*Slave latency for the connection in number of connection events.*/
+	uint16_t suprvsn_tout;/*Supervision timeout for the connection requested by the remote device.*/
+	uint8_t peer_addr_type;/*Peer address type*/
+	uint8_t master_clk_accurcy;/*Master clock acuracy.*/
+}ble_enhanced_conn_cmplt_evnt_st;
+
+typedef struct _ble_prdc_adv_sync_estblshd_st
+{
+	uint8_t* ptr_adv_addrs; /*ptr to Address of the advertiser */
+	ble_stat_t status; /*Periodic advertising sync Status*/
+	uint16_t sync_handle; /*identifying the periodic advertising train*/
+	uint16_t prdc_adv_intrvl;/*Periodic advertising interval*/
+	uint8_t adv_sid;/*Value of the Advertising SID subfield in the ADI field of the PDU */
+	uint8_t adv_addrs_type;/*address type of the advertiser */
+	uint8_t adv_phy; /*advertiser PHY */
+	uint8_t adv_clk_accuracy;/*Advertiser Clock Accuracy*/
+}ble_prdc_adv_sync_estblshd_st;
+
+/*============ PAWR ============ */
+
+typedef struct _ble_prdc_adv_rprt_st
+{
+	ble_buff_hdr_t *ptr_data;/*ptr to Data received from a Periodic Advertising packet.*/
+	uint8_t tx_power;/*Tx Power information*/
+	int8_t rssi;/*RSSI value*/
+	uint8_t cte_type;/* indicates the type of Constant Tone Extension in the periodic advertising packets*/
+	uint8_t data_status;/*Data status*/
+	uint8_t data_length;/*Length of the Data field*/
+}ble_prdc_adv_rprt_st;
+
 
 /* HCI Commands Parameters Structures */
 #if (SUPPORT_AOA_AOD)
@@ -894,25 +964,12 @@ struct hci_dispatch_tbl {
 	 * 	   LE Connection Complete event are unmasked, only the LE Enhanced Connection Complete event is generated is sent when
 	 * 	   a new connection has been completed).
 	 *
-	 * @param  status                        : [in] indicate if the connection was successfully completed or not.
-	 * @param  conn_handle_id                : [in] connection handle of the connection which was created.
-	 * @param  role                          : [in] indicate whether the connection is master or slave.
-	 * @param  peer_addr_type                : [in] define the address type of the peer device.
-	 * @param  peer_Addr                     : [in] address of the peer device.
-	 * @param  local_resolvable_private_addr : [in] resolvable private address being used by the local device for this connection (in case the local device uses the resolvable private address).
-	 * @param  peer_resolvable_private_addr  : [in] resolvable private address being used by the peer device for this connection (in case the peer device uses the resolvable private address)..
-	 * @param  conn_interval                 : [in] connection interval value used on the connection created.
-	 * @param  conn_latency                  : [in] slave latency value for the connection created, in number of connection events.
-	 * @param  supervsn_timeout	         	 : [in] connection supervision timeout value for the connection created.
-	 * @param  master_clock_accuracy         : [in] master clock accuracy value (only valid for a slave).
+	 * @param  ptr_enhanced_conn_cmplt_evnt*	: [in] Pointer to struct contains the enhanced conn complt event params.
+	 *
+	 * @retval None.
 	 */
-	void (*ll_intf_le_enhanced_conn_cmplt_evnt)(ble_stat_t status,
-		uint16_t conn_handle_id, ble_conn_role_e role, uint8_t peer_addr_type,
-		uint8_t peer_addr[ADDRESS_SIZE],
-		uint8_t local_resolvable_private_addr[ADDRESS_SIZE],
-		uint8_t peer_resolvable_private_addr[ADDRESS_SIZE],
-		uint16_t conn_interval, uint16_t conn_latency,
-		uint16_t supervsn_timeout, uint8_t master_clock_accuracy);
+	void (*ll_intf_le_enhanced_conn_cmplt_evnt)(
+			ble_enhanced_conn_cmplt_evnt_st* ptr_enhanced_conn_cmplt_evnt);
 
 	/*===== Read Remote Version Information Complete Event =====*/
 	/**
@@ -1187,44 +1244,26 @@ struct hci_dispatch_tbl {
 	/**
 	 * @brief  indicates that the Controller has received a Periodic Advertising packet
 	 *
-	 * @param  sync_handle 	: [in] used to identify the periodic advertiser from which data has been received.
-	 * @param  tx_power    	: [in] tx power from the extended adv report
-	 * @param  rssi 	   	: [in] Advertiser address type.
-	 * @param  cte_type 	: [in] indicates the type of CTE in the periodic advertising packets.
-	 *								0x00: AoA_CTE
-	 *								0x01: AoD_CTE_1us_Slot
-	 *								0x02: AoD_CTE_2us_Slot
-	 *								0xFF: No CTE
-	 * @param  data_status 	: [in] 0x00 Data complete
-	 *                             0x01 Data incomplete, more data to come
-	 *                             0x02 Data incomplete, data truncated, no more to come
-	 *                             All other values Reserved for future use.
-	 * @param  data_length 	: [in] data length
-	 * @param  ptr_data     : [in] Data received from a Periodic Advertising packet.
+	 * @param  sync_handle					:[in] Sync_Handle identifying the periodic advertising train.
+	 * @param  ptr_prdc_adv_rprt_params*    :[in] ptr to struct contains the periodic adv packet to be reported.
+	 *
+	 *
+	 * @retval None.
 	 */
 	void (*ll_intf_le_periodic_adv_report)(uint16_t sync_handle,
-		uint8_t tx_power, int8_t rssi, uint8_t cte_type, uint8_t data_status,
-		uint8_t data_length, ble_buff_hdr_t *ptr_data);
+			ble_prdc_adv_rprt_st* ptr_prdc_adv_rprt_params);
 
 	/*===== LE Periodic Advertising Sync Established =====*/
 	/**
-	 * @brief  Indicates that the Controller has received the first periodic advertising packet from an advertiser after the LE_Periodic_Advertising_Create_Sync Command has been sent to the Controller.
+	 * @brief  indicates that the Controller has received the first periodic advertising packet from an advertiser
+	 * 		   after the LE_Periodic_Advertising_Create_Sync Command has been sent to the Controller.
 	 *
-	 * @param  status						: [in] Periodic advertising sync successful/failed.
-	 * @param  sync_handle 					: [in] Used to identify the periodic advertiser.
-	 * @param  advertising_sid 				: [in] Value of the Advertising SID subfield in the ADI field of the PDU.
-	 * @param  advertiser_address_type 		: [in] Advertiser address type.
-	 * @param  ptr_advertiser_address 		: [in] Pointer to advertiser address.
-	 * @param  advertiser_phy 				: [in] Advertiser PHY.
-	 * @param  periodic_advertising_interval: [in] Periodic advertising interval.
-	 * @param  advertiser_clock_accuracy	: [in] Clock accuracy used by advertiser.
+	 * @param  ptr_prdc_adv_sync_estblshd*		: [in] ptr to struct contains the established periodic adv sync parameters.
+	 *
+	 * @retval None.
 	 */
-	void (*ll_intf_le_periodic_adv_sync_estblshd)(uint8_t status,
-		uint16_t sync_handle, uint8_t advertising_sid,
-		uint8_t advertiser_address_type,
-		uint8_t* ptr_advertiser_address, uint8_t advertiser_phy,
-		uint16_t periodic_advertising_interval,
-		uint8_t advertiser_clock_accuracy);
+	void (*ll_intf_le_periodic_adv_sync_estblshd)(
+			ble_prdc_adv_sync_estblshd_st* ptr_prdc_adv_sync_estblshd);
 
 	/*===== LE Periodic Advertising Sync Lost Event =====*/
 	/**
@@ -1244,7 +1283,7 @@ struct hci_dispatch_tbl {
  	 * @param  ptr_prdc_sync_transfer_report	: [in] Pointer to periodic advertising sync transfer report
    	 */
 	void (*ll_intf_periodic_adv_sync_transfer_recieved)(
-		ble_intf_prdc_adv_sync_transfer_report_st * ptr_prdc_sync_transfer_report);
+			ble_intf_prdc_adv_sync_transfer_report_st * ptr_prdc_sync_transfer_report);
 #endif /* SUPPORT_PERIODIC_SYNC_TRANSFER */
 
 #endif /* SUPPORT_EXPLCT_OBSERVER_ROLE || SUPPORT_MASTER_CONNECTION || SUPPORT_SYNC_ISOCHRONOUS*/
@@ -1386,6 +1425,7 @@ struct hci_dispatch_tbl {
  */
 	void (*ll_intf_end_of_activity_evnt)(uint16_t curr_state, uint16_t nxt_state);
 #endif /* END_OF_RADIO_ACTIVITY_REPORTING */
+
 };
 
 #if (SUPPORT_CONNECTED_ISOCHRONOUS &&( SUPPORT_MASTER_CONNECTION || SUPPORT_SLAVE_CONNECTION))
@@ -1818,7 +1858,7 @@ ble_stat_t ll_intf_le_set_adv_params(le_set_adv_params_cmd_st *ptr_hst_adv_param
  * @retval ble_stat_t : Command status to be sent to the Host.
  */
 ble_stat_t ll_intf_le_set_adv_data(uint8_t adv_data_length,
-	uint8_t adv_data[31]);
+	uint8_t * adv_data);
 #endif /* SUPPORT_EXPLCT_BROADCASTER_ROLE || SUPPORT_SLAVE_CONNECTION || SUPPORT_BRD_ISOCHRONOUS */
 
 #if (SUPPORT_SLAVE_CONNECTION || SUPPORT_EXPLCT_BROADCASTER_ROLE)
@@ -1831,7 +1871,7 @@ ble_stat_t ll_intf_le_set_adv_data(uint8_t adv_data_length,
  * @retval ble_stat_t : Command status to be sent to the Host.
  */
 ble_stat_t ll_intf_le_set_scan_rsp_data(uint8_t scan_rsp_data_length,
-	uint8_t scan_rsp_data[31]);
+	uint8_t * scan_rsp_data);
 #endif /* SUPPORT_SLAVE_CONNECTION || SUPPORT_EXPLCT_BROADCASTER_ROLE */
 
 #if(SUPPORT_EXPLCT_BROADCASTER_ROLE || SUPPORT_SLAVE_CONNECTION || SUPPORT_BRD_ISOCHRONOUS)
@@ -2186,7 +2226,7 @@ ble_stat_t ll_intf_le_read_adv_channel_tx_power(int8_t *transmit_power_level);
  * @retval ble_stat_t : Command status to be sent to the Host.
  */
 ble_stat_t ll_intf_le_read_channel_map(uint16_t conn_handle_id,
-	uint8_t channel_map[5]);
+	uint8_t * channel_map);
 /**@}
  */
 #endif /* SUPPORT_MASTER_CONNECTION || SUPPORT_SLAVE_CONNECTION */
@@ -2565,7 +2605,8 @@ ble_stat_t ll_intf_le_set_extended_adv_params(uint8_t adv_handle,
 	uint8_t own_addrs_type, uint8_t peer_addrs_type,
 	uint8_t *ptr_peer_addrs, uint8_t adv_filter_policy, int8_t adv_tx_power,
 	uint8_t prim_adv_phy, uint8_t sec_adv_max_skip, uint8_t sec_adv_phy,
-	uint8_t adv_sid, uint8_t scan_req_notfy, int8_t *selected_tx_pwr);
+	uint8_t adv_sid, uint8_t scan_req_notfy,
+	int8_t *selected_tx_pwr);
 
 /*================  LE Set Extended Advertising Data Command =====================*/
 /**
@@ -2668,10 +2709,7 @@ ble_stat_t ll_intf_le_clear_adv_sets(void);
  *
  * @retval ble_stat_t	: Command status.
  */
-ble_stat_t ll_intf_le_set_periodic_adv_params(uint8_t advertising_handle,
-	uint16_t periodic_advertising_interval_min,
-	uint16_t periodic_advertising_interval_max,
-	uint16_t periodic_advertising_properties);
+ble_stat_t ll_intf_le_set_periodic_adv_params(uint8_t advertising_handle , ble_set_prdc_adv_param_st* ptr_prdc_adv_params);
 /**
  * @brief  Set periodic advertising data.
  *
@@ -2751,10 +2789,7 @@ ble_stat_t ll_intf_le_set_extended_scan_enable(uint8_t scan_enable,
  *
  * @retval ble_stat_t	: Command status.
  */
-ble_stat_t ll_intf_le_extended_create_conn(uint8_t initiator_filter_policy,
-	uint8_t own_addr_type, uint8_t peer_addr_type,
-	uint8_t* ptr_peer_address, uint8_t initiating_phys,
-	st_ble_intf_ext_create_conn* ptr_ext_create_conn);
+ble_stat_t ll_intf_le_extended_create_conn(ble_intf_ext_create_conn_cmd_st* ptr_ext_create_conn_params);
 #endif /* (SUPPORT_MASTER_CONNECTION) */
 /**@}
 */
@@ -3268,7 +3303,7 @@ ble_stat_t ll_intf_le_write_tx_pwr(int8_t tx_pwr);
  */
 
 
-#if (SUPPORT_SLEEP_CLOCK_ACCURCY_UPDATES)
+#if (SUPPORT_SLEEP_CLOCK_ACCURCY_UPDATES && MAXIMUM_SLP_CLK_ACCURACY > 1 )
 /** @ingroup  modify_slpclk_cfg Sleep Clock Accuracy Commands
  * @{
  */
@@ -3327,8 +3362,7 @@ ble_stat_t ll_intf_le_set_dp_slp_mode(uint8_t dp_slp_mode);
  */
 void ll_intf_le_set_phy_clbr_params(uint32_t phy_clbr_evnt_period, uint32_t phy_clbr_evnt_count);
 
-#if ((SUPPORT_BRD_ISOCHRONOUS || SUPPORT_SYNC_ISOCHRONOUS) || \
-	 (SUPPORT_CONNECTED_ISOCHRONOUS && (SUPPORT_MASTER_CONNECTION || SUPPORT_SLAVE_CONNECTION)))
+#if ((SUPPORT_BRD_ISOCHRONOUS || SUPPORT_SYNC_ISOCHRONOUS) || (SUPPORT_CONNECTED_ISOCHRONOUS))
 #if SUPPORT_HW_AUDIO_SYNC_SIGNAL
 /**
  * @brief Enable the audio sync signal for specific Stream
@@ -3350,8 +3384,7 @@ ble_stat_t ll_intf_enable_audio_sync_signal(uint16_t conn_hndle);
 ble_stat_t ll_intf_force_audio_sync_signal_resync(uint16_t conn_hndle, uint8_t force_state);
 #endif /*SUPPORT_SYNC_ISOCHRONOUS*/
 #endif /*SUPPORT_HW_AUDIO_SYNC_SIGNAL*/
-#endif /*#if ((SUPPORT_BRD_ISOCHRONOUS || SUPPORT_SYNC_ISOCHRONOUS) || \
-	 (SUPPORT_CONNECTED_ISOCHRONOUS && (SUPPORT_MASTER_CONNECTION || SUPPORT_SLAVE_CONNECTION))) */
+#endif /* ((SUPPORT_BRD_ISOCHRONOUS || SUPPORT_SYNC_ISOCHRONOUS) || (SUPPORT_CONNECTED_ISOCHRONOUS)) */
 
 /*===============  LE Set Get Remaining Time For Next Event ===============*/
 /**
@@ -3423,9 +3456,7 @@ ble_stat_t ll_intf_le_start_energy_detection(uint8_t * chnnl_map, uint32_t durat
  * @retval ble_stat_t : Command status to be sent to the Host.
  */
 ble_stat_t ll_intf_le_select_slp_clk_src(uint8_t slp_clk_src, uint16_t *ptr_slp_clk_freq_value);
-#endif /* USE_NON_ACCURATE_32K_SLEEP_CLK */
 
-#if (USE_NON_ACCURATE_32K_SLEEP_CLK)
 /*===============  LE Set RCO Calibration Event Parameters ===============*/
 /**
  * @brief Used to configure the runtime RCO calibration event parameters.
@@ -3741,7 +3772,7 @@ ble_stat_t ll_intf_read_connection_accept_tout(uint16_t *ptr_accept_tout);
  */
 ble_stat_t ll_intf_set_cstm_rssi_golden_range(int lower_limit , int upper_limit);
 #endif /* (SUPPORT_LE_POWER_CONTROL) */
-#if ((SUPPORT_LE_ENHANCED_CONN_UPDATE || SUPPORT_CONNECTED_ISOCHRONOUS )&&( SUPPORT_MASTER_CONNECTION || SUPPORT_SLAVE_CONNECTION))
+#if (SUPPORT_LE_ENHANCED_CONN_UPDATE || SUPPORT_CONNECTED_ISOCHRONOUS || SUPPORT_CSSA)
 /**  @}
 */
 
@@ -3758,7 +3789,7 @@ ble_stat_t ll_intf_set_cstm_rssi_golden_range(int lower_limit , int upper_limit)
  * @retval ble_stat_t	: Command status.
  */
 ble_stat_t ll_intf_le_set_host_feature(uint8_t bit_num, uint8_t bit_value);
-#endif /* #if ((SUPPORT_LE_ENHANCED_CONN_UPDATE || SUPPORT_CONNECTED_ISOCHRONOUS )&&( SUPPORT_MASTER_CONNECTION || SUPPORT_SLAVE_CONNECTION)) */
+#endif /* (SUPPORT_LE_ENHANCED_CONN_UPDATE || SUPPORT_CONNECTED_ISOCHRONOUS || SUPPORT_CSSA) */
 #if((SUPPORT_CONNECTED_ISOCHRONOUS &&( SUPPORT_MASTER_CONNECTION || SUPPORT_SLAVE_CONNECTION)) \
 	||(SUPPORT_BRD_ISOCHRONOUS || SUPPORT_SYNC_ISOCHRONOUS))
 
@@ -3993,7 +4024,7 @@ ble_stat_t ll_intf_pta_enable(
 		const uint8_t enable);
 
 #if (SUPPORT_MASTER_CONNECTION || SUPPORT_SLAVE_CONNECTION || \
-	(SUPPORT_LE_EXTENDED_ADVERTISING && SUPPORT_LE_PERIODIC_ADVERTISING && (SUPPORT_EXPLCT_OBSERVER_ROLE || SUPPORT_SYNC_ISOCHRONOUS)))
+	(SUPPORT_LE_PERIODIC_ADVERTISING && (SUPPORT_EXPLCT_OBSERVER_ROLE || SUPPORT_SYNC_ISOCHRONOUS)))
 /**
  * @brief Priority configuration function for the ACL and Periodic Scan events
  *
@@ -4017,10 +4048,9 @@ ble_stat_t ll_intf_pta_ble_set_link_coex_priority(
 		const uint8_t acl_multi_slot_nbr_of_packets,
 		const uint8_t link_loss_limit_timeout);
 #endif /* (SUPPORT_MASTER_CONNECTION || SUPPORT_SLAVE_CONNECTION || \
-		  (SUPPORT_LE_EXTENDED_ADVERTISING && SUPPORT_LE_PERIODIC_ADVERTISING && (SUPPORT_EXPLCT_OBSERVER_ROLE || SUPPORT_SYNC_ISOCHRONOUS))) */
+	(SUPPORT_LE_PERIODIC_ADVERTISING && (SUPPORT_EXPLCT_OBSERVER_ROLE || SUPPORT_SYNC_ISOCHRONOUS))) */
 
-#if (SUPPORT_BRD_ISOCHRONOUS || SUPPORT_SYNC_ISOCHRONOUS || \
-	(SUPPORT_CONNECTED_ISOCHRONOUS && (SUPPORT_MASTER_CONNECTION || SUPPORT_SLAVE_CONNECTION)))
+#if (SUPPORT_BRD_ISOCHRONOUS || SUPPORT_SYNC_ISOCHRONOUS || (SUPPORT_CONNECTED_ISOCHRONOUS))
 
 /**
  * @brief Priority configuration function for the BIG and CIG events.
@@ -4042,8 +4072,7 @@ ble_stat_t ll_intf_pta_ble_set_iso_coex_priority(
 		const uint32_t priority,
 		const uint32_t priority_mask,
 		const uint8_t link_loss_limit_timeout);
-#endif /* (SUPPORT_BRD_ISOCHRONOUS || SUPPORT_SYNC_ISOCHRONOUS || \
-		  (SUPPORT_CONNECTED_ISOCHRONOUS && (SUPPORT_MASTER_CONNECTION || SUPPORT_SLAVE_CONNECTION))) */
+#endif /* (SUPPORT_BRD_ISOCHRONOUS || SUPPORT_SYNC_ISOCHRONOUS || (SUPPORT_CONNECTED_ISOCHRONOUS)) */
 
 /**
  * @brief Generic Priority configuration function.
@@ -4082,7 +4111,7 @@ ble_stat_t ll_init_start_unmod_carrier(uint8_t channel, int16_t offset , uint8_t
  *  started while the continuous modulation mode or unmodulated carrier mode is running
  * @retval status.
  */
-ble_stat_t ll_init_stop_unmod_carrier();
+ble_stat_t ll_init_stop_unmod_carrier(void);
 
 /**
  * @brief this function is used to Start continuous DTM  Mode
@@ -4244,6 +4273,22 @@ ble_stat_t ll_intf_le_subrate_req(
 /**  @}
 */
 
+/**
+ * @ingroup pawr_custom
+ * @{
+ */
+
+
+/**  @}
+*/
+
+/** @ingroup  pawr
+ *  @{
+ */
+
+/**
+ * @}
+ */
 
 #if SUPPORT_HCI_EVENT_ONLY
 

@@ -1,12 +1,11 @@
 /*****************************************************************************
  * @file    ble_types.h
- * @author  MDG
  * @brief   STM32WBA BLE command/event types
  *          Auto-generated file: do not edit!
  *****************************************************************************
  * @attention
  *
- * Copyright (c) 2018-2023 STMicroelectronics.
+ * Copyright (c) 2018-2024 STMicroelectronics.
  * All rights reserved.
  *
  * This software is licensed under terms that can be found in the LICENSE file
@@ -701,6 +700,22 @@ typedef __PACKED_STRUCT
 {
   uint8_t Status;
 } hci_host_number_of_completed_packets_rp0;
+
+typedef __PACKED_STRUCT
+{
+  uint8_t Status;
+  uint8_t AFH_Channel_Assessment_Mode;
+} hci_read_afh_channel_assessment_mode_rp0;
+
+typedef __PACKED_STRUCT
+{
+  uint8_t AFH_Channel_Assessment_Mode;
+} hci_write_afh_channel_assessment_mode_cp0;
+
+typedef __PACKED_STRUCT
+{
+  uint8_t Status;
+} hci_write_afh_channel_assessment_mode_rp0;
 
 typedef __PACKED_STRUCT
 {
@@ -2287,6 +2302,46 @@ typedef __PACKED_STRUCT
 typedef __PACKED_STRUCT
 {
   uint8_t Advertising_Handle;
+  uint8_t Change_Reasons;
+} hci_le_set_data_related_address_changes_cp0;
+
+typedef __PACKED_STRUCT
+{
+  uint8_t Status;
+} hci_le_set_data_related_address_changes_rp0;
+
+typedef __PACKED_STRUCT
+{
+  uint16_t Subrate_Min;
+  uint16_t Subrate_Max;
+  uint16_t Max_Latency;
+  uint16_t Continuation_Number;
+  uint16_t Supervision_Timeout;
+} hci_le_set_default_subrate_cp0;
+
+typedef __PACKED_STRUCT
+{
+  uint8_t Status;
+} hci_le_set_default_subrate_rp0;
+
+typedef __PACKED_STRUCT
+{
+  uint16_t Connection_Handle;
+  uint16_t Subrate_Min;
+  uint16_t Subrate_Max;
+  uint16_t Max_Latency;
+  uint16_t Continuation_Number;
+  uint16_t Supervision_Timeout;
+} hci_le_subrate_request_cp0;
+
+typedef __PACKED_STRUCT
+{
+  uint8_t Status;
+} hci_le_subrate_request_rp0;
+
+typedef __PACKED_STRUCT
+{
+  uint8_t Advertising_Handle;
   uint16_t Periodic_Adv_Interval_Min;
   uint16_t Periodic_Adv_Interval_Max;
   uint16_t Periodic_Adv_Properties;
@@ -2389,8 +2444,8 @@ typedef __PACKED_STRUCT
 typedef __PACKED_STRUCT
 {
   uint8_t Status;
-  uint8_t Link_Status[10];
-  uint16_t Link_Connection_Handle[10];
+  uint8_t Link_Status[22];
+  uint16_t Link_Connection_Handle[22];
 } aci_hal_get_link_status_v2_rp0;
 
 typedef __PACKED_STRUCT
@@ -4288,6 +4343,16 @@ typedef __PACKED_STRUCT
   uint8_t Framing;
   uint8_t Encryption;
 } hci_le_biginfo_advertising_report_event_rp0;
+
+typedef __PACKED_STRUCT
+{
+  uint8_t Status;
+  uint16_t Connection_Handle;
+  uint16_t Subrate_Factor;
+  uint16_t Peripheral_Latency;
+  uint16_t Continuation_Number;
+  uint16_t Supervision_Timeout;
+} hci_le_subrate_change_event_rp0;
 
 typedef __PACKED_STRUCT
 {

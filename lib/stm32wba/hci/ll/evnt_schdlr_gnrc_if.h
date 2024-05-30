@@ -1,4 +1,4 @@
-/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/1.30a-SOW05PatchV6/firmware/public_inc/evnt_schdlr_gnrc_if.h#1 $*/
+/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/1.30a-SOW05Patchv6_2/firmware/public_inc/evnt_schdlr_gnrc_if.h#1 $*/
 /**
  ********************************************************************************
  * @file    evnt_schdlr_gnrc_if.h
@@ -106,7 +106,7 @@ typedef struct _extrnl_evnt_st_t{
 	 * when it is  called from event scheduler, the stack should stop all running operation that access phy,
 	 *  no need to call @ref evnt_schdlr_gnrc_evnt_cmpltafter calling this callback as it is called from scheduler itself.
 	 * */
-	uint32_t    				(*evnt_abortd_cbk)();
+	uint32_t    				(*evnt_abortd_cbk)(void);
 #if (RADIO_CSMA)
 	/** Event coexistence error Callback Function. it will be called when @ref EXTRNL_GNRC event execution returned error.
 	 *  when  @ref evnt_strtd_cbk of @ref EXTRNL_GNRC failed at execution for any reason, this callback will be  called from event scheduler,

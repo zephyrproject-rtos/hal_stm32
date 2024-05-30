@@ -35,6 +35,7 @@
 /* Private macros ------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 
+#if (DISABLE_RFTS_EXT_EVNT_HNDLR == 0u)
 /**
   * @brief Pointer to time window requester's callback
   */
@@ -60,6 +61,7 @@ static ext_evnt_hndl_t ext_event_handler;
 static void RFTS_WindowAllowed_Callback(void);
 static void RFTS_Timeout_Callback(void* Argument);
 static uint32_t event_started_callback(ext_evnt_hndl_t evnt_hndl, uint32_t slot_durn, void* priv_data_ptr);
+#endif /* (DISABLE_RFTS_EXT_EVNT_HNDLR == 0u) */
 
 /* Functions Definition ------------------------------------------------------*/
 
@@ -71,6 +73,7 @@ static uint32_t event_started_callback(ext_evnt_hndl_t evnt_hndl, uint32_t slot_
   */
 RFTS_Cmd_Status_t RFTS_ReqWindow(uint32_t Duration, void (*Callback)(void))
 {
+#if (DISABLE_RFTS_EXT_EVNT_HNDLR == 0u)
   extrnl_evnt_st_t extrnl_evnt_config;
   bool req_pending = false;
 
@@ -127,6 +130,7 @@ RFTS_Cmd_Status_t RFTS_ReqWindow(uint32_t Duration, void (*Callback)(void))
 
     return RFTS_WINDOW_REQ_FAILED;
   }
+#endif /* (DISABLE_RFTS_EXT_EVNT_HNDLR == 0u) */
 
   return RFTS_CMD_OK;
 }
@@ -138,6 +142,7 @@ RFTS_Cmd_Status_t RFTS_ReqWindow(uint32_t Duration, void (*Callback)(void))
   */
 RFTS_Cmd_Status_t RFTS_RelWindow(void)
 {
+#if (DISABLE_RFTS_EXT_EVNT_HNDLR == 0u)
   RFTS_Cmd_Status_t status;
 
   /* Stop RFTS module window overrun control timer */
@@ -161,8 +166,12 @@ RFTS_Cmd_Status_t RFTS_RelWindow(void)
   UTILS_EXIT_CRITICAL_SECTION();
 
   return status;
+#else
+  return RFTS_CMD_OK;
+#endif /* (DISABLE_RFTS_EXT_EVNT_HNDLR == 0u) */
 }
 
+#if (DISABLE_RFTS_EXT_EVNT_HNDLR == 0u)
 /**
   * @brief  Callback called by Firmware Link Layer when a time window is available
   * @note   This callback is supposed to be called under interrupt
@@ -202,3 +211,4 @@ static uint32_t event_started_callback(ext_evnt_hndl_t evnt_hndl, uint32_t slot_
   RFTS_WindowAllowed_Callback();
   return 0;
 }
+#endif /* (DISABLE_RFTS_EXT_EVNT_HNDLR == 0u) */

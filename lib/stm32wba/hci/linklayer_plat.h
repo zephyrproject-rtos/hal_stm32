@@ -153,6 +153,20 @@ extern void LINKLAYER_PLAT_StartRadioEvt(void);
 extern void LINKLAYER_PLAT_StopRadioEvt(void);
 
 /**
+  * @brief  Link Layer notification for RCO calibration start.
+  * @param  None
+  * @retval None
+  */
+extern void LINKLAYER_PLAT_RCOStartClbr(void);
+
+/**
+  * @brief  Link Layer notification for RCO calibration end.
+  * @param  None
+  * @retval None
+  */
+extern void LINKLAYER_PLAT_RCOStopClbr(void);
+
+/**
   * @brief  Link Layer requests temperature.
   * @param  None
   * @retval None

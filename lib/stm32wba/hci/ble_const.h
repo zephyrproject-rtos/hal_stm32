@@ -5,7 +5,7 @@
  *****************************************************************************
  * @attention
  *
- * Copyright (c) 2018-2023 STMicroelectronics.
+ * Copyright (c) 2018-2024 STMicroelectronics.
  * All rights reserved.
  *
  * This software is licensed under terms that can be found in the LICENSE file
@@ -28,6 +28,9 @@
 /* Default BLE variant */
 #ifndef BASIC_FEATURES
 #define BASIC_FEATURES 0
+#endif
+#ifndef BASIC_PLUS
+#define BASIC_PLUS 0
 #endif
 #ifndef LL_ONLY
 #define LL_ONLY 0

@@ -1,4 +1,8 @@
-/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/1.30a-SOW05PatchV6/firmware/public_inc/mem_intf.h#1 $*/
+/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/branches/P10164613/issue_2029/firmware/public_inc/mem_intf.h#2 $*/
+/*Version_INFO
+V2  --> Original version is 1.30a-SOW05PatchV6_2
+V2  --> combined patch case 01641860
+*/
 /**
  ********************************************************************************
  * @file    mem_intf.h
@@ -90,6 +94,18 @@ int8_t ble_memcmp(
 	const void *ptr_src,
 	uint16_t n);
 
+/**
+ * @brief  Moving  memory from position to another.
+ * @param  ptr_dstntion	: pointer to the destination array where the content is to be moved.
+ * @param  ptr_src	: pointer to the source of data to be moved.
+ * @param  n 		: the number of bytes to be moved.
+ * @retval pointer to destination.
+ */
+
+void *ble_memmov(
+	void *ptr_dstntion,
+	const void *ptr_src,
+	uint16_t n);
 /**
  * @}
  */

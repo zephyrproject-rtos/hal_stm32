@@ -341,7 +341,8 @@ void RNG_KERNEL_CLK_ON(void);
 
 /* RNG_KERNEL_CLK_OFF
  *
- * Disable RNG kernel clock.
+ * Called when RNG kernel clock may be disabled.
+ * Weak function to be implemented by user.
  */
 void RNG_KERNEL_CLK_OFF(void);
 
