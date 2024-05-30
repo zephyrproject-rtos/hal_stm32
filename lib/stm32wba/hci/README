@@ -100,9 +100,11 @@ License Link:
    opensource.org/license/mit
 
 Patch List:
---> please check that the following list is still valid:
 
 	* Disable Temperature based radio calibration:
+	  Impacted file: app_conf.h
+
+	* Increased 2.4GHz RADIO low ISR priority:
 	  Impacted file: app_conf.h
 
 	* Minimize dependency list
