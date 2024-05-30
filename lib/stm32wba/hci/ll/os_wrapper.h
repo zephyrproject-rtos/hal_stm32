@@ -1,4 +1,4 @@
-/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/1.30a-SOW05PatchV6/firmware/public_inc/os_wrapper.h#1 $*/
+/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/1.30a-SOW05Patchv6_2/firmware/public_inc/os_wrapper.h#1 $*/
 /**
  ********************************************************************************
  * @file    os_wrapper.h
@@ -195,7 +195,7 @@ os_thread_id os_thread_create(
  * @param int_id 		Interrupt ID
  */
 void intr_hndlr_reg(
-		void (*ptr_int_hndlr)(),
+		void (*ptr_int_hndlr)(void),
 		int_state_e int_id);
 
 /**

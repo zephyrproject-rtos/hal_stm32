@@ -69,6 +69,7 @@ void ll_sys_setup_radio_intr(void (*intr_cb)());
 void ll_sys_setup_radio_sw_low_intr(void (*intr_cb)());
 void ll_sys_radio_sw_low_intr_trigger(uint8_t priority);
 void ll_sys_radio_evt_not(uint8_t start);
+void ll_sys_rco_clbr_not(uint8_t start);
 void ll_sys_request_temperature(void);
 void ll_sys_schldr_timing_update_not(Evnt_timing_t * p_evnt_timing);
 
@@ -96,5 +97,12 @@ ll_sys_status_t ll_sys_dp_slp_enter(uint32_t dp_slp_duration);
 ll_sys_status_t ll_sys_dp_slp_exit(void);
 ll_sys_dp_slp_state_t ll_sys_dp_slp_get_state(void);
 void ll_sys_dp_slp_wakeup_evt_clbk(void const *ptr_arg);
+
+/**
+  * @brief  Get the number of concurrent state machines for the Link Layer
+  * @param  None
+  * @retval Supported number of concurrent state machines
+  */
+uint8_t ll_sys_get_concurrent_state_machines_num(void);
 
 #endif /* LL_SYS_H */

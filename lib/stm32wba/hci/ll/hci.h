@@ -1,4 +1,4 @@
-/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/1.30a-SOW05PatchV6/firmware/public_inc/hci.h#1 $*/
+/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/1.30a-SOW05Patchv6_2/firmware/public_inc/hci.h#1 $*/
 /**
  ********************************************************************************
  * @file    hci.h
@@ -173,7 +173,7 @@ uint8_t hci_rgstr_ble_external_custom_cbk(ble_ext_custm_cb_t ext_custm_cbk);
  *
  * @retval ble_stat_t  None
  */
-void hci_init_events_queues();
+void hci_init_events_queues(void);
 /**
  * @brief  Post data/event to appropriate queue. This function is called
  * 		   in case of sending data/events to host

@@ -131,6 +131,24 @@ void ll_sys_radio_evt_not(uint8_t start)
 }
 
 /**
+  * @brief  Link Layer RCO calibration notification
+  * @param  start      start/end of RCO calibration
+  * @retval None
+  */
+void ll_sys_rco_clbr_not(uint8_t start)
+{
+  if(start)
+  {
+    LINKLAYER_PLAT_RCOStartClbr();
+  }
+
+  else
+  {
+    LINKLAYER_PLAT_RCOStopClbr();
+  }
+}
+
+/**
   * @brief  Link Layer temperature request
   * @param  None
   * @retval None
@@ -164,6 +182,16 @@ void ll_sys_bg_process(void)
 void ll_sys_schldr_timing_update_not(Evnt_timing_t * p_evnt_timing)
 {
   LINKLAYER_PLAT_SCHLDR_TIMING_UPDATE_NOT(p_evnt_timing);
+}
+
+/**
+  * @brief  Get the number of concurrent state machines for the Link Layer
+  * @param  None
+  * @retval Supported number of concurrent state machines
+  */
+uint8_t ll_sys_get_concurrent_state_machines_num(void)
+{
+  return MAX_NUM_CNCRT_STAT_MCHNS;
 }
 
 __WEAK void HostStack_Process(void)

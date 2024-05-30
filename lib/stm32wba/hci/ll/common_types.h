@@ -1,4 +1,8 @@
-/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/1.30a-SOW05PatchV6/firmware/public_inc/common_types.h#1 $*/
+/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/branches/P10164613/issue_2029/firmware/public_inc/common_types.h#2 $*/
+/*Version_INFO
+V2  --> Original version is 1.30a-SOW05PatchV6_2
+V2  --> combined patch case 01641860
+*/
 /**
  ********************************************************************************
  * @file    common_types.h
@@ -103,9 +107,7 @@
 #if((!SUPPORT_BLE)&&(SUPPORT_MAC)&&(SUPPORT_ANT))
 #error "BLE controller must be enabled to support MAC and ANT Coexistence"
 #endif
-#if (SUPPORT_LE_ENHANCED_CONN_UPDATE) && (!SUPPORT_MASTER_CONNECTION && !SUPPORT_SLAVE_CONNECTION)
-#error "LE Enhanced Connection Update(subrating) enabled only if master or slave enabled"
-#endif /* (SUPPORT_LE_ENHANCED_CONN_UPDATE) && (!SUPPORT_MASTER_CONNECTION && !SUPPORT_SLAVE_CONNECTION) */
+
 #define SUPPORT_COEXISTENCE							((SUPPORT_BLE&&SUPPORT_MAC) || (SUPPORT_BLE&&SUPPORT_ANT))
 #define SUPPORT_ANT_COEXISTENCE						(SUPPORT_BLE&&SUPPORT_ANT)
 /****************** User configuration **********************************/
@@ -142,6 +144,7 @@
 #define MEMSET(ptr_memory, value, memory_size)				ble_memset(ptr_memory, value, memory_size)
 #define MEMCPY(ptr_destination, ptr_source, memory_size)	ble_memcpy(ptr_destination, ptr_source, memory_size)
 #define MEMCMP(ptr_destination, ptr_source, memory_size)	ble_memcmp(ptr_destination, ptr_source, memory_size)
+#define MEMMOV(ptr_destination, ptr_source, memory_size)	ble_memmov(ptr_destination, ptr_source, memory_size)
 
 
 
@@ -338,6 +341,15 @@ typedef struct _sdu_buf_hdr_st {
 } iso_sdu_buf_hdr_st, *iso_sdu_buf_hdr_p;
 #endif  /* (SUPPORT_BRD_ISOCHRONOUS || SUPPORT_SYNC_ISOCHRONOUSs ||  (SUPPORT_CONNECTED_ISOCHRONOUS && ( SUPPORT_MASTER_CONNECTION || SUPPORT_SLAVE_CONNECTION))) */
 
+/**
+ * brief: PAWR host buffer struct
+ */
+typedef struct _pawr_host_buffer {
+	uint8_t buffer[257];
+	uint8_t total_data_lenth;
+	uint8_t number_of_reports;
+}pawr_host_buffer;
+
 /*
  * @brief   Transport layer event
  */
@@ -415,5 +427,7 @@ typedef enum {
 
 #endif/* (!USE_HCI_TRANSPORT) && (SUPPORT_BLE) */
 
-#define SUPPORT_HW_AUDIO_SYNC_SIGNAL       1
+#define SUPPORT_HW_AUDIO_SYNC_SIGNAL       0
+
+
 #endif /*COMMON_TYPES_H_*/

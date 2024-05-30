@@ -103,7 +103,7 @@ static uint32_t Get_Region_Mask(Log_Region_t region);
  *
  * @return Length of the new Log.
  */
-static uint16_t RegionToColor( char * szBuffer, Log_Region_t eRegion )
+static uint16_t RegionToColor( char * szBuffer, uint16_t iSizeMax, Log_Region_t eRegion )
 {
   uint16_t            iLength = 0;
   Log_Color_t         eColor;
@@ -122,9 +122,9 @@ static uint16_t RegionToColor( char * szBuffer, Log_Region_t eRegion )
   if ( eColor != ePreviousColor )
   {
     if ( eColor == LOG_COLOR_CODE_DEFAULT )
-      { sprintf( szBuffer, "\x1b[0m" ); }
+      { snprintf( szBuffer, iSizeMax, "\x1b[0m" ); }
     else
-      { sprintf( szBuffer, "\x1b[0;%02dm", eColor ); }
+      { snprintf( szBuffer, iSizeMax, "\x1b[0;%02dm", eColor ); }
 
     ePreviousColor = eColor;
     iLength = strlen( szBuffer );
@@ -141,7 +141,7 @@ static uint16_t RegionToColor( char * szBuffer, Log_Region_t eRegion )
 void Log_Module_PrintWithArg( Log_Verbose_Level_t eVerboseLevel, Log_Region_t eRegion, const char * pText, va_list args )
 {
   uint16_t  iTempSize, iBuffSize = 0u;
-  char      szFullText[UTIL_ADV_TRACE_TMP_BUF_SIZE];
+  char      szFullText[UTIL_ADV_TRACE_TMP_BUF_SIZE + 1u];
 
   /**
    * This user section can be used to insert a guard clauses design pattern
@@ -173,20 +173,21 @@ void Log_Module_PrintWithArg( Log_Verbose_Level_t eVerboseLevel, Log_Region_t eR
 
 #if ( LOG_INSERT_COLOR_INSIDE_THE_TRACE != 0 )
   /* Add Color in function of Region */
-  iTempSize = RegionToColor( &szFullText[iBuffSize], eRegion );
+  iTempSize = RegionToColor( &szFullText[iBuffSize], ( UTIL_ADV_TRACE_TMP_BUF_SIZE - iBuffSize ), eRegion );
   iBuffSize += iTempSize;
 #endif /* LOG_INSERT_COLOR_INSIDE_THE_TRACE */
 
 #if ( LOG_INSERT_TIME_STAMP_INSIDE_THE_TRACE != 0 )
   if ( pLogTimeStampFunc != NULL )
   {
+     iTempSize = UTIL_ADV_TRACE_TMP_BUF_SIZE - iBuffSize;
      pLogTimeStampFunc( &szFullText[iBuffSize], &iTempSize );
      iBuffSize += iTempSize;
   }
 #endif /* LOG_INSERT_TIME_STAMP_INSIDE_THE_TRACE */
 
   /* Copy the data */
-  iTempSize = (uint16_t)UTIL_ADV_TRACE_VSNPRINTF( &szFullText[iBuffSize], ( UTIL_ADV_TRACE_TMP_BUF_SIZE - iBuffSize ), pText, args );
+  iTempSize = (uint16_t)vsnprintf( &szFullText[iBuffSize], ( UTIL_ADV_TRACE_TMP_BUF_SIZE - iBuffSize ), pText, args );
   iBuffSize += iTempSize;
 
   /* USER CODE BEGIN Log_Module_PrintWithArg_2 */
@@ -195,10 +196,13 @@ void Log_Module_PrintWithArg( Log_Verbose_Level_t eVerboseLevel, Log_Region_t eR
 
 #if ( LOG_INSERT_EOL_INSIDE_THE_TRACE != 0 )
   /* Add End Of Line if needed */
-  if ( ( szFullText[iBuffSize - 1] != ENDOFLINE_CHAR ) && ( szFullText[iBuffSize - 2] != ENDOFLINE_CHAR ) )
+  if ( iBuffSize > 1 )
   {
-    szFullText[iBuffSize++] = ENDOFLINE_CHAR;
-    szFullText[iBuffSize] = 0;
+    if ( ( szFullText[iBuffSize - 1] != ENDOFLINE_CHAR ) && ( szFullText[iBuffSize - 2] != ENDOFLINE_CHAR ) )
+    {
+      szFullText[iBuffSize++] = ENDOFLINE_CHAR;
+      szFullText[iBuffSize] = 0;
+    }
   }
 #endif /* LOG_INSERT_EOL_INSIDE_THE_TRACE */
 

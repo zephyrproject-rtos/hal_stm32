@@ -5,7 +5,7 @@
  ******************************************************************************
  * @attention
  *
- * Copyright (c) 2018-2023 STMicroelectronics.
+ * Copyright (c) 2018-2024 STMicroelectronics.
  * All rights reserved.
  *
  * This software is licensed under terms that can be found in the LICENSE file
@@ -36,7 +36,6 @@
 #define HCI_ACLDATA_MAX_DATA_LEN         251  /* LE_ACL_Data_Packet_Length */
 #define HCI_EVENT_MAX_PARAM_LEN          255
 #define HCI_ISODATA_MAX_DATA_LEN         300  /* ISO_Data_Packet_Length */
-#define MAX_PARAM_CIS                    (BLE_CMD_MAX_PARAM_LEN/9)  /*sizeof(CIS_cfg_t)*/
 
 /* HCI packet maximum size */
 #define HCI_COMMAND_PKT_MAX_SIZE \
@@ -244,9 +243,9 @@
 
 /* Bluetooth Core Specification versions
  */
-#define BLE_CORE_5_2                     11
-#define BLE_CORE_5_3                     12
-#define BLE_CORE_5_4                     13
+#define BLE_CORE_5_2                                   11
+#define BLE_CORE_5_3                                   12
+#define BLE_CORE_5_4                                   13
 
 /* AD types for advertising data and scan response data
  */
@@ -276,11 +275,11 @@
 
 /* Flag bits for Flags AD Type
  */
-#define FLAG_BIT_LE_LIMITED_DISCOVERABLE_MODE          0x01
-#define FLAG_BIT_LE_GENERAL_DISCOVERABLE_MODE          0x02
-#define FLAG_BIT_BR_EDR_NOT_SUPPORTED                  0x04
-#define FLAG_BIT_LE_BR_EDR_CONTROLLER                  0x08
-#define FLAG_BIT_LE_BR_EDR_HOST                        0x10
+#define FLAG_BIT_LE_LIMITED_DISCOVERABLE_MODE          0x01U
+#define FLAG_BIT_LE_GENERAL_DISCOVERABLE_MODE          0x02U
+#define FLAG_BIT_BR_EDR_NOT_SUPPORTED                  0x04U
+#define FLAG_BIT_LE_BR_EDR_CONTROLLER                  0x08U
+#define FLAG_BIT_LE_BR_EDR_HOST                        0x10U
 
 /* Appearance values
  */
