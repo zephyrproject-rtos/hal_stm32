@@ -11,12 +11,12 @@ below.
 Series          CubeMX version
 =============== ===============
 stm32c0xx       1.1.0
-stm32f0xx       1.11.4
+stm32f0xx       1.11.5
 stm32f1xx       1.8.5
 stm32f2xx       1.9.4
-stm32f3xx       1.11.4
+stm32f3xx       1.11.5
 stm32f4xx       1.28.0
-stm32f7xx       1.17.1
+stm32f7xx       1.17.2
 stm32g0xx       1.6.2
 stm32g4xx       1.5.2
 stm32h5xx       1.2.0
@@ -29,6 +29,6 @@ stm32l5xx       1.5.1
 stm32mp1xx      1.6.0
 stm32u5xx       1.5.0
 stm32wbaxx      1.3.1
-stm32wbxx       1.19.0
+stm32wbxx       1.19.1
 stm32wlxx       1.3.0
 =============== ===============
