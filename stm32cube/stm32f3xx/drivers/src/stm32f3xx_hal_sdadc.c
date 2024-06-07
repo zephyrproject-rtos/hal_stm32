@@ -318,6 +318,8 @@ static void              SDADC_DMAError(DMA_HandleTypeDef *hdma);
   */
 HAL_StatusTypeDef HAL_SDADC_Init(SDADC_HandleTypeDef* hsdadc)
 {
+  uint32_t tickstart;
+
   /* Check SDADC handle */
   if(hsdadc == NULL)
   {
@@ -393,8 +395,13 @@ HAL_StatusTypeDef HAL_SDADC_Init(SDADC_HandleTypeDef* hsdadc)
   hsdadc->Instance->CR2 |= SDADC_CR2_ADON;
 
   /* Wait end of stabilization */
+  tickstart = HAL_GetTick();
   while((hsdadc->Instance->ISR & SDADC_ISR_STABIP) != 0UL)
   {
+    if((HAL_GetTick()-tickstart) > SDADC_TIMEOUT)
+    {
+      return HAL_TIMEOUT;
+    }
   }
 
   /* Set SDADC to ready state */

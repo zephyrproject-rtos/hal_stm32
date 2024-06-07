@@ -279,7 +279,7 @@ HAL_StatusTypeDef HAL_DMA_DeInit(DMA_HandleTypeDef *hdma)
   */
 HAL_StatusTypeDef HAL_DMA_Start(DMA_HandleTypeDef *hdma, uint32_t SrcAddress, uint32_t DstAddress, uint32_t DataLength)
 {
-	HAL_StatusTypeDef status = HAL_OK;
+  HAL_StatusTypeDef status = HAL_OK;
 
   /* Check the parameters */
   assert_param(IS_DMA_BUFFER_SIZE(DataLength));
@@ -289,27 +289,27 @@ HAL_StatusTypeDef HAL_DMA_Start(DMA_HandleTypeDef *hdma, uint32_t SrcAddress, ui
 
   if(HAL_DMA_STATE_READY == hdma->State)
   {
-	/* Change DMA peripheral state */
-  	hdma->State = HAL_DMA_STATE_BUSY;
-  	
-  	hdma->ErrorCode = HAL_DMA_ERROR_NONE;
-  	
-  	/* Disable the peripheral */
-	hdma->Instance->CCR &= ~DMA_CCR_EN;
-  	
-  	/* Configure the source, destination address and the data length */
-  	DMA_SetConfig(hdma, SrcAddress, DstAddress, DataLength);
-  	
-  	/* Enable the Peripheral */
-	hdma->Instance->CCR |= DMA_CCR_EN;
+    /* Change DMA peripheral state */
+    hdma->State = HAL_DMA_STATE_BUSY;
+
+    hdma->ErrorCode = HAL_DMA_ERROR_NONE;
+
+    /* Disable the peripheral */
+    hdma->Instance->CCR &= ~DMA_CCR_EN;
+
+    /* Configure the source, destination address and the data length */
+    DMA_SetConfig(hdma, SrcAddress, DstAddress, DataLength);
+
+    /* Enable the Peripheral */
+    hdma->Instance->CCR |= DMA_CCR_EN;
   }
   else
   {
-  	/* Process Unlocked */
-  	__HAL_UNLOCK(hdma);
-  	
-  	/* Remain BUSY */
-  	status = HAL_BUSY;
+    /* Process Unlocked */
+    __HAL_UNLOCK(hdma);
+
+    /* Remain BUSY */
+    status = HAL_BUSY;
   }
 
   return status;
@@ -326,7 +326,7 @@ HAL_StatusTypeDef HAL_DMA_Start(DMA_HandleTypeDef *hdma, uint32_t SrcAddress, ui
   */
 HAL_StatusTypeDef HAL_DMA_Start_IT(DMA_HandleTypeDef *hdma, uint32_t SrcAddress, uint32_t DstAddress, uint32_t DataLength)
 {
-	HAL_StatusTypeDef status = HAL_OK;
+  HAL_StatusTypeDef status = HAL_OK;
 
   /* Check the parameters */
   assert_param(IS_DMA_BUFFER_SIZE(DataLength));
@@ -336,35 +336,35 @@ HAL_StatusTypeDef HAL_DMA_Start_IT(DMA_HandleTypeDef *hdma, uint32_t SrcAddress,
 
   if(HAL_DMA_STATE_READY == hdma->State)
   {
-	/* Change DMA peripheral state */
-  	hdma->State = HAL_DMA_STATE_BUSY;
-  	
-  	hdma->ErrorCode = HAL_DMA_ERROR_NONE;
-  	
-  	/* Disable the peripheral */
-  	hdma->Instance->CCR &= ~DMA_CCR_EN;
-  	
-	/* Configure the source, destination address and the data length */
-  	DMA_SetConfig(hdma, SrcAddress, DstAddress, DataLength);
-  	
-  	/* Enable the transfer complete, & transfer error interrupts */
-  	/* Half transfer interrupt is optional: enable it only if associated callback is available */
+    /* Change DMA peripheral state */
+    hdma->State = HAL_DMA_STATE_BUSY;
+
+    hdma->ErrorCode = HAL_DMA_ERROR_NONE;
+
+    /* Disable the peripheral */
+    hdma->Instance->CCR &= ~DMA_CCR_EN;
+
+    /* Configure the source, destination address and the data length */
+    DMA_SetConfig(hdma, SrcAddress, DstAddress, DataLength);
+
+    /* Enable the transfer complete, & transfer error interrupts */
+    /* Half transfer interrupt is optional: enable it only if associated callback is available */
     if(NULL != hdma->XferHalfCpltCallback )
     {
       hdma->Instance->CCR |= (DMA_IT_TC | DMA_IT_HT | DMA_IT_TE);
     }
-  	else
-  	{
-  		hdma->Instance->CCR |= (DMA_IT_TC | DMA_IT_TE);
-  		hdma->Instance->CCR &= ~DMA_IT_HT;
-  	}
-  	
-  	/* Enable the Peripheral */
-  	hdma->Instance->CCR |= DMA_CCR_EN;
+    else
+    {
+      hdma->Instance->CCR |= (DMA_IT_TC | DMA_IT_TE);
+      hdma->Instance->CCR &= ~DMA_IT_HT;
+    }
+
+    /* Enable the Peripheral */
+    hdma->Instance->CCR |= DMA_CCR_EN;
   }
   else
   {
-  	/* Process Unlocked */
+    /* Process Unlocked */
     __HAL_UNLOCK(hdma);
 
     /* Remain BUSY */
@@ -382,6 +382,12 @@ HAL_StatusTypeDef HAL_DMA_Start_IT(DMA_HandleTypeDef *hdma, uint32_t SrcAddress,
   */
 HAL_StatusTypeDef HAL_DMA_Abort(DMA_HandleTypeDef *hdma)
 {
+  /* Check the DMA handle allocation */
+  if(NULL == hdma)
+  {
+    return HAL_ERROR;
+  }
+
   if(hdma->State != HAL_DMA_STATE_BUSY)
   {
     /* no transfer ongoing */
@@ -395,7 +401,7 @@ HAL_StatusTypeDef HAL_DMA_Abort(DMA_HandleTypeDef *hdma)
   else
   {
     /* Disable DMA IT */
-     hdma->Instance->CCR &= ~(DMA_IT_TC | DMA_IT_HT | DMA_IT_TE);
+    hdma->Instance->CCR &= ~(DMA_IT_TC | DMA_IT_HT | DMA_IT_TE);
 
     /* Disable the channel */
     hdma->Instance->CCR &= ~DMA_CCR_EN;
@@ -431,7 +437,6 @@ HAL_StatusTypeDef HAL_DMA_Abort_IT(DMA_HandleTypeDef *hdma)
   }
   else
   {
-
     /* Disable DMA IT */
     hdma->Instance->CCR &= ~(DMA_IT_TC | DMA_IT_HT | DMA_IT_TE);
 
@@ -567,62 +572,62 @@ HAL_StatusTypeDef HAL_DMA_PollForTransfer(DMA_HandleTypeDef *hdma, uint32_t Comp
   */
 void HAL_DMA_IRQHandler(DMA_HandleTypeDef *hdma)
 {
-	uint32_t flag_it = hdma->DmaBaseAddress->ISR;
+  uint32_t flag_it = hdma->DmaBaseAddress->ISR;
   uint32_t source_it = hdma->Instance->CCR;
 
   /* Half Transfer Complete Interrupt management ******************************/
   if ((RESET != (flag_it & (DMA_FLAG_HT1 << hdma->ChannelIndex))) && (RESET != (source_it & DMA_IT_HT)))
   {
-  	/* Disable the half transfer interrupt if the DMA mode is not CIRCULAR */
-  	if((hdma->Instance->CCR & DMA_CCR_CIRC) == 0U)
-  	{
-  		/* Disable the half transfer interrupt */
-  		hdma->Instance->CCR &= ~DMA_IT_HT;
-  	}
-  	
-  	/* Clear the half transfer complete flag */
-  	hdma->DmaBaseAddress->IFCR = DMA_FLAG_HT1 << hdma->ChannelIndex;
-  	
-  	/* DMA peripheral state is not updated in Half Transfer */
-  	/* State is updated only in Transfer Complete case */
-  	
-  	if(hdma->XferHalfCpltCallback != NULL)
-  	{
-  		/* Half transfer callback */
-  		hdma->XferHalfCpltCallback(hdma);
-  	}
+    /* Disable the half transfer interrupt if the DMA mode is not CIRCULAR */
+    if((hdma->Instance->CCR & DMA_CCR_CIRC) == 0U)
+    {
+      /* Disable the half transfer interrupt */
+      hdma->Instance->CCR &= ~DMA_IT_HT;
+    }
+
+    /* Clear the half transfer complete flag */
+    hdma->DmaBaseAddress->IFCR = DMA_FLAG_HT1 << hdma->ChannelIndex;
+
+    /* DMA peripheral state is not updated in Half Transfer */
+    /* State is updated only in Transfer Complete case */
+
+    if(hdma->XferHalfCpltCallback != NULL)
+    {
+      /* Half transfer callback */
+      hdma->XferHalfCpltCallback(hdma);
+    }
   }
 
   /* Transfer Complete Interrupt management ***********************************/
   else if ((RESET != (flag_it & (DMA_FLAG_TC1 << hdma->ChannelIndex))) && (RESET != (source_it & DMA_IT_TC)))
   {
-  	if((hdma->Instance->CCR & DMA_CCR_CIRC) == 0U)
-  	{
-  		/* Disable the transfer complete  & transfer error interrupts */
-  		/* if the DMA mode is not CIRCULAR */
-  		hdma->Instance->CCR &= ~(DMA_IT_TC | DMA_IT_TE);
-  		
-  		/* Change the DMA state */
-  		hdma->State = HAL_DMA_STATE_READY;
-  	}
-  	
-  	/* Clear the transfer complete flag */
-  	hdma->DmaBaseAddress->IFCR = DMA_FLAG_TC1 << hdma->ChannelIndex;
-  	
-  	/* Process Unlocked */
-  	__HAL_UNLOCK(hdma);
-  	
-  	if(hdma->XferCpltCallback != NULL)
-  	{
-  		/* Transfer complete callback */
-  		hdma->XferCpltCallback(hdma);
-  	}
+    if((hdma->Instance->CCR & DMA_CCR_CIRC) == 0U)
+    {
+      /* Disable the transfer complete  & transfer error interrupts */
+      /* if the DMA mode is not CIRCULAR */
+      hdma->Instance->CCR &= ~(DMA_IT_TC | DMA_IT_TE);
+
+      /* Change the DMA state */
+      hdma->State = HAL_DMA_STATE_READY;
+    }
+
+    /* Clear the transfer complete flag */
+    hdma->DmaBaseAddress->IFCR = DMA_FLAG_TC1 << hdma->ChannelIndex;
+
+    /* Process Unlocked */
+    __HAL_UNLOCK(hdma);
+
+    if(hdma->XferCpltCallback != NULL)
+    {
+      /* Transfer complete callback */
+      hdma->XferCpltCallback(hdma);
+    }
   }
 
   /* Transfer Error Interrupt management ***************************************/
   else if (( RESET != (flag_it & (DMA_FLAG_TE1 << hdma->ChannelIndex))) && (RESET != (source_it & DMA_IT_TE)))
   {
-  	/* When a DMA transfer error occurs */
+    /* When a DMA transfer error occurs */
     /* A hardware clear of its EN bits is performed */
     /* Then, disable all DMA interrupts */
     hdma->Instance->CCR &= ~(DMA_IT_TC | DMA_IT_HT | DMA_IT_TE);
@@ -641,8 +646,8 @@ void HAL_DMA_IRQHandler(DMA_HandleTypeDef *hdma)
 
     if(hdma->XferErrorCallback != NULL)
     {
-    	/* Transfer error callback */
-    	hdma->XferErrorCallback(hdma);
+      /* Transfer error callback */
+      hdma->XferErrorCallback(hdma);
     }
   }
 }
@@ -712,7 +717,7 @@ HAL_StatusTypeDef HAL_DMA_UnRegisterCallback(DMA_HandleTypeDef *hdma, HAL_DMA_Ca
 {
   HAL_StatusTypeDef status = HAL_OK;
 
-    /* Process locked */
+  /* Process locked */
   __HAL_LOCK(hdma);
 
   if(HAL_DMA_STATE_READY == hdma->State)
@@ -823,7 +828,7 @@ uint32_t HAL_DMA_GetError(DMA_HandleTypeDef *hdma)
   */
 static void DMA_SetConfig(DMA_HandleTypeDef *hdma, uint32_t SrcAddress, uint32_t DstAddress, uint32_t DataLength)
 {
-	/* Clear all flags */
+  /* Clear all flags */
   hdma->DmaBaseAddress->IFCR  = (DMA_FLAG_GL1 << hdma->ChannelIndex);
 
   /* Configure DMA Channel data length */
