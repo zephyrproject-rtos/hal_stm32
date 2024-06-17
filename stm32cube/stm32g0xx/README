@@ -44,4 +44,8 @@ Patch List:
     -Added stm32cube/stm32g0xx/drivers/include/stm32_assert.h
     -Removed unused stm32cube/stm32g0xx/drivers/include/stm32_assert_template.h
 
+   *Fix to remove PAGESIZE definition which conflicts with POSIX
+    Impacted files:
+     drivers/include/Legacy/stm32_hal_legacy.h
+
    See release_note.html from STM32Cube

@@ -55,4 +55,8 @@ Patch List:
       drivers/include/stm32f7xx_hal_def.h
      ST Internal Reference: 136825
 
+   *Fix to remove PAGESIZE definition which conflicts with POSIX
+    Impacted files:
+     drivers/include/Legacy/stm32_hal_legacy.h
+
    See release_note.html from STM32Cube

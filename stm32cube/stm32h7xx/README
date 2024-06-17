@@ -69,4 +69,8 @@ Patch List:
      drivers/src/stm32h7xx_hal_eth.c
     ST Internal Reference: 157129
 
+   *Fix to remove PAGESIZE definition which conflicts with POSIX
+    Impacted files:
+     drivers/include/Legacy/stm32_hal_legacy.h
+
    See release_note.html from STM32Cube
