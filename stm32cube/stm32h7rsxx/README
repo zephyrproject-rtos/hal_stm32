@@ -47,4 +47,8 @@ Patch List:
     on the stm32h7s78 disco kit
     -internal ticket 175303
 
+   *Fix to remove PAGESIZE definition which conflicts with POSIX
+    Impacted files:
+     drivers/include/Legacy/stm32_hal_legacy.h
+
    See release_note.html from STM32Cube

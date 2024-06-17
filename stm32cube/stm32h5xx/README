@@ -63,4 +63,8 @@ Patch List:
      If the CTXT bit is set in the context descriptor then extract the timestamps
      ST internal bug : 161504
 
+   *Fix to remove PAGESIZE definition which conflicts with POSIX
+    Impacted files:
+     drivers/include/Legacy/stm32_hal_legacy.h
+
    See release_note.html from STM32Cube

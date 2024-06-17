@@ -62,4 +62,8 @@ Patch List:
     This will have to be removed once Zephyr driver is migrated ot the new
     Cube HAL ethernet API.
 
+   *Fix to remove PAGESIZE definition which conflicts with POSIX
+    Impacted files:
+     drivers/include/Legacy/stm32_hal_legacy.h
+
    See release_note.html from STM32Cube

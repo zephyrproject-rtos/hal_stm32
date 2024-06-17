@@ -44,4 +44,8 @@ Patch List:
     Impacted files drivers/include/stm32c0xx_ll_rcc.h
     Internal reference 157185.
 
+   *Fix to remove PAGESIZE definition which conflicts with POSIX
+    Impacted files:
+     drivers/include/Legacy/stm32_hal_legacy.h
+
    See release_note.html from STM32Cube

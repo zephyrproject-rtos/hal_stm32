@@ -49,4 +49,8 @@ Patch List:
    Impacted files: drivers/include/stm32u5xx_hal_gfxtim.h
    Internal reference: 157095
 
+   *Fix to remove PAGESIZE definition which conflicts with POSIX
+    Impacted files:
+     drivers/include/Legacy/stm32_hal_legacy.h
+
    See release_note.html from STM32Cube
