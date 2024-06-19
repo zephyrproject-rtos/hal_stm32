@@ -17,7 +17,7 @@ import logging
 from pathlib import Path
 import re
 import shutil
-from subprocess import check_output
+from subprocess import check_output, STDOUT, CalledProcessError
 import xml.etree.ElementTree as ET
 
 from jinja2 import Environment, FileSystemLoader
@@ -599,8 +599,12 @@ def main(data_path, output):
                 )
 
     # write readme file
-    commit_raw = check_output(["git", "rev-parse", "HEAD"], cwd=data_path)
-    commit = commit_raw.decode("utf-8").strip()
+    try:
+        commit_raw = check_output(
+            ["git", "rev-parse", "HEAD"], cwd=data_path, stderr=STDOUT)
+        commit = commit_raw.decode("utf-8").strip()
+    except CalledProcessError:
+        commit = "<unknown commit>"
     with open(output / "README.rst", "w") as f:
         f.write(readme_template.render(commit=commit))
 
