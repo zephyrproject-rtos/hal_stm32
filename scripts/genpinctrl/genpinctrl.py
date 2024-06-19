@@ -536,6 +536,48 @@ def get_mcu_signals(data_path, gpio_ip_afs):
     return results
 
 
+def detect_xml_namespace(data_path: Path):
+    """
+    Attempt to detect the XML namespace used in the pindata files automatically.
+    This removes the need to modify this file when using pin data from sources
+    other than the official ST repository, which may use a different xmlns.
+    """
+    global NS
+
+    mcus_path = data_path / "mcu"
+    try:
+        sampled_file = next(mcus_path.glob("STM32*.xml"))
+    except StopIteration:
+        # No STM32*.xml file found. Log a warning but continue script execution.
+        # If this really isn't a pindata folder, something else will panic later on.
+        logger.warn(f"No STM32*.xml found in {data_path!s} - XMLNS detection skipped")
+        return
+
+    with open(sampled_file, "r") as fd:
+        line = "<dummy>"
+        xmlns = None
+        while len(line) > 0:
+            line = fd.readline().removeprefix("<").removesuffix(">\n")
+
+            # '<Mcu ...>' tag sets XML namespace
+            if line.startswith("Mcu"):
+                # Find the XML namespace in tag elements
+                for e in line.split():
+                    if e.startswith("xmlns="):
+                        xmlns = e
+                        break
+                break
+
+        if xmlns is None:
+            logger.info(f"Could not determine XML namespace from {sampled_file}")
+            return
+        else:
+            xml_namespace_url = xmlns.removeprefix('xmlns="').removesuffix('"')
+            NS = "{" + xml_namespace_url + "}"
+
+        logger.info(f"Using {NS} as XML namespace.")
+
+
 def main(data_path, output):
     """Entry point.
 
@@ -559,6 +601,8 @@ def main(data_path, output):
     env.filters["format_remap_name"] = format_remap_name
     pinctrl_template = env.get_template(PINCTRL_TEMPLATE)
     readme_template = env.get_template(README_TEMPLATE)
+
+    detect_xml_namespace(data_path)
 
     gpio_ip_afs = get_gpio_ip_afs(data_path)
     mcu_signals = get_mcu_signals(data_path, gpio_ip_afs)
