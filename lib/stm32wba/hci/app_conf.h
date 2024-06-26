@@ -25,6 +25,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "hw_if.h"
 #include "utilities_conf.h"
+#include "blestack.h"
 /* #include "log_module.h" */
 
 /* USER CODE BEGIN Includes */
@@ -131,7 +132,7 @@
 #define CFG_BLE_OPTIONS             (0 | \
                                      0 | \
                                      0 | \
-                                     0 | \
+              BLE_OPTIONS_EXTENDED_ADV | \
                                      0 | \
                                      0 | \
                                      0 | \
