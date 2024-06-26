@@ -102,6 +102,9 @@ License Link:
 
 Patch List:
 
+	* Enabled extended advertising in CFG_BLE_OPTIONS:
+	  Impacted file: app_conf.h
+
 	* Disable Temperature based radio calibration:
 	  Impacted file: app_conf.h
 
