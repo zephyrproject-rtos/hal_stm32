@@ -1472,8 +1472,8 @@ HAL_StatusTypeDef HAL_ETH_ReleaseTxPacket(ETH_HandleTypeDef *heth)
       if ((heth->Init.TxDesc[idx].DESC0 & ETH_DMATXDESC_OWN) == 0U)
       {
 #ifdef HAL_ETH_USE_PTP
-        if ((heth->Init.TxDesc[idx].DESC3 & ETH_DMATXDESC_LS)
-            && (heth->Init.TxDesc[idx].DESC3 & ETH_DMATXDESC_TTSS))
+        if ((heth->Init.TxDesc[idx].DESC0 & ETH_DMATXDESC_LS)
+            && (heth->Init.TxDesc[idx].DESC0 & ETH_DMATXDESC_TTSS))
         {
           /* Get timestamp low */
           timestamp->TimeStampLow = heth->Init.TxDesc[idx].DESC6;
