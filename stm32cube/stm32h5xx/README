@@ -67,4 +67,9 @@ Patch List:
     Impacted files:
      drivers/include/Legacy/stm32_hal_legacy.h
 
+   *Fix to set __SAUREGION_PRESENT to 0 for STM32H503 devices
+     Impacted files:
+     stm32cube/stm32h5xx/soc/stm32h503xx.h
+     ST internal bug: 177135
+
    See release_note.html from STM32Cube

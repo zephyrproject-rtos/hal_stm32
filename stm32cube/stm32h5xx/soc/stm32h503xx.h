@@ -175,7 +175,7 @@ typedef enum
 
 /* --------  Configuration of the Cortex-M33 Processor and Core Peripherals  ------ */
 #define __CM33_REV                0x0000U   /* Core revision r0p1 */
-#define __SAUREGION_PRESENT       1U        /* SAU regions present */
+#define __SAUREGION_PRESENT       0U        /* SAU regions present */
 #define __MPU_PRESENT             1U        /* MPU present */
 #define __VTOR_PRESENT            1U        /* VTOR present */
 #define __NVIC_PRIO_BITS          4U        /* Number of Bits used for Priority Levels */
