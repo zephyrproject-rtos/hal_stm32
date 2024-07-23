@@ -19,10 +19,6 @@ if(CONFIG_HAS_STM32LIB)
 
   if(CONFIG_BT_STM32WBA)
 
-    if(DEFINED CONFIG_BOARD_NUCLEO_WBA52CG)
-      message(FATAL_ERROR "BLE library is not compatible with nucleo_wba52cg")
-    endif()
-
     zephyr_compile_definitions( -DBLE )
 
     zephyr_include_directories(stm32wba/hci)
