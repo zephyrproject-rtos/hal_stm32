@@ -1922,18 +1922,22 @@
 
 			/omit-if-no-ref/ rcc_mco_1_pa8: rcc_mco_1_pa8 {
 				pinmux = <STM32_PINMUX('A', 8, AF0)>;
+				slew-rate = "very-high-speed";
 			};
 
 			/omit-if-no-ref/ rcc_mco_1_pa13: rcc_mco_1_pa13 {
 				pinmux = <STM32_PINMUX('A', 13, AF2)>;
+				slew-rate = "very-high-speed";
 			};
 
 			/omit-if-no-ref/ rcc_mco_2_pa14: rcc_mco_2_pa14 {
 				pinmux = <STM32_PINMUX('A', 14, AF2)>;
+				slew-rate = "very-high-speed";
 			};
 
 			/omit-if-no-ref/ rcc_mco_2_pc12: rcc_mco_2_pc12 {
 				pinmux = <STM32_PINMUX('C', 12, AF1)>;
+				slew-rate = "very-high-speed";
 			};
 
 			/* SDMMC */

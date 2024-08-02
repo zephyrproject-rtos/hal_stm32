@@ -210,6 +210,7 @@
 - name: RCC_MCO
   match: "^RCC_MCO_?(\\d+)?$"
   mode: alternate
+  slew-rate: very-high-speed
 
 - name: QUADSPI
   match: "^QUADSPI(\\d+)?_(?:CLK|NCS|BK1_NCS|BK1_IO[0-3]|BK2_NCS|BK2_IO[0-3])$"

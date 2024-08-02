@@ -1356,10 +1356,12 @@
 
 			/omit-if-no-ref/ rcc_mco_1_pa8: rcc_mco_1_pa8 {
 				pinmux = <STM32_PINMUX('A', 8, AF0)>;
+				slew-rate = "very-high-speed";
 			};
 
 			/omit-if-no-ref/ rcc_mco_2_pc9: rcc_mco_2_pc9 {
 				pinmux = <STM32_PINMUX('C', 9, AF0)>;
+				slew-rate = "very-high-speed";
 			};
 
 			/* SDMMC */
