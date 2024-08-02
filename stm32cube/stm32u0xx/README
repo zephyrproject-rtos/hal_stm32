@@ -50,4 +50,7 @@ Patch List:
     -Added stm32cube/stm32u0xx/drivers/include/stm32_assert.h
     -Removed unused stm32cube/stm32u0xx/drivers/include/stm32_assert_template.h
 
+   *Fix to remove PAGESIZE definition which conflicts with POSIX
+    Impacted files:
+    stm32cube/stm32u0xx/drivers/include/Legacy/stm32_hal_legacy.h
 
