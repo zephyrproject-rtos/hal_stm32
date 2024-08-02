@@ -281,14 +281,17 @@
 
 			/omit-if-no-ref/ rcc_mco_pa8: rcc_mco_pa8 {
 				pinmux = <STM32_PINMUX('A', 8, AF0)>;
+				slew-rate = "very-high-speed";
 			};
 
 			/omit-if-no-ref/ rcc_mco_pa15: rcc_mco_pa15 {
 				pinmux = <STM32_PINMUX('A', 15, AF6)>;
+				slew-rate = "very-high-speed";
 			};
 
 			/omit-if-no-ref/ rcc_mco_pb6: rcc_mco_pb6 {
 				pinmux = <STM32_PINMUX('B', 6, AF0)>;
+				slew-rate = "very-high-speed";
 			};
 
 			/* SPI_MISO */
