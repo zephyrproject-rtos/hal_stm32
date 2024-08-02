@@ -17,7 +17,7 @@ import logging
 from pathlib import Path
 import re
 import shutil
-from subprocess import check_output
+from subprocess import check_output, STDOUT, CalledProcessError
 import xml.etree.ElementTree as ET
 
 from jinja2 import Environment, FileSystemLoader
@@ -78,6 +78,55 @@ PIN_MODS = [
 ]
 """Allowed pin modifiers"""
 
+class FamilyFilter():
+    def _prepare(self, filters, excluding: bool):
+        family_list = []
+
+        self.excluding = excluding
+
+        for filter in filters:
+            family_name = "STM32" + \
+                filter.upper() \
+                    .removeprefix("STM32")
+            
+            family_list.append(family_name)
+
+        self.filtered_families_list = family_list
+
+    def __init__(self):
+        self.filtered_families_list = []
+
+    def set_filters(self, allow_filter, forbid_filter):
+        if allow_filter != None:
+            self.filter_list = self._prepare(
+                allow_filter, False)
+        elif forbid_filter != None:
+            self.filter_list = self._prepare(
+                forbid_filter, True)
+
+    def is_active(self) -> bool:
+        """Is the filter active?"""
+        return len(self.filtered_families_list) > 0
+
+    def should_skip_model(self, model: str) -> bool:
+        """Should processing of STM32 model be skipped?
+        
+            model:
+                STM32 model string (any string that starts
+                with 'STM32yyy' where yyy is family code)
+        """
+        if not self.is_active():
+            return False
+
+        for family in self.filtered_families_list:
+            if model.startswith(family):
+                #Skip if we found and this is exclude list
+                return self.excluding
+        #Skip if not found and this is include list
+        return not self.excluding
+
+FAMILY_FILTER = FamilyFilter()
+"""STM32 family selection filter"""
 
 def validate_config_entry(entry, family):
     """Validates pin configuration entry.
@@ -271,6 +320,9 @@ def get_gpio_ip_afs(data_path):
         m = re.search(r"GPIO-(.*)_Modes.xml", gpio_file.name)
         gpio_ip = m.group(1)
 
+        if FAMILY_FILTER.should_skip_model(gpio_ip):
+            continue
+
         gpio_ip_entries = dict()
         results[gpio_ip] = gpio_ip_entries
 
@@ -382,6 +434,9 @@ def get_mcu_signals(data_path, gpio_ip_afs):
     results = dict()
 
     for mcu_file in mcus_path.glob("STM32*.xml"):
+        if FAMILY_FILTER.should_skip_model(mcu_file.name):
+            continue
+
         mcu_tree = ET.parse(mcu_file)
         mcu_root = mcu_tree.getroot()
 
@@ -479,6 +534,42 @@ def get_mcu_signals(data_path, gpio_ip_afs):
     return results
 
 
+def detect_xml_namespace(data_path: Path):
+    """
+    Attempt to detect the XML namespace used in the pindata files automatically.
+    This removes the need to modify this file when using pin data from sources
+    other than the official ST repository, which may use a different xmlns.
+    """
+    global NS
+
+    mcus_path = data_path / "mcu"
+    sampled_file = next(mcus_path.glob("STM32*.xml"))
+
+    with open(sampled_file, "r") as fd:
+        line = "<dummy>"
+        xmlns = None
+        while len(line) > 0:
+            line = fd.readline().removeprefix("<").removesuffix(">\n")
+
+            #'<Mcu ...>' tag sets XML namespace
+            if line.startswith("Mcu"):
+                #Find the XML namespace in tag elements
+                for e in line.split():
+                    if e.startswith("xmlns="):
+                        xmlns = e
+                        break
+                break
+
+        if xmlns == None:
+            logger.info(f"Could not determine XML namespace from {sampled_file}")
+            return
+        else:
+            xml_namespace_url = xmlns.removeprefix('xmlns="').removesuffix('"')
+            NS = "{" + xml_namespace_url + "}"
+
+        logger.info(f"Using {NS} as XML namespace.")
+
+
 def main(data_path, output):
     """Entry point.
 
@@ -503,19 +594,24 @@ def main(data_path, output):
     pinctrl_template = env.get_template(PINCTRL_TEMPLATE)
     readme_template = env.get_template(README_TEMPLATE)
 
+    detect_xml_namespace(data_path)
+
     gpio_ip_afs = get_gpio_ip_afs(data_path)
     mcu_signals = get_mcu_signals(data_path, gpio_ip_afs)
 
-    if output.exists():
+    #erase output if we're about to generate for all families
+    if output.exists() and not FAMILY_FILTER.is_active():
         shutil.rmtree(output)
-    output.mkdir(parents=True)
+        output.mkdir(parents=True)
 
     for family, refs in mcu_signals.items():
         # obtain family pinctrl address
         pinctrl_addr = PINCTRL_ADDRESSES.get(family.lower())
         if not pinctrl_addr:
-            logger.error(f"Unsupported family: {family}")
+            logger.warning(f"Skipping unsupported family {family}.")
             continue
+        else:
+            logger.info(f"Processing family {family}...")
 
         # create directory for each family
         family_dir = output / "st" / family.lower()[5:]
@@ -598,8 +694,11 @@ def main(data_path, output):
                 )
 
     # write readme file
-    commit_raw = check_output(["git", "rev-parse", "HEAD"], cwd=data_path)
-    commit = commit_raw.decode("utf-8").strip()
+    try:
+        commit_raw = check_output(["git", "rev-parse", "HEAD"], cwd=data_path, stderr=STDOUT)
+        commit = commit_raw.decode("utf-8").strip()
+    except CalledProcessError:
+        commit = "<unknown commit>"
     with open(output / "README.rst", "w") as f:
         f.write(readme_template.render(commit=commit))
 
@@ -620,6 +719,34 @@ if __name__ == "__main__":
         default=REPO_ROOT / "dts",
         help="Output directory",
     )
+    parser.add_argument(
+        "-v",
+        "--verbose",
+        action="store_true",
+        help="Make script verbose"
+    )
+    filter_group = parser.add_mutually_exclusive_group()
+    filter_group.add_argument(
+        "-f",
+        "--only-family",
+        type=str,
+        action="append",
+        help="process only specified STM32 family "
+        "(can be specified multiple times)"
+    )
+    filter_group.add_argument(
+        "-nf",
+        "--not-family",
+        type=str,
+        action="append",
+        help="don't process specified STM32 family "
+        "(can be specified multiple times)"
+    )
     args = parser.parse_args()
+
+    logger.setLevel(logging.INFO if args.verbose else logging.WARN)
+    logger.addHandler(logging.StreamHandler())
+
+    FAMILY_FILTER.set_filters(args.only_family, args.not_family)
 
     main(args.data_path, args.output)
