@@ -40,6 +40,12 @@ Patch List:
     -dos2unix applied
     -trailing white spaces removed
 
+   *Created LL_SetFlashLatency function that return UTILS_SetFlashLatency
+    Impacted files:
+    stm32cube/stm32u0xx/drivers/src/stm32u0xx_ll_utils.c
+    stm32cube/stm32u0xx/drivers/include/stm32u0xx_ll_utils.h
+    Internal reference 187914.
+
    *Provision to enable hal & ll asserts added
     -Added stm32cube/stm32u0xx/drivers/include/stm32_assert.h
     -Removed unused stm32cube/stm32u0xx/drivers/include/stm32_assert_template.h
