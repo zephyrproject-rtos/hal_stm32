@@ -73,4 +73,10 @@ Patch List:
     Impacted files:
      drivers/include/Legacy/stm32_hal_legacy.h
 
+   *include STM32Cube patch in stm32h7xx_hal_ospi.c:
+    [HAL][OSPI] Fix wrong parameters passed to HAL_MDMA_Start_IT function
+
+   *include STM32Cube patch in stm32h7xx_ll_delayblock.c:
+    [LL][DELAYBLOCK] Add a missing define for OSPI to the defgroup DELAYB…
+
    See release_note.html from STM32Cube
