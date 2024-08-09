@@ -1597,7 +1597,7 @@ HAL_StatusTypeDef HAL_OSPI_Receive_DMA(OSPI_HandleTypeDef *hospi, uint8_t *pData
         }
 
         /* Enable the transmit MDMA Channel */
-        if (HAL_MDMA_Start_IT(hospi->hmdma, (uint32_t)pData, (uint32_t)&hospi->Instance->DR, hospi->XferSize, 1) == \
+        if (HAL_MDMA_Start_IT(hospi->hmdma, (uint32_t)&hospi->Instance->DR, (uint32_t)pData, hospi->XferSize, 1) == \
             HAL_OK)
         {
           /* Enable the transfer error interrupt */
