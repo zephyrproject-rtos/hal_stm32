@@ -1,3 +1,4 @@
+name: hal_stm32
 build:
   cmake: .
   settings:
