@@ -66,6 +66,7 @@ set(supported_series
   stm32mp1x
   stm32u0x
   stm32u5x
+  stm32wb0x
   stm32wbax
   stm32wbx
   stm32wlx
