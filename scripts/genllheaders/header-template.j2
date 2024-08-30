@@ -5,7 +5,7 @@
  */
 
 {% for series in all_series %}
-#{{ "if" if loop.index == 1 else "elif"}} defined(CONFIG_SOC_SERIES_{{ series[:-1] | upper }})
+#{{ "if" if loop.index == 1 else "elif"}} defined(CONFIG_SOC_SERIES_{{ series.replace("xx", "x") | upper }})
 #include <{{ series }}_ll_{{ ll_api }}.h>
 {% endfor %}
 #endif
