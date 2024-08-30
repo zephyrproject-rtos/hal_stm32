@@ -42,6 +42,8 @@
 #include <stm32u0xx_ll_usart.h>
 #elif defined(CONFIG_SOC_SERIES_STM32U5X)
 #include <stm32u5xx_ll_usart.h>
+#elif defined(CONFIG_SOC_SERIES_STM32WB0X)
+#include <stm32wb0x_ll_usart.h>
 #elif defined(CONFIG_SOC_SERIES_STM32WBAX)
 #include <stm32wbaxx_ll_usart.h>
 #elif defined(CONFIG_SOC_SERIES_STM32WBX)
