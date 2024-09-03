@@ -59,4 +59,11 @@ Patch List:
     Impacted files:
      drivers/include/Legacy/stm32_hal_legacy.h
 
+   *Fix: Use the correct register DESC0
+    This fix ensures that the TX timestamp is properly set by correctly
+    checking the ETH_DMATXDESC_LS and ETH_DMATXDESC_TTSS flags in the DESC0 register.
+    Impacted files:
+     stm32cube/stm32f7xx/drivers/src/stm32f7xx_hal_eth.c
+    ST Internal reference: 185461
+
    See release_note.html from STM32Cube
