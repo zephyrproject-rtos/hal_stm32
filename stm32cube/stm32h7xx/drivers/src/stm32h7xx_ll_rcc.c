@@ -138,6 +138,12 @@ void LL_RCC_DeInit(void)
   while (LL_RCC_HSI_IsReady() == 0U)
   {}
 
+  /* Set HSIDIV Default value */
+  CLEAR_BIT(RCC->CR, RCC_CR_HSIDIV);
+
+  /* Set HSITRIM bits to the reset value */
+  LL_RCC_HSI_SetCalibTrimming(0x40U);
+
   /* Reset CFGR register */
   CLEAR_REG(RCC->CFGR);
 

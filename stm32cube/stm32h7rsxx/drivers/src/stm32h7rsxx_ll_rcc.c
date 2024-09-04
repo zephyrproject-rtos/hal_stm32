@@ -168,7 +168,12 @@ void LL_RCC_DeInit(void)
   /* Wait for HSI READY bit */
   while (LL_RCC_HSI_IsReady() == 0U)
   {}
+ /* Set HSIDIV Default value */
+  CLEAR_BIT(RCC->CR, RCC_CR_HSIDIV);
 
+  /* Set HSITRIM bits to the reset value */
+  LL_RCC_HSI_SetCalibTrimming(0x40U);
+  
   /* Reset CFGR register to select HSI as system clock */
   CLEAR_REG(RCC->CFGR);
 
