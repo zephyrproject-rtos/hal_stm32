@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-zephyr_library_sources(soc/system_stm32wb0x.c)
+# soc/src/system_stm32wb0.c is not included on purpose
 zephyr_library_sources(drivers/src/stm32wb0x_hal.c)
 zephyr_library_sources(drivers/src/stm32wb0x_hal_rcc.c)
 zephyr_library_sources(drivers/src/stm32wb0x_hal_rcc_ex.c)
