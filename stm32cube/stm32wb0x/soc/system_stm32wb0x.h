@@ -156,6 +156,7 @@ extern "C" {
 /** @addtogroup Exported types
   * @{
   */
+#if 0 /** PATCH: don't define unused datatypes 'intfunc' and 'intvec_elem' */
 typedef void(*intfunc)(void);
 
 typedef union
@@ -163,6 +164,7 @@ typedef union
   intfunc __fun;
   void *__ptr;
 } intvec_elem;
+#endif /* ENDOF PATCH */
 
 typedef struct RAM_VR_s
 {
@@ -199,7 +201,9 @@ extern uint32_t SystemCoreClock;     /*!< System Clock Frequency (Core Clock)  *
 
 extern RAM_VR_TypeDef RAM_VR;        /*!< Virtual Register map in RAM  */
 
+#if 0 /** PATCH: remove declaration of '__vector_table[]' */
 extern const intvec_elem __vector_table[];
+#endif /* ENDOF PATCH */
 
 /**
   * @}

@@ -204,6 +204,7 @@ static uint8_t CondRoutineRxTrue(ActionPacket *p)
 /* Round up HOT_TABLE_SIZE to an integer number of words then add 4 words for table management pointers */
 volatile uint32_t hot_table_radio_config_u32[((HOT_TABLE_SIZE + 3) >> 2) + 4] = {0x00};
 
+#if 0 /** PATCH: do not define __blue_RAM here */
 /* BLUE RAM, reserved for radio communication. Not usable from the application */
 __SECTION(".bss.__blue_RAM")
 #if defined(STM32WB05) || defined(STM32WB09)
@@ -213,6 +214,7 @@ __REQUIRED(uint8_t __blue_RAM[CFG_NUM_RADIO_TASKS * 80 + 28]) = {0,};
 #else
 #warning "No Blue RAM allocated"
 #endif
+#endif /* ENDOF PATCH */
 
 /**
   * @}

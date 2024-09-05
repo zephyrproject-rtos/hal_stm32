@@ -44,5 +44,21 @@ Patch List:
     -Added stm32cube/stm32wb0x/drivers/include/stm32_assert.h
     -Removed unused stm32cube/stm32wb0x/drivers/include/stm32_assert_template.h
 
+   *Added patches to enable compilation with Zephyr
+    -exclude stm32cube/stm32wb0x/soc/system_stm32wb0.c from build
+      . Missing definitions moved to 'zephyr/soc/st/stm32/stm32wb0xx/soc.c'
+        . SystemCoreClock (CMSIS global variable)
+        . RAM_VR          (STM32WB0x virtual registers)
+    -in stm32cube/stm32wb0x/soc/system_stm32wb0x.h
+      . Remove declaration of non-existent '__vector_table' symbol
+      . Remove declaration of associated datatypes 'intfunc' / 'intvec_elem'
+    -in stm32cube/stm32wb0x/drivers/include/Legacy/stm32_hal_legacy.h
+      . Remove PAGESIZE definition which conflicts with POSIX
+    -in stm32cube/stm32wb0x/drivers/include/stm32wb0x_hal_conf.h
+      . Change USE_RADIO_PROPRIETARY_DRIVER from 1U to 0U
+         . Required for BLE stack compatibility
+    -in stm32cube/stm32wb0x/drivers/src/stm32wb0x_hal_radio.c
+      . Remove definition of __blue_RAM variable
+        . Moved to 'zephyr/soc/st/stm32/stm32wb0xx/soc.c'
 
    See Release_Notes.html from STM32Cube for more details.
