@@ -6,7 +6,7 @@ Origin:
    http://www.st.com/en/embedded-software/stm32cubel4.html
 
 Status:
-   version v1.18.0
+   version v1.18.1
 
 Purpose:
    ST Microelectronics official MCU package for STM32L4 series.
@@ -23,7 +23,7 @@ URL:
    https://github.com/STMicroelectronics/STM32CubeL4
 
 Commit:
-   82e7ade76252f4c973c9fc7515ebc42b850b7c0b
+   d4c40b36185bd0d75e33c94ebc8337b634bbcc94
 
 Maintained-by:
    External
