@@ -24,7 +24,7 @@ stm32h7rsxx     1.0.0
 stm32h7xx       1.11.2
 stm32l0xx       1.12.2
 stm32l1xx       1.10.4
-stm32l4xx       1.18.0
+stm32l4xx       1.18.1
 stm32l5xx       1.5.1
 stm32mp1xx      1.6.0
 stm32u0xx       1.1.0
