@@ -100,14 +100,31 @@ HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
   TimHandle.Init.ClockDivision = 0U;
   TimHandle.Init.CounterMode = TIM_COUNTERMODE_UP;
   TimHandle.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
-  if (HAL_TIM_Base_Init(&TimHandle) == HAL_OK)
+  status = HAL_TIM_Base_Init(&TimHandle);
+  if (status == HAL_OK)
   {
     /* Start the TIM time Base generation in interrupt mode */
-    return HAL_TIM_Base_Start_IT(&TimHandle);
+    status = HAL_TIM_Base_Start_IT(&TimHandle);
+    if (status == HAL_OK)
+    {
+      /* Enable the TIM2 global Interrupt */
+      HAL_NVIC_EnableIRQ(TIM2_IRQn);
+
+      if (TickPriority < (1UL << __NVIC_PRIO_BITS))
+      {
+        /*Configure the TIM2 IRQ priority */
+        HAL_NVIC_SetPriority(TIM2_IRQn, TickPriority ,0);
+        uwTickPrio = TickPriority;
+      }
+      else
+      {
+        status = HAL_ERROR;
+      }
+    }
   }
 
   /* Return function status */
-  return HAL_ERROR;
+  return status;
 }
 
 /**
