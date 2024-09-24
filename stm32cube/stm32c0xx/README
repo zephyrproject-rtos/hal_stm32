@@ -6,7 +6,7 @@ Origin:
    http://www.st.com/en/embedded-software/stm32cubec0.html
 
 Status:
-   version v1.1.0
+   version v1.2.0
 
 Purpose:
    ST Microelectronics official MCU package for STM32C0 series.
@@ -23,7 +23,7 @@ URL:
    https://github.com/STMicroelectronics/STM32CubeC0
 
 Commit:
-   8731fa98190b337c01e2a4c3d3a725fe6bf3c04a
+   291f417c07b8e6f997a555b4abafa861551d22e3
 
 Maintained-by:
    External
@@ -39,10 +39,6 @@ Patch List:
    *Provision to enable hal & ll asserts added
     -Added stm32cube/stm32c0xx/drivers/include/stm32_assert.h
     -Removed unused stm32cube/stm32c0xx/drivers/include/stm32_assert_template.h
-
-   *Renamed LL_RCC_HCLK_DIV_X to LL_RCC_SYSCLK_DIV_X
-    Impacted files drivers/include/stm32c0xx_ll_rcc.h
-    Internal reference 157185.
 
    *Fix to remove PAGESIZE definition which conflicts with POSIX
     Impacted files:
