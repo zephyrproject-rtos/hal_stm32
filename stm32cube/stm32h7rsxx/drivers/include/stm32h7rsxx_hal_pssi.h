@@ -565,4 +565,3 @@ void HAL_PSSI_AbortCpltCallback(PSSI_HandleTypeDef *hpssi);
 #endif
 
 #endif /* STM32H7RSxx_HAL_PSSI_H */
-

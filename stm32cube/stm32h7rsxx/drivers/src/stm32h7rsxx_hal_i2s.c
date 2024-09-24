@@ -2707,4 +2707,3 @@ static HAL_StatusTypeDef I2S_WaitFlagStateUntilTimeout(I2S_HandleTypeDef *hi2s, 
   */
 
 #endif /* HAL_I2S_MODULE_ENABLED */
-

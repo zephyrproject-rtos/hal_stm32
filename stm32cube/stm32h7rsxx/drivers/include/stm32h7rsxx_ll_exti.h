@@ -1502,4 +1502,3 @@ void        LL_EXTI_StructInit(LL_EXTI_InitTypeDef *EXTI_InitStruct);
 #endif
 
 #endif /* STM32H7RSxx_LL_EXTI_H */
-

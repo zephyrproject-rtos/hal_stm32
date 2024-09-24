@@ -16,19 +16,13 @@
 
   [..] The Flash memory interface manages CPU AHB C-Bus accesses to the Flash memory.
        It implements the erase and program Flash memory operations and the read
-     and write protection mechanisms.
-
-  [..] The Flash memory interface implements the TrustZone security features (TZ) supported
-       by ARM Cortex-M33 core (CM33).
+       and write protection mechanisms.
 
   [..] The FLASH main features are:
       (+) Flash memory read operations
       (+) Flash memory program/erase operations
       (+) Read / write protections
       (+) Option bytes programming
-    (+) TrustZone aware
-    (+) Watermark-based area protection including PCROP and secure hide area
-    (+) Block-based page protection
       (+) Error code correction (ECC) : Data in flash are 137-bits word
           (9 bits added per quad-word)
 
@@ -39,31 +33,30 @@
       memory of all STM32H7RSxx devices.
 
       (#) Flash Memory IO Programming functions:
-           (++) Lock and Unlock the FLASH interface using HAL_FLASH_Unlock() and
-                HAL_FLASH_Lock() functions
-           (++) Program functions: quad-words and burst program (8 quad-words)
-           (++) There are two modes of programming :
-            (+++) Polling mode using HAL_FLASH_Program() function
-            (+++) Interrupt mode using HAL_FLASH_Program_IT() function
+        (++) Lock and Unlock the FLASH interface using HAL_FLASH_Unlock() and
+             HAL_FLASH_Lock() functions
+        (++) Program functions: bytes, half-words, words, double-words and quad-words
+        (++) There are two modes of programming :
+          (+++) Polling mode using HAL_FLASH_Program() function
+          (+++) Interrupt mode using HAL_FLASH_Program_IT() function
 
       (#) Interrupts and flags management functions :
-           (++) Handle FLASH interrupts by calling HAL_FLASH_IRQHandler()
-           (++) Callback functions are called when the flash operations are finished :
-                HAL_FLASH_EndOfOperationCallback() when everything is ok, otherwise
-                HAL_FLASH_OperationErrorCallback()
-           (++) Get error flag status by calling HAL_GetError()
+        (++) Handle FLASH interrupts by calling HAL_FLASH_IRQHandler()
+        (++) Callback functions are called when the flash operations are finished :
+             HAL_FLASH_EndOfOperationCallback() when everything is ok, otherwise
+             HAL_FLASH_OperationErrorCallback()
+        (++) Get error flag status by calling HAL_GetError()
 
       (#) Option bytes management functions :
-           (++) Lock and Unlock the option bytes using HAL_FLASH_OB_Unlock() and
-                HAL_FLASH_OB_Lock() functions
-           (++) Launch the reload of the option bytes using HAL_FLASH_Launch() function.
-                In this case, a reset is generated
+        (++) Lock and Unlock the option bytes using HAL_FLASH_OB_Unlock() and
+             HAL_FLASH_OB_Lock() functions
+        (++) Launch the reload of the option bytes using HAL_FLASH_Launch() function.
+             In this case, a reset is generated
 
     [..]
       In addition to these functions, this driver includes a set of macros allowing
       to handle the following operations:
        (+) Set the latency
-       (+) Enable/Disable the Flash power-down during low-power run and sleep modes
        (+) Enable/Disable the Flash interrupts
        (+) Monitor the Flash flags status
 

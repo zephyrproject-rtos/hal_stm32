@@ -796,6 +796,21 @@ extern "C" {
 #define GPIO_AF0_S2DSTOP                          GPIO_AF0_SRDSTOP
 #define GPIO_AF11_LPGPIO                          GPIO_AF11_LPGPIO1
 #endif /* STM32U5 */
+
+#if defined(STM32WBA)
+#define GPIO_AF11_RF_ANTSW0    GPIO_AF11_RF
+#define GPIO_AF11_RF_ANTSW1    GPIO_AF11_RF
+#define GPIO_AF11_RF_ANTSW2    GPIO_AF11_RF
+#define GPIO_AF11_RF_IO1       GPIO_AF11_RF
+#define GPIO_AF11_RF_IO2       GPIO_AF11_RF
+#define GPIO_AF11_RF_IO3       GPIO_AF11_RF
+#define GPIO_AF11_RF_IO4       GPIO_AF11_RF
+#define GPIO_AF11_RF_IO5       GPIO_AF11_RF
+#define GPIO_AF11_RF_IO6       GPIO_AF11_RF
+#define GPIO_AF11_RF_IO7       GPIO_AF11_RF
+#define GPIO_AF11_RF_IO8       GPIO_AF11_RF
+#define GPIO_AF11_RF_IO9       GPIO_AF11_RF
+#endif /* STM32WBA */
 /**
   * @}
   */
@@ -1807,7 +1822,7 @@ extern "C" {
 #define HAL_FMPI2CEx_AnalogFilter_Config      HAL_FMPI2CEx_ConfigAnalogFilter
 #define HAL_FMPI2CEx_DigitalFilter_Config     HAL_FMPI2CEx_ConfigDigitalFilter
 
-#define HAL_I2CFastModePlusConfig(SYSCFG_I2CFastModePlus, cmd) ((cmd == ENABLE)? \
+#define HAL_I2CFastModePlusConfig(SYSCFG_I2CFastModePlus, cmd) (((cmd) == ENABLE)? \
                                                                 HAL_I2CEx_EnableFastModePlus(SYSCFG_I2CFastModePlus): \
                                                                 HAL_I2CEx_DisableFastModePlus(SYSCFG_I2CFastModePlus))
 
@@ -2721,6 +2736,12 @@ extern "C" {
 #define __APB1_RELEASE_RESET __HAL_RCC_APB1_RELEASE_RESET
 #define __APB2_FORCE_RESET __HAL_RCC_APB2_FORCE_RESET
 #define __APB2_RELEASE_RESET __HAL_RCC_APB2_RELEASE_RESET
+#if defined(STM32C0)
+#define __HAL_RCC_APB1_FORCE_RESET    __HAL_RCC_APB1_GRP1_FORCE_RESET
+#define __HAL_RCC_APB1_RELEASE_RESET  __HAL_RCC_APB1_GRP1_RELEASE_RESET
+#define __HAL_RCC_APB2_FORCE_RESET    __HAL_RCC_APB1_GRP2_FORCE_RESET
+#define __HAL_RCC_APB2_RELEASE_RESET  __HAL_RCC_APB1_GRP2_RELEASE_RESET
+#endif /* STM32C0 */
 #define __BKP_CLK_DISABLE __HAL_RCC_BKP_CLK_DISABLE
 #define __BKP_CLK_ENABLE __HAL_RCC_BKP_CLK_ENABLE
 #define __BKP_FORCE_RESET __HAL_RCC_BKP_FORCE_RESET

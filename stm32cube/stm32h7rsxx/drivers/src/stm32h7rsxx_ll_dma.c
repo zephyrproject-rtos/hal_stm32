@@ -1192,4 +1192,3 @@ void LL_DMA_DisconnectNextLinkNode(LL_DMA_LinkNodeTypeDef *pLinkNode, uint32_t L
   */
 
 #endif /* USE_FULL_LL_DRIVER */
-

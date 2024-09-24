@@ -963,4 +963,3 @@ uint32_t HAL_RAMECC_GetError(const RAMECC_HandleTypeDef *hramecc)
 /**
   * @}
   */
-

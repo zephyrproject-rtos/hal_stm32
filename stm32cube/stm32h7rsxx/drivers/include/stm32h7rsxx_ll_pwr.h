@@ -1883,5 +1883,3 @@ ErrorStatus LL_PWR_DeInit(void);
 #endif
 
 #endif /* STM32H7RSxx_LL_PWR_H */
-
-

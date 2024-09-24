@@ -97,7 +97,7 @@ typedef struct
 typedef struct
 {
   uint32_t FrameRate;         /*!< Configures the DCMIPP Pipe Frame Rate
-                                   This parameter can be one value of @ref DCMIPP_Frame_Rates      */
+                                   This parameter can be one value of @ref DCMIPP_Frame_Rates           */
 } DCMIPP_PipeConfTypeDef;
 
 /**
@@ -214,7 +214,7 @@ typedef struct
                                                                                                 Callback              */
   void (* PIPE_ErrorCallback)(struct __DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe);      /*!< DCMIPP Pipe Error
                                                                                                 Callback              */
-  void (* ErrorCallback)(struct __DCMIPP_HandleTypeDef *hdcmipp);                         /*!< DCMIPP Error Callback */
+  void (* ErrorCallback)(struct __DCMIPP_HandleTypeDef *hdcmipp);                         /*!< DCMIPP Error Callback  */
   void (* MspInitCallback)(struct __DCMIPP_HandleTypeDef *hdcmipp);                       /*!< DCMIPP Msp Init
                                                                                                 Callback              */
   void (* MspDeInitCallback)(struct __DCMIPP_HandleTypeDef *hdcmipp);                     /*!< DCMIPP Msp DeInit
@@ -314,10 +314,10 @@ typedef void (*pDCMIPP_PIPE_CallbackTypeDef)(DCMIPP_HandleTypeDef *hdcmipp, uint
 /** @defgroup DCMIPP_Maximum_Outstanding_Transactions DCMIPP Maximum Outstanding Transactions
   * @{
   */
-#define DCMIPP_OUTSTANDING_TRANSACTION_NONE 0U                               /*!< Nooutstanding transaction limitation*/
-#define DCMIPP_OUTSTANDING_TRANSACTION_2    (0x01U << DCMIPP_IPC1R1_OTR_Pos) /*!< Two outstanding transactions        */
-#define DCMIPP_OUTSTANDING_TRANSACTION_3    (0x02U << DCMIPP_IPC1R1_OTR_Pos) /*!< Three outstanding transactions      */
-#define DCMIPP_OUTSTANDING_TRANSACTION_4    (0x03U << DCMIPP_IPC1R1_OTR_Pos) /*!< Four outstanding transactions       */
+#define DCMIPP_OUTSTANDING_TRANSACTION_NONE 0U    /*!< Nooutstanding transaction limitation*/
+#define DCMIPP_OUTSTANDING_TRANSACTION_2    0x01U /*!< Two outstanding transactions        */
+#define DCMIPP_OUTSTANDING_TRANSACTION_3    0x02U /*!< Three outstanding transactions      */
+#define DCMIPP_OUTSTANDING_TRANSACTION_4    0x03U /*!< Four outstanding transactions       */
 /**
   * @}
   */
@@ -341,7 +341,6 @@ typedef void (*pDCMIPP_PIPE_CallbackTypeDef)(DCMIPP_HandleTypeDef *hdcmipp, uint
 /**
   * @}
   */
-
 
 
 /** @defgroup DCMIPP_Format  DCMIPP Format
@@ -678,7 +677,7 @@ HAL_StatusTypeDef HAL_DCMIPP_PIPE_Resume(DCMIPP_HandleTypeDef *hdcmipp, uint32_t
   * @brief      IRQ and Callbacks functions
   * @{
   */
-/** @addtogroup DCMIPP_IRQHandler_Functions IRQHandler Functions
+/** @addtogroup DCMIPP_IRQHandler_Function IRQHandler Function
   * @{
   */
 void HAL_DCMIPP_IRQHandler(DCMIPP_HandleTypeDef *hdcmipp);
@@ -843,7 +842,6 @@ uint32_t HAL_DCMIPP_GetError(const DCMIPP_HandleTypeDef *hdcmipp);
                                                 ((INTERFACE) == DCMIPP_INTERFACE_14BITS) ||\
                                                 ((INTERFACE) == DCMIPP_INTERFACE_16BITS))
 
-
 #define IS_DCMIPP_SYNC_MODE(SYNC_MODE) (((SYNC_MODE) == DCMIPP_SYNCHRO_HARDWARE) ||\
                                         ((SYNC_MODE) == DCMIPP_SYNCHRO_EMBEDDED))
 
@@ -854,13 +852,10 @@ uint32_t HAL_DCMIPP_GetError(const DCMIPP_HandleTypeDef *hdcmipp);
                                             ((SWAP_CYCLES) == DCMIPP_SWAPCYCLES_DISABLE))
 
 
-
 #define IS_DCMIPP_FRAME_RATE(FRAME_RATE) (((FRAME_RATE) == DCMIPP_FRAME_RATE_ALL)      ||\
                                           ((FRAME_RATE) == DCMIPP_FRAME_RATE_1_OVER_2) ||\
                                           ((FRAME_RATE) == DCMIPP_FRAME_RATE_1_OVER_4) ||\
                                           ((FRAME_RATE) == DCMIPP_FRAME_RATE_1_OVER_8))
-
-
 #define IS_DCMIPP_CLIENT(CLIENT) (((CLIENT) == DCMIPP_CLIENT1))
 
 #define IS_DCMIPP_DPREG_END(DPREG_END) ((DPREG_END) <= 0x1FU)
@@ -870,6 +865,7 @@ uint32_t HAL_DCMIPP_GetError(const DCMIPP_HandleTypeDef *hdcmipp);
                                                             ((OUTS_TRANS) == DCMIPP_OUTSTANDING_TRANSACTION_2    )||\
                                                             ((OUTS_TRANS) == DCMIPP_OUTSTANDING_TRANSACTION_3    )||\
                                                             ((OUTS_TRANS) == DCMIPP_OUTSTANDING_TRANSACTION_4    ))
+
 #define IS_DCMIPP_MEMORY_PAGE_SIZE(MEMORY_PAGE_SIZE) (((MEMORY_PAGE_SIZE) ==  DCMIPP_MEMORY_PAGE_SIZE_64BYTES)  ||\
                                                       ((MEMORY_PAGE_SIZE) ==  DCMIPP_MEMORY_PAGE_SIZE_128BYTES) ||\
                                                       ((MEMORY_PAGE_SIZE) ==  DCMIPP_MEMORY_PAGE_SIZE_256BYTES) ||\
@@ -945,4 +941,3 @@ uint32_t HAL_DCMIPP_GetError(const DCMIPP_HandleTypeDef *hdcmipp);
 #endif
 
 #endif /* __STM32H7RSxx_HAL_DCMIPP_H */
-

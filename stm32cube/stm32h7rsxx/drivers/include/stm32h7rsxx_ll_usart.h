@@ -4397,4 +4397,3 @@ void        LL_USART_ClockStructInit(LL_USART_ClockInitTypeDef *USART_ClockInitS
 #endif
 
 #endif /* STM32H7RSxx_LL_USART_H */
-

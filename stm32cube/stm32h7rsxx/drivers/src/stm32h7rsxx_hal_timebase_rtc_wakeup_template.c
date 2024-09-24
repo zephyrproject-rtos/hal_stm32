@@ -187,7 +187,7 @@ HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
 
   if (Status == HAL_OK)
   {
-    uint32_t WakeUpCounter = ((uint32_t)uwTickFreq / (uint32_t)HAL_TICK_FREQ_1KHZ) - 1U;  
+    uint32_t WakeUpCounter = ((uint32_t)uwTickFreq / (uint32_t)HAL_TICK_FREQ_1KHZ) - 1U;
     Status = HAL_RTCEx_SetWakeUpTimer_IT(&hRTC_Handle, WakeUpCounter, RTC_WAKEUPCLOCK_CK_SPRE_16BITS, 0);
   }
 

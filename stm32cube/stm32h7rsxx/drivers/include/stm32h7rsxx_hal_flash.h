@@ -437,14 +437,6 @@ typedef struct
 #define FLASH_LATENCY_5        (FLASH_ACR_LATENCY_2 | FLASH_ACR_LATENCY_0 | FLASH_ACR_WRHIGHFREQ_1)                     /*!< FLASH Five wait states     */
 #define FLASH_LATENCY_6        (FLASH_ACR_LATENCY_2 | FLASH_ACR_LATENCY_1 | FLASH_ACR_WRHIGHFREQ)                       /*!< FLASH Six wait state       */
 #define FLASH_LATENCY_7        (FLASH_ACR_LATENCY_2 | FLASH_ACR_LATENCY_1 | FLASH_ACR_LATENCY_0 | FLASH_ACR_WRHIGHFREQ) /*!< FLASH Seven wait states    */
-#define FLASH_LATENCY_8        (FLASH_ACR_LATENCY_3 | FLASH_ACR_WRHIGHFREQ)                                             /*!< FLASH Eight wait states    */
-#define FLASH_LATENCY_9        (FLASH_ACR_LATENCY_3 | FLASH_ACR_LATENCY_0 | FLASH_ACR_WRHIGHFREQ)                       /*!< FLASH Nine wait states     */
-#define FLASH_LATENCY_10       (FLASH_ACR_LATENCY_3 | FLASH_ACR_LATENCY_1 | FLASH_ACR_WRHIGHFREQ)                       /*!< FLASH Ten wait states      */
-#define FLASH_LATENCY_11       (FLASH_ACR_LATENCY_3 | FLASH_ACR_LATENCY_1 | FLASH_ACR_LATENCY_0 | FLASH_ACR_WRHIGHFREQ) /*!< FLASH Eleven wait states   */
-#define FLASH_LATENCY_12       (FLASH_ACR_LATENCY_3 | FLASH_ACR_LATENCY_2 | FLASH_ACR_WRHIGHFREQ)                       /*!< FLASH Twelve wait states   */
-#define FLASH_LATENCY_13       (FLASH_ACR_LATENCY_3 | FLASH_ACR_LATENCY_2 | FLASH_ACR_LATENCY_0 | FLASH_ACR_WRHIGHFREQ) /*!< FLASH Thirteen wait states */
-#define FLASH_LATENCY_14       (FLASH_ACR_LATENCY_3 | FLASH_ACR_LATENCY_2 | FLASH_ACR_LATENCY_1 | FLASH_ACR_WRHIGHFREQ) /*!< FLASH Fourteen wait states */
-#define FLASH_LATENCY_15       (FLASH_ACR_LATENCY   | FLASH_ACR_WRHIGHFREQ)                                               /*!< FLASH Fifteen wait states  */
 /**
   * @}
   */
@@ -485,14 +477,6 @@ typedef struct
   *     @arg FLASH_LATENCY_5: FLASH Five wait states
   *     @arg FLASH_LATENCY_6: FLASH Six wait states
   *     @arg FLASH_LATENCY_7: FLASH Seven wait states
-  *     @arg FLASH_LATENCY_8: FLASH Eight wait states
-  *     @arg FLASH_LATENCY_9: FLASH Nine wait states
-  *     @arg FLASH_LATENCY_10: FLASH Ten wait states
-  *     @arg FLASH_LATENCY_11: FLASH Eleven wait states
-  *     @arg FLASH_LATENCY_12: FLASH Twelve wait states
-  *     @arg FLASH_LATENCY_13: FLASH Thirteen wait states
-  *     @arg FLASH_LATENCY_14: FLASH Fourteen wait states
-  *     @arg FLASH_LATENCY_15: FLASH Fifteen wait states
   * @retval None
   */
 #define __HAL_FLASH_SET_LATENCY(__LATENCY__) MODIFY_REG(FLASH->ACR, (FLASH_ACR_LATENCY |\
@@ -510,14 +494,6 @@ typedef struct
   *     @arg FLASH_LATENCY_5: FLASH Five wait states
   *     @arg FLASH_LATENCY_6: FLASH Six wait states
   *     @arg FLASH_LATENCY_7: FLASH Seven wait states
-  *     @arg FLASH_LATENCY_8: FLASH Eight wait states
-  *     @arg FLASH_LATENCY_9: FLASH Nine wait states
-  *     @arg FLASH_LATENCY_10: FLASH Ten wait states
-  *     @arg FLASH_LATENCY_11: FLASH Eleven wait states
-  *     @arg FLASH_LATENCY_12: FLASH Twelve wait states
-  *     @arg FLASH_LATENCY_13: FLASH Thirteen wait states
-  *     @arg FLASH_LATENCY_14: FLASH Fourteen wait states
-  *     @arg FLASH_LATENCY_15: FLASH Fifteen wait states
   */
 #define __HAL_FLASH_GET_LATENCY() READ_BIT(FLASH->ACR, (FLASH_ACR_LATENCY | FLASH_ACR_WRHIGHFREQ))
 
@@ -797,11 +773,7 @@ extern FLASH_ProcessTypeDef pFlash;
 #define IS_FLASH_LATENCY(LATENCY)          (((LATENCY) == FLASH_LATENCY_0)  || ((LATENCY) == FLASH_LATENCY_1) || \
                                             ((LATENCY) == FLASH_LATENCY_2)  || ((LATENCY) == FLASH_LATENCY_3) || \
                                             ((LATENCY) == FLASH_LATENCY_4)  || ((LATENCY) == FLASH_LATENCY_5) || \
-                                            ((LATENCY) == FLASH_LATENCY_6)  || ((LATENCY) == FLASH_LATENCY_7) || \
-                                            ((LATENCY) == FLASH_LATENCY_8)  || ((LATENCY) == FLASH_LATENCY_9) || \
-                                            ((LATENCY) == FLASH_LATENCY_10) || ((LATENCY) == FLASH_LATENCY_11) || \
-                                            ((LATENCY) == FLASH_LATENCY_12) || ((LATENCY) == FLASH_LATENCY_13) || \
-                                            ((LATENCY) == FLASH_LATENCY_14) || ((LATENCY) == FLASH_LATENCY_15))
+                                            ((LATENCY) == FLASH_LATENCY_6)  || ((LATENCY) == FLASH_LATENCY_7))
 
 /**
   * @}

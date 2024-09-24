@@ -50,7 +50,7 @@ typedef struct
   uint32_t FifoThresholdByte;         /*!< This is the threshold used by the Peripheral to generate the interrupt
                                            indicating that data are available in reception or free place
                                            is available in transmission.
-                                           For XSPI, this parameter can be a value between 1 and 64 */
+                                           For XSPI, this parameter can be a value between 1 and 32 */
   uint32_t MemoryMode;                /*!< It Specifies the memory mode.
                                            This parameter can be a value of @ref XSPI_MemoryMode */
   uint32_t MemoryType;                /*!< It indicates the external device type connected to the XSPI.

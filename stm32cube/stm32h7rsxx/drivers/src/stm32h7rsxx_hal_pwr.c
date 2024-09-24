@@ -689,4 +689,3 @@ void HAL_PWR_DisableSEVOnPend(void)
 /**
   * @}
   */
-

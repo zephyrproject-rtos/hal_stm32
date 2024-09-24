@@ -327,14 +327,6 @@ extern "C" {
 #define LL_FLASH_LATENCY_5        (FLASH_ACR_LATENCY_2 | FLASH_ACR_LATENCY_0)                       /*!< FLASH Five wait state      */
 #define LL_FLASH_LATENCY_6        (FLASH_ACR_LATENCY_2 | FLASH_ACR_LATENCY_1)                       /*!< FLASH Six wait state       */
 #define LL_FLASH_LATENCY_7        (FLASH_ACR_LATENCY_2 | FLASH_ACR_LATENCY_1 | FLASH_ACR_LATENCY_0) /*!< FLASH Seven wait states    */
-#define LL_FLASH_LATENCY_8        FLASH_ACR_LATENCY_3                                               /*!< FLASH Eight wait states    */
-#define LL_FLASH_LATENCY_9        (FLASH_ACR_LATENCY_3 | FLASH_ACR_LATENCY_0)                       /*!< FLASH Nine wait states     */
-#define LL_FLASH_LATENCY_10       (FLASH_ACR_LATENCY_3 | FLASH_ACR_LATENCY_1)                       /*!< FLASH Ten wait state       */
-#define LL_FLASH_LATENCY_11       (FLASH_ACR_LATENCY_3 | FLASH_ACR_LATENCY_1 | FLASH_ACR_LATENCY_0) /*!< FLASH Eleven wait state    */
-#define LL_FLASH_LATENCY_12       (FLASH_ACR_LATENCY_3 | FLASH_ACR_LATENCY_2)                       /*!< FLASH Twelve wait states   */
-#define LL_FLASH_LATENCY_13       (FLASH_ACR_LATENCY_3 | FLASH_ACR_LATENCY_2 | FLASH_ACR_LATENCY_0) /*!< FLASH Thirteen wait states */
-#define LL_FLASH_LATENCY_14       (FLASH_ACR_LATENCY_3 | FLASH_ACR_LATENCY_2 | FLASH_ACR_LATENCY_1) /*!< FLASH Fourteen wait states */
-#define LL_FLASH_LATENCY_15       FLASH_ACR_LATENCY                                                 /*!< FLASH Fifteen wait states  */
 /**
   * @}
   */
@@ -2027,14 +2019,6 @@ __STATIC_INLINE void LL_VREFBUF_SetTrimming(uint32_t Value)
   *         @arg @ref LL_FLASH_LATENCY_5
   *         @arg @ref LL_FLASH_LATENCY_6
   *         @arg @ref LL_FLASH_LATENCY_7
-  *         @arg @ref LL_FLASH_LATENCY_8
-  *         @arg @ref LL_FLASH_LATENCY_9
-  *         @arg @ref LL_FLASH_LATENCY_10
-  *         @arg @ref LL_FLASH_LATENCY_11
-  *         @arg @ref LL_FLASH_LATENCY_12
-  *         @arg @ref LL_FLASH_LATENCY_13
-  *         @arg @ref LL_FLASH_LATENCY_14
-  *         @arg @ref LL_FLASH_LATENCY_15
   * @retval None
   */
 __STATIC_INLINE void LL_FLASH_SetLatency(uint32_t Latency)
@@ -2054,14 +2038,6 @@ __STATIC_INLINE void LL_FLASH_SetLatency(uint32_t Latency)
   *         @arg @ref LL_FLASH_LATENCY_5
   *         @arg @ref LL_FLASH_LATENCY_6
   *         @arg @ref LL_FLASH_LATENCY_7
-  *         @arg @ref LL_FLASH_LATENCY_8
-  *         @arg @ref LL_FLASH_LATENCY_9
-  *         @arg @ref LL_FLASH_LATENCY_10
-  *         @arg @ref LL_FLASH_LATENCY_11
-  *         @arg @ref LL_FLASH_LATENCY_12
-  *         @arg @ref LL_FLASH_LATENCY_13
-  *         @arg @ref LL_FLASH_LATENCY_14
-  *         @arg @ref LL_FLASH_LATENCY_15
   */
 __STATIC_INLINE uint32_t LL_FLASH_GetLatency(void)
 {

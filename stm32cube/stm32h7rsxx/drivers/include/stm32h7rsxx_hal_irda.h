@@ -897,4 +897,3 @@ uint32_t              HAL_IRDA_GetError(const IRDA_HandleTypeDef *hirda);
 #endif
 
 #endif /* STM32H7RSxx_HAL_IRDA_H */
-

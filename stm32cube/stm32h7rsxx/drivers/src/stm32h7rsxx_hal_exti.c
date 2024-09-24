@@ -636,4 +636,3 @@ void HAL_EXTI_GenerateSWI(const EXTI_HandleTypeDef *hexti)
 /**
   * @}
   */
-

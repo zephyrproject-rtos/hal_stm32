@@ -353,6 +353,7 @@ typedef struct
   * @{
   */
 
+/* The following Huffman tables, are based on the JPEG standard as defined by the ITU-T Recommendation T.81. */
 static const JPEG_DCHuffTableTypeDef JPEG_DCLUM_HuffTable =
 {
   { 0, 1, 5, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0 },   /*Bits*/
@@ -4277,4 +4278,3 @@ static uint32_t JPEG_GetQuality(const JPEG_HandleTypeDef *hjpeg)
 /**
   * @}
   */
-

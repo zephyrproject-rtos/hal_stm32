@@ -643,10 +643,10 @@ ErrorStatus LL_I2S_Init(SPI_TypeDef *SPIx, LL_I2S_InitTypeDef *I2S_InitStruct)
       else if ((SPIx == SPI2) || (SPIx == SPI3))
       {
         sourceclock = LL_RCC_GetSPIClockFreq(LL_RCC_SPI23_CLKSOURCE);
-      }      
+      }
       else /* SPI6 */
       {
-      	sourceclock = LL_RCC_GetSPIClockFreq(LL_RCC_SPI6_CLKSOURCE);
+	sourceclock = LL_RCC_GetSPIClockFreq(LL_RCC_SPI6_CLKSOURCE);
       }
 
       /* Compute the Real divider depending on the MCLK output state with a fixed point */

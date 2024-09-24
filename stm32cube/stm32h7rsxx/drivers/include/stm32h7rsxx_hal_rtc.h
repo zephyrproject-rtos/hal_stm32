@@ -974,4 +974,3 @@ uint8_t            RTC_Bcd2ToByte(uint8_t Value);
 #endif
 
 #endif /* STM32H7RSxx_HAL_RTC_H */
-
