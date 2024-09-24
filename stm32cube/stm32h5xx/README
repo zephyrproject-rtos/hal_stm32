@@ -6,7 +6,7 @@ Origin:
    http://www.st.com/en/embedded-software/stm32cubeh5.html
 
 Status:
-   version v1.2.0
+   version v1.3.0
 
 Purpose:
    ST Microelectronics official MCU package for STM32H5 series.
@@ -23,7 +23,7 @@ URL:
    https://github.com/STMicroelectronics/STM32CubeH5
 
 Commit:
-   182f4c8589bf775b330ed63af7c0c17060d8a649
+   a6a936dfaf382c83b73be5e46c3c1c28e8d0caa0
 Maintained-by:
    External
 
@@ -48,12 +48,6 @@ Patch List:
       . renamed stm32h5xx_hal_timebase_rtc_wakeup_template. c to stm32h5xx_hal_timebase_rtc_wakeup.c
       . renamed stm32h5xx_hal_timebase_tim_template. c to stm32h5xx_hal_timebase_tim.c
 
-   *Var init in LL_I2S_Init
-    - In the LL_I2S_Init function, initialisation of the sourceclock to avoid compilation warning.
-      Impacted files:
-       drivers/include/stm32h5xx_ll_spi.c
-      ST internal bug : 147754
-
    *fix to the V2 HAL API to get PTP to work
      impacted file : stm32h5xx_hal_eth.c
      In the HAL_ETH_ReadData function where it checks for the last descriptor,
@@ -66,10 +60,5 @@ Patch List:
    *Fix to remove PAGESIZE definition which conflicts with POSIX
     Impacted files:
      drivers/include/Legacy/stm32_hal_legacy.h
-
-   *Fix to set __SAUREGION_PRESENT to 0 for STM32H503 devices
-     Impacted files:
-     stm32cube/stm32h5xx/soc/stm32h503xx.h
-     ST internal bug: 177135
 
    See release_note.html from STM32Cube
