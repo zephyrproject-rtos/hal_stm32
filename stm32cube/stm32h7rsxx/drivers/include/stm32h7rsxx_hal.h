@@ -71,9 +71,9 @@ typedef enum
   * @brief STM32H7RSxx HAL Driver version number
   */
 #define STM32H7RSXX_HAL_VERSION_MAIN   (0x01U) /*!< [31:24] main version */
-#define STM32H7RSXX_HAL_VERSION_SUB1   (0x00U) /*!< [23:16] sub1 version */
+#define STM32H7RSXX_HAL_VERSION_SUB1   (0x01U) /*!< [23:16] sub1 version */
 #define STM32H7RSXX_HAL_VERSION_SUB2   (0x00U) /*!< [15:8]  sub2 version */
-#define STM32H7RSXX_HAL_VERSION_RC     (0x04U) /*!< [7:0]  release candidate */
+#define STM32H7RSXX_HAL_VERSION_RC     (0x00U) /*!< [7:0]  release candidate */
 #define STM32H7RSXX_HAL_VERSION        ((STM32H7RSXX_HAL_VERSION_MAIN  << 24U)\
                                         |(STM32H7RSXX_HAL_VERSION_SUB1 << 16U)\
                                         |(STM32H7RSXX_HAL_VERSION_SUB2 << 8U )\

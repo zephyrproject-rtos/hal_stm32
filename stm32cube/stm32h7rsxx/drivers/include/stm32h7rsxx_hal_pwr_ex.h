@@ -607,4 +607,3 @@ HAL_StatusTypeDef HAL_PWREx_DisableGPIOPullDown(uint32_t GPIO_Port, uint32_t GPI
 
 
 #endif /* STM32H7RSxx_HAL_PWR_EX_H */
-

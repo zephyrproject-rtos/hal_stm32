@@ -2098,6 +2098,7 @@ static uint32_t RCC_PLL1_GetVCOOutputFreq(void)
   uint32_t pllm;
   uint32_t plln;
   uint32_t pllfracn;
+  float_t frequency;
 
   /* Get PLL1 CFGR and DIVR register values */
   tmpreg1 = RCC->PLLCKSELR;
@@ -2155,7 +2156,9 @@ static uint32_t RCC_PLL1_GetVCOOutputFreq(void)
   }
 
   /* Compute VCO output frequency */
-  return ((pllsrc / pllm) * (plln + (pllfracn / 0x2000U)));
+  frequency = ((float_t)pllsrc / (float_t)pllm) * ((float_t)plln + ((float_t)pllfracn / (float_t)0x2000U));
+
+  return (uint32_t)frequency;
 }
 
 /**
@@ -2170,6 +2173,7 @@ static uint32_t RCC_PLL2_GetVCOOutputFreq(void)
   uint32_t pllm;
   uint32_t plln;
   uint32_t pllfracn;
+  float_t frequency;
 
   /* Get PLL2 CFGR and DIVR register values */
   tmpreg1 = RCC->PLLCKSELR;
@@ -2227,7 +2231,9 @@ static uint32_t RCC_PLL2_GetVCOOutputFreq(void)
   }
 
   /* Compute VCO output frequency */
-  return ((pllsrc / pllm) * (plln + (pllfracn / 0x2000U)));
+  frequency = ((float_t)pllsrc / (float_t)pllm) * ((float_t)plln + ((float_t)pllfracn / (float_t)0x2000U));
+
+  return (uint32_t)frequency;
 }
 
 /**
@@ -2242,6 +2248,7 @@ static uint32_t RCC_PLL3_GetVCOOutputFreq(void)
   uint32_t pllm;
   uint32_t plln;
   uint32_t pllfracn;
+  float_t frequency;
 
   /* Get PLL3 CFGR and DIVR register values */
   tmpreg1 = RCC->PLLCKSELR;
@@ -2299,7 +2306,9 @@ static uint32_t RCC_PLL3_GetVCOOutputFreq(void)
   }
 
   /* Compute VCO output frequency */
-  return ((pllsrc / pllm) * (plln + (pllfracn / 0x2000U)));
+  frequency = ((float_t)pllsrc / (float_t)pllm) * ((float_t)plln + ((float_t)pllfracn / (float_t)0x2000U));
+
+  return (uint32_t)frequency;
 }
 
 /**

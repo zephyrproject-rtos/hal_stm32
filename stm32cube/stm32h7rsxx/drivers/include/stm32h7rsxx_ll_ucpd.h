@@ -1882,4 +1882,3 @@ void        LL_UCPD_StructInit(LL_UCPD_InitTypeDef *UCPD_InitStruct);
 #endif
 
 #endif /* STM32H7RSxx_LL_UCPD_H */
-

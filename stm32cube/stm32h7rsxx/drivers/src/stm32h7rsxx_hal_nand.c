@@ -494,7 +494,7 @@ HAL_StatusTypeDef HAL_NAND_Reset(NAND_HandleTypeDef *hnand)
   * @param  pDeviceConfig  pointer to NAND_DeviceConfigTypeDef structure
   * @retval HAL status
   */
-HAL_StatusTypeDef  HAL_NAND_ConfigDevice(NAND_HandleTypeDef *hnand, NAND_DeviceConfigTypeDef *pDeviceConfig)
+HAL_StatusTypeDef  HAL_NAND_ConfigDevice(NAND_HandleTypeDef *hnand, const NAND_DeviceConfigTypeDef *pDeviceConfig)
 {
   hnand->Config.PageSize           = pDeviceConfig->PageSize;
   hnand->Config.SpareAreaSize      = pDeviceConfig->SpareAreaSize;
@@ -2228,4 +2228,3 @@ uint32_t HAL_NAND_Read_Status(const NAND_HandleTypeDef *hnand)
 /**
   * @}
   */
-

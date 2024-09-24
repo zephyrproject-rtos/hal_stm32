@@ -333,4 +333,3 @@ HAL_StatusTypeDef HAL_SMARTCARDEx_SetRxFifoThreshold(SMARTCARD_HandleTypeDef *hs
 #endif
 
 #endif /* STM32H7RSxx_HAL_SMARTCARD_EX_H */
-

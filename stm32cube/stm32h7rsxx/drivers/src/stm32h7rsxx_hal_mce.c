@@ -74,15 +74,14 @@
 #define MCE1_CONTEXT_NB    2U
 /* Private macros ------------------------------------------------------------*/
 
-
 #define IS_MCE_AES_INSTANCE(INSTANCE) ((INSTANCE) == MCE1)
+
+
 #define IS_MCE_NOEKEON_INSTANCE(INSTANCE) ((INSTANCE) == MCE2) || ((INSTANCE) == MCE3)
 
 /* Private variables ---------------------------------------------------------*/
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
-
-
 
 /* Exported functions --------------------------------------------------------*/
 /** @addtogroup MCE_Exported_Functions
@@ -270,7 +269,7 @@ HAL_StatusTypeDef HAL_MCE_ConfigNoekeon(MCE_HandleTypeDef *hmce, const MCE_Noeke
       WRITE_REG(hmce->Instance->MKEYR1, pConfig->pKey[1]);
       WRITE_REG(hmce->Instance->MKEYR2, pConfig->pKey[2]);
       WRITE_REG(hmce->Instance->MKEYR3, pConfig->pKey[3]);
-      if (HAL_IS_BIT_CLR(hmce->Instance->SR, MCE_SR_MKVALID))
+      while (HAL_IS_BIT_CLR(hmce->Instance->SR, MCE_SR_MKVALID))
       {
         /* Check for the Timeout */
         if ((HAL_GetTick() - tickstart) > MCE_TIMEOUT_VALUE)
@@ -278,6 +277,7 @@ HAL_StatusTypeDef HAL_MCE_ConfigNoekeon(MCE_HandleTypeDef *hmce, const MCE_Noeke
 
           hmce->ErrorCode |= HAL_MCE_MASTER_KEY_ERROR;
           ret = HAL_ERROR;
+          break;
         }
       }
 
@@ -294,13 +294,14 @@ HAL_StatusTypeDef HAL_MCE_ConfigNoekeon(MCE_HandleTypeDef *hmce, const MCE_Noeke
       WRITE_REG(hmce->Instance->FMKEYR1, pConfig->pKey[1]);
       WRITE_REG(hmce->Instance->FMKEYR2, pConfig->pKey[2]);
       WRITE_REG(hmce->Instance->FMKEYR3, pConfig->pKey[3]);
-      if (HAL_IS_BIT_CLR(hmce->Instance->SR, MCE_SR_FMKVALID))
+      while (HAL_IS_BIT_CLR(hmce->Instance->SR, MCE_SR_FMKVALID))
       {
         /* Check for the Timeout */
         if ((HAL_GetTick() - tickstart) > MCE_TIMEOUT_VALUE)
         {
           hmce->ErrorCode |= HAL_MCE_FASTMASTER_KEY_ERROR;
           ret = HAL_ERROR;
+          break;
         }
       }
     }
@@ -445,6 +446,17 @@ HAL_StatusTypeDef HAL_MCE_ConfigRegion(MCE_HandleTypeDef *hmce, uint32_t RegionI
   return ret;
 
 }
+
+/**
+  * @brief  Set region AES Context.
+  * @param  hmce pointer to an MCE_HandleTypeDef structure that contains
+  *         the configuration information for MCE module
+  * @param  ContextIndex index of context that is configured
+  * @param  RegionIndex index of region that is configured
+  * @note   The Region is enabled by default once the configuration is complete
+  * @note   An enabled region is temporary disabled to apply the new configuration
+  * @retval HAL status
+  */
 
 HAL_StatusTypeDef HAL_MCE_SetRegionAESContext(MCE_HandleTypeDef *hmce, uint32_t ContextIndex, uint32_t RegionIndex)
 {
@@ -877,6 +889,11 @@ HAL_StatusTypeDef HAL_MCE_GetAESContextCRCKey(const MCE_HandleTypeDef *hmce, uin
   assert_param(IS_MCE_AES_INSTANCE(hmce->Instance));
   assert_param(IS_MCE_CONTEXT(hmce->Instance, ContextIndex));
 
+  if (*pCRCKey == 0x00U)
+  {
+    ret = HAL_ERROR;
+  }
+
   address = (__IO uint32_t)((uint32_t)hmce->Instance + 0x240UL + \
                             (0x30UL * ((ContextIndex - MCE_CONTEXT1) >> MCE_REGCR_CTXID_Pos)));
   p_context = (MCE_Context_TypeDef *)address;
@@ -884,11 +901,6 @@ HAL_StatusTypeDef HAL_MCE_GetAESContextCRCKey(const MCE_HandleTypeDef *hmce, uin
   *pCRCKey = READ_REG((p_context->CCCFGR)) & MCE_CCCFGR_KEYCRC;
 
   *pCRCKey >>= MCE_CCCFGR_KEYCRC_Pos;
-  if (*pCRCKey == 0x00U)
-  {
-    ret = HAL_ERROR;
-  }
-
   return ret;
 }
 
@@ -1038,7 +1050,6 @@ uint32_t HAL_MCE_GetError(MCE_HandleTypeDef const *hmce)
 
   return hmce->ErrorCode;
 }
-
 
 
 /**

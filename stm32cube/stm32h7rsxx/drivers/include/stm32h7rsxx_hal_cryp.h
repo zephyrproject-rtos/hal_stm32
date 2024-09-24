@@ -412,7 +412,7 @@ typedef  void (*pCRYP_CallbackTypeDef)(CRYP_HandleTypeDef *hcryp);    /*!< point
 
 #define CRYP_FLAG_WRERR    (SAES_SR_WRERR | 0x80000000U) /*!< SAES peripheral Write Error flag */
 #define CRYP_FLAG_RDERR    (SAES_SR_RDERR | 0x80000000U) /*!< SAES peripheral Read error flag */
-#define CRYP_FLAG_CCF      SAES_SR_CCF                   /*!< SAES peripheral Computation completed flag 
+#define CRYP_FLAG_CCF      SAES_SR_CCF                   /*!< SAES peripheral Computation completed flag
                                                               as AES_ISR_CCF */
 #define CRYP_FLAG_KEIF     SAES_ISR_KEIF                 /*!< SAES peripheral Key error interrupt flag */
 #define CRYP_FLAG_RWEIF    SAES_ISR_RWEIF                /*!< SAES peripheral Read or Write error Interrupt flag */
@@ -439,7 +439,7 @@ typedef  void (*pCRYP_CallbackTypeDef)(CRYP_HandleTypeDef *hcryp);    /*!< point
   * @{
   */
 
-#define CRYP_KEYIVCONFIG_ALWAYS        0x00000000U            /*!< Peripheral Key and IV configuration 
+#define CRYP_KEYIVCONFIG_ALWAYS        0x00000000U            /*!< Peripheral Key and IV configuration
                                                                    to do systematically */
 #define CRYP_KEYIVCONFIG_ONCE          0x00000001U            /*!< Peripheral Key and IV configuration
                                                                    to do only once */
@@ -454,7 +454,7 @@ typedef  void (*pCRYP_CallbackTypeDef)(CRYP_HandleTypeDef *hcryp);    /*!< point
   */
 
 #define CRYP_KEYMODE_NORMAL         0x00000000U         /*!< Normal key usage, Key registers are freely usable */
-#define CRYP_KEYMODE_WRAPPED        SAES_CR_KMOD_0      /*!< Only for SAES, Wrapped key: to encrypt 
+#define CRYP_KEYMODE_WRAPPED        SAES_CR_KMOD_0      /*!< Only for SAES, Wrapped key: to encrypt
                                                              or decrypt AES keys */
 #define CRYP_KEYMODE_SHARED         SAES_CR_KMOD_1      /*!< Key shared by SAES peripheral */
 /**
@@ -466,16 +466,16 @@ typedef  void (*pCRYP_CallbackTypeDef)(CRYP_HandleTypeDef *hcryp);    /*!< point
   */
 
 #define CRYP_KEYSEL_NORMAL       0x00000000U            /*!< Normal key, key registers SAES_KEYx or CRYP_KEYx */
-#define CRYP_KEYSEL_HW           SAES_CR_KEYSEL_0       /*!< Only for SAES, Hardware key : derived hardware 
+#define CRYP_KEYSEL_HW           SAES_CR_KEYSEL_0       /*!< Only for SAES, Hardware key : derived hardware
                                                              unique key (DHUK 256-bit) */
-#define CRYP_KEYSEL_SW           SAES_CR_KEYSEL_1       /*!< Only for SAES, Software key : boot hardware 
+#define CRYP_KEYSEL_SW           SAES_CR_KEYSEL_1       /*!< Only for SAES, Software key : boot hardware
                                                              key BHK (256-bit) */
-#define CRYP_KEYSEL_HSW          SAES_CR_KEYSEL_2       /*!< Only for SAES, DHUK XOR BHK Hardware unique 
+#define CRYP_KEYSEL_HSW          SAES_CR_KEYSEL_2       /*!< Only for SAES, DHUK XOR BHK Hardware unique
                                                              key XOR software key */
-#define CRYP_KEYSEL_AHK          (SAES_CR_KEYSEL_1|SAES_CR_KEYSEL_0)  /*!< Only for SAES, Software key : 
+#define CRYP_KEYSEL_AHK          (SAES_CR_KEYSEL_1|SAES_CR_KEYSEL_0)  /*!< Only for SAES, Software key :
                                                                       application hardware key AHK (128- or 256-bit) */
 #define CRYP_KEYSEL_DUK_AHK      (SAES_CR_KEYSEL_2|SAES_CR_KEYSEL_0)   /*!< Only for SAES, DHUK XOR AHK */
-#define CRYP_KEYSEL_TEST_KEY     (SAES_CR_KEYSEL_2|SAES_CR_KEYSEL_1|SAES_CR_KEYSEL_0) /*!< Test mode key (256-bit 
+#define CRYP_KEYSEL_TEST_KEY     (SAES_CR_KEYSEL_2|SAES_CR_KEYSEL_1|SAES_CR_KEYSEL_0) /*!< Test mode key (256-bit
                                                                                hardware constant key 0xA5A5...A5A5) */
 /**
   * @}

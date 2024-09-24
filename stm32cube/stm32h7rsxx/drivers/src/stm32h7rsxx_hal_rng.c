@@ -238,7 +238,7 @@ HAL_StatusTypeDef HAL_RNG_Init(RNG_HandleTypeDef *hrng)
     if ((HAL_GetTick() - tickstart) > RNG_TIMEOUT_VALUE)
     {
       /* New check to avoid false timeout detection in case of preemption */
-      if (__HAL_RNG_GET_FLAG(hrng, RNG_FLAG_SECS) != RESET)
+      if (__HAL_RNG_GET_FLAG(hrng, RNG_FLAG_DRDY) != SET)
       {
         hrng->State = HAL_RNG_STATE_ERROR;
         hrng->ErrorCode = HAL_RNG_ERROR_TIMEOUT;

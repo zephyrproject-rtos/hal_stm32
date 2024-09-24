@@ -27,21 +27,24 @@
   * @{
   */
 
+#if (defined(USE_HAL_DRIVER) && defined(HAL_I3C_MODULE_ENABLED)) || defined(USE_FULL_LL_DRIVER)
+
 /* Private typedef ---------------------------------------------------------------------------------------------------*/
 /* Private define ----------------------------------------------------------------------------------------------------*/
 /** @defgroup I3C_UTIL_Private_Define I3C Utility Private Define
   * @{
   */
 #define SEC210PSEC              (uint64_t)100000000000 /*!< 10ps, to take two decimal float of ns calculation */
-#define TI3CH_MIN               3200U    /*!< Open drain & push pull SCL high min, 32ns */
-#define TI3CH_OD_MAX            4100U    /*!< Open drain SCL high max, 41 ns */
-#define TI3CL_OD_MIN            20000U   /*!< Open drain SCL low min, 200 ns */
-#define TFMPL_OD_MIN            50000U   /*!< Fast Mode Plus Open drain SCL low min, 500 ns */
-#define TFML_OD_MIN             130000U  /*!< Fast Mode Open drain SCL low min, 1300 ns */
-#define TFM_MIN                 250000U  /*!< Fast Mode, period min for ti3cclk, 2.5us */
-#define TSM_MIN                 1000000U /*!< Standard Mode, period min for ti3cclk, 10us */
-#define TI3C_CAS_MIN            3840U    /*!< Time SCL after START min, 38.4 ns */
-#define TCAPA                   35000U   /*!< Capacitor effect Value measure on Nucleo around 350ns */
+#define TI3CH_MIN               3200U       /*!< Open drain & push pull SCL high min, 32ns */
+#define TI3CH_OD_MAX            4100U       /*!< Open drain SCL high max, 41 ns */
+#define TI3CL_OD_MIN            20000U      /*!< Open drain SCL low min, 200 ns */
+#define TFMPL_OD_MIN            50000U      /*!< Fast Mode Plus Open drain SCL low min, 500 ns */
+#define TFML_OD_MIN             130000U     /*!< Fast Mode Open drain SCL low min, 1300 ns */
+#define TFM_MIN                 250000U     /*!< Fast Mode, period min for ti3cclk, 2.5us */
+#define TSM_MIN                 1000000U    /*!< Standard Mode, period min for ti3cclk, 10us */
+#define TI3C_CAS_MIN            3840U       /*!< Time SCL after START min, 38.4 ns */
+#define TCAPA                   35000U      /*!< Capacitor effect Value measure on Nucleo around 350ns */
+#define I3C_FREQUENCY_MAX       257000000U  /*!< Maximum I3C frequency */
 /**
   * @}
   */
@@ -128,6 +131,17 @@ ErrorStatus I3C_CtrlTimingComputation(const I3C_CtrlTimingTypeDef *pInputTiming,
   uint32_t sdahold;
 
   /* Verify Parameters */
+  if (pInputTiming->clockSrcFreq > I3C_FREQUENCY_MAX)
+  {
+    /* Above this frequency, some timing register parameters are over than field value */
+    status = ERROR;
+  }
+
+  if ((pInputTiming->busType != I3C_PURE_I3C_BUS) && (pInputTiming->busType != I3C_MIXED_BUS))
+  {
+    status = ERROR;
+  }
+
   if (((pInputTiming->clockSrcFreq == 0U) || (pInputTiming->i3cPPFreq == 0U)) &&
       (pInputTiming->busType == I3C_PURE_I3C_BUS))
   {
@@ -400,6 +414,8 @@ ErrorStatus I3C_TgtTimingComputation(const I3C_TgtTimingTypeDef *pInputTiming,
   */
 
 /* Private functions ---------------------------------------------------------*/
+
+#endif /* (defined(USE_HAL_DRIVER) && defined(HAL_I3C_MODULE_ENABLED)) || defined(USE_FULL_LL_DRIVER) */
 /**
   * @}
   */

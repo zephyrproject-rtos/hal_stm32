@@ -15,74 +15,64 @@
   [..] Comparing to other previous devices, the FLASH interface for STM32H7RSxx
        devices contains the following additional features
 
-       (+) Capacity up to 2 Mbyte with dual bank architecture supporting read-while-write
-           capability (RWW)
-       (+) Dual bank memory organization
-       (+) Watermark-based secure area including PCROP and secure hide areas
-       (+) Block-based secure pages
+       (+) Non-volatile state, Root-Of-Trust and Epoch option bytes
+       (+) Option byte keys associated with hide protection level
+       (+) CRC hardware module to check integrity
+       (+) OTP blocks lock mechanism
 
                         ##### How to use this driver #####
  ==============================================================================
   [..] This driver provides functions to configure and program the FLASH memory
        of all STM32H7RSxx devices. It includes:
       (#) Flash Memory Erase functions:
-           (++) Lock and Unlock the FLASH interface using HAL_FLASH_Unlock() and
-                HAL_FLASH_Lock() functions
-           (++) Erase function: page Erase and Bank/Mass Erase
-           (++) There are two modes of erase :
-             (+++) Polling Mode using HAL_FLASHEx_Erase()
-             (+++) Interrupt Mode using HAL_FLASHEx_Erase_IT()
+        (++) Lock and Unlock the FLASH interface using HAL_FLASH_Unlock() and
+             HAL_FLASH_Lock() functions
+        (++) Erase function: Sector Erase and Mass Erase
+        (++) There are two modes of erase :
+          (+++) Polling Mode using HAL_FLASHEx_Erase()
+          (+++) Interrupt Mode using HAL_FLASHEx_Erase_IT()
 
       (#) Option Bytes Programming function: Use HAL_FLASHEx_OBProgram() to:
-        (++) Configure the write protection for each area
-        (++) Set the Read protection Level
+        (++) Configure the write protection for each sector
         (++) Program the user Option Bytes
-        (++) Configure the watermark security for each area including PCROP and secure hide areas
-        (++) Configure the boot lock (BOOT_LOCK)
-        (++) Configure the Boot addresses
+        (++) Configure the hide protection area
+        (++) Configure the non-volatile state
 
       (#) Get Option Bytes Configuration function: Use HAL_FLASHEx_OBGetConfig() to:
-        (++) Get the value of a write protection area
-        (++) Know if the read protection is activated
+        (++) Get the value of the sectors write protection
         (++) Get the value of the user Option Bytes
-        (++) Get the configuration of a watermark security area including PCROP and secure hide areas
-        (++) Get the boot lock (BOOT_LOCK) configuration
-        (++) Get the value of a boot address
+        (++) Get the configuration of the hide protection area
+        (++) Get the value of the non-volatile state
+        (++) Get the value of the Root-Of-Trust configuration
+        (++) Get the value of the Epoch
 
-      (#) Block-based secure / privilege area configuration function: Use HAL_FLASHEx_ConfigBBAttributes()
-        (++) Bit-field allowing to secure or un-secure each page
-        (++) Bit-field allowing to privilege or un-privilege each page
+      (#) OTP lock configuration function: Use HAL_FLASHEx_OTPLockConfig()
+        (++) Activate the lock of an OTP block
 
-      (#) Get the block-based secure / privilege area configuration function: Use HAL_FLASHEx_GetBBSec()
-        (++) Return the configuration of the block-based security and privilege for all the pages
+      (#) Get the OTP lock configuration function: Use HAL_FLASHEx_GetOTPLock()
+        (++) Get the value of the OTP blocks lock configuration
 
-      (#) Activation of the secure hide area function: Use HAL_FLASHEx_EnableSecHideProtection()
-        (++) Deny the access to the secure hide area
+      (#) Option Byte Keys configuration function: Use HAL_FLASHEx_KeyConfig()
+        (++) Program an option key for a specified hide protection level
 
-      (#) Privilege mode configuration function: Use HAL_FLASHEx_ConfigPrivMode()
-        (++) FLASH register can be protected against non-privilege accesses
+      (#) Get an option byte key value: Use HAL_FLASHEx_GetKey()
+        (++) Get the value of an option byte key for a specified hide protection level
 
-      (#) Get the privilege mode configuration function: Use HAL_FLASHEx_GetPrivMode()
-        (++) Return if the FLASH registers are protected against non-privilege accesses
+      (#) Perform a CRC computation function: Use HAL_FLASHEx_ComputeCRC()
+        (++) Perform CRC computation on a area defined either by sectors or by start/end
+		     addresses and return computation result
 
-      (#) Security inversion configuration function: Use HAL_FLASHEx_ConfigSecInversion()
-        (++) FLASH secure state can be override
-
-      (#) Get the security inversion configuration function: Use HAL_FLASHEx_GetSecInversion()
-        (++) Return if FLASH secure state is override
-
-      (#) Enable bank low-power mode function: Use HAL_FLASHEx_EnablePowerDown()
-        (++) Enable low-power mode for Flash Bank 1 and/or Bank 2
-
-      (#) Enable low-power read mode function: Use HAL_FLASHEx_ConfigLowPowerRead()
-        (++) Enable low-power read mode for Flash memory
-
-      (#) Get the low-power read mode configuration function: Use HAL_FLASHEx_GetLowPowerRead()
-        (++) Return if FLASH is in low-power read mode or normal read mode
-
-      (#) Get Flash operation function: Use HAL_FLASHEx_GetOperation()
-        (++) Return information about the on-going Flash operation. After a
-             system reset, return information about the interrupted Flash operation, if any.
+      (#) ECC management functions:
+        (++) Handle ECC Detection flash interrupt by calling HAL_FLASHEx_ECCD_IRQHandler()
+        (++) Callback functions are called when the ECC detection or correction occurs :
+             HAL_FLASHEx_EccDetectionCallback() for ECC detection, otherwise
+             HAL_FLASHEx_EccCorrectionCallback()
+        (++) Get information about ECC error by calling HAL_FLASHEx_GetEccInfo()
+        (++) Enable/Disable the ECC correction and detection interrupts:
+          (+++) HAL_FLASHEx_EnableEccCorrectionInterrupt() to enable ECC correction interrupt
+          (+++) HAL_FLASHEx_DisableEccCorrectionInterrupt() to disable ECC correction interrupt
+          (+++) HAL_FLASHEx_EnableEccDetectionInterrupt() to enable ECC detection interrupt
+          (+++) HAL_FLASHEx_DisableEccDetectionInterrupt() to disable ECC detection interrupt
 
  @endverbatim
   ******************************************************************************
@@ -396,16 +386,16 @@ void HAL_FLASHEx_OBGetConfig(FLASH_OBProgramInitTypeDef *pOBInit)
   * @}
   */
 
-/** @defgroup FLASHEx_Exported_Functions_Group2 Extended CRC operation functions
-  *  @brief   Extended CRC operation functions
+/** @defgroup FLASHEx_Exported_Functions_Group2 Extended protection operation functions
+  *  @brief   Extended protection operation functions
   *
 @verbatim
  ===============================================================================
-                  ##### Extended CRC operation functions #####
+               ##### Extended protection operation functions #####
  ===============================================================================
     [..]
     This subsection provides a set of functions allowing to manage the Extended FLASH
-    CRC Operations.
+    CRC operations, OTP lock mechanism and option byte keys management.
 
 @endverbatim
   * @{
@@ -574,11 +564,13 @@ HAL_StatusTypeDef HAL_FLASHEx_KeyConfig(const FLASH_KeyConfigTypeDef *pKeyConfig
 HAL_StatusTypeDef HAL_FLASHEx_GetKey(const FLASH_KeyConfigTypeDef *pKeyConfig, uint32_t *pKey)
 {
   uint32_t index;
+  uint32_t index_max;
   uint32_t *pdata;
   HAL_StatusTypeDef status;
 
   /* Check the parameters */
   assert_param(IS_KEY_INDEX(pKeyConfig->Index));
+  assert_param(IS_KEY_SIZE(pKeyConfig->Size));
   assert_param(IS_KEY_HDPL_LEVEL(pKeyConfig->HDPLLevel));
 
   /* Process Locked */
@@ -597,7 +589,7 @@ HAL_StatusTypeDef HAL_FLASHEx_GetKey(const FLASH_KeyConfigTypeDef *pKeyConfig, u
 
     /* Configure index and HDPL level */
     MODIFY_REG(FLASH->OBKCR, (FLASH_OBKCR_OBKINDEX | FLASH_OBKCR_NEXTKL | FLASH_OBKCR_OBKSIZE | FLASH_OBKCR_KEYPROG),
-               (pKeyConfig->Index | pKeyConfig->HDPLLevel));
+               (pKeyConfig->Index | pKeyConfig->HDPLLevel | pKeyConfig->Size));
 
     /* Set the start bit to get the key value */
     SET_BIT(FLASH->OBKCR, FLASH_OBKCR_KEYSTART);
@@ -607,8 +599,32 @@ HAL_StatusTypeDef HAL_FLASHEx_GetKey(const FLASH_KeyConfigTypeDef *pKeyConfig, u
 
     if ((status == HAL_OK) && (pKey != NULL))
     {
+      switch (pKeyConfig->Size)
+      {
+        case FLASH_KEY_32_BITS :
+          index_max = 1U;
+          break;
+
+        case FLASH_KEY_64_BITS :
+          index_max = 2U;
+          break;
+
+        case FLASH_KEY_128_BITS :
+          index_max = 4U;
+          break;
+
+        case FLASH_KEY_256_BITS :
+          index_max = 8U;
+          break;
+
+        default:
+          /* This case should not occur */
+          index_max = 0U;
+          break;
+      }
+
       pdata = pKey;
-      for (index = 0U; index < 8U; index++)
+      for (index = 0U; index < index_max; index++)
       {
         *pdata = FLASH->OBKDR[index];
         pdata++;

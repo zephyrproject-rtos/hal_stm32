@@ -934,8 +934,7 @@ __STATIC_INLINE uint32_t LL_DMA2D_GetOutputMemAddr(const DMA2D_TypeDef *DMA2Dx)
   */
 __STATIC_INLINE void LL_DMA2D_SetOutputColor(DMA2D_TypeDef *DMA2Dx, uint32_t OutputColor)
 {
-  MODIFY_REG(DMA2Dx->OCOLR, (DMA2D_OCOLR_BLUE_1 | DMA2D_OCOLR_GREEN_1 | DMA2D_OCOLR_RED_1 | DMA2D_OCOLR_ALPHA_1), \
-             OutputColor);
+  WRITE_REG(DMA2Dx->OCOLR, OutputColor);
 }
 
 /**

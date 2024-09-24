@@ -391,4 +391,3 @@ uint32_t                HAL_RAMECC_GetError(const RAMECC_HandleTypeDef *hramecc)
 #endif
 
 #endif /* STM32H7RSxx_HAL_RAMECC_H */
-

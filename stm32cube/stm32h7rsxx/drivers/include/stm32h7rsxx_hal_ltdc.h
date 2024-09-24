@@ -717,4 +717,3 @@ uint32_t              HAL_LTDC_GetError(const LTDC_HandleTypeDef *hltdc);
 #endif
 
 #endif /* STM32H7RSxx_HAL_LTDC_H */
-
