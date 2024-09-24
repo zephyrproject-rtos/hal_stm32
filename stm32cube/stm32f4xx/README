@@ -6,7 +6,7 @@ Origin:
    http://www.st.com/en/embedded-software/stm32cubef4.html
 
 Status:
-   version v1.28.0
+   version v1.28.1
 
 Purpose:
    ST Microelectronics official MCU package for STM32F4 series.
@@ -23,7 +23,7 @@ URL:
    https://github.com/STMicroelectronics/STM32CubeF4
 
 Commit:
-   9e7d2aa86197059fc29cf89931d46d0ab64e6081
+   83778d5c95cb01695c7facbf095db3ab445532ea
 
 Maintained-by:
    External
@@ -51,16 +51,6 @@ Patch List:
    *Provision to enable hal & ll asserts added
     -Added stm32cube/stm32f4xx/drivers/include/stm32_assert.h
     -Removed unused stm32cube/stm32f4xx/drivers/include/stm32_assert_template.h
-
-   *Unused variable in HAL_QSPI_Command_IT
-    -removed tickstart variable declaration
-    Impacted files:
-     drivers/src/stm32f4xx_hal_qspi.c
-    ST Bug tracker ID: 112664
-
-   *Enable legacy ethernet driver using HAL_ETH_LEGACY_MODULE_ENABLED
-    This will have to be removed once Zephyr driver is migrated ot the new
-    Cube HAL ethernet API.
 
    *Fix to remove PAGESIZE definition which conflicts with POSIX
     Impacted files:
