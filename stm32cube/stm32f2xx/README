@@ -6,7 +6,7 @@ Origin:
    http://www.st.com/en/embedded-software/stm32cubef2.html
 
 Status:
-   version v1.9.4
+   version v1.9.5
 
 Purpose:
    ST Microelectronics official MCU package for STM32F2 series.
@@ -23,7 +23,7 @@ URL:
    https://github.com/STMicroelectronics/STM32CubeF2
 
 Commit:
-   a20e30a3c5ebd39621fb81c31bf3de141ed43dd2
+   63e02baff3d0c0c96cd9009aa2f9dc198a08e947
 
 Maintained-by:
    External
@@ -51,13 +51,6 @@ Patch List:
    *Provision to enable hal & ll asserts added
     -Added stm32cube/stm32f2xx/drivers/include/stm32_assert.h
     -Removed unused stm32cube/stm32f2xx/drivers/include/stm32_assert_template.h
-
-   *Wrap define UNUSED with an ifndef
-     This will prevent a compiler warning for the case the UNUSED macro
-     is already defined elsewhere in the project
-     Impacted files:
-      drivers/include/stm32f2xx_hal_def.h
-     ST Internal Reference: 136825
 
    *Fix to remove PAGESIZE definition which conflicts with POSIX
     Impacted files:
