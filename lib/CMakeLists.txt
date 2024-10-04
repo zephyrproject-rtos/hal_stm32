@@ -72,4 +72,5 @@ if(CONFIG_HAS_STM32LIB)
     target_link_libraries(app PUBLIC stm32wba_ll_lib)
 
   endif()
+  add_subdirectory_ifdef(CONFIG_BT_STM32WB0 stm32wb0)
 endif()
