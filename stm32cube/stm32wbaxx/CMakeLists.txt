@@ -1,4 +1,4 @@
-# Copyright (c) 2023 STMicroelectronics
+# Copyright (c) 2020 STMicroelectronics
 #
 # SPDX-License-Identifier: Apache-2.0
 
