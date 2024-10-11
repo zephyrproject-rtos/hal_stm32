@@ -109,6 +109,15 @@ FD_FlashOp_Status_t FD_EraseSectors(uint32_t Sect)
   uint32_t page_error;
   FLASH_EraseInitTypeDef p_erase_init;
 
+#ifndef FLASH_DBANK_SUPPORT
+  if (FLASH_PAGE_NB < Sect)
+#else
+  if ((FLASH_PAGE_NB * 2u) < Sect)
+#endif
+  {
+    return status;
+  }
+
   /* Check if LL allows flash access */
   if ((FD_Flash_Control_status & (1u << FD_FLASHACCESS_RFTS)) &&
       (FD_Flash_Control_status & (1u << FD_FLASHACCESS_RFTS_BYPASS)))
@@ -120,8 +129,20 @@ FD_FlashOp_Status_t FD_EraseSectors(uint32_t Sect)
   while (FD_Flash_Control_status & (1u << FD_FLASHACCESS_SYSTEM));
 
   p_erase_init.TypeErase = FLASH_TYPEERASE_PAGES;
-  p_erase_init.Page = Sect;
+  p_erase_init.Page = (Sect & (FLASH_PAGE_NB - 1u));
   p_erase_init.NbPages = 1;
+
+#if defined(FLASH_DBANK_SUPPORT)
+  /* Verify which Bank is impacted */
+  if ((FLASH_PAGE_NB <= Sect) ^ (OB_SWAP_BANK_ENABLE == READ_BIT (FLASH->OPTR, FLASH_OPTR_SWAP_BANK_Msk)))
+  {
+    p_erase_init.Banks = FLASH_BANK_2;
+  }
+  else
+  {
+    p_erase_init.Banks = FLASH_BANK_1;
+  }
+#endif
 
   if (HAL_FLASHEx_Erase(&p_erase_init, &page_error) == HAL_OK)
   {

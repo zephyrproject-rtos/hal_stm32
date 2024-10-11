@@ -177,3 +177,92 @@ void HW_AES_Disable( void )
 }
 
 /*****************************************************************************/
+
+void HW_AES_InitCcm( uint8_t decrypt,
+                     const uint8_t* key,
+                     const uint32_t* b0,
+                     const uint32_t* b1 )
+{
+  uint32_t tmp[4], mode = decrypt ? AES_CR_MODE_1 : 0;
+
+  /* CCM init phase */
+  HW_AESX->CR = AES_CR_CHMOD_2 | mode;
+
+  /* Copy key bytes to the AES registers */
+  memcpy( tmp, key, 16 );
+  HW_AESX->KEYR0 = tmp[0];
+  HW_AESX->KEYR1 = tmp[1];
+  HW_AESX->KEYR2 = tmp[2];
+  HW_AESX->KEYR3 = tmp[3];
+
+  /* Copy B0 bytes to the AES registers */
+  HW_AESX->IVR3 = __REV( b0[0] );
+  HW_AESX->IVR2 = __REV( b0[1] );
+  HW_AESX->IVR1 = __REV( b0[2] );
+  HW_AESX->IVR0 = __REV( b0[3] );
+
+  /* Enable AES processing */
+  HW_AESX->CR |= AES_CR_EN;
+
+  /* Wait for CCF flag to be raised */
+  while ( ! (HW_AESX->SR & AES_SR_CCF) );
+
+  /* Clear CCF Flag */
+  HW_AESX->ICR |= AES_ICR_CCF;
+
+  /* CCM header phase */
+  HW_AESX->CR = AES_CR_CHMOD_2 | AES_CR_GCMPH_0 | AES_CR_DATATYPE_1;
+
+  /* Enable AES processing */
+  HW_AESX->CR |= AES_CR_EN;
+
+  /* Write the header block B1 into the input FIFO */
+  HW_AESX->DINR = b1[0];
+  HW_AESX->DINR = b1[1];
+  HW_AESX->DINR = b1[2];
+  HW_AESX->DINR = b1[3];
+
+  /* Wait for CCF flag to be raised */
+  while ( !(HW_AESX->SR & AES_SR_CCF) );
+
+  /* Clear CCF Flag */
+  HW_AESX->ICR |= AES_ICR_CCF;
+
+  /* CCM payload  phase */
+  HW_AESX->CR = (AES_CR_EN | AES_CR_CHMOD_2 |
+                 AES_CR_GCMPH_1 | AES_CR_DATATYPE_1 | mode);
+}
+
+/*****************************************************************************/
+
+void HW_AES_EndCcm( uint8_t tag_length,
+                    uint8_t* tag )
+{
+  uint32_t tmp[4];
+
+  /* CCM final phase */
+  HW_AESX->CR = (AES_CR_EN | AES_CR_CHMOD_2 |
+                 AES_CR_GCMPH_0 | AES_CR_GCMPH_1 | AES_CR_DATATYPE_1);
+
+  /* Wait for CCF flag to be raised */
+  while ( !(HW_AESX->SR & AES_SR_CCF) );
+
+  /* Read the output block from the output FIFO */
+  tmp[0] = HW_AESX->DOUTR;
+  tmp[1] = HW_AESX->DOUTR;
+  tmp[2] = HW_AESX->DOUTR;
+  tmp[3] = HW_AESX->DOUTR;
+  memcpy( tag, tmp, tag_length );
+
+  /* Clear CCF Flag */
+  HW_AESX->ICR |= AES_ICR_CCF;
+}
+
+/*****************************************************************************/
+
+void HW_AES_SetLast( uint8_t left_length )
+{
+  HW_AESX->CR |= (16UL - left_length) << AES_CR_NPBLB_Pos;
+}
+
+/*****************************************************************************/

@@ -1,8 +1,4 @@
-/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/branches/P10164613/issue_2029/firmware/public_inc/common_types.h#2 $*/
-/*Version_INFO
-V2  --> Original version is 1.30a-SOW05PatchV6_2
-V2  --> combined patch case 01641860
-*/
+/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/1.32a-LCA00/firmware/public_inc/common_types.h#1 $*/
 /**
  ********************************************************************************
  * @file    common_types.h
@@ -141,6 +137,9 @@ V2  --> combined patch case 01641860
 #define NULL				((void *)0)
 #endif	/* NULL */
 
+#define UNUSED_VALUE		0
+#define UNUSED_PTR			NULL
+
 #define MEMSET(ptr_memory, value, memory_size)				ble_memset(ptr_memory, value, memory_size)
 #define MEMCPY(ptr_destination, ptr_source, memory_size)	ble_memcpy(ptr_destination, ptr_source, memory_size)
 #define MEMCMP(ptr_destination, ptr_source, memory_size)	ble_memcmp(ptr_destination, ptr_source, memory_size)
@@ -177,6 +176,9 @@ extern os_mutex_id g_ll_lock;
 /* end of radio activity custom command flag */
 #define END_OF_RADIO_ACTIVITY_REPORTING				1 /* Enable\Disable end of radio activity reporting feature. Enable:1 - Disable:0 */
 
+#if SUPPORT_MAC && SUPPORT_ANT_DIV
+#define EXT_ADDRESS_LENGTH							8
+#endif /* SUPPORT_MAC && SUPPORT_ANT_DIV */
 /* Supported PHYs*/
 typedef enum {
 	LE_NO_CHANGE			= 0x00,
@@ -286,7 +288,27 @@ typedef enum _slptmr_src_type_e {
 #endif /* USE_NON_ACCURATE_32K_SLEEP_CLK */
 }slptmr_src_type_e;
 
+/**
+  * @brief Enumeration of the antenna diversity interval type.
+  */
+#if SUPPORT_MAC && SUPPORT_ANT_DIV
+typedef enum ant_intrv_type_enum {
+	NO_TYPE,
+	FIXED_TIME,
+	PACKETS_NUMBER
+} ant_intrv_type_enum_t;
 
+/*
+ * @brief structure that hold antenna diversity parameters information.
+ */
+typedef struct _antenna_diversity_st{
+	ant_intrv_type_enum_t ant_intrv_type;                /* antenna interval type: FIXED_TIME(us) or PACKETS_NUMBER(n) */
+	uint32_t ant_intrv_value;                            /* antenna interval value based on type; us for FIXED_TIME, n for PACKETS_NUMBER */
+	uint16_t wntd_coord_shrt_addr;	                     /* wanted coordinator/router short address */
+	uint8_t wntd_coord_ext_addr[EXT_ADDRESS_LENGTH];	 /* wanted coordinator/router extended address */
+	uint8_t max_rx_ack_retries;                          /* max number of retries to receive ack in case of ack error reception*/
+} antenna_diversity_st;
+#endif /* SUPPORT_MAC && SUPPORT_ANT_DIV */
 
 /*
  * @brief structure that hold some information about the data transmitted across layers.
@@ -341,14 +363,6 @@ typedef struct _sdu_buf_hdr_st {
 } iso_sdu_buf_hdr_st, *iso_sdu_buf_hdr_p;
 #endif  /* (SUPPORT_BRD_ISOCHRONOUS || SUPPORT_SYNC_ISOCHRONOUSs ||  (SUPPORT_CONNECTED_ISOCHRONOUS && ( SUPPORT_MASTER_CONNECTION || SUPPORT_SLAVE_CONNECTION))) */
 
-/**
- * brief: PAWR host buffer struct
- */
-typedef struct _pawr_host_buffer {
-	uint8_t buffer[257];
-	uint8_t total_data_lenth;
-	uint8_t number_of_reports;
-}pawr_host_buffer;
 
 /*
  * @brief   Transport layer event
@@ -412,6 +426,11 @@ typedef enum {
  */
 #define DEFAULT_PHY_CALIBRATION_PERIOD        		10	/* Time period for PHY calibration = 10s */
 
+#ifdef PHY_40nm_3_00_a
+#define SUPPORT_MAC_PHY_CONT_TESTING_CMDS 1
+#else
+#define SUPPORT_MAC_PHY_CONT_TESTING_CMDS 0
+#endif /*end of PHY_40nm_3_00_a && SUPPORT_MAC_PHY_CONT_TESTING_CMDS */
 
 #ifndef EXTERNAL_CUSTOM_CMDS
 #define EXTERNAL_CUSTOM_CMDS						0	/* Indicates that an external custom HCI commands module exists */
@@ -425,9 +444,11 @@ typedef enum {
    -Allow host to register callback to refuse current controller event and receive it later with another callback*/
 #define SUPPORT_HCI_EVENT_ONLY				1
 
+#else
+#define SUPPORT_HCI_EVENT_ONLY				0
 #endif/* (!USE_HCI_TRANSPORT) && (SUPPORT_BLE) */
 
 #define SUPPORT_HW_AUDIO_SYNC_SIGNAL       0
 
-
+#define SUPPORT_TIM_UPDT					1
 #endif /*COMMON_TYPES_H_*/

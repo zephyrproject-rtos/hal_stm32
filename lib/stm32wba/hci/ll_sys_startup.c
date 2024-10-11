@@ -26,11 +26,16 @@
 #include "st_mac_802_15_4_sap.h"
 #endif /* MAC */
 
+/**
+  * @brief  Missed HCI event flag
+  */
+uint8_t missed_hci_event_flag = 0;
+
 static void ll_sys_dependencies_init(void);
 #ifdef BLE
 static void ll_sys_event_missed_cb( ble_buff_hdr_t* ptr_evnt_hdr )
 {
-
+  missed_hci_event_flag = 1;
 }
 
 /**
@@ -40,7 +45,8 @@ static void ll_sys_event_missed_cb( ble_buff_hdr_t* ptr_evnt_hdr )
   */
 void ll_sys_ble_cntrl_init(hst_cbk hostCallback)
 {
-  const struct hci_dispatch_tbl* p_hci_dis_tbl;
+  const struct hci_dispatch_tbl* p_hci_dis_tbl = NULL;
+
   hci_get_dis_tbl( &p_hci_dis_tbl );
 
   ll_intf_init(p_hci_dis_tbl);
@@ -84,7 +90,14 @@ void ll_sys_thread_init(void)
   */
 static void ll_sys_dependencies_init(void)
 {
-  ll_sys_status_t dp_slp_status = LL_SYS_ERROR;
+  static uint8_t is_ll_initialized = 0;
+  ll_sys_status_t dp_slp_status;
+
+  /* Ensure Link Layer resources are created only once */
+  if (is_ll_initialized == 1) {
+    return;
+  }
+  is_ll_initialized = 1;
 
   /* Deep sleep feature initialization */
   dp_slp_status = ll_sys_dp_slp_init();

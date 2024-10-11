@@ -140,4 +140,22 @@ extern "C" {
             for(volatile unsigned int cpt = 178 ; cpt!=0 ; --cpt);\
            } while(0)
 
+#define STM32WBA5x_DEFAULT_SCA_RANGE          (0)
+#define STM32WBA5x_REV_ID_A_SCA_RANGE         (STM32WBA5x_DEFAULT_SCA_RANGE)
+#define STM32WBA5x_REV_ID_B_SCA_RANGE         (4)
+
+/* Macro helper for optimizing by speed specific functions.
+ * For IAR only: The functions with this definition will be optimized
+ * by speed only if the project uses a High optimisation level.
+ */
+#if defined(__IAR_SYSTEMS_ICC__)
+#define OPTIMIZED _Pragma("optimize=speed")
+#elif defined(__clang__)
+#define OPTIMIZED   _Pragma("pragma Ofast")
+#elif defined(__GNUC__)
+#define OPTIMIZED   __attribute__((optimize("Ofast")))
+#endif
+
+#define UTIL_UNUSED(X) (void)X      /* To avoid gcc/g++ warnings */
+
 #endif /* UTILITIES_COMMON_H */

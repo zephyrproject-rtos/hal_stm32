@@ -122,6 +122,36 @@ extern void HW_AES_Crypt( const uint32_t* input,
  */
 extern void HW_AES_Disable( void );
 
+/*
+ * HW_AES_InitCcm
+ *
+ * Initilaizes AES for CCM encryption (decrypt = 0) or decryption (decrypt = 1)
+ * Note: B0 and B1 4-word blocks must be provided by user.
+ *
+ */
+extern void HW_AES_InitCcm( uint8_t decrypt,
+                            const uint8_t* key,
+                            const uint32_t* b0,
+                            const uint32_t* b1 );
+
+/*
+ * HW_AES_EndCcm
+ *
+ * Completes CCM processing by computing the authentication tag
+ *
+ */
+extern void HW_AES_EndCcm( uint8_t tag_length,
+                           uint8_t* tag );
+
+/*
+ * HW_AES_SetLast
+ *
+ * Function used in CCM processing to indicate the last block of data in
+ * case of decryption
+ *
+ */
+extern void HW_AES_SetLast( uint8_t left_length );
+
 /* ---------------------------------------------------------------------------
  *                                 PKA
  * ---------------------------------------------------------------------------

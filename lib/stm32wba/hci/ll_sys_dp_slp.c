@@ -18,10 +18,7 @@
 
 #include "linklayer_plat.h"
 #include "ll_sys.h"
-#include "ll_intf.h"
-#if defined(MAC)
-#include "platform.h"
-#endif
+#include "ll_intf_cmn.h"
 
 /* Link Layer deep sleep status */
 uint8_t is_Radio_DeepSleep = 0U;
@@ -43,6 +40,9 @@ ll_sys_status_t ll_sys_dp_slp_init(void)
 
   /* Create link layer timer for handling IP DEEP SLEEP mode */
   radio_dp_slp_tmr_id = os_timer_create((t_timer_callbk)ll_sys_dp_slp_wakeup_evt_clbk, os_timer_once, NULL);
+
+  /* Set priority of deep sleep timer */
+  os_timer_set_prio(radio_dp_slp_tmr_id, hg_prio_tmr);
 
   if (radio_dp_slp_tmr_id != NULL)
   {
@@ -68,7 +68,7 @@ ll_sys_dp_slp_state_t ll_sys_dp_slp_get_state(void)
   * @retval LL_SYS status
   */
 ll_sys_status_t ll_sys_dp_slp_enter(uint32_t dp_slp_duration){
-  ble_stat_t cmd_status = GENERAL_FAILURE;
+  ble_stat_t cmd_status;
   int32_t os_status = GENERAL_FAILURE;
   ll_sys_status_t return_status = LL_SYS_ERROR;
 
@@ -88,17 +88,7 @@ ll_sys_status_t ll_sys_dp_slp_enter(uint32_t dp_slp_duration){
   if(os_status == SUCCESS)
   {
     /* Switch Link Layer IP to DEEP SLEEP mode */
-#if defined(BLE)
-    /* BLE & Concurrent use case */
-    cmd_status = ll_intf_le_set_dp_slp_mode(DEEP_SLEEP_ENABLE);
-#elif defined(MAC)
-    if (radio_set_dp_slp_mode(DEEP_SLEEP_ENABLE) == OT_ERROR_NONE)
-    {
-      cmd_status = SUCCESS;
-    }
-#else
- #error "neither MAC not BLE defined"
-#endif
+    cmd_status = ll_intf_cmn_le_set_dp_slp_mode(DEEP_SLEEP_ENABLE);
     if(cmd_status == SUCCESS){
       linklayer_dp_slp_state = LL_SYS_DP_SLP_ENABLED;
       return_status = LL_SYS_OK;
@@ -114,7 +104,7 @@ ll_sys_status_t ll_sys_dp_slp_enter(uint32_t dp_slp_duration){
   * @retval LL_SYS status
   */
 ll_sys_status_t ll_sys_dp_slp_exit(void){
-  ble_stat_t cmd_status = GENERAL_FAILURE;
+  ble_stat_t cmd_status;
   ll_sys_status_t return_status = LL_SYS_ERROR;
 
   /* Disable radio interrupt */
@@ -134,17 +124,7 @@ ll_sys_status_t ll_sys_dp_slp_exit(void){
     }
 
     /* Switch Link Layer IP to SLEEP mode (by deactivate DEEP SLEEP mode) */
-#if defined(BLE)
-    /* BLE & Concurrent use case */
-    cmd_status = ll_intf_le_set_dp_slp_mode(DEEP_SLEEP_DISABLE);
-#elif defined(MAC)
-    if (radio_set_dp_slp_mode(DEEP_SLEEP_DISABLE) == OT_ERROR_NONE)
-    {
-      cmd_status = SUCCESS;
-    }
-#else
- #error "neither MAC not BLE defined"
-#endif
+    cmd_status = ll_intf_cmn_le_set_dp_slp_mode(DEEP_SLEEP_DISABLE);
     if(cmd_status == SUCCESS)
     {
       linklayer_dp_slp_state = LL_SYS_DP_SLP_DISABLED;
@@ -164,7 +144,7 @@ ll_sys_status_t ll_sys_dp_slp_exit(void){
   * @retval LL_SYS status
   */
 void ll_sys_dp_slp_wakeup_evt_clbk(void const *ptr_arg){
-  int32_t os_status = GENERAL_FAILURE;
+  int32_t os_status;
 
   /* Stop the Link Layer IP DEEP SLEEP wake-up timer */
   os_status = os_timer_stop(radio_dp_slp_tmr_id);

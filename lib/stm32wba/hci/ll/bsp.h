@@ -1,4 +1,4 @@
-/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/1.30a-SOW05Patchv6_2/firmware/public_inc/bsp.h#1 $*/
+/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/1.32a-LCA00/firmware/public_inc/bsp.h#1 $*/
 
 /**
  ********************************************************************************
@@ -55,6 +55,9 @@
 #define LL_LOW_ISR_ONLY  		0x02	// Specify only LL LOW ISR to be enabled or disabled
 #define SYS_LOW_ISR		 		0x04 	// Specify only system low ISR to be enabled or disabled
 
+#ifndef EBQ_BUILD
+#define EBQ_BUILD					0
+#endif
 /**
  * @brief InterruptPriorities Enum.
  * it is used to define the different ISR priorities in the controller
@@ -267,6 +270,7 @@ typedef enum Debug_GPIO_e{
 
 	DBG_IO_CONN_MNGR_PROCESS_EVNT_CLBK                          ,
 	DBG_IO_CONN_MNGR_UPDT_CONN_PARAM_CBK                        ,
+	DBG_IO_CONN_MNGR_DATA_LEN_UPDT_CBK							,
 	DBG_IO_EVNT_SCHDLR_HW_EVNT_CMPLT                            ,
 
 	DBG_IO_HCI_EVENT_HNDLR                                      ,
@@ -281,9 +285,7 @@ typedef enum Debug_GPIO_e{
 	DBG_IO_PROFILE_MARKER_PHY_WAKEUP_TIME                       ,
 	DBG_IO_PROFILE_END_DRIFT_TIME                               ,
 	DBG_IO_PROC_RADIO_RCV										,
-
 	DBG_IO_EVNT_TIME_UPDT										,
-
 	DBG_IO_MAC_RECEIVE_DONE										,
 	DBG_IO_MAC_TX_DONE											,
 	DBG_IO_RADIO_APPLY_CSMA										,
@@ -612,6 +614,7 @@ void bsp_debug_gpio_toggle(Debug_GPIO_t gpio);
  * @retval None.
  */
 void bsp_set_phy_clbr_state(PhyClbrState state);
+
 /**
  * @brief a function to notify the upper layer to switch the clock.
  *

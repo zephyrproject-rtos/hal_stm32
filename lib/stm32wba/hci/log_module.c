@@ -181,7 +181,7 @@ void Log_Module_PrintWithArg( Log_Verbose_Level_t eVerboseLevel, Log_Region_t eR
   if ( pLogTimeStampFunc != NULL )
   {
      iTempSize = UTIL_ADV_TRACE_TMP_BUF_SIZE - iBuffSize;
-     pLogTimeStampFunc( &szFullText[iBuffSize], &iTempSize );
+     pLogTimeStampFunc( &szFullText[iBuffSize], iTempSize, &iTempSize );
      iBuffSize += iTempSize;
   }
 #endif /* LOG_INSERT_TIME_STAMP_INSIDE_THE_TRACE */
