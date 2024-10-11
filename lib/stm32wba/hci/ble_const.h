@@ -1,6 +1,6 @@
 /*****************************************************************************
  * @file    ble_const.h
- * @author  MDG
+ *
  * @brief   This file contains the definitions which are compiler dependent.
  *****************************************************************************
  * @attention
@@ -31,6 +31,9 @@
 #endif
 #ifndef BASIC_PLUS
 #define BASIC_PLUS 0
+#endif
+#ifndef PERIPHERAL_ONLY
+#define PERIPHERAL_ONLY 0
 #endif
 #ifndef LL_ONLY
 #define LL_ONLY 0

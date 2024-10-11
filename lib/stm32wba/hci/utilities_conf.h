@@ -28,7 +28,7 @@ extern "C" {
 
 /* Includes ------------------------------------------------------------------*/
 #include "cmsis_compiler.h"
-
+#include "app_conf.h"
 /* definitions to be provided to "sequencer" utility */
 #include "stm32_mem.h"
 /* definition and callback for tiny_vsnprintf */
@@ -148,9 +148,9 @@ extern "C" {
 #define UTIL_ADV_TRACE_INIT_CRITICAL_SECTION( )    UTILS_INIT_CRITICAL_SECTION()         /*!< init the critical section in trace feature */
 #define UTIL_ADV_TRACE_ENTER_CRITICAL_SECTION( )   UTILS_ENTER_CRITICAL_SECTION()        /*!< enter the critical section in trace feature */
 #define UTIL_ADV_TRACE_EXIT_CRITICAL_SECTION( )    UTILS_EXIT_CRITICAL_SECTION()         /*!< exit the critical section in trace feature */
-#define UTIL_ADV_TRACE_TMP_BUF_SIZE                (256U)                                /*!< default trace buffer size */
-#define UTIL_ADV_TRACE_TMP_MAX_TIMESTMAP_SIZE      (15U)                                 /*!< default trace timestamp size */
-#define UTIL_ADV_TRACE_FIFO_SIZE                   (4096U)                               /*!< default trace fifo size */
+#define UTIL_ADV_TRACE_TMP_BUF_SIZE                (CFG_LOG_TRACE_BUF_SIZE)              /*!< trace buffer size */
+#define UTIL_ADV_TRACE_TMP_MAX_TIMESTMAP_SIZE      (15U)                                 /*!< trace timestamp size */
+#define UTIL_ADV_TRACE_FIFO_SIZE                   (CFG_LOG_TRACE_FIFO_SIZE)             /*!< trace fifo size */
 #define UTIL_ADV_TRACE_MEMSET8( dest, value, size) UTIL_MEM_set_8((dest),(value),(size)) /*!< memset utilities interface to trace feature */
 #define UTIL_ADV_TRACE_VSNPRINTF(...)              vsnprintf(__VA_ARGS__)      /*!< vsnprintf utilities interface to trace feature */
 

@@ -1,4 +1,4 @@
-/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/1.30a-SOW05Patchv6_2/firmware/public_inc/ll_intf.h#1 $*/
+/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/1.32a-LCA00/firmware/public_inc/ll_intf.h#1 $*/
 /**
  ********************************************************************************
  * @file    ll_intf_cmds.h
@@ -4438,7 +4438,7 @@ ble_stat_t ll_intf_get_num_of_antennas(uint8_t *ptr_num_of_antennas);
  * @retval status  : [out] 0:SUCCESS, 0xXX:ERROR_CODE.
  */
 ble_stat_t ll_intf_set_dtm_with_spcfc_pckt_count(uint16_t pckt_count);
-
+#if SUPPORT_TIM_UPDT
 /**
  * @brief  used to update the event timing.
  *
@@ -4447,6 +4447,7 @@ ble_stat_t ll_intf_set_dtm_with_spcfc_pckt_count(uint16_t pckt_count);
  * @retval None
  */
 void ll_intf_config_schdling_time(Evnt_timing_t * p_evnt_timing);
+#endif /* SUPPORT_TIM_UPDT */
 /**@}
 */
 

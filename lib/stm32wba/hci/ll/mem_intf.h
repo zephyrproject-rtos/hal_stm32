@@ -1,8 +1,4 @@
-/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/branches/P10164613/issue_2029/firmware/public_inc/mem_intf.h#2 $*/
-/*Version_INFO
-V2  --> Original version is 1.30a-SOW05PatchV6_2
-V2  --> combined patch case 01641860
-*/
+/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/1.32a-LCA00/firmware/public_inc/mem_intf.h#1 $*/
 /**
  ********************************************************************************
  * @file    mem_intf.h

@@ -1,4 +1,4 @@
-/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/1.30a-SOW05Patchv6_2/firmware/public_inc/event_manager.h#1 $*/
+/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/1.32a-LCA00/firmware/public_inc/event_manager.h#1 $*/
 /**
  ********************************************************************************
  * @file    event_manager.h
@@ -72,6 +72,9 @@ typedef enum {
 #if ((SUPPORT_MASTER_CONNECTION) || (SUPPORT_SLAVE_CONNECTION))
 	CONN_EVENT, /*connection event handler ID*/
 	CONN_PARAM_UPDATE_EVENT, /* handler for connection parameter update initiated by link layer */
+#if ((SUPPORT_CONNECTED_ISOCHRONOUS) && (SUPPORT_MASTER_CONNECTION))
+	CONN_DATA_LEN_UPDATE_EVENT, /* handler for connection data length update initiated by link layer */
+#endif /*SUPPORT_CONNECTED_ISOCHRONOUS && SUPPORT_MASTER_CONNECTION*/
 #if(SUPPORT_CONNECTED_ISOCHRONOUS &&( SUPPORT_MASTER_CONNECTION || SUPPORT_SLAVE_CONNECTION))
 	CIS_EVENT,
 #endif /*SUPPORT_CONNECTED_ISOCHRONOUS*/
@@ -101,6 +104,7 @@ typedef enum {
 	COEX_TIMER_EVENT,
 #endif
 #if SUPPORT_MAC
+	RADIO_MAC_TX_DONE_EVENT,
 	RAL_SM_DONE_EVENT,
 	MAC_SM_DONE_EVENT,
 	ED_TMR_EVENT,
@@ -153,7 +157,6 @@ typedef enum {
 #if (NUM_OF_CTSM_EMNGR_HNDLS >= 3)
 	CUSTOM_HANDLE_3,
 #endif
-
 	MAX_EM_HANDLE
 } handler_t;
 /* Exported functions ------------------------------------------------------- */

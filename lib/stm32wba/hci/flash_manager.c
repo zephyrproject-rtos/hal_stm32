@@ -61,7 +61,7 @@ typedef struct FM_FlashOpConfig
 }FM_FlashOpConfig_t;
 
 /* Private defines -----------------------------------------------------------*/
-
+#define FLASH_PAGE_NBR    (FLASH_SIZE / FLASH_PAGE_SIZE)
 #define FLASH_WRITE_BLOCK_SIZE  4U
 #define ALIGNMENT_32   0x00000003
 #define ALIGNMENT_128  0x0000000F
@@ -134,8 +134,8 @@ FM_Cmd_Status_t FM_Write(uint32_t *Src, uint32_t *Dest, int32_t Size, FM_Callbac
 {
   FM_Cmd_Status_t status;
 
-  if (((uint32_t)Dest < FLASH_BASE) || ((uint32_t)Dest > (FLASH_BASE + FLASH_BANK_SIZE))
-                                    || (((uint32_t)Dest + Size) > (FLASH_BASE + FLASH_BANK_SIZE)))
+  if (((uint32_t)Dest < FLASH_BASE) || ((uint32_t)Dest > (FLASH_BASE + FLASH_SIZE))
+                                    || (((uint32_t)Dest + Size) > (FLASH_BASE + FLASH_SIZE)))
   {
     LOG_ERROR_SYSTEM("\r\nFM_Write - Destination address not part of the flash");
 
@@ -185,7 +185,7 @@ FM_Cmd_Status_t FM_Erase(uint32_t FirstSect, uint32_t NbrSect, FM_CallbackNode_t
 {
   FM_Cmd_Status_t status;
 
-  if ((FirstSect > FLASH_PAGE_NB) || ((FirstSect + NbrSect) > FLASH_PAGE_NB))
+  if ((FirstSect > FLASH_PAGE_NBR) || ((FirstSect + NbrSect) > FLASH_PAGE_NBR))
   {
     LOG_ERROR_SYSTEM("\r\nFM_Erase - Inconsistent request");
 

@@ -21,6 +21,9 @@
 #include "event_manager.h"
 #include "ll_intf.h"
 
+extern uint8_t AHB5_SwitchedOff;
+extern uint32_t radio_sleep_timer_val;
+
 /**
   * @brief  Initialize the Link Layer SoC dependencies
   * @param  None
@@ -68,8 +71,14 @@ void ll_sys_radio_ack_ctrl(uint8_t enable)
   */
 void ll_sys_radio_wait_for_busclkrdy(void)
 {
-  LINKLAYER_PLAT_WaitHclkRdy();
+  /* Wait on radio bus clock readiness if it has been turned of */
+  if (AHB5_SwitchedOff == 1)
+  {
+    AHB5_SwitchedOff = 0;
+    while (radio_sleep_timer_val == ll_intf_cmn_get_slptmr_value());
+  }
 }
+
 
 /**
   * @brief  Get RNG number for the Link Layer IP

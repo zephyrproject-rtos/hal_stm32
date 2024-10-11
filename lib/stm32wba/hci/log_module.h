@@ -30,6 +30,7 @@ extern "C" {
 #include <stdarg.h>
 #include <stdint.h>
 #include <stdbool.h>
+#include "app_conf.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -288,12 +289,24 @@ void Log_Module_PrintWithArg( Log_Verbose_Level_t eVerboseLevel, Log_Region_t eR
 /* USER CODE END EFP */
 
 /* Exported macro ------------------------------------------------------------*/
+/* Display 64 bits number for all compiler. */
+/* Example : LOG_INFO_APP( "New Device : " LOG_DISPLAY64() " installed in %d seconds", LOG_NUMBER64( dlDevice ), iTime ); */
+#define LOG_DISPLAY64()             "0x%08X%08X"
+#define LOG_NUMBER64( number )      (uint32_t)( number >> 32u ), (uint32_t)( number )
+
 /* Module API - Log macros for each region */
 /* LOG_REGION_BLE */
+#if (CFG_LOG_SUPPORTED != 0)
 #define LOG_INFO_BLE(...)         Log_Module_Print( LOG_VERBOSE_INFO, LOG_REGION_BLE, __VA_ARGS__)
 #define LOG_ERROR_BLE(...)        Log_Module_Print( LOG_VERBOSE_ERROR, LOG_REGION_BLE, __VA_ARGS__)
 #define LOG_WARNING_BLE(...)      Log_Module_Print( LOG_VERBOSE_WARNING, LOG_REGION_BLE, __VA_ARGS__)
 #define LOG_DEBUG_BLE(...)        Log_Module_Print( LOG_VERBOSE_DEBUG, LOG_REGION_BLE, __VA_ARGS__)
+#else /* (CFG_LOG_SUPPORTED != 0) */
+#define LOG_INFO_BLE(...)         do {} while(0)
+#define LOG_ERROR_BLE(...)        do {} while(0)
+#define LOG_WARNING_BLE(...)      do {} while(0)
+#define LOG_DEBUG_BLE(...)        do {} while(0)
+#endif /* (CFG_LOG_SUPPORTED != 0) */
 
 /* USER CODE BEGIN LOG_REGION_BLE */
 /**
@@ -310,10 +323,17 @@ void Log_Module_PrintWithArg( Log_Verbose_Level_t eVerboseLevel, Log_Region_t eR
 /* USER CODE END LOG_REGION_BLE */
 
 /* LOG_REGION_SYSTEM */
+#if (CFG_LOG_SUPPORTED != 0)
 #define LOG_INFO_SYSTEM(...)      Log_Module_Print( LOG_VERBOSE_INFO, LOG_REGION_SYSTEM, __VA_ARGS__)
 #define LOG_ERROR_SYSTEM(...)     Log_Module_Print( LOG_VERBOSE_ERROR, LOG_REGION_SYSTEM, __VA_ARGS__)
 #define LOG_WARNING_SYSTEM(...)   Log_Module_Print( LOG_VERBOSE_WARNING, LOG_REGION_SYSTEM, __VA_ARGS__)
 #define LOG_DEBUG_SYSTEM(...)     Log_Module_Print( LOG_VERBOSE_DEBUG, LOG_REGION_SYSTEM, __VA_ARGS__)
+#else /* (CFG_LOG_SUPPORTED != 0) */
+#define LOG_INFO_SYSTEM(...)      do {} while(0)
+#define LOG_ERROR_SYSTEM(...)     do {} while(0)
+#define LOG_WARNING_SYSTEM(...)   do {} while(0)
+#define LOG_DEBUG_SYSTEM(...)     do {} while(0)
+#endif /* (CFG_LOG_SUPPORTED != 0) */
 
 /* USER CODE BEGIN LOG_REGION_SYSTEM */
 /**
@@ -330,10 +350,17 @@ void Log_Module_PrintWithArg( Log_Verbose_Level_t eVerboseLevel, Log_Region_t eR
 /* USER CODE END LOG_REGION_SYSTEM */
 
 /* LOG_REGION_APP */
+#if (CFG_LOG_SUPPORTED != 0)
 #define LOG_INFO_APP(...)       Log_Module_Print( LOG_VERBOSE_INFO, LOG_REGION_APP, __VA_ARGS__)
 #define LOG_ERROR_APP(...)      Log_Module_Print( LOG_VERBOSE_ERROR, LOG_REGION_APP, __VA_ARGS__)
 #define LOG_WARNING_APP(...)    Log_Module_Print( LOG_VERBOSE_WARNING, LOG_REGION_APP, __VA_ARGS__)
 #define LOG_DEBUG_APP(...)      Log_Module_Print( LOG_VERBOSE_DEBUG, LOG_REGION_APP, __VA_ARGS__)
+#else /* (CFG_LOG_SUPPORTED != 0) */
+#define LOG_INFO_APP(...)       do {} while(0)
+#define LOG_ERROR_APP(...)      do {} while(0)
+#define LOG_WARNING_APP(...)    do {} while(0)
+#define LOG_DEBUG_APP(...)      do {} while(0)
+#endif /* (CFG_LOG_SUPPORTED != 0) */
 
 /* USER CODE BEGIN LOG_REGION_APP */
 /**
@@ -354,10 +381,17 @@ void Log_Module_PrintWithArg( Log_Verbose_Level_t eVerboseLevel, Log_Region_t eR
  * Add inside this user section your defines to match the new regions you
  * created into Log_Region_t.
  * Example :
+ * #if (CFG_LOG_SUPPORTED != 0)
  * #define LOG_INFO_CUSTOM(...)       Log_Module_Print( LOG_VERBOSE_INFO, LOG_REGION_CUSTOM, __VA_ARGS__)
  * #define LOG_ERROR_CUSTOM(...)      Log_Module_Print( LOG_VERBOSE_ERROR, LOG_REGION_CUSTOM, __VA_ARGS__)
  * #define LOG_WARNING_CUSTOM(...)    Log_Module_Print( LOG_VERBOSE_WARNING, LOG_REGION_CUSTOM, __VA_ARGS__)
  * #define LOG_DEBUG_CUSTOM(...)      Log_Module_Print( LOG_VERBOSE_DEBUG, LOG_REGION_CUSTOM, __VA_ARGS__)
+ * #else
+ * #define LOG_INFO_CUSTOM(...)       do {} while(0)
+ * #define LOG_ERROR_CUSTOM(...)      do {} while(0)
+ * #define LOG_WARNING_CUSTOM(...)    do {} while(0)
+ * #define LOG_DEBUG_CUSTOM(...)      do {} while(0)
+ * #endif
  */
 
 /* USER CODE END APP_LOG_USER_DEFINES */
