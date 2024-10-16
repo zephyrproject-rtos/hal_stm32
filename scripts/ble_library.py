@@ -74,6 +74,7 @@ file_list_wba = {
             "Middlewares/ST/STM32_WPAN/link_layer/ll_sys/src/ll_sys_startup.c",
             "Middlewares/ST/STM32_WPAN/link_layer/ll_sys/inc/ll_sys_startup.h",
             "Middlewares/ST/STM32_WPAN/stm32_wpan_common.h",
+            "Middlewares/ST/STM32_WPAN/ll_intf_cmn.h",
             ble_heartrate_app_path + "/Core/Inc/app_common.h",
             ble_heartrate_app_path + "/Core/Inc/app_conf.h",
             ble_heartrate_app_path + "/Core/Inc/app_entry.h",

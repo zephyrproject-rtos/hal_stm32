@@ -116,6 +116,7 @@ Patch List:
 			  main.h
 			  app_conf.h
 			  scm.c
+			  ll_intf_cmn.h
 
 	* Changes from official delivery:
 	- dos2unix applied
