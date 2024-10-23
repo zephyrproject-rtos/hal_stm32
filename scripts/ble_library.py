@@ -107,6 +107,8 @@ file_list_wba = {
             ble_heartrate_app_path + "/STM32_WPAN/Target/power_table.c",
             ble_heartrate_app_path + "/STM32_WPAN/Target/bpka.c",
             ble_heartrate_app_path + "/STM32_WPAN/Target/bpka.h",
+            ble_heartrate_app_path + "/STM32_WPAN/Target/linklayer_plat.c",
+            ble_heartrate_app_path + "/STM32_WPAN/Target/ll_sys_if.c",
             "Utilities/trace/adv_trace/stm32_adv_trace.h",
             "Utilities/misc/stm32_mem.h",
             "Utilities/tim_serv/stm32_timer.h",

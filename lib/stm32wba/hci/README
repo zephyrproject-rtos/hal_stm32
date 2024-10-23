@@ -33,6 +33,7 @@ Description:
       Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/os_wrapper.h
       Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/power_table.h
       Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/pta.h
+      Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/ll_intf_cmn.h
       Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/config/ble_full/ll_fw_config.h
       Middlewares/ST/STM32_WPAN/link_layer/ll_sys/inc/linklayer_plat.h
       Middlewares/ST/STM32_WPAN/link_layer/ll_sys/inc/ll_sys.h
@@ -74,6 +75,8 @@ Description:
       Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_HeartRate/STM32_WPAN/Target/power_table.c
       Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_HeartRate/STM32_WPAN/Target/bpka.c
       Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_HeartRate/STM32_WPAN/Target/bpka.h
+      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_HeartRate/STM32_WPAN/Target/linklayer_plat.c
+      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_HeartRate/STM32_WPAN/Target/ll_sys_if.c
       Utilities/trace/adv_trace/stm32_adv_trace.h
       Utilities/misc/stm32_mem.h
       Utilities/tim_serv/stm32_timer.h
@@ -117,6 +120,12 @@ Patch List:
 			  app_conf.h
 			  scm.c
 			  ll_intf_cmn.h
+			  ll_sys_if.c
+			  linklayer_plat.c
+
+	* #ifndef __ZEPHYR__ applied to remove Cube specific implementation
+	  Impacted files: ll_sys_if.c
+			  linklayer_plat.c
 
 	* Changes from official delivery:
 	- dos2unix applied
