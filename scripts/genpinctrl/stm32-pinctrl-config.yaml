@@ -267,13 +267,11 @@
   
 - name: UART_CTS / USART_CTS / LPUART_CTS
   match: "^(?:LP)?US?ART\\d+_CTS$"
-  drive: open-drain
   bias: pull-up
 
 - name: UART_RTS / USART_RTS / LPUART_RTS
   match: "^(?:LP)?US?ART\\d+_RTS$"
-  drive: open-drain
-  bias: pull-up
+  drive: push-pull
 
 - name: UART_DE / USART_DE / LPUART_DE
   match: "^(?:LP)?US?ART\\d+_DE$"
