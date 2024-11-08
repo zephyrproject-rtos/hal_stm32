@@ -695,13 +695,18 @@ def main(data_path, output):
                 )
 
             # write pinctrl file
-            ref_file = family_dir / (ref["name"].lower() + "-pinctrl.dtsi")
-            with open(ref_file, "w") as f:
-                f.write(
-                    pinctrl_template.render(
-                        family=family, pinctrl_addr=pinctrl_addr, entries=entries
-                    )
+            pinctrl_filename = f"{ref['name'].lower()}-pinctrl.dtsi"
+            rendered = ""
+            try:
+                rendered = pinctrl_template.render(
+                    family=family, pinctrl_addr=pinctrl_addr, entries=entries
                 )
+            except Exception:
+                logger.error(f"Skipping '{pinctrl_filename}' (rendering failed)")
+                continue
+
+            with open(family_dir / pinctrl_filename, "w") as f:
+                f.write(rendered)
 
     # write readme file
     try:
