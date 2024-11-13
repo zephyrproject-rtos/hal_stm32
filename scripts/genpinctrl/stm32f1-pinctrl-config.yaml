@@ -255,3 +255,8 @@
 - name: USB
   match: "^USB_(?:DM)?(?:DP)?$"
   mode: input
+
+- name: SDIO
+  match: "^SDIO_(?:CK)?(?:CKIN)?(?:CDIR)?(?:CMD)?(?:D\\d+)?(?:D0DIR)?(?:D123DIR)?$"
+  mode: alternate
+  slew-rate: max-speed-50mhz
