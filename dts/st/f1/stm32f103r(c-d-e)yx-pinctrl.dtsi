@@ -472,6 +472,58 @@
 				pinmux = <STM32F1_PINMUX('A', 8, ALTERNATE, NO_REMAP)>;
 			};
 
+			/* SDIO */
+
+			/omit-if-no-ref/ sdio_d4_pb8: sdio_d4_pb8 {
+				pinmux = <STM32F1_PINMUX('B', 8, ALTERNATE, NO_REMAP)>;
+				slew-rate = "max-speed-50mhz";
+			};
+
+			/omit-if-no-ref/ sdio_d5_pb9: sdio_d5_pb9 {
+				pinmux = <STM32F1_PINMUX('B', 9, ALTERNATE, NO_REMAP)>;
+				slew-rate = "max-speed-50mhz";
+			};
+
+			/omit-if-no-ref/ sdio_d6_pc6: sdio_d6_pc6 {
+				pinmux = <STM32F1_PINMUX('C', 6, ALTERNATE, NO_REMAP)>;
+				slew-rate = "max-speed-50mhz";
+			};
+
+			/omit-if-no-ref/ sdio_d7_pc7: sdio_d7_pc7 {
+				pinmux = <STM32F1_PINMUX('C', 7, ALTERNATE, NO_REMAP)>;
+				slew-rate = "max-speed-50mhz";
+			};
+
+			/omit-if-no-ref/ sdio_d0_pc8: sdio_d0_pc8 {
+				pinmux = <STM32F1_PINMUX('C', 8, ALTERNATE, NO_REMAP)>;
+				slew-rate = "max-speed-50mhz";
+			};
+
+			/omit-if-no-ref/ sdio_d1_pc9: sdio_d1_pc9 {
+				pinmux = <STM32F1_PINMUX('C', 9, ALTERNATE, NO_REMAP)>;
+				slew-rate = "max-speed-50mhz";
+			};
+
+			/omit-if-no-ref/ sdio_d2_pc10: sdio_d2_pc10 {
+				pinmux = <STM32F1_PINMUX('C', 10, ALTERNATE, NO_REMAP)>;
+				slew-rate = "max-speed-50mhz";
+			};
+
+			/omit-if-no-ref/ sdio_d3_pc11: sdio_d3_pc11 {
+				pinmux = <STM32F1_PINMUX('C', 11, ALTERNATE, NO_REMAP)>;
+				slew-rate = "max-speed-50mhz";
+			};
+
+			/omit-if-no-ref/ sdio_ck_pc12: sdio_ck_pc12 {
+				pinmux = <STM32F1_PINMUX('C', 12, ALTERNATE, NO_REMAP)>;
+				slew-rate = "max-speed-50mhz";
+			};
+
+			/omit-if-no-ref/ sdio_cmd_pd2: sdio_cmd_pd2 {
+				pinmux = <STM32F1_PINMUX('D', 2, ALTERNATE, NO_REMAP)>;
+				slew-rate = "max-speed-50mhz";
+			};
+
 			/* SPI_MASTER_MISO */
 
 			/omit-if-no-ref/ spi1_miso_master_pa6: spi1_miso_master_pa6 {
