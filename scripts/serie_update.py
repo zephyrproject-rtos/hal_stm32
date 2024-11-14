@@ -456,16 +456,6 @@ class Stm32SerieUpdate:
 
         self.os_cmd(("dos2unix", str(readme_path)))
 
-    def copy_release_note(self):
-        """Copy release_note.html file from STM32Cube to zephyr"""
-        release_note_src = self.stm32cube_serie_path / "Release_Notes.html"
-        release_note_dst = self.zephyr_module_serie_path / "release_note.html"
-        if release_note_dst.exists():
-            release_note_dst.unlink()
-        if release_note_src.exists:
-            release_note_src.rename(release_note_dst)
-            self.os_cmd(("dos2unix", str(release_note_dst)))
-
     def update_cmakelist(self):
         """Update CMakeLists.txt file"""
         cmakelists_path = self.zephyr_module_serie_path / "CMakeLists.txt"
@@ -640,10 +630,9 @@ class Stm32SerieUpdate:
             os.remove(patch_path)
         shutil.copy(str(self.stm32cube_temp / self.module_patch), patch_path)
 
-        # Update README and CMakeList, copy release note
+        # Update README and CMakeList
         self.update_readme(self.version_update, self.update_commit)
         self.update_cmakelist()
-        self.copy_release_note()
 
         # remove stm32_assert_template.h and create stm32_assert.h
         self.generate_assert_file()
