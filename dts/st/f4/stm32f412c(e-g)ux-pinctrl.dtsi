@@ -947,27 +947,23 @@
 			/omit-if-no-ref/ usart1_cts_pa11: usart1_cts_pa11 {
 				pinmux = <STM32_PINMUX('A', 11, AF7)>;
 				bias-pull-up;
-				drive-open-drain;
 			};
 
 			/omit-if-no-ref/ usart2_cts_pa0: usart2_cts_pa0 {
 				pinmux = <STM32_PINMUX('A', 0, AF7)>;
 				bias-pull-up;
-				drive-open-drain;
 			};
 
 			/* UART_RTS / USART_RTS / LPUART_RTS */
 
 			/omit-if-no-ref/ usart1_rts_pa12: usart1_rts_pa12 {
 				pinmux = <STM32_PINMUX('A', 12, AF7)>;
-				bias-pull-up;
-				drive-open-drain;
+				drive-push-pull;
 			};
 
 			/omit-if-no-ref/ usart2_rts_pa1: usart2_rts_pa1 {
 				pinmux = <STM32_PINMUX('A', 1, AF7)>;
-				bias-pull-up;
-				drive-open-drain;
+				drive-push-pull;
 			};
 
 			/* UART_RX / USART_RX / LPUART_RX */
