@@ -230,6 +230,10 @@
   mode: input
   variant: pwm_in
 
+- name: TSC
+  match: "^TSC_(?:G\\d+_IO\\d+|SYNC)$"
+  mode: alternate
+
 - name: UART_CTS / USART_CTS
   match: "^US?ART\\d+_CTS$"
   drive: open-drain

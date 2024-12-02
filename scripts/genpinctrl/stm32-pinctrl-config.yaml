@@ -259,6 +259,9 @@
 - name: TIM_CH / TIM_CHN
   match: "^TIM\\d+_CH\\d+N?$"
 
+- name: TSC
+  match: "^TSC_(?:G\\d+_IO\\d+|SYNC)$"
+  
 - name: UART_CTS / USART_CTS / LPUART_CTS
   match: "^(?:LP)?US?ART\\d+_CTS$"
   drive: open-drain
