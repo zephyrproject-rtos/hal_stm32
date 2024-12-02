@@ -299,3 +299,6 @@
 
 - name: JTAG PORT
   match: ^(SYS|DEBUG)_((JTMS-)?SWDIO|(JTCK-)?SWCLK|JTDI|JTDO(-TRACESWO|-SWO)?|(NJ)?JTRST)$
+
+- name: TSC
+  match: "^TSC_(?:G\\d+_IO\\d+|SYNC)$"

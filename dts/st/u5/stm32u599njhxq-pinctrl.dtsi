@@ -3261,6 +3261,136 @@
 				pinmux = <STM32_PINMUX('I', 7, AF3)>;
 			};
 
+			/* TSC */
+
+			/omit-if-no-ref/ tsc_g2_io1_pb4: tsc_g2_io1_pb4 {
+				pinmux = <STM32_PINMUX('B', 4, AF9)>;
+			};
+
+			/omit-if-no-ref/ tsc_g2_io2_pb5: tsc_g2_io2_pb5 {
+				pinmux = <STM32_PINMUX('B', 5, AF9)>;
+			};
+
+			/omit-if-no-ref/ tsc_g2_io3_pb6: tsc_g2_io3_pb6 {
+				pinmux = <STM32_PINMUX('B', 6, AF9)>;
+			};
+
+			/omit-if-no-ref/ tsc_g2_io4_pb7: tsc_g2_io4_pb7 {
+				pinmux = <STM32_PINMUX('B', 7, AF9)>;
+			};
+
+			/omit-if-no-ref/ tsc_sync_pb10: tsc_sync_pb10 {
+				pinmux = <STM32_PINMUX('B', 10, AF9)>;
+			};
+
+			/omit-if-no-ref/ tsc_g1_io1_pb12: tsc_g1_io1_pb12 {
+				pinmux = <STM32_PINMUX('B', 12, AF9)>;
+			};
+
+			/omit-if-no-ref/ tsc_g1_io2_pb13: tsc_g1_io2_pb13 {
+				pinmux = <STM32_PINMUX('B', 13, AF9)>;
+			};
+
+			/omit-if-no-ref/ tsc_g1_io3_pb14: tsc_g1_io3_pb14 {
+				pinmux = <STM32_PINMUX('B', 14, AF9)>;
+			};
+
+			/omit-if-no-ref/ tsc_g4_io1_pc6: tsc_g4_io1_pc6 {
+				pinmux = <STM32_PINMUX('C', 6, AF9)>;
+			};
+
+			/omit-if-no-ref/ tsc_g4_io2_pc7: tsc_g4_io2_pc7 {
+				pinmux = <STM32_PINMUX('C', 7, AF9)>;
+			};
+
+			/omit-if-no-ref/ tsc_g4_io3_pc8: tsc_g4_io3_pc8 {
+				pinmux = <STM32_PINMUX('C', 8, AF9)>;
+			};
+
+			/omit-if-no-ref/ tsc_g4_io4_pc9: tsc_g4_io4_pc9 {
+				pinmux = <STM32_PINMUX('C', 9, AF9)>;
+			};
+
+			/omit-if-no-ref/ tsc_g3_io2_pc10: tsc_g3_io2_pc10 {
+				pinmux = <STM32_PINMUX('C', 10, AF9)>;
+			};
+
+			/omit-if-no-ref/ tsc_g3_io3_pc11: tsc_g3_io3_pc11 {
+				pinmux = <STM32_PINMUX('C', 11, AF9)>;
+			};
+
+			/omit-if-no-ref/ tsc_g3_io4_pc12: tsc_g3_io4_pc12 {
+				pinmux = <STM32_PINMUX('C', 12, AF9)>;
+			};
+
+			/omit-if-no-ref/ tsc_sync_pd2: tsc_sync_pd2 {
+				pinmux = <STM32_PINMUX('D', 2, AF9)>;
+			};
+
+			/omit-if-no-ref/ tsc_g6_io1_pd10: tsc_g6_io1_pd10 {
+				pinmux = <STM32_PINMUX('D', 10, AF9)>;
+			};
+
+			/omit-if-no-ref/ tsc_g6_io2_pd11: tsc_g6_io2_pd11 {
+				pinmux = <STM32_PINMUX('D', 11, AF9)>;
+			};
+
+			/omit-if-no-ref/ tsc_g6_io3_pd12: tsc_g6_io3_pd12 {
+				pinmux = <STM32_PINMUX('D', 12, AF9)>;
+			};
+
+			/omit-if-no-ref/ tsc_g6_io4_pd13: tsc_g6_io4_pd13 {
+				pinmux = <STM32_PINMUX('D', 13, AF9)>;
+			};
+
+			/omit-if-no-ref/ tsc_g7_io1_pe2: tsc_g7_io1_pe2 {
+				pinmux = <STM32_PINMUX('E', 2, AF9)>;
+			};
+
+			/omit-if-no-ref/ tsc_g7_io2_pe3: tsc_g7_io2_pe3 {
+				pinmux = <STM32_PINMUX('E', 3, AF9)>;
+			};
+
+			/omit-if-no-ref/ tsc_g7_io3_pe4: tsc_g7_io3_pe4 {
+				pinmux = <STM32_PINMUX('E', 4, AF9)>;
+			};
+
+			/omit-if-no-ref/ tsc_g7_io4_pe5: tsc_g7_io4_pe5 {
+				pinmux = <STM32_PINMUX('E', 5, AF9)>;
+			};
+
+			/omit-if-no-ref/ tsc_g5_io1_pe10: tsc_g5_io1_pe10 {
+				pinmux = <STM32_PINMUX('E', 10, AF9)>;
+			};
+
+			/omit-if-no-ref/ tsc_g5_io2_pe11: tsc_g5_io2_pe11 {
+				pinmux = <STM32_PINMUX('E', 11, AF9)>;
+			};
+
+			/omit-if-no-ref/ tsc_g5_io3_pe12: tsc_g5_io3_pe12 {
+				pinmux = <STM32_PINMUX('E', 12, AF9)>;
+			};
+
+			/omit-if-no-ref/ tsc_g5_io4_pe13: tsc_g5_io4_pe13 {
+				pinmux = <STM32_PINMUX('E', 13, AF9)>;
+			};
+
+			/omit-if-no-ref/ tsc_g8_io1_pf14: tsc_g8_io1_pf14 {
+				pinmux = <STM32_PINMUX('F', 14, AF9)>;
+			};
+
+			/omit-if-no-ref/ tsc_g8_io2_pf15: tsc_g8_io2_pf15 {
+				pinmux = <STM32_PINMUX('F', 15, AF9)>;
+			};
+
+			/omit-if-no-ref/ tsc_g8_io3_pg0: tsc_g8_io3_pg0 {
+				pinmux = <STM32_PINMUX('G', 0, AF9)>;
+			};
+
+			/omit-if-no-ref/ tsc_g8_io4_pg1: tsc_g8_io4_pg1 {
+				pinmux = <STM32_PINMUX('G', 1, AF9)>;
+			};
+
 			/* UART_CTS / USART_CTS / LPUART_CTS */
 
 			/omit-if-no-ref/ lpuart1_cts_pa6: lpuart1_cts_pa6 {
