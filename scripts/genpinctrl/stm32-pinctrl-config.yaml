@@ -259,6 +259,9 @@
 - name: TIM_CH / TIM_CHN
   match: "^TIM\\d+_CH\\d+N?$"
 
+- name: TSC
+  match: "^TSC_(?:G\\d+_IO\\d+|SYNC)$"
+  
 - name: UART_CTS / USART_CTS / LPUART_CTS
   match: "^(?:LP)?US?ART\\d+_CTS$"
   drive: open-drain
@@ -299,3 +302,6 @@
 
 - name: JTAG PORT
   match: ^(SYS|DEBUG)_((JTMS-)?SWDIO|(JTCK-)?SWCLK|JTDI|JTDO(-TRACESWO|-SWO)?|(NJ)?JTRST)$
+
+- name: TSC
+  match: "^TSC_(?:G\\d+_IO\\d+|SYNC)$"

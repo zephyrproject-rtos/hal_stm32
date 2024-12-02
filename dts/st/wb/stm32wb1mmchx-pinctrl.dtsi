@@ -371,6 +371,36 @@
 				pinmux = <STM32_PINMUX('A', 5, AF1)>;
 			};
 
+			/* TSC */
+
+			/omit-if-no-ref/ tsc_g7_io2_pa10: tsc_g7_io2_pa10 {
+				pinmux = <STM32_PINMUX('A', 10, AF9)>;
+			};
+
+			/omit-if-no-ref/ tsc_g7_io1_pa13: tsc_g7_io1_pa13 {
+				pinmux = <STM32_PINMUX('A', 13, AF9)>;
+			};
+
+			/omit-if-no-ref/ tsc_g2_io1_pb4: tsc_g2_io1_pb4 {
+				pinmux = <STM32_PINMUX('B', 4, AF9)>;
+			};
+
+			/omit-if-no-ref/ tsc_g2_io2_pb5: tsc_g2_io2_pb5 {
+				pinmux = <STM32_PINMUX('B', 5, AF9)>;
+			};
+
+			/omit-if-no-ref/ tsc_g2_io3_pb6: tsc_g2_io3_pb6 {
+				pinmux = <STM32_PINMUX('B', 6, AF9)>;
+			};
+
+			/omit-if-no-ref/ tsc_g2_io4_pb7: tsc_g2_io4_pb7 {
+				pinmux = <STM32_PINMUX('B', 7, AF9)>;
+			};
+
+			/omit-if-no-ref/ tsc_g7_io3_pb8: tsc_g7_io3_pb8 {
+				pinmux = <STM32_PINMUX('B', 8, AF9)>;
+			};
+
 			/* UART_CTS / USART_CTS / LPUART_CTS */
 
 			/omit-if-no-ref/ lpuart1_cts_pa6: lpuart1_cts_pa6 {
