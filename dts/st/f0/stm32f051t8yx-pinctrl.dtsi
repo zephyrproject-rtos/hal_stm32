@@ -446,6 +446,84 @@
 				pinmux = <STM32_PINMUX('B', 7, AF2)>;
 			};
 
+			/* TSC */
+
+			/omit-if-no-ref/ tsc_g1_io1_pa0: tsc_g1_io1_pa0 {
+				pinmux = <STM32_PINMUX('A', 0, AF3)>;
+			};
+
+			/omit-if-no-ref/ tsc_g1_io2_pa1: tsc_g1_io2_pa1 {
+				pinmux = <STM32_PINMUX('A', 1, AF3)>;
+			};
+
+			/omit-if-no-ref/ tsc_g1_io3_pa2: tsc_g1_io3_pa2 {
+				pinmux = <STM32_PINMUX('A', 2, AF3)>;
+			};
+
+			/omit-if-no-ref/ tsc_g1_io4_pa3: tsc_g1_io4_pa3 {
+				pinmux = <STM32_PINMUX('A', 3, AF3)>;
+			};
+
+			/omit-if-no-ref/ tsc_g2_io1_pa4: tsc_g2_io1_pa4 {
+				pinmux = <STM32_PINMUX('A', 4, AF3)>;
+			};
+
+			/omit-if-no-ref/ tsc_g2_io2_pa5: tsc_g2_io2_pa5 {
+				pinmux = <STM32_PINMUX('A', 5, AF3)>;
+			};
+
+			/omit-if-no-ref/ tsc_g2_io3_pa6: tsc_g2_io3_pa6 {
+				pinmux = <STM32_PINMUX('A', 6, AF3)>;
+			};
+
+			/omit-if-no-ref/ tsc_g2_io4_pa7: tsc_g2_io4_pa7 {
+				pinmux = <STM32_PINMUX('A', 7, AF3)>;
+			};
+
+			/omit-if-no-ref/ tsc_g4_io1_pa9: tsc_g4_io1_pa9 {
+				pinmux = <STM32_PINMUX('A', 9, AF3)>;
+			};
+
+			/omit-if-no-ref/ tsc_g4_io2_pa10: tsc_g4_io2_pa10 {
+				pinmux = <STM32_PINMUX('A', 10, AF3)>;
+			};
+
+			/omit-if-no-ref/ tsc_g4_io3_pa11: tsc_g4_io3_pa11 {
+				pinmux = <STM32_PINMUX('A', 11, AF3)>;
+			};
+
+			/omit-if-no-ref/ tsc_g4_io4_pa12: tsc_g4_io4_pa12 {
+				pinmux = <STM32_PINMUX('A', 12, AF3)>;
+			};
+
+			/omit-if-no-ref/ tsc_g3_io2_pb0: tsc_g3_io2_pb0 {
+				pinmux = <STM32_PINMUX('B', 0, AF3)>;
+			};
+
+			/omit-if-no-ref/ tsc_g3_io3_pb1: tsc_g3_io3_pb1 {
+				pinmux = <STM32_PINMUX('B', 1, AF3)>;
+			};
+
+			/omit-if-no-ref/ tsc_g3_io4_pb2: tsc_g3_io4_pb2 {
+				pinmux = <STM32_PINMUX('B', 2, AF3)>;
+			};
+
+			/omit-if-no-ref/ tsc_g5_io1_pb3: tsc_g5_io1_pb3 {
+				pinmux = <STM32_PINMUX('B', 3, AF3)>;
+			};
+
+			/omit-if-no-ref/ tsc_g5_io2_pb4: tsc_g5_io2_pb4 {
+				pinmux = <STM32_PINMUX('B', 4, AF3)>;
+			};
+
+			/omit-if-no-ref/ tsc_g5_io3_pb6: tsc_g5_io3_pb6 {
+				pinmux = <STM32_PINMUX('B', 6, AF3)>;
+			};
+
+			/omit-if-no-ref/ tsc_g5_io4_pb7: tsc_g5_io4_pb7 {
+				pinmux = <STM32_PINMUX('B', 7, AF3)>;
+			};
+
 			/* UART_CTS / USART_CTS / LPUART_CTS */
 
 			/omit-if-no-ref/ usart1_cts_pa11: usart1_cts_pa11 {

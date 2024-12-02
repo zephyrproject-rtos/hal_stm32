@@ -255,3 +255,7 @@
 - name: USB
   match: "^USB_(?:DM)?(?:DP)?$"
   mode: input
+
+- name: TSC
+  match: "^TSC_(?:G\\d+_IO\\d+|SYNC)$"
+  mode: alternate
