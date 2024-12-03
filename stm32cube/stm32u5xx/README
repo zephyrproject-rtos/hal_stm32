@@ -6,7 +6,7 @@ Origin:
    http://www.st.com/en/embedded-software/stm32cubeu5.html
 
 Status:
-   version v1.6.0
+   version v1.7.0
 
 Purpose:
    ST Microelectronics official MCU package for STM32U5 series.
@@ -23,7 +23,7 @@ URL:
    https://github.com/STMicroelectronics/STM32CubeU5
 
 Commit:
-   6591004477fdd8fba04573c0373679f2be0da595
+   7392378474639cdcd87a71918f5272f847454055
 
 Maintained-by:
    External
