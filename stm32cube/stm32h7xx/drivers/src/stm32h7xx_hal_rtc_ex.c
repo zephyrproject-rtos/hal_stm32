@@ -469,7 +469,7 @@ HAL_StatusTypeDef HAL_RTCEx_GetTimeStamp(RTC_HandleTypeDef *hrtc, RTC_TimeTypeDe
   * @param  sTamper Pointer to Tamper Structure.
   * @retval HAL status
   */
-HAL_StatusTypeDef HAL_RTCEx_SetTamper(RTC_HandleTypeDef * hrtc, RTC_TamperTypeDef * sTamper)
+HAL_StatusTypeDef HAL_RTCEx_SetTamper(RTC_HandleTypeDef * hrtc, const RTC_TamperTypeDef * sTamper)
 {
   uint32_t tmpreg;
 
@@ -537,7 +537,7 @@ HAL_StatusTypeDef HAL_RTCEx_SetTamper(RTC_HandleTypeDef * hrtc, RTC_TamperTypeDe
   * @param  sTamper Pointer to Tamper Structure.
   * @retval HAL status
   */
-HAL_StatusTypeDef HAL_RTCEx_SetTamper(RTC_HandleTypeDef * hrtc, RTC_TamperTypeDef * sTamper)
+HAL_StatusTypeDef HAL_RTCEx_SetTamper(RTC_HandleTypeDef * hrtc, const RTC_TamperTypeDef * sTamper)
 {
   uint32_t tmpreg;
 
@@ -671,7 +671,7 @@ HAL_StatusTypeDef HAL_RTCEx_SetTamper(RTC_HandleTypeDef * hrtc, RTC_TamperTypeDe
   * @param  sTamper Pointer to Tamper Structure.
   * @retval HAL status
   */
-HAL_StatusTypeDef HAL_RTCEx_SetTamper_IT(RTC_HandleTypeDef * hrtc, RTC_TamperTypeDef * sTamper)
+HAL_StatusTypeDef HAL_RTCEx_SetTamper_IT(RTC_HandleTypeDef * hrtc, const RTC_TamperTypeDef * sTamper)
 {
   uint32_t tmpreg;
 
@@ -748,7 +748,7 @@ HAL_StatusTypeDef HAL_RTCEx_SetTamper_IT(RTC_HandleTypeDef * hrtc, RTC_TamperTyp
   * @param  sTamper Pointer to Tamper Structure.
   * @retval HAL status
   */
-HAL_StatusTypeDef HAL_RTCEx_SetTamper_IT(RTC_HandleTypeDef * hrtc, RTC_TamperTypeDef * sTamper)
+HAL_StatusTypeDef HAL_RTCEx_SetTamper_IT(RTC_HandleTypeDef * hrtc, const RTC_TamperTypeDef * sTamper)
 {
   uint32_t tmpreg;
 
@@ -981,7 +981,7 @@ HAL_StatusTypeDef HAL_RTCEx_DeactivateTamper(RTC_HandleTypeDef * hrtc, uint32_t 
   * @param  sIntTamper Pointer to Internal Tamper Structure.
   * @retval HAL status
   */
-HAL_StatusTypeDef HAL_RTCEx_SetInternalTamper(RTC_HandleTypeDef *hrtc, RTC_InternalTamperTypeDef *sIntTamper)
+HAL_StatusTypeDef HAL_RTCEx_SetInternalTamper(RTC_HandleTypeDef *hrtc, const RTC_InternalTamperTypeDef *sIntTamper)
 {
   /* Check the parameters */
   assert_param(IS_RTC_INTERNAL_TAMPER(sIntTamper->IntTamper));
@@ -1007,7 +1007,7 @@ HAL_StatusTypeDef HAL_RTCEx_SetInternalTamper(RTC_HandleTypeDef *hrtc, RTC_Inter
   * @param  sIntTamper Pointer to Internal Tamper Structure.
   * @retval HAL status
   */
-HAL_StatusTypeDef HAL_RTCEx_SetInternalTamper_IT(RTC_HandleTypeDef *hrtc, RTC_InternalTamperTypeDef *sIntTamper)
+HAL_StatusTypeDef HAL_RTCEx_SetInternalTamper_IT(RTC_HandleTypeDef *hrtc, const RTC_InternalTamperTypeDef *sIntTamper)
 {
   /* Check the parameters */
   assert_param(IS_RTC_INTERNAL_TAMPER(sIntTamper->IntTamper));
@@ -1063,7 +1063,7 @@ HAL_StatusTypeDef HAL_RTCEx_DeactivateInternalTamper(RTC_HandleTypeDef *hrtc, ui
   * @param  sAllTamper Pointer to active Tamper Structure.
   * @retval HAL status
   */
-HAL_StatusTypeDef HAL_RTCEx_SetActiveTampers(RTC_HandleTypeDef *hrtc, RTC_ActiveTampersTypeDef *sAllTamper)
+HAL_StatusTypeDef HAL_RTCEx_SetActiveTampers(RTC_HandleTypeDef *hrtc, const RTC_ActiveTampersTypeDef *sAllTamper)
 {
   uint32_t IER, CR1, CR2, ATCR1, CR, i, tickstart;
 
@@ -1177,7 +1177,7 @@ HAL_StatusTypeDef HAL_RTCEx_SetActiveTampers(RTC_HandleTypeDef *hrtc, RTC_Active
   * @param  pSeed Pointer to active tamper seed values.
   * @retval HAL status
   */
-HAL_StatusTypeDef HAL_RTCEx_SetActiveSeed(RTC_HandleTypeDef *hrtc, uint32_t *pSeed)
+HAL_StatusTypeDef HAL_RTCEx_SetActiveSeed(RTC_HandleTypeDef *hrtc, const uint32_t *pSeed)
 {
   uint32_t i, tickstart;
 
@@ -2129,7 +2129,7 @@ HAL_StatusTypeDef HAL_RTCEx_DeactivateWakeUpTimer(RTC_HandleTypeDef *hrtc)
   * @param  hrtc RTC handle
   * @retval Counter value
   */
-uint32_t HAL_RTCEx_GetWakeUpTimer(RTC_HandleTypeDef *hrtc)
+uint32_t HAL_RTCEx_GetWakeUpTimer(const RTC_HandleTypeDef *hrtc)
 {
   /* Get the counter value */
   return ((uint32_t)(hrtc->Instance->WUTR & RTC_WUTR_WUT));
@@ -2273,7 +2273,7 @@ HAL_StatusTypeDef HAL_RTCEx_PollForWakeUpTimerEvent(RTC_HandleTypeDef * hrtc, ui
   * @param  Data Data to be written in the specified Backup data register.
   * @retval None
   */
-void HAL_RTCEx_BKUPWrite(RTC_HandleTypeDef * hrtc, uint32_t BackupRegister, uint32_t Data)
+void HAL_RTCEx_BKUPWrite(const RTC_HandleTypeDef * hrtc, uint32_t BackupRegister, uint32_t Data)
 {
   uint32_t tmp;
 
@@ -2282,9 +2282,9 @@ void HAL_RTCEx_BKUPWrite(RTC_HandleTypeDef * hrtc, uint32_t BackupRegister, uint
 
   /* Point on address of first backup register */
 #if defined(TAMP)
-  tmp = (uint32_t) & (((TAMP_TypeDef *)((uint32_t)hrtc->Instance + TAMP_OFFSET))->BKP0R);
+  tmp = (uint32_t) &(((TAMP_TypeDef *)((uint32_t)hrtc->Instance + TAMP_OFFSET))->BKP0R);
 #else
-  tmp = (uint32_t) & (hrtc->Instance->BKP0R);
+  tmp = (uint32_t) &(hrtc->Instance->BKP0R);
 #endif /* TAMP */
 
   tmp += (BackupRegister * 4U);
@@ -2302,7 +2302,7 @@ void HAL_RTCEx_BKUPWrite(RTC_HandleTypeDef * hrtc, uint32_t BackupRegister, uint
   *                                 specify the register.
   * @retval Read value
   */
-uint32_t HAL_RTCEx_BKUPRead(RTC_HandleTypeDef * hrtc, uint32_t BackupRegister)
+uint32_t HAL_RTCEx_BKUPRead(const RTC_HandleTypeDef * hrtc, uint32_t BackupRegister)
 {
   uint32_t tmp;
 
@@ -2311,9 +2311,9 @@ uint32_t HAL_RTCEx_BKUPRead(RTC_HandleTypeDef * hrtc, uint32_t BackupRegister)
 
   /* Point on address of first backup register */
 #if defined(TAMP)
-  tmp = (uint32_t) & (((TAMP_TypeDef *)((uint32_t)hrtc->Instance + TAMP_OFFSET))->BKP0R);
+  tmp = (uint32_t) &(((TAMP_TypeDef *)((uint32_t)hrtc->Instance + TAMP_OFFSET))->BKP0R);
 #else
-  tmp = (uint32_t) & (hrtc->Instance->BKP0R);
+  tmp = (uint32_t) &(hrtc->Instance->BKP0R);
 #endif /* TAMP */
 
   tmp += (BackupRegister * 4U);
@@ -2709,7 +2709,7 @@ HAL_StatusTypeDef HAL_RTCEx_EnableBypassShadow(RTC_HandleTypeDef * hrtc)
   __HAL_RTC_WRITEPROTECTION_DISABLE(hrtc);
 
   /* Set the BYPSHAD bit */
-  hrtc->Instance->CR |= (uint8_t)RTC_CR_BYPSHAD;
+  hrtc->Instance->CR |= (uint32_t)RTC_CR_BYPSHAD;
 
   /* Enable the write protection for RTC registers */
   __HAL_RTC_WRITEPROTECTION_ENABLE(hrtc);
@@ -2741,7 +2741,7 @@ HAL_StatusTypeDef HAL_RTCEx_DisableBypassShadow(RTC_HandleTypeDef * hrtc)
   __HAL_RTC_WRITEPROTECTION_DISABLE(hrtc);
 
   /* Reset the BYPSHAD bit */
-  hrtc->Instance->CR &= ((uint8_t)~RTC_CR_BYPSHAD);
+  hrtc->Instance->CR &= ((uint32_t)~RTC_CR_BYPSHAD);
 
   /* Enable the write protection for RTC registers */
   __HAL_RTC_WRITEPROTECTION_ENABLE(hrtc);
@@ -2784,7 +2784,7 @@ HAL_StatusTypeDef HAL_RTCEx_MonotonicCounterIncrement(RTC_HandleTypeDef *hrtc,  
   * @param  Counter monotonic counter value
   * @retval HAL status
   */
-HAL_StatusTypeDef HAL_RTCEx_MonotonicCounterGet(RTC_HandleTypeDef *hrtc, uint32_t *Counter,  uint32_t Instance)
+HAL_StatusTypeDef HAL_RTCEx_MonotonicCounterGet(const RTC_HandleTypeDef *hrtc, uint32_t *Counter,  uint32_t Instance)
 {
   UNUSED(hrtc);
   UNUSED(Instance);
