@@ -560,7 +560,7 @@ static ErrorStatus UTILS_SetFlashLatency(uint32_t HCLK_Frequency)
 
 ErrorStatus LL_SetFlashLatency(uint32_t HCLK_Frequency)
 {
-    return UTILS_SetFlashLatency(HCLK_Frequency);
+  return UTILS_SetFlashLatency(HCLK_Frequency);
 }
 
 /**
