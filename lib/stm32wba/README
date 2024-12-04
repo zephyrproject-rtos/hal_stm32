@@ -43,40 +43,40 @@ Description:
       Middlewares/ST/STM32_WPAN/link_layer/ll_sys/src/ll_sys_startup.c
       Middlewares/ST/STM32_WPAN/link_layer/ll_sys/inc/ll_sys_startup.h
       Middlewares/ST/STM32_WPAN/stm32_wpan_common.h
-      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_HeartRate/Core/Inc/app_common.h
-      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_HeartRate/Core/Inc/app_conf.h
-      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_HeartRate/Core/Inc/app_entry.h
-      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_HeartRate/Core/Inc/utilities_conf.h
-      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_HeartRate/Core/Inc/main.h
-      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_HeartRate/System/Modules/Flash/rf_timing_synchro.c
-      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_HeartRate/System/Modules/Flash/rf_timing_synchro.h
-      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_HeartRate/System/Modules/Flash/flash_driver.c
-      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_HeartRate/System/Modules/Flash/flash_driver.h
-      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_HeartRate/System/Modules/Flash/flash_manager.c
-      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_HeartRate/System/Modules/Flash/flash_manager.h
-      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_HeartRate/System/Modules/RTDebug/debug_signals.h
-      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_HeartRate/System/Modules/RTDebug/RTDebug.c
-      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_HeartRate/System/Modules/RTDebug/RTDebug.h
-      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_HeartRate/System/Modules/RTDebug/local_debug_tables.h
-      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_HeartRate/System/Modules/scm.c
-      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_HeartRate/System/Modules/scm.h
-      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_HeartRate/System/Modules/stm_list.c
-      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_HeartRate/System/Modules/stm_list.h
-      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_HeartRate/System/Modules/utilities_common.h
-      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_HeartRate/System/Interfaces/hw.h
-      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_HeartRate/System/Interfaces/hw_aes.c
-      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_HeartRate/System/Interfaces/hw_if.h
-      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_HeartRate/System/Interfaces/hw_pka.c
-      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_HeartRate/System/Interfaces/pka_p256.c
-      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_HeartRate/System/Config/Log/log_module.c
-      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_HeartRate/System/Config/Log/log_module.h
-      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_HeartRate/System/Config/Debug_GPIO/app_debug.h
-      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_HeartRate/System/Config/Debug_GPIO/debug_config.h
-      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_HeartRate/STM32_WPAN/Target/power_table.c
-      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_HeartRate/STM32_WPAN/Target/bpka.c
-      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_HeartRate/STM32_WPAN/Target/bpka.h
-      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_HeartRate/STM32_WPAN/Target/linklayer_plat.c
-      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_HeartRate/STM32_WPAN/Target/ll_sys_if.c
+      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_TransparentMode/Core/Inc/app_common.h
+      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_TransparentMode/Core/Inc/app_conf.h
+      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_TransparentMode/Core/Inc/app_entry.h
+      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_TransparentMode/Core/Inc/utilities_conf.h
+      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_TransparentMode/Core/Inc/main.h
+      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_TransparentMode/System/Modules/Flash/rf_timing_synchro.c
+      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_TransparentMode/System/Modules/Flash/rf_timing_synchro.h
+      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_TransparentMode/System/Modules/Flash/flash_driver.c
+      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_TransparentMode/System/Modules/Flash/flash_driver.h
+      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_TransparentMode/System/Modules/Flash/flash_manager.c
+      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_TransparentMode/System/Modules/Flash/flash_manager.h
+      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_TransparentMode/System/Modules/RTDebug/debug_signals.h
+      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_TransparentMode/System/Modules/RTDebug/RTDebug.c
+      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_TransparentMode/System/Modules/RTDebug/RTDebug.h
+      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_TransparentMode/System/Modules/RTDebug/local_debug_tables.h
+      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_TransparentMode/System/Modules/scm.c
+      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_TransparentMode/System/Modules/scm.h
+      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_TransparentMode/System/Modules/stm_list.c
+      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_TransparentMode/System/Modules/stm_list.h
+      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_TransparentMode/System/Modules/utilities_common.h
+      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_TransparentMode/System/Interfaces/hw.h
+      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_TransparentMode/System/Interfaces/hw_aes.c
+      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_TransparentMode/System/Interfaces/hw_if.h
+      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_TransparentMode/System/Interfaces/hw_pka.c
+      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_TransparentMode/System/Interfaces/pka_p256.c
+      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_TransparentMode/System/Config/Log/log_module.c
+      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_TransparentMode/System/Config/Log/log_module.h
+      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_TransparentMode/System/Config/Debug_GPIO/app_debug.h
+      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_TransparentMode/System/Config/Debug_GPIO/debug_config.h
+      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_TransparentMode/STM32_WPAN/Target/power_table.c
+      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_TransparentMode/STM32_WPAN/Target/bpka.c
+      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_TransparentMode/STM32_WPAN/Target/bpka.h
+      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_TransparentMode/STM32_WPAN/Target/linklayer_plat.c
+      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_TransparentMode/STM32_WPAN/Target/ll_sys_if.c
       Utilities/trace/adv_trace/stm32_adv_trace.h
       Utilities/misc/stm32_mem.h
       Utilities/tim_serv/stm32_timer.h

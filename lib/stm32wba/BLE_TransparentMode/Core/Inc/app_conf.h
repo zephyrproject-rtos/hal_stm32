@@ -36,71 +36,6 @@
 /**< generic parameters ******************************************************/
 
 /**
- * Define Tx Power
- */
-#define CFG_TX_POWER                      (0x19) /* 0x19 <=> -0.3 dBm */
-
-/**
- * Definition of public BD Address,
- * when CFG_BD_ADDRESS = 0x000000000000 the BD address is generated based on Unique Device Number.
- */
-#define CFG_BD_ADDRESS                    (0x0000000000000)
-
-/**
- * Define BD_ADDR type: define proper address. Can only be GAP_PUBLIC_ADDR (0x00) or GAP_STATIC_RANDOM_ADDR (0x01)
- */
-#define CFG_BD_ADDRESS_DEVICE             (GAP_PUBLIC_ADDR)
-
-/**
- * Define privacy: PRIVACY_DISABLED or PRIVACY_ENABLED
- */
-#define CFG_PRIVACY                       (PRIVACY_DISABLED)
-
-/**
- * Define BLE Address Type
- * Bluetooth address types defined in ble_legacy.h
- * if CFG_PRIVACY equals PRIVACY_DISABLED, CFG_BLE_ADDRESS_TYPE has 2 allowed values: GAP_PUBLIC_ADDR or GAP_STATIC_RANDOM_ADDR
- * if CFG_PRIVACY equals PRIVACY_ENABLED, CFG_BLE_ADDRESS_TYPE has 2 allowed values: GAP_RESOLVABLE_PRIVATE_ADDR or GAP_NON_RESOLVABLE_PRIVATE_ADDR
- */
-#define CFG_BD_ADDRESS_TYPE               (GAP_PUBLIC_ADDR)
-
-#define ADV_INTERVAL_MIN                  (0x0080)
-#define ADV_INTERVAL_MAX                  (0x00A0)
-#define ADV_LP_INTERVAL_MIN               (0x0640)
-#define ADV_LP_INTERVAL_MAX               (0x0FA0)
-#define ADV_TYPE                          ADV_IND
-#define ADV_FILTER                        NO_WHITE_LIST_USE
-
-/**
- * Define IO Authentication
- */
-#define CFG_BONDING_MODE                  (1)
-#define CFG_USED_FIXED_PIN                (0) /* 0->fixed pin is used ; 1->No fixed pin used*/
-#define CFG_FIXED_PIN                     (111111)
-#define CFG_ENCRYPTION_KEY_SIZE_MAX       (16)
-#define CFG_ENCRYPTION_KEY_SIZE_MIN       (8)
-
-/**
- * Define Input Output capabilities
- */
-#define CFG_IO_CAPABILITY                 (IO_CAP_DISPLAY_YES_NO)
-
-/**
- * Define Man In The Middle modes
- */
-#define CFG_MITM_PROTECTION               (MITM_PROTECTION_REQUIRED)
-
-/**
- * Define Secure Connections Support
- */
-#define CFG_SC_SUPPORT                    (SC_PAIRING_OPTIONAL)
-
-/**
- * Define Keypress Notification Support
- */
-#define CFG_KEYPRESS_NOTIFICATION_SUPPORT (KEYPRESS_NOT_SUPPORTED)
-
-/**
 *   Identity root key used to derive IRK and DHK(Legacy)
 */
 #define CFG_BLE_IR      {0x12, 0x34, 0x56, 0x78, 0x9A, 0xBC, 0xDE, 0xF0, 0x12, 0x34, 0x56, 0x78, 0x9A, 0xBC, 0xDE, 0xF0}
@@ -228,7 +163,7 @@
  *   - 0 : Standby is not used, so stop mode 1 is used as low power mode.
  *
  ******************************************************************************/
-#define CFG_LPM_LEVEL            (2)
+#define CFG_LPM_LEVEL            (1)
 #define CFG_LPM_STDBY_SUPPORTED  (1)
 
 /* Defines time to wake up from standby before radio event to meet timings */
@@ -248,6 +183,7 @@ typedef enum
   CFG_LPM_LOG,
   CFG_LPM_LL_DEEPSLEEP,
   CFG_LPM_LL_HW_RCO_CLBR,
+  CFG_LPM_APP_BLE,
   /* USER CODE BEGIN CFG_LPM_Id_t */
 
   /* USER CODE END CFG_LPM_Id_t */
@@ -322,7 +258,12 @@ typedef enum
 {
   CFG_TASK_HW_RNG,
   CFG_TASK_LINK_LAYER,
-  CFG_TASK_HCI_ASYNCH_EVT_ID,
+  CFG_TASK_BLE_HCI_CMD_ID,
+  CFG_TASK_SYS_HCI_CMD_ID,
+  CFG_TASK_HCI_ACL_DATA_ID,
+  CFG_TASK_SYS_LOCAL_CMD_ID,
+  CFG_TASK_TX_TO_HOST_ID,
+  CFG_TASK_NOTIFY_EVENT_ID,
   CFG_TASK_TEMP_MEAS,
   CFG_TASK_BLE_HOST,
   CFG_TASK_AMM,
@@ -333,8 +274,6 @@ typedef enum
   TASK_BUTTON_1,
   TASK_BUTTON_2,
   TASK_BUTTON_3,
-  CFG_TASK_MEAS_REQ_ID,
-  CFG_TASK_ADV_LP_REQ_ID,
   /* USER CODE END CFG_Task_Id_t */
   CFG_TASK_NBR /* Shall be LAST in the list */
 } CFG_Task_Id_t;
@@ -359,17 +298,6 @@ typedef enum
 
 /* Sequencer configuration */
 #define UTIL_SEQ_CONF_PRIO_NBR              CFG_SEQ_PRIO_NBR
-
-/**
- * This is a bit mapping over 32bits listing all events id supported in the application
- */
-typedef enum
-{
-  CFG_IDLEEVT_PROC_GAP_COMPLETE,
-  /* USER CODE BEGIN CFG_IdleEvt_Id_t */
-
-  /* USER CODE END CFG_IdleEvt_Id_t */
-} CFG_IdleEvt_Id_t;
 
 /**
  * These are the lists of events id registered to the sequencer
@@ -419,7 +347,7 @@ typedef enum
  *   - 2 : Debugger available in low power mode.
  *
  ******************************************************************************/
-#define CFG_DEBUGGER_LEVEL           (0)
+#define CFG_DEBUGGER_LEVEL           (2)
 
 /******************************************************************************
  * RealTime GPIO debug module configuration
@@ -464,7 +392,7 @@ typedef enum
  *   0 -> RF TX output level from -20 dBm to +10 dBm
  *   1 -> RF TX output level from -20 dBm to +3 dBm
  */
-#define CFG_RF_TX_POWER_TABLE_ID            (1)
+#define CFG_RF_TX_POWER_TABLE_ID            (0)
 
 /* Custom LSE sleep clock accuracy to use if both conditions are met:
  * - LSE is selected as Link Layer sleep clock source
@@ -511,7 +439,7 @@ typedef enum
  * When CFG_BUTTON_SUPPORTED is set, the push button are activated if requested
  */
 
-#define CFG_LED_SUPPORTED                       (0)
+#define CFG_LED_SUPPORTED                       (1)
 #define CFG_BUTTON_SUPPORTED                    (1)
 
 /**
