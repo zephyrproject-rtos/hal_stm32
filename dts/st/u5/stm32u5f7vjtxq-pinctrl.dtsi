@@ -619,34 +619,6 @@
 				slew-rate = "very-high-speed";
 			};
 
-			/* FDCAN_RX */
-
-			/omit-if-no-ref/ fdcan1_rx_pa11: fdcan1_rx_pa11 {
-				pinmux = <STM32_PINMUX('A', 11, AF9)>;
-			};
-
-			/omit-if-no-ref/ fdcan1_rx_pb8: fdcan1_rx_pb8 {
-				pinmux = <STM32_PINMUX('B', 8, AF9)>;
-			};
-
-			/omit-if-no-ref/ fdcan1_rx_pd0: fdcan1_rx_pd0 {
-				pinmux = <STM32_PINMUX('D', 0, AF9)>;
-			};
-
-			/* FDCAN_TX */
-
-			/omit-if-no-ref/ fdcan1_tx_pa12: fdcan1_tx_pa12 {
-				pinmux = <STM32_PINMUX('A', 12, AF9)>;
-			};
-
-			/omit-if-no-ref/ fdcan1_tx_pb9: fdcan1_tx_pb9 {
-				pinmux = <STM32_PINMUX('B', 9, AF9)>;
-			};
-
-			/omit-if-no-ref/ fdcan1_tx_pd1: fdcan1_tx_pd1 {
-				pinmux = <STM32_PINMUX('D', 1, AF9)>;
-			};
-
 			/* FMC */
 
 			/omit-if-no-ref/ fmc_nl_pb7: fmc_nl_pb7 {
