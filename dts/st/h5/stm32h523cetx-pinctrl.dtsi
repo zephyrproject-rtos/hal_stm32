@@ -1062,13 +1062,27 @@
 				drive-open-drain;
 			};
 
-			/omit-if-no-ref/ usart6_cts_pb7: usart6_cts_pb7 {
-				pinmux = <STM32_PINMUX('B', 7, AF6)>;
-				bias-pull-up;
-				drive-open-drain;
+			/* UART_DE / USART_DE / LPUART_DE */
+
+			/omit-if-no-ref/ lpuart1_de_pa12: lpuart1_de_pa12 {
+				pinmux = <STM32_PINMUX('A', 12, AF3)>;
+				drive-push-pull;
 			};
 
-			/* UART_DE / USART_DE / LPUART_DE */
+			/omit-if-no-ref/ usart1_de_pa12: usart1_de_pa12 {
+				pinmux = <STM32_PINMUX('A', 12, AF7)>;
+				drive-push-pull;
+			};
+
+			/omit-if-no-ref/ usart2_de_pa1: usart2_de_pa1 {
+				pinmux = <STM32_PINMUX('A', 1, AF7)>;
+				drive-push-pull;
+			};
+
+			/omit-if-no-ref/ usart3_de_pb14: usart3_de_pb14 {
+				pinmux = <STM32_PINMUX('B', 14, AF7)>;
+				drive-push-pull;
+			};
 
 			/omit-if-no-ref/ uart4_de_pa15: uart4_de_pa15 {
 				pinmux = <STM32_PINMUX('A', 15, AF8)>;
@@ -1176,10 +1190,6 @@
 				pinmux = <STM32_PINMUX('B', 15, AF14)>;
 			};
 
-			/omit-if-no-ref/ usart6_rx_pb6: usart6_rx_pb6 {
-				pinmux = <STM32_PINMUX('B', 6, AF6)>;
-			};
-
 			/* UART_TX / USART_TX / LPUART_TX */
 
 			/omit-if-no-ref/ lpuart1_tx_pa2: lpuart1_tx_pa2 {
@@ -1259,11 +1269,6 @@
 
 			/omit-if-no-ref/ uart5_tx_pb13: uart5_tx_pb13 {
 				pinmux = <STM32_PINMUX('B', 13, AF14)>;
-				bias-pull-up;
-			};
-
-			/omit-if-no-ref/ usart6_tx_pb5: usart6_tx_pb5 {
-				pinmux = <STM32_PINMUX('B', 5, AF6)>;
 				bias-pull-up;
 			};
 
