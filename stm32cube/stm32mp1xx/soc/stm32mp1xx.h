@@ -8,8 +8,8 @@
   *          is using in the C source code, usually in main.c. This file contains:
   *           - Configuration section that allows to select:
   *              - The STM32MP1xx device used in the target application
-  *              - To use or not the peripheral’s drivers in application code(i.e.
-  *                code will be based on direct access to peripheral’s registers
+  *              - To use or not the peripheralï¿½s drivers in application code(i.e.
+  *                code will be based on direct access to peripheralï¿½s registers
   *                rather than drivers API), this option is controlled by
   *                "#define USE_HAL_DRIVER"
   *
@@ -119,31 +119,29 @@
 
 #if defined(CORE_CA7)
 #if defined(STM32MP15xx)  /* keep for backward compatibility STM32MP15xx = STM32MP157Cxx */
-  #include "stm32mp157cxx_ca7.h"
+  #include "stm32mp131axx_ca7.h"
 #elif defined(STM32MP157Axx)
-  #include "stm32mp157axx_ca7.h"
+  #include "stm32mp131cxx_ca7.h"
 #elif defined(STM32MP157Cxx)
-  #include "stm32mp157cxx_ca7.h"
+  #include "stm32mp131dxx_ca7.h"
 #elif defined(STM32MP157Dxx)
-  #include "stm32mp157dxx_ca7.h"
+  #include "stm32mp131fxx_ca7.h"
 #elif defined(STM32MP157Fxx)
-  #include "stm32mp157fxx_ca7.h"
+  #include "stm32mp133axx_ca7.h"
 #elif defined(STM32MP153Axx)
-  #include "stm32mp153axx_ca7.h"
+  #include "stm32mp133cxx_ca7.h"
 #elif defined(STM32MP153Cxx)
-  #include "stm32mp153cxx_ca7.h"
+  #include "stm32mp133dxx_ca7.h"
 #elif defined(STM32MP153Dxx)
-  #include "stm32mp153dxx_ca7.h"
+  #include "stm32mp133fxx_ca7.h"
 #elif defined(STM32MP153Fxx)
-  #include "stm32mp153fxx_ca7.h"
+  #include "stm32mp135axx_ca7.h"
 #elif defined(STM32MP151Axx)
-  #include "stm32mp151axx_ca7.h"
+  #include "stm32mp135cxx_ca7.h"
 #elif defined(STM32MP151Cxx)
-  #include "stm32mp151cxx_ca7.h"
+  #include "stm32mp135dxx_ca7.h"
 #elif defined(STM32MP151Dxx)
-  #include "stm32mp151dxx_ca7.h"
-#elif defined(STM32MP151Fxx)
-  #include "stm32mp151fxx_ca7.h"
+  #include "stm32mp135fxx_ca7.h"
 #else
  #error "Please select first the target STM32MP1xx device used in your application (in stm32mp1xx.h file)"
 #endif

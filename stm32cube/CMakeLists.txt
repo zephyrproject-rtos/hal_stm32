@@ -44,6 +44,8 @@ if(CONFIG_CPU_CORTEX_M4)
   zephyr_compile_definitions( -DCORE_CM4 )
 elseif(CONFIG_CPU_CORTEX_M7)
   zephyr_compile_definitions( -DCORE_CM7 )
+elseif(CONFIG_CPU_CORTEX_A7)
+  zephyr_compile_definitions( -DCORE_CA7 )
 endif()
 
 if(CONFIG_CLOCK_STM32_HSE_CLOCK)
