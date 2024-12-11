@@ -203,6 +203,9 @@
   match: "^I3C\\d+_SDA$"
   slew-rate: very-high-speed
 
+- name: JTAG PORT
+  match: ^(SYS|DEBUG)_((JTMS-)?SWDIO|(JTCK-)?SWCLK|JTDI|JTDO(-TRACESWO|-SWO)?|(NJ)?JTRST)$
+
 - name: LTDC
   match: "^LTDC_(?:DE|CLK|HSYNC|VSYNC|R[0-7]|G[0-7]|B[0-7])$"
 
@@ -300,8 +303,3 @@
 - name: USB
   match: "^USB_(?:DM)?(?:DP)?(?:NOE)?$"
 
-- name: JTAG PORT
-  match: ^(SYS|DEBUG)_((JTMS-)?SWDIO|(JTCK-)?SWCLK|JTDI|JTDO(-TRACESWO|-SWO)?|(NJ)?JTRST)$
-
-- name: TSC
-  match: "^TSC_(?:G\\d+_IO\\d+|SYNC)$"
