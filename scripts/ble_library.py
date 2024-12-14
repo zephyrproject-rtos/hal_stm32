@@ -39,81 +39,83 @@ file_list_wb = [
     + "tl_dbg_conf.h",
 ]
 
-ble_heartrate_app_path = "Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_HeartRate"
-
+ble_transparent_mode_app_path = "Projects/NUCLEO-WBA55CG/Applications/BLE/" \
+                                + "BLE_TransparentMode"
 file_list_wba = {
-    "auto": ["Middlewares/ST/STM32_WPAN/ble/stack/include/auto/ble_types.h",
-             ],
-    "reg_files": ["Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/_40nm_reg_files/"
-                  + "DWC_ble154combo.h",
-                  ],
-    "ll": ["Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/bsp.h",
-           "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/common_types.h",
-           "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/event_manager.h",
-           "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/evnt_schdlr_gnrc_if.h",
-           "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/hci.h",
-           "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/ll_intf.h",
-           "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/mem_intf.h",
-           "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/os_wrapper.h",
-           "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/power_table.h",
-           "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/pta.h",
-           "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/config/ble_full/"
-           + "ll_fw_config.h",
-           ],
-    "hci": ["Middlewares/ST/STM32_WPAN/ble/stack/include/ble_bufsize.h",
-            "Middlewares/ST/STM32_WPAN/ble/stack/include/ble_const.h",
-            "Middlewares/ST/STM32_WPAN/ble/stack/include/ble_defs.h",
-            "Middlewares/ST/STM32_WPAN/ble/stack/include/ble_std.h",
-            "Middlewares/ST/STM32_WPAN/ble/stack/include/bleplat.h",
-            "Middlewares/ST/STM32_WPAN/ble/stack/include/blestack.h",
-            "Middlewares/ST/STM32_WPAN/link_layer/ll_sys/inc/linklayer_plat.h",
-            "Middlewares/ST/STM32_WPAN/link_layer/ll_sys/inc/ll_sys.h",
-            "Middlewares/ST/STM32_WPAN/link_layer/ll_sys/src/ll_sys_cs.c",
-            "Middlewares/ST/STM32_WPAN/link_layer/ll_sys/src/ll_sys_dp_slp.c",
-            "Middlewares/ST/STM32_WPAN/link_layer/ll_sys/src/ll_sys_intf.c",
-            "Middlewares/ST/STM32_WPAN/link_layer/ll_sys/src/ll_sys_startup.c",
-            "Middlewares/ST/STM32_WPAN/link_layer/ll_sys/inc/ll_sys_startup.h",
-            "Middlewares/ST/STM32_WPAN/stm32_wpan_common.h",
-            "Middlewares/ST/STM32_WPAN/ll_intf_cmn.h",
-            ble_heartrate_app_path + "/Core/Inc/app_common.h",
-            ble_heartrate_app_path + "/Core/Inc/app_conf.h",
-            ble_heartrate_app_path + "/Core/Inc/app_entry.h",
-            ble_heartrate_app_path + "/Core/Inc/utilities_conf.h",
-            ble_heartrate_app_path + "/Core/Inc/main.h",
-            ble_heartrate_app_path + "/System/Modules/Flash/rf_timing_synchro.c",
-            ble_heartrate_app_path + "/System/Modules/Flash/rf_timing_synchro.h",
-            ble_heartrate_app_path + "/System/Modules/Flash/flash_driver.c",
-            ble_heartrate_app_path + "/System/Modules/Flash/flash_driver.h",
-            ble_heartrate_app_path + "/System/Modules/Flash/flash_manager.c",
-            ble_heartrate_app_path + "/System/Modules/Flash/flash_manager.h",
-            ble_heartrate_app_path + "/System/Modules/RTDebug/debug_signals.h",
-            ble_heartrate_app_path + "/System/Modules/RTDebug/RTDebug.c",
-            ble_heartrate_app_path + "/System/Modules/RTDebug/RTDebug.h",
-            ble_heartrate_app_path + "/System/Modules/RTDebug/local_debug_tables.h",
-            ble_heartrate_app_path + "/System/Modules/scm.c",
-            ble_heartrate_app_path + "/System/Modules/scm.h",
-            ble_heartrate_app_path + "/System/Modules/stm_list.c",
-            ble_heartrate_app_path + "/System/Modules/stm_list.h",
-            ble_heartrate_app_path + "/System/Modules/utilities_common.h",
-            ble_heartrate_app_path + "/System/Interfaces/hw.h",
-            ble_heartrate_app_path + "/System/Interfaces/hw_aes.c",
-            ble_heartrate_app_path + "/System/Interfaces/hw_if.h",
-            ble_heartrate_app_path + "/System/Interfaces/hw_pka.c",
-            ble_heartrate_app_path + "/System/Interfaces/pka_p256.c",
-            ble_heartrate_app_path + "/System/Config/Log/log_module.c",
-            ble_heartrate_app_path + "/System/Config/Log/log_module.h",
-            ble_heartrate_app_path + "/System/Config/Debug_GPIO/app_debug.h",
-            ble_heartrate_app_path + "/System/Config/Debug_GPIO/debug_config.h",
-            ble_heartrate_app_path + "/STM32_WPAN/Target/power_table.c",
-            ble_heartrate_app_path + "/STM32_WPAN/Target/bpka.c",
-            ble_heartrate_app_path + "/STM32_WPAN/Target/bpka.h",
-            ble_heartrate_app_path + "/STM32_WPAN/Target/linklayer_plat.c",
-            ble_heartrate_app_path + "/STM32_WPAN/Target/ll_sys_if.c",
-            "Utilities/trace/adv_trace/stm32_adv_trace.h",
-            "Utilities/misc/stm32_mem.h",
-            "Utilities/tim_serv/stm32_timer.h",
-            "Utilities/misc/stm32_tiny_vsnprintf.h",
-            ],
+    "STM32_WPAN": [
+        "Middlewares/ST/STM32_WPAN/ble/stack/include/auto/ble_types.h",
+        "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/_40nm_reg_files/"
+        + "DWC_ble154combo.h",
+        "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/bsp.h",
+        "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/common_types.h",
+        "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/event_manager.h",
+        "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/evnt_schdlr_gnrc_if.h",
+        "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/hci.h",
+        "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/ll_intf.h",
+        "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/ll_intf_cmn.h",
+        "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/mem_intf.h",
+        "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/os_wrapper.h",
+        "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/power_table.h",
+        "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/pta.h",
+        "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/config/ble_full/"
+        + "ll_fw_config.h",
+        "Middlewares/ST/STM32_WPAN/ble/stack/include/ble_bufsize.h",
+        "Middlewares/ST/STM32_WPAN/ble/stack/include/ble_const.h",
+        "Middlewares/ST/STM32_WPAN/ble/stack/include/ble_defs.h",
+        "Middlewares/ST/STM32_WPAN/ble/stack/include/ble_std.h",
+        "Middlewares/ST/STM32_WPAN/ble/stack/include/bleplat.h",
+        "Middlewares/ST/STM32_WPAN/ble/stack/include/blestack.h",
+        "Middlewares/ST/STM32_WPAN/link_layer/ll_sys/inc/linklayer_plat.h",
+        "Middlewares/ST/STM32_WPAN/link_layer/ll_sys/inc/ll_sys.h",
+        "Middlewares/ST/STM32_WPAN/link_layer/ll_sys/src/ll_sys_cs.c",
+        "Middlewares/ST/STM32_WPAN/link_layer/ll_sys/src/ll_sys_dp_slp.c",
+        "Middlewares/ST/STM32_WPAN/link_layer/ll_sys/src/ll_sys_intf.c",
+        "Middlewares/ST/STM32_WPAN/link_layer/ll_sys/src/ll_sys_startup.c",
+        "Middlewares/ST/STM32_WPAN/link_layer/ll_sys/inc/ll_sys_startup.h",
+        "Middlewares/ST/STM32_WPAN/stm32_wpan_common.h",
+    ],
+    "BLE_TransparentMode": [
+        ble_transparent_mode_app_path + "/Core/Inc/app_common.h",
+        ble_transparent_mode_app_path + "/Core/Inc/app_conf.h",
+        ble_transparent_mode_app_path + "/Core/Inc/app_entry.h",
+        ble_transparent_mode_app_path + "/Core/Inc/utilities_conf.h",
+        ble_transparent_mode_app_path + "/Core/Inc/main.h",
+        ble_transparent_mode_app_path + "/System/Modules/Flash/rf_timing_synchro.c",
+        ble_transparent_mode_app_path + "/System/Modules/Flash/rf_timing_synchro.h",
+        ble_transparent_mode_app_path + "/System/Modules/Flash/flash_driver.c",
+        ble_transparent_mode_app_path + "/System/Modules/Flash/flash_driver.h",
+        ble_transparent_mode_app_path + "/System/Modules/Flash/flash_manager.c",
+        ble_transparent_mode_app_path + "/System/Modules/Flash/flash_manager.h",
+        ble_transparent_mode_app_path + "/System/Modules/RTDebug/debug_signals.h",
+        ble_transparent_mode_app_path + "/System/Modules/RTDebug/RTDebug.c",
+        ble_transparent_mode_app_path + "/System/Modules/RTDebug/RTDebug.h",
+        ble_transparent_mode_app_path + "/System/Modules/RTDebug/local_debug_tables.h",
+        ble_transparent_mode_app_path + "/System/Modules/scm.c",
+        ble_transparent_mode_app_path + "/System/Modules/scm.h",
+        ble_transparent_mode_app_path + "/System/Modules/stm_list.c",
+        ble_transparent_mode_app_path + "/System/Modules/stm_list.h",
+        ble_transparent_mode_app_path + "/System/Modules/utilities_common.h",
+        ble_transparent_mode_app_path + "/System/Interfaces/hw.h",
+        ble_transparent_mode_app_path + "/System/Interfaces/hw_aes.c",
+        ble_transparent_mode_app_path + "/System/Interfaces/hw_if.h",
+        ble_transparent_mode_app_path + "/System/Interfaces/hw_pka.c",
+        ble_transparent_mode_app_path + "/System/Interfaces/pka_p256.c",
+        ble_transparent_mode_app_path + "/System/Config/Log/log_module.c",
+        ble_transparent_mode_app_path + "/System/Config/Log/log_module.h",
+        ble_transparent_mode_app_path + "/System/Config/Debug_GPIO/app_debug.h",
+        ble_transparent_mode_app_path + "/System/Config/Debug_GPIO/debug_config.h",
+        ble_transparent_mode_app_path + "/STM32_WPAN/Target/power_table.c",
+        ble_transparent_mode_app_path + "/STM32_WPAN/Target/bpka.c",
+        ble_transparent_mode_app_path + "/STM32_WPAN/Target/bpka.h",
+        ble_transparent_mode_app_path + "/STM32_WPAN/Target/linklayer_plat.c",
+        ble_transparent_mode_app_path + "/STM32_WPAN/Target/ll_sys_if.c",
+    ],
+    "Utilities": [
+        "Utilities/trace/adv_trace/stm32_adv_trace.h",
+        "Utilities/misc/stm32_mem.h",
+        "Utilities/tim_serv/stm32_timer.h",
+        "Utilities/misc/stm32_tiny_vsnprintf.h",
+    ],
 }
 
 
@@ -140,54 +142,53 @@ def os_cmd(cmd, cwd=None, shell=False):
 
 def copy_hci_files(src_repo_path, dest_lib_path, stm32_serie):
     """Copy sources files from Cube Firmware to zephyr"""
-    # remove existing *.c and *.h files
-    hci_path = Path(dest_lib_path / "hci")
-    if hci_path.exists():
-        for item in os.listdir(hci_path):
-            if item.endswith(".c") or item.endswith(".h"):
-                os.remove(hci_path / item)
-
     if stm32_serie == "stm32wb":
+        # Remove existing *.c and *.h files
+        hci_path = Path(dest_lib_path / "hci")
+        if hci_path.exists():
+            for item in os.listdir(hci_path):
+                if item.endswith(".c") or item.endswith(".h"):
+                    os.remove(hci_path / item)
+
+        # Create hci folder if does not exist
         if not hci_path.exists():
             hci_path.mkdir(parents=True)
 
+        # Copy files
         for file in file_list_wb:
-            file_path = Path(src_repo_path / file)
-            file_name = file_path.name
-            if file_path.exists():
+            src_file_path = Path(src_repo_path / file)
+            file_name = src_file_path.name
+            if src_file_path.exists():
                 # copy each file to destination
-                shutil.copy(file_path, Path(hci_path / file_name))
+                shutil.copy(src_file_path, Path(hci_path / file_name))
             else:
-                logging.error(f"File : {file_path} not found")
+                logging.error(f"File : {src_file_path} not found")
                 logging.error("Abort")
                 sys.exit()
 
     elif stm32_serie == "stm32wba":
-        # remove existing *.c and *.h files
-        auto_path = Path(hci_path / "auto")
-        ll_path = Path(hci_path / "ll")
-        reg_files_path = Path(ll_path / "_40nm_reg_files")
-        dir_paths = {"hci": hci_path, "auto": auto_path, "ll": ll_path,
-                     "reg_files": reg_files_path}
-
-        for dir_path in [auto_path, ll_path, reg_files_path]:
-            if dir_path.exists():
-                for item in os.listdir(dir_path):
-                    if item.endswith(".c") or item.endswith(".h"):
-                        os.remove(dir_path / item)
+        # Remove existing *.c and *.h files
+        for root, _, files in os.walk(dest_lib_path):
+            for file in files:
+                if file.endswith(".c") or file.endswith(".h"):
+                    os.remove(os.path.join(root, file))
 
         for dir_name in file_list_wba:
-            if not dir_paths[dir_name].exists():
-                dir_paths[dir_name].mkdir(parents=True)
-
             for file in file_list_wba[dir_name]:
-                file_path = Path(src_repo_path / file)
-                file_name = file_path.name
-                if file_path.exists():
-                    # copy each file to destination
-                    shutil.copy(file_path, Path(dir_paths[dir_name]))
+                # Src file path to be copied
+                src_file_path = Path(src_repo_path / file)
+                if src_file_path.exists():
+                    # Extract the relevant part of the path from "dir_name" onwards
+                    start_index = file.find(dir_name)
+                    relative_path = file[start_index:]
+                    # Create the full destination path
+                    destination_path = os.path.join(dest_lib_path, relative_path)
+                    # Create (if does not exist) all directories in the destination path
+                    os.makedirs(os.path.dirname(destination_path), exist_ok=True)
+                    # Copy the file to the destination path
+                    shutil.copy(src_file_path, destination_path)
                 else:
-                    logging.error(f"File : {file_path} not found")
+                    logging.error(f"File : {src_file_path} not found")
                     logging.error("Abort")
                     sys.exit()
 
