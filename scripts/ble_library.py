@@ -202,7 +202,7 @@ def update_ble_lib_readme(lib_path, make_version, make_commit):
         make_commit: Commit corresponding to latest STM32Cube version.
     """
 
-    readme_path = Path(lib_path / "hci" / "README")
+    readme_path = Path(lib_path / "README")
 
     with readme_path.open(mode="r") as readme_prev:
         lines = (x for x in readme_prev.read().splitlines())
@@ -285,8 +285,8 @@ def build_patch_from_current_zephyr_version(
     for file in temp_source_lib_path.glob("*"):
         if file.is_file():
             file.unlink()
-    if Path(temp_source_lib_path / "hci" / "README").exists():
-        Path(temp_source_lib_path / "hci" / "README").unlink()
+    if Path(temp_source_lib_path / "README").exists():
+        Path(temp_source_lib_path / "README").unlink()
 
     # commit this current zephyr library file
     os_cmd(("git", "add", "*"), cwd=temp_source_path)
@@ -337,9 +337,8 @@ def update(
     )
     copy_hci_files(src_repo_path, dest_lib_path, stm32_serie)
     common_utils.apply_patch(dest_lib_path / "ble_zephyr.patch", dest_lib_path)
-    if Path(dest_lib_path / "hci" / "README").exists():
-        update_ble_lib_readme(
-            dest_lib_path, update_version, commit)
+    if Path(dest_lib_path / "README").exists():
+        update_ble_lib_readme(dest_lib_path, update_version, commit)
 
 
 if __name__ == "__main__":
