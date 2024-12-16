@@ -318,6 +318,24 @@
 				pinmux = <STM32F1_PINMUX('B', 12, ALTERNATE, NO_REMAP)>;
 			};
 
+			/* JTAG PORT */
+
+			/omit-if-no-ref/ sys_jtms_swdio_pa13: sys_jtms_swdio_pa13 {
+				pinmux = <STM32F1_PINMUX('A', 13, ALTERNATE, NO_REMAP)>;
+			};
+
+			/omit-if-no-ref/ sys_jtck_swclk_pa14: sys_jtck_swclk_pa14 {
+				pinmux = <STM32F1_PINMUX('A', 14, ALTERNATE, NO_REMAP)>;
+			};
+
+			/omit-if-no-ref/ sys_jtdi_pa15: sys_jtdi_pa15 {
+				pinmux = <STM32F1_PINMUX('A', 15, ALTERNATE, NO_REMAP)>;
+			};
+
+			/omit-if-no-ref/ sys_jtdo_traceswo_pb3: sys_jtdo_traceswo_pb3 {
+				pinmux = <STM32F1_PINMUX('B', 3, ALTERNATE, NO_REMAP)>;
+			};
+
 			/* RCC_MCO */
 
 			/omit-if-no-ref/ rcc_mco_pa8: rcc_mco_pa8 {
