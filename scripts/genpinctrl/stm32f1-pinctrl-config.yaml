@@ -170,6 +170,10 @@
   match: "^I2S\\d+_SD$"
   mode: alternate
 
+- name: JTAG PORT
+  match: "^(SYS|DEBUG)_((JTMS-)?SWDIO|(JTCK-)?SWCLK|JTDI|JTDO(-TRACESWO|-SWO)?|(NJ)?JTRST)$"
+  mode: alternate
+
 - name: RCC_MCO
   match: "^RCC_MCO_?(\\d+)?$"
   mode: alternate
