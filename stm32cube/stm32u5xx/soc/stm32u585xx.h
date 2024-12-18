@@ -1213,23 +1213,24 @@ typedef struct
   */
 typedef struct
 {
-  __IO uint32_t GCR;          /*!< SAI global configuration register,        Address offset: 0x00 */
-  uint32_t      RESERVED[16]; /*!< Reserved,                         Address offset: 0x04 to 0x40 */
-  __IO uint32_t PDMCR;        /*!< SAI PDM control register,                 Address offset: 0x44 */
-  __IO uint32_t PDMDLY;       /*!< SAI PDM delay register,                   Address offset: 0x48 */
-} SAI_TypeDef;
+  __IO uint32_t CR1;         /*!< SAI block x configuration register 1,     Address offset: 0x00 */
+  __IO uint32_t CR2;         /*!< SAI block x configuration register 2,     Address offset: 0x04 */
+  __IO uint32_t FRCR;        /*!< SAI block x frame configuration register, Address offset: 0x08 */
+  __IO uint32_t SLOTR;       /*!< SAI block x slot register,                Address offset: 0x0C */
+  __IO uint32_t IMR;         /*!< SAI block x interrupt mask register,      Address offset: 0x10 */
+  __IO uint32_t SR;          /*!< SAI block x status register,              Address offset: 0x14 */
+  __IO uint32_t CLRFR;       /*!< SAI block x clear flag register,          Address offset: 0x18 */
+  __IO uint32_t DR;          /*!< SAI block x data register,                Address offset: 0x1C */
+} SAI_Block_TypeDef;
 
 typedef struct
 {
-  __IO uint32_t CR1;         /*!< SAI block x configuration register 1,     Address offset: 0x04 */
-  __IO uint32_t CR2;         /*!< SAI block x configuration register 2,     Address offset: 0x08 */
-  __IO uint32_t FRCR;        /*!< SAI block x frame configuration register, Address offset: 0x0C */
-  __IO uint32_t SLOTR;       /*!< SAI block x slot register,                Address offset: 0x10 */
-  __IO uint32_t IMR;         /*!< SAI block x interrupt mask register,      Address offset: 0x14 */
-  __IO uint32_t SR;          /*!< SAI block x status register,              Address offset: 0x18 */
-  __IO uint32_t CLRFR;       /*!< SAI block x clear flag register,          Address offset: 0x1C */
-  __IO uint32_t DR;          /*!< SAI block x data register,                Address offset: 0x20 */
-} SAI_Block_TypeDef;
+  __IO uint32_t GCR;          /*!< SAI global configuration register,        Address offset: 0x00 */
+  SAI_Block_TypeDef BLOCK_A;  /*!< First Block of SAI Module                 Address offset: 0x04 */
+  SAI_Block_TypeDef BLOCK_B;  /*!< Second Block of SAI Module                Address offset: 0x24 */
+  __IO uint32_t PDMCR;        /*!< SAI PDM control register,                 Address offset: 0x44 */
+  __IO uint32_t PDMDLY;       /*!< SAI PDM delay register,                   Address offset: 0x48 */
+} SAI_TypeDef;
 
 /**
   * @brief System configuration controller
