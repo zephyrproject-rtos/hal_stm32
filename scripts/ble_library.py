@@ -140,8 +140,8 @@ def os_cmd(cmd, cwd=None, shell=False):
     )
 
 
-def copy_hci_files(src_repo_path, dest_lib_path, stm32_serie):
-    """Copy sources files from Cube Firmware to zephyr"""
+def copy_ble_lib_files(src_repo_path, dest_lib_path, stm32_serie):
+    """Copy BLE lib related files from Cube Firmware to hal_stm32"""
     if stm32_serie == "stm32wb":
         # Remove existing *.c and *.h files
         hci_path = Path(dest_lib_path / "hci")
@@ -251,7 +251,7 @@ def build_patch_from_current_zephyr_version(
     shutil.rmtree(temp_source_path, onerror=common_utils.remove_readonly)
     temp_source_lib_path.mkdir(parents=True)
 
-    copy_hci_files(
+    copy_ble_lib_files(
         src_repo_path,
         temp_source_lib_path,
         stm32_serie,
@@ -335,7 +335,7 @@ def update(
         ("git", "checkout", "-f", "--recurse-submodules", update_version),
         cwd=src_repo_path,
     )
-    copy_hci_files(src_repo_path, dest_lib_path, stm32_serie)
+    copy_ble_lib_files(src_repo_path, dest_lib_path, stm32_serie)
     common_utils.apply_patch(dest_lib_path / "ble_zephyr.patch", dest_lib_path)
     if Path(dest_lib_path / "README").exists():
         update_ble_lib_readme(dest_lib_path, update_version, commit)
