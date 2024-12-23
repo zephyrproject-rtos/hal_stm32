@@ -144,6 +144,22 @@
   match: "^ETH_TXD3$"
   slew-rate: very-high-speed
 
+- name: ETH (STM32N6 IP)
+  match: "^ETH\\d+_(?:MDC|MDIO|PHY_INTN|PPS_OUT|CLK|TX_ER)$"
+  slew-rate: very-high-speed
+
+- name: ETH_MII
+  match: "^ETH\\d_MII_(?:COL|CRS|RXD[0-3]|RX_CLK|RX_DV|RX_ER|TX_EN|TXD[0-3]|TX_CLK|TX_EN)$"
+  slew-rate: very-high-speed
+
+- name: ETH_RGMII
+  match: "^ETH\\d+_RGMII_(?:CLk125|GTX_CLK|RXD[0-3]|RX_CLK|RX_CTL|RX_ER|TX_EN|RX_DV|TXD[0-3]|TX_CLK|TX_EN)$"
+  slew-rate: very-high-speed
+
+- name: ETH_RMII
+  match: "^ETH\\d+_RMII_(?:CRS_DV|REF_CLK|RXD[0-1]|RX_CLK|RX_ER|TX_EN|RX_DV|TXD[0-1]|TX_CLK|TX_EN)$"
+  slew-rate: very-high-speed
+
 - name: FDCAN_RX
   match: "^FDCAN\\d+_RX$"
 
