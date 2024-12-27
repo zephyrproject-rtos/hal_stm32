@@ -194,7 +194,7 @@ def copy_ble_lib_files(src_repo_path, dest_lib_path, stm32_serie):
 
 
 def update_ble_lib_readme(lib_path, make_version, make_commit):
-    """Update README file
+    """Update README.rst file
 
     Args:
         dest_lib_path: library path
@@ -202,14 +202,14 @@ def update_ble_lib_readme(lib_path, make_version, make_commit):
         make_commit: Commit corresponding to latest STM32Cube version.
     """
 
-    readme_path = Path(lib_path / "README")
+    readme_path = Path(lib_path / "README.rst")
 
     with readme_path.open(mode="r") as readme_prev:
         lines = (x for x in readme_prev.read().splitlines())
 
     readme_path.unlink()
 
-    # Write README from previous one if exists
+    # Write README.rst from previous one if exists
     with open(str(readme_path), "w") as readme_file:
         for line_item in lines:
             # change version nb
@@ -285,8 +285,8 @@ def build_patch_from_current_zephyr_version(
     for file in temp_source_lib_path.glob("*"):
         if file.is_file():
             file.unlink()
-    if Path(temp_source_lib_path / "README").exists():
-        Path(temp_source_lib_path / "README").unlink()
+    if Path(temp_source_lib_path / "README.rst").exists():
+        Path(temp_source_lib_path / "README.rst").unlink()
 
     # commit this current zephyr library file
     os_cmd(("git", "add", "*"), cwd=temp_source_path)
@@ -337,7 +337,7 @@ def update(
     )
     copy_ble_lib_files(src_repo_path, dest_lib_path, stm32_serie)
     common_utils.apply_patch(dest_lib_path / "ble_zephyr.patch", dest_lib_path)
-    if Path(dest_lib_path / "README").exists():
+    if Path(dest_lib_path / "README.rst").exists():
         update_ble_lib_readme(dest_lib_path, update_version, commit)
 
 
