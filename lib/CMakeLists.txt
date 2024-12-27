@@ -1,6 +1,7 @@
 # Makefile - STLIB SDK
 #
 # Copyright (c) 2016 Linaro Limited
+# Copyright (c) 2024 STMicroelectronics
 #
 # SPDX-License-Identifier: Apache-2.0
 
