@@ -47,4 +47,10 @@ Patch List:
     Impacted files:
      drivers/include/Legacy/stm32_hal_legacy.h
 
+   *Fix FSBL configuration
+    -Remove CMSE_NS_ENTRY modifier, which requires enabling CONFIG_ARM_FIRMWARE_HAS_SECURE_ENTRY_FUNCS
+     which we don't need right now.
+    Impacted files:
+    -soc/system_stm32n6xx_fsbl.c
+
    See release_note.html from STM32Cube
