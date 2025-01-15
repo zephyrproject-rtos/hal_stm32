@@ -12,6 +12,8 @@
 #include <stm32l4xx_ll_pka.h>
 #elif defined(CONFIG_SOC_SERIES_STM32L5X)
 #include <stm32l5xx_ll_pka.h>
+#elif defined(CONFIG_SOC_SERIES_STM32N6X)
+#include <stm32n6xx_ll_pka.h>
 #elif defined(CONFIG_SOC_SERIES_STM32U5X)
 #include <stm32u5xx_ll_pka.h>
 #elif defined(CONFIG_SOC_SERIES_STM32WB0X)

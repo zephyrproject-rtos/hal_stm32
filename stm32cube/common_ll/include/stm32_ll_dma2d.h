@@ -14,6 +14,8 @@
 #include <stm32h7xx_ll_dma2d.h>
 #elif defined(CONFIG_SOC_SERIES_STM32L4X)
 #include <stm32l4xx_ll_dma2d.h>
+#elif defined(CONFIG_SOC_SERIES_STM32N6X)
+#include <stm32n6xx_ll_dma2d.h>
 #elif defined(CONFIG_SOC_SERIES_STM32U5X)
 #include <stm32u5xx_ll_dma2d.h>
 #endif
