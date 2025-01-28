@@ -1,4 +1,4 @@
-/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/1.32a-LCA00/firmware/public_inc/hci.h#1 $*/
+/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/1.32a-lca02/firmware/public_inc/hci.h#2 $*/
 /**
  ********************************************************************************
  * @file    hci.h
@@ -117,8 +117,6 @@ ble_stat_t hci_rcvd_acl_data_pckt_hndlr(
 ble_stat_t hci_rcvd_iso_data_pckt_hndlr(
 		ble_buff_hdr_t *ptr_buff_hdr);
 #endif /* ((SUPPORT_CONNECTED_ISOCHRONOUS && (SUPPORT_MASTER_CONNECTION || SUPPORT_SLAVE_CONNECTION)) || SUPPORT_BRD_ISOCHRONOUS) */
-#endif /* !SUPPORT_HCI_EVENT_ONLY || SUPPORT_HCI_EVENT_ONLY_TESTING */
-
 
 /**
  * @brief  Process the received HCI command packet from the host.
@@ -130,6 +128,8 @@ ble_stat_t hci_rcvd_iso_data_pckt_hndlr(
 ble_stat_t hci_rcvd_cmd_pckt_hndlr(
 	uint8_t *ptr_rcvd_pckt_strt,
 	uint16_t rcvd_pckt_len);
+
+#endif /* !SUPPORT_HCI_EVENT_ONLY || SUPPORT_HCI_EVENT_ONLY_TESTING */
 
 /**
  * @brief  allocate a message structure to be sent to the HCI layer through event manager.

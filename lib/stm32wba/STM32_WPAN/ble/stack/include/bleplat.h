@@ -106,7 +106,8 @@ extern int BLEPLAT_NvmAdd( uint8_t type,
  * @param  offset: The offset from which the NVM starts the read an operation.
  * @param  data: The pointer to data read by the function
  * @param  size: The size of data to be read
- * @retval status (BLEPLAT_XX)
+ * @retval - if positive or zero, it is the number of copied bytes
+ *         - if negative, it is an error status (BLEPLAT_XX)
  */
 extern int BLEPLAT_NvmGet( uint8_t mode,
                            uint8_t type,
@@ -119,7 +120,9 @@ extern int BLEPLAT_NvmGet( uint8_t mode,
  * @param  offset: The offset from which the NVM starts the comparison
  * @param  data: The data to be compared with stored data in the NVM
  * @param  size: The size of data to be compared
- * @retval status (BLEPLAT_XX)
+ * @retval - if zero, the comparison was successful (BLEPLAT_OK)
+ *         - if positive, the comparison failed
+ *         - if negative, it is an error status (BLEPLAT_XX)
  */
 extern int BLEPLAT_NvmCompare( uint16_t offset,
                                const uint8_t* data,

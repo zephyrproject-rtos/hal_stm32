@@ -1,11 +1,21 @@
-/*
- * Copyright (c) 2023 STMicroelectronics
- *
- * SPDX-License-Identifier: Apache-2.0
- */
-
-
-
+/* USER CODE BEGIN Header */
+/**
+  ******************************************************************************
+  * @file    linklayer_plat.c
+  * @author  MCD Application Team
+  * @brief   Source file for the linklayer plateform adaptation layer
+  ******************************************************************************
+  * @attention
+  *
+  * Copyright (c) 2022 STMicroelectronics.
+  * All rights reserved.
+  *
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
+  *
+  ******************************************************************************
+  */
 /* USER CODE END Header */
 
 #ifndef __ZEPHYR__
@@ -26,6 +36,8 @@
 #include "stm32_lpm.h"
 #endif /* (CFG_LPM_LEVEL != 0) */
 /* USER CODE BEGIN Includes */
+
+/* USER CODE END Includes */
 
 #else
 #include "scm.h"
@@ -102,6 +114,44 @@ void LINKLAYER_PLAT_WaitHclkRdy(void)
 {
   /* Wait on radio bus clock readiness */
   while(HAL_RCCEx_GetRadioBusClockReadiness() != RCC_RADIO_BUS_CLOCK_READY);
+}
+
+/**
+  * @brief  Notify the Link Layer platform layer the system will enter in WFI
+  *         and AHB5 clock may be turned of regarding the 2.4Ghz radio state.
+  * @param  None
+  * @retval None
+  */
+void LINKLAYER_PLAT_NotifyWFIEnter(void)
+{
+  /* Check if Radio state will allow the AHB5 clock to be cut */
+
+  /* AHB5 clock will be cut in the following cases:
+   * - 2.4GHz radio is not in ACTIVE mode (in SLEEP or DEEPSLEEP mode).
+   * - RADIOSMEN and STRADIOCLKON bits are at 0.
+   */
+  if((LL_PWR_GetRadioMode() != LL_PWR_RADIO_ACTIVE_MODE) ||
+     ((__HAL_RCC_RADIO_IS_CLK_SLEEP_ENABLED() == 0) && (LL_RCC_RADIO_IsEnabledSleepTimerClock() == 0)))
+  {
+    AHB5_SwitchedOff = 1;
+  }
+}
+
+/**
+  * @brief  Notify the Link Layer platform layer the system exited WFI and AHB5
+  *         clock may be resynchronized as is may have been turned of during
+  *         low power mode entry.
+  * @param  None
+  * @retval None
+  */
+void LINKLAYER_PLAT_NotifyWFIExit(void)
+{
+  /* Check if AHB5 clock has been turned of and needs resynchronisation */
+  if (AHB5_SwitchedOff)
+  {
+    /* Read sleep register as earlier as possible */
+    radio_sleep_timer_val = ll_intf_cmn_get_slptmr_value();
+  }
 }
 
 /**
@@ -273,9 +323,9 @@ void LINKLAYER_PLAT_EnableSpecificIRQ(uint8_t isr_type)
     {
       /* When specific counter for link layer high ISR reaches 0, interrupt is enabled */
       HAL_NVIC_EnableIRQ(RADIO_INTR_NUM);
-      /* USER CODE BEGIN LINKLAYER_PLAT_EnableSpecificIRQ_1*/
+      /* USER CODE BEGIN LINKLAYER_PLAT_EnableSpecificIRQ_1 */
 
-      /* USER CODE END LINKLAYER_PLAT_EnableSpecificIRQ_1*/
+      /* USER CODE END LINKLAYER_PLAT_EnableSpecificIRQ_1 */
     }
   }
 
@@ -318,9 +368,9 @@ void LINKLAYER_PLAT_DisableSpecificIRQ(uint8_t isr_type)
     prio_high_isr_counter++;
     if(prio_high_isr_counter == 1)
     {
-      /* USER CODE BEGIN LINKLAYER_PLAT_DisableSpecificIRQ_1*/
+      /* USER CODE BEGIN LINKLAYER_PLAT_DisableSpecificIRQ_1 */
 
-      /* USER CODE END LINKLAYER_PLAT_DisableSpecificIRQ_1*/
+      /* USER CODE END LINKLAYER_PLAT_DisableSpecificIRQ_1 */
       /* When specific counter for link layer high ISR value is 1, interrupt is disabled */
       HAL_NVIC_DisableIRQ(RADIO_INTR_NUM);
     }
@@ -358,15 +408,15 @@ void LINKLAYER_PLAT_DisableSpecificIRQ(uint8_t isr_type)
   */
 void LINKLAYER_PLAT_EnableRadioIT(void)
 {
-  /* USER CODE BEGIN LINKLAYER_PLAT_EnableRadioIT_1*/
+  /* USER CODE BEGIN LINKLAYER_PLAT_EnableRadioIT_1 */
 
-  /* USER CODE END LINKLAYER_PLAT_EnableRadioIT_1*/
+  /* USER CODE END LINKLAYER_PLAT_EnableRadioIT_1 */
 
   HAL_NVIC_EnableIRQ((IRQn_Type) RADIO_INTR_NUM);
 
-  /* USER CODE BEGIN LINKLAYER_PLAT_EnableRadioIT_2*/
+  /* USER CODE BEGIN LINKLAYER_PLAT_EnableRadioIT_2 */
 
-  /* USER CODE END LINKLAYER_PLAT_EnableRadioIT_2*/
+  /* USER CODE END LINKLAYER_PLAT_EnableRadioIT_2 */
 }
 
 /**
@@ -376,15 +426,15 @@ void LINKLAYER_PLAT_EnableRadioIT(void)
   */
 void LINKLAYER_PLAT_DisableRadioIT(void)
 {
-  /* USER CODE BEGIN LINKLAYER_PLAT_DisableRadioIT_1*/
+  /* USER CODE BEGIN LINKLAYER_PLAT_DisableRadioIT_1 */
 
-  /* USER CODE END LINKLAYER_PLAT_DisableRadioIT_1*/
+  /* USER CODE END LINKLAYER_PLAT_DisableRadioIT_1 */
 
   HAL_NVIC_DisableIRQ((IRQn_Type) RADIO_INTR_NUM);
 
-  /* USER CODE BEGIN LINKLAYER_PLAT_DisableRadioIT_2*/
+  /* USER CODE BEGIN LINKLAYER_PLAT_DisableRadioIT_2 */
 
-  /* USER CODE END LINKLAYER_PLAT_DisableRadioIT_2*/
+  /* USER CODE END LINKLAYER_PLAT_DisableRadioIT_2 */
 }
 
 #ifndef __ZEPHYR__
@@ -473,6 +523,12 @@ void LINKLAYER_PLAT_RequestTemperature(void)
   */
 void LINKLAYER_PLAT_EnableOSContextSwitch(void)
 {
+  /* USER CODE BEGIN LINKLAYER_PLAT_EnableOSContextSwitch_0 */
+
+  /* USER CODE END LINKLAYER_PLAT_EnableOSContextSwitch_0 */
+  /* USER CODE BEGIN LINKLAYER_PLAT_EnableOSContextSwitch_1 */
+
+  /* USER CODE END LINKLAYER_PLAT_EnableOSContextSwitch_1 */
 }
 
 /**
@@ -482,6 +538,12 @@ void LINKLAYER_PLAT_EnableOSContextSwitch(void)
   */
 void LINKLAYER_PLAT_DisableOSContextSwitch(void)
 {
+  /* USER CODE BEGIN LINKLAYER_PLAT_DisableOSContextSwitch_0 */
+
+  /* USER CODE END LINKLAYER_PLAT_DisableOSContextSwitch_0 */
+  /* USER CODE BEGIN LINKLAYER_PLAT_DisableOSContextSwitch_1 */
+
+  /* USER CODE END LINKLAYER_PLAT_DisableOSContextSwitch_1 */
 }
 
 /**
@@ -515,50 +577,7 @@ uint32_t LINKLAYER_PLAT_GetUDN(void)
 {
   return LL_FLASH_GetUDN();
 }
-
-/* USER CODE BEGIN LINKLAYER_PLAT 0 */
-
-/* Radio bus clock control variables */
-uint8_t AHB5_SwitchedOff = 0;
-uint32_t radio_sleep_timer_val = 0;
 #endif
-
-/**
-  * @brief  Notify the Link Layer platform layer the system will enter in WFI 
-  *         and AHB5 clock may be turned of regarding the 2.4Ghz radio state. 
-  * @param  None
-  * @retval None
-  */
-void LINKLAYER_PLAT_NotifyWFIEnter(void)
-{
-  /* Check if Radio state will allow the AHB5 clock to be cut */
-  
-  /* AHB5 clock will be cut in the following cases:
-   * - 2.4GHz radio is not in ACTIVE mode (in SLEEP or DEEPSLEEP mode).
-   * - RADIOSMEN and STRADIOCLKON bits are at 0.
-   */
-  if((LL_PWR_GetRadioMode() != LL_PWR_RADIO_ACTIVE_MODE) ||
-     ((__HAL_RCC_RADIO_IS_CLK_SLEEP_ENABLED() == 0) && (LL_RCC_RADIO_IsEnabledSleepTimerClock() == 0)))
-  {
-    AHB5_SwitchedOff = 1;
-  }
-}
-
-/**
-  * @brief  Notify the Link Layer platform layer the system exited WFI and AHB5 
-  *         clock may be resynchronized as is may have been turned of during
-  *         low power mode entry.
-  * @param  None
-  * @retval None
-  */
-void LINKLAYER_PLAT_NotifyWFIExit(void)
-{
- /* Check if AHB5 clock has been turned of and needs resynchronisation */
-  if (AHB5_SwitchedOff)
-  {
-    /* Read sleep register as earlier as possible */
-    radio_sleep_timer_val = ll_intf_cmn_get_slptmr_value();
-  }
-}
+/* USER CODE BEGIN LINKLAYER_PLAT 0 */
 
 /* USER CODE END LINKLAYER_PLAT 0 */

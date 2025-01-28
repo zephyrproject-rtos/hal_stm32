@@ -7,7 +7,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2024 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -30,139 +30,37 @@ extern "C" {
 #include <stdarg.h>
 #include <stdint.h>
 #include <stdbool.h>
-#include "app_conf.h"
+#include "log_module_conf.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
 /* USER CODE END Includes */
 
-/* Module configuration ------------------------------------------------------*/
-/**
- * @brief  When this define is set to 0, there is no time stamp insertion inside
- *         the trace data. When set to 1, there is.
- */
-#define LOG_INSERT_TIME_STAMP_INSIDE_THE_TRACE    CFG_LOG_INSERT_TIME_STAMP_INSIDE_THE_TRACE
-
-/**
- * @brief  When this define is set to 1, a color in function or region is inserted on
- *         the trace data. When set to 0, color is always the same.
- */
-#define LOG_INSERT_COLOR_INSIDE_THE_TRACE         CFG_LOG_INSERT_COLOR_INSIDE_THE_TRACE
-
-/**
- * @brief  When this define is set to 1, a End Of File is inserted at the end of
- *         the trace data. When set to 0, not EOF is inserted.
- */
-#define LOG_INSERT_EOL_INSIDE_THE_TRACE           CFG_LOG_INSERT_EOL_INSIDE_THE_TRACE
-
-/* USER CODE BEGIN Module configuration */
-
-/* USER CODE END Module configuration */
-
-/* Private defines -----------------------------------------------------------*/
-/* These defines are related to the UTIL_ADV_TRACE. Do not modify them please. */
-#define LOG_MODULE_MIN_VERBOSE_LEVEL    (0)
-#define LOG_MODULE_MAX_VERBOSE_LEVEL    (0xFFFFFFFF)
-#define LOG_MODULE_MIN_REGION_VALUE     (0)
-#define LOG_MODULE_ALL_REGION_MASK      (0xFFFFFFFF)
-
-/* USER CODE BEGIN Private defines */
-
-/* USER CODE END Private defines */
-
 /* Exported types ------------------------------------------------------------*/
 /* Log module types */
 /**
- * @brief  Customizable enum describing the verbose levels used by the log module.
- *         The levels include the lower levels in the logs.
- *         E.g. LOG_VERBOSE_ERROR means LOG_VERBOSE_ERROR logs will be printed,
- *         as well as LOG_VERBOSE_INFO, but not the others with higher values.
- *         The min and max ranges are defined by LOG_MODULE_MIN_VERBOSE_LEVEL
- *         and LOG_MODULE_MAX_VERBOSE_LEVEL.
- *         The user can add its own levels but must NOT add a value to the said
- *         levels. Verbose levels are handled by ADV Trace.
- */
-typedef enum
-{
-  LOG_VERBOSE_INFO = LOG_MODULE_MIN_VERBOSE_LEVEL,
-  /* USER CODE BEGIN Log_Verbose_Level_t_0 */
-
-  /* USER CODE END Log_Verbose_Level_t_0 */
-  LOG_VERBOSE_ERROR,
-  /* USER CODE BEGIN Log_Verbose_Level_t_1 */
-
-  /* USER CODE END Log_Verbose_Level_t_1 */
-  LOG_VERBOSE_WARNING,
-  /* USER CODE BEGIN Log_Verbose_Level_t_2 */
-
-  /* USER CODE END Log_Verbose_Level_t_2 */
-  LOG_VERBOSE_DEBUG,
-  /* USER CODE BEGIN Log_Verbose_Level_t_3 */
-
-  /* USER CODE END Log_Verbose_Level_t_3 */
-  LOG_VERBOSE_ALL_LOGS = LOG_MODULE_MAX_VERBOSE_LEVEL,
-} Log_Verbose_Level_t;
-
-/**
- * @brief  Customizable enum describing the regions used by the log module.
- *         Regions are used to separate the logs into different places.
- *         Let's say you have a Task 1 and a Task 2. Both of them have Info and
- *         Debug logs. By using them as such, i.e. with the same regions, you'll
- *         print the logs of the 2 tasks as long as the verbose is Info or Debug.
- *         If you create a region for Task 1 and another for Task 2, you can
- *         split the logs between them, and, if needed, only print the Debug
- *         logs for Task 1 only (i.e. Task 1 logs for Info and Debug).
- *         Behind the scenes is a mask into which each region is a bit.
- *         The user can add its own regions but must NOT add a value to them.
- *         The log module handles the mask on its own.
- */
-typedef enum
-{
-  LOG_REGION_BLE = LOG_MODULE_MIN_REGION_VALUE,
-  LOG_REGION_SYSTEM,
-  LOG_REGION_APP,
-  LOG_REGION_LINKLAYER,
-  LOG_REGION_MAC,
-  LOG_REGION_ZIGBEE,
-  LOG_REGION_THREAD,
-  LOG_REGION_RTOS,
-  /* USER CODE BEGIN Log_Region_t */
-
-  /* USER CODE END Log_Region_t */
-  LOG_REGION_ALL_REGIONS = LOG_MODULE_ALL_REGION_MASK,
-} Log_Region_t;
-
-typedef enum
-{
-  LOG_COLOR_NONE          = 0,     // Initialization.
-  LOG_COLOR_CODE_DEFAULT  = 37,    // White
-  LOG_COLOR_CODE_RED      = 91,
-  LOG_COLOR_CODE_GREEN    = 92,
-  LOG_COLOR_CODE_YELLOW   = 93,
-  LOG_COLOR_CODE_CYAN     = 96,
-  /* USER CODE BEGIN Log_Color_t */
-
-  /* USER CODE END Log_Color_t */
-} Log_Color_t;
-
-/**
  * @brief  Data type to initialize the module by calling Log_Module_Init.
+ *         verbose_level : A value of type Log_Verbose_Level_t.
+ *         region_mask   : A mask based on Log_Region_t.
+ *                         You can directly assign it to LOG_REGION_ALL_REGIONS,
+ *                         or select only some regions :
+ *                         (1U << LOG_REGION_BLE | 1U << LOG_REGION_APP)
  */
 typedef struct
 {
-  Log_Verbose_Level_t verbose_level;
-  Log_Region_t region;
+  Log_Verbose_Level_t   verbose_level;
+  uint32_t              region_mask;
 } Log_Module_t;
 
 /**
- * @brief Callback function to insert Time Stamp.
+ * @brief  Callback function to insert Time Stamp.
  *
- * @param  pData    The location where insert the new TimeStamp
- * @param  iSizeMax The maximum size for the TimeStamp insert.
- * @param  piSize   Pointer on the size of the TimeStamp insert.
+ * @param  Data                 The data into which to insert the TimeStamp.
+ * @param  SizeMax              The maximum size for the TimeStamp insert.
+ * @param  TimeStampSize        Pointer to update with the size of the TimeStamp inserted into data.
  */
-typedef void CallBack_TimeStamp( char * pData, uint16_t iSizeMax, uint16_t * piSize );
+typedef void CallBack_TimeStamp(char * Data, uint16_t SizeMax, uint16_t * TimeStampSize);
 
 /* USER CODE BEGIN ET */
 
@@ -179,6 +77,7 @@ extern const Log_Module_t LOG_MODULE_DEFAULT_CONFIGURATION;
 /**
  * @brief  A const enum variable with the verbose level set to LOG_VERBOSE_ERROR.
  *         The levels include the lower levels in the logs.
+ *
  *         E.g. LOG_VERBOSE_ERROR means LOG_VERBOSE_ERROR logs will be printed,
  *         as well as LOG_VERBOSE_INFO, but not the others with higher values.
  */
@@ -197,13 +96,15 @@ extern const Log_Region_t LOG_REGION_MASK_DEFAULT;
 /* Module API - Module configuration */
 /**
  * @brief  Initialization of the log module.
- * @param  The configuration of the log module, of type Log_Module_t.
+ *
+ * @param  LogConfiguration     The configuration of the log module, of type Log_Module_t.
  * @return None.
  */
-void Log_Module_Init(Log_Module_t log_configuration);
+void Log_Module_Init(Log_Module_t LogConfiguration);
 
 /**
  * @brief  DeInitialization of the log module.
+ *
  * @param  None.
  * @return None.
  */
@@ -212,189 +113,105 @@ void Log_Module_DeInit(void);
 /**
  * @brief  Set the verbose level of the log.
  *         The levels include the lower levels in the logs.
+ *
  *         E.g. LOG_VERBOSE_ERROR means LOG_VERBOSE_ERROR logs will be printed,
  *         as well as LOG_VERBOSE_INFO, but not the others with higher values.
- * @param  The new verbose level to be set, of type Log_Verbose_Level_t
+ *
+ * @param  NewVerboseLevel      The new verbose level to be set, of type Log_Verbose_Level_t
  * @return None
  */
-void Log_Module_Set_Verbose_Level(Log_Verbose_Level_t new_verbose_level);
+void Log_Module_Set_Verbose_Level(Log_Verbose_Level_t NewVerboseLevel);
 
 /**
- * @brief  Replace the current region mask to use and set only the given region.
- * @param  The new region to use, of type Log_Region_t.
+ * @brief  Replace the current regions in use and only set the given region.
+ *
+ * @param  NewRegion            The new region to use, of type Log_Region_t.
  * @return None.
  */
-void Log_Module_Set_Region(Log_Region_t new_region);
+void Log_Module_Set_Region(Log_Region_t NewRegion);
+
+/**
+ * @brief  Replace the current regions in use and set one or several as replacement.
+ *
+ * @param  NewRegionMask        A mask, of type uint32_t, where each bit corresponds to a region.
+ *                              You can directly assign it to LOG_REGION_ALL_REGIONS to enable all of them,
+ *                              or select only some regions, e.g. (1U << LOG_REGION_BLE | 1U << LOG_REGION_APP)
+ * @return None.
+ */
+void Log_Module_Set_Multiple_Regions(uint32_t NewRegionMask);
 
 /**
  * @brief  Add to the current region mask the given region.
- * @param  The new region to use, alongside the others, of type Log_Region_t.
+ *
+ * @param  NewRegion            The new region to use, alongside the others, of type Log_Region_t.
  * @return None.
  */
-void Log_Module_Add_Region(Log_Region_t new_region);
+void Log_Module_Add_Region(Log_Region_t NewRegion);
+
+/**
+ * @brief  Remove from the current region mask the given region.
+ *
+ * @param  Region               The region to remove, of type Log_Region_t.
+ * @return None.
+ */
+void Log_Module_Remove_Region(Log_Region_t Region);
 
 /**
  * @brief  Enable all the regions.
+ *
  * @param  None.
  * @return None.
  */
 void Log_Module_Enable_All_Regions(void);
 
 /**
- * @brief  Set/Replace the color for a region.
- * @param  eRegion    The region where apply the color, type Log_Region_t.
- * @param  eNewColor  The color to apply to selected region, type Log_Color_t.
+ * @brief  Set the color for a region.
+ *
+ * @param  Region               The region where apply the color, type Log_Region_t.
+ * @param  Color                The color to apply to selected region, of type Log_Color_t.
  * @return None.
  */
-void Log_Module_Set_Color(Log_Region_t eRegion, Log_Color_t eNewColor );
+void Log_Module_Set_Color(Log_Region_t Region, Log_Color_t Color);
 
 /**
- * @brief   Register a callback function to insert the 'TimeStamp' to the log.
+ * @brief  Register a callback function to insert the TimeStamp into the data.
  *
- * @param  pCallbackFunc    Callback function to insert Time Stamp.
- *                          This function is typedef void ( uint8_t * pData, uint16_t * piSize );
- *                          Where pData is the location where insert the new TimeStamp and piSize is the size of insert.
+ * @param  TimeStampFunction    Callback function to insert TimeStamp.
+ *                              This function is typedef void (char * data, uint16_t size_max, uint16_t * timestamp_size);
+ *                              Where data is the location where to insert the new TimeStamp, and timestamp_size is the size of this insertion.
  * @return None.
  */
-void Log_Module_RegisterTimeStampFunction( CallBack_TimeStamp * pCallbackFunc );
+void Log_Module_RegisterTimeStampFunction(CallBack_TimeStamp * TimeStampFunction);
 
 /* Module API - Wrapper function */
 /**
- * @brief  Underlying function of all the LOG macros.
+ * @brief  Underlying function of all the LOG_xxx macros.
  *
- * @param  eVerboseLevel  The level of verbose for this Log.
- * @param  eRegion        The stack where the log is issued
- * @param  pText          Pointer to the text to be printed.
- * @param  Any other parameters to be printed with the text.
- *         E.g. an int variable. as 3rd parameter, as long as %d is in text.
+ * @param  VerboseLevel         The level of verbose used for this Log, of type Log_Verbose_Level_t.
+ * @param  Region               The region set for this log, of type Log_Region_t.
+ * @param  Text                 The text to be printed.
+ * @param  ...                  Any other parameters to be printed with the text.
+ *                              E.g. an int variable. as 3rd parameter, as long as %d is in text.
  *
  * @return None.
  */
-void Log_Module_Print( Log_Verbose_Level_t eVerboseLevel, Log_Region_t eRegion, const char * pText, ...);
+void Log_Module_Print(Log_Verbose_Level_t VerboseLevel, Log_Region_t Region, const char * Text, ...);
 
 /**
  * @brief  Function of log with already a arg list.
  *
- * @param  eVerboseLevel  The level of verbose for this Log.
- * @param  eRegion        The stack where the log is issued
- * @param  pText          Pointer to the text to be printed.
- * @param  args           Arguments list.
+ * @param  VerboseLevel         The level of verbose used for this Log, of type Log_Verbose_Level_t.
+ * @param  Region               The region set for this log, of type Log_Region_t.
+ * @param  Text                 The text to be printed
+ * @param  Args                 Arguments list, of type va_list.
  *
  * @return None.
  */
-void Log_Module_PrintWithArg( Log_Verbose_Level_t eVerboseLevel, Log_Region_t eRegion, const char * pText, va_list args );
+void Log_Module_PrintWithArg(Log_Verbose_Level_t VerboseLevel, Log_Region_t Region, const char * Text, va_list Args);
 
 /* USER CODE BEGIN EFP */
 
 /* USER CODE END EFP */
-
-/* Exported macro ------------------------------------------------------------*/
-/* Display 64 bits number for all compiler. */
-/* Example : LOG_INFO_APP( "New Device : " LOG_DISPLAY64() " installed in %d seconds", LOG_NUMBER64( dlDevice ), iTime ); */
-#define LOG_DISPLAY64()             "0x%08X%08X"
-#define LOG_NUMBER64( number )      (uint32_t)( number >> 32u ), (uint32_t)( number )
-
-/* Module API - Log macros for each region */
-/* LOG_REGION_BLE */
-#if (CFG_LOG_SUPPORTED != 0)
-#define LOG_INFO_BLE(...)         Log_Module_Print( LOG_VERBOSE_INFO, LOG_REGION_BLE, __VA_ARGS__)
-#define LOG_ERROR_BLE(...)        Log_Module_Print( LOG_VERBOSE_ERROR, LOG_REGION_BLE, __VA_ARGS__)
-#define LOG_WARNING_BLE(...)      Log_Module_Print( LOG_VERBOSE_WARNING, LOG_REGION_BLE, __VA_ARGS__)
-#define LOG_DEBUG_BLE(...)        Log_Module_Print( LOG_VERBOSE_DEBUG, LOG_REGION_BLE, __VA_ARGS__)
-#else /* (CFG_LOG_SUPPORTED != 0) */
-#define LOG_INFO_BLE(...)         do {} while(0)
-#define LOG_ERROR_BLE(...)        do {} while(0)
-#define LOG_WARNING_BLE(...)      do {} while(0)
-#define LOG_DEBUG_BLE(...)        do {} while(0)
-#endif /* (CFG_LOG_SUPPORTED != 0) */
-
-/* USER CODE BEGIN LOG_REGION_BLE */
-/**
- * Add inside this user section your defines to match the new verbose levels you
- * created into Log_Verbose_Level_t.
- * Example :
- * #define LOG_CUSTOM_BLE(...)      Log_Module_Print( LOG_VERBOSE_CUSTOM, LOG_REGION_BLE, __VA_ARGS__);
- *
- * You don't need to update all regions with your custom values.
- * Do it accordingly to your needs. E.g you might not need LOG_VERBOSE_CUSTOM
- * for a System region.
- */
-
-/* USER CODE END LOG_REGION_BLE */
-
-/* LOG_REGION_SYSTEM */
-#if (CFG_LOG_SUPPORTED != 0)
-#define LOG_INFO_SYSTEM(...)      Log_Module_Print( LOG_VERBOSE_INFO, LOG_REGION_SYSTEM, __VA_ARGS__)
-#define LOG_ERROR_SYSTEM(...)     Log_Module_Print( LOG_VERBOSE_ERROR, LOG_REGION_SYSTEM, __VA_ARGS__)
-#define LOG_WARNING_SYSTEM(...)   Log_Module_Print( LOG_VERBOSE_WARNING, LOG_REGION_SYSTEM, __VA_ARGS__)
-#define LOG_DEBUG_SYSTEM(...)     Log_Module_Print( LOG_VERBOSE_DEBUG, LOG_REGION_SYSTEM, __VA_ARGS__)
-#else /* (CFG_LOG_SUPPORTED != 0) */
-#define LOG_INFO_SYSTEM(...)      do {} while(0)
-#define LOG_ERROR_SYSTEM(...)     do {} while(0)
-#define LOG_WARNING_SYSTEM(...)   do {} while(0)
-#define LOG_DEBUG_SYSTEM(...)     do {} while(0)
-#endif /* (CFG_LOG_SUPPORTED != 0) */
-
-/* USER CODE BEGIN LOG_REGION_SYSTEM */
-/**
- * Add inside this user section your defines to match the new verbose levels you
- * created into Log_Verbose_Level_t.
- * Example :
- * #define LOG_CUSTOM_SYSTEM(...)      Log_Module_Print( LOG_VERBOSE_CUSTOM, LOG_REGION_SYSTEM, __VA_ARGS__);
- *
- * You don't need to update all regions with your custom values.
- * Do it accordingly to your needs. E.g you might not need LOG_VERBOSE_CUSTOM
- * for a System region.
- */
-
-/* USER CODE END LOG_REGION_SYSTEM */
-
-/* LOG_REGION_APP */
-#if (CFG_LOG_SUPPORTED != 0)
-#define LOG_INFO_APP(...)       Log_Module_Print( LOG_VERBOSE_INFO, LOG_REGION_APP, __VA_ARGS__)
-#define LOG_ERROR_APP(...)      Log_Module_Print( LOG_VERBOSE_ERROR, LOG_REGION_APP, __VA_ARGS__)
-#define LOG_WARNING_APP(...)    Log_Module_Print( LOG_VERBOSE_WARNING, LOG_REGION_APP, __VA_ARGS__)
-#define LOG_DEBUG_APP(...)      Log_Module_Print( LOG_VERBOSE_DEBUG, LOG_REGION_APP, __VA_ARGS__)
-#else /* (CFG_LOG_SUPPORTED != 0) */
-#define LOG_INFO_APP(...)       do {} while(0)
-#define LOG_ERROR_APP(...)      do {} while(0)
-#define LOG_WARNING_APP(...)    do {} while(0)
-#define LOG_DEBUG_APP(...)      do {} while(0)
-#endif /* (CFG_LOG_SUPPORTED != 0) */
-
-/* USER CODE BEGIN LOG_REGION_APP */
-/**
- * Add inside this user section your defines to match the new verbose levels you
- * created into Log_Verbose_Level_t.
- * Example :
- * #define LOG_CUSTOM_APP(...)         Log_Module_Print( LOG_VERBOSE_CUSTOM, LOG_REGION_APP, __VA_ARGS__);
- *
- * You don't need to update all regions with your custom values.
- * Do it accordingly to your needs. E.g you might not need LOG_VERBOSE_CUSTOM
- * for a System region.
- */
-
-/* USER CODE END LOG_REGION_APP */
-
-/* USER CODE BEGIN APP_LOG_USER_DEFINES */
-/**
- * Add inside this user section your defines to match the new regions you
- * created into Log_Region_t.
- * Example :
- * #if (CFG_LOG_SUPPORTED != 0)
- * #define LOG_INFO_CUSTOM(...)       Log_Module_Print( LOG_VERBOSE_INFO, LOG_REGION_CUSTOM, __VA_ARGS__)
- * #define LOG_ERROR_CUSTOM(...)      Log_Module_Print( LOG_VERBOSE_ERROR, LOG_REGION_CUSTOM, __VA_ARGS__)
- * #define LOG_WARNING_CUSTOM(...)    Log_Module_Print( LOG_VERBOSE_WARNING, LOG_REGION_CUSTOM, __VA_ARGS__)
- * #define LOG_DEBUG_CUSTOM(...)      Log_Module_Print( LOG_VERBOSE_DEBUG, LOG_REGION_CUSTOM, __VA_ARGS__)
- * #else
- * #define LOG_INFO_CUSTOM(...)       do {} while(0)
- * #define LOG_ERROR_CUSTOM(...)      do {} while(0)
- * #define LOG_WARNING_CUSTOM(...)    do {} while(0)
- * #define LOG_DEBUG_CUSTOM(...)      do {} while(0)
- * #endif
- */
-
-/* USER CODE END APP_LOG_USER_DEFINES */
 
 #ifdef __cplusplus
 }

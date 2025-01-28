@@ -98,6 +98,40 @@ const power_table_entry ll_tx_power_table_low_power[] = {
   {0x02, 0x19, 0x01, 3},   /* Actual_Power = 2.6 dBm */
 };
 
+const power_table_entry ll_tx_power_table_external_PA[] = {
+  {0x02, 0x14, 0x00, -20}, /* Actual_Power = 20 dBm */
+  {0x02, 0x14, 0x00, -19}, /* Actual_Power = 20 dBm */
+  {0x02, 0x14, 0x00, -18}, /* Actual_Power = 20 dBm */
+  {0x02, 0x14, 0x00, -17}, /* Actual_Power = 20 dBm */
+  {0x02, 0x14, 0x00, -16}, /* Actual_Power = 20 dBm */
+  {0x02, 0x14, 0x00, -15}, /* Actual_Power = 20 dBm */
+  {0x02, 0x14, 0x00, -14}, /* Actual_Power = 20 dBm */
+  {0x02, 0x14, 0x00, -13}, /* Actual_Power = 20 dBm */
+  {0x02, 0x14, 0x00, -12}, /* Actual_Power = 20 dBm */
+  {0x02, 0x14, 0x00, -11}, /* Actual_Power = 20 dBm */
+  {0x02, 0x14, 0x00, -10}, /* Actual_Power = 20 dBm */
+  {0x02, 0x14, 0x00, -9},  /* Actual_Power = 20 dBm */
+  {0x02, 0x14, 0x00, -8},  /* Actual_Power = 20 dBm */
+  {0x02, 0x14, 0x00, -7},  /* Actual_Power = 20 dBm */
+  {0x02, 0x14, 0x00, -6},  /* Actual_Power = 20 dBm */
+  {0x02, 0x14, 0x00, -5},  /* Actual_Power = 20 dBm */
+  {0x02, 0x14, 0x00, -4},  /* Actual_Power = 20 dBm */
+  {0x02, 0x14, 0x00, -3},  /* Actual_Power = 20 dBm */
+  {0x02, 0x14, 0x00, -2},  /* Actual_Power = 20 dBm */
+  {0x02, 0x14, 0x00, -1},  /* Actual_Power = 20 dBm */
+  {0x02, 0x14, 0x00, 0},   /* Actual_Power = 20 dBm */
+  {0x02, 0x14, 0x00, 1},   /* Actual_Power = 20 dBm */
+  {0x02, 0x14, 0x00, 2},   /* Actual_Power = 20 dBm */
+  {0x02, 0x14, 0x00, 3},   /* Actual_Power = 20 dBm */
+  {0x02, 0x14, 0x00, 4},   /* Actual_Power = 20 dBm */
+  {0x02, 0x14, 0x00, 5},   /* Actual_Power = 20 dBm */
+  {0x02, 0x14, 0x00, 6},   /* Actual_Power = 20 dBm */
+  {0x02, 0x14, 0x00, 7},   /* Actual_Power = 20 dBm */
+  {0x02, 0x14, 0x00, 8},   /* Actual_Power = 20 dBm */
+  {0x02, 0x14, 0x00, 9},   /* Actual_Power = 20 dBm */
+  {0x02, 0x14, 0x00, 10},  /* Actual_Power = 20 dBm */
+};
+
 /* USER CODE BEGIN ll_tx_power_table */
 
 /* USER CODE END ll_tx_power_table */
@@ -106,6 +140,7 @@ const power_table_entry ll_tx_power_table_low_power[] = {
 const power_table_id_t ll_tx_power_tables[] = {
   {ll_tx_power_table_max_power, sizeof(ll_tx_power_table_max_power)/sizeof(ll_tx_power_table_max_power[0]), VDD_LDO_VALUE_MAX_POWER, VDD_LDO_VALUE_2_ID_0, 0},
   {ll_tx_power_table_low_power, sizeof(ll_tx_power_table_low_power)/sizeof(ll_tx_power_table_low_power[0]), VDD_LDO_VALUE_LOW_POWER, VDD_LDO_VALUE_2_ID_0, 1},
+  {ll_tx_power_table_external_PA, sizeof(ll_tx_power_table_external_PA)/sizeof(ll_tx_power_table_external_PA[0]), VDD_LDO_VALUE_LOW_POWER, VDD_LDO_VALUE_2_ID_0, 2},
   /* USER CODE BEGIN ll_tx_power_tables */
 
   /* USER CODE END ll_tx_power_tables */

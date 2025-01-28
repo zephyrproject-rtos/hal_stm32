@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    hw_radio.h
+  * @file    linklayer_plat.h
   * @author  MCD Application Team
   * @brief   Header for linklayer_plat.c interface module
   ******************************************************************************

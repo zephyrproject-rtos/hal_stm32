@@ -1,4 +1,4 @@
-/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/1.32a-LCA00/firmware/public_inc/common_types.h#1 $*/
+/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/1.32a-lca02/firmware/public_inc/common_types.h#3 $*/
 /**
  ********************************************************************************
  * @file    common_types.h
@@ -107,12 +107,9 @@
 #define SUPPORT_COEXISTENCE							((SUPPORT_BLE&&SUPPORT_MAC) || (SUPPORT_BLE&&SUPPORT_ANT))
 #define SUPPORT_ANT_COEXISTENCE						(SUPPORT_BLE&&SUPPORT_ANT)
 /****************** User configuration **********************************/
+#define CS_TESTING TRUE
 
 #define SUPPORT_GNRC_SCHDLR_IF	              (1)
-
-
-
-
 /********************* Macros **********************************/
 
 #ifndef SUCCESS
@@ -144,14 +141,31 @@
 #define MEMCPY(ptr_destination, ptr_source, memory_size)	ble_memcpy(ptr_destination, ptr_source, memory_size)
 #define MEMCMP(ptr_destination, ptr_source, memory_size)	ble_memcmp(ptr_destination, ptr_source, memory_size)
 #define MEMMOV(ptr_destination, ptr_source, memory_size)	ble_memmov(ptr_destination, ptr_source, memory_size)
-
-
+#define MEMCPY_N_BYTES(ptr_dest, ptr_src,no_bytes ,keep_endian)	 ble_memcpy_n_bytes(ptr_dest,ptr_src ,no_bytes ,keep_endian)
 
 
 
 extern os_mutex_id g_ll_lock;
 #define LL_LOCK()	os_rcrsv_mutex_wait(g_ll_lock,0xffffffff)
 #define LL_UNLOCK()	os_rcrsv_mutex_release(g_ll_lock)
+
+#ifndef SUPPORT_ANT_DIV
+#define SUPPORT_ANT_DIV 0
+#endif
+
+#if SUPPORT_MAC
+#define RADIO_MAC_TX_DONE_EVENT_MAX     				1
+#define RAL_SM_DONE_EVENT_MAX 							RADIO_TX_RX_PACKET_BLOCK_COUNT
+#define ED_TIMER_EVENT_MAX								1
+#define MAX_MLME_TIMER_EVENT							MAC_NUMBER_OF_INSTANCE
+#define MAX_DIRECT_DATA_TX_EVENT						MAC_NUMBER_OF_INSTANCE
+#define MAX_INDIRECT_DATA_TIMEOUT_EVENT					MAX_NUMBER_OF_INDIRECT_DATA
+#define PRDC_CLBR_TMR_EVENT_MAX 						1
+#define CSL_RCV_TMR_EVENT_MAX   						1
+
+/* Size in octets of extended address used in security processing */
+#define EXT_ADDRESS_LENGTH								8
+#endif /* SUPPORT_MAC */
 
 #if SUPPORT_MAC && SUPPORT_OPENTHREAD_1_2
 /* compiler flag to control supporting of CSL transmitter , RADIO TX at specific time , 1  supported , 0 not supported */
@@ -176,9 +190,6 @@ extern os_mutex_id g_ll_lock;
 /* end of radio activity custom command flag */
 #define END_OF_RADIO_ACTIVITY_REPORTING				1 /* Enable\Disable end of radio activity reporting feature. Enable:1 - Disable:0 */
 
-#if SUPPORT_MAC && SUPPORT_ANT_DIV
-#define EXT_ADDRESS_LENGTH							8
-#endif /* SUPPORT_MAC && SUPPORT_ANT_DIV */
 /* Supported PHYs*/
 typedef enum {
 	LE_NO_CHANGE			= 0x00,
@@ -251,6 +262,7 @@ typedef enum ral_phy_rate_enum {
 #endif
 	RAL_RATE_256K  = 0x01
 } ral_phy_rate_enum_t;
+
 #endif /*SUPPORT_MAC*/
 /**
  * @enum extrnl_evnt_priority_e
@@ -339,6 +351,7 @@ typedef struct _iso_pdu_buff_hdr_st {
 #if(SUPPORT_CONNECTED_ISOCHRONOUS && (SUPPORT_MASTER_CONNECTION || SUPPORT_SLAVE_CONNECTION))
 	uint8_t flsh_tmout_cnt;		/* flush timeout counter */
 	uint8_t flsh_tmout_subevnt_cnt;		/* flush timeout subevent number */
+	uint8_t rx_flsh_tmout_cnt_updtd;	/* flush timeout count updated or not flag */
 #endif //(SUPPORT_CONNECTED_ISOCHRONOUS && (SUPPORT_MASTER_CONNECTION || SUPPORT_SLAVE_CONNECTION))
 	uint8_t status;
 } iso_pdu_buff_hdr_st;
@@ -363,6 +376,17 @@ typedef struct _sdu_buf_hdr_st {
 } iso_sdu_buf_hdr_st, *iso_sdu_buf_hdr_p;
 #endif  /* (SUPPORT_BRD_ISOCHRONOUS || SUPPORT_SYNC_ISOCHRONOUSs ||  (SUPPORT_CONNECTED_ISOCHRONOUS && ( SUPPORT_MASTER_CONNECTION || SUPPORT_SLAVE_CONNECTION))) */
 
+#if SUPPORT_LE_PAWR_ADVERTISER_ROLE
+/**
+ * brief: PAWR host buffer struct
+ */
+typedef struct _pawr_host_buffer {
+	uint8_t buffer[257];
+	uint8_t total_data_lenth;
+	uint8_t number_of_reports;
+}pawr_host_buffer;
+#endif /* SUPPORT_LE_PAWR_ADVERTISER_ROLE */
+
 
 /*
  * @brief   Transport layer event
@@ -372,14 +396,16 @@ typedef enum {
 	HCI_ACL_DATA_PCKT = 0x02,
 	HCI_EVNT_PCKT = 0x04,
 	HCI_ISO_DATA_PCKT = 0x05,
+
+
 #if (SUPPORT_MAC && SUPPORT_MAC_HCI_UART)
 	HCI_MAC_REQ = 0x0A,
 	HCI_MAC_CFM = 0x0B,
 	HCI_MAC_KEY_TBL_CFM = 0x0E,
 #endif /* SUPPORT_MAC && SUPPORT_MAC_HCI_UART */
 #if (SUPPORT_ANT_HCI_UART)
-	HCI_ANT_REQ = 0x07,
-	HCI_ANT_CFM = 0x08,
+	HCI_ANT_REQ = 0x10,
+	HCI_ANT_CFM = 0x11,
 #endif /* SUPPORT_ANT_HCI_UART */
 #if (SUPPORT_AUG_MAC_HCI_UART)
 	AUG_HCI_MAC_REQ = 0x0C,
@@ -426,11 +452,14 @@ typedef enum {
  */
 #define DEFAULT_PHY_CALIBRATION_PERIOD        		10	/* Time period for PHY calibration = 10s */
 
-#ifdef PHY_40nm_3_00_a
+#if defined(PHY_40nm_3_00_a) || defined(PHY_40nm_3_40_a)
 #define SUPPORT_MAC_PHY_CONT_TESTING_CMDS 1
 #else
 #define SUPPORT_MAC_PHY_CONT_TESTING_CMDS 0
-#endif /*end of PHY_40nm_3_00_a && SUPPORT_MAC_PHY_CONT_TESTING_CMDS */
+#if(SUPPORT_MAC_PHY_CONT_TESTING_CMDS)
+#error "SUPPORT_MAC_PHY_CONT_TESTING_CMDS must be enabled for PHY_40nm_3_00_a or PHY_40nm_3_40_a only"
+#endif/*end of (SUPPORT_MAC_PHY_CONT_TESTING_CMDS) */
+#endif /*end of defined(PHY_40nm_3_00_a) || defined(PHY_40nm_3_40_a) */
 
 #ifndef EXTERNAL_CUSTOM_CMDS
 #define EXTERNAL_CUSTOM_CMDS						0	/* Indicates that an external custom HCI commands module exists */
@@ -448,7 +477,40 @@ typedef enum {
 #define SUPPORT_HCI_EVENT_ONLY				0
 #endif/* (!USE_HCI_TRANSPORT) && (SUPPORT_BLE) */
 
+#ifndef SUPPORT_HCI_EVENT_ONLY_TESTING
+#define SUPPORT_HCI_EVENT_ONLY_TESTING				0
+#endif /* SUPPORT_HCI_EVENT_ONLY_TESTING */
+
 #define SUPPORT_HW_AUDIO_SYNC_SIGNAL       0
 
+#if SUPPORT_LE_PAWR_SYNC_ROLE
+#define SUPPORT_PAWR_CUSTOM_SYNC			1
+#else
+#define SUPPORT_PAWR_CUSTOM_SYNC			0
+#endif /* SUPPORT_LE_PAWR_SYNC_ROLE */
+
+#define PAWR_TESTING						0
+#ifndef SUPPORT_LE_PAWR_ADVERTISER_ROLE
+#define SUPPORT_LE_PAWR_ADVERTISER_ROLE		0
+#endif
+
+
+
 #define SUPPORT_TIM_UPDT					1
+
+#define SUPPORT_RX_DTP_CONTROL				1 /* Enable\Disable ACL Rx data throughput feature */
+
+#ifndef SUPPORT_CUSTOM_ADV_SCAN_TESTING
+#define SUPPORT_CUSTOM_ADV_SCAN_TESTING		0
+#endif /* SUPPORT_CUSTOM_ADV_SCAN_TESTING */
+
+#ifndef SUPPORT_CHANNEL_SOUNDING
+#define SUPPORT_CHANNEL_SOUNDING			0
+#endif /* SUPPORT_CHANNEL_SOUNDING */
+
+#ifndef SUPPORT_EXT_FEATURE_SET
+#define SUPPORT_EXT_FEATURE_SET 0
+#endif /* SUPPORT_EXT_FEATURE_SET */
+
+
 #endif /*COMMON_TYPES_H_*/

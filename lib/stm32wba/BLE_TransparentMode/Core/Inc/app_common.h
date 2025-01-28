@@ -30,6 +30,7 @@ extern "C"{
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
+#include <inttypes.h>
 
 #include "app_conf.h"
 #include "hw.h"

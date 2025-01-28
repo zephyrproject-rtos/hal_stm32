@@ -64,7 +64,6 @@ enum
 */
 typedef struct
 {
-
   /* Start address of the RAM buffer allocated for BLE stack library.
    * It must be a 32bit aligned RAM area.
    */

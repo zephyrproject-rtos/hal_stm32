@@ -1,4 +1,4 @@
-/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/1.32a-LCA00/firmware/public_inc/mem_intf.h#1 $*/
+/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/1.32a-lca02/firmware/public_inc/mem_intf.h#1 $*/
 /**
  ********************************************************************************
  * @file    mem_intf.h
@@ -102,6 +102,16 @@ void *ble_memmov(
 	void *ptr_dstntion,
 	const void *ptr_src,
 	uint16_t n);
+/**
+ * @brief  Coping n bytes of memory from position to another.
+ * @param  destination	: pointer to the destination array where the content is to be copied.
+ * @param  source	    : pointer to the source of data to be copied.
+ * @param  num_bytes    : the number of bytes to be copied.
+ * @param  keep_endian  : flag to keep or change the endian
+ * @retval pointer to destination.
+ */
+void ble_memcpy_n_bytes(uint8_t *destination,
+		const uint8_t *source, uint8_t num_bytes, uint8_t keep_endian);
 /**
  * @}
  */
