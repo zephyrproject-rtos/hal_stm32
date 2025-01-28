@@ -70,10 +70,17 @@
 #define SUPPORT_CHANNEL_CLASSIFICATION              1
 #define SUPPORT_LE_ENHANCED_CONN_UPDATE             1
 
+
+#define SUPPORT_CSSA                                1 /* Enable\Disable Coding Selection Scheme on Advertising Feature. Enable:1 - Disable:0 */
+#define SUPPORT_LE_PAWR_ADVERTISER_ROLE             0 /* Enable\Disable PAwR Advertiser role. Enable:1 - Disable:0 */
+#define SUPPORT_LE_PAWR_SYNC_ROLE                   0 /* Enable\Disable PAwR Synchronizer role. Enable:1 - Disable:0 */
+
 /* Non-standard features configurations */
 #define NUM_OF_CTSM_EMNGR_HNDLS                     1 /* Number of custom handles in event manager to be used for app specific needs */
 #define SUPPORT_AUGMENTED_BLE_MODE                  1 /* Enable\Disable Augmented BLE Support. Enable:1 - Disable:0 */
 #define SUPPORT_PTA                                 1 /* Enable\Disable PTA Feature. Enable:1 - Disable:0 */
+
+#define CHECK_ANY_MISSED_EVENT_ON_DEEP_SLEEP_EXIT   1 /* Enable\Disable calling event scheduler handler function at the end of deep sleep exit*/
 
 #define SUPPORT_AUTONOMOUS_POWER_CONTROL_REQ        1
 #define LL_BASIC  0

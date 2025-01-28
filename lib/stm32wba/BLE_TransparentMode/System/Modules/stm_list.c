@@ -7,7 +7,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2024 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -21,8 +21,6 @@
 /******************************************************************************
  * Include Files
  ******************************************************************************/
-#include "utilities_common.h"
-
 #include "stm_list.h"
 
 /******************************************************************************

@@ -120,5 +120,4 @@ void ll_sys_config_BLE_schldr_timings(uint8_t drift_time, uint8_t exec_time);
 
 uint32_t ll_intf_cmn_get_slptmr_value(void);
 
-
 #endif /* LL_SYS_H */

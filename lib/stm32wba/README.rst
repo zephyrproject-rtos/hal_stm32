@@ -6,7 +6,7 @@ Origin:
    https://github.com/STMicroelectronics/STM32CubeWBA
 
 Status:
-   version v1.4.1
+   version v1.5.0
 
 Purpose:
    This library is used on STM32WBA series to port  BLE controller library in
@@ -90,7 +90,7 @@ URL:
    https://github.com/STMicroelectronics/STM32CubeWBA
 
 Commit:
-   3820501e7e128592290861c9cc0f7189246bf00d
+   06402010bb3e1eb4d49ee22cbe45d3408ce413c5
 
 Maintained-by:
    External
@@ -125,6 +125,17 @@ Patch List:
 
 	* #ifndef __ZEPHYR__ applied to remove Cube specific implementation
 	  Impacted files: ll_sys_if.c
+			  linklayer_plat.c
+
+	* LL sleep timer clock source set to LSE by default
+	  Impacted files: ll_sys_if.c
+			  linklayer_plat.c
+
+	* LL power table set not apllied
+	  Impacted files: ll_sys_if.c
+
+	* SCM_HSE_WaitUntilReady Cube mechanism not used
+	  Impacted files: scm.c
 			  linklayer_plat.c
 
 	* Changes from official delivery:

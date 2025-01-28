@@ -1,4 +1,4 @@
-/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/1.32a-LCA00/firmware/public_inc/ll_intf.h#1 $*/
+/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/1.32a-lca02/firmware/public_inc/ll_intf.h#3 $*/
 /**
  ********************************************************************************
  * @file    ll_intf_cmds.h
@@ -49,11 +49,15 @@
  */
 typedef uint32_t ble_stat_t;
 
+
+
 #ifndef ADDRESS_SIZE
 #define ADDRESS_SIZE			6
 #endif /* ADDRESS_SIZE */
 
 #define LE_FEATURES_BYTES_NO 	8
+
+
 #define ISO_CODEC_ID_SIZE 		5
 
 /*!
@@ -86,6 +90,14 @@ typedef uint32_t ble_stat_t;
  */
 #define CHANNEL_CLASSIFICATION_REPORTING_TIMING_PARAM_MIN		5
 #define CHANNEL_CLASSIFICATION_REPORTING_TIMING_PARAM_MAX		150
+
+
+
+/* Maximum number of supported sleep clock accuracy */
+#define MAXIMUM_SLP_CLK_ACCURACY                1
+#if (SUPPORT_LE_PAWR_ADVERTISER_ROLE)||(SUPPORT_LE_PAWR_SYNC_ROLE)
+#define NUM_PAWR_SUBEVENTS_MAX		0x80
+#endif /*(SUPPORT_LE_PAWR_ADVERTISER_ROLE)||(SUPPORT_LE_PAWR_SYNC_ROLE)*/
 
 extern const struct hci_dispatch_tbl* p_dis_tbl;
 /*================================= Enumerations =====================================*/
@@ -234,6 +246,12 @@ typedef struct _ble_intf_prdc_adv_sync_transfer_report_st {
 	uint8_t advertiser_address_type;   /* Advertiser address type */
 	uint8_t advertiser_phy;            /* Advertiser PHY */
 	uint8_t advertiser_clock_accuracy; /* Clock accuracy used by advertise */
+#if SUPPORT_LE_PAWR_SYNC_ROLE
+	uint8_t num_subevnts; /* Number of subevents */
+	uint8_t subevnt_intrvl; /* Interval between subevents */
+	uint8_t rsp_slot_delay; /* Time bet the adv packet in a subevent and the first response slot */
+	uint8_t rsp_slot_spacing; /* Time between response slots */
+#endif /*SUPPORT_LE_PAWR_SYNC_ROLE*/
 } ble_intf_prdc_adv_sync_transfer_report_st ;
 #endif /* SUPPORT_PERIODIC_SYNC_TRANSFER */
 
@@ -497,6 +515,7 @@ typedef struct _le_subrate_change_evnt_st{
 }le_subrate_change_evnt_st;
 #endif /* SUPPORT_LE_ENHANCED_CONN_UPDATE */
 
+
 typedef enum _enum_ext_create_conn_verison
 {
 	EXT_CREATE_CONN_VER_1,
@@ -529,6 +548,11 @@ typedef struct _ble_intf_ext_create_conn_cmd_st
 {
 	st_ble_intf_ext_create_conn* ptr_ext_create_conn; /* ptr to extended create connection parameters */
 	uint8_t* ptr_peer_address; /* ptr to the Peer address*/
+#if SUPPORT_LE_PAWR_ADVERTISER_ROLE
+	enum_ext_create_conn_ver ext_create_conn_ver; /* to Indicate which hci command version sent from the host*/
+	uint8_t adv_hndl;/* Advertising_Handle identifying the periodic advertising train */
+	uint8_t subevent;/* Subevent where the connection request is to be sent */
+#endif /*SUPPORT_LE_PAWR_ADVERTISER_ROLE */
 	uint8_t initiator_filter_policy; /* used to determine whether the Filter Accept List is used */
 	uint8_t own_address_type; /* indicates the type of address used in the connection request packets */
 	uint8_t peer_address_type; /* indicates the type of address used in the connectable advertisement sent by the peer */
@@ -540,6 +564,14 @@ typedef struct _ble_set_prdc_adv_param_st
 	uint16_t prdc_adv_intrvl_min;/* Minimum advertising interval for periodic advertising */
 	uint16_t prdc_adv_intrvl_max;/* Maximum advertising interval for periodic advertising */
 	uint16_t prdc_adv_prpts; /* Include TxPower in the advertising PDU */
+#if SUPPORT_LE_PAWR_ADVERTISER_ROLE
+	enum_prdc_adv_param_ver prdc_adv_param_ver; /* to Indicate which hci command version sent from the host*/
+	uint8_t num_subevents; /* identifiers the number of subevents that shall be transmitted for each periodic advertising event*/
+	uint8_t subevent_intrvl; /* time between the subevents of PAwR*/
+	uint8_t res_slot_delay; /* Time bet the adv packet in a subevent and the first response slot */
+	uint8_t res_slot_spacing; /* Time between response slots */
+	uint8_t num_res_slots; /* Number of subevent response slots */
+#endif /*SUPPORT_LE_PAWR_ADVERTISER_ROLE */
 }ble_set_prdc_adv_param_st;
 
 typedef struct _ble_enhanced_conn_cmplt_evnt_st
@@ -553,6 +585,10 @@ typedef struct _ble_enhanced_conn_cmplt_evnt_st
 	uint16_t conn_intrvl;/*Connection interval used on this connection.*/
 	uint16_t slave_ltncy;/*Slave latency for the connection in number of connection events.*/
 	uint16_t suprvsn_tout;/*Supervision timeout for the connection requested by the remote device.*/
+#if (SUPPORT_LE_PAWR_ADVERTISER_ROLE)||(SUPPORT_LE_PAWR_SYNC_ROLE)
+	uint16_t sync_handle;/*Used to identify the periodic advertising train*/
+	uint8_t adv_handle;/*Used to identify an advertising set*/
+#endif /*(SUPPORT_LE_PAWR_ADVERTISER_ROLE)||(SUPPORT_LE_PAWR_SYNC_ROLE)*/
 	uint8_t peer_addr_type;/*Peer address type*/
 	uint8_t master_clk_accurcy;/*Master clock acuracy.*/
 }ble_enhanced_conn_cmplt_evnt_st;
@@ -567,13 +603,63 @@ typedef struct _ble_prdc_adv_sync_estblshd_st
 	uint8_t adv_addrs_type;/*address type of the advertiser */
 	uint8_t adv_phy; /*advertiser PHY */
 	uint8_t adv_clk_accuracy;/*Advertiser Clock Accuracy*/
+#if SUPPORT_LE_PAWR_SYNC_ROLE
+	uint8_t num_subevnts; /* Number of subevents */
+	uint8_t subevnt_intrvl; /* Interval between subevents */
+	uint8_t rsp_slot_delay; /* Time bet the adv packet in a subevent and the first response slot */
+	uint8_t rsp_slot_spacing; /* Time between response slots */
+#endif /*SUPPORT_LE_PAWR_SYNC_ROLE*/
 }ble_prdc_adv_sync_estblshd_st;
 
 /*============ PAWR ============ */
+#if SUPPORT_LE_PAWR_SYNC_ROLE
+/**
+ * @brief This structure contains the parameters used by the Host to set the data for a response slot in a specific subevent of the PAwR
+ */
+typedef struct _ble_set_prdc_adv_rsp_data_st
+{
+	uint8_t *ptr_rsp_data; /* ptr to the response data */
+	uint16_t req_evnt; /* The event in which the periodic advertising packet that the Host is responding to */
+	uint8_t req_subevnt; /*The subevent for the periodic advertising packet that the Host is responding to */
+	uint8_t rsp_subevnt;/* identifies the subevent that the response shall be sent in. */
+	uint8_t rsp_slot;/* identifies the response slot in which this response data is to be transmitted */
+	uint8_t rsp_data_len;/* The number of octets in the Response_Data parameter.*/
+
+}ble_set_prdc_adv_rsp_data_st;
+
+/**
+ * @brief This structure contains the parameters used to instruct the Controller to synchronize with a subset of the subevents within a PAwR train
+ */
+typedef struct _ble_set_prdc_sync_subevnt_st
+{
+	uint8_t *ptr_subevnts;/* The subevent to synchronize with */
+	uint16_t prdc_adv_prprts; /* Include TxPower in the advertising PDU */
+	uint8_t num_subevnts; /* Number of subevents */
+}ble_set_prdc_sync_subevnt_st;
+#endif/*SUPPORT_LE_PAWR_SYNC_ROLE*/
+
+#if SUPPORT_LE_PAWR_ADVERTISER_ROLE
+/**
+ * @brief This structure contains the parameters used  by the Host to set the data for one or more subevents of PAwR.
+ */
+typedef struct _ble_set_prdc_adv_subevnt_data_st
+{
+	uint8_t *ptr_data; /* ptr to the advertising data */
+	uint8_t subevnt; /* The subevent index of the data contained in this command */
+	uint8_t rsp_slot_start; /* The first response slots to be used in this subevent */
+	uint8_t rsp_slot_count;/* The number of response slots to be used */
+	uint8_t subevnt_data_len;/* The number of octets in the Subevent_Data parameter */
+
+}ble_set_prdc_adv_subevnt_data_st;
+#endif/*SUPPORT_LE_PAWR_ADVERTISER_ROLE*/
 
 typedef struct _ble_prdc_adv_rprt_st
 {
 	ble_buff_hdr_t *ptr_data;/*ptr to Data received from a Periodic Advertising packet.*/
+#if SUPPORT_LE_PAWR_SYNC_ROLE
+	uint16_t prdc_evnt_counter;/*The value of paEventCounter for the reported periodic advertising packet*/
+	uint8_t subevnt;/*indicates the PAWR subevent that the periodic advertising packet was received in*/
+#endif /*SUPPORT_LE_PAWR_SYNC_ROLE*/
 	uint8_t tx_power;/*Tx Power information*/
 	int8_t rssi;/*RSSI value*/
 	uint8_t cte_type;/* indicates the type of Constant Tone Extension in the periodic advertising packets*/
@@ -581,6 +667,18 @@ typedef struct _ble_prdc_adv_rprt_st
 	uint8_t data_length;/*Length of the Data field*/
 }ble_prdc_adv_rprt_st;
 
+#if SUPPORT_LE_PAWR_ADVERTISER_ROLE
+typedef struct _ble_prdc_adv_rsp_rprt_st
+{
+	uint8_t tx_power;/*Tx Power information*/
+	int8_t rssi;/*RSSI value*/
+	uint8_t cte_type;/* indicates the type of Constant Tone Extension in the periodic advertising packets*/
+	uint8_t response_slot;/*The response slot the data was received in*/
+	uint8_t data_status;/*Data status*/
+	uint8_t data_length;/*Length of the Data field*/
+	uint8_t *ptr_data;/*ptr to Data received from a Periodic Advertising response packet.*/
+}ble_prdc_adv_rsp_rprt_st;
+#endif/*SUPPORT_LE_PAWR_ADVERTISER_ROLE*/
 
 /* HCI Commands Parameters Structures */
 #if (SUPPORT_AOA_AOD)
@@ -848,6 +946,19 @@ typedef struct _le_rmt_conn_param_req_rply_cmd_st {
 	uint16_t max_ce_length;		/*Range: 0x0000  0xFFFF, Time = N * 0.625 msec.*/
 } le_rmt_conn_param_req_rply_cmd_st;
 
+
+#if SUPPORT_RX_DTP_CONTROL
+
+/**
+ * @brief Control RX Data Throughput parameters
+ */
+typedef struct _ctrl_rx_dtp_st {
+	uint8_t pckt_count;				/* holds number of packets to be expected with rx_octets size */
+	uint8_t rx_octets;				/* holds number of octets to be received */
+} ctrl_rx_dtp_st;
+
+#endif /* SUPPORT_RX_DTP_CONTROL */
+
 /**
  * @brief HCI Dispatch table containing callback event functions
  */
@@ -992,7 +1103,7 @@ struct hci_dispatch_tbl {
 	 * @param  conn_handle_id : [in] connection handle of the connection for which the LE Read Remote Used Features command is applied.
 	 * @param  le_features    : [in] Bit Mask List of used LE features.
 	 */
-	void (*ll_intf_le_read_remote_used_features_cmplt_evnt)(
+	void (*ll_intf_le_read_remote_used_page_0_features_cmplt_evnt)(
 		ble_stat_t status, uint16_t conn_handle_id,
 		uint8_t le_features[LE_FEATURES_BYTES_NO]);
 
@@ -1426,6 +1537,74 @@ struct hci_dispatch_tbl {
 	void (*ll_intf_end_of_activity_evnt)(uint16_t curr_state, uint16_t nxt_state);
 #endif /* END_OF_RADIO_ACTIVITY_REPORTING */
 
+#if (SUPPORT_LE_PAWR_ADVERTISER_ROLE)||(SUPPORT_LE_PAWR_SYNC_ROLE)
+/**
+ * @brief  Used to inform the host that a new connection has been created(if both the LE Enhanced Connection Complete event and
+ * 	   LE Connection Complete event are unmasked, only the LE Enhanced Connection Complete event is generated is sent when
+ * 	   a new connection has been completed).
+ *
+ * @param  ptr_enhanced_conn_cmplt_evnt*	: [in] Pointer to struct contains the enhanced conn complt event params.
+ *
+ * @retval None.
+ */
+	void (*ll_intf_le_enhanced_conn_cmplt_evnt_v2)(
+			ble_enhanced_conn_cmplt_evnt_st* ptr_enhanced_conn_cmplt_evnt);
+#endif /*(SUPPORT_LE_PAWR_ADVERTISER_ROLE)||(SUPPORT_LE_PAWR_SYNC_ROLE)*/
+#if SUPPORT_LE_PAWR_SYNC_ROLE
+/**
+ * @brief  indicates that the Controller has received the first periodic advertising packet from an advertiser
+ * 		   after the LE_Periodic_Advertising_Create_Sync Command has been sent to the Controller.
+ *
+ * @param  ptr_prdc_adv_sync_estblshd*		: [in] ptr to struct contains the established periodic adv sync parameters.
+ *
+ * @retval None.
+ */
+	void(*ll_intf_le_periodic_adv_sync_estblshd_v2)(
+			ble_prdc_adv_sync_estblshd_st* ptr_prdc_adv_sync_estblshd);
+/**
+ * @brief  indicates that the Controller has received a Periodic Advertising packet
+ *
+ * @param  sync_handle					:[in] Sync_Handle identifying the periodic advertising train.
+ * @param  ptr_prdc_adv_rprt_params*    :[in] ptr to struct contains the periodic adv packet to be reported.
+ *
+ * @retval None.
+ */
+	void(*ll_intf_le_periodic_adv_report_v2)(uint16_t sync_handle,
+			ble_prdc_adv_rprt_st* ptr_prdc_adv_rprt_params);
+/**
+ * @brief  used by the Controller to report that it has received periodic advertising synchronization
+ *		   information from the device referred to by the Connection_Handle parameter and either successfully
+ *		   synchronized to the periodic advertising events or timed out while attempting to synchronize
+ *
+ * @param  ptr_prdc_sync_transfer_report	: [in] Pointer to periodic advertising sync transfer report
+ */
+	void(*ll_intf_le_periodic_adv_sync_transfer_recieved_v2)(
+			ble_intf_prdc_adv_sync_transfer_report_st * ptr_prdc_sync_transfer_report);
+#endif/*SUPPORT_LE_PAWR_SYNC_ROLE*/
+#if SUPPORT_LE_PAWR_ADVERTISER_ROLE
+/**
+ * @brief  used to allow the Controller to indicate that it is ready to transmit
+ * 		   one or more subevents and is requesting the advertising data for these subevents.
+ *
+ * @param  advertising_handle : [in] Used to identify a periodic advertising train.
+ * @param  subevent_start 	  : [in] The first subevent that data is requested for.
+ * @param  subevent_data_count: [in] The number of subevents that data is requested for.
+ *
+ * @retval None.
+ */
+	void (*ll_intf_le_periodic_subevnt_data_req_evnt)(uint8_t advertising_handle, uint8_t subevent_start, uint8_t subevent_data_count);
+/**
+ * @brief   indicates that one or more Bluetooth devices have responded to a periodic
+ * advertising subevent during a PAwR train
+ *
+ * @param[in] pointer to the start of the formatted report needed to be sent to the host
+ * @retval None.
+ */
+	void (*ll_intf_le_periodic_adv_rsp_report_evnt)(pawr_host_buffer* evnt_pckt_p);
+#endif/*SUPPORT_LE_PAWR_ADVERTISER_ROLE*/
+
+
+
 };
 
 #if (SUPPORT_CONNECTED_ISOCHRONOUS &&( SUPPORT_MASTER_CONNECTION || SUPPORT_SLAVE_CONNECTION))
@@ -1644,6 +1823,8 @@ typedef union _hci_cmds_params_un
 #if (SUPPORT_MASTER_CONNECTION || SUPPORT_SLAVE_CONNECTION)
 	le_set_conn_tx_pwr_lvl_cmd_st le_set_conn_tx_pwr_lvl_cmd;
 #endif /* SUPPORT_MASTER_CONNECTION || SUPPORT_SLAVE_CONNECTION */
+
+
 } hci_cmds_params_un;
 
 
@@ -1662,6 +1843,7 @@ typedef struct subrate_default_params_st{
 }subrate_default_params_t;
 
 #endif /* SUPPORT_LE_ENHANCED_CONN_UPDATE */
+
 
 /* Exported  Definition ------------------------------------------------------*/
 #if ((SUPPORT_CONNECTED_ISOCHRONOUS && (SUPPORT_MASTER_CONNECTION || SUPPORT_SLAVE_CONNECTION)) || (SUPPORT_SYNC_ISOCHRONOUS))
@@ -1682,6 +1864,7 @@ typedef void (*hst_cig_missed_evnt_cbk)(uint8_t cig_id, uint8_t missed_intrvs, u
 /* missed big events callback function type definition */
 typedef void (*hst_big_missed_evnt_cbk)(uint8_t big_hndl, uint8_t missed_intrvs, uint32_t nxt_anchor_pnt);
 #endif /* (SUPPORT_BRD_ISOCHRONOUS || SUPPORT_SYNC_ISOCHRONOUS) */
+
 
 /*##### Device Setup HCI Commands' Group #####*/
 /** @ingroup  device_setup
@@ -1776,7 +1959,7 @@ ble_stat_t ll_intf_read_local_supported_cmds(uint8_t supported_cmds[64]);
  *
  * @retval ble_stat_t : Command status to be sent to the Host.
  */
-ble_stat_t ll_intf_read_local_supported_features(uint8_t lmp_features[8]);
+ble_stat_t ll_intf_read_local_supported_features_page_0(uint8_t lmp_features[8]);
 
 /**
  * @brief  Read the list of the supported LE features for the Controller .
@@ -1785,7 +1968,7 @@ ble_stat_t ll_intf_read_local_supported_features(uint8_t lmp_features[8]);
  *
  * @retval ble_stat_t : Command status to be sent to the Host.
  */
-ble_stat_t ll_intf_le_read_local_supported_features(
+ble_stat_t ll_intf_le_read_local_supported_features_page_0(
 	uint8_t le_features[LE_FEATURES_BYTES_NO]);
 
 /**
@@ -2453,7 +2636,7 @@ ble_stat_t ll_intf_read_remote_version_info(uint16_t conn_handle_id);
  *
  * @retval ble_stat_t : Command status to be sent to the Host.
  */
-ble_stat_t ll_intf_le_read_remote_used_features(uint16_t conn_handle_id);
+ble_stat_t ll_intf_le_read_remote_features_page_0(uint16_t conn_handle_id);
 /**@}
  */
 
@@ -2606,6 +2789,9 @@ ble_stat_t ll_intf_le_set_extended_adv_params(uint8_t adv_handle,
 	uint8_t *ptr_peer_addrs, uint8_t adv_filter_policy, int8_t adv_tx_power,
 	uint8_t prim_adv_phy, uint8_t sec_adv_max_skip, uint8_t sec_adv_phy,
 	uint8_t adv_sid, uint8_t scan_req_notfy,
+#if SUPPORT_CSSA
+	uint8_t prim_phy_options,uint8_t sec_phy_options,
+#endif /* SUPPORT_CSSA */
 	int8_t *selected_tx_pwr);
 
 /*================  LE Set Extended Advertising Data Command =====================*/
@@ -3765,14 +3951,14 @@ ble_stat_t ll_intf_read_connection_accept_tout(uint16_t *ptr_accept_tout);
 /**
  * @brief  Used for setting the custom golden range RSSI
  *
- * @param  upper_limit			: [in]
- * @param  lower_limit		: [in]
+ * @param  lower_limit		: [in] golden range RSSI lower limit in dBm
+ * @param  upper_limit		: [in] golden range RSSI upper limit in dBm
  *
  * @retval Success
  */
 ble_stat_t ll_intf_set_cstm_rssi_golden_range(int lower_limit , int upper_limit);
 #endif /* (SUPPORT_LE_POWER_CONTROL) */
-#if (SUPPORT_LE_ENHANCED_CONN_UPDATE || SUPPORT_CONNECTED_ISOCHRONOUS || SUPPORT_CSSA)
+#if (((SUPPORT_LE_ENHANCED_CONN_UPDATE || SUPPORT_CONNECTED_ISOCHRONOUS || SUPPORT_CHANNEL_SOUNDING)&&( SUPPORT_MASTER_CONNECTION || SUPPORT_SLAVE_CONNECTION)) || SUPPORT_CSSA)
 /**  @}
 */
 
@@ -3789,7 +3975,7 @@ ble_stat_t ll_intf_set_cstm_rssi_golden_range(int lower_limit , int upper_limit)
  * @retval ble_stat_t	: Command status.
  */
 ble_stat_t ll_intf_le_set_host_feature(uint8_t bit_num, uint8_t bit_value);
-#endif /* (SUPPORT_LE_ENHANCED_CONN_UPDATE || SUPPORT_CONNECTED_ISOCHRONOUS || SUPPORT_CSSA) */
+#endif /* (((SUPPORT_LE_ENHANCED_CONN_UPDATE || SUPPORT_CONNECTED_ISOCHRONOUS || SUPPORT_CHANNEL_SOUNDING)&&( SUPPORT_MASTER_CONNECTION || SUPPORT_SLAVE_CONNECTION)) || SUPPORT_CSSA) */
 #if((SUPPORT_CONNECTED_ISOCHRONOUS &&( SUPPORT_MASTER_CONNECTION || SUPPORT_SLAVE_CONNECTION)) \
 	||(SUPPORT_BRD_ISOCHRONOUS || SUPPORT_SYNC_ISOCHRONOUS))
 
@@ -4278,6 +4464,26 @@ ble_stat_t ll_intf_le_subrate_req(
  * @{
  */
 
+#if SUPPORT_LE_PAWR_ADVERTISER_ROLE
+/**
+ * @brief this API set the max size for pawr queue
+ * @param[in] max_size	the max size for the PAWR queue length this param shall be an even number
+ */
+ble_stat_t ll_intf_set_pawr_queue_max_size(uint8_t max_size );
+#endif /* SUPPORT_LE_PAWR_ADVERTISER_ROLE */
+
+#if SUPPORT_PAWR_CUSTOM_SYNC
+/**
+ * @brief this API set the initialization sync bit map for a periodic scan context
+ * @param[in] sync_bit_map the initialization value of sync_bit_map sent by host. At least one sub-event shall be periodic sync
+ */
+ble_stat_t ll_intf_set_pawr_sync_bit_map(uint8_t* sync_bit_map );
+#endif /* SUPPORT_PAWR_CUSTOM_SYNC */
+
+#if PAWR_TESTING
+ble_stat_t ll_intf_parasite_rsp_enable(uint16_t sync_handle,uint8_t enable, uint8_t rsp_slot, uint8_t data_length);
+#endif /* PAWR_TESTING */
+
 
 /**  @}
 */
@@ -4285,6 +4491,57 @@ ble_stat_t ll_intf_le_subrate_req(
 /** @ingroup  pawr
  *  @{
  */
+#if SUPPORT_LE_PAWR_SYNC_ROLE
+/**
+ * @brief  Used to set the data for a response slot in a specific sub-event of the PAwR
+ *
+ * @param[in]  sync_handle identifying the PAwR train.
+ * @param[in]  ptr_prdc_adv_rsp_param ptr to struct contains the response data params.
+ *
+ * @retval Status(0:SUCCESS, 0xXX:ERROR_CODE).
+ *
+ */
+ble_stat_t ll_intf_le_set_prdc_adv_rsp_data(uint16_t sync_handle ,ble_set_prdc_adv_rsp_data_st* ptr_prdc_adv_rsp_data_param);
+/**
+ * @brief Used to instruct the Controller to synchronize with a subset of the sub-events within a PAwR train
+ *
+ * @param[in]  sync_handle identifying the PAwR train.
+ * @param[in]  ptr_prdc_adv_synch_params ptr to struct contains the Periodic Sync sub-event parameters.
+ *
+ * @retval Status(0:SUCCESS, 0xXX:ERROR_CODE).
+ */
+ble_stat_t ll_intf_le_set_prdc_adv_sync_subevnt(uint16_t sync_handle ,ble_set_prdc_sync_subevnt_st* ptr_prdc_adv_synch_params);
+#endif/*SUPPORT_LE_PAWR_SYNC_ROLE*/
+
+#if SUPPORT_LE_PAWR_ADVERTISER_ROLE
+/**
+ * @brief Used by the Host to set the data for one or more sub-events of PAwR
+ *  in reply to an HCI_LE_Periodic_Advertising_Subevent_Data_Request event.
+ *
+ * @param[in]  advertising_handle Used to identify a periodic advertising train.
+ * @param[in]  num_subevents Number of sub-event data in the command.
+ * @param[in]  ptr_prdc_adv_subevnt_data ptr to struct contains the periodic adv subevent data.
+ *
+ * @retval Status(0:SUCCESS, 0xXX:ERROR_CODE).
+ */
+ble_stat_t ll_intf_le_set_prdc_adv_subevnt_data(
+			uint8_t advertising_handle,
+			uint8_t num_subevents ,
+			ble_set_prdc_adv_subevnt_data_st* ptr_prdc_adv_subevnt_data);
+#endif/*SUPPORT_LE_PAWR_ADVERTISER_ROLE*/
+
+/**
+ * @}
+ */
+
+/** @ingroup 6.0_Features
+ *  @{
+ */
+
+
+
+
+
 
 /**
  * @}
@@ -4314,7 +4571,9 @@ typedef union _change_state_options_t
 		uint8_t allow_acl_data: 1;
 		uint8_t allow_iso_data: 1;
 		uint8_t allow_reports: 1;
-		uint8_t rfu: 4;
+		uint8_t allow_sync_event: 1;
+		uint8_t allow_eoa_event: 1;
+		uint8_t rfu: 2;
 	} bitfield;
 } change_state_options_t;
 /**
@@ -4448,6 +4707,29 @@ ble_stat_t ll_intf_set_dtm_with_spcfc_pckt_count(uint16_t pckt_count);
  */
 void ll_intf_config_schdling_time(Evnt_timing_t * p_evnt_timing);
 #endif /* SUPPORT_TIM_UPDT */
+
+
+
+
+#if SUPPORT_RX_DTP_CONTROL
+
+/**
+ * @brief  Set the rx data length throughput parameters.
+ * 		the first rx_pckt_count will have a payload size of rx_pckt_len and the remaining rx slot (if any) will have a payload size of
+ * 		connEffectiveMaxRxOctets of the current connection, if rx_pckt_count is set to a value greater than the PACKETS_PER_EVENT_MAX,
+ * 		the PACKETS_PER_EVENT_MAX will be used, if rx_pckt_len is set to a value greater than the connEffectiveMaxRxOctets of the
+ * 		current connection, the connEffectiveMaxRxOctets will be used.
+ *
+ * @param  rx_pckt_count 	: [in] number of rx packets expected to be received with a payload size of rx_pckt_len octets,
+ *  				the remaining rx slots will be calculated with the connEffectiveMaxRxOctets of the current connection.
+ * @param  rx_pckt_len		: [in] length of rx packets expected to be received on the first rx_pckt_count slots.
+ *
+ * @retval ble_stat_t: Command status to be sent to the Host.
+ */
+ble_stat_t ll_intf_ctrl_rx_dtp(uint8_t rx_pckt_count, uint8_t rx_pckt_len);
+
+#endif /* SUPPORT_RX_DTP_CONTROL */
+
 /**@}
 */
 

@@ -1,4 +1,4 @@
-/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/1.32a-LCA00/firmware/public_inc/os_wrapper.h#1 $*/
+/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/1.32a-lca02/firmware/public_inc/os_wrapper.h#1 $*/
 /**
  ********************************************************************************
  * @file    os_wrapper.h
@@ -40,6 +40,10 @@
 #define INCLUDE_OS_WRAPPER_H_
 
 #include "stdint.h"
+/********************* Macros **********************************/
+#define POOL_BLOCK_SIZE 		16
+#define POOL_TOTAL_BLOCKS_SIZE 	10
+#define POOL_INDEX_SIZE 		6
 
 /* Exported  Defines -----------------------------------------------------------*/
 
@@ -164,7 +168,9 @@ typedef struct _mem_blck_t {
  * @brief Memory Pool Block Structure
  */
 typedef struct {
-	uint32_t blck_size; 	/* block size */
+	uint32_t blck_size			: POOL_BLOCK_SIZE; 			/* block size */
+	uint32_t total_blcks		: POOL_TOTAL_BLOCKS_SIZE;	/* total number of blocks */
+	uint32_t indx				: POOL_INDEX_SIZE;			/* pool index (sub-pool number) */
 	mem_blck_t* next_blck; 	/* next free block */
 } os_pool_def_t;
 

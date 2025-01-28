@@ -7,7 +7,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2024 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -29,6 +29,7 @@
 #include "stm32wbaxx_hal.h"
 #include "stm32wbaxx_ll_pwr.h"
 #include "stm32wbaxx_ll_rcc.h"
+#include "stm32wbaxx_ll_tim.h"
 
 /* Exported types ------------------------------------------------------------*/
 typedef enum {
@@ -55,6 +56,9 @@ typedef enum {
   SCM_USER_APP,
   SCM_USER_LL_FW,
   SCM_USER_LL_HW_RCO_CLBR,
+  /* USER CODE BEGIN SCM_USER */
+
+  /* USER CODE END SCM_USER */
   TOTAL_CLIENT_NUM, /* To be at the end of the enum */
 } scm_user_id_t;
 
@@ -65,7 +69,7 @@ typedef enum {
 } scm_pll_mode_t;
 
 typedef enum {
-  SCM_RADIO_NOT_ACTIVE,
+  SCM_RADIO_NOT_ACTIVE = 0,
   SCM_RADIO_ACTIVE,
 } scm_radio_state_t;
 
@@ -123,6 +127,13 @@ void scm_pll_setconfig(const scm_pll_config_t *p_pll_config);
   * @retval None
   */
 void scm_standbyexit(void);
+
+/**
+  * @brief  Return the state of the Radio.
+  * @param  None
+  * @retval radio_state
+  */
+scm_radio_state_t isRadioActive(void);
 
 /**
   * @brief  Configure the PLL for switching fractional parameters on the fly.
@@ -193,6 +204,43 @@ void scm_hserdy_isr(void);
   */
 void scm_pllrdy_isr(void);
 
+/* SCM HSE BEGIN */
+/**
+ * @brief Getter for SW HSERDY flag
+ */
+uint8_t SCM_HSE_Get_SW_HSERDY(void);
+
+/**
+ * @brief Setter for SW HSERDY flag
+ */
+void SCM_HSE_Set_SW_HSERDY(void);
+
+/**
+ * @brief Clean of SW HSERDY flag
+ */
+void SCM_HSE_Clear_SW_HSERDY(void);
+
+/**
+ * @brief Polling function to wait until HSE is ready
+ */
+void SCM_HSE_WaitUntilReady(void);
+
+/**
+ * @brief Start the HSE stabilization timer
+ */
+void SCM_HSE_StartStabilizationTimer(void);
+
+/**
+ * @brief Stop the HSE stabilization timer
+ */
+void SCM_HSE_StopStabilizationTimer(void);
+
+/**
+ * @brief HSE stabilization timer interrupt handler
+ */
+void SCM_HSE_SW_HSERDY_isr(void);
+/* SCM HSE END */
+
 /* Exported functions - To be implemented by the user ------------------------- */
 
 /**
@@ -213,6 +261,17 @@ extern void SCM_HSI_CLK_ON(void);
   */
 extern void SCM_HSI_CLK_OFF(void);
 
+/* SCM HSE BEGIN */
+/**
+ * @brief Entry hook for HSI switch
+ */
+extern void SCM_HSI_SwithSystemClock_Entry(void);
+
+/**
+ * @brief Exit hook for HSI switch
+ */
+extern void SCM_HSI_SwithSystemClock_Exit(void);
+/* SCM HSE END */
 #else /* CFG_SCM_SUPPORTED */
 
 /* Unused empty functions */

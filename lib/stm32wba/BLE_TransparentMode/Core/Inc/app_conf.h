@@ -65,12 +65,12 @@
 #define CFG_BLE_OPTIONS             (0 | \
                                      0 | \
                                      0 | \
-              BLE_OPTIONS_EXTENDED_ADV | \
+                                     BLE_OPTIONS_EXTENDED_ADV | \
+                                     0 | \
+                                     BLE_OPTIONS_GATT_CACHING | \
                                      0 | \
                                      0 | \
-                                     0 | \
-                                     0 | \
-                                     0)
+                                     BLE_OPTIONS_ENHANCED_ATT)
 
 /**
  * Maximum number of simultaneous connections and advertising that the device will support.
@@ -196,9 +196,6 @@ typedef enum
 /******************************************************************************
  * RTC
  ******************************************************************************/
-#define RTC_N_PREDIV_S (10)
-#define RTC_PREDIV_S ((1<<RTC_N_PREDIV_S)-1)
-#define RTC_PREDIV_A ((1<<(15-RTC_N_PREDIV_S))-1)
 
 /* USER CODE BEGIN RTC */
 
@@ -221,6 +218,8 @@ typedef enum
  */
 #define CFG_LOG_SUPPORTED           (0U)
 
+/* Usart used by LOG */
+
 /* Configure Log display settings */
 #define CFG_LOG_INSERT_COLOR_INSIDE_THE_TRACE       (0U)
 #define CFG_LOG_INSERT_TIME_STAMP_INSIDE_THE_TRACE  (0U)
@@ -241,7 +240,7 @@ typedef enum
  * Configure Log level for Application
  ******************************************************************************/
 #define APPLI_CONFIG_LOG_LEVEL      LOG_VERBOSE_INFO
-
+#define APPLI_CONFIG_LOG_REGION     (LOG_REGION_ALL_REGIONS)
 /* USER CODE BEGIN Log_level */
 
 /* USER CODE END Log_level */
@@ -320,7 +319,7 @@ typedef enum
  * NVM configuration
  ******************************************************************************/
 
-#define CFG_SNVMA_START_SECTOR_ID     (FLASH_PAGE_NB - 2u)
+#define CFG_SNVMA_START_SECTOR_ID     ((FLASH_SIZE / FLASH_PAGE_SIZE) - 2u)
 
 #define CFG_SNVMA_START_ADDRESS       (FLASH_BASE + (FLASH_PAGE_SIZE * (CFG_SNVMA_START_SECTOR_ID)))
 
@@ -347,20 +346,20 @@ typedef enum
  *   - 2 : Debugger available in low power mode.
  *
  ******************************************************************************/
-#define CFG_DEBUGGER_LEVEL           (2)
+#define CFG_DEBUGGER_LEVEL                  (2)
 
 /******************************************************************************
  * RealTime GPIO debug module configuration
  ******************************************************************************/
 
-#define CFG_RT_DEBUG_GPIO_MODULE         (0)
-#define CFG_RT_DEBUG_DTB                 (0)
+#define CFG_RT_DEBUG_GPIO_MODULE            (0)
+#define CFG_RT_DEBUG_DTB                    (0)
 
 /******************************************************************************
  * System Clock Manager module configuration
  ******************************************************************************/
 
-#define CFG_SCM_SUPPORTED            (1)
+#define CFG_SCM_SUPPORTED                   (1)
 
 /******************************************************************************
  * HW RADIO configuration
@@ -391,8 +390,13 @@ typedef enum
 /* RF TX power table ID selection:
  *   0 -> RF TX output level from -20 dBm to +10 dBm
  *   1 -> RF TX output level from -20 dBm to +3 dBm
+ *   2 -> RF TX output level at +20 dBm with an external PA
  */
 #define CFG_RF_TX_POWER_TABLE_ID            (0)
+
+#define CFG_EXTERNAL_PA_ENABLE              (0)
+
+#define CFG_BLE_AOA_AOD_ENABLE              (0)
 
 /* Custom LSE sleep clock accuracy to use if both conditions are met:
  * - LSE is selected as Link Layer sleep clock source
@@ -425,8 +429,8 @@ typedef enum
 #define CFG_AMM_VIRTUAL_STACK_BLE_BUFFER_SIZE     (400U)  /* words (32 bits) */
 #define CFG_AMM_VIRTUAL_APP_BLE                           (2U)
 #define CFG_AMM_VIRTUAL_APP_BLE_BUFFER_SIZE     (200U)  /* words (32 bits) */
-#define CFG_AMM_POOL_SIZE                                 DIVC(CFG_MM_POOL_SIZE, sizeof (uint32_t)) \
-                                                          + (AMM_VIRTUAL_INFO_ELEMENT_SIZE * CFG_AMM_VIRTUAL_MEMORY_NUMBER)
+#define CFG_AMM_POOL_SIZE                                 ( DIVC(CFG_MM_POOL_SIZE, sizeof (uint32_t)) \
+                                                          + (AMM_VIRTUAL_INFO_ELEMENT_SIZE * CFG_AMM_VIRTUAL_MEMORY_NUMBER) )
 
 /* USER CODE BEGIN MEMORY_MANAGER_Configuration */
 
