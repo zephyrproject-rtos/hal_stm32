@@ -601,6 +601,15 @@ extern "C" {
 #define HAL_SYSCFG_DisableIOAnalogSwitchVDD       HAL_SYSCFG_DisableIOSwitchVDD
 #endif /* STM32G4 */
 
+#if defined(STM32U5)
+
+#define HAL_SYSCFG_EnableIOAnalogSwitchBooster                 HAL_SYSCFG_EnableIOAnalogBooster
+#define HAL_SYSCFG_DisableIOAnalogSwitchBooster                HAL_SYSCFG_DisableIOAnalogBooster
+#define HAL_SYSCFG_EnableIOAnalogSwitchVoltageSelection        HAL_SYSCFG_EnableIOAnalogVoltageSelection
+#define HAL_SYSCFG_DisableIOAnalogSwitchVoltageSelection       HAL_SYSCFG_DisableIOAnalogVoltageSelection
+
+#endif /* STM32U5 */
+
 #if defined(STM32H5)
 #define SYSCFG_IT_FPU_IOC         SBS_IT_FPU_IOC
 #define SYSCFG_IT_FPU_DZC         SBS_IT_FPU_DZC
@@ -875,6 +884,10 @@ extern "C" {
 #define __HAL_HRTIM_SetCompare        __HAL_HRTIM_SETCOMPARE
 #define __HAL_HRTIM_GetCompare        __HAL_HRTIM_GETCOMPARE
 
+#if defined(STM32F3) || defined(STM32G4) || defined(STM32H7)
+#define HRTIMInterruptResquests  HRTIMInterruptRequests
+#endif /* STM32F3 || STM32G4 || STM32H7 */
+
 #if defined(STM32G4)
 #define HAL_HRTIM_ExternalEventCounterConfig    HAL_HRTIM_ExtEventCounterConfig
 #define HAL_HRTIM_ExternalEventCounterEnable    HAL_HRTIM_ExtEventCounterEnable
@@ -1012,8 +1025,8 @@ extern "C" {
 #define HRTIM_CALIBRATIONRATE_910              (HRTIM_DLLCR_CALRTE_0)
 #define HRTIM_CALIBRATIONRATE_114              (HRTIM_DLLCR_CALRTE_1)
 #define HRTIM_CALIBRATIONRATE_14               (HRTIM_DLLCR_CALRTE_1 | HRTIM_DLLCR_CALRTE_0)
-
 #endif /* STM32F3 */
+
 /**
   * @}
   */
@@ -3931,7 +3944,7 @@ extern "C" {
   */
 #if defined (STM32G0) || defined (STM32L5) || defined (STM32L412xx) || defined (STM32L422xx) || \
     defined (STM32L4P5xx)|| defined (STM32L4Q5xx) || defined (STM32G4) || defined (STM32WL) || defined (STM32U5) || \
-    defined (STM32WBA) || defined (STM32H5) || defined (STM32C0) ||  defined (STM32H7RS) ||  defined (STM32U0)
+    defined (STM32WBA) || defined (STM32H5) || defined (STM32C0) || defined (STM32H7RS) ||  defined (STM32U0)
 #else
 #define __HAL_RTC_CLEAR_FLAG                      __HAL_RTC_EXTI_CLEAR_FLAG
 #endif
@@ -4225,6 +4238,33 @@ extern "C" {
 
 #define HAL_PCD_SetTxFiFo                                  HAL_PCDEx_SetTxFiFo
 #define HAL_PCD_SetRxFiFo                                  HAL_PCDEx_SetRxFiFo
+#if defined(STM32U5)
+#define USB_OTG_GOTGCTL_BSESVLD                            USB_OTG_GOTGCTL_BSVLD
+#define USB_OTG_GAHBCFG_GINT                               USB_OTG_GAHBCFG_GINTMSK
+#define USB_OTG_GUSBCFG_PHYLPCS                            USB_OTG_GUSBCFG_PHYLPC
+#define USB_OTG_GRSTCTL_HSRST                              USB_OTG_GRSTCTL_PSRST
+#define USB_OTG_GINTSTS_BOUTNAKEFF                         USB_OTG_GINTSTS_GONAKEFF
+#define USB_OTG_GINTSTS_WKUINT                             USB_OTG_GINTSTS_WKUPINT
+#define USB_OTG_GINTMSK_PXFRM_IISOOXFRM                    USB_OTG_GINTMSK_IPXFRM_IISOOXFRM
+#define USB_OTG_GRXSTSP_EPNUM                              USB_OTG_GRXSTSP_EPNUM_CHNUM
+#define USB_OTG_GLPMCFG_L1ResumeOK                         USB_OTG_GLPMCFG_L1RSMOK
+#define USB_OTG_HPTXFSIZ_PTXFD                             USB_OTG_HPTXFSIZ_PTXFSIZ
+#define USB_OTG_HCCHAR_MC                                  USB_OTG_HCCHAR_MCNT
+#define USB_OTG_HCCHAR_MC_0                                USB_OTG_HCCHAR_MCNT_0
+#define USB_OTG_HCCHAR_MC_1                                USB_OTG_HCCHAR_MCNT_1
+#define USB_OTG_HCINTMSK_AHBERR                            USB_OTG_HCINTMSK_AHBERRM
+#define USB_OTG_HCTSIZ_DOPING                              USB_OTG_HCTSIZ_DOPNG
+#define USB_OTG_DOEPMSK_OPEM                               USB_OTG_DOEPMSK_OUTPKTERRM
+#define USB_OTG_DIEPCTL_SODDFRM                            USB_OTG_DIEPCTL_SD1PID_SODDFRM
+#define USB_OTG_DIEPTSIZ_MULCNT                            USB_OTG_DIEPTSIZ_MCNT
+#define USB_OTG_DOEPCTL_SODDFRM                            USB_OTG_DOEPCTL_SD1PID_SODDFRM
+#define USB_OTG_DOEPCTL_DPID                               USB_OTG_DOEPCTL_DPID_EONUM
+#define USB_OTG_DOEPTSIZ_STUPCNT                           USB_OTG_DOEPTSIZ_RXDPID
+#define USB_OTG_DOEPTSIZ_STUPCNT_0                         USB_OTG_DOEPTSIZ_RXDPID_0
+#define USB_OTG_DOEPTSIZ_STUPCNT_1                         USB_OTG_DOEPTSIZ_RXDPID_1
+#define USB_OTG_PCGCCTL_STOPCLK                            USB_OTG_PCGCCTL_STPPCLK
+#define USB_OTG_PCGCCTL_GATECLK                            USB_OTG_PCGCCTL_GATEHCLK
+#endif
 /**
   * @}
   */
