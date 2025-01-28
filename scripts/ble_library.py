@@ -99,7 +99,7 @@ file_list_wba = {
         ble_transparent_mode_app_path + "/System/Interfaces/hw_aes.c",
         ble_transparent_mode_app_path + "/System/Interfaces/hw_if.h",
         ble_transparent_mode_app_path + "/System/Interfaces/hw_pka.c",
-        ble_transparent_mode_app_path + "/System/Interfaces/pka_p256.c",
+        ble_transparent_mode_app_path + "/System/Interfaces/hw_pka_p256.c",
         ble_transparent_mode_app_path + "/System/Config/Log/log_module.c",
         ble_transparent_mode_app_path + "/System/Config/Log/log_module.h",
         ble_transparent_mode_app_path + "/System/Config/Debug_GPIO/app_debug.h",
@@ -188,9 +188,8 @@ def copy_ble_lib_files(src_repo_path, dest_lib_path, stm32_serie):
                     # Copy the file to the destination path
                     shutil.copy(src_file_path, destination_path)
                 else:
+                    # Raise all the errors but not aborting to allow a manual check
                     logging.error(f"File : {src_file_path} not found")
-                    logging.error("Abort")
-                    sys.exit()
 
 
 def update_ble_lib_readme(lib_path, make_version, make_commit):
