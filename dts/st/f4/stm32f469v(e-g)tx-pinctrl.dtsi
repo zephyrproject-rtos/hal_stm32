@@ -1128,6 +1128,20 @@
 				slew-rate = "very-high-speed";
 			};
 
+			/* SAI */
+
+			/omit-if-no-ref/ sai1_sd_a_pc1: sai1_sd_a_pc1 {
+				pinmux = <STM32_PINMUX('C', 1, AF6)>;
+			};
+
+			/omit-if-no-ref/ sai1_sd_a_pd6: sai1_sd_a_pd6 {
+				pinmux = <STM32_PINMUX('D', 6, AF6)>;
+			};
+
+			/omit-if-no-ref/ sai1_mclk_a_pe2: sai1_mclk_a_pe2 {
+				pinmux = <STM32_PINMUX('E', 2, AF6)>;
+			};
+
 			/* SDIO */
 
 			/omit-if-no-ref/ sdio_d4_pb8: sdio_d4_pb8 {

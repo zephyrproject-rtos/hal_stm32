@@ -1273,6 +1273,76 @@
 				slew-rate = "very-high-speed";
 			};
 
+			/* SAI */
+
+			/omit-if-no-ref/ sai1_sd_b_pa3: sai1_sd_b_pa3 {
+				pinmux = <STM32_PINMUX('A', 3, AF6)>;
+			};
+
+			/omit-if-no-ref/ sai1_d1_pb2: sai1_d1_pb2 {
+				pinmux = <STM32_PINMUX('B', 2, AF2)>;
+			};
+
+			/omit-if-no-ref/ sai1_sd_a_pb2: sai1_sd_a_pb2 {
+				pinmux = <STM32_PINMUX('B', 2, AF6)>;
+			};
+
+			/omit-if-no-ref/ sai1_mclk_a_pc0: sai1_mclk_a_pc0 {
+				pinmux = <STM32_PINMUX('C', 0, AF6)>;
+			};
+
+			/omit-if-no-ref/ sai1_d1_pc1: sai1_d1_pc1 {
+				pinmux = <STM32_PINMUX('C', 1, AF2)>;
+			};
+
+			/omit-if-no-ref/ sai1_sd_a_pc1: sai1_sd_a_pc1 {
+				pinmux = <STM32_PINMUX('C', 1, AF6)>;
+			};
+
+			/omit-if-no-ref/ sai1_d3_pc3: sai1_d3_pc3 {
+				pinmux = <STM32_PINMUX('C', 3, AF2)>;
+			};
+
+			/omit-if-no-ref/ sai1_ck1_pc4: sai1_ck1_pc4 {
+				pinmux = <STM32_PINMUX('C', 4, AF2)>;
+			};
+
+			/omit-if-no-ref/ sai1_d3_pc5: sai1_d3_pc5 {
+				pinmux = <STM32_PINMUX('C', 5, AF2)>;
+			};
+
+			/omit-if-no-ref/ sai1_fs_a_pc5: sai1_fs_a_pc5 {
+				pinmux = <STM32_PINMUX('C', 5, AF6)>;
+			};
+
+			/omit-if-no-ref/ sai1_sck_a_pc6: sai1_sck_a_pc6 {
+				pinmux = <STM32_PINMUX('C', 6, AF6)>;
+			};
+
+			/omit-if-no-ref/ sai2_sd_b_pa0: sai2_sd_b_pa0 {
+				pinmux = <STM32_PINMUX('A', 0, AF10)>;
+			};
+
+			/omit-if-no-ref/ sai2_mclk_b_pa1: sai2_mclk_b_pa1 {
+				pinmux = <STM32_PINMUX('A', 1, AF10)>;
+			};
+
+			/omit-if-no-ref/ sai2_sck_b_pa2: sai2_sck_b_pa2 {
+				pinmux = <STM32_PINMUX('A', 2, AF8)>;
+			};
+
+			/omit-if-no-ref/ sai2_fs_b_pa12: sai2_fs_b_pa12 {
+				pinmux = <STM32_PINMUX('A', 12, AF8)>;
+			};
+
+			/omit-if-no-ref/ sai2_fs_b_pc0: sai2_fs_b_pc0 {
+				pinmux = <STM32_PINMUX('C', 0, AF8)>;
+			};
+
+			/omit-if-no-ref/ sai2_sd_a_pc1: sai2_sd_a_pc1 {
+				pinmux = <STM32_PINMUX('C', 1, AF8)>;
+			};
+
 			/* SDMMC */
 
 			/omit-if-no-ref/ sdmmc1_d0_pa10: sdmmc1_d0_pa10 {
