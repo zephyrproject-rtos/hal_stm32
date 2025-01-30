@@ -226,6 +226,9 @@
   match: "^XSPIM(.*)(?:CLK|NCS[1-2]|DQS[0-1]|IO\\d+)$"
   slew-rate: very-high-speed
 
+- name: SAI
+  match: "^SAI\\d+_(?:D\\d+)?(?:CK\\d+)?(?:FS_A)?(?:FS_B)?(?:MCLK_A)?(?:MCLK_B)?(?:SD_A)?(?:SD_B)?(?:SCK_A)?(?:SCK_B)?(?:EXTCLK)?$"
+
 - name: SDMMC
   match: "^SDMMC\\d+_(?:CK)?(?:CKIN)?(?:CDIR)?(?:CMD)?(?:D\\d+)?(?:D0DIR)?(?:D123DIR)?$"
   slew-rate: very-high-speed
