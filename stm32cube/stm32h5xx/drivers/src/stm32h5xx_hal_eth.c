@@ -1218,7 +1218,7 @@ static void ETH_UpdateDescriptor(ETH_HandleTypeDef *heth)
   if (heth->RxDescList.RxBuildDescCnt != desccount)
   {
     /* Set the tail pointer index */
-    tailidx = (descidx + 1U) % ETH_RX_DESC_CNT;
+    tailidx = (ETH_RX_DESC_CNT + descidx - 1U) % ETH_RX_DESC_CNT;
 
     /* DMB instruction to avoid race condition */
     __DMB();
