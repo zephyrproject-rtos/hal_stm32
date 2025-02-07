@@ -1030,6 +1030,11 @@
 				slew-rate = "very-high-speed";
 			};
 
+			/omit-if-no-ref/ eth1_rgmii_clk125_pf2: eth1_rgmii_clk125_pf2 {
+				pinmux = <STM32_PINMUX('F', 2, AF11)>;
+				slew-rate = "very-high-speed";
+			};
+
 			/omit-if-no-ref/ eth1_rgmii_rx_clk_pf7: eth1_rgmii_rx_clk_pf7 {
 				pinmux = <STM32_PINMUX('F', 7, AF11)>;
 				slew-rate = "very-high-speed";
@@ -1047,6 +1052,11 @@
 
 			/omit-if-no-ref/ eth1_rgmii_rx_ctl_pf10: eth1_rgmii_rx_ctl_pf10 {
 				pinmux = <STM32_PINMUX('F', 10, AF11)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ eth1_rgmii_tx_ctl_pf11: eth1_rgmii_tx_ctl_pf11 {
+				pinmux = <STM32_PINMUX('F', 11, AF11)>;
 				slew-rate = "very-high-speed";
 			};
 
