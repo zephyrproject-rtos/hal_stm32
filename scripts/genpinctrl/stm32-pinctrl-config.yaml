@@ -77,7 +77,7 @@
   slew-rate: very-high-speed
 
 - name: ETH_RGMII
-  match: "^ETH\\d+_RGMII_(?:CLk125|GTX_CLK|RXD[0-3]|RX_CLK|RX_CTL|RX_ER|TX_EN|RX_DV|TXD[0-3]|TX_CLK|TX_EN)$"
+  match: "^ETH\\d+_RGMII_(?:CLK125|GTX_CLK|RXD[0-3]|RX_CLK|RX_CTL|RX_ER|TX_EN|RX_DV|TXD[0-3]|TX_CTL|TX_EN)$"
   slew-rate: very-high-speed
 
 - name: ETH_RMII
