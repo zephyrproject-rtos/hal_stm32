@@ -41,17 +41,18 @@
 
 #else
 #include "scm.h"
-#endif
+#endif /* __ZEPHYR__ */
+
+#ifndef __ZEPHYR__
 #define max(a,b) ((a) > (b) ? a : b)
 
 /* 2.4GHz RADIO ISR callbacks */
 typedef void (*radio_isr_cb_t) (void);
 
-
-
 /* Radio critical sections */
 static uint32_t primask_bit = 0;
 volatile int32_t irq_counter;
+#endif /* __ZEPHYR__ */
 
 /* Radio bus clock control variables */
 uint8_t AHB5_SwitchedOff;
@@ -103,7 +104,7 @@ void LINKLAYER_PLAT_Assert(uint8_t condition)
 {
   assert_param(condition);
 }
-#endif
+#endif /* __ZEPHYR__ */
 
 /**
   * @brief  Enable/disable the Link Layer active clock (baseband clock).
@@ -269,7 +270,6 @@ void LINKLAYER_PLAT_TriggerSwLowIT(uint8_t priority)
 
   HAL_NVIC_SetPendingIRQ((IRQn_Type) RADIO_SW_LOW_INTR_NUM);
 }
-#endif
 
 /**
   * @brief  Enable interrupts.
@@ -303,7 +303,6 @@ void LINKLAYER_PLAT_DisableIRQ(void)
   irq_counter ++;
 }
 
-#ifndef __ZEPHYR__
 /**
   * @brief  Enable specific interrupt group.
   * @param  isr_type: mask for interrupt group to enable.
@@ -399,7 +398,6 @@ void LINKLAYER_PLAT_DisableSpecificIRQ(uint8_t isr_type)
     }
   }
 }
-#endif
 
 /**
   * @brief  Enable link layer high priority ISR only.
@@ -437,7 +435,6 @@ void LINKLAYER_PLAT_DisableRadioIT(void)
   /* USER CODE END LINKLAYER_PLAT_DisableRadioIT_2 */
 }
 
-#ifndef __ZEPHYR__
 /**
   * @brief  Link Layer notification for radio activity start.
   * @param  None
@@ -577,7 +574,7 @@ uint32_t LINKLAYER_PLAT_GetUDN(void)
 {
   return LL_FLASH_GetUDN();
 }
-#endif
+#endif /* __ZEPHYR__ */
 /* USER CODE BEGIN LINKLAYER_PLAT 0 */
 
 /* USER CODE END LINKLAYER_PLAT 0 */
