@@ -1,0 +1,46 @@
+STM32CubeMP13
+#############
+
+Origin:
+   ST Microelectronics
+   https://github.com/STMicroelectronics/STM32CubeMP13
+
+Status:
+   version 1.2.0
+
+Purpose:
+   ST Microelectronics official MCU package for STM32MP13 series.
+
+Description:
+   This package is an extract of official STM32CubeMP13 package written by ST Microelectronics.
+   It is composed of STM32Cube hardware abstraction layer (HAL) and low layer (LL) plus a set
+   of CMSIS headers files, one for each SoC in STM32MP1 series.
+
+Dependencies:
+    None.
+
+URL:
+   https://github.com/STMicroelectronics/STM32CubeMP13
+
+Commit:
+   0ef689b06775da063006da84d952d8bd48f9e5e1
+
+Maintained-by:
+   External
+
+License:
+   BSD-3-Clause
+
+License Link:
+   https://opensource.org/licenses/BSD-3-Clause
+
+Patch List:
+
+   *Changes from official delivery:
+    -dos2unix applied
+    -trailing white spaces removed
+
+   *Provision to enable hal & ll asserts added
+    -Modified stm32cube/stm32mp13xx/drivers/include/stm32_assert_templates.h
+
+   See release_note.html from STM32Cube
