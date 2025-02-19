@@ -1,11 +1,14 @@
 This file provides licensing information on the code provided in this repository.
 
-Three licenses are in use in this repository: Apache-2.0, BSD-3-Clause and ST SLA0044.
+The following licenses are in use in this repository: BSD-3-Clause, Apache-2.0,
+MIT and ST SLA0044.
 They are applied according to the following scheme:
 - All files imported from STM32Cube packages are subject to their original
   license: BSD-3-Clause. This covers following folders:
                 - stm32cube/stm32*
-                - lib/*
+                - lib/* (except lib/stm32wba/STM32_WPAN/link_layer/ll_cmd_lib/ see below)
+- All files in lib/stm32wba/STM32_WPAN/link_layer/ll_cmd_lib/ are subject to 
+  MIT License terms.
 - All files in dts/ folder are subject to usual Zephyr project license: Apache-2.0
 - Binary blobs explicitly fetched by the user with command `west blobs fetch stm32`
   and stored under zephyr/blobs/stm32wba/lib are subject to ST proprietary
@@ -16,7 +19,7 @@ They are applied according to the following scheme:
 - Files missing explicit license information fall under the Apache-2.0
 
 
-For these three licenses, full length texts are available hereafter:
+For these licenses, full length texts are available hereafter:
 
 
                              BSD 3-Clause License
@@ -252,11 +255,32 @@ For these three licenses, full length texts are available hereafter:
    limitations under the License.
 
 
+                            Synopsys MIT License
+                    Copyright (c) 2020-Present Synopsys, Inc
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of the software and
+associated documentation files (the “Software”), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
+following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial
+portions of the Software.
+
+THIS SOFTWARE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING, BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT. IN NO EVENT SHALL
+THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT, OR OTHERWISE
+ARISING FROM, OUT OF, OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+OTHER DEALINGS IN THE SOFTWARE.
+
+
                   SLA0044 Rev5/February 2018
 
-                 ## Software license agreement
+                  Software license agreement
 
-        ### __ULTIMATE LIBERTY SOFTWARE LICENSE AGREEMENT__
+           __ULTIMATE LIBERTY SOFTWARE LICENSE AGREEMENT__
 
 BY INSTALLING, COPYING, DOWNLOADING, ACCESSING OR OTHERWISE USING THIS SOFTWARE
 OR ANY PART THEREOF (AND THE RELATED DOCUMENTATION) FROM STMICROELECTRONICS
