@@ -2516,6 +2516,10 @@
 				pinmux = <STM32_PINMUX('B', 3, ANALOG)>;
 			};
 
+			/omit-if-no-ref/ debug_njtrst_pb4: debug_njtrst_pb4 {
+				pinmux = <STM32_PINMUX('B', 4, AF0)>;
+			};
+
 			/omit-if-no-ref/ debug_jtdo_swo_pb5: debug_jtdo_swo_pb5 {
 				pinmux = <STM32_PINMUX('B', 5, AF0)>;
 			};
