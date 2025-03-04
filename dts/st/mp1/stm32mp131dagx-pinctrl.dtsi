@@ -768,6 +768,58 @@
 				slew-rate = "very-high-speed";
 			};
 
+			/* ETH (STM32N6 IP) */
+
+			/omit-if-no-ref/ eth1_mdio_pa2: eth1_mdio_pa2 {
+				pinmux = <STM32_PINMUX('A', 2, AF11)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ eth1_pps_out_pa4: eth1_pps_out_pa4 {
+				pinmux = <STM32_PINMUX('A', 4, AF10)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ eth1_pps_out_pa5: eth1_pps_out_pa5 {
+				pinmux = <STM32_PINMUX('A', 5, AF10)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ eth1_clk_pa11: eth1_clk_pa11 {
+				pinmux = <STM32_PINMUX('A', 11, AF11)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ eth1_tx_er_pe11: eth1_tx_er_pe11 {
+				pinmux = <STM32_PINMUX('E', 11, AF11)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ eth1_tx_er_pf12: eth1_tx_er_pf12 {
+				pinmux = <STM32_PINMUX('F', 12, AF10)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ eth1_mdc_pg2: eth1_mdc_pg2 {
+				pinmux = <STM32_PINMUX('G', 2, AF11)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ eth1_mdio_pg3: eth1_mdio_pg3 {
+				pinmux = <STM32_PINMUX('G', 3, AF11)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ eth1_phy_intn_pg12: eth1_phy_intn_pg12 {
+				pinmux = <STM32_PINMUX('G', 12, AF11)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ eth1_phy_intn_ph6: eth1_phy_intn_ph6 {
+				pinmux = <STM32_PINMUX('H', 6, AF10)>;
+				slew-rate = "very-high-speed";
+			};
+
 			/* FMC */
 
 			/omit-if-no-ref/ fmc_a21_pa8: fmc_a21_pa8 {

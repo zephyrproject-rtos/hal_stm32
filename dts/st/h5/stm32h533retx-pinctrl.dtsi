@@ -795,6 +795,10 @@
 				pinmux = <STM32_PINMUX('B', 3, AF0)>;
 			};
 
+			/omit-if-no-ref/ debug_njtrst_pb4: debug_njtrst_pb4 {
+				pinmux = <STM32_PINMUX('B', 4, AF0)>;
+			};
+
 			/* OCTOSPI */
 
 			/omit-if-no-ref/ octospi1_dqs_pa1: octospi1_dqs_pa1 {

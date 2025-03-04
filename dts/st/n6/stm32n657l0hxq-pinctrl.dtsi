@@ -2343,6 +2343,10 @@
 				pinmux = <STM32_PINMUX('B', 3, ANALOG)>;
 			};
 
+			/omit-if-no-ref/ debug_njtrst_pb4: debug_njtrst_pb4 {
+				pinmux = <STM32_PINMUX('B', 4, AF0)>;
+			};
+
 			/omit-if-no-ref/ debug_jtdo_swo_pb5: debug_jtdo_swo_pb5 {
 				pinmux = <STM32_PINMUX('B', 5, AF0)>;
 			};
@@ -3715,18 +3719,6 @@
 
 			/omit-if-no-ref/ tim17_ch1_pg12: tim17_ch1_pg12 {
 				pinmux = <STM32_PINMUX('G', 12, AF1)>;
-			};
-
-			/omit-if-no-ref/ tim8_ch3n_pb13: tim8_ch3n_pb13 {
-				pinmux = <STM32_PINMUX('B', 13, AF2)>;
-			};
-
-			/omit-if-no-ref/ tim8_ch4n_pb14: tim8_ch4n_pb14 {
-				pinmux = <STM32_PINMUX('B', 14, AF2)>;
-			};
-
-			/omit-if-no-ref/ tim8_ch4_pg14: tim8_ch4_pg14 {
-				pinmux = <STM32_PINMUX('G', 14, AF2)>;
 			};
 
 			/omit-if-no-ref/ tim9_ch1_pa0: tim9_ch1_pa0 {
