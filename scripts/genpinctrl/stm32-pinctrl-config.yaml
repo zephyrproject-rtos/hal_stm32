@@ -144,7 +144,7 @@
   slew-rate: very-high-speed
 
 - name: JTAG PORT
-  match: ^(SYS|DEBUG)_((JTMS-)?SWDIO|(JTCK-)?SWCLK|JTDI|JTDO(-TRACESWO|-SWO)?|(NJ)?JTRST)$
+  match: ^(SYS|DEBUG)_((JTMS-)?SWDIO|(JTCK-)?SWCLK|JTDI|JTDO(-TRACESWO|-SWO)?|(N)?JTRST)$
 
 - name: LTDC
   match: "^LTDC_(?:DE|CLK|HSYNC|VSYNC|R[0-7]|G[0-7]|B[0-7])$"
