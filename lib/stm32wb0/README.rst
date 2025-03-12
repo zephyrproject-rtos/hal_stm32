@@ -127,5 +127,7 @@ Patch List:
 	  Impacted file: app_conf.h
 	- Exclude HAL_UART_MspInit and HAL_UART_MspDeInit from compilation:
 	  Impacted file: stm32wb0x_hal_msp.c
+	- Removed BLEPLAT_RngGetRandom16 and BLEPLAT_RngGetRandom32 functions:
+	  Impacted file: bleplat.c
 	- dos2unix applied
 	- trailing white spaces removed
