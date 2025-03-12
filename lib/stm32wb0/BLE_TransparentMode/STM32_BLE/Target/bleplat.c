@@ -118,16 +118,6 @@ int32_t BLEPLAT_AesCMACEncryptFinish(BLEPLAT_AESCMACctxTypeDef *pAESCMACctx,
 }
 #endif /* (BLESTACK_CONTROLLER_ONLY == 0) */
 
-void BLEPLAT_RngGetRandom16(uint16_t* num)
-{
-  HW_RNG_GetRandom16(num);
-}
-
-void BLEPLAT_RngGetRandom32(uint32_t* num)
-{
-  HW_RNG_GetRandom32(num);
-}
-
 uint8_t BLEPLAT_DBmToPALevel(int8_t TX_dBm)
 {
   return RADIO_DBmToPALevel(TX_dBm);
