@@ -36,6 +36,8 @@
 #include <stm32l4xx_ll_rtc.h>
 #elif defined(CONFIG_SOC_SERIES_STM32L5X)
 #include <stm32l5xx_ll_rtc.h>
+#elif defined(CONFIG_SOC_SERIES_STM32MP13X)
+#include <stm32mp13xx_ll_rtc.h>
 #elif defined(CONFIG_SOC_SERIES_STM32MP1X)
 #include <stm32mp1xx_ll_rtc.h>
 #elif defined(CONFIG_SOC_SERIES_STM32N6X)
