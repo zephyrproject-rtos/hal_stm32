@@ -223,7 +223,7 @@
 			};
 
 			/omit-if-no-ref/ i2c2_scl_pa9: i2c2_scl_pa9 {
-				pinmux = <STM32_PINMUX('A', 9, ANALOG)>;
+				pinmux = <STM32_PINMUX('A', 9, AF8)>;
 				bias-pull-up;
 				drive-open-drain;
 			};
@@ -273,7 +273,7 @@
 			};
 
 			/omit-if-no-ref/ i2c2_sda_pa10: i2c2_sda_pa10 {
-				pinmux = <STM32_PINMUX('A', 10, ANALOG)>;
+				pinmux = <STM32_PINMUX('A', 10, AF8)>;
 				bias-pull-up;
 				drive-open-drain;
 			};
@@ -480,7 +480,7 @@
 			};
 
 			/omit-if-no-ref/ spi2_miso_pa9: spi2_miso_pa9 {
-				pinmux = <STM32_PINMUX('A', 9, ANALOG)>;
+				pinmux = <STM32_PINMUX('A', 9, AF4)>;
 				bias-pull-down;
 			};
 
@@ -527,7 +527,7 @@
 			};
 
 			/omit-if-no-ref/ spi2_mosi_pa10: spi2_mosi_pa10 {
-				pinmux = <STM32_PINMUX('A', 10, ANALOG)>;
+				pinmux = <STM32_PINMUX('A', 10, AF0)>;
 				bias-pull-down;
 			};
 

@@ -226,6 +226,10 @@
 				pinmux = <STM32_PINMUX('B', 3, AF0)>;
 			};
 
+			/omit-if-no-ref/ sys_njtrst_pb4: sys_njtrst_pb4 {
+				pinmux = <STM32_PINMUX('B', 4, AF0)>;
+			};
+
 			/* RCC_MCO */
 
 			/omit-if-no-ref/ rcc_mco_pa8: rcc_mco_pa8 {

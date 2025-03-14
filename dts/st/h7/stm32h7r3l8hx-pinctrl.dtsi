@@ -822,19 +822,7 @@
 				pinmux = <STM32_PINMUX('P', 7, ANALOG)>;
 			};
 
-			/* ETH_MDC */
-
-			/omit-if-no-ref/ eth_mdc_pc1: eth_mdc_pc1 {
-				pinmux = <STM32_PINMUX('C', 1, AF11)>;
-				slew-rate = "very-high-speed";
-			};
-
-			/omit-if-no-ref/ eth_mdc_pg6: eth_mdc_pg6 {
-				pinmux = <STM32_PINMUX('G', 6, AF11)>;
-				slew-rate = "very-high-speed";
-			};
-
-			/* ETH_MDIO */
+			/* ETH */
 
 			/omit-if-no-ref/ eth_mdio_pa2: eth_mdio_pa2 {
 				pinmux = <STM32_PINMUX('A', 2, AF11)>;
@@ -846,15 +834,23 @@
 				slew-rate = "very-high-speed";
 			};
 
-			/* ETH_PPS_OUT */
-
 			/omit-if-no-ref/ eth_pps_out_pb5: eth_pps_out_pb5 {
 				pinmux = <STM32_PINMUX('B', 5, AF11)>;
 				slew-rate = "very-high-speed";
 			};
 
+			/omit-if-no-ref/ eth_mdc_pc1: eth_mdc_pc1 {
+				pinmux = <STM32_PINMUX('C', 1, AF11)>;
+				slew-rate = "very-high-speed";
+			};
+
 			/omit-if-no-ref/ eth_pps_out_pg3: eth_pps_out_pg3 {
 				pinmux = <STM32_PINMUX('G', 3, AF11)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ eth_mdc_pg6: eth_mdc_pg6 {
+				pinmux = <STM32_PINMUX('G', 6, AF11)>;
 				slew-rate = "very-high-speed";
 			};
 
@@ -1876,6 +1872,10 @@
 
 			/omit-if-no-ref/ debug_jtdo_swo_pb3: debug_jtdo_swo_pb3 {
 				pinmux = <STM32_PINMUX('B', 3, AF0)>;
+			};
+
+			/omit-if-no-ref/ debug_njtrst_pb4: debug_njtrst_pb4 {
+				pinmux = <STM32_PINMUX('B', 4, AF0)>;
 			};
 
 			/* RCC_MCO */
