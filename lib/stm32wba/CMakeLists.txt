@@ -2,10 +2,6 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-if(DEFINED CONFIG_BOARD_NUCLEO_WBA52CG)
-  message(FATAL_ERROR "BLE library is not compatible with nucleo_wba52cg")
-endif()
-
 zephyr_compile_definitions( -DBLE )
 
 zephyr_include_directories(BLE_TransparentMode/Core/Inc)
