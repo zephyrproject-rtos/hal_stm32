@@ -624,13 +624,15 @@ def main(data_path, output):
         else:
             logger.info(f"Processing family {family}...")
 
-        # create directory for each family
-        family_dir = output / "st" / family.lower()[5:]
-        if not family_dir.exists():
-            family_dir.mkdir(parents=True)
-
-        # process each reference
+        # create directory for each family and process each reference
         for ref in refs:
+            if ref["name"].lower().startswith("stm32mp13"):
+                family_dir = output / "st" / "mp13"
+            else:
+                family_dir = output / "st" / family.lower()[5:]
+            if not family_dir.exists():
+                family_dir.mkdir(parents=True)
+
             entries = dict()
 
             # process each pin in the current reference

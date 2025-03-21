@@ -6,6 +6,8 @@
 
 #if defined(CONFIG_SOC_SERIES_STM32H7X)
 #include <stm32h7xx_ll_delayblock.h>
+#elif defined(CONFIG_SOC_SERIES_STM32MP13X)
+#include <stm32mp13xx_ll_delayblock.h>
 #elif defined(CONFIG_SOC_SERIES_STM32MP1X)
 #include <stm32mp1xx_ll_delayblock.h>
 #endif
