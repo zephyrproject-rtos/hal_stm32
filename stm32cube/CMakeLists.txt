@@ -65,6 +65,7 @@ set(supported_series
   stm32l5x
   stm32mp1x
   stm32mp13x
+  stm32mp2x
   stm32n6x
   stm32u0x
   stm32u5x
@@ -84,6 +85,8 @@ elseif(CONFIG_CPU_CORTEX_M55)
   zephyr_compile_definitions( -DCORE_CM55 )
 elseif(CONFIG_CPU_CORTEX_A7)
   zephyr_compile_definitions( -DCORE_CA7 )
+elseif(CONFIG_CPU_CORTEX_M33)
+  zephyr_compile_definitions( -DCORE_CM33 )
 endif()
 
 # Define the HSE frequency visible to Cube if a value is specified in Zephyr.
