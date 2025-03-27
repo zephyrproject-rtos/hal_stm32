@@ -1,0 +1,47 @@
+STM32CubeMP2
+###########
+
+Origin:
+   ST Microelectronics
+   https://github.com/STMicroelectronics/STM32CubeMP2
+
+Status:
+   version 1.1.0
+
+Purpose:
+   ST Microelectronics official MCU package for STM32MP2 series.
+
+Description:
+   This package is an extract of official STM32CubeMP2 package written by ST Microelectronics.
+   It is composed of STM32Cube hardware abstraction layer (HAL) and low layer (LL) plus a set
+   of CMSIS headers files, one for each SoC in STM32MP2 series.
+
+Dependencies:
+    None.
+
+URL:
+   https://github.com/STMicroelectronics/STM32CubeMP2
+
+Commit:
+   1b1ff6b48df3c9b7417ac411dbd8dfd097f0bb04
+
+Maintained-by:
+   External
+
+License:
+   BSD-3-Clause
+
+License Link:
+   https://opensource.org/licenses/BSD-3-Clause
+
+Patch List:
+
+   * Changes from official delivery:
+   - dos2unix applied
+   - Trailing white spaces removed
+
+   * Provision to enable hal & ll asserts added
+   - Added stm32cube/stm32mp2xx/drivers/include/stm32_assert.h
+   - Removed unused stm32cube/stm32mp2xx/drivers/include/stm32_assert_template.h
+
+   See release_note.html from STM32Cube
