@@ -886,9 +886,10 @@ HAL_StatusTypeDef HAL_XSPI_Command(XSPI_HandleTypeDef *hxspi, XSPI_RegularCmdTyp
         if (pCmd->DataMode == HAL_XSPI_DATA_NONE)
         {
           /* When there is no data phase, the transfer start as soon as the configuration is done
-             so wait until TC flag is set to go back in idle state */
-          status = XSPI_WaitFlagStateUntilTimeout(hxspi, HAL_XSPI_FLAG_TC, SET, tickstart, Timeout);
+             so wait until BUSY flag is reset to go back in idle state. */
+          status = XSPI_WaitFlagStateUntilTimeout(hxspi, HAL_XSPI_FLAG_BUSY, RESET, tickstart, Timeout);
 
+          /* Clear TC flag */
           HAL_XSPI_CLEAR_FLAG(hxspi, HAL_XSPI_FLAG_TC);
         }
         else
@@ -2832,7 +2833,7 @@ HAL_StatusTypeDef HAL_XSPIM_Config(XSPI_HandleTypeDef *const hxspi, XSPIM_CfgTyp
 
   for (index = 0U; index < (XSPI_NB_INSTANCE - 1U); index++)
   {
-    if ((IOM_cfg[index].IOPort == IOM_cfg[index + 1U].IOPort))
+    if (IOM_cfg[index].IOPort == IOM_cfg[index + 1U].IOPort)
     {
       /*Mux*/
       SET_BIT(XSPIM->CR, XSPIM_CR_MUXEN);
@@ -3238,7 +3239,7 @@ static HAL_StatusTypeDef XSPI_ConfigCmd(XSPI_HandleTypeDef *hxspi, XSPI_RegularC
       /* Deactivate sample shifting when receiving data in DTR mode (DDTR=1) */
       CLEAR_BIT(hxspi->Instance->TCR, XSPI_TCR_SSHIFT);
     }
-    else if(hxspi->Init.SampleShifting == HAL_XSPI_SAMPLE_SHIFT_HALFCYCLE)
+    else if (hxspi->Init.SampleShifting == HAL_XSPI_SAMPLE_SHIFT_HALFCYCLE)
     {
       /* Configure sample shifting */
       SET_BIT(hxspi->Instance->TCR, XSPI_TCR_SSHIFT);

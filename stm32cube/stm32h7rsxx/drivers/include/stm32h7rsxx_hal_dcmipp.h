@@ -906,12 +906,10 @@ uint32_t HAL_DCMIPP_GetError(const DCMIPP_HandleTypeDef *hdcmipp);
 #define IS_DCMIPP_LINE_SELECT_START(LINE__START)(((LINE__START) == DCMIPP_OELS_ODD) ||\
                                                  ((LINE__START) == DCMIPP_OELS_EVEN))
 
-
 #define IS_DCMIPP_MEMORY_ADDRESS(MEMORY_ADDRESS) (((MEMORY_ADDRESS) == DCMIPP_MEMORY_ADDRESS_0) ||\
                                                   ((MEMORY_ADDRESS) == DCMIPP_MEMORY_ADDRESS_1))
 
 #define IS_DCMIPP_DATA_LIMIT(DATA_LIMIT) (((DATA_LIMIT) >=1U ) && ((DATA_LIMIT) <= 0xFFFFFFU))
-
 
 #define IS_DCMIPP_PIPE_MULTILINE(MULTILINE) (((MULTILINE) == DCMIPP_MULTILINE_1_LINE )   ||\
                                              ((MULTILINE) == DCMIPP_MULTILINE_2_LINES)  ||\

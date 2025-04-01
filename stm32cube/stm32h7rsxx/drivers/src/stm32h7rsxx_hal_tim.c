@@ -8101,17 +8101,17 @@ static void TIM_TI4_SetConfig(TIM_TypeDef *TIMx, uint32_t TIM_ICPolarity, uint32
   *            @arg TIM_TS_ITR0: Internal Trigger 0
   *            @arg TIM_TS_ITR1: Internal Trigger 1
   *            @arg TIM_TS_ITR2: Internal Trigger 2
-  *            @arg TIM_CLOCKSOURCE_ITR3: Internal Trigger 3
-  *            @arg TIM_CLOCKSOURCE_ITR4: Internal Trigger 4
-  *            @arg TIM_CLOCKSOURCE_ITR5: Internal Trigger 5
-  *            @arg TIM_CLOCKSOURCE_ITR6: Internal Trigger 6
-  *            @arg TIM_CLOCKSOURCE_ITR7: Internal Trigger 7
-  *            @arg TIM_CLOCKSOURCE_ITR8: Internal Trigger 8
-  *            @arg TIM_CLOCKSOURCE_ITR9: Internal Trigger 9
-  *            @arg TIM_CLOCKSOURCE_ITR10: Internal Trigger 10
-  *            @arg TIM_CLOCKSOURCE_ITR11: Internal Trigger 11
-  *            @arg TIM_CLOCKSOURCE_ITR13: Internal Trigger 13
-  *            @arg TIM_CLOCKSOURCE_ITR14: Internal Trigger 14
+  *            @arg TIM_TS_ITR3: Internal Trigger 3
+  *            @arg TIM_TS_ITR4: Internal Trigger 4
+  *            @arg TIM_TS_ITR5: Internal Trigger 5
+  *            @arg TIM_TS_ITR6: Internal Trigger 6
+  *            @arg TIM_TS_ITR7: Internal Trigger 7
+  *            @arg TIM_TS_ITR8: Internal Trigger 8
+  *            @arg TIM_TS_ITR9: Internal Trigger 9
+  *            @arg TIM_TS_ITR10: Internal Trigger 10
+  *            @arg TIM_TS_ITR11: Internal Trigger 11
+  *            @arg TIM_TS_ITR13: Internal Trigger 13
+  *            @arg TIM_TS_ITR14: Internal Trigger 14
   *            @arg TIM_TS_TI1F_ED: TI1 Edge Detector
   *            @arg TIM_TS_TI1FP1: Filtered Timer Input 1
   *            @arg TIM_TS_TI2FP2: Filtered Timer Input 2

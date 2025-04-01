@@ -412,6 +412,17 @@ HAL_StatusTypeDef HAL_DMA_Init(DMA_HandleTypeDef *const hdma)
   /* Allocate lock resource */
   __HAL_UNLOCK(hdma);
 
+  /* Initialize the callbacks */
+  if (hdma->State == HAL_DMA_STATE_RESET)
+  {
+    /* Clean all callbacks */
+    hdma->XferCpltCallback     = NULL;
+    hdma->XferHalfCpltCallback = NULL;
+    hdma->XferErrorCallback    = NULL;
+    hdma->XferAbortCallback    = NULL;
+    hdma->XferSuspendCallback  = NULL;
+  }
+
   /* Update the DMA channel state */
   hdma->State = HAL_DMA_STATE_BUSY;
 
@@ -1019,7 +1030,7 @@ void HAL_DMA_IRQHandler(DMA_HandleTypeDef *const hdma)
   }
 
   /* Data Transfer Error Interrupt management *************************************************************************/
-  if ((__HAL_DMA_GET_FLAG(hdma, DMA_FLAG_DTE) != 0U))
+  if (__HAL_DMA_GET_FLAG(hdma, DMA_FLAG_DTE) != 0U)
   {
     /* Check if interrupt source is enabled */
     if (__HAL_DMA_GET_IT_SOURCE(hdma, DMA_IT_DTE) != 0U)
@@ -1033,7 +1044,7 @@ void HAL_DMA_IRQHandler(DMA_HandleTypeDef *const hdma)
   }
 
   /* Update Linked-list Error Interrupt management ********************************************************************/
-  if ((__HAL_DMA_GET_FLAG(hdma, DMA_FLAG_ULE) != 0U))
+  if (__HAL_DMA_GET_FLAG(hdma, DMA_FLAG_ULE) != 0U)
   {
     /* Check if interrupt source is enabled */
     if (__HAL_DMA_GET_IT_SOURCE(hdma, DMA_IT_ULE) != 0U)
@@ -1047,7 +1058,7 @@ void HAL_DMA_IRQHandler(DMA_HandleTypeDef *const hdma)
   }
 
   /* User Setting Error Interrupt management **************************************************************************/
-  if ((__HAL_DMA_GET_FLAG(hdma, DMA_FLAG_USE) != 0U))
+  if (__HAL_DMA_GET_FLAG(hdma, DMA_FLAG_USE) != 0U)
   {
     /* Check if interrupt source is enabled */
     if (__HAL_DMA_GET_IT_SOURCE(hdma, DMA_IT_USE) != 0U)
@@ -1061,7 +1072,7 @@ void HAL_DMA_IRQHandler(DMA_HandleTypeDef *const hdma)
   }
 
   /* Trigger Overrun Interrupt management *****************************************************************************/
-  if ((__HAL_DMA_GET_FLAG(hdma, DMA_FLAG_TO) != 0U))
+  if (__HAL_DMA_GET_FLAG(hdma, DMA_FLAG_TO) != 0U)
   {
     /* Check if interrupt source is enabled */
     if (__HAL_DMA_GET_IT_SOURCE(hdma, DMA_IT_TO) != 0U)
@@ -1075,7 +1086,7 @@ void HAL_DMA_IRQHandler(DMA_HandleTypeDef *const hdma)
   }
 
   /* Half Transfer Complete Interrupt management **********************************************************************/
-  if ((__HAL_DMA_GET_FLAG(hdma, DMA_FLAG_HT) != 0U))
+  if (__HAL_DMA_GET_FLAG(hdma, DMA_FLAG_HT) != 0U)
   {
     /* Check if interrupt source is enabled */
     if (__HAL_DMA_GET_IT_SOURCE(hdma, DMA_IT_HT) != 0U)
@@ -1093,7 +1104,7 @@ void HAL_DMA_IRQHandler(DMA_HandleTypeDef *const hdma)
   }
 
   /* Suspend Transfer Interrupt management ****************************************************************************/
-  if ((__HAL_DMA_GET_FLAG(hdma, DMA_FLAG_SUSP) != 0U))
+  if (__HAL_DMA_GET_FLAG(hdma, DMA_FLAG_SUSP) != 0U)
   {
     /* Check if interrupt source is enabled */
     if (__HAL_DMA_GET_IT_SOURCE(hdma, DMA_IT_SUSP) != 0U)
@@ -1151,7 +1162,7 @@ void HAL_DMA_IRQHandler(DMA_HandleTypeDef *const hdma)
   }
 
   /* Transfer Complete Interrupt management ***************************************************************************/
-  if ((__HAL_DMA_GET_FLAG(hdma, DMA_FLAG_TC) != 0U))
+  if (__HAL_DMA_GET_FLAG(hdma, DMA_FLAG_TC) != 0U)
   {
     /* Check if interrupt source is enabled */
     if (__HAL_DMA_GET_IT_SOURCE(hdma, DMA_IT_TC) != 0U)
@@ -1547,7 +1558,6 @@ HAL_StatusTypeDef HAL_DMA_GetConfigChannelAttributes(DMA_HandleTypeDef const *co
 
   return HAL_OK;
 }
-
 
 
 /**

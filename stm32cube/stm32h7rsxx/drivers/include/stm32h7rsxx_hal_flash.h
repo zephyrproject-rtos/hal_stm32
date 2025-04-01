@@ -448,8 +448,8 @@ typedef struct
 #define FLASH_KEY2                   0xCDEF89ABU /*!< Flash key2: used with FLASH_KEY1
                                                       to unlock the FLASH registers access */
 
-#define FLASH_OPTKEY1                0x08192A3BU /*!< Flash option byte key1 */
-#define FLASH_OPTKEY2                0x4C5D6E7FU /*!< Flash option byte key2: used with FLASH_OPTKEY1
+#define FLASH_OPT_KEY1                0x08192A3BU /*!< Flash option byte key1 */
+#define FLASH_OPT_KEY2                0x4C5D6E7FU /*!< Flash option byte key2: used with FLASH_OPT_KEY1
                                                       to allow option bytes operations */
 /**
   * @}

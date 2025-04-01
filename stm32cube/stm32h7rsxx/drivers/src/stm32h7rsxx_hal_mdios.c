@@ -712,8 +712,12 @@ HAL_StatusTypeDef HAL_MDIOS_EnableEvents(MDIOS_HandleTypeDef *hmdios)
   */
 void HAL_MDIOS_IRQHandler(MDIOS_HandleTypeDef *hmdios)
 {
+  uint32_t itsource = READ_REG(hmdios->Instance->CR);
+  uint32_t itflag = READ_REG(hmdios->Instance->SR);
+  uint32_t exti_flag = READ_REG(EXTI->PR2);
+
   /* Write Register Interrupt enabled ? */
-  if (__HAL_MDIOS_GET_IT_SOURCE(hmdios, MDIOS_IT_WRITE) != (uint32_t)RESET)
+  if ((itsource & MDIOS_IT_WRITE) != 0U)
   {
     /* Write register flag */
     if (HAL_MDIOS_GetWrittenRegAddress(hmdios) != (uint32_t)RESET)
@@ -732,7 +736,7 @@ void HAL_MDIOS_IRQHandler(MDIOS_HandleTypeDef *hmdios)
   }
 
   /* Read Register Interrupt enabled ? */
-  if (__HAL_MDIOS_GET_IT_SOURCE(hmdios, MDIOS_IT_READ) != (uint32_t)RESET)
+  if ((itsource & MDIOS_IT_READ) != 0U)
   {
     /* Read register flag */
     if (HAL_MDIOS_GetReadRegAddress(hmdios) != (uint32_t)RESET)
@@ -751,10 +755,10 @@ void HAL_MDIOS_IRQHandler(MDIOS_HandleTypeDef *hmdios)
   }
 
   /* Error Interrupt enabled ? */
-  if (__HAL_MDIOS_GET_IT_SOURCE(hmdios, MDIOS_IT_ERROR) != (uint32_t)RESET)
+  if ((itsource & MDIOS_IT_ERROR) != 0U)
   {
     /* All Errors Flag */
-    if (__HAL_MDIOS_GET_ERROR_FLAG(hmdios, MDIOS_ALL_ERRORS_FLAG) != (uint32_t)RESET)
+    if ((itflag & MDIOS_ALL_ERRORS_FLAG) != 0U)
     {
       hmdios->ErrorCode |= HAL_MDIOS_ERROR_DATA;
 
@@ -772,7 +776,7 @@ void HAL_MDIOS_IRQHandler(MDIOS_HandleTypeDef *hmdios)
     hmdios->ErrorCode = HAL_MDIOS_ERROR_NONE;
   }
   /* check MDIOS WAKEUP exti flag */
-  if (__HAL_MDIOS_WAKEUP_EXTI_GET_FLAG(MDIOS_WAKEUP_EXTI_LINE) != (uint32_t)RESET)
+  if ((exti_flag & MDIOS_WAKEUP_EXTI_LINE) != 0U)
   {
     /* Clear MDIOS WAKEUP Exti pending bit */
     __HAL_MDIOS_WAKEUP_EXTI_CLEAR_FLAG(MDIOS_WAKEUP_EXTI_LINE);
