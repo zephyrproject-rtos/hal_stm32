@@ -6,7 +6,7 @@ Origin:
    http://www.st.com/en/embedded-software/stm32cubec0.html
 
 Status:
-   version v1.2.0
+   version v1.4.0
 
 Purpose:
    ST Microelectronics official MCU package for STM32C0 series.
@@ -23,7 +23,7 @@ URL:
    https://github.com/STMicroelectronics/STM32CubeC0
 
 Commit:
-   291f417c07b8e6f997a555b4abafa861551d22e3
+   0b55caf68dc0ef3e7f7f392812cbe17bcd74892d
 
 Maintained-by:
    External
