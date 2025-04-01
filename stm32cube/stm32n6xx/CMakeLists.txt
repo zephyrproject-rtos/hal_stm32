@@ -1,8 +1,8 @@
-# Copyright (c) 2025 STMicroelectronics
+# Copyright (c) 2020 STMicroelectronics
 #
 # SPDX-License-Identifier: Apache-2.0
 
-zephyr_library_sources(soc/system_stm32n6xx_fsbl.c)
+zephyr_library_sources(soc/system_stm32n6xx.c)
 zephyr_library_sources(drivers/src/stm32n6xx_hal.c)
 zephyr_library_sources(drivers/src/stm32n6xx_hal_rcc.c)
 zephyr_library_sources(drivers/src/stm32n6xx_hal_rcc_ex.c)
@@ -18,8 +18,8 @@ zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_CRYP_EX drivers/src/stm32n6xx_
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_DCMI drivers/src/stm32n6xx_hal_dcmi.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_DCMIPP drivers/src/stm32n6xx_hal_dcmipp.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_DMA drivers/src/stm32n6xx_hal_dma.c)
-zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_DMA_EX drivers/src/stm32n6xx_hal_dma_ex.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_DMA2D drivers/src/stm32n6xx_hal_dma2d.c)
+zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_DMA_EX drivers/src/stm32n6xx_hal_dma_ex.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_DTS drivers/src/stm32n6xx_hal_dts.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_ETH drivers/src/stm32n6xx_hal_eth.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_ETH_EX drivers/src/stm32n6xx_hal_eth_ex.c)
@@ -109,4 +109,3 @@ zephyr_library_sources_ifdef(CONFIG_USE_STM32_LL_USART drivers/src/stm32n6xx_ll_
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_LL_USB drivers/src/stm32n6xx_ll_usb.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_LL_UTILS drivers/src/stm32n6xx_ll_utils.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_LL_VENC drivers/src/stm32n6xx_ll_venc.c)
-zephyr_library_sources_ifdef(CONFIG_USE_STM32_UTIL_I3C drivers/src/stm32n6xx_util_i3c.c)

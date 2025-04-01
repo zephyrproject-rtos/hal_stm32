@@ -83,6 +83,7 @@
           (##) HAL_ETH_PTP_GetTime(): Get Seconds and Nanoseconds for the Ethernet PTP registers
           (##) HAL_ETH_PTP_SetTime(): Set Seconds and Nanoseconds for the Ethernet PTP registers
           (##) HAL_ETH_PTP_AddTimeOffset(): Add Seconds and Nanoseconds offset for the Ethernet PTP registers
+          (##) HAL_ETH_PTP_AddendUpdate(): Update the Addend register
           (##) HAL_ETH_PTP_InsertTxTimestamp(): Insert Timestamp in transmission
           (##) HAL_ETH_PTP_GetTxTimestamp(): Get transmission timestamp
           (##) HAL_ETH_PTP_GetRxTimestamp(): Get reception timestamp
@@ -268,6 +269,11 @@ static void ETH_UpdateDescriptor(ETH_HandleTypeDef *heth);
 #if (USE_HAL_ETH_REGISTER_CALLBACKS == 1)
 static void ETH_InitCallbacksToDefault(ETH_HandleTypeDef *heth);
 #endif /* USE_HAL_ETH_REGISTER_CALLBACKS */
+
+#ifdef HAL_ETH_USE_PTP
+static HAL_StatusTypeDef HAL_ETH_PTP_AddendUpdate(ETH_HandleTypeDef *heth, int32_t timeoffset);
+#endif /* HAL_ETH_USE_PTP */
+
 /**
   * @}
   */
@@ -1737,6 +1743,7 @@ HAL_StatusTypeDef HAL_ETH_PTP_GetTime(ETH_HandleTypeDef *heth, ETH_TimeTypeDef *
 HAL_StatusTypeDef HAL_ETH_PTP_AddTimeOffset(ETH_HandleTypeDef *heth, ETH_PtpUpdateTypeDef ptpoffsettype,
                                             ETH_TimeTypeDef *timeoffset)
 {
+  int32_t addendtime ;
   if (heth->IsPtpConfigured == HAL_ETH_PTP_CONFIGURED)
   {
     if (ptpoffsettype ==  HAL_ETH_PTP_NEGATIVE_UPDATE)
@@ -1754,6 +1761,11 @@ HAL_StatusTypeDef HAL_ETH_PTP_AddTimeOffset(ETH_HandleTypeDef *heth, ETH_PtpUpda
         /* Set nanoSeconds update */
         heth->Instance->MACSTNUR = ETH_MACSTSUR_VALUE - timeoffset->NanoSeconds + 1U;
       }
+
+      /* adjust negative addend register */
+      addendtime = - timeoffset->NanoSeconds;
+      HAL_ETH_PTP_AddendUpdate(heth, addendtime);
+
     }
     else
     {
@@ -1761,6 +1773,11 @@ HAL_StatusTypeDef HAL_ETH_PTP_AddTimeOffset(ETH_HandleTypeDef *heth, ETH_PtpUpda
       heth->Instance->MACSTSUR = timeoffset->Seconds;
       /* Set nanoSeconds update */
       heth->Instance->MACSTNUR = timeoffset->NanoSeconds;
+
+      /* adjust positive addend register */
+      addendtime = timeoffset->NanoSeconds;
+      HAL_ETH_PTP_AddendUpdate(heth, addendtime);
+
     }
 
     SET_BIT(heth->Instance->MACTSCR, ETH_MACTSCR_TSUPDT);
@@ -1775,6 +1792,40 @@ HAL_StatusTypeDef HAL_ETH_PTP_AddTimeOffset(ETH_HandleTypeDef *heth, ETH_PtpUpda
   }
 }
 
+/**
+  * @brief  Update the Addend register
+  * @param  heth: Pointer to a ETH_HandleTypeDef structure that contains
+  *         the configuration information for ETHERNET module
+  * @param  timeoffset: The value of the time offset to be added to
+  *         the addend register in Nanoseconds
+  * @retval HAL status
+  */
+static HAL_StatusTypeDef HAL_ETH_PTP_AddendUpdate(ETH_HandleTypeDef *heth, int32_t timeoffset)
+{
+  uint32_t tmpreg;
+  if (heth->IsPtpConfigured == HAL_ETH_PTP_CONFIGURED)
+  {
+    /* update the addend register */
+
+    tmpreg = READ_REG(heth->Instance->MACTSAR);
+    tmpreg += timeoffset ;
+    WRITE_REG(heth->Instance->MACTSAR, tmpreg);
+
+    SET_BIT(heth->Instance->MACTSCR, ETH_MACTSCR_TSADDREG);
+    while ((heth->Instance->MACTSCR & ETH_MACTSCR_TSADDREG) != 0)
+    {
+
+    }
+
+    /* Return function status */
+    return HAL_OK;
+  }
+  else
+  {
+    /* Return function status */
+    return HAL_ERROR;
+  }
+}
 /**
   * @brief  Insert Timestamp in transmission.
   * @param  heth: pointer to a ETH_HandleTypeDef structure that contains

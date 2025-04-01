@@ -345,6 +345,8 @@ HAL_StatusTypeDef HAL_RCC_DeInit(void)
   *         first and then HSE On or HSE Bypass.
   * @note   This function does not protect the MCOxSEL, the PERSEL and the PPPSEL glitch-free muxes
   *         (Mux selection cannot be changed if selected input clock is inactive).
+  * @note   This function activates HSE but does not wait for the startup time defined in the datasheet.
+  *         This must be ensured by the application when the HSE is selected as PLL source.
   * @retval HAL status
   */
 HAL_StatusTypeDef HAL_RCC_OscConfig(const RCC_OscInitTypeDef  *pRCC_OscInitStruct)

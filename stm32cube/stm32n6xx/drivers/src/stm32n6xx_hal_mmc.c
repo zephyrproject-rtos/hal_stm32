@@ -4093,7 +4093,7 @@ static uint32_t MMC_HighSpeed(MMC_HandleTypeDef *hmmc, FunctionalState state)
             }
             else
             {
-              Init.ClockDiv = sdmmc_clk / (2U * MMC_HIGH_SPEED_FREQ);
+              Init.ClockDiv = (sdmmc_clk / (2U * MMC_HIGH_SPEED_FREQ)) + 1U;
             }
             (void)SDMMC_Init(hmmc->Instance, Init);
 

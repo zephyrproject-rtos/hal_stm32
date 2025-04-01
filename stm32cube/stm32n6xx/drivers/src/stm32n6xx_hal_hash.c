@@ -301,7 +301,7 @@ HAL_StatusTypeDef HAL_HASH_DeInit(HASH_HandleTypeDef *hhash)
   *         the configuration information for HASH module
   * @retval HAL status
   */
-HAL_StatusTypeDef HAL_HASH_SetConfig(HASH_HandleTypeDef *hhash, HASH_ConfigTypeDef *pConf)
+HAL_StatusTypeDef HAL_HASH_SetConfig(HASH_HandleTypeDef *hhash, const HASH_ConfigTypeDef *pConf)
 {
   uint32_t cr_value;
 

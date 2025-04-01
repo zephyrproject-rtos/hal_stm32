@@ -1708,11 +1708,14 @@ typedef enum
   */
 #define ETH_DMA_CH0_IDX             (0U)
 #define ETH_DMA_CH1_IDX             (1U)
+
 /**
   * @}
   */
 
-
+/**
+  * @}
+  */
 
 /* Exported macro ------------------------------------------------------------*/
 /** @defgroup ETH_Exported_Macros ETH Exported Macros
@@ -2074,10 +2077,6 @@ uint32_t             HAL_ETH_GetDMAError(const ETH_HandleTypeDef *heth);
 uint32_t             HAL_ETH_GetMACError(const ETH_HandleTypeDef *heth);
 uint32_t             HAL_ETH_GetMACWakeUpSource(const ETH_HandleTypeDef *heth);
 uint32_t             HAL_ETH_GetTxBuffersNumber(const ETH_HandleTypeDef *heth);
-/**
-  * @}
-  */
-
 /**
   * @}
   */

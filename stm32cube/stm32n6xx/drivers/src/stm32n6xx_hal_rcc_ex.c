@@ -36,17 +36,6 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private defines -----------------------------------------------------------*/
-/** @defgroup RCCEx_Private_Constants RCCEx Private Constants
-  * @{
-  */
-#if defined(USE_FPGA)
-/* ***** FPGA values ******/
-#define RCC_PLL_SOURCE_FREQ   32000000UL  /* PLL source forced to 32MHz */
-#endif /* USE_FPGA */
-/**
-  * @}
-  */
-
 /* Private macros ------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 /* Private function prototypes -----------------------------------------------*/
@@ -2838,11 +2827,6 @@ uint32_t HAL_RCCEx_GetPLL1CLKFreq(void)
 
       if (pllinputfreq != RCC_PERIPH_FREQUENCY_NO)
       {
-#if defined(USE_FPGA)
-        /**** FPGA PLL input forced to 32MHz *****/
-        pllinputfreq = RCC_PLL_SOURCE_FREQ;
-        /*****************************************/
-#endif /* USE_FPGA */
         divm = LL_RCC_PLL1_GetM();
 
         if (divm != 0U)
@@ -2886,11 +2870,7 @@ uint32_t HAL_RCCEx_GetPLL2CLKFreq(void)
 
       if (pllinputfreq != RCC_PERIPH_FREQUENCY_NO)
       {
-#if defined(USE_FPGA)
-        /**** FPGA PLL input forced to 32MHz *****/
-        pllinputfreq = RCC_PLL_SOURCE_FREQ;
-        /*****************************************/
-#endif /* USE_FPGA */
+
         divm = LL_RCC_PLL2_GetM();
 
         if (divm != 0U)
@@ -2934,11 +2914,6 @@ uint32_t HAL_RCCEx_GetPLL3CLKFreq(void)
 
       if (pllinputfreq != RCC_PERIPH_FREQUENCY_NO)
       {
-#if defined(USE_FPGA)
-        /**** FPGA PLL input forced to 32MHz *****/
-        pllinputfreq = RCC_PLL_SOURCE_FREQ;
-        /*****************************************/
-#endif /* USE_FPGA */
         divm = LL_RCC_PLL3_GetM();
 
         if (divm != 0U)
@@ -2982,11 +2957,7 @@ uint32_t HAL_RCCEx_GetPLL4CLKFreq(void)
 
       if (pllinputfreq != RCC_PERIPH_FREQUENCY_NO)
       {
-#if defined(USE_FPGA)
-        /**** FPGA PLL input forced to 32MHz *****/
-        pllinputfreq = RCC_PLL_SOURCE_FREQ;
-        /*****************************************/
-#endif /* USE_FPGA */
+
         divm = LL_RCC_PLL4_GetM();
 
         if (divm != 0U)

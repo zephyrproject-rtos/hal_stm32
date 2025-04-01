@@ -358,6 +358,8 @@ uint32_t HAL_RIF_RISC_GetLock(void)
   * @brief  Configure the Security and Privilege of a designated slave peripheral.
   * @param  PeriphId specifies the index of the bus slave.
   *         This parameter can be one of @ref RIF_PERIPHERAL_INDEX
+  *         bits[31:28] define the register index a peripheral belongs to, value from 0 to 5
+  *         bits[4:0]   define the bit position within the register, value from 0 to 31
   * @param  SecPriv specifies the security and privilege attributes of the peripheral.
   *         This parameter can be one or a combination of @ref RIF_SEC_PRIV
   * @retval None
@@ -384,6 +386,8 @@ void HAL_RIF_RISC_SetSlaveSecureAttributes(uint32_t PeriphId, uint32_t SecPriv)
   * @brief  Get the Security and Privilege configuration of a designated slave peripheral.
   * @param  PeriphId specifies the index of the bus slave.
   *         This parameter can be one of @ref RIF_PERIPHERAL_INDEX
+  *         bits[31:28] define the register index a peripheral belongs to, value from 0 to 5
+  *         bits[4:0]   define the bit position within the register, value from 0 to 31
   * @retval can be a combination of @ref RIF_SEC_PRIV
   */
 uint32_t HAL_RIF_RISC_GetSlaveSecureAttributes(uint32_t PeriphId)
@@ -408,6 +412,8 @@ uint32_t HAL_RIF_RISC_GetSlaveSecureAttributes(uint32_t PeriphId)
   * @note   This API is protected by the Trusted Domain compilation directive.
   * @param  PeriphId specifies the index of the bus slave.
   *         This parameter can be one of @ref RIF_PERIPHERAL_INDEX
+  *         bits[31:28] define the register index a peripheral belongs to, value from 0 to 5
+  *         bits[4:0]   define the bit position within the register, value from 0 to 31
   * @retval None
   */
 void HAL_RIF_RISC_SlaveConfigLock(uint32_t PeriphId)
@@ -426,6 +432,8 @@ void HAL_RIF_RISC_SlaveConfigLock(uint32_t PeriphId)
   * @brief  Get the Isolation and Security configuration lock status.
   * @param  PeriphId specifies the index of the bus slave.
   *         This parameter can be one of @ref RIF_PERIPHERAL_INDEX
+  *         bits[31:28] define the register index a peripheral belongs to, value from 0 to 5
+  *         bits[4:0]   define the bit position within the register, value from 0 to 31
   * @retval 1 if the Isolation and Security configuration is locked, else 0
   */
 uint32_t HAL_RIF_RISC_GetSlaveConfigLock(uint32_t PeriphId)
@@ -995,6 +1003,8 @@ void HAL_RIF_RISAF_GetIllegalAccess(RISAF_TypeDef *RISAFx, RISAF_IllegalAccess_t
   * @note   This API is protected by the TrustZone Enabled compilation directive.
   * @param  PeriphId specifies the index of the bus slave.
   *         This parameter can be one of @ref RIF_PERIPHERAL_INDEX
+  *         bits[31:28] define the register index a peripheral belongs to, value from 0 to 5
+  *         bits[4:0]   define the bit position within the register, value from 0 to 31
   * @retval None
   */
 void HAL_RIF_IAC_EnableIT(uint32_t PeriphId)
@@ -1014,6 +1024,8 @@ void HAL_RIF_IAC_EnableIT(uint32_t PeriphId)
   * @note   This API is protected by the Trusted Domain compilation directive.
   * @param  PeriphId specifies the index of the bus slave.
   *         This parameter can be one of @ref RIF_PERIPHERAL_INDEX
+  *         bits[31:28] define the register index a peripheral belongs to, value from 0 to 5
+  *         bits[4:0]   define the bit position within the register, value from 0 to 31
   * @retval None
   */
 void HAL_RIF_IAC_DisableIT(uint32_t PeriphId)
@@ -1032,6 +1044,8 @@ void HAL_RIF_IAC_DisableIT(uint32_t PeriphId)
   * @note   This API is protected by the Trusted Domain compilation directive.
   * @param  PeriphId specifies the index of the bus slave.
   *         This parameter can be one of @ref RIF_PERIPHERAL_INDEX
+  *         bits[31:28] define the register index a peripheral belongs to, value from 0 to 5
+  *         bits[4:0]   define the bit position within the register, value from 0 to 31
   * @retval Detection flag value
   */
 uint32_t HAL_RIF_IAC_GetFlag(uint32_t PeriphId)
@@ -1055,6 +1069,8 @@ uint32_t HAL_RIF_IAC_GetFlag(uint32_t PeriphId)
   * @note   This API is protected by the Trusted Domain compilation directive.
   * @param  PeriphId specifies the index of the bus slave.
   *         This parameter can be one of @ref RIF_PERIPHERAL_INDEX
+  *         bits[31:28] define the register index a peripheral belongs to, value from 0 to 5
+  *         bits[4:0]   define the bit position within the register, value from 0 to 31
   * @retval None
   */
 void HAL_RIF_IAC_ClearFlag(uint32_t PeriphId)
@@ -1104,6 +1120,8 @@ void HAL_RIF_IRQHandler(void)
   * @note   This API is protected by the TrustZone Enabled compilation directive.
   * @param  PeriphId specifies the index of the bus slave.
   *         This parameter can be one of @ref RIF_PERIPHERAL_INDEX
+  *         bits[31:28] define the register index a peripheral belongs to, value from 0 to 5
+  *         bits[4:0]   define the bit position within the register, value from 0 to 31
   * @retval None
   */
 __weak void HAL_RIF_ILA_Callback(uint32_t PeriphId)

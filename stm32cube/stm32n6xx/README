@@ -6,7 +6,7 @@ Origin:
    http://www.st.com/en/embedded-software/stm32cuben6.html
 
 Status:
-   version v1.0.0
+   version v1.1.0
 
 Purpose:
    ST Microelectronics official MCU package for STM32N6 series.
@@ -23,7 +23,7 @@ URL:
    https://github.com/STMicroelectronics/STM32CubeN6
 
 Commit:
-   7cc0f778f9ed60d2a00ad9ba7794a3e7feaa3596
+   6bacd534fd36eb7cf9a8a16196b97b7faac72dfb
 
 Maintained-by:
    External
