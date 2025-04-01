@@ -32,26 +32,43 @@
      camera module, which should be made before to configure and enable
      the DCMIPP to capture images.
 
-     (#) Program the required configuration through the following parameters:
-         the Format, the VSPolarity,the HSPolarity, the PCKPolarity, the ExtendedDataMode
-         the SynchroMode, the SynchroCodes of the frame delimite, the SwapBits and the SwapCycles
-         using HAL_DCMIPP_Init() and HAL_DCMIPP_SetParallelConfig
-     (#) Program the required configuration through the following parameters:
-         the FrameRate using HAL_DCMIPP_PIPE_Config function.
+
+
+Initialize the DCMIPP through HAL_DCMIPP_Init() function.
+
+  *** Mandatory Configuration ***
+  ===================================
+The configuration of the camera sensor interface in Parallel mode
+involves programming specific parameters to ensure proper functionality.
+Below is the structured process for configuring each interface type:
+
+     (#)Parallel Mode configuration
+        To configure the camera sensor in Parallel mode, program the following parameters:
+        the Format, the VSPolarity,the HSPolarity, the PCKPolarity, the ExtendedDataMode the SynchroMode,
+        the SynchroCodes of the frame delimiter, the SwapBits and the SwapCycles
+        using HAL_DCMIPP_PARALLEL_SetConfig() function.
+
+     (#)Pipe configuration
+         + To configure the Pipe , program the following parameters:
+           the FrameRate using HAL_DCMIPP_PIPE_SetConfig() function.
 
   *** Interrupt mode IO operation ***
   ===================================
-     (#) Configure Pipe parameter, destination (one or two) and Capture Mode (Snapshot or Continuous) and enable
-         the capture request using the following functions:
+
+     (#) Configure Pipe parameters, destination (one or two) and Capture Mode (Snapshot or Continuous) and enable
+         the capture request using one from the following functions:
          HAL_DCMIPP_PIPE_Start() or HAL_DCMIPP_PIPE_DoubleBufferStart().
+
+
 
      (#) Use HAL_DCMIPP_IRQHandler() called under DCMIPP_IRQHandler() interrupt subroutine.
      (#) At the end of frame capture request HAL_DCMIPP_IRQHandler() function is executed and user can
          add his own function by customization of function pointer PipeFrameEventCallback (member
          of DCMIPP handle structure).
-     (#) In case of common error, the HAL_DCMIPP_IRQHandler() function calls the callback
-         ErrorCallback otherwise in case of Pipe error
-         the HAL_DCMIPP_IRQHandler() function calls the callbackPipeErrorCallback.
+
+
+    (#) In case of common error, the HAL_DCMIPP_IRQHandler() function calls the callback
+         ErrorCallback, in case of Pipe error the HAL_DCMIPP_IRQHandler() function calls the callback PIPE_ErrorCallback
 
     (#) The Pipe capture can be suspended and resumed using the following functions
         HAL_DCMIPP_PIPE_Suspend() and HAL_DCMIPP_PIPE_Resume().
@@ -86,9 +103,7 @@
     (#) To read and reset the Frame counter of the pipe, use the following functions:
         HAL_DCMIPP_PIPE_ReadFrameCounter() and HAL_DCMIPP_PIPE_ResetFrameCounter().
 
-    (#) The Pipe capture can be Stopped using HAL_DCMIPP_PIPE_Stop() function.
-
-
+    (#) The Pipe capture in parallel mode can be Stopped using HAL_DCMIPP_PIPE_Stop() function.
     (#) To control the DCMIPP state, use the following function: HAL_DCMIPP_GetState().
 
     (#) To control the DCMIPP Pipe state, use the following function: HAL_DCMIPP_PIPE_GetState().
@@ -121,11 +136,11 @@
           This function takes as parameters the HAL peripheral handle, the Callback ID
           and a pointer to the user callback function.
      (#) Function @ref HAL_DCMIPP_PIPE_RegisterCallback() allows to register following callbacks:
-         (+) PipeFrameEventCallback : callback for Pipe Frame Event.
-         (+) PipeVsyncEventCallback : callback for Pipe Vsync Event.
-         (+) PipeLineEventCallback  : callback for Pipe Line Event.
-         (+) PipeLimitEventCallback : callback for Pipe Limit Event.
-         (+) PipeErrorCallback      : callback for Pipe Error
+         (+) PIPE_FrameEventCallback : callback for Pipe Frame Event.
+         (+) PIPE_VsyncEventCallback : callback for Pipe Vsync Event.
+         (+) PIPE_LineEventCallback  : callback for Pipe Line Event.
+         (+) PIPE_LimitEventCallback : callback for Pipe Limit Event.
+         (+) PIPE_ErrorCallback      : callback for Pipe Error
           This function takes as parameters the HAL peripheral handle, the Callback ID
           and a pointer to the user callback function.
 
@@ -142,11 +157,11 @@
          @ref HAL_DCMIPP_PIPE_UnRegisterCallback() takes as parameters the HAL peripheral handle,
          and the Callback ID.
          This function allows to reset following callbacks:
-         (+) PipeFrameEventCallback : callback for Pipe Frame Event.
-         (+) PipeVsyncEventCallback : callback for Pipe Vsync Event.
-         (+) PipeLineEventCallback  : callback for Pipe Line Event.
-         (+) PipeLimitEventCallback : callback for Pipe Limit Event.
-         (+) PipeErrorCallback      : callback for Pipe Error
+         (+) PIPE_FrameEventCallback : callback for Pipe Frame Event.
+         (+) PIPE_VsyncEventCallback : callback for Pipe Vsync Event.
+         (+) PIPE_LineEventCallback  : callback for Pipe Line Event.
+         (+) PIPE_LimitEventCallback : callback for Pipe Limit Event.
+         (+) PIPE_ErrorCallback      : callback for Pipe Error
 
      (#) By default, after the @ref HAL_DCMIPP_Init and if the state is HAL_DCMIPP_STATE_RESET
          all callbacks are reset to the corresponding legacy weak (surcharged) functions:
@@ -210,148 +225,6 @@ static void DCMIPP_SetDBMConfig(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe, ui
                                 uint32_t DstAddress1, uint32_t CaptureMode);
 static void DCMIPP_EnableCapture(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe);
 static HAL_StatusTypeDef DCMIPP_Stop(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe);
-/**
-  * @}
-  */
-/* Private functions ---------------------------------------------------------*/
-/** @defgroup DCMIPP_Private_Functions DCMIPP Private Functions
-  * @{
-  */
-/**
-  * @brief  Configure the selected Pipe
-  * @param  hdcmipp     Pointer to DCMIPP handle
-  * @param  Pipe        Specifies the DCMIPP pipe, can be a value from @ref DCMIPP_Pipes
-  * @param  pPipeConfig pointer to the DCMIPP_PipeConfTypeDef structure that contains
-  *                     the configuration information for the pipe.
-  * @retval None
-  */
-static void Pipe_Config(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe, const DCMIPP_PipeConfTypeDef *pPipeConfig)
-{
-  if (Pipe == DCMIPP_PIPE0)
-  {
-    /* Configure Pipe0 */
-    /* Configure Frame Rate */
-    MODIFY_REG(hdcmipp->Instance->P0FCTCR, DCMIPP_P0FCTCR_FRATE, pPipeConfig->FrameRate);
-  }
-}
-/**
-  * @brief  Configure the destination address and capture mode for the selected pipe
-  * @param  hdcmipp     Pointer to DCMIPP handle
-  * @param  Pipe        Specifies the DCMIPP pipe, can be a value from @ref DCMIPP_Pipes
-  * @param  DstAddress  Specifies the destination memory address for the captured data.
-  * @param  CaptureMode Specifies the capture mode to be set for the pipe.
-  * @retval None
-  */
-static void DCMIPP_SetConfig(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe, uint32_t DstAddress, uint32_t CaptureMode)
-{
-  if (Pipe == DCMIPP_PIPE0)
-  {
-    /* Update the DCMIPP pipe State */
-    hdcmipp->PipeState[Pipe] = HAL_DCMIPP_PIPE_STATE_BUSY;
-
-    /* Set the capture mode */
-    hdcmipp->Instance->P0FCTCR |= CaptureMode;
-
-    /* Set the destination address */
-    WRITE_REG(hdcmipp->Instance->P0PPM0AR1, DstAddress);
-
-    /* Enable all required interrupts lines for the PIPE0 */
-    __HAL_DCMIPP_ENABLE_IT(hdcmipp, DCMIPP_IT_PIPE0_FRAME | DCMIPP_IT_PIPE0_VSYNC | DCMIPP_IT_PIPE0_OVR |
-                           DCMIPP_IT_AXI_TRANSFER_ERROR);
-  }
-}
-/**
-  * @brief  Configure the destination addresses and capture mode for the selected pipe for Double Buffering Mode
-  * @param  hdcmipp     Pointer to DCMIPP handle
-  * @param  Pipe        Specifies the DCMIPP pipe, can be a value from @ref DCMIPP_Pipes
-  * @param  DstAddress0 Specifies the first destination memory address for the captured data.
-  * @param  DstAddress1 Specifies the second destination memory address for the captured data.
-  * @param  CaptureMode Specifies the capture mode to be set for the pipe.
-  * @retval None
-  */
-static void DCMIPP_SetDBMConfig(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe, uint32_t DstAddress0,
-                                uint32_t DstAddress1, uint32_t CaptureMode)
-{
-  if (Pipe == DCMIPP_PIPE0)
-  {
-    /* Update the DCMIPP pipe State */
-    hdcmipp->PipeState[Pipe] = HAL_DCMIPP_PIPE_STATE_BUSY;
-
-    /* Set the capture mode */
-    hdcmipp->Instance->P0FCTCR |= CaptureMode;
-
-    /* Set the destination address */
-    WRITE_REG(hdcmipp->Instance->P0PPM0AR1, DstAddress0);
-
-    /* Set the second destination address */
-    WRITE_REG(hdcmipp->Instance->P0PPM0AR2, DstAddress1);
-
-    /* Enable Double buffering Mode */
-    SET_BIT(hdcmipp->Instance->P0PPCR, DCMIPP_P0PPCR_DBM);
-
-    /* Enable all required interrupts lines for the Pipe0 */
-    __HAL_DCMIPP_ENABLE_IT(hdcmipp, DCMIPP_IT_PIPE0_FRAME | DCMIPP_IT_PIPE0_VSYNC | DCMIPP_IT_PIPE0_OVR);
-  }
-}
-/**
-  * @brief  Enable the capture for the specified DCMIPP pipe.
-  * @param  hdcmipp     Pointer to DCMIPP handle
-  * @param  Pipe        Specifies the DCMIPP pipe, can be a value from @ref DCMIPP_Pipes
-  * @retval None
-  */
-static void DCMIPP_EnableCapture(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe)
-{
-  if (Pipe == DCMIPP_PIPE0)
-  {
-    /* Activate the Pipe */
-    SET_BIT(hdcmipp->Instance->P0FSCR, DCMIPP_P0FSCR_PIPEN);
-
-    /* Start the capture */
-    SET_BIT(hdcmipp->Instance->P0FCTCR, DCMIPP_P0FCTCR_CPTREQ);
-  }
-}
-/**
-  * @brief  Stop the capture for the specified DCMIPP pipe.
-  * @param  hdcmipp     Pointer to DCMIPP handle
-  * @param  Pipe        Specifies the DCMIPP pipe, can be a value from @ref DCMIPP_Pipes
-  * @retval HAL status
-  */
-static HAL_StatusTypeDef DCMIPP_Stop(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe)
-{
-  uint32_t tickstart;
-
-  if (Pipe == DCMIPP_PIPE0)
-  {
-    /* Stop the capture */
-    CLEAR_BIT(hdcmipp->Instance->P0FCTCR, DCMIPP_P0FCTCR_CPTREQ);
-
-    /* Poll CPTACT status till No capture currently active */
-    tickstart = HAL_GetTick();
-    do
-    {
-      if ((HAL_GetTick() - tickstart) > DCMIPP_TIMEOUT)
-      {
-        return HAL_ERROR;
-      }
-    } while ((hdcmipp->Instance->CMSR1 & DCMIPP_CMSR1_P0CPTACT) != 0U);
-
-    /* Disable DBM when enabled */
-    if ((hdcmipp->Instance->P0PPCR & DCMIPP_P0PPCR_DBM) == DCMIPP_P0PPCR_DBM)
-    {
-      CLEAR_BIT(hdcmipp->Instance->P0PPCR, DCMIPP_P0PPCR_DBM);
-    }
-
-    /* Disable the pipe */
-    CLEAR_BIT(hdcmipp->Instance->P0FSCR, DCMIPP_P0FSCR_PIPEN);
-
-    /* Disable all interrupts for this pipe */
-    __HAL_DCMIPP_DISABLE_IT(hdcmipp, DCMIPP_IT_PIPE0_FRAME | DCMIPP_IT_PIPE0_VSYNC | DCMIPP_IT_PIPE0_LINE | \
-                            DCMIPP_IT_PIPE0_LIMIT | DCMIPP_IT_PIPE0_OVR);
-
-  }
-
-  return HAL_OK;
-}
 /**
   * @}
   */
@@ -1522,6 +1395,17 @@ HAL_StatusTypeDef HAL_DCMIPP_PIPE_UnRegisterCallback(DCMIPP_HandleTypeDef *hdcmi
 /**
   * @}
   */
+/**
+  * The DCMIPP pipe peripheral can be configured using a set of functions that allow
+  *
+  */
+
+/**
+  * Crop Feature : Allows setting and managing the crop coordinates to capture a specific area of the image.
+  *    - HAL_DCMIPP_PIPE_SetCropConfig() : Configure the DCMI crop coordinates.
+  *    - HAL_DCMIPP_PIPE_EnableCrop()    : Enable the cropping feature.
+  *    - HAL_DCMIPP_PIPE_DisableCrop()   : Disable the cropping feature.
+  */
 /** @defgroup DCMIPP_Crop_Functions DCMIPP Crop Functions
   * @{
   */
@@ -1674,6 +1558,13 @@ HAL_StatusTypeDef HAL_DCMIPP_PIPE_DisableCrop(DCMIPP_HandleTypeDef *hdcmipp, uin
 
 /** @defgroup DCMIPP_Decimation_Functions DCMIPP Decimation Functions
   * @{
+  */
+/**
+  * Decimation Feature
+  *     - Horizontal resolution :
+  *       - HAL_DCMIPP_PIPE_SetBytesDecimationConfig() : Set the bytes decimation.
+  *     - Vertical resolution :
+  *       - HAL_DCMIPP_PIPE_SetLinesDecimationConfig() : Set the lines decimation.
   */
 /**
   * @brief  Configure the Bytes decimation for the selected Pipe.
@@ -2064,6 +1955,11 @@ HAL_StatusTypeDef HAL_DCMIPP_PARALLEL_SetSyncUnmask(DCMIPP_HandleTypeDef *hdcmip
   * @{
   */
 /**
+  * Lines Event Feature:
+  *     - HAL_DCMIPP_PIPE_EnableLineEvent()    : Enable the Line event for the selected Line.
+  *     - HAL_DCMIPP_PIPE_DisableLineEvent()   : Disable the Line event for the selected Line.
+  */
+/**
   * @brief  Configures the position of the line interrupt.
   * @param  hdcmipp  Pointer to DCMIPP handle
   * @param  Pipe     Specifies the DCMIPP pipe, can be a value from @ref DCMIPP_Pipes
@@ -2278,6 +2174,145 @@ HAL_DCMIPP_PipeStateTypeDef HAL_DCMIPP_PIPE_GetState(const DCMIPP_HandleTypeDef 
   * @}
   */
 
+/* Private functions ---------------------------------------------------------*/
+/** @defgroup DCMIPP_Private_Functions DCMIPP Private Functions
+  * @{
+  */
+/**
+  * @brief  Configure the selected Pipe
+  * @param  hdcmipp     Pointer to DCMIPP handle
+  * @param  Pipe        Specifies the DCMIPP pipe, can be a value from @ref DCMIPP_Pipes
+  * @param  pPipeConfig pointer to the DCMIPP_PipeConfTypeDef structure that contains
+  *                     the configuration information for the pipe.
+  * @retval None
+  */
+static void Pipe_Config(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe, const DCMIPP_PipeConfTypeDef *pPipeConfig)
+{
+  if (Pipe == DCMIPP_PIPE0)
+  {
+    /* Configure Pipe0 */
+    /* Configure Frame Rate */
+    MODIFY_REG(hdcmipp->Instance->P0FCTCR, DCMIPP_P0FCTCR_FRATE, pPipeConfig->FrameRate);
+  }
+}
+/**
+  * @brief  Configure the destination address and capture mode for the selected pipe
+  * @param  hdcmipp     Pointer to DCMIPP handle
+  * @param  Pipe        Specifies the DCMIPP pipe, can be a value from @ref DCMIPP_Pipes
+  * @param  DstAddress  Specifies the destination memory address for the captured data.
+  * @param  CaptureMode Specifies the capture mode to be set for the pipe.
+  * @retval None
+  */
+static void DCMIPP_SetConfig(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe, uint32_t DstAddress, uint32_t CaptureMode)
+{
+  if (Pipe == DCMIPP_PIPE0)
+  {
+    /* Update the DCMIPP pipe State */
+    hdcmipp->PipeState[Pipe] = HAL_DCMIPP_PIPE_STATE_BUSY;
+
+    /* Set the capture mode */
+    hdcmipp->Instance->P0FCTCR |= CaptureMode;
+
+    /* Set the destination address */
+    WRITE_REG(hdcmipp->Instance->P0PPM0AR1, DstAddress);
+
+    /* Enable all required interrupts lines for the PIPE0 */
+    __HAL_DCMIPP_ENABLE_IT(hdcmipp, DCMIPP_IT_PIPE0_FRAME | DCMIPP_IT_PIPE0_VSYNC | DCMIPP_IT_PIPE0_OVR |
+                           DCMIPP_IT_AXI_TRANSFER_ERROR);
+  }
+}
+/**
+  * @brief  Configure the destination addresses and capture mode for the selected pipe for Double Buffering Mode
+  * @param  hdcmipp     Pointer to DCMIPP handle
+  * @param  Pipe        Specifies the DCMIPP pipe, can be a value from @ref DCMIPP_Pipes
+  * @param  DstAddress0 Specifies the first destination memory address for the captured data.
+  * @param  DstAddress1 Specifies the second destination memory address for the captured data.
+  * @param  CaptureMode Specifies the capture mode to be set for the pipe.
+  * @retval None
+  */
+static void DCMIPP_SetDBMConfig(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe, uint32_t DstAddress0,
+                                uint32_t DstAddress1, uint32_t CaptureMode)
+{
+  if (Pipe == DCMIPP_PIPE0)
+  {
+    /* Update the DCMIPP pipe State */
+    hdcmipp->PipeState[Pipe] = HAL_DCMIPP_PIPE_STATE_BUSY;
+
+    /* Set the capture mode */
+    hdcmipp->Instance->P0FCTCR |= CaptureMode;
+
+    /* Set the destination address */
+    WRITE_REG(hdcmipp->Instance->P0PPM0AR1, DstAddress0);
+
+    /* Set the second destination address */
+    WRITE_REG(hdcmipp->Instance->P0PPM0AR2, DstAddress1);
+
+    /* Enable Double buffering Mode */
+    SET_BIT(hdcmipp->Instance->P0PPCR, DCMIPP_P0PPCR_DBM);
+
+    /* Enable all required interrupts lines for the Pipe0 */
+    __HAL_DCMIPP_ENABLE_IT(hdcmipp, DCMIPP_IT_PIPE0_FRAME | DCMIPP_IT_PIPE0_VSYNC | DCMIPP_IT_PIPE0_OVR);
+  }
+}
+/**
+  * @brief  Enable the capture for the specified DCMIPP pipe.
+  * @param  hdcmipp     Pointer to DCMIPP handle
+  * @param  Pipe        Specifies the DCMIPP pipe, can be a value from @ref DCMIPP_Pipes
+  * @retval None
+  */
+static void DCMIPP_EnableCapture(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe)
+{
+  if (Pipe == DCMIPP_PIPE0)
+  {
+    /* Activate the Pipe */
+    SET_BIT(hdcmipp->Instance->P0FSCR, DCMIPP_P0FSCR_PIPEN);
+
+    /* Start the capture */
+    SET_BIT(hdcmipp->Instance->P0FCTCR, DCMIPP_P0FCTCR_CPTREQ);
+  }
+}
+/**
+  * @brief  Stop the capture for the specified DCMIPP pipe.
+  * @param  hdcmipp     Pointer to DCMIPP handle
+  * @param  Pipe        Specifies the DCMIPP pipe, can be a value from @ref DCMIPP_Pipes
+  * @retval HAL status
+  */
+static HAL_StatusTypeDef DCMIPP_Stop(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe)
+{
+  uint32_t tickstart;
+
+  if (Pipe == DCMIPP_PIPE0)
+  {
+    /* Stop the capture */
+    CLEAR_BIT(hdcmipp->Instance->P0FCTCR, DCMIPP_P0FCTCR_CPTREQ);
+
+    /* Poll CPTACT status till No capture currently active */
+    tickstart = HAL_GetTick();
+    do
+    {
+      if ((HAL_GetTick() - tickstart) > DCMIPP_TIMEOUT)
+      {
+        return HAL_ERROR;
+      }
+    } while ((hdcmipp->Instance->CMSR1 & DCMIPP_CMSR1_P0CPTACT) != 0U);
+
+    /* Disable DBM when enabled */
+    if ((hdcmipp->Instance->P0PPCR & DCMIPP_P0PPCR_DBM) == DCMIPP_P0PPCR_DBM)
+    {
+      CLEAR_BIT(hdcmipp->Instance->P0PPCR, DCMIPP_P0PPCR_DBM);
+    }
+
+    /* Disable the pipe */
+    CLEAR_BIT(hdcmipp->Instance->P0FSCR, DCMIPP_P0FSCR_PIPEN);
+
+    /* Disable all interrupts for this pipe */
+    __HAL_DCMIPP_DISABLE_IT(hdcmipp, DCMIPP_IT_PIPE0_FRAME | DCMIPP_IT_PIPE0_VSYNC | DCMIPP_IT_PIPE0_LINE | \
+                            DCMIPP_IT_PIPE0_LIMIT | DCMIPP_IT_PIPE0_OVR);
+
+  }
+
+  return HAL_OK;
+}
 /**
   * @}
   */

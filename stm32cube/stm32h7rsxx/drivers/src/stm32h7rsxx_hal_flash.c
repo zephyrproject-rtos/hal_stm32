@@ -542,8 +542,8 @@ HAL_StatusTypeDef HAL_FLASH_OB_Unlock(void)
   if (READ_BIT(FLASH->OPTCR, FLASH_OPTCR_OPTLOCK) != 0U)
   {
     /* Authorizes the Option Byte register programming */
-    WRITE_REG(FLASH->OPTKEYR, FLASH_OPTKEY1);
-    WRITE_REG(FLASH->OPTKEYR, FLASH_OPTKEY2);
+    WRITE_REG(FLASH->OPTKEYR, FLASH_OPT_KEY1);
+    WRITE_REG(FLASH->OPTKEYR, FLASH_OPT_KEY2);
 
     /* Verify that the Option Bytes are unlocked */
     if (READ_BIT(FLASH->OPTCR, FLASH_OPTCR_OPTLOCK) != 0U)
