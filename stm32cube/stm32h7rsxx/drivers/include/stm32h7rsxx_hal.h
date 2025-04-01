@@ -60,6 +60,7 @@ typedef enum
   * @{
   */
 #define REV_ID_A 0x1003U  /*!< STM32H7Rx/Sx rev.A */
+#define REV_ID_B 0x2000U  /*!< STM32H7Rx/Sx rev.B */
 /**
   * @}
   */
@@ -71,7 +72,7 @@ typedef enum
   * @brief STM32H7RSxx HAL Driver version number
   */
 #define STM32H7RSXX_HAL_VERSION_MAIN   (0x01U) /*!< [31:24] main version */
-#define STM32H7RSXX_HAL_VERSION_SUB1   (0x01U) /*!< [23:16] sub1 version */
+#define STM32H7RSXX_HAL_VERSION_SUB1   (0x02U) /*!< [23:16] sub1 version */
 #define STM32H7RSXX_HAL_VERSION_SUB2   (0x00U) /*!< [15:8]  sub2 version */
 #define STM32H7RSXX_HAL_VERSION_RC     (0x00U) /*!< [7:0]  release candidate */
 #define STM32H7RSXX_HAL_VERSION        ((STM32H7RSXX_HAL_VERSION_MAIN  << 24U)\

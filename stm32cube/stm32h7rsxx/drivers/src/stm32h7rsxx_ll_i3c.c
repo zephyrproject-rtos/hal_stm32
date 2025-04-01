@@ -18,8 +18,8 @@
 #if defined(USE_FULL_LL_DRIVER)
 
 /* Includes ------------------------------------------------------------------*/
-#include "stm32h7rsxx_ll_i3c.h"
 #include "stm32h7rsxx_ll_bus.h"
+#include "stm32h7rsxx_ll_i3c.h"
 #ifdef  USE_FULL_ASSERT
 #include "stm32_assert.h"
 #else

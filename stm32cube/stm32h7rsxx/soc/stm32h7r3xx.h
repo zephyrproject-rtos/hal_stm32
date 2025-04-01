@@ -224,8 +224,8 @@ typedef enum
 /** @} */ /* End of group Configuration_of_CMSIS */
 
 
-#include <core_cm7.h>                     /*!< ARM Cortex-M7 processor and core peripherals  */
-#include "system_stm32h7rsxx.h"             /*!< STM32H7RSxx System */
+#include "core_cm7.h"                     /*!< ARM Cortex-M7 processor and core peripherals  */
+#include "system_stm32h7rsxx.h"           /*!< STM32H7RSxx System */
 
 
 /* =========================================================================================================================== */
@@ -2185,9 +2185,6 @@ typedef struct
 
 /*!< Unique device ID register base address */
 #define UID_BASE                        (0x08FFF800UL)
-
-/*!< Flash size data register base address  */
-#define FLASHSIZE_BASE                  (0x08FFF80CUL)
 
 /*!< Package data register base address     */
 #define PACKAGE_BASE                    (0x08FFF80CUL)

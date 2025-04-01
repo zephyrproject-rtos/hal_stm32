@@ -641,6 +641,8 @@ HAL_StatusTypeDef HAL_RNG_GenerateRandomNumber(RNG_HandleTypeDef *hrng, uint32_t
       status = RNG_RecoverSeedError(hrng);
       if (status == HAL_ERROR)
       {
+        /* Update the error code */
+        hrng->ErrorCode = HAL_RNG_ERROR_RECOVERSEED;
         return status;
       }
     }
@@ -1024,4 +1026,3 @@ HAL_StatusTypeDef RNG_RecoverSeedError(RNG_HandleTypeDef *hrng)
 /**
   * @}
   */
-

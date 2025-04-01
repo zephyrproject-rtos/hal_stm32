@@ -1077,8 +1077,11 @@ extern const uint8_t LL_RCC_PrescTable[16];
 /** @defgroup RCC_LL_EC_TIM_CLKPRESCALER  Timers clocks prescalers selection
   * @{
   */
-#define LL_RCC_TIM_PRESCALER_DISABLE         0U
-#define LL_RCC_TIM_PRESCALER_ENABLE          RCC_CFGR_TIMPRE
+#define LL_RCC_TIM_PRESCALER_TWICE         0U
+#define LL_RCC_TIM_PRESCALER_FOUR_TIMES    RCC_CFGR_TIMPRE
+/* Legacy Aliases */
+#define LL_RCC_TIM_PRESCALER_DISABLE       LL_RCC_TIM_PRESCALER_TWICE
+#define LL_RCC_TIM_PRESCALER_ENABLE        LL_RCC_TIM_PRESCALER_FOUR_TIMES
 /**
   * @}
   */
@@ -3611,8 +3614,8 @@ __STATIC_INLINE uint32_t LL_RCC_GetRTC_HSEPrescaler(void)
   * @brief  Set Timers Clock Prescalers
   * @rmtoll CFGR         TIMPRE        LL_RCC_SetTIMPrescaler
   * @param  Prescaler This parameter can be one of the following values:
-  *         @arg @ref LL_RCC_TIM_PRESCALER_DISABLE
-  *         @arg @ref LL_RCC_TIM_PRESCALER_ENABLE
+  *         @arg @ref LL_RCC_TIM_PRESCALER_TWICE
+  *         @arg @ref LL_RCC_TIM_PRESCALER_FOUR_TIMES
   * @retval None
   */
 __STATIC_INLINE void LL_RCC_SetTIMPrescaler(uint32_t Prescaler)
@@ -3624,8 +3627,8 @@ __STATIC_INLINE void LL_RCC_SetTIMPrescaler(uint32_t Prescaler)
   * @brief  Get Timers Clock Prescalers
   * @rmtoll CFGR         TIMPRE        LL_RCC_GetTIMPrescaler
   * @retval Returned value can be one of the following values:
-  *         @arg @ref LL_RCC_TIM_PRESCALER_DISABLE
-  *         @arg @ref LL_RCC_TIM_PRESCALER_ENABLE
+  *         @arg @ref LL_RCC_TIM_PRESCALER_TWICE
+  *         @arg @ref LL_RCC_TIM_PRESCALER_FOUR_TIMES
   */
 __STATIC_INLINE uint32_t LL_RCC_GetTIMPrescaler(void)
 {
