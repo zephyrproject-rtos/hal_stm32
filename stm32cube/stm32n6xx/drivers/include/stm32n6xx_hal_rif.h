@@ -556,9 +556,8 @@ typedef struct
 /* Composition definition for Peripheral identifier parameter (PeriphId) used in
  * RIF RISC and IAC related functions.
  * Bitmap Definition
- *   bits[31:28] Field "register". Define the register index a peripheral belongs to.
- *   bits[4:0]   Field "bit position". Define the bit position within the
- *               register dedicated to the peripheral, value from 0 to 31.
+  *     bits[31:28] define the register index a peripheral belongs to, value from 0 to 5.
+  *     bits[4:0]   define the bit position within the register, value from 0 to 31.
  */
 #define RIF_PERIPH_REG_SHIFT               28U
 #define RIF_PERIPH_REG                     0xF0000000U

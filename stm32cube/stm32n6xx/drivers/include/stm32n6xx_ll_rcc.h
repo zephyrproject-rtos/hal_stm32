@@ -149,11 +149,11 @@ typedef struct
   * @{
   */
 #if !defined  (HSE_VALUE)
-#define HSE_VALUE    48000000U  /*!< Value of the HSE oscillator in Hz */  /* N6 FPGA was 30 MHz */
+#define HSE_VALUE    48000000U  /*!< Value of the HSE oscillator in Hz */
 #endif /* HSE_VALUE */
 
 #if !defined  (HSI_VALUE)
-#define HSI_VALUE    64000000U  /*!< Value of the HSI oscillator in Hz */  /* N6 FPGA was 48 MHz */
+#define HSI_VALUE    64000000U  /*!< Value of the HSI oscillator in Hz */
 #endif /* HSI_VALUE */
 
 #if !defined  (MSI_VALUE)
@@ -161,7 +161,7 @@ typedef struct
 #endif /* MSI_VALUE */
 
 #if !defined  (LSE_VALUE)
-#define LSE_VALUE    32768U     /*!< Value of the LSE oscillator in Hz */  /* N6 FPGA was 32 KHz*/
+#define LSE_VALUE    32768U     /*!< Value of the LSE oscillator in Hz */
 #endif /* LSE_VALUE */
 
 #if !defined  (LSI_VALUE)

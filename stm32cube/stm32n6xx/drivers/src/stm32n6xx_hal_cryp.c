@@ -657,7 +657,7 @@ HAL_StatusTypeDef HAL_CRYP_DeInit(CRYP_HandleTypeDef *hcryp)
   *         the configuration information for CRYP module
   * @retval HAL status
   */
-HAL_StatusTypeDef HAL_CRYP_SetConfig(CRYP_HandleTypeDef *hcryp, CRYP_ConfigTypeDef *pConf)
+HAL_StatusTypeDef HAL_CRYP_SetConfig(CRYP_HandleTypeDef *hcryp, const CRYP_ConfigTypeDef *pConf)
 {
   /* Check the CRYP handle allocation */
   if ((hcryp == NULL) || (pConf == NULL))
@@ -806,7 +806,7 @@ HAL_StatusTypeDef HAL_CRYP_GetConfig(CRYP_HandleTypeDef *hcryp, CRYP_ConfigTypeD
     pConf->HeaderWidthUnit = hcryp->Init.HeaderWidthUnit;
     pConf->KeyMode         = hcryp->Init.KeyMode;
     pConf->KeySelect       = hcryp->Init.KeySelect;
-    hcryp->Init.KeyProtection   = pConf->KeyProtection;
+    pConf->KeyProtection   = hcryp->Init.KeyProtection;
     pConf->KeyIVConfigSkip = hcryp->Init.KeyIVConfigSkip;
 
     /* Process Unlocked */

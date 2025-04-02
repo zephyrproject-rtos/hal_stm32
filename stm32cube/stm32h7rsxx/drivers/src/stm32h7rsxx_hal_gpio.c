@@ -200,7 +200,8 @@ void HAL_GPIO_Init(GPIO_TypeDef  *GPIOx, const GPIO_InitTypeDef *GPIO_Init)
         GPIOx->OTYPER = temp;
       }
 
-      if ((GPIO_Init->Mode & GPIO_MODE) != MODE_ANALOG)
+      if (((GPIO_Init->Mode & GPIO_MODE) != MODE_ANALOG) ||
+          (((GPIO_Init->Mode & GPIO_MODE) == MODE_ANALOG) && (GPIO_Init->Pull != GPIO_PULLUP)))
       {
         /* Check the Pull parameter */
         assert_param(IS_GPIO_PULL(GPIO_Init->Pull));

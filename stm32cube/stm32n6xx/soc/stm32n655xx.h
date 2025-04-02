@@ -1321,21 +1321,6 @@ typedef struct
 } FDCAN_ClockCalibrationUnit_TypeDef;
 
 /**
- * @brief FD Controller Area Network Configuration
- */
-typedef struct
-{
- __IO uint32_t CKDIV;          /*!< FDCAN clock divider register,            Address offset: 0x100 + 0x000 */
-      uint32_t RESERVED1[128]; /*!< Reserved,                                0x100 + 0x004 - 0x100 + 0x200 */
- __IO uint32_t OPTR;           /*!< FDCAN option register,                   Address offset: 0x100 + 0x204 */
-      uint32_t RESERVED2[58];  /*!< Reserved,                                0x100 + 0x208 - 0x100 + 0x2EC */
- __IO uint32_t HWCFG;          /*!< FDCAN hardware configuration register,   Address offset: 0x100 + 0x2F0 */
- __IO uint32_t VERR;           /*!< FDCAN IP version register,               Address offset: 0x100 + 0x2F4 */
- __IO uint32_t IPIDR;          /*!< FDCAN IP ID register,                    Address offset: 0x100 + 0x2F8 */
- __IO uint32_t SIDR;           /*!< FDCAN size ID register,                  Address offset: 0x100 + 0x2FC */
-} FDCAN_Config_TypeDef;
-
-/**
   * @brief Flexible Memory Controller Bank1
   */
 typedef struct
@@ -2713,14 +2698,14 @@ typedef struct
   __IO uint32_t ICNEWRCR;       /*!< SYSCFG AHB-AXI bridge early write response,                                  Address offset: 0x34 */
   __IO uint32_t ICNCGCR;        /*!< SYSCFG ICN clock gating control register,                                    Address offset: 0x38 */
   uint32_t      RESERVED2[2];   /*!< Reserved,                                                                    Address offset: 0x3C-0x40 */
-  __IO uint32_t VDDIO2CCCR;     /*!< SYSCFG VDDIO2 compensation cell control register,                            Address offset: 0x44 */
-  __IO uint32_t VDDIO2CCSR;     /*!< SYSCFG VDDIO2 compensation cell status register,                             Address offset: 0x48 */
-  __IO uint32_t VDDIO3CCCR;     /*!< SYSCFG VDDIO3 compensation cell control register,                            Address offset: 0x4C */
-  __IO uint32_t VDDIO3CCSR;     /*!< SYSCFG VDDIO3 compensation cell status register,                             Address offset: 0x50 */
-  __IO uint32_t VDDIO4CCCR;     /*!< SYSCFG VDDIO4 compensation cell control register,                            Address offset: 0x54 */
-  __IO uint32_t VDDIO4CCSR;     /*!< SYSCFG VDDIO4 compensation cell status register,                             Address offset: 0x58 */
-  __IO uint32_t VDDIO5CCCR;     /*!< SYSCFG VDDIO5 compensation cell control register,                            Address offset: 0x5C */
-  __IO uint32_t VDDIO5CCSR;     /*!< SYSCFG VDDIO5 compensation cell status register,                             Address offset: 0x60 */
+  __IO uint32_t VDDIO4CCCR;     /*!< SYSCFG VDDIO4 compensation cell control register,                            Address offset: 0x44 */
+  __IO uint32_t VDDIO4CCSR;     /*!< SYSCFG VDDIO4 compensation cell status register,                             Address offset: 0x48 */
+  __IO uint32_t VDDIO5CCCR;     /*!< SYSCFG VDDIO5 compensation cell control register,                            Address offset: 0x4C */
+  __IO uint32_t VDDIO5CCSR;     /*!< SYSCFG VDDIO5 compensation cell status register,                             Address offset: 0x50 */
+  __IO uint32_t VDDIO2CCCR;     /*!< SYSCFG VDDIO2 compensation cell control register,                            Address offset: 0x54 */
+  __IO uint32_t VDDIO2CCSR;     /*!< SYSCFG VDDIO2 compensation cell status register,                             Address offset: 0x58 */
+  __IO uint32_t VDDIO3CCCR;     /*!< SYSCFG VDDIO3 compensation cell control register,                            Address offset: 0x5C */
+  __IO uint32_t VDDIO3CCSR;     /*!< SYSCFG VDDIO3 compensation cell status register,                             Address offset: 0x60 */
   __IO uint32_t VDDCCCR;        /*!< SYSCFG VDD compensation cell control register,                               Address offset: 0x64 */
   __IO uint32_t VDDCCSR;        /*!< SYSCFG VDD compensation cell status register,                                Address offset: 0x68 */
   __IO uint32_t CBR;            /*!< SYSCFG control timer break register,                                         Address offset: 0x6C */
@@ -3059,7 +3044,6 @@ typedef struct
 #define UART8_BASE_NS                   (APB1PERIPH_BASE_NS + 0x7C00UL)
 #define MDIOS_BASE_NS                   (APB1PERIPH_BASE_NS + 0x9400UL)
 #define FDCAN1_BASE_NS                  (APB1PERIPH_BASE_NS + 0xA000UL)
-#define FDCAN_CONFIG_BASE_NS            (APB1PERIPH_BASE_NS + 0xA100UL)
 #define FDCAN2_BASE_NS                  (APB1PERIPH_BASE_NS + 0xA400UL)
 #define FDCAN_CCU_BASE_NS               (APB1PERIPH_BASE_NS + 0xA800UL)
 #define SRAMCAN_BASE_NS                 (APB1PERIPH_BASE_NS + 0xC000UL)
@@ -3362,7 +3346,6 @@ typedef struct
 #define UART8_BASE_S                    (APB1PERIPH_BASE_S + 0x7C00UL)
 #define MDIOS_BASE_S                    (APB1PERIPH_BASE_S + 0x9400UL)
 #define FDCAN1_BASE_S                   (APB1PERIPH_BASE_S + 0xA000UL)
-#define FDCAN_CONFIG_BASE_S             (APB1PERIPH_BASE_S + 0xA100UL)
 #define FDCAN2_BASE_S                   (APB1PERIPH_BASE_S + 0xA400UL)
 #define FDCAN_CCU_BASE_S                (APB1PERIPH_BASE_S + 0xA800UL)
 #define SRAMCAN_BASE_S                  (APB1PERIPH_BASE_S + 0xC000UL)
@@ -3629,7 +3612,6 @@ typedef struct
 #define FDCAN2_NS                 ((FDCAN_GlobalTypeDef *) FDCAN2_BASE_NS)
 #define FDCAN3_NS                 ((FDCAN_GlobalTypeDef *) FDCAN3_BASE_NS)
 #define FDCAN_CCU_NS              ((FDCAN_ClockCalibrationUnit_TypeDef *) FDCAN_CCU_BASE_NS)
-#define FDCAN_CONFIG_NS           ((FDCAN_Config_TypeDef *) FDCAN_CONFIG_BASE_NS)
 #define FMC_Bank1E_R_NS           ((FMC_Bank1E_TypeDef *) FMC_Bank1E_R_BASE_NS)
 #define FMC_Bank1_R_NS            ((FMC_Bank1_TypeDef *) FMC_Bank1_R_BASE_NS)
 #define FMC_Bank3_R_NS            ((FMC_Bank3_TypeDef *) FMC_Bank3_R_BASE_NS)
@@ -3856,7 +3838,6 @@ typedef struct
 #define FDCAN2_S                  ((FDCAN_GlobalTypeDef *) FDCAN2_BASE_S)
 #define FDCAN3_S                  ((FDCAN_GlobalTypeDef *) FDCAN3_BASE_S)
 #define FDCAN_CCU_S               ((FDCAN_ClockCalibrationUnit_TypeDef *) FDCAN_CCU_BASE_S)
-#define FDCAN_CONFIG_S            ((FDCAN_Config_TypeDef *) FDCAN_CONFIG_BASE_S)
 #define FMC_Bank1E_R_S            ((FMC_Bank1E_TypeDef *) FMC_Bank1E_R_BASE_S)
 #define FMC_Bank1_R_S             ((FMC_Bank1_TypeDef *) FMC_Bank1_R_BASE_S)
 #define FMC_Bank3_R_S             ((FMC_Bank3_TypeDef *) FMC_Bank3_R_BASE_S)
@@ -4133,9 +4114,6 @@ typedef struct
 
 #define FDCAN_CCU                 FDCAN_CCU_S
 #define FDCAN_CCU_BASE            FDCAN_CCU_BASE_S
-
-#define FDCAN_CONFIG              FDCAN_CONFIG_S
-#define FDCAN_CONFIG_BASE         FDCAN_CONFIG_BASE_S
 
 #define FMC_R_BASE                FMC_R_BASE_S
 
@@ -4827,9 +4805,6 @@ typedef struct
 
 #define FDCAN_CCU                 FDCAN_CCU_NS
 #define FDCAN_CCU_BASE            FDCAN_CCU_BASE_NS
-
-#define FDCAN_CONFIG              FDCAN_CONFIG_NS
-#define FDCAN_CONFIG_BASE         FDCAN_CONFIG_BASE_NS
 
 #define FMC_R_BASE                FMC_R_BASE_NS
 #define FMC_R_BASE_BASE           FMC_R_BASE_BASE_NS
@@ -41028,8 +41003,6 @@ typedef struct
                                          ((INSTANCE) == FDCAN2_S) || ((INSTANCE) == FDCAN2_NS) || \
                                          ((INSTANCE) == FDCAN3_S) || ((INSTANCE) == FDCAN3_NS))
 
-#define IS_FDCAN_CONFIG_INSTANCE(INSTANCE) (((INSTANCE) == FDCAN_CONFIG_S) || ((INSTANCE) == FDCAN_CONFIG_NS))
-
 #define IS_FDCAN_TT_INSTANCE(__INSTANCE__) ((__INSTANCE__) == FDCAN1_S)
 
 /******************************* GFXMMU Instance *****************************/
@@ -41916,8 +41889,6 @@ typedef struct
 #define IS_FDCAN_ALL_INSTANCE(INSTANCE) (((INSTANCE) == FDCAN1_NS) || \
                                          ((INSTANCE) == FDCAN2_NS) || \
                                          ((INSTANCE) == FDCAN3_NS))
-
-#define IS_FDCAN_CONFIG_INSTANCE(INSTANCE) ((INSTANCE) == FDCAN_CONFIG_NS)
 
 #define IS_FDCAN_TT_INSTANCE(__INSTANCE__) ((__INSTANCE__) == FDCAN1_NS)
 

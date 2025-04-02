@@ -1689,8 +1689,7 @@ __LL_ADC_CONVERT_DATA_RESOLUTION((__DATA__),\
   * @brief  Helper macro to calculate the voltage (unit: mVolt)
   *         corresponding to a ADC conversion data (unit: digital value).
   * @note   Analog reference voltage (Vref+) must be either known from
-  *         user board environment or can be calculated using ADC measurement
-  *         and ADC helper macro @ref __LL_ADC_CALC_VREFANALOG_VOLTAGE().
+  *         user board environment.
   * @param  __VREFANALOG_VOLTAGE__ Analog reference voltage (unit: mV)
   * @param  __ADC_DATA__ ADC conversion data (resolution 12 bits)
   *                       (unit: digital value).
@@ -1713,8 +1712,7 @@ __LL_ADC_CALC_DATA_TO_VOLTAGE((__VREFANALOG_VOLTAGE__),\
   *         corresponding to a ADC conversion data (unit: digital value)
   *         in differential ended mode.
   * @note   Analog reference voltage (Vref+) must be either known from
-  *         user board environment or can be calculated using ADC measurement
-  *         and ADC helper macro @ref __LL_ADC_CALC_VREFANALOG_VOLTAGE().
+  *         user board environment.
   * @param  __VREFANALOG_VOLTAGE__ Analog reference voltage (unit: mV)
   * @param  __ADC_DATA__ ADC conversion data (resolution 12 bits)
   *                       (unit: digital value).
@@ -1731,36 +1729,6 @@ __LL_ADC_CALC_DATA_TO_VOLTAGE((__VREFANALOG_VOLTAGE__),\
 __LL_ADC_CALC_DIFF_DATA_TO_VOLTAGE((__VREFANALOG_VOLTAGE__),\
                                    (__ADC_DATA__),\
                                    (__ADC_RESOLUTION__))
-
-/**
-  * @brief  Helper macro to calculate analog reference voltage (Vref+)
-  *         (unit: mVolt) from ADC conversion data of internal voltage
-  *         reference VrefInt.
-  * @note   Computation is using VrefInt calibration value
-  *         stored in system memory for each device during production.
-  * @note   This voltage depends on user board environment: voltage level
-  *         connected to pin Vref+.
-  *         On devices with small package, the pin Vref+ is not present
-  *         and internally bonded to pin Vdda.
-  * @note   On this STM32 series, calibration data of internal voltage reference
-  *         VrefInt corresponds to a resolution of 12 bits,
-  *         this is the recommended ADC resolution to convert voltage of
-  *         internal voltage reference VrefInt.
-  *         Otherwise, this macro performs the processing to scale
-  *         ADC conversion data to 12 bits.
-  * @param  __VREFINT_ADC_DATA__ ADC conversion data (resolution 12 bits)
-  *         of internal voltage reference VrefInt (unit: digital value).
-  * @param  __ADC_RESOLUTION__ This parameter can be one of the following values:
-  *         @arg @ref ADC_RESOLUTION_12B
-  *         @arg @ref ADC_RESOLUTION_10B
-  *         @arg @ref ADC_RESOLUTION_8B
-  *         @arg @ref ADC_RESOLUTION_6B
-  * @retval Analog reference voltage (unit: mV)
-  */
-#define __HAL_ADC_CALC_VREFANALOG_VOLTAGE(__VREFINT_ADC_DATA__,\
-                                          __ADC_RESOLUTION__) \
-__LL_ADC_CALC_VREFANALOG_VOLTAGE((__VREFINT_ADC_DATA__),\
-                                 (__ADC_RESOLUTION__))
 
 
 /**

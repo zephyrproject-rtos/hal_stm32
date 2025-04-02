@@ -69,14 +69,16 @@
 #define UTILS_SCALE0_LATENCY2_FREQ     120000000U   /*!< HCLK frequency to set FLASH latency 2 in power scale 0  */
 #define UTILS_SCALE0_LATENCY3_FREQ     160000000U   /*!< HCLK frequency to set FLASH latency 3 in power scale 0  */
 #define UTILS_SCALE0_LATENCY4_FREQ     200000000U   /*!< HCLK frequency to set FLASH latency 4 in power scale 0  */
-#define UTILS_SCALE0_LATENCY5_FREQ     234000000U   /*!< HCLK frequency to set FLASH latency 5 in power scale 0  */
+#define UTILS_SCALE0_LATENCY5_FREQ     240000000U   /*!< HCLK frequency to set FLASH latency 5 in power scale 0  */
+#define UTILS_SCALE0_LATENCY6_FREQ     280000000U   /*!< HCLK frequency to set FLASH latency 6 in power scale 0  */
+#define UTILS_SCALE0_LATENCY7_FREQ     320000000U   /*!< HCLK frequency to set FLASH latency 7 in power scale 0  */
 
 #define UTILS_SCALE1_LATENCY0_FREQ      36000000U   /*!< HCLK frequency to set FLASH latency 0 in power scale 1  */
 #define UTILS_SCALE1_LATENCY1_FREQ      72000000U   /*!< HCLK frequency to set FLASH latency 1 in power scale 1  */
 #define UTILS_SCALE1_LATENCY2_FREQ     108000000U   /*!< HCLK frequency to set FLASH latency 2 in power scale 1  */
 #define UTILS_SCALE1_LATENCY3_FREQ     144000000U   /*!< HCLK frequency to set FLASH latency 3 in power scale 1  */
 #define UTILS_SCALE1_LATENCY4_FREQ     180000000U   /*!< HCLK frequency to set FLASH latency 4 in power scale 1  */
-#define UTILS_SCALE1_LATENCY5_FREQ     183000000U   /*!< HCLK frequency to set FLASH latency 5 in power scale 1  */
+#define UTILS_SCALE1_LATENCY5_FREQ     216000000U   /*!< HCLK frequency to set FLASH latency 5 in power scale 1  */
 /**
   * @}
   */
@@ -255,8 +257,8 @@ void LL_mDelay(uint32_t Delay)
     [..]
          System, AXI, AHB and APB buses clocks configuration
 
-         (+) The maximum frequency of the SYSCLK is 464 MHz and HCLK is 232 MHz.
-         (+) The maximum frequency of the PCLK1, PCLK2, PCLK4 and PCLK5 is 116 MHz.
+         (+) The maximum frequency of the SYSCLK is 600 MHz and HCLK is 300 MHz.
+         (+) The maximum frequency of the PCLK1, PCLK2, PCLK4 and PCLK5 is 150 MHz.
   @endverbatim
   @internal
              Depending on the device voltage range, the maximum frequency should be
@@ -264,8 +266,8 @@ void LL_mDelay(uint32_t Delay)
              (++) +---------------------------------------------------------------------------+
              (++) |  Wait states        |  AXI interface clock frequency (MHz) vs Vcore range |
              (++) |                     |-----------------------------------------------------|
-             (++) |  (Latency)          |      voltage scale 1     |      voltage scale 0     |
-             (++) |                     |       1.15V - 1.26V      |       1.26V - 1.40V      |
+             (++) |  (Latency)          | voltage scale 1 (low)    | voltage scale 0 (high)   |
+             (++) |                     |       1.15V - 1.26V      |       1.30V - 1.40V      |
              (++) |---------------------|--------------------------|--------------------------|
              (++) | 0WS (1 CPU cycle)   |     0 < HCLK <= 36       |     0 < HCLK <= 40       |
              (++) |---------------------|--------------------------|--------------------------|
@@ -279,7 +281,9 @@ void LL_mDelay(uint32_t Delay)
              (++) |---------------------|--------------------------|--------------------------|
              (++) | 5WS (6 CPU cycles)  |   180 < HCLK <= 216      |   200 < HCLK <= 240      |
              (++) |---------------------|--------------------------|--------------------------|
-             (++) | 6WS (7 CPU cycles)  |   216 < HCLK <= 252      |                          |
+             (++) | 6WS (7 CPU cycles)  |           NA             |   240 < HCLK <= 280      |
+             (++) |---------------------|--------------------------|--------------------------|
+             (++) | 7WS (8 CPU cycles)  |           NA             |   280 < HCLK <= 320      |
              (++) |---------------------|--------------------------|--------------------------|
 
   @endinternal
@@ -612,7 +616,7 @@ ErrorStatus LL_SetFlashLatency(uint32_t HCLK_Frequency)
   ErrorStatus status = SUCCESS;
   uint32_t timeout;
   uint32_t getlatency;
-  uint32_t latency;
+  uint32_t latency = LL_FLASH_LATENCY_0;  /* default value 0WS */
 
   /* Frequency cannot be equal to 0 */
   if (HCLK_Frequency == 0U)
@@ -623,76 +627,95 @@ ErrorStatus LL_SetFlashLatency(uint32_t HCLK_Frequency)
   {
     if (LL_PWR_GetRegulVoltageScaling() == LL_PWR_REGU_VOLTAGE_SCALE0) /* Scale 0 */
     {
-      if ((HCLK_Frequency > UTILS_SCALE0_LATENCY4_FREQ) && (HCLK_Frequency <= UTILS_SCALE0_LATENCY5_FREQ))
+      if (HCLK_Frequency <= UTILS_SCALE0_LATENCY0_FREQ)
       {
-        latency = LL_FLASH_LATENCY_5; /* 5WS (6 CPU cycles) */
+        /* 0 < HCLK <= 40 => 0WS (1 CPU cycle) : Do nothing, keep latency to default  LL_FLASH_LATENCY_0 */
       }
-      else if ((HCLK_Frequency > UTILS_SCALE0_LATENCY3_FREQ) && (HCLK_Frequency <= UTILS_SCALE0_LATENCY4_FREQ))
+      else if (HCLK_Frequency <= UTILS_SCALE0_LATENCY1_FREQ)
       {
-        latency = LL_FLASH_LATENCY_4; /* 4WS (5 CPU cycles) */
+        latency = LL_FLASH_LATENCY_1; /* 40 < HCLK <= 80  => 1WS (2 CPU cycles) */
       }
-      else if ((HCLK_Frequency > UTILS_SCALE0_LATENCY2_FREQ) && (HCLK_Frequency <= UTILS_SCALE0_LATENCY3_FREQ))
+      else if (HCLK_Frequency <= UTILS_SCALE0_LATENCY2_FREQ)
       {
-        latency = LL_FLASH_LATENCY_3; /* 3WS (4 CPU cycles) */
+        latency = LL_FLASH_LATENCY_2; /* 80 < HCLK <= 120  => 2WS (3 CPU cycles) */
       }
-      else if ((HCLK_Frequency > UTILS_SCALE0_LATENCY1_FREQ) && (HCLK_Frequency <= UTILS_SCALE0_LATENCY2_FREQ))
+      else if (HCLK_Frequency <= UTILS_SCALE0_LATENCY3_FREQ)
       {
-        latency = LL_FLASH_LATENCY_2; /* 2WS (3 CPU cycles) */
+        latency = LL_FLASH_LATENCY_3; /* 120 < HCLK <= 160  => 3WS (4 CPU cycles) */
       }
-      else if ((HCLK_Frequency > UTILS_SCALE0_LATENCY0_FREQ) && (HCLK_Frequency <= UTILS_SCALE0_LATENCY1_FREQ))
+      else if (HCLK_Frequency <= UTILS_SCALE0_LATENCY4_FREQ)
       {
-        latency = LL_FLASH_LATENCY_1; /* 1WS (2 CPU cycles) */
+        latency = LL_FLASH_LATENCY_4; /* 160 < HCLK <= 200  => 4WS (5 CPU cycles) */
+      }
+      else if (HCLK_Frequency <= UTILS_SCALE0_LATENCY5_FREQ)
+      {
+        latency = LL_FLASH_LATENCY_5; /* 200 < HCLK <= 240  => 5WS (6 CPU cycles) */
+      }
+      else if (HCLK_Frequency <= UTILS_SCALE0_LATENCY6_FREQ)
+      {
+        latency = LL_FLASH_LATENCY_6; /* 240 < HCLK <= 280  => 6WS (7 CPU cycles) */
+      }
+      else if (HCLK_Frequency <= UTILS_SCALE0_LATENCY7_FREQ)
+      {
+        latency = LL_FLASH_LATENCY_7; /* 280 < HCLK <= 320  => 6WS (7 CPU cycles) */
       }
       else
       {
-        latency = LL_FLASH_LATENCY_0; /* 0WS (1 CPU cycles) */
+        status = ERROR;
       }
     }
     else /* Scale 1 */
     {
-      if ((HCLK_Frequency > UTILS_SCALE1_LATENCY4_FREQ) && (HCLK_Frequency <= UTILS_SCALE1_LATENCY5_FREQ))
+      if (HCLK_Frequency <= UTILS_SCALE1_LATENCY0_FREQ)
       {
-        latency = LL_FLASH_LATENCY_5; /* 5WS (6 CPU cycles) */
+         /* 0 < HCLK <= 36 => 0WS (1 CPU cycles) : Do nothing, keep latency to default  LL_FLASH_LATENCY_0 */
       }
-      else if ((HCLK_Frequency > UTILS_SCALE1_LATENCY3_FREQ) && (HCLK_Frequency <= UTILS_SCALE1_LATENCY4_FREQ))
+      else if (HCLK_Frequency <= UTILS_SCALE1_LATENCY1_FREQ)
       {
-        latency = LL_FLASH_LATENCY_4; /* 4WS (5 CPU cycles) */
+        latency = LL_FLASH_LATENCY_1; /* 36 < HCLK <= 72 => 1WS (2 CPU cycles) */
       }
-      else if ((HCLK_Frequency > UTILS_SCALE1_LATENCY2_FREQ) && (HCLK_Frequency <= UTILS_SCALE1_LATENCY3_FREQ))
+      else if (HCLK_Frequency <= UTILS_SCALE1_LATENCY2_FREQ)
       {
-        latency = LL_FLASH_LATENCY_3; /* 3WS (4 CPU cycles) */
+        latency = LL_FLASH_LATENCY_2; /* 72 < HCLK <= 108 => 2WS (3 CPU cycles) */
       }
-      else if ((HCLK_Frequency > UTILS_SCALE1_LATENCY1_FREQ) && (HCLK_Frequency <= UTILS_SCALE1_LATENCY2_FREQ))
+      else if (HCLK_Frequency <= UTILS_SCALE1_LATENCY3_FREQ)
       {
-        latency = LL_FLASH_LATENCY_2; /* 2WS (3 CPU cycles) */
+        latency = LL_FLASH_LATENCY_3; /* 108 < HCLK <= 144 => 3WS (2 CPU cycles) */
       }
-      else if ((HCLK_Frequency > UTILS_SCALE1_LATENCY0_FREQ) && (HCLK_Frequency <= UTILS_SCALE1_LATENCY1_FREQ))
+      else if (HCLK_Frequency <= UTILS_SCALE1_LATENCY4_FREQ)
       {
-        latency = LL_FLASH_LATENCY_1; /* 1WS (2 CPU cycles) */
+        latency = LL_FLASH_LATENCY_4; /* 144 < HCLK <= 180 => 4WS (5 CPU cycles) */
+      }
+      else if (HCLK_Frequency <= UTILS_SCALE1_LATENCY5_FREQ)
+      {
+        latency = LL_FLASH_LATENCY_5; /* 180 < HCLK <= 216 => 5WS (6 CPU cycles) */
       }
       else
       {
-        latency = LL_FLASH_LATENCY_0; /* 0WS (1 CPU cycles) */
+        status = ERROR;
       }
     }
-
-    LL_FLASH_SetLatency(latency);
-
-    /* Check that the new number of wait states is taken into account to access the Flash
-    memory by reading the FLASH_ACR register */
-    timeout = 2;
-    do
-    {
-      /* Wait for Flash latency to be updated */
-      getlatency = LL_FLASH_GetLatency();
-      timeout--;
-    } while ((getlatency != latency) && (timeout > 0U));
-
-    if (getlatency != latency)
-    {
-      status = ERROR;
-    }
   }
+
+    if (status == SUCCESS)
+    {
+      LL_FLASH_SetLatency(latency);
+
+      /* Check that the new number of wait states is taken into account to access the Flash
+      memory by reading the FLASH_ACR register */
+      timeout = 2;
+      do
+      {
+        /* Wait for Flash latency to be updated */
+        getlatency = LL_FLASH_GetLatency();
+        timeout--;
+      } while ((getlatency != latency) && (timeout > 0U));
+
+      if (getlatency != latency)
+      {
+        status = ERROR;
+      }
+    }
 
   return status;
 }

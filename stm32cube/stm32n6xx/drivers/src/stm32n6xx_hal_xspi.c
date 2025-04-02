@@ -302,8 +302,8 @@ static void              XSPI_DMAError(DMA_HandleTypeDef *hdma);
 static void              XSPI_DMAAbortCplt(DMA_HandleTypeDef *hdma);
 static HAL_StatusTypeDef XSPI_WaitFlagStateUntilTimeout(XSPI_HandleTypeDef *hxspi, uint32_t Flag, FlagStatus State,
                                                         uint32_t Tickstart, uint32_t Timeout);
-static HAL_StatusTypeDef XSPI_ConfigCmd(XSPI_HandleTypeDef *hxspi, XSPI_RegularCmdTypeDef *const pCmd);
-static void XSPIM_GetConfig(uint8_t instance_nb, XSPIM_CfgTypeDef *const pCfg);
+static HAL_StatusTypeDef XSPI_ConfigCmd(XSPI_HandleTypeDef *hxspi, const XSPI_RegularCmdTypeDef *pCmd);
+static void XSPIM_GetConfig(uint8_t instance_nb, XSPIM_CfgTypeDef *pCfg);
 /**
   @endcond
   */
@@ -820,7 +820,7 @@ void HAL_XSPI_IRQHandler(XSPI_HandleTypeDef *hxspi)
   * @param  Timeout : Timeout duration
   * @retval HAL status
   */
-HAL_StatusTypeDef HAL_XSPI_Command(XSPI_HandleTypeDef *hxspi, XSPI_RegularCmdTypeDef *const pCmd, uint32_t Timeout)
+HAL_StatusTypeDef HAL_XSPI_Command(XSPI_HandleTypeDef *hxspi, const XSPI_RegularCmdTypeDef *pCmd, uint32_t Timeout)
 {
   HAL_StatusTypeDef status;
   uint32_t state;
@@ -893,9 +893,10 @@ HAL_StatusTypeDef HAL_XSPI_Command(XSPI_HandleTypeDef *hxspi, XSPI_RegularCmdTyp
         if (pCmd->DataMode == HAL_XSPI_DATA_NONE)
         {
           /* When there is no data phase, the transfer start as soon as the configuration is done
-             so wait until TC flag is set to go back in idle state */
-          status = XSPI_WaitFlagStateUntilTimeout(hxspi, HAL_XSPI_FLAG_TC, SET, tickstart, Timeout);
+             so wait until BUSY flag is reset to go back in idle state. */
+          status = XSPI_WaitFlagStateUntilTimeout(hxspi, HAL_XSPI_FLAG_BUSY, RESET, tickstart, Timeout);
 
+          /* Clear TC flag */
           HAL_XSPI_CLEAR_FLAG(hxspi, HAL_XSPI_FLAG_TC);
         }
         else
@@ -955,7 +956,7 @@ HAL_StatusTypeDef HAL_XSPI_Command(XSPI_HandleTypeDef *hxspi, XSPI_RegularCmdTyp
   * @note   This function is used only in Indirect Read or Write Modes
   * @retval HAL status
   */
-HAL_StatusTypeDef HAL_XSPI_Command_IT(XSPI_HandleTypeDef *hxspi, XSPI_RegularCmdTypeDef *const pCmd)
+HAL_StatusTypeDef HAL_XSPI_Command_IT(XSPI_HandleTypeDef *hxspi, const XSPI_RegularCmdTypeDef *pCmd)
 {
   HAL_StatusTypeDef status;
   uint32_t tickstart = HAL_GetTick();
@@ -1044,7 +1045,7 @@ HAL_StatusTypeDef HAL_XSPI_Command_IT(XSPI_HandleTypeDef *hxspi, XSPI_RegularCmd
   * @param  Timeout : Timeout duration
   * @retval HAL status
   */
-HAL_StatusTypeDef HAL_XSPI_HyperbusCfg(XSPI_HandleTypeDef *hxspi, XSPI_HyperbusCfgTypeDef *const pCfg,
+HAL_StatusTypeDef HAL_XSPI_HyperbusCfg(XSPI_HandleTypeDef *hxspi, const XSPI_HyperbusCfgTypeDef *pCfg,
                                        uint32_t Timeout)
 {
   HAL_StatusTypeDef status;
@@ -1095,7 +1096,7 @@ HAL_StatusTypeDef HAL_XSPI_HyperbusCfg(XSPI_HandleTypeDef *hxspi, XSPI_HyperbusC
   * @param  Timeout : Timeout duration
   * @retval HAL status
   */
-HAL_StatusTypeDef HAL_XSPI_HyperbusCmd(XSPI_HandleTypeDef *hxspi, XSPI_HyperbusCmdTypeDef *const pCmd,
+HAL_StatusTypeDef HAL_XSPI_HyperbusCmd(XSPI_HandleTypeDef *hxspi, const XSPI_HyperbusCmdTypeDef *pCmd,
                                        uint32_t Timeout)
 {
   HAL_StatusTypeDef status;
@@ -1234,7 +1235,7 @@ HAL_StatusTypeDef HAL_XSPI_Transmit(XSPI_HandleTypeDef *hxspi, const uint8_t *pD
   * @note   This function is used only in Indirect Read Mode
   * @retval HAL status
   */
-HAL_StatusTypeDef HAL_XSPI_Receive(XSPI_HandleTypeDef *hxspi, uint8_t *const pData, uint32_t Timeout)
+HAL_StatusTypeDef HAL_XSPI_Receive(XSPI_HandleTypeDef *hxspi, uint8_t *pData, uint32_t Timeout)
 {
   HAL_StatusTypeDef status;
   uint32_t tickstart = HAL_GetTick();
@@ -1373,7 +1374,7 @@ HAL_StatusTypeDef HAL_XSPI_Transmit_IT(XSPI_HandleTypeDef *hxspi, const uint8_t 
   * @note   This function is used only in Indirect Read Mode
   * @retval HAL status
   */
-HAL_StatusTypeDef HAL_XSPI_Receive_IT(XSPI_HandleTypeDef *hxspi, uint8_t *const pData)
+HAL_StatusTypeDef HAL_XSPI_Receive_IT(XSPI_HandleTypeDef *hxspi, uint8_t *pData)
 {
   HAL_StatusTypeDef status = HAL_OK;
   uint32_t addr_reg = hxspi->Instance->AR;
@@ -1628,7 +1629,7 @@ HAL_StatusTypeDef HAL_XSPI_Transmit_DMA(XSPI_HandleTypeDef *hxspi, const uint8_t
   *         of data and the fifo threshold should be aligned on word
   * @retval HAL status
   */
-HAL_StatusTypeDef HAL_XSPI_Receive_DMA(XSPI_HandleTypeDef *hxspi, uint8_t *const pData)
+HAL_StatusTypeDef HAL_XSPI_Receive_DMA(XSPI_HandleTypeDef *hxspi, uint8_t *pData)
 {
   HAL_StatusTypeDef status = HAL_OK;
   uint32_t data_size = hxspi->Instance->DLR + 1U;
@@ -1828,7 +1829,7 @@ HAL_StatusTypeDef HAL_XSPI_Receive_DMA(XSPI_HandleTypeDef *hxspi, uint8_t *const
   * @note   This function is used only in Automatic Polling Mode
   * @retval HAL status
   */
-HAL_StatusTypeDef HAL_XSPI_AutoPolling(XSPI_HandleTypeDef *hxspi, XSPI_AutoPollingTypeDef *const pCfg,
+HAL_StatusTypeDef HAL_XSPI_AutoPolling(XSPI_HandleTypeDef *hxspi, const XSPI_AutoPollingTypeDef *pCfg,
                                        uint32_t Timeout)
 {
   HAL_StatusTypeDef status;
@@ -1909,7 +1910,7 @@ HAL_StatusTypeDef HAL_XSPI_AutoPolling(XSPI_HandleTypeDef *hxspi, XSPI_AutoPolli
   * @note   This function is used only in Automatic Polling Mode
   * @retval HAL status
   */
-HAL_StatusTypeDef HAL_XSPI_AutoPolling_IT(XSPI_HandleTypeDef *hxspi, XSPI_AutoPollingTypeDef *const pCfg)
+HAL_StatusTypeDef HAL_XSPI_AutoPolling_IT(XSPI_HandleTypeDef *hxspi, const XSPI_AutoPollingTypeDef *pCfg)
 {
   HAL_StatusTypeDef status;
   uint32_t tickstart = HAL_GetTick();
@@ -1982,7 +1983,7 @@ HAL_StatusTypeDef HAL_XSPI_AutoPolling_IT(XSPI_HandleTypeDef *hxspi, XSPI_AutoPo
   * @note   This function is used only in Memory mapped Mode
   * @retval HAL status
   */
-HAL_StatusTypeDef HAL_XSPI_MemoryMapped(XSPI_HandleTypeDef *hxspi, XSPI_MemoryMappedTypeDef *const pCfg)
+HAL_StatusTypeDef HAL_XSPI_MemoryMapped(XSPI_HandleTypeDef *hxspi, const XSPI_MemoryMappedTypeDef *pCfg)
 {
   HAL_StatusTypeDef status;
   uint32_t tickstart = HAL_GetTick();
@@ -2782,7 +2783,7 @@ uint32_t HAL_XSPI_GetState(const XSPI_HandleTypeDef *hxspi)
   * @param  Timeout : Timeout duration
   * @retval HAL status
   */
-HAL_StatusTypeDef HAL_XSPIM_Config(XSPI_HandleTypeDef *const hxspi, XSPIM_CfgTypeDef *const pCfg, uint32_t Timeout)
+HAL_StatusTypeDef HAL_XSPIM_Config(XSPI_HandleTypeDef *hxspi, const XSPIM_CfgTypeDef *pCfg, uint32_t Timeout)
 {
   HAL_StatusTypeDef status = HAL_OK;
   uint8_t index;
@@ -2948,7 +2949,7 @@ HAL_StatusTypeDef HAL_XSPIM_Config(XSPI_HandleTypeDef *const hxspi, XSPIM_CfgTyp
   * @param  pCfg   : Current delay values corresponding to the DelayValueType field.
   * @retval HAL status
   */
-HAL_StatusTypeDef HAL_XSPI_GetDelayValue(XSPI_HandleTypeDef *hxspi, XSPI_HSCalTypeDef *const pCfg)
+HAL_StatusTypeDef HAL_XSPI_GetDelayValue(XSPI_HandleTypeDef *hxspi, XSPI_HSCalTypeDef *pCfg)
 {
   HAL_StatusTypeDef status = HAL_OK;
   __IO uint32_t reg = 0;
@@ -3000,7 +3001,7 @@ HAL_StatusTypeDef HAL_XSPI_GetDelayValue(XSPI_HandleTypeDef *hxspi, XSPI_HSCalTy
   * @param  pCfg   : Configuration of delay value specified in DelayValueType field.
   * @retval HAL status
   */
-HAL_StatusTypeDef HAL_XSPI_SetDelayValue(XSPI_HandleTypeDef *hxspi, XSPI_HSCalTypeDef *const pCfg)
+HAL_StatusTypeDef HAL_XSPI_SetDelayValue(XSPI_HandleTypeDef *hxspi, const XSPI_HSCalTypeDef *pCfg)
 {
   HAL_StatusTypeDef status = HAL_OK;
 
@@ -3219,7 +3220,7 @@ static HAL_StatusTypeDef XSPI_WaitFlagStateUntilTimeout(XSPI_HandleTypeDef *hxsp
   * @param  pCmd   : structure that contains the command configuration information
   * @retval HAL status
   */
-static HAL_StatusTypeDef XSPI_ConfigCmd(XSPI_HandleTypeDef *hxspi, XSPI_RegularCmdTypeDef *pCmd)
+static HAL_StatusTypeDef XSPI_ConfigCmd(XSPI_HandleTypeDef *hxspi, const XSPI_RegularCmdTypeDef *pCmd)
 {
   HAL_StatusTypeDef status = HAL_OK;
   __IO uint32_t *ccr_reg;
@@ -3417,7 +3418,7 @@ static HAL_StatusTypeDef XSPI_ConfigCmd(XSPI_HandleTypeDef *hxspi, XSPI_RegularC
   * @param  pCfg         : configuration of the IO Manager for the instance
   * @retval HAL status
   */
-static void XSPIM_GetConfig(uint8_t instance_nb, XSPIM_CfgTypeDef *const pCfg)
+static void XSPIM_GetConfig(uint8_t instance_nb, XSPIM_CfgTypeDef *pCfg)
 {
   uint32_t mux;
   uint32_t mode;

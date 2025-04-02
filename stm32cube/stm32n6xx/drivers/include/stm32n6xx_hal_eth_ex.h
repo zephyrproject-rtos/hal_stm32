@@ -572,7 +572,7 @@ typedef struct
 #define  ETH_RX_QUEUE_PRIO_6   0x00000040U    /*!<  Rx VLAN User Tag Priority 6 */
 #define  ETH_RX_QUEUE_PRIO_7   0x00000080U    /*!<  Rx VLAN User Tag Priority 7 */
 /**
-  *
+  * @}
   */
 
 /** @defgroup ETHEx_Preemption_Packet ETHEx Preemption Packet
@@ -708,10 +708,6 @@ HAL_StatusTypeDef HAL_ETHEx_DisableFPE(ETH_HandleTypeDef *heth);
 HAL_StatusTypeDef HAL_ETHEx_GetFPEConfig(ETH_HandleTypeDef *heth,  ETH_FPEConfigTypeDef *fpeconf);
 HAL_StatusTypeDef HAL_ETHEx_SetFPEConfig(ETH_HandleTypeDef *heth,  ETH_FPEConfigTypeDef *fpeconf);
 #endif /* HAL_ETH_USE_FPE */
-
-/**
-  * @}
-  */
 
 /**
   * @}

@@ -67,11 +67,6 @@ extern "C" {
 #define UID_BASE_ADDRESS              UID_BASE
 
 /**
-  * @brief Flash size data register base address
-  */
-#define FLASHSIZE_BASE_ADDRESS        FLASHSIZE_BASE
-
-/**
   * @brief Package data register base address
   */
 #define PACKAGE_BASE_ADDRESS          PACKAGE_BASE
@@ -273,21 +268,6 @@ __STATIC_INLINE uint32_t LL_GetUID_Word2(void)
 }
 
 /**
-  * @brief  Get Flash memory size
-  * @note   This bitfield indicates the size of the device Flash memory expressed in
-  *         Kbytes. As an example, 0x040 corresponds to 64 Kbytes.
-  * @note   The read address belongs to an area which may contain virgin data generating
-  *         double ECC error (as never programmed). Thus, in case of cache activation
-  *         the address range 0x08FFF000-0x08FFFFFF should be defined as non-cacheable
-  *         through the MPU.
-  * @retval FLASH_SIZE[15:0]: Flash memory size
-  */
-__STATIC_INLINE uint32_t LL_GetFlashSize(void)
-{
-  return (uint32_t)((READ_REG(*((__IO uint32_t *)FLASHSIZE_BASE_ADDRESS)) & 0xFFFF0000UL) >> 16UL);
-}
-
-/**
   * @brief  Get Package type
   * @note   The read address belongs to an area which may contain virgin data generating
   *         double ECC error (as never programmed). Thus, in case of cache activation
@@ -312,7 +292,7 @@ __STATIC_INLINE uint32_t LL_GetFlashSize(void)
   */
 __STATIC_INLINE uint32_t LL_GetPackageType(void)
 {
-  return (uint32_t)(READ_REG(*((__IO uint32_t *)PACKAGE_BASE_ADDRESS)) & 0x0FUL);
+  return (uint32_t)((READ_REG(*((__IO uint32_t *)PACKAGE_BASE_ADDRESS)) & 0x000F0000UL) >> 16UL);
 }
 
 /**
