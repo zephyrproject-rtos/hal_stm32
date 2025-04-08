@@ -1902,8 +1902,15 @@ HAL_StatusTypeDef HAL_TIMEx_OnePulseN_Stop_IT(TIM_HandleTypeDef *htim, uint32_t 
   *            @arg TIM_TS_ITR0: Internal trigger 0 selected
   *            @arg TIM_TS_ITR1: Internal trigger 1 selected
   *            @arg TIM_TS_ITR2: Internal trigger 2 selected
+#if defined(TIM4)
+  *            @arg TIM_TS_ITR3: Internal trigger 3 selected
   *            @arg TIM_TS_ITR7: Internal trigger 7 selected
   *            @arg TIM_TS_ITR8: Internal trigger 8 selected
+  *            @arg TIM_TS_ITR11: Internal trigger 11 selected
+#else
+  *            @arg TIM_TS_ITR7: Internal trigger 7 selected
+  *            @arg TIM_TS_ITR8: Internal trigger 8 selected
+#endif
   *            @arg TIM_TS_NONE: No trigger is needed
   * @param  CommutationSource the Commutation Event source
   *          This parameter can be one of the following values:
@@ -1920,9 +1927,16 @@ HAL_StatusTypeDef HAL_TIMEx_ConfigCommutEvent(TIM_HandleTypeDef *htim, uint32_t 
 
   __HAL_LOCK(htim);
 
+#if defined(TIM4)
+  if ((InputTrigger == TIM_TS_ITR0) || (InputTrigger == TIM_TS_ITR1) ||
+      (InputTrigger == TIM_TS_ITR2) || (InputTrigger == TIM_TS_ITR3) ||
+      (InputTrigger == TIM_TS_ITR7) || (InputTrigger == TIM_TS_ITR8) ||
+      (InputTrigger == TIM_TS_ITR11))
+#else
   if ((InputTrigger == TIM_TS_ITR0) || (InputTrigger == TIM_TS_ITR1) ||
       (InputTrigger == TIM_TS_ITR2) || (InputTrigger == TIM_TS_ITR7) ||
       (InputTrigger == TIM_TS_ITR8))
+#endif /* TIM4 */
   {
     /* Select the Input trigger */
     htim->Instance->SMCR &= ~TIM_SMCR_TS;
@@ -1960,8 +1974,15 @@ HAL_StatusTypeDef HAL_TIMEx_ConfigCommutEvent(TIM_HandleTypeDef *htim, uint32_t 
   *            @arg TIM_TS_ITR0: Internal trigger 0 selected
   *            @arg TIM_TS_ITR1: Internal trigger 1 selected
   *            @arg TIM_TS_ITR2: Internal trigger 2 selected
+#if defined(TIM4)
+  *            @arg TIM_TS_ITR3: Internal trigger 3 selected
   *            @arg TIM_TS_ITR7: Internal trigger 7 selected
   *            @arg TIM_TS_ITR8: Internal trigger 8 selected
+  *            @arg TIM_TS_ITR11: Internal trigger 11 selected
+#else
+  *            @arg TIM_TS_ITR7: Internal trigger 7 selected
+  *            @arg TIM_TS_ITR8: Internal trigger 8 selected
+#endif
   *            @arg TIM_TS_NONE: No trigger is needed
   * @param  CommutationSource the Commutation Event source
   *          This parameter can be one of the following values:
@@ -1978,9 +1999,16 @@ HAL_StatusTypeDef HAL_TIMEx_ConfigCommutEvent_IT(TIM_HandleTypeDef *htim, uint32
 
   __HAL_LOCK(htim);
 
+#if defined(TIM4)
+  if ((InputTrigger == TIM_TS_ITR0) || (InputTrigger == TIM_TS_ITR1) ||
+      (InputTrigger == TIM_TS_ITR2) || (InputTrigger == TIM_TS_ITR3) ||
+      (InputTrigger == TIM_TS_ITR7) || (InputTrigger == TIM_TS_ITR8) ||
+      (InputTrigger == TIM_TS_ITR11))
+#else
   if ((InputTrigger == TIM_TS_ITR0) || (InputTrigger == TIM_TS_ITR1) ||
       (InputTrigger == TIM_TS_ITR2) || (InputTrigger == TIM_TS_ITR7) ||
       (InputTrigger == TIM_TS_ITR8))
+#endif /* TIM4 */
   {
     /* Select the Input trigger */
     htim->Instance->SMCR &= ~TIM_SMCR_TS;
@@ -2019,8 +2047,15 @@ HAL_StatusTypeDef HAL_TIMEx_ConfigCommutEvent_IT(TIM_HandleTypeDef *htim, uint32
   *            @arg TIM_TS_ITR0: Internal trigger 0 selected
   *            @arg TIM_TS_ITR1: Internal trigger 1 selected
   *            @arg TIM_TS_ITR2: Internal trigger 2 selected
+#if defined(TIM4)
+  *            @arg TIM_TS_ITR3: Internal trigger 3 selected
   *            @arg TIM_TS_ITR7: Internal trigger 7 selected
   *            @arg TIM_TS_ITR8: Internal trigger 8 selected
+  *            @arg TIM_TS_ITR11: Internal trigger 11 selected
+#else
+  *            @arg TIM_TS_ITR7: Internal trigger 7 selected
+  *            @arg TIM_TS_ITR8: Internal trigger 8 selected
+#endif
   *            @arg TIM_TS_NONE: No trigger is needed
   * @param  CommutationSource the Commutation Event source
   *          This parameter can be one of the following values:
@@ -2037,9 +2072,16 @@ HAL_StatusTypeDef HAL_TIMEx_ConfigCommutEvent_DMA(TIM_HandleTypeDef *htim, uint3
 
   __HAL_LOCK(htim);
 
+#if defined(TIM4)
+  if ((InputTrigger == TIM_TS_ITR0) || (InputTrigger == TIM_TS_ITR1) ||
+      (InputTrigger == TIM_TS_ITR2) || (InputTrigger == TIM_TS_ITR3) ||
+      (InputTrigger == TIM_TS_ITR7) || (InputTrigger == TIM_TS_ITR8) ||
+      (InputTrigger == TIM_TS_ITR11))
+#else
   if ((InputTrigger == TIM_TS_ITR0) || (InputTrigger == TIM_TS_ITR1) ||
       (InputTrigger == TIM_TS_ITR2) || (InputTrigger == TIM_TS_ITR7) ||
       (InputTrigger == TIM_TS_ITR8))
+#endif /* TIM4 */
   {
     /* Select the Input trigger */
     htim->Instance->SMCR &= ~TIM_SMCR_TS;
@@ -2342,6 +2384,9 @@ HAL_StatusTypeDef HAL_TIMEx_ConfigBreakInput(TIM_HandleTypeDef *htim,
   *            @arg TIM_TIM2_ETR_COMP2          TIM2_ETR is connected to COMP2 output
   *            @arg TIM_TIM2_ETR_HSI            TIM2_ETR is connected to HSI
   *            @arg TIM_TIM2_ETR_TIM3_ETR       TIM2_ETR is connected to TIM3 ETR
+#if defined(TIM4)
+  *            @arg TIM_TIM2_ETR_TIM4_ETR       TIM2_ETR is connected to TIM4 ETR
+#endif
   *            @arg TIM_TIM2_ETR_LSE            TIM2_ETR is connected to LSE
   *
   *         For TIM3, the parameter can take one of the following values:
@@ -2350,8 +2395,20 @@ HAL_StatusTypeDef HAL_TIMEx_ConfigBreakInput(TIM_HandleTypeDef *htim,
   *            @arg TIM_TIM3_ETR_COMP2          TIM3_ETR is connected to COMP2 output
   *            @arg TIM_TIM3_ETR_HSI            TIM3_ETR is connected to HSI
   *            @arg TIM_TIM3_ETR_TIM2_ETR       TIM3_ETR is connected to TIM2 ETR
+#if defined(TIM4)
+  *            @arg TIM_TIM3_ETR_TIM4_ETR       TIM3_ETR is connected to TIM4 ETR
+#endif
   *            @arg TIM_TIM3_ETR_ADC4_AWD2      TIM3_ETR is connected to ADC4 AWD2
   *            @arg TIM_TIM3_ETR_ADC4_AWD3      TIM3_ETR is connected to ADC4 AWD3
+#if defined(TIM4)
+  *
+  *         For TIM4, the parameter can take one of the following values:
+  *            @arg TIM_TIM4_ETR_GPIO           TIM4_ETR is not connected to I/O
+  *            @arg TIM_TIM4_ETR_COMP1          TIM4_ETR is connected to COMP1 output
+  *            @arg TIM_TIM4_ETR_COMP2          TIM4_ETR is connected to COMP2 output
+  *            @arg TIM_TIM4_ETR_HSI            TIM4_ETR is connected to HSI
+  *            @arg TIM_TIM4_ETR_TIM3_ETR       TIM4_ETR is connected to TIM3 ETR
+#endif
   *
   * @retval HAL status
   */
@@ -2403,6 +2460,16 @@ HAL_StatusTypeDef HAL_TIMEx_RemapConfig(TIM_HandleTypeDef *htim, uint32_t Remap)
   *            @arg TIM_TIM3_TI2_COMP1:               TIM3 TI2 is connected to COMP1 output
   *            @arg TIM_TIM3_TI2_COMP2:               TIM3 TI2 is connected to COMP1 output
   *
+#if defined(TIM4)
+  *         For TIM4, the parameter is one of the following values:
+  *            @arg TIM_TIM4_TI1_GPIO:                TIM4 TI1 is connected to GPIO
+  *            @arg TIM_TIM4_TI1_COMP1:               TIM4 TI1 is connected to COMP1 output
+  *            @arg TIM_TIM4_TI1_COMP2:               TIM4 TI1 is connected to COMP2 output
+  *            @arg TIM_TIM4_TI2_GPIO:                TIM4 TI2 is connected to GPIO
+  *            @arg TIM_TIM4_TI2_COMP1:               TIM4 TI2 is connected to COMP1 output
+  *            @arg TIM_TIM4_TI2_COMP2:               TIM4 TI2 is connected to COMP1 output
+  *
+#endif
   *         For TIM16, the parameter can have the following values:
   *            @arg TIM_TIM16_TI1_GPIO:              TIM16 TI1 is connected to GPIO
   *            @arg TIM_TIM16_TI1_MCO:               TIM16 TI1 is connected to MCO
