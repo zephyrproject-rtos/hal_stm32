@@ -5871,8 +5871,14 @@ HAL_StatusTypeDef HAL_TIM_ConfigClockSource(TIM_HandleTypeDef *htim, const TIM_C
     case TIM_CLOCKSOURCE_ITR0:
     case TIM_CLOCKSOURCE_ITR1:
     case TIM_CLOCKSOURCE_ITR2:
+#if defined(TIM4)
+    case TIM_CLOCKSOURCE_ITR3:
+#endif /* TIM4 */
     case TIM_CLOCKSOURCE_ITR7:
     case TIM_CLOCKSOURCE_ITR8:
+#if defined(USB_OTG_HS)
+    case TIM_CLOCKSOURCE_ITR11:
+#endif /* USB_OTG_HS */
     {
       /* Check whether or not the timer instance supports internal trigger input */
       assert_param(IS_TIM_CLOCKSOURCE_INSTANCE((htim->Instance), sClockSourceConfig->ClockSource));
@@ -7835,8 +7841,14 @@ static HAL_StatusTypeDef TIM_SlaveTimer_SetConfig(TIM_HandleTypeDef *htim,
     case TIM_TS_ITR0:
     case TIM_TS_ITR1:
     case TIM_TS_ITR2:
+#if defined(TIM4)
+    case TIM_TS_ITR3:
+#endif /* TIM4 */
     case TIM_TS_ITR7:
     case TIM_TS_ITR8:
+#if defined(USB_OTG_HS)
+    case TIM_TS_ITR11:
+#endif /* USB_OTG_HS */
     {
       /* Check the parameter */
       assert_param(IS_TIM_INTERNAL_TRIGGEREVENT_INSTANCE((htim->Instance), sSlaveConfig->InputTrigger));
@@ -8128,8 +8140,14 @@ static void TIM_TI4_SetConfig(TIM_TypeDef *TIMx, uint32_t TIM_ICPolarity, uint32
   *            @arg TIM_TS_ITR0: Internal Trigger 0
   *            @arg TIM_TS_ITR1: Internal Trigger 1
   *            @arg TIM_TS_ITR2: Internal Trigger 2
+#if defined(TIM4)
+  *            @arg TIM_TS_ITR3: Internal Trigger 3
+#endif
   *            @arg TIM_TS_ITR7: Internal Trigger 7
   *            @arg TIM_TS_ITR8: Internal Trigger 8
+#if defined(USB_OTG_HS)
+  *            @arg TIM_TS_ITR11: Internal Trigger 11
+#endif
   *            @arg TIM_TS_TI1F_ED: TI1 Edge Detector
   *            @arg TIM_TS_TI1FP1: Filtered Timer Input 1
   *            @arg TIM_TS_TI2FP2: Filtered Timer Input 2
