@@ -48,6 +48,9 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
+#if defined(VREFBUF)
+#define VREFBUF_TIMEOUT_VALUE   10U   /* 10 ms (to be confirmed) */
+#endif /* VREFBUF */
 
 /* Private macros ------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
@@ -614,6 +617,96 @@ void HAL_SYSCFG_DisableIOAnalogSwitchVdd(void)
   CLEAR_BIT(SYSCFG->CFGR1, SYSCFG_CFGR1_ANASWVDD);
 }
 
+#ifdef VREFBUF
+/**
+  * @brief Configure the internal voltage reference buffer voltage scale.
+  * @param  VoltageScaling: specifies the output voltage to achieve
+  *          This parameter can be one of the following values:
+  *            @arg SYSCFG_VREFBUF_VOLTAGE_SCALE0: VREF_OUT1 around 1.5 V.
+  *                                                This requires VDDA equal to or higher than 1.8 V.
+  *            @arg SYSCFG_VREFBUF_VOLTAGE_SCALE1: VREF_OUT1 around 1.8 V.
+  *                                                This requires VDDA equal to or higher than 2.1 V.
+  *            @arg SYSCFG_VREFBUF_VOLTAGE_SCALE2: VREF_OUT1 around 2.048 V.
+  *                                                This requires VDDA equal to or higher than 2.4 V.
+  *            @arg SYSCFG_VREFBUF_VOLTAGE_SCALE3: VREF_OUT1 around 2.5 V.
+  *                                                This requires VDDA equal to or higher than 2.8 V.
+  * @retval None
+  */
+void HAL_SYSCFG_VREFBUF_VoltageScalingConfig(uint32_t VoltageScaling)
+{
+  /* Check the parameters */
+  assert_param(IS_SYSCFG_VREFBUF_VOLTAGE_SCALE(VoltageScaling));
+
+  MODIFY_REG(VREFBUF->CSR, VREFBUF_CSR_VRS, VoltageScaling);
+}
+
+/**
+  * @brief Configure the internal voltage reference buffer high impedance mode.
+  * @param  Mode: specifies the high impedance mode
+  *          This parameter can be one of the following values:
+  *            @arg SYSCFG_VREFBUF_HIGH_IMPEDANCE_DISABLE: VREF+ pin is internally connect to VREFINT output.
+  *            @arg SYSCFG_VREFBUF_HIGH_IMPEDANCE_ENABLE: VREF+ pin is high impedance.
+  * @retval None
+  */
+void HAL_SYSCFG_VREFBUF_HighImpedanceConfig(uint32_t Mode)
+{
+  /* Check the parameters */
+  assert_param(IS_SYSCFG_VREFBUF_HIGH_IMPEDANCE(Mode));
+
+  MODIFY_REG(VREFBUF->CSR, VREFBUF_CSR_HIZ, Mode);
+}
+
+/**
+  * @brief  Tune the Internal Voltage Reference buffer (VREFBUF).
+  * @retval None
+  */
+void HAL_SYSCFG_VREFBUF_TrimmingConfig(uint32_t TrimmingValue)
+{
+  /* Check the parameters */
+  assert_param(IS_SYSCFG_VREFBUF_TRIMMING(TrimmingValue));
+
+  MODIFY_REG(VREFBUF->CCR, VREFBUF_CCR_TRIM, TrimmingValue);
+}
+
+/**
+  * @brief  Enable the Internal Voltage Reference buffer (VREFBUF).
+  * @retval HAL_OK/HAL_TIMEOUT
+  */
+HAL_StatusTypeDef HAL_SYSCFG_EnableVREFBUF(void)
+{
+  uint32_t  tickstart;
+
+  SET_BIT(VREFBUF->CSR, VREFBUF_CSR_ENVR);
+
+  /* Get Start Tick*/
+  tickstart = HAL_GetTick();
+
+  /* VRR detection is only available when bit HIZ is cleared */
+  if (READ_BIT(VREFBUF->CSR, VREFBUF_CSR_HIZ) == 0UL)
+  {
+    /* Wait for VRR bit  */
+    while (READ_BIT(VREFBUF->CSR, VREFBUF_CSR_VRR) == 0UL)
+    {
+      if ((HAL_GetTick() - tickstart) > VREFBUF_TIMEOUT_VALUE)
+      {
+        return HAL_TIMEOUT;
+      }
+    }
+  }
+
+  return HAL_OK;
+}
+
+/**
+  * @brief  Disable the Internal Voltage Reference buffer (VREFBUF).
+  *
+  * @retval None
+  */
+void HAL_SYSCFG_DisableVREFBUF(void)
+{
+  CLEAR_BIT(VREFBUF->CSR, VREFBUF_CSR_ENVR);
+}
+#endif /* VREFBUF */
 
 #ifdef SYSCFG_OTGHSPHYCR_EN
 /**

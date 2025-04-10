@@ -31,7 +31,7 @@
   * @{
   */
 
-#if defined (TIM1) || defined (TIM2) || defined (TIM3) || defined (TIM16) || defined (TIM17)
+#if defined (TIM1) || defined (TIM2) || defined (TIM3) || defined (TIM4) || defined (TIM16) || defined (TIM17)
 
 /** @addtogroup TIM_LL
   * @{
@@ -251,6 +251,13 @@ ErrorStatus LL_TIM_DeInit(const TIM_TypeDef *TIMx)
     LL_APB1_GRP1_ReleaseReset(LL_APB1_GRP1_PERIPH_TIM3);
   }
 #endif /* TIM3 */
+#if defined(TIM4)
+  else if (TIMx == TIM4)
+  {
+    LL_APB1_GRP1_ForceReset(LL_APB1_GRP1_PERIPH_TIM4);
+    LL_APB1_GRP1_ReleaseReset(LL_APB1_GRP1_PERIPH_TIM4);
+  }
+#endif /* TIM4 */
   else if (TIMx == TIM16)
   {
     LL_APB2_GRP1_ForceReset(LL_APB2_GRP1_PERIPH_TIM16);
@@ -1337,7 +1344,7 @@ static ErrorStatus IC4Config(TIM_TypeDef *TIMx, const LL_TIM_IC_InitTypeDef *TIM
   * @}
   */
 
-#endif /* TIM1 || TIM2 || TIM3 || TIM16 || TIM17 */
+#endif /* TIM1 || TIM2 || TIM3 || TIM4 || TIM16 || TIM17 */
 
 /**
   * @}

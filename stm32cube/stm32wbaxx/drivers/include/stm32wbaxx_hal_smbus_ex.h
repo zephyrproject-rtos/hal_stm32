@@ -91,9 +91,9 @@ typedef struct
 /** @defgroup SMBUSEx_AutonomousMode_TriggerSelection SMBUS Extended Autonomous Mode Trigger Selection
   * @{
   */
-#if defined(I2C1)
-#define SMBUS_TRIG_GRP1                   (0x10000000U)         /*!< Trigger Group for I2C1 */
-#endif /* I2C1 */
+#if (defined(I2C1) || defined(I2C2) || defined(I2C4))
+#define SMBUS_TRIG_GRP1                   (0x10000000U)         /*!< Trigger Group for I2C1, I2C2, I2C4 */
+#endif /* I2C1, I2C2, I2C4 */
 #define SMBUS_TRIG_GRP2                   (0x20000000U)         /*!< Trigger Group for I2C3 */
 
 #if defined(SMBUS_TRIG_GRP1)
