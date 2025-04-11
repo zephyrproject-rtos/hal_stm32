@@ -219,8 +219,6 @@ typedef enum
 /* ================                           Processor and Core Peripheral Section                           ================ */
 /* =========================================================================================================================== */
 
-#define SMPS       /*!< Switched mode power supply feature */
-
 /**
   * @brief Configuration of the Cortex-M7 Processor and Core Peripherals
    */
