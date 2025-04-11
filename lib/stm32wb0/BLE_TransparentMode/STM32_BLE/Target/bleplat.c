@@ -32,6 +32,7 @@
 #include "osal.h"
 #include "stm32wb0x.h"
 #include "stm32wb0x_ll_radio.h"
+#include <zephyr/drivers/entropy.h>
 
 #define PLL_ADC_CALIB_CORR  2
 #define CP_ISEL_Msk         (0x07UL)
@@ -39,6 +40,8 @@
 #define SYNTHCAL3_ANA_TST   (*(volatile uint32_t *)0x600015A4)
 #define LL_DUMMY_ACCESS_ADDRESS (0x00000000U)
 #define LL_DTM_ACCESS_ADDRESS   (0x71764129U)
+
+const struct device *rng_dev = DEVICE_DT_GET(DT_CHOSEN(zephyr_entropy));
 
 #if defined(STM32WB06) || defined(STM32WB07) || defined(STM32WB09)
 uint32_t SYNTH0_ANA_ENG_bak, PWR_ENGTRIM_bak;
@@ -120,12 +123,14 @@ int32_t BLEPLAT_AesCMACEncryptFinish(BLEPLAT_AESCMACctxTypeDef *pAESCMACctx,
 
 void BLEPLAT_RngGetRandom16(uint16_t* num)
 {
-  HW_RNG_GetRandom16(num);
+  uint16_t len = 2;
+  entropy_get_entropy_isr(rng_dev, (uint8_t *)num, len, 0);
 }
 
 void BLEPLAT_RngGetRandom32(uint32_t* num)
 {
-  HW_RNG_GetRandom32(num);
+  uint16_t len = 4;
+  entropy_get_entropy_isr(rng_dev, (uint8_t *)num, len, 0);
 }
 
 uint8_t BLEPLAT_DBmToPALevel(int8_t TX_dBm)
