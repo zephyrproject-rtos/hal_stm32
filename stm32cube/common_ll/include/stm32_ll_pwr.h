@@ -42,6 +42,8 @@
 #include <stm32n6xx_ll_pwr.h>
 #elif defined(CONFIG_SOC_SERIES_STM32U0X)
 #include <stm32u0xx_ll_pwr.h>
+#elif defined(CONFIG_SOC_SERIES_STM32U3X)
+#include <stm32u3xx_ll_pwr.h>
 #elif defined(CONFIG_SOC_SERIES_STM32U5X)
 #include <stm32u5xx_ll_pwr.h>
 #elif defined(CONFIG_SOC_SERIES_STM32WB0X)
