@@ -1,0 +1,51 @@
+STM32CubeU3
+###########
+
+Origin:
+   ST Microelectronics
+   https://www.st.com/en/embedded-software/stm32cubeu3.html
+
+Status:
+   version v1.1.0
+
+Purpose:
+   ST Microelectronics official MCU package for STM32U3 series.
+
+Description:
+   This package is an extract of official STM32CubeU3 package written by ST Microelectronics.
+   It is composed of STM32Cube hardware abstraction layer (HAL) and low layer (LL) plus a set
+   of CMSIS headers files, one for each SoC in STM32U3 series.
+
+Dependencies:
+    None.
+
+URL:
+   https://github.com/STMicroelectronics/STM32CubeU3
+
+Commit:
+   6dead3ef988faf1bdb8087bf4239d6fcb80b1058
+
+Maintained-by:
+   External
+
+License:
+   BSD-3-Clause
+
+License Link:
+   https://opensource.org/licenses/BSD-3-Clause
+
+Patch List:
+
+   *Changes from official delivery:
+    -dos2unix applied
+    -trailing white spaces removed
+
+   *Provision to enable hal & ll asserts added
+    -Added stm32cube/stm32u3xx/drivers/include/stm32_assert.h
+    -Removed unused stm32cube/stm32u3xx/drivers/include/stm32_assert_template.h
+
+   *Fix to remove PAGESIZE definition which conflicts with POSIX
+    Impacted files:
+    stm32cube/stm32u0xx/drivers/include/Legacy/stm32_hal_legacy.h
+
+   See release_note.html from STM32Cube
