@@ -10,4 +10,6 @@
 #include <stm32h7rsxx_ll_i3c.h>
 #elif defined(CONFIG_SOC_SERIES_STM32N6X)
 #include <stm32n6xx_ll_i3c.h>
+#elif defined(CONFIG_SOC_SERIES_STM32U3X)
+#include <stm32u3xx_ll_i3c.h>
 #endif
