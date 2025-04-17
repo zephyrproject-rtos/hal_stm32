@@ -25,7 +25,7 @@
 #include "stm32_assert.h"
 #else
 #define assert_param(expr) ((void)0U)
-#endif
+#endif /* USE_FULL_LL_DRIVER */
 
 /** @addtogroup STM32H7RSxx_LL_Driver
   * @{
@@ -312,8 +312,11 @@ void LL_RCC_GetSystemClocksFreq(LL_RCC_ClocksTypeDef *RCC_Clocks)
   */
 void LL_RCC_GetPLL1ClockFreq(LL_PLL_ClocksTypeDef *PLL_Clocks)
 {
-  uint32_t pllinputfreq = LL_RCC_PERIPH_FREQUENCY_NO, pllsource;
-  uint32_t m, n, fracn = 0U;
+  uint32_t pllinputfreq = LL_RCC_PERIPH_FREQUENCY_NO;
+  uint32_t pllsource;
+  uint32_t m;
+  uint32_t n;
+  uint32_t fracn = 0U;
 
   /* PLL_VCO = (HSE_VALUE, CSI_VALUE or HSI_VALUE/HSIDIV) / PLLM * (PLLN + FRACN)
      SYSCLK = PLL_VCO / PLLP
@@ -396,8 +399,11 @@ void LL_RCC_GetPLL1ClockFreq(LL_PLL_ClocksTypeDef *PLL_Clocks)
   */
 void LL_RCC_GetPLL2ClockFreq(LL_PLL_ClocksTypeDef *PLL_Clocks)
 {
-  uint32_t pllinputfreq = LL_RCC_PERIPH_FREQUENCY_NO, pllsource;
-  uint32_t m, n, fracn = 0U;
+  uint32_t pllinputfreq = LL_RCC_PERIPH_FREQUENCY_NO;
+  uint32_t pllsource;
+  uint32_t m;
+  uint32_t n;
+  uint32_t fracn = 0U;
 
   /* PLL_VCO = (HSE_VALUE, CSI_VALUE or HSI_VALUE/HSIDIV) / PLLM * (PLLN + FRACN)
      SYSCLK = PLL_VCO / PLLP
@@ -485,8 +491,11 @@ void LL_RCC_GetPLL2ClockFreq(LL_PLL_ClocksTypeDef *PLL_Clocks)
   */
 void LL_RCC_GetPLL3ClockFreq(LL_PLL_ClocksTypeDef *PLL_Clocks)
 {
-  uint32_t pllinputfreq = LL_RCC_PERIPH_FREQUENCY_NO, pllsource;
-  uint32_t m, n, fracn = 0U;
+  uint32_t pllinputfreq = LL_RCC_PERIPH_FREQUENCY_NO;
+  uint32_t pllsource;
+  uint32_t m;
+  uint32_t n;
+  uint32_t fracn = 0U;
 
   /* PLL_VCO = (HSE_VALUE, CSI_VALUE or HSI_VALUE/HSIDIV) / PLLM * (PLLN + FRACN)
      SYSCLK = PLL_VCO / PLLP
@@ -1705,7 +1714,7 @@ uint32_t LL_RCC_GetFMCClockFreq(uint32_t FMCxSource)
 
     case LL_RCC_FMC_CLKSOURCE_HCLK_DIV4:
       fmc_frequency = (RCC_GetHCLKClockFreq(LL_RCC_CALC_SYSCLK_FREQ(RCC_GetSystemClockFreq(), LL_RCC_GetSysPrescaler())) / 4U);
-    break;
+      break;
 
     default:
       /* Nothing to do */
@@ -1783,7 +1792,7 @@ uint32_t LL_RCC_GetXSPIClockFreq(uint32_t XSPIxSource)
     case LL_RCC_XSPI1_CLKSOURCE_HCLK_DIV4:
     case LL_RCC_XSPI2_CLKSOURCE_HCLK_DIV4:
       xspi_frequency = (RCC_GetHCLKClockFreq(LL_RCC_CALC_SYSCLK_FREQ(RCC_GetSystemClockFreq(), LL_RCC_GetSysPrescaler())) / 4U);
-    break;
+      break;
 
     default:
       /* Nothing to do */

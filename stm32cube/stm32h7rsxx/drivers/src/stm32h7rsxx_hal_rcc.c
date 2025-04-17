@@ -41,8 +41,7 @@
       (+) Configure the AHB and APB buses pre-scalers
       (+) Enable the clock for the peripheral(s) to be used
       (+) Configure the clock kernel source(s) for peripherals which clocks are not
-          derived from the System clock through :RCC_D1CCIPR,RCC_D2CCIP1R,RCC_D2CCIP2R
-          and RCC_D3CCIPR registers
+          derived from the System clock.
 
                       ##### RCC Limitations #####
   ==============================================================================
@@ -193,15 +192,10 @@ static HAL_StatusTypeDef RCC_PLL_Config(uint32_t PLLnumber, const RCC_PLLInitTyp
              HSE and PLL.
              The AHB clock (HCLK) is derived from System core clock through configurable
              pre-scaler and used to clock the CPU, memory and peripherals mapped
-             on AHB and APB bus of the 3 Domains (D1, D2, D3)* through configurable pre-scalers
+             on AHB and APB bus through configurable pre-scalers
              and used to clock the peripherals mapped on these buses. You can use
              "HAL_RCC_GetSysClockFreq()" function to retrieve system clock frequency.
 
-         -@- All the peripheral clocks are derived from the System clock (SYSCLK) except those
-             with dual clock domain where kernel source clock could be selected through
-             RCC_D1CCIPR,RCC_D2CCIP1R,RCC_D2CCIP2R and RCC_D3CCIPR registers.
-
-     (*) : 2 Domains (CD and SRD) for stm32h7a3xx and stm32h7b3xx family lines.
 @endverbatim
   * @{
   */
@@ -248,7 +242,7 @@ HAL_StatusTypeDef HAL_RCC_DeInit(void)
     /* Reset CFGR register (HSI is selected as system clock source) */
     CLEAR_REG(RCC->CFGR);
 
-    /* Update the SystemCoreClock and SystemD2Clock global variables */
+    /* Update the SystemCoreClock global variables */
     SystemCoreClock = HSI_VALUE;
 
     /* Adapt Systick interrupt period */
@@ -874,8 +868,6 @@ HAL_StatusTypeDef HAL_RCC_OscConfig(RCC_OscInitTypeDef  *RCC_OscInitStruct)
   *         occur when the clock source will be ready.
   *         You can use HAL_RCC_GetClockConfig() function to know which clock is
   *         currently used as system clock source.
-  * @note   Depending on the device voltage range, the software has to set correctly
-  *         D1CPRE[3:0] bits to ensure that  Domain1 core clock not exceed the maximum allowed frequency
   *         (for more details refer to section above "Initialization/de-initialization functions")
   * @retval None
   */
@@ -1255,9 +1247,15 @@ void HAL_RCC_DisableCSS(void)
   */
 uint32_t HAL_RCC_GetSysClockFreq(void)
 {
-  uint32_t pllp, pllsource, pllm, pllfracen, hsivalue;
-  float_t fracn1, pllvco;
-  uint32_t sysclockfreq, prescaler;
+  uint32_t pllp;
+  uint32_t pllsource;
+  uint32_t pllm;
+  uint32_t pllfracen;
+  uint32_t hsivalue;
+  float_t fracn1;
+  float_t pllvco;
+  uint32_t sysclockfreq;
+  uint32_t prescaler;
 
   /* Get SYSCLK source -------------------------------------------------------*/
 
@@ -1355,7 +1353,8 @@ uint32_t HAL_RCC_GetSysClockFreq(void)
   */
 uint32_t HAL_RCC_GetHCLKFreq(void)
 {
-  uint32_t clock, prescaler;
+  uint32_t clock;
+  uint32_t prescaler;
   const uint8_t AHBPrescTable[8] = {1U, 2U, 3U, 4U, 6U, 7U, 8U, 9U};
 
   /* SysClk */
@@ -1377,7 +1376,8 @@ uint32_t HAL_RCC_GetHCLKFreq(void)
   */
 uint32_t HAL_RCC_GetPCLK1Freq(void)
 {
-  uint32_t clock, prescaler;
+  uint32_t clock;
+  uint32_t prescaler;
   /* Get HCLK source and compute PCLK1 frequency ---------------------------*/
   clock = HAL_RCC_GetHCLKFreq();
   /* APB1 prescaler */
@@ -1397,7 +1397,8 @@ uint32_t HAL_RCC_GetPCLK1Freq(void)
   */
 uint32_t HAL_RCC_GetPCLK2Freq(void)
 {
-  uint32_t clock, prescaler;
+  uint32_t clock;
+  uint32_t prescaler;
   /* Get HCLK source and compute PCLK2 frequency ---------------------------*/
   clock = HAL_RCC_GetHCLKFreq();
   /* APB2 prescaler */
@@ -1417,7 +1418,8 @@ uint32_t HAL_RCC_GetPCLK2Freq(void)
   */
 uint32_t HAL_RCC_GetPCLK4Freq(void)
 {
-  uint32_t clock, prescaler;
+  uint32_t clock;
+  uint32_t prescaler;
   /* Get HCLK source and compute PCLK4 frequency ---------------------------*/
   clock = HAL_RCC_GetHCLKFreq();
   /* APB4 prescaler */
@@ -1437,7 +1439,8 @@ uint32_t HAL_RCC_GetPCLK4Freq(void)
   */
 uint32_t HAL_RCC_GetPCLK5Freq(void)
 {
-  uint32_t clock, prescaler;
+  uint32_t clock;
+  uint32_t prescaler;
   /* Get HCLK source and compute PCLK5 frequency ---------------------------*/
   clock = HAL_RCC_GetHCLKFreq();
   /* APB5 prescaler */
@@ -2100,7 +2103,7 @@ static uint32_t RCC_PLL1_GetVCOOutputFreq(void)
   uint32_t pllfracn;
   float_t frequency;
 
-  /* Get PLL1 CFGR and DIVR register values */
+  /* Get PLL1 CKSELR and DIVR register values */
   tmpreg1 = RCC->PLLCKSELR;
   tmpreg2 = RCC->PLL1DIVR1;
 
@@ -2115,7 +2118,7 @@ static uint32_t RCC_PLL1_GetVCOOutputFreq(void)
   }
 
   /* Check if fractional part is enable */
-  if ((tmpreg1 & RCC_PLLCFGR_PLL1FRACEN) != 0U)
+  if ((RCC->PLLCFGR & RCC_PLLCFGR_PLL1FRACEN) != 0U)
   {
     pllfracn = (RCC->PLL1FRACR & RCC_PLL1FRACR_FRACN) >> RCC_PLL1FRACR_FRACN_Pos;
   }
@@ -2154,10 +2157,10 @@ static uint32_t RCC_PLL1_GetVCOOutputFreq(void)
       pllsrc = 0U;
       break;
   }
-
+  
   /* Compute VCO output frequency */
   frequency = ((float_t)pllsrc / (float_t)pllm) * ((float_t)plln + ((float_t)pllfracn / (float_t)0x2000U));
-
+  
   return (uint32_t)frequency;
 }
 
@@ -2175,7 +2178,7 @@ static uint32_t RCC_PLL2_GetVCOOutputFreq(void)
   uint32_t pllfracn;
   float_t frequency;
 
-  /* Get PLL2 CFGR and DIVR register values */
+  /* Get PLL2 CKSELR and DIVR register values */
   tmpreg1 = RCC->PLLCKSELR;
   tmpreg2 = RCC->PLL2DIVR1;
 
@@ -2190,7 +2193,7 @@ static uint32_t RCC_PLL2_GetVCOOutputFreq(void)
   }
 
   /* Check if fractional part is enable */
-  if ((tmpreg1 & RCC_PLLCFGR_PLL2FRACEN) != 0U)
+  if ((RCC->PLLCFGR & RCC_PLLCFGR_PLL2FRACEN) != 0U)
   {
     pllfracn = (RCC->PLL2FRACR & RCC_PLL2FRACR_FRACN) >> RCC_PLL2FRACR_FRACN_Pos;
   }
@@ -2232,7 +2235,7 @@ static uint32_t RCC_PLL2_GetVCOOutputFreq(void)
 
   /* Compute VCO output frequency */
   frequency = ((float_t)pllsrc / (float_t)pllm) * ((float_t)plln + ((float_t)pllfracn / (float_t)0x2000U));
-
+  
   return (uint32_t)frequency;
 }
 
@@ -2250,7 +2253,7 @@ static uint32_t RCC_PLL3_GetVCOOutputFreq(void)
   uint32_t pllfracn;
   float_t frequency;
 
-  /* Get PLL3 CFGR and DIVR register values */
+  /* Get PLL3 CKSELR and DIVR register values */
   tmpreg1 = RCC->PLLCKSELR;
   tmpreg2 = RCC->PLL3DIVR1;
 
@@ -2265,7 +2268,7 @@ static uint32_t RCC_PLL3_GetVCOOutputFreq(void)
   }
 
   /* Check if fractional part is enable */
-  if ((tmpreg1 & RCC_PLLCFGR_PLL3FRACEN) != 0U)
+  if ((RCC->PLLCFGR & RCC_PLLCFGR_PLL3FRACEN) != 0U)
   {
     pllfracn = (RCC->PLL3FRACR & RCC_PLL3FRACR_FRACN) >> RCC_PLL3FRACR_FRACN_Pos;
   }
@@ -2307,7 +2310,7 @@ static uint32_t RCC_PLL3_GetVCOOutputFreq(void)
 
   /* Compute VCO output frequency */
   frequency = ((float_t)pllsrc / (float_t)pllm) * ((float_t)plln + ((float_t)pllfracn / (float_t)0x2000U));
-
+  
   return (uint32_t)frequency;
 }
 

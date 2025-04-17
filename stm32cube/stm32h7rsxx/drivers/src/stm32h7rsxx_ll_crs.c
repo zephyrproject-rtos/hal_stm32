@@ -60,8 +60,6 @@ ErrorStatus LL_CRS_DeInit(void)
   return  SUCCESS;
 }
 
-
-
 /**
   * @}
   */

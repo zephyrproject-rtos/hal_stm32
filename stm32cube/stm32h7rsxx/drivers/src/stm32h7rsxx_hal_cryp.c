@@ -7112,7 +7112,7 @@ static HAL_StatusTypeDef CRYP_GCMCCM_SetHeaderPhase(CRYP_HandleTypeDef *hcryp, u
       {
         /* Enter last bytes, padded with zeros */
         tmp =  *(uint32_t *)(hcryp->Init.Header + hcryp->CrypHeaderCount);
-        tmp &= mask[(hcryp->Init.DataType * 2U) + (headersize_in_bytes % 4U)];
+        tmp &= mask[(SAES_CONV_DATATYPE(hcryp->Init.DataType) * 2U) + (headersize_in_bytes % 4U)];
         ((SAES_TypeDef *)(hcryp->Instance))->DINR = tmp;
         loopcounter++;
         /* Pad the data with zeros to have a complete block */
@@ -7378,7 +7378,7 @@ static HAL_StatusTypeDef CRYP_GCMCCM_SetHeaderPhase_DMA(CRYP_HandleTypeDef *hcry
         {
           /* Enter last bytes, padded with zeros */
           tmp =  *(uint32_t *)(hcryp->Init.Header + hcryp->CrypHeaderCount);
-          tmp &= mask[(hcryp->Init.DataType * 2U) + (headersize_in_bytes % 4U)];
+          tmp &= mask[(SAES_CONV_DATATYPE(hcryp->Init.DataType) * 2U) + (headersize_in_bytes % 4U)];
           ((SAES_TypeDef *)(hcryp->Instance))->DINR = tmp;
           loopcounter++;
           /* Pad the data with zeros to have a complete block */
@@ -7667,7 +7667,7 @@ static void CRYP_GCMCCM_SetHeaderPhase_IT(CRYP_HandleTypeDef *hcryp)
       {
         /* Enter last bytes, padded with zeros */
         tmp =  *(uint32_t *)(hcryp->Init.Header + hcryp->CrypHeaderCount);
-        tmp &= mask[(hcryp->Init.DataType * 2U) + (headersize_in_bytes % 4U)];
+        tmp &= mask[(SAES_CONV_DATATYPE(hcryp->Init.DataType) * 2U) + (headersize_in_bytes % 4U)];
         ((SAES_TypeDef *)(hcryp->Instance))->DINR = tmp;
         loopcounter++;
         hcryp->CrypHeaderCount++;
