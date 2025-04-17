@@ -4103,7 +4103,6 @@ typedef struct
   *                  192 to 836 MHz or 128 to 560 MHz(*) if PLL2VCOSEL = 0
   *                  150 to 420 MHz if PLL2VCOSEL = 1.
   *
-  * (*) : For stm32h7a3xx and stm32h7b3xx family lines.
   *
   * @retval None
   */
@@ -4129,7 +4128,6 @@ typedef struct
   *            @arg RCC_PLL_VCO_HIGH: Range frequency is between 192 and 836 MHz or between 128 to 560 MHz(*)
   *            @arg RCC_PLL_VCO_LOW: Range frequency is between 150 and 420 MHz
   *
-  * (*) : For stm32h7a3xx and stm32h7b3xx family lines.
   *
   * @retval None
   */
@@ -4242,7 +4240,6 @@ typedef struct
   *                  192 to 836 MHz or 128 to 560 MHz(*) if PLL3VCOSEL = 0
   *                  150 to 420 MHz if PLL3VCOSEL = 1.
   *
-  * (*) : For stm32h7a3xx and stm32h7b3xx family lines.
   *
   * @retval None
   */
@@ -4266,7 +4263,6 @@ typedef struct
   *            @arg RCC_PLL_VCO_HIGH: Range frequency is between 192 and 836 MHz  or between 128 to 560 MHz(*)
   *            @arg RCC_PLL_VCO_HIGH: Range frequency is between 150 and 420 MHz
   *
-  * (*) : For stm32h7a3xx and stm32h7b3xx family lines.
   *
   * @retval None
   */

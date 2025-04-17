@@ -75,7 +75,7 @@ extern "C" {
   */
 #if !defined(UNUSED)
 #define UNUSED(x) ((void)(x))
-#endif
+#endif /* UNUSED */
 
 #define LL_CLKSOURCE_SHIFT(__CLKSOURCE__)   (((__CLKSOURCE__) >> LL_RCC_POS_SHIFT   ) & 0x1FUL)
 
@@ -5445,7 +5445,7 @@ __STATIC_INLINE uint32_t LL_RCC_IsActiveFlag_HSECSS(void)
 }
 
 /**
-  * @brief  Check if RCC flag Low Power D1 reset is set or not.
+  * @brief  Check if RCC flag Low Power reset is set or not.
   * @rmtoll RSR          LPWRRSTF       LL_RCC_IsActiveFlag_LPWRRST
   * @retval State of bit (1 or 0).
   */

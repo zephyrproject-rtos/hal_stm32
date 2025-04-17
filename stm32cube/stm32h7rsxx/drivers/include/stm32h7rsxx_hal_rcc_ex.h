@@ -888,7 +888,7 @@ typedef struct
   *            @arg RCC_FMCCLKSOURCE_HCLK_DIV4 Recovery Clock selected as FMC clock
   */
 #define __HAL_RCC_GET_FMC_SOURCE() ((READ_BIT(RCC->CKPROTR, RCC_CKPROTR_FMCSWP) == RCC_FMCCLKSOURCE_HCLK_DIV4) ? \
-            RCC_FMCCLKSOURCE_HCLK_DIV4 : ((uint32_t)(READ_BIT(RCC->CCIPR1, RCC_CCIPR1_FMCSEL))))
+                                    RCC_FMCCLKSOURCE_HCLK_DIV4 : ((uint32_t)(READ_BIT(RCC->CCIPR1, RCC_CCIPR1_FMCSEL))))
 
 /** @brief  Macro to configure the I2C1/I3C1 clock source.
   * @param  __I2C1_I3C1_CLKSOURCE__ specifies the I2C1/I3C1clock source.
@@ -1070,7 +1070,7 @@ typedef struct
   *            @arg RCC_XSPI1CLKSOURCE_HCLK_DIV4 Recovery Clock selected as XSPI1 clock
   */
 #define __HAL_RCC_GET_XSPI1_SOURCE() ((READ_BIT(RCC->CKPROTR, RCC_CKPROTR_XSPI1SWP) == RCC_XSPI1CLKSOURCE_HCLK_DIV4) ? \
-            RCC_XSPI1CLKSOURCE_HCLK_DIV4 : ((uint32_t)(READ_BIT(RCC->CCIPR1, RCC_CCIPR1_XSPI1SEL))))
+                                      RCC_XSPI1CLKSOURCE_HCLK_DIV4 : ((uint32_t)(READ_BIT(RCC->CCIPR1, RCC_CCIPR1_XSPI1SEL))))
 
 /** @brief  Macro to configure the XSPI2 clock source.
   *
@@ -1090,7 +1090,7 @@ typedef struct
   *            @arg RCC_XSPI2CLKSOURCE_HCLK_DIV4 Recovery Clock selected as XSPI2 clock
   */
 #define __HAL_RCC_GET_XSPI2_SOURCE() ((READ_BIT(RCC->CKPROTR, RCC_CKPROTR_XSPI2SWP) == RCC_XSPI2CLKSOURCE_HCLK_DIV4) ? \
-            RCC_XSPI2CLKSOURCE_HCLK_DIV4 : ((uint32_t)(READ_BIT(RCC->CCIPR1, RCC_CCIPR1_XSPI2SEL))))
+                                      RCC_XSPI2CLKSOURCE_HCLK_DIV4 : ((uint32_t)(READ_BIT(RCC->CCIPR1, RCC_CCIPR1_XSPI2SEL))))
 
 /**
   * @brief  Macro to configure the PSSI clock source.

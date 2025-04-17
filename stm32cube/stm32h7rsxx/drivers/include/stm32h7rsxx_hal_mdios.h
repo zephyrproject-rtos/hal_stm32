@@ -83,7 +83,7 @@ typedef struct
 typedef struct __MDIOS_HandleTypeDef
 #else
 typedef struct
-#endif
+#endif /* USE_HAL_MDIOS_REGISTER_CALLBACKS */
 {
   MDIOS_TypeDef                *Instance;     /*!< Register base address       */
 

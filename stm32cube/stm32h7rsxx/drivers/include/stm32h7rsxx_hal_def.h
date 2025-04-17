@@ -130,6 +130,10 @@ typedef enum
 /* Macro to get buffer 32-bytes aligned (aligned to cache line width) */
 #define ALIGN_32BYTES(buf)  buf __attribute__((aligned(32)))
 
+/* Macro to get buffer 8-bytes aligned (aligned to double-word width) */
+/* This alignment is required for double-word DMA transfers */
+#define ALIGN_8BYTES(buf)  buf __attribute__((aligned(8)))
+
 /* Legacy macros to get variable 4-bytes aligned */
 #ifndef __ALIGN_BEGIN
 #define __ALIGN_BEGIN
