@@ -388,7 +388,7 @@ void HAL_CORTEX_ClearEvent(void);
 
 #define IS_MPU_SUB_REGION_DISABLE(__SUBREGION__)      ((__SUBREGION__) < (uint16_t)0x00FFU)
 
-#define IS_MPU_ADDRESS_MULTIPLE_SIZE(__ADDRESS__, __SIZE__) (((__ADDRESS__) & (1<<(__SIZE__+1U))- 1U) == 0U)
+#define IS_MPU_ADDRESS_MULTIPLE_SIZE(__ADDRESS__, __SIZE__) (((__ADDRESS__) & ((1<<(__SIZE__+1U))- 1U)) == 0U)
 
 /**
   * @}

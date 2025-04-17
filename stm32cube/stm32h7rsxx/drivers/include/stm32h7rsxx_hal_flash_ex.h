@@ -204,8 +204,8 @@ void              HAL_FLASHEx_EnableEccDetectionInterrupt(void);
 void              HAL_FLASHEx_DisableEccDetectionInterrupt(void);
 void              HAL_FLASHEx_GetEccInfo(FLASH_EccInfoTypeDef *pData);
 void              HAL_FLASHEx_ECCD_IRQHandler(void);
-__weak void       HAL_FLASHEx_EccDetectionCallback(void);
-__weak void       HAL_FLASHEx_EccCorrectionCallback(void);
+void              HAL_FLASHEx_EccDetectionCallback(void);
+void              HAL_FLASHEx_EccCorrectionCallback(void);
 /**
   * @}
   */
