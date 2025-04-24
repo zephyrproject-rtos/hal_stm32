@@ -142,6 +142,8 @@ extern "C" {
 #include "stm32f439xx.h"
 #elif defined(STM32F401xC)
 #include "stm32f401xc.h"
+#elif defined(STM32F401xD)
+#include "stm32f401xe.h"
 #elif defined(STM32F401xE)
 #include "stm32f401xe.h"
 #elif defined(STM32F410Tx)

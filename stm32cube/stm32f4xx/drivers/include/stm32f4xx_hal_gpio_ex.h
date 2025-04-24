@@ -483,7 +483,7 @@
 /*----------------------------------------------------------------------------*/
 
 /*---------------------------------------- STM32F401xx------------------------*/
-#if defined(STM32F401xC) || defined(STM32F401xE)
+#if defined(STM32F401xC) || defined(STM32F401xD) || defined(STM32F401xE)
 /**
   * @brief   AF 0 selection
   */
@@ -568,7 +568,7 @@
   * @brief   AF 15 selection
   */
 #define GPIO_AF15_EVENTOUT      ((uint8_t)0x0F)  /* EVENTOUT Alternate Function mapping */
-#endif /* STM32F401xC || STM32F401xE */
+#endif /* STM32F401xC || STM32F401xD || STM32F401xE */
 /*----------------------------------------------------------------------------*/
 
 /*--------------- STM32F412Zx/STM32F412Vx/STM32F412Rx/STM32F412Cx-------------*/
@@ -1294,13 +1294,13 @@
                                                ((__GPIOx__) == (GPIOC))? 2U : 7U)
 #endif /* STM32F410Tx || STM32F410Cx || STM32F410Rx */
 
-#if defined(STM32F401xC) || defined(STM32F401xE) || defined(STM32F411xE)
+#if defined(STM32F401xC) || defined(STM32F401xD) || defined(STM32F401xE) || defined(STM32F411xE)
 #define GPIO_GET_INDEX(__GPIOx__)    (uint8_t)(((__GPIOx__) == (GPIOA))? 0U :\
                                                ((__GPIOx__) == (GPIOB))? 1U :\
                                                ((__GPIOx__) == (GPIOC))? 2U :\
                                                ((__GPIOx__) == (GPIOD))? 3U :\
                                                ((__GPIOx__) == (GPIOE))? 4U : 7U)
-#endif /* STM32F401xC || STM32F401xE || STM32F411xE */
+#endif /* STM32F401xC || STM32F401xD || STM32F401xE || STM32F411xE */
 
 #if defined(STM32F446xx) || defined(STM32F412Zx) || defined(STM32F413xx) || defined(STM32F423xx)
 #define GPIO_GET_INDEX(__GPIOx__)    (uint8_t)(((__GPIOx__) == (GPIOA))? 0U :\
@@ -1441,7 +1441,7 @@
 /*----------------------------------------------------------------------------*/
 
 /*---------------------------------------- STM32F401xx------------------------*/
-#if defined(STM32F401xC) || defined(STM32F401xE)
+#if defined(STM32F401xC) || defined(STM32F401xD) || defined(STM32F401xE)
 #define IS_GPIO_AF(AF)   (((AF) == GPIO_AF0_RTC_50Hz)   || ((AF) == GPIO_AF12_SDIO)      || \
                           ((AF) == GPIO_AF0_MCO)        || ((AF) == GPIO_AF0_TAMPER)     || \
                           ((AF) == GPIO_AF0_SWJ)        || ((AF) == GPIO_AF0_TRACE)      || \
@@ -1456,7 +1456,7 @@
                           ((AF) == GPIO_AF7_USART2)     || ((AF) == GPIO_AF8_USART6)     || \
                           ((AF) == GPIO_AF9_I2C2)       || ((AF) == GPIO_AF9_I2C3)       || \
                           ((AF) == GPIO_AF10_OTG_FS)    || ((AF) == GPIO_AF15_EVENTOUT))
-#endif /* STM32F401xC || STM32F401xE */
+#endif /* STM32F401xC || STM32F401xD || STM32F401xE */
 /*----------------------------------------------------------------------------*/
 /*---------------------------------------- STM32F410xx------------------------*/
 #if defined(STM32F410Tx) || defined(STM32F410Cx) || defined(STM32F410Rx)
