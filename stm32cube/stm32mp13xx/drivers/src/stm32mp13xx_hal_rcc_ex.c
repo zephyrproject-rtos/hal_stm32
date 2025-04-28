@@ -250,7 +250,6 @@ HAL_StatusTypeDef RCCEx_PLL2_Config(const RCC_PLLInitTypeDef *pll2)
 }
 
 
-
 /**
   * @brief  Configures PLL3
   * @param  pll3: pointer to a RCC_PLLInitTypeDef structure
@@ -624,7 +623,7 @@ HAL_StatusTypeDef RCCEx_PLL4_Config(const RCC_PLLInitTypeDef *pll4)
   *         @arg @ref RCC_PERIPHCLK_DCMIPP DCMIPP peripheral clock
   *         @arg @ref RCC_PERIPHCLK_SAES SAES peripheral clock
   *         @arg @ref RCC_PERIPHCLK_TIMG1 TIMG1 peripheral clock
-  *         @arg @ref RCC_PERIPHCLK_TIMG2 TIMG2 peripheral clock
+  *         @arg @ref RCC_PERIPHCLK_TIMG2 TIMG2 TIMG3 peripheral clock
   *         @arg @ref RCC_PERIPHCLK_RTC RTC peripheral clock
   *         @arg @ref RCC_PERIPHCLK_CKPER CKPER peripheral clock
   *
@@ -1988,6 +1987,29 @@ HAL_StatusTypeDef HAL_RCCEx_PeriphCLKConfig(const RCC_PeriphCLKInitTypeDef
     }
   }
 
+  /*---------------------------- TIMG3 configuration -------------------------*/
+  if (((PeriphClkInit->PeriphClockSelection) & RCC_PERIPHCLK_TIMG3) ==
+      RCC_PERIPHCLK_TIMG3)
+  {
+    /* Check the parameters */
+    assert_param(IS_RCC_TIMG3PRES(PeriphClkInit->TIMG3PresSelection));
+
+    /* Set TIMG3 division factor */
+    __HAL_RCC_TIMG3PRES(PeriphClkInit->TIMG3PresSelection);
+
+    /* Get Start Tick*/
+    tickstart = HAL_GetTick();
+
+    /* Wait till TIMG3 is ready */
+    while (__HAL_RCC_GET_FLAG(RCC_FLAG_TIMG3PRERDY) == 0U)
+    {
+      if ((HAL_GetTick() - tickstart) > CLOCKSWITCH_TIMEOUT_VALUE)
+      {
+        return HAL_TIMEOUT;
+      }
+    }
+  }
+
   return status;
 }
 
@@ -2001,7 +2023,7 @@ HAL_StatusTypeDef HAL_RCCEx_PeriphCLKConfig(const RCC_PeriphCLKInitTypeDef
   *         USART1, USART2, UART35, UART4, USART6, UART78, LPTIM1, LPTIM2, LPTIM3,
   *         LPTIM45, SAI1, SAI2, FDCAN, SPDIFRX, ADC1, ADC2, SDMMC1, SDMMC2, ETH1,
   *         ETH2, USBPHY, USBO, QSPI, FMC, RNG1, STGEN, DCMIPP, SAES, TIMG1,
-  *         TIMG2, RTC and CKPER
+  *         TIMG2, TIMG3, RTC and CKPER
   * @retval None
   */
 void HAL_RCCEx_GetPeriphCLKConfig(RCC_PeriphCLKInitTypeDef  *PeriphClkInit)
@@ -2020,8 +2042,8 @@ void HAL_RCCEx_GetPeriphCLKConfig(RCC_PeriphCLKInitTypeDef  *PeriphClkInit)
     RCC_PERIPHCLK_ETH2 | RCC_PERIPHCLK_USBPHY | RCC_PERIPHCLK_USBO |
     RCC_PERIPHCLK_QSPI | RCC_PERIPHCLK_FMC | RCC_PERIPHCLK_RNG1 |
     RCC_PERIPHCLK_STGEN | RCC_PERIPHCLK_DCMIPP | RCC_PERIPHCLK_SAES |
-    RCC_PERIPHCLK_TIMG1 | RCC_PERIPHCLK_TIMG2 | RCC_PERIPHCLK_RTC |
-    RCC_PERIPHCLK_CKPER;
+    RCC_PERIPHCLK_TIMG1 | RCC_PERIPHCLK_TIMG2 | RCC_PERIPHCLK_TIMG3 |
+    RCC_PERIPHCLK_RTC | RCC_PERIPHCLK_CKPER;
 
 
   /* Get the CKPER clock source ----------------------------------------------*/
@@ -2108,6 +2130,8 @@ void HAL_RCCEx_GetPeriphCLKConfig(RCC_PeriphCLKInitTypeDef  *PeriphClkInit)
   PeriphClkInit->TIMG1PresSelection = __HAL_RCC_GET_TIMG1PRES();
   /* Get the TIM2 Prescaler configuration ------------------------------------*/
   PeriphClkInit->TIMG2PresSelection = __HAL_RCC_GET_TIMG2PRES();
+  /* Get the TIM3 Prescaler configuration ------------------------------------*/
+  PeriphClkInit->TIMG3PresSelection = __HAL_RCC_GET_TIMG3PRES();
 }
 
 /**
@@ -3476,6 +3500,51 @@ uint32_t HAL_RCCEx_GetPeriphCLKFreq(uint64_t PeriphClk)
             frequency /= 4U;
             break;
           case RCC_APB2_DIV16:
+            frequency /= 8U;
+            break;
+          default:
+            break;
+        }
+      }
+      break;
+    }
+
+    case RCC_PERIPHCLK_TIMG3:
+    {
+      frequency = HAL_RCC_GetMLAHBFreq();
+
+      if (__HAL_RCC_GET_TIMG3PRES() == RCC_TIMG3PRES_ACTIVATED)
+      {
+        switch (__HAL_RCC_GET_APB6_DIV())
+        {
+          case RCC_APB6_DIV1:
+          case RCC_APB6_DIV2:
+          case RCC_APB6_DIV4:
+            break;
+          case RCC_APB6_DIV8:
+            frequency /= 2U;
+            break;
+          case RCC_APB6_DIV16:
+            frequency /= 4U;
+            break;
+          default:
+            break;
+        }
+      }
+      else
+      {
+        switch (__HAL_RCC_GET_APB6_DIV())
+        {
+          case RCC_APB6_DIV1:
+          case RCC_APB6_DIV2:
+            break;
+          case RCC_APB6_DIV4:
+            frequency /= 2U;
+            break;
+          case RCC_APB6_DIV8:
+            frequency /= 4U;
+            break;
+          case RCC_APB6_DIV16:
             frequency /= 8U;
             break;
           default:

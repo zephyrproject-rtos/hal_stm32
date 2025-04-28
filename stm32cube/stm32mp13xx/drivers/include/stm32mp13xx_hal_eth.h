@@ -105,7 +105,7 @@ typedef struct
 
   uint32_t *PacketAddress[ETH_TX_DESC_CNT];  /*<! Ethernet packet addresses array */
 
-  uint32_t *CurrentPacketAddress;           /*<! Current transmit NX_PACKET addresses */
+  uint32_t *CurrentPacketAddress;           /*<! Current transmit packet addresses */
 
   uint32_t BuffersInUse;                   /*<! Buffers in Use */
 
@@ -409,6 +409,21 @@ typedef enum
   *
   */
 
+/**
+  * @brief  HAL ETH Reference Clock enum definition
+  */
+typedef enum
+{
+  HAL_ETH1_REF_CLK_RCC         = 0x00U,   /*!<  ETH1 reference clock (RMII mode) comes from the RCC */
+  HAL_ETH1_REF_CLK_RX_CLK_PIN  = 0x01U,   /*!<  ETH1 reference clock (RMII mode) comes from the ETH2_RX_CLK/ETH2_REF_CLK pin */
+  HAL_ETH2_REF_CLK_RCC         = 0x02U,   /*!<  ETH2 reference clock (RMII mode) comes from the RCC */
+  HAL_ETH2_REF_CLK_RX_CLK_PIN  = 0x03U,   /*!<  ETH2 reference clock (RMII mode) comes from the ETH2_RX_CLK/ETH2_REF_CLK pin */
+} ETH_ClkSrcTypeDef;
+
+/**
+  *
+  */
+
 #ifdef HAL_ETH_USE_PTP
 /**
   * @brief  HAL ETH PTP Update type enum definition
@@ -432,6 +447,8 @@ typedef struct
   *MACAddr;                  /*!< MAC Address of used Hardware: must be pointer on an array of 6 bytes */
 
   ETH_MediaInterfaceTypeDef   MediaInterface;            /*!< Selects the MII interface or the RMII interface. */
+
+  ETH_ClkSrcTypeDef           ClockSelection;            /*!< Selects the Clock Source for RMII interface */
 
   ETH_DMADescTypeDef
   *TxDesc;                   /*!< Provides the address of the first DMA Tx descriptor in the list */
@@ -486,47 +503,9 @@ typedef uint32_t HAL_ETH_StateTypeDef;
   */
 
 /**
-  * @brief  HAL ETH Rx Get Buffer Function definition
-  */
-typedef  void (*pETH_rxAllocateCallbackTypeDef)(uint8_t **buffer);  /*!< pointer to an ETH Rx Get Buffer Function */
-/**
-  *
-  */
-
-/**
-  * @brief  HAL ETH Rx Set App Data Function definition
-  */
-typedef  void (*pETH_rxLinkCallbackTypeDef)(void **pStart, void **pEnd, uint8_t *buff,
-                                            uint16_t Length); /*!< pointer to an ETH Rx Set App Data Function */
-/**
-  *
-  */
-
-/**
-  * @brief  HAL ETH Tx Free Function definition
-  */
-typedef  void (*pETH_txFreeCallbackTypeDef)(uint32_t *buffer);  /*!< pointer to an ETH Tx Free function */
-/**
-  *
-  */
-
-/**
-  * @brief  HAL ETH Tx Free Function definition
-  */
-typedef  void (*pETH_txPtpCallbackTypeDef)(uint32_t *buffer,
-                                           ETH_TimeStampTypeDef *timestamp);  /*!< pointer to an ETH Tx Free function */
-/**
-  *
-  */
-
-/**
   * @brief  ETH Handle Structure definition
   */
-#if (USE_HAL_ETH_REGISTER_CALLBACKS == 1)
 typedef struct __ETH_HandleTypeDef
-#else
-typedef struct
-#endif /* USE_HAL_ETH_REGISTER_CALLBACKS */
 {
   ETH_TypeDef                *Instance;                 /*!< Register base address       */
 
@@ -584,12 +563,46 @@ typedef struct
 
 #endif  /* USE_HAL_ETH_REGISTER_CALLBACKS */
 
-  pETH_rxAllocateCallbackTypeDef  rxAllocateCallback;  /*!< ETH Rx Get Buffer Function   */
-  pETH_rxLinkCallbackTypeDef      rxLinkCallback; /*!< ETH Rx Set App Data Function */
-  pETH_txFreeCallbackTypeDef      txFreeCallback;       /*!< ETH Tx Free Function         */
-  pETH_txPtpCallbackTypeDef       txPtpCallback;  /*!< ETH Tx Handle Ptp Function */
+  void (*rxAllocateCallback)(struct __ETH_HandleTypeDef *heth, uint8_t **buffer);  /*!< ETH Rx Get Buffer Function   */
+  void (*rxLinkCallback)(struct __ETH_HandleTypeDef *heth, void **pStart, void **pEnd, uint8_t *buff, uint16_t Length); /*!< ETH Rx Set App Data Function */
+  void (*txFreeCallback)(struct __ETH_HandleTypeDef *heth, uint32_t *buffer); /*!< ETH Tx Free Function         */
+  void (*txPtpCallback)(struct __ETH_HandleTypeDef *heth, uint32_t *buffer, ETH_TimeStampTypeDef *timestamp); /*!< ETH Tx Handle Ptp Function */
 
 } ETH_HandleTypeDef;
+/**
+  *
+  */
+
+/**
+  * @brief  HAL ETH Rx Get Buffer Function definition
+  */
+typedef  void (*pETH_rxAllocateCallbackTypeDef)(struct __ETH_HandleTypeDef *heth, uint8_t **buffer);  /*!< pointer to an ETH Rx Get Buffer Function */
+/**
+  *
+  */
+
+/**
+  * @brief  HAL ETH Rx Set App Data Function definition
+  */
+typedef  void (*pETH_rxLinkCallbackTypeDef)(struct __ETH_HandleTypeDef *heth, void **pStart, void **pEnd, uint8_t *buff,
+                                            uint16_t Length); /*!< pointer to an ETH Rx Set App Data Function */
+/**
+  *
+  */
+
+/**
+  * @brief  HAL ETH Tx Free Function definition
+  */
+typedef  void (*pETH_txFreeCallbackTypeDef)(struct __ETH_HandleTypeDef *heth, uint32_t *buffer);  /*!< pointer to an ETH Tx Free function */
+/**
+  *
+  */
+
+/**
+  * @brief  HAL ETH Tx Free Function definition
+  */
+typedef  void (*pETH_txPtpCallbackTypeDef)(struct __ETH_HandleTypeDef *heth, uint32_t *buffer,
+                                           ETH_TimeStampTypeDef *timestamp);  /*!< pointer to an ETH Tx Free function */
 /**
   *
   */
@@ -1279,22 +1292,22 @@ typedef struct
   * @{
   */
 #define ETH_DMA_RX_NO_ERROR_FLAG                 0x00000000U
-#define ETH_DMA_RX_DESC_READ_ERROR_FLAG          (ETH_DMACSR_REB_BIT_2 | ETH_DMACSR_REB_BIT_1 | ETH_DMACSR_REB_BIT_0)
-#define ETH_DMA_RX_DESC_WRITE_ERROR_FLAG         (ETH_DMACSR_REB_BIT_2 | ETH_DMACSR_REB_BIT_1)
-#define ETH_DMA_RX_BUFFER_READ_ERROR_FLAG        (ETH_DMACSR_REB_BIT_2 | ETH_DMACSR_REB_BIT_0)
-#define ETH_DMA_RX_BUFFER_WRITE_ERROR_FLAG        ETH_DMACSR_REB_BIT_2
+#define ETH_DMA_RX_DESC_READ_ERROR_FLAG          0x00380000U
+#define ETH_DMA_RX_DESC_WRITE_ERROR_FLAG         0x00300000U
+#define ETH_DMA_RX_BUFFER_READ_ERROR_FLAG        0x00280000U
+#define ETH_DMA_RX_BUFFER_WRITE_ERROR_FLAG       0x00200000U
 #define ETH_DMA_TX_NO_ERROR_FLAG                 0x00000000U
-#define ETH_DMA_TX_DESC_READ_ERROR_FLAG          (ETH_DMACSR_TEB_BIT_2 | ETH_DMACSR_TEB_BIT_1 | ETH_DMACSR_TEB_BIT_0)
-#define ETH_DMA_TX_DESC_WRITE_ERROR_FLAG         (ETH_DMACSR_TEB_BIT_2 | ETH_DMACSR_TEB_BIT_1)
-#define ETH_DMA_TX_BUFFER_READ_ERROR_FLAG        (ETH_DMACSR_TEB_BIT_2 | ETH_DMACSR_TEB_BIT_0)
-#define ETH_DMA_TX_BUFFER_WRITE_ERROR_FLAG        ETH_DMACSR_TEB_BIT_2
-#define ETH_DMA_CONTEXT_DESC_ERROR_FLAG           ETH_DMACSR_CDE
-#define ETH_DMA_FATAL_BUS_ERROR_FLAG              ETH_DMACSR_FBE
-#define ETH_DMA_EARLY_TX_IT_FLAG                  ETH_DMACSR_ERI
-#define ETH_DMA_RX_WATCHDOG_TIMEOUT_FLAG          ETH_DMACSR_RWT
-#define ETH_DMA_RX_PROCESS_STOPPED_FLAG           ETH_DMACSR_RPS
-#define ETH_DMA_RX_BUFFER_UNAVAILABLE_FLAG        ETH_DMACSR_RBU
-#define ETH_DMA_TX_PROCESS_STOPPED_FLAG           ETH_DMACSR_TPS
+#define ETH_DMA_TX_DESC_READ_ERROR_FLAG          0x00070000U
+#define ETH_DMA_TX_DESC_WRITE_ERROR_FLAG         0x00060000U
+#define ETH_DMA_TX_BUFFER_READ_ERROR_FLAG        0x00050000U
+#define ETH_DMA_TX_BUFFER_WRITE_ERROR_FLAG       0x00040000U
+#define ETH_DMA_CONTEXT_DESC_ERROR_FLAG          ETH_DMACSR_CDE
+#define ETH_DMA_FATAL_BUS_ERROR_FLAG             ETH_DMACSR_FBE
+#define ETH_DMA_EARLY_TX_IT_FLAG                 ETH_DMACSR_ERI
+#define ETH_DMA_RX_WATCHDOG_TIMEOUT_FLAG         ETH_DMACSR_RWT
+#define ETH_DMA_RX_PROCESS_STOPPED_FLAG          ETH_DMACSR_RPS
+#define ETH_DMA_RX_BUFFER_UNAVAILABLE_FLAG       ETH_DMACSR_RBU
+#define ETH_DMA_TX_PROCESS_STOPPED_FLAG          ETH_DMACSR_TPS
 /**
   * @}
   */
@@ -1783,10 +1796,11 @@ void              HAL_ETH_ErrorCallback(ETH_HandleTypeDef *heth);
 void              HAL_ETH_PMTCallback(ETH_HandleTypeDef *heth);
 void              HAL_ETH_EEECallback(ETH_HandleTypeDef *heth);
 void              HAL_ETH_WakeUpCallback(ETH_HandleTypeDef *heth);
-void              HAL_ETH_RxAllocateCallback(uint8_t **buff);
-void              HAL_ETH_RxLinkCallback(void **pStart, void **pEnd, uint8_t *buff, uint16_t Length);
-void              HAL_ETH_TxFreeCallback(uint32_t *buff);
-void              HAL_ETH_TxPtpCallback(uint32_t *buff, ETH_TimeStampTypeDef *timestamp);
+void              HAL_ETH_RxAllocateCallback(ETH_HandleTypeDef *heth, uint8_t **buff);
+void              HAL_ETH_RxLinkCallback(ETH_HandleTypeDef *heth, void **pStart, void **pEnd, uint8_t *buff,
+                                         uint16_t Length);
+void              HAL_ETH_TxFreeCallback(ETH_HandleTypeDef *heth, uint32_t *buff);
+void              HAL_ETH_TxPtpCallback(ETH_HandleTypeDef *heth, uint32_t *buff, ETH_TimeStampTypeDef *timestamp);
 /**
   * @}
   */

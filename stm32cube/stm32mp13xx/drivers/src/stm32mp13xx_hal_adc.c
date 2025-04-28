@@ -2783,6 +2783,19 @@ HAL_StatusTypeDef HAL_ADC_ConfigChannel(ADC_HandleTypeDef *hadc, ADC_ChannelConf
   }
   else
   {
+#if defined(ADC1) & !defined(ADC2)
+    if (hadc->Instance == ADC1)
+    {
+      assert_param(IS_ADC1_DIFF_CHANNEL(pConfig->Channel));
+    }
+#endif
+#if defined(ADC2) & !defined(ADC1)
+    if (hadc->Instance == ADC2)
+    {
+      assert_param(IS_ADC2_DIFF_CHANNEL(pConfig->Channel));
+    }
+#endif
+#if defined(ADC1) & defined(ADC2)
     if (hadc->Instance == ADC1)
     {
       assert_param(IS_ADC1_DIFF_CHANNEL(pConfig->Channel));
@@ -2791,6 +2804,7 @@ HAL_StatusTypeDef HAL_ADC_ConfigChannel(ADC_HandleTypeDef *hadc, ADC_ChannelConf
     {
       assert_param(IS_ADC2_DIFF_CHANNEL(pConfig->Channel));
     }
+#endif
   }
 
   /* Process locked */

@@ -122,7 +122,7 @@ extern "C" {
   */
 #define LL_SYSCFG_TIMBREAK_PVD             SYSCFG_CBR_PVDL    /*!< Enables and locks the PVD connection
                                                                    with TIM1/8/15/16/17 Break Input
-                                                                   and also the PVDE and PLS bits of the
+                                                                   and also the PVDE and PLS bits of the 
                                                                    Power Control Interface */
 /**
   * @}

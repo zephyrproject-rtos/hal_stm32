@@ -1967,8 +1967,15 @@ typedef struct
   * @param  __ADCx__ ADC instance
   * @retval ADC common register instance
   */
+#if defined(ADC1) & !defined(ADC2)
+#define __LL_ADC_COMMON_INSTANCE(__ADCx__)  ADC1_COMMON
+#endif
+#if !defined(ADC1) & defined(ADC2)
+#define __LL_ADC_COMMON_INSTANCE(__ADCx__)  ADC2_COMMON
+#endif
+#if defined(ADC1) & defined(ADC2)
 #define __LL_ADC_COMMON_INSTANCE(__ADCx__)((((__ADCx__) == ADC1))? ((ADC1_COMMON)):((ADC2_COMMON)))
-
+#endif
 /**
   * @brief  Helper macro to check if all ADC instances sharing the same
   *         ADC common instance are disabled.
@@ -1986,9 +1993,19 @@ typedef struct
   *         Value "1" if at least one ADC instance sharing the same ADC common instance
   *         is enabled.
   */
+#if !defined (ADC1) & defined(ADC2)
 #define __LL_ADC_IS_ENABLED_ALL_COMMON_INSTANCE(__ADCXY_COMMON__)              \
-  (LL_ADC_IsEnabled(ADC1) |                                                    \
-   LL_ADC_IsEnabled(ADC2)  )
+    (LL_ADC_IsEnabled(ADC2)  )
+#endif
+#if defined (ADC1) & !defined(ADC2)
+#define __LL_ADC_IS_ENABLED_ALL_COMMON_INSTANCE(__ADCXY_COMMON__)              \
+    (LL_ADC_IsEnabled(ADC1)  )
+#endif
+#if defined (ADC1) & defined(ADC2)
+#define __LL_ADC_IS_ENABLED_ALL_COMMON_INSTANCE(__ADCXY_COMMON__)              \
+   (LL_ADC_IsEnabled(ADC1) |                                                   \
+    LL_ADC_IsEnabled(ADC2)  )
+#endif
 
 /**
   * @brief  Helper macro to define the ADC conversion data full-scale digital

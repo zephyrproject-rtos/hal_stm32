@@ -99,8 +99,6 @@ typedef struct
 } RCC_PLLInitTypeDef;
 
 
-
-
 typedef struct
 {
   uint32_t PLL1_P_Frequency;
@@ -432,7 +430,6 @@ typedef struct
 #define RCC_MCODIV_15                  (RCC_MCO1CFGR_MCO1DIV_3 | RCC_MCO1CFGR_MCO1DIV_2 | RCC_MCO1CFGR_MCO1DIV_1)
 #define RCC_MCODIV_16                  (RCC_MCO1CFGR_MCO1DIV_3 |\
                                         RCC_MCO1CFGR_MCO1DIV_2 | RCC_MCO1CFGR_MCO1DIV_1 | RCC_MCO1CFGR_MCO1DIV_0)
-
 
 
 #define IS_RCC_MCODIV(DIV)  (((DIV) == RCC_MCODIV_1)  || ((DIV) == RCC_MCODIV_2) || \
@@ -1007,6 +1004,9 @@ typedef struct
 
 /* Flags in the TIMG2PRER register */
 #define RCC_FLAG_TIMG2PRERDY      ( (RCC->TIMG2PRER & RCC_TIMG2PRER_TIMG2PRERDY) == RCC_TIMG2PRER_TIMG2PRERDY )
+
+/* Flags in the TIMG3PRER register */
+#define RCC_FLAG_TIMG3PRERDY      ( (RCC->TIMG3PRER & RCC_TIMG3PRER_TIMG3PRERDY) == RCC_TIMG3PRER_TIMG3PRERDY )
 
 /* Flags in the MPCKDIVR register */
 #define RCC_FLAG_MPUDIVRDY        ( (RCC->MPCKDIVR & RCC_MPCKDIVR_MPUDIVRDY)     == RCC_MPCKDIVR_MPUDIVRDY )
@@ -2095,8 +2095,6 @@ typedef struct
 #define __HAL_RCC_SYS_RESET()       (RCC->MP_GRSTCSETR = RCC_MP_GRSTCSETR_MPSYSRST)
 
 
-
-
 /** @brief  Enable or disable the APB1 peripheral clock during  CSLEEP mode.
   * @note   Peripheral clock gating in SLEEP mode can be used to further reduce
   *         power consumption.
@@ -2954,8 +2952,6 @@ typedef struct
 #define __HAL_RCC_LSI_DISABLE() CLEAR_BIT(RCC->RDLSICR, RCC_RDLSICR_LSION)
 
 
-
-
 /** @brief  Macro to configure the Minimum Reset Duration
   * @note   Set and reset by software. They define the minimum guaranteed
   *         duration of the NRST low pulse. The LSI oscillator is automatically
@@ -2971,7 +2967,6 @@ typedef struct
                     (uint32_t)(__DURATION__) << RCC_RDLSICR_MRD_Pos); \
     HAL_Delay(1); \
   }  while(0)
-
 
 
 /**
@@ -3154,7 +3149,6 @@ typedef struct
 #define __HAL_RCC_PLL1FRACV_DISABLE()       CLEAR_BIT(RCC->PLL1FRACR, RCC_PLL1FRACR_FRACLE)
 
 
-
 /**
   * @brief  Macro to configure PLL1 and PLL2 clock source
   * @note   This function must be used only when the PLLs are disabled.
@@ -3206,7 +3200,6 @@ typedef struct
     MODIFY_REG( RCC->PLL1CFGR2, (RCC_PLL1CFGR2_DIVP | RCC_PLL1CFGR2_DIVQ | RCC_PLL1CFGR2_DIVR), \
                 ( ((__PLLP1__) - 1U) | ( ((__PLLQ1__) - 1U) <<8U ) | ( ((__PLLR1__) - 1U) <<16U) )); \
   } while(0)
-
 
 
 /**
@@ -3267,7 +3260,6 @@ do{  MODIFY_REG( RCC->PLL1CSGR, (RCC_PLL1CSGR_MOD_PER | RCC_PLL1CSGR_TPDFN_DIS |
                    ((__RCC_PLL1_MOD_PER__) | (__RCC_PLL1_TPDFN_DIS__) | (__RCC_PLL1_RPDFN_DIS__) | \
                     (__RCC_PLL1_SSCG_MODE__) | ((__RCC_PLL1_INC_STEP__) << RCC_PLL1CSGR_INC_STEP_Pos)) ) ;\
 }while (0)
-
 
 
 /** @brief  Macros to enable or disable the PLL2.

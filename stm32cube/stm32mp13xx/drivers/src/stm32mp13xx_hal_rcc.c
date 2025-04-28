@@ -1117,7 +1117,6 @@ HAL_StatusTypeDef RCC_PLL1_Config(const RCC_PLLInitTypeDef *pll1)
 }
 
 
-
 /**
   * @brief  Initializes the MPU,AXI, AHB and APB busses clocks according to the specified
   *         parameters in the RCC_ClkInitStruct.

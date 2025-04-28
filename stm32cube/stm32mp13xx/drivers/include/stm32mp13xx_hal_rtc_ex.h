@@ -1851,7 +1851,7 @@ HAL_StatusTypeDef HAL_RTCEx_PrivilegeModeGet(RTC_HandleTypeDef *hrtc, RTC_Privil
 												 ((__STATE__) == TAMP_MONOTONIC_CNT2_YES) || \
 												 ((__STATE__) == TAMP_MONOTONIC_CNT2_NO)  || \
         							   	   	   	 ((__STATE__) == TAMP_MONOTONIC_CNT1_NO))
-
+ 
 #define IS_RTC_SECURE_FEATURES(__FEATURES__) (((__FEATURES__) & ~RTC_SECURE_FEATURE_ALL) == 0U)
 
 /**
