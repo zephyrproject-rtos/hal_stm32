@@ -230,7 +230,7 @@ uint32_t LL_DLYB_GetClockPeriod(DLYB_TypeDef *DLYBx, LL_DLYB_CfgTypeDef *pdlyb_c
 /**
   * @}
   */
-#endif /* HAL_SD_MODULE_ENABLED || HAL_QSPI_MODULE_ENABLED ||
+#endif /* HAL_SD_MODULE_ENABLED || HAL_QSPI_MODULE_ENABLED || 
 defined(HAL_XSPI_MODULE_ENABLED)*/
 
 /**

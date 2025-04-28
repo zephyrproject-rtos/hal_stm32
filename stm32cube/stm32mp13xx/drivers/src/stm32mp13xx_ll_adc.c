@@ -78,10 +78,22 @@
 
 /* Check of parameters for configuration of ADC hierarchical scope:           */
 /* common to several ADC instances.                                           */
+#if defined(ADC1) & !defined(ADC2)
+#define IS_LL_ADC_COMMON_INSTANCE(__COMMON_INSTANCE__)                         \
+  (   ((__COMMON_INSTANCE__) == ADC1_COMMON)                                   \
+  )
+#endif
+#if !defined(ADC1) & defined(ADC2)
+#define IS_LL_ADC_COMMON_INSTANCE(__COMMON_INSTANCE__)                         \
+  (   ((__COMMON_INSTANCE__) == ADC2_COMMON)                                   \
+  )
+#endif
+#if defined(ADC1) & defined(ADC2)
 #define IS_LL_ADC_COMMON_INSTANCE(__COMMON_INSTANCE__)                         \
   (   ((__COMMON_INSTANCE__) == ADC1_COMMON)                                   \
       || ((__COMMON_INSTANCE__) == ADC2_COMMON)                                   \
   )
+#endif
 
 #define IS_LL_ADC_COMMON_CLOCK(__CLOCK__)                                      \
   (   ((__CLOCK__) == LL_ADC_CLOCK_SYNC_PCLK_DIV1)                             \

@@ -86,7 +86,7 @@ typedef struct
 /** @defgroup TIMEx_Remap TIM Extended Remapping
   * @{
   */
-#define TIM_TIM1_ETR_GPIO        0x00000000U                                                 /* !< TIM1_ETR is
+#define TIM_TIM1_ETR_GPIO        0x00000000U                                                 /* !< TIM1_ETR is 
                                                                                               connected to GPIO */
 #define TIM_TIM1_ETR_ADC1_AWD1   (TIM1_AF1_ETRSEL_1 | TIM1_AF1_ETRSEL_0)                     /* !< TIM1_ETR is
                                                                                               connected to ADC1 AWD1 */

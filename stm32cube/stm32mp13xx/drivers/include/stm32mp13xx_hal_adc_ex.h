@@ -758,7 +758,16 @@ typedef struct
   * @param __HANDLE__ ADC handle.
   * @retval SET (ADC instance is valid) or RESET (ADC instance is invalid)
   */
+#if defined(ADC1) & !defined(ADC2)
+#define ADC_VREFINT_INSTANCE(__HANDLE__)  ((__HANDLE__)->Instance == ADC1)
+#endif
+#if defined(ADC2) & !defined(ADC1)
+#define ADC_VREFINT_INSTANCE(__HANDLE__)  ((__HANDLE__)->Instance == ADC2)
+#endif
+#if defined(ADC1) & defined(ADC2)
 #define ADC_VREFINT_INSTANCE(__HANDLE__)  (((__HANDLE__)->Instance == ADC1) || ((__HANDLE__)->Instance == ADC2))
+#endif
+
 /**
   * @brief Verify the ADC instance connected to the internal voltage reference VDDCORE.
   * @param __HANDLE__ ADC handle.

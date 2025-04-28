@@ -527,7 +527,7 @@ static HAL_StatusTypeDef HAL_NAND_ReadBegin(NAND_HandleTypeDef *restrict hnand, 
   if (hnand->Config.ExtraCommandEnable == ENABLE)
   {
     status = HAL_NAND_WaitReady(hnand, NAND_READ_BEGIN_TIMEOUT);
-    if (status != HAL_OK)
+    if ((status != HAL_OK) && (status != HAL_ERROR))
     {
       return status;
     }
@@ -1013,7 +1013,12 @@ HAL_StatusTypeDef HAL_NAND_Write_Page(NAND_HandleTypeDef *hnand, NAND_AddressTyp
 
       /* End writing */
       status = HAL_NAND_WriteEnd(hnand);
-      if (status != HAL_OK)
+      if (status == HAL_ERROR)
+      {
+        hnand->State = HAL_NAND_STATE_READY;
+        break;
+      }
+      else if (status != HAL_OK)
       {
         break;
       }
@@ -1120,7 +1125,7 @@ HAL_StatusTypeDef HAL_NAND_Write_SinglePage(NAND_HandleTypeDef *hnand, NAND_Addr
       status = HAL_NAND_WriteEnd(hnand);
     }
 
-    if (status == HAL_OK)
+    if ((status == HAL_OK) || (status == HAL_ERROR))
     {
       hnand->State = HAL_NAND_STATE_READY;
     }
@@ -1415,7 +1420,12 @@ HAL_StatusTypeDef HAL_NAND_Write_SpareArea(NAND_HandleTypeDef *hnand, NAND_Addre
 
       /* End writing */
       status = HAL_NAND_WriteEnd(hnand);
-      if (status != HAL_OK)
+      if (status == HAL_ERROR)
+      {
+        hnand->State = HAL_NAND_STATE_READY;
+        break;
+      }
+      else if (status != HAL_OK)
       {
         break;
       }
@@ -1522,7 +1532,7 @@ HAL_StatusTypeDef HAL_NAND_Write_SingleSpareArea(NAND_HandleTypeDef *hnand, NAND
       status = HAL_NAND_WriteEnd(hnand);
     }
 
-    if (status == HAL_OK)
+    if ((status == HAL_OK) || (status == HAL_ERROR))
     {
       hnand->State = HAL_NAND_STATE_READY;
     }
@@ -1609,7 +1619,7 @@ HAL_StatusTypeDef HAL_NAND_Erase_Block(NAND_HandleTypeDef *hnand, NAND_AddressTy
 
     /* Wait end of erase */
     status = HAL_NAND_WaitReady(hnand, NAND_ERASE_BLOCK_TIMEOUT);
-    if (status == HAL_OK)
+    if ((status == HAL_OK) || (status == HAL_ERROR))
     {
       hnand->State = HAL_NAND_STATE_READY;
     }
@@ -2795,6 +2805,11 @@ HAL_StatusTypeDef  HAL_NAND_ECC_Write_Page(NAND_HandleTypeDef *hnand, NAND_Addre
     while ((numPagesWritten < NumPagesToWrite) && (nandAddress < nandAddressMax))
     {
       status = HAL_NAND_ECC_Write_SinglePage(hnand, nandAddress, pBuffer, bufferOffset);
+      if (status == HAL_ERROR)
+      {
+        hnand->State = HAL_NAND_STATE_READY;
+        break;
+      }
       if (status != HAL_OK)
       {
         break;
@@ -2886,7 +2901,6 @@ void HAL_NAND_ECC_GetStatistics(NAND_HandleTypeDef *hnand, NAND_EccStatisticsTyp
 /**
   * @}
   */
-
 
 
 /** @defgroup NAND_Exported_Functions_Group6 Input and Output functions with error correction
@@ -3613,5 +3627,4 @@ HAL_StatusTypeDef HAL_NAND_Sequencer_ECC_Write_Page_16b(NAND_HandleTypeDef *hnan
 /**
   * @}
   */
-
 

@@ -309,6 +309,7 @@ static void ETH_InitCallbacksToDefault(ETH_HandleTypeDef *heth);
 HAL_StatusTypeDef HAL_ETH_Init(ETH_HandleTypeDef *heth)
 {
   uint32_t tickstart;
+  uint32_t syscfg_config;
 
   if (heth == NULL)
   {
@@ -367,11 +368,21 @@ HAL_StatusTypeDef HAL_ETH_Init(ETH_HandleTypeDef *heth)
   {
     if (heth->Instance == ETH)
     {
-      HAL_SYSCFG_ETHInterfaceSelect(SYSCFG_ETH1_RMII);
+      syscfg_config = SYSCFG_ETH1_RMII;
+      if (heth->Init.ClockSelection == HAL_ETH1_REF_CLK_RCC)
+      {
+        syscfg_config |= SYSCFG_PMCSETR_ETH1_REF_CLK_SEL;
+      }
+      HAL_SYSCFG_ETHInterfaceSelect(syscfg_config);
     }
     else
     {
-      HAL_SYSCFG_ETHInterfaceSelect(SYSCFG_ETH2_RMII);
+      syscfg_config = SYSCFG_ETH2_RMII;
+      if (heth->Init.ClockSelection == HAL_ETH2_REF_CLK_RCC)
+      {
+        syscfg_config |= SYSCFG_PMCSETR_ETH2_REF_CLK_SEL;
+      }
+      HAL_SYSCFG_ETHInterfaceSelect(syscfg_config);
     }
   }
 
@@ -1111,7 +1122,7 @@ HAL_StatusTypeDef HAL_ETH_ReadData(ETH_HandleTypeDef *heth, void **pAppBuff)
         heth->RxDescList.RxDataLength = 0;
       }
 
-      /* Get the Frame Length of the received packet: substruct 4 bytes of the CRC */
+      /* Get the Frame Length of the received packet */
       bufflength = READ_BIT(dmarxdesc->DESC3, ETH_DMARXNDESCWBF_PL) - heth->RxDescList.RxDataLength;
 
       /* Check if last descriptor */
@@ -1127,11 +1138,11 @@ HAL_StatusTypeDef HAL_ETH_ReadData(ETH_HandleTypeDef *heth, void **pAppBuff)
       /* Link data */
 #if (USE_HAL_ETH_REGISTER_CALLBACKS == 1)
       /*Call registered Link callback*/
-      heth->rxLinkCallback(&heth->RxDescList.pRxStart, &heth->RxDescList.pRxEnd,
+      heth->rxLinkCallback(heth, &heth->RxDescList.pRxStart, &heth->RxDescList.pRxEnd,
                            (uint8_t *)dmarxdesc->BackupAddr0, bufflength);
 #else
       /* Link callback */
-      HAL_ETH_RxLinkCallback(&heth->RxDescList.pRxStart, &heth->RxDescList.pRxEnd,
+      HAL_ETH_RxLinkCallback(heth, &heth->RxDescList.pRxStart, &heth->RxDescList.pRxEnd,
                              (uint8_t *)dmarxdesc->BackupAddr0, (uint16_t) bufflength);
 #endif  /* USE_HAL_ETH_REGISTER_CALLBACKS */
       heth->RxDescList.RxDescCnt++;
@@ -1200,10 +1211,10 @@ static void ETH_UpdateDescriptor(ETH_HandleTypeDef *heth)
       /* Get a new buffer. */
 #if (USE_HAL_ETH_REGISTER_CALLBACKS == 1)
       /*Call registered Allocate callback*/
-      heth->rxAllocateCallback(&buff);
+      heth->rxAllocateCallback(heth, &buff);
 #else
       /* Allocate callback */
-      HAL_ETH_RxAllocateCallback(&buff);
+      HAL_ETH_RxAllocateCallback(heth, &buff);
 #endif  /* USE_HAL_ETH_REGISTER_CALLBACKS */
       if (buff == NULL)
       {
@@ -1239,7 +1250,7 @@ static void ETH_UpdateDescriptor(ETH_HandleTypeDef *heth)
   if (heth->RxDescList.RxBuildDescCnt != desccount)
   {
     /* Set the tail pointer index */
-    tailidx = (descidx + 1U) % ETH_RX_DESC_CNT;
+    tailidx = (ETH_RX_DESC_CNT + descidx - 1U) % ETH_RX_DESC_CNT;
 
     /* DMB instruction to avoid race condition */
     __DMB();
@@ -1293,7 +1304,7 @@ HAL_StatusTypeDef HAL_ETH_UnRegisterRxAllocateCallback(ETH_HandleTypeDef *heth)
   * @param  buff: pointer to allocated buffer
   * @retval None
   */
-__weak void HAL_ETH_RxAllocateCallback(uint8_t **buff)
+__weak void HAL_ETH_RxAllocateCallback(ETH_HandleTypeDef *heth, uint8_t **buff)
 {
   /* Prevent unused argument(s) compilation warning */
   UNUSED(buff);
@@ -1310,7 +1321,7 @@ __weak void HAL_ETH_RxAllocateCallback(uint8_t **buff)
   * @param  Length: received data length
   * @retval None
   */
-__weak void HAL_ETH_RxLinkCallback(void **pStart, void **pEnd, uint8_t *buff, uint16_t Length)
+__weak void HAL_ETH_RxLinkCallback(ETH_HandleTypeDef *heth, void **pStart, void **pEnd, uint8_t *buff, uint16_t Length)
 {
   /* Prevent unused argument(s) compilation warning */
   UNUSED(pStart);
@@ -1412,7 +1423,7 @@ HAL_StatusTypeDef HAL_ETH_UnRegisterTxFreeCallback(ETH_HandleTypeDef *heth)
   * @param  buff: pointer to buffer to free
   * @retval None
   */
-__weak void HAL_ETH_TxFreeCallback(uint32_t *buff)
+__weak void HAL_ETH_TxFreeCallback(ETH_HandleTypeDef *heth, uint32_t *buff)
 {
   /* Prevent unused argument(s) compilation warning */
   UNUSED(buff);
@@ -1481,22 +1492,22 @@ HAL_StatusTypeDef HAL_ETH_ReleaseTxPacket(ETH_HandleTypeDef *heth)
         /* Handle Ptp  */
         if (timestamp->TimeStampHigh != UINT32_MAX && timestamp->TimeStampLow != UINT32_MAX)
         {
-          heth->txPtpCallback(dmatxdesclist->PacketAddress[idx], timestamp);
+          heth->txPtpCallback(heth, dmatxdesclist->PacketAddress[idx], timestamp);
         }
 #endif  /* HAL_ETH_USE_PTP */
         /* Release the packet.  */
-        heth->txFreeCallback(dmatxdesclist->PacketAddress[idx]);
+        heth->txFreeCallback(heth, dmatxdesclist->PacketAddress[idx]);
 #else
         /* Call callbacks */
 #ifdef HAL_ETH_USE_PTP
         /* Handle Ptp  */
         if (timestamp->TimeStampHigh != UINT32_MAX && timestamp->TimeStampLow != UINT32_MAX)
         {
-          HAL_ETH_TxPtpCallback(dmatxdesclist->PacketAddress[idx], timestamp);
+          HAL_ETH_TxPtpCallback(heth, dmatxdesclist->PacketAddress[idx], timestamp);
         }
 #endif  /* HAL_ETH_USE_PTP */
         /* Release the packet.  */
-        HAL_ETH_TxFreeCallback(dmatxdesclist->PacketAddress[idx]);
+        HAL_ETH_TxFreeCallback(heth, dmatxdesclist->PacketAddress[idx]);
 #endif  /* USE_HAL_ETH_REGISTER_CALLBACKS */
 
         /* Clear the entry in the in-use array.  */
@@ -1866,7 +1877,7 @@ HAL_StatusTypeDef HAL_ETH_UnRegisterTxPtpCallback(ETH_HandleTypeDef *heth)
   *         transmission timestamp
   * @retval None
   */
-__weak void HAL_ETH_TxPtpCallback(uint32_t *buff, ETH_TimeStampTypeDef *timestamp)
+__weak void HAL_ETH_TxPtpCallback(ETH_HandleTypeDef *heth, uint32_t *buff, ETH_TimeStampTypeDef *timestamp)
 {
   /* Prevent unused argument(s) compilation warning */
   UNUSED(buff);
@@ -1995,7 +2006,7 @@ void HAL_ETH_IRQHandler(ETH_HandleTypeDef *heth)
   if ((mac_flag & ETH_MAC_LPI_IT) != 0U)
   {
     /* Get MAC LPI interrupt source and clear the status register pending bit */
-    heth->MACLPIEvent = READ_BIT(heth->Instance->MACPCSR, 0x0000000FU);
+    heth->MACLPIEvent = READ_BIT(heth->Instance->MACLCSR, 0x0000000FU);
 
 #if (USE_HAL_ETH_REGISTER_CALLBACKS == 1)
     /* Call registered EEE callback*/
@@ -2488,7 +2499,7 @@ HAL_StatusTypeDef HAL_ETH_SetMACFilterConfig(ETH_HandleTypeDef *heth, const ETH_
                   ((uint32_t)pFilterConfig->HashMulticast << 2)  |
                   ((uint32_t)pFilterConfig->DestAddrInverseFiltering << 3) |
                   ((uint32_t)pFilterConfig->PassAllMulticast << 4) |
-                  ((uint32_t)((pFilterConfig->BroadcastFilter == DISABLE) ? 1U : 0U) << 5) |
+                  ((uint32_t)((pFilterConfig->BroadcastFilter == ENABLE) ? 1U : 0U) << 5) |
                   ((uint32_t)pFilterConfig->SrcAddrInverseFiltering << 8) |
                   ((uint32_t)pFilterConfig->SrcAddrFiltering << 9) |
                   ((uint32_t)pFilterConfig->HachOrPerfectFilter << 10) |
@@ -2521,7 +2532,7 @@ HAL_StatusTypeDef HAL_ETH_GetMACFilterConfig(const ETH_HandleTypeDef *heth, ETH_
   pFilterConfig->DestAddrInverseFiltering = ((READ_BIT(heth->Instance->MACPFR,
                                                        ETH_MACPFR_DAIF) >> 3) > 0U) ? ENABLE : DISABLE;
   pFilterConfig->PassAllMulticast = ((READ_BIT(heth->Instance->MACPFR, ETH_MACPFR_PM) >> 4) > 0U) ? ENABLE : DISABLE;
-  pFilterConfig->BroadcastFilter = ((READ_BIT(heth->Instance->MACPFR, ETH_MACPFR_DBF) >> 5) == 0U) ? ENABLE : DISABLE;
+  pFilterConfig->BroadcastFilter = ((READ_BIT(heth->Instance->MACPFR, ETH_MACPFR_DBF) >> 5) > 0U) ? ENABLE : DISABLE;
   pFilterConfig->ControlPacketsFilter = READ_BIT(heth->Instance->MACPFR, ETH_MACPFR_PCF);
   pFilterConfig->SrcAddrInverseFiltering = ((READ_BIT(heth->Instance->MACPFR,
                                                       ETH_MACPFR_SAIF) >> 8) > 0U) ? ENABLE : DISABLE;

@@ -62,7 +62,7 @@
 #endif /* USE_HAL_SAES_ONLY */
 
 #define  CRYPEx_PHASE_PROCESS       0x02U     /*!< CRYP peripheral is in processing phase */
-#define  CRYPEx_PHASE_FINAL         0x03U     /*!< CRYP peripheral is in final phase this is relevant
+#define  CRYPEx_PHASE_FINAL         0x03U     /*!< CRYP peripheral is in final phase this is relevant 
                                                    only with CCM and GCM modes */
 
 /*  CTR0 information to use in CCM algorithm */

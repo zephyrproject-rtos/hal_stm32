@@ -4132,7 +4132,7 @@ __STATIC_INLINE uint32_t LL_RCC_GetRTC_HSEPrescaler(void)
   * @brief  Configure TIMGx prescaler selection
   * @rmtoll TIMG1PRER      TIMG1PRE      LL_RCC_SetTIMGPrescaler\n
   *         TIMG2PRER      TIMG2PRE      LL_RCC_SetTIMGPrescaler\n
-  *         TIMG2PRER      TIMG3PRE      LL_RCC_SetTIMGPrescaler
+  *         TIMG3PRER      TIMG3PRE      LL_RCC_SetTIMGPrescaler
   * @param  PreSelection This parameter can be one of the following values:
   *         @arg @ref LL_RCC_TIMG1PRES_DEACTIVATED
   *         @arg @ref LL_RCC_TIMG1PRES_ACTIVATED
@@ -4151,7 +4151,7 @@ __STATIC_INLINE void LL_RCC_SetTIMGPrescaler(uint32_t PreSelection)
   * @brief  Get TIMGx prescaler selection
   * @rmtoll TIMG1PRER      TIMG1PRE      LL_RCC_GetTIMGPrescaler\n
   *         TIMG2PRER      TIMG2PRE      LL_RCC_GetTIMGPrescaler\n
-  *         TIMG2PRER      TIMG3PRE      LL_RCC_GetTIMGPrescaler
+  *         TIMG3PRER      TIMG3PRE      LL_RCC_GetTIMGPrescaler
   * @param  TIMGroup This parameter can be one of the following values:
   *         @arg @ref LL_RCC_TIMG1PRES
   *         @arg @ref LL_RCC_TIMG2PRES

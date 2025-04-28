@@ -290,7 +290,7 @@
   * @{
   */
 #define CRYP_TIMEOUT_KEYPREPARATION      82U         /* The latency of key preparation operation is 82 clock cycles.*/
-#define CRYP_TIMEOUT_GCMCCMINITPHASE     299U        /* The latency of  GCM/CCM init phase to prepare hash subkey is
+#define CRYP_TIMEOUT_GCMCCMINITPHASE     299U        /* The latency of  GCM/CCM init phase to prepare hash subkey is 
                                                         299 clock cycles.*/
 #define CRYP_TIMEOUT_GCMCCMHEADERPHASE   290U        /* The latency of  GCM/CCM header phase is 290 clock cycles.*/
 
@@ -302,7 +302,7 @@
 #define  CRYP_PHASE_HEADER_SUSPENDED     0x00000004U /*!< GCM/GMAC/CCM header phase is suspended */
 #define  CRYP_PHASE_PAYLOAD_SUSPENDED    0x00000005U /*!< GCM/CCM payload phase is suspended     */
 #endif /* USE_HAL_CRYP_SUSPEND_RESUME */
-#define  CRYP_PHASE_HEADER_DMA_FEED      0x00000006U /*!< GCM/GMAC/CCM header is fed to the peripheral in
+#define  CRYP_PHASE_HEADER_DMA_FEED      0x00000006U /*!< GCM/GMAC/CCM header is fed to the peripheral in 
                                                           MDMA mode */
 
 #if !defined(USE_HAL_CRYP_ONLY) || (USE_HAL_CRYP_ONLY == 1)

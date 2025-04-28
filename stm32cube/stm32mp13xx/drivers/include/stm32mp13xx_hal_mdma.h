@@ -460,11 +460,11 @@ typedef struct __MDMA_HandleTypeDef
   */
 #define MDMA_DATAALIGN_PACKENABLE        ((uint32_t)MDMA_CTCR_PKE)     /*!< The source data is packed/un-packed into
                                                                             the destination data size
-                                                                            All data are right aligned, in Little
+                                                                            All data are right aligned, in Little 
                                                                             Endian mode. */
 #define MDMA_DATAALIGN_RIGHT            ((uint32_t)0x00000000U)        /*!< Right Aligned, padded w/ 0s (default)                                                           */
 #define MDMA_DATAALIGN_RIGHT_SIGNED     ((uint32_t)MDMA_CTCR_PAM_0)    /*!< Right Aligned, Sign extended ,
-                                                                            Note : this mode is allowed only if the
+                                                                            Note : this mode is allowed only if the 
                                                                             Source data size is smaller than Destination
                                       data size  */
 #define MDMA_DATAALIGN_LEFT             ((uint32_t)MDMA_CTCR_PAM_1)    /*!< Left Aligned (padded with 0s)                                                                   */

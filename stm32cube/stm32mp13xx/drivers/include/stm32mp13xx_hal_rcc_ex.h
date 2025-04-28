@@ -214,6 +214,11 @@ typedef struct
                                         This parameter can be a value of @ref
                                         RCCEx_TIMG2_Prescaler_Selection */
 
+  uint32_t TIMG3PresSelection;     /*!< Specifies TIM Group 3 Clock Prescalers
+                                        Selection.
+                                        This parameter can be a value of @ref
+                                        RCCEx_TIMG3_Prescaler_Selection */
+
   uint32_t RTCClockSelection;      /*!< Specifies RTC clock source
                                         This parameter can be a value of @ref
                                         RCC_RTC_Clock_Source */
@@ -235,7 +240,7 @@ typedef struct
 /** @defgroup RCCEx_Periph_Clock_Selection RCCEx_Periph_Clock_Selection
   * @{
   */
-#define RCC_PERIPHCLK_I2C12             ((uint64_t)0x00000001)
+#define RCC_PERIPHCLK_I2C12             ((uint64_t)0x00000001U)
 #define RCC_PERIPHCLK_I2C3              ((uint64_t)0x00000002U)
 #define RCC_PERIPHCLK_I2C4              ((uint64_t)0x00000004U)
 #define RCC_PERIPHCLK_I2C5              ((uint64_t)0x00000008U)
@@ -273,8 +278,9 @@ typedef struct
 #define RCC_PERIPHCLK_SAES              ((uint64_t)0x800000000U)
 #define RCC_PERIPHCLK_TIMG1             ((uint64_t)0x1000000000U)
 #define RCC_PERIPHCLK_TIMG2             ((uint64_t)0x2000000000U)
-#define RCC_PERIPHCLK_RTC               ((uint64_t)0x4000000000U)
-#define RCC_PERIPHCLK_CKPER             ((uint64_t)0x8000000000U)
+#define RCC_PERIPHCLK_TIMG3             ((uint64_t)0x4000000000U)
+#define RCC_PERIPHCLK_RTC               ((uint64_t)0x8000000000U)
+#define RCC_PERIPHCLK_CKPER             ((uint64_t)0x10000000000U)
 
 #define IS_RCC_PERIPHCLOCK(SELECTION) \
   ((((SELECTION) & RCC_PERIPHCLK_I2C12)  == RCC_PERIPHCLK_I2C12)  || \
@@ -315,6 +321,7 @@ typedef struct
    (((SELECTION) & RCC_PERIPHCLK_SAES)   == RCC_PERIPHCLK_SAES)   || \
    (((SELECTION) & RCC_PERIPHCLK_TIMG1)  == RCC_PERIPHCLK_TIMG1)  || \
    (((SELECTION) & RCC_PERIPHCLK_TIMG2)  == RCC_PERIPHCLK_TIMG2)  || \
+   (((SELECTION) & RCC_PERIPHCLK_TIMG3)  == RCC_PERIPHCLK_TIMG3)  || \
    (((SELECTION) & RCC_PERIPHCLK_RTC)    == RCC_PERIPHCLK_RTC)    || \
    (((SELECTION) & RCC_PERIPHCLK_CKPER)  == RCC_PERIPHCLK_CKPER))
 
@@ -337,14 +344,14 @@ typedef struct
 #define RCC_PERIPHCLK_TIM5              RCC_PERIPHCLK_TIMG1
 #define RCC_PERIPHCLK_TIM6              RCC_PERIPHCLK_TIMG1
 #define RCC_PERIPHCLK_TIM7              RCC_PERIPHCLK_TIMG1
-#define RCC_PERIPHCLK_TIM12             RCC_PERIPHCLK_TIMG1
-#define RCC_PERIPHCLK_TIM13             RCC_PERIPHCLK_TIMG1
-#define RCC_PERIPHCLK_TIM14             RCC_PERIPHCLK_TIMG1
+#define RCC_PERIPHCLK_TIM12             RCC_PERIPHCLK_TIMG3
+#define RCC_PERIPHCLK_TIM13             RCC_PERIPHCLK_TIMG3
+#define RCC_PERIPHCLK_TIM14             RCC_PERIPHCLK_TIMG3
 #define RCC_PERIPHCLK_TIM1              RCC_PERIPHCLK_TIMG2
 #define RCC_PERIPHCLK_TIM8              RCC_PERIPHCLK_TIMG2
-#define RCC_PERIPHCLK_TIM15             RCC_PERIPHCLK_TIMG2
-#define RCC_PERIPHCLK_TIM16             RCC_PERIPHCLK_TIMG2
-#define RCC_PERIPHCLK_TIM17             RCC_PERIPHCLK_TIMG2
+#define RCC_PERIPHCLK_TIM15             RCC_PERIPHCLK_TIMG3
+#define RCC_PERIPHCLK_TIM16             RCC_PERIPHCLK_TIMG3
+#define RCC_PERIPHCLK_TIM17             RCC_PERIPHCLK_TIMG3
 
 #define IS_RCC_PERIPHONECLOCK(PERIPH) \
   ((((PERIPH) & RCC_PERIPHCLK_LTDC)     == RCC_PERIPHCLK_LTDC)    || \
@@ -354,7 +361,8 @@ typedef struct
    (((PERIPH) & RCC_PERIPHCLK_IWDG2)    == RCC_PERIPHCLK_IWDG2)   || \
    (((PERIPH) & RCC_PERIPHCLK_DDRPHYC)  == RCC_PERIPHCLK_DDRPHYC) || \
    (((PERIPH) & RCC_PERIPHCLK_TIMG1)    == RCC_PERIPHCLK_TIMG1)   || \
-   (((PERIPH) & RCC_PERIPHCLK_TIMG2)    == RCC_PERIPHCLK_TIMG2))
+   (((PERIPH) & RCC_PERIPHCLK_TIMG2)    == RCC_PERIPHCLK_TIMG2)   || \
+   (((PERIPH) & RCC_PERIPHCLK_TIMG3)    == RCC_PERIPHCLK_TIMG3))
 
 /**
   * @}
@@ -872,7 +880,6 @@ typedef struct
 #define RCC_FDCANCLKSOURCE_PLL4_R       (RCC_FDCANCKSELR_FDCANSRC_1 | RCC_FDCANCKSELR_FDCANSRC_0)
 
 
-
 #define IS_RCC_FDCANCLKSOURCE(SOURCE) \
   (((SOURCE) == RCC_FDCANCLKSOURCE_HSE)     || \
    ((SOURCE) == RCC_FDCANCLKSOURCE_PLL3)    || \
@@ -1146,7 +1153,6 @@ typedef struct
 #define RCC_LPTIM45CLKSOURCE_OFF        (RCC_LPTIM45CKSELR_LPTIM45SRC_2 | RCC_LPTIM45CKSELR_LPTIM45SRC_1)
 
 
-
 #define IS_RCC_LPTIM45CLKSOURCE(SOURCE) \
   (((SOURCE) == RCC_LPTIM45CLKSOURCE_PCLK3) || \
    ((SOURCE) == RCC_LPTIM45CLKSOURCE_PLL4)  || \
@@ -1181,6 +1187,18 @@ typedef struct
 
 #define IS_RCC_TIMG2PRES(PRES)  (((PRES) == RCC_TIMG2PRES_DEACTIVATED)    || \
                                  ((PRES) == RCC_TIMG2PRES_ACTIVATED))
+/**
+  * @}
+  */
+
+/** @defgroup RCCEx_TIMG3_Prescaler_Selection TIMG3 Prescaler Selection
+  * @{
+  */
+#define RCC_TIMG3PRES_DEACTIVATED                0U
+#define RCC_TIMG3PRES_ACTIVATED                  RCC_TIMG3PRER_TIMG3PRE
+
+#define IS_RCC_TIMG3PRES(PRES)  (((PRES) == RCC_TIMG3PRES_DEACTIVATED)    || \
+                                 ((PRES) == RCC_TIMG3PRES_ACTIVATED))
 /**
   * @}
   */
@@ -2140,11 +2158,10 @@ typedef struct
 #define __HAL_RCC_GET_LPTIM45_SOURCE() ((uint32_t)(READ_BIT(RCC->LPTIM45CKSELR, RCC_LPTIM45CKSELR_LPTIM45SRC)))
 
 
-
 /**
   * @brief  Macro to set the APB1 timer clock prescaler
   * @note   Set and reset by software to control the clock frequency of all the timers connected to APB1 domain.
-  *         It concerns TIM2, TIM3, TIM4, TIM5, TIM6, TIM7, TIM12, TIM13 and TIM14.
+  *         It concerns TIM2, TIM3, TIM4, TIM5, TIM6, TIM7.
   * @param  __RCC_TIMG1PRES__: specifies the Timers clocks prescaler selection
   *          This parameter can be one of the following values:
   *              @arg RCC_TIMG1PRES_DEACTIVATED:  The Timers kernel clock is equal to ck_hclk
@@ -2173,7 +2190,7 @@ typedef struct
 /**
   * @brief  Macro to set the APB2 timers clocks prescaler
   * @note   Set and reset by software to control the clock frequency of all the timers connected to APB2 domain.
-  *         It concerns TIM1, TIM8, TIM15, TIM16, and TIM17.
+  *         It concerns TIM1 and TIM8.
   * @param  __RCC_TIMG2PRES__: specifies the timers clocks prescaler selection
   *          This parameter can be one of the following values:
   *              @arg RCC_TIMG2PRES_DEACTIVATED:  The Timers kernel clock is equal to ck_hclk if
@@ -2198,7 +2215,33 @@ typedef struct
   */
 #define __HAL_RCC_GET_TIMG2PRES() ((uint32_t)(RCC->TIMG2PRER & RCC_TIMG2PRER_TIMG2PRE))
 
+/**
+  * @brief  Macro to set the APB6 timers clocks prescaler
+  * @note   Set and reset by software to control the clock frequency of all the timers connected to APB6 domain.
+  *         It concerns TIM12, TIM13, TIM14, TIM15, TIM16, and TIM17.
+  * @param  __RCC_TIMG3PRES__: specifies the timers clocks prescaler selection
+  *          This parameter can be one of the following values:
+  *              @arg RCC_TIMG3PRES_DEACTIVATED:  The Timers kernel clock is equal to ck_hclk if
+  *                                               APB6DIV is corresponding to a division by 1 or 2, else
+  *                                               it is equal to 2 x Fck_pclk2 (default after reset)
+  *              @arg RCC_TIMG3PRES_ACTIVATED:    The Timers kernel clock is equal to ck_hclk if APB6DIV is
+  *                                               correspondingto division by 1, 2 or 4, else
+  *                                               it is equal to 4 x Fck_pclk1
+  */
+#define __HAL_RCC_TIMG3PRES(__RCC_TIMG3PRES__) \
+  do{  MODIFY_REG( RCC->TIMG3PRER, RCC_TIMG3PRER_TIMG3PRE , __RCC_TIMG3PRES__ );\
+  } while(0)
 
+/** @brief  Macro to get the APB6 timer clock prescaler.
+  * @retval The APB6 timer clock prescaler. The returned value can be one
+  *         of the following:
+  *             - RCC_TIMG3PRES_DEACTIVATED: The Timers kernel clock is equal to ck_hclk if APB6DIV is corresponding
+  *                                           to a division by 1 or 2, else it is equal to
+  *                                           2 x Fck_pclk1 (default after reset)
+  *             - RCC_TIMG3PRES_ACTIVATED:   The Timers kernel clock is equal to ck_hclk if APB6DIV is corresponding
+  *                                          to division by 1, 2 or 4, else it is equal to 4 x Fck_pclk1
+  */
+#define __HAL_RCC_GET_TIMG3PRES() ((uint32_t)(RCC->TIMG3PRER & RCC_TIMG3PRER_TIMG3PRE))
 
 #define USB_PHY_VALUE    ((uint32_t)48000000U) /*!< Value of the USB_PHY_VALUE signal in Hz
                                                    It is equal to rcc_hsphy_CLK_48M which is

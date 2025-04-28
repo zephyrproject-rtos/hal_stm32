@@ -1694,6 +1694,19 @@ HAL_StatusTypeDef HAL_ADCEx_InjectedConfigChannel(ADC_HandleTypeDef *hadc, ADC_I
   }
   else
   {
+#if defined(ADC1) & !defined(ADC2)
+    if (hadc->Instance == ADC1)
+    {
+      assert_param(IS_ADC1_DIFF_CHANNEL(pConfigInjected->InjectedChannel));
+    }
+#endif
+#if !defined(ADC1) & defined(ADC2)
+    if (hadc->Instance == ADC2)
+    {
+      assert_param(IS_ADC2_DIFF_CHANNEL(pConfigInjected->InjectedChannel));
+    }
+#endif
+#if defined(ADC1) & defined(ADC2)
     if (hadc->Instance == ADC1)
     {
       assert_param(IS_ADC1_DIFF_CHANNEL(pConfigInjected->InjectedChannel));
@@ -1702,7 +1715,8 @@ HAL_StatusTypeDef HAL_ADCEx_InjectedConfigChannel(ADC_HandleTypeDef *hadc, ADC_I
     {
       assert_param(IS_ADC2_DIFF_CHANNEL(pConfigInjected->InjectedChannel));
     }
-  }
+#endif
+}
 
   /* Process locked */
   __HAL_LOCK(hadc);
