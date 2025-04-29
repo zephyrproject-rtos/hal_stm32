@@ -153,8 +153,10 @@ typedef struct
 
 /* General tools */
 #define ABS(x)          ((x) < (0) ? -(x) : (x))
+#ifdef H1_INTERNAL
 #define MAX(a, b)       ((a) > (b) ?  (a) : (b))
 #define MIN(a, b)       ((a) < (b) ?  (a) : (b))
+#endif
 #define SIGN(a)         ((a) < (0) ? (-1) : (1))
 #define OUT_OF_RANGE(x,a,b) ((((i32)x)<(a)?(1):(0)) || ((x)>(b)?(1):(0)))
 #define CLIP3(v, min, max)  ((v) < (min) ? (min) : ((v) > (max) ? (max) : (v)))
