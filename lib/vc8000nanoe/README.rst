@@ -77,3 +77,6 @@ License Link:
 Patch List:
 	* Avoid bool redefinition
 	  Impacted files: inc/basetype.h
+
+	* Avoid MIN/MAX redefinition
+	  Impacted files: inc/enccommon.h
