@@ -104,12 +104,13 @@ typedef int32_t i32;
 typedef uint64_t u64;
 typedef int64_t   i64;
 
-
+#ifdef H1_INTERNAL
 #ifndef __cplusplus
 typedef enum {
         false   = 0,
         true    = 1
 } bool;
+#endif
 #endif
 
 #endif
