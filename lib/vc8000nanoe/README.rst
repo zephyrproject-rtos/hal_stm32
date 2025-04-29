@@ -75,3 +75,5 @@ License Link:
    opensource.org/licenses/BSD-3-Clause
 
 Patch List:
+	* Avoid bool redefinition
+	  Impacted files: inc/basetype.h
