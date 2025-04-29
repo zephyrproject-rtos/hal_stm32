@@ -79,6 +79,8 @@ typedef enum {
 
 #else /* __symbian__ or __win__ or whatever, customize it to suit well */
 
+#include <stdbool.h>
+
 #ifndef _SIZE_T_DEFINED
 typedef uint32_t size_t;
 
@@ -106,10 +108,12 @@ typedef int64_t   i64;
 
 
 #ifndef __cplusplus
+#ifndef __bool_true_false_are_defined
 typedef enum {
         false   = 0,
         true    = 1
 } bool;
+#endif
 #endif
 
 #endif
