@@ -59,6 +59,10 @@
   match: "^DCMI_(?:HSYNC|PIXCLK|VSYNC|D(?:[0-9]|1[0-3]))$"
   slew-rate: very-high-speed
 
+- name: DCMIPP
+  match: "^DCMIPP_(?:HSYNC|PIXCLK|VSYNC|D(?:[0-9]|1[0-5]))$"
+  slew-rate: very-high-speed
+
 - name: DFSDM
   match: "^DFSDM[1-2]_(DATIN[0-7]|CKIN[0-7]|CKOUT)$"
   slew-rate: very-high-speed
