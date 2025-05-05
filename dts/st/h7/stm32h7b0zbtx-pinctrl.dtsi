@@ -670,6 +670,11 @@
 				slew-rate = "very-high-speed";
 			};
 
+			/omit-if-no-ref/ dcmi_d10_pb5: dcmi_d10_pb5 {
+				pinmux = <STM32_PINMUX('B', 5, AF13)>;
+				slew-rate = "very-high-speed";
+			};
+
 			/omit-if-no-ref/ dcmi_d5_pb6: dcmi_d5_pb6 {
 				pinmux = <STM32_PINMUX('B', 6, AF13)>;
 				slew-rate = "very-high-speed";
@@ -715,13 +720,43 @@
 				slew-rate = "very-high-speed";
 			};
 
+			/omit-if-no-ref/ dcmi_d8_pc10: dcmi_d8_pc10 {
+				pinmux = <STM32_PINMUX('C', 10, AF13)>;
+				slew-rate = "very-high-speed";
+			};
+
 			/omit-if-no-ref/ dcmi_d4_pc11: dcmi_d4_pc11 {
 				pinmux = <STM32_PINMUX('C', 11, AF13)>;
 				slew-rate = "very-high-speed";
 			};
 
+			/omit-if-no-ref/ dcmi_d9_pc12: dcmi_d9_pc12 {
+				pinmux = <STM32_PINMUX('C', 12, AF13)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ dcmi_d11_pd2: dcmi_d11_pd2 {
+				pinmux = <STM32_PINMUX('D', 2, AF13)>;
+				slew-rate = "very-high-speed";
+			};
+
 			/omit-if-no-ref/ dcmi_d5_pd3: dcmi_d5_pd3 {
 				pinmux = <STM32_PINMUX('D', 3, AF13)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ dcmi_d10_pd6: dcmi_d10_pd6 {
+				pinmux = <STM32_PINMUX('D', 6, AF13)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ dcmi_d12_pd12: dcmi_d12_pd12 {
+				pinmux = <STM32_PINMUX('D', 12, AF13)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ dcmi_d13_pd13: dcmi_d13_pd13 {
+				pinmux = <STM32_PINMUX('D', 13, AF13)>;
 				slew-rate = "very-high-speed";
 			};
 
@@ -750,6 +785,26 @@
 				slew-rate = "very-high-speed";
 			};
 
+			/omit-if-no-ref/ dcmi_d11_pf10: dcmi_d11_pf10 {
+				pinmux = <STM32_PINMUX('F', 10, AF13)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ dcmi_d12_pf11: dcmi_d12_pf11 {
+				pinmux = <STM32_PINMUX('F', 11, AF13)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ dcmi_d12_pg6: dcmi_d12_pg6 {
+				pinmux = <STM32_PINMUX('G', 6, AF13)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ dcmi_d13_pg7: dcmi_d13_pg7 {
+				pinmux = <STM32_PINMUX('G', 7, AF13)>;
+				slew-rate = "very-high-speed";
+			};
+
 			/omit-if-no-ref/ dcmi_vsync_pg9: dcmi_vsync_pg9 {
 				pinmux = <STM32_PINMUX('G', 9, AF13)>;
 				slew-rate = "very-high-speed";
@@ -762,6 +817,11 @@
 
 			/omit-if-no-ref/ dcmi_d3_pg11: dcmi_d3_pg11 {
 				pinmux = <STM32_PINMUX('G', 11, AF13)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ dcmi_d13_pg15: dcmi_d13_pg15 {
+				pinmux = <STM32_PINMUX('G', 15, AF13)>;
 				slew-rate = "very-high-speed";
 			};
 
