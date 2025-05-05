@@ -56,7 +56,7 @@
   match: "^DAC(?:\\d+)?_OUT\\d+$"
 
 - name: DCMI
-  match: "^DCMI_(?:HSYNC|PIXCLK|VSYNC|D[0-7])$"
+  match: "^DCMI_(?:HSYNC|PIXCLK|VSYNC|D(?:[0-9]|1[0-3]))$"
   slew-rate: very-high-speed
 
 - name: DFSDM
