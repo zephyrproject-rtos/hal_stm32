@@ -111,6 +111,10 @@
 - name: HRTIM_SCIN / HRTIM_SCOUT
   match: "^HRTIM\\d+_SC(IN|OUT)$"
 
+- name: HSPI
+  match: "^HSPI(.*)(?:CLK|NCS|DQS|IO\\d+)$"
+  slew-rate: very-high-speed
+
 - name: I2C_SCL
   match: "^I2C\\d+_SCL$"
   drive: open-drain
