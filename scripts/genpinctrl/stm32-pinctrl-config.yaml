@@ -72,7 +72,7 @@
   match: "^ETH+_(?:COL$|CRS|CRS_DV|MDC|MDIO|PPS_OUT|REF_CLK|RX_CLK|RX_DV|RX_ER||RXD[0-3]|TX_CLK|TX_EN|TXD[0-3])$"
   slew-rate: very-high-speed
 
-- name: ETH (STM32N6 IP)
+- name: ETH (Extended)
   match: "^ETH\\d+_(?:MDC|MDIO|PHY_INTN|PPS_OUT|CLK|TX_ER)$"
   slew-rate: very-high-speed
 
@@ -211,7 +211,7 @@
 
 - name: TSC
   match: "^TSC_(?:G\\d+_IO\\d+|SYNC)$"
-  
+
 - name: UART_CTS / USART_CTS / LPUART_CTS
   match: "^(?:LP)?US?ART\\d+_CTS$"
   bias: pull-up
@@ -247,4 +247,3 @@
 
 - name: USB
   match: "^USB_(?:DM)?(?:DP)?(?:NOE)?$"
-
