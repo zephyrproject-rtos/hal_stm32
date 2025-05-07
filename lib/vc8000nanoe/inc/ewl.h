@@ -250,6 +250,11 @@ extern u32 (*pollInputLineBufTestFunc)(void);
 /* Get the base address of on-chip sram used for input MB line buffer. */
 i32 EWLGetInputLineBufferBase(const void *instance, EWLLinearMem_t * info);
 
+/* Debug & trace */
+void EWLassert(bool expr, const char *str_expr, const char *file, unsigned int line);
+void EWLtrace(const char *s);
+void EWLtraceparam(const char *fmt, const char *param, unsigned int val);
+
 #ifdef __cplusplus
 }
 #endif
