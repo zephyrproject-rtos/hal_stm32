@@ -1500,6 +1500,103 @@
 				slew-rate = "very-high-speed";
 			};
 
+			/* HSPI */
+
+			/omit-if-no-ref/ hspi1_ncs_ph9: hspi1_ncs_ph9 {
+				pinmux = <STM32_PINMUX('H', 9, AF8)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ hspi1_io0_ph10: hspi1_io0_ph10 {
+				pinmux = <STM32_PINMUX('H', 10, AF8)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ hspi1_io1_ph11: hspi1_io1_ph11 {
+				pinmux = <STM32_PINMUX('H', 11, AF8)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ hspi1_io2_ph12: hspi1_io2_ph12 {
+				pinmux = <STM32_PINMUX('H', 12, AF8)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ hspi1_io3_ph13: hspi1_io3_ph13 {
+				pinmux = <STM32_PINMUX('H', 13, AF8)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ hspi1_io4_ph14: hspi1_io4_ph14 {
+				pinmux = <STM32_PINMUX('H', 14, AF8)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ hspi1_io5_ph15: hspi1_io5_ph15 {
+				pinmux = <STM32_PINMUX('H', 15, AF8)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ hspi1_io6_pi0: hspi1_io6_pi0 {
+				pinmux = <STM32_PINMUX('I', 0, AF8)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ hspi1_io7_pi1: hspi1_io7_pi1 {
+				pinmux = <STM32_PINMUX('I', 1, AF8)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ hspi1_clk_pi3: hspi1_clk_pi3 {
+				pinmux = <STM32_PINMUX('I', 3, AF8)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ hspi1_nclk_pi4: hspi1_nclk_pi4 {
+				pinmux = <STM32_PINMUX('I', 4, AF8)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ hspi1_io8_pi9: hspi1_io8_pi9 {
+				pinmux = <STM32_PINMUX('I', 9, AF8)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ hspi1_io9_pi10: hspi1_io9_pi10 {
+				pinmux = <STM32_PINMUX('I', 10, AF8)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ hspi1_io10_pi11: hspi1_io10_pi11 {
+				pinmux = <STM32_PINMUX('I', 11, AF8)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ hspi1_io11_pi12: hspi1_io11_pi12 {
+				pinmux = <STM32_PINMUX('I', 12, AF8)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ hspi1_io12_pi13: hspi1_io12_pi13 {
+				pinmux = <STM32_PINMUX('I', 13, AF8)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ hspi1_io13_pi14: hspi1_io13_pi14 {
+				pinmux = <STM32_PINMUX('I', 14, AF8)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ hspi1_io14_pi15: hspi1_io14_pi15 {
+				pinmux = <STM32_PINMUX('I', 15, AF8)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ hspi1_io15_pj0: hspi1_io15_pj0 {
+				pinmux = <STM32_PINMUX('J', 0, AF8)>;
+				slew-rate = "very-high-speed";
+			};
+
 			/* I2C_SCL */
 
 			/omit-if-no-ref/ i2c1_scl_pb6: i2c1_scl_pb6 {
