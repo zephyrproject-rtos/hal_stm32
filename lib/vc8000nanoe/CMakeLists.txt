@@ -4,6 +4,7 @@
 zephyr_library()
 
 zephyr_library_compile_definitions(H1_INTERNAL)
+zephyr_library_compile_definitions(H1_HAVE_ENCDEBUG_H)
 zephyr_include_directories(inc)
 zephyr_include_directories(source/common)
 zephyr_include_directories(source/h264)

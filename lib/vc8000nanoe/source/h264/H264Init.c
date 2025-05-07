@@ -76,7 +76,9 @@
 #ifdef H264ENC_TRACE
 #define APITRACE(str) H264EncTrace(str)
 #else
+#ifndef APITRACE
 #define APITRACE(str)
+#endif
 #endif
 
 /*------------------------------------------------------------------------------
