@@ -115,8 +115,12 @@
 #define APITRACEPARAM(str, val) \
   { char tmpstr[255]; sprintf(tmpstr, "  %s: %d", str, (int)val); H264EncTrace(tmpstr); }
 #else
+#ifndef APITRACE
 #define APITRACE(str)
+#endif
+#ifndef APITRACEPARAM
 #define APITRACEPARAM(str, val)
+#endif
 #endif
 
 /*------------------------------------------------------------------------------

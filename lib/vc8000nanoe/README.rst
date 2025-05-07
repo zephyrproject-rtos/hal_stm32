@@ -80,3 +80,9 @@ Patch List:
 
 	* Avoid MIN/MAX redefinition
 	  Impacted files: inc/enccommon.h
+
+	* Add assert/debug/trace support
+	  Impacted files: CMakeLists.txt
+                          inc/encdebug.h
+                          source/h264/H264EncApi.c
+                          source/h264/H264Init.c
