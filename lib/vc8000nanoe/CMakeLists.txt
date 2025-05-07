@@ -2,6 +2,8 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
+zephyr_library_compile_definitions(H1_HAVE_ENCDEBUG_H)
+#zephyr_library_compile_definitions(CONFIG_VENC_DEBUG)
 zephyr_include_directories(inc)
 zephyr_include_directories(source/common)
 zephyr_include_directories(source/h264)
