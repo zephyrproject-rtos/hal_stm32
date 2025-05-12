@@ -660,7 +660,8 @@ H264EncRet H264EncSetCodingCtrl(H264EncInst inst,
         /* check depth*mb_width align to 4 */
         if ((pEncInst->mbPerRow * pCodeParams->inputLineBufDepth) & 3)
         {
-           APITRACE("H264EncSetCodingCtrl: Invalid input buffer depth");
+           APITRACE("H264EncSetCodingCtrl: Invalid input buffer depth (depth*mb_width align to 4)");
+           APITRACEPARAM("mbPerRow", pEncInst->mbPerRow);
            return ENCHW_NOK;
         }
     }
@@ -1768,7 +1769,7 @@ H264EncRet H264EncStrmEncode(H264EncInst inst, const H264EncIn * pEncIn,
     case H264ENC_P010:
         if(!H264_BUS_ADDRESS_VALID(pEncIn->busChromaV))
         {
-            APITRACE("H264EncStrmEncode: ERROR Invalid input busChromaU");
+            APITRACE("H264EncStrmEncode: ERROR Invalid input busChromaV");
             return H264ENC_INVALID_ARGUMENT;
         }
         /* fall through */

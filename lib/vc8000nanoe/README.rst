@@ -86,3 +86,6 @@ Patch List:
                           inc/encdebug.h
                           source/h264/H264EncApi.c
                           source/h264/H264Init.c
+
+	* Fix some trace points
+	  Impacted files: source/h264/H264EncApi.c
