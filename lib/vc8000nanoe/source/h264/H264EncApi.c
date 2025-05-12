@@ -660,7 +660,8 @@ H264EncRet H264EncSetCodingCtrl(H264EncInst inst,
         /* check depth*mb_width align to 4 */
         if ((pEncInst->mbPerRow * pCodeParams->inputLineBufDepth) & 3)
         {
-           APITRACE("H264EncSetCodingCtrl: Invalid input buffer depth");
+           APITRACE("H264EncSetCodingCtrl: Invalid input buffer depth (depth*mb_width align to 4)");
+           APITRACEPARAM("mbPerRow", pEncInst->mbPerRow);
            return ENCHW_NOK;
         }
     }
@@ -1459,8 +1460,8 @@ H264EncRet H264EncStrmStart(H264EncInst inst, const H264EncIn * pEncIn,
     APITRACEPARAM("busLuma", pEncIn->busLuma);
     APITRACEPARAM("busChromaU", pEncIn->busChromaU);
     APITRACEPARAM("busChromaV", pEncIn->busChromaV);
-    APITRACEPARAM("pOutBuf", pEncIn->pOutBuf);
-    APITRACEPARAM("busOutBuf", pEncIn->busOutBuf);
+    APITRACEPARAMX("pOutBuf", pEncIn->pOutBuf);
+    APITRACEPARAMX("busOutBuf", pEncIn->busOutBuf);
     APITRACEPARAM("outBufSize", pEncIn->outBufSize);
     APITRACEPARAM("codingType", pEncIn->codingType);
     APITRACEPARAM("timeIncrement", pEncIn->timeIncrement);
@@ -1687,15 +1688,15 @@ H264EncRet H264EncStrmEncode(H264EncInst inst, const H264EncIn * pEncIn,
     i32 prefix_nalu_length = 0;
     u8 *prefix_nalu_addr = NULL;
     APITRACE("H264EncStrmEncode#");
-    APITRACEPARAM("busLuma", pEncIn->busLuma);
-    APITRACEPARAM("busChromaU", pEncIn->busChromaU);
-    APITRACEPARAM("busChromaV", pEncIn->busChromaV);
-    APITRACEPARAM("pOutBuf", pEncIn->pOutBuf);
-    APITRACEPARAM("busOutBuf", pEncIn->busOutBuf);
+    APITRACEPARAMX("busLuma", pEncIn->busLuma);
+    APITRACEPARAMX("busChromaU", pEncIn->busChromaU);
+    APITRACEPARAMX("busChromaV", pEncIn->busChromaV);
+    APITRACEPARAMX("pOutBuf", pEncIn->pOutBuf);
+    APITRACEPARAMX("busOutBuf", pEncIn->busOutBuf);
     APITRACEPARAM("outBufSize", pEncIn->outBufSize);
     APITRACEPARAM("codingType", pEncIn->codingType);
     APITRACEPARAM("timeIncrement", pEncIn->timeIncrement);
-    APITRACEPARAM("busLumaStab", pEncIn->busLumaStab);
+    APITRACEPARAMX("busLumaStab", pEncIn->busLumaStab);
     APITRACEPARAM("ipf", pEncIn->ipf);
     APITRACEPARAM("ltrf", pEncIn->ltrf);
 
@@ -1768,7 +1769,7 @@ H264EncRet H264EncStrmEncode(H264EncInst inst, const H264EncIn * pEncIn,
     case H264ENC_P010:
         if(!H264_BUS_ADDRESS_VALID(pEncIn->busChromaV))
         {
-            APITRACE("H264EncStrmEncode: ERROR Invalid input busChromaU");
+            APITRACE("H264EncStrmEncode: ERROR Invalid input busChromaV");
             return H264ENC_INVALID_ARGUMENT;
         }
         /* fall through */
