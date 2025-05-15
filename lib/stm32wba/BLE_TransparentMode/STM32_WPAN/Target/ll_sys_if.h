@@ -1,13 +1,13 @@
 /* USER CODE BEGIN Header */
 /**
   ******************************************************************************
-  * @file    hw_if.h
+  * @file    ll_sys_if.h
   * @author  MCD Application Team
-  * @brief   Hardware Interface
+  * @brief   Header file for initiating system
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2024 STMicroelectronics.
+  * Copyright (c) 2022 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -19,49 +19,35 @@
 /* USER CODE END Header */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef HW_IF_H
-#define HW_IF_H
+#ifndef LL_SYS_IF_H
+#define LL_SYS_IF_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
-#include "stm32wbaxx.h"
-#include "stm32wbaxx_hal_conf.h"
-#include "stm32wbaxx_hal_def.h"
-#include "stm32wbaxx_ll_exti.h"
-#include "stm32wbaxx_ll_system.h"
-#include "stm32wbaxx_ll_rcc.h"
-#include "stm32wbaxx_ll_bus.h"
-#include "stm32wbaxx_ll_pwr.h"
-#include "stm32wbaxx_ll_cortex.h"
-#include "stm32wbaxx_ll_utils.h"
-#include "stm32wbaxx_ll_gpio.h"
-#include "stm32wbaxx_ll_rtc.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
 /* USER CODE END Includes */
 
-/* Private typedef -----------------------------------------------------------*/
-/* USER CODE BEGIN PTD */
-
-/* USER CODE END PTD */
-
-/* Private define ------------------------------------------------------------*/
-/* USER CODE BEGIN PD */
-
-/* USER CODE END PD */
-
 /* Exported types ------------------------------------------------------------*/
-
 /* USER CODE BEGIN ET */
 
 /* USER CODE END ET */
 
 /* Exported constants --------------------------------------------------------*/
+#define DRIFT_TIME_DEFAULT                      (13)
+#define DRIFT_TIME_EXTRA_LSI2                   (9)
+#define DRIFT_TIME_EXTRA_GCC_DEBUG              (6)
+
+#define EXEC_TIME_DEFAULT                       (10)
+#define EXEC_TIME_EXTRA_LSI2                    (3)
+#define EXEC_TIME_EXTRA_GCC_DEBUG               (4)
+
+#define SCHDL_TIME_DEFAULT                      (20)
 /* USER CODE BEGIN EC */
 
 /* USER CODE END EC */
@@ -71,23 +57,15 @@ extern "C" {
 
 /* USER CODE END EV */
 
-/* Private variables ---------------------------------------------------------*/
-/* USER CODE BEGIN PV */
-
-/* USER CODE END PV */
-
 /* Exported macro ------------------------------------------------------------*/
 /* USER CODE BEGIN EM */
 
 /* USER CODE END EM */
 
-/* Private function prototypes -----------------------------------------------*/
-/* USER CODE BEGIN PFP */
-
-/* USER CODE END PFP */
-
 /* Exported functions prototypes ---------------------------------------------*/
-
+#if (USE_TEMPERATURE_BASED_RADIO_CALIBRATION == 1)
+void ll_sys_bg_temperature_measurement(void);
+#endif /* USE_TEMPERATURE_BASED_RADIO_CALIBRATION */
 /* USER CODE BEGIN EFP */
 
 /* USER CODE END EFP */
@@ -96,4 +74,4 @@ extern "C" {
 }
 #endif
 
-#endif /*HW_IF_H */
+#endif /*LL_SYS_IF_H */

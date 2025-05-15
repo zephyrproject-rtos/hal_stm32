@@ -1,4 +1,3 @@
-/* USER CODE BEGIN Header */
 /**
   ******************************************************************************
   * @file    hw_aes.c
@@ -16,7 +15,6 @@
   *
   ******************************************************************************
   */
-/* USER CODE END Header */
 
 #include "app_common.h"
 #include "stm32wbaxx_ll_bus.h"
@@ -29,6 +27,9 @@
 #define HW_AES_CLOCK_DISABLE( )   LL_AHB2_GRP1_DisableClock( LL_AHB2_GRP1_PERIPH_AES )
 
 #define HW_AES_CLOCK_IS_ENABLE( ) LL_AHB2_GRP1_IsEnabledClock( LL_AHB2_GRP1_PERIPH_AES )
+
+#define AES_BLOCK_SIZE_WORD       (4U)
+#define AES_BLOCK_SIZE_BYTE       (16U)
 
 /*****************************************************************************/
 
@@ -174,6 +175,38 @@ void HW_AES_Disable( void )
 
     av->run = FALSE;
   }
+}
+
+/*****************************************************************************/
+
+void HW_AES_Crypt8( const uint8_t * pInput, uint8_t * pOutput )
+{
+  uint32_t    pTemp[AES_BLOCK_SIZE_WORD];
+
+  // Transfer 8 -> 32  bits */
+  memcpy( pTemp, pInput, AES_BLOCK_SIZE_BYTE );
+
+  /*  Write the input block into the input FIFO */
+  HW_AESX->DINR = __REV( pTemp[0] );
+  HW_AESX->DINR = __REV( pTemp[1] );
+  HW_AESX->DINR = __REV( pTemp[2] );
+  HW_AESX->DINR = __REV( pTemp[3] );
+
+  // -- Wait for CCF flag to be raised /
+  while ( (HW_AESX->SR & AES_SR_CCF) == 0x00u )
+    { }
+
+  /* Read the output block from the output FIFO */
+  pTemp[0] = __REV( HW_AESX->DOUTR );
+  pTemp[1] = __REV( HW_AESX->DOUTR );
+  pTemp[2] = __REV( HW_AESX->DOUTR );
+  pTemp[3] = __REV( HW_AESX->DOUTR );
+
+  /* Transfer 32 -> 8  bits */
+  memcpy( pOutput, pTemp, AES_BLOCK_SIZE_BYTE );
+
+  /* Clear CCF Flag */
+  HW_AESX->ICR |= AES_ICR_CCF;
 }
 
 /*****************************************************************************/

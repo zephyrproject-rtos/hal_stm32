@@ -6,7 +6,7 @@ Origin:
    https://github.com/STMicroelectronics/STM32CubeWBA
 
 Status:
-   version v1.5.0
+   version v1.6.0
 
 Purpose:
    This library is used on STM32WBA series to port  BLE controller library in
@@ -48,28 +48,28 @@ Description:
       Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_TransparentMode/Core/Inc/app_entry.h
       Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_TransparentMode/Core/Inc/utilities_conf.h
       Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_TransparentMode/Core/Inc/main.h
-      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_TransparentMode/System/Modules/Flash/rf_timing_synchro.c
-      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_TransparentMode/System/Modules/Flash/rf_timing_synchro.h
-      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_TransparentMode/System/Modules/Flash/flash_driver.c
-      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_TransparentMode/System/Modules/Flash/flash_driver.h
-      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_TransparentMode/System/Modules/Flash/flash_manager.c
-      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_TransparentMode/System/Modules/Flash/flash_manager.h
-      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_TransparentMode/System/Modules/RTDebug/debug_signals.h
-      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_TransparentMode/System/Modules/RTDebug/RTDebug.c
-      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_TransparentMode/System/Modules/RTDebug/RTDebug.h
-      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_TransparentMode/System/Modules/RTDebug/local_debug_tables.h
-      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_TransparentMode/System/Modules/scm.c
-      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_TransparentMode/System/Modules/scm.h
-      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_TransparentMode/System/Modules/stm_list.c
-      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_TransparentMode/System/Modules/stm_list.h
-      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_TransparentMode/System/Modules/utilities_common.h
-      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_TransparentMode/System/Interfaces/hw.h
-      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_TransparentMode/System/Interfaces/hw_aes.c
-      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_TransparentMode/System/Interfaces/hw_if.h
-      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_TransparentMode/System/Interfaces/hw_pka.c
-      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_TransparentMode/System/Interfaces/pka_p256.c
-      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_TransparentMode/System/Config/Log/log_module.c
-      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_TransparentMode/System/Config/Log/log_module.h
+      Projects/Common/WPAN/Modules/Flash/rf_timing_synchro.c
+      Projects/Common/WPAN/Modules/Flash/rf_timing_synchro.h
+      Projects/Common/WPAN/Modules/Flash/flash_driver.c
+      Projects/Common/WPAN/Modules/Flash/flash_driver.h
+      Projects/Common/WPAN/Modules/Flash/flash_manager.c
+      Projects/Common/WPAN/Modules/Flash/flash_manager.h
+      Projects/Common/WPAN/Modules/RTDebug/debug_signals.h
+      Projects/Common/WPAN/Modules/RTDebug/RTDebug.c
+      Projects/Common/WPAN/Modules/RTDebug/RTDebug.h
+      Projects/Common/WPAN/Modules/RTDebug/local_debug_tables.h
+      Projects/Common/WPAN/Modules/scm.c
+      Projects/Common/WPAN/Modules/scm.h
+      Projects/Common/WPAN/Modules/stm_list.c
+      Projects/Common/WPAN/Modules/stm_list.h
+      Projects/Common/WPAN/Modules/utilities_common.h
+      Projects/Common/WPAN/Interfaces/hw.h
+      Projects/Common/WPAN/Interfaces/hw_aes.c
+      Projects/Common/WPAN/Interfaces/hw_if.h
+      Projects/Common/WPAN/Interfaces/hw_pka.c
+      Projects/Common/WPAN/Interfaces/hw_pka_p256.c
+      Projects/Common/WPAN/Modules/Log/log_module.c
+      Projects/Common/WPAN/Modules/Log/log_module.h
       Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_TransparentMode/System/Config/Debug_GPIO/app_debug.h
       Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_TransparentMode/System/Config/Debug_GPIO/debug_config.h
       Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_TransparentMode/STM32_WPAN/Target/power_table.c
@@ -77,6 +77,7 @@ Description:
       Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_TransparentMode/STM32_WPAN/Target/bpka.h
       Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_TransparentMode/STM32_WPAN/Target/linklayer_plat.c
       Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_TransparentMode/STM32_WPAN/Target/ll_sys_if.c
+      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_TransparentMode/STM32_WPAN/Target/ll_sys_if.h
       Utilities/trace/adv_trace/stm32_adv_trace.h
       Utilities/misc/stm32_mem.h
       Utilities/tim_serv/stm32_timer.h
@@ -90,7 +91,7 @@ URL:
    https://github.com/STMicroelectronics/STM32CubeWBA
 
 Commit:
-   06402010bb3e1eb4d49ee22cbe45d3408ce413c5
+   e7d27c496416aae8f4ba8b3e84f963f0c5a0b69f
 
 Maintained-by:
    External
