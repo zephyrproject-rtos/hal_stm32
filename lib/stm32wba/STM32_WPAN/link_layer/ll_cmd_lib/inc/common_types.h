@@ -109,7 +109,10 @@
 /****************** User configuration **********************************/
 #define CS_TESTING TRUE
 
-#define SUPPORT_GNRC_SCHDLR_IF	              (1)
+#ifndef SUPPORT_GNRC_SCHDLR_IF
+#define SUPPORT_GNRC_SCHDLR_IF                      1 /* Enable\Disable event EXTRNL_GNRC in Ble event manager. Enable:1 - Disable:0 */
+#endif /* SUPPORT_GNRC_SCHDLR_IF */
+
 /********************* Macros **********************************/
 
 #ifndef SUCCESS
