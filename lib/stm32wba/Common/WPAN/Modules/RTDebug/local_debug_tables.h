@@ -1,4 +1,3 @@
-/* USER CODE BEGIN Header */
 /**
   ******************************************************************************
   * @file    local_debug_tables.h
@@ -17,7 +16,7 @@
   *
   ******************************************************************************
   */
-/* USER CODE END Header */
+
 #ifndef LOCAL_DEBUG_TABLES_H
 #define LOCAL_DEBUG_TABLES_H
 
@@ -100,6 +99,24 @@ static const rt_debug_signal_t system_debug_table[] = {
   [LOW_POWER_STOP_MODE_ACTIVE] = RT_DEBUG_SIGNAL_UNUSED,
 #endif /* USE_RT_DEBUG_LOW_POWER_STOP_MODE_ACTIVE */
 
+#if (USE_RT_DEBUG_LOW_POWER_STOP2_MODE_ENTER == 1)
+  [LOW_POWER_STOP2_MODE_ENTER] = RT_DEBUG_LOW_POWER_STOP2_MODE_ENTER,
+#else
+  [LOW_POWER_STOP2_MODE_ENTER] = RT_DEBUG_SIGNAL_UNUSED,
+#endif /* USE_RT_DEBUG_LOW_POWER_STOP2_MODE_ENTER */
+
+#if (USE_RT_DEBUG_LOW_POWER_STOP2_MODE_EXIT == 1)
+  [LOW_POWER_STOP2_MODE_EXIT] = RT_DEBUG_LOW_POWER_STOP2_MODE_EXIT,
+#else
+  [LOW_POWER_STOP2_MODE_EXIT] = RT_DEBUG_SIGNAL_UNUSED,
+#endif /* USE_RT_DEBUG_LOW_POWER_STOP2_MODE_EXIT */
+
+#if (USE_RT_DEBUG_LOW_POWER_STOP2_MODE_ACTIVE == 1)
+  [LOW_POWER_STOP2_MODE_ACTIVE] = RT_DEBUG_LOW_POWER_STOP2_MODE_ACTIVE,
+#else
+  [LOW_POWER_STOP2_MODE_ACTIVE] = RT_DEBUG_SIGNAL_UNUSED,
+#endif /* USE_RT_DEBUG_LOW_POWER_STOP2_MODE_ACTIVE */
+
 #if (USE_RT_DEBUG_LOW_POWER_STANDBY_MODE_ENTER == 1)
   [LOW_POWER_STANDBY_MODE_ENTER] = RT_DEBUG_LOW_POWER_STANDBY_MODE_ENTER,
 #else
@@ -117,6 +134,7 @@ static const rt_debug_signal_t system_debug_table[] = {
 #else
   [LOW_POWER_STANDBY_MODE_ACTIVE] = RT_DEBUG_SIGNAL_UNUSED,
 #endif /* USE_RT_DEBUG_LOW_POWER_STANDBY_MODE_ACTIVE */
+
 };
 
 /***********************************/
