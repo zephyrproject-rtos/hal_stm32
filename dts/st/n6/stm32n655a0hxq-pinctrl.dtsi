@@ -943,7 +943,7 @@
 				slew-rate = "very-high-speed";
 			};
 
-			/* ETH (STM32N6 IP) */
+			/* ETH (Extended) */
 
 			/omit-if-no-ref/ eth1_mdc_pd1: eth1_mdc_pd1 {
 				pinmux = <STM32_PINMUX('D', 1, AF11)>;
