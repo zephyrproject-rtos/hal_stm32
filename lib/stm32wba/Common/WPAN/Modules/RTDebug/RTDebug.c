@@ -1,4 +1,3 @@
-/* USER CODE BEGIN Header */
 /**
   ******************************************************************************
   * @file    RTDebug.c
@@ -16,7 +15,7 @@
   *
   ******************************************************************************
   */
-/* USER CODE END Header */
+
 #include "RTDebug.h"
 #include "local_debug_tables.h"
 #include "stm32wbaxx_hal.h"

@@ -1,8 +1,9 @@
-/* USER CODE BEGIN Header */
 /**
   ******************************************************************************
-  * File Name          :
-  * Description        :
+  * @file    hw_pka_p256.c
+  * @author  MCD Application Team
+  * @brief   This file is an optional part of the PKA driver for STM32WBA.
+  *          It is dedicated to the P256 elliptic curve.
   ******************************************************************************
   * @attention
   *
@@ -15,7 +16,6 @@
   *
   ******************************************************************************
   */
-/* USER CODE END Header */
 
 #include "app_common.h"
 #include "stm32wbaxx_ll_pka.h"

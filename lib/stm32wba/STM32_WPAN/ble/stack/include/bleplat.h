@@ -7,7 +7,7 @@
  *****************************************************************************
  * @attention
  *
- * Copyright (c) 2018-2024 STMicroelectronics.
+ * Copyright (c) 2018-2025 STMicroelectronics.
  * All rights reserved.
  *
  * This software is licensed under terms that can be found in the LICENSE file
@@ -235,7 +235,7 @@ extern void BLEPLAT_AesCmacCompute( const uint8_t* input,
   * @param  add_length: add length (in bytes)
   * @param  add: add data
   * @param  input_length: input data length (in bytes)
-  * @param  inputL: original data (to be encrypted or decrypted)
+  * @param  input: original data (to be encrypted or decrypted)
   * @param  tag_length: CCM tag length (in bytes)
   * @param  tag: CCM tag
   * @param  output: result data (encrypted or decrypted)

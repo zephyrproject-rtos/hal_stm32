@@ -1,11 +1,11 @@
 /*****************************************************************************
  * @file    blestack.h
  *
- * @brief   Header file for BLE stack
+ * @brief   Header file for STM32WBA BLE stack
  *****************************************************************************
  * @attention
  *
- * Copyright (c) 2018-2024 STMicroelectronics.
+ * Copyright (c) 2018-2025 STMicroelectronics.
  * All rights reserved.
  *
  * This software is licensed under terms that can be found in the LICENSE file
@@ -157,7 +157,7 @@ typedef struct
    * - bit 3:   1: extended adv supported    0: extended adv not supported
    * - bit 5:   1: Reduced GATT db in NVM    0: Full GATT db in NVM
    * - bit 6:   1: GATT caching is used      0: GATT caching is not used
-   * - bit 7:   1: LE Power Class 1          0: LE Power Class 2-3
+   * - bit 7:   1: LE Power Class 1          0: Other LE Power Classes
    * - bit 8:   1: appearance Writable       0: appearance Read-Only
    * - bit 9:   1: Enhanced ATT supported    0: Enhanced ATT not supported
    * - other bits: reserved

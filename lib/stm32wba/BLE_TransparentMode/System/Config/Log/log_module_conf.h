@@ -1,7 +1,7 @@
 /* USER CODE BEGIN Header */
 /**
   ******************************************************************************
-  * @file    log_module.h
+  * @file    log_module_conf.h
   * @author  MCD Application Team
   * @brief   Header file of the log module.
   ******************************************************************************

@@ -1,4 +1,4 @@
-/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/1.32a-lca02/firmware/public_inc/_40nm_reg_files/DWC_ble154combo.h#3 $*/
+/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/2.00a-lca01/firmware/public_inc/_40nm_reg_files/DWC_ble154combo.h#1 $*/
 /**
  ********************************************************************************
  * @brief

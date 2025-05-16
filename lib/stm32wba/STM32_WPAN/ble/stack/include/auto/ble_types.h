@@ -5,7 +5,7 @@
  *****************************************************************************
  * @attention
  *
- * Copyright (c) 2018-2024 STMicroelectronics.
+ * Copyright (c) 2018-2025 STMicroelectronics.
  * All rights reserved.
  *
  * This software is licensed under terms that can be found in the LICENSE file
@@ -2918,17 +2918,6 @@ typedef __PACKED_STRUCT
 
 typedef __PACKED_STRUCT
 {
-  uint8_t Address[6];
-} aci_gap_resolve_private_addr_cp0;
-
-typedef __PACKED_STRUCT
-{
-  uint8_t Status;
-  uint8_t Actual_Address[6];
-} aci_gap_resolve_private_addr_rp0;
-
-typedef __PACKED_STRUCT
-{
   uint16_t Advertising_Interval_Min;
   uint16_t Advertising_Interval_Max;
   uint8_t Advertising_Type;
@@ -2974,12 +2963,14 @@ typedef __PACKED_STRUCT
 {
   uint8_t Peer_Address_Type;
   uint8_t Peer_Address[6];
-} aci_gap_is_device_bonded_cp0;
+} aci_gap_check_bonded_device_cp0;
 
 typedef __PACKED_STRUCT
 {
   uint8_t Status;
-} aci_gap_is_device_bonded_rp0;
+  uint8_t Id_Address_Type;
+  uint8_t Id_Address[6];
+} aci_gap_check_bonded_device_rp0;
 
 typedef __PACKED_STRUCT
 {
@@ -4418,6 +4409,32 @@ typedef __PACKED_STRUCT
 
 typedef __PACKED_STRUCT
 {
+  uint8_t Status;
+  uint16_t Connection_Handle;
+  uint8_t CIG_Sync_Delay[3];
+  uint8_t CIS_Sync_Delay[3];
+  uint8_t Transport_Latency_C_To_P[3];
+  uint8_t Transport_Latency_P_To_C[3];
+  uint8_t PHY_C_To_P;
+  uint8_t PHY_P_To_C;
+  uint8_t NSE;
+  uint8_t BN_C_To_P;
+  uint8_t BN_P_To_C;
+  uint8_t FT_C_To_P;
+  uint8_t FT_P_To_C;
+  uint16_t Max_PDU_C_To_P;
+  uint16_t Max_PDU_P_To_C;
+  uint16_t ISO_Interval;
+  uint8_t Sub_Interval[3];
+  uint16_t Max_SDU_C_To_P;
+  uint16_t Max_SDU_P_To_C;
+  uint8_t SDU_Interval_C_To_P[3];
+  uint8_t SDU_Interval_P_To_C[3];
+  uint8_t Framing;
+} hci_le_cis_established_v2_event_rp0;
+
+typedef __PACKED_STRUCT
+{
   uint8_t Last_State;
   uint8_t Next_State;
   uint32_t Next_State_SysTime;
@@ -4427,10 +4444,10 @@ typedef __PACKED_STRUCT
 
 typedef __PACKED_STRUCT
 {
-  uint8_t FW_Error_Type;
+  uint8_t Warning_Type;
   uint8_t Data_Length;
   uint8_t Data[(BLE_EVT_MAX_PARAM_LEN - 2) - 2];
-} aci_hal_fw_error_event_rp0;
+} aci_hal_warning_event_rp0;
 
 typedef __PACKED_STRUCT
 {
@@ -4456,6 +4473,11 @@ typedef __PACKED_STRUCT
 {
   uint16_t Connection_Handle;
 } aci_gap_authorization_req_event_rp0;
+
+typedef __PACKED_STRUCT
+{
+  uint16_t Connection_Handle;
+} aci_gap_bond_lost_event_rp0;
 
 typedef __PACKED_STRUCT
 {
