@@ -4,6 +4,13 @@ build:
   settings:
     dts_root: .
 blobs:
+  - path: stm32wba/lib/WBA6_LinkLayer_BLE_Full_lib.a
+    sha256: fda0c5a80d65e859c249f270b297117f8cff1f38c0ee4fbe0ad9d5b3bfc2813e
+    type: lib
+    version: '1.6.0'
+    license-path: zephyr/blobs/stm32wba/lib/license.md
+    url: https://github.com/STMicroelectronics/STM32CubeWBA/raw/v1.6.0/Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/lib/WBA6_LinkLayer_BLE_Full_lib.a
+    description: "Binary Link Layer library for the STM32WBA6 Bluetooth subsystem"
   - path: stm32wba/lib/LinkLayer_BLE_Full_lib.a
     sha256: c935072ee0d98ddaec3b7f4a1e502ade9768c3fe8056101823a3f19327a1b148
     type: lib

@@ -39,7 +39,7 @@ file_list_wb = [
     + "tl_dbg_conf.h",
 ]
 
-ble_transparent_mode_app_path = "Projects/NUCLEO-WBA55CG/Applications/BLE/" \
+ble_transparent_mode_app_path = "Projects/NUCLEO-WBA65RI/Applications/BLE/" \
                                 + "BLE_TransparentMode"
 file_list_wba = {
     "STM32_WPAN": [

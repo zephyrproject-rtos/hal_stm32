@@ -43,11 +43,11 @@ Description:
       Middlewares/ST/STM32_WPAN/link_layer/ll_sys/src/ll_sys_startup.c
       Middlewares/ST/STM32_WPAN/link_layer/ll_sys/inc/ll_sys_startup.h
       Middlewares/ST/STM32_WPAN/stm32_wpan_common.h
-      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_TransparentMode/Core/Inc/app_common.h
-      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_TransparentMode/Core/Inc/app_conf.h
-      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_TransparentMode/Core/Inc/app_entry.h
-      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_TransparentMode/Core/Inc/utilities_conf.h
-      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_TransparentMode/Core/Inc/main.h
+      Projects/NUCLEO-WBA65RI/Applications/BLE/BLE_TransparentMode/Core/Inc/app_common.h
+      Projects/NUCLEO-WBA65RI/Applications/BLE/BLE_TransparentMode/Core/Inc/app_conf.h
+      Projects/NUCLEO-WBA65RI/Applications/BLE/BLE_TransparentMode/Core/Inc/app_entry.h
+      Projects/NUCLEO-WBA65RI/Applications/BLE/BLE_TransparentMode/Core/Inc/utilities_conf.h
+      Projects/NUCLEO-WBA65RI/Applications/BLE/BLE_TransparentMode/Core/Inc/main.h
       Projects/Common/WPAN/Modules/Flash/rf_timing_synchro.c
       Projects/Common/WPAN/Modules/Flash/rf_timing_synchro.h
       Projects/Common/WPAN/Modules/Flash/flash_driver.c
@@ -70,14 +70,14 @@ Description:
       Projects/Common/WPAN/Interfaces/hw_pka_p256.c
       Projects/Common/WPAN/Modules/Log/log_module.c
       Projects/Common/WPAN/Modules/Log/log_module.h
-      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_TransparentMode/System/Config/Debug_GPIO/app_debug.h
-      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_TransparentMode/System/Config/Debug_GPIO/debug_config.h
-      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_TransparentMode/STM32_WPAN/Target/power_table.c
-      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_TransparentMode/STM32_WPAN/Target/bpka.c
-      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_TransparentMode/STM32_WPAN/Target/bpka.h
-      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_TransparentMode/STM32_WPAN/Target/linklayer_plat.c
-      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_TransparentMode/STM32_WPAN/Target/ll_sys_if.c
-      Projects/NUCLEO-WBA55CG/Applications/BLE/BLE_TransparentMode/STM32_WPAN/Target/ll_sys_if.h
+      Projects/NUCLEO-WBA65RI/Applications/BLE/BLE_TransparentMode/System/Config/Debug_GPIO/app_debug.h
+      Projects/NUCLEO-WBA65RI/Applications/BLE/BLE_TransparentMode/System/Config/Debug_GPIO/debug_config.h
+      Projects/NUCLEO-WBA65RI/Applications/BLE/BLE_TransparentMode/STM32_WPAN/Target/power_table.c
+      Projects/NUCLEO-WBA65RI/Applications/BLE/BLE_TransparentMode/STM32_WPAN/Target/bpka.c
+      Projects/NUCLEO-WBA65RI/Applications/BLE/BLE_TransparentMode/STM32_WPAN/Target/bpka.h
+      Projects/NUCLEO-WBA65RI/Applications/BLE/BLE_TransparentMode/STM32_WPAN/Target/linklayer_plat.c
+      Projects/NUCLEO-WBA65RI/Applications/BLE/BLE_TransparentMode/STM32_WPAN/Target/ll_sys_if.c
+      Projects/NUCLEO-WBA65RI/Applications/BLE/BLE_TransparentMode/STM32_WPAN/Target/ll_sys_if.h
       Utilities/trace/adv_trace/stm32_adv_trace.h
       Utilities/misc/stm32_mem.h
       Utilities/tim_serv/stm32_timer.h
