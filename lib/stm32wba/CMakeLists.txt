@@ -59,10 +59,22 @@ add_dependencies(
 set_target_properties(
   stm32wba_ble_lib PROPERTIES IMPORTED_LOCATION ${STM32WBA_BLE_LIB_DIR}/stm32wba_ble_stack_llo.a
 )
-set_target_properties(
-  stm32wba_ll_lib PROPERTIES IMPORTED_LOCATION ${STM32WBA_BLE_LIB_DIR}/LinkLayer_BLE_Full_lib.a
-)
 
+# Selecting the proper version of link layer lib according the soc
+# Checking all the soc variants and not simply relying on board name 
+
+if(CONFIG_SOC_STM32WBA65XX)
+  message(STATUS "STM32WBA6 link layer lib selected")
+  set(LL_LIB "WBA6_LinkLayer_BLE_Full_lib.a")
+endif()
+
+if(CONFIG_SOC_STM32WBA55XX OR SOC_STM32WBA52XX)
+  message(STATUS "STM32WBA5 link layer lib selected")
+  set(LL_LIB "LinkLayer_BLE_Full_lib.a")
+endif()
+
+# Using the selected version of link layer lib
+set_target_properties(stm32wba_ll_lib PROPERTIES IMPORTED_LOCATION ${STM32WBA_BLE_LIB_DIR}/${LL_LIB})
 set_target_properties(stm32wba_ble_lib PROPERTIES INTERFACE_INCLUDE_DIRECTORIES ${STM32WBA_BLE_LIB_INCLUDE_DIR})
 set_target_properties(stm32wba_ll_lib PROPERTIES INTERFACE_INCLUDE_DIRECTORIES ${STM32WBA_LL_LIB_INCLUDE_DIR})
 
