@@ -6,6 +6,8 @@
 
 #if defined(CONFIG_SOC_SERIES_STM32MP1X)
 #include <stm32mp1xx_ll_ipcc.h>
+#elif defined(CONFIG_SOC_SERIES_STM32MP2X)
+#include <stm32mp2xx_ll_ipcc.h>
 #elif defined(CONFIG_SOC_SERIES_STM32WBX)
 #include <stm32wbxx_ll_ipcc.h>
 #elif defined(CONFIG_SOC_SERIES_STM32WLX)
