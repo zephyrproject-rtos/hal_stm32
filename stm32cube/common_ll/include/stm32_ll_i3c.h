@@ -8,6 +8,8 @@
 #include <stm32h5xx_ll_i3c.h>
 #elif defined(CONFIG_SOC_SERIES_STM32H7RSX)
 #include <stm32h7rsxx_ll_i3c.h>
+#elif defined(CONFIG_SOC_SERIES_STM32MP2X)
+#include <stm32mp2xx_ll_i3c.h>
 #elif defined(CONFIG_SOC_SERIES_STM32N6X)
 #include <stm32n6xx_ll_i3c.h>
 #elif defined(CONFIG_SOC_SERIES_STM32U3X)
