@@ -61,7 +61,7 @@ extern "C" {
 #define HAL_IWDG_MODULE_ENABLED
 #define HAL_LPTIM_MODULE_ENABLED
 #define HAL_LTDC_MODULE_ENABLED
-#define HAL_LVDS_MODULE_ENABLED
+/* #define HAL_LVDS_MODULE_ENABLED */ /* Disabled because LVDS HAL not available yet */
 #define HAL_MDF_MODULE_ENABLED
 #define HAL_MMC_MODULE_ENABLED
 #define HAL_NAND_MODULE_ENABLED
