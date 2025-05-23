@@ -8,6 +8,8 @@
 #include <stm32h7xx_ll_hsem.h>
 #elif defined(CONFIG_SOC_SERIES_STM32MP1X)
 #include <stm32mp1xx_ll_hsem.h>
+#elif defined(CONFIG_SOC_SERIES_STM32MP2X)
+#include <stm32mp2xx_ll_hsem.h>
 #elif defined(CONFIG_SOC_SERIES_STM32WBAX)
 #include <stm32wbaxx_ll_hsem.h>
 #elif defined(CONFIG_SOC_SERIES_STM32WBX)
