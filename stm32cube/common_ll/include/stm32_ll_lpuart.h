@@ -20,6 +20,8 @@
 #include <stm32l4xx_ll_lpuart.h>
 #elif defined(CONFIG_SOC_SERIES_STM32L5X)
 #include <stm32l5xx_ll_lpuart.h>
+#elif defined(CONFIG_SOC_SERIES_STM32MP2X)
+#include <stm32mp2xx_ll_lpuart.h>
 #elif defined(CONFIG_SOC_SERIES_STM32N6X)
 #include <stm32n6xx_ll_lpuart.h>
 #elif defined(CONFIG_SOC_SERIES_STM32U0X)
