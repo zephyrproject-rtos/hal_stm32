@@ -425,7 +425,7 @@ void SystemCoreClockUpdate(void)
   *         other parameters.
   * @retval SystemCoreClock value
   */
-CMSE_NS_ENTRY uint32_t SECURE_SystemCoreClockUpdate(void)
+uint32_t SECURE_SystemCoreClockUpdate(void)
 {
   SystemCoreClockUpdate();
 

@@ -52,6 +52,7 @@ Patch List:
      which we don't need right now.
     Impacted files:
     -soc/system_stm32n6xx_fsbl.c
+    -soc/system_stm32n6xx_s.c
 
    *Fix SDIO initialization failure when skipping card identification sequence
      Fixes an issue in the STM32HN6 SDIO driver where HAL_SDIO_Init() fails if

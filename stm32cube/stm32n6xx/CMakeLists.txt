@@ -1,8 +1,13 @@
 # Copyright (c) 2025 STMicroelectronics
 #
 # SPDX-License-Identifier: Apache-2.0
-
-zephyr_library_sources(soc/system_stm32n6xx_fsbl.c)
+if(CONFIG_BOOTLOADER_MCUBOOT)
+	zephyr_include_directories(soc)
+	zephyr_include_directories(soc/Templates)
+	zephyr_library_sources(soc/system_stm32n6xx_s.c)
+else()
+	zephyr_library_sources(soc/system_stm32n6xx_fsbl.c)
+endif()
 zephyr_library_sources(drivers/src/stm32n6xx_hal.c)
 zephyr_library_sources(drivers/src/stm32n6xx_hal_rcc.c)
 zephyr_library_sources(drivers/src/stm32n6xx_hal_rcc_ex.c)
