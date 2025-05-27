@@ -61,4 +61,10 @@ Patch List:
     Impacted files:
      drivers/include/Legacy/stm32_hal_legacy.h
 
+   *Fix SDIO initialization failure when skipping card identification sequence
+     Fixes an issue in the STM32H5 SDIO driver where HAL_SDIO_Init() fails if
+     the card identification sequence is skipped.
+     Impacted files:
+      stm32cube/stm32h5xx/drivers/src/stm32h5xx_hal_sdio.c
+
    See release_note.html from STM32Cube
