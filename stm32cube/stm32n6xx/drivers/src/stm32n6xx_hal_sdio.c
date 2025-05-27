@@ -314,7 +314,6 @@ HAL_StatusTypeDef HAL_SDIO_Init(SDIO_HandleTypeDef *hsdio)
 {
   SDIO_InitTypeDef Init;
   uint32_t sdmmc_clk;
-  uint8_t data;
 
   /* Check the parameters */
   assert_param(hsdio != NULL);
@@ -397,12 +396,6 @@ HAL_StatusTypeDef HAL_SDIO_Init(SDIO_HandleTypeDef *hsdio)
   Init.HardwareFlowControl = hsdio->Init.HardwareFlowControl;
   Init.ClockDiv            = hsdio->Init.ClockDiv;
   (void)SDMMC_Init(hsdio->Instance, Init);
-
-  data = (hsdio->Init.BusWide == HAL_SDIO_4_WIRES_MODE) ? 2U : 0U;
-  if (SDIO_WriteDirect(hsdio, SDMMC_SDIO_CCCR4_SD_BYTE3, HAL_SDIO_WRITE_ONLY, SDIO_FUNCTION_0, &data) != HAL_OK)
-  {
-    return HAL_ERROR;
-  }
 
   hsdio->Context = SDIO_CONTEXT_NONE;
   hsdio->State = HAL_SDIO_STATE_READY;
@@ -2486,6 +2479,7 @@ HAL_StatusTypeDef HAL_SDIO_RegisterIOFunctionCallback(SDIO_HandleTypeDef *hsdio,
   */
 static HAL_StatusTypeDef SDIO_InitCard(SDIO_HandleTypeDef *hsdio)
 {
+  uint8_t data;
   uint32_t errorstate;
   uint32_t timeout = 0U;
   uint16_t sdio_rca = 1U;
@@ -2556,6 +2550,12 @@ static HAL_StatusTypeDef SDIO_InitCard(SDIO_HandleTypeDef *hsdio)
   /* Select the Card ( Sending CMD7)*/
   errorstate = SDMMC_CmdSelDesel(hsdio->Instance, (uint32_t)(((uint32_t)sdio_rca) << 16U));
   if (errorstate != HAL_SDIO_ERROR_NONE)
+  {
+    return HAL_ERROR;
+  }
+
+  data = (hsdio->Init.BusWide == HAL_SDIO_4_WIRES_MODE) ? 2U : 0U;
+  if (SDIO_WriteDirect(hsdio, SDMMC_SDIO_CCCR4_SD_BYTE3, HAL_SDIO_WRITE_ONLY, SDIO_FUNCTION_0, &data) != HAL_OK)
   {
     return HAL_ERROR;
   }
