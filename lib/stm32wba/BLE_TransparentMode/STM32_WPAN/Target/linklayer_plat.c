@@ -28,10 +28,10 @@
 #include "linklayer_plat.h"
 #include "scm.h"
 #include "log_module.h"
+#ifndef __ZEPHYR__
 #if (USE_TEMPERATURE_BASED_RADIO_CALIBRATION == 1)
 #include "adc_ctrl.h"
 #endif /* (USE_TEMPERATURE_BASED_RADIO_CALIBRATION == 1) */
-#ifndef __ZEPHYR__
 #if (CFG_LPM_LEVEL != 0)
 #include "stm32_lpm.h"
 #include "stm32_lpm_if.h"
@@ -502,6 +502,7 @@ void LINKLAYER_PLAT_RCOStopClbr(void)
   while (LL_PWR_IsActiveFlag_VOS() == 0);
 #endif /* (CFG_SCM_SUPPORTED == 1) */
 }
+#endif /*__ZEPHYR__*/
 
 /**
   * @brief  Link Layer requests temperature.
@@ -514,7 +515,7 @@ void LINKLAYER_PLAT_RequestTemperature(void)
   ll_sys_bg_temperature_measurement();
 #endif /* USE_TEMPERATURE_BASED_RADIO_CALIBRATION */
 }
-
+#ifndef __ZEPHYR__
 /**
   * @brief  Enable RTOS context switch.
   * @param  None
