@@ -60,6 +60,11 @@ set_target_properties(
   stm32wba_ble_lib PROPERTIES IMPORTED_LOCATION ${STM32WBA_BLE_LIB_DIR}/stm32wba_ble_stack_llo.a
 )
 
+# Setting the right Cube define according to the Zephyr configuration
+if(NOT CONFIG_BT_STM32WBA_USE_TEMP_BASED_CALIB)
+  zephyr_compile_definitions( -DUSE_TEMPERATURE_BASED_RADIO_CALIBRATION=0 )
+endif()
+
 # Selecting the proper version of link layer lib according the soc
 # Checking all the soc variants and not simply relying on board name 
 
