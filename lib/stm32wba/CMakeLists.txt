@@ -86,6 +86,11 @@ elseif (BLE_LIB_TYPE STREQUAL "BLE_LIB_FULL")
   )
 endif()
 
+# Setting the right Cube define according to the Zephyr configuration
+if(NOT CONFIG_BT_STM32WBA_USE_TEMP_BASED_CALIB)
+  zephyr_compile_definitions( -DUSE_TEMPERATURE_BASED_RADIO_CALIBRATION=0 )
+endif()
+
 # Selecting the proper version of link layer lib according the soc
 # Checking all the soc variants and not simply relying on board name 
 
