@@ -19,6 +19,7 @@
 #ifndef LL_SYS_H
 #define LL_SYS_H
 
+#include "app_conf.h"
 #include "ll_intf.h"
 #include "hci.h"
 #include "cmsis_compiler.h" 
@@ -98,6 +99,12 @@ ll_sys_status_t ll_sys_dp_slp_enter(uint32_t dp_slp_duration);
 ll_sys_status_t ll_sys_dp_slp_exit(void);
 ll_sys_dp_slp_state_t ll_sys_dp_slp_get_state(void);
 void ll_sys_dp_slp_wakeup_evt_clbk(void const *ptr_arg);
+
+/* Link Layer system interface temperature calibration functions  ************************************************/
+#if (USE_TEMPERATURE_BASED_RADIO_CALIBRATION == 1)
+void ll_sys_bg_temperature_measurement_init(void);
+void ll_sys_bg_temperature_measurement(void);
+#endif /* USE_TEMPERATURE_BASED_RADIO_CALIBRATION */
 
 /**
   * @brief  Get the number of concurrent state machines for the Link Layer

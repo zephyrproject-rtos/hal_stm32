@@ -23,10 +23,11 @@
 #include "ll_sys.h"
 #include "ll_sys_if.h"
 #include "utilities_common.h"
+#ifndef __ZEPHYR__
 #if (USE_TEMPERATURE_BASED_RADIO_CALIBRATION == 1)
 #include "temp_measurement.h"
 #endif /* (USE_TEMPERATURE_BASED_RADIO_CALIBRATION == 1) */
-
+#endif /*__ZEPHYR__*/
 /* Private defines -----------------------------------------------------------*/
 /* Radio event scheduling method - must be set at 1 */
 #define USE_RADIO_LOW_ISR                   (1)
@@ -58,9 +59,6 @@
 /* USER CODE END GV */
 
 /* Private functions prototypes-----------------------------------------------*/
-#if (USE_TEMPERATURE_BASED_RADIO_CALIBRATION == 1)
-static void ll_sys_bg_temperature_measurement_init(void);
-#endif /* USE_TEMPERATURE_BASED_RADIO_CALIBRATION */
 static void ll_sys_sleep_clock_source_selection(void);
 static uint8_t ll_sys_BLE_sleep_clock_accuracy_selection(void);
 void ll_sys_reset(void);
@@ -129,7 +127,6 @@ void ll_sys_config_params(void)
   /* Apply the selected link layer sleep timer source */
   ll_sys_sleep_clock_source_selection();
 
-#ifndef __ZEPHYR__
 /* USER CODE BEGIN ll_sys_config_params_1 */
 
 /* USER CODE END ll_sys_config_params_1 */
@@ -142,9 +139,10 @@ void ll_sys_config_params(void)
   ll_intf_cmn_set_temperature_sensor_state();
 #endif /* USE_TEMPERATURE_BASED_RADIO_CALIBRATION */
 
+#ifndef __ZEPHYR__
   /* Link Layer power table */
   ll_intf_cmn_select_tx_power_table(CFG_RF_TX_POWER_TABLE_ID);
-#endif 
+#endif  /*__ZEPHYR__*/
 /* USER CODE BEGIN ll_sys_config_params_2 */
 
 /* USER CODE END ll_sys_config_params_2 */
