@@ -47,4 +47,10 @@ Patch List:
    * HAL LVDS module disabled
    - Disabled HAL_LVDS_MODULE_ENABLED as LVDS HAL is not available yet
 
+   * USE_FULL_ASSERT disabled
+   - Disabled the USE_FULL_ASSERT macro to prevent build errors when compiling
+     STM32Cube-based code in Zephyr. This allows successful compilation even if
+	 assertion checks are not implemented, as the code still functions
+	 correctly without them.
+
    See release_note.html from STM32Cube
