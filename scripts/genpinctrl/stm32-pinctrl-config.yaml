@@ -112,7 +112,7 @@
   match: "^HRTIM\\d+_SC(IN|OUT)$"
 
 - name: HSPI
-  match: "^HSPI(.*)(?:CLK|NCS|DQS|IO\\d+)$"
+  match: "^HSPI(.*)(?:CLK|NCS|DQS[0-1]|IO\\d+)$"
   slew-rate: very-high-speed
 
 - name: I2C_SCL
