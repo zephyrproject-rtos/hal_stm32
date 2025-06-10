@@ -1547,6 +1547,11 @@
 				slew-rate = "very-high-speed";
 			};
 
+			/omit-if-no-ref/ hspi1_dqs0_pi2: hspi1_dqs0_pi2 {
+				pinmux = <STM32_PINMUX('I', 2, AF8)>;
+				slew-rate = "very-high-speed";
+			};
+
 			/omit-if-no-ref/ hspi1_clk_pi3: hspi1_clk_pi3 {
 				pinmux = <STM32_PINMUX('I', 3, AF8)>;
 				slew-rate = "very-high-speed";
@@ -1554,6 +1559,11 @@
 
 			/omit-if-no-ref/ hspi1_nclk_pi4: hspi1_nclk_pi4 {
 				pinmux = <STM32_PINMUX('I', 4, AF8)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ hspi1_dqs1_pi8: hspi1_dqs1_pi8 {
+				pinmux = <STM32_PINMUX('I', 8, AF8)>;
 				slew-rate = "very-high-speed";
 			};
 
