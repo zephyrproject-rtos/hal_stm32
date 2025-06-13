@@ -384,7 +384,7 @@ typedef enum
   */
 
 #if defined (USE_HAL_DRIVER)
- #include "stm32mp2xx_hal_conf.h"
+ #include "stm32mp2xx_hal.h"
 #endif /* USE_HAL_DRIVER */
 
 #ifdef __cplusplus

@@ -53,4 +53,10 @@ Patch List:
 	 assertion checks are not implemented, as the code still functions
 	 correctly without them.
 
+   * Fix the USE_HAL_DRIVER included header
+   - The stm32cube/stm32mp2xx/soc/stm32mp2xx.h file
+	 was modified to include the correct header for the HAL driver.
+	 "stm32mp2xx_hal_conf.h" -> "stm32mp2xx_hal.h"
+	 This change ensures that the HAL driver is properly included in the build.
+
    See release_note.html from STM32Cube
