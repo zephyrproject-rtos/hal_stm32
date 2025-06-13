@@ -109,7 +109,7 @@ Patch List:
 	* Enabled extended advertising in CFG_BLE_OPTIONS:
 	  Impacted file: app_conf.h
 
-	* Disable Temperature based radio calibration:
+	* Allowing Temperature based radio calibration configuration to be externally overwritten:
 	  Impacted file: app_conf.h
 
 	* Increased 2.4GHz RADIO low ISR priority:
