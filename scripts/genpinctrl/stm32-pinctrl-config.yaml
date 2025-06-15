@@ -86,6 +86,10 @@
   match: '^ETH\d?_MII_(?:COL|CRS|RXD[0-3]|RX_CLK|RX_DV|RX_ER|TX_EN|TXD[0-3]|TX_CLK|TX_EN)$'
   slew-rate: very-high-speed
 
+- name: ETH_STM32MP1
+  match: "^ETH[12]_(COL|CRS|CRS_DV|GTX_CLK|REF_CLK|RX_CLK|RX_CTL|RX_DV|RX_ER|RXD[0-3]|TX_CLK|TX_CTL|TX_EN|TXD[0-3])$"
+  slew-rate: very-high-speed
+
 - name: ETH_RGMII
   match: "^ETH\\d+_RGMII_(?:CLK125|GTX_CLK|RXD[0-3]|RX_CLK|RX_CTL|RX_ER|TX_EN|RX_DV|TXD[0-3]|TX_CTL)$"
   slew-rate: very-high-speed
