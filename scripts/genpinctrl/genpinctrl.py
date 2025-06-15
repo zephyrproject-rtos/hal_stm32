@@ -39,6 +39,9 @@ CONFIG_FILE = SCRIPT_DIR / "stm32-pinctrl-config.yaml"
 CONFIG_F1_FILE = SCRIPT_DIR / "stm32f1-pinctrl-config.yaml"
 """Configuration file for F1 series."""
 
+CONFIG_MP1_FILE = SCRIPT_DIR / "stm32mp1-pinctrl-config.yaml"
+"""Configuration file for MP1 series."""
+
 PINCTRL_TEMPLATE = "pinctrl-template.j2"
 """pinctrl template file."""
 
@@ -597,6 +600,9 @@ def main(data_path, output):
     with open(CONFIG_F1_FILE) as f:
         config_f1 = yaml.load(f, Loader=yaml.Loader)
 
+    with open(CONFIG_MP1_FILE) as f:
+        config_mp1 = yaml.load(f, Loader=yaml.Loader)
+
     env = Environment(
         trim_blocks=True, lstrip_blocks=True, loader=FileSystemLoader(SCRIPT_DIR)
     )
@@ -643,6 +649,8 @@ def main(data_path, output):
                 for signal in pin["signals"]:
                     if family == "STM32F1":
                         selected_config = config_f1
+                    elif family == "STM32MP1":
+                        selected_config = config_mp1
                     else:
                         selected_config = config
 
