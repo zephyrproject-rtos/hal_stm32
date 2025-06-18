@@ -60,4 +60,11 @@ Patch List:
      Impacted files:
       stm32cube/stm32n6xx/drivers/src/stm32n6xx_hal_sdio.c
 
+   *Fix XSPIM initialization sequence
+     Don't cut XSPI2(ext NOR) clock when initializing XSPI1(PSRAM) which doesn't work
+     when application is running in XIP on external NOR
+    Impacted files:
+      stm32cube/stm32n6xx/drivers/src/stm32n6xx_hal_xspi.c
+    Internal reference: 212765
+
    See release_note.html from STM32Cube
