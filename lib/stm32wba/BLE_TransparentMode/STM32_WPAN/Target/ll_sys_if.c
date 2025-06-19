@@ -290,6 +290,10 @@ void ll_sys_reset(void)
     drift_time += DRIFT_TIME_EXTRA_GCC_DEBUG;
     exec_time += EXEC_TIME_EXTRA_GCC_DEBUG;
 #endif
+#if defined (__ZEPHYR__)
+    drift_time += DRIFT_TIME_EXTRA_ZEPHYR;
+    exec_time += EXEC_TIME_EXTRA_ZEPHYR;
+#endif
   }
 
   /* USER CODE BEGIN ll_sys_reset_1 */

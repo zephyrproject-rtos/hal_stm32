@@ -42,10 +42,16 @@ extern "C" {
 #define DRIFT_TIME_DEFAULT                      (13)
 #define DRIFT_TIME_EXTRA_LSI2                   (9)
 #define DRIFT_TIME_EXTRA_GCC_DEBUG              (6)
+#ifdef __ZEPHYR__
+#define DRIFT_TIME_EXTRA_ZEPHYR                 (15)
+#endif
 
 #define EXEC_TIME_DEFAULT                       (10)
 #define EXEC_TIME_EXTRA_LSI2                    (3)
 #define EXEC_TIME_EXTRA_GCC_DEBUG               (4)
+#ifdef __ZEPHYR__
+#define EXEC_TIME_EXTRA_ZEPHYR                  (15)
+#endif
 
 #define SCHDL_TIME_DEFAULT                      (20)
 /* USER CODE BEGIN EC */

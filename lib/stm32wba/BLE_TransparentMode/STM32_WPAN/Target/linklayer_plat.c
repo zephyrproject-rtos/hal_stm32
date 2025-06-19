@@ -26,7 +26,7 @@
 #include "app_common.h"
 #include "app_conf.h"
 #include "linklayer_plat.h"
-#include "scm.h"
+
 #include "log_module.h"
 #ifndef __ZEPHYR__
 #if (USE_TEMPERATURE_BASED_RADIO_CALIBRATION == 1)
@@ -36,14 +36,8 @@
 #include "stm32_lpm.h"
 #include "stm32_lpm_if.h"
 #endif /* (CFG_LPM_LEVEL != 0) */
+#endif
 
-/* USER CODE BEGIN Includes */
-
-/* USER CODE END Includes */
-
-#else
-#include "scm.h"
-#endif /* __ZEPHYR__ */
 
 #ifndef __ZEPHYR__
 #define max(a,b) ((a) > (b) ? a : b)
@@ -457,9 +451,6 @@ void LINKLAYER_PLAT_StartRadioEvt(void)
 {
   __HAL_RCC_RADIO_CLK_SLEEP_ENABLE();
   NVIC_SetPriority(RADIO_INTR_NUM, RADIO_INTR_PRIO_HIGH);
-#if (CFG_SCM_SUPPORTED == 1)
-  scm_notifyradiostate(SCM_RADIO_ACTIVE);
-#endif /* CFG_SCM_SUPPORTED */
 }
 
 /**
@@ -471,9 +462,6 @@ void LINKLAYER_PLAT_StopRadioEvt(void)
 {
   __HAL_RCC_RADIO_CLK_SLEEP_DISABLE();
   NVIC_SetPriority(RADIO_INTR_NUM, RADIO_INTR_PRIO_LOW);
-#if (CFG_SCM_SUPPORTED == 1)
-  scm_notifyradiostate(SCM_RADIO_NOT_ACTIVE);
-#endif /* CFG_SCM_SUPPORTED */
 }
 
 /**
@@ -488,10 +476,6 @@ void LINKLAYER_PLAT_RCOStartClbr(void)
   /* Disabling stop mode prevents also from entering in standby */
   UTIL_LPM_SetStopMode(1U << CFG_LPM_LL_HW_RCO_CLBR, UTIL_LPM_DISABLE);
 #endif /* (CFG_LPM_LEVEL != 0) */
-#if (CFG_SCM_SUPPORTED == 1)
-  scm_setsystemclock(SCM_USER_LL_HW_RCO_CLBR, HSE_32MHZ);
-  while (LL_PWR_IsActiveFlag_VOS() == 0);
-#endif /* (CFG_SCM_SUPPORTED == 1) */
 }
 
 /**
@@ -505,10 +489,6 @@ void LINKLAYER_PLAT_RCOStopClbr(void)
   PWR_EnableSleepMode();
   UTIL_LPM_SetStopMode(1U << CFG_LPM_LL_HW_RCO_CLBR, UTIL_LPM_ENABLE);
 #endif /* (CFG_LPM_LEVEL != 0) */
-#if (CFG_SCM_SUPPORTED == 1)
-  scm_setsystemclock(SCM_USER_LL_HW_RCO_CLBR, HSE_16MHZ);
-  while (LL_PWR_IsActiveFlag_VOS() == 0);
-#endif /* (CFG_SCM_SUPPORTED == 1) */
 }
 #endif /*__ZEPHYR__*/
 
