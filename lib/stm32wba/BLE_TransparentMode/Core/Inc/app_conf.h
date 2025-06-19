@@ -370,7 +370,7 @@ typedef enum
  * System Clock Manager module configuration
  ******************************************************************************/
 
-#define CFG_SCM_SUPPORTED                   (1)
+#define CFG_SCM_SUPPORTED                   (0)
 
 /******************************************************************************
  * HW RADIO configuration
