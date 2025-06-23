@@ -29,6 +29,22 @@
   */
 extern void LINKLAYER_PLAT_ClockInit(void);
 
+#ifdef __ZEPHYR__
+/**
+ * @brief  Enable access to backup domain resources
+ * @param  None
+ * @retval None
+ */
+extern void LINKLAYER_PLAT_EnableBackupDomainAccess(void);
+
+/**
+ * @brief  Disable access to backup domain resources
+ * @param  None
+ * @retval None
+ */
+extern void LINKLAYER_PLAT_DisableBackupDomainAccess(void);
+#endif /* __ZEPHYR__ */
+
 /**
   * @brief  Link Layer active waiting loop.
   * @param  delay: delay in us

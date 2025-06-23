@@ -70,12 +70,20 @@ void LINKLAYER_PLAT_ClockInit(void)
 	AHB5_SwitchedOff = 0;
 	radio_sleep_timer_val = 0;
 
+#ifdef __ZEPHYR__
+	LINKLAYER_PLAT_EnableBackupDomainAccess();
+#else
 	LL_PWR_EnableBkUpAccess();
+#endif
 
 	/* Select LSE as Sleep CLK */
 	__HAL_RCC_RADIOSLPTIM_CONFIG(RCC_RADIOSTCLKSOURCE_LSE);
 
+#ifdef __ZEPHYR__
+	LINKLAYER_PLAT_DisableBackupDomainAccess();
+#else
 	LL_PWR_DisableBkUpAccess();
+#endif
 
 	/* Enable AHB5ENR peripheral clock (bus CLK) */
 	__HAL_RCC_RADIO_CLK_ENABLE();
