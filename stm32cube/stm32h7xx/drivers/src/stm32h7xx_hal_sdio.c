@@ -1002,7 +1002,7 @@ HAL_StatusTypeDef HAL_SDIO_ReadExtended(SDIO_HandleTypeDef *hsdio, HAL_SDIO_Exte
     cmd |= Argument->Block_Mode << 27U;
     cmd |= Argument->OpCode << 26U;
     cmd |= (Argument->Reg_Addr & 0x1FFFFU) << 9U;
-    cmd |= (Size_byte & 0x1FFU);
+    cmd |= ((nbr_of_block == 0U)? Size_byte : nbr_of_block)& 0x1FFU;
     errorstate = SDMMC_SDIO_CmdReadWriteExtended(hsdio->Instance, cmd);
     if (errorstate != HAL_SDIO_ERROR_NONE)
     {
@@ -1147,7 +1147,7 @@ HAL_StatusTypeDef HAL_SDIO_WriteExtended(SDIO_HandleTypeDef *hsdio, HAL_SDIO_Ext
   uint8_t byteCount;
   uint32_t data;
   uint32_t dataremaining;
-  uint8_t *u32tempbuff = pData;
+  uint32_t *u32tempbuff = (uint32_t *) pData;
   uint32_t nbr_of_block;
 
   /* Check the parameters */
@@ -1207,7 +1207,7 @@ HAL_StatusTypeDef HAL_SDIO_WriteExtended(SDIO_HandleTypeDef *hsdio, HAL_SDIO_Ext
     cmd |= Argument->Block_Mode << 27U;
     cmd |= Argument->OpCode << 26U;
     cmd |= (Argument->Reg_Addr & 0x1FFFFU) << 9U;
-    cmd |= (Size_byte & 0x1FFU);
+    cmd |= ((nbr_of_block == 0U)? Size_byte : nbr_of_block)& 0x1FFU;
     errorstate = SDMMC_SDIO_CmdReadWriteExtended(hsdio->Instance, cmd);
     if (errorstate != HAL_SDIO_ERROR_NONE)
     {
