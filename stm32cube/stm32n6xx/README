@@ -55,7 +55,7 @@ Patch List:
     -soc/system_stm32n6xx_s.c
 
    *Fix SDIO initialization failure when skipping card identification sequence
-     Fixes an issue in the STM32HN6 SDIO driver where HAL_SDIO_Init() fails if
+     Fixes an issue in the STM32N6 SDIO driver where HAL_SDIO_Init() fails if
      the card identification sequence is skipped.
      Impacted files:
       stm32cube/stm32n6xx/drivers/src/stm32n6xx_hal_sdio.c
@@ -67,4 +67,9 @@ Patch List:
       stm32cube/stm32n6xx/drivers/src/stm32n6xx_hal_xspi.c
     Internal reference: 212765
 
-   See release_note.html from STM32Cube
+   *Fix SDIO polling mode data transfer issues
+     Fixes two related issues in the STM32N6 SDIO driver: incorrect block count calculation 
+     that caused the card to hang, and improper buffer size handling that led to misaligned FIFO writes. 
+     Together, these changes ensure correct and stable data transfer in polling mode.
+     Impacted file: 
+      stm32cube/stm32n6xx/drivers/src/stm32n6xx_hal_sdio.c   
