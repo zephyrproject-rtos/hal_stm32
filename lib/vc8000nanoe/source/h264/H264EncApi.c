@@ -1688,15 +1688,15 @@ H264EncRet H264EncStrmEncode(H264EncInst inst, const H264EncIn * pEncIn,
     i32 prefix_nalu_length = 0;
     u8 *prefix_nalu_addr = NULL;
     APITRACE("H264EncStrmEncode#");
-    APITRACEPARAM("busLuma", pEncIn->busLuma);
-    APITRACEPARAM("busChromaU", pEncIn->busChromaU);
-    APITRACEPARAM("busChromaV", pEncIn->busChromaV);
-    APITRACEPARAM("pOutBuf", pEncIn->pOutBuf);
-    APITRACEPARAM("busOutBuf", pEncIn->busOutBuf);
+    APITRACEPARAMX("busLuma", pEncIn->busLuma);
+    APITRACEPARAMX("busChromaU", pEncIn->busChromaU);
+    APITRACEPARAMX("busChromaV", pEncIn->busChromaV);
+    APITRACEPARAMX("pOutBuf", pEncIn->pOutBuf);
+    APITRACEPARAMX("busOutBuf", pEncIn->busOutBuf);
     APITRACEPARAM("outBufSize", pEncIn->outBufSize);
     APITRACEPARAM("codingType", pEncIn->codingType);
     APITRACEPARAM("timeIncrement", pEncIn->timeIncrement);
-    APITRACEPARAM("busLumaStab", pEncIn->busLumaStab);
+    APITRACEPARAMX("busLumaStab", pEncIn->busLumaStab);
     APITRACEPARAM("ipf", pEncIn->ipf);
     APITRACEPARAM("ltrf", pEncIn->ltrf);
 

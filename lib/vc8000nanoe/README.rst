@@ -89,3 +89,7 @@ Patch List:
 
 	* Fix some trace points
 	  Impacted files: source/h264/H264EncApi.c
+
+	* Trace pointers in hexa
+	  Impacted files: inc/encdebug.h
+			  source/h264/H264EncApi.c
