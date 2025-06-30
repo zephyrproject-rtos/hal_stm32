@@ -55,6 +55,7 @@
 #define TRACE_BIT_STREAM(v,n)
 #define APITRACE(x) printf(x);printf("\n");
 #define APITRACEPARAM(x,y) printf("  %s: %d\n",x,y);
+#define APITRACEPARAMX(x,y) printf("  %s: 0x%x\n",x,y);
 #else
 #define ASSERT(expr) __ASSERT_NO_MSG(expr)
 #define DEBUG_PRINT(args)
