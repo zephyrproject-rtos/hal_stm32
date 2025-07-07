@@ -59,4 +59,8 @@ Patch List:
 	 "stm32mp2xx_hal_conf.h" -> "stm32mp2xx_hal.h"
 	 This change ensures that the HAL driver is properly included in the build.
 
+   * Add support for I2C8 clock configuration
+   - The stm32cube/stm32mp2xx/drivers/src/stm32mp2xx_ll_rcc.c file was modified
+    for retrieving the clock configuration of the I2C8 peripheral.
+
    See release_note.html from STM32Cube

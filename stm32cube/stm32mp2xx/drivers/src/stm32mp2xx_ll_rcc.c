@@ -779,6 +779,14 @@ uint32_t LL_RCC_GetI2CClockFreq(uint32_t I2CxSource)
       break;
 #endif /* LL_RCC_I2C3_CLKSOURCE */
 
+#if defined(LL_RCC_I2C8_CLKSOURCE)
+    case LL_RCC_I2C8_CLKSOURCE:
+      i2c_source = LL_RCC_GetI2C8ClockSource();
+      i2c_prediv = LL_RCC_GetI2C8_PREDIV();
+      i2c_findiv = LL_RCC_GetI2C8_FINDIV();
+      break;
+#endif /* LL_RCC_I2C8_CLKSOURCE */
+
 #if defined(LL_RCC_I3C4_CLKSOURCE)
     case LL_RCC_I3C4_CLKSOURCE:
       i2c_source = LL_RCC_GetI3C4ClockSource();
