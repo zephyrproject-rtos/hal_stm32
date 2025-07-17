@@ -1047,10 +1047,10 @@ void VirtualTimer_IRQHandler(void)
    /*        the corrected value in a readable variable.                      */
    /***************************************************************************/
 #ifdef DEBUG_TIMER2
-   RELOAD_VAL2 = TimerPeriod + VL1_GetCurrentTimerValue();
-   VL1_SetCurrentTimerValue(RELOAD_VAL2);
+   //RELOAD_VAL2 = TimerPeriod + VL1_GetCurrentTimerValue();
+   //VL1_SetCurrentTimerValue(RELOAD_VAL2);
 #else
-   VL1_SetCurrentTimerValue(TimerPeriod + VL1_GetCurrentTimerValue());
+   //VL1_SetCurrentTimerValue(TimerPeriod + VL1_GetCurrentTimerValue());
 #endif
    /* Increment Tick value and call user CB */
    HAL_IncTick();
@@ -1341,13 +1341,13 @@ uint32_t SystemA35_SYSTICK_Config( uint32_t timer_priority )
 
    /* Stop Timers */
    PL1_SetControl(0x0);
-   VL1_SetControl(0x0);
+   //VL1_SetControl(0x0);
 
    /* Reset Timers */
    PL1_SetLoadValue(0);
    PL1_SetPhysicalCompareValue(0);
-   VL1_SetCurrentTimerValue(0);
-   VL1_SetTimerCompareValue(0);
+   //VL1_SetCurrentTimerValue(0);
+   //VL1_SetTimerCompareValue(0);
 
 #ifdef DEBUG_PPI2x
    FIQ_count = 0;
@@ -1407,8 +1407,8 @@ uint32_t SystemA35_SYSTICK_Config( uint32_t timer_priority )
    }
    else
    {
-      VL1_SetCurrentTimerValue(TimerPeriod);
-      VL1_SetControl(0x1);
+      //VL1_SetCurrentTimerValue(TimerPeriod);
+      //VL1_SetControl(0x1);
    }
    return 0;
 }
@@ -1457,7 +1457,7 @@ uint32_t SystemA35_ManageTick( uint32_t suspend_resume_stop_tick )
       case A35_STOP_SYSTICK :
          /* Stop Timers */
          PL1_SetControl(0x0);
-         VL1_SetControl(0x0);
+         //VL1_SetControl(0x0);
       case A35_SUSPEND_SYSTICK :
          /* Disable corresponding interrupt and clear it if pending */
          IRQ_Disable(sourcetimer_irq);
