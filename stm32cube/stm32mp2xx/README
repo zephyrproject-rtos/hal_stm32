@@ -68,4 +68,8 @@ Patch List:
      functions which are not yet supported in the CMSIS version for Cortex A.
      These calls have been removed if the used CMSIS version is older than 6.x.
 
+   * HAL_A35_WRAPPER_ENABLED disabled
+   - Disabled the HAL_A35_WRAPPER_ENABLED macro to prevent build warnings when compiling
+     Zephyr for the Cortex-A35.
+
    See release_note.html from STM32Cube
