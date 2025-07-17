@@ -1046,11 +1046,13 @@ void VirtualTimer_IRQHandler(void)
    /* NOTE : In DEBUG_TIMER2 mode, a time deviation is added to write         */
    /*        the corrected value in a readable variable.                      */
    /***************************************************************************/
+#if (__CA_CMSIS_VERSION_MAIN>=(6U))
 #ifdef DEBUG_TIMER2
    RELOAD_VAL2 = TimerPeriod + VL1_GetCurrentTimerValue();
    VL1_SetCurrentTimerValue(RELOAD_VAL2);
 #else
    VL1_SetCurrentTimerValue(TimerPeriod + VL1_GetCurrentTimerValue());
+#endif
 #endif
    /* Increment Tick value and call user CB */
    HAL_IncTick();
@@ -1341,13 +1343,16 @@ uint32_t SystemA35_SYSTICK_Config( uint32_t timer_priority )
 
    /* Stop Timers */
    PL1_SetControl(0x0);
+#if (__CA_CMSIS_VERSION_MAIN>=(6U))
    VL1_SetControl(0x0);
-
+#endif
    /* Reset Timers */
    PL1_SetLoadValue(0);
    PL1_SetPhysicalCompareValue(0);
+#if (__CA_CMSIS_VERSION_MAIN>=(6U))
    VL1_SetCurrentTimerValue(0);
    VL1_SetTimerCompareValue(0);
+#endif
 
 #ifdef DEBUG_PPI2x
    FIQ_count = 0;
@@ -1407,8 +1412,10 @@ uint32_t SystemA35_SYSTICK_Config( uint32_t timer_priority )
    }
    else
    {
+#if(__CA_CMSIS_VERSION_MAIN>=(6U))
       VL1_SetCurrentTimerValue(TimerPeriod);
       VL1_SetControl(0x1);
+#endif
    }
    return 0;
 }
@@ -1457,7 +1464,9 @@ uint32_t SystemA35_ManageTick( uint32_t suspend_resume_stop_tick )
       case A35_STOP_SYSTICK :
          /* Stop Timers */
          PL1_SetControl(0x0);
+#if (__CA_CMSIS_VERSION_MAIN>=(6U))
          VL1_SetControl(0x0);
+#endif
       case A35_SUSPEND_SYSTICK :
          /* Disable corresponding interrupt and clear it if pending */
          IRQ_Disable(sourcetimer_irq);
