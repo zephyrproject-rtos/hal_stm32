@@ -2,7 +2,11 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-zephyr_library_sources(soc/system_stm32mp2xx_m33.c)
+if(CONFIG_CPU_CORTEX_A35)
+	zephyr_library_sources(soc/system_stm32mp2xx_a35.c)
+else()
+	zephyr_library_sources(soc/system_stm32mp2xx_m33.c)
+endif()
 zephyr_library_sources(drivers/src/stm32mp2xx_hal.c)
 zephyr_library_sources(drivers/src/stm32mp2xx_hal_rcc.c)
 zephyr_library_sources(drivers/src/stm32mp2xx_hal_rcc_ex.c)
