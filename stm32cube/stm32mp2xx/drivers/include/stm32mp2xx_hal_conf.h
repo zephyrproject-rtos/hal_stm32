@@ -33,7 +33,7 @@ extern "C" {
   */
 #define HAL_MODULE_ENABLED
 #if defined (CORE_CA35)
-#define HAL_A35_WRAPPER_ENABLED
+/* #define HAL_A35_WRAPPER_ENABLED */
 #endif /* CORE_CA35 */
 #define HAL_ADC_MODULE_ENABLED
 #define HAL_BSEC_MODULE_ENABLED
