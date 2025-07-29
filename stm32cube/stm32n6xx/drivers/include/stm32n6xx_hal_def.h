@@ -196,9 +196,9 @@ typedef enum
 #define __NON_CACHEABLE_SECTION_END   ((uint32_t) __sfe(".noncacheable"))
 #elif defined(__ARMCC_VERSION)
 extern uint32_t Image$$RW_NONCACHEABLEBUFFER$$Base;
-extern uint32_t Image$$RW_NONCACHEABLEBUFFER$$Length;
-#define __NON_CACHEABLE_SECTION_BEGIN Image$$RW_NONCACHEABLEBUFFER$$Base
-#define __NON_CACHEABLE_SECTION_END   (__NON_CACHEABLE_SECTION_BEGIN + Image$$RW_NONCACHEABLEBUFFER$$Length)
+extern uint32_t Image$$RW_NONCACHEABLEBUFFER$$Limit;
+#define __NON_CACHEABLE_SECTION_BEGIN ((uint32_t) &Image$$RW_NONCACHEABLEBUFFER$$Base)
+#define __NON_CACHEABLE_SECTION_END   ((uint32_t) &Image$$RW_NONCACHEABLEBUFFER$$Limit-1)
 #elif defined(__GNUC__)
 extern uint32_t __snoncacheable;
 extern uint32_t __enoncacheable;

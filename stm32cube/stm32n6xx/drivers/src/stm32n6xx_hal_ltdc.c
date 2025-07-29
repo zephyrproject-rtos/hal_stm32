@@ -1238,7 +1238,7 @@ HAL_StatusTypeDef HAL_LTDC_ConfigGammaCorrection(LTDC_HandleTypeDef *hltdc, uint
     hltdc->Instance->GCCR = RGBComponent | ((uint32_t) GammaAdress[gammasegment] << LTDC_GCCR_ADDR_Pos) |
                             ((uint32_t) GammaLUT[gammasegment + gammaindex] << LTDC_GCCR_COMP_Pos);
   }
-  hltdc->Instance->GCCR = RGBComponent | (0xFFU << LTDC_GCCR_COMP_Pos) | LTDC_GCCR_ADDR;
+  hltdc->Instance->GCCR = RGBComponent | (0xFFUL << LTDC_GCCR_COMP_Pos) | LTDC_GCCR_ADDR;
 
   /* Change the LTDC state*/
   hltdc->State = HAL_LTDC_STATE_READY;

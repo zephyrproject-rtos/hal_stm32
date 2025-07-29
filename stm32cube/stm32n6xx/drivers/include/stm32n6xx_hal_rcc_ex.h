@@ -2591,6 +2591,7 @@ uint32_t HAL_RCCEx_GetPLL1CLKFreq(void);
 uint32_t HAL_RCCEx_GetPLL2CLKFreq(void);
 uint32_t HAL_RCCEx_GetPLL3CLKFreq(void);
 uint32_t HAL_RCCEx_GetPLL4CLKFreq(void);
+uint32_t HAL_RCCEx_GetTIMGFreq(void);
 /**
   * @}
   */

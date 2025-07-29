@@ -200,14 +200,14 @@ typedef enum
 /** @defgroup ControlSignal_Configuration ControlSignal Configuration
   * @{
   */
-#define HAL_PSSI_DE_RDY_DISABLE           (0x0U << PSSI_CR_DERDYCFG_Pos) /*!< Neither DE nor RDY are enabled */
-#define HAL_PSSI_RDY_ENABLE               (0x1U << PSSI_CR_DERDYCFG_Pos) /*!< Only RDY enabled */
-#define HAL_PSSI_DE_ENABLE                (0x2U << PSSI_CR_DERDYCFG_Pos) /*!< Only DE enabled */
-#define HAL_PSSI_DE_RDY_ALT_ENABLE        (0x3U << PSSI_CR_DERDYCFG_Pos) /*!< Both RDY and DE alternate functions enabled */
-#define HAL_PSSI_MAP_RDY_BIDIR_ENABLE     (0x4U << PSSI_CR_DERDYCFG_Pos) /*!< Bi-directional on RDY pin */
-#define HAL_PSSI_RDY_MAP_ENABLE           (0x5U << PSSI_CR_DERDYCFG_Pos) /*!< Only RDY enabled, mapped to DE pin */
-#define HAL_PSSI_DE_MAP_ENABLE            (0x6U << PSSI_CR_DERDYCFG_Pos) /*!< Only DE enabled, mapped to RDY pin */
-#define HAL_PSSI_MAP_DE_BIDIR_ENABLE      (0x7U << PSSI_CR_DERDYCFG_Pos) /*!< Bi-directional on DE pin */
+#define HAL_PSSI_DE_RDY_DISABLE           (0x0UL << PSSI_CR_DERDYCFG_Pos) /*!< Neither DE nor RDY are enabled */
+#define HAL_PSSI_RDY_ENABLE               (0x1UL << PSSI_CR_DERDYCFG_Pos) /*!< Only RDY enabled */
+#define HAL_PSSI_DE_ENABLE                (0x2UL << PSSI_CR_DERDYCFG_Pos) /*!< Only DE enabled */
+#define HAL_PSSI_DE_RDY_ALT_ENABLE        (0x3UL << PSSI_CR_DERDYCFG_Pos) /*!< Both RDY and DE alternate functions enabled */
+#define HAL_PSSI_MAP_RDY_BIDIR_ENABLE     (0x4UL << PSSI_CR_DERDYCFG_Pos) /*!< Bi-directional on RDY pin */
+#define HAL_PSSI_RDY_MAP_ENABLE           (0x5UL << PSSI_CR_DERDYCFG_Pos) /*!< Only RDY enabled, mapped to DE pin */
+#define HAL_PSSI_DE_MAP_ENABLE            (0x6UL << PSSI_CR_DERDYCFG_Pos) /*!< Only DE enabled, mapped to RDY pin */
+#define HAL_PSSI_MAP_DE_BIDIR_ENABLE      (0x7UL << PSSI_CR_DERDYCFG_Pos) /*!< Bi-directional on DE pin */
 
 /**
   * @}

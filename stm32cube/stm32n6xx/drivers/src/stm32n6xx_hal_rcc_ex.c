@@ -36,17 +36,6 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private defines -----------------------------------------------------------*/
-/** @defgroup RCCEx_Private_Constants RCCEx Private Constants
-  * @{
-  */
-#if defined(USE_FPGA)
-/* ***** FPGA values ******/
-#define RCC_PLL_SOURCE_FREQ   32000000UL  /* PLL source forced to 32MHz */
-#endif /* USE_FPGA */
-/**
-  * @}
-  */
-
 /* Private macros ------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 /* Private function prototypes -----------------------------------------------*/
@@ -2589,7 +2578,7 @@ void HAL_RCCEx_GetPeriphCLKConfig(RCC_PeriphCLKInitTypeDef  *PeriphClkInit)
   *            @arg RCC_PERIPHCLK_XSPI1    : XSPI1 peripheral clock
   *            @arg RCC_PERIPHCLK_XSPI2    : XSPI2 peripheral clock
   *            @arg RCC_PERIPHCLK_XSPI3    : XSPI3 peripheral clock
-  * @retval Frequency in KHz
+  * @retval Frequency in Hz
   */
 uint32_t HAL_RCCEx_GetPeriphCLKFreq(uint64_t PeriphClk)
 {
@@ -2838,11 +2827,6 @@ uint32_t HAL_RCCEx_GetPLL1CLKFreq(void)
 
       if (pllinputfreq != RCC_PERIPH_FREQUENCY_NO)
       {
-#if defined(USE_FPGA)
-        /**** FPGA PLL input forced to 32MHz *****/
-        pllinputfreq = RCC_PLL_SOURCE_FREQ;
-        /*****************************************/
-#endif /* USE_FPGA */
         divm = LL_RCC_PLL1_GetM();
 
         if (divm != 0U)
@@ -2886,11 +2870,7 @@ uint32_t HAL_RCCEx_GetPLL2CLKFreq(void)
 
       if (pllinputfreq != RCC_PERIPH_FREQUENCY_NO)
       {
-#if defined(USE_FPGA)
-        /**** FPGA PLL input forced to 32MHz *****/
-        pllinputfreq = RCC_PLL_SOURCE_FREQ;
-        /*****************************************/
-#endif /* USE_FPGA */
+
         divm = LL_RCC_PLL2_GetM();
 
         if (divm != 0U)
@@ -2934,11 +2914,6 @@ uint32_t HAL_RCCEx_GetPLL3CLKFreq(void)
 
       if (pllinputfreq != RCC_PERIPH_FREQUENCY_NO)
       {
-#if defined(USE_FPGA)
-        /**** FPGA PLL input forced to 32MHz *****/
-        pllinputfreq = RCC_PLL_SOURCE_FREQ;
-        /*****************************************/
-#endif /* USE_FPGA */
         divm = LL_RCC_PLL3_GetM();
 
         if (divm != 0U)
@@ -2982,11 +2957,7 @@ uint32_t HAL_RCCEx_GetPLL4CLKFreq(void)
 
       if (pllinputfreq != RCC_PERIPH_FREQUENCY_NO)
       {
-#if defined(USE_FPGA)
-        /**** FPGA PLL input forced to 32MHz *****/
-        pllinputfreq = RCC_PLL_SOURCE_FREQ;
-        /*****************************************/
-#endif /* USE_FPGA */
+
         divm = LL_RCC_PLL4_GetM();
 
         if (divm != 0U)
@@ -3007,6 +2978,15 @@ uint32_t HAL_RCCEx_GetPLL4CLKFreq(void)
   }
 
   return plloutputfreq;
+}
+
+/**
+  * @brief  Return the Timer group frequency.
+  * @retval Timer group frequency in Hz
+  */
+uint32_t HAL_RCCEx_GetTIMGFreq(void)
+{
+  return LL_RCC_CALC_TIMG_FREQ(HAL_RCC_GetSysClockFreq(), LL_RCC_GetTIMPrescaler());
 }
 
 /**
@@ -3478,7 +3458,7 @@ static uint32_t RCCEx_GetADCCLKFreq(uint32_t ADCxSource)
       break;
 
     case LL_RCC_ADC_CLKSOURCE_TIMG:
-      adc_frequency = HAL_RCC_GetSysClockFreq() / (1UL << LL_RCC_GetTIMPrescaler());
+      adc_frequency = LL_RCC_CALC_TIMG_FREQ(HAL_RCC_GetSysClockFreq(), LL_RCC_GetTIMPrescaler());
       break;
 
     default:
@@ -3588,7 +3568,7 @@ static uint32_t RCCEx_GetADFCLKFreq(uint32_t ADFxSource)
       break;
 
     case LL_RCC_ADF1_CLKSOURCE_TIMG:
-      adf_frequency = HAL_RCC_GetSysClockFreq() / (1UL << LL_RCC_GetTIMPrescaler());
+      adf_frequency = LL_RCC_CALC_TIMG_FREQ(HAL_RCC_GetSysClockFreq(), LL_RCC_GetTIMPrescaler());
       break;
 
     default:
@@ -4510,7 +4490,7 @@ static uint32_t RCCEx_GetLPTIMCLKFreq(uint32_t LPTIMxSource)
     case LL_RCC_LPTIM3_CLKSOURCE_TIMG:
     case LL_RCC_LPTIM4_CLKSOURCE_TIMG:
     case LL_RCC_LPTIM5_CLKSOURCE_TIMG:
-      lptim_frequency = HAL_RCC_GetSysClockFreq() / (1UL << LL_RCC_GetTIMPrescaler());
+      lptim_frequency = LL_RCC_CALC_TIMG_FREQ(HAL_RCC_GetSysClockFreq(), LL_RCC_GetTIMPrescaler());
       break;
 
     default:
@@ -4795,7 +4775,7 @@ static uint32_t RCCEx_GetMDFCLKFreq(uint32_t MDFxSource)
       break;
 
     case LL_RCC_MDF1_CLKSOURCE_TIMG:
-      adf_frequency = HAL_RCC_GetSysClockFreq() / (1UL << LL_RCC_GetTIMPrescaler());
+      adf_frequency = LL_RCC_CALC_TIMG_FREQ(HAL_RCC_GetSysClockFreq(), LL_RCC_GetTIMPrescaler());
       break;
 
     default:

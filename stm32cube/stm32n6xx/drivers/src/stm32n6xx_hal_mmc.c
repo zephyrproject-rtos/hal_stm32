@@ -3382,7 +3382,7 @@ HAL_StatusTypeDef HAL_MMC_SleepDevice(MMC_HandleTypeDef *hmmc)
                   {
                     /* Send CMD5 CMD_MMC_SLEEP_AWAKE with RCA and SLEEP as argument */
                     errorstate = SDMMC_CmdSleepMmc(hmmc->Instance,
-                                                   ((hmmc->MmcCard.RelCardAdd << 16U) | (0x1U << 15U)));
+                                                   ((hmmc->MmcCard.RelCardAdd << 16UL) | (0x1UL << 15UL)));
                     if (errorstate == HAL_MMC_ERROR_NONE)
                     {
                       /* Wait that the device is ready by checking the D0 line */
@@ -4093,7 +4093,7 @@ static uint32_t MMC_HighSpeed(MMC_HandleTypeDef *hmmc, FunctionalState state)
             }
             else
             {
-              Init.ClockDiv = sdmmc_clk / (2U * MMC_HIGH_SPEED_FREQ);
+              Init.ClockDiv = (sdmmc_clk / (2U * MMC_HIGH_SPEED_FREQ)) + 1U;
             }
             (void)SDMMC_Init(hmmc->Instance, Init);
 
