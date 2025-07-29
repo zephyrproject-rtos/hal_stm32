@@ -38,18 +38,6 @@
 /* Private types -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 /* Private constants ---------------------------------------------------------*/
-/** @addtogroup RCC_LL_Private_Constants
-  * @{
-  */
-#if defined(USE_FPGA)
-/* ***** FPGA values ******/
-#define FREF_FREQ         32000000UL  /* FREF forced to 32MHz */
-#define PLL_SOURCE_FREQ   32000000UL  /* PLL source forced to 32MHz */
-#endif /* USE_FPGA */
-/**
-  * @}
-  */
-
 /* Private macros ------------------------------------------------------------*/
 /** @addtogroup RCC_LL_Private_Macros
   * @{
@@ -527,10 +515,6 @@ uint32_t LL_RCC_GetPLL1ClockFreq(void)
 
       if (pllinputfreq != LL_RCC_PERIPH_FREQUENCY_NO)
       {
-#if defined(USE_FPGA)
-        /**** FPGA PLL input forced to 32MHz *****/
-        pllinputfreq = PLL_SOURCE_FREQ;
-#endif /* USE_FPGA */
         /* INTEGER mode only  - others TO DO */
         divm = LL_RCC_PLL1_GetM();
 
@@ -601,10 +585,6 @@ uint32_t LL_RCC_GetPLL2ClockFreq(void)
 
       if (pllinputfreq != LL_RCC_PERIPH_FREQUENCY_NO)
       {
-#if defined(USE_FPGA)
-        /**** FPGA PLL input forced to 32MHz *****/
-        pllinputfreq = PLL_SOURCE_FREQ;
-#endif /* USE_FPGA */
         /* INTEGER mode only  - others TO DO */
         divm = LL_RCC_PLL2_GetM();
 
@@ -675,10 +655,6 @@ uint32_t LL_RCC_GetPLL3ClockFreq(void)
 
       if (pllinputfreq != LL_RCC_PERIPH_FREQUENCY_NO)
       {
-#if defined(USE_FPGA)
-        /**** FPGA PLL input forced to 32MHz *****/
-        pllinputfreq = PLL_SOURCE_FREQ;
-#endif /* USE_FPGA */
         /* INTEGER mode only  - others TO DO */
         divm = LL_RCC_PLL3_GetM();
 
@@ -749,10 +725,6 @@ uint32_t LL_RCC_GetPLL4ClockFreq(void)
 
       if (pllinputfreq != LL_RCC_PERIPH_FREQUENCY_NO)
       {
-#if defined(USE_FPGA)
-        /**** FPGA PLL input forced to 32MHz *****/
-        pllinputfreq = PLL_SOURCE_FREQ;
-#endif /* USE_FPGA */
         /* INTEGER mode only  - others TO DO */
         divm = LL_RCC_PLL4_GetM();
 

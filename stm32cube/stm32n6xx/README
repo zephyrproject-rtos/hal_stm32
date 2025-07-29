@@ -6,7 +6,7 @@ Origin:
    http://www.st.com/en/embedded-software/stm32cuben6.html
 
 Status:
-   version v1.0.0
+   version v1.2.0
 
 Purpose:
    ST Microelectronics official MCU package for STM32N6 series.
@@ -23,7 +23,7 @@ URL:
    https://github.com/STMicroelectronics/STM32CubeN6
 
 Commit:
-   7cc0f778f9ed60d2a00ad9ba7794a3e7feaa3596
+   85170d2c6eaa438622ed879caa4d7bcc6cc3920d
 
 Maintained-by:
    External
@@ -66,10 +66,13 @@ Patch List:
     Impacted files:
       stm32cube/stm32n6xx/drivers/src/stm32n6xx_hal_xspi.c
     Internal reference: 212765
+    Status : implemented
 
    *Fix SDIO polling mode data transfer issues
-     Fixes two related issues in the STM32N6 SDIO driver: incorrect block count calculation 
-     that caused the card to hang, and improper buffer size handling that led to misaligned FIFO writes. 
+     Fixes two related issues in the STM32N6 SDIO driver: incorrect block count calculation
+     that caused the card to hang, and improper buffer size handling that led to misaligned FIFO writes.
      Together, these changes ensure correct and stable data transfer in polling mode.
-     Impacted file: 
-      stm32cube/stm32n6xx/drivers/src/stm32n6xx_hal_sdio.c   
+     Impacted file:
+      stm32cube/stm32n6xx/drivers/src/stm32n6xx_hal_sdio.c
+
+   See release_note.html from STM32Cube

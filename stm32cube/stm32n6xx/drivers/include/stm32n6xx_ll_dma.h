@@ -649,7 +649,7 @@ typedef struct
   */
 #endif /* USE_FULL_LL_DRIVER */
 
-/** @defgroup DMA_LL_EC_CID Priority Level
+/** @defgroup DMA_LL_EC_CID Static Isolation CID
   * @{
   */
 #define LL_DMA_CHANNEL_STATIC_CID_0             (0U<<DMA_CCIDCFGR_SCID_Pos)         /*!< Channel is assigned to CID0 */
@@ -663,7 +663,7 @@ typedef struct
   * @}
   */
 
-/** @defgroup DMA_LL_EC_PRIORITY_LEVEL DMA Priority Level
+/** @defgroup DMA_LL_EC_PRIORITY_LEVEL Priority Level
   * @{
   */
 #define LL_DMA_LOW_PRIORITY_LOW_WEIGHT  0x00000000U    /*!< Priority level : Low Priority, Low Weight  */

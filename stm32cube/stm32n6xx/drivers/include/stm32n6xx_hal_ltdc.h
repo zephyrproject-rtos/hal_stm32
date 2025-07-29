@@ -538,10 +538,10 @@ typedef  void (*pLTDC_CallbackTypeDef)(LTDC_HandleTypeDef *hltdc);  /*!< pointer
 /** @defgroup LTDC_ARGB_SIZE LTDC ARGB pixel size in bytes
   * @{
   */
-#define LTDC_ARGB_PIXEL_SIZE_1_BYTE      0U       /*!<Custom ARGB with 1 byte per pixel          */
-#define LTDC_ARGB_PIXEL_SIZE_2_BYTES     1U       /*!<Custom ARGB with 2 bytes per pixel         */
-#define LTDC_ARGB_PIXEL_SIZE_3_BYTES     2U       /*!<Custom ARGB with 3 bytes per pixel         */
-#define LTDC_ARGB_PIXEL_SIZE_4_BYTES     3U       /*!<Custom ARGB with 4 bytes per pixel         */
+#define LTDC_ARGB_PIXEL_SIZE_1_BYTE      1U       /*!<Custom ARGB with 1 byte per pixel          */
+#define LTDC_ARGB_PIXEL_SIZE_2_BYTES     2U       /*!<Custom ARGB with 2 bytes per pixel         */
+#define LTDC_ARGB_PIXEL_SIZE_3_BYTES     3U       /*!<Custom ARGB with 3 bytes per pixel         */
+#define LTDC_ARGB_PIXEL_SIZE_4_BYTES     4U       /*!<Custom ARGB with 4 bytes per pixel         */
 /**
   * @}
   */

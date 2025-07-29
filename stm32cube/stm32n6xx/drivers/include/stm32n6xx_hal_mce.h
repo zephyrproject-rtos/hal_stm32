@@ -46,11 +46,6 @@ typedef struct
 
   uint32_t         Mode;                   /*!< Indicates the chaining mode used for encryption. */
   /*!< This parameter is a value of @defgroup MCE_Ciphering_Algorithm */
-  uint32_t         AccessMode;             /*!< MCE region writes enabled or not */
-  /*!< This parameter is a value of @ref MCE_Region_Privilege. */
-
-  uint32_t         PrivilegedAccess;       /*!< MCE region privileged access or not */
-  /*!< This parameter is a value of @ref MCE_Region_Privilege. */
 
 } MCE_RegionConfigTypeDef;
 
@@ -249,7 +244,6 @@ typedef  void (*pMCE_CallbackTypeDef)(MCE_HandleTypeDef *hmce); /*!< pointer to 
   */
 
 
-
 /** @defgroup MCE_CipherSelection MCE Cipher Selection
   * @{
   */
@@ -330,7 +324,6 @@ typedef  void (*pMCE_CallbackTypeDef)(MCE_HandleTypeDef *hmce); /*!< pointer to 
   * @retval 0 (not set) or 1 (set)
   */
 #define __HAL_MCE_GET_FLAG(__HANDLE__, __FLAG__)  READ_BIT((__HANDLE__)->Instance->IASR, MCE_IASR_IAEF)
-
 
 
 /**

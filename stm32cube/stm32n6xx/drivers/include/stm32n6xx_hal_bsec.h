@@ -159,10 +159,10 @@ typedef struct
 /** @defgroup BSEC_Lifecycle_State BSEC Device lifecycle state
   * @{
   */
-#define HAL_BSEC_OPEN_STATE                 (0x16U << BSEC_SR_NVSTATE_Pos)  /*!< BSEC is in open state                                              */
-#define HAL_BSEC_CLOSED_STATE               (0x0DU << BSEC_SR_NVSTATE_Pos)  /*!< BSEC is in closed state                                            */
-#define HAL_BSEC_INVALID_STATE              (0x07U << BSEC_SR_NVSTATE_Pos)  /*!< BSEC is in invalid state                                           */
-#define HAL_BSEC_INVALID_STATE_WITH_TAMPER  (0x23U << BSEC_SR_NVSTATE_Pos)  /*!< BSEC is in invalid state with an active confirmed tamper triggered */
+#define HAL_BSEC_OPEN_STATE                 (0x16UL << BSEC_SR_NVSTATE_Pos)  /*!< BSEC is in open state                                              */
+#define HAL_BSEC_CLOSED_STATE               (0x0DUL << BSEC_SR_NVSTATE_Pos)  /*!< BSEC is in closed state                                            */
+#define HAL_BSEC_INVALID_STATE              (0x07UL << BSEC_SR_NVSTATE_Pos)  /*!< BSEC is in invalid state                                           */
+#define HAL_BSEC_INVALID_STATE_WITH_TAMPER  (0x23UL << BSEC_SR_NVSTATE_Pos)  /*!< BSEC is in invalid state with an active confirmed tamper triggered */
 /**
   * @}
   */

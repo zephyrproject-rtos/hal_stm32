@@ -2715,8 +2715,7 @@ static const uint8_t ADC_CHANNEL_DIFF_LUT[2][20] =
   * @brief  Helper macro to calculate the voltage (unit: mVolt)
   *         corresponding to a ADC conversion data (unit: digital value).
   * @note   Analog reference voltage (Vref+) must be either known from
-  *         user board environment or can be calculated using ADC measurement
-  *         and ADC helper macro @ref __LL_ADC_CALC_VREFANALOG_VOLTAGE().
+  *         user board environment.
   * @param  __VREFANALOG_VOLTAGE__ Analog reference voltage (unit: mV)
   * @param  __ADC_DATA__ ADC conversion data (resolution 12 bits)
   *                       (unit: digital value).
@@ -2742,8 +2741,7 @@ static const uint8_t ADC_CHANNEL_DIFF_LUT[2][20] =
   *         middle code in. Converted voltage can be positive or negative
   *         depending on differential input voltages.
   * @note   Analog reference voltage (Vref+) must be either known from
-  *         user board environment or can be calculated using ADC measurement
-  *         and ADC helper macro @ref __LL_ADC_CALC_VREFANALOG_VOLTAGE().
+  *         user board environment.
   * @param  __VREFANALOG_VOLTAGE__ Analog reference voltage (unit: mV)
   * @param  __ADC_DATA__ ADC conversion data (unit: digital value).
   * @param  __ADC_RESOLUTION__ This parameter can be one of the following values:
