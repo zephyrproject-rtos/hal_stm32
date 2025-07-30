@@ -455,73 +455,73 @@ typedef struct
 /** @defgroup RCC_RTC_Clock_Source  RTC Clock Source
   * @{
   */
-#define RCC_RTCCLKSOURCE_DISABLE       0U                                                      /*!< No clock used as RTC clock */
-#define RCC_RTCCLKSOURCE_LSE           RCC_CCIPR7_RTCSEL_0                                     /*!< LSE oscillator clock used as RTC clock */
-#define RCC_RTCCLKSOURCE_LSI           RCC_CCIPR7_RTCSEL_1                                     /*!< LSI oscillator clock used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV1      ((0x00U << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 1 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV2      ((0x01U << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 2 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV3      ((0x02U << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 3 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV4      ((0x03U << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 4 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV5      ((0x04U << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 5 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV6      ((0x05U << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 6 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV7      ((0x06U << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 7 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV8      ((0x07U << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 8 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV9      ((0x08U << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 9 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV10     ((0x09U << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 10 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV11     ((0x0AU << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 11 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV12     ((0x0BU << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 12 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV13     ((0x0CU << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 13 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV14     ((0x0DU << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 14 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV15     ((0x0EU << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 15 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV16     ((0x0FU << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 16 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV17     ((0x10U << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 17 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV18     ((0x11U << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 18 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV19     ((0x12U << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 19 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV20     ((0x13U << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 20 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV21     ((0x14U << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 21 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV22     ((0x15U << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 22 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV23     ((0x16U << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 23 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV24     ((0x17U << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 24 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV25     ((0x18U << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 25 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV26     ((0x19U << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 26 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV27     ((0x1AU << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 27 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV28     ((0x1BU << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 28 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV29     ((0x1CU << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 29 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV30     ((0x1DU << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 30 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV31     ((0x1EU << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 31 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV32     ((0x1FU << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 32 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV33     ((0x20U << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 33 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV34     ((0x21U << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 34 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV35     ((0x22U << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 35 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV36     ((0x23U << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 36 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV37     ((0x24U << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 37 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV38     ((0x25U << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 38 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV39     ((0x26U << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 39 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV40     ((0x27U << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 40 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV41     ((0x28U << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 41 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV42     ((0x29U << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 42 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV43     ((0x2AU << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 43 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV44     ((0x2BU << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 44 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV45     ((0x2CU << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 45 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV46     ((0x2DU << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 46 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV47     ((0x2EU << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 47 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV48     ((0x2FU << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 48 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV49     ((0x30U << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 49 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV50     ((0x31U << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 50 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV51     ((0x32U << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 51 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV52     ((0x33U << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 52 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV53     ((0x34U << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 53 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV54     ((0x35U << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 54 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV55     ((0x36U << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 55 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV56     ((0x37U << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 56 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV57     ((0x38U << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 57 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV58     ((0x39U << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 58 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV59     ((0x3AU << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 59 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV60     ((0x3BU << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 60 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV61     ((0x3CU << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 61 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV62     ((0x3DU << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 62 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV63     ((0x3EU << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 63 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV64     ((0x3FU << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 64 used as RTC clock */
+#define RCC_RTCCLKSOURCE_DISABLE       0UL                                                      /*!< No clock used as RTC clock */
+#define RCC_RTCCLKSOURCE_LSE           RCC_CCIPR7_RTCSEL_0                                      /*!< LSE oscillator clock used as RTC clock */
+#define RCC_RTCCLKSOURCE_LSI           RCC_CCIPR7_RTCSEL_1                                      /*!< LSI oscillator clock used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV1      ((0x00UL << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 1 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV2      ((0x01UL << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 2 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV3      ((0x02UL << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 3 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV4      ((0x03UL << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 4 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV5      ((0x04UL << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 5 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV6      ((0x05UL << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 6 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV7      ((0x06UL << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 7 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV8      ((0x07UL << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 8 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV9      ((0x08UL << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 9 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV10     ((0x09UL << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 10 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV11     ((0x0AUL << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 11 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV12     ((0x0BUL << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 12 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV13     ((0x0CUL << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 13 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV14     ((0x0DUL << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 14 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV15     ((0x0EUL << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 15 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV16     ((0x0FUL << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 16 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV17     ((0x10UL << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 17 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV18     ((0x11UL << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 18 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV19     ((0x12UL << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 19 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV20     ((0x13UL << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 20 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV21     ((0x14UL << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 21 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV22     ((0x15UL << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 22 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV23     ((0x16UL << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 23 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV24     ((0x17UL << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 24 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV25     ((0x18UL << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 25 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV26     ((0x19UL << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 26 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV27     ((0x1AUL << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 27 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV28     ((0x1BUL << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 28 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV29     ((0x1CUL << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 29 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV30     ((0x1DUL << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 30 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV31     ((0x1EUL << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 31 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV32     ((0x1FUL << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 32 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV33     ((0x20UL << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 33 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV34     ((0x21UL << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 34 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV35     ((0x22UL << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 35 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV36     ((0x23UL << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 36 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV37     ((0x24UL << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 37 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV38     ((0x25UL << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 38 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV39     ((0x26UL << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 39 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV40     ((0x27UL << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 40 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV41     ((0x28UL << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 41 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV42     ((0x29UL << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 42 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV43     ((0x2AUL << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 43 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV44     ((0x2BUL << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 44 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV45     ((0x2CUL << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 45 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV46     ((0x2DUL << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 46 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV47     ((0x2EUL << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 47 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV48     ((0x2FUL << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 48 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV49     ((0x30UL << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 49 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV50     ((0x31UL << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 50 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV51     ((0x32UL << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 51 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV52     ((0x33UL << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 52 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV53     ((0x34UL << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 53 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV54     ((0x35UL << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 54 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV55     ((0x36UL << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 55 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV56     ((0x37UL << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 56 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV57     ((0x38UL << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 57 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV58     ((0x39UL << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 58 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV59     ((0x3AUL << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 59 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV60     ((0x3BUL << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 60 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV61     ((0x3CUL << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 61 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV62     ((0x3DUL << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 62 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV63     ((0x3EUL << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 63 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV64     ((0x3FUL << RCC_CCIPR7_RTCPRE_Pos) | RCC_CCIPR7_RTCSEL)  /*!< HSE oscillator clock divided by 64 used as RTC clock */
 /**
   * @}
   */
@@ -4319,6 +4319,8 @@ void     HAL_RCC_MCOConfig(uint32_t RCC_MCOx, uint32_t RCC_MCOSource, uint32_t R
 void     HAL_RCC_EnableCSS(void);
 uint32_t HAL_RCC_GetCpuClockFreq(void);
 uint32_t HAL_RCC_GetSysClockFreq(void);
+uint32_t HAL_RCC_GetNPUClockFreq(void);
+uint32_t HAL_RCC_GetNPURAMSClockFreq(void);
 uint32_t HAL_RCC_GetHCLKFreq(void);
 uint32_t HAL_RCC_GetPCLK1Freq(void);
 uint32_t HAL_RCC_GetPCLK2Freq(void);

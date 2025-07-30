@@ -120,12 +120,15 @@
 #define RCC_MCO2_CLK_ENABLE()     __HAL_RCC_GPIOC_CLK_ENABLE()
 #define RCC_MCO2_GPIO_PORT        GPIOC
 #define RCC_MCO2_PIN              GPIO_PIN_9
+
+#define RCC_GET_MSI_FREQUENCY() (HAL_IS_BIT_SET(RCC->MSICFGR, RCC_MSICFGR_MSIFREQSEL) ? (MSI_VALUE << 2U) : MSI_VALUE)
 /**
   * @}
   */
 
 /* Private variables ---------------------------------------------------------*/
 /* Private function prototypes -----------------------------------------------*/
+static uint32_t RCC_GetSysClockFreq(uint32_t icx_source, uint32_t icx_divider);
 static HAL_StatusTypeDef RCC_PLL_Config(uint32_t PLLnumber, const RCC_PLLInitTypeDef *pPLLInit);
 static HAL_StatusTypeDef RCC_PLL_Enable(uint32_t PLLnumber);
 static uint32_t RCC_PLL_IsNewConfig(uint32_t PLLnumber, const RCC_PLLInitTypeDef *pPLLInit);
@@ -345,6 +348,8 @@ HAL_StatusTypeDef HAL_RCC_DeInit(void)
   *         first and then HSE On or HSE Bypass.
   * @note   This function does not protect the MCOxSEL, the PERSEL and the PPPSEL glitch-free muxes
   *         (Mux selection cannot be changed if selected input clock is inactive).
+  * @note   This function activates HSE but does not wait for the startup time defined in the datasheet.
+  *         This must be ensured by the application when the HSE is selected as PLL source.
   * @retval HAL status
   */
 HAL_StatusTypeDef HAL_RCC_OscConfig(const RCC_OscInitTypeDef  *pRCC_OscInitStruct)
@@ -1357,14 +1362,7 @@ uint32_t HAL_RCC_GetCpuClockFreq(void)
       break;
 
     case LL_RCC_CPU_CLKSOURCE_STATUS_MSI:
-      if (LL_RCC_MSI_GetFrequency() == LL_RCC_MSI_FREQ_4MHZ)
-      {
-        frequency = MSI_VALUE;
-      }
-      else
-      {
-        frequency = 16000000UL;
-      }
+      frequency = RCC_GET_MSI_FREQUENCY();
       break;
 
     case LL_RCC_CPU_CLKSOURCE_STATUS_HSE:
@@ -1434,71 +1432,89 @@ uint32_t HAL_RCC_GetCpuClockFreq(void)
   *         baud rate for the communication peripherals or configure other parameters.
   *
   * @note   Each time SYSCLK changes, this function must be called by the user application
-  *         to update the SYSCLK value. Otherwise, any configuration based on this function
+  *         to update the SYSCLK bus value. Otherwise, any configuration based on this function
   *         will be incorrect.
   *
   * @retval SYSCLK frequency
   */
 uint32_t HAL_RCC_GetSysClockFreq(void)
 {
-  uint32_t frequency = 0U;
-  uint32_t ic_divider;
+  return RCC_GetSysClockFreq(LL_RCC_IC2_GetSource(), LL_RCC_IC2_GetDivider());
+}
 
-  /* Get SYSCLK source -------------------------------------------------------*/
-  switch (LL_RCC_GetSysClkSource())
-  {
-    /* No check on Ready: Won't be selected by hardware if not */
-    case LL_RCC_SYS_CLKSOURCE_STATUS_HSI:
-      frequency = HSI_VALUE >> (LL_RCC_HSI_GetDivider() >> RCC_HSICFGR_HSIDIV_Pos);
-      break;
+/**
+  * @brief  Returns the NPU clock (sysc_ck) frequency
+  *
+  * @note   The NPU clock frequency computed by this function may be not the real frequency in the chip.
+  *         It is calculated based on the predefined constant and the selected clock source:
+  * @note     If SYSCLK source is HSI, function returns values based on HSI_VALUE(**)
+  * @note     If SYSCLK source is MSI, function returns values based on MSI_VALUE(*)
+  * @note     If SYSCLK source is HSE, function returns values based on HSE_VALUE(***)
+  * @note     If SYSCLK source is IC6, function returns values based on HSI_VALUE(*),
+  *           MSI_VALUE(**) or HSE_VALUE(***) multiplied/divided by the PLL factors.
+  * @note     (*) HSI_VALUE is a constant defined in stm32n6xx_hal_conf.h file (default value
+  *               64 MHz) but the real value may vary depending on the variations
+  *               in voltage and temperature.
+  * @note     (**) MSI_VALUE is a constant defined in stm32n6xx_hal_conf.h file (default value
+  *               4 MHz) but the real value may vary depending on the variations
+  *               in voltage and temperature.
+  * @note     (***) HSE_VALUE is a constant defined in stm32n6xx_hal_conf.h file (default value
+  *                25 MHz), user has to ensure that HSE_VALUE is same as the real
+  *                frequency of the crystal used. Otherwise, this function may
+  *                have wrong result.
+  *
+  * @note   The result of this function could be not correct when using fractional
+  *         value for HSE crystal.
+  *
+  * @note   This function can be used by the user application.
+  *
+  * @note   Each time SYSCLK changes, this function must be called by the user application
+  *         to update the NPU clock value. Otherwise, any configuration based on this function
+  *         will be incorrect.
+  *
+  * @retval NPU clock frequency
+  */
+uint32_t HAL_RCC_GetNPUClockFreq(void)
+{
+  return RCC_GetSysClockFreq(LL_RCC_IC6_GetSource(), LL_RCC_IC6_GetDivider());
+}
 
-    case LL_RCC_SYS_CLKSOURCE_STATUS_MSI:
-      if (LL_RCC_MSI_GetFrequency() == LL_RCC_MSI_FREQ_4MHZ)
-      {
-        frequency = MSI_VALUE;
-      }
-      else
-      {
-        frequency = 16000000UL;
-      }
-      break;
-
-    case LL_RCC_SYS_CLKSOURCE_STATUS_HSE:
-      frequency = HSE_VALUE;
-      break;
-
-    case LL_RCC_SYS_CLKSOURCE_STATUS_IC2_IC6_IC11:
-      ic_divider = LL_RCC_IC2_GetDivider();
-      switch (LL_RCC_IC2_GetSource())
-      {
-        case LL_RCC_ICCLKSOURCE_PLL1:
-          frequency = HAL_RCCEx_GetPLL1CLKFreq();
-          frequency = frequency / ic_divider;
-          break;
-        case LL_RCC_ICCLKSOURCE_PLL2:
-          frequency = HAL_RCCEx_GetPLL2CLKFreq();
-          frequency = frequency / ic_divider;
-          break;
-        case LL_RCC_ICCLKSOURCE_PLL3:
-          frequency = HAL_RCCEx_GetPLL3CLKFreq();
-          frequency = frequency / ic_divider;
-          break;
-        case LL_RCC_ICCLKSOURCE_PLL4:
-          frequency = HAL_RCCEx_GetPLL4CLKFreq();
-          frequency = frequency / ic_divider;
-          break;
-        default:
-          /* Unexpected case */
-          break;
-      }
-      break;
-
-    default:
-      /* Unexpected case */
-      break;
-  }
-
-  return frequency;
+/**
+  * @brief  Returns the NPU RAMS clock (sysd_ck) frequency
+  *
+  * @note   The NPU RAMS rams clock frequency computed by this function may be not the real frequency in the chip.
+  *         It is calculated based on the predefined constant and the selected clock source:
+  * @note     If SYSCLK source is HSI, function returns values based on HSI_VALUE(**)
+  * @note     If SYSCLK source is MSI, function returns values based on MSI_VALUE(*)
+  * @note     If SYSCLK source is HSE, function returns values based on HSE_VALUE(***)
+  * @note     If SYSCLK source is IC11, function returns values based on HSI_VALUE(*),
+  *           MSI_VALUE(**) or HSE_VALUE(***) multiplied/divided by the PLL factors.
+  * @note     (*) HSI_VALUE is a constant defined in stm32n6xx_hal_conf.h file (default value
+  *               64 MHz) but the real value may vary depending on the variations
+  *               in voltage and temperature.
+  * @note     (**) MSI_VALUE is a constant defined in stm32n6xx_hal_conf.h file (default value
+  *               4 MHz) but the real value may vary depending on the variations
+  *               in voltage and temperature.
+  * @note     (***) HSE_VALUE is a constant defined in stm32n6xx_hal_conf.h file (default value
+  *                25 MHz), user has to ensure that HSE_VALUE is same as the real
+  *                frequency of the crystal used. Otherwise, this function may
+  *                have wrong result.
+  *
+  * @note   The result of this function could be not correct when using fractional
+  *         value for HSE crystal.
+  *
+  * @note   This function can be used by the user application to compute the
+  *         baud rate for the communication peripherals or configure other parameters.
+  *
+  * @note   Each time SYSCLK changes, this function must be called by the user application
+  *         to update the NPU RAMS clock value. Otherwise, any configuration based on this function
+  *         will be incorrect.
+  *
+  * @retval NPU RAMS clock frequency
+  */
+uint32_t HAL_RCC_GetNPURAMSClockFreq(void)
+{
+  return RCC_GetSysClockFreq(LL_RCC_IC11_GetSource(), LL_RCC_IC11_GetDivider());
 }
 
 /**
@@ -2012,6 +2028,66 @@ HAL_StatusTypeDef HAL_RCC_GetConfigAttributes(uint32_t Item, uint32_t *pAttribut
 /** @defgroup RCC_Private_functions RCC Private Functions
   * @{
   */
+/**
+  * @brief  Returns the SYSCLK frequency divided, if icx is selected, by icx_divider.
+  * @param  icx_source  The intermediate clock source
+  * @param  icx_divider The intermediate clock divider
+  *
+  * @retval SYSCLK frequency
+  */
+static uint32_t RCC_GetSysClockFreq(uint32_t icx_source, uint32_t icx_divider)
+{
+  uint32_t frequency = 0U;
+
+  /* Get SYSCLK source -------------------------------------------------------*/
+  switch (LL_RCC_GetSysClkSource())
+  {
+    /* No check on Ready: Won't be selected by hardware if not */
+    case LL_RCC_SYS_CLKSOURCE_STATUS_HSI:
+      frequency = HSI_VALUE >> (LL_RCC_HSI_GetDivider() >> RCC_HSICFGR_HSIDIV_Pos);
+      break;
+
+    case LL_RCC_SYS_CLKSOURCE_STATUS_MSI:
+      frequency = RCC_GET_MSI_FREQUENCY();
+      break;
+
+    case LL_RCC_SYS_CLKSOURCE_STATUS_HSE:
+      frequency = HSE_VALUE;
+      break;
+
+    case LL_RCC_SYS_CLKSOURCE_STATUS_IC2_IC6_IC11:
+      switch (icx_source)
+      {
+        case LL_RCC_ICCLKSOURCE_PLL1:
+          frequency = HAL_RCCEx_GetPLL1CLKFreq();
+          frequency = frequency / icx_divider;
+          break;
+        case LL_RCC_ICCLKSOURCE_PLL2:
+          frequency = HAL_RCCEx_GetPLL2CLKFreq();
+          frequency = frequency / icx_divider;
+          break;
+        case LL_RCC_ICCLKSOURCE_PLL3:
+          frequency = HAL_RCCEx_GetPLL3CLKFreq();
+          frequency = frequency / icx_divider;
+          break;
+        case LL_RCC_ICCLKSOURCE_PLL4:
+          frequency = HAL_RCCEx_GetPLL4CLKFreq();
+          frequency = frequency / icx_divider;
+          break;
+        default:
+          /* Unexpected case */
+          break;
+      }
+      break;
+
+    default:
+      /* Unexpected case */
+      break;
+  }
+
+  return frequency;
+}
+
 /**
   * @brief  Configure the requested PLL
   * @param  PLLnumber PLL number to configure

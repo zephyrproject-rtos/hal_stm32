@@ -113,6 +113,7 @@ extern "C" {
 #define GPIO_AF5_SPI4          ((uint8_t)0x05)  /*!< SPI4 Alternate Function mapping */
 #define GPIO_AF5_SPI5          ((uint8_t)0x05)  /*!< SPI5 Alternate Function mapping */
 #define GPIO_AF5_SPI6          ((uint8_t)0x05)  /*!< SPI6 Alternate Function mapping */
+#define GPIO_AF5_SYS           ((uint8_t)0x05)  /*!< AUDIOCLK Alternate Function mapping */
 
 /**
   * @brief   AF 6 selection

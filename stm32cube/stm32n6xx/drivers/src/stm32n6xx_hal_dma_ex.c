@@ -3546,7 +3546,7 @@ HAL_StatusTypeDef HAL_DMAEx_Suspend(DMA_HandleTypeDef *const hdma)
 }
 
 /**
-  * @brief  Suspend any ongoing DMA channel transfer in polling mode (Non-blocking mode).
+  * @brief  Suspend any ongoing DMA channel transfer in interrupt mode (Non-blocking mode).
   * @param  hdma : Pointer to a DMA_HandleTypeDef structure that contains the configuration information for the
   *                specified DMA Channel.
   * @retval HAL status.

@@ -770,8 +770,8 @@ typedef struct
 #define NODE_CDAR_DEFAULT_OFFSET        (0x0004U) /* CDAR default offset                   */
 #define NODE_CTR3_DEFAULT_OFFSET        (0x0005U) /* CTR3 2D addressing default offset     */
 #define NODE_CBR2_DEFAULT_OFFSET        (0x0006U) /* CBR2 2D addressing default offset     */
-#define NODE_CLLR_2D_DEFAULT_OFFSET     (0x0007U) /* CLLR 2D addressing default offset     */
-#define NODE_CLLR_LINEAR_DEFAULT_OFFSET (0x0005U) /* CLLR linear addressing default offset */
+#define NODE_CLLR_2D_DEFAULT_OFFSET     (0x007UL) /* CLLR 2D addressing default offset     */
+#define NODE_CLLR_LINEAR_DEFAULT_OFFSET (0x005UL) /* CLLR linear addressing default offset */
 
 #define DMA_BURST_ADDR_OFFSET_MIN       (-8192L)  /* DMA burst minimum address offset      */
 #define DMA_BURST_ADDR_OFFSET_MAX       (8192L)   /* DMA burst maximum address offset      */

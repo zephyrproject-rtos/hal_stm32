@@ -295,7 +295,7 @@ ErrorStatus LL_PLL_ConfigSystemClock_HSI(const LL_UTILS_PLLInitTypeDef *pUTILS_P
       UTILS_ConfigureIC(pUTILS_ICInitStruct);
 
       /* Enable PLL and switch CPU/system clock to PLL */
-      status = UTILS_EnablePLL1AndSwitchSystem(pllfreq, pUTILS_ClkInitStruct);
+      status = UTILS_EnablePLL1AndSwitchSystem(pllfreq / pUTILS_ICInitStruct->IC1Divider, pUTILS_ClkInitStruct);
     }
     else
     {
@@ -380,7 +380,7 @@ ErrorStatus LL_PLL_ConfigSystemClock_MSI(const LL_UTILS_PLLInitTypeDef *pUTILS_P
       UTILS_ConfigureIC(pUTILS_ICInitStruct);
 
       /* Enable PLL and switch system clock to PLL */
-      status = UTILS_EnablePLL1AndSwitchSystem(pllfreq, pUTILS_ClkInitStruct);
+      status = UTILS_EnablePLL1AndSwitchSystem(pllfreq / pUTILS_ICInitStruct->IC1Divider, pUTILS_ClkInitStruct);
     }
     else
     {
@@ -484,7 +484,7 @@ ErrorStatus LL_PLL_ConfigSystemClock_HSE(uint32_t HSEFrequency, uint32_t HSEBypa
       UTILS_ConfigureIC(pUTILS_ICInitStruct);
 
       /* Enable PLL and switch system clock to PLL */
-      status = UTILS_EnablePLL1AndSwitchSystem(pllfreq, pUTILS_ClkInitStruct);
+      status = UTILS_EnablePLL1AndSwitchSystem(pllfreq / pUTILS_ICInitStruct->IC1Divider, pUTILS_ClkInitStruct);
     }
     else
     {

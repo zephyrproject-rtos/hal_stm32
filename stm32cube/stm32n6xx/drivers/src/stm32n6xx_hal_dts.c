@@ -279,7 +279,7 @@ HAL_StatusTypeDef HAL_DTS_Init(DTS_HandleTypeDef *hdts)
       /* So CLK_SYNTH_HI and CLK_SYNTH_LO have to be set to 0 on TSCCLKSYNTHR register */
       /* in order to have TS clock frequency at 4MHz. */
       hdts->Instance->TSCCLKSYNTHR = (DTS_TSCCLKSYNTHR_CLK_SYNTH_EN |
-                                      (1U << DTS_TSCCLKSYNTHR_CLK_SYNTH_HOLD_Pos));
+                                      (1UL << DTS_TSCCLKSYNTHR_CLK_SYNTH_HOLD_Pos));
 
       /* Program typical power-up delay for all sensors */
       status = DTS_ProgramSdaRegister(hdts, DTS_SENSOR_ALL, DTS_SDATS_TIMERR_REG, DTS_SDA_POWER_UP_DELAY);

@@ -51,14 +51,16 @@ typedef struct
                                        This parameter can be a value of @ref CORTEX_MPU_Region_Enable                 */
   uint8_t  Number;                /*!< Specifies the number of the region to protect.
                                        This parameter can be a value of @ref CORTEX_MPU_Region_Number                 */
-  uint32_t BaseAddress;           /*!< Specifies the base address of the region to protect.                           */
-  uint32_t LimitAddress;          /*!< Specifies the limit address of the region to protect.                          */
   uint8_t  AttributesIndex;       /*!< Specifies the memory attributes index.
                                        This parameter can be a value of @ref CORTEX_MPU_Attributes_Number             */
+  uint32_t BaseAddress;           /*!< Specifies the base address of the region to protect.                           */
+  uint32_t LimitAddress;          /*!< Specifies the limit address of the region to protect.                          */
   uint8_t  AccessPermission;      /*!< Specifies the region access permission type.
                                        This parameter can be a value of @ref CORTEX_MPU_Region_Permission_Attributes  */
   uint8_t  DisableExec;           /*!< Specifies the instruction access status.
                                        This parameter can be a value of @ref CORTEX_MPU_Instruction_Access            */
+  uint8_t  DisablePrivExec;       /*!< Specifies if privileged software can execute instructions from this region.
+                                       This parameter can be a value of @ref CORTEX_MPU_Priv_Instruction_Access       */
   uint8_t  IsShareable;           /*!< Specifies the shareability status of the protected region.
                                        This parameter can be a value of @ref CORTEX_MPU_Access_Shareable              */
 } MPU_Region_InitTypeDef;
@@ -75,7 +77,7 @@ typedef struct
                                        This parameter can be a value of @ref CORTEX_MPU_Attributes_Number             */
 
   uint8_t  Attributes;            /*!< Specifies the memory attributes vue.
-                                       This parameter must be a number between Min_Data = 0x0 and Max_Data = 0xFFFF   */
+                                       This parameter can be a value of @ref CORTEX_MPU_Attributes                    */
 
 } MPU_Attributes_InitTypeDef;
 /**
@@ -144,6 +146,15 @@ typedef struct
   */
 #define  MPU_INSTRUCTION_ACCESS_ENABLE   0U
 #define  MPU_INSTRUCTION_ACCESS_DISABLE  1U
+/**
+  * @}
+  */
+
+/** @defgroup CORTEX_MPU_Priv_Instruction_Access CORTEX MPU Privileged Instruction Access
+  * @{
+  */
+#define  MPU_PRIV_INSTRUCTION_ACCESS_ENABLE   0U
+#define  MPU_PRIV_INSTRUCTION_ACCESS_DISABLE  1U
 /**
   * @}
   */
@@ -351,6 +362,9 @@ void HAL_MPU_ConfigMemoryAttributes_NS(const MPU_Attributes_InitTypeDef *pMPU_At
 
 #define IS_MPU_INSTRUCTION_ACCESS(__STATE__)      (((__STATE__) == MPU_INSTRUCTION_ACCESS_ENABLE) || \
                                                    ((__STATE__) == MPU_INSTRUCTION_ACCESS_DISABLE))
+
+#define IS_MPU_PRIV_INSTRUCTION_ACCESS(__STATE__) (((__STATE__) == MPU_PRIV_INSTRUCTION_ACCESS_ENABLE) || \
+                                                   ((__STATE__) == MPU_PRIV_INSTRUCTION_ACCESS_DISABLE))
 
 #define IS_MPU_ACCESS_SHAREABLE(__STATE__)        (((__STATE__) == MPU_ACCESS_OUTER_SHAREABLE) || \
                                                    ((__STATE__) == MPU_ACCESS_INNER_SHAREABLE) || \

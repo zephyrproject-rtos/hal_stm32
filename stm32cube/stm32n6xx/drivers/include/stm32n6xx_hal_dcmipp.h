@@ -194,13 +194,13 @@ typedef struct
 typedef struct
 {
   uint32_t VStart;   /*!< Configures the DCMIPP Crop Vertical Start
-                          This parameter can be one value between 0 and 4095          */
+                          This parameter can be one value between 0 and 4094          */
   uint32_t HStart;   /*!< Configures the DCMIPP Crop Horizontal Start
-                          This parameter can be one value between 0 and 4095          */
+                          This parameter can be one value between 0 and 4094          */
   uint32_t VSize;    /*!< Configures the DCMIPP Crop Vertical Size
-                          This parameter can be one value between 0 and 4095          */
+                          This parameter can be one value between 0 and 4094          */
   uint32_t HSize;    /*!< Configures the DCMIPP Crop Horizontal Size
-                          This parameter can be one value between 1 and 4095          */
+                          This parameter can be one value between 1 and 4094          */
   uint32_t PipeArea; /*!< Configures the DCMIPP Crop Area for the pipe0
                           This parameter can be one value of @ref DCMIPP_Crop_Area    */
 } DCMIPP_CropConfTypeDef;
@@ -208,13 +208,13 @@ typedef struct
 typedef struct
 {
   uint32_t VStart;    /*!< Configures the DCMIPP Statistic Extraction Vertical Start
-                           This parameter can be one value between 0 and 4095                     */
+                           This parameter can be one value between 0 and 4094                     */
   uint32_t HStart;    /*!< Configures the DCMIPP Statistic Extraction Horizontal Start
-                           This parameter can be one value between 0 and 4095                     */
+                           This parameter can be one value between 0 and 4094                     */
   uint32_t VSize;     /*!< Configures the DCMIPP Statistic Extraction Vertical Size
-                           This parameter can be one value between 0 and 4095                     */
+                           This parameter can be one value between 0 and 4094                     */
   uint32_t HSize;     /*!< Configures the DCMIPP Statistic Extraction Horizontal Size
-                           This parameter can be one value between 0 and 4095                     */
+                           This parameter can be one value between 0 and 4094                     */
 } DCMIPP_StatisticExtractionAreaConfTypeDef;
 
 typedef struct
@@ -321,23 +321,23 @@ typedef struct
 typedef struct
 {
   uint32_t VStart;           /*!< Configures the DCMIPP Region Of Interest Vertical Start
-                                  This parameter can be one value between 0 and 4095                      */
+                                  This parameter can be one value between 0 and 4094                      */
   uint32_t HStart;           /*!< Configures the DCMIPP Region Of Interest Horizontal Start
-                                  This parameter can be one value between 0 and 4095                      */
+                                  This parameter can be one value between 0 and 4094                      */
   uint32_t VSize;            /*!< Configures the DCMIPP Region Of Interest Vertical Size
-                                  This parameter can be one value between 0 and 4095                      */
+                                  This parameter can be one value between 0 and 4094                      */
   uint32_t HSize;            /*!< Configures the DCMIPP Region Of Interest Horizontal Size
-                                  This parameter can be one value between 0 and 4095                      */
+                                  This parameter can be one value between 0 and 4094                      */
   uint32_t LineSizeWidth;    /*!< Configures the DCMIPP Region Of Interest Line Size Width
                                   This parameter can be a value from @ref DCMIPP_Region_Of_Interest_Line_Width */
   uint32_t RegionOfInterest; /*!< Configures the DCMIPP Region Of Interest
                                   This parameter can be a value from @ref DCMIPP_Region_Of_Interest       */
   uint8_t  ColorLineRed;     /*!< Configures the DCMIPP Region Of Interest Line Color : Red Component
-                                  This parameter can be one value between 0 and 4095                      */
+                                  This parameter can be one value between 0 and 3                      */
   uint8_t  ColorLineGreen;   /*!< Configures the DCMIPP Region Of Interest Line Color : Green Component
-                                  This parameter can be one value between 0 and 4095                      */
+                                  This parameter can be one value between 0 and 3                      */
   uint8_t  ColorLineBlue;    /*!< Configures the DCMIPP Region Of Interest Line Color : Blue Component
-                                  This parameter can be one value between 0 and 4095                      */
+                                  This parameter can be one value between 0 and 3                      */
 } DCMIPP_RegionOfInterestConfTypeDef;
 
 /**
@@ -359,17 +359,17 @@ typedef struct
 typedef struct
 {
   uint32_t VSize;       /*!< Configures the DCMIPP Downsize Vertical Size
-                             This parameter can be one value between 0 and 4095     */
+                             This parameter can be one value between 0 and 4094     */
   uint32_t HSize;       /*!< Configures the DCMIPP Downsize Horizontal Size
-                             This parameter can be one value between 0 and 4095     */
+                             This parameter can be one value between 0 and 4094     */
   uint32_t VRatio;      /*!< Configures the DCMIPP Downsize Vertical Ratio
-                             This parameter can be one value between 0 and 4095     */
+                             This parameter can be one value between 0 and 4094     */
   uint32_t HRatio;      /*!< Configures the DCMIPP Downsize Horizontal Ratio
-                             This parameter can be one value between 0 and 4095     */
+                             This parameter can be one value between 0 and 4094     */
   uint32_t VDivFactor;  /*!< Configures the DCMIPP Downsize Vertical Division Factor
-                             This parameter can be one value between 0 and 4095     */
+                             This parameter can be one value between 0 and 4094     */
   uint32_t HDivFactor;  /*!< Configures the DCMIPP Downsize Horizontal Division Factor
-                             This parameter can be one value between 0 and 4095     */
+                             This parameter can be one value between 0 and 4094     */
 } DCMIPP_DownsizeTypeDef;
 
 typedef struct
@@ -667,15 +667,15 @@ typedef void (*pDCMIPP_PIPE_CallbackTypeDef)(DCMIPP_HandleTypeDef *hdcmipp, uint
 /** @defgroup DCMIPP_DataTypeMode DCMIPP DCMIPP Data Type Mode
   * @{
   */
-#define DCMIPP_DTMODE_DTIDA                (0U << DCMIPP_P0FSCR_DTMODE_Pos) /*!< Only flow DTIDA from the selected VC
+#define DCMIPP_DTMODE_DTIDA                (0UL << DCMIPP_P0FSCR_DTMODE_Pos) /*!< Only flow DTIDA from the selected VC
                                                                                  is forwarded in the pipe */
-#define DCMIPP_DTMODE_DTIDA_OR_DTIDB       (1U << DCMIPP_P0FSCR_DTMODE_Pos) /*!< Flows DTIDA and/or DTIDB from the
+#define DCMIPP_DTMODE_DTIDA_OR_DTIDB       (1UL << DCMIPP_P0FSCR_DTMODE_Pos) /*!< Flows DTIDA and/or DTIDB from the
                                                                                 selected VC are forwarded in the pipe */
-#define DCMIPP_DTMODE_ALL_EXCEPT_DTIA_DTIB (2U << DCMIPP_P0FSCR_DTMODE_Pos) /*!< All data types from the selected VC
+#define DCMIPP_DTMODE_ALL_EXCEPT_DTIA_DTIB (2UL << DCMIPP_P0FSCR_DTMODE_Pos) /*!< All data types from the selected VC
                                                                                 (except the DTIDA or DTIDB) are
                                                                                  forwarded in the pipe,
                                                                                  only for Pipe0 */
-#define DCMIPP_DTMODE_ALL                  (3U << DCMIPP_P0FSCR_DTMODE_Pos) /*!< All data types of the selected virtual
+#define DCMIPP_DTMODE_ALL                  (3UL << DCMIPP_P0FSCR_DTMODE_Pos) /*!< All data types of the selected virtual
                                                                                  channel VC are forwarded in the pipe,
                                                                                  only for Pipe0 */
 /**
@@ -728,8 +728,8 @@ typedef void (*pDCMIPP_PIPE_CallbackTypeDef)(DCMIPP_HandleTypeDef *hdcmipp, uint
 /** @defgroup DCMIPP_CSI_Number_Of_Lanes DCMIPP CSI Number Of Lanes
   * @{
   */
-#define DCMIPP_CSI_ONE_DATA_LANE  (1U << CSI_LMCFGR_LANENB_Pos) /*!< DCMIPP CSI One Data Lane */
-#define DCMIPP_CSI_TWO_DATA_LANES (2U << CSI_LMCFGR_LANENB_Pos) /*!< DCMIPP CSI 2 Data Lanes  */
+#define DCMIPP_CSI_ONE_DATA_LANE  (1UL << CSI_LMCFGR_LANENB_Pos) /*!< DCMIPP CSI One Data Lane */
+#define DCMIPP_CSI_TWO_DATA_LANES (2UL << CSI_LMCFGR_LANENB_Pos) /*!< DCMIPP CSI 2 Data Lanes  */
 /**
   * @}
   */
@@ -747,8 +747,8 @@ typedef void (*pDCMIPP_PIPE_CallbackTypeDef)(DCMIPP_HandleTypeDef *hdcmipp, uint
 /** @defgroup DCMIPP_CSI_DataLane DCMIPP CSI Data Lane
   * @{
   */
-#define DCMIPP_CSI_DATA_LANE0   1U /*!< DCMIPP CSI Data Lane 0 */
-#define DCMIPP_CSI_DATA_LANE1   2U /*!< DCMIPP CSI Data Lane 1 */
+#define DCMIPP_CSI_DATA_LANE0   1UL /*!< DCMIPP CSI Data Lane 0 */
+#define DCMIPP_CSI_DATA_LANE1   2UL /*!< DCMIPP CSI Data Lane 1 */
 /**
   * @}
   */
@@ -877,18 +877,18 @@ typedef void (*pDCMIPP_PIPE_CallbackTypeDef)(DCMIPP_HandleTypeDef *hdcmipp, uint
   * @{
   */
 #define  DCMIPP_FORMAT_BYTE             0U                               /*!< DCMIPP Format BYTE    */
-#define  DCMIPP_FORMAT_YUV422          (0x1EU << DCMIPP_PRCR_FORMAT_Pos) /*!< DCMIPP Format YUV422  */
-#define  DCMIPP_FORMAT_RGB565          (0x22U << DCMIPP_PRCR_FORMAT_Pos) /*!< DCMIPP Format RGB565  */
-#define  DCMIPP_FORMAT_RGB666          (0x23U << DCMIPP_PRCR_FORMAT_Pos) /*!< DCMIPP Format RGB666  */
-#define  DCMIPP_FORMAT_RGB888          (0x24U << DCMIPP_PRCR_FORMAT_Pos) /*!< DCMIPP Format RGB888  */
-#define  DCMIPP_FORMAT_RAW8            (0x2AU << DCMIPP_PRCR_FORMAT_Pos) /*!< DCMIPP Format RAW8    */
-#define  DCMIPP_FORMAT_RAW10           (0x2BU << DCMIPP_PRCR_FORMAT_Pos) /*!< DCMIPP Format RAW10   */
-#define  DCMIPP_FORMAT_RAW12           (0x2CU << DCMIPP_PRCR_FORMAT_Pos) /*!< DCMIPP Format RAW12   */
-#define  DCMIPP_FORMAT_RAW14           (0x2DU << DCMIPP_PRCR_FORMAT_Pos) /*!< DCMIPP Format RAW14   */
-#define  DCMIPP_FORMAT_MONOCHROME_8B   (0x4AU << DCMIPP_PRCR_FORMAT_Pos) /*!< DCMIPP Format 8-bits  */
-#define  DCMIPP_FORMAT_MONOCHROME_10B  (0x4BU << DCMIPP_PRCR_FORMAT_Pos) /*!< DCMIPP Format 10-bits */
-#define  DCMIPP_FORMAT_MONOCHROME_12B  (0x4CU << DCMIPP_PRCR_FORMAT_Pos) /*!< DCMIPP Format 12-bits */
-#define  DCMIPP_FORMAT_MONOCHROME_14B  (0x4DU << DCMIPP_PRCR_FORMAT_Pos) /*!< DCMIPP Format 14-bits */
+#define  DCMIPP_FORMAT_YUV422          (0x1EUL << DCMIPP_PRCR_FORMAT_Pos) /*!< DCMIPP Format YUV422  */
+#define  DCMIPP_FORMAT_RGB565          (0x22UL << DCMIPP_PRCR_FORMAT_Pos) /*!< DCMIPP Format RGB565  */
+#define  DCMIPP_FORMAT_RGB666          (0x23UL << DCMIPP_PRCR_FORMAT_Pos) /*!< DCMIPP Format RGB666  */
+#define  DCMIPP_FORMAT_RGB888          (0x24UL << DCMIPP_PRCR_FORMAT_Pos) /*!< DCMIPP Format RGB888  */
+#define  DCMIPP_FORMAT_RAW8            (0x2AUL << DCMIPP_PRCR_FORMAT_Pos) /*!< DCMIPP Format RAW8    */
+#define  DCMIPP_FORMAT_RAW10           (0x2BUL << DCMIPP_PRCR_FORMAT_Pos) /*!< DCMIPP Format RAW10   */
+#define  DCMIPP_FORMAT_RAW12           (0x2CUL << DCMIPP_PRCR_FORMAT_Pos) /*!< DCMIPP Format RAW12   */
+#define  DCMIPP_FORMAT_RAW14           (0x2DUL << DCMIPP_PRCR_FORMAT_Pos) /*!< DCMIPP Format RAW14   */
+#define  DCMIPP_FORMAT_MONOCHROME_8B   (0x4AUL << DCMIPP_PRCR_FORMAT_Pos) /*!< DCMIPP Format 8-bits  */
+#define  DCMIPP_FORMAT_MONOCHROME_10B  (0x4BUL << DCMIPP_PRCR_FORMAT_Pos) /*!< DCMIPP Format 10-bits */
+#define  DCMIPP_FORMAT_MONOCHROME_12B  (0x4CUL << DCMIPP_PRCR_FORMAT_Pos) /*!< DCMIPP Format 12-bits */
+#define  DCMIPP_FORMAT_MONOCHROME_14B  (0x4DUL << DCMIPP_PRCR_FORMAT_Pos) /*!< DCMIPP Format 14-bits */
 /**
   * @}
   */
@@ -896,11 +896,11 @@ typedef void (*pDCMIPP_PIPE_CallbackTypeDef)(DCMIPP_HandleTypeDef *hdcmipp, uint
 /** @defgroup DCMIPP_Extended_Data_Mode  DCMIPP Extended Data Mode
   * @{
   */
-#define  DCMIPP_INTERFACE_8BITS   0U                         /*!< Interface captures 8bits on every pixel clock  */
-#define  DCMIPP_INTERFACE_10BITS (1U << DCMIPP_PRCR_EDM_Pos) /*!< Interface captures 10bits on every pixel clock */
-#define  DCMIPP_INTERFACE_12BITS (2U << DCMIPP_PRCR_EDM_Pos) /*!< Interface captures 12bits on every pixel clock */
-#define  DCMIPP_INTERFACE_14BITS (3U << DCMIPP_PRCR_EDM_Pos) /*!< Interface captures 14bits on every pixel clock */
-#define  DCMIPP_INTERFACE_16BITS (4U << DCMIPP_PRCR_EDM_Pos) /*!< Interface captures 16bits on every pixel clock */
+#define  DCMIPP_INTERFACE_8BITS   0UL                         /*!< Interface captures 8bits on every pixel clock  */
+#define  DCMIPP_INTERFACE_10BITS (1UL << DCMIPP_PRCR_EDM_Pos) /*!< Interface captures 10bits on every pixel clock */
+#define  DCMIPP_INTERFACE_12BITS (2UL << DCMIPP_PRCR_EDM_Pos) /*!< Interface captures 12bits on every pixel clock */
+#define  DCMIPP_INTERFACE_14BITS (3UL << DCMIPP_PRCR_EDM_Pos) /*!< Interface captures 14bits on every pixel clock */
+#define  DCMIPP_INTERFACE_16BITS (4UL << DCMIPP_PRCR_EDM_Pos) /*!< Interface captures 16bits on every pixel clock */
 /**
   * @}
   */
@@ -971,17 +971,17 @@ typedef void (*pDCMIPP_PIPE_CallbackTypeDef)(DCMIPP_HandleTypeDef *hdcmipp, uint
 /** @defgroup DCMIPP_Line_Select_Mode DCMIPP Line Select Mode
   * @{
   */
-#define DCMIPP_LSM_ALL          0U                              /*!< Interface captures all received lines */
-#define DCMIPP_LSM_ALTERNATE_2 (1U << DCMIPP_P0PPCR_LSM_Pos )   /*!< Interface captures one line out of two */
+#define DCMIPP_LSM_ALL          0UL                              /*!< Interface captures all received lines */
+#define DCMIPP_LSM_ALTERNATE_2 (1UL << DCMIPP_P0PPCR_LSM_Pos )   /*!< Interface captures one line out of two */
 /**
   * @}
   */
 /** @defgroup DCMIPP_Line_Start_Mode DCMIPP Line Start Mode
   * @{
   */
-#define DCMIPP_OELS_ODD         0U                              /*!< Interface captures first line from the frame start,
+#define DCMIPP_OELS_ODD         0UL                              /*!< Interface captures first line from the frame start,
                                                                      second one is dropped */
-#define DCMIPP_OELS_EVEN       (1U << DCMIPP_P0PPCR_OELS_Pos)   /*!< Interface captures second line from the frame
+#define DCMIPP_OELS_EVEN       (1UL << DCMIPP_P0PPCR_OELS_Pos)   /*!< Interface captures second line from the frame
                                                                      start, first one is dropped */
 /**
   * @}
@@ -996,19 +996,19 @@ typedef void (*pDCMIPP_PIPE_CallbackTypeDef)(DCMIPP_HandleTypeDef *hdcmipp, uint
 /** @defgroup DCMIPP_Byte_Select_Mode DCMIPP Byte Select Mode
   * @{
   */
-#define DCMIPP_BSM_ALL          0U                              /*!< Interface captures all received data */
-#define DCMIPP_BSM_DATA_OUT_2  (1U << DCMIPP_P0PPCR_BSM_Pos)    /*!< Interface captures 1 data out of 2   */
-#define DCMIPP_BSM_BYTE_OUT_4  (2U << DCMIPP_P0PPCR_BSM_Pos)    /*!< Interface captures 1 byte out of 4   */
-#define DCMIPP_BSM_2BYTE_OUT_4 (3U << DCMIPP_P0PPCR_BSM_Pos)    /*!< Interface captures 2 byte out of 4   */
+#define DCMIPP_BSM_ALL          0UL                              /*!< Interface captures all received data */
+#define DCMIPP_BSM_DATA_OUT_2  (1UL << DCMIPP_P0PPCR_BSM_Pos)    /*!< Interface captures 1 data out of 2   */
+#define DCMIPP_BSM_BYTE_OUT_4  (2UL << DCMIPP_P0PPCR_BSM_Pos)    /*!< Interface captures 1 byte out of 4   */
+#define DCMIPP_BSM_2BYTE_OUT_4 (3UL << DCMIPP_P0PPCR_BSM_Pos)    /*!< Interface captures 2 byte out of 4   */
 /**
   * @}
   */
 /** @defgroup DCMIPP_Byte_Start_Mode DCMIPP Byte Start Mode
   * @{
   */
-#define DCMIPP_OEBS_ODD        0U                              /*!< Interface captures first data (byte or double byte)
+#define DCMIPP_OEBS_ODD        0UL                              /*!< Interface captures first data (byte or double byte)
                                                                    from the frame/line start,second one being dropped */
-#define DCMIPP_OEBS_EVEN      (1U << DCMIPP_P0PPCR_OEBS_Pos)   /*!< Interface captures second data (byte or double byte)
+#define DCMIPP_OEBS_EVEN      (1UL << DCMIPP_P0PPCR_OEBS_Pos)   /*!< Interface captures second data (byte or double byte)
                                                                     from the frame/line start, first one is dropped   */
 /**
   * @}
@@ -1028,28 +1028,28 @@ typedef void (*pDCMIPP_PIPE_CallbackTypeDef)(DCMIPP_HandleTypeDef *hdcmipp, uint
 /** @defgroup DCMIPP_LineMult DCMIPP Line Mult
   * @{
   */
-#define  DCMIPP_MULTILINE_1_LINE      0U                                  /*!< Event after every 1   line   */
-#define  DCMIPP_MULTILINE_2_LINES    (1U << DCMIPP_P0PPCR_LINEMULT_Pos)   /*!< Event after every 2   lines  */
-#define  DCMIPP_MULTILINE_4_LINES    (2U << DCMIPP_P0PPCR_LINEMULT_Pos)   /*!< Event after every 4   lines  */
-#define  DCMIPP_MULTILINE_8_LINES    (3U << DCMIPP_P0PPCR_LINEMULT_Pos)   /*!< Event after every 8   lines  */
-#define  DCMIPP_MULTILINE_16_LINES   (4U << DCMIPP_P0PPCR_LINEMULT_Pos)   /*!< Event after every 16  lines  */
-#define  DCMIPP_MULTILINE_32_LINES   (5U << DCMIPP_P0PPCR_LINEMULT_Pos)   /*!< Event after every 32  lines  */
-#define  DCMIPP_MULTILINE_64_LINES   (6U << DCMIPP_P0PPCR_LINEMULT_Pos)   /*!< Event after every 64  lines  */
-#define  DCMIPP_MULTILINE_128_LINES  (7U << DCMIPP_P0PPCR_LINEMULT_Pos)   /*!< Event after every 128 lines  */
+#define  DCMIPP_MULTILINE_1_LINE      0UL                                  /*!< Event after every 1   line   */
+#define  DCMIPP_MULTILINE_2_LINES    (1UL << DCMIPP_P0PPCR_LINEMULT_Pos)   /*!< Event after every 2   lines  */
+#define  DCMIPP_MULTILINE_4_LINES    (2UL << DCMIPP_P0PPCR_LINEMULT_Pos)   /*!< Event after every 4   lines  */
+#define  DCMIPP_MULTILINE_8_LINES    (3UL << DCMIPP_P0PPCR_LINEMULT_Pos)   /*!< Event after every 8   lines  */
+#define  DCMIPP_MULTILINE_16_LINES   (4UL << DCMIPP_P0PPCR_LINEMULT_Pos)   /*!< Event after every 16  lines  */
+#define  DCMIPP_MULTILINE_32_LINES   (5UL << DCMIPP_P0PPCR_LINEMULT_Pos)   /*!< Event after every 32  lines  */
+#define  DCMIPP_MULTILINE_64_LINES   (6UL << DCMIPP_P0PPCR_LINEMULT_Pos)   /*!< Event after every 64  lines  */
+#define  DCMIPP_MULTILINE_128_LINES  (7UL << DCMIPP_P0PPCR_LINEMULT_Pos)   /*!< Event after every 128 lines  */
 /**
   * @}
   */
 /** @defgroup DCMIPP_LineWrapAddress DCMIPP line Wrap Address
   * @{
   */
-#define  DCMIPP_WRAP_ADDRESS_1_LINE     (0U << DCMIPP_P1PPCR_LMAWM_Pos)  /*!< Wraps address after 1   line   */
-#define  DCMIPP_WRAP_ADDRESS_2_LINES    (1U << DCMIPP_P1PPCR_LMAWM_Pos)  /*!< Wraps address after 2   lines  */
-#define  DCMIPP_WRAP_ADDRESS_4_LINES    (2U << DCMIPP_P1PPCR_LMAWM_Pos)  /*!< Wraps address after 4   lines  */
-#define  DCMIPP_WRAP_ADDRESS_8_LINES    (3U << DCMIPP_P1PPCR_LMAWM_Pos)  /*!< Wraps address after 8   lines  */
-#define  DCMIPP_WRAP_ADDRESS_16_LINES   (4U << DCMIPP_P1PPCR_LMAWM_Pos)  /*!< Wraps address after 16  lines  */
-#define  DCMIPP_WRAP_ADDRESS_32_LINES   (5U << DCMIPP_P1PPCR_LMAWM_Pos)  /*!< Wraps address after 32  lines  */
-#define  DCMIPP_WRAP_ADDRESS_64_LINES   (6U << DCMIPP_P1PPCR_LMAWM_Pos)  /*!< Wraps address after 64  lines  */
-#define  DCMIPP_WRAP_ADDRESS_128_LINES  (7U << DCMIPP_P1PPCR_LMAWM_Pos)  /*!< Wraps address after 128 lines  */
+#define  DCMIPP_WRAP_ADDRESS_1_LINE     (0UL << DCMIPP_P1PPCR_LMAWM_Pos)  /*!< Wraps address after 1   line   */
+#define  DCMIPP_WRAP_ADDRESS_2_LINES    (1UL << DCMIPP_P1PPCR_LMAWM_Pos)  /*!< Wraps address after 2   lines  */
+#define  DCMIPP_WRAP_ADDRESS_4_LINES    (2UL << DCMIPP_P1PPCR_LMAWM_Pos)  /*!< Wraps address after 4   lines  */
+#define  DCMIPP_WRAP_ADDRESS_8_LINES    (3UL << DCMIPP_P1PPCR_LMAWM_Pos)  /*!< Wraps address after 8   lines  */
+#define  DCMIPP_WRAP_ADDRESS_16_LINES   (4UL << DCMIPP_P1PPCR_LMAWM_Pos)  /*!< Wraps address after 16  lines  */
+#define  DCMIPP_WRAP_ADDRESS_32_LINES   (5UL << DCMIPP_P1PPCR_LMAWM_Pos)  /*!< Wraps address after 32  lines  */
+#define  DCMIPP_WRAP_ADDRESS_64_LINES   (6UL << DCMIPP_P1PPCR_LMAWM_Pos)  /*!< Wraps address after 64  lines  */
+#define  DCMIPP_WRAP_ADDRESS_128_LINES  (7UL << DCMIPP_P1PPCR_LMAWM_Pos)  /*!< Wraps address after 128 lines  */
 /**
   * @}
   */
@@ -1088,10 +1088,11 @@ typedef void (*pDCMIPP_PIPE_CallbackTypeDef)(DCMIPP_HandleTypeDef *hdcmipp, uint
 #define  DCMIPP_PIXEL_PACKER_FORMAT_MONO_Y8_G8_1    (4U << DCMIPP_P1PPCR_FORMAT_Pos)   /*!< Monochrome Y8 or G8      */
 #define  DCMIPP_PIXEL_PACKER_FORMAT_YUV444_1        (5U << DCMIPP_P1PPCR_FORMAT_Pos)   /*!< YUV444 1-buffer 32bpp
                                                                                             A=0xff)                  */
-#define  DCMIPP_PIXEL_PACKER_FORMAT_YUV422_1        (6U << DCMIPP_P1PPCR_FORMAT_Pos)   /*!< YUV422 1-buffer 16bpp    */
+#define  DCMIPP_PIXEL_PACKER_FORMAT_YUV422_1        (6U << DCMIPP_P1PPCR_FORMAT_Pos)   /*!< YUV422 1-buffer 16bpp YUYV*/
 #define  DCMIPP_PIXEL_PACKER_FORMAT_YUV422_2        (7U << DCMIPP_P1PPCR_FORMAT_Pos)   /*!< YUV422 2-buffer 16bpp    */
 #define  DCMIPP_PIXEL_PACKER_FORMAT_YUV420_2        (8U << DCMIPP_P1PPCR_FORMAT_Pos)   /*!< YUV420 2-buffer 12bpp    */
 #define  DCMIPP_PIXEL_PACKER_FORMAT_YUV420_3        (9U << DCMIPP_P1PPCR_FORMAT_Pos)   /*!< YUV420 3-buffer 12bpp    */
+#define  DCMIPP_PIXEL_PACKER_FORMAT_YUV422_1_UYVY   (0xAU << DCMIPP_P1PPCR_FORMAT_Pos) /*!< YUV422 1-buffer 16bpp UYVY*/
 /**
   * @}
   */
@@ -2207,7 +2208,8 @@ uint32_t HAL_DCMIPP_GetError(const DCMIPP_HandleTypeDef *hdcmipp);
                                                ((FORMAT) == DCMIPP_PIXEL_PACKER_FORMAT_YUV422_1)        ||\
                                                ((FORMAT) == DCMIPP_PIXEL_PACKER_FORMAT_YUV422_2)        ||\
                                                ((FORMAT) == DCMIPP_PIXEL_PACKER_FORMAT_YUV420_2)        ||\
-                                               ((FORMAT) == DCMIPP_PIXEL_PACKER_FORMAT_YUV420_3))
+                                               ((FORMAT) == DCMIPP_PIXEL_PACKER_FORMAT_YUV420_3)        ||\
+                                               ((FORMAT) == DCMIPP_PIXEL_PACKER_FORMAT_YUV422_1_UYVY))
 
 #define IS_DCMIPP_PIXEL_PIPE_PITCH(PITCH) ((((PITCH) & 0xFU) == 0U) && ((PITCH) <= 0x7FFFU))
 

@@ -206,6 +206,7 @@
 #define  USE_HAL_RTC_REGISTER_CALLBACKS       0U /* RTC register callback disabled       */
 #define  USE_HAL_SAI_REGISTER_CALLBACKS       0U /* SAI register callback disabled       */
 #define  USE_HAL_SD_REGISTER_CALLBACKS        0U /* SD register callback disabled        */
+#define  USE_HAL_SDIO_REGISTER_CALLBACKS      0U /* SDIO register callback disabled      */
 #define  USE_HAL_SDRAM_REGISTER_CALLBACKS     0U /* SDRAM register callback disabled     */
 #define  USE_HAL_SMARTCARD_REGISTER_CALLBACKS 0U /* SMARTCARD register callback disabled */
 #define  USE_HAL_SMBUS_REGISTER_CALLBACKS     0U /* SMBUS register callback disabled     */
@@ -229,6 +230,10 @@
 /* ################## SDMMC peripheral configuration ######################### */
 
 #define USE_SD_TRANSCEIVER            0U
+
+/* ################## SDIO peripheral configuration ########################## */
+#define USE_SDIO_TRANSCEIVER          1U
+#define SDIO_MAX_IO_NUMBER            7U /*!< SDIO device support maximum IO number */
 
 /* Includes ------------------------------------------------------------------*/
 /**
@@ -425,6 +430,10 @@
 #ifdef HAL_SD_MODULE_ENABLED
 #include "stm32n6xx_hal_sd.h"
 #endif /* HAL_SD_MODULE_ENABLED */
+
+#ifdef HAL_SDIO_MODULE_ENABLED
+#include "stm32n6xx_hal_sdio.h"
+#endif /* HAL_SDIO_MODULE_ENABLED */
 
 #ifdef HAL_SDRAM_MODULE_ENABLED
 #include "stm32n6xx_hal_sdram.h"

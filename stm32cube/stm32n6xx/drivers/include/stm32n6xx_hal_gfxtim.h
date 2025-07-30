@@ -523,18 +523,18 @@ typedef struct
 /** @defgroup GFXTIM_WatchdogClockSrc GFXTIM Watchdog clock source
   * @{
   */
-#define GFXTIM_WATCHDOG_CLK_SRC_LINE_CLK       (0U  <<  GFXTIM_WDGTCR_WDGCS_Pos) /*!< Line Clock */
-#define GFXTIM_WATCHDOG_CLK_SRC_FRAME_CLK      (1U  <<  GFXTIM_WDGTCR_WDGCS_Pos) /*!< Frame Clock */
-#define GFXTIM_WATCHDOG_CLK_SRC_HSYNC_RISING   (2U  <<  GFXTIM_WDGTCR_WDGCS_Pos) /*!< HSYNC rising edge */
-#define GFXTIM_WATCHDOG_CLK_SRC_HSYNC_FALLING  (3U  <<  GFXTIM_WDGTCR_WDGCS_Pos) /*!< HSYNC falling edge */
-#define GFXTIM_WATCHDOG_CLK_SRC_VSYNC_RISING   (4U  <<  GFXTIM_WDGTCR_WDGCS_Pos) /*!< VSYNC rising edge */
-#define GFXTIM_WATCHDOG_CLK_SRC_VSYNC_FALLING  (5U  <<  GFXTIM_WDGTCR_WDGCS_Pos) /*!< VSYNC falling edge */
-#define GFXTIM_WATCHDOG_CLK_SRC_TE_RISING      (6U  <<  GFXTIM_WDGTCR_WDGCS_Pos) /*!< Tearing Effect rising edge */
-#define GFXTIM_WATCHDOG_CLK_SRC_TE_FALLING     (7U  <<  GFXTIM_WDGTCR_WDGCS_Pos) /*!< Tearing Effect falling edge */
-#define GFXTIM_WATCHDOG_CLK_SRC_EVENT_1        (8U  <<  GFXTIM_WDGTCR_WDGCS_Pos) /*!< Event Generator 1 output */
-#define GFXTIM_WATCHDOG_CLK_SRC_EVENT_2        (9U  <<  GFXTIM_WDGTCR_WDGCS_Pos) /*!< Event Generator 2 output */
-#define GFXTIM_WATCHDOG_CLK_SRC_EVENT_3        (10U <<  GFXTIM_WDGTCR_WDGCS_Pos) /*!< Event Generator 3 output */
-#define GFXTIM_WATCHDOG_CLK_SRC_EVENT_4        (11U <<  GFXTIM_WDGTCR_WDGCS_Pos) /*!< Event Generator 4 output */
+#define GFXTIM_WATCHDOG_CLK_SRC_LINE_CLK       (0UL  <<  GFXTIM_WDGTCR_WDGCS_Pos) /*!< Line Clock */
+#define GFXTIM_WATCHDOG_CLK_SRC_FRAME_CLK      (1UL  <<  GFXTIM_WDGTCR_WDGCS_Pos) /*!< Frame Clock */
+#define GFXTIM_WATCHDOG_CLK_SRC_HSYNC_RISING   (2UL  <<  GFXTIM_WDGTCR_WDGCS_Pos) /*!< HSYNC rising edge */
+#define GFXTIM_WATCHDOG_CLK_SRC_HSYNC_FALLING  (3UL  <<  GFXTIM_WDGTCR_WDGCS_Pos) /*!< HSYNC falling edge */
+#define GFXTIM_WATCHDOG_CLK_SRC_VSYNC_RISING   (4UL  <<  GFXTIM_WDGTCR_WDGCS_Pos) /*!< VSYNC rising edge */
+#define GFXTIM_WATCHDOG_CLK_SRC_VSYNC_FALLING  (5UL  <<  GFXTIM_WDGTCR_WDGCS_Pos) /*!< VSYNC falling edge */
+#define GFXTIM_WATCHDOG_CLK_SRC_TE_RISING      (6UL  <<  GFXTIM_WDGTCR_WDGCS_Pos) /*!< Tearing Effect rising edge */
+#define GFXTIM_WATCHDOG_CLK_SRC_TE_FALLING     (7UL  <<  GFXTIM_WDGTCR_WDGCS_Pos) /*!< Tearing Effect falling edge */
+#define GFXTIM_WATCHDOG_CLK_SRC_EVENT_1        (8UL  <<  GFXTIM_WDGTCR_WDGCS_Pos) /*!< Event Generator 1 output */
+#define GFXTIM_WATCHDOG_CLK_SRC_EVENT_2        (9UL  <<  GFXTIM_WDGTCR_WDGCS_Pos) /*!< Event Generator 2 output */
+#define GFXTIM_WATCHDOG_CLK_SRC_EVENT_3        (10UL <<  GFXTIM_WDGTCR_WDGCS_Pos) /*!< Event Generator 3 output */
+#define GFXTIM_WATCHDOG_CLK_SRC_EVENT_4        (11UL <<  GFXTIM_WDGTCR_WDGCS_Pos) /*!< Event Generator 4 output */
 /**
   * @}
   */

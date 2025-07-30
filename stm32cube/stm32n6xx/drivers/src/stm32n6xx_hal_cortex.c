@@ -729,6 +729,7 @@ static void MPU_ConfigRegion(MPU_Type *MPUx, const MPU_Region_InitTypeDef *pMPU_
 
   /* Check the parameters */
   assert_param(IS_MPU_INSTRUCTION_ACCESS(pMPU_RegionInit->DisableExec));
+  assert_param(IS_MPU_PRIV_INSTRUCTION_ACCESS(pMPU_RegionInit->DisablePrivExec));
   assert_param(IS_MPU_REGION_PERMISSION_ATTRIBUTE(pMPU_RegionInit->AccessPermission));
   assert_param(IS_MPU_ACCESS_SHAREABLE(pMPU_RegionInit->IsShareable));
   assert_param(IS_MPU_ATTRIBUTES_NUMBER(pMPU_RegionInit->AttributesIndex));
@@ -739,6 +740,7 @@ static void MPU_ConfigRegion(MPU_Type *MPUx, const MPU_Region_InitTypeDef *pMPU_
                 ((uint32_t)pMPU_RegionInit->DisableExec      << MPU_RBAR_XN_Pos));
 
   MPUx->RLAR = (((uint32_t)pMPU_RegionInit->LimitAddress & 0xFFFFFFE0UL) |
+                ((uint32_t)pMPU_RegionInit->DisablePrivExec << MPU_RLAR_PXN_Pos) |
                 ((uint32_t)pMPU_RegionInit->AttributesIndex  << MPU_RLAR_AttrIndx_Pos) |
                 ((uint32_t)pMPU_RegionInit->Enable           << MPU_RLAR_EN_Pos));
 }
