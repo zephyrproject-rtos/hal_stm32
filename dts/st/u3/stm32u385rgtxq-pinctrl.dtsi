@@ -786,6 +786,14 @@
 				pinmux = <STM32_PINMUX('A', 9, AF13)>;
 			};
 
+			/omit-if-no-ref/ sai1_fs_a_pb9: sai1_fs_a_pb9 {
+				pinmux = <STM32_PINMUX('B', 9, AF13)>;
+			};
+
+			/omit-if-no-ref/ sai1_fs_a_pe4: sai1_fs_a_pe4 {
+				pinmux = <STM32_PINMUX('E', 4, AF13)>;
+			};
+
 			/omit-if-no-ref/ sai1_d1_pa10: sai1_d1_pa10 {
 				pinmux = <STM32_PINMUX('A', 10, AF3)>;
 			};
