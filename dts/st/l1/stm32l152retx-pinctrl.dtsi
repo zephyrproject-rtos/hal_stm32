@@ -298,6 +298,108 @@
 				pinmux = <STM32_PINMUX('H', 1, ANALOG)>;
 			};
 
+			/* COMP_IN */
+
+			/omit-if-no-ref/ comp1_inp_pa0: comp1_inp_pa0 {
+				pinmux = <STM32_PINMUX('A', 0, AF14)>;
+			};
+
+			/omit-if-no-ref/ comp1_inp_pa1: comp1_inp_pa1 {
+				pinmux = <STM32_PINMUX('A', 1, AF14)>;
+			};
+
+			/omit-if-no-ref/ comp1_inp_pa2: comp1_inp_pa2 {
+				pinmux = <STM32_PINMUX('A', 2, AF14)>;
+			};
+
+			/omit-if-no-ref/ comp1_inp_pa3: comp1_inp_pa3 {
+				pinmux = <STM32_PINMUX('A', 3, AF14)>;
+			};
+
+			/omit-if-no-ref/ comp1_inp_pa4: comp1_inp_pa4 {
+				pinmux = <STM32_PINMUX('A', 4, AF14)>;
+			};
+
+			/omit-if-no-ref/ comp1_inp_pa5: comp1_inp_pa5 {
+				pinmux = <STM32_PINMUX('A', 5, AF14)>;
+			};
+
+			/omit-if-no-ref/ comp1_inp_pa6: comp1_inp_pa6 {
+				pinmux = <STM32_PINMUX('A', 6, AF14)>;
+			};
+
+			/omit-if-no-ref/ comp1_inp_pa7: comp1_inp_pa7 {
+				pinmux = <STM32_PINMUX('A', 7, AF14)>;
+			};
+
+			/omit-if-no-ref/ comp1_inp_pb0: comp1_inp_pb0 {
+				pinmux = <STM32_PINMUX('B', 0, AF14)>;
+			};
+
+			/omit-if-no-ref/ comp1_inp_pb1: comp1_inp_pb1 {
+				pinmux = <STM32_PINMUX('B', 1, AF14)>;
+			};
+
+			/omit-if-no-ref/ comp1_inp_pb12: comp1_inp_pb12 {
+				pinmux = <STM32_PINMUX('B', 12, AF14)>;
+			};
+
+			/omit-if-no-ref/ comp1_inp_pb13: comp1_inp_pb13 {
+				pinmux = <STM32_PINMUX('B', 13, AF14)>;
+			};
+
+			/omit-if-no-ref/ comp1_inp_pb14: comp1_inp_pb14 {
+				pinmux = <STM32_PINMUX('B', 14, AF14)>;
+			};
+
+			/omit-if-no-ref/ comp1_inp_pb15: comp1_inp_pb15 {
+				pinmux = <STM32_PINMUX('B', 15, AF14)>;
+			};
+
+			/omit-if-no-ref/ comp1_inp_pc0: comp1_inp_pc0 {
+				pinmux = <STM32_PINMUX('C', 0, AF14)>;
+			};
+
+			/omit-if-no-ref/ comp1_inp_pc1: comp1_inp_pc1 {
+				pinmux = <STM32_PINMUX('C', 1, AF14)>;
+			};
+
+			/omit-if-no-ref/ comp1_inp_pc2: comp1_inp_pc2 {
+				pinmux = <STM32_PINMUX('C', 2, AF14)>;
+			};
+
+			/omit-if-no-ref/ comp1_inp_pc3: comp1_inp_pc3 {
+				pinmux = <STM32_PINMUX('C', 3, AF14)>;
+			};
+
+			/omit-if-no-ref/ comp1_inp_pc4: comp1_inp_pc4 {
+				pinmux = <STM32_PINMUX('C', 4, AF14)>;
+			};
+
+			/omit-if-no-ref/ comp1_inp_pc5: comp1_inp_pc5 {
+				pinmux = <STM32_PINMUX('C', 5, AF14)>;
+			};
+
+			/omit-if-no-ref/ comp2_inm_pb3: comp2_inm_pb3 {
+				pinmux = <STM32_PINMUX('B', 3, AF14)>;
+			};
+
+			/omit-if-no-ref/ comp2_inp_pb4: comp2_inp_pb4 {
+				pinmux = <STM32_PINMUX('B', 4, AF14)>;
+			};
+
+			/omit-if-no-ref/ comp2_inp_pb5: comp2_inp_pb5 {
+				pinmux = <STM32_PINMUX('B', 5, AF14)>;
+			};
+
+			/omit-if-no-ref/ comp2_inp_pb6: comp2_inp_pb6 {
+				pinmux = <STM32_PINMUX('B', 6, AF14)>;
+			};
+
+			/omit-if-no-ref/ comp2_inp_pb7: comp2_inp_pb7 {
+				pinmux = <STM32_PINMUX('B', 7, AF14)>;
+			};
+
 			/* DAC_OUT */
 
 			/omit-if-no-ref/ dac_out1_pa4: dac_out1_pa4 {
