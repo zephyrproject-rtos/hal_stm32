@@ -170,6 +170,42 @@
 				pinmux = <STM32_PINMUX('H', 3, ANALOG)>;
 			};
 
+			/* COMP_IN */
+
+			/omit-if-no-ref/ comp1_inm_pa1: comp1_inm_pa1 {
+				pinmux = <STM32_PINMUX('A', 1, ANALOG)>;
+			};
+
+			/omit-if-no-ref/ comp1_inp_pa2: comp1_inp_pa2 {
+				pinmux = <STM32_PINMUX('A', 2, ANALOG)>;
+			};
+
+			/omit-if-no-ref/ comp2_inp_pa0: comp2_inp_pa0 {
+				pinmux = <STM32_PINMUX('A', 0, ANALOG)>;
+			};
+
+			/omit-if-no-ref/ comp2_inm_pb9: comp2_inm_pb9 {
+				pinmux = <STM32_PINMUX('B', 9, ANALOG)>;
+			};
+
+			/* COMP_OUT */
+
+			/omit-if-no-ref/ comp1_out_pa7: comp1_out_pa7 {
+				pinmux = <STM32_PINMUX('A', 7, AF12)>;
+			};
+
+			/omit-if-no-ref/ comp1_out_pb8: comp1_out_pb8 {
+				pinmux = <STM32_PINMUX('B', 8, AF12)>;
+			};
+
+			/omit-if-no-ref/ comp2_out_pa12: comp2_out_pa12 {
+				pinmux = <STM32_PINMUX('A', 12, AF12)>;
+			};
+
+			/omit-if-no-ref/ comp2_out_pa14: comp2_out_pa14 {
+				pinmux = <STM32_PINMUX('A', 14, AF12)>;
+			};
+
 			/* I2C_SCL */
 
 			/omit-if-no-ref/ i2c1_scl_pa15: i2c1_scl_pa15 {

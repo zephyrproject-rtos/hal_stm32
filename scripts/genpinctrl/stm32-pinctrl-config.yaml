@@ -52,6 +52,12 @@
 - name: CAN_TX
   match: "^CAN\\d*_TX$"
 
+- name: COMP_IN
+  match: "^COMP\\d+_IN[MP]$"
+
+- name: COMP_OUT
+  match: "^COMP\\d+_OUT$"
+
 - name: DAC_OUT
   match: "^DAC(?:\\d+)?_OUT\\d+$"
 
