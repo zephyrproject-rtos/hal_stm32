@@ -47,4 +47,13 @@ Patch List:
     Impacted files:
      drivers/include/Legacy/stm32_hal_legacy.h
 
+   *Allow usage of HAL_DCMIPP_PIPE_SetConfig when DCMIPP is in READY state
+     Allow performing PIPE configuration when the DCMIPP device is not only
+     in RESET and ERROR states but also in READY state. This allow to
+     reconfigure a DCMIPP pipe between 2 use-cases without having to
+     call HAL_DCMIPP_DeInit / HAL_DCMIPP_Init.
+     Impacted file:
+      stm32cube/stm32mp13xx/drivers/src/stm32mp13xx_hal_dcmipp.c
+     Internal reference: 215688
+
    See release_note.html from STM32Cube
