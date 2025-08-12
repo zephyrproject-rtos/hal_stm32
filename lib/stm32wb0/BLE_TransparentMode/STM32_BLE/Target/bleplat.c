@@ -233,11 +233,6 @@ void BLEPLAT_StopTimer(BLEPLAT_TimerHandleTypeDef *TimerHandle)
   HAL_RADIO_TIMER_StopVirtualTimer((VTIMER_HandleType*)TimerHandle);
 }
 
-uint8_t BLEPLAT_SetRadioTimerValue(uint32_t Time, uint8_t EventType, uint8_t CalReq)
-{
-  return HAL_RADIO_TIMER_SetRadioTimerValue(Time, EventType, CalReq);
-}
-
 uint8_t BLEPLAT_ClearRadioTimerValue(void)
 {
   return HAL_RADIO_TIMER_ClearRadioTimerValue();
