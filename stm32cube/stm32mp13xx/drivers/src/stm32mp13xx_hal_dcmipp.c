@@ -484,7 +484,8 @@ HAL_StatusTypeDef HAL_DCMIPP_PIPE_Config(DCMIPP_HandleTypeDef *phdcmipp, uint32_
 
   if (phdcmipp->State == HAL_DCMIPP_STATE_READY)
   {
-    if ((pipe_state == HAL_DCMIPP_PIPE_STATE_RESET) || \
+    if ((pipe_state == HAL_DCMIPP_PIPE_STATE_READY) ||
+	(pipe_state == HAL_DCMIPP_PIPE_STATE_RESET) ||
         (pipe_state == HAL_DCMIPP_PIPE_STATE_ERROR))
     {
       /* Update the DCMIPP PIPE state */

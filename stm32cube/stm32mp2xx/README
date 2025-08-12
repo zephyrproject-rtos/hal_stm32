@@ -63,4 +63,13 @@ Patch List:
    - The stm32cube/stm32mp2xx/drivers/src/stm32mp2xx_ll_rcc.c file was modified
     for retrieving the clock configuration of the I2C8 peripheral.
 
+   *Allow usage of HAL_DCMIPP_PIPE_SetConfig when DCMIPP is in READY state
+     Allow performing PIPE configuration when the DCMIPP device is not only
+     in RESET and ERROR states but also in READY state. This allow to
+     reconfigure a DCMIPP pipe between 2 use-cases without having to
+     call HAL_DCMIPP_DeInit / HAL_DCMIPP_Init.
+     Impacted file:
+      stm32cube/stm32mp2xx/drivers/src/stm32mp2xx_hal_dcmipp.c
+     Internal reference: 215688
+
    See release_note.html from STM32Cube
