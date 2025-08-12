@@ -8,5 +8,7 @@
 if(CONFIG_HAS_STM32LIB)
   add_subdirectory_ifdef(CONFIG_BT_STM32_IPM stm32wb)
   add_subdirectory_ifdef(CONFIG_BT_STM32WBA stm32wba)
-  add_subdirectory_ifdef(CONFIG_BT_STM32WB0 stm32wb0)
+  if(CONFIG_BT_STM32WB0 OR CONFIG_STM32_RADIO_TIMER)
+    add_subdirectory(stm32wb0)
+  endif()
 endif()
