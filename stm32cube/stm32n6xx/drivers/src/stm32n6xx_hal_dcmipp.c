@@ -1041,7 +1041,8 @@ HAL_StatusTypeDef HAL_DCMIPP_PIPE_SetConfig(DCMIPP_HandleTypeDef *hdcmipp, uint3
 
   if (hdcmipp->State == HAL_DCMIPP_STATE_READY)
   {
-    if ((pipe_state == HAL_DCMIPP_PIPE_STATE_RESET) || (pipe_state == HAL_DCMIPP_PIPE_STATE_ERROR))
+    if ((pipe_state == HAL_DCMIPP_PIPE_STATE_READY) || (pipe_state == HAL_DCMIPP_PIPE_STATE_RESET) ||
+        (pipe_state == HAL_DCMIPP_PIPE_STATE_ERROR))
     {
       /* Update the DCMIPP PIPE state */
       hdcmipp->PipeState[Pipe] = HAL_DCMIPP_PIPE_STATE_BUSY;
