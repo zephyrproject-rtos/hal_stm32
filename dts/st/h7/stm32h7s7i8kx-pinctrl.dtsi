@@ -948,6 +948,150 @@
 				slew-rate = "very-high-speed";
 			};
 
+			/* ETH_MII */
+
+			/omit-if-no-ref/ eth_mii_rx_clk_pa1: eth_mii_rx_clk_pa1 {
+				pinmux = <STM32_PINMUX('A', 1, AF11)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ eth_mii_col_pa3: eth_mii_col_pa3 {
+				pinmux = <STM32_PINMUX('A', 3, AF11)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ eth_mii_rx_dv_pa7: eth_mii_rx_dv_pa7 {
+				pinmux = <STM32_PINMUX('A', 7, AF11)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ eth_mii_txd0_pb0: eth_mii_txd0_pb0 {
+				pinmux = <STM32_PINMUX('B', 0, AF11)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ eth_mii_txd1_pb1: eth_mii_txd1_pb1 {
+				pinmux = <STM32_PINMUX('B', 1, AF11)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ eth_mii_rx_clk_pb6: eth_mii_rx_clk_pb6 {
+				pinmux = <STM32_PINMUX('B', 6, AF11)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ eth_mii_txd1_pb7: eth_mii_txd1_pb7 {
+				pinmux = <STM32_PINMUX('B', 7, AF11)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ eth_mii_txd3_pb8: eth_mii_txd3_pb8 {
+				pinmux = <STM32_PINMUX('B', 8, AF11)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ eth_mii_rx_er_pb10: eth_mii_rx_er_pb10 {
+				pinmux = <STM32_PINMUX('B', 10, AF11)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ eth_mii_tx_en_pb11: eth_mii_tx_en_pb11 {
+				pinmux = <STM32_PINMUX('B', 11, AF11)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ eth_mii_rxd3_pb13: eth_mii_rxd3_pb13 {
+				pinmux = <STM32_PINMUX('B', 13, AF11)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ eth_mii_txd2_pc2: eth_mii_txd2_pc2 {
+				pinmux = <STM32_PINMUX('C', 2, AF11)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ eth_mii_tx_clk_pc3: eth_mii_tx_clk_pc3 {
+				pinmux = <STM32_PINMUX('C', 3, AF11)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ eth_mii_rxd0_pc4: eth_mii_rxd0_pc4 {
+				pinmux = <STM32_PINMUX('C', 4, AF11)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ eth_mii_rxd1_pc5: eth_mii_rxd1_pc5 {
+				pinmux = <STM32_PINMUX('C', 5, AF11)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ eth_mii_rx_clk_pd7: eth_mii_rx_clk_pd7 {
+				pinmux = <STM32_PINMUX('D', 7, AF4)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ eth_mii_tx_en_pd8: eth_mii_tx_en_pd8 {
+				pinmux = <STM32_PINMUX('D', 8, AF11)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ eth_mii_txd3_pe2: eth_mii_txd3_pe2 {
+				pinmux = <STM32_PINMUX('E', 2, AF11)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ eth_mii_rxd3_pe3: eth_mii_rxd3_pe3 {
+				pinmux = <STM32_PINMUX('E', 3, AF11)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ eth_mii_crs_pf3: eth_mii_crs_pf3 {
+				pinmux = <STM32_PINMUX('F', 3, AF11)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ eth_mii_rxd2_pf5: eth_mii_rxd2_pf5 {
+				pinmux = <STM32_PINMUX('F', 5, AF11)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/* ETH_RMII */
+
+			/omit-if-no-ref/ eth_rmii_txd0_pb0: eth_rmii_txd0_pb0 {
+				pinmux = <STM32_PINMUX('B', 0, AF11)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ eth_rmii_txd1_pb1: eth_rmii_txd1_pb1 {
+				pinmux = <STM32_PINMUX('B', 1, AF11)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ eth_rmii_txd1_pb7: eth_rmii_txd1_pb7 {
+				pinmux = <STM32_PINMUX('B', 7, AF11)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ eth_rmii_tx_en_pb11: eth_rmii_tx_en_pb11 {
+				pinmux = <STM32_PINMUX('B', 11, AF11)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ eth_rmii_rxd0_pc4: eth_rmii_rxd0_pc4 {
+				pinmux = <STM32_PINMUX('C', 4, AF11)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ eth_rmii_rxd1_pc5: eth_rmii_rxd1_pc5 {
+				pinmux = <STM32_PINMUX('C', 5, AF11)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ eth_rmii_tx_en_pd8: eth_rmii_tx_en_pd8 {
+				pinmux = <STM32_PINMUX('D', 8, AF11)>;
+				slew-rate = "very-high-speed";
+			};
+
 			/* FDCAN_RX */
 
 			/omit-if-no-ref/ fdcan1_rx_pa11: fdcan1_rx_pa11 {
