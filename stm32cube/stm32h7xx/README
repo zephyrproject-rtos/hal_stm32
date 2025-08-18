@@ -75,4 +75,9 @@ Patch List:
      Impacted file: 
       stm32cube/stm32h7xx/drivers/src/stm32h7xx_hal_sdio.c
          
+   *Fix an issue in the STM32H7 HAL OSPI by correcting the DMA source and destination
+      addresses in the HAL_MDMA_Start_IT() call.
+      Impacted files:
+      stm32cube/stm32h7xx/drivers/src/stm32h7xx_hal_ospi.c
+
    See release_note.html from STM32Cube
