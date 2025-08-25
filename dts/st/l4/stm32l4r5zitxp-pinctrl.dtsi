@@ -1751,6 +1751,32 @@
 				slew-rate = "very-high-speed";
 			};
 
+			/* OPAMP */
+
+			/omit-if-no-ref/ opamp1_vinp_pa0: opamp1_vinp_pa0 {
+				pinmux = <STM32_PINMUX('A', 0, ANALOG)>;
+			};
+
+			/omit-if-no-ref/ opamp1_vinm_pa1: opamp1_vinm_pa1 {
+				pinmux = <STM32_PINMUX('A', 1, ANALOG)>;
+			};
+
+			/omit-if-no-ref/ opamp1_vout_pa3: opamp1_vout_pa3 {
+				pinmux = <STM32_PINMUX('A', 3, ANALOG)>;
+			};
+
+			/omit-if-no-ref/ opamp2_vinp_pa6: opamp2_vinp_pa6 {
+				pinmux = <STM32_PINMUX('A', 6, ANALOG)>;
+			};
+
+			/omit-if-no-ref/ opamp2_vinm_pa7: opamp2_vinm_pa7 {
+				pinmux = <STM32_PINMUX('A', 7, ANALOG)>;
+			};
+
+			/omit-if-no-ref/ opamp2_vout_pb0: opamp2_vout_pb0 {
+				pinmux = <STM32_PINMUX('B', 0, ANALOG)>;
+			};
+
 			/* RCC_MCO */
 
 			/omit-if-no-ref/ rcc_mco_pa8: rcc_mco_pa8 {

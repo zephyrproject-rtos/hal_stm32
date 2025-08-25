@@ -375,6 +375,28 @@
 				pinmux = <STM32_PINMUX('B', 4, AF0)>;
 			};
 
+			/* OPAMP */
+
+			/omit-if-no-ref/ opamp2_vinm_pa5: opamp2_vinm_pa5 {
+				pinmux = <STM32_PINMUX('A', 5, ANALOG)>;
+			};
+
+			/omit-if-no-ref/ opamp2_vout_pa6: opamp2_vout_pa6 {
+				pinmux = <STM32_PINMUX('A', 6, ANALOG)>;
+			};
+
+			/omit-if-no-ref/ opamp2_vinp_pa7: opamp2_vinp_pa7 {
+				pinmux = <STM32_PINMUX('A', 7, ANALOG)>;
+			};
+
+			/omit-if-no-ref/ opamp2_vinp_pb0: opamp2_vinp_pb0 {
+				pinmux = <STM32_PINMUX('B', 0, ANALOG)>;
+			};
+
+			/omit-if-no-ref/ opamp2_vinp_pb14: opamp2_vinp_pb14 {
+				pinmux = <STM32_PINMUX('B', 14, ANALOG)>;
+			};
+
 			/* RCC_MCO */
 
 			/omit-if-no-ref/ rcc_mco_pa8: rcc_mco_pa8 {

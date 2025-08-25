@@ -843,6 +843,104 @@
 				pinmux = <STM32_PINMUX('B', 4, AF0)>;
 			};
 
+			/* OPAMP */
+
+			/omit-if-no-ref/ opamp1_vinp_pa1: opamp1_vinp_pa1 {
+				pinmux = <STM32_PINMUX('A', 1, ANALOG)>;
+			};
+
+			/omit-if-no-ref/ opamp1_vout_pa2: opamp1_vout_pa2 {
+				pinmux = <STM32_PINMUX('A', 2, ANALOG)>;
+			};
+
+			/omit-if-no-ref/ opamp1_vinm_pa3: opamp1_vinm_pa3 {
+				pinmux = <STM32_PINMUX('A', 3, ANALOG)>;
+			};
+
+			/omit-if-no-ref/ opamp1_vinp_pa3: opamp1_vinp_pa3 {
+				pinmux = <STM32_PINMUX('A', 3, ANALOG)>;
+			};
+
+			/omit-if-no-ref/ opamp1_vinp_pa7: opamp1_vinp_pa7 {
+				pinmux = <STM32_PINMUX('A', 7, ANALOG)>;
+			};
+
+			/omit-if-no-ref/ opamp1_vinm_pc5: opamp1_vinm_pc5 {
+				pinmux = <STM32_PINMUX('C', 5, ANALOG)>;
+			};
+
+			/omit-if-no-ref/ opamp2_vinm_pa5: opamp2_vinm_pa5 {
+				pinmux = <STM32_PINMUX('A', 5, ANALOG)>;
+			};
+
+			/omit-if-no-ref/ opamp2_vout_pa6: opamp2_vout_pa6 {
+				pinmux = <STM32_PINMUX('A', 6, ANALOG)>;
+			};
+
+			/omit-if-no-ref/ opamp2_vinp_pa7: opamp2_vinp_pa7 {
+				pinmux = <STM32_PINMUX('A', 7, ANALOG)>;
+			};
+
+			/omit-if-no-ref/ opamp2_vinp_pb0: opamp2_vinp_pb0 {
+				pinmux = <STM32_PINMUX('B', 0, ANALOG)>;
+			};
+
+			/omit-if-no-ref/ opamp2_vinp_pb14: opamp2_vinp_pb14 {
+				pinmux = <STM32_PINMUX('B', 14, ANALOG)>;
+			};
+
+			/omit-if-no-ref/ opamp2_vinm_pc5: opamp2_vinm_pc5 {
+				pinmux = <STM32_PINMUX('C', 5, ANALOG)>;
+			};
+
+			/omit-if-no-ref/ opamp3_vinp_pa1: opamp3_vinp_pa1 {
+				pinmux = <STM32_PINMUX('A', 1, ANALOG)>;
+			};
+
+			/omit-if-no-ref/ opamp3_vinp_pb0: opamp3_vinp_pb0 {
+				pinmux = <STM32_PINMUX('B', 0, ANALOG)>;
+			};
+
+			/omit-if-no-ref/ opamp3_vout_pb1: opamp3_vout_pb1 {
+				pinmux = <STM32_PINMUX('B', 1, ANALOG)>;
+			};
+
+			/omit-if-no-ref/ opamp3_vinm_pb2: opamp3_vinm_pb2 {
+				pinmux = <STM32_PINMUX('B', 2, ANALOG)>;
+			};
+
+			/omit-if-no-ref/ opamp3_vinm_pb10: opamp3_vinm_pb10 {
+				pinmux = <STM32_PINMUX('B', 10, ANALOG)>;
+			};
+
+			/omit-if-no-ref/ opamp3_vinp_pb13: opamp3_vinp_pb13 {
+				pinmux = <STM32_PINMUX('B', 13, ANALOG)>;
+			};
+
+			/omit-if-no-ref/ opamp6_vinm_pa1: opamp6_vinm_pa1 {
+				pinmux = <STM32_PINMUX('A', 1, ANALOG)>;
+			};
+
+			/omit-if-no-ref/ opamp6_vinm_pb1: opamp6_vinm_pb1 {
+				pinmux = <STM32_PINMUX('B', 1, ANALOG)>;
+			};
+
+			/omit-if-no-ref/ opamp6_vout_pb11: opamp6_vout_pb11 {
+				pinmux = <STM32_PINMUX('B', 11, ANALOG)>;
+			};
+
+			/omit-if-no-ref/ opamp6_vinp_pb12: opamp6_vinp_pb12 {
+				pinmux = <STM32_PINMUX('B', 12, ANALOG)>;
+			};
+
+			/omit-if-no-ref/ opamp6_vinp_pb13: opamp6_vinp_pb13 {
+				pinmux = <STM32_PINMUX('B', 13, ANALOG)>;
+			};
+
+			/omit-if-no-ref/ opamp6_vinp_pd9: opamp6_vinp_pd9 {
+				pinmux = <STM32_PINMUX('D', 9, ANALOG)>;
+			};
+
 			/* QUADSPI */
 
 			/omit-if-no-ref/ quadspi1_bk1_ncs_pa2: quadspi1_bk1_ncs_pa2 {
