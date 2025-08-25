@@ -167,6 +167,9 @@
   match: "^OCTOSPI(.*)(?:CLK|NCS|DQS|IO[0-7])$"
   slew-rate: very-high-speed
 
+- name: OPAMP
+  match: "^OPAMP\\d+_V(IN[MP])?(OUT)?$"
+
 - name: RCC_MCO
   match: "^RCC_MCO_?(\\d+)?$"
   mode: alternate
