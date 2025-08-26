@@ -153,6 +153,12 @@
 - name: I2S_SD
   match: "^I2S\\d+_SD$"
 
+- name: I2S_SDI
+  match: "^I2S\\d+_SDI$"
+
+- name: I2S_SDO
+  match: "^I2S\\d+_SDO$"
+
 - name: I3C_SCL
   match: "^I3C\\d+_SCL$"
   slew-rate: very-high-speed
@@ -162,7 +168,7 @@
   slew-rate: very-high-speed
 
 - name: JTAG PORT
-  match: ^(SYS|DEBUG)_((JTMS-)?SWDIO|(JTCK-)?SWCLK|JTDI|JTDO(-TRACESWO|-SWO)?|(N)?JTRST)$
+  match: "^(SYS|DEBUG)_((JTMS-?)?SWDIO|(JTCK-?)?SWCLK|JTDI|(JTDO-?)?(TRACESWO|SWO)?|(N)?JTRST|TRACECLK|TRACED\\d)$"
 
 - name: LPTIM
   match: "^LPTIM[1-6]_(IN[1-2]|CH[1-4]|ETR|OUT)$"
@@ -186,8 +192,8 @@
   match: "^QUADSPI(\\d+)?_(?:CLK|NCS|BK1_NCS|BK1_IO[0-3]|BK2_NCS|BK2_IO[0-3])$"
   slew-rate: very-high-speed
 
-- name: XSPIM
-  match: "^XSPIM(.*)(?:CLK|NCS[1-2]|DQS[0-1]|IO\\d+)$"
+- name: XSPI
+  match: "^XSPI(.*)(?:N?CLK|NCS\\d|DQS\\d?|IO\\d+)$"
   slew-rate: very-high-speed
 
 - name: SAI
@@ -269,4 +275,4 @@
   slew-rate: high-speed
 
 - name: USB
-  match: "^USB_(?:DM)?(?:DP)?(?:NOE)?$"
+  match: "^USB_(?:DM|DP|NOE|SOF)$"
