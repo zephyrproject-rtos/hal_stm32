@@ -100,8 +100,6 @@ file_list_wba = {
         "Projects/Common/WPAN/Modules/RTDebug/RTDebug.c",
         "Projects/Common/WPAN/Modules/RTDebug/RTDebug.h",
         "Projects/Common/WPAN/Modules/RTDebug/local_debug_tables.h",
-        "Projects/Common/WPAN/Modules/scm.c",
-        "Projects/Common/WPAN/Modules/scm.h",
         "Projects/Common/WPAN/Modules/stm_list.c",
         "Projects/Common/WPAN/Modules/stm_list.h",
         "Projects/Common/WPAN/Modules/utilities_common.h",
