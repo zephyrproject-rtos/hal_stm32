@@ -37,7 +37,7 @@
  *
  ******************************************************************************
  */
-  
+
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef UTIL_TIME_SERVER_H__
 #define UTIL_TIME_SERVER_H__
@@ -54,10 +54,10 @@
 /* Includes ------------------------------------------------------------------*/
 #include <stdbool.h>
 #include <stdint.h>
-#include <stddef.h>   
+#include <stddef.h>
 #include <cmsis_compiler.h>
 #include "utilities_conf.h"
-   
+
 /* Exported types ------------------------------------------------------------*/
 /** @defgroup TIMER_SERVER_exported_TypeDef TIMER_SERVER exported Typedef
   *  @{
@@ -71,7 +71,7 @@ typedef enum {
   UTIL_TIMER_PERIODIC = 1  /*!<Periodic timer. */
 } UTIL_TIMER_Mode_t;
 
-  
+
 /**
   * @brief Timer status
   */
@@ -105,17 +105,17 @@ typedef struct
 {
     UTIL_TIMER_Status_t   (* InitTimer )( void );                  /*!< Initialisation of the low layer timer    */
     UTIL_TIMER_Status_t   (* DeInitTimer )( void );                /*!< Un-Initialisation of the low layer timer */
-      
+
     UTIL_TIMER_Status_t   (* StartTimerEvt )( uint32_t timeout );  /*!< Start the low layer timer */
     UTIL_TIMER_Status_t   (* StopTimerEvt )( void);                /*!< Stop the low layer timer */
-    
+
     uint32_t              (* SetTimerContext)( void );             /*!< Set the timer context */
     uint32_t              (* GetTimerContext)( void );             /*!< Get the timer context */
-    
+
     uint32_t              (* GetTimerElapsedTime)( void );         /*!< Get elapsed time */
     uint32_t              (* GetTimerValue)( void );               /*!< Get timer value */
     uint32_t              (* GetMinimumTimeout)( void );           /*!< Get Minimum timeout */
-    
+
     uint32_t              (* ms2Tick)( uint32_t timeMicroSec );    /*!< convert ms to tick */
     uint32_t              (* Tick2ms)( uint32_t tick );            /*!< convert tick into ms */
 } UTIL_TIMER_Driver_s;
@@ -147,7 +147,7 @@ extern const UTIL_TIMER_Driver_s UTIL_TimerDriver;
 /* Exported constants --------------------------------------------------------*/
 /* External variables --------------------------------------------------------*/
 /* Exported macros -----------------------------------------------------------*/
-/* Exported functions ------------------------------------------------------- */ 
+/* Exported functions ------------------------------------------------------- */
 
 /** @defgroup TIMER_SERVER_exported_function TIMER_SERVER exported function
   *  @{
@@ -300,4 +300,3 @@ void UTIL_TIMER_IRQ_Handler( void );
 #endif
 
 #endif /* UTIL_TIME_SERVER_H__*/
-

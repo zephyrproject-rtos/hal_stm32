@@ -1,4 +1,4 @@
-/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/1.32a-lca02/firmware/public_inc/evnt_schdlr_gnrc_if.h#2 $*/
+/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/2.00a-lca01/firmware/public_inc/evnt_schdlr_gnrc_if.h#1 $*/
 /**
  ********************************************************************************
  * @file    evnt_schdlr_gnrc_if.h

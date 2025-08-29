@@ -20,14 +20,11 @@
 #include "ll_sys.h"
 #include "ll_intf_cmn.h"
 
-/* Link Layer deep sleep status */
-uint8_t is_Radio_DeepSleep = 0U;
-
 /* Link Layer deep sleep timer */
-os_timer_id radio_dp_slp_tmr_id = NULL;
+static os_timer_id radio_dp_slp_tmr_id = NULL;
 
 /* Link Layer deep sleep state */
-ll_sys_dp_slp_state_t linklayer_dp_slp_state = LL_SYS_DP_SLP_DISABLED;
+static ll_sys_dp_slp_state_t linklayer_dp_slp_state = LL_SYS_DP_SLP_DISABLED;
 
 /**
   * @brief  Initialize resources to handle deep sleep entry/exit
@@ -117,18 +114,18 @@ ll_sys_status_t ll_sys_dp_slp_exit(void){
   }
   else
   {
-    /* Stop the deep sleep wake-up timer if running */
-    if(os_get_tmr_state(radio_dp_slp_tmr_id) != (os_timer_state)osTimerStopped)
-    {
-      os_timer_stop(radio_dp_slp_tmr_id);
-    }
-
     /* Switch Link Layer IP to SLEEP mode (by deactivate DEEP SLEEP mode) */
     cmd_status = ll_intf_cmn_le_set_dp_slp_mode(DEEP_SLEEP_DISABLE);
     if(cmd_status == SUCCESS)
     {
       linklayer_dp_slp_state = LL_SYS_DP_SLP_DISABLED;
       return_status = LL_SYS_OK;
+    }
+
+    /* Stop the deep sleep wake-up timer if running */
+    if(os_get_tmr_state(radio_dp_slp_tmr_id) != (os_timer_state)osTimerStopped)
+    {
+      os_timer_stop(radio_dp_slp_tmr_id);
     }
   }
 
@@ -144,14 +141,8 @@ ll_sys_status_t ll_sys_dp_slp_exit(void){
   * @retval LL_SYS status
   */
 void ll_sys_dp_slp_wakeup_evt_clbk(void const *ptr_arg){
-  int32_t os_status;
-
-  /* Stop the Link Layer IP DEEP SLEEP wake-up timer */
-  os_status = os_timer_stop(radio_dp_slp_tmr_id);
-  if(os_status != SUCCESS){
-    return;
-  }
 
   /* Link Layer IP exits from DEEP SLEEP mode */
   ll_sys_dp_slp_exit();
+
 }

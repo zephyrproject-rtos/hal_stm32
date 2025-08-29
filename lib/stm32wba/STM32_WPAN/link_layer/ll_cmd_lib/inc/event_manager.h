@@ -1,4 +1,4 @@
-/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/1.32a-lca02/firmware/public_inc/event_manager.h#2 $*/
+/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/2.00a-lca01/firmware/public_inc/event_manager.h#1 $*/
 /**
  ********************************************************************************
  * @file    event_manager.h
@@ -126,6 +126,9 @@ typedef enum {
 	HCI_RADIO_ACTIVITY_EVENT,
 #endif /* END_OF_RADIO_ACTIVITY_REPORTING */
 #endif /* SUPPORT_HCI_EVENT_ONLY */
+#if (SUPPORT_CHANNEL_SOUNDING &&( SUPPORT_MASTER_CONNECTION || SUPPORT_SLAVE_CONNECTION))
+	CS_EVENT_REMOVE,
+#endif /*(SUPPORT_CHANNEL_SOUNDING &&( SUPPORT_MASTER_CONNECTION || SUPPORT_SLAVE_CONNECTION))*/
 #if ((SUPPORT_MAC) && (MAC_LAYER_BUILD))
 	MLME_TIMER_EVENT,
 	DIRECT_DATA_TX_EVENT,
