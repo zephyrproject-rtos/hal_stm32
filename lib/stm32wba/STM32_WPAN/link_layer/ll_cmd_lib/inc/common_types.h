@@ -1,4 +1,4 @@
-/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/1.32a-lca02/firmware/public_inc/common_types.h#3 $*/
+/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/2.00a-lca01/firmware/public_inc/common_types.h#1 $*/
 /**
  ********************************************************************************
  * @file    common_types.h
@@ -101,10 +101,6 @@
 /****************** User configuration **********************************/
 #define CS_TESTING TRUE
 
-#ifndef SUPPORT_GNRC_SCHDLR_IF
-#define SUPPORT_GNRC_SCHDLR_IF                      1 /* Enable\Disable event EXTRNL_GNRC in Ble event manager. Enable:1 - Disable:0 */
-#endif /* SUPPORT_GNRC_SCHDLR_IF */
-
 /********************* Macros **********************************/
 
 #ifndef SUCCESS
@@ -192,6 +188,10 @@ typedef enum {
 	LE_2M 					= 0x02,
 	LE_CODED_S8				= 0x03,
 	LE_CODED 				= 0x04,
+/*===============  Channel Sounding  ===============*/
+#if (SUPPORT_CHANNEL_SOUNDING &&( SUPPORT_MASTER_CONNECTION || SUPPORT_SLAVE_CONNECTION))
+	LE_2M_2BT				= 0x08,
+#endif /*SUPPORT_CHANNEL_SOUNDING &&( SUPPORT_MASTER_CONNECTION || SUPPORT_SLAVE_CONNECTION)*/
 #if (SUPPORT_LE_POWER_CONTROL)
 	LE_PHY_UNDEFINED		= 0xFC,
 	NEW_PHY_CODED_S2		= 0xFD,
@@ -216,6 +216,7 @@ typedef struct time_st {
 	uint16_t time_stamp_fine;
 	uint8_t  overflow_flag;
 } ble_time_t, *ble_time_p;
+
 typedef enum dpslp_state {
 	DEEP_SLEEP_ENABLE  = 0x01,
 	DEEP_SLEEP_DISABLE = 0x00
@@ -445,7 +446,9 @@ typedef enum {
 /**
  * The default PHY periodic calibration period in second. this Macro can be set to any value , Zero means that phy periodic calibration is disabled
  */
+#ifndef DEFAULT_PHY_CALIBRATION_PERIOD
 #define DEFAULT_PHY_CALIBRATION_PERIOD        		10	/* Time period for PHY calibration = 10s */
+#endif /* DEFAULT_PHY_CALIBRATION_PERIOD */
 
 #if defined(PHY_40nm_3_00_a) || defined(PHY_40nm_3_40_a)
 #define SUPPORT_MAC_PHY_CONT_TESTING_CMDS 1
@@ -459,8 +462,9 @@ typedef enum {
 #ifndef EXTERNAL_CUSTOM_CMDS
 #define EXTERNAL_CUSTOM_CMDS						0	/* Indicates that an external custom HCI commands module exists */
 #endif /* EXTERNAL_CUSTOM_CMDS */
+#ifndef SUPPORT_ZIGBEE_PHY_CERTIFICATION
 #define SUPPORT_ZIGBEE_PHY_CERTIFICATION   0  /* 0 disable , 1 enable .. used to enable support of hci command required to implement zigbee phy Test cases*/
-
+#endif /* SUPPORT_ZIGBEE_PHY_CERTIFICATION */
 
 #if (!USE_HCI_TRANSPORT) && (SUPPORT_BLE)						  /* SUPPORT_HCI_EVENT_ONLY cannot be supported with default HCI_transport */
 /* if this marco is enabled it will enable  the below features
@@ -476,7 +480,9 @@ typedef enum {
 #define SUPPORT_HCI_EVENT_ONLY_TESTING				0
 #endif /* SUPPORT_HCI_EVENT_ONLY_TESTING */
 
+#ifndef SUPPORT_HW_AUDIO_SYNC_SIGNAL
 #define SUPPORT_HW_AUDIO_SYNC_SIGNAL       0
+#endif /* SUPPORT_HW_AUDIO_SYNC_SIGNAL */
 
 #if SUPPORT_LE_PAWR_SYNC_ROLE
 #define SUPPORT_PAWR_CUSTOM_SYNC			1
@@ -491,9 +497,13 @@ typedef enum {
 
 
 
+#ifndef SUPPORT_TIM_UPDT
 #define SUPPORT_TIM_UPDT					1
+#endif /* SUPPORT_TIM_UPDT */
 
+#ifndef SUPPORT_RX_DTP_CONTROL
 #define SUPPORT_RX_DTP_CONTROL				1 /* Enable\Disable ACL Rx data throughput feature */
+#endif /* SUPPORT_RX_DTP_CONTROL */
 
 #ifndef SUPPORT_CUSTOM_ADV_SCAN_TESTING
 #define SUPPORT_CUSTOM_ADV_SCAN_TESTING		0
@@ -507,5 +517,68 @@ typedef enum {
 #define SUPPORT_EXT_FEATURE_SET 0
 #endif /* SUPPORT_EXT_FEATURE_SET */
 
+
+#ifndef SUPPORT_CONFIGURABLE_GAIN_FIX
+#define SUPPORT_CONFIGURABLE_GAIN_FIX				0 /* Enable\Disable configurable gain fix support */
+#endif /* SUPPORT_CONFIGURABLE_GAIN_FIX */
+
+#if SUPPORT_CONFIGURABLE_GAIN_FIX
+#define PREEMPH_GAIN_COEFF_STEP_SIZE				10 			/* percentage margin of single step */
+#define GAIN_FIX_WAKEUP_TIME_OVERHEAD				4 			/* in sleep timer units, the added time overhead from patching all pre-emphasis coefficients */
+#else
+#define GAIN_FIX_WAKEUP_TIME_OVERHEAD				0
+#endif /* SUPPORT_CONFIGURABLE_GAIN_FIX */
+
+#ifndef SUPPORT_PHY_SHUTDOWN_MODE
+#if defined(PHY_40nm_3_60_a_tc) || defined(PHY_40nm_3_00_a) || defined(PHY_40nm_3_40_a)
+#define SUPPORT_PHY_SHUTDOWN_MODE					1 /* Enable\Disable phpy shutdown mode support */
+#else
+#define SUPPORT_PHY_SHUTDOWN_MODE					0
+#endif /* defined(PHY_40nm_3_60_a_tc) || defined(PHY_40nm_3_00_a) || defined(PHY_40nm_3_40_a) */
+#endif /* SUPPORT_PHY_SHUTDOWN_MODE */
+
+#if SUPPORT_PHY_SHUTDOWN_MODE
+#define PHY_SHUTDOWN_WAKEUP_TIME_OVERHEAD			2 			/* in sleep timer units, the added time overhead from executing override seqeuences needed in phy shutdown mode */
+#else
+#define PHY_SHUTDOWN_WAKEUP_TIME_OVERHEAD			0
+#endif /* SUPPORT_PHY_SHUTDOWN_MODE */
+
+#ifndef SUPPORT_GNRC_SCHDLR_IF
+#define SUPPORT_GNRC_SCHDLR_IF				1
+#endif
+#ifndef NEAR_AUX_AFTER_EXT_SLEEP_TIMER_SCHEDULING
+#define NEAR_AUX_AFTER_EXT_SLEEP_TIMER_SCHEDULING 	0
+#endif /* NEAR_AUX_AFTER_EXT_SLEEP_TIMER_SCHEDULING */
+
+#if (SUPPORT_CHANNEL_SOUNDING &&( SUPPORT_MASTER_CONNECTION || SUPPORT_SLAVE_CONNECTION))
+/**
+ * @brief holds the possible values for cs roles
+ */
+typedef enum _cs_role_e
+{
+	CS_ROLE_INITIATOR,
+	CS_ROLE_REFLECTOR
+} cs_role_e;
+
+/**
+ * @brief holds the possible values for cs step mode types
+ */
+typedef enum _cs_step_mode_type_e
+{
+	CS_STEP_MODE_0,
+	CS_STEP_MODE_1,
+	CS_STEP_MODE_2,
+	CS_STEP_MODE_3,
+	CS_STEP_MODE_NONE = 0xFF
+} cs_step_mode_type_e;
+
+/**
+ * @brief cs host buffer structure
+ */
+typedef struct _cs_host_buffer {
+	uint8_t buffer[257]; /*CS_HOST_BUFFER_DATA_MAX (255) + HCI_EVENT_HEADER_LEN(2)*/
+}cs_host_buffer;
+
+#endif /*SUPPORT_CHANNEL_SOUNDING &&( SUPPORT_MASTER_CONNECTION || SUPPORT_SLAVE_CONNECTION)*/
 
 #endif /*COMMON_TYPES_H_*/

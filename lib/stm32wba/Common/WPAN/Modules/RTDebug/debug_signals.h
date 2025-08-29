@@ -1,3 +1,4 @@
+/* USER CODE BEGIN Header */
 /**
   ******************************************************************************
   * @file    debug_signals.h
@@ -15,7 +16,7 @@
   *
   ******************************************************************************
   */
-
+/* USER CODE END Header */
 #ifndef DEBUG_SIGNALS_H
 #define DEBUG_SIGNALS_H
 
@@ -110,7 +111,7 @@ typedef enum {
 #if (USE_RT_DEBUG_LOW_POWER_STOP_MODE_ACTIVE == 1)
   RT_DEBUG_LOW_POWER_STOP_MODE_ACTIVE,
 #endif /* USE_RT_DEBUG_LOW_POWER_STOP_MODE_ACTIVE */
-  
+
 #if (USE_RT_DEBUG_LOW_POWER_STOP2_MODE_ENTER == 1)
   RT_DEBUG_LOW_POWER_STOP2_MODE_ENTER,
 #endif /* USE_RT_DEBUG_LOW_POWER_STOP2_MODE_ENTER */
@@ -122,7 +123,7 @@ typedef enum {
 #if (USE_RT_DEBUG_LOW_POWER_STOP2_MODE_ACTIVE == 1)
   RT_DEBUG_LOW_POWER_STOP2_MODE_ACTIVE,
 #endif /* USE_RT_DEBUG_LOW_POWER_STOP2_MODE_ACTIVE */
-  
+
 #if (USE_RT_DEBUG_LOW_POWER_STANDBY_MODE_ENTER == 1)
   RT_DEBUG_LOW_POWER_STANDBY_MODE_ENTER,
 #endif /* USE_RT_DEBUG_LOW_POWER_STANDBY_MODE_ENTER */

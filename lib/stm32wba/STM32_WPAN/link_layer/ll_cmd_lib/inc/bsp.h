@@ -1,4 +1,4 @@
-/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/1.32a-lca02/firmware/public_inc/bsp.h#2 $*/
+/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/2.00a-lca01/firmware/public_inc/bsp.h#1 $*/
 
 /**
  ********************************************************************************
@@ -280,6 +280,7 @@ typedef enum Debug_GPIO_e{
 	DBG_IO_ED_TMR_HNDL                                          ,
 	DBG_IO_OS_TMR_EVNT_CBK                                      ,
 	DBG_IO_PROFILE_MARKER_PHY_WAKEUP_TIME                       ,
+	DBG_IO_PROFILE_MARKER_BLOCKING_PHY_WAKEUP_TIME              ,
 	DBG_IO_PROFILE_END_DRIFT_TIME                               ,
 	DBG_IO_PROC_RADIO_RCV										,
 	DBG_IO_EVNT_TIME_UPDT										,

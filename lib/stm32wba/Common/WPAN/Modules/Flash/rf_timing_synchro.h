@@ -1,3 +1,4 @@
+/* USER CODE BEGIN Header */
 /**
   ******************************************************************************
   * @file    rf_timing_synchro.h
@@ -15,6 +16,7 @@
   *
   ******************************************************************************
   */
+/* USER CODE END Header */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef RF_TIMING_SYNCHRO_H
@@ -38,11 +40,8 @@ typedef enum
 } RFTS_Cmd_Status_t;
 
 /* Exported constants --------------------------------------------------------*/
-
 /* Exported variables --------------------------------------------------------*/
-
 /* Exported macros -----------------------------------------------------------*/
-
 /* Exported functions prototypes ---------------------------------------------*/
 RFTS_Cmd_Status_t RFTS_ReqWindow(uint32_t Duration, void (*Callback)(void));
 RFTS_Cmd_Status_t RFTS_RelWindow(void);

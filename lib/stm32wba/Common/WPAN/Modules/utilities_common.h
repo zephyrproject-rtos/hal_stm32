@@ -1,3 +1,4 @@
+/* USER CODE BEGIN Header */
 /**
   ******************************************************************************
   * @file    utilities_common.h
@@ -15,6 +16,7 @@
   *
   ******************************************************************************
   */
+/* USER CODE END Header */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef UTILITIES_COMMON_H
@@ -160,4 +162,3 @@ extern "C" {
 #define UTIL_UNUSED(X) (void)X      /* To avoid gcc/g++ warnings */
 
 #endif /* UTILITIES_COMMON_H */
-

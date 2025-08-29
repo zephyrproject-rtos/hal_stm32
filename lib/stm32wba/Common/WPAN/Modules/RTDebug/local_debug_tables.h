@@ -1,3 +1,4 @@
+/* USER CODE BEGIN Header */
 /**
   ******************************************************************************
   * @file    local_debug_tables.h
@@ -16,7 +17,7 @@
   *
   ******************************************************************************
   */
-
+/* USER CODE END Header */
 #ifndef LOCAL_DEBUG_TABLES_H
 #define LOCAL_DEBUG_TABLES_H
 
