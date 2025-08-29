@@ -1,4 +1,4 @@
-/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/1.32a-lca02/firmware/public_inc/ll_intf.h#3 $*/
+/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/2.00a-lca01/firmware/public_inc/ll_intf.h#1 $*/
 /**
  ********************************************************************************
  * @file    ll_intf_cmds.h
@@ -41,6 +41,14 @@
  */
 typedef uint32_t ble_stat_t;
 
+#if (SUPPORT_CHANNEL_SOUNDING && 								\
+(SUPPORT_MASTER_CONNECTION || SUPPORT_SLAVE_CONNECTION))
+/**
+ * @brief type definition for pointer to per cs step data type
+ */
+typedef void * 		cs_step_data_t;
+
+#endif /* (SUPPORT_CHANNEL_SOUNDING && (SUPPORT_MASTER_CONNECTION || SUPPORT_SLAVE_CONNECTION)) */
 
 
 #ifndef ADDRESS_SIZE
@@ -49,6 +57,11 @@ typedef uint32_t ble_stat_t;
 
 #define LE_FEATURES_BYTES_NO 	8
 
+#if SUPPORT_EXT_FEATURE_SET
+#define MAX_ALLOWED_EXT_FEATURE_SET_PAGES    		10
+#define MAX_SUPPORTED_EXT_FEATURE_SET_PAGES    		1
+#define EXT_FEATURE_SET_BYTES_NO               		24
+#endif /* SUPPORT_EXT_FEATURE_SET */
 
 #define ISO_CODEC_ID_SIZE 		5
 
@@ -84,6 +97,17 @@ typedef uint32_t ble_stat_t;
 #define CHANNEL_CLASSIFICATION_REPORTING_TIMING_PARAM_MAX		150
 
 
+#define MAX_IFS_VALUE 						(10000) /* 10ms */
+#define SUPPORTED_TIFS_TYPES					(0x1F)
+
+#if (SUPPORT_CHANNEL_SOUNDING && 								\
+(SUPPORT_MASTER_CONNECTION || SUPPORT_SLAVE_CONNECTION))
+
+#define CS_CHANNEL_MAP_BYTES_NO  10
+#define CS_SYNC_PAYLOAD_BYTES_NO 16
+#define CS_SYNC_USER_PAYLOAD     0x80 /* for user specified payload to be used on cs_test command */
+#define CS_NUM_CHANNELS          72
+#endif /* (SUPPORT_CHANNEL_SOUNDING && (SUPPORT_MASTER_CONNECTION || SUPPORT_SLAVE_CONNECTION)) */
 
 /* Maximum number of supported sleep clock accuracy */
 #define MAXIMUM_SLP_CLK_ACCURACY                1
@@ -184,6 +208,15 @@ enum _sm_status_e {
 	SM_STATUS_PERI_CIG	 	= 13,
 	SM_STATUS_CENT_CIG	 	= 14,
 };
+
+#if SUPPORT_LE_ADVERTISERS_MONITORING
+
+typedef enum _mntrd_adv_rssi_condition_e {
+    RSSI_LOWER_THAN_RSSI_LOW_LONGER_THAN_TIMEOUT = 0x00,
+    RSSI_EQUAL_OR_GREATER_THAN_RSSI_HIGH = 0x01
+} mntrd_adv_rssi_condition_e;
+
+#endif /* SUPPORT_LE_ADVERTISERS_MONITORING */
 
 /*================================= Structures =====================================*/
 
@@ -296,6 +329,11 @@ typedef struct _ble_intf_cis_estblshd_evnt_st{
 	uint32_t cis_sync_delay;		/* The maximum time, in us, for transmission of PDUs of a CIS */
 	uint32_t trsnprt_ltncy_m_to_s;	/* The maximum time, in us, for transmission of SDUs of all CISes */
 	uint32_t trsnprt_ltncy_s_to_m;
+	uint32_t sub_intrv;
+	uint32_t sdu_intrv_m_to_s;
+	uint32_t sdu_intrv_s_to_m;
+	uint16_t max_sdu_m_to_s;
+	uint16_t max_sdu_s_to_m;
 	uint16_t conn_hndl;				/* Connection handle of the CIS */
 	uint16_t max_pdu_m_to_s;			/* max pdu size */
 	uint16_t max_pdu_s_to_m;
@@ -308,6 +346,7 @@ typedef struct _ble_intf_cis_estblshd_evnt_st{
 	uint8_t bn_s_to_m;
 	uint8_t ft_m_to_s;				/* flush timeout */
 	uint8_t ft_s_to_m;
+	uint8_t framing;
 } ble_intf_cis_estblshd_evnt_st;
 
 /**
@@ -369,6 +408,9 @@ typedef struct _ble_intf_create_big_common_param_cmd_st{
 	uint8_t adv_hndle;   /* identifies the associated periodic advertising train of the BIG */
 	uint8_t pack;           /* the preferred method of arranging subevents of multiple BISes*/
 	uint8_t framing;    /* indicates the format for sending BIS Data PDUs (framed or unframed)*/
+#if SUPPORT_ISO_UNSEG_MODE
+	uint8_t seg_mode;	/* indicates the framing mode: Segmented Framed or Unsegmented Framed */
+#endif /* SUPPORT_ISO_UNSEG_MODE */
 	tx_rx_phy_e phy;             /* the PHY used for transmission of PDUs of BISes in the BIG */
 	ble_intf_big_common_sync_bc_cmd_st big_common_sync_bc; /* common parameters between the synchronizer and broadcaster */
 }ble_intf_create_big_common_param_cmd_st;
@@ -507,6 +549,16 @@ typedef struct _le_subrate_change_evnt_st{
 }le_subrate_change_evnt_st;
 #endif /* SUPPORT_LE_ENHANCED_CONN_UPDATE */
 
+#if SUPPORT_FRAME_SPACE_UPDATE
+typedef struct _le_frame_updt_cmplt_st{
+	uint16_t conn_handle;
+	uint16_t frame_space_value;
+	uint16_t spacing_type;
+	uint8_t phys;
+	uint8_t initiator;
+	uint8_t status;
+}le_frame_updt_cmplt_st;
+#endif /* SUPPORT_FRAME_SPACE_UPDATE */
 
 typedef enum _enum_ext_create_conn_verison
 {
@@ -671,6 +723,23 @@ typedef struct _ble_prdc_adv_rsp_rprt_st
 	uint8_t *ptr_data;/*ptr to Data received from a Periodic Advertising response packet.*/
 }ble_prdc_adv_rsp_rprt_st;
 #endif/*SUPPORT_LE_PAWR_ADVERTISER_ROLE*/
+
+#if SUPPORT_LE_ADVERTISERS_MONITORING
+
+typedef enum _ble_mntrd_adv_device_type_e
+{
+	MNTRD_ADV_PUBLIC, MNTRD_ADV_RANDOM
+} ble_mntrd_adv_device_type_e;
+
+typedef struct _ble_mntrd_add_adv_device_st
+{
+    uint8_t addr[ADDRESS_SIZE];
+	uint8_t signal_loss_timeout;
+    int8_t rssi_low_threshold;
+	int8_t rssi_high_threshold;
+	ble_mntrd_adv_device_type_e addr_type;
+} ble_mntrd_add_adv_device_st;
+#endif /* SUPPORT_LE_ADVERTISERS_MONITORING */
 
 /* HCI Commands Parameters Structures */
 #if (SUPPORT_AOA_AOD)
@@ -938,6 +1007,304 @@ typedef struct _le_rmt_conn_param_req_rply_cmd_st {
 	uint16_t max_ce_length;		/*Range: 0x0000  0xFFFF, Time = N * 0.625 msec.*/
 } le_rmt_conn_param_req_rply_cmd_st;
 
+#if SUPPORT_FRAME_SPACE_UPDATE
+typedef struct _le_frame_space_updt_cmd_st
+{
+	uint16_t conn_handle_id ;
+	uint16_t frame_space_min ;
+	uint16_t frame_space_max ;
+	uint16_t spacing_type ;
+	uint8_t phys ;
+}le_frame_space_updt_cmd_st;
+#endif /* SUPPORT_FRAME_SPACE_UPDATE */
+
+/* BLE 6.0 Channel Sounding */
+
+#if (SUPPORT_CHANNEL_SOUNDING && 								\
+(SUPPORT_MASTER_CONNECTION || SUPPORT_SLAVE_CONNECTION))
+
+/* BLE_6.0 Channel Sounding Commands */
+
+/**
+ * @brief CS capability exchange parameters (hold the local/peer device capabilites)
+ * 	used on the following commands/events:
+ * 		LE_CS_Read_Local_Supported_Capabilities command
+ * 		LE_CS_Write_Cached_Remote_Supported_Capabilities command
+ * 		LE_CS_Read_Remote_supported_Capabilities_Complete event
+ */
+typedef struct _ble_cs_capabilities_cmd_st {
+	uint16_t max_consecutive_procedures_supported;	/* maximum number of consecutive CS procedures that the controller can run in a back-to-back fashion (range 0x0001 to 0xFFFF, 0x0000 indicates indifinite number) */
+	uint16_t optional_nadm_sounding_capability;		/* indicates the support of Normalized Attack Detector Metric (NADM) when CS SYNC packet with sounding sequence is received (bit 0: NADM support) */
+	uint16_t optional_nadm_random_capability;		/* indicates the support of Normalized Attack Detector Metric (NADM) when CS SYNC packet with random sequence is received (bit 0: NADM support) */
+	uint16_t subfeatures_supported;					/* indicates the optional subfeatures supported by the controller (bit 0: companion signal support, bit 1: FAE of zero relative to mode-0 tx on reflector role support, bit 2: channel selection algorithm 3c support, bit 3: phase-based ranging for sounding sequence support) */
+	uint16_t optional_t_ip1_supported;				/* indicates the supported optional T_IP1 values by the controller (bit 0: 10 us support, bit 1: 20 us support, bit 2: 30 us support, bit 3: 40 us support, bit 4: 50 us support, bit 5: 60 us support, bit 6: 80 us support) */
+	uint16_t optional_t_ip2_supported;				/* indicates the supported optional T_IP2 values by the controller (bit 0: 10 us support, bit 1: 20 us support, bit 2: 30 us support, bit 3: 40 us support, bit 4: 50 us support, bit 5: 60 us support, bit 6: 80 us support) */
+	uint16_t optional_t_fcs_supported;				/* indicates the supported optional T_FCS values by the controller (bit 0: 15 us support, bit 1: 20 us support, bit 2: 30 us support, bit 3: 40 us support, bit 4: 50 us support, bit 5: 60 us support, bit 6: 80 us support, bit 7: 100 us support, bit 8: 120 us support) */
+	uint16_t optional_t_pm_supported;				/* indicates the supported optional T_PM values by the controller (bit 0: 10 us support, bit 1: 20 us support) */
+	uint8_t num_config_supported;					/* number of supported configurations on the controller per connection (range: 0x01 to 0x04) */
+	uint8_t num_antennas_supported;					/* number of supported antennas on the controller (range: 0x01 to 0x04) */
+	uint8_t max_antenna_paths_supported;			/* max number of antenna paths supported by the controller (range: 0x01 to 0x04) */
+	uint8_t roles_supported;						/* indicates the supported roles by the controller (bit 0: Initiator, bit 1: Reflector) */
+	uint8_t optional_modes_supported;				/* indicates the support for optional mode (mode_3) by the controller (bit 0: mode-3) */
+	uint8_t rtt_capability;							/* indicates the time-of-flight measurement precision for each of the following methods (bit 0: AA_Only, bit 1: Sounding, bit 2: Random_Payload) */
+	uint8_t rtt_aa_only_n;							/* number of CS SYNC packets needed to fulfill the precision specified on rtt_capability for CS SYNC packets with access address only (range: 0x01 to 0xFF, 0x00 inidicates that RTT coarse is unsupported) */
+	uint8_t rtt_sounding_n;							/* number of CS SYNC packets needed to fulfill the precision specified on rtt_capability for CS SYNC packets with sounding sequence (range: 0x01 to 0xFF, 0x00 inidicates that RTT sounding sequence is unsupported) */
+	uint8_t rtt_random_payload_n;					/* number of CS SYNC packets needed to fulfill the precision specified on rtt_capability for CS SYNC packets with random sequence (range: 0x01 to 0xFF, 0x00 inidicates that RTT random sequence is unsupported) */
+	uint8_t optional_cs_sync_phys_supported;		/* indicates the support for optional phy for CS SYNC packets (LE 2M PHY) by the controller (bit 1: LE 2M PHY support) */
+	uint8_t t_sw_supported;							/* indicates the supported T_SW values by the controller (supported values: 0x01 [1 us], 0x02 [2 us], 0x04 [4 us], 0x0A [10 us]) */
+	uint8_t tx_snr_capability;
+} ble_cs_capabilities_cmd_st;
+
+/**
+ * @brief CS Procedure parameters (hold cs procedure parameters)
+ * 	used on the following commands/events:
+ * 		LE_CS_Set_Procedure_Parameters command
+ */
+typedef struct _ble_cs_prcdr_params_cmd_st {
+	uint32_t min_subevent_len;			/* indicates the suggested minimum subevent duration in microseconds (range: 0x0004E2 [1250 us] to 0x3D0900 [4 s]) */
+	uint32_t max_subevent_len;			/* indicates the suggested maximun subevent duration in microseconds (range: 0x0004E2 [1250 us] to 0x3D0900 [4 s]) */
+	uint16_t max_procedure_len;			/* indicates the maximum duration of a single cs procedure in 0.625 ms units (range: 0x0001 [0.625 ms] to 0xFFFF [40.959375 s]) */
+	uint16_t min_procedure_interval;	/* indicates the minimum number of connection events for consecuitive cs procedure interval (range: 0x0001 to 0xFFFF, 0x0000 is ignored in case of max_procedure_count = 1 else 0x0000 is RFU) */
+	uint16_t max_procedure_interval;	/* indicates the maximum number of connection events for consecuitive cs procedure interval (range: 0x0001 to 0xFFFF, 0x0000 is ignored in case of max_procedure_count = 1 else 0x0000 is RFU) */
+	uint16_t max_procedure_count;		/* indicates the maximum number of scheduled cs procedure (range: 0x0001 to 0xFFFF, 0x0000 indicates continuous cs procedures untill disabled) */
+	uint8_t config_id;					/* indicates the configuration identifier to be used for the current cs procedure (range: 0 to 3) */
+	uint8_t tone_ant_cfg_slct;			/* indicates the antenna configuration index (range: 0x00 to 0x07) */
+	uint8_t phy;						/* indicates the phy constrained with tx_pwr_delta parameter (0x01: LE_1M_PHY, 0x02: LE_2M_PHY) */
+	uint8_t preferred_peer_antenna;		/* indicates the local device preferred antenna elements to be used by the remote device in antenna configuration index selection (bitfield of 4 bits, range: 0x00 to 0x0F) */
+	int8_t tx_pwr_delta;				/* indicates the recomended difference between remote device power and the output power level of the phy specified in dB (range: 0x81 [-127 dB] to 0x7F [127 dB], 0x80 indicates that no recommended difference) */
+	uint8_t snr_ctrl_init;                 /* indicates the SNR control adjustment for the CS_SYNC transmissions of the initiator. (supported values: 0x00 (18db), 0x01 (21db), 0x02 (24db), 0x03 (27db), 0x04 (30db), 0xFF (Not Applied))*/
+	uint8_t snr_ctrl_refl;                 /* indicates the SNR control adjustment for the CS_SYNC transmissions of the reflector. (supported values: 0x00 (18db), 0x01 (21db), 0x02 (24db), 0x03 (27db), 0x04 (30db), 0xFF (Not Applied))*/
+} ble_cs_prcdr_params_cmd_st;
+
+/**
+ * @brief CS Configuration parameters (hold the parameters for
+ * 		 a cs configuration identified by config_id)
+ * 	used on the following commands/events:
+ * 		LE_CS_Create_Config command
+ * 		LE_CS_Remove_Config command
+ * 		LE_CS_Create_Config_Complete event
+ */
+typedef struct _ble_cs_config_cmd_st {
+	uint8_t create_context;							/* indicates the context of the configuration to be created and whether CHANNEL_SOUNDING_CONFIGURATION_PROCEDURE is needed to start to exchange configurations or not (0: local context, 1: global context) */
+	uint8_t main_mode_type;							/* indicates the type of the cs main mode step (0x01: Mode-1, 0x02: Mode-2, 0x03: Mode-3) */
+	uint8_t sub_mode_type;							/* indicates the type of the cs sub mode step (0x01: Mode-1, 0x02: Mode-2, 0x03: Mode-3) */
+	uint8_t min_main_mode_steps;					/* indicates lower bound for Main_Mode_Steps which is number of main mode steps that is used before using 1 sub mode step (not including main_mode_repetition) */
+	uint8_t max_main_mode_steps;					/* indicates upper bound for Main_Mode_Steps which is number of main mode steps that is used before using 1 sub mode step (not including main_mode_repetition) */
+	uint8_t main_mode_repetition;					/* indicates number of main mode steps from subevent that is repeated on subsequent subevent after the initial mode-0 steps  */
+	uint8_t mode_0_steps;							/* indicates number of mode-0 steps at the beginning of a subevent */
+	uint8_t role;									/* indicates the role that is used by the local device for the current configuration (cs_role_e 0x00 CS_ROLE_INITIATOR, 0x01 CS_ROLE_REFLECTOR) */
+	uint8_t rtt_type;								/* indicates the type of RTT used on all mode-1 and mode-3 CS_SYNC packets */
+	uint8_t cs_sync_phy;							/* indicates the type of the phy used for CS_SYNC packets exchange (0x01: LE_1M_PHY, 0x02: LE_1M_PHY) */
+	uint8_t channel_map[CS_CHANNEL_MAP_BYTES_NO];	/* per-channel bit array holding used and unused cs channels for the current cs configuration */
+	uint8_t channel_map_repetition;					/* indicates number of times the given channel mapping is used to generate the cs channel mapping to be used for non-mode 0 steps using either channel selection algorithm 3b or 3c */
+	uint8_t channel_selection_type;					/* indicates the channel selection algorithm to be used on non-mode 0 steps (0x00: algo_3b, 0x01: algo_3c) */
+	uint8_t ch3c_shape;								/* in case of channel_selection_type=0x01: indicates the channel sequence shape to be used (0x00: Hat shape, 0x01: X shape) */
+	uint8_t ch3c_jump;								/* in case of channel_selection_type=0x01: indicates the number of channels to be skipped in generating channel map using channel selection algorithm 3c */
+	uint8_t companion_signal_enable;				/* indicates whether the local controller shall request the remote controller to enable or disable the companion signal being sent during the subsequent CS procedures */
+} ble_cs_config_cmd_st;
+
+
+/* CS TEST COMMAND */
+
+/**
+ * @brief CS Test command Override Parameters Data
+ * Per config overridden
+ * 	used on the following commands/events:
+ * 		LE_CS_Test command
+ */
+typedef union _ble_cs_test_chnl_hop_patrn_un {
+	struct
+	{
+		uint8_t *chnl_map;              /* array holding list of channels to be used on the current CS test */
+		uint8_t  chnl_sel_type;         /* indicates which Channel Selection Algorithm to use when calculating the channel sequence for the CS procedure (range: 0 (3A/3B), 1 (3C)) */
+		uint8_t  ch3c_shape;            /* indicates which shape to use when calculating Channel Selection Algorithm #3c. Ignored otherwise. (range: 0 (Hat Shape), 1 (X Shape)) */
+		uint8_t  ch3c_jump;             /* indicate which CSChannelJump value to use when calculating Channel Selection Algorithm #3c. Ignored otherwise. (range: 1 to 110) */
+	}default_params;
+	struct
+	{
+		uint8_t *chnl_list;             /* array holding list of channels to be used on the current CS test */
+		uint8_t  chnl_length;           /* indicates number of channels on channel parameter (range: 1 to 72) */
+	}override_params;
+} ble_cs_test_chnl_hop_patrn_un;
+
+typedef struct _ble_cs_test_access_addr_st {
+	uint8_t aa_init[4];                   /* indicates the access address used by inititor on CS SYNC packets on the current CS test */
+	uint8_t aa_refl[4];                   /* indicates the access address used by reflector on CS SYNC packets on the current CS test */
+} ble_cs_test_access_addr_st;
+
+typedef struct _ble_cs_test_ss_marker_pos_st {
+	uint8_t ss_marker1_position;        /* indicates the position of the first marker of 32-bit or 96-bit sounding sequence */
+	uint8_t ss_marker2_position;        /* indicates the position of the second marker of a 96-bit sounding sequence */
+} ble_cs_test_ss_marker_pos_st;
+
+typedef struct _ble_cs_test_rand_seq_st {
+	uint8_t  cs_sync_payload_pattern;   /* indicates the pattern used for CS SYNC packet payload (range: 0x00 to 0x07, 0x80 value indicates that a user specified value will be used, using cs_sync_user_payload parameter) */
+	uint8_t  cs_sync_custom_payload[CS_SYNC_PAYLOAD_BYTES_NO];      /* 16 byte user specified CS SYNC packet payload if cs_sync_payload_pattern parameter indicates user payload (0x80) otherwise all bytes are set to Zero */
+	uint8_t  cs_sync_seq_size;                                       /*indicates the payload size according to the random sequence type.*/
+} ble_cs_test_rand_seq_st;
+
+/**
+ * @brief CS Test command Override Parameters Data
+ * 	used on the following commands/events:
+ * 		LE_CS_Test command
+ */
+typedef struct _ble_cs_test_ovrde_param_st {
+	ble_cs_test_access_addr_st 	    access_addr;        /* structure that holds access address */
+	ble_cs_test_chnl_hop_patrn_un 	chnl_hop_patrn;     /* structure that holds channel hopping pattern */
+	ble_cs_test_ss_marker_pos_st    ss_marker_pos;      /* structure that holds sounding sequence marker position */
+	ble_cs_test_rand_seq_st         rand_seq;           /* structure that holds random sequence */
+	uint8_t                         main_mode_steps;    /* holds number of main mode steps to be shceduled before a sub-mode step being scheduled (not including main_mode_repetition) */
+	uint8_t                         tpm_ext_slots;     /* holds a flag to indicate the presence of tone extention slots */
+	uint8_t                         ant_perm_idx;       /* holds the antenna permutation index which is used to indicate the antenna switching pattern for CS steps that contains CS tones */
+	uint8_t                         ss_marker_val;      /* holds the value of sounding sequence marker value */
+} ble_cs_test_ovrde_param_st;
+
+typedef struct _ble_cs_ovrde_cfg_st {
+		uint16_t chnl_hop_patrn     :1;     /* channel hopping pattern DRBG override flag */
+		uint16_t rfu_1              :1;
+		uint16_t main_mode_steps    :1;     /* main mode steps DRBG override flag */
+		uint16_t tpm_ext_slots      :1;      /* extension slot presence DRBG override flag */
+		uint16_t ant_perm_idx       :1;     /* antenna permutation index DRBG override flag */
+		uint16_t access_addr        :1;     /* access address DRBG override flag */
+		uint16_t ss_marker_pos      :1;     /* souding sequence markar position DRBG override flag */
+		uint16_t ss_marker_val      :1;     /* souding sequence markar value DRBG override flag */
+		uint16_t rand_seq           :1;     /* random sequence DRBG override flag */
+		uint16_t rfu_2              :1;
+		uint16_t stbl_phase_test    :1;     /* this bit's value indicates that a stable phase test should be ran. */
+		uint16_t rfu_3              :5;
+} ble_cs_ovrde_cfg_st;
+
+typedef struct _ble_cs_step_time_param_st {
+	uint8_t t_ip1_time;					/* indicates the cs packets interlude period to be used in microseconds (supported values: 10 us, 20 us, 30 us, 40 us, 50 us, 60 us, 80 us, 145 us) */
+	uint8_t t_ip2_time;					/* indicates the cs tone interlude period to be used in microseconds (supported values: 10 us, 20 us, 30 us, 40 us, 50 us, 60 us, 80 us, 145 us) */
+	uint8_t t_fcs_time;					/* indicates the frequency change spacing period to be used in microseconds (supported values: 10 us, 20 us, 30 us, 40 us, 50 us, 60 us, 80 us, 100 us, 120 us, 150 us) */
+	uint8_t t_pm_time;					/* indicates the phase measurement period of cs tones to be used in microseconds (supported values: 10 us, 20 us, 40 us) */
+} ble_cs_step_time_param_st;
+/**
+ * @brief CS Test command parameter
+ * 	used on the following commands/events:
+ * 		LE_CS_Test command
+ */
+typedef struct _ble_cs_test_cmd_st {
+	ble_cs_test_ovrde_param_st override_params_data;    /* structure holding the CS parameters the is not derived from DRBG based on override_config bitfield */
+	uint32_t subevent_len;                 /* indicates the maximum subevent duration in microseconds (range: 0x0004E2 [1250 us] to 0x3D0900 [4 s]) */
+	ble_cs_ovrde_cfg_st override_config;   /* bitfield indicates whether the corresponding  CS parameter is derived from DRBG or from hci parameter override_params_data */
+	uint16_t subevent_interval;            /* indicates the gap between 2 consecutive CS subevent in 0.625 ms units (range: 0x0001 [0.625 ms] to 0xFFFF [40.959375 s], 0x0000 value indicates that only 1 subevent will be executed) */
+	uint16_t drbg_nonce;                   /* indicates the 14th and 15th octet of the drbg nonce used (other octets are padded with 0) the most significant octet is the 14th octet and the least significant octet is the 15th octet */
+	uint8_t main_mode_type;                /* indicates the type of the cs main mode step (0x01: Mode-1, 0x02: Mode-2, 0x03: Mode-3) */
+	uint8_t sub_mode_type;                 /* indicates the type of the cs sub mode step (0x01: Mode-1, 0x02: Mode-2, 0x03: Mode-3) */
+	uint8_t main_mode_repetition;          /* indicates number of main mode steps from subevent that is repeated on subsequent subevent after the initial mode-0 steps (range: 0x00 to 0x03) */
+	uint8_t mode_0_steps;                  /* indicates number of mode-0 steps at the beginning of a subevent (range: 0x01 to 0x03) */
+	uint8_t role;                          /* indicates the role that is used by the local device for the current configuration (cs_role_e 0x00 CS_ROLE_INITIATOR, 0x01 CS_ROLE_REFLECTOR) */
+	uint8_t rtt_type;                      /* indicates the type of RTT used on all mode-1 and mode-3 CS_SYNC packets (range: 0x00 to 0x06) */
+	uint8_t cs_sync_phy;                   /* indicates the type of the phy used for CS_SYNC packets exchange (0x01: LE_1M_PHY, 0x02: LE_1M_PHY) */
+	uint8_t cs_sync_ant_slct;              /* indicates the select antenna identifier for CS_SYNC packets exchange (range: 0x01 to 0x04) */
+	uint8_t max_num_subevents;             /* indicates the maximum number of subevents in the procedure. (range: 0x00 to 0x20, where 0x00 signifies that this value should be ignored.) */
+	uint8_t t_ip1_time;                    /* indicates the cs packets interlude period to be used in microseconds (supported values: 10 us, 20 us, 30 us, 40 us, 50 us, 60 us, 80 us, 145 us) */
+	uint8_t t_ip2_time;                    /* indicates the cs tone interlude period to be used in microseconds (supported values: 10 us, 20 us, 30 us, 40 us, 50 us, 60 us, 80 us, 145 us) */
+	uint8_t t_fcs_time;                    /* indicates the frequency change spacing period to be used in microseconds (supported values: 10 us, 20 us, 30 us, 40 us, 50 us, 60 us, 80 us, 100 us, 120 us, 150 us) */
+	uint8_t t_pm_time;                     /* indicates the phase measurement period of cs tones to be used in microseconds (supported values: 10 us, 20 us, 40 us) */
+	uint8_t t_sw_time;                     /* indicates the antenna switching period to be used in microseconds (supported values: 0x00, 1 us, 2 us, 4 us, 10 us) */
+	uint8_t ant_cfg_idx;                   /* indicates the antenna configuration index used during the cs tone phase (range: 0 to 7) */
+	uint8_t companion_signal_enable;       /* indicates whether the local controller shall enable or disable the companion signal being used and the type of the companion signal in case of being enabled (ranges: 0x00 to 0x03) */
+	uint8_t snr_ctrl_init;                 /* indicates the SNR control adjustment for the CS_SYNC transmissions of the initiator. (supported values: 0x00 (18db), 0x01 (21db), 0x02 (24db), 0x03 (27db), 0x04 (30db), 0xFF (Not Applied))*/
+	uint8_t snr_ctrl_refl;                 /* indicates the SNR control adjustment for the CS_SYNC transmissions of the reflector. (supported values: 0x00 (18db), 0x01 (21db), 0x02 (24db), 0x03 (27db), 0x04 (30db), 0xFF (Not Applied))*/
+	uint8_t chnl_map_rep;                  /* indicates the number of times the channels indicated by the Channel_Map or the Channel field in the Override Parameters is cycled through for non-mode‑0 steps within a CS procedure. (range: 0x01 to 0xFF)*/
+	int8_t  tx_pwr_lvl;                    /* indicates the transmit power level specified (or the nearest supported level) in dbm (range: 0x81 [-127 dbm] to 0x14 [20 dbm], 0x7E and 0x7F are used to set transmitter to minimum and maximum available power level respectively) */
+	uint8_t override_params_length;        /* inidicates override_params_data paramter size in bytes (range: 0 to 255) */
+} ble_cs_test_cmd_st;
+
+/* BLE_6.0 Channel Sounding Events */
+
+/**
+ * @brief CS Procedure Enable Complete event parameter
+ *
+ */
+typedef struct _ble_cs_prcdr_en_cmplt_evnt_st {
+	uint32_t subevent_len;			/* holds cs subevent duration in microseconds (range: 0x0004E2 [1250 us] to 0x3D0900 [4 s]) */
+	uint16_t conn_handle;			/* holds the connection handle identifier (range: 0x0000 to 0x0EFF) */
+	uint16_t subevent_interval;		/* holds time between consecutive subevents anchored off the same ACL anchor point in units of 0.625 ms (range: 0x0000 [0 ms] to 0xFFFF [40.959375 s]) */
+	uint16_t event_interval;		/* holds number of ACL connection events between 2 consecutive cs events (range: 0x0000 to 0xFFFF) */
+	uint16_t procedure_interval;	/* holds number of ACL connection events between 2 consecutive cs procedures (range: 0x0000 to 0xFFFF) */
+	uint16_t procedure_count;		/* holds number of procedures executed (range: 0x0001 to 0xFFFF, 0x000 indicates indefinite number of cs procedures until disabled by host) */
+	uint16_t max_procedure_length;  /* holds the selected maximum duration of each CS procedure */
+	uint8_t config_id;				/* holds the cs configuration identifier (range: 0 to 3) */
+	uint8_t status;					/* holds event status (0x00: successful, else: failed) */
+	uint8_t state;					/* holds cs state (0x00: disabled [all subsequent parameters shall be ignored], 0x01: enabled) */
+	uint8_t tone_ant_cfg_slct;		/* holds antenna configuration inex using on the current cs procedure (range: 0 to 7) */
+	int8_t slctd_tx_pwr;			/* holds the select tx power level (or estimated tx power level in case of a varying one) in dbm of the current cs procedure (range: 0x81 [-127 dbm] to 0x14 [20 dbm], 0x7F indicates that tx power level is unavailable) */
+	uint8_t subevents_per_event;	/* holds number of subevents anchored off the same ACL anchor point (range: 0x01 to 0x10) */
+} ble_cs_prcdr_en_cmplt_evnt_st;
+
+/**
+ * @brief holds mode- and role- specific step data object type
+ * 	used on the following commands/events:
+ * 		LE_CS_Subevent_Result event
+ * 		LE_CS_Subevent_Result_Continue event
+ */
+typedef struct _ble_cs_subevent_result_mode_0_st {
+	int16_t measured_freq_offset;	/* indicates the frequency offset measured in units of 0.01 ppm (15 signed bits meaningful, range: 0xD8F0 [-100 ppm] to 0x2710 [100 ppm]) */
+	uint8_t packet_quality;			/* indicates the quality of packet (4 bits for the CS AA error check + 4 bits for CS payload number of error bits) */
+	int8_t packet_rssi;			/* indicates the packet rssi in dB (8 signed bits, range: 0x81 [-127 dB] to 0x14 [20 dB], 0x7F indicates that rssi is unavailable) * */
+	uint8_t packet_antenna;			/* indicates the antenna identifier for the antenna used on RTT packet */
+} ble_cs_subevent_result_mode_0_st;
+
+typedef struct _ble_cs_subevent_result_mode_1_st {
+	uint32_t packet_pct1;		/* indicates the Phase Correction Term for IQ samples (3 Octets meaningful, 12 bits I sample + 12 bits Q sample, 0xFFFFFF: indicates no PCT)  */
+	uint32_t packet_pct2;		/* indicates the Phase Correction Term for IQ samples (3 Octets meaningful, 12 bits I sample + 12 bits Q sample, 0xFFFFFF: indicates no PCT)  */
+	int16_t toa_tod_differnece;	/* indicates the time difference between time of arrival and time of departure in case of initiator role or time of departure and time of arrival in case of reflector role during a CS step execluding the known nominal offsets in units of 0.5 ns (16 signed bits, range: 0x8001 [-16.3835 us] to 0x7FFF [16.3835 us], 0x8000 indicates no time difference) */
+	uint8_t packet_quality;		/* indicates the quality of packet (4 bits for the CS AA error check + 4 bits for CS payload number of error bits) */
+	uint8_t packet_nadm;		/* indicates the likelihood of an attack being detected from a random or sounding sequence */
+	int8_t packet_rssi;		/* indicates the packet rssi in dB (8 signed bits, range: 0x81 [-127 dB] to 0x14 [20 dB], 0x7F indicates that rssi is unavailable) * */
+	uint8_t packet_antenna;		/* indicates the antenna identifier for the antenna used on RTT packet */
+} ble_cs_subevent_result_mode_1_st;
+
+typedef struct _ble_cs_subevent_result_mode_2_st {
+	uint32_t *tone_pct;			/* array holding the per antenna path tone Phase Correction Term (tone_pct[num_ant_paths+1], tone_pct[i] has 3 Octets meaningful, 12 bits I sample + 12 bits Q sample) */
+	uint8_t *tone_quality_indicator;	/* array holding the per antenna path tone quality (tone_quality_indicator[num_ant_paths+1], tone_pct[i] has 4 bits for the tone quality + 4 bits tone extension slot) */
+	uint8_t antenna_perm_idx;	/* indicates the permutation index for the selected number of antenna paths (range: 0x00 to 0x17) */
+} ble_cs_subevent_result_mode_2_st;
+
+typedef struct _ble_cs_subevent_result_mode_3_st {
+	uint32_t *tone_pct;			/* array holding the per antenna path tone Phase Correction Term (tone_pct[num_ant_paths+1], tone_pct[i] has 3 Octets meaningful, 12 bits I sample + 12 bits Q sample) */
+	uint32_t packet_pct1;		/* indicates the Phase Correction Term for IQ samples (3 Octets meaningful, 12 bits I sample + 12 bits Q sample, 0xFFFFFF: indicates no PCT)  */
+	uint32_t packet_pct2;		/* indicates the Phase Correction Term for IQ samples (3 Octets meaningful, 12 bits I sample + 12 bits Q sample, 0xFFFFFF: indicates no PCT)  */
+	uint8_t *tone_quality_indicator;	/* array holding the per antenna path tone quality (tone_quality_indicator[num_ant_paths+1], tone_pct[i] has 4 bits for the tone quality + 4 bits tone extension slot) */
+	int16_t toa_tod_differnece;	/* indicates the time difference between time of arrival and time of departure in case of initiator role or time of departure and time of arrival in case of reflector role during a CS step execluding the known nominal offsets in units of 0.5 ns (16 signed bits, range: 0x8001 [-16.3835 us] to 0x7FFF [16.3835 us], 0x8000 indicates no time difference) */
+	uint8_t packet_quality;		/* indicates the quality of packet (4 bits for the CS AA error check + 4 bits for CS payload number of error bits) */
+	uint8_t packet_nadm;		/* indicates the likelihood of an attack being detected from a random or sounding sequence */
+	int8_t packet_rssi;		/* indicates the packet rssi in dB (8 signed bits, range: 0x81 [-127 dB] to 0x14 [20 dB], 0x7F indicates that rssi is unavailable) * */
+	uint8_t packet_antenna;		/* indicates the antenna identifier for the antenna used on RTT packet */
+	uint8_t antenna_perm_idx;	/* indicates the permutation index for the selected number of antenna paths (range: 0x00 to 0x17) */
+} ble_cs_subevent_result_mode_3_st;
+
+/**
+ * @brief CS Subevent Result event parameter
+ * 	used on the following commands/events:
+ * 		LE_CS_Subevent_Result event
+ * 		LE_CS_Subevent_Result_Continue event
+ *
+ */
+typedef struct _ble_cs_subevent_result_evnt_st {
+	uint8_t *step_mode;				/* array holding per-step mode (step_mode[num_steps_reported], range of step_mode[i]: 0x00 to 0x03) */
+	uint8_t *step_channel;			/* array holding per-step channel (step_channel[num_steps_reported], range of step_channel[i]: 0x00 to 0x4E, [0x00, 0x01, 0x17, 0x18, 0x19, 0x4D, 0x4E] are invalid channel indices, others are RFU) */
+	uint8_t *step_data_len;			/* array holding per-step data length in bytes (step_data_len[num_steps_reported], range of step_data_len[i]: 0x00 to 0xFF) */
+	cs_step_data_t *step_data;		/* array holding cs_step_data_t pointers that points to per-mode and role data object (step_data[num_steps_reported]) */
+	uint16_t conn_handle;			/* holds the connection handle identifier (range: 0x0000 to 0x0EFF, 0xFFFF indicates CS test) */
+	uint16_t conn_event_counter;	/* holds the ACL connection event counter that the current CS result is anchored from */
+	uint16_t procedure_counter;		/* holds number of completed cs procedures since cs security start procedure (range: 0x0000 to 0xFFFF) */
+	int16_t freq_compensation;		/* holds the frequency compensation value in units of 0.01 ppm (15 signed bits meaningful, range: 0xD8F0 [-100 ppm] to 0x2710 [100 ppm], 0xC000 frequency compensation is unavailable) */
+	uint8_t config_id;				/* holds the cs configuration identifier (range: 0 to 3) */
+	int8_t ref_power_level;			/* holds the reference power level in dBm (8 signed bits, range: 0x81 [-127 dBm] to 0x14 [20 dBm], 0x7F indicates that reference power level isn't applicable) * */
+	uint8_t prcdr_done_status;		/* holds the status of the current cs procedure (4 bits for status + 4 bits RFU) */
+	uint8_t subevnt_done_status;	/* holds the status of the current cs subevent (4 bits for status + 4 bits RFU) */
+	uint8_t abort_reason;			/* holds the abort reason for the current procedure and subevent (4 bits for procedure done status + 4 bits for subevent done status) */
+	uint8_t num_ant_paths;			/* holds number of antenna paths used during the current cs steps to be reported (range: 0x01 to 0x04, 0x00 indicates that no phase measurement during the current cs steps) */
+	uint8_t num_steps_reported;		/* holds number of cs steps to be reported (range: 0x01 to 0xA0) */
+} ble_cs_subevent_result_evnt_st;
+
+#endif /* (SUPPORT_CHANNEL_SOUNDING && (SUPPORT_MASTER_CONNECTION || SUPPORT_SLAVE_CONNECTION)) */
+
 
 #if SUPPORT_RX_DTP_CONTROL
 
@@ -950,6 +1317,16 @@ typedef struct _ctrl_rx_dtp_st {
 } ctrl_rx_dtp_st;
 
 #endif /* SUPPORT_RX_DTP_CONTROL */
+
+#if SUPPORT_LE_ADVERTISERS_MONITORING
+
+typedef struct _ble_intf_mntrd_adv_report_evnt {
+    uint8_t addr[ADDRESS_SIZE];
+    uint8_t addr_type;
+    mntrd_adv_rssi_condition_e condition;
+} ble_intf_mntrd_adv_report_evnt_st;
+
+#endif /* SUPPORT_LE_ADVERTISERS_MONITORING */
 
 /**
  * @brief HCI Dispatch table containing callback event functions
@@ -1596,6 +1973,134 @@ struct hci_dispatch_tbl {
 #endif/*SUPPORT_LE_PAWR_ADVERTISER_ROLE*/
 
 
+#if SUPPORT_FRAME_SPACE_UPDATE
+/**
+ * @brief this API for the frame_space_complete event based on the parameters passed
+ *
+ * @param[in] evnt_param pointer to struct of type le_frame_updt_cmplt_st that holds the parameters
+ *
+ * @return void
+ */
+	void (*ll_intf_le_frame_space_updt_cmplt_evnt)(le_frame_updt_cmplt_st* evnt_param);
+#endif /* SUPPORT_FRAME_SPACE_UPDATE */
+
+#if (SUPPORT_CHANNEL_SOUNDING && 								\
+(SUPPORT_MASTER_CONNECTION || SUPPORT_SLAVE_CONNECTION))
+
+/**
+ * @brief  Send the cs remote supported capabilities complete event to host.
+ *
+ * @param  status  				: [in] return status of the event
+ * @param  conn_handle_id  		: [in] connection handle identifier
+ * @param  remote_capabilities  : [in] remote capabilities to be reported
+ *
+ * @retval None
+ */
+	void (*ll_intf_cs_read_remote_supported_capabilities_cmplt_evnt)(
+		ble_stat_t status,
+		uint16_t conn_handle_id,
+		ble_cs_capabilities_cmd_st *remote_capabilities);
+
+/**
+ * @brief  Send the cs security enable complete event to host.
+ *
+ * @param  status  				: [in] return status of the event
+ * @param  conn_handle_id  		: [in] connection handle identifier
+ *
+ * @retval None
+ */
+	void (*ll_intf_cs_security_enable_cmplt_evnt)(
+		ble_stat_t status, uint16_t conn_handle_id);
+
+/**
+ * @brief  Send the cs read remote FAE table complete event to host.
+ *
+ * @param  status  				: [in] return status of the event
+ * @param  conn_handle_id  		: [in] connection handle identifier
+ * @param  fae_table  			: [in] pointer to array holding remote FAE table content
+ *
+ * @retval None
+ */
+	void (*ll_intf_cs_read_remote_fae_table_cmplt_evnt)(
+		ble_stat_t status, uint16_t conn_handle_id, int8_t *fae_table);
+
+
+/**
+ * @brief  Send the cs config complete event to host as a response for
+ * 		cs_create_config command or cs_remove_config command.
+ *
+ * @param  status  				: [in] return status of the event
+ * @param  conn_handle_id  		: [in] connection handle identifier
+ * @param  config_id  			: [in] configuration identifier
+ * @param  action  				: [in] the retuned state of the configuration reported (0x00: remove/diable, 0x01: create/enable)
+ * @param  ptr_cs_config		: [in] pointer to structure hold the config parameters (in case the config is created action=0x01)
+ * @param  ptr_cs_step_time		: [in] pointer to structure hold CS step timing parameters (T_IP1, T_IP2, T_FCS and T_PM)
+ *
+ * @retval None
+ */
+	void (*ll_intf_cs_config_cmplt_evnt)(
+		uint8_t status, uint16_t conn_handle_id,
+		uint8_t config_id, uint8_t action,
+		ble_cs_config_cmd_st *ptr_cs_config,
+		ble_cs_step_time_param_st *ptr_cs_step_time);
+
+/**
+ * @brief  Send the CS Procedure Enable complete event to host.
+ *
+ * @param  ptr_evnt_params  : [in] pointer to struct holding procedure enable
+ *
+ * @retval None
+ */
+	void (*ll_intf_cs_procedure_enable_cmplt_evnt)(ble_cs_prcdr_en_cmplt_evnt_st *ptr_evnt_params);
+
+
+/**
+ * @brief  Send the CS Subevent Result event to host.
+ * @param  [in] evnt_pckt_p : pointer to the host buffer.
+ * @param  [in] data_length : length of data expected to be found in the buffer.
+ * @retval None
+ */
+	void (*ll_intf_cs_subevent_result_evnt)(cs_host_buffer* evnt_pckt_p, uint8_t data_length);
+
+/**
+ * @brief  Send the CS Subevent Result Continue event to host.
+ * @param  [in] evnt_pckt_p : pointer to the host buffer.
+ * @param  [in] data_length : length of data expected to be found in the buffer.
+ * @retval None
+ */
+	void (*ll_intf_cs_subevent_result_continue_evnt)(cs_host_buffer* evnt_pckt_p, uint8_t data_length);
+
+/**
+ * @brief  Send the cs test end complete event to host as a
+ * 		response for cs_test_end command.
+ *
+ * @param  status  				: [in] return status of the event
+ *
+ * @retval None
+ */
+	void (*ll_intf_cs_test_end_cmplt_evnt)(uint8_t status);
+
+#endif /* (SUPPORT_CHANNEL_SOUNDING && (SUPPORT_MASTER_CONNECTION || SUPPORT_SLAVE_CONNECTION)) */
+
+
+#if SUPPORT_EXT_FEATURE_SET
+	/**
+	 * @brief  used to indicate the completion of the process of the local Controller obtaining the used features of the remote device.
+	 *
+	 * @param  status         : [in] indicate whether the LE Read Remote Used Features command has successfully completed.
+	 * @param  conn_handle_id : [in] connection handle of the connection for which the LE Read Remote Used Features command is applied.
+	 * @param  le_features    : [in] Bit Mask List of used LE features.
+	 */
+	void (*ll_intf_le_read_all_remote_features_cmplt_evnt)(
+		const ble_stat_t status, const uint16_t conn_handle_id,
+		const uint8_t max_remote_page, const uint8_t max_valid_page,
+		const uint8_t page_0_features[LE_FEATURES_BYTES_NO],
+		uint8_t ext_pages_features[MAX_ALLOWED_EXT_FEATURE_SET_PAGES] [EXT_FEATURE_SET_BYTES_NO]);
+#endif /* SUPPORT_EXT_FEATURE_SET */
+
+#if SUPPORT_LE_ADVERTISERS_MONITORING
+	void (*ll_intf_le_mntrd_adv_report_evnt)(const ble_intf_mntrd_adv_report_evnt_st* const report_params);
+#endif /* SUPPORT_LE_ADVERTISERS_MONITORING */
 
 };
 
@@ -1613,6 +2118,9 @@ typedef struct _ble_intf_cig_host_param{
 	uint8_t sca;						/* The worst-case sleep clock accuracy of all the slaves */
 	uint8_t pack;						/* the preferred method of arranging subevents of multiple CISes */
 	uint8_t framing;					/* Framed or Unframed SDUs */
+#if SUPPORT_ISO_UNSEG_MODE
+	uint8_t seg_mode;					/* Segmented or Unsegmented Framed Mode */
+#endif /* SUPPORT_ISO_UNSEG_MODE */
 	uint8_t cis_cnt;					/* Total number of CISes in the CIG being added or modified */
 	uint8_t ft_m_to_s; 					/* The flush timeout in multiples of ISO_Interval for each payload sent from the master to slave */
 	uint8_t ft_s_to_m; 					/* The flush timeout in multiples of ISO_Interval for each payload sent from     the slave to master */
@@ -1816,6 +2324,9 @@ typedef union _hci_cmds_params_un
 	le_set_conn_tx_pwr_lvl_cmd_st le_set_conn_tx_pwr_lvl_cmd;
 #endif /* SUPPORT_MASTER_CONNECTION || SUPPORT_SLAVE_CONNECTION */
 
+#if SUPPORT_FRAME_SPACE_UPDATE
+	le_frame_space_updt_cmd_st le_frame_space_updt_cmd;
+#endif /* SUPPORT_FRAME_SPACE_UPDATE */
 
 } hci_cmds_params_un;
 
@@ -1951,7 +2462,20 @@ ble_stat_t ll_intf_read_local_supported_cmds(uint8_t supported_cmds[64]);
  *
  * @retval ble_stat_t : Command status to be sent to the Host.
  */
-ble_stat_t ll_intf_read_local_supported_features_page_0(uint8_t lmp_features[8]);
+ble_stat_t ll_intf_read_local_supported_features(uint8_t lmp_features[8]);
+
+#if SUPPORT_EXT_FEATURE_SET
+/**
+ * @brief  Set the return parameters of the "Read Local Extended Features" HCI command in the event packet that to be sent to the Host.
+ *
+ * @param  page_number		: [in/out] 	Requested Page Number/Returned Page Number.
+ * @param  lmp_features     : [out] 	LMP Features to be reported
+ * @param  max_page_number  : [out] 	Max Supported Pages for LMP Features
+ *
+ * @retval None.
+ */
+ble_stat_t ll_intf_read_local_extended_features(uint8_t* page_number, uint8_t lmp_features[8], uint8_t* max_page_number);
+#endif /* SUPPORT_EXT_FEATURE_SET */
 
 /**
  * @brief  Read the list of the supported LE features for the Controller .
@@ -4530,10 +5054,254 @@ ble_stat_t ll_intf_le_set_prdc_adv_subevnt_data(
  *  @{
  */
 
+#if SUPPORT_FRAME_SPACE_UPDATE
+/*
+ * @brief used to set the inter frame space(TIFS) value on a specific connection
+ *
+ * @param[in] frame_Space_update_cmd_param structure hold the host parameters
+ * @return ble_stat_t
+ */
+ble_stat_t ll_intf_le_frame_space_update(le_frame_space_updt_cmd_st* frame_Space_update_cmd_param);
+#endif /* SUPPORT_FRAME_SPACE_UPDATE */
 
 
 
+/* BLE 6.0 Channel Sounding link layer */
+#if (SUPPORT_CHANNEL_SOUNDING && 								\
+(SUPPORT_MASTER_CONNECTION || SUPPORT_SLAVE_CONNECTION))
 
+/**
+ * @brief  Used to get the local supported cpabilities by controller
+ *
+ * @param  capabilities	: [out] pointer to struct that will hold the capabalities
+ * 								read from controller
+ *
+ * @retval ble_stat_t
+ */
+ble_stat_t ll_intf_cs_read_local_supported_capabilities(ble_cs_capabilities_cmd_st *capabilities);
+
+/**
+ * @brief  Used to get the remote supported cpabilities, in case a cached copy exist (if exchanged before with
+ *  the peer device or set by the host through cs_write_cached_remote_supported_capabilites command) then use
+ * 	the cached copy, else initiate cs capabilities exchange procedure.
+ *
+ * @param  conn_handle_id: [IN] connection identifier
+ *
+ * @retval ble_stat_t
+ */
+ble_stat_t ll_intf_cs_read_remote_supported_capabilities(uint16_t conn_handle_id);
+
+/**
+ * @brief  Used to write a cached copy of the remote device supported cpabilities provided by the host.
+ *
+ * @param  conn_handle_id: [IN] connection identifier
+ * @param  remote_capabilities: [IN] pointer to remote supported capabilities
+ * 				 provided by the host
+ *
+ * @retval ble_stat_t
+ */
+ble_stat_t ll_intf_cs_write_cached_remote_supported_capabilities(
+	uint16_t conn_handle_id,
+	ble_cs_capabilities_cmd_st *remote_capabilities);
+
+/**
+ * @brief  Used to set start or restart cs security start procedure.
+ *
+ * @param  conn_handle_id: [IN] connection identifier
+ *
+ * @retval ble_stat_t
+ */
+ble_stat_t ll_intf_cs_security_enable(uint16_t conn_handle_id);
+
+/**
+ * @brief Used to Set the default Settings to be used for the local device.
+ *
+ * @param conn_handle_id: [IN] connection identifier
+ * @param role_enable: [IN] roles enabled by the local device
+ * 						0b00: both devices are disabled by default
+ * 						0b01: initiator is enabled by default
+ * 						0b10: reflector is enabled by default
+ * 						0b11: both devices are enabled by default
+ * @param CS_SYNC_ant_slct: [IN] default antenna identifier to be
+ * 						used by default (range: 1 to 4)
+ * @param max_tx_pwr: [IN] max power to be used in cs transmissions
+ *
+ * @retval ble_stat_t
+ */
+ble_stat_t ll_intf_cs_set_default_settings(uint16_t conn_handle_id,
+		uint8_t role_enable,
+		uint8_t CS_SYNC_ant_slct,
+		int8_t max_tx_pwr);
+
+/**
+ * @brief Used to read per channel Frequency Actuation Error relative to mode-0 of the remote device.
+ *
+ * @param conn_handle_id: [IN] connection identifier.
+ *
+ * @retval ble_stat_t
+ */
+ble_stat_t ll_intf_cs_read_remote_fae_table(uint16_t conn_handle_id);
+
+/**
+ * @brief  Used to write a cached copy of the per channel Frequency Actuation Error
+ * 		relative to mode-0 of the remote device provided by the host.
+ *
+ * @param conn_handle_id: [IN] connection identifier.
+ * @param remote_fae_table: [IN] pointer to array holding the
+ * 	remote FAE values to be stored on the connection context.
+ *
+ * @retval ble_stat_t
+ */
+ble_stat_t ll_intf_cs_write_cached_remote_fae_table(uint16_t conn_handle_id, int8_t *remote_fae_table);
+
+/**
+ * @brief Used to create and update configuration identified by config_id.
+ *
+ * @param conn_handle_id: [IN] connection identifier.
+ * @param config_id: [IN] configuration identifier.
+ * @param config_params: [IN] pointer to struct that will hold the
+ * 	configuration parameters.
+ *
+ * @retval ble_stat_t
+ */
+ble_stat_t ll_intf_cs_create_config(uint16_t conn_handle_id, uint8_t config_id, ble_cs_config_cmd_st *config_params);
+
+/**
+ * @brief Used to remove cs configuration identified by config_id.
+ *
+ * @param conn_handle_id: [IN] connection identifier.
+ * @param config_id: [IN] configuration identifier.
+ *
+ * @retval ble_stat_t
+ */
+ble_stat_t ll_intf_cs_remove_config(uint16_t conn_handle_id, uint8_t config_id);
+
+/**
+ * @brief Used to set the cs channel classification to be used
+ * 		to figure out the channel map to be used on subseqent
+ *  	CS procedures.
+ *
+ * @param channel_classification: [IN] pointer to array holding
+ * 	the channel classification.
+ *
+ * @retval ble_stat_t
+ */
+ble_stat_t ll_intf_cs_set_channel_classification(uint8_t *channel_classification);
+
+/**
+ * @brief Used to set the CS procedure parameters.
+ * @param conn_handle_id: [IN] connection identifier.
+ * @param cs_prcdr_params: [IN] pointer to struct that holds
+ * 		the cs procedure parameters
+ *
+ * @retval ble_stat_t
+ */
+ble_stat_t ll_intf_cs_set_procedure_parameters(uint16_t conn_handle_id, ble_cs_prcdr_params_cmd_st *cs_prcdr_params);
+
+/**
+ * @brief enable and disable CS Procedure.
+ *
+ * @param conn_handle_id: [IN] connection handle identifier.
+ * @param config_id: [IN] configuration identifier.
+ * @param enable: [IN] procedure state (0x00: disable - 0x01: enable).
+ *
+ * @retval ble_stat_t
+ */
+ble_stat_t ll_intf_cs_procedure_enable(uint16_t conn_handle_id, uint8_t config_id, uint8_t enable);
+
+/**
+ * @brief Start CS Test procedure given the passed parameters.
+ *
+ * @param cs_test_params_p: [IN] pointer to struct the holds CS test parameters.
+ *
+ * @retval ble_stat_t
+ */
+ble_stat_t ll_intf_cs_test(ble_cs_test_cmd_st *cs_test_params_p);
+
+/**
+ * @brief End CS Test procedure.
+ *
+ * @param None
+ *
+ * @retval ble_stat_t
+ */
+ble_stat_t ll_intf_cs_test_end(void);
+
+#endif /* (SUPPORT_CHANNEL_SOUNDING && (SUPPORT_MASTER_CONNECTION || SUPPORT_SLAVE_CONNECTION)) */
+
+
+#if SUPPORT_EXT_FEATURE_SET
+/**
+ * @brief  Read All pages of the supported LE features for the Controller .
+ *
+ * @param  all_features 		: [out] Bit Mask List of supported LE Page 0 to 10 features.
+ * @param  max_page 			: [out] max pages supported by the controller.
+ *
+ * @retval ble_stat_t : Command status to be sent to the Host.
+ */
+ble_stat_t ll_intf_le_read_all_local_supported_features(
+		uint8_t* all_features, uint8_t* max_page);
+
+/**
+ * @brief  Read all features [Pages 0 to 10] of a LE remote device.
+ *
+ * @param  conn_handle_id : [in] Connection Handle Id to identify a connection.
+ *
+ * @retval ble_stat_t : Command status to be sent to the Host.
+ */
+ble_stat_t ll_intf_le_read_all_remote_features(uint16_t conn_handle_id);
+
+#endif /* SUPPORT_EXT_FEATURE_SET */
+
+
+#if SUPPORT_LE_ADVERTISERS_MONITORING
+/**
+ * @brief Enables and disables the Advertisers Monitoring Feature.
+ *
+ * @param[in]  enable Enable/Disable .
+ *
+ * @retval SUCCESS always.
+ */
+ble_stat_t ll_intf_le_enable_mntrd_adv(uint8_t enable);
+
+/**
+ * @brief Adds an advertiser to the advertisers monitored list.
+ *
+ * @param[in]  mntrd_adv_info Advertisers Info.
+ *
+ * @retval  COMMAND_DISALLOWED if legacy command is issued before this command.
+ * 			INVALID_HCI_COMMAND_PARAMETERS if RSSI high is lower than RSSI low.
+ * 			MEMORY_CAPACITY_EXCEEDED if all the monitored list is occupied.
+ * 			SUCCESS Otherwise.
+ */
+ble_stat_t ll_intf_le_add_device_to_mntrd_adv_list(ble_mntrd_add_adv_device_st * mntrd_adv_info);
+
+/**
+ * @brief Removes an advertiser from the advertisers monitored list.
+ *
+ * @param[in]  addr 		Advertiser Address.
+ * @param[in]  addr_type 	Advertiser Address Type (Public or Random).
+ *
+ * @retval  INVALID_HCI_COMMAND_PARAMETERS if the device is not found in the monitored list.
+ * 			SUCCESS otherwise.
+ */
+ble_stat_t ll_intf_le_rmv_device_from_mntrd_adv_list(uint8_t* addr, ble_mntrd_adv_device_type_e addr_type);
+
+/**
+ * @brief Clears all the advertisers from the advertisers monitored list.
+ *
+ * @retval  None
+ */
+ble_stat_t ll_intf_le_clr_mntrd_adv_list(void);
+
+/**
+ * @brief Reads the advertisers monitored list size.
+ *
+ * @retval  Advertisers monitored list size.
+ */
+uint8_t ll_intf_le_read_mntrd_adv_list(void);
+
+#endif
 
 /**
  * @}
@@ -4721,6 +5489,27 @@ void ll_intf_config_schdling_time(Evnt_timing_t * p_evnt_timing);
 ble_stat_t ll_intf_ctrl_rx_dtp(uint8_t rx_pckt_count, uint8_t rx_pckt_len);
 
 #endif /* SUPPORT_RX_DTP_CONTROL */
+
+#if SUPPORT_CONFIGURABLE_GAIN_FIX
+/**
+ * @brief  initialize rssi gain fix region and select resistor measured
+ *			percentage that affects pre-emphasis sequence.
+ *
+ * @param  region_0x1f_val: absolute gain fix for region 0x1F in dbm.
+ * @param  region_0x0f_val: absolute gain fix for region 0x0F in dbm.
+ * @param  region_0x0b_val: absolute gain fix for region 0x0B in dbm.
+ * @param  region_0x09_val: absolute gain fix for region 0x09 in dbm.
+ * @param  r_msur_percent: percentage of the measured resistor value that will be used
+ * 				to select the update values in pre-emphasis sequence (range: 0 to 99).
+ *
+ * @retval None.
+ */
+void ll_intf_gain_fix_init(
+		uint8_t region_0x1f_val, uint8_t region_0x0f_val,
+		uint8_t region_0x0b_val, uint8_t region_0x09_val,
+		uint8_t r_msur_percent);
+
+#endif /* SUPPORT_CONFIGURABLE_GAIN_FIX */
 
 /**@}
 */
