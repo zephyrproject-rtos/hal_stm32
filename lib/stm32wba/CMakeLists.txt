@@ -6,7 +6,6 @@ zephyr_compile_definitions( -DBLE )
 
 zephyr_include_directories(BLE_TransparentMode/Core/Inc)
 zephyr_include_directories(BLE_TransparentMode/STM32_WPAN/Target)
-zephyr_include_directories(BLE_TransparentMode/System/Config/Debug_GPIO)
 zephyr_include_directories(BLE_TransparentMode/System/Config/Log)
 zephyr_include_directories(Common/WPAN/Interfaces)
 zephyr_include_directories(Common/WPAN/Modules)
@@ -32,7 +31,7 @@ zephyr_sources(Common/WPAN/Modules/Log/log_module.c)
 zephyr_sources(Common/WPAN/Interfaces/hw_pka.c)
 zephyr_sources(Common/WPAN/Interfaces/hw_pka_p256.c)
 zephyr_sources(Common/WPAN/Modules/scm.c)
-zephyr_sources(Common/WPAN/Modules/RTDebug/RTDebug.c)
+zephyr_sources(Common/WPAN/Modules/RTDebug/RTDebug_dtb.c)
 zephyr_sources(STM32_WPAN/link_layer/ll_sys/src/ll_sys_cs.c)
 zephyr_sources(STM32_WPAN/link_layer/ll_sys/src/ll_sys_dp_slp.c)
 zephyr_sources(STM32_WPAN/link_layer/ll_sys/src/ll_sys_intf.c)
@@ -90,6 +89,14 @@ endif()
 if(NOT CONFIG_BT_STM32WBA_USE_TEMP_BASED_CALIB)
   zephyr_compile_definitions( -DUSE_TEMPERATURE_BASED_RADIO_CALIBRATION=0 )
 endif()
+
+# Setting the right Cube define according to the Zephyr configuration
+if(NOT CONFIG_BT_STM32WBA_RT_DEBUG_DTB)
+  zephyr_compile_definitions( -DCFG_RT_DEBUG_DTB=0 )
+else()
+  zephyr_compile_definitions( -DCFG_RT_DEBUG_DTB=1 )
+endif()
+
 
 # Selecting the proper version of link layer lib according the soc
 # Checking all the soc variants and not simply relying on board name 
