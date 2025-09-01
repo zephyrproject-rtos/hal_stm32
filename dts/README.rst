@@ -50,3 +50,8 @@ Patch List:
       - Impacted files:
          dts/st/u3/stm32u375*-pinctrl.dtsi
          dts/st/u3/stm32u385*-pinctrl.dtsi
+
+   *Rename "TIM3_REMAP1" on the pin "PB5" to "TIM3_REMAP2"
+   of the following GPIO-STM32F103xx.xml files.
+      - Impacted files:
+         dts/st/f1/stm32f103r(8-b)tx-pinctrl.dtsi
