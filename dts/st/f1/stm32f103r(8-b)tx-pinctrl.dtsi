@@ -898,8 +898,8 @@
 				pinmux = <STM32F1_PINMUX('B', 4, ALTERNATE, TIM3_REMAP1)>;
 			};
 
-			/omit-if-no-ref/ tim3_ch2_remap1_pwm_out_pb5: tim3_ch2_remap1_pwm_out_pb5 {
-				pinmux = <STM32F1_PINMUX('B', 5, ALTERNATE, TIM3_REMAP1)>;
+			/omit-if-no-ref/ tim3_ch2_remap2_pwm_out_pb5: tim3_ch2_remap2_pwm_out_pb5 {
+				pinmux = <STM32F1_PINMUX('B', 5, ALTERNATE, TIM3_REMAP2)>;
 			};
 
 			/omit-if-no-ref/ tim3_ch1_remap2_pwm_out_pc6: tim3_ch1_remap2_pwm_out_pc6 {
