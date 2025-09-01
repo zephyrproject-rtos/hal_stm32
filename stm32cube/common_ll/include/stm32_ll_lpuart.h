@@ -4,7 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-#if defined(CONFIG_SOC_SERIES_STM32G0X)
+#if defined(CONFIG_SOC_SERIES_STM32C5X)
+#include <stm32c5xx_ll_lpuart.h>
+#elif defined(CONFIG_SOC_SERIES_STM32G0X)
 #include <stm32g0xx_ll_lpuart.h>
 #elif defined(CONFIG_SOC_SERIES_STM32G4X)
 #include <stm32g4xx_ll_lpuart.h>
