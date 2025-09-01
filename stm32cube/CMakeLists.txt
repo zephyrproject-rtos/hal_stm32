@@ -48,6 +48,7 @@ zephyr_compile_definitions(
 # List of all supported STM32 SoC series
 set(supported_series
   stm32c0x
+  stm32c5x
   stm32f0x
   stm32f1x
   stm32f2x
@@ -123,10 +124,21 @@ foreach(series ${supported_series})
       set(cube_dir ${series}x)
     endif()
 
-    zephyr_include_directories(
-	    ${cube_dir}/soc
-	    ${cube_dir}/drivers/include
-	  )
+   if(CONFIG_STM32_HAL2)
+      zephyr_compile_definitions(USE_EXTERNAL_ENV)
+      zephyr_include_directories(
+        ${cube_dir}/dfp/Include
+        ${cube_dir}/dfp/Include/Templates
+        ${cube_dir}/drivers/hal
+        ${cube_dir}/drivers/ll
+        ${cube_dir}/drivers/templates/common
+      )
+   else()
+      zephyr_include_directories(
+        ${cube_dir}/soc
+        ${cube_dir}/drivers/include
+      )
+    endif()
 
     add_subdirectory(${cube_dir})
   endif()
