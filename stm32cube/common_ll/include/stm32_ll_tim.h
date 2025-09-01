@@ -6,6 +6,8 @@
 
 #if defined(CONFIG_SOC_SERIES_STM32C0X)
 #include <stm32c0xx_ll_tim.h>
+#elif defined(CONFIG_SOC_SERIES_STM32C5X)
+#include <stm32c5xx_ll_tim.h>
 #elif defined(CONFIG_SOC_SERIES_STM32F0X)
 #include <stm32f0xx_ll_tim.h>
 #elif defined(CONFIG_SOC_SERIES_STM32F1X)
