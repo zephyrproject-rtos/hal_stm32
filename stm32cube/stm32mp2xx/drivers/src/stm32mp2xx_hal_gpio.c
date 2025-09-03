@@ -324,22 +324,22 @@ EXTI_TypeDef *getUsedExti(const GPIO_TypeDef  *GPIOx, uint32_t pinPosition)
   uint32_t extiIndex;
   uint32_t portIndex;
   uint32_t GPIOx_index = 0xFF;
-  EXTI_TypeDef  *instanceEXTI;
-  EXTI_TypeDef *instanceTab[]  = {EXTI1, EXTI2};
+  const EXTI_TypeDef  *instanceEXTI;
+  const EXTI_TypeDef *instanceTab[]  = {EXTI1, EXTI2};
   uint32_t temp;
 #if defined(GPIOJ) && defined(GPIOK)
-  GPIO_TypeDef *port[] = {GPIOA, GPIOB, GPIOC, GPIOD, GPIOE, GPIOF, GPIOG, GPIOH, GPIOI, GPIOJ, GPIOK, GPIOZ};
+  const GPIO_TypeDef *port[] = {GPIOA, GPIOB, GPIOC, GPIOD, GPIOE, GPIOF, GPIOG, GPIOH, GPIOI, GPIOJ, GPIOK, GPIOZ};
 #else   /* defined(GPIOJ) && defined(GPIOK) */
-  GPIO_TypeDef *port[] = {GPIOA, GPIOB, GPIOC, GPIOD, GPIOE, GPIOF, GPIOG, GPIOH, GPIOI, GPIOZ};
+  const GPIO_TypeDef *port[] = {GPIOA, GPIOB, GPIOC, GPIOD, GPIOE, GPIOF, GPIOG, GPIOH, GPIOI, GPIOZ};
 #endif  /* defined(GPIOJ) && defined(GPIOK) */
   const EXTI_Core_TypeDef *EXTI_CurrentCPU;
 
 
 #if defined(CORE_CM33)
-  EXTI_Core_TypeDef *EXTI_CPU[]  = {EXTI1_C2, EXTI2_C2};
+  const EXTI_Core_TypeDef *EXTI_CPU[]  = {EXTI1_C2, EXTI2_C2};
 #endif  /* CORE_CM33 */
 #if defined(CORE_CA35)
-  EXTI_Core_TypeDef *EXTI_CPU[]  = {EXTI1_C1, EXTI2_C1};
+  const EXTI_Core_TypeDef *EXTI_CPU[]  = {EXTI1_C1, EXTI2_C1};
 #endif  /* CORE_CA35 */
 
   /* find port index */
@@ -365,12 +365,12 @@ EXTI_TypeDef *getUsedExti(const GPIO_TypeDef  *GPIOx, uint32_t pinPosition)
       /*check if interruption mode is selected for input pin*/
       if ((((EXTI_CurrentCPU->IMR1) >> pinPosition) & 0x1U) != 0U)
       {
-        return instanceEXTI;  /* both GPIO bank and interruption mode are OK */
+        return (EXTI_TypeDef *)instanceEXTI;  /* both GPIO bank and interruption mode are OK */
       }
       /*check if event mode is selected for input pin*/
       if ((((EXTI_CurrentCPU->EMR1) >> pinPosition) & 0x1U) != 0U)
       {
-        return instanceEXTI;  /* both GPIO bank and event mode are OK */
+        return (EXTI_TypeDef *)instanceEXTI;  /* both GPIO bank and event mode are OK */
       }
     }
   }
@@ -936,7 +936,7 @@ HAL_StatusTypeDef HAL_GPIO_TakePinSemaphore(GPIO_TypeDef *GPIOx, uint16_t GPIO_P
   * @param  GPIO_Pin : gpio pin bitmap
   * @retval HAL Status, HAL_OK
   */
-HAL_StatusTypeDef HAL_GPIO_ReleasePinSemaphore(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin)
+HAL_StatusTypeDef HAL_GPIO_ReleasePinSemaphore(const GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin)
 {
   uint32_t position = 0x00;
   uint32_t iocurrent;
@@ -954,7 +954,7 @@ HAL_StatusTypeDef HAL_GPIO_ReleasePinSemaphore(GPIO_TypeDef *GPIOx, uint16_t GPI
     if (iocurrent != 0U)
     {
       /* Release Semaphore*/
-      regaddr = &GPIOx->SEMCR0 + (GPIO_SEMCFGR_OFFSET * position);
+      regaddr = (__IO uint32_t *)&GPIOx->SEMCR0 + (GPIO_SEMCFGR_OFFSET * position);
       *regaddr = ~GPIO_SEMCR0_SEM_MUTEX;
     }
     position++;

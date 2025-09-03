@@ -1032,20 +1032,20 @@ HAL_RTCStateTypeDef HAL_RTC_GetState(const RTC_HandleTypeDef *hrtc);
 #define IS_RTC_ALARM_DATE_WEEKDAY_SEL(SEL) (((SEL) == RTC_ALARMDATEWEEKDAYSEL_DATE) || \
                                             ((SEL) == RTC_ALARMDATEWEEKDAYSEL_WEEKDAY))
 
-#define IS_RTC_ALARM_MASK(MASK)  (((MASK) & ~(RTC_ALARMMASK_ALL)) == 0UL)
+#define IS_RTC_ALARM_MASK(ALARM_MASK)  (((ALARM_MASK) & ~(RTC_ALARMMASK_ALL)) == 0UL)
 
 #define IS_RTC_ALARM(ALARM)      (((ALARM) == RTC_ALARM_A) || \
                                   ((ALARM) == RTC_ALARM_B))
 
 #define IS_RTC_ALARM_SUB_SECOND_VALUE(VALUE) ((VALUE) <= RTC_ALRMASSR_SS)
 
-#define IS_RTC_ALARM_SUB_SECOND_MASK(MASK)  ( \
-                                              ((MASK) == 0UL)                                \
+#define IS_RTC_ALARM_SUB_SECOND_MASK(ALARM_MASK)  ( \
+                                              ((ALARM_MASK) == 0UL)                                \
                                               ||                                             \
                                               ( \
-                                                ((MASK) >= RTC_ALARMSUBSECONDMASK_SS14_1)    \
+                                                ((ALARM_MASK) >= RTC_ALARMSUBSECONDMASK_SS14_1)    \
                                                 &&                                           \
-                                                ((MASK) <= RTC_ALARMSUBSECONDMASK_NONE)      \
+                                                ((ALARM_MASK) <= RTC_ALARMSUBSECONDMASK_NONE)      \
                                               )                                              \
                                             )
 

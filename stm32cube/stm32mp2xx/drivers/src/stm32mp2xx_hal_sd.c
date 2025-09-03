@@ -467,7 +467,7 @@ HAL_StatusTypeDef HAL_SD_InitCard(SD_HandleTypeDef *hsd)
 {
   uint32_t errorstate;
   SD_InitTypeDef Init;
-  uint32_t sdmmc_clk;
+  uint32_t sdmmc_clk = 0U;
 
   /* Default SDMMC peripheral configuration for SD card initialization */
   Init.ClockEdge           = SDMMC_CLOCK_EDGE_RISING;
@@ -2376,7 +2376,7 @@ HAL_StatusTypeDef HAL_SD_ConfigWideBusOperation(SD_HandleTypeDef *hsd, uint32_t 
 {
   SDMMC_InitTypeDef Init;
   uint32_t errorstate;
-  uint32_t sdmmc_clk;
+  uint32_t sdmmc_clk = 0U;
   HAL_StatusTypeDef status = HAL_OK;
 
   /* Check the parameters */

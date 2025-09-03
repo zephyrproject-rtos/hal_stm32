@@ -603,7 +603,7 @@ ErrorStatus LL_I2S_Init(SPI_TypeDef *SPIx, LL_I2S_InitTypeDef *I2S_InitStruct)
   uint32_t packetlength = 1UL;
   uint32_t ispcm = 0UL;
   uint32_t tmp;
-  uint32_t sourceclock;
+  uint32_t sourceclock = 0UL;
   ErrorStatus status = ERROR;
 
   /* Check the I2S parameters */
@@ -675,7 +675,7 @@ ErrorStatus LL_I2S_Init(SPI_TypeDef *SPIx, LL_I2S_InitTypeDef *I2S_InitStruct)
       if (SPIx == SPI2)
       {
 #if defined(LL_RCC_SPI2_CLKSOURCE)
-      	sourceclock = LL_RCC_GetSPIClockFreq(LL_RCC_SPI2_CLKSOURCE);
+        sourceclock = LL_RCC_GetSPIClockFreq(LL_RCC_SPI2_CLKSOURCE);
 #else
         sourceclock = LL_RCC_GetSPIClockFreq(LL_RCC_SPI23_CLKSOURCE);
 #endif /* LL_RCC_SPI2_CLKSOURCE */
@@ -685,7 +685,7 @@ ErrorStatus LL_I2S_Init(SPI_TypeDef *SPIx, LL_I2S_InitTypeDef *I2S_InitStruct)
       if (SPIx == SPI3)
       {
 #if defined(LL_RCC_SPI3_CLKSOURCE)
-      	sourceclock = LL_RCC_GetSPIClockFreq(LL_RCC_SPI3_CLKSOURCE);
+        sourceclock = LL_RCC_GetSPIClockFreq(LL_RCC_SPI3_CLKSOURCE);
 #else
         sourceclock = LL_RCC_GetSPIClockFreq(LL_RCC_SPI23_CLKSOURCE);
 #endif /* LL_RCC_SPI3_CLKSOURCE */

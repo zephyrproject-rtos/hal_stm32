@@ -18,6 +18,7 @@
   * in the root directory of this software component.
   * If no LICENSE file comes with this software, it is provided AS-IS.
   *
+  *
   ******************************************************************************
   @verbatim
   ==============================================================================
@@ -44,6 +45,7 @@
 
   @endverbatim
   ******************************************************************************
+
   */
 #ifndef STM32MP2xx_HAL_RIF_C
 #define STM32MP2xx_HAL_RIF_C
@@ -200,7 +202,8 @@ HAL_StatusTypeDef HAL_RISC_GetConfigPeriphAttributes(uint32_t PeriphId, RIF_Peri
 #if defined(CORE_CA35) || defined(CORTEX_IN_SECURE_STATE)
 /**
   * @brief  Lock RIF peripheral global configuration.
-  * @retval None.
+  * @param  none
+  * @retval none.
   */
 void HAL_RIF_PeriphGLock()
 {
@@ -210,6 +213,7 @@ void HAL_RIF_PeriphGLock()
 
 /**
   * @brief  Get RIF peripheral global lock configuration.
+  * @param  none
   * @retval Lock State (RIF_PERIPH_GLOCK_OFF or RIF_PERIPH_GLOCK_ON)
   */
 uint32_t HAL_RIF_GetPeriphGLock()
@@ -712,7 +716,8 @@ HAL_StatusTypeDef HAL_RIMC_GetConfigMasterAttributes(uint32_t MasterId, RIF_RIMC
 #if defined(CORE_CA35) || defined(CORTEX_IN_SECURE_STATE)
 /**
   * @brief  Lock RIMC global configuration.
-  * @retval None
+  * @param  none
+  * @retval none
   */
 void HAL_RIMC_GLock()
 {
@@ -722,6 +727,7 @@ void HAL_RIMC_GLock()
 
 /**
   * @brief  Get RIMC global lock configuration.
+  * @param  none
   * @retval Lock State (RIF_RIMC_GLOCK_OFF or RIF_RIMC_GLOCK_ON)
   */
 uint32_t HAL_RIMC_GetGLock()
@@ -854,7 +860,7 @@ HAL_StatusTypeDef HAL_RISAB_ConfigMemAttributes(uint32_t PageId, RIF_MemRisab_De
 /**
   * @brief  Get RIF RISAB memory configuration.
   * @param  PageId RISAB Memory Page Id.
-  * @param  Cid RISAB Memory Compartiment Id.
+  * @param  PageId RISAB Memory Compartiment Id.
   * @param  Instance RISAB Memory instance.
   * @param  MemAttributes RISAB Memory attribute pointer.
   *         This parameter can be a value of @ref RIF_MemRisab_Desc.
@@ -1237,6 +1243,7 @@ HAL_StatusTypeDef HAL_RISAF_ConfigMemSubRegionAttributes(uint32_t RegionId, RIF_
 
 /**
   * @brief  RIF RISAF memory encrypt configuration.
+  * @param  RegionId RISAF Memory Region Id.
   * @param  MemAttributes RISAF Memory attribute pointer.
   *         This parameter can be a value of @ref RIF_MemRisafEncKey_Desc.
   * @retval HAL status.
@@ -1422,6 +1429,7 @@ uint32_t HAL_RISAF_GetMemGLock(uint32_t Instance)
   return (RIF_HAL_ERROR);
 }
 
+
 /**
   * @}
   */
@@ -1466,7 +1474,7 @@ HAL_StatusTypeDef HAL_IAC_DisableIT(uint32_t PeriphId)
   {
     /* common case where only one peripheral is configured */
     CLEAR_BIT(IAC->IER[RIF_GET_REG_INDEX(PeriphId) % (sizeof(IAC->IER) / sizeof(IAC->IER[0]))]\
-              , 1U << RIF_GET_PERIPH_POS(PeriphId));
+              , 1UL << RIF_GET_PERIPH_POS(PeriphId));
   }
 
   return HAL_OK;
@@ -1670,3 +1678,5 @@ __weak void HAL_IAC_Callback(uint32_t PeriphId)
   */
 
 #endif /* STM32MP2xx_HAL_RIF_C */
+
+/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

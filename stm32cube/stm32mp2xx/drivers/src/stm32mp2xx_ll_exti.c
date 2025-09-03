@@ -18,13 +18,13 @@
 #if defined(USE_FULL_LL_DRIVER)
 
 /* Includes ------------------------------------------------------------------*/
+#include "stm32mp2xx_ll_exti.h"
+
 #ifdef  USE_FULL_ASSERT
 #include "stm32_assert.h"
 #else   /* USE_FULL_ASSERT */
 #define assert_param(expr) ((void)0U)
 #endif  /* USE_FULL_ASSERT */
-
-#include "stm32mp2xx_ll_exti.h"
 
 /** @addtogroup STM32MP2xx_LL_Driver
   * @{

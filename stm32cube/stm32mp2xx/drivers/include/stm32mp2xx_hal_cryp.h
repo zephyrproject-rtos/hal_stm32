@@ -468,13 +468,13 @@ typedef  void (*pCRYP_CallbackTypeDef)(CRYP_HandleTypeDef *hcryp);    /*!< point
 /** @defgroup CRYP_Key_Mode CRYP or SAES Key Mode
   * @{
   */
-#define CRYP_KEYMODE_NORMAL         0x00000000U               /*!< Normal key usage, Key registers are freely usable */
+#define CRYP_KEYMODE_NORMAL         0x00000000UL              /*!< Normal key usage, Key registers are freely usable */
 #if defined (SAES_CR_WRAPEN)
 #define CRYP_KEYMODE_WRAPPED        SAES_CR_WRAPEN            /*!< Only for SAES, Wrapped key: to encrypt or decrypt AES keys */
-#define CRYP_KEYMODE_SHARED         (0x02U << CRYP_CR_KMOD_Pos) /*!< Only for SAES, Wrapped key: to encrypt or decrypt AES keys */
+#define CRYP_KEYMODE_SHARED         (0x02UL << CRYP_CR_KMOD_Pos) /*!< Only for SAES, Wrapped key: to encrypt or decrypt AES keys */
 #else
 #define CRYP_KEYMODE_WRAPPED        SAES_CR_KMOD_0            /*!< Only for SAES, Wrapped key: to encrypt or decrypt AES keys */
-#define CRYP_KEYMODE_SHARED         (0x02U << CRYP_CR_KMOD_Pos) /*!< Key shared by SAES peripheral */
+#define CRYP_KEYMODE_SHARED         (0x02UL << CRYP_CR_KMOD_Pos) /*!< Key shared by SAES peripheral */
 #endif /* SAES_CR_WRAPEN */
 /**
   * @}
@@ -484,7 +484,7 @@ typedef  void (*pCRYP_CallbackTypeDef)(CRYP_HandleTypeDef *hcryp);    /*!< point
   * @{
   */
 
-#define CRYP_KEYSEL_NORMAL       0x00000000U            /*!< Normal key, key registers SAES_KEYx or CRYP_KEYx */
+#define CRYP_KEYSEL_NORMAL       0x00000000UL           /*!< Normal key, key registers SAES_KEYx or CRYP_KEYx */
 #define CRYP_KEYSEL_HW           SAES_CR_KEYSEL_0       /*!< Only for SAES, Hardware key : derived hardware
                                                              unique key (DHUK 256-bit) */
 #define CRYP_KEYSEL_SW           SAES_CR_KEYSEL_1       /*!< Only for SAES, Software key : boot hardware
@@ -507,7 +507,7 @@ typedef  void (*pCRYP_CallbackTypeDef)(CRYP_HandleTypeDef *hcryp);    /*!< point
 
 #define CRYP_KEYPROT_ENABLE         SAES_CR_KEYPROT     /*!< Only for SAES, Key can't be shared between
                                                              two applications with different security contexts */
-#define CRYP_KEYPROT_DISABLE        0x00000000U         /*!< Only for SAES, Key can be shared between
+#define CRYP_KEYPROT_DISABLE        0x00000000UL        /*!< Only for SAES, Key can be shared between
                                                              two applications with different security contexts */
 
 /**
@@ -518,11 +518,11 @@ typedef  void (*pCRYP_CallbackTypeDef)(CRYP_HandleTypeDef *hcryp);    /*!< point
   * @{
   */
 #if defined(SAES_CR_WRAPID)
-#define CRYP_KEYSHARED_SELF         0x00000000U              /*!< Only for SAES, key is used by SAES peripheral */
+#define CRYP_KEYSHARED_SELF         0x00000000UL             /*!< Only for SAES, key is used by SAES peripheral */
 #define CRYP_KEYSHARED_CRYP1        SAES_CR_WRAPID_CRYP1     /*!< Only for SAES, key is shared with CRYP1 peripheral */
 #define CRYP_KEYSHARED_CRYP2        SAES_CR_WRAPID_CRYP2     /*!< Only for SAES, key is shared with CRYP2 peripheral */
 #else
-#define CRYP_KEYSHARED_CRYP1        0x00000000U              /*!< Only for SAES, key is shared with CRYP1 peripheral */
+#define CRYP_KEYSHARED_CRYP1        0x00000000UL             /*!< Only for SAES, key is shared with CRYP1 peripheral */
 #define CRYP_KEYSHARED_CRYP2        SAES_CR_KSHAREID_0       /*!< Only for SAES, key is shared with CRYP2 peripheral */
 #endif /* SAES_CR_WRAPID */
 /**
@@ -533,7 +533,7 @@ typedef  void (*pCRYP_CallbackTypeDef)(CRYP_HandleTypeDef *hcryp);    /*!< point
   * @{
   */
 
-#define CRYP_MODE_ENCRYPT                0x00000000U             /*!< SAES peripheral encryption mode   */
+#define CRYP_MODE_ENCRYPT                0x00000000UL            /*!< SAES peripheral encryption mode   */
 #if defined (SAES_CR_WRAPEN)
 #define CRYP_MODE_KEY_DERIVATION         SAES_CR_OPMOD_0         /*!< SAES peripheral key derivation    */
 #define CRYP_MODE_DECRYPT                SAES_CR_OPMOD_1         /*!< SAES peripheral decryption mode   */
@@ -551,7 +551,7 @@ typedef  void (*pCRYP_CallbackTypeDef)(CRYP_HandleTypeDef *hcryp);    /*!< point
   * @{
   */
 
-#define CRYP_OPERATINGMODE_ENCRYPT       0x00000000U             /*!< CRYP peripheral encryption mode   */
+#define CRYP_OPERATINGMODE_ENCRYPT       0x00000000UL            /*!< CRYP peripheral encryption mode   */
 #define CRYP_OPERATINGMODE_DECRYPT       CRYP_CR_ALGODIR         /*!< CRYP peripheral decryption mode   */
 
 /**
@@ -568,7 +568,7 @@ typedef  void (*pCRYP_CallbackTypeDef)(CRYP_HandleTypeDef *hcryp);    /*!< point
   * @param  INSTANCE: specifies the HW instance.
   * @retval None
   */
-#define IS_CRYP_INSTANCE(INSTANCE) ((INSTANCE) == CRYP1 || (INSTANCE) == CRYP2)
+#define IS_CRYP_INSTANCE(INSTANCE) (((INSTANCE) == CRYP1) || ((INSTANCE) == CRYP2))
 #define IS_SAES_INSTANCE(INSTANCE) ((INSTANCE) == SAES)
 
 /** @brief Reset CRYP handle state

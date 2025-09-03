@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2024 STMicroelectronics.
+  * Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -30,7 +30,8 @@
   * @{
   */
 
-#if defined (I2C1) || defined (I2C2) || defined (I2C3) || defined (I2C4) || defined (I2C5) || defined (I2C6) || defined (I2C7) || defined (I2C8)
+#if defined (I2C1) || defined (I2C2) || defined (I2C3) || defined (I2C4) ||\
+    defined (I2C5) || defined (I2C6) || defined (I2C7) || defined (I2C8)
 
 /** @defgroup I2C_LL I2C
   * @{
@@ -90,7 +91,6 @@ ErrorStatus LL_I2C_DeInit(const I2C_TypeDef *I2Cx)
   /* Check the I2C Instance I2Cx */
   assert_param(IS_I2C_ALL_INSTANCE(I2Cx));
 
-#if defined(I2C1)
   if (I2Cx == I2C1)
   {
     /* Force reset of I2C clock */
@@ -99,8 +99,6 @@ ErrorStatus LL_I2C_DeInit(const I2C_TypeDef *I2Cx)
     /* Release reset of I2C clock */
     LL_RCC_I2C1_ReleaseReset();
   }
-#endif /* I2C1 */
-#if defined(I2C2)
   else if (I2Cx == I2C2)
   {
     /* Force reset of I2C clock */
@@ -110,7 +108,6 @@ ErrorStatus LL_I2C_DeInit(const I2C_TypeDef *I2Cx)
     LL_RCC_I2C2_ReleaseReset();
 
   }
-#endif /* I2C2 */
 #if defined(I2C3)
   else if (I2Cx == I2C3)
   {
@@ -161,6 +158,7 @@ ErrorStatus LL_I2C_DeInit(const I2C_TypeDef *I2Cx)
     LL_RCC_I2C7_ReleaseReset();
   }
 #endif /* I2C7 */
+#if defined(I2C8)
 #if defined(I2C8) && ! defined(CORE_CM0PLUS)
   else if (I2Cx == I2C8)
   {
@@ -171,7 +169,8 @@ ErrorStatus LL_I2C_DeInit(const I2C_TypeDef *I2Cx)
     LL_RCC_I2C8_ReleaseReset();
   }
 #endif /* I2C8 && ! CORE_CM0PLUS */
-  if (IS_I2C_ALL_INSTANCE(I2Cx) == 0U)
+#endif /* I2C8 */
+  else
   {
     status = ERROR;
   }

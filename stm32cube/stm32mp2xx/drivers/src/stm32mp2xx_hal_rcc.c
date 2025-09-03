@@ -178,7 +178,7 @@ static uint32_t RCC_is_hse_in_use(void)
       (((gfg & RCC_MUXSELCFGR_MUXSEL4_Msk) >> RCC_MUXSELCFGR_MUXSEL4_Pos) == 0x1U) ||
       (((gfg & RCC_MUXSELCFGR_MUXSEL5_Msk) >> RCC_MUXSELCFGR_MUXSEL5_Pos) == 0x1U) ||
       (((gfg & RCC_MUXSELCFGR_MUXSEL6_Msk) >> RCC_MUXSELCFGR_MUXSEL6_Pos) == 0x1U))
-#endif
+#endif /* RCC_MUXSELCFGR_MUXSEL7 */
   {
     return 1;
   }
@@ -228,7 +228,7 @@ static uint32_t RCC_is_hsi_in_use(void)
       (((gfg & RCC_MUXSELCFGR_MUXSEL4_Msk) >> RCC_MUXSELCFGR_MUXSEL4_Pos) == 0x0U) ||
       (((gfg & RCC_MUXSELCFGR_MUXSEL5_Msk) >> RCC_MUXSELCFGR_MUXSEL5_Pos) == 0x0U) ||
       (((gfg & RCC_MUXSELCFGR_MUXSEL6_Msk) >> RCC_MUXSELCFGR_MUXSEL6_Pos) == 0x0U))
-#endif
+#endif /* RCC_MUXSELCFGR_MUXSEL7 */
   {
     return 1;
   }
@@ -278,7 +278,7 @@ static uint32_t RCC_is_msi_in_use(void)
       (((gfg & RCC_MUXSELCFGR_MUXSEL4_Msk) >> RCC_MUXSELCFGR_MUXSEL4_Pos) == 0x2U) ||
       (((gfg & RCC_MUXSELCFGR_MUXSEL5_Msk) >> RCC_MUXSELCFGR_MUXSEL5_Pos) == 0x2U) ||
       (((gfg & RCC_MUXSELCFGR_MUXSEL6_Msk) >> RCC_MUXSELCFGR_MUXSEL6_Pos) == 0x2U))
-#endif
+#endif /* RCC_MUXSELCFGR_MUXSEL7 */
   {
     return 1;
   }

@@ -369,24 +369,24 @@ HAL_StatusTypeDef HAL_I2S_Init(I2S_HandleTypeDef *hi2s)
         /* SPI1 source clock */
         i2sclk = HAL_RCCEx_GetPeriphCLKFreq(RCC_PERIPHCLK_SPI1);
       }
-    	else if (hi2s->Instance == SPI2)
-    	{
+      else if (hi2s->Instance == SPI2)
+      {
 #if defined(RCC_PERIPHCLK_SPI2)
-    	  i2sclk = HAL_RCCEx_GetPeriphCLKFreq(RCC_PERIPHCLK_SPI2);
+        i2sclk = HAL_RCCEx_GetPeriphCLKFreq(RCC_PERIPHCLK_SPI2);
 #elif defined(RCC_PERIPHCLK_SPI2_3)
         /* SPI2 and SPI3 share the same source clock */
         i2sclk = HAL_RCCEx_GetPeriphCLKFreq(RCC_PERIPHCLK_SPI2_3);
 #endif /* RCC_PERIPHCLK_SPI2 */
-    	}
-    	else
-    	{
+      }
+      else
+      {
 #if defined(RCC_PERIPHCLK_SPI3)
-    	  i2sclk = HAL_RCCEx_GetPeriphCLKFreq(RCC_PERIPHCLK_SPI3);
+        i2sclk = HAL_RCCEx_GetPeriphCLKFreq(RCC_PERIPHCLK_SPI3);
 #elif defined(RCC_PERIPHCLK_SPI2_3)
         /* SPI2 and SPI3 share the same source clock */
         i2sclk = HAL_RCCEx_GetPeriphCLKFreq(RCC_PERIPHCLK_SPI2_3);
 #endif /* RCC_PERIPHCLK_SPI3 */
-    	}
+      }
       /* Compute the Real divider depending on the MCLK output state, with a floating point */
       if (hi2s->Init.MCLKOutput == I2S_MCLKOUTPUT_ENABLE)
       {

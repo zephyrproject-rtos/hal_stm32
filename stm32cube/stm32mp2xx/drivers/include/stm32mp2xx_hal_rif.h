@@ -4,8 +4,6 @@
   * @author  MCD Application Team
   * @brief   Header file of RIF HAL module.
   ******************************************************************************
-  *
-  ******************************************************************************
   * @attention
   *
   * Copyright (c) 2020 STMicroelectronics.
@@ -14,6 +12,7 @@
   * This software is licensed under terms that can be found in the LICENSE file
   * in the root directory of this software component.
   * If no LICENSE file comes with this software, it is provided AS-IS.
+  *
   *
   ******************************************************************************
   */
@@ -194,7 +193,6 @@ typedef struct
   */
 
 /* Definitions for RIF register values and constants */
-#if defined (STM32MP25xxxx)|| defined(STM32MP21xxxx) || defined(STM32MP23xxxx)
 #define RIF_PERIPH_REG_MAX             (6U)
 #define RIF_COMP_MAX                   (8U)
 #define RIF_CID_MAX                    (7U)
@@ -223,7 +221,6 @@ typedef struct
 #define RISC_PERIPH_REG3_ALL_Msk       (0x0FFDFDFFUL)
 #define RISC_PERIPH_REG4_ALL_Msk       (0x00000000UL)
 #define RISC_PERIPH_REG5_ALL_Msk       (0x00000000UL)
-#endif /* defined (STM32MP25xxxx) || defined(STM32MP21xxxx) || defined(STM32MP23xxxx) */
 
 /** @defgroup RIF_Attribute RIF Attribute
   *           bitmap: bit0 : Sec Attr (0 = Ns, 1 = Sec)
@@ -287,7 +284,9 @@ typedef struct
 #if defined(SPI7)
 #define RIF_PERIPH_SPI7                (RIF_PERIPH_REG0 | RISC_SECCFGR0_SEC28_Pos)
 #endif /* SPI7 */
+#if defined(SPI8)
 #define RIF_PERIPH_SPI8                (RIF_PERIPH_REG0 | RISC_SECCFGR0_SEC29_Pos)
+#endif /* SPI8 */
 #define RIF_PERIPH_SPDIFRX             (RIF_PERIPH_REG0 | RISC_SECCFGR0_SEC30_Pos)
 #define RIF_PERIPH_USART1              (RIF_PERIPH_REG0 | RISC_SECCFGR0_SEC31_Pos)
 
@@ -318,8 +317,12 @@ typedef struct
 #if defined(I2C6)
 #define RIF_PERIPH_I2C6                (RIF_PERIPH_REG1 | RISC_SECCFGR1_SEC46_Pos)
 #endif /* I2C6 */
+#if defined(I2C7)
 #define RIF_PERIPH_I2C7                (RIF_PERIPH_REG1 | RISC_SECCFGR1_SEC47_Pos)
+#endif /* I2C7 */
+#if defined(I2C8)
 #define RIF_PERIPH_I2C8                (RIF_PERIPH_REG1 | RISC_SECCFGR1_SEC48_Pos)
+#endif /* I2C8 */
 #define RIF_PERIPH_SAI1                (RIF_PERIPH_REG1 | RISC_SECCFGR1_SEC49_Pos)
 #define RIF_PERIPH_SAI2                (RIF_PERIPH_REG1 | RISC_SECCFGR1_SEC50_Pos)
 #define RIF_PERIPH_SAI3                (RIF_PERIPH_REG1 | RISC_SECCFGR1_SEC51_Pos)
@@ -328,11 +331,16 @@ typedef struct
 #define RIF_PERIPH_MDF1                (RIF_PERIPH_REG1 | RISC_SECCFGR1_SEC54_Pos)
 #if defined(ADF1)
 #define RIF_PERIPH_ADF1                (RIF_PERIPH_REG1 | RISC_SECCFGR1_SEC55_Pos)
-#endif
+#endif /* ADF1 */
 #define RIF_PERIPH_FDCAN               (RIF_PERIPH_REG1 | RISC_SECCFGR1_SEC56_Pos)
 #define RIF_PERIPH_HDP                 (RIF_PERIPH_REG1 | RISC_SECCFGR1_SEC57_Pos)
+#if defined(ADC12_COMMON)
 #define RIF_PERIPH_ADC12               (RIF_PERIPH_REG1 | RISC_SECCFGR1_SEC58_Pos)
 #define RIF_PERIPH_ADC3                (RIF_PERIPH_REG1 | RISC_SECCFGR1_SEC59_Pos)
+#else
+#define RIF_PERIPH_ADC1                (RIF_PERIPH_REG1 | RISC_SECCFGR1_SEC58_Pos)
+#define RIF_PERIPH_ADC2                (RIF_PERIPH_REG1 | RISC_SECCFGR1_SEC59_Pos)
+#endif /* ADC12_COMMON */
 #define RIF_PERIPH_ETH1                (RIF_PERIPH_REG1 | RISC_SECCFGR1_SEC60_Pos)
 #define RIF_PERIPH_ETH2                (RIF_PERIPH_REG1 | RISC_SECCFGR1_SEC61_Pos)
 #define RIF_PERIPH_RES62               (RIF_PERIPH_REG1 | RISC_SECCFGR1_SEC62_Pos)
@@ -340,16 +348,33 @@ typedef struct
 
 #define RIF_PERIPH_RES64               (RIF_PERIPH_REG2 | RISC_SECCFGR2_SEC64_Pos)
 #define RIF_PERIPH_RES65               (RIF_PERIPH_REG2 | RISC_SECCFGR2_SEC65_Pos)
+#if  ! defined(RIF_DERIVATIVE1_RESOURCES)
 #define RIF_PERIPH_USB3DR              (RIF_PERIPH_REG2 | RISC_SECCFGR2_SEC66_Pos)
 #define RIF_PERIPH_COMBOPHY            (RIF_PERIPH_REG2 | RISC_SECCFGR2_SEC67_Pos)
+#else
+#define RIF_PERIPH_OTG_HS              (RIF_PERIPH_REG2 | RISC_SECCFGR2_SEC66_Pos)
+#define RIF_PERIPH_DDRPERFM            (RIF_PERIPH_REG2 | RISC_SECCFGR2_SEC67_Pos)
+#endif /* RIF_DERIVATIVE1_RESOURCES */
+#if defined(RISAF5)
 #define RIF_PERIPH_PCIE                (RIF_PERIPH_REG2 | RISC_SECCFGR2_SEC68_Pos)
+#endif /*RISAF5*/
+#if defined(UCPD1)
 #define RIF_PERIPH_UCPD1               (RIF_PERIPH_REG2 | RISC_SECCFGR2_SEC69_Pos)
+#endif /* UCPD1 */
+#if defined(ETHSW_DEIP)
 #define RIF_PERIPH_ETHSW_DEIP          (RIF_PERIPH_REG2 | RISC_SECCFGR2_SEC70_Pos)
+#endif /* ETHSW_DEIP */
+#if defined(ETHSW_ACM)
 #define RIF_PERIPH_ETHSW_ACM           (RIF_PERIPH_REG2 | RISC_SECCFGR2_SEC71_Pos)
+#endif /* ETHSW_ACM */
+#if defined(ETHSW_ACMMSG)
 #define RIF_PERIPH_ETHSW_ACM_MSG       (RIF_PERIPH_REG2 | RISC_SECCFGR2_SEC72_Pos)
+#endif /* ETHSW_ACM_MSG */
 #define RIF_PERIPH_STGEN               (RIF_PERIPH_REG2 | RISC_SECCFGR2_SEC73_Pos)
 #define RIF_PERIPH_OCTOSPI1            (RIF_PERIPH_REG2 | RISC_SECCFGR2_SEC74_Pos)
+#if defined(OCTOSPI2)
 #define RIF_PERIPH_OCTOSPI2            (RIF_PERIPH_REG2 | RISC_SECCFGR2_SEC75_Pos)
+#endif /* OCTOSPI2 */
 #define RIF_PERIPH_SDMMC1              (RIF_PERIPH_REG2 | RISC_SECCFGR2_SEC76_Pos)
 #define RIF_PERIPH_SDMMC2              (RIF_PERIPH_REG2 | RISC_SECCFGR2_SEC77_Pos)
 #define RIF_PERIPH_SDMMC3              (RIF_PERIPH_REG2 | RISC_SECCFGR2_SEC78_Pos)
@@ -357,10 +382,14 @@ typedef struct
 #define RIF_PERIPH_GPU                 (RIF_PERIPH_REG2 | RISC_SECCFGR2_SEC79_Pos)
 #endif /* GPU */
 #define RIF_PERIPH_LTDC_CMN            (RIF_PERIPH_REG2 | RISC_SECCFGR2_SEC80_Pos)
+#if defined(DSI)
 #define RIF_PERIPH_DSI_CMN             (RIF_PERIPH_REG2 | RISC_SECCFGR2_SEC81_Pos)
+#endif /* DSI */
 #define RIF_PERIPH_RES82               (RIF_PERIPH_REG2 | RISC_SECCFGR2_SEC82_Pos)
 #define RIF_PERIPH_RES83               (RIF_PERIPH_REG2 | RISC_SECCFGR2_SEC83_Pos)
+#if defined(LVDS)
 #define RIF_PERIPH_LDITX               (RIF_PERIPH_REG2 | RISC_SECCFGR2_SEC84_Pos)
+#endif /* LVDS */
 #define RIF_PERIPH_RES85               (RIF_PERIPH_REG2 | RISC_SECCFGR2_SEC85_Pos)
 #define RIF_PERIPH_CSI2HOST            (RIF_PERIPH_REG2 | RISC_SECCFGR2_SEC86_Pos)
 #define RIF_PERIPH_DCMIPP              (RIF_PERIPH_REG2 | RISC_SECCFGR2_SEC87_Pos)
@@ -372,6 +401,35 @@ typedef struct
 #define RIF_PERIPH_VENC                (RIF_PERIPH_REG2 | RISC_SECCFGR2_SEC90_Pos)
 #endif /* VENC */
 #define RIF_PERIPH_RES91               (RIF_PERIPH_REG2 | RISC_SECCFGR2_SEC91_Pos)
+#if defined(RIF_DERIVATIVE1_RESOURCES)
+#define RIF_PERIPH_RNG1                (RIF_PERIPH_REG2 | RISC_SECCFGR2_SEC92_Pos)
+#define RIF_PERIPH_RNG2                (RIF_PERIPH_REG2 | RISC_SECCFGR2_SEC93_Pos)
+#define RIF_PERIPH_PKA                 (RIF_PERIPH_REG2 | RISC_SECCFGR2_SEC94_Pos)
+#define RIF_PERIPH_SAES                (RIF_PERIPH_REG2 | RISC_SECCFGR2_SEC95_Pos)
+#define RIF_PERIPH_HASH1               (RIF_PERIPH_REG3 | RISC_SECCFGR3_SEC96_Pos)
+#define RIF_PERIPH_HASH2               (RIF_PERIPH_REG3 | RISC_SECCFGR3_SEC97_Pos)
+
+#define RIF_PERIPH_CRYP1               (RIF_PERIPH_REG3 | RISC_SECCFGR3_SEC98_Pos)
+#define RIF_PERIPH_CRYP2               (RIF_PERIPH_REG3 | RISC_SECCFGR3_SEC99_Pos)
+#define RIF_PERIPH_IWDG1               (RIF_PERIPH_REG3 | RISC_SECCFGR3_SEC100_Pos)
+#define RIF_PERIPH_IWDG2               (RIF_PERIPH_REG3 | RISC_SECCFGR3_SEC101_Pos)
+#define RIF_PERIPH_IWDG3               (RIF_PERIPH_REG3 | RISC_SECCFGR3_SEC102_Pos)
+#define RIF_PERIPH_IWDG4               (RIF_PERIPH_REG3 | RISC_SECCFGR3_SEC103_Pos)
+#define RIF_PERIPH_WWDG1               (RIF_PERIPH_REG3 | RISC_SECCFGR3_SEC104_Pos)
+#elif defined(RIF_DERIVATIVE2_RESOURCES)
+#define RIF_PERIPH_RNG                 (RIF_PERIPH_REG2 | RISC_SECCFGR2_SEC92_Pos)
+#define RIF_PERIPH_PKA                 (RIF_PERIPH_REG2 | RISC_SECCFGR2_SEC93_Pos)
+#define RIF_PERIPH_SAES                (RIF_PERIPH_REG2 | RISC_SECCFGR2_SEC94_Pos)
+#define RIF_PERIPH_HASH                (RIF_PERIPH_REG2 | RISC_SECCFGR2_SEC95_Pos)
+
+#define RIF_PERIPH_CRYP1               (RIF_PERIPH_REG3 | RISC_SECCFGR3_SEC96_Pos)
+#define RIF_PERIPH_CRYP2               (RIF_PERIPH_REG3 | RISC_SECCFGR3_SEC97_Pos)
+#define RIF_PERIPH_IWDG1               (RIF_PERIPH_REG3 | RISC_SECCFGR3_SEC98_Pos)
+#define RIF_PERIPH_IWDG2               (RIF_PERIPH_REG3 | RISC_SECCFGR3_SEC99_Pos)
+#define RIF_PERIPH_IWDG3               (RIF_PERIPH_REG3 | RISC_SECCFGR3_SEC100_Pos)
+#define RIF_PERIPH_IWDG4               (RIF_PERIPH_REG3 | RISC_SECCFGR3_SEC101_Pos)
+#define RIF_PERIPH_WWDG1               (RIF_PERIPH_REG3 | RISC_SECCFGR3_SEC103_Pos)
+#else /* RIF_DERIVATIVE2_RESOURCES */
 #define RIF_PERIPH_RNG                 (RIF_PERIPH_REG2 | RISC_SECCFGR2_SEC92_Pos)
 #define RIF_PERIPH_PKA                 (RIF_PERIPH_REG2 | RISC_SECCFGR2_SEC93_Pos)
 #define RIF_PERIPH_SAES                (RIF_PERIPH_REG2 | RISC_SECCFGR2_SEC94_Pos)
@@ -386,30 +444,45 @@ typedef struct
 #define RIF_PERIPH_IWDG5               (RIF_PERIPH_REG3 | RISC_SECCFGR3_SEC102_Pos)
 #define RIF_PERIPH_WWDG1               (RIF_PERIPH_REG3 | RISC_SECCFGR3_SEC103_Pos)
 #define RIF_PERIPH_WWDG2               (RIF_PERIPH_REG3 | RISC_SECCFGR3_SEC104_Pos)
+#endif /* RIF_DERIVATIVE1_RESOURCES */
 #define RIF_PERIPH_RES105              (RIF_PERIPH_REG3 | RISC_SECCFGR3_SEC105_Pos)
 #define RIF_PERIPH_VREFBUF             (RIF_PERIPH_REG3 | RISC_SECCFGR3_SEC106_Pos)
 #define RIF_PERIPH_DTS                 (RIF_PERIPH_REG3 | RISC_SECCFGR3_SEC107_Pos)
 #define RIF_PERIPH_RAMCFG              (RIF_PERIPH_REG3 | RISC_SECCFGR3_SEC108_Pos)
 #define RIF_PERIPH_CRC                 (RIF_PERIPH_REG3 | RISC_SECCFGR3_SEC109_Pos)
 #define RIF_PERIPH_SERC                (RIF_PERIPH_REG3 | RISC_SECCFGR3_SEC110_Pos)
+#if defined(OCTOSPIM)
 #define RIF_PERIPH_OCTOSPIM            (RIF_PERIPH_REG3 | RISC_SECCFGR3_SEC111_Pos)
+#endif /* OCTOSPIM */
+#if defined(GICV2M)
 #define RIF_PERIPH_GICV2M              (RIF_PERIPH_REG3 | RISC_SECCFGR3_SEC112_Pos)
+#endif /* GICV2M */
 #define RIF_PERIPH_RES113              (RIF_PERIPH_REG3 | RISC_SECCFGR3_SEC113_Pos)
 #define RIF_PERIPH_I3C1                (RIF_PERIPH_REG3 | RISC_SECCFGR3_SEC114_Pos)
 #define RIF_PERIPH_I3C2                (RIF_PERIPH_REG3 | RISC_SECCFGR3_SEC115_Pos)
 #if defined(I3C3)
 #define RIF_PERIPH_I3C3                (RIF_PERIPH_REG3 | RISC_SECCFGR3_SEC116_Pos)
 #endif /* I3C3 */
+#if defined(I3C4)
 #define RIF_PERIPH_I3C4                (RIF_PERIPH_REG3 | RISC_SECCFGR3_SEC117_Pos)
+#endif /* I3C4 */
 #define RIF_PERIPH_ICACHE_DCACHE       (RIF_PERIPH_REG3 | RISC_SECCFGR3_SEC118_Pos)
 #define RIF_PERIPH_LTDC_L1L2           (RIF_PERIPH_REG3 | RISC_SECCFGR3_SEC119_Pos)
 #define RIF_PERIPH_LTDC_L3             (RIF_PERIPH_REG3 | RISC_SECCFGR3_SEC120_Pos)
+#if !defined(RIF_DERIVATIVE1_RESOURCES)
 #define RIF_PERIPH_LTDC_ROT            (RIF_PERIPH_REG3 | RISC_SECCFGR3_SEC121_Pos)
+#endif /* !RIF_DERIVATIVE1_RESOURCES  */
+#if defined(DSI)
 #define RIF_PERIPH_DSI_TRIG            (RIF_PERIPH_REG3 | RISC_SECCFGR3_SEC122_Pos)
 #define RIF_PERIPH_DSI_RD              (RIF_PERIPH_REG3 | RISC_SECCFGR3_SEC123_Pos)
+#endif /* DSI */
 #define RIF_PERIPH_RES124              (RIF_PERIPH_REG3 | RISC_SECCFGR3_SEC124_Pos)
+#if defined(OTFDEC1)
 #define RIF_PERIPH_OTFDEC1             (RIF_PERIPH_REG3 | RISC_SECCFGR3_SEC125_Pos)
+#endif /* OTFDEC1 */
+#if defined(OTFDEC2)
 #define RIF_PERIPH_OTFDEC2             (RIF_PERIPH_REG3 | RISC_SECCFGR3_SEC126_Pos)
+#endif /* OTFDEC2 */
 #define RIF_PERIPH_IAC                 (RIF_PERIPH_REG3 | RISC_SECCFGR3_SEC127_Pos)
 
 #define RIF_PERIPH_RISAB1              (RIF_PERIPH_REG4 | RISC_SECCFGR4_SEC128_Pos)
@@ -441,12 +514,18 @@ typedef struct
 #define RIF_PERIPH_RES142              (RIF_PERIPH_REG4 | RISC_SECCFGR4_SEC142_Pos)
 #define RIF_PERIPH_RES143              (RIF_PERIPH_REG4 | RISC_SECCFGR4_SEC143_Pos)
 #define RIF_PERIPH_IPCC1               (RIF_PERIPH_REG4 | RISC_SECCFGR4_SEC144_Pos)
+#if defined(IPCC2)
 #define RIF_PERIPH_IPCC2               (RIF_PERIPH_REG4 | RISC_SECCFGR4_SEC145_Pos)
+#endif /* IPCC2 */
+#if defined(HSEM)
 #define RIF_PERIPH_HSEM                (RIF_PERIPH_REG4 | RISC_SECCFGR4_SEC146_Pos)
+#endif /* HSEM */
 #define RIF_PERIPH_HPDMA1              (RIF_PERIPH_REG4 | RISC_SECCFGR4_SEC147_Pos)
 #define RIF_PERIPH_HPDMA2              (RIF_PERIPH_REG4 | RISC_SECCFGR4_SEC148_Pos)
 #define RIF_PERIPH_HPDMA3              (RIF_PERIPH_REG4 | RISC_SECCFGR4_SEC149_Pos)
+#if defined(LPDMA)
 #define RIF_PERIPH_LPDMA               (RIF_PERIPH_REG4 | RISC_SECCFGR4_SEC150_Pos)
+#endif /* LPDMA */
 #define RIF_PERIPH_RTC                 (RIF_PERIPH_REG4 | RISC_SECCFGR4_SEC151_Pos)
 #define RIF_PERIPH_TAMP                (RIF_PERIPH_REG4 | RISC_SECCFGR4_SEC152_Pos)
 #define RIF_PERIPH_EXTI1               (RIF_PERIPH_REG4 | RISC_SECCFGR4_SEC153_Pos)
@@ -494,7 +573,11 @@ typedef struct
 #define RIF_PERIPH_RES190              (RIF_PERIPH_REG5 | RISC_SECCFGR5_SEC190_Pos)
 #define RIF_PERIPH_RES191              (RIF_PERIPH_REG5 | RISC_SECCFGR5_SEC191_Pos)
 
+#if defined(OTFDEC2)
 #define RIF_NB_PERIPH_MAX              (RIF_GET_ARRAY_INDEX(RIF_PERIPH_OTFDEC2) + 1)
+#else
+#define RIF_NB_PERIPH_MAX              (RIF_GET_ARRAY_INDEX(RIF_PERIPH_OTFDEC1) + 1)
+#endif /* OTFDEC2 */
 #define RIF_NB_PERIPH_LAST             (RIF_GET_ARRAY_INDEX(RIF_PERIPH_RES191) + 1U)
 
 #define RIF_PERIPH_ALL                 (RIF_PERIPH_ALLIP_Msk)
@@ -516,7 +599,9 @@ typedef struct
 #define RIF_SRAM2                      ((uint32_t)RISAB4)
 #endif /* RISAB4 */
 #define RIF_RETRAM                     ((uint32_t)RISAB5)
+#if defined(RISAB6)
 #define RIF_VDERAM                     ((uint32_t)RISAB6)
+#endif /* RISAB6 */
 #define RIF_BCKRAM                     ((uint32_t)RISAF1)
 #define RIF_OCTOSPI12                  ((uint32_t)RISAF2)
 #define RIF_DDR                        ((uint32_t)RISAF4)
@@ -539,25 +624,40 @@ typedef struct
 /* Master Fixed values */
 #define RIF_MCID_CPU1                  (0x01U)
 #define RIF_MCID_CPU2                  (0x02U)
+#if defined(RIF_CID_CPU3_CM0)
 #define RIF_MCID_CPU3                  (0x03U)
-
+#endif /* RIF_CID_CPU3_CM0 */
 /* Master CID index */
 #define RIF_MCID_TRACE                 (0U)
 #define RIF_MCID_SDMMC1                (1U)
 #define RIF_MCID_SDMMC2                (2U)
 #define RIF_MCID_SDMMC3                (3U)
+#if !defined(RIF_DERIVATIVE1_RESOURCES)
 #define RIF_MCID_USB3DR                (4U)
+#else
+#define RIF_MCID_OTG_HS                (4U)
+#endif /* RIF_DERIVATIVE1_RESOURCES */
 #define RIF_MCID_USBH                  (5U)
 #define RIF_MCID_ETH1                  (6U)
 #define RIF_MCID_ETH2                  (7U)
+#if defined(RISAF5)
 #define RIF_MCID_PCIE                  (8U)
+#endif /* RISAF5 */
+#if defined(GPU)
 #define RIF_MCID_GPU                   (9U)
+#endif /* GPU */
 #define RIF_MCID_DCMIPP                (10U)
 #define RIF_MCID_LTDC_L1_L2            (11U)
 #define RIF_MCID_LTDC_L3               (12U)
+#if !defined(RIF_DERIVATIVE1_RESOURCES)
 #define RIF_MCID_LTDC_ROT              (13U)
+#endif /* RIF_DERIVATIVE1_RESOURCES */
+#if defined(VDEC)
 #define RIF_MCID_VDEC                  (14U)
+#endif /* VDEC */
+#if defined(VENC)
 #define RIF_MCID_VENC                  (15U)
+#endif /* VENC */
 
 /* DAPCID specific value (highest level of debug access) */
 #define DAPCID_MASTER                  (0x07U)
@@ -622,6 +722,15 @@ typedef struct
   */
 
 /* Exported macros -----------------------------------------------------------*/
+
+/** @defgroup RIF_Exported_Macros RIF Exported Macros
+  * @{
+  */
+
+/**
+  * @}
+  */
+
 /* Exported functions --------------------------------------------------------*/
 
 /** @addtogroup RIF_Exported_Functions
@@ -787,6 +896,37 @@ void HAL_IAC_Callback(uint32_t PeriphId);
     ( (uint32_t)(subreg) == (uint32_t)(RIF_RISAL_MEM_SUBREGB) ) )
 
 #endif /* RIF_LPSRAM1 && RIF_LPSRAM2 && RIF_LPSRAM3 */
+#if defined(RIF_DERIVATIVE1_RESOURCES)
+#define IS_RIMC_MASTERID(cid) \
+  ( ( (uint32_t)(cid) == RIF_MCID_TRACE ) || \
+    ( (uint32_t)(cid) == RIF_MCID_SDMMC1 ) || \
+    ( (uint32_t)(cid) == RIF_MCID_SDMMC2 ) || \
+    ( (uint32_t)(cid) == RIF_MCID_SDMMC3 ) || \
+    ( (uint32_t)(cid) == RIF_MCID_OTG_HS ) || \
+    ( (uint32_t)(cid) == RIF_MCID_USBH ) || \
+    ( (uint32_t)(cid) == RIF_MCID_ETH1 ) || \
+    ( (uint32_t)(cid) == RIF_MCID_ETH2 ) || \
+    ( (uint32_t)(cid) == RIF_MCID_DCMIPP ) || \
+    ( (uint32_t)(cid) == RIF_MCID_LTDC_L1_L2 ) || \
+    ( (uint32_t)(cid) == RIF_MCID_LTDC_L3 ) )
+#elif defined(RIF_DERIVATIVE2_RESOURCES)
+#define IS_RIMC_MASTERID(cid) \
+  ( ( (uint32_t)(cid) == RIF_MCID_TRACE ) || \
+    ( (uint32_t)(cid) == RIF_MCID_SDMMC1 ) || \
+    ( (uint32_t)(cid) == RIF_MCID_SDMMC2 ) || \
+    ( (uint32_t)(cid) == RIF_MCID_SDMMC3 ) || \
+    ( (uint32_t)(cid) == RIF_MCID_USB3DR ) || \
+    ( (uint32_t)(cid) == RIF_MCID_USBH ) || \
+    ( (uint32_t)(cid) == RIF_MCID_ETH1 ) || \
+    ( (uint32_t)(cid) == RIF_MCID_ETH2 ) || \
+    ( (uint32_t)(cid) == RIF_MCID_PCIE ) || \
+    ( (uint32_t)(cid) == RIF_MCID_GPU ) || \
+    ( (uint32_t)(cid) == RIF_MCID_DCMIPP ) || \
+    ( (uint32_t)(cid) == RIF_MCID_LTDC_L1_L2 ) || \
+    ( (uint32_t)(cid) == RIF_MCID_LTDC_L3 ) || \
+    ( (uint32_t)(cid) == RIF_MCID_LTDC_ROT ) || \
+    ( (uint32_t)(cid) == RIF_MCID_VDEC ) )
+#else
 #define IS_RIMC_MASTERID(cid) \
   ( ( (uint32_t)(cid) == RIF_MCID_TRACE ) || \
     ( (uint32_t)(cid) == RIF_MCID_SDMMC1 ) || \
@@ -804,6 +944,7 @@ void HAL_IAC_Callback(uint32_t PeriphId);
     ( (uint32_t)(cid) == RIF_MCID_LTDC_ROT ) || \
     ( (uint32_t)(cid) == RIF_MCID_VDEC ) || \
     ( (uint32_t)(cid) == RIF_MCID_VENC ) )
+#endif /* RIF_DERIVATIVE1_RESOURCES */
 
 #define IS_RIMC_TDCID(cid) \
   ( ( (uint32_t)(cid) == RIMC_CR_TDCID0 ) || \
@@ -835,7 +976,13 @@ void HAL_IAC_Callback(uint32_t PeriphId);
     ( (uint32_t)(cid) == RIMC_ATTR_MCID6 ) || \
     ( (uint32_t)(cid) == RIMC_ATTR_MCID7 ) )
 
-#if defined(RIF_SRAM2)
+#if defined(RIF_DERIVATIVE1_RESOURCES)
+#define IS_RISAB_INSTANCE(instance) \
+  ( ( (uint32_t)(instance) == (uint32_t)(RIF_SYSRAMLOW) ) || \
+    ( (uint32_t)(instance) == (uint32_t)(RIF_SYSRAMHIGH) ) || \
+    ( (uint32_t)(instance) == (uint32_t)(RIF_SRAM1) ) || \
+    ( (uint32_t)(instance) == (uint32_t)(RIF_RETRAM) ) )
+#else
 #define IS_RISAB_INSTANCE(instance) \
   ( ( (uint32_t)(instance) == (uint32_t)(RIF_SYSRAMLOW) ) || \
     ( (uint32_t)(instance) == (uint32_t)(RIF_SYSRAMHIGH) ) || \
@@ -843,19 +990,19 @@ void HAL_IAC_Callback(uint32_t PeriphId);
     ( (uint32_t)(instance) == (uint32_t)(RIF_SRAM2) ) || \
     ( (uint32_t)(instance) == (uint32_t)(RIF_RETRAM) ) || \
     ( (uint32_t)(instance) == (uint32_t)(RIF_VDERAM) ) )
-#else
-#define IS_RISAB_INSTANCE(instance) \
-  ( ( (uint32_t)(instance) == (uint32_t)(RIF_SYSRAMLOW) ) || \
-    ( (uint32_t)(instance) == (uint32_t)(RIF_SYSRAMHIGH) ) || \
-    ( (uint32_t)(instance) == (uint32_t)(RIF_SRAM1) ) || \
-    ( (uint32_t)(instance) == (uint32_t)(RIF_RETRAM) ) || \
-    ( (uint32_t)(instance) == (uint32_t)(RIF_VDERAM) ) )
-#endif /* RIF_SRAM2 */
+#endif /* RIF_DERIVATIVE1_RESOURCES */
 
+#if defined(RIF_CID_CPU3_CM0)
 #define IS_RISAB_CID(cid) \
   ( ( (uint32_t)(cid) == RIF_MCID_CPU1 ) || \
     ( (uint32_t)(cid) == RIF_MCID_CPU2 ) || \
     ( (uint32_t)(cid) == RIF_MCID_CPU3 ) )
+#else
+#define IS_RISAB_CID(cid) \
+  ( ( (uint32_t)(cid) == RIF_MCID_CPU1 ) || \
+    ( (uint32_t)(cid) == RIF_MCID_CPU2 ) )
+#endif /* RIF_CID_CPU3_CM0 */
+
 
 #define IS_RISAB_PAGEID(pageid) \
   ( ( (uint32_t)(pageid) >= 0U ) && \
@@ -1836,3 +1983,5 @@ void HAL_IAC_Callback(uint32_t PeriphId);
 #endif
 
 #endif /* STM32MP2xx_HAL_RIF_H */
+
+/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

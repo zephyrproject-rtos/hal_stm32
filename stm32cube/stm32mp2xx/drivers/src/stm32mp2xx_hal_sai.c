@@ -536,23 +536,23 @@ HAL_StatusTypeDef HAL_SAI_Init(SAI_HandleTypeDef *hsai)
 
     /* In this case, the MCKDIV value is calculated to get AudioFrequency */
 
-    #if defined(RCC_DERIVATIVE1_FLEXGEN_CHANNEL_MAPPING)
+#if defined(RCC_DERIVATIVE1_FLEXGEN_CHANNEL_MAPPING)
     if ((hsai->Instance == SAI1_Block_A) || (hsai->Instance == SAI1_Block_B))
     {
       freq = HAL_RCCEx_GetPeriphCLKFreq(RCC_PERIPHCLK_SAI1);
     }
-    #else
+#else
     if ((hsai->Instance == SAI1_Block_A) || (hsai->Instance == SAI1_Block_B))
     {
-       freq = HAL_RCCEx_GetPeriphCLKFreq(RCC_PERIPHCLK_SAI1_MDF1);
+      freq = HAL_RCCEx_GetPeriphCLKFreq(RCC_PERIPHCLK_SAI1_MDF1);
     }
-    #endif /*RCC_DERIVATIVE1_FLEXGEN_CHANNEL_MAPPING */
+#endif /*RCC_DERIVATIVE1_FLEXGEN_CHANNEL_MAPPING */
 
     if ((hsai->Instance == SAI2_Block_A) || (hsai->Instance == SAI2_Block_B))
     {
       freq = HAL_RCCEx_GetPeriphCLKFreq(RCC_PERIPHCLK_SAI2);
     }
-    #if defined(RCC_DERIVATIVE1_FLEXGEN_CHANNEL_MAPPING)
+#if defined(RCC_DERIVATIVE1_FLEXGEN_CHANNEL_MAPPING)
     if ((hsai->Instance == SAI3_Block_A) || (hsai->Instance == SAI3_Block_B))
     {
       freq = HAL_RCCEx_GetPeriphCLKFreq(RCC_PERIPHCLK_SAI3);
@@ -561,13 +561,13 @@ HAL_StatusTypeDef HAL_SAI_Init(SAI_HandleTypeDef *hsai)
     {
       freq = HAL_RCCEx_GetPeriphCLKFreq(RCC_PERIPHCLK_SAI4);
     }
-    #else
+#else
     if ((hsai->Instance == SAI3_Block_A) || (hsai->Instance == SAI3_Block_B) || \
         (hsai->Instance == SAI4_Block_A) || (hsai->Instance == SAI4_Block_B))
     {
       freq = HAL_RCCEx_GetPeriphCLKFreq(RCC_PERIPHCLK_SAI3_4);
     }
-    #endif /* RCC_DERIVATIVE1_FLEXGEN_CHANNEL_MAPPING */
+#endif /* RCC_DERIVATIVE1_FLEXGEN_CHANNEL_MAPPING */
 
 
     /* Configure Master Clock Divider using the following formula :

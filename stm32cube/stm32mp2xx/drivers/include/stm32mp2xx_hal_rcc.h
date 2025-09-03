@@ -389,32 +389,32 @@ typedef struct
 #define RCC_MCO_INDEX_POS      28U
 #define RCC_MCO_INDEX_MASK     (0x1UL << RCC_MCO_INDEX_POS)
 
-#define RCC_MCO1_INDEX         (0x0UL << RCC_MCO_INDEX_POS)             /*!< MCO1 index */
-#define RCC_MCO2_INDEX         (0x1UL << RCC_MCO_INDEX_POS)             /*!< MCO2 index */
+#define RCC_MCO1_INDEX         (0x0UL << RCC_MCO_INDEX_POS)            /*!< MCO1 index */
+#define RCC_MCO2_INDEX         (0x1UL << RCC_MCO_INDEX_POS)            /*!< MCO2 index */
 /* @endcond */
 #define RCC_MCO1_PC9           (RCC_MCO1_INDEX |\
-                                (GPIO_AF1_MCO1 << RCC_MCO_GPIOAF_POS) |\
-                                (GPIO_GET_INDEX(GPIOC) << RCC_MCO_GPIOPORT_POS) | GPIO_PIN_9)
+                                ((uint32_t)GPIO_AF1_MCO1 << RCC_MCO_GPIOAF_POS) |\
+                                ((uint32_t)GPIO_GET_INDEX(GPIOC) << RCC_MCO_GPIOPORT_POS) | GPIO_PIN_9)
 #define RCC_MCO1_PF11          (RCC_MCO1_INDEX |\
-                                (GPIO_AF1_MCO1 << RCC_MCO_GPIOAF_POS) |\
-                                (GPIO_GET_INDEX(GPIOF) << RCC_MCO_GPIOPORT_POS) | GPIO_PIN_11)
+                                ((uint32_t)GPIO_AF1_MCO1 << RCC_MCO_GPIOAF_POS) |\
+                                ((uint32_t)GPIO_GET_INDEX(GPIOF) << RCC_MCO_GPIOPORT_POS) | GPIO_PIN_11)
 #define RCC_MCO1_PI6           (RCC_MCO1_INDEX |\
-                                (GPIO_AF1_MCO1 << RCC_MCO_GPIOAF_POS) |\
-                                (GPIO_GET_INDEX(GPIOI) << RCC_MCO_GPIOPORT_POS) | GPIO_PIN_6)
+                                ((uint32_t)GPIO_AF1_MCO1 << RCC_MCO_GPIOAF_POS) |\
+                                ((uint32_t)GPIO_GET_INDEX(GPIOI) << RCC_MCO_GPIOPORT_POS) | GPIO_PIN_6)
 #define RCC_MCO1_PZ5           (RCC_MCO1_INDEX |\
-                                (GPIO_AF1_MCO1 << RCC_MCO_GPIOAF_POS) |\
-                                (GPIO_GET_INDEX(GPIOZ) << RCC_MCO_GPIOPORT_POS) | GPIO_PIN_5)
+                                ((uint32_t)GPIO_AF1_MCO1 << RCC_MCO_GPIOAF_POS) |\
+                                ((uint32_t)GPIO_GET_INDEX(GPIOZ) << RCC_MCO_GPIOPORT_POS) | GPIO_PIN_5)
 #define RCC_MCO1               RCC_MCO1_PC9         /*!< Alias to be compliant with other families with 1 Pin per MCO output */
 
 #define RCC_MCO2_PF10          (RCC_MCO2_INDEX |\
-                                (GPIO_AF1_MCO2 << RCC_MCO_GPIOAF_POS) |\
-                                (GPIO_GET_INDEX(GPIOF) << RCC_MCO_GPIOPORT_POS) | GPIO_PIN_10)
+                                ((uint32_t)GPIO_AF1_MCO2 << RCC_MCO_GPIOAF_POS) |\
+                                ((uint32_t)GPIO_GET_INDEX(GPIOF) << RCC_MCO_GPIOPORT_POS) | GPIO_PIN_10)
 #define RCC_MCO2_PZ4           (RCC_MCO2_INDEX |\
-                                (GPIO_AF2_MCO2 << RCC_MCO_GPIOAF_POS) |\
-                                (GPIO_GET_INDEX(GPIOZ) << RCC_MCO_GPIOPORT_POS) | GPIO_PIN_4)
+                                ((uint32_t)GPIO_AF2_MCO2 << RCC_MCO_GPIOAF_POS) |\
+                                ((uint32_t)GPIO_GET_INDEX(GPIOZ) << RCC_MCO_GPIOPORT_POS) | GPIO_PIN_4)
 #define RCC_MCO2_PZ9           (RCC_MCO2_INDEX |\
-                                (GPIO_AF1_MCO2 << RCC_MCO_GPIOAF_POS) |\
-                                (GPIO_GET_INDEX(GPIOZ) << RCC_MCO_GPIOPORT_POS) | GPIO_PIN_9)
+                                ((uint32_t)GPIO_AF1_MCO2 << RCC_MCO_GPIOAF_POS) |\
+                                ((uint32_t)GPIO_GET_INDEX(GPIOZ) << RCC_MCO_GPIOPORT_POS) | GPIO_PIN_9)
 #define RCC_MCO2               RCC_MCO2_PF10        /*!< Alias to be compliant with other families with 1 Pin per MCO output */
 
 #define RCC_MCO                RCC_MCO1             /*!< Alias to be compliant with other families with 1 MCO */
@@ -3378,7 +3378,7 @@ typedef struct
 #else
 #define __HAL_RCC_ALLOW_CSTOP()                   SET_BIT(RCC->C1SREQSETR, RCC_C1SREQSETR_STPREQ_P0)
 #define __HAL_RCC_PREVENT_CSTOP()                 WRITE_REG(RCC->C1SREQCLRR, RCC_C1SREQCLRR_STPREQ_P0)
-#endif
+#endif /* RCC_C1SREQCLRR_STPREQ_P1 */
 #define __HAL_RCC_ALLOW_ENHANCED_CSLEEP()         SET_BIT(RCC->C1SREQSETR, RCC_C1SREQSETR_ESLPREQ)
 #define __HAL_RCC_PREVENT_ENHANCED_CSLEEP()       WRITE_REG(RCC->C1SREQCLRR, RCC_C1SREQCLRR_ESLPREQ)
 #endif /* CORE_CA35 */
@@ -3424,9 +3424,11 @@ typedef struct
   */
 #define RCC_ADC2KERCLKSOURCE_CK_KER_ADC2      (0x0U << RCC_ADC2CFGR_ADC2KERSEL_Pos)
 #define RCC_ADC2KERCLKSOURCE_CK_ICN_LS_MCU    (0x1U << RCC_ADC2CFGR_ADC2KERSEL_Pos)
+#define RCC_ADC2KERCLKSOURCE_CK_KER_ADC1      (0x2U << RCC_ADC2CFGR_ADC2KERSEL_Pos)
 
-#define IS_RCC_ADC2KERCLKSOURCE(SOURCE) (((SOURCE) == RCC_ADC2KERCLKSOURCE_CK_KER_ADC2) || \
-                                         ((SOURCE) == RCC_ADC2KERCLKSOURCE_CK_ICN_LS_MCU))
+#define IS_RCC_ADC2KERCLKSOURCE(SOURCE) (((SOURCE) == RCC_ADC2KERCLKSOURCE_CK_KER_ADC2)  || \
+                                         ((SOURCE) == RCC_ADC2KERCLKSOURCE_CK_ICN_LS_MCU)|| \
+                                         ((SOURCE) == RCC_ADC2KERCLKSOURCE_CK_KER_ADC1))
 
 /**
   * @brief  Macro to select ADC2 kernel source clock
@@ -3435,6 +3437,7 @@ typedef struct
   *          This parameter can be one of the following values:
   *            @arg RCC_ADC2KERCLKSOURCE_CK_KER_ADC2:  "ck_ker_adc2"  Flexiclockgen output 47
   *            @arg RCC_ADC2KERCLKSOURCE_CK_ICN_LS_MCU: "ck_icn_ls_mcu" Flexiclockgen output 0
+  *            @arg RCC_ADC2KERCLKSOURCE_CK_KER_ADC1:  "ck_ker_adc1"  Flexiclockgen output 46
   *
   * @retval None
   */
@@ -3664,8 +3667,8 @@ typedef struct
 /** @defgroup RCC_DSIBL_Kernel_Clock_Source RCC_DSIBL_Kernel_Clock_Source
   * @{
   */
-#define RCC_DSIBLKERCLKSOURCE_CK_DSIPHY_SEL    (0x0U << RCC_DSICFGR_DSIBLSEL_Pos)
-#define RCC_DSIBLKERCLKSOURCE_CK_KER_LTDC      (0x1U << RCC_DSICFGR_DSIBLSEL_Pos)
+#define RCC_DSIBLKERCLKSOURCE_CK_DSIPHY_SEL    (0x0UL << RCC_DSICFGR_DSIBLSEL_Pos)
+#define RCC_DSIBLKERCLKSOURCE_CK_KER_LTDC      (0x1UL << RCC_DSICFGR_DSIBLSEL_Pos)
 
 #define IS_RCC_DSIBLKERCLKSOURCE(SOURCE) (((SOURCE) == RCC_DSIBLKERCLKSOURCE_CK_DSIPHY_SEL) || \
                                           ((SOURCE) == RCC_DSIBLKERCLKSOURCE_CK_KER_LTDC))

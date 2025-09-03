@@ -1666,7 +1666,7 @@ typedef struct
   */
 #define __HAL_ETH_WAKEUP_EXTI_CLEAR_FLAG(__EXTI_LINE__) (EXTI1_C1->IMR3 = (__EXTI_LINE__))
 
-#if defined(DUAL_CORE)
+#if defined(CORE_CM33)
 /**
   * @brief Enable the ETH WAKEUP Exti Line by Core2.
   * @param  __EXTI_LINE__: specifies the ETH WAKEUP Exti sources to be enabled.
@@ -1690,7 +1690,7 @@ typedef struct
   * @retval None.
   */
 #define __HAL_ETH_WAKEUP_EXTID2_CLEAR_FLAG(__EXTI_LINE__) (EXTI1_C2->IMR3 = (__EXTI_LINE__))
-#endif /* DUAL_CORE */
+#endif /* CORE_CM33 */
 
 /**
   * @brief  enable rising edge interrupt on selected EXTI line.

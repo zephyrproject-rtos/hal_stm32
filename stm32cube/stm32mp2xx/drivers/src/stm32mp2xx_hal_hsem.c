@@ -575,17 +575,17 @@ HAL_StatusTypeDef HAL_HSEM_ConfigAttributes(uint32_t Item, uint32_t Attributes)
     else if ((Attributes & HSEM_GROUP_CID_STATIC_SELECT) != 0U)
     {
       /* Enable with white list value */
-      if ((Attributes & (1U << HSEM_GROUP_CID_CPU1_VAL_Pos)) != 0U)
+      if ((Attributes & (1UL << HSEM_GROUP_CID_CPU1_VAL_Pos)) != 0U)
       {
-        sem_wlist |= 1U << 0U;
+        sem_wlist |= 1UL << 0UL;
       }
-      if ((Attributes & (1U << HSEM_GROUP_CID_CPU2_VAL_Pos)) != 0U)
+      if ((Attributes & (1UL << HSEM_GROUP_CID_CPU2_VAL_Pos)) != 0U)
       {
-        sem_wlist |= 1U << 1U;
+        sem_wlist |= 1UL << 1UL;
       }
-      if ((Attributes & (1U << HSEM_GROUP_CID_CPU3_VAL_Pos)) != 0U)
+      if ((Attributes & (1UL << HSEM_GROUP_CID_CPU3_VAL_Pos)) != 0U)
       {
-        sem_wlist |= 1U << 2U;
+        sem_wlist |= 1UL << 2UL;
       }
 
       *regaddr = HSEM_G0CIDCFGR_CFEN  | (sem_wlist << HSEM_G0CIDCFGR_SEM_WLIST_C_Pos);
@@ -671,15 +671,15 @@ HAL_StatusTypeDef HAL_HSEM_GetConfigAttributes(uint32_t Item, uint32_t *pAttribu
       else
       {
         sem_wlist = (*regaddr & HSEM_G0CIDCFGR_SEM_WLIST_C_Msk) >> HSEM_G0CIDCFGR_SEM_WLIST_C_Pos;
-        if ((sem_wlist & (1U << 0U)) != 0U)
+        if ((sem_wlist & (1UL << 0UL)) != 0U)
         {
           *pAttributes |= HSEM_GROUP_CID_STATIC_1;
         }
-        if ((sem_wlist & (1U << 1U)) != 0U)
+        if ((sem_wlist & (1UL << 1UL)) != 0U)
         {
           *pAttributes |= HSEM_GROUP_CID_STATIC_2;
         }
-        if ((sem_wlist & (1U << 2U)) != 0U)
+        if ((sem_wlist & (1UL << 2UL)) != 0U)
         {
           *pAttributes |= HSEM_GROUP_CID_STATIC_3;
         }
@@ -690,7 +690,7 @@ HAL_StatusTypeDef HAL_HSEM_GetConfigAttributes(uint32_t Item, uint32_t *pAttribu
       /* Read CPU CID attribute */
       regaddr = &HSEM->C1CIDCFGR + (Item - HSEM_CPU1);
 
-      if ((*regaddr & HSEM_C1CIDCFGR_CFEN) == 0U)
+      if ((*regaddr & HSEM_C1CIDCFGR_CFEN) == 0UL)
       {
         *pAttributes = HSEM_CPU_CID_DISABLE;
       }

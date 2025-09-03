@@ -1,4 +1,5 @@
 # Copyright (C) 2025 Savoir-faire Linux, Inc.
+# Copyright (c) 2025 STMicroelectronics
 #
 # SPDX-License-Identifier: Apache-2.0
 
@@ -107,4 +108,3 @@ zephyr_library_sources_ifdef(CONFIG_USE_STM32_LL_USB drivers/src/stm32mp2xx_ll_u
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_LL_USB_DRD drivers/src/stm32mp2xx_ll_usb_drd.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_LL_USB_OTG drivers/src/stm32mp2xx_ll_usb_otg.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_UTIL_I3C drivers/src/stm32mp2xx_util_i3c.c)
-

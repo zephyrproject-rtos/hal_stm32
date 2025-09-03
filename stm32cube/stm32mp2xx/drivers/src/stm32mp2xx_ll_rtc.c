@@ -19,6 +19,8 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32mp2xx_ll_rtc.h"
+#include "stm32mp2xx_ll_cortex.h"
+
 #ifdef  USE_FULL_ASSERT
 #include "stm32_assert.h"
 #else   /* USE_FULL_ASSERT */
