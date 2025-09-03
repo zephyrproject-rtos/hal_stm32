@@ -547,11 +547,11 @@ typedef enum
 /** @defgroup SMARTCARD_Interruption_Mask SMARTCARD interruptions flags mask
   * @{
   */
-#define SMARTCARD_IT_MASK                   0x001FU   /*!< SMARTCARD interruptions flags mask  */
-#define SMARTCARD_CR_MASK                   0x00E0U   /*!< SMARTCARD control register mask     */
-#define SMARTCARD_CR_POS                    5U        /*!< SMARTCARD control register position */
-#define SMARTCARD_ISR_MASK                  0x1F00U   /*!< SMARTCARD ISR register mask         */
-#define SMARTCARD_ISR_POS                   8U        /*!< SMARTCARD ISR register position     */
+#define SMARTCARD_IT_MASK                   0x001FUL   /*!< SMARTCARD interruptions flags mask  */
+#define SMARTCARD_CR_MASK                   0x00E0UL   /*!< SMARTCARD control register mask     */
+#define SMARTCARD_CR_POS                    5UL        /*!< SMARTCARD control register position */
+#define SMARTCARD_ISR_MASK                  0x1F00UL   /*!< SMARTCARD ISR register mask         */
+#define SMARTCARD_ISR_POS                   8UL        /*!< SMARTCARD ISR register position     */
 /**
   * @}
   */
@@ -725,14 +725,14 @@ typedef enum
   * @retval None
   */
 #define __HAL_SMARTCARD_DISABLE_IT(__HANDLE__, __INTERRUPT__)  (((((__INTERRUPT__) & SMARTCARD_CR_MASK) >>\
-                                                                  SMARTCARD_CR_POS) == 1U)?\
-                                                                ((__HANDLE__)->Instance->CR1 &= ~ (1U <<\
+                                                                  SMARTCARD_CR_POS) == 1UL)?\
+                                                                ((__HANDLE__)->Instance->CR1 &= ~ (1UL <<\
                                                                     ((__INTERRUPT__) & SMARTCARD_IT_MASK))): \
                                                                 ((((__INTERRUPT__) & SMARTCARD_CR_MASK) >>\
-                                                                  SMARTCARD_CR_POS) == 2U)?\
-                                                                ((__HANDLE__)->Instance->CR2 &= ~ (1U <<\
+                                                                  SMARTCARD_CR_POS) == 2UL)?\
+                                                                ((__HANDLE__)->Instance->CR2 &= ~ (1UL <<\
                                                                     ((__INTERRUPT__) & SMARTCARD_IT_MASK))): \
-                                                                ((__HANDLE__)->Instance->CR3 &= ~ (1U <<\
+                                                                ((__HANDLE__)->Instance->CR3 &= ~ (1UL <<\
                                                                     ((__INTERRUPT__) & SMARTCARD_IT_MASK))))
 
 /** @brief  Check whether the specified SmartCard interrupt has occurred or not.

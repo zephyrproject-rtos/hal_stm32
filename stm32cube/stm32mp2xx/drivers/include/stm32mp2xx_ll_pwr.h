@@ -210,8 +210,6 @@ __STATIC_INLINE uint32_t LL_PWR_IsActiveFlag_PVDO(void)
 __STATIC_INLINE void LL_PWR_EnableSupplyMonitoring(uint32_t SupplyID)
 {
   __IO uint32_t *regaddr;
-  /* Check the parameters */
-  assert_param(IS_PWR_SUPPLY(SupplyID));
 
   regaddr = &PWR->CR1 + (REGISTER_ADD_OFFSET * (SupplyID >> 16));
   SET_BIT(*regaddr, (((uint32_t)PWR_CR7_VDDIO2VMEN) << (SupplyID & 0xFU)));
@@ -219,8 +217,6 @@ __STATIC_INLINE void LL_PWR_EnableSupplyMonitoring(uint32_t SupplyID)
 __STATIC_INLINE void LL_PWR_DisableSupplyMonitoring(uint32_t SupplyID)
 {
   __IO uint32_t *regaddr;
-  /* Check the parameters */
-  assert_param(IS_PWR_SUPPLY(SupplyID));
 
   regaddr = &PWR->CR1 + (REGISTER_ADD_OFFSET * (SupplyID >> 16));
   CLEAR_BIT(*regaddr, (((uint32_t)PWR_CR7_VDDIO2VMEN) << (SupplyID & 0xFU)));
@@ -229,8 +225,6 @@ __STATIC_INLINE void LL_PWR_DisableSupplyMonitoring(uint32_t SupplyID)
 __STATIC_INLINE uint32_t LL_PWR_IsSupplyMonitoringEnabled(uint32_t SupplyID)
 {
   const __IO uint32_t *regaddr;
-  /* Check the parameters */
-  assert_param(IS_PWR_SUPPLY(SupplyID));
 
   regaddr = &PWR->CR1 + (REGISTER_ADD_OFFSET * (SupplyID >> 16));
   return ((READ_BIT(*regaddr, (((uint32_t)PWR_CR7_VDDIO2VMEN) << (SupplyID & 0xFU))) == \
@@ -254,8 +248,6 @@ __STATIC_INLINE uint32_t LL_PWR_IsSupplyMonitoringEnabled(uint32_t SupplyID)
 __STATIC_INLINE uint32_t LL_PWR_IsSupplyReady(uint32_t SupplyID)
 {
   const __IO uint32_t *regaddr;
-  /* Check the parameters */
-  assert_param(IS_PWR_SUPPLY(SupplyID));
 
   regaddr = &PWR->CR1 + (REGISTER_ADD_OFFSET * (SupplyID >> 16));
   return ((READ_BIT(*regaddr, (((uint32_t)PWR_CR7_VDDIO2RDY) << (SupplyID & 0xFU))) == \
@@ -278,8 +270,6 @@ __STATIC_INLINE uint32_t LL_PWR_IsSupplyReady(uint32_t SupplyID)
 __STATIC_INLINE void LL_PWR_EnableSupplyValidation(uint32_t SupplyID)
 {
   __IO uint32_t *regaddr;
-  /* Check the parameters */
-  assert_param(IS_PWR_SUPPLY(SupplyID));
 
   regaddr = &PWR->CR1 + (REGISTER_ADD_OFFSET * (SupplyID >> 16));
   SET_BIT(*regaddr, (((uint32_t)PWR_CR7_VDDIO2SV) << (SupplyID & 0xFU)));
@@ -287,8 +277,6 @@ __STATIC_INLINE void LL_PWR_EnableSupplyValidation(uint32_t SupplyID)
 __STATIC_INLINE void LL_PWR_DisableSupplyValidation(uint32_t SupplyID)
 {
   __IO uint32_t *regaddr;
-  /* Check the parameters */
-  assert_param(IS_PWR_SUPPLY(SupplyID));
 
   regaddr = &PWR->CR1 + (REGISTER_ADD_OFFSET * (SupplyID >> 16));
   CLEAR_BIT(*regaddr, (((uint32_t)PWR_CR7_VDDIO2SV) << (SupplyID & 0xFU)));
@@ -297,8 +285,6 @@ __STATIC_INLINE void LL_PWR_DisableSupplyValidation(uint32_t SupplyID)
 __STATIC_INLINE uint32_t LL_PWR_IsSupplyValidationEnabled(uint32_t SupplyID)
 {
   const __IO uint32_t *regaddr;
-  /* Check the parameters */
-  assert_param(IS_PWR_SUPPLY(SupplyID));
 
   regaddr = &PWR->CR1 + (REGISTER_ADD_OFFSET * (SupplyID >> 16));
   return ((READ_BIT(*regaddr, (((uint32_t)PWR_CR7_VDDIO2SV) << (SupplyID & 0xFU))) == \
@@ -323,8 +309,6 @@ __STATIC_INLINE uint32_t LL_PWR_IsSupplyValidationEnabled(uint32_t SupplyID)
 __STATIC_INLINE void LL_PWR_SetVRSEL(uint32_t SupplyID, uint32_t Vrsel)
 {
   __IO uint32_t *regaddr;
-  /* Check the parameters */
-  assert_param(IS_PWR_SUPPLY_1V8_OPTIMIZATION_CAPABLE(SupplyID));
 
   regaddr = &PWR->CR1 + (REGISTER_ADD_OFFSET * ((SupplyID >> 16) & 0xFFU));
   MODIFY_REG(*regaddr, ((uint32_t)PWR_CR7_VDDIO2VRSEL) << ((SupplyID >> 8) & 0xFU), Vrsel << ((SupplyID >> 8) & 0xFU));
@@ -347,8 +331,6 @@ __STATIC_INLINE void LL_PWR_SetVRSEL(uint32_t SupplyID, uint32_t Vrsel)
 __STATIC_INLINE uint32_t LL_PWR_GetVRSEL(uint32_t SupplyID)
 {
   const __IO uint32_t *regaddr;
-  /* Check the parameters */
-  assert_param(IS_PWR_SUPPLY_1V8_OPTIMIZATION_CAPABLE(SupplyID));
 
   regaddr = &PWR->CR1 + (REGISTER_ADD_OFFSET * ((SupplyID >> 16) & 0xFFU));
   return ((READ_REG(*regaddr) & ((uint32_t)PWR_CR7_VDDIO2VRSEL_Msk << ((SupplyID >> 8) & 0xFU))) >> \
@@ -368,8 +350,6 @@ __STATIC_INLINE uint32_t LL_PWR_GetVRSEL(uint32_t SupplyID)
 __STATIC_INLINE void LL_PWR_EnableVRSELRSTBY(uint32_t SupplyID)
 {
   __IO uint32_t *regaddr;
-  /* Check the parameters */
-  assert_param(IS_PWR_SUPPLY_VRSELRSTBY_CAPABLE(SupplyID));
 
   regaddr = &PWR->CR1 + (REGISTER_ADD_OFFSET * (SupplyID >> 16));
   SET_BIT(*regaddr, (((uint32_t)PWR_CR7_VDDIO2VRSEL) << (SupplyID & 0xFU)));
@@ -377,8 +357,6 @@ __STATIC_INLINE void LL_PWR_EnableVRSELRSTBY(uint32_t SupplyID)
 __STATIC_INLINE void LL_PWR_DisableVRSELRSTBY(uint32_t SupplyID)
 {
   __IO uint32_t *regaddr;
-  /* Check the parameters */
-  assert_param(IS_PWR_SUPPLY_VRSELRSTBY_CAPABLE(SupplyID));
 
   regaddr = &PWR->CR1 + (REGISTER_ADD_OFFSET * (SupplyID >> 16));
   CLEAR_BIT(*regaddr, (((uint32_t)PWR_CR7_VDDIO2VRSEL) << (SupplyID & 0xFU)));
@@ -387,8 +365,6 @@ __STATIC_INLINE void LL_PWR_DisableVRSELRSTBY(uint32_t SupplyID)
 __STATIC_INLINE uint32_t LL_PWR_IsVRSELRSTBYEnabled(uint32_t SupplyID)
 {
   const __IO uint32_t *regaddr;
-  /* Check the parameters */
-  assert_param(IS_PWR_SUPPLY_VRSELRSTBY_CAPABLE(SupplyID));
 
   regaddr = &PWR->CR1 + (REGISTER_ADD_OFFSET * (SupplyID >> 16));
   return ((READ_BIT(*regaddr, (((uint32_t)PWR_CR7_VDDIO2VRSEL) << (SupplyID & 0xFU))) == \

@@ -1893,10 +1893,11 @@ void HAL_ETH_IRQHandler(ETH_HandleTypeDef *heth)
   uint32_t mac_flag = READ_REG(heth->Instance->MACISR);
   uint32_t dma_flag = READ_REG(heth->Instance->DMAC0SR);
   uint32_t dma_itsource = READ_REG(heth->Instance->DMAC0IER);
+#if defined(CORE_CA35)
   uint32_t exti_d1_flag = READ_REG(EXTI1_C1->IMR3);
-#if defined(DUAL_CORE)
+#else /* CORE_CM33 */
   uint32_t exti_d2_flag = READ_REG(EXTI1_C2->IMR3);
-#endif /* DUAL_CORE */
+#endif /* CORE_CA35 or CORE_CM33 defined */
 
   /* Packet received */
   if (((dma_flag & ETH_DMAC0SR_RI) != 0U) && ((dma_itsource & ETH_DMAC0IER_RIE) != 0U))
@@ -2017,40 +2018,7 @@ void HAL_ETH_IRQHandler(ETH_HandleTypeDef *heth)
     heth->MACLPIEvent = (uint32_t)(0x0U);
   }
 
-#if defined(DUAL_CORE)
-  if (HAL_GetCurrentCPUID() == CM7_CPUID)
-  {
-    /* check ETH WAKEUP exti flag */
-    if ((exti_d1_flag & ETH_WAKEUP_EXTI_LINE) != 0U)
-    {
-      /* Clear ETH WAKEUP Exti pending bit */
-      __HAL_ETH_WAKEUP_EXTI_CLEAR_FLAG(ETH_WAKEUP_EXTI_LINE);
-#if (USE_HAL_ETH_REGISTER_CALLBACKS == 1)
-      /* Call registered WakeUp callback*/
-      heth->WakeUpCallback(heth);
-#else
-      /* ETH WAKEUP callback */
-      HAL_ETH_WakeUpCallback(heth);
-#endif /* USE_HAL_ETH_REGISTER_CALLBACKS */
-    }
-  }
-  else
-  {
-    /* check ETH WAKEUP exti flag */
-    if ((exti_d2_flag & ETH_WAKEUP_EXTI_LINE) != 0U)
-    {
-      /* Clear ETH WAKEUP Exti pending bit */
-      __HAL_ETH_WAKEUP_EXTID2_CLEAR_FLAG(ETH_WAKEUP_EXTI_LINE);
-#if (USE_HAL_ETH_REGISTER_CALLBACKS == 1)
-      /* Call registered WakeUp callback*/
-      heth->WakeUpCallback(heth);
-#else
-      /* ETH WAKEUP callback */
-      HAL_ETH_WakeUpCallback(heth);
-#endif /* USE_HAL_ETH_REGISTER_CALLBACKS */
-    }
-  }
-#else /* DUAL_CORE not defined */
+#if defined(CORE_CA35)
   /* check ETH WAKEUP exti flag */
   if ((exti_d1_flag & ETH_WAKEUP_EXTI_LINE) != 0U)
   {
@@ -2064,7 +2032,21 @@ void HAL_ETH_IRQHandler(ETH_HandleTypeDef *heth)
     HAL_ETH_WakeUpCallback(heth);
 #endif /* USE_HAL_ETH_REGISTER_CALLBACKS */
   }
-#endif /* DUAL_CORE */
+#else /* CORE_M33 defined */
+  /* check ETH WAKEUP exti flag */
+  if ((exti_d2_flag & ETH_WAKEUP_EXTI_LINE) != 0U)
+  {
+    /* Clear ETH WAKEUP Exti pending bit */
+    __HAL_ETH_WAKEUP_EXTID2_CLEAR_FLAG(ETH_WAKEUP_EXTI_LINE);
+#if (USE_HAL_ETH_REGISTER_CALLBACKS == 1)
+      /* Call registered WakeUp callback*/
+      heth->WakeUpCallback(heth);
+#else
+    /* ETH WAKEUP callback */
+    HAL_ETH_WakeUpCallback(heth);
+#endif /* USE_HAL_ETH_REGISTER_CALLBACKS */
+  }
+#endif /* CORE_CA35 or CORE_CM33 defined */
 }
 
 /**

@@ -315,15 +315,9 @@ HAL_StatusTypeDef HAL_SMBUSEx_GetConfigAutonomousMode(const SMBUS_HandleTypeDef 
   autocr_tmp = hsmbus->Instance->AUTOCR;
 
   sConfig->TriggerState     = (autocr_tmp & I2C_AUTOCR_TRIGEN);
-
-#if defined(SMBUS_TRIG_GRP3)
 #if defined(SMBUS_TRIG_GRP2)
 #if defined(SMBUS_TRIG_GRP1)
-  if (IS_SMBUS_GRP3_INSTANCE(hsmbus->Instance))
-  {
-    sConfig->TriggerSelection = ((autocr_tmp & I2C_AUTOCR_TRIGSEL) | SMBUS_TRIG_GRP3);
-  }
-  else if (IS_SMBUS_GRP2_INSTANCE(hsmbus->Instance))
+  if (IS_SMBUS_GRP2_INSTANCE(hsmbus->Instance))
   {
     sConfig->TriggerSelection = ((autocr_tmp & I2C_AUTOCR_TRIGSEL) | SMBUS_TRIG_GRP2);
   }
@@ -332,22 +326,11 @@ HAL_StatusTypeDef HAL_SMBUSEx_GetConfigAutonomousMode(const SMBUS_HandleTypeDef 
     sConfig->TriggerSelection = ((autocr_tmp & I2C_AUTOCR_TRIGSEL) | SMBUS_TRIG_GRP1);
   }
 #else
-  if (IS_SMBUS_GRP3_INSTANCE(hsmbus->Instance))
-  {
-    sConfig->TriggerSelection = ((autocr_tmp & I2C_AUTOCR_TRIGSEL) | SMBUS_TRIG_GRP3);
-  }
-  else
-  {
-    sConfig->TriggerSelection = ((autocr_tmp & I2C_AUTOCR_TRIGSEL) | SMBUS_TRIG_GRP2);
-  }
   sConfig->TriggerSelection = ((autocr_tmp & I2C_AUTOCR_TRIGSEL) | SMBUS_TRIG_GRP2);
 #endif /* SMBUS_TRIG_GRP1 */
 #else
-  sConfig->TriggerSelection = ((autocr_tmp & I2C_AUTOCR_TRIGSEL) | SMBUS_TRIG_GRP3);
-#endif /* SMBUS_TRIG_GRP2 */
-#else
   sConfig->TriggerSelection = ((autocr_tmp & I2C_AUTOCR_TRIGSEL) | SMBUS_TRIG_GRP1);
-#endif /* SMBUS_TRIG_GRP3*/
+#endif /* SMBUS_TRIG_GRP2*/
   sConfig->TriggerPolarity  = (autocr_tmp & I2C_AUTOCR_TRIGPOL);
 
   return HAL_OK;

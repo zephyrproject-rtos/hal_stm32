@@ -277,7 +277,7 @@ HAL_StatusTypeDef USB_DevInit(USB_OTG_GlobalTypeDef *USBx, USB_OTG_CfgTypeDef cf
   uint32_t USBx_BASE = (uint32_t)USBx;
   uint32_t i;
 
-  for (i = 0U; i < 15U; i++)
+  for (i = 0U; i < 8U; i++)
   {
     USBx->DIEPTXF[i] = 0U;
   }
