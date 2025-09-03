@@ -97,9 +97,9 @@
  *   mentioned parameters.
 */
 #if (BEACON_ONLY != 0)
-#define BLE_FIXED_BUFFER_SIZE_BYTES  4100   /* Beacon only */
+#define BLE_FIXED_BUFFER_SIZE_BYTES  4200   /* Beacon only */
 #elif (LL_ONLY_BASIC != 0)
-#define BLE_FIXED_BUFFER_SIZE_BYTES  6040   /* LL only Basic*/
+#define BLE_FIXED_BUFFER_SIZE_BYTES  5960   /* LL only Basic*/
 #elif (LL_ONLY != 0)
 #define BLE_FIXED_BUFFER_SIZE_BYTES  6288   /* LL only Full */
 #elif (SLAVE_ONLY != 0)

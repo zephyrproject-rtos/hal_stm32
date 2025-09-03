@@ -10,9 +10,8 @@ Purpose
 | This library is used on stm32wb series to enable HCI communication between a host BLE running on the Cortex-M4 core
 | and a controller BLE firmware running on the Cortex-M0 core.
 
-Status
-------
-version v1.20.0
+Status:
+   version v1.23.0
 
 Coprocessor Binaries
 --------------------
@@ -78,9 +77,8 @@ URL
 ---
 https://github.com/STMicroelectronics/STM32CubeWB
 
-Commit
-------
-529e571e91c93d4bf1aae6e0d69b9a5dcf4d828d
+Commit:
+   24e69da13336e90cccce4fccf5b8fddfcd4959fc
 
 Maintained-by
 -------------
@@ -94,7 +92,7 @@ License Link
 ------------
 https://opensource.org/license/BSD-3-Clause
 
-Patch List
+Patch List:
 ----------
 * | Move some files license from ST SLA0044 to BSD-3 Clause.
   | Following files are distributed under ST License SLA0044 and they are made available under BSD-3 Clause for Zephyr:
