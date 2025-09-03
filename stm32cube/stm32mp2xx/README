@@ -63,4 +63,13 @@ Patch List:
    - The stm32cube/stm32mp2xx/drivers/src/stm32mp2xx_ll_rcc.c file was modified
     for retrieving the clock configuration of the I2C8 peripheral.
 
+   * Fix the use of virtual timer call
+   - The stm32cube/stm32mp2xx/soc/system_stm32mp2xx_a35.c file use VL1_*
+     functions which are not yet supported in the CMSIS version for Cortex A.
+     These calls have been removed if the used CMSIS version is older than 6.x.
+
+   * HAL_A35_WRAPPER_ENABLED disabled
+   - Disabled the HAL_A35_WRAPPER_ENABLED macro to prevent build warnings when compiling
+     Zephyr for the Cortex-A35.
+
    See release_note.html from STM32Cube
