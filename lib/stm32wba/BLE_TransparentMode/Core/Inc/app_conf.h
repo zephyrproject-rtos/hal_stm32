@@ -362,9 +362,12 @@ typedef enum
 /******************************************************************************
  * RealTime GPIO debug module configuration
  ******************************************************************************/
-
+#ifndef CFG_RT_DEBUG_GPIO_MODULE
 #define CFG_RT_DEBUG_GPIO_MODULE            (0)
+#endif
+#ifndef CFG_RT_DEBUG_DTB
 #define CFG_RT_DEBUG_DTB                    (0)
+#endif
 
 /******************************************************************************
  * System Clock Manager module configuration
