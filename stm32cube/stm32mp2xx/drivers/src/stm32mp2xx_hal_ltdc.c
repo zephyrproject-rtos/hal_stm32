@@ -285,11 +285,16 @@ HAL_StatusTypeDef HAL_LTDC_Init(LTDC_HandleTypeDef *hltdc)
   /* Configure the HS, VS, DE, PC polarity, Single frame trig, External trig, Rotation, Gamma, Background */
   hltdc->Instance->GCR &= ~(LTDC_GCR_HSPOL | LTDC_GCR_VSPOL | LTDC_GCR_DEPOL | LTDC_GCR_PCPOL | LTDC_GCR_SFEXEN \
                             | LTDC_GCR_SFEN);
+#if !defined(STM32MP21xxxx)
   hltdc->Instance->GCR |= (uint32_t)(hltdc->Init.HSPolarity | hltdc->Init.VSPolarity | \
                                      hltdc->Init.DEPolarity | hltdc->Init.PCPolarity | \
                                      hltdc->Init.SFExtTrig | hltdc->Init.SFTrig | \
                                      hltdc->Init.RotEn);
-
+#else
+  hltdc->Instance->GCR |= (uint32_t)(hltdc->Init.HSPolarity | hltdc->Init.VSPolarity | \
+                                     hltdc->Init.DEPolarity | hltdc->Init.PCPolarity | \
+                                     hltdc->Init.SFExtTrig | hltdc->Init.SFTrig);
+#endif /* !defined(STM32MP21xxxx) */
   /* Set Synchronization size */
   hltdc->Instance->SSCR &= ~(LTDC_SSCR_VSH | LTDC_SSCR_HSW);
   tmp = (hltdc->Init.HorizontalSync << 16U);
@@ -320,25 +325,28 @@ HAL_StatusTypeDef HAL_LTDC_Init(LTDC_HandleTypeDef *hltdc)
   hltdc->Instance->EDCR &= ~(LTDC_EDCR_OCYEN | LTDC_EDCR_OCYSEL | LTDC_EDCR_OCYCO);
   hltdc->Instance->EDCR |= (uint32_t)(hltdc->Init.ExtDisp.YCbCrEn | hltdc->Init.ExtDisp.YCbCrSel | \
                                       hltdc->Init.ExtDisp.YCbCrOrder);
-
+#if  defined(LTDC_RB0AR_ADDR)
   /* Configure rotation buffer 0 address register */
   hltdc->Instance->RB0AR &= ~(LTDC_RB0AR_ADDR);
   hltdc->Instance->RB0AR |= (uint32_t)(hltdc->Init.Rotation.Buffer0Addr);
-
+#endif /* defined(LTDC_RB0AR_ADDR) */
+#if  defined(LTDC_RB1AR_ADDR)
   /* Configure rotation buffer 1 address register */
   hltdc->Instance->RB1AR &= ~(LTDC_RB1AR_ADDR);
   hltdc->Instance->RB1AR |= (uint32_t)(hltdc->Init.Rotation.Buffer1Addr);
-
+#endif /* defined(LTDC_RB1AR_ADDR) */
+#if  defined(LTDC_RBPR_PITCH)
   /* Configure rotation pitch buffer register */
   hltdc->Instance->RBPR &= ~(LTDC_RBPR_PITCH);
   hltdc->Instance->RBPR = (uint32_t)(hltdc->Init.Rotation.BufferPitch);
-
+#endif /* defined(LTDC_RBPR_PITCH) */
+#if  defined(LTDC_RIFCR_RIFBLUE) && defined(LTDC_RIFCR_RIFGREEN) && defined(LTDC_RIFCR_RIFRED)
   /* Configure rotation intermediate frame color buffer register */
   tmp = ((uint32_t)(hltdc->Init.Rotation.InterFrameGreen) << 8U);
   tmp1 = ((uint32_t)(hltdc->Init.Rotation.InterFrameRed) << 16U);
   hltdc->Instance->RIFCR &= ~(LTDC_RIFCR_RIFBLUE | LTDC_RIFCR_RIFGREEN | LTDC_RIFCR_RIFRED);
   hltdc->Instance->RIFCR |= (uint32_t)(tmp | tmp1 | hltdc->Init.Rotation.InterFrameBlue);
-
+#endif /* defined(LTDC_RIFCR_RIFBLUE) & defined(LTDC_RIFCR_RIFGREEN) & defined(LTDC_RIFCR_RIFRED)*/
   /* Configure the Fifo Underrun Threshold register */
   hltdc->Instance->FUTR &= ~(LTDC_FUTR_THRE);
   hltdc->Instance->FUTR = (uint32_t)(hltdc->Init.FifoUnderThresh);
@@ -2045,12 +2053,6 @@ HAL_StatusTypeDef HAL_LTDC_DisableVMirror(LTDC_HandleTypeDef *hltdc, const LTDC_
   *                the configuration information for the LTDC.
   * @retval  HAL status
   */
-/**
-  * @brief  Enable Dither.
-  * @param  hltdc  pointer to a LTDC_HandleTypeDef structure that contains
-  *                the configuration information for the LTDC.
-  * @retval  HAL status
-  */
 
 HAL_StatusTypeDef HAL_LTDC_EnableDither(LTDC_HandleTypeDef *hltdc)
 {
@@ -3429,6 +3431,7 @@ static void LTDC_SetConfig(LTDC_HandleTypeDef *hltdc, const LTDC_LayerCfgTypeDef
     HorInputSize = pLayerCfg->WindowX1 - pLayerCfg->WindowX0;
   }
 
+#if !defined(STM32MP21xxxx)
   if (hltdc->Init.RotEn == 0U)
   {
     /* Configure the horizontal start and stop position */
@@ -3456,6 +3459,19 @@ static void LTDC_SetConfig(LTDC_HandleTypeDef *hltdc, const LTDC_LayerCfgTypeDef
     LTDC_LAYER(hltdc, LayerIdx)->WVPCR  = ((pLayerCfg->WindowY0 \
                                             + ((hltdc->Instance->BPCR & LTDC_BPCR_AHBP) >> 16U) + 1U) | tmp);
   }
+#else
+  /* Configure the horizontal start and stop position */
+  tmp = ((pLayerCfg->WindowX1 + ((hltdc->Instance->BPCR & LTDC_BPCR_AHBP) >> 16U)) << 16U);
+  LTDC_LAYER(hltdc, LayerIdx)->WHPCR &= ~(LTDC_LxWHPCR_WHSTPOS | LTDC_LxWHPCR_WHSPPOS);
+  LTDC_LAYER(hltdc, LayerIdx)->WHPCR = ((pLayerCfg->WindowX0 + ((hltdc->Instance->BPCR & LTDC_BPCR_AHBP) >> 16U) \
+                                         + 1U) | tmp);
+
+  /* Configure the vertical start and stop position */
+  tmp = ((pLayerCfg->WindowY1 + (hltdc->Instance->BPCR & LTDC_BPCR_AVBP)) << 16U);
+  LTDC_LAYER(hltdc, LayerIdx)->WVPCR &= ~(LTDC_LxWVPCR_WVSTPOS | LTDC_LxWVPCR_WVSPPOS);
+  LTDC_LAYER(hltdc, LayerIdx)->WVPCR  = ((pLayerCfg->WindowY0 + (hltdc->Instance->BPCR & LTDC_BPCR_AVBP) + 1U) \
+                                         | tmp);
+#endif /* !defined(STM32MP21xxxx) */
 
   /* Configure the default color values */
   tmp = ((uint32_t)(pLayerCfg->Backcolor.Green) << 8U);
@@ -3667,7 +3683,7 @@ static void LTDC_SetConfig(LTDC_HandleTypeDef *hltdc, const LTDC_LayerCfgTypeDef
       /* Configure the vertical scaling phase */
       LTDC_LAYER(hltdc, LayerIdx)->SHSPR = calculateScalingFactor(pLayerCfg->Scaler.HorInputSize,
                                                                   pLayerCfg->Scaler.HorOutputSize) +
-                                           (1U << SCALER_FRACTION);
+                                           (1UL << SCALER_FRACTION);
 
       ConfigPlane += (uint32_t)LTDC_LxCR_SCEN;
     }

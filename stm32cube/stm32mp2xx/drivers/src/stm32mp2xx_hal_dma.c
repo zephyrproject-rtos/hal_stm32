@@ -322,6 +322,16 @@ HAL_StatusTypeDef HAL_DMA_Init(DMA_HandleTypeDef *const hdma)
   /* Allocate lock resource */
   __HAL_UNLOCK(hdma);
 
+  /* Initialize the callbacks */
+  if (hdma->State == HAL_DMA_STATE_RESET)
+  {
+    /* Clean all callbacks */
+    hdma->XferCpltCallback     = NULL;
+    hdma->XferHalfCpltCallback = NULL;
+    hdma->XferErrorCallback    = NULL;
+    hdma->XferAbortCallback    = NULL;
+    hdma->XferSuspendCallback  = NULL;
+  }
   /* Update the DMA channel state */
   hdma->State = HAL_DMA_STATE_BUSY;
 
@@ -624,6 +634,7 @@ HAL_StatusTypeDef HAL_DMA_Start_IT(DMA_HandleTypeDef *const hdma,
   * @note   When Terminate and Drain FIFO feature is available,
             The DMA internal FIFO is systematically drained before the channel stops.
             Please refer to channel terminate and drain FIFO section of the reference manual for more information.
+            When called in interrupt mode, this function can complete part of the treatment done in HAL_DMA_IRQHandler.
   */
 HAL_StatusTypeDef HAL_DMA_Abort(DMA_HandleTypeDef *const hdma)
 {
@@ -668,11 +679,11 @@ HAL_StatusTypeDef HAL_DMA_Abort(DMA_HandleTypeDef *const hdma)
 #endif /* DMA_CSR_DRAININGF */
 
     /* Update the DMA channel state */
-    hdma->State = HAL_DMA_STATE_SUSPEND;
+    hdma->State = HAL_DMA_STATE_ABORT;
 
 #if defined(DMA_CSR_DRAININGF)
     /* Check if the DMA Channel is suspended/TransferCompleteFlag */
-    while ((hdma->Instance->CSR & pollingflag) == 0U)
+    while (((hdma->Instance->CSR & pollingflag) == 0U) && hdma->State == HAL_DMA_STATE_ABORT)
 #else
     /* Check if the DMA Channel is suspended */
     while ((hdma->Instance->CSR & DMA_CSR_SUSPF) == 0U)
@@ -703,9 +714,6 @@ HAL_StatusTypeDef HAL_DMA_Abort(DMA_HandleTypeDef *const hdma)
 
     /* Reset the channel */
     hdma->Instance->CCR |= DMA_CCR_RESET;
-
-    /* Update the DMA channel state */
-    hdma->State = HAL_DMA_STATE_ABORT;
 
     /* Clear all status flags */
     __HAL_DMA_CLEAR_FLAG(hdma, (DMA_FLAG_TC | DMA_FLAG_HT | DMA_FLAG_DTE | DMA_FLAG_ULE | DMA_FLAG_USE | DMA_FLAG_SUSP |
@@ -1809,11 +1817,43 @@ static void DMA_SetConfig(DMA_HandleTypeDef const *const hdma,
   __HAL_DMA_CLEAR_FLAG(hdma, DMA_FLAG_TC | DMA_FLAG_HT | DMA_FLAG_DTE | DMA_FLAG_ULE | DMA_FLAG_USE | DMA_FLAG_SUSP |
                        DMA_FLAG_TO);
 
+#if (defined(SYSCFG_HPDMAARCR_HPDMA1AREN)||defined(SYSCFG_HPDMAARCR_HPDMA2AREN)||defined(SYSCFG_HPDMAARCR_HPDMA3AREN))
+  /* To check syscfg bit is set to 1 and src/dest port is AXI for DMA Master to see 4GB DDR */
+  if (((READ_BIT(SYSCFG->HPDMAARCR, SYSCFG_HPDMAARCR_HPDMA1AREN) == SYSCFG_HPDMAARCR_HPDMA1AREN) || \
+       (READ_BIT(SYSCFG->HPDMAARCR, SYSCFG_HPDMAARCR_HPDMA2AREN) == SYSCFG_HPDMAARCR_HPDMA2AREN)  || \
+       (READ_BIT(SYSCFG->HPDMAARCR, SYSCFG_HPDMAARCR_HPDMA3AREN) == SYSCFG_HPDMAARCR_HPDMA3AREN)) && \
+      ((hdma->Init.TransferAllocatedPort & DMA_CTR1_SAP) == DMA_SRC_ALLOCATED_PORT0))
+  {
+    /* subtracting 0x80000000 from the source/destination address to get the actual address */
+    /* Configure DMA channel source address */
+    hdma->Instance->CSAR = (SrcAddress - 0x80000000);
+  }
+  else
+  {
+    /* Configure DMA channel source address */
+    hdma->Instance->CSAR = SrcAddress;
+  }
+  if (((READ_BIT(SYSCFG->HPDMAARCR, SYSCFG_HPDMAARCR_HPDMA1AREN) == SYSCFG_HPDMAARCR_HPDMA1AREN) || \
+       (READ_BIT(SYSCFG->HPDMAARCR, SYSCFG_HPDMAARCR_HPDMA2AREN) == SYSCFG_HPDMAARCR_HPDMA2AREN)  || \
+       (READ_BIT(SYSCFG->HPDMAARCR, SYSCFG_HPDMAARCR_HPDMA3AREN) == SYSCFG_HPDMAARCR_HPDMA3AREN)) && \
+      ((hdma->Init.TransferAllocatedPort & DMA_CTR1_DAP) == DMA_DEST_ALLOCATED_PORT0))
+  {
+    /* subtracting 0x80000000 from the source/destination address to get the actual address */
+    /* Configure DMA channel destination address */
+    hdma->Instance->CDAR = (DstAddress - 0x80000000);
+  }
+  else
+  {
+    /* Configure DMA channel destination address */
+    hdma->Instance->CDAR = DstAddress;
+  }
+#else
   /* Configure DMA channel source address */
   hdma->Instance->CSAR = SrcAddress;
 
   /* Configure DMA channel destination address */
   hdma->Instance->CDAR = DstAddress;
+#endif /* SYSCFG_HPDMAARCR_HPDMAxAREN */
 }
 
 /**

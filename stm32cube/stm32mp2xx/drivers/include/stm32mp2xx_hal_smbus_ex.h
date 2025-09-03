@@ -92,98 +92,77 @@ typedef struct
   * @{
   */
 #if defined(I2C8)
-#define SMBUS_TRIG_GRP1                   (0x10000000U)                    /*!< Trigger Group for I2C8 */
+#define SMBUS_TRIG_GRP1                   (0x10000000U)                    /*!< Trigger Group for I2C8,(I2C1||I2C2)(Depends on the product) */
 /* HW Trigger signal is LPDMA_CH0_TRG   */
 #define SMBUS_GRP1_LPDMA_CH0_TCF_TRG      (uint32_t)(SMBUS_TRIG_GRP1 | (0x00000000U))
 /* HW Trigger signal is LPDMA_CH1_TRG   */
-#define SMBUS_GRP1_LPDMA_CH1_TCF_TRG      (uint32_t)(SMBUS_TRIG_GRP1 | (0x1U << I2C_AUTOCR_TRIGSEL_Pos))
+#define SMBUS_GRP1_LPDMA_CH1_TCF_TRG      (uint32_t)(SMBUS_TRIG_GRP1 | (0x1UL << I2C_AUTOCR_TRIGSEL_Pos))
 /* HW Trigger signal is LPDMA_CH2_TRG   */
-#define SMBUS_GRP1_LPDMA_CH2_TCF_TRG      (uint32_t)(SMBUS_TRIG_GRP1 | (0x2U << I2C_AUTOCR_TRIGSEL_Pos))
+#define SMBUS_GRP1_LPDMA_CH2_TCF_TRG      (uint32_t)(SMBUS_TRIG_GRP1 | (0x2UL << I2C_AUTOCR_TRIGSEL_Pos))
 /* HW Trigger signal is LPDMA_CH3_TRG   */
-#define SMBUS_GRP1_LPDMA_CH3_TCF_TRG      (uint32_t)(SMBUS_TRIG_GRP1 | (0x3U << I2C_AUTOCR_TRIGSEL_Pos))
+#define SMBUS_GRP1_LPDMA_CH3_TCF_TRG      (uint32_t)(SMBUS_TRIG_GRP1 | (0x3UL << I2C_AUTOCR_TRIGSEL_Pos))
 /* HW Trigger signal is EXTI4_TRG       */
-#define SMBUS_GRP1_EXTI4_TRG              (uint32_t)(SMBUS_TRIG_GRP1 | (0x4U << I2C_AUTOCR_TRIGSEL_Pos))
+#define SMBUS_GRP1_EXTI4_TRG              (uint32_t)(SMBUS_TRIG_GRP1 | (0x4UL << I2C_AUTOCR_TRIGSEL_Pos))
 /* HW Trigger signal is EXTI5_TRG       */
-#define SMBUS_GRP1_EXTI5_TRG              (uint32_t)(SMBUS_TRIG_GRP1 | (0x5U << I2C_AUTOCR_TRIGSEL_Pos))
+#define SMBUS_GRP1_EXTI5_TRG              (uint32_t)(SMBUS_TRIG_GRP1 | (0x5UL << I2C_AUTOCR_TRIGSEL_Pos))
 /* HW Trigger signal is LPTIM3_CH1_TRG  */
-#define SMBUS_GRP1_LPTIM3_CH1_TRG         (uint32_t)(SMBUS_TRIG_GRP1 | (0x6U << I2C_AUTOCR_TRIGSEL_Pos))
+#define SMBUS_GRP1_LPTIM3_CH1_TRG         (uint32_t)(SMBUS_TRIG_GRP1 | (0x6UL << I2C_AUTOCR_TRIGSEL_Pos))
 /* HW Trigger signal is LPTIM4_CH1_TRG  */
-#define SMBUS_GRP1_LPTIM4_CH1_TRG         (uint32_t)(SMBUS_TRIG_GRP1 | (0x7U << I2C_AUTOCR_TRIGSEL_Pos))
+#define SMBUS_GRP1_LPTIM4_CH1_TRG         (uint32_t)(SMBUS_TRIG_GRP1 | (0x7UL << I2C_AUTOCR_TRIGSEL_Pos))
 /* HW Trigger signal is LPTIM5_OUT_TRG  */
-#define SMBUS_GRP1_LPTIM5_OUT_TRG         (uint32_t)(SMBUS_TRIG_GRP1 | (0x8U << I2C_AUTOCR_TRIGSEL_Pos))
+#define SMBUS_GRP1_LPTIM5_OUT_TRG         (uint32_t)(SMBUS_TRIG_GRP1 | (0x8UL << I2C_AUTOCR_TRIGSEL_Pos))
 /* HW Trigger signal is RTC_ALRA_TRG    */
-#define SMBUS_GRP1_RTC_ALRA_TRG           (uint32_t)(SMBUS_TRIG_GRP1 | (0x9U << I2C_AUTOCR_TRIGSEL_Pos))
+#define SMBUS_GRP1_RTC_ALRA_TRG           (uint32_t)(SMBUS_TRIG_GRP1 | (0x9UL << I2C_AUTOCR_TRIGSEL_Pos))
 /* HW Trigger signal is RTC_WUT_TRG     */
-#define SMBUS_GRP1_RTC_WUT_TRG            (uint32_t)(SMBUS_TRIG_GRP1 | (0xAU << I2C_AUTOCR_TRIGSEL_Pos))
+#define SMBUS_GRP1_RTC_WUT_TRG            (uint32_t)(SMBUS_TRIG_GRP1 | (0xAUL << I2C_AUTOCR_TRIGSEL_Pos))
 #else
-#if   defined(I2C1) && !defined(I2C8)
-#define SMBUS_TRIG_GRP1                   (0x10000000U)         /*!< Trigger Group for I2C8 */
-/* HW Trigger signal is EXTI4_TRG         */
-#define SMBUS_GRP1_EXTI4_TRG                (uint32_t)(SMBUS_TRIG_GRP1 | (0x4U << I2C_AUTOCR_TRIGSEL_Pos))
-/* HW Trigger signal is EXTI5_TRG         */
-#define SMBUS_GRP1_EXTI5_TRG                (uint32_t)(SMBUS_TRIG_GRP1 | (0x5U << I2C_AUTOCR_TRIGSEL_Pos))
-/* HW Trigger signal is LPTIM3_CH1_TRG    */
-#define SMBUS_GRP1_LPTIM3_CH1_TRG           (uint32_t)(SMBUS_TRIG_GRP1 | (0x7U << I2C_AUTOCR_TRIGSEL_Pos))
-/* HW Trigger signal is LPTIM4_CH1_TRG    */
-#define SMBUS_GRP1_LPTIM4_CH1_TRG           (uint32_t)(SMBUS_TRIG_GRP1 | (0x8U << I2C_AUTOCR_TRIGSEL_Pos))
-/* HW Trigger signal is LPTIM5_OUT_TRG    */
-#define SMBUS_GRP1_LPTIM5_OUT_TRG           (uint32_t)(SMBUS_TRIG_GRP1 | (0x9U << I2C_AUTOCR_TRIGSEL_Pos))
-/* HW Trigger signal is RTC_ALRA_TRG      */
-#define SMBUS_GRP1_RTC_ALRA_TRG             (uint32_t)(SMBUS_TRIG_GRP1 | (0xAU << I2C_AUTOCR_TRIGSEL_Pos))
-/* HW Trigger signal is RTC_WUT_TRG       */
-#define SMBUS_GRP1_RTC_WUT_TRG              (uint32_t)(SMBUS_TRIG_GRP1 | (0xBU << I2C_AUTOCR_TRIGSEL_Pos))
-/* HW Trigger signal is EXTI6_TRG         */
-#define SMBUS_GRP1_EXTI6_TRG                (uint32_t)(SMBUS_TRIG_GRP1 | (0xCU << I2C_AUTOCR_TRIGSEL_Pos))
-/* HW Trigger signal is EXTI7_TRG         */
-#define SMBUS_GRP1_EXTI7_TRG                (uint32_t)(SMBUS_TRIG_GRP1 | (0xDU << I2C_AUTOCR_TRIGSEL_Pos))
-/* HW Trigger signal is LPTIM1_CH1_TRG    */
-#define SMBUS_GRP1_LPTIM1_CH1_TRG           (uint32_t)(SMBUS_TRIG_GRP1 | (0xEU << I2C_AUTOCR_TRIGSEL_Pos))
-/* HW Trigger signal is LPTIM2_CH1_TRG    */
-#define SMBUS_GRP1_LPTIM2_CH1_TRG           (uint32_t)(SMBUS_TRIG_GRP1 | (0xFU << I2C_AUTOCR_TRIGSEL_Pos))
-#endif /* I2C1 */
+#if (defined(I2C1) || defined(I2C2))
+#define SMBUS_TRIG_GRP1                   (0x10000000U)         /*!< Trigger Group for I2C8,(I2C1||I2C2)(Depends on the product) */
+#endif /* I2C8,(I2C1||I2C2)(Depends on the product) */
+#if defined(I2C3)
+#define SMBUS_TRIG_GRP2                   (0x20000000U)         /*!< Trigger Group for I2C3 */
+#endif /* I2C3 */
 
-#if   defined(I2C2) && !defined(I2C8)
-#define SMBUS_TRIG_GRP2                   (0x20000000U)        /*!< Trigger Group for I2C2 */
+#if defined(SMBUS_TRIG_GRP1)
 /* HW Trigger signal is EXTI4_TRG         */
-#define SMBUS_GRP2_EXTI4_TRG                (uint32_t)(SMBUS_TRIG_GRP2 | (0x4U << I2C_AUTOCR_TRIGSEL_Pos))
+#define SMBUS_GRP1_EXTI4_TRG                (uint32_t)(SMBUS_TRIG_GRP1 | (0x4UL << I2C_AUTOCR_TRIGSEL_Pos))
 /* HW Trigger signal is EXTI5_TRG         */
-#define SMBUS_GRP2_EXTI5_TRG                (uint32_t)(SMBUS_TRIG_GRP2 | (0x5U << I2C_AUTOCR_TRIGSEL_Pos))
+#define SMBUS_GRP1_EXTI5_TRG                (uint32_t)(SMBUS_TRIG_GRP1 | (0x5UL << I2C_AUTOCR_TRIGSEL_Pos))
 /* HW Trigger signal is LPTIM3_CH1_TRG    */
-#define SMBUS_GRP2_LPTIM3_CH1_TRG           (uint32_t)(SMBUS_TRIG_GRP2 | (0x7U << I2C_AUTOCR_TRIGSEL_Pos))
+#define SMBUS_GRP1_LPTIM3_CH1_TRG           (uint32_t)(SMBUS_TRIG_GRP1 | (0x7UL << I2C_AUTOCR_TRIGSEL_Pos))
 /* HW Trigger signal is LPTIM4_CH1_TRG    */
-#define SMBUS_GRP2_LPTIM4_CH1_TRG           (uint32_t)(SMBUS_TRIG_GRP2 | (0x8U << I2C_AUTOCR_TRIGSEL_Pos))
+#define SMBUS_GRP1_LPTIM4_CH1_TRG           (uint32_t)(SMBUS_TRIG_GRP1 | (0x8UL << I2C_AUTOCR_TRIGSEL_Pos))
 /* HW Trigger signal is LPTIM5_OUT_TRG    */
-#define SMBUS_GRP2_LPTIM5_OUT_TRG           (uint32_t)(SMBUS_TRIG_GRP2 | (0x9U << I2C_AUTOCR_TRIGSEL_Pos))
+#define SMBUS_GRP1_LPTIM5_OUT_TRG           (uint32_t)(SMBUS_TRIG_GRP1 | (0x9UL << I2C_AUTOCR_TRIGSEL_Pos))
 /* HW Trigger signal is RTC_ALRA_TRG      */
-#define SMBUS_GRP2_RTC_ALRA_TRG             (uint32_t)(SMBUS_TRIG_GRP2 | (0xAU << I2C_AUTOCR_TRIGSEL_Pos))
+#define SMBUS_GRP1_RTC_ALRA_TRG             (uint32_t)(SMBUS_TRIG_GRP1 | (0xAUL << I2C_AUTOCR_TRIGSEL_Pos))
 /* HW Trigger signal is RTC_WUT_TRG       */
-#define SMBUS_GRP2_RTC_WUT_TRG              (uint32_t)(SMBUS_TRIG_GRP2 | (0xBU << I2C_AUTOCR_TRIGSEL_Pos))
+#define SMBUS_GRP1_RTC_WUT_TRG              (uint32_t)(SMBUS_TRIG_GRP1 | (0xBUL << I2C_AUTOCR_TRIGSEL_Pos))
 /* HW Trigger signal is EXTI6_TRG         */
-#define SMBUS_GRP2_EXTI6_TRG                (uint32_t)(SMBUS_TRIG_GRP2 | (0xCU << I2C_AUTOCR_TRIGSEL_Pos))
+#define SMBUS_GRP1_EXTI6_TRG                (uint32_t)(SMBUS_TRIG_GRP1 | (0xCUL << I2C_AUTOCR_TRIGSEL_Pos))
 /* HW Trigger signal is EXTI7_TRG         */
-#define SMBUS_GRP2_EXTI7_TRG                (uint32_t)(SMBUS_TRIG_GRP2 | (0xDU << I2C_AUTOCR_TRIGSEL_Pos))
+#define SMBUS_GRP1_EXTI7_TRG                (uint32_t)(SMBUS_TRIG_GRP1 | (0xDUL << I2C_AUTOCR_TRIGSEL_Pos))
 /* HW Trigger signal is LPTIM1_CH1_TRG    */
-#define SMBUS_GRP2_LPTIM1_CH1_TRG           (uint32_t)(SMBUS_TRIG_GRP2 | (0xEU << I2C_AUTOCR_TRIGSEL_Pos))
+#define SMBUS_GRP1_LPTIM1_CH1_TRG           (uint32_t)(SMBUS_TRIG_GRP1 | (0xEUL << I2C_AUTOCR_TRIGSEL_Pos))
 /* HW Trigger signal is LPTIM2_CH1_TRG    */
-#define SMBUS_GRP2_LPTIM2_CH1_TRG           (uint32_t)(SMBUS_TRIG_GRP2 | (0xFU << I2C_AUTOCR_TRIGSEL_Pos))
-#endif /* I2C2 */
+#define SMBUS_GRP1_LPTIM2_CH1_TRG           (uint32_t)(SMBUS_TRIG_GRP1 | (0xFUL << I2C_AUTOCR_TRIGSEL_Pos))
+#endif /* I2C1 || I2C2*/
 
-#if   defined(I2C3) && !defined(I2C8)
-#define SMBUS_TRIG_GRP3                   (0x30000000U)         /*!< Trigger Group for I2C3 */
+#if defined(SMBUS_TRIG_GRP2)
 /* HW Trigger signal is EXTI4_TRG         */
-#define SMBUS_GRP3_EXTI4_TRG                (uint32_t)(SMBUS_TRIG_GRP3 | (0x4U << I2C_AUTOCR_TRIGSEL_Pos))
+#define SMBUS_GRP2_EXTI4_TRG                (uint32_t)(SMBUS_TRIG_GRP2 | (0x4UL << I2C_AUTOCR_TRIGSEL_Pos))
 /* HW Trigger signal is EXTI5_TRG         */
-#define SMBUS_GRP3_EXTI5_TRG                (uint32_t)(SMBUS_TRIG_GRP3 | (0x5U << I2C_AUTOCR_TRIGSEL_Pos))
+#define SMBUS_GRP2_EXTI5_TRG                (uint32_t)(SMBUS_TRIG_GRP2 | (0x5UL << I2C_AUTOCR_TRIGSEL_Pos))
 /* HW Trigger signal is LPTIM3_CH1_TRG    */
-#define SMBUS_GRP3_LPTIM3_CH1_TRG           (uint32_t)(SMBUS_TRIG_GRP3 | (0x7U << I2C_AUTOCR_TRIGSEL_Pos))
+#define SMBUS_GRP2_LPTIM3_CH1_TRG           (uint32_t)(SMBUS_TRIG_GRP2 | (0x7UL << I2C_AUTOCR_TRIGSEL_Pos))
 /* HW Trigger signal is LPTIM4_CH1_TRG    */
-#define SMBUS_GRP3_LPTIM4_CH1_TRG           (uint32_t)(SMBUS_TRIG_GRP3 | (0x8U << I2C_AUTOCR_TRIGSEL_Pos))
+#define SMBUS_GRP2_LPTIM4_CH1_TRG           (uint32_t)(SMBUS_TRIG_GRP2 | (0x8UL << I2C_AUTOCR_TRIGSEL_Pos))
 /* HW Trigger signal is LPTIM5_OUT_TRG    */
-#define SMBUS_GRP3_LPTIM5_OUT_TRG           (uint32_t)(SMBUS_TRIG_GRP3 | (0x9U << I2C_AUTOCR_TRIGSEL_Pos))
+#define SMBUS_GRP2_LPTIM5_OUT_TRG           (uint32_t)(SMBUS_TRIG_GRP2 | (0x9UL << I2C_AUTOCR_TRIGSEL_Pos))
 /* HW Trigger signal is RTC_ALRA_TRG      */
-#define SMBUS_GRP3_RTC_ALRA_TRG             (uint32_t)(SMBUS_TRIG_GRP3 | (0xAU << I2C_AUTOCR_TRIGSEL_Pos))
+#define SMBUS_GRP2_RTC_ALRA_TRG             (uint32_t)(SMBUS_TRIG_GRP2 | (0xAUL << I2C_AUTOCR_TRIGSEL_Pos))
 /* HW Trigger signal is RTC_WUT_TRG       */
-#define SMBUS_GRP3_RTC_WUT_TRG              (uint32_t)(SMBUS_TRIG_GRP3 | (0xBU << I2C_AUTOCR_TRIGSEL_Pos))
+#define SMBUS_GRP2_RTC_WUT_TRG              (uint32_t)(SMBUS_TRIG_GRP2 | (0xBUL << I2C_AUTOCR_TRIGSEL_Pos))
 #endif /* I2C3 */
 
 #endif /* I2C8 */
@@ -286,9 +265,9 @@ HAL_StatusTypeDef HAL_SMBUSEx_ClearConfigAutonomousMode(SMBUS_HandleTypeDef *hsm
                                                 ((__SOURCE__) == SMBUS_GRP1_RTC_ALRA_TRG       ) || \
                                                 ((__SOURCE__) == SMBUS_GRP1_RTC_WUT_TRG        ))
 #else
+#if defined(SMBUS_TRIG_GRP2)
+#if defined(SMBUS_TRIG_GRP1)
 #define IS_SMBUS_TRIG_SOURCE(__INSTANCE__, __SOURCE__)  (((__INSTANCE__) == I2C3) ? \
-                                                         IS_SMBUS_GRP3_TRIG_SOURCE(__SOURCE__) : \
-                                                         ((__INSTANCE__) == I2C2) ? \
                                                          IS_SMBUS_GRP2_TRIG_SOURCE(__SOURCE__) : \
                                                          IS_SMBUS_GRP1_TRIG_SOURCE(__SOURCE__))
 
@@ -310,41 +289,21 @@ HAL_StatusTypeDef HAL_SMBUSEx_ClearConfigAutonomousMode(SMBUS_HandleTypeDef *hsm
                                                 ((__SOURCE__) == SMBUS_GRP2_LPTIM4_CH1_TRG     ) || \
                                                 ((__SOURCE__) == SMBUS_GRP2_LPTIM5_OUT_TRG     ) || \
                                                 ((__SOURCE__) == SMBUS_GRP2_RTC_ALRA_TRG       ) || \
-                                                ((__SOURCE__) == SMBUS_GRP2_RTC_WUT_TRG        ) || \
-                                                ((__SOURCE__) == SMBUS_GRP2_EXTI6_TRG          ) || \
-                                                ((__SOURCE__) == SMBUS_GRP2_EXTI7_TRG          ) || \
-                                                ((__SOURCE__) == SMBUS_GRP2_LPTIM1_CH1_TRG     ) || \
-                                                ((__SOURCE__) == SMBUS_GRP2_LPTIM2_CH1_TRG     ))
-
-#define IS_SMBUS_GRP3_TRIG_SOURCE(__SOURCE__)  (((__SOURCE__) == SMBUS_GRP3_EXTI4_TRG          ) || \
-                                                ((__SOURCE__) == SMBUS_GRP3_EXTI5_TRG          ) || \
-                                                ((__SOURCE__) == SMBUS_GRP3_LPTIM3_CH1_TRG     ) || \
-                                                ((__SOURCE__) == SMBUS_GRP3_LPTIM4_CH1_TRG     ) || \
-                                                ((__SOURCE__) == SMBUS_GRP3_LPTIM5_OUT_TRG     ) || \
-                                                ((__SOURCE__) == SMBUS_GRP3_RTC_ALRA_TRG       ) || \
-                                                ((__SOURCE__) == SMBUS_GRP3_RTC_WUT_TRG        ))
+                                                ((__SOURCE__) == SMBUS_GRP2_RTC_WUT_TRG        ))
+#endif /* SMBUS_TRIG_GRP1 */
+#endif /* SMBUS_TRIG_GRP2 */
 #endif /* I2C8 */
 
-#if defined(SMBUS_TRIG_GRP3)
 #if defined(SMBUS_TRIG_GRP2)
 #if defined(SMBUS_TRIG_GRP1)
 #define IS_SMBUS_TRIG_INPUT_INSTANCE(__INSTANCE__)    (IS_SMBUS_GRP1_INSTANCE(__INSTANCE__) ||                     \
-                                                       IS_SMBUS_GRP2_INSTANCE(__INSTANCE__) ||             \
-                                                       IS_SMBUS_GRP3_INSTANCE(__INSTANCE__))
-#endif /* SMBUS_TRIG_GRP1 */
-#else
-#define IS_SMBUS_TRIG_INPUT_INSTANCE(__INSTANCE__)    IS_SMBUS_GRP1_INSTANCE(__INSTANCE__)
-#endif /* SMBUS_TRIG_GRP2 */
-#else
-#if defined(SMBUS_TRIG_GRP2)
-#if defined(SMBUS_TRIG_GRP1)
-#define IS_SMBUS_TRIG_INPUT_INSTANCE(__INSTANCE__)    (IS_SMBUS_GRP1_INSTANCE(__INSTANCE__) || \
                                                        IS_SMBUS_GRP2_INSTANCE(__INSTANCE__))
+#else
+#define IS_SMBUS_TRIG_INPUT_INSTANCE(__INSTANCE__)    IS_SMBUS_GRP1_INSTANCE(__INSTANCE__)
 #endif /* SMBUS_TRIG_GRP1 */
 #else
 #define IS_SMBUS_TRIG_INPUT_INSTANCE(__INSTANCE__)    IS_SMBUS_GRP1_INSTANCE(__INSTANCE__)
 #endif /* SMBUS_TRIG_GRP2 */
-#endif /* SMBUS_TRIG_GRP3 */
 
 #define IS_SMBUS_AUTO_MODE_TRG_POL(__POLARITY__)      (((__POLARITY__) == SMBUS_TRIG_POLARITY_RISING) ||               \
                                                        ((__POLARITY__) == SMBUS_TRIG_POLARITY_FALLING))

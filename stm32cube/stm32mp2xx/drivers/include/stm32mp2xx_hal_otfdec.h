@@ -340,7 +340,7 @@ HAL_StatusTypeDef HAL_OTFDEC_RegionKeyLock(OTFDEC_HandleTypeDef *hotfdec, uint32
 HAL_StatusTypeDef HAL_OTFDEC_RegionSetKey(OTFDEC_HandleTypeDef *hotfdec, uint32_t RegionIndex, uint32_t *pKey);
 HAL_StatusTypeDef HAL_OTFDEC_RegionSetMode(OTFDEC_HandleTypeDef *hotfdec, uint32_t RegionIndex, uint32_t mode);
 HAL_StatusTypeDef HAL_OTFDEC_RegionConfig(OTFDEC_HandleTypeDef *hotfdec, uint32_t RegionIndex,
-                                          OTFDEC_RegionConfigTypeDef *Config, uint32_t lock);
+                                          const OTFDEC_RegionConfigTypeDef *Config, uint32_t lock);
 uint32_t HAL_OTFDEC_KeyCRCComputation(const uint32_t *pKey);
 HAL_StatusTypeDef HAL_OTFDEC_RegionEnable(OTFDEC_HandleTypeDef *hotfdec, uint32_t RegionIndex);
 HAL_StatusTypeDef HAL_OTFDEC_RegionDisable(OTFDEC_HandleTypeDef *hotfdec, uint32_t RegionIndex);

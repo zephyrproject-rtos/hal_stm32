@@ -228,14 +228,15 @@ typedef struct
   uint32_t            SFTrig;                    /*!< configures the single frame mode. */
 
   uint32_t            SFExtTrig;                 /*!< configures the single frame mode. External Trigger */
-
+#if !defined(STM32MP21xxxx)
   uint32_t            RotEn;                     /*!< Rotation Enable. */
-
+#endif /* !defined(STM32MP21xxxx) */
   uint32_t            FifoUnderThresh;           /*!< Fifo underrun threshold. */
 
   LTDC_ExtDispTypeDef   ExtDisp;                 /*!< Configure the external display interface. */
-
+#if !defined(STM32MP21xxxx)
   LTDC_RotationTypeDef  Rotation;                /*!< Configure the rotation. */
+#endif /* !defined(STM32MP21xxxx) */
 } LTDC_InitTypeDef;
 
 /**

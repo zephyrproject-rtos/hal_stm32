@@ -53,6 +53,7 @@ extern "C" {
   */
 #define GPIO_AF0_TRACE         ((uint8_t)0x00)  /* TRACE Alternate Function mapping for TRACED0-15 et TRACECLK  */
 #define GPIO_AF0_DBTRGI        ((uint8_t)0x00)  /* DBTRGI Alternate Function mapping                            */
+#define GPIO_AF0_DBTRGO        ((uint8_t)0x00)  /* DBTRGO Alternate Function mapping                            */
 
 /**
   * @brief   AF 1 selection
@@ -69,6 +70,7 @@ extern "C" {
 #define GPIO_AF1_SPI_I2S3      ((uint8_t)0x01)  /* SPI_I2S3 Alternate Function mapping SCK RDY NSS MISO MOSI    */
 #define GPIO_AF1_SAI1          ((uint8_t)0x01)  /* SAI1 Alternate Function mapping MCLK_A SCK_A                 */
 #define GPIO_AF1_DBTRGO        ((uint8_t)0x01)  /* DBTRGO Alternate Function mapping                            */
+#define GPIO_AF1_DBTRGI        ((uint8_t)0x01)  /* DBTRGI Alternate Function mapping                            */
 
 
 /**
@@ -233,6 +235,7 @@ extern "C" {
 #define GPIO_AF11_DCMIPP       ((uint8_t)0x0B)  /* DCMIPP Alternate Function mapping */
 #define GPIO_AF11_I2C2         ((uint8_t)0x0B)  /* I2C2 Alternate Function mapping */
 #define GPIO_AF11_I2C3         ((uint8_t)0x0B)  /* I2C3 Alternate Function mapping */
+#define GPIO_AF11_I3C3         ((uint8_t)0x0B)  /* I3C3 Alternate Function mapping */
 #define GPIO_AF11_OCTOSPI1     ((uint8_t)0x0B)  /* OCTOSPI1 Alternate Function mapping */
 
 /**

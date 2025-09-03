@@ -1958,8 +1958,14 @@ typedef struct
    (LL_ADC_IsEnabled(ADC3))                                                 \
   )
 #else
-#define __LL_ADC_IS_ENABLED_ALL_COMMON_INSTANCE(__ADCXY_COMMON__)              \
-  (LL_ADC_IsEnabled(ADC1) | LL_ADC_IsEnabled(ADC2))
+#define __LL_ADC_IS_ENABLED_ALL_COMMON_INSTANCE(__ADCXY_COMMON__)   \
+(                                                                   \
+  ( (__ADCXY_COMMON__) == ADC1_COMMON )                             \
+  ?                                                                 \
+  ( LL_ADC_IsEnabled(ADC1) )                                        \
+  :                                                                 \
+  ( LL_ADC_IsEnabled(ADC2) )                                        \
+)
 #endif /* ADC3 */
 
 /**

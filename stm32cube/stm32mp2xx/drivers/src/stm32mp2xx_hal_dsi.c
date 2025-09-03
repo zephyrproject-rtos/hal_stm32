@@ -193,9 +193,9 @@ typedef struct
 /*
  * Constant PHY PLL Regulation Settings w.r.t Target PHI frequency for the Synopsys D-PHY
  * */
-#define DSI_PLL_GMP_FIELD  0x01U
-#define DSI_PLL_INT_FIELD  0x00U
-#define DSI_PLL_BIAS_FIELD 0x10U
+#define DSI_PLL_GMP_FIELD  0x01UL
+#define DSI_PLL_INT_FIELD  0x00UL
+#define DSI_PLL_BIAS_FIELD 0x10UL
 
 #define DSI_ERROR_ACK_MASK (DSI_ISR0_AE0 | DSI_ISR0_AE1 | DSI_ISR0_AE2 | DSI_ISR0_AE3 | \
                             DSI_ISR0_AE4 | DSI_ISR0_AE5 | DSI_ISR0_AE6 | DSI_ISR0_AE7 | \
@@ -404,7 +404,7 @@ static void DSI_SetWrapperPLLTuning(DSI_HandleTypeDef *hdsi, const DSI_PLLInitTy
   /* Calculate Input Clock Frequency */
   tmp = (((PLLInit->RefClkin / 1000U) - 17U)) * 4U;
 
-  hdsi->Instance->WPCR1 = (0x00U << DSI_WPCR1_DLD_Pos) | \
+  hdsi->Instance->WPCR1 = (0x00UL << DSI_WPCR1_DLD_Pos) | \
                           ((uint32_t)dsi_pll_regulation[hdsi->Init.PhyDataRate].hs_freq << DSI_WPCR1_HSFR_Pos) | \
                           (tmp << DSI_WPCR1_CCF_Pos);
 

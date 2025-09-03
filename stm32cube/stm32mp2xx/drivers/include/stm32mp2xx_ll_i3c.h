@@ -31,7 +31,7 @@ extern "C" {
   * @{
   */
 
-#if defined (I3C1) || defined (I3C2) || defined (I3C3) || defined (I3C4)
+#if defined (I3C1)
 
 /** @defgroup I3C_LL I3C
   * @{
@@ -46,6 +46,9 @@ extern "C" {
 /** @defgroup I3C_LL_Private_Macros I3C Private Macros
   * @{
   */
+#if !defined(UNUSED)
+#define UNUSED(x) ((void)(x))
+#endif /* !UNUSED */
 /**
   * @}
   */
@@ -203,7 +206,38 @@ typedef struct
 /**
   * @}
   */
-
+#if defined(I3C_MISR_CFNFMIS)
+/** @defgroup I3C_LL_EC_MASK_IT MASKS IT Defines
+  * @brief    Masks Interrupt defines which can be used with LL_I3C_ReadReg and  LL_I3C_WriteReg functions
+  * @{
+  */
+#define LL_I3C_MISR_CFNFMIS                I3C_MISR_CFNFMIS
+#define LL_I3C_MISR_SFNEMIS                I3C_MISR_SFNEMIS
+#define LL_I3C_MISR_TXFNFMIS               I3C_MISR_TXFNFMIS
+#define LL_I3C_MISR_RXFNEMIS               I3C_MISR_RXFNEMIS
+#define LL_I3C_MISR_FCMIS                  I3C_MISR_FCMIS
+#define LL_I3C_MISR_RXTGTENDMIS            I3C_MISR_RXTGTENDMIS
+#define LL_I3C_MISR_ERRMIS                 I3C_MISR_ERRMIS
+#define LL_I3C_MISR_IBIMIS                 I3C_MISR_IBIMIS
+#define LL_I3C_MISR_IBIENDMIS              I3C_MISR_IBIENDMIS
+#define LL_I3C_MISR_CRMIS                  I3C_MISR_CRMIS
+#define LL_I3C_MISR_CRUPDMIS               I3C_MISR_CRUPDMIS
+#define LL_I3C_MISR_HJMIS                  I3C_MISR_HJMIS
+#define LL_I3C_MISR_WKPMIS                 I3C_MISR_WKPMIS
+#define LL_I3C_MISR_GETMIS                 I3C_MISR_GETMIS
+#define LL_I3C_MISR_STAMIS                 I3C_MISR_STAMIS
+#define LL_I3C_MISR_DAUPDMIS               I3C_MISR_DAUPDMIS
+#define LL_I3C_MISR_MWLUPDMIS              I3C_MISR_MWLUPDMIS
+#define LL_I3C_MISR_MRLUPDMIS              I3C_MISR_MRLUPDMIS
+#define LL_I3C_MISR_RSTMIS                 I3C_MISR_RSTMIS
+#define LL_I3C_MISR_ASUPDMIS               I3C_MISR_ASUPDMIS
+#define LL_I3C_MISR_INTUPDMIS              I3C_MISR_INTUPDMIS
+#define LL_I3C_MISR_DEFMIS                 I3C_MISR_DEFMIS
+#define LL_I3C_MISR_GRPMIS                 I3C_MISR_GRPMIS
+/**
+  * @}
+  */
+#endif /* I3C_MISR_CFNFMIS */
 /** @defgroup I3C_LL_EC_MODE MODE
   * @{
   */
@@ -274,8 +308,19 @@ typedef struct
 /** @defgroup I3C_LL_EC_SDA_HOLD_TIME SDA HOLD TIME 0
   * @{
   */
+#if defined(I3C_TIMINGR1_SDA_HD_1)
+#define LL_I3C_SDA_HOLD_TIME_0_5           0x00000000U
+/*!< SDA hold time is 0.5 x ti3cclk */
+#define LL_I3C_SDA_HOLD_TIME_1_5           I3C_TIMINGR1_SDA_HD_0
+/*!< SDA hold time is 1.5 x ti3cclk */
+#define LL_I3C_SDA_HOLD_TIME_2_5           I3C_TIMINGR1_SDA_HD_1
+/*!< SDA hold time is 2.5 x ti3cclk */
+#define LL_I3C_SDA_HOLD_TIME_3_5           (I3C_TIMINGR1_SDA_HD_1 | I3C_TIMINGR1_SDA_HD_0)
+/*!< SDA hold time is 3.5 x ti3cclk */
+#else
 #define LL_I3C_SDA_HOLD_TIME_0_5           0x00000000U               /*!< SDA hold time is 0.5 x ti3cclk */
 #define LL_I3C_SDA_HOLD_TIME_1_5           I3C_TIMINGR1_SDA_HD       /*!< SDA hold time is 1.5 x ti3cclk */
+#endif /* I3C_TIMINGR1_SDA_HD_1 */
 /**
   * @}
   */
@@ -1591,6 +1636,10 @@ __STATIC_INLINE uint32_t LL_I3C_GetPeriodClockHighI2C(const I3C_TypeDef *I3Cx)
   * @param  DataHoldTime This parameter can be one of the following values:
   *         @arg @ref LL_I3C_SDA_HOLD_TIME_0_5
   *         @arg @ref LL_I3C_SDA_HOLD_TIME_1_5
+#if defined(I3C_TIMINGR1_SDA_HD_1)
+  *         @arg @ref LL_I3C_SDA_HOLD_TIME_2_5
+  *         @arg @ref LL_I3C_SDA_HOLD_TIME_3_5
+#endif
   * @retval None
   */
 __STATIC_INLINE void LL_I3C_SetDataHoldTime(I3C_TypeDef *I3Cx, uint32_t DataHoldTime)
@@ -1605,6 +1654,10 @@ __STATIC_INLINE void LL_I3C_SetDataHoldTime(I3C_TypeDef *I3Cx, uint32_t DataHold
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_I3C_SDA_HOLD_TIME_0_5
   *         @arg @ref LL_I3C_SDA_HOLD_TIME_1_5
+#if defined(I3C_TIMINGR1_SDA_HD_1)
+  *         @arg @ref LL_I3C_SDA_HOLD_TIME_2_5
+  *         @arg @ref LL_I3C_SDA_HOLD_TIME_3_5
+#endif
   */
 __STATIC_INLINE uint32_t LL_I3C_GetDataHoldTime(const I3C_TypeDef *I3Cx)
 {
@@ -1781,7 +1834,112 @@ __STATIC_INLINE uint32_t LL_I3C_GetStallTime(const I3C_TypeDef *I3Cx)
 {
   return (uint32_t)(READ_BIT(I3Cx->TIMINGR2, I3C_TIMINGR2_STALL));
 }
+#if defined(I3C_TIMINGR2_STALLL)
+/**
+  * @brief  Set stall on data ACK/NACK bit of legacy I2C address (controller mode).
+  * @note   This bit can be programmed when the I3C is disabled (EN = 0).
+  * @rmtoll TIMINGR2     STALLL       LL_I3C_EnableStallACKI2CAddr
+  * @param  I3Cx I3C Instance.
+  * @retval None
+  */
+__STATIC_INLINE void LL_I3C_EnableStallACKI2CAddr(I3C_TypeDef *I3Cx)
+{
+  SET_BIT(I3Cx->TIMINGR2, I3C_TIMINGR2_STALLL);
+}
 
+/**
+  * @brief  Disable stall on data ACK/NACK bit of legacy I2C address (controller mode).
+  * @note   This bit can be programmed when the I3C is disabled (EN = 0).
+  * @rmtoll TIMINGR2     STALLA       LL_I3C_DisableStallACKI2CAddr
+  * @param  I3Cx I3C Instance.
+  * @retval None
+  */
+__STATIC_INLINE void LL_I3C_DisableStallACKI2CAddr(I3C_TypeDef *I3Cx)
+{
+  CLEAR_BIT(I3Cx->TIMINGR2, I3C_TIMINGR2_STALLL);
+}
+
+/**
+  * @brief  Check if stall on data ACK/NACK bit of legacy I2C address is enabled or disabled (controller mode).
+  * @rmtoll TIMINGR2     STALLA       LL_I3C_IsEnabledStallACKI2CAddr
+  * @param  I3Cx I3C Instance.
+  * @retval State of bit (1 or 0).
+  */
+__STATIC_INLINE uint32_t LL_I3C_IsEnabledStallACKI2CAddr(const I3C_TypeDef *I3Cx)
+{
+  return ((READ_BIT(I3Cx->TIMINGR2, I3C_TIMINGR2_STALLL) == (I3C_TIMINGR2_STALLL)) ? 1UL : 0UL);
+}
+
+/**
+  * @brief  Set stall on data ACK/NACK bit of legacy I2C write message (controller mode).
+  * @note   This bit can be programmed when the I3C is disabled (EN = 0).
+  * @rmtoll TIMINGR2     STALLS       LL_I3C_EnableStallACKI2CWrite
+  * @param  I3Cx I3C Instance.
+  * @retval None
+  */
+__STATIC_INLINE void LL_I3C_EnableStallACKI2CWrite(I3C_TypeDef *I3Cx)
+{
+  SET_BIT(I3Cx->TIMINGR2, I3C_TIMINGR2_STALLS);
+}
+
+/**
+  * @brief  Disable stall on data ACK/NACK bit of legacy I2C write message (controller mode).
+  * @note   This bit can be programmed when the I3C is disabled (EN = 0).
+  * @rmtoll TIMINGR2     STALLS       LL_I3C_DisableStallACKI2CWrite
+  * @param  I3Cx I3C Instance.
+  * @retval None
+  */
+__STATIC_INLINE void LL_I3C_DisableStallACKI2CWrite(I3C_TypeDef *I3Cx)
+{
+  CLEAR_BIT(I3Cx->TIMINGR2, I3C_TIMINGR2_STALLS);
+}
+
+/**
+  * @brief  Check if stall on data ACK/NACK bit of legacy I2C write message is enabled or disabled (controller mode).
+  * @rmtoll TIMINGR2     STALLS       LL_I3C_IsEnabledStallACKI2CWrite
+  * @param  I3Cx I3C Instance.
+  * @retval State of bit (1 or 0).
+  */
+__STATIC_INLINE uint32_t LL_I3C_IsEnabledStallACKI2CWrite(const I3C_TypeDef *I3Cx)
+{
+  return ((READ_BIT(I3Cx->TIMINGR2, I3C_TIMINGR2_STALLS) == (I3C_TIMINGR2_STALLS)) ? 1UL : 0UL);
+}
+
+/**
+  * @brief  Set stall on data ACK/NACK bit of legacy I2C read message (controller mode).
+  * @note   This bit can be programmed when the I3C is disabled (EN = 0).
+  * @rmtoll TIMINGR2     STALLR       LL_I3C_EnableStallACKI2CRead
+  * @param  I3Cx I3C Instance.
+  * @retval None
+  */
+__STATIC_INLINE void LL_I3C_EnableStallACKI2CRead(I3C_TypeDef *I3Cx)
+{
+  SET_BIT(I3Cx->TIMINGR2, I3C_TIMINGR2_STALLR);
+}
+
+/**
+  * @brief  Disable stall on data ACK/NACK bit of legacy I2C read message (controller mode).
+  * @note   This bit can be programmed when the I3C is disabled (EN = 0).
+  * @rmtoll TIMINGR2     STALLR       LL_I3C_DisableStallACKI2CRead
+  * @param  I3Cx I3C Instance.
+  * @retval None
+  */
+__STATIC_INLINE void LL_I3C_DisableStallACKI2CRead(I3C_TypeDef *I3Cx)
+{
+  CLEAR_BIT(I3Cx->TIMINGR2, I3C_TIMINGR2_STALLR);
+}
+
+/**
+  * @brief  Check if stall on data ACK/NACK bit of legacy I2C read message is enabled or disabled (controller mode).
+  * @rmtoll TIMINGR2     STALLR       LL_I3C_IsEnabledStallACKI2CRead
+  * @param  I3Cx I3C Instance.
+  * @retval State of bit (1 or 0).
+  */
+__STATIC_INLINE uint32_t LL_I3C_IsEnabledStallACKI2CRead(const I3C_TypeDef *I3Cx)
+{
+  return ((READ_BIT(I3Cx->TIMINGR2, I3C_TIMINGR2_STALLR) == (I3C_TIMINGR2_STALLR)) ? 1UL : 0UL);
+}
+#endif /* I3C_TIMINGR2_STALLL */
 /**
   * @brief  Set stall on ACK bit (controller mode).
   * @note   This bit can be programmed when the I3C is disabled (EN = 0).
@@ -2319,7 +2477,35 @@ __STATIC_INLINE void LL_I3C_RequestStatusFIFOFlush(I3C_TypeDef *I3Cx)
 {
   SET_BIT(I3Cx->CFGR, I3C_CFGR_SFLUSH);
 }
+#if defined(I3C_CFGR_FCFDIS)
+/**
+  * @brief Set End of Frame mode
+  * @note   This bit can be modified only when there is no frame ongoing
+  * @rmtoll CFGR      FCFDIS        LL_I3C_SetEndOfFrameMode
+  * @param  I3Cx I3C Instance.
+  * @param  EOFrameConfig This parameter can be one of the following values:
+  *         @arg @ref LL_I3C_END_OF_FRAME_CPLT_DISABLE
+  *         @arg @ref LL_I3C_END_OF_FRAME_CPLT_ENABLE
+  * @retval None
+  */
+__STATIC_INLINE void LL_I3C_SetEndOfFrameMode(I3C_TypeDef *I3Cx, uint32_t EOFrameConfig)
+{
+  MODIFY_REG(I3Cx->CFGR, I3C_CFGR_FCFDIS, EOFrameConfig);
+}
 
+/**
+  * @brief  Get End of Frame mode
+  * @rmtoll CFGR      FCFDIS        LL_I3C_GetEndOfFrameMode
+  * @param  I3Cx I3C Instance.
+  * @retval Returned value can be one of the following values:
+  *         @arg @ref LL_I3C_END_OF_FRAME_CPLT_DISABLE
+  *         @arg @ref LL_I3C_END_OF_FRAME_CPLT_ENABLE
+  */
+__STATIC_INLINE uint32_t LL_I3C_GetEndOfFrameMode(const I3C_TypeDef *I3Cx)
+{
+  return (uint32_t)(READ_BIT(I3Cx->CFGR, I3C_CFGR_FCFDIS));
+}
+#endif /* I3C_CFGR_FCFDIS */
 /**
   * @brief  Get Activity state of Controller on the I3C Bus (Target only).
   * @rmtoll DEVR0        AS            LL_I3C_GetActivityState
@@ -4368,7 +4554,268 @@ __STATIC_INLINE void LL_I3C_ClearFlag_GRP(I3C_TypeDef *I3Cx)
 /**
   * @}
   */
+#if defined(I3C_MISR_CFNFMIS)
+/** @defgroup I3C_LL_EF_MASK_IT_Management Mask_IT_Management
+  * @{
+  */
 
+/**
+  * @brief  Indicates the status of masked interrupt Control FIFO Not Full flag.
+  * @rmtoll MISR         CFNFMIS       LL_I3C_IsActiveMaskFlag_CFNF
+  * @param  I3Cx I3C Instance.
+  * @retval State of bit (1 or 0).
+  */
+__STATIC_INLINE uint32_t LL_I3C_IsActiveMaskFlag_CFNF(const I3C_TypeDef *I3Cx)
+{
+  return ((READ_BIT(I3Cx->MISR, I3C_MISR_CFNFMIS) == (I3C_MISR_CFNFMIS)) ? 1UL : 0UL);
+}
+
+/**
+  * @brief  Indicates the status of masked interrupt Status FIFO Not Empty flag.
+  * @rmtoll MISR         SFNEMIS       LL_I3C_IsActiveMaskFlag_SFNE
+  * @param  I3Cx I3C Instance.
+  * @retval State of bit (1 or 0).
+  */
+__STATIC_INLINE uint32_t LL_I3C_IsActiveMaskFlag_SFNE(const I3C_TypeDef *I3Cx)
+{
+  return ((READ_BIT(I3Cx->MISR, I3C_MISR_SFNEMIS) == (I3C_MISR_SFNEMIS)) ? 1UL : 0UL);
+}
+
+/**
+  * @brief  Indicates the status of masked interrupt Transmit FIFO Not Full flag.
+  * @rmtoll MISR         TXFNFMIS      LL_I3C_IsActiveMaskFlag_TXFNF
+  * @param  I3Cx I3C Instance.
+  * @retval State of bit (1 or 0).
+  */
+__STATIC_INLINE uint32_t LL_I3C_IsActiveMaskFlag_TXFNF(const I3C_TypeDef *I3Cx)
+{
+  return ((READ_BIT(I3Cx->MISR, I3C_MISR_TXFNFMIS) == (I3C_MISR_TXFNFMIS)) ? 1UL : 0UL);
+}
+
+/**
+  * @brief  Indicates the status of masked interrupt Receive FIFO Not Empty flag.
+  * @rmtoll MISR         RXFNEMIS      LL_I3C_IsActiveMaskFlag_RXFNE
+  * @param  I3Cx I3C Instance.
+  * @retval State of bit (1 or 0).
+  */
+__STATIC_INLINE uint32_t LL_I3C_IsActiveMaskFlag_RXFNE(const I3C_TypeDef *I3Cx)
+{
+  return ((READ_BIT(I3Cx->MISR, I3C_MISR_RXFNEMIS) == (I3C_MISR_RXFNEMIS)) ? 1UL : 0UL);
+}
+
+/**
+  * @brief  Indicates the status of masked interrupt Frame Complete flag.
+  * @rmtoll MISR         FCMIS         LL_I3C_IsActiveMaskFlag_FC
+  * @param  I3Cx I3C Instance.
+  * @retval State of bit (1 or 0).
+  */
+__STATIC_INLINE uint32_t LL_I3C_IsActiveMaskFlag_FC(const I3C_TypeDef *I3Cx)
+{
+  return ((READ_BIT(I3Cx->MISR, I3C_MISR_FCMIS) == (I3C_MISR_FCMIS)) ? 1UL : 0UL);
+}
+
+/**
+  * @brief  Indicates the status of masked interrupt Reception Target End flag.
+  * @rmtoll MISR         RXTGTENDMIS   LL_I3C_IsActiveMaskFlag_RXTGTEND
+  * @param  I3Cx I3C Instance.
+  * @retval State of bit (1 or 0).
+  */
+__STATIC_INLINE uint32_t LL_I3C_IsActiveMaskFlag_RXTGTEND(const I3C_TypeDef *I3Cx)
+{
+  return ((READ_BIT(I3Cx->MISR, I3C_MISR_RXTGTENDMIS) == (I3C_MISR_RXTGTENDMIS)) ? 1UL : 0UL);
+}
+
+/**
+  * @brief  Indicates the status of masked interrupt Error flag.
+  * @rmtoll MISR         ERRMIS        LL_I3C_IsActiveMaskFlag_ERR
+  * @param  I3Cx I3C Instance.
+  * @retval State of bit (1 or 0).
+  */
+__STATIC_INLINE uint32_t LL_I3C_IsActiveMaskFlag_ERR(const I3C_TypeDef *I3Cx)
+{
+  return ((READ_BIT(I3Cx->MISR, I3C_MISR_ERRMIS) == (I3C_MISR_ERRMIS)) ? 1UL : 0UL);
+}
+
+/**
+  * @brief  Indicates the status of masked interrupt IBI flag.
+  * @rmtoll MISR         IBIMIS        LL_I3C_IsActiveMaskFlag_IBI
+  * @param  I3Cx I3C Instance.
+  * @retval State of bit (1 or 0).
+  */
+__STATIC_INLINE uint32_t LL_I3C_IsActiveMaskFlag_IBI(const I3C_TypeDef *I3Cx)
+{
+  return ((READ_BIT(I3Cx->MISR, I3C_MISR_IBIMIS) == (I3C_MISR_IBIMIS)) ? 1UL : 0UL);
+}
+
+/**
+  * @brief  Indicates the status of masked interrupt IBI End flag.
+  * @rmtoll MISR         IBIENDMIS     LL_I3C_IsActiveMaskFlag_IBIEND
+  * @param  I3Cx I3C Instance.
+  * @retval State of bit (1 or 0).
+  */
+__STATIC_INLINE uint32_t LL_I3C_IsActiveMaskFlag_IBIEND(const I3C_TypeDef *I3Cx)
+{
+  return ((READ_BIT(I3Cx->MISR, I3C_MISR_IBIENDMIS) == (I3C_MISR_IBIENDMIS)) ? 1UL : 0UL);
+}
+
+/**
+  * @brief  Indicates the status of masked interrupt Controller-role flag.
+  * @rmtoll MISR         CRMIS         LL_I3C_IsActiveMaskFlag_CR
+  * @param  I3Cx I3C Instance.
+  * @retval State of bit (1 or 0).
+  */
+__STATIC_INLINE uint32_t LL_I3C_IsActiveMaskFlag_CR(const I3C_TypeDef *I3Cx)
+{
+  return ((READ_BIT(I3Cx->MISR, I3C_MISR_CRMIS) == (I3C_MISR_CRMIS)) ? 1UL : 0UL);
+}
+
+/**
+  * @brief  Indicates the status of masked interrupt Controller-role Update flag.
+  * @rmtoll MISR         CRUPDMIS      LL_I3C_IsActiveMaskFlag_CRUPD
+  * @param  I3Cx I3C Instance.
+  * @retval State of bit (1 or 0).
+  */
+__STATIC_INLINE uint32_t LL_I3C_IsActiveMaskFlag_CRUPD(const I3C_TypeDef *I3Cx)
+{
+  return ((READ_BIT(I3Cx->MISR, I3C_MISR_CRUPDMIS) == (I3C_MISR_CRUPDMIS)) ? 1UL : 0UL);
+}
+
+/**
+  * @brief  Indicates the status of masked interrupt Hot Join flag.
+  * @rmtoll MISR         HJMIS         LL_I3C_IsActiveMaskFlag_HJ
+  * @param  I3Cx I3C Instance.
+  * @retval State of bit (1 or 0).
+  */
+__STATIC_INLINE uint32_t LL_I3C_IsActiveMaskFlag_HJ(const I3C_TypeDef *I3Cx)
+{
+  return ((READ_BIT(I3Cx->MISR, I3C_MISR_HJMIS) == (I3C_MISR_HJMIS)) ? 1UL : 0UL);
+}
+
+/**
+  * @brief  Indicates the status of masked interrupt Wake Up is enabled or disabled.
+  * @rmtoll MISR         WKPMIS        LL_I3C_IsActiveMaskFlag_WKP
+  * @param  I3Cx I3C Instance.
+  * @retval State of bit (1 or 0).
+  */
+__STATIC_INLINE uint32_t LL_I3C_IsActiveMaskFlag_WKP(const I3C_TypeDef *I3Cx)
+{
+  return ((READ_BIT(I3Cx->MISR, I3C_MISR_WKPMIS) == (I3C_MISR_WKPMIS)) ? 1UL : 0UL);
+}
+
+/**
+  * @brief  Indicates the status of masked interrupt Get Command is enabled or disabled.
+  * @rmtoll MISR         GETMIS        LL_I3C_IsActiveMaskFlag_GET
+  * @param  I3Cx I3C Instance.
+  * @retval State of bit (1 or 0).
+  */
+__STATIC_INLINE uint32_t LL_I3C_IsActiveMaskFlag_GET(const I3C_TypeDef *I3Cx)
+{
+  return ((READ_BIT(I3Cx->MISR, I3C_MISR_GETMIS) == (I3C_MISR_GETMIS)) ? 1UL : 0UL);
+}
+
+/**
+  * @brief  Indicates the status of masked interrupt Get Status flag.
+  * @rmtoll MISR         STAMIS        LL_I3C_IsActiveMaskFlag_STA
+  * @param  I3Cx I3C Instance.
+  * @retval State of bit (1 or 0).
+  */
+__STATIC_INLINE uint32_t LL_I3C_IsActiveMaskFlag_STA(const I3C_TypeDef *I3Cx)
+{
+  return ((READ_BIT(I3Cx->MISR, I3C_MISR_STAMIS) == (I3C_MISR_STAMIS)) ? 1UL : 0UL);
+}
+
+/**
+  * @brief  Indicates the status of masked interrupt Dynamic Address Update flag.
+  * @rmtoll MISR         DAUPDMIS      LL_I3C_IsActiveMaskFlag_DAUPD
+  * @param  I3Cx I3C Instance.
+  * @retval State of bit (1 or 0).
+  */
+__STATIC_INLINE uint32_t LL_I3C_IsActiveMaskFlag_DAUPD(const I3C_TypeDef *I3Cx)
+{
+  return ((READ_BIT(I3Cx->MISR, I3C_MISR_DAUPDMIS) == (I3C_MISR_DAUPDMIS)) ? 1UL : 0UL);
+}
+
+/**
+  * @brief  Indicates the status of masked interrupt Max Write Length Update flag.
+  * @rmtoll MISR         MWLUPDMIS     LL_I3C_IsActiveMaskFlag_MWLUPD
+  * @param  I3Cx I3C Instance.
+  * @retval State of bit (1 or 0).
+  */
+__STATIC_INLINE uint32_t LL_I3C_IsActiveMaskFlag_MWLUPD(const I3C_TypeDef *I3Cx)
+{
+  return ((READ_BIT(I3Cx->MISR, I3C_MISR_MWLUPDMIS) == (I3C_MISR_MWLUPDMIS)) ? 1UL : 0UL);
+}
+
+/**
+  * @brief  Indicates the status of masked interrupt Max Read Length Update flag.
+  * @rmtoll MISR         MRLUPDMIS     LL_I3C_IsActiveMaskFlag_MRLUPD
+  * @param  I3Cx I3C Instance.
+  * @retval State of bit (1 or 0).
+  */
+__STATIC_INLINE uint32_t LL_I3C_IsActiveMaskFlag_MRLUPD(const I3C_TypeDef *I3Cx)
+{
+  return ((READ_BIT(I3Cx->MISR, I3C_MISR_MRLUPDMIS) == (I3C_MISR_MRLUPDMIS)) ? 1UL : 0UL);
+}
+
+/**
+  * @brief  Indicates the status of masked interrupt Reset flag.
+  * @rmtoll MISR         RSTMIS        LL_I3C_IsActiveMaskFlag_RST
+  * @param  I3Cx I3C Instance.
+  * @retval State of bit (1 or 0).
+  */
+__STATIC_INLINE uint32_t LL_I3C_IsActiveMaskFlag_RST(const I3C_TypeDef *I3Cx)
+{
+  return ((READ_BIT(I3Cx->MISR, I3C_MISR_RSTMIS) == (I3C_MISR_RSTMIS)) ? 1UL : 0UL);
+}
+
+/**
+  * @brief  Indicates the status of masked interrupt Activity State Update flag.
+  * @rmtoll MISR         ASUPDMIS      LL_I3C_IsActiveMaskFlag_ASUPD
+  * @param  I3Cx I3C Instance.
+  * @retval State of bit (1 or 0).
+  */
+__STATIC_INLINE uint32_t LL_I3C_IsActiveMaskFlag_ASUPD(const I3C_TypeDef *I3Cx)
+{
+  return ((READ_BIT(I3Cx->MISR, I3C_MISR_ASUPDMIS) == (I3C_MISR_ASUPDMIS)) ? 1UL : 0UL);
+}
+
+/**
+  * @brief  Indicates the status of masked Interrupt Update flag.
+  * @rmtoll MISR         INTUPDMIS     LL_I3C_IsActiveMaskFlag_INTUPD
+  * @param  I3Cx I3C Instance.
+  * @retval State of bit (1 or 0).
+  */
+__STATIC_INLINE uint32_t LL_I3C_IsActiveMaskFlag_INTUPD(const I3C_TypeDef *I3Cx)
+{
+  return ((READ_BIT(I3Cx->MISR, I3C_MISR_INTUPDMIS) == (I3C_MISR_INTUPDMIS)) ? 1UL : 0UL);
+}
+
+/**
+  * @brief  Indicates the status of masked interrupt Define List Target flag.
+  * @rmtoll MISR         DEFMIS        LL_I3C_IsActiveMaskFlag_DEF
+  * @param  I3Cx I3C Instance.
+  * @retval State of bit (1 or 0).
+  */
+__STATIC_INLINE uint32_t LL_I3C_IsActiveMaskFlag_DEF(const I3C_TypeDef *I3Cx)
+{
+  return ((READ_BIT(I3Cx->MISR, I3C_MISR_DEFMIS) == (I3C_MISR_DEFMIS)) ? 1UL : 0UL);
+}
+
+/**
+  * @brief  Indicates the status of masked interrupt Define List Group Addresses flag.
+  * @rmtoll MISR         GRPMIS        LL_I3C_IsActiveMaskFlag_GRP
+  * @param  I3Cx I3C Instance.
+  * @retval State of bit (1 or 0).
+  */
+__STATIC_INLINE uint32_t LL_I3C_IsActiveMaskFlag_GRP(const I3C_TypeDef *I3Cx)
+{
+  return ((READ_BIT(I3Cx->MISR, I3C_MISR_GRPMIS) == (I3C_MISR_GRPMIS)) ? 1UL : 0UL);
+}
+
+/**
+  * @}
+  */
+#endif /* I3C_MISR_CFNFMIS */
 #if defined(USE_FULL_LL_DRIVER)
 /** @defgroup I3C_LL_EF_Init Initialization and de-initialization functions
   * @{

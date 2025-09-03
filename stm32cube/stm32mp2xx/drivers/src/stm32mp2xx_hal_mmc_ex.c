@@ -218,7 +218,8 @@ HAL_StatusTypeDef HAL_MMCEx_DMALinkedList_DisableCircularMode(MMC_DMALinkedListT
   * @param  NumberOfBlocks: Total number of blocks to read
   * @retval HAL status
   */
-HAL_StatusTypeDef HAL_MMCEx_DMALinkedList_ReadBlocks(MMC_HandleTypeDef *hmmc, MMC_DMALinkedListTypeDef *pLinkedList,
+HAL_StatusTypeDef HAL_MMCEx_DMALinkedList_ReadBlocks(MMC_HandleTypeDef *hmmc,
+                                                     const MMC_DMALinkedListTypeDef *pLinkedList,
                                                      uint32_t BlockAdd, uint32_t NumberOfBlocks)
 {
   SDMMC_DataInitTypeDef config;
@@ -327,7 +328,8 @@ HAL_StatusTypeDef HAL_MMCEx_DMALinkedList_ReadBlocks(MMC_HandleTypeDef *hmmc, MM
   * @param  NumberOfBlocks: Total number of blocks to read
   * @retval HAL status
   */
-HAL_StatusTypeDef HAL_MMCEx_DMALinkedList_WriteBlocks(MMC_HandleTypeDef *hmmc, MMC_DMALinkedListTypeDef *pLinkedList,
+HAL_StatusTypeDef HAL_MMCEx_DMALinkedList_WriteBlocks(MMC_HandleTypeDef *hmmc,
+                                                      const MMC_DMALinkedListTypeDef *pLinkedList,
                                                       uint32_t BlockAdd, uint32_t NumberOfBlocks)
 {
   SDMMC_DataInitTypeDef config;

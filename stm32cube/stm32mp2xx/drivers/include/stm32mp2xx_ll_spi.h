@@ -516,6 +516,31 @@ typedef struct
 #define LL_SPI8_RTC_ALRA_TRG               (uint32_t)(0xAU << SPI_AUTOCR_TRIGSEL_Pos)
 /*!< HW Trigger signal is RTC_WUT_TRG       */
 #define LL_SPI8_RTC_WUT_TRG                (uint32_t)(0xBU << SPI_AUTOCR_TRIGSEL_Pos)
+#else
+/* @brief  SPI1 to SPI6 Triggers */
+
+/*!< HW Trigger signal is EXTI4_TRG         */
+#define LL_SPI1_6_EXTI4_TRG                  (uint32_t)(0x4U << SPI_AUTOCR_TRIGSEL_Pos)
+/*!< HW Trigger signal is EXTI5_TRG         */
+#define LL_SPI1_6_EXTI5_TRG                  (uint32_t)(0x5U << SPI_AUTOCR_TRIGSEL_Pos)
+/*!< HW Trigger signal is LPTIM3_CH1_TRG    */
+#define LL_SPI1_6_LPTIM3_CH1_TRG             (uint32_t)(0x7U << SPI_AUTOCR_TRIGSEL_Pos)
+/*!< HW Trigger signal is LPTIM4_CH1_TRG    */
+#define LL_SPI1_6_LPTIM4_CH1_TRG             (uint32_t)(0x8U << SPI_AUTOCR_TRIGSEL_Pos)
+/*!< HW Trigger signal is LPTIM5_CH1_TRG    */
+#define LL_SPI1_6_LPTIM5_CH1_TRG             (uint32_t)(0x9U << SPI_AUTOCR_TRIGSEL_Pos)
+/*!< HW Trigger signal is RTC_ALRA_TRG      */
+#define LL_SPI1_6_RTC_ALRA_TRG               (uint32_t)(0xAU << SPI_AUTOCR_TRIGSEL_Pos)
+/*!< HW Trigger signal is RTC_WUT_TRG       */
+#define LL_SPI1_6_RTC_WUT_TRG                (uint32_t)(0xBU << SPI_AUTOCR_TRIGSEL_Pos)
+/*!< HW Trigger signal is EXTI6_TRG         */
+#define LL_SPI1_6_EXTI6_TRG                  (uint32_t)(0xCU << SPI_AUTOCR_TRIGSEL_Pos)
+/*!< HW Trigger signal is EXTI7_TRG         */
+#define LL_SPI1_6_EXTI7_TRG                  (uint32_t)(0xDU << SPI_AUTOCR_TRIGSEL_Pos)
+/*!< HW Trigger signal is LPTIM1_CH1_TRG    */
+#define LL_SPI1_6_LPTIM1_CH1_TRG             (uint32_t)(0xEU << SPI_AUTOCR_TRIGSEL_Pos)
+/*!< HW Trigger signal is LPTIM1_CH1_TRG    */
+#define LL_SPI1_6_LPTIM2_CH1_TRG             (uint32_t)(0xFU << SPI_AUTOCR_TRIGSEL_Pos)
 
 #endif /* SPI8 */
 /**
@@ -528,6 +553,10 @@ typedef struct
   */
 #define LL_SPI_TRIG_POLARITY_RISING         0x00000000U           /*!< SPI triggered on rising edge  */
 #define LL_SPI_TRIG_POLARITY_FALLING        SPI_AUTOCR_TRIGPOL    /*!< SPI triggered on falling edge */
+/**
+  * @}
+  */
+
 /**
   * @}
   */
@@ -2583,6 +2612,7 @@ __STATIC_INLINE uint32_t LL_SPI_GetTriggerPolarity(const SPI_TypeDef *SPIx)
   * @rmtoll AUTOCR        TRIGSEL     LL_SPI_SetSelectedTrigger
   * @param  SPIx SPI Instance.
   * @param  Trigger This parameter can be one of the following values:
+  #if defined(SPI8)
   *         @arg @ref  LL_SPI8_LPDMA_CH0_TCF_TRG
   *         @arg @ref  LL_SPI8_LPDMA_CH1_TCF_TRG
   *         @arg @ref  LL_SPI8_LPDMA_CH2_TCF_TRG
@@ -2594,6 +2624,19 @@ __STATIC_INLINE uint32_t LL_SPI_GetTriggerPolarity(const SPI_TypeDef *SPIx)
   *         @arg @ref  LL_SPI8_LPTIM5_CH1_TRG
   *         @arg @ref  LL_SPI8_RTC_ALRA_TRG
   *         @arg @ref  LL_SPI8_RTC_WUT_TRG
+  #else
+  *         @arg @ref  LL_SPI1_6_EXTI4_TRG
+  *         @arg @ref  LL_SPI1_6_EXTI5_TRG
+  *         @arg @ref  LL_SPI1_6_LPTIM3_CH1_TRG
+  *         @arg @ref  LL_SPI1_6_LPTIM4_CH1_TRG
+  *         @arg @ref  LL_SPI1_6_LPTIM5_CH1_TRG
+  *         @arg @ref  LL_SPI1_6_RTC_ALRA_TRG
+  *         @arg @ref  LL_SPI1_6_RTC_WUT_TRG
+  *         @arg @ref  LL_SPI1_6_EXTI6_TRG
+  *         @arg @ref  LL_SPI1_6_EXTI7_TRG
+  *         @arg @ref  LL_SPI1_6_LPTIM1_CH1_TRG
+  *         @arg @ref  LL_SPI1_6_LPTIM1_CH1_TRG
+  #endif
   * @retval None
   */
 __STATIC_INLINE void LL_SPI_SetSelectedTrigger(SPI_TypeDef *SPIx, uint32_t Trigger)
@@ -2606,6 +2649,7 @@ __STATIC_INLINE void LL_SPI_SetSelectedTrigger(SPI_TypeDef *SPIx, uint32_t Trigg
   * @rmtoll AUTOCR        TRIGSEL     LL_SPI_GetSelectedTrigger
   * @param  SPIx SPI Instance.
   * @retval Returned value can be one of the following values:
+  #if defined(SPI8)
   *         @arg @ref  LL_SPI8_LPDMA_CH0_TCF_TRG
   *         @arg @ref  LL_SPI8_LPDMA_CH1_TCF_TRG
   *         @arg @ref  LL_SPI8_LPDMA_CH2_TCF_TRG
@@ -2617,6 +2661,19 @@ __STATIC_INLINE void LL_SPI_SetSelectedTrigger(SPI_TypeDef *SPIx, uint32_t Trigg
   *         @arg @ref  LL_SPI8_LPTIM5_CH1_TRG
   *         @arg @ref  LL_SPI8_RTC_ALRA_TRG
   *         @arg @ref  LL_SPI8_RTC_WUT_TRG
+  #else
+  *         @arg @ref  LL_SPI1_6_EXTI4_TRG
+  *         @arg @ref  LL_SPI1_6_EXTI5_TRG
+  *         @arg @ref  LL_SPI1_6_LPTIM3_CH1_TRG
+  *         @arg @ref  LL_SPI1_6_LPTIM4_CH1_TRG
+  *         @arg @ref  LL_SPI1_6_LPTIM5_CH1_TRG
+  *         @arg @ref  LL_SPI1_6_RTC_ALRA_TRG
+  *         @arg @ref  LL_SPI1_6_RTC_WUT_TRG
+  *         @arg @ref  LL_SPI1_6_EXTI6_TRG
+  *         @arg @ref  LL_SPI1_6_EXTI7_TRG
+  *         @arg @ref  LL_SPI1_6_LPTIM1_CH1_TRG
+  *         @arg @ref  LL_SPI1_6_LPTIM1_CH1_TRG
+  #endif
   */
 __STATIC_INLINE uint32_t LL_SPI_GetSelectedTrigger(const SPI_TypeDef *SPIx)
 {
@@ -3800,9 +3857,8 @@ void        LL_I2S_ConfigPrescaler(SPI_TypeDef *SPIx, uint32_t PrescalerLinear, 
   * @}
   */
 #endif /* ! CORE_CM0PLUS */
-#endif /* defined(SPI1) || defined(SPI2) || defined(SPI3) || \
-          defined(SPI4) || defined(SPI5) || defined(SPI6) || \
-          defined(SPI7) || defined(SPI8) */
+#endif /* defined(SPI1) || defined(SPI2) || defined(SPI3) || defined(SPI4) || \
+        defined(SPI5) || defined(SPI6) || defined(SPI7) || defined(SPI8) */
 
 /**
   * @}

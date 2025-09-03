@@ -217,7 +217,8 @@ HAL_StatusTypeDef HAL_SPIEx_ConfigureUnderrun(SPI_HandleTypeDef *hspi, uint32_t 
   *                the configuration information of the autonomous mode for the specified SPIx peripheral.
   * @retval HAL status
   */
-HAL_StatusTypeDef HAL_SPIEx_SetConfigAutonomousMode(SPI_HandleTypeDef *hspi, SPI_AutonomousModeConfTypeDef *sConfig)
+HAL_StatusTypeDef HAL_SPIEx_SetConfigAutonomousMode(SPI_HandleTypeDef *hspi,
+                                                    const SPI_AutonomousModeConfTypeDef *sConfig)
 {
   if (hspi->State == HAL_SPI_STATE_READY)
   {
@@ -259,7 +260,8 @@ HAL_StatusTypeDef HAL_SPIEx_SetConfigAutonomousMode(SPI_HandleTypeDef *hspi, SPI
   *                the configuration information of the autonomous mode for the specified SPIx peripheral.
   * @retval HAL status
   */
-HAL_StatusTypeDef HAL_SPIEx_GetConfigAutonomousMode(const SPI_HandleTypeDef *hspi, SPI_AutonomousModeConfTypeDef *sConfig)
+HAL_StatusTypeDef HAL_SPIEx_GetConfigAutonomousMode(const SPI_HandleTypeDef *hspi,
+                                                    SPI_AutonomousModeConfTypeDef *sConfig)
 {
   uint32_t autocr_tmp;
 
