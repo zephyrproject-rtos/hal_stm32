@@ -4,11 +4,16 @@
 
 zephyr_library()
 
+if(CONFIG_STM32WB0_RADIO_TIMER)
+	zephyr_include_directories(BLE_TransparentMode/System/Modules)
+	zephyr_library_sources(BLE_TransparentMode/System/Modules/blue_unit_conversion.s)
+endif()
+
+if(CONFIG_BT_STM32WB0)
 # Set the correct directory
 zephyr_include_directories(STM32_BLE)
 zephyr_include_directories(STM32_BLE/stack/include)
 zephyr_include_directories(BLE_TransparentMode/System/Modules/PKAMGR/Inc)
-zephyr_include_directories(BLE_TransparentMode/System/Modules)
 zephyr_include_directories(BLE_TransparentMode/System/Interfaces)
 zephyr_include_directories(BLE_TransparentMode/System/Modules/RADIO_utils/Inc)
 zephyr_include_directories(BLE_TransparentMode/System/Config/Debug_GPIO)
@@ -290,7 +295,6 @@ zephyr_library_sources(BLE_TransparentMode/System/Modules/PKAMGR/Src/pka_manager
 zephyr_library_sources(BLE_TransparentMode/System/Interfaces/hw_aes.c)
 zephyr_library_sources(BLE_TransparentMode/System/Interfaces/hw_pka.c)
 zephyr_library_sources(BLE_TransparentMode/System/Interfaces/hw_rng.c)
-zephyr_library_sources(BLE_TransparentMode/System/Modules/blue_unit_conversion.s)
 zephyr_library_sources(BLE_TransparentMode/System/Modules/osal_memcpy.s)
 zephyr_library_sources(BLE_TransparentMode/STM32_BLE/App/adv_buff_alloc_tiny.c)
 zephyr_library_sources(BLE_TransparentMode/STM32_BLE/App/transport_layer.c)
@@ -302,3 +306,4 @@ zephyr_library_sources(BLE_TransparentMode/STM32_BLE/App/pawr_buff_alloc.c)
 zephyr_library_sources(STM32_BLE/stack/config/ble_stack_user_cfg.c)
 zephyr_library_sources(BLE_TransparentMode/STM32_BLE/App/dtm_cmds.c)
 zephyr_library_sources(BLE_TransparentMode/Core/Src/stm32wb0x_hal_msp.c)
+endif()
