@@ -43,4 +43,6 @@ License Link:
    https://www.apache.org/licenses/LICENSE-2.0
 
 Patch List:
-   None
+
+   *Rename "TIM3_REMAP1" on the pin "PB5" to "TIM3_REMAP2"
+   of the following GPIO-STM32F103xx.xml files
