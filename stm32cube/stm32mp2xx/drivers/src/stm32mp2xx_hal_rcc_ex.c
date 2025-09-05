@@ -2029,7 +2029,7 @@ int32_t HAL_RCCEx_MeasureClockFreq(uint32_t clk_id, uint32_t ref_id, uint32_t *f
      * Register 2 (RCC_FCALCCR2) to select the frequency value type.
      */
     regval = RCC->FCALCCR2;
-    regval |= (0xCU << RCC_FCALCCR2_FCALCTYP_Pos);
+    regval |= (0xCUL << RCC_FCALCCR2_FCALCTYP_Pos);
     WRITE_REG(RCC->FCALCCR2, regval);
 
     /* select the application mode via the FCALCMD field in the RCC Clock Frequency
@@ -2087,7 +2087,7 @@ int32_t HAL_RCCEx_MeasureClockFreq(uint32_t clk_id, uint32_t ref_id, uint32_t *f
         timeout_flag = 1;
       }
       /* detect overflow */
-      if ((1U << 16) == (regval & (1U << 16)))
+      if ((1UL << 16) == (regval & (1UL << 16)))
       {
         overflow_flag = 1;
       }
@@ -2517,8 +2517,8 @@ static uint32_t RCCEx_ComputePLLClockFreq(const RCC_PLLInitTypeDef *pll)
   }
   else
   {
-    pll_output = (uint64_t)source_freq * (((uint64_t)(1U << 24) * (uint64_t)pll->FBDIV) + (uint64_t)pll->FRACIN);
-    pll_output /= (1U << 24);
+    pll_output = (uint64_t)source_freq * (((uint64_t)(1UL << 24) * (uint64_t)pll->FBDIV) + (uint64_t)pll->FRACIN);
+    pll_output /= (1UL << 24);
   }
   pll_output /= ((uint64_t)(pll->FREFDIV) * (uint64_t)(pll->POSTDIV1) * (uint64_t)(pll->POSTDIV2));
 

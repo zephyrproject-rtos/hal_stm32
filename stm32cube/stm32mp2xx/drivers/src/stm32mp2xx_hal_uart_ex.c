@@ -976,7 +976,11 @@ HAL_StatusTypeDef HAL_UARTEx_SetConfigAutonomousMode(UART_HandleTypeDef *huart,
     }
     else
     {
-      /* no trigger available for uart*/
+#if defined(STM32MP21xxxx)
+      assert_param(IS_UART_TRIGGER_SELECTION(sConfig->TriggerSelection));
+#else
+      /* no trigger available for uart */
+#endif /* STM32MP21xxxx */
     }
 
     /* Process Locked */
@@ -1002,8 +1006,14 @@ HAL_StatusTypeDef HAL_UARTEx_SetConfigAutonomousMode(UART_HandleTypeDef *huart,
     }
     else
     {
+#if defined(STM32MP21xxxx)
+      tmpreg = ((sConfig->DataSize << USART_AUTOCR_TDN_Pos) | (sConfig->TriggerPolarity) | \
+                (sConfig->AutonomousModeState) | (sConfig->IdleFrame) | \
+                (sConfig->TriggerSelection << USART_AUTOCR_TRIGSEL_Pos));
+#else
       tmpreg = ((sConfig->DataSize << USART_AUTOCR_TDN_Pos) | (sConfig->TriggerPolarity) | \
                 (sConfig->AutonomousModeState) | (sConfig->IdleFrame));
+#endif /* STM32MP21xxxx */
     }
     WRITE_REG(huart->Instance->AUTOCR, tmpreg);
 

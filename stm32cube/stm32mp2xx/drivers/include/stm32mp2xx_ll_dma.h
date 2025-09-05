@@ -1608,7 +1608,7 @@ typedef struct
   * @param  __CHANNEL_INSTANCE__ DMAx_Channely.
   * @retval DMAx.
   */
-#if defined(LPDMA)
+#if  defined(LPDMA)
 #define LL_DMA_GET_INSTANCE(__CHANNEL_INSTANCE__) \
   ((((uint32_t)(__CHANNEL_INSTANCE__) < ((uint32_t)HPDMA2_Channel0))) \
    ? HPDMA1 :                                                         \
@@ -1622,22 +1622,22 @@ typedef struct
    ? HPDMA1 :                                                         \
    (((uint32_t)(__CHANNEL_INSTANCE__) < ((uint32_t)HPDMA3_Channel0))) \
    ? HPDMA2 : HPDMA3)
-#endif
+#endif /* LPDMA */
+
+
 /**
   * @brief  Convert DMAx_Channely into LL_DMA_CHANNEL_y.
   * @param  __CHANNEL_INSTANCE__ DMAx_Channely.
   * @retval LL_DMA_CHANNEL_y.
   */
 #if defined(CORE_CM0PLUS)
-#if defined(LPDMA)
 #define LL_DMA_GET_CHANNEL(__CHANNEL_INSTANCE__) \
   (((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)LPDMA_Channel0))   ? LL_DMA_CHANNEL_0  : \
    ((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)LPDMA_Channel1))   ? LL_DMA_CHANNEL_1  : \
    ((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)LPDMA_Channel2))   ? LL_DMA_CHANNEL_2  : \
    LL_DMA_CHANNEL_3)
-#endif /* LPDMA */
 #else
-#if defined(LPDMA)
+#if  defined(LPDMA)
 #define LL_DMA_GET_CHANNEL(__CHANNEL_INSTANCE__) \
   (((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)HPDMA1_Channel0))  ? LL_DMA_CHANNEL_0  : \
    ((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)HPDMA2_Channel0))  ? LL_DMA_CHANNEL_0  : \
@@ -1747,7 +1747,6 @@ typedef struct
   * @retval DMAx_Channely.
   */
 #if defined(CORE_CM0PLUS)
-#if defined(LPDMA)
 #define LL_DMA_GET_CHANNEL_INSTANCE(__DMA_INSTANCE__, __CHANNEL__) \
   ((((uint32_t)(__DMA_INSTANCE__) == ((uint32_t)LPDMA))  && ((uint32_t)(__CHANNEL__) == ((uint32_t)LL_DMA_CHANNEL_0))) \
    ? LPDMA_Channel0   :                                                                                                \
@@ -1755,9 +1754,8 @@ typedef struct
    ? LPDMA_Channel1   :                                                                                                \
    (((uint32_t)(__DMA_INSTANCE__) == ((uint32_t)LPDMA))  && ((uint32_t)(__CHANNEL__) == ((uint32_t)LL_DMA_CHANNEL_2))) \
    ? LPDMA_Channel2   :  LPDMA_Channel3)
-#endif /* LPDMA */
 #else
-#if defined(LPDMA)
+#if  defined(LPDMA)
 #define LL_DMA_GET_CHANNEL_INSTANCE(__DMA_INSTANCE__, __CHANNEL__) \
   ((((uint32_t)(__DMA_INSTANCE__) == ((uint32_t)HPDMA1)) && ((uint32_t)(__CHANNEL__) == ((uint32_t)LL_DMA_CHANNEL_0))) \
    ? HPDMA1_Channel0  :                                                                                                \

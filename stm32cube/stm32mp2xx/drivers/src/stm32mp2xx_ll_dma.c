@@ -72,7 +72,7 @@
                                                              ((Channel)  == LL_DMA_CHANNEL_2)     || \
                                                              ((Channel)  == LL_DMA_CHANNEL_3))))
 #else
-#if defined(LPDMA)
+#if  defined(LPDMA)
 #define IS_LL_DMA_ALL_CHANNEL_INSTANCE(INSTANCE, Channel) ((((INSTANCE) == HPDMA1)                && \
                                                             (((Channel)  == LL_DMA_CHANNEL_0)     || \
                                                              ((Channel)  == LL_DMA_CHANNEL_1)     || \
@@ -271,7 +271,7 @@
 #define IS_LL_DMA_MODE(__VALUE__)                         (((__VALUE__) == LL_DMA_NORMAL) || \
                                                            ((__VALUE__) == LL_DMA_PFCTRL))
 
-#if defined(LPDMA)
+#if  defined(LPDMA)
 #define IS_LL_DMA_PFREQ_INSTANCE(INSTANCE, Channel)       ((((INSTANCE) == HPDMA1)                && \
                                                             (((Channel)  == LL_DMA_CHANNEL_12)    || \
                                                              ((Channel)  == LL_DMA_CHANNEL_13)    || \
@@ -420,7 +420,7 @@
 
 #define IS_LL_DMA_LINK_UPDATE_REGISTERS(__VALUE__)       ((((__VALUE__) & 0x01FE0000U) == 0U) && ((__VALUE__) != 0U))
 
-#if defined(LPDMA)
+#if  defined(LPDMA)
 #define IS_LL_DMA_LINK_NODETYPE(__VALUE__)                (((__VALUE__) == LL_DMA_HPDMA_2D_NODE)     || \
                                                            ((__VALUE__) == LL_DMA_HPDMA_LINEAR_NODE) || \
                                                            ((__VALUE__) == LL_DMA_LPDMA_LINEAR_NODE))
@@ -534,7 +534,7 @@ uint32_t LL_DMA_DeInit(DMA_TypeDef *DMAx, uint32_t Channel)
     }
     else
     {
-#if defined(LPDMA)
+#if  defined(LPDMA)
       /* Force reset of LPDMA clock */
       LL_RCC_LPDMA_ForceReset();
 
@@ -542,6 +542,12 @@ uint32_t LL_DMA_DeInit(DMA_TypeDef *DMAx, uint32_t Channel)
       LL_RCC_LPDMA_ReleaseReset();
 #endif /* LPDMA */
     }
+#else
+    /* Force reset of LPDMA clock */
+    LL_RCC_LPDMA_ForceReset();
+
+    /* Release reset of LPDMA clock */
+    LL_RCC_LPDMA_ReleaseReset();
 #endif /* ! CORE_CM0PLUS */
   }
   else
@@ -719,7 +725,6 @@ uint32_t LL_DMA_Init(DMA_TypeDef *DMAx, uint32_t Channel, LL_DMA_InitTypeDef *DM
     }
   }
 #endif /* defined (CORE_CA35) || defined (CORE_CM33) */
-
   /*-------------------------- DMAx CLBAR Configuration ------------------------
    * Configure the Transfer linked list address with parameter :
    * - LinkedListBaseAdd:                              DMA_CLBAR_LBA[31:16] bits
@@ -1151,7 +1156,10 @@ uint32_t LL_DMA_CreateLinkNode(const LL_DMA_InitNodeTypeDef *DMA_InitNodeStruct,
   }
 
   /* Check node type */
-  if (DMA_InitNodeStruct->NodeType == LL_DMA_HPDMA_LINEAR_NODE)
+  /* Check non 2D addressing settings */
+#if  defined(LPDMA)
+  if (DMA_InitNodeStruct->NodeType != LL_DMA_LPDMA_LINEAR_NODE)
+#endif /* GENERATOR_LPDMA_AVAILABLE */
   {
     assert_param(IS_LL_DMA_BURST_LENGTH(DMA_InitNodeStruct->SrcBurstLength));
     assert_param(IS_LL_DMA_BURST_LENGTH(DMA_InitNodeStruct->DestBurstLength));
@@ -1177,8 +1185,7 @@ uint32_t LL_DMA_CreateLinkNode(const LL_DMA_InitNodeTypeDef *DMA_InitNodeStruct,
     assert_param(IS_LL_DMA_BLKRPT_ADDR_UPDATE_VALUE(DMA_InitNodeStruct->BlkRptDestAddrOffset));
   }
 
-  if ((DMA_InitNodeStruct->NodeType == LL_DMA_HPDMA_2D_NODE) || \
-      (DMA_InitNodeStruct->NodeType == LL_DMA_HPDMA_LINEAR_NODE))
+  if ((DMA_InitNodeStruct->NodeType & (LL_DMA_HPDMA_2D_NODE | LL_DMA_HPDMA_LINEAR_NODE)) != 0U)
   {
     if (((DMA_InitNodeStruct->SrcAllocatedPort & DMA_CTR1_SAP) == LL_DMA_SRC_ALLOCATED_PORT0) &&
         (DMA_InitNodeStruct->SrcBurstLength > 16U))
@@ -1443,7 +1450,11 @@ uint32_t LL_DMA_CreateLinkNode(const LL_DMA_InitNodeTypeDef *DMA_InitNodeStruct,
       pNode->LinkRegisters[reg_counter] |= (DMA_InitNodeStruct->UpdateRegisters & (DMA_CLLR_UT3 | DMA_CLLR_UB2));
     }
   }
-
+  else
+  {
+    /* Reset of the CLLR of the node being created */
+    pNode->LinkRegisters[reg_counter] = 0U;
+  }
   return (uint32_t)SUCCESS;
 }
 

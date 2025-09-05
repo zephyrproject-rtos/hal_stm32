@@ -917,7 +917,7 @@ HAL_StatusTypeDef HAL_PCD_Init(PCD_HandleTypeDef *hpcd)
     return HAL_ERROR;
   }
 
-  if (PCD_IRQRegister(HAL_PCD_IRQHandler, hpcd) != 0)
+  if (PCD_IRQRegister(HAL_PCD_IRQHandler, hpcd) != HAL_OK)
   {
     return HAL_ERROR;
   }
@@ -933,6 +933,7 @@ HAL_StatusTypeDef HAL_PCD_Init(PCD_HandleTypeDef *hpcd)
   }
 
   hpcd->State = HAL_PCD_STATE_READY;
+
 
 
   return HAL_OK;

@@ -25,4 +25,3 @@
 #else
 #include "stm32mp2xx_hal_pcd_otg_ex.c"
 #endif /*STM32MP257Cxx*/
-
