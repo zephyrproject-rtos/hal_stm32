@@ -907,7 +907,7 @@ void pvmPosition(uint32_t periph, __IO uint32_t **regPtr, pvmPosTypeDef *pvmPos)
       pvmPos->ready   = PWR_CR1_VDDIO4RDY_Pos;
       pvmPos->monitor = PWR_CR1_VDDIO4VMEN_Pos;
       break;
-#endif
+#endif /* PWR_CR1_VDDIO4SV */
 #if defined(PWR_CR1_USB33SV)
     case PWR_PVM_USB33 :
       *regPtr = &PWR->CR1;
@@ -915,7 +915,7 @@ void pvmPosition(uint32_t periph, __IO uint32_t **regPtr, pvmPosTypeDef *pvmPos)
       pvmPos->ready   = PWR_CR1_USB33RDY_Pos;
       pvmPos->monitor = PWR_CR1_USB33VMEN_Pos;
       break;
-#endif
+#endif /* PWR_CR1_USB33SV */
 #if defined(PWR_CR1_UCPDSV)
     case PWR_PVM_UCPD :
       *regPtr = &PWR->CR1;
@@ -923,7 +923,7 @@ void pvmPosition(uint32_t periph, __IO uint32_t **regPtr, pvmPosTypeDef *pvmPos)
       pvmPos->ready   = PWR_CR1_UCPDRDY_Pos;
       pvmPos->monitor = PWR_CR1_UCPDVMEN_Pos;
       break;
-#endif /* defined(PWR_CR1_UCPDSV) */
+#endif /* PWR_CR1_UCPDSV */
     case PWR_PVM_A :
       *regPtr = &PWR->CR1;
       pvmPos->active   = PWR_CR1_ASV_Pos;

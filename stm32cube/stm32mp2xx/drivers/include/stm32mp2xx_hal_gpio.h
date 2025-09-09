@@ -459,7 +459,7 @@ HAL_StatusTypeDef HAL_GPIO_ConfigPinAttributes(GPIO_TypeDef *GPIOx, uint16_t GPI
 HAL_StatusTypeDef HAL_GPIO_GetConfigPinAttributes(const GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin,
                                                   uint32_t *pPinAttributes);
 HAL_StatusTypeDef HAL_GPIO_TakePinSemaphore(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin);
-HAL_StatusTypeDef HAL_GPIO_ReleasePinSemaphore(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin);
+HAL_StatusTypeDef HAL_GPIO_ReleasePinSemaphore(const GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin);
 
 
 /**

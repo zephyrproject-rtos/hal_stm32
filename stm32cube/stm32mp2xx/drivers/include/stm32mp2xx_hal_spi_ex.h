@@ -78,21 +78,60 @@ typedef struct
 /** @defgroup SPI_AutonomousMode_TriggerSelection Autonomous Mode Trigger Selection
   * @{
   */
+#if defined(SPI8)
 /* @brief  SPI1 to SPI7 Triggers : no Triggers */
 
 /* @brief  SPI8 Triggers */
-#define SPI_AUTO_MODE_SPI8_TRG_LPDMA_CH0             (0x00000000UL)
-#define SPI_AUTO_MODE_SPI8_TRG_LPDMA_CH1             (0x00010000UL)
-#define SPI_AUTO_MODE_SPI8_TRG_LPDMA_CH2             (0x00020000UL)
-#define SPI_AUTO_MODE_SPI8_TRG_LPDMA_CH3             (0x00030000UL)
-#define SPI_AUTO_MODE_SPI8_TRG_EXTI4                 (0x00040000UL)
-#define SPI_AUTO_MODE_SPI8_TRG_EXTI5                 (0x00050000UL)
-#define SPI_AUTO_MODE_SPI8_TRG_LPTIM3_CH1            (0x00070000UL)
-#define SPI_AUTO_MODE_SPI8_TRG_LPTIM4_CH1            (0x00080000UL)
-#define SPI_AUTO_MODE_SPI8_TRG_LPTIM5_CH1            (0x00090000UL)
-#define SPI_AUTO_MODE_SPI8_TRG_RTC_ALRA              (0x000A0000UL)
-#define SPI_AUTO_MODE_SPI8_TRG_RTC_WUT               (0x000B0000UL)
 
+/*!< HW Trigger signal is LPDMA_CH0_TRG     */
+#define HAL_SPI8_LPDMA_CH0_TCF_TRG          (uint32_t)(0x00000000UL)
+/*!< HW Trigger signal is LPDMA_CH1_TRG     */
+#define HAL_SPI8_LPDMA_CH1_TCF_TRG          (uint32_t)(0x1UL << SPI_AUTOCR_TRIGSEL_Pos)
+/*!< HW Trigger signal is LPDMA_CH2_TRG     */
+#define HAL_SPI8_LPDMA_CH2_TCF_TRG          (uint32_t)(0x2UL << SPI_AUTOCR_TRIGSEL_Pos)
+/*!< HW Trigger signal is LPDMA_CH3_TRG     */
+#define HAL_SPI8_LPDMA_CH3_TCF_TRG          (uint32_t)(0x3UL << SPI_AUTOCR_TRIGSEL_Pos)
+/*!< HW Trigger signal is EXTI4_TRG         */
+#define HAL_SPI8_EXTI4_TRG                  (uint32_t)(0x4UL << SPI_AUTOCR_TRIGSEL_Pos)
+/*!< HW Trigger signal is EXTI8_TRG         */
+#define HAL_SPI8_EXTI5_TRG                  (uint32_t)(0x5UL << SPI_AUTOCR_TRIGSEL_Pos)
+/*!< HW Trigger signal is LPTIM3_CH1_TRG    */
+#define HAL_SPI8_LPTIM3_CH1_TRG             (uint32_t)(0x7UL << SPI_AUTOCR_TRIGSEL_Pos)
+/*!< HW Trigger signal is LPTIM4_CH1_TRG    */
+#define HAL_SPI8_LPTIM4_CH1_TRG             (uint32_t)(0x8UL << SPI_AUTOCR_TRIGSEL_Pos)
+/*!< HW Trigger signal is LPTIM5_CH1_TRG    */
+#define HAL_SPI8_LPTIM5_CH1_TRG             (uint32_t)(0x9UL << SPI_AUTOCR_TRIGSEL_Pos)
+/*!< HW Trigger signal is RTC_ALRA_TRG      */
+#define HAL_SPI8_RTC_ALRA_TRG               (uint32_t)(0xAUL << SPI_AUTOCR_TRIGSEL_Pos)
+/*!< HW Trigger signal is RTC_WUT_TRG       */
+#define HAL_SPI8_RTC_WUT_TRG                (uint32_t)(0xBUL << SPI_AUTOCR_TRIGSEL_Pos)
+#else
+/* @brief  SPI1 to SPI6 Triggers */
+
+/*!< HW Trigger signal is EXTI4_TRG         */
+#define HAL_SPI1_6_EXTI4_TRG                  (uint32_t)(0x4UL << SPI_AUTOCR_TRIGSEL_Pos)
+/*!< HW Trigger signal is EXTI5_TRG         */
+#define HAL_SPI1_6_EXTI5_TRG                  (uint32_t)(0x5UL << SPI_AUTOCR_TRIGSEL_Pos)
+/*!< HW Trigger signal is LPTIM3_CH1_TRG    */
+#define HAL_SPI1_6_LPTIM3_CH1_TRG             (uint32_t)(0x7UL << SPI_AUTOCR_TRIGSEL_Pos)
+/*!< HW Trigger signal is LPTIM4_CH1_TRG    */
+#define HAL_SPI1_6_LPTIM4_CH1_TRG             (uint32_t)(0x8UL << SPI_AUTOCR_TRIGSEL_Pos)
+/*!< HW Trigger signal is LPTIM5_CH1_TRG    */
+#define HAL_SPI1_6_LPTIM5_CH1_TRG             (uint32_t)(0x9UL << SPI_AUTOCR_TRIGSEL_Pos)
+/*!< HW Trigger signal is RTC_ALRA_TRG      */
+#define HAL_SPI1_6_RTC_ALRA_TRG               (uint32_t)(0xAUL << SPI_AUTOCR_TRIGSEL_Pos)
+/*!< HW Trigger signal is RTC_WUT_TRG       */
+#define HAL_SPI1_6_RTC_WUT_TRG                (uint32_t)(0xBUL << SPI_AUTOCR_TRIGSEL_Pos)
+/*!< HW Trigger signal is EXTI6_TRG         */
+#define HAL_SPI1_6_EXTI6_TRG                  (uint32_t)(0xCUL << SPI_AUTOCR_TRIGSEL_Pos)
+/*!< HW Trigger signal is EXTI7_TRG         */
+#define HAL_SPI1_6_EXTI7_TRG                  (uint32_t)(0xDUL << SPI_AUTOCR_TRIGSEL_Pos)
+/*!< HW Trigger signal is LPTIM1_CH1_TRG    */
+#define HAL_SPI1_6_LPTIM1_CH1_TRG             (uint32_t)(0xEUL << SPI_AUTOCR_TRIGSEL_Pos)
+/*!< HW Trigger signal is LPTIM1_CH1_TRG    */
+#define HAL_SPI1_6_LPTIM2_CH1_TRG             (uint32_t)(0xFUL << SPI_AUTOCR_TRIGSEL_Pos)
+
+#endif /* SPI8 */
 /**
   * @}
   */
@@ -117,17 +156,31 @@ typedef struct
 
 #define IS_SPI_AUTO_MODE(__MODE__)                  (((__MODE__) == SPI_AUTO_MODE_DISABLE) || \
                                                      ((__MODE__) == SPI_AUTO_MODE_ENABLE))
-#define IS_SPI_TRIG_SOURCE(SOURCE)                (((SOURCE) == SPI_AUTO_MODE_SPI8_TRG_LPDMA_CH0   ) || \
-                                                   ((SOURCE) == SPI_AUTO_MODE_SPI8_TRG_LPDMA_CH1   ) || \
-                                                   ((SOURCE) == SPI_AUTO_MODE_SPI8_TRG_LPDMA_CH2   ) || \
-                                                   ((SOURCE) == SPI_AUTO_MODE_SPI8_TRG_LPDMA_CH3   ) || \
-                                                   ((SOURCE) == SPI_AUTO_MODE_SPI8_TRG_EXTI4       ) || \
-                                                   ((SOURCE) == SPI_AUTO_MODE_SPI8_TRG_EXTI5       ) || \
-                                                   ((SOURCE) == SPI_AUTO_MODE_SPI8_TRG_LPTIM3_CH1  ) || \
-                                                   ((SOURCE) == SPI_AUTO_MODE_SPI8_TRG_LPTIM4_CH1  ) || \
-                                                   ((SOURCE) == SPI_AUTO_MODE_SPI8_TRG_LPTIM5_CH1  ) || \
-                                                   ((SOURCE) == SPI_AUTO_MODE_SPI8_TRG_RTC_ALRA    ) || \
-                                                   ((SOURCE) == SPI_AUTO_MODE_SPI8_TRG_RTC_WUT     ))
+#if defined(SPI8)
+#define IS_SPI_TRIG_SOURCE(__SOURCE__)        (((__SOURCE__) == HAL_SPI8_LPDMA_CH0_TCF_TRG ) || \
+                                               ((__SOURCE__) == HAL_SPI8_LPDMA_CH1_TCF_TRG ) || \
+                                               ((__SOURCE__) == HAL_SPI8_LPDMA_CH2_TCF_TRG ) || \
+                                               ((__SOURCE__) == HAL_SPI8_LPDMA_CH3_TCF_TRG ) || \
+                                               ((__SOURCE__) == HAL_SPI8_EXTI4_TRG         ) || \
+                                               ((__SOURCE__) == HAL_SPI8_EXTI5_TRG         ) || \
+                                               ((__SOURCE__) == HAL_SPI8_LPTIM3_CH1_TRG    ) || \
+                                               ((__SOURCE__) == HAL_SPI8_LPTIM4_CH1_TRG    ) || \
+                                               ((__SOURCE__) == HAL_SPI8_LPTIM5_CH1_TRG    ) || \
+                                               ((__SOURCE__) == HAL_SPI8_RTC_ALRA_TRG      ) || \
+                                               ((__SOURCE__) == HAL_SPI8_RTC_WUT_TRG       ))
+#else
+#define IS_SPI_TRIG_SOURCE(__SOURCE__)        (((__SOURCE__) == HAL_SPI1_6_EXTI4_TRG      ) || \
+                                               ((__SOURCE__) == HAL_SPI1_6_EXTI5_TRG      ) || \
+                                               ((__SOURCE__) == HAL_SPI1_6_LPTIM3_CH1_TRG ) || \
+                                               ((__SOURCE__) == HAL_SPI1_6_LPTIM4_CH1_TRG ) || \
+                                               ((__SOURCE__) == HAL_SPI1_6_LPTIM5_CH1_TRG ) || \
+                                               ((__SOURCE__) == HAL_SPI1_6_RTC_ALRA_TRG   ) || \
+                                               ((__SOURCE__) == HAL_SPI1_6_RTC_WUT_TRG    ) || \
+                                               ((__SOURCE__) == HAL_SPI1_6_EXTI6_TRG      ) || \
+                                               ((__SOURCE__) == HAL_SPI1_6_EXTI7_TRG      ) || \
+                                               ((__SOURCE__) == HAL_SPI1_6_LPTIM1_CH1_TRG ) || \
+                                               ((__SOURCE__) == HAL_SPI1_6_LPTIM2_CH1_TRG ))
+#endif /* SPI8 */
 
 
 #define IS_SPI_AUTO_MODE_TRG_POL(__POLARITY__)      (((__POLARITY__) == SPI_TRIG_POLARITY_RISING) || \
@@ -158,8 +211,10 @@ HAL_StatusTypeDef HAL_SPIEx_ConfigureUnderrun(SPI_HandleTypeDef *hspi, uint32_t 
 /** @addtogroup SPI_Autonomous_Mode_Functions Autonomous Mode Functions
   * @{
   */
-HAL_StatusTypeDef HAL_SPIEx_SetConfigAutonomousMode(SPI_HandleTypeDef *hspi, SPI_AutonomousModeConfTypeDef *sConfig);
-HAL_StatusTypeDef HAL_SPIEx_GetConfigAutonomousMode(const SPI_HandleTypeDef *hspi, SPI_AutonomousModeConfTypeDef *sConfig);
+HAL_StatusTypeDef HAL_SPIEx_SetConfigAutonomousMode(SPI_HandleTypeDef *hspi,
+                                                    const SPI_AutonomousModeConfTypeDef *sConfig);
+HAL_StatusTypeDef HAL_SPIEx_GetConfigAutonomousMode(const SPI_HandleTypeDef *hspi,
+                                                    SPI_AutonomousModeConfTypeDef *sConfig);
 HAL_StatusTypeDef HAL_SPIEx_ClearConfigAutonomousMode(SPI_HandleTypeDef *hspi);
 /**
   * @}

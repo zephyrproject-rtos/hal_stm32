@@ -304,10 +304,10 @@ HAL_StatusTypeDef HAL_SPI_Init(SPI_HandleTypeDef *hspi)
     }
 #endif /* (IS_SPI_PARTIAL_INSTANCE) */
 #if defined (IS_SPI_FULL_INSTANCE)
-  if (IS_SPI_FULL_INSTANCE(hspi->Instance))
-  {
-		assert_param(IS_SPI_CRC_LENGTH(hspi->Init.CRCLength));
-  }
+    if (IS_SPI_FULL_INSTANCE(hspi->Instance))
+    {
+      assert_param(IS_SPI_CRC_LENGTH(hspi->Init.CRCLength));
+    }
 #endif /* (IS_SPI_FULL_INSTANCE) */
     assert_param(IS_SPI_CRC_POLYNOMIAL(hspi->Init.CRCPolynomial));
     assert_param(IS_SPI_CRC_INITIALIZATION_PATTERN(hspi->Init.TxCRCInitializationPattern));
@@ -338,15 +338,15 @@ HAL_StatusTypeDef HAL_SPI_Init(SPI_HandleTypeDef *hspi)
   packet_length = SPI_GetPacketSize(hspi);
   if (
 #if defined (IS_SPI_LIMITED_INSTANCE)
-			((IS_SPI_LIMITED_INSTANCE(hspi->Instance)) && (packet_length > SPI_LOWEND_FIFO_SIZE)) ||
+    ((IS_SPI_LIMITED_INSTANCE(hspi->Instance)) && (packet_length > SPI_LOWEND_FIFO_SIZE)) ||
 #endif /* (IS_SPI_LIMITED_INSTANCE) */
 #if defined (IS_SPI_PARTIAL_INSTANCE)
-      ((IS_SPI_PARTIAL_INSTANCE(hspi->Instance)) && (packet_length > SPI_LOWEND_FIFO_SIZE)) ||
+    ((IS_SPI_PARTIAL_INSTANCE(hspi->Instance)) && (packet_length > SPI_LOWEND_FIFO_SIZE)) ||
 #endif /* (IS_SPI_PARTIAL_INSTANCE) */
 #if defined (IS_SPI_FULL_INSTANCE)
-      ((IS_SPI_FULL_INSTANCE(hspi->Instance)) && (packet_length > SPI_HIGHEND_FIFO_SIZE))
+    ((IS_SPI_FULL_INSTANCE(hspi->Instance)) && (packet_length > SPI_HIGHEND_FIFO_SIZE))
 #endif /* (IS_SPI_FULL_INSTANCE) */
-			)
+  )
   {
     return HAL_ERROR;
   }
@@ -493,17 +493,17 @@ HAL_StatusTypeDef HAL_SPI_Init(SPI_HandleTypeDef *hspi)
     }
 
     /* Enable 33/17 bits CRC computation */
-		if (
+    if (
 #if defined (IS_SPI_LIMITED_INSTANCE)
-				((IS_SPI_LIMITED_INSTANCE(hspi->Instance)) && (crc_length == SPI_CRC_LENGTH_16BIT)) ||
+      ((IS_SPI_LIMITED_INSTANCE(hspi->Instance)) && (crc_length == SPI_CRC_LENGTH_16BIT)) ||
 #endif /* (IS_SPI_LIMITED_INSTANCE) */
 #if defined (IS_SPI_PARTIAL_INSTANCE)
-        ((IS_SPI_PARTIAL_INSTANCE(hspi->Instance)) && (crc_length == SPI_CRC_LENGTH_16BIT)) ||
+      ((IS_SPI_PARTIAL_INSTANCE(hspi->Instance)) && (crc_length == SPI_CRC_LENGTH_16BIT)) ||
 #endif /* (IS_SPI_PARTIAL_INSTANCE) */
 #if defined (IS_SPI_FULL_INSTANCE)
-        ((IS_SPI_FULL_INSTANCE(hspi->Instance)) && (crc_length == SPI_CRC_LENGTH_32BIT))
+      ((IS_SPI_FULL_INSTANCE(hspi->Instance)) && (crc_length == SPI_CRC_LENGTH_32BIT))
 #endif /* (IS_SPI_FULL_INSTANCE) */
-			)
+    )
     {
       SET_BIT(hspi->Instance->CR1, SPI_CR1_CRC33_17);
     }

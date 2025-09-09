@@ -1737,16 +1737,16 @@ HAL_StatusTypeDef HAL_MDF_GenerateTrgo(const MDF_HandleTypeDef *hmdf)
 /**
   * @brief  This function allows to set delay to apply on data source in number of samples.
   * @param  hmdf MDF handle.
-  * @param  Delay Delay to apply on data source in number of samples.
+  * @param  delay delay to apply on data source in number of samples.
   *         This parameter must be a number between Min_Data = 0 and Max_Data = 127.
   * @retval HAL status.
   */
-HAL_StatusTypeDef HAL_MDF_SetDelay(MDF_HandleTypeDef *hmdf, uint32_t Delay)
+HAL_StatusTypeDef HAL_MDF_SetDelay(MDF_HandleTypeDef *hmdf, uint32_t delay)
 {
   HAL_StatusTypeDef status = HAL_OK;
 
   /* Check parameters */
-  assert_param(IS_MDF_DELAY(Delay));
+  assert_param(IS_MDF_DELAY(delay));
 
   /* Check state */
   if (hmdf->State != HAL_MDF_STATE_ACQUISITION)
@@ -1763,7 +1763,7 @@ HAL_StatusTypeDef HAL_MDF_SetDelay(MDF_HandleTypeDef *hmdf, uint32_t Delay)
     else
     {
       /* Configure bitstream delay */
-      hmdf->Instance->DLYCR |= Delay;
+      hmdf->Instance->DLYCR |= delay;
     }
   }
 

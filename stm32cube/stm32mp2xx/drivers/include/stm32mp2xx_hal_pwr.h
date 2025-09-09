@@ -233,12 +233,12 @@ typedef struct
 
 #define WIO_RESOURCE_POS   NON_SHAREABLE_RESOURCE_NB
 
-#define WIO_RESOURCE_0     (1U << (0U + WIO_RESOURCE_POS))   /*!< shareable wake-up IO  Resource1 access control  */
-#define WIO_RESOURCE_1     (1U << (1U + WIO_RESOURCE_POS))   /*!< shareable wake-up IO  Resource2 access control  */
-#define WIO_RESOURCE_2     (1U << (2U + WIO_RESOURCE_POS))   /*!< shareable wake-up IO  Resource3 access control  */
-#define WIO_RESOURCE_3     (1U << (3U + WIO_RESOURCE_POS))   /*!< shareable wake-up IO  Resource4 access control  */
-#define WIO_RESOURCE_4     (1U << (4U + WIO_RESOURCE_POS))   /*!< shareable wake-up IO  Resource5 access control  */
-#define WIO_RESOURCE_5     (1U << (5U + WIO_RESOURCE_POS))   /*!< shareable wake-up IO  Resource5 access control  */
+#define WIO_RESOURCE_0     (1UL << (0U + WIO_RESOURCE_POS))   /*!< shareable wake-up IO  Resource1 access control  */
+#define WIO_RESOURCE_1     (1UL << (1U + WIO_RESOURCE_POS))   /*!< shareable wake-up IO  Resource2 access control  */
+#define WIO_RESOURCE_2     (1UL << (2U + WIO_RESOURCE_POS))   /*!< shareable wake-up IO  Resource3 access control  */
+#define WIO_RESOURCE_3     (1UL << (3U + WIO_RESOURCE_POS))   /*!< shareable wake-up IO  Resource4 access control  */
+#define WIO_RESOURCE_4     (1UL << (4U + WIO_RESOURCE_POS))   /*!< shareable wake-up IO  Resource5 access control  */
+#define WIO_RESOURCE_5     (1UL << (5U + WIO_RESOURCE_POS))   /*!< shareable wake-up IO  Resource5 access control  */
 
 
 #define WIO_PIN_ATTR_PRIV_SELECT          0x01000000U
@@ -288,9 +288,9 @@ typedef struct
 /** @defgroup PWR_Regulator_state_in_STOP_mode PWR Regulator state in STOP_mode
   * @{
   */
-#define PWR_REGULATOR_LP_OFF                        0U
-#define PWR_REGULATOR_LP_ON_LV_OFF                  1U
-#define PWR_REGULATOR_LP_ON_LV_ON                   3U
+#define PWR_REGULATOR_LP_OFF                        0UL
+#define PWR_REGULATOR_LP_ON_LV_OFF                  1UL
+#define PWR_REGULATOR_LP_ON_LV_ON                   3UL
 
 #define IS_PWR_STOP_MODE_REGULATOR(__REGULATOR__)     (((__REGULATOR__) == PWR_REGULATOR_LP_OFF)  || \
                                                        ((__REGULATOR__) == PWR_REGULATOR_LP_ON_LV_OFF) || \

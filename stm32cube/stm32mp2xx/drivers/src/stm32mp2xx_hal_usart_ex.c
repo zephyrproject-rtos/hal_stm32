@@ -494,7 +494,11 @@ HAL_StatusTypeDef HAL_USARTEx_SetConfigAutonomousMode(USART_HandleTypeDef *husar
     assert_param(IS_USART_TRIGGER_POLARITY(sConfig->TriggerPolarity));
     assert_param(IS_USART_IDLE_FRAME_TRANSMIT(sConfig->IdleFrame));
     assert_param(IS_USART_TX_DATA_SIZE(sConfig->DataSize));
+#if defined(STM32MP21xxxx)
     assert_param(IS_USART_TRIGGER_SELECTION(sConfig->TriggerSelection));
+#else
+    /* no trigger available for usart */
+#endif /* STM32MP21xxxx */
 
     /* Process Locked */
     __HAL_LOCK(husart);
@@ -511,9 +515,14 @@ HAL_StatusTypeDef HAL_USARTEx_SetConfigAutonomousMode(USART_HandleTypeDef *husar
     CLEAR_REG(husart->Instance->AUTOCR);
 
     /* USART AUTOCR Configuration */
+#if defined(STM32MP21xxxx)
     tmpreg = ((sConfig->DataSize << USART_AUTOCR_TDN_Pos) | (sConfig->TriggerPolarity) |
               (sConfig->AutonomousModeState) | (sConfig->IdleFrame) |
               (sConfig->TriggerSelection << USART_AUTOCR_TRIGSEL_Pos));
+#else /* STM32MP21xxxx */
+    tmpreg = ((sConfig->DataSize << USART_AUTOCR_TDN_Pos) | (sConfig->TriggerPolarity) |
+              (sConfig->AutonomousModeState) | (sConfig->IdleFrame));
+#endif /* STM32MP21xxxx */
 
     WRITE_REG(husart->Instance->AUTOCR, tmpreg);
 

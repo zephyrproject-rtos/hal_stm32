@@ -166,25 +166,31 @@ typedef struct
   * @}
   */
 
+/*  Only LPUART has triggers on MP25 and MP23; USARTs do not have triggers. */
+
+#if defined(STM32MP21xxxx)
+
 /** @defgroup USARTEx_Autonomous_Trigger_selection USARTEx Autonomous trigger selection
   * @brief    USART Autonomous Trigger selection
   * @{
   */
-#define USART_GPDMA1_CH0_TCF_TRG   0U   /*!< USART GPDMA1 channel0 Internal Trigger  */
-#define USART_GPDMA1_CH1_TCF_TRG   1U   /*!< USART GPDMA1 channel1 Internal Trigger  */
-#define USART_GPDMA1_CH2_TCF_TRG   2U   /*!< USART GPDMA1 channel2 Internal Trigger  */
-#define USART_GPDMA1_CH3_TCF_TRG   3U   /*!< USART GPDMA1 channel3 Internal Trigger  */
-#define USART_EXTI_LINE6_TRG       4U   /*!< USART EXTI line 6 Internal Trigger      */
-#define USART_EXTI_LINE9_TRG       5U   /*!< USART EXTI line 9 Internal Trigger      */
-#define USART_LPTIM1_OUT_TRG       6U   /*!< USART LPTIM1 out Internal Trigger       */
-#define USART_LPTIM2_OUT_TRG       7U   /*!< USART LPTIM2 out Internal Trigger       */
-#define USART_COMP1_OUT_TRG        8U   /*!< USART COMP1 out Internal Trigger        */
-#define USART_COMP2_OUT_TRG        9U   /*!< USART COMP2 out Internal Trigger        */
-#define USART_RTC_ALRA_TRG         10U  /*!< USART RTC alarm Internal Trigger        */
-#define USART_RTC_WUT_TRG          11U  /*!< USART RTC wakeup Internal Trigger       */
+#define USART_EXTI2_LINE4_TRG       4U   /*!< USART EXTI2 line 4 Internal Trigger     */
+#define USART_EXTI2_LINE5_TRG       5U   /*!< USART EXTI2 line 5 Internal Trigger     */
+/*!< No Trigger index 6 on USART            */
+#define USART_LPTIM3_CH1_TRG        7U   /*!< USART LPTIM3 channel 1 Internal Trigger */
+#define USART_LPTIM4_CH1_TRG        8U   /*!< USART LPTIM4 channel 1 Internal Trigger */
+#define USART_LPTIM5_OUT_TRG        9U   /*!< USART LPTIM5 out Internal Trigger       */
+#define USART_RTC_ALRA_TRG          10U  /*!< USART RTC alarm Internal Trigger        */
+#define USART_RTC_WUT_TRG           11U  /*!< USART RTC wakeup Internal Trigger       */
+#define USART_EXTI1_LINE6_TRG       12U  /*!< USART EXTI1 line 6 Internal Trigger     */
+#define USART_EXTI1_LINE7_TRG       13U  /*!< USART EXTI1 line 7 Internal Trigger     */
+#define USART_LPTIM1_CH1_TRG        14U  /*!< USART LPTIM1 channel 1 Internal Trigger */
+#define USART_LPTIM2_CH1_TRG        15U  /*!< USART LPTIM2 channel 1 Internal Trigger */
 /**
   * @}
   */
+
+#endif /* STM32MP21xxxx */
 
 /**
   * @}
@@ -322,7 +328,13 @@ typedef struct
   * @param __SOURCE__ USART Trigger source selection.
   * @retval SET (__SOURCE__ is valid) or RESET (__SOURCE__ is invalid)
   */
-#define IS_USART_TRIGGER_SELECTION(__SOURCE__)    ((__SOURCE__) <= 11U)
+#if defined(STM32MP21xxxx)
+#define IS_USART_TRIGGER_SELECTION(__SOURCE__)    ( ((__SOURCE__) >= 4U) &&\
+                                                    ((__SOURCE__) <= 15U) && ((__SOURCE__) != 6U) )
+#else
+/* No trigger for USART on MP25 and MP23 */
+#define IS_USART_TRIGGER_SELECTION(__SOURCE__)    ((__SOURCE__) <  0U)
+#endif /* STM32MP21xxxx */
 
 /**
   * @brief Ensure that the number of transferred data is valid.

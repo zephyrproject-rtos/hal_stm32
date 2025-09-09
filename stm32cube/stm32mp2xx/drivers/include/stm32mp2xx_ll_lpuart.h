@@ -410,12 +410,12 @@ typedef struct
 #define LL_LPUART_LPDMA1_CH1_TCF_TRG   1U   /*!< LPUART LPDMA1 channel1 Internal Trigger  */
 #define LL_LPUART_LPDMA1_CH2_TCF_TRG   2U   /*!< LPUART LPDMA1 channel2 Internal Trigger  */
 #define LL_LPUART_LPDMA1_CH3_TCF_TRG   3U   /*!< LPUART LPDMA1 channel3 Internal Trigger  */
-#define LL_LPUART_EXTI_LINE6_TRG       4U   /*!< LPUART EXTI line 6 Internal Trigger      */
-#define LL_LPUART_EXTI_LINE8_TRG       5U   /*!< LPUART EXTI line 8 Internal Trigger      */
-#define LL_LPUART_LPTIM1_OUT_TRG       6U   /*!< LPUART LPTIM1 out Internal Trigger       */
-#define LL_LPUART_LPTIM3_OUT_TRG       7U   /*!< LPUART LPTIM3 out Internal Trigger       */
-#define LL_LPUART_COMP1_OUT_TRG        8U   /*!< LPUART COMP1 out Internal Trigger        */
-#define LL_LPUART_COMP2_OUT_TRG        9U   /*!< LPUART COMP2 out Internal Trigger        */
+#define LL_LPUART_EXTI_LINE4_TRG       4U   /*!< LPUART EXTI line 4 Internal Trigger      */
+#define LL_LPUART_EXTI_LINE5_TRG       5U   /*!< LPUART EXTI line 5 Internal Trigger      */
+/*!< No Trigger index 6 on LPUART            */
+#define LL_LPUART_LPTIM3_CH1_TRG       7U   /*!< LPUART LPTIM3 channel 1 Internal Trigger */
+#define LL_LPUART_LPTIM4_CH1_TRG       8U   /*!< LPUART LPTIM4 channel 1 Internal Trigger */
+#define LL_LPUART_LPTIM5_OUT_TRG       9U   /*!< LPUART LPTIM5 out Internal Trigger       */
 #define LL_LPUART_RTC_ALRA_TRG         10U  /*!< LPUART RTC alarm Internal Trigger        */
 #define LL_LPUART_RTC_WUT_TRG          11U  /*!< LPUART RTC wakeup Internal Trigger       */
 /**
@@ -2677,12 +2677,11 @@ __STATIC_INLINE uint32_t LL_LPUART_GetTriggerPolarity(const USART_TypeDef *LPUAR
   *         @arg @ref  LL_LPUART_LPDMA1_CH1_TCF_TRG
   *         @arg @ref  LL_LPUART_LPDMA1_CH2_TCF_TRG
   *         @arg @ref  LL_LPUART_LPDMA1_CH3_TCF_TRG
-  *         @arg @ref  LL_LPUART_EXTI_LINE6_TRG
-  *         @arg @ref  LL_LPUART_EXTI_LINE8_TRG
-  *         @arg @ref  LL_LPUART_LPTIM1_OUT_TRG
-  *         @arg @ref  LL_LPUART_LPTIM3_OUT_TRG
-  *         @arg @ref  LL_LPUART_COMP1_OUT_TRG
-  *         @arg @ref  LL_LPUART_COMP2_OUT_TRG
+  *         @arg @ref  LL_LPUART_EXTI_LINE4_TRG
+  *         @arg @ref  LL_LPUART_EXTI_LINE5_TRG
+  *         @arg @ref  LL_LPUART_LPTIM3_CH1_TRG
+  *         @arg @ref  LL_LPUART_LPTIM4_CH1_TRG
+  *         @arg @ref  LL_LPUART_LPTIM5_OUT_TRG
   *         @arg @ref  LL_LPUART_RTC_ALRA_TRG
   *         @arg @ref  LL_LPUART_RTC_WUT_TRG
   * @retval None
@@ -2701,12 +2700,11 @@ __STATIC_INLINE void LL_LPUART_SetSelectedTrigger(USART_TypeDef *LPUARTx, uint32
   *         @arg @ref  LL_LPUART_LPDMA1_CH1_TCF_TRG
   *         @arg @ref  LL_LPUART_LPDMA1_CH2_TCF_TRG
   *         @arg @ref  LL_LPUART_LPDMA1_CH3_TCF_TRG
-  *         @arg @ref  LL_LPUART_EXTI_LINE6_TRG
-  *         @arg @ref  LL_LPUART_EXTI_LINE8_TRG
-  *         @arg @ref  LL_LPUART_LPTIM1_OUT_TRG
-  *         @arg @ref  LL_LPUART_LPTIM3_OUT_TRG
-  *         @arg @ref  LL_LPUART_COMP1_OUT_TRG
-  *         @arg @ref  LL_LPUART_COMP2_OUT_TRG
+  *         @arg @ref  LL_LPUART_EXTI_LINE4_TRG
+  *         @arg @ref  LL_LPUART_EXTI_LINE5_TRG
+  *         @arg @ref  LL_LPUART_LPTIM3_CH1_TRG
+  *         @arg @ref  LL_LPUART_LPTIM4_CH1_TRG
+  *         @arg @ref  LL_LPUART_LPTIM5_OUT_TRG
   *         @arg @ref  LL_LPUART_RTC_ALRA_TRG
   *         @arg @ref  LL_LPUART_RTC_WUT_TRG
   */

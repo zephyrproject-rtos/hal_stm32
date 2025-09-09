@@ -52,7 +52,7 @@
   * @brief STM32MP2xx HAL Driver version number
    */
 #define __STM32MP2xx_HAL_VERSION_MAIN   (0x01UL) /*!< [31:24] main version */
-#define __STM32MP2xx_HAL_VERSION_SUB1   (0x00UL) /*!< [23:16] sub1 version */
+#define __STM32MP2xx_HAL_VERSION_SUB1   (0x02UL) /*!< [23:16] sub1 version */
 #define __STM32MP2xx_HAL_VERSION_SUB2   (0x00UL) /*!< [15:8]  sub2 version */
 #define __STM32MP2xx_HAL_VERSION_RC     (0x00UL) /*!< [7:0]  release candidate */
 #define __STM32MP2xx_HAL_VERSION         ((__STM32MP2xx_HAL_VERSION_MAIN << 24)\
@@ -152,7 +152,10 @@ HAL_StatusTypeDef HAL_Init(void)
   HAL_NVIC_SetPriorityGrouping(NVIC_PRIORITYGROUP_4);
 #endif /* CORE_CM33 */
   /* Use systick as time base source and configure 1ms tick (default clock after Reset is HSI) */
-  (void)HAL_InitTick(TICK_INT_PRIORITY);
+  if (HAL_InitTick(TICK_INT_PRIORITY) != HAL_OK)
+  {
+    return HAL_ERROR;
+  }
 
   /* Init the low level hardware */
   HAL_MspInit();
@@ -256,7 +259,11 @@ __weak HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
 #else
   /* M33 SysTick "Processor clock" is "ck_cpu2" aka "ck_icn_hs_mcu" */
   HAL_SYSTICK_CLKSourceConfig(SYSTICK_CLKSOURCE_HCLK);
-  (void)HAL_SYSTICK_Config(HAL_RCC_GetFreq(RCC_CLOCKTYPE_ICN_HS_MCU) / 1000U);
+  if (HAL_SYSTICK_Config(HAL_RCC_GetFreq(RCC_CLOCKTYPE_ICN_HS_MCU) / 1000U) > 0U)
+  {
+    return HAL_ERROR;
+  }
+
 #endif /* defined (USE_STM32MP257CXX_EMU) */
 
   /* Configure the SysTick IRQ priority */
@@ -277,20 +284,28 @@ __weak HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
    *   bit 25 "C3SYSTICKSEL" (see page 1877).
    * !!!!!!!!!!!!!!
    */
-  /* Since "Processor" clock is default source clock set by HAL_SYSTICK_Config(),
-   * then use HSI frequency value on FPGA/EMU platforms */
 #if defined (USE_STM32MP257CXX_EMU) || defined (USE_STM32MP257CXX_FPGA)
+  /* Since "Processor" clock is default source clock set by HAL_SYSTICK_Config(),
+   * then use HSI frequency value on FPGA/EMU platforms
+   */
   HAL_SYSTICK_Config(HSI_VALUE / 1000);
 #else
-  HAL_SYSTICK_Config(200000);
+  /* Use LSI clock as reference clock for the SysTick to ensure consistent
+   * HAL delay power when domains D1 or D2 enter or exit low power states
+   */
+  HAL_SYSTICK_Config(LSI_VALUE/1000); /* Set counter to wake up every ms */
+  HAL_SYSTICK_CLKSourceConfig(0); /* Select external clock specified in C3SYSTICKSEL (LSI) */
+
 #endif /* defined (USE_STM32MP257CXX_EMU) || defined (USE_STM32MP257CXX_FPGA) */
   /* Note that in LSI/LSE "External" clock cases, HAL_SYSTICK_Config parameter
    * value shall be taken from TEN_MS (aka "ONE_MS" on MP2) bit field in M0+
    * system register SYST_CALIB.
    */
 
-  /* Configure the SysTick IRQ priority */
-  HAL_NVIC_SetPriority(SysTick_IRQn, TickPriority, 0);
+  /* Configure the SysTick IRQ priority at level 2 to not interrupt low power
+   * workaround when power domains D1 or D2 enter or exit low power states
+   */
+  HAL_NVIC_SetPriority(SysTick_IRQn, TickPriority, 2);
 #else
 #error "No core selected. Please define either CORE_CA35, CORE_CM33 or CORE_CM0PLUS"
 #endif /* defined (CORE_CA35) || defined (CORE_CM33) || defined(CORE_CM0PLUS) */

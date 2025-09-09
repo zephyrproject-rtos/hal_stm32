@@ -18,8 +18,8 @@
 #if defined(USE_FULL_LL_DRIVER)
 
 /* Includes ------------------------------------------------------------------*/
-#include "stm32mp2xx_ll_i3c.h"
 #include "stm32mp2xx_ll_bus.h"
+#include "stm32mp2xx_ll_i3c.h"
 #ifdef  USE_FULL_ASSERT
 #include "stm32_assert.h"
 #else
@@ -30,7 +30,7 @@
   * @{
   */
 
-#if defined (I3C1) || defined (I3C2) || defined (I3C3) || defined (I3C4)
+#if defined (I3C1)
 
 /** @defgroup I3C_LL I3C
   * @{

@@ -43,7 +43,10 @@ extern "C" {
   * @brief    DCMIPP Exported Types
   * @{
   */
+#if defined(DCMIPP_CSI2_SUPPORT)
 #define MAX_DATATYPE_NB  7U  /*!< DCMIPP CSI maximum number of data types  */
+#endif /* DCMIPP_CSI2_SUPPORT */
+
 /**
   * @brief   DCMIPP Embedded Synchronisation Unmask codes structure definition
   */
@@ -66,6 +69,7 @@ typedef struct
   uint8_t FrameEndCode;    /*!< Specifies the code of the frame end delimiter.   */
 } DCMIPP_EmbeddedSyncCodesTypeDef;
 
+#if defined(DCMIPP_CSI2_SUPPORT)
 /**
   * @brief  HAL DCMIPP CSI PIPE configuration structure definition
   */
@@ -127,6 +131,7 @@ typedef struct
   uint32_t ByteCounter;      /*!< Configures the Byte Number
                                   This parameter can be a value between 0 and 65535              */
 } DCMIPP_CSI_LineByteCounterConfTypeDef;
+#endif /* DCMIPP_CSI2_SUPPORT */
 
 /**
   * @brief  HAL DCMIPP Parallel configuration structure definition
@@ -250,7 +255,7 @@ typedef struct
                            This parameter can be a value from @ref DCMIPP_Statistics_Extraction_Source */
   uint32_t Bins;      /*!< Configures the DCMIPP Statistic Extraction Bins
                            This parameter can be a value from @ref DCMIPP_Statistics_Extraction_Bins   */
-} DCMIPP_StatisticExtractionControlConfTypeDef;
+} DCMIPP_StatisticExtractionConfTypeDef;
 
 
 typedef struct
@@ -380,17 +385,13 @@ typedef struct
                          This parameter can be  a value from @ref DCMIPP_PIPE_Horizontal_Decimation_Ratio */
 } DCMIPP_DecimationConfTypeDef;
 
-#if defined(DCMIPPP_P1HISTOGRAM_AVAILABLE)
+#if defined(DCMIPP_P1HISTOGRAM_SUPPORT)
 /**
   *  @brief  Histogram Configuration
   */
 
 typedef struct
 {
-  uint32_t      HDec;           /*!< Horizontal decimation
-                                     This parameter can be a value from @ref DCMIPP_Histogram_Horizontal_Decimation */
-  uint32_t      VDec;           /*!< Vertical decimation
-                                     This parameter can be a value from @ref DCMIPP_Histogram_Vertical_Decimation   */
   uint32_t      Source;         /*!< Source for Histogram extraction
                                      This parameter can be a value from @ref DCMIPP_Histogram_Source                */
   uint32_t      Components;     /*!< components selection for Histograms
@@ -399,23 +400,34 @@ typedef struct
                                      This parameter can be a value from @ref DCMIPP_Histogram_Dynamic               */
   uint32_t      Bin;            /*!< Bin amount per histogram
                                      This parameter can be a value from @ref DCMIPP_Histogram_Bins                  */
-  uint32_t      HReg;           /*!< Horizontal amount of regions per frame
+} DCMIPP_Histogram_ConfTypeDef;
+
+/**
+  *  @brief  Histogram Region Configuration
+  */
+typedef struct
+{
+  uint16_t      HDec;           /*!< Horizontal decimation
+                                     This parameter can be a value from @ref DCMIPP_Histogram_Horizontal_Decimation */
+  uint16_t      VDec;           /*!< Vertical decimation
+                                     This parameter can be a value from @ref DCMIPP_Histogram_Vertical_Decimation   */
+  uint16_t      HReg;           /*!< Horizontal amount of regions per frame
                                      This parameter can be a value from @ref DCMIPP_Histogram_Horizontal_Regions    */
-  uint32_t      VReg;           /*!< Vertical amount of regions per frame
+  uint16_t      VReg;           /*!< Vertical amount of regions per frame
                                      This parameter can be a value from @ref DCMIPP_Histogram_Vertical_Regions      */
-  uint32_t      HStart;         /*!< Horizontal start for histogram in pixels
+  uint16_t      HStart;         /*!< Horizontal start for histogram in pixels
                                      This parameter can be a value from 0 to 4094 pixels                            */
-  uint32_t      VStart;         /*!< Vertical start for histogram in pixels
+  uint16_t      VStart;         /*!< Vertical start for histogram in pixels
                                      This parameter can be a value from 0 to 4094 pixels                            */
-  uint32_t      HSize;          /*!< Horizontal  size of each histogram region
+  uint16_t      HSize;          /*!< Horizontal  size of each histogram region
                                      This parameter can be a value from 0 to 4094 pixels                            */
-  uint32_t      VSize;          /*!< Vertical size of each histogram region
+  uint16_t      VSize;          /*!< Vertical size of each histogram region
                                      This parameter can be a value from 0 to 4094 pixels                            */
   uint32_t      MemoryAddress;  /*!< Starting address for histogram capture
                                      This value must be a multiple of 16                                            */
-} DCMIPP_Histogram_ConfigTypeDef;
+} DCMIPP_Histogram_RegionConfTypeDef;
 
-#endif /* DCMIPPP_P1HISTOGRAM_AVAILABLE */
+#endif /* DCMIPP_P1HISTOGRAM_SUPPORT */
 
 typedef struct
 {
@@ -475,10 +487,9 @@ typedef enum
   HAL_DCMIPP_PIPE_FRAME_EVENT_CB_ID       = 0x03U,    /*!< DCMIPP Pipe Frame event callback ID        */
   HAL_DCMIPP_PIPE_VSYNC_EVENT_CB_ID       = 0x04U,    /*!< DCMIPP Pipe Vsync event callback ID        */
   HAL_DCMIPP_PIPE_ERROR_CB_ID             = 0x05U,    /*!< DCMIPP Pipe Error callback ID              */
-#if defined(DCMIPPP_P1HISTOGRAM_AVAILABLE)
+#if defined(DCMIPP_P1HISTOGRAM_SUPPORT)
   HAL_DCMIPP_PIPE_HISTOGRAM_CB_ID         = 0x06U,    /*!< DCMIPP Pipe Histogram Capture Complete callback ID    */
-  HAL_DCMIPP_PIPE_HISTOGRAM_ERROR_CB_ID   = 0X07U,    /*!< DCMIPP Pipe Histogram ERROR callback ID               */
-#endif /* DCMIPPP_P1HISTOGRAM_AVAILABLE */
+#endif /* DCMIPP_P1HISTOGRAM_SUPPORT */
 } HAL_DCMIPP_PIPE_CallbackIDTypeDef;
 #endif /* USE_HAL_DCMIPP_REGISTER_CALLBACKS */
 
@@ -505,21 +516,18 @@ typedef struct
                                                                                                 Callback              */
   void (* PIPE_LimitEventCallback)(struct __DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe); /*!< DCMIPP Pipe Limit Event
                                                                                                 Callback              */
-#if defined(DCMIPPP_P1HISTOGRAM_AVAILABLE)
+#if defined(DCMIPP_P1HISTOGRAM_SUPPORT)
   void (* PIPE_HistogramEventCallback)(struct __DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe); /*!< DCMIPP Pipe Histogram Event
- */
-  void (* PIPE_HistogramErrorCallback)(struct __DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe, uint32_t Error);
-  /*!< DCMIPP Pipe Histogram Error
-           Callback              */
-  Callback              * /
-#endif /* DCMIPPP_P1HISTOGRAM_AVAILABLE */
+                                                                                               */
+#endif /* DCMIPP_P1HISTOGRAM_SUPPORT */
   void (* PIPE_ErrorCallback)(struct __DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe);      /*!< DCMIPP Pipe Error
                                                                                                 Callback              */
   void (* ErrorCallback)(struct __DCMIPP_HandleTypeDef *hdcmipp);                         /*!< DCMIPP Error Callback  */
   void (* MspInitCallback)(struct __DCMIPP_HandleTypeDef *hdcmipp);                       /*!< DCMIPP Msp Init
                                                                                                 Callback              */
   void (* MspDeInitCallback)(struct __DCMIPP_HandleTypeDef *hdcmipp);                     /*!< DCMIPP Msp DeInit
-                                                                                                Callback              */
+                                                                                               Callback              */
+#if defined(DCMIPP_CSI2_SUPPORT)
   void (* StartOfFrameEventCallback)(struct __DCMIPP_HandleTypeDef *hdcmipp, uint32_t VirtualChannel); /*!< DCMIPP CSI
                                                                                         Start Of Frame Event Callback */
   void (* EndOfFrameEventCallback)(struct __DCMIPP_HandleTypeDef *hdcmipp, uint32_t VirtualChannel); /*!< DCMIPP CSI
@@ -533,7 +541,8 @@ typedef struct
   void (* ClockChangerFifoFullEventCallback)(struct __DCMIPP_HandleTypeDef *hdcmipp); /*!< DCMIPP CSI Clock changer
                                                                                            Fifo Event Callback        */
   void (* ShortPacketDetectionEventCallback)(struct __DCMIPP_HandleTypeDef *hdcmipp); /*!< DCMIPP CSI Short Packet
-                                                                                           detection Event Callback   */
+                                                                                          detection Event Callback   */
+#endif /* DCMIPP_CSI2_SUPPORT */
 #endif  /* USE_HAL_DCMIPP_REGISTER_CALLBACKS */
 } DCMIPP_HandleTypeDef;
 
@@ -578,17 +587,18 @@ typedef void (*pDCMIPP_PIPE_CallbackTypeDef)(DCMIPP_HandleTypeDef *hdcmipp, uint
 #define HAL_DCMIPP_ERROR_PIPE0_OVR       (0x00000008U)             /*!< Overrun error on pipe0    */
 #define HAL_DCMIPP_ERROR_PIPE1_OVR       (0x00000010U)             /*!< Overrun error on pipe1    */
 #define HAL_DCMIPP_ERROR_PIPE2_OVR       (0x00000020U)             /*!< Overrun error on pipe2    */
-#if defined(DCMIPPP_P1HISTOGRAM_AVAILABLE)
+#if defined(DCMIPP_P1HISTOGRAM_SUPPORT)
 #define HAL_DCMIPP_ERROR_PIPE1_HISTO_OVR    (0x00000040U)             /*!< Overrun error on pipe1 histogram    */
 #define HAL_DCMIPP_ERROR_PIPE1_HISTO_BADCFG (0x00000080U)             /*!< Bad Config error on pipe1 histogram */
-#endif /* DCMIPPP_P1HISTOGRAM_AVAILABLE */
+#endif /* DCMIPP_P1HISTOGRAM_SUPPORT */
 
 #if (USE_HAL_DCMIPP_REGISTER_CALLBACKS == 1)
-#define  HAL_DCMIPP_ERROR_INVALID_CALLBACK ((uint32_t)0x00000040U) /*!< Invalid Callback error  */
+#define  HAL_DCMIPP_ERROR_INVALID_CALLBACK ((uint32_t)0x00000100U) /*!< Invalid Callback error  */
 #endif /* USE_HAL_DCMIPP_REGISTER_CALLBACKS */
 /**
   * @}
   */
+#if defined(DCMIPP_CSI2_SUPPORT)
 /** @defgroup DCMIPP_CSI_Error_Codes DCMIPP CSI Error Codes
   * @{
   */
@@ -606,6 +616,7 @@ typedef void (*pDCMIPP_PIPE_CallbackTypeDef)(DCMIPP_HandleTypeDef *hdcmipp, uint
 #define HAL_DCMIPP_CSI_ERROR_DPHY_ESCAPE     (0x00020000U)       /*!< Escape Entry Error on data line (0 OR 1) */
 #define HAL_DCMIPP_CSI_ERROR_SOT_SYNC        (0x00040000U)       /*!< SOT Synchronisation Error on data line(0 OR 1) */
 #define HAL_DCMIPP_CSI_ERROR_SOT             (0x00080000U)       /*!< SOT Error on data line (0 OR 1)        */
+#endif /* DCMIPP_CSI2_SUPPORT */
 /**
   * @}
   */
@@ -617,7 +628,7 @@ typedef void (*pDCMIPP_PIPE_CallbackTypeDef)(DCMIPP_HandleTypeDef *hdcmipp, uint
 /**
   * @}
   */
-
+#if defined(DCMIPP_CSI2_SUPPORT)
 /** @defgroup DCMIPP_modes DCMIPP modes
   * @brief  DCMIPP_modes (DCMI or CSI): modes are exclusive
   * @{
@@ -627,22 +638,23 @@ typedef void (*pDCMIPP_PIPE_CallbackTypeDef)(DCMIPP_HandleTypeDef *hdcmipp, uint
 /**
   * @}
   */
+#endif /* DCMIPP_CSI2_SUPPORT */
 
 
 /** @defgroup DCMIPP_TPG_Format DCMIPP TPG Format
   * @{
   */
-#define DCMIPP_TPG_FORMAT_YUV422     (0x1EU << DCMIPP_CMTPGCR2_FORMAT_Pos)  /*!< DCMIPP TPG Format YUV422  */
-#define DCMIPP_TPG_FORMAT_RGB565     (0x22U << DCMIPP_CMTPGCR2_FORMAT_Pos)  /*!< DCMIPP TPG Format RGB565  */
-#define DCMIPP_TPG_FORMAT_RGB888     (0x24U << DCMIPP_CMTPGCR2_FORMAT_Pos)  /*!< DCMIPP TPG Format RGB888  */
-#define DCMIPP_TPG_FORMAT_RAW8       (0x2AU << DCMIPP_CMTPGCR2_FORMAT_Pos)  /*!< DCMIPP TPG Format RAW8    */
-#define DCMIPP_TPG_FORMAT_RAW10      (0x2BU << DCMIPP_CMTPGCR2_FORMAT_Pos)  /*!< DCMIPP TPG Format RAW10   */
-#define DCMIPP_TPG_FORMAT_RAW12      (0x2CU << DCMIPP_CMTPGCR2_FORMAT_Pos)  /*!< DCMIPP TPG Format RAW12   */
-#define DCMIPP_TPG_FORMAT_RAW14      (0x2DU << DCMIPP_CMTPGCR2_FORMAT_Pos)  /*!< DCMIPP TPG Format RAW14   */
-#define DCMIPP_TPG_FORMAT_MONO8      (0x4AU << DCMIPP_CMTPGCR2_FORMAT_Pos)  /*!< DCMIPP TPG Format MONO 8-bits  */
-#define DCMIPP_TPG_FORMAT_MONO10     (0x4BU << DCMIPP_CMTPGCR2_FORMAT_Pos)  /*!< DCMIPP TPG Format MONO 10-bits */
-#define DCMIPP_TPG_FORMAT_MONO12     (0x4CU << DCMIPP_CMTPGCR2_FORMAT_Pos)  /*!< DCMIPP TPG Format MONO 12-bits */
-#define DCMIPP_TPG_FORMAT_MONO14     (0x4DU << DCMIPP_CMTPGCR2_FORMAT_Pos)  /*!< DCMIPP TPG Format MONO 14-bits */
+#define DCMIPP_TPG_FORMAT_YUV422     (0x1EUL << DCMIPP_CMTPGCR2_FORMAT_Pos)  /*!< DCMIPP TPG Format YUV422  */
+#define DCMIPP_TPG_FORMAT_RGB565     (0x22UL << DCMIPP_CMTPGCR2_FORMAT_Pos)  /*!< DCMIPP TPG Format RGB565  */
+#define DCMIPP_TPG_FORMAT_RGB888     (0x24UL << DCMIPP_CMTPGCR2_FORMAT_Pos)  /*!< DCMIPP TPG Format RGB888  */
+#define DCMIPP_TPG_FORMAT_RAW8       (0x2AUL << DCMIPP_CMTPGCR2_FORMAT_Pos)  /*!< DCMIPP TPG Format RAW8    */
+#define DCMIPP_TPG_FORMAT_RAW10      (0x2BUL << DCMIPP_CMTPGCR2_FORMAT_Pos)  /*!< DCMIPP TPG Format RAW10   */
+#define DCMIPP_TPG_FORMAT_RAW12      (0x2CUL << DCMIPP_CMTPGCR2_FORMAT_Pos)  /*!< DCMIPP TPG Format RAW12   */
+#define DCMIPP_TPG_FORMAT_RAW14      (0x2DUL << DCMIPP_CMTPGCR2_FORMAT_Pos)  /*!< DCMIPP TPG Format RAW14   */
+#define DCMIPP_TPG_FORMAT_MONO8      (0x4AUL << DCMIPP_CMTPGCR2_FORMAT_Pos)  /*!< DCMIPP TPG Format MONO 8-bits  */
+#define DCMIPP_TPG_FORMAT_MONO10     (0x4BUL << DCMIPP_CMTPGCR2_FORMAT_Pos)  /*!< DCMIPP TPG Format MONO 10-bits */
+#define DCMIPP_TPG_FORMAT_MONO12     (0x4CUL << DCMIPP_CMTPGCR2_FORMAT_Pos)  /*!< DCMIPP TPG Format MONO 12-bits */
+#define DCMIPP_TPG_FORMAT_MONO14     (0x4DUL << DCMIPP_CMTPGCR2_FORMAT_Pos)  /*!< DCMIPP TPG Format MONO 14-bits */
 /**
   * @}
   */
@@ -705,9 +717,9 @@ typedef void (*pDCMIPP_PIPE_CallbackTypeDef)(DCMIPP_HandleTypeDef *hdcmipp, uint
 #define DCMIPP_CLIENT3  3U /*!< Client 3 identifier */
 #define DCMIPP_CLIENT4  4U /*!< Client 4 identifier */
 #define DCMIPP_CLIENT5  5U /*!< Client 5 identifier */
-#if defined(DCMIPPP_P1HISTOGRAM_AVAILABLE)
+#if defined(DCMIPP_P1HISTOGRAM_SUPPORT)
 #define DCMIPP_CLIENT6  6U /*!< Client 6 identifier */
-#endif /* DCMIPPP_P1HISTOGRAM_AVAILABLE */
+#endif /* DCMIPP_P1HISTOGRAM_SUPPORT */
 /**
   * @}
   */
@@ -780,7 +792,7 @@ typedef void (*pDCMIPP_PIPE_CallbackTypeDef)(DCMIPP_HandleTypeDef *hdcmipp, uint
 /**
   * @}
   */
-
+#if defined(DCMIPP_CSI2_SUPPORT)
 /** @defgroup DCMIPP_Virtual_Channel DCMIPP Virtual Channel
   * @{
   */
@@ -795,15 +807,15 @@ typedef void (*pDCMIPP_PIPE_CallbackTypeDef)(DCMIPP_HandleTypeDef *hdcmipp, uint
 /** @defgroup DCMIPP_DataTypeMode DCMIPP DCMIPP Data Type Mode
   * @{
   */
-#define DCMIPP_DTMODE_DTIDA                (0U << DCMIPP_P0FSCR_DTMODE_Pos) /*!< Only flow DTIDA from the selected VC
+#define DCMIPP_DTMODE_DTIDA                (0UL << DCMIPP_P0FSCR_DTMODE_Pos) /*!< Only flow DTIDA from the selected VC
                                                                                  is forwarded in the pipe */
-#define DCMIPP_DTMODE_DTIDA_OR_DTIDB       (1U << DCMIPP_P0FSCR_DTMODE_Pos) /*!< Flows DTIDA and/or DTIDB from the
+#define DCMIPP_DTMODE_DTIDA_OR_DTIDB       (1UL << DCMIPP_P0FSCR_DTMODE_Pos) /*!< Flows DTIDA and/or DTIDB from the
                                                                                 selected VC are forwarded in the pipe */
-#define DCMIPP_DTMODE_ALL_EXCEPT_DTIA_DTIB (2U << DCMIPP_P0FSCR_DTMODE_Pos) /*!< All data types from the selected VC
+#define DCMIPP_DTMODE_ALL_EXCEPT_DTIA_DTIB (2UL << DCMIPP_P0FSCR_DTMODE_Pos) /*!< All data types from the selected VC
                                                                                 (except the DTIDA or DTIDB) are
                                                                                  forwarded in the pipe,
                                                                                  only for Pipe0 */
-#define DCMIPP_DTMODE_ALL                  (3U << DCMIPP_P0FSCR_DTMODE_Pos) /*!< All data types of the selected virtual
+#define DCMIPP_DTMODE_ALL                  (3UL << DCMIPP_P0FSCR_DTMODE_Pos) /*!< All data types of the selected virtual
                                                                                  channel VC are forwarded in the pipe,
                                                                                  only for Pipe0 */
 /**
@@ -856,8 +868,8 @@ typedef void (*pDCMIPP_PIPE_CallbackTypeDef)(DCMIPP_HandleTypeDef *hdcmipp, uint
 /** @defgroup DCMIPP_CSI_Number_Of_Lanes DCMIPP CSI Number Of Lanes
   * @{
   */
-#define DCMIPP_CSI_ONE_DATA_LANE  (1U << CSI_LMCFGR_LANENB_Pos) /*!< DCMIPP CSI One Data Lane */
-#define DCMIPP_CSI_TWO_DATA_LANES (2U << CSI_LMCFGR_LANENB_Pos) /*!< DCMIPP CSI 2 Data Lanes  */
+#define DCMIPP_CSI_ONE_DATA_LANE  (1UL << CSI_LMCFGR_LANENB_Pos) /*!< DCMIPP CSI One Data Lane */
+#define DCMIPP_CSI_TWO_DATA_LANES (2UL << CSI_LMCFGR_LANENB_Pos) /*!< DCMIPP CSI 2 Data Lanes  */
 /**
   * @}
   */
@@ -875,8 +887,8 @@ typedef void (*pDCMIPP_PIPE_CallbackTypeDef)(DCMIPP_HandleTypeDef *hdcmipp, uint
 /** @defgroup DCMIPP_CSI_DataLane DCMIPP CSI Data Lane
   * @{
   */
-#define DCMIPP_CSI_DATA_LANE0   1U /*!< DCMIPP CSI Data Lane 0 */
-#define DCMIPP_CSI_DATA_LANE1   2U /*!< DCMIPP CSI Data Lane 1 */
+#define DCMIPP_CSI_DATA_LANE0   1UL /*!< DCMIPP CSI Data Lane 0 */
+#define DCMIPP_CSI_DATA_LANE1   2UL /*!< DCMIPP CSI Data Lane 1 */
 /**
   * @}
   */
@@ -991,6 +1003,7 @@ typedef void (*pDCMIPP_PIPE_CallbackTypeDef)(DCMIPP_HandleTypeDef *hdcmipp, uint
 /**
   * @}
   */
+#endif /* DCMIPP_CSI2_SUPPORT */
 
 /** @defgroup DCMIPP_OutputSamplesType  DCMIPP OutputSamplesType
   * @{
@@ -1005,18 +1018,18 @@ typedef void (*pDCMIPP_PIPE_CallbackTypeDef)(DCMIPP_HandleTypeDef *hdcmipp, uint
   * @{
   */
 #define  DCMIPP_FORMAT_BYTE             0U                               /*!< DCMIPP Format BYTE    */
-#define  DCMIPP_FORMAT_YUV422          (0x1EU << DCMIPP_PRCR_FORMAT_Pos) /*!< DCMIPP Format YUV422  */
-#define  DCMIPP_FORMAT_RGB565          (0x22U << DCMIPP_PRCR_FORMAT_Pos) /*!< DCMIPP Format RGB565  */
-#define  DCMIPP_FORMAT_RGB666          (0x23U << DCMIPP_PRCR_FORMAT_Pos) /*!< DCMIPP Format RGB666  */
-#define  DCMIPP_FORMAT_RGB888          (0x24U << DCMIPP_PRCR_FORMAT_Pos) /*!< DCMIPP Format RGB888  */
-#define  DCMIPP_FORMAT_RAW8            (0x2AU << DCMIPP_PRCR_FORMAT_Pos) /*!< DCMIPP Format RAW8    */
-#define  DCMIPP_FORMAT_RAW10           (0x2BU << DCMIPP_PRCR_FORMAT_Pos) /*!< DCMIPP Format RAW10   */
-#define  DCMIPP_FORMAT_RAW12           (0x2CU << DCMIPP_PRCR_FORMAT_Pos) /*!< DCMIPP Format RAW12   */
-#define  DCMIPP_FORMAT_RAW14           (0x2DU << DCMIPP_PRCR_FORMAT_Pos) /*!< DCMIPP Format RAW14   */
-#define  DCMIPP_FORMAT_MONOCHROME_8B   (0x4AU << DCMIPP_PRCR_FORMAT_Pos) /*!< DCMIPP Format 8-bits  */
-#define  DCMIPP_FORMAT_MONOCHROME_10B  (0x4BU << DCMIPP_PRCR_FORMAT_Pos) /*!< DCMIPP Format 10-bits */
-#define  DCMIPP_FORMAT_MONOCHROME_12B  (0x4CU << DCMIPP_PRCR_FORMAT_Pos) /*!< DCMIPP Format 12-bits */
-#define  DCMIPP_FORMAT_MONOCHROME_14B  (0x4DU << DCMIPP_PRCR_FORMAT_Pos) /*!< DCMIPP Format 14-bits */
+#define  DCMIPP_FORMAT_YUV422          (0x1EUL << DCMIPP_PRCR_FORMAT_Pos) /*!< DCMIPP Format YUV422  */
+#define  DCMIPP_FORMAT_RGB565          (0x22UL << DCMIPP_PRCR_FORMAT_Pos) /*!< DCMIPP Format RGB565  */
+#define  DCMIPP_FORMAT_RGB666          (0x23UL << DCMIPP_PRCR_FORMAT_Pos) /*!< DCMIPP Format RGB666  */
+#define  DCMIPP_FORMAT_RGB888          (0x24UL << DCMIPP_PRCR_FORMAT_Pos) /*!< DCMIPP Format RGB888  */
+#define  DCMIPP_FORMAT_RAW8            (0x2AUL << DCMIPP_PRCR_FORMAT_Pos) /*!< DCMIPP Format RAW8    */
+#define  DCMIPP_FORMAT_RAW10           (0x2BUL << DCMIPP_PRCR_FORMAT_Pos) /*!< DCMIPP Format RAW10   */
+#define  DCMIPP_FORMAT_RAW12           (0x2CUL << DCMIPP_PRCR_FORMAT_Pos) /*!< DCMIPP Format RAW12   */
+#define  DCMIPP_FORMAT_RAW14           (0x2DUL << DCMIPP_PRCR_FORMAT_Pos) /*!< DCMIPP Format RAW14   */
+#define  DCMIPP_FORMAT_MONOCHROME_8B   (0x4AUL << DCMIPP_PRCR_FORMAT_Pos) /*!< DCMIPP Format 8-bits  */
+#define  DCMIPP_FORMAT_MONOCHROME_10B  (0x4BUL << DCMIPP_PRCR_FORMAT_Pos) /*!< DCMIPP Format 10-bits */
+#define  DCMIPP_FORMAT_MONOCHROME_12B  (0x4CUL << DCMIPP_PRCR_FORMAT_Pos) /*!< DCMIPP Format 12-bits */
+#define  DCMIPP_FORMAT_MONOCHROME_14B  (0x4DUL << DCMIPP_PRCR_FORMAT_Pos) /*!< DCMIPP Format 14-bits */
 /**
   * @}
   */
@@ -1024,11 +1037,11 @@ typedef void (*pDCMIPP_PIPE_CallbackTypeDef)(DCMIPP_HandleTypeDef *hdcmipp, uint
 /** @defgroup DCMIPP_Extended_Data_Mode  DCMIPP Extended Data Mode
   * @{
   */
-#define  DCMIPP_INTERFACE_8BITS   0U                         /*!< Interface captures 8bits on every pixel clock  */
-#define  DCMIPP_INTERFACE_10BITS (1U << DCMIPP_PRCR_EDM_Pos) /*!< Interface captures 10bits on every pixel clock */
-#define  DCMIPP_INTERFACE_12BITS (2U << DCMIPP_PRCR_EDM_Pos) /*!< Interface captures 12bits on every pixel clock */
-#define  DCMIPP_INTERFACE_14BITS (3U << DCMIPP_PRCR_EDM_Pos) /*!< Interface captures 14bits on every pixel clock */
-#define  DCMIPP_INTERFACE_16BITS (4U << DCMIPP_PRCR_EDM_Pos) /*!< Interface captures 16bits on every pixel clock */
+#define  DCMIPP_INTERFACE_8BITS   0U                          /*!< Interface captures 8bits on every pixel clock  */
+#define  DCMIPP_INTERFACE_10BITS (1UL << DCMIPP_PRCR_EDM_Pos) /*!< Interface captures 10bits on every pixel clock */
+#define  DCMIPP_INTERFACE_12BITS (2UL << DCMIPP_PRCR_EDM_Pos) /*!< Interface captures 12bits on every pixel clock */
+#define  DCMIPP_INTERFACE_14BITS (3UL << DCMIPP_PRCR_EDM_Pos) /*!< Interface captures 14bits on every pixel clock */
+#define  DCMIPP_INTERFACE_16BITS (4UL << DCMIPP_PRCR_EDM_Pos) /*!< Interface captures 16bits on every pixel clock */
 /**
   * @}
   */
@@ -1099,17 +1112,17 @@ typedef void (*pDCMIPP_PIPE_CallbackTypeDef)(DCMIPP_HandleTypeDef *hdcmipp, uint
 /** @defgroup DCMIPP_Line_Select_Mode DCMIPP Line Select Mode
   * @{
   */
-#define DCMIPP_LSM_ALL          0U                              /*!< Interface captures all received lines */
-#define DCMIPP_LSM_ALTERNATE_2 (1U << DCMIPP_P0PPCR_LSM_Pos )   /*!< Interface captures one line out of two */
+#define DCMIPP_LSM_ALL          0UL                              /*!< Interface captures all received lines */
+#define DCMIPP_LSM_ALTERNATE_2 (1UL << DCMIPP_P0PPCR_LSM_Pos )   /*!< Interface captures one line out of two */
 /**
   * @}
   */
 /** @defgroup DCMIPP_Line_Start_Mode DCMIPP Line Start Mode
   * @{
   */
-#define DCMIPP_OELS_ODD         0U                              /*!< Interface captures first line from the frame start,
+#define DCMIPP_OELS_ODD         0UL                              /*!< Interface captures first line from the frame start,
                                                                      second one is dropped */
-#define DCMIPP_OELS_EVEN       (1U << DCMIPP_P0PPCR_OELS_Pos)   /*!< Interface captures second line from the frame
+#define DCMIPP_OELS_EVEN       (1UL << DCMIPP_P0PPCR_OELS_Pos)   /*!< Interface captures second line from the frame
                                                                      start, first one is dropped */
 /**
   * @}
@@ -1125,18 +1138,18 @@ typedef void (*pDCMIPP_PIPE_CallbackTypeDef)(DCMIPP_HandleTypeDef *hdcmipp, uint
   * @{
   */
 #define DCMIPP_BSM_ALL          0U                              /*!< Interface captures all received data */
-#define DCMIPP_BSM_DATA_OUT_2  (1U << DCMIPP_P0PPCR_BSM_Pos)    /*!< Interface captures 1 data out of 2   */
-#define DCMIPP_BSM_BYTE_OUT_4  (2U << DCMIPP_P0PPCR_BSM_Pos)    /*!< Interface captures 1 byte out of 4   */
-#define DCMIPP_BSM_2BYTE_OUT_4 (3U << DCMIPP_P0PPCR_BSM_Pos)    /*!< Interface captures 2 byte out of 4   */
+#define DCMIPP_BSM_DATA_OUT_2  (1UL << DCMIPP_P0PPCR_BSM_Pos)    /*!< Interface captures 1 data out of 2   */
+#define DCMIPP_BSM_BYTE_OUT_4  (2UL << DCMIPP_P0PPCR_BSM_Pos)    /*!< Interface captures 1 byte out of 4   */
+#define DCMIPP_BSM_2BYTE_OUT_4 (3UL << DCMIPP_P0PPCR_BSM_Pos)    /*!< Interface captures 2 byte out of 4   */
 /**
   * @}
   */
 /** @defgroup DCMIPP_Byte_Start_Mode DCMIPP Byte Start Mode
   * @{
   */
-#define DCMIPP_OEBS_ODD        0U                              /*!< Interface captures first data (byte or double byte)
+#define DCMIPP_OEBS_ODD        0UL                              /*!< Interface captures first data (byte or double byte)
                                                                    from the frame/line start,second one being dropped */
-#define DCMIPP_OEBS_EVEN      (1U << DCMIPP_P0PPCR_OEBS_Pos)   /*!< Interface captures second data (byte or double byte)
+#define DCMIPP_OEBS_EVEN      (1UL << DCMIPP_P0PPCR_OEBS_Pos)   /*!< Interface captures second data (byte or double byte)
                                                                     from the frame/line start, first one is dropped   */
 /**
   * @}
@@ -1156,14 +1169,14 @@ typedef void (*pDCMIPP_PIPE_CallbackTypeDef)(DCMIPP_HandleTypeDef *hdcmipp, uint
 /** @defgroup DCMIPP_LineMult DCMIPP Line Mult
   * @{
   */
-#define  DCMIPP_MULTILINE_1_LINE      0U                                  /*!< Event after every 1   line   */
-#define  DCMIPP_MULTILINE_2_LINES    (1U << DCMIPP_P0PPCR_LINEMULT_Pos)   /*!< Event after every 2   lines  */
-#define  DCMIPP_MULTILINE_4_LINES    (2U << DCMIPP_P0PPCR_LINEMULT_Pos)   /*!< Event after every 4   lines  */
-#define  DCMIPP_MULTILINE_8_LINES    (3U << DCMIPP_P0PPCR_LINEMULT_Pos)   /*!< Event after every 8   lines  */
-#define  DCMIPP_MULTILINE_16_LINES   (4U << DCMIPP_P0PPCR_LINEMULT_Pos)   /*!< Event after every 16  lines  */
-#define  DCMIPP_MULTILINE_32_LINES   (5U << DCMIPP_P0PPCR_LINEMULT_Pos)   /*!< Event after every 32  lines  */
-#define  DCMIPP_MULTILINE_64_LINES   (6U << DCMIPP_P0PPCR_LINEMULT_Pos)   /*!< Event after every 64  lines  */
-#define  DCMIPP_MULTILINE_128_LINES  (7U << DCMIPP_P0PPCR_LINEMULT_Pos)   /*!< Event after every 128 lines  */
+#define  DCMIPP_MULTILINE_1_LINE      0UL                                  /*!< Event after every 1   line   */
+#define  DCMIPP_MULTILINE_2_LINES    (1UL << DCMIPP_P0PPCR_LINEMULT_Pos)   /*!< Event after every 2   lines  */
+#define  DCMIPP_MULTILINE_4_LINES    (2UL << DCMIPP_P0PPCR_LINEMULT_Pos)   /*!< Event after every 4   lines  */
+#define  DCMIPP_MULTILINE_8_LINES    (3UL << DCMIPP_P0PPCR_LINEMULT_Pos)   /*!< Event after every 8   lines  */
+#define  DCMIPP_MULTILINE_16_LINES   (4UL << DCMIPP_P0PPCR_LINEMULT_Pos)   /*!< Event after every 16  lines  */
+#define  DCMIPP_MULTILINE_32_LINES   (5UL << DCMIPP_P0PPCR_LINEMULT_Pos)   /*!< Event after every 32  lines  */
+#define  DCMIPP_MULTILINE_64_LINES   (6UL << DCMIPP_P0PPCR_LINEMULT_Pos)   /*!< Event after every 64  lines  */
+#define  DCMIPP_MULTILINE_128_LINES  (7UL << DCMIPP_P0PPCR_LINEMULT_Pos)   /*!< Event after every 128 lines  */
 /**
   * @}
   */
@@ -1336,125 +1349,118 @@ typedef void (*pDCMIPP_PIPE_CallbackTypeDef)(DCMIPP_HandleTypeDef *hdcmipp, uint
 /**
   * @}
   */
-
-#if defined(DCMIPPP_P1HISTOGRAM_AVAILABLE)
+#if defined(DCMIPP_P1HISTOGRAM_SUPPORT)
 /** @defgroup DCMIPP_Histogram_Vertical_Decimation  DCMIPP Histogram Vertical Decimation
   * @{
   */
 
-#define  DCMIPP_HISTO_VDEC_NO_VDEC           (0U)
-#define  DCMIPP_HISTO_VDEC_1_LINE_OUT_OF_2   (1U)
-#define  DCMIPP_HISTO_VDEC_1_LINE_OUT_OF_4   (2U)
-#define  DCMIPP_HISTO_VDEC_1_LINE_OUT_OF_8   (3U)
-#define  DCMIPP_HISTO_VDEC_1_LINE_OUT_OF_16  (4U)
+#define  DCMIPP_HISTO_VDEC_NONE              (0U) /*!< All lines are transmitted, no vertical decimation               */
+#define  DCMIPP_HISTO_VDEC_1_LINE_OUT_OF_2   (1U) /*!< One line out of 2 transmitted, For Raw Bayer 2 lines out of 4   */
+#define  DCMIPP_HISTO_VDEC_1_LINE_OUT_OF_4   (2U) /*!< One line out of 4 transmitted, For Raw Bayer 2 lines out of 8   */
+#define  DCMIPP_HISTO_VDEC_1_LINE_OUT_OF_8   (3U) /*!< One line out of 8 transmitted, For Raw Bayer 2 lines out of 16  */
+#define  DCMIPP_HISTO_VDEC_1_LINE_OUT_OF_16  (4U) /*!< One line out of 16 transmitted, For Raw Bayer 2 lines out of 32 */
 /**
   * @}
   */
 /** @defgroup DCMIPP_Histogram_Horizontal_Decimation  DCMIPP Histogram Horizontal Decimation
   * @{
   */
-#define  DCMIPP_HISTO_HDEC_NO_HDEC            (0U)
-#define  DCMIPP_HISTO_HDEC_1_PIXL_OUT_OF_2    (1U)
-#define  DCMIPP_HISTO_HDEC_1_PIXL_OUT_OF_4    (2U)
-#define  DCMIPP_HISTO_HDEC_1_PIXL_OUT_OF_8    (3U)
-#define  DCMIPP_HISTO_HDEC_1_PIXL_OUT_OF_16   (4U)
+#define  DCMIPP_HISTO_HDEC_NONE               (0U) /*!< All pixels are transmitted, no Horizontal decimation             */
+#define  DCMIPP_HISTO_HDEC_1_PIXL_OUT_OF_2    (1U) /*!< One pixel out of 2 transmitted, For Raw Bayer 2 pixel out of 4   */
+#define  DCMIPP_HISTO_HDEC_1_PIXL_OUT_OF_4    (2U) /*!< One pixel out of 4 transmitted, For Raw Bayer 2 pixel out of 8   */
+#define  DCMIPP_HISTO_HDEC_1_PIXL_OUT_OF_8    (3U) /*!< One pixel out of 8 transmitted, For Raw Bayer 2 pixel out of 16  */
+#define  DCMIPP_HISTO_HDEC_1_PIXL_OUT_OF_16   (4U) /*!< One pixel out of 16 transmitted, For Raw Bayer 2 pixel out of 32 */
 /**
   * @}
   */
 /** @defgroup DCMIPP_Histogram_Component_Selection  DCMIPP Histogram Component Selection
   * @{
   */
-#define  DCMIPP_HISTO_COMP_SEL_R_R_V_128      (0U)
-#define  DCMIPP_HISTO_COMP_SEL_GR_G_Y_Y       (1U)
-#define  DCMIPP_HISTO_COMP_SEL_B_B_U_128      (2U)
-#define  DCMIPP_HISTO_COMP_SEL_GB_L_L_L       (3U)
-#define  DCMIPP_HISTO_COMP_SEL_ALL_FOUR       (4U)
+#define  DCMIPP_HISTO_COMP_SEL_R_R_V_128      (0U) /*!< Red or V component selection             */
+#define  DCMIPP_HISTO_COMP_SEL_GR_G_Y_Y       (1U) /*!< Grey-Red, Green or Y component selection */
+#define  DCMIPP_HISTO_COMP_SEL_B_B_U_128      (2U) /*!< Blue or U component selection            */
+#define  DCMIPP_HISTO_COMP_SEL_GB_L_L_L       (3U) /*!< Grey-Blue  or L component                */
+#define  DCMIPP_HISTO_COMP_SEL_ALL_FOUR       (4U) /*!< All four components selection            */
 /**
   * @}
   */
 /** @defgroup DCMIPP_Histogram_Source  DCMIPP Histogram Source
   * @{
   */
-#define  DCMIPP_HISTO_SRC_BEFOR_BLK_LVL      (0U)
-#define  DCMIPP_HISTO_SRC_BEFOR_EXPOSURE     (1U)
-#define  DCMIPP_HISTO_SRC_BEFOR_DEMOSAICING  (2U)
-#define  DCMIPP_HISTO_SRC_BEFOR_CLR_CONV     (3U)
-#define  DCMIPP_HISTO_SRC_BEFOR_CONTRAST     (4U)
-#define  DCMIPP_HISTO_SRC_BEFOR_CROP         (5U)
-#define  DCMIPP_HISTO_SRC_AFTR_INPUT_DECIM   (DCMIPP_HISTO_SRC_BEFOR_BLK_LVL)
-#define  DCMIPP_HISTO_SRC_AFTR_BLK_LVL       (DCMIPP_HISTO_SRC_BEFOR_EXPOSURE)
-#define  DCMIPP_HISTO_SRC_AFTR_EXPOSURE      (DCMIPP_HISTO_SRC_BEFOR_DEMOSAICING)
-#define  DCMIPP_HISTO_SRC_AFTR_DEMOSAICING   (DCMIPP_HISTO_SRC_BEFOR_CLR_CONV)
-#define  DCMIPP_HISTO_SRC_AFTR_CLR_CONV      (DCMIPP_HISTO_SRC_BEFOR_CONTRAST)
-#define  DCMIPP_HISTO_SRC_AFTR_CONTRAST      (DCMIPP_HISTO_SRC_BEFOR_CROP)
+#define  DCMIPP_HISTO_SRC_AFTR_INPUT_DECIM   (0U) /*!< Histogram Source after input Decimation or before black level  */
+#define  DCMIPP_HISTO_SRC_AFTR_BLK_LVL       (1U) /*!< Histogram Source after Black Level or before Exposure          */
+#define  DCMIPP_HISTO_SRC_AFTR_EXPOSURE      (2U) /*!< Histogram Source after Exposure or before Demosaicing          */
+#define  DCMIPP_HISTO_SRC_AFTR_DEMOSAICING   (3U) /*!< Histogram Source after Demosaicing or before Colour conversion */
+#define  DCMIPP_HISTO_SRC_AFTR_CLR_CONV      (4U) /*!< Histogram Source after Colour conversion or before Contrast    */
+#define  DCMIPP_HISTO_SRC_AFTR_CONTRAST      (5U) /*!< Histogram Source after Contrast or before Crop                 */
 /**
   * @}
   */
 /** @defgroup DCMIPP_Histogram_Dynamic  DCMIPP Histogram Dynamic
   * @{
   */
-#define  DCMIPP_HISTO_PIX_DYN_13_TO_6   (0U)
-#define  DCMIPP_HISTO_PIX_DYN_11_TO_4   (1U)
-#define  DCMIPP_HISTO_PIX_DYN_9_TO_2    (2U)
-#define  DCMIPP_HISTO_PIX_DYN_7_TO_0    (3U)
+#define  DCMIPP_HISTO_PIX_DYN_13_TO_6   (0U) /*!< Histogram Dynamic to extract a histogram of the light pixel values      */
+#define  DCMIPP_HISTO_PIX_DYN_11_TO_4   (1U) /*!< Histogram Dynamic to extract a histogram of the semi light pixel values */
+#define  DCMIPP_HISTO_PIX_DYN_9_TO_2    (2U) /*!< Histogram Dynamic to extract a histogram of the semi dark pixel values  */
+#define  DCMIPP_HISTO_PIX_DYN_7_TO_0    (3U) /*!< Histogram Dynamic to extract a histogram of the dark pixel values       */
 /**
   * @}
   */
 /** @defgroup DCMIPP_Histogram_Bins  DCMIPP Histogram Bins
   * @{
   */
-#define  DCMIPP_HISTO_4_BINS_PER_HISTOGRM      (0U)
-#define  DCMIPP_HISTO_16_BINS_PER_HISTOGRM     (1U)
-#define  DCMIPP_HISTO_64_BINS_PER_HISTOGRM     (2U)
-#define  DCMIPP_HISTO_256_BINS_PER_HISTOGRM    (3U)
+#define  DCMIPP_HISTO_4_BINS      (0U) /*!< 4 bins per histogram   */
+#define  DCMIPP_HISTO_16_BINS     (1U) /*!< 16 bins per histogram  */
+#define  DCMIPP_HISTO_64_BINS     (2U) /*!< 64 bins per histogram  */
+#define  DCMIPP_HISTO_256_BINS    (3U) /*!< 256 bins per histogram */
 /**
   * @}
   */
 /** @defgroup DCMIPP_Histogram_Vertical_Regions  DCMIPP Histogram Vertical Regions
   * @{
   */
-#define  DCMIPP_HISTO_1_VERTICAL_REGION_PER_FRAME      (0U)
-#define  DCMIPP_HISTO_2_VERTICAL_REGION_PER_FRAME      (1U)
-#define  DCMIPP_HISTO_3_VERTICAL_REGION_PER_FRAME      (2U)
-#define  DCMIPP_HISTO_4_VERTICAL_REGION_PER_FRAME      (3U)
-#define  DCMIPP_HISTO_5_VERTICAL_REGION_PER_FRAME      (4U)
-#define  DCMIPP_HISTO_6_VERTICAL_REGION_PER_FRAME      (5U)
-#define  DCMIPP_HISTO_7_VERTICAL_REGION_PER_FRAME      (6U)
-#define  DCMIPP_HISTO_8_VERTICAL_REGION_PER_FRAME      (7U)
-#define  DCMIPP_HISTO_9_VERTICAL_REGION_PER_FRAME      (8U)
-#define  DCMIPP_HISTO_10_VERTICAL_REGION_PER_FRAME     (9U)
-#define  DCMIPP_HISTO_11_VERTICAL_REGION_PER_FRAME     (10U)
-#define  DCMIPP_HISTO_12_VERTICAL_REGION_PER_FRAME     (11U)
-#define  DCMIPP_HISTO_13_VERTICAL_REGION_PER_FRAME     (12U)
-#define  DCMIPP_HISTO_14_VERTICAL_REGION_PER_FRAME     (13U)
-#define  DCMIPP_HISTO_15_VERTICAL_REGION_PER_FRAME     (14U)
-#define  DCMIPP_HISTO_16_VERTICAL_REGION_PER_FRAME     (15U)
+#define  DCMIPP_HISTO_1_VERTICAL_REGION_PER_FRAME      (0U)   /*!< 1 vertical region per frame  */
+#define  DCMIPP_HISTO_2_VERTICAL_REGIONS_PER_FRAME      (1U)  /*!< 2 vertical regions per frame  */
+#define  DCMIPP_HISTO_3_VERTICAL_REGIONS_PER_FRAME      (2U)  /*!< 3 vertical regions per frame  */
+#define  DCMIPP_HISTO_4_VERTICAL_REGIONS_PER_FRAME      (3U)  /*!< 4 vertical regions per frame  */
+#define  DCMIPP_HISTO_5_VERTICAL_REGIONS_PER_FRAME      (4U)  /*!< 5 vertical regions per frame  */
+#define  DCMIPP_HISTO_6_VERTICAL_REGIONS_PER_FRAME      (5U)  /*!< 6 vertical regions per frame  */
+#define  DCMIPP_HISTO_7_VERTICAL_REGIONS_PER_FRAME      (6U)  /*!< 7 vertical regions per frame  */
+#define  DCMIPP_HISTO_8_VERTICAL_REGIONS_PER_FRAME      (7U)  /*!< 8 vertical regions per frame  */
+#define  DCMIPP_HISTO_9_VERTICAL_REGIONS_PER_FRAME      (8U)  /*!< 9 vertical regions per frame  */
+#define  DCMIPP_HISTO_10_VERTICAL_REGIONS_PER_FRAME     (9U)  /*!< 10 vertical regions per frame */
+#define  DCMIPP_HISTO_11_VERTICAL_REGIONS_PER_FRAME     (10U) /*!< 11 vertical regions per frame */
+#define  DCMIPP_HISTO_12_VERTICAL_REGIONS_PER_FRAME     (11U) /*!< 12 vertical regions per frame */
+#define  DCMIPP_HISTO_13_VERTICAL_REGIONS_PER_FRAME     (12U) /*!< 13 vertical regions per frame */
+#define  DCMIPP_HISTO_14_VERTICAL_REGIONS_PER_FRAME     (13U) /*!< 14 vertical regions per frame */
+#define  DCMIPP_HISTO_15_VERTICAL_REGIONS_PER_FRAME     (14U) /*!< 15 vertical regions per frame */
+#define  DCMIPP_HISTO_16_VERTICAL_REGIONS_PER_FRAME     (15U) /*!< 16 vertical regions per frame */
 /**
   * @}
   */
 /** @defgroup DCMIPP_Histogram_Horizontal_Regions  DCMIPP Histogram Horizontal Regions
   * @{
   */
-#define  DCMIPP_HISTO_1_HORIZONTAL_REGION_PER_FRAME      (0U)
-#define  DCMIPP_HISTO_2_HORIZONTAL_REGION_PER_FRAME      (1U)
-#define  DCMIPP_HISTO_3_HORIZONTAL_REGION_PER_FRAME      (2U)
-#define  DCMIPP_HISTO_4_HORIZONTAL_REGION_PER_FRAME      (3U)
-#define  DCMIPP_HISTO_5_HORIZONTAL_REGION_PER_FRAME      (4U)
-#define  DCMIPP_HISTO_6_HORIZONTAL_REGION_PER_FRAME      (5U)
-#define  DCMIPP_HISTO_7_HORIZONTAL_REGION_PER_FRAME      (6U)
-#define  DCMIPP_HISTO_8_HORIZONTAL_REGION_PER_FRAME      (7U)
-#define  DCMIPP_HISTO_9_HORIZONTAL_REGION_PER_FRAME      (8U)
-#define  DCMIPP_HISTO_10_HORIZONTAL_REGION_PER_FRAME     (9U)
-#define  DCMIPP_HISTO_11_HORIZONTAL_REGION_PER_FRAME     (10U)
-#define  DCMIPP_HISTO_12_HORIZONTAL_REGION_PER_FRAME     (11U)
-#define  DCMIPP_HISTO_13_HORIZONTAL_REGION_PER_FRAME     (12U)
-#define  DCMIPP_HISTO_14_HORIZONTAL_REGION_PER_FRAME     (13U)
-#define  DCMIPP_HISTO_15_HORIZONTAL_REGION_PER_FRAME     (14U)
-#define  DCMIPP_HISTO_16_HORIZONTAL_REGION_PER_FRAME     (15U)
+#define  DCMIPP_HISTO_1_HORIZONTAL_REGION_PER_FRAME      (0U)   /*!< 1 horizontal region per frame  */
+#define  DCMIPP_HISTO_2_HORIZONTAL_REGIONS_PER_FRAME      (1U)  /*!< 2 horizontal regions per frame  */
+#define  DCMIPP_HISTO_3_HORIZONTAL_REGIONS_PER_FRAME      (2U)  /*!< 3 horizontal regions per frame  */
+#define  DCMIPP_HISTO_4_HORIZONTAL_REGIONS_PER_FRAME      (3U)  /*!< 4 horizontal regions per frame  */
+#define  DCMIPP_HISTO_5_HORIZONTAL_REGIONS_PER_FRAME      (4U)  /*!< 5 horizontal regions per frame  */
+#define  DCMIPP_HISTO_6_HORIZONTAL_REGIONS_PER_FRAME      (5U)  /*!< 6 horizontal regions per frame  */
+#define  DCMIPP_HISTO_7_HORIZONTAL_REGIONS_PER_FRAME      (6U)  /*!< 7 horizontal regions per frame  */
+#define  DCMIPP_HISTO_8_HORIZONTAL_REGIONS_PER_FRAME      (7U)  /*!< 8 horizontal regions per frame  */
+#define  DCMIPP_HISTO_9_HORIZONTAL_REGIONS_PER_FRAME      (8U)  /*!< 9 horizontal regions per frame  */
+#define  DCMIPP_HISTO_10_HORIZONTAL_REGIONS_PER_FRAME     (9U)  /*!< 10 horizontal regions per frame */
+#define  DCMIPP_HISTO_11_HORIZONTAL_REGIONS_PER_FRAME     (10U) /*!< 11 horizontal regions per frame */
+#define  DCMIPP_HISTO_12_HORIZONTAL_REGIONS_PER_FRAME     (11U) /*!< 12 horizontal regions per frame */
+#define  DCMIPP_HISTO_13_HORIZONTAL_REGIONS_PER_FRAME     (12U) /*!< 13 horizontal regions per frame */
+#define  DCMIPP_HISTO_14_HORIZONTAL_REGIONS_PER_FRAME     (13U) /*!< 14 horizontal regions per frame */
+#define  DCMIPP_HISTO_15_HORIZONTAL_REGIONS_PER_FRAME     (14U) /*!< 15 horizontal regions per frame */
+#define  DCMIPP_HISTO_16_HORIZONTAL_REGIONS_PER_FRAME     (15U) /*!< 16 horizontal regions per frame */
 /**
   * @}
   */
-#endif /* DCMIPPP_P1HISTOGRAM_AVAILABLE */
+#endif /* DCMIPP_P1HISTOGRAM_SUPPORT */
 /** @defgroup DCMIPP_Interrupt_Sources  DCMIPP Interrupt sources
   * @{
   */
@@ -1469,11 +1475,11 @@ typedef void (*pDCMIPP_PIPE_CallbackTypeDef)(DCMIPP_HandleTypeDef *hdcmipp, uint
 #define DCMIPP_IT_PIPE1_FRAME         DCMIPP_CMIER_P1FRAMEIE /*!< Frame capture interrupt complete for pipe1 */
 #define DCMIPP_IT_PIPE1_VSYNC         DCMIPP_CMIER_P1VSYNCIE /*!< Vertical sync interrupt for pipe1          */
 #define DCMIPP_IT_PIPE1_OVR           DCMIPP_CMIER_P1OVRIE   /*!< Overrun interrupt for pipe1                */
-#if defined(DCMIPPP_P1HISTOGRAM_AVAILABLE)
+#if defined(DCMIPP_P1HISTOGRAM_SUPPORT)
 #define DCMIPP_IT_PIPE1_STATS          DCMIPP_CMIER_STFRAMEIE   /*!< Histogram Capture interrupt for pipe1    */
 #define DCMIPP_IT_PIPE1_STATS_OVR      DCMIPP_CMIER_STOVRIE     /*!< Histogram Overrun interrupt for pipe1    */
 #define DCMIPP_IT_PIPE1_STATS_BAD_CFG  DCMIPP_CMIER_STBCIE      /*!< Histogram Bad Config interrupt for pipe1 */
-#endif /* DCMIPPP_P1HISTOGRAM_AVAILABLE */
+#endif /* DCMIPP_P1HISTOGRAM_SUPPORT */
 #define DCMIPP_IT_PIPE2_LINE          DCMIPP_CMIER_P2LINEIE  /*!< Multiline capture interrupt for pipe2      */
 #define DCMIPP_IT_PIPE2_FRAME         DCMIPP_CMIER_P2FRAMEIE /*!< Frame capture interrupt complete for pipe2 */
 #define DCMIPP_IT_PIPE2_VSYNC         DCMIPP_CMIER_P2VSYNCIE /*!< Vertical synch interrupt for pipe2         */
@@ -1497,11 +1503,11 @@ typedef void (*pDCMIPP_PIPE_CallbackTypeDef)(DCMIPP_HandleTypeDef *hdcmipp, uint
 #define DCMIPP_FLAG_PIPE1_FRAME       DCMIPP_CMSR2_P1FRAMEF  /*!< Frame capture interrupt complete for pipe1 flag     */
 #define DCMIPP_FLAG_PIPE1_VSYNC       DCMIPP_CMSR2_P1VSYNCF  /*!< Vertical synch interrupt for pipe1 flag             */
 #define DCMIPP_FLAG_PIPE1_OVR         DCMIPP_CMSR2_P1OVRF    /*!< Overrun interrupt for pipe1 flag                    */
-#if defined(DCMIPPP_P1HISTOGRAM_AVAILABLE)
-#define DCMIPP_FLAG_PIPE1_STATS          DCMIPP_CMSR2_STFRAMEF  /*!< Histogram capture complete interrupt               */
-#define DCMIPP_FLAG_PIPE1_STATS_OVR      DCMIPP_CMSR2_STOVRF    /*!< Histogram overrun interrupt                        */
-#define DCMIPP_FLAG_PIPE1_STATS_BAD_CFG  DCMIPP_CMSR2_STBCF     /*!< Histogram Bad Configuration interrupt              */
-#endif /* DCMIPPP_P1HISTOGRAM_AVAILABLE */
+#if defined(DCMIPP_P1HISTOGRAM_SUPPORT)
+#define DCMIPP_FLAG_PIPE1_STATS          DCMIPP_CMSR2_STFRAMEF  /*!< Histogram capture complete interrupt             */
+#define DCMIPP_FLAG_PIPE1_STATS_OVR      DCMIPP_CMSR2_STOVRF    /*!< Histogram overrun interrupt                      */
+#define DCMIPP_FLAG_PIPE1_STATS_BAD_CFG  DCMIPP_CMSR2_STBCF     /*!< Histogram Bad Configuration interrupt            */
+#endif /* DCMIPP_P1HISTOGRAM_SUPPORT */
 #define DCMIPP_FLAG_PIPE2_LINE        DCMIPP_CMSR2_P2LINEF   /*!< Multiline capture interrupt for pipe2 flag          */
 #define DCMIPP_FLAG_PIPE2_FRAME       DCMIPP_CMSR2_P2FRAMEF  /*!< Frame capture interrupt complete for pipe2 flag     */
 #define DCMIPP_FLAG_PIPE2_VSYNC       DCMIPP_CMSR2_P2VSYNCF  /*!< Vertical synch interrupt for pipe2 flag             */
@@ -1509,6 +1515,7 @@ typedef void (*pDCMIPP_PIPE_CallbackTypeDef)(DCMIPP_HandleTypeDef *hdcmipp, uint
 /**
   * @}
   */
+#if defined(DCMIPP_CSI2_SUPPORT)
 /** @defgroup DCMIPP_CSI_Interrupt_Sources  DCMIPP CSI Interrupt sources
   * @{
   */
@@ -1595,6 +1602,7 @@ typedef void (*pDCMIPP_PIPE_CallbackTypeDef)(DCMIPP_HandleTypeDef *hdcmipp, uint
 /**
   * @}
   */
+#endif /* DCMIPP_CSI2_SUPPORT */
 
 /**
   * @}
@@ -1744,7 +1752,7 @@ typedef void (*pDCMIPP_PIPE_CallbackTypeDef)(DCMIPP_HandleTypeDef *hdcmipp, uint
 /**
   * @}
   */
-
+#if defined(DCMIPP_CSI2_SUPPORT)
 /** @defgroup DCMIPP_CSI_Exported_Macros DCMIPP CSI Exported Macros
   * @brief    DCMIPP CSI Exported Macros
   * @{
@@ -2009,6 +2017,7 @@ typedef void (*pDCMIPP_PIPE_CallbackTypeDef)(DCMIPP_HandleTypeDef *hdcmipp, uint
 /**
   * @}
   */
+#endif /* DCMIPP_CSI2_SUPPORT */
 /* Exported functions --------------------------------------------------------*/
 /** @addtogroup DCMIPP_Exported_Functions
   * @{
@@ -2026,25 +2035,26 @@ void HAL_DCMIPP_MspDeInit(DCMIPP_HandleTypeDef *hdcmipp);
   * @}
   */
 
-/** @defgroup DCMIPP_Configuration_Functions DCMIPP Configuration Functions
+/** @addtogroup DCMIPP_Configuration_Functions DCMIPP Configuration Functions
   * @brief    Configuration Functions
   * @{
   */
 
 HAL_StatusTypeDef HAL_DCMIPP_PARALLEL_SetConfig(DCMIPP_HandleTypeDef *hdcmipp,
                                                 const DCMIPP_ParallelConfTypeDef *pParallelConfig);
+#if defined(DCMIPP_CSI2_SUPPORT)
 HAL_StatusTypeDef HAL_DCMIPP_CSI_PIPE_SetConfig(DCMIPP_HandleTypeDef *hdcmipp,
                                                 uint32_t Pipe, const DCMIPP_CSI_PIPE_ConfTypeDef
                                                 *pCSI_PipeConfig);
 HAL_StatusTypeDef HAL_DCMIPP_CSI_SetConfig(DCMIPP_HandleTypeDef *hdcmipp, const DCMIPP_CSI_ConfTypeDef *pCSI_Config);
 HAL_StatusTypeDef HAL_DCMIPP_CSI_SetVCFilteringConfig(DCMIPP_HandleTypeDef *hdcmipp,
                                                       uint32_t VirtualChannel,
-                                                      DCMIPP_CSI_VCFilteringConfTypeDef
+                                                      const DCMIPP_CSI_VCFilteringConfTypeDef
                                                       *pVCFilteringConfig);
 HAL_StatusTypeDef HAL_DCMIPP_CSI_SetVCConfig(DCMIPP_HandleTypeDef *hdcmipp,
                                              uint32_t VirtualChannel,
                                              uint32_t DataTypeFormat);
-
+#endif /* DCMIPP_CSI2_SUPPORT */
 
 HAL_StatusTypeDef HAL_DCMIPP_PIPE_SetConfig(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe,
                                             const DCMIPP_PipeConfTypeDef *pPipeConfig);
@@ -2053,7 +2063,7 @@ HAL_StatusTypeDef HAL_DCMIPP_SetIPPlugConfig(DCMIPP_HandleTypeDef *hdcmipp,
 /**
   * @}
   */
-/** @defgroup DCMIPP_TPG_Configuration_Functions DCMIPP TPG Configuration Functions
+/** @addtogroup DCMIPP_TPG_Configuration_Functions DCMIPP TPG Configuration Functions
   * @brief    TPG Configuration Functions
   * @{
   */
@@ -2070,14 +2080,18 @@ HAL_StatusTypeDef  HAL_DCMIPP_TPG_Disable(DCMIPP_HandleTypeDef *hdcmipp);
   */
 HAL_StatusTypeDef HAL_DCMIPP_PIPE_Start(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe, uint32_t DstAddress,
                                         uint32_t CaptureMode);
+
+#if defined(DCMIPP_CSI2_SUPPORT)
 HAL_StatusTypeDef HAL_DCMIPP_CSI_PIPE_Start(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe, uint32_t VirtualChannel,
                                             uint32_t DstAddress, uint32_t CaptureMode);
+#endif /* DCMIPP_CSI2_SUPPORT */
 HAL_StatusTypeDef HAL_DCMIPP_PIPE_SemiPlanarStart(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe,
                                                   DCMIPP_SemiPlanarDstAddressTypeDef *pSemiPlanarDstAddress,
                                                   uint32_t CaptureMode);
 HAL_StatusTypeDef HAL_DCMIPP_PIPE_FullPlanarStart(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe,
                                                   DCMIPP_FullPlanarDstAddressTypeDef *pFullPlanarDstAddress,
                                                   uint32_t CaptureMode);
+#if defined(DCMIPP_CSI2_SUPPORT)
 HAL_StatusTypeDef HAL_DCMIPP_CSI_PIPE_SemiPlanarStart(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe,
                                                       uint32_t VirtualChannel,
                                                       DCMIPP_SemiPlanarDstAddressTypeDef *pSemiPlanarDstAddress,
@@ -2086,8 +2100,11 @@ HAL_StatusTypeDef HAL_DCMIPP_CSI_PIPE_FullPlanarStart(DCMIPP_HandleTypeDef *hdcm
                                                       uint32_t VirtualChannel,
                                                       DCMIPP_FullPlanarDstAddressTypeDef *pFullPlanarDstAddress,
                                                       uint32_t CaptureMode);
+#endif /* DCMIPP_CSI2_SUPPORT */
 HAL_StatusTypeDef HAL_DCMIPP_PIPE_Stop(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe);
+#if defined(DCMIPP_CSI2_SUPPORT)
 HAL_StatusTypeDef HAL_DCMIPP_CSI_PIPE_Stop(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe, uint32_t VirtualChannel);
+#endif /* DCMIPP_CSI2_SUPPORT */
 HAL_StatusTypeDef HAL_DCMIPP_PIPE_Suspend(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe);
 HAL_StatusTypeDef HAL_DCMIPP_PIPE_Resume(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe);
 
@@ -2106,31 +2123,32 @@ void HAL_DCMIPP_IRQHandler(DCMIPP_HandleTypeDef *hdcmipp);
 /**
   * @}
   */
-/** @defgroup DCMIPP_CSI_IRQHandler_Function  CSI IRQHandler Function
+#if defined(DCMIPP_CSI2_SUPPORT)
+/** @addtogroup DCMIPP_CSI_IRQHandler_Function  CSI IRQHandler Function
   * @{
   */
 void HAL_DCMIPP_CSI_IRQHandler(DCMIPP_HandleTypeDef *hdcmipp);
 /**
   * @}
   */
-/** @defgroup DCMIPP_Callback_Functions Callback Functions
+#endif /* DCMIPP_CSI2_SUPPORT */
+/** @addtogroup DCMIPP_Callback_Functions Callback Functions
   * @{
   */
 void HAL_DCMIPP_PIPE_FrameEventCallback(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe);
 void HAL_DCMIPP_PIPE_VsyncEventCallback(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe);
 void HAL_DCMIPP_PIPE_LineEventCallback(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe);
 void HAL_DCMIPP_PIPE_LimitEventCallback(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe);
-#if defined(DCMIPPP_P1HISTOGRAM_AVAILABLE)
+#if defined(DCMIPP_P1HISTOGRAM_SUPPORT)
 void HAL_DCMIPP_PIPE_HistogramEventCallback(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe);
-void HAL_DCMIPP_PIPE_HistogramErrorCallback(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe, uint32_t Error);
-#endif /* DCMIPPP_P1HISTOGRAM_AVAILABLE */
+#endif /* DCMIPP_P1HISTOGRAM_SUPPORT */
 void HAL_DCMIPP_PIPE_ErrorCallback(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe);
 void HAL_DCMIPP_ErrorCallback(DCMIPP_HandleTypeDef *hdcmipp);
 /**
   * @}
   */
-
-/** @defgroup DCMIPP_CSI_Callback_Functions CSI Callback Functions
+#if defined(DCMIPP_CSI2_SUPPORT)
+/** @addtogroup DCMIPP_CSI_Callback_Functions CSI Callback Functions
   * @{
   */
 void HAL_DCMIPP_CSI_StartOfFrameEventCallback(DCMIPP_HandleTypeDef *hdcmipp, uint32_t VirtualChannel);
@@ -2143,7 +2161,8 @@ void HAL_DCMIPP_CSI_ShortPacketDetectionEventCallback(DCMIPP_HandleTypeDef *hdcm
 /**
   * @}
   */
-/** @defgroup DCMIPP_RegisterCallback_Functions Register Callback Functions
+#endif /* DCMIPP_CSI2_SUPPORT */
+/** @addtogroup DCMIPP_RegisterCallback_Functions Register Callback Functions
   * @{
   */
 /* Callbacks Register/UnRegister functions  ***********************************/
@@ -2167,7 +2186,7 @@ HAL_StatusTypeDef HAL_DCMIPP_PIPE_UnRegisterCallback(DCMIPP_HandleTypeDef *hdcmi
   * @}
   */
 
-/** @defgroup DCMIPP_Decimation_Functions DCMIPP Decimation Functions
+/** @addtogroup DCMIPP_Decimation_Functions DCMIPP Decimation Functions
   * @{
   */
 HAL_StatusTypeDef HAL_DCMIPP_PIPE_SetBytesDecimationConfig(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe,
@@ -2186,7 +2205,7 @@ HAL_StatusTypeDef HAL_DCMIPP_PIPE_DisableDecimation(DCMIPP_HandleTypeDef *hdcmip
 /**
   * @}
   */
-/** @defgroup DCMIPP_Crop_Functions DCMIPP Crop Functions
+/** @addtogroup DCMIPP_Crop_Functions DCMIPP Crop Functions
   * @{
   */
 HAL_StatusTypeDef HAL_DCMIPP_PIPE_SetCropConfig(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe,
@@ -2196,7 +2215,7 @@ HAL_StatusTypeDef HAL_DCMIPP_PIPE_DisableCrop(DCMIPP_HandleTypeDef *hdcmipp, uin
 /**
   * @}
   */
-/** @defgroup DCMIPP_Line_Event_Functions DCMIPP Line Event Functions
+/** @addtogroup DCMIPP_Line_Event_Functions DCMIPP Line Event Functions
   * @{
   */
 HAL_StatusTypeDef HAL_DCMIPP_PIPE_EnableLineEvent(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe, uint32_t Line);
@@ -2204,7 +2223,7 @@ HAL_StatusTypeDef HAL_DCMIPP_PIPE_DisableLineEvent(DCMIPP_HandleTypeDef *hdcmipp
 /**
   * @}
   */
-/** @defgroup DCMIPP_LimitEvent_Functions DCMIPP Limit Event Functions
+/** @addtogroup DCMIPP_LimitEvent_Functions DCMIPP Limit Event Functions
   * @{
   */
 HAL_StatusTypeDef HAL_DCMIPP_PIPE_EnableLimitEvent(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe, uint32_t Limit);
@@ -2212,26 +2231,26 @@ HAL_StatusTypeDef HAL_DCMIPP_PIPE_DisableLimitEvent(DCMIPP_HandleTypeDef *hdcmip
 /**
   * @}
   */
-/** @defgroup DCMIPP_Statistic_Functions DCMIPP Statistic Functions
+/** @addtogroup DCMIPP_Statistic_Functions DCMIPP Statistic Functions
   * @{
   */
-HAL_StatusTypeDef HAL_DCMIPP_PIPE_SetISPControlStatisticExtractionConfig(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe,
-                                                                         uint8_t ModuleID, const
-                                                                         DCMIPP_StatisticExtractionControlConfTypeDef
-                                                                         *pStatisticExtractionControlConfig);
+HAL_StatusTypeDef HAL_DCMIPP_PIPE_SetISPStatisticExtractionConfig(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe,
+                                                                  uint8_t ModuleID, const
+                                                                  DCMIPP_StatisticExtractionConfTypeDef
+                                                                  *pStatisticExtractionConfig);
 HAL_StatusTypeDef HAL_DCMIPP_PIPE_SetISPAreaStatisticExtractionConfig(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe,
                                                                       const DCMIPP_StatisticExtractionAreaConfTypeDef
                                                                       *pStatisticExtractionAreaConfig);
-HAL_StatusTypeDef HAL_DCMIPP_PIPE_EnableISPStatisticExtractionModule(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe,
-                                                                     uint8_t ModuleID);
-HAL_StatusTypeDef HAL_DCMIPP_PIPE_DisableISPStatisticExtractionModule(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe,
-                                                                      uint8_t ModuleID);
+HAL_StatusTypeDef HAL_DCMIPP_PIPE_EnableISPStatisticExtraction(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe,
+                                                               uint8_t ModuleID);
+HAL_StatusTypeDef HAL_DCMIPP_PIPE_DisableISPStatisticExtraction(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe,
+                                                                uint8_t ModuleID);
 HAL_StatusTypeDef HAL_DCMIPP_PIPE_EnableISPAreaStatisticExtraction(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe);
 HAL_StatusTypeDef HAL_DCMIPP_PIPE_DisableISPAreaStatisticExtraction(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe);
 /**
   * @}
   */
-/** @defgroup DCMIPP_Down_Size_Functions DCMIPP Down Size Functions
+/** @addtogroup DCMIPP_Down_Size_Functions DCMIPP Down Size Functions
   * @{
   */
 HAL_StatusTypeDef HAL_DCMIPP_PIPE_SetDownsizeConfig(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe,
@@ -2241,7 +2260,7 @@ HAL_StatusTypeDef HAL_DCMIPP_PIPE_EnableDownsize(DCMIPP_HandleTypeDef *hdcmipp, 
 /**
   * @}
   */
-/** @defgroup DCMIPP_Black_Level_Calibration_Functions DCMIPP Black Level Calibration Functions
+/** @addtogroup DCMIPP_Black_Level_Calibration_Functions DCMIPP Black Level Calibration Functions
   * @{
   */
 HAL_StatusTypeDef HAL_DCMIPP_PIPE_SetISPBlackLevelCalibrationConfig(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe,
@@ -2252,7 +2271,7 @@ HAL_StatusTypeDef HAL_DCMIPP_PIPE_EnableISPBlackLevelCalibration(DCMIPP_HandleTy
 /**
   * @}
   */
-/** @defgroup DCMIPP_Black_Enable_Gamma_Conversion_Functions DCMIPP Enable Gamma Conversion Functions
+/** @addtogroup DCMIPP_Black_Enable_Gamma_Conversion_Functions DCMIPP Enable Gamma Conversion Functions
   * @{
   */
 HAL_StatusTypeDef HAL_DCMIPP_PIPE_EnableGammaConversion(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe);
@@ -2261,7 +2280,7 @@ uint32_t HAL_DCMIPP_PIPE_IsEnabledGammaConversion(const DCMIPP_HandleTypeDef *hd
 /**
   * @}
   */
-/** @defgroup DCMIPP_Bad_Pixel_Removal_Functions DCMIPP Bad Pixel Removal Functions
+/** @addtogroup DCMIPP_Bad_Pixel_Removal_Functions DCMIPP Bad Pixel Removal Functions
   * @{
   */
 HAL_StatusTypeDef HAL_DCMIPP_PIPE_SetISPBadPixelRemovalConfig(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe,
@@ -2271,7 +2290,7 @@ HAL_StatusTypeDef HAL_DCMIPP_PIPE_EnableISPBadPixelRemoval(DCMIPP_HandleTypeDef 
 /**
   * @}
   */
-/** @defgroup DCMIPP_Contrast_Control_Functions DCMIPP Contrast Control Functions
+/** @addtogroup DCMIPP_Contrast_Control_Functions DCMIPP Contrast Control Functions
   * @{
   */
 HAL_StatusTypeDef HAL_DCMIPP_PIPE_SetISPCtrlContrastConfig(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe,
@@ -2281,7 +2300,7 @@ HAL_StatusTypeDef HAL_DCMIPP_PIPE_DisableISPCtrlContrast(DCMIPP_HandleTypeDef *h
 /**
   * @}
   */
-/** @defgroup DCMIPP_Exposure_Control_Functions DCMIPP Exposure Control Functions
+/** @addtogroup DCMIPP_Exposure_Control_Functions DCMIPP Exposure Control Functions
   * @{
   */
 HAL_StatusTypeDef HAL_DCMIPP_PIPE_SetISPExposureConfig(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe,
@@ -2291,7 +2310,7 @@ HAL_StatusTypeDef HAL_DCMIPP_PIPE_DisableISPExposure(DCMIPP_HandleTypeDef *hdcmi
 /**
   * @}
   */
-/** @defgroup DCMIPP_Statistic_Removal_Functions DCMIPP Statistic Removal Functions
+/** @addtogroup DCMIPP_Statistic_Removal_Functions DCMIPP Statistic Removal Functions
   * @{
   */
 HAL_StatusTypeDef HAL_DCMIPP_PIPE_SetISPRemovalStatisticConfig(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe,
@@ -2301,7 +2320,7 @@ HAL_StatusTypeDef HAL_DCMIPP_PIPE_DisableISPRemovalStatistic(DCMIPP_HandleTypeDe
 /**
   * @}
   */
-/** @defgroup DCMIPP_RAW_2_RGB_Functions DCMIPP RAW 2 RGB Functions
+/** @addtogroup DCMIPP_RAW_2_RGB_Functions DCMIPP RAW 2 RGB Functions
   * @{
   */
 HAL_StatusTypeDef HAL_DCMIPP_PIPE_SetISPRawBayer2RGBConfig(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe,
@@ -2311,7 +2330,7 @@ HAL_StatusTypeDef HAL_DCMIPP_PIPE_EnableISPRawBayer2RGB(DCMIPP_HandleTypeDef *hd
 /**
   * @}
   */
-/** @defgroup DCMIPP_YUV_Conversion_Functions DCMIPP YUV Conversion Functions
+/** @addtogroup DCMIPP_YUV_Conversion_Functions DCMIPP YUV Conversion Functions
   * @{
   */
 HAL_StatusTypeDef HAL_DCMIPP_PIPE_SetYUVConversionConfig(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe,
@@ -2322,7 +2341,7 @@ HAL_StatusTypeDef HAL_DCMIPP_PIPE_EnableYUVConversion(DCMIPP_HandleTypeDef *hdcm
 /**
   * @}
   */
-/** @defgroup DCMIPP_Color_Conversion_Functions DCMIPP Color Conversion Functions
+/** @addtogroup DCMIPP_Color_Conversion_Functions DCMIPP Color Conversion Functions
   * @{
   */
 HAL_StatusTypeDef HAL_DCMIPP_PIPE_SetISPColorConversionConfig(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe,
@@ -2338,10 +2357,10 @@ void HAL_DCMIPP_PIPE_GetISPDecimationConfig(const DCMIPP_HandleTypeDef *hdcmipp,
 void HAL_DCMIPP_PIPE_GetISPBlackLevelCalibrationConfig(const DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe,
                                                        DCMIPP_BlackLevelConfTypeDef *pBlackLevelConfig);
 uint32_t HAL_DCMIPP_PIPE_GetISPBadPixelRemovalConfig(const DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe);
-void HAL_DCMIPP_PIPE_GetISPControlStatisticExtractionConfig(const DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe,
-                                                            uint8_t ModuleID,
-                                                            DCMIPP_StatisticExtractionControlConfTypeDef
-                                                            *pStatisticExtractionControlConfig);
+void HAL_DCMIPP_PIPE_GetISPStatisticExtractionConfig(const DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe,
+                                                     uint8_t ModuleID,
+                                                     DCMIPP_StatisticExtractionConfTypeDef
+                                                     *pStatisticExtractionConfig);
 void HAL_DCMIPP_PIPE_GetISPAreaStatisticExtractionConfig(const DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe,
                                                          DCMIPP_StatisticExtractionAreaConfTypeDef
                                                          *pStatisticExtractionAreaConfig);
@@ -2355,10 +2374,6 @@ void HAL_DCMIPP_PIPE_GetISPColorConversionConfig(const DCMIPP_HandleTypeDef *hdc
                                                  DCMIPP_ColorConversionConfTypeDef *pColorConversionConfig);
 void HAL_DCMIPP_PIPE_GetISPRemovalStatisticConfig(const DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe,
                                                   uint32_t *NbFirstLines, uint32_t *NbLastLines);
-#if defined(DCMIPPP_P1HISTOGRAM_AVAILABLE)
-void HAL_DCMIPP_PIPE_GetHistogramConfig(const DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe,
-                                        DCMIPP_Histogram_ConfigTypeDef *pHistogramConfig);
-#endif /* DCMIPPP_P1HISTOGRAM_AVAILABLE */
 uint32_t HAL_DCMIPP_PIPE_IsEnabledISPRemovalStatistic(const DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe);
 uint32_t HAL_DCMIPP_PIPE_IsEnabledISPBadPixelRemoval(const DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe);
 uint32_t HAL_DCMIPP_PIPE_IsEnabledISPDecimation(const DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe);
@@ -2367,12 +2382,12 @@ uint32_t HAL_DCMIPP_PIPE_IsEnabledISPExposure(const DCMIPP_HandleTypeDef *hdcmip
 uint32_t HAL_DCMIPP_PIPE_IsEnabledISPRawBayer2RGB(const DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe);
 uint32_t HAL_DCMIPP_PIPE_IsEnabledISPColorConversion(const DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe);
 uint32_t HAL_DCMIPP_PIPE_IsEnabledISPCtrlContrast(const DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe);
-uint32_t HAL_DCMIPP_PIPE_IsEnabledISPStatisticExtractionModule(const DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe,
-                                                               uint8_t ModuleID);
+uint32_t HAL_DCMIPP_PIPE_IsEnabledISPStatisticExtraction(const DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe,
+                                                         uint8_t ModuleID);
 uint32_t HAL_DCMIPP_PIPE_IsEnabledISPAreaStatisticExtraction(const DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe);
 
 
-/** @defgroup DCMIPP_PeripheralControl_Functions DCMIPP Peripheral Control Functions
+/** @addtogroup DCMIPP_PeripheralControl_Functions DCMIPP Peripheral Control Functions
   * @{
   */
 HAL_StatusTypeDef HAL_DCMIPP_PIPE_SetFrameRate(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe, uint32_t FrameRate);
@@ -2399,35 +2414,51 @@ HAL_StatusTypeDef HAL_DCMIPP_PIPE_CSI_SetVirtualChannelID(DCMIPP_HandleTypeDef *
                                                           uint32_t VirtualChannelID);
 HAL_StatusTypeDef HAL_DCMIPP_PARALLEL_SetSyncUnmask(DCMIPP_HandleTypeDef *hdcmipp,
                                                     const DCMIPP_EmbeddedSyncUnmaskTypeDef *SyncUnmask);
+#if defined(DCMIPP_CSI2_SUPPORT)
 HAL_StatusTypeDef HAL_DCMIPP_CSI_SetLineByteCounterConfig(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Counter,
-                                                          DCMIPP_CSI_LineByteCounterConfTypeDef *pLineByteConfig);
+                                                          const DCMIPP_CSI_LineByteCounterConfTypeDef *pLineByteConfig);
 HAL_StatusTypeDef HAL_DCMIPP_CSI_EnableLineByteCounter(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Counter);
 HAL_StatusTypeDef HAL_DCMIPP_CSI_DisableLineByteCounter(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Counter);
 HAL_StatusTypeDef HAL_DCMIPP_CSI_SetTimerConfig(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Timer,
-                                                DCMIPP_CSI_TimerConfTypeDef *TimerConfig);
+                                                const DCMIPP_CSI_TimerConfTypeDef *TimerConfig);
 HAL_StatusTypeDef HAL_DCMIPP_CSI_EnableTimer(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Timer);
 HAL_StatusTypeDef HAL_DCMIPP_CSI_DisableTimer(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Timer);
 HAL_StatusTypeDef HAL_DCMIPP_CSI_SetWatchdogCounterConfig(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Counter);
+#endif /* DCMIPP_CSI2_SUPPORT */
 
 HAL_StatusTypeDef HAL_DCMIPP_PIPE_EnablePAD(DCMIPP_HandleTypeDef *hdcmipp,  uint32_t Pipe);
 HAL_StatusTypeDef HAL_DCMIPP_PIPE_DisablePAD(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe);
-HAL_StatusTypeDef HAL_DCMIPP_PIPE_PARALLEL_EnableComponentsSwap(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe);
-HAL_StatusTypeDef HAL_DCMIPP_PIPE_PARALLEL_DisableComponentsSwap(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe);
+HAL_StatusTypeDef HAL_DCMIPP_PIPE_EnableComponentsSwap(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe);
+HAL_StatusTypeDef HAL_DCMIPP_PIPE_DisableComponentsSwap(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe);
 HAL_StatusTypeDef HAL_DCMIPP_PIPE_DisableRedBlueSwap(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe);
 HAL_StatusTypeDef HAL_DCMIPP_PIPE_EnableRedBlueSwap(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe);
 HAL_StatusTypeDef HAL_DCMIPP_PIPE_DisableYUVSwap(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe);
 HAL_StatusTypeDef HAL_DCMIPP_PIPE_EnableYUVSwap(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe);
-#if defined(DCMIPPP_P1HISTOGRAM_AVAILABLE)
-HAL_StatusTypeDef HAL_DCMIPP_PIPE_SetHistogramConfig(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe,
-                                                     DCMIPP_Histogram_ConfigTypeDef *pHistoConfig);
-HAL_StatusTypeDef  HAL_DCMIPP_PIPE_HistogramEnable(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe);
-HAL_StatusTypeDef  HAL_DCMIPP_PIPE_HistogramDisable(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe);
-#endif /* DCMIPPP_P1HISTOGRAM_AVAILABLE */
 /**
   * @}
   */
+#if defined(DCMIPP_P1HISTOGRAM_SUPPORT)
+/** @addtogroup DCMIPP_Histogram_Functions DCMIPP Histogram Functions
+  * @{
+  */
+HAL_StatusTypeDef HAL_DCMIPP_PIPE_SetISPHistoConfig(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe,
+                                                    const DCMIPP_Histogram_ConfTypeDef *pHistoConfig);
+HAL_StatusTypeDef HAL_DCMIPP_PIPE_SetISPHistoRegionConfig(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe,
+                                                          const DCMIPP_Histogram_RegionConfTypeDef *pHistoRegConfig);
+HAL_StatusTypeDef  HAL_DCMIPP_PIPE_EnableHistogram(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe);
+HAL_StatusTypeDef  HAL_DCMIPP_PIPE_DisableHistogram(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe);
+void HAL_DCMIPP_PIPE_GetISPHistoConfig(const DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe,
+                                       DCMIPP_Histogram_ConfTypeDef *pHistogramConfig);
+void HAL_DCMIPP_PIPE_GetISPHistoRegionConfig(const DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe,
+                                             DCMIPP_Histogram_RegionConfTypeDef *pHistogramRegionConfig);
+void HAL_DCMIPP_PIPE_GetISPHistoLastAddress(const DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe,
+                                            uint32_t *pAddress);
+/**
+  * @}
+  */
+#endif /* DCMIPP_P1HISTOGRAM_SUPPORT */
 
-/** @defgroup DCMIPP_Frame_Counter_Functions DCMIPP Frame Counter Functions
+/** @addtogroup DCMIPP_Frame_Counter_Functions DCMIPP Frame Counter Functions
   * @{
   */
 HAL_StatusTypeDef HAL_DCMIPP_PIPE_SetFrameCounterConfig(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe);
@@ -2437,7 +2468,7 @@ HAL_StatusTypeDef HAL_DCMIPP_PIPE_ReadFrameCounter(const DCMIPP_HandleTypeDef *h
 /**
   * @}
   */
-/** @defgroup DCMIPP_Data_Counter_Functions DCMIPP Data Counter Functions
+/** @addtogroup DCMIPP_Data_Counter_Functions DCMIPP Data Counter Functions
   * @{
   */
 HAL_StatusTypeDef HAL_DCMIPP_PIPE_GetDataCounter(const DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe,
@@ -2449,7 +2480,9 @@ HAL_StatusTypeDef HAL_DCMIPP_PIPE_GetISPRemovedBadPixelCounter(const DCMIPP_Hand
                                                                uint32_t *pCounter);
 HAL_StatusTypeDef HAL_DCMIPP_PIPE_GetISPAccumulatedStatisticsCounter(const DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe,
                                                                      uint8_t ModuleID, uint32_t *pCounter);
+#if defined(DCMIPP_CSI2_SUPPORT)
 uint32_t HAL_DCMIPP_GetMode(const DCMIPP_HandleTypeDef *hdcmipp);
+#endif /* DCMIPP_CSI2_SUPPORT */
 
 /** @addtogroup DCMIPP_State_and_Error_Functions DCMIPP State and Error Functions
   * @{
@@ -2524,7 +2557,7 @@ uint32_t HAL_DCMIPP_GetError(const DCMIPP_HandleTypeDef *hdcmipp);
 
 #define IS_DCMIPP_SWAP_CYCLES(SWAP_CYCLES) (((SWAP_CYCLES) == DCMIPP_SWAPCYCLES_ENABLE) ||\
                                             ((SWAP_CYCLES) == DCMIPP_SWAPCYCLES_DISABLE))
-
+#if defined(DCMIPP_CSI2_SUPPORT)
 #define IS_DCMIPP_VCID(VCID) (((VCID) == DCMIPP_VIRTUAL_CHANNEL0) ||\
                               ((VCID) == DCMIPP_VIRTUAL_CHANNEL1) ||\
                               ((VCID) == DCMIPP_VIRTUAL_CHANNEL2) ||\
@@ -2564,13 +2597,7 @@ uint32_t HAL_DCMIPP_GetError(const DCMIPP_HandleTypeDef *hdcmipp);
                                                           ((DATA_TYPE_FORMAT) == DCMIPP_CSI_DT_BPP12) ||\
                                                           ((DATA_TYPE_FORMAT) == DCMIPP_CSI_DT_BPP14) ||\
                                                           ((DATA_TYPE_FORMAT) == DCMIPP_CSI_DT_BPP16))
-#define IS_DCMIPP_CSI_DATA_CLASS(DATA_TYPE_CLASS)(((DATA_TYPE_CLASS) == DCMIPP_CSI_DT1)||\
-                                                  ((DATA_TYPE_CLASS) == DCMIPP_CSI_DT2)||\
-                                                  ((DATA_TYPE_CLASS) == DCMIPP_CSI_DT3)||\
-                                                  ((DATA_TYPE_CLASS) == DCMIPP_CSI_DT4)||\
-                                                  ((DATA_TYPE_CLASS) == DCMIPP_CSI_DT5)||\
-                                                  ((DATA_TYPE_CLASS) == DCMIPP_CSI_DT6)||\
-                                                  ((DATA_TYPE_CLASS) == DCMIPP_CSI_DT7))
+#define IS_DCMIPP_CSI_DATA_CLASS(DATA_TYPE_CLASS)((DATA_TYPE_CLASS) <= 0x3FU)
 #define IS_DCMIPP_CSI_COUNTER(COUNTER) (((COUNTER) == DCMIPP_CSI_COUNTER0) ||\
                                         ((COUNTER) == DCMIPP_CSI_COUNTER1) ||\
                                         ((COUNTER) == DCMIPP_CSI_COUNTER2) ||\
@@ -2584,13 +2611,13 @@ uint32_t HAL_DCMIPP_GetError(const DCMIPP_HandleTypeDef *hdcmipp);
                                     ((TIMER) == DCMIPP_CSI_TIMER3))
 #define IS_DCMIPP_CSI_TIMER_START(TIMER_START) (((TIMER_START) == DCMIPP_CSI_TIMER_START_SOF)||\
                                                 ((TIMER_START) == DCMIPP_CSI_TIMER_START_EOF))
-
+#endif /* DCMIPP_CSI2_SUPPORT */
 
 #define IS_DCMIPP_FRAME_RATE(FRAME_RATE) (((FRAME_RATE) == DCMIPP_FRAME_RATE_ALL)      ||\
                                           ((FRAME_RATE) == DCMIPP_FRAME_RATE_1_OVER_2) ||\
                                           ((FRAME_RATE) == DCMIPP_FRAME_RATE_1_OVER_4) ||\
                                           ((FRAME_RATE) == DCMIPP_FRAME_RATE_1_OVER_8))
-#if defined(DCMIPPP_P1HISTOGRAM_AVAILABLE)
+#if defined(DCMIPP_P1HISTOGRAM_SUPPORT)
 #define IS_DCMIPP_CLIENT(CLIENT) (((CLIENT) == DCMIPP_CLIENT1) ||\
                                   ((CLIENT) == DCMIPP_CLIENT2) ||\
                                   ((CLIENT) == DCMIPP_CLIENT3) ||\
@@ -2603,7 +2630,7 @@ uint32_t HAL_DCMIPP_GetError(const DCMIPP_HandleTypeDef *hdcmipp);
                                   ((CLIENT) == DCMIPP_CLIENT3) ||\
                                   ((CLIENT) == DCMIPP_CLIENT4) ||\
                                   ((CLIENT) == DCMIPP_CLIENT5))
-#endif /* DCMIPPP_P1HISTOGRAM_AVAILABLE */
+#endif /* DCMIPP_P1HISTOGRAM_SUPPORT */
 #define IS_DCMIPP_DPREG_END(DPREG_END) ((DPREG_END) <= 0x3FFU)
 #define IS_DCMIPP_DPREG_START(DPREG_START) ((DPREG_START) <= 0x3FFU)
 
@@ -2786,80 +2813,73 @@ uint32_t HAL_DCMIPP_GetError(const DCMIPP_HandleTypeDef *hdcmipp);
 
 #define IS_DCMIPP_PIPE_STAT_EXTRACTION_START(START) ((START) <= 0xFFFU)
 #define IS_DCMIPP_PIPE_STAT_EXTRACTION_SIZE(SIZE) ((SIZE) <= 0xFFFU)
-#if defined(DCMIPPP_P1HISTOGRAM_AVAILABLE)
-#define IS_DCMIPP_HISTO_BINS(BINS)     (((BINS) ==  DCMIPP_HISTO_4_BINS_PER_HISTOGRM) ||\
-                                        ((BINS) == DCMIPP_HISTO_16_BINS_PER_HISTOGRM) ||\
-                                        ((BINS) == DCMIPP_HISTO_64_BINS_PER_HISTOGRM) ||\
-                                        ((BINS) == DCMIPP_HISTO_256_BINS_PER_HISTOGRM))
+#if defined(DCMIPP_P1HISTOGRAM_SUPPORT)
+#define IS_DCMIPP_HISTO_BINS(BINS)     (((BINS) ==  DCMIPP_HISTO_4_BINS) ||\
+                                        ((BINS) == DCMIPP_HISTO_16_BINS) ||\
+                                        ((BINS) == DCMIPP_HISTO_64_BINS) ||\
+                                        ((BINS) == DCMIPP_HISTO_256_BINS))
 #define IS_DCMIPP_HISTO_COMP(COMP)     (((COMP) ==  DCMIPP_HISTO_COMP_SEL_R_R_V_128) ||\
                                         ((COMP) == DCMIPP_HISTO_COMP_SEL_GR_G_Y_Y) ||\
                                         ((COMP) == DCMIPP_HISTO_COMP_SEL_B_B_U_128) ||\
                                         ((COMP) == DCMIPP_HISTO_COMP_SEL_GB_L_L_L) ||\
                                         ((COMP) == DCMIPP_HISTO_COMP_SEL_ALL_FOUR))
-#define IS_DCMIPP_HISTO_HDEC(HDEC)    (((HDEC) ==  DCMIPP_HISTO_HDEC_NO_HDEC) ||\
-                                       ((HDEC) == DCMIPP_HISTO_HDEC_1_PIXL_OUT_OF_2) ||\
-                                       ((HDEC) == DCMIPP_HISTO_HDEC_1_PIXL_OUT_OF_4) ||\
-                                       ((HDEC) == DCMIPP_HISTO_HDEC_1_PIXL_OUT_OF_8) ||\
-                                       ((HDEC) == DCMIPP_HISTO_HDEC_1_PIXL_OUT_OF_16))
-#define IS_DCMIPP_HISTO_VDEC(VDEC)    (((VDEC) ==  DCMIPP_HISTO_VDEC_NO_VDEC) ||\
-                                       ((VDEC) == DCMIPP_HISTO_VDEC_1_LINE_OUT_OF_2) ||\
-                                       ((VDEC) == DCMIPP_HISTO_VDEC_1_LINE_OUT_OF_4) ||\
-                                       ((VDEC) == DCMIPP_HISTO_VDEC_1_LINE_OUT_OF_8) ||\
-                                       ((VDEC) == DCMIPP_HISTO_VDEC_1_LINE_OUT_OF_16))
+#define IS_DCMIPP_HISTO_HDEC(HORDEC)    (((HORDEC) ==  DCMIPP_HISTO_HDEC_NONE) ||\
+                                         ((HORDEC) == DCMIPP_HISTO_HDEC_1_PIXL_OUT_OF_2) ||\
+                                         ((HORDEC) == DCMIPP_HISTO_HDEC_1_PIXL_OUT_OF_4) ||\
+                                         ((HORDEC) == DCMIPP_HISTO_HDEC_1_PIXL_OUT_OF_8) ||\
+                                         ((HORDEC) == DCMIPP_HISTO_HDEC_1_PIXL_OUT_OF_16))
+#define IS_DCMIPP_HISTO_VDEC(VERDEC)    (((VERDEC) ==  DCMIPP_HISTO_VDEC_NONE) ||\
+                                         ((VERDEC) == DCMIPP_HISTO_VDEC_1_LINE_OUT_OF_2) ||\
+                                         ((VERDEC) == DCMIPP_HISTO_VDEC_1_LINE_OUT_OF_4) ||\
+                                         ((VERDEC) == DCMIPP_HISTO_VDEC_1_LINE_OUT_OF_8) ||\
+                                         ((VERDEC) == DCMIPP_HISTO_VDEC_1_LINE_OUT_OF_16))
 #define IS_DCMIPP_HISTO_PXL_DYN(DYN)  (((DYN) ==  DCMIPP_HISTO_PIX_DYN_13_TO_6) ||\
                                        ((DYN) == DCMIPP_HISTO_PIX_DYN_11_TO_4) ||\
                                        ((DYN) == DCMIPP_HISTO_PIX_DYN_9_TO_2) ||\
                                        ((DYN) == DCMIPP_HISTO_PIX_DYN_7_TO_0))
 #define IS_DCMIPP_HISTO_VREG(VREG)    (((VREG) == DCMIPP_HISTO_1_VERTICAL_REGION_PER_FRAME) ||\
-                                       ((VREG) == DCMIPP_HISTO_2_VERTICAL_REGION_PER_FRAME) ||\
-                                       ((VREG) == DCMIPP_HISTO_3_VERTICAL_REGION_PER_FRAME) ||\
-                                       ((VREG) == DCMIPP_HISTO_4_VERTICAL_REGION_PER_FRAME) ||\
-                                       ((VREG) == DCMIPP_HISTO_5_VERTICAL_REGION_PER_FRAME) ||\
-                                       ((VREG) == DCMIPP_HISTO_6_VERTICAL_REGION_PER_FRAME) ||\
-                                       ((VREG) == DCMIPP_HISTO_7_VERTICAL_REGION_PER_FRAME) ||\
-                                       ((VREG) == DCMIPP_HISTO_8_VERTICAL_REGION_PER_FRAME) ||\
-                                       ((VREG) == DCMIPP_HISTO_9_VERTICAL_REGION_PER_FRAME) ||\
-                                       ((VREG) == DCMIPP_HISTO_10_VERTICAL_REGION_PER_FRAME) ||\
-                                       ((VREG) == DCMIPP_HISTO_11_VERTICAL_REGION_PER_FRAME) ||\
-                                       ((VREG) == DCMIPP_HISTO_12_VERTICAL_REGION_PER_FRAME) ||\
-                                       ((VREG) == DCMIPP_HISTO_13_VERTICAL_REGION_PER_FRAME) ||\
-                                       ((VREG) == DCMIPP_HISTO_14_VERTICAL_REGION_PER_FRAME) ||\
-                                       ((VREG) == DCMIPP_HISTO_15_VERTICAL_REGION_PER_FRAME) ||\
-                                       ((VREG) == DCMIPP_HISTO_16_VERTICAL_REGION_PER_FRAME))
-#define IS_DCMIPP_HISTO_HREG(HREG)  (((HREG) == DCMIPP_HISTO_1_VERTICAL_REGION_PER_FRAME) ||\
-                                     ((HREG) == DCMIPP_HISTO_2_HORIZONTAL_REGION_PER_FRAME) ||\
-                                     ((HREG) == DCMIPP_HISTO_3_HORIZONTAL_REGION_PER_FRAME) ||\
-                                     ((HREG) == DCMIPP_HISTO_4_HORIZONTAL_REGION_PER_FRAME) ||\
-                                     ((HREG) == DCMIPP_HISTO_5_HORIZONTAL_REGION_PER_FRAME) ||\
-                                     ((HREG) == DCMIPP_HISTO_6_HORIZONTAL_REGION_PER_FRAME) ||\
-                                     ((HREG) == DCMIPP_HISTO_7_HORIZONTAL_REGION_PER_FRAME) ||\
-                                     ((HREG) == DCMIPP_HISTO_8_HORIZONTAL_REGION_PER_FRAME) ||\
-                                     ((HREG) == DCMIPP_HISTO_9_HORIZONTAL_REGION_PER_FRAME) ||\
-                                     ((HREG) == DCMIPP_HISTO_10_HORIZONTAL_REGION_PER_FRAME) ||\
-                                     ((HREG) == DCMIPP_HISTO_11_HORIZONTAL_REGION_PER_FRAME) ||\
-                                     ((HREG) == DCMIPP_HISTO_12_HORIZONTAL_REGION_PER_FRAME) ||\
-                                     ((HREG) == DCMIPP_HISTO_13_HORIZONTAL_REGION_PER_FRAME) ||\
-                                     ((HREG) == DCMIPP_HISTO_14_HORIZONTAL_REGION_PER_FRAME) ||\
-                                     ((HREG) == DCMIPP_HISTO_15_HORIZONTAL_REGION_PER_FRAME) ||\
-                                     ((HREG) == DCMIPP_HISTO_16_HORIZONTAL_REGION_PER_FRAME))
-#define IS_DCMIPP_HISTO_SRC(SRC)     (((SRC) ==  DCMIPP_HISTO_SRC_BEFOR_BLK_LVL) ||\
-                                      ((SRC) == DCMIPP_HISTO_SRC_BEFOR_EXPOSURE     ) ||\
-                                      ((SRC) == DCMIPP_HISTO_SRC_BEFOR_DEMOSAICING  ) ||\
-                                      ((SRC) == DCMIPP_HISTO_SRC_BEFOR_CLR_CONV     ) ||\
-                                      ((SRC) == DCMIPP_HISTO_SRC_BEFOR_CONTRAST      ) ||\
-                                      ((SRC) == DCMIPP_HISTO_SRC_BEFOR_CROP              ) ||\
-                                      ((SRC) == DCMIPP_HISTO_SRC_AFTR_INPUT_DECIM        ) ||\
+                                       ((VREG) == DCMIPP_HISTO_2_VERTICAL_REGIONS_PER_FRAME) ||\
+                                       ((VREG) == DCMIPP_HISTO_3_VERTICAL_REGIONS_PER_FRAME) ||\
+                                       ((VREG) == DCMIPP_HISTO_4_VERTICAL_REGIONS_PER_FRAME) ||\
+                                       ((VREG) == DCMIPP_HISTO_5_VERTICAL_REGIONS_PER_FRAME) ||\
+                                       ((VREG) == DCMIPP_HISTO_6_VERTICAL_REGIONS_PER_FRAME) ||\
+                                       ((VREG) == DCMIPP_HISTO_7_VERTICAL_REGIONS_PER_FRAME) ||\
+                                       ((VREG) == DCMIPP_HISTO_8_VERTICAL_REGIONS_PER_FRAME) ||\
+                                       ((VREG) == DCMIPP_HISTO_9_VERTICAL_REGIONS_PER_FRAME) ||\
+                                       ((VREG) == DCMIPP_HISTO_10_VERTICAL_REGIONS_PER_FRAME) ||\
+                                       ((VREG) == DCMIPP_HISTO_11_VERTICAL_REGIONS_PER_FRAME) ||\
+                                       ((VREG) == DCMIPP_HISTO_12_VERTICAL_REGIONS_PER_FRAME) ||\
+                                       ((VREG) == DCMIPP_HISTO_13_VERTICAL_REGIONS_PER_FRAME) ||\
+                                       ((VREG) == DCMIPP_HISTO_14_VERTICAL_REGIONS_PER_FRAME) ||\
+                                       ((VREG) == DCMIPP_HISTO_15_VERTICAL_REGIONS_PER_FRAME) ||\
+                                       ((VREG) == DCMIPP_HISTO_16_VERTICAL_REGIONS_PER_FRAME))
+#define IS_DCMIPP_HISTO_HREG(HREG)  (((HREG) == DCMIPP_HISTO_1_HORIZONTAL_REGION_PER_FRAME) ||\
+                                     ((HREG) == DCMIPP_HISTO_2_HORIZONTAL_REGIONS_PER_FRAME) ||\
+                                     ((HREG) == DCMIPP_HISTO_3_HORIZONTAL_REGIONS_PER_FRAME) ||\
+                                     ((HREG) == DCMIPP_HISTO_4_HORIZONTAL_REGIONS_PER_FRAME) ||\
+                                     ((HREG) == DCMIPP_HISTO_5_HORIZONTAL_REGIONS_PER_FRAME) ||\
+                                     ((HREG) == DCMIPP_HISTO_6_HORIZONTAL_REGIONS_PER_FRAME) ||\
+                                     ((HREG) == DCMIPP_HISTO_7_HORIZONTAL_REGIONS_PER_FRAME) ||\
+                                     ((HREG) == DCMIPP_HISTO_8_HORIZONTAL_REGIONS_PER_FRAME) ||\
+                                     ((HREG) == DCMIPP_HISTO_9_HORIZONTAL_REGIONS_PER_FRAME) ||\
+                                     ((HREG) == DCMIPP_HISTO_10_HORIZONTAL_REGIONS_PER_FRAME) ||\
+                                     ((HREG) == DCMIPP_HISTO_11_HORIZONTAL_REGIONS_PER_FRAME) ||\
+                                     ((HREG) == DCMIPP_HISTO_12_HORIZONTAL_REGIONS_PER_FRAME) ||\
+                                     ((HREG) == DCMIPP_HISTO_13_HORIZONTAL_REGIONS_PER_FRAME) ||\
+                                     ((HREG) == DCMIPP_HISTO_14_HORIZONTAL_REGIONS_PER_FRAME) ||\
+                                     ((HREG) == DCMIPP_HISTO_15_HORIZONTAL_REGIONS_PER_FRAME) ||\
+                                     ((HREG) == DCMIPP_HISTO_16_HORIZONTAL_REGIONS_PER_FRAME))
+#define IS_DCMIPP_HISTO_SRC(SRC)     (((SRC) == DCMIPP_HISTO_SRC_AFTR_INPUT_DECIM        ) ||\
                                       ((SRC) == DCMIPP_HISTO_SRC_AFTR_BLK_LVL            ) ||\
                                       ((SRC) == DCMIPP_HISTO_SRC_AFTR_EXPOSURE           ) ||\
                                       ((SRC) == DCMIPP_HISTO_SRC_AFTR_DEMOSAICING        ) ||\
                                       ((SRC) == DCMIPP_HISTO_SRC_AFTR_CLR_CONV           ) ||\
-                                      ((SRC) == DCMIPP_HISTO_SRC_BEFOR_CLR_CONV     ) ||\
                                       ((SRC) == DCMIPP_HISTO_SRC_AFTR_CONTRAST           ))
-#define IS_DCMIPP_HISTO_VSTART(VSTART) (((VSTART) >= 0U) && ((VSTART) < 0xFFFU))
-#define IS_DCMIPP_HISTO_HSTART(HSTART) (((HSTART) >= 0U) && ((HSTART) < 0xFFFU))
-#define IS_DCMIPP_HISTO_VSIZE(VSIZE)   (((VSIZE) >= 0U) && ((VSIZE) < 0xFFFU))
-#define IS_DCMIPP_HISTO_HSIZE(HSIZE)   (((HSIZE) >= 0U) && ((HSIZE) < 0xFFFU))
-#endif /* DCMIPPP_P1HISTOGRAM_AVAILABLE */
+#define IS_DCMIPP_HISTO_VSTART(VSTART) ((VSTART) < 0xFFFU)
+#define IS_DCMIPP_HISTO_HSTART(HSTART) ((HSTART) < 0xFFFU)
+#define IS_DCMIPP_HISTO_VSIZE(VSIZE)   ((VSIZE) < 0xFFFU)
+#define IS_DCMIPP_HISTO_HSIZE(HSIZE)   ((HSIZE) < 0xFFFU)
+#endif /* DCMIPP_P1HISTOGRAM_SUPPORT */
 
 /**
   * @}

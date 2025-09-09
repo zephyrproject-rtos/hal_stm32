@@ -195,8 +195,8 @@ static uint32_t ComputePLLClockFreq(const PLLInitTypeDef *pll)
   }
   else
   {
-    pll_output = (uint64_t) source_freq * ( ((1U << 24) * (uint64_t)(pll->FBDIV)) + (uint64_t)(pll->FRACIN) );
-    pll_output /= (1U << 24);
+    pll_output = (uint64_t) source_freq * ( ((1UL << 24) * (uint64_t)(pll->FBDIV)) + (uint64_t)(pll->FRACIN) );
+    pll_output /= (1UL << 24);
   }
   pll_output /= (uint64_t)((uint64_t)pll->FREFDIV * (uint64_t)pll->POSTDIV1 * (uint64_t)pll->POSTDIV2);
 

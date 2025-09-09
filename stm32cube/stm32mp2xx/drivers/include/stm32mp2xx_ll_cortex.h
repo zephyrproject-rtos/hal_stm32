@@ -1517,13 +1517,13 @@ __STATIC_INLINE void LL_MPU_ConfigAttributes(uint32_t AttIndex, uint32_t  Attrib
   if (AttIndex < LL_MPU_ATTRIBUTES_NUMBER4)
   {
     /* Modify Attr<i> field of MPU_MAIR0 accordingly */
-    MODIFY_REG(MPU->MAIR0, (0xFFU << (AttIndex * 8U)), (Attributes << (AttIndex * 8U)));
+    MODIFY_REG(MPU->MAIR0, (0xFFUL << (AttIndex * 8U)), (Attributes << (AttIndex * 8U)));
   }
   /* When selected index is in range [4;7] */
   else
   {
     /* Modify Attr<i> field of MPU_MAIR1 accordingly */
-    MODIFY_REG(MPU->MAIR1, (0xFFU << ((AttIndex - 4U) * 8U)), (Attributes << ((AttIndex - 4U) * 8U)));
+    MODIFY_REG(MPU->MAIR1, (0xFFUL << ((AttIndex - 4U) * 8U)), (Attributes << ((AttIndex - 4U) * 8U)));
   }
 }
 #endif /* defined(CORE_CM0PLUS) */

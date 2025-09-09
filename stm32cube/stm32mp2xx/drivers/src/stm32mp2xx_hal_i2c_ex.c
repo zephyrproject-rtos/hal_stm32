@@ -433,15 +433,10 @@ HAL_StatusTypeDef HAL_I2CEx_GetConfigAutonomousMode(const I2C_HandleTypeDef *hi2
   autocr_tmp = hi2c->Instance->AUTOCR;
 
   sConfig->TriggerState     = (autocr_tmp & I2C_AUTOCR_TRIGEN);
-#if defined(I2C_TRIG_GRP1) || defined(I2C_TRIG_GRP2) || defined(I2C_TRIG_GRP3)
-#if defined(I2C_TRIG_GRP3)
+#if defined(I2C_TRIG_GRP1) || defined(I2C_TRIG_GRP2)
 #if defined(I2C_TRIG_GRP2)
 #if defined(I2C_TRIG_GRP1)
-  if (IS_I2C_GRP3_INSTANCE(hi2c->Instance))
-  {
-    sConfig->TriggerSelection = ((autocr_tmp & I2C_AUTOCR_TRIGSEL) | I2C_TRIG_GRP3);
-  }
-  else if (IS_I2C_GRP2_INSTANCE(hi2c->Instance))
+  if (IS_I2C_GRP2_INSTANCE(hi2c->Instance))
   {
     sConfig->TriggerSelection = ((autocr_tmp & I2C_AUTOCR_TRIGSEL) | I2C_TRIG_GRP2);
   }
@@ -450,27 +445,13 @@ HAL_StatusTypeDef HAL_I2CEx_GetConfigAutonomousMode(const I2C_HandleTypeDef *hi2
     sConfig->TriggerSelection = ((autocr_tmp & I2C_AUTOCR_TRIGSEL) | I2C_TRIG_GRP1);
   }
 #else
-  if (IS_I2C_GRP3_INSTANCE(hi2c->Instance))
-  {
-    sConfig->TriggerSelection = ((autocr_tmp & I2C_AUTOCR_TRIGSEL) | I2C_TRIG_GRP3);
-  }
-  else
-  {
-    sConfig->TriggerSelection = ((autocr_tmp & I2C_AUTOCR_TRIGSEL) | I2C_TRIG_GRP2);
-  }
   sConfig->TriggerSelection = ((autocr_tmp & I2C_AUTOCR_TRIGSEL) | I2C_TRIG_GRP2);
 #endif /* I2C_TRIG_GRP1 */
 #else
-  sConfig->TriggerSelection = ((autocr_tmp & I2C_AUTOCR_TRIGSEL) | I2C_TRIG_GRP3);
-#endif /* I2C_TRIG_GRP2 */
-#else
   sConfig->TriggerSelection = ((autocr_tmp & I2C_AUTOCR_TRIGSEL) | I2C_TRIG_GRP1);
-#endif /* I2C_TRIG_GRP3*/
-#else
-  sConfig->TriggerSelection = (autocr_tmp & I2C_AUTOCR_TRIGSEL);
-#endif /* I2C_TRIG_GRP1 || I2C_TRIG_GRP2 || I2C_TRIG_GRP3 */
+#endif /* I2C_TRIG_GRP2 */
   sConfig->TriggerPolarity  = (autocr_tmp & I2C_AUTOCR_TRIGPOL);
-
+#endif /* defined(I2C_TRIG_GRP1) || defined(I2C_TRIG_GRP2) */
   return HAL_OK;
 }
 

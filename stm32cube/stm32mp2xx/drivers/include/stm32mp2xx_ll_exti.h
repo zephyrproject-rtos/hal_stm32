@@ -1571,9 +1571,6 @@ typedef struct
   */
 __STATIC_INLINE void LL_C1_EXTI_EnableIT_0_31(EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_0_31(EXTIx, ExtiLine));
   SET_BIT(EXTIx->C1IMR1, ExtiLine);
 }
 
@@ -1591,9 +1588,6 @@ __STATIC_INLINE void LL_C1_EXTI_EnableIT_0_31(EXTI_TypeDef *EXTIx, uint32_t Exti
   */
 __STATIC_INLINE void LL_C2_EXTI_EnableIT_0_31(EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_0_31(EXTIx, ExtiLine));
   SET_BIT(EXTIx->C2IMR1, ExtiLine);
 }
 
@@ -1611,9 +1605,6 @@ __STATIC_INLINE void LL_C2_EXTI_EnableIT_0_31(EXTI_TypeDef *EXTIx, uint32_t Exti
   */
 __STATIC_INLINE void LL_C3_EXTI_EnableIT_0_31(EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI2_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_0_31(EXTIx, ExtiLine));
   SET_BIT(EXTIx->C3IMR1, ExtiLine);
 }
 
@@ -1631,9 +1622,6 @@ __STATIC_INLINE void LL_C3_EXTI_EnableIT_0_31(EXTI_TypeDef *EXTIx, uint32_t Exti
   */
 __STATIC_INLINE void LL_C1_EXTI_EnableIT_32_63(EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_32_63(EXTIx, ExtiLine));
   SET_BIT(EXTIx->C1IMR2, ExtiLine);
 }
 
@@ -1651,9 +1639,6 @@ __STATIC_INLINE void LL_C1_EXTI_EnableIT_32_63(EXTI_TypeDef *EXTIx, uint32_t Ext
   */
 __STATIC_INLINE void LL_C2_EXTI_EnableIT_32_63(EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_32_63(EXTIx, ExtiLine));
   SET_BIT(EXTIx->C2IMR2, ExtiLine);
 }
 
@@ -1671,9 +1656,6 @@ __STATIC_INLINE void LL_C2_EXTI_EnableIT_32_63(EXTI_TypeDef *EXTIx, uint32_t Ext
   */
 __STATIC_INLINE void LL_C3_EXTI_EnableIT_32_63(EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI2_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_32_63(EXTIx, ExtiLine));
   SET_BIT(EXTIx->C3IMR2, ExtiLine);
 }
 
@@ -1691,9 +1673,6 @@ __STATIC_INLINE void LL_C3_EXTI_EnableIT_32_63(EXTI_TypeDef *EXTIx, uint32_t Ext
   */
 __STATIC_INLINE void LL_C1_EXTI_EnableIT_64_95(EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_64_95(EXTIx, ExtiLine));
   SET_BIT(EXTIx->C1IMR3, ExtiLine);
 }
 
@@ -1711,9 +1690,6 @@ __STATIC_INLINE void LL_C1_EXTI_EnableIT_64_95(EXTI_TypeDef *EXTIx, uint32_t Ext
   */
 __STATIC_INLINE void LL_C2_EXTI_EnableIT_64_95(EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_64_95(EXTIx, ExtiLine));
   SET_BIT(EXTIx->C2IMR3, ExtiLine);
 }
 
@@ -1731,9 +1707,6 @@ __STATIC_INLINE void LL_C2_EXTI_EnableIT_64_95(EXTI_TypeDef *EXTIx, uint32_t Ext
   */
 __STATIC_INLINE void LL_C3_EXTI_EnableIT_64_95(EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI2_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_64_95(EXTIx, ExtiLine));
   SET_BIT(EXTIx->C3IMR3, ExtiLine);
 }
 
@@ -1751,9 +1724,6 @@ __STATIC_INLINE void LL_C3_EXTI_EnableIT_64_95(EXTI_TypeDef *EXTIx, uint32_t Ext
   */
 __STATIC_INLINE void LL_C1_EXTI_DisableIT_0_31(EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_0_31(EXTIx, ExtiLine));
   CLEAR_BIT(EXTIx->C1IMR1, ExtiLine);
 }
 
@@ -1771,9 +1741,6 @@ __STATIC_INLINE void LL_C1_EXTI_DisableIT_0_31(EXTI_TypeDef *EXTIx, uint32_t Ext
   */
 __STATIC_INLINE void LL_C2_EXTI_DisableIT_0_31(EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_0_31(EXTIx, ExtiLine));
   CLEAR_BIT(EXTIx->C2IMR1, ExtiLine);
 }
 
@@ -1791,9 +1758,6 @@ __STATIC_INLINE void LL_C2_EXTI_DisableIT_0_31(EXTI_TypeDef *EXTIx, uint32_t Ext
   */
 __STATIC_INLINE void LL_C3_EXTI_DisableIT_0_31(EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI2_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_0_31(EXTIx, ExtiLine));
   CLEAR_BIT(EXTIx->C3IMR1, ExtiLine);
 }
 
@@ -1811,9 +1775,6 @@ __STATIC_INLINE void LL_C3_EXTI_DisableIT_0_31(EXTI_TypeDef *EXTIx, uint32_t Ext
   */
 __STATIC_INLINE void LL_C1_EXTI_DisableIT_32_63(EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_32_63(EXTIx, ExtiLine));
   CLEAR_BIT(EXTIx->C1IMR2, ExtiLine);
 }
 
@@ -1831,9 +1792,6 @@ __STATIC_INLINE void LL_C1_EXTI_DisableIT_32_63(EXTI_TypeDef *EXTIx, uint32_t Ex
   */
 __STATIC_INLINE void LL_C2_EXTI_DisableIT_32_63(EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_32_63(EXTIx, ExtiLine));
   CLEAR_BIT(EXTIx->C2IMR2, ExtiLine);
 }
 
@@ -1851,9 +1809,6 @@ __STATIC_INLINE void LL_C2_EXTI_DisableIT_32_63(EXTI_TypeDef *EXTIx, uint32_t Ex
   */
 __STATIC_INLINE void LL_C3_EXTI_DisableIT_32_63(EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI2_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_32_63(EXTIx, ExtiLine));
   CLEAR_BIT(EXTIx->C3IMR2, ExtiLine);
 }
 
@@ -1871,9 +1826,6 @@ __STATIC_INLINE void LL_C3_EXTI_DisableIT_32_63(EXTI_TypeDef *EXTIx, uint32_t Ex
   */
 __STATIC_INLINE void LL_C1_EXTI_DisableIT_64_95(EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_64_95(EXTIx, ExtiLine));
   CLEAR_BIT(EXTIx->C1IMR3, ExtiLine);
 }
 
@@ -1891,9 +1843,6 @@ __STATIC_INLINE void LL_C1_EXTI_DisableIT_64_95(EXTI_TypeDef *EXTIx, uint32_t Ex
   */
 __STATIC_INLINE void LL_C2_EXTI_DisableIT_64_95(EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_64_95(EXTIx, ExtiLine));
   CLEAR_BIT(EXTIx->C2IMR3, ExtiLine);
 }
 
@@ -1911,9 +1860,6 @@ __STATIC_INLINE void LL_C2_EXTI_DisableIT_64_95(EXTI_TypeDef *EXTIx, uint32_t Ex
   */
 __STATIC_INLINE void LL_C3_EXTI_DisableIT_64_95(EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI2_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_64_95(EXTIx, ExtiLine));
   CLEAR_BIT(EXTIx->C3IMR3, ExtiLine);
 }
 
@@ -1931,9 +1877,6 @@ __STATIC_INLINE void LL_C3_EXTI_DisableIT_64_95(EXTI_TypeDef *EXTIx, uint32_t Ex
   */
 __STATIC_INLINE uint32_t LL_C1_EXTI_IsEnabledIT_0_31(const EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_0_31(EXTIx, ExtiLine));
   return ((READ_BIT(EXTIx->C1IMR1, ExtiLine) == (ExtiLine)) ? 1UL : 0UL);
 }
 
@@ -1951,9 +1894,6 @@ __STATIC_INLINE uint32_t LL_C1_EXTI_IsEnabledIT_0_31(const EXTI_TypeDef *EXTIx, 
   */
 __STATIC_INLINE uint32_t LL_C2_EXTI_IsEnabledIT_0_31(const EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_0_31(EXTIx, ExtiLine));
   return ((READ_BIT(EXTIx->C2IMR1, ExtiLine) == (ExtiLine)) ? 1UL : 0UL);
 }
 
@@ -1971,9 +1911,6 @@ __STATIC_INLINE uint32_t LL_C2_EXTI_IsEnabledIT_0_31(const EXTI_TypeDef *EXTIx, 
   */
 __STATIC_INLINE uint32_t LL_C3_EXTI_IsEnabledIT_0_31(const EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI2_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_0_31(EXTIx, ExtiLine));
   return ((READ_BIT(EXTIx->C3IMR1, ExtiLine) == (ExtiLine)) ? 1UL : 0UL);
 }
 
@@ -1991,9 +1928,6 @@ __STATIC_INLINE uint32_t LL_C3_EXTI_IsEnabledIT_0_31(const EXTI_TypeDef *EXTIx, 
   */
 __STATIC_INLINE uint32_t LL_C1_EXTI_IsEnabledIT_32_63(const EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_32_63(EXTIx, ExtiLine));
   return ((READ_BIT(EXTIx->C1IMR2, ExtiLine) == (ExtiLine)) ? 1UL : 0UL);
 }
 
@@ -2011,9 +1945,6 @@ __STATIC_INLINE uint32_t LL_C1_EXTI_IsEnabledIT_32_63(const EXTI_TypeDef *EXTIx,
   */
 __STATIC_INLINE uint32_t LL_C2_EXTI_IsEnabledIT_32_63(const EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_32_63(EXTIx, ExtiLine));
   return ((READ_BIT(EXTIx->C2IMR2, ExtiLine) == (ExtiLine)) ? 1UL : 0UL);
 }
 
@@ -2031,9 +1962,6 @@ __STATIC_INLINE uint32_t LL_C2_EXTI_IsEnabledIT_32_63(const EXTI_TypeDef *EXTIx,
   */
 __STATIC_INLINE uint32_t LL_C3_EXTI_IsEnabledIT_32_63(const EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI2_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_32_63(EXTIx, ExtiLine));
   return ((READ_BIT(EXTIx->C3IMR2, ExtiLine) == (ExtiLine)) ? 1UL : 0UL);
 }
 
@@ -2051,9 +1979,6 @@ __STATIC_INLINE uint32_t LL_C3_EXTI_IsEnabledIT_32_63(const EXTI_TypeDef *EXTIx,
   */
 __STATIC_INLINE uint32_t LL_C1_EXTI_IsEnabledIT_64_95(const EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_64_95(EXTIx, ExtiLine));
   return ((READ_BIT(EXTIx->C1IMR3, ExtiLine) == (ExtiLine)) ? 1UL : 0UL);
 }
 
@@ -2071,9 +1996,6 @@ __STATIC_INLINE uint32_t LL_C1_EXTI_IsEnabledIT_64_95(const EXTI_TypeDef *EXTIx,
   */
 __STATIC_INLINE uint32_t LL_C2_EXTI_IsEnabledIT_64_95(const EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_64_95(EXTIx, ExtiLine));
   return ((READ_BIT(EXTIx->C2IMR3, ExtiLine) == (ExtiLine)) ? 1UL : 0UL);
 }
 
@@ -2091,9 +2013,6 @@ __STATIC_INLINE uint32_t LL_C2_EXTI_IsEnabledIT_64_95(const EXTI_TypeDef *EXTIx,
   */
 __STATIC_INLINE uint32_t LL_C3_EXTI_IsEnabledIT_64_95(const EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI2_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_64_95(EXTIx, ExtiLine));
   return ((READ_BIT(EXTIx->C3IMR3, ExtiLine) == (ExtiLine)) ? 1UL : 0UL);
 }
 
@@ -2120,9 +2039,6 @@ __STATIC_INLINE uint32_t LL_C3_EXTI_IsEnabledIT_64_95(const EXTI_TypeDef *EXTIx,
   */
 __STATIC_INLINE void LL_C2_EXTI_EnableEvent_0_31(EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_0_31(EXTIx, ExtiLine));
   SET_BIT(EXTIx->C2EMR1, ExtiLine);
 }
 
@@ -2140,9 +2056,6 @@ __STATIC_INLINE void LL_C2_EXTI_EnableEvent_0_31(EXTI_TypeDef *EXTIx, uint32_t E
   */
 __STATIC_INLINE void LL_C3_EXTI_EnableEvent_0_31(EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI2_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_0_31(EXTIx, ExtiLine));
   SET_BIT(EXTIx->C3EMR1, ExtiLine);
 }
 
@@ -2161,9 +2074,6 @@ __STATIC_INLINE void LL_C3_EXTI_EnableEvent_0_31(EXTI_TypeDef *EXTIx, uint32_t E
   */
 __STATIC_INLINE void LL_C2_EXTI_EnableEvent_32_63(EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI2_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_32_63(EXTIx, ExtiLine));
   SET_BIT(EXTIx->C2EMR2, ExtiLine);
 }
 
@@ -2181,9 +2091,6 @@ __STATIC_INLINE void LL_C2_EXTI_EnableEvent_32_63(EXTI_TypeDef *EXTIx, uint32_t 
   */
 __STATIC_INLINE void LL_C3_EXTI_EnableEvent_32_63(EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI2_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_32_63(EXTIx, ExtiLine));
   SET_BIT(EXTIx->C3EMR2, ExtiLine);
 }
 
@@ -2202,9 +2109,6 @@ __STATIC_INLINE void LL_C3_EXTI_EnableEvent_32_63(EXTI_TypeDef *EXTIx, uint32_t 
   */
 __STATIC_INLINE void LL_C2_EXTI_EnableEvent_64_95(EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI1_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_64_95(EXTIx, ExtiLine));
   SET_BIT(EXTIx->C2EMR3, ExtiLine);
 }
 
@@ -2223,9 +2127,6 @@ __STATIC_INLINE void LL_C2_EXTI_EnableEvent_64_95(EXTI_TypeDef *EXTIx, uint32_t 
   */
 __STATIC_INLINE void LL_C2_EXTI_DisableEvent_0_31(EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_0_31(EXTIx, ExtiLine));
   CLEAR_BIT(EXTIx->C2EMR1, ExtiLine);
 }
 
@@ -2243,9 +2144,6 @@ __STATIC_INLINE void LL_C2_EXTI_DisableEvent_0_31(EXTI_TypeDef *EXTIx, uint32_t 
   */
 __STATIC_INLINE void LL_C3_EXTI_DisableEvent_0_31(EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI2_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_0_31(EXTIx, ExtiLine));
   CLEAR_BIT(EXTIx->C3EMR1, ExtiLine);
 }
 
@@ -2264,9 +2162,6 @@ __STATIC_INLINE void LL_C3_EXTI_DisableEvent_0_31(EXTI_TypeDef *EXTIx, uint32_t 
   */
 __STATIC_INLINE void LL_C2_EXTI_DisableEvent_32_63(EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI2_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_32_63(EXTIx, ExtiLine));
   CLEAR_BIT(EXTIx->C2EMR2, ExtiLine);
 }
 
@@ -2284,9 +2179,6 @@ __STATIC_INLINE void LL_C2_EXTI_DisableEvent_32_63(EXTI_TypeDef *EXTIx, uint32_t
   */
 __STATIC_INLINE void LL_C3_EXTI_DisableEvent_32_63(EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI2_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_32_63(EXTIx, ExtiLine));
   CLEAR_BIT(EXTIx->C3EMR2, ExtiLine);
 }
 
@@ -2305,9 +2197,6 @@ __STATIC_INLINE void LL_C3_EXTI_DisableEvent_32_63(EXTI_TypeDef *EXTIx, uint32_t
   */
 __STATIC_INLINE void LL_C2_EXTI_DisableEvent_64_95(EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI1_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_64_95(EXTIx, ExtiLine));
   CLEAR_BIT(EXTIx->C2EMR3, ExtiLine);
 }
 
@@ -2326,9 +2215,6 @@ __STATIC_INLINE void LL_C2_EXTI_DisableEvent_64_95(EXTI_TypeDef *EXTIx, uint32_t
   */
 __STATIC_INLINE uint32_t LL_C2_EXTI_IsEnabledEvent_0_31(const EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_0_31(EXTIx, ExtiLine));
   return ((READ_BIT(EXTIx->C2EMR1, ExtiLine) == (ExtiLine)) ? 1UL : 0UL);
 }
 
@@ -2346,9 +2232,6 @@ __STATIC_INLINE uint32_t LL_C2_EXTI_IsEnabledEvent_0_31(const EXTI_TypeDef *EXTI
   */
 __STATIC_INLINE uint32_t LL_C3_EXTI_IsEnabledEvent_0_31(const EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI2_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_0_31(EXTIx, ExtiLine));
   return ((READ_BIT(EXTIx->C3EMR1, ExtiLine) == (ExtiLine)) ? 1UL : 0UL);
 }
 
@@ -2367,9 +2250,6 @@ __STATIC_INLINE uint32_t LL_C3_EXTI_IsEnabledEvent_0_31(const EXTI_TypeDef *EXTI
   */
 __STATIC_INLINE uint32_t LL_C2_EXTI_IsEnabledEvent_32_63(const EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI2_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_32_63(EXTIx, ExtiLine));
   return ((READ_BIT(EXTIx->C2EMR2, ExtiLine) == (ExtiLine)) ? 1UL : 0UL);
 }
 
@@ -2387,9 +2267,6 @@ __STATIC_INLINE uint32_t LL_C2_EXTI_IsEnabledEvent_32_63(const EXTI_TypeDef *EXT
   */
 __STATIC_INLINE uint32_t LL_C3_EXTI_IsEnabledEvent_32_63(const EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI2_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_32_63(EXTIx, ExtiLine));
   return ((READ_BIT(EXTIx->C3EMR2, ExtiLine) == (ExtiLine)) ? 1UL : 0UL);
 }
 
@@ -2408,9 +2285,6 @@ __STATIC_INLINE uint32_t LL_C3_EXTI_IsEnabledEvent_32_63(const EXTI_TypeDef *EXT
   */
 __STATIC_INLINE uint32_t LL_C2_EXTI_IsEnabledEvent_64_95(const EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI1_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_64_95(EXTIx, ExtiLine));
   return ((READ_BIT(EXTIx->C2EMR3, ExtiLine) == (ExtiLine)) ? 1UL : 0UL);
 }
 
@@ -2443,9 +2317,6 @@ __STATIC_INLINE uint32_t LL_C2_EXTI_IsEnabledEvent_64_95(const EXTI_TypeDef *EXT
   */
 __STATIC_INLINE void LL_EXTI_EnableRisingTrig_0_31(EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_0_31(EXTIx, ExtiLine));
   SET_BIT(EXTIx->RTSR1, ExtiLine);
 }
 
@@ -2469,9 +2340,6 @@ __STATIC_INLINE void LL_EXTI_EnableRisingTrig_0_31(EXTI_TypeDef *EXTIx, uint32_t
   */
 __STATIC_INLINE void LL_EXTI_EnableRisingTrig_32_63(EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_32_63(EXTIx, ExtiLine));
   SET_BIT(EXTIx->RTSR2, ExtiLine);
 }
 
@@ -2495,9 +2363,6 @@ __STATIC_INLINE void LL_EXTI_EnableRisingTrig_32_63(EXTI_TypeDef *EXTIx, uint32_
   */
 __STATIC_INLINE void LL_EXTI_EnableRisingTrig_64_95(EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_64_95(EXTIx, ExtiLine));
   SET_BIT(EXTIx->RTSR3, ExtiLine);
 }
 
@@ -2522,9 +2387,6 @@ __STATIC_INLINE void LL_EXTI_EnableRisingTrig_64_95(EXTI_TypeDef *EXTIx, uint32_
   */
 __STATIC_INLINE void LL_EXTI_DisableRisingTrig_0_31(EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_0_31(EXTIx, ExtiLine));
   CLEAR_BIT(EXTIx->RTSR1, ExtiLine);
 }
 
@@ -2549,9 +2411,6 @@ __STATIC_INLINE void LL_EXTI_DisableRisingTrig_0_31(EXTI_TypeDef *EXTIx, uint32_
   */
 __STATIC_INLINE void LL_EXTI_DisableRisingTrig_32_63(EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_32_63(EXTIx, ExtiLine));
   CLEAR_BIT(EXTIx->RTSR2, ExtiLine);
 }
 
@@ -2576,9 +2435,6 @@ __STATIC_INLINE void LL_EXTI_DisableRisingTrig_32_63(EXTI_TypeDef *EXTIx, uint32
   */
 __STATIC_INLINE void LL_EXTI_DisableRisingTrig_64_95(EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_64_95(EXTIx, ExtiLine));
   CLEAR_BIT(EXTIx->RTSR3, ExtiLine);
 }
 
@@ -2596,9 +2452,6 @@ __STATIC_INLINE void LL_EXTI_DisableRisingTrig_64_95(EXTI_TypeDef *EXTIx, uint32
   */
 __STATIC_INLINE uint32_t LL_EXTI_IsEnabledRisingTrig_0_31(const EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_0_31(EXTIx, ExtiLine));
   return ((READ_BIT(EXTIx->RTSR1, ExtiLine) == (ExtiLine)) ? 1UL : 0UL);
 }
 
@@ -2616,9 +2469,6 @@ __STATIC_INLINE uint32_t LL_EXTI_IsEnabledRisingTrig_0_31(const EXTI_TypeDef *EX
   */
 __STATIC_INLINE uint32_t LL_EXTI_IsEnabledRisingTrig_32_63(const EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_32_63(EXTIx, ExtiLine));
   return ((READ_BIT(EXTIx->RTSR2, ExtiLine) == (ExtiLine)) ? 1UL : 0UL);
 }
 
@@ -2636,9 +2486,6 @@ __STATIC_INLINE uint32_t LL_EXTI_IsEnabledRisingTrig_32_63(const EXTI_TypeDef *E
   */
 __STATIC_INLINE uint32_t LL_EXTI_IsEnabledRisingTrig_64_95(const EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_64_95(EXTIx, ExtiLine));
   return ((READ_BIT(EXTIx->RTSR3, ExtiLine) == (ExtiLine)) ? 1UL : 0UL);
 }
 
@@ -2671,9 +2518,6 @@ __STATIC_INLINE uint32_t LL_EXTI_IsEnabledRisingTrig_64_95(const EXTI_TypeDef *E
   */
 __STATIC_INLINE void LL_EXTI_EnableFallingTrig_0_31(EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_0_31(EXTIx, ExtiLine));
   SET_BIT(EXTIx->FTSR1, ExtiLine);
 }
 
@@ -2698,9 +2542,6 @@ __STATIC_INLINE void LL_EXTI_EnableFallingTrig_0_31(EXTI_TypeDef *EXTIx, uint32_
   */
 __STATIC_INLINE void LL_EXTI_EnableFallingTrig_32_63(EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_32_63(EXTIx, ExtiLine));
   SET_BIT(EXTIx->FTSR2, ExtiLine);
 }
 
@@ -2725,9 +2566,6 @@ __STATIC_INLINE void LL_EXTI_EnableFallingTrig_32_63(EXTI_TypeDef *EXTIx, uint32
   */
 __STATIC_INLINE void LL_EXTI_EnableFallingTrig_64_95(EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_64_95(EXTIx, ExtiLine));
   SET_BIT(EXTIx->FTSR3, ExtiLine);
 }
 
@@ -2751,9 +2589,6 @@ __STATIC_INLINE void LL_EXTI_EnableFallingTrig_64_95(EXTI_TypeDef *EXTIx, uint32
   */
 __STATIC_INLINE void LL_EXTI_DisableFallingTrig_0_31(EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_0_31(EXTIx, ExtiLine));
   CLEAR_BIT(EXTIx->FTSR1, ExtiLine);
 }
 
@@ -2777,9 +2612,6 @@ __STATIC_INLINE void LL_EXTI_DisableFallingTrig_0_31(EXTI_TypeDef *EXTIx, uint32
   */
 __STATIC_INLINE void LL_EXTI_DisableFallingTrig_32_63(EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_32_63(EXTIx, ExtiLine));
   CLEAR_BIT(EXTIx->FTSR2, ExtiLine);
 }
 
@@ -2803,9 +2635,6 @@ __STATIC_INLINE void LL_EXTI_DisableFallingTrig_32_63(EXTI_TypeDef *EXTIx, uint3
   */
 __STATIC_INLINE void LL_EXTI_DisableFallingTrig_64_95(EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_64_95(EXTIx, ExtiLine));
   CLEAR_BIT(EXTIx->FTSR3, ExtiLine);
 }
 
@@ -2823,9 +2652,6 @@ __STATIC_INLINE void LL_EXTI_DisableFallingTrig_64_95(EXTI_TypeDef *EXTIx, uint3
   */
 __STATIC_INLINE uint32_t LL_EXTI_IsEnabledFallingTrig_0_31(const EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_0_31(EXTIx, ExtiLine));
   return ((READ_BIT(EXTIx->FTSR1, ExtiLine) == (ExtiLine)) ? 1UL : 0UL);
 }
 
@@ -2843,9 +2669,6 @@ __STATIC_INLINE uint32_t LL_EXTI_IsEnabledFallingTrig_0_31(const EXTI_TypeDef *E
   */
 __STATIC_INLINE uint32_t LL_EXTI_IsEnabledFallingTrig_32_63(const EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_32_63(EXTIx, ExtiLine));
   return ((READ_BIT(EXTIx->FTSR2, ExtiLine) == (ExtiLine)) ? 1UL : 0UL);
 }
 
@@ -2863,9 +2686,6 @@ __STATIC_INLINE uint32_t LL_EXTI_IsEnabledFallingTrig_32_63(const EXTI_TypeDef *
   */
 __STATIC_INLINE uint32_t LL_EXTI_IsEnabledFallingTrig_64_95(const EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_64_95(EXTIx, ExtiLine));
   return ((READ_BIT(EXTIx->FTSR3, ExtiLine) == (ExtiLine)) ? 1UL : 0UL);
 }
 
@@ -2896,9 +2716,6 @@ __STATIC_INLINE uint32_t LL_EXTI_IsEnabledFallingTrig_64_95(const EXTI_TypeDef *
   */
 __STATIC_INLINE void LL_EXTI_GenerateSWI_0_31(EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_0_31(EXTIx, ExtiLine));
   SET_BIT(EXTIx->SWIER1, ExtiLine);
 }
 
@@ -2921,9 +2738,6 @@ __STATIC_INLINE void LL_EXTI_GenerateSWI_0_31(EXTI_TypeDef *EXTIx, uint32_t Exti
   */
 __STATIC_INLINE void LL_EXTI_GenerateSWI_32_63(EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_32_63(EXTIx, ExtiLine));
   SET_BIT(EXTIx->SWIER2, ExtiLine);
 }
 
@@ -2946,9 +2760,6 @@ __STATIC_INLINE void LL_EXTI_GenerateSWI_32_63(EXTI_TypeDef *EXTIx, uint32_t Ext
   */
 __STATIC_INLINE void LL_EXTI_GenerateSWI_64_95(EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_64_95(EXTIx, ExtiLine));
   SET_BIT(EXTIx->SWIER3, ExtiLine);
 }
 
@@ -2976,9 +2787,6 @@ __STATIC_INLINE void LL_EXTI_GenerateSWI_64_95(EXTI_TypeDef *EXTIx, uint32_t Ext
   */
 __STATIC_INLINE uint32_t LL_EXTI_IsActiveRisingFlag_0_31(const EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_0_31(EXTIx, ExtiLine));
   return ((READ_BIT(EXTIx->RPR1, ExtiLine) == (ExtiLine)) ? 1UL : 0UL);
 }
 
@@ -2998,9 +2806,6 @@ __STATIC_INLINE uint32_t LL_EXTI_IsActiveRisingFlag_0_31(const EXTI_TypeDef *EXT
   */
 __STATIC_INLINE uint32_t LL_EXTI_IsActiveRisingFlag_32_63(const EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_32_63(EXTIx, ExtiLine));
   return ((READ_BIT(EXTIx->RPR2, ExtiLine) == (ExtiLine)) ? 1UL : 0UL);
 }
 
@@ -3020,9 +2825,6 @@ __STATIC_INLINE uint32_t LL_EXTI_IsActiveRisingFlag_32_63(const EXTI_TypeDef *EX
   */
 __STATIC_INLINE uint32_t LL_EXTI_IsActiveRisingFlag_64_95(const EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_64_95(EXTIx, ExtiLine));
   return ((READ_BIT(EXTIx->RPR3, ExtiLine) == (ExtiLine)) ? 1UL : 0UL);
 }
 
@@ -3042,9 +2844,6 @@ __STATIC_INLINE uint32_t LL_EXTI_IsActiveRisingFlag_64_95(const EXTI_TypeDef *EX
   */
 __STATIC_INLINE uint32_t LL_EXTI_ReadRisingFlag_0_31(const EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_0_31(EXTIx, ExtiLine));
   return (uint32_t)(READ_BIT(EXTIx->RPR1, ExtiLine));
 }
 
@@ -3064,9 +2863,6 @@ __STATIC_INLINE uint32_t LL_EXTI_ReadRisingFlag_0_31(const EXTI_TypeDef *EXTIx, 
   */
 __STATIC_INLINE uint32_t LL_EXTI_ReadRisingFlag_32_63(const EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_32_63(EXTIx, ExtiLine));
   return (uint32_t)(READ_BIT(EXTIx->RPR2, ExtiLine));
 }
 
@@ -3086,9 +2882,6 @@ __STATIC_INLINE uint32_t LL_EXTI_ReadRisingFlag_32_63(const EXTI_TypeDef *EXTIx,
   */
 __STATIC_INLINE uint32_t LL_EXTI_ReadRisingFlag_64_95(const EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_64_95(EXTIx, ExtiLine));
   return (uint32_t)(READ_BIT(EXTIx->RPR3, ExtiLine));
 }
 
@@ -3108,9 +2901,6 @@ __STATIC_INLINE uint32_t LL_EXTI_ReadRisingFlag_64_95(const EXTI_TypeDef *EXTIx,
   */
 __STATIC_INLINE void LL_EXTI_ClearRisingFlag_0_31(EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_0_31(EXTIx, ExtiLine));
   WRITE_REG(EXTIx->RPR1, ExtiLine);
 }
 
@@ -3130,9 +2920,6 @@ __STATIC_INLINE void LL_EXTI_ClearRisingFlag_0_31(EXTI_TypeDef *EXTIx, uint32_t 
   */
 __STATIC_INLINE void LL_EXTI_ClearRisingFlag_32_63(EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_32_63(EXTIx, ExtiLine));
   WRITE_REG(EXTIx->RPR2, ExtiLine);
 }
 
@@ -3152,9 +2939,6 @@ __STATIC_INLINE void LL_EXTI_ClearRisingFlag_32_63(EXTI_TypeDef *EXTIx, uint32_t
   */
 __STATIC_INLINE void LL_EXTI_ClearRisingFlag_64_95(EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_64_95(EXTIx, ExtiLine));
   WRITE_REG(EXTIx->RPR3, ExtiLine);
 }
 
@@ -3175,9 +2959,6 @@ __STATIC_INLINE void LL_EXTI_ClearRisingFlag_64_95(EXTI_TypeDef *EXTIx, uint32_t
   */
 __STATIC_INLINE uint32_t LL_EXTI_IsActiveFallingFlag_0_31(const EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_0_31(EXTIx, ExtiLine));
   return ((READ_BIT(EXTIx->FPR1, ExtiLine) == (ExtiLine)) ? 1UL : 0UL);
 }
 
@@ -3197,9 +2978,6 @@ __STATIC_INLINE uint32_t LL_EXTI_IsActiveFallingFlag_0_31(const EXTI_TypeDef *EX
   */
 __STATIC_INLINE uint32_t LL_EXTI_IsActiveFallingFlag_32_63(const EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_32_63(EXTIx, ExtiLine));
   return ((READ_BIT(EXTIx->FPR2, ExtiLine) == (ExtiLine)) ? 1UL : 0UL);
 }
 
@@ -3219,9 +2997,6 @@ __STATIC_INLINE uint32_t LL_EXTI_IsActiveFallingFlag_32_63(const EXTI_TypeDef *E
   */
 __STATIC_INLINE uint32_t LL_EXTI_IsActiveFallingFlag_64_95(const EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_64_95(EXTIx, ExtiLine));
   return ((READ_BIT(EXTIx->FPR3, ExtiLine) == (ExtiLine)) ? 1UL : 0UL);
 }
 
@@ -3241,9 +3016,6 @@ __STATIC_INLINE uint32_t LL_EXTI_IsActiveFallingFlag_64_95(const EXTI_TypeDef *E
   */
 __STATIC_INLINE uint32_t LL_EXTI_ReadFallingFlag_0_31(const EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_0_31(EXTIx, ExtiLine));
   return (uint32_t)(READ_BIT(EXTIx->FPR1, ExtiLine));
 }
 
@@ -3263,9 +3035,6 @@ __STATIC_INLINE uint32_t LL_EXTI_ReadFallingFlag_0_31(const EXTI_TypeDef *EXTIx,
   */
 __STATIC_INLINE uint32_t LL_EXTI_ReadFallingFlag_32_63(const EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_32_63(EXTIx, ExtiLine));
   return (uint32_t)(READ_BIT(EXTIx->FPR2, ExtiLine));
 }
 
@@ -3285,9 +3054,6 @@ __STATIC_INLINE uint32_t LL_EXTI_ReadFallingFlag_32_63(const EXTI_TypeDef *EXTIx
   */
 __STATIC_INLINE uint32_t LL_EXTI_ReadFallingFlag_64_95(const EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_64_95(EXTIx, ExtiLine));
   return (uint32_t)(READ_BIT(EXTIx->FPR3, ExtiLine));
 }
 
@@ -3307,9 +3073,6 @@ __STATIC_INLINE uint32_t LL_EXTI_ReadFallingFlag_64_95(const EXTI_TypeDef *EXTIx
   */
 __STATIC_INLINE void LL_EXTI_ClearFallingFlag_0_31(EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_0_31(EXTIx, ExtiLine));
   WRITE_REG(EXTIx->FPR1, ExtiLine);
 }
 
@@ -3329,9 +3092,6 @@ __STATIC_INLINE void LL_EXTI_ClearFallingFlag_0_31(EXTI_TypeDef *EXTIx, uint32_t
   */
 __STATIC_INLINE void LL_EXTI_ClearFallingFlag_32_63(EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_32_63(EXTIx, ExtiLine));
   WRITE_REG(EXTIx->FPR2, ExtiLine);
 }
 
@@ -3351,9 +3111,6 @@ __STATIC_INLINE void LL_EXTI_ClearFallingFlag_32_63(EXTI_TypeDef *EXTIx, uint32_
   */
 __STATIC_INLINE void LL_EXTI_ClearFallingFlag_64_95(EXTI_TypeDef *EXTIx, uint32_t ExtiLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_LINE_64_95(EXTIx, ExtiLine));
   WRITE_REG(EXTIx->FPR3, ExtiLine);
 }
 
@@ -3374,9 +3131,6 @@ __STATIC_INLINE void LL_EXTI_ClearFallingFlag_64_95(EXTI_TypeDef *EXTIx, uint32_
   */
 __STATIC_INLINE void LL_EXTI_EnableSecure_0_31(EXTI_TypeDef *EXTIx, uint32_t ExtiSecureLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_SEC_0_31(EXTIx, ExtiSecureLine));
   SET_BIT(EXTIx->SECCFGR1, ExtiSecureLine);
 }
 /**
@@ -3393,9 +3147,6 @@ __STATIC_INLINE void LL_EXTI_EnableSecure_0_31(EXTI_TypeDef *EXTIx, uint32_t Ext
   */
 __STATIC_INLINE void LL_EXTI_EnableSecure_32_63(EXTI_TypeDef *EXTIx, uint32_t ExtiSecureLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_SEC_32_63(EXTIx, ExtiSecureLine));
   SET_BIT(EXTIx->SECCFGR2, ExtiSecureLine);
 }
 
@@ -3413,9 +3164,6 @@ __STATIC_INLINE void LL_EXTI_EnableSecure_32_63(EXTI_TypeDef *EXTIx, uint32_t Ex
   */
 __STATIC_INLINE void LL_EXTI_EnableSecure_64_95(EXTI_TypeDef *EXTIx, uint32_t ExtiSecureLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_SEC_64_95(EXTIx, ExtiSecureLine));
   SET_BIT(EXTIx->SECCFGR3, ExtiSecureLine);
 }
 
@@ -3433,9 +3181,6 @@ __STATIC_INLINE void LL_EXTI_EnableSecure_64_95(EXTI_TypeDef *EXTIx, uint32_t Ex
   */
 __STATIC_INLINE uint32_t LL_EXTI_IsEnabledSecure_0_31(const EXTI_TypeDef *EXTIx, uint32_t ExtiSecureLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_SEC_0_31(EXTIx, ExtiSecureLine));
   return (uint32_t)(READ_BIT(EXTIx->SECCFGR1, ExtiSecureLine));
 }
 
@@ -3453,9 +3198,6 @@ __STATIC_INLINE uint32_t LL_EXTI_IsEnabledSecure_0_31(const EXTI_TypeDef *EXTIx,
   */
 __STATIC_INLINE uint32_t LL_EXTI_IsEnabledSecure_32_63(const EXTI_TypeDef *EXTIx, uint32_t ExtiSecureLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_SEC_32_63(EXTIx, ExtiSecureLine));
   return (uint32_t)(READ_BIT(EXTIx->SECCFGR2, ExtiSecureLine));
 }
 
@@ -3473,9 +3215,6 @@ __STATIC_INLINE uint32_t LL_EXTI_IsEnabledSecure_32_63(const EXTI_TypeDef *EXTIx
   */
 __STATIC_INLINE uint32_t LL_EXTI_IsEnabledSecure_64_95(const EXTI_TypeDef *EXTIx, uint32_t ExtiSecureLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_SEC_64_95(EXTIx, ExtiSecureLine));
   return (uint32_t)(READ_BIT(EXTIx->SECCFGR3, ExtiSecureLine));
 }
 
@@ -3493,9 +3232,6 @@ __STATIC_INLINE uint32_t LL_EXTI_IsEnabledSecure_64_95(const EXTI_TypeDef *EXTIx
   */
 __STATIC_INLINE void LL_EXTI_DisableSecure_0_31(EXTI_TypeDef *EXTIx, uint32_t ExtiSecureLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_SEC_0_31(EXTIx, ExtiSecureLine));
   CLEAR_BIT(EXTIx->SECCFGR1, ExtiSecureLine);
 }
 
@@ -3513,9 +3249,6 @@ __STATIC_INLINE void LL_EXTI_DisableSecure_0_31(EXTI_TypeDef *EXTIx, uint32_t Ex
   */
 __STATIC_INLINE void LL_EXTI_DisableSecure_32_63(EXTI_TypeDef *EXTIx, uint32_t ExtiSecureLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_SEC_32_63(EXTIx, ExtiSecureLine));
   CLEAR_BIT(EXTIx->SECCFGR2, ExtiSecureLine);
 }
 
@@ -3533,9 +3266,6 @@ __STATIC_INLINE void LL_EXTI_DisableSecure_32_63(EXTI_TypeDef *EXTIx, uint32_t E
   */
 __STATIC_INLINE void LL_EXTI_DisableSecure_64_95(EXTI_TypeDef *EXTIx, uint32_t ExtiSecureLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_SEC_64_95(EXTIx, ExtiSecureLine));
   CLEAR_BIT(EXTIx->SECCFGR3, ExtiSecureLine);
 }
 
@@ -3556,9 +3286,6 @@ __STATIC_INLINE void LL_EXTI_DisableSecure_64_95(EXTI_TypeDef *EXTIx, uint32_t E
   */
 __STATIC_INLINE void LL_EXTI_EnablePrivilege_0_31(EXTI_TypeDef *EXTIx, uint32_t ExtiPrivilegeLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_PRIV_0_31(EXTIx, ExtiPrivilegeLine));
   SET_BIT(EXTIx->PRIVCFGR1, ExtiPrivilegeLine);
 }
 /**
@@ -3575,9 +3302,6 @@ __STATIC_INLINE void LL_EXTI_EnablePrivilege_0_31(EXTI_TypeDef *EXTIx, uint32_t 
   */
 __STATIC_INLINE void LL_EXTI_EnablePrivilege_32_63(EXTI_TypeDef *EXTIx, uint32_t ExtiPrivilegeLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_PRIV_32_63(EXTIx, ExtiPrivilegeLine));
   SET_BIT(EXTIx->PRIVCFGR2, ExtiPrivilegeLine);
 }
 
@@ -3595,9 +3319,6 @@ __STATIC_INLINE void LL_EXTI_EnablePrivilege_32_63(EXTI_TypeDef *EXTIx, uint32_t
   */
 __STATIC_INLINE void LL_EXTI_EnablePrivilege_64_95(EXTI_TypeDef *EXTIx, uint32_t ExtiPrivilegeLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_PRIV_64_95(EXTIx, ExtiPrivilegeLine));
   SET_BIT(EXTIx->PRIVCFGR3, ExtiPrivilegeLine);
 }
 
@@ -3615,9 +3336,6 @@ __STATIC_INLINE void LL_EXTI_EnablePrivilege_64_95(EXTI_TypeDef *EXTIx, uint32_t
   */
 __STATIC_INLINE uint32_t LL_EXTI_IsEnabledPrivilege_0_31(const EXTI_TypeDef *EXTIx, uint32_t ExtiPrivilegeLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_PRIV_0_31(EXTIx, ExtiPrivilegeLine));
   return (uint32_t)(READ_BIT(EXTIx->PRIVCFGR1, ExtiPrivilegeLine));
 }
 
@@ -3635,9 +3353,6 @@ __STATIC_INLINE uint32_t LL_EXTI_IsEnabledPrivilege_0_31(const EXTI_TypeDef *EXT
   */
 __STATIC_INLINE uint32_t LL_EXTI_IsEnabledPrivilege_32_63(const EXTI_TypeDef *EXTIx, uint32_t ExtiPrivilegeLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_PRIV_32_63(EXTIx, ExtiPrivilegeLine));
   return (uint32_t)(READ_BIT(EXTIx->PRIVCFGR2, ExtiPrivilegeLine));
 }
 
@@ -3655,9 +3370,6 @@ __STATIC_INLINE uint32_t LL_EXTI_IsEnabledPrivilege_32_63(const EXTI_TypeDef *EX
   */
 __STATIC_INLINE uint32_t LL_EXTI_IsEnabledPrivilege_64_95(const EXTI_TypeDef *EXTIx, uint32_t ExtiPrivilegeLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_PRIV_64_95(EXTIx, ExtiPrivilegeLine));
   return (uint32_t)(READ_BIT(EXTIx->PRIVCFGR3, ExtiPrivilegeLine));
 }
 
@@ -3675,9 +3387,6 @@ __STATIC_INLINE uint32_t LL_EXTI_IsEnabledPrivilege_64_95(const EXTI_TypeDef *EX
   */
 __STATIC_INLINE void LL_EXTI_DisablePrivilege_0_31(EXTI_TypeDef *EXTIx, uint32_t ExtiPrivilegeLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_PRIV_0_31(EXTIx, ExtiPrivilegeLine));
   CLEAR_BIT(EXTIx->PRIVCFGR1, ExtiPrivilegeLine);
 }
 
@@ -3695,9 +3404,6 @@ __STATIC_INLINE void LL_EXTI_DisablePrivilege_0_31(EXTI_TypeDef *EXTIx, uint32_t
   */
 __STATIC_INLINE void LL_EXTI_DisablePrivilege_32_63(EXTI_TypeDef *EXTIx, uint32_t ExtiPrivilegeLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_PRIV_32_63(EXTIx, ExtiPrivilegeLine));
   CLEAR_BIT(EXTIx->PRIVCFGR2, ExtiPrivilegeLine);
 }
 
@@ -3715,9 +3421,6 @@ __STATIC_INLINE void LL_EXTI_DisablePrivilege_32_63(EXTI_TypeDef *EXTIx, uint32_
   */
 __STATIC_INLINE void LL_EXTI_DisablePrivilege_64_95(EXTI_TypeDef *EXTIx, uint32_t ExtiPrivilegeLine)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_LL_EXTI_PRIV_64_95(EXTIx, ExtiPrivilegeLine));
   CLEAR_BIT(EXTIx->PRIVCFGR3, ExtiPrivilegeLine);
 }
 
@@ -3728,8 +3431,6 @@ __STATIC_INLINE void LL_EXTI_DisablePrivilege_64_95(EXTI_TypeDef *EXTIx, uint32_
   */
 __STATIC_INLINE void LL_EXTI_EnableGlobalSecurityLock(EXTI_TypeDef *EXTIx)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
   SET_BIT(EXTIx->LOCKR, EXTI_LOCKR_GLOCK);
 }
 
@@ -3741,8 +3442,6 @@ __STATIC_INLINE void LL_EXTI_EnableGlobalSecurityLock(EXTI_TypeDef *EXTIx)
   */
 __STATIC_INLINE void LL_EXTI_DisableGlobalSecurityLock(EXTI_TypeDef *EXTIx)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
   CLEAR_BIT(EXTIx->LOCKR, EXTI_LOCKR_GLOCK);
 }
 
@@ -3753,8 +3452,6 @@ __STATIC_INLINE void LL_EXTI_DisableGlobalSecurityLock(EXTI_TypeDef *EXTIx)
   */
 __STATIC_INLINE uint32_t LL_EXTI_IsEnableGlobalSecurityLock(const EXTI_TypeDef *EXTIx)
 {
-  /* Check the parameters */
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
   return ((READ_BIT(EXTIx->LOCKR, EXTI_LOCKR_GLOCK) == (EXTI_LOCKR_GLOCK)) ? 1UL : 0UL);
 }
 
@@ -3768,10 +3465,6 @@ __STATIC_INLINE uint32_t LL_EXTI_IsEnableGlobalSecurityLock(const EXTI_TypeDef *
   */
 __STATIC_INLINE void LL_EXTI_setEventCid(EXTI_TypeDef *EXTIx, uint32_t evtIndex, uint32_t cid)
 {
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_EXTI_EVT_CID_VALID(EXTIx, evtIndex));
-  assert_param(IS_EXTI_CID_VALID(cid));
-
   MODIFY_REG(EXTIx->ECIDCFGR[evtIndex], EXTI_EnCIDCFGR_CID, cid << EXTI_EnCIDCFGR_CID_Pos);
 }
 
@@ -3785,9 +3478,6 @@ __STATIC_INLINE void LL_EXTI_setEventCid(EXTI_TypeDef *EXTIx, uint32_t evtIndex,
   */
 __STATIC_INLINE uint32_t LL_EXTI_getEventCid(const EXTI_TypeDef *EXTIx, uint32_t evtIndex)
 {
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_EXTI_EVT_CID_VALID(EXTIx, evtIndex));
-
   return ((READ_REG(EXTIx->ECIDCFGR[evtIndex]) & (EXTI_EnCIDCFGR_CID)) >> EXTI_EnCIDCFGR_CID_Pos) ;
 }
 
@@ -3798,9 +3488,6 @@ __STATIC_INLINE uint32_t LL_EXTI_getEventCid(const EXTI_TypeDef *EXTIx, uint32_t
   */
 __STATIC_INLINE void LL_EXTI_EnableEventCidFiltering(EXTI_TypeDef *EXTIx, uint32_t evtIndex)
 {
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_EXTI_EVT_CID_VALID(EXTIx, evtIndex));
-
   SET_BIT(EXTIx->ECIDCFGR[evtIndex], EXTI_EnCIDCFGR_CFEN);
 }
 
@@ -3811,9 +3498,6 @@ __STATIC_INLINE void LL_EXTI_EnableEventCidFiltering(EXTI_TypeDef *EXTIx, uint32
   */
 __STATIC_INLINE void LL_EXTI_DisableEventCidFiltering(EXTI_TypeDef *EXTIx, uint32_t evtIndex)
 {
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_EXTI_EVT_CID_VALID(EXTIx, evtIndex));
-
   SET_BIT(EXTIx->ECIDCFGR[evtIndex], EXTI_EnCIDCFGR_CFEN);
 }
 
@@ -3837,8 +3521,6 @@ __STATIC_INLINE uint32_t LL_EXTI_IsEnabledEventCidFiltering(const EXTI_TypeDef *
   */
 __STATIC_INLINE void LL_EXTI_setC1ProcessorCid(EXTI_TypeDef *EXTIx, uint32_t cid)
 {
-  assert_param(IS_EXTI_CID_VALID(cid));
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
   MODIFY_REG(EXTIx->C1CIDCFGR, EXTI_CmCIDCFGR_CID, cid << EXTI_CmCIDCFGR_CID_Pos);
 }
 
@@ -3851,7 +3533,6 @@ __STATIC_INLINE void LL_EXTI_setC1ProcessorCid(EXTI_TypeDef *EXTIx, uint32_t cid
   */
 __STATIC_INLINE uint32_t LL_EXTI_getC1ProcessorCid(const EXTI_TypeDef *EXTIx)
 {
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
   return ((READ_REG(EXTIx->C1CIDCFGR) & (EXTI_CmCIDCFGR_CID)) >> EXTI_CmCIDCFGR_CID_Pos) ;
 }
 
@@ -3861,7 +3542,6 @@ __STATIC_INLINE uint32_t LL_EXTI_getC1ProcessorCid(const EXTI_TypeDef *EXTIx)
   */
 __STATIC_INLINE void LL_EXTI_EnableC1ProcessorCidFiltering(EXTI_TypeDef *EXTIx)
 {
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
   SET_BIT(EXTIx->C1CIDCFGR, EXTI_CmCIDCFGR_CFEN);
 }
 
@@ -3871,7 +3551,6 @@ __STATIC_INLINE void LL_EXTI_EnableC1ProcessorCidFiltering(EXTI_TypeDef *EXTIx)
   */
 __STATIC_INLINE void LL_EXTI_DisableC1ProcessorCidFiltering(EXTI_TypeDef *EXTIx)
 {
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
   CLEAR_BIT(EXTIx->C1CIDCFGR, EXTI_CmCIDCFGR_CFEN);
 }
 
@@ -3882,7 +3561,6 @@ __STATIC_INLINE void LL_EXTI_DisableC1ProcessorCidFiltering(EXTI_TypeDef *EXTIx)
   */
 __STATIC_INLINE uint32_t LL_EXTI_IsEnabledC1ProcessorCidFiltering(const EXTI_TypeDef *EXTIx)
 {
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
   return ((READ_BIT(EXTIx->C1CIDCFGR, EXTI_CmCIDCFGR_CFEN) == EXTI_CmCIDCFGR_CFEN) ? 1UL : 0UL);
 }
 
@@ -3894,8 +3572,6 @@ __STATIC_INLINE uint32_t LL_EXTI_IsEnabledC1ProcessorCidFiltering(const EXTI_Typ
   */
 __STATIC_INLINE void LL_EXTI_setC2ProcessorCid(EXTI_TypeDef *EXTIx, uint32_t cid)
 {
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
-  assert_param(IS_EXTI_CID_VALID(cid));
   MODIFY_REG(EXTIx->C2CIDCFGR, EXTI_CmCIDCFGR_CID, cid << EXTI_CmCIDCFGR_CID_Pos);
 }
 
@@ -3908,7 +3584,6 @@ __STATIC_INLINE void LL_EXTI_setC2ProcessorCid(EXTI_TypeDef *EXTIx, uint32_t cid
   */
 __STATIC_INLINE uint32_t LL_EXTI_getC2ProcessorCid(const EXTI_TypeDef *EXTIx)
 {
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
   return ((READ_REG(EXTIx->C2CIDCFGR) & (EXTI_CmCIDCFGR_CID)) >> EXTI_CmCIDCFGR_CID_Pos) ;
 }
 
@@ -3918,7 +3593,6 @@ __STATIC_INLINE uint32_t LL_EXTI_getC2ProcessorCid(const EXTI_TypeDef *EXTIx)
   */
 __STATIC_INLINE void LL_EXTI_EnableC2ProcessorCidFiltering(EXTI_TypeDef *EXTIx)
 {
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
   SET_BIT(EXTIx->C2CIDCFGR, EXTI_CmCIDCFGR_CFEN);
 }
 
@@ -3928,7 +3602,6 @@ __STATIC_INLINE void LL_EXTI_EnableC2ProcessorCidFiltering(EXTI_TypeDef *EXTIx)
   */
 __STATIC_INLINE void LL_EXTI_DisableC2ProcessorCidFiltering(EXTI_TypeDef *EXTIx)
 {
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
   CLEAR_BIT(EXTIx->C2CIDCFGR, EXTI_CmCIDCFGR_CFEN);
 }
 
@@ -3939,7 +3612,6 @@ __STATIC_INLINE void LL_EXTI_DisableC2ProcessorCidFiltering(EXTI_TypeDef *EXTIx)
   */
 __STATIC_INLINE uint32_t LL_EXTI_IsEnabledC2ProcessorCidFiltering(const EXTI_TypeDef *EXTIx)
 {
-  assert_param(IS_EXTI_ALL_INSTANCE(EXTIx));
   return ((READ_BIT(EXTIx->C2CIDCFGR, EXTI_CmCIDCFGR_CFEN) == EXTI_CmCIDCFGR_CFEN) ? 1UL : 0UL);
 }
 
@@ -3952,8 +3624,6 @@ __STATIC_INLINE uint32_t LL_EXTI_IsEnabledC2ProcessorCidFiltering(const EXTI_Typ
   */
 __STATIC_INLINE void LL_EXTI_setC3ProcessorCid(EXTI_TypeDef *EXTIx, uint32_t cid)
 {
-  assert_param(IS_EXTI2_INSTANCE(EXTIx));
-  assert_param(IS_EXTI_CID_VALID(cid));
   MODIFY_REG(EXTIx->C3CIDCFGR, EXTI_CmCIDCFGR_CID, cid << EXTI_CmCIDCFGR_CID_Pos);
 }
 
@@ -3966,7 +3636,6 @@ __STATIC_INLINE void LL_EXTI_setC3ProcessorCid(EXTI_TypeDef *EXTIx, uint32_t cid
   */
 __STATIC_INLINE uint32_t LL_EXTI_getC3ProcessorCid(const EXTI_TypeDef *EXTIx)
 {
-  assert_param(IS_EXTI2_INSTANCE(EXTIx));
   return ((READ_REG(EXTIx->C3CIDCFGR) & (EXTI_CmCIDCFGR_CID)) >> EXTI_CmCIDCFGR_CID_Pos) ;
 }
 
@@ -3977,7 +3646,6 @@ __STATIC_INLINE uint32_t LL_EXTI_getC3ProcessorCid(const EXTI_TypeDef *EXTIx)
   */
 __STATIC_INLINE void LL_EXTI_EnableC3ProcessorCidFiltering(EXTI_TypeDef *EXTIx)
 {
-  assert_param(IS_EXTI2_INSTANCE(EXTIx));
   SET_BIT(EXTIx->C3CIDCFGR, EXTI_CmCIDCFGR_CFEN);
 }
 
@@ -3987,7 +3655,6 @@ __STATIC_INLINE void LL_EXTI_EnableC3ProcessorCidFiltering(EXTI_TypeDef *EXTIx)
   */
 __STATIC_INLINE void LL_EXTI_DisableC3ProcessorCidFiltering(EXTI_TypeDef *EXTIx)
 {
-  assert_param(IS_EXTI2_INSTANCE(EXTIx));
   CLEAR_BIT(EXTIx->C3CIDCFGR, EXTI_CmCIDCFGR_CFEN);
 }
 
@@ -3998,7 +3665,6 @@ __STATIC_INLINE void LL_EXTI_DisableC3ProcessorCidFiltering(EXTI_TypeDef *EXTIx)
   */
 __STATIC_INLINE uint32_t LL_EXTI_IsEnabledC3ProcessorCidFiltering(const EXTI_TypeDef *EXTIx)
 {
-  assert_param(IS_EXTI2_INSTANCE(EXTIx));
   return ((READ_BIT(EXTIx->C3CIDCFGR, EXTI_CmCIDCFGR_CFEN) == EXTI_CmCIDCFGR_CFEN) ? 1UL : 0UL);
 }
 

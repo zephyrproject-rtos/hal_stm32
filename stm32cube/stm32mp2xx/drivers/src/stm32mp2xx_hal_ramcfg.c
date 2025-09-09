@@ -651,19 +651,16 @@ HAL_StatusTypeDef HAL_RAMCFG_Erase(RAMCFG_HandleTypeDef *hramcfg)
     */
     while (__HAL_RAMCFG_GET_FLAG(hramcfg, RAMCFG_FLAG_SRAMBUSY) != 0U)
     {
-      if (Timeout != HAL_MAX_DELAY)
+      if (((HAL_GetTick() - tickstart) > Timeout) || (Timeout == 0U))
       {
-        if (((HAL_GetTick() - tickstart) > Timeout) || (Timeout == 0U))
-        {
-          /* Update the RAMCFG error code */
-          hramcfg->ErrorCode = HAL_RAMCFG_ERROR_TIMEOUT;
+        /* Update the RAMCFG error code */
+        hramcfg->ErrorCode = HAL_RAMCFG_ERROR_TIMEOUT;
 
-          /* Update the RAMCFG state */
-          hramcfg->State = HAL_RAMCFG_STATE_ERROR;
+        /* Update the RAMCFG state */
+        hramcfg->State = HAL_RAMCFG_STATE_ERROR;
 
-          /* Return error status */
-          return HAL_ERROR;
-        }
+        /* Return error status */
+        return HAL_ERROR;
       }
     }
   }
@@ -1144,19 +1141,16 @@ HAL_StatusTypeDef HAL_RAMCFG_ComputeCRC(RAMCFG_HandleTypeDef *hramcfg)
         /* Wait computation ending */
         while (READ_BIT(hramcfg->Instance->CSR, RAMCFG_CSR_CRCEOC) != RAMCFG_CSR_CRCEOC)
         {
-          if (Timeout != HAL_MAX_DELAY)
+          if (((HAL_GetTick() - tickstart) > Timeout) || (Timeout == 0U))
           {
-            if (((HAL_GetTick() - tickstart) > Timeout) || (Timeout == 0U))
-            {
-              /* Update the RAMCFG error code */
-              hramcfg->ErrorCode = HAL_RAMCFG_ERROR_TIMEOUT;
+            /* Update the RAMCFG error code */
+            hramcfg->ErrorCode = HAL_RAMCFG_ERROR_TIMEOUT;
 
-              /* Update the RAMCFG state */
-              hramcfg->State = HAL_RAMCFG_STATE_ERROR;
+            /* Update the RAMCFG state */
+            hramcfg->State = HAL_RAMCFG_STATE_ERROR;
 
-              /* Return error status */
-              return HAL_ERROR;
-            }
+            /* Return error status */
+            return HAL_ERROR;
           }
         }
 
@@ -1175,19 +1169,16 @@ HAL_StatusTypeDef HAL_RAMCFG_ComputeCRC(RAMCFG_HandleTypeDef *hramcfg)
         /* Wait computation ending */
         while (READ_BIT(hramcfg->Instance->CSR, RAMCFG_CSR_CRCEOC) != RAMCFG_CSR_CRCEOC)
         {
-          if (Timeout != HAL_MAX_DELAY)
+          if (((HAL_GetTick() - tickstart) > Timeout) || (Timeout == 0U))
           {
-            if (((HAL_GetTick() - tickstart) > Timeout) || (Timeout == 0U))
-            {
-              /* Update the RAMCFG error code */
-              hramcfg->ErrorCode = HAL_RAMCFG_ERROR_TIMEOUT;
+            /* Update the RAMCFG error code */
+            hramcfg->ErrorCode = HAL_RAMCFG_ERROR_TIMEOUT;
 
-              /* Update the RAMCFG state */
-              hramcfg->State = HAL_RAMCFG_STATE_ERROR;
+            /* Update the RAMCFG state */
+            hramcfg->State = HAL_RAMCFG_STATE_ERROR;
 
-              /* Return error status */
-              return HAL_ERROR;
-            }
+            /* Return error status */
+            return HAL_ERROR;
           }
         }
 

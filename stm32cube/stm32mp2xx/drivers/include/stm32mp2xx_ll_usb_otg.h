@@ -452,6 +452,7 @@ typedef USB_HCTypeDef       USB_OTG_HCTypeDef;
 #define TEST_FORCE_EN                          5U
 
 #define USBx_PCGCCTL    *(__IO uint32_t *)((uint32_t)USBx_BASE + USB_OTG_PCGCCTL_BASE)
+#define USBx_PCGCCTL1   *(__IO uint32_t *)((uint32_t)USBx_BASE + USB_OTG_PCGCCTL1_BASE)
 #define USBx_HPRT0      *(__IO uint32_t *)((uint32_t)USBx_BASE + USB_OTG_HOST_PORT_BASE)
 
 #define USBx_DEVICE     ((USB_OTG_DeviceTypeDef *)(USBx_BASE + USB_OTG_DEVICE_BASE))

@@ -509,25 +509,31 @@ typedef struct
   * @}
   */
 
-/** @defgroup USART_LL_EC_AUTOCR_TRIGSEL Autonomous Trigger Selection
+/*  Only LPUART has triggers on MP25 and MP23; USARTs do not have triggers. */
+
+#if defined(STM32MP21xxxx)
+
+/** @defgroup USART_LL_EC_AUTOCR_TRIGSEL  Autonomous Trigger Selection
   * @brief    USART Autonomous Trigger selection
   * @{
   */
-#define LL_USART_GPDMA1_CH0_TCF_TRG   0U   /*!< USART GPDMA1 channel0 Internal Trigger  */
-#define LL_USART_GPDMA1_CH1_TCF_TRG   1U   /*!< USART GPDMA1 channel1 Internal Trigger  */
-#define LL_USART_GPDMA1_CH2_TCF_TRG   2U   /*!< USART GPDMA1 channel2 Internal Trigger  */
-#define LL_USART_GPDMA1_CH3_TCF_TRG   3U   /*!< USART GPDMA1 channel3 Internal Trigger  */
-#define LL_USART_EXTI_LINE6_TRG       4U   /*!< USART EXTI line 6 Internal Trigger      */
-#define LL_USART_EXTI_LINE9_TRG       5U   /*!< USART EXTI line 9 Internal Trigger      */
-#define LL_USART_LPTIM1_OUT_TRG       6U   /*!< USART LPTIM1 out Internal Trigger       */
-#define LL_USART_LPTIM2_OUT_TRG       7U   /*!< USART LPTIM2 out Internal Trigger       */
-#define LL_USART_COMP1_OUT_TRG        8U   /*!< USART COMP1 out Internal Trigger        */
-#define LL_USART_COMP2_OUT_TRG        9U   /*!< USART COMP2 out Internal Trigger        */
-#define LL_USART_RTC_ALRA_TRG         10U  /*!< USART RTC alarm Internal Trigger        */
-#define LL_USART_RTC_WUT_TRG          11U  /*!< USART RTC wakeup Internal Trigger       */
+#define LL_USART_EXTI2_LINE4_TRG       4U   /*!< USART EXTI2 line 4 Internal Trigger     */
+#define LL_USART_EXTI2_LINE5_TRG       5U   /*!< USART EXTI2 line 5 Internal Trigger     */
+/*!< No Trigger index 6 on USART            */
+#define LL_USART_LPTIM3_CH1_TRG        7U   /*!< USART LPTIM3 channel 1 Internal Trigger */
+#define LL_USART_LPTIM4_CH1_TRG        8U   /*!< USART LPTIM4 channel 1 Internal Trigger */
+#define LL_USART_LPTIM5_OUT_TRG        9U   /*!< USART LPTIM5 out Internal Trigger       */
+#define LL_USART_RTC_ALRA_TRG          10U  /*!< USART RTC alarm Internal Trigger        */
+#define LL_USART_RTC_WUT_TRG           11U  /*!< USART RTC wakeup Internal Trigger       */
+#define LL_USART_EXTI1_LINE6_TRG       12U  /*!< USART EXTI1 line 6 Internal Trigger     */
+#define LL_USART_EXTI1_LINE7_TRG       13U  /*!< USART EXTI1 line 7 Internal Trigger     */
+#define LL_USART_LPTIM1_CH1_TRG        14U  /*!< USART LPTIM1 channel 1 Internal Trigger */
+#define LL_USART_LPTIM2_CH1_TRG        15U  /*!< USART LPTIM2 channel 1 Internal Trigger */
 /**
   * @}
   */
+
+#endif /* STM32MP21xxxx */
 
 /** @defgroup USART_LL_EC_AUTOCR_TRIGPOL Autonomous Trigger Polarity
   * @brief    USART Autonomous Trigger Polarity
@@ -4401,23 +4407,23 @@ __STATIC_INLINE uint32_t LL_USART_GetTriggerPolarity(const USART_TypeDef *USARTx
   return (uint32_t)(READ_BIT(USARTx->AUTOCR, USART_AUTOCR_TRIGPOL));
 }
 
+#if defined(STM32MP21xxxx)
 /**
   * @brief  Set the selected trigger
   * @rmtoll AUTOCR        TRIGSEL     LL_USART_SetSelectedTrigger
   * @param  USARTx USART Instance
   * @param  Trigger This parameter can be one of the following values:
-  *         @arg @ref  LL_USART_GPDMA1_CH0_TCF_TRG
-  *         @arg @ref  LL_USART_GPDMA1_CH1_TCF_TRG
-  *         @arg @ref  LL_USART_GPDMA1_CH2_TCF_TRG
-  *         @arg @ref  LL_USART_GPDMA1_CH3_TCF_TRG
-  *         @arg @ref  LL_USART_EXTI_LINE6_TRG
-  *         @arg @ref  LL_USART_EXTI_LINE9_TRG
-  *         @arg @ref  LL_USART_LPTIM1_OUT_TRG
-  *         @arg @ref  LL_USART_LPTIM2_OUT_TRG
-  *         @arg @ref  LL_USART_COMP1_OUT_TRG
-  *         @arg @ref  LL_USART_COMP2_OUT_TRG
-  *         @arg @ref  LL_USART_RTC_ALRA_TRG
-  *         @arg @ref  LL_USART_RTC_WUT_TRG
+  *         @arg @ref LL_USART_EXTI2_LINE4_TRG
+  *         @arg @ref LL_USART_EXTI2_LINE5_TRG
+  *         @arg @ref LL_USART_LPTIM3_CH1_TRG
+  *         @arg @ref LL_USART_LPTIM4_CH1_TRG
+  *         @arg @ref LL_USART_LPTIM5_OUT_TRG
+  *         @arg @ref LL_USART_RTC_ALRA_TRG
+  *         @arg @ref LL_USART_RTC_WUT_TRG
+  *         @arg @ref LL_USART_EXTI1_LINE6_TRG
+  *         @arg @ref LL_USART_EXTI1_LINE7_TRG
+  *         @arg @ref LL_USART_LPTIM1_CH1_TRG
+  *         @arg @ref LL_USART_LPTIM2_CH1_TRG
   * @retval None
   */
 __STATIC_INLINE void LL_USART_SetSelectedTrigger(USART_TypeDef *USARTx, uint32_t Trigger)
@@ -4430,23 +4436,23 @@ __STATIC_INLINE void LL_USART_SetSelectedTrigger(USART_TypeDef *USARTx, uint32_t
   * @rmtoll AUTOCR        TRIGSEL     LL_USART_GetSelectedTrigger
   * @param  USARTx USART Instance
   * @retval Returned value can be one of the following values:
-  *         @arg @ref  LL_USART_GPDMA1_CH0_TCF_TRG
-  *         @arg @ref  LL_USART_GPDMA1_CH1_TCF_TRG
-  *         @arg @ref  LL_USART_GPDMA1_CH2_TCF_TRG
-  *         @arg @ref  LL_USART_GPDMA1_CH3_TCF_TRG
-  *         @arg @ref  LL_USART_EXTI_LINE6_TRG
-  *         @arg @ref  LL_USART_EXTI_LINE9_TRG
-  *         @arg @ref  LL_USART_LPTIM1_OUT_TRG
-  *         @arg @ref  LL_USART_LPTIM2_OUT_TRG
-  *         @arg @ref  LL_USART_COMP1_OUT_TRG
-  *         @arg @ref  LL_USART_COMP2_OUT_TRG
-  *         @arg @ref  LL_USART_RTC_ALRA_TRG
-  *         @arg @ref  LL_USART_RTC_WUT_TRG
+  *         @arg @ref LL_USART_EXTI2_LINE4_TRG
+  *         @arg @ref LL_USART_EXTI2_LINE5_TRG
+  *         @arg @ref LL_USART_LPTIM3_CH1_TRG
+  *         @arg @ref LL_USART_LPTIM4_CH1_TRG
+  *         @arg @ref LL_USART_LPTIM5_OUT_TRG
+  *         @arg @ref LL_USART_RTC_ALRA_TRG
+  *         @arg @ref LL_USART_RTC_WUT_TRG
+  *         @arg @ref LL_USART_EXTI1_LINE6_TRG
+  *         @arg @ref LL_USART_EXTI1_LINE7_TRG
+  *         @arg @ref LL_USART_LPTIM1_CH1_TRG
+  *         @arg @ref LL_USART_LPTIM2_CH1_TRG
   */
 __STATIC_INLINE uint32_t LL_USART_GetSelectedTrigger(const USART_TypeDef *USARTx)
 {
   return (uint32_t)((READ_BIT(USARTx->AUTOCR, USART_AUTOCR_TRIGSEL) >> USART_AUTOCR_TRIGSEL_Pos));
 }
+#endif /* STM32MP21xxxx */
 
 /**
   * @}
