@@ -129,5 +129,7 @@ Patch List:
 	  Impacted file: stm32wb0x_hal_msp.c
 	- Removed BLEPLAT_RngGetRandom16 and BLEPLAT_RngGetRandom32 functions:
 	  Impacted file: bleplat.c
+	- Removed BLEPLAT_SetRadioTimerValue function:
+	  Impacted file: bleplat.c
 	- dos2unix applied
 	- trailing white spaces removed
