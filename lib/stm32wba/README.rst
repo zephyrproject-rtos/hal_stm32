@@ -22,7 +22,7 @@ Description:
       Middlewares/ST/STM32_WPAN/ble/stack/include/ble_std.h
       Middlewares/ST/STM32_WPAN/ble/stack/include/bleplat.h
       Middlewares/ST/STM32_WPAN/ble/stack/include/blestack.h
-      Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/_40nm_reg_files/DWC_ble154combo.h
+      Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/_40nm_reg_files/_40nm_reg_files/DWC_ble154combo.h
       Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/bsp.h
       Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/common_types.h
       Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/event_manager.h
@@ -71,7 +71,7 @@ Description:
       Projects/Common/WPAN/Modules/Log/log_module.c
       Projects/Common/WPAN/Modules/Log/log_module.h
       Projects/NUCLEO-WBA65RI/Applications/BLE/BLE_TransparentMode/System/Config/Debug_GPIO/app_debug.h
-      Projects/NUCLEO-WBA65RI/Applications/BLE/BLE_TransparentMode/System/Config/Debug_GPIO/debug_config.h
+      Projects/NUCLEO-WBA65RI/Applications/BLE/BLE_TransparentMode/System/Config/Log/log_module_conf.h
       Projects/NUCLEO-WBA65RI/Applications/BLE/BLE_TransparentMode/STM32_WPAN/Target/power_table.c
       Projects/NUCLEO-WBA65RI/Applications/BLE/BLE_TransparentMode/STM32_WPAN/Target/bpka.c
       Projects/NUCLEO-WBA65RI/Applications/BLE/BLE_TransparentMode/STM32_WPAN/Target/bpka.h

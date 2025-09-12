@@ -74,14 +74,14 @@ file_list_wba = {
         "Middlewares/ST/STM32_WPAN/link_layer/ll_sys/inc/ll_sys_startup.h",
         "Middlewares/ST/STM32_WPAN/stm32_wpan_common.h",
     ],
-    "BLE_TransparentMode": [
+    "ble": [
         ble_transparent_mode_app_path + "/Core/Inc/app_common.h",
         ble_transparent_mode_app_path + "/Core/Inc/app_conf.h",
         ble_transparent_mode_app_path + "/Core/Inc/app_entry.h",
         ble_transparent_mode_app_path + "/Core/Inc/utilities_conf.h",
         ble_transparent_mode_app_path + "/Core/Inc/main.h",
-        ble_transparent_mode_app_path + "/System/Config/Debug_GPIO/app_debug.h",
         ble_transparent_mode_app_path + "/System/Config/Debug_GPIO/debug_config.h",
+        ble_transparent_mode_app_path + "/System/Config/Log/log_module_conf.h",
         ble_transparent_mode_app_path + "/STM32_WPAN/Target/power_table.c",
         ble_transparent_mode_app_path + "/STM32_WPAN/Target/bpka.c",
         ble_transparent_mode_app_path + "/STM32_WPAN/Target/bpka.h",
