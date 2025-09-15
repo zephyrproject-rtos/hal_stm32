@@ -21,11 +21,12 @@
 #include "ll_intf.h"
 #include "ll_sys_startup.h"
 #include "common_types.h"
+#if defined(CONFIG_NET_L2_CUSTOM_IEEE802154_STM32WBA)
 #if defined(MAC) && (SUPPORT_OPENTHREAD_1_2 == 0)
 /* Projects with MAC Layer (i.e. 15.4 except Thread) */
 #include "st_mac_802_15_4_sap.h"
 #endif /* MAC */
-
+#endif /* CONFIG_NET_L2_CUSTOM_IEEE802154_STM32WBA */
 /**
   * @brief  Missed HCI event flag
   */
@@ -58,6 +59,7 @@ void ll_sys_ble_cntrl_init(hst_cbk hostCallback)
   ll_sys_dependencies_init();
 }
 #endif /* BLE */
+#if defined(CONFIG_NET_L2_CUSTOM_IEEE802154_STM32WBA)
 #if defined(MAC) && (SUPPORT_OPENTHREAD_1_2 == 0)
 /**
   * @brief  Initialize the Link Layer IP 802.15.4 MAC controller
@@ -70,7 +72,7 @@ void ll_sys_mac_cntrl_init(void)
   ll_sys_dependencies_init();
 }
 #endif /* MAC */
-
+#endif /* CONFIG_NET_L2_CUSTOM_IEEE802154_STM32WBA */
 /**
   * @brief  Start the Link Layer IP in OpenThread configuration
   * @param  None

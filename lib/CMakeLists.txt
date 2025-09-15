@@ -7,6 +7,8 @@
 
 if(CONFIG_HAS_STM32LIB)
   add_subdirectory_ifdef(CONFIG_BT_STM32_IPM stm32wb)
-  add_subdirectory_ifdef(CONFIG_BT_STM32WBA stm32wba)
+  if(CONFIG_BT_STM32WBA OR CONFIG_IEEE802154_STM32WBA)
+    add_subdirectory(stm32wba)
+  endif()
   add_subdirectory_ifdef(CONFIG_BT_STM32WB0 stm32wb0)
 endif()

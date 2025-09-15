@@ -8,4 +8,4 @@ Available libraries:
   * stm32wb0:
       STM32WB0 BLE controller interfacing library.
   * stm32wba:
-      STM32WBA BLE controller interfacing library.
+      STM32WBA BLE and 802.15.4 controller interfacing libraries.

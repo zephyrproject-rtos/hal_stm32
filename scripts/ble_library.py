@@ -2,7 +2,7 @@
 """
 SPDX-License-Identifier: Apache-2.0
 Copyright (c) 2024 STMicroelectronics.
-This script updates ble library
+This script updates ble and ieee802154 library
 """
 
 import sys
@@ -41,6 +41,8 @@ file_list_wb = [
 
 ble_transparent_mode_app_path = "Projects/NUCLEO-WBA65RI/Applications/BLE/" \
                                 + "BLE_TransparentMode"
+zgbee_onoff_client_sed_app_path = "Projects/NUCLEO-WBA65RI/Applications/BLE/" \
+                                + "Zigbee_OnOff_Client_SED"
 file_list_wba = {
     "STM32_WPAN": [
         "Middlewares/ST/STM32_WPAN/ble/stack/include/auto/ble_types.h",
@@ -48,15 +50,20 @@ file_list_wba = {
         + "DWC_ble154combo.h",
         "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/bsp.h",
         "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/common_types.h",
+        "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/dtm.h",
         "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/event_manager.h",
         "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/evnt_schdlr_gnrc_if.h",
+        "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/ll_error.h",
         "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/hci.h",
         "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/ll_intf.h",
         "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/ll_intf_cmn.h",
         "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/mem_intf.h",
         "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/os_wrapper.h",
+        "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/platform.h",
         "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/power_table.h",
         "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/pta.h",
+        "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/ral.h",
+        "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/rfd_dev_config.h",
         "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/config/ble_full/"
         + "ll_fw_config.h",
         "Middlewares/ST/STM32_WPAN/ble/stack/include/ble_bufsize.h",
@@ -88,6 +95,19 @@ file_list_wba = {
         ble_transparent_mode_app_path + "/STM32_WPAN/Target/linklayer_plat.c",
         ble_transparent_mode_app_path + "/STM32_WPAN/Target/ll_sys_if.c",
         ble_transparent_mode_app_path + "/STM32_WPAN/Target/ll_sys_if.h",
+    ],
+    "IEEE802154": [
+        zgbee_onoff_client_sed_app_path + "/Core/Inc/app_common.h",
+        zgbee_onoff_client_sed_app_path + "/Core/Inc/app_conf.h",
+        zgbee_onoff_client_sed_app_path + "/Core/Inc/app_entry.h",
+        zgbee_onoff_client_sed_app_path + "/Core/Inc/utilities_conf.h",
+        zgbee_onoff_client_sed_app_path + "/Core/Inc/main.h",
+        zgbee_onoff_client_sed_app_path + "/System/Config/Debug_GPIO/debug_config.h",
+        zgbee_onoff_client_sed_app_path + "/System/Config/Log/log_module_conf.h",
+        zgbee_onoff_client_sed_app_path + "/STM32_WPAN/Target/power_table.c",
+        zgbee_onoff_client_sed_app_path + "/STM32_WPAN/Target/linklayer_plat.c",
+        zgbee_onoff_client_sed_app_path + "/STM32_WPAN/Target/ll_sys_if.c",
+        zgbee_onoff_client_sed_app_path + "/STM32_WPAN/Target/ll_sys_if.h",
     ],
     "Common": [
         "Projects/Common/WPAN/Modules/Flash/rf_timing_synchro.c",
