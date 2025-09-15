@@ -139,11 +139,13 @@ ErrorStatus LL_GPIO_DeInit(const GPIO_TypeDef *GPIOx)
     LL_AHB2_GRP1_ForceReset(LL_AHB2_GRP1_PERIPH_GPIOE);
     LL_AHB2_GRP1_ReleaseReset(LL_AHB2_GRP1_PERIPH_GPIOE);
   }
+#if defined(GPIOG)
   else if (GPIOx == GPIOG)
   {
     LL_AHB2_GRP1_ForceReset(LL_AHB2_GRP1_PERIPH_GPIOG);
     LL_AHB2_GRP1_ReleaseReset(LL_AHB2_GRP1_PERIPH_GPIOG);
   }
+#endif /* defined(GPIOG) */
   else if (GPIOx == GPIOH)
   {
     LL_AHB2_GRP1_ForceReset(LL_AHB2_GRP1_PERIPH_GPIOH);

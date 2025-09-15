@@ -69,34 +69,39 @@ extern "C" {
 /** @defgroup BUS_LL_EC_AHB1_GRP1_PERIPH  AHB1 GRP1 PERIPH
   * @{
   */
-#define LL_AHB1_GRP1_PERIPH_GPDMA1        RCC_AHB1ENR1_GPDMA1EN
-#define LL_AHB1_GRP1_PERIPH_ADF1          RCC_AHB1ENR1_ADF1EN
+#define LL_AHB1_GRP1_PERIPH_GPDMA1          RCC_AHB1ENR1_GPDMA1EN
+#if defined(ADF1)
+#define LL_AHB1_GRP1_PERIPH_ADF1            RCC_AHB1ENR1_ADF1EN
+#else
+#define LL_AHB1_GRP1_PERIPH_ADF1            0U
+#endif /* ADF1 */
 #if defined(HSP1)
-#define LL_AHB1_GRP1_PERIPH_HSP1          RCC_AHB1ENR1_HSP1EN
+#define LL_AHB1_GRP1_PERIPH_HSP1            RCC_AHB1ENR1_HSP1EN
 #else
-#define LL_AHB1_GRP1_PERIPH_HSP1          0
+#define LL_AHB1_GRP1_PERIPH_HSP1            0U
 #endif /* #if defined(HSP1) */
-#define LL_AHB1_GRP1_PERIPH_FLASH         RCC_AHB1ENR1_FLASHEN
-#define LL_AHB1_GRP1_PERIPH_CRC           RCC_AHB1ENR1_CRCEN
-#define LL_AHB1_GRP1_PERIPH_TSC           RCC_AHB1ENR1_TSCEN
-#define LL_AHB1_GRP1_PERIPH_RAMCFG        RCC_AHB1ENR1_RAMCFGEN
-#define LL_AHB1_GRP1_PERIPH_GTZC1         RCC_AHB1ENR1_GTZC1EN
-#define LL_AHB1_GRP1_PERIPH_ICACHE        RCC_AHB1SLPENR1_ICACHESLPEN
+#define LL_AHB1_GRP1_PERIPH_FLASH           RCC_AHB1ENR1_FLASHEN
+#define LL_AHB1_GRP1_PERIPH_CRC             RCC_AHB1ENR1_CRCEN
+#define LL_AHB1_GRP1_PERIPH_TSC             RCC_AHB1ENR1_TSCEN
+#define LL_AHB1_GRP1_PERIPH_RAMCFG          RCC_AHB1ENR1_RAMCFGEN
+#define LL_AHB1_GRP1_PERIPH_GTZC1           RCC_AHB1ENR1_GTZC1EN
+#define LL_AHB1_GRP1_PERIPH_ICACHE          RCC_AHB1SLPENR1_ICACHESLPEN
 #if defined(SRAM4)
-#define LL_AHB1_GRP1_PERIPH_SRAM4         RCC_AHB1ENR1_SRAM4EN
+#define LL_AHB1_GRP1_PERIPH_SRAM4           RCC_AHB1ENR1_SRAM4EN
 #else
-#define LL_AHB1_GRP1_PERIPH_SRAM4       0
+#define LL_AHB1_GRP1_PERIPH_SRAM4           0U
 #endif /* #if defined(SRAM4) */
-#define LL_AHB1_GRP1_PERIPH_SRAM1         RCC_AHB1ENR1_SRAM1EN
-#define LL_AHB1_GRP1_PERIPH_ALL           (LL_AHB1_GRP1_PERIPH_GPDMA1 | \
-                                           LL_AHB1_GRP1_PERIPH_ADF1   | \
-                                           LL_AHB1_GRP1_PERIPH_FLASH  | \
-                                           LL_AHB1_GRP1_PERIPH_CRC    | \
-                                           LL_AHB1_GRP1_PERIPH_TSC    | \
-                                           LL_AHB1_GRP1_PERIPH_RAMCFG | \
-                                           LL_AHB1_GRP1_PERIPH_GTZC1  | \
-                                           LL_AHB1_GRP1_PERIPH_SRAM4  | \
-                                           LL_AHB1_GRP1_PERIPH_SRAM1  )
+#define LL_AHB1_GRP1_PERIPH_SRAM1           RCC_AHB1ENR1_SRAM1EN
+#define LL_AHB1_GRP1_PERIPH_ALL             (LL_AHB1_GRP1_PERIPH_GPDMA1 | \
+                                             LL_AHB1_GRP1_PERIPH_ADF1   | \
+                                             LL_AHB1_GRP1_PERIPH_HSP1   | \
+                                             LL_AHB1_GRP1_PERIPH_FLASH  | \
+                                             LL_AHB1_GRP1_PERIPH_CRC    | \
+                                             LL_AHB1_GRP1_PERIPH_TSC    | \
+                                             LL_AHB1_GRP1_PERIPH_RAMCFG | \
+                                             LL_AHB1_GRP1_PERIPH_GTZC1  | \
+                                             LL_AHB1_GRP1_PERIPH_SRAM4  | \
+                                             LL_AHB1_GRP1_PERIPH_SRAM1)
 /**
   * @}
   */
@@ -104,8 +109,8 @@ extern "C" {
 /** @defgroup BUS_LL_EC_AHB1_GRP2_PERIPH  AHB1 GRP2 PERIPH
   * @{
   */
-#define LL_AHB1_GRP2_PERIPH_PWR           RCC_AHB1ENR2_PWREN
-#define LL_AHB1_GRP2_PERIPH_ALL           RCC_AHB1ENR2_PWREN
+#define LL_AHB1_GRP2_PERIPH_PWR             RCC_AHB1ENR2_PWREN
+#define LL_AHB1_GRP2_PERIPH_ALL             RCC_AHB1ENR2_PWREN
 /**
   * @}
   */
@@ -113,76 +118,84 @@ extern "C" {
 /** @defgroup BUS_LL_EC_AHB2_GRP1_PERIPH  AHB2 GRP1 PERIPH
   * @{
   */
-#define LL_AHB2_GRP1_PERIPH_GPIOA          RCC_AHB2ENR1_GPIOAEN
-#define LL_AHB2_GRP1_PERIPH_GPIOB          RCC_AHB2ENR1_GPIOBEN
-#define LL_AHB2_GRP1_PERIPH_GPIOC          RCC_AHB2ENR1_GPIOCEN
-#define LL_AHB2_GRP1_PERIPH_GPIOD          RCC_AHB2ENR1_GPIODEN
-#define LL_AHB2_GRP1_PERIPH_GPIOE          RCC_AHB2ENR1_GPIOEEN
+#define LL_AHB2_GRP1_PERIPH_GPIOA           RCC_AHB2ENR1_GPIOAEN
+#define LL_AHB2_GRP1_PERIPH_GPIOB           RCC_AHB2ENR1_GPIOBEN
+#define LL_AHB2_GRP1_PERIPH_GPIOC           RCC_AHB2ENR1_GPIOCEN
+#define LL_AHB2_GRP1_PERIPH_GPIOD           RCC_AHB2ENR1_GPIODEN
+#define LL_AHB2_GRP1_PERIPH_GPIOE           RCC_AHB2ENR1_GPIOEEN
 #if defined(GPIOF)
-#define LL_AHB2_GRP1_PERIPH_GPIOF          RCC_AHB2ENR1_GPIOFEN
+#define LL_AHB2_GRP1_PERIPH_GPIOF           RCC_AHB2ENR1_GPIOFEN
 #else
-#define LL_AHB2_GRP1_PERIPH_GPIOF          0
+#define LL_AHB2_GRP1_PERIPH_GPIOF           0U
 #endif /* #if defined(GPIOF) */
-#define LL_AHB2_GRP1_PERIPH_GPIOG          RCC_AHB2ENR1_GPIOGEN
-#define LL_AHB2_GRP1_PERIPH_GPIOH          RCC_AHB2ENR1_GPIOHEN
-#define LL_AHB2_GRP1_PERIPH_ADC12          RCC_AHB2ENR1_ADC12EN
-#define LL_AHB2_GRP1_PERIPH_DAC1           RCC_AHB2ENR1_DAC1EN
-#if defined(AES)
-#define LL_AHB2_GRP1_PERIPH_AES            RCC_AHB2ENR1_AESEN
+#if defined(GPIOG)
+#define LL_AHB2_GRP1_PERIPH_GPIOG           RCC_AHB2ENR1_GPIOGEN
 #else
-#define LL_AHB2_GRP1_PERIPH_AES            0
+#define LL_AHB2_GRP1_PERIPH_GPIOG           0U
+#endif /* #if defined(GPIOG) */
+#define LL_AHB2_GRP1_PERIPH_GPIOH           RCC_AHB2ENR1_GPIOHEN
+#define LL_AHB2_GRP1_PERIPH_ADC12           RCC_AHB2ENR1_ADC12EN
+#define LL_AHB2_GRP1_PERIPH_DAC1            RCC_AHB2ENR1_DAC1EN
+#if defined(AES)
+#define LL_AHB2_GRP1_PERIPH_AES             RCC_AHB2ENR1_AESEN
+#else
+#define LL_AHB2_GRP1_PERIPH_AES             0U
 #endif /* #if defined(AES) */
 #if defined(HASH)
-#define LL_AHB2_GRP1_PERIPH_HASH           RCC_AHB2ENR1_HASHEN
+#define LL_AHB2_GRP1_PERIPH_HASH            RCC_AHB2ENR1_HASHEN
 #else
-#define LL_AHB2_GRP1_PERIPH_HASH           0
+#define LL_AHB2_GRP1_PERIPH_HASH            0U
 #endif /* #if defined(HASH) */
 #if defined(RNG)
-#define LL_AHB2_GRP1_PERIPH_RNG            RCC_AHB2ENR1_RNGEN
+#define LL_AHB2_GRP1_PERIPH_RNG             RCC_AHB2ENR1_RNGEN
 #else
-#define LL_AHB2_GRP1_PERIPH_RNG            0
+#define LL_AHB2_GRP1_PERIPH_RNG             0U
 #endif /* #if defined(RNG) */
 #if defined(PKA)
-#define LL_AHB2_GRP1_PERIPH_PKA            RCC_AHB2ENR1_PKAEN
+#define LL_AHB2_GRP1_PERIPH_PKA             RCC_AHB2ENR1_PKAEN
 #else
-#define LL_AHB2_GRP1_PERIPH_PKA            0
+#define LL_AHB2_GRP1_PERIPH_PKA             0U
 #endif /* #if defined(PKA) */
 #if defined(SAES)
-#define LL_AHB2_GRP1_PERIPH_SAES           RCC_AHB2ENR1_SAESEN
+#define LL_AHB2_GRP1_PERIPH_SAES            RCC_AHB2ENR1_SAESEN
 #else
-#define LL_AHB2_GRP1_PERIPH_SAES           0
+#define LL_AHB2_GRP1_PERIPH_SAES            0U
 #endif /* #if defined(SAES) */
 #if defined(CCB)
-#define LL_AHB2_GRP1_PERIPH_CCB            RCC_AHB2ENR1_CCBEN
+#define LL_AHB2_GRP1_PERIPH_CCB             RCC_AHB2ENR1_CCBEN
 #else
-#define LL_AHB2_GRP1_PERIPH_CCB            0
+#define LL_AHB2_GRP1_PERIPH_CCB             0U
 #endif /* #if defined(CCB) */
-#define LL_AHB2_GRP1_PERIPH_SDMMC1         RCC_AHB2ENR1_SDMMC1EN
-#define LL_AHB2_GRP1_PERIPH_SRAM2          RCC_AHB2ENR1_SRAM2EN
-#if defined(SRAM3)
-#define LL_AHB2_GRP1_PERIPH_SRAM3  RCC_AHB2ENR1_SRAM3EN
+#if defined(SDMMC1)
+#define LL_AHB2_GRP1_PERIPH_SDMMC1          RCC_AHB2ENR1_SDMMC1EN
 #else
-#define LL_AHB2_GRP1_PERIPH_SRAM3       0
+#define LL_AHB2_GRP1_PERIPH_SDMMC1          0U
+#endif /* SDMMC1 */
+#define LL_AHB2_GRP1_PERIPH_SRAM2           RCC_AHB2ENR1_SRAM2EN
+#if defined(SRAM3)
+#define LL_AHB2_GRP1_PERIPH_SRAM3           RCC_AHB2ENR1_SRAM3EN
+#else
+#define LL_AHB2_GRP1_PERIPH_SRAM3           0U
 #endif /* #if defined(SRAM3) */
-#define LL_AHB2_GRP1_PERIPH_ALL            (LL_AHB2_GRP1_PERIPH_GPIOA  |\
-                                            LL_AHB2_GRP1_PERIPH_GPIOB  |\
-                                            LL_AHB2_GRP1_PERIPH_GPIOC  |\
-                                            LL_AHB2_GRP1_PERIPH_GPIOD  |\
-                                            LL_AHB2_GRP1_PERIPH_GPIOE  |\
-                                            LL_AHB2_GRP1_PERIPH_GPIOF  |\
-                                            LL_AHB2_GRP1_PERIPH_GPIOG  |\
-                                            LL_AHB2_GRP1_PERIPH_GPIOH  |\
-                                            LL_AHB2_GRP1_PERIPH_ADC12  |\
-                                            LL_AHB2_GRP1_PERIPH_DAC1   |\
-                                            LL_AHB2_GRP1_PERIPH_AES    |\
-                                            LL_AHB2_GRP1_PERIPH_HASH   |\
-                                            LL_AHB2_GRP1_PERIPH_RNG    |\
-                                            LL_AHB2_GRP1_PERIPH_PKA    |\
-                                            LL_AHB2_GRP1_PERIPH_SAES   |\
-                                            LL_AHB2_GRP1_PERIPH_CCB    |\
-                                            LL_AHB2_GRP1_PERIPH_SDMMC1 |\
-                                            LL_AHB2_GRP1_PERIPH_SRAM2  |\
-                                            LL_AHB2_GRP1_PERIPH_SRAM3)
+#define LL_AHB2_GRP1_PERIPH_ALL             (LL_AHB2_GRP1_PERIPH_GPIOA  | \
+                                             LL_AHB2_GRP1_PERIPH_GPIOB  | \
+                                             LL_AHB2_GRP1_PERIPH_GPIOC  | \
+                                             LL_AHB2_GRP1_PERIPH_GPIOD  | \
+                                             LL_AHB2_GRP1_PERIPH_GPIOE  | \
+                                             LL_AHB2_GRP1_PERIPH_GPIOF  | \
+                                             LL_AHB2_GRP1_PERIPH_GPIOG  | \
+                                             LL_AHB2_GRP1_PERIPH_GPIOH  | \
+                                             LL_AHB2_GRP1_PERIPH_ADC12  | \
+                                             LL_AHB2_GRP1_PERIPH_DAC1   | \
+                                             LL_AHB2_GRP1_PERIPH_AES    | \
+                                             LL_AHB2_GRP1_PERIPH_HASH   | \
+                                             LL_AHB2_GRP1_PERIPH_RNG    | \
+                                             LL_AHB2_GRP1_PERIPH_PKA    | \
+                                             LL_AHB2_GRP1_PERIPH_SAES   | \
+                                             LL_AHB2_GRP1_PERIPH_CCB    | \
+                                             LL_AHB2_GRP1_PERIPH_SDMMC1 | \
+                                             LL_AHB2_GRP1_PERIPH_SRAM2  | \
+                                             LL_AHB2_GRP1_PERIPH_SRAM3)
 
 /**
   * @}
@@ -191,8 +204,8 @@ extern "C" {
 /** @defgroup BUS_LL_EC_AHB2_GRP2_PERIPH  AHB2 GRP2 PERIPH
   * @{
   */
-#define LL_AHB2_GRP2_PERIPH_OCTOSPI1       RCC_AHB2ENR2_OCTOSPI1EN
-#define LL_AHB2_GRP2_PERIPH_ALL            RCC_AHB2ENR2_OCTOSPI1EN
+#define LL_AHB2_GRP2_PERIPH_OCTOSPI1        RCC_AHB2ENR2_OCTOSPI1EN
+#define LL_AHB2_GRP2_PERIPH_ALL             RCC_AHB2ENR2_OCTOSPI1EN
 /**
   * @}
   */
@@ -200,54 +213,58 @@ extern "C" {
 /** @defgroup BUS_LL_EC_APB1_GRP1_PERIPH  APB1 GRP1 PERIPH
   * @{
   */
-#define LL_APB1_GRP1_PERIPH_TIM2          RCC_APB1ENR1_TIM2EN
-#define LL_APB1_GRP1_PERIPH_TIM3          RCC_APB1ENR1_TIM3EN
-#define LL_APB1_GRP1_PERIPH_TIM4          RCC_APB1ENR1_TIM4EN
-#define LL_APB1_GRP1_PERIPH_TIM6          RCC_APB1ENR1_TIM6EN
-#define LL_APB1_GRP1_PERIPH_TIM7          RCC_APB1ENR1_TIM7EN
-#define LL_APB1_GRP1_PERIPH_SPI3          RCC_APB1ENR1_SPI3EN
+#define LL_APB1_GRP1_PERIPH_TIM2            RCC_APB1ENR1_TIM2EN
+#define LL_APB1_GRP1_PERIPH_TIM3            RCC_APB1ENR1_TIM3EN
+#define LL_APB1_GRP1_PERIPH_TIM4            RCC_APB1ENR1_TIM4EN
+#define LL_APB1_GRP1_PERIPH_TIM6            RCC_APB1ENR1_TIM6EN
+#define LL_APB1_GRP1_PERIPH_TIM7            RCC_APB1ENR1_TIM7EN
+#define LL_APB1_GRP1_PERIPH_SPI3            RCC_APB1ENR1_SPI3EN
 #if defined(SPI4)
-#define LL_APB1_GRP1_PERIPH_SPI4          RCC_APB1ENR1_SPI4EN
+#define LL_APB1_GRP1_PERIPH_SPI4            RCC_APB1ENR1_SPI4EN
 #else
-#define LL_APB1_GRP1_PERIPH_SPI4          0
+#define LL_APB1_GRP1_PERIPH_SPI4            0U
 #endif /* #if defined(SPI4) */
-#define LL_APB1_GRP1_PERIPH_WWDG          RCC_APB1ENR1_WWDGEN
-#define LL_APB1_GRP1_PERIPH_SPI2          RCC_APB1ENR1_SPI2EN
+#define LL_APB1_GRP1_PERIPH_WWDG            RCC_APB1ENR1_WWDGEN
+#define LL_APB1_GRP1_PERIPH_SPI2            RCC_APB1ENR1_SPI2EN
 #if defined(USART2)
 #define LL_APB1_GRP1_PERIPH_USART2          RCC_APB1ENR1_USART2EN
 #else
-#define LL_APB1_GRP1_PERIPH_USART2          0
+#define LL_APB1_GRP1_PERIPH_USART2          0U
 #endif /* #if defined(USART2) */
-#define LL_APB1_GRP1_PERIPH_USART3        RCC_APB1ENR1_USART3EN
-#define LL_APB1_GRP1_PERIPH_UART4         RCC_APB1ENR1_UART4EN
-#define LL_APB1_GRP1_PERIPH_UART5         RCC_APB1ENR1_UART5EN
-#define LL_APB1_GRP1_PERIPH_I2C1          RCC_APB1ENR1_I2C1EN
-#define LL_APB1_GRP1_PERIPH_I2C2          RCC_APB1ENR1_I2C2EN
-#define LL_APB1_GRP1_PERIPH_I3C1          RCC_APB1ENR1_I3C1EN
-#define LL_APB1_GRP1_PERIPH_CRS           RCC_APB1ENR1_CRSEN
-#define LL_APB1_GRP1_PERIPH_OPAMP         RCC_APB1ENR1_OPAMPEN
-#define LL_APB1_GRP1_PERIPH_VREF          RCC_APB1ENR1_VREFEN
-#define LL_APB1_GRP1_PERIPH_RTCAPB        RCC_APB1ENR1_RTCAPBEN
-#define LL_APB1_GRP1_PERIPH_ALL           ( LL_APB1_GRP1_PERIPH_TIM2             |\
-                                            LL_APB1_GRP1_PERIPH_TIM3             |\
-                                            LL_APB1_GRP1_PERIPH_TIM4             |\
-                                            LL_APB1_GRP1_PERIPH_TIM6             |\
-                                            LL_APB1_GRP1_PERIPH_TIM7             |\
-                                            LL_APB1_GRP1_PERIPH_SPI3             |\
-                                            LL_APB1_GRP1_PERIPH_SPI4             |\
-                                            LL_APB1_GRP1_PERIPH_WWDG             |\
-                                            LL_APB1_GRP1_PERIPH_SPI2             |\
-                                            LL_APB1_GRP1_PERIPH_USART2           |\
-                                            LL_APB1_GRP1_PERIPH_USART3           |\
-                                            LL_APB1_GRP1_PERIPH_UART4            |\
-                                            LL_APB1_GRP1_PERIPH_UART5            |\
-                                            LL_APB1_GRP1_PERIPH_I2C1             |\
-                                            LL_APB1_GRP1_PERIPH_I2C2             |\
-                                            LL_APB1_GRP1_PERIPH_I3C1             |\
-                                            LL_APB1_GRP1_PERIPH_CRS              |\
-                                            LL_APB1_GRP1_PERIPH_OPAMP            |\
-                                            LL_APB1_GRP1_PERIPH_VREF             |\
-                                            LL_APB1_GRP1_PERIPH_RTCAPB           )
+#define LL_APB1_GRP1_PERIPH_USART3          RCC_APB1ENR1_USART3EN
+#define LL_APB1_GRP1_PERIPH_UART4           RCC_APB1ENR1_UART4EN
+#define LL_APB1_GRP1_PERIPH_UART5           RCC_APB1ENR1_UART5EN
+#define LL_APB1_GRP1_PERIPH_I2C1            RCC_APB1ENR1_I2C1EN
+#if defined(I2C2)
+#define LL_APB1_GRP1_PERIPH_I2C2            RCC_APB1ENR1_I2C2EN
+#else
+#define LL_APB1_GRP1_PERIPH_I2C2            0U
+#endif /* I2C2 */
+#define LL_APB1_GRP1_PERIPH_I3C1            RCC_APB1ENR1_I3C1EN
+#define LL_APB1_GRP1_PERIPH_CRS             RCC_APB1ENR1_CRSEN
+#define LL_APB1_GRP1_PERIPH_OPAMP           RCC_APB1ENR1_OPAMPEN
+#define LL_APB1_GRP1_PERIPH_VREF            RCC_APB1ENR1_VREFEN
+#define LL_APB1_GRP1_PERIPH_RTCAPB          RCC_APB1ENR1_RTCAPBEN
+#define LL_APB1_GRP1_PERIPH_ALL             (LL_APB1_GRP1_PERIPH_TIM2             | \
+                                             LL_APB1_GRP1_PERIPH_TIM3             | \
+                                             LL_APB1_GRP1_PERIPH_TIM4             | \
+                                             LL_APB1_GRP1_PERIPH_TIM6             | \
+                                             LL_APB1_GRP1_PERIPH_TIM7             | \
+                                             LL_APB1_GRP1_PERIPH_SPI3             | \
+                                             LL_APB1_GRP1_PERIPH_SPI4             | \
+                                             LL_APB1_GRP1_PERIPH_WWDG             | \
+                                             LL_APB1_GRP1_PERIPH_SPI2             | \
+                                             LL_APB1_GRP1_PERIPH_USART2           | \
+                                             LL_APB1_GRP1_PERIPH_USART3           | \
+                                             LL_APB1_GRP1_PERIPH_UART4            | \
+                                             LL_APB1_GRP1_PERIPH_UART5            | \
+                                             LL_APB1_GRP1_PERIPH_I2C1             | \
+                                             LL_APB1_GRP1_PERIPH_I2C2             | \
+                                             LL_APB1_GRP1_PERIPH_I3C1             | \
+                                             LL_APB1_GRP1_PERIPH_CRS              | \
+                                             LL_APB1_GRP1_PERIPH_OPAMP            | \
+                                             LL_APB1_GRP1_PERIPH_VREF             | \
+                                             LL_APB1_GRP1_PERIPH_RTCAPB)
 /**
   * @}
   */
@@ -257,15 +274,19 @@ extern "C" {
   * @{
   */
 #if defined(I2C4)
-#define LL_APB1_GRP2_PERIPH_I2C4          RCC_APB1ENR2_I2C4EN
+#define LL_APB1_GRP2_PERIPH_I2C4            RCC_APB1ENR2_I2C4EN
 #else
-#define LL_APB1_GRP2_PERIPH_I2C4          0
+#define LL_APB1_GRP2_PERIPH_I2C4            0U
 #endif /* #if defined(I2C4) */
-#define LL_APB1_GRP2_PERIPH_LPTIM2         RCC_APB1ENR2_LPTIM2EN
-#define LL_APB1_GRP2_PERIPH_FDCAN          RCC_APB1ENR2_FDCANEN
-#define LL_APB1_GRP2_PERIPH_ALL            (LL_APB1_GRP2_PERIPH_I2C4 |\
-                                            LL_APB1_GRP2_PERIPH_LPTIM2 |\
-                                            LL_APB1_GRP2_PERIPH_FDCAN )
+#define LL_APB1_GRP2_PERIPH_LPTIM2          RCC_APB1ENR2_LPTIM2EN
+#if defined(FDCAN1)
+#define LL_APB1_GRP2_PERIPH_FDCAN           RCC_APB1ENR2_FDCANEN
+#else
+#define LL_APB1_GRP2_PERIPH_FDCAN           0U
+#endif /* FDCAN1 */
+#define LL_APB1_GRP2_PERIPH_ALL             (LL_APB1_GRP2_PERIPH_I2C4   | \
+                                             LL_APB1_GRP2_PERIPH_LPTIM2 | \
+                                             LL_APB1_GRP2_PERIPH_FDCAN)
 /**
   * @}
   */
@@ -273,36 +294,44 @@ extern "C" {
 /** @defgroup BUS_LL_EC_APB2_GRP1_PERIPH  APB2 GRP1 PERIPH
   * @{
   */
-#define LL_APB2_GRP1_PERIPH_TIM1           RCC_APB2ENR_TIM1EN
-#define LL_APB2_GRP1_PERIPH_SPI1           RCC_APB2ENR_SPI1EN
+#define LL_APB2_GRP1_PERIPH_TIM1            RCC_APB2ENR_TIM1EN
+#define LL_APB2_GRP1_PERIPH_SPI1            RCC_APB2ENR_SPI1EN
 #if defined(TIM8)
-#define LL_APB2_GRP1_PERIPH_TIM8           RCC_APB2ENR_TIM8EN
+#define LL_APB2_GRP1_PERIPH_TIM8            RCC_APB2ENR_TIM8EN
 #else
-#define LL_APB2_GRP1_PERIPH_TIM8           0
+#define LL_APB2_GRP1_PERIPH_TIM8            0U
 #endif /* #if defined(TIM8) */
-#define LL_APB2_GRP1_PERIPH_USART1         RCC_APB2ENR_USART1EN
+#define LL_APB2_GRP1_PERIPH_USART1          RCC_APB2ENR_USART1EN
 #if defined(TIM12)
 #define LL_APB2_GRP1_PERIPH_TIM12           RCC_APB2ENR_TIM12EN
 #else
-#define LL_APB2_GRP1_PERIPH_TIM12           0
+#define LL_APB2_GRP1_PERIPH_TIM12           0U
 #endif /* #if defined(TIM12) */
-#define LL_APB2_GRP1_PERIPH_TIM15          RCC_APB2ENR_TIM15EN
-#define LL_APB2_GRP1_PERIPH_TIM16          RCC_APB2ENR_TIM16EN
-#define LL_APB2_GRP1_PERIPH_TIM17          RCC_APB2ENR_TIM17EN
-#define LL_APB2_GRP1_PERIPH_SAI1           RCC_APB2ENR_SAI1EN
-#define LL_APB2_GRP1_PERIPH_USB1           RCC_APB2ENR_USB1EN
-#define LL_APB2_GRP1_PERIPH_I3C2           RCC_APB2ENR_I3C2EN
-#define LL_APB2_GRP1_PERIPH_ALL            (LL_APB2_GRP1_PERIPH_TIM1   |\
-                                            LL_APB2_GRP1_PERIPH_SPI1   |\
-                                            LL_APB2_GRP1_PERIPH_TIM8  |\
-                                            LL_APB2_GRP1_PERIPH_USART1 |\
-                                            LL_APB2_GRP1_PERIPH_TIM12  |\
-                                            LL_APB2_GRP1_PERIPH_TIM15  |\
-                                            LL_APB2_GRP1_PERIPH_TIM16  |\
-                                            LL_APB2_GRP1_PERIPH_TIM17  |\
-                                            LL_APB2_GRP1_PERIPH_SAI1   |\
-                                            LL_APB2_GRP1_PERIPH_USB1   |\
-                                            LL_APB2_GRP1_PERIPH_I3C2   )
+#define LL_APB2_GRP1_PERIPH_TIM15           RCC_APB2ENR_TIM15EN
+#define LL_APB2_GRP1_PERIPH_TIM16           RCC_APB2ENR_TIM16EN
+#define LL_APB2_GRP1_PERIPH_TIM17           RCC_APB2ENR_TIM17EN
+#if defined(SAI1)
+#define LL_APB2_GRP1_PERIPH_SAI1            RCC_APB2ENR_SAI1EN
+#else
+#define LL_APB2_GRP1_PERIPH_SAI1            0U
+#endif /* SAI1 */
+#define LL_APB2_GRP1_PERIPH_USB1            RCC_APB2ENR_USB1EN
+#if defined(I3C2)
+#define LL_APB2_GRP1_PERIPH_I3C2            RCC_APB2ENR_I3C2EN
+#else
+#define LL_APB2_GRP1_PERIPH_I3C2            0U
+#endif /* I3C2 */
+#define LL_APB2_GRP1_PERIPH_ALL             (LL_APB2_GRP1_PERIPH_TIM1   | \
+                                             LL_APB2_GRP1_PERIPH_SPI1   | \
+                                             LL_APB2_GRP1_PERIPH_TIM8   | \
+                                             LL_APB2_GRP1_PERIPH_USART1 | \
+                                             LL_APB2_GRP1_PERIPH_TIM12  | \
+                                             LL_APB2_GRP1_PERIPH_TIM15  | \
+                                             LL_APB2_GRP1_PERIPH_TIM16  | \
+                                             LL_APB2_GRP1_PERIPH_TIM17  | \
+                                             LL_APB2_GRP1_PERIPH_SAI1   | \
+                                             LL_APB2_GRP1_PERIPH_USB1   | \
+                                             LL_APB2_GRP1_PERIPH_I3C2)
 /**
   * @}
   */
@@ -316,6 +345,11 @@ extern "C" {
 #define LL_APB3_GRP1_PERIPH_LPTIM1        RCC_APB3ENR_LPTIM1EN
 #define LL_APB3_GRP1_PERIPH_LPTIM3        RCC_APB3ENR_LPTIM3EN
 #define LL_APB3_GRP1_PERIPH_LPTIM4        RCC_APB3ENR_LPTIM4EN
+#if defined(LCD)
+#define LL_APB3_GRP1_PERIPH_LCD           RCC_APB3ENR_LCDEN
+#else
+#define LL_APB3_GRP1_PERIPH_LCD           0U
+#endif /* LCD */
 #define LL_APB3_GRP1_PERIPH_COMP          RCC_APB3ENR_COMPEN
 #define LL_APB3_GRP1_PERIPH_ALL           (LL_APB3_GRP1_PERIPH_SYSCFG  |\
                                            LL_APB3_GRP1_PERIPH_LPUART1 |\
@@ -323,6 +357,7 @@ extern "C" {
                                            LL_APB3_GRP1_PERIPH_LPTIM1  |\
                                            LL_APB3_GRP1_PERIPH_LPTIM3  |\
                                            LL_APB3_GRP1_PERIPH_LPTIM4  |\
+                                           LL_APB3_GRP1_PERIPH_LCD     |\
                                            LL_APB3_GRP1_PERIPH_COMP    )
 
 /**
@@ -357,8 +392,8 @@ extern "C" {
   * @param  Periphs This parameter can be a combination of the following values:
   *         @arg @ref LL_AHB1_GRP1_PERIPH_ALL
   *         @arg @ref LL_AHB1_GRP1_PERIPH_GPDMA1
-  *         @arg @ref LL_AHB1_GRP1_PERIPH_ADF1
-  *         @arg @ref LL_AHB1_GRP1_PERIPH_HSP1 (*)
+  *         @arg @ref LL_AHB1_GRP1_PERIPH_ADF1  (*)
+  *         @arg @ref LL_AHB1_GRP1_PERIPH_HSP1  (*)
   *         @arg @ref LL_AHB1_GRP1_PERIPH_FLASH
   *         @arg @ref LL_AHB1_GRP1_PERIPH_CRC
   *         @arg @ref LL_AHB1_GRP1_PERIPH_TSC
@@ -394,8 +429,8 @@ __STATIC_INLINE void LL_AHB1_GRP1_EnableClock(uint32_t Periphs)
   * @param  Periphs This parameter can be a combination of the following values:
   *         @arg @ref LL_AHB1_GRP1_PERIPH_ALL
   *         @arg @ref LL_AHB1_GRP1_PERIPH_GPDMA1
-  *         @arg @ref LL_AHB1_GRP1_PERIPH_ADF1
-  *         @arg @ref LL_AHB1_GRP1_PERIPH_HSP1 (*)
+  *         @arg @ref LL_AHB1_GRP1_PERIPH_ADF1  (*)
+  *         @arg @ref LL_AHB1_GRP1_PERIPH_HSP1  (*)
   *         @arg @ref LL_AHB1_GRP1_PERIPH_FLASH
   *         @arg @ref LL_AHB1_GRP1_PERIPH_CRC
   *         @arg @ref LL_AHB1_GRP1_PERIPH_TSC
@@ -427,8 +462,8 @@ __STATIC_INLINE uint32_t LL_AHB1_GRP1_IsEnabledClock(uint32_t Periphs)
   * @param  Periphs This parameter can be a combination of the following values:
   *         @arg @ref LL_AHB1_GRP1_PERIPH_ALL
   *         @arg @ref LL_AHB1_GRP1_PERIPH_GPDMA1
-  *         @arg @ref LL_AHB1_GRP1_PERIPH_ADF1
-  *         @arg @ref LL_AHB1_GRP1_PERIPH_HSP1 (*)
+  *         @arg @ref LL_AHB1_GRP1_PERIPH_ADF1  (*)
+  *         @arg @ref LL_AHB1_GRP1_PERIPH_HSP1  (*)
   *         @arg @ref LL_AHB1_GRP1_PERIPH_FLASH
   *         @arg @ref LL_AHB1_GRP1_PERIPH_CRC
   *         @arg @ref LL_AHB1_GRP1_PERIPH_TSC
@@ -456,7 +491,7 @@ __STATIC_INLINE void LL_AHB1_GRP1_DisableClock(uint32_t Periphs)
   * @param  Periphs This parameter can be a combination of the following values:
   *         @arg @ref LL_AHB1_GRP1_PERIPH_ALL
   *         @arg @ref LL_AHB1_GRP1_PERIPH_GPDMA1
-  *         @arg @ref LL_AHB1_GRP1_PERIPH_ADF1
+  *         @arg @ref LL_AHB1_GRP1_PERIPH_ADF1 (*)
   *         @arg @ref LL_AHB1_GRP1_PERIPH_HSP1 (*)
   *         @arg @ref LL_AHB1_GRP1_PERIPH_CRC
   *         @arg @ref LL_AHB1_GRP1_PERIPH_TSC
@@ -481,7 +516,7 @@ __STATIC_INLINE void LL_AHB1_GRP1_ForceReset(uint32_t Periphs)
   * @param  Periphs This parameter can be a combination of the following values:
   *         @arg @ref LL_AHB1_GRP1_PERIPH_ALL
   *         @arg @ref LL_AHB1_GRP1_PERIPH_GPDMA1
-  *         @arg @ref LL_AHB1_GRP1_PERIPH_ADF1
+  *         @arg @ref LL_AHB1_GRP1_PERIPH_ADF1 (*)
   *         @arg @ref LL_AHB1_GRP1_PERIPH_HSP1 (*)
   *         @arg @ref LL_AHB1_GRP1_PERIPH_CRC
   *         @arg @ref LL_AHB1_GRP1_PERIPH_TSC
@@ -511,7 +546,7 @@ __STATIC_INLINE void LL_AHB1_GRP1_ReleaseReset(uint32_t Periphs)
   * @param  Periphs This parameter can be a combination of the following values:
   *         @arg @ref LL_AHB1_GRP1_PERIPH_ALL
   *         @arg @ref LL_AHB1_GRP1_PERIPH_GPDMA1
-  *         @arg @ref LL_AHB1_GRP1_PERIPH_ADF1
+  *         @arg @ref LL_AHB1_GRP1_PERIPH_ADF1  (*)
   *         @arg @ref LL_AHB1_GRP1_PERIPH_FLASH
   *         @arg @ref LL_AHB1_GRP1_PERIPH_CRC
   *         @arg @ref LL_AHB1_GRP1_PERIPH_TSC
@@ -549,8 +584,8 @@ __STATIC_INLINE void LL_AHB1_GRP1_EnableClockSleep(uint32_t Periphs)
   * @param  Periphs This parameter can be a combination of the following values:
   *         @arg @ref LL_AHB1_GRP1_PERIPH_ALL
   *         @arg @ref LL_AHB1_GRP1_PERIPH_GPDMA1
-  *         @arg @ref LL_AHB1_GRP1_PERIPH_ADF1
-  *         @arg @ref LL_AHB1_GRP1_PERIPH_HSP1 (*)
+  *         @arg @ref LL_AHB1_GRP1_PERIPH_ADF1  (*)
+  *         @arg @ref LL_AHB1_GRP1_PERIPH_HSP1  (*)
   *         @arg @ref LL_AHB1_GRP1_PERIPH_FLASH
   *         @arg @ref LL_AHB1_GRP1_PERIPH_CRC
   *         @arg @ref LL_AHB1_GRP1_PERIPH_TSC
@@ -584,8 +619,8 @@ __STATIC_INLINE uint32_t LL_AHB1_GRP1_IsEnabledClockSleep(uint32_t Periphs)
   * @param  Periphs This parameter can be a combination of the following values:
   *         @arg @ref LL_AHB1_GRP1_PERIPH_ALL
   *         @arg @ref LL_AHB1_GRP1_PERIPH_GPDMA1
-  *         @arg @ref LL_AHB1_GRP1_PERIPH_ADF1
-  *         @arg @ref LL_AHB1_GRP1_PERIPH_HSP1 (*)
+  *         @arg @ref LL_AHB1_GRP1_PERIPH_ADF1  (*)
+  *         @arg @ref LL_AHB1_GRP1_PERIPH_HSP1  (*)
   *         @arg @ref LL_AHB1_GRP1_PERIPH_FLASH
   *         @arg @ref LL_AHB1_GRP1_PERIPH_CRC
   *         @arg @ref LL_AHB1_GRP1_PERIPH_TSC
@@ -619,7 +654,7 @@ __STATIC_INLINE void LL_AHB1_GRP1_DisableClockSleep(uint32_t Periphs)
   * @param  Periphs This parameter can be a combination of the following values:
   *         @arg @ref LL_AHB1_GRP1_PERIPH_ALL
   *         @arg @ref LL_AHB1_GRP1_PERIPH_GPDMA1
-  *         @arg @ref LL_AHB1_GRP1_PERIPH_ADF1
+  *         @arg @ref LL_AHB1_GRP1_PERIPH_ADF1  (*)
   *         @arg @ref LL_AHB1_GRP1_PERIPH_FLASH
   *         @arg @ref LL_AHB1_GRP1_PERIPH_RAMCFG
   *         @arg @ref LL_AHB1_GRP1_PERIPH_GTZC1 (*)
@@ -650,7 +685,7 @@ __STATIC_INLINE void LL_AHB1_GRP1_EnableClockStop(uint32_t Periphs)
   * @param  Periphs This parameter can be a combination of the following values:
   *         @arg @ref LL_AHB1_GRP1_PERIPH_ALL
   *         @arg @ref LL_AHB1_GRP1_PERIPH_GPDMA1
-  *         @arg @ref LL_AHB1_GRP1_PERIPH_ADF1
+  *         @arg @ref LL_AHB1_GRP1_PERIPH_ADF1  (*)
   *         @arg @ref LL_AHB1_GRP1_PERIPH_FLASH
   *         @arg @ref LL_AHB1_GRP1_PERIPH_RAMCFG
   *         @arg @ref LL_AHB1_GRP1_PERIPH_GTZC1 (*)
@@ -677,7 +712,7 @@ __STATIC_INLINE uint32_t LL_AHB1_GRP1_IsEnabledClockStop(uint32_t Periphs)
   * @param  Periphs This parameter can be a combination of the following values:
   *         @arg @ref LL_AHB1_GRP1_PERIPH_ALL
   *         @arg @ref LL_AHB1_GRP1_PERIPH_GPDMA1
-  *         @arg @ref LL_AHB1_GRP1_PERIPH_ADF1
+  *         @arg @ref LL_AHB1_GRP1_PERIPH_ADF1  (*)
   *         @arg @ref LL_AHB1_GRP1_PERIPH_FLASH
   *         @arg @ref LL_AHB1_GRP1_PERIPH_RAMCFG
   *         @arg @ref LL_AHB1_GRP1_PERIPH_GTZC1 (*)
@@ -828,20 +863,20 @@ __STATIC_INLINE void LL_AHB1_GRP2_DisableClockSleep(uint32_t Periphs)
   *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOC
   *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOD
   *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOE
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOF (*)
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOG
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOF  (*)
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOG  (*)
   *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOH
   *         @arg @ref LL_AHB2_GRP1_PERIPH_ADC12
   *         @arg @ref LL_AHB2_GRP1_PERIPH_DAC1
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_AES (*)
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_HASH (*)
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_RNG (*)
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_PKA (*)
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_SAES (*)
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_CCB (*)
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_SDMMC1
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_AES    (*)
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_HASH   (*)
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_RNG    (*)
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_PKA    (*)
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_SAES   (*)
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_CCB    (*)
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_SDMMC1 (*)
   *         @arg @ref LL_AHB2_GRP1_PERIPH_SRAM2
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_SRAM3 (*)
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_SRAM3  (*)
   *
   *         (*) value not defined in all devices.
   * @retval None
@@ -883,20 +918,20 @@ __STATIC_INLINE void LL_AHB2_GRP1_EnableClock(uint32_t Periphs)
   *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOC
   *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOD
   *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOE
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOF (*)
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOG
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOF  (*)
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOG  (*)
   *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOH
   *         @arg @ref LL_AHB2_GRP1_PERIPH_ADC12
   *         @arg @ref LL_AHB2_GRP1_PERIPH_DAC1
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_AES (*)
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_HASH (*)
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_RNG (*)
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_PKA (*)
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_SAES (*)
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_CCB (*)
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_SDMMC1
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_AES    (*)
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_HASH   (*)
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_RNG    (*)
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_PKA    (*)
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_SAES   (*)
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_CCB    (*)
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_SDMMC1 (*)
   *         @arg @ref LL_AHB2_GRP1_PERIPH_SRAM2
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_SRAM3 (*)
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_SRAM3  (*)
   *
   *         (*) value not defined in all devices.
   * @retval State of Periphs (1 or 0).
@@ -934,20 +969,20 @@ __STATIC_INLINE uint32_t LL_AHB2_GRP1_IsEnabledClock(uint32_t Periphs)
   *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOC
   *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOD
   *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOE
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOF (*)
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOG
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOF  (*)
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOG  (*)
   *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOH
   *         @arg @ref LL_AHB2_GRP1_PERIPH_ADC12
   *         @arg @ref LL_AHB2_GRP1_PERIPH_DAC1
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_AES (*)
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_HASH (*)
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_RNG (*)
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_PKA (*)
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_SAES (*)
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_CCB (*)
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_SDMMC1
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_AES    (*)
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_HASH   (*)
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_RNG    (*)
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_PKA    (*)
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_SAES   (*)
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_CCB    (*)
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_SDMMC1 (*)
   *         @arg @ref LL_AHB2_GRP1_PERIPH_SRAM2
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_SRAM3 (*)
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_SRAM3  (*)
   *
   *         (*) value not defined in all devices.
   * @retval None
@@ -983,18 +1018,18 @@ __STATIC_INLINE void LL_AHB2_GRP1_DisableClock(uint32_t Periphs)
   *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOC
   *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOD
   *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOE
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOF (*)
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOG
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOF  (*)
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOG  (*)
   *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOH
   *         @arg @ref LL_AHB2_GRP1_PERIPH_ADC12
   *         @arg @ref LL_AHB2_GRP1_PERIPH_DAC1
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_AES (*)
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_HASH (*)
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_RNG (*)
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_PKA (*)
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_SAES (*)
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_CCB (*)
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_SDMMC1
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_AES    (*)
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_HASH   (*)
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_RNG    (*)
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_PKA    (*)
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_SAES   (*)
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_CCB    (*)
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_SDMMC1 (*)
   *
   *         (*) value not defined in all devices.
   * @retval None
@@ -1030,18 +1065,18 @@ __STATIC_INLINE void LL_AHB2_GRP1_ForceReset(uint32_t Periphs)
   *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOC
   *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOD
   *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOE
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOF (*)
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOG
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOF  (*)
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOG  (*)
   *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOH
   *         @arg @ref LL_AHB2_GRP1_PERIPH_ADC12
   *         @arg @ref LL_AHB2_GRP1_PERIPH_DAC1
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_AES (*)
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_HASH (*)
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_RNG (*)
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_PKA (*)
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_SAES (*)
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_CCB (*)
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_SDMMC1
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_AES    (*)
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_HASH   (*)
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_RNG    (*)
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_PKA    (*)
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_SAES   (*)
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_CCB    (*)
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_SDMMC1 (*)
   *
   *         (*) value not defined in all devices.
   * @retval None
@@ -1079,20 +1114,20 @@ __STATIC_INLINE void LL_AHB2_GRP1_ReleaseReset(uint32_t Periphs)
   *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOC
   *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOD
   *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOE
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOF (*)
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOG
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOF  (*)
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOG  (*)
   *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOH
   *         @arg @ref LL_AHB2_GRP1_PERIPH_ADC12
   *         @arg @ref LL_AHB2_GRP1_PERIPH_DAC1
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_AES (*)
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_HASH (*)
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_RNG (*)
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_PKA (*)
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_SAES (*)
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_CCB (*)
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_SDMMC1
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_AES    (*)
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_HASH   (*)
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_RNG    (*)
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_PKA    (*)
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_SAES   (*)
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_CCB    (*)
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_SDMMC1 (*)
   *         @arg @ref LL_AHB2_GRP1_PERIPH_SRAM2
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_SRAM3 (*)
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_SRAM3  (*)
   *
   *         (*) value not defined in all devices.
   * @retval None
@@ -1134,20 +1169,20 @@ __STATIC_INLINE void LL_AHB2_GRP1_EnableClockSleep(uint32_t Periphs)
   *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOC
   *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOD
   *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOE
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOF (*)
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOG
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOF  (*)
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOG  (*)
   *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOH
   *         @arg @ref LL_AHB2_GRP1_PERIPH_ADC12
   *         @arg @ref LL_AHB2_GRP1_PERIPH_DAC1
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_AES (*)
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_HASH (*)
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_RNG (*)
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_PKA (*)
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_SAES (*)
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_CCB (*)
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_SDMMC1
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_AES    (*)
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_HASH   (*)
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_RNG    (*)
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_PKA    (*)
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_SAES   (*)
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_CCB    (*)
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_SDMMC1 (*)
   *         @arg @ref LL_AHB2_GRP1_PERIPH_SRAM2
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_SRAM3 (*)
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_SRAM3  (*)
   *
   *         (*) value not defined in all devices.
   * @retval State of Periphs (1 or 0).
@@ -1185,20 +1220,20 @@ __STATIC_INLINE uint32_t LL_AHB2_GRP1_IsEnabledClockSleep(uint32_t Periphs)
   *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOC
   *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOD
   *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOE
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOF (*)
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOG
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOF  (*)
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOG  (*)
   *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOH
   *         @arg @ref LL_AHB2_GRP1_PERIPH_ADC12
   *         @arg @ref LL_AHB2_GRP1_PERIPH_DAC1
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_AES (*)
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_HASH (*)
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_RNG (*)
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_PKA (*)
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_SAES (*)
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_CCB (*)
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_SDMMC1
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_AES    (*)
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_HASH   (*)
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_RNG    (*)
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_PKA    (*)
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_SAES   (*)
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_CCB    (*)
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_SDMMC1 (*)
   *         @arg @ref LL_AHB2_GRP1_PERIPH_SRAM2
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_SRAM3 (*)
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_SRAM3  (*)
   *
   *         (*) value not defined in all devices.
   * @retval None
@@ -1229,7 +1264,7 @@ __STATIC_INLINE void LL_AHB2_GRP1_DisableClockSleep(uint32_t Periphs)
   *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOD
   *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOE
   *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOF (*)
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOG
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOG  (*)
   *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOH
   *         @arg @ref LL_AHB2_GRP1_PERIPH_DAC1
   *         @arg @ref LL_AHB2_GRP1_PERIPH_SRAM2
@@ -1268,7 +1303,7 @@ __STATIC_INLINE void LL_AHB2_GRP1_EnableClockStop(uint32_t Periphs)
   *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOD
   *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOE
   *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOF (*)
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOG
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOG  (*)
   *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOH
   *         @arg @ref LL_AHB2_GRP1_PERIPH_DAC1
   *         @arg @ref LL_AHB2_GRP1_PERIPH_SRAM2
@@ -1303,7 +1338,7 @@ __STATIC_INLINE uint32_t LL_AHB2_GRP1_IsEnabledClockStop(uint32_t Periphs)
   *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOD
   *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOE
   *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOF (*)
-  *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOG
+  *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOG  (*)
   *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOH
   *         @arg @ref LL_AHB2_GRP1_PERIPH_DAC1
   *         @arg @ref LL_AHB2_GRP1_PERIPH_SRAM2
@@ -1479,7 +1514,7 @@ __STATIC_INLINE void LL_AHB2_GRP2_DisableClockSleep(uint32_t Periphs)
   *         @arg @ref LL_APB1_GRP1_PERIPH_TIM6
   *         @arg @ref LL_APB1_GRP1_PERIPH_TIM7
   *         @arg @ref LL_APB1_GRP1_PERIPH_SPI3
-  *         @arg @ref LL_APB1_GRP1_PERIPH_SPI4 (*)
+  *         @arg @ref LL_APB1_GRP1_PERIPH_SPI4   (*)
   *         @arg @ref LL_APB1_GRP1_PERIPH_WWDG
   *         @arg @ref LL_APB1_GRP1_PERIPH_SPI2
   *         @arg @ref LL_APB1_GRP1_PERIPH_USART2 (*)
@@ -1487,7 +1522,7 @@ __STATIC_INLINE void LL_AHB2_GRP2_DisableClockSleep(uint32_t Periphs)
   *         @arg @ref LL_APB1_GRP1_PERIPH_UART4
   *         @arg @ref LL_APB1_GRP1_PERIPH_UART5
   *         @arg @ref LL_APB1_GRP1_PERIPH_I2C1
-  *         @arg @ref LL_APB1_GRP1_PERIPH_I2C2
+  *         @arg @ref LL_APB1_GRP1_PERIPH_I2C2   (*)
   *         @arg @ref LL_APB1_GRP1_PERIPH_I3C1
   *         @arg @ref LL_APB1_GRP1_PERIPH_CRS
   *         @arg @ref LL_APB1_GRP1_PERIPH_OPAMP
@@ -1513,7 +1548,7 @@ __STATIC_INLINE void LL_APB1_GRP1_EnableClock(uint32_t Periphs)
   * @param  Periphs This parameter can be a combination of the following values:
   *         @arg @ref LL_APB1_GRP2_PERIPH_ALL
   *         @arg @ref LL_APB1_GRP2_PERIPH_LPTIM2
-  *         @arg @ref LL_APB1_GRP2_PERIPH_FDCAN
+  *         @arg @ref LL_APB1_GRP2_PERIPH_FDCAN (*)
   * @retval None
   */
 __STATIC_INLINE void LL_APB1_GRP2_EnableClock(uint32_t Periphs)
@@ -1555,7 +1590,7 @@ __STATIC_INLINE void LL_APB1_GRP2_EnableClock(uint32_t Periphs)
   *         @arg @ref LL_APB1_GRP1_PERIPH_TIM6
   *         @arg @ref LL_APB1_GRP1_PERIPH_TIM7
   *         @arg @ref LL_APB1_GRP1_PERIPH_SPI3
-  *         @arg @ref LL_APB1_GRP1_PERIPH_SPI4 (*)
+  *         @arg @ref LL_APB1_GRP1_PERIPH_SPI4   (*)
   *         @arg @ref LL_APB1_GRP1_PERIPH_WWDG
   *         @arg @ref LL_APB1_GRP1_PERIPH_SPI2
   *         @arg @ref LL_APB1_GRP1_PERIPH_USART2 (*)
@@ -1563,7 +1598,7 @@ __STATIC_INLINE void LL_APB1_GRP2_EnableClock(uint32_t Periphs)
   *         @arg @ref LL_APB1_GRP1_PERIPH_UART4
   *         @arg @ref LL_APB1_GRP1_PERIPH_UART5
   *         @arg @ref LL_APB1_GRP1_PERIPH_I2C1
-  *         @arg @ref LL_APB1_GRP1_PERIPH_I2C2
+  *         @arg @ref LL_APB1_GRP1_PERIPH_I2C2   (*)
   *         @arg @ref LL_APB1_GRP1_PERIPH_I3C1
   *         @arg @ref LL_APB1_GRP1_PERIPH_CRS
   *         @arg @ref LL_APB1_GRP1_PERIPH_OPAMP
@@ -1585,7 +1620,7 @@ __STATIC_INLINE uint32_t LL_APB1_GRP1_IsEnabledClock(uint32_t Periphs)
   * @param  Periphs This parameter can be a combination of the following values:
   *         @arg @ref LL_APB1_GRP2_PERIPH_ALL
   *         @arg @ref LL_APB1_GRP2_PERIPH_LPTIM2
-  *         @arg @ref LL_APB1_GRP2_PERIPH_FDCAN
+  *         @arg @ref LL_APB1_GRP2_PERIPH_FDCAN (*)
   * @retval None
   */
 __STATIC_INLINE uint32_t LL_APB1_GRP2_IsEnabledClock(uint32_t Periphs)
@@ -1623,7 +1658,7 @@ __STATIC_INLINE uint32_t LL_APB1_GRP2_IsEnabledClock(uint32_t Periphs)
   *         @arg @ref LL_APB1_GRP1_PERIPH_TIM6
   *         @arg @ref LL_APB1_GRP1_PERIPH_TIM7
   *         @arg @ref LL_APB1_GRP1_PERIPH_SPI3
-  *         @arg @ref LL_APB1_GRP1_PERIPH_SPI4 (*)
+  *         @arg @ref LL_APB1_GRP1_PERIPH_SPI4   (*)
   *         @arg @ref LL_APB1_GRP1_PERIPH_WWDG
   *         @arg @ref LL_APB1_GRP1_PERIPH_SPI2
   *         @arg @ref LL_APB1_GRP1_PERIPH_USART2 (*)
@@ -1631,7 +1666,7 @@ __STATIC_INLINE uint32_t LL_APB1_GRP2_IsEnabledClock(uint32_t Periphs)
   *         @arg @ref LL_APB1_GRP1_PERIPH_UART4
   *         @arg @ref LL_APB1_GRP1_PERIPH_UART5
   *         @arg @ref LL_APB1_GRP1_PERIPH_I2C1
-  *         @arg @ref LL_APB1_GRP1_PERIPH_I2C2
+  *         @arg @ref LL_APB1_GRP1_PERIPH_I2C2   (*)
   *         @arg @ref LL_APB1_GRP1_PERIPH_I3C1
   *         @arg @ref LL_APB1_GRP1_PERIPH_CRS
   *         @arg @ref LL_APB1_GRP1_PERIPH_OPAMP
@@ -1653,9 +1688,9 @@ __STATIC_INLINE void LL_APB1_GRP1_DisableClock(uint32_t Periphs)
   *         APB1ENR2     FDCANEN       LL_APB1_GRP2_DisableClock
   * @param  Periphs This parameter can be a combination of the following values:
   *         @arg @ref LL_APB1_GRP2_PERIPH_ALL
-  *         @arg @ref LL_APB1_GRP2_PERIPH_I2C4 (*)
+  *         @arg @ref LL_APB1_GRP2_PERIPH_I2C4  (*)
   *         @arg @ref LL_APB1_GRP2_PERIPH_LPTIM2
-  *         @arg @ref LL_APB1_GRP2_PERIPH_FDCAN
+  *         @arg @ref LL_APB1_GRP2_PERIPH_FDCAN (*)
   *
   *         (*) value not defined in all devices.
   * @retval None
@@ -1693,14 +1728,14 @@ __STATIC_INLINE void LL_APB1_GRP2_DisableClock(uint32_t Periphs)
   *         @arg @ref LL_APB1_GRP1_PERIPH_TIM6
   *         @arg @ref LL_APB1_GRP1_PERIPH_TIM7
   *         @arg @ref LL_APB1_GRP1_PERIPH_SPI3
-  *         @arg @ref LL_APB1_GRP1_PERIPH_SPI4 (*)
+  *         @arg @ref LL_APB1_GRP1_PERIPH_SPI4   (*)
   *         @arg @ref LL_APB1_GRP1_PERIPH_SPI2
   *         @arg @ref LL_APB1_GRP1_PERIPH_USART2 (*)
   *         @arg @ref LL_APB1_GRP1_PERIPH_USART3
   *         @arg @ref LL_APB1_GRP1_PERIPH_UART4
   *         @arg @ref LL_APB1_GRP1_PERIPH_UART5
   *         @arg @ref LL_APB1_GRP1_PERIPH_I2C1
-  *         @arg @ref LL_APB1_GRP1_PERIPH_I2C2
+  *         @arg @ref LL_APB1_GRP1_PERIPH_I2C2   (*)
   *         @arg @ref LL_APB1_GRP1_PERIPH_I3C1
   *         @arg @ref LL_APB1_GRP1_PERIPH_CRS
   *         @arg @ref LL_APB1_GRP1_PERIPH_OPAMP
@@ -1721,9 +1756,9 @@ __STATIC_INLINE void LL_APB1_GRP1_ForceReset(uint32_t Periphs)
   *         APB1RSTR2     FDCANRST       LL_APB1_GRP2_ForceReset
   * @param  Periphs This parameter can be a combination of the following values:
   *         @arg @ref LL_APB1_GRP2_PERIPH_ALL
-  *         @arg @ref LL_APB1_GRP2_PERIPH_I2C4 (*)
+  *         @arg @ref LL_APB1_GRP2_PERIPH_I2C4   (*)
   *         @arg @ref LL_APB1_GRP2_PERIPH_LPTIM2
-  *         @arg @ref LL_APB1_GRP2_PERIPH_FDCAN
+  *         @arg @ref LL_APB1_GRP2_PERIPH_FDCAN  (*)
   *
   *         (*) value not defined in all devices.
   * @retval None
@@ -1761,14 +1796,14 @@ __STATIC_INLINE void LL_APB1_GRP2_ForceReset(uint32_t Periphs)
   *         @arg @ref LL_APB1_GRP1_PERIPH_TIM6
   *         @arg @ref LL_APB1_GRP1_PERIPH_TIM7
   *         @arg @ref LL_APB1_GRP1_PERIPH_SPI3
-  *         @arg @ref LL_APB1_GRP1_PERIPH_SPI4 (*)
+  *         @arg @ref LL_APB1_GRP1_PERIPH_SPI4   (*)
   *         @arg @ref LL_APB1_GRP1_PERIPH_SPI2
   *         @arg @ref LL_APB1_GRP1_PERIPH_USART2 (*)
   *         @arg @ref LL_APB1_GRP1_PERIPH_USART3
   *         @arg @ref LL_APB1_GRP1_PERIPH_UART4
   *         @arg @ref LL_APB1_GRP1_PERIPH_UART5
   *         @arg @ref LL_APB1_GRP1_PERIPH_I2C1
-  *         @arg @ref LL_APB1_GRP1_PERIPH_I2C2
+  *         @arg @ref LL_APB1_GRP1_PERIPH_I2C2   (*)
   *         @arg @ref LL_APB1_GRP1_PERIPH_I3C1
   *         @arg @ref LL_APB1_GRP1_PERIPH_CRS
   *         @arg @ref LL_APB1_GRP1_PERIPH_OPAMP
@@ -1789,9 +1824,9 @@ __STATIC_INLINE void LL_APB1_GRP1_ReleaseReset(uint32_t Periphs)
   *         APB1RSTR2     FDCANRST       LL_APB1_GRP2_ReleaseReset
   * @param  Periphs This parameter can be a combination of the following values:
   *         @arg @ref LL_APB1_GRP2_PERIPH_ALL
-  *         @arg @ref LL_APB1_GRP2_PERIPH_I2C4 (*)
+  *         @arg @ref LL_APB1_GRP2_PERIPH_I2C4   (*)
   *         @arg @ref LL_APB1_GRP2_PERIPH_LPTIM2
-  *         @arg @ref LL_APB1_GRP2_PERIPH_FDCAN
+  *         @arg @ref LL_APB1_GRP2_PERIPH_FDCAN  (*)
   *
   *         (*) value not defined in all devices.
   * @retval None
@@ -1831,7 +1866,7 @@ __STATIC_INLINE void LL_APB1_GRP2_ReleaseReset(uint32_t Periphs)
   *         @arg @ref LL_APB1_GRP1_PERIPH_TIM6
   *         @arg @ref LL_APB1_GRP1_PERIPH_TIM7
   *         @arg @ref LL_APB1_GRP1_PERIPH_SPI3
-  *         @arg @ref LL_APB1_GRP1_PERIPH_SPI4 (*)
+  *         @arg @ref LL_APB1_GRP1_PERIPH_SPI4   (*)
   *         @arg @ref LL_APB1_GRP1_PERIPH_WWDG
   *         @arg @ref LL_APB1_GRP1_PERIPH_SPI2
   *         @arg @ref LL_APB1_GRP1_PERIPH_USART2 (*)
@@ -1839,7 +1874,7 @@ __STATIC_INLINE void LL_APB1_GRP2_ReleaseReset(uint32_t Periphs)
   *         @arg @ref LL_APB1_GRP1_PERIPH_UART4
   *         @arg @ref LL_APB1_GRP1_PERIPH_UART5
   *         @arg @ref LL_APB1_GRP1_PERIPH_I2C1
-  *         @arg @ref LL_APB1_GRP1_PERIPH_I2C2
+  *         @arg @ref LL_APB1_GRP1_PERIPH_I2C2   (*)
   *         @arg @ref LL_APB1_GRP1_PERIPH_I3C1
   *         @arg @ref LL_APB1_GRP1_PERIPH_CRS
   *         @arg @ref LL_APB1_GRP1_PERIPH_OPAMP
@@ -1865,9 +1900,9 @@ __STATIC_INLINE void LL_APB1_GRP1_EnableClockSleep(uint32_t Periphs)
   *         APB1SLPENR2     FDCANSLPEN       LL_APB1_GRP2_EnableClockSleep
   * @param  Periphs This parameter can be a combination of the following values:
   *         @arg @ref LL_APB1_GRP2_PERIPH_ALL
-  *         @arg @ref LL_APB1_GRP2_PERIPH_I2C4 (*)
+  *         @arg @ref LL_APB1_GRP2_PERIPH_I2C4   (*)
   *         @arg @ref LL_APB1_GRP2_PERIPH_LPTIM2
-  *         @arg @ref LL_APB1_GRP2_PERIPH_FDCAN
+  *         @arg @ref LL_APB1_GRP2_PERIPH_FDCAN  (*)
   *
   *         (*) value not defined in all devices.
   * @retval None
@@ -1911,7 +1946,7 @@ __STATIC_INLINE void LL_APB1_GRP2_EnableClockSleep(uint32_t Periphs)
   *         @arg @ref LL_APB1_GRP1_PERIPH_TIM6
   *         @arg @ref LL_APB1_GRP1_PERIPH_TIM7
   *         @arg @ref LL_APB1_GRP1_PERIPH_SPI3
-  *         @arg @ref LL_APB1_GRP1_PERIPH_SPI4 (*)
+  *         @arg @ref LL_APB1_GRP1_PERIPH_SPI4   (*)
   *         @arg @ref LL_APB1_GRP1_PERIPH_WWDG
   *         @arg @ref LL_APB1_GRP1_PERIPH_SPI2
   *         @arg @ref LL_APB1_GRP1_PERIPH_USART2 (*)
@@ -1919,7 +1954,7 @@ __STATIC_INLINE void LL_APB1_GRP2_EnableClockSleep(uint32_t Periphs)
   *         @arg @ref LL_APB1_GRP1_PERIPH_UART4
   *         @arg @ref LL_APB1_GRP1_PERIPH_UART5
   *         @arg @ref LL_APB1_GRP1_PERIPH_I2C1
-  *         @arg @ref LL_APB1_GRP1_PERIPH_I2C2
+  *         @arg @ref LL_APB1_GRP1_PERIPH_I2C2   (*)
   *         @arg @ref LL_APB1_GRP1_PERIPH_I3C1
   *         @arg @ref LL_APB1_GRP1_PERIPH_CRS
   *         @arg @ref LL_APB1_GRP1_PERIPH_OPAMP
@@ -1941,9 +1976,9 @@ __STATIC_INLINE uint32_t LL_APB1_GRP1_IsEnabledClockSleep(uint32_t Periphs)
   *         APB1SLPENR2     FDCANSLPEN       LL_APB1_GRP2_IsEnabledClockSleep
   * @param  Periphs This parameter can be a combination of the following values:
   *         @arg @ref LL_APB1_GRP2_PERIPH_ALL
-  *         @arg @ref LL_APB1_GRP2_PERIPH_I2C4 (*)
+  *         @arg @ref LL_APB1_GRP2_PERIPH_I2C4   (*)
   *         @arg @ref LL_APB1_GRP2_PERIPH_LPTIM2
-  *         @arg @ref LL_APB1_GRP2_PERIPH_FDCAN
+  *         @arg @ref LL_APB1_GRP2_PERIPH_FDCAN  (*)
   *
   *         (*) value not defined in all devices.
   * @retval State of Periphs (1 or 0).
@@ -1983,7 +2018,7 @@ __STATIC_INLINE uint32_t LL_APB1_GRP2_IsEnabledClockSleep(uint32_t Periphs)
   *         @arg @ref LL_APB1_GRP1_PERIPH_TIM6
   *         @arg @ref LL_APB1_GRP1_PERIPH_TIM7
   *         @arg @ref LL_APB1_GRP1_PERIPH_SPI3
-  *         @arg @ref LL_APB1_GRP1_PERIPH_SPI4 (*)
+  *         @arg @ref LL_APB1_GRP1_PERIPH_SPI4   (*)
   *         @arg @ref LL_APB1_GRP1_PERIPH_WWDG
   *         @arg @ref LL_APB1_GRP1_PERIPH_SPI2
   *         @arg @ref LL_APB1_GRP1_PERIPH_USART2 (*)
@@ -1991,7 +2026,7 @@ __STATIC_INLINE uint32_t LL_APB1_GRP2_IsEnabledClockSleep(uint32_t Periphs)
   *         @arg @ref LL_APB1_GRP1_PERIPH_UART4
   *         @arg @ref LL_APB1_GRP1_PERIPH_UART5
   *         @arg @ref LL_APB1_GRP1_PERIPH_I2C1
-  *         @arg @ref LL_APB1_GRP1_PERIPH_I2C2
+  *         @arg @ref LL_APB1_GRP1_PERIPH_I2C2   (*)
   *         @arg @ref LL_APB1_GRP1_PERIPH_I3C1
   *         @arg @ref LL_APB1_GRP1_PERIPH_CRS
   *         @arg @ref LL_APB1_GRP1_PERIPH_OPAMP
@@ -2013,9 +2048,9 @@ __STATIC_INLINE void LL_APB1_GRP1_DisableClockSleep(uint32_t Periphs)
   *         APB1SLPENR2     FDCANSLPEN       LL_APB1_GRP2_DisableClockSleep
   * @param  Periphs This parameter can be a combination of the following values:
   *         @arg @ref LL_APB1_GRP2_PERIPH_ALL
-  *         @arg @ref LL_APB1_GRP2_PERIPH_I2C4 (*)
+  *         @arg @ref LL_APB1_GRP2_PERIPH_I2C4   (*)
   *         @arg @ref LL_APB1_GRP2_PERIPH_LPTIM2
-  *         @arg @ref LL_APB1_GRP2_PERIPH_FDCAN
+  *         @arg @ref LL_APB1_GRP2_PERIPH_FDCAN  (*)
   *
   *         (*) value not defined in all devices.
   * @retval None
@@ -2043,14 +2078,14 @@ __STATIC_INLINE void LL_APB1_GRP2_DisableClockSleep(uint32_t Periphs)
   * @param  Periphs This parameter can be a combination of the following values:
   *         @arg @ref LL_APB1_GRP1_PERIPH_ALL
   *         @arg @ref LL_APB1_GRP1_PERIPH_SPI3
-  *         @arg @ref LL_APB1_GRP1_PERIPH_SPI4 (*)
+  *         @arg @ref LL_APB1_GRP1_PERIPH_SPI4   (*)
   *         @arg @ref LL_APB1_GRP1_PERIPH_SPI2
   *         @arg @ref LL_APB1_GRP1_PERIPH_USART2 (*)
   *         @arg @ref LL_APB1_GRP1_PERIPH_USART3
   *         @arg @ref LL_APB1_GRP1_PERIPH_UART4
   *         @arg @ref LL_APB1_GRP1_PERIPH_UART5
   *         @arg @ref LL_APB1_GRP1_PERIPH_I2C1
-  *         @arg @ref LL_APB1_GRP1_PERIPH_I2C2
+  *         @arg @ref LL_APB1_GRP1_PERIPH_I2C2   (*)
   *         @arg @ref LL_APB1_GRP1_PERIPH_I3C1
   *         @arg @ref LL_APB1_GRP1_PERIPH_OPAMP
   *         @arg @ref LL_APB1_GRP1_PERIPH_VREF
@@ -2074,7 +2109,7 @@ __STATIC_INLINE void LL_APB1_GRP1_EnableClockStop(uint32_t Periphs)
   *         APB1STPENR2     LPTIM2STPEN      LL_APB1_GRP2_EnableClockStop
   * @param  Periphs This parameter can be a combination of the following values:
   *         @arg @ref LL_APB1_GRP2_PERIPH_ALL
-  *         @arg @ref LL_APB1_GRP2_PERIPH_I2C4 (*)
+  *         @arg @ref LL_APB1_GRP2_PERIPH_I2C4   (*)
   *         @arg @ref LL_APB1_GRP2_PERIPH_LPTIM2
   *
   *         (*) value not defined in all devices.
@@ -2107,14 +2142,14 @@ __STATIC_INLINE void LL_APB1_GRP2_EnableClockStop(uint32_t Periphs)
   * @param  Periphs This parameter can be a combination of the following values:
   *         @arg @ref LL_APB1_GRP1_PERIPH_ALL
   *         @arg @ref LL_APB1_GRP1_PERIPH_SPI3
-  *         @arg @ref LL_APB1_GRP1_PERIPH_SPI4 (*)
+  *         @arg @ref LL_APB1_GRP1_PERIPH_SPI4   (*)
   *         @arg @ref LL_APB1_GRP1_PERIPH_SPI2
   *         @arg @ref LL_APB1_GRP1_PERIPH_USART2 (*)
   *         @arg @ref LL_APB1_GRP1_PERIPH_USART3
   *         @arg @ref LL_APB1_GRP1_PERIPH_UART4
   *         @arg @ref LL_APB1_GRP1_PERIPH_UART5
   *         @arg @ref LL_APB1_GRP1_PERIPH_I2C1
-  *         @arg @ref LL_APB1_GRP1_PERIPH_I2C2
+  *         @arg @ref LL_APB1_GRP1_PERIPH_I2C2   (*)
   *         @arg @ref LL_APB1_GRP1_PERIPH_I3C1
   *         @arg @ref LL_APB1_GRP1_PERIPH_OPAMP
   *         @arg @ref LL_APB1_GRP1_PERIPH_VREF
@@ -2134,7 +2169,7 @@ __STATIC_INLINE uint32_t LL_APB1_GRP1_IsEnabledClockStop(uint32_t Periphs)
   *         APB1STPENR2     LPTIM2STPEN      LL_APB1_GRP2_IsEnabledClockStop
   * @param  Periphs This parameter can be a combination of the following values:
   *         @arg @ref LL_APB1_GRP2_PERIPH_ALL
-  *         @arg @ref LL_APB1_GRP2_PERIPH_I2C4 (*)
+  *         @arg @ref LL_APB1_GRP2_PERIPH_I2C4   (*)
   *         @arg @ref LL_APB1_GRP2_PERIPH_LPTIM2
   *
   *         (*) value not defined in all devices.
@@ -2163,14 +2198,14 @@ __STATIC_INLINE uint32_t LL_APB1_GRP2_IsEnabledClockStop(uint32_t Periphs)
   * @param  Periphs This parameter can be a combination of the following values:
   *         @arg @ref LL_APB1_GRP1_PERIPH_ALL
   *         @arg @ref LL_APB1_GRP1_PERIPH_SPI3
-  *         @arg @ref LL_APB1_GRP1_PERIPH_SPI4 (*)
+  *         @arg @ref LL_APB1_GRP1_PERIPH_SPI4   (*)
   *         @arg @ref LL_APB1_GRP1_PERIPH_SPI2
   *         @arg @ref LL_APB1_GRP1_PERIPH_USART2 (*)
   *         @arg @ref LL_APB1_GRP1_PERIPH_USART3
   *         @arg @ref LL_APB1_GRP1_PERIPH_UART4
   *         @arg @ref LL_APB1_GRP1_PERIPH_UART5
   *         @arg @ref LL_APB1_GRP1_PERIPH_I2C1
-  *         @arg @ref LL_APB1_GRP1_PERIPH_I2C2
+  *         @arg @ref LL_APB1_GRP1_PERIPH_I2C2   (*)
   *         @arg @ref LL_APB1_GRP1_PERIPH_I3C1
   *         @arg @ref LL_APB1_GRP1_PERIPH_OPAMP
   *         @arg @ref LL_APB1_GRP1_PERIPH_VREF
@@ -2190,7 +2225,7 @@ __STATIC_INLINE void LL_APB1_GRP1_DisableClockStop(uint32_t Periphs)
   *         APB1STPENR2     LPTIM2STPEN      LL_APB1_GRP2_DisableClockStop
   * @param  Periphs This parameter can be a combination of the following values:
   *         @arg @ref LL_APB1_GRP2_PERIPH_ALL
-  *         @arg @ref LL_APB1_GRP2_PERIPH_I2C4 (*)
+  *         @arg @ref LL_APB1_GRP2_PERIPH_I2C4   (*)
   *         @arg @ref LL_APB1_GRP2_PERIPH_LPTIM2
   *
   *        (*) value not defined in all devices.
@@ -2227,15 +2262,15 @@ __STATIC_INLINE void LL_APB1_GRP2_DisableClockStop(uint32_t Periphs)
   *         @arg @ref LL_APB2_GRP1_PERIPH_ALL
   *         @arg @ref LL_APB2_GRP1_PERIPH_TIM1
   *         @arg @ref LL_APB2_GRP1_PERIPH_SPI1
-  *         @arg @ref LL_APB2_GRP1_PERIPH_TIM8 (*)
+  *         @arg @ref LL_APB2_GRP1_PERIPH_TIM8  (*)
   *         @arg @ref LL_APB2_GRP1_PERIPH_USART1
   *         @arg @ref LL_APB2_GRP1_PERIPH_TIM12 (*)
   *         @arg @ref LL_APB2_GRP1_PERIPH_TIM15
   *         @arg @ref LL_APB2_GRP1_PERIPH_TIM16
   *         @arg @ref LL_APB2_GRP1_PERIPH_TIM17
-  *         @arg @ref LL_APB2_GRP1_PERIPH_SAI1
+  *         @arg @ref LL_APB2_GRP1_PERIPH_SAI1  (*)
   *         @arg @ref LL_APB2_GRP1_PERIPH_USB1
-  *         @arg @ref LL_APB2_GRP1_PERIPH_I3C2
+  *         @arg @ref LL_APB2_GRP1_PERIPH_I3C2  (*)
   *
   *         (*) value not defined in all devices.
   * @retval None
@@ -2266,15 +2301,15 @@ __STATIC_INLINE void LL_APB2_GRP1_EnableClock(uint32_t Periphs)
   *         @arg @ref LL_APB2_GRP1_PERIPH_ALL
   *         @arg @ref LL_APB2_GRP1_PERIPH_TIM1
   *         @arg @ref LL_APB2_GRP1_PERIPH_SPI1
-  *         @arg @ref LL_APB2_GRP1_PERIPH_TIM8 (*)
+  *         @arg @ref LL_APB2_GRP1_PERIPH_TIM8  (*)
   *         @arg @ref LL_APB2_GRP1_PERIPH_USART1
   *         @arg @ref LL_APB2_GRP1_PERIPH_TIM12 (*)
   *         @arg @ref LL_APB2_GRP1_PERIPH_TIM15
   *         @arg @ref LL_APB2_GRP1_PERIPH_TIM16
   *         @arg @ref LL_APB2_GRP1_PERIPH_TIM17
-  *         @arg @ref LL_APB2_GRP1_PERIPH_SAI1
+  *         @arg @ref LL_APB2_GRP1_PERIPH_SAI1  (*)
   *         @arg @ref LL_APB2_GRP1_PERIPH_USB1
-  *         @arg @ref LL_APB2_GRP1_PERIPH_I3C2
+  *         @arg @ref LL_APB2_GRP1_PERIPH_I3C2  (*)
   *
   *         (*) value not defined in all devices.
   *
@@ -2302,15 +2337,15 @@ __STATIC_INLINE uint32_t LL_APB2_GRP1_IsEnabledClock(uint32_t Periphs)
   *         @arg @ref LL_APB2_GRP1_PERIPH_ALL
   *         @arg @ref LL_APB2_GRP1_PERIPH_TIM1
   *         @arg @ref LL_APB2_GRP1_PERIPH_SPI1
-  *         @arg @ref LL_APB2_GRP1_PERIPH_TIM8 (*)
+  *         @arg @ref LL_APB2_GRP1_PERIPH_TIM8  (*)
   *         @arg @ref LL_APB2_GRP1_PERIPH_USART1
   *         @arg @ref LL_APB2_GRP1_PERIPH_TIM12 (*)
   *         @arg @ref LL_APB2_GRP1_PERIPH_TIM15
   *         @arg @ref LL_APB2_GRP1_PERIPH_TIM16
   *         @arg @ref LL_APB2_GRP1_PERIPH_TIM17
-  *         @arg @ref LL_APB2_GRP1_PERIPH_SAI1
+  *         @arg @ref LL_APB2_GRP1_PERIPH_SAI1  (*)
   *         @arg @ref LL_APB2_GRP1_PERIPH_USB1
-  *         @arg @ref LL_APB2_GRP1_PERIPH_I3C2
+  *         @arg @ref LL_APB2_GRP1_PERIPH_I3C2  (*)
   *
   *         (*) value not defined in all devices.
   * @retval None
@@ -2337,15 +2372,15 @@ __STATIC_INLINE void LL_APB2_GRP1_DisableClock(uint32_t Periphs)
   *         @arg @ref LL_APB2_GRP1_PERIPH_ALL
   *         @arg @ref LL_APB2_GRP1_PERIPH_TIM1
   *         @arg @ref LL_APB2_GRP1_PERIPH_SPI1
-  *         @arg @ref LL_APB2_GRP1_PERIPH_TIM8 (*)
+  *         @arg @ref LL_APB2_GRP1_PERIPH_TIM8  (*)
   *         @arg @ref LL_APB2_GRP1_PERIPH_USART1
   *         @arg @ref LL_APB2_GRP1_PERIPH_TIM12 (*)
   *         @arg @ref LL_APB2_GRP1_PERIPH_TIM15
   *         @arg @ref LL_APB2_GRP1_PERIPH_TIM16
   *         @arg @ref LL_APB2_GRP1_PERIPH_TIM17
-  *         @arg @ref LL_APB2_GRP1_PERIPH_SAI1
+  *         @arg @ref LL_APB2_GRP1_PERIPH_SAI1  (*)
   *         @arg @ref LL_APB2_GRP1_PERIPH_USB1
-  *         @arg @ref LL_APB2_GRP1_PERIPH_I3C2
+  *         @arg @ref LL_APB2_GRP1_PERIPH_I3C2  (*)
   *
   *         (*) value not defined in all devices.
   * @retval None
@@ -2372,15 +2407,15 @@ __STATIC_INLINE void LL_APB2_GRP1_ForceReset(uint32_t Periphs)
   *         @arg @ref LL_APB2_GRP1_PERIPH_ALL
   *         @arg @ref LL_APB2_GRP1_PERIPH_TIM1
   *         @arg @ref LL_APB2_GRP1_PERIPH_SPI1
-  *         @arg @ref LL_APB2_GRP1_PERIPH_TIM8 (*)
+  *         @arg @ref LL_APB2_GRP1_PERIPH_TIM8  (*)
   *         @arg @ref LL_APB2_GRP1_PERIPH_USART1
   *         @arg @ref LL_APB2_GRP1_PERIPH_TIM12 (*)
   *         @arg @ref LL_APB2_GRP1_PERIPH_TIM15
   *         @arg @ref LL_APB2_GRP1_PERIPH_TIM16
   *         @arg @ref LL_APB2_GRP1_PERIPH_TIM17
-  *         @arg @ref LL_APB2_GRP1_PERIPH_SAI1
+  *         @arg @ref LL_APB2_GRP1_PERIPH_SAI1  (*)
   *         @arg @ref LL_APB2_GRP1_PERIPH_USB1
-  *         @arg @ref LL_APB2_GRP1_PERIPH_I3C2
+  *         @arg @ref LL_APB2_GRP1_PERIPH_I3C2  (*)
   *
   *         (*) value not defined in all devices.
   * @retval None
@@ -2407,15 +2442,15 @@ __STATIC_INLINE void LL_APB2_GRP1_ReleaseReset(uint32_t Periphs)
   *         @arg @ref LL_APB2_GRP1_PERIPH_ALL
   *         @arg @ref LL_APB2_GRP1_PERIPH_TIM1
   *         @arg @ref LL_APB2_GRP1_PERIPH_SPI1
-  *         @arg @ref LL_APB2_GRP1_PERIPH_TIM8 (*)
+  *         @arg @ref LL_APB2_GRP1_PERIPH_TIM8  (*)
   *         @arg @ref LL_APB2_GRP1_PERIPH_USART1
   *         @arg @ref LL_APB2_GRP1_PERIPH_TIM12 (*)
   *         @arg @ref LL_APB2_GRP1_PERIPH_TIM15
   *         @arg @ref LL_APB2_GRP1_PERIPH_TIM16
   *         @arg @ref LL_APB2_GRP1_PERIPH_TIM17
-  *         @arg @ref LL_APB2_GRP1_PERIPH_SAI1
+  *         @arg @ref LL_APB2_GRP1_PERIPH_SAI1  (*)
   *         @arg @ref LL_APB2_GRP1_PERIPH_USB1
-  *         @arg @ref LL_APB2_GRP1_PERIPH_I3C2
+  *         @arg @ref LL_APB2_GRP1_PERIPH_I3C2  (*)
   *
   *         (*) value not defined in all devices.
   * @retval None
@@ -2446,15 +2481,15 @@ __STATIC_INLINE void LL_APB2_GRP1_EnableClockSleep(uint32_t Periphs)
   *         @arg @ref LL_APB2_GRP1_PERIPH_ALL
   *         @arg @ref LL_APB2_GRP1_PERIPH_TIM1
   *         @arg @ref LL_APB2_GRP1_PERIPH_SPI1
-  *         @arg @ref LL_APB2_GRP1_PERIPH_TIM8 (*)
+  *         @arg @ref LL_APB2_GRP1_PERIPH_TIM8  (*)
   *         @arg @ref LL_APB2_GRP1_PERIPH_USART1
   *         @arg @ref LL_APB2_GRP1_PERIPH_TIM12 (*)
   *         @arg @ref LL_APB2_GRP1_PERIPH_TIM15
   *         @arg @ref LL_APB2_GRP1_PERIPH_TIM16
   *         @arg @ref LL_APB2_GRP1_PERIPH_TIM17
-  *         @arg @ref LL_APB2_GRP1_PERIPH_SAI1
+  *         @arg @ref LL_APB2_GRP1_PERIPH_SAI1  (*)
   *         @arg @ref LL_APB2_GRP1_PERIPH_USB1
-  *         @arg @ref LL_APB2_GRP1_PERIPH_I3C2
+  *         @arg @ref LL_APB2_GRP1_PERIPH_I3C2  (*)
   *
   *         (*) value not defined in all devices.
   * @retval State of Periphs (1 or 0).
@@ -2482,15 +2517,15 @@ __STATIC_INLINE uint32_t LL_APB2_GRP1_IsEnabledClockSleep(uint32_t Periphs)
   *         @arg @ref LL_APB2_GRP1_PERIPH_ALL
   *         @arg @ref LL_APB2_GRP1_PERIPH_TIM1
   *         @arg @ref LL_APB2_GRP1_PERIPH_SPI1
-  *         @arg @ref LL_APB2_GRP1_PERIPH_TIM8 (*)
+  *         @arg @ref LL_APB2_GRP1_PERIPH_TIM8  (*)
   *         @arg @ref LL_APB2_GRP1_PERIPH_USART1
   *         @arg @ref LL_APB2_GRP1_PERIPH_TIM12 (*)
   *         @arg @ref LL_APB2_GRP1_PERIPH_TIM15
   *         @arg @ref LL_APB2_GRP1_PERIPH_TIM16
   *         @arg @ref LL_APB2_GRP1_PERIPH_TIM17
-  *         @arg @ref LL_APB2_GRP1_PERIPH_SAI1
+  *         @arg @ref LL_APB2_GRP1_PERIPH_SAI1  (*)
   *         @arg @ref LL_APB2_GRP1_PERIPH_USB1
-  *         @arg @ref LL_APB2_GRP1_PERIPH_I3C2
+  *         @arg @ref LL_APB2_GRP1_PERIPH_I3C2  (*)
   *
   *        (*) value not defined in all devices.
   * @retval None
@@ -2511,7 +2546,7 @@ __STATIC_INLINE void LL_APB2_GRP1_DisableClockSleep(uint32_t Periphs)
   *         @arg @ref LL_APB2_GRP1_PERIPH_SPI1
   *         @arg @ref LL_APB2_GRP1_PERIPH_USART1
   *         @arg @ref LL_APB2_GRP1_PERIPH_USB1
-  *         @arg @ref LL_APB2_GRP1_PERIPH_I3C2
+  *         @arg @ref LL_APB2_GRP1_PERIPH_I3C2  (*)
   *
   * @retval None
   */
@@ -2554,7 +2589,7 @@ __STATIC_INLINE uint32_t LL_APB2_GRP1_IsEnabledClockStop(uint32_t Periphs)
   *         @arg @ref LL_APB2_GRP1_PERIPH_SPI1
   *         @arg @ref LL_APB2_GRP1_PERIPH_USART1
   *         @arg @ref LL_APB2_GRP1_PERIPH_USB1
-  *         @arg @ref LL_APB2_GRP1_PERIPH_I3C2
+  *         @arg @ref LL_APB2_GRP1_PERIPH_I3C2  (*)
   * @retval None
   */
 __STATIC_INLINE void LL_APB2_GRP1_DisableClockStop(uint32_t Periphs)
@@ -2578,6 +2613,7 @@ __STATIC_INLINE void LL_APB2_GRP1_DisableClockStop(uint32_t Periphs)
   *         APB3ENR      LPTIM1EN      LL_APB3_GRP1_EnableClock\n
   *         APB3ENR      LPTIM3EN      LL_APB3_GRP1_EnableClock\n
   *         APB3ENR      LPTIM4EN      LL_APB3_GRP1_EnableClock\n
+  *         APB3ENR      LCDEN         LL_APB3_GRP1_EnableClock\n
   *         APB3ENR      COMPEN        LL_APB3_GRP1_EnableClock\n
   * @param  Periphs This parameter can be a combination of the following values:
   *         @arg @ref LL_APB3_GRP1_PERIPH_ALL
@@ -2587,6 +2623,7 @@ __STATIC_INLINE void LL_APB2_GRP1_DisableClockStop(uint32_t Periphs)
   *         @arg @ref LL_APB3_GRP1_PERIPH_LPTIM1
   *         @arg @ref LL_APB3_GRP1_PERIPH_LPTIM3
   *         @arg @ref LL_APB3_GRP1_PERIPH_LPTIM4
+  *         @arg @ref LL_APB3_GRP1_PERIPH_LCD    (*)
   *         @arg @ref LL_APB3_GRP1_PERIPH_COMP
   *
   * @retval None
@@ -2608,6 +2645,7 @@ __STATIC_INLINE void LL_APB3_GRP1_EnableClock(uint32_t Periphs)
   *         APB3ENR      LPTIM1EN      LL_APB3_GRP1_IsEnabledClock\n
   *         APB3ENR      LPTIM3EN      LL_APB3_GRP1_IsEnabledClock\n
   *         APB3ENR      LPTIM4EN      LL_APB3_GRP1_IsEnabledClock\n
+  *         APB3ENR      LCDEN         LL_APB3_GRP1_IsEnabledClock\n
   *         APB3ENR      COMPEN        LL_APB3_GRP1_IsEnabledClock\n
   * @param  Periphs This parameter can be a combination of the following values:
   *         @arg @ref LL_APB3_GRP1_PERIPH_ALL
@@ -2617,6 +2655,7 @@ __STATIC_INLINE void LL_APB3_GRP1_EnableClock(uint32_t Periphs)
   *         @arg @ref LL_APB3_GRP1_PERIPH_LPTIM1
   *         @arg @ref LL_APB3_GRP1_PERIPH_LPTIM3
   *         @arg @ref LL_APB3_GRP1_PERIPH_LPTIM4
+  *         @arg @ref LL_APB3_GRP1_PERIPH_LCD    (*)
   *         @arg @ref LL_APB3_GRP1_PERIPH_COMP
   *
   * @retval State of Periphs (1 or 0).
@@ -2634,6 +2673,7 @@ __STATIC_INLINE uint32_t LL_APB3_GRP1_IsEnabledClock(uint32_t Periphs)
   *         APB3ENR      LPTIM1EN      LL_APB3_GRP1_DisableClock\n
   *         APB3ENR      LPTIM3EN      LL_APB3_GRP1_DisableClock\n
   *         APB3ENR      LPTIM4EN      LL_APB3_GRP1_DisableClock\n
+  *         APB3ENR      LCDEN         LL_APB3_GRP1_DisableClock\n
   *         APB3ENR      COMPEN        LL_APB3_GRP1_DisableClock\n
   * @param  Periphs This parameter can be a combination of the following values:
   *         @arg @ref LL_APB3_GRP1_PERIPH_ALL
@@ -2643,6 +2683,7 @@ __STATIC_INLINE uint32_t LL_APB3_GRP1_IsEnabledClock(uint32_t Periphs)
   *         @arg @ref LL_APB3_GRP1_PERIPH_LPTIM1
   *         @arg @ref LL_APB3_GRP1_PERIPH_LPTIM3
   *         @arg @ref LL_APB3_GRP1_PERIPH_LPTIM4
+  *         @arg @ref LL_APB3_GRP1_PERIPH_LCD    (*)
   *         @arg @ref LL_APB3_GRP1_PERIPH_COMP
   *
   * @retval None
@@ -2660,6 +2701,7 @@ __STATIC_INLINE void LL_APB3_GRP1_DisableClock(uint32_t Periphs)
   *         APB3RSTR      LPTIM1RST      LL_APB3_GRP1_ForceReset\n
   *         APB3RSTR      LPTIM3RST      LL_APB3_GRP1_ForceReset\n
   *         APB3RSTR      LPTIM4RST      LL_APB3_GRP1_ForceReset\n
+  *         APB3RSTR      LCDRST         LL_APB3_GRP1_ForceReset\n
   *         APB3RSTR      COMPRST        LL_APB3_GRP1_ForceReset\n
   * @param  Periphs This parameter can be a combination of the following values:
   *         @arg @ref LL_APB3_GRP1_PERIPH_ALL
@@ -2669,6 +2711,7 @@ __STATIC_INLINE void LL_APB3_GRP1_DisableClock(uint32_t Periphs)
   *         @arg @ref LL_APB3_GRP1_PERIPH_LPTIM1
   *         @arg @ref LL_APB3_GRP1_PERIPH_LPTIM3
   *         @arg @ref LL_APB3_GRP1_PERIPH_LPTIM4
+  *         @arg @ref LL_APB3_GRP1_PERIPH_LCD    (*)
   *         @arg @ref LL_APB3_GRP1_PERIPH_COMP
   * @retval None
   */
@@ -2685,6 +2728,7 @@ __STATIC_INLINE void LL_APB3_GRP1_ForceReset(uint32_t Periphs)
   *         APB3RSTR      LPTIM1RST      LL_APB3_GRP1_ReleaseReset\n
   *         APB3RSTR      LPTIM3RST      LL_APB3_GRP1_ReleaseReset\n
   *         APB3RSTR      LPTIM4RST      LL_APB3_GRP1_ReleaseReset\n
+  *         APB3RSTR      LCDRST         LL_APB3_GRP1_ReleaseReset\n
   *         APB3RSTR      COMPRST        LL_APB3_GRP1_ReleaseReset\n
   * @param  Periphs This parameter can be a combination of the following values:
   *         @arg @ref LL_APB3_GRP1_PERIPH_ALL
@@ -2694,6 +2738,7 @@ __STATIC_INLINE void LL_APB3_GRP1_ForceReset(uint32_t Periphs)
   *         @arg @ref LL_APB3_GRP1_PERIPH_LPTIM1
   *         @arg @ref LL_APB3_GRP1_PERIPH_LPTIM3
   *         @arg @ref LL_APB3_GRP1_PERIPH_LPTIM4
+  *         @arg @ref LL_APB3_GRP1_PERIPH_LCD    (*)
   *         @arg @ref LL_APB3_GRP1_PERIPH_COMP
   * @retval None
   */
@@ -2710,6 +2755,7 @@ __STATIC_INLINE void LL_APB3_GRP1_ReleaseReset(uint32_t Periphs)
   *         APB3SLPENR      LPTIM1SLPEN      LL_APB3_GRP1_EnableClockSleep\n
   *         APB3SLPENR      LPTIM3SLPEN      LL_APB3_GRP1_EnableClockSleep\n
   *         APB3SLPENR      LPTIM4SLPEN      LL_APB3_GRP1_EnableClockSleep\n
+  *         APB3SLPENR      LCDSLPEN         LL_APB3_GRP1_EnableClockSleep\n
   *         APB3SLPENR      COMPSLPEN        LL_APB3_GRP1_EnableClockSleep\n
   * @param  Periphs This parameter can be a combination of the following values:
   *         @arg @ref LL_APB3_GRP1_PERIPH_ALL
@@ -2719,6 +2765,7 @@ __STATIC_INLINE void LL_APB3_GRP1_ReleaseReset(uint32_t Periphs)
   *         @arg @ref LL_APB3_GRP1_PERIPH_LPTIM1
   *         @arg @ref LL_APB3_GRP1_PERIPH_LPTIM3
   *         @arg @ref LL_APB3_GRP1_PERIPH_LPTIM4
+  *         @arg @ref LL_APB3_GRP1_PERIPH_LCD    (*)
   *         @arg @ref LL_APB3_GRP1_PERIPH_COMP
   * @retval None
   */
@@ -2739,6 +2786,7 @@ __STATIC_INLINE void LL_APB3_GRP1_EnableClockSleep(uint32_t Periphs)
   *         APB3SLPENR      LPTIM1SLPEN      LL_APB3_GRP1_IsEnabledClockSleep\n
   *         APB3SLPENR      LPTIM3SLPEN      LL_APB3_GRP1_IsEnabledClockSleep\n
   *         APB3SLPENR      LPTIM4SLPEN      LL_APB3_GRP1_IsEnabledClockSleep\n
+  *         APB3SLPENR      LCDSLPEN         LL_APB3_GRP1_IsEnabledClockSleep\n
   *         APB3SLPENR      COMPSLPEN        LL_APB3_GRP1_IsEnabledClockSleep\n
   * @param  Periphs This parameter can be a combination of the following values:
   *         @arg @ref LL_APB3_GRP1_PERIPH_ALL
@@ -2748,6 +2796,7 @@ __STATIC_INLINE void LL_APB3_GRP1_EnableClockSleep(uint32_t Periphs)
   *         @arg @ref LL_APB3_GRP1_PERIPH_LPTIM1
   *         @arg @ref LL_APB3_GRP1_PERIPH_LPTIM3
   *         @arg @ref LL_APB3_GRP1_PERIPH_LPTIM4
+  *         @arg @ref LL_APB3_GRP1_PERIPH_LCD    (*)
   *         @arg @ref LL_APB3_GRP1_PERIPH_COMP
   * @retval State of Periphs (1 or 0).
   */
@@ -2765,6 +2814,7 @@ __STATIC_INLINE uint32_t LL_APB3_GRP1_IsEnabledClockSleep(uint32_t Periphs)
   *         APB3SLPENR      LPTIM1SLPEN      LL_APB3_GRP1_DisableClockSleep\n
   *         APB3SLPENR      LPTIM3SLPEN      LL_APB3_GRP1_DisableClockSleep\n
   *         APB3SLPENR      LPTIM4SLPEN      LL_APB3_GRP1_DisableClockSleep\n
+  *         APB3SLPENR      LCDSLPEN         LL_APB3_GRP1_DisableClockSleep\n
   *         APB3SLPENR      COMPSLPEN        LL_APB3_GRP1_DisableClockSleep\n
   * @param  Periphs This parameter can be a combination of the following values:
   *         @arg @ref LL_APB3_GRP1_PERIPH_ALL
@@ -2774,6 +2824,7 @@ __STATIC_INLINE uint32_t LL_APB3_GRP1_IsEnabledClockSleep(uint32_t Periphs)
   *         @arg @ref LL_APB3_GRP1_PERIPH_LPTIM1
   *         @arg @ref LL_APB3_GRP1_PERIPH_LPTIM3
   *         @arg @ref LL_APB3_GRP1_PERIPH_LPTIM4
+  *         @arg @ref LL_APB3_GRP1_PERIPH_LCD    (*)
   *         @arg @ref LL_APB3_GRP1_PERIPH_COMP
   * @retval None
   */
@@ -2790,6 +2841,7 @@ __STATIC_INLINE void LL_APB3_GRP1_DisableClockSleep(uint32_t Periphs)
   *         APB3STPENR      LPTIM1STPEN      LL_APB3_GRP1_EnableClockStop\n
   *         APB3STPENR      LPTIM3STPEN      LL_APB3_GRP1_EnableClockStop\n
   *         APB3STPENR      LPTIM4STPEN      LL_APB3_GRP1_EnableClockStop\n
+  *         APB3STPENR      LCDSTPEN         LL_APB3_GRP1_EnableClockStop\n
   *         APB3STPENR      COMPSTPEN        LL_APB3_GRP1_EnableClockStop\n
   * @param  Periphs This parameter can be a combination of the following values:
   *         @arg @ref LL_APB3_GRP1_PERIPH_ALL
@@ -2798,6 +2850,7 @@ __STATIC_INLINE void LL_APB3_GRP1_DisableClockSleep(uint32_t Periphs)
   *         @arg @ref LL_APB3_GRP1_PERIPH_LPTIM1
   *         @arg @ref LL_APB3_GRP1_PERIPH_LPTIM3
   *         @arg @ref LL_APB3_GRP1_PERIPH_LPTIM4
+  *         @arg @ref LL_APB3_GRP1_PERIPH_LCD    (*)
   *         @arg @ref LL_APB3_GRP1_PERIPH_COMP
   * @retval None
   */
@@ -2817,6 +2870,7 @@ __STATIC_INLINE void LL_APB3_GRP1_EnableClockStop(uint32_t Periphs)
   *         APB3STPENR      LPTIM1STPEN      LL_APB3_GRP1_IsEnabledClockStop\n
   *         APB3STPENR      LPTIM3STPEN      LL_APB3_GRP1_IsEnabledClockStop\n
   *         APB3STPENR      LPTIM4STPEN      LL_APB3_GRP1_IsEnabledClockStop\n
+  *         APB3STPENR      LCDSTPEN         LL_APB3_GRP1_IsEnabledClockStop\n
   *         APB3STPENR      COMPSTPEN        LL_APB3_GRP1_IsEnabledClockStop\n
   * @param  Periphs This parameter can be a combination of the following values:
   *         @arg @ref LL_APB3_GRP1_PERIPH_ALL
@@ -2825,6 +2879,7 @@ __STATIC_INLINE void LL_APB3_GRP1_EnableClockStop(uint32_t Periphs)
   *         @arg @ref LL_APB3_GRP1_PERIPH_LPTIM1
   *         @arg @ref LL_APB3_GRP1_PERIPH_LPTIM3
   *         @arg @ref LL_APB3_GRP1_PERIPH_LPTIM4
+  *         @arg @ref LL_APB3_GRP1_PERIPH_LCD    (*)
   *         @arg @ref LL_APB3_GRP1_PERIPH_COMP
   * @retval State of Periphs (1 or 0).
   */
@@ -2840,6 +2895,7 @@ __STATIC_INLINE uint32_t LL_APB3_GRP1_IsEnabledClockStop(uint32_t Periphs)
   *         APB3STPENR      LPTIM1STPEN      LL_APB3_GRP1_DisableClockStop\n
   *         APB3STPENR      LPTIM3STPEN      LL_APB3_GRP1_DisableClockStop\n
   *         APB3STPENR      LPTIM4STPEN      LL_APB3_GRP1_DisableClockStop\n
+  *         APB3STPENR      LCDSTPEN         LL_APB3_GRP1_DisableClockStop\n
   *         APB3STPENR      COMPSTPEN        LL_APB3_GRP1_DisableClockStop\n
   * @param  Periphs This parameter can be a combination of the following values:
   *         @arg @ref LL_APB3_GRP1_PERIPH_ALL
@@ -2848,6 +2904,7 @@ __STATIC_INLINE uint32_t LL_APB3_GRP1_IsEnabledClockStop(uint32_t Periphs)
   *         @arg @ref LL_APB3_GRP1_PERIPH_LPTIM1
   *         @arg @ref LL_APB3_GRP1_PERIPH_LPTIM3
   *         @arg @ref LL_APB3_GRP1_PERIPH_LPTIM4
+  *         @arg @ref LL_APB3_GRP1_PERIPH_LCD    (*)
   *         @arg @ref LL_APB3_GRP1_PERIPH_COMP
   * @retval None
   */

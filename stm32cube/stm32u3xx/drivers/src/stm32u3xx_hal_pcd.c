@@ -49,6 +49,9 @@
      (#)Enable PCD transmission and reception:
          (##) HAL_PCD_Start();
 
+     (#)NOTE: For applications not using double buffer mode, define the symbol
+               'USE_USB_DOUBLE_BUFFER' as 0 to reduce the driver's memory footprint.
+
   @endverbatim
   ******************************************************************************
   */
@@ -1900,7 +1903,7 @@ static HAL_StatusTypeDef PCD_EP_ISR_Handler(PCD_HandleTypeDef *hpcd)
         }
         else
         {
-           ep->xfer_buff += count;
+          ep->xfer_buff += count;
           (void)USB_EPStartXfer(hpcd->Instance, ep);
         }
       }

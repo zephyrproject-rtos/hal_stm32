@@ -518,7 +518,6 @@ void HAL_PWREx_DisableUltraLowPowerMode(void);
   * @{
   */
 void              HAL_PWREx_EnableRAMsPowerDown(uint32_t RAMSelection);
-void              HAL_PWREx_DisableRAMsPowerDown(uint32_t RAMSelection);
 void              HAL_PWREx_EnableRAMsContentStopRetention(uint32_t RAMSelection);
 void              HAL_PWREx_DisableRAMsContentStopRetention(uint32_t RAMSelection);
 void              HAL_PWREx_EnableSRAM2ContentStandbyRetention(uint32_t SRAM2Pages);

@@ -106,7 +106,8 @@
        to stop the PVM VDDx monitoring.
        (++) PVM monitored voltages are :
              (+++) VDDUSB
-             (+++) VDDIO2 (This feature is available only for STM32U375xx, STM32U385xx devices.)
+             (+++) VDDIO2 (This feature is available only for STM32U375xx, STM32U385xx, STM32U3B5xx and STM32U3C5xx
+                          devices.)
              (+++) VDDA
 
    (#) Call HAL_PWR_PVD_IRQHandler() under PVD_PVM_IRQHandler() function to

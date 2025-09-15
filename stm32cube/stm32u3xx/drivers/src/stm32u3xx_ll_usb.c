@@ -33,6 +33,9 @@
 
       (#) The upper HAL HCD/PCD driver will call the right routines for its internal processes.
 
+      (#)NOTE: For applications not using double buffer mode, define the symbol
+                'USE_USB_DOUBLE_BUFFER' as 0 to reduce the driver's memory footprint.
+
   @endverbatim
 
   ******************************************************************************
@@ -1417,14 +1420,13 @@ static HAL_StatusTypeDef USB_HC_BULK_DB_StartXfer(USB_DRD_TypeDef *USBx,
 /**
   * @brief  Halt a host channel in
   * @param  USBx Selected device
-  * @param  hc_num Host Channel number
-  *         This parameter can be a value from 1 to 15
+  * @param  phy_ch_num Host Channel number
   * @retval HAL state
   */
-HAL_StatusTypeDef USB_HC_IN_Halt(USB_DRD_TypeDef *USBx, uint8_t phy_ch)
+HAL_StatusTypeDef USB_HC_IN_Halt(USB_DRD_TypeDef *USBx, uint8_t phy_ch_num)
 {
   /* Set disable to Channel */
-  USB_DRD_SET_CHEP_RX_STATUS(USBx, phy_ch, USB_CH_RX_DIS);
+  USB_DRD_SET_CHEP_RX_STATUS(USBx, phy_ch_num, USB_CH_RX_DIS);
 
   return HAL_OK;
 }
@@ -1433,14 +1435,36 @@ HAL_StatusTypeDef USB_HC_IN_Halt(USB_DRD_TypeDef *USBx, uint8_t phy_ch)
 /**
   * @brief  Halt a host channel out
   * @param  USBx Selected device
-  * @param  hc_num Host Channel number
-  *         This parameter can be a value from 1 to 15
+  * @param  phy_ch_num Host Channel number
   * @retval HAL state
   */
-HAL_StatusTypeDef USB_HC_OUT_Halt(USB_DRD_TypeDef *USBx, uint8_t phy_ch)
+HAL_StatusTypeDef USB_HC_OUT_Halt(USB_DRD_TypeDef *USBx, uint8_t phy_ch_num)
 {
   /* Set disable to Channel */
-  USB_DRD_SET_CHEP_TX_STATUS(USBx, phy_ch, USB_CH_TX_DIS);
+  USB_DRD_SET_CHEP_TX_STATUS(USBx, phy_ch_num, USB_CH_TX_DIS);
+
+  return HAL_OK;
+}
+
+/**
+  * @brief  Activate a host channel
+  * @param  USBx  Selected device
+  * @param  phy_ch_num  Host Channel number
+  * @param  ch_dir  Host Channel direction
+  * @retval HAL state
+  */
+HAL_StatusTypeDef USB_HC_Activate(USB_DRD_TypeDef *USBx, uint8_t phy_ch_num, uint8_t ch_dir)
+{
+  if (ch_dir == CH_IN_DIR)
+  {
+    /* Enable TX host Channel */
+    USB_DRD_SET_CHEP_TX_STATUS(USBx, phy_ch_num, USB_CH_TX_VALID);
+  }
+  else
+  {
+    /* Enable RX host Channel */
+    USB_DRD_SET_CHEP_RX_STATUS(USBx, phy_ch_num, USB_CH_RX_VALID);
+  }
 
   return HAL_OK;
 }

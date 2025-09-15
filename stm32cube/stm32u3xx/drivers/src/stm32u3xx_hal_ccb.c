@@ -2609,7 +2609,7 @@ static void CCB_Memcpy_Not_Align(__IO uint32_t dst[], const uint8_t src[], size_
 
 /**
   * @brief  Get cipher key size
-  * @param  pCurveParam to Curve Parameters
+  * @param  Pointer to Curve Parameters
   * @retval cipher key size.
   */
 static uint32_t  CCB_get_cipherkey_size(CCB_ECDSACurveParamTypeDef *pCurveParam)
@@ -2881,7 +2881,7 @@ static HAL_StatusTypeDef CCB_BlobUse_InitialPhase(CCB_HandleTypeDef *hccb, const
   * @brief  Final phase processing when blob creation
   * @param  hccb CCB handle
   * @param  Operation Operation
-  * @param  pTag pointer to the Tag
+  * @param  Tag pointer to the Tag
   * @param  sizeparam size of parameters
   * @retval HAL status
   */
@@ -3346,7 +3346,7 @@ static HAL_StatusTypeDef CCB_ECDSA_SignBlobCreation(CCB_HandleTypeDef *hccb, CCB
   * @param  pCurveParam pointer to the Curve parameters.
   * @param  pClearPrivateKey pointer to the related wrapped Private Key Blob.
   * @param  pWrappingKey pointer to the Wrapping Key structure.
-  * @param  WarappedKey pointer to the related wrapped Private Key Blob.
+  * @param  pWrappedPrivateKeyBlob pointer to the related wrapped Private Key Blob.
   * @param  CCB_Operation is the CCB Operations.
   * @retval HAL status.
   */
@@ -4098,7 +4098,7 @@ static HAL_StatusTypeDef CCB_ECC_ComputeScalarMul(CCB_HandleTypeDef *hccb, CCB_E
   * @param  pParam pointer to the modular exponatiation parameters.
   * @param  pRSAClearPrivateKey pointer to the clear Private Key.
   * @param  pWrappingKey pointer to the Wrapping Key structure.
-  * @param  pWrappedExp pointer to the related wrapped Private Key Blob.
+  * @param  pWrappedPrivateKeyBlob pointer to the related wrapped Private Key Blob.
   * @retval HAL status.
   */
 static HAL_StatusTypeDef CCB_RSA_ExpBlobCreation(CCB_HandleTypeDef *hccb, CCB_RSAParamTypeDef *pParam,
@@ -4445,7 +4445,7 @@ static HAL_StatusTypeDef CCB_RSA_ExpBlobCreation(CCB_HandleTypeDef *hccb, CCB_RS
   * @param  pParam pointer to the modular exponatiation parameters.
   * @param  pWrappingKey pointer to the Wrapping Key structure.
   * @param  pOperand pointer to the operand.
-  * @param  pWrappedExp pointer to the related wrapped Private Key Blob.
+  * @param  pWrappedPrivateKeyBlob pointer to the related wrapped Private Key Blob.
   * @param  pModularExp pointer to the output operation.
   * @param  pReferenceModularExp pointer to the ReferenceModularExp computed in modular exponentiation Blob creation
   * @param  VerifOperation pointer to the VerifOperation.
@@ -5296,6 +5296,7 @@ static uint32_t PKA_ECDSAVerif_Result(void)
 
 /**
   * @brief  Reset the PKA RAM.
+  * @param  hpka PKA handle
   * @retval None
   */
 static void CCB_PKA_RAMReset(void)

@@ -39,8 +39,13 @@ extern "C" {
 /** @defgroup FLASHEx_Private_Constants FLASH Extended Private Constants
   * @{
   */
+#if defined(FLASH_PRIVBB1R5_PRIV0)
+#define FLASH_BLOCKBASED_NB_REG (8U) /*!< Number of block-based registers available */
+#elif defined(FLASH_PRIVBB1R3_PRIV0)
 #define FLASH_BLOCKBASED_NB_REG (4U) /*!< Number of block-based registers available */
-
+#else
+#define FLASH_BLOCKBASED_NB_REG (2U) /*!< Number of block-based registers available */
+#endif /* defined(STM32U3C5xx) || defined(STM32U3B5xx) */
 /**
   * @}
   */
