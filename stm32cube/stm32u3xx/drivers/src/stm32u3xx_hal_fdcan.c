@@ -302,7 +302,10 @@ HAL_StatusTypeDef HAL_FDCAN_Init(FDCAN_HandleTypeDef *hfdcan)
 
   /* Check function parameters */
   assert_param(IS_FDCAN_ALL_INSTANCE(hfdcan->Instance));
-  assert_param(IS_FDCAN_CKDIV(hfdcan->Init.ClockDivider));
+  if (hfdcan->Instance == FDCAN1)
+  {
+    assert_param(IS_FDCAN_CKDIV(hfdcan->Init.ClockDivider));
+  }
   assert_param(IS_FDCAN_FRAME_FORMAT(hfdcan->Init.FrameFormat));
   assert_param(IS_FDCAN_MODE(hfdcan->Init.Mode));
   assert_param(IS_FUNCTIONAL_STATE(hfdcan->Init.AutoRetransmission));
@@ -407,8 +410,12 @@ HAL_StatusTypeDef HAL_FDCAN_Init(FDCAN_HandleTypeDef *hfdcan)
   /* Enable configuration change */
   SET_BIT(hfdcan->Instance->CCCR, FDCAN_CCCR_CCE);
 
-  /* Configure Clock divider */
-  FDCAN_CONFIG->CKDIV = hfdcan->Init.ClockDivider;
+  /* Check FDCAN instance */
+  if (hfdcan->Instance == FDCAN1)
+  {
+    /* Configure Clock divider */
+    FDCAN_CONFIG->CKDIV = hfdcan->Init.ClockDivider;
+  }
 
   /* Set the no automatic retransmission */
   if (hfdcan->Init.AutoRetransmission == ENABLE)
@@ -3419,6 +3426,13 @@ static void FDCAN_CalcultateRamBlockAddresses(FDCAN_HandleTypeDef *hfdcan)
 {
   uint32_t RAMcounter;
   uint32_t SramCanInstanceBase = SRAMCAN_BASE;
+#if defined(FDCAN2)
+
+  if (hfdcan->Instance == FDCAN2)
+  {
+    SramCanInstanceBase += SRAMCAN_SIZE;
+  }
+#endif /* FDCAN2 */
 
   /* Standard filter list start address */
   hfdcan->msgRam.StandardFilterSA = SramCanInstanceBase + SRAMCAN_FLSSA;

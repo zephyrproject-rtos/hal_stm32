@@ -546,18 +546,6 @@ __STATIC_INLINE void LL_PWR_EnableSRAM1PowerDown(void)
 }
 
 /**
-  * @brief  Disable SRAM1 power down.
-  * @rmtoll CR1          SRAM1PD        LL_PWR_DisableSRAM1PowerDown
-  * @retval None
-  * @retval None
-  */
-__STATIC_INLINE void LL_PWR_DisableSRAM1PowerDown(void)
-{
-  /* SRAM1 powered on */
-  CLEAR_BIT(PWR->CR1, PWR_CR1_SRAM1PD);
-}
-
-/**
   * @brief  Check if SRAM1 power down is enabled.
   * @rmtoll CR1          SRAM1PD        LL_PWR_IsEnabledSRAM1PowerDown
   * @retval State of bit (1 or 0).
@@ -577,17 +565,6 @@ __STATIC_INLINE void LL_PWR_EnableSRAM2PowerDown(void)
 {
   /* SRAM2 powered off */
   SET_BIT(PWR->CR1, PWR_CR1_SRAM2PD);
-}
-
-/**
-  * @brief  Disable SRAM2 power down.
-  * @rmtoll CR1          SRAM2PD        LL_PWR_DisableSRAM2PowerDown
-  * @retval None
-  */
-__STATIC_INLINE void LL_PWR_DisableSRAM2PowerDown(void)
-{
-  /* SRAM2 powered on */
-  CLEAR_BIT(PWR->CR1, PWR_CR1_SRAM2PD);
 }
 
 /**
@@ -647,17 +624,6 @@ __STATIC_INLINE void LL_PWR_EnableSRAM3PowerDown(void)
 }
 
 /**
-  * @brief  Disable SRAM3 power down.
-  * @rmtoll CR1          SRAM3PD        LL_PWR_DisableSRAM3PowerDown
-  * @retval None
-  */
-__STATIC_INLINE void LL_PWR_DisableSRAM3PowerDown(void)
-{
-  /* SRAM3 powered on */
-  CLEAR_BIT(PWR->CR1, PWR_CR1_SRAM3PD);
-}
-
-/**
   * @brief  Check if SRAM3 power down is enabled.
   * @rmtoll CR1          SRAM3PD        LL_PWR_IsEnabledSRAM3PowerDown
   * @retval State of bit (1 or 0).
@@ -679,17 +645,6 @@ __STATIC_INLINE void LL_PWR_EnableSRAM4PowerDown(void)
 {
   /* SRAM4 powered off */
   SET_BIT(PWR->CR1, PWR_CR1_SRAM4PD);
-}
-
-/**
-  * @brief  Disable SRAM4 power down.
-  * @rmtoll CR1          SRAM4PD        LL_PWR_DisableSRAM4PowerDown
-  * @retval None
-  */
-__STATIC_INLINE void LL_PWR_DisableSRAM4PowerDown(void)
-{
-  /* SRAM4 powered on */
-  CLEAR_BIT(PWR->CR1, PWR_CR1_SRAM4PD);
 }
 
 /**
@@ -737,6 +692,7 @@ __STATIC_INLINE uint32_t LL_PWR_IsEnabledUltraLowPowerMode(void)
 /**
   * @brief  Set the SRAM1 page(s) retention in Stop modes (Stop 0, 1, 2, 3).
   * @rmtoll CR2    SRAM1PDSi       LL_PWR_SetSRAM1StopRetention
+  * @note   Parameters noted (*) are not available on STM32U356xx/STM32U366xx devices.
   * @param  SRAM1PageRetention  This parameter can be a combination of the following values:
   *         @arg @ref LL_PWR_SRAM1_STOP_NO_RETENTION
   *         @arg @ref LL_PWR_SRAM1_STOP_PAGE1_RETENTION
@@ -744,8 +700,8 @@ __STATIC_INLINE uint32_t LL_PWR_IsEnabledUltraLowPowerMode(void)
   *         @arg @ref LL_PWR_SRAM1_STOP_PAGE3_RETENTION
   *         @arg @ref LL_PWR_SRAM1_STOP_PAGE4_RETENTION
   *         @arg @ref LL_PWR_SRAM1_STOP_PAGE5_RETENTION
-  *         @arg @ref LL_PWR_SRAM1_STOP_PAGE6_RETENTION
-  *         @arg @ref LL_PWR_SRAM1_STOP_PAGE7_RETENTION
+  *         @arg @ref LL_PWR_SRAM1_STOP_PAGE6_RETENTION (*)
+  *         @arg @ref LL_PWR_SRAM1_STOP_PAGE7_RETENTION (*)
   *         @arg @ref LL_PWR_SRAM1_STOP_FULL_RETENTION
   * @retval None
   */
@@ -757,6 +713,7 @@ __STATIC_INLINE void LL_PWR_SetSRAM1StopRetention(uint32_t SRAM1PageRetention)
 /**
   * @brief  Get the SRAM1 page(s) retention in Stop modes (Stop 0, 1, 2, 3).
   * @rmtoll CR2    SRAM1PDSi       LL_PWR_GetSRAM1StopRetention
+  * @note   Returned values noted (*) are not available on STM32U356xx/STM32U366xx devices.
   * @retval Returned value can be a combination of the following values:
   *         @arg @ref LL_PWR_SRAM1_STOP_NO_RETENTION
   *         @arg @ref LL_PWR_SRAM1_STOP_PAGE1_RETENTION
@@ -764,8 +721,8 @@ __STATIC_INLINE void LL_PWR_SetSRAM1StopRetention(uint32_t SRAM1PageRetention)
   *         @arg @ref LL_PWR_SRAM1_STOP_PAGE3_RETENTION
   *         @arg @ref LL_PWR_SRAM1_STOP_PAGE4_RETENTION
   *         @arg @ref LL_PWR_SRAM1_STOP_PAGE5_RETENTION
-  *         @arg @ref LL_PWR_SRAM1_STOP_PAGE6_RETENTION
-  *         @arg @ref LL_PWR_SRAM1_STOP_PAGE7_RETENTION
+  *         @arg @ref LL_PWR_SRAM1_STOP_PAGE6_RETENTION (*)
+  *         @arg @ref LL_PWR_SRAM1_STOP_PAGE7_RETENTION (*)
   *         @arg @ref LL_PWR_SRAM1_STOP_FULL_RETENTION
   */
 __STATIC_INLINE uint32_t LL_PWR_GetSRAM1StopRetention(void)
@@ -1754,6 +1711,9 @@ __STATIC_INLINE uint32_t LL_PWR_IsEnabledPUPDConfig(void)
 
 /**
   * @brief  Enable GPIO pull-up in Standby and Shutdown modes
+#if defined(RAMCFG_SRAM3)
+  * @note   Parameters noted (*) are only available on STM32U3B5xx/STM32U3C5xx devices.
+#endif
   * @rmtoll PUCRx        PUx        LL_PWR_EnableGPIOPullUp
   * @param  GPIOPort This parameter can be one of the following values:
   *         @arg @ref LL_PWR_GPIO_PORTA
@@ -1792,6 +1752,9 @@ __STATIC_INLINE void LL_PWR_EnableGPIOPullUp(uint32_t GPIOPort, uint32_t GPIOPin
 
 /**
   * @brief  Disable GPIO pull-up in Standby and Shutdown modes
+#if defined(RAMCFG_SRAM3)
+  * @note   Parameters noted (*) are only available on STM32U3B5xx/STM32U3C5xx devices.
+#endif
   * @rmtoll PUCRx        PUx        LL_PWR_DisableGPIOPullUp
   * @param  GPIOPort This parameter can be one of the following values:
   *         @arg @ref LL_PWR_GPIO_PORTA
@@ -1799,6 +1762,9 @@ __STATIC_INLINE void LL_PWR_EnableGPIOPullUp(uint32_t GPIOPort, uint32_t GPIOPin
   *         @arg @ref LL_PWR_GPIO_PORTC
   *         @arg @ref LL_PWR_GPIO_PORTD
   *         @arg @ref LL_PWR_GPIO_PORTE
+#if defined(RAMCFG_SRAM3)
+  *         @arg @ref LL_PWR_GPIO_PORTF (*)
+#endif
   *         @arg @ref LL_PWR_GPIO_PORTG
   *         @arg @ref LL_PWR_GPIO_PORTH
   * @param  GPIOPin This parameter can be a combination of the following values:
@@ -1827,6 +1793,9 @@ __STATIC_INLINE void LL_PWR_DisableGPIOPullUp(uint32_t GPIOPort, uint32_t GPIOPi
 
 /**
   * @brief  Check if GPIO pull-up in Standby and Shutdown modes is enabled
+#if defined(RAMCFG_SRAM3)
+  * @note   Parameters noted (*) are only available on STM32U3B5xx/STM32U3C5xx devices.
+#endif
   * @rmtoll PUCRx        PUx        LL_PWR_IsEnabledGPIOPullUp
   * @param  GPIOPort This parameter can be one of the following values:
   *         @arg @ref LL_PWR_GPIO_PORTA
@@ -1834,6 +1803,9 @@ __STATIC_INLINE void LL_PWR_DisableGPIOPullUp(uint32_t GPIOPort, uint32_t GPIOPi
   *         @arg @ref LL_PWR_GPIO_PORTC
   *         @arg @ref LL_PWR_GPIO_PORTD
   *         @arg @ref LL_PWR_GPIO_PORTE
+#if defined(RAMCFG_SRAM3)
+  *         @arg @ref LL_PWR_GPIO_PORTF (*)
+#endif
   *         @arg @ref LL_PWR_GPIO_PORTG
   *         @arg @ref LL_PWR_GPIO_PORTH
   * @param  GPIOPin This parameter can be one of the following values:
@@ -1862,6 +1834,9 @@ __STATIC_INLINE uint32_t LL_PWR_IsEnabledGPIOPullUp(uint32_t GPIOPort, uint32_t 
 
 /**
   * @brief  Enable GPIO pull-down in Standby and Shutdown modes.
+#if defined(RAMCFG_SRAM3)
+  * @note   Parameters noted (*) are only available on STM32U3B5xx/STM32U3C5xx devices.
+#endif
   * @rmtoll PDCRx        PDx        LL_PWR_EnableGPIOPullDown
   * @param  GPIOPort This parameter can be one of the following values:
   *         @arg @ref LL_PWR_GPIO_PORTA
@@ -1869,6 +1844,9 @@ __STATIC_INLINE uint32_t LL_PWR_IsEnabledGPIOPullUp(uint32_t GPIOPort, uint32_t 
   *         @arg @ref LL_PWR_GPIO_PORTC
   *         @arg @ref LL_PWR_GPIO_PORTD
   *         @arg @ref LL_PWR_GPIO_PORTE
+#if defined(RAMCFG_SRAM3)
+  *         @arg @ref LL_PWR_GPIO_PORTF (*)
+#endif
   *         @arg @ref LL_PWR_GPIO_PORTG
   *         @arg @ref LL_PWR_GPIO_PORTH
   * @param  GPIOPin This parameter can be a combination of the following values:
@@ -1897,6 +1875,9 @@ __STATIC_INLINE void LL_PWR_EnableGPIOPullDown(uint32_t GPIOPort, uint32_t GPIOP
 
 /**
   * @brief  Disable GPIO pull-down in Standby and Shutdown modes.
+#if defined(RAMCFG_SRAM3)
+  * @note   Parameters noted (*) are only available on STM32U3B5xx/STM32U3C5xx devices.
+#endif
   * @rmtoll PDCRx        PDx        LL_PWR_DisableGPIOPullDown
   * @param  GPIOPort This parameter can be one of the following values:
   *         @arg @ref LL_PWR_GPIO_PORTA
@@ -1904,6 +1885,9 @@ __STATIC_INLINE void LL_PWR_EnableGPIOPullDown(uint32_t GPIOPort, uint32_t GPIOP
   *         @arg @ref LL_PWR_GPIO_PORTC
   *         @arg @ref LL_PWR_GPIO_PORTD
   *         @arg @ref LL_PWR_GPIO_PORTE
+#if defined(RAMCFG_SRAM3)
+  *         @arg @ref LL_PWR_GPIO_PORTF (*)
+#endif
   *         @arg @ref LL_PWR_GPIO_PORTG
   *         @arg @ref LL_PWR_GPIO_PORTH
   * @param  GPIOPin This parameter can be a combination of the following values:
@@ -1932,6 +1916,9 @@ __STATIC_INLINE void LL_PWR_DisableGPIOPullDown(uint32_t GPIOPort, uint32_t GPIO
 
 /**
   * @brief  Check if GPIO pull-down in Standby and Shutdown modes is enabled
+#if defined(RAMCFG_SRAM3)
+  * @note   Parameters noted (*) are only available on STM32U3B5xx/STM32U3C5xx devices.
+#endif
   * @rmtoll PDCRx        PDx        LL_PWR_IsEnabledGPIOPullDown
   * @param  GPIOPort This parameter can be one of the following values:
   *         @arg @ref LL_PWR_GPIO_PORTA
@@ -1939,6 +1926,9 @@ __STATIC_INLINE void LL_PWR_DisableGPIOPullDown(uint32_t GPIOPort, uint32_t GPIO
   *         @arg @ref LL_PWR_GPIO_PORTC
   *         @arg @ref LL_PWR_GPIO_PORTD
   *         @arg @ref LL_PWR_GPIO_PORTE
+#if defined(RAMCFG_SRAM3)
+  *         @arg @ref LL_PWR_GPIO_PORTF (*)
+#endif
   *         @arg @ref LL_PWR_GPIO_PORTG
   *         @arg @ref LL_PWR_GPIO_PORTH
   * @param  GPIOPin This parameter can be one of the following values:
@@ -1967,6 +1957,9 @@ __STATIC_INLINE uint32_t LL_PWR_IsEnabledGPIOPullDown(uint32_t GPIOPort, uint32_
 
 /**
   * @brief  Set I3C pull-up configuration for GPIO on port A-B.
+#if defined(RAMCFG_SRAM3)
+  * @note   Parameters noted (*) are only available on STM32U3B5xx/STM32U3C5xx devices.
+#endif
   * @rmtoll I3CPUCR1     PAx_I3CPU        LL_PWR_SetI3CPullUpConfig1
   * @rmtoll I3CPUCR1     PBx_I3CPU        LL_PWR_SetI3CPullUpConfig1
   * @param  Gpio  This parameter can be a combination of the following values:
@@ -1975,6 +1968,9 @@ __STATIC_INLINE uint32_t LL_PWR_IsEnabledGPIOPullDown(uint32_t GPIOPort, uint32_
   *         @arg @ref LL_PWR_I3CPUCR1_PA7
   *         @arg @ref LL_PWR_I3CPUCR1_PB2
   *         @arg @ref LL_PWR_I3CPUCR1_PB6
+#if defined(RAMCFG_SRAM3)
+  *         @arg @ref LL_PWR_I3CPUCR1_PB7 (*)
+#endif
   *         @arg @ref LL_PWR_I3CPUCR1_PB8
   *         @arg @ref LL_PWR_I3CPUCR1_PB9
   *         @arg @ref LL_PWR_I3CPUCR1_PB10
@@ -1992,6 +1988,7 @@ __STATIC_INLINE void LL_PWR_SetI3CPullUpConfig1(uint32_t Gpio)
 /**
   * @brief  Get I3C pull-up configuration for GPIO on port A-B.
 #if defined(RAMCFG_SRAM3)
+  * @note   Parameters noted (*) are only available on STM32U3B5xx/STM32U3C5xx devices.
 #endif
   * @rmtoll I3CPUCR1     PAx_I3CPU        LL_PWR_GetI3CPullUpConfig1
   * @rmtoll I3CPUCR1     PBx_I3CPU        LL_PWR_GetI3CPullUpConfig1
@@ -2001,6 +1998,9 @@ __STATIC_INLINE void LL_PWR_SetI3CPullUpConfig1(uint32_t Gpio)
   *         @arg @ref LL_PWR_I3CPUCR1_PA7
   *         @arg @ref LL_PWR_I3CPUCR1_PB2
   *         @arg @ref LL_PWR_I3CPUCR1_PB6
+#if defined(RAMCFG_SRAM3)
+  *         @arg @ref LL_PWR_I3CPUCR1_PB7 (*)
+#endif
   *         @arg @ref LL_PWR_I3CPUCR1_PB8
   *         @arg @ref LL_PWR_I3CPUCR1_PB9
   *         @arg @ref LL_PWR_I3CPUCR1_PB10

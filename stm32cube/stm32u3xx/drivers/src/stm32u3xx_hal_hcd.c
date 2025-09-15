@@ -46,6 +46,9 @@
     (#)Enable HCD transmission and reception:
         (##) HAL_HCD_Start();
 
+    (#)NOTE: For applications not using double buffer mode, define the symbol
+              'USE_USB_DOUBLE_BUFFER' as 0 to reduce the driver's memory footprint.
+
   @endverbatim
   ******************************************************************************
   */
@@ -1550,6 +1553,24 @@ HAL_StatusTypeDef HAL_HCD_HC_ClearHubInfo(HCD_HandleTypeDef *hhcd, uint8_t ch_nu
   hhcd->hc[ch_num].hub_port_nbr = 0U;
 
   return HAL_OK;
+}
+
+/**
+  * @brief  Activate a host channel.
+  * @param  hhcd HCD handle
+  * @param  ch_num Channel number.
+  *         This parameter can be a value from 1 to 15
+  * @retval HAL status
+  */
+HAL_StatusTypeDef HAL_HCD_HC_Activate(HCD_HandleTypeDef *hhcd, uint8_t ch_num)
+{
+  HAL_StatusTypeDef status = HAL_OK;
+
+  __HAL_LOCK(hhcd);
+  (void)USB_HC_Activate(hhcd->Instance, (uint8_t)ch_num, hhcd->hc[ch_num].ch_dir);
+  __HAL_UNLOCK(hhcd);
+
+  return status;
 }
 
 #if (USE_USB_DOUBLE_BUFFER == 1U)

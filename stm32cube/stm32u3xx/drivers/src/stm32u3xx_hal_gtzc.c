@@ -113,7 +113,26 @@
 
 /* Definitions for GTZC TZSC & TZIC ALL register values */
 /* TZSC1 / TZIC1 instances */
-#if !defined(SRAM3_BASE)
+#if defined(LCD)
+#define TZSC1_SECCFGR1_ALL       (0x01E6BDF7UL)
+#define TZSC1_SECCFGR2_ALL       (0x0003FA7BUL)
+#define TZSC1_SECCFGR3_ALL       (0x00D1F958UL)
+
+#define TZSC1_PRIVCFGR1_ALL      (0x01E6BDF7UL)
+#define TZSC1_PRIVCFGR2_ALL      (0x0003FA7BUL)
+#define TZSC1_PRIVCFGR3_ALL      (0x00D1F958UL)
+
+#define TZIC1_IER1_ALL           (0x01E6BDF7UL)
+#define TZIC1_IER2_ALL           (0x0003FA7BUL)
+#define TZIC1_IER3_ALL           (0x00D1F958UL)
+#define TZIC1_IER4_ALL           (0x0F00C1FFUL)
+
+#define TZIC1_FCR1_ALL           (0x01E6BDF7UL)
+#define TZIC1_FCR2_ALL           (0x0003FA7BUL)
+#define TZIC1_FCR3_ALL           (0x00D1F958UL)
+#define TZIC1_FCR4_ALL           (0x0F00C1FFUL)
+
+#elif !(defined(LCD) && defined(SRAM3_BASE))
 #define TZSC1_SECCFGR1_ALL       (0x01E6FDF7UL)
 #define TZSC1_SECCFGR2_ALL       (0x0001FEFBUL)
 #define TZSC1_SECCFGR3_ALL       (0x01D3F958UL)

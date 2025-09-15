@@ -126,6 +126,9 @@ typedef struct
 /** @defgroup HCD_Exported_Constants HCD Exported Constants
   * @{
   */
+#ifndef HAL_HCD_CHANNEL_NAK_COUNT
+#define HAL_HCD_CHANNEL_NAK_COUNT           2U
+#endif /* HAL_HCD_CHANNEL_NAK_COUNT */
 
 /** @defgroup HCD_Speed HCD Speed
   * @{
@@ -205,6 +208,7 @@ HAL_StatusTypeDef HAL_HCD_HC_Init(HCD_HandleTypeDef *hhcd, uint8_t ch_num,
                                   uint8_t speed, uint8_t ep_type, uint16_t mps);
 
 HAL_StatusTypeDef HAL_HCD_HC_Halt(HCD_HandleTypeDef *hhcd, uint8_t ch_num);
+HAL_StatusTypeDef HAL_HCD_HC_Activate(HCD_HandleTypeDef *hhcd, uint8_t ch_num);
 
 HAL_StatusTypeDef HAL_HCD_HC_Close(HCD_HandleTypeDef *hhcd, uint8_t ch_num);
 
