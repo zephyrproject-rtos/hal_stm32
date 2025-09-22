@@ -93,3 +93,6 @@ Patch List:
 	* Trace pointers in hexa
 	  Impacted files: inc/encdebug.h
 			  source/h264/H264EncApi.c
+
+	* Add hardware configuration info helper needed by EWL
+	  Impacted files: inc/ewl.h
