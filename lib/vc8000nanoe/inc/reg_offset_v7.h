@@ -45,9 +45,17 @@
 #ifndef __HENC_REGISTER_OFFSET_H__
 #define __HENC_REGISTER_OFFSET_H__
 
+/* ASIC identifier */
+#define BASE_HEncASIC 0x0U
+
 /* IRQ Source Map. */
 #define BASE_HEncIRQ 0x4U
 
+/* Control 7 */
+#define BASE_HEncControl7 0x54U
+
+/* HW synthesis config */
+#define BASE_HEncSynth 0xfcU
 
 /* HW synthesis config register 2, read-only */
 #define BASE_HWFuse2 0x4a0U
@@ -331,5 +339,8 @@
 
 /* Last Fake Register for Register Counting. */
 #define BASE_HEncRegisterMax 0x7c8U
+
+/* HW synthesis config 1 */
+#define BASE_HEncSynth1 0xa58U
 
 #endif /* __HENC_REGISTER_OFFSET_H__ */

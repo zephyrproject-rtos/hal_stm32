@@ -96,3 +96,6 @@ Patch List:
 
 	* Add hardware configuration info helper needed by EWL
 	  Impacted files: inc/ewl.h
+
+	* Add some registers needed by EWL
+	  Impacted files: inc/reg_offset_v7.h
