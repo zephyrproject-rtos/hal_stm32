@@ -255,6 +255,35 @@ void EWLassert(bool expr, const char *str_expr, const char *file, unsigned int l
 void EWLtrace(const char *s);
 void EWLtraceparam(const char *fmt, const char *param, unsigned int val);
 
+/* Build hardware configuration structure */
+static inline EWLHwConfig_t EWLBuildHwConfig(uint32_t cfgval, uint32_t cfgval2)
+{
+    EWLHwConfig_t cfg_info;
+
+    cfg_info.maxEncodedWidth = cfgval & ((1U << 12U) - 1U);
+    cfg_info.h264Enabled = (cfgval >> 27U) & 1U;
+    cfg_info.vp8Enabled = (cfgval >> 26U) & 1U;
+    cfg_info.jpegEnabled = (cfgval >> 25U) & 1U;
+    cfg_info.vsEnabled = (cfgval >> 24U) & 1U;
+    cfg_info.rgbEnabled = (cfgval >> 28U) & 1U;
+    cfg_info.searchAreaSmall = (cfgval >> 29U) & 1U;
+    cfg_info.scalingEnabled = (cfgval >> 30U) & 1U;
+    cfg_info.busType = (cfgval >> 20U) & 15U;
+    cfg_info.synthesisLanguage = (cfgval >> 16U) & 15U;
+    cfg_info.busWidth = (cfgval >> 12U) & 15U;
+    cfg_info.addr64Support = (cfgval2 >> 31U) & 1U;
+    cfg_info.dnfSupport = (cfgval2 >> 30U) & 1U;
+    cfg_info.rfcSupport = (cfgval2 >> 28U) & 3U;
+    cfg_info.enhanceSupport = (cfgval2 >> 27U) & 1U;
+    cfg_info.instantSupport = (cfgval2 >> 26U) & 1U;
+    cfg_info.svctSupport = (cfgval2 >> 25U) & 1U;
+    cfg_info.inAxiIdSupport = (cfgval2 >> 24U) & 1U;
+    cfg_info.inLoopbackSupport = (cfgval2 >> 23U) & 1U;
+    cfg_info.irqEnhanceSupport = (cfgval2 >> 22U) & 1U;
+
+    return cfg_info;
+}
+
 #ifdef __cplusplus
 }
 #endif
