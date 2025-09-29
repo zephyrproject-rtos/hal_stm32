@@ -174,7 +174,7 @@ static i32 float2fixpoint8(float data)
         }
 
         pow2 *= 2;
-        base = 1.0/pow2;
+        base = 1.0f/pow2;
 
     }
     return result;

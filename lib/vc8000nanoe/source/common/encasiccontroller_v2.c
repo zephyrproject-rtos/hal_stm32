@@ -167,7 +167,7 @@ i32 EncAsicMemAlloc_V2(asicData_s * asic, u32 width, u32 height,
         regs->internalImageChrBaseR[0] = asic->internalImageChroma[1].busAddress;
 
         /* Optional scaled image output */
-        if(scaledWidth*scaledHeight) {
+        if(scaledWidth*scaledHeight > 0) {
             if (EWLMallocRefFrm(asic->ewl, scaledWidth*scaledHeight*2,
                            &asic->scaledImage) != EWL_OK)
             {

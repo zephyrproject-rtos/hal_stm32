@@ -682,7 +682,7 @@ bool_e SetParameter(h264Instance_s *inst, const H264EncConfig *pEncCfg)
         inst->preProcess.scaledWidth = inst->preProcess.scaledHeight = 0;
 
     inst->preProcess.scaledOutput   =
-        (inst->preProcess.scaledWidth * inst->preProcess.scaledHeight ? 1 : 0);
+        ((inst->preProcess.scaledWidth * inst->preProcess.scaledHeight > 0) ? 1 : 0);
     inst->preProcess.adaptiveRoi = 0;
     inst->preProcess.adaptiveRoiColor  = 0;
     inst->preProcess.adaptiveRoiMotion = -5;
