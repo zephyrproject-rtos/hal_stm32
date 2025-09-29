@@ -65,8 +65,10 @@
               HAL_ETH_TxCpltCallback() will be executed when end of transfer occur
 
       (#) Communication with an external PHY device:
-         (##) HAL_ETH_ReadPHYRegister(): Read a register from an external PHY
-         (##) HAL_ETH_WritePHYRegister(): Write data to an external RHY register
+         (##) HAL_ETH_ReadPHYRegister(): Read a register from an external PHY, clause 22
+         (##) HAL_ETH_WritePHYRegister(): Write data to an external RHY register, clause 22
+         (##) HAL_ETH_ReadPHYRegister_c45(): Read a register from an external PHY, clause 45
+         (##) HAL_ETH_WritePHYRegister_c45(): Write data to an external RHY register, clause 45
 
       (#) Configure the Ethernet MAC after ETH peripheral initialization
           (##) HAL_ETH_GetMACConfig(): Get MAC actual configuration into ETH_MACConfigTypeDef
@@ -2168,11 +2170,13 @@ HAL_StatusTypeDef HAL_ETH_ReadPHYRegister(ETH_HandleTypeDef *heth, uint32_t PHYA
   WRITE_REG(tmpreg, heth->Instance->MACMDIOAR);
 
   /* Prepare the MDIO Address Register value
+     - Set the PHY for clause 22
      - Set the PHY device address
      - Set the PHY register address
      - Set the read mode
      - Set the MII Busy bit */
 
+  MODIFY_REG(tmpreg, ETH_MACMDIOAR_C45E, 0);
   MODIFY_REG(tmpreg, ETH_MACMDIOAR_PA, (PHYAddr << 21));
   MODIFY_REG(tmpreg, ETH_MACMDIOAR_RDA, (PHYReg << 16));
   MODIFY_REG(tmpreg, ETH_MACMDIOAR_MOC, ETH_MACMDIOAR_MOC_RD);
@@ -2223,11 +2227,13 @@ HAL_StatusTypeDef HAL_ETH_WritePHYRegister(const ETH_HandleTypeDef *heth, uint32
   WRITE_REG(tmpreg, heth->Instance->MACMDIOAR);
 
   /* Prepare the MDIO Address Register value
+     - Set the PHY for clause 22
      - Set the PHY device address
      - Set the PHY register address
      - Set the write mode
      - Set the MII Busy bit */
 
+  MODIFY_REG(tmpreg, ETH_MACMDIOAR_C45E, 0);
   MODIFY_REG(tmpreg, ETH_MACMDIOAR_PA, (PHYAddr << 21));
   MODIFY_REG(tmpreg, ETH_MACMDIOAR_RDA, (PHYReg << 16));
   MODIFY_REG(tmpreg, ETH_MACMDIOAR_MOC, ETH_MACMDIOAR_MOC_WR);
@@ -2253,6 +2259,135 @@ HAL_StatusTypeDef HAL_ETH_WritePHYRegister(const ETH_HandleTypeDef *heth, uint32
   return HAL_OK;
 }
 
+/**
+ * @brief  Read a PHY register by Clause 45 spec.
+ * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
+ *         the configuration information for ETHERNET module
+ * @param  PHYAddr: PHY port address, must be a value from 0 to 31
+ * @param  PHYMMD: MMD address, must be a value from 0 to 31
+ * @param  PHYReg: PHY register address, must be a value from 0 to 65535
+ * @param pRegValue: parameter to hold read value
+ * @retval HAL status
+ */
+HAL_StatusTypeDef HAL_ETH_ReadPHYRegister_c45(ETH_HandleTypeDef *heth,
+                                              uint32_t PHYAddr,
+                                              uint8_t PHYMMD,
+                                              uint32_t PHYReg,
+                                              uint32_t *pRegValue)
+{
+  uint32_t tickstart;
+  uint32_t tmpreg;
+
+  /* Check for the Busy flag */
+  if (READ_BIT(heth->Instance->MACMDIOAR, ETH_MACMDIOAR_MB) != (uint32_t)RESET)
+  {
+    return HAL_ERROR;
+  }
+
+  /* Get the  MACMDIOAR value */
+  WRITE_REG(tmpreg, heth->Instance->MACMDIOAR);
+
+  /* Prepare the MDIO Address Register value
+     - Set the PHY for clause 45
+     - Set the PHY address
+     - Set the PHY MMD
+     - Set the PHY register address
+     - Set the read mode
+     - Set the MII Busy bit */
+
+  MODIFY_REG(tmpreg, ETH_MACMDIOAR_C45E, ETH_MACMDIOAR_C45E);
+  MODIFY_REG(tmpreg, ETH_MACMDIOAR_PA, (PHYAddr << 21));
+  MODIFY_REG(tmpreg, ETH_MACMDIOAR_RDA, (PHYMMD << 16));
+  MODIFY_REG(tmpreg, ETH_MACMDIOAR_MOC, ETH_MACMDIOAR_MOC_RD);
+  WRITE_REG(heth->Instance->MACMDIODR, (PHYReg << 16));
+
+  SET_BIT(tmpreg, ETH_MACMDIOAR_MB);
+
+  /* Write the result value into the MDII Address register */
+  WRITE_REG(heth->Instance->MACMDIOAR, tmpreg);
+
+  tickstart = HAL_GetTick();
+
+  /* Wait for the Busy flag */
+  while (READ_BIT(heth->Instance->MACMDIOAR, ETH_MACMDIOAR_MB) > 0U)
+  {
+    if (((HAL_GetTick() - tickstart) > ETH_MDIO_BUS_TIMEOUT))
+    {
+      return HAL_ERROR;
+    }
+  }
+
+  /* Get MACMIIDR value */
+  WRITE_REG(*pRegValue, (uint16_t)heth->Instance->MACMDIODR);
+  /* Clean out C45 reg */
+  *pRegValue &= 0xffff;
+
+  return HAL_OK;
+}
+
+/**
+ * @brief  Writes to a PHY register.
+ * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
+ *         the configuration information for ETHERNET module
+ * @param  PHYAddr: PHY port address, must be a value from 0 to 31
+ * @param  PHYMMD: MMD address, must be a value from 0 to 31
+ * @param  PHYReg: PHY register address, must be a value from 0 to 65535
+ * @param  RegValue: the value to write
+ * @retval HAL status
+ */
+HAL_StatusTypeDef HAL_ETH_WritePHYRegister_c45(ETH_HandleTypeDef *heth,
+                                               uint32_t PHYAddr,
+                                               uint8_t PHYMMD,
+                                               uint32_t PHYReg,
+                                               uint32_t RegValue)
+{
+  uint32_t tickstart;
+  uint32_t tmpreg;
+
+  /* Check for the Busy flag */
+  if (READ_BIT(heth->Instance->MACMDIOAR, ETH_MACMDIOAR_MB) != (uint32_t)RESET)
+  {
+    return HAL_ERROR;
+  }
+
+  /* Get the  MACMDIOAR value */
+  WRITE_REG(tmpreg, heth->Instance->MACMDIOAR);
+
+  /* Prepare the MDIO Address Register value
+     - Set the PHY for clause 45
+     - Set the PHY address
+     - Set the PHY MMD
+     - Set the PHY register address
+     - Set the write mode
+     - Set the MII Busy bit */
+
+  MODIFY_REG(tmpreg, ETH_MACMDIOAR_C45E, ETH_MACMDIOAR_C45E);
+  MODIFY_REG(tmpreg, ETH_MACMDIOAR_PA, (PHYAddr << 21));
+  MODIFY_REG(tmpreg, ETH_MACMDIOAR_RDA, (PHYMMD << 16));
+  MODIFY_REG(tmpreg, ETH_MACMDIOAR_MOC, ETH_MACMDIOAR_MOC_WR);
+  WRITE_REG(ETH->MACMDIODR, (PHYReg << 16));
+
+  SET_BIT(tmpreg, ETH_MACMDIOAR_MB);
+
+  /* Give the value to the MII data register */
+  MODIFY_REG(ETH->MACMDIODR, 0xffff, (uint16_t)RegValue);
+
+  /* Write the result value into the MII Address register */
+  WRITE_REG(ETH->MACMDIOAR, tmpreg);
+
+  tickstart = HAL_GetTick();
+
+  /* Wait for the Busy flag */
+  while (READ_BIT(heth->Instance->MACMDIOAR, ETH_MACMDIOAR_MB) > 0U)
+  {
+    if (((HAL_GetTick() - tickstart) > ETH_MDIO_BUS_TIMEOUT))
+    {
+      return HAL_ERROR;
+    }
+  }
+
+  return HAL_OK;
+}
 /**
   * @}
   */
