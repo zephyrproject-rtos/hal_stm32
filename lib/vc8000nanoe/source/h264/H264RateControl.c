@@ -78,7 +78,7 @@ FILE *fpRcTrc = NULL;
 #define INITIAL_BUFFER_FULLNESS   60    /* Decoder Buffer in procents */
 #define MIN_PIC_SIZE              50    /* Procents from picPerPic */
 
-#define DIV(a, b)       ((b) ? ((a) + (SIGN(a) * (b)) / 2) / (b) : (a))
+#define DIV(a, b)       ((b > 0) ? ((a) + (SIGN(a) * (b)) / 2) / (b) : (a))
 #define DSCY                      32 /* n * 32 */
 #define DSCBITPERMB               128 /* bitPerMb scaler  */
 #define I32_MAX           2147483647 /* 2 ^ 31 - 1 */

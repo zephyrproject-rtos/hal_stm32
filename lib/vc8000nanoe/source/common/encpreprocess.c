@@ -410,8 +410,8 @@ void EncPreProcess(asicData_s * asic, preProcess_s * preProcess)
 
     /* Scaling ratio for down-scaling, fixed point 1.16, calculate from
         rotated dimensions. */
-    if (preProcess->scaledWidth*preProcess->scaledHeight &&
-        preProcess->scaledOutput) {
+    if ((preProcess->scaledWidth*preProcess->scaledHeight > 0) &&
+        (preProcess->scaledOutput > 0)) {
         u32 width16 = (width+15)/16*16;
         u32 height16 = (height+15)/16*16;
 

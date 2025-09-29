@@ -3047,7 +3047,9 @@ void H264SupplyPrefixForSvctMutiSlice(H264EncInst inst, const H264EncIn *pEncIn,
     /* 2.update H264EncOut pEncInst state. */
     for(j = 0; j < num_prefix_to_supply; j++)
     {
+#if 0 /** PATCH: fix build warnings */
         ASSERT(&pEncOut->pNaluSizeBuf[num_nalus - 1 + num_prefix_to_supply -j*2]);
+#endif
         pEncOut->pNaluSizeBuf[num_nalus-1+num_prefix_to_supply-j*2 ] = pEncOut->pNaluSizeBuf[num_nalus-1-j];
         pEncOut->pNaluSizeBuf[num_nalus - 1 + num_prefix_to_supply - j*2 - 1] = prefix_length;
         pEncOut->streamSize += prefix_length;
