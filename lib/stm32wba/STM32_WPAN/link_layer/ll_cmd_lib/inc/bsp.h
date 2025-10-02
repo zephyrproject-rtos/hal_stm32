@@ -1,4 +1,4 @@
-/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/2.00a-lca01/firmware/public_inc/bsp.h#1 $*/
+/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/2.00a-lca03/firmware/public_inc/bsp.h#1 $*/
 
 /**
  ********************************************************************************
@@ -14,10 +14,10 @@
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
  * of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
  * following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in all copies or substantial
  * portions of the Software.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING, BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT. IN NO EVENT SHALL
@@ -104,10 +104,20 @@ typedef struct _ble_ll_bus {
 
 /* Structure holding the Event timing */
 typedef struct Evnt_timing_s{
-	uint32_t drift_time; /* The total drift time between the software timer value and the start execution of the function evnt_schdlr_timer_callback */
-	uint32_t exec_time;  /* The time to get the event ready for air transmission */
+	uint32_t drift_time; 	/* The total drift time between the software timer value and the start execution of the function evnt_schdlr_timer_callback */
+	uint32_t exec_time;  	/* The time to get the event ready for air transmission.
+							 * When passed from the host, it indicates the profiled execution time. It will be replaced
+							 * by the actual execution time using the CALCULATE_EXEC_TIME directive
+							 * after calling ll_intf_config_schdling_time and this new value will be reported through bsp_evnt_schldr_timing_update_not */
 	uint32_t schdling_time; /* The total time to server the completed event and start new cycle of it, the time from longest time of the state machine done isr to till the debug dio DBG_IO_PROFILE_END_DRIFT_TIME is raised */
 }Evnt_timing_t;
+
+typedef enum _profiling_state_e {
+	PROFILE_STATE_START,
+	PROFILE_STATE_CLEAR,
+	PROFILE_STATE_END,
+} profiling_state_e;
+
 /**
  * @brief enum holding all debugging gpio
  *
@@ -334,6 +344,8 @@ typedef enum Debug_GPIO_e{
 	DBG_IO_RAL_AD_SET_MEASUREMENT_STATE							,
     DBG_IO_PROFILE_CS_GEN                                       ,
     DBG_IO_PROFILE_CS_CHNL_SHUFFLING                            ,
+	DBG_IO_SET_DEEP_SLEEP_MODE									,
+	DBG_IO_BACK_FROM_DEEP_SLEEP									,
 	Debug_GPIO_num
 
 }Debug_GPIO_t;
@@ -646,7 +658,7 @@ void bsp_set_phy_clbr_state(PhyClbrState state);
 /**
  * @brief a function to notify the upper layer to switch the clock.
  *
- * @param evnt_timing[in]: Evnt_timing_t pointer to structure contains drift time , execution time and scheduling time
+ * @param evnt_timing[in]: Evnt_timing_t pointer to structure contains drift time , execution time and scheduling time. For the execution time, it shall follow this equation MAX(EXEC_TIME_PROFILED, PHY_WAKEUP_TIME) - PHY_WAKEUP_TIME + EXEC_TIME_MARGIN
  *
  * @retval None.
  */
@@ -665,6 +677,19 @@ int logUart(void* devHandle, char* logStr);
 void bsp_assert_log(uint8_t condition, uint8_t severity, const char *ptr_func_name,  const int line);
 void bsp_assert(uint8_t condition, uint8_t severity);
 
+/**
+ * @brief Communicates the state of the execution time profiling
+ *
+ * @param[in] state: Signals the start, end or clearance of the execution time
+ */
+void bsp_exec_time_profiling(const profiling_state_e state);
+
+/**
+ * @brief Communicates the profiled value for the drift time
+ *
+ * @param[in] value: Profiled value in HW Cycles
+ */
+void bsp_drift_time_profiling(const uint32_t value);
 
 
 #endif /* LL_BSP_H_ */

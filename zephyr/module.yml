@@ -5,46 +5,46 @@ build:
     dts_root: .
 blobs:
   - path: stm32wba/lib/WBA6_LinkLayer_BLE_Full_lib.a
-    sha256: fda0c5a80d65e859c249f270b297117f8cff1f38c0ee4fbe0ad9d5b3bfc2813e
+    sha256: df808d759035bc80d4dd5af10a1ab82593099d144a51d153a559053af1bbeb8e
     type: lib
-    version: '1.6.0'
+    version: '1.7.0'
     license-path: zephyr/blobs/stm32wba/lib/license.md
-    url: https://github.com/STMicroelectronics/STM32CubeWBA/raw/v1.6.0/Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/lib/WBA6_LinkLayer_BLE_Full_lib.a
+    url: https://github.com/STMicroelectronics/STM32CubeWBA/raw/v1.7.0/Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/lib/WBA6_LinkLayer_BLE_Full_lib.a
     description: "Binary Link Layer library for the STM32WBA6 Bluetooth subsystem"
   - path: stm32wba/lib/WBA6_LinkLayer_BLE_Basic_lib.a
-    sha256: aefc7ce2360d12bac52ff38741fcd40cfb0fecf4eff657b2d32b2986dd4165e2
+    sha256: 2003891dccf5a9767d283a1176aeb2e4ca3c454a158cdd75c318d9978b712923
     type: lib
-    version: '1.6.0'
+    version: '1.7.0'
     license-path: zephyr/blobs/stm32wba/lib/license.md
-    url: https://github.com/STMicroelectronics/STM32CubeWBA/raw/v1.6.0/Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/lib/WBA6_LinkLayer_BLE_Basic_lib.a
+    url: https://github.com/STMicroelectronics/STM32CubeWBA/raw/v1.7.0/Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/lib/WBA6_LinkLayer_BLE_Basic_lib.a
     description: "Binary Link Layer library for the STM32WBA6 Bluetooth subsystem"
   - path: stm32wba/lib/LinkLayer_BLE_Full_lib.a
-    sha256: c935072ee0d98ddaec3b7f4a1e502ade9768c3fe8056101823a3f19327a1b148
+    sha256: 67d9e6c1690a93190a7766304031069d0672cd4b69a518350bab80f3aa6dc2f9
     type: lib
-    version: '1.6.0'
+    version: '1.7.0'
     license-path: zephyr/blobs/stm32wba/lib/license.md
-    url: https://github.com/STMicroelectronics/STM32CubeWBA/raw/v1.6.0/Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/lib/LinkLayer_BLE_Full_lib.a
+    url: https://github.com/STMicroelectronics/STM32CubeWBA/raw/v1.7.0/Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/lib/LinkLayer_BLE_Full_lib.a
     description: "Binary Link Layer library for the STM32WBA5 Bluetooth subsystem"
   - path: stm32wba/lib/LinkLayer_BLE_Basic_lib.a
-    sha256: 6a028bba47a11e96d7a63b906d2f1c3c2c5b2d8b0227859f94803c746a1d74b0
+    sha256: f525eccdc0a0ce9fb08b29e89dde75eff9a531e8f15ea9eb380e4eeb25d87880
     type: lib
-    version: '1.6.0'
+    version: '1.7.0'
     license-path: zephyr/blobs/stm32wba/lib/license.md
-    url: https://github.com/STMicroelectronics/STM32CubeWBA/raw/v1.6.0/Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/lib/LinkLayer_BLE_Basic_lib.a
+    url: https://github.com/STMicroelectronics/STM32CubeWBA/raw/v1.7.0/Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/lib/LinkLayer_BLE_Basic_lib.a
     description: "Binary Link Layer library for the STM32WBA5 Bluetooth subsystem"
   - path: stm32wba/lib/stm32wba_ble_stack_llo.a
-    sha256: 70c881f8492ba712c658ab2c4682b60d62bf14d3d55822a611702b32b286c9b1
+    sha256: 85eeea0f8986dab87a4e22c00564ed1110759c582b2224ec35baf0ed87ff69d9
     type: lib
-    version: '1.6.0'
+    version: '1.7.0'
     license-path: zephyr/blobs/stm32wba/lib/license.md
-    url: https://github.com/STMicroelectronics/STM32CubeWBA/raw/v1.6.0/Middlewares/ST/STM32_WPAN/ble/stack/lib/stm32wba_ble_stack_llo.a
+    url: https://github.com/STMicroelectronics/STM32CubeWBA/raw/v1.7.0/Middlewares/ST/STM32_WPAN/ble/stack/lib/stm32wba_ble_stack_llo.a
     description: "Binary Stack library for the STM32WBA Bluetooth subsystem"
   - path: stm32wba/lib/stm32wba_ble_stack_llobasic.a
-    sha256: e4008830f7d3284a8e2634e80120e4f5fb145ec0fdbfa96a0be0b4363b605411
+    sha256: d18866746ab0a5aeac209d9613dfba37338d0b051b8f524c9f9cefa970f8065f
     type: lib
-    version: '1.6.0'
+    version: '1.7.0'
     license-path: zephyr/blobs/stm32wba/lib/license.md
-    url: https://github.com/STMicroelectronics/STM32CubeWBA/raw/v1.6.0/Middlewares/ST/STM32_WPAN/ble/stack/lib/stm32wba_ble_stack_llobasic.a
+    url: https://github.com/STMicroelectronics/STM32CubeWBA/raw/v1.7.0/Middlewares/ST/STM32_WPAN/ble/stack/lib/stm32wba_ble_stack_llobasic.a
     description: "Binary Stack library for the STM32WBA Bluetooth subsystem"
   - path: stm32wb0/lib/stm32wb0x_ble_stack_controller_only.a
     sha256: 54bf69acaa59afc368132f8170e9910858a2c801538494d8de96fa567c02e233
@@ -54,16 +54,16 @@ blobs:
     url: https://github.com/STMicroelectronics/STM32CubeWB0/raw/v1.0.0/Middlewares/ST/STM32_BLE/stack/lib/stm32wb0x_ble_stack_controller_only.a
     description: "Binary Stack library for the STM32WB0 Bluetooth subsystem"
   - path: stm32wba/lib/WBA6_LinkLayer15_4_Zephyr.a
-    sha256: e89b955174e4aa65d9867bdc7bfc5c1ad198fc5f4912b01bea768f2b7a891b40
+    sha256: e67f4270429f3e6399b26aea82a302e85576efb43a47b194648f98b9e9c7805b
     type: lib
-    version: '1.6.0'
+    version: '1.7.0'
     license-path: zephyr/blobs/stm32wba/lib/license.md
-    url: https://github.com/stm32-hotspot/STM32WBA-Zephyr-custom-binaries/raw/main/lib/1_6_0/WBA6_LinkLayer15_4_Zephyr.a
+    url: https://github.com/stm32-hotspot/STM32WBA-Zephyr-custom-binaries/raw/main/lib/1_7_0/WBA6_LinkLayer15_4_Zephyr.a
     description: "Binary Link Layer library for the STM32WBA6 802.15.4 subsystem"
   - path: stm32wba/lib/WBA6_LinkLayer_Thread_lib_Zephyr.a
-    sha256: 2b8c46d3d8afbe99f89fc4e6cf9a155d28ee273ee5a334a53f6b3f6e4718a944
+    sha256: 23e377b1ef70119f1115c57d162065168d860dd71477c3e247fb295f7a728989
     type: lib
-    version: '1.6.0'
+    version: '1.7.0'
     license-path: zephyr/blobs/stm32wba/lib/license.md
-    url: https://github.com/stm32-hotspot/STM32WBA-Zephyr-custom-binaries/raw/main/lib/1_6_0/WBA6_LinkLayer_Thread_lib_Zephyr.a
+    url: https://github.com/stm32-hotspot/STM32WBA-Zephyr-custom-binaries/raw/main/lib/1_7_0/WBA6_LinkLayer_Thread_lib_Zephyr.a
     description: "Binary Link Layer library for the STM32WBA6 Thread subsystem"

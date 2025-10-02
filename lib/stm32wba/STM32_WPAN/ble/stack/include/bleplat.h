@@ -33,38 +33,17 @@ enum
                          requested operation */
   BLEPLAT_EOF   = -3, /* The function exits and notifies the HW resource
                          (memory for example) reached the end */
-  BLEPLAT_WARN  = -4, /* The function runs the asked operation and notifies
-                         that the HW resource is near to be full */
   BLEPLAT_ERROR = -5  /* The function exits due to some issue (memory
                          corruption or buffer overflow for example) */
-};
-
-/* Enumerated values used for the 'type' of NVM functions:
- */
-enum
-{
-  BLEPLAT_NVM_TYPE_SEC  =  0,
-  BLEPLAT_NVM_TYPE_GATT =  1,
-};
-
-/* Enumerated values used for the 'mode' of NVM functions:
- */
-enum
-{
-  BLEPLAT_NVM_FIRST    =  0,
-  BLEPLAT_NVM_NEXT     =  1,
-  BLEPLAT_NVM_CURRENT  =  2,
-  BLEPLAT_NVM_ALL      =  3
 };
 
 /* General functions:
  */
 
 /**
- * @brief  This function is called by the Bluetooth LE stack when it is
- *         initialized or reset (via hci_reset). The user shall call here the
- *         functions to reset the Timer, AES, PKA, NVM and RNG needed for the
- *         Bluetooth LE stack.
+ * @brief  This function is called by the BLE stack when it is initialized
+ *         or reset (via hci_reset). The user shall call here the functions
+ *         to reset the Timer, AES, PKA and RNG needed for the BLE stack.
  * @param  None
  * @retval None
  */
@@ -74,69 +53,18 @@ extern void BLEPLAT_Init( void );
  */
 
 /**
- * @brief  Store data in the NVM
- * @param  type: The type of data to be stored either security data
- *         (BLEPLAT_NVM_TYPE_SEC) or GATT data (BLEPLAT_NVM_TYPE_GATT)
- * @param  data: The data buffer to be stored
- * @param  size: The size of data to be stored
- * @param  extra_data: If there is extra data to be stored too. If not, this
- *         parameter shall be passed with "NULL" value
- * @param  extra_size: The size of extra data
- * @retval status (BLEPLAT_XX)
- */
-extern int BLEPLAT_NvmAdd( uint8_t type,
-                           const uint8_t* data,
-                           uint16_t size,
-                           const uint8_t* extra_data,
-                           uint16_t extra_size );
-
-/**
- * @brief  Read data from the NVM
- * @param  mode: The mode of NVM reading:
- *         - BLEPLAT_NVM_FIRST
- *           used to read the first record of NVM
- *         - BLEPLAT_NVM_NEXT
- *           used to read the next record (after a previous call to
- *           BLEPLAT_NvmGet)
- *         - BLEPLAT_NVM_CURRENT
- *           used to read the same record again (after a previous call to
- *           BLEPLAT_NvmGet)
- * @param  type: The type of data to be read, either security data
- *         (BLEPLAT_NVM_TYPE_SEC) or GATT data (BLEPLAT_NVM_TYPE_GATT)
- * @param  offset: The offset from which the NVM starts the read an operation.
- * @param  data: The pointer to data read by the function
- * @param  size: The size of data to be read
- * @retval - if positive or zero, it is the number of copied bytes
- *         - if negative, it is an error status (BLEPLAT_XX)
- */
-extern int BLEPLAT_NvmGet( uint8_t mode,
-                           uint8_t type,
-                           uint16_t offset,
-                           uint8_t* data,
-                           uint16_t size );
-
-/**
- * @brief  Compare passed data as parameter with data stored in the NVM
- * @param  offset: The offset from which the NVM starts the comparison
- * @param  data: The data to be compared with stored data in the NVM
- * @param  size: The size of data to be compared
- * @retval - if zero, the comparison was successful (BLEPLAT_OK)
- *         - if positive, the comparison failed
- *         - if negative, it is an error status (BLEPLAT_XX)
- */
-extern int BLEPLAT_NvmCompare( uint16_t offset,
-                               const uint8_t* data,
-                               uint16_t size );
-
-/**
- * @brief  Clear a block from the NVM or the whole NVM, storing the security
- *         database (security and GATT records)
- * @param  mode: Mode of deleting data from the NVM, either clear all the
- *         security database (BLEPLAT_NVM_ALL) or the current read NVM block
- *         (BLEPLAT_NVM_CURRENT)
+ * @brief  Store data in the NVM.
+ *         This functions indicates the portion of NVM cache buffer that needs
+ *         to be written in NVM.
+ * @param  ptr: Pointer to the start of the data portion to be stored
+ *              (it points inside the NVM cache buffer)
+ * @param  size: Size of valid data in NVM cache buffer (in 64-bit words)
+ *               Note: valid data always starts at the beginning of the NVM
+ *               cache buffer.
  * @retval None
  */
-extern void BLEPLAT_NvmDiscard( uint8_t mode );
+extern void BLEPLAT_NvmStore( const uint64_t* ptr,
+                              uint16_t size );
 
 /* Public Key Algorithms (PKA) interface:
  */

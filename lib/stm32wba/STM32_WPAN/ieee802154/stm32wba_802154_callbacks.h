@@ -61,7 +61,7 @@ struct stm32wba_802154_ral_cbk_dispatch_tbl{
 	 * @retval none
 	 */
 	void (*stm32wba_802154_ral_cbk_ed_scan_done)(int8_t rssiResult);
-	
+
 	/**
 	 * @brief  callback function called after the end of transmission operation
 	 *
@@ -69,13 +69,13 @@ struct stm32wba_802154_ral_cbk_dispatch_tbl{
 	 * @param error		Transmission error status of type stm32wba_802154_tx_error_t.
 	 *              	 Indicates whether the transmission was successful or if an
 	 *              	 error occurred.
-	 * @param p_metadata 	Pointer to metadata of type stm32wba_802154_transmit_done_metadata_t, 
+	 * @param p_metadata 	Pointer to metadata of type stm32wba_802154_transmit_done_metadata_t,
 	 * 			 containing additional information about the transmission.
 	 *
 	 * @retval none
 	 */
 	void (*stm32wba_802154_ral_cbk_tx_done)(uint8_t * p_frame, stm32wba_802154_ral_tx_error_t error, const stm32wba_802154_ral_transmit_done_metadata_t *p_metadata);
-	
+
 	/**
 	 * @brief  callback function called after the end of Reception operation
 	 *
@@ -94,7 +94,7 @@ struct stm32wba_802154_ral_cbk_dispatch_tbl{
 	 * @retval none
 	 */
 	void (*stm32wba_802154_ral_cbk_cca_done)(uint8_t error);
-	
+
 	/**
 	 * @brief callback function notifies about the start of the ACK frame transmission.
 	 *
@@ -122,4 +122,3 @@ void stm32wba_802154_ral_call_back_funcs_init(struct stm32wba_802154_ral_cbk_dis
 #endif /* STM32WBA_802154_CALLBACKS_H_ */
 
 /** @} */
-

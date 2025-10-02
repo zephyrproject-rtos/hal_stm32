@@ -22,9 +22,11 @@
 #include "ll_sys_startup.h"
 #include "common_types.h"
 #if defined(CONFIG_NET_L2_CUSTOM_IEEE802154_STM32WBA)
-#if defined(MAC) && (SUPPORT_OPENTHREAD_1_2 == 0)
+#if defined(MAC)
+#ifndef OPENTHREAD_CONFIG_FILE
 /* Projects with MAC Layer (i.e. 15.4 except Thread) */
 #include "st_mac_802_15_4_sap.h"
+#endif /* OPENTHREAD_CONFIG_FILE */
 #endif /* MAC */
 #endif /* CONFIG_NET_L2_CUSTOM_IEEE802154_STM32WBA */
 /**
@@ -60,7 +62,8 @@ void ll_sys_ble_cntrl_init(hst_cbk hostCallback)
 }
 #endif /* BLE */
 #if defined(CONFIG_NET_L2_CUSTOM_IEEE802154_STM32WBA)
-#if defined(MAC) && (SUPPORT_OPENTHREAD_1_2 == 0)
+#if defined(MAC)
+#ifndef OPENTHREAD_CONFIG_FILE
 /**
   * @brief  Initialize the Link Layer IP 802.15.4 MAC controller
   * @param  None
@@ -71,6 +74,7 @@ void ll_sys_mac_cntrl_init(void)
   ST_MAC_preInit();
   ll_sys_dependencies_init();
 }
+#endif /* OPENTHREAD_CONFIG_FILE */
 #endif /* MAC */
 #endif /* CONFIG_NET_L2_CUSTOM_IEEE802154_STM32WBA */
 /**

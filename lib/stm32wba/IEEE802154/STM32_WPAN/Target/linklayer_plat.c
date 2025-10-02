@@ -498,37 +498,40 @@ void LINKLAYER_PLAT_RequestTemperature(void)
 {
 
 }
+
+/**
+  * @brief  PHY Start calibration.
+  * @param  None
+  * @retval None
+  */
+void LINKLAYER_PLAT_PhyStartClbr(void)
+{
+  /* USER CODE BEGIN LINKLAYER_PLAT_PhyStartClbr_0 */
+
+  /* USER CODE END LINKLAYER_PLAT_PhyStartClbr_0 */
+
+  /* USER CODE BEGIN LINKLAYER_PLAT_PhyStartClbr_1 */
+
+  /* USER CODE END LINKLAYER_PLAT_PhyStartClbr_1 */
+}
+
+/**
+  * @brief  PHY Stop calibration.
+  * @param  None
+  * @retval None
+  */
+void LINKLAYER_PLAT_PhyStopClbr(void)
+{
+  /* USER CODE BEGIN LINKLAYER_PLAT_PhyStopClbr_0 */
+
+  /* USER CODE END LINKLAYER_PLAT_PhyStopClbr_0 */
+
+  /* USER CODE BEGIN LINKLAYER_PLAT_PhyStopClbr_1 */
+
+  /* USER CODE END LINKLAYER_PLAT_PhyStopClbr_1 */
+}
+
 #ifndef __ZEPHYR__
-/**
-  * @brief  Enable RTOS context switch.
-  * @param  None
-  * @retval None
-  */
-void LINKLAYER_PLAT_EnableOSContextSwitch(void)
-{
-  /* USER CODE BEGIN LINKLAYER_PLAT_EnableOSContextSwitch_0 */
-
-  /* USER CODE END LINKLAYER_PLAT_EnableOSContextSwitch_0 */
-  /* USER CODE BEGIN LINKLAYER_PLAT_EnableOSContextSwitch_1 */
-
-  /* USER CODE END LINKLAYER_PLAT_EnableOSContextSwitch_1 */
-}
-
-/**
-  * @brief  Disable RTOS context switch.
-  * @param  None
-  * @retval None
-  */
-void LINKLAYER_PLAT_DisableOSContextSwitch(void)
-{
-  /* USER CODE BEGIN LINKLAYER_PLAT_DisableOSContextSwitch_0 */
-
-  /* USER CODE END LINKLAYER_PLAT_DisableOSContextSwitch_0 */
-  /* USER CODE BEGIN LINKLAYER_PLAT_DisableOSContextSwitch_1 */
-
-  /* USER CODE END LINKLAYER_PLAT_DisableOSContextSwitch_1 */
-}
-
 /**
  * @brief Notify the upper layer that new Link Layer timings have been applied.
  * @param evnt_timing[in]: Evnt_timing_t pointer to structure contains drift time , execution time and scheduling time

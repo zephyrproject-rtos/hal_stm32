@@ -279,10 +279,10 @@ stm32wba_802154_ral_error_t stm32wba_802154_ral_energy_detection(uint16_t aScanD
 /**
  * @brief Changes the radio state to @ref RADIO_STATE_CCA.
  *
- * @note @ref stm32wba_802154_cca_done can be called before this function returns a result.
+ * @note @ref st_ral_cca_done can be called before this function returns a result.
  *
  * In the CCA state, the radio verifies if the channel is clear. The result of the verification is
- * reported to the higher layer by @ref stm32wba_802154_cca_done.
+ * reported to the higher layer by @ref st_ral_cca_done.
  *
  * @returns  STM32WBA_802154_RAL_ERROR_NONE on success, or an error code on failure.
  */
@@ -487,12 +487,21 @@ stm32wba_802154_ral_error_t stm32wba_802154_ral_mac_gen_rnd_num(uint8_t *ptr_rnd
  *
  * @brief enable/disable antenna diversity
  *
- * @param	enable[in]	    : enable:1 / disable:0
+ * @param[in]	enable	    : enable:1 / disable:0
  *
  * @returns  STM32WBA_802154_RAL_ERROR_NONE on success, or an error code on failure.
  */
 stm32wba_802154_ral_error_t stm32wba_802154_ral_set_ant_div_enable(uint8_t enable);
 
+/**
+ *
+ * @brief A wrapper function to set configurable library parameters
+ *
+ * @param[in]	support_openthread_1_2	    : support_openthread_1_2: true / false
+ * @param[in]	mac_layer_build	            : mac_layer_build: true / false
+ * @retval Error code
+ */
+stm32wba_802154_ral_error_t stm32wba_802154_ral_set_config_lib_params(bool support_openthread_1_2, bool mac_layer_build);
 
 /** @} */
 
@@ -503,4 +512,3 @@ stm32wba_802154_ral_error_t stm32wba_802154_ral_set_ant_div_enable(uint8_t enabl
 #endif /* STM32WBA_802154_H_ */
 
 /** @} */
-

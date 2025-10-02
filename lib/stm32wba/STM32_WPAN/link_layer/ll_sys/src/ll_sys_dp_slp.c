@@ -143,6 +143,6 @@ ll_sys_status_t ll_sys_dp_slp_exit(void){
 void ll_sys_dp_slp_wakeup_evt_clbk(void const *ptr_arg){
 
   /* Link Layer IP exits from DEEP SLEEP mode */
-  ll_sys_dp_slp_exit();
+  (void)ll_sys_dp_slp_exit();
 
 }

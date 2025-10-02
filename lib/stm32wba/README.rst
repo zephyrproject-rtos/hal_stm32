@@ -6,7 +6,7 @@ Origin:
    https://github.com/STMicroelectronics/STM32CubeWBA
 
 Status:
-   version v1.6.0
+   version v1.7.0
 
 Purpose:
    This library is used on STM32WBA series to port BLE and IEEE802154 controller libraries in
@@ -48,6 +48,7 @@ Description:
       Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/ot_inc/toolchain.h
       Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/ot_inc/types.h
       Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/config/ble_full/ll_fw_config.h
+      Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/config/ble_basic/ll_fw_config.h
       Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/config/ieee_15_4_basic/ll_fw_config.h
       Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/config/thread/ll_fw_config.h
       Middlewares/ST/STM32_WPAN/link_layer/ll_sys/inc/linklayer_plat.h
@@ -103,12 +104,12 @@ Description:
       Projects/NUCLEO-WBA65RI/Applications/BLE/BLE_TransparentMode/STM32_WPAN/Target/linklayer_plat.c
       Projects/NUCLEO-WBA65RI/Applications/BLE/BLE_TransparentMode/STM32_WPAN/Target/ll_sys_if.c
       Projects/NUCLEO-WBA65RI/Applications/BLE/BLE_TransparentMode/STM32_WPAN/Target/ll_sys_if.h
-      Projects/NUCLEO-WBA65RI/Applications/BLE/Zigbee_OnOff_Client_SED/System/Config/Debug_GPIO/debug_config.h
-      Projects/NUCLEO-WBA65RI/Applications/BLE/Zigbee_OnOff_Client_SED/System/Config/Log/log_module_conf.h
-      Projects/NUCLEO-WBA65RI/Applications/BLE/Zigbee_OnOff_Client_SED/STM32_WPAN/Target/power_table.c
-      Projects/NUCLEO-WBA65RI/Applications/BLE/Zigbee_OnOff_Client_SED/STM32_WPAN/Target/linklayer_plat.c
-      Projects/NUCLEO-WBA65RI/Applications/BLE/Zigbee_OnOff_Client_SED/STM32_WPAN/Target/ll_sys_if.c
-      Projects/NUCLEO-WBA65RI/Applications/BLE/Zigbee_OnOff_Client_SED/STM32_WPAN/Target/ll_sys_if.h
+      Projects/NUCLEO-WBA65RI/Applications/Zigbee/Zigbee_OnOff_Client_SED/System/Config/Debug_GPIO/debug_config.h
+      Projects/NUCLEO-WBA65RI/Applications/Zigbee/Zigbee_OnOff_Client_SED/System/Config/Log/log_module_conf.h
+      Projects/NUCLEO-WBA65RI/Applications/Zigbee/Zigbee_OnOff_Client_SED/STM32_WPAN/Target/power_table.c
+      Projects/NUCLEO-WBA65RI/Applications/Zigbee/Zigbee_OnOff_Client_SED/STM32_WPAN/Target/linklayer_plat.c
+      Projects/NUCLEO-WBA65RI/Applications/Zigbee/Zigbee_OnOff_Client_SED/STM32_WPAN/Target/ll_sys_if.c
+      Projects/NUCLEO-WBA65RI/Applications/Zigbee/Zigbee_OnOff_Client_SED/STM32_WPAN/Target/ll_sys_if.h
       Utilities/trace/adv_trace/stm32_adv_trace.h
       Utilities/misc/stm32_mem.h
       Utilities/tim_serv/stm32_timer.h
@@ -122,7 +123,7 @@ URL:
    https://github.com/STMicroelectronics/STM32CubeWBA
 
 Commit:
-   e7d27c496416aae8f4ba8b3e84f963f0c5a0b69f
+   f5b281ba4ca4d00aba59215728265f1d2cc80715
 
 Maintained-by:
    External
@@ -153,7 +154,6 @@ Patch List:
 	  Impacted files: stm_list.h
 			  main.h
 			  app_conf.h
-			  scm.c
 			  ll_intf_cmn.h
 			  ll_sys_if.c
 			  linklayer_plat.c
@@ -170,8 +170,7 @@ Patch List:
 	  Impacted files: ll_sys_if.c
 
 	* SCM_HSE_WaitUntilReady Cube mechanism not used
-	  Impacted files: scm.c
-			  linklayer_plat.c
+	  Impacted files: linklayer_plat.c
 
 	* Changes from official delivery:
 	- dos2unix applied

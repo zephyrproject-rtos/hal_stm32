@@ -7,7 +7,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2025 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -39,7 +39,6 @@ extern "C" {
 /* USER CODE END ET */
 
 /* Exported constants --------------------------------------------------------*/
-
 /* USER CODE BEGIN EC */
 
 /* USER CODE END EC */
@@ -55,9 +54,7 @@ extern "C" {
 /* USER CODE END EM */
 
 /* Exported functions prototypes ---------------------------------------------*/
-#if (USE_TEMPERATURE_BASED_RADIO_CALIBRATION == 1)
-void ll_sys_bg_temperature_measurement(void);
-#endif /* USE_TEMPERATURE_BASED_RADIO_CALIBRATION */
+void ll_sys_set_rtl_polling_time(uint8_t rtl_polling_time);
 /* USER CODE BEGIN EFP */
 
 /* USER CODE END EFP */

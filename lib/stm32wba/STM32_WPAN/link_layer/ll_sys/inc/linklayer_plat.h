@@ -212,14 +212,14 @@ extern void LINKLAYER_PLAT_RequestTemperature(void);
   * @param  None
   * @retval None
   */
-extern void LINKLAYER_PLAT_EnableOSContextSwitch(void);
+extern void LINKLAYER_PLAT_PhyStartClbr(void);
 
 /**
   * @brief  Disable RTOS context switch.
   * @param  None
   * @retval None
   */
-extern void LINKLAYER_PLAT_DisableOSContextSwitch(void);
+extern void LINKLAYER_PLAT_PhyStopClbr(void);
 
 /**
  * @brief Notify the upper layer that new Link Layer timings have been applied.

@@ -35,22 +35,6 @@ enum
 };
 
 /*
- * Definitions for 'options' parameter
- */
-enum
-{
-  BLE_OPTIONS_LL_ONLY             = 0x0001U,
-  BLE_OPTIONS_NO_SVC_CHANGE_DESC  = 0x0002U,
-  BLE_OPTIONS_DEV_NAME_READ_ONLY  = 0x0004U,
-  BLE_OPTIONS_EXTENDED_ADV        = 0x0008U,
-  BLE_OPTIONS_REDUCED_DB_IN_NVM   = 0x0020U,
-  BLE_OPTIONS_GATT_CACHING        = 0x0040U,
-  BLE_OPTIONS_POWER_CLASS_1       = 0x0080U,
-  BLE_OPTIONS_APPEARANCE_WRITABLE = 0x0100U,
-  BLE_OPTIONS_ENHANCED_ATT        = 0x0200U,
-};
-
-/*
  * Definitions for 'debug' parameter
  */
 enum
@@ -73,6 +57,20 @@ typedef struct
    * (could be filled with BLE_TOTAL_BUFFER_SIZE return value)
    */
   uint32_t total_buffer_size;
+
+  /* Start address of the RAM buffer allocated for BLE NVM cache.
+   */
+  uint64_t* nvm_cache_buffer;
+
+  /* Size of actual data in BLE NVM cache (in 64-bit words).
+   * Range: 0 .. (nvm_cache_max_size - 1)
+   */
+  uint16_t  nvm_cache_size;
+
+  /* Maximum size of BLE NVM cache (in 64-bit words).
+   * Range: 1 .. 1024
+   */
+  uint16_t  nvm_cache_max_size;
 
   /* Start address of the RAM buffer allocated for GATT database.
    * It must be a 32bit aligned RAM area.
@@ -130,6 +128,12 @@ typedef struct
    */
   uint16_t mblockCount;
 
+  /* Maximum number of bearers that can be created for Enhanced ATT
+   * in addition to the number of links
+   * Range: 0 .. 64
+   */
+  uint8_t max_add_eatt_bearers;
+
   /* Maximum supported ATT_MTU size
    */
   uint16_t attMtu;
@@ -150,7 +154,7 @@ typedef struct
   uint8_t max_coc_initiator_nbr;
 
   /* Options flags
-   * Bitmap of the "BLE_OPTIONS_..." definitions (see above).
+   * Bitmap of the "BLE_OPTIONS_..." definitions (see ble_defs.h).
    * - bit 0:   1: LL only                   0: LL + host
    * - bit 1:   1: no service change desc.   0: with service change desc.
    * - bit 2:   1: device name Read-Only     0: device name R/W

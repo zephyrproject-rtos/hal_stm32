@@ -1,4 +1,4 @@
-/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/2.00a-lca01/firmware/public_inc/ll_intf.h#1 $*/
+/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/2.00a-lca03/firmware/public_inc/ll_intf.h#1 $*/
 /**
  ********************************************************************************
  * @file    ll_intf_cmds.h
@@ -13,10 +13,10 @@
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
  * of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
  * following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in all copies or substantial
  * portions of the Software.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING, BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT. IN NO EVENT SHALL
@@ -35,11 +35,7 @@
 #if SUPPORT_PTA
 #include "pta.h"
 #endif /* SUPPORT_PTA */
-/**
- * @brief Global error definition across different components.
- * refer the error codes defined in @ref  ll_error.h for more  information about  the values that this type should set
- */
-typedef uint32_t ble_stat_t;
+
 
 #if (SUPPORT_CHANNEL_SOUNDING && 								\
 (SUPPORT_MASTER_CONNECTION || SUPPORT_SLAVE_CONNECTION))
@@ -2474,7 +2470,7 @@ ble_stat_t ll_intf_read_local_supported_features(uint8_t lmp_features[8]);
  *
  * @retval None.
  */
-ble_stat_t ll_intf_read_local_extended_features(uint8_t* page_number, uint8_t lmp_features[8], uint8_t* max_page_number);
+ble_stat_t ll_intf_read_local_extended_features(uint8_t page_number, uint8_t lmp_features[8], uint8_t* max_page_number);
 #endif /* SUPPORT_EXT_FEATURE_SET */
 
 /**
@@ -5461,11 +5457,12 @@ ble_stat_t ll_intf_set_dtm_with_spcfc_pckt_count(uint16_t pckt_count);
 /**
  * @brief  used to update the event timing.
  *
- * @param  p_evnt_timing[in]: pointer to structure containing the new Event timing requested from the Upper layer.
+ * @param  p_evnt_timing[in]: pointer to structure containing the new Event timing requested from the Upper layer. All the values passed within should be the worst case timings. The acutal time for each timing is calculated by the link layer.
+ * @param  effective_exec_time[out]: Execution time calculated by the controller.
  *
  * @retval None
  */
-void ll_intf_config_schdling_time(Evnt_timing_t * p_evnt_timing);
+void ll_intf_config_schdling_time(Evnt_timing_t * p_evnt_timing, uint32_t* effective_exec_time);
 #endif /* SUPPORT_TIM_UPDT */
 
 
@@ -5510,6 +5507,25 @@ void ll_intf_gain_fix_init(
 		uint8_t r_msur_percent);
 
 #endif /* SUPPORT_CONFIGURABLE_GAIN_FIX */
+
+#if CTE_DEGRADATION_API_PHY_SUPPORT
+/**
+ * @brief  replace the contents of the wakeup and interpacket
+ * 			sequences to apply the CTE Degradation fix.
+ *
+ * @retval None.
+ */
+void ll_intf_apply_cte_degrad_change(void);
+#endif /* CTE_DEGRADATION_API_PHY_SUPPORT */
+
+#if IS_INTERNAL_PROFILED_ENABLED
+/**
+ * @brief Gets the maximum times for the execution time and drift time
+ * @param exec_time  [out]: Max Execution Time
+ * @param drift_time [out]: Max Drift Time
+ */
+void ll_intf_get_profile_statistics(uint32_t* exec_time, uint32_t* drift_time);
+#endif /* IS_INTERNAL_PROFILED_ENABLED */
 
 /**@}
 */
