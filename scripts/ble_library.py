@@ -41,7 +41,7 @@ file_list_wb = [
 
 ble_transparent_mode_app_path = "Projects/NUCLEO-WBA65RI/Applications/BLE/" \
                                 + "BLE_TransparentMode"
-zgbee_onoff_client_sed_app_path = "Projects/NUCLEO-WBA65RI/Applications/BLE/" \
+zigbee_onoff_client_sed_app_path = "Projects/NUCLEO-WBA65RI/Applications/Zigbee/" \
                                 + "Zigbee_OnOff_Client_SED"
 file_list_wba = {
     "STM32_WPAN": [
@@ -65,6 +65,12 @@ file_list_wba = {
         "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/ral.h",
         "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/rfd_dev_config.h",
         "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/config/ble_full/"
+        + "ll_fw_config.h",
+        "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/config/ble_basic/"
+        + "ll_fw_config.h",
+        "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/config/ieee_15_4_basic/"
+        + "ll_fw_config.h",
+        "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/config/thread/"
         + "ll_fw_config.h",
         "Middlewares/ST/STM32_WPAN/ble/stack/include/ble_bufsize.h",
         "Middlewares/ST/STM32_WPAN/ble/stack/include/ble_const.h",
@@ -97,17 +103,17 @@ file_list_wba = {
         ble_transparent_mode_app_path + "/STM32_WPAN/Target/ll_sys_if.h",
     ],
     "IEEE802154": [
-        zgbee_onoff_client_sed_app_path + "/Core/Inc/app_common.h",
-        zgbee_onoff_client_sed_app_path + "/Core/Inc/app_conf.h",
-        zgbee_onoff_client_sed_app_path + "/Core/Inc/app_entry.h",
-        zgbee_onoff_client_sed_app_path + "/Core/Inc/utilities_conf.h",
-        zgbee_onoff_client_sed_app_path + "/Core/Inc/main.h",
-        zgbee_onoff_client_sed_app_path + "/System/Config/Debug_GPIO/debug_config.h",
-        zgbee_onoff_client_sed_app_path + "/System/Config/Log/log_module_conf.h",
-        zgbee_onoff_client_sed_app_path + "/STM32_WPAN/Target/power_table.c",
-        zgbee_onoff_client_sed_app_path + "/STM32_WPAN/Target/linklayer_plat.c",
-        zgbee_onoff_client_sed_app_path + "/STM32_WPAN/Target/ll_sys_if.c",
-        zgbee_onoff_client_sed_app_path + "/STM32_WPAN/Target/ll_sys_if.h",
+        zigbee_onoff_client_sed_app_path + "/Core/Inc/app_common.h",
+        zigbee_onoff_client_sed_app_path + "/Core/Inc/app_conf.h",
+        zigbee_onoff_client_sed_app_path + "/Core/Inc/app_entry.h",
+        zigbee_onoff_client_sed_app_path + "/Core/Inc/utilities_conf.h",
+        zigbee_onoff_client_sed_app_path + "/Core/Inc/main.h",
+        zigbee_onoff_client_sed_app_path + "/System/Config/Debug_GPIO/debug_config.h",
+        zigbee_onoff_client_sed_app_path + "/System/Config/Log/log_module_conf.h",
+        zigbee_onoff_client_sed_app_path + "/STM32_WPAN/Target/power_table.c",
+        zigbee_onoff_client_sed_app_path + "/STM32_WPAN/Target/linklayer_plat.c",
+        zigbee_onoff_client_sed_app_path + "/STM32_WPAN/Target/ll_sys_if.c",
+        zigbee_onoff_client_sed_app_path + "/STM32_WPAN/Target/ll_sys_if.h",
     ],
     "Common": [
         "Projects/Common/WPAN/Modules/Flash/rf_timing_synchro.c",
