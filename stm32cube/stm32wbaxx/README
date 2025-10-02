@@ -6,7 +6,7 @@ Origin:
    http://www.st.com/en/embedded-software/stm32cubewba.html
 
 Status:
-   version v1.6.0
+   version v1.7.0
 
 Purpose:
    ST Microelectronics official MCU package for STM32WBA series.
@@ -23,7 +23,7 @@ URL:
    https://github.com/STMicroelectronics/STM32CubeWBA
 
 Commit:
-   e7d27c496416aae8f4ba8b3e84f963f0c5a0b69f
+   f5b281ba4ca4d00aba59215728265f1d2cc80715
 
 Maintained-by:
    External
@@ -47,5 +47,9 @@ Patch List:
    *Fix to remove PAGESIZE definition which conflicts with POSIX
     Impacted files:
      drivers/include/Legacy/stm32_hal_legacy.h
+
+   *Fix to remove XSPI HAL support as not present in WBAXX
+    Impacted files:
+     drivers/include/stm32wbaxx_hal_conf.h
 
    See release_note.html from STM32Cube

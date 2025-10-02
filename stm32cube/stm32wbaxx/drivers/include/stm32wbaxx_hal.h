@@ -78,10 +78,10 @@ extern HAL_TickFreqTypeDef      uwTickFreq;
 /**
   * @brief STM32WBAxx HAL Driver version number
   */
-#define __STM32WBAxx_HAL_VERSION_MAIN   (0x01U) /*!< [31:24] main version */
-#define __STM32WBAxx_HAL_VERSION_SUB1   (0x06U) /*!< [23:16] sub1 version */
-#define __STM32WBAxx_HAL_VERSION_SUB2   (0x00U) /*!< [15:8]  sub2 version */
-#define __STM32WBAxx_HAL_VERSION_RC     (0x00U) /*!< [7:0]  release candidate */
+#define __STM32WBAxx_HAL_VERSION_MAIN   (0x01UL) /*!< [31:24] main version */
+#define __STM32WBAxx_HAL_VERSION_SUB1   (0x07UL) /*!< [23:16] sub1 version */
+#define __STM32WBAxx_HAL_VERSION_SUB2   (0x00UL) /*!< [15:8]  sub2 version */
+#define __STM32WBAxx_HAL_VERSION_RC     (0x00UL) /*!< [7:0]  release candidate */
 #define __STM32WBAxx_HAL_VERSION    ((__STM32WBAxx_HAL_VERSION_MAIN << 24U)\
                                      |(__STM32WBAxx_HAL_VERSION_SUB1 << 16U)\
                                      |(__STM32WBAxx_HAL_VERSION_SUB2 << 8U )\

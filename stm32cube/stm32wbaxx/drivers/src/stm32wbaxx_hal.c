@@ -265,6 +265,14 @@ __weak HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
         ticknumber = (LSE_VALUE / (1000UL / (uint32_t)uwTickFreq));
         break;
 
+#if !defined (STM32WBA50xx) && !defined (STM32WBA52xx) && !defined (STM32WBA54xx) && !defined (STM32WBA55xx) && !defined (STM32WBA5Mxx)
+      /* HSI_DIV4 selected as SysTick clock source */
+      case RCC_SYSTICKCLKSOURCE_HSI_DIV4:
+        /* Calculate tick value */
+        ticknumber = (HSI_VALUE / (4000UL / (uint32_t)uwTickFreq));
+        break;
+#endif
+
       default:
         /* Nothing to do */
         break;
@@ -876,7 +884,7 @@ void HAL_SYSCFG_ConfigCompensationCell(uint32_t Selection, uint32_t Code, uint32
 
     offset = ((Selection == SYSCFG_IO_CELL) ? 0U : 8U);
 
-    MODIFY_REG(SYSCFG->CCCR, (0xFFU << offset), ((NmosValue << offset) | (PmosValue << (offset + 4U))));
+    MODIFY_REG(SYSCFG->CCCR, (0xFFUL << offset), ((NmosValue << offset) | (PmosValue << (offset + 4U))));
   }
 
   MODIFY_REG(SYSCFG->CCCSR, (Selection << 1U), (Code << (POSITION_VAL(Selection) + 1U)));

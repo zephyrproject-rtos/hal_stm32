@@ -180,6 +180,7 @@ extern "C" {
 #define  USE_HAL_UART_REGISTER_CALLBACKS       0U /* UART register callback disabled      */
 #define  USE_HAL_USART_REGISTER_CALLBACKS      0U /* USART register callback disabled     */
 #define  USE_HAL_WWDG_REGISTER_CALLBACKS       0U /* WWDG register callback disabled      */
+#define  USE_HAL_XSPI_REGISTER_CALLBACKS       0U /* XSPI register callback disabled      */
 
 /* ################## SPI peripheral configuration ########################## */
 
@@ -204,6 +205,10 @@ extern "C" {
 #ifdef HAL_DMA_MODULE_ENABLED
 #include "stm32wbaxx_hal_dma.h"
 #endif /* HAL_DMA_MODULE_ENABLED */
+
+#ifdef HAL_RCC_MODULE_ENABLED
+#include "stm32wbaxx_hal_rcc.h"
+#endif /* HAL_RCC_MODULE_ENABLED */
 
 #ifdef HAL_ADC_MODULE_ENABLED
 #include "stm32wbaxx_hal_adc.h"
@@ -289,10 +294,6 @@ extern "C" {
 #include "stm32wbaxx_hal_ramcfg.h"
 #endif /* HAL_RAMCFG_MODULE_ENABLED */
 
-#ifdef HAL_RCC_MODULE_ENABLED
-#include "stm32wbaxx_hal_rcc.h"
-#endif /* HAL_RCC_MODULE_ENABLED */
-
 #ifdef HAL_RNG_MODULE_ENABLED
 #include "stm32wbaxx_hal_rng.h"
 #endif /* HAL_RNG_MODULE_ENABLED */
@@ -337,6 +338,9 @@ extern "C" {
 #include "stm32wbaxx_hal_wwdg.h"
 #endif /* HAL_WWDG_MODULE_ENABLED */
 
+#ifdef HAL_XSPI_MODULE_ENABLED
+#include "stm32wbaxx_hal_xspi.h"
+#endif /* HAL_XSPI_MODULE_ENABLED */
 
 /* Exported macro ------------------------------------------------------------*/
 #ifdef  USE_FULL_ASSERT

@@ -342,7 +342,7 @@ uint32_t CompareValue;                /*!< Compare value.
 #define RCC_SYSTICKCLKSOURCE_HCLK_DIV8      0x00000000U
 #define RCC_SYSTICKCLKSOURCE_LSI            RCC_CCIPR1_SYSTICKSEL_0
 #define RCC_SYSTICKCLKSOURCE_LSE            RCC_CCIPR1_SYSTICKSEL_1
-#if defined (STM32WBA62xx) || defined (STM32WBA63xx) || defined (STM32WBA64xx) || defined (STM32WBA65xx)
+#if !defined (STM32WBA50xx) && !defined (STM32WBA52xx) && !defined (STM32WBA54xx) && !defined (STM32WBA55xx) && !defined (STM32WBA5Mxx)
 #define RCC_SYSTICKCLKSOURCE_HSI_DIV4       (RCC_CCIPR1_SYSTICKSEL_1 | RCC_CCIPR1_SYSTICKSEL_0)
 #endif
 /**
@@ -731,10 +731,8 @@ uint32_t CompareValue;                /*!< Compare value.
   *            @arg RCC_SYSTICKCLKSOURCE_HCLK_DIV8 : HCLK divided by 8 Clock selected as SYSTICK clock
   *            @arg RCC_SYSTICKCLKSOURCE_LSI : LSI Clock selected as SYSTICK clock
   *            @arg RCC_SYSTICKCLKSOURCE_LSE : LSE Clock selected as SYSTICK clock
-#if defined (STM32WBA62xx) || defined (STM32WBA63xx) || defined (STM32WBA64xx) || defined (STM32WBA65xx)
-  *            @arg RCC_SYSTICKCLKSOURCE_HSI_DIV4 : HSI Clock selected as SYSTICK clock (1)
+  *            @arg RCC_SYSTICKCLKSOURCE_HSI_DIV4 : HSI divided by 4 Clock selected as SYSTICK clock (1)
   * @note   (1) Source is not available on all devices
-#endif
   */
 #define __HAL_RCC_SYSTICK_CONFIG(__SYSTICK_CLKSOURCE__) \
   MODIFY_REG(RCC->CCIPR1, RCC_CCIPR1_SYSTICKSEL, (__SYSTICK_CLKSOURCE__))
@@ -744,10 +742,8 @@ uint32_t CompareValue;                /*!< Compare value.
   *            @arg RCC_SYSTICKCLKSOURCE_HCLK_DIV8 : HCLK divided by 8 Clock selected as SYSTICK clock
   *            @arg RCC_SYSTICKCLKSOURCE_LSI : LSI Clock selected as SYSTICK clock
   *            @arg RCC_SYSTICKCLKSOURCE_LSE : LSE Clock selected as SYSTICK clock
-#if defined (STM32WBA62xx) || defined (STM32WBA63xx) || defined (STM32WBA64xx) || defined (STM32WBA65xx)
-  *            @arg RCC_SYSTICKCLKSOURCE_HSI_DIV4 : LSI Clock selected as SYSTICK clock (1)
+  *            @arg RCC_SYSTICKCLKSOURCE_HSI_DIV4 : HSI divided by 4 Clock selected as SYSTICK clock (1)
   * @note   (1) Source is not available on all devices
-#endif
   */
 #define __HAL_RCC_GET_SYSTICK_SOURCE()      READ_BIT(RCC->CCIPR1, RCC_CCIPR1_SYSTICKSEL)
 
@@ -1081,7 +1077,7 @@ uint32_t          HAL_RCCEx_GetAudioSyncCaptureValue(void);
                                          RCC_PERIPHCLK_LPUART1 | RCC_PERIPHCLK_SPI3   | RCC_PERIPHCLK_I2C3    | \
                                          RCC_PERIPHCLK_LPTIM1  | RCC_PERIPHCLK_ADC    | RCC_PERIPHCLK_RTC     | \
                                          RCC_PERIPHCLK_RADIOST)
-#elif defined (STM32WBA62xx) || defined (STM32WBA64xx) || defined (STM32WBA65xx)
+#elif defined (STM32WBA62xx) || defined (STM32WBA64xx) || defined (STM32WBA65xx) || defined (STM32WBA6Mxx)
 #define RCC_PERIPHCLOCK_ALL             (RCC_PERIPHCLK_USART1  | RCC_PERIPHCLK_USART2 | RCC_PERIPHCLK_I2C1        | \
                                          RCC_PERIPHCLK_LPTIM2  | RCC_PERIPHCLK_SPI1   | RCC_PERIPHCLK_SYSTICK     | \
                                          RCC_PERIPHCLK_TIMIC   | RCC_PERIPHCLK_SAI1   | RCC_PERIPHCLK_RNG         | \
@@ -1170,7 +1166,7 @@ uint32_t          HAL_RCCEx_GetAudioSyncCaptureValue(void);
                                                    ((__SOURCE__) == RCC_SPI1CLKSOURCE_HSI))
 #endif
 
-#if defined (STM32WBA62xx) || defined (STM32WBA63xx) || defined (STM32WBA64xx) || defined (STM32WBA65xx)
+#if !defined (STM32WBA50xx) && !defined (STM32WBA52xx) && !defined (STM32WBA54xx) && !defined (STM32WBA55xx) && !defined (STM32WBA5Mxx)
 #define IS_RCC_SYSTICKCLKSOURCE(__SOURCE__)       (((__SOURCE__) == RCC_SYSTICKCLKSOURCE_HCLK_DIV8)  || \
                                                    ((__SOURCE__) == RCC_SYSTICKCLKSOURCE_LSI)        || \
                                                    ((__SOURCE__) == RCC_SYSTICKCLKSOURCE_LSE)        || \

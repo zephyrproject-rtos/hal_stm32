@@ -954,7 +954,7 @@ __STATIC_INLINE void LL_GPIO_TogglePin(GPIO_TypeDef *GPIOx, uint32_t PinMask)
   WRITE_REG(GPIOx->BSRR, ((odr & PinMask) << 16u) | (~odr & PinMask));
 }
 
-#if defined (STM32WBA62xx) || defined (STM32WBA63xx) || defined (STM32WBA64xx) || defined (STM32WBA65xx)
+#if defined (STM32WBA62xx) || defined (STM32WBA63xx) || defined (STM32WBA64xx) || defined (STM32WBA65xx) || defined (STM32WBA6Mxx)
 /**
   * @brief  Enable speed optimization for several pin of dedicated port.
   * @note   Not all I/Os support the HSLV mode. Refer to the I/O structure in the corresponding
@@ -1017,7 +1017,7 @@ __STATIC_INLINE void LL_GPIO_DisableHighSPeedLowVoltage(GPIO_TypeDef *GPIOx, uin
   CLEAR_BIT(GPIOx->HSLVR, PinMask);
 }
 
-#endif  /* defined (STM32WBA62xx) || defined (STM32WBA63xx) || defined (STM32WBA64xx) || defined (STM32WBA65xx) */
+#endif  /* defined (STM32WBA62xx) || defined (STM32WBA63xx) || defined (STM32WBA64xx) || defined (STM32WBA65xx) || defined (STM32WBA6Mxx) */
 #if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
 
 /**

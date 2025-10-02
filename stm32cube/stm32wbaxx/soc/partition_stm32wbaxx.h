@@ -58,6 +58,8 @@
   #include "partition_stm32wba64xx.h"
 #elif defined(STM32WBA65xx)
   #include "partition_stm32wba65xx.h"
+#elif defined(STM32WBA6Mxx)
+  #include "partition_stm32wba6mxx.h"
 #else
   #error "Please select first the target STM32WBAxx device used in your application (in stm32wbaxx.h file)"
 #endif

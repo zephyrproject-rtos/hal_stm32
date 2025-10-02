@@ -139,7 +139,7 @@
 #define PWR_PORTC_AVAILABLE_PINS  (0x0E0F0U)
 #define PWR_PORTD_AVAILABLE_PINS  (0x003C0U)
 #define PWR_PORTH_AVAILABLE_PINS  (0x00008U)
-#elif defined(STM32WBA62xx) || defined(STM32WBA65xx)
+#elif defined(STM32WBA62xx) || defined(STM32WBA65xx) || defined (STM32WBA6Mxx)
 #define PWR_PORTA_AVAILABLE_PINS  (0x0FFFFU)
 #define PWR_PORTB_AVAILABLE_PINS  (0x0FFFFU)
 #define PWR_PORTC_AVAILABLE_PINS  (0x0E1FBU)
@@ -1268,7 +1268,7 @@ HAL_StatusTypeDef HAL_PWREx_DisableStandbyRetainedIOState(uint32_t GPIO_Port, ui
   return ret;
 }
 
-#if defined(PWR_STOP2_SUPPORT)
+#if defined(PWR_STOP2_SUPPORT) && defined(PWR_S2RETR_PTASREN)
 /**
   * @brief  Enable the PTA output signals retention in Stop 2 mode.
   * @retval None.
@@ -1305,7 +1305,7 @@ void HAL_PWREx_ClearPTAOutputStop2RetentionState(void)
 {
   CLEAR_BIT(PWR->S2RETR, PWR_S2RETR_PTASR);
 }
-#endif /* defined(PWR_STOP2_SUPPORT) */
+#endif /* defined(PWR_STOP2_SUPPORT) && defined(PWR_S2RETR_PTASREN) */
 /**
   * @}
   */

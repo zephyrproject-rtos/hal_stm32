@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * @file    stm32wba62xx.h
+  * @file    stm32wba6mxx.h
   * @author  MCD Application Team
-  * @brief   CMSIS STM32WBA62xx Device Peripheral Access Layer Header File.
+  * @brief   CMSIS STM32WBA6Mxx Device Peripheral Access Layer Header File.
   *
   *          This file contains:
   *           - Data structures and the address mapping for all peripherals
@@ -21,8 +21,8 @@
   *
   ******************************************************************************
   */
-#ifndef STM32WBA62xx_H
-#define STM32WBA62xx_H
+#ifndef STM32WBA6Mxx_H
+#define STM32WBA6Mxx_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -32,7 +32,7 @@ extern "C" {
   * @{
   */
 
-/** @addtogroup STM32WBA62xx
+/** @addtogroup STM32WBA6Mxx
   * @{
   */
 
@@ -60,7 +60,7 @@ typedef enum
   PendSV_IRQn               =  -2,    /*!< -2  Pendable request for system service                           */
   SysTick_IRQn              =  -1,    /*!< -1  System Tick Timer                                             */
 
-/* ===========================================  STM32WBA62xx Specific Interrupt Numbers  ====================================== */
+/* ===========================================  STM32WBA6Mxx Specific Interrupt Numbers  ====================================== */
   WWDG_IRQn                 = 0,      /*!< Window WatchDog interrupt                                         */
   PVD_IRQn                  = 1,      /*!< PVD through EXTI Line detection Interrupt                         */
   RTC_IRQn                  = 2,      /*!< RTC non-secure interrupt                                          */
@@ -1168,7 +1168,7 @@ typedef struct
   uint32_t Reserved[2];           /*!< Reserved                                      */
 } USB_OTG_HostChannelTypeDef;
 
-/*@}*/ /* end of group STM32WBA62xx_Peripherals */
+/*@}*/ /* end of group STM32WBA6Mxx_Peripherals */
 
 /* --------  End of section using anonymous unions and disabling warnings  -------- */
 #if   defined (__CC_ARM)
@@ -10507,8 +10507,14 @@ typedef struct
 #define PWR_CR2_FLASHFWU_Pos                (14UL)
 #define PWR_CR2_FLASHFWU_Msk                (0x1UL << PWR_CR2_FLASHFWU_Pos)         /*!< 0x00004000 */
 #define PWR_CR2_FLASHFWU                    PWR_CR2_FLASHFWU_Msk                    /*!< Flash low-power mode in Stop modes */
+#define PWR_CR2_FPWM_Pos                    (30UL)
+#define PWR_CR2_FPWM_Msk                    (0x1UL << PWR_CR2_FPWM_Pos)             /*!< 0x40000000 */
+#define PWR_CR2_FPWM                        PWR_CR2_FPWM_Msk                        /*!< SMPS PWM mode */
 
 /********************  Bit definition for PWR_CR3 register  *******************/
+#define PWR_CR3_REGSEL_Pos                  (1UL)
+#define PWR_CR3_REGSEL_Msk                  (0x1UL << PWR_CR3_REGSEL_Pos)           /*!< 0x00000002 */
+#define PWR_CR3_REGSEL                      PWR_CR3_REGSEL_Msk                      /*!< Regulator selection */
 #define PWR_CR3_FSTEN_Pos                   (2UL)
 #define PWR_CR3_FSTEN_Msk                   (0x1UL << PWR_CR3_FSTEN_Pos)            /*!< 0x00000004 */
 #define PWR_CR3_FSTEN                       PWR_CR3_FSTEN_Msk                       /*!< Fast soft start */
@@ -10723,6 +10729,9 @@ typedef struct
 #define PWR_SR_STOP2F                       PWR_SR_STOP2F_Msk                       /*!< Stop 2 flag                           */
 
 /********************  Bit definition for PWR_SVMSR register  *****************/
+#define PWR_SVMSR_REGS_Pos                  (1UL)
+#define PWR_SVMSR_REGS_Msk                  (0x1UL << PWR_SVMSR_REGS_Pos)           /*!< 0x00000002 */
+#define PWR_SVMSR_REGS                      PWR_SVMSR_REGS_Msk                      /*!< Regulator status                                  */
 #define PWR_SVMSR_PVDO_Pos                  (4UL)
 #define PWR_SVMSR_PVDO_Msk                  (0x1UL << PWR_SVMSR_PVDO_Pos)           /*!< 0x00000010 */
 #define PWR_SVMSR_PVDO                      PWR_SVMSR_PVDO_Msk                      /*!< VDD voltage detector output                       */
@@ -11349,9 +11358,18 @@ typedef struct
 #define PWR_RADIOSCR_RFVDDHPA_Pos           (8UL)
 #define PWR_RADIOSCR_RFVDDHPA_Msk           (0x1FUL << PWR_RADIOSCR_RFVDDHPA_Pos)       /*!< 0x00001F00 */
 #define PWR_RADIOSCR_RFVDDHPA               PWR_RADIOSCR_RFVDDHPA_Msk                   /*!< 2.4 GHz RADIO VDDHPA control word */
+#define PWR_RADIOSCR_REGPARDYV11_Pos        (14UL)
+#define PWR_RADIOSCR_REGPARDYV11_Msk        (0x1UL << PWR_RADIOSCR_REGPARDYV11_Pos)     /*!< 0x00004000 */
+#define PWR_RADIOSCR_REGPARDYV11            PWR_RADIOSCR_REGPARDYV11_Msk                /*!< Ready bit for VDDHPA voltage level when selecting VDDRFPA input */
 #define PWR_RADIOSCR_REGPARDYVDDRFPA_Pos    (15UL)
 #define PWR_RADIOSCR_REGPARDYVDDRFPA_Msk    (0x1UL << PWR_RADIOSCR_REGPARDYVDDRFPA_Pos) /*!< 0x00008000 */
 #define PWR_RADIOSCR_REGPARDYVDDRFPA        PWR_RADIOSCR_REGPARDYVDDRFPA_Msk            /*!< Ready bit for VDDHPA voltage level when selecting VDDRFPA input */
+#define PWR_RADIOSCR_REGPASEL_Pos           (23UL)
+#define PWR_RADIOSCR_REGPASEL_Msk           (0x1UL << PWR_RADIOSCR_REGPASEL_Pos)        /*!< 0x00800000 */
+#define PWR_RADIOSCR_REGPASEL               PWR_RADIOSCR_REGPASEL_Msk                   /*!< Regulator REG_VDDHPA input supply selection */
+#define PWR_RADIOSCR_REGPABYPEN_Pos         (24UL)
+#define PWR_RADIOSCR_REGPABYPEN_Msk         (0x1UL << PWR_RADIOSCR_REGPABYPEN_Pos)      /*!< 0x01000000 */
+#define PWR_RADIOSCR_REGPABYPEN             PWR_RADIOSCR_REGPABYPEN_Msk                 /*!< Regulator REG_VDDHPA bypass enable.*/
 
 /********************  Bit definition for PWR_S2RETR register  *****************/
 #define PWR_S2RETR_PTASREN_Pos              (0UL)
@@ -19450,7 +19468,7 @@ typedef struct
 
 /** @} */ /* End of group STM32WBAxx_Peripheral_Exported_macros */
 
-/** @} */ /* End of group STM32WBA62xx */
+/** @} */ /* End of group STM32WBA6Mxx */
 
 /** @} */ /* End of group ST */
 
@@ -19458,4 +19476,4 @@ typedef struct
 }
 #endif
 
-#endif  /* STM32WBA62xx_H */
+#endif  /* STM32WBA6Mxx_H */

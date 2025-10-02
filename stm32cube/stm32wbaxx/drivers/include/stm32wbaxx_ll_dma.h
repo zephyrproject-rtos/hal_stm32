@@ -527,8 +527,14 @@ typedef struct
 /** @defgroup DMA_LL_EC_LINKED_LIST_ALLOCATED_PORT Linked List Allocated Port
   * @{
   */
+#if defined(GPDMA1)
 #define LL_DMA_LINK_ALLOCATED_PORT0 0x00000000U /*!< Linked List Allocated Port 0 */
 #define LL_DMA_LINK_ALLOCATED_PORT1 DMA_CCR_LAP /*!< Linked List Allocated Port 1 */
+#endif /* GPDMA1 */
+#if defined(LPDMA1)
+#define LL_DMA_LINK_ALLOCATED_PORT0 0x00000000U                 /*!< Kept for porting purpose */
+#define LL_DMA_LINK_ALLOCATED_PORT1 LL_DMA_LINK_ALLOCATED_PORT0 /*!< Kept for porting purpose */
+#endif /* LPDMA1 */
 /**
   * @}
   */
@@ -574,8 +580,14 @@ typedef struct
 /** @defgroup DMA_LL_EC_SOURCE_ALLOCATED_PORT Source Allocated Port
   * @{
   */
+#if defined(GPDMA1)
 #define LL_DMA_SRC_ALLOCATED_PORT0 0x00000000U  /*!< Source Allocated Port 0 */
 #define LL_DMA_SRC_ALLOCATED_PORT1 DMA_CTR1_SAP /*!< Source Allocated Port 1 */
+#endif /* GPDMA1 */
+#if defined(LPDMA1)
+#define LL_DMA_SRC_ALLOCATED_PORT0 0x00000000U                /*!< Kept for porting purpose */
+#define LL_DMA_SRC_ALLOCATED_PORT1 LL_DMA_SRC_ALLOCATED_PORT0 /*!< Kept for porting purpose */
+#endif /* LPDMA1 */
 /**
   * @}
   */
@@ -583,8 +595,14 @@ typedef struct
 /** @defgroup DMA_LL_EC_DESTINATION_ALLOCATED_PORT Destination Allocated Port
   * @{
   */
+#if defined(GPDMA1)
 #define LL_DMA_DEST_ALLOCATED_PORT0 0x00000000U  /*!< Destination Allocated Port 0 */
 #define LL_DMA_DEST_ALLOCATED_PORT1 DMA_CTR1_DAP /*!< Destination Allocated Port 1 */
+#endif /* GPDMA1 */
+#if defined(LPDMA1)
+#define LL_DMA_DEST_ALLOCATED_PORT0 0x00000000U                 /*!< Kept for porting purpose */
+#define LL_DMA_DEST_ALLOCATED_PORT1 LL_DMA_DEST_ALLOCATED_PORT0 /*!< Kept for porting purpose */
+#endif /* LPDMA1 */
 /**
   * @}
   */
@@ -709,9 +727,16 @@ typedef struct
 /** @defgroup DMA_LL_EC_TRANSFER_DIRECTION Transfer Direction
   * @{
   */
+#if defined(GPDMA1)
 #define LL_DMA_DIRECTION_MEMORY_TO_MEMORY DMA_CTR2_SWREQ /*!< Memory to memory direction     */
 #define LL_DMA_DIRECTION_PERIPH_TO_MEMORY 0x00000000U    /*!< Peripheral to memory direction */
 #define LL_DMA_DIRECTION_MEMORY_TO_PERIPH DMA_CTR2_DREQ  /*!< Memory to peripheral direction */
+#endif /* GPDMA1 */
+#if defined(LPDMA1)
+#define LL_DMA_DIRECTION_MEMORY_TO_MEMORY DMA_CTR2_SWREQ                     /*!< Memory to memory direction */
+#define LL_DMA_DIRECTION_PERIPH_TO_MEMORY 0x00000000U                        /*!< Kept for porting purpose   */
+#define LL_DMA_DIRECTION_MEMORY_TO_PERIPH LL_DMA_DIRECTION_PERIPH_TO_MEMORY  /*!< Kept for porting purpose   */
+#endif /* LPDMA1 */
 /**
   * @}
   */

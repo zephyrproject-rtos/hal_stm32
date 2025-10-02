@@ -564,6 +564,9 @@ extern "C" {
 #define OB_nBOOT0_RESET               OB_NBOOT0_RESET
 #define OB_nBOOT0_SET                 OB_NBOOT0_SET
 #endif /* STM32U0 */
+#if defined(STM32H5)
+#define FLASH_ECC_AREA_EDATA          FLASH_ECC_AREA_EDATA_BANK1
+#endif /* STM32H5 */
 
 /**
   * @}
@@ -1283,10 +1286,10 @@ extern "C" {
 #define RTC_TAMPERPIN_PA0  RTC_TAMPERPIN_POS1
 #define RTC_TAMPERPIN_PI8  RTC_TAMPERPIN_POS1
 
-#if defined(STM32H5) || defined(STM32H7RS)
+#if defined(STM32H5) || defined(STM32H7RS) || defined(STM32N6)
 #define TAMP_SECRETDEVICE_ERASE_NONE        TAMP_DEVICESECRETS_ERASE_NONE
 #define TAMP_SECRETDEVICE_ERASE_BKP_SRAM    TAMP_DEVICESECRETS_ERASE_BKPSRAM
-#endif /* STM32H5 || STM32H7RS */
+#endif /* STM32H5 || STM32H7RS || STM32N6 */
 
 #if defined(STM32WBA)
 #define TAMP_SECRETDEVICE_ERASE_NONE            TAMP_DEVICESECRETS_ERASE_NONE
@@ -1298,10 +1301,10 @@ extern "C" {
 #define TAMP_SECRETDEVICE_ERASE_ALL             TAMP_DEVICESECRETS_ERASE_ALL
 #endif /* STM32WBA */
 
-#if defined(STM32H5) || defined(STM32WBA) || defined(STM32H7RS)
+#if defined(STM32H5) || defined(STM32WBA) || defined(STM32H7RS) || defined(STM32N6)
 #define TAMP_SECRETDEVICE_ERASE_DISABLE     TAMP_DEVICESECRETS_ERASE_NONE
 #define TAMP_SECRETDEVICE_ERASE_ENABLE      TAMP_SECRETDEVICE_ERASE_ALL
-#endif /* STM32H5 || STM32WBA || STM32H7RS */
+#endif /* STM32H5 || STM32WBA || STM32H7RS ||  STM32N6 */
 
 #if defined(STM32F7) || defined(STM32WB)
 #define RTC_TAMPCR_TAMPXE          RTC_TAMPER_ENABLE_BITS_MASK
@@ -1485,7 +1488,7 @@ extern "C" {
 #define TIM_TIM3_TI1_COMP1COMP2_OUT   TIM_TIM3_TI1_COMP1_COMP2
 #endif
 
-#if defined(STM32U5)
+#if defined(STM32U5) || defined(STM32MP2)
 #define OCREF_CLEAR_SELECT_Pos       OCREF_CLEAR_SELECT_POS
 #define OCREF_CLEAR_SELECT_Msk       OCREF_CLEAR_SELECT_MSK
 #endif
@@ -2033,12 +2036,12 @@ extern "C" {
 /** @defgroup HAL_RTC_Aliased_Functions HAL RTC Aliased Functions maintained for legacy purpose
   * @{
   */
-#if defined(STM32H5) || defined(STM32WBA) || defined(STM32H7RS)
+#if defined(STM32H5) || defined(STM32WBA) || defined(STM32H7RS) || defined(STM32N6)
 #define HAL_RTCEx_SetBoothardwareKey            HAL_RTCEx_LockBootHardwareKey
 #define HAL_RTCEx_BKUPBlock_Enable              HAL_RTCEx_BKUPBlock
 #define HAL_RTCEx_BKUPBlock_Disable             HAL_RTCEx_BKUPUnblock
 #define HAL_RTCEx_Erase_SecretDev_Conf          HAL_RTCEx_ConfigEraseDeviceSecrets
-#endif /* STM32H5 || STM32WBA || STM32H7RS */
+#endif /* STM32H5 || STM32WBA || STM32H7RS || STM32N6 */
 
 /**
   * @}
@@ -3699,7 +3702,7 @@ extern "C" {
 #endif
 
 #if defined(STM32L4) || defined(STM32WB) || defined(STM32G0) || defined(STM32G4) || defined(STM32L5) || \
-    defined(STM32WL) || defined(STM32C0) || defined(STM32H7RS) || defined(STM32U0)
+    defined(STM32WL) || defined(STM32C0) || defined(STM32N6) || defined(STM32H7RS) || defined(STM32U0)
 #define RCC_RTCCLKSOURCE_NO_CLK     RCC_RTCCLKSOURCE_NONE
 #else
 #define RCC_RTCCLKSOURCE_NONE       RCC_RTCCLKSOURCE_NO_CLK
@@ -3950,7 +3953,8 @@ extern "C" {
   */
 #if defined (STM32G0) || defined (STM32L5) || defined (STM32L412xx) || defined (STM32L422xx) || \
     defined (STM32L4P5xx)|| defined (STM32L4Q5xx) || defined (STM32G4) || defined (STM32WL) || defined (STM32U5) || \
-    defined (STM32WBA) || defined (STM32H5) || defined (STM32C0) || defined (STM32H7RS) ||  defined (STM32U0)
+    defined (STM32WBA) || defined (STM32H5) ||  defined (STM32C0) || defined (STM32N6) || \
+    defined (STM32H7RS) ||  defined (STM32U0) || defined (STM32U3)
 #else
 #define __HAL_RTC_CLEAR_FLAG                      __HAL_RTC_EXTI_CLEAR_FLAG
 #endif
