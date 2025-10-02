@@ -834,6 +834,7 @@ __STATIC_INLINE uint32_t LL_PWR_GetSRAM2StopRetention(void)
 #endif /* defined(PWR_STOP3_SUPPORT) */
 }
 
+#if defined (PWR_CR2_ICRAMPDS)
 /**
   * @brief  Set the ICACHE SRAM page(s) retention in Stop mode.
   * @rmtoll CR2           ICRAMPDS        LL_PWR_SetICacheRAMStopRetention
@@ -862,6 +863,8 @@ __STATIC_INLINE uint32_t LL_PWR_GetICacheRAMStopRetention(void)
 {
   return ((~(READ_BIT(PWR->CR2, PWR_CR2_ICRAMPDS))) & PWR_CR2_ICRAMPDS);
 }
+#endif /* PWR_CR2_ICRAMPDS */
+
 #if defined(PWR_STOP2_SUPPORT)
 #if defined(USB_OTG_HS)
 /**
@@ -1236,7 +1239,7 @@ __STATIC_INLINE uint32_t LL_PWR_IsEnabledVddUSB(void)
 {
   return ((READ_BIT(PWR->SVMCR, PWR_SVMCR_USV) == (PWR_SVMCR_USV)) ? 1UL : 0UL);
 }
-#elif defined(PWR_STOP3_SUPPORT)
+#elif defined(PWR_STOP3_SUPPORT) && defined(PWR_SVMCR_USV)
 /**
   * @brief  Enable the VDDUSB supply.
   * @rmtoll VOSR          USV             LL_PWR_EnableVddUSB
@@ -1266,7 +1269,7 @@ __STATIC_INLINE uint32_t LL_PWR_IsEnabledVddUSB(void)
 {
   return ((READ_BIT(PWR->SVMCR, PWR_SVMCR_USV) == (PWR_SVMCR_USV)) ? 1UL : 0UL);
 }
-#endif /* defined(PWR_STOP3_SUPPORT) */
+#endif /* defined(PWR_STOP3_SUPPORT) && defined(PWR_SVMCR_USV) */
 
 #if defined(PWR_SVMCR_IO2SV)
 /**
@@ -1981,7 +1984,7 @@ __STATIC_INLINE uint32_t LL_PWR_GetRadioMode(void)
   * @}
   */
 
-#if defined(PWR_STOP2_SUPPORT)
+#if defined(PWR_STOP2_SUPPORT) && defined(PWR_S2RETR_PTASREN)
 /** @defgroup PWR_LL_EF_PTA_STOP2_RETENTION_MANAGEMENT PWR PTA Stop2 Retention Management
   * @{
   */
@@ -2018,7 +2021,7 @@ __STATIC_INLINE uint32_t LL_PWR_IsEnabledPTAOutputStop2Retention(void)
 /**
   * @}
   */
-#endif /* PWR_STOP2_SUPPORT */
+#endif /* PWR_STOP2_SUPPORT && PWR_S2RETR_PTASREN */
 
 /** @defgroup PWR_LL_EF_FLAG_MANAGEMENT PWR FLAG Management
   * @{
@@ -2208,7 +2211,7 @@ __STATIC_INLINE uint32_t LL_PWR_IsActiveFlag_WU8(void)
   return ((READ_BIT(PWR->WUSR, PWR_WUSR_WUF8) == (PWR_WUSR_WUF8)) ? 1UL : 0UL);
 }
 
-#if defined(PWR_STOP2_SUPPORT)
+#if defined(PWR_STOP2_SUPPORT) && defined(PWR_S2RETR_PTASR)
 /**
   * @brief  Indicate whether the PTA output signals state retention in Stop 2 mode is active or not.
   * @rmtoll SVMSR         PTASR           LL_PWR_IsActiveFlag_PTASR
@@ -2218,7 +2221,7 @@ __STATIC_INLINE uint32_t LL_PWR_IsActiveFlag_PTASR(void)
 {
   return ((READ_BIT(PWR->S2RETR, PWR_S2RETR_PTASR) == (PWR_S2RETR_PTASR)) ? 1UL : 0UL);
 }
-#endif /* defined(PWR_STOP2_SUPPORT) */
+#endif /* defined(PWR_STOP2_SUPPORT) && defined(PWR_S2RETR_PTASR) */
 
 /**
   * @brief  Clear stop flag.
@@ -2346,7 +2349,7 @@ __STATIC_INLINE void LL_PWR_ClearFlag_WU(void)
   WRITE_REG(PWR->WUSCR, PWR_WUSCR_CWUF);
 }
 
-#if defined(PWR_STOP2_SUPPORT)
+#if defined(PWR_STOP2_SUPPORT) && defined(PWR_S2RETR_PTASR)
 /**
   * @brief  Clear the PTA output signals state retention in Stop 2 mode active.
   * @rmtoll SVMSR         PTASR           LL_PWR_ClearFlag_PTASR
@@ -2356,7 +2359,7 @@ __STATIC_INLINE void LL_PWR_ClearFlag_PTASR(void)
 {
   CLEAR_BIT(PWR->S2RETR, PWR_S2RETR_PTASR);
 }
-#endif /* defined(PWR_STOP2_SUPPORT) */
+#endif /* defined(PWR_STOP2_SUPPORT) && defined(PWR_S2RETR_PTASR) */
 /**
   * @}
   */

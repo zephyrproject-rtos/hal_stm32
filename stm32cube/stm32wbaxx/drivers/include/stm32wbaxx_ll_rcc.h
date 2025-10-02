@@ -45,9 +45,9 @@ extern "C" {
   */
 /* Defines used to perform offsets*/
 /* Offset used to access to RCC_CCIPR1, RCC_CCIPR2 and RCC_CCIPR3 registers */
-#define RCC_OFFSET_CCIPR1       0U
-#define RCC_OFFSET_CCIPR2       0x04U
-#define RCC_OFFSET_CCIPR3       0x08U
+#define RCC_OFFSET_CCIPR1       0UL
+#define RCC_OFFSET_CCIPR2       0x04UL
+#define RCC_OFFSET_CCIPR3       0x08UL
 
 /* Defines used for security configuration extension */
 #define RCC_SECURE_MASK         0x10FBU
@@ -272,9 +272,12 @@ typedef struct
 /** @defgroup RCC_LL_EC_SYSTICK_CLKSOURCE  SYSTICK clock source selection
   * @{
   */
-#define LL_RCC_SYSTICK_CLKSOURCE_HCLKDIV8  0U                      /*!< HCLKDIV8 clock used as SYSTICK clock source */
-#define LL_RCC_SYSTICK_CLKSOURCE_LSI       RCC_CCIPR1_SYSTICKSEL_0 /*!< LSI clock used as SYSTICK clock source        */
-#define LL_RCC_SYSTICK_CLKSOURCE_LSE       RCC_CCIPR1_SYSTICKSEL_1 /*!< LSE clock used as SYSTICK clock source        */
+#define LL_RCC_SYSTICK_CLKSOURCE_HCLKDIV8  0U                                                  /*!< HCLKDIV8 clock used as SYSTICK clock source */
+#define LL_RCC_SYSTICK_CLKSOURCE_LSI       RCC_CCIPR1_SYSTICKSEL_0                             /*!< LSI clock used as SYSTICK clock source      */
+#define LL_RCC_SYSTICK_CLKSOURCE_LSE       RCC_CCIPR1_SYSTICKSEL_1                             /*!< LSE clock used as SYSTICK clock source      */
+#if !defined (STM32WBA50xx) && !defined (STM32WBA52xx) && !defined (STM32WBA54xx) && !defined (STM32WBA55xx) && !defined (STM32WBA5Mxx)
+#define LL_RCC_SYSTICK_CLKSOURCE_HSIDIV4   (RCC_CCIPR1_SYSTICKSEL_1 | RCC_CCIPR1_SYSTICKSEL_0) /*!< HSIDIV4 clock used as SYSTICK clock source  */
+#endif
 /**
   * @}
   */
@@ -1535,6 +1538,9 @@ __STATIC_INLINE void LL_RCC_SetAHBPrescaler(uint32_t Prescaler)
   *         @arg @ref LL_RCC_SYSTICK_CLKSOURCE_LSI
   *         @arg @ref LL_RCC_SYSTICK_CLKSOURCE_LSE
   *         @arg @ref LL_RCC_SYSTICK_CLKSOURCE_HCLKDIV8
+  *         @arg @ref LL_RCC_SYSTICK_CLKSOURCE_HSIDIV4 (*)
+  *
+  *         (*) value not defined in all devices.
   * @retval None
   */
 __STATIC_INLINE void LL_RCC_SetSystickClockSource(uint32_t SystickSource)
@@ -1641,6 +1647,9 @@ __STATIC_INLINE uint32_t LL_RCC_GetAHBPrescaler(void)
   *         @arg @ref LL_RCC_SYSTICK_CLKSOURCE_LSI
   *         @arg @ref LL_RCC_SYSTICK_CLKSOURCE_LSE
   *         @arg @ref LL_RCC_SYSTICK_CLKSOURCE_HCLKDIV8
+  *         @arg @ref LL_RCC_SYSTICK_CLKSOURCE_HSIDIV4 (*)
+  *
+  *         (*) value not defined in all devices.
   */
 __STATIC_INLINE uint32_t LL_RCC_GetSystickClockSource(void)
 {
@@ -1943,7 +1952,7 @@ __STATIC_INLINE void LL_RCC_SetLPUARTClockSource(uint32_t LPUARTxSource)
 __STATIC_INLINE void LL_RCC_SetI2CClockSource(uint32_t I2CxSource)
 {
   __IO uint32_t *reg = (__IO uint32_t *)(uint32_t)(RCC_BASE + 0xE0U + (I2CxSource >> 24U));
-  MODIFY_REG(*reg, 3U << (((I2CxSource & 0x00FF0000U) >> 16U) & 0x1FU), ((I2CxSource & 0x000000FFU) << (((I2CxSource & 0x00FF0000U) >> 16U) & 0x1FU)));
+  MODIFY_REG(*reg, 3UL << (((I2CxSource & 0x00FF0000U) >> 16U) & 0x1FU), ((I2CxSource & 0x000000FFU) << (((I2CxSource & 0x00FF0000U) >> 16U) & 0x1FU)));
 }
 
 /**
@@ -1974,7 +1983,7 @@ __STATIC_INLINE void LL_RCC_SetI2CClockSource(uint32_t I2CxSource)
 __STATIC_INLINE void LL_RCC_SetSPIClockSource(uint32_t SPIxSource)
 {
   __IO uint32_t *reg = (__IO uint32_t *)(uint32_t)(RCC_BASE + 0xE0U + (SPIxSource >> 24U));
-  MODIFY_REG(*reg, 3U << (((SPIxSource & 0x00FF0000U) >> 16U) & 0x1FU), ((SPIxSource & 0x000000FFU) << (((SPIxSource & 0x00FF0000U) >> 16U) & 0x1FU)));
+  MODIFY_REG(*reg, 3UL << (((SPIxSource & 0x00FF0000U) >> 16U) & 0x1FU), ((SPIxSource & 0x000000FFU) << (((SPIxSource & 0x00FF0000U) >> 16U) & 0x1FU)));
 }
 
 /**
@@ -1995,7 +2004,7 @@ __STATIC_INLINE void LL_RCC_SetSPIClockSource(uint32_t SPIxSource)
 __STATIC_INLINE void LL_RCC_SetLPTIMClockSource(uint32_t LPTIMxSource)
 {
   __IO uint32_t *reg = (__IO uint32_t *)(uint32_t)(RCC_BASE + 0xE0U + (LPTIMxSource >> 24U));
-  MODIFY_REG(*reg, 3U << (((LPTIMxSource & 0x00FF0000U) >> 16U) & 0x1FU), ((LPTIMxSource & 0x000000FFU) << (((LPTIMxSource & 0x00FF0000U) >> 16U) & 0x1FU)));
+  MODIFY_REG(*reg, 3UL << (((LPTIMxSource & 0x00FF0000U) >> 16U) & 0x1FU), ((LPTIMxSource & 0x000000FFU) << (((LPTIMxSource & 0x00FF0000U) >> 16U) & 0x1FU)));
 }
 
 

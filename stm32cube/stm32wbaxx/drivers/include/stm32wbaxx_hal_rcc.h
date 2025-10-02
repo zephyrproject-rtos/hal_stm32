@@ -413,20 +413,20 @@ typedef struct
   * @{
   */
 /* Flags in the CIFR register */
-#define RCC_IT_LSI1RDY                  ((CIFR_REG_INDEX << 5U) | RCC_CIFR_LSI1RDYF_Pos)    /*!< LSI1 Ready Interrupt flag */
-#define RCC_IT_LSERDY                   ((CIFR_REG_INDEX << 5U) | RCC_CIFR_LSERDYF_Pos)     /*!< LSE Ready Interrupt flag */
-#define RCC_IT_HSIRDY                   ((CIFR_REG_INDEX << 5U) | RCC_CIFR_HSIRDYF_Pos)     /*!< HSI16 Ready Interrupt flag */
-#define RCC_IT_HSERDY                   ((CIFR_REG_INDEX << 5U) | RCC_CIFR_HSERDYF_Pos)     /*!< HSE Ready Interrupt flag */
-#define RCC_IT_PLL1RDY                  ((CIFR_REG_INDEX << 5U) | RCC_CIFR_PLL1RDYF_Pos)    /*!< PLL1 Ready Interrupt flag */
-#define RCC_IT_CSS                      ((CIFR_REG_INDEX << 5U) | RCC_CIFR_HSECSSF_Pos)     /*!< HSE32 Clock Security System Interrupt flag */
+#define RCC_IT_LSI1RDY                  ((CIFR_REG_INDEX << 5UL) | RCC_CIFR_LSI1RDYF_Pos)    /*!< LSI1 Ready Interrupt flag */
+#define RCC_IT_LSERDY                   ((CIFR_REG_INDEX << 5UL) | RCC_CIFR_LSERDYF_Pos)     /*!< LSE Ready Interrupt flag */
+#define RCC_IT_HSIRDY                   ((CIFR_REG_INDEX << 5UL) | RCC_CIFR_HSIRDYF_Pos)     /*!< HSI16 Ready Interrupt flag */
+#define RCC_IT_HSERDY                   ((CIFR_REG_INDEX << 5UL) | RCC_CIFR_HSERDYF_Pos)     /*!< HSE Ready Interrupt flag */
+#define RCC_IT_PLL1RDY                  ((CIFR_REG_INDEX << 5UL) | RCC_CIFR_PLL1RDYF_Pos)    /*!< PLL1 Ready Interrupt flag */
+#define RCC_IT_CSS                      ((CIFR_REG_INDEX << 5UL) | RCC_CIFR_HSECSSF_Pos)     /*!< HSE32 Clock Security System Interrupt flag */
 #if defined(RCC_LSI2_SUPPORT)
-#define RCC_IT_LSI2RDY                  ((CIFR_REG_INDEX << 5U) | RCC_CIFR_LSI2RDYF_Pos)    /*!< LSI2 Ready Interrupt flag */
+#define RCC_IT_LSI2RDY                  ((CIFR_REG_INDEX << 5UL) | RCC_CIFR_LSI2RDYF_Pos)    /*!< LSI2 Ready Interrupt flag */
 #endif /* RCC_BDCR1_LSI2ON */
 
 /* Flags in the ASSR register */
-#define RCC_IT_CAPTURE_ERROR            ((ASSR_REG_INDEX << 5U) | RCC_ASSR_CAEF_Pos)        /*!< Capture Error Interrupt flag */
-#define RCC_IT_COMPARER                 ((ASSR_REG_INDEX << 5U) | RCC_ASSR_COF_Pos)         /*!< Comparer Interrupt flag */
-#define RCC_IT_CAPTURE_TRIGGER          ((ASSR_REG_INDEX << 5U) | RCC_ASSR_CAF_Pos)         /*!< Capture Trigger Interrupt flag */
+#define RCC_IT_CAPTURE_ERROR            ((ASSR_REG_INDEX << 5UL) | RCC_ASSR_CAEF_Pos)        /*!< Capture Error Interrupt flag */
+#define RCC_IT_COMPARER                 ((ASSR_REG_INDEX << 5UL) | RCC_ASSR_COF_Pos)         /*!< Comparer Interrupt flag */
+#define RCC_IT_CAPTURE_TRIGGER          ((ASSR_REG_INDEX << 5UL) | RCC_ASSR_CAF_Pos)         /*!< Capture Trigger Interrupt flag */
 /**
   * @}
   */
@@ -1134,7 +1134,7 @@ typedef struct
                                                   } while(0)
 #endif /* SAI1 */
 
-#if defined(USB)
+#if defined(USB_DRD_FS)
 #define __HAL_RCC_USB_CLK_ENABLE()             do { \
                                                     __IO uint32_t tmpreg; \
                                                     SET_BIT(RCC->APB2ENR, RCC_APB2ENR_USBEN); \
@@ -1142,7 +1142,7 @@ typedef struct
                                                     tmpreg = READ_BIT(RCC->APB2ENR, RCC_APB2ENR_USBEN); \
                                                     UNUSED(tmpreg); \
                                                   } while(0)
-#endif /* USB */
+#endif /* USB_DRD_FS */
 
 #if defined(TIM1)
 #define __HAL_RCC_TIM1_CLK_DISABLE()           CLEAR_BIT(RCC->APB2ENR, RCC_APB2ENR_TIM1EN)
@@ -1158,9 +1158,9 @@ typedef struct
 #if defined(SAI1)
 #define __HAL_RCC_SAI1_CLK_DISABLE()           CLEAR_BIT(RCC->APB2ENR, RCC_APB2ENR_SAI1EN)
 #endif /* SAI1 */
-#if defined(USB)
+#if defined(USB_DRD_FS)
 #define __HAL_RCC_USB_CLK_DISABLE()            CLEAR_BIT(RCC->APB2ENR, RCC_APB2ENR_USBEN)
-#endif /* USB */
+#endif /* USB_DRD_FS */
 /**
   * @}
   */
@@ -1395,9 +1395,9 @@ typedef struct
 #if defined(SAI1)
 #define __HAL_RCC_SAI1_IS_CLK_ENABLED()        (READ_BIT(RCC->APB2ENR, RCC_APB2ENR_SAI1EN) != 0U)
 #endif /* SAI1 */
-#if defined(USB)
+#if defined(USB_DRD_FS)
 #define __HAL_RCC_USB_IS_CLK_ENABLED()         (READ_BIT(RCC->APB2ENR, RCC_APB2ENR_USBEN) != 0U)
-#endif /* USB */
+#endif /* USB_DRD_FS */
 /**
   * @}
   */
@@ -1645,9 +1645,9 @@ typedef struct
 #if defined(SAI1)
 #define __HAL_RCC_SAI1_FORCE_RESET()           SET_BIT(RCC->APB2RSTR, RCC_APB2RSTR_SAI1RST)
 #endif /* SAI1 */
-#if defined(USB)
+#if defined(USB_DRD_FS)
 #define __HAL_RCC_USB_FORCE_RESET()            SET_BIT(RCC->APB2RSTR, RCC_APB2RSTR_USBRST)
-#endif /* SAI1 */
+#endif /* USB_DRD_FS */
 
 #define __HAL_RCC_APB2_RELEASE_RESET()         WRITE_REG(RCC->APB2RSTR, 0x00000000U)
 #define __HAL_RCC_TIM1_RELEASE_RESET()         CLEAR_BIT(RCC->APB2RSTR, RCC_APB2RSTR_TIM1RST)
@@ -1662,9 +1662,9 @@ typedef struct
 #if defined(SAI1)
 #define __HAL_RCC_SAI1_RELEASE_RESET()         CLEAR_BIT(RCC->APB2RSTR, RCC_APB2RSTR_SAI1RST)
 #endif /* SAI1 */
-#if defined(USB)
+#if defined(USB_DRD_FS)
 #define __HAL_RCC_USB_RELEASE_RESET()          CLEAR_BIT(RCC->APB2RSTR, RCC_APB2RSTR_USBRST)
-#endif /* USB */
+#endif /* USB_DRD_FS */
 /**
   * @}
   */
@@ -1955,9 +1955,9 @@ typedef struct
 #if defined(SAI1)
 #define __HAL_RCC_SAI1_CLK_SLEEP_ENABLE()      SET_BIT(RCC->APB2SMENR, RCC_APB2SMENR_SAI1SMEN)
 #endif /* SAI1 */
-#if defined(USB)
+#if defined(USB_DRD_FS)
 #define __HAL_RCC_USB_CLK_SLEEP_ENABLE()       SET_BIT(RCC->APB2SMENR, RCC_APB2SMENR_USBSMEN)
-#endif /* USB */
+#endif /* USB_DRD_FS */
 
 #define __HAL_RCC_TIM1_CLK_SLEEP_DISABLE()     CLEAR_BIT(RCC->APB2SMENR, RCC_APB2SMENR_TIM1SMEN)
 #if defined(SPI1)
@@ -1971,9 +1971,9 @@ typedef struct
 #if defined(SAI1)
 #define __HAL_RCC_SAI1_CLK_SLEEP_DISABLE()     CLEAR_BIT(RCC->APB2SMENR, RCC_APB2SMENR_SAI1SMEN)
 #endif /* SAI1 */
-#if defined(USB)
+#if defined(USB_DRD_FS)
 #define __HAL_RCC_USB_CLK_SLEEP_DISABLE()      CLEAR_BIT(RCC->APB2SMENR, RCC_APB2SMENR_USBSMEN)
-#endif /* USB */
+#endif /* USB_DRD_FS */
 /**
   * @}
   */
@@ -2153,9 +2153,9 @@ typedef struct
 #if defined(SAI1)
 #define __HAL_RCC_SAI1_IS_CLK_SLEEP_ENABLED()        (READ_BIT(RCC->APB2SMENR, RCC_APB2SMENR_SAI1SMEN) != 0U)
 #endif /* SAI1 */
-#if defined(USB)
+#if defined(USB_DRD_FS)
 #define __HAL_RCC_USB_IS_CLK_SLEEP_ENABLED()         (READ_BIT(RCC->APB2SMENR, RCC_APB2SMENR_USBSMEN) != 0U)
-#endif /* USB */
+#endif /* USB_DRD_FS */
 /**
   * @}
   */
@@ -2676,8 +2676,8 @@ typedef struct
   */
 #if defined(RCC_CCIPR2_ASSEL)
 #define __HAL_RCC_CLEAR_IT(__INTERRUPT__) ((((__INTERRUPT__) >> 5U) == 0U) ? \
-                                           WRITE_REG(RCC->CICR,1U << ((__INTERRUPT__) & RCC_FLAG_MASK)) : \
-                                           CLEAR_BIT(RCC->ASSR,1U << ((__INTERRUPT__) & RCC_FLAG_MASK)))
+                                           WRITE_REG(RCC->CICR,1UL << ((__INTERRUPT__) & RCC_FLAG_MASK)) : \
+                                           CLEAR_BIT(RCC->ASSR,1UL << ((__INTERRUPT__) & RCC_FLAG_MASK)))
 #else
 #define __HAL_RCC_CLEAR_IT(__INTERRUPT__) WRITE_REG(RCC->CICR, (__INTERRUPT__))
 #endif /* RCC_CCIPR2_ASSEL */
@@ -2702,8 +2702,8 @@ typedef struct
   */
 #if defined(RCC_CCIPR2_ASSEL)
 #define __HAL_RCC_GET_IT(__INTERRUPT__) ((((__INTERRUPT__) >> 5U) == 0U) ? \
-                                         ((RCC->CIFR & (1U << ((__INTERRUPT__) & RCC_FLAG_MASK))) == (1U << ((__INTERRUPT__) & RCC_FLAG_MASK))) : \
-                                         ((RCC->ASSR & (1U << ((__INTERRUPT__) & RCC_FLAG_MASK))) == (1U << ((__INTERRUPT__) & RCC_FLAG_MASK))))
+                                         ((RCC->CIFR & (1UL << ((__INTERRUPT__) & RCC_FLAG_MASK))) == (1UL << ((__INTERRUPT__) & RCC_FLAG_MASK))) : \
+                                         ((RCC->ASSR & (1UL << ((__INTERRUPT__) & RCC_FLAG_MASK))) == (1UL << ((__INTERRUPT__) & RCC_FLAG_MASK))))
 #else
 #define __HAL_RCC_GET_IT(__INTERRUPT__)  ((RCC->CIFR & (__INTERRUPT__)) == (__INTERRUPT__))
 #endif /* RCC_CCIPR2_ASSEL */
@@ -2759,13 +2759,13 @@ typedef struct
 
 
 /* Defines used for Flags */
-#define CR_REG_INDEX                    (1U)
-#define BDCR1_REG_INDEX                 (2U)
-#define CSR_REG_INDEX                   (3U)
+#define CR_REG_INDEX                    (1UL)
+#define BDCR1_REG_INDEX                 (2UL)
+#define CSR_REG_INDEX                   (3UL)
 #if defined(RCC_CCIPR2_ASSEL)
 /* Defines used for Interrupt Flags */
-#define CIFR_REG_INDEX                  (0U)
-#define ASSR_REG_INDEX                  (1U)
+#define CIFR_REG_INDEX                  (0UL)
+#define ASSR_REG_INDEX                  (1UL)
 #endif /* RCC_CCIPR2_ASSEL */
 
 #define RCC_FLAG_MASK                   (0x1FU)

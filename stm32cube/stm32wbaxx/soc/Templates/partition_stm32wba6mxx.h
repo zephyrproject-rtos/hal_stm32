@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * @file    partition_stm32wba64xx.h
+  * @file    partition_stm32wba6mxx.h
   * @author  MCD Application Team
-  * @brief   CMSIS STM32WBA64xx Device Initial Setup for Secure / Non-Secure Zones
+  * @brief   CMSIS STM32WBA6Mxx Device Initial Setup for Secure / Non-Secure Zones
   *          for ARMCM33 based on CMSIS CORE V5.4.0 partition_ARMCM33.h Template.
   *
   *          This file contains:
@@ -14,7 +14,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2023 STMicroelectronics.
+  * Copyright (c) 2025 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -24,8 +24,8 @@
   ******************************************************************************
  */
 
-#ifndef PARTITION_STM32WBA64XX_H
-#define PARTITION_STM32WBA64XX_H
+#ifndef PARTITION_STM32WBA6MXX_H
+#define PARTITION_STM32WBA6MXX_H
 
 /*
 //-------- <<< Use Configuration Wizard in Context Menu >>> -----------------
@@ -591,4 +591,4 @@ __STATIC_INLINE void TZ_SAU_Setup (void)
 
 }
 
-#endif  /* PARTITION_STM32WBA64XX_H */
+#endif  /* PARTITION_STM32WBA6MXX_H */

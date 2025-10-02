@@ -509,7 +509,7 @@ HAL_StatusTypeDef HAL_GPIO_LockPin(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin)
   }
 }
 
-#if defined (STM32WBA62xx) || defined (STM32WBA63xx) || defined (STM32WBA64xx) || defined (STM32WBA65xx)
+#if defined (STM32WBA62xx) || defined (STM32WBA63xx) || defined (STM32WBA64xx) || defined (STM32WBA65xx) || defined (STM32WBA6Mxx)
 /**
   * @brief  Enable speed optimization for several pin of dedicated port.
   * @note   Not all I/Os support the HSLV mode. Refer to the I/O structure in the corresponding
@@ -552,7 +552,7 @@ void HAL_GPIO_DisableHighSPeedLowVoltage(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin)
   CLEAR_BIT(GPIOx->HSLVR, GPIO_Pin);
 }
 
-#endif  /* defined (STM32WBA62xx) || defined (STM32WBA63xx) || defined (STM32WBA64xx) || defined (STM32WBA65xx) */
+#endif  /* defined (STM32WBA62xx) || defined (STM32WBA63xx) || defined (STM32WBA64xx) || defined (STM32WBA65xx) || defined (STM32WBA6Mxx) */
 /**
   * @brief  Handle EXTI interrupt request.
   * @param  GPIO_Pin Specifies the port pin connected to corresponding EXTI line.

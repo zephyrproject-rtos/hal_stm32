@@ -187,7 +187,7 @@ static void     FLASH_OB_RDPKeyConfig(uint32_t RDPKeyType, uint32_t RDPKey1, uin
   *
   * @retval HAL Status
   */
-HAL_StatusTypeDef HAL_FLASHEx_Erase(FLASH_EraseInitTypeDef *pEraseInit, uint32_t *PageError)
+HAL_StatusTypeDef HAL_FLASHEx_Erase(const FLASH_EraseInitTypeDef *pEraseInit, uint32_t *PageError)
 {
   HAL_StatusTypeDef status;
   uint32_t page_index;
@@ -525,7 +525,7 @@ void HAL_FLASHEx_OBGetConfig(FLASH_OBProgramInitTypeDef *pOBInit)
   *
   * @retval HAL Status
   */
-HAL_StatusTypeDef HAL_FLASHEx_ConfigBBAttributes(FLASH_BBAttributesTypeDef *pBBAttributes)
+HAL_StatusTypeDef HAL_FLASHEx_ConfigBBAttributes(const FLASH_BBAttributesTypeDef *pBBAttributes)
 {
   HAL_StatusTypeDef status;
   uint8_t index;

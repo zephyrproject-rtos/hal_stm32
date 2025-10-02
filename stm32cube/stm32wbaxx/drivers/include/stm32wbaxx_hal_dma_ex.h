@@ -540,12 +540,12 @@ typedef struct
 #define QUEUE_TYPE_STATIC               (0x0000U) /* DMA channel static queue              */
 #define QUEUE_TYPE_DYNAMIC              (0x0001U) /* DMA channel dynamic queue             */
 
-#define NODE_CTR1_DEFAULT_OFFSET        (0x0000U) /* CTR1 default offset                   */
-#define NODE_CTR2_DEFAULT_OFFSET        (0x0001U) /* CTR2 default offset                   */
-#define NODE_CBR1_DEFAULT_OFFSET        (0x0002U) /* CBR1 default offset                   */
-#define NODE_CSAR_DEFAULT_OFFSET        (0x0003U) /* CSAR default offset                   */
-#define NODE_CDAR_DEFAULT_OFFSET        (0x0004U) /* CDAR default offset                   */
-#define NODE_CLLR_LINEAR_DEFAULT_OFFSET (0x0005U) /* CLLR linear addressing default offset */
+#define NODE_CTR1_DEFAULT_OFFSET        (0x0000UL) /* CTR1 default offset                   */
+#define NODE_CTR2_DEFAULT_OFFSET        (0x0001UL) /* CTR2 default offset                   */
+#define NODE_CBR1_DEFAULT_OFFSET        (0x0002UL) /* CBR1 default offset                   */
+#define NODE_CSAR_DEFAULT_OFFSET        (0x0003UL) /* CSAR default offset                   */
+#define NODE_CDAR_DEFAULT_OFFSET        (0x0004UL) /* CDAR default offset                   */
+#define NODE_CLLR_LINEAR_DEFAULT_OFFSET (0x0005UL) /* CLLR linear addressing default offset */
 
 #define DMA_BURST_ADDR_OFFSET_MIN       (-8192L)  /* DMA burst minimum address offset      */
 #define DMA_BURST_ADDR_OFFSET_MAX       (8192L)   /* DMA burst maximum address offset      */

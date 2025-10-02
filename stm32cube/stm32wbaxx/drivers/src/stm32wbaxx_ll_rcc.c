@@ -41,7 +41,7 @@
 /** @addtogroup RCC_LL_Private_Macros
   * @{
   */
-#if defined(STM32WBA62xx) || defined(STM32WBA63xx) || defined(STM32WBA64xx) || defined(STM32WBA65xx)
+#if defined(STM32WBA62xx) || defined(STM32WBA63xx) || defined(STM32WBA64xx) || defined(STM32WBA65xx) || defined (STM32WBA6Mxx)
 #if defined(USART2)
 #define IS_LL_RCC_USART2_CLKSOURCE(__VALUE__) ((__VALUE__) == LL_RCC_USART2_CLKSOURCE)
 #else
