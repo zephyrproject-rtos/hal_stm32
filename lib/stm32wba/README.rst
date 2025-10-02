@@ -137,9 +137,10 @@ License Link:
    opensource.org/license/mit
 
 Patch List:
-        * Discard "static" implementation of ll_sys_bg_temperature_measurement_init to allow specific zephyr implementation
-          Impacted file: ll_sys_if.c
-                         ll_sys.h
+
+   * Discard "static" implementation of ll_sys_bg_temperature_measurement_init to allow specific zephyr implementation
+      Impacted file: ll_sys_if.c
+                     ll_sys.h
 
 	* Enabled extended advertising in CFG_BLE_OPTIONS:
 	  Impacted file: app_conf.h
