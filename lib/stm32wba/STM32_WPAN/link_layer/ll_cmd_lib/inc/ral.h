@@ -1,4 +1,4 @@
-/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/2.00a-lca01/firmware/public_inc/ral.h#1 $*/
+/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/2.00a-lca03/firmware/public_inc/ral.h#1 $*/
 /**
  ********************************************************************************
  * @file    ral.h
@@ -9,28 +9,36 @@
  *
  ******************************************************************************
  * @copy
+ * This Synopsys DWC Bluetooth Low Energy Combo Link Layer/MAC software and
+ * associated documentation ( hereinafter the "Software") is an unsupported
+ * proprietary work of Synopsys, Inc. unless otherwise expressly agreed to in
+ * writing between Synopsys and you. The Software IS NOT an item of Licensed
+ * Software or a Licensed Product under any End User Software License Agreement
+ * or Agreement for Licensed Products with Synopsys or any supplement thereto.
+ * Synopsys is a registered trademark of Synopsys, Inc. Other names included in
+ * the SOFTWARE may be the trademarks of their respective owners.
+ *
  * Synopsys MIT License:
  * Copyright (c) 2020-Present Synopsys, Inc
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of the software and
- * associated documentation files (the “Software”), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
- * of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
- * following conditions:
- * 
- * The above copyright notice and this permission notice shall be included in all copies or substantial
- * portions of the Software.
- * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * the Software), to deal in the Software without restriction, including without
+ * limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom
+ * the Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
  * THIS SOFTWARE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING, BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
- * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT, OR OTHERWISE
- * ARISING FROM, OUT OF, OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
- * OTHER DEALINGS IN THE SOFTWARE.
+ * FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT, OR OTHERWISE ARISING FROM,
+ * OUT OF, OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * */
-
+ 
 #ifndef INCLUDE_RAL_H_
 #define INCLUDE_RAL_H_
 
@@ -122,6 +130,9 @@ typedef enum ral_error_enum {
 #if SUPPORT_ANT_DIV
 	RAL_ERROR_AD_NOT_IN_CONFIG_STATE,
 #endif /* SUPPORT_ANT_DIV */
+#if SUPPORT_CONFIG_LIB
+	RAL_ERROR_CONFIG_LIB_NOT_IN_CONFIG_STATE,
+#endif /* SUPPORT_CONFIG_LIB */
     RAL_ERROR_GENERIC = 255
 } ral_error_enum_t;
 
@@ -167,6 +178,18 @@ typedef enum ral_ack_type_enum {
 #endif
 	RAL_ACK_MAC
 } ral_ack_type_enum_t;
+#if SUPPORT_CONFIG_LIB
+/* @brief: Define configurable library states:
+ *
+ * CONFIGURABLE    : includes pre-initialization and post-reset states.
+ * NOT_CONIFUGRABLE: includes post-initialization and running states.
+ * */
+typedef enum config_lib_state_enum {
+	NOT_CONFIGURED_NOT_INITIALIZED, // initial state
+	CONFIGURED_NOT_INITIALIZED, 	// the state of post-reset or configuring using API
+	CONFIGURED_INITIALIZED			// post-initialization state
+} config_lib_state_enum_t;
+#endif /* SUPPORT_CONFIG_LIB */
 /* @brief: Define ral time structure that contains fine and base */
 typedef ble_time_t ral_time_st;
 
@@ -180,6 +203,7 @@ typedef ble_time_t ral_time_st;
 typedef struct _ral_pkt_st {
 	uint8_t * ptr_pyld;						/* pointer to packet */
 	ral_time_st time_stamp;					/* exact time in which the packet transmitted/received */
+	uint16_t num_ov_cycles;					/* variable to store the number of cycles the  overflow when packet is received*/
 	uint16_t pyld_len;						/* packet length */
 	uint8_t channel;						/* channel at which the packet will be transmitted */
 	uint8_t rxchannelaftertxdone;			/* The RX channel after frame TX is done (after all frame retries - ack received, or timeout, or abort).*/
@@ -194,7 +218,8 @@ typedef struct _ral_pkt_st {
 #endif
         	int8_t tx_power;				/* power of transmitted packet */
         	uint8_t last_tx_pkt;			/* last transmitted packet flag */
-        	uint8_t csl_frame;			   /* True only if the current TX frame is a CSL frame */
+        	uint8_t csl_frame;			    /* True only if the current TX frame is a CSL frame */
+        	uint8_t is_poll_req;		    /* True only if the current TX frame is a Poll reuest frame */
         } tx_info;
 
         struct
@@ -603,6 +628,16 @@ extern llhwc_mac_evnt_info_mem_t* g_mac_event_info;
  * @retval ral instance associated to this context that should be used with any ral interface
  */
 ral_instance_t ral_init(ral_cbk_dispatch_tbl_st * ptr_cbk_dispatch_tbl);
+/**
+ *
+ *
+ * @brief	radio abstraction layer reset
+ *
+ * @param   ral_instance : [in] current RAL instance
+ *
+ * @retval None
+ */
+void ral_reset(ral_instance_t ral_instance);
 
 /**
  *
@@ -781,7 +816,7 @@ ral_error_enum_t ral_set_ifs(ral_instance_t ral_instance, uint16_t ifs);
  * @param   ral_instance 	  : [in] ral instance
  * @param   pkt_src 	 	  : [in] transmission packet source, FIFO based or Packet based
  * @param   ptr_pkt 	 	  : [in] pointer to transmitted packet if packet source is Packet based only
- * @param   ptr_start_time 	  : [in] pointer to start time structure which contains start time of transmission
+ * @param   ptr_start_time 	  : [in] pointer to start time structure which contains start time of transmission (SFD of packet)
  * 									 if NULL function will use the current time get from llhwc_slptmr_get
  * @param   periodic_interval : [in] periodic interval in microsecond, 0 means not periodic
  * @param   ptr_coex_info 	  : [in] pointer to current coexistence parameters
@@ -926,7 +961,7 @@ ral_error_enum_t ral_set_cont_recp_state(ral_instance_t ral_instance, ral_state_
  */
 ral_error_enum_t ral_set_auto_sleep_state(ral_instance_t ral_instance, ral_state_enum_t auto_sleep_state);
 /**
- * @brief	This function used to get the state of automatic switching to sleep mode
+ * @brief	This function used to get the state of automatic switching to sleep mode 
  *
  * @param   ral_instance 	 : [in] ral instance
  *
@@ -1275,12 +1310,13 @@ void ral_set_ot_base_slp_time_value(uint32_t time);
 uint64_t ral_get_ot_base_slp_time_value(void);
 /**
  * @brief  Convert the value of sleep timer to openthread time
- * @param  time [in]      : sleep timer value to be converted to openthread time
+ * @param  time [in]      			 : sleep timer value to be converted to openthread time
+ * @param  num_of_overflow [in]      : number of overflow cycles to be added
  * @note if openthread is not integrated, @ref ral_ot_base_slp_time  is set to zero, no conversion will take place
  * @retval uint64_t. the converted time value
  */
 
-uint64_t ral_cnvert_slp_tim_to_ot_tim(uint32_t time);
+uint64_t ral_cnvert_slp_tim_to_ot_tim(uint32_t time, uint16_t num_of_overflow);
 /**
  * @brief  Convert the value of  openthread time to sleep timer value
  * @param  time [in]      : openthread time value to be converted to sleep timer
@@ -1448,10 +1484,11 @@ uint8_t radio_get_cca_en(void);
  *
  * @param   evnt_type     	: [in] type of new retry (CONTINUE_CSMA_RETRY , START_NEW_FULL_TX_RETRY)
  * @param   radio_error	    : [in] error returned from previous TX trial
+ * @param   is_tx_blocked	: [in] flag to indicate that TX event is blocked
  *
  * @retval None .
  */
-void radio_set_tx_retry_pending(tx_new_retry_enum_t evnt_type, otError radio_error);
+void radio_set_tx_retry_pending(tx_new_retry_enum_t evnt_type, otError radio_error, uint8_t is_tx_blocked);
 /**
  *
  * @brief   handle pending tx retry event
@@ -1498,8 +1535,50 @@ void ral_set_implicitbroadcast(ral_instance_t ral_instance, uint8_t ImplicitBroa
  * @retval void
  */
 void ed_timer_hndl(void* ptr_info);
+#if SUPPORT_CONFIG_LIB
+/**
+ * @fn ral_set_config_lib_params
+ *
+ * @brief	set configurable library parameters
+ *
+ * @param   ptr_config_lib_params : [in] pointer to configurable library parameters structure
+ *
+ * @retval RAL_ERROR_NONE if configurable library parameters are set correctly
+ */
+ral_error_enum_t ral_set_config_lib_params(config_lib_st* ptr_config_lib_params);
+/**
+ * @fn ral_get_config_lib_params
+ *
+ * @brief	get configurable library parameters
+ *
+ * @param   ptr_config_lib_params : [out] pointer to configurable library parameters structure
+ *
+ * @retval void
+ */
+void ral_get_config_lib_params(config_lib_st* ptr_config_lib_params);
+/**
+ * @fn ral_set_rtl_polling_time
+ *
+ * @brief	set RTL polling time
+ *
+ * @param   rtl_polling_time : [in] RTL polling time
+ *
+ * @retval void
+ */
+void ral_set_rtl_polling_time(uint8_t rtl_polling_time);
 
-#if SUPPORT_MAC_PHY_CONT_TESTING_CMDS
+/**
+ * @fn ral_get_rtl_polling_time
+ *
+ * @brief	get current RTL polling time
+ *
+ * @param  None
+ *
+ * @retval current RTL polling time
+ */
+uint8_t ral_get_rtl_polling_time(void);
+#endif /* SUPPORT_CONFIG_LIB */
+#if SUPPORT_MAC_CONT_TESTING_CMDS_PHY_SUPPORT
 /**
  *
  * @brief set the phy continuous modulation and continuous wave modes
@@ -1519,7 +1598,8 @@ void ed_timer_hndl(void* ptr_info);
  * @retval Status
  */
 void ral_phy_set_zigbee_phy_cont_test_mode(ral_instance_t instance, uint8_t type, uint8_t enable_mode, uint8_t chnl_num, int8_t tx_pwr);
-#endif /*end of SUPPORT_MAC_PHY_CONT_TESTING_CMDS */
+#endif /*end of SUPPORT_MAC_CONT_TESTING_CMDS_PHY_SUPPORT */
+
 
 #if SUPPORT_A_MAC
 /**
@@ -1536,6 +1616,19 @@ void ral_phy_set_zigbee_phy_cont_test_mode(ral_instance_t instance, uint8_t type
  */
 ral_error_enum_t ral_get_a_mac_params(ral_instance_t ral_instance,ral_a_mac_params_st* a_mac_params);
 #endif /*SUPPORT_A_MAC*/
+/**
+ *
+ * @fn ral_set_drop_on_error
+ *
+ * @brief   set value for drop on error flag
+ *
+ * @param   ral_instance  : [in] ral instance
+ *
+ * @param   drop_on_error : [in] value for drop on error flag
+ *
+ * @retval None
+ */
+void ral_set_drop_on_error(ral_instance_t ral_instance, uint8_t drop_on_error);
 
 #endif /* INCLUDE_RAL_H_ */
 /**

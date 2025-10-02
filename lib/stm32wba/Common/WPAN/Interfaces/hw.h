@@ -20,6 +20,7 @@
 #define HW_H__
 
 #include "stm32wbaxx.h"
+#include "app_conf.h"
 
 /* ---------------------------------------------------------------------------
  *                               General
@@ -360,7 +361,7 @@ extern void HW_PKA_P256_ReadEccScalarMul( uint32_t* p_x,
  * Thus, the function HW_RNG_Process() must be called regularly in background
  * loop to generate a pool of random numbers. The function HW_RNG_Get() reads
  * the random numbers from the pool.
- * The size of the pool must be configured with CFG_HW_RNG_POOL_SIZE.
+ * The size of the pool must be configured with HW_RNG_POOL_SIZE.
  */
 
 /* Error codes definition for HW_RNG return values */
@@ -370,6 +371,11 @@ enum
   HW_RNG_NOISE_ERROR = CFG_HW_ERROR_OFFSET + 0x102,
   HW_RNG_UFLOW_ERROR = CFG_HW_ERROR_OFFSET + 0x103,
 };
+
+/* RNG pool size */
+#define HW_RNG_POOL_SIZE                        (CFG_HW_RNG_POOL_SIZE)
+/* Default threshold to refill RNG pool */
+#define HW_RNG_POOL_DEFAULT_THRESHOLD           (12)
 
 /* RNG_KERNEL_CLK_ON
  *
@@ -440,6 +446,20 @@ extern void HW_RNG_EnableClock( uint8_t user_mask );
 extern void HW_RNG_DisableClock( uint8_t user_mask );
 
 extern void HWCB_RNG_Process( void );
+
+/*
+ * HW_RNG_Init
+ *
+ * This function initializes RNG (clock, configuration ...)
+ */
+extern void HW_RNG_Init(void);
+
+/*
+ * HW_RNG_Init
+ *
+ * Sets RNG pool threshold (for refill)
+ */
+extern void HW_RNG_SetPoolThreshold(uint8_t threshold);
 
 /* ---------------------------------------------------------------------------
  *                               GPIO

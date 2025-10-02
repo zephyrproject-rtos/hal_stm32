@@ -30,6 +30,7 @@ if(CONFIG_IEEE802154_STM32WBA)
   zephyr_sources(Common/WPAN/Modules/BasicAES/baes_ccm.c)
   zephyr_sources(Common/WPAN/Modules/BasicAES/baes_cmac.c)
   zephyr_sources(Common/WPAN/Modules/BasicAES/baes_ecb.c)
+  zephyr_sources(Common/WPAN/Interfaces/hw_aes.c)
 endif()
 
 set(STM32WBA_LIB_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../zephyr/blobs/stm32wba/lib)
@@ -86,7 +87,12 @@ endif()
 
 # Selecting the proper version of link layer lib
 if(CONFIG_BT_STM32WBA)
-  # Checking all the soc variants and not simply relying on board name 
+  if(BLE_LIB_TYPE STREQUAL "BLE_LIB_BASIC")
+      zephyr_include_directories(STM32_WPAN/link_layer/ll_cmd_lib/config/ble_basic)
+  elseif(BLE_LIB_TYPE STREQUAL "BLE_LIB_FULL")
+      zephyr_include_directories(STM32_WPAN/link_layer/ll_cmd_lib/config/ble_full)
+  endif()
+  # Checking all the soc variants and not simply relying on board name
   if(CONFIG_SOC_STM32WBA65XX)
     message(STATUS "STM32WBA6 link layer lib selected")
     if (BLE_LIB_TYPE STREQUAL "BLE_LIB_BASIC")

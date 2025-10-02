@@ -7,7 +7,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2025 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -17,17 +17,17 @@
   ******************************************************************************
   */
 /* USER CODE END Header */
-#include <zephyr/logging/log.h>
-#include "ll_intf.h"
+
+#include "main.h"
+#include "app_common.h"
+#include "app_conf.h"
+#include "log_module.h"
 #include "ll_intf_cmn.h"
 #include "ll_sys.h"
 #include "ll_sys_if.h"
+#include "platform.h"
 #include "utilities_common.h"
-#ifndef __ZEPHYR__
-#if (USE_TEMPERATURE_BASED_RADIO_CALIBRATION == 1)
-#include "temp_measurement.h"
-#endif /* (USE_TEMPERATURE_BASED_RADIO_CALIBRATION == 1) */
-#endif /*__ZEPHYR__*/
+
 /* Private defines -----------------------------------------------------------*/
 /* Radio event scheduling method - must be set at 1 */
 #define USE_RADIO_LOW_ISR                   (1)
@@ -53,7 +53,6 @@
 /* USER CODE END PV */
 
 /* Global variables ----------------------------------------------------------*/
-
 /* USER CODE BEGIN GV */
 
 /* USER CODE END GV */
@@ -211,4 +210,8 @@ void ll_sys_sleep_clock_source_selection(void)
   ll_intf_cmn_le_select_slp_clk_src((uint8_t)linklayer_slp_clk_src, &freq_value);
 }
 
-
+void ll_sys_set_rtl_polling_time(uint8_t rtl_polling_time)
+{
+  /* first parameter otInstance *aInstance is unused */
+  radio_set_rtl_polling_time(NULL, rtl_polling_time);
+}

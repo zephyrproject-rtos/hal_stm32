@@ -97,23 +97,32 @@
  *   mentioned parameters.
 */
 #if (PERIPHERAL_ONLY != 0)
-#define BLE_FIXED_BUFFER_SIZE_BYTES  4   /* Peripheral Only */
+#define BLE_FIXED_BUFFER_SIZE_BYTES     4   /* Peripheral Only */
 #elif (BASIC_FEATURES != 0)
-#define BLE_FIXED_BUFFER_SIZE_BYTES  260   /* Basic Features */
+#define BLE_FIXED_BUFFER_SIZE_BYTES   260   /* Basic Features */
 #else
-#define BLE_FIXED_BUFFER_SIZE_BYTES  676   /* Full stack / Basic Plus */
+#define BLE_FIXED_BUFFER_SIZE_BYTES   516   /* Full stack / Basic Plus */
 #endif
 
 /*
  * BLE_PER_LINK_SIZE_BYTES: additional memory size used per link
  */
-
 #if (PERIPHERAL_ONLY != 0)
 #define BLE_PER_LINK_SIZE_BYTES       148   /* Peripheral Only */
 #elif (BASIC_FEATURES != 0)
 #define BLE_PER_LINK_SIZE_BYTES       176   /* Basic Features */
 #else
-#define BLE_PER_LINK_SIZE_BYTES       188   /* Full stack / Basic Plus */
+#define BLE_PER_LINK_SIZE_BYTES       192   /* Full stack / Basic Plus */
+#endif
+
+/*
+ * BLE_PER_ADD_BEARER_SIZE_BYTES: additional memory size used per add. bearer
+ */
+
+#if (BASIC_FEATURES | PERIPHERAL_ONLY | LL_ONLY | LL_ONLY_BASIC)
+#define BLE_PER_ADD_BEARER_SIZE_BYTES   0
+#else
+#define BLE_PER_ADD_BEARER_SIZE_BYTES  40   /* Full stack / Basic Plus */
 #endif
 
 /*
@@ -122,13 +131,16 @@
  * whose size depends on the number of supported connections.
  *
  * @param n_link: Maximum number of simultaneous connections that the device
- * will support. Valid values are from 1 to 8.
+ * will support. Valid values are from 1 to 20.
  *
  * @param mblocks_count: Number of memory blocks allocated for packets.
+ *
+ * @param n_add_bearer: Number of additional EATT bearers
  */
-#define BLE_TOTAL_BUFFER_SIZE(n_link, mblocks_count) \
+#define BLE_TOTAL_BUFFER_SIZE(n_link, mblocks_count, n_add_bearer) \
         (16 + BLE_FIXED_BUFFER_SIZE_BYTES + \
          (BLE_PER_LINK_SIZE_BYTES * (n_link)) + \
+         (BLE_PER_ADD_BEARER_SIZE_BYTES * (n_add_bearer)) + \
          ((BLE_MEM_BLOCK_SIZE + 8) * (mblocks_count)))
 
 /*

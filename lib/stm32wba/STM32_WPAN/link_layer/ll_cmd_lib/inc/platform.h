@@ -1,4 +1,4 @@
-/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/2.00a-lca01/firmware/public_inc/platform.h#1 $*/
+/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/2.00a-lca03/firmware/public_inc/platform.h#1 $*/
 /**
  ********************************************************************************
  * @file    platform.h
@@ -15,10 +15,10 @@
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
  * of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
  * following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in all copies or substantial
  * portions of the Software.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING, BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT. IN NO EVENT SHALL
@@ -464,7 +464,7 @@ void radio_run_phy_clbr_on_temp_change(void);
  */
 otError radio_set_dp_slp_mode(dpslp_state_e dp_slp_mode);
 #endif /*end of (!SUPPORT_COEXISTENCE)*/
-#if SUPPORT_MAC_PHY_CONT_TESTING_CMDS
+#if SUPPORT_MAC_CONT_TESTING_CMDS_PHY_SUPPORT
 /**
  *
  * @brief set the phy continuous modulation and continuous wave modes upon enable
@@ -476,7 +476,7 @@ otError radio_set_dp_slp_mode(dpslp_state_e dp_slp_mode);
  * @retval Status
  */
 otError platform_zigbee_set_phy_cont_modul_mode(uint8_t type, uint8_t enable_mode, uint8_t chnl_num, int8_t pwr);
-#endif /*end of SUPPORT_MAC_PHY_CONT_TESTING_CMDS */
+#endif /*end of SUPPORT_MAC_CONT_TESTING_CMDS_PHY_SUPPORT */
 #if SUPPORT_ANT_DIV
 /**
  *
@@ -528,6 +528,35 @@ otError radio_set_default_ant_id(otInstance *aInstance, uint8_t default_ant_id);
  */
 otError radio_set_ant_div_rssi_threshold(otInstance *aInstance, int8_t rssi_threshold);
 #endif /* SUPPORT_ANT_DIV */
+/**
+ *
+ * @brief set bus latency between thread core and radio platform
+ *
+ * @param	aInstance[in]	    : radio instance
+ * @param	bus_latency[in]		: Time in Us for latency between thread core and radio platform
+ * @retval None
+ */
+void otPlatRadioSetBusLatency(otInstance *aInstance, uint32_t bus_latency);
+#if SUPPORT_OPENTHREAD_1_2
+/**
+ *
+ * @brief   Set clock accuracy
+ *
+ * @param   clk_acc: [in] Value for clock accuracy in PPM
+ *
+ * @retval 	None .
+ */
+void radio_set_clk_accuracy(uint8_t clk_acc);
+/**
+ *
+ * @brief   Set clock uncertainty
+ *
+ * @param   clk_uncer: [in] Value for clock uncertainty in units of 10 us.
+ *
+ * @retval 	None .
+ */
+void radio_set_clk_uncertainty(uint8_t clk_uncer);
+#endif /*SUPPORT_OPENTHREAD_1_2*/
 
 #if SUPPORT_CONFIGURABLE_GAIN_FIX
 /**
@@ -548,6 +577,62 @@ void radio_gain_fix_init(
 		uint8_t r_msur_percent);
 
 #endif /* SUPPORT_CONFIGURABLE_GAIN_FIX */
+#if SUPPORT_CONFIG_LIB
+/**
+ *
+ * @brief set configurable library parameters
+ *
+ * @param	ptr_config_lib_params[in]	: pointer to configurable library parameters structure
+ * @retval Status
+ */
+otError radio_set_config_lib_params(otInstance *aInstance, config_lib_st* ptr_config_lib_params);
+/**
+ *
+ * @brief get current configurable library parameters
+ *
+ * @param	aInstance[in]	            : radio instance
+ * @param	ptr_config_lib_params[out]	: pointer to configurable library parameters structure
+ * @retval None
+ */
+void radio_get_config_lib_params(otInstance *aInstance, config_lib_st* ptr_config_lib_params);
+
+/**
+ *
+ * @brief set RTL polling time
+ *
+ * @param	aInstance[in]	        : radio instance
+ * @param	rtl_polling_time[in]	: RTL polling time value
+ * @retval None
+ */
+void radio_set_rtl_polling_time(otInstance *aInstance, uint8_t rtl_polling_time);
+
+/**
+ *
+ * @brief get current RTL polling time
+ *
+ * @param	aInstance[in]	: radio instance
+ * @retval current RTL polling time
+ */
+uint8_t radio_get_rtl_polling_time(otInstance *aInstance);
+#endif /* SUPPORT_CONFIG_LIB */
+#if !SUPPORT_COEXISTENCE && DEFAULT_PHY_CALIBRATION_PERIOD
+/**
+ *
+ * @brief set phy calibration period
+ *
+ * @param	phy_clbr_evnt_period[in]	: phy calibration period
+ * @retval None
+ */
+void radio_set_phy_clbr_period(uint32_t phy_clbr_evnt_period);
+#endif /* !SUPPORT_COEXISTENCE && DEFAULT_PHY_CALIBRATION_PERIOD */
+#if SUPPORT_COEXISTENCE && RADIO_CSMA
+/**
+ * @brief  get minimum block counter of TX packet to increase priority to critical.
+ *
+ * @retval minimum block number of TX packets to be critical
+ */
+uint8_t radio_get_min_blck_cnt_to_be_critical(void);
+#endif /* SUPPORT_COEXISTENCE && RADIO_CSMA */
 
 #endif /* INCLUDE_PLATFORM_H_ */
 /**

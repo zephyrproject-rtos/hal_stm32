@@ -59,12 +59,12 @@ void ll_sys_disable_specific_irq(uint8_t isr_type)
   LINKLAYER_PLAT_DisableSpecificIRQ(isr_type);
 }
 
-void ll_sys_enable_os_context_switch(void)
+void ll_sys_phy_start_clbr(void)
 {
-  LINKLAYER_PLAT_EnableOSContextSwitch();
+  LINKLAYER_PLAT_PhyStartClbr();
 }
 
-void ll_sys_disable_os_context_switch(void)
+void ll_sys_phy_stop_clbr(void)
 {
-  LINKLAYER_PLAT_DisableOSContextSwitch();
+  LINKLAYER_PLAT_PhyStopClbr();
 }

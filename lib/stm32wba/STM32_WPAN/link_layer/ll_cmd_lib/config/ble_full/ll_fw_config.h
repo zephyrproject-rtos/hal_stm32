@@ -13,10 +13,10 @@
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
  * of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
  * following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in all copies or substantial
  * portions of the Software.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING, BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT. IN NO EVENT SHALL
@@ -119,31 +119,55 @@
 #endif /* SUPPORT_CSSA */
 
 #ifndef SUPPORT_LE_PAWR_ADVERTISER_ROLE
+#ifdef STM32WBA25xx
+#define SUPPORT_LE_PAWR_ADVERTISER_ROLE             1 /* Enable\Disable PAwR Advertiser role. Enable:1 - Disable:0 */
+#else
 #define SUPPORT_LE_PAWR_ADVERTISER_ROLE             0 /* Enable\Disable PAwR Advertiser role. Enable:1 - Disable:0 */
+#endif
 #endif /* SUPPORT_LE_PAWR_ADVERTISER_ROLE */
 
 #ifndef SUPPORT_LE_PAWR_SYNC_ROLE
+#ifdef STM32WBA25xx
+#define SUPPORT_LE_PAWR_SYNC_ROLE                   1 /* Enable\Disable PAwR Synchronizer role. Enable:1 - Disable:0 */
+#else
 #define SUPPORT_LE_PAWR_SYNC_ROLE                   0 /* Enable\Disable PAwR Synchronizer role. Enable:1 - Disable:0 */
+#endif
 #endif /* SUPPORT_LE_PAWR_SYNC_ROLE */
 
 #ifndef SUPPORT_CHANNEL_SOUNDING
-#define SUPPORT_CHANNEL_SOUNDING                                        0 /* Enable\Disable Channel Sounding Feature.   Enable:1 - Disable:0 */
+#define SUPPORT_CHANNEL_SOUNDING										0 /* Enable\Disable Channel Sounding Feature.   Enable:1 - Disable:0 */
 #endif /* SUPPORT_CHANNEL_SOUNDING */
 
 #ifndef SUPPORT_FRAME_SPACE_UPDATE
-#define SUPPORT_FRAME_SPACE_UPDATE                                      0 /* Enable\Disable Frame Space Update Feature. Enable:1 - Disable:0 */
+#ifdef STM32WBA25xx
+#define SUPPORT_FRAME_SPACE_UPDATE									1 /* Enable\Disable Frame Space Update Feature. Enable:1 - Disable:0 */
+#else
+#define SUPPORT_FRAME_SPACE_UPDATE									0 /* Enable\Disable Frame Space Update Feature. Enable:1 - Disable:0 */
+#endif
 #endif /* SUPPORT_FRAME_SPACE_UPDATE */
 
 #ifndef SUPPORT_EXT_FEATURE_SET
-#define SUPPORT_EXT_FEATURE_SET                                         0 /* Enable\Disable Extended Feature Set Exchange. Enable:1 - Disable:0 */
+#ifdef STM32WBA25xx
+#define SUPPORT_EXT_FEATURE_SET                     1 /* Enable\Disable Extended Feature Set Exchange. Enable:1 - Disable:0 */
+#else
+#define SUPPORT_EXT_FEATURE_SET                     0 /* Enable\Disable Extended Feature Set Exchange. Enable:1 - Disable:0 */
+#endif
 #endif /* SUPPORT_EXT_FEATURE_SET */
 
 #ifndef SUPPORT_ISO_UNSEG_MODE
-#define SUPPORT_ISO_UNSEG_MODE                                          0 /* Enable\Disable Unsegmented Mode for Framed ISO PDUs. Enable: 1 - Disable: 0*/
+#ifdef STM32WBA25xx
+#define SUPPORT_ISO_UNSEG_MODE                   		1 /* Enable\Disable Unsegmented Mode for Framed ISO PDUs. Enable: 1 - Disable: 0*/
+#else
+#define SUPPORT_ISO_UNSEG_MODE              				0 /* Enable\Disable Unsegmented Mode for Framed ISO PDUs. Enable: 1 - Disable: 0*/
+#endif
 #endif /* SUPPORT_ISO_UNSEG_MODE */
 
 #ifndef SUPPORT_LE_ADVERTISERS_MONITORING
-#define SUPPORT_LE_ADVERTISERS_MONITORING                               0 /* Enable\Disable Advertisers Monitoring Feature. Enable:1 - Disable:0 */
+#ifdef STM32WBA25xx
+#define SUPPORT_LE_ADVERTISERS_MONITORING       		1 /* Enable\Disable Advertisers Monitoring Feature. Enable:1 - Disable:0 */
+#else
+#define SUPPORT_LE_ADVERTISERS_MONITORING           0 /* Enable\Disable Advertisers Monitoring Feature. Enable:1 - Disable:0 */
+#endif
 #endif /* SUPPORT_LE_ADVERTISERS_MONITORING */
 
 /* Capabilities configurations */
@@ -155,6 +179,10 @@
 #define USE_NON_ACCURATE_32K_SLEEP_CLK              1 /* Allow to drive the sleep clock by sources other than the default crystal oscillator source.*/
                                                       /*LL can use crystal oscillator or RTC or RCO to drive the sleep clock.This selection is done via "DEFAULT_SLEEP_CLOCK_SOURCE" macro. */
 #endif /* USE_NON_ACCURATE_32K_SLEEP_CLK */
+
+#ifndef SUPPORT_CTE_DEGRADATION_API
+#define SUPPORT_CTE_DEGRADATION_API                 1 /* Enable\Disable CTE degradation API. Enable:1 - Disable:0 */
+#endif /* SUPPORT_CTE_DEGRADATION_API */
 
 /* Non-standard features configurations */
 #ifndef NUM_OF_CTSM_EMNGR_HNDLS
