@@ -74,4 +74,9 @@ Patch List:
      Impacted file: 
       stm32cube/stm32h5xx/drivers/src/stm32h5xx_hal_sdio.c   
 
+   *Fix warning about extraneous parentheses when compiling with clang
+     ST internal bug: 218364
+     Impacted files:
+      stm32cube/stm32h5xx/drivers/src/stm32h5xx_hal_rcc_ex.c
+
    See release_note.html from STM32Cube
