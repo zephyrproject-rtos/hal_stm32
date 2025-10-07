@@ -3510,7 +3510,7 @@ uint32_t HAL_RCCEx_GetPeriphCLKFreq(uint64_t PeriphClk)
           frequency = pll2_clocks.PLL2_Q_Frequency;
         }
 #if defined(RCC_USART2CLKSOURCE_PLL3Q)
-        else if ((srcclk == RCC_USART2CLKSOURCE_PLL3Q))
+        else if (srcclk == RCC_USART2CLKSOURCE_PLL3Q)
         {
           HAL_RCCEx_GetPLL3ClockFreq(&pll3_clocks);
           frequency = pll3_clocks.PLL3_Q_Frequency;
