@@ -51,6 +51,8 @@ Description:
       Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/config/ble_basic/ll_fw_config.h
       Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/config/ieee_15_4_basic/ll_fw_config.h
       Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/config/thread/ll_fw_config.h
+      Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/config/concurrent/ble_15_4/ll_fw_config.h
+      Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/config/concurrent/ble_full_15_4/ll_fw_config.h
       Middlewares/ST/STM32_WPAN/link_layer/ll_sys/inc/linklayer_plat.h
       Middlewares/ST/STM32_WPAN/link_layer/ll_sys/inc/ll_sys.h
       Middlewares/ST/STM32_WPAN/link_layer/ll_sys/src/ll_sys_cs.c
