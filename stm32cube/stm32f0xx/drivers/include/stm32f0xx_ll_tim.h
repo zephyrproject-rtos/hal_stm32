@@ -3969,6 +3969,19 @@ __STATIC_INLINE void LL_TIM_GenerateEvent_BRK(TIM_TypeDef *TIMx)
 }
 
 /**
+  * @brief  Get the capture/compare register address used for DMA transfer
+  * @rmtoll CCRx           CCRx            LL_TIM_CC_DMA_GetRegAddr
+  * @note   Address of Capture/Compare Register.
+  * @param  TIMx TIM Instance
+  * @retval Address of capture/compare register
+  */
+ __STATIC_INLINE uint32_t LL_TIM_CC_DMA_GetRegAddr(const TIM_TypeDef *TIMx, const uint32_t channel)
+ {
+   /* return address of CC register */
+   return ((uint32_t) &(TIMx->CCR1)) + (channel-1) * 4;
+ }
+
+/**
   * @}
   */
 

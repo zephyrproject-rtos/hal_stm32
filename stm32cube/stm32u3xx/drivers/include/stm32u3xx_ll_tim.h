@@ -6360,6 +6360,20 @@ ErrorStatus LL_TIM_BDTR_Init(TIM_TypeDef *TIMx, const LL_TIM_BDTR_InitTypeDef *T
   */
 #endif /* USE_FULL_LL_DRIVER */
 
+
+/**
+  * @brief  Get the capture/compare register address used for DMA transfer
+  * @rmtoll CCRx           CCRx            LL_TIM_CC_DMA_GetRegAddr
+  * @note   Address of Capture/Compare Register.
+  * @param  TIMx TIM Instance
+  * @retval Address of capture/compare register
+  */
+ __STATIC_INLINE uint32_t LL_TIM_CC_DMA_GetRegAddr(const TIM_TypeDef *TIMx, const uint32_t channel)
+ {
+   /* return address of CC register */
+   return ((uint32_t) &(TIMx->CCR1)) + (channel-1) * 4;
+ }
+
 /**
   * @}
   */
