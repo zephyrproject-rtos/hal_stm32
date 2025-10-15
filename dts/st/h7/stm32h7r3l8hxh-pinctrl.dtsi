@@ -1786,8 +1786,20 @@
 				slew-rate = "very-high-speed";
 			};
 
+			/omit-if-no-ref/ fmc_cle_pf5: fmc_cle_pf5 {
+				pinmux = <STM32_PINMUX('F', 5, AF10)>;
+				bias-pull-up;
+				slew-rate = "very-high-speed";
+			};
+
 			/omit-if-no-ref/ fmc_a17_pf6: fmc_a17_pf6 {
 				pinmux = <STM32_PINMUX('F', 6, AF12)>;
+				bias-pull-up;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ fmc_ale_pf6: fmc_ale_pf6 {
+				pinmux = <STM32_PINMUX('F', 6, AF10)>;
 				bias-pull-up;
 				slew-rate = "very-high-speed";
 			};

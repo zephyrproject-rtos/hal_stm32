@@ -1011,6 +1011,12 @@
 				slew-rate = "very-high-speed";
 			};
 
+			/omit-if-no-ref/ fmc_ale_pc8: fmc_ale_pc8 {
+				pinmux = <STM32_PINMUX('C', 8, AF11)>;
+				bias-pull-up;
+				slew-rate = "very-high-speed";
+			};
+
 			/omit-if-no-ref/ fmc_int_pc8: fmc_int_pc8 {
 				pinmux = <STM32_PINMUX('C', 8, AF10)>;
 				bias-pull-up;
@@ -1025,6 +1031,12 @@
 
 			/omit-if-no-ref/ fmc_ne2_pc8: fmc_ne2_pc8 {
 				pinmux = <STM32_PINMUX('C', 8, AF9)>;
+				bias-pull-up;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ fmc_cle_pc9: fmc_cle_pc9 {
+				pinmux = <STM32_PINMUX('C', 9, AF11)>;
 				bias-pull-up;
 				slew-rate = "very-high-speed";
 			};
@@ -1101,7 +1113,19 @@
 				slew-rate = "very-high-speed";
 			};
 
+			/omit-if-no-ref/ fmc_cle_pd11: fmc_cle_pd11 {
+				pinmux = <STM32_PINMUX('D', 11, AF12)>;
+				bias-pull-up;
+				slew-rate = "very-high-speed";
+			};
+
 			/omit-if-no-ref/ fmc_a17_pd12: fmc_a17_pd12 {
+				pinmux = <STM32_PINMUX('D', 12, AF12)>;
+				bias-pull-up;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ fmc_ale_pd12: fmc_ale_pd12 {
 				pinmux = <STM32_PINMUX('D', 12, AF12)>;
 				bias-pull-up;
 				slew-rate = "very-high-speed";

@@ -1730,7 +1730,19 @@
 				slew-rate = "very-high-speed";
 			};
 
+			/omit-if-no-ref/ fmc_cle_pd11: fmc_cle_pd11 {
+				pinmux = <STM32_PINMUX('D', 11, AF12)>;
+				bias-pull-up;
+				slew-rate = "very-high-speed";
+			};
+
 			/omit-if-no-ref/ fmc_a17_pd12: fmc_a17_pd12 {
+				pinmux = <STM32_PINMUX('D', 12, AF12)>;
+				bias-pull-up;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ fmc_ale_pd12: fmc_ale_pd12 {
 				pinmux = <STM32_PINMUX('D', 12, AF12)>;
 				bias-pull-up;
 				slew-rate = "very-high-speed";
