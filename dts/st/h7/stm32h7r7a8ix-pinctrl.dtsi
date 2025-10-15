@@ -1505,6 +1505,12 @@
 				slew-rate = "very-high-speed";
 			};
 
+			/omit-if-no-ref/ fmc_ale_pf6: fmc_ale_pf6 {
+				pinmux = <STM32_PINMUX('F', 6, AF10)>;
+				bias-pull-up;
+				slew-rate = "very-high-speed";
+			};
+
 			/omit-if-no-ref/ fmc_a18_pf7: fmc_a18_pf7 {
 				pinmux = <STM32_PINMUX('F', 7, AF12)>;
 				bias-pull-up;
