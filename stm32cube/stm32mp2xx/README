@@ -72,4 +72,13 @@ Patch List:
       stm32cube/stm32mp2xx/drivers/src/stm32mp2xx_hal_dcmipp.c
      Internal reference: 215688
 
+   *ethernet: Fix ETH_DMA_XXX definitions
+     On the Ethernet peripheral, there are two DMA channels.
+     As a consequence, the ETH_DMACSR_XXX definitions do not exist and
+     should be replaced by ETH_DMAC0SR_CDE and ETH_DMAC1SR_CDE.
+     The workaround is to replace ETH_DMACSR_XXX with ETH_DMAC0SR_XXX.
+     Impacted file:
+      stm32cube/stm32mp13xx/drivers/include/stm32mp13xx_hal_eth.h
+     Internal reference: 220075
+
    See release_note.html from STM32Cube
