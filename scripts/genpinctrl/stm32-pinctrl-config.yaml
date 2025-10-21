@@ -167,6 +167,9 @@
 - name: LTDC
   match: "^LTDC_(?:DE|CLK|HSYNC|VSYNC|R[0-7]|G[0-7]|B[0-7])$"
 
+- name: LPTIM
+  match: "^LPTIM[1-6]_(IN[1-2]|CH[1-2]|ETR|OUT)$"
+
 - name: OCTOSPI
   match: "^OCTOSPI(.*)(?:CLK|NCS|DQS|IO[0-7])$"
   slew-rate: very-high-speed
