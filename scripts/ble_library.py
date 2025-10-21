@@ -43,6 +43,8 @@ ble_transparent_mode_app_path = "Projects/NUCLEO-WBA65RI/Applications/BLE/" \
                                 + "BLE_TransparentMode"
 zigbee_onoff_client_sed_app_path = "Projects/NUCLEO-WBA65RI/Applications/Zigbee/" \
                                 + "Zigbee_OnOff_Client_SED"
+ble_heartrate_zigbee_app_path = "Projects/NUCLEO-WBA65RI/Applications/BLE_Zigbee/" \
+                                + "BLE_HeartRate_Zigbee"
 file_list_wba = {
     "STM32_WPAN": [
         "Middlewares/ST/STM32_WPAN/ble/stack/include/auto/ble_types.h",
@@ -72,6 +74,10 @@ file_list_wba = {
         + "ll_fw_config.h",
         "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/config/thread/"
         + "ll_fw_config.h",
+        "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/config/concurrent/"
+        + "ble_15_4/ll_fw_config.h",
+        "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/config/concurrent/"
+        + "ble_full_15_4/ll_fw_config.h",
         "Middlewares/ST/STM32_WPAN/ble/stack/include/ble_bufsize.h",
         "Middlewares/ST/STM32_WPAN/ble/stack/include/ble_const.h",
         "Middlewares/ST/STM32_WPAN/ble/stack/include/ble_defs.h",
@@ -114,6 +120,19 @@ file_list_wba = {
         zigbee_onoff_client_sed_app_path + "/STM32_WPAN/Target/linklayer_plat.c",
         zigbee_onoff_client_sed_app_path + "/STM32_WPAN/Target/ll_sys_if.c",
         zigbee_onoff_client_sed_app_path + "/STM32_WPAN/Target/ll_sys_if.h",
+    ],
+    "concurrent": [
+        ble_heartrate_zigbee_app_path + "/Core/Inc/app_common.h",
+        ble_heartrate_zigbee_app_path + "/Core/Inc/app_conf.h",
+        ble_heartrate_zigbee_app_path + "/Core/Inc/app_entry.h",
+        ble_heartrate_zigbee_app_path + "/Core/Inc/utilities_conf.h",
+        ble_heartrate_zigbee_app_path + "/Core/Inc/main.h",
+        ble_heartrate_zigbee_app_path + "/System/Config/Debug_GPIO/debug_config.h",
+        ble_heartrate_zigbee_app_path + "/System/Config/Log/log_module_conf.h",
+        ble_heartrate_zigbee_app_path + "/STM32_WPAN/Target/power_table.c",
+        ble_heartrate_zigbee_app_path + "/STM32_WPAN/Target/linklayer_plat.c",
+        ble_heartrate_zigbee_app_path + "/STM32_WPAN/Target/ll_sys_if.c",
+        ble_heartrate_zigbee_app_path + "/STM32_WPAN/Target/ll_sys_if.h",
     ],
     "Common": [
         "Projects/Common/WPAN/Modules/Flash/rf_timing_synchro.c",

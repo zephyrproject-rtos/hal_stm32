@@ -51,6 +51,8 @@ Description:
       Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/config/ble_basic/ll_fw_config.h
       Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/config/ieee_15_4_basic/ll_fw_config.h
       Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/config/thread/ll_fw_config.h
+      Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/config/concurrent/ble_15_4/ll_fw_config.h
+      Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/config/concurrent/ble_full_15_4/ll_fw_config.h
       Middlewares/ST/STM32_WPAN/link_layer/ll_sys/inc/linklayer_plat.h
       Middlewares/ST/STM32_WPAN/link_layer/ll_sys/inc/ll_sys.h
       Middlewares/ST/STM32_WPAN/link_layer/ll_sys/src/ll_sys_cs.c
@@ -137,9 +139,10 @@ License Link:
    opensource.org/license/mit
 
 Patch List:
-        * Discard "static" implementation of ll_sys_bg_temperature_measurement_init to allow specific zephyr implementation
-          Impacted file: ll_sys_if.c
-                         ll_sys.h
+
+   * Discard "static" implementation of ll_sys_bg_temperature_measurement_init to allow specific zephyr implementation
+      Impacted file: ll_sys_if.c
+                     ll_sys.h
 
 	* Enabled extended advertising in CFG_BLE_OPTIONS:
 	  Impacted file: app_conf.h
