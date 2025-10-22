@@ -57,10 +57,6 @@ Patch List:
      If the CTXT bit is set in the context descriptor then extract the timestamps
      ST internal bug : 161504
 
-   *Fix to remove PAGESIZE definition which conflicts with POSIX
-    Impacted files:
-     drivers/include/Legacy/stm32_hal_legacy.h
-
    *Fix SDIO initialization failure when skipping card identification sequence
      Fixes an issue in the STM32H5 SDIO driver where HAL_SDIO_Init() fails if
      the card identification sequence is skipped.
