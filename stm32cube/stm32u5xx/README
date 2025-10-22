@@ -44,10 +44,6 @@ Patch List:
     -Added stm32cube/stm32u5xx/drivers/include/stm32_assert.h
     -Removed unused stm32cube/stm32u5xx/drivers/include/stm32_assert_template.h
 
-   *Fix to remove PAGESIZE definition which conflicts with POSIX
-    Impacted files:
-     drivers/include/Legacy/stm32_hal_legacy.h
-
    *Update HAL PCD and LL USB which used legacy definitions
     This enables compilation of the HAL PCD and the LL USB modules without the
     legacy header.
