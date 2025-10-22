@@ -129,6 +129,10 @@ foreach(series ${supported_series})
 	  )
 
     add_subdirectory(${cube_dir})
+
+    # Remember the series' name for next steps
+    # (in the format of CONFIG_SOC_SERIES_<xxx>)
+    set(TARGET_SERIES ${series_to_upper})
   endif()
 endforeach()
 
@@ -139,3 +143,45 @@ endif()
 
 # Add the series-agnostic LL headers to include directories
 zephyr_include_directories(common_ll/include)
+
+# Add placeholder for STM32Cube HAL Legacy definitions header
+#
+# The STM32Cube packages contain header "stm32_hal_legacy.h"
+# which provides aliases of old definitions that have been
+# changed/renamed for backwards compatibility. This is not
+# useful to Zephyr since the STM32 drivers are maintained
+# and never use "legacy" STM32Cube APIs or definitions.
+# More annoyingly, some definitions provided by the legacy
+# header alias with ones provided by Zephyr which results
+# in build failures. As such, we'd like to get rid of this
+# header whenever possible...
+#
+# Unfortunately, the "stm32XXXxx_hal_def.h" header contains:
+#
+#   #include "Legacy/stm32_hal_legacy.h"
+#
+# To ensure this directive does not cause a build failure
+# due to the legacy header no longer existing, we add a
+# carefully crafted directory to the include path such
+# that an empty header file is included by this directive.
+# We can then get rid of the legacy header entirely!
+#
+# ...except that HAL drivers of some series are using the
+# legacy definitions, so we keep an escape hatch for such
+# series even though their drivers are in the wrong.
+set(series_with_legacy_header
+  # Please provide a comment next to series name indicating
+  # which driver(s) are faulty and the ST Internal Reference
+  # used to track the issue.
+
+  STM32F7X # HAL RCC (ST Internal Reference: 220413)
+  STM32U5X # HAL PCD + LL USB
+)
+
+list(FIND series_with_legacy_header ${TARGET_SERIES} index)
+if(${index} EQUAL -1)
+  # Series without legacy header: add placeholder to include path
+  zephyr_include_directories(legacy_placeholder)
+else()
+  # Series with legacy header: it's already in the include path!
+endif()
