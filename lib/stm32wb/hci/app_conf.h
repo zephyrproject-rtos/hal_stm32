@@ -304,7 +304,9 @@
  * other bits: complete with Options_extension flag
  */
 /* Z-WB-3 */
+#ifndef __ZEPHYR__
 #define CFG_BLE_OPTIONS  (SHCI_C2_BLE_INIT_OPTIONS_LL_ONLY | SHCI_C2_BLE_INIT_OPTIONS_WITH_SVC_CHANGE_DESC | SHCI_C2_BLE_INIT_OPTIONS_DEVICE_NAME_RW | SHCI_C2_BLE_INIT_OPTIONS_NO_EXT_ADV | SHCI_C2_BLE_INIT_OPTIONS_NO_CS_ALGO2 | SHCI_C2_BLE_INIT_OPTIONS_FULL_GATTDB_NVM | SHCI_C2_BLE_INIT_OPTIONS_GATT_CACHING_NOTUSED | SHCI_C2_BLE_INIT_OPTIONS_POWER_CLASS_2_3)
+#endif
 
 /**
  * BLE stack Options_extension flags to be configured with:
@@ -319,7 +321,9 @@
  *          0: Enhanced ATT not supported
  * other bits: reserved (shall be set to 0)
  */
+#ifndef __ZEPHYR__
 #define CFG_BLE_OPTIONS_EXT  (SHCI_C2_BLE_INIT_OPTIONS_APPEARANCE_READONLY | SHCI_C2_BLE_INIT_OPTIONS_ENHANCED_ATT_NOTSUPPORTED)
+#endif
 
 #define CFG_BLE_MAX_COC_INITIATOR_NBR   (32)
 
@@ -332,8 +336,9 @@
 * in addition to the number of links
 *     - Range: 0 .. 4
 */
+#ifndef __ZEPHYR__
 #define CFG_BLE_MAX_ADD_EATT_BEARERS    (4)
-
+#endif
 
 /**
  * BLE Rx model configuration flags to be configured with:
@@ -353,8 +358,9 @@
  * on Max Extended advertising configuration supported.
  * This parameter is considered by the CPU2 when CFG_BLE_OPTIONS has SHCI_C2_BLE_INIT_OPTIONS_EXT_ADV flag set
  */
-
+#ifndef __ZEPHYR__
 #define CFG_BLE_MAX_ADV_SET_NBR     (3)
+#endif
 
  /* Maximum advertising data length (in bytes)
  * Range: 31 .. 1650 with limitation:
@@ -362,8 +368,9 @@
  * on Max Extended advertising configuration supported.
  * This parameter is considered by the CPU2 when CFG_BLE_OPTIONS has SHCI_C2_BLE_INIT_OPTIONS_EXT_ADV flag set
  */
-
+#ifndef __ZEPHYR__
 #define CFG_BLE_MAX_ADV_DATA_LEN    (1650)
+#endif
 
  /* RF TX Path Compensation Value (16-bit signed integer). Units: 0.1 dB.
   * Range: -1280 .. 1280
