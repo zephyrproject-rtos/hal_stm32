@@ -44,22 +44,18 @@ Patch List:
     -Added stm32cube/stm32h7rsxx/drivers/include/stm32_assert.h
     -Removed unused stm32cube/stm32h7rsxx/drivers/include/stm32_assert_template.h
 
-   *Fix to remove PAGESIZE definition which conflicts with POSIX
-    Impacted files:
-     drivers/include/Legacy/stm32_hal_legacy.h
-
    *Fix SDIO initialization failure when skipping card identification sequence
      Fixes an issue in the STM32H7RS SDIO driver where HAL_SDIO_Init() fails if
      the card identification sequence is skipped.
      Impacted files:
       stm32cube/stm32h7rsxx/drivers/src/stm32h7rsxx_hal_sdio.c
-    
+
    *Fix SDIO polling mode data transfer issues
-     Fixes two related issues in the STM32H7RS SDIO driver: incorrect block count calculation 
-     that caused the card to hang, and improper buffer size handling that led to misaligned FIFO writes. 
+     Fixes two related issues in the STM32H7RS SDIO driver: incorrect block count calculation
+     that caused the card to hang, and improper buffer size handling that led to misaligned FIFO writes.
      Together, these changes ensure correct and stable data transfer in polling mode.
-     Impacted file: 
-      stm32cube/stm32h7rsxx/drivers/src/stm32h7rsxx_hal_sdio.c    
+     Impacted file:
+      stm32cube/stm32h7rsxx/drivers/src/stm32h7rsxx_hal_sdio.c
 
    *Allow usage of HAL_DCMIPP_PIPE_SetConfig when DCMIPP is in READY state
      Allow performing PIPE configuration when the DCMIPP device is not only
