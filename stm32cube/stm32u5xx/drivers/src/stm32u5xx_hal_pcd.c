@@ -1118,7 +1118,7 @@ void HAL_PCD_IRQHandler(PCD_HandleTypeDef *hpcd)
 
       RegVal = USBx->GRXSTSP;
 
-      ep = &hpcd->OUT_ep[RegVal & USB_OTG_GRXSTSP_EPNUM];
+      ep = &hpcd->OUT_ep[RegVal & USB_OTG_GRXSTSP_EPNUM_CHNUM];
 
       if (((RegVal & USB_OTG_GRXSTSP_PKTSTS) >> 17) ==  STS_DATA_UPDT)
       {
@@ -1178,7 +1178,7 @@ void HAL_PCD_IRQHandler(PCD_HandleTypeDef *hpcd)
           /* Clear OUT Endpoint disable interrupt */
           if ((epint & USB_OTG_DOEPINT_EPDISD) == USB_OTG_DOEPINT_EPDISD)
           {
-            if ((USBx->GINTSTS & USB_OTG_GINTSTS_BOUTNAKEFF) == USB_OTG_GINTSTS_BOUTNAKEFF)
+            if ((USBx->GINTSTS & USB_OTG_GINTSTS_GONAKEFF) == USB_OTG_GINTSTS_GONAKEFF)
             {
               USBx_DEVICE->DCTL |= USB_OTG_DCTL_CGONAK;
             }
@@ -1296,7 +1296,7 @@ void HAL_PCD_IRQHandler(PCD_HandleTypeDef *hpcd)
     }
 
     /* Handle Resume Interrupt */
-    if (__HAL_PCD_GET_FLAG(hpcd, USB_OTG_GINTSTS_WKUINT))
+    if (__HAL_PCD_GET_FLAG(hpcd, USB_OTG_GINTSTS_WKUPINT))
     {
       /* Clear the Remote Wake-up Signaling */
       USBx_DEVICE->DCTL &= ~USB_OTG_DCTL_RWUSIG;
@@ -1320,7 +1320,7 @@ void HAL_PCD_IRQHandler(PCD_HandleTypeDef *hpcd)
 #endif /* USE_HAL_PCD_REGISTER_CALLBACKS */
       }
 
-      __HAL_PCD_CLEAR_FLAG(hpcd, USB_OTG_GINTSTS_WKUINT);
+      __HAL_PCD_CLEAR_FLAG(hpcd, USB_OTG_GINTSTS_WKUPINT);
     }
 
     /* Handle Suspend Interrupt */
@@ -1445,7 +1445,7 @@ void HAL_PCD_IRQHandler(PCD_HandleTypeDef *hpcd)
     }
 
     /* Handle Global OUT NAK effective Interrupt */
-    if (__HAL_PCD_GET_FLAG(hpcd, USB_OTG_GINTSTS_BOUTNAKEFF))
+    if (__HAL_PCD_GET_FLAG(hpcd, USB_OTG_GINTSTS_GONAKEFF))
     {
       USBx->GINTMSK &= ~USB_OTG_GINTMSK_GONAKEFFM;
 
@@ -1495,7 +1495,7 @@ void HAL_PCD_IRQHandler(PCD_HandleTypeDef *hpcd)
 
           USBx->GINTMSK |= USB_OTG_GINTMSK_GONAKEFFM;
 
-          if ((USBx->GINTSTS & USB_OTG_GINTSTS_BOUTNAKEFF) == 0U)
+          if ((USBx->GINTSTS & USB_OTG_GINTSTS_GONAKEFF) == 0U)
           {
             USBx_DEVICE->DCTL |= USB_OTG_DCTL_SGONAK;
             break;
