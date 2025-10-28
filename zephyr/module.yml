@@ -58,12 +58,12 @@ blobs:
     type: lib
     version: '1.7.0'
     license-path: zephyr/blobs/stm32wba/lib/license.md
-    url: https://github.com/stm32-hotspot/STM32WBA-Zephyr-custom-binaries/raw/main/lib/1_7_0/WBA6_LinkLayer15_4_Zephyr.a
+    url: https://github.com/stm32-hotspot/STM32WBA-Zephyr-custom-binaries/raw/217cec65d7978d8f82aeac2f85a8e6df93fa460c/lib/1_7_0/WBA6_LinkLayer15_4_Zephyr.a
     description: "Binary Link Layer library for the STM32WBA6 802.15.4 subsystem"
   - path: stm32wba/lib/WBA6_LinkLayer_Thread_lib_Zephyr.a
     sha256: 23e377b1ef70119f1115c57d162065168d860dd71477c3e247fb295f7a728989
     type: lib
     version: '1.7.0'
     license-path: zephyr/blobs/stm32wba/lib/license.md
-    url: https://github.com/stm32-hotspot/STM32WBA-Zephyr-custom-binaries/raw/main/lib/1_7_0/WBA6_LinkLayer_Thread_lib_Zephyr.a
+    url: https://github.com/stm32-hotspot/STM32WBA-Zephyr-custom-binaries/raw/217cec65d7978d8f82aeac2f85a8e6df93fa460c/lib/1_7_0/WBA6_LinkLayer_Thread_lib_Zephyr.a
     description: "Binary Link Layer library for the STM32WBA6 Thread subsystem"
