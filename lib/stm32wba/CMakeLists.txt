@@ -102,7 +102,7 @@ if(CONFIG_BT_STM32WBA)
     endif()
   endif()
 
-  if(CONFIG_SOC_STM32WBA55XX OR SOC_STM32WBA52XX)
+  if(CONFIG_SOC_STM32WBA55XX OR CONFIG_SOC_STM32WBA52XX)
     message(STATUS "STM32WBA5 link layer lib selected")
     if (BLE_LIB_TYPE STREQUAL "BLE_LIB_BASIC")
       set(LL_LIB "LinkLayer_BLE_Basic_lib.a")
