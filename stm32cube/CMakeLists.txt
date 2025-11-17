@@ -139,3 +139,24 @@ endif()
 
 # Add the series-agnostic LL headers to include directories
 zephyr_include_directories(common_ll/include)
+
+# Add placeholder for STM32Cube HAL Legacy definitions header
+#
+# Each serie's STM32Cube package originally contains a header
+# provided for compatibility and filled with "old names" of
+# various Cube definitions. These are not used from Zephyr
+# as drivers should always be using the up-to-date Cube API
+# and, more importantly, some of these "legacy" definitions
+# clash with macros provided by Zephyr which breaks build!
+#
+# Sadly, the header can't be simply discarded when STM32Cube
+# packages are added to this repository as it is included
+# unconditionally by "stm32XXXxx_hal_def.h", a header which
+# provides definitions we do need. To avoid the maintenance
+# burden of patching every STM32Cube package to remove the
+# the offending `#include "Legacy/stm32_hal_legacy.h"`, we
+# instead do discard the Legacy header but add a carefully
+# crafted directory to the include path such that, when the
+# offending `#include` line is reached, it ends up including
+# an empty header file and everything works out :)
+zephyr_include_directories(cube_legacy_placeholder)

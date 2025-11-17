@@ -51,8 +51,4 @@ Patch List:
     definitions, the zephyr SPI driver cannot be used on these parts.
     ST Bug tracker ID: 73643
 
-   *Fix to remove PAGESIZE definition which conflicts with POSIX
-    Impacted files:
-     drivers/include/Legacy/stm32_hal_legacy.h
-
    See release_note.html from STM32Cube

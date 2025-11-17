@@ -43,10 +43,6 @@ Patch List:
    *Provision to enable hal & ll asserts added
     -Modified stm32cube/stm32mp13xx/drivers/include/stm32_assert_templates.h
 
-   *Fix to remove PAGESIZE definition which conflicts with POSIX
-    Impacted files:
-     drivers/include/Legacy/stm32_hal_legacy.h
-
    *Allow usage of HAL_DCMIPP_PIPE_SetConfig when DCMIPP is in READY state
      Allow performing PIPE configuration when the DCMIPP device is not only
      in RESET and ERROR states but also in READY state. This allow to

@@ -44,10 +44,6 @@ Patch List:
     -Added stm32cube/stm32wbaxx/drivers/include/stm32_assert.h
     -Removed unused stm32cube/stm32wbaxx/drivers/include/stm32_assert_template.h
 
-   *Fix to remove PAGESIZE definition which conflicts with POSIX
-    Impacted files:
-     drivers/include/Legacy/stm32_hal_legacy.h
-
    *Fix to remove XSPI HAL support as not present in WBAXX
     Impacted files:
      drivers/include/stm32wbaxx_hal_conf.h

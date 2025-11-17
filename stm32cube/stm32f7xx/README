@@ -48,15 +48,17 @@ Patch List:
     This will have to be removed once Zephyr driver is migrated to the new
     Cube HAL ethernet API.
 
+   *Update HAL RCC which used legacy "GPIO_SPEED_HIGH"
+    This enables compilation of the HAL RCC module without the legacy header.
+    Impacted files:
+     drivers/src/stm32f7xx_hal_rcc.c
+    ST Internal Reference: 220413
+
    *Wrap define UNUSED with an ifndef
      This will prevent a compiler warning for the case the UNUSED macro
      is already defined elsewhere in the project
      Impacted files:
       drivers/include/stm32f7xx_hal_def.h
      ST Internal Reference: 136825
-
-   *Fix to remove PAGESIZE definition which conflicts with POSIX
-    Impacted files:
-     drivers/include/Legacy/stm32_hal_legacy.h
 
    See release_note.html from STM32Cube

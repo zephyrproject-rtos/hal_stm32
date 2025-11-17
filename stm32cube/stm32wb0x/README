@@ -52,8 +52,6 @@ Patch List:
     -in stm32cube/stm32wb0x/soc/system_stm32wb0x.h
       . Remove declaration of non-existent '__vector_table' symbol
       . Remove declaration of associated datatypes 'intfunc' / 'intvec_elem'
-    -in stm32cube/stm32wb0x/drivers/include/Legacy/stm32_hal_legacy.h
-      . Remove PAGESIZE definition which conflicts with POSIX
     -in stm32cube/stm32wb0x/drivers/include/stm32wb0x_hal_conf.h
       . Change USE_RADIO_PROPRIETARY_DRIVER from 1U to 0U
          . Required for BLE stack compatibility
