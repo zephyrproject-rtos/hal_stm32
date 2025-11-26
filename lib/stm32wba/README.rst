@@ -66,11 +66,6 @@ Description:
       Projects/NUCLEO-WBA65RI/Applications/BLE/BLE_TransparentMode/Core/Inc/app_entry.h
       Projects/NUCLEO-WBA65RI/Applications/BLE/BLE_TransparentMode/Core/Inc/utilities_conf.h
       Projects/NUCLEO-WBA65RI/Applications/BLE/BLE_TransparentMode/Core/Inc/main.h
-      Projects/NUCLEO-WBA65RI/Applications/BLE/Zigbee_OnOff_Client_SED/Core/Inc/app_common.h
-      Projects/NUCLEO-WBA65RI/Applications/BLE/Zigbee_OnOff_Client_SED/Core/Inc/app_conf.h
-      Projects/NUCLEO-WBA65RI/Applications/BLE/Zigbee_OnOff_Client_SED/Core/Inc/app_entry.h
-      Projects/NUCLEO-WBA65RI/Applications/BLE/Zigbee_OnOff_Client_SED/Core/Inc/utilities_conf.h
-      Projects/NUCLEO-WBA65RI/Applications/BLE/Zigbee_OnOff_Client_SED/Core/Inc/main.h
       Projects/Common/WPAN/Modules/Flash/rf_timing_synchro.c
       Projects/Common/WPAN/Modules/Flash/rf_timing_synchro.h
       Projects/Common/WPAN/Modules/Flash/flash_driver.c
@@ -106,16 +101,14 @@ Description:
       Projects/NUCLEO-WBA65RI/Applications/BLE/BLE_TransparentMode/STM32_WPAN/Target/linklayer_plat.c
       Projects/NUCLEO-WBA65RI/Applications/BLE/BLE_TransparentMode/STM32_WPAN/Target/ll_sys_if.c
       Projects/NUCLEO-WBA65RI/Applications/BLE/BLE_TransparentMode/STM32_WPAN/Target/ll_sys_if.h
-      Projects/NUCLEO-WBA65RI/Applications/Zigbee/Zigbee_OnOff_Client_SED/System/Config/Debug_GPIO/debug_config.h
-      Projects/NUCLEO-WBA65RI/Applications/Zigbee/Zigbee_OnOff_Client_SED/System/Config/Log/log_module_conf.h
-      Projects/NUCLEO-WBA65RI/Applications/Zigbee/Zigbee_OnOff_Client_SED/STM32_WPAN/Target/power_table.c
-      Projects/NUCLEO-WBA65RI/Applications/Zigbee/Zigbee_OnOff_Client_SED/STM32_WPAN/Target/linklayer_plat.c
-      Projects/NUCLEO-WBA65RI/Applications/Zigbee/Zigbee_OnOff_Client_SED/STM32_WPAN/Target/ll_sys_if.c
-      Projects/NUCLEO-WBA65RI/Applications/Zigbee/Zigbee_OnOff_Client_SED/STM32_WPAN/Target/ll_sys_if.h
       Utilities/trace/adv_trace/stm32_adv_trace.h
       Utilities/misc/stm32_mem.h
       Utilities/tim_serv/stm32_timer.h
       Utilities/misc/stm32_tiny_vsnprintf.h
+
+   The files issued from the Projects/NUCLEO-WBA65RI/Applications/BLE/BLE_TransparentMode folder
+   are used as reference in RF_Integration folder and reworked to support ieee802154 feature
+   according to STM32Cube projects Zigbee_OnOff_Client_SED and BLE_HeartRate_Zigbee projects.
 
 Dependencies:
    This library depends on STM32Cube HAL API.
@@ -184,9 +177,9 @@ Patch List:
 	* host_stack.c is moved to zephyr/soc/st/stm32/stm32wbax/hci_if folder
 
 	* linklayer_plat.c is splitted in two files:
-	- linklayer_plat.c in ble or IEEE802154 subfolders in hal/stm32/lib/stm32wba
+	- linklayer_plat.c in RF_Integration subfolder in hal/stm32/lib/stm32wba
    - linklayer_plat_adapt.c in zephyr/soc/st/stm32/stm32wbax/hci_if
 
 	* ll_sys_if.c is splitted in two files:
-	- ll_sys_if.c in ble or IEEE802154 subfolders in hal/stm32/lib/stm32wba
+	- ll_sys_if.c in RF_Integration subfolder in hal/stm32/lib/stm32wba
    - ll_sys_if_adapt.c in zephyr/soc/st/stm32/stm32wbax/hci_if
