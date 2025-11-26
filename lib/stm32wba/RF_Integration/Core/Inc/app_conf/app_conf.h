@@ -383,14 +383,22 @@ typedef enum
  *         according to radio requirements and user preferences
  *
  ******************************************************************************/
+#ifndef __ZEPHYR__
+#define CFG_SCM_SUPPORTED                   (1)
+#else
 #define CFG_SCM_SUPPORTED                   (0)
+#endif
 
 /******************************************************************************
  * HW RADIO configuration
  ******************************************************************************/
 /* Link Layer uses temperature based calibration (0 --> NO ; 1 --> YES) */
+#if defined(CONFIG_BT_STM32WBA)
 #ifndef USE_TEMPERATURE_BASED_RADIO_CALIBRATION
 #define USE_TEMPERATURE_BASED_RADIO_CALIBRATION (1)
+#endif
+#else
+#define USE_TEMPERATURE_BASED_RADIO_CALIBRATION (0)
 #endif
 
 #define RADIO_INTR_NUM                      RADIO_IRQn     /* 2.4GHz RADIO global interrupt */
@@ -398,8 +406,11 @@ typedef enum
 #define RADIO_INTR_PRIO_LOW                 (5)            /* 2.4GHz RADIO interrupt priority when radio is Not Active - Sleep Timer Only */
 
 #define RADIO_SW_LOW_INTR_NUM               HASH_IRQn      /* Selected interrupt vector for 2.4GHz RADIO low ISR */
+#ifndef __ZEPHYR__
+#define RADIO_SW_LOW_INTR_PRIO              (15)           /* 2.4GHz RADIO low ISR priority */
+#else
 #define RADIO_SW_LOW_INTR_PRIO              (14)           /* 2.4GHz RADIO low ISR priority */
-
+#endif
 #define RCC_INTR_PRIO                       (1)           /* HSERDY and PLL1RDY */
 
 /* RF TX power table ID selection:

@@ -23,7 +23,11 @@
 #include "ll_sys.h"
 #include "ll_sys_if.h"
 #include "utilities_common.h"
-
+#ifndef __ZEPHYR__
+#if (USE_TEMPERATURE_BASED_RADIO_CALIBRATION == 1)
+#include "temp_measurement.h"
+#endif /* (USE_TEMPERATURE_BASED_RADIO_CALIBRATION == 1) */
+#endif /*__ZEPHYR__*/
 /* Private defines -----------------------------------------------------------*/
 /* Radio event scheduling method - must be set at 1 */
 #define USE_RADIO_LOW_ISR                   (1)
@@ -59,7 +63,9 @@
 void ll_sys_bg_temperature_measurement_init(void);
 #endif /* USE_TEMPERATURE_BASED_RADIO_CALIBRATION */
 static void ll_sys_sleep_clock_source_selection(void);
+#if defined(CONFIG_BT_STM32WBA)
 static uint8_t ll_sys_BLE_sleep_clock_accuracy_selection(void);
+#endif /* CONFIG_BT_STM32WBA */
 void ll_sys_reset(void);
 
 /* USER CODE BEGIN PFP */
@@ -147,6 +153,43 @@ void ll_sys_config_params(void)
 /* USER CODE END ll_sys_config_params_2 */
 }
 
+#ifndef __ZEPHYR__
+#if (USE_TEMPERATURE_BASED_RADIO_CALIBRATION == 1)
+
+/**
+  * @brief  Link Layer temperature request background process initialization
+  * @param  None
+  * @retval None
+  */
+void ll_sys_bg_temperature_measurement_init(void)
+{
+  /* Register Temperature Measurement task */
+  UTIL_SEQ_RegTask(1U << CFG_TASK_TEMP_MEAS, UTIL_SEQ_RFU, TEMPMEAS_RequestTemperatureMeasurement);
+}
+
+/**
+  * @brief  Request backroud task processing for temperature measurement
+  * @param  None
+  * @retval None
+  */
+void ll_sys_bg_temperature_measurement(void)
+{
+  static uint8_t initial_temperature_acquisition = 0;
+
+  if(initial_temperature_acquisition == 0)
+  {
+    TEMPMEAS_RequestTemperatureMeasurement();
+    initial_temperature_acquisition = 1;
+  }
+  else
+  {
+    UTIL_SEQ_SetTask(1U << CFG_TASK_TEMP_MEAS, CFG_SEQ_PRIO_0);
+  }
+}
+
+#endif /* USE_TEMPERATURE_BASED_RADIO_CALIBRATION */
+#endif
+#if defined(CONFIG_BT_STM32WBA)
 uint8_t ll_sys_BLE_sleep_clock_accuracy_selection(void)
 {
   uint8_t BLE_sleep_clock_accuracy = 0;
@@ -193,6 +236,7 @@ uint8_t ll_sys_BLE_sleep_clock_accuracy_selection(void)
 
   return BLE_sleep_clock_accuracy;
 }
+#endif /* CONFIG_BT_STM32WBA */
 
 void ll_sys_sleep_clock_source_selection(void)
 {
@@ -221,7 +265,7 @@ void ll_sys_sleep_clock_source_selection(void)
   }
   ll_intf_cmn_le_select_slp_clk_src((uint8_t)linklayer_slp_clk_src, &freq_value);
 }
-
+#if defined(CONFIG_BT_STM32WBA)
 void ll_sys_reset(void)
 {
   uint8_t bsca = 0;
@@ -270,11 +314,4 @@ void ll_sys_reset(void)
 
   /* USER CODE END ll_sys_reset_2 */
 }
-
-#ifndef __ZEPHYR__
-void ll_sys_set_rtl_polling_time(uint8_t rtl_polling_time)
-{
-  /* first parameter otInstance *aInstance is unused */
-  radio_set_rtl_polling_time(NULL, rtl_polling_time);
-}
-#endif
+#endif /* CONFIG_BT_STM32WBA */

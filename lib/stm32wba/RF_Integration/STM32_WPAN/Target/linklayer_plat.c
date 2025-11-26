@@ -28,6 +28,9 @@
 #include "log_module.h"
 
 #ifndef __ZEPHYR__
+#if (USE_TEMPERATURE_BASED_RADIO_CALIBRATION == 1)
+#include "adc_ctrl.h"
+#endif /* (USE_TEMPERATURE_BASED_RADIO_CALIBRATION == 1) */
 #if (CFG_LPM_LEVEL != 0)
 #include "stm32_lpm.h"
 #include "stm32_lpm_if.h"

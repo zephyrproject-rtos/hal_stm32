@@ -45,7 +45,6 @@ extern "C" {
 #ifdef __ZEPHYR__
 #define DRIFT_TIME_EXTRA_ZEPHYR                 (15)
 #endif
-
 #define EXEC_TIME_DEFAULT                       (24)
 #define EXEC_TIME_EXTRA_LSI2                    (3)
 #define EXEC_TIME_EXTRA_GCC_DEBUG               (4)
@@ -69,9 +68,6 @@ extern "C" {
 /* USER CODE END EM */
 
 /* Exported functions prototypes ---------------------------------------------*/
-#ifndef __ZEPHYR__
-void ll_sys_set_rtl_polling_time(uint8_t rtl_polling_time);
-#endif
 #if (USE_TEMPERATURE_BASED_RADIO_CALIBRATION == 1)
 void ll_sys_bg_temperature_measurement(void);
 #endif /* USE_TEMPERATURE_BASED_RADIO_CALIBRATION */
