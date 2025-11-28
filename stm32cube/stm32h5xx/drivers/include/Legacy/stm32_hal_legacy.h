@@ -4405,6 +4405,25 @@ extern "C" {
   * @}
   */
 
+/** @defgroup HAL_XSPI_Aliased_Defines HAL XSPI Aliased Defines maintained for legacy purpose
+  * @{
+  */
+#if defined(STM32H5)
+/* STM32H5 uses OCTOSPI naming for XSPI peripherals - add compatibility macros */
+#if !defined(XSPI1) && defined(OCTOSPI1)
+#define XSPI1      OCTOSPI1
+#endif /* !XSPI1 && OCTOSPI1 */
+#if !defined(XSPI1_NS) && defined(OCTOSPI1_NS)
+#define XSPI1_NS   OCTOSPI1_NS
+#endif /* !XSPI1_NS && OCTOSPI1_NS */
+#if !defined(XSPI1_S) && defined(OCTOSPI1_S)
+#define XSPI1_S    OCTOSPI1_S
+#endif /* !XSPI1_S && OCTOSPI1_S */
+#endif /* STM32H5 */
+/**
+  * @}
+  */
+
 /** @defgroup HAL_PPP_Aliased_Macros HAL PPP Aliased Macros maintained for legacy purpose
   * @{
   */
