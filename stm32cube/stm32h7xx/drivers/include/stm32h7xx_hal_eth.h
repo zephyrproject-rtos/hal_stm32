@@ -1767,6 +1767,10 @@ HAL_StatusTypeDef HAL_ETH_WritePHYRegister(const ETH_HandleTypeDef *heth, uint32
                                            uint32_t RegValue);
 HAL_StatusTypeDef HAL_ETH_ReadPHYRegister(ETH_HandleTypeDef *heth, uint32_t PHYAddr, uint32_t PHYReg,
                                           uint32_t *pRegValue);
+HAL_StatusTypeDef HAL_ETH_ReadPHYRegister_c45(ETH_HandleTypeDef *heth, uint32_t PHYAddr, uint8_t PHYMMD,
+                                              uint32_t PHYReg, uint32_t *pRegValue);
+HAL_StatusTypeDef HAL_ETH_WritePHYRegister_c45(ETH_HandleTypeDef *heth, uint32_t PHYAddr, uint8_t PHYMMD,
+                                               uint32_t PHYReg, uint32_t RegValue);
 
 void              HAL_ETH_IRQHandler(ETH_HandleTypeDef *heth);
 void              HAL_ETH_TxCpltCallback(ETH_HandleTypeDef *heth);
