@@ -56,4 +56,11 @@ Patch List:
     Impacted files:
      drivers/include/Legacy/stm32_hal_legacy.h
 
+   *stm32cube: stm32f2: excluded phy init and config
+     exclude phy init and config as that is already
+     done in zephyr before and we don't want it to
+     be overwritten
+     Impacted files:
+      drivers/src/stm32f2xx_hal_eth.c
+
    See release_note.html from STM32Cube
