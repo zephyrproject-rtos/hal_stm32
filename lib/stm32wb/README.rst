@@ -11,7 +11,7 @@ Purpose
 | and a controller BLE firmware running on the Cortex-M0 core.
 
 Status:
-   version v1.23.0
+   version v1.24.0
 
 Coprocessor Binaries
 --------------------
@@ -78,7 +78,7 @@ URL
 https://github.com/STMicroelectronics/STM32CubeWB
 
 Commit:
-   24e69da13336e90cccce4fccf5b8fddfcd4959fc
+   7c5aa7dcd2c0abe787f922bb06a6213c724d08e4
 
 Maintained-by
 -------------
