@@ -779,11 +779,11 @@ class Stm32SerieUpdate:
         self.apply_zephyr_patch()
         self.merge_commit()
 
-        # 8) In case of stm32wb, update ble library
-        if self.stm32_serie == "stm32wb":
+        # 8) In case of stm32wb/wba/wb0, update library
+        if self.stm32_serie in ["stm32wb", "stm32wba", "stm32wb0"]:
             ble_library.update(
                 self.stm32cube_serie_path,
-                Path(self.zephyr_hal_stm32_path / "lib" / "stm32wb"),
+                Path(self.zephyr_hal_stm32_path / "lib" / self.stm32_serie),
                 self.stm32cube_temp,
                 self.current_version,
                 self.version_update,
@@ -792,19 +792,6 @@ class Stm32SerieUpdate:
             )
             self.merge_commit(lib=True)
 
-        # 9) In case of stm32wba, update hci library
-        elif self.stm32_serie == "stm32wba":
-            ble_library.update(
-                self.stm32cube_serie_path,
-                Path(self.zephyr_hal_stm32_path / "lib" / "stm32wba"),
-                self.stm32cube_temp,
-                self.current_version,
-                self.version_update,
-                self.update_commit,
-                self.stm32_serie
-            )
-            self.merge_commit(lib=True)
-
-        # 10) clean
+        # 9) clean
         self.clean_files()
         logging.info("%s", f"Done {self.stm32_serie}\n")
