@@ -100,6 +100,10 @@ HAL_StatusTypeDef USB_CoreInit(USB_OTG_GlobalTypeDef *USBx, USB_OTG_CfgTypeDef c
 
   if (cfg.dma_enable == 1U)
   {
+    /* make sure to reserve 18 fifo Locations for DMA buffers */
+    USBx->GDFIFOCFG &= ~(0xFFFFUL << 16);
+    USBx->GDFIFOCFG |= 0x3EEUL << 16;
+
     USBx->GAHBCFG &= ~(USB_OTG_GAHBCFG_HBSTLEN);
     USBx->GAHBCFG |= USB_OTG_GAHBCFG_HBSTLEN_INCR4;
     USBx->GAHBCFG |= USB_OTG_GAHBCFG_DMAEN;
@@ -894,10 +898,10 @@ HAL_StatusTypeDef USB_EPStartXfer(USB_OTG_GlobalTypeDef *USBx, USB_OTG_EPTypeDef
 HAL_StatusTypeDef USB_EPStopXfer(USB_OTG_GlobalTypeDef *USBx, USB_OTG_EPTypeDef *ep)
 {
   __IO uint32_t count = 0U;
+  __IO uint32_t RegVal;
   HAL_StatusTypeDef ret = HAL_OK;
   uint32_t USBx_BASE = (uint32_t)USBx;
   uint32_t dma_enable = (USBx->GAHBCFG & USB_OTG_GAHBCFG_DMAEN) >> 0x5U;
-  uint32_t RegVal;
 
   /* IN endpoint */
   if (ep->is_in == 1U)
@@ -1820,7 +1824,7 @@ HAL_StatusTypeDef USB_HC_StartXfer(USB_OTG_GlobalTypeDef *USBx, USB_OTG_HCTypeDe
   /* in DMA mode host Core automatically issues ping in case of NYET/NAK */
   if (dma == 1U)
   {
-    if ((hc->ep_type == EP_TYPE_CTRL) || (hc->ep_type == EP_TYPE_BULK))
+    if (((hc->ep_type == EP_TYPE_CTRL) || (hc->ep_type == EP_TYPE_BULK)) && (hc->do_ssplit == 0U))
     {
 
       USBx_HC((uint32_t)ch_num)->HCINTMSK &= ~(USB_OTG_HCINTMSK_NYET |
