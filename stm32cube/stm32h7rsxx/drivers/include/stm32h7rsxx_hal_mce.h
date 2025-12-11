@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2024 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -162,8 +162,8 @@ typedef  void (*pMCE_CallbackTypeDef)(MCE_HandleTypeDef *hmce); /*!< pointer to 
 /** @defgroup MCE_Illegal_Access_Flags    MCE Illegal Access Flags
   * @{
   */
-#define MCE_CONFIGURATION_ACCESS_ERROR     MCE_IASR_CAEF                      /*!< Configuration access error                                    */
 #define MCE_ILLEGAL_ACCESS_READ_NPRIV      MCE_IASR_IAEF                      /*!< Illegal unprivileged data read/instruction fetch access flag   */
+#define MCE_CONFIGURATION_ACCESS_ERROR     MCE_IASR_CAEF                      /*!< Configuration access error                                    */
 #define MCE_ILLEGAL_ACCESS_READ_PRIV       (MCE_IASR_IAEF | MCE_IAESR_IAPRIV) /*!< Illegal privileged data read/instruction fetch access flag     */
 #define MCE_ILLEGAL_ACCESS_WRITE_NPRIV     (MCE_IASR_IAEF | MCE_IAESR_IANRW)  /*!< Illegal unprivileged write access access flag                 */
 #define MCE_ILLEGAL_ACCESS_WRITE_PRIV      (MCE_IASR_IAEF | MCE_IAESR_IANRW | MCE_IAESR_IAPRIV) /*!< Illegal privileged write access access flag */
@@ -259,6 +259,7 @@ typedef  void (*pMCE_CallbackTypeDef)(MCE_HandleTypeDef *hmce); /*!< pointer to 
 /**
   * @}
   */
+
 
 /**
   * @}
@@ -438,7 +439,6 @@ uint32_t HAL_MCE_KeyCRCComputation(const uint32_t *pKey);
                                                     ((__CONTEXT__) == MCE_CONTEXT1)     || \
                                                     ((__CONTEXT__) == MCE_CONTEXT2))     : \
                                                    ((__CONTEXT__) == MCE_NO_CONTEXT))
-
 /**
   * @brief Verify the MCE region algorithm.
   * @param __INSTANCE__ MCE instance
@@ -453,7 +453,6 @@ uint32_t HAL_MCE_KeyCRCComputation(const uint32_t *pKey);
                                                   (((__ALGO__) == MCE_NO_CIPHER)         || \
                                                    ((__ALGO__) == MCE_BLOCK_CIPHER)      || \
                                                    ((__ALGO__) == MCE_FASTBLOCK_CIPHER)))
-
 
 #endif /* MCE1 */
 

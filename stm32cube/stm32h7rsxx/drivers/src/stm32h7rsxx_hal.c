@@ -663,7 +663,7 @@ void HAL_SBS_OpenAccessPort(void)
   */
 void HAL_SBS_OpenDebug(void)
 {
-  MODIFY_REG(SBS->DBGCR, SBS_DBGCR_DBG_UNLOCK, (SBS_DEBUG_UNLOCK_VALUE << SBS_DBGCR_DBG_UNLOCK_Pos));
+  MODIFY_REG(SBS->DBGCR, SBS_DBGCR_DBG_UNLOCK, ((uint32_t)SBS_DEBUG_UNLOCK_VALUE << SBS_DBGCR_DBG_UNLOCK_Pos));
 }
 
 /**
@@ -895,7 +895,7 @@ void HAL_SBS_ConfigCompensationCell(uint32_t Selection, uint32_t Code, uint32_t 
 
     offset = ((Selection == SBS_IO_ANALOG_CELL) ? 0U : ((Selection == SBS_IO_XSPI1_CELL) ? 8U : 16U));
 
-    MODIFY_REG(SBS->CCSWVALR, (0xFFU << offset), ((NmosValue << offset) | (PmosValue << (offset + 4U))));
+    MODIFY_REG(SBS->CCSWVALR, (0xFFUL << offset), ((NmosValue << offset) | (PmosValue << (offset + 4U))));
   }
 
   MODIFY_REG(SBS->CCCSR, (Selection << 1U), (Code << (POSITION_VAL(Selection) + 1U)));
@@ -1047,7 +1047,7 @@ void HAL_SBS_EXTIConfig(uint32_t Exti, uint32_t Port)
   reg = (Exti / 4U);
   offset = (4U * (Exti % 4U));
 
-  MODIFY_REG(SBS->EXTICR[reg], (0xFU << offset), (Port << offset));
+  MODIFY_REG(SBS->EXTICR[reg], (0xFUL << offset), (Port << offset));
 }
 
 /**
@@ -1477,6 +1477,61 @@ void HAL_AXIM_AMIB_DisableLongBurst(AXIM_AMIB_TypeDef *AmibInstance)
 
   /* Apply Long burst configuration for the selected AMIB */
   WRITE_REG(AmibInstance->FNMODLB, 0U);
+}
+/**
+  * @}
+  */
+
+/** @defgroup HAL_Exported_Functions_Group7 HAL FMC configuration functions
+  *  @brief    HAL FMC configuration functions
+  *
+@verbatim
+ ===============================================================================
+                      ##### HAL FMC configuration functions #####
+ ===============================================================================
+    [..]  This section provides functions allowing to:
+      (+) Configure the FMC Memory Bank Swapping mode
+      (+) Get current FMC Memory Bank Swapping Mode used
+@endverbatim
+  * @{
+  */
+
+/**
+  * @brief  Set the FMC Memory Bank Swapping mode.
+  * @param  BankMapConfig  specifies the FMC Memory Bank Swapping mode to configure
+  *           This parameter can be one of the following values:
+  *             @arg FMC_SWAPBANK_MODE0 : FMC memory default mapping is used
+  *             @arg FMC_SWAPBANK_MODE1 : NOR/SRAM/PSRAM bank and SDRAM bank1 are swapped
+  * @note   FMC bank mapping options
+  * | Start-End address     | FMC_SWAPBANK_MODE0  | FMC_SWAPBANK_MODE1    |
+  * |-----------------------|---------------------|-----------------------|
+  * | 0x60000000-0x6FFFFFFF | NOR/SRAM/PSRAM bank | SDRAM bank1           |
+  * | 0x70000000-0x7FFFFFFF |             Not used by FMC                 |
+  * | 0x80000000-0x8FFFFFFF | NAND bank           | NAND bank             |
+  * | 0x90000000-0x9FFFFFFF |             Not used by FMC                 |
+  * | 0xC0000000-0xCFFFFFFF | SDRAM bank1         | NOR/SRAM/PSRAM bank   |
+  * | 0xD0000000-0xDFFFFFFF | SDRAM bank2         | SDRAM bank2           |
+  * @retval None
+  */
+void HAL_FMC_SetBankSwapConfig(uint32_t BankMapConfig)
+{
+  /* Check the parameter */
+  assert_param(IS_FMC_SWAPBANK_MODE(BankMapConfig));
+
+  /* Apply Memory Bank Swapping configuration */
+  MODIFY_REG(FMC_Bank1_R->BTCR[0], FMC_BCR1_BMAP, BankMapConfig);
+}
+
+/**
+  * @brief  Get the FMC Memory Bank Swapping mode.
+  * @retval Return value is FMC Memory Bank Swapping mode
+  *           This return value can be one of the following values:
+  *             @arg FMC_SWAPBANK_MODE0 : FMC memory default mapping is used
+  *             @arg FMC_SWAPBANK_MODE1 : NOR/SRAM/PSRAM bank and SDRAM bank1 are swapped
+  */
+uint32_t HAL_FMC_GetBankSwapConfig(void)
+{
+  return READ_BIT(FMC_Bank1_R->BTCR[0], FMC_BCR1_BMAP);
 }
 /**
   * @}

@@ -836,6 +836,7 @@ HAL_GFXMMU_StateTypeDef HAL_GFXMMU_GetState(const GFXMMU_HandleTypeDef *hgfxmmu)
 uint32_t HAL_GFXMMU_GetError(GFXMMU_HandleTypeDef *hgfxmmu)
 {
   uint32_t error_code;
+  uint32_t primask = __get_PRIMASK();
 
   /* Enter in critical section */
   __disable_irq();
@@ -845,7 +846,7 @@ uint32_t HAL_GFXMMU_GetError(GFXMMU_HandleTypeDef *hgfxmmu)
   hgfxmmu->ErrorCode = GFXMMU_ERROR_NONE;
 
   /* Exit from critical section */
-  __enable_irq();
+  __set_PRIMASK(primask);
 
   /* Return GFXMMU error code */
   return error_code;

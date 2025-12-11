@@ -441,68 +441,68 @@ typedef struct
 #define RCC_RTCCLKSOURCE_DISABLE       0U                                  /*!< RTC clock is disabled */
 #define RCC_RTCCLKSOURCE_LSE           RCC_BDCR_RTCSEL_0                   /*!< LSE oscillator clock used as RTC clock */
 #define RCC_RTCCLKSOURCE_LSI           RCC_BDCR_RTCSEL_1                   /*!< LSI oscillator clock used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV2      ((0x02U << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 2 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV3      ((0x03U << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 3 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV4      ((0x04U << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 4 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV5      ((0x05U << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 5 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV6      ((0x06U << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 6 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV7      ((0x07U << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 7 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV8      ((0x08U << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 8 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV9      ((0x09U << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 9 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV10     ((0x0AU << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 10 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV11     ((0x0BU << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 11 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV12     ((0x0CU << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 12 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV13     ((0x0DU << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 13 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV14     ((0x0EU << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 14 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV15     ((0x0FU << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 15 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV16     ((0x10U << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 16 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV17     ((0x11U << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 17 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV18     ((0x12U << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 18 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV19     ((0x13U << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 19 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV20     ((0x14U << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 20 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV21     ((0x15U << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 21 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV22     ((0x16U << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 22 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV23     ((0x17U << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 23 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV24     ((0x18U << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 24 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV25     ((0x19U << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 25 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV26     ((0x1AU << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 26 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV27     ((0x1BU << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 27 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV28     ((0x1CU << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 28 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV29     ((0x1DU << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 29 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV30     ((0x1EU << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 30 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV31     ((0x1FU << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 31 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV32     ((0x20U << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 32 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV33     ((0x21U << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 33 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV34     ((0x22U << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 34 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV35     ((0x23U << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 35 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV36     ((0x24U << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 36 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV37     ((0x25U << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 37 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV38     ((0x26U << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 38 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV39     ((0x27U << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 39 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV40     ((0x28U << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 40 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV41     ((0x29U << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 41 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV42     ((0x2AU << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 42 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV43     ((0x2BU << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 43 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV44     ((0x2CU << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 44 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV45     ((0x2DU << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 45 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV46     ((0x2EU << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 46 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV47     ((0x2FU << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 47 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV48     ((0x30U << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 48 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV49     ((0x31U << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 49 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV50     ((0x32U << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 50 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV51     ((0x33U << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 51 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV52     ((0x34U << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 52 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV53     ((0x35U << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 53 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV54     ((0x36U << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 54 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV55     ((0x37U << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 55 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV56     ((0x38U << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 56 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV57     ((0x39U << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 57 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV58     ((0x3AU << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 58 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV59     ((0x3BU << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 59 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV60     ((0x3CU << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 60 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV61     ((0x3DU << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 61 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV62     ((0x3EU << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 62 used as RTC clock */
-#define RCC_RTCCLKSOURCE_HSE_DIV63     ((0x3FU << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 63 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV2      ((0x02UL << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 2 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV3      ((0x03UL << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 3 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV4      ((0x04UL << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 4 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV5      ((0x05UL << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 5 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV6      ((0x06UL << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 6 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV7      ((0x07UL << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 7 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV8      ((0x08UL << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 8 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV9      ((0x09UL << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 9 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV10     ((0x0AUL << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 10 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV11     ((0x0BUL << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 11 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV12     ((0x0CUL << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 12 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV13     ((0x0DUL << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 13 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV14     ((0x0EUL << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 14 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV15     ((0x0FUL << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 15 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV16     ((0x10UL << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 16 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV17     ((0x11UL << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 17 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV18     ((0x12UL << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 18 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV19     ((0x13UL << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 19 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV20     ((0x14UL << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 20 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV21     ((0x15UL << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 21 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV22     ((0x16UL << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 22 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV23     ((0x17UL << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 23 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV24     ((0x18UL << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 24 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV25     ((0x19UL << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 25 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV26     ((0x1AUL << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 26 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV27     ((0x1BUL << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 27 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV28     ((0x1CUL << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 28 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV29     ((0x1DUL << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 29 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV30     ((0x1EUL << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 30 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV31     ((0x1FUL << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 31 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV32     ((0x20UL << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 32 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV33     ((0x21UL << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 33 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV34     ((0x22UL << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 34 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV35     ((0x23UL << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 35 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV36     ((0x24UL << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 36 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV37     ((0x25UL << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 37 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV38     ((0x26UL << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 38 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV39     ((0x27UL << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 39 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV40     ((0x28UL << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 40 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV41     ((0x29UL << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 41 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV42     ((0x2AUL << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 42 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV43     ((0x2BUL << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 43 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV44     ((0x2CUL << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 44 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV45     ((0x2DUL << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 45 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV46     ((0x2EUL << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 46 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV47     ((0x2FUL << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 47 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV48     ((0x30UL << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 48 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV49     ((0x31UL << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 49 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV50     ((0x32UL << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 50 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV51     ((0x33UL << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 51 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV52     ((0x34UL << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 52 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV53     ((0x35UL << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 53 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV54     ((0x36UL << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 54 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV55     ((0x37UL << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 55 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV56     ((0x38UL << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 56 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV57     ((0x39UL << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 57 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV58     ((0x3AUL << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 58 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV59     ((0x3BUL << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 59 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV60     ((0x3CUL << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 60 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV61     ((0x3DUL << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 61 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV62     ((0x3EUL << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 62 used as RTC clock */
+#define RCC_RTCCLKSOURCE_HSE_DIV63     ((0x3FUL << 12U) | RCC_BDCR_RTCSEL)  /*!< HSE oscillator clock divided by 63 used as RTC clock */
 /**
   * @}
   */
@@ -3793,7 +3793,7 @@ typedef struct
   *         RTC clock source).
   */
 #define __HAL_RCC_RTC_CLKPRESCALER(__RTC_CLKSOURCE__) \
-  ((((__RTC_CLKSOURCE__) & (0x3FU << 12U)) != 0U) ? \
+  ((((__RTC_CLKSOURCE__) & (0x3FUL << 12U)) != 0U) ? \
    MODIFY_REG(RCC->CFGR, RCC_CFGR_RTCPRE, (((__RTC_CLKSOURCE__) & (~RCC_BDCR_RTCSEL)) >> 4U)) : \
    CLEAR_BIT(RCC->CFGR, RCC_CFGR_RTCPRE))
 

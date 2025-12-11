@@ -6,7 +6,7 @@ Origin:
    http://www.st.com/en/embedded-software/stm32cubeh7rs.html
 
 Status:
-   version v1.2.0
+   version v1.3.0
 
 Purpose:
    ST Microelectronics official MCU package for STM32H7RS series.
@@ -23,7 +23,7 @@ URL:
    https://github.com/STMicroelectronics/STM32CubeH7RS
 
 Commit:
-   fc7bcafbad47f1a6f7986e236c9f00a46fc3b71f
+   c5da62bfcb09b7bb7c7dba71accd1c7b15a8cf04
 
 Maintained-by:
    External
@@ -53,13 +53,17 @@ Patch List:
      the card identification sequence is skipped.
      Impacted files:
       stm32cube/stm32h7rsxx/drivers/src/stm32h7rsxx_hal_sdio.c
-    
+     See also:
+      https://github.com/zephyrproject-rtos/hal_stm32/pull/281
+
    *Fix SDIO polling mode data transfer issues
-     Fixes two related issues in the STM32H7RS SDIO driver: incorrect block count calculation 
-     that caused the card to hang, and improper buffer size handling that led to misaligned FIFO writes. 
+     Fixes two related issues in the STM32H7RS SDIO driver: incorrect block count calculation
+     that caused the card to hang, and improper buffer size handling that led to misaligned FIFO writes.
      Together, these changes ensure correct and stable data transfer in polling mode.
-     Impacted file: 
-      stm32cube/stm32h7rsxx/drivers/src/stm32h7rsxx_hal_sdio.c    
+     Impacted file:
+      stm32cube/stm32h7rsxx/drivers/src/stm32h7rsxx_hal_sdio.c
+     See also:
+      https://github.com/zephyrproject-rtos/hal_stm32/pull/292
 
    *Allow usage of HAL_DCMIPP_PIPE_SetConfig when DCMIPP is in READY state
      Allow performing PIPE configuration when the DCMIPP device is not only
@@ -69,5 +73,7 @@ Patch List:
      Impacted file:
       stm32cube/stm32h7rsxx/drivers/src/stm32h7rsxx_hal_dcmipp.c
      Internal reference: 215688
+     See also:
+      https://github.com/zephyrproject-rtos/hal_stm32/pull/304
 
    See release_note.html from STM32Cube

@@ -541,9 +541,15 @@ static void DMA_List_BuildNode(DMA_NodeConfTypeDef const *const pNodeConfig,
                                DMA_NodeTypeDef *const pNode);
 static void DMA_List_GetNodeConfig(DMA_NodeConfTypeDef *const pNodeConfig,
                                    DMA_NodeTypeDef const *const pNode);
+#if defined ( __GNUC__ ) && !defined (__CC_ARM)
+static __attribute__((noinline)) uint32_t DMA_List_CheckNodesBaseAddresses(DMA_NodeTypeDef const *const pNode1,  \
+                                                                           DMA_NodeTypeDef const *const pNode2,  \
+                                                                           DMA_NodeTypeDef const *const pNode3);
+#else
 static uint32_t DMA_List_CheckNodesBaseAddresses(DMA_NodeTypeDef const *const pNode1,
                                                  DMA_NodeTypeDef const *const pNode2,
                                                  DMA_NodeTypeDef const *const pNode3);
+#endif /* __GNUC__ && !__CC_ARM */
 static uint32_t DMA_List_CheckNodesTypes(DMA_NodeTypeDef const *const pNode1,
                                          DMA_NodeTypeDef const *const pNode2,
                                          DMA_NodeTypeDef const *const pNode3);
@@ -4044,9 +4050,15 @@ static void DMA_List_GetNodeConfig(DMA_NodeConfTypeDef *const pNodeConfig,
   * @param  pNode3 : Pointer to a DMA_NodeTypeDef structure that contains linked-list node 3 registers configurations.
   * @retval Return 0 when nodes addresses are compatible, 1 otherwise.
   */
+#if defined ( __GNUC__ ) && !defined (__CC_ARM)
+static __attribute__((noinline)) uint32_t DMA_List_CheckNodesBaseAddresses(DMA_NodeTypeDef const *const pNode1,  \
+                                                                           DMA_NodeTypeDef const *const pNode2,  \
+                                                                           DMA_NodeTypeDef const *const pNode3)
+#else
 static uint32_t DMA_List_CheckNodesBaseAddresses(DMA_NodeTypeDef const *const pNode1,
                                                  DMA_NodeTypeDef const *const pNode2,
                                                  DMA_NodeTypeDef const *const pNode3)
+#endif /* __GNUC__ && !__CC_ARM */
 {
   uint32_t temp = (((uint32_t)pNode1 | (uint32_t)pNode2 | (uint32_t)pNode3) & DMA_CLBAR_LBA);
   uint32_t ref  = 0U;

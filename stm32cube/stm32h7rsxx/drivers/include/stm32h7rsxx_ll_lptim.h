@@ -75,14 +75,14 @@ static const uint8_t LL_LPTIM_SHIFT_TAB_CCxE[] =
 
 static const uint8_t LL_LPTIM_OFFSET_TAB_ICx[8][4] =
 {
-  {2, 7, 9, 13},
-  {3, 5, 6, 8},
-  {2, 3, 4, 5},
-  {2, 2, 3, 3},
-  {2, 2, 2, 2},
-  {2, 2, 2, 2},
-  {2, 2, 2, 2},
-  {2, 2, 2, 2}
+  {2U, 7U, 9U, 13U},
+  {3U, 5U, 6U, 8U},
+  {2U, 3U, 4U, 5U},
+  {2U, 2U, 3U, 3U},
+  {2U, 2U, 2U, 2U},
+  {2U, 2U, 2U, 2U},
+  {2U, 2U, 2U, 2U},
+  {2U, 2U, 2U, 2U}
 
 };
 

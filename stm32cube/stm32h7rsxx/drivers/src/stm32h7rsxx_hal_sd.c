@@ -3106,7 +3106,7 @@ static uint32_t SD_PowerON(SD_HandleTypeDef *hsd)
 
   /* CMD8: SEND_IF_COND: Command available only on V2.0 cards */
   errorstate = SDMMC_CmdOperCond(hsd->Instance);
-  if (errorstate == SDMMC_ERROR_TIMEOUT) /* No response to CMD8 */
+  if (errorstate == SDMMC_ERROR_CMD_RSP_TIMEOUT) /* No response to CMD8 */
   {
     hsd->SdCard.CardVersion = CARD_V1_X;
     /* CMD0: GO_IDLE_STATE */

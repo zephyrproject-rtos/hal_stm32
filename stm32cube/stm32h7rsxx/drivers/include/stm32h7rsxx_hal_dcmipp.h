@@ -128,13 +128,13 @@ typedef struct
 typedef struct
 {
   uint32_t VStart;   /*!< Configures the DCMIPP Crop Vertical Start
-                          This parameter can be one value between 0 and 4095          */
+                          This parameter can be one value between 0 and 4094          */
   uint32_t HStart;   /*!< Configures the DCMIPP Crop Horizontal Start
-                          This parameter can be one value between 0 and 4095          */
+                          This parameter can be one value between 0 and 4094          */
   uint32_t VSize;    /*!< Configures the DCMIPP Crop Vertical Size
-                          This parameter can be one value between 0 and 4095          */
+                          This parameter can be one value between 0 and 4094          */
   uint32_t HSize;    /*!< Configures the DCMIPP Crop Horizontal Size
-                          This parameter can be one value between 1 and 4095          */
+                          This parameter can be one value between 1 and 4094          */
   uint32_t PipeArea; /*!< Configures the DCMIPP Crop Area for the pipe0
                           This parameter can be one value of @ref DCMIPP_Crop_Area    */
 } DCMIPP_CropConfTypeDef;
@@ -276,6 +276,9 @@ typedef void (*pDCMIPP_PIPE_CallbackTypeDef)(DCMIPP_HandleTypeDef *hdcmipp, uint
   * @}
   */
 
+/**
+  * @}
+  */
 
 /** @defgroup DCMIPP_IPPLUG_Client DCMIPP IPPLUG Client
   * @{
@@ -342,23 +345,26 @@ typedef void (*pDCMIPP_PIPE_CallbackTypeDef)(DCMIPP_HandleTypeDef *hdcmipp, uint
   * @}
   */
 
+/**
+  * @}
+  */
 
 /** @defgroup DCMIPP_Format  DCMIPP Format
   * @{
   */
 #define  DCMIPP_FORMAT_BYTE             0U                               /*!< DCMIPP Format BYTE    */
-#define  DCMIPP_FORMAT_YUV422          (0x1EU << DCMIPP_PRCR_FORMAT_Pos) /*!< DCMIPP Format YUV422  */
-#define  DCMIPP_FORMAT_RGB565          (0x22U << DCMIPP_PRCR_FORMAT_Pos) /*!< DCMIPP Format RGB565  */
-#define  DCMIPP_FORMAT_RGB666          (0x23U << DCMIPP_PRCR_FORMAT_Pos) /*!< DCMIPP Format RGB666  */
-#define  DCMIPP_FORMAT_RGB888          (0x24U << DCMIPP_PRCR_FORMAT_Pos) /*!< DCMIPP Format RGB888  */
-#define  DCMIPP_FORMAT_RAW8            (0x2AU << DCMIPP_PRCR_FORMAT_Pos) /*!< DCMIPP Format RAW8    */
-#define  DCMIPP_FORMAT_RAW10           (0x2BU << DCMIPP_PRCR_FORMAT_Pos) /*!< DCMIPP Format RAW10   */
-#define  DCMIPP_FORMAT_RAW12           (0x2CU << DCMIPP_PRCR_FORMAT_Pos) /*!< DCMIPP Format RAW12   */
-#define  DCMIPP_FORMAT_RAW14           (0x2DU << DCMIPP_PRCR_FORMAT_Pos) /*!< DCMIPP Format RAW14   */
-#define  DCMIPP_FORMAT_MONOCHROME_8B   (0x4AU << DCMIPP_PRCR_FORMAT_Pos) /*!< DCMIPP Format 8-bits  */
-#define  DCMIPP_FORMAT_MONOCHROME_10B  (0x4BU << DCMIPP_PRCR_FORMAT_Pos) /*!< DCMIPP Format 10-bits */
-#define  DCMIPP_FORMAT_MONOCHROME_12B  (0x4CU << DCMIPP_PRCR_FORMAT_Pos) /*!< DCMIPP Format 12-bits */
-#define  DCMIPP_FORMAT_MONOCHROME_14B  (0x4DU << DCMIPP_PRCR_FORMAT_Pos) /*!< DCMIPP Format 14-bits */
+#define  DCMIPP_FORMAT_YUV422          (0x1EUL << DCMIPP_PRCR_FORMAT_Pos) /*!< DCMIPP Format YUV422  */
+#define  DCMIPP_FORMAT_RGB565          (0x22UL << DCMIPP_PRCR_FORMAT_Pos) /*!< DCMIPP Format RGB565  */
+#define  DCMIPP_FORMAT_RGB666          (0x23UL << DCMIPP_PRCR_FORMAT_Pos) /*!< DCMIPP Format RGB666  */
+#define  DCMIPP_FORMAT_RGB888          (0x24UL << DCMIPP_PRCR_FORMAT_Pos) /*!< DCMIPP Format RGB888  */
+#define  DCMIPP_FORMAT_RAW8            (0x2AUL << DCMIPP_PRCR_FORMAT_Pos) /*!< DCMIPP Format RAW8    */
+#define  DCMIPP_FORMAT_RAW10           (0x2BUL << DCMIPP_PRCR_FORMAT_Pos) /*!< DCMIPP Format RAW10   */
+#define  DCMIPP_FORMAT_RAW12           (0x2CUL << DCMIPP_PRCR_FORMAT_Pos) /*!< DCMIPP Format RAW12   */
+#define  DCMIPP_FORMAT_RAW14           (0x2DUL << DCMIPP_PRCR_FORMAT_Pos) /*!< DCMIPP Format RAW14   */
+#define  DCMIPP_FORMAT_MONOCHROME_8B   (0x4AUL << DCMIPP_PRCR_FORMAT_Pos) /*!< DCMIPP Format 8-bits  */
+#define  DCMIPP_FORMAT_MONOCHROME_10B  (0x4BUL << DCMIPP_PRCR_FORMAT_Pos) /*!< DCMIPP Format 10-bits */
+#define  DCMIPP_FORMAT_MONOCHROME_12B  (0x4CUL << DCMIPP_PRCR_FORMAT_Pos) /*!< DCMIPP Format 12-bits */
+#define  DCMIPP_FORMAT_MONOCHROME_14B  (0x4DUL << DCMIPP_PRCR_FORMAT_Pos) /*!< DCMIPP Format 14-bits */
 /**
   * @}
   */
@@ -366,11 +372,11 @@ typedef void (*pDCMIPP_PIPE_CallbackTypeDef)(DCMIPP_HandleTypeDef *hdcmipp, uint
 /** @defgroup DCMIPP_Extended_Data_Mode  DCMIPP Extended Data Mode
   * @{
   */
-#define  DCMIPP_INTERFACE_8BITS   0U                         /*!< Interface captures 8bits on every pixel clock  */
-#define  DCMIPP_INTERFACE_10BITS (1U << DCMIPP_PRCR_EDM_Pos) /*!< Interface captures 10bits on every pixel clock */
-#define  DCMIPP_INTERFACE_12BITS (2U << DCMIPP_PRCR_EDM_Pos) /*!< Interface captures 12bits on every pixel clock */
-#define  DCMIPP_INTERFACE_14BITS (3U << DCMIPP_PRCR_EDM_Pos) /*!< Interface captures 14bits on every pixel clock */
-#define  DCMIPP_INTERFACE_16BITS (4U << DCMIPP_PRCR_EDM_Pos) /*!< Interface captures 16bits on every pixel clock */
+#define  DCMIPP_INTERFACE_8BITS   0UL                         /*!< Interface captures 8bits on every pixel clock  */
+#define  DCMIPP_INTERFACE_10BITS (1UL << DCMIPP_PRCR_EDM_Pos) /*!< Interface captures 10bits on every pixel clock */
+#define  DCMIPP_INTERFACE_12BITS (2UL << DCMIPP_PRCR_EDM_Pos) /*!< Interface captures 12bits on every pixel clock */
+#define  DCMIPP_INTERFACE_14BITS (3UL << DCMIPP_PRCR_EDM_Pos) /*!< Interface captures 14bits on every pixel clock */
+#define  DCMIPP_INTERFACE_16BITS (4UL << DCMIPP_PRCR_EDM_Pos) /*!< Interface captures 16bits on every pixel clock */
 /**
   * @}
   */
@@ -433,17 +439,17 @@ typedef void (*pDCMIPP_PIPE_CallbackTypeDef)(DCMIPP_HandleTypeDef *hdcmipp, uint
 /** @defgroup DCMIPP_Line_Select_Mode DCMIPP Line Select Mode
   * @{
   */
-#define DCMIPP_LSM_ALL          0U                              /*!< Interface captures all received lines */
-#define DCMIPP_LSM_ALTERNATE_2 (1U << DCMIPP_P0PPCR_LSM_Pos )   /*!< Interface captures one line out of two */
+#define DCMIPP_LSM_ALL          0UL                              /*!< Interface captures all received lines */
+#define DCMIPP_LSM_ALTERNATE_2 (1UL << DCMIPP_P0PPCR_LSM_Pos )   /*!< Interface captures one line out of two */
 /**
   * @}
   */
 /** @defgroup DCMIPP_Line_Start_Mode DCMIPP Line Start Mode
   * @{
   */
-#define DCMIPP_OELS_ODD         0U                              /*!< Interface captures first line from the frame start,
+#define DCMIPP_OELS_ODD         0UL                              /*!< Interface captures first line from the frame start,
                                                                      second one is dropped */
-#define DCMIPP_OELS_EVEN       (1U << DCMIPP_P0PPCR_OELS_Pos)   /*!< Interface captures second line from the frame
+#define DCMIPP_OELS_EVEN       (1UL << DCMIPP_P0PPCR_OELS_Pos)   /*!< Interface captures second line from the frame
                                                                      start, first one is dropped */
 /**
   * @}
@@ -458,19 +464,19 @@ typedef void (*pDCMIPP_PIPE_CallbackTypeDef)(DCMIPP_HandleTypeDef *hdcmipp, uint
 /** @defgroup DCMIPP_Byte_Select_Mode DCMIPP Byte Select Mode
   * @{
   */
-#define DCMIPP_BSM_ALL          0U                              /*!< Interface captures all received data */
-#define DCMIPP_BSM_DATA_OUT_2  (1U << DCMIPP_P0PPCR_BSM_Pos)    /*!< Interface captures 1 data out of 2   */
-#define DCMIPP_BSM_BYTE_OUT_4  (2U << DCMIPP_P0PPCR_BSM_Pos)    /*!< Interface captures 1 byte out of 4   */
-#define DCMIPP_BSM_2BYTE_OUT_4 (3U << DCMIPP_P0PPCR_BSM_Pos)    /*!< Interface captures 2 byte out of 4   */
+#define DCMIPP_BSM_ALL          0UL                              /*!< Interface captures all received data */
+#define DCMIPP_BSM_DATA_OUT_2  (1UL << DCMIPP_P0PPCR_BSM_Pos)    /*!< Interface captures 1 data out of 2   */
+#define DCMIPP_BSM_BYTE_OUT_4  (2UL << DCMIPP_P0PPCR_BSM_Pos)    /*!< Interface captures 1 byte out of 4   */
+#define DCMIPP_BSM_2BYTE_OUT_4 (3UL << DCMIPP_P0PPCR_BSM_Pos)    /*!< Interface captures 2 byte out of 4   */
 /**
   * @}
   */
 /** @defgroup DCMIPP_Byte_Start_Mode DCMIPP Byte Start Mode
   * @{
   */
-#define DCMIPP_OEBS_ODD        0U                              /*!< Interface captures first data (byte or double byte)
+#define DCMIPP_OEBS_ODD        0UL                              /*!< Interface captures first data (byte or double byte)
                                                                    from the frame/line start,second one being dropped */
-#define DCMIPP_OEBS_EVEN      (1U << DCMIPP_P0PPCR_OEBS_Pos)   /*!< Interface captures second data (byte or double byte)
+#define DCMIPP_OEBS_EVEN      (1UL << DCMIPP_P0PPCR_OEBS_Pos)   /*!< Interface captures second data (byte or double byte)
                                                                     from the frame/line start, first one is dropped   */
 /**
   * @}
@@ -490,14 +496,14 @@ typedef void (*pDCMIPP_PIPE_CallbackTypeDef)(DCMIPP_HandleTypeDef *hdcmipp, uint
 /** @defgroup DCMIPP_LineMult DCMIPP Line Mult
   * @{
   */
-#define  DCMIPP_MULTILINE_1_LINE      0U                                  /*!< Event after every 1   line   */
-#define  DCMIPP_MULTILINE_2_LINES    (1U << DCMIPP_P0PPCR_LINEMULT_Pos)   /*!< Event after every 2   lines  */
-#define  DCMIPP_MULTILINE_4_LINES    (2U << DCMIPP_P0PPCR_LINEMULT_Pos)   /*!< Event after every 4   lines  */
-#define  DCMIPP_MULTILINE_8_LINES    (3U << DCMIPP_P0PPCR_LINEMULT_Pos)   /*!< Event after every 8   lines  */
-#define  DCMIPP_MULTILINE_16_LINES   (4U << DCMIPP_P0PPCR_LINEMULT_Pos)   /*!< Event after every 16  lines  */
-#define  DCMIPP_MULTILINE_32_LINES   (5U << DCMIPP_P0PPCR_LINEMULT_Pos)   /*!< Event after every 32  lines  */
-#define  DCMIPP_MULTILINE_64_LINES   (6U << DCMIPP_P0PPCR_LINEMULT_Pos)   /*!< Event after every 64  lines  */
-#define  DCMIPP_MULTILINE_128_LINES  (7U << DCMIPP_P0PPCR_LINEMULT_Pos)   /*!< Event after every 128 lines  */
+#define  DCMIPP_MULTILINE_1_LINE      0UL                                  /*!< Event after every 1   line   */
+#define  DCMIPP_MULTILINE_2_LINES    (1UL << DCMIPP_P0PPCR_LINEMULT_Pos)   /*!< Event after every 2   lines  */
+#define  DCMIPP_MULTILINE_4_LINES    (2UL << DCMIPP_P0PPCR_LINEMULT_Pos)   /*!< Event after every 4   lines  */
+#define  DCMIPP_MULTILINE_8_LINES    (3UL << DCMIPP_P0PPCR_LINEMULT_Pos)   /*!< Event after every 8   lines  */
+#define  DCMIPP_MULTILINE_16_LINES   (4UL << DCMIPP_P0PPCR_LINEMULT_Pos)   /*!< Event after every 16  lines  */
+#define  DCMIPP_MULTILINE_32_LINES   (5UL << DCMIPP_P0PPCR_LINEMULT_Pos)   /*!< Event after every 32  lines  */
+#define  DCMIPP_MULTILINE_64_LINES   (6UL << DCMIPP_P0PPCR_LINEMULT_Pos)   /*!< Event after every 64  lines  */
+#define  DCMIPP_MULTILINE_128_LINES  (7UL << DCMIPP_P0PPCR_LINEMULT_Pos)   /*!< Event after every 128 lines  */
 /**
   * @}
   */
@@ -619,10 +625,6 @@ typedef void (*pDCMIPP_PIPE_CallbackTypeDef)(DCMIPP_HandleTypeDef *hdcmipp, uint
   */
 #define __HAL_DCMIPP_GET_IT_SOURCE(__HANDLE__, __INTERRUPT__) ((((__HANDLE__)->Instance->CMIER & \
                                                                  (__INTERRUPT__)) == (__INTERRUPT__)) ? SET : RESET)
-
-/**
-  * @}
-  */
 
 /* Exported functions --------------------------------------------------------*/
 /** @addtogroup DCMIPP_Exported_Functions
