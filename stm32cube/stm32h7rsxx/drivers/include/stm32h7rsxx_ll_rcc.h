@@ -87,10 +87,10 @@ extern "C" {
 
 #define LL_CLKSOURCE_REG(__CLKSOURCE__)     (((__CLKSOURCE__) >> LL_RCC_REG_SHIFT   ) & 0xFFUL)
 
-#define LL_CLKSOURCE(__REG__, __MSK__, __POS__, __CLK__) ((uint32_t)((((__MSK__) >> (__POS__)) << LL_RCC_MASK_SHIFT) | \
-                                                                     (( __POS__              ) << LL_RCC_POS_SHIFT)  | \
-                                                                     (( __REG__              ) << LL_RCC_REG_SHIFT)  | \
-                                                                     (((__CLK__) >> (__POS__)) << LL_RCC_CONFIG_SHIFT)))
+#define LL_CLKSOURCE(__REG__, __MSK__, __POS__, __CLK__) ((uint32_t)((((uint32_t)(__MSK__) >> (__POS__)) << LL_RCC_MASK_SHIFT) | \
+                                                                     (((uint32_t)(__POS__)   ) << LL_RCC_POS_SHIFT)  | \
+                                                                     (((uint32_t)(__REG__)   ) << LL_RCC_REG_SHIFT)  | \
+                                                                     (((uint32_t)(__CLK__) >> (__POS__)) << LL_RCC_CONFIG_SHIFT)))
 
 /**
   * @}

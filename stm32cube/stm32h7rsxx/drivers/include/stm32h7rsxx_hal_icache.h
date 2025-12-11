@@ -46,7 +46,7 @@ extern "C" {
 /** @defgroup ICACHE_WaysSelection Ways selection
   * @{
   */
-#define ICACHE_1WAY                    0U                /*!< 1-way cache (direct mapped cache) */
+#define ICACHE_1WAY                    0UL               /*!< 1-way cache (direct mapped cache) */
 #define ICACHE_4WAYS                   ICACHE_CR_WAYSEL  /*!< 4-ways set associative cache (default) */
 /**
   * @}

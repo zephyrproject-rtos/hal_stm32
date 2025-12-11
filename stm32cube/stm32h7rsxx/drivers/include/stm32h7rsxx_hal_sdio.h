@@ -27,7 +27,7 @@ extern "C" {
 /* Includes ----------------------------------------------------------------------------------------------------------*/
 #include "stm32h7rsxx_ll_sdmmc.h"
 
-/** @addtogroup STM32U5xx_HAL_Driver
+/** @addtogroup STM32H7RSxx_HAL_Driver
   * @{
   */
 #if defined (SDMMC1) || defined (SDMMC2)
@@ -346,7 +346,6 @@ typedef void (*HAL_SDIO_IOFunction_CallbackTypeDef)(SDIO_HandleTypeDef *hsdio, u
   * @brief  Enable the SDIO device interrupt.
   * @param  __HANDLE__ SDIO Handle.
   * @param  __INTERRUPT__ specifies the SDMMC interrupt sources to be enabled.
-  *         This parameter can be one or a combination of @ref SDMMC_LL_Interrupt_sources.
   * @retval None
   */
 #define __HAL_SDIO_ENABLE_IT(__HANDLE__, __INTERRUPT__) __SDMMC_ENABLE_IT((__HANDLE__)->Instance, (__INTERRUPT__))
@@ -355,7 +354,6 @@ typedef void (*HAL_SDIO_IOFunction_CallbackTypeDef)(SDIO_HandleTypeDef *hsdio, u
   * @brief  Disable the SDIO device interrupt.
   * @param  __HANDLE__ SDIO Handle.
   * @param  __INTERRUPT__ specifies the SDMMC interrupt sources to be disabled.
-  *          This parameter can be one or a combination of @ref SDMMC_LL_Interrupt_sources.
   * @retval None
   */
 #define __HAL_SDIO_DISABLE_IT(__HANDLE__, __INTERRUPT__) __SDMMC_DISABLE_IT((__HANDLE__)->Instance, (__INTERRUPT__))
@@ -364,7 +362,6 @@ typedef void (*HAL_SDIO_IOFunction_CallbackTypeDef)(SDIO_HandleTypeDef *hsdio, u
   * @brief  Check whether the specified SDIO flag is set or not.
   * @param  __HANDLE__ SDIO Handle.
   * @param  __FLAG__ specifies the flag to check.
-  *          This parameter can be one of @ref SDMMC_LL_Flags.
   * @retval The new state of SDIO FLAG (SET or RESET).
   */
 #define __HAL_SDIO_GET_FLAG(__HANDLE__, __FLAG__) __SDMMC_GET_FLAG((__HANDLE__)->Instance, (__FLAG__))
@@ -373,7 +370,6 @@ typedef void (*HAL_SDIO_IOFunction_CallbackTypeDef)(SDIO_HandleTypeDef *hsdio, u
   * @brief  Clear the SDIO's pending flags.
   * @param  __HANDLE__ SDIO Handle.
   * @param  __FLAG__ specifies the flag to clear.
-  *          This parameter can be one or a combination of @ref SDMMC_LL_Flags.
   * @retval None
   */
 #define __HAL_SDIO_CLEAR_FLAG(__HANDLE__, __FLAG__) __SDMMC_CLEAR_FLAG((__HANDLE__)->Instance, (__FLAG__))
@@ -382,7 +378,6 @@ typedef void (*HAL_SDIO_IOFunction_CallbackTypeDef)(SDIO_HandleTypeDef *hsdio, u
   * @brief  Check whether the specified SDIO interrupt has occurred or not.
   * @param  __HANDLE__ SDIO Handle.
   * @param  __INTERRUPT__ specifies the SDMMC interrupt source to check.
-  *          This parameter can be one of @ref SDMMC_LL_Interrupt_sources.
   * @retval The new state of SDIO IT (SET or RESET).
   */
 #define __HAL_SDIO_GET_IT(__HANDLE__, __INTERRUPT__) __SDMMC_GET_IT((__HANDLE__)->Instance, (__INTERRUPT__))

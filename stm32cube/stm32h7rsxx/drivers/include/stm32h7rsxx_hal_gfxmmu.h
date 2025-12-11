@@ -81,7 +81,7 @@ typedef struct
   uint32_t                    BlockSize;          /*!< Size of virtual memory block.
                                                        This parameter can be a value of @ref GFXMMU_BlockSize. */
   uint32_t                    DefaultValue;       /*!< Value returned when virtual memory location not physically mapped. */
-  /*   @note: Useful only when address translation is enabled. */
+                                                  /*   @note: Useful only when address translation is enabled. */
   FunctionalState             AddressTranslation; /*!< Address translation enable/disable. */
   GFXMMU_BuffersTypeDef       Buffers;            /*!< Physical buffers addresses. */
   GFXMMU_InterruptsTypeDef    Interrupts;         /*!< Interrupts parameters. */
@@ -101,9 +101,9 @@ typedef struct
   HAL_GFXMMU_StateTypeDef State;     /*!< GFXMMU state. */
   __IO uint32_t           ErrorCode; /*!< GFXMMU error code. */
 #if (USE_HAL_GFXMMU_REGISTER_CALLBACKS == 1)
-  void (*ErrorCallback)(struct __GFXMMU_HandleTypeDef *hgfxmmu);      /*!< GFXMMU error callback. */
-  void (*MspInitCallback)(struct __GFXMMU_HandleTypeDef *hgfxmmu);    /*!< GFXMMU MSP init callback. */
-  void (*MspDeInitCallback)(struct __GFXMMU_HandleTypeDef *hgfxmmu);  /*!< GFXMMU MSP de-init callback. */
+  void (*ErrorCallback)     (struct __GFXMMU_HandleTypeDef *hgfxmmu); /*!< GFXMMU error callback. */
+  void (*MspInitCallback)   (struct __GFXMMU_HandleTypeDef *hgfxmmu); /*!< GFXMMU MSP init callback. */
+  void (*MspDeInitCallback) (struct __GFXMMU_HandleTypeDef *hgfxmmu); /*!< GFXMMU MSP de-init callback. */
 #endif /* USE_HAL_GFXMMU_REGISTER_CALLBACKS */
 } GFXMMU_HandleTypeDef;
 
