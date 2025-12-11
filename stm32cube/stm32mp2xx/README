@@ -44,6 +44,10 @@ Patch List:
    - Added stm32cube/stm32mp2xx/drivers/include/stm32_assert.h
    - Removed unused stm32cube/stm32mp2xx/drivers/include/stm32_assert_template.h
 
+   *Fix to remove PAGESIZE definition which conflicts with POSIX
+    Impacted files:
+     drivers/include/Legacy/stm32_hal_legacy.h
+
    * HAL LVDS module disabled
    - Disabled HAL_LVDS_MODULE_ENABLED as LVDS HAL is not available yet
 
