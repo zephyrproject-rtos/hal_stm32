@@ -178,6 +178,7 @@ typedef struct
   uint32_t DQSMode;                   /*!< It enables or not the data strobe management.
                                            This parameter can be a value of @ref XSPI_DQSMode */
 } XSPI_RegularCmdTypeDef;
+
 /**
   * @brief  HAL XSPI Hyperbus Configuration Structure definition
   */
@@ -975,6 +976,7 @@ HAL_StatusTypeDef     HAL_XSPI_AutoPolling_IT(XSPI_HandleTypeDef *hxspi, const X
 
 /* XSPI memory-mapped mode functions */
 HAL_StatusTypeDef     HAL_XSPI_MemoryMapped(XSPI_HandleTypeDef *hxspi,  const XSPI_MemoryMappedTypeDef *pCfg);
+uint32_t              HAL_XSPI_IsMemoryMapped(XSPI_HandleTypeDef *hxspi);
 
 /* Callback functions in non-blocking modes ***********************************/
 void                  HAL_XSPI_ErrorCallback(XSPI_HandleTypeDef *hxspi);
@@ -1061,7 +1063,7 @@ HAL_StatusTypeDef     HAL_XSPI_SetDelayValue(XSPI_HandleTypeDef *hxspi, const XS
 
 #define IS_XSPI_MEMORY_TYPE(TYPE)                 (((TYPE) == HAL_XSPI_MEMTYPE_MICRON)       || \
                                                    ((TYPE) == HAL_XSPI_MEMTYPE_MACRONIX)     || \
-                                                   ((TYPE) == HAL_XSPI_MEMTYPE_APMEM)     || \
+                                                   ((TYPE) == HAL_XSPI_MEMTYPE_APMEM)        || \
                                                    ((TYPE) == HAL_XSPI_MEMTYPE_MACRONIX_RAM) || \
                                                    ((TYPE) == HAL_XSPI_MEMTYPE_HYPERBUS)     || \
                                                    ((TYPE) == HAL_XSPI_MEMTYPE_APMEM_16BITS))

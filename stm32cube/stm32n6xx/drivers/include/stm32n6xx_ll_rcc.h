@@ -3619,14 +3619,10 @@ __STATIC_INLINE void LL_RCC_SetUARTClockSource(uint32_t ClkSource)
   *         @arg @ref LL_RCC_OTGPHY1_CLKSOURCE_CLKP
   *         @arg @ref LL_RCC_OTGPHY1_CLKSOURCE_IC15
   *         @arg @ref LL_RCC_OTGPHY1_CLKSOURCE_HSE_DIV_2_OSC
-  *         @arg @ref LL_RCC_OTGPHY1CKREF_CLKSOURCE_OTGPHY1
-  *         @arg @ref LL_RCC_OTGPHY1CKREF_CLKSOURCE_HSE_DIV_2_OSC
   *         @arg @ref LL_RCC_OTGPHY2_CLKSOURCE_HSE_DIV_2
   *         @arg @ref LL_RCC_OTGPHY2_CLKSOURCE_CLKP
   *         @arg @ref LL_RCC_OTGPHY2_CLKSOURCE_IC15
   *         @arg @ref LL_RCC_OTGPHY2_CLKSOURCE_HSE_DIV_2_OSC
-  *         @arg @ref LL_RCC_OTGPHY2CKREF_CLKSOURCE_OTGPHY2
-  *         @arg @ref LL_RCC_OTGPHY2CKREF_CLKSOURCE_HSE_DIV_2_OSC
   * @retval None
   */
 __STATIC_INLINE void LL_RCC_SetUSBClockSource(uint32_t ClkSource)
@@ -4935,6 +4931,7 @@ __STATIC_INLINE uint32_t LL_RCC_GetRTC_HSEPrescaler(void)
   *         @arg @ref LL_RCC_TIM_PRESCALER_4
   *         @arg @ref LL_RCC_TIM_PRESCALER_8
   * @retval None
+  * @note   The clock ratio tim_ker_ck/tim_pclk must be an integer between 1 and 16
   */
 __STATIC_INLINE void LL_RCC_SetTIMPrescaler(uint32_t Prescaler)
 {

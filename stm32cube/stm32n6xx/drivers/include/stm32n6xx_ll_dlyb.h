@@ -64,16 +64,6 @@ typedef struct
   * @}
   */
 
-/** @defgroup DLYB_LL_Flags DLYB Flags
-  * @{
-  */
-
-#define DLYB_FLAG_LNGF DLYB_CFGR_LNGF
-
-/**
-  * @}
-  */
-
 /* Exported functions --------------------------------------------------------*/
 
 /** @defgroup DLYB_LL_Exported_Functions DLYB Exported Functions
@@ -90,20 +80,6 @@ typedef struct
   * @retval None
   */
 
-__STATIC_INLINE void LL_DLYB_Enable(DLYB_TypeDef *DLYBx)
-{
-  SET_BIT(DLYBx->CR, DLYB_CR_DEN);
-}
-
-/** @brief  Disable the DLYB.
-  * @param  DLYBx DLYB Instance.
-  * @retval None
-  */
-
-__STATIC_INLINE void LL_DLYB_Disable(DLYB_TypeDef *DLYBx)
-{
-  CLEAR_BIT(DLYBx->CR, DLYB_CR_DEN);
-}
 
 /**
   * @}
@@ -113,9 +89,8 @@ __STATIC_INLINE void LL_DLYB_Disable(DLYB_TypeDef *DLYBx)
   * @{
   */
 
-void LL_DLYB_SetDelay(DLYB_TypeDef *DLYBx, const LL_DLYB_CfgTypeDef  *pdlyb_cfg);
-void LL_DLYB_GetDelay(const DLYB_TypeDef *DLYBx, LL_DLYB_CfgTypeDef *pdlyb_cfg);
-uint32_t LL_DLYB_GetClockPeriod(DLYB_TypeDef *DLYBx, LL_DLYB_CfgTypeDef *pdlyb_cfg);
+uint32_t LL_DLYB_SetDelayNormalSpeed(DLYB_TypeDef *DLYBx, const LL_DLYB_CfgTypeDef *pdlyb_cfg);
+uint32_t  LL_DLYB_SetDelayHighSpeed(DLYB_TypeDef *DLYBx,  const uint32_t SDMMC_RX_TAP_SEL);
 
 /**
   * @}

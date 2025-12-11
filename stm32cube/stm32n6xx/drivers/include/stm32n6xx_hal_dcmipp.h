@@ -363,13 +363,13 @@ typedef struct
   uint32_t HSize;       /*!< Configures the DCMIPP Downsize Horizontal Size
                              This parameter can be one value between 0 and 4094     */
   uint32_t VRatio;      /*!< Configures the DCMIPP Downsize Vertical Ratio
-                             This parameter can be one value between 0 and 4094     */
+                             This parameter can be one value between 8192 and 65535 */
   uint32_t HRatio;      /*!< Configures the DCMIPP Downsize Horizontal Ratio
-                             This parameter can be one value between 0 and 4094     */
+                             This parameter can be one value between 8192 and 65535 */
   uint32_t VDivFactor;  /*!< Configures the DCMIPP Downsize Vertical Division Factor
-                             This parameter can be one value between 0 and 4094     */
+                             This parameter can be one value between 128 and 1023   */
   uint32_t HDivFactor;  /*!< Configures the DCMIPP Downsize Horizontal Division Factor
-                             This parameter can be one value between 0 and 4094     */
+                             This parameter can be one value between 128 and 1023   */
 } DCMIPP_DownsizeTypeDef;
 
 typedef struct
@@ -2107,6 +2107,12 @@ HAL_StatusTypeDef HAL_DCMIPP_PIPE_PARALLEL_SetInputPixelFormat(DCMIPP_HandleType
 HAL_StatusTypeDef HAL_DCMIPP_PIPE_SetPitch(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe, uint32_t LinePitch);
 HAL_StatusTypeDef HAL_DCMIPP_PIPE_SetPixelPackerFormat(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe,
                                                        uint32_t PixelPackerFormat);
+HAL_StatusTypeDef HAL_DCMIPP_PIPE_SetSemiPlanarMemoryAddress(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe,
+                                                             const DCMIPP_SemiPlanarDstAddressTypeDef
+                                                             *pSemiPlanarDstAddress);
+HAL_StatusTypeDef HAL_DCMIPP_PIPE_SetFullPlanarMemoryAddress(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe,
+                                                             const DCMIPP_FullPlanarDstAddressTypeDef
+                                                             *pFullPlanarDstAddress);
 HAL_StatusTypeDef HAL_DCMIPP_PIPE_CSI_EnableShare(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe);
 HAL_StatusTypeDef HAL_DCMIPP_PIPE_CSI_DisableShare(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe);
 HAL_StatusTypeDef HAL_DCMIPP_PIPE_CSI_ForceDataTypeFormat(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe,

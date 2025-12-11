@@ -52,9 +52,11 @@ extern "C" {
    application
   */
 
-#if !defined (STM32N647xx) && !defined (STM32N657xx)
+#if !defined (STM32N647xx) && !defined (STM32N657xx) && !defined (STM32N645xx) && !defined (STM32N655xx)
   /* #define STM32N647xx */   /*!< STM32N647xx Devices */
   /* #define STM32N657xx */   /*!< STM32N657xx Devices */
+  /* #define STM32N645xx */   /*!< STM32N645xx Devices */
+  /* #define STM32N655xx */   /*!< STM32N655xx Devices */
 #endif
 
 /*  Tip: To avoid modifying this file each time you need to switch between these
@@ -65,7 +67,7 @@ extern "C" {
   * @brief CMSIS Device version number
   */
 #define __STM32N6_CMSIS_VERSION_MAIN   (0x01U) /*!< [31:24] main version */
-#define __STM32N6_CMSIS_VERSION_SUB1   (0x02U) /*!< [23:16] sub1 version */
+#define __STM32N6_CMSIS_VERSION_SUB1   (0x03U) /*!< [23:16] sub1 version */
 #define __STM32N6_CMSIS_VERSION_SUB2   (0x00U) /*!< [15:8]  sub2 version */
 #define __STM32N6_CMSIS_VERSION_RC     (0x00U) /*!< [7:0]  release candidate */
 #define __STM32N6_CMSIS_VERSION        ((__STM32N6_CMSIS_VERSION_MAIN << 24U)\

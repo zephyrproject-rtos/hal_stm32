@@ -44,7 +44,7 @@
     (#)Initialize the HASH HAL using HAL_HASH_Init(). This function:
         (##) resorts to HAL_HASH_MspInit() for low-level initialization,
         (##) configures the data type: no swap, half word swap, bit swap or byte swap,
-        (##) configures the Algorithm : MD5, SHA1 or SHA2
+         (##) configures the Algorithm : SHA1 or SHA2
 
     (#)Three processing schemes are available:
         (##) Polling mode: processing APIs are blocking functions
@@ -168,7 +168,7 @@ static HAL_StatusTypeDef HASH_WaitOnFlagUntilTimeout(HASH_HandleTypeDef *hhash, 
       (+) Configure HASH (HAL_HASH_SetConfig) with the specified parameters in the HASH_ConfigTypeDef
           Parameters which are configured in This section are :
           (+) Data Type : no swap, half word swap, bit swap or byte swap
-          (+) Algorithm : MD5,SHA1 or SHA2
+          (+) Algorithm : SHA1 or SHA2
       (+) Get HASH configuration (HAL_HASH_GetConfig) from the specified parameters in the HASH_HandleTypeDef
 
 @endverbatim

@@ -432,7 +432,6 @@ uint32_t HAL_GetHalVersion(void)
   return __STM32N6xx_HAL_VERSION;
 }
 
-#if defined(CPU_IN_SECURE_STATE)
 /**
   * @brief  Returns the device revision identifier
   * @note Returned Revision ID can be
@@ -446,6 +445,7 @@ uint32_t HAL_GetREVID(void)
   return *(uint32_t *)(REVID_BASE);
 }
 
+#if defined(CPU_IN_SECURE_STATE)
 /**
   * @brief  Returns the device identifier
   * @note This function can only be used if the HAL BSEC module is enabled in the hal configuration file.
@@ -1467,6 +1467,8 @@ void HAL_SYSCFG_DisablexPUClockGating(uint32_t Xpu)
 
 /**
   * @brief  Enable the VDDIO2 compensation cell.
+  * @note   This function is deprecated, please refer to Errata Sheet ES0620.
+  *         I/O compensation cells must remain disabled.
   * @retval None
   */
 void HAL_SYSCFG_EnableVDDIO2CompensationCell(void)
@@ -1485,6 +1487,8 @@ void HAL_SYSCFG_DisableVDDIO2CompensationCell(void)
 
 /**
   * @brief  Enable the VDDIO3 compensation cell.
+  * @note   This function is deprecated, please refer to Errata Sheet ES0620.
+  *         I/O compensation cells must remain disabled.
   * @retval None
   */
 void HAL_SYSCFG_EnableVDDIO3CompensationCell(void)
@@ -1503,6 +1507,8 @@ void HAL_SYSCFG_DisableVDDIO3CompensationCell(void)
 
 /**
   * @brief  Enable the VDDIO4 compensation cell.
+  * @note   This function is deprecated, please refer to Errata Sheet ES0620.
+  *         I/O compensation cells must remain disabled.
   * @retval None
   */
 void HAL_SYSCFG_EnableVDDIO4CompensationCell(void)
@@ -1521,6 +1527,8 @@ void HAL_SYSCFG_DisableVDDIO4CompensationCell(void)
 
 /**
   * @brief  Enable the VDDIO5 compensation cell.
+  * @note   This function is deprecated, please refer to Errata Sheet ES0620.
+  *         I/O compensation cells must remain disabled.
   * @retval None
   */
 void HAL_SYSCFG_EnableVDDIO5CompensationCell(void)
@@ -1820,6 +1828,8 @@ HAL_StatusTypeDef HAL_SYSCFG_ConfigVDDCompensationCell(uint32_t Code, uint32_t N
 
 /**
   * @brief  Enable the VDD compensation cell.
+  * @note   This function is deprecated, please refer to Errata Sheet ES0620.
+  *         I/O compensation cells must remain disabled.
   * @retval None
   */
 void HAL_SYSCFG_EnableVDDCompensationCell(void)
@@ -2086,6 +2096,58 @@ uint32_t HAL_SYSCFG_GetAddressWritePostingBuffer(void)
   return READ_BIT(SYSCFG->AHBWP_ERROR_SR, SYSCFG_AHBWP_ERROR_SR_PAHB_ERROR_ADDR);
 }
 
+/**
+  * @}
+  */
+
+/** @defgroup HAL_Exported_Functions_Group5 HAL FMC configuration functions
+  *  @brief    HAL FMC configuration functions
+  *
+@verbatim
+ ===============================================================================
+                      ##### HAL FMC configuration functions #####
+ ===============================================================================
+    [..]  This section provides functions allowing to:
+      (+) Configure the FMC Memory Bank Swapping mode
+      (+) Get current FMC Memory Bank Swapping Mode used
+@endverbatim
+  * @{
+  */
+
+/**
+  * @brief  Set the FMC Memory Bank Swapping mode.
+  * @param  BankMapConfig  specifies the FMC Memory Bank Swapping mode to configure
+  *           This parameter can be one of the following values:
+  *             @arg FMC_SWAPBANK_MODE0 : FMC memory default mapping is used
+  *             @arg FMC_SWAPBANK_MODE1 : NOR/SRAM/PSRAM bank and SDRAM bank1 are swapped
+  * @note   FMC bank mapping options
+  * | Start-End address     | FMC_SWAPBANK_MODE0  | FMC_SWAPBANK_MODE1  |
+  * |-----------------------|---------------------|---------------------|
+  * | 0x60000000-0x6FFFFFFF | NOR/SRAM/PSRAM bank | SDRAM bank1         |
+  * | 0xC0000000-0xCFFFFFFF | SDRAM bank1         | NOR/SRAM/PSRAM bank |
+  * | 0xD0000000-0xDFFFFFFF | SDRAM bank2         | SDRAM bank2         |
+  * @retval None
+  */
+void HAL_FMC_SetBankSwapConfig(uint32_t BankMapConfig)
+{
+  /* Check the parameter */
+  assert_param(IS_FMC_SWAPBANK_MODE(BankMapConfig));
+
+  /* Apply Memory Bank Swapping configuration */
+  MODIFY_REG(FMC_Common_R->CFGR, FMC_CFGR_BMAP, BankMapConfig);
+}
+
+/**
+  * @brief  Get the FMC Memory Bank Swapping mode.
+  * @retval Return value is FMC Memory Bank Swapping mode
+  *           This return value can be one of the following values:
+  *             @arg FMC_SWAPBANK_MODE0 : FMC memory default mapping is used
+  *             @arg FMC_SWAPBANK_MODE1 : NOR/SRAM/PSRAM bank and SDRAM bank1 are swapped
+  */
+uint32_t HAL_FMC_GetBankSwapConfig(void)
+{
+  return READ_BIT(FMC_Common_R->CFGR, FMC_CFGR_BMAP);
+}
 /**
   * @}
   */

@@ -98,126 +98,108 @@
 /** @addtogroup DLYB_Control_Functions DLYB Control functions
   * @{
   */
-
 /**
-  * @brief  Set the Delay value configured on SEL and UNIT.
-  * @param  DLYBx: Pointer to DLYB instance.
-  * @param  pdlyb_cfg: Pointer to DLYB configuration structure.
-  * @retval An ErrorStatus enumeration value:
-  *          - SUCCESS: the Delay value is set.
-  *          - ERROR: the Delay value is not set.
+  * @brief  Set Normal Speed mode for frequencies below 50 MHz.
+  * @param  DLYBx: Pointer to a DLYB instance.
+  * @param  pdlyb_cfg: Pointer to the DLYB configuration structure.
+  * @retval uint32_t: An ErrorStatus enumeration value:
+  *          - SUCCESS: Normal speed mode set successfully.
+  *          - HAL_TIMEOUT: Failed to establish normal speed mode within timeout.
   */
-void LL_DLYB_SetDelay(DLYB_TypeDef *DLYBx, const LL_DLYB_CfgTypeDef  *pdlyb_cfg)
+uint32_t LL_DLYB_SetDelayNormalSpeed(DLYB_TypeDef *DLYBx, const LL_DLYB_CfgTypeDef *pdlyb_cfg)
 {
-  /* Check the DelayBlock instance */
-  assert_param(IS_DLYB_ALL_INSTANCE(DLYBx));
-
-  /* Enable the length sampling */
-  SET_BIT(DLYBx->CR, DLYB_CR_SEN);
-
-  /* Update the UNIT and SEL field */
-  DLYBx->CFGR = (pdlyb_cfg->PhaseSel) | ((pdlyb_cfg->Units) << DLYB_CFGR_UNIT_Pos);
-
-  /* Disable the length sampling */
-  CLEAR_BIT(DLYBx->CR, DLYB_CR_SEN);
-}
-
-/**
-  * @brief  Get the Delay value configured on SEL and UNIT.
-  * @param  DLYBx: Pointer to DLYB instance.
-  * @param  pdlyb_cfg: Pointer to DLYB configuration structure.
-  * @retval An ErrorStatus enumeration value:
-  *          - SUCCESS: the Delay value is received.
-  *          - ERROR: the Delay value is not received.
-  */
-void LL_DLYB_GetDelay(const DLYB_TypeDef *DLYBx, LL_DLYB_CfgTypeDef *pdlyb_cfg)
-{
-  /* Check the DelayBlock instance */
-  assert_param(IS_DLYB_ALL_INSTANCE(DLYBx));
-
-  /* Fill the DelayBlock configuration structure with SEL and UNIT value */
-  pdlyb_cfg->Units = ((DLYBx->CFGR & DLYB_CFGR_UNIT) >> DLYB_CFGR_UNIT_Pos);
-  pdlyb_cfg->PhaseSel = (DLYBx->CFGR & DLYB_CFGR_SEL);
-}
-
-/**
-  * @brief  Get the clock period.
-  * @param  DLYBx: Pointer to DLYB instance.
-  * @param  pdlyb_cfg: Pointer to DLYB configuration structure.
-  * @retval An ErrorStatus enumeration value:
-  *          - SUCCESS: there is a valid period detected and stored in pdlyb_cfg.
-  *          - ERROR: there is no valid period detected.
-  */
-uint32_t LL_DLYB_GetClockPeriod(DLYB_TypeDef *DLYBx, LL_DLYB_CfgTypeDef *pdlyb_cfg)
-{
-  uint32_t i = 0U;
-  uint32_t nb ;
-  uint32_t lng ;
   uint32_t tickstart;
 
   /* Check the DelayBlock instance */
   assert_param(IS_DLYB_ALL_INSTANCE(DLYBx));
 
-  /* Enable the length sampling */
-  SET_BIT(DLYBx->CR, DLYB_CR_SEN);
+  /* Disable the lock mode */
+  CLEAR_BIT(DLYBx->CFG, DLYB_CFGR_SDMMC_DLL_EN);
 
-  /* Delay line length detection */
-  while (i < DLYB_MAX_UNIT)
+  /* Wait until the lock is disabled */
+  tickstart = HAL_GetTick();
+  while ((DLYBx->STATUS & DLYB_STATUS_SDMMC_DLL_LOCK) == DLYB_STATUS_SDMMC_DLL_LOCK)
   {
-    /* Set the Delay of the UNIT(s)*/
-    DLYBx->CFGR = DLYB_MAX_SELECT | (i << DLYB_CFGR_UNIT_Pos);
-
-    /* Waiting for a LNG valid value */
-    tickstart =  HAL_GetTick();
-    while ((DLYBx->CFGR & DLYB_CFGR_LNGF) == 0U)
+    if ((HAL_GetTick() - tickstart) >= DLYB_TIMEOUT)
     {
-      if ((HAL_GetTick() - tickstart) >=  DLYB_TIMEOUT)
+      /* New check to avoid false timeout detection in case of preemption */
+      if ((DLYBx->STATUS & DLYB_STATUS_SDMMC_DLL_LOCK) == DLYB_STATUS_SDMMC_DLL_LOCK)
       {
-        /* New check to avoid false timeout detection in case of preemption */
-        if ((DLYBx->CFGR & DLYB_CFGR_LNGF) == 0U)
-        {
-          return (uint32_t) HAL_TIMEOUT;
-        }
+        return (uint32_t) HAL_TIMEOUT;
       }
     }
-
-    if ((DLYBx->CFGR & DLYB_LNG_10_0_MASK) != 0U)
-    {
-      if ((DLYBx->CFGR & (DLYB_CFGR_LNG_11 | DLYB_CFGR_LNG_10)) != DLYB_LNG_11_10_MASK)
-      {
-        /* Delay line length is configured to one input clock period*/
-        break;
-      }
-    }
-    i++;
   }
+  /* Enable bypass mode */
+  SET_BIT(DLYBx->CFG, DLYB_CFGR_SDMMC_DLL_BYP_EN);
 
-  if (DLYB_MAX_UNIT != i)
+  /* Enable anti-glitch logic */
+  SET_BIT(DLYBx->CFG, DLYB_CFGR_SDMMC_DLL_ANTIGLITCH_EN);
+
+  /* Set the value of the taps (a.k.a units) */
+  MODIFY_REG(DLYBx->CFG, DLYB_CFGR_SDMMC_DLL_BYP_CMD_Msk, pdlyb_cfg->Units << DLYB_CFGR_SDMMC_DLL_BYP_CMD_Pos);
+
+  /* Program RX delay tap selection (0 to 31) */
+  MODIFY_REG(DLYBx->CFG, DLYB_CFGR_SDMMC_RX_TAP_SEL_Msk, pdlyb_cfg->PhaseSel << DLYB_CFGR_SDMMC_RX_TAP_SEL_Pos);
+
+  /* Wait until RX delay line is configured with the delay selected by SDMMC_RX_TAP_SEL[5:0] */
+  tickstart = HAL_GetTick();
+  while ((DLYBx->STATUS & DLYB_STATUS_SDMMC_RX_TAP_SEL_ACK) != DLYB_STATUS_SDMMC_RX_TAP_SEL_ACK)
   {
-    /* Determine how many unit delays (nb) span one input clock period */
-    lng = (DLYBx->CFGR & DLYB_CFGR_LNG) >> 16U;
-    nb = 10U;
-    while ((nb > 0U) && ((lng >> nb) == 0U))
+    if ((HAL_GetTick() - tickstart) >= DLYB_TIMEOUT)
     {
-      nb--;
-    }
-    if (nb != 0U)
-    {
-      pdlyb_cfg->PhaseSel = nb ;
-      pdlyb_cfg->Units = i ;
-
-      /* Disable the length sampling */
-      CLEAR_BIT(DLYBx->CR, DLYB_CR_SEN);
-
-      return (uint32_t)SUCCESS;
+      /* New check to avoid false timeout detection in case of preemption */
+      if ((DLYBx->STATUS & DLYB_STATUS_SDMMC_RX_TAP_SEL_ACK) != DLYB_STATUS_SDMMC_RX_TAP_SEL_ACK)
+      {
+        return (uint32_t) HAL_TIMEOUT;
+      }
     }
   }
 
-  /* Disable the length sampling */
-  CLEAR_BIT(DLYBx->CR, DLYB_CR_SEN);
+  return (uint32_t) SUCCESS;
+}
 
-  return (uint32_t)ERROR;
+/**
+  * @brief  Set High Speed mode for frequencies higher than 50 MHz.
+  * @param  DLYBx: Pointer to a DLYB instance.
+  * @param  SDMMC_RX_TAP_SEL: RX delay tap selection value (0 to 31).
+  * @retval uint32_t: An ErrorStatus enumeration value:
+  *          - SUCCESS: High speed mode set successfully.
+  *          - HAL_TIMEOUT: Failed to establish high speed mode within timeout.
+  */
+uint32_t LL_DLYB_SetDelayHighSpeed(DLYB_TypeDef *DLYBx, const uint32_t SDMMC_RX_TAP_SEL)
+{
+  uint32_t tickstart;
 
+  /* Check the DelayBlock instance */
+  assert_param(IS_DLYB_ALL_INSTANCE(DLYBx));
+
+  /* Disable bypass mode */
+  CLEAR_BIT(DLYBx->CFG, DLYB_CFGR_SDMMC_DLL_BYP_EN);
+
+  /* Enable anti-glitch logic */
+  SET_BIT(DLYBx->CFG, DLYB_CFGR_SDMMC_DLL_ANTIGLITCH_EN);
+
+  /* Start lock sequence again */
+  SET_BIT(DLYBx->CFG, DLYB_CFGR_SDMMC_DLL_EN);
+
+  /* Program RX delay tap selection (0 to 31) */
+  MODIFY_REG(DLYBx->CFG, DLYB_CFGR_SDMMC_RX_TAP_SEL_Msk, SDMMC_RX_TAP_SEL << DLYB_CFGR_SDMMC_RX_TAP_SEL_Pos);
+
+  /* Wait until RX delay tap selection is acknowledged */
+  tickstart = HAL_GetTick();
+  while ((DLYBx->STATUS & DLYB_STATUS_SDMMC_RX_TAP_SEL_ACK) == 0U)
+  {
+    if ((HAL_GetTick() - tickstart) >= DLYB_TIMEOUT)
+    {
+      /* New check to avoid false timeout detection in case of preemption */
+      if ((DLYBx->STATUS & DLYB_STATUS_SDMMC_RX_TAP_SEL_ACK) == 0U)
+      {
+        return (uint32_t) HAL_TIMEOUT;
+      }
+    }
+  }
+
+  return (uint32_t) SUCCESS;
 }
 
 /**

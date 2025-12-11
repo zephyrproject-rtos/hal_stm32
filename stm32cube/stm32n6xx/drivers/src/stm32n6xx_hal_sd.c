@@ -3900,7 +3900,7 @@ static uint32_t SD_UltraHighSpeed(SD_HandleTypeDef *hsd, uint32_t UltraHighSpeed
       /* Enable DelayBlock Peripheral */
       /* SDMMC_FB_CLK tuned feedback clock selected as receive clock, for SDR104 */
       MODIFY_REG(hsd->Instance->CLKCR, SDMMC_CLKCR_SELCLKRX, SDMMC_CLKCR_SELCLKRX_1);
-      LL_DLYB_Enable(SD_GET_DLYB_INSTANCE(hsd->Instance));
+
 #endif /* (DLYB_SDMMC1) || (DLYB_SDMMC2) */
     }
   }
@@ -4027,7 +4027,7 @@ static uint32_t SD_DDR_Mode(SD_HandleTypeDef *hsd)
       /* Enable DelayBlock Peripheral */
       /* SDMMC_CKin feedback clock selected as receive clock, for DDR50 */
       MODIFY_REG(hsd->Instance->CLKCR, SDMMC_CLKCR_SELCLKRX, SDMMC_CLKCR_SELCLKRX_0);
-      LL_DLYB_Enable(SD_GET_DLYB_INSTANCE(hsd->Instance));
+
 #endif /* (DLYB_SDMMC1) || (DLYB_SDMMC2) */
     }
   }
