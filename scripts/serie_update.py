@@ -507,32 +507,21 @@ class Stm32SerieUpdate:
                 if "_hal_rcc" in filename.name:
                     continue
 
-                if "_hal_" in filename.name:
-                    # retrieve IP name from filename, like adc,
-                    # which is delimited by
-                    #   * _hal_ on one side
-                    #   * and file extension on the other side
-                    pattern = r".*_hal_(.*)\..*"
+                # Retrieve driver name from filename, like adc, spi, ...
+                # which is delimited by _ll_ or _hal_ or _util_ on the left side
+                # and file extension on the right side.
+                # If matching, make it be built upon its related config symbol.
+                pattern = re.compile(r".*_(ll|hal|util)_(.*)\..*")
+                match = pattern.match(filename.name)
+                if match:
+                    drv_type = match.group(1)
+                    drv_name = match.group(2)
                     cmakelists_new.write(
-                        "zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_"
-                        + re.sub(pattern, r"\1", filename.name).upper()
-                        + " drivers/src/"
-                        + filename.name
-                        + ")\n"
+                        "zephyr_library_sources_ifdef("
+                        f"CONFIG_USE_STM32_{drv_type.upper()}_{drv_name.upper()}"
+                        f" drivers/src/{filename.name})\n"
                     )
-                if "_ll_" in filename.name:
-                    # retrieve IP name from filename, like adc,
-                    # which is delimited by
-                    #   * _ll_ on one side
-                    #   * and file extension on the other side
-                    pattern = r".*_ll_(.*)\..*"
-                    cmakelists_new.write(
-                        "zephyr_library_sources_ifdef(CONFIG_USE_STM32_LL_"
-                        + re.sub(pattern, r"\1", filename.name).upper()
-                        + " drivers/src/"
-                        + filename.name
-                        + ")\n"
-                    )
+
         self.os_cmd(("dos2unix", str(cmakelists_path)))
 
     def generate_assert_file(self):
