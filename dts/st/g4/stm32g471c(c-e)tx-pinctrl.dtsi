@@ -605,6 +605,28 @@
 				pinmux = <STM32_PINMUX('B', 4, AF0)>;
 			};
 
+			/* LPTIM */
+
+			/omit-if-no-ref/ lptim1_out_pa14: lptim1_out_pa14 {
+				pinmux = <STM32_PINMUX('A', 14, AF1)>;
+			};
+
+			/omit-if-no-ref/ lptim1_out_pb2: lptim1_out_pb2 {
+				pinmux = <STM32_PINMUX('B', 2, AF1)>;
+			};
+
+			/omit-if-no-ref/ lptim1_in1_pb5: lptim1_in1_pb5 {
+				pinmux = <STM32_PINMUX('B', 5, AF11)>;
+			};
+
+			/omit-if-no-ref/ lptim1_etr_pb6: lptim1_etr_pb6 {
+				pinmux = <STM32_PINMUX('B', 6, AF11)>;
+			};
+
+			/omit-if-no-ref/ lptim1_in2_pb7: lptim1_in2_pb7 {
+				pinmux = <STM32_PINMUX('B', 7, AF11)>;
+			};
+
 			/* OPAMP */
 
 			/omit-if-no-ref/ opamp1_vinp_pa1: opamp1_vinp_pa1 {

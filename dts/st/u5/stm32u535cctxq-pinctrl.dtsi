@@ -372,6 +372,80 @@
 				pinmux = <STM32_PINMUX('B', 4, AF0)>;
 			};
 
+			/* LPTIM */
+
+			/omit-if-no-ref/ lptim1_ch2_pa1: lptim1_ch2_pa1 {
+				pinmux = <STM32_PINMUX('A', 1, AF0)>;
+			};
+
+			/omit-if-no-ref/ lptim1_ch1_pa14: lptim1_ch1_pa14 {
+				pinmux = <STM32_PINMUX('A', 14, AF1)>;
+			};
+
+			/omit-if-no-ref/ lptim1_ch1_pb3: lptim1_ch1_pb3 {
+				pinmux = <STM32_PINMUX('B', 3, AF2)>;
+			};
+
+			/omit-if-no-ref/ lptim1_ch2_pb4: lptim1_ch2_pb4 {
+				pinmux = <STM32_PINMUX('B', 4, AF1)>;
+			};
+
+			/omit-if-no-ref/ lptim1_in1_pb5: lptim1_in1_pb5 {
+				pinmux = <STM32_PINMUX('B', 5, AF1)>;
+			};
+
+			/omit-if-no-ref/ lptim1_etr_pb6: lptim1_etr_pb6 {
+				pinmux = <STM32_PINMUX('B', 6, AF1)>;
+			};
+
+			/omit-if-no-ref/ lptim1_in2_pb7: lptim1_in2_pb7 {
+				pinmux = <STM32_PINMUX('B', 7, AF1)>;
+			};
+
+			/omit-if-no-ref/ lptim2_ch1_pa4: lptim2_ch1_pa4 {
+				pinmux = <STM32_PINMUX('A', 4, AF14)>;
+			};
+
+			/omit-if-no-ref/ lptim2_etr_pa5: lptim2_etr_pa5 {
+				pinmux = <STM32_PINMUX('A', 5, AF14)>;
+			};
+
+			/omit-if-no-ref/ lptim2_ch2_pa7: lptim2_ch2_pa7 {
+				pinmux = <STM32_PINMUX('A', 7, AF13)>;
+			};
+
+			/omit-if-no-ref/ lptim2_ch1_pa8: lptim2_ch1_pa8 {
+				pinmux = <STM32_PINMUX('A', 8, AF14)>;
+			};
+
+			/omit-if-no-ref/ lptim2_in2_pa10: lptim2_in2_pa10 {
+				pinmux = <STM32_PINMUX('A', 10, AF2)>;
+			};
+
+			/omit-if-no-ref/ lptim2_in1_pb1: lptim2_in1_pb1 {
+				pinmux = <STM32_PINMUX('B', 1, AF14)>;
+			};
+
+			/omit-if-no-ref/ lptim2_in2_pb15: lptim2_in2_pb15 {
+				pinmux = <STM32_PINMUX('B', 15, AF2)>;
+			};
+
+			/omit-if-no-ref/ lptim3_ch1_pb0: lptim3_ch1_pb0 {
+				pinmux = <STM32_PINMUX('B', 0, AF4)>;
+			};
+
+			/omit-if-no-ref/ lptim3_ch2_pb1: lptim3_ch2_pb1 {
+				pinmux = <STM32_PINMUX('B', 1, AF4)>;
+			};
+
+			/omit-if-no-ref/ lptim3_in1_pb13: lptim3_in1_pb13 {
+				pinmux = <STM32_PINMUX('B', 13, AF2)>;
+			};
+
+			/omit-if-no-ref/ lptim3_etr_pb14: lptim3_etr_pb14 {
+				pinmux = <STM32_PINMUX('B', 14, AF2)>;
+			};
+
 			/* OCTOSPI */
 
 			/omit-if-no-ref/ octospi1_ncs_pa0: octospi1_ncs_pa0 {

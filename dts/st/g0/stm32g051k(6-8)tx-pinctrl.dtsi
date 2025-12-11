@@ -424,6 +424,48 @@
 				pinmux = <STM32_PINMUX('A', 14, AF0)>;
 			};
 
+			/* LPTIM */
+
+			/omit-if-no-ref/ lptim1_out_pa0: lptim1_out_pa0 {
+				pinmux = <STM32_PINMUX('A', 0, AF5)>;
+			};
+
+			/omit-if-no-ref/ lptim1_out_pb0: lptim1_out_pb0 {
+				pinmux = <STM32_PINMUX('B', 0, AF5)>;
+			};
+
+			/omit-if-no-ref/ lptim1_out_pb2: lptim1_out_pb2 {
+				pinmux = <STM32_PINMUX('B', 2, AF5)>;
+			};
+
+			/omit-if-no-ref/ lptim1_in1_pb5: lptim1_in1_pb5 {
+				pinmux = <STM32_PINMUX('B', 5, AF5)>;
+			};
+
+			/omit-if-no-ref/ lptim1_etr_pb6: lptim1_etr_pb6 {
+				pinmux = <STM32_PINMUX('B', 6, AF5)>;
+			};
+
+			/omit-if-no-ref/ lptim1_in2_pb7: lptim1_in2_pb7 {
+				pinmux = <STM32_PINMUX('B', 7, AF5)>;
+			};
+
+			/omit-if-no-ref/ lptim2_out_pa4: lptim2_out_pa4 {
+				pinmux = <STM32_PINMUX('A', 4, AF5)>;
+			};
+
+			/omit-if-no-ref/ lptim2_etr_pa5: lptim2_etr_pa5 {
+				pinmux = <STM32_PINMUX('A', 5, AF5)>;
+			};
+
+			/omit-if-no-ref/ lptim2_out_pa8: lptim2_out_pa8 {
+				pinmux = <STM32_PINMUX('A', 8, AF5)>;
+			};
+
+			/omit-if-no-ref/ lptim2_in1_pb1: lptim2_in1_pb1 {
+				pinmux = <STM32_PINMUX('B', 1, AF5)>;
+			};
+
 			/* RCC_MCO */
 
 			/omit-if-no-ref/ rcc_mco_pa8: rcc_mco_pa8 {
