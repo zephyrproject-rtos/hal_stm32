@@ -39,24 +39,8 @@ extern "C" {
 
 /* Private types -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-
 /* Private constants ---------------------------------------------------------*/
-/** @defgroup CRS_LL_Private_Constants CRS Private Constants
-  * @{
-  */
-
-/* Defines used for the bit position in the register and perform offsets*/
-#define CRS_POSITION_TRIM        (CRS_CR_TRIM_Pos)     /* bit position in CR reg */
-#define CRS_POSITION_FECAP       (CRS_ISR_FECAP_Pos)   /* bit position in ISR reg */
-#define CRS_POSITION_FELIM       (CRS_CFGR_FELIM_Pos)  /* bit position in CFGR reg */
-
-
-/**
-  * @}
-  */
-
 /* Private macros ------------------------------------------------------------*/
-
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
 /** @defgroup CRS_LL_Exported_Constants CRS Exported Constants
@@ -127,8 +111,8 @@ extern "C" {
 /** @defgroup CRS_LL_EC_FREQERRORDIR Frequency Error Direction
   * @{
   */
-#define LL_CRS_FREQ_ERROR_DIR_UP             0x00000000U        /*!< Upcounting direction, the actual frequency is above the target */
-#define LL_CRS_FREQ_ERROR_DIR_DOWN           CRS_ISR_FEDIR      /*!< Downcounting direction, the actual frequency is below the target */
+#define LL_CRS_FREQ_ERROR_DIR_UP           0x00000000U         /*!< Upcounting direction, the actual frequency is above the target */
+#define LL_CRS_FREQ_ERROR_DIR_DOWN         CRS_ISR_FEDIR       /*!< Downcounting direction, the actual frequency is below the target */
 /**
   * @}
   */
@@ -150,11 +134,12 @@ extern "C" {
 
 /**
   * @brief Reset value of the HSI48 Calibration field
-  * @note The default value is 32, which corresponds to the middle of the trimming interval.
-  *       The trimming step is around 67 kHz between two consecutive TRIM steps.
-  *       A higher TRIM value corresponds to a higher output frequency
+  * @note The default value is 32,
+  *       which corresponds to the middle of the trimming interval.
+  *       The trimming step is specified in the product datasheet.
+  *       A higher TRIM value corresponds to a higher output frequency.
   */
-#define LL_CRS_HSI48CALIBRATION_DEFAULT    0x00000020U
+#define LL_CRS_HSI48CALIBRATION_DEFAULT     0x00000020U
 /**
   * @}
   */
@@ -297,7 +282,7 @@ __STATIC_INLINE uint32_t LL_CRS_IsEnabledAutoTrimming(void)
   */
 __STATIC_INLINE void LL_CRS_SetHSI48SmoothTrimming(uint32_t Value)
 {
-  MODIFY_REG(CRS->CR, CRS_CR_TRIM, Value << CRS_POSITION_TRIM);
+  MODIFY_REG(CRS->CR, CRS_CR_TRIM, Value << CRS_CR_TRIM_Pos);
 }
 
 /**
@@ -307,7 +292,7 @@ __STATIC_INLINE void LL_CRS_SetHSI48SmoothTrimming(uint32_t Value)
   */
 __STATIC_INLINE uint32_t LL_CRS_GetHSI48SmoothTrimming(void)
 {
-  return (uint32_t)(READ_BIT(CRS->CR, CRS_CR_TRIM) >> CRS_POSITION_TRIM);
+  return (uint32_t)(READ_BIT(CRS->CR, CRS_CR_TRIM) >> CRS_CR_TRIM_Pos);
 }
 
 /**
@@ -342,7 +327,7 @@ __STATIC_INLINE uint32_t LL_CRS_GetReloadCounter(void)
   */
 __STATIC_INLINE void LL_CRS_SetFreqErrorLimit(uint32_t Value)
 {
-  MODIFY_REG(CRS->CFGR, CRS_CFGR_FELIM, Value << CRS_POSITION_FELIM);
+  MODIFY_REG(CRS->CFGR, CRS_CFGR_FELIM, Value << CRS_CFGR_FELIM_Pos);
 }
 
 /**
@@ -352,7 +337,7 @@ __STATIC_INLINE void LL_CRS_SetFreqErrorLimit(uint32_t Value)
   */
 __STATIC_INLINE uint32_t LL_CRS_GetFreqErrorLimit(void)
 {
-  return (uint32_t)(READ_BIT(CRS->CFGR, CRS_CFGR_FELIM) >> CRS_POSITION_FELIM);
+  return (uint32_t)(READ_BIT(CRS->CFGR, CRS_CFGR_FELIM) >> CRS_CFGR_FELIM_Pos);
 }
 
 /**
@@ -456,18 +441,21 @@ __STATIC_INLINE uint32_t LL_CRS_GetSyncPolarity(void)
   * @param  ErrorLimitValue a number between Min_Data = 0 and Max_Data = 0xFFFF
   * @param  ReloadValue a number between Min_Data = 0 and Max_Data = 255
   * @param  Settings This parameter can be a combination of the following values:
-  *         @arg @ref LL_CRS_SYNC_DIV_1 or @ref LL_CRS_SYNC_DIV_2 or @ref LL_CRS_SYNC_DIV_4 or @ref LL_CRS_SYNC_DIV_8
-  *              or @ref LL_CRS_SYNC_DIV_16 or @ref LL_CRS_SYNC_DIV_32 or @ref LL_CRS_SYNC_DIV_64 or @ref LL_CRS_SYNC_DIV_128
+  *         @arg @ref LL_CRS_SYNC_DIV_1 or @ref LL_CRS_SYNC_DIV_2 or @ref LL_CRS_SYNC_DIV_4
+  *              or @ref LL_CRS_SYNC_DIV_8 or @ref LL_CRS_SYNC_DIV_16 or @ref LL_CRS_SYNC_DIV_32
+  *              or @ref LL_CRS_SYNC_DIV_64 or @ref LL_CRS_SYNC_DIV_128
   *         @arg @ref LL_CRS_SYNC_SOURCE_GPIO or @ref LL_CRS_SYNC_SOURCE_LSE or @ref LL_CRS_SYNC_SOURCE_USB
   *         @arg @ref LL_CRS_SYNC_POLARITY_RISING or @ref LL_CRS_SYNC_POLARITY_FALLING
   * @retval None
   */
-__STATIC_INLINE void LL_CRS_ConfigSynchronization(uint32_t HSI48CalibrationValue, uint32_t ErrorLimitValue, uint32_t ReloadValue, uint32_t Settings)
+__STATIC_INLINE void LL_CRS_ConfigSynchronization(uint32_t HSI48CalibrationValue, uint32_t ErrorLimitValue,
+                                                  uint32_t ReloadValue, uint32_t Settings)
 {
-  MODIFY_REG(CRS->CR, CRS_CR_TRIM, HSI48CalibrationValue);
+  MODIFY_REG(CRS->CR, CRS_CR_TRIM, HSI48CalibrationValue << CRS_CR_TRIM_Pos);
+
   MODIFY_REG(CRS->CFGR,
              CRS_CFGR_RELOAD | CRS_CFGR_FELIM | CRS_CFGR_SYNCDIV | CRS_CFGR_SYNCSRC | CRS_CFGR_SYNCPOL,
-             ReloadValue | (ErrorLimitValue << CRS_POSITION_FELIM) | Settings);
+             ReloadValue | (ErrorLimitValue << CRS_CFGR_FELIM_Pos) | Settings);
 }
 
 /**
@@ -508,7 +496,7 @@ __STATIC_INLINE uint32_t LL_CRS_GetFreqErrorDirection(void)
   */
 __STATIC_INLINE uint32_t LL_CRS_GetFreqErrorCapture(void)
 {
-  return (uint32_t)(READ_BIT(CRS->ISR, CRS_ISR_FECAP) >> CRS_POSITION_FECAP);
+  return (uint32_t)(READ_BIT(CRS->ISR, CRS_ISR_FECAP) >> CRS_ISR_FECAP_Pos);
 }
 
 /**
