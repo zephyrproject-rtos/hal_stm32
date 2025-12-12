@@ -677,35 +677,6 @@ __STATIC_INLINE uint32_t LL_RNG_GetSamplingClockEnableDivider(RNG_TypeDef *RNGx)
   return (uint32_t)(READ_BIT(RNGx->CR, RNG_CR_CLKDIV_15_0) >> RNG_CR_CLKDIV_15_0_Pos);
 }
 
-/**
-  * @brief  Set the random raw values from the random sources
-  * @note   Available only in test mode for analog characterization where tst_bypass_ana_i input of the IP is
-  set to 10x0 Post processing is used0x1 Post processing is bypassed
-  * @rmtoll CR          BP_POSTP       LL_RNG_SetBypassOfPostProcessing
-  * @param  RNGx RNG Instance
-  * @param  value can be one of the following values:
-  *         @arg LL_RNG_CR_BP_POSTP_0
-  *         @arg LL_RNG_CR_BP_POSTP_1
-  * @retval None
-  */
-__STATIC_INLINE void LL_RNG_SetBypassOfPostProcessing(RNG_TypeDef *RNGx, uint32_t value)
-{
-  MODIFY_REG(RNGx->CR, RNG_CR_BP_POSTP, value);
-}
-
-/**
-  * @brief  Get the random raw values from the random sources
-  * @note   Available only in test mode for analog characterization where tst_bypass_ana_i input of the IP is
-  set to 10x0 Post processing is used0x1 Post processing is bypassed
-  * @rmtoll CR          BP_POSTP       LL_RNG_GetBypassOfPostProcessing
-  * @retval can be one of the following values
-  *         @arg LL_RNG_CR_BP_POSTP_0
-  *         @arg LL_RNG_CR_BP_POSTP_1
-  */
-__STATIC_INLINE uint32_t LL_RNG_GetBypassOfPostProcessing(RNG_TypeDef *RNGx)
-{
-  return (uint32_t)(READ_BIT(RNGx->CR, RNG_CR_BP_POSTP));
-}
 
 /**
   * @brief  Indicate if DISABLED value Flag is set or not.
@@ -1868,6 +1839,39 @@ __STATIC_INLINE uint32_t LL_RNG_GetFfFullIrq(RNG_TypeDef *RNGx)
 __STATIC_INLINE uint32_t LL_RNG_GetErrorIrq(RNG_TypeDef *RNGx)
 {
   return (uint32_t)(READ_BIT(RNGx->IRQ_SR, RNG_IRQ_SR_ERROR_IRQ));
+}
+
+/**
+  * @brief  Clear the FF_FULL_IRQ flag
+  * @note   Flag is cleared by writing a 1
+  * @rmtoll IRQ_SR          FF_FULL_IRQ       LL_RNG_ClearFfFullIrq
+  * @param  RNGx RNG Instance
+  * @retval None
+  */
+__STATIC_INLINE void LL_RNG_ClearFfFullIrq(RNG_TypeDef *RNGx)
+{
+  SET_BIT(RNGx->IRQ_SR, RNG_IRQ_SR_FF_FULL_IRQ);
+}
+/**
+  * @brief  Clear the ERROR_IRQ flag
+  * @note   Flag is cleared by writing a 1
+  * @rmtoll IRQ_SR          ERROR_IRQ       LL_RNG_ClearErrorIrq
+  * @param  RNGx RNG Instance
+  * @retval None
+  */
+__STATIC_INLINE void LL_RNG_ClearErrorIrq(RNG_TypeDef *RNGx)
+{
+  SET_BIT(RNGx->IRQ_SR, RNG_IRQ_SR_ERROR_IRQ);
+}
+/**
+  * @brief  Check if Random Number Generator is enabled
+  * @rmtoll CR           RNG_DIS         LL_RNG_IsEnabled
+  * @param  RNGx RNG Instance
+  * @retval State of bit (1 or 0).
+  */
+__STATIC_INLINE uint32_t LL_RNG_IsEnabled(RNG_TypeDef *RNGx)
+{
+  return ((READ_BIT(RNGx->CR, RNG_CR_DISABLE) != (RNG_CR_DISABLE)) ? 1UL : 0UL);
 }
 
 #if defined(USE_FULL_LL_DRIVER)

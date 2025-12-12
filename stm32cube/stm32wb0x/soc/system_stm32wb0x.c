@@ -229,7 +229,7 @@ void SystemInit(void)
   SET_BIT(PWR->CR2, PWR_CR2_RAMRET2);
 #endif /* PWR_CR2_RAMRET2 */
 
-#if defined(PWR_CR2_RAMRET2)
+#if defined(PWR_CR2_RAMRET3)
   SET_BIT(PWR->CR2, PWR_CR2_RAMRET3);
 #endif /* PWR_CR2_RAMRET3 */
 
