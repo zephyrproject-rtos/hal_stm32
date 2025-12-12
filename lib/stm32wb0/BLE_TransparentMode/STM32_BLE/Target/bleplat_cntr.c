@@ -56,6 +56,48 @@ __disable_irq(); \
 #define LL_PHY_CODED 0x04U
 #endif
 
+#if defined (STM32WB06) || defined (STM32WB07)
+
+#define ANY_HW_ERROR_INTERRUPT_Msk ( \
+        BLUE_STATUSREG_ADDPOINTERROR_Msk      |  \
+        BLUE_STATUSREG_RXOVERFLOWERROR_Msk    |  \
+        BLUE_STATUSREG_TXERROR_0_Msk          |  \
+        BLUE_STATUSREG_TXERROR_1_Msk          |  \
+        BLUE_STATUSREG_TXERROR_2_Msk          |  \
+        BLUE_STATUSREG_TXERROR_3_Msk          |  \
+        BLUE_STATUSREG_TXERROR_4_Msk          |  \
+        BLUE_STATUSREG_ALLTABLEREADYERROR_Msk | \
+        BLUE_STATUSREG_TXDATAREADYERROR_Msk   | \
+        BLUE_STATUSREG_NOACTIVELERROR_Msk     | \
+        BLUE_STATUSREG_INITDELAYERROR_Msk     | \
+        BLUE_STATUSREG_SEMATIMEOUTERROR_Msk   | \
+        BLUE_STATUSREG_ACTIVE2ERROR_Msk       | \
+        BLUE_STATUSREG_CONFIGERROR_Msk          \
+        )
+
+#define WAKEUPINITDELAY_MT                   (64U)
+#define TIMER12_INIT_DELAY_CAL               (63U)
+#define TIMER2_INIT_DELAY_NO_CAL              (9U)
+#define RCV_LEN_MARGIN_US                    (16U)
+#define TX_DELAY_START                       (16U)
+#define TX_DELAY_END                         (16U)
+
+#define RADIO_FSM_RX_DELAY_CAL              (116U)
+#define RADIO_FSM_RX_DELAY_NO_CAL            (56U)
+#define RADIO_FSM_TX_DELAY_CAL              (118U)
+#define RADIO_FSM_TX_DELAY_NO_CAL            (58U)
+
+#define RECEIVE_CAL_DELAY_CHECK              (RADIO_FSM_RX_DELAY_CAL)
+#define RECEIVE_NO_CAL_DELAY_CHECK           (RADIO_FSM_RX_DELAY_NO_CAL)
+#define TRANSMIT_CAL_DELAY_CHECK             (RADIO_FSM_TX_DELAY_CAL)
+#define TRANSMIT_NO_CAL_DELAY_CHECK          (RADIO_FSM_TX_DELAY_NO_CAL)
+
+#define CONFIG_END_DURATION                  (20U)
+#define TX_DATA_READY_CHECK                   (5U)
+#define TX_READY_TIMEOUT                      (5U)
+
+#elif defined (STM32WB05) || defined (STM32WB09)
+
 #define ANY_HW_ERROR_INTERRUPT_Msk ( \
         BLUE_STATUSREG_ADDPOINTERROR_Msk      |  \
         BLUE_STATUSREG_RXOVERFLOWERROR_Msk    |  \
@@ -92,6 +134,8 @@ __disable_irq(); \
 #define CONFIG_END_DURATION                  (20U)
 #define TX_DATA_READY_CHECK                   (5U)
 #define TX_READY_TIMEOUT                      (4U)
+
+#endif
 
 #ifndef LL_PHY_CODED
 #define LL_PHY_CODED 0x04U

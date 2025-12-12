@@ -148,6 +148,7 @@
 #ifndef __ZEPHYR__
 #define CFG_BLE_NUM_AUX_SCAN_SLOTS                      (4)
 #endif
+
 /**
  * Maximum number of slots for synchronizing to a periodic advertising train,
  * if Periodic Advertising and Synchronizing Feature is enabled.
@@ -224,6 +225,16 @@
 #define CFG_BLE_USER_FIFO_SIZE                          (1024)
 
 /**
+ * If 1, Peripheral Preferred Connection Parameters Characteristic is added in GAP service.
+ */
+#define CFG_BLE_GAP_PERIPH_PREF_CONN_PARAM_CHARACTERISTIC  (1)
+
+/**
+ * If 1, Encrypted Key Material Characteristic is added in GAP service.
+ */
+#define CFG_BLE_GAP_ENCRYPTED_KEY_MATERIAL_CHARACTERISTIC  (0)
+
+/**
  * Number of allocated memory blocks used for packet allocation.
  * The use of BLE_STACK_MBLOCKS_CALC macro is suggested to calculate the minimum
  * number of memory blocks for a given number of supported links and ATT MTU.
@@ -267,6 +278,11 @@
  * Initialization parameters used in Network Processor mode
  ******************************************************************************/
 /**
+ * Network mode (used in gap_profile.c)
+ */
+#define CFG_BLE_NETWORK_PROC_MODE                       (1)
+
+/**
  * Size of buffer used for ATT queued writes
  */
 #define CFG_BLE_ATT_QUEUED_WRITE_SIZE                   (512)
@@ -286,6 +302,11 @@
  * write procedures) and ADV_NWK library (used for advertising buffers).
  */
 #define CFG_BLE_GATT_ADV_NWK_BUFFER_SIZE           (CFG_BLE_GATT_NWK_BUFFER_SIZE + CFG_BLE_ADV_NWK_BUFFER_SIZE + CFG_BLE_ATT_QUEUED_WRITE_SIZE)
+
+/**
+* Maximum number of characteristics that can be subscribed to check for security level.
+*/
+#define  CFG_BLE_GATT_CLT_NUM_CHARAC_SUBSCRIPTIONS_MAX        (5)
 
 /******************************************************************************
  * BLE Stack modularity options

@@ -122,11 +122,10 @@ int BLEPLAT_MemCmp(void *S1, void *S2, unsigned int Size);
  * This function returns the device ID, version and revision numbers.
  * To be called by the BLE Stack for ensuring platform independence.
  *
- * @param[out] device_id Device ID (6 = STM32WB09)
- * @param[out] major_cut Device cut version/major number
- * @param[out] minor_cut Device cut revision/minor number
+ * @param[out] pDeviceId Device ID (6 = STM32WB09)
+ * @param[out] pMajorCut Device cut version/major number
+ * @param[out] pMinorCut Device cut revision/minor number
  *
- * @retval None
  */
 void BLEPLAT_GetPartInfo(uint8_t *pDeviceId, uint8_t *pMajorCut, uint8_t *pMinorCut);
 
@@ -194,7 +193,7 @@ void BLEPLAT_RngGetRandom32(uint32_t* Num);
 
 /**
   * @brief  Convert TX output power in dBm to the related Power Amplifier level
-  * @param  TX_dBm Desired TX output power.
+  * @param  TxDBm Desired TX output power.
   *
   * @retval PA level that has to be set in the radio register to have a TX
   *         output power lower than or equal to the desired output power
@@ -203,7 +202,7 @@ uint8_t BLEPLAT_DBmToPALevel(int8_t TxDBm);
 
 /**
   * @brief  Convert TX output power in dBm to the related Power Amplifier level
-  * @param  TX_dBm Desired TX output power.
+  * @param  TxDBm Desired TX output power.
   *
   * @retval PA level that has to be set in the radio register to have a TX
   *         output power greater than or equal to the desired output power
@@ -212,7 +211,7 @@ uint8_t BLEPLAT_DBmToPALevelGe(int8_t TxDBm);
 
 /**
   * @brief  Convert Power Amplifier level to TX output power in dBm
-  * @param  PA_Level Level setting for the Power Amplifier
+  * @param  PaLevel Level setting for the Power Amplifier
   *
   * @retval Output power in dBm, corresponding to the given PA level. If PA
   *         level is invalid, returned value is 127.
@@ -221,19 +220,17 @@ int8_t BLEPLAT_PALevelToDBm(uint8_t PaLevel);
 
 /**
   * @brief  Return minimum and maximum supported TX power.
-  * @param[out]  Min_Tx_Power Minimum supported TX power in dBm.
-  * @param[out]  Max_Tx_Power Maximum supported TX power in dBm.
+  * @param[out]  MinTxPower Minimum supported TX power in dBm.
+  * @param[out]  MaxTxPower Maximum supported TX power in dBm.
   *
-  * @retval None
   */
 void BLEPLAT_ReadTransmitPower(int8_t *MinTxPower, int8_t *MaxTxPower);
 
 /**
   * @brief  Configure the radio in order to increase output power level.
   * @note   This function should be called only by the BLE stack.
-  * @param  enable Enable or disable the ability to reach maximum TX power.
+  * @param  Enable Enable or disable the ability to reach maximum TX power.
   *                Set to 1 to enable high power mode. Set ot 0 to disable.
-  * @retval None
   */
 void BLEPLAT_SetHighPower(uint8_t Enable);
 
@@ -245,17 +242,17 @@ void BLEPLAT_SetHighPower(uint8_t Enable);
 int8_t BLEPLAT_CalculateRSSI(void);
 
 /**
-  * @brief  Return the next value of the average of RSSI values
-  *         given the current RSSI average value and the next RSSI value.
+  * @brief  This function must return the average of RSSI values
+  *         given the past RSSI average value and the next RSSI value.
   *         All values are signed and expressed in dBm.
   *         An Exponential Moving Average algorithm is applied.
-  * @param  avg_rssi          Current RSSI average value.
-  *                           Set to 127 to return the 'rssi' value.
-  * @param  rssi              Next RSSI value
-  * @param  rssi_filter_coeff Coefficient used for the filtering of
+  * @param  AvgRssi           Past RSSI average value.
+  *                           It is 127 if no average is available yet (i.e. first sample).
+  * @param  Rssi              Current RSSI value
+  * @param  RssiFilterCoeff   Coefficient used for the filtering of
   *                           the RSSI samples and the calculation of
   *                           the average RSSI.
-  * @retval Next RSSI average value
+  * @retval RSSI average value
   */
 int8_t BLEPLAT_UpdateAvgRSSI(int8_t AvgRssi, int8_t Rssi, uint8_t RssiFilterCoeff);
 
