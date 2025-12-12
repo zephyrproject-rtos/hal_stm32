@@ -1459,6 +1459,43 @@ __STATIC_INLINE uint32_t LL_RCC_GetSPI3I2SClockSource(void)
   * @}
   */
 
+/** @defgroup RCC_LL_EF_RTC RTC
+  * @{
+  */
+
+/**
+  * @brief  Enable RTC
+  * @rmtoll APB0ENR         RTCEN         LL_RCC_EnableRTC
+  * @retval None
+  */
+__STATIC_INLINE void LL_RCC_EnableRTC(void)
+{
+  SET_BIT(RCC->APB0ENR, RCC_APB0ENR_RTCEN);
+}
+
+/**
+  * @brief  Disable RTC
+  * @rmtoll APB0ENR         RTCEN         LL_RCC_DisableRTC
+  * @retval None
+  */
+__STATIC_INLINE void LL_RCC_DisableRTC(void)
+{
+  CLEAR_BIT(RCC->APB0ENR, RCC_APB0ENR_RTCEN);
+}
+
+/**
+  * @brief  Check if RTC has been enabled or not
+  * @rmtoll APB0ENR         RTCEN         LL_RCC_IsEnabledRTC
+  * @retval State of bit (1 or 0).
+  */
+__STATIC_INLINE uint32_t LL_RCC_IsEnabledRTC(void)
+{
+  return ((READ_BIT(RCC->APB0ENR, RCC_APB0ENR_RTCEN) == (RCC_APB0ENR_RTCEN)) ? 1UL : 0UL);
+}
+
+/**
+  * @}
+  */
 
 /** @defgroup RCC_LL_EF_PLL PLL
   * @{
@@ -1787,7 +1824,7 @@ __STATIC_INLINE uint32_t LL_RCC_IsActiveFlag_LPURSTREL(void)
   */
 __STATIC_INLINE uint32_t LL_RCC_IsActiveFlag_LOCKUPRST(void)
 {
-  return ((READ_BIT(RCC->CSR, RCC_CSR_LOCKUPRSTF) == (RCC_CSR_LOCKUPRSTF)) ? 1UL : 0UL);
+  return (((RAM_VR.ResetReason & LL_RCC_CSR_LOCKUPRSTF) == LL_RCC_CSR_LOCKUPRSTF) ? 1UL : 0UL);
 }
 
 /**
@@ -1797,7 +1834,7 @@ __STATIC_INLINE uint32_t LL_RCC_IsActiveFlag_LOCKUPRST(void)
   */
 __STATIC_INLINE uint32_t LL_RCC_IsActiveFlag_WDGRST(void)
 {
-  return ((READ_BIT(RCC->CSR, RCC_CSR_WDGRSTF) == (RCC_CSR_WDGRSTF)) ? 1UL : 0UL);
+  return (((RAM_VR.ResetReason & LL_RCC_CSR_WDGRSTF) == LL_RCC_CSR_WDGRSTF) ? 1UL : 0UL);
 }
 
 /**
@@ -1807,7 +1844,7 @@ __STATIC_INLINE uint32_t LL_RCC_IsActiveFlag_WDGRST(void)
   */
 __STATIC_INLINE uint32_t LL_RCC_IsActiveFlag_SFTRST(void)
 {
-  return ((READ_BIT(RCC->CSR, RCC_CSR_SFTRSTF) == (RCC_CSR_SFTRSTF)) ? 1UL : 0UL);
+  return (((RAM_VR.ResetReason & LL_RCC_CSR_SFTRSTF) == LL_RCC_CSR_SFTRSTF) ? 1UL : 0UL);
 }
 
 /**
@@ -1817,7 +1854,7 @@ __STATIC_INLINE uint32_t LL_RCC_IsActiveFlag_SFTRST(void)
   */
 __STATIC_INLINE uint32_t LL_RCC_IsActiveFlag_PORRST(void)
 {
-  return ((READ_BIT(RCC->CSR, RCC_CSR_PORRSTF) == (RCC_CSR_PORRSTF)) ? 1UL : 0UL);
+  return (((RAM_VR.ResetReason & LL_RCC_CSR_PORRSTF) == LL_RCC_CSR_PORRSTF) ? 1UL : 0UL);
 }
 
 /**
@@ -1827,17 +1864,16 @@ __STATIC_INLINE uint32_t LL_RCC_IsActiveFlag_PORRST(void)
   */
 __STATIC_INLINE uint32_t LL_RCC_IsActiveFlag_PADRST(void)
 {
-  return ((READ_BIT(RCC->CSR, RCC_CSR_PADRSTF) == (RCC_CSR_PADRSTF)) ? 1UL : 0UL);
+  return (((RAM_VR.ResetReason & LL_RCC_CSR_PADRSTF) == LL_RCC_CSR_PADRSTF) ? 1UL : 0UL);
 }
 
 /**
-  * @brief  Set RMVF bit to clear the reset flags.
-  * @rmtoll CSR          RMVF          LL_RCC_ClearResetFlags
+  * @brief  Clear all reset flags.
   * @retval None
   */
 __STATIC_INLINE void LL_RCC_ClearResetFlags(void)
 {
-  WRITE_REG(RCC->CSR, RCC_CSR_RMVF);
+  RAM_VR.ResetReason = 0;
 }
 
 /**

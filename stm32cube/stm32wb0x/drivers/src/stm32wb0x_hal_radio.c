@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    stm32wb0x_hal_radio.h
+  * @file    stm32wb0x_hal_radio.c
   * @author  GPM WBL Application Team
   * @brief   This file provides all the Radio Driver APIs.
   ******************************************************************************
@@ -70,11 +70,6 @@
   * @{
   */
 
-/* initDelay */
-#define INITDELAY_WAKEUP          (0x40U)
-#define INITDELAY_TIMER12_CAL     (0x3FU)
-#define INITDELAY_TIMER2_NOCAL    (0x9U)
-
 /* Init_radio_delay */
 #if defined (STM32WB05) || defined(STM32WB09 )
 #define DELAYCHK_TRANSMIT_CAL     (0x5AU)
@@ -102,8 +97,6 @@
 #if defined (STM32WB06) || defined(STM32WB07)
 #define TXREADY_TIMEOUT          (0x5U)
 #endif
-#define TXDELAY_START            (0x10U)
-#define TXDELAY_END              (0x10U)
 
 /* RX parameter init */
 #define RCV_TIMEOUT              (0x100)
@@ -204,17 +197,11 @@ static uint8_t CondRoutineRxTrue(ActionPacket *p)
 /* Round up HOT_TABLE_SIZE to an integer number of words then add 4 words for table management pointers */
 volatile uint32_t hot_table_radio_config_u32[((HOT_TABLE_SIZE + 3) >> 2) + 4] = {0x00};
 
-#if 0 /** PATCH: do not define __blue_RAM here */
+#ifndef __ZEPHYR__ /** do not define __blue_RAM here, it is defined in Zephyr wtm32wb0x/soc.c */
 /* BLUE RAM, reserved for radio communication. Not usable from the application */
 __SECTION(".bss.__blue_RAM")
-#if defined(STM32WB05) || defined(STM32WB09)
-__REQUIRED(uint8_t __blue_RAM[CFG_NUM_RADIO_TASKS * 92 + 28]) = {0,};
-#elif defined(STM32WB06) || defined (STM32WB07)
-__REQUIRED(uint8_t __blue_RAM[CFG_NUM_RADIO_TASKS * 80 + 28]) = {0,};
-#else
-#warning "No Blue RAM allocated"
-#endif
-#endif /* ENDOF PATCH */
+__REQUIRED(uint8_t __blue_RAM[CFG_NUM_RADIO_TASKS * sizeof(STATMACH_TypeDef) + sizeof(GLOBALSTATMACH_TypeDef)]) = {0,};
+#endif /* __ZEPHYR__ */
 
 /**
   * @}
@@ -306,9 +293,9 @@ void HAL_RADIO_Init(RADIO_HandleTypeDef *hradio)
 #endif /* STM32WB05 or STM32WB09 */
 
   /*Set InitDelay*/
-  LL_RADIO_SetWakeupInitDelay(INITDELAY_WAKEUP);
-  LL_RADIO_SetTimer12InitDelayCal(INITDELAY_TIMER12_CAL);
-  LL_RADIO_SetTimer12InitDelayNoCal(INITDELAY_TIMER2_NOCAL);
+  LL_RADIO_SetWakeupInitDelay(RADIO_INITDELAY_WAKEUP);
+  LL_RADIO_SetTimer12InitDelayCal(RADIO_INITDELAY_TIMER12_CAL);
+  LL_RADIO_SetTimer12InitDelayNoCal(RADIO_INITDELAY_TIMER2_NOCAL);
 
   /*Set Init_radio_delay*/
   LL_RADIO_SetReceivedCalDelayChk(DELAYCHK_RECEIVE_CAL);
@@ -319,8 +306,8 @@ void HAL_RADIO_Init(RADIO_HandleTypeDef *hradio)
   /* Initial and final TX delays: control the on-air start time of the TX packet
   *  and the length of the packet "tail" after last bit is transmitted
   */
-  LL_RADIO_SetTxDelayStart(TXDELAY_START);
-  LL_RADIO_SetTxDelayEnd(TXDELAY_END);
+  LL_RADIO_SetTxDelayStart(RADIO_TXDELAY_START);
+  LL_RADIO_SetTxDelayEnd(RADIO_TXDELAY_END);
 
   /* Timeout for TX ready signal from the radio FSM after the 2nd init phase
   *  has expired
@@ -344,7 +331,7 @@ void HAL_RADIO_Init(RADIO_HandleTypeDef *hradio)
 #endif
 
   /* The commands in the hot table start at word 4
-  * The words 0 t0 2 are used to point to the command list
+  * The words 0 to 2 are used to point to the command list
   * for the various trigger events, word 3 is a null command
   * (see function BLEPLAT_CNTR_SetRadioConfigData)
   */
@@ -398,8 +385,11 @@ void HAL_RADIO_Init(RADIO_HandleTypeDef *hradio)
 
   LL_RADIO_SetRadioConfigurationAddressPointer(hot_table_radio_config_u32[0]);
   /* Reload radio config pointer */
-  *(uint32_t *)(RRM_BASE + 0x10U) = 0x01U;
+  RRM->UDRA_CTRL0 = RRM_UDRA_CTRL0_RELOAD_RDCFGPTR;
   LL_RADIO_Active2ErrorInterrupt_Enable();
+
+  /* Enable RRM Port Grant interrupt */
+  SET_BIT(RRM->BLE_IRQ_ENABLE, RRM_BLE_IRQ_ENABLE_PORT_GRANT);
 
 #if USE_RADIO_PROPRIETARY_DRIVER
   globalParameters.back2backTime = BACK_TO_BACK_TIME;
@@ -548,6 +538,7 @@ static void HAL_RADIO_ActionPacketIsr(uint32_t int_flags)
       LL_RADIO_TIMER_DisableTimer2(BLUE);
       LL_RADIO_TIMER_DisableBLEWakeupTimer(WAKEUP);
       MODIFY_REG(BLUEGLOB->BYTE4, GLOBAL_BYTE4_ACTIVE_Msk, BLUE_IDLE_0);
+      HAL_RADIO_TIMER_ClearRadioTimerValue();
     }
     else
     {
@@ -610,39 +601,6 @@ static void HAL_RADIO_ActionPacketIsr(uint32_t int_flags)
 
   return ;
 }
-
-/**
-  * @brief RADIO MSP Init
-  * @param  hradio pointer to a RADIO_HandleTypeDef structure that contains
-  *         the configuration information for RADIO module
-  * @retval None
-  */
-__weak void HAL_RADIO_MspInit(RADIO_HandleTypeDef *hradio)
-{
-  /* Prevent unused argument(s) compilation warning */
-  UNUSED(hradio);
-
-  /* NOTE : This function Should not be modified, when the callback is needed,
-            the HAL_I2S_MspInit could be implemented in the user file
-   */
-}
-
-/**
-  * @brief RADIO MSP DeInit
-  * @param  hradio pointer to a RADIO_HandleTypeDef structure that contains
-  *         the configuration information for RADIO module
-  * @retval None
-  */
-__weak void HAL_RADIO_MspDeInit(RADIO_HandleTypeDef *hradio)
-{
-  /* Prevent unused argument(s) compilation warning */
-  UNUSED(hradio);
-
-  /* NOTE : This function Should not be modified, when the callback is needed,
-            the HAL_RADIO_MspDeInit could be implemented in the user file
-   */
-}
-
 
 /**
   * @brief  This routine force the radio to be stopped. After calling this function,
@@ -1754,10 +1712,45 @@ uint8_t HAL_RADIO_ReceivePacketWithAck(uint8_t channel, uint32_t wakeup_time, ui
 
 #endif /* USE_RADIO_PROPRIETARY_DRIVER */
 
+/**
+  * @brief RADIO MSP Init
+  * @param  hradio pointer to a RADIO_HandleTypeDef structure that contains
+  *         the configuration information for RADIO module
+  * @retval None
+  */
+__weak void HAL_RADIO_MspInit(RADIO_HandleTypeDef *hradio)
+{
+  /* Prevent unused argument(s) compilation warning */
+  UNUSED(hradio);
+
+  /* NOTE : This function Should not be modified, when the callback is needed,
+            the HAL_RADIO_MspInit could be implemented in the user file
+   */
+}
+
+/**
+  * @brief RADIO MSP DeInit
+  * @param  hradio pointer to a RADIO_HandleTypeDef structure that contains
+  *         the configuration information for RADIO module
+  * @retval None
+  */
+__weak void HAL_RADIO_MspDeInit(RADIO_HandleTypeDef *hradio)
+{
+  /* Prevent unused argument(s) compilation warning */
+  UNUSED(hradio);
+
+  /* NOTE : This function Should not be modified, when the callback is needed,
+            the HAL_RADIO_MspDeInit could be implemented in the user file
+   */
+}
+
 __weak void HAL_RADIO_TxRxCallback(uint32_t flags)
 {
 }
 
+__weak void HAL_RADIO_RRMCallback(uint32_t ble_irq_status)
+{
+}
 
 __weak void HAL_RADIO_TxRxSeqCallback(void)
 {
@@ -1768,7 +1761,7 @@ void HAL_RADIO_TXRX_IRQHandler(void)
   uint32_t blue_status = BLUE->STATUSREG;
   uint32_t blue_interrupt = BLUE->INTERRUPT1REG;
 
-  /** clear all pending interrupts */
+  /* clear all pending interrupts */
   BLUE->INTERRUPT1REG = blue_interrupt;
 
   HAL_RADIO_TIMER_EndOfRadioActivityIsr();
@@ -1787,6 +1780,19 @@ void HAL_RADIO_TXRX_IRQHandler(void)
      the clear interrupt register operation,
      due the AHB down converter latency */
   blue_interrupt = BLUE->INTERRUPT1REG;
+}
+
+void HAL_RADIO_RRM_IRQHandler(void)
+{
+  uint32_t ble_irq_status = RRM->BLE_IRQ_STATUS;
+
+  /* Clear RRM Status register */
+  RRM->BLE_IRQ_STATUS = ble_irq_status;
+
+  HAL_RADIO_RRMCallback(ble_irq_status);
+
+  /* Ensure flag is cleared */
+  ble_irq_status = RRM->BLE_IRQ_STATUS;
 }
 
 

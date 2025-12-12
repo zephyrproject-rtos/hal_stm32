@@ -78,9 +78,16 @@ def update_cubes():
                 "%s",
                 f"***************  updating module {stmyyxx.name} *****************",
             )
+
+            # STM32WB0 uses a single 'x' suffix in HAL/LL resources
+            if stmyyxx.name == 'stm32wb0x':
+                serie_name = stmyyxx.name[:-1]
+            else:
+                serie_name = stmyyxx.name[:-2]
+
             # Force the commit for each serie
             update_serie = serie_update.Stm32SerieUpdate(
-                stmyyxx.name[:-2],
+                serie_name,
                 repo_path,
                 noclean=args.noclean,
                 debug=args.debug,

@@ -35,7 +35,7 @@
 
 /**
  *@addtogroup GATT_constants GATT Constants
- *@brief Constants for GATT layer
+ * Constants for GATT layer
  *@{
  */
 
@@ -51,6 +51,9 @@
 #define BLE_GATT_MAX_ATTR_VALUE_SIZE                    (512U) /**< Max size of an attribute value. @see 3.2.9 Long
                                                                 *   attribute values - BLUETOOTH CORE SPECIFICATION
                                                                 *   Version 5.1 | Vol 3, Part F page 2297 */
+
+#define BLE_GATT_CLT_SEC_ALL_CONN_HANDLES               (0xFFFFU) /**< Used to identify minimum security setting level */
+#define BLE_GATT_CLT_SEC_ALL_ATTR_HANDLES               (0xFFFFU) /**< Used to identify minimum security setting level */
 /**
  *@}
  */
@@ -494,7 +497,7 @@ typedef struct {
 
 typedef struct ble_gatt_val_buffer_def_s {
     uint8_t op_flags; /**< See @ref SRV_VALBUFFER_OP_FLAGS */
-    uint16_t val_len; /**< Actual value length. It can differ from buffer_len if BLE_GATT_SRV_PERM_ENCRY_READ the BLE_GATT_SRV_OP_VALUE_VAR_LENGTH_FLAG is set in op_flags */
+    uint16_t val_len; /**< Actual value length. It can differ from buffer_len if BLE_GATT_SRV_OP_VALUE_VAR_LENGTH_FLAG is set in op_flags */
     uint16_t buffer_len; /**< Buffer length. */
     uint8_t *buffer_p; /**< Pointer to the storage buffer. */
 } ble_gatt_val_buffer_def_t;
@@ -508,7 +511,8 @@ typedef struct ble_gatt_descr_def_s {
     uint8_t min_key_size;
     uint8_t permissions; /**< Access permissions. See @ref GATT_SRV_PERMS. */
     ble_uuid_t uuid; /**< UUID for this descriptor */
-    ble_gatt_val_buffer_def_t *val_buffer_p; /**< Pointer to the value buffer structure. */
+    ble_gatt_val_buffer_def_t *val_buffer_p; /**< Pointer to the value buffer structure. If NULL, aci_gatt_srv_read_event
+                                                 and aci_gatt_srv_write_event are generated for this characteristic descriptor. */
 } ble_gatt_descr_def_t;
 
 typedef struct ble_gatt_chr_def_s {
@@ -524,7 +528,8 @@ typedef struct ble_gatt_chr_def_s {
         uint8_t descr_count; /**< Number of descriptors. */
         ble_gatt_descr_def_t *descrs_p; /**< Pointer to the descriptors vector. */
     } descrs; /**< List of descriptors. */
-    ble_gatt_val_buffer_def_t *val_buffer_p; /**< Pointer to the value buffer structure. */
+    ble_gatt_val_buffer_def_t *val_buffer_p; /**< Pointer to the value buffer structure. If NULL, aci_gatt_srv_read_event
+                                                 and aci_gatt_srv_write_event are generated for this characteristic value. */
 } ble_gatt_chr_def_t;
 
 typedef struct ble_gatt_srv_def_s {
@@ -541,6 +546,12 @@ typedef struct ble_gatt_srv_def_s {
     } chrs; /**< List of characteristics. */
 } ble_gatt_srv_def_t;
 
+typedef struct ble_gatt_clt_sec_level_s {
+    uint8_t sec_level; /**< Security Level. See Vol 3, Part C, 10.2 LE SECURITY MODES */
+    uint16_t attr_handle; /**< Attribute Handle */
+    uint16_t conn_handle; /**< Connection Handle */
+    struct ble_gatt_clt_sec_level_s *next_p;
+} ble_gatt_clt_sec_level_st;
 /******************************************************************************
  * FUNCTION PROTOTYPES
  *****************************************************************************/

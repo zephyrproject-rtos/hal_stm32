@@ -71,17 +71,7 @@
 /*
  * BLE_STACK_MAX_ATT_MTU: maximum supported ATT_MTU size.
  */
-#define BLE_STACK_MAX_ATT_MTU                     (1024U - 6U)  // (6 bytes for L2CAP header)
-
-/**
- * BLE_STACK_DEFAULT_MAX_ATT_MTU: default max ATT_MTU size.
- */
-#define BLE_STACK_DEFAULT_MAX_ATT_MTU             (251U - 6U) // (6 bytes for L2CAP header)
-
-/**
- * BLE_STACK_DEFAULT_MAX_ATT_SIZE: maximum attribute size.
- */
-#define BLE_STACK_DEFAULT_MAX_ATT_SIZE            (512U)
+#define BLE_STACK_MAX_ATT_MTU                     (1024U - 6U)  // (6 bytes for L2CAP header and SDU Length)
 
 /**
  * BLE_STACK_MEM_BLOCK_X_MTU(mtu, n_links): compute how many memory blocks are needed to
@@ -125,7 +115,7 @@
 /**
  * Number of GATT attributes used for mandatory profiles (GATT and GAP).
  */
-#define BLE_STACK_NUM_GATT_MANDATORY_ATTRIBUTES (19U)
+#define BLE_STACK_NUM_GATT_MANDATORY_ATTRIBUTES (22U)
 
 /**
  * Amount of memory needed by each GATT Client procedure context
@@ -149,34 +139,33 @@
 /**
  * Amount of memory needed to support ISO feature
  */
-#define BLE_STACK_ISO_CMN_SIZE(NUM_BRC_BIG, NUM_SYNC_BIG, NUM_CIG)    ((((NUM_BRC_BIG) + (NUM_SYNC_BIG) + (NUM_CIG)) > 0U) ?                \
-                                                                        (12U + 4U)                                                          \
-                                                                       : 0U)
+#define BLE_STACK_ISO_CMN(NUM_ISO_GROUPS)               (((NUM_ISO_GROUPS) > 0U) ?                                      \
+                                                                                (12U + 56U * (NUM_ISO_GROUPS))          \
+                                                                                : 0U)
+#define BLE_STACK_BIG_SIZE(BIS_EN, SYNC_EN, NUM_BRC_BIG, NUM_BRC_BIS, NUM_SYNC_BIG, NUM_SYNC_BIS)                       \
+                                                        (((BIS_EN) > 0U) ?                                              \
+                                                                        ((244U + 8U * (NUM_BRC_BIS)) * (NUM_BRC_BIG) + \
+                                                                        (((SYNC_EN) > 0U) ?                             \
+                                                                             ((280U + 20U * (NUM_SYNC_BIS)) * (NUM_SYNC_BIG)) \
+                                                                              : 0U))                                    \
+                                                                        : 0U)
 
-#define BLE_STACK_BIG_SIZE(NUM_BRC_BIG, NUM_BRC_BIS, NUM_SYNC_BIG, NUM_SYNC_BIS)     ((((NUM_BRC_BIG) + (NUM_SYNC_BIG)) > 0U) ?             \
-                                                                                        (248U * (NUM_BRC_BIG) +                             \
-                                                                                           8U * (NUM_BRC_BIG) * (NUM_BRC_BIS) +             \
-                                                                                         296U * (NUM_SYNC_BIG) +                            \
-                                                                                          20U * (NUM_SYNC_BIS) * (NUM_SYNC_BIG))            \
-                                                                                        : 0U)
-
-#define BLE_STACK_CIG_SIZE(NUM_CIG, NUM_CIS)    (((NUM_CIG) > 0U) ?                                                                         \
-                                                  (16U + 56U +                                                                              \
-                                                  168U * (NUM_CIG) +                                                                        \
-                                                  192U * (NUM_CIS))                                                                         \
-                                                 : 0U)
+#define BLE_STACK_CIG_SIZE(CONN_SUPP_EN, NUM_CIG, NUM_CIS)    ((((NUM_CIG) > 0U) && ((CONN_SUPP_EN) != 0U)) ?           \
+                                                                                                 (56U +                 \
+                                                                                                  128U * (NUM_CIG) +    \
+                                                                                                  180U * (NUM_CIS))     \
+                                                                                                 : 0U)
 
 #define BLE_STACK_ISOAL_SIZE(NUM_TX_STREAMS, NUM_RX_STREAMS)    ((((NUM_TX_STREAMS) + (NUM_RX_STREAMS)) > 0U) ?                             \
-                                                                    (20U +                                                                  \
-                                                                     12U * ((NUM_TX_STREAMS) + (NUM_RX_STREAMS)) +                          \
-                                                                     52U * (NUM_TX_STREAMS) +                                               \
-                                                                     28U * (NUM_RX_STREAMS))                                                \
+                                                                    (24U +                                                                  \
+                                                                     60U * (NUM_TX_STREAMS) +                                               \
+                                                                     40U * (NUM_RX_STREAMS))                                                \
                                                                    : 0U)
 
-#define BLE_STACK_ISO_SIZE(NUM_BRC_BIG, NUM_BRC_BIS, NUM_SYNC_BIG, NUM_SYNC_BIS, NUM_CIG, NUM_CIS)                                          \
-                                           (BLE_STACK_ISO_CMN_SIZE(NUM_BRC_BIG, NUM_SYNC_BIG, NUM_CIG) +                                    \
-                                            BLE_STACK_BIG_SIZE(NUM_BRC_BIG, NUM_BRC_BIS, NUM_SYNC_BIG, NUM_SYNC_BIS) +                      \
-                                            BLE_STACK_CIG_SIZE(NUM_CIG, NUM_CIS) +                                                          \
+#define BLE_STACK_ISO_SIZE(EXT_ADV_SCN_EN, PER_ADV_SCN_EN, SCN_EN, CONN_SUPP_EN, NUM_BRC_BIG, NUM_BRC_BIS, NUM_SYNC_BIG, NUM_SYNC_BIS, NUM_CIG, NUM_CIS)                                          \
+                                           (BLE_STACK_ISO_CMN((NUM_BRC_BIG) + (NUM_SYNC_BIG) + (NUM_CIG)) +                \
+                                            BLE_STACK_BIG_SIZE(((EXT_ADV_SCN_EN) + (PER_ADV_SCN_EN)), SCN_EN, NUM_BRC_BIG, NUM_BRC_BIS, NUM_SYNC_BIG, NUM_SYNC_BIS) +                      \
+                                            BLE_STACK_CIG_SIZE(CONN_SUPP_EN, NUM_CIG, NUM_CIS) +                                                          \
                                             BLE_STACK_ISOAL_SIZE((NUM_BRC_BIG) * (NUM_BRC_BIS) + (NUM_CIS),                                 \
                                                                  (NUM_SYNC_BIG) * (NUM_SYNC_BIS) + (NUM_CIS)))
 
@@ -196,16 +185,18 @@
  * - a part, that may be considered "fixed", i.e., independent from the above
  *   mentioned parameters.
 */
-#   define BLE_STACK_FIXED_BUFFER_SIZE_BYTES (970U)
+#   define BLE_STACK_FIXED_BUFFER_SIZE_BYTES (1058U)
 
 /**
  * Amount of memory needed by each radio link
  */
-#   define COEFF_CONN_SUPP_EN   (840U + BLE_STACK_GATT_ATTRIBUTE_SIZE * BLE_STACK_NUM_GATT_MANDATORY_ATTRIBUTES)
-#   define COEFF_NUM_OF_LINKS_0 (48U)
-#   define COEFF_NUM_OF_LINKS_1 (656U)
+#   define COEFF_CONN_SUPP_EN       (980U + BLE_STACK_GATT_ATTRIBUTE_SIZE * BLE_STACK_NUM_GATT_MANDATORY_ATTRIBUTES)
+#   define COEFF_NUM_OF_LINKS_0     (8U)
+#   define COEFF_NUM_OF_LINKS_1     (664U)
 #   define BLE_STACK_LINKS_SIZE(CONN_SUPP_EN, NUM_OF_LINKS) \
-        (((CONN_SUPP_EN) == 1U) || ((NUM_OF_LINKS) > 0U) ? COEFF_CONN_SUPP_EN * (CONN_SUPP_EN) + COEFF_NUM_OF_LINKS_0 * (NUM_OF_LINKS) + COEFF_NUM_OF_LINKS_1 * (CONN_SUPP_EN) * (NUM_OF_LINKS) : 0U)
+        (((CONN_SUPP_EN) == 1U) || ((NUM_OF_LINKS) > 0U) ? COEFF_CONN_SUPP_EN * (CONN_SUPP_EN) + \
+                                                           COEFF_NUM_OF_LINKS_0 * (NUM_OF_LINKS) + \
+                                                           COEFF_NUM_OF_LINKS_1 * (CONN_SUPP_EN) * (NUM_OF_LINKS) : 0U)
 
 /**
  * Amount of memory needed for mem. blocks allocated for connections
@@ -223,7 +214,7 @@
  * subtracted from the total
  */
 #   define BLE_STACK_CONTROLLER_EXT_ADV_SIZE(ENABLED, NUM_ADV_SET, NUM_AUX_EVENT, NUM_OF_LINKS) \
-        (((ENABLED) == 1U) ? -276U + 368U * (NUM_ADV_SET) + 0U * (NUM_AUX_EVENT) + 0U * (NUM_OF_LINKS) : 0U)
+        (((ENABLED) == 1U) ? -304U + 396U * (NUM_ADV_SET) + 0U * (NUM_AUX_EVENT) + 0U * (NUM_OF_LINKS) : 0U)
 
 /**
  * Amount of memory needed for the Filter Accept List and, if connections are supported, also for connection ID list
@@ -245,10 +236,10 @@
  * Amount of memory needed to support periodic advertising and synchronizing feature
  */
 #   define BLE_STACK_CONTROLLER_PERIODIC_ADV_WR_SIZE(PER_ADV_WR_EN, CONN_SUPP_EN, NUM_ADV_SET, NUM_SUBEVENTS_PAWR, MAX_SUBEVENT_DATA_COUNT_PAWR) \
-        ((((PER_ADV_WR_EN) == 1U) && ((CONN_SUPP_EN) == 1U)) ? (132U + 8U * (NUM_SUBEVENTS_PAWR) + 16U * (MAX_SUBEVENT_DATA_COUNT_PAWR)) * (NUM_ADV_SET) : 0U)
+        ((((PER_ADV_WR_EN) == 1U) && ((CONN_SUPP_EN) == 1U)) ? (228U + 12U * (NUM_SUBEVENTS_PAWR) + 16U * (MAX_SUBEVENT_DATA_COUNT_PAWR)) * (NUM_ADV_SET) : 0U)
 
 #   define BLE_STACK_CONTROLLER_PERIODIC_ADV_SIZE(PER_ADV_EN, PER_ADV_WR_EN, CONN_SUPP_EN, NUM_LINKS, NUM_ADV_SET, NUM_SUBEVENTS_PAWR, MAX_SUBEVENT_DATA_COUNT_PAWR) \
-        (((PER_ADV_EN) == 1U) ? (156U * (NUM_ADV_SET) + 32U * (NUM_LINKS) + \
+        (((PER_ADV_EN) == 1U) ? (204U * (NUM_ADV_SET) + 32U * (NUM_LINKS) + \
                                  BLE_STACK_CONTROLLER_PERIODIC_ADV_WR_SIZE(PER_ADV_WR_EN, CONN_SUPP_EN, NUM_ADV_SET, NUM_SUBEVENTS_PAWR, MAX_SUBEVENT_DATA_COUNT_PAWR)) : \
                                 0U)
 
@@ -257,25 +248,25 @@
  */
 #   define BLE_STACK_BASE_SIZE(CONN_SUPP_EN) (((CONN_SUPP_EN) == 1U) ? 32U : 20U)
 
-#   define BLE_STACK_PAST_SIZE(CONN_SUPP_EN, NUM_OF_LINKS) (((CONN_SUPP_EN) == 1U) ? 24U * (NUM_OF_LINKS) : 0U)
+#   define BLE_STACK_PAST_SIZE(CONN_SUPP_EN, NUM_OF_LINKS) (((CONN_SUPP_EN) == 1U) ? 8U * (NUM_OF_LINKS) : 0U)
 
 #   define BLE_STACK_PER_SYNC_SIZE(PER_ADV_EN, CONN_SUPP_EN, NUM_SYNC_SLOTS, NUM_OF_LINKS, ADV_LIST_LIZE)\
-        (((PER_ADV_EN) == 1U) ? BLE_STACK_BASE_SIZE(CONN_SUPP_EN) + 144U * (NUM_SYNC_SLOTS) + 8U * (1U << (ADV_LIST_LIZE)) + BLE_STACK_PAST_SIZE(CONN_SUPP_EN, NUM_OF_LINKS) : 0U)
+        (((PER_ADV_EN) == 1U) ? BLE_STACK_BASE_SIZE(CONN_SUPP_EN) + 192U * (NUM_SYNC_SLOTS) + 8U * (1U << (ADV_LIST_LIZE)) + BLE_STACK_PAST_SIZE(CONN_SUPP_EN, NUM_OF_LINKS) : 0U)
 
 #   define BLE_STACK_PER_SYNC_WR_SIZE(PER_ADV_EN, PER_ADV_WR_EN, CONN_SUPP_EN, NUM_SYNC_SLOTS, NUM_SYNC_SUBEVENTS)\
-        (((PER_ADV_WR_EN & PER_ADV_EN & CONN_SUPP_EN) == 1U) ? 176U * (NUM_SYNC_SLOTS) + ALIGN_32(NUM_SYNC_SUBEVENTS) : 0U)
+        (((PER_ADV_WR_EN & PER_ADV_EN & CONN_SUPP_EN) == 1U) ? 224U * (NUM_SYNC_SLOTS) + ALIGN_32(NUM_SYNC_SUBEVENTS) : 0U)
 
 #   define BLE_STACK_CONTROLLER_SCAN_SIZE(SCAN_EN, EXT_ADV_EN, PER_ADV_EN, PER_ADV_WR_EN, CONN_SUPP_EN, NUM_AUX_EVENT,\
                                           NUM_SYNC_SLOTS, NUM_OF_LINKS, ADV_LIST_LIZE, NUM_SYNC_SUBEVENTS) \
-        (((SCAN_EN) == 1U) ? 320U + (192U + 48U * (NUM_AUX_EVENT) + \
-            BLE_STACK_PER_SYNC_SIZE(PER_ADV_EN, CONN_SUPP_EN, NUM_SYNC_SLOTS, NUM_OF_LINKS, ADV_LIST_LIZE) + \
-            BLE_STACK_PER_SYNC_WR_SIZE(PER_ADV_EN, PER_ADV_WR_EN, CONN_SUPP_EN, NUM_SYNC_SLOTS, NUM_SYNC_SUBEVENTS)) * (EXT_ADV_EN) : 0U)
+        (((SCAN_EN) == 1U) ? 564U + (((EXT_ADV_EN) == 1U ) ? (192U + 96U * (NUM_AUX_EVENT) + \
+                             BLE_STACK_PER_SYNC_SIZE(PER_ADV_EN, CONN_SUPP_EN, NUM_SYNC_SLOTS, NUM_OF_LINKS, ADV_LIST_LIZE) + \
+                             BLE_STACK_PER_SYNC_WR_SIZE(PER_ADV_EN, PER_ADV_WR_EN, CONN_SUPP_EN, NUM_SYNC_SLOTS, NUM_SYNC_SUBEVENTS)) : 0U) : 0U)
 
 
 /**
  * Amount of memory needed to support controller privacy feature
  */
-#   define BLE_STACK_CONTROLLER_PRIV_SIZE(ENABLED, FILTER_ACCEPT_LIST_SIZE_LOG2) (((ENABLED) == 1U) ? 104U + 80U * (1U << (FILTER_ACCEPT_LIST_SIZE_LOG2)) : 0U)
+#   define BLE_STACK_CONTROLLER_PRIV_SIZE(ENABLED, FILTER_ACCEPT_LIST_SIZE_LOG2) (((ENABLED) == 1U) ? 112U + 80U * (1U << (FILTER_ACCEPT_LIST_SIZE_LOG2)) : 0U)
 
 /**
  * Amount of memory needed to support CTE feature
@@ -302,7 +293,7 @@
 /**
  * Amount of memory needed to support PCL feature
  */
-#   define BLE_STACK_PCL_NUM_OF_LINKS(NUM_OF_LINKS)  (32U * (NUM_OF_LINKS))
+#   define BLE_STACK_PCL_NUM_OF_LINKS(NUM_OF_LINKS)  (36U * (NUM_OF_LINKS))
 #   define BLE_STACK_PCL_SIZE(CONN_SUPP_EN, PCL_EN, NUM_OF_LINKS) (((CONN_SUPP_EN) == 1U) && ((PCL_EN) == 1U) ? 20U + BLE_STACK_PCL_NUM_OF_LINKS(NUM_OF_LINKS) : 0U)
 
 /**
@@ -310,6 +301,16 @@
  */
 #   define BLE_STACK_CHC_NUM_OF_LINKS(NUM_OF_LINKS) (28U * (NUM_OF_LINKS))
 #   define BLE_STACK_CHC_SIZE(CONN_SUPP_EN, CHC_EN, NUM_OF_LINKS) (((CONN_SUPP_EN) == 1U) && ((CHC_EN) == 1U) ? BLE_STACK_CHC_NUM_OF_LINKS(NUM_OF_LINKS) : 0U)
+
+/**
+ * Amount of memory needed for Link Layer extra Control Procedure contexts
+ */
+#   define BLE_STACK_EXTRA_LL_PROCEDURE_CONTEXTS_SIZE(CONN_SUPP_EN, EXTRA_LL_PROCEDURE_CONTEXTS) (((CONN_SUPP_EN) == 1U) ? (72U * (EXTRA_LL_PROCEDURE_CONTEXTS)) : 0U)
+
+/**
+* Amount of memory needed to support the logging feature
+*/
+#define BLE_STACK_LOG_SIZE(BLE_STACK_LOG_EN) (((BLE_STACK_LOG_EN) == 1U) ? 2540U : 0U)
 
 /**
  * Amount of memory needed by FIFOs
@@ -329,16 +330,18 @@
 
 #else // (BLESTACK_CONTROLLER_ONLY == 1)
 
-#   define BLE_STACK_FIXED_BUFFER_SIZE_BYTES (828U)
+#   define BLE_STACK_FIXED_BUFFER_SIZE_BYTES (908U)
 
 /**
  * Amount of memory needed by each radio link
  */
-#   define COEFF_CONN_SUPP_EN   (180U)
-#   define COEFF_NUM_OF_LINKS_0 (48U)  // [DB] NOTE: scheduler's tasks
-#   define COEFF_NUM_OF_LINKS_1 (484U)
+#   define COEFF_CONN_SUPP_EN       (312U)
+#   define COEFF_NUM_OF_LINKS_0     (8U)  // [DB] NOTE: scheduler's tasks
+#   define COEFF_NUM_OF_LINKS_1     (488U)
 #   define BLE_STACK_LINKS_SIZE(CONN_SUPP_EN, NUM_OF_LINKS) \
-        (((CONN_SUPP_EN) == 1U) || ((NUM_OF_LINKS) > 0U) ? COEFF_CONN_SUPP_EN * (CONN_SUPP_EN) + COEFF_NUM_OF_LINKS_0 * (NUM_OF_LINKS) + COEFF_NUM_OF_LINKS_1 * (CONN_SUPP_EN) * (NUM_OF_LINKS) : 0U)
+        (((CONN_SUPP_EN) == 1U) || ((NUM_OF_LINKS) > 0U) ? COEFF_CONN_SUPP_EN * (CONN_SUPP_EN) + \
+                                                           COEFF_NUM_OF_LINKS_0 * (NUM_OF_LINKS) + \
+                                                           COEFF_NUM_OF_LINKS_1 * (CONN_SUPP_EN) * (NUM_OF_LINKS) : 0U)
 
 /**
  * Amount of memory needed for mem. blocks allocated for connections
@@ -356,7 +359,7 @@
  * subtracted from the total
  */
 #   define BLE_STACK_CONTROLLER_EXT_ADV_SIZE(ENABLED, NUM_ADV_SET, NUM_AUX_EVENT, NUM_OF_LINKS) \
-        (((ENABLED) == 1U) ? -256U + 348U * (NUM_ADV_SET) + 0U * (NUM_AUX_EVENT) + 0U * (NUM_OF_LINKS) : 0U)
+        (((ENABLED) == 1U) ? -284U + 376U * (NUM_ADV_SET) + 0U * (NUM_AUX_EVENT) + 0U * (NUM_OF_LINKS) : 0U)
 
 /**
  * Amount of memory needed for the Filter Accept List and, if connections are supported, also for connection ID list
@@ -378,10 +381,10 @@
  * Amount of memory needed to support periodic advertising and synchronizing feature
  */
 #   define BLE_STACK_CONTROLLER_PERIODIC_ADV_WR_SIZE(PER_ADV_WR_EN, CONN_SUPP_EN, NUM_ADV_SET, NUM_SUBEVENTS_PAWR, MAX_SUBEVENT_DATA_COUNT_PAWR) \
-        ((((PER_ADV_WR_EN) == 1U) && ((CONN_SUPP_EN) == 1U)) ? (132U + 8U * (NUM_SUBEVENTS_PAWR) + 16U * (MAX_SUBEVENT_DATA_COUNT_PAWR)) * (NUM_ADV_SET) : 0U)
+        ((((PER_ADV_WR_EN) == 1U) && ((CONN_SUPP_EN) == 1U)) ? (132U + 96U + 12U * (NUM_SUBEVENTS_PAWR) + 16U * (MAX_SUBEVENT_DATA_COUNT_PAWR)) * (NUM_ADV_SET) : 0U)
 
 #   define BLE_STACK_CONTROLLER_PERIODIC_ADV_SIZE(PER_ADV_EN, PER_ADV_WR_EN, CONN_SUPP_EN, NUM_LINKS, NUM_ADV_SET, NUM_SUBEVENTS_PAWR, MAX_SUBEVENT_DATA_COUNT_PAWR) \
-        (((PER_ADV_EN) == 1U) ? (156U * (NUM_ADV_SET) + 32U * (NUM_LINKS) + \
+        (((PER_ADV_EN) == 1U) ? (204U * (NUM_ADV_SET) + 32U * (NUM_LINKS) + \
                                  BLE_STACK_CONTROLLER_PERIODIC_ADV_WR_SIZE(PER_ADV_WR_EN, CONN_SUPP_EN, NUM_ADV_SET, NUM_SUBEVENTS_PAWR, MAX_SUBEVENT_DATA_COUNT_PAWR)) : \
                                 0U)
 
@@ -390,24 +393,24 @@
  */
 #   define BLE_STACK_BASE_SIZE(CONN_SUPP_EN) (((CONN_SUPP_EN) == 1U) ? 32U : 20U)
 
-#   define BLE_STACK_PAST_SIZE(CONN_SUPP_EN, NUM_OF_LINKS) (((CONN_SUPP_EN) == 1U) ? 24U * (NUM_OF_LINKS) : 0U)
+#   define BLE_STACK_PAST_SIZE(CONN_SUPP_EN, NUM_OF_LINKS) (((CONN_SUPP_EN) == 1U) ? 8U * (NUM_OF_LINKS) : 0U)
 
 #   define BLE_STACK_PER_SYNC_SIZE(PER_ADV_EN, CONN_SUPP_EN, NUM_SYNC_SLOTS, NUM_OF_LINKS, ADV_LIST_LIZE)\
-    (((PER_ADV_EN) == 1U) ? BLE_STACK_BASE_SIZE(CONN_SUPP_EN) + 144U * (NUM_SYNC_SLOTS) + 8U * (1U << (ADV_LIST_LIZE)) + BLE_STACK_PAST_SIZE(CONN_SUPP_EN, NUM_OF_LINKS) : 0U)
+    (((PER_ADV_EN) == 1U) ? BLE_STACK_BASE_SIZE(CONN_SUPP_EN) + 192U * (NUM_SYNC_SLOTS) + 8U * (1U << (ADV_LIST_LIZE)) + BLE_STACK_PAST_SIZE(CONN_SUPP_EN, NUM_OF_LINKS) : 0U)
 
 #   define BLE_STACK_PER_SYNC_WR_SIZE(PER_ADV_EN, PER_ADV_WR_EN, CONN_SUPP_EN, NUM_SYNC_SLOTS, NUM_SYNC_SUBEVENTS)\
-        (((PER_ADV_WR_EN & PER_ADV_EN & CONN_SUPP_EN) == 1U) ? 176U * (NUM_SYNC_SLOTS) + ALIGN_32(NUM_SYNC_SUBEVENTS) : 0U)
+        (((PER_ADV_WR_EN & PER_ADV_EN & CONN_SUPP_EN) == 1U) ? 224U * (NUM_SYNC_SLOTS) + ALIGN_32(NUM_SYNC_SUBEVENTS) : 0U)
 
 #   define BLE_STACK_CONTROLLER_SCAN_SIZE(SCAN_EN, EXT_ADV_EN, PER_ADV_EN, PER_ADV_WR_EN, CONN_SUPP_EN, NUM_AUX_EVENT,\
                                           NUM_SYNC_SLOTS, NUM_OF_LINKS, ADV_LIST_LIZE, NUM_SYNC_SUBEVENTS) \
-        (((SCAN_EN) == 1U) ? 320U + (164U + 48U * (NUM_AUX_EVENT) + \
+        (((SCAN_EN) == 1U) ? 564U + (((EXT_ADV_EN) == 1U ) ? (164U + 96U * (NUM_AUX_EVENT) + \
                              BLE_STACK_PER_SYNC_SIZE(PER_ADV_EN, CONN_SUPP_EN, NUM_SYNC_SLOTS, NUM_OF_LINKS, ADV_LIST_LIZE) + \
-                             BLE_STACK_PER_SYNC_WR_SIZE(PER_ADV_EN, PER_ADV_WR_EN, CONN_SUPP_EN, NUM_SYNC_SLOTS, NUM_SYNC_SUBEVENTS)) * (EXT_ADV_EN) : 0U)
+                             BLE_STACK_PER_SYNC_WR_SIZE(PER_ADV_EN, PER_ADV_WR_EN, CONN_SUPP_EN, NUM_SYNC_SLOTS, NUM_SYNC_SUBEVENTS)) : 0U) : 0U)
 
 /**
  * Amount of memory needed to support controller privacy feature
  */
-#   define BLE_STACK_CONTROLLER_PRIV_SIZE(ENABLED, FILTER_ACCEPT_LIST_SIZE_LOG2) (((ENABLED) == 1U) ? 104U + 80U * (1U << (FILTER_ACCEPT_LIST_SIZE_LOG2)) : 0U)
+#   define BLE_STACK_CONTROLLER_PRIV_SIZE(ENABLED, FILTER_ACCEPT_LIST_SIZE_LOG2) (((ENABLED) == 1U) ? 112U + 80U * (1U << (FILTER_ACCEPT_LIST_SIZE_LOG2)) : 0U)
 
 /**
  * Amount of memory needed to support CTE feature
@@ -435,7 +438,7 @@
 /**
  * Amount of memory needed to support PCL feature
  */
-#   define BLE_STACK_PCL_NUM_OF_LINKS(NUM_OF_LINKS)  (32U * (NUM_OF_LINKS))
+#   define BLE_STACK_PCL_NUM_OF_LINKS(NUM_OF_LINKS)  (36U * (NUM_OF_LINKS))
 #   define BLE_STACK_PCL_SIZE(CONN_SUPP_EN, PCL_EN, NUM_OF_LINKS) (((CONN_SUPP_EN) == 1U) && ((PCL_EN) == 1U) ? 20U + BLE_STACK_PCL_NUM_OF_LINKS(NUM_OF_LINKS) : 0U)
 
 /**
@@ -443,6 +446,16 @@
  */
 #   define BLE_STACK_CHC_NUM_OF_LINKS(NUM_OF_LINKS) (28U * (NUM_OF_LINKS))
 #   define BLE_STACK_CHC_SIZE(CONN_SUPP_EN, CHC_EN, NUM_OF_LINKS) (((CONN_SUPP_EN) == 1U) && ((CHC_EN) == 1U) ? BLE_STACK_CHC_NUM_OF_LINKS(NUM_OF_LINKS) : 0U)
+
+/**
+ * Amount of memory needed for extra Link Layer Control Procedure contexts
+ */
+#   define BLE_STACK_EXTRA_LL_PROCEDURE_CONTEXTS_SIZE(CONN_SUPP_EN, EXTRA_LL_PROCEDURE_CONTEXTS) (((CONN_SUPP_EN) == 1U) ? (72U * (EXTRA_LL_PROCEDURE_CONTEXTS)) : 0U)
+
+/**
+* Amount of memory needed to support the logging feature
+*/
+#define BLE_STACK_LOG_SIZE(BLE_STACK_LOG_EN) (((BLE_STACK_LOG_EN) == 1U) ? 2540U : 0U)
 
 /**
  * Amount of memory needed by FIFOs
@@ -496,7 +509,8 @@
  * @param BLE_STACK_NUM_BRC_BIS: Number of BIG Broadcaster streams per group to support.
  * @param BLE_STACK_NUM_CIG: Number of CIG groups to support.
  * @param BLE_STACK_NUM_CIS: Number of CIS streams to support.
- * @param BLE_STACK_CIS_EN: Enable or disable the Connected Isochronous Streams feature. Valid values are 0 or 1.
+ * @param BLE_STACK_EXTRA_LL_PROCEDURE_CONTEXTS: Number of extra Control Procedure contexts.
+ * @param BLE_STACK_LOG_EN: Enable or disable log buffer allocation in stack. Valid values are 0 or 1.
  * @param ISR0_FIFO_SIZE: Size of the internal FIFO used for critical controller events produced by the ISR (e.g. rx data packets)
  * @param ISR1_FIFO_SIZE: Size of the internal FIFO used for non-critical controller events produced by the ISR (e.g. advertising or IQ sampling reports)
  * @param USER_FIFO_SIZE: Size of the internal FIFO used for controller and host events produced outside the ISR
@@ -535,6 +549,8 @@
     BLE_STACK_NUM_BRC_BIS,\
     BLE_STACK_NUM_CIG,\
     BLE_STACK_NUM_CIS,\
+    BLE_STACK_EXTRA_LL_PROCEDURE_CONTEXTS,\
+    BLE_STACK_LOG_EN,\
     ISR0_FIFO_SIZE,\
     ISR1_FIFO_SIZE,\
     USER_FIFO_SIZE)\
@@ -568,9 +584,12 @@
     BLE_STACK_CTE_EN, BLE_STACK_NUM_LINKS, NUM_CTE_ANT_IDS, NUM_CTE_IQSAMPLES)                                  + \
   BLE_STACK_PCL_SIZE(BLE_STACK_CONN_SUPP_EN, BLE_STACK_PCL_EN, BLE_STACK_NUM_LINKS)                             + \
   BLE_STACK_CHC_SIZE(BLE_STACK_CONN_SUPP_EN, BLE_STACK_CHC_EN, BLE_STACK_NUM_LINKS)                             + \
-  BLE_STACK_ISO_SIZE(BLE_STACK_NUM_BRC_BIG, BLE_STACK_NUM_BRC_BIS,                                                \
+  BLE_STACK_ISO_SIZE(BLE_STACK_EXT_ADV_SCAN_EN, CONTROLLER_PERIODIC_ADV_EN, BLE_STACK_SCAN_EN, BLE_STACK_CONN_SUPP_EN, \
+                     BLE_STACK_NUM_BRC_BIG, BLE_STACK_NUM_BRC_BIS,                                                \
                      BLE_STACK_NUM_SYNC_BIG, BLE_STACK_NUM_SYNC_BIS,                                              \
                      BLE_STACK_NUM_CIG, BLE_STACK_NUM_CIS)                                                      + \
+  BLE_STACK_EXTRA_LL_PROCEDURE_CONTEXTS_SIZE(BLE_STACK_CONN_SUPP_EN, BLE_STACK_EXTRA_LL_PROCEDURE_CONTEXTS)     + \
+  BLE_STACK_LOG_SIZE(BLE_STACK_LOG_EN)                                                                          + \
   BLE_STACK_FIFO_SIZE(ISR0_FIFO_SIZE, ISR1_FIFO_SIZE, USER_FIFO_SIZE)                                             \
 )
 
@@ -595,6 +614,13 @@ on the available device RAM)
  * @param NUM_SYNC_SLOTS: Number of radio tasks to allocate for synchronizing to periodic advertisements.
  * @param BLE_STACK_NUM_CTE_ANT_IDS: Maximum antenna switching pattern length .
  * @param BLE_STACK_NUM_IQSAMPLES: Maximum number of IQ-Samples in the buffer.
+ * @param BLE_STACK_NUM_SYNC_BIG: Number of BIG Synchronous groups to support.
+ * @param BLE_STACK_NUM_BRC_BIG: Number of BIG Broadcaster groups to support.
+ * @param BLE_STACK_NUM_SYNC_BIS: Number of BIG Synchronous streams per group to support.
+ * @param BLE_STACK_NUM_BRC_BIS: Number of BIG Broadcaster streams per group to support.
+ * @param BLE_STACK_NUM_CIG: Number of CIG groups to support.
+ * @param BLE_STACK_NUM_CIS: Number of CIS streams to support.
+ * @param BLE_STACK_EXTRA_LL_PROCEDURE_CONTEXTS: Number of extra Control Procedure contexts.
  * @param ISR0_FIFO_SIZE: Size of the internal FIFO used for critical controller events produced by the ISR (e.g. rx data packets).
  * @param ISR1_FIFO_SIZE: Size of the internal FIFO used for non-critical controller events produced by the ISR (e.g. advertising or IQ sampling reports).
  * @param USER_FIFO_SIZE: Size of the internal FIFO used for controller and host events produced outside the ISR.
@@ -620,6 +646,7 @@ on the available device RAM)
     BLE_STACK_NUM_BRC_BIS,\
     BLE_STACK_NUM_CIG,\
     BLE_STACK_NUM_CIS,\
+    BLE_STACK_EXTRA_LL_PROCEDURE_CONTEXTS,\
     ISR0_FIFO_SIZE,\
     ISR1_FIFO_SIZE,\
     USER_FIFO_SIZE)\
@@ -658,6 +685,8 @@ on the available device RAM)
         BLE_STACK_NUM_BRC_BIS,\
         BLE_STACK_NUM_CIG,\
         BLE_STACK_NUM_CIS,\
+        BLE_STACK_EXTRA_LL_PROCEDURE_CONTEXTS,\
+        DTM_DEBUG_ENABLED,\
         ISR0_FIFO_SIZE,\
         ISR1_FIFO_SIZE,\
         USER_FIFO_SIZE\
@@ -694,6 +723,7 @@ typedef struct {
   uint8_t NumOfBrcBIS;              /**< Maximum number of ISO Broadcaster streams. */
   uint8_t NumOfCIG;                 /**< Maximum number of Connected Isochronous Groups. */
   uint8_t NumOfCIS;                 /**< Maximum number of Connected Isochronous Streams. */
+  uint8_t ExtraLLProcedureContexts; /**< Number of extra Link Layer Control Procedure contexts */
   uint16_t isr0_fifo_size;          /**< Size of the internal FIFO used for critical controller events produced by the ISR (e.g. rx data packets)*/
   uint16_t isr1_fifo_size;          /**< Size of the internal FIFO used for non-critical controller events produced by the ISR (e.g. advertising or IQ sampling reports)*/
   uint16_t user_fifo_size;          /**< Size of the internal FIFO used for controller and host events produced outside the ISR */
@@ -703,11 +733,8 @@ typedef struct {
 /**
  * @brief This function executes the processing of all Host Stack layers.
  *
- * The BLE Stack Tick function has to be executed regularly to process incoming Link Layer packets and to process Host Layers procedures. All
- * stack callbacks are called by this function.
- *
- * If Low Speed Ring Oscillator is used instead of the LS Crystal oscillator this function performs also the LS RO calibration and hence must
- * be called at least once at every system wake-up in order to keep the 500 ppm accuracy (at least 500 ppm accuracy is mandatory if acting as a Central).
+ * The BLE Stack Tick function has to be executed to process incoming Link Layer packets and to process Host Layers procedures. All
+ * stack callbacks are called by this function. This function should be executed after every call to the BLE_STACK_ProcessRequest().
  *
  * No BLE stack function must be called while the BLE_STACK_Tick is running. For example, if a BLE stack function may be called inside an
  * interrupt routine, that interrupt must be disabled during the execution of BLE_STACK_Tick(). Example (if a stack function may be called inside
@@ -717,11 +744,21 @@ typedef struct {
  * BLE_STACK_Tick();
  * NVIC_EnableIRQ(UART_IRQn);
  * @endcode
-
- * @note The API name and parameters are subject to change in future releases.
- * @return None
+ *
+ * @note Do not call BLE_STACK_Tick() directly from BLE_STACK_ProcessRequest().
  */
 void BLE_STACK_Tick(void);
+
+/**
+ * @brief This function executes the processing of all Host Stack layers without calling BLE_STACK_Event() .
+ *
+ * This version of the BLE Stack Tick function is useful in case the classic BLE_STACK_Tick() cannot be called for long time.
+ * In fact it is possible to call this BLE_STACK_TickNoEvents() from an interrupt context (e.g. from the Systick ISR) while being sure
+ * that BLE_STACK_Event() will not be called by this function.
+ *
+ * @note Do not call BLE_STACK_TickNoEvents() while other BLE Stack functions are being executed.
+ */
+void BLE_STACK_TickNoEvents(void);
 
 /**
  * @brief The BLE Stack initialization routine
@@ -741,10 +778,8 @@ tBleStatus BLE_STACK_Init(const BLE_STACK_InitTypeDef *BLE_STACK_InitStruct);
  *
  * @param  hci_pckt: The user event received from the BLE stack
  * @param  length:   Length of the event
- * @retval None
  */
 void BLE_STACK_Event(hci_pckt *hci_pckt, uint16_t length);
-
 
 /**
  * @brief Returns the BLE Stack matching sleep mode
@@ -759,13 +794,21 @@ uint8_t BLE_STACK_SleepCheck(void);
 
 /**
  *
+ * @brief Radio Resource Manager (RRM) ISR routine.
+ *
+ * This is the base function called for any RRM ISR.
+ *
+ * @param[in] RRMStatus Value of RRM Status register
+ */
+void BLE_STACK_RRMHandler(uint32_t RRMStatus);
+
+/**
+ *
  * @brief Radio ISR routine.
  *
  * This is the base function called for any radio ISR.
  *
  * @param[in]  BlueInterrupt    value of the radio interrupt register
- *
- * @return None
  */
 void BLE_STACK_RadioHandler(uint32_t BlueInterrupt);
 
@@ -784,6 +827,14 @@ Information provided includes type of radio activity and absolute time in system
   - 0x07: RX test mode
   */
 uint8_t BLE_STACK_ReadNextRadioActivity(uint32_t *NextStateSysTime);
+
+/**
+ * @brief This function is called whenever an execution of BLE_STACK_Tick() is requested.
+ *
+ * It may be called from an interrupt context, so it should return as quickly as possible.
+ * The BLE_STACK_Tick() must not be called directly by this API.
+ */
+void BLE_STACK_ProcessRequest(void);
 
 /* Statistics per link */
 typedef struct llc_conn_per_statistic_s {

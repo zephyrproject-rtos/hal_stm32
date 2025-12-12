@@ -20,6 +20,7 @@
 
 #include "stm32wb0x.h"
 #include "ble_stack.h"
+#include "dtm_cmds.h"
 #include "dtm_cmd_db.h"
 #include "transport_layer.h"
 #include "adv_buff_alloc.h"
@@ -66,6 +67,7 @@
 */
 #define CONNECTION_BIT                         ((uint32_t)0x00000800)  /*!< Bit 11 selected */
 #define CONTROLLER_ONLY_BIT                    ((uint32_t)0x00001000)  /*!< Bit 12 selected */
+#define DTM_DEBUG_BIT                          ((uint32_t)0x00002000)  /*!< Bit 13 selected */
 #define CONTROLLER_CHAN_CLASS_BIT              ((uint32_t)0x00010000)  /*!< Bit 16 selected */
 #define CONTROLLER_BIS_BIT                     ((uint32_t)0x00020000)  /*!< Bit 17 selected */
 #define CONNECTION_SUBRATING_BIT               ((uint32_t)0x00080000)  /*!< Bit 19 selected */
@@ -100,12 +102,17 @@
     ((uint32_t)(CONTROLLER_POWER_CONTROL_ENABLED * CONTROLLER_POWER_CONTROL_BIT))                 | \
     ((uint32_t)(CONNECTION_ENABLED * CONNECTION_BIT))                                             | \
     ((uint32_t)(BLESTACK_CONTROLLER_ONLY * CONTROLLER_ONLY_BIT))                                  | \
+    ((uint32_t)(DTM_DEBUG_ENABLED * DTM_DEBUG_BIT))                                               | \
     ((uint32_t)(CONTROLLER_CHAN_CLASS_ENABLED * CONTROLLER_CHAN_CLASS_BIT))                       | \
     ((uint32_t)(CONTROLLER_BIS_ENABLED * CONTROLLER_BIS_BIT))                                     | \
     ((uint32_t)(CONNECTION_SUBRATING_ENABLED * CONNECTION_SUBRATING_BIT))                         | \
     ((uint32_t)(CONTROLLER_CIS_ENABLED * CONTROLLER_CIS_BIT))                                     | \
     ((uint32_t)(CONTROLLER_PERIODIC_ADV_WR_ENABLED * CONTROLLER_PERIODIC_ADV_WR_BIT))               \
 )
+
+/* irq_count used for the aci_hal_transmitter_test_packets() command implementation */
+uint16_t irq_count = 0;
+uint16_t num_packets = 0;
 
 tBleStatus aci_hal_get_firmware_details(uint8_t *DTM_version_major,
                                         uint8_t *DTM_version_minor,
@@ -189,7 +196,6 @@ tBleStatus aci_hal_transmitter_test_packets(uint8_t TX_Frequency,
                                             uint16_t Number_Of_Packets,
                                             uint8_t PHY)
 {
-  extern uint16_t num_packets;
   tBleStatus status;
 
   if(Number_Of_Packets == 0)
@@ -213,7 +219,12 @@ tBleStatus aci_hal_transmitter_test_packets(uint8_t TX_Frequency,
 
   if(status == 0x00)
   {
-    num_packets = Number_Of_Packets;
+    num_packets = Number_Of_Packets - 1; /* Request to stop one packet before the end */
+
+    if(num_packets == 0)
+    {
+      DTM_CMDS_TxTestStopRequest();
+    }
   }
 
   return status;
@@ -245,7 +256,6 @@ tBleStatus aci_hal_transmitter_test_packets_v2(uint8_t TX_Channel,
                                                uint8_t Switching_Pattern_Length,
                                                uint8_t Antenna_IDs[])
 {
-  extern uint16_t num_packets;
   tBleStatus status;
 
   if(Number_Of_Packets == 0)
@@ -264,12 +274,49 @@ tBleStatus aci_hal_transmitter_test_packets_v2(uint8_t TX_Channel,
 
   if(status == 0x00)
   {
-    num_packets = Number_Of_Packets;
+    num_packets = Number_Of_Packets - 1; /* Request to stop one packet before the end */
+
+    if(num_packets == 0)
+    {
+      DTM_CMDS_TxTestStopRequest();
+    }
   }
 
   return status;
 }
 #endif
+
+/* It must be called at the end of a TX */
+void DTM_CMDS_TxEnd(void)
+{
+  if(irq_count != num_packets)
+  {
+    irq_count++;
+
+    if(irq_count == num_packets)
+    {
+      DTM_CMDS_TxTestStopRequest();
+    }
+  }
+}
+
+/* Check if the desired number of packets has been sent and possibly send the
+   aci_hal_le_test_end_event.  */
+void DTM_CMDS_TxTestStop(void)
+{
+  uint32_t Number_Of_TX_Packets = 0;
+  uint16_t Number_Of_RX_Packets;
+
+  /* Reached number of tx test packets */
+  hci_le_test_end(&Number_Of_RX_Packets);
+  aci_hal_le_tx_test_packet_number(&Number_Of_TX_Packets);
+  aci_hal_le_test_end_event(Number_Of_TX_Packets);
+
+  ATOMIC_SECTION_BEGIN();
+  irq_count = 0;
+  num_packets = 0;
+  ATOMIC_SECTION_END();
+}
 
 #if (CONNECTION_ENABLED == 1) && (BLESTACK_CONTROLLER_ONLY==0)
 

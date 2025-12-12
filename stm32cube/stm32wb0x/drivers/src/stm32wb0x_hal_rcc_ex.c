@@ -315,6 +315,8 @@ uint32_t HAL_RCCEx_GetPeriphCLKFreq(uint32_t PeriphClk)
           frequency = LSE_VALUE;
           break;
         case RCC_LPUART1_CLKSOURCE_16M:
+          frequency = 16000000U;
+          break;
         default:
           frequency = HSE_VALUE / 2;
           break;

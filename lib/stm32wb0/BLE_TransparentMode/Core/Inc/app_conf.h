@@ -61,10 +61,11 @@
 #ifndef __ZEPHYR__
 /* It is handled by CMakeLists.txt */
 #define CFG_BLE_NUM_RADIO_TASKS                         (CFG_NUM_RADIO_TASKS)
-#endif
+#endif /* __ZEPHYR__ */
 
 /**
- * Maximum number of Attributes that can be stored in the GATT database.
+ * Maximum number of attributes that can be stored in the GATT database in addition to the attributes number already defined for the GATT and GAP services
+ * (BLE_STACK_NUM_GATT_MANDATORY_ATTRIBUTES value on STM32_BLE middleware, ble_stack.h header file).
  */
 #define CFG_BLE_NUM_GATT_ATTRIBUTES                     (60)
 
@@ -108,7 +109,7 @@
  */
 #ifndef __ZEPHYR__
 #define CFG_BLE_NUM_EATT_CHANNELS                       (6)
-#endif
+#endif /* __ZEPHYR__ */
 
 /**
  * Maximum number of channels in LE Credit Based Flow Control mode [0-255].
@@ -129,7 +130,7 @@
 #ifndef __ZEPHYR__
 /* It is handled by CMakeLists.txt */
 #define CFG_BLE_NUM_ADV_SETS                            (2)
-#endif
+#endif /* __ZEPHYR__ */
 
 /**
  * Maximum number of Periodic Advertising with Responses subevents.
@@ -147,7 +148,8 @@
  */
 #ifndef __ZEPHYR__
 #define CFG_BLE_NUM_AUX_SCAN_SLOTS                      (4)
-#endif
+#endif /* __ZEPHYR__ */
+
 /**
  * Maximum number of slots for synchronizing to a periodic advertising train,
  * if Periodic Advertising and Synchronizing Feature is enabled.
@@ -155,7 +157,7 @@
 #ifndef __ZEPHYR__
 /* It is handled by CMakeLists.txt */
 #define CFG_BLE_NUM_SYNC_SLOTS                          (2)
-#endif
+#endif /* __ZEPHYR__ */
 
 /**
  * Two's logarithm of Filter Accept, Resolving and Advertiser list size.
@@ -206,6 +208,12 @@
 #endif /* __ZEPHYR__ */
 
 /**
+* Maximum number of simultaneous Link Layer procedures that can be managed, in addition to the minimum required by the stack.
+*  The minimum number guarantees one LL procedure initiated by the peer for each link, one LL procedure automatically initiated by the Controller and one LL procedure initiated by the Host.
+*/
+#define  CFG_BLE_EXTRA_LL_PROCEDURE_CONTEXTS        (0)
+
+/**
  * Size of the internal FIFO used for critical controller events produced by the
  * ISR (e.g. rx data packets).
  */
@@ -222,6 +230,16 @@
  * outside the ISR.
  */
 #define CFG_BLE_USER_FIFO_SIZE                          (1024)
+
+/**
+ * If 1, Peripheral Preferred Connection Parameters Characteristic is added in GAP service.
+ */
+#define CFG_BLE_GAP_PERIPH_PREF_CONN_PARAM_CHARACTERISTIC  (1)
+
+/**
+ * If 1, Encrypted Key Material Characteristic is added in GAP service.
+ */
+#define CFG_BLE_GAP_ENCRYPTED_KEY_MATERIAL_CHARACTERISTIC  (0)
 
 /**
  * Number of allocated memory blocks used for packet allocation.
@@ -255,6 +273,7 @@
                                                         CFG_BLE_NUM_BRC_BIS_MAX,\
                                                         CFG_BLE_NUM_CIG_MAX,\
                                                         CFG_BLE_NUM_CIS_MAX,\
+                                                        CFG_BLE_EXTRA_LL_PROCEDURE_CONTEXTS,\
                                                         CFG_BLE_ISR0_FIFO_SIZE,\
                                                         CFG_BLE_ISR1_FIFO_SIZE,\
                                                         CFG_BLE_USER_FIFO_SIZE))
@@ -266,6 +285,11 @@
 /******************************************************************************
  * Initialization parameters used in Network Processor mode
  ******************************************************************************/
+/**
+ * Network mode (used in gap_profile.c)
+ */
+#define CFG_BLE_NETWORK_PROC_MODE                       (1)
+
 /**
  * Size of buffer used for ATT queued writes
  */
@@ -286,6 +310,11 @@
  * write procedures) and ADV_NWK library (used for advertising buffers).
  */
 #define CFG_BLE_GATT_ADV_NWK_BUFFER_SIZE           (CFG_BLE_GATT_NWK_BUFFER_SIZE + CFG_BLE_ADV_NWK_BUFFER_SIZE + CFG_BLE_ATT_QUEUED_WRITE_SIZE)
+
+/**
+* Maximum number of characteristics that can be subscribed to check for security level.
+*/
+#define  CFG_BLE_GATT_CLT_NUM_CHARAC_SUBSCRIPTIONS_MAX        (5)
 
 /******************************************************************************
  * BLE Stack modularity options
@@ -308,7 +337,7 @@
 #define CFG_BLE_CONTROLLER_BIS_ENABLED                    (1U)
 #define CFG_BLE_CONNECTION_SUBRATING_ENABLED              (1U)
 #define CFG_BLE_CONTROLLER_CIS_ENABLED                    (1U)
-#endif
+#endif /* __ZEPHYR__ */
 
 /******************************************************************************
  * Low Power
@@ -317,11 +346,16 @@
  *  low power mode. It means that all what can have an impact on the consumptions
  *  are powered down.(For instance LED, Access to Debugger, Etc.)
  *
+ *  When CFG_LPM_SUPPORTED and CFG_FULL_LOW_EMULATED are both set to 1, the system is configured to
+ *  emulate the Deepstop mode without losing the debugger connection and breakpoints nor watchpoints.
+ *
  ******************************************************************************/
 
 #define CFG_FULL_LOW_POWER       (0)
 
 #define CFG_LPM_SUPPORTED        (1)
+
+#define CFG_LPM_EMULATED         (0)
 
 /**
  * Low Power configuration

@@ -34,7 +34,6 @@
   ******************************************************************************
   */
 
-
 #include "ble_stack_user_cfg.h"
 
 /* check whether all the configuration flag macros are defined */
@@ -71,6 +70,9 @@
 #if !defined(CFG_BLE_CONNECTION_ENABLED)
 #   error "CFG_BLE_CONNECTION_ENABLED is not defined"
 #endif
+#if !defined(DTM_DEBUG_ENABLED)
+#   error "DTM_DEBUG_ENABLED is not defined"
+#endif
 #if !defined(CFG_BLE_CONTROLLER_CHAN_CLASS_ENABLED)
 #   error "CFG_BLE_CONTROLLER_CHAN_CLASS_ENABLED is not defined"
 #endif
@@ -81,10 +83,7 @@
 #   error "CFG_BLE_CONNECTION_SUBRATING_ENABLED is not defined"
 #endif
 #if !defined(CFG_BLE_CONTROLLER_CIS_ENABLED)
-#   error "(CFG_BLE_CONTROLLER_CIS_ENABLED is not defined"
-#endif
-#if !defined(CONTROLLER_ISO_ENABLED)
-#   error "CONTROLLER_ISO_ENABLED is not defined"
+#   error "CFG_BLE_CONTROLLER_CIS_ENABLED is not defined"
 #endif
 #if !defined(CFG_BLE_CONTROLLER_PERIODIC_ADV_WR_ENABLED)
 #   error "CFG_BLE_CONTROLLER_PERIODIC_ADV_WR_ENABLED is not defined"
@@ -113,8 +112,7 @@
 #endif
 #if (CONTROLLER_BIS_ENABLED == 1) && \
    ((CONTROLLER_EXT_ADV_SCAN_ENABLED == 0) || \
-    (CONTROLLER_PERIODIC_ADV_ENABLED == 0) || \
-    (CONTROLLER_ISO_ENABLED == 0))
+    (CONTROLLER_PERIODIC_ADV_ENABLED == 0))
 #   error "CONTROLLER_BIS_ENABLED cannot be 1"
 #endif
 #if (CONNECTION_SUBRATING_ENABLED == 1) && \
@@ -122,8 +120,7 @@
 #   error "CONNECTION_SUBRATING_ENABLED cannot be 1"
 #endif
 #if (CONTROLLER_CIS_ENABLED == 1) && \
-   ((CONNECTION_ENABLED == 0) || \
-    (CONTROLLER_ISO_ENABLED == 0))
+    (CONNECTION_ENABLED == 0)
 #   error "CONTROLLER_CIS_ENABLED cannot be 1"
 #endif
 #if (CONTROLLER_PERIODIC_ADV_WR_ENABLED == 1) && \
@@ -340,7 +337,7 @@ void GAP_central_connection_complete_handler_ucfg(uint8_t status,
 #if (CONTROLLER_SCAN_ENABLED == 1) &&\
     (CONNECTION_ENABLED == 1)
 uint8_t GAP_parse_connectable_advertising_report_ucfg(uint8_t* adv_buf,
-                                                   uint8_t extended)
+                                                      uint8_t extended)
 {
     return GAP_parse_connectable_advertising_report(adv_buf,
                                                     extended);
@@ -352,7 +349,7 @@ uint8_t GAP_parse_connectable_advertising_report_ucfg(uint8_t* adv_buf,
 #if (BLESTACK_CONTROLLER_ONLY == 0)
 #if (CONTROLLER_SCAN_ENABLED == 1)
 uint8_t GAP_parse_advertising_report_ucfg(uint8_t* adv_buf,
-                                       uint8_t extended)
+                                          uint8_t extended)
 {
     return GAP_parse_advertising_report(adv_buf,
                                         extended);
@@ -446,9 +443,9 @@ tBleStatus GAP_set_controller_random_address_ucfg(uint8_t random_address[6])
 
 #if (BLESTACK_CONTROLLER_ONLY == 0)
 #if (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1)
-tBleStatus GAP_init_advertising_sets_ucfg(uint8_t own_address_type)
+tBleStatus GAP_init_advertising_sets_ucfg(void)
 {
-    return GAP_init_advertising_sets(own_address_type);
+    return GAP_init_advertising_sets();
 }
 #endif /* (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1) */
 #endif /* (BLESTACK_CONTROLLER_ONLY == 0) */
@@ -486,22 +483,6 @@ tBleStatus hci_acl_data_ind_event_int_cb_ucfg(void* header_p,
 {
     return hci_acl_data_ind_event_int_cb(header_p,
                                          buff_p);
-}
-#endif /* (CONNECTION_ENABLED == 1) */
-
-#if ((CONTROLLER_CHAN_CLASS_ENABLED == 1) &&\
-    (CONNECTION_ENABLED == 1))
-uint32_t chc_csr_ucfg(void)
-{
-    return chc_csr();
-}
-#endif /* ((CONTROLLER_CHAN_CLASS_ENABLED == 1) &&\
-          (CONNECTION_ENABLED == 1)) */
-
-#if (CONNECTION_ENABLED == 1)
-void Controller_Process_Q_ucfg(uint16_t task_idx)
-{
-    Controller_Process_Q(task_idx);
 }
 #endif /* (CONNECTION_ENABLED == 1) */
 
@@ -724,14 +705,29 @@ tBleStatus hci_le_enhanced_connection_complete_v2_event_int_cb_ucfg(void* header
           (CONTROLLER_PERIODIC_ADV_WR_ENABLED == 1)) &&\
           (CONNECTION_ENABLED == 1) */
 
-#if (CONNECTION_ENABLED == 1) ||\
-    (CONTROLLER_ISO_ENABLED == 1)
+#if (\
+     (CONNECTION_ENABLED == 1)\
+     ||\
+     (\
+      (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1) &&\
+      (CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
+      (CONTROLLER_BIS_ENABLED == 1)\
+     )\
+    )
 tBleStatus MBM_init_ucfg(void)
 {
     return MBM_init();
 }
-#endif /* (CONNECTION_ENABLED == 1) ||\
-          (CONTROLLER_ISO_ENABLED == 1) */
+#endif
+
+#if (BLESTACK_CONTROLLER_ONLY == 0)
+#if (CONNECTION_ENABLED == 1)
+tBleStatus smp_debug_trudy__set_config_ucfg(uint32_t config)
+{
+    return smp_debug_trudy__set_config(config);
+}
+#endif /* (CONNECTION_ENABLED == 1) */
+#endif /* (BLESTACK_CONTROLLER_ONLY == 0) */
 
 #if (BLESTACK_CONTROLLER_ONLY == 0)
 #if ((SECURE_CONNECTIONS_ENABLED == 1) &&\
@@ -778,6 +774,124 @@ void smp_sap_hci_le_generate_dhkey_complete_evt_hndl_ucfg(uint8_t status,
 #endif /* ((SECURE_CONNECTIONS_ENABLED == 1) &&\
           (CONNECTION_ENABLED == 1)) */
 #endif /* (BLESTACK_CONTROLLER_ONLY == 0) */
+
+#if (DTM_DEBUG_ENABLED == 1)
+uint8_t ble_stack_log_verbosity_set_ucfg(void* p)
+{
+    return ble_stack_log_verbosity_set(p);
+}
+#endif /* (DTM_DEBUG_ENABLED == 1) */
+
+#if (DTM_DEBUG_ENABLED == 1)
+void ble_stack_log_verbosity_get_ucfg(void* verb_p)
+{
+    ble_stack_log_verbosity_get(verb_p);
+}
+#endif /* (DTM_DEBUG_ENABLED == 1) */
+
+#if (DTM_DEBUG_ENABLED == 1)
+void ble_stack_log_init_ucfg(void)
+{
+    ble_stack_log_init();
+}
+#endif /* (DTM_DEBUG_ENABLED == 1) */
+
+#if (DTM_DEBUG_ENABLED == 1)
+void ble_stack_log_notify_stu_ucfg(uint8_t lvl,
+                                   uint8_t cid,
+                                   uint16_t mid,
+                                   uint8_t uid,
+                                   uint8_t fmt,
+                                   uint8_t len,
+                                   uint8_t* buf_p,
+                                   uint8_t isr)
+{
+    ble_stack_log_notify_stu(lvl,
+                             cid,
+                             mid,
+                             uid,
+                             fmt,
+                             len,
+                             buf_p,
+                             isr);
+}
+#endif /* (DTM_DEBUG_ENABLED == 1) */
+
+#if (DTM_DEBUG_ENABLED == 1)
+void ble_stack_log_notify_us_deferred_ucfg(uint8_t lvl,
+                                           uint8_t cid,
+                                           uint16_t mid,
+                                           uint8_t uid,
+                                           uint8_t add_info_present,
+                                           uint32_t add_info)
+{
+    ble_stack_log_notify_us_deferred(lvl,
+                                     cid,
+                                     mid,
+                                     uid,
+                                     add_info_present,
+                                     add_info);
+}
+#endif /* (DTM_DEBUG_ENABLED == 1) */
+
+#if (DTM_DEBUG_ENABLED == 1)
+void ble_stack_log_notify_us_flush_ucfg(void)
+{
+    ble_stack_log_notify_us_flush();
+}
+#endif /* (DTM_DEBUG_ENABLED == 1) */
+
+#if (DTM_DEBUG_ENABLED == 1)
+uint32_t ble_stack_log_csr_ucfg(void)
+{
+    return ble_stack_log_csr();
+}
+#endif /* (DTM_DEBUG_ENABLED == 1) */
+
+#if (DTM_DEBUG_ENABLED == 1)
+int llc_isr_tim_mon_reset_stat_params_ucfg(uint8_t* params_p)
+{
+    return llc_isr_tim_mon_reset_stat_params(params_p);
+}
+#endif /* (DTM_DEBUG_ENABLED == 1) */
+
+#if (DTM_DEBUG_ENABLED == 1)
+void llc_isr_tim_mon_stat_abs_ucfg(uint8_t mod_id,
+                                   uint8_t var_id,
+                                   uint8_t checkp)
+{
+    llc_isr_tim_mon_stat_abs(mod_id,
+                             var_id,
+                             checkp);
+}
+#endif /* (DTM_DEBUG_ENABLED == 1) */
+
+#if (DTM_DEBUG_ENABLED == 1)
+void llc_isr_tim_mon_stat_rel_ucfg(uint8_t mod_id,
+                                   uint8_t var_id,
+                                   uint8_t checkp)
+{
+    llc_isr_tim_mon_stat_rel(mod_id,
+                             var_id,
+                             checkp);
+}
+#endif /* (DTM_DEBUG_ENABLED == 1) */
+
+#if (DTM_DEBUG_ENABLED == 1)
+void llc_isr_tim_mon_stat_check_ucfg(uint8_t mod_id,
+                                     uint8_t var_id)
+{
+    llc_isr_tim_mon_stat_check(mod_id,
+                               var_id);
+}
+#endif /* (DTM_DEBUG_ENABLED == 1) */
+
+#if (DTM_DEBUG_ENABLED == 1)
+void llc_isr_tim_mon_stat_notify_ucfg(void)
+{
+    llc_isr_tim_mon_stat_notify();
+}
+#endif /* (DTM_DEBUG_ENABLED == 1) */
 
 #if (BLESTACK_CONTROLLER_ONLY == 0)
 #if ((L2CAP_COS_ENABLED == 1) &&\
@@ -918,6 +1032,34 @@ void llc_conn_check_subrate_and_set_params_ucfg(void* cntxt_p,
 #endif /* ((CONNECTION_SUBRATING_ENABLED == 1) &&\
           (CONNECTION_ENABLED == 1)) */
 
+#if (CONNECTION_ENABLED == 1)
+void llc_conn_mem_allocate_ucfg(uint8_t phy_upd_en,
+                                uint8_t cte_en,
+                                uint8_t pcl_en,
+                                uint8_t cns_en,
+                                uint8_t chc_en,
+                                uint8_t padv_en)
+{
+    llc_conn_mem_allocate(phy_upd_en,
+                          cte_en,
+                          pcl_en,
+                          cns_en,
+                          chc_en,
+                          padv_en);
+}
+#endif /* (CONNECTION_ENABLED == 1) */
+
+#if (CONTROLLER_PRIVACY_ENABLED == 1) &&\
+    (CONNECTION_ENABLED == 1)
+void llc_conn_list_replace_rpa_addresses_ucfg(void* peer_id_addr_p,
+                                              uint32_t peer_irk[4])
+{
+    llc_conn_list_replace_rpa_addresses(peer_id_addr_p,
+                                        peer_irk);
+}
+#endif /* (CONTROLLER_PRIVACY_ENABLED == 1) &&\
+          (CONNECTION_ENABLED == 1) */
+
 #if ((CONNECTION_SUBRATING_ENABLED == 1) &&\
     (CONNECTION_ENABLED == 1))
 uint32_t llc_conn_calc_skip_ucfg(void* cntxt_p,
@@ -939,9 +1081,16 @@ tBleStatus llc_conn_multi_link_connection_ucfg(uint8_t enable)
 #endif /* (CONNECTION_ENABLED == 1) */
 
 #if (CONNECTION_ENABLED == 1)
-void llc_conn_peripheral_latency_cancellation_tsk_ucfg(uint16_t task_idx)
+void llc_conn_peripheral_roll_back_params_tsk_ucfg(uint16_t task_idx)
 {
-    llc_conn_peripheral_latency_cancellation_tsk(task_idx);
+    llc_conn_peripheral_roll_back_params_tsk(task_idx);
+}
+#endif /* (CONNECTION_ENABLED == 1) */
+
+#if (CONNECTION_ENABLED == 1)
+void llc_cpe_tsk_ucfg(uint16_t task_idx)
+{
+    llc_cpe_tsk(task_idx);
 }
 #endif /* (CONNECTION_ENABLED == 1) */
 
@@ -1000,86 +1149,134 @@ uint8_t llc_check_adv_or_crsp_rx_addr_ucfg(uint8_t* rx_addr7_p,
 
 #if ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
     (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1) &&\
-    (CONTROLLER_BIS_ENABLED == 1) &&\
-    (CONTROLLER_ISO_ENABLED == 1))
+    (CONTROLLER_BIS_ENABLED == 1))
 uint32_t bis_csr_ucfg(void)
 {
     return bis_csr();
 }
 #endif /* ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
           (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1) &&\
-          (CONTROLLER_BIS_ENABLED == 1) &&\
-          (CONTROLLER_ISO_ENABLED == 1)) */
+          (CONTROLLER_BIS_ENABLED == 1)) */
 
 #if ((CONTROLLER_CIS_ENABLED == 1) &&\
-    (CONNECTION_ENABLED == 1) &&\
-    (CONTROLLER_ISO_ENABLED == 1))
+    (CONNECTION_ENABLED == 1))
 uint32_t cis_csr_ucfg(void)
 {
     return cis_csr();
 }
 #endif /* ((CONTROLLER_CIS_ENABLED == 1) &&\
-          (CONNECTION_ENABLED == 1) &&\
-          (CONTROLLER_ISO_ENABLED == 1)) */
+          (CONNECTION_ENABLED == 1)) */
 
-#if (CONTROLLER_ISO_ENABLED == 1)
+#if (\
+     (\
+      (CONNECTION_ENABLED == 1) &&\
+      (CONTROLLER_CIS_ENABLED == 1)\
+     )\
+     ||\
+     (\
+      (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1) &&\
+      (CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
+      (CONTROLLER_BIS_ENABLED == 1)\
+     )\
+    )
 void llc_isoal_mem_alloc_ucfg(void)
 {
     llc_isoal_mem_alloc();
 }
-#endif /* (CONTROLLER_ISO_ENABLED == 1) */
+#endif
 
-#if (CONTROLLER_ISO_ENABLED == 1)
+#if (\
+     (\
+      (CONNECTION_ENABLED == 1) &&\
+      (CONTROLLER_CIS_ENABLED == 1)\
+     )\
+     ||\
+     (\
+      (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1) &&\
+      (CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
+      (CONTROLLER_BIS_ENABLED == 1)\
+     )\
+    )
 uint32_t iso_csr_ucfg(void)
 {
     return iso_csr();
 }
-#endif /* (CONTROLLER_ISO_ENABLED == 1) */
+#endif
 
-#if (CONTROLLER_ISO_ENABLED == 1)
+#if (\
+     (\
+      (CONNECTION_ENABLED == 1) &&\
+      (CONTROLLER_CIS_ENABLED == 1)\
+     )\
+     ||\
+     (\
+      (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1) &&\
+      (CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
+      (CONTROLLER_BIS_ENABLED == 1)\
+     )\
+    )
 tBleStatus iso_rx_bn_pdu_event_int_cb_ucfg(void* header_p,
                                            uint8_t* buff_p)
 {
     return iso_rx_bn_pdu_event_int_cb(header_p,
                                       buff_p);
 }
-#endif /* (CONTROLLER_ISO_ENABLED == 1) */
+#endif
 
-#if (CONTROLLER_ISO_ENABLED == 1)
+#if (\
+     (\
+      (CONNECTION_ENABLED == 1) &&\
+      (CONTROLLER_CIS_ENABLED == 1)\
+     )\
+     ||\
+     (\
+      (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1) &&\
+      (CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
+      (CONTROLLER_BIS_ENABLED == 1)\
+     )\
+    )
 tBleStatus iso_terminate_event_int_cb_ucfg(void* header_p,
                                            uint8_t* buff_p)
 {
     return iso_terminate_event_int_cb(header_p,
                                       buff_p);
 }
-#endif /* (CONTROLLER_ISO_ENABLED == 1) */
+#endif
 
-#if (CONTROLLER_ISO_ENABLED == 1)
+#if (\
+     (\
+      (CONNECTION_ENABLED == 1) &&\
+      (CONTROLLER_CIS_ENABLED == 1)\
+     )\
+     ||\
+     (\
+      (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1) &&\
+      (CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
+      (CONTROLLER_BIS_ENABLED == 1)\
+     )\
+    )
 tBleStatus iso_tx_bn_pdu_event_int_cb_ucfg(void* header_p,
                                            uint8_t* buff_p)
 {
     return iso_tx_bn_pdu_event_int_cb(header_p,
                                       buff_p);
 }
-#endif /* (CONTROLLER_ISO_ENABLED == 1) */
+#endif
 
 #if ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
     (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1) &&\
-    (CONTROLLER_BIS_ENABLED == 1) &&\
-    (CONTROLLER_ISO_ENABLED == 1))
+    (CONTROLLER_BIS_ENABLED == 1))
 void llc_big_brc_mem_alloc_ucfg(void)
 {
     llc_big_brc_mem_alloc();
 }
 #endif /* ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
           (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1) &&\
-          (CONTROLLER_BIS_ENABLED == 1) &&\
-          (CONTROLLER_ISO_ENABLED == 1)) */
+          (CONTROLLER_BIS_ENABLED == 1)) */
 
 #if ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
     (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1) &&\
-    (CONTROLLER_BIS_ENABLED == 1) &&\
-    (CONTROLLER_ISO_ENABLED == 1))
+    (CONTROLLER_BIS_ENABLED == 1))
 tBleStatus llc_big_brc_alloc_streams_ucfg(void* ctx,
                                           uint8_t stream_count)
 {
@@ -1088,13 +1285,11 @@ tBleStatus llc_big_brc_alloc_streams_ucfg(void* ctx,
 }
 #endif /* ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
           (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1) &&\
-          (CONTROLLER_BIS_ENABLED == 1) &&\
-          (CONTROLLER_ISO_ENABLED == 1)) */
+          (CONTROLLER_BIS_ENABLED == 1)) */
 
 #if ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
     (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1) &&\
-    (CONTROLLER_BIS_ENABLED == 1) &&\
-    (CONTROLLER_ISO_ENABLED == 1))
+    (CONTROLLER_BIS_ENABLED == 1))
 void llc_big_brc_add_biginfo_to_periodic_sync_packet_ucfg(void* pointer,
                                                           uint8_t* packet_p)
 {
@@ -1103,26 +1298,22 @@ void llc_big_brc_add_biginfo_to_periodic_sync_packet_ucfg(void* pointer,
 }
 #endif /* ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
           (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1) &&\
-          (CONTROLLER_BIS_ENABLED == 1) &&\
-          (CONTROLLER_ISO_ENABLED == 1)) */
+          (CONTROLLER_BIS_ENABLED == 1)) */
 
 #if ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
     (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1) &&\
-    (CONTROLLER_BIS_ENABLED == 1) &&\
-    (CONTROLLER_ISO_ENABLED == 1))
+    (CONTROLLER_BIS_ENABLED == 1))
 void* llc_big_brc_get_group_descr_of_adv_ucfg(uint8_t adv_handle)
 {
     return llc_big_brc_get_group_descr_of_adv(adv_handle);
 }
 #endif /* ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
           (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1) &&\
-          (CONTROLLER_BIS_ENABLED == 1) &&\
-          (CONTROLLER_ISO_ENABLED == 1)) */
+          (CONTROLLER_BIS_ENABLED == 1)) */
 
 #if ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
     (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1) &&\
-    (CONTROLLER_BIS_ENABLED == 1) &&\
-    (CONTROLLER_ISO_ENABLED == 1))
+    (CONTROLLER_BIS_ENABLED == 1))
 tBleStatus llc_big_brc_enqueue_pdu_ucfg(void* ctx_p,
                                         uint32_t iso_interval_idx,
                                         uint16_t conn_handle,
@@ -1135,13 +1326,11 @@ tBleStatus llc_big_brc_enqueue_pdu_ucfg(void* ctx_p,
 }
 #endif /* ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
           (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1) &&\
-          (CONTROLLER_BIS_ENABLED == 1) &&\
-          (CONTROLLER_ISO_ENABLED == 1)) */
+          (CONTROLLER_BIS_ENABLED == 1)) */
 
 #if ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
     (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1) &&\
-    (CONTROLLER_BIS_ENABLED == 1) &&\
-    (CONTROLLER_ISO_ENABLED == 1))
+    (CONTROLLER_BIS_ENABLED == 1))
 uint32_t llc_big_brc_get_own_big_event_time_ucfg(void* ctx_p,
                                                  uint16_t conn_handle,
                                                  uint16_t num_enq_packet)
@@ -1152,26 +1341,22 @@ uint32_t llc_big_brc_get_own_big_event_time_ucfg(void* ctx_p,
 }
 #endif /* ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
           (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1) &&\
-          (CONTROLLER_BIS_ENABLED == 1) &&\
-          (CONTROLLER_ISO_ENABLED == 1)) */
+          (CONTROLLER_BIS_ENABLED == 1)) */
 
 #if ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
     (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1) &&\
-    (CONTROLLER_BIS_ENABLED == 1) &&\
-    (CONTROLLER_ISO_ENABLED == 1))
+    (CONTROLLER_BIS_ENABLED == 1))
 void llc_big_sync_mem_alloc_ucfg(void)
 {
     llc_big_sync_mem_alloc();
 }
 #endif /* ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
           (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1) &&\
-          (CONTROLLER_BIS_ENABLED == 1) &&\
-          (CONTROLLER_ISO_ENABLED == 1)) */
+          (CONTROLLER_BIS_ENABLED == 1)) */
 
 #if ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
     (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1) &&\
-    (CONTROLLER_BIS_ENABLED == 1) &&\
-    (CONTROLLER_ISO_ENABLED == 1))
+    (CONTROLLER_BIS_ENABLED == 1))
 tBleStatus llc_big_sync_alloc_streams_ucfg(void* ctx,
                                            uint8_t stream_count)
 {
@@ -1180,13 +1365,11 @@ tBleStatus llc_big_sync_alloc_streams_ucfg(void* ctx,
 }
 #endif /* ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
           (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1) &&\
-          (CONTROLLER_BIS_ENABLED == 1) &&\
-          (CONTROLLER_ISO_ENABLED == 1)) */
+          (CONTROLLER_BIS_ENABLED == 1)) */
 
 #if ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
     (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1) &&\
-    (CONTROLLER_BIS_ENABLED == 1) &&\
-    (CONTROLLER_ISO_ENABLED == 1)) &&\
+    (CONTROLLER_BIS_ENABLED == 1)) &&\
     (CONTROLLER_SCAN_ENABLED == 1)
 void llc_big_sync_deploy_sync_ucfg(uint8_t* biginfo,
                                    uint16_t sync_handle,
@@ -1200,14 +1383,12 @@ void llc_big_sync_deploy_sync_ucfg(uint8_t* biginfo,
 }
 #endif /* ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
           (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1) &&\
-          (CONTROLLER_BIS_ENABLED == 1) &&\
-          (CONTROLLER_ISO_ENABLED == 1)) &&\
+          (CONTROLLER_BIS_ENABLED == 1)) &&\
           (CONTROLLER_SCAN_ENABLED == 1) */
 
 #if ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
     (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1) &&\
-    (CONTROLLER_BIS_ENABLED == 1) &&\
-    (CONTROLLER_ISO_ENABLED == 1)) &&\
+    (CONTROLLER_BIS_ENABLED == 1)) &&\
     (CONTROLLER_SCAN_ENABLED == 1)
 tBleStatus llc_big_sync_decrypt_bis_packet_ucfg(void* ctx_p,
                                                 void* pdu_p)
@@ -1217,14 +1398,12 @@ tBleStatus llc_big_sync_decrypt_bis_packet_ucfg(void* ctx_p,
 }
 #endif /* ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
           (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1) &&\
-          (CONTROLLER_BIS_ENABLED == 1) &&\
-          (CONTROLLER_ISO_ENABLED == 1)) &&\
+          (CONTROLLER_BIS_ENABLED == 1)) &&\
           (CONTROLLER_SCAN_ENABLED == 1) */
 
 #if ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
     (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1) &&\
-    (CONTROLLER_BIS_ENABLED == 1) &&\
-    (CONTROLLER_ISO_ENABLED == 1))
+    (CONTROLLER_BIS_ENABLED == 1))
 uint32_t llc_big_sync_get_sdu_synchronization_us_ucfg(uint16_t conn_handle,
                                                       uint8_t framed,
                                                       uint32_t anchor_us,
@@ -1237,13 +1416,11 @@ uint32_t llc_big_sync_get_sdu_synchronization_us_ucfg(uint16_t conn_handle,
 }
 #endif /* ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
           (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1) &&\
-          (CONTROLLER_BIS_ENABLED == 1) &&\
-          (CONTROLLER_ISO_ENABLED == 1)) */
+          (CONTROLLER_BIS_ENABLED == 1)) */
 
 #if ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
     (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1) &&\
-    (CONTROLLER_BIS_ENABLED == 1) &&\
-    (CONTROLLER_ISO_ENABLED == 1))
+    (CONTROLLER_BIS_ENABLED == 1))
 tBleStatus llc_big_cmn_get_iso_params_ucfg(uint8_t direction,
                                            uint16_t conn_handle,
                                            void* param_p)
@@ -1254,16 +1431,14 @@ tBleStatus llc_big_cmn_get_iso_params_ucfg(uint8_t direction,
 }
 #endif /* ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
           (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1) &&\
-          (CONTROLLER_BIS_ENABLED == 1) &&\
-          (CONTROLLER_ISO_ENABLED == 1)) */
+          (CONTROLLER_BIS_ENABLED == 1)) */
 
 #if (\
      (CONNECTION_ENABLED == 1)\
      &&\
      (\
       (CONNECTION_ENABLED == 1) &&\
-      (CONTROLLER_CIS_ENABLED == 1) &&\
-      (CONTROLLER_ISO_ENABLED == 1)\
+      (CONTROLLER_CIS_ENABLED == 1)\
      )\
      &&\
      (\
@@ -1277,17 +1452,17 @@ tBleStatus llc_big_cmn_get_iso_params_ucfg(uint8_t direction,
       )\
      )\
     )
-uint32_t llc_cig_cen_get_cis_offset_from_acl_us_ucfg(void* ctx_p,
+uint16_t llc_cig_cen_get_cis_offset_from_acl_us_ucfg(void* ctx_p,
                                                      void* cis_p,
                                                      uint8_t conn_idx,
-                                                     uint16_t* event_count_p,
-                                                     uint32_t* cig_anchor_st_p)
+                                                     uint32_t* cis_min_offset_us_p,
+                                                     uint32_t* cis_max_offset_us_p)
 {
     return llc_cig_cen_get_cis_offset_from_acl_us(ctx_p,
                                                   cis_p,
                                                   conn_idx,
-                                                  event_count_p,
-                                                  cig_anchor_st_p);
+                                                  cis_min_offset_us_p,
+                                                  cis_max_offset_us_p);
 }
 #endif
 
@@ -1296,8 +1471,7 @@ uint32_t llc_cig_cen_get_cis_offset_from_acl_us_ucfg(void* ctx_p,
      &&\
      (\
       (CONNECTION_ENABLED == 1) &&\
-      (CONTROLLER_CIS_ENABLED == 1) &&\
-      (CONTROLLER_ISO_ENABLED == 1)\
+      (CONTROLLER_CIS_ENABLED == 1)\
      )\
      &&\
      (\
@@ -1324,8 +1498,7 @@ uint32_t llc_cig_cen_get_sdu_synchronization_us_ucfg(uint16_t conn_handle,
 #endif
 
 #if ((CONTROLLER_CIS_ENABLED == 1) &&\
-    (CONNECTION_ENABLED == 1) &&\
-    (CONTROLLER_ISO_ENABLED == 1))
+    (CONNECTION_ENABLED == 1))
 uint32_t llc_cig_per_get_sdu_synchronization_us_ucfg(uint16_t conn_handle,
                                                      uint8_t framed,
                                                      uint32_t anchor_us,
@@ -1337,12 +1510,10 @@ uint32_t llc_cig_per_get_sdu_synchronization_us_ucfg(uint16_t conn_handle,
                                                   time_offset);
 }
 #endif /* ((CONTROLLER_CIS_ENABLED == 1) &&\
-          (CONNECTION_ENABLED == 1) &&\
-          (CONTROLLER_ISO_ENABLED == 1)) */
+          (CONNECTION_ENABLED == 1)) */
 
 #if ((CONTROLLER_CIS_ENABLED == 1) &&\
-    (CONNECTION_ENABLED == 1) &&\
-    (CONTROLLER_ISO_ENABLED == 1))
+    (CONNECTION_ENABLED == 1))
 tBleStatus llc_cig_cmn_disconnect_ucfg(uint16_t cis_handle,
                                        uint8_t reason)
 {
@@ -1350,23 +1521,19 @@ tBleStatus llc_cig_cmn_disconnect_ucfg(uint16_t cis_handle,
                                   reason);
 }
 #endif /* ((CONTROLLER_CIS_ENABLED == 1) &&\
-          (CONNECTION_ENABLED == 1) &&\
-          (CONTROLLER_ISO_ENABLED == 1)) */
+          (CONNECTION_ENABLED == 1)) */
 
 #if ((CONTROLLER_CIS_ENABLED == 1) &&\
-    (CONNECTION_ENABLED == 1) &&\
-    (CONTROLLER_ISO_ENABLED == 1))
+    (CONNECTION_ENABLED == 1))
 void llc_cig_cmn_mem_alloc_ucfg(void)
 {
     llc_cig_cmn_mem_alloc();
 }
 #endif /* ((CONTROLLER_CIS_ENABLED == 1) &&\
-          (CONNECTION_ENABLED == 1) &&\
-          (CONTROLLER_ISO_ENABLED == 1)) */
+          (CONNECTION_ENABLED == 1)) */
 
 #if ((CONTROLLER_CIS_ENABLED == 1) &&\
-    (CONNECTION_ENABLED == 1) &&\
-    (CONTROLLER_ISO_ENABLED == 1))
+    (CONNECTION_ENABLED == 1))
 tBleStatus llc_cig_cmn_alloc_streams_ucfg(void* ctx,
                                           uint8_t stream_count,
                                           uint8_t group_type)
@@ -1376,12 +1543,10 @@ tBleStatus llc_cig_cmn_alloc_streams_ucfg(void* ctx,
                                      group_type);
 }
 #endif /* ((CONTROLLER_CIS_ENABLED == 1) &&\
-          (CONNECTION_ENABLED == 1) &&\
-          (CONTROLLER_ISO_ENABLED == 1)) */
+          (CONNECTION_ENABLED == 1)) */
 
 #if ((CONTROLLER_CIS_ENABLED == 1) &&\
-    (CONNECTION_ENABLED == 1) &&\
-    (CONTROLLER_ISO_ENABLED == 1))
+    (CONNECTION_ENABLED == 1))
 void llc_cig_cmn_terminate_stream_ucfg(void* cig_p,
                                        void* cis_p,
                                        uint8_t reason)
@@ -1391,12 +1556,10 @@ void llc_cig_cmn_terminate_stream_ucfg(void* cig_p,
                                  reason);
 }
 #endif /* ((CONTROLLER_CIS_ENABLED == 1) &&\
-          (CONNECTION_ENABLED == 1) &&\
-          (CONTROLLER_ISO_ENABLED == 1)) */
+          (CONNECTION_ENABLED == 1)) */
 
 #if ((CONTROLLER_CIS_ENABLED == 1) &&\
-    (CONNECTION_ENABLED == 1) &&\
-    (CONTROLLER_ISO_ENABLED == 1))
+    (CONNECTION_ENABLED == 1))
 uint32_t llc_cig_cmn_get_own_cig_event_time_ucfg(void* ctx_p,
                                                  uint16_t conn_handle,
                                                  uint16_t num_enq_packet)
@@ -1406,12 +1569,31 @@ uint32_t llc_cig_cmn_get_own_cig_event_time_ucfg(void* ctx_p,
                                               num_enq_packet);
 }
 #endif /* ((CONTROLLER_CIS_ENABLED == 1) &&\
-          (CONNECTION_ENABLED == 1) &&\
-          (CONTROLLER_ISO_ENABLED == 1)) */
+          (CONNECTION_ENABLED == 1)) */
 
 #if ((CONTROLLER_CIS_ENABLED == 1) &&\
-    (CONNECTION_ENABLED == 1) &&\
-    (CONTROLLER_ISO_ENABLED == 1))
+    (CONNECTION_ENABLED == 1))
+void llc_cig_cmn_get_cis_anchor_range_ucfg(void* cig_p,
+                                           void* cis_p,
+                                           uint8_t conn_idx,
+                                           uint16_t event_offset,
+                                           uint16_t* acl_event_counter_p,
+                                           uint32_t* cis_min_offset_us_p,
+                                           uint32_t* cis_max_offset_us_p)
+{
+    llc_cig_cmn_get_cis_anchor_range(cig_p,
+                                     cis_p,
+                                     conn_idx,
+                                     event_offset,
+                                     acl_event_counter_p,
+                                     cis_min_offset_us_p,
+                                     cis_max_offset_us_p);
+}
+#endif /* ((CONTROLLER_CIS_ENABLED == 1) &&\
+          (CONNECTION_ENABLED == 1)) */
+
+#if ((CONTROLLER_CIS_ENABLED == 1) &&\
+    (CONNECTION_ENABLED == 1))
 tBleStatus llc_cig_cmn_enqueue_pdu_to_tx_ucfg(void* ctx_p,
                                               uint32_t iso_interval_idx,
                                               uint16_t conn_handle,
@@ -1423,12 +1605,10 @@ tBleStatus llc_cig_cmn_enqueue_pdu_to_tx_ucfg(void* ctx_p,
                                          pdu_p);
 }
 #endif /* ((CONTROLLER_CIS_ENABLED == 1) &&\
-          (CONNECTION_ENABLED == 1) &&\
-          (CONTROLLER_ISO_ENABLED == 1)) */
+          (CONNECTION_ENABLED == 1)) */
 
 #if ((CONTROLLER_CIS_ENABLED == 1) &&\
-    (CONNECTION_ENABLED == 1) &&\
-    (CONTROLLER_ISO_ENABLED == 1))
+    (CONNECTION_ENABLED == 1))
 tBleStatus llc_cig_cmn_decrypt_packet_ucfg(void* ctx_p,
                                            void* pdu_p)
 {
@@ -1436,12 +1616,10 @@ tBleStatus llc_cig_cmn_decrypt_packet_ucfg(void* ctx_p,
                                       pdu_p);
 }
 #endif /* ((CONTROLLER_CIS_ENABLED == 1) &&\
-          (CONNECTION_ENABLED == 1) &&\
-          (CONTROLLER_ISO_ENABLED == 1)) */
+          (CONNECTION_ENABLED == 1)) */
 
 #if ((CONTROLLER_CIS_ENABLED == 1) &&\
-    (CONNECTION_ENABLED == 1) &&\
-    (CONTROLLER_ISO_ENABLED == 1))
+    (CONNECTION_ENABLED == 1))
 void llc_cig_cmn_start_cis_ucfg(uint8_t conn_idx,
                                 uint16_t instant)
 {
@@ -1449,34 +1627,28 @@ void llc_cig_cmn_start_cis_ucfg(uint8_t conn_idx,
                           instant);
 }
 #endif /* ((CONTROLLER_CIS_ENABLED == 1) &&\
-          (CONNECTION_ENABLED == 1) &&\
-          (CONTROLLER_ISO_ENABLED == 1)) */
+          (CONNECTION_ENABLED == 1)) */
 
 #if ((CONTROLLER_CIS_ENABLED == 1) &&\
-    (CONNECTION_ENABLED == 1) &&\
-    (CONTROLLER_ISO_ENABLED == 1))
-uint8_t llc_cig_cmn_is_active_cis_on_acl_ucfg(uint16_t acl_conn_handle)
+    (CONNECTION_ENABLED == 1))
+uint8_t llc_cig_cmn_is_active_cis_on_acl_ucfg(uint8_t acl_conn_idx)
 {
-    return llc_cig_cmn_is_active_cis_on_acl(acl_conn_handle);
+    return llc_cig_cmn_is_active_cis_on_acl(acl_conn_idx);
 }
 #endif /* ((CONTROLLER_CIS_ENABLED == 1) &&\
-          (CONNECTION_ENABLED == 1) &&\
-          (CONTROLLER_ISO_ENABLED == 1)) */
+          (CONNECTION_ENABLED == 1)) */
 
 #if ((CONTROLLER_CIS_ENABLED == 1) &&\
-    (CONNECTION_ENABLED == 1) &&\
-    (CONTROLLER_ISO_ENABLED == 1))
-void llc_cig_cmn_terminate_cises_on_acl_ucfg(uint16_t acl_conn_handle)
+    (CONNECTION_ENABLED == 1))
+void llc_cig_cmn_terminate_cises_on_acl_ucfg(uint8_t conn_idx)
 {
-    llc_cig_cmn_terminate_cises_on_acl(acl_conn_handle);
+    llc_cig_cmn_terminate_cises_on_acl(conn_idx);
 }
 #endif /* ((CONTROLLER_CIS_ENABLED == 1) &&\
-          (CONNECTION_ENABLED == 1) &&\
-          (CONTROLLER_ISO_ENABLED == 1)) */
+          (CONNECTION_ENABLED == 1)) */
 
 #if ((CONTROLLER_CIS_ENABLED == 1) &&\
-    (CONNECTION_ENABLED == 1) &&\
-    (CONTROLLER_ISO_ENABLED == 1))
+    (CONNECTION_ENABLED == 1))
 void llc_cig_cmn_cis_established_event_gen_ucfg(void* cig_p,
                                                 void* cis_p,
                                                 uint8_t status)
@@ -1486,12 +1658,34 @@ void llc_cig_cmn_cis_established_event_gen_ucfg(void* cig_p,
                                           status);
 }
 #endif /* ((CONTROLLER_CIS_ENABLED == 1) &&\
-          (CONNECTION_ENABLED == 1) &&\
-          (CONTROLLER_ISO_ENABLED == 1)) */
+          (CONNECTION_ENABLED == 1)) */
 
 #if ((CONTROLLER_CIS_ENABLED == 1) &&\
-    (CONNECTION_ENABLED == 1) &&\
-    (CONTROLLER_ISO_ENABLED == 1))
+    (CONNECTION_ENABLED == 1))
+tBleStatus llc_cig_cmn_check_params_ucfg(uint8_t cig_id,
+                                         void* cig_p,
+                                         void* cis_p)
+{
+    return llc_cig_cmn_check_params(cig_id,
+                                    cig_p,
+                                    cis_p);
+}
+#endif /* ((CONTROLLER_CIS_ENABLED == 1) &&\
+          (CONNECTION_ENABLED == 1)) */
+
+#if ((CONTROLLER_CIS_ENABLED == 1) &&\
+    (CONNECTION_ENABLED == 1))
+tBleStatus llc_cig_cmn_check_iso_params_ucfg(void* cig_p,
+                                             void* cis_p)
+{
+    return llc_cig_cmn_check_iso_params(cig_p,
+                                        cis_p);
+}
+#endif /* ((CONTROLLER_CIS_ENABLED == 1) &&\
+          (CONNECTION_ENABLED == 1)) */
+
+#if ((CONTROLLER_CIS_ENABLED == 1) &&\
+    (CONNECTION_ENABLED == 1))
 tBleStatus llc_cig_cmn_get_iso_params_ucfg(uint8_t direction,
                                            uint16_t conn_handle,
                                            void* param_p)
@@ -1501,12 +1695,10 @@ tBleStatus llc_cig_cmn_get_iso_params_ucfg(uint8_t direction,
                                       param_p);
 }
 #endif /* ((CONTROLLER_CIS_ENABLED == 1) &&\
-          (CONNECTION_ENABLED == 1) &&\
-          (CONTROLLER_ISO_ENABLED == 1)) */
+          (CONNECTION_ENABLED == 1)) */
 
 #if ((CONTROLLER_CIS_ENABLED == 1) &&\
-    (CONNECTION_ENABLED == 1) &&\
-    (CONTROLLER_ISO_ENABLED == 1))
+    (CONNECTION_ENABLED == 1))
 tBleStatus llc_cig_cmn_read_iso_link_quality_ucfg(uint16_t conn_handle,
                                                   uint32_t* tx_unacked_packets_p,
                                                   uint32_t* tx_flushed_packets_p,
@@ -1526,15 +1718,44 @@ tBleStatus llc_cig_cmn_read_iso_link_quality_ucfg(uint16_t conn_handle,
                                              duplicate_packets_p);
 }
 #endif /* ((CONTROLLER_CIS_ENABLED == 1) &&\
-          (CONNECTION_ENABLED == 1) &&\
-          (CONTROLLER_ISO_ENABLED == 1)) */
+          (CONNECTION_ENABLED == 1)) */
 
-#if (CONTROLLER_ISO_ENABLED == 1)
+#if ((CONTROLLER_CIS_ENABLED == 1) &&\
+    (CONNECTION_ENABLED == 1))
+tBleStatus llc_cig_cmn_validate_cis_params_from_acl_ucfg(void* ctx_p,
+                                                         void* cis_p,
+                                                         uint8_t conn_idx,
+                                                         uint16_t event_counter,
+                                                         uint32_t cis_min_offset_us,
+                                                         uint32_t cis_max_offset_us)
+{
+    return llc_cig_cmn_validate_cis_params_from_acl(ctx_p,
+                                                    cis_p,
+                                                    conn_idx,
+                                                    event_counter,
+                                                    cis_min_offset_us,
+                                                    cis_max_offset_us);
+}
+#endif /* ((CONTROLLER_CIS_ENABLED == 1) &&\
+          (CONNECTION_ENABLED == 1)) */
+
+#if (\
+     (\
+      (CONNECTION_ENABLED == 1) &&\
+      (CONTROLLER_CIS_ENABLED == 1)\
+     )\
+     ||\
+     (\
+      (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1) &&\
+      (CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
+      (CONTROLLER_BIS_ENABLED == 1)\
+     )\
+    )
 void llc_iso_cmn_mem_alloc_ucfg(void)
 {
     llc_iso_cmn_mem_alloc();
 }
-#endif /* (CONTROLLER_ISO_ENABLED == 1) */
+#endif
 
 #if ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
     (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1))
@@ -1602,7 +1823,7 @@ uint8_t llc_padv_check_if_syncinfo_is_included_and_start_periodic_advertising_uc
 #if ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
     (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1))
 uint8_t llc_padv_update_sync_info_ucfg(void* padv_per_p,
-                                    uint32_t aux_adv_ind_anchor)
+                                       uint32_t aux_adv_ind_anchor)
 {
     return llc_padv_update_sync_info(padv_per_p,
                                      aux_adv_ind_anchor);
@@ -1637,7 +1858,7 @@ uint32_t llc_padv_periodic_adv_sync_csr_ucfg(void)
     (CONTROLLER_PERIODIC_ADV_WR_ENABLED == 1)) &&\
     (CONNECTION_ENABLED == 1)
 uint8_t llc_padv_wr_create_connection_cancel_ucfg(void* _padv_per_p,
-                                               uint8_t advertising_handle)
+                                                  uint8_t advertising_handle)
 {
     return llc_padv_wr_create_connection_cancel(_padv_per_p,
                                                 advertising_handle);
@@ -1678,7 +1899,7 @@ tBleStatus llc_padv_wr_set_periodic_advertising_subevent_data_ucfg(void* set_pad
     (CONTROLLER_PERIODIC_ADV_WR_ENABLED == 1)) &&\
     (CONNECTION_ENABLED == 1)
 uint8_t llc_padv_wr_set_ctrdata_ucfg(void* padv_per_p,
-                                  uint8_t* ctrdata_p)
+                                     uint8_t* ctrdata_p)
 {
     return llc_padv_wr_set_ctrdata(padv_per_p,
                                    ctrdata_p);
@@ -1742,12 +1963,132 @@ void llc_padv_wr_disable_ext_ucfg(void* _padv_per_p)
           (CONTROLLER_PERIODIC_ADV_WR_ENABLED == 1)) &&\
           (CONNECTION_ENABLED == 1) */
 
+#if ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
+    (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1)) &&\
+    (CONTROLLER_SCAN_ENABLED == 1) &&\
+    (CONNECTION_ENABLED == 1)
+void llc_past_mem_allocate_ucfg(uint8_t scan_en,
+                                uint8_t ext_en,
+                                uint8_t pscan_en,
+                                uint8_t conn_en)
+{
+    llc_past_mem_allocate(scan_en,
+                          ext_en,
+                          pscan_en,
+                          conn_en);
+}
+#endif /* ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
+          (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1)) &&\
+          (CONTROLLER_SCAN_ENABLED == 1) &&\
+          (CONNECTION_ENABLED == 1) */
+
+#if ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
+    (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1)) &&\
+    (CONTROLLER_SCAN_ENABLED == 1) &&\
+    (CONNECTION_ENABLED == 1)
+void llc_past_init_ucfg(uint8_t conn_idx)
+{
+    llc_past_init(conn_idx);
+}
+#endif /* ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
+          (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1)) &&\
+          (CONTROLLER_SCAN_ENABLED == 1) &&\
+          (CONNECTION_ENABLED == 1) */
+
+#if ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
+    (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1)) &&\
+    (CONTROLLER_SCAN_ENABLED == 1) &&\
+    (CONNECTION_ENABLED == 1)
+void llc_past_by_scanner_ucfg(void* params,
+                              uint32_t conn_anchor,
+                              uint32_t conn_interval,
+                              uint16_t conn_event_count,
+                              uint8_t* pdu_p)
+{
+    llc_past_by_scanner(params,
+                        conn_anchor,
+                        conn_interval,
+                        conn_event_count,
+                        pdu_p);
+}
+#endif /* ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
+          (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1)) &&\
+          (CONTROLLER_SCAN_ENABLED == 1) &&\
+          (CONNECTION_ENABLED == 1) */
+
+#if ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
+    (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1)) &&\
+    (CONTROLLER_SCAN_ENABLED == 1) &&\
+    (CONNECTION_ENABLED == 1)
+void llc_past_peer_init_ucfg(uint8_t* pdu_p,
+                             uint8_t conn_idx)
+{
+    llc_past_peer_init(pdu_p,
+                       conn_idx);
+}
+#endif /* ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
+          (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1)) &&\
+          (CONTROLLER_SCAN_ENABLED == 1) &&\
+          (CONNECTION_ENABLED == 1) */
+
+#if ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
+    (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1)) &&\
+    (CONNECTION_ENABLED == 1)
+void llc_past_register_cpf_ucfg(void)
+{
+    llc_past_register_cpf();
+}
+#endif /* ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
+          (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1)) &&\
+          (CONNECTION_ENABLED == 1) */
+
 #if (CONTROLLER_PRIVACY_ENABLED == 1)
 void llc_priv_generate_peer_rpa_from_peer_id_ucfg(void* peer_p,
                                                   uint8_t in_isr)
 {
     llc_priv_generate_peer_rpa_from_peer_id(peer_p,
                                             in_isr);
+}
+#endif /* (CONTROLLER_PRIVACY_ENABLED == 1) */
+
+#if ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
+    (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1) &&\
+    (CONTROLLER_PERIODIC_ADV_WR_ENABLED == 1)) &&\
+    (CONTROLLER_SCAN_ENABLED == 1) &&\
+    (CONNECTION_ENABLED == 1)
+uint8_t llc_check_creq_rx_addr_ucfg(uint8_t* rx_addr7_p,
+                                    uint8_t* tx_addr7_p,
+                                    uint8_t* local_addr7_p,
+                                    uint8_t* rl_index_p)
+{
+    return llc_check_creq_rx_addr(rx_addr7_p,
+                                  tx_addr7_p,
+                                  local_addr7_p,
+                                  rl_index_p);
+}
+#endif /* ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
+          (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1) &&\
+          (CONTROLLER_PERIODIC_ADV_WR_ENABLED == 1)) &&\
+          (CONTROLLER_SCAN_ENABLED == 1) &&\
+          (CONNECTION_ENABLED == 1) */
+
+#if (CONTROLLER_PRIVACY_ENABLED == 1)
+uint8_t llc_priv_generate_rpa_from_rl_index_ucfg(uint8_t rl_index,
+                                                 uint8_t local_rpa,
+                                                 uint8_t in_isr,
+                                                 void* addr8_rpa_p)
+{
+    return llc_priv_generate_rpa_from_rl_index(rl_index,
+                                               local_rpa,
+                                               in_isr,
+                                               addr8_rpa_p);
+}
+#endif /* (CONTROLLER_PRIVACY_ENABLED == 1) */
+
+#if (CONTROLLER_PRIVACY_ENABLED == 1)
+void llc_priv_get_id_addr_from_rpa_ucfg(void* addr_p)
+{
+    llc_priv_get_id_addr_from_rpa(addr_p);
 }
 #endif /* (CONTROLLER_PRIVACY_ENABLED == 1) */
 
@@ -1818,6 +2159,20 @@ void llc_priv_init_random_part_of_one_local_rpa_ucfg(void* peer_id_p)
 }
 #endif /* (CONTROLLER_PRIVACY_ENABLED == 1) */
 
+#if (CONTROLLER_PRIVACY_ENABLED == 1)
+void llc_priv_enable_rpa_change_at_timeout_ucfg(uint8_t enable)
+{
+    llc_priv_enable_rpa_change_at_timeout(enable);
+}
+#endif /* (CONTROLLER_PRIVACY_ENABLED == 1) */
+
+#if (CONTROLLER_PRIVACY_ENABLED == 1)
+uint8_t llc_priv_is_rpa_change_at_timeout_enabled_ucfg(void)
+{
+    return llc_priv_is_rpa_change_at_timeout_enabled();
+}
+#endif /* (CONTROLLER_PRIVACY_ENABLED == 1) */
+
 #if ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
     (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1)) &&\
     (CONTROLLER_SCAN_ENABLED == 1) &&\
@@ -1830,17 +2185,6 @@ void llc_pscan_cancel_slot_cte_ucfg(void* cntxt_per_p)
           (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1)) &&\
           (CONTROLLER_SCAN_ENABLED == 1) &&\
           (CONTROLLER_CTE_ENABLED == 1) */
-
-#if ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
-    (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1)) &&\
-    (CONTROLLER_SCAN_ENABLED == 1)
-uint8_t llc_pscan_isr_ucfg(void* cntxt_per_p)
-{
-    return llc_pscan_isr(cntxt_per_p);
-}
-#endif /* ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
-          (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1)) &&\
-          (CONTROLLER_SCAN_ENABLED == 1) */
 
 #if ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
     (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1)) &&\
@@ -1960,19 +2304,6 @@ void llc_pscan_synchronizing_ucfg(void* params_p)
           (CONTROLLER_SCAN_ENABLED == 1) */
 
 #if ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
-    (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1)) &&\
-    (CONTROLLER_SCAN_ENABLED == 1) &&\
-    (CONTROLLER_CTE_ENABLED == 1)
-void llc_pscan_wrong_cte_type_ucfg(void* cntxt_p)
-{
-    llc_pscan_wrong_cte_type(cntxt_p);
-}
-#endif /* ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
-          (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1)) &&\
-          (CONTROLLER_SCAN_ENABLED == 1) &&\
-          (CONTROLLER_CTE_ENABLED == 1) */
-
-#if ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
     (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1) &&\
     (CONTROLLER_PERIODIC_ADV_WR_ENABLED == 1)) &&\
     (CONTROLLER_SCAN_ENABLED == 1) &&\
@@ -2048,8 +2379,8 @@ void llc_pscan_wr_config_tx_blue_sm_ucfg(void* params_p,
     (CONTROLLER_SCAN_ENABLED == 1) &&\
     (CONNECTION_ENABLED == 1)
 uint8_t llc_pscan_wr_get_pawr_info_ucfg(uint8_t acad_size,
-                                     uint8_t* acad_p,
-                                     uint8_t* pawr_info_p)
+                                        uint8_t* acad_p,
+                                        uint8_t* pawr_info_p)
 {
     return llc_pscan_wr_get_pawr_info(acad_size,
                                       acad_p,
@@ -2140,6 +2471,15 @@ void llc_pscan_wr_set_scheduler_params_ucfg(void* params_p)
           (CONTROLLER_SCAN_ENABLED == 1) &&\
           (CONNECTION_ENABLED == 1) */
 
+#if ((CONTROLLER_CIS_ENABLED == 1) &&\
+    (CONNECTION_ENABLED == 1))
+void llc_sca_upd_register_cpf_ucfg(void)
+{
+    llc_sca_upd_register_cpf();
+}
+#endif /* ((CONTROLLER_CIS_ENABLED == 1) &&\
+          (CONNECTION_ENABLED == 1)) */
+
 #if (CONTROLLER_SCAN_ENABLED == 1) &&\
     (CONNECTION_ENABLED == 1)
 void llc_scan_conn_ind_sent_ucfg(void* ptr,
@@ -2153,19 +2493,19 @@ void llc_scan_conn_ind_sent_ucfg(void* ptr,
 
 #if (CONTROLLER_SCAN_ENABLED == 1) &&\
     (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1)
-uint8_t llc_scan_process_ext_adv_ucfg(void* scan_p,
+void llc_scan_process_ext_adv_ucfg(void* scan_p,
                                    void* params_p,
                                    uint32_t direct_addr[2],
                                    uint8_t idx,
                                    uint8_t advertiser_addr_flag,
                                    uint8_t* send_report_p)
 {
-    return llc_scan_process_ext_adv(scan_p,
-                                    params_p,
-                                    direct_addr,
-                                    idx,
-                                    advertiser_addr_flag,
-                                    send_report_p);
+    llc_scan_process_ext_adv(scan_p,
+                             params_p,
+                             direct_addr,
+                             idx,
+                             advertiser_addr_flag,
+                             send_report_p);
 }
 #endif /* (CONTROLLER_SCAN_ENABLED == 1) &&\
           (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1) */
@@ -2273,15 +2613,6 @@ void llc_scan_disable_ucfg(void* scan_p)
 
 #if ((CONNECTION_SUBRATING_ENABLED == 1) &&\
     (CONNECTION_ENABLED == 1))
-uint8_t llc_subrate_get_active_sr_req_proc_ucfg(uint8_t conn_idx)
-{
-    return llc_subrate_get_active_sr_req_proc(conn_idx);
-}
-#endif /* ((CONNECTION_SUBRATING_ENABLED == 1) &&\
-          (CONNECTION_ENABLED == 1)) */
-
-#if ((CONNECTION_SUBRATING_ENABLED == 1) &&\
-    (CONNECTION_ENABLED == 1))
 void llc_subrate_new_sr_base_event_ucfg(uint16_t sr_factor,
                                         uint16_t* sr_base_event_p)
 {
@@ -2309,7 +2640,27 @@ uint8_t llc_subrate_offline_processing_ucfg(void* cntxt_p)
 #endif /* ((CONNECTION_SUBRATING_ENABLED == 1) &&\
           (CONNECTION_ENABLED == 1)) */
 
-#if (CONTROLLER_ISO_ENABLED == 1)
+#if ((CONNECTION_SUBRATING_ENABLED == 1) &&\
+    (CONNECTION_ENABLED == 1))
+void llc_subrate_register_cpf_ucfg(void)
+{
+    llc_subrate_register_cpf();
+}
+#endif /* ((CONNECTION_SUBRATING_ENABLED == 1) &&\
+          (CONNECTION_ENABLED == 1)) */
+
+#if (\
+     (\
+      (CONNECTION_ENABLED == 1) &&\
+      (CONTROLLER_CIS_ENABLED == 1)\
+     )\
+     ||\
+     (\
+      (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1) &&\
+      (CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
+      (CONTROLLER_BIS_ENABLED == 1)\
+     )\
+    )
 void llc_mngm_csa2_select_subevent_channel_ucfg(uint8_t subevent_counter,
                                                 uint8_t* subevent_index_p,
                                                 uint16_t prn_s,
@@ -2328,124 +2679,7 @@ void llc_mngm_csa2_select_subevent_channel_ucfg(uint8_t subevent_counter,
                                           _csa2_table_p,
                                           channel_index_p);
 }
-#endif /* (CONTROLLER_ISO_ENABLED == 1) */
-
-#if (CONTROLLER_DATA_LENGTH_EXTENSION_ENABLED == 1) &&\
-    (CONNECTION_ENABLED == 1)
-void LL_cpe_init_length_update_ucfg(void)
-{
-    LL_cpe_init_length_update();
-}
-#endif /* (CONTROLLER_DATA_LENGTH_EXTENSION_ENABLED == 1) &&\
-          (CONNECTION_ENABLED == 1) */
-
-#if (CONTROLLER_2M_CODED_PHY_ENABLED == 1) &&\
-    (CONNECTION_ENABLED == 1)
-void LL_cpe_init_phy_update_ucfg(void)
-{
-    LL_cpe_init_phy_update();
-}
-#endif /* (CONTROLLER_2M_CODED_PHY_ENABLED == 1) &&\
-          (CONNECTION_ENABLED == 1) */
-
-#if (CONTROLLER_CTE_ENABLED == 1) &&\
-    (CONNECTION_ENABLED == 1)
-void LL_cpe_init_cte_ucfg(void)
-{
-    LL_cpe_init_cte();
-}
-#endif /* (CONTROLLER_CTE_ENABLED == 1) &&\
-          (CONNECTION_ENABLED == 1) */
-
-#if ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
-    (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1)) &&\
-    (CONNECTION_ENABLED == 1)
-void LL_cpe_init_past_ucfg(void)
-{
-    LL_cpe_init_past();
-}
-#endif /* ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
-          (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1)) &&\
-          (CONNECTION_ENABLED == 1) */
-
-#if ((CONTROLLER_POWER_CONTROL_ENABLED == 1) &&\
-    (CONNECTION_ENABLED == 1))
-void LL_cpe_init_pcl_ucfg(void)
-{
-    LL_cpe_init_pcl();
-}
-#endif /* ((CONTROLLER_POWER_CONTROL_ENABLED == 1) &&\
-          (CONNECTION_ENABLED == 1)) */
-
-#if (CONNECTION_ENABLED == 1)
-void LL_cpe_init_conn_update_ucfg(void)
-{
-    LL_cpe_init_conn_update();
-}
-#endif /* (CONNECTION_ENABLED == 1) */
-
-#if (CONNECTION_ENABLED == 1)
-void LL_cpe_init_chmap_update_ucfg(void)
-{
-    LL_cpe_init_chmap_update();
-}
-#endif /* (CONNECTION_ENABLED == 1) */
-
-#if ((CONTROLLER_CHAN_CLASS_ENABLED == 1) &&\
-    (CONNECTION_ENABLED == 1))
-void LL_cpe_init_chc_enable_ucfg(void)
-{
-    LL_cpe_init_chc_enable();
-}
-#endif /* ((CONTROLLER_CHAN_CLASS_ENABLED == 1) &&\
-          (CONNECTION_ENABLED == 1)) */
-
-#if ((CONTROLLER_CHAN_CLASS_ENABLED == 1) &&\
-    (CONNECTION_ENABLED == 1))
-void LL_cpe_init_chc_reporting_ucfg(void)
-{
-    LL_cpe_init_chc_reporting();
-}
-#endif /* ((CONTROLLER_CHAN_CLASS_ENABLED == 1) &&\
-          (CONNECTION_ENABLED == 1)) */
-
-#if ((CONNECTION_SUBRATING_ENABLED == 1) &&\
-    (CONNECTION_ENABLED == 1))
-void LL_cpe_init_subrate_ucfg(void)
-{
-    LL_cpe_init_subrate();
-}
-#endif /* ((CONNECTION_SUBRATING_ENABLED == 1) &&\
-          (CONNECTION_ENABLED == 1)) */
-
-#if ((CONTROLLER_CIS_ENABLED == 1) &&\
-    (CONNECTION_ENABLED == 1) &&\
-    (CONTROLLER_ISO_ENABLED == 1))
-void LL_cpe_init_sca_upd_ucfg(void)
-{
-    LL_cpe_init_sca_upd();
-}
-#endif /* ((CONTROLLER_CIS_ENABLED == 1) &&\
-          (CONNECTION_ENABLED == 1) &&\
-          (CONTROLLER_ISO_ENABLED == 1)) */
-
-#if ((CONTROLLER_CIS_ENABLED == 1) &&\
-    (CONNECTION_ENABLED == 1) &&\
-    (CONTROLLER_ISO_ENABLED == 1))
-void LL_cpe_init_cis_ucfg(void)
-{
-    LL_cpe_init_cis();
-}
-#endif /* ((CONTROLLER_CIS_ENABLED == 1) &&\
-          (CONNECTION_ENABLED == 1) &&\
-          (CONTROLLER_ISO_ENABLED == 1)) */
-
-#if (CONNECTION_ENABLED == 1)
-void LL_cpe_init_ucfg(void)
-{
-    LL_cpe_init();
-}
-#endif /* (CONNECTION_ENABLED == 1) */
+#endif
 
 #if ((CONTROLLER_CHAN_CLASS_ENABLED == 1) &&\
     (CONNECTION_ENABLED == 1))
@@ -2505,16 +2739,50 @@ uint8_t LLC_chc_reporting_offline_processing_ucfg(uint8_t conn_idx)
 #endif /* ((CONTROLLER_CHAN_CLASS_ENABLED == 1) &&\
           (CONNECTION_ENABLED == 1)) */
 
+#if ((CONTROLLER_CHAN_CLASS_ENABLED == 1) &&\
+    (CONNECTION_ENABLED == 1))
+uint32_t chc_csr_ucfg(void)
+{
+    return chc_csr();
+}
+#endif /* ((CONTROLLER_CHAN_CLASS_ENABLED == 1) &&\
+          (CONNECTION_ENABLED == 1)) */
+
+#if ((CONTROLLER_CHAN_CLASS_ENABLED == 1) &&\
+    (CONNECTION_ENABLED == 1))
+void llc_chan_class_register_cpf_ucfg(void)
+{
+    llc_chan_class_register_cpf();
+}
+#endif /* ((CONTROLLER_CHAN_CLASS_ENABLED == 1) &&\
+          (CONNECTION_ENABLED == 1)) */
+
+#if (CONNECTION_ENABLED == 1)
+void llc_chc_notify_all_conn_links_ucfg(uint8_t* chmap_p,
+                                        uint8_t* local_chclass_p)
+{
+    llc_chc_notify_all_conn_links(chmap_p,
+                                  local_chclass_p);
+}
+#endif /* (CONNECTION_ENABLED == 1) */
+
 #if ((CONTROLLER_CIS_ENABLED == 1) &&\
-    (CONNECTION_ENABLED == 1) &&\
-    (CONTROLLER_ISO_ENABLED == 1))
+    (CONNECTION_ENABLED == 1))
 void LL_cpf_cis_processing_ucfg(uint16_t task_idx)
 {
     LL_cpf_cis_processing(task_idx);
 }
 #endif /* ((CONTROLLER_CIS_ENABLED == 1) &&\
-          (CONNECTION_ENABLED == 1) &&\
-          (CONTROLLER_ISO_ENABLED == 1)) */
+          (CONNECTION_ENABLED == 1)) */
+
+#if ((CONTROLLER_CIS_ENABLED == 1) &&\
+    (CONNECTION_ENABLED == 1))
+void llc_cis_register_cpf_ucfg(void)
+{
+    llc_cis_register_cpf();
+}
+#endif /* ((CONTROLLER_CIS_ENABLED == 1) &&\
+          (CONNECTION_ENABLED == 1)) */
 
 #if (CONTROLLER_2M_CODED_PHY_ENABLED == 1) &&\
     (CONNECTION_ENABLED == 1)
@@ -2532,6 +2800,15 @@ void LL_conn_upd_data_length_change_event_ucfg(void* params)
     LL_conn_upd_data_length_change_event(params);
 }
 #endif /* (CONTROLLER_2M_CODED_PHY_ENABLED == 1) &&\
+          (CONNECTION_ENABLED == 1) */
+
+#if (CONTROLLER_CTE_ENABLED == 1) &&\
+    (CONNECTION_ENABLED == 1)
+void llc_cte_register_cpf_ucfg(void)
+{
+    llc_cte_register_cpf();
+}
+#endif /* (CONTROLLER_CTE_ENABLED == 1) &&\
           (CONNECTION_ENABLED == 1) */
 
 #if (CONTROLLER_CTE_ENABLED == 1) &&\
@@ -2565,6 +2842,17 @@ void LLC_connection_cte_response_pause_resume_ucfg(uint8_t conn_idx,
 
 #if (CONTROLLER_CTE_ENABLED == 1) &&\
     (CONNECTION_ENABLED == 1)
+void LLC_connection_cte_request_disable_ucfg(uint8_t conn_idx,
+                                             uint8_t taskslot_no)
+{
+    LLC_connection_cte_request_disable(conn_idx,
+                                       taskslot_no);
+}
+#endif /* (CONTROLLER_CTE_ENABLED == 1) &&\
+          (CONNECTION_ENABLED == 1) */
+
+#if (CONTROLLER_CTE_ENABLED == 1) &&\
+    (CONNECTION_ENABLED == 1)
 void LLC_connection_cte_response_disable_ucfg(uint8_t conn_idx,
                                               uint8_t taskslot_no)
 {
@@ -2583,97 +2871,21 @@ void llc_cte_process_rx_cte_ucfg(void* params,
 }
 #endif /* (CONTROLLER_CTE_ENABLED == 1) */
 
+#if (CONTROLLER_DATA_LENGTH_EXTENSION_ENABLED == 1) &&\
+    (CONNECTION_ENABLED == 1)
+void llc_len_upd_register_cpf_ucfg(void)
+{
+    llc_len_upd_register_cpf();
+}
+#endif /* (CONTROLLER_DATA_LENGTH_EXTENSION_ENABLED == 1) &&\
+          (CONNECTION_ENABLED == 1) */
+
 #if (CONNECTION_ENABLED == 1)
 void LLC_authenticated_payload_timeout_processing_ucfg(uint16_t task_idx)
 {
     LLC_authenticated_payload_timeout_processing(task_idx);
 }
 #endif /* (CONNECTION_ENABLED == 1) */
-
-#if ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
-    (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1)) &&\
-    (CONTROLLER_SCAN_ENABLED == 1) &&\
-    (CONNECTION_ENABLED == 1)
-void llc_past_mem_allocate_ucfg(uint8_t scan_en,
-                                uint8_t ext_en,
-                                uint8_t pscan_en,
-                                uint8_t conn_en)
-{
-    llc_past_mem_allocate(scan_en,
-                          ext_en,
-                          pscan_en,
-                          conn_en);
-}
-#endif /* ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
-          (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1)) &&\
-          (CONTROLLER_SCAN_ENABLED == 1) &&\
-          (CONNECTION_ENABLED == 1) */
-
-#if ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
-    (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1)) &&\
-    (CONTROLLER_SCAN_ENABLED == 1) &&\
-    (CONNECTION_ENABLED == 1)
-void LL_past_load_txctrl_packet_from_scanner_ucfg(void* params,
-                                                  uint8_t* pdu_p,
-                                                  uint32_t instant_anchor,
-                                                  uint32_t connect_interval,
-                                                  uint16_t connect_event_count,
-                                                  uint16_t connect_event_cnt)
-{
-    LL_past_load_txctrl_packet_from_scanner(params,
-                                            pdu_p,
-                                            instant_anchor,
-                                            connect_interval,
-                                            connect_event_count,
-                                            connect_event_cnt);
-}
-#endif /* ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
-          (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1)) &&\
-          (CONTROLLER_SCAN_ENABLED == 1) &&\
-          (CONNECTION_ENABLED == 1) */
-
-#if ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
-    (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1)) &&\
-    (CONTROLLER_SCAN_ENABLED == 1) &&\
-    (CONNECTION_ENABLED == 1)
-void LL_periodicscan_deploy_scanner_from_past_ucfg(void* params,
-                                                   uint8_t conn_idx,
-                                                   uint8_t pawr_feat)
-{
-    LL_periodicscan_deploy_scanner_from_past(params,
-                                             conn_idx,
-                                             pawr_feat);
-}
-#endif /* ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
-          (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1)) &&\
-          (CONTROLLER_SCAN_ENABLED == 1) &&\
-          (CONNECTION_ENABLED == 1) */
-
-#if ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
-    (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1)) &&\
-    (CONTROLLER_SCAN_ENABLED == 1) &&\
-    (CONNECTION_ENABLED == 1)
-void LL_past_initialize_connect_context_ucfg(uint8_t conn_idx)
-{
-    LL_past_initialize_connect_context(conn_idx);
-}
-#endif /* ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
-          (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1)) &&\
-          (CONTROLLER_SCAN_ENABLED == 1) &&\
-          (CONNECTION_ENABLED == 1) */
-
-#if ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
-    (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1)) &&\
-    (CONTROLLER_SCAN_ENABLED == 1) &&\
-    (CONNECTION_ENABLED == 1)
-void LL_past_default_params_ucfg(uint8_t conn_idx)
-{
-    LL_past_default_params(conn_idx);
-}
-#endif /* ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
-          (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1)) &&\
-          (CONTROLLER_SCAN_ENABLED == 1) &&\
-          (CONNECTION_ENABLED == 1) */
 
 #if ((CONTROLLER_POWER_CONTROL_ENABLED == 1) &&\
     (CONNECTION_ENABLED == 1))
@@ -2757,6 +2969,15 @@ uint8_t LLC_pcl_offline_processing_ucfg(uint8_t conn_idx)
 
 #if ((CONTROLLER_POWER_CONTROL_ENABLED == 1) &&\
     (CONNECTION_ENABLED == 1))
+void llc_pcl_register_cpf_ucfg(void)
+{
+    llc_pcl_register_cpf();
+}
+#endif /* ((CONTROLLER_POWER_CONTROL_ENABLED == 1) &&\
+          (CONNECTION_ENABLED == 1)) */
+
+#if ((CONTROLLER_POWER_CONTROL_ENABLED == 1) &&\
+    (CONNECTION_ENABLED == 1))
 tBleStatus LL_Read_RSSI_ucfg(int8_t* rssiVal,
                              uint16_t connHandle)
 {
@@ -2795,6 +3016,15 @@ uint8_t LL_phy_upd_pending_ucfg(uint8_t conn_idx)
 
 #if (CONTROLLER_2M_CODED_PHY_ENABLED == 1) &&\
     (CONNECTION_ENABLED == 1)
+void llc_phy_upd_register_cpf_ucfg(void)
+{
+    llc_phy_upd_register_cpf();
+}
+#endif /* (CONTROLLER_2M_CODED_PHY_ENABLED == 1) &&\
+          (CONNECTION_ENABLED == 1) */
+
+#if (CONTROLLER_2M_CODED_PHY_ENABLED == 1) &&\
+    (CONNECTION_ENABLED == 1)
 tBleStatus LL_phy_update_init_ucfg(void)
 {
     return LL_phy_update_init();
@@ -2804,9 +3034,11 @@ tBleStatus LL_phy_update_init_ucfg(void)
 
 #if (CONTROLLER_2M_CODED_PHY_ENABLED == 1) &&\
     (CONNECTION_ENABLED == 1)
-tBleStatus LL_phy_update_init_per_st_data_ucfg(uint8_t conn_idx)
+tBleStatus LL_phy_update_init_per_st_data_ucfg(uint8_t conn_idx,
+                                               uint8_t hw_phy)
 {
-    return LL_phy_update_init_per_st_data(conn_idx);
+    return LL_phy_update_init_per_st_data(conn_idx,
+                                          hw_phy);
 }
 #endif /* (CONTROLLER_2M_CODED_PHY_ENABLED == 1) &&\
           (CONNECTION_ENABLED == 1) */
@@ -2854,8 +3086,8 @@ void LLC_connless_process_rx_cte_ucfg(uint8_t iq_samples_ready,
     (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1)) &&\
     (CONTROLLER_CTE_ENABLED == 1)
 uint8_t LLC_check_iq_samples_ready_ucfg(uint8_t* iq_samples_number,
-                                     uint8_t* channel,
-                                     uint8_t taskslot_no)
+                                        uint8_t* channel,
+                                        uint8_t taskslot_no)
 {
     return LLC_check_iq_samples_ready(iq_samples_number,
                                       channel,
@@ -2908,9 +3140,11 @@ void llc_cte_timer_error_ucfg(void)
     (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1)) &&\
     (CONTROLLER_SCAN_ENABLED == 1) &&\
     (CONTROLLER_CTE_ENABLED == 1)
-void llc_cte_timer_start_ucfg(void* params)
+void llc_cte_timer_start_ucfg(void* params,
+                              uint32_t radio_task_anchor)
 {
-    llc_cte_timer_start(params);
+    llc_cte_timer_start(params,
+                        radio_task_anchor);
 }
 #endif /* ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
           (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1)) &&\
@@ -2945,13 +3179,13 @@ void LLC_test_set_cte_ucfg(void* params)
 #endif /* (CONTROLLER_CTE_ENABLED == 1) */
 
 #if (CONNECTION_ENABLED == 1)
-void ADV_ISR_connect_request_received_ucfg(void* pointer,
+uint8_t ADV_ISR_connect_request_received_ucfg(void* pointer,
                                            uint8_t* packet,
                                            void* PeerIDAddress_p)
 {
-    ADV_ISR_connect_request_received(pointer,
-                                     packet,
-                                     PeerIDAddress_p);
+    return ADV_ISR_connect_request_received(pointer,
+                                            packet,
+                                            PeerIDAddress_p);
 }
 #endif /* (CONNECTION_ENABLED == 1) */
 
@@ -2988,9 +3222,11 @@ tBleStatus llc_eadv_max_supported_data_check_ucfg(uint16_t data_length,
 #endif /* (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1) */
 
 #if (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1)
-void LL_eadv_start_extended_ucfg(void* pointer)
+tBleStatus LL_eadv_start_extended_ucfg(void* pointer,
+                                       uint32_t anchor_stu)
 {
-    LL_eadv_start_extended(pointer);
+    return LL_eadv_start_extended(pointer,
+                                  anchor_stu);
 }
 #endif /* (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1) */
 
@@ -3021,16 +3257,15 @@ tBleStatus LL_Remove_Advertising_Set_ucfg(uint16_t Advertising_Handle)
 
 #if (CONTROLLER_DATA_LENGTH_EXTENSION_ENABLED == 1) &&\
     (CONNECTION_ENABLED == 1)
-uint8_t Data_Len_Update_Offline_Processing_ucfg(void* params,
-                                             uint32_t ctrl_flds)
+uint8_t Data_Len_Update_Offline_Processing_ucfg(void* params)
 {
-    return Data_Len_Update_Offline_Processing(params,
-                                              ctrl_flds);
+    return Data_Len_Update_Offline_Processing(params);
 }
 #endif /* (CONTROLLER_DATA_LENGTH_EXTENSION_ENABLED == 1) &&\
           (CONNECTION_ENABLED == 1) */
 
-#if (CONTROLLER_DATA_LENGTH_EXTENSION_ENABLED == 1)
+#if (CONTROLLER_DATA_LENGTH_EXTENSION_ENABLED == 1) &&\
+    (CONNECTION_ENABLED == 1)
 tBleStatus ll_write_supported_data_ucfg(uint16_t Supported_Max_Tx_Octets,
                                         uint16_t Supported_Max_Tx_Time,
                                         uint16_t Supported_Max_Rx_Octets,
@@ -3041,7 +3276,8 @@ tBleStatus ll_write_supported_data_ucfg(uint16_t Supported_Max_Tx_Octets,
                                    Supported_Max_Rx_Octets,
                                    Supported_Max_Rx_Time);
 }
-#endif /* (CONTROLLER_DATA_LENGTH_EXTENSION_ENABLED == 1) */
+#endif /* (CONTROLLER_DATA_LENGTH_EXTENSION_ENABLED == 1) &&\
+          (CONNECTION_ENABLED == 1) */
 
 #if (CONNECTION_ENABLED == 1)
 void LL_init_ucfg(uint8_t dataLenExt,
@@ -3069,15 +3305,6 @@ void LL_init_ucfg(uint8_t dataLenExt,
             Chc);
 }
 #endif /* (CONNECTION_ENABLED == 1) */
-
-#if (BLESTACK_CONTROLLER_ONLY == 0)
-#if (CONNECTION_ENABLED == 1)
-tBleStatus smp_debug_trudy__set_config_ucfg(uint32_t config)
-{
-    return smp_debug_trudy__set_config(config);
-}
-#endif /* (CONNECTION_ENABLED == 1) */
-#endif /* (BLESTACK_CONTROLLER_ONLY == 0) */
 
 #if (BLESTACK_CONTROLLER_ONLY == 0)
 #if (\
@@ -4321,6 +4548,15 @@ tBleStatus aci_gatt_clt_confirm_indication(uint16_t Connection_Handle,
 #endif /* (CONNECTION_ENABLED == 1) */
 #endif /* (BLESTACK_CONTROLLER_ONLY == 0) */
 
+#if (BLESTACK_CONTROLLER_ONLY == 0)
+#if (CONNECTION_ENABLED == 1)
+tBleStatus aci_gatt_clt_add_subscription_security_level(ble_gatt_clt_sec_level_st* sec_level_p)
+{
+    return aci_gatt_clt_add_subscription_security_level_api(sec_level_p);
+}
+#endif /* (CONNECTION_ENABLED == 1) */
+#endif /* (BLESTACK_CONTROLLER_ONLY == 0) */
+
 #if (CONNECTION_ENABLED == 1)
 tBleStatus aci_hal_peripheral_latency_enable(uint16_t Connection_Handle,
                                              uint8_t Enable)
@@ -4462,6 +4698,25 @@ tBleStatus aci_l2cap_cos_connection_resp(uint16_t connection_handle,
 #if (BLESTACK_CONTROLLER_ONLY == 0)
 #if ((L2CAP_COS_ENABLED == 1) &&\
     (CONNECTION_ENABLED == 1))
+tBleStatus aci_l2cap_cos_flow_control_credits_ind(uint16_t Connection_Handle,
+                                                  uint16_t CID,
+                                                  uint16_t RX_Credits,
+                                                  uint8_t CFC_Policy,
+                                                  uint16_t* RX_Credit_Balance)
+{
+    return aci_l2cap_cos_flow_control_credits_ind_api(Connection_Handle,
+                                                      CID,
+                                                      RX_Credits,
+                                                      CFC_Policy,
+                                                      RX_Credit_Balance);
+}
+#endif /* ((L2CAP_COS_ENABLED == 1) &&\
+          (CONNECTION_ENABLED == 1)) */
+#endif /* (BLESTACK_CONTROLLER_ONLY == 0) */
+
+#if (BLESTACK_CONTROLLER_ONLY == 0)
+#if ((L2CAP_COS_ENABLED == 1) &&\
+    (CONNECTION_ENABLED == 1))
 tBleStatus aci_l2cap_cos_disconnect_req(uint16_t Connection_Handle,
                                         uint16_t CID)
 {
@@ -4542,7 +4797,18 @@ tBleStatus aci_l2cap_cos_sdu_data_extract(uint16_t Connection_Handle,
           (CONNECTION_ENABLED == 1)) */
 #endif /* (BLESTACK_CONTROLLER_ONLY == 0) */
 
-#if (CONTROLLER_ISO_ENABLED == 1)
+#if (\
+     (\
+      (CONNECTION_ENABLED == 1) &&\
+      (CONTROLLER_CIS_ENABLED == 1)\
+     )\
+     ||\
+     (\
+      (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1) &&\
+      (CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
+      (CONTROLLER_BIS_ENABLED == 1)\
+     )\
+    )
 tBleStatus hci_le_read_buffer_size_v2(uint16_t* HC_LE_ACL_Data_Packet_Length,
                                       uint8_t* HC_Total_Num_LE_ACL_Data_Packets,
                                       uint16_t* HC_LE_ISO_Data_Packet_Length,
@@ -4553,12 +4819,11 @@ tBleStatus hci_le_read_buffer_size_v2(uint16_t* HC_LE_ACL_Data_Packet_Length,
                                           HC_LE_ISO_Data_Packet_Length,
                                           HC_Total_Num_LE_ISO_Data_Packets);
 }
-#endif /* (CONTROLLER_ISO_ENABLED == 1) */
+#endif
 
 #if ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
     (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1) &&\
-    (CONTROLLER_BIS_ENABLED == 1) &&\
-    (CONTROLLER_ISO_ENABLED == 1))
+    (CONTROLLER_BIS_ENABLED == 1))
 tBleStatus hci_le_create_big_test(uint8_t big_handle,
                                   uint8_t advertising_handle,
                                   uint8_t num_bis,
@@ -4595,13 +4860,11 @@ tBleStatus hci_le_create_big_test(uint8_t big_handle,
 }
 #endif /* ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
           (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1) &&\
-          (CONTROLLER_BIS_ENABLED == 1) &&\
-          (CONTROLLER_ISO_ENABLED == 1)) */
+          (CONTROLLER_BIS_ENABLED == 1)) */
 
 #if ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
     (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1) &&\
-    (CONTROLLER_BIS_ENABLED == 1) &&\
-    (CONTROLLER_ISO_ENABLED == 1)) &&\
+    (CONTROLLER_BIS_ENABLED == 1)) &&\
     (CONTROLLER_SCAN_ENABLED == 1)
 tBleStatus hci_le_big_create_sync(uint8_t BIG_Handle,
                                   uint16_t Sync_Handle,
@@ -4623,14 +4886,12 @@ tBleStatus hci_le_big_create_sync(uint8_t BIG_Handle,
 }
 #endif /* ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
           (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1) &&\
-          (CONTROLLER_BIS_ENABLED == 1) &&\
-          (CONTROLLER_ISO_ENABLED == 1)) &&\
+          (CONTROLLER_BIS_ENABLED == 1)) &&\
           (CONTROLLER_SCAN_ENABLED == 1) */
 
 #if ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
     (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1) &&\
-    (CONTROLLER_BIS_ENABLED == 1) &&\
-    (CONTROLLER_ISO_ENABLED == 1))
+    (CONTROLLER_BIS_ENABLED == 1))
 tBleStatus hci_le_terminate_big(uint8_t Terminate_Big,
                                 uint8_t Reason)
 {
@@ -4639,13 +4900,11 @@ tBleStatus hci_le_terminate_big(uint8_t Terminate_Big,
 }
 #endif /* ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
           (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1) &&\
-          (CONTROLLER_BIS_ENABLED == 1) &&\
-          (CONTROLLER_ISO_ENABLED == 1)) */
+          (CONTROLLER_BIS_ENABLED == 1)) */
 
 #if ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
     (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1) &&\
-    (CONTROLLER_BIS_ENABLED == 1) &&\
-    (CONTROLLER_ISO_ENABLED == 1)) &&\
+    (CONTROLLER_BIS_ENABLED == 1)) &&\
     (CONTROLLER_SCAN_ENABLED == 1)
 tBleStatus hci_le_big_terminate_sync(uint8_t Big_handle)
 {
@@ -4653,14 +4912,12 @@ tBleStatus hci_le_big_terminate_sync(uint8_t Big_handle)
 }
 #endif /* ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
           (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1) &&\
-          (CONTROLLER_BIS_ENABLED == 1) &&\
-          (CONTROLLER_ISO_ENABLED == 1)) &&\
+          (CONTROLLER_BIS_ENABLED == 1)) &&\
           (CONTROLLER_SCAN_ENABLED == 1) */
 
 #if ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
     (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1) &&\
-    (CONTROLLER_BIS_ENABLED == 1) &&\
-    (CONTROLLER_ISO_ENABLED == 1))
+    (CONTROLLER_BIS_ENABLED == 1))
 tBleStatus hci_le_create_big(uint8_t big_handle,
                              uint8_t advertising_handle,
                              uint8_t num_bis,
@@ -4689,8 +4946,7 @@ tBleStatus hci_le_create_big(uint8_t big_handle,
 }
 #endif /* ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
           (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1) &&\
-          (CONTROLLER_BIS_ENABLED == 1) &&\
-          (CONTROLLER_ISO_ENABLED == 1)) */
+          (CONTROLLER_BIS_ENABLED == 1)) */
 
 #if ((CONTROLLER_CHAN_CLASS_ENABLED == 1) &&\
     (CONNECTION_ENABLED == 1))
@@ -4734,8 +4990,7 @@ tBleStatus hci_le_set_host_channel_classification(uint8_t Channel_Map[LLC_MIN_NU
      &&\
      (\
       (CONNECTION_ENABLED == 1) &&\
-      (CONTROLLER_CIS_ENABLED == 1) &&\
-      (CONTROLLER_ISO_ENABLED == 1)\
+      (CONTROLLER_CIS_ENABLED == 1)\
      )\
      &&\
      (\
@@ -4780,8 +5035,7 @@ tBleStatus hci_le_set_cig_parameters(uint8_t CIG_ID,
      &&\
      (\
       (CONNECTION_ENABLED == 1) &&\
-      (CONTROLLER_CIS_ENABLED == 1) &&\
-      (CONTROLLER_ISO_ENABLED == 1)\
+      (CONTROLLER_CIS_ENABLED == 1)\
      )\
      &&\
      (\
@@ -4828,8 +5082,7 @@ tBleStatus hci_le_set_cig_parameters_test(uint8_t CIG_ID,
      &&\
      (\
       (CONNECTION_ENABLED == 1) &&\
-      (CONTROLLER_CIS_ENABLED == 1) &&\
-      (CONTROLLER_ISO_ENABLED == 1)\
+      (CONTROLLER_CIS_ENABLED == 1)\
      )\
      &&\
      (\
@@ -4856,8 +5109,7 @@ tBleStatus hci_le_create_cis(uint8_t CIS_Count,
      &&\
      (\
       (CONNECTION_ENABLED == 1) &&\
-      (CONTROLLER_CIS_ENABLED == 1) &&\
-      (CONTROLLER_ISO_ENABLED == 1)\
+      (CONTROLLER_CIS_ENABLED == 1)\
      )\
      &&\
      (\
@@ -4878,19 +5130,16 @@ tBleStatus hci_le_remove_cig(uint8_t CIG_ID)
 #endif
 
 #if ((CONTROLLER_CIS_ENABLED == 1) &&\
-    (CONNECTION_ENABLED == 1) &&\
-    (CONTROLLER_ISO_ENABLED == 1))
+    (CONNECTION_ENABLED == 1))
 tBleStatus hci_le_accept_cis_request(uint16_t Connection_Handle)
 {
     return hci_le_accept_cis_request_api(Connection_Handle);
 }
 #endif /* ((CONTROLLER_CIS_ENABLED == 1) &&\
-          (CONNECTION_ENABLED == 1) &&\
-          (CONTROLLER_ISO_ENABLED == 1)) */
+          (CONNECTION_ENABLED == 1)) */
 
 #if ((CONTROLLER_CIS_ENABLED == 1) &&\
-    (CONNECTION_ENABLED == 1) &&\
-    (CONTROLLER_ISO_ENABLED == 1))
+    (CONNECTION_ENABLED == 1))
 tBleStatus hci_le_reject_cis_request(uint16_t Connection_Handle,
                                      uint8_t Reason)
 {
@@ -4898,30 +5147,25 @@ tBleStatus hci_le_reject_cis_request(uint16_t Connection_Handle,
                                          Reason);
 }
 #endif /* ((CONTROLLER_CIS_ENABLED == 1) &&\
-          (CONNECTION_ENABLED == 1) &&\
-          (CONTROLLER_ISO_ENABLED == 1)) */
+          (CONNECTION_ENABLED == 1)) */
 
 #if ((CONTROLLER_CIS_ENABLED == 1) &&\
-    (CONNECTION_ENABLED == 1) &&\
-    (CONTROLLER_ISO_ENABLED == 1))
+    (CONNECTION_ENABLED == 1))
 tBleStatus hci_read_connection_accept_timeout(uint16_t* Connection_Accept_Timeout)
 {
     return hci_read_connection_accept_timeout_api(Connection_Accept_Timeout);
 }
 #endif /* ((CONTROLLER_CIS_ENABLED == 1) &&\
-          (CONNECTION_ENABLED == 1) &&\
-          (CONTROLLER_ISO_ENABLED == 1)) */
+          (CONNECTION_ENABLED == 1)) */
 
 #if ((CONTROLLER_CIS_ENABLED == 1) &&\
-    (CONNECTION_ENABLED == 1) &&\
-    (CONTROLLER_ISO_ENABLED == 1))
+    (CONNECTION_ENABLED == 1))
 tBleStatus hci_write_connection_accept_timeout(uint16_t Connection_Accept_Timeout)
 {
     return hci_write_connection_accept_timeout_api(Connection_Accept_Timeout);
 }
 #endif /* ((CONTROLLER_CIS_ENABLED == 1) &&\
-          (CONNECTION_ENABLED == 1) &&\
-          (CONTROLLER_ISO_ENABLED == 1)) */
+          (CONNECTION_ENABLED == 1)) */
 
 #if (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1) ||\
     (CONNECTION_ENABLED == 1)
@@ -5393,97 +5637,58 @@ tBleStatus hci_le_clear_advertising_sets(void)
 }
 #endif /* (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1) */
 
-#if ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
-    (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1)) &&\
-    (CONTROLLER_SCAN_ENABLED == 1) &&\
-    (CONNECTION_ENABLED == 1)
-tBleStatus hci_le_set_default_periodic_advertising_sync_transfer_parameters(uint8_t Mode,
-                                                                            uint16_t Skip,
-                                                                            uint16_t Sync_Timeout,
-                                                                            uint8_t CTE_Type)
-{
-    return hci_le_set_default_periodic_advertising_sync_transfer_parameters_api(Mode,
-                                                                                Skip,
-                                                                                Sync_Timeout,
-                                                                                CTE_Type);
-}
-#endif /* ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
-          (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1)) &&\
-          (CONTROLLER_SCAN_ENABLED == 1) &&\
-          (CONNECTION_ENABLED == 1) */
-
-#if ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
-    (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1)) &&\
-    (CONTROLLER_SCAN_ENABLED == 1) &&\
-    (CONNECTION_ENABLED == 1)
-tBleStatus hci_le_set_periodic_advertising_sync_transfer_parameters(uint16_t Connection_Handle,
-                                                                    uint8_t Mode,
-                                                                    uint16_t Skip,
-                                                                    uint16_t Sync_Timeout,
-                                                                    uint8_t CTE_Type)
-{
-    return hci_le_set_periodic_advertising_sync_transfer_parameters_api(Connection_Handle,
-                                                                        Mode,
-                                                                        Skip,
-                                                                        Sync_Timeout,
-                                                                        CTE_Type);
-}
-#endif /* ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
-          (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1)) &&\
-          (CONTROLLER_SCAN_ENABLED == 1) &&\
-          (CONNECTION_ENABLED == 1) */
-
-#if ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
-    (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1)) &&\
-    (CONNECTION_ENABLED == 1)
-tBleStatus hci_le_periodic_advertising_set_info_transfer(uint16_t Connection_Handle,
-                                                         uint16_t Service_Data,
-                                                         uint8_t Advertising_Handle)
-{
-    return hci_le_periodic_advertising_set_info_transfer_api(Connection_Handle,
-                                                             Service_Data,
-                                                             Advertising_Handle);
-}
-#endif /* ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
-          (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1)) &&\
-          (CONNECTION_ENABLED == 1) */
-
-#if ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
-    (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1)) &&\
-    (CONTROLLER_SCAN_ENABLED == 1) &&\
-    (CONNECTION_ENABLED == 1)
-tBleStatus hci_le_periodic_advertising_sync_transfer(uint16_t Connection_Handle,
-                                                     uint16_t Service_Data,
-                                                     uint16_t Sync_Handle)
-{
-    return hci_le_periodic_advertising_sync_transfer_api(Connection_Handle,
-                                                         Service_Data,
-                                                         Sync_Handle);
-}
-#endif /* ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
-          (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1)) &&\
-          (CONTROLLER_SCAN_ENABLED == 1) &&\
-          (CONNECTION_ENABLED == 1) */
-
-#if (CONTROLLER_ISO_ENABLED == 1)
+#if (\
+     (\
+      (CONNECTION_ENABLED == 1) &&\
+      (CONTROLLER_CIS_ENABLED == 1)\
+     )\
+     ||\
+     (\
+      (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1) &&\
+      (CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
+      (CONTROLLER_BIS_ENABLED == 1)\
+     )\
+    )
 tBleStatus hci_le_iso_transmit_test(uint16_t Connection_Handle,
                                     uint8_t Payload_Type)
 {
     return hci_le_iso_transmit_test_api(Connection_Handle,
                                         Payload_Type);
 }
-#endif /* (CONTROLLER_ISO_ENABLED == 1) */
+#endif
 
-#if (CONTROLLER_ISO_ENABLED == 1)
+#if (\
+     (\
+      (CONNECTION_ENABLED == 1) &&\
+      (CONTROLLER_CIS_ENABLED == 1)\
+     )\
+     ||\
+     (\
+      (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1) &&\
+      (CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
+      (CONTROLLER_BIS_ENABLED == 1)\
+     )\
+    )
 tBleStatus hci_le_iso_receive_test(uint16_t Connection_Handle,
                                    uint8_t Payload_Type)
 {
     return hci_le_iso_receive_test_api(Connection_Handle,
                                        Payload_Type);
 }
-#endif /* (CONTROLLER_ISO_ENABLED == 1) */
+#endif
 
-#if (CONTROLLER_ISO_ENABLED == 1)
+#if (\
+     (\
+      (CONNECTION_ENABLED == 1) &&\
+      (CONTROLLER_CIS_ENABLED == 1)\
+     )\
+     ||\
+     (\
+      (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1) &&\
+      (CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
+      (CONTROLLER_BIS_ENABLED == 1)\
+     )\
+    )
 tBleStatus hci_le_iso_read_test_counters(uint16_t Connection_Handle,
                                          uint32_t* Received_Packet_Count,
                                          uint32_t* Missed_Packet_Count,
@@ -5494,9 +5699,20 @@ tBleStatus hci_le_iso_read_test_counters(uint16_t Connection_Handle,
                                              Missed_Packet_Count,
                                              Failed_Packet_Count);
 }
-#endif /* (CONTROLLER_ISO_ENABLED == 1) */
+#endif
 
-#if (CONTROLLER_ISO_ENABLED == 1)
+#if (\
+     (\
+      (CONNECTION_ENABLED == 1) &&\
+      (CONTROLLER_CIS_ENABLED == 1)\
+     )\
+     ||\
+     (\
+      (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1) &&\
+      (CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
+      (CONTROLLER_BIS_ENABLED == 1)\
+     )\
+    )
 tBleStatus hci_le_iso_test_end(uint16_t Connection_Handle,
                                uint32_t* Received_Packet_Count,
                                uint32_t* Missed_Packet_Count,
@@ -5507,9 +5723,20 @@ tBleStatus hci_le_iso_test_end(uint16_t Connection_Handle,
                                    Missed_Packet_Count,
                                    Failed_Packet_Count);
 }
-#endif /* (CONTROLLER_ISO_ENABLED == 1) */
+#endif
 
-#if (CONTROLLER_ISO_ENABLED == 1)
+#if (\
+     (\
+      (CONNECTION_ENABLED == 1) &&\
+      (CONTROLLER_CIS_ENABLED == 1)\
+     )\
+     ||\
+     (\
+      (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1) &&\
+      (CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
+      (CONTROLLER_BIS_ENABLED == 1)\
+     )\
+    )
 tBleStatus hci_le_setup_iso_data_path(uint16_t Connection_Handle,
                                       uint8_t Data_Path_Direction,
                                       uint8_t Data_Path_ID,
@@ -5526,18 +5753,40 @@ tBleStatus hci_le_setup_iso_data_path(uint16_t Connection_Handle,
                                           Codec_Configuration_Length,
                                           Codec_Configuration);
 }
-#endif /* (CONTROLLER_ISO_ENABLED == 1) */
+#endif
 
-#if (CONTROLLER_ISO_ENABLED == 1)
+#if (\
+     (\
+      (CONNECTION_ENABLED == 1) &&\
+      (CONTROLLER_CIS_ENABLED == 1)\
+     )\
+     ||\
+     (\
+      (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1) &&\
+      (CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
+      (CONTROLLER_BIS_ENABLED == 1)\
+     )\
+    )
 tBleStatus hci_le_remove_iso_data_path(uint16_t Connection_Handle,
                                        uint8_t Data_Path_Direction)
 {
     return hci_le_remove_iso_data_path_api(Connection_Handle,
                                            Data_Path_Direction);
 }
-#endif /* (CONTROLLER_ISO_ENABLED == 1) */
+#endif
 
-#if (CONTROLLER_ISO_ENABLED == 1)
+#if (\
+     (\
+      (CONNECTION_ENABLED == 1) &&\
+      (CONTROLLER_CIS_ENABLED == 1)\
+     )\
+     ||\
+     (\
+      (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1) &&\
+      (CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
+      (CONTROLLER_BIS_ENABLED == 1)\
+     )\
+    )
 tBleStatus hci_le_read_iso_link_quality(uint16_t connection_handle,
                                         uint32_t* tx_unacked_packets,
                                         uint32_t* tx_flushed_packets,
@@ -5556,9 +5805,20 @@ tBleStatus hci_le_read_iso_link_quality(uint16_t connection_handle,
                                             rx_unreceived_packets,
                                             duplicate_packets);
 }
-#endif /* (CONTROLLER_ISO_ENABLED == 1) */
+#endif
 
-#if (CONTROLLER_ISO_ENABLED == 1)
+#if (\
+     (\
+      (CONNECTION_ENABLED == 1) &&\
+      (CONTROLLER_CIS_ENABLED == 1)\
+     )\
+     ||\
+     (\
+      (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1) &&\
+      (CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
+      (CONTROLLER_BIS_ENABLED == 1)\
+     )\
+    )
 tBleStatus hci_le_read_iso_tx_sync(uint16_t connection_handle,
                                    uint16_t* packet_sequence_number,
                                    uint32_t* timestamp,
@@ -5569,9 +5829,20 @@ tBleStatus hci_le_read_iso_tx_sync(uint16_t connection_handle,
                                        timestamp,
                                        timeoffset);
 }
-#endif /* (CONTROLLER_ISO_ENABLED == 1) */
+#endif
 
-#if (CONTROLLER_ISO_ENABLED == 1)
+#if (\
+     (\
+      (CONNECTION_ENABLED == 1) &&\
+      (CONTROLLER_CIS_ENABLED == 1)\
+     )\
+     ||\
+     (\
+      (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1) &&\
+      (CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
+      (CONTROLLER_BIS_ENABLED == 1)\
+     )\
+    )
 tBleStatus hci_tx_iso_data(uint16_t connection_handle,
                            uint8_t pb_flag,
                            uint8_t ts_flag,
@@ -5584,7 +5855,7 @@ tBleStatus hci_tx_iso_data(uint16_t connection_handle,
                                iso_data_load_len,
                                iso_data_load_p);
 }
-#endif /* (CONTROLLER_ISO_ENABLED == 1) */
+#endif
 
 #if (CONTROLLER_DATA_LENGTH_EXTENSION_ENABLED == 1) &&\
     (CONNECTION_ENABLED == 1)
@@ -5689,6 +5960,78 @@ tBleStatus hci_le_set_periodic_advertising_parameters_v2(uint8_t Advertising_Han
 #endif /* ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
           (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1) &&\
           (CONTROLLER_PERIODIC_ADV_WR_ENABLED == 1)) &&\
+          (CONNECTION_ENABLED == 1) */
+
+#if ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
+    (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1)) &&\
+    (CONNECTION_ENABLED == 1)
+tBleStatus hci_le_periodic_advertising_set_info_transfer(uint16_t Connection_Handle,
+                                                         uint16_t Service_Data,
+                                                         uint8_t Advertising_Handle)
+{
+    return hci_le_periodic_advertising_set_info_transfer_api(Connection_Handle,
+                                                             Service_Data,
+                                                             Advertising_Handle);
+}
+#endif /* ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
+          (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1)) &&\
+          (CONNECTION_ENABLED == 1) */
+
+#if ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
+    (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1)) &&\
+    (CONTROLLER_SCAN_ENABLED == 1) &&\
+    (CONNECTION_ENABLED == 1)
+tBleStatus hci_le_periodic_advertising_sync_transfer(uint16_t Connection_Handle,
+                                                     uint16_t Service_Data,
+                                                     uint16_t Sync_Handle)
+{
+    return hci_le_periodic_advertising_sync_transfer_api(Connection_Handle,
+                                                         Service_Data,
+                                                         Sync_Handle);
+}
+#endif /* ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
+          (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1)) &&\
+          (CONTROLLER_SCAN_ENABLED == 1) &&\
+          (CONNECTION_ENABLED == 1) */
+
+#if ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
+    (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1)) &&\
+    (CONTROLLER_SCAN_ENABLED == 1) &&\
+    (CONNECTION_ENABLED == 1)
+tBleStatus hci_le_set_default_periodic_advertising_sync_transfer_parameters(uint8_t Mode,
+                                                                            uint16_t Skip,
+                                                                            uint16_t Sync_Timeout,
+                                                                            uint8_t CTE_Type)
+{
+    return hci_le_set_default_periodic_advertising_sync_transfer_parameters_api(Mode,
+                                                                                Skip,
+                                                                                Sync_Timeout,
+                                                                                CTE_Type);
+}
+#endif /* ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
+          (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1)) &&\
+          (CONTROLLER_SCAN_ENABLED == 1) &&\
+          (CONNECTION_ENABLED == 1) */
+
+#if ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
+    (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1)) &&\
+    (CONTROLLER_SCAN_ENABLED == 1) &&\
+    (CONNECTION_ENABLED == 1)
+tBleStatus hci_le_set_periodic_advertising_sync_transfer_parameters(uint16_t Connection_Handle,
+                                                                    uint8_t Mode,
+                                                                    uint16_t Skip,
+                                                                    uint16_t Sync_Timeout,
+                                                                    uint8_t CTE_Type)
+{
+    return hci_le_set_periodic_advertising_sync_transfer_parameters_api(Connection_Handle,
+                                                                        Mode,
+                                                                        Skip,
+                                                                        Sync_Timeout,
+                                                                        CTE_Type);
+}
+#endif /* ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
+          (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1)) &&\
+          (CONTROLLER_SCAN_ENABLED == 1) &&\
           (CONNECTION_ENABLED == 1) */
 
 #if ((CONTROLLER_POWER_CONTROL_ENABLED == 1) &&\
@@ -6025,15 +6368,13 @@ tBleStatus hci_le_set_periodic_sync_subevent(uint16_t Sync_Handle,
           (CONNECTION_ENABLED == 1) */
 
 #if ((CONTROLLER_CIS_ENABLED == 1) &&\
-    (CONNECTION_ENABLED == 1) &&\
-    (CONTROLLER_ISO_ENABLED == 1))
+    (CONNECTION_ENABLED == 1))
 tBleStatus hci_le_request_peer_sca(uint16_t Connection_Handle)
 {
     return hci_le_request_peer_sca_api(Connection_Handle);
 }
 #endif /* ((CONTROLLER_CIS_ENABLED == 1) &&\
-          (CONNECTION_ENABLED == 1) &&\
-          (CONTROLLER_ISO_ENABLED == 1)) */
+          (CONNECTION_ENABLED == 1)) */
 
 #if (CONTROLLER_SCAN_ENABLED == 1)
 tBleStatus hci_le_set_scan_parameters(uint8_t LE_Scan_Type,
@@ -6089,7 +6430,20 @@ tBleStatus hci_le_set_extended_scan_enable(uint8_t Enable,
 #endif /* (CONTROLLER_SCAN_ENABLED == 1) &&\
           (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1) */
 
-#if (CONNECTION_ENABLED == 1)
+#if (\
+     (CONNECTION_ENABLED == 1)\
+     &&\
+     (\
+      (CONTROLLER_SCAN_ENABLED == 1)\
+      ||\
+      (\
+       (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1) &&\
+       (CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
+       (CONNECTION_ENABLED == 1) &&\
+       (CONTROLLER_PERIODIC_ADV_WR_ENABLED == 1)\
+      )\
+     )\
+    )
 tBleStatus hci_le_connection_update(uint16_t Connection_Handle,
                                     uint16_t Connection_Interval_Min,
                                     uint16_t Connection_Interval_Max,
@@ -6106,7 +6460,7 @@ tBleStatus hci_le_connection_update(uint16_t Connection_Handle,
                                         Min_CE_Length,
                                         Max_CE_Length);
 }
-#endif /* (CONNECTION_ENABLED == 1) */
+#endif
 
 #if ((CONNECTION_SUBRATING_ENABLED == 1) &&\
     (CONNECTION_ENABLED == 1))

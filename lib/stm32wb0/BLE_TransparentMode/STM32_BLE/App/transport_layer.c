@@ -30,6 +30,7 @@
 #include "hci_parser.h"
 #include "dtm_preprocess_events.h"
 #include "app_common.h"
+#include "dtm_cmds.h"
 
 /* Private typedef -----------------------------------------------------------*/\
 
@@ -80,6 +81,8 @@ static uint8_t DMA_RX_Buffer[DMA_RX_BUFFER_SIZE];
 
 static event_lost_register_t event_lost_register;
 static uint8_t dma_state = DMA_IDLE;
+
+bool tx_test_stop_request = false;
 
 #ifdef DEBUG_DTM
 DebugLabel debug_buf[DEBUG_ARRAY_LEN] = {EMPTY,};
@@ -213,9 +216,11 @@ static void transport_layer_send_data(uint8_t *data, uint16_t data_length)
   }
 }
 
-static void transport_layer_DMA_RX_Data(uint16_t dma_counter)
+static void transport_layer_DMA_RX_Data(UART_HandleTypeDef *huart)
 {
   static uint16_t rx_index = 0;
+
+  uint16_t dma_counter = DMA_RX_BUFFER_SIZE - __HAL_DMA_GET_COUNTER(huart->hdmarx);
 
   if(rx_index != dma_counter)
   {
@@ -249,6 +254,12 @@ void transport_layer_tick(void)
   uint8_t buffer[COMMAND_BUFFER_SIZE], buffer_out[FIFO_VAR_LEN_ITEM_MAX_SIZE];
   uint16_t len;
   uint16_t size = 0;
+
+  if(tx_test_stop_request)
+  {
+    tx_test_stop_request = false;
+    DTM_CMDS_TxTestStop();
+  }
 
   /* Event queue */
   if ((fifo_size(&event_fifo) > 0) && (dma_state == DMA_IDLE)) {
@@ -307,6 +318,7 @@ void transport_layer_tick(void)
     else
     {
       fifo_roll_back(&command_fifo, size);
+      TL_ProcessReqCallback();
     }
 #else
     DEBUG_NOTES(COMMAND_PROCESSED);
@@ -385,7 +397,7 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
 
 void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size)
 {
-  transport_layer_DMA_RX_Data(Size);
+  transport_layer_DMA_RX_Data(huart);
 }
 
 __weak void TL_ProcessReqCallback(void){}
@@ -469,3 +481,9 @@ send_event:
   }
 }
 
+/* Handle request to stop TX test for aci_hal_transmitter_test_packets */
+void DTM_CMDS_TxTestStopRequest(void)
+{
+  tx_test_stop_request = true;
+  TL_ProcessReqCallback();
+}

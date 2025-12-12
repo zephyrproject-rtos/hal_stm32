@@ -134,6 +134,79 @@ file_list_wba = {
     ],
 }
 
+wb0_ble_transparent_mode_app_path = "Projects/NUCLEO-WB09KE/Applications/BLE/" \
+                                    + "BLE_TransparentMode"
+
+file_list_wb0 = {
+    "STM32_BLE": [
+        "Middlewares/ST/STM32_BLE/ble.h",
+        "Middlewares/ST/STM32_BLE/stack/config/ble_stack_user_cfg.c",
+        "Middlewares/ST/STM32_BLE/stack/include/ble_api.h",
+        "Middlewares/ST/STM32_BLE/stack/include/ble_const.h",
+        "Middlewares/ST/STM32_BLE/stack/include/ble_events.h",
+        "Middlewares/ST/STM32_BLE/stack/include/ble_gatt.h",
+        "Middlewares/ST/STM32_BLE/stack/include/bleplat_cntr.h",
+        "Middlewares/ST/STM32_BLE/stack/include/bleplat.h",
+        "Middlewares/ST/STM32_BLE/stack/include/ble_stack.h",
+        "Middlewares/ST/STM32_BLE/stack/include/ble_stack_user_cfg.h",
+        "Middlewares/ST/STM32_BLE/stack/include/ble_status.h",
+        "Middlewares/ST/STM32_BLE/stack/include/ble_types.h",
+        "Middlewares/ST/STM32_BLE/stack/include/uuid.h",
+    ],
+    "BLE_TransparentMode": [
+        wb0_ble_transparent_mode_app_path + "/Core/Inc/app_common.h",
+        wb0_ble_transparent_mode_app_path + "/Core/Inc/app_conf.h",
+        wb0_ble_transparent_mode_app_path + "/Core/Src/stm32wb0x_hal_msp.c",
+        wb0_ble_transparent_mode_app_path + "/STM32_BLE/App/aci_adv_nwk.c",
+        wb0_ble_transparent_mode_app_path + "/STM32_BLE/App/aci_adv_nwk.h",
+        wb0_ble_transparent_mode_app_path + "/STM32_BLE/App/aci_gatt_nwk.h",
+        wb0_ble_transparent_mode_app_path + "/STM32_BLE/App/aci_l2cap_nwk.h",
+        wb0_ble_transparent_mode_app_path + "/STM32_BLE/App/adv_buff_alloc.c",
+        wb0_ble_transparent_mode_app_path + "/STM32_BLE/App/adv_buff_alloc.h",
+        wb0_ble_transparent_mode_app_path + "/STM32_BLE/App/adv_buff_alloc_tiny.c",
+        wb0_ble_transparent_mode_app_path + "/STM32_BLE/App/adv_buff_alloc_tiny.h",
+        wb0_ble_transparent_mode_app_path + "/STM32_BLE/App/app_ble.h",
+        wb0_ble_transparent_mode_app_path + "/STM32_BLE/App/ble_conf.h",
+        wb0_ble_transparent_mode_app_path + "/STM32_BLE/App/dm_alloc.c",
+        wb0_ble_transparent_mode_app_path + "/STM32_BLE/App/dm_alloc.h",
+        wb0_ble_transparent_mode_app_path + "/STM32_BLE/App/dtm_burst.h",
+        wb0_ble_transparent_mode_app_path + "/STM32_BLE/App/dtm_cmd_db.c",
+        wb0_ble_transparent_mode_app_path + "/STM32_BLE/App/dtm_cmd_db.h",
+        wb0_ble_transparent_mode_app_path + "/STM32_BLE/App/dtm_cmd_en.h",
+        wb0_ble_transparent_mode_app_path + "/STM32_BLE/App/dtm_cmds.c",
+        wb0_ble_transparent_mode_app_path + "/STM32_BLE/App/dtm_cmd_stack_en.h",
+        wb0_ble_transparent_mode_app_path + "/STM32_BLE/App/dtm_preprocess_events.c",
+        wb0_ble_transparent_mode_app_path + "/STM32_BLE/App/dtm_preprocess_events.h",
+        wb0_ble_transparent_mode_app_path + "/STM32_BLE/App/fifo.h",
+        wb0_ble_transparent_mode_app_path + "/STM32_BLE/App/hci_parser.h",
+        wb0_ble_transparent_mode_app_path + "/STM32_BLE/App/pawr_buff_alloc.c",
+        wb0_ble_transparent_mode_app_path + "/STM32_BLE/App/pawr_buff_alloc.h",
+        wb0_ble_transparent_mode_app_path + "/STM32_BLE/App/transport_layer.c",
+        wb0_ble_transparent_mode_app_path + "/STM32_BLE/App/transport_layer.h",
+        wb0_ble_transparent_mode_app_path + "/STM32_BLE/Target/bleplat.c",
+        wb0_ble_transparent_mode_app_path + "/STM32_BLE/Target/bleplat_cntr.c",
+    ],
+    "Common": [
+        "Projects/Common/BLE/Interfaces/hw_aes.c",
+        "Projects/Common/BLE/Interfaces/hw_aes.h",
+        "Projects/Common/BLE/Interfaces/hw_pka.c",
+        "Projects/Common/BLE/Interfaces/hw_pka.h",
+        "Projects/Common/BLE/Interfaces/hw_rng.c",
+        "Projects/Common/BLE/Interfaces/hw_rng.h",
+        "Projects/Common/BLE/Modules/asm.h",
+        "Projects/Common/BLE/Modules/blue_unit_conversion.s",
+        "Projects/Common/BLE/Modules/compiler.h",
+        "Projects/Common/BLE/Modules/crash_handler.h",
+        "Projects/Common/BLE/Modules/miscutil.c",
+        "Projects/Common/BLE/Modules/miscutil.h",
+        "Projects/Common/BLE/Modules/osal.h",
+        "Projects/Common/BLE/Modules/osal_memcpy.s",
+        "Projects/Common/BLE/Modules/PKAMGR/Inc/pka_manager.h",
+        "Projects/Common/BLE/Modules/PKAMGR/Src/pka_manager.c",
+        "Projects/Common/BLE/Modules/RADIO_utils/Inc/RADIO_utils.h",
+        "Projects/Common/BLE/Modules/RADIO_utils/Src/RADIO_utils.c",
+    ],
+}
 
 def os_cmd(cmd, cwd=None, shell=False):
     """Execute a command with subprocess.check_call()
@@ -182,15 +255,25 @@ def copy_ble_lib_files(src_repo_path, dest_lib_path, stm32_serie):
                 logging.error("Abort")
                 sys.exit()
 
-    elif stm32_serie == "stm32wba":
+    elif stm32_serie in ["stm32wba", "stm32wb0"]:
+
+        if stm32_serie == "stm32wba":
+            target_file_list = file_list_wba
+        elif stm32_serie == "stm32wb0":
+            target_file_list = file_list_wb0
+        else:
+            logging.error(f"File : Unexpected series {stm32_serie}")
+            logging.error("Abort")
+            sys.exit()
+
         # Remove existing *.c and *.h files
         for root, _, files in os.walk(dest_lib_path):
             for file in files:
                 if file.endswith(".c") or file.endswith(".h"):
                     os.remove(os.path.join(root, file))
 
-        for dir_name in file_list_wba:
-            for file in file_list_wba[dir_name]:
+        for dir_name in target_file_list:
+            for file in target_file_list[dir_name]:
                 # Src file path to be copied
                 src_file_path = Path(src_repo_path / file)
                 if src_file_path.exists():

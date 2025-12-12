@@ -186,6 +186,18 @@ typedef struct
   * @}
   */
 
+/** @defgroup SYSTEM_LL_EC_FLASH_FLAGS FLASH Flags Definition
+  * @{
+  */
+#define LL_FLASH_FLAG_CMDDONE             FLASH_IRQRAW_CMDDONE_RIS     /*!< FLASH command done flag      */
+#define LL_FLASH_FLAG_CMDSTART            FLASH_IRQRAW_CMDSTART_RIS    /*!< FLASH command started flag   */
+#define LL_FLASH_FLAG_CMDERR              FLASH_IRQRAW_CMDERR_RIS      /*!< FLASH command error flag     */
+#define LL_FLASH_FLAG_ILLCMD              FLASH_IRQRAW_ILLCMD_RIS      /*!< FLASH illegal command flag   */
+
+/**
+  * @}
+  */
+
 /** @defgroup SYSTEM_LL_EC_FLASH_INTERRUPT FLASH Interrupts Definition
   * @brief FLASH Interrupt definition
   * @{
@@ -1378,10 +1390,10 @@ __STATIC_INLINE void LL_FLASH_DisableIT(FLASH_TypeDef *FLASHx, uint32_t interrup
   * @param  FLASHx FLASH Instance
   * @param  interrupt FLASH interrupt
   *         This parameter can be any combination of the following values:
-  *     @arg @ref FLASH_IT_CMDDONE  Command Done Interrupt
-  *     @arg @ref FLASH_IT_CMDSTART Command Started Interrupt
-  *     @arg @ref FLASH_IT_CMDERR   Command Error Interrupt
-  *     @arg @ref FLASH_IT_ILLCMD   Illegal Command Interrupt
+  *     @arg @ref LL_FLASH_IT_CMDDONE  Command Done Interrupt
+  *     @arg @ref LL_FLASH_IT_CMDSTART Command Started Interrupt
+  *     @arg @ref LL_FLASH_IT_CMDERR   Command Error Interrupt
+  *     @arg @ref LL_FLASH_IT_ILLCMD   Illegal Command Interrupt
   * @retval The new state of interrupt flag (SET or RESET).
   */
 __STATIC_INLINE uint32_t LL_FLASH_GetIT(FLASH_TypeDef *FLASHx, uint32_t interrupt)
@@ -1394,10 +1406,10 @@ __STATIC_INLINE uint32_t LL_FLASH_GetIT(FLASH_TypeDef *FLASHx, uint32_t interrup
   * @param  FLASHx FLASH Instance
   * @param  interrupt FLASH interrupt
   *         This parameter can be any combination of the following values:
-  *     @arg @ref FLASH_IT_CMDDONE  Command Done Interrupt
-  *     @arg @ref FLASH_IT_CMDSTART Command Started Interrupt
-  *     @arg @ref FLASH_IT_CMDERR   Command Error Interrupt
-  *     @arg @ref FLASH_IT_ILLCMD   Illegal Command Interrupt
+  *     @arg @ref LL_FLASH_IT_CMDDONE  Command Done Interrupt
+  *     @arg @ref LL_FLASH_IT_CMDSTART Command Started Interrupt
+  *     @arg @ref LL_FLASH_IT_CMDERR   Command Error Interrupt
+  *     @arg @ref LL_FLASH_IT_ILLCMD   Illegal Command Interrupt
   * @retval None
   */
 __STATIC_INLINE void LL_FLASH_ClearIT(FLASH_TypeDef *FLASHx, uint32_t interrupt)

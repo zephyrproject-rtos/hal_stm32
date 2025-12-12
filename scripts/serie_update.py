@@ -56,7 +56,7 @@ class Stm32SerieUpdate:
         """Class Stm32SerieUpdate constructor
 
         Args:
-            stm32_serie: stm32 serie ex:stm32f3xx
+            stm32_serie: stm32 series name (without 'x' suffixes), e.g. 'stm32f3'
             stm32cube_repo_path: directory path where to fetch github repo
             noclean: boolean to clean or not github repo after update done
             version_update: string to force a specified version to be updated
@@ -76,9 +76,17 @@ class Stm32SerieUpdate:
 
         # Set serie variables
         self.stm32_serie = stm32_serie
-        self.stm32_seriexx = stm32_serie + "xx"  # ex:stm32f3xx
+
+        # STM32WB0 uses a single 'x' suffix in HAL/LL resources
+        if self.stm32_serie == 'stm32wb0':
+            x_suffix = 'x'
+        else:
+            x_suffix = 'xx'
+
+        self.stm32_seriexx = stm32_serie + x_suffix
+
         self.stm32_serie_upper = stm32_serie.upper()  # ex:STM32F3
-        self.stm32_seriexx_upper = self.stm32_serie_upper + "xx"  # ex:STM32F3xx
+        self.stm32_seriexx_upper = self.stm32_serie_upper + x_suffix  # ex:STM32F3xx
         self.serie = self.stm32_serie_upper[5:]
         self.noclean = noclean
         self.version_update = version_update
@@ -273,13 +281,20 @@ class Stm32SerieUpdate:
         temp_cmsis_soc_path = self.stm32cube_temp_serie / "soc"
         Path.mkdir(temp_cmsis_soc_path, parents=True)
 
+        # STM32WB0 uses a specifc CMSIS device driver path
+        # with a single uppercase X suffix.
+        if self.stm32_serie == 'stm32wb0':
+            cmsis_device_dir = 'STM32WB0X'
+        else:
+            cmsis_device_dir = self.stm32_seriexx_upper
+
         stm32cube_cmsis_include_path = (
             self.stm32cube_serie_path
             / "Drivers"
             / "CMSIS"
             / "Device"
             / "ST"
-            / self.stm32_seriexx_upper
+            / cmsis_device_dir
             / "Include"
         )
         shutil.rmtree(temp_cmsis_soc_path, onerror=common_utils.remove_readonly)
@@ -291,7 +306,7 @@ class Stm32SerieUpdate:
             / "CMSIS"
             / "Device"
             / "ST"
-            / self.stm32_seriexx_upper
+            / cmsis_device_dir
             / "Source"
             / "Templates"
         )
@@ -764,11 +779,11 @@ class Stm32SerieUpdate:
         self.apply_zephyr_patch()
         self.merge_commit()
 
-        # 8) In case of stm32wb, update ble library
-        if self.stm32_serie == "stm32wb":
+        # 8) In case of stm32wb/wba/wb0, update library
+        if self.stm32_serie in ["stm32wb", "stm32wba", "stm32wb0"]:
             ble_library.update(
                 self.stm32cube_serie_path,
-                Path(self.zephyr_hal_stm32_path / "lib" / "stm32wb"),
+                Path(self.zephyr_hal_stm32_path / "lib" / self.stm32_serie),
                 self.stm32cube_temp,
                 self.current_version,
                 self.version_update,
@@ -777,19 +792,6 @@ class Stm32SerieUpdate:
             )
             self.merge_commit(lib=True)
 
-        # 9) In case of stm32wba, update hci library
-        elif self.stm32_serie == "stm32wba":
-            ble_library.update(
-                self.stm32cube_serie_path,
-                Path(self.zephyr_hal_stm32_path / "lib" / "stm32wba"),
-                self.stm32cube_temp,
-                self.current_version,
-                self.version_update,
-                self.update_commit,
-                self.stm32_serie
-            )
-            self.merge_commit(lib=True)
-
-        # 10) clean
+        # 9) clean
         self.clean_files()
         logging.info("%s", f"Done {self.stm32_serie}\n")

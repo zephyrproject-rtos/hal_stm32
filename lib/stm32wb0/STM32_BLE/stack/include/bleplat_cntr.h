@@ -239,8 +239,8 @@ void BLEPLAT_CNTR_SmToggleSn(uint8_t smNo);
 void BLEPLAT_CNTR_StartEncrypt(void);
 uint32_t BLEPLAT_CNTR_TimeDiff(uint32_t x, uint32_t y);
 uint8_t BLEPLAT_CNTR_DemodDelaySt(uint8_t RxPHY);
-uint32_t BLEPLAT_CNTR_GetTimer2TimeoutForIfs(uint32_t T_Ifs, BLEPLAT_CNTR_Transaction Transaction, uint8_t Cal_Enabled);
-
+uint32_t BLEPLAT_CNTR_GetTimer2TimeoutForIfs(uint32_t T_Ifs, BLEPLAT_CNTR_Transaction Transaction, uint8_t Rx_Phy, uint8_t Tx_Phy, uint8_t Cal_Enabled);
+uint32_t BLEPLAT_CNTR_IsEnabledTimer1(void);
 
 /**
   * @}

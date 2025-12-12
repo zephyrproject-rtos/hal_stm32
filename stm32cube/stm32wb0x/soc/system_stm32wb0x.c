@@ -97,14 +97,16 @@
 #if defined(VECT_TAB_SRAM)
 #define VECT_TAB_BASE_ADDRESS   SRAM_BASE       /*!< Vector Table base address field.
                                                      This value must be a multiple of 0x100. */
-#define VECT_TAB_OFFSET         0x00000000U     /*!< Vector Table base offset field.
-                                                     This value must be a multiple of 0x100. */
 #else
 #define VECT_TAB_BASE_ADDRESS   NVM_BASE        /*!< Vector Table base address field.
                                                      This value must be a multiple of 0x100. */
-#define VECT_TAB_OFFSET         0x00000000U     /*!< Vector Table base offset field.
-                                                     This value must be a multiple of 0x100. */
 #endif /* VECT_TAB_SRAM */
+
+#if !defined(VECT_TAB_OFFSET)
+#define VECT_TAB_OFFSET         0x00000000U     /*!< Vector Table offset field.
+                                                     This value must be a multiple of 0x100. */
+#endif /* VECT_TAB_OFFSET */
+
 #endif /* USER_VECT_TAB_ADDRESS */
 
 /******************************************************************************/
@@ -229,7 +231,7 @@ void SystemInit(void)
   SET_BIT(PWR->CR2, PWR_CR2_RAMRET2);
 #endif /* PWR_CR2_RAMRET2 */
 
-#if defined(PWR_CR2_RAMRET2)
+#if defined(PWR_CR2_RAMRET3)
   SET_BIT(PWR->CR2, PWR_CR2_RAMRET3);
 #endif /* PWR_CR2_RAMRET3 */
 

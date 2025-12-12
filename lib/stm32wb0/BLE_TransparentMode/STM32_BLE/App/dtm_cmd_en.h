@@ -79,7 +79,7 @@
         (CONNECTION_ENABLED)
 #ifndef __ZEPHYR__
 #define ACI_HAL_TRANSMITTER_TEST_PACKETS_V2_ENABLED\
-       (CONTROLLER_CTE_ENABLED)
+        (CONTROLLER_CTE_ENABLED)
 #endif /* __ZEPHYR__ */
 #define ACI_TEST_TX_NOTIFICATION_START_ENABLED\
         (CONNECTION_ENABLED)
@@ -91,6 +91,8 @@
         (CONNECTION_ENABLED)
 #define ACI_TEST_REPORT_ENABLED\
         (CONNECTION_ENABLED)
+
+#define ACI_HAL_UPDATER_START_FORCE_DISABLED                                            1
 
 #if CONFIG_NO_HCI_COMMANDS
 /* Macros to force exclusion of some unnecessary HCI/ACI commands from DTM */

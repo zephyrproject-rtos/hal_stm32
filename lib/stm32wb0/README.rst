@@ -6,7 +6,7 @@ Origin:
    https://github.com/STMicroelectronics/STM32CubeWB0
 
 Status:
-   version v1.0.0
+   version v1.4.0
 
 Purpose:
    This library is used on STM32WB0 series to port BLE controller library in
@@ -59,24 +59,24 @@ Description:
       Projects/NUCLEO-WB09KE/Applications/BLE/BLE_TransparentMode/STM32_BLE/App/transport_layer.h
       Projects/NUCLEO-WB09KE/Applications/BLE/BLE_TransparentMode/STM32_BLE/Target/bleplat.c
       Projects/NUCLEO-WB09KE/Applications/BLE/BLE_TransparentMode/STM32_BLE/Target/bleplat_cntr.c
-      Projects/NUCLEO-WB09KE/Applications/BLE/BLE_TransparentMode/System/Interfaces/hw_aes.c
-      Projects/NUCLEO-WB09KE/Applications/BLE/BLE_TransparentMode/System/Interfaces/hw_aes.h
-      Projects/NUCLEO-WB09KE/Applications/BLE/BLE_TransparentMode/System/Interfaces/hw_pka.c
-      Projects/NUCLEO-WB09KE/Applications/BLE/BLE_TransparentMode/System/Interfaces/hw_pka.h
-      Projects/NUCLEO-WB09KE/Applications/BLE/BLE_TransparentMode/System/Interfaces/hw_rng.c
-      Projects/NUCLEO-WB09KE/Applications/BLE/BLE_TransparentMode/System/Interfaces/hw_rng.h
-      Projects/NUCLEO-WB09KE/Applications/BLE/BLE_TransparentMode/System/Modules/asm.h
-      Projects/NUCLEO-WB09KE/Applications/BLE/BLE_TransparentMode/System/Modules/blue_unit_conversion.s
-      Projects/NUCLEO-WB09KE/Applications/BLE/BLE_TransparentMode/System/Modules/compiler.h
-      Projects/NUCLEO-WB09KE/Applications/BLE/BLE_TransparentMode/System/Modules/crash_handler.h
-      Projects/NUCLEO-WB09KE/Applications/BLE/BLE_TransparentMode/System/Modules/miscutil.c
-      Projects/NUCLEO-WB09KE/Applications/BLE/BLE_TransparentMode/System/Modules/miscutil.h
-      Projects/NUCLEO-WB09KE/Applications/BLE/BLE_TransparentMode/System/Modules/osal.h
-      Projects/NUCLEO-WB09KE/Applications/BLE/BLE_TransparentMode/System/Modules/osal_memcpy.s
-      Projects/NUCLEO-WB09KE/Applications/BLE/BLE_TransparentMode/System/Modules/PKAMGR/Inc/pka_manager.h
-      Projects/NUCLEO-WB09KE/Applications/BLE/BLE_TransparentMode/System/Modules/PKAMGR/Src/pka_manager.c
-      Projects/NUCLEO-WB09KE/Applications/BLE/BLE_TransparentMode/System/Modules/RADIO_utils/Inc/RADIO_utils.h
-      Projects/NUCLEO-WB09KE/Applications/BLE/BLE_TransparentMode/System/Modules/RADIO_utils/Src/RADIO_utils.c
+      Projects/Common/BLE/Interfaces/hw_aes.c
+      Projects/Common/BLE/Interfaces/hw_aes.h
+      Projects/Common/BLE/Interfaces/hw_pka.c
+      Projects/Common/BLE/Interfaces/hw_pka.h
+      Projects/Common/BLE/Interfaces/hw_rng.c
+      Projects/Common/BLE/Interfaces/hw_rng.h
+      Projects/Common/BLE/Modules/asm.h
+      Projects/Common/BLE/Modules/blue_unit_conversion.s
+      Projects/Common/BLE/Modules/compiler.h
+      Projects/Common/BLE/Modules/crash_handler.h
+      Projects/Common/BLE/Modules/miscutil.c
+      Projects/Common/BLE/Modules/miscutil.h
+      Projects/Common/BLE/Modules/osal.h
+      Projects/Common/BLE/Modules/osal_memcpy.s
+      Projects/Common/BLE/Modules/PKAMGR/Inc/pka_manager.h
+      Projects/Common/BLE/Modules/PKAMGR/Src/pka_manager.c
+      Projects/Common/BLE/Modules/RADIO_utils/Inc/RADIO_utils.h
+      Projects/Common/BLE/Modules/RADIO_utils/Src/RADIO_utils.c
 
 Dependencies:
    This library depends on STM32Cube HAL API.
@@ -86,7 +86,7 @@ URL:
    https://github.com/STMicroelectronics/STM32CubeWB0
 
 Commit:
-   61d80e00cdb6136a58a33b95d2137e3bc9baa28e
+   feb9b9624b10a3af4e5dccb390a01b0cc4d71771
 
 Maintained-by:
    External
