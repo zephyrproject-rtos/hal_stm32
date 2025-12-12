@@ -66,7 +66,7 @@ extern "C" {
   * @brief RAM base address
   */
 #define _MEMORY_RAM_BEGIN_       0x20000000
-#define _MEMORY_RAM_SIZE_        0x10000           /* 32KB  */
+#define _MEMORY_RAM_SIZE_        0x8000           /* 32KB  */
 #define _MEMORY_RAM_END_         0x20007FFF
 
 /**

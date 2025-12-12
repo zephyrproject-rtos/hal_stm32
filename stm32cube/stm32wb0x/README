@@ -6,7 +6,7 @@ Origin:
    http://www.st.com/en/embedded-software/stm32cubewb0.html
 
 Status:
-   version v1.0.0
+   version v1.1.0
 
 Purpose:
    STMicroelectronics official MCU package for STM32WB0 series.
@@ -23,7 +23,7 @@ URL:
    https://github.com/STMicroelectronics/STM32CubeWB0
 
 Commit:
-   61d80e00cdb6136a58a33b95d2137e3bc9baa28e
+   acb6e3c6086b69b3fff8111c89b825d6acbb3d71
 
 Maintained-by:
    External
@@ -44,7 +44,9 @@ Patch List:
     -Added stm32cube/stm32wb0x/drivers/include/stm32_assert.h
     -Removed unused stm32cube/stm32wb0x/drivers/include/stm32_assert_template.h
 
-   *Added patches to enable compilation with Zephyr
+   *Added patches to enable compilation with Zephyr.
+    See commit e8043b4d124e ("stm32cube: stm32wb0x: add compatibility patches")
+    from pull request https://github.com/zephyrproject-rtos/hal_stm32/pull/230.
     -exclude stm32cube/stm32wb0x/soc/system_stm32wb0.c from build
       . Missing definitions moved to 'zephyr/soc/st/stm32/stm32wb0xx/soc.c'
         . SystemCoreClock (CMSIS global variable)
@@ -61,4 +63,4 @@ Patch List:
       . Remove definition of __blue_RAM variable
         . Moved to 'zephyr/soc/st/stm32/stm32wb0xx/soc.c'
 
-   See Release_Notes.html from STM32Cube for more details.
+   See release_note.html from STM32Cube

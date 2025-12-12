@@ -2070,8 +2070,6 @@ __STATIC_INLINE uint32_t LL_ADC_GetMicrophonePGAGain(const ADC_TypeDef *ADCx)
   *         @arg @ref LL_ADC_CHANNEL_VINP1_VINM1
   *         @arg @ref LL_ADC_CHANNEL_VINP2_VINM2
   *         @arg @ref LL_ADC_CHANNEL_VINP3_VINM3
-  *         @arg @ref LL_ADC_CHANNEL_VBAT
-  *         @arg @ref LL_ADC_CHANNEL_TEMPSENSOR
   * @param  Range This parameter can be one of the following values:
   *         @arg @ref LL_ADC_VIN_RANGE_1V2
   *         @arg @ref LL_ADC_VIN_RANGE_2V4
@@ -2108,8 +2106,6 @@ __STATIC_INLINE void LL_ADC_SetChannelVoltageRange(ADC_TypeDef *ADCx, uint32_t C
   *         @arg @ref LL_ADC_CHANNEL_VINP1_VINM1
   *         @arg @ref LL_ADC_CHANNEL_VINP2_VINM2
   *         @arg @ref LL_ADC_CHANNEL_VINP3_VINM3
-  *         @arg @ref LL_ADC_CHANNEL_VBAT
-  *         @arg @ref LL_ADC_CHANNEL_TEMPSENSOR
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_ADC_VIN_RANGE_1V2
   *         @arg @ref LL_ADC_VIN_RANGE_2V4

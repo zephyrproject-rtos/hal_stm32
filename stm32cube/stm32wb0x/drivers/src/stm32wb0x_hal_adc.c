@@ -153,7 +153,7 @@ while off-loading the CPU (ratio adjustable from 1 to 128).
     (#) Disable the ADC interface
       (++) ADC clock can be hard reset and disabled at RCC top level.
         (++) Hard reset of ADC peripherals
-             using macro __ADCx_FORCE_RESET(), __ADCx_RELEASE_RESET().
+             using macro __HAL_RCC_ADC_FORCE_RESET(), __HAL_RCC_ADC_RELEASE_RESET().
         (++) ADC clock disable
              using the equivalent macro/functions as configuration step.
              (+++) Example:
@@ -165,13 +165,13 @@ while off-loading the CPU (ratio adjustable from 1 to 128).
 
     (#) Optionally, in case of usage of ADC with interruptions:
          (++) Disable the NVIC for ADC
-              using function HAL_NVIC_EnableIRQ(ADCx_IRQn)
+              using function HAL_NVIC_DisableIRQ(ADCx_IRQn)
 
     (#) Optionally, in case of usage of DMA:
          (++) Deinitialize the DMA
-              using function HAL_DMA_Init().
+              using function HAL_DMA_DeInit().
          (++) Disable the NVIC for DMA
-              using function HAL_NVIC_EnableIRQ(DMAx_Channelx_IRQn)
+              using function HAL_NVIC_DisableIRQ(DMAx_Channelx_IRQn)
 
     [..]
 
@@ -2212,7 +2212,11 @@ HAL_StatusTypeDef HAL_ADC_ConfigChannel(ADC_HandleTypeDef *hadc, const ADC_Chann
   if (LL_ADC_IsConversionOngoing(hadc->Instance) == 0UL)
   {
     LL_ADC_SetSequencerRanks(hadc->Instance, sConfigChannel->Rank, sConfigChannel->Channel);
-    LL_ADC_SetChannelVoltageRange(hadc->Instance, sConfigChannel->Channel, sConfigChannel->VoltRange);
+    if ((sConfigChannel->Channel != ADC_CHANNEL_TEMPSENSOR)
+        && (sConfigChannel->Channel != ADC_CHANNEL_VBAT))
+    {
+      LL_ADC_SetChannelVoltageRange(hadc->Instance, sConfigChannel->Channel, sConfigChannel->VoltRange);
+    }
   }
   /* If a conversion is on going no update could be done on                   */
   /* neither of the channel configuration structure parameters.               */
@@ -2233,7 +2237,7 @@ HAL_StatusTypeDef HAL_ADC_ConfigChannel(ADC_HandleTypeDef *hadc, const ADC_Chann
     else if ((sConfigChannel->VoltRange == ADC_VIN_RANGE_1V2)
              || (sConfigChannel->Channel == ADC_CHANNEL_TEMPSENSOR))
     {
-      /* 1.2V mode: [calibrated gain =0.96, gain clamped at 1] */
+      /* 1.2V mode: [calibrated gain = 0.96, gain clamped at 1] */
       tmp_gain = 0xFFFUL;
     }
     else if (sConfigChannel->VoltRange == ADC_VIN_RANGE_2V4)
