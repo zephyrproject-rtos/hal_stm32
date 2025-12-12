@@ -4148,9 +4148,6 @@ typedef struct  /*!< WAKEUP Structure  */
 /* ============================================================================================================================*/
 
 /* =====================================================    CR    =====================================================*/
-#define RNG_CR_BP_POSTP_Pos                                                (24UL)   /*!<RNG CR: BP_POSTP (Bit 24) */
-#define RNG_CR_BP_POSTP_Msk                                                (0x1000000UL)    /*!< RNG CR: BP_POSTP (Bitfield-Mask: 0x01) */
-#define RNG_CR_BP_POSTP                                                    RNG_CR_BP_POSTP_Msk
 #define RNG_CR_CLKDIV_15_0_Pos                                             (8UL)    /*!<RNG CR: CLKDIV_15_0 (Bit 8) */
 #define RNG_CR_CLKDIV_15_0_Msk                                             (0xffff00UL)   /*!< RNG CR: CLKDIV_15_0 (Bitfield-Mask: 0xffff) */
 #define RNG_CR_CLKDIV_15_0                                                 RNG_CR_CLKDIV_15_0_Msk
