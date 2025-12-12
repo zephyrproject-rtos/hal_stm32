@@ -151,8 +151,10 @@ HAL_StatusTypeDef HAL_RS485Ex_Init(UART_HandleTypeDef *huart, uint32_t Polarity,
   */
 
 #if defined(USART_CR1_UESM)
+#if defined(USART_CR3_WUFIE)
 void HAL_UARTEx_WakeupCallback(UART_HandleTypeDef *huart);
 
+#endif /* USART_CR3_WUFIE */
 #endif /* USART_CR1_UESM */
 void HAL_UARTEx_RxFifoFullCallback(UART_HandleTypeDef *huart);
 void HAL_UARTEx_TxFifoEmptyCallback(UART_HandleTypeDef *huart);

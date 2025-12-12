@@ -348,11 +348,11 @@ void HAL_GPIO_DeInit(GPIO_TypeDef  *GPIOx, uint32_t GPIO_Pin)
       tmp = SYSCFG->IO_IER;
       if(GPIOx == GPIOA)
       {
-        tmp = ~(1<<position);
+        tmp &= ~(1<<position);
       }
       else
       {
-        tmp = ~((1<<position) << 16);
+        tmp &= ~((1<<position) << 16);
       }
       SYSCFG->IO_IER = tmp;
 
@@ -360,22 +360,22 @@ void HAL_GPIO_DeInit(GPIO_TypeDef  *GPIOx, uint32_t GPIO_Pin)
       tmp = SYSCFG->IO_DTR;
       if(GPIOx == GPIOA)
       {
-        tmp = ~(1<<position);
+        tmp &= ~(1<<position);
       }
       else
       {
-        tmp = ~((1<<position) << 16);
+        tmp &= ~((1<<position) << 16);
       }
       SYSCFG->IO_DTR = tmp;
 
       tmp = SYSCFG->IO_IBER;
       if(GPIOx == GPIOA)
       {
-        tmp = ~(1<<position);
+        tmp &= ~(1<<position);
       }
       else
       {
-        tmp = ~((1<<position) << 16);
+        tmp &= ~((1<<position) << 16);
       }
       SYSCFG->IO_IBER = tmp;
 
@@ -383,11 +383,11 @@ void HAL_GPIO_DeInit(GPIO_TypeDef  *GPIOx, uint32_t GPIO_Pin)
       tmp = SYSCFG->IO_IEVR;
       if(GPIOx == GPIOA)
       {
-        tmp = ~(1<<position);
+        tmp &= ~(1<<position);
       }
       else
       {
-        tmp = ~((1<<position) << 16);
+        tmp &= ~((1<<position) << 16);
       }
       SYSCFG->IO_IEVR = tmp;
 
