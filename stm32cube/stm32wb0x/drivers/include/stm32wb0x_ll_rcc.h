@@ -1459,6 +1459,43 @@ __STATIC_INLINE uint32_t LL_RCC_GetSPI3I2SClockSource(void)
   * @}
   */
 
+/** @defgroup RCC_LL_EF_RTC RTC
+  * @{
+  */
+
+/**
+  * @brief  Enable RTC
+  * @rmtoll APB0ENR         RTCEN         LL_RCC_EnableRTC
+  * @retval None
+  */
+__STATIC_INLINE void LL_RCC_EnableRTC(void)
+{
+  SET_BIT(RCC->APB0ENR, RCC_APB0ENR_RTCEN);
+}
+
+/**
+  * @brief  Disable RTC
+  * @rmtoll APB0ENR         RTCEN         LL_RCC_DisableRTC
+  * @retval None
+  */
+__STATIC_INLINE void LL_RCC_DisableRTC(void)
+{
+  CLEAR_BIT(RCC->APB0ENR, RCC_APB0ENR_RTCEN);
+}
+
+/**
+  * @brief  Check if RTC has been enabled or not
+  * @rmtoll APB0ENR         RTCEN         LL_RCC_IsEnabledRTC
+  * @retval State of bit (1 or 0).
+  */
+__STATIC_INLINE uint32_t LL_RCC_IsEnabledRTC(void)
+{
+  return ((READ_BIT(RCC->APB0ENR, RCC_APB0ENR_RTCEN) == (RCC_APB0ENR_RTCEN)) ? 1UL : 0UL);
+}
+
+/**
+  * @}
+  */
 
 /** @defgroup RCC_LL_EF_PLL PLL
   * @{

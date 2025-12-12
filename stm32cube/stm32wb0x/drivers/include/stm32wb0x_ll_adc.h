@@ -348,8 +348,14 @@ typedef struct
   * @{
   */
 
-#define LL_ADC_SAMPLING_AT_START    (0x00000000UL)             /*!< Sampling only at conversion start */
-#define LL_ADC_SAMPLING_AT_END      (ADC_CONF_ADC_CONT_1V2)    /*!< Sampling starts at the end of conversion (default)*/
+#define LL_ADC_SAMPLING_AT_START    (0x00000000UL)             /*!< Sampling phase starts only at conversion start and
+                                                                    sampling time is 125ns regardless of the sampling
+                                                                    period (default). */
+#define LL_ADC_SAMPLING_AT_END      (ADC_CONF_ADC_CONT_1V2)    /*!< Sampling phase starts after end of
+                                                                    conversion, and stops upon trigger event (Also known
+                                                                    as Bulb sampling mode).
+                                                                    Sampling time is a function of the sampling period
+                                                                    (Sample rate). */
 
 /**
   * @}
@@ -2769,7 +2775,7 @@ __STATIC_INLINE void LL_ADC_SetCalibPointGain(ADC_TypeDef *ADCx, uint32_t Point,
 
 /**
   * @brief  Get the gain of the calibration point 1.
-  * @rmtoll COMP_1     GAIN1       LL_ADC_GetCalibPoint1Gain
+  * @rmtoll COMP_1     GAIN1       LL_ADC_GetCalibPointGain
   * @param  ADCx ADC instance
   * @param  Point This parameter can be one of the following values:
   *         @arg @ref LL_ADC_CALIB_POINT_1
@@ -2788,7 +2794,7 @@ __STATIC_INLINE uint32_t LL_ADC_GetCalibPointGain(const ADC_TypeDef *ADCx, uint3
 
 /**
   * @brief  Set the offset of the calibration point 1.
-  * @rmtoll COMP_1     OFFSET1       LL_ADC_SetCalibPoint1Offset
+  * @rmtoll COMP_1     OFFSET1       LL_ADC_SetCalibPointOffset
   * @param  ADCx ADC instance
   * @param  Offset the signed offset of the first calibration point.
   * @param  Point This parameter can be one of the following values:
@@ -2808,7 +2814,7 @@ __STATIC_INLINE void LL_ADC_SetCalibPointOffset(ADC_TypeDef *ADCx, uint32_t Poin
 
 /**
   * @brief  Get the offset of the calibration point 1.
-  * @rmtoll COMP_1     OFFSET1       LL_ADC_GetCalibPoint1Offset
+  * @rmtoll COMP_1     OFFSET1       LL_ADC_GetCalibPointOffset
   * @param  ADCx ADC instance
   * @param  Point This parameter can be one of the following values:
   *         @arg @ref LL_ADC_CALIB_POINT_1
@@ -2895,7 +2901,7 @@ __STATIC_INLINE uint32_t LL_ADC_GetCalibPointForDiff(const ADC_TypeDef *ADCx, ui
 /**
   * @brief  Set the use of a specific calibration point for
   *         ADC single positive mode
-  * @rmtoll COMP_SEL     ADC_COMP_SEL_OFFSET_GAIN7       LL_ADC_SetCalibPointForSinglePos3V6
+  * @rmtoll COMP_SEL     ADC_COMP_SEL_OFFSET_GAIN7       LL_ADC_SetCalibPointForSinglePos
   * @param  ADCx ADC instance
   * @param  Point This parameter can be one of the following values:
   *         @arg @ref LL_ADC_CALIB_POINT_1
@@ -2931,7 +2937,7 @@ __STATIC_INLINE void LL_ADC_SetCalibPointForSinglePos(ADC_TypeDef *ADCx, uint32_
 /**
   * @brief  Get what calibration point is used for
   *         ADC single positive mode
-  * @rmtoll COMP_SEL     ADC_COMP_SEL_OFFSET_GAIN7       LL_ADC_GetCalibPointForSinglePos3V6
+  * @rmtoll COMP_SEL     ADC_COMP_SEL_OFFSET_GAIN7       LL_ADC_GetCalibPointForSinglePos
   * @param  ADCx ADC instance
   * @param  Range This parameter can be one of the following values:
   *         @arg @ref LL_ADC_VIN_RANGE_1V2
@@ -3043,6 +3049,8 @@ __STATIC_INLINE uint32_t LL_ADC_GetCalibPointForSingleNeg(const ADC_TypeDef *ADC
 
 /**
   * @brief  Configure the WatchDoG threshold low and high.
+  * @rmtoll WD_TH     ADC_WD_TH_WD_LT       LL_ADC_ConfigureAWDThresholds\n
+  *         WD_TH     ADC_WD_TH_WD_HT       LL_ADC_ConfigureAWDThresholds
   * @param  ADCx ADC instance
   * @param  LowThreshold This parameter is a 12-bit value.
   * @param  HighThreshold This parameter is a 12-bit value.
