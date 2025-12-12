@@ -67,25 +67,25 @@
 
 /* Expected TX output power (dBm) for each PA level when SMPS voltage is 1.4V */
 static const int8_t normal_pa_level_table[TX_POWER_LEVELS] = {
-    -54, -21, -20, -19, -17, -16, -15, -14,
-    -13, -12, -11, -10,  -9,  -8,  -7,  -6,
-     -6,  -4,  -3,  -3,  -2,  -2,  -1,  -1,
-      0,   0,   1,   2,   3,   4,   5,   6
+    -60, -23, -22, -21, -20, -18, -17, -16,
+    -15, -14, -13, -13,  -12,  -11,  -10,  -9,
+     -8,  -7,  -6,  -5,  -4,  -3,  -3,  -2,
+     -1,   0,   2,   3,   4,   5,   5,   6
 };
 
 #if defined(STM32WB09)
 static const int8_t high_power_pa_level_table[HP_TX_POWER_LEVELS] = {
-    -54, -21, -20, -19, -17, -16, -15, -14,
-    -13, -12, -11, -10,  -9,  -8,  -7,  -6,
-     -6,  -4,  -3,  -3,  -2,  -2,  -1,  -1,
-      0,   0,   1,   2,   3,   4,   5,   6,
-      8
+    -60, -24, -23, -22, -21, -19, -18, -17,
+    -16, -15, -14, -13, -12, -11, -10,  -9,
+     -8,  -7,  -6,  -5,  -4,  -4,  -3,  -2,
+     -1,   0,   1,   2,   3,   4,   5,   6,
+      7
 };
 #else
 /* Expected TX output power (dBm) for each PA level when SMPS voltage is 1.9V
    (high power mode). */
 static const int8_t high_power_pa_level_table[HP_TX_POWER_LEVELS] = {
-    -54, -19, -18, -17, -16, -15, -14, -13,
+    -60, -19, -18, -17, -16, -15, -14, -13,
     -12, -11, -10,  -9,  -8,  -7,  -6,  -5,
      -4,  -3,  -3,  -2,  -1,   0,   1,   2,
       3,   8,   8,   8,   8,   8,   8,   8
@@ -344,7 +344,7 @@ int8_t RADIO_UpdateAvgRSSI(int8_t avg_rssi, int8_t rssi, uint8_t rssi_filter_coe
 
 void RADIO_AntIdxRemap(uint8_t AntPattLen, uint8_t *pAntRamTable, const uint8_t* pAntPatt)
 {
-#if defined(STM32WB07) || defined(STM32WB06) || defined(STM32WB09)
+#if defined(STM32WB05) || defined(STM32WB09)
     for (uint8_t i=0; i<AntPattLen; i++)
     {
         pAntRamTable[i] = (pAntPatt[i] << antenna_conf.Antenna_ID_Shift);
