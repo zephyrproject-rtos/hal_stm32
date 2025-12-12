@@ -71,6 +71,9 @@
 #if !defined(CFG_BLE_CONNECTION_ENABLED)
 #   error "CFG_BLE_CONNECTION_ENABLED is not defined"
 #endif
+#if !defined(DTM_DEBUG_ENABLED)
+#   error "DTM_DEBUG_ENABLED is not defined"
+#endif
 #if !defined(CFG_BLE_CONTROLLER_CHAN_CLASS_ENABLED)
 #   error "CFG_BLE_CONTROLLER_CHAN_CLASS_ENABLED is not defined"
 #endif
@@ -489,6 +492,77 @@ tBleStatus hci_acl_data_ind_event_int_cb_ucfg(void* header_p,
 }
 #endif /* (CONNECTION_ENABLED == 1) */
 
+#if (DTM_DEBUG_ENABLED == 1)
+uint8_t log_verbosity_set_ucfg(void* p)
+{
+    return log_verbosity_set(p);
+}
+#endif /* (DTM_DEBUG_ENABLED == 1) */
+
+#if (DTM_DEBUG_ENABLED == 1)
+void log_verbosity_get_ucfg(void* verb_p)
+{
+    log_verbosity_get(verb_p);
+}
+#endif /* (DTM_DEBUG_ENABLED == 1) */
+
+#if (DTM_DEBUG_ENABLED == 1)
+void log_init_ucfg(void)
+{
+    log_init();
+}
+#endif /* (DTM_DEBUG_ENABLED == 1) */
+
+#if (DTM_DEBUG_ENABLED == 1)
+void log_notify_stu_ucfg(uint8_t lvl,
+                         uint8_t cid,
+                         uint16_t mid,
+                         uint8_t uid,
+                         uint8_t fmt,
+                         uint8_t len,
+                         uint8_t* buf_p)
+{
+    log_notify_stu(lvl,
+                   cid,
+                   mid,
+                   uid,
+                   fmt,
+                   len,
+                   buf_p);
+}
+#endif /* (DTM_DEBUG_ENABLED == 1) */
+
+#if (DTM_DEBUG_ENABLED == 1)
+void log_notify_us_deferred_ucfg(uint8_t lvl,
+                                 uint8_t cid,
+                                 uint16_t mid,
+                                 uint8_t uid,
+                                 uint8_t add_info_present,
+                                 uint32_t add_info)
+{
+    log_notify_us_deferred(lvl,
+                           cid,
+                           mid,
+                           uid,
+                           add_info_present,
+                           add_info);
+}
+#endif /* (DTM_DEBUG_ENABLED == 1) */
+
+#if (DTM_DEBUG_ENABLED == 1)
+void log_notify_us_flush_ucfg(void)
+{
+    log_notify_us_flush();
+}
+#endif /* (DTM_DEBUG_ENABLED == 1) */
+
+#if (DTM_DEBUG_ENABLED == 1)
+uint32_t log_csr_ucfg(void)
+{
+    return log_csr();
+}
+#endif /* (DTM_DEBUG_ENABLED == 1) */
+
 #if ((CONTROLLER_CHAN_CLASS_ENABLED == 1) &&\
     (CONNECTION_ENABLED == 1))
 uint32_t chc_csr_ucfg(void)
@@ -734,6 +808,15 @@ tBleStatus MBM_init_ucfg(void)
           (CONTROLLER_ISO_ENABLED == 1) */
 
 #if (BLESTACK_CONTROLLER_ONLY == 0)
+#if (CONNECTION_ENABLED == 1)
+tBleStatus smp_debug_trudy__set_config_ucfg(uint32_t config)
+{
+    return smp_debug_trudy__set_config(config);
+}
+#endif /* (CONNECTION_ENABLED == 1) */
+#endif /* (BLESTACK_CONTROLLER_ONLY == 0) */
+
+#if (BLESTACK_CONTROLLER_ONLY == 0)
 #if ((SECURE_CONNECTIONS_ENABLED == 1) &&\
     (CONNECTION_ENABLED == 1))
 uint32_t secure_connections_csr_ucfg(void)
@@ -939,9 +1022,9 @@ tBleStatus llc_conn_multi_link_connection_ucfg(uint8_t enable)
 #endif /* (CONNECTION_ENABLED == 1) */
 
 #if (CONNECTION_ENABLED == 1)
-void llc_conn_peripheral_latency_cancellation_tsk_ucfg(uint16_t task_idx)
+void llc_conn_peripheral_roll_back_params_tsk_ucfg(uint16_t task_idx)
 {
-    llc_conn_peripheral_latency_cancellation_tsk(task_idx);
+    llc_conn_peripheral_roll_back_params_tsk(task_idx);
 }
 #endif /* (CONNECTION_ENABLED == 1) */
 
@@ -1818,6 +1901,20 @@ void llc_priv_init_random_part_of_one_local_rpa_ucfg(void* peer_id_p)
 }
 #endif /* (CONTROLLER_PRIVACY_ENABLED == 1) */
 
+#if (CONTROLLER_PRIVACY_ENABLED == 1)
+void llc_priv_enable_rpa_change_at_timeout_ucfg(uint8_t enable)
+{
+    llc_priv_enable_rpa_change_at_timeout(enable);
+}
+#endif /* (CONTROLLER_PRIVACY_ENABLED == 1) */
+
+#if (CONTROLLER_PRIVACY_ENABLED == 1)
+uint8_t llc_priv_is_rpa_change_at_timeout_enabled_ucfg(void)
+{
+    return llc_priv_is_rpa_change_at_timeout_enabled();
+}
+#endif /* (CONTROLLER_PRIVACY_ENABLED == 1) */
+
 #if ((CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
     (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1)) &&\
     (CONTROLLER_SCAN_ENABLED == 1) &&\
@@ -2151,6 +2248,22 @@ void llc_scan_conn_ind_sent_ucfg(void* ptr,
 #endif /* (CONTROLLER_SCAN_ENABLED == 1) &&\
           (CONNECTION_ENABLED == 1) */
 
+#if (CONTROLLER_SCAN_ENABLED == 1)
+uint8_t llc_scan_isr_uncoded_ucfg(void* cntxt_p)
+{
+    return llc_scan_isr_uncoded(cntxt_p);
+}
+#endif /* (CONTROLLER_SCAN_ENABLED == 1) */
+
+#if (CONTROLLER_SCAN_ENABLED == 1) &&\
+    (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1)
+uint8_t llc_scan_isr_coded_ucfg(void* cntxt_p)
+{
+    return llc_scan_isr_coded(cntxt_p);
+}
+#endif /* (CONTROLLER_SCAN_ENABLED == 1) &&\
+          (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1) */
+
 #if (CONTROLLER_SCAN_ENABLED == 1) &&\
     (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1)
 uint8_t llc_scan_process_ext_adv_ucfg(void* scan_p,
@@ -2270,6 +2383,13 @@ void llc_scan_disable_ucfg(void* scan_p)
 }
 #endif /* (CONTROLLER_SCAN_ENABLED == 1) &&\
           (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1) */
+
+#if (CONTROLLER_SCAN_ENABLED == 1)
+uint8_t llc_scan_stop_ucfg(uint8_t scan_disable)
+{
+    return llc_scan_stop(scan_disable);
+}
+#endif /* (CONTROLLER_SCAN_ENABLED == 1) */
 
 #if ((CONNECTION_SUBRATING_ENABLED == 1) &&\
     (CONNECTION_ENABLED == 1))
@@ -3069,15 +3189,6 @@ void LL_init_ucfg(uint8_t dataLenExt,
             Chc);
 }
 #endif /* (CONNECTION_ENABLED == 1) */
-
-#if (BLESTACK_CONTROLLER_ONLY == 0)
-#if (CONNECTION_ENABLED == 1)
-tBleStatus smp_debug_trudy__set_config_ucfg(uint32_t config)
-{
-    return smp_debug_trudy__set_config(config);
-}
-#endif /* (CONNECTION_ENABLED == 1) */
-#endif /* (BLESTACK_CONTROLLER_ONLY == 0) */
 
 #if (BLESTACK_CONTROLLER_ONLY == 0)
 #if (\
@@ -4321,6 +4432,15 @@ tBleStatus aci_gatt_clt_confirm_indication(uint16_t Connection_Handle,
 #endif /* (CONNECTION_ENABLED == 1) */
 #endif /* (BLESTACK_CONTROLLER_ONLY == 0) */
 
+#if (BLESTACK_CONTROLLER_ONLY == 0)
+#if (CONNECTION_ENABLED == 1)
+tBleStatus aci_gatt_clt_add_subscription_security_level(ble_gatt_clt_sec_level_st* sec_level_p)
+{
+    return aci_gatt_clt_add_subscription_security_level_api(sec_level_p);
+}
+#endif /* (CONNECTION_ENABLED == 1) */
+#endif /* (BLESTACK_CONTROLLER_ONLY == 0) */
+
 #if (CONNECTION_ENABLED == 1)
 tBleStatus aci_hal_peripheral_latency_enable(uint16_t Connection_Handle,
                                              uint8_t Enable)
@@ -4454,6 +4574,25 @@ tBleStatus aci_l2cap_cos_connection_resp(uint16_t connection_handle,
                                              result,
                                              cid_count,
                                              local_cid);
+}
+#endif /* ((L2CAP_COS_ENABLED == 1) &&\
+          (CONNECTION_ENABLED == 1)) */
+#endif /* (BLESTACK_CONTROLLER_ONLY == 0) */
+
+#if (BLESTACK_CONTROLLER_ONLY == 0)
+#if ((L2CAP_COS_ENABLED == 1) &&\
+    (CONNECTION_ENABLED == 1))
+tBleStatus aci_l2cap_cos_flow_control_credits_ind(uint16_t Connection_Handle,
+                                                  uint16_t CID,
+                                                  uint16_t RX_Credits,
+                                                  uint8_t CFC_Policy,
+                                                  uint16_t* RX_Credit_Balance)
+{
+    return aci_l2cap_cos_flow_control_credits_ind_api(Connection_Handle,
+                                                      CID,
+                                                      RX_Credits,
+                                                      CFC_Policy,
+                                                      RX_Credit_Balance);
 }
 #endif /* ((L2CAP_COS_ENABLED == 1) &&\
           (CONNECTION_ENABLED == 1)) */
@@ -6089,7 +6228,20 @@ tBleStatus hci_le_set_extended_scan_enable(uint8_t Enable,
 #endif /* (CONTROLLER_SCAN_ENABLED == 1) &&\
           (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1) */
 
-#if (CONNECTION_ENABLED == 1)
+#if (\
+     (CONNECTION_ENABLED == 1)\
+     &&\
+     (\
+      (CONTROLLER_SCAN_ENABLED == 1)\
+      ||\
+      (\
+       (CONTROLLER_EXT_ADV_SCAN_ENABLED == 1) &&\
+       (CONTROLLER_PERIODIC_ADV_ENABLED == 1) &&\
+       (CONNECTION_ENABLED == 1) &&\
+       (CONTROLLER_PERIODIC_ADV_WR_ENABLED == 1)\
+      )\
+     )\
+    )
 tBleStatus hci_le_connection_update(uint16_t Connection_Handle,
                                     uint16_t Connection_Interval_Min,
                                     uint16_t Connection_Interval_Max,
@@ -6106,7 +6258,7 @@ tBleStatus hci_le_connection_update(uint16_t Connection_Handle,
                                         Min_CE_Length,
                                         Max_CE_Length);
 }
-#endif /* (CONNECTION_ENABLED == 1) */
+#endif
 
 #if ((CONNECTION_SUBRATING_ENABLED == 1) &&\
     (CONNECTION_ENABLED == 1))

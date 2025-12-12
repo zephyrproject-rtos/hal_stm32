@@ -226,10 +226,10 @@ typedef uint8_t tBleStatus;
 */
 
 /**
- * @brief The remote device in in the Blacklist and the pairing operation it requested
- * cannot be performed.
+ * @brief The remote device is in the reject list due to repeated pairing attempts
+ * and the procedure cannot be started.
  */
-#define BLE_STATUS_DEV_IN_BLACKLIST         ((tBleStatus)(0xB0))
+#define BLE_STATUS_REPEATED_ATTEMPTS        ((tBleStatus)(0xB0))
 
 /**
  * @brief CSRK not found during validation of an incoming signed packet
@@ -309,7 +309,7 @@ typedef uint8_t tBleStatus;
 #define BLE_STATUS_INVALID_SCAN_CONFIGURATION    ((tBleStatus)(0xD1))
 
 /**
- *  @brief The configuration set by the aci_gap_set_connect_configuration command
+ *  @brief The configuration set by the aci_gap_set_connection_configuration command
  *         is not coherent with the GAP procedure that is requested to be started
  */
 #define BLE_STATUS_INVALID_CONNECT_CONFIGURATION ((tBleStatus)(0xD2))

@@ -104,9 +104,9 @@ typedef enum
 #define CONN_SUP_TIMEOUT_MS(x) ((uint16_t)((x)/10.0f))
 #define CONN_CE_LENGTH_MS(x) ((uint16_t)((x)/0.625f))
 
-/* STM32WB09 Transparent Mode/DTM version (Bluetooth LE stack v4.0) */
+/* Transparent Mode/DTM version (Bluetooth LE stack v4.x) */
 #define DTM_FW_VERSION_MAJOR    1
-#define DTM_FW_VERSION_MINOR    0
+#define DTM_FW_VERSION_MINOR    1
 #define DTM_FW_VERSION_PATCH    0
 
 #define UART_INTERFACE
@@ -125,6 +125,7 @@ typedef enum
 void ModulesInit(void);
 void BLE_Init(void);
 void APP_BLE_Init(void);
+
 /* USER CODE BEGIN EF */
 
 /* USER CODE END EF */

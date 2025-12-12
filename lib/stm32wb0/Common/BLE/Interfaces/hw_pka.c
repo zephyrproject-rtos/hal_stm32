@@ -948,7 +948,7 @@ void HW_PKA_P256_StartPointCheck( const uint32_t* x, const uint32_t* y )
   /* Set the point coordinate y */
   HW_PKA_WriteOperand( PKA_POINT_CHECK_IN_INITIAL_POINT_Y, 8, y );
   /* Set the Montgomery parameter */
-  HW_PKA_WriteOperand( PKA_ECC_SCALAR_MUL_IN_MONTGOMERY_PARAM, 8, HW_PKA_P256_r2 );
+  HW_PKA_WriteOperand( PKA_POINT_CHECK_IN_MONTGOMERY, 8, HW_PKA_P256_r2 );
   /* Set the coefficient |b| */
   HW_PKA_WriteOperand( PKA_POINT_CHECK_IN_B_COEFF, 8, HW_PKA_P256_b );
 #endif /* STM32WB09 */

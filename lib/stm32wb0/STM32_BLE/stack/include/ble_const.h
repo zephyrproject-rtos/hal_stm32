@@ -29,7 +29,7 @@
 
 /**
  * @defgroup Link_Layer Link Layer constants and types
- * @brief Constants and types related to Link Layer functions
+ * Constants and types related to Link Layer functions
  * @{
  */
 
@@ -357,7 +357,7 @@
  */
 /**
  *@addtogroup HAL_constants HAL/LL Constants
- *@brief Constants for Hardware abstraction Layer and Link Layer.
+ * Constants for Hardware abstraction Layer and Link Layer.
  *@{
  */
 
@@ -370,8 +370,8 @@
 #define CONFIG_DATA_ER_OFFSET                       (0x08) /**< Encryption root key used to derive LTK and CSRK */
 #define CONFIG_DATA_IR_OFFSET                       (0x18) /**< Identity root key used to derive LTK and CSRK */
 #define CONFIG_DATA_LL_WITHOUT_HOST                 (0x2C) /**< Switch on/off Link Layer only mode. Set to 1 to disable Host.
-                           It can be written only if aci_hal_write_config_data() is the first command
-                           after reset. */
+                                                                It can be written only if aci_hal_write_config_data() is the first command
+                                                                after reset. */
 #define CONFIG_DATA_STATIC_RANDOM_ADDRESS           (0x2E) /**< To set the static random address used by the stack, instead of the one stored in NVM. */
 #define CONFIG_DATA_SCAN_CH_MAP                     (0x2F) /**< To set the channel map for scanning. */
 #define CONFIG_DATA_STORED_STATIC_RANDOM_ADDRESS    (0x80) /**< The static random address stored in NVM. */
@@ -448,7 +448,7 @@
 
 /**
  *@addtogroup GAP_constants GAP Constants
- *@brief Constants for GAP layer
+ * Constants for GAP layer
  *@{
  */
 
@@ -456,8 +456,8 @@
  * @name Characteristic value lengths
  * @{
  */
-#define APPEARANCE_CHAR_LEN                     (2)
-#define PERIPHERAL_PREFERRED_CONN_PARAMS_CHAR_LEN (8)
+#define APPEARANCE_CHAR_LEN                         (2)
+#define PERIPHERAL_PREFERRED_CONN_PARAMS_CHAR_LEN   (8)
 #define CENTRAL_ADDRESS_RESOLUTION_CHAR_LEN         (1)
 /**
  * @}
@@ -469,9 +469,9 @@
  * @{
  */
 
-#define AD_TYPE_FLAGS                   (0x01)
+#define AD_TYPE_FLAGS                           (0x01)
 
-#define AD_TYPE_16_BIT_SERV_UUID          (0x02)
+#define AD_TYPE_16_BIT_SERV_UUID                (0x02)
 #define AD_TYPE_16_BIT_SERV_UUID_CMPLT_LIST     (0x03)
 #define AD_TYPE_32_BIT_SERV_UUID                (0x04)
 #define AD_TYPE_32_BIT_SERV_UUID_CMPLT_LIST     (0x05)
@@ -554,8 +554,8 @@
  * Values for Operation parameter (see aci_gap_set_advertising_data()).
  * @{
  */
-#define ADV_COMPLETE_DATA           (0x03)
-#define ADV_UNCHANGED_DATA            (0x04)
+#define ADV_COMPLETE_DATA               (0x03)
+#define ADV_UNCHANGED_DATA              (0x04)
 /**
  * @}
  */
@@ -688,8 +688,8 @@
  * @name Authentication requirements
  * @{
  */
-#define BONDING                (0x01)
-#define NO_BONDING         (0x00)
+#define BONDING                                                 0x01
+#define NO_BONDING                                              0x00
 /**
  * @}
  */
@@ -772,12 +772,12 @@
 /**
  * @anchor pairing_failed_codes
  * @name Pairing failed error codes
- * Error codes in @ref aci_gap_pairing_complete_event event
+ * Error codes in @ref aci_gap_pairing_complete_event_rp0 event
  * @{
  */
-#define SM_PAIRING_SUCCESS              (0x00)
-#define SM_PAIRING_TIMEOUT              (0x01)
-#define SM_PAIRING_FAILED               (0x02)
+#define SM_PAIRING_SUCCESS                      (0x00)
+#define SM_PAIRING_TIMEOUT                      (0x01)
+#define SM_PAIRING_FAILED                       (0x02)
 /**
  * @}
  */
@@ -785,7 +785,7 @@
 /**
  * @anchor secure_connections_support
  * @name Secure connection support option code
- * Error codes in @ref aci_gap_set_authentication_requirement API
+ * Error codes in @ref aci_gap_set_security_requirements()
  * @{
  */
 #define GAP_SC_NOT_SUPPORTED (0x00) /* Not supported */
@@ -799,7 +799,7 @@
 /**
  * @anchor keypress_support
  * @name Secure connection key press notification option code
- * Error codes in @ref aci_gap_set_authentication_requirement API
+ * Error codes in @ref aci_gap_set_security_requirements()
  * @{
  */
 #define GAP_KEYPRESS_NOT_SUPPORTED (0x00)
@@ -951,7 +951,7 @@
  */
 #define GATT_DONT_NOTIFY_EVENTS                       (0x00) /**< Do not notify events. */
 #define GATT_NOTIFY_ATTRIBUTE_WRITE                   (0x01) /**< The application will be notified when a client writes to this attribute.
-                                                                  An @ref aci_gatt_srv_attribute_modified_event will be issued. */
+                                                                  An @ref aci_gatt_srv_attribute_modified_event_rp0 will be issued. */
 #define GATT_NOTIFY_WRITE_REQ_AND_WAIT_FOR_APPL_RESP  (0x02) /**< The application will be notified when a write request, a write cmd
                                                                     or a signed write cmd are received by the server for this attribute.*/
 #define GATT_NOTIFY_READ_REQ_AND_WAIT_FOR_APPL_RESP   (0x04) /**< The application will be notified when a read request of any type is
@@ -1043,13 +1043,13 @@ typedef PACKED(struct) _charactFormat {
  */
 /**
  *@addtogroup L2CAP_constants L2CAP Constants
- *@brief Constants for L2CAP layer.
+ * Constants for L2CAP layer.
  *@{
  */
 
 /**
- *@name L2CAP Connection Event Type
- *@see aci_l2cap_cfc_connection_event
+ *@name L2CAP Channel Type
+ *@see @ref aci_l2cap_cos_connection_req_event_rp0
  *@{
  */
 #define L2CAP_CONN_REQ                 0
