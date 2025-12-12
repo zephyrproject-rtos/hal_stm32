@@ -179,35 +179,39 @@ typedef struct
 
 /** @defgroup CORTEX_MPU_Region_Size CORTEX MPU Region Size
   * @{
+  *
+  * @brief MPU region size encoding:
+  * Size (Bytes) = 2^(MPU_REGION_SIZE + 1),
+  * where MPU_REGION_SIZE represents one of the values defined below.
   */
-#define MPU_REGION_SIZE_32B             0x04U
-#define MPU_REGION_SIZE_64B             0x05U
-#define MPU_REGION_SIZE_128B            0x06U
-#define MPU_REGION_SIZE_256B            0x07U
-#define MPU_REGION_SIZE_512B            0x08U
-#define MPU_REGION_SIZE_1KB             0x09U
-#define MPU_REGION_SIZE_2KB             0x0AU
-#define MPU_REGION_SIZE_4KB             0x0BU
-#define MPU_REGION_SIZE_8KB             0x0CU
-#define MPU_REGION_SIZE_16KB            0x0DU
-#define MPU_REGION_SIZE_32KB            0x0EU
-#define MPU_REGION_SIZE_64KB            0x0FU
-#define MPU_REGION_SIZE_128KB           0x10U
-#define MPU_REGION_SIZE_256KB           0x11U
-#define MPU_REGION_SIZE_512KB           0x12U
-#define MPU_REGION_SIZE_1MB             0x13U
-#define MPU_REGION_SIZE_2MB             0x14U
-#define MPU_REGION_SIZE_4MB             0x15U
-#define MPU_REGION_SIZE_8MB             0x16U
-#define MPU_REGION_SIZE_16MB            0x17U
-#define MPU_REGION_SIZE_32MB            0x18U
-#define MPU_REGION_SIZE_64MB            0x19U
-#define MPU_REGION_SIZE_128MB           0x1AU
-#define MPU_REGION_SIZE_256MB           0x1BU
-#define MPU_REGION_SIZE_512MB           0x1CU
-#define MPU_REGION_SIZE_1GB             0x1DU
-#define MPU_REGION_SIZE_2GB             0x1EU
-#define MPU_REGION_SIZE_4GB             0x1FU
+#define MPU_REGION_SIZE_32B             0x04U /* 32 Bytes */
+#define MPU_REGION_SIZE_64B             0x05U /* 64 Bytes */
+#define MPU_REGION_SIZE_128B            0x06U /* 128 Bytes */
+#define MPU_REGION_SIZE_256B            0x07U /* 256 Bytes */
+#define MPU_REGION_SIZE_512B            0x08U /* 512 Bytes */
+#define MPU_REGION_SIZE_1KB             0x09U /* 1 Kilobyte (1024 Bytes) */
+#define MPU_REGION_SIZE_2KB             0x0AU /* 2 Kilobytes */
+#define MPU_REGION_SIZE_4KB             0x0BU /* 4 Kilobytes */
+#define MPU_REGION_SIZE_8KB             0x0CU /* 8 Kilobytes */
+#define MPU_REGION_SIZE_16KB            0x0DU /* 16 Kilobytes */
+#define MPU_REGION_SIZE_32KB            0x0EU /* 32 Kilobytes */
+#define MPU_REGION_SIZE_64KB            0x0FU /* 64 Kilobytes */
+#define MPU_REGION_SIZE_128KB           0x10U /* 128 Kilobytes */
+#define MPU_REGION_SIZE_256KB           0x11U /* 256 Kilobytes */
+#define MPU_REGION_SIZE_512KB           0x12U /* 512 Kilobytes */
+#define MPU_REGION_SIZE_1MB             0x13U /* 1 Megabyte (1024 KB) */
+#define MPU_REGION_SIZE_2MB             0x14U /* 2 Megabytes */
+#define MPU_REGION_SIZE_4MB             0x15U /* 4 Megabytes */
+#define MPU_REGION_SIZE_8MB             0x16U /* 8 Megabytes */
+#define MPU_REGION_SIZE_16MB            0x17U /* 16 Megabytes */
+#define MPU_REGION_SIZE_32MB            0x18U /* 32 Megabytes */
+#define MPU_REGION_SIZE_64MB            0x19U /* 64 Megabytes */
+#define MPU_REGION_SIZE_128MB           0x1AU /* 128 Megabytes */
+#define MPU_REGION_SIZE_256MB           0x1BU /* 256 Megabytes */
+#define MPU_REGION_SIZE_512MB           0x1CU /* 512 Megabytes */
+#define MPU_REGION_SIZE_1GB             0x1DU /* 1 Gigabyte (1024 MB) */
+#define MPU_REGION_SIZE_2GB             0x1EU /* 2 Gigabytes */
+#define MPU_REGION_SIZE_4GB             0x1FU /* 4 Gigabytes (maximum region size) */
 /**
   * @}
   */

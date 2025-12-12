@@ -199,7 +199,7 @@ void LL_RCC_DeInit(void)
 
   /* Reset PLLCKSELR register to default value */
   LL_RCC_WriteReg(PLLCKSELR, \
-                  (32U << RCC_PLLCKSELR_DIVM1_Pos) | (32U << RCC_PLLCKSELR_DIVM2_Pos) | (32U << RCC_PLLCKSELR_DIVM3_Pos));
+                  (32UL << RCC_PLLCKSELR_DIVM1_Pos) | (32UL << RCC_PLLCKSELR_DIVM2_Pos) | (32UL << RCC_PLLCKSELR_DIVM3_Pos));
 
   /* Reset PLLCFGR register to default value */
   LL_RCC_WriteReg(PLLCFGR, 0U);

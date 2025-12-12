@@ -59,7 +59,7 @@ extern "C" {
   */
 #define LL_SBS_REGISTER_PINPOS_SHFT   16U                                 /*!< Define used to shift pin position in EXTICR register */
 #define LL_SBS_HDPL_INCREMENT_VALUE   0x6AU                               /*!< Define used for the HDPL increment */
-#define LL_SBS_DBG_UNLOCK             (0xB4U << SBS_DBGCR_DBG_UNLOCK_Pos) /*!< Define used to unlock debug */
+#define LL_SBS_DBG_UNLOCK             (0xB4UL << SBS_DBGCR_DBG_UNLOCK_Pos) /*!< Define used to unlock debug */
 #define LL_SBS_ACCESS_PORT_UNLOCK     0xB4U                               /*!< Define used to unlock access port */
 #define LL_SBS_DBG_CONFIG_LOCK        0xC3U                               /*!< Define used to lock debug configuration */
 #define LL_SBS_DBG_CONFIG_UNLOCK      0xB4U                               /*!< Define used to unlock debug configuration */
@@ -181,22 +181,22 @@ extern "C" {
 /** @defgroup SYSTEM_LL_EC_SBS_EXTI_LINE SBS EXTI LINE
   * @{
   */
-#define LL_SBS_EXTI_LINE0             ((0U  << LL_SBS_REGISTER_PINPOS_SHFT) | 0U)  /*!< EXTI_POSITION_0  | EXTICR[0] */
-#define LL_SBS_EXTI_LINE1             ((4U  << LL_SBS_REGISTER_PINPOS_SHFT) | 0U)  /*!< EXTI_POSITION_8  | EXTICR[0] */
-#define LL_SBS_EXTI_LINE2             ((8U  << LL_SBS_REGISTER_PINPOS_SHFT) | 0U)  /*!< EXTI_POSITION_16 | EXTICR[0] */
-#define LL_SBS_EXTI_LINE3             ((12U << LL_SBS_REGISTER_PINPOS_SHFT) | 0U)  /*!< EXTI_POSITION_24 | EXTICR[0] */
-#define LL_SBS_EXTI_LINE4             ((0U  << LL_SBS_REGISTER_PINPOS_SHFT) | 1U)  /*!< EXTI_POSITION_0  | EXTICR[1] */
-#define LL_SBS_EXTI_LINE5             ((4U  << LL_SBS_REGISTER_PINPOS_SHFT) | 1U)  /*!< EXTI_POSITION_8  | EXTICR[1] */
-#define LL_SBS_EXTI_LINE6             ((8U  << LL_SBS_REGISTER_PINPOS_SHFT) | 1U)  /*!< EXTI_POSITION_16 | EXTICR[1] */
-#define LL_SBS_EXTI_LINE7             ((12U << LL_SBS_REGISTER_PINPOS_SHFT) | 1U)  /*!< EXTI_POSITION_24 | EXTICR[1] */
-#define LL_SBS_EXTI_LINE8             ((0U  << LL_SBS_REGISTER_PINPOS_SHFT) | 2U)  /*!< EXTI_POSITION_0  | EXTICR[2] */
-#define LL_SBS_EXTI_LINE9             ((4U  << LL_SBS_REGISTER_PINPOS_SHFT) | 2U)  /*!< EXTI_POSITION_8  | EXTICR[2] */
-#define LL_SBS_EXTI_LINE10            ((8U  << LL_SBS_REGISTER_PINPOS_SHFT) | 2U)  /*!< EXTI_POSITION_16 | EXTICR[2] */
-#define LL_SBS_EXTI_LINE11            ((12U << LL_SBS_REGISTER_PINPOS_SHFT) | 2U)  /*!< EXTI_POSITION_24 | EXTICR[2] */
-#define LL_SBS_EXTI_LINE12            ((0U  << LL_SBS_REGISTER_PINPOS_SHFT) | 3U)  /*!< EXTI_POSITION_0  | EXTICR[3] */
-#define LL_SBS_EXTI_LINE13            ((4U  << LL_SBS_REGISTER_PINPOS_SHFT) | 3U)  /*!< EXTI_POSITION_8  | EXTICR[3] */
-#define LL_SBS_EXTI_LINE14            ((8U  << LL_SBS_REGISTER_PINPOS_SHFT) | 3U)  /*!< EXTI_POSITION_16 | EXTICR[3] */
-#define LL_SBS_EXTI_LINE15            ((12U << LL_SBS_REGISTER_PINPOS_SHFT) | 3U)  /*!< EXTI_POSITION_24 | EXTICR[3] */
+#define LL_SBS_EXTI_LINE0             ((0UL  << LL_SBS_REGISTER_PINPOS_SHFT) | 0U)  /*!< EXTI_POSITION_0  | EXTICR[0] */
+#define LL_SBS_EXTI_LINE1             ((4UL  << LL_SBS_REGISTER_PINPOS_SHFT) | 0U)  /*!< EXTI_POSITION_8  | EXTICR[0] */
+#define LL_SBS_EXTI_LINE2             ((8UL  << LL_SBS_REGISTER_PINPOS_SHFT) | 0U)  /*!< EXTI_POSITION_16 | EXTICR[0] */
+#define LL_SBS_EXTI_LINE3             ((12UL << LL_SBS_REGISTER_PINPOS_SHFT) | 0U)  /*!< EXTI_POSITION_24 | EXTICR[0] */
+#define LL_SBS_EXTI_LINE4             ((0UL  << LL_SBS_REGISTER_PINPOS_SHFT) | 1U)  /*!< EXTI_POSITION_0  | EXTICR[1] */
+#define LL_SBS_EXTI_LINE5             ((4UL  << LL_SBS_REGISTER_PINPOS_SHFT) | 1U)  /*!< EXTI_POSITION_8  | EXTICR[1] */
+#define LL_SBS_EXTI_LINE6             ((8UL  << LL_SBS_REGISTER_PINPOS_SHFT) | 1U)  /*!< EXTI_POSITION_16 | EXTICR[1] */
+#define LL_SBS_EXTI_LINE7             ((12UL << LL_SBS_REGISTER_PINPOS_SHFT) | 1U)  /*!< EXTI_POSITION_24 | EXTICR[1] */
+#define LL_SBS_EXTI_LINE8             ((0UL  << LL_SBS_REGISTER_PINPOS_SHFT) | 2U)  /*!< EXTI_POSITION_0  | EXTICR[2] */
+#define LL_SBS_EXTI_LINE9             ((4UL  << LL_SBS_REGISTER_PINPOS_SHFT) | 2U)  /*!< EXTI_POSITION_8  | EXTICR[2] */
+#define LL_SBS_EXTI_LINE10            ((8UL  << LL_SBS_REGISTER_PINPOS_SHFT) | 2U)  /*!< EXTI_POSITION_16 | EXTICR[2] */
+#define LL_SBS_EXTI_LINE11            ((12UL << LL_SBS_REGISTER_PINPOS_SHFT) | 2U)  /*!< EXTI_POSITION_24 | EXTICR[2] */
+#define LL_SBS_EXTI_LINE12            ((0UL  << LL_SBS_REGISTER_PINPOS_SHFT) | 3U)  /*!< EXTI_POSITION_0  | EXTICR[3] */
+#define LL_SBS_EXTI_LINE13            ((4UL  << LL_SBS_REGISTER_PINPOS_SHFT) | 3U)  /*!< EXTI_POSITION_8  | EXTICR[3] */
+#define LL_SBS_EXTI_LINE14            ((8UL  << LL_SBS_REGISTER_PINPOS_SHFT) | 3U)  /*!< EXTI_POSITION_16 | EXTICR[3] */
+#define LL_SBS_EXTI_LINE15            ((12UL << LL_SBS_REGISTER_PINPOS_SHFT) | 3U)  /*!< EXTI_POSITION_24 | EXTICR[3] */
 /**
   * @}
   */

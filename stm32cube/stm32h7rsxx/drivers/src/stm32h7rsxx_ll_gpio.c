@@ -49,7 +49,7 @@
 /** @addtogroup GPIO_LL_Private_Macros
   * @{
   */
-#define IS_LL_GPIO_PIN(__VALUE__)          (((0x00u) < (__VALUE__)) && ((__VALUE__) <= (LL_GPIO_PIN_ALL)))
+#define IS_LL_GPIO_PIN(__VALUE__)          (((0x00U) < (__VALUE__)) && ((__VALUE__) <= (LL_GPIO_PIN_ALL)))
 
 #define IS_LL_GPIO_MODE(__VALUE__)         (((__VALUE__) == LL_GPIO_MODE_INPUT)     ||\
                                             ((__VALUE__) == LL_GPIO_MODE_OUTPUT)    ||\
@@ -100,7 +100,7 @@
   */
 
 /**
-  * @brief  De-initialize GPIO registers (Registers restored to their default values).
+  * @brief  De-initialize GPIO configuration registers (Registers restored to their default values).
   * @param  GPIOx GPIO Port
   * @retval An ErrorStatus enumeration value:
   *          - SUCCESS: GPIO registers are de-initialized
@@ -207,12 +207,12 @@ ErrorStatus LL_GPIO_Init(GPIO_TypeDef *GPIOx, const LL_GPIO_InitTypeDef *GPIO_In
   pinpos = POSITION_VAL(GPIO_InitStruct->Pin);
 
   /* Configure the port pins */
-  while (((GPIO_InitStruct->Pin) >> pinpos) != 0x00u)
+  while (((GPIO_InitStruct->Pin) >> pinpos) != 0x00U)
   {
     /* Get current io position */
-    currentpin = (GPIO_InitStruct->Pin) & (0x00000001uL << pinpos);
+    currentpin = (GPIO_InitStruct->Pin) & (0x00000001UL << pinpos);
 
-    if (currentpin != 0x00u)
+    if (currentpin != 0x00U)
     {
       if ((GPIO_InitStruct->Mode == LL_GPIO_MODE_OUTPUT) || (GPIO_InitStruct->Mode == LL_GPIO_MODE_ALTERNATE))
       {

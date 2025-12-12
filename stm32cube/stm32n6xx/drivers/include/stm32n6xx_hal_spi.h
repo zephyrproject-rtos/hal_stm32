@@ -986,7 +986,18 @@ uint32_t             HAL_SPI_GetError(const SPI_HandleTypeDef *hspi);
   * @brief  DataSize for limited instance
   */
 #define IS_SPI_LIMITED_DATASIZE(DATASIZE)          (((DATASIZE) == SPI_DATASIZE_16BIT) || \
-                                                    ((DATASIZE) == SPI_DATASIZE_8BIT))
+                                                    ((DATASIZE) == SPI_DATASIZE_15BIT) || \
+                                                    ((DATASIZE) == SPI_DATASIZE_14BIT) || \
+                                                    ((DATASIZE) == SPI_DATASIZE_13BIT) || \
+                                                    ((DATASIZE) == SPI_DATASIZE_12BIT) || \
+                                                    ((DATASIZE) == SPI_DATASIZE_11BIT) || \
+                                                    ((DATASIZE) == SPI_DATASIZE_10BIT) || \
+                                                    ((DATASIZE) == SPI_DATASIZE_9BIT)  || \
+                                                    ((DATASIZE) == SPI_DATASIZE_8BIT)  || \
+                                                    ((DATASIZE) == SPI_DATASIZE_7BIT)  || \
+                                                    ((DATASIZE) == SPI_DATASIZE_6BIT)  || \
+                                                    ((DATASIZE) == SPI_DATASIZE_5BIT)  || \
+                                                    ((DATASIZE) == SPI_DATASIZE_4BIT))
 
 #define IS_SPI_FIFOTHRESHOLD(THRESHOLD)            (((THRESHOLD) == SPI_FIFO_THRESHOLD_01DATA) || \
                                                     ((THRESHOLD) == SPI_FIFO_THRESHOLD_02DATA) || \
@@ -1084,6 +1095,8 @@ uint32_t             HAL_SPI_GetError(const SPI_HandleTypeDef *hspi);
                                                     ((LENGTH) == SPI_CRC_LENGTH_4BIT))
 
 
+#define IS_SPI_LIMITED_TRANSFER_SIZE(SIZE)         (((SIZE) < 0xFFFFU) && ((SIZE) != 0U))
+
 /**
   * @brief  CRC Length for limited instance
   */
@@ -1108,6 +1121,8 @@ uint32_t             HAL_SPI_GetError(const SPI_HandleTypeDef *hspi);
 
 #define IS_SPI_MASTER_RX_AUTOSUSP(MODE)            (((MODE) == SPI_MASTER_RX_AUTOSUSP_DISABLE) || \
                                                     ((MODE) == SPI_MASTER_RX_AUTOSUSP_ENABLE))
+
+#define IS_SPI_TRANSFER_SIZE(SIZE)                 (((SIZE) < 0xFFFFU) && ((SIZE) != 0U))
 /**
   * @}
   */

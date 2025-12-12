@@ -111,3 +111,4 @@ zephyr_library_sources_ifdef(CONFIG_USE_STM32_LL_UCPD drivers/src/stm32h7rsxx_ll
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_LL_USART drivers/src/stm32h7rsxx_ll_usart.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_LL_USB drivers/src/stm32h7rsxx_ll_usb.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_LL_UTILS drivers/src/stm32h7rsxx_ll_utils.c)
+zephyr_library_sources_ifdef(CONFIG_USE_STM32_UTIL_I3C drivers/src/stm32h7rsxx_util_i3c.c)

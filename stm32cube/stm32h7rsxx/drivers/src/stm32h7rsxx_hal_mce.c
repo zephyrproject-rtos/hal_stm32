@@ -344,14 +344,15 @@ HAL_StatusTypeDef HAL_MCE_ConfigAESContext(MCE_HandleTypeDef *hmce, const MCE_AE
     address = (__IO uint32_t)((uint32_t)hmce->Instance + 0x240UL + \
                               (0x30UL * ((ContextIndex - MCE_CONTEXT1) >> MCE_REGCR_CTXID_Pos)));
     p_context = (MCE_Context_TypeDef *)address;
+
+
     /* Check cipher context is not locked */
-    if (((p_context->CCCFGR & MCE_CCCFGR_CCLOCK) != MCE_CCCFGR_CCLOCK))
+    if ((p_context->CCCFGR & MCE_CCCFGR_CCLOCK) != MCE_CCCFGR_CCLOCK)
     {
       if ((p_context->CCCFGR & MCE_CCCFGR_KEYLOCK) != MCE_CCCFGR_KEYLOCK)
       {
         /* Take Lock */
         __HAL_LOCK(hmce);
-
         /* Write nonce */
         WRITE_REG(p_context->CCNR0, AESConfig->Nonce[0]);
         WRITE_REG(p_context->CCNR1, AESConfig->Nonce[1]);
@@ -882,7 +883,7 @@ __weak void HAL_MCE_MspDeInit(MCE_HandleTypeDef *hmce)
 HAL_StatusTypeDef HAL_MCE_GetAESContextCRCKey(const MCE_HandleTypeDef *hmce, uint32_t *pCRCKey, uint32_t ContextIndex)
 {
   HAL_StatusTypeDef ret = HAL_OK;
-  MCE_Context_TypeDef *p_context;
+  const MCE_Context_TypeDef *p_context;
   __IO uint32_t address;
 
   /* Check the parameters */

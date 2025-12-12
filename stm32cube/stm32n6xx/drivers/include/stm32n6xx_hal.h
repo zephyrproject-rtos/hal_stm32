@@ -79,7 +79,7 @@ extern HAL_TickFreqTypeDef      uwTickFreq;
   * @brief STM32N6xx HAL Driver version number
   */
 #define __STM32N6xx_HAL_VERSION_MAIN   (0x01UL) /*!< [31:24] main version */
-#define __STM32N6xx_HAL_VERSION_SUB1   (0x02UL) /*!< [23:16] sub1 version */
+#define __STM32N6xx_HAL_VERSION_SUB1   (0x03UL) /*!< [23:16] sub1 version */
 #define __STM32N6xx_HAL_VERSION_SUB2   (0x00UL) /*!< [15:8]  sub2 version */
 #define __STM32N6xx_HAL_VERSION_RC     (0x00UL) /*!< [7:0]  release candidate */
 #define __STM32N6xx_HAL_VERSION         ((__STM32N6xx_HAL_VERSION_MAIN << 24U)  \
@@ -279,6 +279,16 @@ and DCAICRR */
                                            SYSCFG_CBR_BKPRAML    |\
                                            SYSCFG_CBR_CM55CACHEL |\
                                            SYSCFG_CBR_CM55TCML)
+
+/**
+  * @}
+  */
+
+/** @defgroup FMC_SwapBankMapping_Config FMC SwapBankMapping Config
+  * @{
+  */
+#define FMC_SWAPBANK_MODE0              (0x00000000U)       /*!< FMC memory default mapping is used */
+#define FMC_SWAPBANK_MODE1              FMC_CFGR_BMAP_0     /*!< FMC SDRAM bank1 and NOR/SRAM/PSRAM bank are swapped */
 
 /**
   * @}
@@ -762,6 +772,15 @@ and DCAICRR */
   * @}
   */
 
+/** @defgroup FMC_Private_Macros FMC Private Macros
+  * @{
+  */
+#define IS_FMC_SWAPBANK_MODE(__MODE__) (((__MODE__) == FMC_SWAPBANK_MODE0) || \
+                                        ((__MODE__) == FMC_SWAPBANK_MODE1))
+/**
+  * @}
+  */
+
 /* Exported functions --------------------------------------------------------*/
 
 /** @addtogroup HAL_Exported_Functions
@@ -798,7 +817,9 @@ void HAL_SuspendTick(void);
 void HAL_ResumeTick(void);
 uint32_t HAL_GetHalVersion(void);
 uint32_t HAL_GetREVID(void);
+#if defined(CPU_IN_SECURE_STATE)
 uint32_t HAL_GetDEVID(void);
+#endif /* CPU_IN_SECURE_STATE */
 uint32_t HAL_GetUIDw0(void);
 uint32_t HAL_GetUIDw1(void);
 uint32_t HAL_GetUIDw2(void);
@@ -975,6 +996,18 @@ void HAL_SYSCFG_DisableInterleavingCpuRam(void);
 uint32_t HAL_SYSCFG_GetBootPinConnection(uint32_t BootId);
 
 uint32_t HAL_SYSCFG_GetAddressWritePostingBuffer(void);
+
+/** @addtogroup HAL_Exported_Functions_Group5
+  * @{
+  */
+
+/* FMC Configuration functions  ************************************************/
+void HAL_FMC_SetBankSwapConfig(uint32_t BankMapConfig);
+uint32_t HAL_FMC_GetBankSwapConfig(void);
+
+/**
+  * @}
+  */
 
 /**
   * @}

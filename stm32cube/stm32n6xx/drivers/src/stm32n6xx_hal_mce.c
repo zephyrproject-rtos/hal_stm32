@@ -73,9 +73,6 @@
 #define MCE_TIMEOUT_VALUE  255U   /* Internal timeout for keys valid flag */
 #define MCE1_CONTEXT_NB    2U
 /* Private macros ------------------------------------------------------------*/
-
-#define IS_MCE_AES_INSTANCE(INSTANCE) ((INSTANCE) == MCE1)
-
 /* Private variables ---------------------------------------------------------*/
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
@@ -219,8 +216,6 @@ HAL_StatusTypeDef HAL_MCE_DeInit(MCE_HandleTypeDef *hmce)
   /* Return function status */
   return HAL_OK;
 }
-
-
 /** *********  main sequence functions : set the configuration of regions, AES context and Noekeon config *********/
 
 /**
@@ -318,8 +313,6 @@ HAL_StatusTypeDef HAL_MCE_ConfigNoekeon(MCE_HandleTypeDef *hmce, const MCE_Noeke
   }
   return ret;
 }
-
-
 /**
   * @brief  Set context configuration.
   * @param  hmce pointer to an MCE_HandleTypeDef structure that contains
@@ -335,60 +328,134 @@ HAL_StatusTypeDef HAL_MCE_ConfigAESContext(MCE_HandleTypeDef *hmce, const MCE_AE
   MCE_Context_TypeDef *p_context;
   uint32_t *p_key;
   __IO uint32_t address;
-
+  uint32_t tickstart;
   /* Check the parameters */
   assert_param(IS_MCE_ALL_INSTANCE(hmce->Instance));
   assert_param(IS_MCE_CONTEXT(hmce->Instance, ContextIndex));
-
-
+  tickstart = HAL_GetTick();
   /* If global lock is set or no configuration provided, context cannot be configured */
-  if (((hmce->Instance->CR & MCE_CR_GLOCK) != MCE_CR_GLOCK) && (AESConfig != NULL) && \
-      ((ContextIndex == MCE_CONTEXT1) || (ContextIndex == MCE_CONTEXT2)))
+  if (((hmce->Instance->CR & MCE_CR_GLOCK) != MCE_CR_GLOCK) && (AESConfig != NULL))
   {
-    address = (__IO uint32_t)((uint32_t)hmce->Instance + 0x240UL + \
-                              (0x30UL * ((ContextIndex - MCE_CONTEXT1) >> MCE_REGCR_CTXID_Pos)));
-    p_context = (MCE_Context_TypeDef *)address;
-    MODIFY_REG(hmce->Instance->CR, MCE_CR_CIPHERSEL, AESConfig->KeySize);
-    /* Check cipher context is not locked */
-    if ((p_context->CCCFGR & MCE_CCCFGR_CCLOCK) != MCE_CCCFGR_CCLOCK)
+    if ((ContextIndex == MCE_CONTEXT1) || (ContextIndex == MCE_CONTEXT2))
     {
-      if ((p_context->CCCFGR & MCE_CCCFGR_KEYLOCK) != MCE_CCCFGR_KEYLOCK)
+      address = (__IO uint32_t)((uint32_t)hmce->Instance + 0x240UL + \
+                                (0x30UL * ((ContextIndex - MCE_CONTEXT1) >> MCE_REGCR_CTXID_Pos)));
+      p_context = (MCE_Context_TypeDef *)address;
+      MODIFY_REG(hmce->Instance->CR, MCE_CR_CIPHERSEL, AESConfig->KeySize);
+
+      /* Check cipher context is not locked */
+      if ((p_context->CCCFGR & MCE_CCCFGR_CCLOCK) != MCE_CCCFGR_CCLOCK)
       {
-        /* Take Lock */
-        __HAL_LOCK(hmce);
-
-        /* Write nonce */
-        WRITE_REG(p_context->CCNR0, AESConfig->Nonce[0]);
-        WRITE_REG(p_context->CCNR1, AESConfig->Nonce[1]);
-
-        if (AESConfig->pKey != NULL)
+        if ((p_context->CCCFGR & MCE_CCCFGR_KEYLOCK) != MCE_CCCFGR_KEYLOCK)
         {
-          p_key = AESConfig->pKey;
-          WRITE_REG(p_context->CCKEYR0, *p_key);
-          p_key++;
-          WRITE_REG(p_context->CCKEYR1, *p_key);
-          p_key++;
-          WRITE_REG(p_context->CCKEYR2, *p_key);
-          p_key++;
-          WRITE_REG(p_context->CCKEYR3, *p_key);
+          /* Take Lock */
+          __HAL_LOCK(hmce);
+          MODIFY_REG(p_context->CCCFGR, MCE_CCCFGR_MODE, (uint32_t) AESConfig->Cipher_Mode);
+          /* Write nonce */
+          WRITE_REG(p_context->CCNR0, AESConfig->Nonce[0]);
+          WRITE_REG(p_context->CCNR1, AESConfig->Nonce[1]);
+
+          if (AESConfig->pKey != NULL)
+          {
+            p_key = AESConfig->pKey;
+            WRITE_REG(p_context->CCKEYR0, *p_key);
+            p_key++;
+            WRITE_REG(p_context->CCKEYR1, *p_key);
+            p_key++;
+            WRITE_REG(p_context->CCKEYR2, *p_key);
+            p_key++;
+            WRITE_REG(p_context->CCKEYR3, *p_key);
+          }
+          /* Write version */
+          MODIFY_REG(p_context->CCCFGR, MCE_CCCFGR_VERSION, ((uint32_t) AESConfig->Version) << MCE_CCCFGR_VERSION_Pos);
+          ret = HAL_OK;
+          /* Release Lock */
+          __HAL_UNLOCK(hmce);
+
         }
-        /* Compute theoretically expected CRC and compare it with that reported by the peripheral */
+        else
+        {
+          ret = HAL_ERROR;
+        }
+      }
+    }
+    if (ContextIndex == MCE_NO_CONTEXT)
+    {
+      if (AESConfig->KeySize == MCE_AES_256)
+      {
+        MODIFY_REG(hmce->Instance->CR, MCE_CR_CIPHERSEL, MCE_AES_256);
 
-        /* Write version */
-        MODIFY_REG(p_context->CCCFGR, MCE_CCCFGR_VERSION, ((uint32_t) AESConfig->Version) << MCE_CCCFGR_VERSION_Pos);
+        if (AESConfig->Cipher_Mode == MCE_CONTEXT_BLOCK_CIPHER)
+        {
+          if ((hmce->Instance->SR & MCE_SR_MKVALID) != 0U)
+          {
+            WRITE_REG(hmce->Instance->MKEYR0, 0U);
+          }
+          /* Set Key */
+          WRITE_REG(hmce->Instance->MKEYR0, AESConfig->pKey[0]);
+          WRITE_REG(hmce->Instance->MKEYR1, AESConfig->pKey[1]);
+          WRITE_REG(hmce->Instance->MKEYR2, AESConfig->pKey[2]);
+          WRITE_REG(hmce->Instance->MKEYR3, AESConfig->pKey[3]);
+          WRITE_REG(hmce->Instance->MKEYR4, AESConfig->pKey[4]);
+          WRITE_REG(hmce->Instance->MKEYR5, AESConfig->pKey[5]);
+          WRITE_REG(hmce->Instance->MKEYR6, AESConfig->pKey[6]);
+          WRITE_REG(hmce->Instance->MKEYR7, AESConfig->pKey[7]);
 
-        MODIFY_REG(p_context->CCCFGR, MCE_CCCFGR_MODE, (uint32_t) AESConfig->Cipher_Mode);
-        ret = HAL_OK;
 
-        /* Release Lock */
-        __HAL_UNLOCK(hmce);
+          while (HAL_IS_BIT_CLR(hmce->Instance->SR, MCE_SR_MKVALID))
+          {
+            /* Check for the Timeout */
+            if ((HAL_GetTick() - tickstart) > MCE_TIMEOUT_VALUE)
+            {
+
+              hmce->ErrorCode |= HAL_MCE_MASTER_KEY_ERROR;
+              ret = HAL_ERROR;
+              return ret;
+            }
+          }
+          ret = HAL_OK;
+        }
+        else if (AESConfig->Cipher_Mode == MCE_CONTEXT_FASTBLOCK_CIPHER)
+        {
+
+          /* If Fast Master Key valid flag is set, need to write dummy value in FMKEYRx to reset it */
+          if ((hmce->Instance->SR & MCE_SR_FMKVALID) != 0U)
+          {
+            WRITE_REG(hmce->Instance->FMKEYR0, 0U);
+          }
+
+          WRITE_REG(hmce->Instance->FMKEYR0, AESConfig->pKey[0]);
+          WRITE_REG(hmce->Instance->FMKEYR1, AESConfig->pKey[1]);
+          WRITE_REG(hmce->Instance->FMKEYR2, AESConfig->pKey[2]);
+          WRITE_REG(hmce->Instance->FMKEYR3, AESConfig->pKey[3]);
+          WRITE_REG(hmce->Instance->FMKEYR4, AESConfig->pKey[4]);
+          WRITE_REG(hmce->Instance->FMKEYR5, AESConfig->pKey[5]);
+          WRITE_REG(hmce->Instance->FMKEYR6, AESConfig->pKey[6]);
+          WRITE_REG(hmce->Instance->FMKEYR7, AESConfig->pKey[7]);
+
+          while (HAL_IS_BIT_CLR(hmce->Instance->SR, MCE_SR_FMKVALID))
+          {
+            /* Check for the Timeout */
+            if ((HAL_GetTick() - tickstart) > MCE_TIMEOUT_VALUE)
+            {
+              hmce->ErrorCode |= HAL_MCE_FASTMASTER_KEY_ERROR;
+              ret = HAL_ERROR;
+              return ret;
+            }
+          }
+          ret = HAL_OK;
+        }
+        else
+        {
+          hmce->ErrorCode |= HAL_MCE_CONTEXT_KEY_ERROR;
+          ret = HAL_ERROR;
+          return ret;
+        }
       }
     }
   }
   return ret;
 }
-
-
 /**
   * @brief  Set region configuration.
   * @param  hmce pointer to an MCE_HandleTypeDef structure that contains
@@ -890,7 +957,7 @@ HAL_StatusTypeDef HAL_MCE_GetAESContextCRCKey(const MCE_HandleTypeDef *hmce, uin
   __IO uint32_t address;
 
   /* Check the parameters */
-  assert_param(IS_MCE_AES_INSTANCE(hmce->Instance));
+  assert_param(IS_MCE_ALL_INSTANCE(hmce->Instance));
   assert_param(IS_MCE_CONTEXT(hmce->Instance, ContextIndex));
 
   if (*pCRCKey == 0x00U)

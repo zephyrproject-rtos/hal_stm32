@@ -787,7 +787,8 @@ HAL_StatusTypeDef HAL_RCCEx_PeriphCLKConfig(const RCC_PeriphCLKInitTypeDef  *Per
 
     /* Configure the ETH1 PTP clock source and divider */
     MODIFY_REG(RCC->CCIPR2, (RCC_CCIPR2_ETH1PTPDIV | RCC_CCIPR2_ETH1PTPSEL), \
-               (((PeriphClkInit->Eth1PtpDivider - 1U) << RCC_CCIPR2_ETH1PTPDIV_Pos) | PeriphClkInit->Eth1PtpClockSelection));
+               (((PeriphClkInit->Eth1PtpDivider - 1U) << RCC_CCIPR2_ETH1PTPDIV_Pos) | \
+                PeriphClkInit->Eth1PtpClockSelection));
   }
 
   /*---------------------- FDCAN configuration -------------------------------*/
@@ -2267,6 +2268,28 @@ HAL_StatusTypeDef HAL_RCCEx_PeriphCLKConfig(const RCC_PeriphCLKInitTypeDef  *Per
     /* Check the parameters */
     assert_param(IS_RCC_USBPHY1CLKSOURCE(PeriphClkInit->UsbPhy1ClockSelection));
 
+    if (PeriphClkInit->UsbPhy1ClockSelection == RCC_USBPHY1CLKSOURCE_IC15)
+    {
+      /* Check the parameters */
+      assert_param(IS_RCC_ICCLKSOURCE(PeriphClkInit->ICSelection[RCC_IC15].ClockSelection));
+      assert_param(IS_RCC_ICCLKDIVIDER(PeriphClkInit->ICSelection[RCC_IC15].ClockDivider));
+
+      /* Set IC15 configuration */
+      MODIFY_REG(RCC->IC15CFGR, RCC_IC15CFGR_IC15SEL | RCC_IC15CFGR_IC15INT,
+                 PeriphClkInit->ICSelection[RCC_IC15].ClockSelection | \
+                 ((PeriphClkInit->ICSelection[RCC_IC15].ClockDivider - 1U) << RCC_IC15CFGR_IC15INT_Pos));
+
+      LL_RCC_IC15_Enable();
+    }
+    else if (PeriphClkInit->UsbPhy1ClockSelection == RCC_USBPHY1CLKSOURCE_CLKP)
+    {
+      LL_RCC_CLKP_Enable();
+    }
+    else
+    {
+      /* No specific enable to do on other sources */
+    }
+
     /* Set the source of USBPHY1 clock*/
     __HAL_RCC_USBPHY1_CONFIG(PeriphClkInit->UsbPhy1ClockSelection);
   }
@@ -2276,6 +2299,28 @@ HAL_StatusTypeDef HAL_RCCEx_PeriphCLKConfig(const RCC_PeriphCLKInitTypeDef  *Per
   {
     /* Check the parameters */
     assert_param(IS_RCC_USBPHY2CLKSOURCE(PeriphClkInit->UsbPhy2ClockSelection));
+
+    if (PeriphClkInit->UsbPhy2ClockSelection == RCC_USBPHY2CLKSOURCE_IC15)
+    {
+      /* Check the parameters */
+      assert_param(IS_RCC_ICCLKSOURCE(PeriphClkInit->ICSelection[RCC_IC15].ClockSelection));
+      assert_param(IS_RCC_ICCLKDIVIDER(PeriphClkInit->ICSelection[RCC_IC15].ClockDivider));
+
+      /* Set IC15 configuration */
+      MODIFY_REG(RCC->IC15CFGR, RCC_IC15CFGR_IC15SEL | RCC_IC15CFGR_IC15INT,
+                 PeriphClkInit->ICSelection[RCC_IC15].ClockSelection | \
+                 ((PeriphClkInit->ICSelection[RCC_IC15].ClockDivider - 1U) << RCC_IC15CFGR_IC15INT_Pos));
+
+      LL_RCC_IC15_Enable();
+    }
+    else if (PeriphClkInit->UsbPhy2ClockSelection == RCC_USBPHY2CLKSOURCE_CLKP)
+    {
+      LL_RCC_CLKP_Enable();
+    }
+    else
+    {
+      /* No specific enable to do on other sources */
+    }
 
     /* Set the source of USBPHY2 clock*/
     __HAL_RCC_USBPHY2_CONFIG(PeriphClkInit->UsbPhy2ClockSelection);
@@ -2287,28 +2332,6 @@ HAL_StatusTypeDef HAL_RCCEx_PeriphCLKConfig(const RCC_PeriphCLKInitTypeDef  *Per
     /* Check the parameters */
     assert_param(IS_RCC_USBOTGHS1CLKSOURCE(PeriphClkInit->UsbOtgHs1ClockSelection));
 
-    if (PeriphClkInit->UsbOtgHs1ClockSelection == RCC_USBOTGHS1CLKSOURCE_IC15)
-    {
-      /* Check the parameters */
-      assert_param(IS_RCC_ICCLKSOURCE(PeriphClkInit->ICSelection[RCC_IC15].ClockSelection));
-      assert_param(IS_RCC_ICCLKDIVIDER(PeriphClkInit->ICSelection[RCC_IC15].ClockDivider));
-
-      /* Set IC15 configuration */
-      MODIFY_REG(RCC->IC15CFGR, RCC_IC15CFGR_IC15SEL | RCC_IC15CFGR_IC15INT,
-                 PeriphClkInit->ICSelection[RCC_IC15].ClockSelection | \
-                 ((PeriphClkInit->ICSelection[RCC_IC15].ClockDivider - 1U) << RCC_IC15CFGR_IC15INT_Pos));
-
-      LL_RCC_IC15_Enable();
-    }
-    else if (PeriphClkInit->UsbOtgHs1ClockSelection == RCC_USBOTGHS1CLKSOURCE_CLKP)
-    {
-      LL_RCC_CLKP_Enable();
-    }
-    else
-    {
-      /* No specific enable to do on other sources */
-    }
-
     /* Set the source of USBOTGHS1 clock */
     __HAL_RCC_USBOTGHS1_CONFIG(PeriphClkInit->UsbOtgHs1ClockSelection);
   }
@@ -2318,28 +2341,6 @@ HAL_StatusTypeDef HAL_RCCEx_PeriphCLKConfig(const RCC_PeriphCLKInitTypeDef  *Per
   {
     /* Check the parameters */
     assert_param(IS_RCC_USBOTGHS2CLKSOURCE(PeriphClkInit->UsbOtgHs2ClockSelection));
-
-    if (PeriphClkInit->UsbOtgHs2ClockSelection == RCC_USBOTGHS2CLKSOURCE_IC15)
-    {
-      /* Check the parameters */
-      assert_param(IS_RCC_ICCLKSOURCE(PeriphClkInit->ICSelection[RCC_IC15].ClockSelection));
-      assert_param(IS_RCC_ICCLKDIVIDER(PeriphClkInit->ICSelection[RCC_IC15].ClockDivider));
-
-      /* Set IC15 configuration */
-      MODIFY_REG(RCC->IC15CFGR, RCC_IC15CFGR_IC15SEL | RCC_IC15CFGR_IC15INT,
-                 PeriphClkInit->ICSelection[RCC_IC15].ClockSelection | \
-                 ((PeriphClkInit->ICSelection[RCC_IC15].ClockDivider - 1U) << RCC_IC15CFGR_IC15INT_Pos));
-
-      LL_RCC_IC15_Enable();
-    }
-    else if (PeriphClkInit->UsbOtgHs2ClockSelection == RCC_USBOTGHS2CLKSOURCE_CLKP)
-    {
-      LL_RCC_CLKP_Enable();
-    }
-    else
-    {
-      /* No specific enable to do on other sources */
-    }
 
     /* Set the source of USBOTGHS2 clock */
     __HAL_RCC_USBOTGHS2_CONFIG(PeriphClkInit->UsbOtgHs2ClockSelection);
@@ -2404,7 +2405,7 @@ void HAL_RCCEx_GetPeriphCLKConfig(RCC_PeriphCLKInitTypeDef  *PeriphClkInit)
   for (uint32_t i = 0; i < 20U; i++)
   {
     icx_val = *p_icxcfgr;
-    PeriphClkInit->ICSelection[i].ClockSelection = (icx_val & RCC_IC1CFGR_IC1SEL) >> RCC_IC1CFGR_IC1SEL_Pos;
+    PeriphClkInit->ICSelection[i].ClockSelection = (icx_val & RCC_IC1CFGR_IC1SEL);
     PeriphClkInit->ICSelection[i].ClockDivider = ((icx_val & RCC_IC1CFGR_IC1INT) >> RCC_IC1CFGR_IC1INT_Pos) + 1U;
     p_icxcfgr++;
   }
@@ -2771,19 +2772,19 @@ uint32_t HAL_RCCEx_GetPeriphCLKFreq(uint64_t PeriphClk)
       break;
 
     case RCC_PERIPHCLK_USBPHY1:
-      frequency = RCCEx_GetOTGPHYCKREFCLKFreq(LL_RCC_OTGPHY1CKREF_CLKSOURCE);
-      break;
-
-    case RCC_PERIPHCLK_USBOTGHS1:
       frequency = RCCEx_GetOTGPHYCLKFreq(LL_RCC_OTGPHY1_CLKSOURCE);
       break;
 
+    case RCC_PERIPHCLK_USBOTGHS1:
+      frequency = RCCEx_GetOTGPHYCKREFCLKFreq(LL_RCC_OTGPHY1CKREF_CLKSOURCE);
+      break;
+
     case RCC_PERIPHCLK_USBPHY2:
-      frequency = RCCEx_GetOTGPHYCKREFCLKFreq(LL_RCC_OTGPHY2CKREF_CLKSOURCE);
+      frequency = RCCEx_GetOTGPHYCLKFreq(LL_RCC_OTGPHY2_CLKSOURCE);
       break;
 
     case RCC_PERIPHCLK_USBOTGHS2:
-      frequency = RCCEx_GetOTGPHYCLKFreq(LL_RCC_OTGPHY2_CLKSOURCE);
+      frequency = RCCEx_GetOTGPHYCKREFCLKFreq(LL_RCC_OTGPHY2CKREF_CLKSOURCE);
       break;
 
     case RCC_PERIPHCLK_XSPI1:

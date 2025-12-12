@@ -222,6 +222,19 @@ void SystemInit(void)
   /* Set default Vector Table location after system reset or return from Standby */
   SYSCFG->INITSVTORCR = SCB->VTOR;
 
+  /* Compensation cells setting according to Errata Sheet ES0620 */
+  /* a/ Enable access and configuration of VDDIOxCCCR registers  */
+  PWR->SVMCR1 |= PWR_SVMCR1_VDDIO4SV;
+  PWR->SVMCR2 |= PWR_SVMCR2_VDDIO5SV;
+  PWR->SVMCR3 |= PWR_SVMCR3_VDDIO2SV | PWR_SVMCR3_VDDIO3SV;
+
+  /* b/ Enable access and configuration of VDDIOxCCCR registers */
+  SYSCFG->VDDIO2CCCR = 0x00000287UL; /* VDDIO2 power domain compensation */
+  SYSCFG->VDDIO3CCCR = 0x00000287UL; /* VDDIO3 power domain compensation */
+  SYSCFG->VDDIO4CCCR = 0x00000287UL; /* VDDIO4 power domain compensation */
+  SYSCFG->VDDIO5CCCR = 0x00000287UL; /* VDDIO4 power domain compensation */
+  SYSCFG->VDDCCCR    = 0x00000287UL; /* VDD power domain compensation    */
+
   /* Enable VDDADC CLAMP */
   PWR->SVMCR3 |= PWR_SVMCR3_ASV;
   PWR->SVMCR3 |= PWR_SVMCR3_AVMEN;

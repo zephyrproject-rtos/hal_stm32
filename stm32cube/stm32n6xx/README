@@ -6,7 +6,7 @@ Origin:
    http://www.st.com/en/embedded-software/stm32cuben6.html
 
 Status:
-   version v1.2.0
+   version v1.3.0
 
 Purpose:
    ST Microelectronics official MCU package for STM32N6 series.
@@ -23,7 +23,7 @@ URL:
    https://github.com/STMicroelectronics/STM32CubeN6
 
 Commit:
-   85170d2c6eaa438622ed879caa4d7bcc6cc3920d
+   1fc803683e03b0ce78e64523441d31acd0db2829
 
 Maintained-by:
    External
@@ -35,6 +35,7 @@ License Link:
    https://opensource.org/licenses/BSD-3-Clause
 
 Patch List:
+--> please check that the following list is still valid:
    *Changes from official delivery:
     -dos2unix applied
     -trailing white spaces removed
@@ -53,12 +54,17 @@ Patch List:
     Impacted files:
     -soc/system_stm32n6xx_fsbl.c
     -soc/system_stm32n6xx_s.c
+    See also:
+     https://github.com/zephyrproject-rtos/hal_stm32/pull/252
+     https://github.com/zephyrproject-rtos/hal_stm32/pull/289
 
    *Fix SDIO initialization failure when skipping card identification sequence
      Fixes an issue in the STM32N6 SDIO driver where HAL_SDIO_Init() fails if
      the card identification sequence is skipped.
      Impacted files:
       stm32cube/stm32n6xx/drivers/src/stm32n6xx_hal_sdio.c
+     See also:
+      https://github.com/zephyrproject-rtos/hal_stm32/pull/281
 
    *Fix XSPIM initialization sequence
      Don't cut XSPI2(ext NOR) clock when initializing XSPI1(PSRAM) which doesn't work
@@ -66,7 +72,8 @@ Patch List:
     Impacted files:
       stm32cube/stm32n6xx/drivers/src/stm32n6xx_hal_xspi.c
     Internal reference: 212765
-    Status : implemented
+    See also:
+      https://github.com/zephyrproject-rtos/hal_stm32/pull/289
 
    *Fix SDIO polling mode data transfer issues
      Fixes two related issues in the STM32N6 SDIO driver: incorrect block count calculation
@@ -74,6 +81,8 @@ Patch List:
      Together, these changes ensure correct and stable data transfer in polling mode.
      Impacted file:
       stm32cube/stm32n6xx/drivers/src/stm32n6xx_hal_sdio.c
+     See also:
+      https://github.com/zephyrproject-rtos/hal_stm32/pull/292
 
    *Allow usage of HAL_DCMIPP_PIPE_SetConfig when DCMIPP is in READY state
      Allow performing PIPE configuration when the DCMIPP device is not only
@@ -83,5 +92,7 @@ Patch List:
      Impacted file:
       stm32cube/stm32n6xx/drivers/src/stm32n6xx_hal_dcmipp.c
     Internal reference: 215688
+    See also:
+      https://github.com/zephyrproject-rtos/hal_stm32/pull/304
 
    See release_note.html from STM32Cube

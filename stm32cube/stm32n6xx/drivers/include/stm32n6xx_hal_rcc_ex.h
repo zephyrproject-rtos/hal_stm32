@@ -720,9 +720,11 @@ extern "C" {
 /** @defgroup RCCEx_USBPHY1_Clock_Source  USBPHY1 Clock Source
   * @{
   */
-#define RCC_USBPHY1REFCLKSOURCE_OTGPHY1             LL_RCC_OTGPHY1CKREF_CLKSOURCE_OTGPHY1
-#define RCC_USBPHY1REFCLKSOURCE_HSE_DIRECT          LL_RCC_OTGPHY1CKREF_CLKSOURCE_HSE_DIV_2_OSC
-#define RCC_USBPHY1REFCLKSOURCE_HSE_DIRECT_DIV2     (LL_RCC_OTGPHY1CKREF_CLKSOURCE_HSE_DIV_2_OSC | 0x80000000UL)
+#define RCC_USBPHY1CLKSOURCE_HSE_DIV2             LL_RCC_OTGPHY1_CLKSOURCE_HSE_DIV_2
+#define RCC_USBPHY1CLKSOURCE_CLKP                 LL_RCC_OTGPHY1_CLKSOURCE_CLKP
+#define RCC_USBPHY1CLKSOURCE_IC15                 LL_RCC_OTGPHY1_CLKSOURCE_IC15
+#define RCC_USBPHY1CLKSOURCE_HSE_DIRECT           LL_RCC_OTGPHY1_CLKSOURCE_HSE_DIV_2_OSC
+#define RCC_USBPHY1CLKSOURCE_HSE_DIRECT_DIV2      (LL_RCC_OTGPHY1_CLKSOURCE_HSE_DIV_2_OSC | 0x80000000UL)
 /**
   * @}
   */
@@ -730,9 +732,11 @@ extern "C" {
 /** @defgroup RCCEx_USBPHY2_Clock_Source  USBPHY2 Clock Source
   * @{
   */
-#define RCC_USBPHY2REFCLKSOURCE_OTGPHY2             LL_RCC_OTGPHY2CKREF_CLKSOURCE_OTGPHY2
-#define RCC_USBPHY2REFCLKSOURCE_HSE_DIRECT          LL_RCC_OTGPHY2CKREF_CLKSOURCE_HSE_DIV_2_OSC
-#define RCC_USBPHY2REFCLKSOURCE_HSE_DIRECT_DIV2     (LL_RCC_OTGPHY2CKREF_CLKSOURCE_HSE_DIV_2_OSC | 0x80000000UL)
+#define RCC_USBPHY2CLKSOURCE_HSE_DIV2             LL_RCC_OTGPHY2_CLKSOURCE_HSE_DIV_2
+#define RCC_USBPHY2CLKSOURCE_CLKP                 LL_RCC_OTGPHY2_CLKSOURCE_CLKP
+#define RCC_USBPHY2CLKSOURCE_IC15                 LL_RCC_OTGPHY2_CLKSOURCE_IC15
+#define RCC_USBPHY2CLKSOURCE_HSE_DIRECT           LL_RCC_OTGPHY2_CLKSOURCE_HSE_DIV_2_OSC
+#define RCC_USBPHY2CLKSOURCE_HSE_DIRECT_DIV2      (LL_RCC_OTGPHY2_CLKSOURCE_HSE_DIV_2_OSC | 0x80000000UL)
 /**
   * @}
   */
@@ -740,11 +744,9 @@ extern "C" {
 /** @defgroup RCCEx_USB_OTGHS1_Clock_Source  USB OTGHS1 Clock Source
   * @{
   */
-#define RCC_USBOTGHS1CLKSOURCE_HSE_DIV2             LL_RCC_OTGPHY1_CLKSOURCE_HSE_DIV_2
-#define RCC_USBOTGHS1CLKSOURCE_CLKP                 LL_RCC_OTGPHY1_CLKSOURCE_CLKP
-#define RCC_USBOTGHS1CLKSOURCE_IC15                 LL_RCC_OTGPHY1_CLKSOURCE_IC15
-#define RCC_USBOTGHS1CLKSOURCE_HSE_DIRECT           LL_RCC_OTGPHY1_CLKSOURCE_HSE_DIV_2_OSC
-#define RCC_USBOTGHS1CLKSOURCE_HSE_DIRECT_DIV2      (LL_RCC_OTGPHY1_CLKSOURCE_HSE_DIV_2_OSC | 0x80000000UL)
+#define RCC_USBOTGHS1CLKSOURCE_OTGPHY1             LL_RCC_OTGPHY1CKREF_CLKSOURCE_OTGPHY1
+#define RCC_USBOTGHS1CLKSOURCE_HSE_DIRECT          LL_RCC_OTGPHY1CKREF_CLKSOURCE_HSE_DIV_2_OSC
+#define RCC_USBOTGHS1CLKSOURCE_HSE_DIRECT_DIV2     (LL_RCC_OTGPHY1CKREF_CLKSOURCE_HSE_DIV_2_OSC | 0x80000000UL)
 /**
   * @}
   */
@@ -752,11 +754,9 @@ extern "C" {
 /** @defgroup RCCEx_USB_OTGHS2_Clock_Source  USB OTGHS2 Clock Source
   * @{
   */
-#define RCC_USBOTGHS2CLKSOURCE_HSE_DIV2             LL_RCC_OTGPHY2_CLKSOURCE_HSE_DIV_2
-#define RCC_USBOTGHS2CLKSOURCE_CLKP                 LL_RCC_OTGPHY2_CLKSOURCE_CLKP
-#define RCC_USBOTGHS2CLKSOURCE_IC15                 LL_RCC_OTGPHY2_CLKSOURCE_IC15
-#define RCC_USBOTGHS2CLKSOURCE_HSE_DIRECT           LL_RCC_OTGPHY2_CLKSOURCE_HSE_DIV_2_OSC
-#define RCC_USBOTGHS2CLKSOURCE_HSE_DIRECT_DIV2      (LL_RCC_OTGPHY2_CLKSOURCE_HSE_DIV_2_OSC | 0x80000000UL)
+#define RCC_USBOTGHS2CLKSOURCE_OTGPHY2             LL_RCC_OTGPHY2CKREF_CLKSOURCE_OTGPHY2
+#define RCC_USBOTGHS2CLKSOURCE_HSE_DIRECT          LL_RCC_OTGPHY2CKREF_CLKSOURCE_HSE_DIV_2_OSC
+#define RCC_USBOTGHS2CLKSOURCE_HSE_DIRECT_DIV2     (LL_RCC_OTGPHY2CKREF_CLKSOURCE_HSE_DIV_2_OSC | 0x80000000UL)
 /**
   * @}
   */
@@ -1188,6 +1188,18 @@ typedef struct
 #define  __HAL_RCC_PLL4_MODSPRDW_CONFIG(__PLLMODSPRDW__) \
   MODIFY_REG(RCC->PLL4CFGR3, RCC_PLL4CFGR3_PLL4MODSPRDW, (uint32_t)(__PLLMODSPRDW__) << RCC_PLL4CFGR3_PLL4MODSPRDW_Pos)
 
+/**
+  * @brief  Macro to configure an IC Source and Divider
+  *
+  * @param  __ICSEL__    specifies the IC Selection. It must be a value of @ref RCCEx_IC_Selection
+  * @param  __ICCLKSRC__ specifies the IC clock source. It must be a value of @ref RCC_IC_Clock_Source
+  * @param  __ICCLKDIV__ specifies the IC clock divider. It must be a a number between Min_Data = 1 and Max_Data = 256
+  * @retval None
+  */
+#define  __HAL_RCC_IC_CONFIG(__ICSEL__, __ICCLKSRC__, __ICCLKDIV__) \
+  MODIFY_REG(*((&(RCC->IC1CFGR)) + (__ICSEL__)), \
+             RCC_IC1CFGR_IC1SEL | RCC_IC1CFGR_IC1INT, \
+             ((__ICCLKSRC__) | ((uint32_t)((__ICCLKDIV__)-1) << RCC_IC1CFGR_IC1INT_Pos)))
 
 /** @brief  Macro to configure the ADC clock
   * @param  __ADC_CLKSOURCE__ specifies the ADC  clock source.
@@ -2434,6 +2446,7 @@ typedef struct
   *            @arg RCC_TIMPRES_DIV2 The Timers kernels clocks prescaler is 2
   *            @arg RCC_TIMPRES_DIV4 The Timers kernels clocks prescaler is 4
   *            @arg RCC_TIMPRES_DIV8 The Timers kernels clocks prescaler is 8
+  * @note   The clock ratio tim_ker_ck/tim_pclk must be an integer between 1 and 16
   */
 #define __HAL_RCC_TIMCLKPRESCALER_CONFIG(__PRESC__) LL_RCC_SetTIMPrescaler((__PRESC__))
 
@@ -2449,14 +2462,16 @@ typedef struct
 /** @brief  Macro to configure the USBPHY1 clock.
   * @param  __USBPHY1_CLKSOURCE__ specifies the USBPHY1 clock source.
   *         This parameter can be one of the following values:
-  *            @arg RCC_USBPHY1REFCLKSOURCE_OTGPHY1         USB OTGPHY1 kernel clock selected as USBPHY1 clock
-  *            @arg RCC_USBPHY1REFCLKSOURCE_HSE_DIRECT      HSE from oscillator selected as USBPHY1 clock
-  *            @arg RCC_USBPHY1REFCLKSOURCE_HSE_DIRECT_DIV2 HSE from oscillator divided by 2 selected as USBPHY1 clock
+  *            @arg RCC_USBPHY1CLKSOURCE_HSE_DIV2        HSE divided by 2 selected as USBPHY1 clock
+  *            @arg RCC_USBPHY1CLKSOURCE_CLKP            Peripheral clock CKLP selected as USBPHY1 clock
+  *            @arg RCC_USBPHY1CLKSOURCE_IC15            IC15 selected as USBPHY1 clock
+  *            @arg RCC_USBPHY1CLKSOURCE_HSE_DIRECT      HSE from oscillator selected as USBPHY1 clock
+  *            @arg RCC_USBPHY1CLKSOURCE_HSE_DIRECT_DIV2 HSE from oscillator divided by 2 selected as USBPHY1 clock
   */
 #define __HAL_RCC_USBPHY1_CONFIG(__USBPHY1_CLKSOURCE__)                               \
   do                                                                                  \
   {                                                                                   \
-    LL_RCC_SetOTGPHYCKREFClockSource((__USBPHY1_CLKSOURCE__) & 0x7FFFFFFFUL);         \
+    LL_RCC_SetOTGPHYClockSource((__USBPHY1_CLKSOURCE__) & 0x7FFFFFFFUL);         \
     if(((__USBPHY1_CLKSOURCE__)>>31U) == 1UL) {LL_RCC_HSE_SelectHSEDiv2AsDiv2Clock();} \
       else {LL_RCC_HSE_SelectHSEAsDiv2Clock();}                                         \
   } while (0)
@@ -2464,88 +2479,90 @@ typedef struct
 
 /** @brief  Macro to get the USBPHY1 clock source.
   * @retval The clock source can be one of the following values:
-  *            @arg RCC_USBPHY1REFCLKSOURCE_OTGPHY1         USB OTGPHY1 kernel clock selected as USBPHY1 clock
-  *            @arg RCC_USBPHY1REFCLKSOURCE_HSE_DIRECT      HSE from oscillator selected as USBPHY1 clock
-  *            @arg RCC_USBPHY1REFCLKSOURCE_HSE_DIRECT_DIV2 HSE from oscillator divided by 2 selected as USBPHY1 clock
+  *            @arg RCC_USBPHY1CLKSOURCE_HSE_DIV2        HSE divided by 2 selected as USBPHY1 clock
+  *            @arg RCC_USBPHY1CLKSOURCE_CLKP            Peripheral clock CKLP selected as USBPHY1 clock
+  *            @arg RCC_USBPHY1CLKSOURCE_IC15            IC15 selected as USBPHY1 clock
+  *            @arg RCC_USBPHY1CLKSOURCE_HSE_DIRECT      HSE from oscillator selected as USBPHY1 clock
+  *            @arg RCC_USBPHY1CLKSOURCE_HSE_DIRECT_DIV2 HSE from oscillator divided by 2 selected as USBPHY1 clock
   */
 #define __HAL_RCC_GET_USBPHY1_SOURCE()                       \
-  (LL_RCC_GetOTGPHYCKREFClockSource(LL_RCC_OTGPHY1CKREF_CLKSOURCE) | (LL_RCC_HSE_IsSelectedHSEDiv2AsDiv2Clock()<<31U))
+  (LL_RCC_GetOTGPHYClockSource(LL_RCC_OTGPHY1_CLKSOURCE) | (LL_RCC_HSE_IsSelectedHSEDiv2AsDiv2Clock()<<31U))
 
 /** @brief  Macro to configure the USBPHY2 clock.
   * @param  __USBPHY2_CLKSOURCE__ specifies the USBPHY2 clock source.
   *         This parameter can be one of the following values:
-  *            @arg RCC_USBPHY2REFCLKSOURCE_OTGPHY2         USB OTGPHY2 kernel clock selected as USBPHY2 clock
-  *            @arg RCC_USBPHY2REFCLKSOURCE_HSE_DIRECT      HSE from oscillator selected as USBPHY2 clock
-  *            @arg RCC_USBPHY2REFCLKSOURCE_HSE_DIRECT_DIV2 HSE from oscillator divided by 2 selected as USBPHY2 clock
+  *            @arg RCC_USBPHY2CLKSOURCE_HSE_DIV2        HSE divided by 2 selected as USBPHY2 clock
+  *            @arg RCC_USBPHY2CLKSOURCE_CLKP            Peripheral clock CKLP selected as USBPHY2 clock
+  *            @arg RCC_USBPHY2CLKSOURCE_IC15            IC15 selected as USBPHY2 clock
+  *            @arg RCC_USBPHY2CLKSOURCE_HSE_DIRECT      HSE from oscillator selected as USBPHY2 clock
+  *            @arg RCC_USBPHY2CLKSOURCE_HSE_DIRECT_DIV2 HSE from oscillator divided by 2 selected as USBPHY2 clock
   */
 #define __HAL_RCC_USBPHY2_CONFIG(__USBPHY2_CLKSOURCE__)                                 \
   do                                                                                    \
   {                                                                                     \
-    LL_RCC_SetOTGPHYCKREFClockSource((__USBPHY2_CLKSOURCE__) & 0x7FFFFFFFUL);           \
+    LL_RCC_SetOTGPHYClockSource((__USBPHY2_CLKSOURCE__) & 0x7FFFFFFFUL);           \
     if(((__USBPHY2_CLKSOURCE__)>>31U) == 1UL) {LL_RCC_HSE_SelectHSEDiv2AsDiv2Clock();} \
       else {LL_RCC_HSE_SelectHSEAsDiv2Clock();}                                         \
   } while (0)
 
 /** @brief  Macro to get the USBPHY2 clock source.
   * @retval The clock source can be one of the following values:
-  *            @arg RCC_USBPHY2REFCLKSOURCE_OTGPHY2         USB OTGPHY2 kernel clock selected as USBPHY2 clock
-  *            @arg RCC_USBPHY2REFCLKSOURCE_HSE_DIRECT      HSE from oscillator selected as USBPHY2 clock
-  *            @arg RCC_USBPHY2REFCLKSOURCE_HSE_DIRECT_DIV2 HSE from oscillator divided by 2 selected as USBPHY2 clock
+  *            @arg RCC_USBPHY2CLKSOURCE_HSE_DIV2        HSE divided by 2 selected as USBPHY2 clock
+  *            @arg RCC_USBPHY2CLKSOURCE_CLKP            Peripheral clock CKLP selected as USBPHY2 clock
+  *            @arg RCC_USBPHY2CLKSOURCE_IC15            IC15 selected as USBPHY2 clock
+  *            @arg RCC_USBPHY2CLKSOURCE_HSE_DIRECT      HSE from oscillator selected as USBPHY2 clock
+  *            @arg RCC_USBPHY2CLKSOURCE_HSE_DIRECT_DIV2 HSE from oscillator divided by 2 selected as USBPHY2 clock
   */
 #define __HAL_RCC_GET_USBPHY2_SOURCE()                       \
-  (LL_RCC_GetOTGPHYCKREFClockSource(LL_RCC_OTGPHY2CKREF_CLKSOURCE) | (LL_RCC_HSE_IsSelectedHSEDiv2AsDiv2Clock()<<31U))
+  (LL_RCC_GetOTGPHYClockSource(LL_RCC_OTGPHY2_CLKSOURCE) | (LL_RCC_HSE_IsSelectedHSEDiv2AsDiv2Clock()<<31U))
 
 /** @brief  Macro to configure the USB OTGHS1 clock.
   * @param  __USBOTGHS1_CLKSOURCE__ specifies the USB OTGHS1 clock source.
   *         This parameter can be one of the following values:
-  *            @arg RCC_USBOTGHS1CLKSOURCE_HSE_DIV2      HSE divided by 2 selected as USBOTGHS1 clock
-  *            @arg RCC_USBOTGHS1CLKSOURCE_CLKP          Peripheral clock CKLP selected as USBOTGHS1 clock
-  *            @arg RCC_USBOTGHS1CLKSOURCE_IC15          IC15 selected as USBOTGHS1 clock
-  *            @arg RCC_USBOTGHS1CLKSOURCE_HSE_DIV_2_OSC HSE divided by 2 from oscillator selected as USBOTGHS1 clock
+  *            @arg RCC_USBOTGHS1CLKSOURCE_OTGPHY1         OTGPHY1 selected as USBOTGHS1 clock
+  *            @arg RCC_USBOTGHS1CLKSOURCE_HSE_DIRECT      HSE from oscillator selected as USBOTGHS1 clock
+  *            @arg RCC_USBOTGHS1CLKSOURCE_HSE_DIRECT_DIV2 HSE from oscillator divided by 2 selected as USBOTGHS1 clock
   */
 #define __HAL_RCC_USBOTGHS1_CONFIG(__USBOTGHS1_CLKSOURCE__)                             \
   do                                                                                    \
   {                                                                                     \
-    LL_RCC_SetOTGPHYClockSource((__USBOTGHS1_CLKSOURCE__) & 0x7FFFFFFFUL);              \
+    LL_RCC_SetOTGPHYCKREFClockSource((__USBOTGHS1_CLKSOURCE__) & 0x7FFFFFFFUL);              \
     if(((__USBOTGHS1_CLKSOURCE__)>>31U) == 1UL) {LL_RCC_HSE_SelectHSEDiv2AsDiv2Clock();} \
       else {LL_RCC_HSE_SelectHSEAsDiv2Clock();}                                           \
   } while (0)
 
 /** @brief  Macro to get the USB OTGHS1 clock source.
   * @retval The clock source can be one of the following values:
-  *            @arg RCC_USBOTGHS1CLKSOURCE_HSE_DIV2      HSE divided by 2 selected as USBOTGHS1 clock
-  *            @arg RCC_USBOTGHS1CLKSOURCE_CLKP          Peripheral clock CKLP selected as USBOTGHS1 clock
-  *            @arg RCC_USBOTGHS1CLKSOURCE_IC15          IC15 selected as USBOTGHS1 clock
-  *            @arg RCC_USBOTGHS1CLKSOURCE_HSE_DIV_2_OSC HSE divided by 2 from oscillator selected as USBOTGHS1 clock
+  *            @arg RCC_USBOTGHS1CLKSOURCE_OTGPHY1         OTGPHY1 selected as USBOTGHS1 clock
+  *            @arg RCC_USBOTGHS1CLKSOURCE_HSE_DIRECT      HSE from oscillator selected as USBOTGHS1 clock
+  *            @arg RCC_USBOTGHS1CLKSOURCE_HSE_DIRECT_DIV2 HSE from oscillator divided by 2 selected as USBOTGHS1 clock
   */
 #define __HAL_RCC_GET_USBOTGHS1_SOURCE()                       \
-  (LL_RCC_GetOTGPHYClockSource(LL_RCC_OTGPHY1_CLKSOURCE) | (LL_RCC_HSE_IsSelectedHSEDiv2AsDiv2Clock()<<31U))
+  (LL_RCC_GetOTGPHYCKREFClockSource(LL_RCC_OTGPHY1CKREF_CLKSOURCE) | (LL_RCC_HSE_IsSelectedHSEDiv2AsDiv2Clock()<<31U))
 
 /** @brief  Macro to configure the USB OTGHS2 clock.
   * @param  __USBOTGHS2_CLKSOURCE__ specifies the USB OTGHS2 clock source.
   *         This parameter can be one of the following values:
-  *            @arg RCC_USBOTGHS2CLKSOURCE_HSE_DIV2      HSE divided by 2 selected as USBOTGHS2 clock
-  *            @arg RCC_USBOTGHS2CLKSOURCE_CLKP          Peripheral clock CKLP selected as USBOTGHS2 clock
-  *            @arg RCC_USBOTGHS2CLKSOURCE_IC15          IC15 selected as USBOTGHS2 clock
-  *            @arg RCC_USBOTGHS2CLKSOURCE_HSE_DIV_2_OSC HSE divided by 2 from oscillator selected as USBOTGHS2 clock
+  *            @arg RCC_USBOTGHS2CLKSOURCE_OTGPHY2         OTGPHY2 selected as USBOTGHS2 clock
+  *            @arg RCC_USBOTGHS2CLKSOURCE_HSE_DIRECT      HSE from oscillator selected as USBOTGHS2 clock
+  *            @arg RCC_USBOTGHS2CLKSOURCE_HSE_DIRECT_DIV2 HSE from oscillator divided by 2 selected as USBOTGHS2 clock
   */
 #define __HAL_RCC_USBOTGHS2_CONFIG(__USBOTGHS2_CLKSOURCE__)                             \
   do                                                                                    \
   {                                                                                     \
-    LL_RCC_SetOTGPHYClockSource((__USBOTGHS2_CLKSOURCE__) & 0x7FFFFFFFUL);              \
+    LL_RCC_SetOTGPHYCKREFClockSource((__USBOTGHS2_CLKSOURCE__) & 0x7FFFFFFFUL);              \
     if(((__USBOTGHS2_CLKSOURCE__)>>31U) == 1UL) {LL_RCC_HSE_SelectHSEDiv2AsDiv2Clock();} \
       else {LL_RCC_HSE_SelectHSEAsDiv2Clock();}                                           \
   } while (0)
 
 /** @brief  Macro to get the USB OTGHS2 clock source.
   * @retval The clock source can be one of the following values:
-  *            @arg RCC_USBOTGHS2CLKSOURCE_HSE_DIV2      HSE divided by 2 selected as USBOTGHS2 clock
-  *            @arg RCC_USBOTGHS2CLKSOURCE_CLKP          Peripheral clock CKLP selected as USBOTGHS2 clock
-  *            @arg RCC_USBOTGHS2C LKSOURCE_IC15          IC15 selected as USBOTGHS2 clock
-  *            @arg RCC_USBOTGHS2CLKSOURCE_HSE_DIV_2_OSC HSE divided by 2 from oscillator selected as USBOTGHS2 clock
+  *            @arg RCC_USBOTGHS2CLKSOURCE_OTGPHY2         OTGPHY2 selected as USBOTGHS2 clock
+  *            @arg RCC_USBOTGHS2CLKSOURCE_HSE_DIRECT      HSE from oscillator selected as USBOTGHS2 clock
+  *            @arg RCC_USBOTGHS2CLKSOURCE_HSE_DIRECT_DIV2 HSE from oscillator divided by 2 selected as USBOTGHS2 clock
   */
 #define __HAL_RCC_GET_USBOTGHS2_SOURCE()                       \
-  (LL_RCC_GetOTGPHYClockSource(LL_RCC_OTGPHY2_CLKSOURCE) | (LL_RCC_HSE_IsSelectedHSEDiv2AsDiv2Clock()<<31U))
+  (LL_RCC_GetOTGPHYCKREFClockSource(LL_RCC_OTGPHY2CKREF_CLKSOURCE) | (LL_RCC_HSE_IsSelectedHSEDiv2AsDiv2Clock()<<31U))
 
 /**
   * @brief Enable the RCC LSE CSS Extended Interrupt Line.
@@ -3074,27 +3091,27 @@ HAL_StatusTypeDef HAL_RCCEx_PLLSSCGConfig(uint32_t PLLnumber, const RCC_PLLInitT
    ((__SOURCE__) == RCC_USART10CLKSOURCE_MSI)   || \
    ((__SOURCE__) == RCC_USART10CLKSOURCE_HSI))
 
-#define IS_RCC_USBPHY1CLKSOURCE(__SOURCE__)                  \
-  (((__SOURCE__) == RCC_USBPHY1REFCLKSOURCE_OTGPHY1)      || \
-   ((__SOURCE__) == RCC_USBPHY1REFCLKSOURCE_HSE_DIRECT)   || \
-   ((__SOURCE__) == RCC_USBPHY1REFCLKSOURCE_HSE_DIRECT_DIV2))
+#define IS_RCC_USBPHY1CLKSOURCE(__SOURCE__)               \
+  (((__SOURCE__) == RCC_USBPHY1CLKSOURCE_HSE_DIV2)     || \
+   ((__SOURCE__) == RCC_USBPHY1CLKSOURCE_CLKP)         || \
+   ((__SOURCE__) == RCC_USBPHY1CLKSOURCE_IC15)         || \
+   ((__SOURCE__) == RCC_USBPHY1CLKSOURCE_HSE_DIRECT)   || \
+   ((__SOURCE__) == RCC_USBPHY1CLKSOURCE_HSE_DIRECT_DIV2))
 
-#define IS_RCC_USBPHY2CLKSOURCE(__SOURCE__)                  \
-  (((__SOURCE__) == RCC_USBPHY2REFCLKSOURCE_OTGPHY2)      || \
-   ((__SOURCE__) == RCC_USBPHY2REFCLKSOURCE_HSE_DIRECT)   || \
-   ((__SOURCE__) == RCC_USBPHY2REFCLKSOURCE_HSE_DIRECT_DIV2))
+#define IS_RCC_USBPHY2CLKSOURCE(__SOURCE__)               \
+  (((__SOURCE__) == RCC_USBPHY2CLKSOURCE_HSE_DIV2)     || \
+   ((__SOURCE__) == RCC_USBPHY2CLKSOURCE_CLKP)         || \
+   ((__SOURCE__) == RCC_USBPHY2CLKSOURCE_IC15)         || \
+   ((__SOURCE__) == RCC_USBPHY2CLKSOURCE_HSE_DIRECT)   || \
+   ((__SOURCE__) == RCC_USBPHY2CLKSOURCE_HSE_DIRECT_DIV2))
 
-#define IS_RCC_USBOTGHS1CLKSOURCE(__SOURCE__)                \
-  (((__SOURCE__) == RCC_USBOTGHS1CLKSOURCE_HSE_DIV2)      || \
-   ((__SOURCE__) == RCC_USBOTGHS1CLKSOURCE_CLKP)          || \
-   ((__SOURCE__) == RCC_USBOTGHS1CLKSOURCE_IC15)          || \
+#define IS_RCC_USBOTGHS1CLKSOURCE(__SOURCE__)               \
+  (((__SOURCE__) == RCC_USBOTGHS1CLKSOURCE_OTGPHY1)      || \
    ((__SOURCE__) == RCC_USBOTGHS1CLKSOURCE_HSE_DIRECT)    || \
    ((__SOURCE__) == RCC_USBOTGHS1CLKSOURCE_HSE_DIRECT_DIV2))
 
 #define IS_RCC_USBOTGHS2CLKSOURCE(__SOURCE__)                \
-  (((__SOURCE__) == RCC_USBOTGHS2CLKSOURCE_HSE_DIV2)      || \
-   ((__SOURCE__) == RCC_USBOTGHS2CLKSOURCE_CLKP)          || \
-   ((__SOURCE__) == RCC_USBOTGHS2CLKSOURCE_IC15)          || \
+  (((__SOURCE__) == RCC_USBOTGHS2CLKSOURCE_OTGPHY2)       || \
    ((__SOURCE__) == RCC_USBOTGHS2CLKSOURCE_HSE_DIRECT)    || \
    ((__SOURCE__) == RCC_USBOTGHS2CLKSOURCE_HSE_DIRECT_DIV2))
 

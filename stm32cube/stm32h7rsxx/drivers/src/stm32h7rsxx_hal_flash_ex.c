@@ -1269,12 +1269,12 @@ static void FLASH_CRC_SelectAddress(uint32_t CRCStartAddr, uint32_t CRCEndAddr)
   */
 static HAL_StatusTypeDef FLASH_CRC_WaitForLastOperation(uint32_t Timeout)
 {
-  uint32_t timeout = HAL_GetTick() + Timeout;
+  uint32_t tickstart = HAL_GetTick();
 
   /* Wait for the FLASH CRC computation to complete by polling on CRC_BUSY flag to be reset */
   while ((FLASH->SR & FLASH_SR_CRC_BUSY) != 0U)
   {
-    if (HAL_GetTick() >= timeout)
+    if(((HAL_GetTick() - tickstart) > Timeout) || (Timeout == 0U))
     {
       return HAL_TIMEOUT;
     }

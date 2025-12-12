@@ -6,7 +6,7 @@ Origin:
    http://www.st.com/en/embedded-software/stm32cubel4.html
 
 Status:
-   version v1.18.1
+   version v1.18.2
 
 Purpose:
    ST Microelectronics official MCU package for STM32L4 series.
@@ -23,7 +23,7 @@ URL:
    https://github.com/STMicroelectronics/STM32CubeL4
 
 Commit:
-   d4c40b36185bd0d75e33c94ebc8337b634bbcc94
+   703570fd63f1e8623e89df99285ead68f1665f83
 
 Maintained-by:
    External
@@ -43,13 +43,6 @@ Patch List:
    *Provision to enable hal & ll asserts added
     -Added stm32cube/stm32l4xx/drivers/include/stm32_assert.h
     -Removed unused stm32cube/stm32l4xx/drivers/include/stm32_assert_template.h
-
-   *Wrap define UNUSED with an ifndef
-     This will prevent a compiler warning for the case the UNUSED macro
-     is already defined elsewhere in the project
-     Impacted files:
-      drivers/include/stm32l4xx_hal_def.h
-     ST Internal Reference: 136825
 
    *Fix to remove PAGESIZE definition which conflicts with POSIX
     Impacted files:

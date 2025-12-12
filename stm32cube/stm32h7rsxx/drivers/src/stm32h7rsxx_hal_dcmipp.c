@@ -204,12 +204,18 @@ Below is the structured process for configuring each interface type:
   * @{
   */
 
-/* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /** @defgroup DCMIPP_Private_Constants DCMIPP Private Constants
   * @{
   */
 #define DCMIPP_TIMEOUT 1000U  /*!<  1s  */
+/**
+  * @}
+  */
+/* Private typedef -----------------------------------------------------------*/
+/** @defgroup DCMIPP_Private_TypeDef DCMIPP Private TypeDef
+  * @{
+  */
 /**
   * @}
   */
@@ -575,7 +581,7 @@ HAL_StatusTypeDef HAL_DCMIPP_SetIPPlugConfig(DCMIPP_HandleTypeDef *hdcmipp,
       hdcmipp->Instance->IPC1R1 = (pIPPlugConfig->Traffic |
                                    (pIPPlugConfig->MaxOutstandingTransactions << DCMIPP_IPC1R1_OTR_Pos));
 
-      /* Set End word and Start Word of the FIFO of the Clientx */
+      /* Set Ratio arbitration */
       hdcmipp->Instance->IPC1R2 = (pIPPlugConfig->WLRURatio << DCMIPP_IPC1R2_WLRU_Pos);
 
       /* Set End word and Start Word of the FIFO of the Clientx */
@@ -624,8 +630,7 @@ HAL_StatusTypeDef HAL_DCMIPP_PIPE_Start(DCMIPP_HandleTypeDef *hdcmipp, uint32_t 
     return HAL_ERROR;
   }
 
-  /* Check DCMIPP pipe state */
-  if (hdcmipp->PipeState[Pipe]  != HAL_DCMIPP_PIPE_STATE_READY)
+  if (hdcmipp->PipeState[Pipe] != HAL_DCMIPP_PIPE_STATE_READY)
   {
     return HAL_ERROR;
   }
@@ -660,8 +665,7 @@ HAL_StatusTypeDef HAL_DCMIPP_PIPE_DoubleBufferStart(DCMIPP_HandleTypeDef *hdcmip
     return HAL_ERROR;
   }
 
-  /* Check DCMIPP pipe state */
-  if (hdcmipp->PipeState[Pipe]  != HAL_DCMIPP_PIPE_STATE_READY)
+  if (hdcmipp->PipeState[Pipe] != HAL_DCMIPP_PIPE_STATE_READY)
   {
     return HAL_ERROR;
   }
@@ -1959,7 +1963,7 @@ HAL_StatusTypeDef HAL_DCMIPP_PARALLEL_SetSyncUnmask(DCMIPP_HandleTypeDef *hdcmip
   * Lines Event Feature:
   *     - HAL_DCMIPP_PIPE_EnableLineEvent()    : Enable the Line event for the selected Line.
   *     - HAL_DCMIPP_PIPE_DisableLineEvent()   : Disable the Line event for the selected Line.
-  */
+*/
 /**
   * @brief  Configures the position of the line interrupt.
   * @param  hdcmipp  Pointer to DCMIPP handle
@@ -2318,6 +2322,9 @@ static HAL_StatusTypeDef DCMIPP_Stop(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pip
   * @}
   */
 
+/**
+  * @}
+  */
 /**
   * @}
   */

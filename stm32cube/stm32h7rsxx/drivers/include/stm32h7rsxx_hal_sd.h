@@ -297,9 +297,9 @@ typedef void (*pSD_TransceiverCallbackTypeDef)(FlagStatus status);
 /** @defgroup SD_Exported_Constants SD Exported Constants
   * @{
   */
-
+#ifndef BLOCKSIZE
 #define BLOCKSIZE   ((uint32_t)512U) /*!< Block size is 512 bytes */
-
+#endif
 /** @defgroup SD_Exported_Constansts_Group1 SD Error status enumeration Structure definition
   * @{
   */

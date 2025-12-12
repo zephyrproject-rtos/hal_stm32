@@ -834,8 +834,8 @@ typedef struct
   */
 typedef struct
 {
-  __IO uint32_t CR;   /*!< Delay Block Control Register,       Address offset: 0x00 */
-  __IO uint32_t CFGR; /*!< Delay Block Configuration Register, Address offset: 0x04 */
+  __IO uint32_t CFG;            /*!< Delay Block Configuration Register,                                 Address offset: 0x00 */
+  __IO uint32_t STATUS;         /*!< Delay Block Status Register,                                        Address offset: 0x04 */
 } DLYB_TypeDef;
 
 /**
@@ -3307,7 +3307,7 @@ typedef struct
 #define UID_BASE_NS                     (0x46009014UL)
 
 /*!< Revision ID base address */
-#define REVID_BASE_NS                   (BOOTROM_BASE_NS + 0x0047ECUL)
+#define REVID_BASE_NS                   (BOOTROM_BASE_NS + 0x001004UL)
 
 
 #if defined (CPU_IN_SECURE_STATE)
@@ -3616,7 +3616,7 @@ typedef struct
 #define UID_BASE_S                      (0x56009014UL)
 
 /*!< Revision ID base address */
-#define REVID_BASE_S                    (BOOTROM_BASE_S + 0x0047ECUL)
+#define REVID_BASE_S                    (BOOTROM_BASE_S + 0x001004UL)
 
 #endif
 
@@ -11567,57 +11567,50 @@ typedef struct
 
 /******************************************************************************/
 /*                                                                            */
-/*                        Delay Block Interface (DLYB)                        */
+/*                        Delay Block Interface (DLYBSD)                        */
 /*                                                                            */
 /******************************************************************************/
-/*******************  Bit definition for DLYB_CR register  ********************/
-#define DLYB_CR_DEN_Pos                     (0UL)
-#define DLYB_CR_DEN_Msk                     (0x1UL << DLYB_CR_DEN_Pos)              /*!< 0x00000001 */
-#define DLYB_CR_DEN                         DLYB_CR_DEN_Msk                         /*!<Delay Block enable */
-#define DLYB_CR_SEN_Pos                     (1UL)
-#define DLYB_CR_SEN_Msk                     (0x1UL << DLYB_CR_SEN_Pos)              /*!< 0x00000002 */
-#define DLYB_CR_SEN                         DLYB_CR_SEN_Msk                         /*!<Sampler length enable */
+/*******************  Bit definition for DLYBSD_CFGR register  ********************/
+#define DLYB_CFGR_SDMMC_DLL_EN_Pos              (0UL)
+#define DLYB_CFGR_SDMMC_DLL_EN_Msk              (0x1UL << DLYB_CFGR_SDMMC_DLL_EN_Pos)        /*!< 0x00000001 */
+#define DLYB_CFGR_SDMMC_DLL_EN                  DLYB_CFGR_SDMMC_DLL_EN_Msk                   /*!<Delay Block enable */
 
-/*******************  Bit definition for DLYB_CFGR register  ********************/
-#define DLYB_CFGR_SEL_Pos                   (0UL)
-#define DLYB_CFGR_SEL_Msk                   (0xFUL << DLYB_CFGR_SEL_Pos)            /*!< 0x0000000F */
-#define DLYB_CFGR_SEL                       DLYB_CFGR_SEL_Msk                       /*!<Select the phase for the Output clock[3:0] */
-#define DLYB_CFGR_SEL_0                     (0x1UL << DLYB_CFGR_SEL_Pos)            /*!< 0x00000001 */
-#define DLYB_CFGR_SEL_1                     (0x2UL << DLYB_CFGR_SEL_Pos)            /*!< 0x00000002 */
-#define DLYB_CFGR_SEL_2                     (0x3UL << DLYB_CFGR_SEL_Pos)            /*!< 0x00000003 */
-#define DLYB_CFGR_SEL_3                     (0x8UL << DLYB_CFGR_SEL_Pos)            /*!< 0x00000008 */
+#define DLYB_CFGR_SDMMC_RX_TAP_SEL_Pos          (1UL)
+#define DLYB_CFGR_SDMMC_RX_TAP_SEL_Msk          (0x3FUL << DLYB_CFGR_SDMMC_RX_TAP_SEL_Pos)   /*!< 0x0000007E */
+#define DLYB_CFGR_SDMMC_RX_TAP_SEL              DLYB_CFGR_SDMMC_RX_TAP_SEL_Msk               /*!<Select the phase for RX DLYB */
+#define DLYB_CFGR_SDMMC_RX_TAP_SEL_0            (0x1UL << DLYB_CFGR_SDMMC_RX_TAP_SEL_Pos)    /*!< 0x00000002 */
+#define DLYB_CFGR_SDMMC_RX_TAP_SEL_1            (0x2UL << DLYB_CFGR_SDMMC_RX_TAP_SEL_Pos)    /*!< 0x00000004 */
+#define DLYB_CFGR_SDMMC_RX_TAP_SEL_2            (0x4UL << DLYB_CFGR_SDMMC_RX_TAP_SEL_Pos)    /*!< 0x00000008 */
+#define DLYB_CFGR_SDMMC_RX_TAP_SEL_3            (0x8UL << DLYB_CFGR_SDMMC_RX_TAP_SEL_Pos)    /*!< 0x00000010 */
+#define DLYB_CFGR_SDMMC_RX_TAP_SEL_4            (0x10UL << DLYB_CFGR_SDMMC_RX_TAP_SEL_Pos)   /*!< 0x00000020 */
+#define DLYB_CFGR_SDMMC_RX_TAP_SEL_5            (0x20UL << DLYB_CFGR_SDMMC_RX_TAP_SEL_Pos)   /*!< 0x00000040 */
 
-#define DLYB_CFGR_UNIT_Pos                  (8UL)
-#define DLYB_CFGR_UNIT_Msk                  (0x7FUL << DLYB_CFGR_UNIT_Pos)          /*!< 0x00007F00 */
-#define DLYB_CFGR_UNIT                      DLYB_CFGR_UNIT_Msk                      /*!<Delay Defines the delay of a Unit delay cell[6:0] */
-#define DLYB_CFGR_UNIT_0                    (0x01UL << DLYB_CFGR_UNIT_Pos)          /*!< 0x00000100 */
-#define DLYB_CFGR_UNIT_1                    (0x02UL << DLYB_CFGR_UNIT_Pos)          /*!< 0x00000200 */
-#define DLYB_CFGR_UNIT_2                    (0x04UL << DLYB_CFGR_UNIT_Pos)          /*!< 0x00000400 */
-#define DLYB_CFGR_UNIT_3                    (0x08UL << DLYB_CFGR_UNIT_Pos)          /*!< 0x00000800 */
-#define DLYB_CFGR_UNIT_4                    (0x10UL << DLYB_CFGR_UNIT_Pos)          /*!< 0x00001000 */
-#define DLYB_CFGR_UNIT_5                    (0x20UL << DLYB_CFGR_UNIT_Pos)          /*!< 0x00002000 */
-#define DLYB_CFGR_UNIT_6                    (0x40UL << DLYB_CFGR_UNIT_Pos)          /*!< 0x00004000 */
+#define DLYB_CFGR_SDMMC_DLL_BYP_EN_Pos          (16UL)
+#define DLYB_CFGR_SDMMC_DLL_BYP_EN_Msk          (0x1UL << DLYB_CFGR_SDMMC_DLL_BYP_EN_Pos)    /*!< 0x00010000 */
+#define DLYB_CFGR_SDMMC_DLL_BYP_EN              DLYB_CFGR_SDMMC_DLL_BYP_EN_Msk               /*!< DLYB Bypass mode enable */
 
-#define DLYB_CFGR_LNG_Pos                   (16UL)
-#define DLYB_CFGR_LNG_Msk                   (0xFFFUL << DLYB_CFGR_LNG_Pos)          /*!< 0x0FFF0000 */
-#define DLYB_CFGR_LNG                       DLYB_CFGR_LNG_Msk                       /*!<Delay line length value[11:0] */
-#define DLYB_CFGR_LNG_0                     (0x001UL << DLYB_CFGR_LNG_Pos)          /*!< 0x00010000 */
-#define DLYB_CFGR_LNG_1                     (0x002UL << DLYB_CFGR_LNG_Pos)          /*!< 0x00020000 */
-#define DLYB_CFGR_LNG_2                     (0x004UL << DLYB_CFGR_LNG_Pos)          /*!< 0x00040000 */
-#define DLYB_CFGR_LNG_3                     (0x008UL << DLYB_CFGR_LNG_Pos)          /*!< 0x00080000 */
-#define DLYB_CFGR_LNG_4                     (0x010UL << DLYB_CFGR_LNG_Pos)          /*!< 0x00100000 */
-#define DLYB_CFGR_LNG_5                     (0x020UL << DLYB_CFGR_LNG_Pos)          /*!< 0x00200000 */
-#define DLYB_CFGR_LNG_6                     (0x040UL << DLYB_CFGR_LNG_Pos)          /*!< 0x00400000 */
-#define DLYB_CFGR_LNG_7                     (0x080UL << DLYB_CFGR_LNG_Pos)          /*!< 0x00800000 */
-#define DLYB_CFGR_LNG_8                     (0x100UL << DLYB_CFGR_LNG_Pos)          /*!< 0x01000000 */
-#define DLYB_CFGR_LNG_9                     (0x200UL << DLYB_CFGR_LNG_Pos)          /*!< 0x02000000 */
-#define DLYB_CFGR_LNG_10                    (0x400UL << DLYB_CFGR_LNG_Pos)          /*!< 0x04000000 */
-#define DLYB_CFGR_LNG_11                    (0x800UL << DLYB_CFGR_LNG_Pos)          /*!< 0x08000000 */
+#define DLYB_CFGR_SDMMC_DLL_BYP_CMD_Pos         (17UL)
+#define DLYB_CFGR_SDMMC_DLL_BYP_CMD_Msk         (0x1FUL << DLYB_CFGR_SDMMC_DLL_BYP_CMD_Pos)   /*!< 0x003E0000 */
+#define DLYB_CFGR_SDMMC_DLL_BYP_CMD             DLYB_CFGR_SDMMC_DLL_BYP_CMD_Msk                /*!<Select Taps values */
+#define DLYB_CFGR_SDMMC_DLL_BYP_CMD_0           (0x1UL << DLYB_CFGR_SDMMC_DLL_BYP_CMD_Pos)    /*!< 0x00010000 */
+#define DLYB_CFGR_SDMMC_DLL_BYP_CMD_1           (0x2UL << DLYB_CFGR_SDMMC_DLL_BYP_CMD_Pos)    /*!< 0x00020000 */
+#define DLYB_CFGR_SDMMC_DLL_BYP_CMD_2           (0x4UL << DLYB_CFGR_SDMMC_DLL_BYP_CMD_Pos)    /*!< 0x00040000 */
+#define DLYB_CFGR_SDMMC_DLL_BYP_CMD_3           (0x8UL << DLYB_CFGR_SDMMC_DLL_BYP_CMD_Pos)    /*!< 0x00080000 */
+#define DLYB_CFGR_SDMMC_DLL_BYP_CMD_4           (0x10UL << DLYB_CFGR_SDMMC_DLL_BYP_CMD_Pos)   /*!< 0x00100000 */
 
-#define DLYB_CFGR_LNGF_Pos                  (31UL)
-#define DLYB_CFGR_LNGF_Msk                  (0x1UL << DLYB_CFGR_LNGF_Pos)            /*!< 0x80000000 */
-#define DLYB_CFGR_LNGF                      DLYB_CFGR_LNGF_Msk                       /*!<Length valid flag */
+#define DLYB_CFGR_SDMMC_DLL_ANTIGLITCH_EN_Pos   (22UL)
+#define DLYB_CFGR_SDMMC_DLL_ANTIGLITCH_EN_Msk   (0x1UL << DLYB_CFGR_SDMMC_DLL_ANTIGLITCH_EN_Pos) /*!< 0x00010000 */
+#define DLYB_CFGR_SDMMC_DLL_ANTIGLITCH_EN       DLYB_CFGR_SDMMC_DLL_ANTIGLITCH_EN_Msk            /*!<Enable Antiglitch  */
 
+/*******************  Bit definition for DLYBSD_STATUS register  *******************/
+
+#define DLYB_STATUS_SDMMC_DLL_LOCK_Pos          (0UL)
+#define DLYB_STATUS_SDMMC_DLL_LOCK_Msk          (0x1UL << DLYB_STATUS_SDMMC_DLL_LOCK_Pos)     /*!< 0x00000001 */
+#define DLYB_STATUS_SDMMC_DLL_LOCK              DLYB_STATUS_SDMMC_DLL_LOCK_Msk                /*!<DLYB lock mode enable */
+
+#define DLYB_STATUS_SDMMC_RX_TAP_SEL_ACK_Pos    (1UL)
+#define DLYB_STATUS_SDMMC_RX_TAP_SEL_ACK_Msk    (0x1UL << DLYB_STATUS_SDMMC_RX_TAP_SEL_ACK_Pos)  /*!< 0x00000002 */
+#define DLYB_STATUS_SDMMC_RX_TAP_SEL_ACK        DLYB_STATUS_SDMMC_RX_TAP_SEL_ACK_Msk             /*!< RX delay selection acknowledge */
 
 /******************************************************************************/
 /*                                                                            */

@@ -71,13 +71,13 @@ typedef enum
 /**
   * @brief STM32H7RSxx HAL Driver version number
   */
-#define STM32H7RSXX_HAL_VERSION_MAIN   (0x01U) /*!< [31:24] main version */
-#define STM32H7RSXX_HAL_VERSION_SUB1   (0x02U) /*!< [23:16] sub1 version */
-#define STM32H7RSXX_HAL_VERSION_SUB2   (0x00U) /*!< [15:8]  sub2 version */
-#define STM32H7RSXX_HAL_VERSION_RC     (0x00U) /*!< [7:0]  release candidate */
+#define STM32H7RSXX_HAL_VERSION_MAIN   (0x01UL) /*!< [31:24] main version */
+#define STM32H7RSXX_HAL_VERSION_SUB1   (0x02UL) /*!< [23:16] sub1 version */
+#define STM32H7RSXX_HAL_VERSION_SUB2   (0x01UL) /*!< [15:8]  sub2 version */
+#define STM32H7RSXX_HAL_VERSION_RC     (0x00UL) /*!< [7:0]  release candidate */
 #define STM32H7RSXX_HAL_VERSION        ((STM32H7RSXX_HAL_VERSION_MAIN  << 24U)\
                                         |(STM32H7RSXX_HAL_VERSION_SUB1 << 16U)\
-                                        |(STM32H7RSXX_HAL_VERSION_SUB2 << 8U )\
+                                        |(STM32H7RSXX_HAL_VERSION_SUB2 << 8U)\
                                         |(STM32H7RSXX_HAL_VERSION_RC))
 /**
   * @}
@@ -511,6 +511,18 @@ typedef enum
   * @}
   */
 
+/** @defgroup FMC_SwapBankMapping_Config FMC SwapBankMapping Config
+  * @{
+  */
+#define FMC_SWAPBANK_MODE0              (0x00000000U)     /*!< FMC memory default mapping is used */
+#define FMC_SWAPBANK_MODE1              FMC_BCR1_BMAP_0   /*!< FMC SDRAM bank1 and NOR/SRAM/PSRAM bank are swapped */
+
+#define IS_FMC_SWAPBANK_MODE(__MODE__) (((__MODE__) == FMC_SWAPBANK_MODE0) || \
+                                        ((__MODE__) == FMC_SWAPBANK_MODE1))
+/**
+  * @}
+  */
+
 /** @addtogroup SBS_Private_Macros
   * @{
   */
@@ -740,6 +752,17 @@ void                 HAL_AXIM_AMIB_IssuingConfigBusMatrix(AXIM_AMIB_TypeDef *Ami
                                                           uint32_t WriteIssuing);
 void                 HAL_AXIM_AMIB_EnableLongBurst(AXIM_AMIB_TypeDef *AmibInstance);
 void                 HAL_AXIM_AMIB_DisableLongBurst(AXIM_AMIB_TypeDef *AmibInstance);
+/**
+  * @}
+  */
+
+/** @addtogroup HAL_Exported_Functions_Group7
+  * @{
+  */
+
+/* FMC Configuration functions  *************************************************/
+void                 HAL_FMC_SetBankSwapConfig(uint32_t BankMapConfig);
+uint32_t             HAL_FMC_GetBankSwapConfig(void);
 /**
   * @}
   */

@@ -533,6 +533,19 @@ class Stm32SerieUpdate:
                         + filename.name
                         + ")\n"
                     )
+                if "_util_" in filename.name:
+                    # retrieve IP name from filename, like adc,
+                    # which is delimited by
+                    #   * _util_ on one side
+                    #   * and file extension on the other side
+                    pattern = r".*_util_(.*)\..*"
+                    cmakelists_new.write(
+                        "zephyr_library_sources_ifdef(CONFIG_USE_STM32_UTIL_"
+                        + re.sub(pattern, r"\1", filename.name).upper()
+                        + " drivers/src/"
+                        + filename.name
+                        + ")\n"
+                    )
         self.os_cmd(("dos2unix", str(cmakelists_path)))
 
     def generate_assert_file(self):
