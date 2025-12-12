@@ -39,6 +39,7 @@ tBleStatus aci_hal_transmitter_test_packets(uint8_t TX_Frequency,uint8_t Length_
 tBleStatus aci_hal_transmitter_test_packets_v2(uint8_t TX_Channel,uint8_t Test_Data_Length,uint8_t Packet_Payload,uint16_t Number_Of_Packets,uint8_t PHY,uint8_t CTE_Length,uint8_t CTE_Type,uint8_t Switching_Pattern_Length, uint8_t Antenna_IDs[]);
 tBleStatus aci_hal_write_radio_reg(uint32_t Start_Address, uint8_t Num_Bytes, uint8_t Data[]);
 tBleStatus aci_hal_read_radio_reg(uint32_t Start_Address, uint8_t Num_Bytes, uint8_t *Data_Length, uint8_t Data[]);
+tBleStatus aci_hal_updater_start(void);
 tBleStatus hci_le_read_maximum_advertising_data_length(uint16_t *Maximum_Advertising_Data_Length);
 tBleStatus aci_test_tx_notification_start(uint16_t Connection_Handle, uint16_t Service_Handle, uint16_t Char_Handle, uint16_t Value_Length);
 tBleStatus aci_test_tx_write_command_start(uint16_t Connection_Handle, uint16_t Attr_Handle, uint16_t Value_Length);

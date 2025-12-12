@@ -106,7 +106,7 @@ typedef enum
 
 /* Transparent Mode/DTM version (Bluetooth LE stack v4.x) */
 #define DTM_FW_VERSION_MAJOR    1
-#define DTM_FW_VERSION_MINOR    1
+#define DTM_FW_VERSION_MINOR    2
 #define DTM_FW_VERSION_PATCH    0
 
 #define UART_INTERFACE

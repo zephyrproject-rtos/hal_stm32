@@ -92,6 +92,8 @@
 #define ACI_TEST_REPORT_ENABLED\
         (CONNECTION_ENABLED)
 
+#define ACI_HAL_UPDATER_START_FORCE_DISABLED                                            1
+
 #if CONFIG_NO_HCI_COMMANDS
 /* Macros to force exclusion of some unnecessary HCI/ACI commands from DTM */
 #define HCI_DISCONNECT_FORCE_DISABLED                                                   1

@@ -52,8 +52,8 @@
                                                                 *   attribute values - BLUETOOTH CORE SPECIFICATION
                                                                 *   Version 5.1 | Vol 3, Part F page 2297 */
 
-#define BLE_GATT_CLT_SEC_ALL_CONN_HANDLES               (0xFFFFU) /**< Used to set default minimum security level */
-#define BLE_GATT_CLT_SEC_ALL_ATTR_HANDLES               (0xFFFFU) /**< Used to set default minimum security level */
+#define BLE_GATT_CLT_SEC_ALL_CONN_HANDLES               (0xFFFFU) /**< Used to identify minimum security setting level */
+#define BLE_GATT_CLT_SEC_ALL_ATTR_HANDLES               (0xFFFFU) /**< Used to identify minimum security setting level */
 /**
  *@}
  */

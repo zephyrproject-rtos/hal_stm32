@@ -212,6 +212,11 @@ tBleStatus hci_le_set_periodic_advertising_subevent_data(uint8_t Advertising_Han
     return BLE_ERROR_UNKNOWN_ADVERTISING_IDENTIFIER;
   }
 
+  if ((Num_Subevents == 0) || (Num_Subevents > 0x0F))
+  {
+    return BLE_ERROR_INVALID_HCI_CMD_PARAMS;
+  }
+
   if(pawr_buff_subevent_num_available() < Num_Subevents)
   {
     /* This happens is host has given more data than what requested by the Controller.  */

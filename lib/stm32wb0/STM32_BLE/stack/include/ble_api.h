@@ -3460,175 +3460,6 @@ tBleStatus hci_le_set_cig_parameters(uint8_t CIG_ID,
                                      CIS_Param_t CIS_Param[],
                                      uint16_t Connection_Handle[]);
 /**
- * @brief The HCI_LE_Set_CIG_Parameters_Test command should only be used for
- *        testing purposes. The command is used by a Central's Host to create a
- *        CIG and to set the parameters of one or more CISes that are associated
- *        with a CIG in the Controller. The CIG_ID parameter identifies a CIG.
- *        This parameter is allocated by the Central's Host and passed to the
- *        Peripheral's Host through the Link Layers during the process of
- *        creating a CIS. If the CIG_ID does not exist, then the Controller
- *        shall first create a new CIG. Once the CIG is created (whether through
- *        this command or previously), the Controller shall modify or add CIS
- *        configurations in the CIG that is identified by the CIG_ID and update
- *        all the parameters that apply to the CIG. The SDU_Interval_C_To_P
- *        parameter specifies the time interval of periodic SDUs from the
- *        Central's Host. The SDU_Interval_P_To_C parameter specifies the time
- *        interval of periodic SDUs from the Peripheral's Host. The FT_C_To_P
- *        parameter identifies the maximum time for a payload from the Central
- *        to Peripheral to be transmitted and re-transmitted, after which it is
- *        flushed (see [Vol 6] Part B, Section 4.5.13.5). This parameter is
- *        expressed in multiples of ISO_Interval. The FT_P_To_C parameter
- *        identifies the maximum time for a payload from the Peripheral to
- *        Central to be transmitted and re-transmitted, after which it is
- *        flushed (see[Vol 6] Part B, Section 4.5.13.5). This parameter is
- *        expressed in multiples of ISO_Interval. The ISO_Interval parameter
- *        specifies the time between two consecutive CIS anchor points. The
- *        CIS_Count parameter contains the number of CIS configurations being
- *        added or modified by this command. The Controller shall set the
- *        CIS_Count return parameter equal to this. The CIS_ID[i] parameter
- *        identifies the CIS and is set by the Central's Host and passed to the
- *        Peripheral's Host through the Link Layers during the process of
- *        establishing a CIS. The Worst_Case_SCA parameter is the worst-case
- *        sleep clock accuracy of all the Peripherals that will participate in
- *        the CIG. The Host should get the sleep clock accuracy from all the
- *        Peripherals before issuing this command. In case the Host cannot get
- *        the sleep clock accuracy from all the Peripherals, it shall set the
- *        Worst_Case_SCA parameter to zero. Note: The Worst_Case_SCA parameter
- *        can be used by the Link Layer to better allow for clock drift when
- *        scheduling the CISes in the CIG. For example, if a CIS has more than
- *        two subevents, the Link Layer of the Central can set the timing of the
- *        subevents such that the worst case drift in the Peripheral's clock
- *        will not exceed 2 x Sub_Interval. This prevents the Peripheral from
- *        synchronizing its timing to the wrong subevent (adjacent subevents
- *        cannot be on the same channel). The Packing parameter is used to
- *        indicate the preferred method of arranging subevents of multiple
- *        CISes. The subevents can be arranged in Sequential or Interleaved
- *        arrangement. This is a recommendation to the Controller which it may
- *        ignore. This parameter shall be ignored when there is only one CIS in
- *        the CIG. The Framing parameter indicates the format of the CIS Data
- *        PDUs of all the CISes. If the Framing parameter is set to 1 then the
- *        CIS Data PDUs of the specified CISes shall be framed, and when set to
- *        0 they shall be unframed (see [Vol 6] Part G, Section 1). The
- *        CIS_ID[i] parameter is used to identify a CIS. The NSE[i] parameter
- *        identifies the maximum number of subevents for each CIS in a CIG
- *        event. The Max_SDU_C_To_P[i] parameter identifies the maximum size of
- *        SDU from the Central's Host. If the CIS is unidirectional from
- *        Peripheral to Central, this parameter shall be set to 0. If a CIS
- *        configuration that is being modified has a data path set in the
- *        Central to Peripheral direction and the Host has specified that
- *        Max_SDU_C_To_P[i] shall be set to zero, the Controller shall return
- *        the error code Command Disallowed (0x0C). The minimum value of the
- *        Max_SDU_Size parameter in the ISO Transmit Test mode when the
- *        Payload_Type = 1 or 2 shall be 4 octets. The Max_SDU_P_To_C[i]
- *        parameter identifies the maximum size of SDU from the Peripheral's
- *        Host. If the CIS is unidirectional from Central to Peripheral, this
- *        parameter shall be set to 0. If a CIS configuration that is being
- *        modified has a data path set in the Peripheral to Central direction
- *        and the Host has specified that Max_SDU_P_To_C[i] shall be set to
- *        zero, the Controller shall return the error code Command Disallowed
- *        (0x0C).The minimum value of the Max_SDU parameter in the ISO Transmit
- *        Test mode when the Payload_Type = 1 or 2 shall be 4 octets. The
- *        Max_PDU_C_To_P[i] parameter identifies the maximum size PDU from the
- *        Central to Peripheral. The Max_PDU_P_To_C[i] parameter identifies the
- *        maximum size PDU from the Peripheral to Central. The PHY_C_To_P[i]
- *        parameter identifies the PHY to be used for transmission of packets
- *        from the Central to the Peripheral. The Host shall set only one bit in
- *        this parameter and the Controller shall use the PHY set by the Host.
- *        The PHY_P_To_C[i] parameter identifies the PHY to be used for
- *        transmission of packets from the Peripheral to the Central. The Host
- *        shall set only one bit in this parameter and the Controller shall use
- *        the PHY set by the Host. The BN_C_To_P[i] parameter identifies the
- *        burst number for Central to Peripheral (see [Vol 6] Part B, Section
- *        4.5.13). If the CIS is unidirectional from Peripheral to Central, this
- *        parameter shall be set to zero. The BN_P_To_C[i] parameter identifies
- *        the burst number for Peripheral to Central (see [Vol 6] Part B,
- *        Section 4.5.13). If the CIS is unidirectional from Central to
- *        Peripheral, this parameter shall be set to zero. If the Status return
- *        parameter is non-zero, then the state of the CIG and its CIS
- *        configurations shall not be changed by the command. If the CIG did not
- *        already exist, it shall not be created. If the Status return parameter
- *        is zero, then the Controller shall set the Connection_Handle arrayed
- *        return parameter to the connection handle(s) corresponding to the CIS
- *        configurations specified in the CIS_IDs command parameter, in the same
- *        order. If the same CIS_ID is being reconfigured, the same connection
- *        handle shall be returned. If the Host issues this command when the CIG
- *        is not in the configurable state, the Controller shall return the
- *        error code Command Disallowed (0x0C). If the Host attempts to create a
- *        CIG or set parameters that exceed the maximum supported resources in
- *        the Controller, the Controller shall return the error code Memory
- *        Capacity Exceeded (0x07). If the Host attempts to set CIS parameters
- *        that exceed the maximum supported connections in the Controller, the
- *        Controller shall return the error code Connection Limit Exceeded
- *        (0x09). If the Host attempts to set an invalid combination of CIS
- *        parameters, the Controller shall return the error code Unsupported
- *        Feature or Parameter Value (0x11). If the Host sets, in the
- *        PHY_C_To_P[i] or PHY_P_To_C[i] parameters, a bit for a PHY that the
- *        Controller does not support, including a bit that is reserved for
- *        future use, the Controller shall return the error code Unsupported
- *        Feature or Parameter Value (0x11). If the Controller does not support
- *        asymmetric PHYs and the Host sets PHY_C_To_P[i] to a different value
- *        than PHY_P_To_C[i], the Controller shall return the error code
- *        Unsupported Feature or Parameter Value (0x11).
- * @param CIG_ID Used to identify the CIG.
- *        Values:
- *        - 0x00 ... 0xEF
- * @param SDU_Interval_C_To_P The interval, in microseconds, of periodic SDUs.
- *        Values:
- *        - 0x0000FF ... 0x0FFFFF
- * @param SDU_Interval_P_To_C The interval, in microseconds, of periodic SDUs.
- *        Values:
- *        - 0x0000FF ... 0x0FFFFF
- * @param FT_C_To_P The flush timeout in multiples of ISO_Interval for each
- *        payload sent from the Central to Peripheral.
- *        Values:
- *        - 0x01 ... 0xFF
- * @param FT_P_To_C The flush timeout in multiples of ISO_Interval for each
- *        payload sent from the Peripheral to Central.
- *        Values:
- *        - 0x01 ... 0xFF
- * @param ISO_Interval Time between consecutive CIS anchor points. Time = N *
- *        1.25 ms
- *        Values:
- *        - 0x0004 (5.00 ms)  ... 0x0C80 (4000.00 ms)
- * @param Worst_Case_SCA Worst-case sleep clock accuracy of all the Peripherals.
- *        Values:
- *        - 0x00: 251 ppm to 500 ppm
- *        - 0x01: 151 ppm to 250 ppm
- *        - 0x02: 101 ppm to 150 ppm
- *        - 0x03: 76 ppm to 100 ppm
- *        - 0x04: 51 ppm to 75 ppm
- *        - 0x05: 31 ppm to 50 ppm
- *        - 0x06: 21 ppm to 30 ppm
- *        - 0x07: 0 ppm to 20 ppm
- * @param Packing Preferred method of arranging subevents of multiple CISes.
- *        Values:
- *        - 0x00: Sequential
- *        - 0x01: Interleaved
- * @param Framing Format of the CIS Data PDUs of the specified CISes.
- *        Values:
- *        - 0x00: Unframed
- *        - 0x01: Framed
- * @param CIS_Count Total number of CIS configurations in the CIG being added or
- *        modified.
- *        Values:
- *        - 0x00 ... 0x1F
- * @param CIS_Param_Test See @ref CIS_Param_Test_t
- * @param[out] Connection_Handle Connection handle of the CIS in the CIG.
- * @retval Value indicating success or error code.
- */
-tBleStatus hci_le_set_cig_parameters_test(uint8_t CIG_ID,
-                                          uint8_t SDU_Interval_C_To_P[3],
-                                          uint8_t SDU_Interval_P_To_C[3],
-                                          uint8_t FT_C_To_P,
-                                          uint8_t FT_P_To_C,
-                                          uint16_t ISO_Interval,
-                                          uint8_t Worst_Case_SCA,
-                                          uint8_t Packing,
-                                          uint8_t Framing,
-                                          uint8_t CIS_Count,
-                                          CIS_Param_Test_t CIS_Param_Test[],
-                                          uint16_t Connection_Handle[]);
-/**
  * @brief The HCI_LE_Create_CIS command is used by the Central's Host to create
  *        one or more CISes using the connections identified by the
  *        ACL_Connection_Handle arrayed parameter. The CIS_Count parameter is
@@ -3843,84 +3674,6 @@ tBleStatus hci_le_create_big(uint8_t BIG_Handle,
                              uint8_t Encryption,
                              uint8_t Broadcast_Code[16]);
 /**
- * @brief The HCI_LE_Create_BIG_Test command should only be used for testing
- *        purposes. The command is used to create one or more BISes of a BIG.
- *        All BISes in the BIG have the same values for all parameters.
- * @param BIG_Handle Used to identify the BIG.
- *        Values:
- *        - 0x00 ... 0xEF
- * @param Advertising_Handle Used to identify the periodic advertising train.
- *        Values:
- *        - 0x00 ... 0xEF
- * @param Num_BIS Total number of BISes in the BIG.
- *        Values:
- *        - 0x01 ... 0x1F
- * @param SDU_Interval The interval, in microseconds, of periodic SDUs.
- *        Values:
- *        - 0x0000FF ... 0x0FFFFF
- * @param ISO_Interval The time between consecutive BIG anchor points. Time = N
- *        * 1.25 ms Time Range: 5 ms to 4 s
- *        Values:
- *        - 0x0004 (5.00 ms)  ... 0x0C80 (4000.00 ms)
- * @param NSE The total number of subevents in each interval of each BIS in the
- *        BIG.
- *        Values:
- *        - 0x01 ... 0x1F
- * @param Max_SDU Maximum size of an SDU, in octets.
- *        Values:
- *        - 0x0001 ... 0x0FFF
- * @param Max_PDU Maximum size, in octets, of payload
- *        Values:
- *        - 0x0001 ... 0x00FB
- * @param PHY Transmitter PHY of packets.
- *        Flags:
- *        - 0x01: LE_1M_PHY_BIT
- *        - 0x02: LE_2M_PHY_BIT
- *        - 0x04: LE_CODED_PHY_BIT
- * @param Packing Used to indicate the preferred method of arranging subevents
- *        of multiple BISes.
- *        Values:
- *        - 0x00: Sequential
- *        - 0x01: Interleaved
- * @param Framing The format for sending BIS Data PDUs.
- *        Values:
- *        - 0x00: Unframed
- *        - 0x01: Framed
- * @param BN The number of new payloads in each interval for each BIS.
- *        Values:
- *        - 0x01 ... 0x07
- * @param IRC The number of times the scheduled payload(s) are transmitted in a
- *        given event.
- *        Values:
- *        - 0x01 ... 0x0F
- * @param PTO Offset used for pre-transmissions.
- *        Values:
- *        - 0x00 ... 0x0F
- * @param Encryption The encryption mode of the BISes.
- *        Values:
- *        - 0x00: Unencrypted
- *        - 0x01: Encrypted
- * @param Broadcast_Code 128-bit code used for deriving the session key for
- *        decrypting payloads of BISes in the BIG.
- * @retval Value indicating success or error code.
- */
-tBleStatus hci_le_create_big_test(uint8_t BIG_Handle,
-                                  uint8_t Advertising_Handle,
-                                  uint8_t Num_BIS,
-                                  uint8_t SDU_Interval[3],
-                                  uint16_t ISO_Interval,
-                                  uint8_t NSE,
-                                  uint16_t Max_SDU,
-                                  uint16_t Max_PDU,
-                                  uint8_t PHY,
-                                  uint8_t Packing,
-                                  uint8_t Framing,
-                                  uint8_t BN,
-                                  uint8_t IRC,
-                                  uint8_t PTO,
-                                  uint8_t Encryption,
-                                  uint8_t Broadcast_Code[16]);
-/**
  * @brief The HCI_LE_Terminate_BIG command is used to terminate a BIG identified
  *        by the BIG_Handle parameter. The command also terminates the
  *        transmission of all BISes of the BIG, destroys the associated
@@ -4086,90 +3839,6 @@ tBleStatus hci_le_setup_iso_data_path(uint16_t Connection_Handle,
  */
 tBleStatus hci_le_remove_iso_data_path(uint16_t Connection_Handle,
                                        uint8_t Data_Path_Direction);
-/**
- * @brief The HCI_LE_ISO_Transmit_Test command should only be used in the ISO
- *        Test mode and only for testing purposes. The command is used to
- *        configure an established CIS or BIS specified by the Connection_Handle
- *        parameter, and transmit test payloads which are generated by the
- *        Controller. When using this command for a CIS, the Host shall set up a
- *        CIG before invoking this command. When using this command for a BIS,
- *        the Host shall create the BIG before invoking this command. This
- *        command applies to all BISes in the BIG.
- * @param Connection_Handle Connection handle of the CIS or BIS.
- *        Values:
- *        - 0x0000 ... 0x0EFF
- * @param Payload_Type The Payload_Type parameter defines the configuration of
- *        SDUs in the payload.
- *        Values:
- *        - 0x00: ZERO_LENGTH_PAYLOAD
- *        - 0x01: VARIABLE_LENGTH_PAYLOAD
- *        - 0x02: MAXIMUM_LENGTH_PAYLOAD
- * @retval Value indicating success or error code.
- */
-tBleStatus hci_le_iso_transmit_test(uint16_t Connection_Handle,
-                                    uint8_t Payload_Type);
-/**
- * @brief The HCI_LE_ISO_Receive_Test command should only be used in the ISO
- *        Test mode and only for testing purposes. The command is used to
- *        configure an established CIS or a synchronized BIG specified by the
- *        Connection_Handle parameter to receive payloads. When using this
- *        command for a BIS, the Host shall synchronize with a BIG using the
- *        HCI_LE_BIG_Create_Sync command before invoking this command.
- * @param Connection_Handle Connection handle of the CIS or BIS.
- *        Values:
- *        - 0x0000 ... 0x0EFF
- * @param Payload_Type The Payload_Type parameter defines the configuration of
- *        SDUs in the payload.
- *        Values:
- *        - 0x00: ZERO_LENGTH_PAYLOAD
- *        - 0x01: VARIABLE_LENGTH_PAYLOAD
- *        - 0x02: MAXIMUM_LENGTH_PAYLOAD
- * @retval Value indicating success or error code.
- */
-tBleStatus hci_le_iso_receive_test(uint16_t Connection_Handle,
-                                   uint8_t Payload_Type);
-/**
- * @brief The HCI_LE_ISO_Read_Test_Counters command should only be used in the
- *        ISO Test mode and only for testing purposes. The command is used to
- *        read the test counters (see Core 5.2 [Vol 6] Part B, Section 7) in the
- *        Controller which is configured in ISO Receive Test mode for a CIS or
- *        BIS specified by the Connection_Handle. Reading the test counters does
- *        not reset the test counters.
- * @param Connection_Handle Connection handle of the CIS or BIS.
- *        Values:
- *        - 0x0000 ... 0x0EFF
- * @param[out] Received_Packet_Count Number in the Received_Packet_Count.
- * @param[out] Missed_Packet_Count Number in the Missed_Packet_Count.
- * @param[out] Failed_Packet_Count Number in the Failed_Packet_Count.
- * @retval Value indicating success or error code.
- */
-tBleStatus hci_le_iso_read_test_counters(uint16_t Connection_Handle,
-                                         uint32_t *Received_Packet_Count,
-                                         uint32_t *Missed_Packet_Count,
-                                         uint32_t *Failed_Packet_Count);
-/**
- * @brief The HCI_LE_ISO_Test_End command should only be used in the ISO Test
- *        mode and only for testing purposes. The command is used to terminate
- *        the ISO Transmit and/or Receive Test mode for a CIS or BIS specified
- *        by the Connection_Handle parameter but does not terminate the CIS or
- *        BIS. When the Host terminates the ISO Test mode for a CIS or BIS that
- *        is set to ISO Transmit Test mode only, the test counters in the return
- *        parameters shall be set to zero. When the Host terminates the ISO Test
- *        mode for a CIS or BIS that is set to the ISO Receive Test mode, the
- *        return parameters contain the values of the test counters as defined
- *        in [Vol 6] Part B, Section 7.
- * @param Connection_Handle Connection handle of the CIS or BIS.
- *        Values:
- *        - 0x0000 ... 0x0EFF
- * @param[out] Received_Packet_Count Number in the Received_Packet_Count.
- * @param[out] Missed_Packet_Count Number in the Missed_Packet_Count.
- * @param[out] Failed_Packet_Count Number in the Failed_Packet_Count.
- * @retval Value indicating success or error code.
- */
-tBleStatus hci_le_iso_test_end(uint16_t Connection_Handle,
-                               uint32_t *Received_Packet_Count,
-                               uint32_t *Missed_Packet_Count,
-                               uint32_t *Failed_Packet_Count);
 /**
  * @brief The HCI_LE_Set_Host_Feature command is used by the Host to set or
  *        clear a bit controlled by the Host in the Link Layer FeatureSet stored
@@ -5217,6 +4886,337 @@ tBleStatus hci_le_transmitter_test_v3(uint8_t TX_Channel,
                                       uint8_t CTE_Type,
                                       uint8_t Switching_Pattern_Length,
                                       uint8_t Antenna_IDs[]);
+/**
+ * @brief The HCI_LE_Set_CIG_Parameters_Test command should only be used for
+ *        testing purposes. The command is used by a Central's Host to create a
+ *        CIG and to set the parameters of one or more CISes that are associated
+ *        with a CIG in the Controller. The CIG_ID parameter identifies a CIG.
+ *        This parameter is allocated by the Central's Host and passed to the
+ *        Peripheral's Host through the Link Layers during the process of
+ *        creating a CIS. If the CIG_ID does not exist, then the Controller
+ *        shall first create a new CIG. Once the CIG is created (whether through
+ *        this command or previously), the Controller shall modify or add CIS
+ *        configurations in the CIG that is identified by the CIG_ID and update
+ *        all the parameters that apply to the CIG. The SDU_Interval_C_To_P
+ *        parameter specifies the time interval of periodic SDUs from the
+ *        Central's Host. The SDU_Interval_P_To_C parameter specifies the time
+ *        interval of periodic SDUs from the Peripheral's Host. The FT_C_To_P
+ *        parameter identifies the maximum time for a payload from the Central
+ *        to Peripheral to be transmitted and re-transmitted, after which it is
+ *        flushed (see [Vol 6] Part B, Section 4.5.13.5). This parameter is
+ *        expressed in multiples of ISO_Interval. The FT_P_To_C parameter
+ *        identifies the maximum time for a payload from the Peripheral to
+ *        Central to be transmitted and re-transmitted, after which it is
+ *        flushed (see[Vol 6] Part B, Section 4.5.13.5). This parameter is
+ *        expressed in multiples of ISO_Interval. The ISO_Interval parameter
+ *        specifies the time between two consecutive CIS anchor points. The
+ *        CIS_Count parameter contains the number of CIS configurations being
+ *        added or modified by this command. The Controller shall set the
+ *        CIS_Count return parameter equal to this. The CIS_ID[i] parameter
+ *        identifies the CIS and is set by the Central's Host and passed to the
+ *        Peripheral's Host through the Link Layers during the process of
+ *        establishing a CIS. The Worst_Case_SCA parameter is the worst-case
+ *        sleep clock accuracy of all the Peripherals that will participate in
+ *        the CIG. The Host should get the sleep clock accuracy from all the
+ *        Peripherals before issuing this command. In case the Host cannot get
+ *        the sleep clock accuracy from all the Peripherals, it shall set the
+ *        Worst_Case_SCA parameter to zero. Note: The Worst_Case_SCA parameter
+ *        can be used by the Link Layer to better allow for clock drift when
+ *        scheduling the CISes in the CIG. For example, if a CIS has more than
+ *        two subevents, the Link Layer of the Central can set the timing of the
+ *        subevents such that the worst case drift in the Peripheral's clock
+ *        will not exceed 2 x Sub_Interval. This prevents the Peripheral from
+ *        synchronizing its timing to the wrong subevent (adjacent subevents
+ *        cannot be on the same channel). The Packing parameter is used to
+ *        indicate the preferred method of arranging subevents of multiple
+ *        CISes. The subevents can be arranged in Sequential or Interleaved
+ *        arrangement. This is a recommendation to the Controller which it may
+ *        ignore. This parameter shall be ignored when there is only one CIS in
+ *        the CIG. The Framing parameter indicates the format of the CIS Data
+ *        PDUs of all the CISes. If the Framing parameter is set to 1 then the
+ *        CIS Data PDUs of the specified CISes shall be framed, and when set to
+ *        0 they shall be unframed (see [Vol 6] Part G, Section 1). The
+ *        CIS_ID[i] parameter is used to identify a CIS. The NSE[i] parameter
+ *        identifies the maximum number of subevents for each CIS in a CIG
+ *        event. The Max_SDU_C_To_P[i] parameter identifies the maximum size of
+ *        SDU from the Central's Host. If the CIS is unidirectional from
+ *        Peripheral to Central, this parameter shall be set to 0. If a CIS
+ *        configuration that is being modified has a data path set in the
+ *        Central to Peripheral direction and the Host has specified that
+ *        Max_SDU_C_To_P[i] shall be set to zero, the Controller shall return
+ *        the error code Command Disallowed (0x0C). The minimum value of the
+ *        Max_SDU_Size parameter in the ISO Transmit Test mode when the
+ *        Payload_Type = 1 or 2 shall be 4 octets. The Max_SDU_P_To_C[i]
+ *        parameter identifies the maximum size of SDU from the Peripheral's
+ *        Host. If the CIS is unidirectional from Central to Peripheral, this
+ *        parameter shall be set to 0. If a CIS configuration that is being
+ *        modified has a data path set in the Peripheral to Central direction
+ *        and the Host has specified that Max_SDU_P_To_C[i] shall be set to
+ *        zero, the Controller shall return the error code Command Disallowed
+ *        (0x0C).The minimum value of the Max_SDU parameter in the ISO Transmit
+ *        Test mode when the Payload_Type = 1 or 2 shall be 4 octets. The
+ *        Max_PDU_C_To_P[i] parameter identifies the maximum size PDU from the
+ *        Central to Peripheral. The Max_PDU_P_To_C[i] parameter identifies the
+ *        maximum size PDU from the Peripheral to Central. The PHY_C_To_P[i]
+ *        parameter identifies the PHY to be used for transmission of packets
+ *        from the Central to the Peripheral. The Host shall set only one bit in
+ *        this parameter and the Controller shall use the PHY set by the Host.
+ *        The PHY_P_To_C[i] parameter identifies the PHY to be used for
+ *        transmission of packets from the Peripheral to the Central. The Host
+ *        shall set only one bit in this parameter and the Controller shall use
+ *        the PHY set by the Host. The BN_C_To_P[i] parameter identifies the
+ *        burst number for Central to Peripheral (see [Vol 6] Part B, Section
+ *        4.5.13). If the CIS is unidirectional from Peripheral to Central, this
+ *        parameter shall be set to zero. The BN_P_To_C[i] parameter identifies
+ *        the burst number for Peripheral to Central (see [Vol 6] Part B,
+ *        Section 4.5.13). If the CIS is unidirectional from Central to
+ *        Peripheral, this parameter shall be set to zero. If the Status return
+ *        parameter is non-zero, then the state of the CIG and its CIS
+ *        configurations shall not be changed by the command. If the CIG did not
+ *        already exist, it shall not be created. If the Status return parameter
+ *        is zero, then the Controller shall set the Connection_Handle arrayed
+ *        return parameter to the connection handle(s) corresponding to the CIS
+ *        configurations specified in the CIS_IDs command parameter, in the same
+ *        order. If the same CIS_ID is being reconfigured, the same connection
+ *        handle shall be returned. If the Host issues this command when the CIG
+ *        is not in the configurable state, the Controller shall return the
+ *        error code Command Disallowed (0x0C). If the Host attempts to create a
+ *        CIG or set parameters that exceed the maximum supported resources in
+ *        the Controller, the Controller shall return the error code Memory
+ *        Capacity Exceeded (0x07). If the Host attempts to set CIS parameters
+ *        that exceed the maximum supported connections in the Controller, the
+ *        Controller shall return the error code Connection Limit Exceeded
+ *        (0x09). If the Host attempts to set an invalid combination of CIS
+ *        parameters, the Controller shall return the error code Unsupported
+ *        Feature or Parameter Value (0x11). If the Host sets, in the
+ *        PHY_C_To_P[i] or PHY_P_To_C[i] parameters, a bit for a PHY that the
+ *        Controller does not support, including a bit that is reserved for
+ *        future use, the Controller shall return the error code Unsupported
+ *        Feature or Parameter Value (0x11). If the Controller does not support
+ *        asymmetric PHYs and the Host sets PHY_C_To_P[i] to a different value
+ *        than PHY_P_To_C[i], the Controller shall return the error code
+ *        Unsupported Feature or Parameter Value (0x11).
+ * @param CIG_ID Used to identify the CIG.
+ *        Values:
+ *        - 0x00 ... 0xEF
+ * @param SDU_Interval_C_To_P The interval, in microseconds, of periodic SDUs.
+ *        Values:
+ *        - 0x0000FF ... 0x0FFFFF
+ * @param SDU_Interval_P_To_C The interval, in microseconds, of periodic SDUs.
+ *        Values:
+ *        - 0x0000FF ... 0x0FFFFF
+ * @param FT_C_To_P The flush timeout in multiples of ISO_Interval for each
+ *        payload sent from the Central to Peripheral.
+ *        Values:
+ *        - 0x01 ... 0xFF
+ * @param FT_P_To_C The flush timeout in multiples of ISO_Interval for each
+ *        payload sent from the Peripheral to Central.
+ *        Values:
+ *        - 0x01 ... 0xFF
+ * @param ISO_Interval Time between consecutive CIS anchor points. Time = N *
+ *        1.25 ms
+ *        Values:
+ *        - 0x0004 (5.00 ms)  ... 0x0C80 (4000.00 ms)
+ * @param Worst_Case_SCA Worst-case sleep clock accuracy of all the Peripherals.
+ *        Values:
+ *        - 0x00: 251 ppm to 500 ppm
+ *        - 0x01: 151 ppm to 250 ppm
+ *        - 0x02: 101 ppm to 150 ppm
+ *        - 0x03: 76 ppm to 100 ppm
+ *        - 0x04: 51 ppm to 75 ppm
+ *        - 0x05: 31 ppm to 50 ppm
+ *        - 0x06: 21 ppm to 30 ppm
+ *        - 0x07: 0 ppm to 20 ppm
+ * @param Packing Preferred method of arranging subevents of multiple CISes.
+ *        Values:
+ *        - 0x00: Sequential
+ *        - 0x01: Interleaved
+ * @param Framing Format of the CIS Data PDUs of the specified CISes.
+ *        Values:
+ *        - 0x00: Unframed
+ *        - 0x01: Framed
+ * @param CIS_Count Total number of CIS configurations in the CIG being added or
+ *        modified.
+ *        Values:
+ *        - 0x00 ... 0x1F
+ * @param CIS_Param_Test See @ref CIS_Param_Test_t
+ * @param[out] Connection_Handle Connection handle of the CIS in the CIG.
+ * @retval Value indicating success or error code.
+ */
+tBleStatus hci_le_set_cig_parameters_test(uint8_t CIG_ID,
+                                          uint8_t SDU_Interval_C_To_P[3],
+                                          uint8_t SDU_Interval_P_To_C[3],
+                                          uint8_t FT_C_To_P,
+                                          uint8_t FT_P_To_C,
+                                          uint16_t ISO_Interval,
+                                          uint8_t Worst_Case_SCA,
+                                          uint8_t Packing,
+                                          uint8_t Framing,
+                                          uint8_t CIS_Count,
+                                          CIS_Param_Test_t CIS_Param_Test[],
+                                          uint16_t Connection_Handle[]);
+/**
+ * @brief The HCI_LE_Create_BIG_Test command should only be used for testing
+ *        purposes. The command is used to create one or more BISes of a BIG.
+ *        All BISes in the BIG have the same values for all parameters.
+ * @param BIG_Handle Used to identify the BIG.
+ *        Values:
+ *        - 0x00 ... 0xEF
+ * @param Advertising_Handle Used to identify the periodic advertising train.
+ *        Values:
+ *        - 0x00 ... 0xEF
+ * @param Num_BIS Total number of BISes in the BIG.
+ *        Values:
+ *        - 0x01 ... 0x1F
+ * @param SDU_Interval The interval, in microseconds, of periodic SDUs.
+ *        Values:
+ *        - 0x0000FF ... 0x0FFFFF
+ * @param ISO_Interval The time between consecutive BIG anchor points. Time = N
+ *        * 1.25 ms Time Range: 5 ms to 4 s
+ *        Values:
+ *        - 0x0004 (5.00 ms)  ... 0x0C80 (4000.00 ms)
+ * @param NSE The total number of subevents in each interval of each BIS in the
+ *        BIG.
+ *        Values:
+ *        - 0x01 ... 0x1F
+ * @param Max_SDU Maximum size of an SDU, in octets.
+ *        Values:
+ *        - 0x0001 ... 0x0FFF
+ * @param Max_PDU Maximum size, in octets, of payload
+ *        Values:
+ *        - 0x0001 ... 0x00FB
+ * @param PHY Transmitter PHY of packets.
+ *        Flags:
+ *        - 0x01: LE_1M_PHY_BIT
+ *        - 0x02: LE_2M_PHY_BIT
+ *        - 0x04: LE_CODED_PHY_BIT
+ * @param Packing Used to indicate the preferred method of arranging subevents
+ *        of multiple BISes.
+ *        Values:
+ *        - 0x00: Sequential
+ *        - 0x01: Interleaved
+ * @param Framing The format for sending BIS Data PDUs.
+ *        Values:
+ *        - 0x00: Unframed
+ *        - 0x01: Framed
+ * @param BN The number of new payloads in each interval for each BIS.
+ *        Values:
+ *        - 0x01 ... 0x07
+ * @param IRC The number of times the scheduled payload(s) are transmitted in a
+ *        given event.
+ *        Values:
+ *        - 0x01 ... 0x0F
+ * @param PTO Offset used for pre-transmissions.
+ *        Values:
+ *        - 0x00 ... 0x0F
+ * @param Encryption The encryption mode of the BISes.
+ *        Values:
+ *        - 0x00: Unencrypted
+ *        - 0x01: Encrypted
+ * @param Broadcast_Code 128-bit code used for deriving the session key for
+ *        decrypting payloads of BISes in the BIG.
+ * @retval Value indicating success or error code.
+ */
+tBleStatus hci_le_create_big_test(uint8_t BIG_Handle,
+                                  uint8_t Advertising_Handle,
+                                  uint8_t Num_BIS,
+                                  uint8_t SDU_Interval[3],
+                                  uint16_t ISO_Interval,
+                                  uint8_t NSE,
+                                  uint16_t Max_SDU,
+                                  uint16_t Max_PDU,
+                                  uint8_t PHY,
+                                  uint8_t Packing,
+                                  uint8_t Framing,
+                                  uint8_t BN,
+                                  uint8_t IRC,
+                                  uint8_t PTO,
+                                  uint8_t Encryption,
+                                  uint8_t Broadcast_Code[16]);
+/**
+ * @brief The HCI_LE_ISO_Transmit_Test command should only be used in the ISO
+ *        Test mode and only for testing purposes. The command is used to
+ *        configure an established CIS or BIS specified by the Connection_Handle
+ *        parameter, and transmit test payloads which are generated by the
+ *        Controller. When using this command for a CIS, the Host shall set up a
+ *        CIG before invoking this command. When using this command for a BIS,
+ *        the Host shall create the BIG before invoking this command. This
+ *        command applies to all BISes in the BIG.
+ * @param Connection_Handle Connection handle of the CIS or BIS.
+ *        Values:
+ *        - 0x0000 ... 0x0EFF
+ * @param Payload_Type The Payload_Type parameter defines the configuration of
+ *        SDUs in the payload.
+ *        Values:
+ *        - 0x00: ZERO_LENGTH_PAYLOAD
+ *        - 0x01: VARIABLE_LENGTH_PAYLOAD
+ *        - 0x02: MAXIMUM_LENGTH_PAYLOAD
+ * @retval Value indicating success or error code.
+ */
+tBleStatus hci_le_iso_transmit_test(uint16_t Connection_Handle,
+                                    uint8_t Payload_Type);
+/**
+ * @brief The HCI_LE_ISO_Receive_Test command should only be used in the ISO
+ *        Test mode and only for testing purposes. The command is used to
+ *        configure an established CIS or a synchronized BIG specified by the
+ *        Connection_Handle parameter to receive payloads. When using this
+ *        command for a BIS, the Host shall synchronize with a BIG using the
+ *        HCI_LE_BIG_Create_Sync command before invoking this command.
+ * @param Connection_Handle Connection handle of the CIS or BIS.
+ *        Values:
+ *        - 0x0000 ... 0x0EFF
+ * @param Payload_Type The Payload_Type parameter defines the configuration of
+ *        SDUs in the payload.
+ *        Values:
+ *        - 0x00: ZERO_LENGTH_PAYLOAD
+ *        - 0x01: VARIABLE_LENGTH_PAYLOAD
+ *        - 0x02: MAXIMUM_LENGTH_PAYLOAD
+ * @retval Value indicating success or error code.
+ */
+tBleStatus hci_le_iso_receive_test(uint16_t Connection_Handle,
+                                   uint8_t Payload_Type);
+/**
+ * @brief The HCI_LE_ISO_Read_Test_Counters command should only be used in the
+ *        ISO Test mode and only for testing purposes. The command is used to
+ *        read the test counters (see Core 5.2 [Vol 6] Part B, Section 7) in the
+ *        Controller which is configured in ISO Receive Test mode for a CIS or
+ *        BIS specified by the Connection_Handle. Reading the test counters does
+ *        not reset the test counters.
+ * @param Connection_Handle Connection handle of the CIS or BIS.
+ *        Values:
+ *        - 0x0000 ... 0x0EFF
+ * @param[out] Received_Packet_Count Number in the Received_Packet_Count.
+ * @param[out] Missed_Packet_Count Number in the Missed_Packet_Count.
+ * @param[out] Failed_Packet_Count Number in the Failed_Packet_Count.
+ * @retval Value indicating success or error code.
+ */
+tBleStatus hci_le_iso_read_test_counters(uint16_t Connection_Handle,
+                                         uint32_t *Received_Packet_Count,
+                                         uint32_t *Missed_Packet_Count,
+                                         uint32_t *Failed_Packet_Count);
+/**
+ * @brief The HCI_LE_ISO_Test_End command should only be used in the ISO Test
+ *        mode and only for testing purposes. The command is used to terminate
+ *        the ISO Transmit and/or Receive Test mode for a CIS or BIS specified
+ *        by the Connection_Handle parameter but does not terminate the CIS or
+ *        BIS. When the Host terminates the ISO Test mode for a CIS or BIS that
+ *        is set to ISO Transmit Test mode only, the test counters in the return
+ *        parameters shall be set to zero. When the Host terminates the ISO Test
+ *        mode for a CIS or BIS that is set to the ISO Receive Test mode, the
+ *        return parameters contain the values of the test counters as defined
+ *        in [Vol 6] Part B, Section 7.
+ * @param Connection_Handle Connection handle of the CIS or BIS.
+ *        Values:
+ *        - 0x0000 ... 0x0EFF
+ * @param[out] Received_Packet_Count Number in the Received_Packet_Count.
+ * @param[out] Missed_Packet_Count Number in the Missed_Packet_Count.
+ * @param[out] Failed_Packet_Count Number in the Failed_Packet_Count.
+ * @retval Value indicating success or error code.
+ */
+tBleStatus hci_le_iso_test_end(uint16_t Connection_Handle,
+                               uint32_t *Received_Packet_Count,
+                               uint32_t *Missed_Packet_Count,
+                               uint32_t *Failed_Packet_Count);
 /**
  * @brief This command is used to start a test where the DUT generates test
  *        reference packets at a fixed interval. The Controller shall transmit

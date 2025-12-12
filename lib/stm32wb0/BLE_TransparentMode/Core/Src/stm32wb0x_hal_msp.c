@@ -86,70 +86,70 @@ void HAL_MspInit(void)
 }
 
 /**
-* @brief PKA MSP Initialization
-* This function configures the hardware resources used in this example
-* @param hpka: PKA handle pointer
-* @retval None
-*/
+  * @brief PKA MSP Initialization
+  * This function configures the hardware resources used in this example
+  * @param hpka: PKA handle pointer
+  * @retval None
+  */
 void HAL_PKA_MspInit(PKA_HandleTypeDef* hpka)
 {
   if(hpka->Instance==PKA)
   {
-  /* USER CODE BEGIN PKA_MspInit 0 */
+    /* USER CODE BEGIN PKA_MspInit 0 */
 
-  /* USER CODE END PKA_MspInit 0 */
+    /* USER CODE END PKA_MspInit 0 */
     /* Peripheral clock enable */
     __HAL_RCC_PKA_CLK_ENABLE();
     /* PKA interrupt Init */
     HAL_NVIC_SetPriority(PKA_IRQn, 1, 0);
     HAL_NVIC_EnableIRQ(PKA_IRQn);
-  /* USER CODE BEGIN PKA_MspInit 1 */
+    /* USER CODE BEGIN PKA_MspInit 1 */
 
-  /* USER CODE END PKA_MspInit 1 */
+    /* USER CODE END PKA_MspInit 1 */
 
   }
 
 }
 
 /**
-* @brief PKA MSP De-Initialization
-* This function freeze the hardware resources used in this example
-* @param hpka: PKA handle pointer
-* @retval None
-*/
+  * @brief PKA MSP De-Initialization
+  * This function freeze the hardware resources used in this example
+  * @param hpka: PKA handle pointer
+  * @retval None
+  */
 void HAL_PKA_MspDeInit(PKA_HandleTypeDef* hpka)
 {
   if(hpka->Instance==PKA)
   {
-  /* USER CODE BEGIN PKA_MspDeInit 0 */
+    /* USER CODE BEGIN PKA_MspDeInit 0 */
 
-  /* USER CODE END PKA_MspDeInit 0 */
+    /* USER CODE END PKA_MspDeInit 0 */
     /* Peripheral clock disable */
     __HAL_RCC_PKA_CLK_DISABLE();
 
     /* PKA interrupt DeInit */
     HAL_NVIC_DisableIRQ(PKA_IRQn);
-  /* USER CODE BEGIN PKA_MspDeInit 1 */
+    /* USER CODE BEGIN PKA_MspDeInit 1 */
 
-  /* USER CODE END PKA_MspDeInit 1 */
+    /* USER CODE END PKA_MspDeInit 1 */
   }
 
 }
 
 /**
-* @brief RADIO MSP Initialization
-* This function configures the hardware resources used in this example
-* @param hradio: RADIO handle pointer
-* @retval None
-*/
+  * @brief RADIO MSP Initialization
+  * This function configures the hardware resources used in this example
+  * @param hradio: RADIO handle pointer
+  * @retval None
+  */
 void HAL_RADIO_MspInit(RADIO_HandleTypeDef* hradio)
 {
   RCC_PeriphCLKInitTypeDef PeriphClkInitStruct = {0};
   if(hradio->Instance==RADIO)
   {
-  /* USER CODE BEGIN RADIO_MspInit 0 */
+    /* USER CODE BEGIN RADIO_MspInit 0 */
 
-  /* USER CODE END RADIO_MspInit 0 */
+    /* USER CODE END RADIO_MspInit 0 */
 
   /** Initializes the peripherals clock
   */
@@ -176,27 +176,29 @@ void HAL_RADIO_MspInit(RADIO_HandleTypeDef* hradio)
     HAL_NVIC_EnableIRQ(RADIO_TXRX_IRQn);
     HAL_NVIC_SetPriority(RADIO_TXRX_SEQ_IRQn, 0, 0);
     HAL_NVIC_EnableIRQ(RADIO_TXRX_SEQ_IRQn);
-  /* USER CODE BEGIN RADIO_MspInit 1 */
+    HAL_NVIC_SetPriority(RADIO_RRM_IRQn, 0, 0);
+    HAL_NVIC_EnableIRQ(RADIO_RRM_IRQn);
+    /* USER CODE BEGIN RADIO_MspInit 1 */
 
-  /* USER CODE END RADIO_MspInit 1 */
+    /* USER CODE END RADIO_MspInit 1 */
 
   }
 
 }
 
 /**
-* @brief RADIO MSP De-Initialization
-* This function freeze the hardware resources used in this example
-* @param hradio: RADIO handle pointer
-* @retval None
-*/
+  * @brief RADIO MSP De-Initialization
+  * This function freeze the hardware resources used in this example
+  * @param hradio: RADIO handle pointer
+  * @retval None
+  */
 void HAL_RADIO_MspDeInit(RADIO_HandleTypeDef* hradio)
 {
   if(hradio->Instance==RADIO)
   {
-  /* USER CODE BEGIN RADIO_MspDeInit 0 */
+    /* USER CODE BEGIN RADIO_MspDeInit 0 */
 
-  /* USER CODE END RADIO_MspDeInit 0 */
+    /* USER CODE END RADIO_MspDeInit 0 */
     /* Peripheral clock disable */
     __HAL_RCC_RADIO_CLK_DISABLE();
     __HAL_RCC_RADIO_FORCE_RESET();
@@ -205,28 +207,29 @@ void HAL_RADIO_MspDeInit(RADIO_HandleTypeDef* hradio)
     /* RADIO interrupt DeInit */
     HAL_NVIC_DisableIRQ(RADIO_TXRX_IRQn);
     HAL_NVIC_DisableIRQ(RADIO_TXRX_SEQ_IRQn);
-  /* USER CODE BEGIN RADIO_MspDeInit 1 */
+    HAL_NVIC_DisableIRQ(RADIO_RRM_IRQn);
+    /* USER CODE BEGIN RADIO_MspDeInit 1 */
 
-  /* USER CODE END RADIO_MspDeInit 1 */
+    /* USER CODE END RADIO_MspDeInit 1 */
   }
 
 }
 
 /**
-* @brief UART MSP Initialization
-* This function configures the hardware resources used in this example
-* @param huart: UART handle pointer
-* @retval None
-*/
+  * @brief UART MSP Initialization
+  * This function configures the hardware resources used in this example
+  * @param huart: UART handle pointer
+  * @retval None
+  */
 #ifndef __ZEPHYR__
 void HAL_UART_MspInit(UART_HandleTypeDef* huart)
 {
   GPIO_InitTypeDef GPIO_InitStruct = {0};
   if(huart->Instance==USART1)
   {
-  /* USER CODE BEGIN USART1_MspInit 0 */
+    /* USER CODE BEGIN USART1_MspInit 0 */
 
-  /* USER CODE END USART1_MspInit 0 */
+    /* USER CODE END USART1_MspInit 0 */
     /* Peripheral clock enable */
     __HAL_RCC_USART1_CLK_ENABLE();
 
@@ -250,9 +253,13 @@ void HAL_UART_MspInit(UART_HandleTypeDef* huart)
     GPIO_InitStruct.Alternate = GPIO_AF2_USART1;
     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-    LL_PWR_SetNoPullB(LL_PWR_GPIO_BIT_0);
+    HAL_PWREx_DisableGPIOPullUp(PWR_GPIO_B, PWR_GPIO_BIT_0);
 
-    LL_PWR_SetNoPullA(LL_PWR_GPIO_BIT_1);
+    HAL_PWREx_DisableGPIOPullUp(PWR_GPIO_A, PWR_GPIO_BIT_1);
+
+    HAL_PWREx_DisableGPIOPullDown(PWR_GPIO_B, PWR_GPIO_BIT_0);
+
+    HAL_PWREx_DisableGPIOPullDown(PWR_GPIO_A, PWR_GPIO_BIT_1);
 
     /* USART1 DMA Init */
     /* USART1_TX Init */
@@ -292,27 +299,27 @@ void HAL_UART_MspInit(UART_HandleTypeDef* huart)
     /* USART1 interrupt Init */
     HAL_NVIC_SetPriority(USART1_IRQn, 2, 0);
     HAL_NVIC_EnableIRQ(USART1_IRQn);
-  /* USER CODE BEGIN USART1_MspInit 1 */
+    /* USER CODE BEGIN USART1_MspInit 1 */
 
-  /* USER CODE END USART1_MspInit 1 */
+    /* USER CODE END USART1_MspInit 1 */
 
   }
 
 }
 
 /**
-* @brief UART MSP De-Initialization
-* This function freeze the hardware resources used in this example
-* @param huart: UART handle pointer
-* @retval None
-*/
+  * @brief UART MSP De-Initialization
+  * This function freeze the hardware resources used in this example
+  * @param huart: UART handle pointer
+  * @retval None
+  */
 void HAL_UART_MspDeInit(UART_HandleTypeDef* huart)
 {
   if(huart->Instance==USART1)
   {
-  /* USER CODE BEGIN USART1_MspDeInit 0 */
+    /* USER CODE BEGIN USART1_MspDeInit 0 */
 
-  /* USER CODE END USART1_MspDeInit 0 */
+    /* USER CODE END USART1_MspDeInit 0 */
     /* Peripheral clock disable */
     __HAL_RCC_USART1_CLK_DISABLE();
 
@@ -330,9 +337,9 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* huart)
 
     /* USART1 interrupt DeInit */
     HAL_NVIC_DisableIRQ(USART1_IRQn);
-  /* USER CODE BEGIN USART1_MspDeInit 1 */
+    /* USER CODE BEGIN USART1_MspDeInit 1 */
 
-  /* USER CODE END USART1_MspDeInit 1 */
+    /* USER CODE END USART1_MspDeInit 1 */
   }
 
 }

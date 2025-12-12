@@ -6,7 +6,7 @@ Origin:
    https://github.com/STMicroelectronics/STM32CubeWB0
 
 Status:
-   version v1.1.0
+   version v1.4.0
 
 Purpose:
    This library is used on STM32WB0 series to port BLE controller library in
@@ -86,7 +86,7 @@ URL:
    https://github.com/STMicroelectronics/STM32CubeWB0
 
 Commit:
-   acb6e3c6086b69b3fff8111c89b825d6acbb3d71
+   feb9b9624b10a3af4e5dccb390a01b0cc4d71771
 
 Maintained-by:
    External

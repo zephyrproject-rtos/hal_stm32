@@ -30,6 +30,7 @@
 #include "hci_parser.h"
 #include "dtm_preprocess_events.h"
 #include "app_common.h"
+#include "dtm_cmds.h"
 
 /* Private typedef -----------------------------------------------------------*/\
 
@@ -80,6 +81,8 @@ static uint8_t DMA_RX_Buffer[DMA_RX_BUFFER_SIZE];
 
 static event_lost_register_t event_lost_register;
 static uint8_t dma_state = DMA_IDLE;
+
+bool tx_test_stop_request = false;
 
 #ifdef DEBUG_DTM
 DebugLabel debug_buf[DEBUG_ARRAY_LEN] = {EMPTY,};
@@ -252,6 +255,12 @@ void transport_layer_tick(void)
   uint16_t len;
   uint16_t size = 0;
 
+  if(tx_test_stop_request)
+  {
+    tx_test_stop_request = false;
+    DTM_CMDS_TxTestStop();
+  }
+
   /* Event queue */
   if ((fifo_size(&event_fifo) > 0) && (dma_state == DMA_IDLE)) {
     uint8_t *ptr;
@@ -309,6 +318,7 @@ void transport_layer_tick(void)
     else
     {
       fifo_roll_back(&command_fifo, size);
+      TL_ProcessReqCallback();
     }
 #else
     DEBUG_NOTES(COMMAND_PROCESSED);
@@ -471,3 +481,9 @@ send_event:
   }
 }
 
+/* Handle request to stop TX test for aci_hal_transmitter_test_packets */
+void DTM_CMDS_TxTestStopRequest(void)
+{
+  tx_test_stop_request = true;
+  TL_ProcessReqCallback();
+}
