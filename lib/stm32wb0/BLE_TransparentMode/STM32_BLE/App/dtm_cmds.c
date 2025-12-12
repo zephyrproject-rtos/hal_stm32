@@ -66,6 +66,7 @@
 */
 #define CONNECTION_BIT                         ((uint32_t)0x00000800)  /*!< Bit 11 selected */
 #define CONTROLLER_ONLY_BIT                    ((uint32_t)0x00001000)  /*!< Bit 12 selected */
+#define DTM_DEBUG_BIT                          ((uint32_t)0x00002000)  /*!< Bit 13 selected */
 #define CONTROLLER_CHAN_CLASS_BIT              ((uint32_t)0x00010000)  /*!< Bit 16 selected */
 #define CONTROLLER_BIS_BIT                     ((uint32_t)0x00020000)  /*!< Bit 17 selected */
 #define CONNECTION_SUBRATING_BIT               ((uint32_t)0x00080000)  /*!< Bit 19 selected */
@@ -100,6 +101,7 @@
     ((uint32_t)(CONTROLLER_POWER_CONTROL_ENABLED * CONTROLLER_POWER_CONTROL_BIT))                 | \
     ((uint32_t)(CONNECTION_ENABLED * CONNECTION_BIT))                                             | \
     ((uint32_t)(BLESTACK_CONTROLLER_ONLY * CONTROLLER_ONLY_BIT))                                  | \
+    ((uint32_t)(DTM_DEBUG_ENABLED * DTM_DEBUG_BIT))                                               | \
     ((uint32_t)(CONTROLLER_CHAN_CLASS_ENABLED * CONTROLLER_CHAN_CLASS_BIT))                       | \
     ((uint32_t)(CONTROLLER_BIS_ENABLED * CONTROLLER_BIS_BIT))                                     | \
     ((uint32_t)(CONNECTION_SUBRATING_ENABLED * CONNECTION_SUBRATING_BIT))                         | \

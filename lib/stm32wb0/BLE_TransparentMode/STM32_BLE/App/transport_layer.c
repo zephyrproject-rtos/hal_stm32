@@ -213,9 +213,11 @@ static void transport_layer_send_data(uint8_t *data, uint16_t data_length)
   }
 }
 
-static void transport_layer_DMA_RX_Data(uint16_t dma_counter)
+static void transport_layer_DMA_RX_Data(UART_HandleTypeDef *huart)
 {
   static uint16_t rx_index = 0;
+
+  uint16_t dma_counter = DMA_RX_BUFFER_SIZE - __HAL_DMA_GET_COUNTER(huart->hdmarx);
 
   if(rx_index != dma_counter)
   {
@@ -385,7 +387,7 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
 
 void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size)
 {
-  transport_layer_DMA_RX_Data(Size);
+  transport_layer_DMA_RX_Data(huart);
 }
 
 __weak void TL_ProcessReqCallback(void){}

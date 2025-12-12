@@ -507,6 +507,23 @@ tBleStatus aci_gatt_clt_write_char_reliable_nwk(uint16_t Connection_Handle,
                                                 uint8_t Attribute_Val[]);
 
 /**
+ * @brief Add a subscription security level setting.
+ * Any received Notification, Indication or Multiple Notification that not meet this
+ * requirement will be discarded automatically.
+ * @param Conn_Handle Connection handle that identifies the connection.
+ * Values:
+ * - 0x0000 ... 0x0EFF
+ * - 0xFFFF is a special value that identify the default setting
+ * @param Char_Handle Handle of the Characteristic
+ * Values:
+ * - 0x0001 ... 0xFFFF
+ * - 0xFFFF is a special value that identify the default setting
+ */
+tBleStatus aci_gatt_clt_add_subscription_security_level_nwk(uint16_t Conn_Handle,
+                                                            uint16_t Char_Handle,
+                                                            uint8_t Sec_Level);
+
+/**
  * @brief
  * @param Conn_Handle Connection handle to be used to identify the connection with the peer device.
  * Values:
