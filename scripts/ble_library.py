@@ -184,6 +184,7 @@ file_list_wb0 = {
         wb0_ble_transparent_mode_app_path + "/STM32_BLE/App/dtm_cmd_db.h",
         wb0_ble_transparent_mode_app_path + "/STM32_BLE/App/dtm_cmd_en.h",
         wb0_ble_transparent_mode_app_path + "/STM32_BLE/App/dtm_cmds.c",
+        wb0_ble_transparent_mode_app_path + "/STM32_BLE/App/dtm_cmds.h",
         wb0_ble_transparent_mode_app_path + "/STM32_BLE/App/dtm_cmd_stack_en.h",
         wb0_ble_transparent_mode_app_path + "/STM32_BLE/App/dtm_preprocess_events.c",
         wb0_ble_transparent_mode_app_path + "/STM32_BLE/App/dtm_preprocess_events.h",
