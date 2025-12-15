@@ -1,0 +1,34 @@
+# STM32Cube HAL configuration
+#
+# Copyright (c) {{current_year}} STMicroelectronics
+# SPDX-License-Identifier: Apache-2.0
+
+config ZEPHYR_HAL_STM32_MODULE
+	bool
+
+config ZEPHYR_HAL_STM32_MODULE_BLOBS
+	bool
+
+config HAS_STM32LIB
+	bool
+
+config HAS_STM32CUBE
+	bool
+	select HAS_CMSIS_CORE
+	depends on SOC_FAMILY_STM32
+
+if HAS_STM32CUBE
+
+{% for driver_kconfig, description_lines in drivers %}
+config {{driver_kconfig}}
+	bool
+	help
+	{% for line in description_lines %}
+	  {{line}}
+	{% endfor %}
+{{newline}}
+{% endfor %}
+{# We don't add a newline here because the last #}
+{#   Kconfig option will add one after itself   #}
+endif # HAS_STM32CUBE
+{{newline}}
