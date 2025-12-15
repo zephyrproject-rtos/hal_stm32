@@ -49,6 +49,7 @@ Description:
       Projects/NUCLEO-WB09KE/Applications/BLE/BLE_TransparentMode/STM32_BLE/App/dtm_cmd_en.h
       Projects/NUCLEO-WB09KE/Applications/BLE/BLE_TransparentMode/STM32_BLE/App/dtm_cmd_stack_en.h
       Projects/NUCLEO-WB09KE/Applications/BLE/BLE_TransparentMode/STM32_BLE/App/dtm_cmds.c
+      Projects/NUCLEO-WB09KE/Applications/BLE/BLE_TransparentMode/STM32_BLE/App/dtm_cmds.h
       Projects/NUCLEO-WB09KE/Applications/BLE/BLE_TransparentMode/STM32_BLE/App/dtm_preprocess_events.c
       Projects/NUCLEO-WB09KE/Applications/BLE/BLE_TransparentMode/STM32_BLE/App/dtm_preprocess_events.h
       Projects/NUCLEO-WB09KE/Applications/BLE/BLE_TransparentMode/STM32_BLE/App/fifo.h

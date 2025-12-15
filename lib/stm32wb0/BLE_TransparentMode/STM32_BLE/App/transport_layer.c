@@ -481,9 +481,11 @@ send_event:
   }
 }
 
+#ifndef __ZEPHYR__
 /* Handle request to stop TX test for aci_hal_transmitter_test_packets */
 void DTM_CMDS_TxTestStopRequest(void)
 {
   tx_test_stop_request = true;
   TL_ProcessReqCallback();
 }
+#endif /* __ZEPHYR__ */
