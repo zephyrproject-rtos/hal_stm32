@@ -104,6 +104,9 @@ foreach(series ${supported_series})
   endif()
 endforeach()
 
+# Add common header files to include directories
+zephyr_include_directories(common/include)
+
 # Enable HAL asserts if requested by Zephyr
 if(CONFIG_USE_STM32_ASSERT)
 	zephyr_compile_definitions( -DUSE_FULL_ASSERT )
