@@ -55,5 +55,9 @@ Patch List:
    *Fix to remove PAGESIZE definition which conflicts with POSIX
     Impacted files:
      drivers/include/Legacy/stm32_hal_legacy.h
-
+   
+   *Add missing FSMC -> FMC compatibility aliases
+    Impacted files:
+     drivers/include/stm32f4xx_ll_fsmc.h
+    ST Internal Reference: 223859
    See release_note.html from STM32Cube
