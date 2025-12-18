@@ -372,8 +372,10 @@ void HAL_RADIO_TIMER_Init(RADIO_TIMER_InitTypeDef *RADIO_TIMER_InitStruct)
   /* Configure the Calibration callback and schedule the next calibration */
   RADIO_TIMER_Context.calibrationTimer.callback = _calibration_callback;
   RADIO_TIMER_Context.calibrationTimer.userData = NULL;
+#ifndef __ZEPHYR__
   _start_timer(&RADIO_TIMER_Context.calibrationTimer,
                HAL_RADIO_TIMER_GetCurrentSysTime() + RADIO_TIMER_Context.calibrationSettings.periodicCalibrationInterval);
+#endif /* __ZEPHYR__ */
 
   /* Tx & Rx delay configuration */
   _configureTxRxDelay(&RADIO_TIMER_Context, TRUE);
@@ -1228,6 +1230,11 @@ static uint64_t _get_system_time_and_machine(RADIO_TIMER_ContextTypeDef *context
   *current_machine_time =  LL_RADIO_TIMER_GetAbsoluteTime(WAKEUP);
   difftime = TIME_ABSDIFF(*current_machine_time, context->last_machine_time);
   new_time += blue_unit_conversion(difftime, context->calibrationData.period1, MULT64_THR_PERIOD);
+#ifdef __ZEPHYR__
+  if (difftime > (TIMER_MAX_VALUE >> 2)) {
+	_update_system_time(&RADIO_TIMER_Context);
+  }
+#endif /* __ZEPHYR__ */
   if (new_time < context->last_system_time)
   {
     new_time += blue_unit_conversion(TIMER_MAX_VALUE, context->calibrationData.period1, MULT64_THR_PERIOD);
@@ -1468,12 +1475,14 @@ static void _update_system_time(RADIO_TIMER_ContextTypeDef *context)
                                                                context->last_machine_time),
                                                   period, MULT64_THR_PERIOD);
 
+#ifndef __ZEPHYR__
   if ((context->calibrationSettings.periodicCalibration == 0)
       && (TIME_ABSDIFF(current_machine_time,
                        context->last_machine_time) < context->calibrationData.calibration_machine_interval))
   {
     context->cumulative_time += blue_unit_conversion(TIMER_MAX_VALUE, period, MULT64_THR_PERIOD);
   }
+#endif /* __ZEPHYR__ */
   context->last_machine_time = current_machine_time;
   context->calibrationData.last_calibration_time = context->cumulative_time;
   context->calibrationData.last_period1 = context->calibrationData.period1;

@@ -61,4 +61,15 @@ Patch List:
       . Remove definition of __blue_RAM variable
         . Moved to 'zephyr/soc/st/stm32/stm32wb0xx/soc.c'
 
+   *Added patches to fix HAL radio timer for WB07/WB05
+    -Exclude "_start_timer" from HAL_RADIO_TIMER_Init since the virtual
+     radio timer is implemented on Zephyr side.
+    -Update system time frequently.
+    -Handle machine time wrapping to make sure that the system ticks are
+     coherent.
+    -Impacted file:
+     stm32wb0x_hal_radio_timer.c
+    -See also:
+     https://github.com/zephyrproject-rtos/hal_stm32/pull/337
+
    See Release_Notes.html from STM32Cube for more details.
