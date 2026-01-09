@@ -80,7 +80,7 @@ zephyr_library_sources_ifdef(CONFIG_USE_STM32_LL_DMA2D drivers/src/stm32f4xx_ll_
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_LL_EXTI drivers/src/stm32f4xx_ll_exti.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_LL_FMC drivers/src/stm32f4xx_ll_fmc.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_LL_FMPI2C drivers/src/stm32f4xx_ll_fmpi2c.c)
-zephyr_library_sources_ifdef(CONFIG_USE_STM32_LL_FSMC drivers/src/stm32f4xx_ll_fsmc.c)
+zephyr_library_sources_ifdef(CONFIG_USE_STM32_LL_FMC drivers/src/stm32f4xx_ll_fsmc.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_LL_GPIO drivers/src/stm32f4xx_ll_gpio.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_LL_I2C drivers/src/stm32f4xx_ll_i2c.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_LL_LPTIM drivers/src/stm32f4xx_ll_lptim.c)
