@@ -65,15 +65,6 @@ Patch List:
      See also:
       https://github.com/zephyrproject-rtos/hal_stm32/pull/281
 
-   *Fix XSPIM initialization sequence
-     Don't cut XSPI2(ext NOR) clock when initializing XSPI1(PSRAM) which doesn't work
-     when application is running in XIP on external NOR
-    Impacted files:
-      stm32cube/stm32n6xx/drivers/src/stm32n6xx_hal_xspi.c
-    Internal reference: 212765
-    See also:
-      https://github.com/zephyrproject-rtos/hal_stm32/pull/289
-
    *Fix SDIO polling mode data transfer issues
      Fixes two related issues in the STM32N6 SDIO driver: incorrect block count calculation
      that caused the card to hang, and improper buffer size handling that led to misaligned FIFO writes.
