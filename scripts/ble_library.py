@@ -46,6 +46,13 @@ file_list_wba = {
         "Middlewares/ST/STM32_WPAN/ble/stack/include/auto/ble_types.h",
         "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/_40nm_reg_files/"
         + "DWC_ble154combo.h",
+        "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/ot_inc/crypto.h",
+        "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/ot_inc/error.h",
+        "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/ot_inc/instance.h",
+        "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/ot_inc/logging.h",
+        "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/ot_inc/radio.h",
+        "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/ot_inc/toolchain.h",
+        "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/ot_inc/types.h",
         "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/bsp.h",
         "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/common_types.h",
         "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/dtm.h",
@@ -55,6 +62,7 @@ file_list_wba = {
         "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/hci.h",
         "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/ll_intf.h",
         "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/ll_intf_cmn.h",
+        "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/mac_host_intf.h",
         "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/mem_intf.h",
         "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/os_wrapper.h",
         "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/platform.h",
@@ -68,12 +76,8 @@ file_list_wba = {
         + "ll_fw_config.h",
         "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/config/ieee_15_4_basic/"
         + "ll_fw_config.h",
-        "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/config/thread/"
-        + "ll_fw_config.h",
         "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/config/concurrent/"
         + "ble_15_4/ll_fw_config.h",
-        "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/config/concurrent/"
-        + "ble_full_15_4/ll_fw_config.h",
         "Middlewares/ST/STM32_WPAN/ble/stack/include/ble_bufsize.h",
         "Middlewares/ST/STM32_WPAN/ble/stack/include/ble_const.h",
         "Middlewares/ST/STM32_WPAN/ble/stack/include/ble_defs.h",
@@ -89,14 +93,16 @@ file_list_wba = {
         "Middlewares/ST/STM32_WPAN/link_layer/ll_sys/inc/ll_sys_startup.h",
         "Middlewares/ST/STM32_WPAN/stm32_wpan_common.h",
     ],
-    "RF_Integration": [
+    "RF_Integration/Core": [
         ble_transparent_mode_app_path + "/Core/Inc/app_common.h",
-        ble_transparent_mode_app_path + "/Core/Inc/app_conf.h",
-        ble_transparent_mode_app_path + "/Core/Inc/app_entry.h",
         ble_transparent_mode_app_path + "/Core/Inc/utilities_conf.h",
         ble_transparent_mode_app_path + "/Core/Inc/main.h",
+    ],
+    "RF_Integration/System": [
         ble_transparent_mode_app_path + "/System/Config/Debug_GPIO/debug_config.h",
         ble_transparent_mode_app_path + "/System/Config/Log/log_module_conf.h",
+    ],
+    "RF_Integration/STM32_WPAN": [
         ble_transparent_mode_app_path + "/STM32_WPAN/Target/power_table.c",
         ble_transparent_mode_app_path + "/STM32_WPAN/Target/bpka.c",
         ble_transparent_mode_app_path + "/STM32_WPAN/Target/bpka.h",
@@ -104,13 +110,23 @@ file_list_wba = {
         ble_transparent_mode_app_path + "/STM32_WPAN/Target/ll_sys_if.c",
         ble_transparent_mode_app_path + "/STM32_WPAN/Target/ll_sys_if.h",
     ],
+    "RF_Integration/Core/Inc/app_conf": [
+        ble_transparent_mode_app_path + "/Core/Inc/app_conf.h",
+    ],
     "Common": [
+        "Projects/Common/WPAN/Modules/BasicAES/baes_ccm.c",
+        "Projects/Common/WPAN/Modules/BasicAES/baes_cmac.c",
+        "Projects/Common/WPAN/Modules/BasicAES/baes_ecb.c",
+        "Projects/Common/WPAN/Modules/BasicAES/baes_global.h",
+        "Projects/Common/WPAN/Modules/BasicAES/baes.h",
         "Projects/Common/WPAN/Modules/Flash/rf_timing_synchro.c",
         "Projects/Common/WPAN/Modules/Flash/rf_timing_synchro.h",
         "Projects/Common/WPAN/Modules/Flash/flash_driver.c",
         "Projects/Common/WPAN/Modules/Flash/flash_driver.h",
         "Projects/Common/WPAN/Modules/Flash/flash_manager.c",
         "Projects/Common/WPAN/Modules/Flash/flash_manager.h",
+        "Projects/Common/WPAN/Modules/Log/log_module.c",
+        "Projects/Common/WPAN/Modules/Log/log_module.h",
         "Projects/Common/WPAN/Modules/RTDebug/debug_signals.h",
         "Projects/Common/WPAN/Modules/RTDebug/RTDebug.c",
         "Projects/Common/WPAN/Modules/RTDebug/RTDebug.h",
@@ -123,8 +139,6 @@ file_list_wba = {
         "Projects/Common/WPAN/Interfaces/hw_if.h",
         "Projects/Common/WPAN/Interfaces/hw_pka.c",
         "Projects/Common/WPAN/Interfaces/hw_pka_p256.c",
-        "Projects/Common/WPAN/Modules/Log/log_module.c",
-        "Projects/Common/WPAN/Modules/Log/log_module.h",
     ],
     "Utilities": [
         "Utilities/trace/adv_trace/stm32_adv_trace.h",
@@ -196,11 +210,27 @@ def copy_ble_lib_files(src_repo_path, dest_lib_path, stm32_serie):
                 if src_file_path.exists():
                     # Extract the relevant part of the path from "dir_name" onwards
                     start_index = file.find(dir_name)
-                    relative_path = file[start_index:]
+                    if start_index > 0:
+                        # Relevant part of the path from "dir_name" has been found
+                        relative_path = file[start_index:]
+                    else:
+                        # Extract subdirectory from "dir_name"
+                        sub_dir_name = os.path.basename(dir_name)
+                        # Extract parent directory name from "dir_name"
+                        parent_name = os.path.dirname(os.path.normpath(dir_name))
+                        # Extract the relevant part of the path
+                        # from "sub_dir_name" onwards
+                        start_index = file.find(sub_dir_name)
+                        if sub_dir_name == 'app_conf':
+                            # If base name is app_conf, add 'app_conf'
+                            # in the relative path
+                            parent_name = os.path.join(parent_name, sub_dir_name)
+                        relative_path = os.path.join(parent_name, file[start_index:])
                     # Create the full destination path
                     destination_path = os.path.join(dest_lib_path, relative_path)
                     # Create (if does not exist) all directories in the destination path
                     os.makedirs(os.path.dirname(destination_path), exist_ok=True)
+                    logging.info(f"File : {src_file_path} copy to {destination_path}")
                     # Copy the file to the destination path
                     shutil.copy(src_file_path, destination_path)
                 else:
