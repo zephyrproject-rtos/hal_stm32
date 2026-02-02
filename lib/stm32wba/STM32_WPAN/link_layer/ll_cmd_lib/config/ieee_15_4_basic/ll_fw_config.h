@@ -1,4 +1,4 @@
-/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/2.00a-lca01/firmware/public_inc/ll_fw_config.h#1 $*/
+/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/2.00a-lca04/firmware/public_inc/ll_fw_config.h#1 $*/
 /**
  ********************************************************************************
  * @file    ll_fw_config.h
@@ -9,7 +9,7 @@
  * Copyright (c) 2020-Present Synopsys, Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of the software and
- * associated documentation files (the ‚ÄúSoftware‚Äù), to deal in the Software without restriction, including
+ * associated documentation files (the ìSoftwareî), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
  * of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
  * following conditions:
@@ -192,9 +192,18 @@
 #define FFD_DEVICE_CONFIG                           0 /* Enable\Disable FFD:1 - RFD:0 */
 #endif
 
+#ifdef SUPPORT_AUG_MAC_HCI_UART
 #ifndef RAL_NUMBER_OF_INSTANCE
-#define RAL_NUMBER_OF_INSTANCE                      1 /* The Number of RAL instances supported */
+#define RAL_NUMBER_OF_INSTANCE						2 /* The Number of RAL instances supported */
 #endif /* RAL_NUMBER_OF_INSTANCE */
+
+#else
+#ifndef RAL_NUMBER_OF_INSTANCE
+#define RAL_NUMBER_OF_INSTANCE						1 /* The Number of RAL instances supported */
+#endif /* RAL_NUMBER_OF_INSTANCE */
+
+#endif
+
 
 #ifndef MAX_NUMBER_OF_INDIRECT_DATA
 #define MAX_NUMBER_OF_INDIRECT_DATA                 10 /* The maximum number of supported indirect data buffers */
@@ -211,6 +220,10 @@
 #ifndef RADIO_CSMA
 #define RADIO_CSMA                                  1 /* Enable\Disable CSMA Algorithm in Radio Layer, Must be Enabled if MAC_LAYER_BUILD */
 #endif /* RADIO_CSMA */
+
+#ifndef ENHANCED_RX_WHILE_CSMA_BACKOFF_DELAY
+#define ENHANCED_RX_WHILE_CSMA_BACKOFF_DELAY		1 /* Enable\Disable RX WITH CSMA Feature */
+#endif /* ENHANCED_RX_WHILE_CSMA_BACKOFF_DELAY */
 
 #ifndef SUPPORT_ANT_DIV
 #define SUPPORT_ANT_DIV                             1 /* Enable/Disable Antenna Diversity Feature */

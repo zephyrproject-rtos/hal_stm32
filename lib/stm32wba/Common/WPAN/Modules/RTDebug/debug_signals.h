@@ -19,6 +19,10 @@
 #ifndef DEBUG_SIGNALS_H
 #define DEBUG_SIGNALS_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "bsp.h"
 
 /**************************************************/
@@ -821,5 +825,9 @@ typedef enum {
 } rt_debug_signal_t;
 
 #endif /* CFG_RT_DEBUG_GPIO_MODULE */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* DEBUG_SIGNALS_H */

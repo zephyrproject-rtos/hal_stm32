@@ -22,6 +22,10 @@
 
 /*****************************************************************************/
 
+extern void Error_Handler(void);
+
+/*****************************************************************************/
+
 typedef struct
 {
   uint8_t  run;
@@ -33,6 +37,18 @@ static HW_PKA_VAR_T HW_PKA_var;
 
 /*****************************************************************************/
 
+__WEAK int PKA_MutexTake(void)
+{
+  return 0; /* This shall be implemented by user */
+}
+
+__WEAK int PKA_MutexRelease(void)
+{
+  return 0; /* This shall be implemented by user */
+}
+
+/*****************************************************************************/
+
 int HW_PKA_Enable( void )
 {
   HW_PKA_VAR_T* pv = &HW_PKA_var;
@@ -40,6 +56,11 @@ int HW_PKA_Enable( void )
   /* Test if the driver is not already in use */
 
   if ( pv->run )
+  {
+    return FALSE;
+  }
+
+  if (0 != PKA_MutexTake())
   {
     return FALSE;
   }
@@ -162,6 +183,11 @@ void HW_PKA_Disable( void )
     LL_AHB2_GRP1_DisableClock( LL_AHB2_GRP1_PERIPH_PKA );
 
     UTILS_EXIT_CRITICAL_SECTION( );
+
+    if (0 != PKA_MutexRelease())
+    {
+      Error_Handler();
+    }
 
     pv->run = FALSE;
   }

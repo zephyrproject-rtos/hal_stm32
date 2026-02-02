@@ -529,10 +529,12 @@ void LINKLAYER_PLAT_StopRadioEvt(void)
 void LINKLAYER_PLAT_RCOStartClbr(void)
 {
 #if (CFG_LPM_LEVEL != 0)
-  PWR_DisableSleepMode();
-  /* Disabling stop mode prevents also from entering in standby */
-  UTIL_LPM_SetStopMode(1U << CFG_LPM_LL_HW_RCO_CLBR, UTIL_LPM_DISABLE);
+  UTIL_LPM_SetMaxMode(1U << CFG_LPM_LL_HW_RCO_CLBR, UTIL_LPM_IDLE_MODE);
 #endif /* (CFG_LPM_LEVEL != 0) */
+#if (CFG_SCM_SUPPORTED == 1)
+  scm_setsystemclock(SCM_USER_LL_HW_RCO_CLBR, HSE_32MHZ);
+  while (LL_PWR_IsActiveFlag_VOS() == 0);
+#endif /* (CFG_SCM_SUPPORTED == 1) */
 }
 
 /**
@@ -543,9 +545,11 @@ void LINKLAYER_PLAT_RCOStartClbr(void)
 void LINKLAYER_PLAT_RCOStopClbr(void)
 {
 #if (CFG_LPM_LEVEL != 0)
-  PWR_EnableSleepMode();
-  UTIL_LPM_SetStopMode(1U << CFG_LPM_LL_HW_RCO_CLBR, UTIL_LPM_ENABLE);
+  UTIL_LPM_SetMaxMode(1U << CFG_LPM_LL_HW_RCO_CLBR, UTIL_LPM_MAX_MODE);
 #endif /* (CFG_LPM_LEVEL != 0) */
+#if (CFG_SCM_SUPPORTED == 1)
+  scm_setsystemclock(SCM_USER_LL_HW_RCO_CLBR, HSE_16MHZ);
+#endif /* (CFG_SCM_SUPPORTED == 1) */
 }
 #endif /*__ZEPHYR__*/
 

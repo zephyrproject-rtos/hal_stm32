@@ -43,9 +43,8 @@ enum
 };
 
 /*
- * This structure contains memory and low level hardware configuration data
- * for the device
-*/
+ * This structure contains the BLE stack initialization parameters
+ */
 typedef struct
 {
   /* Start address of the RAM buffer allocated for BLE stack library.
@@ -81,6 +80,32 @@ typedef struct
    * (could be filled with BLE_TOTAL_BUFFER_SIZE_GATT return value)
    */
   uint32_t total_buffer_size_GATT;
+
+  /* Address of the RAM buffer allocated for GATT long write procedures.
+   * If ACI_GATT_WRITE_LONG_CHAR_VALUE/ACI_GATT_WRITE_CHAR_RELIABLE commands
+   * are used, this parameter must point to a 256-byte static buffer. If these
+   * commands are never used, this parameter can be set to NULL.
+   */
+  uint8_t* gatt_long_write_buffer;
+
+  /* Address of the RAM buffer allocated for the extension of Host commands.
+   * This buffer is referred as the "extra data" buffer in the BLE Wireless
+   * Interface document. If the commands that need this extension are never
+   * used, this parameter can be set to NULL.
+   */
+  uint8_t* extra_data_buffer;
+
+  /* Size of the RAM buffer allocated for the extension of Host commands.
+   */
+  uint32_t extra_data_buffer_size;
+
+  /* Address of the Host events FIFO buffer.
+   */
+  uint16_t* host_event_fifo_buffer;
+
+  /* Size of the Host events FIFO buffer (in 16-bit words).
+   */
+  uint16_t host_event_fifo_buffer_size;
 
   /* Maximum number of Attributes (i.e. the number of characteristic + the
    * number of characteristic values + the number of descriptors, excluding the

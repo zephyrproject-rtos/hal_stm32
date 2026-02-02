@@ -19,6 +19,10 @@
 #ifndef SYSTEM_DEBUG_H
 #define SYSTEM_DEBUG_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "debug_config.h"
 
 #if(CFG_RT_DEBUG_GPIO_MODULE == 1)
@@ -81,5 +85,9 @@ void SYSTEM_DEBUG_SIGNAL_TOGGLE(system_debug_signal_t signal);
 void LINKLAYER_DEBUG_SIGNAL_SET(linklayer_debug_signal_t signal);
 void LINKLAYER_DEBUG_SIGNAL_RESET(linklayer_debug_signal_t signal);
 void LINKLAYER_DEBUG_SIGNAL_TOGGLE(linklayer_debug_signal_t signal);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* SYSTEM_DEBUG_H */

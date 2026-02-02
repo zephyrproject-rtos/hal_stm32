@@ -1,37 +1,29 @@
-/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/2.00a-lca01/firmware/public_inc/ll_fw_config.h#1 $*/
+/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/2.00a-lca04/firmware/public_inc/ll_fw_config.h#1 $*/
 /**
  ********************************************************************************
  * @file    ll_fw_config.h
  * @brief   This file contains the major configurations to the BLE controller.
  ******************************************************************************
  * @copy
- * This Synopsys DWC Bluetooth Low Energy Combo Link Layer/MAC software and
- * associated documentation ( hereinafter the "Software") is an unsupported
- * proprietary work of Synopsys, Inc. unless otherwise expressly agreed to in
- * writing between Synopsys and you. The Software IS NOT an item of Licensed
- * Software or a Licensed Product under any End User Software License Agreement
- * or Agreement for Licensed Products with Synopsys or any supplement thereto.
- * Synopsys is a registered trademark of Synopsys, Inc. Other names included in
- * the SOFTWARE may be the trademarks of their respective owners.
- *
  * Synopsys MIT License:
  * Copyright (c) 2020-Present Synopsys, Inc
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * the Software), to deal in the Software without restriction, including without
- * limitation the rights to use, copy, modify, merge, publish, distribute,
- * sublicense, and/or sell copies of the Software, and to permit persons to whom
- * the Software is furnished to do so, subject to the following conditions:
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of the software and
+ * associated documentation files (the “Software”), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+ * of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
+ * following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or substantial
+ * portions of the Software.
  *
  * THIS SOFTWARE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING, BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT, OR OTHERWISE ARISING FROM,
- * OUT OF, OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+ * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT, OR OTHERWISE
+ * ARISING FROM, OUT OF, OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
  *
  * */
 #ifndef INCLUDE_LL_FW_CONFIG_H
@@ -44,6 +36,10 @@
 
 /*************************** BLE Configuration *************************************/
 /*Configurations of BLE will apply only when BLE is enabled*/
+
+/* Variant configuration */
+#define CFG_LL_BLE_BASIC                                1
+
 /* Roles configurations */
 #ifndef SUPPORT_EXPLCT_OBSERVER_ROLE
 #define SUPPORT_EXPLCT_OBSERVER_ROLE                1 /* Enable\Disable Explicit observer role. Enable:1 - Disable:0 */
@@ -189,6 +185,10 @@
 #define CHECK_ANY_MISSED_EVENT_ON_DEEP_SLEEP_EXIT   1 /* Enable\Disable calling event scheduler handler function at the end of deep sleep exit*/
 #endif /* CHECK_ANY_MISSED_EVENT_ON_DEEP_SLEEP_EXIT */
 
+#ifndef SUPPORT_PROFILE
+#define SUPPORT_PROFILE                             PROFILE_LIGHTWEIGHT /* Enable\Disable profiling LL timing framework */
+#endif /* SUPPORT_PROFILE */
+
 #ifndef LL_BASIC
 #define LL_BASIC                                    0
 #endif /* LL_BASIC */
@@ -204,9 +204,17 @@
 #define FFD_DEVICE_CONFIG                           0 /* Enable\Disable FFD:1 - RFD:0 */
 #endif
 
+#ifdef SUPPORT_AUG_MAC_HCI_UART
 #ifndef RAL_NUMBER_OF_INSTANCE
-#define RAL_NUMBER_OF_INSTANCE                      1 /* The Number of RAL instances supported */
+#define RAL_NUMBER_OF_INSTANCE						2 /* The Number of RAL instances supported */
 #endif /* RAL_NUMBER_OF_INSTANCE */
+
+#else
+#ifndef RAL_NUMBER_OF_INSTANCE
+#define RAL_NUMBER_OF_INSTANCE						1 /* The Number of RAL instances supported */
+#endif /* RAL_NUMBER_OF_INSTANCE */
+
+#endif
 
 #ifndef MAX_NUMBER_OF_INDIRECT_DATA
 #define MAX_NUMBER_OF_INDIRECT_DATA                 10 /* The maximum number of supported indirect data buffers */
@@ -223,6 +231,10 @@
 #ifndef RADIO_CSMA
 #define RADIO_CSMA                                  1 /* Enable\Disable CSMA Algorithm in Radio Layer, Must be Enabled if MAC_LAYER_BUILD */
 #endif /* RADIO_CSMA */
+
+#ifndef ENHANCED_RX_WHILE_CSMA_BACKOFF_DELAY
+#define ENHANCED_RX_WHILE_CSMA_BACKOFF_DELAY		1 /* Enable\Disable RX WITH CSMA Feature */
+#endif /* ENHANCED_RX_WHILE_CSMA_BACKOFF_DELAY */
 
 #ifndef SUPPORT_ANT_DIV
 #define SUPPORT_ANT_DIV                             1 /* Enable/Disable Antenna Diversity Feature */

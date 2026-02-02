@@ -20,6 +20,10 @@
 #ifndef LOCAL_DEBUG_TABLES_H
 #define LOCAL_DEBUG_TABLES_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #if(CFG_RT_DEBUG_GPIO_MODULE == 1)
 
 /*******************************/
@@ -1158,5 +1162,9 @@ static const rt_debug_signal_t linklayer_debug_table[] = {
 };
 
 #endif /* CFG_RT_DEBUG_GPIO_MODULE */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* LOCAL_DEBUG_TABLES_H*/

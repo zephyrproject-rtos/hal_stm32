@@ -60,6 +60,7 @@ typedef struct FM_FlashOpConfig
 
 /* Private defines -----------------------------------------------------------*/
 #define FLASH_PAGE_NBR    (FLASH_SIZE / FLASH_PAGE_SIZE)
+
 #define FLASH_WRITE_BLOCK_SIZE  4U
 #define ALIGNMENT_32   0x00000003
 #define ALIGNMENT_128  0x0000000F
@@ -88,11 +89,6 @@ static bool fm_window_granted = FALSE;
 static tListNode fm_cb_pending_list;
 
 /**
-  * @brief Flag indicating if pending node list has been initialized
-  */
-static bool fm_cb_pending_list_init = FALSE;
-
-/**
   * @brief Pointer to current flash operation requester's callback
   */
 static void (*fm_running_cb)(FM_FlashOp_Status_t);
@@ -118,6 +114,20 @@ static FM_Cmd_Status_t FM_CheckFlashManagerState(FM_CallbackNode_t *CallbackNode
 static void FM_WindowAllowed_Callback(void);
 
 /* Functions Definition ------------------------------------------------------*/
+/**
+ * @brief Initialize the Flash manager module
+ */
+void FM_Init (void)
+{
+  static bool fm_cb_pending_list_init = false;
+
+  /* Initialize pending list if not done */
+  if (fm_cb_pending_list_init == false)
+  {
+    LST_init_head(&fm_cb_pending_list);
+    fm_cb_pending_list_init = true;
+  }
+}
 
 /**
   * @brief  Request the Flash Manager module to initiate a Flash Write operation
@@ -434,12 +444,6 @@ static FM_Cmd_Status_t FM_CheckFlashManagerState(FM_CallbackNode_t *CallbackNode
   /* Check if semaphore on flash is available */
   UTILS_ENTER_CRITICAL_SECTION();
 
-  /* Initialize pending list if not done */
-  if (fm_cb_pending_list_init == false)
-  {
-    LST_init_head(&fm_cb_pending_list);
-    fm_cb_pending_list_init = true;
-  }
   /* Check if semaphore on flash is available */
   if (busy_flash_sem == false)
   { /* Check if Flash Manager is already busy */

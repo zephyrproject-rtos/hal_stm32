@@ -19,6 +19,10 @@
 #ifndef HW_H__
 #define HW_H__
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "stm32wbaxx.h"
 #include "app_conf.h"
 
@@ -83,6 +87,9 @@ enum
   HW_AES_REV     = 2,
   HW_AES_SWAP    = 4
 };
+
+extern int CRYP_MutexTake(void);
+extern int CRYP_MutexRelease(void);
 
 /*
  * HW_AES_Enable
@@ -165,6 +172,9 @@ extern void HW_AES_SetLast( uint8_t left_length );
  *                                 PKA
  * ---------------------------------------------------------------------------
  */
+
+extern int PKA_MutexTake(void);
+extern int PKA_MutexRelease(void);
 
 /*
  * HW_PKA_Enable
@@ -377,6 +387,9 @@ enum
 /* Default threshold to refill RNG pool */
 #define HW_RNG_POOL_DEFAULT_THRESHOLD           (12)
 
+extern int RNG_MutexTake(void);
+extern int RNG_MutexRelease(void);
+
 /* RNG_KERNEL_CLK_ON
  *
  * Enable RNG kernel clock.
@@ -541,5 +554,9 @@ int HW_OTP_Write( uint8_t* additional_data,
                   uint8_t* bd_address,
                   uint8_t hsetune,
                   uint8_t index );
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* HW_H__ */

@@ -1,4 +1,4 @@
-/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/2.00a-lca03/firmware/public_inc/pta.h#1 $*/
+/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/2.00a-lca04/firmware/public_inc/pta.h#1 $*/
 /**
  ******************************************************************************
  * @file    pta.h
@@ -9,7 +9,7 @@
  * Copyright (c) 2020-Present Synopsys, Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of the software and
- * associated documentation files (the ‚ÄúSoftware‚Äù), to deal in the Software without restriction, including
+ * associated documentation files (the ìSoftwareî), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
  * of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
  * following conditions:
@@ -191,12 +191,28 @@ pta_error pta_set_link_coex_priority(
  * 						PTA_ERROR_SUCCESS			 : Otherwise.
  */
 pta_error pta_set_iso_coex_priority(
-                pta_iso_type iso_type,
-                uint8_t group_id,
-                uint32_t priority,
-                uint32_t priority_mask,
-                uint8_t link_loss_limit_timeout);
+		pta_iso_type iso_type,
+		uint8_t group_id,
+		uint32_t priority,
+		uint32_t priority_mask,
+		uint8_t link_loss_limit_timeout);
 #endif /* (SUPPORT_BRD_ISOCHRONOUS || SUPPORT_SYNC_ISOCHRONOUS || SUPPORT_CONNECTED_ISOCHRONOUS) */
+#if (SUPPORT_CHANNEL_SOUNDING &&( SUPPORT_MASTER_CONNECTION || SUPPORT_SLAVE_CONNECTION))
+/**
+ * @brief Channel Sounding Priority Configuration Function
+ * @param [in] is_test_mode : Single Bit, Set if this for CS Test Mode
+ * @param [in] conn_id : ACL Connection ID Asscoiated with this CS
+ * @param [in] priority  : Determines the state of each priority mode.
+ * @param [in] priority_mask : Determines which priorities are in effect in the priority variable.
+ * @param [in] number_protected_steps : Number of protected steps :
+ * @retval SUCCESS: Otherwise
+ */
+pta_error pta_set_cs_coex_priority(uint8_t is_test_mode,
+				   uint16_t conn_id,
+				   uint32_t priority,
+				   uint32_t priority_mask,
+				   uint8_t number_protected_steps);
+#endif /*(SUPPORT_CHANNEL_SOUNDING &&( SUPPORT_MASTER_CONNECTION || SUPPORT_SLAVE_CONNECTION))*/
 #endif /* SUPPORT_BLE */
 
 /**

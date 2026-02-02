@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 if(CONFIG_BT_STM32WBA)
-  zephyr_compile_definitions( -DBLE )
+  zephyr_compile_definitions( -DBLE_LL )
 endif()
 if(CONFIG_IEEE802154_STM32WBA)
   zephyr_compile_definitions( -DMAC )

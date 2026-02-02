@@ -6,7 +6,7 @@ Origin:
    https://github.com/STMicroelectronics/STM32CubeWBA
 
 Status:
-   version v1.7.0
+   version v1.8.0
 
 Purpose:
    This library is used on STM32WBA series to port BLE and IEEE802154 controller libraries in
@@ -117,7 +117,7 @@ URL:
    https://github.com/STMicroelectronics/STM32CubeWBA
 
 Commit:
-   f5b281ba4ca4d00aba59215728265f1d2cc80715
+   893fc71d008cdbb09de590c44b61c79cd92e7931
 
 Maintained-by:
    External

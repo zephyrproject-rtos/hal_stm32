@@ -1,4 +1,10 @@
-/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/2.00a-lca01/firmware/public_inc/mac_host_intf.h#1 $*/
+/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/2.00a-lca04/firmware/public_inc/mac_host_intf.h#2 $*/
+/*
+ * Version Info
+ * V1: Original 2.00a-lca04
+ * V2: Patch for case 01898239: 802.15.4 RAM increase after dynamic lib feature
+ *
+ */
 /**
  ********************************************************************************
  * @file    mac_host_intf.h
@@ -11,7 +17,7 @@
  * Copyright (c) 2020-Present Synopsys, Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of the software and
- * associated documentation files (the ‚ÄúSoftware‚Äù), to deal in the Software without restriction, including
+ * associated documentation files (the ìSoftwareî), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
  * of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
  * following conditions:
@@ -37,49 +43,59 @@
 #include "error.h"
 #include  "stdint.h"
 /*====================================   MACROS   =======================================*/
-/* Size in octets of frame counter used in security processing */
+/** Size in octets of frame counter used in security processing */
 #define FRM_CNTR_SIZE 				4
-/* Size in octets of key src in case of key id mode 2 used in security processing */
+/** Size in octets of key src in case of key id mode 2 used in security processing */
 #define KEY_SRC_SIZE_MOD_2 			4
-/* Size in octets of key src in case of key id mode 3 used in security processing */
+/** Size in octets of key src in case of key id mode 3 used in security processing */
 #define KEY_SRC_SIZE_MOD_3 			8
-/* Security Key ID Modes  */
-#define MODE_ZERO					0
-#define MODE_ONE					1
-#define MODE_TWO					2
-#define MODE_THREE					3
+
+#define MODE_ZERO					0	///< Security key ID mode 0
+#define MODE_ONE					1	///< Security key ID mode 1
+#define MODE_TWO					2	///< Security key ID mode 2
+#define MODE_THREE					3	///< Security key ID mode 3
 
 /**security parameters */
 #if SUPPORT_SEC
-#define KEY_SOURCE_SIZE    				 8
-#define KEY_ID_LOOKUP_DSCRP_LIST_SIZE    3
-#define MAX_NUM_OF_DEVICES_USE_KEY       8
-#define KEY_USAGE_LIST_SIZE              5
-#define KEY_SIZE                        16
-#define MAC_KEY_TBL_STRUCT_SIZE_PLUS_OVERHEAD	(sizeof(key_dscrp_st_t) + 7) /*adding 7 bytes for header parameters ( 1 opcode + 2 length + 1 mac_handle + 1 pib_attributes + 1 pib_attribute_index + 1 pib_attribute_length )*/
-#endif /*SUPPORT_SEC */
+#define KEY_SOURCE_SIZE    				 8	///< The size in octects of the key source element of KeyIdLookupDescriptor
+#define KEY_ID_LOOKUP_DSCRP_LIST_SIZE    3	///< The size of the key ID lookup descriptor list element of KeyDescriptor
+#define MAX_NUM_OF_DEVICES_USE_KEY       8	///< The size of the device descriptor list element of KeyDescriptor
+#define KEY_USAGE_LIST_SIZE              5	///< The size of the key usage descriptor list element of KeyDescriptor
+#define KEY_SIZE                        16	///< The size of the key element of KeyDescriptor
+/** adding 7 bytes for header parameters (1 opcode + 2 length + 1 mac_handle + 1 pib_attributes + 1 pib_attribute_index + 1 pib_attribute_length) */
+#define MAC_KEY_TBL_STRUCT_SIZE_PLUS_OVERHEAD	(sizeof(key_dscrp_st_t) + 7)
+#endif /* SUPPORT_SEC */
 
-
-/* The maximum number of octets that can be transmitted in the MAC Payload field (MAX_PHY_PACKET_SIZE  MIN_PDU_OVERHEAD)*/
+/** The maximum number of octets that can be transmitted in the MAC Payload field (MAX_PHY_PACKET_SIZE - MIN_PDU_OVERHEAD)*/
 #define MAX_MAC_SAFE_PAYLOAD_SIZE       118
-#define	MAX_HDR_IE_SIZE				3
-/* EB payload IE length = 19 + 2 = 21 octets
- * Tx power IE length = 6 octets */
-#define MAX_ZIGBEE_EB_IE_LEN				27 // maximum allowed IE Size for Enhanced Beacon
+#define	MAX_HDR_IE_SIZE				3		///< The maximum size of header IE in octets
+
+/**
+ * Maximum allowed IE size for enhanced beacon =
+ * 	EB payload IE length (19 + 2 = 21 octets) + Tx power IE length (6 octets) = 27 octets
+ */
+#define MAX_ZIGBEE_EB_IE_LEN				27
 /*
  * False vendor specific IE: 5 octets without any vendor specific info only OUI
  * False MLME nested: 3 for our testing <not random length>
  * used for zigbee certification
  * */
+
+/**
+ * False vendor specific IE: 5 octets without any vendor specific info only OUI
+ * False MLME nested: 3 for our testing <not random length>
+ * used for zigbee certification
+ */
 #define MAX_ADDITIONAL_ZIGBEE_PYLDIE_SIZE	8
-/* Rejoin IE  = 12 + 3 hdr = 15 octets
+/**
+ * Rejoin IE  = 12 + 3 hdr = 15 octets
  * Tx power IE length = 1 + 3 hdr octets
  * Vendor specific IE hdr = 5 octets
- * */
+ */
 #define MAX_ZIGBEE_EBR_IE_LEN				(20 + MAX_ADDITIONAL_ZIGBEE_PYLDIE_SIZE)
 
+#define MAX_BEACON_FRAME_PENDING_ADDRESSES  7	///< The maximum number of pending addresses in beacon frame
 
-#define MAX_BEACON_FRAME_PENDING_ADDRESSES  7
 /**
  * @brief Enumeration representing any error codes that could result from calling a MAC API
  **/
@@ -124,10 +140,14 @@ typedef enum {
 	RANGING_NOT_SUPPORTED,
 	INTERNAL_ERROR,
 	CONDITINALLY_PASSED,
+	INVALID_STATE = 0xD0,
 	MAC_STATUS_SUCCESS = 0,
 } mac_status_enum_t;
 
-/* MAC PIBs IDs */
+/**
+ * @brief enum represents MAC PIBs IDs
+ *
+ */
 typedef enum {
 	ACK_WAIT_DUR_ID = 0x40,
 	ASSOC_PAN_COORD_ID = 0x56,
@@ -220,6 +240,10 @@ typedef enum {
 	NORMAL_BEACON = 0x00, ENHANCED_BEACON = 0x01
 } bcon_typ_t;
 
+/**
+ * @brief Enum represents MAC command frames
+ *
+ */
 typedef enum {
 	ASSOC_REQ = 0x01,
 	ASSOC_RSP = 0x02,
@@ -232,13 +256,11 @@ typedef enum {
 } mac_cmd_frm_t;
 
 /**
- * @brief enum represents Frame types defined in 802.15.4 std
+ * @brief Enum represents frame types defined in IEEE 802.15.4 standard
  **/
 typedef enum {
 	BEACON = 0x00, DATA = 0x01, ACK = 0x02, COMMAND = 0x03, FT_RESERVED = 0x04, FT_MULTIPURPOSE = 0x5, FT_FRAK = 0x6, FT_EXTENDED = 0x7, NO_FRAME=0xFF
 } mac_frm_t;
-
-
 
 /**
  * @brief indicates the actual frame protection that is provided. This value can be adapted on a frame-by-frame basis and allows for
@@ -261,84 +283,113 @@ typedef enum security_level_enum {
  * @brief struct conatins PIB attribute data
  **/
 typedef struct attr_arr_e {
-	uint8_t* data;
-	uint16_t length;
+	uint8_t* data;		///< PIB attribute data
+	uint16_t length;	///< length of PIB attribute data
 } attr_arr_t;
 /**
  * @brief union contains PIB attribute value [bool/ single int / octet string]
  **/
 typedef union attr_value_e {
-	uint32_t attr_int;
-	uint32_t attr_bool;
-	attr_arr_t attr_array;
+	uint32_t attr_int;		///< PIB attribute value in case of single integer
+	uint32_t attr_bool;		///< PIB attribute value in case of boolean
+	attr_arr_t attr_array;	///< PIB attribute value in case of array
 } attr_val_t;
 
 /**
  * @brief structure represents common security parameters
  **/
 typedef struct prim_sec_param_e {
-	uint32_t frm_cntr;
-	uint8_t key_src[KEY_SRC_SIZE_MOD_3];
-	sec_level_enum_t sec_level;
-	uint8_t key_indx;
-	uint8_t key_id_mod;
+	uint32_t frm_cntr;						///< Frame counter field of the auxiliary security header
+	uint8_t key_src[KEY_SRC_SIZE_MOD_3];	///< Key source field of the Key Identifier field of the auxiliary security header
+	sec_level_enum_t sec_level;				///< Security level field of the security control field of the auxiliary security header
+	uint8_t key_indx;						///< Key index field of the Key Identifier field of the auxiliary security header
+	uint8_t key_id_mod;						///< Key ID mode field of  the security control field of the auxiliary security header
 } prim_sec_param_st;
 
 #if SUPPORT_SEC
+/**
+ * @brief Union represents the device address
+ *
+ */
 typedef union _dev_addrs_un
 {
-	uint8_t  dev_addrs_arr[EXT_ADDRESS_LENGTH];
-	uint16_t shrt_addrs;
-
+	uint8_t  dev_addrs_arr[EXT_ADDRESS_LENGTH];	///< Extended address of the device
+	uint16_t shrt_addrs;						///< Short address of the device
 }dev_addrs_un_t;
 
 /**
- * @brief Security device descriptor list element structure
+ * @brief Structure represents the elements of device descriptor
  *
  **/
 typedef struct _device_dscrp_st
 {
+	/** The PAN identifier of the device in this DeviceDescriptor */
 	uint16_t      device_pan_id;
+	/** The short address of the device in this DeviceDescriptor.
+	 * A value of 0xfffe indicates that this device is using only its extended address.
+	 * A value of 0xffff indicates that this value is unknown */
 	uint16_t      device_short_addrs;
+	/** The extended IEEE address of the device */
 	uint8_t       dev_extd_addrs_arr[EXT_ADDRESS_LENGTH];
+	/** The incoming frame counter of the device */
 	uint32_t      incoming_frame_counter;
+	/** Indication of whether the device may override the minimum security level settings */
 	uint8_t       exempt_min_sec_level;
-	uint8_t		  tbl_set_flag; /*TRUE means that this entry is used, FALSE means this entry not used*/
+	/** TRUE means that this entry is used, FALSE means this entry not used */
+	uint8_t		  tbl_set_flag;
 }device_dscrp_st_t;
 
+/**
+ * @brief Structure represents the elements of key ID lookup descriptor
+ */
 typedef struct _key_id_lookup_dscrp_st
 {
-	uint32_t key_index ; /* allows unique identification of different keys with the same originator */
+	/** Information used to identify the key. Present only if KeyIdMode is not equal to 0x00 */
+	uint32_t key_index ;
+	/** The device address for this descriptor. Present only if KeyIdMode is equal to 0x00 */
 	dev_addrs_un_t un_dev_addrs;
+	/** The PAN identifier for this descriptor. Present only if KeyIdMode is equal to 0x00 */
 	uint16_t dev_pan_id;
-	uint8_t  key_id_mode;        /* The mode used to for this descriptor. */
-	uint8_t key_src_arr[KEY_SOURCE_SIZE]; /* indicates the originator of a group key. Present only if KeyIdMode is equal to 0x02 or 0x03 */
-	uint8_t  enum_device_addrs_mode; //range values from  mac_addrs_mode_enum_t enum (should be set to NOT_USED=0xFF when this entry isn't being used )
+	/** The mode used to for this descriptor */
+	uint8_t  key_id_mode;
+	/** Information to identify the key. Present only if KeyIdMode is equal to 0x02 or 0x03 */
+	uint8_t key_src_arr[KEY_SOURCE_SIZE];
+	/** The addressing mode for this descriptor. Present only if KeyIdMode is equal to 0x00 */
+	uint8_t  enum_device_addrs_mode;
 
 }key_id_lookup_dscrp_st_t;
 
-/* indicating the frame types with which this key may be used */
+/**
+ * @brief Structure represents the elements of key usage descriptor
+ *
+ */
 typedef struct _key_usage_dscrp_st
 {
-	uint8_t     enum_mac_frm_type;  //range values from mac_frm_t enum
-	uint8_t 	enum_cmd_frm_id;	//range value from mac_cmd_frm_t enum
+	uint8_t     enum_mac_frm_type;  ///< MAC frame type
+	uint8_t 	enum_cmd_frm_id;	///< MAC command frame ID
 }key_usage_dscrp_st_t;
 
 /**
- * @brief Security key descriptor list element structure
+ * @brief Structure represents the elements of key descriptor
  *
  **/
 typedef struct _key_dscrp_st
 {
+	/** A list of KeyIdLookupDescriptor entries used to identify this KeyDescriptor */
 	key_id_lookup_dscrp_st_t key_id_lookup_dscrp_list[KEY_ID_LOOKUP_DSCRP_LIST_SIZE];
+	/** A list of implementation specific handles to DeviceDescriptor entries in macDeviceTable
+	 * for each of the devices that are currently using this key */
 	device_dscrp_st_t        device_dscrp_list[MAX_NUM_OF_DEVICES_USE_KEY];
+	/** A list of KeyUsageDescriptor entries indicating the frame types with which this key may be used */
 	key_usage_dscrp_st_t     key_usage_dscrp_st_list[KEY_USAGE_LIST_SIZE];
+	/** The value of the key */
 	uint8_t                  key_arr[KEY_SIZE];
-	uint8_t		  			 tbl_set_flag; /*TRUE means that this entry is used, FALSE means this entry not used*/
+	/** TRUE means that this entry is used, FALSE otherwise */
+	uint8_t		  			 tbl_set_flag;
 }key_dscrp_st_t;
 
 /**
- * @brief enum represents Security table types that can be used in mlme-remove-sec_table
+ * @brief Enum represents security table types that can be used in mlme-remove-sec_table
  **/
 typedef enum security_tbl_enum {
 	MAC_SEC_LEVEL_TABLE,
@@ -349,22 +400,27 @@ typedef enum security_tbl_enum {
 	KEY_USAGE_DSCRP_ST_LIST
 } sec_tbl_enum_t;
 
-#endif /*SUPPORT_SEC */
+#endif /* SUPPORT_SEC */
 
 /**
- * @brief structure represents pan descriptor parameters
+ * @brief Structure represents PAN descriptor parameters
  **/
 typedef struct pan_descr_e {
 #if SUPPORT_SEC
-	/* Security Information */
+	/** Security information */
 	prim_sec_param_st sec_params;
 #endif
+	/**
+	 * The time at which the beacon frame was received, in symbols.
+	 * This value is equal to the timestamp taken when the beacon frame was received
+	 * The precision of this value shall be a minimum of 20 bits, with the lowest 4 bits being the least significant
+	 */
 	uint32_t time_stamp;
 	/** The address of the coordinator as specified in the received beacon frame */
 	uint8_t coord_addr[EXT_ADDRESS_LENGTH];
 	/** The PAN ID of the coordinator as specified in the received beacon frame */
 	uint16_t coord_pan_id;
-	/** Superframe specification */
+	/** The superframe specification as specified in the received beacon frame */
 	uint16_t super_frm_spec;
 	/** The coordinator addressing mode corresponding to the received beacon frame */
 	uint8_t coord_addr_mod;
@@ -372,11 +428,17 @@ typedef struct pan_descr_e {
 	uint8_t logic_chanl;
 	/** The current channel page occupied by the network */
 	uint8_t chnl_pge;
-	/** The LQI at which the network beacon was received */
+	/**
+	 * The LQI at which the network beacon was received.
+	 * Lower values represent lower LQI
+	 */
 	uint8_t link_qual;
-	/* Set to one  if the beacon is from the PAN coordinator that is accepting GTS requests*/
+	/** TRUE if the beacon is from the PAN coordinator that is accepting GTS requests*/
 	uint8_t gts_perm;
-	/* SUCCESS if there was no error in the security processing of the frame otherwise check error code */
+	/**
+	 * SUCCESS if there was no error in the security processing of the frame.
+	 * One of the other status codes indicating an error in the security processing otherwise
+	 */
 	uint8_t sec_fail_status;
 } pan_descr_st;
 
@@ -407,6 +469,7 @@ typedef struct mlme_scan_conf_param_e {
 typedef struct mlme_bcon_notfy_params_e {
 	/** Pointer to the PANDescriptor for the received Beacon frame.*/
 	pan_descr_st* pan_desc_ptr;
+	/** The list of addresses of the devices for which the beacon source has data */
 	uint8_t addr_list [EXT_ADDRESS_LENGTH * MAX_BEACON_FRAME_PENDING_ADDRESSES + MAX_BEACON_FRAME_PENDING_ADDRESSES * EXT_ADDRESS_LENGTH] ;
 	/** The set of octets comprising the beacon payload to be transferred from the MAC
 	 *sublayer entity to the next higher layer */
@@ -449,184 +512,213 @@ typedef struct mlme_sync_loss_params_e {
 	uint8_t chnl_pge;
 } mlme_sync_loss_params_st_t;
 
-/* MCPS-DATA.indication parameters  primitive is generated by the MAC sublayer and issued to the SSCS on receipt
- of a data frame at the local MAC sublayer entity */
+/**
+ * @brief Structure represents MCPS-DATA.indication parameters
+ *
+ */
 typedef struct {
-	/* Optional. The time, in symbols, at which the data were received */
+	/** Optional. The time, in symbols, at which the data were received */
 	uint32_t timestamp;
-	/* The individual device address of the entity from which the MSDU was received.*/
+	/** The individual device address of the entity from which the MSDU was received.*/
 	uint8_t src_addrs[EXT_ADDRESS_LENGTH];
-	/* The individual device address of the entity to which the MSDU is being transferred */
+	/** The individual device address of the entity to which the MSDU is being transferred */
 	uint8_t dstn_addrs[EXT_ADDRESS_LENGTH];
-	/* The 16-bit PAN identifier of the entity from which the MSDU was received. */
+	/** The 16-bit PAN identifier of the entity from which the MSDU was received. */
 	uint16_t src_pan_id;
-	/* The 16-bit PAN identifier of the entity to which the MSDU is being transferred. */
+	/** The 16-bit PAN identifier of the entity to which the MSDU is being transferred. */
 	uint16_t dstn_pan_id;
-	/* The destination addressing mode for this primitive corresponding to the received MPDU. This value can take one of the
+	/** The destination addressing mode for this primitive corresponding to the received MPDU. This value can take one of the
 	 following values:
 	 0x00 = no address, 0x01 = reserved, 0x02 = 16-bit short address, 0x03 = 64-bit extended address. */
 	mac_addrs_mode_enum_t enum_dstn_addrs_mode;
-	/* The source addressing mode for this primitive corresponding to the received MPDU.. This value can take one of the following values:
+	/** The source addressing mode for this primitive corresponding to the received MPDU.. This value can take one of the following values:
 	 * 0x00 = no address, 0x01 = reserved, 0x02 = 16-bit short address, 0x03 = 64-bit extended address.*/
 	mac_addrs_mode_enum_t enum_src_addrs_mode;
-	/* The number of octets contained in the MSDU being indicated by the MAC sublayer entity.*/
+	/** The number of octets contained in the MSDU being indicated by the MAC sublayer entity.*/
 	uint8_t msdu_len;
-	/* The set of octets forming the MSDU being indicated by the MAC sublayer entity..*/
+	/** The set of octets forming the MSDU being indicated by the MAC sublayer entity..*/
 	uint8_t *ptr_msdu;
-	/*  The DSN of the received data frame.*/
+	/**  The DSN of the received data frame.*/
 	uint8_t dsn;
-	/* link quality value */
+	/** LQI value measured during reception of the MPDU. Lower values represent lower LQI */
 	uint8_t mpdu_link_qlty;
-	/* RSSI */
+	/**
+	 * The Received Signal Strength Indicator is a measure of the RF power level at the input of the transceiver
+	 * measured during the PHR and is valid after the SFD is detected
+	 */
 	uint8_t mpdu_rssi;
-	/* The security level purportedly used by the received data frame */
+	/** The security level purportedly used by the received data frame */
 	sec_level_enum_t enum_mcps_security_level;
 #if SUPPORT_SEC
-	/* The mode used to identify the key purportedly used by the originator of the received frame */
+	/** The mode used to identify the key purportedly used by the originator of the received frame */
 	uint8_t key_id_mode;
-	/* The index of the key purportedly used by the originator of the received frame */
+	/** The index of the key purportedly used by the originator of the received frame */
 	uint8_t key_index;
-	/* The originator of the key purportedly used by the originator of the received frame */
+	/** The originator of the key purportedly used by the originator of the received frame */
 	uint8_t key_src[8];
 #endif
+	/** Frame pending bit field from received data frame */
+	uint8_t frame_pending;
 } mcps_indicate_params_st_t;
 
-/* MLME Association Status */
+/**
+ * @brief Enum represents MLME association status
+ *
+ */
 typedef enum mlme_assoc_status_enum {
 	ASSOCIATION_SUCCESS = 0x00, AT_CAPACITY = 0x01, ACCESS_DENIED = 0x02,
 } mlme_assoc_status_enum_t;
 
 #if (FFD_DEVICE_CONFIG || RFD_SUPPORT_ASSOCIATION_IND_RSP)
 /**
- * @brief structure represents parameters for MLME-ASSOCIATE.indication
+ * @brief Structure represents MLME-ASSOCIATE.indication parameters
  **/
 typedef struct mlme_assoc_ind_params_e {
-	prim_sec_param_st sec_params; /**< security information */
-	uint8_t dev_addr[EXT_ADDRESS_LENGTH]; /**< The address of the device requesting association */
-	uint8_t cap_info; /**< The operational capabilities of the device requesting association */
+	prim_sec_param_st sec_params; 			///< Security information
+	uint8_t dev_addr[EXT_ADDRESS_LENGTH]; 	///< The address of the device requesting association
+	uint8_t cap_info; 						///< The operational capabilities of the device requesting association
 } mlme_assoc_ind_param_st;
 
 /**
- * @brief structure represents MLME-ASSOCIATE.response input parameters
+ * @brief Structure represents MLME-ASSOCIATE.response input parameters
  **/
 typedef struct mlme_assoc_res_params_e {
-	uint8_t dev_addr[EXT_ADDRESS_LENGTH]; /**< The address of the device requesting association.*/
-	uint16_t dev_short_addr; /**< The short address allocated by the coordinator */
-	mlme_assoc_status_enum_t status; /**< The status of the association attemp */
-	prim_sec_param_st sec_params; /**< Security Information */
+	uint8_t dev_addr[EXT_ADDRESS_LENGTH]; 	///< The address of the device requesting association
+	/**
+	 * The short device address allocated by the coordinator on successful association.
+	 * This parameter is set to 0xffff if the association was unsuccessful
+	 */
+	uint16_t dev_short_addr;
+	mlme_assoc_status_enum_t status; 		///< The status of the association attempt
+	prim_sec_param_st sec_params; 			///< Security Information
 } mlme_assoc_res_param_st;
 #endif /* (FFD_DEVICE_CONFIG || RFD_SUPPORT_ASSOCIATION_IND_RSP) */
 
-
 /**
- * @brief structure represents MLME-ASSOCIATE.request input parameters
+ * @brief Structure represents MLME-ASSOCIATE.request input parameters
  **/
 typedef struct mlme_assoc_req_params_e {
-	mac_addrs_mode_enum_t coord_addr_mod; /**< Coordinator addressing mode */
-	uint8_t coord_addr[EXT_ADDRESS_LENGTH]; /**< The address of the coordinator with which to associate */
-	uint16_t coord_pan_id; /**< The identifier of the PAN with which to associate */
-	uint8_t chnl_pge; /**< The channel page on which to attempt association */
-	uint8_t chann_num; /**< The channel number on which to attempt association */
-	uint8_t capab_info; /**< Specifies the operational capabilities of the associating device */
-	prim_sec_param_st sec_params; /**< Security information */
+	mac_addrs_mode_enum_t coord_addr_mod; 	///< The coordinator addressing mode for this primitive and subsequent MPDU
+	uint8_t coord_addr[EXT_ADDRESS_LENGTH]; ///< The address of the coordinator with which to associate
+	uint16_t coord_pan_id; 					///< The identifier of the PAN with which to associate
+	uint8_t chnl_pge; 						///< The channel page on which to attempt association
+	uint8_t chann_num; 						///< The channel number on which to attempt association
+	uint8_t capab_info; 					///< Specifies the operational capabilities of the associating device
+	prim_sec_param_st sec_params; 			///< Security information
 } mlme_assoc_req_param_st;
 
-
 /**
- * @brief structure represents MLME-DISASSOCIATE.Request input parameters
+ * @brief Structure represents MLME-DISASSOCIATE.request input parameters
  **/
 typedef struct mlme_disassoc_req_params_e {
-	prim_sec_param_st sec_params; /**< security information */
-	uint8_t dev_addr[EXT_ADDRESS_LENGTH]; /**<The address of the device to which to send the command */
-	uint16_t dev_pan_id; /**<The PAN ID of the device to which to send the command */
-	uint8_t tx_indirect; /**<set to one if the Disassociation Notification command is to be sent indirectly */
-	mac_addrs_mode_enum_t addr_mod; /**<The addressing mode of the device to which to send the command */
-	uint8_t reason; /**<The reason for the disassociation */
+	prim_sec_param_st sec_params; 			///< Security information
+	uint8_t dev_addr[EXT_ADDRESS_LENGTH]; 	///< The address of the device to which to send the command
+	uint16_t dev_pan_id; 					///< The PAN ID of the device to which to send the command
+	uint8_t tx_indirect; 					///< set to one if the Disassociation Notification command is to be sent indirectly
+	mac_addrs_mode_enum_t addr_mod; 		///< The addressing mode of the device to which to send the command
+	uint8_t reason; 						///< The reason for the disassociation
 } mlme_disassoc_req_param_st;
 
 /**
- * @brief structure represents MLME-SCAN.request input parameters
+ * @brief Structure represents MLME-SCAN.request input parameters
  **/
 typedef struct mlme_scn_req_params_e {
-	uint32_t 				scn_chnls; /**< The channel numbers to be scanned */
-	uint8_t* 				ptr_hdr_ie_list; /**< Pointer to header IE */
-	uint8_t* 				ptr_pyld_ie_list; /**< Pointer to payload IE */
-	prim_sec_param_st 		sec_params; /**< Security Information */
-	scn_type_t 				scn_type; /**< Indicates the type of scan performed */
-	uint8_t 				scn_dur; /**< time to spend scanning on each channel*/
-	uint8_t 				chnl_pge; /**<The channel page on which to perform the scan */
-	uint8_t 				hdr_ie_list_count; /**< Number of header IE */
-	uint8_t 				pyld_ie_list_count; /**< Number of payload IE */
-	uint8_t 				sn_supr; /**<Set to one if the sequence number is suppressed in the frame */
-	uint8_t					ie_present; /**<Information Element present(either header or payload IE */
-	uint8_t					ie_hdr_total_len; /* total length of the header IE including its headers */
-	uint8_t					ie_payld_total_len; /* total length of the payload IE including its headers */
+	uint32_t 				scn_chnls; 			///< The channel numbers to be scanned
+	uint8_t* 				ptr_hdr_ie_list; 	///< Pointer to header IE
+	uint8_t* 				ptr_pyld_ie_list; 	///< Pointer to payload IE
+	prim_sec_param_st 		sec_params; 		///< Security Information
+	scn_type_t 				scn_type; 			///< Indicates the type of scan performed
+	uint8_t 				scn_dur; 			///< Time to spend scanning on each channe
+	uint8_t 				chnl_pge; 			///< The channel page on which to perform the scan
+	uint8_t 				hdr_ie_list_count; 	///< Number of header IE
+	uint8_t 				pyld_ie_list_count; ///< Number of payload IE
+	uint8_t 				sn_supr; 			///< Set to one if the sequence number is suppressed in the frame
+	uint8_t					ie_present; 		///< Information Element present(either header or payload IE
+	uint8_t					ie_hdr_total_len; 	///< Total length of the header IE including its headers
+	uint8_t					ie_payld_total_len; ///< Total length of the payload IE including its headers
 } mlme_scn_req_param_st;
 
 /**
- * @brief structure represents MLME-POLL.request input parameters
+ * @brief Structure represents MLME-POLL.request input parameters
  **/
 typedef struct mlme_poll_req_params_e {
-	mac_addrs_mode_enum_t coord_addr_mod;/**< coordinator address mode */
-	uint8_t coord_addr[EXT_ADDRESS_LENGTH];/**< coordinator address based on the mode */
-	prim_sec_param_st sec_params;/**< Security Information */
-	uint16_t coord_pan_id;/**< PanId for coordinator */
+	mac_addrs_mode_enum_t coord_addr_mod;		///< coordinator address mode
+	uint8_t coord_addr[EXT_ADDRESS_LENGTH];		///< coordinator address based on the mode
+	prim_sec_param_st sec_params;				///< Security Information
+	uint16_t coord_pan_id;						///< PanId for coordinator
 } mlme_poll_req_param_st;
 
 #if (FFD_DEVICE_CONFIG || RFD_SUPPORT_START_PRIM)
 /**
- * @brief structure represents MLME-Start.Request input parameters
+ * @brief Structure represents MLME-Start.Request input parameters
  **/
 typedef struct mlme_start_req_params_e {
-	prim_sec_param_st coord_realign_sec_parms;/**< Security information to be used in coordinator realignment command */
-	prim_sec_param_st beacn_sec_params;/**< Security information to be used in Beacon frame */
-	uint8_t* ptr_hdr_ie_list;/**< pointer to header IEs that will be attached to the beacon frame */
-	uint8_t* ptr_pyld_ie_list;/**< pointer to payload IEs that will be attached to the beacon frame */
-	uint32_t start_time;/**< This parameter is ignored for non-beacon enabled */
-	uint32_t pan_coord;/**< Flag to indicate the role of this device (coordinator/pan-coordinator) */
-	uint32_t batt_life_ext; /**<This parameter is ignored in non-beacon enabled network*/
-	uint32_t coord_realign; /**<This flag indicate if coordinator realignment is to be transmitted*/
-	uint16_t pan_id;/**<The PAN identifier to be used by thedevic*/
-	uint8_t logic_chanl;/**< Channel to transmit beacon frame or coordinator realignment command frame on*/
-	uint8_t chnl_pge;/**<The channel page on which to begin listen and transmit*/
-	uint8_t bcon_ord;/**<value of 15 indicates that the coordinator will not transmit periodic beacons (non-beacon enabled)*/
-	uint8_t super_frm_ord;/**< ignored in case of non-beacon enabled network */
-	uint8_t ie_present; /**< flag to indicate existence of IEs in the sent frame*/
-	uint8_t hdr_ie_list_count;/**< number of header IEs passed */
-	uint8_t pyld_ie_list_count;/**< number of payload IEs passed */
-	uint8_t	ie_hdr_total_len; /**< total length of the header IE including its headers */
-	uint8_t	ie_payld_total_len; /**< total length of the payload IE including its headers */
-
+	/** Security information to be used in coordinator realignment command */
+	prim_sec_param_st coord_realign_sec_parms;
+	/** Security information to be used in beacon frame */
+	prim_sec_param_st beacn_sec_params;
+	/** Pointer to header IEs that will be attached to the beacon frame */
+	uint8_t* ptr_hdr_ie_list;
+	/** Pointer to payload IEs that will be attached to the beacon frame */
+	uint8_t* ptr_pyld_ie_list;
+	/** This parameter is ignored for non-beacon enabled */
+	uint32_t start_time;
+	/** Flag to indicate the role of this device (coordinator/pan-coordinator) */
+	uint32_t pan_coord;
+	/** This parameter is ignored in non-beacon enabled network */
+	uint32_t batt_life_ext;
+	/** This flag indicate if coordinator realignment is to be transmitted */
+	uint32_t coord_realign;
+	/** The PAN identifier to be used by the device */
+	uint16_t pan_id;
+	/** Channel to transmit beacon frame or coordinator realignment command frame on */
+	uint8_t logic_chanl;
+	/** The channel page on which to begin listen and transmit */
+	uint8_t chnl_pge;
+	/** Value of 15 indicates that the coordinator will not transmit periodic beacons (non-beacon enabled) */
+	uint8_t bcon_ord;
+	/** Ignored in case of non-beacon enabled network */
+	uint8_t super_frm_ord;
+	/** Flag to indicate existence of IEs in the sent frame */
+	uint8_t ie_present;
+	/** Number of header IEs passed */
+	uint8_t hdr_ie_list_count;
+	/** Number of payload IEs passed */
+	uint8_t pyld_ie_list_count;
+	/** Total length of the header IE including its headers */
+	uint8_t	ie_hdr_total_len;
+	/** Total length of the payload IE including its headers */
+	uint8_t	ie_payld_total_len;
 } mlme_start_req_param_st;
 #endif /* FFD_DEVICE_CONFIG */
 /**
  * @brief Structure contains all the information required for MLME-DISASSOCIATE.confirm primitive
  **/
 typedef struct mlme_disassoc_cfm_params_e {
-	mac_status_enum_t status; /**< Status of disassociation operation */
-	mac_addrs_mode_enum_t dev_addr_mode; /**< Device addressing mode */
-	uint16_t dev_pan_id; /**< Device PAN ID */
-	uint8_t dev_addr[EXT_ADDRESS_LENGTH]; /**< Device address*/
+	mac_status_enum_t status; 				///< Status of disassociation operation
+	mac_addrs_mode_enum_t dev_addr_mode; 	///< Device addressing mode
+	uint16_t dev_pan_id; 					///< Device PAN ID
+	uint8_t dev_addr[EXT_ADDRESS_LENGTH]; 	///< Device address
 } mlme_disassoc_cfm_params_st;
 
 /**
  * @brief Structure contains all the information required for MLME-DISASSOCIATE.indication primitive
  **/
 typedef struct mlme_disassoc_ind_e {
-	uint8_t dev_addr[EXT_ADDRESS_LENGTH]; /**< The address of the device requesting disassociation */
-	uint8_t reason; /**< The reason for the disassociation */
-	prim_sec_param_st beacn_sec_params; /** <Security Information */
+	uint8_t dev_addr[EXT_ADDRESS_LENGTH]; 	///< The address of the device requesting disassociation
+	uint8_t reason; 						///< The reason for the disassociation
+	prim_sec_param_st beacn_sec_params; 	///< Security Information
 } mlme_disassoc_ind_st;
 
 /*******************************************mcps_data_types ***********************/
-/*
- * @enum
- * @brief enumeration that describes tx options passed in mcps-data.request
- * */
+/**
+ * @brief Enum represents TX options passed in mcps-data.request
+ *
+ */
 typedef enum mcps_tx_options_mask_enum {
-	ack_transm_msk = 0x01, /* acknowledged transmission is required */
-	indirect_transm_shift = 0x02, /* indirect transmission bit shift */
-	indirect_transm_msk = 0x04 /* indirect transmission */
+	ack_transm_msk = 0x01, 			///< acknowledged transmission is required
+	indirect_transm_shift = 0x02, 	///< indirect transmission bit shift
+	indirect_transm_msk = 0x04 		///< indirect transmission
 } mcps_tx_options_mask_enum_t;
 /**
  * @brief Structure contains all the input parameters for a the MCPS-DATA.Request
@@ -662,27 +754,29 @@ typedef struct st_mcps_data_req_params {
 	/** The index of the key to be used (see 7.6.2.4.2). This parameter is ignored if the KeyIdMode parameter is ignored or set to 0x00. */
 	uint8_t key_index;
 } mcps_data_req_params_st_t;
-/*
- * @struct
- * @brief contains the private data to be used in persistent timer call back
- * */
+/**
+ * @brief Structure contains the private data to be used in persistent timer call back
+ *
+ */
 typedef struct persis_tmr_data_e {
-	void *ptr_mac_cntx;
-	void *ptr_persist_data_loc;
+	void *ptr_mac_cntx;				///< Pointer to the MAC context
+	void *ptr_persist_data_loc;		///< Pointer to the indirect packet which its persistent timer is fired
 } persis_tmr_data_st;
-
-/* MCPS-DATA cfm parameters */
+/**
+ * @brief Structure contains all the information required for MCPS-DATA.confirm primitive
+ *
+ */
 typedef struct {
-	uint32_t timestamp; /* Optional. The time, in symbols, at which the data were transmitted */
-	uint8_t msdu_hndl; /* The handle associated with the MSDU being cfmed */
-	uint8_t enum_data_tx_status; /* The status of the last MSDU transmission */
+	uint32_t timestamp; 			///< Optional. The time, in symbols, at which the data were transmitted
+	uint8_t msdu_hndl; 				///< The handle associated with the MSDU being confirmed
+	uint8_t enum_data_tx_status; 	///< The status of the last MSDU transmission
 } mcps_data_cfm_params_st_t;
 
 /**
  * @brief Structure contains all information related to MLME-COMM-STATUS.indication primitive
  **/
 typedef struct {
-	/* Security Information */
+	/** Security Information */
 	prim_sec_param_st sec_params;
 	/** Source address */
 	uint8_t src_add[EXT_ADDRESS_LENGTH];
@@ -699,81 +793,87 @@ typedef struct {
 } mlme_comm_status_st_t;
 
 #if (FFD_DEVICE_CONFIG || RFD_SUPPORT_ORPHAN_IND_RSP)
-/*
- * @struct
+/**
  * @brief Structure contains all information related to MLME-ORPHAN.indication primitive
- * */
+ *
+ */
 typedef struct {
-	/* orphan device address */
+	/** Orphan device address */
 	uint8_t orphan_addr[EXT_ADDRESS_LENGTH];
-	/* security Information for orphan notification command */
+	/** Security Information for orphan notification command */
 	prim_sec_param_st sec_params;
 } mlme_orphan_ind_st_t;
-/*
- * @struct
+/**
  * @brief Structure contains all information related to MLME-ORPHAN.response primitive
- * */
+ *
+ */
 typedef struct {
-	/* security Information for orphan response frame */
+	/** Security Information for orphan response frame */
 	prim_sec_param_st sec_params;
-	/* orphan device address */
+	/** Orphan device address */
 	uint8_t orphan_addr[EXT_ADDRESS_LENGTH];
-	/* The short address allocated to the orphaned device if it is associated with this coordinator.
+	/**
+	 * The short address allocated to the orphaned device if it is associated with this coordinator.
 	 * The special short address 0xfffe indicates that no short address was allocated,and the device
 	 * will use its extended address in all communications. If the device was not associated with
-	 * this coordinator, this field will contain the value 0xffff and be ignored on receipt */
+	 * this coordinator, this field will contain the value 0xffff and be ignored on receipt
+	 */
 	uint16_t shrt_addr;
-	/* TRUE if the orphaned device is associated with this coordinator or FALSE otherwise.
-	 * @note:If False function will ignore the call for MLME-ORPHAN.Response */
+	/**
+	 * TRUE if the orphaned device is associated with this coordinator or FALSE otherwise.
+	 * If False function will ignore the call for MLME-ORPHAN.Response
+	 */
 	uint8_t assoc_member;
-
 } mlme_orphan_rsp_st_t;
 #endif /* (FFD_DEVICE_CONFIG || RFD_SUPPORT_ORPHAN_IND_RSP) */
 
 #if (FFD_DEVICE_CONFIG || RFD_SUPPORT_SEND_BEACON)
-/*
- * @struct
+/**
  * @brief Structure contains all information related to MLME-BEAON-Req.Indication primitive
- * */
+ *
+ */
 typedef struct mlme_bcon_req_ind_params_e {
-	uint8_t src_addr[EXT_ADDRESS_LENGTH]; /**< source address for the device sending beacon request */
-	uint8_t ptr_hdr_ie_list[MAX_HDR_IE_SIZE]; /**< parsed header IEs from beacon request frame */
-	uint8_t ptr_pyld_ie_list[MAX_ZIGBEE_EBR_IE_LEN];/**< parsed payload IEs from beacon request frame*/
-	uint16_t dst_pan_id;/**< PANID for the device receiving beacon request */
-	uint8_t bcon_type;/**< Type of beacon frame required to be sent on response for beacon request Beacon/Enhanced Beacon*/
-	uint8_t src_addr_mode;/**< source address mode for th device sending beacon request */
-	uint8_t hdr_ie_list_count; /**<count of header IEs after filtering the unrecognized IEs*/
-	uint8_t pyld_ie_list_count; /**<count of payload IEs after filtering the unrecognized IEs */
-	uint8_t pyld_ie_total_len; /**<length of header IEs after filtering the unrecognized IEs*/
-	uint8_t hdr_ie_total_len;  /**<length of payload IEs after filtering the unrecognized HDR IEs */
+	uint8_t src_addr[EXT_ADDRESS_LENGTH]; 			///< Source address for the device sending beacon request
+	uint8_t ptr_hdr_ie_list[MAX_HDR_IE_SIZE]; 		///< Parsed header IEs from beacon request frame
+	uint8_t ptr_pyld_ie_list[MAX_ZIGBEE_EBR_IE_LEN];///< Parsed payload IEs from beacon request frame
+	uint16_t dst_pan_id;							///< PANID for the device receiving beacon request
+	uint8_t bcon_type;								///< Type of beacon frame required to be sent on response for beacon request Beacon/Enhanced Beacon
+	uint8_t src_addr_mode;							///< Source address mode for the device sending beacon request
+	uint8_t hdr_ie_list_count; 						///< Count of header IEs after filtering the unrecognized IEs
+	uint8_t pyld_ie_list_count; 					///< Count of payload IEs after filtering the unrecognized IEs
+	uint8_t pyld_ie_total_len; 						///< Length of header IEs after filtering the unrecognized IEs
+	uint8_t hdr_ie_total_len;  						///< Length of payload IEs after filtering the unrecognized HDR IEs
 } mlme_bcon_req_ind_params_st;
-/*
- * @struct
+/**
  * @brief Structure contains all information related to MLME-BEAON-SEND.Request primitive
- * */
+ *
+ */
 typedef struct st_mlme_bcon_send_req_params {
-	uint8_t 				key_src[KEY_SRC_SIZE_MOD_3]; /**< key source for Security information */
-	uint8_t 				dstn_addrs[EXT_ADDRESS_LENGTH];/**< address of the device to send beacon to in response of beacon request*/
-	uint8_t* 				ptr_hdr_ie_list;/**< pointer to header IEs to be attached to beacon frame in case of Enhanced beacon */
-	uint8_t* 				ptr_pyld_ie_list;/**< pointer to payload IEs to be attached to beacon frame in case of Enhanced beacon */
-	bcon_typ_t 				enum_bcon_typ;/**< beacon type: Enhanced Beacon / Beacon */
-	mac_addrs_mode_enum_t 	enum_dstn_addrs_mode;/**< destination address mode */
-	mac_addrs_mode_enum_t 	enum_src_addrs_mode;/**< source address mode */
-	sec_level_enum_t 		enum_mcps_security_level;/**< Security level for security information */
-	uint8_t 				chnnl_num;/**< channel to transmit beacon frame on */
-	uint8_t 				chnnl_page;/**< channel page to transmit beacon frame on */
-	uint8_t					super_frm_ord;/**< ignored in non-beacon enabled*/
-	uint8_t 				hdr_ie_list_count;/**< count of header IEs */
-	uint8_t 				pyld_ie_list_count;/**< count of payload IEs */
-	uint8_t 				hdr_ie_total_len;/**< total len of header IEs */
-	uint8_t 				pyld_ie_total_len;/**< total len of header IEs*/
-	uint8_t 				key_id_mode;/**< key id mode used for security processing */
-	uint8_t 				key_index;/**< key index mode used for security processing */
-	uint8_t 				bsn_supr;/**< beacon sequence number suppression flag used to suppress SN*/
+	uint8_t 				key_src[KEY_SRC_SIZE_MOD_3]; 	///< Key source for Security information
+	uint8_t 				dstn_addrs[EXT_ADDRESS_LENGTH];	///< Address of the device to send beacon to in response of beacon request
+	uint8_t* 				ptr_hdr_ie_list;				///< Pointer to header IEs to be attached to beacon frame in case of Enhanced beacon
+	uint8_t* 				ptr_pyld_ie_list;				///< Pointer to payload IEs to be attached to beacon frame in case of Enhanced beacon
+	bcon_typ_t 				enum_bcon_typ;					///< Beacon type: Enhanced Beacon / Beacon
+	mac_addrs_mode_enum_t 	enum_dstn_addrs_mode;			///< Destination address mode
+	mac_addrs_mode_enum_t 	enum_src_addrs_mode;			///< Source address mode
+	sec_level_enum_t 		enum_mcps_security_level;		///< Security level for security information
+	uint8_t 				chnnl_num;						///< Channel to transmit beacon frame on
+	uint8_t 				chnnl_page;						///< Channel page to transmit beacon frame on
+	uint8_t					super_frm_ord;					///< Ignored in non-beacon enabled
+	uint8_t 				hdr_ie_list_count;				///< Count of header IEs
+	uint8_t 				pyld_ie_list_count;				///< Count of payload IEs
+	uint8_t 				hdr_ie_total_len;				///< Total len of header IEs
+	uint8_t 				pyld_ie_total_len;				///< Total len of header IEs
+	uint8_t 				key_id_mode;					///< Key id mode used for security processing
+	uint8_t 				key_index;						///< Key index mode used for security processing
+	uint8_t 				bsn_supr;						///< Beacon sequence number suppression flag used to suppress SN
 } mlme_bcon_send_req_params_st_t;
 
 #endif
-/*Structure representing all the call backs that could be called from MAC to the upper host*/
+/**
+ * @brief Structure representing all the call backs that could be called from MAC to the upper host
+ *
+ */
 struct mac_dispatch_tbl {
 
 	/*========================================================================================================*/
@@ -923,6 +1023,27 @@ struct mac_dispatch_tbl {
 	 */
 	void (*mlme_set_ant_div_rssi_threshold_cfm)(void* mac_cntx_ptr, uint8_t status, int8_t rssi_threshold);
 #endif /* SUPPORT_ANT_DIV */
+#if SUPPORT_CONFIG_LIB
+	/**
+	 * @brief  MLME-SET-CONFIG-LIB-PARAMS.CONFIRM primitive callback
+	 *
+	 * @param  mac_cntx_ptr		     : [in] indicate the used mac context
+	 * @param  status			     : [in] indicates the status of setting configurable library params
+	 * @param  ptr_config_lib_params : [in] indicates the pointer of currently used configurable library parameters
+	 *
+	 * @retval None.
+	 */
+	void (*mlme_set_config_lib_params_cfm)(void* mac_cntx_ptr, uint8_t status, config_lib_st* ptr_config_lib_params);
+	/**
+	 * @brief  MLME-INIT.CONFIRM primitive callback
+	 *
+	 * @param  mac_cntx_ptr		     : [in] indicate the used mac context
+	 * @param  status			     : [in] indicates the status of init operation
+	 *
+	 * @retval None.
+	 */
+	void (*mlme_init_cfm)(void* mac_cntx_ptr, uint8_t status);
+#endif /* SUPPORT_CONFIG_LIB */
 #if SUPPORT_SEC
 	/*===== Get key table Confirm Callback =====*/
 	/**
@@ -1184,8 +1305,6 @@ struct mac_dispatch_tbl {
 			                            int8_t tx_pwr_level, int8_t  last_rssi_level, uint8_t nwk_negotiated);
 #if SUPPORT_ZIGBEE_PHY_CERTIFICATION
 /**
- * @fn check tx error confirm
- *
  * @brief   This function is used to notify upper layer upon transmission by number or trials of expected error
  *
  * @param  mac_cntx_ptr 		: [in] pointer to mac context
@@ -1206,10 +1325,10 @@ struct mac_dispatch_tbl {
 /**
  * @brief   Mac Initialization function, it must be invoked once at the beginning
  *
- * @param   mac_hndl[in] : the MAC instance handle
- * @param   ptr_dispatch_tbl[in] : pointer to the dispatch table
+ * @param[in]   mac_hndl 			: The MAC instance handle
+ * @param[in]   ptr_dispatch_tbl 	: Pointer to the dispatch table
  *
- * @retval mac_status_enum_t :  status to be sent to the Host
+ * @retval Status to be sent to the Host
  */
 mac_status_enum_t mac_init(uint32_t* mac_hndl,
 		struct mac_dispatch_tbl* ptr_dispatch_tbl);
@@ -1233,13 +1352,12 @@ mac_status_enum_t mac_init(uint32_t* mac_hndl,
 /* ============================== MLME Requests ======================================================== */
 #if (FFD_DEVICE_CONFIG || RFD_SUPPORT_SEND_BEACON)
 /**
- * @brief   beacon send request primitive.
+ * @brief   MLME-BEACON.request primitive
  *
- * @param   mac_hndl[in] : the MAC instance handle
+ * @param[in] mac_hndl 						: The MAC instance handle
+ * @param[in] ptr_st_bcon_send_req_params 	: Pointer to the beacon send request parameters
  *
- * @param  	ptr_st_bcon_send_req_params[in]: pointer to the beacon send request parameters
- *
- * @retval  mac_status_enum_t :  status to be sent to the Host
+ * @retval  Status to be sent to the Host
  *
  * @note 	this function will post DIRECT_DATA_TX_EVENT event that will be handled
  *			when call emngr_handle_all_events to call the cbk direct_tx_evnt_cbk
@@ -1248,15 +1366,12 @@ mac_status_enum_t mlme_bcon_send_req(uint32_t mac_hndl,
 		mlme_bcon_send_req_params_st_t *ptr_st_bcon_send_req_params);
 #endif
 /**
- * @brief   used by a device to request an association with a coordinator,
- *			mlme_assoc_cfm callback is used to inform the next higher layer
- *			whether its request to associate was successful or unsuccessful.
+ * @brief   MLME-ASSOCIATE.request, used by a device to request an association with a coordinator,
  *
- * @param   mac_hndl[in] : the MAC instance handle
+ * @param[in] mac_hndl  				: The MAC instance handle
+ * @param[in] ptr_st_assoc_req_param 	: Pointer to the association request parameters
  *
- * @param  	ptr_st_assoc_req_param[in]: pointer to the association request parameters
- *
- * @retval  mac_status_enum_t :  status to be sent to the Host
+ * @retval  Status to be sent to the Host
  *
  * @note 	this function will post DIRECT_DATA_TX_EVENT event that will be handled
  *			when call emngr_handle_all_events to call the cbk direct_tx_evnt_cbk
@@ -1266,13 +1381,12 @@ mac_status_enum_t mlme_assoc_req(uint32_t mac_hndl,
 
 #if (FFD_DEVICE_CONFIG || RFD_SUPPORT_ASSOCIATION_IND_RSP)
 /**
- * @brief   association response primitive.
+ * @brief   MLME-ASSOCIATE.response primitive.
  *
- * @param   mac_hndl[in] : the MAC instance handle
+ * @param[in] mac_hndl 					: The MAC instance handle
+ * @param[in] ptr_st_assoc_res_param 	: Pointer to the association response parameters
  *
- * @param  	ptr_st_assoc_req_param[in]: pointer to the association request parameters
- *
- * @retval 	None
+ * @retval 	Status to be sent to the Host
  *
  * @note 	this function will post DIRECT_DATA_TX_EVENT event that will be handled
  *			when call emngr_handle_all_events to call the cbk direct_tx_evnt_cbk
@@ -1280,63 +1394,52 @@ mac_status_enum_t mlme_assoc_req(uint32_t mac_hndl,
 mac_status_enum_t mlme_assoc_res(uint32_t mac_hndl,
 		mlme_assoc_res_param_st *ptr_st_assoc_res_param);
 #endif /* (FFD_DEVICE_CONFIG || RFD_SUPPORT_ASSOCIATION_IND_RSP) */
-
 /**
- * @brief   Request to disassociate from a PAN or used by the coordinator to disassociate a device from a PAN,
- * 			 mlme_disassoc_cfm callback will be issued with data stored in structure  mlme_disassoc_cfm_params_e
+ * @brief   MLME-DISASSOCIATE.request primitive
+ * 			used by the device to disassociate from a PAN or used by the coordinator to disassociate a device from a PAN
  *
- * @param   mac_hndl : [in] the MAC instance handle
- * @param  	mlme_disassoc_req_param : [in] pointer to disassociation request primitive params
+ * @param[in] mac_hndl 					: The MAC instance handle
+ * @param[in] mlme_disassoc_req_param 	: Pointer to disassociation request primitive params
  *
- * @retval 	mac_status_enum_t :  status to be sent to the Host
+ * @retval 	Status to be sent to the Host
  *
  * @note 	this function will post DIRECT_DATA_TX_EVENT event that will be handled
  *			when call emngr_handle_all_events to call the cbk direct_tx_evnt_cbk
  */
 mac_status_enum_t mlme_disassoc_req(uint32_t mac_hndl,
 		mlme_disassoc_req_param_st* mlme_disassoc_req_param);
-
 /**
- * @brief   mlme get request for accessing PIB attributes
+ * @brief   MLME-GET.request primitive
  *
- * @param   mac_hndl	 : [in] the MAC instance handle
- * @param  	pib_attr     : [in] PIB attribute ID
- * @param   pib_attr_indx: [in] PIB attribute index
- * @param	pib_attr_value: [out] PIB value
- *
- * @retval void
+ * @param[in] mac_hndl	 	: The MAC instance handle
+ * @param[in] pib_attr_id   : PIB attribute ID
+ * @param[in] pib_attr_indx : PIB attribute index
+ * @param[out] pib_attr_val : PIB value
  */
 void mlme_get_req(uint32_t mac_hndl, uint8_t pib_attr_id, uint8_t pib_attr_indx,
 		attr_val_t *pib_attr_val);
 
 /**
- * @brief   mlme reset request for reset everything
+ * @brief   MLME-RESET.request primitive
  *
- * @param   mac_hndl	: [in] the MAC instance handle
- * @param  	set_def_pib : [in] set default PIB flag
- *
- * @retval void
+ * @param[in] mac_hndl		: The MAC instance handle
+ * @param[in] set_def_pib 	: Set default PIB flag
  */
 void mlme_rst_req(uint32_t mac_hndl, uint8_t set_def_pib);
 
 /**
+ * @brief   Destroy all the MAC handles registered
  *
- * @brief   destroy all the mac handles registered
- *
- * @param   none
- *
- * @retval void
  */
 void mac_destroy(void);
 
 /**
+ * @brief   MLME-SCAN.request primitive
  *
- * @brief   mlme scn request issued to start one of [Active/ Enhanced Active / Passive / Energy Detection / Orphan] Scan type.
+ * @param[in] mac_hndl				: The MAC instance handle
+ * @param[in] mlme_scn_req_params 	: Pointer to request primitive params
  *
- * @param   mac_hndl			 : [in] the MAC instance handle
- * @param  	mlme_req_prim_params : [in] pointer to request primitive params
- *
- * @retval 	void
+ * @retval 	Status to be sent to the Host
  *
  * @note   	this function will post DIRECT_DATA_TX_EVENT event that will be handled
  *			when call emngr_handle_all_events to call the cbk direct_tx_evnt_cbk
@@ -1347,75 +1450,65 @@ mac_status_enum_t mlme_scn_req(uint32_t mac_hndl,
 
 #if SUPPORT_SEC
 /**
+ * @brief   Remove a mac_sec_level_table specified by pib_attr_indx
  *
- * @brief   remove a mac_sec_level_table specified by pib_attr_indx
- *
- * @param   mac_hndl 	 : [in] the MAC instance handle
- * @param   tbl_type	 : [in] Indicate type of removed table
- * @param   tbl_index	 : [in] Indicate index of SecTable of main security attribute to be removed
- * @param   tbl_sub_index: [in] Indicate index of SecTable of sub security attribute to be removed.
- *
- * @retval void
+ * @param[in] mac_hndl 	 	: The MAC instance handle
+ * @param[in] tbl_type	 	: Type of removed table
+ * @param[in] tbl_index	 	: Index of SecTable of main security attribute to be removed
+ * @param[in] tbl_sub_index : Index of SecTable of sub security attribute to be removed.
  */
 void mlme_rmv_sec_table(uint32_t mac_hndl, uint8_t tbl_type, uint8_t tbl_index, uint8_t tbl_sub_index);
 #endif /*end of SUPPORT_SEC*/
 /**
+ * @brief   MLME-SET.request primitive
  *
- * @brief   set a value of PIB attribute
- *
- * @param   mac_hndl 	 : [in] the MAC instance handle
- * @param  	pib_attr     : [in] PIB attribute ID
- * @param   pib_attr_indx: [in] PIB attribute index
- * @param	pib_attr_value: [in] PIB value
- *
- * @retval void
+ * @param[in] mac_hndl 		: The MAC instance handle
+ * @param[in] pib_attr_id 	: PIB attribute ID
+ * @param[in] pib_attr_indx : PIB attribute index
+ * @param[in] pib_attr_val 	: PIB value
  */
 void mlme_set_req(uint32_t mac_hndl, uint8_t pib_attr_id, uint8_t pib_attr_indx,
 		attr_val_t* pib_attr_val);
 
 #if (FFD_DEVICE_CONFIG || RFD_SUPPORT_START_PRIM)
 /**
- *
  * @brief   MLME-START.request is used by the PAN coordinator to initiate a new PAN or to begin
  *			using a new superframe configuration,mlme_strt_cfm callback is called to send
  *			MLME-START.confirm to the upper layers
  *			As stated in standard the impact of new updates will be added immediately in case
  *			of idle state or after transmission of beacon in case a beacon prepared to be sent.
  *
- * @param   mac_hndl : [in] the MAC instance handle
- * @param  	mlme_req_prim_params : [in] pointer to request primitive params
+ * @param[in] mac_hndl 				: The MAC instance handle
+ * @param[in] ptr_strt_req_params 	: Pointer to the start request primitive params
  *
- * @retval status
+ * @retval Status to be sent to the Host
  */
 mac_status_enum_t mlme_strt_req(uint32_t mac_hndl,
 		mlme_start_req_param_st* ptr_strt_req_params);
 #endif /* (FFD_DEVICE_CONFIG || RFD_SUPPORT_START_PRIM) */
 
 /**
- *
  * @brief   The MLME-POLL.request primitive prompts the device to request data from the coordinator,
  *			 mlme_poll_cfm callback will called by MLME to send MLME-POLL.confirm to the upper layers
  *
+ * @param[in] mac_hndl 				: The MAC instance handle
+ * @param[in] ptr_st_poll_req_param : Pointer to the polling request parameters
  *
- * @param   mac_hndl[in] : the MAC instance handle
- * @param  	ptr_st_poll_req_param[in]: pointer to the polling request parameters
- *
- * @retval  mac_status_enum_t
+ * @retval  Status to be sent to the Host
  *
  * @note 	this function will post DIRECT_DATA_TX_EVENT event that will be handled
- *				  when call emngr_handle_all_events to call the cbk direct_tx_evnt_cbk
+ *			when call emngr_handle_all_events to call the cbk direct_tx_evnt_cbk
  */
 mac_status_enum_t mlme_poll_req(uint32_t mac_hndl, mlme_poll_req_param_st *ptr_st_poll_req_param);
 
 #if (FFD_DEVICE_CONFIG || RFD_SUPPORT_ORPHAN_IND_RSP)
 /**
- * @brief   used to respond to orphan notification command to inform the orphan device if associatied
- * 			about its exchanged information during association.
+ * @brief   MLME-ORPHAN.response primitive used to respond to orphan notification command
  *
- * @param   mac_hndl[in] : the MAC instance handle
- * @param  	ptr_st_orphan_rsp_param[in]: pointer to the orphan response parameters
+ * @param[in] mac_hndl 					: The MAC instance handle
+ * @param[in] ptr_st_orphan_rsp_param 	: Pointer to the orphan response parameters
  *
- * @retval  mac_status_enum_t
+ * @retval  Status to be sent to the Host
  *
  * @note    this function will post DIRECT_DATA_TX_EVENT event that will be handled
  *			when call emngr_handle_all_events to call the cbk direct_tx_evnt_cbk
@@ -1426,13 +1519,13 @@ mac_status_enum_t mlme_orphan_rsp(uint32_t mac_hndl, mlme_orphan_rsp_st_t *ptr_s
 
 /**************************************************MCPS-SAP public functions*******************************************/
 /**
- * @brief  requests the transfer of a data SPDU (i.e., MSDU) from a local SSCS
+ * @brief  MCPS-DATA.request primitive used to request the transfer of a data SPDU (i.e., MSDU) from a local SSCS
  *         entity to a single peer SSCS entity.
  *
- * @param   ptr_st_data_req_params[in]	: pointer to the data request parameters
- * @param   mac_hndl[in]	            : the MAC instance handle that initiated data send request
+ * @param[in] ptr_st_mcps_data_req_params	: Pointer to the data request parameters
+ * @param[in] mac_hndl	            		: The MAC instance handle that initiated data send request
  *
- * @retval 	mac_status_enum_t            : the results of a request.
+ * @retval 	Status to be sent to the Host.
  *
  * @note 	this function will post DIRECT_DATA_TX_EVENT event that will be handled
  *			when call emngr_handle_all_events to call the cbk direct_tx_evnt_cbk
@@ -1441,42 +1534,37 @@ mac_status_enum_t mcps_data_send_req(mcps_data_req_params_st_t *ptr_st_mcps_data
 #if (FFD_DEVICE_CONFIG || RFD_SUPPORT_DATA_PURGE)
 /**
  * @brief  The MCPS-PURGE.request primitive allows the next
- * 		higher layer to purge an MSDU from the transaction queue ,After request is completed
- * 		 mcps_purge_cfm callback is called to send MCPS-PURGE.confirm to upper layer
+ * 		   higher layer to purge an MSDU from the transaction queue
  *
- * @param   mac_hndl[in]	: The MAC instance handle
- * @param   msdu_hndl[in]	: The handle of the MSDU
- *
- * @retval void
+ * @param[in] mac_hndl 	: The MAC instance handle
+ * @param[in] msdu_hndl : The handle of the MSDU
  */
 void mcps_purge_req(uint32_t mac_hndl, uint8_t msdu_hndl);
 #endif /* (FFD_DEVICE_CONFIG || RFD_SUPPORT_DATA_PURGE) */
 /**
+ * @brief   MLME-RX-ENABLE.request primitive used to enable/disable RX for a given duration
  *
- * @brief   enable/disable RX for a given duration
+ * @param[in] mac_hndl      	: The MAC instance handle
+ * @param[in] RxOnDuration     	: Duration to enable RX with it starting from the current time , 0 means disable.
+ * @param[in] RangingRxControl 	: Ranging RX control it should be set to 0 " RANGING_OFF ".
  *
- * @param    mac_hndl      	  : [in] the MAC instance handle
- * @param    RxOnDuration     : [in] Duration to enable RX with it starting from the current time , 0 means disable.
- * @param    RangingRxControl : [in] Ranging RX control it should be set to 0 " RANGING_OFF ".
- *
- * @retval mac_status_enum_t :  status to be sent to the Host.
+ * @retval Status to be sent to the Host
  */
 mac_status_enum_t mlme_rx_enable_req(uint32_t mac_hndl,
 								uint32_t    RxOnDuration,
 								uint8_t     RangingRxControl);
 /**
+ * @brief   Adds new entry to the Power Control Information table or update an existing entry
  *
- * @brief   adds new entry to the Power Control Information table or update an existing entry
+ * @param[in] mac_hndl 			: The MAC instance handle
+ * @param[in] short_addrs 	 	: Short address of the link pair to transmit the packet to.
+ * @param[in] ptr_ext_addrs 	: Pointer to Extended (IEEE) address of the link pair to transmit the packet to.
+ * @param[in] tx_pwr_level 	 	: Tx power level of the link pair to transmit the packet to.
+ * @param[in] last_rssi_level  	: RSSI of last packet received on the link pair
+ * @param[in] nwk_negotiated   	: Flag = 0 during the joining / rejoining process , 1 after joining/rejoining
+ * @param[in] cfm_flag		 	: Flag = 1 means that cfm is to be sent / = 0 otherwise
  *
- * @param   mac_hndl 		 : [in] the MAC instance handle
- * @param   short_addrs 	 : [in] Short address of the link pair to transmit the packet to.
- * @param   ptr_ext_addrs 	 : [in] Pointer to Extended (IEEE) address of the link pair to transmit the packet to.
- * @param   tx_pwr_level 	 : [in] Tx power level of the link pair to transmit the packet to.
- * @param   last_rssi_level  : [in] RSSI of last packet received on the link pair
- * @param   nwk_negotiated   : [in] Flag = 0 during the joining / rejoining process , 1 after joining/rejoining
- * @param	cfm_flag		 : [in] Flag = 1 means that cfm is to be sent / = 0 otherwise
- *
- * @retval mac_status_enum_t :  status to be sent to the Host.
+ * @retval Status to be sent to the Host.
  */
 mac_status_enum_t mlme_set_pwr_info_table_req(uint32_t mac_hndl,
 								uint16_t    short_addrs,
@@ -1486,27 +1574,24 @@ mac_status_enum_t mlme_set_pwr_info_table_req(uint32_t mac_hndl,
 								uint8_t     nwk_negotiated,
 								uint8_t 	cfm_flag);
 /**
+ * @brief   Returns the Power Control Information entry for the link pair
  *
- * @brief   primitive returns the Power Control Information entry for the link pair
- *
- * @param   mac_hndl 		: [in] the MAC instance handle
- * @param    short_addrs 	: [in] Short address of the link pair.
- * @param    ptr_ext_addrs  : [in] Pointer to Extended (IEEE) address of the link.
- *
- * @retval None .
+ * @param[in] mac_hndl 			: The MAC instance handle
+ * @param[in] enum_addr_mode 	: The address mode of the link pair.
+ * @param[in] ptr_addrs 		: Pointer to the address of the link.
  */
 void mlme_get_pwr_info_table_req(uint32_t mac_hndl, mac_addrs_mode_enum_t enum_addr_mode, uint8_t  *ptr_addrs);
 
 #if (FFD_DEVICE_CONFIG || RFD_SUPPORT_SEND_BEACON)
 /**
- * @brief   send beacon frame
+ * @brief   MLME-BEACON.request primitive used to send beacon frame
  *
- * @param   mac_hndl	 [in] : the MAC instance handle
- * @param   enum_bcon_typ[in] : beacon type [Beacon / Enhanced Beacon]
- * @param   bcon_tx_pwr  [in] : tx power to be added in the tx poweer IE
- * @param   ptr_st_bcon_send_req_params [in] : pointer to send beacon parameters
+ * @param[in] mac_hndl	  					: The MAC instance handle
+ * @param[in] enum_bcon_typ 				: Beacon type [Beacon / Enhanced Beacon]
+ * @param[in] bcon_tx_pwr   				: Tx power to be added in the tx poweer IE
+ * @param[in] ptr_st_bcon_send_req_params 	: Pointer to send beacon parameters
  *
- * @retval mac_status_enum_t
+ * @retval Status to be sent to the Host
  *
  * @note 	this function will post DIRECT_DATA_TX_EVENT event that will be handled
  *		    when call emngr_handle_all_events to call the cbk direct_tx_evnt_cbk
@@ -1516,120 +1601,125 @@ mac_status_enum_t mlme_send_bcon_frm(uint32_t mac_hndl, bcon_typ_t enum_bcon_typ
 #endif
 #if (SUPPORT_MAC_HCI_UART)
 /**
- * @fn mlme_read_ieee_ext_addr
+ * @brief   Read IEEE extended address
  *
- * @brief   read ext address
- *
- * @param   mac_hndl[in] : the MAC instance handle
- * @param   ext_addr[in] : extended address
+ * @param[in] mac_hndl : The MAC instance handle
+ * @param[in] ext_addr : IEEE extended address
  */
 void mlme_read_ieee_ext_addr(uint32_t mac_hndl, uint8_t* ext_addr);
 #endif /* SUPPORT_MAC_HCI_UART */
 
 #if RADIO_CSMA
 /**
+ * @brief   Set CSMA enable flag
  *
- * @brief   set csma enable flag
- *
- * @param   csma_en 		: [in] value for csma enable flag to be set
- *
- * @retval None .
+ * @param[in] csma_en : Value for CSMA enable flag to be set
  */
 void mac_set_csma_en(uint8_t csma_en);
 #endif /*end of RADIO_CSMA*/
 /**
+ * @brief   Set CCA enable flag
  *
- * @brief   set cca enable flag
- *
- * @param   cca_en 		: [in] value for cca enable flag to be set
- *
- * @retval None .
+ * @param[in] cca_en : Value for CCA enable flag to be set
  */
 void mac_set_cca_en(uint8_t cca_en);
 /**
- * @fn mac_set_cca_threshold
+ * @brief   Set CCA threshold
  *
- * @brief   set cca threshold
+ * @param[in] mac_hndl	 	: The MAC instance handle
+ * @param[in] cca_thresold 	: Value of CCA threshold that set
  *
- * @param   mac_hndl	 : [in] the MAC instance handle
- * @param   cca_thresold : [in] value of cca threshold that set
- *
- * @retval mac_status_enum_t .
+ * @retval Status to be sent to the Host .
  */
 mac_status_enum_t mac_set_cca_threshold(uint32_t mac_hndl, int8_t cca_thresold);
 /**
- * @fn mac_get_cca_threshold
+ * @brief   Get CCA threshold
  *
- * @brief   get cca threshold
+ * @param[in] mac_hndl	 	: The MAC instance handle
+ * @param[out] cca_thresold : Pointer to the value of CCA threshold
  *
- * @param   mac_hndl	 : [in] the MAC instance handle
- * @param   cca_thresold : [in] pointer to value of cca threshold
- *
- * @retval mac_status_enum_t .
+ * @retval Status to be sent to the Host
  */
 mac_status_enum_t mac_get_cca_threshold(uint32_t mac_hndl, int8_t * cca_thresold);
 
 #if SUPPORT_ANT_DIV
 /**
- * @fn mac_set_ant_div_params
+ * @brief   Set antenna diversity parameters
  *
- * @brief   set antenna diversity parameters
+ * @param[in] mac_hndl	   			: The MAC instance handle
+ * @param[in] ptr_ant_div_params 	: Pointer to antenna diversity params
  *
- * @param   mac_hndl	   : [in] the MAC instance handle
- * @param   ptr_ant_div_params : [in] pointer to antenna diversity params structure
- *
- * @retval mac_status_enum_t .
+ * @retval Status to be sent to the Host
  */
 mac_status_enum_t mac_set_ant_div_params(uint32_t mac_hndl, antenna_diversity_st* ptr_ant_div_params);
-
 /**
- * @fn mac_get_ant_div_params
+ * @brief   Get antenna diversity parameters
  *
- * @brief   get antenna diversity parameters
- *
- * @param   mac_hndl	   : [in] the MAC instance handle
- * @param   ptr_ant_div_params : [out] pointer to antenna diversity params structure
- *
- * @retval None .
+ * @param[in] mac_hndl	   			: The MAC instance handle
+ * @param[out] ptr_ant_div_params 	: Pointer to antenna diversity params
  */
 void mac_get_ant_div_params(uint32_t mac_hndl, antenna_diversity_st* ptr_ant_div_params);
-
 /**
- * @fn mac_set_default_ant_id
+ * @brief   Enable/disable antenna diversity feature
  *
- * @brief   set the default antenna id to be used for transmission and reception
+ * @param[in] mac_hndl	: The MAC instance handle
+ * @param[in] enable    : Enable:1 / Disable:0
  *
- * @param   mac_hndl	    : [in] the MAC instance handle
- * @param   default_ant_id  : [in] the antenna id to be used as default
- *
- * @retval mac_status_enum_t .
+ * @retval Status to be sent to the Host
  */
 mac_status_enum_t mac_set_ant_div_enable(uint32_t mac_hndl, uint8_t enable);
-
 /**
- * @fn mac_set_default_ant_id
+ * @brief   Set the default antenna id to be used for transmission and reception
  *
- * @brief   enable/disable antenna diversity
+ * @param[in] mac_hndl	    	: The MAC instance handle
+ * @param[in] default_ant_id  	: Antenna ID to be used as default
  *
- * @param   mac_hndl	: [in] the MAC instance handle
- * @param   enable      : [in] enable:1 / disable:0
- *
- * @retval mac_status_enum_t .
+ * @retval Status to be sent to the Host
  */
-mac_status_enum_t mac_set_default_ant_id(uint32_t mac_hndl, uint8_t enable);
-
+mac_status_enum_t mac_set_default_ant_id(uint32_t mac_hndl, uint8_t default_ant_id);
 /**
- * @fn mac_set_ant_div_rssi_threshold
+ * @brief   Set antenna diversity RSSI threshold
  *
- * @brief   set antenna diversity rssi threshold
+ * @param[in] mac_hndl	     	: The MAC instance handle
+ * @param[in] rssi_threshold   	: RSSI threshold to compare with during antenna diversity measurements
  *
- * @param   mac_hndl	     : [in] the MAC instance handle
- * @param   rssi_threshold   : [in] rssi threshold to compare with during antenna diversity measurements
- *
- * @retval mac_status_enum_t .
+ * @retval Status to be sent to the Host
  */
 mac_status_enum_t mac_set_ant_div_rssi_threshold(uint32_t mac_hndl, int8_t rssi_threshold);
 #endif /* SUPPORT_ANT_DIV */
+#if SUPPORT_CONFIG_LIB
+/**
+ * @brief   Set configurable library parameters
+ *
+ * @param[in] mac_hndl	          	: The MAC instance handle
+ * @param[in] ptr_config_lib_params : Pointer to configurable library parameters
+ *
+ * @retval Status to be sent to the Host
+ */
+mac_status_enum_t mac_set_config_lib_params(uint32_t mac_hndl, config_lib_st* ptr_config_lib_params);
+/**
+ * @brief   Get configurable library parameters
+ *
+ * @param[in] mac_hndl	          		: The MAC instance handle
+ * @param[out] ptr_config_lib_params	: Pointer to configurable library parameters
+ */
+void mac_get_config_lib_params(uint32_t mac_hndl, config_lib_st* ptr_config_lib_params);
+/**
+ * @brief   Set RTL polling time
+ *
+ * @param[in] mac_hndl	     	: The MAC instance handle
+ * @param[in] rtl_polling_time 	: RTL polling time
+ */
+void mac_set_rtl_polling_time(uint32_t mac_hndl, uint8_t rtl_polling_time);
+/**
+ * @brief   Get RTL polling time
+ *
+ * @param[in] mac_hndl : The MAC instance handle
+ *
+ * @retval Current RTL polling time
+ */
+uint8_t mac_get_rtl_polling_time(uint32_t mac_hndl);
+#endif /* SUPPORT_CONFIG_LIB */
 #endif /* INCLUDE_MAC_HOST_INTF_H_ */
 /**
  * @}

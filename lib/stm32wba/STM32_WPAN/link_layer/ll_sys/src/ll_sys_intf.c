@@ -15,9 +15,10 @@
   *
   ******************************************************************************
   */
+#include <stdint.h>
 
-#include "linklayer_plat.h"
 #include "ll_sys.h"
+#include "linklayer_plat.h"
 #include "event_manager.h"
 #include "ll_intf.h"
 
@@ -167,7 +168,6 @@ void ll_sys_bg_process(void)
 {
   if(emngr_can_mcu_sleep() == 0)
   {
-    (void)ll_sys_dp_slp_exit();
     emngr_handle_all_events();
 
     HostStack_Process();

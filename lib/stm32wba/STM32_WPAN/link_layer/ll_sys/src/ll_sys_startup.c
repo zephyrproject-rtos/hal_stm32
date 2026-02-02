@@ -38,7 +38,7 @@ uint8_t missed_hci_event_flag = 0;
 static void ll_init(void);
 #endif  /*__ZEPHYR__*/
 static void ll_sys_dependencies_init(void);
-#ifdef BLE
+#if SUPPORT_BLE
 static void ll_sys_event_missed_cb( ble_buff_hdr_t* ptr_evnt_hdr )
 {
   missed_hci_event_flag = 1;
@@ -71,7 +71,7 @@ void ll_sys_ble_cntrl_init(hst_cbk hostCallback)
   ll_intf_rgstr_hst_cbk_ll_queue_full( ll_sys_event_missed_cb );
 #endif  /*__ZEPHYR__*/
 }
-#endif /* BLE */
+#endif /* SUPPORT_BLE */
 #if defined(CONFIG_NET_L2_CUSTOM_IEEE802154_STM32WBA)
 #if defined(MAC)
 #ifndef OPENTHREAD_CONFIG_FILE
@@ -148,9 +148,9 @@ static void ll_sys_dependencies_init(void)
 static void ll_init(void)
 {
   static uint8_t is_ll_initialized = 0;
-#ifdef BLE
+#if SUPPORT_BLE
   const struct hci_dispatch_tbl* p_hci_dis_tbl = NULL;
-#endif /* BLE */
+#endif /* SUPPORT_BLE */
 
   /* Ensure Link Layer resources are created only once */
   if (is_ll_initialized == 1) {
@@ -158,11 +158,11 @@ static void ll_init(void)
   }
   is_ll_initialized = 1;
 
-#ifdef BLE
+#if SUPPORT_BLE
   hci_get_dis_tbl( &p_hci_dis_tbl );
 
   ll_intf_init(p_hci_dis_tbl);
-#endif /* BLE */
+#endif /* SUPPORT_BLE */
 
 #if defined(CONFIG_NET_L2_CUSTOM_IEEE802154_STM32WBA)
 #if defined(MAC)

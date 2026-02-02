@@ -160,7 +160,7 @@ extern "C" {
 /* Maximum number of supported LPM drivers */
 #define UTIL_LPM_DRIVER_MAX_NUM (10)
 /* Enables LPM legacy APIs */
-#define UTIL_LPM_LEGACY_ENABLED (1)
+#define UTIL_LPM_LEGACY_ENABLED (0)
 
 /* USER CODE BEGIN EM */
 

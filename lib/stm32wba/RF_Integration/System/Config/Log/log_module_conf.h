@@ -103,7 +103,7 @@ typedef enum
   /* USER CODE BEGIN Log_Verbose_Level_t_3 */
 
   /* USER CODE END Log_Verbose_Level_t_3 */
-  LOG_VERBOSE_ALL_LOGS = LOG_MODULE_MAX_VERBOSE_LEVEL,
+  LOG_VERBOSE_ALL = LOG_MODULE_MAX_VERBOSE_LEVEL,
 } Log_Verbose_Level_t;
 
 /**

@@ -1,4 +1,4 @@
-/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/2.00a-lca03/firmware/public_inc/dtm.h#1 $*/
+/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/2.00a-lca04/firmware/public_inc/dtm.h#1 $*/
 /**
  ********************************************************************************
  * @file    dtm.h
@@ -11,7 +11,7 @@
  * Copyright (c) 2020-Present Synopsys, Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of the software and
- * associated documentation files (the ‚ÄúSoftware‚Äù), to deal in the Software without restriction, including
+ * associated documentation files (the ìSoftwareî), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
  * of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
  * following conditions:
@@ -39,15 +39,15 @@
 #include "ral.h"
 
 /*=========================================== MACROS ======================================*/
-#define aMaxSIFSFrameSize 			18
-#define macMinSIFSPeriod 			192
-#define macMinLIFSPeriod 			640
-#define MAX_PHY_PACKET_SIZE 		127
-#define macMaxIFSPeriod 			1000
-#define MAX_ERROR_PER_SINGLE_TX		5
+#define aMaxSIFSFrameSize           18      ///< Maximum SIFS frame size in bytes
+#define macMinSIFSPeriod            192     ///< Minimum SIFS period in microseconds
+#define macMinLIFSPeriod            640     ///< Minimum LIFS period in microseconds
+#define MAX_PHY_PACKET_SIZE         127     ///< Maximum PHY packet size in bytes
+#define MAX_ERROR_PER_SINGLE_TX     5       ///< Maximum error types per single TX
 /*============================= Enumerations ================================*/
 /**
- * @brief:  Current DTM State
+ * @brief  Enum represents the current DTM State.
+ *
  */
 typedef enum z_dtm_mode {
 	Z_DTM_STOPPED = 0,
@@ -59,40 +59,45 @@ typedef enum z_dtm_mode {
 
 /*============================= Structures ================================*/
 /**
- * @brief:  type to represent the current state of DTM TX.
+ * @brief  Structure represents the current state of DTM TX.
+ *
  */
 typedef struct Tx_Info
 {
-	uint16_t TxTotal; // Total number of transmitted Frames (with/without errors)
-	uint16_t NoErr;  // Number of frames that are transmitted successfully
-	uint16_t ErrNoAck; // Number of frames that are requesting ack and no Ack is received after transmission
-	uint16_t ErrOther; // Number of frames that are transmitted with errors excluding the no ack error
+    uint16_t TxTotal;    ///< Total number of transmitted frames (with/without errors)
+    uint16_t NoErr;      ///< Number of frames transmitted successfully
+    uint16_t ErrNoAck;   ///< Number of frames requesting ACK and no ACK received after transmission
+    uint16_t ErrOther;   ///< Number of frames transmitted with errors excluding no ACK error
 } TxInfo_s;
 
 /**
- * @brief:  type to represent the current state of DTM RX.
+ * @brief Structure represents the current state of DTM RX.
+ *
  */
 typedef struct Rx_Info
 {
-	uint16_t RxTotal;// Total number of received Frames (with/without errors)
-	uint16_t NoErr; // Number of frames that are successfully received
-	uint16_t ErrFcs; // Number of frames that are received with invalid FCS
-	uint16_t ErrOther; // Number of frames that are received with errors excluding the invalid FCS error
-	uint8_t	lqi; // LQI  of the received Frame
+    uint16_t RxTotal;    ///< Total number of received frames (with/without errors)
+    uint16_t NoErr;      ///< Number of frames successfully received
+    uint16_t ErrFcs;     ///< Number of frames received with invalid FCS
+    uint16_t ErrOther;   ///< Number of frames received with errors excluding invalid FCS error
+    uint8_t  lqi;        ///< LQI of the received frame
 } RxInfo_s;
 
 /**
- * @brief:  structure to store all information related to DTM.
+ * @brief Structure represents all information related to DTM.
+ *
  */
 typedef struct dtmInfo_st
 {
-	z_dtm_mode_e curr_mode;  // Current State (TX,RX,STopped)
-
-	union{
-		TxInfo_s TxInfo; // DTM information in case of TX and TX_ACK
-		RxInfo_s RxInfo;  // DTM information in case of RX
-	} tx_rx_info_u;
-
+    z_dtm_mode_e curr_mode;  ///< Current State (TX, RX, Stopped)
+	/**
+	 * @brief Union represents DTM TX/RX information.
+	 *
+	 */
+    union{
+        TxInfo_s TxInfo;     ///< DTM information in case of TX and TX_ACK
+        RxInfo_s RxInfo;     ///< DTM information in case of RX
+    } tx_rx_info_u;
 } dtmInfo_t;
 
 /** @ingroup  mac_dtm
@@ -100,130 +105,143 @@ typedef struct dtmInfo_st
 */
 /*=========================================== API  ============================================*/
 /**
- * @brief  this function is used to initialize or rest DTM , it also stops the current running DTM
- * @retval None.
+ * @brief  Initialize or reset DTM, or stop the current running DTM.
+ *
  */
 void dtmReset(void);
 
 /**
- * @brief  get the the state of DTM (running or stopped)
- * @retval uin8_t . TRUE if DTM is running ,
- * 					FALSE if DTM is stopped
+ * @brief  Get the state of DTM (running or stopped).
+ *
+ * @return TRUE if DTM is running, FALSE if DTM is stopped.
  */
 uint8_t dtmIsEnabled(void);
 
-
 /**
- * @brief  this function is used to start continuous DTM transmission with the given input parameters until the  dtmStop() API is called
- * @param  mPsdu [in]    : pointer to MAC DTM FRame  including MAC header.
- * @param  mLength [in]  : Length of the frame to be transmitted.
- * @param  mChannel [in] : Channel to transmit the frame on .
- * @param  IFS [in]      : Interframe spacing in us
- * @retval mac_status_enum_t. MAC error State of starting transmission
+ * @brief  Start continuous DTM transmission with the given input parameters until the dtmStop() API is called.
+ *
+ * @param[in]  mPsdu     : Pointer to MAC DTM frame including MAC header.
+ * @param[in]  mLength   : Length of the frame to be transmitted.
+ * @param[in]  mChannel  : Channel to transmit the frame on.
+ * @param[in]  IFS       : Interframe spacing in us.
+ * @return MAC error state of starting transmission.
  */
 mac_status_enum_t dtmStartTransmit(uint8_t * mPsdu, uint8_t mLength, uint8_t mChannel, uint16_t IFS);
 
 /**
- * @brief  this function is used to start transmission of a single DTM Frame that is requesting ACK  with the given input parameters
- * @param  mPsdu [in]    : pointer to MAC DTM FRame  including MAC header.
- * @param  mLength [in]  : Length of the frame to be transmitted.
- * @param  mChannel [in] : Channel to transmit the frame on .
- * @param  IFS [in]      : Interframe spacing in us
- * @retval mac_status_enum_t. MAC error State of starting transmission
+ * @brief  Start transmission of a single DTM frame that is requesting ACK with the given input parameters.
+ *
+ * @param[in]  mPsdu     : Pointer to MAC DTM frame including MAC header.
+ * @param[in]  mLength   : Length of the frame to be transmitted.
+ * @param[in]  mChannel  : Channel to transmit the frame on.
+ * @param[in]  IFS       : Interframe spacing in us.
+ * @return MAC error state of starting transmission.
  */
 mac_status_enum_t dtmStartTransmitwithAck(uint8_t * mPsdu, uint8_t mLength, uint8_t mChannel, uint16_t IFS);
 /**
- * @brief  this function is used to stop the current Running DTM  (TX or RX)
- * @retval mac_status_enum_t. MAC error State of stopping DTM
+ * @brief  Stop the current running DTM (TX or RX).
+ *
+ * @param[out] num_rec_pckts : Pointer to number of received packets.
+ * @param[out] lqi           : Pointer to average LQI.
+ * @return MAC error state of stopping DTM.
  */
 mac_status_enum_t dtmStop(uint16_t *num_rec_pckts, uint8_t *lqi);
 
 /**
- * @brief  this function is used to start continuous DTM reception on the given channel
- * @param  mChannel [in] : Channel to receive on .
- * @retval mac_status_enum_t. MAC error State of starting transmission
+ * @brief  Start continuous DTM reception on the given channel.
+ *
+ * @param[in]  aChannel : Channel to receive on.
+ * @return MAC error state of starting reception.
  */
 mac_status_enum_t dtmStartReceive(uint8_t aChannel);
 
 /**
- * @brief  this function is used to start CCA on the given channel
- * @param  mChannel [in] : Channel to perform CCA  on .
- * @retval mac_status_enum_t. MAC error State of starting reception
+ * @brief  Start CCA on the given channel.
+ *
+ * @param[in]  channel : Channel to perform CCA on.
+ * @return MAC error state of performing CCA.
  */
 mac_status_enum_t dtmPerformCCA(uint8_t channel);
 
 
 /**
- * @brief  get the current LQI of the last received packet
- * @retval uint8_t. LQI value
+ * @brief  Get the current LQI of the last received packet.
+ *
+ * @return LQI value.
  */
 uint8_t dtmGetLQIValue(void);
+
+/**
+ * @brief  get the current RSSI of the last received packet
+ * @retval int8_t. RSSI value
+ */
+int8_t dtmGetRSSIValue(void);
+
 /**
  * @}
  */
 /**
- * @brief  check if there is more DTM frames to transmit
- * @retval uin8_t . TRUE  Continue DTM transmission ,
- * 					FALSE Stop DTM transmission
+ * @brief  Check if there are more DTM frames to transmit.
+ *
+ * @return TRUE to continue DTM transmission, FALSE to stop DTM transmission.
  */
 uint8_t dtmCheckMoreTx(void);
 
 /**
- * @brief  check if that dtm is in reception state
- * @retval uin8_t . TRUE  DTM in reception mode ,
- * 					FALSE DTM is not in reception mode
+ * @brief  Check if DTM is in reception state.
+ *
+ * @return TRUE if DTM is in reception mode, FALSE otherwise.
  */
 uint8_t dtmCheckRxState(void);
 
 /**
- * @brief  Done function that should be called after each DTM event
- * @param  aFrame    	    : [in] pointer to MAC transmitted/Received Frame.
- * @param  aError			: [in] status error of overall transmission (success , No_ack, and other errors).
- * @retval None.
+ * @brief  Done function called after each DTM event.
+ *
+ * @param[in] aFrame : Pointer to MAC transmitted/received frame.
+ * @param[in] aError : Status error of overall transmission (success, No_ack, and other errors).
  */
 void dtmRadioDone(otRadioFrame *aFrame, otError aError);
 
 /**
-* @brief  check if in Z_DTM_CHECK_TX_ERROR transmission mode or not
-* @param  None.
-* @retval uin8_t . TRUE  in Z_DTM_CHECK_TX_ERROR transmission mode ,
-* 					FALSE Not in Z_DTM_CHECK_TX_ERROR transmission mode
-*/
+ * @brief  Check if in Z_DTM_CHECK_TX_ERROR transmission mode or not.
+ *
+ * @return TRUE if in Z_DTM_CHECK_TX_ERROR transmission mode, FALSE otherwise.
+ */
 uint8_t dtmCheckTxErrorState(void);
 /**
-* @brief  count errors which happens in single tx in Z_DTM_CHECK_TX_ERROR transmission mode
-* @param  tx_error : [in] type of error to be counted for this trial
-* @retval None.
-*/
+ * @brief  Count errors that happen in single TX in Z_DTM_CHECK_TX_ERROR transmission mode.
+ *
+ * @param[in] tx_error : Type of error to be counted for this trial.
+ */
 void dtmCheckTxErrorCount(otError tx_error);
 /**
-* @brief  gives stored errors and its count that happens in single tx in Z_DTM_CHECK_TX_ERROR transmission mode
-* @param  errors       : [in] pointer to array to point to array of stored errors in Z_DTM_CHECK_TX_ERROR transmission mode
-* @param  error_count  : [in] pointer that will have number of errors that stored in errors array
-* @retval None.
-*/
+ * @brief  Gives stored errors and their count that happen in single TX in Z_DTM_CHECK_TX_ERROR transmission mode.
+ *
+ * @param[out] errors      : Pointer to array of stored errors in Z_DTM_CHECK_TX_ERROR transmission mode.
+ * @param[out] error_count : Pointer to number of errors stored in errors array.
+ */
 void dtmTxCheckErrorCountDone(uint8_t ** errors, uint8_t *error_count);
 /**
-* @brief  start transmission in Z_DTM_CHECK_TX_ERROR transmission mode
-* @param  mac_hndl           : [in] MAC instance handle
-* @param  mPsdu              : [in] pointer to tx packet
-* @param  mLength            : [in] length of tx packet
-* @param  mChannel           : [in] channel that packet will be sent on
-* @param  IFS                : [in] used Inter-frame-spacing
-* @param  csma_en            : [in] flag to indicate to apply csma in this transmission if max_csma_retry_count != 0
-* @param  backoff_count_max  : [in] maximum number of tx trials in every full csma trial
-* @param  frame_retry        : [in] maximum number of trials after failure that not related to cca_failure
-* @param  ack_req            : [in] indicate if this packet require ack or not
-* @retval mac_status_enum_t.
-*/
+ * @brief  Start transmission in Z_DTM_CHECK_TX_ERROR transmission mode.
+ *
+ * @param[in]  mac_hndl           : MAC instance handle.
+ * @param[in]  mPsdu              : Pointer to TX packet.
+ * @param[in]  mLength            : Length of TX packet.
+ * @param[in]  mChannel           : Channel that packet will be sent on.
+ * @param[in]  IFS                : Used inter-frame-spacing.
+ * @param[in]  csma_en            : Flag to indicate to apply CSMA in this transmission if max_csma_retry_count != 0.
+ * @param[in]  backoff_count_max  : Maximum number of TX trials in every full CSMA trial.
+ * @param[in]  frame_retry        : Maximum number of trials after failure not related to CCA failure.
+ * @param[in]  ack_req            : Indicate if this packet requires ACK or not.
+ * @return Status.
+ */
 mac_status_enum_t dtmTxSpecificErrorCount(uint32_t mac_hndl, uint8_t * mPsdu, uint8_t mLength, uint8_t mChannel, uint16_t IFS,
 		uint8_t csma_en, uint8_t backoff_count_max, uint8_t frame_retry, uint8_t ack_req);
 
 /**
-* @brief  reset tx_check_err_arr array and its counter for Z_DTM_CHECK_TX_ERROR mode
-* @param  None.
-* @retval None.
-*/
+ * @brief  Reset tx_check_err_arr array and its counter for Z_DTM_CHECK_TX_ERROR mode.
+ *
+ */
 void dtmTxErrorCountReset(void);
 
 #endif /* MAC_CONTROLLER_INC_DTM_H_ */

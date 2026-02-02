@@ -440,7 +440,7 @@ stm32wba_802154_ral_error_t stm32wba_802154_ral_get_cca_energy_detect_threshold(
  * @brief Sets the CCA energy detection threshold.
  *
  * @param[in] cca_thr The CCA energy detection threshold to set.
- * 
+ *
  * @returns  STM32WBA_802154_RAL_ERROR_NONE on success, or an error code on failure.
  */
 stm32wba_802154_ral_error_t stm32wba_802154_ral_set_cca_energy_detect_threshold(int8_t cca_thr);
@@ -477,7 +477,7 @@ stm32wba_802154_ral_error_t stm32wba_802154_ral_radio_reset(void);
  * @param[out] ptr_rnd Pointer to store the generated random number.
  * @param[in]  len    Length of the random number to generate.
  * @param[in]  check_cont_rx Indicates whether to check for continuous reception.
- * 
+ *
  * @returns  STM32WBA_802154_RAL_ERROR_NONE on success, or an error code on failure.
  */
 stm32wba_802154_ral_error_t stm32wba_802154_ral_mac_gen_rnd_num(uint8_t *ptr_rnd, uint16_t len, uint8_t check_cont_rx);
@@ -502,6 +502,35 @@ stm32wba_802154_ral_error_t stm32wba_802154_ral_set_ant_div_enable(uint8_t enabl
  * @retval Error code
  */
 stm32wba_802154_ral_error_t stm32wba_802154_ral_set_config_lib_params(bool support_openthread_1_2, bool mac_layer_build);
+
+/** 
+ * @brief Sets the MAC frame counter.
+ *
+ * @param[in] aMacFrameCounter The MAC frame counter value to set.
+ */
+void stm32wba_802154_ral_set_mac_frame_counter(uint32_t aMacFrameCounter);
+
+/** 
+ * @brief Sets the MAC frame counter if the provided value is larger than the current one.
+ *
+ * @param[in] aMacFrameCounter The MAC frame counter value to compare and set.
+ */
+void stm32wba_802154_ral_set_mac_frame_counter_if_larger(uint32_t aMacFrameCounter);
+
+/** 
+ * @brief Sets the MAC key for secure communications.
+ *
+ * @param[in]  aKeyIdMode   The key ID mode.
+ * @param[in]  aKeyId       The key ID.
+ * @param[in]  aPrevKey     Pointer to the previous key.
+ * @param[in]  aCurrKey     Pointer to the current key.
+ * @param[in]  aNextKey     Pointer to the next key.
+ */
+void stm32wba_802154_ral_set_mac_key(uint8_t                 aKeyIdMode,
+                          			 uint8_t                 aKeyId,
+                          			 const uint8_t           *aPrevKey,
+                          			 const uint8_t           *aCurrKey,
+                          			 const uint8_t           *aNextKey);
 
 /** @} */
 

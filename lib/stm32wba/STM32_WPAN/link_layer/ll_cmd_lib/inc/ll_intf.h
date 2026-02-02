@@ -1,4 +1,4 @@
-/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/2.00a-lca03/firmware/public_inc/ll_intf.h#1 $*/
+/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/2.00a-lca04/firmware/public_inc/ll_intf.h#1 $*/
 /**
  ********************************************************************************
  * @file    ll_intf_cmds.h
@@ -35,7 +35,6 @@
 #if SUPPORT_PTA
 #include "pta.h"
 #endif /* SUPPORT_PTA */
-
 
 #if (SUPPORT_CHANNEL_SOUNDING && 								\
 (SUPPORT_MASTER_CONNECTION || SUPPORT_SLAVE_CONNECTION))
@@ -111,6 +110,8 @@ typedef void * 		cs_step_data_t;
 #define NUM_PAWR_SUBEVENTS_MAX		0x80
 #endif /*(SUPPORT_LE_PAWR_ADVERTISER_ROLE)||(SUPPORT_LE_PAWR_SYNC_ROLE)*/
 
+/* Defines the minimum number of BN can be selected by the host or LL */
+#define MIN_BN							0x01
 extern const struct hci_dispatch_tbl* p_dis_tbl;
 /*================================= Enumerations =====================================*/
 
@@ -2460,19 +2461,6 @@ ble_stat_t ll_intf_read_local_supported_cmds(uint8_t supported_cmds[64]);
  */
 ble_stat_t ll_intf_read_local_supported_features(uint8_t lmp_features[8]);
 
-#if SUPPORT_EXT_FEATURE_SET
-/**
- * @brief  Set the return parameters of the "Read Local Extended Features" HCI command in the event packet that to be sent to the Host.
- *
- * @param  page_number		: [in/out] 	Requested Page Number/Returned Page Number.
- * @param  lmp_features     : [out] 	LMP Features to be reported
- * @param  max_page_number  : [out] 	Max Supported Pages for LMP Features
- *
- * @retval None.
- */
-ble_stat_t ll_intf_read_local_extended_features(uint8_t page_number, uint8_t lmp_features[8], uint8_t* max_page_number);
-#endif /* SUPPORT_EXT_FEATURE_SET */
-
 /**
  * @brief  Read the list of the supported LE features for the Controller .
  *
@@ -2484,8 +2472,7 @@ ble_stat_t ll_intf_le_read_local_supported_features_page_0(
 	uint8_t le_features[LE_FEATURES_BYTES_NO]);
 
 /**
- * @brief  Read the Public Device Address of the LE controller .Reset the controller and the Link Layer on an LE controller .
- *
+ * @brief  Read the Public Device Address of the LE controller.
  * @param  bd_addr : [out] Public address of the LE controller .
  *
  * @retval ble_stat_t : Command status to be sent to the Host .
@@ -4786,6 +4773,23 @@ ble_stat_t ll_intf_pta_ble_set_iso_coex_priority(
 ble_stat_t ll_intf_pta_ble_set_coex_priority(
 		const uint32_t priority,
 		const uint32_t priority_mask);
+
+#if (SUPPORT_CHANNEL_SOUNDING &&( SUPPORT_MASTER_CONNECTION || SUPPORT_SLAVE_CONNECTION))
+/**
+ * @brief Channel Sounding Priority Configuration Function
+ * @param [in] is_test_mode : Single Bit, Set if this for CS Test Mode
+ * @param [in] conn_id : ACL Connection ID Asscoiated with this CS
+ * @param [in] priority  : Determines the state of each priority mode.
+ * @param [in] priority_mask : Determines which priorities are in effect in the priority variable.
+ * @param [in] number_protected_steps : Number of protected steps :
+ * @return
+ */
+ble_stat_t ll_intf_pta_ble_set_cs_coex_priority(uint8_t is_test_mode,
+						uint16_t conn_id,
+						uint32_t priority,
+						uint32_t priority_mask,
+						uint8_t number_protected_steps);
+#endif /*(SUPPORT_CHANNEL_SOUNDING &&( SUPPORT_MASTER_CONNECTION || SUPPORT_SLAVE_CONNECTION))*/
 /** @}
 */
 #endif /* SUPPORT_PTA */
@@ -4817,6 +4821,7 @@ ble_stat_t ll_init_stop_unmod_carrier(void);
  * @param  packet_payload		: DTM pay-load type.
  * @param  phy					: PHY type, 1M/2M/coded PHY.
  * @param  Tx_power_level		: indicate TX Power level.
+ * @note the Tx_power_level input is applicable only if SUPPORT_LE_POWER_CONTROL is supported
  * @retval status.
  */
 ble_stat_t ll_init_start_cont_dtm(uint8_t ch_index, uint8_t phy, uint8_t packet_payload, int8_t tx_power_level);
@@ -4841,6 +4846,7 @@ ble_stat_t ll_intf_le_read_phy_reg(uint8_t phy_reg, uint8_t* value);
  * 		 ,otherwise, it will return COMMAND_DISALLOWED
  */
 ble_stat_t ll_intf_le_write_phy_reg(uint8_t phy_reg, uint8_t value);
+
 
 /**
  * @brief flag to the LL the existence of a temperature sensor
@@ -4923,18 +4929,8 @@ ble_stat_t ll_intf_get_link_status(uint8_t *sm_status, uint8_t *link_conn_handle
 /**
  * @brief this function is used control the channel reporting mode of the controller
  * @param[in]  conn_handle_id	: identifier of the connection.
- * @param[in]  ptr_reporting_params		: pointer to structure holding the reporting parameters as follows:
- * 					report_mode		: reporting mode value.
- * 										0 : disable
- * 										1 : enable
- * 					min_spacing 	:min spacing value (min time between
- * 									2 consecutive LL_CHANNEL_STATUS
- * 									"unit of 200 ms")
- * 										5 (1 sec) <= min_spacing <= 150 (30 sec)
- * 					max_delay 		:max delay value (max time between
- * 									channel classification change and
- * 									LL_CHANNEL_STATUS sending "unit of 200 ms")
- * 										5 (1 sec) <= max_delay <= 150 (30 sec)
+ * @param[in]  ptr_reporting_params		: pointer to structure holding the channel reporting parameters.
+ *
  * @retval status.
  */
 ble_stat_t ll_intf_cntrl_chnl_clsfction_report(uint16_t conn_handle_id, void *ptr_reporting_params);
@@ -5222,7 +5218,12 @@ ble_stat_t ll_intf_cs_test(ble_cs_test_cmd_st *cs_test_params_p);
  * @retval ble_stat_t
  */
 ble_stat_t ll_intf_cs_test_end(void);
-
+/**
+ * @brief Set CS Host Preferred Antennas in case it exceeds Capbabilites
+ * @param [in] preferred_antennas_bitfield : Bitfiled with each bit representing if this antennas is preferred or not by host
+ * @retval : ble_stat_t
+ */
+ble_stat_t ll_intf_cs_set_host_preferred_antennas(uint8_t preferred_antennas_bitfield);
 #endif /* (SUPPORT_CHANNEL_SOUNDING && (SUPPORT_MASTER_CONNECTION || SUPPORT_SLAVE_CONNECTION)) */
 
 
@@ -5523,8 +5524,9 @@ void ll_intf_apply_cte_degrad_change(void);
  * @brief Gets the maximum times for the execution time and drift time
  * @param exec_time  [out]: Max Execution Time
  * @param drift_time [out]: Max Drift Time
+ * @param average_drift_time [out]: Average Drift Time
  */
-void ll_intf_get_profile_statistics(uint32_t* exec_time, uint32_t* drift_time);
+void ll_intf_get_profile_statistics(uint32_t* exec_time, uint32_t* drift_time, uint32_t* average_drift_time);
 #endif /* IS_INTERNAL_PROFILED_ENABLED */
 
 /**@}

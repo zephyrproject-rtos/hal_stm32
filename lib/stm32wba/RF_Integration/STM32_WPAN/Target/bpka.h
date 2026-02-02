@@ -21,6 +21,10 @@
 #ifndef BPKA_H__
 #define BPKA_H__
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 
 /* Enumerated values used for the return of the functions:
@@ -55,5 +59,9 @@ void BPKA_BG_Process( void );
 void BPKACB_Complete( void );
 
 void BPKACB_Process( void );
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* BPKA_H__ */

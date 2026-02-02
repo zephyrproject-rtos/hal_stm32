@@ -71,6 +71,19 @@ extern "C" {
 #if (USE_TEMPERATURE_BASED_RADIO_CALIBRATION == 1)
 void ll_sys_bg_temperature_measurement(void);
 #endif /* USE_TEMPERATURE_BASED_RADIO_CALIBRATION */
+#ifndef __ZEPHYR__
+#if defined(STM32WBA52xx) || defined(STM32WBA54xx) || defined(STM32WBA55xx) || defined(STM32WBA65xx)
+/**
+ * @brief Apply CTE degradation settings
+ * @param  None
+ * @retval None
+ */
+void ll_sys_apply_cte_settings(void);
+#endif /* defined(STM32WBA52xx) || defined(STM32WBA54xx) || defined(STM32WBA55xx) || defined(STM32WBA65xx) */
+#if (CFG_LPM_STANDBY_SUPPORTED == 0)
+void ll_sys_get_ble_profile_statistics(uint32_t* exec_time, uint32_t* drift_time, uint32_t* average_drift_time, uint8_t reset);
+#endif
+#endif /* __ZEPHYR__ */
 /* USER CODE BEGIN EFP */
 
 /* USER CODE END EFP */

@@ -24,24 +24,30 @@
 #include "ble_std.h"
 #include "ble_defs.h"
 
-
 /* Default BLE variant
  */
-#ifndef BASIC_PLUS
-#define BASIC_PLUS 0
+#ifndef BLE_STACK_ADVANCED_FEATURES
+#define BLE_STACK_ADVANCED_FEATURES 0
 #endif
-#ifndef BASIC_FEATURES
-#define BASIC_FEATURES 0
+#ifndef BLE_STACK_BASIC_PLUS
+#define BLE_STACK_BASIC_PLUS 0
 #endif
-#ifndef PERIPHERAL_ONLY
-#define PERIPHERAL_ONLY 0
+#ifndef BLE_STACK_BASIC_FEATURES
+#define BLE_STACK_BASIC_FEATURES 0
 #endif
-#ifndef LL_ONLY
-#define LL_ONLY 0
+#ifndef BLE_STACK_PERIPHERAL_ONLY
+#define BLE_STACK_PERIPHERAL_ONLY 0
 #endif
-#ifndef LL_ONLY_BASIC
-#define LL_ONLY_BASIC 0
+#ifndef BLE_STACK_LL_ONLY
+#define BLE_STACK_LL_ONLY 0
 #endif
+
+/* Defintion to determine BLE Host stack presence */
+#define BLE_HOST_PRESENT (!BLE_STACK_LL_ONLY)
+
+/* Defintion to determine if all features are present */
+#define BLE_ALL (!(BLE_STACK_ADVANCED_FEATURES || BLE_STACK_BASIC_PLUS || \
+                   BLE_STACK_BASIC_FEATURES || BLE_STACK_PERIPHERAL_ONLY))
 
 /* Maximum parameter size of BLE commands.
  */
