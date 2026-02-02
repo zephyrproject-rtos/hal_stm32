@@ -205,10 +205,12 @@
 
 - name: SPI_MISO
   match: "^SPI\\d+_MISO$"
+  slew-rate: very-high-speed
   bias: pull-down
 
 - name: SPI_MOSI
   match: "^SPI\\d+_MOSI$"
+  slew-rate: very-high-speed
   bias: pull-down
 
 # NOTE: The SPI_SCK pins speed must be set to very-high-speed to avoid last data
@@ -221,6 +223,7 @@
 
 - name: SPI_NSS
   match: "^SPI\\d+_NSS$"
+  slew-rate: very-high-speed
   bias: pull-up
 
 - name: TIM_BKIN
