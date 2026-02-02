@@ -572,41 +572,49 @@
 			/omit-if-no-ref/ spi1_miso_pa0: spi1_miso_pa0 {
 				pinmux = <STM32_PINMUX('A', 0, AF12)>;
 				bias-pull-down;
+				slew-rate = "very-high-speed";
 			};
 
 			/omit-if-no-ref/ spi1_miso_pa9: spi1_miso_pa9 {
 				pinmux = <STM32_PINMUX('A', 9, AF4)>;
 				bias-pull-down;
+				slew-rate = "very-high-speed";
 			};
 
 			/omit-if-no-ref/ spi1_miso_pb4: spi1_miso_pb4 {
 				pinmux = <STM32_PINMUX('B', 4, AF5)>;
 				bias-pull-down;
+				slew-rate = "very-high-speed";
 			};
 
 			/omit-if-no-ref/ spi2_miso_pa7: spi2_miso_pa7 {
 				pinmux = <STM32_PINMUX('A', 7, AF11)>;
 				bias-pull-down;
+				slew-rate = "very-high-speed";
 			};
 
 			/omit-if-no-ref/ spi2_miso_pa15: spi2_miso_pa15 {
 				pinmux = <STM32_PINMUX('A', 15, AF7)>;
 				bias-pull-down;
+				slew-rate = "very-high-speed";
 			};
 
 			/omit-if-no-ref/ spi2_miso_pb5: spi2_miso_pb5 {
 				pinmux = <STM32_PINMUX('B', 5, AF6)>;
 				bias-pull-down;
+				slew-rate = "very-high-speed";
 			};
 
 			/omit-if-no-ref/ spi3_miso_pb4: spi3_miso_pb4 {
 				pinmux = <STM32_PINMUX('B', 4, AF6)>;
 				bias-pull-down;
+				slew-rate = "very-high-speed";
 			};
 
 			/omit-if-no-ref/ spi3_miso_pb15: spi3_miso_pb15 {
 				pinmux = <STM32_PINMUX('B', 15, AF6)>;
 				bias-pull-down;
+				slew-rate = "very-high-speed";
 			};
 
 			/* SPI_MOSI */
@@ -614,36 +622,43 @@
 			/omit-if-no-ref/ spi1_mosi_pa7: spi1_mosi_pa7 {
 				pinmux = <STM32_PINMUX('A', 7, AF5)>;
 				bias-pull-down;
+				slew-rate = "very-high-speed";
 			};
 
 			/omit-if-no-ref/ spi1_mosi_pb5: spi1_mosi_pb5 {
 				pinmux = <STM32_PINMUX('B', 5, AF5)>;
 				bias-pull-down;
+				slew-rate = "very-high-speed";
 			};
 
 			/omit-if-no-ref/ spi2_mosi_pa8: spi2_mosi_pa8 {
 				pinmux = <STM32_PINMUX('A', 8, AF6)>;
 				bias-pull-down;
+				slew-rate = "very-high-speed";
 			};
 
 			/omit-if-no-ref/ spi2_mosi_pb15: spi2_mosi_pb15 {
 				pinmux = <STM32_PINMUX('B', 15, AF5)>;
 				bias-pull-down;
+				slew-rate = "very-high-speed";
 			};
 
 			/omit-if-no-ref/ spi3_mosi_pa5: spi3_mosi_pa5 {
 				pinmux = <STM32_PINMUX('A', 5, AF10)>;
 				bias-pull-down;
+				slew-rate = "very-high-speed";
 			};
 
 			/omit-if-no-ref/ spi3_mosi_pa9: spi3_mosi_pa9 {
 				pinmux = <STM32_PINMUX('A', 9, AF10)>;
 				bias-pull-down;
+				slew-rate = "very-high-speed";
 			};
 
 			/omit-if-no-ref/ spi3_mosi_pb5: spi3_mosi_pb5 {
 				pinmux = <STM32_PINMUX('B', 5, AF7)>;
 				bias-pull-down;
+				slew-rate = "very-high-speed";
 			};
 
 			/* SPI_NSS */
@@ -651,36 +666,43 @@
 			/omit-if-no-ref/ spi1_nss_pa15: spi1_nss_pa15 {
 				pinmux = <STM32_PINMUX('A', 15, AF5)>;
 				bias-pull-up;
+				slew-rate = "very-high-speed";
 			};
 
 			/omit-if-no-ref/ spi1_nss_pb8: spi1_nss_pb8 {
 				pinmux = <STM32_PINMUX('B', 8, AF12)>;
 				bias-pull-up;
+				slew-rate = "very-high-speed";
 			};
 
 			/omit-if-no-ref/ spi2_nss_pa8: spi2_nss_pa8 {
 				pinmux = <STM32_PINMUX('A', 8, AF11)>;
 				bias-pull-up;
+				slew-rate = "very-high-speed";
 			};
 
 			/omit-if-no-ref/ spi2_nss_pa11: spi2_nss_pa11 {
 				pinmux = <STM32_PINMUX('A', 11, AF5)>;
 				bias-pull-up;
+				slew-rate = "very-high-speed";
 			};
 
 			/omit-if-no-ref/ spi2_nss_pb4: spi2_nss_pb4 {
 				pinmux = <STM32_PINMUX('B', 4, AF7)>;
 				bias-pull-up;
+				slew-rate = "very-high-speed";
 			};
 
 			/omit-if-no-ref/ spi3_nss_pa0: spi3_nss_pa0 {
 				pinmux = <STM32_PINMUX('A', 0, AF10)>;
 				bias-pull-up;
+				slew-rate = "very-high-speed";
 			};
 
 			/omit-if-no-ref/ spi3_nss_pa15: spi3_nss_pa15 {
 				pinmux = <STM32_PINMUX('A', 15, AF6)>;
 				bias-pull-up;
+				slew-rate = "very-high-speed";
 			};
 
 			/* SPI_SCK */

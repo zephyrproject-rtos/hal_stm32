@@ -167,7 +167,7 @@
 				pinmux = <STM32_PINMUX('B', 3, AF0)>;
 			};
 
-			/omit-if-no-ref/ debug_jtrst_pb4: debug_jtrst_pb4 {
+			/omit-if-no-ref/ debug_njtrst_pb4: debug_njtrst_pb4 {
 				pinmux = <STM32_PINMUX('B', 4, AF0)>;
 			};
 
@@ -205,6 +205,7 @@
 			/omit-if-no-ref/ spi3_miso_pb9: spi3_miso_pb9 {
 				pinmux = <STM32_PINMUX('B', 9, AF6)>;
 				bias-pull-down;
+				slew-rate = "very-high-speed";
 			};
 
 			/* SPI_MOSI */
@@ -212,6 +213,7 @@
 			/omit-if-no-ref/ spi3_mosi_pb8: spi3_mosi_pb8 {
 				pinmux = <STM32_PINMUX('B', 8, AF6)>;
 				bias-pull-down;
+				slew-rate = "very-high-speed";
 			};
 
 			/* SPI_NSS */
@@ -219,6 +221,7 @@
 			/omit-if-no-ref/ spi3_nss_pa5: spi3_nss_pa5 {
 				pinmux = <STM32_PINMUX('A', 5, AF6)>;
 				bias-pull-up;
+				slew-rate = "very-high-speed";
 			};
 
 			/* SPI_SCK */

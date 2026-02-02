@@ -31,7 +31,7 @@ URL:
    https://github.com/STMicroelectronics/STM32_open_pin_data
 
 Commit:
-   3d64b1076ac7f0bf0f74acf89b9578b530f37ed7
+   299253ac6ca176834a6b0b2faadd0ce7c628d296
 
 Maintained-by:
    External
@@ -45,13 +45,6 @@ License Link:
 Patch List:
    *Missing additional pins for SAI1_FS_A and SAI1_FS_B signals on STM32U3 serie
       - Add the SAI1_FS_A signal name on PB9 and PE4 in the appropriate U3 pinctrl file.
-      - Add the SAI1_FS_B signal name on PE9 in the appropriate U3 pinctrl files.
       -Link: https://github.com/STMicroelectronics/STM32_open_pin_data/issues/15
       - Impacted files:
-         dts/st/u3/stm32u375*-pinctrl.dtsi
-         dts/st/u3/stm32u385*-pinctrl.dtsi
-
-   *Rename "TIM3_REMAP1" on the pin "PB5" to "TIM3_REMAP2"
-   of the following GPIO-STM32F103xx.xml files.
-      - Impacted files:
-         dts/st/f1/stm32f103r(8-b)tx-pinctrl.dtsi
+         dts/st/u3/stm32u385rgtxq-pinctrl.dtsi

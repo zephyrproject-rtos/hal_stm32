@@ -160,6 +160,13 @@
 				drive-open-drain;
 			};
 
+			/* I2C_SMBA */
+
+			/omit-if-no-ref/ i2c1_smba_pb14: i2c1_smba_pb14 {
+				pinmux = <STM32_PINMUX('B', 14, ANALOG)>;
+				bias-pull-up;
+			};
+
 			/* I2S_MCK */
 
 			/omit-if-no-ref/ i2s3_mck_pa2: i2s3_mck_pa2 {
@@ -211,6 +218,7 @@
 			/omit-if-no-ref/ spi3_miso_pa8: spi3_miso_pa8 {
 				pinmux = <STM32_PINMUX('A', 8, AF3)>;
 				bias-pull-down;
+				slew-rate = "very-high-speed";
 			};
 
 			/* SPI_MOSI */
@@ -218,6 +226,7 @@
 			/omit-if-no-ref/ spi3_mosi_pa11: spi3_mosi_pa11 {
 				pinmux = <STM32_PINMUX('A', 11, AF3)>;
 				bias-pull-down;
+				slew-rate = "very-high-speed";
 			};
 
 			/* SPI_NSS */
@@ -225,6 +234,7 @@
 			/omit-if-no-ref/ spi3_nss_pa9: spi3_nss_pa9 {
 				pinmux = <STM32_PINMUX('A', 9, AF3)>;
 				bias-pull-up;
+				slew-rate = "very-high-speed";
 			};
 
 			/* SPI_SCK */
