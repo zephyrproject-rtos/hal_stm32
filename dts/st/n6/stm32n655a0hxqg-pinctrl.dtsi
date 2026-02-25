@@ -334,14 +334,6 @@
 				pinmux = <STM32_PINMUX('C', 13, ANALOG)>;
 			};
 
-			/omit-if-no-ref/ analog_pc14: analog_pc14 {
-				pinmux = <STM32_PINMUX('C', 14, ANALOG)>;
-			};
-
-			/omit-if-no-ref/ analog_pc15: analog_pc15 {
-				pinmux = <STM32_PINMUX('C', 15, ANALOG)>;
-			};
-
 			/omit-if-no-ref/ analog_pd8: analog_pd8 {
 				pinmux = <STM32_PINMUX('D', 8, ANALOG)>;
 			};
@@ -448,14 +440,6 @@
 
 			/omit-if-no-ref/ analog_pg13: analog_pg13 {
 				pinmux = <STM32_PINMUX('G', 13, ANALOG)>;
-			};
-
-			/omit-if-no-ref/ analog_ph0: analog_ph0 {
-				pinmux = <STM32_PINMUX('H', 0, ANALOG)>;
-			};
-
-			/omit-if-no-ref/ analog_ph1: analog_ph1 {
-				pinmux = <STM32_PINMUX('H', 1, ANALOG)>;
 			};
 
 			/omit-if-no-ref/ analog_ph2: analog_ph2 {
