@@ -31,7 +31,7 @@ URL:
    https://github.com/STMicroelectronics/STM32_open_pin_data
 
 Commit:
-   299253ac6ca176834a6b0b2faadd0ce7c628d296
+   d2ca9b5ed0b35ad3aa92e91984ec7addae58bf7e
 
 Maintained-by:
    External
