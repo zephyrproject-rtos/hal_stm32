@@ -94,4 +94,12 @@ Patch List:
     See also:
       https://github.com/zephyrproject-rtos/hal_stm32/pull/304
 
+   *Enable missing SDIO HAL module
+     Add define for HAL_SDIO_MODULE_ENABLED and clean up
+     HAL config file.
+    Impacted files:
+     stm32n6xx_hal_conf.h‎
+    Seel also:
+     https://github.com/zephyrproject-rtos/hal_stm32/pull/345
+
    See release_note.html from STM32Cube
