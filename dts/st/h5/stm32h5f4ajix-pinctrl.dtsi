@@ -3581,6 +3581,11 @@
 				slew-rate = "very-high-speed";
 			};
 
+			/omit-if-no-ref/ octospim_p2_ncs1_pb0: octospim_p2_ncs1_pb0 {
+				pinmux = <STM32_PINMUX('B', 0, AF9)>;
+				slew-rate = "very-high-speed";
+			};
+
 			/omit-if-no-ref/ octospim_p1_io0_pb1: octospim_p1_io0_pb1 {
 				pinmux = <STM32_PINMUX('B', 1, AF6)>;
 				slew-rate = "very-high-speed";
@@ -3613,6 +3618,16 @@
 
 			/omit-if-no-ref/ octospim_p2_clk_pb5: octospim_p2_clk_pb5 {
 				pinmux = <STM32_PINMUX('B', 5, AF10)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ octospim_p1_ncs1_pb6: octospim_p1_ncs1_pb6 {
+				pinmux = <STM32_PINMUX('B', 6, AF10)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ octospim_p1_ncs1_pb10: octospim_p1_ncs1_pb10 {
+				pinmux = <STM32_PINMUX('B', 10, AF9)>;
 				slew-rate = "very-high-speed";
 			};
 
@@ -3681,13 +3696,28 @@
 				slew-rate = "very-high-speed";
 			};
 
+			/omit-if-no-ref/ octospim_p1_ncs1_pc11: octospim_p1_ncs1_pc11 {
+				pinmux = <STM32_PINMUX('C', 11, AF9)>;
+				slew-rate = "very-high-speed";
+			};
+
 			/omit-if-no-ref/ octospim_p2_io7_pc12: octospim_p2_io7_pc12 {
 				pinmux = <STM32_PINMUX('C', 12, AF9)>;
 				slew-rate = "very-high-speed";
 			};
 
+			/omit-if-no-ref/ octospim_p1_ncs2_pd0: octospim_p1_ncs2_pd0 {
+				pinmux = <STM32_PINMUX('D', 0, AF10)>;
+				slew-rate = "very-high-speed";
+			};
+
 			/omit-if-no-ref/ octospim_p2_dqs_pd1: octospim_p2_dqs_pd1 {
 				pinmux = <STM32_PINMUX('D', 1, AF10)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ octospim_p1_ncs2_pd2: octospim_p1_ncs2_pd2 {
+				pinmux = <STM32_PINMUX('D', 2, AF9)>;
 				slew-rate = "very-high-speed";
 			};
 
@@ -3751,6 +3781,11 @@
 				slew-rate = "very-high-speed";
 			};
 
+			/omit-if-no-ref/ octospim_p1_ncs2_pe0: octospim_p1_ncs2_pe0 {
+				pinmux = <STM32_PINMUX('E', 0, AF11)>;
+				slew-rate = "very-high-speed";
+			};
+
 			/omit-if-no-ref/ octospim_p1_io2_pe2: octospim_p1_io2_pe2 {
 				pinmux = <STM32_PINMUX('E', 2, AF9)>;
 				slew-rate = "very-high-speed";
@@ -3796,8 +3831,28 @@
 				slew-rate = "very-high-speed";
 			};
 
+			/omit-if-no-ref/ octospim_p1_ncs1_pe11: octospim_p1_ncs1_pe11 {
+				pinmux = <STM32_PINMUX('E', 11, AF6)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ octospim_p2_ncs2_pe11: octospim_p2_ncs2_pe11 {
+				pinmux = <STM32_PINMUX('E', 11, AF9)>;
+				slew-rate = "very-high-speed";
+			};
+
 			/omit-if-no-ref/ octospim_p2_clk_pe14: octospim_p2_clk_pe14 {
 				pinmux = <STM32_PINMUX('E', 14, AF9)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ octospim_p2_ncs1_pe15: octospim_p2_ncs1_pe15 {
+				pinmux = <STM32_PINMUX('E', 15, AF9)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ octospim_p2_ncs2_pf4: octospim_p2_ncs2_pf4 {
+				pinmux = <STM32_PINMUX('F', 4, AF9)>;
 				slew-rate = "very-high-speed";
 			};
 
@@ -3836,6 +3891,11 @@
 				slew-rate = "very-high-speed";
 			};
 
+			/omit-if-no-ref/ octospim_p2_ncs2_pf15: octospim_p2_ncs2_pf15 {
+				pinmux = <STM32_PINMUX('F', 15, AF9)>;
+				slew-rate = "very-high-speed";
+			};
+
 			/omit-if-no-ref/ octospim_p2_io0_pg0: octospim_p2_io0_pg0 {
 				pinmux = <STM32_PINMUX('G', 0, AF9)>;
 				slew-rate = "very-high-speed";
@@ -3863,6 +3923,16 @@
 
 			/omit-if-no-ref/ octospim_p2_io5_pg5: octospim_p2_io5_pg5 {
 				pinmux = <STM32_PINMUX('G', 5, AF9)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ octospim_p1_ncs1_pg6: octospim_p1_ncs1_pg6 {
+				pinmux = <STM32_PINMUX('G', 6, AF10)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ octospim_p2_ncs1_pg6: octospim_p2_ncs1_pg6 {
+				pinmux = <STM32_PINMUX('G', 6, AF9)>;
 				slew-rate = "very-high-speed";
 			};
 
@@ -3898,6 +3968,11 @@
 
 			/omit-if-no-ref/ octospim_p2_clk_pg12: octospim_p2_clk_pg12 {
 				pinmux = <STM32_PINMUX('G', 12, AF9)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ octospim_p2_ncs1_pg13: octospim_p2_ncs1_pg13 {
+				pinmux = <STM32_PINMUX('G', 13, AF9)>;
 				slew-rate = "very-high-speed";
 			};
 
