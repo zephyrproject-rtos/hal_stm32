@@ -2297,6 +2297,11 @@
 
 			/* OCTOSPI */
 
+			/omit-if-no-ref/ octospi1_ncs2_pb11: octospi1_ncs2_pb11 {
+				pinmux = <STM32_PINMUX('B', 11, AF13)>;
+				slew-rate = "very-high-speed";
+			};
+
 			/omit-if-no-ref/ octospi1_clk_pd0: octospi1_clk_pd0 {
 				pinmux = <STM32_PINMUX('D', 0, AF10)>;
 				slew-rate = "very-high-speed";
@@ -2307,8 +2312,23 @@
 				slew-rate = "very-high-speed";
 			};
 
+			/omit-if-no-ref/ octospi1_ncs2_pd1: octospi1_ncs2_pd1 {
+				pinmux = <STM32_PINMUX('D', 1, AF11)>;
+				slew-rate = "very-high-speed";
+			};
+
 			/omit-if-no-ref/ octospi1_dqs_pd2: octospi1_dqs_pd2 {
 				pinmux = <STM32_PINMUX('D', 2, AF10)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ octospi1_ncs2_pd2: octospi1_ncs2_pd2 {
+				pinmux = <STM32_PINMUX('D', 2, AF11)>;
+				slew-rate = "very-high-speed";
+			};
+
+			/omit-if-no-ref/ octospi1_ncs1_pd3: octospi1_ncs1_pd3 {
+				pinmux = <STM32_PINMUX('D', 3, AF10)>;
 				slew-rate = "very-high-speed";
 			};
 
