@@ -48,35 +48,35 @@ README_TEMPLATE = "readme-template.j2"
 NS = "{http://dummy.com}"
 """MCU XML namespace."""
 
-PINCTRL_ADDRESSES = {
-    "stm32c0": 0x50000000,
-    "stm32f0": 0x48000000,
-    "stm32f1": 0x40010800,
-    "stm32f2": 0x40020000,
-    "stm32f3": 0x48000000,
-    "stm32f4": 0x40020000,
-    "stm32f7": 0x40020000,
-    "stm32g0": 0x50000000,
-    "stm32g4": 0x48000000,
-    "stm32h5": 0x42020000,
-    "stm32h7": 0x58020000,
-    "stm32h7rs": 0x58020000,
-    "stm32l0": 0x50000000,
-    "stm32l1": 0x40020000,
-    "stm32l4": 0x48000000,
-    "stm32l5": 0x42020000,
-    "stm32mp1": 0x50002000,
-    "stm32mp2": 0x44240000,
-    "stm32n6": 0x56020000,
-    "stm32u0": 0x50000000,
-    "stm32u3": 0x42020000,
-    "stm32u5": 0x42020000,
-    "stm32wba": 0x42020000,
-    "stm32wb": 0x48000000,
-    "stm32wb0": 0x48000000,
-    "stm32wl": 0x48000000,
-}
-"""pinctrl peripheral addresses for each family."""
+SUPPORTED_FAMILIES = [
+    "stm32c0",
+    "stm32f0",
+    "stm32f1",
+    "stm32f2",
+    "stm32f3",
+    "stm32f4",
+    "stm32f7",
+    "stm32g0",
+    "stm32g4",
+    "stm32h5",
+    "stm32h7",
+    "stm32h7rs",
+    "stm32l0",
+    "stm32l1",
+    "stm32l4",
+    "stm32l5",
+    "stm32mp1",
+    "stm32mp2",
+    "stm32n6",
+    "stm32u0",
+    "stm32u3",
+    "stm32u5",
+    "stm32wba",
+    "stm32wb",
+    "stm32wb0",
+    "stm32wl",
+]
+"""Supported SoC families"""
 
 PIN_MODS = [
     "_C",  # Pins with analog switch (H7)
@@ -618,9 +618,8 @@ def main(data_path, output):
         output.mkdir(parents=True)
 
     for family, refs in mcu_signals.items():
-        # obtain family pinctrl address
-        pinctrl_addr = PINCTRL_ADDRESSES.get(family.lower())
-        if not pinctrl_addr:
+        # check family is supported
+        if family.lower() not in SUPPORTED_FAMILIES:
             logger.warning(f"Skipping unsupported family {family}.")
             continue
         else:
@@ -704,7 +703,7 @@ def main(data_path, output):
             rendered = ""
             try:
                 rendered = pinctrl_template.render(
-                    family=family, pinctrl_addr=pinctrl_addr, entries=entries
+                    family=family, entries=entries
                 )
             except Exception:
                 logger.error(f"Skipping '{pinctrl_filename}' (rendering failed)")

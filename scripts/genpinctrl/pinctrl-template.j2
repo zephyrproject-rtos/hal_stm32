@@ -10,36 +10,32 @@
 #include <zephyr/dt-bindings/pinctrl/stm32-pinctrl.h>
 {% endif %}
 
-/ {
-	soc {
-		pinctrl: pin-controller@{{ "%08X" | format(pinctrl_addr) }} {
+&pinctrl {
 {{ newline }}
-			{% for group, group_entries in entries.items() %}
-			/* {{ group }} */
+	{% for group, group_entries in entries.items() %}
+	/* {{ group }} */
 {{ newline }}
-			{% for entry in group_entries %}
-			{% set variant = "_" + entry["variant"] if entry["variant"] else "" %}
-			{% set remap = (entry["af"] | format_remap_name) if family == "STM32F1" else "" %}
-			{% set name = "%s%s%s_p%s%d%s" | format(entry["signal"], remap, variant, entry["port"], entry["pin"], entry["mod"]) %}
-			/omit-if-no-ref/ {{ name }}: {{ name }} {
-				{% if family == "STM32F1" %}
-				pinmux = <STM32F1_PINMUX('{{ entry["port"] | upper }}', {{ entry["pin"] }}, {{ entry["mode"] | format_mode_f1 }}, {{ entry["af"] | format_remap }})>;
-				{% else %}
-				pinmux = <STM32_PINMUX('{{ entry["port"] | upper }}', {{ entry["pin"] }}, {{ entry["mode"] | format_mode(entry["af"]) }})>;
-				{% endif %}
-				{% if entry["bias"] %}
-				bias-{{ entry["bias"] }};
-				{% endif %}
-				{% if entry["drive"] %}
-				drive-{{ entry["drive"] }};
-				{% endif %}
-				{% if entry["slew-rate"] %}
-				slew-rate = "{{ entry["slew-rate"] }}";
-				{% endif %}
-			};
-{{ newline }}
-			{% endfor %}
-			{% endfor %}
-		};
+	{% for entry in group_entries %}
+	{% set variant = "_" + entry["variant"] if entry["variant"] else "" %}
+	{% set remap = (entry["af"] | format_remap_name) if family == "STM32F1" else "" %}
+	{% set name = "%s%s%s_p%s%d%s" | format(entry["signal"], remap, variant, entry["port"], entry["pin"], entry["mod"]) %}
+	/omit-if-no-ref/ {{ name }}: {{ name }} {
+		{% if family == "STM32F1" %}
+		pinmux = <STM32F1_PINMUX('{{ entry["port"] | upper }}', {{ entry["pin"] }}, {{ entry["mode"] | format_mode_f1 }}, {{ entry["af"] | format_remap }})>;
+		{% else %}
+		pinmux = <STM32_PINMUX('{{ entry["port"] | upper }}', {{ entry["pin"] }}, {{ entry["mode"] | format_mode(entry["af"]) }})>;
+		{% endif %}
+		{% if entry["bias"] %}
+		bias-{{ entry["bias"] }};
+		{% endif %}
+		{% if entry["drive"] %}
+		drive-{{ entry["drive"] }};
+		{% endif %}
+		{% if entry["slew-rate"] %}
+		slew-rate = "{{ entry["slew-rate"] }}";
+		{% endif %}
 	};
+{{ newline }}
+	{% endfor %}
+	{% endfor %}
 };
