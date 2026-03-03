@@ -6,29 +6,25 @@
 
 #include <zephyr/dt-bindings/pinctrl/stm32-pinctrl.h>
 
-/ {
-	soc {
-		pinctrl: pin-controller@48000000 {
+&pinctrl {
 
-			/* ADC_IN / ADC_INN / ADC_INP */
+	/* ADC_IN / ADC_INN / ADC_INP */
 
-			/omit-if-no-ref/ adc1_in0_pa0: adc1_in0_pa0 {
-				pinmux = <STM32_PINMUX('A', 0, ANALOG)>;
-			};
-
-			/* UART_RX / USART_RX / LPUART_RX */
-
-			/omit-if-no-ref/ uart1_rx_pa0: uart1_rx_pa0 {
-				pinmux = <STM32_PINMUX('A', 0, AF1)>;
-			};
-
-			/* UART_TX / USART_TX / LPUART_TX */
-
-			/omit-if-no-ref/ uart1_tx_pa0: uart1_tx_pa0 {
-				pinmux = <STM32_PINMUX('A', 0, AF0)>;
-				bias-pull-up;
-			};
-
-		};
+	/omit-if-no-ref/ adc1_in0_pa0: adc1_in0_pa0 {
+		pinmux = <STM32_PINMUX('A', 0, ANALOG)>;
 	};
+
+	/* UART_RX / USART_RX / LPUART_RX */
+
+	/omit-if-no-ref/ uart1_rx_pa0: uart1_rx_pa0 {
+		pinmux = <STM32_PINMUX('A', 0, AF1)>;
+	};
+
+	/* UART_TX / USART_TX / LPUART_TX */
+
+	/omit-if-no-ref/ uart1_tx_pa0: uart1_tx_pa0 {
+		pinmux = <STM32_PINMUX('A', 0, AF0)>;
+		bias-pull-up;
+	};
+
 };
