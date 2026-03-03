@@ -211,7 +211,9 @@
 * Maximum number of simultaneous Link Layer procedures that can be managed, in addition to the minimum required by the stack.
 *  The minimum number guarantees one LL procedure initiated by the peer for each link, one LL procedure automatically initiated by the Controller and one LL procedure initiated by the Host.
 */
+#ifndef __ZEPHYR__
 #define  CFG_BLE_EXTRA_LL_PROCEDURE_CONTEXTS        (0)
+#endif /* __ZEPHYR__ */
 
 /**
  * Size of the internal FIFO used for critical controller events produced by the
