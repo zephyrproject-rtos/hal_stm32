@@ -1685,7 +1685,7 @@ __STATIC_INLINE void LL_APB1_GRP2_ReleaseReset(uint32_t Periphs)
   *         APB1SMENR1     TIM3SMEN       LL_APB1_GRP1_EnableClockStopSleep\n
 #if defined(TIM4)
   *         APB1SMENR1     TIM4SMEN       LL_APB1_GRP1_EnableClockStopSleep\n
-#endif
+#
 #if defined(WWDG)
   *         APB1SMENR1     WWDGSMEN       LL_APB1_GRP1_EnableClockStopSleep\n
 #endif

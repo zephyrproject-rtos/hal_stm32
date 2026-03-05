@@ -752,7 +752,7 @@ typedef struct
   __IO uint32_t CR;      /*!< RNG control register,                   Address offset: 0x00 */
   __IO uint32_t SR;      /*!< RNG status register,                    Address offset: 0x04 */
   __IO uint32_t DR;      /*!< RNG data register,                      Address offset: 0x08 */
-  uint32_t RESERVED;
+  __IO uint32_t NSCR;    /*!< RNG noise source control register,      Address offset: 0x0C */
   __IO uint32_t HTCR;    /*!< RNG health test configuration register, Address offset: 0x10 */
 } RNG_TypeDef;
 
@@ -10978,14 +10978,35 @@ typedef struct
 #define RNG_DR_RNDATA_Msk                  (0xFFFFFFFFUL << RNG_DR_RNDATA_Pos)      /*!< 0xFFFFFFFF */
 #define RNG_DR_RNDATA                      RNG_DR_RNDATA_Msk
 
+/********************  Bit definition for RNG_NSCR register  ********************/
+#define RNG_NSCR_EN_OSC1_Pos (0UL)
+#define RNG_NSCR_EN_OSC1_Msk (0x7UL << RNG_NSCR_EN_OSC1_Pos) /*!< 0x00000007 */
+#define RNG_NSCR_EN_OSC1     RNG_NSCR_EN_OSC1_Msk            /*!< EN_OSC1[2:0] bits (Each bit drives one oscillator enable signal input of instance number 1, gated with RNGEN bit in RNG_CR (set bit to enable the oscillator). Bit is ignored otherwise.) */
+#define RNG_NSCR_EN_OSC2_Pos (3UL)
+#define RNG_NSCR_EN_OSC2_Msk (0x7UL << RNG_NSCR_EN_OSC2_Pos) /*!< 0x00000038 */
+#define RNG_NSCR_EN_OSC2     RNG_NSCR_EN_OSC2_Msk            /*!< EN_OSC2[2:0] bits (Each bit drives one oscillator enable signal input of instance number 2, gated with RNGEN bit in RNG_CR (set bit to enable the oscillator). Bit is ignored otherwise.) */
+#define RNG_NSCR_EN_OSC3_Pos (6UL)
+#define RNG_NSCR_EN_OSC3_Msk (0x7UL << RNG_NSCR_EN_OSC3_Pos) /*!< 0x000001C0 */
+#define RNG_NSCR_EN_OSC3     RNG_NSCR_EN_OSC3_Msk            /*!< EN_OSC3[2:0] bits (Each bit drives one oscillator enable signal input of instance number 3, gated with RNGEN bit in RNG_CR (set bit to enable the oscillator). Bit is ignored otherwise.) */
+#define RNG_NSCR_EN_OSC4_Pos (9UL)
+#define RNG_NSCR_EN_OSC4_Msk (0x7UL << RNG_NSCR_EN_OSC4_Pos) /*!< 0x00000E00 */
+#define RNG_NSCR_EN_OSC4     RNG_NSCR_EN_OSC4_Msk            /*!< EN_OSC4[2:0] bits (Each bit drives one oscillator enable signal input of instance number 1, gated with RNGEN bit in RNG_CR (set bit to enable the oscillator). Bit is ignored otherwise.) */
+#define RNG_NSCR_EN_OSC5_Pos (12UL)
+#define RNG_NSCR_EN_OSC5_Msk (0x7UL << RNG_NSCR_EN_OSC5_Pos) /*!< 0x00007000 */
+#define RNG_NSCR_EN_OSC5     RNG_NSCR_EN_OSC5_Msk            /*!< EN_OSC5[2:0] bits (Each bit drives one oscillator enable signal input of instance number 2, gated with RNGEN bit in RNG_CR (set bit to enable the oscillator). Bit is ignored otherwise.) */
+#define RNG_NSCR_EN_OSC6_Pos (15UL)
+#define RNG_NSCR_EN_OSC6_Msk (0x7UL << RNG_NSCR_EN_OSC6_Pos) /*!< 0x00038000 */
+#define RNG_NSCR_EN_OSC6     RNG_NSCR_EN_OSC6_Msk            /*!< EN_OSC6[2:0] bits (Each bit drives one oscillator enable signal input of instance number 3, gated with RNGEN bit in RNG_CR (set bit to enable the oscillator). Bit is ignored otherwise.) */
+
 /********************  Bits definition for RNG_HTCR register  *******************/
 #define RNG_HTCR_HTCFG_Pos                 (0UL)
 #define RNG_HTCR_HTCFG_Msk                 (0xFFFFFFFFUL << RNG_HTCR_HTCFG_Pos)     /*!< 0xFFFFFFFF */
 #define RNG_HTCR_HTCFG                     RNG_HTCR_HTCFG_Msk
+
 /********************  RNG Nist Compliance Values  *******************/
 #define RNG_CR_NIST_VALUE                   (0x00F02D00U)
+#define RNG_NSCR_NIST_VALUE                 (0x0003FFFFU)
 #define RNG_HTCR_NIST_VALUE                 (0xAAC7U)
-
 
 /******************************************************************************/
 /*                                                                            */

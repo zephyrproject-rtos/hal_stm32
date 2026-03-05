@@ -255,6 +255,11 @@ extern "C" {
 #define VREFINT_CAL_ADDR                   ((const uint16_t*) (0x0BFA07A5UL)) /* Internal voltage reference, address of
                                            parameter VREFINT_CAL: VrefInt ADC raw data acquired at temperature 30 DegC
                                            (tolerance: +-5 DegC), Vref+ = 3.3 V (tolerance: +-10 mV). */
+#elif defined(STM32WBA20xx) || defined(STM32WBA23xx) || defined(STM32WBA25xx)
+/* Internal voltage reference VrefInt */
+#define VREFINT_CAL_ADDR                   ((const uint16_t*) (0x0BF8D7A5UL)) /* Internal voltage reference, address of
+                                           parameter VREFINT_CAL: VrefInt ADC raw data acquired at temperature 30 DegC
+                                           (tolerance: +-5 DegC), Vref+ = 3.3 V (tolerance: +-10 mV). */
 #else
 /* Internal voltage reference VrefInt */
 #define VREFINT_CAL_ADDR                   ((const uint16_t*) (0x0BF907A5UL)) /* Internal voltage reference, address of
@@ -270,6 +275,14 @@ extern "C" {
                                            temperature sensor ADC raw data acquired at temperature  30 DegC
                                            (tolerance: +-5 DegC), Vref+ = 3.0 V (tolerance: +-10 mV). */
 #define TEMPSENSOR_CAL2_ADDR               ((const uint16_t*) (0x0BFA0742UL)) /* Address of parameter TS_CAL2: On this series,
+                                           temperature sensor ADC raw data acquired at temperature 130 DegC
+                                           (tolerance: +-5 DegC), Vref+ = 3.0 V (tolerance: +-10 mV). */
+#elif defined(STM32WBA20xx) || defined(STM32WBA23xx) || defined(STM32WBA25xx)
+/* Temperature sensor */
+#define TEMPSENSOR_CAL1_ADDR               ((const uint16_t*) (0x0BF8D710UL)) /* Address of parameter TS_CAL1: On this series,
+                                           temperature sensor ADC raw data acquired at temperature  30 DegC
+                                           (tolerance: +-5 DegC), Vref+ = 3.0 V (tolerance: +-10 mV). */
+#define TEMPSENSOR_CAL2_ADDR               ((const uint16_t*) (0x0BF8D742UL)) /* Address of parameter TS_CAL2: On this series,
                                            temperature sensor ADC raw data acquired at temperature 130 DegC
                                            (tolerance: +-5 DegC), Vref+ = 3.0 V (tolerance: +-10 mV). */
 #else

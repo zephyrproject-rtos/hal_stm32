@@ -764,8 +764,8 @@ typedef struct
   __IO uint32_t CR;      /*!< RNG control register,                   Address offset: 0x00 */
   __IO uint32_t SR;      /*!< RNG status register,                    Address offset: 0x04 */
   __IO uint32_t DR;      /*!< RNG data register,                      Address offset: 0x08 */
-  uint32_t RESERVED;
-  __IO uint32_t HTCR;    /*!< RNG health test configuration register, Address offset: 0x10 */
+  __IO uint32_t NSCR;    /*!< RNG noise source control register,      Address offset: 0x0C */
+  __IO uint32_t HTCR[4]; /*!< RNG health test control register,       Address offset: 0x10 - 0x1F */
 } RNG_TypeDef;
 
 /*
@@ -11966,14 +11966,41 @@ typedef struct
 #define RNG_DR_RNDATA_Msk                  (0xFFFFFFFFUL << RNG_DR_RNDATA_Pos)      /*!< 0xFFFFFFFF */
 #define RNG_DR_RNDATA                      RNG_DR_RNDATA_Msk
 
-/********************  Bits definition for RNG_HTCR register  *******************/
-#define RNG_HTCR_HTCFG_Pos                 (0UL)
-#define RNG_HTCR_HTCFG_Msk                 (0xFFFFFFFFUL << RNG_HTCR_HTCFG_Pos)     /*!< 0xFFFFFFFF */
-#define RNG_HTCR_HTCFG                     RNG_HTCR_HTCFG_Msk
+/********************  Bit definition for RNG_NSCR register  ********************/
+#define RNG_NSCR_EN_OSC1_Pos (0UL)
+#define RNG_NSCR_EN_OSC1_Msk (0x7UL << RNG_NSCR_EN_OSC1_Pos) /*!< 0x00000007 */
+#define RNG_NSCR_EN_OSC1     RNG_NSCR_EN_OSC1_Msk            /*!< EN_OSC1[2:0] bits (Each bit drives one oscillator enable signal input of instance number 1, gated with RNGEN bit in RNG_CR (set bit to enable the oscillator). Bit is ignored otherwise.) */
+#define RNG_NSCR_EN_OSC2_Pos (3UL)
+#define RNG_NSCR_EN_OSC2_Msk (0x7UL << RNG_NSCR_EN_OSC2_Pos) /*!< 0x00000038 */
+#define RNG_NSCR_EN_OSC2     RNG_NSCR_EN_OSC2_Msk            /*!< EN_OSC2[2:0] bits (Each bit drives one oscillator enable signal input of instance number 2, gated with RNGEN bit in RNG_CR (set bit to enable the oscillator). Bit is ignored otherwise.) */
+#define RNG_NSCR_EN_OSC3_Pos (6UL)
+#define RNG_NSCR_EN_OSC3_Msk (0x7UL << RNG_NSCR_EN_OSC3_Pos) /*!< 0x000001C0 */
+#define RNG_NSCR_EN_OSC3     RNG_NSCR_EN_OSC3_Msk            /*!< EN_OSC3[2:0] bits (Each bit drives one oscillator enable signal input of instance number 3, gated with RNGEN bit in RNG_CR (set bit to enable the oscillator). Bit is ignored otherwise.) */
+
+/******************  Bit definition for RNG_HTCR0 register  *******************/
+#define RNG_HTCR0_HTCFG_Pos                (0UL)
+#define RNG_HTCR0_HTCFG_Msk                (0xFFFFFFFFU << RNG_HTCR0_HTCFG_Pos)     /*!< 0xFFFFFFFF */
+#define RNG_HTCR0_HTCFG                    RNG_HTCR0_HTCFG_Msk                      /*!< health test configuration */
+
+/******************  Bit definition for RNG_HTCR1 register  *******************/
+#define RNG_HTCR1_HTCFG_Pos                (0UL)
+#define RNG_HTCR1_HTCFG_Msk                (0xFFFFFFFFU << RNG_HTCR1_HTCFG_Pos)     /*!< 0xFFFFFFFF */
+#define RNG_HTCR1_HTCFG                    RNG_HTCR1_HTCFG_Msk                      /*!< health test configuration */
+
+/******************  Bit definition for RNG_HTCR2 register  *******************/
+#define RNG_HTCR2_HTCFG_Pos                (0UL)
+#define RNG_HTCR2_HTCFG_Msk                (0xFFFFFFFFU << RNG_HTCR2_HTCFG_Pos)     /*!< 0xFFFFFFFF */
+#define RNG_HTCR2_HTCFG                    RNG_HTCR2_HTCFG_Msk                      /*!< health test configuration */
+
+/******************  Bit definition for RNG_HTCR3 register  *******************/
+#define RNG_HTCR3_HTCFG_Pos                (0UL)
+#define RNG_HTCR3_HTCFG_Msk                (0xFFFFFFFFU << RNG_HTCR3_HTCFG_Pos)     /*!< 0xFFFFFFFF */
+#define RNG_HTCR3_HTCFG                    RNG_HTCR3_HTCFG_Msk                      /*!< health test configuration */
+
 /********************  RNG Nist Compliance Values  *******************/
 #define RNG_CR_NIST_VALUE                   (0x00200F00U)
+#define RNG_NSCR_NIST_VALUE                 (0x000001FFU)
 #define RNG_HTCR_NIST_VALUE                 (0xA2B0U)
-
 
 /******************************************************************************/
 /*                                                                            */
@@ -13418,13 +13445,13 @@ typedef struct
 /**************  Bit definition for SYSCFG_OTGHSPHYTUNER2 register  ***********/
 #define SYSCFG_OTGHSPHYTUNER2_COMPDISTUNE_Pos     (0UL)
 #define SYSCFG_OTGHSPHYTUNER2_COMPDISTUNE_Msk     (0x7UL << SYSCFG_OTGHSPHYTUNER2_COMPDISTUNE_Pos)     /*!< 0x00000007 */
-#define SYSCFG_OTGHSPHYTUNER2_COMPDISTUNE         SYSCFG_OTGHSPHYTUNER2_COMPDISTUNE_Msk                /*!< USB OTG HS PHY disconnect threshold adjustement */
+#define SYSCFG_OTGHSPHYTUNER2_COMPDISTUNE         SYSCFG_OTGHSPHYTUNER2_COMPDISTUNE_Msk                /*!< USB OTG HS PHY disconnect threshold adjustment */
 #define SYSCFG_OTGHSPHYTUNER2_COMPDISTUNE_0       (0x1UL << SYSCFG_OTGHSPHYTUNER2_COMPDISTUNE_Pos)     /*!< 0x00000001 */
 #define SYSCFG_OTGHSPHYTUNER2_COMPDISTUNE_1       (0x2UL << SYSCFG_OTGHSPHYTUNER2_COMPDISTUNE_Pos)     /*!< 0x00000002 */
 #define SYSCFG_OTGHSPHYTUNER2_COMPDISTUNE_2       (0x4UL << SYSCFG_OTGHSPHYTUNER2_COMPDISTUNE_Pos)     /*!< 0x00000004 */
 #define SYSCFG_OTGHSPHYTUNER2_SQRXTUNE_Pos        (4UL)
 #define SYSCFG_OTGHSPHYTUNER2_SQRXTUNE_Msk        (0x7UL << SYSCFG_OTGHSPHYTUNER2_SQRXTUNE_Pos)        /*!< 0x00000070 */
-#define SYSCFG_OTGHSPHYTUNER2_SQRXTUNE            SYSCFG_OTGHSPHYTUNER2_SQRXTUNE_Msk                   /*!< USB OTG HS PHY squetch threshold adjustement */
+#define SYSCFG_OTGHSPHYTUNER2_SQRXTUNE            SYSCFG_OTGHSPHYTUNER2_SQRXTUNE_Msk                   /*!< USB OTG HS PHY squetch threshold adjustment */
 #define SYSCFG_OTGHSPHYTUNER2_SQRXTUNE_0          (0x1UL << SYSCFG_OTGHSPHYTUNER2_SQRXTUNE_Pos)        /*!< 0x00000010 */
 #define SYSCFG_OTGHSPHYTUNER2_SQRXTUNE_1          (0x2UL << SYSCFG_OTGHSPHYTUNER2_SQRXTUNE_Pos)        /*!< 0x00000020 */
 #define SYSCFG_OTGHSPHYTUNER2_SQRXTUNE_2          (0x4UL << SYSCFG_OTGHSPHYTUNER2_SQRXTUNE_Pos)        /*!< 0x00000040 */

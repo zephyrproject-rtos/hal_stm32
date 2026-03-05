@@ -573,7 +573,7 @@ void HAL_DBGMCU_DisableDBGStandbyMode(void)
       (+) Enable/Disable the I/O analog switch voltage booster
       (+) Configure the Voltage reference buffer
       (+) Enable/Disable the Voltage reference buffer
-      (+) Enable/Disbale the OTG PHY
+      (+) Enable/Disable the OTG PHY
       (+) Configure the OTG PHY power down
       (+) Select the OTG PHY reference clock
       (+) Configure the OTG PHY disconnect/squelch threshold

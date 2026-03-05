@@ -52,6 +52,7 @@ extern "C" {
 #define HAL_IRDA_MODULE_ENABLED
 #define HAL_IWDG_MODULE_ENABLED
 #define HAL_LPTIM_MODULE_ENABLED
+#define HAL_OTFDEC_MODULE_ENABLED
 #define HAL_PCD_MODULE_ENABLED
 #define HAL_PKA_MODULE_ENABLED
 #define HAL_PWR_MODULE_ENABLED
@@ -166,6 +167,7 @@ extern "C" {
 #define  USE_HAL_IRDA_REGISTER_CALLBACKS       0U /* IRDA register callback disabled      */
 #define  USE_HAL_IWDG_REGISTER_CALLBACKS       0U /* IWDG register callback disabled      */
 #define  USE_HAL_LPTIM_REGISTER_CALLBACKS      0U /* LPTIM register callback disabled     */
+#define  USE_HAL_OTFDEC_REGISTER_CALLBACKS     0U /* OTFDEC register callback disabled    */
 #define  USE_HAL_PCD_REGISTER_CALLBACKS        0U /* PCD register callback disabled       */
 #define  USE_HAL_PKA_REGISTER_CALLBACKS        0U /* PKA register callback disabled       */
 #define  USE_HAL_RAMCFG_REGISTER_CALLBACKS     0U /* RAMCFG register callback disabled    */
@@ -276,6 +278,10 @@ extern "C" {
 #ifdef HAL_LPTIM_MODULE_ENABLED
 #include "stm32wbaxx_hal_lptim.h"
 #endif /* HAL_LPTIM_MODULE_ENABLED */
+
+#ifdef HAL_OTFDEC_MODULE_ENABLED
+#include "stm32wbaxx_hal_otfdec.h"
+#endif /* HAL_OTFDEC_MODULE_ENABLED */
 
 #ifdef HAL_PCD_MODULE_ENABLED
 #include "stm32wbaxx_hal_pcd.h"

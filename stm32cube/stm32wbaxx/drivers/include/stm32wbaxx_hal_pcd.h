@@ -175,6 +175,7 @@ typedef struct
   */
 #define PCD_PHY_ULPI                 1U
 #define PCD_PHY_EMBEDDED             2U
+#define PCD_HS_PHY_EMBEDDED          3U
 #define PCD_PHY_UTMI                 3U
 /**
   * @}

@@ -116,6 +116,10 @@
   * @{
   */
 
+#if defined(GTZC_TZIC_SR4_MPCWM1F)
+/* Definitions for GTZC_TZSC_MPCWM */
+#define GTZC_TZSC_MPCWM1_MEM_SIZE         0x10000000U    /* 256MB max size */
+#endif /* GTZC_TZIC_SR4_MPCWM1F */
 
 /* Definitions for GTZC TZSC & TZIC ALL register values */
 /* TZSC1 / TZIC1 instances */
@@ -139,6 +143,16 @@
 #define TZSC1_SECCFGR2_ALL       (0x018F00EBUL)
 #define TZSC1_SECCFGR3_ALL       (0x01C17C58UL)
 #define TZIC1_IER4_ALL           (0xC3C0EF87UL)
+#elif defined (STM32WBA23xx)
+#define TZSC1_SECCFGR1_ALL       (0x00022081UL)
+#define TZSC1_SECCFGR2_ALL       (0x010F00E8UL)
+#define TZSC1_SECCFGR3_ALL       (0x01C17848UL)
+#define TZIC1_IER4_ALL           (0x03C0EF87UL)
+#elif defined (STM32WBA25xx)
+#define TZSC1_SECCFGR1_ALL       (0x00022081UL)
+#define TZSC1_SECCFGR2_ALL       (0x010F80E8UL)
+#define TZSC1_SECCFGR3_ALL       (0x01D17848UL)
+#define TZIC1_IER4_ALL           (0x03D0EF8FUL)
 #else
 #define TZSC1_SECCFGR1_ALL       (0x000222C3UL)
 #define TZSC1_SECCFGR2_ALL       (0x010F006BUL)
@@ -476,6 +490,170 @@ HAL_StatusTypeDef HAL_GTZC_TZSC_GetConfigPeriphAttributes(uint32_t PeriphId,
   * @}
   */
 
+#if defined(GTZC_TZIC_SR4_MPCWM1F)
+/** @defgroup GTZC_Exported_Functions_Group2 MPCWM Configuration functions
+  * @brief    MPCWM Configuration functions
+  *
+  @verbatim
+  ==============================================================================
+            ##### MPCWM Configuration functions #####
+  ==============================================================================
+  [..]
+    This section provides functions allowing to configure MPCWM
+    MPCWM is Memory Protection Controller WaterMark
+@endverbatim
+  * @{
+  */
+
+/**
+  * @brief  Configure a TZSC-MPCWM area.
+  * @param  MemBaseAddress WM identifier.
+  * @param  pMPCWM_Desc TZSC-MPCWM descriptor pointer.
+  *         The structure description is available in @ref GTZC_Exported_Types.
+  * @retval HAL status.
+  */
+HAL_StatusTypeDef HAL_GTZC_TZSC_MPCWM_ConfigMemAttributes(uint32_t MemBaseAddress,
+                                                          const MPCWM_ConfigTypeDef *pMPCWM_Desc)
+{
+  uint32_t register_address;
+  uint32_t reg_value;
+  uint32_t size;
+  /* granularity value depends on selected memory */
+  uint32_t granularity = GTZC_TZSC_MPCWM_GRANULARITY_1;
+
+  /* check entry parameters */
+  if ((pMPCWM_Desc->AreaId > GTZC_TZSC_MPCWM_ID2)
+      || ((pMPCWM_Desc->Offset % granularity) != 0U)
+      || ((pMPCWM_Desc->Length % granularity) != 0U))
+  {
+    return HAL_ERROR;
+  }
+
+  /* check descriptor content vs. memory capacity */
+  switch (MemBaseAddress)
+  {
+    case XSPI1_BASE:
+      size = GTZC_TZSC_MPCWM1_MEM_SIZE;
+      if (pMPCWM_Desc->AreaId == GTZC_TZSC_MPCWM_ID1)
+      {
+        register_address = (uint32_t) &(GTZC_TZSC->MPCWM1AR);
+      }
+      else
+      {
+        /* Here pMPCWM_Desc->AreaId == GTZC_TZSC_MPCWM_ID2
+         * (Parameter already checked)
+         */
+        register_address = (uint32_t) &(GTZC_TZSC->MPCWM1BR);
+      }
+      break;
+    default:
+      return HAL_ERROR;
+      break;
+  }
+
+  if ((pMPCWM_Desc->Offset > size)
+      || ((pMPCWM_Desc->Offset
+           + pMPCWM_Desc->Length)
+          > size))
+  {
+    return HAL_ERROR;
+  }
+
+  /* Write watermark start and length value */
+  reg_value = ((pMPCWM_Desc->Offset / granularity)
+               << GTZC1_TZSC_MPCWM1AR_SUBA_START_Pos) & GTZC1_TZSC_MPCWM1AR_SUBA_START;
+  reg_value |= ((pMPCWM_Desc->Length / granularity)
+                << GTZC1_TZSC_MPCWM1AR_SUBA_LENGTH_Pos) & GTZC1_TZSC_MPCWM1AR_SUBA_LENGTH;
+  MODIFY_REG(*(__IO uint32_t *)register_address, GTZC1_TZSC_MPCWM1AR_SUBA_START | \
+             GTZC1_TZSC_MPCWM1AR_SUBA_LENGTH, reg_value);
+
+#if defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
+  /* Write watermark configuration value */
+  reg_value = (pMPCWM_Desc->Attribute << GTZC1_TZSC_MPCWM1ACFGR_SEC_Pos) | \
+              pMPCWM_Desc->Lock                                  | \
+              pMPCWM_Desc->AreaStatus;
+  MODIFY_REG(*(__IO uint32_t *)(register_address - 4U), (GTZC1_TZSC_MPCWM1ACFGR_PRIV | GTZC1_TZSC_MPCWM1ACFGR_SEC | \
+                                                         GTZC1_TZSC_MPCWM1ACFGR_SRLOCK | GTZC1_TZSC_MPCWM1ACFGR_SREN), \
+             reg_value);
+#else
+  /* Write watermark configuration value */
+  reg_value = (pMPCWM_Desc->Attribute << (GTZC1_TZSC_MPCWM1ACFGR_PRIV_Pos - 1U)) | \
+              pMPCWM_Desc->Lock                                  | \
+              pMPCWM_Desc->AreaStatus;
+  MODIFY_REG(*(__IO uint32_t *)(register_address - 4U), (GTZC1_TZSC_MPCWM1ACFGR_PRIV | GTZC1_TZSC_MPCWM1ACFGR_SRLOCK | \
+                                                         GTZC1_TZSC_MPCWM1ACFGR_SREN), reg_value);
+#endif /* (__ARM_FEATURE_CMSE) */
+
+  return HAL_OK;
+}
+
+/**
+  * @brief  Get a TZSC-MPCWM area configuration.
+  * @param  MemBaseAddress WM identifier.
+  * @param  pMPCWM_Desc pointer to a TZSC-MPCWM descriptor.
+  *         When the WaterMark memory supports two sub-regions A and B. pMPCWM_Desc argument must point to an array of
+  *         two MPCWM_ConfigTypeDef structures.
+  *         The structure description is available in @ref GTZC_Exported_Types.
+  * @retval HAL status.
+  */
+HAL_StatusTypeDef HAL_GTZC_TZSC_MPCWM_GetConfigMemAttributes(uint32_t MemBaseAddress, MPCWM_ConfigTypeDef *pMPCWM_Desc)
+{
+  uint32_t register_address;
+  uint32_t reg_value;
+  uint32_t granularity = GTZC_TZSC_MPCWM_GRANULARITY_1;
+
+  /* firstly take care of the first area, present on all MPCWM sub-blocks */
+  switch (MemBaseAddress)
+  {
+    case XSPI1_BASE:
+      register_address = (uint32_t) &(GTZC_TZSC->MPCWM1AR);
+      break;
+    default:
+      return HAL_ERROR;
+      break;
+  }
+
+  /* read register and update the descriptor for first area*/
+  reg_value = READ_REG(*(__IO uint32_t *)register_address);
+  pMPCWM_Desc[0].AreaId = GTZC_TZSC_MPCWM_ID1;
+  pMPCWM_Desc[0].Offset = ((reg_value & GTZC1_TZSC_MPCWM1AR_SUBA_START)
+                           >> GTZC1_TZSC_MPCWM1AR_SUBA_START_Pos) * granularity;
+  pMPCWM_Desc[0].Length = ((reg_value & GTZC1_TZSC_MPCWM1AR_SUBA_LENGTH)
+                           >> GTZC1_TZSC_MPCWM1AR_SUBA_LENGTH_Pos) * granularity;
+
+  /* read configuration register and update the descriptor for first area*/
+  reg_value = READ_REG(*(__IO uint32_t *)(register_address - 4U));
+#if defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
+  pMPCWM_Desc[0].Attribute = (reg_value & (GTZC1_TZSC_MPCWM1ACFGR_PRIV | \
+                                           GTZC1_TZSC_MPCWM1ACFGR_SEC)) >> GTZC1_TZSC_MPCWM1ACFGR_SEC_Pos;
+#else
+  pMPCWM_Desc[0].Attribute = (reg_value & GTZC1_TZSC_MPCWM1ACFGR_PRIV) >> (GTZC1_TZSC_MPCWM1ACFGR_PRIV_Pos - 1U);
+#endif /* defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U) */
+  pMPCWM_Desc[0].Lock = reg_value & GTZC1_TZSC_MPCWM1ACFGR_SRLOCK;
+  pMPCWM_Desc[0].AreaStatus = reg_value & GTZC1_TZSC_MPCWM1ACFGR_SREN;
+
+#if defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
+      register_address = (uint32_t) &(GTZC_TZSC->MPCWM1BR);
+
+    /* read register and update the descriptor for second area*/
+    reg_value = READ_REG(*(__IO uint32_t *)register_address);
+    pMPCWM_Desc[1].AreaId = GTZC_TZSC_MPCWM_ID2;
+    pMPCWM_Desc[1].Offset = ((reg_value & GTZC1_TZSC_MPCWM1BR_SUBB_START)
+                             >> GTZC1_TZSC_MPCWM1BR_SUBB_START_Pos) * granularity;
+    pMPCWM_Desc[1].Length = ((reg_value & GTZC1_TZSC_MPCWM1BR_SUBB_LENGTH)
+                             >> GTZC1_TZSC_MPCWM1BR_SUBB_LENGTH_Pos) * granularity;
+
+    /* read configuration register and update the descriptor for second area*/
+    reg_value = READ_REG(*(__IO uint32_t *)(register_address - 4U));
+    pMPCWM_Desc[1].Attribute = (reg_value & (GTZC1_TZSC_MPCWM1BCFGR_PRIV | \
+                                             GTZC1_TZSC_MPCWM1BCFGR_SEC)) >> GTZC1_TZSC_MPCWM1BCFGR_SEC_Pos;
+    pMPCWM_Desc[1].Lock = reg_value & GTZC1_TZSC_MPCWM1BCFGR_SRLOCK;
+    pMPCWM_Desc[1].AreaStatus = reg_value & GTZC1_TZSC_MPCWM1BCFGR_SREN;
+#endif /* defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U) */
+
+  return HAL_OK;
+}
+#endif /* GTZC_TZIC_SR4_MPCWM1F */
 
 #if defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
 
@@ -544,34 +722,23 @@ HAL_StatusTypeDef HAL_GTZC_MPCBB_ConfigMem(uint32_t MemBaseAddress,
                                            const MPCBB_ConfigTypeDef *pMPCBB_desc)
 {
   GTZC_MPCBB_TypeDef *mpcbb_ptr;
-  uint32_t reg_value;
   uint32_t mem_size;
   uint32_t size_in_superblocks;
   uint32_t i;
 #if defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
+  uint32_t reg_value;
   uint32_t size_mask;
-#endif /* defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U) */
 
   /* check entry parameters */
-  if ((!(IS_GTZC_BASE_ADDRESS(SRAM1, MemBaseAddress))
-       &&  !(IS_GTZC_BASE_ADDRESS(SRAM2, MemBaseAddress))
-       && !(IS_GTZC_BASE_ADDRESS(SRAM6, MemBaseAddress)))
-      || ((pMPCBB_desc->SecureRWIllegalMode
-           != GTZC_MPCBB_SRWILADIS_ENABLE)
-          && (pMPCBB_desc->SecureRWIllegalMode
-              != GTZC_MPCBB_SRWILADIS_DISABLE))
-      || ((pMPCBB_desc->InvertSecureState
-           != GTZC_MPCBB_INVSECSTATE_NOT_INVERTED)
-          && (pMPCBB_desc->InvertSecureState
-              != GTZC_MPCBB_INVSECSTATE_INVERTED)))
+  if (((pMPCBB_desc->SecureRWIllegalMode != GTZC_MPCBB_SRWILADIS_ENABLE) &&
+       (pMPCBB_desc->SecureRWIllegalMode != GTZC_MPCBB_SRWILADIS_DISABLE)) ||
+      ((pMPCBB_desc->InvertSecureState != GTZC_MPCBB_INVSECSTATE_NOT_INVERTED) &&
+       (pMPCBB_desc->InvertSecureState != GTZC_MPCBB_INVSECSTATE_INVERTED)))
   {
     return HAL_ERROR;
   }
+#endif /* defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U) */
 
-  /* write InvertSecureState and SecureRWIllegalMode properties */
-  /* assume their Position/Mask is identical for all sub-blocks */
-  reg_value = pMPCBB_desc->InvertSecureState;
-  reg_value |= pMPCBB_desc->SecureRWIllegalMode;
   if (IS_GTZC_BASE_ADDRESS(SRAM1, MemBaseAddress))
   {
     mpcbb_ptr = GTZC_MPCBB1;
@@ -583,13 +750,17 @@ HAL_StatusTypeDef HAL_GTZC_MPCBB_ConfigMem(uint32_t MemBaseAddress,
     mem_size = GTZC_MEM_SIZE(SRAM2);
   }
 #if defined(GTZC_MPCBB6)
-  else
+  else if (IS_GTZC_BASE_ADDRESS(SRAM6, MemBaseAddress))
   {
     /* Here MemBaseAddress is inside SRAM6 (parameter already checked) */
     mpcbb_ptr = GTZC_MPCBB6;
     mem_size = GTZC_MEM_SIZE(SRAM6);
   }
 #endif /* GTZC_MPCBB6 */
+  else
+  {
+    return HAL_ERROR;
+  }
 
   /* translate mem_size in number of super-blocks  */
   size_in_superblocks = (mem_size / GTZC_MPCBB_SUPERBLOCK_SIZE);
@@ -602,6 +773,10 @@ HAL_StatusTypeDef HAL_GTZC_MPCBB_ConfigMem(uint32_t MemBaseAddress,
   }
 
 #if defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
+  /* write InvertSecureState and SecureRWIllegalMode properties */
+  /* assume their Position/Mask is identical for all sub-blocks */
+  reg_value = pMPCBB_desc->InvertSecureState;
+  reg_value |= pMPCBB_desc->SecureRWIllegalMode;
   /* write SECCFGR register information */
   for (i = 0U; i < size_in_superblocks; i++)
   {
@@ -635,14 +810,6 @@ HAL_StatusTypeDef HAL_GTZC_MPCBB_GetConfigMem(uint32_t MemBaseAddress,
   uint32_t size_in_superblocks;
   uint32_t i;
 
-  /* check entry parameters */
-  if (!(IS_GTZC_BASE_ADDRESS(SRAM1, MemBaseAddress))
-      && !(IS_GTZC_BASE_ADDRESS(SRAM2, MemBaseAddress))
-      && !(IS_GTZC_BASE_ADDRESS(SRAM6, MemBaseAddress)))
-  {
-    return HAL_ERROR;
-  }
-
   /* read InvertSecureState and SecureRWIllegalMode properties */
   /* assume their Position/Mask is identical for all sub-blocks */
   if (IS_GTZC_BASE_ADDRESS(SRAM1, MemBaseAddress))
@@ -656,12 +823,16 @@ HAL_StatusTypeDef HAL_GTZC_MPCBB_GetConfigMem(uint32_t MemBaseAddress,
     mem_size = GTZC_MEM_SIZE(SRAM2);
   }
 #if defined(GTZC_MPCBB6)
-  else
+  else if (IS_GTZC_BASE_ADDRESS(SRAM6, MemBaseAddress))
   {
     mpcbb_ptr = GTZC_MPCBB6;
     mem_size = GTZC_MEM_SIZE(SRAM6);
   }
 #endif /* GTZC_MPCBB6 */
+  else
+  {
+    return HAL_ERROR;
+  }
 
   /* translate mem_size in number of super-blocks  */
   size_in_superblocks = (mem_size / GTZC_MPCBB_SUPERBLOCK_SIZE);

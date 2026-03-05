@@ -644,8 +644,6 @@ HAL_StatusTypeDef HAL_UART_DeInit(UART_HandleTypeDef *huart)
 
   huart->gState = HAL_UART_STATE_BUSY;
 
-  __HAL_UART_DISABLE(huart);
-
   huart->Instance->CR1 = 0x0U;
   huart->Instance->CR2 = 0x0U;
   huart->Instance->CR3 = 0x0U;
@@ -3751,6 +3749,8 @@ static void UART_DMATransmitCplt(DMA_HandleTypeDef *hdma)
   /* Check if DMA in circular mode */
   if (hdma->Mode != DMA_LINKEDLIST_CIRCULAR)
   {
+    huart->TxXferCount = 0U;
+
     /* Disable the DMA transfer for transmit request by resetting the DMAT bit
        in the UART CR3 register */
     ATOMIC_CLEAR_BIT(huart->Instance->CR3, USART_CR3_DMAT);
@@ -3801,6 +3801,8 @@ static void UART_DMAReceiveCplt(DMA_HandleTypeDef *hdma)
   /* Check if DMA in circular mode */
   if (hdma->Mode != DMA_LINKEDLIST_CIRCULAR)
   {
+    huart->RxXferCount = 0U;
+
     /* Disable PE and ERR (Frame error, noise error, overrun error) interrupts */
     ATOMIC_CLEAR_BIT(huart->Instance->CR1, USART_CR1_PEIE);
     ATOMIC_CLEAR_BIT(huart->Instance->CR3, USART_CR3_EIE);
@@ -3827,6 +3829,8 @@ static void UART_DMAReceiveCplt(DMA_HandleTypeDef *hdma)
      If Reception till IDLE event has been selected : use Rx Event callback */
   if (huart->ReceptionType == HAL_UART_RECEPTION_TOIDLE)
   {
+    huart->RxXferCount = 0;
+
     /* Check current nb of data still to be received on DMA side.
        DMA Normal mode, remaining nb of data will be 0
        DMA Circular mode, remaining nb of data is reset to RxXferSize */

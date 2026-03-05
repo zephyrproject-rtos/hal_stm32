@@ -82,6 +82,8 @@ extern "C" {
 #if defined(USB_OTG_HS)
 /* USB_OTG_HS SRAM power-down in Stop modes */
 #define PWR_USB_OTG_HS_SRAM_STOP_RETENTION   PWR_CR2_PRAMPDS      /*!< USB_OTG_HS SRAM content retained in Stop modes */
+#elif defined(PWR_STOP3_SUPPORT) && defined (STM32WBA25xx)
+#define PWR_USB_SRAM_STOP_RETENTION          PWR_CR2_PRAMPDS      /*!< USB SRAM content retained in Stop modes */
 #endif /* defined(USB_OTG_HS) */
 
 /* PKA SRAM power-down in Stop modes */
@@ -420,7 +422,14 @@ extern "C" {
                                                   ((RAMCONTENT) == PWR_USB_OTG_HS_SRAM_STOP_RETENTION)   ||\
                                                   ((RAMCONTENT) == PWR_PKA_SRAM_STOP_RETENTION))
 #else
-#if   defined(PWR_STOP3_SUPPORT)
+#if defined(PWR_STOP3_SUPPORT) && defined (STM32WBA25xx)
+#define IS_PWR_RAM_STOP_RETENTION(RAMCONTENT)    (((RAMCONTENT) == PWR_SRAM1_FULL_STOP_RETENTION)    ||\
+                                                  ((RAMCONTENT) == PWR_SRAM2_PAGE1_STOP_RETENTION)   ||\
+                                                  ((RAMCONTENT) == PWR_SRAM2_PAGE2_STOP_RETENTION)   ||\
+                                                  ((RAMCONTENT) == PWR_SRAM2_FULL_STOP_RETENTION)    ||\
+                                                  ((RAMCONTENT) == PWR_USB_SRAM_STOP_RETENTION)      ||\
+                                                  ((RAMCONTENT) == PWR_PKA_SRAM_STOP_RETENTION))
+#elif defined(PWR_STOP3_SUPPORT)
 #define IS_PWR_RAM_STOP_RETENTION(RAMCONTENT)    (((RAMCONTENT) == PWR_SRAM1_FULL_STOP_RETENTION)    ||\
                                                   ((RAMCONTENT) == PWR_SRAM2_PAGE1_STOP_RETENTION)   ||\
                                                   ((RAMCONTENT) == PWR_SRAM2_PAGE2_STOP_RETENTION)   ||\
@@ -436,7 +445,7 @@ extern "C" {
                                                   ((RAMCONTENT) == PWR_SRAM2_FULL_STOP_RETENTION)    ||\
                                                   ((RAMCONTENT) == PWR_ICACHE_FULL_STOP_RETENTION)   ||\
                                                   ((RAMCONTENT) == PWR_PKA_SRAM_STOP_RETENTION))
-#endif /* defined(PWR_STOP3_SUPPORT) */
+#endif /* defined(PWR_STOP3_SUPPORT) && defined (STM32WBA25xx) */
 #endif /* defined(USB_OTG_HS) */
 #else
 #define IS_PWR_RAM_STOP_RETENTION(RAMCONTENT)    (((RAMCONTENT) == PWR_SRAM1_FULL_STOP_RETENTION) ||\

@@ -2144,7 +2144,7 @@ HAL_StatusTypeDef HAL_DMAEx_List_InsertQ(DMA_QListTypeDef *const pSrcQList,
   uint32_t cllr_mask;
   uint32_t cllr_offset;
   DMA_NodeInQInfoTypeDef src_q_node_info;
-  DMA_NodeInQInfoTypeDef dest_q_node_info;
+  DMA_NodeInQInfoTypeDef dest_q_node_info = {0};
 
   /* Check the source and destination queues and the previous node parameters */
   if ((pSrcQList == NULL) || (pDestQList == NULL))

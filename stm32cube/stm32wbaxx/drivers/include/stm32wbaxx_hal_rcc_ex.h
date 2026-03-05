@@ -1047,7 +1047,18 @@ uint32_t          HAL_RCCEx_GetAudioSyncCaptureValue(void);
   * @{
   */
 /* Define used for IS_RCC_* macros below */
-#if   defined (STM32WBA54xx) || defined (STM32WBA55xx) || defined(STM32WBA5Mxx)
+#if defined (STM32WBA20xx)
+#define RCC_PERIPHCLOCK_ALL             (RCC_PERIPHCLK_USART1  | RCC_PERIPHCLK_SYSTICK | RCC_PERIPHCLK_TIMIC  | \
+                                         RCC_PERIPHCLK_RNG     | RCC_PERIPHCLK_LPUART1 | RCC_PERIPHCLK_SPI3   | \
+                                         RCC_PERIPHCLK_I2C3    | RCC_PERIPHCLK_LPTIM1  | RCC_PERIPHCLK_ADC    | \
+                                         RCC_PERIPHCLK_RTC     | RCC_PERIPHCLK_RADIOST | RCC_PERIPHCLK_AUDIOSYNC)
+#elif defined (STM32WBA23xx) || defined (STM32WBA25xx)
+#define RCC_PERIPHCLOCK_ALL             (RCC_PERIPHCLK_USART1  | RCC_PERIPHCLK_I2C1    | RCC_PERIPHCLK_LPTIM2 | \
+                                         RCC_PERIPHCLK_SYSTICK | RCC_PERIPHCLK_TIMIC   | RCC_PERIPHCLK_SAI1   | \
+                                         RCC_PERIPHCLK_RNG     | RCC_PERIPHCLK_LPUART1 | RCC_PERIPHCLK_SPI3   | \
+                                         RCC_PERIPHCLK_I2C3    | RCC_PERIPHCLK_LPTIM1  | RCC_PERIPHCLK_ADC    | \
+                                         RCC_PERIPHCLK_RTC     | RCC_PERIPHCLK_RADIOST | RCC_PERIPHCLK_AUDIOSYNC)
+#elif defined (STM32WBA54xx) || defined (STM32WBA55xx) || defined(STM32WBA5Mxx)
 #if !defined (STM32WBAXX_SI_CUT1_0)
 #define RCC_PERIPHCLOCK_ALL             (RCC_PERIPHCLK_USART1  | RCC_PERIPHCLK_USART2 | RCC_PERIPHCLK_I2C1    | \
                                          RCC_PERIPHCLK_LPTIM2  | RCC_PERIPHCLK_SPI1   | RCC_PERIPHCLK_SYSTICK | \
