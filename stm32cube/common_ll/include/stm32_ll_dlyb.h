@@ -14,4 +14,6 @@
 #include <stm32u3xx_ll_dlyb.h>
 #elif defined(CONFIG_SOC_SERIES_STM32U5X)
 #include <stm32u5xx_ll_dlyb.h>
+#elif defined(CONFIG_SOC_SERIES_STM32WBAX)
+#include <stm32wbaxx_ll_dlyb.h>
 #endif
