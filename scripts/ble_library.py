@@ -104,8 +104,6 @@ file_list_wba = {
     ],
     "RF_Integration/STM32_WPAN": [
         ble_transparent_mode_app_path + "/STM32_WPAN/Target/power_table.c",
-        ble_transparent_mode_app_path + "/STM32_WPAN/Target/bpka.c",
-        ble_transparent_mode_app_path + "/STM32_WPAN/Target/bpka.h",
         ble_transparent_mode_app_path + "/STM32_WPAN/Target/linklayer_plat.c",
         ble_transparent_mode_app_path + "/STM32_WPAN/Target/ll_sys_if.c",
         ble_transparent_mode_app_path + "/STM32_WPAN/Target/ll_sys_if.h",
@@ -137,8 +135,6 @@ file_list_wba = {
         "Projects/Common/WPAN/Interfaces/hw.h",
         "Projects/Common/WPAN/Interfaces/hw_aes.c",
         "Projects/Common/WPAN/Interfaces/hw_if.h",
-        "Projects/Common/WPAN/Interfaces/hw_pka.c",
-        "Projects/Common/WPAN/Interfaces/hw_pka_p256.c",
     ],
     "Utilities": [
         "Utilities/trace/adv_trace/stm32_adv_trace.h",
