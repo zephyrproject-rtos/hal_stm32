@@ -93,4 +93,12 @@ Patch List:
     Seel also:
      https://github.com/zephyrproject-rtos/hal_stm32/pull/345
 
+   *Fix XSPIM initialization sequence for XSPI3
+     Don't forget to enable XSPI3 clock back when leaving.
+    Impacted files:
+      stm32cube/stm32n6xx/drivers/src/stm32n6xx_hal_xspi.c
+    Internal reference: 212765 (last part)
+    See also:
+      https://github.com/zephyrproject-rtos/hal_stm32/pull/340
+
    See release_note.html from STM32Cube
