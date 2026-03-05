@@ -1,4 +1,9 @@
-/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/2.00a-lca04/firmware/public_inc/ral.h#1 $*/
+/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/branches/P10164613/2.00a-lca05_CombinedPatchV2/firmware/public_inc/ral.h#2 $*/
+/*
+ * Version Info
+ * V1: Original 2.00a-lca05_CombinedPatchV2
+ * V2: Patch for Temperature Calibration
+ */
 /**
  ********************************************************************************
  * @file    ral.h
@@ -13,7 +18,7 @@
  * Copyright (c) 2020-Present Synopsys, Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of the software and
- * associated documentation files (the “Software”), to deal in the Software without restriction, including
+ * associated documentation files (the ?Software?), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
  * of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
  * following conditions:
@@ -223,7 +228,7 @@ typedef struct _ral_pkt_st {
 		int8_t tx_power;				///< Power of transmitted packet
 		uint8_t last_tx_pkt;			///< Last transmitted packet flag
 		uint8_t csl_frame;			    ///< True only if the current TX frame is a CSL frame
-		uint8_t is_poll_req;		    ///< True only if the current TX frame is a poll reuest frame
+		uint8_t is_poll_req;		    ///< True only if the current TX frame is a poll request frame
         } tx_info;
 
         struct
@@ -522,11 +527,11 @@ enum error_flags_shift{
 
 /** Start of frame delimiter length as defined in OQPSK phy in MAC 802.15.4 std */
 #define DEFAULT_MAC_SFD_LENGTH 			1
-/** Preample length as defined in OQPSK phy in MAC 802.15.4 std */
+/** Preamble length as defined in OQPSK phy in MAC 802.15.4 std */
 #define DEFAULT_MAC_PREAMBLE_LENGTH 	4
 /** Start of frame delimiter value as defined in OQPSK phy in MAC 802.15.4 std */
 #define DEFAULT_MAC_SFD_VALUE			0xA7
-/** Preample value as defined in OQPSK phy in MAC 802.15.4 std */
+/** Preamble value as defined in OQPSK phy in MAC 802.15.4 std */
 #define DEFAULT_MAC_PEAMBLE_VALUE		0x0
 
 #if(SUPPORT_A_MAC)
@@ -538,7 +543,7 @@ enum error_flags_shift{
 /** Custom start of frame delimiter value used in 1M phy_rate */
 #define DEFAULT_A_MAC_SFD_VALUE_1M			0x71764129
 /** Custom preample value used in 1M phy rate */
-#define DEFAULT_A_MAC_PEAMBLE_VALUE_1M		0xAA
+#define DEFAULT_A_MAC_PEAMBLE_VALUE_1M		0x55
 
 /* 2M preamble and SFD used only in A_MAC */
 /** Custom start of frame delimiter length used in 2M phy_rate */
@@ -548,7 +553,7 @@ enum error_flags_shift{
 /** Custom start of frame delimiter value used in 2M phy_rate */
 #define DEFAULT_A_MAC_SFD_VALUE_2M			0x71764129
 /** Custom preample value used in 2M phy rate */
-#define DEFAULT_A_MAC_PEAMBLE_VALUE_2M		0xAAAA
+#define DEFAULT_A_MAC_PEAMBLE_VALUE_2M		0x5555
 #endif
 
 /* Bitfield sizes defined for MAC descriptor */
@@ -734,13 +739,42 @@ ral_error_enum_t ral_set_ant_div_rssi_threshold(ral_instance_t ral_instance, int
 /**
  * @}
  */
-#if((!SUPPORT_COEXISTENCE && DEFAULT_PHY_CALIBRATION_PERIOD))
+#if DEFAULT_PHY_CALIBRATION_PERIOD
+#if !SUPPORT_COEXISTENCE
 /**
  * @brief	Execute PHY periodic calibration
  *
  */
 void ral_exec_phy_prdc_clbr(void);
-#endif
+#endif /* !SUPPORT_COEXISTENCE */
+
+/**
+ * @brief Check whether a MAC channel is about to be calibrated.
+ *
+ * @param[in] channel : MAC channel
+ * @return TRUE to run the MAC channel calibration, FALSE to postpone it.
+ */
+uint8_t ral_is_about_to_clbr_mac_ch(uint8_t channel);
+
+/**
+ * @brief Set the PHY calibration state for a MAC channel to pending.
+ *
+ * @param[in] channel : MAC channel
+ */
+void ral_set_mac_chnl_clbr_pending(uint8_t channel);
+
+/**
+ * @brief Execute pending MAC channels calibration
+ *
+ */
+void ral_exec_mac_ch_phy_clbr_pending(void);
+/**
+ * @brief Get the duration of single MAC channel calibration in sleep timer steps
+ *
+ * @return Duration of single MAC channel calibration in sleep timer steps
+ */
+uint32_t ral_get_mac_ch_clbr_durn(void);
+#endif /* DEFAULT_PHY_CALIBRATION_PERIOD */
 /**  @ingroup ral_intf_cmn
 *  @{
 */
@@ -1424,6 +1458,11 @@ void radio_set_implicitbroadcast(uint8_t ImplicitBroadcast);
  * @param[in] ImplicitBroadcast	: Value for MAC implicit broadcast PIB to be set
  */
 void ral_set_implicitbroadcast(ral_instance_t ral_instance, uint8_t ImplicitBroadcast);
+/**
+ * @brief Update polling time value when sleep clock source is changed
+ *
+ */
+void ral_update_polling_time_on_slp_src_change(void);
 /**
  * @brief	Energy detection timer event handle
  *

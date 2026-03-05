@@ -1,4 +1,4 @@
-/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/2.00a-lca04/firmware/public_inc/ll_intf.h#1 $*/
+/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/branches/P10164613/2.00a-lca05_CombinedPatchV2/firmware/public_inc/ll_intf.h#5 $*/
 /**
  ********************************************************************************
  * @file    ll_intf_cmds.h
@@ -139,7 +139,7 @@ typedef enum _ble_adv_event_type_e {
  */
 typedef enum dev_addr_type {
 	PUBLIC, RANDOM, PUBLIC_ID, RANDOM_STATIC_ID, INVALID_TYPE,
-	ANNONYMOUS = 0xFF
+	ANONYMOUS = 0xFF
 } dev_addr_type_e;
 
 /**
@@ -268,12 +268,12 @@ typedef struct _ble_intf_prdc_adv_sync_transfer_report_st {
 	uint8_t advertiser_address_type;   /* Advertiser address type */
 	uint8_t advertiser_phy;            /* Advertiser PHY */
 	uint8_t advertiser_clock_accuracy; /* Clock accuracy used by advertise */
-#if SUPPORT_LE_PAWR_SYNC_ROLE
+#if (SUPPORT_LE_PAWR_SYNC_ROLE)||(CFG_LL_BLE_INTERFACE_COMPATIBILITY)
 	uint8_t num_subevnts; /* Number of subevents */
 	uint8_t subevnt_intrvl; /* Interval between subevents */
 	uint8_t rsp_slot_delay; /* Time bet the adv packet in a subevent and the first response slot */
 	uint8_t rsp_slot_spacing; /* Time between response slots */
-#endif /*SUPPORT_LE_PAWR_SYNC_ROLE*/
+#endif /*(SUPPORT_LE_PAWR_SYNC_ROLE)||(CFG_LL_BLE_INTERFACE_COMPATIBILITY)*/
 } ble_intf_prdc_adv_sync_transfer_report_st ;
 #endif /* SUPPORT_PERIODIC_SYNC_TRANSFER */
 
@@ -405,9 +405,9 @@ typedef struct _ble_intf_create_big_common_param_cmd_st{
 	uint8_t adv_hndle;   /* identifies the associated periodic advertising train of the BIG */
 	uint8_t pack;           /* the preferred method of arranging subevents of multiple BISes*/
 	uint8_t framing;    /* indicates the format for sending BIS Data PDUs (framed or unframed)*/
-#if SUPPORT_ISO_UNSEG_MODE
+#if (SUPPORT_ISO_UNSEG_MODE)
 	uint8_t seg_mode;	/* indicates the framing mode: Segmented Framed or Unsegmented Framed */
-#endif /* SUPPORT_ISO_UNSEG_MODE */
+#endif /*(SUPPORT_ISO_UNSEG_MODE)*/
 	tx_rx_phy_e phy;             /* the PHY used for transmission of PDUs of BISes in the BIG */
 	ble_intf_big_common_sync_bc_cmd_st big_common_sync_bc; /* common parameters between the synchronizer and broadcaster */
 }ble_intf_create_big_common_param_cmd_st;
@@ -589,11 +589,11 @@ typedef struct _ble_intf_ext_create_conn_cmd_st
 {
 	st_ble_intf_ext_create_conn* ptr_ext_create_conn; /* ptr to extended create connection parameters */
 	uint8_t* ptr_peer_address; /* ptr to the Peer address*/
-#if SUPPORT_LE_PAWR_ADVERTISER_ROLE
+#if (SUPPORT_LE_PAWR_ADVERTISER_ROLE)||(CFG_LL_BLE_INTERFACE_COMPATIBILITY)
 	enum_ext_create_conn_ver ext_create_conn_ver; /* to Indicate which hci command version sent from the host*/
 	uint8_t adv_hndl;/* Advertising_Handle identifying the periodic advertising train */
 	uint8_t subevent;/* Subevent where the connection request is to be sent */
-#endif /*SUPPORT_LE_PAWR_ADVERTISER_ROLE */
+#endif /*(SUPPORT_LE_PAWR_ADVERTISER_ROLE)||(CFG_LL_BLE_INTERFACE_COMPATIBILITY)*/
 	uint8_t initiator_filter_policy; /* used to determine whether the Filter Accept List is used */
 	uint8_t own_address_type; /* indicates the type of address used in the connection request packets */
 	uint8_t peer_address_type; /* indicates the type of address used in the connectable advertisement sent by the peer */
@@ -605,14 +605,14 @@ typedef struct _ble_set_prdc_adv_param_st
 	uint16_t prdc_adv_intrvl_min;/* Minimum advertising interval for periodic advertising */
 	uint16_t prdc_adv_intrvl_max;/* Maximum advertising interval for periodic advertising */
 	uint16_t prdc_adv_prpts; /* Include TxPower in the advertising PDU */
-#if SUPPORT_LE_PAWR_ADVERTISER_ROLE
+#if (SUPPORT_LE_PAWR_ADVERTISER_ROLE)||(CFG_LL_BLE_INTERFACE_COMPATIBILITY)
 	enum_prdc_adv_param_ver prdc_adv_param_ver; /* to Indicate which hci command version sent from the host*/
 	uint8_t num_subevents; /* identifiers the number of subevents that shall be transmitted for each periodic advertising event*/
 	uint8_t subevent_intrvl; /* time between the subevents of PAwR*/
 	uint8_t res_slot_delay; /* Time bet the adv packet in a subevent and the first response slot */
 	uint8_t res_slot_spacing; /* Time between response slots */
 	uint8_t num_res_slots; /* Number of subevent response slots */
-#endif /*SUPPORT_LE_PAWR_ADVERTISER_ROLE */
+#endif /*(SUPPORT_LE_PAWR_ADVERTISER_ROLE)||(CFG_LL_BLE_INTERFACE_COMPATIBILITY)*/
 }ble_set_prdc_adv_param_st;
 
 typedef struct _ble_enhanced_conn_cmplt_evnt_st
@@ -626,12 +626,12 @@ typedef struct _ble_enhanced_conn_cmplt_evnt_st
 	uint16_t conn_intrvl;/*Connection interval used on this connection.*/
 	uint16_t slave_ltncy;/*Slave latency for the connection in number of connection events.*/
 	uint16_t suprvsn_tout;/*Supervision timeout for the connection requested by the remote device.*/
-#if (SUPPORT_LE_PAWR_ADVERTISER_ROLE)||(SUPPORT_LE_PAWR_SYNC_ROLE)
+#if (SUPPORT_LE_PAWR_ADVERTISER_ROLE)||(SUPPORT_LE_PAWR_SYNC_ROLE)||(CFG_LL_BLE_INTERFACE_COMPATIBILITY)
 	uint16_t sync_handle;/*Used to identify the periodic advertising train*/
 	uint8_t adv_handle;/*Used to identify an advertising set*/
-#endif /*(SUPPORT_LE_PAWR_ADVERTISER_ROLE)||(SUPPORT_LE_PAWR_SYNC_ROLE)*/
+#endif /*(SUPPORT_LE_PAWR_ADVERTISER_ROLE)||(SUPPORT_LE_PAWR_SYNC_ROLE)||(CFG_LL_BLE_INTERFACE_COMPATIBILITY)*/
 	uint8_t peer_addr_type;/*Peer address type*/
-	uint8_t master_clk_accurcy;/*Master clock acuracy.*/
+	uint8_t master_clk_accurcy;/*Master clock accuracy.*/
 }ble_enhanced_conn_cmplt_evnt_st;
 
 typedef struct _ble_prdc_adv_sync_estblshd_st
@@ -644,12 +644,12 @@ typedef struct _ble_prdc_adv_sync_estblshd_st
 	uint8_t adv_addrs_type;/*address type of the advertiser */
 	uint8_t adv_phy; /*advertiser PHY */
 	uint8_t adv_clk_accuracy;/*Advertiser Clock Accuracy*/
-#if SUPPORT_LE_PAWR_SYNC_ROLE
+#if (SUPPORT_LE_PAWR_SYNC_ROLE)||(CFG_LL_BLE_INTERFACE_COMPATIBILITY)
 	uint8_t num_subevnts; /* Number of subevents */
 	uint8_t subevnt_intrvl; /* Interval between subevents */
 	uint8_t rsp_slot_delay; /* Time bet the adv packet in a subevent and the first response slot */
 	uint8_t rsp_slot_spacing; /* Time between response slots */
-#endif /*SUPPORT_LE_PAWR_SYNC_ROLE*/
+#endif /*(SUPPORT_LE_PAWR_SYNC_ROLE)||(CFG_LL_BLE_INTERFACE_COMPATIBILITY)*/
 }ble_prdc_adv_sync_estblshd_st;
 
 /*============ PAWR ============ */
@@ -697,10 +697,10 @@ typedef struct _ble_set_prdc_adv_subevnt_data_st
 typedef struct _ble_prdc_adv_rprt_st
 {
 	ble_buff_hdr_t *ptr_data;/*ptr to Data received from a Periodic Advertising packet.*/
-#if SUPPORT_LE_PAWR_SYNC_ROLE
+#if (SUPPORT_LE_PAWR_SYNC_ROLE)||(CFG_LL_BLE_INTERFACE_COMPATIBILITY)
 	uint16_t prdc_evnt_counter;/*The value of paEventCounter for the reported periodic advertising packet*/
 	uint8_t subevnt;/*indicates the PAWR subevent that the periodic advertising packet was received in*/
-#endif /*SUPPORT_LE_PAWR_SYNC_ROLE*/
+#endif /*(SUPPORT_LE_PAWR_SYNC_ROLE)||(CFG_LL_BLE_INTERFACE_COMPATIBILITY)*/
 	uint8_t tx_power;/*Tx Power information*/
 	int8_t rssi;/*RSSI value*/
 	uint8_t cte_type;/* indicates the type of Constant Tone Extension in the periodic advertising packets*/
@@ -747,7 +747,7 @@ typedef struct _ble_mntrd_add_adv_device_st
 typedef struct _le_set_connless_cte_tx_params_cmd_st
 {
 	uint8_t adv_handle;
-	uint8_t cte_len;		/* Length of the Constant Tone Extension in 8 us units. Range:[0x02 – 0x14]
+	uint8_t cte_len;		/* Length of the Constant Tone Extension in 8 us units. Range:[0x02 - 0x14]
 	 	 	 	 	   0x00: means Do not transmit a Constant Tone Extension */
 	uint8_t cte_type;		/* 0x00: AoA CTE
 					   0x01: AoD CTE with 1 us slots
@@ -1023,7 +1023,7 @@ typedef struct _le_frame_space_updt_cmd_st
 /* BLE_6.0 Channel Sounding Commands */
 
 /**
- * @brief CS capability exchange parameters (hold the local/peer device capabilites)
+ * @brief CS capability exchange parameters (hold the local/peer device capabilities)
  * 	used on the following commands/events:
  * 		LE_CS_Read_Local_Supported_Capabilities command
  * 		LE_CS_Write_Cached_Remote_Supported_Capabilities command
@@ -1044,9 +1044,9 @@ typedef struct _ble_cs_capabilities_cmd_st {
 	uint8_t roles_supported;						/* indicates the supported roles by the controller (bit 0: Initiator, bit 1: Reflector) */
 	uint8_t optional_modes_supported;				/* indicates the support for optional mode (mode_3) by the controller (bit 0: mode-3) */
 	uint8_t rtt_capability;							/* indicates the time-of-flight measurement precision for each of the following methods (bit 0: AA_Only, bit 1: Sounding, bit 2: Random_Payload) */
-	uint8_t rtt_aa_only_n;							/* number of CS SYNC packets needed to fulfill the precision specified on rtt_capability for CS SYNC packets with access address only (range: 0x01 to 0xFF, 0x00 inidicates that RTT coarse is unsupported) */
-	uint8_t rtt_sounding_n;							/* number of CS SYNC packets needed to fulfill the precision specified on rtt_capability for CS SYNC packets with sounding sequence (range: 0x01 to 0xFF, 0x00 inidicates that RTT sounding sequence is unsupported) */
-	uint8_t rtt_random_payload_n;					/* number of CS SYNC packets needed to fulfill the precision specified on rtt_capability for CS SYNC packets with random sequence (range: 0x01 to 0xFF, 0x00 inidicates that RTT random sequence is unsupported) */
+	uint8_t rtt_aa_only_n;							/* number of CS SYNC packets needed to fulfill the precision specified on rtt_capability for CS SYNC packets with access address only (range: 0x01 to 0xFF, 0x00 indicates that RTT coarse is unsupported) */
+	uint8_t rtt_sounding_n;							/* number of CS SYNC packets needed to fulfill the precision specified on rtt_capability for CS SYNC packets with sounding sequence (range: 0x01 to 0xFF, 0x00 indicates that RTT sounding sequence is unsupported) */
+	uint8_t rtt_random_payload_n;					/* number of CS SYNC packets needed to fulfill the precision specified on rtt_capability for CS SYNC packets with random sequence (range: 0x01 to 0xFF, 0x00 indicates that RTT random sequence is unsupported) */
 	uint8_t optional_cs_sync_phys_supported;		/* indicates the support for optional phy for CS SYNC packets (LE 2M PHY) by the controller (bit 1: LE 2M PHY support) */
 	uint8_t t_sw_supported;							/* indicates the supported T_SW values by the controller (supported values: 0x01 [1 us], 0x02 [2 us], 0x04 [4 us], 0x0A [10 us]) */
 	uint8_t tx_snr_capability;
@@ -1059,16 +1059,16 @@ typedef struct _ble_cs_capabilities_cmd_st {
  */
 typedef struct _ble_cs_prcdr_params_cmd_st {
 	uint32_t min_subevent_len;			/* indicates the suggested minimum subevent duration in microseconds (range: 0x0004E2 [1250 us] to 0x3D0900 [4 s]) */
-	uint32_t max_subevent_len;			/* indicates the suggested maximun subevent duration in microseconds (range: 0x0004E2 [1250 us] to 0x3D0900 [4 s]) */
+	uint32_t max_subevent_len;			/* indicates the suggested maximum subevent duration in microseconds (range: 0x0004E2 [1250 us] to 0x3D0900 [4 s]) */
 	uint16_t max_procedure_len;			/* indicates the maximum duration of a single cs procedure in 0.625 ms units (range: 0x0001 [0.625 ms] to 0xFFFF [40.959375 s]) */
 	uint16_t min_procedure_interval;	/* indicates the minimum number of connection events for consecuitive cs procedure interval (range: 0x0001 to 0xFFFF, 0x0000 is ignored in case of max_procedure_count = 1 else 0x0000 is RFU) */
 	uint16_t max_procedure_interval;	/* indicates the maximum number of connection events for consecuitive cs procedure interval (range: 0x0001 to 0xFFFF, 0x0000 is ignored in case of max_procedure_count = 1 else 0x0000 is RFU) */
-	uint16_t max_procedure_count;		/* indicates the maximum number of scheduled cs procedure (range: 0x0001 to 0xFFFF, 0x0000 indicates continuous cs procedures untill disabled) */
+	uint16_t max_procedure_count;		/* indicates the maximum number of scheduled cs procedure (range: 0x0001 to 0xFFFF, 0x0000 indicates continuous cs procedures until disabled) */
 	uint8_t config_id;					/* indicates the configuration identifier to be used for the current cs procedure (range: 0 to 3) */
 	uint8_t tone_ant_cfg_slct;			/* indicates the antenna configuration index (range: 0x00 to 0x07) */
 	uint8_t phy;						/* indicates the phy constrained with tx_pwr_delta parameter (0x01: LE_1M_PHY, 0x02: LE_2M_PHY) */
 	uint8_t preferred_peer_antenna;		/* indicates the local device preferred antenna elements to be used by the remote device in antenna configuration index selection (bitfield of 4 bits, range: 0x00 to 0x0F) */
-	int8_t tx_pwr_delta;				/* indicates the recomended difference between remote device power and the output power level of the phy specified in dB (range: 0x81 [-127 dB] to 0x7F [127 dB], 0x80 indicates that no recommended difference) */
+	int8_t tx_pwr_delta;				/* indicates the recommended difference between remote device power and the output power level of the phy specified in dB (range: 0x81 [-127 dB] to 0x7F [127 dB], 0x80 indicates that no recommended difference) */
 	uint8_t snr_ctrl_init;                 /* indicates the SNR control adjustment for the CS_SYNC transmissions of the initiator. (supported values: 0x00 (18db), 0x01 (21db), 0x02 (24db), 0x03 (27db), 0x04 (30db), 0xFF (Not Applied))*/
 	uint8_t snr_ctrl_refl;                 /* indicates the SNR control adjustment for the CS_SYNC transmissions of the reflector. (supported values: 0x00 (18db), 0x01 (21db), 0x02 (24db), 0x03 (27db), 0x04 (30db), 0xFF (Not Applied))*/
 } ble_cs_prcdr_params_cmd_st;
@@ -1151,7 +1151,7 @@ typedef struct _ble_cs_test_ovrde_param_st {
 	ble_cs_test_ss_marker_pos_st    ss_marker_pos;      /* structure that holds sounding sequence marker position */
 	ble_cs_test_rand_seq_st         rand_seq;           /* structure that holds random sequence */
 	uint8_t                         main_mode_steps;    /* holds number of main mode steps to be shceduled before a sub-mode step being scheduled (not including main_mode_repetition) */
-	uint8_t                         tpm_ext_slots;     /* holds a flag to indicate the presence of tone extention slots */
+	uint8_t                         tpm_ext_slots;     /* holds a flag to indicate the presence of tone extension slots */
 	uint8_t                         ant_perm_idx;       /* holds the antenna permutation index which is used to indicate the antenna switching pattern for CS steps that contains CS tones */
 	uint8_t                         ss_marker_val;      /* holds the value of sounding sequence marker value */
 } ble_cs_test_ovrde_param_st;
@@ -1206,9 +1206,9 @@ typedef struct _ble_cs_test_cmd_st {
 	uint8_t companion_signal_enable;       /* indicates whether the local controller shall enable or disable the companion signal being used and the type of the companion signal in case of being enabled (ranges: 0x00 to 0x03) */
 	uint8_t snr_ctrl_init;                 /* indicates the SNR control adjustment for the CS_SYNC transmissions of the initiator. (supported values: 0x00 (18db), 0x01 (21db), 0x02 (24db), 0x03 (27db), 0x04 (30db), 0xFF (Not Applied))*/
 	uint8_t snr_ctrl_refl;                 /* indicates the SNR control adjustment for the CS_SYNC transmissions of the reflector. (supported values: 0x00 (18db), 0x01 (21db), 0x02 (24db), 0x03 (27db), 0x04 (30db), 0xFF (Not Applied))*/
-	uint8_t chnl_map_rep;                  /* indicates the number of times the channels indicated by the Channel_Map or the Channel field in the Override Parameters is cycled through for non-mode‑0 steps within a CS procedure. (range: 0x01 to 0xFF)*/
+	uint8_t chnl_map_rep;                  /* indicates the number of times the channels indicated by the Channel_Map or the Channel field in the Override Parameters is cycled through for non-mode-0 steps within a CS procedure. (range: 0x01 to 0xFF)*/
 	int8_t  tx_pwr_lvl;                    /* indicates the transmit power level specified (or the nearest supported level) in dbm (range: 0x81 [-127 dbm] to 0x14 [20 dbm], 0x7E and 0x7F are used to set transmitter to minimum and maximum available power level respectively) */
-	uint8_t override_params_length;        /* inidicates override_params_data paramter size in bytes (range: 0 to 255) */
+	uint8_t override_params_length;        /* indicates override_params_data parameter size in bytes (range: 0 to 255) */
 } ble_cs_test_cmd_st;
 
 /* BLE_6.0 Channel Sounding Events */
@@ -1349,7 +1349,7 @@ struct hci_dispatch_tbl {
 	/**
 	 * @brief  The HCI_LE_Request_Peer_SCA_Complete event indicates that the HCI_LE_Request_Peer_SCA command has been completed.
 	 *
-	 * @param  status		: [in] whether the correct PDU is recieved by the controller.
+	 * @param  status		: [in] whether the correct PDU is received by the controller.
 	 * @param  conn_hndl	: [in] is the connection handle of the ACL connection in which the HCI_LE_Request_Peer_SCA command is issued.
 	 * @param  sca			: [in] contains the sleep clock accuracy of the peer.
 	 */
@@ -1476,7 +1476,7 @@ struct hci_dispatch_tbl {
 	/*##### Host Flow Control HCI Group #####*/
 
 	/**
-	 * @brief  used to indicate that the Controller’s data buffers have been overflowed. This can occur if the Host has sent more packets than allowed.
+	 * @brief  used to indicate that the Controller's data buffers have been overflowed. This can occur if the Host has sent more packets than allowed.
 	 *
 	 * @param  link_type : [in] indicate whether the overflow was caused by ACL or synchronous data (in case of BLE: only ACL is used).
 	 */
@@ -1823,7 +1823,7 @@ struct hci_dispatch_tbl {
 	 * @brief notify the Host that Sleep clock accuracy update procedure completed.
 	 *
 	 * @param  status			: HCI_LE_Update_Sleep_Clock_Accuracy command successfully completed.
-	 * @param  sca      		: Recommanded sleep clock accuracy.
+	 * @param  sca      		: Recommended sleep clock accuracy.
 	 */
 	void (*ll_intf_le_update_slp_clk_acc_cmp_evnt) (uint8_t status , uint8_t sca);
 
@@ -1834,7 +1834,7 @@ struct hci_dispatch_tbl {
 	/**
 	 * @brief generated after the execution of CIG or BIG is completed on hardware.
 	 *
-	 * @param  ptr_sync_evnt_params : pointer to sync event paramters.
+	 * @param  ptr_sync_evnt_params : pointer to sync event parameters.
 	 */
 	void (*ll_intf_le_sync_evnt) (ble_intf_sync_evnt_st * ptr_sync_evnt_params);
 #endif /*  (SUPPORT_CONNECTED_ISOCHRONOUS &&( SUPPORT_MASTER_CONNECTION || SUPPORT_SLAVE_CONNECTION) || (SUPPORT_BRD_ISOCHRONOUS) || (SUPPORT_SYNC_ISOCHRONOUS)) */
@@ -1864,7 +1864,7 @@ struct hci_dispatch_tbl {
 	 * @brief generated after the execution of Energy Detection on the host provided channel Map is completed on hardware.
 	 *
 	 * @param  ed_values : Array of Energy Detected Values.
-	 * @param  num_of_chnl : Numer of energy detection channels.
+	 * @param  num_of_chnl : Number of energy detection channels.
 	 */
 	 void (*ll_intf_le_energy_dctn_cmplt_evnt)(uint16_t* ed_values, uint8_t num_of_chnl);
 	#endif /* SUPPORT_AUGMENTED_BLE_MODE */
@@ -1874,7 +1874,7 @@ struct hci_dispatch_tbl {
  * @brief  Send the ISO data from the controller to host.
  *
  * @param  frst_sdu_ptr  	: [in] pointer to the first received sdu_buff_hdr
- * @param  iso_conn_hndl  	: [in] the iso conn_handle  for BIS /CIS in which the SDU is recieved
+ * @param  iso_conn_hndl  	: [in] the iso conn_handle  for BIS /CIS in which the SDU is received
  *
  * @retval None
  */
@@ -2029,7 +2029,7 @@ struct hci_dispatch_tbl {
  * @param  status  				: [in] return status of the event
  * @param  conn_handle_id  		: [in] connection handle identifier
  * @param  config_id  			: [in] configuration identifier
- * @param  action  				: [in] the retuned state of the configuration reported (0x00: remove/diable, 0x01: create/enable)
+ * @param  action  				: [in] the returned state of the configuration reported (0x00: remove/disable, 0x01: create/enable)
  * @param  ptr_cs_config		: [in] pointer to structure hold the config parameters (in case the config is created action=0x01)
  * @param  ptr_cs_step_time		: [in] pointer to structure hold CS step timing parameters (T_IP1, T_IP2, T_FCS and T_PM)
  *
@@ -2111,7 +2111,7 @@ typedef struct _ble_intf_cig_host_param{
 	uint16_t iso_interval;  			/* Time duration of the isochronous interval */
 	uint16_t max_trnsprt_ltncy_m_to_s;	/* Maximum time, in ms, for an SDU to be sent from the master to slave */
 	uint16_t max_trnsprt_ltncy_s_to_m;	/* Maximum time, in ms, for an SDU to be sent from the   slave to master */
-	uint8_t cig_id;						/* CIG Identifer */
+	uint8_t cig_id;						/* CIG Identifier */
 	uint8_t sca;						/* The worst-case sleep clock accuracy of all the slaves */
 	uint8_t pack;						/* the preferred method of arranging subevents of multiple CISes */
 	uint8_t framing;					/* Framed or Unframed SDUs */
@@ -2445,7 +2445,7 @@ ble_stat_t ll_intf_read_cntrlr_ver_info(uint8_t *ptr_vrsn, uint8_t length);
  * 		   (It is implied that if a command is listed as supported, the feature underlying that command is also supported) .
  *
  * @param  supported_cmds : [out] A bit mask for each HCI command, where:
- * 			     If the controller sets a bit to 1, then the controller supports the corresponding command and the features required for the comman, and
+ * 			     If the controller sets a bit to 1, then the controller supports the corresponding command and the features required for the command, and
  * 			     If the controller sets a bit to 0, then this command is unsupported or undefined command .
  *
  * @retval ble_stat_t : Command status to be sent to the Host.
@@ -2857,7 +2857,7 @@ ble_stat_t ll_intf_le_set_privacy_mode(uint8_t peer_id_addr_type,
 /**
  * @brief  Read the value of the transmit power level of certain connection handle.
  *
- * @param  conn_handle_id		: [in]  Specify which Connection_Handle’s Transmit Power Level setting to read.
+ * @param  conn_handle_id		: [in]  Specify which Connection_Handle's Transmit Power Level setting to read.
  * @param  type				: [in]  Type of the transmit power level to be read, whether current transmit power level or maximum transmit power level.
  * @param  transmit_power_level	: [out] Transmit power level value to be returned.
  *
@@ -2867,7 +2867,7 @@ ble_stat_t ll_intf_read_transmit_power_level(uint16_t conn_handle_id,
 	uint8_t type, int8_t *transmit_power_level);
 
 /**
- * @brief  Read the RSSI value for a ceratin connection from the controller.
+ * @brief  Read the RSSI value for a certain connection from the controller.
  *
  * @param  conn_handle_id 	: [in]  Handle for the connection for which the RSSI is to be read.
  * @param  rssi        	: [out] RSSI (Received Signal Strength Indication) value read from the controller.
@@ -3162,7 +3162,7 @@ ble_stat_t ll_intf_le_conn_update(uint16_t conn_handle_id,
 	uint16_t min_ce_length, uint16_t max_ce_length);
 
 /**
- * @brief  is used to accept the remote device’s request to change the connection parameters of the LE connection.
+ * @brief  is used to accept the remote device's request to change the connection parameters of the LE connection.
  *
  * @param  conn_handle_id 		: [in] Connection Handle Id to be used to identify a connection.
  * @param  ptr_new_conn_param 	: [in] Pointer to the new connection parameters.
@@ -3174,7 +3174,7 @@ ble_stat_t ll_intf_le_remote_conn_parm_req_reply(
 	le_rmt_conn_param_req_rply_cmd_st *ptr_new_conn_param);
 
 /**
- * @brief  is used to reject the remote device’s request to change the connection parameters of the LE connection.
+ * @brief  is used to reject the remote device's request to change the connection parameters of the LE connection.
  *
  * @param  conn_handle_id 	   : [in] Connection Handle Id to be used to identify a connection.
  * @param  reason		   : [in] Reason that the connection parameter request was rejected.
@@ -3468,7 +3468,7 @@ ble_stat_t ll_intf_le_set_extended_scan_enable(uint8_t scan_enable,
  * @param  initiator_filter_policy  : [in] Scanning enable/disable flag.
  * @param  own_addr_type		: [in] Filter policy used in initiating state.
  * @param  peer_addr_type		: [in] Peer address type.
- * @param  ptr_peer_address		: [in] Pionter to peer address.
+ * @param  ptr_peer_address		: [in] Pointer to peer address.
  * @param  initiating_phys  	: [in] PHY(s) on which the advertising packets should be received on the primary advertising channel..
  * @param  ptr_ext_create_conn	: [in] Pointer represents extended create connection structure.
  *
@@ -3757,11 +3757,11 @@ ble_stat_t ll_intf_le_read_phy_cmd(uint16_t conn_handle_id, uint8_t *tx_phy,
 	uint8_t *rx_phy);
 
 /**
- * @brief  The LE Set Default PHY command is sent by the host to set the prefered working PHYs for Tx and Rx.
+ * @brief  The LE Set Default PHY command is sent by the host to set the preferred working PHYs for Tx and Rx.
  *
- * @param all_phys : [in]  The Host preferences (use prefered shown in tx_phys and rx_phys / no_preference) for the used PHYs in the TX or RX
- * @param tx_phys  : [in]  The prefered used PHY in the Tx
- * @param rx_phys  : [in]  The prefered used PHY in the Rx
+ * @param all_phys : [in]  The Host preferences (use preferred shown in tx_phys and rx_phys / no_preference) for the used PHYs in the TX or RX
+ * @param tx_phys  : [in]  The preferred used PHY in the Tx
+ * @param rx_phys  : [in]  The preferred used PHY in the Rx
  *
  * @retval status  : [out] 0:SUCCESS, 0xXX:ERROR_CODE.
  *
@@ -3773,9 +3773,9 @@ ble_stat_t ll_intf_le_set_default_phy_cmd(uint8_t all_phys, uint8_t tx_phys,
  * @brief  The LE Set PHY command is used to request a change to the transmitter PHY and receiver PHY for a connection.
  *
  * @param conn_handle_id : [in] Connection_Handle to be used to identify a connection.(Range:0x0000-0x0EFF)
- * @param all_phys 	 : [in] The Host preferences (use prefered shown in tx_phys and rx_phys / no_preference) for the used PHYs in the TX or RX
- * @param tx_phys  	 : [in] The prefered used PHY in the Tx
- * @param rx_phys  	 : [in] The prefered used PHY in the Rx
+ * @param all_phys 	 : [in] The Host preferences (use preferred shown in tx_phys and rx_phys / no_preference) for the used PHYs in the TX or RX
+ * @param tx_phys  	 : [in] The preferred used PHY in the Tx
+ * @param rx_phys  	 : [in] The preferred used PHY in the Rx
  *
  * @retval status        : [out] 0:SUCCESS, 0xXX:ERROR_CODE.
  */
@@ -4069,6 +4069,22 @@ ble_stat_t ll_intf_enable_audio_sync_signal(uint16_t conn_hndle);
 ble_stat_t ll_intf_force_audio_sync_signal_resync(uint16_t conn_hndle, uint8_t force_state);
 #endif /*SUPPORT_SYNC_ISOCHRONOUS*/
 #endif /*SUPPORT_HW_AUDIO_SYNC_SIGNAL*/
+/* BZ 219809 change */
+#if (SUPPORT_CONNECTED_ISOCHRONOUS)
+/*=============== Get CIG information ===============*/
+/**
+ * @brief  Get CIG information.
+ *
+ * @param  cis_handle_id     : [in] the connection handle of CIS
+ *
+ * @param  get_cig_info     : [out] pointer to some CIG parameters to transfer to Codec
+ *
+ * @retval ble_stat_t : Command status to be sent to the Host.
+ */
+ble_stat_t ll_intf_get_cig_info (uint16_t cis_handle_id, ble_intf_get_cig_info_st *get_cig_info);
+
+#endif /*SUPPORT_CONNECTED_ISOCHRONOUS*/
+/* End BZ 219809 change */
 #endif /* ((SUPPORT_BRD_ISOCHRONOUS || SUPPORT_SYNC_ISOCHRONOUS) || (SUPPORT_CONNECTED_ISOCHRONOUS)) */
 
 /*===============  LE Set Get Remaining Time For Next Event ===============*/
@@ -4203,11 +4219,22 @@ void ll_intf_free_ll_pkt(void* pkt);
 
 /*===============  ll_intf_free_ll_pkt_hndlr ===============*/
 /**
- * @brief  This function free both the LL packet and the handler asociated with it.
+ * @brief  This function free both the LL packet and the handler associated with it.
  *
  * @param  pkt  : [in] Pointer to ble_buff_hdr_t that points to the LL packet
  */
 void ll_intf_free_ll_pkt_hndlr(ble_buff_hdr_t* pkt);
+
+/* BZ 223394 change */
+#if((SUPPORT_CONNECTED_ISOCHRONOUS) || (SUPPORT_BRD_ISOCHRONOUS))
+/*===============  ll_intf_free_iso_sdu ===============*/
+/**
+ * @brief  This function free ISO SDU packet..
+ *
+ * @param  iso_buff  : [in] Pointer to the ISO SDU buffer.
+ */
+void ll_intf_free_iso_sdu( const iso_sdu_buf_hdr_p iso_buff );
+#endif
 /**@}
  */
 
@@ -4909,7 +4936,7 @@ ble_stat_t ll_intf_set_tx_free_carrier(uint8_t enable, uint8_t channel_idx);
  * 			(0x1000) isochronous broadcast scanning event
  * 			(0x2000) peripheral in isochronous connection state event
  * 			(0x4000) central in isochronous connection state event
- * 		note that the following values are reserved and will be ignored upon recepient
+ * 		note that the following values are reserved and will be ignored upon reception
  * 			(0x0010, 0x0040, 0x0080, 0x0100, 0x8000)
  *
  * @retval ble_stat_t	     : Command status.
@@ -4924,6 +4951,19 @@ ble_stat_t ll_intf_set_end_of_activity_mask(uint16_t mask);
  * @retval ble_stat_t	: Command status.
  */
 ble_stat_t ll_intf_get_link_status(uint8_t *sm_status, uint8_t *link_conn_handle);
+
+
+/* BZ 143245 change */
+/**
+ * @brief  This function disables or enables the Peripheral latency feature
+ *         during a connection.
+ *
+ * @param  enable [in]	: If set to 0, disable Peripheral latency
+ *                        if set to 1, enable Peripheral latency.
+ * @retval ble_stat_t	: Command status.
+ */
+ble_stat_t ll_intf_set_peripheral_latency(uint8_t enable);
+/* End BZ 143245 change */
 
 #if (SUPPORT_MASTER_CONNECTION && SUPPORT_CHANNEL_CLASSIFICATION)
 /**
@@ -5074,7 +5114,7 @@ ble_stat_t ll_intf_cs_read_local_supported_capabilities(ble_cs_capabilities_cmd_
 
 /**
  * @brief  Used to get the remote supported cpabilities, in case a cached copy exist (if exchanged before with
- *  the peer device or set by the host through cs_write_cached_remote_supported_capabilites command) then use
+ *  the peer device or set by the host through cs_write_cached_remote_supported_capabilities command) then use
  * 	the cached copy, else initiate cs capabilities exchange procedure.
  *
  * @param  conn_handle_id: [IN] connection identifier
@@ -5170,7 +5210,7 @@ ble_stat_t ll_intf_cs_remove_config(uint16_t conn_handle_id, uint8_t config_id);
 
 /**
  * @brief Used to set the cs channel classification to be used
- * 		to figure out the channel map to be used on subseqent
+ * 		to figure out the channel map to be used on subsequent
  *  	CS procedures.
  *
  * @param channel_classification: [IN] pointer to array holding
@@ -5369,7 +5409,7 @@ void ll_intf_set_le_event_mask(uint8_t event_mask[8]);
 
 /*
  * @brief Delete ACL/ISO data related to a specific connection handle
- * @param : [In] ACL or Cis or Bis conenction handle
+ * @param : [In] ACL or Cis or Bis connection handle
  * @retval: UNKNOWN_CONNECTION_IDENTIF if conn_Handle doesn't belong to any state machine. False
  * 			if no data was found for conn_Handle and True if any data was deleted.
  * */
@@ -5434,7 +5474,7 @@ ble_stat_t ll_intf_set_num_of_antennas(uint8_t num_of_antennas);
  * @brief 	Get the number of antennas configured to the controller
  *
  * @param	ptr_num_of_antennas: [out] pointer to a variable hold
- *  			number of antennas retrived
+ *  			number of antennas retrieved
  *
  * @retval status  : [out] 0:SUCCESS, 0xXX:ERROR_CODE.
  */
@@ -5449,7 +5489,7 @@ ble_stat_t ll_intf_get_num_of_antennas(uint8_t *ptr_num_of_antennas);
  *
  * @note   for non-zero values of pckt_count, DTM start on TX mode will trigger sending packets with the specified
  * 		number (pckt_count), if the value of pckt_count is Zero, DTM start on TX mode will trigger sending
- *  		indefinite number of packets untill subsequent DTM stop is called or HCI reset is sent.
+ *  		indefinite number of packets until subsequent DTM stop is called or HCI reset is sent.
  *
  * @retval status  : [out] 0:SUCCESS, 0xXX:ERROR_CODE.
  */
@@ -5458,7 +5498,7 @@ ble_stat_t ll_intf_set_dtm_with_spcfc_pckt_count(uint16_t pckt_count);
 /**
  * @brief  used to update the event timing.
  *
- * @param  p_evnt_timing[in]: pointer to structure containing the new Event timing requested from the Upper layer. All the values passed within should be the worst case timings. The acutal time for each timing is calculated by the link layer.
+ * @param  p_evnt_timing[in]: pointer to structure containing the new Event timing requested from the Upper layer. All the values passed within should be the worst case timings. The actual time for each timing is calculated by the link layer.
  * @param  effective_exec_time[out]: Execution time calculated by the controller.
  *
  * @retval None
@@ -5525,10 +5565,24 @@ void ll_intf_apply_cte_degrad_change(void);
  * @param exec_time  [out]: Max Execution Time
  * @param drift_time [out]: Max Drift Time
  * @param average_drift_time [out]: Average Drift Time
+ * @param reset_timing [in]: Reset all timings profiled for future profiling.
  */
-void ll_intf_get_profile_statistics(uint32_t* exec_time, uint32_t* drift_time, uint32_t* average_drift_time);
+void ll_intf_get_profile_statistics(uint32_t* exec_time, uint32_t* drift_time, uint32_t* average_drift_time, uint8_t reset_timing );
 #endif /* IS_INTERNAL_PROFILED_ENABLED */
 
+/**
+ * @brief Proprietary commands to enable the ADV 5ms support
+ * @param enable  [in]: Enable/Disable proprietary feature
+ * @param randomization [in]: Max Randomization time in 625us unit. Range allowed 0-15
+ */
+void ll_intf_ADV5ms_support(uint8_t enable, uint32_t randomization);
+
+/**
+ * @brief Proprietary commands to enable the Connection 5ms support
+ * @param enable  [in]: Enable/ Disable proprietary feature.
+ *              (0 : disable min at 5ms, 1 : enable min Conn Interval at 5ms)
+ */
+void ll_intf_BLE5ms_interval_support(uint8_t enable);
 /**@}
 */
 

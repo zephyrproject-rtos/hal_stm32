@@ -5,7 +5,7 @@
  *****************************************************************************
  * @attention
  *
- * Copyright (c) 2018-2025 STMicroelectronics.
+ * Copyright (c) 2018-2026 STMicroelectronics.
  * All rights reserved.
  *
  * This software is licensed under terms that can be found in the LICENSE file
@@ -42,10 +42,10 @@
 #define BLE_STACK_LL_ONLY 0
 #endif
 
-/* Defintion to determine BLE Host stack presence */
+/* Definition to determine BLE Host stack presence */
 #define BLE_HOST_PRESENT (!BLE_STACK_LL_ONLY)
 
-/* Defintion to determine if all features are present */
+/* Definition to determine if all features are present */
 #define BLE_ALL (!(BLE_STACK_ADVANCED_FEATURES || BLE_STACK_BASIC_PLUS || \
                    BLE_STACK_BASIC_FEATURES || BLE_STACK_PERIPHERAL_ONLY))
 

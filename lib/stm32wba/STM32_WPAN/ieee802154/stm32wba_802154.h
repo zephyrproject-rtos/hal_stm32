@@ -64,8 +64,16 @@ typedef uint8_t stm32wba_802154_ral_tx_error_t;
  */
 typedef uint8_t stm32wba_802154_ral_rx_error_t;
 
-#define STM32WBA_802154_RAL_RX_ERROR_NONE                    0x00 // !< There is no receive error.
-#define STM32WBA_802154_RAL_RX_ERROR_NO_BUFFERS              0x03 // !< Not enough buffers.
+#define STM32WBA_802154_RAL_RX_ERROR_NONE                       0x00 // !< There is no receive error.
+#define STM32WBA_802154_RAL_RX_ERROR_FAILED                     0x01 // !< Process failed.
+#define STM32WBA_802154_RAL_RX_ERROR_NO_BUFFERS                 0x03 // !< Not enough buffers.
+#define STM32WBA_802154_RAL_RX_ERROR_NO_ACK                     0x0E // !< No acknowledgment was received after macMaxFrameRetries (IEEE 802.15.4-2006).
+#define STM32WBA_802154_RAL_RX_ERROR_FCS                        0x11 // !< FCS check failure.
+#define STM32WBA_802154_RAL_RX_ERROR_NO_FRAME_RECEIVED          0x12 // !< Not frame received.
+#define STM32WBA_802154_RAL_RX_ERROR_INVALID_SOURCE_ADDRESS     0x14 // !< No Src nor Dest Address.
+#define STM32WBA_802154_RAL_RX_ERROR_DEST_ADDRESS_FILTERED      0x16 // !< Destination Adress Error.
+#define STM32WBA_802154_RAL_RX_ERROR_GENERIC                    0xFF // !< Generic error.
+
 
 /**
  * @brief Structure with transmit request metadata for simple transmission request.
@@ -503,21 +511,21 @@ stm32wba_802154_ral_error_t stm32wba_802154_ral_set_ant_div_enable(uint8_t enabl
  */
 stm32wba_802154_ral_error_t stm32wba_802154_ral_set_config_lib_params(bool support_openthread_1_2, bool mac_layer_build);
 
-/** 
+/**
  * @brief Sets the MAC frame counter.
  *
  * @param[in] aMacFrameCounter The MAC frame counter value to set.
  */
 void stm32wba_802154_ral_set_mac_frame_counter(uint32_t aMacFrameCounter);
 
-/** 
+/**
  * @brief Sets the MAC frame counter if the provided value is larger than the current one.
  *
  * @param[in] aMacFrameCounter The MAC frame counter value to compare and set.
  */
 void stm32wba_802154_ral_set_mac_frame_counter_if_larger(uint32_t aMacFrameCounter);
 
-/** 
+/**
  * @brief Sets the MAC key for secure communications.
  *
  * @param[in]  aKeyIdMode   The key ID mode.
@@ -527,10 +535,10 @@ void stm32wba_802154_ral_set_mac_frame_counter_if_larger(uint32_t aMacFrameCount
  * @param[in]  aNextKey     Pointer to the next key.
  */
 void stm32wba_802154_ral_set_mac_key(uint8_t                 aKeyIdMode,
-                          			 uint8_t                 aKeyId,
-                          			 const uint8_t           *aPrevKey,
-                          			 const uint8_t           *aCurrKey,
-                          			 const uint8_t           *aNextKey);
+						 uint8_t                 aKeyId,
+						 const uint8_t           *aPrevKey,
+						 const uint8_t           *aCurrKey,
+						 const uint8_t           *aNextKey);
 
 /** @} */
 

@@ -175,6 +175,8 @@ extern void HW_AES_SetLast( uint8_t left_length );
 
 extern int PKA_MutexTake(void);
 extern int PKA_MutexRelease(void);
+extern int PKA_TakeSemEndOfOperation(void);
+extern int PKA_ReleaseSemEndOfOperation(void);
 
 /*
  * HW_PKA_Enable
@@ -261,12 +263,13 @@ extern void HW_PKA_ReadResult( uint32_t index,
  */
 extern void HW_PKA_Disable( void );
 
+
 /*
- * Notes:
+ * HW_PKA_EndOfProcessCb
  *
- * - this driver uses a semaphore to handle access to the PKA. The index of
- * the semaphore must be configured with CFG_HW_PKA_SEMID.
+ * Callback to be called when PKA end of process IRQ is managed.
  */
+extern void HW_PKA_EndOfProcessCb (void);
 
 /* ---------------------------------------------------------------------------
  *                               PKA_P256

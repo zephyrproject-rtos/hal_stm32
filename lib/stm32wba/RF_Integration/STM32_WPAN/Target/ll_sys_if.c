@@ -33,6 +33,9 @@
 #define USE_RADIO_LOW_ISR                   (1)
 #define NEXT_EVENT_SCHEDULING_FROM_ISR      (1)
 
+#define LSI_RCO_CALIB_PERIOD_MS            (15000U) /* LSI calib period in ms */
+#define LSI_RCO_CALIB_DURATION_CYCLE       (24U)    /* LSI calib duration in LL sleep timer clock cycles */
+
 /* USER CODE BEGIN PD */
 
 /* USER CODE END PD */
@@ -289,6 +292,12 @@ void ll_sys_reset(void)
   bsca = ll_sys_BLE_sleep_clock_accuracy_selection();
   ll_intf_le_set_sleep_clock_accuracy(bsca);
 
+  if(LL_RCC_RADIO_GetSleepTimerClockSource() == LL_RCC_RADIOSLEEPSOURCE_LSI)
+  {
+    /* Configure RCO calibration */
+    ll_intf_le_set_rco_clbr_evnt_params(LSI_RCO_CALIB_DURATION_CYCLE, LSI_RCO_CALIB_PERIOD_MS);
+  }
+
   /* Update link layer timings depending on selected configuration */
   if(LL_RCC_RADIO_GetSleepTimerClockSource() == LL_RCC_RADIOSLEEPSOURCE_LSI)
   {
@@ -332,11 +341,7 @@ void ll_sys_apply_cte_settings(void)
 #if (CFG_LPM_STANDBY_SUPPORTED == 0)
 void ll_sys_get_ble_profile_statistics(uint32_t* exec_time, uint32_t* drift_time, uint32_t* average_drift_time, uint8_t reset)
 {
-  if (reset != 0U)
-  {
-    profile_reset();
-  }
-  ll_intf_get_profile_statistics(exec_time, drift_time, average_drift_time);
+  ll_intf_get_profile_statistics(exec_time, drift_time, average_drift_time, reset);
 }
 #endif
 #endif /*__ZEPHYR__*/

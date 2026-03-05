@@ -5,7 +5,7 @@
  ******************************************************************************
  * @attention
  *
- * Copyright (c) 2018-2025 STMicroelectronics.
+ * Copyright (c) 2018-2026 STMicroelectronics.
  * All rights reserved.
  *
  * This software is licensed under terms that can be found in the LICENSE file
@@ -266,6 +266,7 @@
 #define BLE_CORE_5_4                                   13
 #define BLE_CORE_6_0                                   14
 #define BLE_CORE_6_1                                   15
+#define BLE_CORE_6_2                                   16
 
 /* AD types for advertising data and scan response data
  */

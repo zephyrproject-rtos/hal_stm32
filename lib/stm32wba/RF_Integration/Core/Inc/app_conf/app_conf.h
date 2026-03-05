@@ -211,6 +211,7 @@ typedef enum
   CFG_LPM_LL_DEEPSLEEP,
   CFG_LPM_LL_HW_RCO_CLBR,
   CFG_LPM_APP_BLE,
+  CFG_LPM_PKA_OVR_IT,
   /* USER CODE BEGIN CFG_LPM_Id_t */
 
   /* USER CODE END CFG_LPM_Id_t */
@@ -302,7 +303,7 @@ typedef enum
   CFG_TASK_TEMP_MEAS,
   CFG_TASK_BLE_HOST,
   CFG_TASK_AMM,
-  CFG_TASK_BPKA,
+  CFG_TASK_PKACTRL,
   CFG_TASK_BLE_TIMER_BCKGND,
   CFG_TASK_FLASH_MANAGER,
   /* USER CODE BEGIN CFG_Task_Id_t */
@@ -341,6 +342,8 @@ typedef enum
  */
 typedef enum
 {
+  CFG_PKA_MUTEX,
+  CFG_PKA_END_OF_PROCESS,
   /* USER CODE BEGIN CFG_Event_Id_t */
 
   /* USER CODE END CFG_Event_Id_t */
@@ -430,9 +433,9 @@ typedef enum
 #define RCC_INTR_PRIO                       (1)           /* HSERDY and PLL1RDY */
 
 /* RF TX power table ID selection:
- *   0 -> RF TX output level from -20 dBm to +10 dBm, with VDDRFPA at VDD level.
- *   1 -> RF TX output level from -20 dBm to +3 dBm, with VDDRFPA at VDD11 level like on ST MB1803 and MB2130 boards.
- *   2 -> RF TX output level at +20 dBm with an external PA
+ *   0 -> RF TX output level from -20 dBm to +10 dBm. VDDRFPA at VDD level.
+ *   1 -> RF TX output level from -20 dBm to +3 dBm. VDDRFPA at VDD11 level like on ST MB1803 and MB2130 boards.
+ *   2 -> RF TX output level at +20 dBm with an external PA.
  */
 #define CFG_RF_TX_POWER_TABLE_ID            (0)
 
@@ -461,6 +464,12 @@ typedef enum
 /* USER CODE BEGIN HW_RNG_Configuration */
 
 /* USER CODE END HW_RNG_Configuration */
+
+/******************************************************************************
+ * PKA configuration
+ ******************************************************************************/
+/* PKA IRQ priority of the PKA end of process */
+#define PKA_INTR_PRIO_PROCEND               (7)
 
 /******************************************************************************
  * MEMORY MANAGER
@@ -520,6 +529,11 @@ typedef enum
   #define CFG_LPM_STOP2_SUPPORTED   (0U)
   #undef CFG_LPM_STANDBY_SUPPORTED
   #define CFG_LPM_STANDBY_SUPPORTED (0U)
+#endif
+
+#if !defined(PWR_STOP2_SUPPORT)
+  #undef CFG_LPM_STOP2_SUPPORTED
+  #define CFG_LPM_STOP2_SUPPORTED   (0U)
 #endif
 
 /*********************************************************************

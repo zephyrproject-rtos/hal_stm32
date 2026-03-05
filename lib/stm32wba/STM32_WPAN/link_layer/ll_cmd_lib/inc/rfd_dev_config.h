@@ -1,4 +1,4 @@
-/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/2.00a-lca04/firmware/public_inc/rfd_dev_config.h#1 $*/
+/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/branches/P10164613/2.00a-lca05_CombinedPatchV2/firmware/public_inc/rfd_dev_config.h#4 $*/
 /**
  ********************************************************************************
  * @file    rfd_dev_config.h
@@ -38,15 +38,15 @@
 
 #if (!FFD_DEVICE_CONFIG)  /* RFD Device Configuration */
 
-#define RFD_SUPPORT_ACTIVE_SCAN						1 /* Enable\Disable :RFD supports Active Scanning Enable:1 - Disable:0 */
-#define RFD_SUPPORT_ENERGY_DETECT					1 /* Enable\Disable :RFD supports Energy Detection Enable:1 - Disable:0 */
+#define RFD_SUPPORT_ACTIVE_SCAN						1 ///< Enable\Disable :RFD supports Active Scanning Enable:1 - Disable:0
+#define RFD_SUPPORT_ENERGY_DETECT					1 ///< Enable\Disable :RFD supports Energy Detection Enable:1 - Disable:0
 #define RFD_SUPPORT_DATA_PURGE						0 /* Enable\Disable :RFD supports Data Purge Primitive Enable:1 - Disable:0 */
 #define RFD_SUPPORT_ASSOCIATION_IND_RSP				0 /* Enable\Disable :RFD supports Association Indication and Response Primitives Enable:1 - Disable:0 */
-#define RFD_SUPPORT_ORPHAN_IND_RSP					1 /* Enable\Disable :RFD supports Orphan Indication and Response Primitives Enable:1 - Disable:0 */
-#define RFD_SUPPORT_START_PRIM						1 /* Enable\Disable :RFD supports Start Primitive Enable:1 - Disable:0 */
-#define RFD_SUPPORT_PROMISCUOUS_MODE				1 /* Enable\Disable :RFD supports Promiscuous Mode Enable:1 - Disable:0 */
-#define RFD_SUPPORT_SEND_BEACON						1 /* Enable\Disable :RFD supports Sending Beacons if Coordinator Enable:1 - Disable:0 */
-#define RFD_SUPPORT_PANID_CONFLICT_RSLN				1 /* Enable\Disable :RFD supports Pan Id conflict detection and resolution Enable:1 - Disable:0 */
+#define RFD_SUPPORT_ORPHAN_IND_RSP					1 ///< Enable\Disable :RFD supports Orphan Indication and Response Primitives Enable:1 - Disable:0
+#define RFD_SUPPORT_START_PRIM						1 ///< Enable\Disable :RFD supports Start Primitive Enable:1 - Disable:0
+#define RFD_SUPPORT_PROMISCUOUS_MODE				1 ///< Enable\Disable :RFD supports Promiscuous Mode Enable:1 - Disable:0
+#define RFD_SUPPORT_SEND_BEACON						1 ///< Enable\Disable :RFD supports Sending Beacons if Coordinator Enable:1 - Disable:0
+#define RFD_SUPPORT_PANID_CONFLICT_RSLN				1 ///< Enable\Disable :RFD supports Pan Id conflict detection and resolution Enable:1 - Disable:0
 
 #endif
 

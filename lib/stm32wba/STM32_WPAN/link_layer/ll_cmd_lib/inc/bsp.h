@@ -1,6 +1,4 @@
-/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/2.00a-lca04/firmware/public_inc/bsp.h#1 $*/
-	/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/2.00a-lca04/firmware/public_inc/bsp.h#1 $*/
-
+/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/branches/P10164613/2.00a-lca05_CombinedPatchV2/firmware/public_inc/bsp.h#5 $*/
 /**
  ********************************************************************************
  * @file    bsp.h
@@ -75,7 +73,7 @@ typedef enum InterruptPriorities {
 typedef enum EvntNotiState {
 	EVNT_START,
 	EVNT_END,
-	EVNT_NOT_SPECIIFED
+	EVNT_NOT_SPECIFIED
 }EvntNotiState;
 
 /**
@@ -394,7 +392,7 @@ void bus_write(uint8_t *buffer, uint16_t size);
 /**
  * @brief   logger port initialization
  *
- *this function is used to initalizer the logger
+ *this function is used to initialize the logger
  * @param  None
  * @retval None
  *
@@ -458,7 +456,7 @@ void disable_specific_irq(uint8_t isr_type );
  * 	this function is used to initialize the used MCU
  * @param  op[in]   : pointer to @ref _ble_ll_bus structure that stores the bus callback functions
  * @retval 0 if SUCCESS
- * otherwise Not SUCESS
+ * otherwise Not SUCCESS
  *
  */
 int bsp_init(void);
@@ -477,7 +475,7 @@ void bsp_delay_us(uint32_t delay);
  *
  * 	this function is used to enabled and register ISR for the given interrupt line
  * @param  intrNum[in]   : number to the interrupt line to be enabled
- * @param  intr_cb[in]   : pionter to ISR function the will be called when this interupt is fired
+ * @param  intr_cb[in]   : pointer to ISR function the will be called when this interrupt is fired
  * @retval  None
  *
  */
@@ -487,7 +485,7 @@ int bsp_intr_enable (uint32_t intrNum, void (*intr_cb)(void));
  *
  * 	this function is used to set the interrupt priority and register ISR for the given interrupt line
  * @param  intrNum[in]   : number to the configured interrupt line
- * @param  intr_cb[in]   : pionter to ISR function the will be called when this interupt is fired
+ * @param  intr_cb[in]   : pointer to ISR function the will be called when this interrupt is fired
  * @param  intpri[in]    : the priority oto used for the given interrupt
  * @retval  None
  *

@@ -5,7 +5,7 @@
  *****************************************************************************
  * @attention
  *
- * Copyright (c) 2018-2025 STMicroelectronics.
+ * Copyright (c) 2018-2026 STMicroelectronics.
  * All rights reserved.
  *
  * This software is licensed under terms that can be found in the LICENSE file
@@ -420,6 +420,10 @@
 #define GATT_CHAR_UPDATE_LOCAL_ONLY                0x00U
 #define GATT_CHAR_UPDATE_SEND_NOTIFICATION         0x01U
 #define GATT_CHAR_UPDATE_SEND_INDICATION           0x02U
+
+/* Conn_Handle_To_Notify definitions for ACI_GATT_UPDATE_CHAR_VALUE_EXT
+ */
+#define GATT_NOTIFY_TO_ALL_CLIENTS                 0x0FFFU
 
 /* ------------------------------------------------------------------------- */
 

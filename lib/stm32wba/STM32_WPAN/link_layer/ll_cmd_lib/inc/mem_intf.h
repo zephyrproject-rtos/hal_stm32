@@ -1,4 +1,4 @@
-/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/2.00a-lca04/firmware/public_inc/mem_intf.h#1 $*/
+/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/branches/P10164613/2.00a-lca05_CombinedPatchV2/firmware/public_inc/mem_intf.h#3 $*/
 /**
  ********************************************************************************
  * @file    mem_intf.h
@@ -33,7 +33,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include <stdint.h>
-/* Defination ----------------------------------------------------------------*/
+/* Definition ----------------------------------------------------------------*/
 /* Exported variables ------------------------------------------------------- */
 /* Exported types ------------------------------------------------------------*/
 /* Exported macros -----------------------------------------------------------*/
@@ -57,7 +57,7 @@ void *ble_memcpy(
 	uint16_t n);
 
 /**
- * @brief  Setting a certian block of memory with a certain value.
+ * @brief  Setting a certain block of memory with a certain value.
  * @param  ptr_mem	: pointer to the block of memory to fill.
  * @param  value	: the value to be set. The value is passed as an int.
  * @param  n 		: the number of bytes to be set to the value.
