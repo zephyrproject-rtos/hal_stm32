@@ -56,9 +56,13 @@
    application
   */
 
-#if !defined(STM32WBA50xx) && !defined(STM32WBA52xx) && !defined(STM32WBA54xx) && !defined(STM32WBA55xx) && \
+#if !defined(STM32WBA20xx) && !defined(STM32WBA23xx) && !defined(STM32WBA25xx) && \
+    !defined(STM32WBA50xx) && !defined(STM32WBA52xx) && !defined(STM32WBA54xx) && !defined(STM32WBA55xx) && \
     !defined(STM32WBA5Mxx) && !defined(STM32WBA62xx) && !defined(STM32WBA63xx) && !defined(STM32WBA64xx) && \
     !defined(STM32WBA65xx) && !defined(STM32WBA6Mxx)
+  /* #define STM32WBA20xx */   /*!< STM32WBA20xx Devices */
+  /* #define STM32WBA23xx */   /*!< STM32WBA23xx Devices */
+  /* #define STM32WBA25xx */   /*!< STM32WBA25xx Devices */
   /* #define STM32WBA50xx */   /*!< STM32WBA50xx Devices */
   /* #define STM32WBA52xx */   /*!< STM32WBA52xx Devices */
   /* #define STM32WBA54xx */   /*!< STM32WBA54xx Devices */
@@ -87,7 +91,7 @@
   * @brief CMSIS Device version number
   */
 #define __STM32WBA_CMSIS_VERSION_MAIN   (0x01U) /*!< [31:24] main version */
-#define __STM32WBA_CMSIS_VERSION_SUB1   (0x08U) /*!< [23:16] sub1 version */
+#define __STM32WBA_CMSIS_VERSION_SUB1   (0x09U) /*!< [23:16] sub1 version */
 #define __STM32WBA_CMSIS_VERSION_SUB2   (0x00U) /*!< [15:8]  sub2 version */
 #define __STM32WBA_CMSIS_VERSION_RC     (0x00U) /*!< [7:0]  release candidate */
 #define __STM32WBA_CMSIS_VERSION       ((__STM32WBA_CMSIS_VERSION_MAIN << 24U)\
@@ -103,7 +107,13 @@
   * @{
   */
 
-#if defined(STM32WBA50xx)
+#if defined(STM32WBA20xx)
+  #include "stm32wba20xx.h"
+#elif defined(STM32WBA23xx)
+  #include "stm32wba23xx.h"
+#elif defined(STM32WBA25xx)
+  #include "stm32wba25xx.h"
+#elif defined(STM32WBA50xx)
   #include "stm32wba50xx.h"
 #elif defined(STM32WBA52xx)
   #include "stm32wba52xx.h"

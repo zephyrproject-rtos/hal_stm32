@@ -163,6 +163,8 @@ typedef struct
   */
 #define HCD_PHY_ULPI                 1U
 #define HCD_PHY_EMBEDDED             2U
+#define HCD_HS_PHY_EMBEDDED          3U
+#define HCD_PHY_UTMI                 3U
 /**
   * @}
   */

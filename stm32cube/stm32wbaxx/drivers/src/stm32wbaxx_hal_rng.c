@@ -213,6 +213,7 @@ HAL_StatusTypeDef HAL_RNG_Init(RNG_HandleTypeDef *hrng)
   WRITE_REG(hrng->Instance->HTCR, RNG_HTCR_NIST_VALUE);
 #endif  /* defined(RNG_HTCR0_HTCFG) */
 #endif /* RNG_HTCR_NIST_VALUE */
+  WRITE_REG(hrng->Instance->NSCR, RNG_NSCR_NIST_VALUE);
 
   /* Writing bit CONDRST=0 */
   CLEAR_BIT(hrng->Instance->CR, RNG_CR_CONDRST);

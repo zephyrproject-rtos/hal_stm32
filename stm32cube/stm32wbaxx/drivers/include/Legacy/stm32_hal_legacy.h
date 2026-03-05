@@ -363,7 +363,6 @@ extern "C" {
 #define DMA_REQUEST_DCMI_PSSI                    DMA_REQUEST_DCMI
 #elif defined(STM32L4P5xx) || defined(STM32L4Q5xx)
 #define DMA_REQUEST_PSSI                    DMA_REQUEST_DCMI_PSSI
-#define LL_DMAMUX_REQ_PSSI                  LL_DMAMUX_REQ_DCMI_PSSI
 #endif /* STM32L4R5xx || STM32L4R9xx || STM32L4R9xx || STM32L4S5xx || STM32L4S7xx || STM32L4S9xx */
 
 #endif /* STM32L4 */
@@ -2030,6 +2029,9 @@ extern "C" {
 #define PWR_SRAM6_FULL_RUN_RETENTION                  PWR_SRAM6_FULL_RUN
 
 #define PWR_ALL_RAM_RUN_RETENTION_MASK                PWR_ALL_RAM_RUN_MASK
+#endif
+#if defined (STM32H7RS)
+#define PWR_SMPS_1V8_SUPPLIES_EXT_AND_LDO             PWR_SMPS_1V8_SUPPLIES_EXT_VDD_SUPPLIES_LDO
 #endif
 
 /**
@@ -3964,7 +3966,7 @@ extern "C" {
 #if defined (STM32G0) || defined (STM32L5) || defined (STM32L412xx) || defined (STM32L422xx) || \
     defined (STM32L4P5xx)|| defined (STM32L4Q5xx) || defined (STM32G4) || defined (STM32WL) || defined (STM32U5) || \
     defined (STM32WBA) || defined (STM32H5) || defined (STM32C0) || defined (STM32N6) || defined (STM32H7RS) || \
-    defined (STM32U0) || defined (STM32U3)
+	defined (STM32U0) || defined (STM32U3)
 #else
 #define __HAL_RTC_CLEAR_FLAG                      __HAL_RTC_EXTI_CLEAR_FLAG
 #endif

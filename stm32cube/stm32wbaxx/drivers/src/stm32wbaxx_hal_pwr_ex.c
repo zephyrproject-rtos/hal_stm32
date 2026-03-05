@@ -147,6 +147,21 @@
 #define PWR_PORTE_AVAILABLE_PINS  (0x000FFU)
 #define PWR_PORTG_AVAILABLE_PINS  (0x0FFFCU)
 #define PWR_PORTH_AVAILABLE_PINS  (0x00008U)
+#elif defined(STM32WBA20xx)
+#define PWR_PORTA_AVAILABLE_PINS  (0x0F1E7U)
+#define PWR_PORTB_AVAILABLE_PINS  (0x09300U)
+#define PWR_PORTC_AVAILABLE_PINS  (0x0C000U)
+#define PWR_PORTH_AVAILABLE_PINS  (0x00008U)
+#elif defined(STM32WBA23xx)
+#define PWR_PORTA_AVAILABLE_PINS  (0x0FFE7U)
+#define PWR_PORTB_AVAILABLE_PINS  (0x0937CU)
+#define PWR_PORTC_AVAILABLE_PINS  (0x0E000U)
+#define PWR_PORTH_AVAILABLE_PINS  (0x00008U)
+#elif defined(STM32WBA25xx)
+#define PWR_PORTA_AVAILABLE_PINS  (0x0FFE6U)
+#define PWR_PORTB_AVAILABLE_PINS  (0x0937CU)
+#define PWR_PORTC_AVAILABLE_PINS  (0x0E000U)
+#define PWR_PORTH_AVAILABLE_PINS  (0x00008U)
 #endif /* defined(STM32WBA63xx) */
 #endif /* defined(STM32WBA52xx) || defined(STM32WBA54xx) || defined(STM32WBA55xx) || defined(STM32WBA5Mxx) */
 /*!< Time out value of flags setting */
@@ -766,7 +781,9 @@ void HAL_PWREx_DisableRadioSRAMClockStandbyRetention(void)
 #endif
   *                      @arg PWR_SRAM2_FULL_STOP_RETENTION   : full SRAM2 retention.
   *                      @arg PWR_ICACHE_FULL_STOP_RETENTION  : I-CACHE SRAM retention.
-#if   defined(PWR_STOP3_SUPPORT)
+#if defined(PWR_STOP3_SUPPORT) && defined (STM32WBA25xx)
+  *                      @arg PWR_USB_SRAM_STOP_RETENTION     : USB SRAM retention.(*)
+#elif defined(PWR_STOP3_SUPPORT)
   *                      @arg PWR_PKA_SRAM_STOP_RETENTION     : PKA SRAM retention.
 #endif
 #endif
@@ -807,7 +824,9 @@ void HAL_PWREx_EnableRAMsContentStopRetention(uint32_t RAMSelection)
 #endif
   *                      @arg PWR_SRAM2_FULL_STOP_RETENTION   : full SRAM2 retention.
   *                      @arg PWR_ICACHE_FULL_STOP_RETENTION  : I-CACHE SRAM retention.
-#if   defined(PWR_STOP3_SUPPORT)
+#if defined(PWR_STOP3_SUPPORT) && defined (STM32WBA25xx)
+  *                      @arg PWR_USB_SRAM_STOP_RETENTION     : USB SRAM retention.(*)
+#elif defined(PWR_STOP3_SUPPORT)
   *                      @arg PWR_PKA_SRAM_STOP_RETENTION     : PKA SRAM retention.
 #endif
 #endif

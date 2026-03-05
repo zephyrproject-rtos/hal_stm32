@@ -348,13 +348,13 @@ __STATIC_INLINE void LL_COMP_SetCommonWindowMode(const COMP_Common_TypeDef *COMP
 {
   /* Note: On this STM32 series, window mode can be set from any instance     */
   /*       of the pair of comparator instances.                               */
-  register __IO uint32_t *preg = __COMP_PTR_REG_OFFSET(COMPxy_COMMON->CSR_ODD,
-                                                       (WindowMode & LL_COMP_WINDOWMODE_COMPX_REGOFFSET_MASK));
+  __IO uint32_t *preg = __COMP_PTR_REG_OFFSET(COMPxy_COMMON->CSR_ODD,
+                                              (WindowMode & LL_COMP_WINDOWMODE_COMPX_REGOFFSET_MASK));
 
   /* Clear the potential previous setting of window mode */
-  register __IO uint32_t *preg_clear = __COMP_PTR_REG_OFFSET(COMPxy_COMMON->CSR_ODD,
-                                                             (~(WindowMode & LL_COMP_WINDOWMODE_COMPX_REGOFFSET_MASK)
-                                                              & 0x1UL));
+  __IO uint32_t *preg_clear = __COMP_PTR_REG_OFFSET(COMPxy_COMMON->CSR_ODD,
+                                                    (~(WindowMode & LL_COMP_WINDOWMODE_COMPX_REGOFFSET_MASK)
+                                                     & 0x1UL));
   CLEAR_BIT(*preg_clear,
             COMP_CSR_WINMODE
            );
@@ -381,8 +381,8 @@ __STATIC_INLINE uint32_t LL_COMP_GetCommonWindowMode(const COMP_Common_TypeDef *
 {
   /* Note: On this STM32 series, window mode can be set from any instance     */
   /*       of the pair of comparator instances.                               */
-  register const uint32_t window_mode_comp_odd = (uint32_t)READ_BIT(COMPxy_COMMON->CSR_ODD, COMP_CSR_WINMODE);
-  register const uint32_t window_mode_comp_even = (uint32_t)READ_BIT(COMPxy_COMMON->CSR_EVEN, COMP_CSR_WINMODE);
+  const uint32_t window_mode_comp_odd = (uint32_t)READ_BIT(COMPxy_COMMON->CSR_ODD, COMP_CSR_WINMODE);
+  const uint32_t window_mode_comp_even = (uint32_t)READ_BIT(COMPxy_COMMON->CSR_EVEN, COMP_CSR_WINMODE);
 
   return (uint32_t)(window_mode_comp_odd
                     | window_mode_comp_even
@@ -405,14 +405,14 @@ __STATIC_INLINE uint32_t LL_COMP_GetCommonWindowMode(const COMP_Common_TypeDef *
   */
 __STATIC_INLINE void LL_COMP_SetCommonWindowOutput(const COMP_Common_TypeDef *COMPxy_COMMON, uint32_t WindowOutput)
 {
-  register __IO uint32_t *preg = __COMP_PTR_REG_OFFSET(COMPxy_COMMON->CSR_ODD,
-                                                       (WindowOutput & LL_COMP_WINDOWMODE_COMPX_REGOFFSET_MASK));
+  __IO uint32_t *preg = __COMP_PTR_REG_OFFSET(COMPxy_COMMON->CSR_ODD,
+                                              (WindowOutput & LL_COMP_WINDOWMODE_COMPX_REGOFFSET_MASK));
 
   /* Clear the potential previous setting of window output on the relevant comparator instance */
   /* (clear bit of window output unless specific case of setting of comparator both output selected) */
-  register __IO uint32_t *preg_clear = __COMP_PTR_REG_OFFSET(COMPxy_COMMON->CSR_ODD,
-                                                             (~(WindowOutput & LL_COMP_WINDOWMODE_COMPX_REGOFFSET_MASK)
-                                                              & 0x1UL));
+  __IO uint32_t *preg_clear = __COMP_PTR_REG_OFFSET(COMPxy_COMMON->CSR_ODD,
+                                                    (~(WindowOutput & LL_COMP_WINDOWMODE_COMPX_REGOFFSET_MASK)
+                                                     & 0x1UL));
   MODIFY_REG(*preg_clear,
              COMP_CSR_WINOUT,
              ((WindowOutput & LL_COMP_WINDOWOUTPUT_BOTH_SETTING_MASK) >> LL_COMP_WINDOWOUTPUT_BOTH_POS_VS_WINDOW)
@@ -438,8 +438,8 @@ __STATIC_INLINE void LL_COMP_SetCommonWindowOutput(const COMP_Common_TypeDef *CO
   */
 __STATIC_INLINE uint32_t LL_COMP_GetCommonWindowOutput(const COMP_Common_TypeDef *COMPxy_COMMON)
 {
-  register const uint32_t window_output_comp_odd = (uint32_t)READ_BIT(COMPxy_COMMON->CSR_ODD, COMP_CSR_WINOUT);
-  register const uint32_t window_output_comp_even = (uint32_t)READ_BIT(COMPxy_COMMON->CSR_EVEN, COMP_CSR_WINOUT);
+  const uint32_t window_output_comp_odd = (uint32_t)READ_BIT(COMPxy_COMMON->CSR_ODD, COMP_CSR_WINOUT);
+  const uint32_t window_output_comp_even = (uint32_t)READ_BIT(COMPxy_COMMON->CSR_EVEN, COMP_CSR_WINOUT);
 
   /* Construct value corresponding to LL_COMP_WINDOWOUTPUT_xxx */
   return (uint32_t)(window_output_comp_odd

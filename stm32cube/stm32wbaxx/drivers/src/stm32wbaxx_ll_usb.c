@@ -103,6 +103,10 @@ HAL_StatusTypeDef USB_CoreInit(USB_OTG_GlobalTypeDef *USBx, USB_OTG_CfgTypeDef c
 
   if (cfg.dma_enable == 1U)
   {
+    /* make sure to reserve 18 fifo Locations for DMA buffers */
+    USBx->GDFIFOCFG &= ~(0xFFFFUL << 16);
+    USBx->GDFIFOCFG |= 0x3EEUL << 16;
+
     USBx->GAHBCFG &= ~(USB_OTG_GAHBCFG_HBSTLEN);
     USBx->GAHBCFG |= USB_OTG_GAHBCFG_HBSTLEN_INCR4;
     USBx->GAHBCFG |= USB_OTG_GAHBCFG_DMAEN;

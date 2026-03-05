@@ -172,6 +172,16 @@ typedef struct
 #define LL_UTILS_PACKAGETYPE_VFQFPN68_SMPS_USB  0x0000000CU /*!< VFQFPN68 with internal SMPS and USB package type    */
 #define LL_UTILS_PACKAGETYPE_WLCSP88_SMPS_USB   0x0000000DU /*!< WLCSP88 with internal SMPS and USB package type     */
 #define LL_UTILS_PACKAGETYPE_UFBGA121_SMPS_USB  0x0000000FU /*!< UFBGA121 with internal SMPS and USB package type    */
+#elif defined(STM32WBA20xx) || defined(STM32WBA23xx) || defined(STM32WBA25xx)
+#define LL_UTILS_PACKAGETYPE_UFQFPN32           0x00000001U /*!< UFQFPN32 package type                               */
+#define LL_UTILS_PACKAGETYPE_UFQFPN48           0x00000002U /*!< UFQFPN48 package type                               */
+#define LL_UTILS_PACKAGETYPE_WLCSP37            0x00000003U /*!< WLCSP37 package type                                */
+#define LL_UTILS_PACKAGETYPE_UFQFPN32_USB       0x00000005U /*!< UFQFPN32 with USB package type                      */
+#define LL_UTILS_PACKAGETYPE_UFQFPN48_USB       0x00000006U /*!< UFQFPN48 with USB package type                      */
+#define LL_UTILS_PACKAGETYPE_WLCSP37_USB        0x00000007U /*!< WLCSP37 with USB package type                       */
+#define LL_UTILS_PACKAGETYPE_UFQFPN48_SMPS      0x0000000AU /*!< UFQFPN48 with internal SMPS package type            */
+#define LL_UTILS_PACKAGETYPE_WLCSP37_SMPS_USB   0x0000000DU /*!< WLCSP37 with internal SMPS and USB package type     */
+#define LL_UTILS_PACKAGETYPE_UFQFPN48_SMPS_USB  0x0000000EU /*!< UFQFPN48 with internal SMPS and USB package type    */
 #endif /* defined(STM32WBA52xx) || defined(STM32WBA54xx) || defined(STM32WBA55xx) || defined(STM32WBA5Mxx) */
 /**
   * @}
@@ -248,6 +258,16 @@ __STATIC_INLINE uint32_t LL_GetFlashSize(void)
   *         @arg @ref LL_UTILS_PACKAGETYPE_VFQFPN68_SMPS_USB
   *         @arg @ref LL_UTILS_PACKAGETYPE_WLCSP88_SMPS_USB
   *         @arg @ref LL_UTILS_PACKAGETYPE_UFBGA121_SMPS_USB
+#elif defined(STM32WBA20xx) || defined(STM32WBA23xx) || defined(STM32WBA25xx)
+  *         @arg @ref LL_UTILS_PACKAGETYPE_UFQFPN32
+  *         @arg @ref LL_UTILS_PACKAGETYPE_UFQFPN48
+  *         @arg @ref LL_UTILS_PACKAGETYPE_WLCSP37
+  *         @arg @ref LL_UTILS_PACKAGETYPE_UFQFPN32_USB
+  *         @arg @ref LL_UTILS_PACKAGETYPE_UFQFPN48_USB
+  *         @arg @ref LL_UTILS_PACKAGETYPE_WLCSP37_USB
+  *         @arg @ref LL_UTILS_PACKAGETYPE_UFQFPN48_SMPS
+  *         @arg @ref LL_UTILS_PACKAGETYPE_WLCSP37_SMPS_USB
+  *         @arg @ref LL_UTILS_PACKAGETYPE_UFQFPN48_SMPS_USB
 #endif
   */
 __STATIC_INLINE uint32_t LL_GetPackageType(void)

@@ -767,8 +767,6 @@ HAL_StatusTypeDef HAL_HCD_RegisterCallback(HCD_HandleTypeDef *hhcd,
     hhcd->ErrorCode |= HAL_HCD_ERROR_INVALID_CALLBACK;
     return HAL_ERROR;
   }
-  /* Process locked */
-  __HAL_LOCK(hhcd);
 
   if (hhcd->State == HAL_HCD_STATE_READY)
   {
@@ -834,12 +832,11 @@ HAL_StatusTypeDef HAL_HCD_RegisterCallback(HCD_HandleTypeDef *hhcd,
   {
     /* Update the error code */
     hhcd->ErrorCode |= HAL_HCD_ERROR_INVALID_CALLBACK;
+
     /* Return error status */
     status =  HAL_ERROR;
   }
 
-  /* Release Lock */
-  __HAL_UNLOCK(hhcd);
   return status;
 }
 
@@ -861,9 +858,6 @@ HAL_StatusTypeDef HAL_HCD_RegisterCallback(HCD_HandleTypeDef *hhcd,
 HAL_StatusTypeDef HAL_HCD_UnRegisterCallback(HCD_HandleTypeDef *hhcd, HAL_HCD_CallbackIDTypeDef CallbackID)
 {
   HAL_StatusTypeDef status = HAL_OK;
-
-  /* Process locked */
-  __HAL_LOCK(hhcd);
 
   /* Setup Legacy weak Callbacks  */
   if (hhcd->State == HAL_HCD_STATE_READY)
@@ -937,8 +931,6 @@ HAL_StatusTypeDef HAL_HCD_UnRegisterCallback(HCD_HandleTypeDef *hhcd, HAL_HCD_Ca
     status =  HAL_ERROR;
   }
 
-  /* Release Lock */
-  __HAL_UNLOCK(hhcd);
   return status;
 }
 
@@ -962,9 +954,6 @@ HAL_StatusTypeDef HAL_HCD_RegisterHC_NotifyURBChangeCallback(HCD_HandleTypeDef *
     return HAL_ERROR;
   }
 
-  /* Process locked */
-  __HAL_LOCK(hhcd);
-
   if (hhcd->State == HAL_HCD_STATE_READY)
   {
     hhcd->HC_NotifyURBChangeCallback = pCallback;
@@ -977,9 +966,6 @@ HAL_StatusTypeDef HAL_HCD_RegisterHC_NotifyURBChangeCallback(HCD_HandleTypeDef *
     /* Return error status */
     status =  HAL_ERROR;
   }
-
-  /* Release Lock */
-  __HAL_UNLOCK(hhcd);
 
   return status;
 }
@@ -995,9 +981,6 @@ HAL_StatusTypeDef HAL_HCD_UnRegisterHC_NotifyURBChangeCallback(HCD_HandleTypeDef
 {
   HAL_StatusTypeDef status = HAL_OK;
 
-  /* Process locked */
-  __HAL_LOCK(hhcd);
-
   if (hhcd->State == HAL_HCD_STATE_READY)
   {
     hhcd->HC_NotifyURBChangeCallback = HAL_HCD_HC_NotifyURBChange_Callback; /* Legacy weak DataOutStageCallback  */
@@ -1010,9 +993,6 @@ HAL_StatusTypeDef HAL_HCD_UnRegisterHC_NotifyURBChangeCallback(HCD_HandleTypeDef
     /* Return error status */
     status =  HAL_ERROR;
   }
-
-  /* Release Lock */
-  __HAL_UNLOCK(hhcd);
 
   return status;
 }
@@ -1777,7 +1757,8 @@ static void HCD_HC_OUT_IRQHandler(HCD_HandleTypeDef *hhcd, uint8_t chnum)
       hhcd->hc[chnum].state = HC_HALTED;
       hhcd->hc[chnum].urb_state = URB_DONE;
 
-      if (hhcd->hc[chnum].ep_type != EP_TYPE_ISOC)
+      if ((hhcd->hc[chnum].ep_type == EP_TYPE_BULK) ||
+          (hhcd->hc[chnum].ep_type == EP_TYPE_INTR))
       {
         if (hhcd->Init.dma_enable == 0U)
         {
@@ -2959,8 +2940,6 @@ HAL_StatusTypeDef HAL_HCD_RegisterCallback(HCD_HandleTypeDef *hhcd,
     hhcd->ErrorCode |= HAL_HCD_ERROR_INVALID_CALLBACK;
     return HAL_ERROR;
   }
-  /* Process locked */
-  __HAL_LOCK(hhcd);
 
   if (hhcd->State == HAL_HCD_STATE_READY)
   {
@@ -3030,8 +3009,6 @@ HAL_StatusTypeDef HAL_HCD_RegisterCallback(HCD_HandleTypeDef *hhcd,
     status =  HAL_ERROR;
   }
 
-  /* Release Lock */
-  __HAL_UNLOCK(hhcd);
   return status;
 }
 
@@ -3054,9 +3031,6 @@ HAL_StatusTypeDef HAL_HCD_UnRegisterCallback(HCD_HandleTypeDef *hhcd,
                                              HAL_HCD_CallbackIDTypeDef CallbackID)
 {
   HAL_StatusTypeDef status = HAL_OK;
-
-  /* Process locked */
-  __HAL_LOCK(hhcd);
 
   /* Setup Legacy weak Callbacks */
   if (hhcd->State == HAL_HCD_STATE_READY)
@@ -3130,8 +3104,6 @@ HAL_StatusTypeDef HAL_HCD_UnRegisterCallback(HCD_HandleTypeDef *hhcd,
     status =  HAL_ERROR;
   }
 
-  /* Release Lock */
-  __HAL_UNLOCK(hhcd);
   return status;
 }
 
@@ -3155,9 +3127,6 @@ HAL_StatusTypeDef HAL_HCD_RegisterHC_NotifyURBChangeCallback(HCD_HandleTypeDef *
     return HAL_ERROR;
   }
 
-  /* Process locked */
-  __HAL_LOCK(hhcd);
-
   if (hhcd->State == HAL_HCD_STATE_READY)
   {
     hhcd->HC_NotifyURBChangeCallback = pCallback;
@@ -3170,9 +3139,6 @@ HAL_StatusTypeDef HAL_HCD_RegisterHC_NotifyURBChangeCallback(HCD_HandleTypeDef *
     /* Return error status */
     status = HAL_ERROR;
   }
-
-  /* Release Lock */
-  __HAL_UNLOCK(hhcd);
 
   return status;
 }
@@ -3188,9 +3154,6 @@ HAL_StatusTypeDef HAL_HCD_UnRegisterHC_NotifyURBChangeCallback(HCD_HandleTypeDef
 {
   HAL_StatusTypeDef status = HAL_OK;
 
-  /* Process locked */
-  __HAL_LOCK(hhcd);
-
   if (hhcd->State == HAL_HCD_STATE_READY)
   {
     hhcd->HC_NotifyURBChangeCallback = HAL_HCD_HC_NotifyURBChange_Callback; /* Legacy weak DataOutStageCallback */
@@ -3203,9 +3166,6 @@ HAL_StatusTypeDef HAL_HCD_UnRegisterHC_NotifyURBChangeCallback(HCD_HandleTypeDef
     /* Return error status */
     status =  HAL_ERROR;
   }
-
-  /* Release Lock */
-  __HAL_UNLOCK(hhcd);
 
   return status;
 }
@@ -4175,22 +4135,31 @@ static void HCD_HC_OUT_IRQHandler(HCD_HandleTypeDef *hhcd, uint8_t chnum)
   */
 static void HCD_Port_IRQHandler(HCD_HandleTypeDef *hhcd)
 {
-  uint32_t FnrReg = hhcd->Instance->FNR;
   uint32_t IstrReg = hhcd->Instance->ISTR;
 
-  /* SE0 detected USB Disconnected state */
-  if ((FnrReg & (USB_FNR_RXDP | USB_FNR_RXDM)) == 0U)
+    /* SE0 detected USB Disconnected state */
+  if ((IstrReg & USB_ISTR_DCON_STAT) == USB_ISTR_DCON_STAT)
+  {
+      hhcd->HostState = HCD_HCD_STATE_CONNECTED;
+
+#if (USE_HAL_HCD_REGISTER_CALLBACKS == 1U)
+      hhcd->ConnectCallback(hhcd);
+#else
+      HAL_HCD_Connect_Callback(hhcd);
+#endif /* USE_HAL_HCD_REGISTER_CALLBACKS */
+  }
+  else
   {
     /* Host Port State */
     hhcd->HostState = HCD_HCD_STATE_DISCONNECTED;
 
-    /* Clear all allocated virtual channel */
+    /* clear all allocated virtual channel */
     HAL_HCD_ClearPhyChannel(hhcd);
 
     /* Reset the PMA current pointer */
     (void)HAL_HCD_PMAReset(hhcd);
 
-    /* Reset Ep0 Pma allocation state */
+    /* reset Ep0 PMA allocation state */
     hhcd->ep0_PmaAllocState = 0U;
 
     /* Disconnection Callback */
@@ -4199,48 +4168,6 @@ static void HCD_Port_IRQHandler(HCD_HandleTypeDef *hhcd)
 #else
     HAL_HCD_Disconnect_Callback(hhcd);
 #endif /* USE_HAL_HCD_REGISTER_CALLBACKS */
-
-    return;
-  }
-
-  if ((hhcd->HostState == HCD_HCD_STATE_DISCONNECTED) != 0U)
-  {
-    /* J-state or K-state detected & LastState=Disconnected */
-    if (((FnrReg & USB_FNR_RXDP) != 0U) || ((IstrReg & USB_ISTR_LS_DCONN) != 0U))
-    {
-      hhcd->HostState = HCD_HCD_STATE_CONNECTED;
-
-#if (USE_HAL_HCD_REGISTER_CALLBACKS == 1U)
-      hhcd->ConnectCallback(hhcd);
-#else
-      HAL_HCD_Connect_Callback(hhcd);
-#endif /* USE_HAL_HCD_REGISTER_CALLBACKS */
-    }
-  }
-  else
-  {
-    /* J-state or K-state detected & lastState=Connected: a Missed disconnection is detected */
-    if (((FnrReg & USB_FNR_RXDP) != 0U) || ((IstrReg & USB_ISTR_LS_DCONN) != 0U))
-    {
-      /* Host Port State */
-      hhcd->HostState = HCD_HCD_STATE_DISCONNECTED;
-
-      /* clear all allocated virtual channel */
-      HAL_HCD_ClearPhyChannel(hhcd);
-
-      /* Reset the PMA current pointer */
-      (void)HAL_HCD_PMAReset(hhcd);
-
-      /* reset Ep0 PMA allocation state */
-      hhcd->ep0_PmaAllocState = 0U;
-
-      /* Disconnection Callback */
-#if (USE_HAL_HCD_REGISTER_CALLBACKS == 1U)
-      hhcd->DisconnectCallback(hhcd);
-#else
-      HAL_HCD_Disconnect_Callback(hhcd);
-#endif /* USE_HAL_HCD_REGISTER_CALLBACKS */
-    }
   }
 }
 

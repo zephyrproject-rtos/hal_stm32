@@ -679,7 +679,7 @@ void HAL_EXTI_GenerateSWI(const EXTI_HandleTypeDef *hexti)
   * @{
   */
 
-#if defined(EXTI_SECCFGR1_SEC0)
+#if defined(EXTI_SECCFGR1_SEC1)
 /**
   * @brief  Configure the EXTI line attribute(s).
   * @note   Available attributes are to secure EXTI line and set EXT line as privileged.
@@ -824,7 +824,7 @@ HAL_StatusTypeDef HAL_EXTI_GetConfigLineAttributes(uint32_t ExtiLine, uint32_t *
 
   return HAL_OK;
 }
-#endif /* #if defined(EXTI_SECCFGR1_SEC0) */
+#endif /* #if defined(EXTI_SECCFGR1_SEC1) */
 
 #if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
 /**

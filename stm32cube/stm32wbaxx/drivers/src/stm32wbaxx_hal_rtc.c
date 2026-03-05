@@ -347,8 +347,8 @@ HAL_StatusTypeDef HAL_RTC_Init(RTC_HandleTypeDef *hrtc)
     /* Set RTC state */
     hrtc->State = HAL_RTC_STATE_BUSY;
 
-    /* Check if the calendar has been not initialized */
-    if (__HAL_RTC_IS_CALENDAR_INITIALIZED(hrtc) == 0U)
+    /* Check whether the calendar needs to be initialized and the RTC mode is not 'binary only' */
+    if (READ_BIT(RTC->ICSR, (RTC_ICSR_INITS | RTC_ICSR_BIN)) != RTC_BINARY_ONLY)
     {
       /* Disable the write protection for RTC registers */
       __HAL_RTC_WRITEPROTECTION_DISABLE(hrtc);
