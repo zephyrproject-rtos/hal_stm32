@@ -2937,6 +2937,10 @@ HAL_StatusTypeDef HAL_XSPIM_Config(XSPI_HandleTypeDef *hxspi, const XSPIM_CfgTyp
   {
     SET_BIT(XSPI2->CR, XSPI_CR_EN);
   }
+  if ((xspi_enabled & 0x4U) != 0U)
+  {
+    SET_BIT(XSPI3->CR, XSPI_CR_EN);
+  }
 
   return status;
 }
