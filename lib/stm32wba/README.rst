@@ -6,7 +6,7 @@ Origin:
    https://github.com/STMicroelectronics/STM32CubeWBA
 
 Status:
-   version v1.8.0
+   version v1.9.0
 
 Purpose:
    This library is used on STM32WBA series to port BLE and IEEE802154 controller libraries in
@@ -75,8 +75,6 @@ Description:
       - Projects/Common/WPAN/Modules/RTDebug/RTDebug.c
       - Projects/Common/WPAN/Modules/RTDebug/RTDebug.h
       - Projects/Common/WPAN/Modules/RTDebug/local_debug_tables.h
-      - Projects/Common/WPAN/Modules/scm.c
-      - Projects/Common/WPAN/Modules/scm.h
       - Projects/Common/WPAN/Modules/stm_list.c
       - Projects/Common/WPAN/Modules/stm_list.h
       - Projects/Common/WPAN/Modules/utilities_common.h
@@ -117,7 +115,7 @@ URL:
    https://github.com/STMicroelectronics/STM32CubeWBA
 
 Commit:
-   893fc71d008cdbb09de590c44b61c79cd92e7931
+   92e834c2c34cf473b73271d54674a91a9c78477d
 
 Maintained-by:
    External

@@ -1,4 +1,4 @@
-/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/2.00a-lca04/firmware/public_inc/ot_inc/radio.h#1 $*/
+/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/branches/P10164613/2.00a-lca05_CombinedPatchV2/firmware/public_inc/ot_inc/radio.h#5 $*/
 /*
  *  Copyright (c) 2016, The OpenThread Authors.
  *  All rights reserved.
@@ -1204,7 +1204,7 @@ otError otPlatRadioResetCsl(otInstance *aInstance);
 void otPlatRadioUpdateCslSampleTime(otInstance *aInstance, uint32_t aCslSampleTime);
 
 /**
- * Get the current estimated worst case accuracy (maximum ± deviation from the
+ * Get the current estimated worst case accuracy (maximum +/- deviation from the
  * nominal frequency) of the local radio clock in units of PPM. This is the
  * clock used to schedule CSL operations.
  *

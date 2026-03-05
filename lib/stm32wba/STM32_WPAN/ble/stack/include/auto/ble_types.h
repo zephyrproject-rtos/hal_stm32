@@ -5,7 +5,7 @@
  *****************************************************************************
  * @attention
  *
- * Copyright (c) 2018-2025 STMicroelectronics.
+ * Copyright (c) 2018-2026 STMicroelectronics.
  * All rights reserved.
  *
  * This software is licensed under terms that can be found in the LICENSE file
@@ -4119,6 +4119,22 @@ typedef __PACKED_STRUCT
 
 typedef __PACKED_STRUCT
 {
+  uint16_t Connection_Handle;
+  uint16_t Attr_Handle;
+  uint16_t Offset;
+  uint16_t Value_Length_Requested;
+} aci_gatt_get_attribute_value_cp0;
+
+typedef __PACKED_STRUCT
+{
+  uint8_t Status;
+  uint16_t Length;
+  uint16_t Value_Length;
+  uint8_t Value[(BLE_EVT_MAX_PARAM_LEN - 3) - 5];
+} aci_gatt_get_attribute_value_rp0;
+
+typedef __PACKED_STRUCT
+{
   uint16_t Conn_Handle_To_Notify;
   uint16_t Service_Handle;
   uint16_t Char_Handle;
@@ -5025,6 +5041,7 @@ typedef __PACKED_STRUCT
 typedef __PACKED_STRUCT
 {
   uint16_t Connection_Handle;
+  uint8_t IO_Capability;
 } aci_gap_pass_key_req_event_rp0;
 
 typedef __PACKED_STRUCT

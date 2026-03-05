@@ -1,4 +1,4 @@
-/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/2.00a-lca04/firmware/public_inc/common_types.h#1 $*/
+/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/branches/P10164613/2.00a-lca05_CombinedPatchV2/firmware/public_inc/common_types.h#5 $*/
 /**
  ********************************************************************************
  * @file    common_types.h
@@ -410,7 +410,9 @@ typedef struct ble_buff_hdr_st {
 typedef struct _iso_pdu_buff_hdr_st {
 	ble_buff_hdr_t  pkt;	/* PDU Packet */
 #if(SUPPORT_CONNECTED_ISOCHRONOUS && (SUPPORT_MASTER_CONNECTION || SUPPORT_SLAVE_CONNECTION))
-	uint8_t flsh_tmout_cnt;		/* flush timeout counter */
+/* BZ 220696 Change */
+	int8_t flsh_tmout_cnt;		/* flush timeout counter */
+/* End BZ 220696 Change */
 	uint8_t flsh_tmout_subevnt_cnt;		/* flush timeout subevent number */
 	uint8_t rx_flsh_tmout_cnt_updtd;	/* flush timeout count updated or not flag */
 #endif //(SUPPORT_CONNECTED_ISOCHRONOUS && (SUPPORT_MASTER_CONNECTION || SUPPORT_SLAVE_CONNECTION))
@@ -422,6 +424,7 @@ typedef struct _iso_pdu_buff_hdr_st {
 typedef struct _sdu_buf_hdr_st {
 	iso_pdu_buff_hdr_st* ptr_last_pdu_buff_hdr;		/* pointer to the last pdu buffer header pointed to this sdu */
 	struct _sdu_buf_hdr_st* ptr_nxt_sdu_buff_hdr;	/* next sdu pointer */
+	struct _sdu_buf_hdr_st* ptr_nxt_frgmnt_sdu_buff_hdr;	/* sdu fragments pointer is a list for all sdu fragments from controller perspective not Host */
 	uint32_t*ptr_sdu_buffer;	/* pointer to SDU buffer in system memory for rx*/
 	uint32_t time_stamp;	/* Time Stamp associated with this SDU */
 	uint32_t time_offset;	/* Time Offset used only in framed SDUs */
@@ -429,13 +432,32 @@ typedef struct _sdu_buf_hdr_st {
 	uint16_t iso_sdu_len;	/* ISO SDU data real length */
 	uint16_t total_sdu_len; /* total sdu length for all sdu fragments */
 	uint8_t  pkt_status_flag;
-	uint8_t  pb_flag;      /* PB_flag used in rx */
+	uint8_t  pb_flag;      									/* Packet boundary flag*/
+	uint8_t  is_virtual_sdu_hdr;							/* Is virtual SDU is set in case of virtual SDUs to be allocated
+															   This is used in flush mechanism to handle the flow control
+															 */
 	/*
 	 * the first one will have the value 10 complete sdu until a new sdu fragment will be received then it will be 00 first fragment
 	 * the subsequent one will have the value 11 last fragment until a new sdu fragment will be received then it will be 01 continuation fragment
 	 *
 	 * */
 } iso_sdu_buf_hdr_st, *iso_sdu_buf_hdr_p;
+/* BZ 219809 change */
+/**
+ * @brief Data contained in CIS Request event
+ *
+ * This structure contains the parameters passed from the master to the host of the slave in CIS creation procedure.
+ */
+typedef struct _ble_intf_get_cig_info_st{
+	uint32_t trsnprt_ltncy_m_to_s;	/* The maximum time, in us, for transmission of SDUs of all CISes */
+	uint32_t trsnprt_ltncy_s_to_m;
+	uint16_t iso_interval;
+	uint16_t cis_conn_hndl;	/* CIS connection handle */
+	uint8_t role;
+	uint8_t cis_id;		/* CIS Identifier */
+	uint8_t cig_id;		/* CIG Identifier */
+} ble_intf_get_cig_info_st;
+/* End BZ 219809 change */
 #endif  /* (SUPPORT_BRD_ISOCHRONOUS || SUPPORT_SYNC_ISOCHRONOUSs ||  (SUPPORT_CONNECTED_ISOCHRONOUS && ( SUPPORT_MASTER_CONNECTION || SUPPORT_SLAVE_CONNECTION))) */
 
 #if SUPPORT_LE_PAWR_ADVERTISER_ROLE
@@ -520,11 +542,13 @@ typedef enum {
 #define SUPPORT_MAC_PHY_CONT_TESTING_CMDS			1
 #endif /* SUPPORT_MAC_PHY_CONT_TESTING_CMDS */
 
-#if (defined(PHY_40nm_3_60_a_tc)|| defined(PHY_40nm_3_60_a_tc_new_demod) || defined(PHY_40nm_3_00_a) || defined(PHY_40nm_3_40_a) || defined(PHY_40nm_6_00_a))
+#if (defined(PHY_40nm_3_60_a_tc)|| defined(PHY_40nm_3_60_a_tc_new_demod) || defined(PHY_40nm_3_00_a)	\
+		|| defined(PHY_40nm_3_40_a) || defined(PHY_40nm_6_00_a) || defined(PHY_40nm_6_00_a_lca00))
 #define SUPPORT_MAC_CONT_TESTING_CMDS_PHY_SUPPORT	SUPPORT_MAC_PHY_CONT_TESTING_CMDS
 #else
 #define SUPPORT_MAC_CONT_TESTING_CMDS_PHY_SUPPORT	0
-#endif /*end of defined(PHY_40nm_3_60_a_tc) || defined(PHY_40nm_3_60_a_tc_new_demod)|| defined(PHY_40nm_3_00_a) || defined(PHY_40nm_3_40_a) || defined(PHY_40nm_6_00_a) */
+#endif /*end of defined(PHY_40nm_3_60_a_tc) || defined(PHY_40nm_3_60_a_tc_new_demod)|| defined(PHY_40nm_3_00_a)
+		|| defined(PHY_40nm_3_40_a) || defined(PHY_40nm_6_00_a) || defined(PHY_40nm_6_00_a_lca00) */
 
 #ifndef EXTERNAL_CUSTOM_CMDS
 #define EXTERNAL_CUSTOM_CMDS						0	/* Indicates that an external custom HCI commands module exists */
@@ -550,7 +574,7 @@ typedef enum {
 #endif /* SUPPORT_HCI_EVENT_ONLY_TESTING */
 
 #ifndef SUPPORT_HW_AUDIO_SYNC_SIGNAL
-#define SUPPORT_HW_AUDIO_SYNC_SIGNAL       0
+#define SUPPORT_HW_AUDIO_SYNC_SIGNAL        0
 #endif /* SUPPORT_HW_AUDIO_SYNC_SIGNAL */
 
 #if SUPPORT_LE_PAWR_SYNC_ROLE
@@ -600,11 +624,13 @@ typedef enum {
 #define SUPPORT_PHY_SHUTDOWN_MODE					1 /* Enable\Disable phpy shutdown mode support */
 #endif /* SUPPORT_PHY_SHUTDOWN_MODE */
 
-#if (defined(PHY_40nm_3_60_a_tc) || defined(PHY_40nm_3_60_a_tc_new_demod) || defined(PHY_40nm_3_00_a) || defined(PHY_40nm_3_40_a) || defined(PHY_40nm_6_00_a))
+#if (defined(PHY_40nm_3_60_a_tc) || defined(PHY_40nm_3_60_a_tc_new_demod) || defined(PHY_40nm_3_00_a)	\
+		|| defined(PHY_40nm_3_40_a) || defined(PHY_40nm_6_00_a)) || defined(PHY_40nm_6_00_a_lca00)
 #define PHY_SHUTDOWN_MODE_PHY_SUPPORT				SUPPORT_PHY_SHUTDOWN_MODE
 #else
 #define PHY_SHUTDOWN_MODE_PHY_SUPPORT				0
-#endif /* defined(PHY_40nm_3_60_a_tc) || defined(PHY_40nm_3_60_a_tc_new_demod) || defined(PHY_40nm_3_00_a) || defined(PHY_40nm_3_40_a) || defined(PHY_40nm_6_00_a) */
+#endif /* defined(PHY_40nm_3_60_a_tc) || defined(PHY_40nm_3_60_a_tc_new_demod) || defined(PHY_40nm_3_00_a)
+		|| defined(PHY_40nm_3_40_a) || defined(PHY_40nm_6_00_a) || defined(PHY_40nm_6_00_a_lca00) */
 
 #if PHY_SHUTDOWN_MODE_PHY_SUPPORT
 #define PHY_SHUTDOWN_WAKEUP_TIME_OVERHEAD			2 			/* in sleep timer units, the added time overhead from executing override seqeuences needed in phy shutdown mode */
@@ -635,11 +661,11 @@ typedef enum {
 #define SUPPORT_LE_ENHANCED_CONN_UPDATE 0
 #endif /* SUPPORT_LE_ENHANCED_CONN_UPDATE */
 
-#if defined(PHY_40nm_6_00_a)
+#if (defined(PHY_40nm_6_00_a) || defined(PHY_40nm_6_00_a_lca00))
 #define PHY_USE_APB_TRANSPORT				1
 #else
 #define PHY_USE_APB_TRANSPORT				0
-#endif /*PHY_40nm_6_00_a */
+#endif /* PHY_40nm_6_00_a || PHY_40nm_6_00_a_lca00 */
 #if defined(RTL_VER_7)
 #define USE_NEW_DEMODULATOR							1
 #endif /* (USED_RTL_VER >= 7) */

@@ -60,9 +60,13 @@ typedef struct FM_FlashOpConfig
 
 /* Private defines -----------------------------------------------------------*/
 #define FLASH_PAGE_NBR    (FLASH_SIZE / FLASH_PAGE_SIZE)
-
+#if defined(STM32WBA25xx) || defined(STM32WBA23xx)
+#define FLASH_WRITE_BLOCK_SIZE  2U
+#else
 #define FLASH_WRITE_BLOCK_SIZE  4U
+#endif /* defined(STM32WBA25xx) || defined(STM32WBA23xx)  */
 #define ALIGNMENT_32   0x00000003
+#define ALIGNMENT_64   0x00000007
 #define ALIGNMENT_128  0x0000000F
 
 /* Private macros ------------------------------------------------------------*/
@@ -143,7 +147,7 @@ FM_Cmd_Status_t FM_Write(uint32_t *Src, uint32_t *Dest, int32_t Size, FM_Callbac
   FM_Cmd_Status_t status;
 
   if (((uint32_t)Dest < FLASH_BASE) || ((uint32_t)Dest > (FLASH_BASE + FLASH_SIZE))
-                                    || (((uint32_t)Dest + Size) > (FLASH_BASE + FLASH_SIZE)))
+                                    || (((uint32_t)Dest + (Size << 2)) > (FLASH_BASE + FLASH_SIZE)))
   {
     LOG_ERROR_SYSTEM("\r\nFM_Write - Destination address not part of the flash");
 
@@ -151,7 +155,11 @@ FM_Cmd_Status_t FM_Write(uint32_t *Src, uint32_t *Dest, int32_t Size, FM_Callbac
     return FM_ERROR;
   }
 
+#ifdef FLASH_DOUBLEWORD_SUPPORT
+  if (((uint32_t) Src & ALIGNMENT_32) || ((uint32_t) Dest & ALIGNMENT_64))
+#else
   if (((uint32_t) Src & ALIGNMENT_32) || ((uint32_t) Dest & ALIGNMENT_128))
+#endif
   {
     LOG_ERROR_SYSTEM("\r\nFM_Write - Source or destination address not properly aligned");
 

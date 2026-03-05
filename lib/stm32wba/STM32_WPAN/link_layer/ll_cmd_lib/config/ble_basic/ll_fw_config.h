@@ -38,7 +38,8 @@
 /*Configurations of BLE will apply only when BLE is enabled*/
 
 /* Variant configuration */
-#define CFG_LL_BLE_BASIC                                1
+#define CFG_LL_BLE_BASIC                            1
+#define CFG_LL_BLE_INTERFACE_COMPATIBILITY          1
 
 /* Roles configurations */
 #ifndef SUPPORT_EXPLCT_OBSERVER_ROLE

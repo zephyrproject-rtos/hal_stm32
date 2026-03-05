@@ -1,5 +1,4 @@
-/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/2.00a-lca04/firmware/public_inc/ll_error.h#1 $*/
-
+/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/branches/P10164613/2.00a-lca05_CombinedPatchV2/firmware/public_inc/ll_error.h#4 $*/
 /**
  ********************************************************************************
  * @file    error.h
@@ -220,9 +219,9 @@ typedef enum _HW_ERROR_CODES
 #error "Dynamic Preemphasis coefficients feature cannot be enabled while the CTE degradation API is enabled"
 #endif /* SUPPORT_DYNAMIC_PREEMPH_COEFF && CTE_DEGRADATION_API_PHY_SUPPORT */
 
-#if (defined(RTL_VER_7) ^ defined(PHY_40nm_3_60_a_tc_new_demod)) && defined(snps_ble_demo)
-#error "Configuration error: RTL_VER_7 and PHY_40nm_3_60_a_tc_new_demod must be defined together or not at all"
-#endif /*(defined(RTL_VER_7) && (!defined(PHY_40nm_3_60_a_tc_new_demod)))*/
+#if (defined(RTL_VER_7) ^ (defined(PHY_40nm_3_60_a_tc_new_demod) || defined(PHY_40nm_6_00_a_lca00))) && defined(snps_ble_demo)
+#error "Configuration error: RTL_VER_7 shall only be defined while either PHY_40nm_3_60_a_tc_new_demod or PHY_40nm_6_00_a_lca00 is defined"
+#endif /*(defined(RTL_VER_7) && (!defined(PHY_40nm_3_60_a_tc_new_demod) && !defined(PHY_40nm_6_00_a_lca00)))*/
 
 /* Exported macros ------------------------------------------------------------*/
 

@@ -1,4 +1,9 @@
-/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/2.00a-lca04/firmware/public_inc/platform.h#1 $*/
+/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/branches/P10164613/2.00a-lca05_CombinedPatchV2/firmware/public_inc/platform.h#2 $*/
+/*
+ * Version Info
+ * V1: Original 2.00a-lca05_CombinedPatchV2
+ * V2: Patch for Temperature Calibration
+ */
 /**
  ********************************************************************************
  * @file    platform.h
@@ -63,6 +68,16 @@ typedef enum _radio_evnt_type_enum
 	RX_AT_STATE  ,      ///< Rx at specific time
 #endif /* SUPPORT_COEXISTENCE */
 }radio_event_enum_t;
+
+#if DEFAULT_PHY_CALIBRATION_PERIOD
+typedef enum _calibration_status{
+	CALIBRATION_NOT_RUNNING, 			///< No calibration waiting or required
+	CALIBRATION_READY,		 			///< Calibration started its timer and waits for timer firing
+	CALIBRATION_RUNNING,	 			///< Timer of calibration fired and started executing the calibration
+	PRDC_OR_TEMP_CALIBRATION_WAITING,	///< Timer of calibration fired or temperature has changed with +- 5 degrees but there's in progress operation like TX, ED or RX with no continuous reception
+	MAC_CH_CALIBRATION_WAITING			///< MAC channel calibration is pending due to starting TX or RX at specific time.
+}calibration_status;
+#endif /* DEFAULT_PHY_CALIBRATION_PERIOD */
 /******************************************************************************************//**
  *  								 Structures
  *********************************************************************************************/
@@ -108,7 +123,7 @@ struct mac_cbk_dispatch_tbl{
 	 */
 	void (*mac_rx_done)(otInstance *aInstance, otRadioFrame *aFrame, otError aError);
 	/**
-	 * @brief  The start of successfull transmission callback
+	 * @brief  The start of successful transmission callback
 	 *
 	 * @param[in] aInstance	: Radio instance
 	 * @param[in] aFrame	: Pointer to the transmitted frame
@@ -138,7 +153,7 @@ struct mac_cbk_dispatch_tbl{
 *  @{
 */
 /**
- * @brief  Initialize radio layer including registeration for RAL callbacks, some filter configurations,
+ * @brief  Initialize radio layer including registration for RAL callbacks, some filter configurations,
  * 		   and some automatic configurations like auto_sleep and auto_ack...etc
  *
  */
@@ -427,11 +442,27 @@ uint32_t platform_crypto(uint8_t *ptr_pckt, const uint8_t *ptr_key,
 		security_mode_enum_t security_mode);
 
 /**
- * @brief Run periodic calibration if tempature has changed
+ * @brief Run periodic calibration if temperature has changed
  *
  */
 void radio_run_phy_clbr_on_temp_change(void);
 #endif /*!SUPPORT_COEXISTENCE*/
+
+#if DEFAULT_PHY_CALIBRATION_PERIOD
+/**
+ * @brief Get the calibration state of MAC channel.
+ *
+ * @param[in] channel		: MAC channel (11:26).
+ * @retval Calibration state
+ */
+uint8_t radio_get_mac_ch_clbr_state(uint8_t channel);
+/**
+ * @brief Get the duration of single MAC channel calibration in sleep timer steps
+ *
+ * @return Duration of single MAC channel calibration in sleep timer steps
+ */
+uint32_t radio_get_mac_ch_clbr_durn(void);
+#endif /* DEFAULT_PHY_CALIBRATION_PERIOD */
 
 #if (!SUPPORT_COEXISTENCE)
 /**

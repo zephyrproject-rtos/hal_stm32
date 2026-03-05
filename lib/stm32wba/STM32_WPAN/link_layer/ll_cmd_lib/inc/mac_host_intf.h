@@ -1,10 +1,4 @@
-/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/2.00a-lca04/firmware/public_inc/mac_host_intf.h#2 $*/
-/*
- * Version Info
- * V1: Original 2.00a-lca04
- * V2: Patch for case 01898239: 802.15.4 RAM increase after dynamic lib feature
- *
- */
+/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/branches/P10164613/2.00a-lca05_CombinedPatchV2/firmware/public_inc/mac_host_intf.h#4 $*/
 /**
  ********************************************************************************
  * @file    mac_host_intf.h
@@ -57,7 +51,7 @@
 
 /**security parameters */
 #if SUPPORT_SEC
-#define KEY_SOURCE_SIZE    				 8	///< The size in octects of the key source element of KeyIdLookupDescriptor
+#define KEY_SOURCE_SIZE    				 8	///< The size in octets of the key source element of KeyIdLookupDescriptor
 #define KEY_ID_LOOKUP_DSCRP_LIST_SIZE    3	///< The size of the key ID lookup descriptor list element of KeyDescriptor
 #define MAX_NUM_OF_DEVICES_USE_KEY       8	///< The size of the device descriptor list element of KeyDescriptor
 #define KEY_USAGE_LIST_SIZE              5	///< The size of the key usage descriptor list element of KeyDescriptor
@@ -280,7 +274,7 @@ typedef enum security_level_enum {
 	sec_lvls_num
 } sec_level_enum_t;
 /**
- * @brief struct conatins PIB attribute data
+ * @brief struct contains PIB attribute data
  **/
 typedef struct attr_arr_e {
 	uint8_t* data;		///< PIB attribute data

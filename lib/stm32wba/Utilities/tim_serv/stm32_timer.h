@@ -1,24 +1,5 @@
 /*!
- * \file      timer.h
- *
- * \brief     Timer objects and scheduling management implementation
- *
- * \copyright Revised BSD License, see section \ref LICENSE.
- *
- * \code
- *                ______                              _
- *               / _____)             _              | |
- *              ( (____  _____ ____ _| |_ _____  ____| |__
- *               \____ \| ___ |    (_   _) ___ |/ ___)  _ \
- *               _____) ) ____| | | || |_| ____( (___| | | |
- *              (______/|_____)_|_|_| \__)_____)\____)_| |_|
  *              (C)2013-2017 Semtech
- *
- * \endcode
- *
- * \author    Miguel Luis ( Semtech )
- *
- * \author    Gregory Cristian ( Semtech )
  */
 
 /******************************************************************************
@@ -87,15 +68,16 @@ typedef enum {
   */
 typedef struct TimerEvent_s
 {
-    uint32_t Timestamp;           /*!<Expiring timer value in ticks from TimerContext */
-    uint32_t ReloadValue;         /*!<Reload Value when Timer is restarted            */
-    uint8_t IsPending;            /*!<Is the timer waiting for an event               */
-    uint8_t IsRunning;            /*!<Is the timer running                            */
-    uint8_t IsReloadStopped;      /*!<Is the reload stopped                           */
-    UTIL_TIMER_Mode_t Mode;       /*!<Timer type : one-shot/continuous                */
-    void ( *Callback )( void *);  /*!<callback function                               */
-    void *argument;               /*!<callback argument                               */
-	struct TimerEvent_s *Next;    /*!<Pointer to the next Timer object.               */
+    uint32_t Timestamp;                 /*!<Expiring timer value in ticks from TimerContext */
+    uint32_t ReloadValue;               /*!<Reload Value when Timer is restarted            */
+    uint8_t IsPending;                  /*!<Is the timer waiting for an event               */
+    uint8_t IsRunning;                  /*!<Is the timer running                            */
+    uint8_t IsReloadStopped;            /*!<Is the reload stopped                           */
+    UTIL_TIMER_Mode_t Mode;             /*!<Timer type : one-shot/continuous                */
+    void ( *Callback )( void *);        /*!<callback function                               */
+    void *argument;                     /*!<callback argument                               */
+	struct TimerEvent_s *Next;          /*!<Pointer to the next Timer object.               */
+    struct TimerEvent_s *NextExecution; /*!<Pointer to the next Timer object for execution. */
 } UTIL_TIMER_Object_t;
 
 /**
