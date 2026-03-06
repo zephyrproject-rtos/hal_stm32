@@ -107,7 +107,7 @@
   *          - SUCCESS: the Delay value is set.
   *          - ERROR: the Delay value is not set.
   */
-void LL_DLYB_SetDelay(DLYB_TypeDef *DLYBx, LL_DLYB_CfgTypeDef  *pdlyb_cfg)
+void LL_DLYB_SetDelay(DLYB_TypeDef *DLYBx, const LL_DLYB_CfgTypeDef  *pdlyb_cfg)
 {
   /* Check the DelayBlock instance */
   assert_param(IS_DLYB_ALL_INSTANCE(DLYBx));
@@ -130,7 +130,7 @@ void LL_DLYB_SetDelay(DLYB_TypeDef *DLYBx, LL_DLYB_CfgTypeDef  *pdlyb_cfg)
   *          - SUCCESS: the Delay value is received.
   *          - ERROR: the Delay value is not received.
   */
-void LL_DLYB_GetDelay(DLYB_TypeDef *DLYBx, LL_DLYB_CfgTypeDef *pdlyb_cfg)
+void LL_DLYB_GetDelay(const DLYB_TypeDef *DLYBx, LL_DLYB_CfgTypeDef *pdlyb_cfg)
 {
   /* Check the DelayBlock instance */
   assert_param(IS_DLYB_ALL_INSTANCE(DLYBx));
@@ -207,14 +207,14 @@ uint32_t LL_DLYB_GetClockPeriod(DLYB_TypeDef *DLYBx, LL_DLYB_CfgTypeDef *pdlyb_c
       pdlyb_cfg->Units = i ;
 
       /* Disable the length sampling */
-      DLYBx->CR = DLYB_CR_SEN;
+      CLEAR_BIT(DLYBx->CR, DLYB_CR_SEN);
 
       return (uint32_t)SUCCESS;
     }
   }
 
   /* Disable the length sampling */
-  DLYBx->CR = DLYB_CR_SEN;
+  CLEAR_BIT(DLYBx->CR, DLYB_CR_SEN);
 
   return (uint32_t)ERROR;
 

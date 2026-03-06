@@ -71,6 +71,12 @@ extern "C" {
 #define DMA_CHANNEL5_OFFSET  (0x000002D0UL)
 #define DMA_CHANNEL6_OFFSET  (0x00000350UL)
 #define DMA_CHANNEL7_OFFSET  (0x000003D0UL)
+#if defined(GPDMA1_Channel11)
+#define DMA_CHANNEL8_OFFSET  (0x00000450UL)
+#define DMA_CHANNEL9_OFFSET  (0x000004D0UL)
+#define DMA_CHANNEL10_OFFSET (0x00000550UL)
+#define DMA_CHANNEL11_OFFSET (0x000005D0UL)
+#endif /* GPDMA1_Channel11 */
 
 
 /* Array used to get the DMA Channel register offset versus Channel index LL_DMA_CHANNEL_x */
@@ -78,6 +84,9 @@ static const uint32_t LL_DMA_CH_OFFSET_TAB[] =
 {
   DMA_CHANNEL0_OFFSET,  DMA_CHANNEL1_OFFSET,  DMA_CHANNEL2_OFFSET,  DMA_CHANNEL3_OFFSET,
   DMA_CHANNEL4_OFFSET,  DMA_CHANNEL5_OFFSET,  DMA_CHANNEL6_OFFSET,  DMA_CHANNEL7_OFFSET,
+#if defined(GPDMA1_Channel11)
+  DMA_CHANNEL8_OFFSET,  DMA_CHANNEL9_OFFSET,  DMA_CHANNEL10_OFFSET,  DMA_CHANNEL11_OFFSET,
+#endif /* GPDMA1_Channel11 */
 };
 
 /**
@@ -983,11 +992,11 @@ typedef struct
 #define LL_GPDMA1_REQUEST_UART4_RX       27U     /*!< GPDMA1 HW request is UART4_RX      */
 #define LL_GPDMA1_REQUEST_UART4_TX       28U     /*!< GPDMA1 HW request is UART4_TX      */
 #endif /* UART4 */
-#if defined (UART4)
+#if defined (UART5)
 #define LL_GPDMA1_REQUEST_UART5_RX       29U     /*!< GPDMA1 HW request is UART5_RX      */
 #define LL_GPDMA1_REQUEST_UART5_TX       30U     /*!< GPDMA1 HW request is UART5_TX      */
 #endif /* UART5 */
-#if defined (UART4)
+#if defined (USART6)
 #define LL_GPDMA1_REQUEST_USART6_RX      31U     /*!< GPDMA1 HW request is USART6_RX     */
 #define LL_GPDMA1_REQUEST_USART6_TX      32U     /*!< GPDMA1 HW request is USART6_TX     */
 #endif /* USART6 */
@@ -1155,6 +1164,27 @@ typedef struct
 #define LL_GPDMA1_REQUEST_I3C2_TC        138U    /*!< GPDMA1 HW request is I3C2_TC       */
 #define LL_GPDMA1_REQUEST_I3C2_RS        139U    /*!< GPDMA1 HW request is I3C2_RS       */
 #endif /* I3C2 */
+#if defined (JPEG)
+#define LL_GPDMA1_REQUEST_JPEG_RX_REQ    140U    /*!< GPDMA1 HW request is JPEG_TX_REQ   */
+#define LL_GPDMA1_REQUEST_JPEG_TX_REQ    141U    /*!< GPDMA1 HW request is JPEG_TX_REQ   */
+#endif /* JPEG */
+#if defined (ADC3)
+#define LL_GPDMA1_REQUEST_ADC3           142U    /*!< GPDMA1 HW request is ADC3          */
+#endif /* ADC3 */
+#if defined (OCTOSPI2)
+#define LL_GPDMA1_REQUEST_OCTOSPI2       143U    /*!< GPDMA1 HW request is OCTOSPI2      */
+#endif /* OCTOSPI2 */
+#if defined (MDF1)
+#define LL_GPDMA1_REQUEST_MDF1_FLT0      144U    /*!< GPDMA1 HW request is MDF1_FLT0     */
+#define LL_GPDMA1_REQUEST_MDF1_FLT1      145U    /*!< GPDMA1 HW request is MDF1_FLT1     */
+#define LL_GPDMA1_REQUEST_MDF1_FLT2      146U    /*!< GPDMA1 HW request is MDF1_FLT2     */
+#define LL_GPDMA1_REQUEST_MDF1_FLT3      147U    /*!< GPDMA1 HW request is MDF1_FLT3     */
+#define LL_GPDMA1_REQUEST_MDF1_FLT4      148U    /*!< GPDMA1 HW request is MDF1_FLT4     */
+#define LL_GPDMA1_REQUEST_MDF1_FLT5      149U    /*!< GPDMA1 HW request is MDF1_FLT5     */
+#endif /* MDF1 */
+#if defined (ADF1)
+#define LL_GPDMA1_REQUEST_ADF1_FLT0      150U    /*!< GPDMA1 HW request is ADF1_FLT0     */
+#endif /* ADF1 */
 
 /* GPDMA2 Hardware Requests */
 #define LL_GPDMA2_REQUEST_ADC1           0U      /*!< GPDMA2 HW request is ADC1          */
@@ -1189,11 +1219,11 @@ typedef struct
 #define LL_GPDMA2_REQUEST_UART4_RX       27U     /*!< GPDMA2 HW request is UART4_RX      */
 #define LL_GPDMA2_REQUEST_UART4_TX       28U     /*!< GPDMA2 HW request is UART4_TX      */
 #endif /* UART4 */
-#if defined (UART4)
+#if defined (UART5)
 #define LL_GPDMA2_REQUEST_UART5_RX       29U     /*!< GPDMA2 HW request is UART5_RX      */
 #define LL_GPDMA2_REQUEST_UART5_TX       30U     /*!< GPDMA2 HW request is UART5_TX      */
 #endif /* UART5 */
-#if defined (UART4)
+#if defined (USART6)
 #define LL_GPDMA2_REQUEST_USART6_RX      31U     /*!< GPDMA2 HW request is USART6_RX     */
 #define LL_GPDMA2_REQUEST_USART6_TX      32U     /*!< GPDMA2 HW request is USART6_TX     */
 #endif /* USART6 */
@@ -1361,7 +1391,27 @@ typedef struct
 #define LL_GPDMA2_REQUEST_I3C2_TC        138U    /*!< GPDMA2 HW request is I3C2_TC       */
 #define LL_GPDMA2_REQUEST_I3C2_RS        139U    /*!< GPDMA2 HW request is I3C2_RS       */
 #endif /* I3C2 */
-
+#if defined (JPEG)
+#define LL_GPDMA2_REQUEST_JPEG_RX_REQ    140U    /*!< GPDMA2 HW request is JPEG_TX_REQ   */
+#define LL_GPDMA2_REQUEST_JPEG_TX_REQ    141U    /*!< GPDMA2 HW request is JPEG_TX_REQ   */
+#endif /* JPEG */
+#if defined (ADC3)
+#define LL_GPDMA2_REQUEST_ADC3           142U    /*!< GPDMA2 HW request is ADC3          */
+#endif /* ADC3 */
+#if defined (OCTOSPI2)
+#define LL_GPDMA2_REQUEST_OCTOSPI2       143U    /*!< GPDMA2 HW request is OCTOSPI2      */
+#endif /* OCTOSPI2 */
+#if defined (MDF1)
+#define LL_GPDMA2_REQUEST_MDF1_FLT0      144U    /*!< GPDMA2 HW request is MDF1_FLT0     */
+#define LL_GPDMA2_REQUEST_MDF1_FLT1      145U    /*!< GPDMA2 HW request is MDF1_FLT1     */
+#define LL_GPDMA2_REQUEST_MDF1_FLT2      146U    /*!< GPDMA2 HW request is MDF1_FLT2     */
+#define LL_GPDMA2_REQUEST_MDF1_FLT3      147U    /*!< GPDMA2 HW request is MDF1_FLT3     */
+#define LL_GPDMA2_REQUEST_MDF1_FLT4      148U    /*!< GPDMA2 HW request is MDF1_FLT4     */
+#define LL_GPDMA2_REQUEST_MDF1_FLT5      149U    /*!< GPDMA2 HW request is MDF1_FLT5     */
+#endif /* MDF1 */
+#if defined (ADF1)
+#define LL_GPDMA2_REQUEST_ADF1_FLT0      150U    /*!< GPDMA2 HW request is ADF1_FLT0     */
+#endif /* ADF1 */
 /**
   * @}
   */
@@ -1431,9 +1481,42 @@ typedef struct
 #if defined (COMP1)
 #define LL_GPDMA1_TRIGGER_COMP1_OUT           44U      /*!< GPDMA1 HW Trigger signal is COMP1_OUT          */
 #endif /* COMP1 */
-#if defined (STM32H503xx) || defined(STM32H523xx) || defined(STM32H533xx)
+#if defined (STM32H503xx) || defined(STM32H523xx) || defined(STM32H533xx) || defined(STM32H5F5xx) || defined(STM32H5F4xx) \
+    || defined(STM32H5E5xx) || defined(STM32H5E4xx) || defined(STM32H553xx) || defined(STM32H543xx)
 #define LL_GPDMA1_TRIGGER_EVENTOUT            45U      /*!< GPDMA1 HW Trigger signal is EVENTOUT           */
-#endif /* STM32H503xx || STM32H523xx || STM32H533xx */
+#endif /* STM32H503xx || STM32H523xx || STM32H533xx || STM32H5F5xx || STM32H5F4xx ||
+          STM32H5E5xx || STM32H5E4xx || STM32H553xx || STM32H543xx */
+#if defined(STM32H5F5xx) || defined(STM32H5F4xx) || defined(STM32H5E5xx) || defined(STM32H5E4xx)|| defined(STM32H553xx) || defined(STM32H543xx)
+#define LL_GPDMA1_TRIGGER_COMP2_OUT           46U      /*!< GPDMA1 HW Trigger signal is COMP1_OUT          */
+#if defined(STM32H5F5xx) || defined(STM32H5F4xx) || defined(STM32H5E5xx) || defined(STM32H5E4xx)
+#define LL_GPDMA1_TRIGGER_DMA2D_TC_FLAG       47U      /*!< GPDMA1 HW Trigger signal is TC_FLAG            */
+#define LL_GPDMA1_TRIGGER_DMA2D_CTC_FLAG      48U      /*!< GPDMA1 HW Trigger signal is CTC_FLAG           */
+#define LL_GPDMA1_TRIGGER_DMA2D_TW_FLAG       49U      /*!< GPDMA1 HW Trigger signal is TW_FLAG            */
+#define LL_GPDMA1_TRIGGER_DMA2D_GPFLAGS0      50U      /*!< GPDMA1 HW Trigger signal is GPFLAGS[0]         */
+#define LL_GPDMA1_TRIGGER_DMA2D_GPFLAGS1      51U      /*!< GPDMA1 HW Trigger signal is GPFLAGS[1]         */
+#define LL_GPDMA1_TRIGGER_DMA2D_GPFLAGS2      52U      /*!< GPDMA1 HW Trigger signal is GPFLAGS[2]         */
+#define LL_GPDMA1_TRIGGER_DMA2D_GPFLAGS3      53U      /*!< GPDMA1 HW Trigger signal is GPFLAGS[3]         */
+#define LL_GPDMA1_TRIGGER_JPEG_IFT_FLAG       54U      /*!< GPDMA1 HW Trigger signal is JPEG_IFT_FLAG      */
+#define LL_GPDMA1_TRIGGER_JPEG_IFNF_FLAG      55U      /*!< GPDMA1 HW Trigger signal is JPEG_IFNF_FLAG     */
+#define LL_GPDMA1_TRIGGER_JPEG_OFT_FLAG       56U      /*!< GPDMA1 HW Trigger signal is JPEG_OFT_FLAG      */
+#define LL_GPDMA1_TRIGGER_JPEG_OFNE_FLAG      57U      /*!< GPDMA1 HW Trigger signal is JPEG_OFNE_FLAG     */
+#define LL_GPDMA1_TRIGGER_JPEG_EOC_FLAG       58U      /*!< GPDMA1 HW Trigger signal is JPEG_EOC_FLAG      */
+#define LL_GPDMA1_TRIGGER_GFXTIM_EVT1         59U      /*!< GPDMA1 HW Trigger signal is GFXTIM_EVT[1]      */
+#define LL_GPDMA1_TRIGGER_GFXTIM_EVT2         60U      /*!< GPDMA1 HW Trigger signal is GFXTIM_EVT[2]      */
+#define LL_GPDMA1_TRIGGER_GFXTIM_EVT3         61U      /*!< GPDMA1 HW Trigger signal is GFXTIM_EVT[2+4]    */
+#define LL_GPDMA1_TRIGGER_GFXTIM_EVT4         62U      /*!< GPDMA1 HW Trigger signal is GFXTIM_EVT[4]      */
+#define LL_GPDMA1_TRIGGER_LCD_CTRL_SCANLINE   63U      /*!< GPDMA1 HW Trigger signal is LCD_CTRL_SCANLINE  */
+#define LL_GPDMA1_TRIGGER_GPDMA1_CH8_TCF      64U      /*!< GPDMA1 HW Trigger signal is GPDMA1_CH8_TC      */
+#define LL_GPDMA1_TRIGGER_GPDMA1_CH9_TCF      65U      /*!< GPDMA1 HW Trigger signal is GPDMA1_CH9_TC      */
+#define LL_GPDMA1_TRIGGER_GPDMA1_CH10_TCF     66U      /*!< GPDMA1 HW Trigger signal is GPDMA1_CH10_TC     */
+#define LL_GPDMA1_TRIGGER_GPDMA1_CH11_TCF     67U      /*!< GPDMA1 HW Trigger signal is GPDMA1_CH11_TC     */
+#define LL_GPDMA1_TRIGGER_GPDMA2_CH8_TCF      68U      /*!< GPDMA1 HW Trigger signal is GPDMA2_CH8_TC      */
+#define LL_GPDMA1_TRIGGER_GPDMA2_CH9_TCF      69U      /*!< GPDMA1 HW Trigger signal is GPDMA2_CH9_TC      */
+#define LL_GPDMA1_TRIGGER_GPDMA2_CH10_TCF     70U      /*!< GPDMA1 HW Trigger signal is GPDMA2_CH10_TC     */
+#define LL_GPDMA1_TRIGGER_GPDMA2_CH11_TCF     71U      /*!< GPDMA1 HW Trigger signal is GPDMA2_CH11_TC     */
+#endif /* STM32H5F5xx || STM32H5F4xx || STM32H5E5xx || STM32H5E4xx */
+#define LL_GPDMA1_TRIGGER_PLAY1_OUT15         72U      /*!< GPDMA1 HW Trigger signal is PLAY1_OUT15        */
+#endif /* STM32H5F5xx || STM32H5F4xx || STM32H5E5xx || STM32H5E4xx || STM32H553xx || STM32H543xx*/
 
 /* GPDMA2 Hardware Triggers */
 #define LL_GPDMA2_TRIGGER_EXTI_LINE0          0U       /*!< GPDMA2 HW Trigger signal is EXTI_LINE0         */
@@ -1495,9 +1578,42 @@ typedef struct
 #if defined (COMP1)
 #define LL_GPDMA2_TRIGGER_COMP1_OUT           44U      /*!< GPDMA2 HW Trigger signal is COMP1_OUT          */
 #endif /* COMP1 */
-#if defined (STM32H503xx) || defined(STM32H523xx) || defined(STM32H533xx)
+#if defined (STM32H503xx) || defined(STM32H523xx) || defined(STM32H533xx) || defined(STM32H5F5xx) || defined(STM32H5F4xx) \
+    || defined(STM32H5E5xx) || defined(STM32H5E4xx) || defined(STM32H553xx) || defined(STM32H543xx)
 #define LL_GPDMA2_TRIGGER_EVENTOUT            45U      /*!< GPDMA2 HW Trigger signal is EVENTOUT           */
-#endif /* STM32H503xx || STM32H523xx || STM32H533xx */
+#endif /* STM32H503xx || STM32H523xx || STM32H533xx || STM32H5F5xx || STM32H5F4xx ||
+          STM32H5E5xx || STM32H5E4xx || STM32H553xx || STM32H543xx */
+#if defined(STM32H5F5xx) || defined(STM32H5F4xx) || defined(STM32H5E5xx) || defined(STM32H5E4xx) || defined(STM32H553xx) || defined(STM32H543xx)
+#define LL_GPDMA2_TRIGGER_COMP2_OUT           46U      /*!< GPDMA2 HW Trigger signal is COMP1_OUT          */
+#if defined(STM32H5F5xx) || defined(STM32H5F4xx) || defined(STM32H5E5xx) || defined(STM32H5E4xx)
+#define LL_GPDMA2_TRIGGER_DMA2D_TC_FLAG       47U      /*!< GPDMA2 HW Trigger signal is TC_FLAG            */
+#define LL_GPDMA2_TRIGGER_DMA2D_CTC_FLAG      48U      /*!< GPDMA2 HW Trigger signal is CTC_FLAG           */
+#define LL_GPDMA2_TRIGGER_DMA2D_TW_FLAG       49U      /*!< GPDMA2 HW Trigger signal is TW_FLAG            */
+#define LL_GPDMA2_TRIGGER_DMA2D_GPFLAGS0      50U      /*!< GPDMA2 HW Trigger signal is GPFLAGS[0]         */
+#define LL_GPDMA2_TRIGGER_DMA2D_GPFLAGS1      51U      /*!< GPDMA2 HW Trigger signal is GPFLAGS[1]         */
+#define LL_GPDMA2_TRIGGER_DMA2D_GPFLAGS2      52U      /*!< GPDMA2 HW Trigger signal is GPFLAGS[2]         */
+#define LL_GPDMA2_TRIGGER_DMA2D_GPFLAGS3      53U      /*!< GPDMA2 HW Trigger signal is GPFLAGS[3]         */
+#define LL_GPDMA2_TRIGGER_JPEG_IFT_FLAG       54U      /*!< GPDMA2 HW Trigger signal is JPEG_IFT_FLAG      */
+#define LL_GPDMA2_TRIGGER_JPEG_IFNF_FLAG      55U      /*!< GPDMA2 HW Trigger signal is JPEG_IFNF_FLAG     */
+#define LL_GPDMA2_TRIGGER_JPEG_OFT_FLAG       56U      /*!< GPDMA2 HW Trigger signal is JPEG_OFT_FLAG      */
+#define LL_GPDMA2_TRIGGER_JPEG_OFNE_FLAG      57U      /*!< GPDMA2 HW Trigger signal is JPEG_OFNE_FLAG     */
+#define LL_GPDMA2_TRIGGER_JPEG_EOC_FLAG       58U      /*!< GPDMA2 HW Trigger signal is JPEG_EOC_FLAG      */
+#define LL_GPDMA2_TRIGGER_GFXTIM_EVT1         59U      /*!< GPDMA2 HW Trigger signal is GFXTIM_EVT[1]      */
+#define LL_GPDMA2_TRIGGER_GFXTIM_EVT2         60U      /*!< GPDMA2 HW Trigger signal is GFXTIM_EVT[2]      */
+#define LL_GPDMA2_TRIGGER_GFXTIM_EVT3         61U      /*!< GPDMA2 HW Trigger signal is GFXTIM_EVT[2+4]    */
+#define LL_GPDMA2_TRIGGER_GFXTIM_EVT4         62U      /*!< GPDMA2 HW Trigger signal is GFXTIM_EVT[4]      */
+#define LL_GPDMA2_TRIGGER_LCD_CTRL_SCANLINE   63U      /*!< GPDMA2 HW Trigger signal is LCD_CTRL_SCANLINE  */
+#define LL_GPDMA2_TRIGGER_GPDMA1_CH8_TCF      64U      /*!< GPDMA2 HW Trigger signal is GPDMA1_CH8_TC      */
+#define LL_GPDMA2_TRIGGER_GPDMA1_CH9_TCF      65U      /*!< GPDMA2 HW Trigger signal is GPDMA1_CH9_TC      */
+#define LL_GPDMA2_TRIGGER_GPDMA1_CH10_TCF     66U      /*!< GPDMA2 HW Trigger signal is GPDMA1_CH10_TC     */
+#define LL_GPDMA2_TRIGGER_GPDMA1_CH11_TCF     67U      /*!< GPDMA2 HW Trigger signal is GPDMA1_CH11_TC     */
+#define LL_GPDMA2_TRIGGER_GPDMA2_CH8_TCF      68U      /*!< GPDMA2 HW Trigger signal is GPDMA2_CH8_TC      */
+#define LL_GPDMA2_TRIGGER_GPDMA2_CH9_TCF      69U      /*!< GPDMA2 HW Trigger signal is GPDMA2_CH9_TC      */
+#define LL_GPDMA2_TRIGGER_GPDMA2_CH10_TCF     70U      /*!< GPDMA2 HW Trigger signal is GPDMA2_CH10_TC     */
+#define LL_GPDMA2_TRIGGER_GPDMA2_CH11_TCF     71U      /*!< GPDMA2 HW Trigger signal is GPDMA2_CH11_TC     */
+#endif /* STM32H5F5xx || STM32H5F4xx || STM32H5E5xx || STM32H5E4xx */
+#define LL_GPDMA2_TRIGGER_PLAY1_OUT15         72U      /*!< GPDMA2 HW Trigger signal is PLAY1_OUT15        */
+#endif /* STM32H5F5xx || STM32H5F4xx || STM32H5E5xx || STM32H5E4xx || STM32H553xx || STM32H543xx */
 /**
   * @}
   */
@@ -1543,14 +1659,46 @@ typedef struct
   * @param  __CHANNEL_INSTANCE__ DMAx_Channely.
   * @retval DMAx.
   */
+#if defined(GPDMA1_Channel11)
+#define LL_DMA_GET_INSTANCE(__CHANNEL_INSTANCE__) \
+  (((uint32_t)(__CHANNEL_INSTANCE__) > ((uint32_t)GPDMA1_Channel11)) ?  GPDMA2 : GPDMA1)
+#else
 #define LL_DMA_GET_INSTANCE(__CHANNEL_INSTANCE__) \
   (((uint32_t)(__CHANNEL_INSTANCE__) > ((uint32_t)GPDMA1_Channel7)) ?  GPDMA2 : GPDMA1)
+#endif /* GPDMA1_Channel11 */
 
 /**
   * @brief  Convert DMAx_Channely into LL_DMA_CHANNEL_y.
   * @param  __CHANNEL_INSTANCE__ DMAx_Channely.
   * @retval LL_DMA_CHANNEL_y.
   */
+#if defined(GPDMA1_Channel11)
+#define LL_DMA_GET_CHANNEL(__CHANNEL_INSTANCE__) \
+  (((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)GPDMA1_Channel0))  ? LL_DMA_CHANNEL_0  : \
+   ((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)GPDMA2_Channel0))  ? LL_DMA_CHANNEL_0  : \
+   ((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)GPDMA1_Channel1))  ? LL_DMA_CHANNEL_1  : \
+   ((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)GPDMA2_Channel1))  ? LL_DMA_CHANNEL_1  : \
+   ((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)GPDMA1_Channel2))  ? LL_DMA_CHANNEL_2  : \
+   ((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)GPDMA2_Channel2))  ? LL_DMA_CHANNEL_2  : \
+   ((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)GPDMA1_Channel3))  ? LL_DMA_CHANNEL_3  : \
+   ((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)GPDMA2_Channel3))  ? LL_DMA_CHANNEL_3  : \
+   ((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)GPDMA1_Channel4))  ? LL_DMA_CHANNEL_4  : \
+   ((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)GPDMA2_Channel4))  ? LL_DMA_CHANNEL_4  : \
+   ((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)GPDMA1_Channel5))  ? LL_DMA_CHANNEL_5  : \
+   ((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)GPDMA2_Channel5))  ? LL_DMA_CHANNEL_5  : \
+   ((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)GPDMA1_Channel6))  ? LL_DMA_CHANNEL_6  : \
+   ((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)GPDMA2_Channel6))  ? LL_DMA_CHANNEL_6  : \
+   ((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)GPDMA1_Channel7))  ? LL_DMA_CHANNEL_7  : \
+   ((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)GPDMA2_Channel7))  ? LL_DMA_CHANNEL_7  : \
+   ((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)GPDMA1_Channel8))  ? LL_DMA_CHANNEL_8  : \
+   ((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)GPDMA2_Channel8))  ? LL_DMA_CHANNEL_8  : \
+   ((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)GPDMA1_Channel9))  ? LL_DMA_CHANNEL_9  : \
+   ((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)GPDMA2_Channel9))  ? LL_DMA_CHANNEL_9  : \
+   ((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)GPDMA1_Channel10))  ? LL_DMA_CHANNEL_10  : \
+   ((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)GPDMA2_Channel10))  ? LL_DMA_CHANNEL_10  : \
+   ((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)GPDMA1_Channel11))  ? LL_DMA_CHANNEL_11  : \
+   LL_DMA_CHANNEL_11)
+#else
 #define LL_DMA_GET_CHANNEL(__CHANNEL_INSTANCE__) \
   (((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)GPDMA1_Channel0))  ? LL_DMA_CHANNEL_0  : \
    ((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)GPDMA2_Channel0))  ? LL_DMA_CHANNEL_0  : \
@@ -1568,6 +1716,7 @@ typedef struct
    ((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)GPDMA2_Channel6))  ? LL_DMA_CHANNEL_6  : \
    ((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)GPDMA1_Channel7))  ? LL_DMA_CHANNEL_7  : \
    LL_DMA_CHANNEL_7)
+#endif /* GPDMA1_Channel11 */
 
 /**
   * @brief  Convert DMA Instance DMAx and LL_DMA_CHANNEL_y into DMAx_Channely.
@@ -1575,6 +1724,55 @@ typedef struct
   * @param  __CHANNEL__      LL_DMA_CHANNEL_y.
   * @retval DMAx_Channely.
   */
+#if defined(GPDMA1_Channel11)
+#define LL_DMA_GET_CHANNEL_INSTANCE(__DMA_INSTANCE__, __CHANNEL__) \
+  ((((uint32_t)(__DMA_INSTANCE__) == ((uint32_t)GPDMA1)) && ((uint32_t)(__CHANNEL__) == ((uint32_t)LL_DMA_CHANNEL_0))) \
+   ? GPDMA1_Channel0  :                                                                                                \
+   (((uint32_t)(__DMA_INSTANCE__) == ((uint32_t)GPDMA1)) && ((uint32_t)(__CHANNEL__) == ((uint32_t)LL_DMA_CHANNEL_1))) \
+   ? GPDMA1_Channel1  :                                                                                                \
+   (((uint32_t)(__DMA_INSTANCE__) == ((uint32_t)GPDMA1)) && ((uint32_t)(__CHANNEL__) == ((uint32_t)LL_DMA_CHANNEL_2))) \
+   ? GPDMA1_Channel2  :                                                                                                \
+   (((uint32_t)(__DMA_INSTANCE__) == ((uint32_t)GPDMA1)) && ((uint32_t)(__CHANNEL__) == ((uint32_t)LL_DMA_CHANNEL_3))) \
+   ? GPDMA1_Channel3  :                                                                                                \
+   (((uint32_t)(__DMA_INSTANCE__) == ((uint32_t)GPDMA1)) && ((uint32_t)(__CHANNEL__) == ((uint32_t)LL_DMA_CHANNEL_4))) \
+   ? GPDMA1_Channel4  :                                                                                                \
+   (((uint32_t)(__DMA_INSTANCE__) == ((uint32_t)GPDMA1)) && ((uint32_t)(__CHANNEL__) == ((uint32_t)LL_DMA_CHANNEL_5))) \
+   ? GPDMA1_Channel5  :                                                                                                \
+   (((uint32_t)(__DMA_INSTANCE__) == ((uint32_t)GPDMA1)) && ((uint32_t)(__CHANNEL__) == ((uint32_t)LL_DMA_CHANNEL_6))) \
+   ? GPDMA1_Channel6  :                                                                                                \
+   (((uint32_t)(__DMA_INSTANCE__) == ((uint32_t)GPDMA1)) && ((uint32_t)(__CHANNEL__) == ((uint32_t)LL_DMA_CHANNEL_7))) \
+   ? GPDMA1_Channel7  :                                                                                                \
+   (((uint32_t)(__DMA_INSTANCE__) == ((uint32_t)GPDMA1)) && ((uint32_t)(__CHANNEL__) == ((uint32_t)LL_DMA_CHANNEL_8))) \
+   ? GPDMA1_Channel8  :                                                                                                \
+   (((uint32_t)(__DMA_INSTANCE__) == ((uint32_t)GPDMA1)) && ((uint32_t)(__CHANNEL__) == ((uint32_t)LL_DMA_CHANNEL_9))) \
+   ? GPDMA1_Channel9  :                                                                                                \
+   (((uint32_t)(__DMA_INSTANCE__) == ((uint32_t)GPDMA1)) && ((uint32_t)(__CHANNEL__) == ((uint32_t)LL_DMA_CHANNEL_10)))\
+   ? GPDMA1_Channel10  :                                                                                               \
+   (((uint32_t)(__DMA_INSTANCE__) == ((uint32_t)GPDMA1)) && ((uint32_t)(__CHANNEL__) == ((uint32_t)LL_DMA_CHANNEL_11)))\
+   ? GPDMA1_Channel11  :                                                                                               \
+   (((uint32_t)(__DMA_INSTANCE__) == ((uint32_t)GPDMA2)) && ((uint32_t)(__CHANNEL__) == ((uint32_t)LL_DMA_CHANNEL_0))) \
+   ? GPDMA2_Channel0  :                                                                                                \
+   (((uint32_t)(__DMA_INSTANCE__) == ((uint32_t)GPDMA2)) && ((uint32_t)(__CHANNEL__) == ((uint32_t)LL_DMA_CHANNEL_1))) \
+   ? GPDMA2_Channel1  :                                                                                                \
+   (((uint32_t)(__DMA_INSTANCE__) == ((uint32_t)GPDMA2)) && ((uint32_t)(__CHANNEL__) == ((uint32_t)LL_DMA_CHANNEL_2)))\
+   ? GPDMA2_Channel2 :                                                                                                \
+   (((uint32_t)(__DMA_INSTANCE__) == ((uint32_t)GPDMA2)) && ((uint32_t)(__CHANNEL__) == ((uint32_t)LL_DMA_CHANNEL_3)))\
+   ? GPDMA2_Channel3 :                                                                                                \
+   (((uint32_t)(__DMA_INSTANCE__) == ((uint32_t)GPDMA2)) && ((uint32_t)(__CHANNEL__) == ((uint32_t)LL_DMA_CHANNEL_4)))\
+   ? GPDMA2_Channel4 :                                                                                                \
+   (((uint32_t)(__DMA_INSTANCE__) == ((uint32_t)GPDMA2)) && ((uint32_t)(__CHANNEL__) == ((uint32_t)LL_DMA_CHANNEL_5)))\
+   ? GPDMA2_Channel5 :                                                                                                \
+   (((uint32_t)(__DMA_INSTANCE__) == ((uint32_t)GPDMA2)) && ((uint32_t)(__CHANNEL__) == ((uint32_t)LL_DMA_CHANNEL_6)))\
+   ? GPDMA2_Channel6 :                                                                                                \
+   (((uint32_t)(__DMA_INSTANCE__) == ((uint32_t)GPDMA2)) && ((uint32_t)(__CHANNEL__) == ((uint32_t)LL_DMA_CHANNEL_7)))\
+   ? GPDMA2_Channel7 :                                                                                                \
+   (((uint32_t)(__DMA_INSTANCE__) == ((uint32_t)GPDMA2)) && ((uint32_t)(__CHANNEL__) == ((uint32_t)LL_DMA_CHANNEL_8)))\
+   ? GPDMA2_Channel8 :                                                                                                \
+   (((uint32_t)(__DMA_INSTANCE__) == ((uint32_t)GPDMA2)) && ((uint32_t)(__CHANNEL__) == ((uint32_t)LL_DMA_CHANNEL_9)))\
+   ? GPDMA2_Channel9 :                                                                                                \
+   (((uint32_t)(__DMA_INSTANCE__) == ((uint32_t)GPDMA2)) && ((uint32_t)(__CHANNEL__) == ((uint32_t)LL_DMA_CHANNEL_10)))\
+   ? GPDMA2_Channel10 :  GPDMA2_Channel11)
+#else
 #define LL_DMA_GET_CHANNEL_INSTANCE(__DMA_INSTANCE__, __CHANNEL__) \
   ((((uint32_t)(__DMA_INSTANCE__) == ((uint32_t)GPDMA1)) && ((uint32_t)(__CHANNEL__) == ((uint32_t)LL_DMA_CHANNEL_0))) \
    ? GPDMA1_Channel0  :                                                                                                \
@@ -1606,6 +1804,7 @@ typedef struct
    ? GPDMA2_Channel5 :                                                                                                \
    (((uint32_t)(__DMA_INSTANCE__) == ((uint32_t)GPDMA2)) && ((uint32_t)(__CHANNEL__) == ((uint32_t)LL_DMA_CHANNEL_6)))\
    ? GPDMA2_Channel6 :  GPDMA2_Channel7)
+#endif /* GPDMA1_Channel11 */
 
 /**
   * @}
@@ -1638,6 +1837,11 @@ typedef struct
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval None.
   */
 __STATIC_INLINE void LL_DMA_EnableChannel(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -1660,6 +1864,11 @@ __STATIC_INLINE void LL_DMA_EnableChannel(const DMA_TypeDef *DMAx, uint32_t Chan
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval None.
   */
 __STATIC_INLINE void LL_DMA_DisableChannel(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -1683,6 +1892,11 @@ __STATIC_INLINE void LL_DMA_DisableChannel(const DMA_TypeDef *DMAx, uint32_t Cha
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_DMA_IsEnabledChannel(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -1706,6 +1920,11 @@ __STATIC_INLINE uint32_t LL_DMA_IsEnabledChannel(const DMA_TypeDef *DMAx, uint32
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval None.
   */
 __STATIC_INLINE void LL_DMA_ResetChannel(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -1728,6 +1947,11 @@ __STATIC_INLINE void LL_DMA_ResetChannel(const DMA_TypeDef *DMAx, uint32_t Chann
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval None.
   */
 __STATIC_INLINE void LL_DMA_SuspendChannel(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -1750,6 +1974,11 @@ __STATIC_INLINE void LL_DMA_SuspendChannel(const DMA_TypeDef *DMAx, uint32_t Cha
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval None.
   */
 __STATIC_INLINE void LL_DMA_ResumeChannel(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -1772,6 +2001,11 @@ __STATIC_INLINE void LL_DMA_ResumeChannel(const DMA_TypeDef *DMAx, uint32_t Chan
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_DMA_IsSuspendedChannel(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -1795,6 +2029,11 @@ __STATIC_INLINE uint32_t LL_DMA_IsSuspendedChannel(const DMA_TypeDef *DMAx, uint
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @param  LinkedListBaseAddr Between 0 to 0xFFFF0000 (where the 4 LSB bytes
   *         are always 0)
   * @retval None.
@@ -1821,6 +2060,11 @@ __STATIC_INLINE void LL_DMA_SetLinkedListBaseAddr(const DMA_TypeDef *DMAx, uint3
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval Value between 0 to 0xFFFF0000 (where the 4 LSB bytes are always 0)
   */
 __STATIC_INLINE uint32_t LL_DMA_GetLinkedListBaseAddr(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -1845,6 +2089,11 @@ __STATIC_INLINE uint32_t LL_DMA_GetLinkedListBaseAddr(const DMA_TypeDef *DMAx, u
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @param  Configuration This parameter must be a combination of all the following values:
   *         @arg @ref LL_DMA_LOW_PRIORITY_LOW_WEIGHT  or @ref LL_DMA_LOW_PRIORITY_MID_WEIGHT or
   *              @ref LL_DMA_LOW_PRIORITY_HIGH_WEIGHT or @ref LL_DMA_HIGH_PRIORITY
@@ -1873,6 +2122,11 @@ __STATIC_INLINE void LL_DMA_ConfigControl(const DMA_TypeDef *DMAx, uint32_t Chan
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @param  Priority This parameter can be one of the following values:
   *         @arg @ref LL_DMA_LOW_PRIORITY_LOW_WEIGHT
   *         @arg @ref LL_DMA_LOW_PRIORITY_MID_WEIGHT
@@ -1900,6 +2154,11 @@ __STATIC_INLINE void LL_DMA_SetChannelPriorityLevel(const DMA_TypeDef *DMAx, uin
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_DMA_LOW_PRIORITY_LOW_WEIGHT
   *         @arg @ref LL_DMA_LOW_PRIORITY_MID_WEIGHT
@@ -1925,6 +2184,11 @@ __STATIC_INLINE uint32_t LL_DMA_GetChannelPriorityLevel(const DMA_TypeDef *DMAx,
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @param  LinkAllocatedPort This parameter can be one of the following values:
   *         @arg @ref LL_DMA_LINK_ALLOCATED_PORT0
   *         @arg @ref LL_DMA_LINK_ALLOCATED_PORT1
@@ -1950,6 +2214,11 @@ __STATIC_INLINE void LL_DMA_SetLinkAllocatedPort(const DMA_TypeDef *DMAx, uint32
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_DMA_LINK_ALLOCATED_PORT0
   *         @arg @ref LL_DMA_LINK_ALLOCATED_PORT1
@@ -1974,6 +2243,11 @@ __STATIC_INLINE uint32_t LL_DMA_GetLinkAllocatedPort(const DMA_TypeDef *DMAx, ui
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @param  LinkStepMode This parameter can be one of the following values:
   *         @arg @ref LL_DMA_LSM_FULL_EXECUTION
   *         @arg @ref LL_DMA_LSM_1LINK_EXECUTION
@@ -1999,6 +2273,11 @@ __STATIC_INLINE void LL_DMA_SetLinkStepMode(const DMA_TypeDef *DMAx, uint32_t Ch
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_DMA_LSM_FULL_EXECUTION
   *         @arg @ref LL_DMA_LSM_1LINK_EXECUTION
@@ -2030,6 +2309,11 @@ __STATIC_INLINE uint32_t LL_DMA_GetLinkStepMode(const DMA_TypeDef *DMAx, uint32_
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @param  Configuration This parameter must be a combination of all the following values:
   *         @arg @ref LL_DMA_DEST_ALLOCATED_PORT0     or @ref LL_DMA_DEST_ALLOCATED_PORT1
   *         @arg @ref LL_DMA_DEST_HALFWORD_PRESERVE   or @ref LL_DMA_DEST_HALFWORD_EXCHANGE
@@ -2068,6 +2352,11 @@ __STATIC_INLINE void LL_DMA_ConfigTransfer(const DMA_TypeDef *DMAx, uint32_t Cha
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @param  SrcBurstLength Between 1 to 64
   * @param  DestBurstLength Between 1 to 64
   * @retval None.
@@ -2098,6 +2387,11 @@ __STATIC_INLINE void LL_DMA_ConfigBurstLength(const DMA_TypeDef *DMAx, uint32_t 
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @param  Configuration This parameter must be a combination of all the following values:
   *         @arg @ref LL_DMA_CHANNEL_NSEC      or @ref LL_DMA_CHANNEL_SEC
   *         @arg @ref LL_DMA_CHANNEL_SRC_NSEC  or @ref LL_DMA_CHANNEL_SRC_SEC
@@ -2126,6 +2420,11 @@ __STATIC_INLINE void LL_DMA_ConfigChannelSecure(DMA_TypeDef *DMAx, uint32_t Chan
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval None.
   */
 __STATIC_INLINE void LL_DMA_EnableChannelDestSecure(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -2148,6 +2447,11 @@ __STATIC_INLINE void LL_DMA_EnableChannelDestSecure(const DMA_TypeDef *DMAx, uin
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval None.
   */
 __STATIC_INLINE void LL_DMA_DisableChannelDestSecure(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -2172,6 +2476,11 @@ __STATIC_INLINE void LL_DMA_DisableChannelDestSecure(const DMA_TypeDef *DMAx, ui
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_DMA_IsEnabledChannelDestSecure(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -2197,6 +2506,11 @@ __STATIC_INLINE uint32_t LL_DMA_IsEnabledChannelDestSecure(const DMA_TypeDef *DM
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval None.
   */
 __STATIC_INLINE void LL_DMA_EnableChannelSrcSecure(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -2219,6 +2533,11 @@ __STATIC_INLINE void LL_DMA_EnableChannelSrcSecure(const DMA_TypeDef *DMAx, uint
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval None.
   */
 __STATIC_INLINE void LL_DMA_DisableChannelSrcSecure(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -2243,6 +2562,11 @@ __STATIC_INLINE void LL_DMA_DisableChannelSrcSecure(const DMA_TypeDef *DMAx, uin
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_DMA_IsEnabledChannelSrcSecure(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -2266,6 +2590,11 @@ __STATIC_INLINE uint32_t LL_DMA_IsEnabledChannelSrcSecure(const DMA_TypeDef *DMA
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @param  DestAllocatedPort This parameter can be one of the following values:
   *         @arg @ref LL_DMA_DEST_ALLOCATED_PORT0
   *         @arg @ref LL_DMA_DEST_ALLOCATED_PORT1
@@ -2291,6 +2620,11 @@ __STATIC_INLINE void LL_DMA_SetDestAllocatedPort(const DMA_TypeDef *DMAx, uint32
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_DMA_DEST_ALLOCATED_PORT0
   *         @arg @ref LL_DMA_DEST_ALLOCATED_PORT1
@@ -2314,6 +2648,11 @@ __STATIC_INLINE uint32_t LL_DMA_GetDestAllocatedPort(const DMA_TypeDef *DMAx, ui
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @param  DestHWordExchange This parameter can be one of the following values:
   *         @arg @ref LL_DMA_DEST_HALFWORD_PRESERVE
   *         @arg @ref LL_DMA_DEST_HALFWORD_EXCHANGE
@@ -2339,6 +2678,11 @@ __STATIC_INLINE void LL_DMA_SetDestHWordExchange(const DMA_TypeDef *DMAx, uint32
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_DMA_DEST_HALFWORD_PRESERVE
   *         @arg @ref LL_DMA_DEST_HALFWORD_EXCHANGE
@@ -2362,6 +2706,11 @@ __STATIC_INLINE uint32_t LL_DMA_GetDestHWordExchange(const DMA_TypeDef *DMAx, ui
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @param  DestByteExchange This parameter can be one of the following values:
   *         @arg @ref LL_DMA_DEST_BYTE_PRESERVE
   *         @arg @ref LL_DMA_DEST_BYTE_EXCHANGE
@@ -2387,6 +2736,11 @@ __STATIC_INLINE void LL_DMA_SetDestByteExchange(const DMA_TypeDef *DMAx, uint32_
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_DMA_DEST_BYTE_PRESERVE
   *         @arg @ref LL_DMA_DEST_BYTE_EXCHANGE
@@ -2410,6 +2764,11 @@ __STATIC_INLINE uint32_t LL_DMA_GetDestByteExchange(const DMA_TypeDef *DMAx, uin
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @param  SrcByteExchange This parameter can be one of the following values:
   *         @arg @ref LL_DMA_SRC_BYTE_PRESERVE
   *         @arg @ref LL_DMA_SRC_BYTE_EXCHANGE
@@ -2435,6 +2794,11 @@ __STATIC_INLINE void LL_DMA_SetSrcByteExchange(const DMA_TypeDef *DMAx, uint32_t
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_DMA_SRC_BYTE_PRESERVE
   *         @arg @ref LL_DMA_SRC_BYTE_EXCHANGE
@@ -2458,6 +2822,11 @@ __STATIC_INLINE uint32_t LL_DMA_GetSrcByteExchange(const DMA_TypeDef *DMAx, uint
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @param  DestBurstLength Between 1 to 64
   * @retval None.
   */
@@ -2481,6 +2850,11 @@ __STATIC_INLINE void LL_DMA_SetDestBurstLength(const DMA_TypeDef *DMAx, uint32_t
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval Between 1 to 64.
   */
 __STATIC_INLINE uint32_t LL_DMA_GetDestBurstLength(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -2503,6 +2877,11 @@ __STATIC_INLINE uint32_t LL_DMA_GetDestBurstLength(const DMA_TypeDef *DMAx, uint
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @param  DestInc This parameter can be one of the following values:
   *         @arg @ref LL_DMA_DEST_FIXED
   *         @arg @ref LL_DMA_DEST_INCREMENT
@@ -2528,6 +2907,11 @@ __STATIC_INLINE void LL_DMA_SetDestIncMode(const DMA_TypeDef *DMAx, uint32_t Cha
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_DMA_DEST_FIXED
   *         @arg @ref LL_DMA_DEST_INCREMENT
@@ -2552,6 +2936,11 @@ __STATIC_INLINE uint32_t LL_DMA_GetDestIncMode(const DMA_TypeDef *DMAx, uint32_t
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @param  DestDataWidth This parameter can be one of the following values:
   *         @arg @ref LL_DMA_DEST_DATAWIDTH_BYTE
   *         @arg @ref LL_DMA_DEST_DATAWIDTH_HALFWORD
@@ -2579,6 +2968,11 @@ __STATIC_INLINE void LL_DMA_SetDestDataWidth(const DMA_TypeDef *DMAx, uint32_t C
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_DMA_DEST_DATAWIDTH_BYTE
   *         @arg @ref LL_DMA_DEST_DATAWIDTH_HALFWORD
@@ -2603,6 +2997,11 @@ __STATIC_INLINE uint32_t LL_DMA_GetDestDataWidth(const DMA_TypeDef *DMAx, uint32
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @param  SrcAllocatedPort This parameter can be one of the following values:
   *         @arg @ref LL_DMA_SRC_ALLOCATED_PORT0
   *         @arg @ref LL_DMA_SRC_ALLOCATED_PORT1
@@ -2628,6 +3027,11 @@ __STATIC_INLINE void LL_DMA_SetSrcAllocatedPort(const DMA_TypeDef *DMAx, uint32_
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_DMA_SRC_ALLOCATED_PORT0
   *         @arg @ref LL_DMA_SRC_ALLOCATED_PORT1
@@ -2652,6 +3056,11 @@ __STATIC_INLINE uint32_t LL_DMA_GetSrcAllocatedPort(const DMA_TypeDef *DMAx, uin
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @param  DataAlignment This parameter can be one of the following values:
   *         @arg @ref LL_DMA_DATA_ALIGN_ZEROPADD
   *         @arg @ref LL_DMA_DATA_ALIGN_SIGNEXTPADD
@@ -2679,6 +3088,11 @@ __STATIC_INLINE void LL_DMA_SetDataAlignment(const DMA_TypeDef *DMAx, uint32_t C
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_DMA_DATA_ALIGN_ZEROPADD
   *         @arg @ref LL_DMA_DATA_ALIGN_SIGNEXTPADD
@@ -2703,6 +3117,11 @@ __STATIC_INLINE uint32_t LL_DMA_GetDataAlignment(const DMA_TypeDef *DMAx, uint32
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @param  SrcBurstLength Between 1 to 64
   * @retval None.
   */
@@ -2726,6 +3145,11 @@ __STATIC_INLINE void LL_DMA_SetSrcBurstLength(const DMA_TypeDef *DMAx, uint32_t 
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval Between 1 to 64
   * @retval None.
   */
@@ -2750,6 +3174,11 @@ __STATIC_INLINE uint32_t LL_DMA_GetSrcBurstLength(const DMA_TypeDef *DMAx, uint3
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @param  SrcInc This parameter can be one of the following values:
   *         @arg @ref LL_DMA_SRC_FIXED
   *         @arg @ref LL_DMA_SRC_INCREMENT
@@ -2775,6 +3204,11 @@ __STATIC_INLINE void LL_DMA_SetSrcIncMode(const DMA_TypeDef *DMAx, uint32_t Chan
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_DMA_SRC_FIXED
   *         @arg @ref LL_DMA_SRC_INCREMENT
@@ -2799,6 +3233,11 @@ __STATIC_INLINE uint32_t LL_DMA_GetSrcIncMode(const DMA_TypeDef *DMAx, uint32_t 
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @param  SrcDataWidth This parameter can be one of the following values:
   *         @arg @ref LL_DMA_SRC_DATAWIDTH_BYTE
   *         @arg @ref LL_DMA_SRC_DATAWIDTH_HALFWORD
@@ -2826,6 +3265,11 @@ __STATIC_INLINE void LL_DMA_SetSrcDataWidth(const DMA_TypeDef *DMAx, uint32_t Ch
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_DMA_SRC_DATAWIDTH_BYTE
   *         @arg @ref LL_DMA_SRC_DATAWIDTH_HALFWORD
@@ -2857,6 +3301,11 @@ __STATIC_INLINE uint32_t LL_DMA_GetSrcDataWidth(const DMA_TypeDef *DMAx, uint32_
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @param  Configuration This parameter must be a combination of all the following values:
   *         @arg @ref LL_DMA_TCEM_BLK_TRANSFER          or @ref LL_DMA_TCEM_RPT_BLK_TRANSFER      or
   *              @ref LL_DMA_TCEM_EACH_LLITEM_TRANSFER  or @ref LL_DMA_TCEM_LAST_LLITEM_TRANSFER
@@ -2892,6 +3341,11 @@ __STATIC_INLINE void LL_DMA_ConfigChannelTransfer(const DMA_TypeDef *DMAx, uint3
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @param  TransferEventMode This parameter can be one of the following values:
   *         @arg @ref LL_DMA_TCEM_BLK_TRANSFER
   *         @arg @ref LL_DMA_TCEM_RPT_BLK_TRANSFER
@@ -2920,6 +3374,11 @@ __STATIC_INLINE void LL_DMA_SetTransferEventMode(const DMA_TypeDef *DMAx, uint32
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_DMA_TCEM_BLK_TRANSFER
   *         @arg @ref LL_DMA_TCEM_RPT_BLK_TRANSFER
@@ -2946,6 +3405,11 @@ __STATIC_INLINE uint32_t LL_DMA_GetTransferEventMode(const DMA_TypeDef *DMAx, ui
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @param  TriggerPolarity This parameter can be one of the following values:
   *         @arg @ref LL_DMA_TRIG_POLARITY_MASKED
   *         @arg @ref LL_DMA_TRIG_POLARITY_RISING
@@ -2973,6 +3437,11 @@ __STATIC_INLINE void LL_DMA_SetTriggerPolarity(const DMA_TypeDef *DMAx, uint32_t
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_DMA_TRIG_POLARITY_MASKED
   *         @arg @ref LL_DMA_TRIG_POLARITY_RISING
@@ -2998,6 +3467,11 @@ __STATIC_INLINE uint32_t LL_DMA_GetTriggerPolarity(const DMA_TypeDef *DMAx, uint
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @param  TriggerMode This parameter can be one of the following values:
   *         @arg @ref LL_DMA_TRIGM_BLK_TRANSFER
   *         @arg @ref LL_DMA_TRIGM_RPT_BLK_TRANSFER (This value is allowed only for 2D addressing channels)
@@ -3026,6 +3500,11 @@ __STATIC_INLINE void LL_DMA_SetTriggerMode(const DMA_TypeDef *DMAx, uint32_t Cha
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_DMA_TRIGM_BLK_TRANSFER
   *         @arg @ref LL_DMA_TRIGM_RPT_BLK_TRANSFER (This value is allowed only for 2D addressing channels)
@@ -3053,6 +3532,11 @@ __STATIC_INLINE uint32_t LL_DMA_GetTriggerMode(const DMA_TypeDef *DMAx, uint32_t
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @param  Direction This parameter can be one of the following values:
   *         @arg @ref LL_DMA_DIRECTION_PERIPH_TO_MEMORY
   *         @arg @ref LL_DMA_DIRECTION_MEMORY_TO_PERIPH
@@ -3081,6 +3565,11 @@ __STATIC_INLINE void LL_DMA_SetDataTransferDirection(const DMA_TypeDef *DMAx, ui
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_DMA_DIRECTION_PERIPH_TO_MEMORY
   *         @arg @ref LL_DMA_DIRECTION_MEMORY_TO_PERIPH
@@ -3107,6 +3596,11 @@ __STATIC_INLINE uint32_t LL_DMA_GetDataTransferDirection(const DMA_TypeDef *DMAx
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @param  BlkHWRequest This parameter can be one of the following values:
   *         @arg @ref LL_DMA_HWREQUEST_SINGLEBURST
   *         @arg @ref LL_DMA_HWREQUEST_BLK
@@ -3133,6 +3627,11 @@ __STATIC_INLINE void LL_DMA_SetBlkHWRequest(const DMA_TypeDef *DMAx, uint32_t Ch
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_DMA_HWREQUEST_SINGLEBURST
   *         @arg @ref LL_DMA_HWREQUEST_BLK
@@ -3157,6 +3656,11 @@ __STATIC_INLINE uint32_t LL_DMA_GetBlkHWRequest(const DMA_TypeDef *DMAx, uint32_
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @param  Request This parameter can be one of the following values:
   *         @arg @ref LL_GPDMA1_REQUEST_ADC1
   *         @arg @ref LL_GPDMA1_REQUEST_ADC2 (*)
@@ -3294,6 +3798,17 @@ __STATIC_INLINE uint32_t LL_DMA_GetBlkHWRequest(const DMA_TypeDef *DMAx, uint32_
   *         @arg @ref LL_GPDMA1_REQUEST_I3C2_TX (*)
   *         @arg @ref LL_GPDMA1_REQUEST_I3C2_TC (*)
   *         @arg @ref LL_GPDMA1_REQUEST_I3C2_RS (*)
+  *         @arg @ref LL_GPDMA1_REQUEST_JPEG_RX_REQ (*)
+  *         @arg @ref LL_GPDMA1_REQUEST_JPEG_TX_REQ (*)
+  *         @arg @ref LL_GPDMA1_REQUEST_ADC3  (*)
+  *         @arg @ref LL_GPDMA1_REQUEST_OCTOSPI2  (*)
+  *         @arg @ref LL_GPDMA1_REQUEST_MDF1_FLT0 (*)
+  *         @arg @ref LL_GPDMA1_REQUEST_MDF1_FLT1 (*)
+  *         @arg @ref LL_GPDMA1_REQUEST_MDF1_FLT2 (*)
+  *         @arg @ref LL_GPDMA1_REQUEST_MDF1_FLT3 (*)
+  *         @arg @ref LL_GPDMA1_REQUEST_MDF1_FLT4 (*)
+  *         @arg @ref LL_GPDMA1_REQUEST_MDF1_FLT5 (*)
+  *         @arg @ref LL_GPDMA1_REQUEST_ADF1_FLT0 (*)
   *
   *         @arg @ref LL_GPDMA2_REQUEST_ADC1
   *         @arg @ref LL_GPDMA2_REQUEST_ADC2 (*)
@@ -3431,6 +3946,17 @@ __STATIC_INLINE uint32_t LL_DMA_GetBlkHWRequest(const DMA_TypeDef *DMAx, uint32_
   *         @arg @ref LL_GPDMA2_REQUEST_I3C2_TX (*)
   *         @arg @ref LL_GPDMA2_REQUEST_I3C2_TC (*)
   *         @arg @ref LL_GPDMA2_REQUEST_I3C2_RS (*)
+  *         @arg @ref LL_GPDMA2_REQUEST_JPEG_RX_REQ (*)
+  *         @arg @ref LL_GPDMA2_REQUEST_JPEG_TX_REQ (*)
+  *         @arg @ref LL_GPDMA2_REQUEST_ADC3  (*)
+  *         @arg @ref LL_GPDMA2_REQUEST_OCTOSPI2  (*)
+  *         @arg @ref LL_GPDMA2_REQUEST_MDF1_FLT0 (*)
+  *         @arg @ref LL_GPDMA2_REQUEST_MDF1_FLT1 (*)
+  *         @arg @ref LL_GPDMA2_REQUEST_MDF1_FLT2 (*)
+  *         @arg @ref LL_GPDMA2_REQUEST_MDF1_FLT3 (*)
+  *         @arg @ref LL_GPDMA2_REQUEST_MDF1_FLT4 (*)
+  *         @arg @ref LL_GPDMA2_REQUEST_MDF1_FLT5 (*)
+  *         @arg @ref LL_GPDMA2_REQUEST_ADF1_FLT0 (*)
   *
   * @note   (*) Availability depends on devices.
   * @retval None.
@@ -3455,6 +3981,11 @@ __STATIC_INLINE void LL_DMA_SetPeriphRequest(const DMA_TypeDef *DMAx, uint32_t C
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_GPDMA1_REQUEST_ADC1
   *         @arg @ref LL_GPDMA1_REQUEST_ADC2 (*)
@@ -3592,6 +4123,17 @@ __STATIC_INLINE void LL_DMA_SetPeriphRequest(const DMA_TypeDef *DMAx, uint32_t C
   *         @arg @ref LL_GPDMA1_REQUEST_I3C2_TX (*)
   *         @arg @ref LL_GPDMA1_REQUEST_I3C2_TC (*)
   *         @arg @ref LL_GPDMA1_REQUEST_I3C2_RS (*)
+  *         @arg @ref LL_GPDMA1_REQUEST_JPEG_RX_REQ (*)
+  *         @arg @ref LL_GPDMA1_REQUEST_JPEG_TX_REQ (*)
+  *         @arg @ref LL_GPDMA1_REQUEST_ADC3  (*)
+  *         @arg @ref LL_GPDMA1_REQUEST_OCTOSPI2  (*)
+  *         @arg @ref LL_GPDMA1_REQUEST_MDF1_FLT0 (*)
+  *         @arg @ref LL_GPDMA1_REQUEST_MDF1_FLT1 (*)
+  *         @arg @ref LL_GPDMA1_REQUEST_MDF1_FLT2 (*)
+  *         @arg @ref LL_GPDMA1_REQUEST_MDF1_FLT3 (*)
+  *         @arg @ref LL_GPDMA1_REQUEST_MDF1_FLT4 (*)
+  *         @arg @ref LL_GPDMA1_REQUEST_MDF1_FLT5 (*)
+  *         @arg @ref LL_GPDMA1_REQUEST_ADF1_FLT0 (*)
   *
   *         @arg @ref LL_GPDMA2_REQUEST_ADC1
   *         @arg @ref LL_GPDMA2_REQUEST_ADC2 (*)
@@ -3729,6 +4271,17 @@ __STATIC_INLINE void LL_DMA_SetPeriphRequest(const DMA_TypeDef *DMAx, uint32_t C
   *         @arg @ref LL_GPDMA2_REQUEST_I3C2_TX (*)
   *         @arg @ref LL_GPDMA2_REQUEST_I3C2_TC (*)
   *         @arg @ref LL_GPDMA2_REQUEST_I3C2_RS (*)
+  *         @arg @ref LL_GPDMA2_REQUEST_JPEG_RX_REQ (*)
+  *         @arg @ref LL_GPDMA2_REQUEST_JPEG_TX_REQ (*)
+  *         @arg @ref LL_GPDMA2_REQUEST_ADC3  (*)
+  *         @arg @ref LL_GPDMA2_REQUEST_OCTOSPI2  (*)
+  *         @arg @ref LL_GPDMA2_REQUEST_MDF1_FLT0 (*)
+  *         @arg @ref LL_GPDMA2_REQUEST_MDF1_FLT1 (*)
+  *         @arg @ref LL_GPDMA2_REQUEST_MDF1_FLT2 (*)
+  *         @arg @ref LL_GPDMA2_REQUEST_MDF1_FLT3 (*)
+  *         @arg @ref LL_GPDMA2_REQUEST_MDF1_FLT4 (*)
+  *         @arg @ref LL_GPDMA2_REQUEST_MDF1_FLT5 (*)
+  *         @arg @ref LL_GPDMA2_REQUEST_ADF1_FLT0 (*)
   *
   * @note   (*) Availability depends on devices.
   */
@@ -3752,6 +4305,11 @@ __STATIC_INLINE  uint32_t LL_DMA_GetPeriphRequest(const DMA_TypeDef *DMAx, uint3
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @param  Trigger This parameter can be one of the following values:
   *         @arg @ref LL_GPDMA1_TRIGGER_EXTI_LINE0
   *         @arg @ref LL_GPDMA1_TRIGGER_EXTI_LINE1
@@ -3808,6 +4366,33 @@ __STATIC_INLINE  uint32_t LL_DMA_GetPeriphRequest(const DMA_TypeDef *DMAx, uint3
   *         @arg @ref LL_GPDMA1_TRIGGER_LPTIM6_CH2 (*)
   *         @arg @ref LL_GPDMA1_TRIGGER_COMP1_OUT (*)
   *         @arg @ref LL_GPDMA1_TRIGGER_EVENTOUT (*)
+  *         @arg @ref LL_GPDMA1_TRIGGER_COMP2_OUT (*)
+  *         @arg @ref LL_GPDMA1_TRIGGER_DMA2D_TC_FLAG  (*)
+  *         @arg @ref LL_GPDMA1_TRIGGER_DMA2D_CTC_FLAG (*)
+  *         @arg @ref LL_GPDMA1_TRIGGER_DMA2D_TW_FLAG  (*)
+  *         @arg @ref LL_GPDMA1_TRIGGER_DMA2D_GPFLAGS0 (*)
+  *         @arg @ref LL_GPDMA1_TRIGGER_DMA2D_GPFLAGS1 (*)
+  *         @arg @ref LL_GPDMA1_TRIGGER_DMA2D_GPFLAGS2 (*)
+  *         @arg @ref LL_GPDMA1_TRIGGER_DMA2D_GPFLAGS3 (*)
+  *         @arg @ref LL_GPDMA1_TRIGGER_JPEG_IFT_FLAG  (*)
+  *         @arg @ref LL_GPDMA1_TRIGGER_JPEG_IFNF_FLAG (*)
+  *         @arg @ref LL_GPDMA1_TRIGGER_JPEG_OFT_FLAG (*)
+  *         @arg @ref LL_GPDMA1_TRIGGER_JPEG_OFNE_FLAG (*)
+  *         @arg @ref LL_GPDMA1_TRIGGER_JPEG_EOC_FLAG  (*)
+  *         @arg @ref LL_GPDMA1_TRIGGER_GFXTIM_EVT1 (*)
+  *         @arg @ref LL_GPDMA1_TRIGGER_GFXTIM_EVT2 (*)
+  *         @arg @ref LL_GPDMA1_TRIGGER_GFXTIM_EVT3 (*)
+  *         @arg @ref LL_GPDMA1_TRIGGER_GFXTIM_EVT4 (*)
+  *         @arg @ref LL_GPDMA1_TRIGGER_LCD_CTRL_SCANLINE (*)
+  *         @arg @ref LL_GPDMA1_TRIGGER_GPDMA1_CH8_TCF  (*)
+  *         @arg @ref LL_GPDMA1_TRIGGER_GPDMA1_CH9_TCF  (*)
+  *         @arg @ref LL_GPDMA1_TRIGGER_GPDMA1_CH10_TCF (*)
+  *         @arg @ref LL_GPDMA1_TRIGGER_GPDMA1_CH11_TCF (*)
+  *         @arg @ref LL_GPDMA1_TRIGGER_GPDMA2_CH8_TCF (*)
+  *         @arg @ref LL_GPDMA1_TRIGGER_GPDMA2_CH9_TCF (*)
+  *         @arg @ref LL_GPDMA1_TRIGGER_GPDMA2_CH10_TCF (*)
+  *         @arg @ref LL_GPDMA1_TRIGGER_GPDMA2_CH11_TCF (*)
+  *         @arg @ref LL_GPDMA1_TRIGGER_PLAY1_OUT15  (*)
   *
   *         @arg @ref LL_GPDMA2_TRIGGER_EXTI_LINE0
   *         @arg @ref LL_GPDMA2_TRIGGER_EXTI_LINE1
@@ -3864,6 +4449,33 @@ __STATIC_INLINE  uint32_t LL_DMA_GetPeriphRequest(const DMA_TypeDef *DMAx, uint3
   *         @arg @ref LL_GPDMA2_TRIGGER_LPTIM6_CH2 (*)
   *         @arg @ref LL_GPDMA2_TRIGGER_COMP1_OUT (*)
   *         @arg @ref LL_GPDMA2_TRIGGER_EVENTOUT (*)
+  *         @arg @ref LL_GPDMA2_TRIGGER_COMP2_OUT (*)
+  *         @arg @ref LL_GPDMA2_TRIGGER_DMA2D_TC_FLAG  (*)
+  *         @arg @ref LL_GPDMA2_TRIGGER_DMA2D_CTC_FLAG (*)
+  *         @arg @ref LL_GPDMA2_TRIGGER_DMA2D_TW_FLAG  (*)
+  *         @arg @ref LL_GPDMA2_TRIGGER_DMA2D_GPFLAGS0 (*)
+  *         @arg @ref LL_GPDMA2_TRIGGER_DMA2D_GPFLAGS1 (*)
+  *         @arg @ref LL_GPDMA2_TRIGGER_DMA2D_GPFLAGS2 (*)
+  *         @arg @ref LL_GPDMA2_TRIGGER_DMA2D_GPFLAGS3 (*)
+  *         @arg @ref LL_GPDMA2_TRIGGER_JPEG_IFT_FLAG  (*)
+  *         @arg @ref LL_GPDMA2_TRIGGER_JPEG_IFNF_FLAG (*)
+  *         @arg @ref LL_GPDMA2_TRIGGER_JPEG_OFT_FLAG (*)
+  *         @arg @ref LL_GPDMA2_TRIGGER_JPEG_OFNE_FLAG (*)
+  *         @arg @ref LL_GPDMA2_TRIGGER_JPEG_EOC_FLAG  (*)
+  *         @arg @ref LL_GPDMA2_TRIGGER_GFXTIM_EVT1 (*)
+  *         @arg @ref LL_GPDMA2_TRIGGER_GFXTIM_EVT2 (*)
+  *         @arg @ref LL_GPDMA2_TRIGGER_GFXTIM_EVT3 (*)
+  *         @arg @ref LL_GPDMA2_TRIGGER_GFXTIM_EVT4 (*)
+  *         @arg @ref LL_GPDMA2_TRIGGER_LCD_CTRL_SCANLINE (*)
+  *         @arg @ref LL_GPDMA2_TRIGGER_GPDMA1_CH8_TCF  (*)
+  *         @arg @ref LL_GPDMA2_TRIGGER_GPDMA1_CH9_TCF  (*)
+  *         @arg @ref LL_GPDMA2_TRIGGER_GPDMA1_CH10_TCF (*)
+  *         @arg @ref LL_GPDMA2_TRIGGER_GPDMA1_CH11_TCF (*)
+  *         @arg @ref LL_GPDMA2_TRIGGER_GPDMA2_CH8_TCF (*)
+  *         @arg @ref LL_GPDMA2_TRIGGER_GPDMA2_CH9_TCF (*)
+  *         @arg @ref LL_GPDMA2_TRIGGER_GPDMA2_CH10_TCF (*)
+  *         @arg @ref LL_GPDMA2_TRIGGER_GPDMA2_CH11_TCF (*)
+  *         @arg @ref LL_GPDMA2_TRIGGER_PLAY1_OUT15  (*)
   *
   * @note   (*) Availability depends on devices.
   * @retval None.
@@ -3889,6 +4501,11 @@ __STATIC_INLINE void LL_DMA_SetHWTrigger(const DMA_TypeDef *DMAx, uint32_t Chann
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_GPDMA1_TRIGGER_EXTI_LINE0
   *         @arg @ref LL_GPDMA1_TRIGGER_EXTI_LINE1
@@ -3945,6 +4562,33 @@ __STATIC_INLINE void LL_DMA_SetHWTrigger(const DMA_TypeDef *DMAx, uint32_t Chann
   *         @arg @ref LL_GPDMA1_TRIGGER_LPTIM6_CH2 (*)
   *         @arg @ref LL_GPDMA1_TRIGGER_COMP1_OUT (*)
   *         @arg @ref LL_GPDMA1_TRIGGER_EVENTOUT (*)
+  *         @arg @ref LL_GPDMA1_TRIGGER_COMP2_OUT (*)
+  *         @arg @ref LL_GPDMA1_TRIGGER_DMA2D_TC_FLAG  (*)
+  *         @arg @ref LL_GPDMA1_TRIGGER_DMA2D_CTC_FLAG (*)
+  *         @arg @ref LL_GPDMA1_TRIGGER_DMA2D_TW_FLAG  (*)
+  *         @arg @ref LL_GPDMA1_TRIGGER_DMA2D_GPFLAGS0 (*)
+  *         @arg @ref LL_GPDMA1_TRIGGER_DMA2D_GPFLAGS1 (*)
+  *         @arg @ref LL_GPDMA1_TRIGGER_DMA2D_GPFLAGS2 (*)
+  *         @arg @ref LL_GPDMA1_TRIGGER_DMA2D_GPFLAGS3 (*)
+  *         @arg @ref LL_GPDMA1_TRIGGER_JPEG_IFT_FLAG  (*)
+  *         @arg @ref LL_GPDMA1_TRIGGER_JPEG_IFNF_FLAG (*)
+  *         @arg @ref LL_GPDMA1_TRIGGER_JPEG_OFT_FLAG (*)
+  *         @arg @ref LL_GPDMA1_TRIGGER_JPEG_OFNE_FLAG (*)
+  *         @arg @ref LL_GPDMA1_TRIGGER_JPEG_EOC_FLAG  (*)
+  *         @arg @ref LL_GPDMA1_TRIGGER_GFXTIM_EVT1 (*)
+  *         @arg @ref LL_GPDMA1_TRIGGER_GFXTIM_EVT2 (*)
+  *         @arg @ref LL_GPDMA1_TRIGGER_GFXTIM_EVT3 (*)
+  *         @arg @ref LL_GPDMA1_TRIGGER_GFXTIM_EVT4 (*)
+  *         @arg @ref LL_GPDMA1_TRIGGER_LCD_CTRL_SCANLINE (*)
+  *         @arg @ref LL_GPDMA1_TRIGGER_GPDMA1_CH8_TCF  (*)
+  *         @arg @ref LL_GPDMA1_TRIGGER_GPDMA1_CH9_TCF  (*)
+  *         @arg @ref LL_GPDMA1_TRIGGER_GPDMA1_CH10_TCF (*)
+  *         @arg @ref LL_GPDMA1_TRIGGER_GPDMA1_CH11_TCF (*)
+  *         @arg @ref LL_GPDMA1_TRIGGER_GPDMA2_CH8_TCF (*)
+  *         @arg @ref LL_GPDMA1_TRIGGER_GPDMA2_CH9_TCF (*)
+  *         @arg @ref LL_GPDMA1_TRIGGER_GPDMA2_CH10_TCF (*)
+  *         @arg @ref LL_GPDMA1_TRIGGER_GPDMA2_CH11_TCF (*)
+  *         @arg @ref LL_GPDMA1_TRIGGER_PLAY1_OUT15  (*)
   *
   *         @arg @ref LL_GPDMA2_TRIGGER_EXTI_LINE0
   *         @arg @ref LL_GPDMA2_TRIGGER_EXTI_LINE1
@@ -4001,6 +4645,33 @@ __STATIC_INLINE void LL_DMA_SetHWTrigger(const DMA_TypeDef *DMAx, uint32_t Chann
   *         @arg @ref LL_GPDMA2_TRIGGER_LPTIM6_CH2 (*)
   *         @arg @ref LL_GPDMA2_TRIGGER_COMP1_OUT (*)
   *         @arg @ref LL_GPDMA2_TRIGGER_EVENTOUT (*)
+  *         @arg @ref LL_GPDMA2_TRIGGER_COMP2_OUT (*)
+  *         @arg @ref LL_GPDMA2_TRIGGER_DMA2D_TC_FLAG  (*)
+  *         @arg @ref LL_GPDMA2_TRIGGER_DMA2D_CTC_FLAG (*)
+  *         @arg @ref LL_GPDMA2_TRIGGER_DMA2D_TW_FLAG  (*)
+  *         @arg @ref LL_GPDMA2_TRIGGER_DMA2D_GPFLAGS0 (*)
+  *         @arg @ref LL_GPDMA2_TRIGGER_DMA2D_GPFLAGS1 (*)
+  *         @arg @ref LL_GPDMA2_TRIGGER_DMA2D_GPFLAGS2 (*)
+  *         @arg @ref LL_GPDMA2_TRIGGER_DMA2D_GPFLAGS3 (*)
+  *         @arg @ref LL_GPDMA2_TRIGGER_JPEG_IFT_FLAG  (*)
+  *         @arg @ref LL_GPDMA2_TRIGGER_JPEG_IFNF_FLAG (*)
+  *         @arg @ref LL_GPDMA2_TRIGGER_JPEG_OFT_FLAG (*)
+  *         @arg @ref LL_GPDMA2_TRIGGER_JPEG_OFNE_FLAG (*)
+  *         @arg @ref LL_GPDMA2_TRIGGER_JPEG_EOC_FLAG  (*)
+  *         @arg @ref LL_GPDMA2_TRIGGER_GFXTIM_EVT1 (*)
+  *         @arg @ref LL_GPDMA2_TRIGGER_GFXTIM_EVT2 (*)
+  *         @arg @ref LL_GPDMA2_TRIGGER_GFXTIM_EVT3 (*)
+  *         @arg @ref LL_GPDMA2_TRIGGER_GFXTIM_EVT4 (*)
+  *         @arg @ref LL_GPDMA2_TRIGGER_LCD_CTRL_SCANLINE (*)
+  *         @arg @ref LL_GPDMA2_TRIGGER_GPDMA1_CH8_TCF  (*)
+  *         @arg @ref LL_GPDMA2_TRIGGER_GPDMA1_CH9_TCF  (*)
+  *         @arg @ref LL_GPDMA2_TRIGGER_GPDMA1_CH10_TCF (*)
+  *         @arg @ref LL_GPDMA2_TRIGGER_GPDMA1_CH11_TCF (*)
+  *         @arg @ref LL_GPDMA2_TRIGGER_GPDMA2_CH8_TCF (*)
+  *         @arg @ref LL_GPDMA2_TRIGGER_GPDMA2_CH9_TCF (*)
+  *         @arg @ref LL_GPDMA2_TRIGGER_GPDMA2_CH10_TCF (*)
+  *         @arg @ref LL_GPDMA2_TRIGGER_GPDMA2_CH11_TCF (*)
+  *         @arg @ref LL_GPDMA2_TRIGGER_PLAY1_OUT15  (*)
   *
   * @note   (*) Availability depends on devices.
   */
@@ -4017,8 +4688,11 @@ __STATIC_INLINE  uint32_t LL_DMA_GetHWTrigger(const DMA_TypeDef *DMAx, uint32_t 
   * @rmtoll CTR2         PFREQ     LL_DMA_SetTransferMode
   * @param  DMAx DMAx Instance
   * @param  Channel This parameter can be one of the following values:
-  *         @arg @ref LL_DMA_CHANNEL_0
-  *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_0 (*)
+  *         @arg @ref LL_DMA_CHANNEL_7 (*)
+  *         @arg @ref LL_DMA_CHANNEL_1 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @param  Mode This parameter can be one of the following values:
   *         @arg @ref LL_DMA_NORMAL
   *         @arg @ref LL_DMA_PFCTRL
@@ -4037,8 +4711,11 @@ __STATIC_INLINE void LL_DMA_SetTransferMode(const DMA_TypeDef *DMAx, uint32_t Ch
   * @rmtoll CTR2         TRIGSEL     LL_DMA_GetTransferMode
   * @param  DMAx DMAx Instance
   * @param  Channel This parameter can be one of the following values:
-  *         @arg @ref LL_DMA_CHANNEL_0
-  *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_0 (*)
+  *         @arg @ref LL_DMA_CHANNEL_7 (*)
+  *         @arg @ref LL_DMA_CHANNEL_1 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_DMA_NORMAL
   *         @arg @ref LL_DMA_PFCTRL
@@ -4059,8 +4736,11 @@ __STATIC_INLINE  uint32_t LL_DMA_GetTransferMode(const DMA_TypeDef *DMAx, uint32
   *         CBR1         SDEC              LL_DMA_ConfigBlkRptAddrUpdate
   * @param  DMAx DMAx Instance
   * @param  Channel This parameter can be one of the following values:
-  *         @arg @ref LL_DMA_CHANNEL_6
-  *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_6 (*)
+  *         @arg @ref LL_DMA_CHANNEL_7 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @param  Configuration This parameter must be a combination of all the following values:
   *         @arg @ref LL_DMA_BLKRPT_DEST_ADDR_INCREMENT or @ref LL_DMA_BLKRPT_DEST_ADDR_DECREMENT
   *         @arg @ref LL_DMA_BLKRPT_SRC_ADDR_INCREMENT  or @ref LL_DMA_BLKRPT_SRC_ADDR_DECREMENT
@@ -4082,8 +4762,11 @@ __STATIC_INLINE void LL_DMA_ConfigBlkRptAddrUpdate(const DMA_TypeDef *DMAx, uint
   *         CBR1         BRC                      LL_DMA_ConfigBlkCounters
   * @param  DMAx DMAx Instance
   * @param  Channel This parameter can be one of the following values:
-  *         @arg @ref LL_DMA_CHANNEL_6
-  *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_6 (*)
+  *         @arg @ref LL_DMA_CHANNEL_7 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @param  BlkDataLength Block transfer length
                           Value between 0 to 0x0000FFFF
   * @param  BlkRptCount Block repeat counter
@@ -4104,8 +4787,11 @@ __STATIC_INLINE void LL_DMA_ConfigBlkCounters(const DMA_TypeDef *DMAx, uint32_t 
   * @rmtoll CBR1          BRDDEC           LL_DMA_SetBlkRptDestAddrUpdate
   * @param  DMAx DMAx Instance
   * @param  Channel This parameter can be one of the following values:
-  *         @arg @ref LL_DMA_CHANNEL_6
-  *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_6 (*)
+  *         @arg @ref LL_DMA_CHANNEL_7 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @param  BlkRptDestAddrUpdate This parameter can be one of the following values:
   *         @arg @ref LL_DMA_BLKRPT_DEST_ADDR_INCREMENT
   *         @arg @ref LL_DMA_BLKRPT_DEST_ADDR_DECREMENT
@@ -4125,8 +4811,11 @@ __STATIC_INLINE void LL_DMA_SetBlkRptDestAddrUpdate(const DMA_TypeDef *DMAx, uin
   * @rmtoll CBR1          BRDDEC           LL_DMA_GetBlkRptDestAddrUpdate
   * @param  DMAx DMAx Instance
   * @param  Channel This parameter can be one of the following values:
-  *         @arg @ref LL_DMA_CHANNEL_6
-  *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_6 (*)
+  *         @arg @ref LL_DMA_CHANNEL_7 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_DMA_BLKRPT_DEST_ADDR_INCREMENT
   *         @arg @ref LL_DMA_BLKRPT_DEST_ADDR_DECREMENT
@@ -4143,8 +4832,11 @@ __STATIC_INLINE uint32_t LL_DMA_GetBlkRptDestAddrUpdate(const DMA_TypeDef *DMAx,
   * @rmtoll CBR1          BRSDEC           LL_DMA_SetBlkRptSrcAddrUpdate
   * @param  DMAx DMAx Instance
   * @param  Channel This parameter can be one of the following values:
-  *         @arg @ref LL_DMA_CHANNEL_6
-  *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_6 (*)
+  *         @arg @ref LL_DMA_CHANNEL_7 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @param  BlkRptSrcAddrUpdate This parameter can be one of the following values:
   *         @arg @ref LL_DMA_BLKRPT_SRC_ADDR_INCREMENT
   *         @arg @ref LL_DMA_BLKRPT_SRC_ADDR_DECREMENT
@@ -4164,8 +4856,11 @@ __STATIC_INLINE void LL_DMA_SetBlkRptSrcAddrUpdate(const DMA_TypeDef *DMAx, uint
   * @rmtoll CBR1          BRSDEC           LL_DMA_GetBlkRptSrcAddrUpdate
   * @param  DMAx DMAx Instance
   * @param  Channel This parameter can be one of the following values:
-  *         @arg @ref LL_DMA_CHANNEL_6
-  *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_6 (*)
+  *         @arg @ref LL_DMA_CHANNEL_7 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_DMA_BLKRPT_SRC_ADDR_INCREMENT
   *         @arg @ref LL_DMA_BLKRPT_SRC_ADDR_DECREMENT
@@ -4182,8 +4877,11 @@ __STATIC_INLINE uint32_t LL_DMA_GetBlkRptSrcAddrUpdate(const DMA_TypeDef *DMAx, 
   * @rmtoll CBR1          DDEC           LL_DMA_SetDestAddrUpdate
   * @param  DMAx DMAx Instance
   * @param  Channel This parameter can be one of the following values:
-  *         @arg @ref LL_DMA_CHANNEL_6
-  *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_6 (*)
+  *         @arg @ref LL_DMA_CHANNEL_7 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @param  DestAddrUpdate This parameter can be one of the following values:
   *         @arg @ref LL_DMA_BURST_DEST_ADDR_INCREMENT
   *         @arg @ref LL_DMA_BURST_DEST_ADDR_DECREMENT
@@ -4202,8 +4900,11 @@ __STATIC_INLINE void LL_DMA_SetDestAddrUpdate(const DMA_TypeDef *DMAx, uint32_t 
   * @rmtoll CBR1          DDEC           LL_DMA_GetDestAddrUpdate
   * @param  DMAx DMAx Instance
   * @param  Channel This parameter can be one of the following values:
-  *         @arg @ref LL_DMA_CHANNEL_6
-  *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_6 (*)
+  *         @arg @ref LL_DMA_CHANNEL_7 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_DMA_BURST_DEST_ADDR_INCREMENT
   *         @arg @ref LL_DMA_BURST_DEST_ADDR_DECREMENT
@@ -4220,8 +4921,11 @@ __STATIC_INLINE uint32_t LL_DMA_GetDestAddrUpdate(const DMA_TypeDef *DMAx, uint3
   * @rmtoll CBR1          SDEC           LL_DMA_SetSrcAddrUpdate
   * @param  DMAx DMAx Instance
   * @param  Channel This parameter can be one of the following values:
-  *         @arg @ref LL_DMA_CHANNEL_6
-  *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_6 (*)
+  *         @arg @ref LL_DMA_CHANNEL_7 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @param  SrcAddrUpdate This parameter can be one of the following values:
   *         @arg @ref LL_DMA_BURST_SRC_ADDR_INCREMENT
   *         @arg @ref LL_DMA_BURST_SRC_ADDR_DECREMENT
@@ -4240,8 +4944,11 @@ __STATIC_INLINE void LL_DMA_SetSrcAddrUpdate(const DMA_TypeDef *DMAx, uint32_t C
   * @rmtoll CBR1          SDEC           LL_DMA_GetSrcAddrUpdate
   * @param  DMAx DMAx Instance
   * @param  Channel This parameter can be one of the following values:
-  *         @arg @ref LL_DMA_CHANNEL_6
-  *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_6 (*)
+  *         @arg @ref LL_DMA_CHANNEL_7 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_DMA_BURST_SRC_ADDR_INCREMENT
   *         @arg @ref LL_DMA_BURST_SRC_ADDR_DECREMENT
@@ -4258,8 +4965,11 @@ __STATIC_INLINE uint32_t LL_DMA_GetSrcAddrUpdate(const DMA_TypeDef *DMAx, uint32
   * @rmtoll CBR1        BRC            LL_DMA_SetBlkRptCount
   * @param  DMAx DMAx Instance
   * @param  Channel This parameter can be one of the following values:
-  *         @arg @ref LL_DMA_CHANNEL_6
-  *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_6 (*)
+  *         @arg @ref LL_DMA_CHANNEL_7 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @param  BlkRptCount Block repeat counter
   *                     Value between 0 to 0x000007FF
   * @retval None.
@@ -4277,8 +4987,11 @@ __STATIC_INLINE void LL_DMA_SetBlkRptCount(const DMA_TypeDef *DMAx, uint32_t Cha
   * @rmtoll CBR1        BRC            LL_DMA_GetBlkRptCount
   * @param  DMAx DMAx Instance
   * @param  Channel This parameter can be one of the following values:
-  *         @arg @ref LL_DMA_CHANNEL_6
-  *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_6 (*)
+  *         @arg @ref LL_DMA_CHANNEL_7 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval Between 0 to 0x000007FF
   */
 __STATIC_INLINE uint32_t LL_DMA_GetBlkRptCount(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -4302,6 +5015,11 @@ __STATIC_INLINE uint32_t LL_DMA_GetBlkRptCount(const DMA_TypeDef *DMAx, uint32_t
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @param  BlkDataLength Between 0 to 0x0000FFFF
   * @retval None.
   */
@@ -4326,6 +5044,11 @@ __STATIC_INLINE void LL_DMA_SetBlkDataLength(const DMA_TypeDef *DMAx, uint32_t C
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval Between 0 to 0x0000FFFF
   */
 __STATIC_INLINE uint32_t LL_DMA_GetBlkDataLength(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -4350,6 +5073,11 @@ __STATIC_INLINE uint32_t LL_DMA_GetBlkDataLength(const DMA_TypeDef *DMAx, uint32
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @param  SrcAddress Between 0 to 0xFFFFFFFF
   * @param  DestAddress Between 0 to 0xFFFFFFFF
   * @retval None.
@@ -4376,6 +5104,11 @@ __STATIC_INLINE void LL_DMA_ConfigAddresses(const DMA_TypeDef *DMAx, uint32_t Ch
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @param  SrcAddress Between 0 to 0xFFFFFFFF
   * @retval None.
   */
@@ -4399,6 +5132,11 @@ __STATIC_INLINE void LL_DMA_SetSrcAddress(const DMA_TypeDef *DMAx, uint32_t Chan
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval Between 0 to 0xFFFFFFFF
   */
 __STATIC_INLINE uint32_t LL_DMA_GetSrcAddress(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -4421,6 +5159,11 @@ __STATIC_INLINE uint32_t LL_DMA_GetSrcAddress(const DMA_TypeDef *DMAx, uint32_t 
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @param  DestAddress Between 0 to 0xFFFFFFFF
   * @retval None.
   */
@@ -4444,6 +5187,11 @@ __STATIC_INLINE void LL_DMA_SetDestAddress(const DMA_TypeDef *DMAx, uint32_t Cha
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval Between 0 to 0xFFFFFFFF
   */
 __STATIC_INLINE uint32_t LL_DMA_GetDestAddress(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -4460,8 +5208,11 @@ __STATIC_INLINE uint32_t LL_DMA_GetDestAddress(const DMA_TypeDef *DMAx, uint32_t
   *         CTR3        SAO          LL_DMA_ConfigAddrUpdateValue
   * @param  DMAx DMAx Instance
   * @param  Channel This parameter can be one of the following values:
-  *         @arg @ref LL_DMA_CHANNEL_6
-  *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_6 (*)
+  *         @arg @ref LL_DMA_CHANNEL_7 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @param  DestAddrOffset Between 0 to 0x00001FFF
   * @param  SrcAddrOffset Between 0 to 0x00001FFF
   * @retval None.
@@ -4480,8 +5231,11 @@ __STATIC_INLINE void LL_DMA_ConfigAddrUpdateValue(const DMA_TypeDef *DMAx, uint3
   * @rmtoll CTR3       DAO         LL_DMA_SetDestAddrUpdateValue
   * @param  DMAx DMAx Instance
   * @param  Channel This parameter can be one of the following values:
-  *         @arg @ref LL_DMA_CHANNEL_6
-  *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_6 (*)
+  *         @arg @ref LL_DMA_CHANNEL_7 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @param  DestAddrOffset Between 0 to 0x00001FFF
   * @retval None.
   */
@@ -4498,8 +5252,11 @@ __STATIC_INLINE void LL_DMA_SetDestAddrUpdateValue(const DMA_TypeDef *DMAx, uint
   * @rmtoll CDAR        DAO         LL_DMA_GetDestAddrUpdateValue
   * @param  DMAx DMAx Instance
   * @param  Channel This parameter can be one of the following values:
-  *         @arg @ref LL_DMA_CHANNEL_6
-  *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_6 (*)
+  *         @arg @ref LL_DMA_CHANNEL_7 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval Between 0 to 0x00001FFF
   */
 __STATIC_INLINE uint32_t LL_DMA_GetDestAddrUpdateValue(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -4515,8 +5272,11 @@ __STATIC_INLINE uint32_t LL_DMA_GetDestAddrUpdateValue(const DMA_TypeDef *DMAx, 
   * @rmtoll CTR3        SAO         LL_DMA_SetSrcAddrUpdateValue
   * @param  DMAx DMAx Instance
   * @param  Channel This parameter can be one of the following values:
-  *         @arg @ref LL_DMA_CHANNEL_6
-  *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_6 (*)
+  *         @arg @ref LL_DMA_CHANNEL_7 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @param  SrcAddrOffset Between 0 to 0x00001FFF
   * @retval None.
   */
@@ -4533,8 +5293,11 @@ __STATIC_INLINE void LL_DMA_SetSrcAddrUpdateValue(const DMA_TypeDef *DMAx, uint3
   * @rmtoll CTR3        SAO         LL_DMA_GetSrcAddrUpdateValue
   * @param  DMAx DMAx Instance
   * @param  Channel This parameter can be one of the following values:
-  *         @arg @ref LL_DMA_CHANNEL_6
-  *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_6 (*)
+  *         @arg @ref LL_DMA_CHANNEL_7 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval Between 0 to 0x00001FFF
   */
 __STATIC_INLINE uint32_t LL_DMA_GetSrcAddrUpdateValue(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -4551,8 +5314,11 @@ __STATIC_INLINE uint32_t LL_DMA_GetSrcAddrUpdateValue(const DMA_TypeDef *DMAx, u
   *         CBR2        BRSAO          LL_DMA_ConfigBlkRptAddrUpdateValue
   * @param  DMAx DMAx Instance
   * @param  Channel This parameter can be one of the following values:
-  *         @arg @ref LL_DMA_CHANNEL_6
-  *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_6 (*)
+  *         @arg @ref LL_DMA_CHANNEL_7 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @param  BlkRptDestAddrOffset Between 0 to 0x0000FFFF
   * @param  BlkRptSrcAddrOffset Between 0 to 0x0000FFFF
   * @retval None.
@@ -4571,8 +5337,11 @@ __STATIC_INLINE void LL_DMA_ConfigBlkRptAddrUpdateValue(const DMA_TypeDef *DMAx,
   * @rmtoll CBR2       BRDAO         LL_DMA_SetBlkRptDestAddrUpdateValue
   * @param  DMAx DMAx Instance
   * @param  Channel This parameter can be one of the following values:
-  *         @arg @ref LL_DMA_CHANNEL_6
-  *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_6 (*)
+  *         @arg @ref LL_DMA_CHANNEL_7 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @param  BlkRptDestAddrOffset Between 0 to 0x0000FFFF
   * @retval None.
   */
@@ -4590,8 +5359,11 @@ __STATIC_INLINE void LL_DMA_SetBlkRptDestAddrUpdateValue(const DMA_TypeDef *DMAx
   * @rmtoll CBR2        BRDAO         LL_DMA_GetBlkRptDestAddrUpdateValue
   * @param  DMAx DMAx Instance
   * @param  Channel This parameter can be one of the following values:
-  *         @arg @ref LL_DMA_CHANNEL_6
-  *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_6 (*)
+  *         @arg @ref LL_DMA_CHANNEL_7 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval Between 0 to 0x0000FFFF.
   */
 __STATIC_INLINE uint32_t LL_DMA_GetBlkRptDestAddrUpdateValue(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -4607,8 +5379,11 @@ __STATIC_INLINE uint32_t LL_DMA_GetBlkRptDestAddrUpdateValue(const DMA_TypeDef *
   * @rmtoll CBR2        BRSAO         LL_DMA_SetBlkRptSrcAddrUpdateValue
   * @param  DMAx DMAx Instance
   * @param  Channel This parameter can be one of the following values:
-  *         @arg @ref LL_DMA_CHANNEL_6
-  *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_6 (*)
+  *         @arg @ref LL_DMA_CHANNEL_7 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @param  BlkRptSrcAddrOffset Between 0 to 0x0000FFFF
   * @retval None.
   */
@@ -4626,8 +5401,11 @@ __STATIC_INLINE void LL_DMA_SetBlkRptSrcAddrUpdateValue(const DMA_TypeDef *DMAx,
   * @rmtoll CBR2        BRSAO         LL_DMA_GetBlkRptSrcAddrUpdateValue
   * @param  DMAx DMAx Instance
   * @param  Channel This parameter can be one of the following values:
-  *         @arg @ref LL_DMA_CHANNEL_6
-  *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_6 (*)
+  *         @arg @ref LL_DMA_CHANNEL_7 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval Between 0 to 0x0000FFFF
   */
 __STATIC_INLINE uint32_t LL_DMA_GetBlkRptSrcAddrUpdateValue(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -4658,6 +5436,11 @@ __STATIC_INLINE uint32_t LL_DMA_GetBlkRptSrcAddrUpdateValue(const DMA_TypeDef *D
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @param  RegistersUpdate This parameter must be a combination of all the following values:
   *         @arg @ref LL_DMA_UPDATE_CTR1
   *         @arg @ref LL_DMA_UPDATE_CTR2
@@ -4693,6 +5476,11 @@ __STATIC_INLINE void LL_DMA_ConfigLinkUpdate(const DMA_TypeDef *DMAx, uint32_t C
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval None.
   */
 __STATIC_INLINE void LL_DMA_EnableCTR1Update(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -4715,6 +5503,11 @@ __STATIC_INLINE void LL_DMA_EnableCTR1Update(const DMA_TypeDef *DMAx, uint32_t C
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval None.
   */
 __STATIC_INLINE void LL_DMA_DisableCTR1Update(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -4737,6 +5530,11 @@ __STATIC_INLINE void LL_DMA_DisableCTR1Update(const DMA_TypeDef *DMAx, uint32_t 
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_DMA_IsEnabledCTR1Update(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -4760,6 +5558,11 @@ __STATIC_INLINE uint32_t LL_DMA_IsEnabledCTR1Update(const DMA_TypeDef *DMAx, uin
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval None.
   */
 __STATIC_INLINE void LL_DMA_EnableCTR2Update(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -4782,6 +5585,11 @@ __STATIC_INLINE void LL_DMA_EnableCTR2Update(const DMA_TypeDef *DMAx, uint32_t C
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval None.
   */
 __STATIC_INLINE void LL_DMA_DisableCTR2Update(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -4804,6 +5612,11 @@ __STATIC_INLINE void LL_DMA_DisableCTR2Update(const DMA_TypeDef *DMAx, uint32_t 
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_DMA_IsEnabledCTR2Update(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -4827,6 +5640,11 @@ __STATIC_INLINE uint32_t LL_DMA_IsEnabledCTR2Update(const DMA_TypeDef *DMAx, uin
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval None.
   */
 __STATIC_INLINE void LL_DMA_EnableCBR1Update(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -4849,6 +5667,11 @@ __STATIC_INLINE void LL_DMA_EnableCBR1Update(const DMA_TypeDef *DMAx, uint32_t C
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval None.
   */
 __STATIC_INLINE void LL_DMA_DisableCBR1Update(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -4871,6 +5694,11 @@ __STATIC_INLINE void LL_DMA_DisableCBR1Update(const DMA_TypeDef *DMAx, uint32_t 
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_DMA_IsEnabledCBR1Update(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -4894,6 +5722,11 @@ __STATIC_INLINE uint32_t LL_DMA_IsEnabledCBR1Update(const DMA_TypeDef *DMAx, uin
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval None.
   */
 __STATIC_INLINE void LL_DMA_EnableCSARUpdate(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -4916,6 +5749,11 @@ __STATIC_INLINE void LL_DMA_EnableCSARUpdate(const DMA_TypeDef *DMAx, uint32_t C
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval None.
   */
 __STATIC_INLINE void LL_DMA_DisableCSARUpdate(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -4938,6 +5776,11 @@ __STATIC_INLINE void LL_DMA_DisableCSARUpdate(const DMA_TypeDef *DMAx, uint32_t 
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_DMA_IsEnabledCSARUpdate(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -4961,6 +5804,11 @@ __STATIC_INLINE uint32_t LL_DMA_IsEnabledCSARUpdate(const DMA_TypeDef *DMAx, uin
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval None.
   */
 __STATIC_INLINE void LL_DMA_EnableCDARUpdate(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -4983,6 +5831,11 @@ __STATIC_INLINE void LL_DMA_EnableCDARUpdate(const DMA_TypeDef *DMAx, uint32_t C
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval None.
   */
 __STATIC_INLINE void LL_DMA_DisableCDARUpdate(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -5005,6 +5858,11 @@ __STATIC_INLINE void LL_DMA_DisableCDARUpdate(const DMA_TypeDef *DMAx, uint32_t 
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_DMA_IsEnabledCDARUpdate(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -5020,8 +5878,11 @@ __STATIC_INLINE uint32_t LL_DMA_IsEnabledCDARUpdate(const DMA_TypeDef *DMAx, uin
   * @rmtoll CLLR          UT3            LL_DMA_EnableCTR3Update
   * @param  DMAx DMAx Instance
   * @param  Channel This parameter can be one of the following values:
-  *         @arg @ref LL_DMA_CHANNEL_6
-  *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_6 (*)
+  *         @arg @ref LL_DMA_CHANNEL_7 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval None.
   */
 __STATIC_INLINE void LL_DMA_EnableCTR3Update(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -5036,8 +5897,11 @@ __STATIC_INLINE void LL_DMA_EnableCTR3Update(const DMA_TypeDef *DMAx, uint32_t C
   * @rmtoll CLLR          UT3            LL_DMA_DisableCTR3Update
   * @param  DMAx DMAx Instance
   * @param  Channel This parameter can be one of the following values:
-  *         @arg @ref LL_DMA_CHANNEL_6
-  *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_6 (*)
+  *         @arg @ref LL_DMA_CHANNEL_7 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval None.
   */
 __STATIC_INLINE void LL_DMA_DisableCTR3Update(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -5052,8 +5916,11 @@ __STATIC_INLINE void LL_DMA_DisableCTR3Update(const DMA_TypeDef *DMAx, uint32_t 
   * @rmtoll CLLR          UT3            LL_DMA_IsEnabledCTR3Update
   * @param  DMAx DMAx Instance
   * @param  Channel This parameter can be one of the following values:
-  *         @arg @ref LL_DMA_CHANNEL_6
-  *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_6 (*)
+  *         @arg @ref LL_DMA_CHANNEL_7 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_DMA_IsEnabledCTR3Update(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -5069,8 +5936,11 @@ __STATIC_INLINE uint32_t LL_DMA_IsEnabledCTR3Update(const DMA_TypeDef *DMAx, uin
   * @rmtoll CLLR          UB2            LL_DMA_EnableCBR2Update
   * @param  DMAx DMAx Instance
   * @param  Channel This parameter can be one of the following values:
-  *         @arg @ref LL_DMA_CHANNEL_6
-  *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_6 (*)
+  *         @arg @ref LL_DMA_CHANNEL_7 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval None.
   */
 __STATIC_INLINE void LL_DMA_EnableCBR2Update(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -5085,8 +5955,11 @@ __STATIC_INLINE void LL_DMA_EnableCBR2Update(const DMA_TypeDef *DMAx, uint32_t C
   * @rmtoll CLLR          UB2            LL_DMA_DisableCBR2Update
   * @param  DMAx DMAx Instance
   * @param  Channel This parameter can be one of the following values:
-  *         @arg @ref LL_DMA_CHANNEL_6
-  *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_6 (*)
+  *         @arg @ref LL_DMA_CHANNEL_7 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval None.
   */
 __STATIC_INLINE void LL_DMA_DisableCBR2Update(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -5101,8 +5974,11 @@ __STATIC_INLINE void LL_DMA_DisableCBR2Update(const DMA_TypeDef *DMAx, uint32_t 
   * @rmtoll CLLR          UB2            LL_DMA_IsEnabledCBR2Update
   * @param  DMAx DMAx Instance
   * @param  Channel This parameter can be one of the following values:
-  *         @arg @ref LL_DMA_CHANNEL_6
-  *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_6 (*)
+  *         @arg @ref LL_DMA_CHANNEL_7 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_DMA_IsEnabledCBR2Update(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -5126,6 +6002,11 @@ __STATIC_INLINE uint32_t LL_DMA_IsEnabledCBR2Update(const DMA_TypeDef *DMAx, uin
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval None.
   */
 __STATIC_INLINE void LL_DMA_EnableCLLRUpdate(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -5148,6 +6029,11 @@ __STATIC_INLINE void LL_DMA_EnableCLLRUpdate(const DMA_TypeDef *DMAx, uint32_t C
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval None.
   */
 __STATIC_INLINE void LL_DMA_DisableCLLRUpdate(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -5170,6 +6056,11 @@ __STATIC_INLINE void LL_DMA_DisableCLLRUpdate(const DMA_TypeDef *DMAx, uint32_t 
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_DMA_IsEnabledCLLRUpdate(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -5193,6 +6084,11 @@ __STATIC_INLINE uint32_t LL_DMA_IsEnabledCLLRUpdate(const DMA_TypeDef *DMAx, uin
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @param  LinkedListAddrOffset Between 0 to 0x0000FFFC by increment of 4 Bytes.
   * @retval None.
   */
@@ -5218,6 +6114,11 @@ __STATIC_INLINE void LL_DMA_SetLinkedListAddrOffset(const DMA_TypeDef *DMAx, uin
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval Between 0 to 0x0000FFFC.
   */
 __STATIC_INLINE uint32_t LL_DMA_GetLinkedListAddrOffset(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -5240,6 +6141,11 @@ __STATIC_INLINE uint32_t LL_DMA_GetLinkedListAddrOffset(const DMA_TypeDef *DMAx,
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval Between 0 to 0x000000FF.
   */
 __STATIC_INLINE uint32_t LL_DMA_GetFIFOLevel(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -5264,6 +6170,11 @@ __STATIC_INLINE uint32_t LL_DMA_GetFIFOLevel(const DMA_TypeDef *DMAx, uint32_t C
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval None.
   */
 __STATIC_INLINE void LL_DMA_EnableChannelSecure(DMA_TypeDef *DMAx, uint32_t Channel)
@@ -5285,6 +6196,11 @@ __STATIC_INLINE void LL_DMA_EnableChannelSecure(DMA_TypeDef *DMAx, uint32_t Chan
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval None.
   */
 __STATIC_INLINE void LL_DMA_DisableChannelSecure(DMA_TypeDef *DMAx, uint32_t Channel)
@@ -5308,6 +6224,11 @@ __STATIC_INLINE void LL_DMA_DisableChannelSecure(DMA_TypeDef *DMAx, uint32_t Cha
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_DMA_IsEnabledChannelSecure(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -5331,6 +6252,11 @@ __STATIC_INLINE uint32_t LL_DMA_IsEnabledChannelSecure(const DMA_TypeDef *DMAx, 
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval None.
   */
 __STATIC_INLINE void LL_DMA_EnableChannelPrivilege(DMA_TypeDef *DMAx, uint32_t Channel)
@@ -5352,6 +6278,11 @@ __STATIC_INLINE void LL_DMA_EnableChannelPrivilege(DMA_TypeDef *DMAx, uint32_t C
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval None.
   */
 __STATIC_INLINE void LL_DMA_DisableChannelPrivilege(DMA_TypeDef *DMAx, uint32_t Channel)
@@ -5373,6 +6304,11 @@ __STATIC_INLINE void LL_DMA_DisableChannelPrivilege(DMA_TypeDef *DMAx, uint32_t 
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_DMA_IsEnabledChannelPrivilege(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -5396,6 +6332,11 @@ __STATIC_INLINE uint32_t LL_DMA_IsEnabledChannelPrivilege(const DMA_TypeDef *DMA
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval None.
   */
 __STATIC_INLINE void LL_DMA_EnableChannelLockAttribute(DMA_TypeDef *DMAx, uint32_t Channel)
@@ -5419,6 +6360,11 @@ __STATIC_INLINE void LL_DMA_EnableChannelLockAttribute(DMA_TypeDef *DMAx, uint32
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_DMA_IsEnabledChannelLockAttribute(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -5450,6 +6396,11 @@ __STATIC_INLINE uint32_t LL_DMA_IsEnabledChannelLockAttribute(const DMA_TypeDef 
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval None.
   */
 __STATIC_INLINE void LL_DMA_ClearFlag_TO(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -5472,6 +6423,11 @@ __STATIC_INLINE void LL_DMA_ClearFlag_TO(const DMA_TypeDef *DMAx, uint32_t Chann
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval None.
   */
 __STATIC_INLINE void LL_DMA_ClearFlag_SUSP(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -5494,6 +6450,11 @@ __STATIC_INLINE void LL_DMA_ClearFlag_SUSP(const DMA_TypeDef *DMAx, uint32_t Cha
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval None.
   */
 __STATIC_INLINE void LL_DMA_ClearFlag_USE(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -5516,6 +6477,11 @@ __STATIC_INLINE void LL_DMA_ClearFlag_USE(const DMA_TypeDef *DMAx, uint32_t Chan
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval None.
   */
 __STATIC_INLINE void LL_DMA_ClearFlag_ULE(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -5538,6 +6504,11 @@ __STATIC_INLINE void LL_DMA_ClearFlag_ULE(const DMA_TypeDef *DMAx, uint32_t Chan
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval None.
   */
 __STATIC_INLINE void LL_DMA_ClearFlag_DTE(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -5560,6 +6531,11 @@ __STATIC_INLINE void LL_DMA_ClearFlag_DTE(const DMA_TypeDef *DMAx, uint32_t Chan
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval None.
   */
 __STATIC_INLINE void LL_DMA_ClearFlag_HT(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -5582,6 +6558,11 @@ __STATIC_INLINE void LL_DMA_ClearFlag_HT(const DMA_TypeDef *DMAx, uint32_t Chann
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval None.
   */
 __STATIC_INLINE void LL_DMA_ClearFlag_TC(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -5604,6 +6585,11 @@ __STATIC_INLINE void LL_DMA_ClearFlag_TC(const DMA_TypeDef *DMAx, uint32_t Chann
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_DMA_IsActiveFlag_TO(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -5627,6 +6613,11 @@ __STATIC_INLINE uint32_t LL_DMA_IsActiveFlag_TO(const DMA_TypeDef *DMAx, uint32_
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_DMA_IsActiveFlag_SUSP(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -5650,6 +6641,11 @@ __STATIC_INLINE uint32_t LL_DMA_IsActiveFlag_SUSP(const DMA_TypeDef *DMAx, uint3
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_DMA_IsActiveFlag_USE(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -5673,6 +6669,11 @@ __STATIC_INLINE uint32_t LL_DMA_IsActiveFlag_USE(const DMA_TypeDef *DMAx, uint32
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_DMA_IsActiveFlag_ULE(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -5696,6 +6697,11 @@ __STATIC_INLINE uint32_t LL_DMA_IsActiveFlag_ULE(const DMA_TypeDef *DMAx, uint32
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_DMA_IsActiveFlag_DTE(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -5719,6 +6725,11 @@ __STATIC_INLINE uint32_t LL_DMA_IsActiveFlag_DTE(const DMA_TypeDef *DMAx, uint32
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_DMA_IsActiveFlag_HT(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -5742,6 +6753,11 @@ __STATIC_INLINE uint32_t LL_DMA_IsActiveFlag_HT(const DMA_TypeDef *DMAx, uint32_
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_DMA_IsActiveFlag_TC(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -5765,6 +6781,11 @@ __STATIC_INLINE uint32_t LL_DMA_IsActiveFlag_TC(const DMA_TypeDef *DMAx, uint32_
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_DMA_IsActiveFlag_IDLE(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -5788,6 +6809,11 @@ __STATIC_INLINE uint32_t LL_DMA_IsActiveFlag_IDLE(const DMA_TypeDef *DMAx, uint3
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_DMA_IsActiveFlag_MIS(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -5811,6 +6837,11 @@ __STATIC_INLINE uint32_t LL_DMA_IsActiveFlag_MIS(const DMA_TypeDef *DMAx, uint32
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_DMA_IsActiveFlag_SMIS(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -5841,6 +6872,11 @@ __STATIC_INLINE uint32_t LL_DMA_IsActiveFlag_SMIS(const DMA_TypeDef *DMAx, uint3
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval None.
   */
 __STATIC_INLINE void LL_DMA_EnableIT_TO(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -5863,6 +6899,11 @@ __STATIC_INLINE void LL_DMA_EnableIT_TO(const DMA_TypeDef *DMAx, uint32_t Channe
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval None.
   */
 __STATIC_INLINE void LL_DMA_EnableIT_SUSP(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -5885,6 +6926,11 @@ __STATIC_INLINE void LL_DMA_EnableIT_SUSP(const DMA_TypeDef *DMAx, uint32_t Chan
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval None.
   */
 __STATIC_INLINE void LL_DMA_EnableIT_USE(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -5907,6 +6953,11 @@ __STATIC_INLINE void LL_DMA_EnableIT_USE(const DMA_TypeDef *DMAx, uint32_t Chann
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval None.
   */
 __STATIC_INLINE void LL_DMA_EnableIT_ULE(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -5929,6 +6980,11 @@ __STATIC_INLINE void LL_DMA_EnableIT_ULE(const DMA_TypeDef *DMAx, uint32_t Chann
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval None.
   */
 __STATIC_INLINE void LL_DMA_EnableIT_DTE(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -5951,6 +7007,11 @@ __STATIC_INLINE void LL_DMA_EnableIT_DTE(const DMA_TypeDef *DMAx, uint32_t Chann
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval None.
   */
 __STATIC_INLINE void LL_DMA_EnableIT_HT(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -5973,6 +7034,11 @@ __STATIC_INLINE void LL_DMA_EnableIT_HT(const DMA_TypeDef *DMAx, uint32_t Channe
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval None.
   */
 __STATIC_INLINE void LL_DMA_EnableIT_TC(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -5995,6 +7061,11 @@ __STATIC_INLINE void LL_DMA_EnableIT_TC(const DMA_TypeDef *DMAx, uint32_t Channe
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval None.
   */
 __STATIC_INLINE void LL_DMA_DisableIT_TO(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -6017,6 +7088,11 @@ __STATIC_INLINE void LL_DMA_DisableIT_TO(const DMA_TypeDef *DMAx, uint32_t Chann
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval None.
   */
 __STATIC_INLINE void LL_DMA_DisableIT_SUSP(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -6039,6 +7115,11 @@ __STATIC_INLINE void LL_DMA_DisableIT_SUSP(const DMA_TypeDef *DMAx, uint32_t Cha
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval None.
   */
 __STATIC_INLINE void LL_DMA_DisableIT_USE(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -6061,6 +7142,11 @@ __STATIC_INLINE void LL_DMA_DisableIT_USE(const DMA_TypeDef *DMAx, uint32_t Chan
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval None.
   */
 __STATIC_INLINE void LL_DMA_DisableIT_ULE(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -6083,6 +7169,11 @@ __STATIC_INLINE void LL_DMA_DisableIT_ULE(const DMA_TypeDef *DMAx, uint32_t Chan
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval None.
   */
 __STATIC_INLINE void LL_DMA_DisableIT_DTE(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -6105,6 +7196,11 @@ __STATIC_INLINE void LL_DMA_DisableIT_DTE(const DMA_TypeDef *DMAx, uint32_t Chan
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval None.
   */
 __STATIC_INLINE void LL_DMA_DisableIT_HT(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -6127,6 +7223,11 @@ __STATIC_INLINE void LL_DMA_DisableIT_HT(const DMA_TypeDef *DMAx, uint32_t Chann
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval None.
   */
 __STATIC_INLINE void LL_DMA_DisableIT_TC(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -6149,6 +7250,11 @@ __STATIC_INLINE void LL_DMA_DisableIT_TC(const DMA_TypeDef *DMAx, uint32_t Chann
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_DMA_IsEnabledIT_TO(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -6172,6 +7278,11 @@ __STATIC_INLINE uint32_t LL_DMA_IsEnabledIT_TO(const DMA_TypeDef *DMAx, uint32_t
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_DMA_IsEnabledIT_SUSP(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -6195,6 +7306,11 @@ __STATIC_INLINE uint32_t LL_DMA_IsEnabledIT_SUSP(const DMA_TypeDef *DMAx, uint32
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_DMA_IsEnabledIT_USE(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -6218,6 +7334,11 @@ __STATIC_INLINE uint32_t LL_DMA_IsEnabledIT_USE(const DMA_TypeDef *DMAx, uint32_
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_DMA_IsEnabledIT_ULE(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -6241,6 +7362,11 @@ __STATIC_INLINE uint32_t LL_DMA_IsEnabledIT_ULE(const DMA_TypeDef *DMAx, uint32_
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_DMA_IsEnabledIT_DTE(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -6264,6 +7390,11 @@ __STATIC_INLINE uint32_t LL_DMA_IsEnabledIT_DTE(const DMA_TypeDef *DMAx, uint32_
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_DMA_IsEnabledIT_HT(const DMA_TypeDef *DMAx, uint32_t Channel)
@@ -6287,6 +7418,11 @@ __STATIC_INLINE uint32_t LL_DMA_IsEnabledIT_HT(const DMA_TypeDef *DMAx, uint32_t
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_DMA_IsEnabledIT_TC(const DMA_TypeDef *DMAx, uint32_t Channel)

@@ -2278,6 +2278,37 @@ HAL_StatusTypeDef HAL_TIMEx_ConfigBreakInput(TIM_HandleTypeDef *htim,
       break;
     }
 #endif /* COMP1 */
+#if defined (COMP2)
+    case TIM_BREAKINPUTSOURCE_COMP2:
+    {
+      bkin_enable_mask = TIM1_AF1_BKCMP2E;
+      bkin_enable_bitpos = TIM1_AF1_BKCMP2E_Pos;
+      bkin_polarity_mask = TIM1_AF1_BKCMP2P;
+      bkin_polarity_bitpos = TIM1_AF1_BKCMP2P_Pos;
+      break;
+    }
+#endif /* COMP2 */
+#if defined(PLAY1)
+    case TIM_BREAKINPUTSOURCE_PLAY1:
+    {
+      bkin_enable_mask = TIM1_AF1_BKCMP3E;
+      bkin_enable_bitpos = TIM1_AF1_BKCMP3E_Pos;
+      bkin_polarity_mask = TIM1_AF1_BKCMP3P;
+      bkin_polarity_bitpos = TIM1_AF1_BKCMP3P_Pos;
+      break;
+    }
+#endif /* PLAY1 */
+#if defined(MDF1)
+    case TIM_BREAKINPUTSOURCE_MDF1:
+    {
+      bkin_enable_mask = TIM1_AF1_BKDF1BK0E;
+      bkin_enable_bitpos = TIM1_AF1_BKDF1BK0E_Pos;
+      /* No polarity bit for MDF. Variable bkin_polarity_mask keeps its default value 0 */
+      bkin_polarity_mask = 0U;
+      bkin_polarity_bitpos = 0U;
+      break;
+    }
+#endif /* MDF1 */
 
     default:
     {
@@ -2301,8 +2332,15 @@ HAL_StatusTypeDef HAL_TIMEx_ConfigBreakInput(TIM_HandleTypeDef *htim,
       tmporx |= (sBreakInputConfig->Enable << bkin_enable_bitpos) & bkin_enable_mask;
 
       /* Set the break input polarity */
-      tmporx &= ~bkin_polarity_mask;
-      tmporx |= (sBreakInputConfig->Polarity << bkin_polarity_bitpos) & bkin_polarity_mask;
+#if  defined(MDF1)
+      if ((bkin_polarity_mask != 0U) && (sBreakInputConfig->Source != TIM_BREAKINPUTSOURCE_MDF1))
+#else
+      if (bkin_polarity_mask != 0U)
+#endif /* MDF1 */
+      {
+        tmporx &= ~bkin_polarity_mask;
+        tmporx |= (sBreakInputConfig->Polarity << bkin_polarity_bitpos) & bkin_polarity_mask;
+      }
 
       /* Set TIMx_AF1 */
       htim->Instance->AF1 = tmporx;
@@ -2318,16 +2356,25 @@ HAL_StatusTypeDef HAL_TIMEx_ConfigBreakInput(TIM_HandleTypeDef *htim,
       tmporx |= (sBreakInputConfig->Enable << bkin_enable_bitpos) & bkin_enable_mask;
 
       /* Set the break input polarity */
-      tmporx &= ~bkin_polarity_mask;
-      tmporx |= (sBreakInputConfig->Polarity << bkin_polarity_bitpos) & bkin_polarity_mask;
+#if  defined(MDF1)
+      if ((bkin_polarity_mask != 0U) && (sBreakInputConfig->Source != TIM_BREAKINPUTSOURCE_MDF1))
+#else
+      if (bkin_polarity_mask != 0U)
+#endif /* MDF1 */
+      {
+        tmporx &= ~bkin_polarity_mask;
+        tmporx |= (sBreakInputConfig->Polarity << bkin_polarity_bitpos) & bkin_polarity_mask;
+      }
 
       /* Set TIMx_AF2 */
       htim->Instance->AF2 = tmporx;
       break;
     }
     default:
+    {
       status = HAL_ERROR;
       break;
+    }
   }
 
   __HAL_UNLOCK(htim);
@@ -2449,8 +2496,8 @@ HAL_StatusTypeDef HAL_TIMEx_RemapConfig(TIM_HandleTypeDef *htim, uint32_t Remap)
   *            @arg TIM_TIM2_TI1_GPIO:                TIM2 TI1 is connected to GPIO
   *            @arg TIM_TIM2_TI1_LSI:                 TIM2 TI1 is connected to LSI             (*)
   *            @arg TIM_TIM2_TI1_LSE:                 TIM2 TI1 is connected to LSE             (*)
-  *            @arg TIM_TIM2_TI1_RTC_WKUP:            TIM2 TI2 is connected to RTC_WKUP        (*)
-  *            @arg TIM_TIM2_TI1_TIM3_TI1:            TIM2 TI2 is connected to TIM3_TI1        (*)
+  *            @arg TIM_TIM2_TI1_RTC_WKUP:            TIM2 TI1 is connected to RTC_WKUP        (*)
+  *            @arg TIM_TIM2_TI1_TIM3_TI1:            TIM2 TI1 is connected to TIM3_TI1        (*)
   *            @arg TIM_TIM2_TI1_ETH_PPS              TIM2 TI1 is connected to ETH PPS         (*)
   *            @arg TIM_TIM2_TI1_COMP1                TIM2 TI1 is connected to COMP1 output    (*)
   *            @arg TIM_TIM2_TI1_COMP2                TIM2 TI1 is connected to COMP2 output    (*)
@@ -2462,16 +2509,19 @@ HAL_StatusTypeDef HAL_TIMEx_RemapConfig(TIM_HandleTypeDef *htim, uint32_t Remap)
   *            @arg TIM_TIM2_TI2_MCO1:                TIM2 TI2 is connected to MCO1            (*)
   *            @arg TIM_TIM2_TI2_COMP1:               TIM2 TI2 is connected to COMP1 output    (*)
   *            @arg TIM_TIM2_TI2_COMP2:               TIM2 TI2 is connected to COMP2 output    (*)
+  *            @arg TIM_TIM2_TI2_PLAY1_OUT4           TIM2 TI2 is connected to PLAY1 output 4  (*)
   *            @arg TIM_TIM2_TI3_GPIO:                TIM2 TI3 is connected to GPIO
+  *            @arg TIM_TIM2_TI3_PLAY1_OUT5           TIM2 TI3 is connected to PLAY1 output 5  (*)
   *            @arg TIM_TIM2_TI4_GPIO:                TIM2 TI4 is connected to GPIO
   *            @arg TIM_TIM2_TI4_COMP1:               TIM2 TI4 is connected to COMP1 output    (*)
+  *            @arg TIM_TIM2_TI4_PLAY1_OUT6           TIM2 TI4 is connected to PLAY1 output 6  (*)
   *
   *         For TIM3, the parameter is one of the following values:
   *            @arg TIM_TIM3_TI1_GPIO:                TIM3 TI1 is connected to GPIO
   *            @arg TIM_TIM3_TI1_COMP1:               TIM3 TI1 is connected to COMP1 output    (*)
-  *            @arg TIM_TIM3_TI1_MCO1:                TIM3 TI2 is connected to MCO1            (*)
-  *            @arg TIM_TIM3_TI1_TIM2_TI1:            TIM3 TI2 is connected to TIM2 TI1        (*)
-  *            @arg TIM_TIM3_TI1_HSE_1MHZ:            TIM3 TI2 is connected to HSE_1MHZ        (*)
+  *            @arg TIM_TIM3_TI1_MCO1:                TIM3 TI1 is connected to MCO1            (*)
+  *            @arg TIM_TIM3_TI1_TIM2_TI1:            TIM3 TI1 is connected to TIM2 TI1        (*)
+  *            @arg TIM_TIM3_TI1_HSE_1MHZ:            TIM3 TI1 is connected to HSE_1MHZ        (*)
   *            @arg TIM_TIM3_TI1_ETH_PPS              TIM3 TI1 is connected to ETH PPS         (*)
   *            @arg TIM_TIM3_TI1_COMP1                TIM3 TI1 is connected to COMP1 output    (*)
   *            @arg TIM_TIM3_TI1_COMP2                TIM3 TI1 is connected to COMP2 output    (*)
@@ -2482,8 +2532,11 @@ HAL_StatusTypeDef HAL_TIMEx_RemapConfig(TIM_HandleTypeDef *htim, uint32_t Remap)
   *            @arg TIM_TIM3_TI2_HSI_1024:            TIM3 TI2 is connected to HSI_1024        (*)
   *            @arg TIM_TIM3_TI2_COMP1:               TIM3 TI2 is connected to COMP1 output    (*)
   *            @arg TIM_TIM3_TI2_COMP2:               TIM3 TI2 is connected to COMP2 output    (*)
-  *            @arg TIM_TIM3_TI3_GPIO:                TIM3 TI2 is connected to GPIO
-  *            @arg TIM_TIM3_TI4_GPIO:                TIM3 TI2 is connected to GPIO
+  *            @arg TIM_TIM3_TI2_PLAY1_OUT4           TIM3 TI2 is connected to PLAY1 output 4  (*)
+  *            @arg TIM_TIM3_TI3_GPIO:                TIM3 TI3 is connected to GPIO
+  *            @arg TIM_TIM3_TI3_PLAY1_OUT5           TIM3 TI3 is connected to PLAY1 output 5  (*)
+  *            @arg TIM_TIM3_TI4_GPIO:                TIM3 TI4 is connected to GPIO
+  *            @arg TIM_TIM3_TI4_PLAY1_OUT6           TIM3 TI4 is connected to PLAY1 output 6  (*)
   *
   *         For TIM4, the parameter is one of the following values: (**)
   *            @arg TIM_TIM4_TI1_GPIO:                TIM4 TI1 is connected to GPIO
@@ -2595,6 +2648,9 @@ HAL_StatusTypeDef  HAL_TIMEx_TISelection(TIM_HandleTypeDef *htim, uint32_t TISel
       break;
     case TIM_CHANNEL_2:
       MODIFY_REG(htim->Instance->TISEL, TIM_TISEL_TI2SEL, TISelection);
+      break;
+    case TIM_CHANNEL_3:
+      MODIFY_REG(htim->Instance->TISEL, TIM_TISEL_TI3SEL, TISelection);
       break;
     case TIM_CHANNEL_4:
       MODIFY_REG(htim->Instance->TISEL, TIM_TISEL_TI4SEL, TISelection);

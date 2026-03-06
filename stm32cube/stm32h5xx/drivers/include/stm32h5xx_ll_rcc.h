@@ -44,7 +44,11 @@ extern "C" {
   * @{
   */
 /* Defines used for security configuration extension */
+#if defined(RCC_CR_PLL3ON)
 #define RCC_SECURE_MASK         0x3BFFU
+#else
+#define RCC_SECURE_MASK         0x39FFU
+#endif /* RCC_CR_PLL3ON */
 /**
   * @}
   */
@@ -170,6 +174,9 @@ typedef struct
 /**
   * @}
   */
+#if defined(PWR_USBSCR_OTGHSEN)
+#define OTGHS_CLK48_VALUE       48000000U /*!< Value of the OTGHS_CLK48 in Hz */
+#endif /* PWR_USBSCR_OTGHSEN */
 
 /**
   * @}
@@ -189,7 +196,9 @@ typedef struct
 /** @defgroup RCC_LL_EC_LSEDRIVE  LSE oscillator drive capability
   * @{
   */
+#if !defined(STM32H5E5xx) || !defined(STM32H5E4xx) || !defined(STM32H5F5xx) || !defined(STM32H5F4xx)
 #define LL_RCC_LSEDRIVE_LOW                0x00000000U             /*!< Xtal mode lower driving capability */
+#endif /* !defined(STM32H5E5xx) || !defined(STM32H5E4xx) || !defined(STM32H5F5xx) || !defined(STM32H5F4xx) */
 #define LL_RCC_LSEDRIVE_MEDIUMLOW          RCC_BDCR_LSEDRV_0       /*!< Xtal mode medium low driving capability */
 #define LL_RCC_LSEDRIVE_MEDIUMHIGH         RCC_BDCR_LSEDRV_1       /*!< Xtal mode medium high driving capability */
 #define LL_RCC_LSEDRIVE_HIGH               RCC_BDCR_LSEDRV         /*!< Xtal mode higher driving capability */
@@ -231,7 +240,9 @@ typedef struct
 /** @defgroup RCC_LL_EC_LSEEXT  EXTERNAL LSE clock Type
   * @{
   */
+#if !defined(STM32H5E5xx) || !defined(STM32H5E4xx) || !defined(STM32H5F5xx) || !defined(STM32H5F4xx)
 #define LL_RCC_LSE_ANALOG_TYPE               0U                    /*!< ANALOG  clock used as LSE external clock source  */
+#endif /* !defined(STM32H5E5xx) || !defined(STM32H5E4xx) || !defined(STM32H5F5xx) || !defined(STM32H5F4xx) */
 #define LL_RCC_LSE_DIGITAL_TYPE              RCC_BDCR_LSEEXT       /*!< DIGITAL clock used as LSE external clock source */
 /**
   * @}
@@ -542,6 +553,17 @@ typedef struct
   */
 #endif /* USE_FULL_LL_DRIVER */
 
+#if defined (RCC_CCIPR4_OTGPDCTRL)
+/** @defgroup RCC_LL_EC_OTGPD_SUSPEND OTG PHY Suspend Power State
+  * @{
+  */
+#define LL_RCC_OTGPD_SUSPEND_POWERDOWN   ((uint32_t)0x00000000U)         /*!< Power down the PHY state machine, bias, and PLL in SUSPEND mode. */
+#define LL_RCC_OTGPD_SUSPEND_POWERON     RCC_CCIPR4_OTGPDCTRL            /*!< Keep the PHY powered in SUSPEND mode (default after reset). */
+/**
+  * @}
+  */
+#endif /* RCC_CCIPR4_OTGPDCTRL */
+
 /** @defgroup RCC_LL_EC_RTC_CLKSOURCE  RTC clock source selection
   * @{
   */
@@ -560,7 +582,7 @@ typedef struct
 #define LL_RCC_USART1_CLKSOURCE_PLL2Q       LL_CLKSOURCE(CCIPR1_OFFSET, RCC_CCIPR1_USART1SEL, RCC_CCIPR1_USART1SEL_Pos, RCC_CCIPR1_USART1SEL_0)                           /*!< PLL2 Q clock used as USART1 clock source */
 #if defined(RCC_CR_PLL3ON)
 #define LL_RCC_USART1_CLKSOURCE_PLL3Q       LL_CLKSOURCE(CCIPR1_OFFSET, RCC_CCIPR1_USART1SEL, RCC_CCIPR1_USART1SEL_Pos, RCC_CCIPR1_USART1SEL_1)                           /*!< PLL3 Q clock used as USART1 clock source */
-#endif /* PLL3 */
+#endif /* RCC_CR_PLL3ON */
 #define LL_RCC_USART1_CLKSOURCE_HSI         LL_CLKSOURCE(CCIPR1_OFFSET, RCC_CCIPR1_USART1SEL, RCC_CCIPR1_USART1SEL_Pos, RCC_CCIPR1_USART1SEL_1 | RCC_CCIPR1_USART1SEL_0)  /*!< HSI   clock used as USART1 clock source  */
 #define LL_RCC_USART1_CLKSOURCE_CSI         LL_CLKSOURCE(CCIPR1_OFFSET, RCC_CCIPR1_USART1SEL, RCC_CCIPR1_USART1SEL_Pos, RCC_CCIPR1_USART1SEL_2)                           /*!< CSI   clock used as USART1 clock source  */
 #define LL_RCC_USART1_CLKSOURCE_LSE         LL_CLKSOURCE(CCIPR1_OFFSET, RCC_CCIPR1_USART1SEL, RCC_CCIPR1_USART1SEL_Pos, RCC_CCIPR1_USART1SEL_2 | RCC_CCIPR1_USART1SEL_0)  /*!< LSE   clock used as USART1 clock source  */
@@ -569,7 +591,7 @@ typedef struct
 #define LL_RCC_USART2_CLKSOURCE_PLL2Q       LL_CLKSOURCE(CCIPR1_OFFSET, RCC_CCIPR1_USART2SEL, RCC_CCIPR1_USART2SEL_Pos, RCC_CCIPR1_USART2SEL_0)                           /*!< PLL2 Q clock used as USART2 clock source */
 #if defined(RCC_CR_PLL3ON)
 #define LL_RCC_USART2_CLKSOURCE_PLL3Q       LL_CLKSOURCE(CCIPR1_OFFSET, RCC_CCIPR1_USART2SEL, RCC_CCIPR1_USART2SEL_Pos, RCC_CCIPR1_USART2SEL_1)                           /*!< PLL3 Q clock used as USART2 clock source */
-#endif /* PLL3 */
+#endif /* RCC_CR_PLL3ON */
 #define LL_RCC_USART2_CLKSOURCE_HSI         LL_CLKSOURCE(CCIPR1_OFFSET, RCC_CCIPR1_USART2SEL, RCC_CCIPR1_USART2SEL_Pos, RCC_CCIPR1_USART2SEL_1 | RCC_CCIPR1_USART2SEL_0)  /*!< HSI   clock used as USART2 clock source  */
 #define LL_RCC_USART2_CLKSOURCE_CSI         LL_CLKSOURCE(CCIPR1_OFFSET, RCC_CCIPR1_USART2SEL, RCC_CCIPR1_USART2SEL_Pos, RCC_CCIPR1_USART2SEL_2)                           /*!< CSI   clock used as USART2 clock source  */
 #define LL_RCC_USART2_CLKSOURCE_LSE         LL_CLKSOURCE(CCIPR1_OFFSET, RCC_CCIPR1_USART2SEL, RCC_CCIPR1_USART2SEL_Pos, RCC_CCIPR1_USART2SEL_2 | RCC_CCIPR1_USART2SEL_0)  /*!< LSE   clock used as USART2 clock source  */
@@ -578,7 +600,7 @@ typedef struct
 #define LL_RCC_USART3_CLKSOURCE_PLL2Q       LL_CLKSOURCE(CCIPR1_OFFSET, RCC_CCIPR1_USART3SEL, RCC_CCIPR1_USART3SEL_Pos, RCC_CCIPR1_USART3SEL_0)                           /*!< PLL2 Q clock used as USART3 clock source */
 #if defined(RCC_CR_PLL3ON)
 #define LL_RCC_USART3_CLKSOURCE_PLL3Q       LL_CLKSOURCE(CCIPR1_OFFSET, RCC_CCIPR1_USART3SEL, RCC_CCIPR1_USART3SEL_Pos, RCC_CCIPR1_USART3SEL_1)                           /*!< PLL3 Q clock used as USART3 clock source */
-#endif /* PLL3 */
+#endif /* RCC_CR_PLL3ON */
 #define LL_RCC_USART3_CLKSOURCE_HSI         LL_CLKSOURCE(CCIPR1_OFFSET, RCC_CCIPR1_USART3SEL, RCC_CCIPR1_USART3SEL_Pos, RCC_CCIPR1_USART3SEL_1 | RCC_CCIPR1_USART3SEL_0)  /*!< HSI   clock used as USART3 clock source  */
 #define LL_RCC_USART3_CLKSOURCE_CSI         LL_CLKSOURCE(CCIPR1_OFFSET, RCC_CCIPR1_USART3SEL, RCC_CCIPR1_USART3SEL_Pos, RCC_CCIPR1_USART3SEL_2)                           /*!< CSI   clock used as USART3 clock source  */
 #define LL_RCC_USART3_CLKSOURCE_LSE         LL_CLKSOURCE(CCIPR1_OFFSET, RCC_CCIPR1_USART3SEL, RCC_CCIPR1_USART3SEL_Pos, RCC_CCIPR1_USART3SEL_2 | RCC_CCIPR1_USART3SEL_0)  /*!< LSE   clock used as USART3 clock source  */
@@ -586,7 +608,9 @@ typedef struct
 #if defined(USART6)
 #define LL_RCC_USART6_CLKSOURCE_PCLK1       LL_CLKSOURCE(CCIPR1_OFFSET, RCC_CCIPR1_USART6SEL, RCC_CCIPR1_USART6SEL_Pos, 0x00000000U)                                      /*!< PCLK1 clock used as USART6 clock source  */
 #define LL_RCC_USART6_CLKSOURCE_PLL2Q       LL_CLKSOURCE(CCIPR1_OFFSET, RCC_CCIPR1_USART6SEL, RCC_CCIPR1_USART6SEL_Pos, RCC_CCIPR1_USART6SEL_0)                           /*!< PLL2 Q clock used as USART6 clock source */
+#if defined(RCC_CR_PLL3ON)
 #define LL_RCC_USART6_CLKSOURCE_PLL3Q       LL_CLKSOURCE(CCIPR1_OFFSET, RCC_CCIPR1_USART6SEL, RCC_CCIPR1_USART6SEL_Pos, RCC_CCIPR1_USART6SEL_1)                           /*!< PLL3 Q clock used as USART6 clock source */
+#endif /* RCC_CR_PLL3ON */
 #define LL_RCC_USART6_CLKSOURCE_HSI         LL_CLKSOURCE(CCIPR1_OFFSET, RCC_CCIPR1_USART6SEL, RCC_CCIPR1_USART6SEL_Pos, RCC_CCIPR1_USART6SEL_1 | RCC_CCIPR1_USART6SEL_0)  /*!< HSI   clock used as USART6 clock source  */
 #define LL_RCC_USART6_CLKSOURCE_CSI         LL_CLKSOURCE(CCIPR1_OFFSET, RCC_CCIPR1_USART6SEL, RCC_CCIPR1_USART6SEL_Pos, RCC_CCIPR1_USART6SEL_2)                           /*!< CSI   clock used as USART6 clock source  */
 #define LL_RCC_USART6_CLKSOURCE_LSE         LL_CLKSOURCE(CCIPR1_OFFSET, RCC_CCIPR1_USART6SEL, RCC_CCIPR1_USART6SEL_Pos, RCC_CCIPR1_USART6SEL_2 | RCC_CCIPR1_USART6SEL_0)  /*!< LSE   clock used as USART6 clock source  */
@@ -619,28 +643,36 @@ typedef struct
   */
 #define LL_RCC_UART4_CLKSOURCE_PCLK1       LL_CLKSOURCE(CCIPR1_OFFSET, RCC_CCIPR1_UART4SEL, RCC_CCIPR1_UART4SEL_Pos, 0x00000000U)                                            /*!< PCLK1 clock used as UART4 clock source  */
 #define LL_RCC_UART4_CLKSOURCE_PLL2Q       LL_CLKSOURCE(CCIPR1_OFFSET, RCC_CCIPR1_UART4SEL, RCC_CCIPR1_UART4SEL_Pos, RCC_CCIPR1_UART4SEL_0)                                  /*!< PLL2 Q clock used as UART4 clock source */
+#if defined(RCC_CR_PLL3ON)
 #define LL_RCC_UART4_CLKSOURCE_PLL3Q       LL_CLKSOURCE(CCIPR1_OFFSET, RCC_CCIPR1_UART4SEL, RCC_CCIPR1_UART4SEL_Pos, RCC_CCIPR1_UART4SEL_1)                                  /*!< PLL3 Q clock used as UART4 clock source */
+#endif /* RCC_CR_PLL3ON */
 #define LL_RCC_UART4_CLKSOURCE_HSI         LL_CLKSOURCE(CCIPR1_OFFSET, RCC_CCIPR1_UART4SEL, RCC_CCIPR1_UART4SEL_Pos, RCC_CCIPR1_UART4SEL_1 | RCC_CCIPR1_UART4SEL_0)          /*!< HSI   clock used as UART4 clock source  */
 #define LL_RCC_UART4_CLKSOURCE_CSI         LL_CLKSOURCE(CCIPR1_OFFSET, RCC_CCIPR1_UART4SEL, RCC_CCIPR1_UART4SEL_Pos, RCC_CCIPR1_UART4SEL_2)                                  /*!< CSI   clock used as UART4 clock source  */
 #define LL_RCC_UART4_CLKSOURCE_LSE         LL_CLKSOURCE(CCIPR1_OFFSET, RCC_CCIPR1_UART4SEL, RCC_CCIPR1_UART4SEL_Pos, RCC_CCIPR1_UART4SEL_2 | RCC_CCIPR1_UART4SEL_0)          /*!< LSE   clock used as UART4 clock source  */
 
 #define LL_RCC_UART5_CLKSOURCE_PCLK1       LL_CLKSOURCE(CCIPR1_OFFSET, RCC_CCIPR1_UART5SEL, RCC_CCIPR1_UART5SEL_Pos, 0x00000000U)                                            /*!< PCLK1 clock used as UART5 clock source  */
 #define LL_RCC_UART5_CLKSOURCE_PLL2Q       LL_CLKSOURCE(CCIPR1_OFFSET, RCC_CCIPR1_UART5SEL, RCC_CCIPR1_UART5SEL_Pos, RCC_CCIPR1_UART5SEL_0)                                  /*!< PLL2 Q clock used as UART5 clock source */
+#if defined(RCC_CR_PLL3ON)
 #define LL_RCC_UART5_CLKSOURCE_PLL3Q       LL_CLKSOURCE(CCIPR1_OFFSET, RCC_CCIPR1_UART5SEL, RCC_CCIPR1_UART5SEL_Pos, RCC_CCIPR1_UART5SEL_1)                                  /*!< PLL3 Q clock used as UART5 clock source */
+#endif /* RCC_CR_PLL3ON */
 #define LL_RCC_UART5_CLKSOURCE_HSI         LL_CLKSOURCE(CCIPR1_OFFSET, RCC_CCIPR1_UART5SEL, RCC_CCIPR1_UART5SEL_Pos, RCC_CCIPR1_UART5SEL_1 | RCC_CCIPR1_UART5SEL_0)          /*!< HSI   clock used as UART5 clock source  */
 #define LL_RCC_UART5_CLKSOURCE_CSI         LL_CLKSOURCE(CCIPR1_OFFSET, RCC_CCIPR1_UART5SEL, RCC_CCIPR1_UART5SEL_Pos, RCC_CCIPR1_UART5SEL_2)                                  /*!< CSI   clock used as UART5 clock source  */
 #define LL_RCC_UART5_CLKSOURCE_LSE         LL_CLKSOURCE(CCIPR1_OFFSET, RCC_CCIPR1_UART5SEL, RCC_CCIPR1_UART5SEL_Pos, RCC_CCIPR1_UART5SEL_2 | RCC_CCIPR1_UART5SEL_0)          /*!< LSE   clock used as UART5 clock source  */
 
 #define LL_RCC_UART7_CLKSOURCE_PCLK1       LL_CLKSOURCE(CCIPR1_OFFSET, RCC_CCIPR1_UART7SEL, RCC_CCIPR1_UART7SEL_Pos, 0x00000000U)                                            /*!< PCLK1 clock used as UART7 clock source  */
 #define LL_RCC_UART7_CLKSOURCE_PLL2Q       LL_CLKSOURCE(CCIPR1_OFFSET, RCC_CCIPR1_UART7SEL, RCC_CCIPR1_UART7SEL_Pos, RCC_CCIPR1_UART7SEL_0)                                  /*!< PLL2 Q clock used as UART7 clock source */
+#if defined(RCC_CR_PLL3ON)
 #define LL_RCC_UART7_CLKSOURCE_PLL3Q       LL_CLKSOURCE(CCIPR1_OFFSET, RCC_CCIPR1_UART7SEL, RCC_CCIPR1_UART7SEL_Pos, RCC_CCIPR1_UART7SEL_1)                                  /*!< PLL3 Q clock used as UART7 clock source */
+#endif /* RCC_CR_PLL3ON */
 #define LL_RCC_UART7_CLKSOURCE_HSI         LL_CLKSOURCE(CCIPR1_OFFSET, RCC_CCIPR1_UART7SEL, RCC_CCIPR1_UART7SEL_Pos, RCC_CCIPR1_UART7SEL_1 | RCC_CCIPR1_UART7SEL_0)          /*!< HSI   clock used as UART7 clock source  */
 #define LL_RCC_UART7_CLKSOURCE_CSI         LL_CLKSOURCE(CCIPR1_OFFSET, RCC_CCIPR1_UART7SEL, RCC_CCIPR1_UART7SEL_Pos, RCC_CCIPR1_UART7SEL_2)                                  /*!< CSI   clock used as UART7 clock source  */
 #define LL_RCC_UART7_CLKSOURCE_LSE         LL_CLKSOURCE(CCIPR1_OFFSET, RCC_CCIPR1_UART7SEL, RCC_CCIPR1_UART7SEL_Pos, RCC_CCIPR1_UART7SEL_2 | RCC_CCIPR1_UART7SEL_0)          /*!< LSE   clock used as UART7 clock source  */
 
 #define LL_RCC_UART8_CLKSOURCE_PCLK1       LL_CLKSOURCE(CCIPR1_OFFSET, RCC_CCIPR1_UART8SEL, RCC_CCIPR1_UART8SEL_Pos, 0x00000000U)                                            /*!< PCLK1 clock used as UART8 clock source  */
 #define LL_RCC_UART8_CLKSOURCE_PLL2Q       LL_CLKSOURCE(CCIPR1_OFFSET, RCC_CCIPR1_UART8SEL, RCC_CCIPR1_UART8SEL_Pos, RCC_CCIPR1_UART8SEL_0)                                  /*!< PLL2 Q clock used as UART8 clock source */
+#if defined(RCC_CR_PLL3ON)
 #define LL_RCC_UART8_CLKSOURCE_PLL3Q       LL_CLKSOURCE(CCIPR1_OFFSET, RCC_CCIPR1_UART8SEL, RCC_CCIPR1_UART8SEL_Pos, RCC_CCIPR1_UART8SEL_1)                                  /*!< PLL3 Q clock used as UART8 clock source */
+#endif /* RCC_CR_PLL3ON */
 #define LL_RCC_UART8_CLKSOURCE_HSI         LL_CLKSOURCE(CCIPR1_OFFSET, RCC_CCIPR1_UART8SEL, RCC_CCIPR1_UART8SEL_Pos, RCC_CCIPR1_UART8SEL_1 | RCC_CCIPR1_UART8SEL_0)          /*!< HSI   clock used as UART8 clock source  */
 #define LL_RCC_UART8_CLKSOURCE_CSI         LL_CLKSOURCE(CCIPR1_OFFSET, RCC_CCIPR1_UART8SEL, RCC_CCIPR1_UART8SEL_Pos, RCC_CCIPR1_UART8SEL_2)                                  /*!< CSI   clock used as UART8 clock source  */
 #define LL_RCC_UART8_CLKSOURCE_LSE         LL_CLKSOURCE(CCIPR1_OFFSET, RCC_CCIPR1_UART8SEL, RCC_CCIPR1_UART8SEL_Pos, RCC_CCIPR1_UART8SEL_2 | RCC_CCIPR1_UART8SEL_0)          /*!< LSE   clock used as UART8 clock source  */
@@ -670,7 +702,7 @@ typedef struct
 #define LL_RCC_LPUART1_CLKSOURCE_PLL2Q       RCC_CCIPR3_LPUART1SEL_0                             /*!< PLL2Q clock used as LPUART1 clock source */
 #if defined(RCC_CR_PLL3ON)
 #define LL_RCC_LPUART1_CLKSOURCE_PLL3Q       RCC_CCIPR3_LPUART1SEL_1                             /*!< PLL3Q clock used as LPUART1 clock source */
-#endif /* PLL3 */
+#endif /* RCC_CR_PLL3ON */
 #define LL_RCC_LPUART1_CLKSOURCE_HSI        (RCC_CCIPR3_LPUART1SEL_0 | RCC_CCIPR3_LPUART1SEL_1)  /*!< HSI   clock used as LPUART1 clock source */
 #define LL_RCC_LPUART1_CLKSOURCE_CSI         RCC_CCIPR3_LPUART1SEL_2                             /*!< CSI   clock used as LPUART1 clock source */
 #define LL_RCC_LPUART1_CLKSOURCE_LSE        (RCC_CCIPR3_LPUART1SEL_0 | RCC_CCIPR3_LPUART1SEL_2)  /*!< LSE   clock used as LPUART1 clock source */
@@ -686,7 +718,7 @@ typedef struct
 #define LL_RCC_I2C1_CLKSOURCE_PLL3R         LL_CLKSOURCE(CCIPR4_OFFSET, RCC_CCIPR4_I2C1SEL, RCC_CCIPR4_I2C1SEL_Pos, RCC_CCIPR4_I2C1SEL_0)     /*!< PLL3 R clock used as I2C1 clock source */
 #else
 #define LL_RCC_I2C1_CLKSOURCE_PLL2R         LL_CLKSOURCE(CCIPR4_OFFSET, RCC_CCIPR4_I2C1SEL, RCC_CCIPR4_I2C1SEL_Pos, RCC_CCIPR4_I2C1SEL_0)     /*!< PLL2 R clock used as I2C1 clock source */
-#endif /* PLL3 */
+#endif /* RCC_CR_PLL3ON */
 #define LL_RCC_I2C1_CLKSOURCE_HSI           LL_CLKSOURCE(CCIPR4_OFFSET, RCC_CCIPR4_I2C1SEL, RCC_CCIPR4_I2C1SEL_Pos, RCC_CCIPR4_I2C1SEL_1)     /*!< HSI clock used as I2C1 clock source */
 #define LL_RCC_I2C1_CLKSOURCE_CSI           LL_CLKSOURCE(CCIPR4_OFFSET, RCC_CCIPR4_I2C1SEL, RCC_CCIPR4_I2C1SEL_Pos, RCC_CCIPR4_I2C1SEL)       /*!< CSI clock used as I2C1 clock source */
 
@@ -695,13 +727,17 @@ typedef struct
 #define LL_RCC_I2C2_CLKSOURCE_PLL3R         LL_CLKSOURCE(CCIPR4_OFFSET, RCC_CCIPR4_I2C2SEL, RCC_CCIPR4_I2C2SEL_Pos, RCC_CCIPR4_I2C2SEL_0)     /*!< PLL3 R clock used as I2C2 clock source */
 #else
 #define LL_RCC_I2C2_CLKSOURCE_PLL2R         LL_CLKSOURCE(CCIPR4_OFFSET, RCC_CCIPR4_I2C2SEL, RCC_CCIPR4_I2C2SEL_Pos, RCC_CCIPR4_I2C2SEL_0)     /*!< PLL2 R clock used as I2C2 clock source */
-#endif /* PLL3 */
+#endif /* RCC_CR_PLL3ON */
 #define LL_RCC_I2C2_CLKSOURCE_HSI           LL_CLKSOURCE(CCIPR4_OFFSET, RCC_CCIPR4_I2C2SEL, RCC_CCIPR4_I2C2SEL_Pos, RCC_CCIPR4_I2C2SEL_1)     /*!< HSI clock used as I2C2 clock source */
 #define LL_RCC_I2C2_CLKSOURCE_CSI           LL_CLKSOURCE(CCIPR4_OFFSET, RCC_CCIPR4_I2C2SEL, RCC_CCIPR4_I2C2SEL_Pos, RCC_CCIPR4_I2C2SEL)       /*!< CSI clock used as I2C2 clock source */
 
 #if defined(I2C3)
 #define LL_RCC_I2C3_CLKSOURCE_PCLK3         LL_CLKSOURCE(CCIPR4_OFFSET, RCC_CCIPR4_I2C3SEL, RCC_CCIPR4_I2C3SEL_Pos, 0x00000000U)              /*!< PCLK3 clock used as I2C3 clock source */
+#if defined(RCC_CR_PLL3ON)
 #define LL_RCC_I2C3_CLKSOURCE_PLL3R         LL_CLKSOURCE(CCIPR4_OFFSET, RCC_CCIPR4_I2C3SEL, RCC_CCIPR4_I2C3SEL_Pos, RCC_CCIPR4_I2C3SEL_0)     /*!< PLL3 R clock used as I2C3 clock source */
+#else
+#define LL_RCC_I2C3_CLKSOURCE_PLL2R         LL_CLKSOURCE(CCIPR4_OFFSET, RCC_CCIPR4_I2C3SEL, RCC_CCIPR4_I2C3SEL_Pos, RCC_CCIPR4_I2C3SEL_0)     /*!< PLL2 R clock used as I2C3 clock source */
+#endif /* RCC_CR_PLL3ON */
 #define LL_RCC_I2C3_CLKSOURCE_HSI           LL_CLKSOURCE(CCIPR4_OFFSET, RCC_CCIPR4_I2C3SEL, RCC_CCIPR4_I2C3SEL_Pos, RCC_CCIPR4_I2C3SEL_1)     /*!< HSI clock used as I2C3 clock source */
 #define LL_RCC_I2C3_CLKSOURCE_CSI           LL_CLKSOURCE(CCIPR4_OFFSET, RCC_CCIPR4_I2C3SEL, RCC_CCIPR4_I2C3SEL_Pos, RCC_CCIPR4_I2C3SEL)       /*!< CSI clock used as I2C3 clock source */
 #endif /* I2C3 */
@@ -724,7 +760,7 @@ typedef struct
 #define LL_RCC_I3C1_CLKSOURCE_PLL3R         LL_CLKSOURCE(CCIPR4_OFFSET, RCC_CCIPR4_I3C1SEL, RCC_CCIPR4_I3C1SEL_Pos, RCC_CCIPR4_I3C1SEL_0)     /*!< PLL3 R clock used as I3C1 clock source */
 #else
 #define LL_RCC_I3C1_CLKSOURCE_PLL2R         LL_CLKSOURCE(CCIPR4_OFFSET, RCC_CCIPR4_I3C1SEL, RCC_CCIPR4_I3C1SEL_Pos, RCC_CCIPR4_I3C1SEL_0)     /*!< PLL2 R clock used as I3C1 clock source */
-#endif /* PLL3 */
+#endif /* RCC_CR_PLL3ON */
 #define LL_RCC_I3C1_CLKSOURCE_HSI           LL_CLKSOURCE(CCIPR4_OFFSET, RCC_CCIPR4_I3C1SEL, RCC_CCIPR4_I3C1SEL_Pos, RCC_CCIPR4_I3C1SEL_1)     /*!< HSI clock used as I3C1 clock source */
 #define LL_RCC_I3C1_CLKSOURCE_NONE          LL_CLKSOURCE(CCIPR4_OFFSET, RCC_CCIPR4_I3C1SEL, RCC_CCIPR4_I3C1SEL_Pos, RCC_CCIPR4_I3C1SEL)       /*!< NONE clock used as I3C1 clock source */
 
@@ -734,9 +770,13 @@ typedef struct
 #define LL_RCC_I3C2_CLKSOURCE_PLL3R         LL_CLKSOURCE(CCIPR4_OFFSET, RCC_CCIPR4_I3C2SEL, RCC_CCIPR4_I3C2SEL_Pos, RCC_CCIPR4_I3C2SEL_0)     /*!< PLL3 R clock used as I3C2 clock source */
 #else
 #define LL_RCC_I3C2_CLKSOURCE_PLL2R         LL_CLKSOURCE(CCIPR4_OFFSET, RCC_CCIPR4_I3C2SEL, RCC_CCIPR4_I3C2SEL_Pos, RCC_CCIPR4_I3C2SEL_0)     /*!< PLL2 R clock used as I3C2 clock source */
-#endif /* PLL3 */
+#endif /* RCC_CR_PLL3ON */
 #define LL_RCC_I3C2_CLKSOURCE_HSI           LL_CLKSOURCE(CCIPR4_OFFSET, RCC_CCIPR4_I3C2SEL, RCC_CCIPR4_I3C2SEL_Pos, RCC_CCIPR4_I3C2SEL_1)     /*!< HSI clock used as I3C2 clock source */
+#if defined(STM32H5E5xx) || defined(STM32H5E4xx) || defined(STM32H5F5xx) || defined(STM32H5F4xx)
+#define LL_RCC_I3C2_CLKSOURCE_CSI           LL_CLKSOURCE(CCIPR4_OFFSET, RCC_CCIPR4_I3C2SEL, RCC_CCIPR4_I3C2SEL_Pos, RCC_CCIPR4_I3C2SEL_0 |RCC_CCIPR4_I3C2SEL_1)  /*!< CSI clock used as I3C2 clock source */
+#else
 #define LL_RCC_I3C2_CLKSOURCE_NONE          LL_CLKSOURCE(CCIPR4_OFFSET, RCC_CCIPR4_I3C2SEL, RCC_CCIPR4_I3C2SEL_Pos, RCC_CCIPR4_I3C2SEL)       /*!< NONE clock used as I3C2 clock source */
+#endif /* defined(STM32H5E5xx) || defined(STM32H5E4xx) || defined(STM32H5F5xx) || defined(STM32H5F4xx) */
 #endif /* I3C2 */
 /**
   * @}
@@ -749,7 +789,7 @@ typedef struct
 #define LL_RCC_SPI1_CLKSOURCE_PLL2P         LL_CLKSOURCE(CCIPR3_OFFSET, RCC_CCIPR3_SPI1SEL, RCC_CCIPR3_SPI1SEL_Pos, RCC_CCIPR3_SPI1SEL_0)                         /*!< PLL2 P clock used as SPI1 clock source */
 #if defined(RCC_CR_PLL3ON)
 #define LL_RCC_SPI1_CLKSOURCE_PLL3P         LL_CLKSOURCE(CCIPR3_OFFSET, RCC_CCIPR3_SPI1SEL, RCC_CCIPR3_SPI1SEL_Pos, RCC_CCIPR3_SPI1SEL_1)                         /*!< PLL3 P clock used as SPI1 clock source */
-#endif /* PLL3 */
+#endif /* RCC_CR_PLL3ON */
 #define LL_RCC_SPI1_CLKSOURCE_PIN           LL_CLKSOURCE(CCIPR3_OFFSET, RCC_CCIPR3_SPI1SEL, RCC_CCIPR3_SPI1SEL_Pos, RCC_CCIPR3_SPI1SEL_1 | RCC_CCIPR3_SPI1SEL_0)  /*!< PIN clock used as SPI1 clock source    */
 #define LL_RCC_SPI1_CLKSOURCE_CLKP          LL_CLKSOURCE(CCIPR3_OFFSET, RCC_CCIPR3_SPI1SEL, RCC_CCIPR3_SPI1SEL_Pos, RCC_CCIPR3_SPI1SEL_2)                         /*!< CLKP clock used as SPI1 clock source   */
 
@@ -757,7 +797,7 @@ typedef struct
 #define LL_RCC_SPI2_CLKSOURCE_PLL2P         LL_CLKSOURCE(CCIPR3_OFFSET, RCC_CCIPR3_SPI2SEL, RCC_CCIPR3_SPI2SEL_Pos, RCC_CCIPR3_SPI2SEL_0)                         /*!< PLL2 P clock used as SPI2 clock source */
 #if defined(RCC_CR_PLL3ON)
 #define LL_RCC_SPI2_CLKSOURCE_PLL3P         LL_CLKSOURCE(CCIPR3_OFFSET, RCC_CCIPR3_SPI2SEL, RCC_CCIPR3_SPI2SEL_Pos, RCC_CCIPR3_SPI2SEL_1)                         /*!< PLL3 P clock used as SPI2 clock source */
-#endif /* PLL3 */
+#endif /* RCC_CR_PLL3ON */
 #define LL_RCC_SPI2_CLKSOURCE_PIN           LL_CLKSOURCE(CCIPR3_OFFSET, RCC_CCIPR3_SPI2SEL, RCC_CCIPR3_SPI2SEL_Pos, RCC_CCIPR3_SPI2SEL_1 | RCC_CCIPR3_SPI2SEL_0)  /*!< PIN clock used as SPI2 clock source    */
 #define LL_RCC_SPI2_CLKSOURCE_CLKP          LL_CLKSOURCE(CCIPR3_OFFSET, RCC_CCIPR3_SPI2SEL, RCC_CCIPR3_SPI2SEL_Pos, RCC_CCIPR3_SPI2SEL_2)                         /*!< CLKP clock used as SPI2 clock source   */
 
@@ -765,14 +805,16 @@ typedef struct
 #define LL_RCC_SPI3_CLKSOURCE_PLL2P         LL_CLKSOURCE(CCIPR3_OFFSET, RCC_CCIPR3_SPI3SEL, RCC_CCIPR3_SPI3SEL_Pos, RCC_CCIPR3_SPI3SEL_0)                         /*!< PLL2 P clock used as SPI3 clock source */
 #if defined(RCC_CR_PLL3ON)
 #define LL_RCC_SPI3_CLKSOURCE_PLL3P         LL_CLKSOURCE(CCIPR3_OFFSET, RCC_CCIPR3_SPI3SEL, RCC_CCIPR3_SPI3SEL_Pos, RCC_CCIPR3_SPI3SEL_1)                         /*!< PLL3 P clock used as SPI3 clock source */
-#endif /* PLL3 */
+#endif /* RCC_CR_PLL3ON */
 #define LL_RCC_SPI3_CLKSOURCE_PIN           LL_CLKSOURCE(CCIPR3_OFFSET, RCC_CCIPR3_SPI3SEL, RCC_CCIPR3_SPI3SEL_Pos, RCC_CCIPR3_SPI3SEL_1 | RCC_CCIPR3_SPI3SEL_0)  /*!< PIN clock used as SPI3 clock source    */
 #define LL_RCC_SPI3_CLKSOURCE_CLKP          LL_CLKSOURCE(CCIPR3_OFFSET, RCC_CCIPR3_SPI3SEL, RCC_CCIPR3_SPI3SEL_Pos, RCC_CCIPR3_SPI3SEL_2)                         /*!< CLKP clock used as SPI3 clock source   */
 
 #if defined(SPI4)
 #define LL_RCC_SPI4_CLKSOURCE_PCLK2         LL_CLKSOURCE(CCIPR3_OFFSET, RCC_CCIPR3_SPI4SEL, RCC_CCIPR3_SPI4SEL_Pos, 0x00000000U)                                  /*!< PCLK2 clock used as SPI4 clock source  */
 #define LL_RCC_SPI4_CLKSOURCE_PLL2Q         LL_CLKSOURCE(CCIPR3_OFFSET, RCC_CCIPR3_SPI4SEL, RCC_CCIPR3_SPI4SEL_Pos, RCC_CCIPR3_SPI4SEL_0)                         /*!< PLL2 Q clock used as SPI4 clock source */
+#if defined(RCC_CR_PLL3ON)
 #define LL_RCC_SPI4_CLKSOURCE_PLL3Q         LL_CLKSOURCE(CCIPR3_OFFSET, RCC_CCIPR3_SPI4SEL, RCC_CCIPR3_SPI4SEL_Pos, RCC_CCIPR3_SPI4SEL_1)                         /*!< PLL3 Q clock used as SPI4 clock source */
+#endif /* RCC_CR_PLL3ON */
 #define LL_RCC_SPI4_CLKSOURCE_HSI           LL_CLKSOURCE(CCIPR3_OFFSET, RCC_CCIPR3_SPI4SEL, RCC_CCIPR3_SPI4SEL_Pos, RCC_CCIPR3_SPI4SEL_1 | RCC_CCIPR3_SPI4SEL_0)  /*!< HSI clock used as SPI4 clock source    */
 #define LL_RCC_SPI4_CLKSOURCE_CSI           LL_CLKSOURCE(CCIPR3_OFFSET, RCC_CCIPR3_SPI4SEL, RCC_CCIPR3_SPI4SEL_Pos, RCC_CCIPR3_SPI4SEL_2)                         /*!< CSI clock used as SPI4 clock source    */
 #define LL_RCC_SPI4_CLKSOURCE_HSE           LL_CLKSOURCE(CCIPR3_OFFSET, RCC_CCIPR3_SPI4SEL, RCC_CCIPR3_SPI4SEL_Pos, RCC_CCIPR3_SPI4SEL_2 | RCC_CCIPR3_SPI4SEL_0)  /*!< HSE clock used as SPI4 clock source    */
@@ -806,7 +848,7 @@ typedef struct
 #define LL_RCC_LPTIM1_CLKSOURCE_PLL2P       LL_CLKSOURCE(CCIPR2_OFFSET, RCC_CCIPR2_LPTIM1SEL, RCC_CCIPR2_LPTIM1SEL_Pos, RCC_CCIPR2_LPTIM1SEL_0)                            /*!< PLL2 P clock used as LPTIM1 clock source  */
 #if defined(RCC_CR_PLL3ON)
 #define LL_RCC_LPTIM1_CLKSOURCE_PLL3R       LL_CLKSOURCE(CCIPR2_OFFSET, RCC_CCIPR2_LPTIM1SEL, RCC_CCIPR2_LPTIM1SEL_Pos, RCC_CCIPR2_LPTIM1SEL_1)                            /*!< PLL3 R clock used as LPTIM1 clock source  */
-#endif /* PLL3 */
+#endif /* RCC_CR_PLL3ON */
 #define LL_RCC_LPTIM1_CLKSOURCE_LSE         LL_CLKSOURCE(CCIPR2_OFFSET, RCC_CCIPR2_LPTIM1SEL, RCC_CCIPR2_LPTIM1SEL_Pos, RCC_CCIPR2_LPTIM1SEL_0 | RCC_CCIPR2_LPTIM1SEL_1)   /*!< LSE  clock used as LPTIM1 clock source  */
 #define LL_RCC_LPTIM1_CLKSOURCE_LSI         LL_CLKSOURCE(CCIPR2_OFFSET, RCC_CCIPR2_LPTIM1SEL, RCC_CCIPR2_LPTIM1SEL_Pos, RCC_CCIPR2_LPTIM1SEL_2)                            /*!< LSI  clock used as LPTIM1 clock source  */
 #define LL_RCC_LPTIM1_CLKSOURCE_CLKP        LL_CLKSOURCE(CCIPR2_OFFSET, RCC_CCIPR2_LPTIM1SEL, RCC_CCIPR2_LPTIM1SEL_Pos, RCC_CCIPR2_LPTIM1SEL_0 | RCC_CCIPR2_LPTIM1SEL_2)   /*!< CLKP clock used as LPTIM1 clock source  */
@@ -815,7 +857,7 @@ typedef struct
 #define LL_RCC_LPTIM2_CLKSOURCE_PLL2P       LL_CLKSOURCE(CCIPR2_OFFSET, RCC_CCIPR2_LPTIM2SEL, RCC_CCIPR2_LPTIM2SEL_Pos, RCC_CCIPR2_LPTIM2SEL_0)                            /*!< PLL2 P clock used as LPTIM2 clock source  */
 #if defined(RCC_CR_PLL3ON)
 #define LL_RCC_LPTIM2_CLKSOURCE_PLL3R       LL_CLKSOURCE(CCIPR2_OFFSET, RCC_CCIPR2_LPTIM2SEL, RCC_CCIPR2_LPTIM2SEL_Pos, RCC_CCIPR2_LPTIM2SEL_1)                            /*!< PLL3 R clock used as LPTIM2 clock source  */
-#endif /* PLL3 */
+#endif /* RCC_CR_PLL3ON */
 #define LL_RCC_LPTIM2_CLKSOURCE_LSE         LL_CLKSOURCE(CCIPR2_OFFSET, RCC_CCIPR2_LPTIM2SEL, RCC_CCIPR2_LPTIM2SEL_Pos, RCC_CCIPR2_LPTIM2SEL_0 | RCC_CCIPR2_LPTIM2SEL_1)   /*!< LSE  clock used as LPTIM2 clock source  */
 #define LL_RCC_LPTIM2_CLKSOURCE_LSI         LL_CLKSOURCE(CCIPR2_OFFSET, RCC_CCIPR2_LPTIM2SEL, RCC_CCIPR2_LPTIM2SEL_Pos, RCC_CCIPR2_LPTIM2SEL_2)                            /*!< LSI  clock used as LPTIM2 clock source  */
 #define LL_RCC_LPTIM2_CLKSOURCE_CLKP        LL_CLKSOURCE(CCIPR2_OFFSET, RCC_CCIPR2_LPTIM2SEL, RCC_CCIPR2_LPTIM2SEL_Pos, RCC_CCIPR2_LPTIM2SEL_0 | RCC_CCIPR2_LPTIM2SEL_2)   /*!< CLKP clock used as LPTIM2 clock source  */
@@ -926,7 +968,7 @@ typedef struct
 #define LL_RCC_USB_CLKSOURCE_PLL3Q       RCC_CCIPR4_USBSEL_1       /*!< PLL3 Q clock used as USB clock source */
 #else
 #define LL_RCC_USB_CLKSOURCE_PLL2Q       RCC_CCIPR4_USBSEL_1       /*!< PLL2 Q clock used as USB clock source */
-#endif /* PLL3 */
+#endif /* RCC_CR_PLL3ON */
 #define LL_RCC_USB_CLKSOURCE_HSI48       RCC_CCIPR4_USBSEL         /*!< HSI48 clock used as USB clock source */
 /**
   * @}
@@ -981,6 +1023,208 @@ typedef struct
   */
 #endif /* OCTOSPI1 */
 
+#if defined(PLAY1)
+/** @defgroup RCC_LL_EC_PLAY1_CLKSOURCE  Peripheral PLAY1 clock source selection
+  * @{
+  */
+#define LL_RCC_PLAY1_CLKSOURCE_PCLK3        ((uint32_t)0x00000000U)
+#define LL_RCC_PLAY1_CLKSOURCE_PLL2P        RCC_CCIPR3_PLAY1SEL_0
+#if defined(RCC_CR_PLL3ON)
+#define LL_RCC_PLAY1_CLKSOURCE_PLL3R        RCC_CCIPR3_PLAY1SEL_1
+#endif /* RCC_CR_PLL3ON */
+#define LL_RCC_PLAY1_CLKSOURCE_LSE          (RCC_CCIPR3_PLAY1SEL_0 | RCC_CCIPR3_PLAY1SEL_1)
+#define LL_RCC_PLAY1_CLKSOURCE_LSI          RCC_CCIPR3_PLAY1SEL_2
+#define LL_RCC_PLAY1_CLKSOURCE_CLKP         (RCC_CCIPR3_PLAY1SEL_0 | RCC_CCIPR3_PLAY1SEL_2)
+/**
+  * @}
+  */
+
+/** @defgroup RCC_LL_EC_PLAY1_CLKDIVIDER  Peripheral PLAY1 clock divider selection
+  * @{
+  */
+#define LL_RCC_PLAY1_CLK_DIV_1              ((uint32_t)0x00000000U)                                                        /*!< PLAY1 not divided (default) */
+#define LL_RCC_PLAY1_CLK_DIV_2              RCC_CCIPR3_PLAY1DIV_0                                                          /*!< PLAY1 divided by 2 */
+#define LL_RCC_PLAY1_CLK_DIV_4              RCC_CCIPR3_PLAY1DIV_1                                                          /*!< PLAY1 divided by 4 */
+#define LL_RCC_PLAY1_CLK_DIV_8              (RCC_CCIPR3_PLAY1DIV_0 | RCC_CCIPR3_PLAY1DIV_1)                                /*!< PLAY1 divided by 8 */
+#define LL_RCC_PLAY1_CLK_DIV_16             RCC_CCIPR3_PLAY1DIV_2                                                          /*!< PLAY1 divided by 16 */
+#define LL_RCC_PLAY1_CLK_DIV_32             (RCC_CCIPR3_PLAY1DIV_2 | RCC_CCIPR3_PLAY1DIV_0)                                /*!< PLAY1 divided by 32 */
+#define LL_RCC_PLAY1_CLK_DIV_64             (RCC_CCIPR3_PLAY1DIV_2 | RCC_CCIPR3_PLAY1DIV_1)                                /*!< PLAY1 divided by 64 */
+#define LL_RCC_PLAY1_CLK_DIV_128            (RCC_CCIPR3_PLAY1DIV_2 | RCC_CCIPR3_PLAY1DIV_1 | RCC_CCIPR3_PLAY1DIV_0)        /*!< PLAY1 divided by 128 */
+#define LL_RCC_PLAY1_CLK_DIV_256            RCC_CCIPR3_PLAY1DIV_3                                                          /*!< PLAY1 divided by 256 */
+#define LL_RCC_PLAY1_CLK_DIV_512            (RCC_CCIPR3_PLAY1DIV_3 | RCC_CCIPR3_PLAY1DIV_0)                                /*!< PLAY1 divided by 512 */
+#define LL_RCC_PLAY1_CLK_DIV_1024           (RCC_CCIPR3_PLAY1DIV_3 | RCC_CCIPR3_PLAY1DIV_1)                                /*!< PLAY1 divided by 1024 */
+#define LL_RCC_PLAY1_CLK_DIV_2048           (RCC_CCIPR3_PLAY1DIV_3 | RCC_CCIPR3_PLAY1DIV_1 | RCC_CCIPR3_PLAY1DIV_0)        /*!< PLAY1 divided by 2048 */
+#define LL_RCC_PLAY1_CLK_DIV_4096           (RCC_CCIPR3_PLAY1DIV_3 | RCC_CCIPR3_PLAY1DIV_2)                                /*!< PLAY1 divided by 4096 */
+#define LL_RCC_PLAY1_CLK_DIV_8192           (RCC_CCIPR3_PLAY1DIV_3 | RCC_CCIPR3_PLAY1DIV_2 | RCC_CCIPR3_PLAY1DIV_0)        /*!< PLAY1 divided by 8192 */
+#define LL_RCC_PLAY1_CLK_DIV_16384          (RCC_CCIPR3_PLAY1DIV_3 | RCC_CCIPR3_PLAY1DIV_2 | RCC_CCIPR3_PLAY1DIV_1)        /*!< PLAY1 divided by 16384 */
+#define LL_RCC_PLAY1_CLK_DIV_32768          (RCC_CCIPR3_PLAY1DIV_3 | RCC_CCIPR3_PLAY1DIV_2 | RCC_CCIPR3_PLAY1DIV_1 | \
+                                             RCC_CCIPR3_PLAY1DIV_0)                                                        /*!< PLAY1 divided by 32768 */
+/**
+  * @}
+  */
+#endif /* PLAY1 */
+
+#if defined(USB_OTG_FS)
+/** @defgroup RCC_LL_EC_USB_OTG_FS_CLKSOURCE  Peripheral USB_OTG_FS clock source selection
+  * @{
+  */
+#define LL_RCC_OTGFS_CLKSOURCE_HSI48          ((uint32_t)0x00000000U)
+#define LL_RCC_OTGFS_CLKSOURCE_PLL1Q          RCC_CCIPR4_OTGFSSEL_0
+#define LL_RCC_OTGFS_CLKSOURCE_PLL3Q          RCC_CCIPR4_OTGFSSEL_1
+#if defined (PWR_USBSCR_OTGHSEN)
+#define LL_RCC_OTGFS_CLKSOURCE_CLK48          (RCC_CCIPR4_OTGFSSEL_0 | RCC_CCIPR4_OTGFSSEL_1 )
+#endif /* PWR_USBSCR_OTGHSEN */
+/**
+  * @}
+  */
+#endif /* USB_OTG_FS */
+
+#if defined(USB_OTG_HS)
+/** @defgroup RCC_LL_EC_USB_OTG_HS_CLKSOURCE  Peripheral USB_OTG_HS clock source selection
+  * @{
+  */
+#define LL_RCC_OTGHS_CLKSOURCE_HSE          ((uint32_t)0x00000000U)
+#define LL_RCC_OTGHS_CLKSOURCE_PLL3Q        RCC_CCIPR4_OTGHSSEL_0
+#define LL_RCC_OTGHS_CLKSOURCE_HSE_DIV2     RCC_CCIPR4_OTGHSSEL_1
+#define LL_RCC_OTGHS_CLKSOURCE_PLL1Q_DIV2   (RCC_CCIPR4_OTGHSSEL_0 | RCC_CCIPR4_OTGHSSEL_1)
+/**
+  * @}
+  */
+#endif /* USB_OTG_HS */
+
+#if defined(RCC_CCIPR4_OTGPHYREFCKSEL)
+/** @defgroup RCC_LL_EC_OTGPHYREFCK_CLKSOURCE  Peripheral OTGPHYREFCK clock source selection
+  * @{
+  */
+#define LL_RCC_OTGPHYREFCKCLKSOURCE_16M            (RCC_CCIPR4_OTGPHYREFCKSEL_0 | RCC_CCIPR4_OTGPHYREFCKSEL_1 )
+#define LL_RCC_OTGPHYREFCKCLKSOURCE_19_2M          RCC_CCIPR4_OTGPHYREFCKSEL_3
+#define LL_RCC_OTGPHYREFCKCLKSOURCE_20M            (RCC_CCIPR4_OTGPHYREFCKSEL_3 | RCC_CCIPR4_OTGPHYREFCKSEL_0 )
+#define LL_RCC_OTGPHYREFCKCLKSOURCE_24M            (RCC_CCIPR4_OTGPHYREFCKSEL_3 | RCC_CCIPR4_OTGPHYREFCKSEL_1 )
+#define LL_RCC_OTGPHYREFCKCLKSOURCE_26M            (RCC_CCIPR4_OTGPHYREFCKSEL_3 |\
+                                                    RCC_CCIPR4_OTGPHYREFCKSEL_2 | RCC_CCIPR4_OTGPHYREFCKSEL_1)
+#define LL_RCC_OTGPHYREFCKCLKSOURCE_32M            (RCC_CCIPR4_OTGPHYREFCKSEL_3 |\
+                                                    RCC_CCIPR4_OTGPHYREFCKSEL_1 | RCC_CCIPR4_OTGPHYREFCKSEL_0)
+
+/**
+  * @}
+  */
+#endif /* RCC_CCIPR4_OTGPHYREFCKSEL */
+
+#if defined(OCTOSPI2)
+/** @defgroup RCC_LL_EC_OCTOSPI2_CLKSOURCE  Peripheral OCTOSPI2 kernel clock source selection
+  * @{
+  */
+#define LL_RCC_OSPI2_CLKSOURCE_HCLK        0x00000000U                                         /*!< AHB clock used as OctoSPI2 kernel clock source */
+#define LL_RCC_OSPI2_CLKSOURCE_PLL1Q       RCC_CCIPR5_OCTOSPI2SEL_0                            /*!< PLL1 Q clock used as OctoSPI2 kernel clock source */
+#define LL_RCC_OSPI2_CLKSOURCE_PLL2R       RCC_CCIPR5_OCTOSPI2SEL_1                            /*!< PLL2 R clock used as OctoSPI2 kernel clock source */
+#define LL_RCC_OSPI2_CLKSOURCE_CLKP        (RCC_CCIPR5_OCTOSPI2SEL_0 | RCC_CCIPR5_OCTOSPI2SEL_1) /*!< CLKP clock used as OctoSPI2 clock source */
+/**
+  * @}
+  */
+#endif /* OCTOSPI2 */
+
+#if defined(RCC_CCIPR5_ETHPTPCLKSEL)
+/** @defgroup RCC_LL_EC_ETHPTP_CLKSOURCE  Peripheral ETHPTP kernel clock source selection
+  * @{
+  */
+#define LL_RCC_ETHPTP_CLKSOURCE_HCLK               ((uint32_t)0x00000000U)
+#define LL_RCC_ETHPTP_CLKSOURCE_PLL1R              RCC_CCIPR5_ETHPTPCLKSEL_0
+#define LL_RCC_ETHPTP_CLKSOURCE_PLL1Q              RCC_CCIPR5_ETHPTPCLKSEL_1
+#if defined(RCC_CR_PLL3ON)
+#define LL_RCC_ETHPTP_CLKSOURCE_PLL3P              (RCC_CCIPR5_ETHPTPCLKSEL_0 | RCC_CCIPR5_ETHPTPCLKSEL_1)
+#endif /* RCC_CR_PLL3ON */
+
+/**
+  * @}
+  */
+#endif /* RCC_CCIPR5_ETHPTPCLKSEL */
+
+#if defined(RCC_CCIPR4_ETHPTPDIV)
+/** @defgroup RCC_LL_ETHPTP_CLK_Divider    Peripheral ETHPTP Clock Divider selection
+  * @{
+  */
+#define LL_RCC_ETHPTP_CLK_DIV_1     ((uint32_t)0x00000000U)                                                     /*!< ETHPTP not divided (default) */
+#define LL_RCC_ETHPTP_CLK_DIV_2     RCC_CCIPR4_ETHPTPDIV_0                                                      /*!< ETHPTP divided by 2 */
+#define LL_RCC_ETHPTP_CLK_DIV_3     RCC_CCIPR4_ETHPTPDIV_1                                                      /*!< ETHPTP divided by 3 */
+#define LL_RCC_ETHPTP_CLK_DIV_4     (RCC_CCIPR4_ETHPTPDIV_0 | RCC_CCIPR4_ETHPTPDIV_1)                           /*!< ETHPTP divided by 4 */
+#define LL_RCC_ETHPTP_CLK_DIV_5     RCC_CCIPR4_ETHPTPDIV_2                                                      /*!< ETHPTP divided by 5 */
+#define LL_RCC_ETHPTP_CLK_DIV_6     (RCC_CCIPR4_ETHPTPDIV_2 | RCC_CCIPR4_ETHPTPDIV_0)                           /*!< ETHPTP divided by 6 */
+#define LL_RCC_ETHPTP_CLK_DIV_7     (RCC_CCIPR4_ETHPTPDIV_2 | RCC_CCIPR4_ETHPTPDIV_1)                           /*!< ETHPTP divided by 7 */
+#define LL_RCC_ETHPTP_CLK_DIV_8     (RCC_CCIPR4_ETHPTPDIV_2 | RCC_CCIPR4_ETHPTPDIV_1 | RCC_CCIPR4_ETHPTPDIV_0)  /*!< ETHPTP divided by 8 */
+#define LL_RCC_ETHPTP_CLK_DIV_9     RCC_CCIPR4_ETHPTPDIV_3                                                      /*!< ETHPTP divided by 9 */
+#define LL_RCC_ETHPTP_CLK_DIV_10    (RCC_CCIPR4_ETHPTPDIV_3 | RCC_CCIPR4_ETHPTPDIV_0)                           /*!< ETHPTP divided by 10 */
+#define LL_RCC_ETHPTP_CLK_DIV_11    (RCC_CCIPR4_ETHPTPDIV_3 | RCC_CCIPR4_ETHPTPDIV_1)                           /*!< ETHPTP divided by 11 */
+#define LL_RCC_ETHPTP_CLK_DIV_12    (RCC_CCIPR4_ETHPTPDIV_3 | RCC_CCIPR4_ETHPTPDIV_1 | RCC_CCIPR4_ETHPTPDIV_0)  /*!< ETHPTP divided by 12 */
+#define LL_RCC_ETHPTP_CLK_DIV_13    (RCC_CCIPR4_ETHPTPDIV_3 | RCC_CCIPR4_ETHPTPDIV_2)                           /*!< ETHPTP divided by 13 */
+#define LL_RCC_ETHPTP_CLK_DIV_14    (RCC_CCIPR4_ETHPTPDIV_3 | RCC_CCIPR4_ETHPTPDIV_2 | RCC_CCIPR4_ETHPTPDIV_0)  /*!< ETHPTP divided by 14 */
+#define LL_RCC_ETHPTP_CLK_DIV_15    (RCC_CCIPR4_ETHPTPDIV_3 | RCC_CCIPR4_ETHPTPDIV_2 | RCC_CCIPR4_ETHPTPDIV_1)  /*!< ETHPTP divided by 15 */
+#define LL_RCC_ETHPTP_CLK_DIV_16    (RCC_CCIPR4_ETHPTPDIV_3 | RCC_CCIPR4_ETHPTPDIV_2 | \
+                                     RCC_CCIPR4_ETHPTPDIV_1 | RCC_CCIPR4_ETHPTPDIV_0)                            /*!< ETHPTP divided by 16 */
+#endif /* RCC_CCIPR4_ETHPTPDIV */
+
+#if defined(RCC_CCIPR4_ETHCLKSEL)
+/** @defgroup RCC_LL_EC_ETH_CLKSOURCE  Peripheral ETH kernel clock source selection
+  * @{
+  */
+#define LL_RCC_ETH_CLKSOURCE_HSE               ((uint32_t)0x00000000U)
+#define LL_RCC_ETH_CLKSOURCE_PLL1Q             RCC_CCIPR4_ETHCLKSEL
+/**
+  * @}
+  */
+#endif /* RCC_CCIPR4_ETHCLKSEL */
+
+#if defined(LTDC)
+/** @defgroup RCC_LL_EC_LTDC_CLKSOURCE  Peripheral LTDC kernel clock source selection
+  * @{
+  */
+#define LL_RCC_LTDC_CLKSOURCE_PLL3R               ((uint32_t)0x00000000U)
+#define LL_RCC_LTDC_CLKSOURCE_PLL2R               RCC_CCIPR5_LTDCSEL
+
+/**
+  * @}
+  */
+#endif /* LTDC */
+
+#if defined(RCC_CCIPR5_ETHREFCLKSEL)
+/** @defgroup RCC_LL_EC_ETHREF_CLKSOURCE  Peripheral ETHREF kernel clock source selection
+  * @{
+  */
+#define LL_RCC_ETHREF_CLKSOURCE_PLL1Q               ((uint32_t)0x00000000U)
+#define LL_RCC_ETHREF_CLKSOURCE_PLL1R               RCC_CCIPR5_ETHREFCLKSEL
+
+/**
+  * @}
+  */
+#endif /* RCC_CCIPR5_ETHREFCLKSEL */
+
+#if defined(ADF1)
+/** @defgroup RCC_LL_EC_ADF1_CLKSOURCE  Peripheral ADF1 kernel clock source selection
+  * @{
+  */
+#define LL_RCC_ADF1_CLKSOURCE_PLL1Q               ((uint32_t)0x00000000U)
+#define LL_RCC_ADF1_CLKSOURCE_PLL2P               RCC_CCIPR5_ADF1SEL_0
+#define LL_RCC_ADF1_CLKSOURCE_PLL3P               RCC_CCIPR5_ADF1SEL_1
+#define LL_RCC_ADF1_CLKSOURCE_PIN                 (RCC_CCIPR5_ADF1SEL_0 | RCC_CCIPR5_ADF1SEL_1)
+#define LL_RCC_ADF1_CLKSOURCE_CLKP                RCC_CCIPR5_ADF1SEL_2
+/**
+  * @}
+  */
+#endif /* ADF1 */
+
+#if defined(MDF1)
+/** @defgroup RCC_LL_EC_MDF1_CLKSOURCE  Peripheral MDF1 kernel clock source selection
+  * @{
+  */
+#define LL_RCC_MDF1_CLKSOURCE_PLL1Q               ((uint32_t)0x00000000U)
+#define LL_RCC_MDF1_CLKSOURCE_PLL2P               RCC_CCIPR5_MDF1SEL_0
+#define LL_RCC_MDF1_CLKSOURCE_PLL3P               RCC_CCIPR5_MDF1SEL_1
+#define LL_RCC_MDF1_CLKSOURCE_PIN                 (RCC_CCIPR5_MDF1SEL_0 | RCC_CCIPR5_MDF1SEL_1)
+#define LL_RCC_MDF1_CLKSOURCE_CLKP                RCC_CCIPR5_MDF1SEL_2
+/**
+  * @}
+  */
+#endif /* MDF1 */
+
 /** @defgroup RCC_LL_EC_CLKP_CLKSOURCE  Peripheral CLKP clock source selection
   * @{
   */
@@ -995,17 +1239,17 @@ typedef struct
 /** @defgroup RCC_LL_EC_USART Peripheral USARTx get clock source
   * @{
   */
-#define LL_RCC_USART1_CLKSOURCE          LL_CLKSOURCE(CCIPR1_OFFSET, RCC_CCIPR1_USART1SEL, RCC_CCIPR1_USART1SEL_Pos, 0x00000000U)    /*!< USART1 Clock source selection */
-#define LL_RCC_USART2_CLKSOURCE          LL_CLKSOURCE(CCIPR1_OFFSET, RCC_CCIPR1_USART2SEL, RCC_CCIPR1_USART2SEL_Pos, 0x00000000U)    /*!< USART2 Clock source selection */
-#define LL_RCC_USART3_CLKSOURCE          LL_CLKSOURCE(CCIPR1_OFFSET, RCC_CCIPR1_USART3SEL, RCC_CCIPR1_USART3SEL_Pos, 0x00000000U)    /*!< USART3 Clock source selection */
+#define LL_RCC_USART1_CLKSOURCE          LL_CLKSOURCE(CCIPR1_OFFSET, RCC_CCIPR1_USART1SEL, RCC_CCIPR1_USART1SEL_Pos, 0x00000000UL)    /*!< USART1 Clock source selection */
+#define LL_RCC_USART2_CLKSOURCE          LL_CLKSOURCE(CCIPR1_OFFSET, RCC_CCIPR1_USART2SEL, RCC_CCIPR1_USART2SEL_Pos, 0x00000000UL)    /*!< USART2 Clock source selection */
+#define LL_RCC_USART3_CLKSOURCE          LL_CLKSOURCE(CCIPR1_OFFSET, RCC_CCIPR1_USART3SEL, RCC_CCIPR1_USART3SEL_Pos, 0x00000000UL)    /*!< USART3 Clock source selection */
 #if defined(USART6)
-#define LL_RCC_USART6_CLKSOURCE          LL_CLKSOURCE(CCIPR1_OFFSET, RCC_CCIPR1_USART6SEL, RCC_CCIPR1_USART6SEL_Pos, 0x00000000U)    /*!< USART6 Clock source selection */
+#define LL_RCC_USART6_CLKSOURCE          LL_CLKSOURCE(CCIPR1_OFFSET, RCC_CCIPR1_USART6SEL, RCC_CCIPR1_USART6SEL_Pos, 0x00000000UL)    /*!< USART6 Clock source selection */
 #endif /* USART6 */
 #if defined(USART10)
-#define LL_RCC_USART10_CLKSOURCE         LL_CLKSOURCE(CCIPR1_OFFSET, RCC_CCIPR1_USART10SEL, RCC_CCIPR1_USART10SEL_Pos, 0x00000000U)  /*!< USART10 Clock source selection */
+#define LL_RCC_USART10_CLKSOURCE         LL_CLKSOURCE(CCIPR1_OFFSET, RCC_CCIPR1_USART10SEL, RCC_CCIPR1_USART10SEL_Pos, 0x00000000UL)  /*!< USART10 Clock source selection */
 #endif /* USART10 */
 #if defined(USART11)
-#define LL_RCC_USART11_CLKSOURCE         LL_CLKSOURCE(CCIPR2_OFFSET, RCC_CCIPR2_USART11SEL, RCC_CCIPR2_USART11SEL_Pos, 0x00000000U)  /*!< USART11 Clock source selection */
+#define LL_RCC_USART11_CLKSOURCE         LL_CLKSOURCE(CCIPR2_OFFSET, RCC_CCIPR2_USART11SEL, RCC_CCIPR2_USART11SEL_Pos, 0x00000000UL)  /*!< USART11 Clock source selection */
 #endif /* USART11 */
 /**
   * @}
@@ -1015,12 +1259,12 @@ typedef struct
 /** @defgroup RCC_LL_EC_UART Peripheral UARTx get clock source
   * @{
   */
-#define LL_RCC_UART4_CLKSOURCE          LL_CLKSOURCE(CCIPR1_OFFSET, RCC_CCIPR1_UART4SEL, RCC_CCIPR1_UART4SEL_Pos, 0x00000000U)    /*!< UART4 Clock source selection */
-#define LL_RCC_UART5_CLKSOURCE          LL_CLKSOURCE(CCIPR1_OFFSET, RCC_CCIPR1_UART5SEL, RCC_CCIPR1_UART5SEL_Pos, 0x00000000U)    /*!< UART5 Clock source selection */
-#define LL_RCC_UART7_CLKSOURCE          LL_CLKSOURCE(CCIPR1_OFFSET, RCC_CCIPR1_UART7SEL, RCC_CCIPR1_UART7SEL_Pos, 0x00000000U)    /*!< UART7 Clock source selection */
-#define LL_RCC_UART8_CLKSOURCE          LL_CLKSOURCE(CCIPR1_OFFSET, RCC_CCIPR1_UART8SEL, RCC_CCIPR1_UART8SEL_Pos, 0x00000000U)    /*!< UART8 Clock source selection */
-#define LL_RCC_UART9_CLKSOURCE          LL_CLKSOURCE(CCIPR1_OFFSET, RCC_CCIPR1_UART9SEL, RCC_CCIPR1_UART9SEL_Pos, 0x00000000U)    /*!< UART9 Clock source selection */
-#define LL_RCC_UART12_CLKSOURCE         LL_CLKSOURCE(CCIPR2_OFFSET, RCC_CCIPR2_UART12SEL, RCC_CCIPR2_UART12SEL_Pos, 0x00000000U)  /*!< UART12 Clock source selection */
+#define LL_RCC_UART4_CLKSOURCE          LL_CLKSOURCE(CCIPR1_OFFSET, RCC_CCIPR1_UART4SEL, RCC_CCIPR1_UART4SEL_Pos, 0x00000000UL)    /*!< UART4 Clock source selection */
+#define LL_RCC_UART5_CLKSOURCE          LL_CLKSOURCE(CCIPR1_OFFSET, RCC_CCIPR1_UART5SEL, RCC_CCIPR1_UART5SEL_Pos, 0x00000000UL)    /*!< UART5 Clock source selection */
+#define LL_RCC_UART7_CLKSOURCE          LL_CLKSOURCE(CCIPR1_OFFSET, RCC_CCIPR1_UART7SEL, RCC_CCIPR1_UART7SEL_Pos, 0x00000000UL)    /*!< UART7 Clock source selection */
+#define LL_RCC_UART8_CLKSOURCE          LL_CLKSOURCE(CCIPR1_OFFSET, RCC_CCIPR1_UART8SEL, RCC_CCIPR1_UART8SEL_Pos, 0x00000000UL)    /*!< UART8 Clock source selection */
+#define LL_RCC_UART9_CLKSOURCE          LL_CLKSOURCE(CCIPR1_OFFSET, RCC_CCIPR1_UART9SEL, RCC_CCIPR1_UART9SEL_Pos, 0x00000000UL)    /*!< UART9 Clock source selection */
+#define LL_RCC_UART12_CLKSOURCE         LL_CLKSOURCE(CCIPR2_OFFSET, RCC_CCIPR2_UART12SEL, RCC_CCIPR2_UART12SEL_Pos, 0x00000000UL)  /*!< UART12 Clock source selection */
 /**
   * @}
   */
@@ -1029,17 +1273,17 @@ typedef struct
 /** @defgroup RCC_LL_EC_SPI Peripheral SPIx get clock source
   * @{
   */
-#define LL_RCC_SPI1_CLKSOURCE           LL_CLKSOURCE(CCIPR3_OFFSET, RCC_CCIPR3_SPI1SEL, RCC_CCIPR3_SPI1SEL_Pos, 0x00000000U)    /*!< SPI1 Clock source selection */
-#define LL_RCC_SPI2_CLKSOURCE           LL_CLKSOURCE(CCIPR3_OFFSET, RCC_CCIPR3_SPI2SEL, RCC_CCIPR3_SPI2SEL_Pos, 0x00000000U)    /*!< SPI2 Clock source selection */
-#define LL_RCC_SPI3_CLKSOURCE           LL_CLKSOURCE(CCIPR3_OFFSET, RCC_CCIPR3_SPI3SEL, RCC_CCIPR3_SPI3SEL_Pos, 0x00000000U)    /*!< SPI3 Clock source selection */
+#define LL_RCC_SPI1_CLKSOURCE           LL_CLKSOURCE(CCIPR3_OFFSET, RCC_CCIPR3_SPI1SEL, RCC_CCIPR3_SPI1SEL_Pos, 0x00000000UL)    /*!< SPI1 Clock source selection */
+#define LL_RCC_SPI2_CLKSOURCE           LL_CLKSOURCE(CCIPR3_OFFSET, RCC_CCIPR3_SPI2SEL, RCC_CCIPR3_SPI2SEL_Pos, 0x00000000UL)    /*!< SPI2 Clock source selection */
+#define LL_RCC_SPI3_CLKSOURCE           LL_CLKSOURCE(CCIPR3_OFFSET, RCC_CCIPR3_SPI3SEL, RCC_CCIPR3_SPI3SEL_Pos, 0x00000000UL)    /*!< SPI3 Clock source selection */
 #if defined(SPI4)
-#define LL_RCC_SPI4_CLKSOURCE           LL_CLKSOURCE(CCIPR3_OFFSET, RCC_CCIPR3_SPI4SEL, RCC_CCIPR3_SPI4SEL_Pos, 0x00000000U)    /*!< SPI4 Clock source selection */
+#define LL_RCC_SPI4_CLKSOURCE           LL_CLKSOURCE(CCIPR3_OFFSET, RCC_CCIPR3_SPI4SEL, RCC_CCIPR3_SPI4SEL_Pos, 0x00000000UL)    /*!< SPI4 Clock source selection */
 #endif /* SPI4 */
 #if defined(SPI5)
-#define LL_RCC_SPI5_CLKSOURCE           LL_CLKSOURCE(CCIPR3_OFFSET, RCC_CCIPR3_SPI5SEL, RCC_CCIPR3_SPI5SEL_Pos, 0x00000000U)    /*!< SPI5 Clock source selection */
+#define LL_RCC_SPI5_CLKSOURCE           LL_CLKSOURCE(CCIPR3_OFFSET, RCC_CCIPR3_SPI5SEL, RCC_CCIPR3_SPI5SEL_Pos, 0x00000000UL)    /*!< SPI5 Clock source selection */
 #endif /* SPI5 */
 #if defined(SPI6)
-#define LL_RCC_SPI6_CLKSOURCE           LL_CLKSOURCE(CCIPR3_OFFSET, RCC_CCIPR3_SPI6SEL, RCC_CCIPR3_SPI6SEL_Pos, 0x00000000U)    /*!< SPI6 Clock source selection */
+#define LL_RCC_SPI6_CLKSOURCE           LL_CLKSOURCE(CCIPR3_OFFSET, RCC_CCIPR3_SPI6SEL, RCC_CCIPR3_SPI6SEL_Pos, 0x00000000UL)    /*!< SPI6 Clock source selection */
 #endif /* SPI6 */
 /**
   * @}
@@ -1056,13 +1300,13 @@ typedef struct
 /** @defgroup RCC_LL_EC_I2C Peripheral I2Cx get clock source
   * @{
   */
-#define LL_RCC_I2C1_CLKSOURCE             LL_CLKSOURCE(CCIPR4_OFFSET, RCC_CCIPR4_I2C1SEL, RCC_CCIPR4_I2C1SEL_Pos, 0x00000000U) /*!< I2C1 Clock source selection */
-#define LL_RCC_I2C2_CLKSOURCE             LL_CLKSOURCE(CCIPR4_OFFSET, RCC_CCIPR4_I2C2SEL, RCC_CCIPR4_I2C2SEL_Pos, 0x00000000U) /*!< I2C2 Clock source selection */
+#define LL_RCC_I2C1_CLKSOURCE             LL_CLKSOURCE(CCIPR4_OFFSET, RCC_CCIPR4_I2C1SEL, RCC_CCIPR4_I2C1SEL_Pos, 0x00000000UL) /*!< I2C1 Clock source selection */
+#define LL_RCC_I2C2_CLKSOURCE             LL_CLKSOURCE(CCIPR4_OFFSET, RCC_CCIPR4_I2C2SEL, RCC_CCIPR4_I2C2SEL_Pos, 0x00000000UL) /*!< I2C2 Clock source selection */
 #if defined(I2C3)
-#define LL_RCC_I2C3_CLKSOURCE             LL_CLKSOURCE(CCIPR4_OFFSET, RCC_CCIPR4_I2C3SEL, RCC_CCIPR4_I2C3SEL_Pos, 0x00000000U) /*!< I2C3 Clock source selection */
+#define LL_RCC_I2C3_CLKSOURCE             LL_CLKSOURCE(CCIPR4_OFFSET, RCC_CCIPR4_I2C3SEL, RCC_CCIPR4_I2C3SEL_Pos, 0x00000000UL) /*!< I2C3 Clock source selection */
 #endif /* I2C3 */
 #if defined(I2C4)
-#define LL_RCC_I2C4_CLKSOURCE             LL_CLKSOURCE(CCIPR4_OFFSET, RCC_CCIPR4_I2C4SEL, RCC_CCIPR4_I2C4SEL_Pos, 0x00000000U) /*!< I2C4 Clock source selection */
+#define LL_RCC_I2C4_CLKSOURCE             LL_CLKSOURCE(CCIPR4_OFFSET, RCC_CCIPR4_I2C4SEL, RCC_CCIPR4_I2C4SEL_Pos, 0x00000000UL) /*!< I2C4 Clock source selection */
 #endif /* I2C4 */
 /**
   * @}
@@ -1071,9 +1315,9 @@ typedef struct
 /** @defgroup RCC_LL_EC_I3C Peripheral I3Cx get clock source
   * @{
   */
-#define LL_RCC_I3C1_CLKSOURCE             LL_CLKSOURCE(CCIPR4_OFFSET, RCC_CCIPR4_I3C1SEL, RCC_CCIPR4_I3C1SEL_Pos, 0x00000000U) /*!< I3C1 Clock source selection */
+#define LL_RCC_I3C1_CLKSOURCE             LL_CLKSOURCE(CCIPR4_OFFSET, RCC_CCIPR4_I3C1SEL, RCC_CCIPR4_I3C1SEL_Pos, 0x00000000UL) /*!< I3C1 Clock source selection */
 #if defined(I3C2)
-#define LL_RCC_I3C2_CLKSOURCE             LL_CLKSOURCE(CCIPR4_OFFSET, RCC_CCIPR4_I3C2SEL, RCC_CCIPR4_I3C2SEL_Pos, 0x00000000U) /*!< I3C2 Clock source selection */
+#define LL_RCC_I3C2_CLKSOURCE             LL_CLKSOURCE(CCIPR4_OFFSET, RCC_CCIPR4_I3C2SEL, RCC_CCIPR4_I3C2SEL_Pos, 0x00000000UL) /*!< I3C2 Clock source selection */
 #endif /* I3C2 */
 /**
   * @}
@@ -1082,19 +1326,19 @@ typedef struct
 /** @defgroup RCC_LL_EC_LPTIM Peripheral LPTIMx get clock source
   * @{
   */
-#define LL_RCC_LPTIM1_CLKSOURCE           LL_CLKSOURCE(CCIPR2_OFFSET, RCC_CCIPR2_LPTIM1SEL, RCC_CCIPR2_LPTIM1SEL_Pos, 0x00000000U)       /*!< LPTIM1 Clock source selection */
-#define LL_RCC_LPTIM2_CLKSOURCE           LL_CLKSOURCE(CCIPR2_OFFSET, RCC_CCIPR2_LPTIM2SEL, RCC_CCIPR2_LPTIM2SEL_Pos, 0x00000000U)       /*!< LPTIM2 Clock source selection */
+#define LL_RCC_LPTIM1_CLKSOURCE           LL_CLKSOURCE(CCIPR2_OFFSET, RCC_CCIPR2_LPTIM1SEL, RCC_CCIPR2_LPTIM1SEL_Pos, 0x00000000UL)       /*!< LPTIM1 Clock source selection */
+#define LL_RCC_LPTIM2_CLKSOURCE           LL_CLKSOURCE(CCIPR2_OFFSET, RCC_CCIPR2_LPTIM2SEL, RCC_CCIPR2_LPTIM2SEL_Pos, 0x00000000UL)       /*!< LPTIM2 Clock source selection */
 #if defined(LPTIM3)
-#define LL_RCC_LPTIM3_CLKSOURCE           LL_CLKSOURCE(CCIPR2_OFFSET, RCC_CCIPR2_LPTIM3SEL, RCC_CCIPR2_LPTIM3SEL_Pos, 0x00000000U)       /*!< LPTIM3 Clock source selection */
+#define LL_RCC_LPTIM3_CLKSOURCE           LL_CLKSOURCE(CCIPR2_OFFSET, RCC_CCIPR2_LPTIM3SEL, RCC_CCIPR2_LPTIM3SEL_Pos, 0x00000000UL)       /*!< LPTIM3 Clock source selection */
 #endif /* LPTIM3 */
 #if defined(LPTIM4)
-#define LL_RCC_LPTIM4_CLKSOURCE           LL_CLKSOURCE(CCIPR2_OFFSET, RCC_CCIPR2_LPTIM4SEL, RCC_CCIPR2_LPTIM4SEL_Pos, 0x00000000U)       /*!< LPTIM4 Clock source selection */
+#define LL_RCC_LPTIM4_CLKSOURCE           LL_CLKSOURCE(CCIPR2_OFFSET, RCC_CCIPR2_LPTIM4SEL, RCC_CCIPR2_LPTIM4SEL_Pos, 0x00000000UL)       /*!< LPTIM4 Clock source selection */
 #endif /* LPTIM4 */
 #if defined(LPTIM5)
-#define LL_RCC_LPTIM5_CLKSOURCE           LL_CLKSOURCE(CCIPR2_OFFSET, RCC_CCIPR2_LPTIM5SEL, RCC_CCIPR2_LPTIM5SEL_Pos, 0x00000000U)       /*!< LPTIM5 Clock source selection */
+#define LL_RCC_LPTIM5_CLKSOURCE           LL_CLKSOURCE(CCIPR2_OFFSET, RCC_CCIPR2_LPTIM5SEL, RCC_CCIPR2_LPTIM5SEL_Pos, 0x00000000UL)       /*!< LPTIM5 Clock source selection */
 #endif /* LPTIM5 */
 #if defined(LPTIM6)
-#define LL_RCC_LPTIM6_CLKSOURCE           LL_CLKSOURCE(CCIPR2_OFFSET, RCC_CCIPR2_LPTIM6SEL, RCC_CCIPR2_LPTIM6SEL_Pos, 0x00000000U)       /*!< LPTIM6 Clock source selection */
+#define LL_RCC_LPTIM6_CLKSOURCE           LL_CLKSOURCE(CCIPR2_OFFSET, RCC_CCIPR2_LPTIM6SEL, RCC_CCIPR2_LPTIM6SEL_Pos, 0x00000000UL)       /*!< LPTIM6 Clock source selection */
 #endif /* LPTIM6 */
 /**
   * @}
@@ -1104,8 +1348,8 @@ typedef struct
 /** @defgroup RCC_LL_EC_SAI  Peripheral SAIx get clock source
   * @{
   */
-#define LL_RCC_SAI1_CLKSOURCE             LL_CLKSOURCE(CCIPR5_OFFSET, RCC_CCIPR5_SAI1SEL, RCC_CCIPR5_SAI1SEL_Pos, 0x00000000U)  /*!< SAI1 Clock source selection */
-#define LL_RCC_SAI2_CLKSOURCE             LL_CLKSOURCE(CCIPR5_OFFSET, RCC_CCIPR5_SAI2SEL, RCC_CCIPR5_SAI2SEL_Pos, 0x00000000U)  /*!< SAI2 Clock source selection */
+#define LL_RCC_SAI1_CLKSOURCE             LL_CLKSOURCE(CCIPR5_OFFSET, RCC_CCIPR5_SAI1SEL, RCC_CCIPR5_SAI1SEL_Pos, 0x00000000UL)  /*!< SAI1 Clock source selection */
+#define LL_RCC_SAI2_CLKSOURCE             LL_CLKSOURCE(CCIPR5_OFFSET, RCC_CCIPR5_SAI2SEL, RCC_CCIPR5_SAI2SEL_Pos, 0x00000000UL)  /*!< SAI2 Clock source selection */
 /**
   * @}
   */
@@ -1115,9 +1359,9 @@ typedef struct
 /** @defgroup RCC_LL_EC_SDMMC Peripheral SDMMC get clock source
   * @{
   */
-#define LL_RCC_SDMMC1_CLKSOURCE            LL_CLKSOURCE(CCIPR4_OFFSET, RCC_CCIPR4_SDMMC1SEL, RCC_CCIPR4_SDMMC1SEL_Pos, 0x00000000U)     /*!< SDMMC1 Kernel Clock source selection */
+#define LL_RCC_SDMMC1_CLKSOURCE            LL_CLKSOURCE(CCIPR4_OFFSET, RCC_CCIPR4_SDMMC1SEL, RCC_CCIPR4_SDMMC1SEL_Pos, 0x00000000UL)     /*!< SDMMC1 Kernel Clock source selection */
 #if defined(SDMMC2)
-#define LL_RCC_SDMMC2_CLKSOURCE            LL_CLKSOURCE(CCIPR4_OFFSET, RCC_CCIPR4_SDMMC2SEL, RCC_CCIPR4_SDMMC2SEL_Pos, 0x00000000U)     /*!< SDMMC2 Kernel Clock source selection */
+#define LL_RCC_SDMMC2_CLKSOURCE            LL_CLKSOURCE(CCIPR4_OFFSET, RCC_CCIPR4_SDMMC2SEL, RCC_CCIPR4_SDMMC2SEL_Pos, 0x00000000UL)     /*!< SDMMC2 Kernel Clock source selection */
 #endif /*SDMMC2*/
 /**
   * @}
@@ -1183,10 +1427,18 @@ typedef struct
   */
 
 #if defined(PLAY1)
-/** @defgroup RCC_LL_EC_PLAY1  Peripheral PLAY1 get clock source
+/** @defgroup RCC_LL_EC_PLAY1_SRC  Peripheral PLAY1 get clock source
   * @{
   */
 #define LL_RCC_PLAY1_CLKSOURCE            RCC_CCIPR3_PLAY1SEL    /*!< PLAY1 Clock source selection */
+/**
+  * @}
+  */
+
+/** @defgroup RCC_LL_EC_PLAY1_DIV  Peripheral PLAY1 get clock divider
+  * @{
+  */
+#define LL_RCC_PLAY1_CLKDIVIDER            RCC_CCIPR3_PLAY1DIV    /*!< PLAY1 Clock divider selection */
 /**
   * @}
   */
@@ -1281,7 +1533,7 @@ typedef struct
   */
 
 #if defined(RCC_CCIPR5_ETHPTPCLKSEL)
-/** @defgroup RCC_LL_EC_ETHPTP  Peripheral ETHPTP get clock source
+/** @defgroup RCC_LL_EC_ETHPTP_SRC  Peripheral ETHPTP get clock source
   * @{
   */
 #define LL_RCC_ETHPTP_CLKSOURCE          RCC_CCIPR5_ETHPTPCLKSEL    /*!< ETHPTP Clock source selection */
@@ -1290,15 +1542,16 @@ typedef struct
   */
 #endif /* RCC_CCIPR5_ETHPTPCLKSEL */
 
-#if defined(RCC_CCIPR5_ETHT1SCLKSEL)
-/** @defgroup RCC_LL_EC_ETHT1S  Peripheral ETHT1S get clock source
+#if defined(RCC_CCIPR4_ETHPTPDIV)
+/** @defgroup RCC_LL_EC_ETHPTP_DIV  Peripheral ETHPTP get clock divider
   * @{
   */
-#define LL_RCC_ETHT1S_CLKSOURCE          RCC_CCIPR5_ETHT1SCLKSEL    /*!< ETHT1S Clock source selection */
+#define LL_RCC_ETHPTP_CLKDIVIDER          RCC_CCIPR4_ETHPTPDIV    /*!< ETHPTP Clock divider selection */
 /**
   * @}
   */
-#endif /* RCC_CCIPR5_ETHT1SCLKSEL */
+
+#endif /* RCC_CCIPR4_ETHPTPDIV */
 
 #if defined(RCC_CCIPR5_ETHREFCLKSEL)
 /** @defgroup RCC_LL_EC_ETHREF  Peripheral ETHREF get clock source
@@ -1352,7 +1605,7 @@ typedef struct
 /**
   * @}
   */
-
+#if defined(RCC_CR_PLL3ON)
 /** @defgroup RCC_LL_EC_PLL3SOURCE  PLL3 entry clock source
   * @{
   */
@@ -1363,7 +1616,7 @@ typedef struct
 /**
   * @}
   */
-
+#endif /* RCC_CR_PLL3ON */
 #if defined(RCC_SECCFGR_HSISEC)
 /** @defgroup RCC_LL_EC_SECURE_ATTRIBUTES Secure attributes
   * @note Only available when system implements security (TZEN=1)
@@ -1517,7 +1770,7 @@ typedef struct
   */
 #define __LL_RCC_CALC_PLL2CLK_R_FREQ(__INPUTFREQ__, __PLL2M__, __PLL2N__, __PLL2R__) \
   ((((__INPUTFREQ__) /(__PLL2M__)) * (__PLL2N__)) / (__PLL2R__))
-
+#if defined(RCC_CR_PLL3ON)
 /**
   * @brief  Helper macro to calculate the PLL3P clock frequency
   * @note ex: @ref __LL_RCC_CALC_PLL3CLK_P_FREQ (HSE_VALUE,@ref LL_RCC_PLL3_GetM (),
@@ -1556,7 +1809,7 @@ typedef struct
   */
 #define __LL_RCC_CALC_PLL3CLK_R_FREQ(__INPUTFREQ__, __PLL3M__, __PLL3N__, __PLL3R__) \
   ((((__INPUTFREQ__) /(__PLL3M__)) * (__PLL3N__)) / (__PLL3R__))
-
+#endif /* RCC_CR_PLL3ON */
 /**
   * @brief  Helper macro to calculate the HCLK frequency
   * @param  __SYSCLKFREQ__ SYSCLK frequency (based on HSI/HSE/CSI/PLLCLK)
@@ -2651,12 +2904,12 @@ __STATIC_INLINE void LL_RCC_ConfigMCO(uint32_t MCOxSource, uint32_t MCOxPrescale
   *         @arg @ref LL_RCC_LPUART1_CLKSOURCE_LSE
   *         @arg @ref LL_RCC_I2C1_CLKSOURCE_PCLK1
   *         @arg @ref LL_RCC_I2C1_CLKSOURCE_PLL3R (*)
-  *         @arg @ref LL_RCC_I2C1_CLKSOURCE_PLL2R (*)
+  *         @arg @ref LL_RCC_I2C1_CLKSOURCE_PLL2R (**)
   *         @arg @ref LL_RCC_I2C1_CLKSOURCE_HSI
   *         @arg @ref LL_RCC_I2C1_CLKSOURCE_CSI
   *         @arg @ref LL_RCC_I2C2_CLKSOURCE_PCLK1
   *         @arg @ref LL_RCC_I2C2_CLKSOURCE_PLL3R (*)
-  *         @arg @ref LL_RCC_I2C2_CLKSOURCE_PLL2R (*)
+  *         @arg @ref LL_RCC_I2C2_CLKSOURCE_PLL2R (**)
   *         @arg @ref LL_RCC_I2C2_CLKSOURCE_HSI
   *         @arg @ref LL_RCC_I2C2_CLKSOURCE_CSI
   *         @arg @ref LL_RCC_I2C3_CLKSOURCE_PCLK3 (*)
@@ -2669,16 +2922,15 @@ __STATIC_INLINE void LL_RCC_ConfigMCO(uint32_t MCOxSource, uint32_t MCOxPrescale
   *         @arg @ref LL_RCC_I2C4_CLKSOURCE_CSI (*)
   *         @arg @ref LL_RCC_I3C1_CLKSOURCE_PCLK1
   *         @arg @ref LL_RCC_I3C1_CLKSOURCE_PLL3R (*)
-  *         @arg @ref LL_RCC_I3C1_CLKSOURCE_PLL2R (*)
+  *         @arg @ref LL_RCC_I3C1_CLKSOURCE_PLL2R (**)
   *         @arg @ref LL_RCC_I3C1_CLKSOURCE_HSI
   *         @arg @ref LL_RCC_I3C1_CLKSOURCE_NONE
-  *         @arg @ref LL_RCC_I3C2_CLKSOURCE_PCLK1 (*)
   *         @arg @ref LL_RCC_I3C2_CLKSOURCE_PCLK3 (*)
   *         @arg @ref LL_RCC_I3C2_CLKSOURCE_PLL3R (*)
-  *         @arg @ref LL_RCC_I3C2_CLKSOURCE_PLL2R (*)
+  *         @arg @ref LL_RCC_I3C2_CLKSOURCE_PLL2R (**)
   *         @arg @ref LL_RCC_I3C2_CLKSOURCE_HSI (*)
   *         @arg @ref LL_RCC_I3C2_CLKSOURCE_CSI (*)
-  *         @arg @ref LL_RCC_I3C2_CLKSOURCE_NONE (*)
+  *         @arg @ref LL_RCC_I3C2_CLKSOURCE_NONE (**)
   *         @arg @ref LL_RCC_SPI1_CLKSOURCE_PLL1Q
   *         @arg @ref LL_RCC_SPI1_CLKSOURCE_PLL2P
   *         @arg @ref LL_RCC_SPI1_CLKSOURCE_PLL3P
@@ -2764,6 +3016,8 @@ __STATIC_INLINE void LL_RCC_ConfigMCO(uint32_t MCOxSource, uint32_t MCOxPrescale
   *         @arg @ref LL_RCC_SDMMC2_CLKSOURCE_PLL2R (*)
   *
   *         (*) value not defined in all devices.
+  *         (**) : For stm32h503xx family line only.
+  *
   * @retval None
   */
 __STATIC_INLINE void LL_RCC_SetClockSource(uint32_t ClkSource)
@@ -2945,7 +3199,6 @@ __STATIC_INLINE void LL_RCC_SetI2CClockSource(uint32_t I2CxSource)
   *         @arg @ref LL_RCC_I3C1_CLKSOURCE_PLL2R (**)
   *         @arg @ref LL_RCC_I3C1_CLKSOURCE_HSI
   *         @arg @ref LL_RCC_I3C1_CLKSOURCE_NONE
-  *         @arg @ref LL_RCC_I3C2_CLKSOURCE_PCLK1 (***)
   *         @arg @ref LL_RCC_I3C2_CLKSOURCE_PCLK3 (**)
   *         @arg @ref LL_RCC_I3C2_CLKSOURCE_PLL2R (**)
   *         @arg @ref LL_RCC_I3C2_CLKSOURCE_HSI   (**)
@@ -3228,7 +3481,7 @@ __STATIC_INLINE void LL_RCC_SetOCTOSPIClockSource(uint32_t OCTOSPIxSource)
   * @rmtoll CCIPR3         PLAY1SEL        LL_RCC_SetPLAY1ClockSource
   * @param  PLAYxSource This parameter can be one of the following values:
   *         @arg @ref LL_RCC_PLAY1_CLKSOURCE_PCLK3
-  *         @arg @ref LL_RCC_PLAY1_CLKSOURCE_PLL2Q
+  *         @arg @ref LL_RCC_PLAY1_CLKSOURCE_PLL2P
   *         @arg @ref LL_RCC_PLAY1_CLKSOURCE_PLL3R
   *         @arg @ref LL_RCC_PLAY1_CLKSOURCE_LSE
   *         @arg @ref LL_RCC_PLAY1_CLKSOURCE_LSI
@@ -3396,22 +3649,6 @@ __STATIC_INLINE void LL_RCC_SetETHPTPClockSource(uint32_t ETHPTPxSource)
 }
 #endif /* RCC_CCIPR5_ETHPTPCLKSEL */
 
-#if defined(RCC_CCIPR5_ETHT1SCLKSEL)
-/**
-  * @brief  Configure ETHT1S kernel clock source
-  * @rmtoll CCIPR5         ETHT1SSEL        LL_RCC_SetETHT1SClockSource
-  * @param  ETHT1SxSource This parameter can be one of the following values:
-  *         @arg @ref LL_RCC_ETHT1S_CLKSOURCE_PLL1Q
-  *         @arg @ref LL_RCC_ETHT1S_CLKSOURCE_PLL1R
-  *         @arg @ref LL_RCC_ETHT1S_CLKSOURCE_PLL3P
-  * @retval None
-  */
-__STATIC_INLINE void LL_RCC_SetETHT1SClockSource(uint32_t ETHT1SxSource)
-{
-  MODIFY_REG(RCC->CCIPR5, RCC_CCIPR5_ETHT1SCLKSEL, ETHT1SxSource);
-}
-#endif /* RCC_CCIPR5_ETHT1SCLKSEL */
-
 #if defined(RCC_CCIPR5_ETHREFCLKSEL)
 /**
   * @brief  Configure ETHREF kernel clock source
@@ -3442,6 +3679,63 @@ __STATIC_INLINE void LL_RCC_SetCLKPClockSource(uint32_t ClkSource)
   MODIFY_REG(RCC->CCIPR5, RCC_CCIPR5_CKERPSEL, ClkSource);
 }
 
+#if defined(PLAY1)
+/**
+  * @brief  Configure PLAY1 kernel clock divider
+  * @rmtoll CCIPR3         PLAY1DIV        LL_RCC_SetPLAY1ClockDivider
+  * @param  PLAYxDivider This parameter can be one of the following values:
+  *         @arg @ref LL_RCC_PLAY1_CLK_DIV_1
+  *         @arg @ref LL_RCC_PLAY1_CLK_DIV_2
+  *         @arg @ref LL_RCC_PLAY1_CLK_DIV_4
+  *         @arg @ref LL_RCC_PLAY1_CLK_DIV_8
+  *         @arg @ref LL_RCC_PLAY1_CLK_DIV_16
+  *         @arg @ref LL_RCC_PLAY1_CLK_DIV_32
+  *         @arg @ref LL_RCC_PLAY1_CLK_DIV_64
+  *         @arg @ref LL_RCC_PLAY1_CLK_DIV_128
+  *         @arg @ref LL_RCC_PLAY1_CLK_DIV_256
+  *         @arg @ref LL_RCC_PLAY1_CLK_DIV_512
+  *         @arg @ref LL_RCC_PLAY1_CLK_DIV_1024
+  *         @arg @ref LL_RCC_PLAY1_CLK_DIV_2048
+  *         @arg @ref LL_RCC_PLAY1_CLK_DIV_4096
+  *         @arg @ref LL_RCC_PLAY1_CLK_DIV_8192
+  *         @arg @ref LL_RCC_PLAY1_CLK_DIV_16384
+  *         @arg @ref LL_RCC_PLAY1_CLK_DIV_32768
+  * @retval None
+  */
+__STATIC_INLINE void LL_RCC_SetPLAY1ClockDivider(uint32_t PLAYxDivider)
+{
+  MODIFY_REG(RCC->CCIPR3, RCC_CCIPR3_PLAY1DIV, PLAYxDivider);
+}
+#endif /* PLAY1 */
+
+#if defined(RCC_CCIPR4_ETHPTPDIV)
+/**
+  * @brief  Configure ETHPTP kernel clock divider
+  * @rmtoll CCIPR4         ETHPTPDIV        LL_RCC_SetETHPTPClockDivider
+  * @param  ETHPTPxDivider This parameter can be one of the following values:
+  *         @arg @ref LL_RCC_ETHPTP_CLK_DIV_1
+  *         @arg @ref LL_RCC_ETHPTP_CLK_DIV_2
+  *         @arg @ref LL_RCC_ETHPTP_CLK_DIV_3
+  *         @arg @ref LL_RCC_ETHPTP_CLK_DIV_4
+  *         @arg @ref LL_RCC_ETHPTP_CLK_DIV_5
+  *         @arg @ref LL_RCC_ETHPTP_CLK_DIV_6
+  *         @arg @ref LL_RCC_ETHPTP_CLK_DIV_7
+  *         @arg @ref LL_RCC_ETHPTP_CLK_DIV_8
+  *         @arg @ref LL_RCC_ETHPTP_CLK_DIV_9
+  *         @arg @ref LL_RCC_ETHPTP_CLK_DIV_10
+  *         @arg @ref LL_RCC_ETHPTP_CLK_DIV_11
+  *         @arg @ref LL_RCC_ETHPTP_CLK_DIV_12
+  *         @arg @ref LL_RCC_ETHPTP_CLK_DIV_13
+  *         @arg @ref LL_RCC_ETHPTP_CLK_DIV_14
+  *         @arg @ref LL_RCC_ETHPTP_CLK_DIV_15
+  *         @arg @ref LL_RCC_ETHPTP_CLK_DIV_16
+  * @retval None
+  */
+__STATIC_INLINE void LL_RCC_SetETHPTPClockDivider(uint32_t ETHPTPxDivider)
+{
+  MODIFY_REG(RCC->CCIPR4, RCC_CCIPR4_ETHPTPDIV, ETHPTPxDivider);
+}
+#endif /* RCC_CCIPR4_ETHPTPDIV */
 
 /**
   * @brief  Get periph clock source
@@ -3566,12 +3860,12 @@ __STATIC_INLINE void LL_RCC_SetCLKPClockSource(uint32_t ClkSource)
   *         @arg @ref LL_RCC_LPUART1_CLKSOURCE_LSE
   *         @arg @ref LL_RCC_I2C1_CLKSOURCE_PCLK1
   *         @arg @ref LL_RCC_I2C1_CLKSOURCE_PLL3R (*)
-  *         @arg @ref LL_RCC_I2C1_CLKSOURCE_PLL2R (*)
+  *         @arg @ref LL_RCC_I2C1_CLKSOURCE_PLL2R (**)
   *         @arg @ref LL_RCC_I2C1_CLKSOURCE_HSI
   *         @arg @ref LL_RCC_I2C1_CLKSOURCE_CSI
   *         @arg @ref LL_RCC_I2C2_CLKSOURCE_PCLK1
   *         @arg @ref LL_RCC_I2C2_CLKSOURCE_PLL3R
-  *         @arg @ref LL_RCC_I2C2_CLKSOURCE_PLL2R
+  *         @arg @ref LL_RCC_I2C2_CLKSOURCE_PLL2R (**)
   *         @arg @ref LL_RCC_I2C2_CLKSOURCE_HSI
   *         @arg @ref LL_RCC_I2C2_CLKSOURCE_CSI
   *         @arg @ref LL_RCC_I2C3_CLKSOURCE_PCLK3 (*)
@@ -3584,15 +3878,14 @@ __STATIC_INLINE void LL_RCC_SetCLKPClockSource(uint32_t ClkSource)
   *         @arg @ref LL_RCC_I2C4_CLKSOURCE_CSI (*)
   *         @arg @ref LL_RCC_I3C1_CLKSOURCE_PCLK1
   *         @arg @ref LL_RCC_I3C1_CLKSOURCE_PLL3R (*)
-  *         @arg @ref LL_RCC_I3C1_CLKSOURCE_PLL2R (*)
+  *         @arg @ref LL_RCC_I3C1_CLKSOURCE_PLL2R (**)
   *         @arg @ref LL_RCC_I3C1_CLKSOURCE_HSI
   *         @arg @ref LL_RCC_I3C1_CLKSOURCE_NONE
-  *         @arg @ref LL_RCC_I3C2_CLKSOURCE_PCLK1 (*)
   *         @arg @ref LL_RCC_I3C2_CLKSOURCE_PCLK3 (*)
-  *         @arg @ref LL_RCC_I3C2_CLKSOURCE_PLL2R (*)
+  *         @arg @ref LL_RCC_I3C2_CLKSOURCE_PLL2R (**)
   *         @arg @ref LL_RCC_I3C2_CLKSOURCE_HSI (*)
   *         @arg @ref LL_RCC_I3C2_CLKSOURCE_CSI (*)
-  *         @arg @ref LL_RCC_I3C2_CLKSOURCE_NONE (*)
+  *         @arg @ref LL_RCC_I3C2_CLKSOURCE_NONE (**)
   *         @arg @ref LL_RCC_SPI1_CLKSOURCE_PLL1Q
   *         @arg @ref LL_RCC_SPI1_CLKSOURCE_PLL2P
   *         @arg @ref LL_RCC_SPI1_CLKSOURCE_PLL3P
@@ -3678,6 +3971,7 @@ __STATIC_INLINE void LL_RCC_SetCLKPClockSource(uint32_t ClkSource)
   *         @arg @ref LL_RCC_SDMMC2_CLKSOURCE_PLL2R (*)
   *
   *         (*) value not defined in all devices.
+  *         (**) : For stm32h503xx family line only.
   * @retval None
   */
 __STATIC_INLINE uint32_t LL_RCC_GetClockSource(uint32_t Periph)
@@ -3879,16 +4173,15 @@ __STATIC_INLINE uint32_t LL_RCC_GetI2CClockSource(uint32_t I2Cx)
   *         @arg @ref LL_RCC_I3C1_CLKSOURCE_PLL2R (**)
   *         @arg @ref LL_RCC_I3C1_CLKSOURCE_HSI
   *         @arg @ref LL_RCC_I3C1_CLKSOURCE_NONE
-  *         @arg @ref LL_RCC_I3C2_CLKSOURCE_PCLK1 (***)
   *         @arg @ref LL_RCC_I3C2_CLKSOURCE_PCLK3 (**)
   *         @arg @ref LL_RCC_I3C2_CLKSOURCE_PLL2R (**)
   *         @arg @ref LL_RCC_I3C2_CLKSOURCE_HSI   (**)
   *         @arg @ref LL_RCC_I3C2_CLKSOURCE_CSI   (***)
   *         @arg @ref LL_RCC_I3C2_CLKSOURCE_NONE  (**)
   *
-  *  (*)  : For stm32h56xxx, stm32h57xxx, stm32h5exxx and stm32h5fxxx family lines.
-  *  (**) : For stm32h503xx family line.
-  *  (***)  : For stm32h5exxx and stm32h5fxxx family lines.
+  *  (*)   : For stm32h56xxx, stm32h57xxx, stm32h5exxx and stm32h5fxxx family lines.
+  *  (**)  : For stm32h503xx family line.
+  *  (***) : For stm32h5exxx and stm32h5fxxx family lines.
   */
 __STATIC_INLINE uint32_t LL_RCC_GetI3CClockSource(uint32_t I3Cx)
 {
@@ -4032,6 +4325,22 @@ __STATIC_INLINE void LL_RCC_TIMIC_Disable(void)
   CLEAR_BIT(RCC->CCIPR1, RCC_CCIPR1_TIMICSEL);
 }
 
+#if defined(RCC_CCIPR4_OTGPDCTRL)
+
+/**
+  * @brief  Set the power state of the OTG PHY in SUSPEND mode.
+  * @rmtoll CCIPR4       OTGPDCTRL    LL_RCC_OTGPD_Enable
+  * @param  PwrState Specifies the power state to set for the OTG PHY in SUSPEND mode.
+  *         This parameter can be one of the following values:
+  *           @arg RCC_OTGPD_SUSPEND_POWERON: Keep the PHY powered in SUSPEND mode (default after reset).
+  *           @arg RCC_OTGPD_SUSPEND_POWERDOWN: Power down the PHY state machine, bias, and PLL in SUSPEND mode.
+  * @retval None
+  */
+__STATIC_INLINE void LL_RCC_OTGPD_SetPWRSuspend(uint32_t PwrState)
+{
+  MODIFY_REG(RCC->CCIPR4, RCC_CCIPR4_OTGPDCTRL, PwrState);
+}
+#endif /* RCC_CCIPR4_OTGPDCTRL */
 /**
   * @brief  Get FDCAN kernel clock source
   * @rmtoll CCIPR5         FDCANSEL        LL_RCC_GetFDCANClockSource
@@ -4077,7 +4386,7 @@ __STATIC_INLINE uint32_t LL_RCC_GetSAIClockSource(uint32_t SAIx)
 /**
   * @brief  Get SDMMCx kernel clock source
   * @rmtoll CCIPR4         SDMMC1SEL        LL_RCC_GetSDMMCClockSource
-  * @rmtoll CCIPR4         SDMMC2SEL        LL_RCC_GetSDMMCClockSource
+  *         CCIPR4         SDMMC2SEL        LL_RCC_GetSDMMCClockSource
   * @param  SDMMCx This parameter can be one of the following values:
   *         @arg @ref LL_RCC_SDMMC1_CLKSOURCE
   *         @arg @ref LL_RCC_SDMMC2_CLKSOURCE (*)
@@ -4197,6 +4506,206 @@ __STATIC_INLINE uint32_t LL_RCC_GetOCTOSPIClockSource(uint32_t OCTOSPIx)
 }
 #endif /* OCTOSPI1 */
 
+#if defined(PLAY1)
+/**
+  * @brief  Get PLAY1 kernel clock source
+  * @rmtoll CCIPR3         PLAY1SEL        LL_RCC_GetPLAY1ClockSource
+  * @param  PLAYx This parameter can be one of the following values:
+  *         @arg @ref LL_RCC_PLAY1_CLKSOURCE
+  * @retval Returned value can be one of the following values:
+  *         @arg @ref LL_RCC_PLAY1_CLKSOURCE_PCLK3
+  *         @arg @ref LL_RCC_PLAY1_CLKSOURCE_PLL2P
+  *         @arg @ref LL_RCC_PLAY1_CLKSOURCE_PLL3R
+  *         @arg @ref LL_RCC_PLAY1_CLKSOURCE_LSE
+  *         @arg @ref LL_RCC_PLAY1_CLKSOURCE_LSI
+  *         @arg @ref LL_RCC_PLAY1_CLKSOURCE_CLKP
+  */
+__STATIC_INLINE uint32_t LL_RCC_GetPLAY1ClockSource(uint32_t PLAYx)
+{
+  return (uint32_t)(READ_BIT(RCC->CCIPR3, PLAYx));
+}
+#endif /* PLAY1 */
+
+#if defined(USB_OTG_FS)
+/**
+  * @brief  Get OTGFS kernel clock source
+  * @rmtoll CCIPR4         OTGFSSEL        LL_RCC_GetOTGFSClockSource
+  * @param  OTGFSx This parameter can be one of the following values:
+  *         @arg @ref LL_RCC_OTGFS_CLKSOURCE
+  * @retval Returned value can be one of the following values:
+  *         @arg @ref LL_RCC_OTGFS_CLKSOURCE_HSI48
+  *         @arg @ref LL_RCC_OTGFS_CLKSOURCE_PLL1Q
+  *         @arg @ref LL_RCC_OTGFS_CLKSOURCE_PLL3Q
+  *         @arg @ref LL_RCC_OTGFS_CLKSOURCE_CLK48 (*)
+  *
+  *  (*) : Available only on STM32H5E5x/STM32H5F5x when OTG_HS PHY is enabled.
+  */
+__STATIC_INLINE uint32_t LL_RCC_GetOTGFSClockSource(uint32_t OTGFSx)
+{
+  return (uint32_t)(READ_BIT(RCC->CCIPR4, OTGFSx));
+}
+#endif /* USB_OTG_FS */
+
+#if defined(USB_OTG_HS)
+/**
+  * @brief  Get OTGHS kernel clock source
+  * @rmtoll CCIPR4         OTGHSSEL        LL_RCC_GetOTGHSClockSource
+  * @param  OTGHSx This parameter can be one of the following values:
+  *         @arg @ref LL_RCC_OTGHS_CLKSOURCE
+  * @retval Returned value can be one of the following values:
+  *         @arg @ref LL_RCC_OTGHS_CLKSOURCE_HSE
+  *         @arg @ref LL_RCC_OTGHS_CLKSOURCE_PLL3Q
+  *         @arg @ref LL_RCC_OTGHS_CLKSOURCE_HSE_DIV2
+  *         @arg @ref LL_RCC_OTGHS_CLKSOURCE_PLL1Q_DIV2
+  */
+__STATIC_INLINE uint32_t LL_RCC_GetOTGHSClockSource(uint32_t OTGHSx)
+{
+  return (uint32_t)(READ_BIT(RCC->CCIPR4, OTGHSx));
+}
+#endif /* USB_OTG_HS */
+
+#if defined(RCC_CCIPR4_OTGPHYREFCKSEL)
+/**
+  * @brief  Get OTGPHY kernel clock source
+  * @rmtoll CCIPR4         OTGPHYREFCKSEL    LL_RCC_GetOTGPHYClockSource
+  * @param  OTGPHYx This parameter can be one of the following values:
+  *         @arg @ref LL_RCC_OTGPHY_CLKSOURCE
+  * @retval Returned value can be one of the following values:
+  *         @arg @ref LL_RCC_OTGPHYREFCKCLKSOURCE_16M
+  *         @arg @ref LL_RCC_OTGPHYREFCKCLKSOURCE_19_2M
+  *         @arg @ref LL_RCC_OTGPHYREFCKCLKSOURCE_20M
+  *         @arg @ref LL_RCC_OTGPHYREFCKCLKSOURCE_24M
+  *         @arg @ref LL_RCC_OTGPHYREFCKCLKSOURCE_26M
+  *         @arg @ref LL_RCC_OTGPHYREFCKCLKSOURCE_32M
+  */
+__STATIC_INLINE uint32_t LL_RCC_GetOTGPHYClockSource(uint32_t OTGPHYx)
+{
+  return (uint32_t)(READ_BIT(RCC->CCIPR4, OTGPHYx));
+}
+#endif /* RCC_CCIPR4_OTGPHYREFCKSEL */
+
+#if defined(OCTOSPI2)
+/**
+  * @brief  Get OCTOSPI2 kernel clock source
+  * @rmtoll CCIPR5         OCTOSPI2SEL        LL_RCC_GetOCTOSPI2ClockSource
+  * @param  OCTOSPIx This parameter can be one of the following values:
+  *         @arg @ref LL_RCC_OCTOSPI2_CLKSOURCE
+  * @retval Returned value can be one of the following values:
+  *         @arg @ref LL_RCC_OSPI2_CLKSOURCE_HCLK
+  *         @arg @ref LL_RCC_OSPI2_CLKSOURCE_PLL1Q
+  *         @arg @ref LL_RCC_OSPI2_CLKSOURCE_PLL2R
+  *         @arg @ref LL_RCC_OSPI2_CLKSOURCE_CLKP
+  */
+__STATIC_INLINE uint32_t LL_RCC_GetOCTOSPI2ClockSource(uint32_t OCTOSPIx)
+{
+  return (uint32_t)(READ_BIT(RCC->CCIPR5, OCTOSPIx));
+}
+#endif /* OCTOSPI2 */
+
+#if defined(LTDC)
+/**
+  * @brief  Get LTDC kernel clock source
+  * @rmtoll CCIPR5         LTDCSEL        LL_RCC_GetLTDCClockSource
+  * @param  LTDCx This parameter can be one of the following values:
+  *         @arg @ref LL_RCC_LTDC_CLKSOURCE
+  * @retval Returned value can be one of the following values:
+  *         @arg @ref LL_RCC_LTDC_CLKSOURCE_PLL3R
+  *         @arg @ref LL_RCC_LTDC_CLKSOURCE_PLL2R
+  */
+__STATIC_INLINE uint32_t LL_RCC_GetLTDCClockSource(uint32_t LTDCx)
+{
+  return (uint32_t)(READ_BIT(RCC->CCIPR5, LTDCx));
+}
+#endif /* LTDC */
+
+#if defined(ADF1)
+/**
+  * @brief  Get ADF1 kernel clock source
+  * @rmtoll CCIPR5         ADF1SEL        LL_RCC_GetADF1ClockSource
+  * @param  ADFx This parameter can be one of the following values:
+  *         @arg @ref LL_RCC_ADF1_CLKSOURCE
+  * @retval Returned value can be one of the following values:
+  *         @arg @ref LL_RCC_ADF1_CLKSOURCE_PLL1Q
+  *         @arg @ref LL_RCC_ADF1_CLKSOURCE_PLL2P
+  *         @arg @ref LL_RCC_ADF1_CLKSOURCE_PLL3P
+  *         @arg @ref LL_RCC_ADF1_CLKSOURCE_PIN
+  *         @arg @ref LL_RCC_ADF1_CLKSOURCE_CLKP
+  */
+__STATIC_INLINE uint32_t LL_RCC_GetADF1ClockSource(uint32_t ADFx)
+{
+  return (uint32_t)(READ_BIT(RCC->CCIPR5, ADFx));
+}
+#endif /* ADF1 */
+
+#if defined(MDF1)
+/**
+  * @brief  Get MDF1 kernel clock source
+  * @rmtoll CCIPR5         MDF1SEL        LL_RCC_GetMDF1ClockSource
+  * @param  MDFx This parameter can be one of the following values:
+  *         @arg @ref LL_RCC_MDF1_CLKSOURCE
+  * @retval Returned value can be one of the following values:
+  *         @arg @ref LL_RCC_MDF1_CLKSOURCE_PLL1Q
+  *         @arg @ref LL_RCC_MDF1_CLKSOURCE_PLL2P
+  *         @arg @ref LL_RCC_MDF1_CLKSOURCE_PLL3P
+  *         @arg @ref LL_RCC_MDF1_CLKSOURCE_PIN
+  *         @arg @ref LL_RCC_MDF1_CLKSOURCE_CLKP
+  */
+__STATIC_INLINE uint32_t LL_RCC_GetMDF1ClockSource(uint32_t MDFx)
+{
+  return (uint32_t)(READ_BIT(RCC->CCIPR5, MDFx));
+}
+#endif /* MDF1 */
+
+#if defined(RCC_CCIPR4_ETHCLKSEL)
+/*
+  * @brief  Get ETH kernel clock source
+  * @rmtoll CCIPR4         ETHSEL        LL_RCC_GetETHClockSource
+  * @param  ETHx This parameter can be one of the following values:
+  *         @arg @ref LL_RCC_ETH_CLKSOURCE
+  * @retval Returned value can be one of the following values:
+  *         @arg @ref LL_RCC_ETH_CLKSOURCE_HSE
+  *         @arg @ref LL_RCC_ETH_CLKSOURCE_PLL1Q
+  */
+__STATIC_INLINE uint32_t LL_RCC_GetETHClockSource(uint32_t ETHx)
+{
+  return (uint32_t)(READ_BIT(RCC->CCIPR4, ETHx));
+}
+#endif /* RCC_CCIPR4_ETHCLKSEL */
+
+#if defined(RCC_CCIPR5_ETHPTPCLKSEL)
+/*
+  * @brief  Get ETHPTP kernel clock source
+  * @rmtoll CCIPR5         ETHPTPSEL        LL_RCC_GetETHPTPClockSource
+  * @param  ETHPTPx This parameter can be one of the following values:
+  *         @arg @ref LL_RCC_ETHPTP_CLKSOURCE
+  * @retval Returned value can be one of the following values:
+  *         @arg @ref LL_RCC_ETHPTP_CLKSOURCE_HCLK
+  *         @arg @ref LL_RCC_ETHPTP_CLKSOURCE_PLL1R
+  *         @arg @ref LL_RCC_ETHPTP_CLKSOURCE_PLL1Q
+  *         @arg @ref LL_RCC_ETHPTP_CLKSOURCE_PLL3P
+  */
+__STATIC_INLINE uint32_t LL_RCC_GetETHPTPClockSource(uint32_t ETHPTPx)
+{
+  return (uint32_t)(READ_BIT(RCC->CCIPR5, ETHPTPx));
+}
+#endif /* RCC_CCIPR5_ETHPTPCLKSEL */
+
+#if defined(RCC_CCIPR5_ETHREFCLKSEL)
+/*
+  * @brief  Get ETHREF kernel clock source
+  * @rmtoll CCIPR5         ETHREFSEL        LL_RCC_GetETHREFClockSource
+  * @param  ETHREFx This parameter can be one of the following values:
+  *         @arg @ref LL_RCC_ETHREF_CLKSOURCE
+  * @retval Returned value can be one of the following values:
+  *         @arg @ref LL_RCC_ETHREF_CLKSOURCE_PLL1Q
+  *         @arg @ref LL_RCC_ETHREF_CLKSOURCE_PLL1R
+  */
+__STATIC_INLINE uint32_t LL_RCC_GetETHREFClockSource(uint32_t ETHREFx)
+{
+  return (uint32_t)(READ_BIT(RCC->CCIPR5, ETHREFx));
+}
+#endif /* RCC_CCIPR5_ETHREFCLKSEL */
+
 /**
   * @brief  Get CLKP kernel clock source
   * @rmtoll CCIPR5       CKPERSEL        LL_RCC_GetCLKPClockSource
@@ -4213,6 +4722,66 @@ __STATIC_INLINE uint32_t LL_RCC_GetCLKPClockSource(uint32_t CLKPx)
   return (uint32_t)(READ_BIT(RCC->CCIPR5, CLKPx));
 }
 
+#if defined(PLAY1)
+/**
+  * @brief  Get PLAY1 kernel clock divider
+  * @rmtoll CCIPR3         PLAY1DIV        LL_RCC_GetPLAY1ClockDivider
+  * @param  PLAYx This parameter can be one of the following values:
+  *         @arg @ref LL_RCC_PLAY1_CLKDIVIDER
+  * @retval Returned value can be one of the following values:
+  *         @arg @ref LL_RCC_PLAY1_CLK_DIV_1
+  *         @arg @ref LL_RCC_PLAY1_CLK_DIV_2
+  *         @arg @ref LL_RCC_PLAY1_CLK_DIV_4
+  *         @arg @ref LL_RCC_PLAY1_CLK_DIV_8
+  *         @arg @ref LL_RCC_PLAY1_CLK_DIV_16
+  *         @arg @ref LL_RCC_PLAY1_CLK_DIV_32
+  *         @arg @ref LL_RCC_PLAY1_CLK_DIV_64
+  *         @arg @ref LL_RCC_PLAY1_CLK_DIV_128
+  *         @arg @ref LL_RCC_PLAY1_CLK_DIV_256
+  *         @arg @ref LL_RCC_PLAY1_CLK_DIV_512
+  *         @arg @ref LL_RCC_PLAY1_CLK_DIV_1024
+  *         @arg @ref LL_RCC_PLAY1_CLK_DIV_2048
+  *         @arg @ref LL_RCC_PLAY1_CLK_DIV_4096
+  *         @arg @ref LL_RCC_PLAY1_CLK_DIV_8192
+  *         @arg @ref LL_RCC_PLAY1_CLK_DIV_16384
+  *         @arg @ref LL_RCC_PLAY1_CLK_DIV_32768
+  */
+__STATIC_INLINE uint32_t LL_RCC_GetPLAY1ClockDivider(uint32_t PLAYx)
+{
+  return (uint32_t)(READ_BIT(RCC->CCIPR3, PLAYx));
+}
+#endif /* PLAY1 */
+
+#if defined(RCC_CCIPR4_ETHPTPDIV)
+/**
+  * @brief  Get ETHPTP kernel clock divider
+  * @rmtoll CCIPR4         ETHPTPDIV        LL_RCC_GetETHPTPClockDivider
+  * @param  ETHPTPx This parameter can be one of the following values:
+  *         @arg @ref LL_RCC_ETHPTP_CLKDIVIDER
+  * @retval Returned value can be one of the following values:
+  *         @arg @ref LL_RCC_ETHPTP_CLK_DIV_1
+  *         @arg @ref LL_RCC_ETHPTP_CLK_DIV_2
+  *         @arg @ref LL_RCC_ETHPTP_CLK_DIV_3
+  *         @arg @ref LL_RCC_ETHPTP_CLK_DIV_4
+  *         @arg @ref LL_RCC_ETHPTP_CLK_DIV_5
+  *         @arg @ref LL_RCC_ETHPTP_CLK_DIV_6
+  *         @arg @ref LL_RCC_ETHPTP_CLK_DIV_7
+  *         @arg @ref LL_RCC_ETHPTP_CLK_DIV_8
+  *         @arg @ref LL_RCC_ETHPTP_CLK_DIV_9
+  *         @arg @ref LL_RCC_ETHPTP_CLK_DIV_10
+  *         @arg @ref LL_RCC_ETHPTP_CLK_DIV_11
+  *         @arg @ref LL_RCC_ETHPTP_CLK_DIV_12
+  *         @arg @ref LL_RCC_ETHPTP_CLK_DIV_13
+  *         @arg @ref LL_RCC_ETHPTP_CLK_DIV_14
+  *         @arg @ref LL_RCC_ETHPTP_CLK_DIV_15
+  *         @arg @ref LL_RCC_ETHPTP_CLK_DIV_16
+  * @retval None
+  */
+__STATIC_INLINE uint32_t LL_RCC_GetETHPTPClockDivider(uint32_t ETHPTPx)
+{
+  return (uint32_t)(READ_BIT(RCC->CCIPR4, ETHPTPx));
+}
+#endif /* RCC_CCIPR4_ETHPTPDIV */
 /**
   * @brief  Configure the Kernel wakeup clock source
   * @rmtoll CFGR1         STOPKERWUCK       LL_RCC_SetKerWakeUpClkSource
@@ -5592,7 +6161,7 @@ __STATIC_INLINE void LL_RCC_PLL3_SetVCOOutputRange(uint32_t VCORange)
 /**
   * @}
   */
-#endif /* PLL3 */
+#endif /* RCC_CR_PLL3ON */
 
 /** @defgroup RCC_LL_EF_PRIV Privileged mode
   * @{
@@ -5794,7 +6363,7 @@ __STATIC_INLINE void LL_RCC_ClearFlag_PLL3RDY(void)
 {
   SET_BIT(RCC->CICR, RCC_CICR_PLL3RDYC);
 }
-#endif /* PLL3 */
+#endif /* RCC_CR_PLL3ON */
 
 /**
   * @brief  Clear Clock security system interrupt flag
@@ -5895,7 +6464,7 @@ __STATIC_INLINE uint32_t LL_RCC_IsActiveFlag_PLL3RDY(void)
 {
   return ((READ_BIT(RCC->CIFR, RCC_CIFR_PLL3RDYF) == RCC_CIFR_PLL3RDYF) ? 1UL : 0UL);
 }
-#endif /* PLL3 */
+#endif /* RCC_CR_PLL3ON */
 
 /**
   * @brief  Check if Clock security system interrupt occurred or not
@@ -6075,7 +6644,7 @@ __STATIC_INLINE void LL_RCC_EnableIT_PLL3RDY(void)
 {
   SET_BIT(RCC->CIER, RCC_CIER_PLL3RDYIE);
 }
-#endif /* PLL3 */
+#endif /* RCC_CR_PLL3ON */
 
 /**
   * @brief  Disable LSI ready interrupt
@@ -6167,7 +6736,7 @@ __STATIC_INLINE void LL_RCC_DisableIT_PLL3RDY(void)
 {
   CLEAR_BIT(RCC->CIER, RCC_CIER_PLL3RDYIE);
 }
-#endif /* PLL3 */
+#endif /* RCC_CR_PLL3ON */
 
 /**
   * @brief  Checks if LSI ready interrupt source is enabled or disabled.
@@ -6258,7 +6827,7 @@ __STATIC_INLINE uint32_t LL_RCC_IsEnabledIT_PLL3RDY(void)
 {
   return ((READ_BIT(RCC->CIER, RCC_CIER_PLL3RDYIE) == RCC_CIER_PLL3RDYIE) ? 1UL : 0UL);
 }
-#endif /* PLL3 */
+#endif /* RCC_CR_PLL3ON */
 
 /**
   * @}
@@ -6428,9 +6997,6 @@ uint32_t    LL_RCC_GetETHClockFreq(uint32_t ETHxSource);
 #if defined(RCC_CCIPR5_ETHPTPCLKSEL)
 uint32_t    LL_RCC_GetETHPTPClockFreq(uint32_t ETHPTPxSource);
 #endif /* RCC_CCIPR5_ETHPTPCLKSEL */
-#if defined(RCC_CCIPR5_ETHT1SCLKSEL)
-uint32_t    LL_RCC_GetETHT1SClockFreq(uint32_t ETHT1SxSource);
-#endif /* RCC_CCIPR5_ETHT1SCLKSEL */
 #if defined(RCC_CCIPR5_ETHREFCLKSEL)
 uint32_t    LL_RCC_GetETHREFClockFreq(uint32_t ETHREFxSource);
 #endif /* RCC_CCIPR5_ETHREFCLKSEL */

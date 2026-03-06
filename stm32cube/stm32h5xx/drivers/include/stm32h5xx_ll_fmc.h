@@ -124,8 +124,14 @@ extern "C" {
 #endif /* FMC_BANK3 */
 #if defined(FMC_Bank5_6_R)
 
+#if defined(STM32H5F5xx) || defined(STM32H5F4xx) || defined(STM32H5E5xx) || defined(STM32H5E4xx)
+#define IS_FMC_SDMEMORY_WIDTH(__WIDTH__) (((__WIDTH__) == FMC_SDRAM_MEM_BUS_WIDTH_8)  || \
+                                          ((__WIDTH__) == FMC_SDRAM_MEM_BUS_WIDTH_16) || \
+                                          ((__WIDTH__) == FMC_SDRAM_MEM_BUS_WIDTH_32))
+#else
 #define IS_FMC_SDMEMORY_WIDTH(__WIDTH__) (((__WIDTH__) == FMC_SDRAM_MEM_BUS_WIDTH_8)  || \
                                           ((__WIDTH__) == FMC_SDRAM_MEM_BUS_WIDTH_16))
+#endif /* STM32H5F5xx || STM32H5F4xx || STM32H5E5xx || STM32H5E4xx */
 #define IS_FMC_WRITE_PROTECTION(__WRITE__) (((__WRITE__) == FMC_SDRAM_WRITE_PROTECTION_DISABLE) || \
                                             ((__WRITE__) == FMC_SDRAM_WRITE_PROTECTION_ENABLE))
 #define IS_FMC_SDCLOCK_PERIOD(__PERIOD__) (((__PERIOD__) == FMC_SDRAM_CLOCK_DISABLE)  || \
@@ -790,6 +796,9 @@ typedef struct
   */
 #define FMC_SDRAM_MEM_BUS_WIDTH_8               (0x00000000U)
 #define FMC_SDRAM_MEM_BUS_WIDTH_16              (0x00000010U)
+#if defined(STM32H5F5xx) || defined(STM32H5F4xx) || defined(STM32H5E5xx) || defined(STM32H5E4xx)
+#define FMC_SDRAM_MEM_BUS_WIDTH_32              (0x00000020U)
+#endif /* STM32H5F5xx || STM32H5F4xx || STM32H5E5xx || STM32H5E4xx */
 /**
   * @}
   */
@@ -1129,8 +1138,8 @@ typedef struct
 /** @defgroup FMC_LL_Private_Functions FMC LL Private Functions
   *  @{
   */
-
 #if defined(FMC_BANK1)
+
 /** @defgroup FMC_LL_NORSRAM  NOR SRAM
   *  @{
   */
@@ -1162,8 +1171,8 @@ HAL_StatusTypeDef  FMC_NORSRAM_WriteOperation_Disable(FMC_NORSRAM_TypeDef *Devic
   * @}
   */
 #endif /* FMC_BANK1 */
-
 #if defined(FMC_BANK3)
+
 /** @defgroup FMC_LL_NAND NAND
   *  @{
   */
@@ -1194,9 +1203,8 @@ HAL_StatusTypeDef  FMC_NAND_GetECC(const FMC_NAND_TypeDef *Device, uint32_t *ECC
   * @}
   */
 #endif /* FMC_BANK3 */
-
-
 #if defined(FMC_Bank5_6_R)
+
 /** @defgroup FMC_LL_SDRAM SDRAM
   *  @{
   */

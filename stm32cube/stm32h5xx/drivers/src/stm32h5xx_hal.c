@@ -48,12 +48,12 @@
 /* Private typedef ---------------------------------------------------------------------------------------------------*/
 /* Private define ----------------------------------------------------------------------------------------------------*/
 /**
-  * @brief STM32H5xx HAL Driver version number 1.5.0.RC1
+  * @brief STM32H5xx HAL Driver version number 1.6.0
    */
-#define __STM32H5XX_HAL_VERSION_MAIN   (0x01U) /*!< [31:24] main version */
-#define __STM32H5XX_HAL_VERSION_SUB1   (0x05U) /*!< [23:16] sub1 version */
-#define __STM32H5XX_HAL_VERSION_SUB2   (0x00U) /*!< [15:8]  sub2 version */
-#define __STM32H5XX_HAL_VERSION_RC     (0x00U) /*!< [7:0]  release candidate */
+#define __STM32H5XX_HAL_VERSION_MAIN   (0x01UL) /*!< [31:24] main version */
+#define __STM32H5XX_HAL_VERSION_SUB1   (0x06UL) /*!< [23:16] sub1 version */
+#define __STM32H5XX_HAL_VERSION_SUB2   (0x00UL) /*!< [15:8]  sub2 version */
+#define __STM32H5XX_HAL_VERSION_RC     (0x00UL) /*!< [7:0]  release candidate */
 #define __STM32H5XX_HAL_VERSION         ((__STM32H5XX_HAL_VERSION_MAIN << 24U)\
                                          |(__STM32H5XX_HAL_VERSION_SUB1 << 16U)\
                                          |(__STM32H5XX_HAL_VERSION_SUB2 << 8U )\
@@ -1080,7 +1080,7 @@ void HAL_SBS_OpenAccessPort(void)
   */
 void HAL_SBS_OpenDebug(void)
 {
-  MODIFY_REG(SBS->DBGCR, SBS_DBGCR_DBG_UNLOCK, (SBS_DEBUG_UNLOCK_VALUE << SBS_DBGCR_DBG_UNLOCK_Pos));
+  MODIFY_REG(SBS->DBGCR, SBS_DBGCR_DBG_UNLOCK, ((uint32_t)SBS_DEBUG_UNLOCK_VALUE << SBS_DBGCR_DBG_UNLOCK_Pos));
 }
 
 /**
@@ -1132,7 +1132,7 @@ void HAL_SBS_LockDebugConfig(void)
 #if defined(SBS_DBGCR_DBG_AUTH_SEC)
 /**
   * @brief  Configure the authenticated debug security access.
-  * @param  Control debug opening secure/non-secure or non-secure only
+  * @param  Security debug opening secure/non-secure or non-secure only
   *         This parameter can be one of the following values:
   *            @arg SBS_DEBUG_SEC_NSEC: debug opening for secure and non-secure.
   *            @arg SBS_DEBUG_NSEC: debug opening for non-secure only.
@@ -1155,6 +1155,100 @@ uint32_t HAL_SBS_GetDebugSecurity(void)
   return ((SBS->DBGCR & SBS_DBGCR_DBG_AUTH_SEC) >> SBS_DBGCR_DBG_AUTH_SEC_Pos);
 }
 #endif /* SBS_DBGCR_DBG_AUTH_SEC */
+
+#if defined(SBS_OTGHSPHYTUNER2_COMPDISTUNE)
+/**
+  * @brief  Set the OTG PHY Disconnect Threshold.
+  * @param  DisconnectThreshold Defines the voltage level for the threshold used to detect a disconnect event.
+  *         This parameter can be one of the following values:
+  *            @arg SBS_OTG_HS_PHY_DISCONNECT_5_9PERCENT: +5.9% (recommended value)
+  *            @arg SBS_OTG_HS_PHY_DISCONNECT_0PERCENT: 0% (default value)
+  * @retval None
+  */
+
+void HAL_SBS_SetOTGPHYDisconnectThreshold(uint32_t DisconnectThreshold)
+{
+  /* Check the parameter */
+  assert_param(IS_SBS_OTGPHY_DISCONNECT(DisconnectThreshold));
+
+  MODIFY_REG(SBS->OTGHSPHYTUNER2, SBS_OTGHSPHYTUNER2_COMPDISTUNE, DisconnectThreshold);
+}
+
+/**
+  * @brief  Get the current voltage level for the threshold used to detect a disconnect event.
+  * @retval The returned value can be one of the following values:
+  *            @arg SBS_OTG_HS_PHY_DISCONNECT_5_9PERCENT: +5.9% (recommended value)
+  *            @arg SBS_OTG_HS_PHY_DISCONNECT_0PERCENT: 0% (default value)
+  */
+uint32_t HAL_SBS_GetOTGPHYDisconnectThreshold(void)
+{
+  return (uint32_t)(READ_BIT(SBS->OTGHSPHYTUNER2, SBS_OTGHSPHYTUNER2_COMPDISTUNE));
+}
+#endif /* SBS_OTGHSPHYTUNER2_COMPDISTUNE */
+
+#if defined(SBS_OTGHSPHYTUNER2_SQRXTUNE)
+/**
+  * @brief  Adjust the voltage level for the threshold used to detect valid high speed data.
+  * @param  SquelchThreshold Defines the voltage level.
+  *          This parameter can be one of the following values:
+  *            @arg SBS_OTG_HS_PHY_SQUELCH_15PERCENT: +15% (recommended value)
+  *            @arg SBS_OTG_HS_PHY_SQUELCH_0PERCENT: 0% (default value)
+  * @retval None
+  */
+
+void HAL_SBS_SetOTGPHYSquelchThreshold(uint32_t SquelchThreshold)
+{
+  /* Check the parameter */
+  assert_param(IS_SBS_OTGPHY_SQUELCH(SquelchThreshold));
+
+  MODIFY_REG(SBS->OTGHSPHYTUNER2, SBS_OTGHSPHYTUNER2_SQRXTUNE, SquelchThreshold);
+}
+
+/**
+  * @brief  Get the current voltage level for the threshold used to detect a squelch event.
+  * @retval The returned value can be one of the following values:
+  *            @arg SBS_OTG_HS_PHY_SQUELCH_15PERCENT: +15% (recommended value)
+  *            @arg SBS_OTG_HS_PHY_SQUELCH_0PERCENT: 0% (default value)
+  */
+uint32_t HAL_SBS_GetOTGPHYSquelchThreshold(void)
+{
+  return (uint32_t)(READ_BIT(SBS->OTGHSPHYTUNER2, SBS_OTGHSPHYTUNER2_SQRXTUNE));
+}
+#endif /* SBS_OTGHSPHYTUNER2_SQRXTUNE */
+
+#if defined(SBS_OTGHSPHYTUNER2_TXPREEMPAMPTUNE)
+/**
+  * @brief  Set the OTG PHY Current config.
+  * @param  PreemphasisCurrent Defines the current configuration.
+  *         This parameter can be one of the following values:
+  *            @arg SBS_OTG_HS_PHY_PREEMP_DISABLED: HS transmitter preemphasis circuit disabled
+  *            @arg SBS_OTG_HS_PHY_PREEMP_1X: HS transmitter preemphasis circuit sources 1x preemphasis current
+  *            @arg SBS_OTG_HS_PHY_PREEMP_2X: HS transmitter preemphasis circuit sources 2x preemphasis current
+  *            @arg SBS_OTG_HS_PHY_PREEMP_3X: HS transmitter preemphasis circuit sources 3x preemphasis current
+  * @retval None
+  */
+
+void HAL_SBS_SetOTGPHYPreemphasisCurrent(uint32_t PreemphasisCurrent)
+{
+  /* Check the parameter */
+  assert_param(IS_SBS_OTGPHY_PREEMPHASIS(PreemphasisCurrent));
+
+  MODIFY_REG(SBS->OTGHSPHYTUNER2, SBS_OTGHSPHYTUNER2_TXPREEMPAMPTUNE, PreemphasisCurrent);
+}
+
+/**
+  * @brief  Get the current level for the preemphasis.
+  * @retval The returned value can be one of the following values:
+  *            @arg SBS_OTG_HS_PHY_PREEMP_DISABLED: HS transmitter preemphasis circuit disabled
+  *            @arg SBS_OTG_HS_PHY_PREEMP_1X: HS transmitter preemphasis circuit sources 1x preemphasis current
+  *            @arg SBS_OTG_HS_PHY_PREEMP_2X: HS transmitter preemphasis circuit sources 2x preemphasis current
+  *            @arg SBS_OTG_HS_PHY_PREEMP_3X: HS transmitter preemphasis circuit sources 3x preemphasis current
+  */
+uint32_t HAL_SBS_GetOTGPHYPreemphasisCurrent(void)
+{
+  return (uint32_t)(READ_BIT(SBS->OTGHSPHYTUNER2, SBS_OTGHSPHYTUNER2_TXPREEMPAMPTUNE));
+}
+#endif /* SBS_OTGHSPHYTUNER2_TXPREEMPAMPTUNE */
 
 /**
   * @}

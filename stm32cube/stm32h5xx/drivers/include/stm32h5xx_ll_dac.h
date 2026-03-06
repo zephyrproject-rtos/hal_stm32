@@ -307,6 +307,10 @@ typedef struct
 /* Devices STM32H503xx */
 #define LL_DAC_TRIG_EXT_TIM3_TRGO          (                                  DAC_CR_TSEL1_1 | DAC_CR_TSEL1_0) /*!< DAC channel conversion trigger from external peripheral: TIM3 TRGO. */
 #endif /* Devices STM32H563/H573xx or STM32H503xx */
+#if defined(PLAY1)
+#define LL_DAC_TRIG_EXT_PLAY1_OUT11         (DAC_CR_TSEL1_3 | DAC_CR_TSEL1_2 | DAC_CR_TSEL1_1                 ) /*!< DAC channel conversion trigger from external peripheral: PLAY1 OUT11. */
+#define LL_DAC_TRIG_EXT_PLAY1_OUT12         (DAC_CR_TSEL1_3 | DAC_CR_TSEL1_2 | DAC_CR_TSEL1_1 | DAC_CR_TSEL1_0) /*!< DAC channel conversion trigger from external peripheral: PLAY1 OUT12. */
+#endif /* Devices STM32H5E5/H5F5xx */
 
 #define LL_DAC_TRIG_EXT_LPTIM1_OUT         LL_DAC_TRIG_EXT_LPTIM1_CH1  /*!< Keep old definition for compatibility */
 #define LL_DAC_TRIG_EXT_LPTIM2_OUT         LL_DAC_TRIG_EXT_LPTIM2_CH1  /*!< Keep old definition for compatibility */
@@ -720,18 +724,22 @@ __STATIC_INLINE uint32_t LL_DAC_GetTrimmingValue(const DAC_TypeDef *DACx, uint32
   *         @arg @ref LL_DAC_TRIG_EXT_TIM3_TRGO      (1)
   *         @arg @ref LL_DAC_TRIG_EXT_TIM4_TRGO      (2)
   *         @arg @ref LL_DAC_TRIG_EXT_TIM5_TRGO      (2)
-  *         @arg @ref LL_DAC_TRIG_EXT_TIM6_TRG
+  *         @arg @ref LL_DAC_TRIG_EXT_TIM6_TRGO
   *         @arg @ref LL_DAC_TRIG_EXT_TIM7_TRGO
   *         @arg @ref LL_DAC_TRIG_EXT_TIM8_TRGO      (2)
   *         @arg @ref LL_DAC_TRIG_EXT_TIM15_TRGO     (2)
   *         @arg @ref LL_DAC_TRIG_EXT_LPTIM1_CH1
   *         @arg @ref LL_DAC_TRIG_EXT_LPTIM2_CH1
   *         @arg @ref LL_DAC_TRIG_EXT_EXTI_LINE9
+  *         @arg @ref LL_DAC_TRIG_EXT_PLAY1_OUT11    (3)
+  *         @arg @ref LL_DAC_TRIG_EXT_PLAY1_OUT12    (3)
   *
   *         (1) On this STM32 series, parameter not available on all devices.
   *          Only available on STM32H503xx (refer to device reference manual for supported features list)
   *         (2) On this STM32 series, parameter not available on all devices.
   *          Only available on STM32H563/H573xx (refer to device reference manual for supported features list)
+  *         (3) On this STM32 series, parameter not available on all devices.
+  *          Only available on STM32H5E5/H5F5xx (refer to device reference manual for supported features list)
   * @retval None
   */
 __STATIC_INLINE void LL_DAC_SetTriggerSource(DAC_TypeDef *DACx, uint32_t DAC_Channel, uint32_t TriggerSource)
@@ -760,18 +768,22 @@ __STATIC_INLINE void LL_DAC_SetTriggerSource(DAC_TypeDef *DACx, uint32_t DAC_Cha
   *         @arg @ref LL_DAC_TRIG_EXT_TIM3_TRGO      (1)
   *         @arg @ref LL_DAC_TRIG_EXT_TIM4_TRGO      (2)
   *         @arg @ref LL_DAC_TRIG_EXT_TIM5_TRGO      (2)
-  *         @arg @ref LL_DAC_TRIG_EXT_TIM6_TRG
+  *         @arg @ref LL_DAC_TRIG_EXT_TIM6_TRGO
   *         @arg @ref LL_DAC_TRIG_EXT_TIM7_TRGO
   *         @arg @ref LL_DAC_TRIG_EXT_TIM8_TRGO      (2)
   *         @arg @ref LL_DAC_TRIG_EXT_TIM15_TRGO     (2)
   *         @arg @ref LL_DAC_TRIG_EXT_LPTIM1_CH1
   *         @arg @ref LL_DAC_TRIG_EXT_LPTIM2_CH1
   *         @arg @ref LL_DAC_TRIG_EXT_EXTI_LINE9
+  *         @arg @ref LL_DAC_TRIG_EXT_PLAY1_OUT11    (3)
+  *         @arg @ref LL_DAC_TRIG_EXT_PLAY1_OUT12    (3)
   *
   *         (1) On this STM32 series, parameter not available on all devices.
   *          Only available on STM32H503xx (refer to device reference manual for supported features list)
   *         (2) On this STM32 series, parameter not available on all devices.
   *          Only available on STM32H563/H573xx (refer to device reference manual for supported features list)
+  *         (3) On this STM32 series, parameter not available on all devices.
+  *          Only available on STM32H5E5/H5F5xx (refer to device reference manual for supported features list)
   */
 __STATIC_INLINE uint32_t LL_DAC_GetTriggerSource(const DAC_TypeDef *DACx, uint32_t DAC_Channel)
 {

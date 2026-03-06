@@ -188,16 +188,30 @@ typedef struct
 #elif defined (PWR_PMCR_SRAM2_16LSO)
 #define PWR_RAM2_LOW_16_MEMORY_BLOCK   PWR_PMCR_SRAM2_16LSO   /*!< RAM2 low 16k byte shut-off control in Stop mode      */
 #define PWR_RAM2_HIGH_16_MEMORY_BLOCK  PWR_PMCR_SRAM2_16HSO   /*!< RAM2 High 16k byte shut-off control in Stop mode     */
+#if defined (PWR_PMCR_SRAM2_48LSO)
+#define PWR_RAM2_LOW_48_MEMORY_BLOCK   PWR_PMCR_SRAM2_48LSO   /*!< RAM2 low 48k byte shut-off control in Stop mode      */
+#define PWR_RAM2_HIGH_48_MEMORY_BLOCK  PWR_PMCR_SRAM2_48HSO   /*!< RAM2 High 48k byte shut-off control in Stop mode     */
+#else
 #define PWR_RAM2_48_MEMORY_BLOCK       PWR_PMCR_SRAM2_48SO    /*!< RAM2 48k byte shut-off control in Stop mode          */
+#endif /* PWR_PMCR_SRAM2_48LSO */
 #else
 #define PWR_RAM2_MEMORY_BLOCK          PWR_PMCR_SRAM2SO       /*!< RAM2 shut-off control in Stop mode                   */
 #endif /* PWR_PMCR_SRAM2_16SO */
 #if defined (PWR_PMCR_SRAM3SO)
 #define PWR_RAM3_MEMORY_BLOCK          PWR_PMCR_SRAM3SO       /*!< RAM3 shut-off control in Stop mode                   */
 #endif /* PWR_PMCR_SRAM3SO */
+#if defined (PWR_PMCR_SRAM4SO)
+#define PWR_RAM4_MEMORY_BLOCK          PWR_PMCR_SRAM4SO       /*!< RAM4 shut-off control in Stop mode                   */
+#endif /* PWR_PMCR_SRAM4SO */
+#if defined (PWR_PMCR_SRAM5SO)
+#define PWR_RAM5_MEMORY_BLOCK          PWR_PMCR_SRAM5SO       /*!< RAM5 shut-off control in Stop mode                   */
+#endif /* PWR_PMCR_SRAM5SO */
 #if defined (PWR_PMCR_ETHERNETSO)
 #define PWR_ETHERNET_MEMORY_BLOCK      PWR_PMCR_ETHERNETSO    /*!< Ethernet shut-off control in Stop mode               */
 #endif /* PWR_PMCR_ETHERNETSO */
+#if defined (PWR_PMCR_LTDCSO)
+#define PWR_LTDC_MEMORY_BLOCK          PWR_PMCR_LTDCSO        /*!< LTDC shut-off control in Stop mode               */
+#endif /* PWR_PMCR_LTDCSO */
 
 /**
   * @}
@@ -428,6 +442,33 @@ typedef struct
                                     ((BLOCK) == PWR_RAM2_16_MEMORY_BLOCK)  || \
                                     ((BLOCK) == PWR_RAM2_48_MEMORY_BLOCK)  || \
                                     ((BLOCK) == PWR_RAM1_MEMORY_BLOCK))
+
+#elif defined (PWR_PMCR_SRAM2_48SO)
+#if defined (PWR_PMCR_ETHERNETSO)
+#define IS_PWR_MEMORY_BLOCK(BLOCK) (((BLOCK) == PWR_ETHERNET_MEMORY_BLOCK)      || \
+                                    ((BLOCK) == PWR_RAM3_MEMORY_BLOCK)          || \
+                                    ((BLOCK) == PWR_RAM2_LOW_16_MEMORY_BLOCK)   || \
+                                    ((BLOCK) == PWR_RAM2_HIGH_16_MEMORY_BLOCK)  || \
+                                    ((BLOCK) == PWR_RAM2_48_MEMORY_BLOCK)       || \
+                                    ((BLOCK) == PWR_RAM1_MEMORY_BLOCK))
+#else
+#define IS_PWR_MEMORY_BLOCK(BLOCK) (((BLOCK) == PWR_RAM3_MEMORY_BLOCK)          || \
+                                    ((BLOCK) == PWR_RAM2_LOW_16_MEMORY_BLOCK)   || \
+                                    ((BLOCK) == PWR_RAM2_HIGH_16_MEMORY_BLOCK)  || \
+                                    ((BLOCK) == PWR_RAM2_48_MEMORY_BLOCK)       || \
+                                    ((BLOCK) == PWR_RAM1_MEMORY_BLOCK))
+#endif /* PWR_PMCR_ETHERNETSO */
+#elif defined (PWR_PMCR_SRAM2_48LSO)
+#define IS_PWR_MEMORY_BLOCK(BLOCK) (((BLOCK) == PWR_ETHERNET_MEMORY_BLOCK)      || \
+                                    ((BLOCK) == PWR_LTDC_MEMORY_BLOCK)          || \
+                                    ((BLOCK) == PWR_RAM5_MEMORY_BLOCK)          || \
+                                    ((BLOCK) == PWR_RAM4_MEMORY_BLOCK)          || \
+                                    ((BLOCK) == PWR_RAM3_MEMORY_BLOCK)          || \
+                                    ((BLOCK) == PWR_RAM2_LOW_16_MEMORY_BLOCK)   || \
+                                    ((BLOCK) == PWR_RAM2_HIGH_16_MEMORY_BLOCK)  || \
+                                    ((BLOCK) == PWR_RAM2_LOW_48_MEMORY_BLOCK)   || \
+                                    ((BLOCK) == PWR_RAM2_HIGH_48_MEMORY_BLOCK)  || \
+                                    ((BLOCK) == PWR_RAM1_MEMORY_BLOCK))
 #elif defined (PWR_PMCR_SRAM2_16LSO)
 #define IS_PWR_MEMORY_BLOCK(BLOCK) (((BLOCK) == PWR_RAM3_MEMORY_BLOCK)          || \
                                     ((BLOCK) == PWR_RAM2_LOW_16_MEMORY_BLOCK)   || \
@@ -486,6 +527,8 @@ void HAL_PWREx_EnableUSBVoltageDetector(void);
 void HAL_PWREx_DisableUSBVoltageDetector(void);
 void HAL_PWREx_EnableVddUSB(void);
 void HAL_PWREx_DisableVddUSB(void);
+void HAL_PWREx_EnableUSBOTGHSPhy(void);
+void HAL_PWREx_DisableUSBOTGHSPhy(void);
 #endif /* PWR_USBSCR_USB33DEN */
 void HAL_PWREx_EnableMonitoring(void);
 void HAL_PWREx_DisableMonitoring(void);

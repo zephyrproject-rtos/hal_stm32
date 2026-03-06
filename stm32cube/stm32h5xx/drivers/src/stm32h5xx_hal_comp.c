@@ -25,7 +25,8 @@
   ======================================================================================================================
 
   [..]
-      The STM32H5xx device family integrates one analog comparator instance: COMP1.
+      The STM32H5xx series integrates analog comparator instance depending on device:
+      STM32H503xx one instance COMP1, STM32H5Ex/STM32H5Fx two instances COMP1 and COMP2.
       (#) Comparators input minus (inverting input) and input plus (non inverting input)
           can be set to internal references or to GPIO pins
           (refer to GPIO list in reference manual).
@@ -35,15 +36,17 @@
           alternate functions for comparator), timers.
           (refer to GPIO list in reference manual).
 
-      (#) The comparators have interrupt capability through direct line to NVIC (featuring
-          low latency interrupt).
-          Caution: Specific behavior for comparator of this STM32 series: comparator output triggers interruption
-                   on high level
-          - triggering on level (instead of edge) implies to disable interrupt in comparator IRQ handler.
-            In case of further operation needed in interrupt mode, comparator interruption must be rearmed.
-          - triggering on high level implies that comparator output initial state must at low level.
-            Then, comparator can trig signal on rising edge.
-            Trigger a signal on falling edge is possible by inverting comparator polarity.
+      (#) The comparators have interrupt capability.
+          - STM32H503xx: interrupt through direct line to NVIC (featuring low latency interrupt).
+            Caution: Specific behavior for comparator of this device: comparator output triggers interruption
+                     on high level
+            - triggering on level (instead of edge) implies to disable interrupt in comparator IRQ handler.
+              In case of further operation needed in interrupt mode, comparator interruption must be rearmed.
+            - triggering on high level implies that comparator output initial state must at low level.
+              Then, comparator can trig signal on rising edge.
+              Trigger a signal on falling edge is possible by inverting comparator polarity.
+          - STM32H5Ex/STM32H5Fx: interrupt through EXTI to NVIC
+            Comparator output triggers interruption on edge (rising, falling, both)
 
   ======================================================================================================================
                                        ##### How to use this driver #####
@@ -76,13 +79,16 @@
       (#) Reconfiguration on-the-fly of comparator can be done by calling again
           function HAL_COMP_Init() with new input structure parameters values.
 
-      (#) Enable the comparator using HAL_COMP_Start(), HAL_COMP_Start_IT_OneShot() or HAL_COMP_Start_IT_AutoRearm()
-          Note: Using HAL_COMP_Start_IT_OneShot() or HAL_COMP_Start_IT_AutoRearm(), these functions can change
+      (#) Enable the comparator using HAL_COMP_Start_x()
+          Usage with interruption:
+          - STM32H5Ex/STM32H5Fx: set init field TriggerMode with selected trigger, then use HAL_COMP_Start().
+          - STM32H503xx: HAL_COMP_Start_IT_OneShot() or HAL_COMP_Start_IT_AutoRearm()
+              - Using HAL_COMP_Start_IT_OneShot() or HAL_COMP_Start_IT_AutoRearm(), these functions can change
                 comparator output polarity to match initial comparator output level constraint.
-          Note: Using HAL_COMP_Start_IT_OneShot(), after each interruption triggered the interruption
+              - Using HAL_COMP_Start_IT_OneShot(), after each interruption triggered the interruption
                 is disabled in IRQ handler. If needed, comparartor interruption can be rearmed by calling again
                 start function.
-          Note: In case of comparator and interruption used to exit from low power mode, user most ensure of stable
+              - In case of comparator and interruption used to exit from low power mode, user most ensure of stable
                 comparator input voltage (risk would be that comparator trigs early and IT disabled in IRQ handler
                 before device entering in low power mode, inducing no further system wake up possible).
                 Most appropriate function is HAL_COMP_Start_IT_AutoRearm() because comparartor triggers remains enable,
@@ -168,7 +174,7 @@
 
 #ifdef HAL_COMP_MODULE_ENABLED
 
-#if defined (COMP1)
+#if defined (COMP1) || defined (COMP2)
 
 /** @defgroup COMP COMP
   * @brief COMP HAL module driver
@@ -257,6 +263,13 @@ HAL_StatusTypeDef HAL_COMP_Init(COMP_HandleTypeDef *hcomp)
     assert_param(IS_COMP_HYSTERESIS(hcomp->Init.Hysteresis));
     assert_param(IS_COMP_BLANKINGSRCE(hcomp->Init.BlankingSrce));
     assert_param(IS_COMP_TRIGGERMODE(hcomp->Init.TriggerMode));
+#if defined(COMP_WINDOW_MODE_SUPPORT)
+    assert_param(IS_COMP_WINDOWMODE(hcomp->Init.WindowMode));
+    if (hcomp->Init.WindowMode != COMP_WINDOWMODE_DISABLE)
+    {
+      assert_param(IS_COMP_WINDOWOUTPUT(hcomp->Init.WindowOutput));
+    }
+#endif /* COMP_WINDOW_MODE_SUPPORT */
 
     if (hcomp->State == HAL_COMP_STATE_RESET)
     {
@@ -266,7 +279,9 @@ HAL_StatusTypeDef HAL_COMP_Init(COMP_HandleTypeDef *hcomp)
       /* Set COMP error code to none */
       COMP_CLEAR_ERRORCODE(hcomp);
 
+#if defined(STM32H503xx)
       hcomp->InterruptAutoRearm = 0;
+#endif /* STM32H503xx */
 
 #if (USE_HAL_COMP_REGISTER_CALLBACKS == 1U)
       /* Init the COMP Callback settings */
@@ -289,18 +304,38 @@ HAL_StatusTypeDef HAL_COMP_Init(COMP_HandleTypeDef *hcomp)
     comp_voltage_scaler_initialized = READ_BIT(hcomp->Instance->CFGR1, COMP_CFGR1_SCALEN);
 
     /* Set COMP parameters */
+#if defined(STM32H503xx)
     tmp_csr = (hcomp->Init.InputMinus
                | hcomp->Init.InputPlus
                | hcomp->Init.BlankingSrce
                | hcomp->Init.Hysteresis
                | hcomp->Init.OutputPol
                | hcomp->Init.Mode);
+#else
+    uint32_t input_minus = hcomp->Init.InputMinus;
+    if (hcomp->Instance == COMP2)
+    {
+      /* Adapt value of input minus literal for COMP2 */
+      if ((input_minus >= COMP_INPUT_MINUS_IO1) && (input_minus <= COMP_INPUT_MINUS_IO3))
+      {
+        input_minus += (1UL << COMP_CFGR1_INMSEL_Pos);
+      }
+    }
+
+    tmp_csr = (input_minus
+               | hcomp->Init.InputPlus
+               | hcomp->Init.BlankingSrce
+               | hcomp->Init.Hysteresis
+               | hcomp->Init.OutputPol
+               | hcomp->Init.Mode);
+#endif /* STM32H503xx */
 
     /* Set parameters in COMP register */
     /* Note: Update all bits except read-only, lock and enable bits */
+#if defined(STM32H503xx)
     MODIFY_REG(hcomp->Instance->CFGR1,
-               COMP_CFGR1_PWRMODE | COMP_CFGR1_INMSEL | COMP_CFGR1_INPSEL1
-               | COMP_CFGR1_INPSEL2 | COMP_CFGR1_POLARITY | COMP_CFGR1_HYST
+               COMP_CFGR1_PWRMODE | COMP_CFGR1_INMSEL | COMP_CFGR1_INPSEL1 | COMP_CFGR1_INPSEL2
+               | COMP_CFGR1_POLARITY | COMP_CFGR1_HYST
                | COMP_CFGR1_BLANKING | COMP_CFGR1_BRGEN | COMP_CFGR1_SCALEN,
                tmp_csr
               );
@@ -309,6 +344,64 @@ HAL_StatusTypeDef HAL_COMP_Init(COMP_HandleTypeDef *hcomp)
     {
       MODIFY_REG(hcomp->Instance->CFGR2, COMP_CFGR2_INPSEL0, COMP_CFGR2_INPSEL0);
     }
+#else
+    MODIFY_REG(hcomp->Instance->CFGR1,
+               COMP_CFGR1_PWRMODE | COMP_CFGR1_INMSEL | COMP_CFGR1_INPSEL0 | COMP_CFGR1_INPSEL1
+               | COMP_CFGR1_POLARITY | COMP_CFGR1_HYST
+               | COMP_CFGR1_BLANKING | COMP_CFGR1_BRGEN | COMP_CFGR1_SCALEN,
+               tmp_csr
+              );
+#endif /* STM32H503xx */
+
+#if defined(COMP_WINDOW_MODE_SUPPORT)
+    /* Set window mode */
+    /* Note: Window mode bit is located into 1 out of the 2 pairs of COMP     */
+    /*       instances. Therefore, this function can update another COMP      */
+    /*       instance that the one currently selected.                        */
+
+    if (hcomp->Init.WindowMode == COMP_WINDOWMODE_COMP1_INPUT_PLUS_COMMON)
+    {
+      CLEAR_BIT(COMP12_COMMON->CFGR1_ODD, COMP_CFGR1_WINMODE);
+      SET_BIT(COMP12_COMMON->CFGR1_EVEN, COMP_CFGR1_WINMODE);
+    }
+    else if (hcomp->Init.WindowMode == COMP_WINDOWMODE_COMP2_INPUT_PLUS_COMMON)
+    {
+      SET_BIT(COMP12_COMMON->CFGR1_ODD, COMP_CFGR1_WINMODE);
+      CLEAR_BIT(COMP12_COMMON->CFGR1_EVEN, COMP_CFGR1_WINMODE);
+    }
+    else
+    {
+      CLEAR_BIT(COMP12_COMMON->CFGR1_ODD, COMP_CFGR1_WINMODE);
+      CLEAR_BIT(COMP12_COMMON->CFGR1_EVEN, COMP_CFGR1_WINMODE);
+    }
+
+    /* Set window mode output */
+    /* Note: Window mode mode output can also be used when window mode        */
+    /*       is disabled, to use comparators in independent mode with their   */
+    /*       output connected through exclusive-or circuitry.                 */
+    switch (hcomp->Init.WindowOutput)
+    {
+      case COMP_WINDOWOUTPUT_COMP1:
+        SET_BIT(COMP12_COMMON->CFGR1_ODD, COMP_CFGR1_WINOUT);
+        CLEAR_BIT(COMP12_COMMON->CFGR1_EVEN, COMP_CFGR1_WINOUT);
+        break;
+
+      case COMP_WINDOWOUTPUT_COMP2:
+        CLEAR_BIT(COMP12_COMMON->CFGR1_ODD, COMP_CFGR1_WINOUT);
+        SET_BIT(COMP12_COMMON->CFGR1_EVEN, COMP_CFGR1_WINOUT);
+        break;
+
+      case COMP_WINDOWOUTPUT_BOTH:
+        SET_BIT(COMP12_COMMON->CFGR1_ODD, COMP_CFGR1_WINOUT);
+        SET_BIT(COMP12_COMMON->CFGR1_EVEN, COMP_CFGR1_WINOUT);
+        break;
+
+      default: /* COMP_WINDOWOUTPUT_EACH_COMP */
+        CLEAR_BIT(COMP12_COMMON->CFGR1_ODD, COMP_CFGR1_WINOUT);
+        CLEAR_BIT(COMP12_COMMON->CFGR1_EVEN, COMP_CFGR1_WINOUT);
+        break;
+    }
+#endif /* COMP_WINDOW_MODE_SUPPORT */
 
     /* Delay for COMP scaler bridge voltage stabilization */
     /* Apply the delay if voltage scaler bridge is enabled for the first time */
@@ -330,15 +423,69 @@ HAL_StatusTypeDef HAL_COMP_Init(COMP_HandleTypeDef *hcomp)
     exti_line = COMP_GET_EXTI_LINE(hcomp->Instance);
 
     /* Manage EXTI settings */
+#if defined(STM32H503xx)
     if ((hcomp->Init.TriggerMode & COMP_EXTI_IT) != 0UL)
     {
       LL_EXTI_EnableIT_0_31(exti_line);
     }
     else
     {
-      /* Disable EXTI interrupt mode */
       LL_EXTI_DisableIT_0_31(exti_line);
     }
+#else
+    if ((hcomp->Init.TriggerMode & (COMP_EXTI_IT | COMP_EXTI_EVENT)) != 0UL)
+    {
+      /* Configure EXTI rising edge */
+      if ((hcomp->Init.TriggerMode & COMP_EXTI_RISING) != 0UL)
+      {
+        LL_EXTI_EnableRisingTrig_32_63(exti_line);
+      }
+      else
+      {
+        LL_EXTI_DisableRisingTrig_32_63(exti_line);
+      }
+
+      /* Configure EXTI falling edge */
+      if ((hcomp->Init.TriggerMode & COMP_EXTI_FALLING) != 0UL)
+      {
+        LL_EXTI_EnableFallingTrig_32_63(exti_line);
+      }
+      else
+      {
+        LL_EXTI_DisableFallingTrig_32_63(exti_line);
+      }
+
+      /* Clear COMP EXTI pending bit (if any) */
+      LL_EXTI_ClearRisingFlag_32_63(exti_line);
+      LL_EXTI_ClearFallingFlag_32_63(exti_line);
+
+      /* Configure EXTI event mode */
+      if ((hcomp->Init.TriggerMode & COMP_EXTI_EVENT) != 0UL)
+      {
+        LL_EXTI_EnableEvent_32_63(exti_line);
+      }
+      else
+      {
+        LL_EXTI_DisableEvent_32_63(exti_line);
+      }
+
+      /* Configure EXTI interrupt mode */
+      if ((hcomp->Init.TriggerMode & COMP_EXTI_IT) != 0UL)
+      {
+        LL_EXTI_EnableIT_32_63(exti_line);
+      }
+      else
+      {
+        LL_EXTI_DisableIT_32_63(exti_line);
+      }
+    }
+    else
+    {
+      /* Disable EXTI interrupt and event mode */
+      LL_EXTI_DisableEvent_32_63(exti_line);
+      LL_EXTI_DisableIT_32_63(exti_line);
+    }
+#endif /* STM32H503xx */
 
     /* Set HAL COMP handle state */
     /* Note: Transition from state reset to state ready,                      */
@@ -379,6 +526,9 @@ HAL_StatusTypeDef HAL_COMP_DeInit(COMP_HandleTypeDef *hcomp)
 
     /* Set configuration register to reset value */
     WRITE_REG(hcomp->Instance->CFGR1, 0x00000000UL);
+#if defined(STM32H503xx)
+    WRITE_REG(hcomp->Instance->CFGR2, 0x00000000UL);
+#endif /* STM32H503xx */
 
 #if (USE_HAL_COMP_REGISTER_CALLBACKS == 1U)
     if (hcomp->MspDeInitCallback == NULL)
@@ -615,6 +765,8 @@ HAL_StatusTypeDef HAL_COMP_UnRegisterCallback(COMP_HandleTypeDef *hcomp, HAL_COM
 
 /**
   * @brief  Start the comparator.
+  * @note   Depending on trigger configuration, this functions configures EXTI to generate an event or interruption
+  *         (wake up system from low power mode and CPU).
   * @param  hcomp COMP handle
   * @retval HAL status
   */
@@ -638,13 +790,16 @@ HAL_StatusTypeDef HAL_COMP_Start(COMP_HandleTypeDef *hcomp)
     /* Check the parameter */
     assert_param(IS_COMP_ALL_INSTANCE(hcomp->Instance));
 
+#if defined(STM32H503xx)
     if ((hcomp->Init.TriggerMode & COMP_EXTI_IT) != 0UL)
     {
       /* Case of operation with interruption */
-      /* Note: Specific to comparator of this STM32 series featuring IT with direct line only (low latency) */
+      /* Note: Specific to comparator of STM32H503xx device featuring IT with direct line only
+               (low latency, detection on level) */
       status = HAL_COMP_Start_IT_AutoRearm(hcomp);
     }
     else
+#endif /* STM32H503xx */
     {
       if (hcomp->State == HAL_COMP_STATE_READY)
       {
@@ -717,12 +872,13 @@ HAL_StatusTypeDef HAL_COMP_Stop(COMP_HandleTypeDef *hcomp)
   return status;
 }
 
+#if defined(STM32H503xx)
 /**
   * @brief  Start the comparator with interruption low latency, interruption disabled at first trigger occurrence.
   * @note   Interruption low latency is achieved through direct line to NVIC (instead of going through EXTI).
   * @note   If needed, comparartor interruption can be rearmed by calling again this function.
   * @note   Specific to comparator of this STM32 series: comparator output triggers interruption on high level.
-            This function can change output polarity depending on initial output level.
+  *         This function can change output polarity depending on initial output level.
   * @param  hcomp COMP handle
   * @retval HAL status
   */
@@ -813,7 +969,7 @@ HAL_StatusTypeDef HAL_COMP_Start_IT_OneShot(COMP_HandleTypeDef *hcomp)
   * @note   Interruption low latency is achieved through direct line to NVIC (instead of going through EXTI).
   * @note   If needed, comparartor interruption can be rearmed by calling again this function.
   * @note   Specific to comparator of this STM32 series: comparator output triggers interruption on high level.
-            This function can change output polarity depending on initial output level.
+  *         This function can change output polarity depending on initial output level.
   * @param  hcomp COMP handle
   * @retval HAL status
   */
@@ -898,6 +1054,36 @@ HAL_StatusTypeDef HAL_COMP_Start_IT_AutoRearm(COMP_HandleTypeDef *hcomp)
 
   return status;
 }
+#else
+/**
+  * @brief  Start the comparator with interruption.
+  * @note   Interruption through EXTI to NVIC, allowing detection on edge (rising, falling, both).
+  * @param  hcomp COMP handle
+  * @retval HAL status
+  */
+HAL_StatusTypeDef HAL_COMP_Start_IT(COMP_HandleTypeDef *hcomp)
+{
+  HAL_StatusTypeDef status = HAL_OK;
+
+  /* Check the COMP handle allocation and lock status */
+  if (hcomp == NULL)
+  {
+    status = HAL_ERROR;
+  }
+  else
+  {
+    /* Check the parameter */
+    /* Trigger must be have been set in initialization phase */
+    assert_param((hcomp->Init.TriggerMode & COMP_EXTI_IT) != 0UL);
+
+    /* Call start function */
+    HAL_COMP_Start(hcomp);
+  }
+
+  return status;
+}
+
+#endif /* STM32H503xx */
 
 /**
   * @brief  Disable the interrupt and Stop the comparator.
@@ -930,7 +1116,12 @@ HAL_StatusTypeDef HAL_COMP_Stop_IT(COMP_HandleTypeDef *hcomp)
       CLEAR_BIT(hcomp->Instance->CFGR1, COMP_CFGR1_EN);
 
       /* Disable the EXTI Line interrupt mode */
-      CLEAR_BIT(EXTI->IMR1, COMP_GET_EXTI_LINE(hcomp->Instance));
+#if defined(STM32H503xx)
+      LL_EXTI_DisableIT_0_31(COMP_EXTI_LINE_COMP1);
+#else
+      uint32_t exti_line = COMP_GET_EXTI_LINE(hcomp->Instance);
+      LL_EXTI_DisableIT_32_63(exti_line);
+#endif /* STM32H503xx */
 
       /* Disable the Interrupt comparator */
       CLEAR_BIT(hcomp->Instance->CFGR1, COMP_CFGR1_ITEN);
@@ -954,6 +1145,7 @@ HAL_StatusTypeDef HAL_COMP_Stop_IT(COMP_HandleTypeDef *hcomp)
   */
 void HAL_COMP_IRQHandler(COMP_HandleTypeDef *hcomp)
 {
+#if defined(STM32H503xx)
   uint32_t polarity_toggle = 0U;
 
   /* Disable COMP interrupt */
@@ -962,7 +1154,11 @@ void HAL_COMP_IRQHandler(COMP_HandleTypeDef *hcomp)
 
   /* Clear COMP1 interrupt flag */
   __HAL_COMP_CLEAR_C1IFLAG();
+#if defined(STM32H503xx)
   NVIC_ClearPendingIRQ(COMP1_IRQn);
+#else
+  NVIC_ClearPendingIRQ(COMP_IRQn);
+#endif /* defined(STM32H503xx) */
 
   /* COMP trigger callback */
 #if (USE_HAL_COMP_REGISTER_CALLBACKS == 1U)
@@ -1010,6 +1206,78 @@ void HAL_COMP_IRQHandler(COMP_HandleTypeDef *hcomp)
     /* Change COMP state */
     hcomp->State = HAL_COMP_STATE_READY;
   }
+
+#else /* STM32H5Ex/STM32H5Fx */
+  /* Get the EXTI line corresponding to the selected COMP instance */
+  uint32_t exti_line = COMP_GET_EXTI_LINE(hcomp->Instance);
+#if defined(COMP_WINDOW_MODE_SUPPORT)
+  uint32_t comparator_window_mode = READ_BIT(hcomp->Instance->CFGR1, COMP_CFGR1_WINMODE);
+#endif /* COMP_WINDOW_MODE_SUPPORT */
+
+  /* Check COMP EXTI flag */
+  if (LL_EXTI_IsActiveRisingFlag_32_63(exti_line) != 0UL)
+  {
+#if defined(COMP_WINDOW_MODE_SUPPORT)
+    /* Check whether comparator is in independent or window mode */
+    if (comparator_window_mode != 0UL)
+    {
+      /* Clear COMP EXTI line pending bit of the pair of comparators          */
+      /* in window mode.                                                      */
+      /* Note: Pair of comparators in window mode can both trig IRQ when      */
+      /*       input voltage is changing from "out of window" area            */
+      /*       (low or high ) to the other "out of window" area (high or low).*/
+      /*       Both flags must be cleared to call comparator trigger          */
+      /*       callback is called once.                                       */
+      WRITE_REG(EXTI->RPR2, (COMP_EXTI_LINE_COMP1 | COMP_EXTI_LINE_COMP2));
+    }
+    else
+#endif /* COMP_WINDOW_MODE_SUPPORT */
+    {
+      /* Clear COMP EXTI line pending bit */
+      WRITE_REG(EXTI->RPR2, exti_line);
+    }
+
+    /* COMP trigger user callback */
+#if (USE_HAL_COMP_REGISTER_CALLBACKS == 1)
+    hcomp->TriggerCallback(hcomp);
+#else
+    HAL_COMP_TriggerCallback(hcomp);
+#endif /* USE_HAL_COMP_REGISTER_CALLBACKS */
+  }
+  else if (LL_EXTI_IsActiveFallingFlag_32_63(exti_line) != 0UL)
+  {
+#if defined(COMP_WINDOW_MODE_SUPPORT)
+    /* Check whether comparator is in independent or window mode */
+    if (comparator_window_mode != 0UL)
+    {
+      /* Clear COMP EXTI line pending bit of the pair of comparators          */
+      /* in window mode.                                                      */
+      /* Note: Pair of comparators in window mode can both trig IRQ when      */
+      /*       input voltage is changing from "out of window" area            */
+      /*       (low or high ) to the other "out of window" area (high or low).*/
+      /*       Both flags must be cleared to call comparator trigger          */
+      /*       callback is called once.                                       */
+      WRITE_REG(EXTI->FPR2, (COMP_EXTI_LINE_COMP1 | COMP_EXTI_LINE_COMP2));
+    }
+    else
+#endif /* COMP_WINDOW_MODE_SUPPORT */
+    {
+      /* Clear COMP EXTI line pending bit */
+      WRITE_REG(EXTI->FPR2, exti_line);
+    }
+
+    /* COMP trigger user callback */
+#if (USE_HAL_COMP_REGISTER_CALLBACKS == 1)
+    hcomp->TriggerCallback(hcomp);
+#else
+    HAL_COMP_TriggerCallback(hcomp);
+#endif /* USE_HAL_COMP_REGISTER_CALLBACKS */
+  }
+  else
+  {
+    /* nothing to do */
+  }
+#endif /* STM32H503xx */
 }
 
 /**
@@ -1100,8 +1368,18 @@ uint32_t HAL_COMP_GetOutputLevel(const COMP_HandleTypeDef *hcomp)
 {
   /* Check the parameter */
   assert_param(IS_COMP_ALL_INSTANCE(hcomp->Instance));
-
+#if defined(STM32H503xx)
   return (uint32_t)(READ_BIT(COMP1->SR, COMP_SR_C1VAL));
+#else
+  if (hcomp->Instance == COMP1)
+  {
+    return (uint32_t)(READ_BIT(COMP12->SR, COMP_SR_C1VAL));
+  }
+  else
+  {
+    return (uint32_t)((READ_BIT(COMP12->SR, COMP_SR_C2VAL))>> 1UL);
+  }
+#endif /* STM32H503xx */
 }
 
 /**
@@ -1183,7 +1461,7 @@ uint32_t HAL_COMP_GetError(const COMP_HandleTypeDef *hcomp)
   * @}
   */
 
-#endif /* COMP1 */
+#endif /* COMP1 || COMP2 */
 
 #endif /* HAL_COMP_MODULE_ENABLED */
 

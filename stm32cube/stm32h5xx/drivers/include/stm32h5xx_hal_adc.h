@@ -204,6 +204,10 @@ typedef struct
   uint32_t SamplingMode;          /*!< Select the sampling mode to be used for ADC group regular conversion.
                                        This parameter can be a value of @ref ADC_regular_sampling_mode */
 
+#if defined(ADC3)
+  uint32_t ConversionDataManagement; /*!< Specifies whether the Data conversion data is managed: using the DMA (one shot
+                                            or circular),or stored in the DR register or transferred to ADF register.*/
+#endif /* ADC3 */
   FunctionalState DMAContinuousRequests; /*!< Specify whether the DMA requests are performed in one shot mode (DMA
                                               transfer stops when number of conversions is reached) or in continuous
                                               mode (DMA transfer unlimited, whatever number of conversions).
@@ -664,7 +668,7 @@ typedef  void (*pADC_CallbackTypeDef)(ADC_HandleTypeDef *hadc); /*!< pointer to 
 
 /* Triggers specific to some devices of STM32H5 series */
 #if defined(TIM8)
-/* Devices STM32H563/H573xx */
+/* Devices STM32H563/H573xx and STM32H5Ex/H5Fxxx */
 #define ADC_EXTERNALTRIG_T4_CC4       (LL_ADC_REG_TRIG_EXT_TIM4_CH4)              /*!< ADC group regular conversion
                                       trigger from external peripheral: TIM4 channel 4 event (capture compare).
                                       Specific to devices STM32H563/H573xx. */
@@ -680,6 +684,12 @@ typedef  void (*pADC_CallbackTypeDef)(ADC_HandleTypeDef *hadc); /*!< pointer to 
 #define ADC_EXTERNALTRIG_T15_TRGO     (LL_ADC_REG_TRIG_EXT_TIM15_TRGO)            /*!< ADC group regular conversion
                                       trigger from external peripheral: TIM15 TRGO event.
                                       Specific to devices STM32H563/H573xx. */
+#if defined(ADC3)
+/* Devices STM32H5Ex/H5Fxxx */
+#define ADC_EXTERNALTRIG_PLAY_OUT7    (LL_ADC_REG_TRIG_EXT_PLAY_OUT7)             /*!< ADC group regular conversion
+                                      trigger from external peripheral: PLAY_OUT7 event.
+                                      Specific to devices STM32H5Ex/H5Fxxx. */
+#endif /* ADC3 */
 #else
 /* Devices STM32H503xx */
 #define ADC_EXTERNALTRIG_T7_TRGO      (LL_ADC_REG_TRIG_EXT_TIM7_TRGO)             /*!< ADC group regular conversion
@@ -809,18 +819,43 @@ typedef  void (*pADC_CallbackTypeDef)(ADC_HandleTypeDef *hadc); /*!< pointer to 
 #define ADC_CHANNEL_18                     (LL_ADC_CHANNEL_18)             /*!< External channel (GPIO pin) ADCx_IN18 */
 #define ADC_CHANNEL_19                     (LL_ADC_CHANNEL_19)             /*!< External channel (GPIO pin) ADCx_IN19 */
 #define ADC_CHANNEL_VREFINT                (LL_ADC_CHANNEL_VREFINT)        /*!< Internal channel VrefInt: Internal
-                                           voltage reference, channel specific to ADC1. */
+                                           voltage reference, channel specific to ADC1, ADC3. */
 #define ADC_CHANNEL_TEMPSENSOR             (LL_ADC_CHANNEL_TEMPSENSOR)     /*!< Internal channel Temperature sensor,
-                                           channel specific to ADC1. */
+                                           channel specific to ADC1, ADC3. */
 #define ADC_CHANNEL_VBAT                   (LL_ADC_CHANNEL_VBAT)           /*!< Internal channel Vbat/4: Vbat voltage
                                            through a divider ladder of factor 1/4 to have channel voltage always below
                                            Vdda, channel specific to ADC2. */
 #define ADC_CHANNEL_VDDCORE                (LL_ADC_CHANNEL_VDDCORE)        /*!< Internal channel Vddcore, channel
                                            specific to ADC2. */
+#if defined(ADC3)
+#define ADC_CHANNEL_VBAT_ADC3              (LL_ADC_CHANNEL_VBAT_ADC3)      /*!< Internal channel Vbat/4: Vbat voltage
+                                           through a divider ladder of factor 1/4 to have channel voltage always below
+                                           Vdda, channel specific to ADC3. */
+#define ADC_CHANNEL_VDDCORE_ADC3           (LL_ADC_CHANNEL_VDDCORE_ADC3)   /*!< Internal channel Vddcore, channel
+                                           specific to ADC3. */
+#define ADC_CHANNEL_DAC1_CH1               (LL_ADC_CHANNEL_DAC1_CH1)       /*!< Internal channel DAC1 channel 1,
+                                           channel specific to ADC3 */
+#define ADC_CHANNEL_DAC1_CH2               (LL_ADC_CHANNEL_DAC1_CH2)       /*!< Internal channel DAC1 channel 2,
+                                           channel specific to ADC3 */
+#endif /* ADC3 */
 /**
   * @}
   */
 
+#if   defined(ADC3)
+/** @defgroup ADC_ConversionDataManagement ADC Conversion Data Management
+  * @{
+  */
+#define ADC_CONVERSIONDATA_DR                  (0x00000000UL)     /*!< Regular Conversion data stored in DR register
+                                               only  */
+#if defined(ADC_CFGR_ADFCFG)
+#define ADC_CONVERSIONDATA_MDF                 (ADC_CFGR_ADFCFG)  /*!< MDF (ADF) mode selected */
+#endif /* ADC_CFGR_ADFCFG */
+/**
+  * @}
+  */
+
+#endif /* ADC3*/
 /** @defgroup ADC_HAL_EC_AWD_NUMBER Analog watchdog - ADC analog watchdog (AWD) number
   * @{
   */
@@ -1007,6 +1042,22 @@ out-of-window sample to raise flag or interrupt */
   */
 /* Macro reserved for internal HAL driver usage, not intended to be used in   */
 /* code of final user.                                                        */
+#if   defined(ADC3)
+/**
+  * @brief Verify the ADC data conversion setting.
+  * @param DATA : programmed DATA conversion mode.
+  * @retval SET (DATA is a valid value) or RESET (DATA is invalid)
+  */
+#if defined(ADC_CFGR_ADFCFG)
+#define IS_ADC_CONVERSIONDATAMGT(DATA)                                         \
+  ((((DATA) == ADC_CONVERSIONDATA_DR))          || \
+   (((DATA) == ADC_CONVERSIONDATA_MDF)))
+#else
+#define IS_ADC_CONVERSIONDATAMGT(DATA)                                         \
+  (((DATA) == ADC_CONVERSIONDATA_DR))
+
+#endif /* ADC_CFGR_ADFCFG */
+#endif /* ADC3*/
 
 /**
   * @brief Return resolution bits in CFGR register RES[1:0] field.
@@ -1129,7 +1180,7 @@ out-of-window sample to raise flag or interrupt */
   * @param __REGTRIG__ programmed ADC regular conversions external trigger.
   * @retval SET (__REGTRIG__ is a valid value) or RESET (__REGTRIG__ is invalid)
   */
-#if defined(TIM8)
+#if defined(TIM8) && !defined(ADC3)
 /* Devices STM32H563/H573xx */
 #define IS_ADC_EXTTRIG(__REGTRIG__) (((__REGTRIG__) == ADC_EXTERNALTRIG_T1_CC1)        || \
                                      ((__REGTRIG__) == ADC_EXTERNALTRIG_T1_CC2)        || \
@@ -1150,6 +1201,29 @@ out-of-window sample to raise flag or interrupt */
                                      ((__REGTRIG__) == ADC_EXTERNALTRIG_EXT_IT15)      || \
                                      ((__REGTRIG__) == ADC_EXTERNALTRIG_LPTIM1_CH1)    || \
                                      ((__REGTRIG__) == ADC_EXTERNALTRIG_LPTIM2_CH1)    || \
+                                     ((__REGTRIG__) == ADC_SOFTWARE_START)           )
+#elif defined(ADC3)
+/* Devices STM32H5Ex/H5Fxxx */
+#define IS_ADC_EXTTRIG(__REGTRIG__) (((__REGTRIG__) == ADC_EXTERNALTRIG_T1_CC1)        || \
+                                     ((__REGTRIG__) == ADC_EXTERNALTRIG_T1_CC2)        || \
+                                     ((__REGTRIG__) == ADC_EXTERNALTRIG_T1_CC3)        || \
+                                     ((__REGTRIG__) == ADC_EXTERNALTRIG_T2_CC2)        || \
+                                     ((__REGTRIG__) == ADC_EXTERNALTRIG_T3_TRGO)       || \
+                                     ((__REGTRIG__) == ADC_EXTERNALTRIG_T4_CC4)        || \
+                                     ((__REGTRIG__) == ADC_EXTERNALTRIG_EXT_IT11)      || \
+                                     ((__REGTRIG__) == ADC_EXTERNALTRIG_T8_TRGO)       || \
+                                     ((__REGTRIG__) == ADC_EXTERNALTRIG_T8_TRGO2)      || \
+                                     ((__REGTRIG__) == ADC_EXTERNALTRIG_T1_TRGO)       || \
+                                     ((__REGTRIG__) == ADC_EXTERNALTRIG_T1_TRGO2)      || \
+                                     ((__REGTRIG__) == ADC_EXTERNALTRIG_T2_TRGO)       || \
+                                     ((__REGTRIG__) == ADC_EXTERNALTRIG_T4_TRGO)       || \
+                                     ((__REGTRIG__) == ADC_EXTERNALTRIG_T6_TRGO)       || \
+                                     ((__REGTRIG__) == ADC_EXTERNALTRIG_T15_TRGO)      || \
+                                     ((__REGTRIG__) == ADC_EXTERNALTRIG_T3_CC4)        || \
+                                     ((__REGTRIG__) == ADC_EXTERNALTRIG_EXT_IT15)      || \
+                                     ((__REGTRIG__) == ADC_EXTERNALTRIG_LPTIM1_CH1)    || \
+                                     ((__REGTRIG__) == ADC_EXTERNALTRIG_LPTIM2_CH1)    || \
+                                     ((__REGTRIG__) == ADC_EXTERNALTRIG_PLAY_OUT7)     || \
                                      ((__REGTRIG__) == ADC_SOFTWARE_START)           )
 #else
 /* Devices STM32H503xx */

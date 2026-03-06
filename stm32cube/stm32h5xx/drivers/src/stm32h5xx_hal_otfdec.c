@@ -526,8 +526,6 @@ __weak void HAL_OTFDEC_ErrorCallback(OTFDEC_HandleTypeDef *hotfdec)
   */
 
 
-
-
 /** @defgroup OTFDEC_Exported_Functions_Group3 Peripheral Control functions
   *  @brief   Peripheral control functions.
   *
@@ -1092,7 +1090,7 @@ uint32_t HAL_OTFDEC_RegionGetKeyCRC(const OTFDEC_HandleTypeDef *hotfdec, uint32_
 HAL_StatusTypeDef HAL_OTFDEC_RegionGetConfig(OTFDEC_HandleTypeDef *hotfdec, uint32_t RegionIndex,
                                              OTFDEC_RegionConfigTypeDef *Config)
 {
-  OTFDEC_Region_TypeDef *region;
+  const OTFDEC_Region_TypeDef *region;
   uint32_t address;
 
   /* Check the parameters */
@@ -1120,8 +1118,8 @@ HAL_StatusTypeDef HAL_OTFDEC_RegionGetConfig(OTFDEC_HandleTypeDef *hotfdec, uint
     Config->EndAddress = READ_REG(region->REG_END_ADDR);
 
     /* Read Version */
-    Config->Version = (uint16_t)(READ_REG(region->REG_CONFIGR) &
-                                 OTFDEC_REG_CONFIGR_VERSION) >> OTFDEC_REG_CONFIGR_VERSION_Pos;
+    Config->Version = (uint16_t)((READ_REG(region->REG_CONFIGR) &
+                                  OTFDEC_REG_CONFIGR_VERSION) >> OTFDEC_REG_CONFIGR_VERSION_Pos);
 
     /* Release Lock */
     __HAL_UNLOCK(hotfdec);

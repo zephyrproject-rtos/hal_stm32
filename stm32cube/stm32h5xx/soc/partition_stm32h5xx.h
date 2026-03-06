@@ -60,6 +60,14 @@
   #include "partition_stm32h533xx.h"
 #elif defined(STM32H523xx)
   #include "partition_stm32h523xx.h"
+#elif defined(STM32H5E5xx)
+  #include "partition_stm32h5e5xx.h"
+#elif defined(STM32H5F5xx)
+  #include "partition_stm32h5f5xx.h"
+#elif defined(STM32H5E4xx)
+  #include "partition_stm32h5e4xx.h"
+#elif defined(STM32H5F4xx)
+  #include "partition_stm32h5f4xx.h"
 #else
   #error "Please select first the target STM32H5xx device used in your application (in stm32h5xx.h file)"
 #endif

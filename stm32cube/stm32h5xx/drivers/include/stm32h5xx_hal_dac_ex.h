@@ -94,7 +94,24 @@ extern "C" {
 /** @defgroup DACEx_Private_Macros DACEx Private Macros
   * @{
   */
-#if defined(TIM8)
+#if defined(PLAY1)
+/* Devices STM32H5E5/H5F5xx */
+#define IS_DAC_TRIGGER(TRIGGER) (((TRIGGER) == DAC_TRIGGER_NONE)       || \
+                                 ((TRIGGER) == DAC_TRIGGER_T1_TRGO)    || \
+                                 ((TRIGGER) == DAC_TRIGGER_T2_TRGO)    || \
+                                 ((TRIGGER) == DAC_TRIGGER_T4_TRGO)    || \
+                                 ((TRIGGER) == DAC_TRIGGER_T5_TRGO)    || \
+                                 ((TRIGGER) == DAC_TRIGGER_T6_TRGO)    || \
+                                 ((TRIGGER) == DAC_TRIGGER_T7_TRGO)    || \
+                                 ((TRIGGER) == DAC_TRIGGER_T8_TRGO)    || \
+                                 ((TRIGGER) == DAC_TRIGGER_T15_TRGO)   || \
+                                 ((TRIGGER) == DAC_TRIGGER_LPTIM1_CH1) || \
+                                 ((TRIGGER) == DAC_TRIGGER_LPTIM2_CH1) || \
+                                 ((TRIGGER) == DAC_TRIGGER_PLAY1_OUT11)|| \
+                                 ((TRIGGER) == DAC_TRIGGER_PLAY1_OUT12)|| \
+                                 ((TRIGGER) == DAC_TRIGGER_EXT_IT9)    || \
+                                 ((TRIGGER) == DAC_TRIGGER_SOFTWARE))
+#elif defined(TIM8)
 /* Devices STM32H563/H573xx */
 #define IS_DAC_TRIGGER(TRIGGER) (((TRIGGER) == DAC_TRIGGER_NONE)       || \
                                  ((TRIGGER) == DAC_TRIGGER_T1_TRGO)    || \

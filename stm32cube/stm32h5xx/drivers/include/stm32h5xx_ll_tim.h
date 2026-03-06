@@ -162,7 +162,7 @@ static const uint8_t SHIFT_TAB_OISx[] =
   */
 
 #define OCREF_CLEAR_SELECT_POS (28U)
-#define OCREF_CLEAR_SELECT_MSK (0x1U << OCREF_CLEAR_SELECT_POS)                /*!< 0x10000000 */
+#define OCREF_CLEAR_SELECT_MSK (0x1UL << OCREF_CLEAR_SELECT_POS)                /*!< 0x10000000 */
 /**
   * @}
   */
@@ -1151,7 +1151,7 @@ typedef struct
 #define LL_TIM_TIM5_ETRSOURCE_SAI2_FSA    TIM1_AF1_ETRSEL_0                                           /*!< ETR input is connected to SAI2_FSA */
 #define LL_TIM_TIM5_ETRSOURCE_SAI2_FSB    TIM1_AF1_ETRSEL_1                                           /*!< ETR input is connected to SAI2_FSB */
 #if defined(COMP1) && defined(COMP2)
-#define LL_TIM_TIM5_ETRSOURCE_COMP1       (TIM1_AF1_ETRSEL_2 | TIM1_AF1_ETRSEL_0)                     /*!< ETR input is connected to COMP1_OUT */
+#define LL_TIM_TIM5_ETRSOURCE_COMP1       (TIM1_AF1_ETRSEL_2 | TIM1_AF1_ETRSEL_1)                     /*!< ETR input is connected to COMP1_OUT */
 #define LL_TIM_TIM5_ETRSOURCE_COMP2       (TIM1_AF1_ETRSEL_2 | TIM1_AF1_ETRSEL_1 | TIM1_AF1_ETRSEL_0) /*!< ETR input is connected to COMP2_OUT */
 #endif /* COMP1 && COMP2 */
 #define LL_TIM_TIM5_ETRSOURCE_TIM2_ETR    TIM1_AF1_ETRSEL_3                                           /*!< ETR input is connected to TIM2 ETR */
@@ -1447,8 +1447,10 @@ typedef struct
 #if defined(COMP1) && defined(COMP2)
 #define LL_TIM_TIM2_TI1_RMP_COMP1              TIM_TISEL_TI1SEL_1                                  /*!< TIM2_TI1 is connected to COMP1 output */
 #define LL_TIM_TIM2_TI1_RMP_COMP2              (TIM_TISEL_TI1SEL_1 | TIM_TISEL_TI1SEL_0)           /*!< TIM2_TI1 is connected to COMP2 output */
-#define LL_TIM_TIM2_TI1_RMP_PLAY1_OUT3         TIM_TISEL_TI1SEL_2                                  /*!< TIM2_TI1 is connected to PLAY1 output 3 */
 #endif /* COMP1 && COMP2 */
+#if defined(PLAY1)
+#define LL_TIM_TIM2_TI1_RMP_PLAY1_OUT3         TIM_TISEL_TI1SEL_2                                  /*!< TIM2_TI1 is connected to PLAY1 output 3 */
+#endif /* PLAY1 */
 /**
   * @}
   */
@@ -1467,6 +1469,20 @@ typedef struct
 #define LL_TIM_TIM2_TI2_RMP_COMP1              TIM_TISEL_TI2SEL_0                                  /*!< TIM2_TI2 is connected to COMP1 output */
 #define LL_TIM_TIM2_TI2_RMP_COMP2              TIM_TISEL_TI2SEL_1                                  /*!< TIM2_TI2 is connected to COMP2 output */
 #endif /* COMP1 && COMP2 */
+#if defined(PLAY1)
+#define LL_TIM_TIM2_TI2_RMP_PLAY1_OUT4         (TIM_TISEL_TI2SEL_1 | TIM_TISEL_TI2SEL_0)           /*!< TIM2_TI2 is connected to PLAY1 output 4 */
+#endif /* PLAY1 */
+/**
+  * @}
+  */
+
+/** @defgroup TIM_LL_EC_TIM2_TI3_RMP  TIM2 External Input Ch3 Remap
+  * @{
+  */
+#define LL_TIM_TIM2_TI3_RMP_GPIO               0x00000000UL                                        /*!< TIM2_TI4 is connected to GPIO */
+#if defined(PLAY1)
+#define LL_TIM_TIM2_TI3_RMP_PLAY1_OUT5         TIM_TISEL_TI3SEL_0                                  /*!< TIM2_TI3 is connected to PLAY1 output 5 */
+#endif /* PLAY1 */
 /**
   * @}
   */
@@ -1478,6 +1494,9 @@ typedef struct
 #if defined(STM32H503xx)
 #define LL_TIM_TIM2_TI4_RMP_COMP1              TIM_TISEL_TI4SEL_0                                  /*!< TIM2_TI4 is connected to COMP1 output */
 #endif /* STM32H503xx */
+#if defined(PLAY1)
+#define LL_TIM_TIM2_TI4_RMP_PLAY1_OUT6         TIM_TISEL_TI4SEL_0                                  /*!< TIM2_TI4 is connected to PLAY1 output 6 */
+#endif /* PLAY1 */
 /**
   * @}
   */
@@ -1498,8 +1517,10 @@ typedef struct
 #if defined(COMP1) && defined(COMP2)
 #define LL_TIM_TIM3_TI1_RMP_COMP1              TIM_TISEL_TI1SEL_1                                  /*!< TIM3_TI1 is connected to COMP1 output */
 #define LL_TIM_TIM3_TI1_RMP_COMP2              (TIM_TISEL_TI1SEL_1 | TIM_TISEL_TI1SEL_0)           /*!< TIM3_TI1 is connected to COMP2 output */
-#define LL_TIM_TIM3_TI1_RMP_PLAY1_OUT3         TIM_TISEL_TI1SEL_2                                  /*!< TIM3_TI1 is connected to PLAY1 output 3 */
 #endif /* COMP1 && COMP2 */
+#if defined(PLAY1)
+#define LL_TIM_TIM3_TI1_RMP_PLAY1_OUT3         TIM_TISEL_TI1SEL_2                                  /*!< TIM3_TI1 is connected to PLAY1 output 3 */
+#endif /* PLAY1 */
 /**
   * @}
   */
@@ -1517,6 +1538,31 @@ typedef struct
 #define LL_TIM_TIM3_TI2_RMP_COMP1              TIM_TISEL_TI2SEL_0                                  /*!< TIM3_TI2 is connected to COMP1 output */
 #define LL_TIM_TIM3_TI2_RMP_COMP2              TIM_TISEL_TI2SEL_1                                  /*!< TIM3_TI2 is connected to COMP2 output */
 #endif /* COMP1 && COMP2 */
+#if defined(PLAY1)
+#define LL_TIM_TIM3_TI2_RMP_PLAY1_OUT4         (TIM_TISEL_TI2SEL_1 |TIM_TISEL_TI2SEL_0)            /*!< TIM3_TI2 is connected to PLAY1 output 4 */
+#endif /* PLAY1 */
+/**
+  * @}
+  */
+
+/** @defgroup TIM_LL_EC_TIM3_TI3_RMP  TIM3 External Input Ch3 Remap
+  * @{
+  */
+#define LL_TIM_TIM3_TI3_RMP_GPIO               0x00000000UL                                        /*!< TIM3_TI3 is connected to GPIO */
+#if defined(PLAY1)
+#define LL_TIM_TIM3_TI3_RMP_PLAY1_OUT5         TIM_TISEL_TI3SEL_0                                  /*!< TIM3_TI3 is connected to PLAY1 output 5 */
+#endif /* PLAY1 */
+/**
+  * @}
+  */
+
+/** @defgroup TIM_LL_EC_TIM3_TI4_RMP  TIM3 External Input Ch4 Remap
+  * @{
+  */
+#define LL_TIM_TIM3_TI4_RMP_GPIO               0x00000000UL                                        /*!< TIM3_TI4 is connected to GPIO */
+#if defined(PLAY1)
+#define LL_TIM_TIM3_TI4_RMP_PLAY1_OUT6         TIM_TISEL_TI4SEL_0                                  /*!< TIM3_TI4 is connected to PLAY1 output 6 */
+#endif /* PLAY1 */
 /**
   * @}
   */
@@ -1684,8 +1730,8 @@ typedef struct
 #define LL_TIM_TIM17_TI1_RMP_HSE_1MHZ          TIM_TISEL_TI1SEL_1                                  /*!< TIM17_TI1 is connected to HSE 1MHZ */
 #define LL_TIM_TIM17_TI1_RMP_MCO1              (TIM_TISEL_TI1SEL_1 | TIM_TISEL_TI1SEL_0)           /*!< TIM17_TI1 is connected to MCO1 */
 #if defined(COMP1) && defined(COMP2)
-#define LL_TIM_TIM17_TI1_RMP_COMP1             TIM_TISEL_TI1SEL_2                                  /*!< TIM17_TI1 is connected to COMP1 output */
-#define LL_TIM_TIM17_TI1_RMP_COMP2             (TIM_TISEL_TI1SEL_2 | TIM_TISEL_TI1SEL_0)           /*!< TIM17_TI1 is connected to COMP2 output */
+#define LL_TIM_TIM17_TI1_RMP_COMP1             TIM_TISEL_TI1SEL_3                                  /*!< TIM17_TI1 is connected to COMP1 output */
+#define LL_TIM_TIM17_TI1_RMP_COMP2             (TIM_TISEL_TI1SEL_3 | TIM_TISEL_TI1SEL_0)           /*!< TIM17_TI1 is connected to COMP2 output */
 #endif /* COMP1 && COMP2 */
 /**
   * @}
@@ -5125,10 +5171,14 @@ __STATIC_INLINE void LL_TIM_ConfigIDX(TIM_TypeDef *TIMx, uint32_t Configuration)
   *            @arg LL_TIM_TIM2_TI2_RMP_CSI_128:             TIM2 TI2 is connected to CSI 128         (*)
   *            @arg LL_TIM_TIM2_TI2_RMP_MCO2:                TIM2 TI2 is connected to MCO2            (*)
   *            @arg LL_TIM_TIM2_TI2_RMP_MCO1:                TIM2 TI2 is connected to MCO1            (*)
-  *            @arg LL_TIM_TIM2_TI1_RMP_COMP1:               TIM2 TI2 is connected to COMP1 output    (*)
-  *            @arg LL_TIM_TIM2_TI1_RMP_COMP2:               TIM2 TI2 is connected to COMP2 output    (*)
+  *            @arg LL_TIM_TIM2_TI2_RMP_COMP1:               TIM2 TI2 is connected to COMP1 output    (*)
+  *            @arg LL_TIM_TIM2_TI2_RMP_COMP2:               TIM2 TI2 is connected to COMP2 output    (*)
+  *            @arg LL_TIM_TIM2_TI2_RMP_PLAY1_OUT4:          TIM2 TI2 is connected to PLAY1 output 4  (*)
+  *            @arg LL_TIM_TIM2_TI3_RMP_GPIO:                TIM2 TI3 is connected to GPIO
+  *            @arg LL_TIM_TIM2_TI3_RMP_PLAY1_OUT5:          TIM2 TI3 is connected to PLAY1 output 5  (*)
   *            @arg LL_TIM_TIM2_TI4_RMP_GPIO:                TIM2 TI4 is connected to GPIO
   *            @arg LL_TIM_TIM2_TI4_RMP_COMP1:               TIM2 TI4 is connected to COMP1           (*)
+  *            @arg LL_TIM_TIM2_TI4_RMP_PLAY1_OUT6:          TIM2 TI4 is connected to PLAY1 output 6  (*)
   *
   *         TIM3: one of the following values:
   *            @arg LL_TIM_TIM3_TI1_RMP_GPIO:                TIM3 TI1 is connected to GPIO
@@ -5145,6 +5195,11 @@ __STATIC_INLINE void LL_TIM_ConfigIDX(TIM_TypeDef *TIMx, uint32_t Configuration)
   *            @arg LL_TIM_TIM3_TI2_RMP_HSI_1024:            TIM3 TI2 is connected to HSI_1024        (*)
   *            @arg LL_TIM_TIM3_TI2_RMP_COMP1:               TIM3 TI2 is connected to COMP1 output    (*)
   *            @arg LL_TIM_TIM3_TI2_RMP_COMP2:               TIM3 TI2 is connected to COMP2 output    (*)
+  *            @arg LL_TIM_TIM3_TI2_RMP_PLAY1_OUT4:          TIM3 TI2 is connected to PLAY1 output 4  (*)
+  *            @arg LL_TIM_TIM3_TI3_RMP_GPIO:                TIM3 TI3 is connected to GPIO
+  *            @arg LL_TIM_TIM3_TI3_RMP_PLAY1_OUT5:          TIM3 TI3 is connected to PLAY1 output 5  (*)
+  *            @arg LL_TIM_TIM3_TI4_RMP_GPIO:                TIM3 TI4 is connected to GPIO
+  *            @arg LL_TIM_TIM3_TI4_RMP_PLAY1_OUT6:          TIM3 TI4 is connected to PLAY1 output 6  (*)
   *
   *         TIM4: one of the following values: (**)
   *            @arg LL_TIM_TIM4_TI1_RMP_GPIO:                TIM4 TI1 is connected to GPIO
@@ -5222,6 +5277,7 @@ __STATIC_INLINE void LL_TIM_SetRemap(TIM_TypeDef *TIMx, uint32_t Remap)
   MODIFY_REG(TIMx->TISEL, (TIM_TISEL_TI1SEL | TIM_TISEL_TI2SEL | TIM_TISEL_TI3SEL | TIM_TISEL_TI4SEL), Remap);
 }
 
+#if defined(TIM_OR1_RTCPREEN)
 /**
   * @brief  Enable request for HSE 1MHz clock used for TISEL remap.
   * @note Only TIM17 support HSE 1MHz remap
@@ -5257,6 +5313,7 @@ __STATIC_INLINE uint32_t LL_TIM_IsEnabledRTCPRE(const TIM_TypeDef *TIMx)
 {
   return ((READ_BIT(TIMx->OR1, TIM_OR1_RTCPREEN) == (TIM_OR1_RTCPREEN)) ? 1UL : 0UL);
 }
+#endif /* TIM_OR1_RTCPREEN */
 
 /**
   * @}
@@ -6558,7 +6615,8 @@ ErrorStatus LL_TIM_BDTR_Init(TIM_TypeDef *TIMx, const LL_TIM_BDTR_InitTypeDef *T
   * @}
   */
 
-#endif /* TIM1 || TIM2 || TIM3 || TIM4 || TIM5 || TIM6 || TIM7 || TIM8 || TIM12 || TIM13 || TIM14 || TIM15 || TIM16 || TIM17 */
+#endif /* TIM1 || TIM2 || TIM3 || TIM4 || TIM5 || TIM6 || TIM7 || TIM8 || \
+          TIM12 || TIM13 || TIM14 || TIM15 || TIM16 || TIM17 */
 
 /**
   * @}

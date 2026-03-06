@@ -374,7 +374,7 @@ ErrorStatus LL_RTC_DATE_Init(RTC_TypeDef *RTCx, uint32_t RTC_Format, LL_RTC_Date
 
   if ((RTC_Format == LL_RTC_FORMAT_BIN) && ((RTC_DateStruct->Month & 0x10U) == 0x10U))
   {
-    RTC_DateStruct->Month = (uint8_t)((uint32_t) RTC_DateStruct->Month & (uint32_t)~(0x10U)) + 0x0AU;
+    RTC_DateStruct->Month = (uint8_t)(((uint32_t) RTC_DateStruct->Month & (uint32_t)~(0x10U)) + 0x0AU);
   }
   if (RTC_Format == LL_RTC_FORMAT_BIN)
   {

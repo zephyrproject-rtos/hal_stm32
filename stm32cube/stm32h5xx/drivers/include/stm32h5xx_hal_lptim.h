@@ -385,9 +385,14 @@ typedef  void (*pLPTIM_CallbackTypeDef)(LPTIM_HandleTypeDef *hlptim);  /*!< poin
   * @{
   */
 
-#define LPTIM_INPUT1SOURCE_GPIO          0x00000000U             /*!< For LPTIM1, LPTIM2, LPTIM3, LPTIM4, LPTIM5 and LPTIM6*/
+#define LPTIM_INPUT1SOURCE_GPIO          0x00000000U             /*!< For LPTIM1 and LPTIM2, LPTIM3, LPTIM4, LPTIM5 and LPTIM6 when supported */
+#if defined(COMP1)
+#define LPTIM_INPUT1SOURCE_COMP1         LPTIM_CFGR2_IN1SEL_0    /*!< For LPTIM1 and LPTIM2, LPTIM3, LPTIM4, LPTIM5 and LPTIM6 when supported */
+#endif /* COMP1 */
+#if defined(PLAY1)
+#define LPTIM_INPUT1SOURCE_PLAY1_OUT3    LPTIM_CFGR2_IN1SEL_1     /*!<For LPTIM1 and LPTIM2, LPTIM3, LPTIM4, LPTIM5 and LPTIM6 when supported */
+#endif /* PLAY1 */
 #if defined(STM32H503xx)
-#define LPTIM_INPUT1SOURCE_COMP1         LPTIM_CFGR2_IN1SEL_0    /*!< For LPTIM1 and LPTIM2 */
 #define LPTIM_INPUT1SOURCE_LPTIM2_CH1    LPTIM_CFGR2_IN1SEL_1    /*!< For LPTIM1 */
 #define LPTIM_INPUT1SOURCE_LPTIM1_CH2    LPTIM_CFGR2_IN1SEL_1    /*!< For LPTIM2 */
 #endif /* STM32H503xx */
@@ -399,7 +404,13 @@ typedef  void (*pLPTIM_CallbackTypeDef)(LPTIM_HandleTypeDef *hlptim);  /*!< poin
   * @{
   */
 
-#define LPTIM_INPUT2SOURCE_GPIO         0x00000000U                    /*!< For LPTIM1, LPTIM2, LPTIM3, LPTIM4, LPTIM5 and LPTIM6 */
+#define LPTIM_INPUT2SOURCE_GPIO         0x00000000U              /*!< For LPTIM1 and LPTIM2, LPTIM3, LPTIM4, LPTIM5 and LPTIM6 when supported */
+#if defined(COMP2)
+#define LPTIM_INPUT2SOURCE_COMP2         LPTIM_CFGR2_IN2SEL_0    /*!< For LPTIM1 and LPTIM2, LPTIM3, LPTIM5 and LPTIM6 when supported */
+#endif /* COMP1 */
+#if defined(PLAY1)
+#define LPTIM_INPUT2SOURCE_PLAY1_OUT4    LPTIM_CFGR2_IN2SEL_1     /*!<For LPTIM1 and LPTIM2, LPTIM3, LPTIM5 and LPTIM6 when supported */
+#endif /* PLAY1 */
 /**
   * @}
   */
@@ -520,10 +531,20 @@ typedef  void (*pLPTIM_CallbackTypeDef)(LPTIM_HandleTypeDef *hlptim);  /*!< poin
 /** @defgroup LPTIM_Input_Capture_Source LPTIM Input Capture Source
   * @{
   */
-#define LPTIM_IC1SOURCE_GPIO                       0x00000000UL                                 /*!< For LPTIM1, LPTIM2, LPTIM3, LPTIM4, LPTIM5 and LPTIM6 */
+#define LPTIM_IC1SOURCE_GPIO                       0x00000000UL                                 /*!< For LPTIM1 and LPTIM2, LPTIM3, LPTIM4, LPTIM5 and LPTIM6 when supported */
 #if defined(COMP1)
-#define LPTIM_IC1SOURCE_COMP1                      LPTIM_CFGR2_IC1SEL_0                         /*!< For LPTIM1, LPTIM2, LPTIM3, LPTIM4, LPTIM5 and LPTIM6 */
+#define LPTIM_IC1SOURCE_COMP1                      LPTIM_CFGR2_IC1SEL_0                         /*!< For LPTIM1 and LPTIM2, LPTIM3, LPTIM5 and LPTIM6 when supported */
 #endif /* COMP1 */
+#if defined(COMP2)
+#define LPTIM_IC1SOURCE_COMP2                      LPTIM_CFGR2_IC1SEL_1                         /*!< For LPTIM1 and LPTIM2, LPTIM3, LPTIM5 and LPTIM6 when supported */
+#endif /* COMP2 */
+#if defined(PLAY1)
+#define LPTIM_IC1SOURCE_PLAY1_OUT5                 (LPTIM_CFGR2_IC1SEL_0 | LPTIM_CFGR2_IC1SEL_1)/*!< For LPTIM1 */
+#endif /* PLAY1 */
+#if defined(STM32H5E5xx) || defined(STM32H5E4xx) || defined(STM32H5F5xx) || defined(STM32H5F4xx)
+#define LPTIM_IC1SOURCE_I3C1_IBIACK                (LPTIM_CFGR2_IC1SEL_0 | LPTIM_CFGR2_IC1SEL_1)/*!< For LPTIM5 */
+#define LPTIM_IC1SOURCE_I3C2_IBIACK                (LPTIM_CFGR2_IC1SEL_0 | LPTIM_CFGR2_IC1SEL_1)/*!< For LPTIM6 */
+#endif /* STM32H5F5xx || STM32H5F4xx || STM32H5E5xx || STM32H5E4xx */
 #if defined(STM32H503xx)
 #define LPTIM_IC1SOURCE_EVENTOUT                   LPTIM_CFGR2_IC1SEL_1                         /*!< For LPTIM1, LPTIM2, LPTIM3, LPTIM4, LPTIM5 and LPTIM6 */
 #define LPTIM_IC1SOURCE_MCO1                       (LPTIM_CFGR2_IC1SEL_0 | LPTIM_CFGR2_IC1SEL_1)/*!< For LPTIM1 */
@@ -533,12 +554,17 @@ typedef  void (*pLPTIM_CallbackTypeDef)(LPTIM_HandleTypeDef *hlptim);  /*!< poin
 #define LPTIM_IC2SOURCE_GPIO                       0x00000000UL                                 /*!< For LPTIM1, LPTIM2, LPTIM3, LPTIM4, LPTIM5 and LPTIM6 */
 #define LPTIM_IC2SOURCE_LSI                        LPTIM_CFGR2_IC2SEL_0                         /*!< For LPTIM1 */
 #define LPTIM_IC2SOURCE_LSE                        LPTIM_CFGR2_IC2SEL_1                         /*!< For LPTIM1 */
-#if defined(STM32H503xx)
+#if defined(STM32H503xx) || defined(STM32H5E5xx) || defined(STM32H5E4xx) || defined(STM32H5F5xx) || defined(STM32H5F4xx)
 #define LPTIM_IC2SOURCE_HSE_1M                     (LPTIM_CFGR2_IC2SEL_0 | LPTIM_CFGR2_IC2SEL_1)/*!< For LPTIM1 */
-#endif /* STM32H503xx*/
+#endif /* STM32H503xx || STM32H5F5xx || STM32H5F4xx || STM32H5E5xx || STM32H5E4xx */
 #define LPTIM_IC2SOURCE_HSI_1024                   LPTIM_CFGR2_IC2SEL_0                         /*!< For LPTIM2 */
 #define LPTIM_IC2SOURCE_CSI_128                    LPTIM_CFGR2_IC2SEL_1                         /*!< For LPTIM2 */
 #define LPTIM_IC2SOURCE_HSI_8                      (LPTIM_CFGR2_IC2SEL_0 | LPTIM_CFGR2_IC2SEL_1)/*!< For LPTIM2 */
+#if defined(STM32H5E5xx) || defined(STM32H5E4xx) || defined(STM32H5F5xx) || defined(STM32H5F4xx)
+#define LPTIM_IC2SOURCE_COMP1                      LPTIM_CFGR2_IC2SEL_0                         /*!< For LPTIM3, LPTIM5 and LPTIM6 */
+#define LPTIM_IC2SOURCE_COMP2                      LPTIM_CFGR2_IC2SEL_1                         /*!< For LPTIM3 */
+#define LPTIM_IC2SOURCE_EVENTOUT                   LPTIM_CFGR2_IC1SEL_1                         /*!< For LPTIM5 and LPTIM6 */
+#endif /* STM32H5F5xx || STM32H5F4xx || STM32H5E5xx || STM32H5E4xx */
 /**
   * @}
   */
@@ -1112,106 +1138,182 @@ HAL_LPTIM_StateTypeDef HAL_LPTIM_GetState(const LPTIM_HandleTypeDef *hlptim);
 #define IS_LPTIM_REPETITION(__REPETITION__)     ((__REPETITION__) <= 0x000000FFUL)
 
 #if defined(STM32H503xx)
-#define IS_LPTIM_INPUT1_SOURCE(__INSTANCE__, __SOURCE__)  \
-  ((((__INSTANCE__) == LPTIM1) &&                       \
-    (((__SOURCE__) == LPTIM_INPUT1SOURCE_GPIO) ||       \
-     ((__SOURCE__) == LPTIM_INPUT1SOURCE_COMP1) ||      \
-     ((__SOURCE__) == LPTIM_INPUT1SOURCE_LPTIM2_CH1)))  \
-   ||                                                   \
-   (((__INSTANCE__) == LPTIM2) &&                       \
-    (((__SOURCE__) == LPTIM_INPUT1SOURCE_GPIO) ||       \
-     ((__SOURCE__) == LPTIM_INPUT1SOURCE_COMP1) ||      \
+#define IS_LPTIM_INPUT1_SOURCE(__INSTANCE__, __SOURCE__) \
+  ((((__INSTANCE__) == LPTIM1) &&                        \
+    (((__SOURCE__) == LPTIM_INPUT1SOURCE_GPIO)  ||       \
+     ((__SOURCE__) == LPTIM_INPUT1SOURCE_COMP1) ||       \
+     ((__SOURCE__) == LPTIM_INPUT1SOURCE_LPTIM2_CH1)))   \
+   ||                                                    \
+   (((__INSTANCE__) == LPTIM2) &&                        \
+    (((__SOURCE__) == LPTIM_INPUT1SOURCE_GPIO)  ||       \
+     ((__SOURCE__) == LPTIM_INPUT1SOURCE_COMP1) ||       \
      ((__SOURCE__) == LPTIM_INPUT1SOURCE_LPTIM1_CH2))))
+#elif defined(STM32H5E5xx) || defined(STM32H5E4xx) || defined(STM32H5F5xx) || defined(STM32H5F4xx)
+#define IS_LPTIM_INPUT1_SOURCE(__INSTANCE__, __SOURCE__) \
+  ((((__INSTANCE__) == LPTIM1) ||                        \
+    ((__INSTANCE__) == LPTIM2) ||                        \
+    ((__INSTANCE__) == LPTIM3) ||                        \
+    ((__INSTANCE__) == LPTIM4) ||                        \
+    ((__INSTANCE__) == LPTIM5) ||                        \
+    ((__INSTANCE__) == LPTIM6)) &&                       \
+   (((__SOURCE__) == LPTIM_INPUT1SOURCE_GPIO)  ||        \
+    ((__SOURCE__) == LPTIM_INPUT1SOURCE_COMP1) ||        \
+    ((__SOURCE__) == LPTIM_INPUT1SOURCE_PLAY1_OUT3)))
 #elif defined(LPTIM3) && defined(LPTIM4) && defined(LPTIM5) && defined(LPTIM6)
 #define IS_LPTIM_INPUT1_SOURCE(__INSTANCE__, __SOURCE__) \
-  ((((__INSTANCE__) == LPTIM1) || \
-    ((__INSTANCE__) == LPTIM2) || \
-    ((__INSTANCE__) == LPTIM3) || \
-    ((__INSTANCE__) == LPTIM4) || \
-    ((__INSTANCE__) == LPTIM5) || \
-    ((__INSTANCE__) == LPTIM6)) && \
+  ((((__INSTANCE__) == LPTIM1) ||                        \
+    ((__INSTANCE__) == LPTIM2) ||                        \
+    ((__INSTANCE__) == LPTIM3) ||                        \
+    ((__INSTANCE__) == LPTIM4) ||                        \
+    ((__INSTANCE__) == LPTIM5) ||                        \
+    ((__INSTANCE__) == LPTIM6)) &&                       \
    (((__SOURCE__) == LPTIM_INPUT1SOURCE_GPIO)))
 #else
 #define IS_LPTIM_INPUT1_SOURCE(__INSTANCE__, __SOURCE__) \
-  ((((__INSTANCE__) == LPTIM1) || \
-    ((__INSTANCE__) == LPTIM2)) && \
+  ((((__INSTANCE__) == LPTIM1) ||                        \
+    ((__INSTANCE__) == LPTIM2)) &&                       \
    (((__SOURCE__) == LPTIM_INPUT1SOURCE_GPIO)))
 #endif /* STM32H503xx */
 
 #if defined(STM32H503xx)
 #define IS_LPTIM_INPUT2_SOURCE(__INSTANCE__, __SOURCE__) \
-  ((((__INSTANCE__) == LPTIM1)  || \
-    ((__INSTANCE__) == LPTIM2)) && \
+  ((((__INSTANCE__) == LPTIM1)  ||                       \
+    ((__INSTANCE__) == LPTIM2)) &&                       \
    (((__SOURCE__) == LPTIM_INPUT2SOURCE_GPIO)))
+#elif defined(STM32H5E5xx) || defined(STM32H5E4xx) || defined(STM32H5F5xx) || defined(STM32H5F4xx)
+#define IS_LPTIM_INPUT2_SOURCE(__INSTANCE__, __SOURCE__) \
+  (((((__INSTANCE__) == LPTIM1) ||                       \
+     ((__INSTANCE__) == LPTIM2) ||                       \
+     ((__INSTANCE__) == LPTIM3) ||                       \
+     ((__INSTANCE__) == LPTIM5) ||                       \
+     ((__INSTANCE__) == LPTIM6)) &&                      \
+    (((__SOURCE__) == LPTIM_INPUT2SOURCE_GPIO)  ||       \
+     ((__SOURCE__) == LPTIM_INPUT2SOURCE_COMP2) ||       \
+     ((__SOURCE__) == LPTIM_INPUT2SOURCE_PLAY1_OUT4)))   \
+   ||                                                    \
+   (((__INSTANCE__) == LPTIM4) &&                        \
+    ((__SOURCE__) == LPTIM_INPUT2SOURCE_GPIO)))
 #elif defined(LPTIM3) && defined(LPTIM5) && defined(LPTIM6)
 #define IS_LPTIM_INPUT2_SOURCE(__INSTANCE__, __SOURCE__) \
-  ((((__INSTANCE__) == LPTIM1) || \
-    ((__INSTANCE__) == LPTIM2) || \
-    ((__INSTANCE__) == LPTIM3) || \
-    ((__INSTANCE__) == LPTIM5) || \
-    ((__INSTANCE__) == LPTIM6)) && \
+  ((((__INSTANCE__) == LPTIM1) ||                        \
+    ((__INSTANCE__) == LPTIM2) ||                        \
+    ((__INSTANCE__) == LPTIM3) ||                        \
+    ((__INSTANCE__) == LPTIM5) ||                        \
+    ((__INSTANCE__) == LPTIM6)) &&                       \
    (((__SOURCE__) == LPTIM_INPUT2SOURCE_GPIO)))
 #else
 #define IS_LPTIM_INPUT2_SOURCE(__INSTANCE__, __SOURCE__) \
-  ((((__INSTANCE__) == LPTIM1) || \
-    ((__INSTANCE__) == LPTIM2)) && \
+  ((((__INSTANCE__) == LPTIM1) ||                        \
+    ((__INSTANCE__) == LPTIM2)) &&                       \
    (((__SOURCE__) == LPTIM_INPUT2SOURCE_GPIO)))
 #endif /* STM32H503xx */
 
 #if defined(STM32H503xx)
 #define IS_LPTIM_IC1_SOURCE(__INSTANCE__, __SOURCE__) \
-  ((((__INSTANCE__) == LPTIM1) &&                 \
-    (((__SOURCE__) == LPTIM_IC1SOURCE_GPIO)    || \
-     ((__SOURCE__) == LPTIM_IC1SOURCE_COMP1)   || \
-     ((__SOURCE__) == LPTIM_IC1SOURCE_EVENTOUT)|| \
-     ((__SOURCE__) == LPTIM_IC1SOURCE_MCO1)))     \
-   ||                                             \
-   (((__INSTANCE__) == LPTIM2) &&                 \
-    (((__SOURCE__) == LPTIM_IC1SOURCE_GPIO)    || \
-     ((__SOURCE__) == LPTIM_IC1SOURCE_COMP1)   || \
-     ((__SOURCE__) == LPTIM_IC1SOURCE_EVENTOUT)|| \
+  ((((__INSTANCE__) == LPTIM1) &&                     \
+    (((__SOURCE__) == LPTIM_IC1SOURCE_GPIO)    ||     \
+     ((__SOURCE__) == LPTIM_IC1SOURCE_COMP1)   ||     \
+     ((__SOURCE__) == LPTIM_IC1SOURCE_EVENTOUT)||     \
+     ((__SOURCE__) == LPTIM_IC1SOURCE_MCO1)))         \
+   ||                                                 \
+   (((__INSTANCE__) == LPTIM2) &&                     \
+    (((__SOURCE__) == LPTIM_IC1SOURCE_GPIO)    ||     \
+     ((__SOURCE__) == LPTIM_IC1SOURCE_COMP1)   ||     \
+     ((__SOURCE__) == LPTIM_IC1SOURCE_EVENTOUT)||     \
      ((__SOURCE__) == LPTIM_IC1SOURCE_MCO2))))
 
 #define IS_LPTIM_IC2_SOURCE(__INSTANCE__, __SOURCE__) \
-  ((((__INSTANCE__) == LPTIM1) &&                   \
-    (((__SOURCE__) == LPTIM_IC2SOURCE_GPIO) ||      \
-     ((__SOURCE__) == LPTIM_IC2SOURCE_LSI)  ||     \
-     ((__SOURCE__) == LPTIM_IC2SOURCE_LSE)  ||     \
-     ((__SOURCE__) == LPTIM_IC2SOURCE_HSE_1M)))    \
-   ||                                              \
-   (((__INSTANCE__) == LPTIM2) &&                  \
-    (((__SOURCE__) == LPTIM_IC2SOURCE_GPIO)     || \
-     ((__SOURCE__) == LPTIM_IC2SOURCE_HSI_1024) || \
-     ((__SOURCE__) == LPTIM_IC2SOURCE_CSI_128)  || \
+  ((((__INSTANCE__) == LPTIM1) &&                     \
+    (((__SOURCE__) == LPTIM_IC2SOURCE_GPIO) ||        \
+     ((__SOURCE__) == LPTIM_IC2SOURCE_LSI)  ||        \
+     ((__SOURCE__) == LPTIM_IC2SOURCE_LSE)  ||        \
+     ((__SOURCE__) == LPTIM_IC2SOURCE_HSE_1M)))       \
+   ||                                                 \
+   (((__INSTANCE__) == LPTIM2) &&                     \
+    (((__SOURCE__) == LPTIM_IC2SOURCE_GPIO)     ||    \
+     ((__SOURCE__) == LPTIM_IC2SOURCE_HSI_1024) ||    \
+     ((__SOURCE__) == LPTIM_IC2SOURCE_CSI_128)  ||    \
      ((__SOURCE__) == LPTIM_IC2SOURCE_HSI_8))))
+#elif defined(STM32H5E5xx) || defined(STM32H5E4xx) || defined(STM32H5F5xx) || defined(STM32H5F4xx)
+#define IS_LPTIM_IC1_SOURCE(__INSTANCE__, __SOURCE__) \
+  (((((__INSTANCE__) == LPTIM1) ||                    \
+     ((__INSTANCE__) == LPTIM2)) &&                   \
+    (((__SOURCE__) == LPTIM_IC1SOURCE_GPIO)    ||     \
+     ((__SOURCE__) == LPTIM_IC1SOURCE_COMP1)   ||     \
+     ((__SOURCE__) == LPTIM_IC1SOURCE_COMP2)   ||     \
+     ((__SOURCE__) == LPTIM_IC1SOURCE_PLAY1_OUT5)))   \
+   ||                                                 \
+   (((__INSTANCE__) == LPTIM3) &&                     \
+    (((__SOURCE__) == LPTIM_IC1SOURCE_GPIO)    ||     \
+     ((__SOURCE__) == LPTIM_IC1SOURCE_COMP1)   ||     \
+     ((__SOURCE__) == LPTIM_IC1SOURCE_COMP2)))        \
+   ||                                                 \
+   (((__INSTANCE__) == LPTIM5) &&                     \
+    (((__SOURCE__) == LPTIM_IC1SOURCE_GPIO)    ||     \
+     ((__SOURCE__) == LPTIM_IC1SOURCE_COMP1)   ||     \
+     ((__SOURCE__) == LPTIM_IC1SOURCE_COMP2)   ||     \
+     ((__SOURCE__) == LPTIM_IC1SOURCE_I3C1_IBIACK)))  \
+   ||                                                 \
+   (((__INSTANCE__) == LPTIM6) &&                     \
+    (((__SOURCE__) == LPTIM_IC1SOURCE_GPIO)    ||     \
+     ((__SOURCE__) == LPTIM_IC1SOURCE_COMP1)   ||     \
+     ((__SOURCE__) == LPTIM_IC1SOURCE_COMP2)   ||     \
+     ((__SOURCE__) == LPTIM_IC1SOURCE_I3C2_IBIACK))))
+
+#define IS_LPTIM_IC2_SOURCE(__INSTANCE__, __SOURCE__) \
+  ((((__INSTANCE__) == LPTIM1) &&                     \
+    (((__SOURCE__) == LPTIM_IC2SOURCE_GPIO)     ||    \
+     ((__SOURCE__) == LPTIM_IC2SOURCE_LSI)      ||    \
+     ((__SOURCE__) == LPTIM_IC2SOURCE_LSE)      ||    \
+     ((__SOURCE__) == LPTIM_IC2SOURCE_HSE_1M)))       \
+   ||                                                 \
+   (((__INSTANCE__) == LPTIM2) &&                     \
+    (((__SOURCE__) == LPTIM_IC2SOURCE_GPIO)     ||    \
+     ((__SOURCE__) == LPTIM_IC2SOURCE_HSI_1024) ||    \
+     ((__SOURCE__) == LPTIM_IC2SOURCE_CSI_128)  ||    \
+     ((__SOURCE__) == LPTIM_IC2SOURCE_HSI_8)))        \
+   ||                                                 \
+   (((__INSTANCE__) == LPTIM3) &&                     \
+    (((__SOURCE__) == LPTIM_IC2SOURCE_GPIO)     ||    \
+     ((__SOURCE__) == LPTIM_IC2SOURCE_COMP1)    ||    \
+     ((__SOURCE__) == LPTIM_IC2SOURCE_COMP2)))        \
+   ||                                                 \
+   (((__INSTANCE__) == LPTIM4) &&                     \
+    ((__SOURCE__) == LPTIM_IC2SOURCE_GPIO))           \
+   ||                                                 \
+   ((((__INSTANCE__) == LPTIM5) ||                    \
+     ((__INSTANCE__) == LPTIM6))  &&                  \
+    (((__SOURCE__) == LPTIM_IC2SOURCE_GPIO)     ||    \
+     ((__SOURCE__) == LPTIM_IC2SOURCE_COMP1)    ||    \
+     ((__SOURCE__) == LPTIM_IC2SOURCE_EVENTOUT))))
 #elif defined(LPTIM3) && defined(LPTIM5) && defined(LPTIM6)
 #define IS_LPTIM_IC1_SOURCE(__INSTANCE__, __SOURCE__) \
-  ((((__INSTANCE__) == LPTIM1) ||                  \
-    ((__INSTANCE__) == LPTIM2) ||                  \
-    ((__INSTANCE__) == LPTIM3) ||                  \
-    ((__INSTANCE__) == LPTIM5) ||                  \
-    ((__INSTANCE__) == LPTIM6)) &&                 \
+  ((((__INSTANCE__) == LPTIM1) ||                     \
+    ((__INSTANCE__) == LPTIM2) ||                     \
+    ((__INSTANCE__) == LPTIM3) ||                     \
+    ((__INSTANCE__) == LPTIM5) ||                     \
+    ((__INSTANCE__) == LPTIM6)) &&                    \
    (((__SOURCE__) == LPTIM_IC1SOURCE_GPIO)))
 
 #define IS_LPTIM_IC2_SOURCE(__INSTANCE__, __SOURCE__) \
-  ((((__INSTANCE__) == LPTIM1) &&                   \
-    (((__SOURCE__) == LPTIM_IC2SOURCE_GPIO) ||      \
-     ((__SOURCE__) == LPTIM_IC2SOURCE_LSI)  ||     \
-     ((__SOURCE__) == LPTIM_IC2SOURCE_LSE)))       \
-   ||                                              \
-   (((__INSTANCE__) == LPTIM2) &&                  \
-    (((__SOURCE__) == LPTIM_IC2SOURCE_GPIO)     || \
-     ((__SOURCE__) == LPTIM_IC2SOURCE_HSI_1024) || \
-     ((__SOURCE__) == LPTIM_IC2SOURCE_CSI_128)  || \
-     ((__SOURCE__) == LPTIM_IC2SOURCE_HSI_8)))     \
-   ||                                              \
-   (((__INSTANCE__) == LPTIM3) &&                  \
-    ((__SOURCE__) == LPTIM_IC2SOURCE_GPIO))        \
-   ||                                              \
-   (((__INSTANCE__) == LPTIM5) &&                  \
-    ((__SOURCE__) == LPTIM_IC2SOURCE_GPIO))        \
-   ||                                              \
-   (((__INSTANCE__) == LPTIM6) &&                  \
+  ((((__INSTANCE__) == LPTIM1) &&                     \
+    (((__SOURCE__) == LPTIM_IC2SOURCE_GPIO) ||        \
+     ((__SOURCE__) == LPTIM_IC2SOURCE_LSI)  ||        \
+     ((__SOURCE__) == LPTIM_IC2SOURCE_LSE)))          \
+   ||                                                 \
+   (((__INSTANCE__) == LPTIM2) &&                     \
+    (((__SOURCE__) == LPTIM_IC2SOURCE_GPIO)     ||    \
+     ((__SOURCE__) == LPTIM_IC2SOURCE_HSI_1024) ||    \
+     ((__SOURCE__) == LPTIM_IC2SOURCE_CSI_128)  ||    \
+     ((__SOURCE__) == LPTIM_IC2SOURCE_HSI_8)))        \
+   ||                                                 \
+   (((__INSTANCE__) == LPTIM3) &&                     \
+    ((__SOURCE__) == LPTIM_IC2SOURCE_GPIO))           \
+   ||                                                 \
+   (((__INSTANCE__) == LPTIM5) &&                     \
+    ((__SOURCE__) == LPTIM_IC2SOURCE_GPIO))           \
+   ||                                                 \
+   (((__INSTANCE__) == LPTIM6) &&                     \
     ((__SOURCE__) == LPTIM_IC2SOURCE_GPIO)))
 #else
 #define IS_LPTIM_IC1_SOURCE(__INSTANCE__, __SOURCE__) \
@@ -1220,15 +1322,15 @@ HAL_LPTIM_StateTypeDef HAL_LPTIM_GetState(const LPTIM_HandleTypeDef *hlptim);
    (((__SOURCE__) == LPTIM_IC1SOURCE_GPIO)))
 
 #define IS_LPTIM_IC2_SOURCE(__INSTANCE__, __SOURCE__) \
-  ((((__INSTANCE__) == LPTIM1) &&                   \
-    (((__SOURCE__) == LPTIM_IC2SOURCE_GPIO) ||      \
-     ((__SOURCE__) == LPTIM_IC2SOURCE_LSI)  ||     \
-     ((__SOURCE__) == LPTIM_IC2SOURCE_LSE)))       \
-   ||                                              \
-   (((__INSTANCE__) == LPTIM2) &&                  \
-    (((__SOURCE__) == LPTIM_IC2SOURCE_GPIO)     || \
-     ((__SOURCE__) == LPTIM_IC2SOURCE_HSI_1024) || \
-     ((__SOURCE__) == LPTIM_IC2SOURCE_CSI_128)  || \
+  ((((__INSTANCE__) == LPTIM1) &&                     \
+    (((__SOURCE__) == LPTIM_IC2SOURCE_GPIO) ||        \
+     ((__SOURCE__) == LPTIM_IC2SOURCE_LSI)  ||        \
+     ((__SOURCE__) == LPTIM_IC2SOURCE_LSE)))          \
+   ||                                                 \
+   (((__INSTANCE__) == LPTIM2) &&                     \
+    (((__SOURCE__) == LPTIM_IC2SOURCE_GPIO)     ||    \
+     ((__SOURCE__) == LPTIM_IC2SOURCE_HSI_1024) ||    \
+     ((__SOURCE__) == LPTIM_IC2SOURCE_CSI_128)  ||    \
      ((__SOURCE__) == LPTIM_IC2SOURCE_HSI_8))))
 #endif /* STM32H503xx */
 

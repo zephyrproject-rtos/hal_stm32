@@ -57,9 +57,17 @@
    application
   */
 
-#if !defined (STM32H573xx) && !defined (STM32H563xx) \
+#if !defined (STM32H5F5xx) && !defined (STM32H5F4xx)    \
+    && !defined (STM32H5F4xx) && !defined (STM32H5E4xx) \
+    && !defined (STM32H573xx) && !defined (STM32H563xx) \
     && !defined (STM32H562xx) && !defined (STM32H503xx) \
     && !defined (STM32H533xx) && !defined (STM32H523xx)
+  /* #define STM32H543xx  */   /*!< STM32H543xx Devices   */
+  /* #define STM32H553xx  */   /*!< STM32H553xx Devices   */
+  /* #define STM32H5F5xx  */   /*!< STM32H5F5xx Devices   */
+  /* #define STM32H5F4xx  */   /*!< STM32H5F4xx Devices   */
+  /* #define STM32H5E5xx  */   /*!< STM32H5E5xx Devices   */
+  /* #define STM32H5E4xx  */   /*!< STM32H5E4xx Devices   */
   /* #define STM32H573xx  */   /*!< STM32H573xx Devices   */
   /* #define STM32H563xx  */   /*!< STM32H563xx Devices   */
   /* #define STM32H562xx  */   /*!< STM32H562xx Devices   */
@@ -83,10 +91,10 @@
 /**
   * @brief CMSIS Device version number 1.4.0
   */
-#define __STM32H5_CMSIS_VERSION_MAIN   (0x01) /*!< [31:24] main version */
-#define __STM32H5_CMSIS_VERSION_SUB1   (0x04) /*!< [23:16] sub1 version */
-#define __STM32H5_CMSIS_VERSION_SUB2   (0x00) /*!< [15:8]  sub2 version */
-#define __STM32H5_CMSIS_VERSION_RC     (0x00) /*!< [7:0]  release candidate */
+#define __STM32H5_CMSIS_VERSION_MAIN   (0x01U) /*!< [31:24] main version */
+#define __STM32H5_CMSIS_VERSION_SUB1   (0x06U) /*!< [23:16] sub1 version */
+#define __STM32H5_CMSIS_VERSION_SUB2   (0x00U) /*!< [15:8]  sub2 version */
+#define __STM32H5_CMSIS_VERSION_RC     (0x00U) /*!< [7:0]  release candidate */
 #define __STM32H5_CMSIS_VERSION        ((__STM32H5_CMSIS_VERSION_MAIN << 24U)\
                                        |(__STM32H5_CMSIS_VERSION_SUB1 << 16U)\
                                        |(__STM32H5_CMSIS_VERSION_SUB2 << 8U )\
@@ -99,7 +107,16 @@
 /** @addtogroup Device_Included
   * @{
   */
-#if defined(STM32H573xx)
+
+#if defined(STM32H5F5xx)
+  #include "stm32h5f5xx.h"
+#elif defined(STM32H5F4xx)
+  #include "stm32h5f4xx.h"
+#elif defined(STM32H5E5xx)
+  #include "stm32h5e5xx.h"
+#elif defined(STM32H5E4xx)
+  #include "stm32h5e4xx.h"
+#elif defined(STM32H573xx)
   #include "stm32h573xx.h"
 #elif defined(STM32H563xx)
   #include "stm32h563xx.h"

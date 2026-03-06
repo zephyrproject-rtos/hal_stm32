@@ -865,10 +865,12 @@ HAL_StatusTypeDef HAL_SRAM_Write_DMA(SRAM_HandleTypeDef *hsram, uint32_t *pAddre
   * @param hsram : SRAM handle
   * @param CallbackId : ID of the callback to be registered
   *        This parameter can be one of the following values:
-  *          @arg @ref HAL_SRAM_MSP_INIT_CB_ID       SRAM MspInit callback ID
-  *          @arg @ref HAL_SRAM_MSP_DEINIT_CB_ID     SRAM MspDeInit callback ID
+  *          @arg @ref HAL_SRAM_MSP_INIT_CB_ID       SRAM MspInit callback ID (*)
+  *          @arg @ref HAL_SRAM_MSP_DEINIT_CB_ID     SRAM MspDeInit callback ID (*)
   * @param pCallback : pointer to the Callback function
   * @retval status
+  *
+  * (*) : For all h5 series
   */
 HAL_StatusTypeDef HAL_SRAM_RegisterCallback(SRAM_HandleTypeDef *hsram, HAL_SRAM_CallbackIDTypeDef CallbackId,
                                             pSRAM_CallbackTypeDef pCallback)
@@ -913,11 +915,13 @@ HAL_StatusTypeDef HAL_SRAM_RegisterCallback(SRAM_HandleTypeDef *hsram, HAL_SRAM_
   * @param hsram : SRAM handle
   * @param CallbackId : ID of the callback to be unregistered
   *        This parameter can be one of the following values:
-  *          @arg @ref HAL_SRAM_MSP_INIT_CB_ID       SRAM MspInit callback ID
-  *          @arg @ref HAL_SRAM_MSP_DEINIT_CB_ID     SRAM MspDeInit callback ID
-  *          @arg @ref HAL_SRAM_DMA_XFER_CPLT_CB_ID  SRAM DMA Xfer Complete callback ID
-  *          @arg @ref HAL_SRAM_DMA_XFER_ERR_CB_ID   SRAM DMA Xfer Error callback ID
+  *          @arg @ref HAL_SRAM_MSP_INIT_CB_ID       SRAM MspInit callback ID (*)
+  *          @arg @ref HAL_SRAM_MSP_DEINIT_CB_ID     SRAM MspDeInit callback ID (*)
+  *          @arg @ref HAL_SRAM_DMA_XFER_CPLT_CB_ID  SRAM DMA Xfer Complete callback ID (*)
+  *          @arg @ref HAL_SRAM_DMA_XFER_ERR_CB_ID   SRAM DMA Xfer Error callback ID (*)
   * @retval status
+  *
+  * (*) : For all h5 series
   */
 HAL_StatusTypeDef HAL_SRAM_UnRegisterCallback(SRAM_HandleTypeDef *hsram, HAL_SRAM_CallbackIDTypeDef CallbackId)
 {
@@ -978,10 +982,12 @@ HAL_StatusTypeDef HAL_SRAM_UnRegisterCallback(SRAM_HandleTypeDef *hsram, HAL_SRA
   * @param hsram : SRAM handle
   * @param CallbackId : ID of the callback to be registered
   *        This parameter can be one of the following values:
-  *          @arg @ref HAL_SRAM_DMA_XFER_CPLT_CB_ID  SRAM DMA Xfer Complete callback ID
-  *          @arg @ref HAL_SRAM_DMA_XFER_ERR_CB_ID   SRAM DMA Xfer Error callback ID
+  *          @arg @ref HAL_SRAM_DMA_XFER_CPLT_CB_ID  SRAM DMA Xfer Complete callback ID (*)
+  *          @arg @ref HAL_SRAM_DMA_XFER_ERR_CB_ID   SRAM DMA Xfer Error callback ID (*)
   * @param pCallback : pointer to the Callback function
   * @retval status
+  *
+  * (*) : For all h5 series
   */
 HAL_StatusTypeDef HAL_SRAM_RegisterDmaCallback(SRAM_HandleTypeDef *hsram, HAL_SRAM_CallbackIDTypeDef CallbackId,
                                                pSRAM_DmaCallbackTypeDef pCallback)

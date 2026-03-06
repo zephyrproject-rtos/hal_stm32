@@ -367,6 +367,28 @@ void HAL_PWREx_DisableVddUSB(void)
 }
 #endif /* PWR_USBSCR_USB33DEN */
 
+#if defined (PWR_USBSCR_OTGHSEN)
+/**
+  * @brief Enable the USB OTGHS PHY.
+  * @retval None.
+  */
+void HAL_PWREx_EnableUSBOTGHSPhy(void)
+{
+  /* Enable the USB OTGHS PHY */
+  SET_BIT(PWR->USBSCR, PWR_USBSCR_OTGHSEN);
+}
+
+/**
+  * @brief Disable the USB OTGHS PHY.
+  * @retval None.
+  */
+void HAL_PWREx_DisableUSBOTGHSPhy(void)
+{
+  /* Disable the OTGHS PHY */
+  CLEAR_BIT(PWR->USBSCR, PWR_USBSCR_OTGHSEN);
+}
+#endif /* PWR_USBSCR_OTGHSEN */
+
 /**
   * @brief  Enable the VBAT and temperature monitoring.
   * @retval None.
@@ -672,6 +694,30 @@ void HAL_PWREx_DisableFlashPowerDown(void)
   *         content. The user can select which memory is discarded during STOP
   *         mode by means of xxSO bits.
   * @param  MemoryBlock : Specifies the memory block to shut-off during Stop mode.
+  *          This parameter can be one of the following values for STM32H5F5xx/STM32H5F4xx/STM32H5E5xx/STM32H5E4xx :
+  *            @arg PWR_ETHERNET_MEMORY_BLOCK      PWR_PMCR_ETHERNETSO    : Ethernet shut-off control in Stop mode
+  *            @arg PWR_LTDC_MEMORY_BLOCK          PWR_PMCR_LTDCSO        : LTDC shut-off control in Stop mode
+  *            @arg PWR_RAM5_MEMORY_BLOCK          PWR_PMCR_SRAM5SO       : RAM5 shut-off control in Stop mode
+  *            @arg PWR_RAM4_MEMORY_BLOCK          PWR_PMCR_SRAM4SO       : RAM4 shut-off control in Stop mode
+  *            @arg PWR_RAM3_MEMORY_BLOCK          PWR_PMCR_SRAM3SO       : RAM3 shut-off control in Stop mode
+  *            @arg PWR_RAM2_LOW_16_MEMORY_BLOCK   PWR_PMCR_SRAM2_16LSO   : RAM2 Low 16k byte shut-off control
+  *            in Stop mode
+  *            @arg PWR_RAM2_HIGH_16_MEMORY_BLOCK  PWR_PMCR_SRAM2_16HSO   : RAM2 High 16k byte shut-off control
+  *            in Stop mode
+  *            @arg PWR_RAM2_LOW_48_MEMORY_BLOCK   PWR_PMCR_SRAM2_48LSO   : RAM2 Low 48k byte shut-off control
+  *            in Stop mode
+  *            @arg PWR_RAM2_HIGH_48_MEMORY_BLOCK  PWR_PMCR_SRAM2_48HSO   : RAM2 High 48k byte shut-off control
+  *            in Stop mode
+  *            @arg PWR_RAM1_MEMORY_BLOCK          PWR_PMCR_SRAM1SO       : RAM1 shut-off control in Stop mode
+  *          This parameter can be one of the following values for STM32H553xx/STM32H543xx :
+  *            @arg PWR_ETHERNET_MEMORY_BLOCK      PWR_PMCR_ETHERNETSO    : Ethernet shut-off control in Stop mode
+  *            @arg PWR_RAM3_MEMORY_BLOCK          PWR_PMCR_SRAM3SO       : RAM3 shut-off control in Stop mode
+  *            @arg PWR_RAM2_LOW_16_MEMORY_BLOCK   PWR_PMCR_SRAM2_16LSO   : RAM2 Low 16k byte shut-off control
+  *            in Stop mode
+  *            @arg PWR_RAM2_HIGH_16_MEMORY_BLOCK  PWR_PMCR_SRAM2_16HSO   : RAM2 High 16k byte shut-off control
+  *            in Stop mode
+  *            @arg PWR_RAM2_48_MEMORY_BLOCK       PWR_PMCR_SRAM2_48SO    : RAM2 48k byte shut-off control in Stop mode
+  *            @arg PWR_RAM1_MEMORY_BLOCK          PWR_PMCR_SRAM1SO       : RAM1 shut-off control in Stop mode
   *          This parameter can be one of the following values for STM32H573xx/STM32H563xx/STM32H562xx :
   *            @arg PWR_ETHERNET_MEMORY_BLOCK      PWR_PMCR_ETHERNETSO    : Ethernet shut-off control in Stop mode
   *            @arg PWR_RAM3_MEMORY_BLOCK          PWR_PMCR_SRAM3SO       : RAM3 shut-off control in Stop mode
@@ -704,6 +750,30 @@ void HAL_PWREx_EnableMemoryShutOff(uint32_t MemoryBlock)
   * @brief Disable memory block shut-off in Stop mode
   * @param  MemoryBlock : Specifies the memory block to keep content during
   *                       Stop mode.
+  *          This parameter can be one of the following values for STM32H5F5xx/STM32H5F4xx/STM32H5E5xx/STM32H5E4xx :
+  *            @arg PWR_ETHERNET_MEMORY_BLOCK      PWR_PMCR_ETHERNETSO    : Ethernet shut-off control in Stop mode
+  *            @arg PWR_LTDC_MEMORY_BLOCK          PWR_PMCR_LTDCSO        : LTDC shut-off control in Stop mode
+  *            @arg PWR_RAM5_MEMORY_BLOCK          PWR_PMCR_SRAM5SO       : RAM5 shut-off control in Stop mode
+  *            @arg PWR_RAM4_MEMORY_BLOCK          PWR_PMCR_SRAM4SO       : RAM4 shut-off control in Stop mode
+  *            @arg PWR_RAM3_MEMORY_BLOCK          PWR_PMCR_SRAM3SO       : RAM3 shut-off control in Stop mode
+  *            @arg PWR_RAM2_LOW_16_MEMORY_BLOCK   PWR_PMCR_SRAM2_16LSO   : RAM2 Low 16k byte shut-off control
+  *            in Stop mode
+  *            @arg PWR_RAM2_HIGH_16_MEMORY_BLOCK  PWR_PMCR_SRAM2_16HSO   : RAM2 High 16k byte shut-off control
+  *            in Stop mode
+  *            @arg PWR_RAM2_LOW_48_MEMORY_BLOCK   PWR_PMCR_SRAM2_48LSO   : RAM2 Low 48k byte shut-off control
+  *            in Stop mode
+  *            @arg PWR_RAM2_HIGH_48_MEMORY_BLOCK  PWR_PMCR_SRAM2_48HSO   : RAM2 High 48k byte shut-off control
+  *            in Stop mode
+  *            @arg PWR_RAM1_MEMORY_BLOCK          PWR_PMCR_SRAM1SO       : RAM1 shut-off control in Stop mode
+  *          This parameter can be one of the following values for STM32H553xx/STM32H543xx :
+  *            @arg PWR_ETHERNET_MEMORY_BLOCK      PWR_PMCR_ETHERNETSO    : Ethernet shut-off control in Stop mode
+  *            @arg PWR_RAM3_MEMORY_BLOCK          PWR_PMCR_SRAM3SO       : RAM3 shut-off control in Stop mode
+  *            @arg PWR_RAM2_LOW_16_MEMORY_BLOCK   PWR_PMCR_SRAM2_16LSO   : RAM2 Low 16k byte shut-off control
+  *            in Stop mode
+  *            @arg PWR_RAM2_HIGH_16_MEMORY_BLOCK  PWR_PMCR_SRAM2_16HSO   : RAM2 High 16k byte shut-off control
+  *            in Stop mode
+  *            @arg PWR_RAM2_48_MEMORY_BLOCK       PWR_PMCR_SRAM2_48SO    : RAM2 48k byte shut-off control in Stop mode
+  *            @arg PWR_RAM1_MEMORY_BLOCK          PWR_PMCR_SRAM1SO       : RAM1 shut-off control in Stop mode
   *          This parameter can be one of the following values for STM32H573xx/STM32H563xx/STM32H562xx :
   *            @arg PWR_ETHERNET_MEMORY_BLOCK      PWR_PMCR_ETHERNETSO    : Ethernet shut-off control in Stop mode
   *            @arg PWR_RAM3_MEMORY_BLOCK          PWR_PMCR_SRAM3SO       : RAM3 shut-off control in Stop mode

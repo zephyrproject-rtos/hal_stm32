@@ -109,9 +109,9 @@ static void FLASH_MassErase(uint32_t Banks);
 #if defined (FLASH_SR_OBKERR)
 static void FLASH_OBKErase(void);
 #endif /* FLASH_SR_OBKERR */
-static void FLASH_OB_EnableWRP(uint32_t WRPSector, uint32_t Banks);
-static void FLASH_OB_DisableWRP(uint32_t WRPSector, uint32_t Bank);
-static void FLASH_OB_GetWRP(uint32_t Bank, uint32_t *WRPState, uint32_t *WRPSector);
+static void FLASH_OB_EnableWRP(uint64_t WRPSector, uint32_t Banks);
+static void FLASH_OB_DisableWRP(uint64_t WRPSector, uint32_t Bank);
+static void FLASH_OB_GetWRP(uint32_t Bank, uint32_t *WRPState, uint64_t *WRPSector);
 static void FLASH_OB_ProdStateConfig(uint32_t ProdStateConfig);
 static uint32_t FLASH_OB_GetProdState(void);
 static void FLASH_OB_UserConfig(uint32_t UserType, uint32_t UserConfig1, uint32_t UserConfig2);
@@ -675,7 +675,7 @@ void HAL_FLASHEx_GetOperation(FLASH_OperationTypeDef *pFlashOperation)
   *
   * @retval HAL Status
   */
-HAL_StatusTypeDef HAL_FLASHEx_ConfigBBAttributes(FLASH_BBAttributesTypeDef *pBBAttributes)
+HAL_StatusTypeDef HAL_FLASHEx_ConfigBBAttributes(const FLASH_BBAttributesTypeDef *pBBAttributes)
 {
   HAL_StatusTypeDef status;
   uint8_t index;
@@ -1050,21 +1050,52 @@ static void FLASH_OBKErase()
   *
   * @retval None
   */
-static void FLASH_OB_EnableWRP(uint32_t WRPSector, uint32_t Banks)
+static void FLASH_OB_EnableWRP(uint64_t WRPSector, uint32_t Banks)
 {
   /* Check the parameters */
   assert_param(IS_FLASH_BANK(Banks));
+#if defined(OB_WRP_SECTOR_128TO131)
+  uint32_t WRPSector_Group1 = (uint32_t)(WRPSector & 0xFFFFFFFF);
+  uint32_t WRPSector_Group2 = (uint32_t)((WRPSector >> 32) & 0xFFFFFFFF);
+  if ((Banks & FLASH_BANK_1) == FLASH_BANK_1)
+  {
+    if (WRPSector_Group1 != 0)
+    {
+        /* Enable Write Protection for bank 1 Group1 */
+        FLASH->WRP11R_PRG &= (~(WRPSector_Group1 & FLASH_WRPR_WRPSG));
+    }
+    if (WRPSector_Group2 != 0)
+    {
+        /* Enable Write Protection for bank 1 Group2 */
+        FLASH->WRP12R_PRG &= (~(WRPSector_Group2 & FLASH_WRPR_WRPSG));
+    }
+  }
+  if ((Banks & FLASH_BANK_2) == FLASH_BANK_2)
+  {
+    if (WRPSector_Group1 != 0)
+    {
+        /* Enable Write Protection for bank 2 Group1 */
+        FLASH->WRP21R_PRG &= (~(WRPSector_Group1 & FLASH_WRPR_WRPSG));
+    }
+    if (WRPSector_Group2 != 0)
+    {
+        /* Enable Write Protection for bank 2 Group2 */
+        FLASH->WRP22R_PRG &= (~(WRPSector_Group2 & FLASH_WRPR_WRPSG));
+    }
+  }
+#else
   if ((Banks & FLASH_BANK_1) == FLASH_BANK_1)
   {
     /* Enable Write Protection for bank 1 */
-    FLASH->WRP1R_PRG &= (~(WRPSector & FLASH_WRPR_WRPSG));
+    FLASH->WRP1R_PRG &= (~((uint32_t)(WRPSector & FLASH_WRPR_WRPSG)));
   }
 
   if ((Banks & FLASH_BANK_2) == FLASH_BANK_2)
   {
     /* Enable Write Protection for bank 2 */
-    FLASH->WRP2R_PRG &= (~(WRPSector & FLASH_WRPR_WRPSG));
+    FLASH->WRP2R_PRG &= (~((uint32_t)(WRPSector & FLASH_WRPR_WRPSG)));
   }
+#endif /* OB_WRP_SECTOR_128TO131 */
 }
 
 /**
@@ -1080,22 +1111,53 @@ static void FLASH_OB_EnableWRP(uint32_t WRPSector, uint32_t Banks)
   *
   * @retval None
   */
-static void FLASH_OB_DisableWRP(uint32_t WRPSector, uint32_t Banks)
+static void FLASH_OB_DisableWRP(uint64_t WRPSector, uint32_t Banks)
 {
   /* Check the parameters */
   assert_param(IS_FLASH_BANK(Banks));
+#if defined(OB_WRP_SECTOR_128TO131)
+  uint32_t WRPSector_Group1 = (uint32_t)(WRPSector & 0xFFFFFFFF);
+  uint32_t WRPSector_Group2 = (uint32_t)((WRPSector >> 32) & 0xFFFFFFFF);
+  if ((Banks & FLASH_BANK_1) == FLASH_BANK_1)
+  {
+    if (WRPSector_Group1 != 0)
+    {
+      /* Disable Write Protection for bank 1 group1 */
+      FLASH->WRP11R_PRG |= (WRPSector_Group1 & FLASH_WRPR_WRPSG);
+    }
+    if (WRPSector_Group2 != 0)
+    {
+      /* Disable Write Protection for bank 1 group2 */
+      FLASH->WRP12R_PRG |= (WRPSector_Group2 & FLASH_WRPR_WRPSG);
+    }
+  }
 
+  if ((Banks & FLASH_BANK_2) == FLASH_BANK_2)
+  {
+    if (WRPSector_Group1 != 0)
+    {
+      /* Disable Write Protection for bank 2 group1 */
+      FLASH->WRP21R_PRG |= (WRPSector_Group1 & FLASH_WRPR_WRPSG);
+    }
+    if (WRPSector_Group2 != 0)
+    {
+      /* Disable Write Protection for bank 2 group2 */
+      FLASH->WRP22R_PRG |= (WRPSector_Group2 & FLASH_WRPR_WRPSG);
+    }
+  }
+#else
   if ((Banks & FLASH_BANK_1) == FLASH_BANK_1)
   {
     /* Disable Write Protection for bank 1 */
-    FLASH->WRP1R_PRG |= (WRPSector & FLASH_WRPR_WRPSG);
+    FLASH->WRP1R_PRG |= (uint32_t)(WRPSector & FLASH_WRPR_WRPSG);
   }
 
   if ((Banks & FLASH_BANK_2) == FLASH_BANK_2)
   {
     /* Disable Write Protection for bank 2 */
-    FLASH->WRP2R_PRG |= (WRPSector & FLASH_WRPR_WRPSG);
+    FLASH->WRP2R_PRG |= (uint32_t)(WRPSector & FLASH_WRPR_WRPSG);
   }
+#endif /* OB_WRP_SECTOR_128TO131 */
 }
 
 /**
@@ -1114,30 +1176,60 @@ static void FLASH_OB_DisableWRP(uint32_t WRPSector, uint32_t Banks)
   *
   * @retval None
   */
-static void FLASH_OB_GetWRP(uint32_t Bank, uint32_t *WRPState, uint32_t *WRPSector)
+static void FLASH_OB_GetWRP(uint32_t Bank, uint32_t *WRPState, uint64_t *WRPSector)
 {
-  uint32_t regvalue = 0U;
+  uint32_t regvalue1 = 0U;
+
+#if defined(OB_WRP_SECTOR_128TO131)
+  uint32_t regvalue2 = 0U;
 
   if (Bank == FLASH_BANK_1)
   {
-    regvalue = FLASH->WRP1R_CUR;
+    regvalue1 = FLASH->WRP11R_CUR;
+    regvalue2 = FLASH->WRP12R_CUR;
   }
 
   if (Bank == FLASH_BANK_2)
   {
-    regvalue = FLASH->WRP2R_CUR;
+    regvalue1 = FLASH->WRP21R_CUR;
+    regvalue2 = FLASH->WRP22R_CUR;
   }
 
-  (*WRPSector) = (~regvalue) & FLASH_WRPR_WRPSG;
+  uint64_t wrp_sector_group1 = (~regvalue1) & FLASH_WRPR_WRPSG;
+  uint64_t wrp_sector_group2 = (~regvalue2) & FLASH_WRPR_WRPSG;
+
+  *WRPSector = (wrp_sector_group2 << 32) | wrp_sector_group1;
 
   if (*WRPSector == 0U)
   {
-    (*WRPState) = OB_WRPSTATE_DISABLE;
+    *WRPState = OB_WRPSTATE_DISABLE;
   }
   else
   {
-    (*WRPState) = OB_WRPSTATE_ENABLE;
+    *WRPState = OB_WRPSTATE_ENABLE;
   }
+#else
+  if (Bank == FLASH_BANK_1)
+  {
+    regvalue1 = FLASH->WRP1R_CUR;
+  }
+
+  if (Bank == FLASH_BANK_2)
+  {
+    regvalue1 = FLASH->WRP2R_CUR;
+  }
+
+  *WRPSector = ((uint64_t)(~regvalue1) & (uint64_t)FLASH_WRPR_WRPSG);
+
+  if (*WRPSector == 0U)
+  {
+    *WRPState = OB_WRPSTATE_DISABLE;
+  }
+  else
+  {
+    *WRPState = OB_WRPSTATE_ENABLE;
+  }
+#endif /* OB_WRP_SECTOR_128TO131 */
 }
 
 /**
@@ -1339,6 +1431,16 @@ static void FLASH_OB_UserConfig(uint32_t UserType, uint32_t UserConfig1, uint32_
     optr_reg2_val |= (UserConfig2 & FLASH_OPTSR2_SRAM1_3_RST);
     optr_reg2_mask |= FLASH_OPTSR2_SRAM1_3_RST;
   }
+#elif defined (FLASH_OPTSR2_SRAM1_3_4_5_RST)
+  if ((UserType & OB_USER_SRAM1_3_4_5_RST) != 0U)
+  {
+    /* SRAM13_RST option byte should be modified */
+    assert_param(IS_OB_USER_SRAM1_3_4_5_RST(UserConfig2 & FLASH_OPTSR2_SRAM1_3_4_5_RST));
+
+    /* Set value and mask for SRAM13_RST option byte */
+    optr_reg2_val |= (UserConfig2 & FLASH_OPTSR2_SRAM1_3_4_5_RST);
+    optr_reg2_mask |= FLASH_OPTSR2_SRAM1_3_4_5_RST;
+  }
 #endif /* FLASH_OPTSR2_SRAM1_3_RST */
 
 #if defined (FLASH_OPTSR2_SRAM1_RST)
@@ -1430,6 +1532,17 @@ static void FLASH_OB_UserConfig(uint32_t UserType, uint32_t UserConfig1, uint32_
     optr_reg2_mask |= FLASH_OPTSR2_TZEN;
   }
 #endif /* FLASH_OPTSR2_TZEN */
+#if defined(FLASH_OPTSR2_HUK_PUF)
+  if ((UserType & OB_USER_HUK_PUF) != 0U)
+  {
+    /* TZEN option byte should be modified */
+    assert_param(IS_OB_USER_HUK_PUF(UserConfig2 & FLASH_OPTSR2_HUK_PUF));
+
+    /* Set value and mask for TZEN option byte */
+    optr_reg2_val |= (UserConfig2 & FLASH_OPTSR2_HUK_PUF);
+    optr_reg2_mask |= FLASH_OPTSR2_HUK_PUF;
+  }
+#endif /* FLASH_OPTSR2_HUK_PUF */
 
   /* Check to write first User OB register or/and second one */
   if ((UserType & 0xFFFU) != 0U)
@@ -1437,7 +1550,7 @@ static void FLASH_OB_UserConfig(uint32_t UserType, uint32_t UserConfig1, uint32_
     /* Configure the option bytes register */
     MODIFY_REG(FLASH->OPTSR_PRG, optr_reg1_mask, optr_reg1_val);
   }
-  if ((UserType & 0xFF000U) != 0U)
+  if ((UserType & 0x1FF000U) != 0U)
   {
     /* Configure the option bytes register */
     MODIFY_REG(FLASH->OPTSR2_PRG, optr_reg2_mask, optr_reg2_val);
@@ -1865,7 +1978,6 @@ static void FLASH_OB_GetEDATA(uint32_t Bank, uint32_t *EDATASize)
   */
 /**
   * @brief  Enable ECC correction interrupt
-  * @param  None
   * @retval None
   */
 void HAL_FLASHEx_EnableEccCorrectionInterrupt(void)
@@ -1875,7 +1987,6 @@ void HAL_FLASHEx_EnableEccCorrectionInterrupt(void)
 
 /**
   * @brief  Disable ECC correction interrupt
-  * @param  None
   * @retval None
   */
 void HAL_FLASHEx_DisableEccCorrectionInterrupt(void)
@@ -1928,8 +2039,8 @@ void HAL_FLASHEx_GetEccInfo(FLASH_EccInfoTypeDef *pData)
          * Therefore, the address returned by ECC registers in bank1 represents 128-bit flash word,
          * to get the correct address value, we must do a shift by 4 bits
         */
-        addr_reg = addr_reg << 4U;
-        pData->Address = FLASH_BASE + addr_reg;
+        addr_reg = ((uint32_t)addr_reg << 4U) & 0xFFFFFFFFU;
+        pData->Address = (FLASH_BASE + addr_reg) & 0xFFFFFFFFU;
         break;
       case FLASH_ECC_AREA_USER_BANK2:
         /*
@@ -1937,46 +2048,49 @@ void HAL_FLASHEx_GetEccInfo(FLASH_EccInfoTypeDef *pData)
          * Therefore, the address returned by ECC registers in bank2 represents 128-bit flash word,
          * to get the correct address value, we must do a shift by 4 bits
         */
-        addr_reg = addr_reg << 4U;
-        pData->Address = FLASH_BASE + FLASH_BANK_SIZE + addr_reg;
+        addr_reg = ((uint32_t)addr_reg << 4U) & 0xFFFFFFFFU;
+        pData->Address = (FLASH_BASE + FLASH_BANK_SIZE + addr_reg) & 0xFFFFFFFFU;
         break;
       case FLASH_ECC_AREA_SYSTEM:
         /* check system flash bank */
         if ((correction_reg & FLASH_ECCR_BK_ECC) == FLASH_ECCR_BK_ECC)
         {
-          pData->Address = FLASH_SYSTEM_BASE + FLASH_SYSTEM_SIZE + addr_reg;
+          pData->Address = (FLASH_SYSTEM_BASE + FLASH_SYSTEM_SIZE + addr_reg) & 0xFFFFFFFFU;
         }
         else
         {
-          pData->Address = FLASH_SYSTEM_BASE + addr_reg;
+          pData->Address = (FLASH_SYSTEM_BASE + addr_reg) & 0xFFFFFFFFU;
         }
         break;
 #if defined (FLASH_SR_OBKERR)
       case FLASH_ECC_AREA_OBK:
-        pData->Address = FLASH_OBK_BASE + addr_reg;
+        pData->Address = (FLASH_OBK_BASE + addr_reg) & 0xFFFFFFFFU;
         break;
 #endif /* FLASH_SR_OBKERR */
 #if defined (FLASH_EDATAR_EDATA_EN)
-      case FLASH_ECC_AREA_EDATA:
+      case FLASH_ECC_AREA_EDATA_BANK1:
         /* check flash high-cycle data bank */
-        if ((correction_reg & FLASH_ECCR_BK_ECC) == FLASH_ECCR_BK_ECC)
-        {
           /*
            * addr_reg is the address returned by the ECC register along with an offset value depends on area
            * To calculate the exact address set by user while an ECC occurred, we must subtract the offset value,
            * In addition, the address returned by ECC registers represents 128-bit flash word (multiply by 4),
           */
-          pData->Address = FLASH_EDATA_BASE + FLASH_BANK_SIZE + ((addr_reg - FLASH_ADDRESS_OFFSET_EDATA) * 4U);
-        }
-        else
-        {
-          pData->Address = FLASH_EDATA_BASE + ((addr_reg - FLASH_ADDRESS_OFFSET_EDATA) * 4U);
-        }
+          pData->Address = (FLASH_EDATA_BASE + ((addr_reg - FLASH_ADDRESS_OFFSET_EDATA) * 4U)) & 0xFFFFFFFFU;
+        break;
+      case FLASH_ECC_AREA_EDATA_BANK2:
+        /* check flash high-cycle data bank */
+          /*
+           * addr_reg is the address returned by the ECC register along with an offset value depends on area
+           * To calculate the exact address set by user while an ECC occurred, we must subtract the offset value,
+           * In addition, the address returned by ECC registers represents 128-bit flash word (multiply by 4),
+          */
+          pData->Address = (FLASH_EDATA_BASE + FLASH_EDATA_BANK_SIZE + \
+                           ((addr_reg - FLASH_ADDRESS_OFFSET_EDATA) * 4U)) & 0xFFFFFFFFU;
         break;
 #endif /* FLASH_EDATAR_EDATA_EN */
       case FLASH_ECC_AREA_OTP:
         /* Address returned by the ECC is an halfword, multiply by 4 to get the exact address*/
-        pData->Address = FLASH_OTP_BASE + ((addr_reg - FLASH_ADDRESS_OFFSET_OTP) * 4U);
+        pData->Address = (FLASH_OTP_BASE + ((addr_reg - FLASH_ADDRESS_OFFSET_OTP) * 4U)) & 0xFFFFFFFFU;
         break;
 
       default:

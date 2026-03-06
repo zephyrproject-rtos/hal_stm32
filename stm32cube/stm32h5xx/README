@@ -6,7 +6,7 @@ Origin:
    http://www.st.com/en/embedded-software/stm32cubeh5.html
 
 Status:
-   version v1.5.0
+   version v1.6.0
 
 Purpose:
    ST Microelectronics official MCU package for STM32H5 series.
@@ -23,7 +23,7 @@ URL:
    https://github.com/STMicroelectronics/STM32CubeH5
 
 Commit:
-   047a3e84bc870a5609d2f9f38c74caf20d033403
+   e25dd1b1d0e8871627e79e2d1453687f0f22835c
 Maintained-by:
    External
 
@@ -68,11 +68,11 @@ Patch List:
       stm32cube/stm32h5xx/drivers/src/stm32h5xx_hal_sdio.c
 
    *Fix SDIO polling mode data transfer issues
-     Fixes two related issues in the STM32H5 SDIO driver: incorrect block count calculation 
-     that caused the card to hang, and improper buffer size handling that led to misaligned FIFO writes. 
+     Fixes two related issues in the STM32H5 SDIO driver: incorrect block count calculation
+     that caused the card to hang, and improper buffer size handling that led to misaligned FIFO writes.
      Together, these changes ensure correct and stable data transfer in polling mode.
-     Impacted file: 
-      stm32cube/stm32h5xx/drivers/src/stm32h5xx_hal_sdio.c   
+     Impacted file:
+      stm32cube/stm32h5xx/drivers/src/stm32h5xx_hal_sdio.c
 
    *Fix warning about extraneous parentheses when compiling with clang
      ST internal bug: 218364

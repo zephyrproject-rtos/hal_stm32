@@ -143,8 +143,10 @@
 /*!< Uncomment the following line if you need to relocate your vector Table in
      Internal SRAM. */
 /* #define VECT_TAB_SRAM */
+#if !defined(VECT_TAB_OFFSET)
 #define VECT_TAB_OFFSET  0x00U /*!< Vector Table base offset field.
                                    This value must be a multiple of 0x200. */
+#endif /* VECT_TAB_OFFSET */
 /******************************************************************************/
 
 /**
@@ -206,8 +208,8 @@ void SystemInit(void)
   #endif
 
   /* Reset the RCC clock configuration to the default reset state ------------*/
-  /* Set HSION bit */
-  RCC->CR = RCC_CR_HSION;
+  /* Set HSION bit while preserving the current HSIDIV value*/
+  RCC->CR = (RCC->CR & RCC_CR_HSIDIV_Msk) | RCC_CR_HSION;
 
   /* Reset CFGR register */
   RCC->CFGR1 = 0U;
@@ -215,10 +217,10 @@ void SystemInit(void)
 
   /* Reset HSEON, HSECSSON, HSEBYP, HSEEXT, HSIDIV, HSIKERON, CSION, CSIKERON, HSI48 and PLLxON bits */
 #if defined(RCC_CR_PLL3ON)
-  RCC->CR &= ~(RCC_CR_HSEON | RCC_CR_HSECSSON | RCC_CR_HSEBYP | RCC_CR_HSEEXT | RCC_CR_HSIDIV | RCC_CR_HSIKERON | \
+  RCC->CR &= ~(RCC_CR_HSEON | RCC_CR_HSECSSON | RCC_CR_HSEBYP | RCC_CR_HSEEXT | RCC_CR_HSIKERON | \
                RCC_CR_CSION | RCC_CR_CSIKERON |RCC_CR_HSI48ON | RCC_CR_PLL1ON | RCC_CR_PLL2ON | RCC_CR_PLL3ON);
 #else
-  RCC->CR &= ~(RCC_CR_HSEON | RCC_CR_HSECSSON | RCC_CR_HSEBYP | RCC_CR_HSEEXT | RCC_CR_HSIDIV | RCC_CR_HSIKERON | \
+  RCC->CR &= ~(RCC_CR_HSEON | RCC_CR_HSECSSON | RCC_CR_HSEBYP | RCC_CR_HSEEXT | RCC_CR_HSIKERON | \
                RCC_CR_CSION | RCC_CR_CSIKERON |RCC_CR_HSI48ON | RCC_CR_PLL1ON | RCC_CR_PLL2ON);
 #endif
 

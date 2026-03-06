@@ -164,7 +164,11 @@ typedef struct
 #if defined(EXTI_IMR2_IM48)
 #define EXTI_LINE_48                        (EXTI_DIRECT   | EXTI_REG2 | 0x10U)
 #endif /* EXTI_IMR2_IM48 */
+#if defined(STM32H5E5xx) || defined(STM32H5E4xx) || defined(STM32H5F5xx) || defined(STM32H5F4xx)
+#define EXTI_LINE_49                        (EXTI_CONFIG   | EXTI_REG2 | 0x11U)
+#else
 #define EXTI_LINE_49                        (EXTI_DIRECT   | EXTI_REG2 | 0x11U)
+#endif /* STM32H5E5xx || STM32H5E4xx || STM32H5F5xx || STM32H5F4xx */
 #define EXTI_LINE_50                        (EXTI_CONFIG   | EXTI_REG2 | 0x12U)
 #if defined(EXTI_IMR2_IM51)
 #define EXTI_LINE_51                        (EXTI_DIRECT   | EXTI_REG2 | 0x13U)
@@ -188,8 +192,34 @@ typedef struct
 #if defined(EXTI_IMR2_IM58)
 #if defined(I3C2)
 #define EXTI_LINE_58                        (EXTI_DIRECT   | EXTI_REG2 | 0x1AU)
+#elif defined(COMP1)
+#define EXTI_LINE_58                        (EXTI_CONFIG   | EXTI_REG2 | 0x1AU)
 #endif /* I3C2 */
 #endif /* EXTI_IMR2_IM58 */
+#if defined(EXTI_IMR2_IM59)
+#define EXTI_LINE_59                        (EXTI_CONFIG   | EXTI_REG2 | 0x1BU)
+#endif /* EXTI_IMR2_IM59 */
+#if defined(EXTI_IMR2_IM60)
+#define EXTI_LINE_60                        (EXTI_DIRECT   | EXTI_REG2 | 0x1CU)
+#endif /* EXTI_IMR2_IM60 */
+#if defined(EXTI_IMR2_IM61)
+#define EXTI_LINE_61                        (EXTI_DIRECT   | EXTI_REG2 | 0x1DU)
+#endif /* EXTI_IMR2_IM61 */
+#if defined(EXTI_IMR2_IM62)
+#define EXTI_LINE_62                        (EXTI_DIRECT   | EXTI_REG2 | 0x1EU)
+#endif /* EXTI_IMR2_IM62 */
+#if defined(EXTI_IMR2_IM63)
+#define EXTI_LINE_63                        (EXTI_DIRECT   | EXTI_REG2 | 0x1FU)
+#endif /* EXTI_IMR2_IM63 */
+#if defined(EXTI_IMR3_IM64)
+#define EXTI_LINE_64                        (EXTI_CONFIG   | EXTI_REG3 | 0x20U)
+#endif /* EXTI_IMR3_IM64 */
+#if defined(EXTI_IMR3_IM65)
+#define EXTI_LINE_65                        (EXTI_DIRECT   | EXTI_REG3 | 0x21U)
+#endif /* EXTI_IMR3_IM65 */
+#if defined(EXTI_IMR3_IM66)
+#define EXTI_LINE_66                        (EXTI_CONFIG   | EXTI_REG3 | 0x22U)
+#endif /* EXTI_IMR3_IM66 */
 /**
   * @}
   */
@@ -236,6 +266,12 @@ typedef struct
 #if defined(GPIOI)
 #define EXTI_GPIOI                          0x00000008U
 #endif /* GPIOI */
+#if defined(GPIOJ)
+#define EXTI_GPIOJ                          0x00000009U
+#endif /* GPIOJ */
+#if defined(GPIOK)
+#define EXTI_GPIOK                          0x0000000AU
+#endif /* GPIOK */
 /**
   * @}
   */
@@ -292,20 +328,21 @@ typedef struct
 /**
   * @brief  EXTI Line property definition
   */
-#define EXTI_PROPERTY_SHIFT                  24U
-#define EXTI_DIRECT                         (0x01U << EXTI_PROPERTY_SHIFT)
-#define EXTI_CONFIG                         (0x02U << EXTI_PROPERTY_SHIFT)
-#define EXTI_GPIO                           ((0x04U << EXTI_PROPERTY_SHIFT) | EXTI_CONFIG)
-#define EXTI_RESERVED                       (0x08U << EXTI_PROPERTY_SHIFT)
+#define EXTI_PROPERTY_SHIFT                  24UL
+#define EXTI_DIRECT                         (0x01UL << EXTI_PROPERTY_SHIFT)
+#define EXTI_CONFIG                         (0x02UL << EXTI_PROPERTY_SHIFT)
+#define EXTI_GPIO                           ((0x04UL << EXTI_PROPERTY_SHIFT) | EXTI_CONFIG)
+#define EXTI_RESERVED                       (0x08UL << EXTI_PROPERTY_SHIFT)
 #define EXTI_PROPERTY_MASK                  (EXTI_DIRECT | EXTI_CONFIG | EXTI_GPIO)
 
 /**
   * @brief  EXTI Register and bit usage
   */
 #define EXTI_REG_SHIFT                      16U
-#define EXTI_REG1                           (0x00U << EXTI_REG_SHIFT)
-#define EXTI_REG2                           (0x01U << EXTI_REG_SHIFT)
-#define EXTI_REG_MASK                       (EXTI_REG1 | EXTI_REG2)
+#define EXTI_REG1                           (0x00UL << EXTI_REG_SHIFT)
+#define EXTI_REG2                           (0x01UL << EXTI_REG_SHIFT)
+#define EXTI_REG3                           (0x02UL << EXTI_REG_SHIFT)
+#define EXTI_REG_MASK                       (EXTI_REG1 | EXTI_REG2 | EXTI_REG3)
 #define EXTI_PIN_MASK                       0x0000001FU
 
 /**
@@ -321,13 +358,15 @@ typedef struct
 /**
   * @brief  EXTI Line number
   */
-#if defined(EXTI_IMR2_IM58)
+#if defined(EXTI_IMR3_IM66)
+#define EXTI_LINE_NB                        67U
+#elif defined(EXTI_IMR2_IM58)
 #define EXTI_LINE_NB                        59U
 #elif defined(EXTI_IMR2_IM57)
 #define EXTI_LINE_NB                        58U
 #else
 #define EXTI_LINE_NB                        54U
-#endif /* EXTI_IMR2_IM58 */
+#endif /* EXTI_IMR3_IM66 */
 
 /**
   * @brief  EXTI Mask for secure & privilege attributes
@@ -360,7 +399,19 @@ typedef struct
 
 #define IS_EXTI_CONFIG_LINE(__EXTI_LINE__)   (((__EXTI_LINE__) & EXTI_CONFIG) != 0x00U)
 
-#if defined(GPIOI)
+#if defined(GPIOK)
+#define IS_EXTI_GPIO_PORT(__PORT__)     (((__PORT__) == EXTI_GPIOA) || \
+                                         ((__PORT__) == EXTI_GPIOB) || \
+                                         ((__PORT__) == EXTI_GPIOC) || \
+                                         ((__PORT__) == EXTI_GPIOD) || \
+                                         ((__PORT__) == EXTI_GPIOE) || \
+                                         ((__PORT__) == EXTI_GPIOF) || \
+                                         ((__PORT__) == EXTI_GPIOG) || \
+                                         ((__PORT__) == EXTI_GPIOH) || \
+                                         ((__PORT__) == EXTI_GPIOI) || \
+                                         ((__PORT__) == EXTI_GPIOJ) || \
+                                         ((__PORT__) == EXTI_GPIOK))
+#elif defined(GPIOI)
 #define IS_EXTI_GPIO_PORT(__PORT__)     (((__PORT__) == EXTI_GPIOA) || \
                                          ((__PORT__) == EXTI_GPIOB) || \
                                          ((__PORT__) == EXTI_GPIOC) || \
@@ -423,8 +474,8 @@ typedef struct
   * @{
   */
 /* Configuration functions ****************************************************/
-HAL_StatusTypeDef HAL_EXTI_SetConfigLine(EXTI_HandleTypeDef *hexti, EXTI_ConfigTypeDef *pExtiConfig);
-HAL_StatusTypeDef HAL_EXTI_GetConfigLine(EXTI_HandleTypeDef *hexti, EXTI_ConfigTypeDef *pExtiConfig);
+HAL_StatusTypeDef HAL_EXTI_SetConfigLine(EXTI_HandleTypeDef *hexti, const EXTI_ConfigTypeDef *pExtiConfig);
+HAL_StatusTypeDef HAL_EXTI_GetConfigLine(const EXTI_HandleTypeDef *hexti, EXTI_ConfigTypeDef *pExtiConfig);
 HAL_StatusTypeDef HAL_EXTI_ClearConfigLine(const EXTI_HandleTypeDef *hexti);
 HAL_StatusTypeDef HAL_EXTI_RegisterCallback(EXTI_HandleTypeDef *hexti, EXTI_CallbackIDTypeDef CallbackID,
                                             void (*pPendingCbfn)(void));

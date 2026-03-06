@@ -502,7 +502,8 @@ typedef  void (*pCRYP_CallbackTypeDef)(CRYP_HandleTypeDef *hcryp);    /*!< point
                                                        & (CRYP_FLAG_KEIF)) == (CRYP_FLAG_KEIF))?SET:RESET) : \
                                                    ((__FLAG__) == CRYP_FLAG_RWEIF )?((((__HANDLE__)->Instance->ISR \
                                                        & (CRYP_FLAG_RWEIF)) == (CRYP_FLAG_RWEIF))?SET:RESET) : \
-                                                   ((((__HANDLE__)->Instance->ISR & (CRYP_FLAG_CCF)) == (CRYP_FLAG_CCF)))?SET:RESET)
+                                                   ((((__HANDLE__)->Instance->ISR & (CRYP_FLAG_CCF)) == \
+                                                     (CRYP_FLAG_CCF)))?SET:RESET)
 
 /** @brief  Clear the CRYP pending status flag.
   * @param  __HANDLE__ specifies the CRYP handle.

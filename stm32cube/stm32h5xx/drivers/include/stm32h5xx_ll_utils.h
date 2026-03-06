@@ -205,6 +205,12 @@ typedef struct
 #define LL_UTILS_PACKAGETYPE_WLCSP39                 0x00000011U /*!< WLCSP39 package type                                */
 #define LL_UTILS_PACKAGETYPE_UFBGA100                0x00000014U /*!< UFBGA100 package type                               */
 #define LL_UTILS_PACKAGETYPE_UFBGA144                0x00000015U /*!< UFBGA144 package type                               */
+#define LL_UTILS_PACKAGETYPE_UFBGA144_SMPS           0x00000016U /*!< UFBGA144 with internal SMPS package type            */
+#define LL_UTILS_PACKAGETYPE_WLCSP100_SMPS_USBPHY    0x00000018U /*!< WLCSP100 with internal SMPS USBPHY package type     */
+#define LL_UTILS_PACKAGETYPE_UFBGA176_25_SMPS_USBPHY 0x00000019U /*!< UFBGA176+25 with internal SMPS USBPHY package type  */
+#define LL_UTILS_PACKAGETYPE_LQFP176_SMPS_USBPHY     0x0000001AU /*!< LQFP176 with internal SMPS USBPHY package type      */
+#define LL_UTILS_PACKAGETYPE_TFBGA255_SMPS_USBPHY    0x0000001BU /*!< TFBGA1255 with internal SMPS USBPHY package type    */
+#define LL_UTILS_PACKAGETYPE_LQFP144_USBPHY          0x0000001CU /*!< LQFP144 with USBPHY package type                    */
 
 /**
   * @}
@@ -285,6 +291,11 @@ __STATIC_INLINE uint32_t LL_GetFlashSize(void)
   *         @arg @ref LL_UTILS_PACKAGETYPE_WLCSP39
   *         @arg @ref LL_UTILS_PACKAGETYPE_UFBGA100
   *         @arg @ref LL_UTILS_PACKAGETYPE_UFBGA144
+  *         @arg @ref LL_UTILS_PACKAGETYPE_UFBGA144_SMPS
+  *         @arg @ref LL_UTILS_PACKAGETYPE_WLCSP100_SMPS_USBPHY
+  *         @arg @ref LL_UTILS_PACKAGETYPE_LQFP176_SMPS_USBPHY
+  *         @arg @ref LL_UTILS_PACKAGETYPE_TFBGA255_SMPS_USBPHY
+  *         @arg @ref LL_UTILS_PACKAGETYPE_LQFP144_USBPHY
   * @note   Refer to product datasheet for availability of package on a specific device
   */
 __STATIC_INLINE uint32_t LL_GetPackageType(void)

@@ -2936,7 +2936,7 @@ HAL_StatusTypeDef HAL_DMAEx_List_ConvertQToDynamic(DMA_QListTypeDef *const pQLis
   uint32_t cllr_offset;
   uint32_t currentnode_addr;
   DMA_NodeTypeDef context_node;
-  DMA_NodeInQInfoTypeDef node_info;
+  DMA_NodeInQInfoTypeDef node_info = {0U};
 
   /* Check the queue parameter */
   if (pQList == NULL)
@@ -4148,16 +4148,31 @@ static uint32_t DMA_List_CheckNodesBaseAddresses(DMA_NodeTypeDef const *const pN
   /* Check node 1 address */
   if ((uint32_t)pNode1 != 0U)
   {
+    /* Check addresses offset compatibility */
+    if (((uint32_t)pNode1 & 0xFFFFU) > 0xFFE0U)
+    {
+      return 1U;
+    }
     ref = (uint32_t)pNode1;
   }
   /* Check node 2 address */
   else if ((uint32_t)pNode2 != 0U)
   {
+    /* Check addresses offset compatibility */
+    if (((uint32_t)pNode2 & 0xFFFFU) > 0xFFE0U)
+    {
+      return 1U;
+    }
     ref = (uint32_t)pNode2;
   }
   /* Check node 3 address */
   else if ((uint32_t)pNode3 != 0U)
   {
+    /* Check addresses offset compatibility */
+    if (((uint32_t)pNode3 & 0xFFFFU) > 0xFFE0U)
+    {
+      return 1U;
+    }
     ref = (uint32_t)pNode3;
   }
   else

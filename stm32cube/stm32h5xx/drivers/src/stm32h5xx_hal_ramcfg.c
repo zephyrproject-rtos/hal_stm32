@@ -1,7 +1,7 @@
 /**
   ******************************************************************************
   * @file    stm32h5xx_hal_ramcfg.c
-  * @author  GPM Application Team
+  * @author  MCD Application Team
   * @brief   RAMCFG HAL module driver.
   *          This file provides firmware functions to manage the following
   *          functionalities of the RAMs configuration controller peripheral:
@@ -614,6 +614,9 @@ HAL_StatusTypeDef HAL_RAMCFG_EnableWriteProtection(RAMCFG_HandleTypeDef *hramcfg
 #if defined (RAMCFG_WPR3_P64WP)
   uint32_t page_mask_2 = 0U;
 #endif /* RAMCFG_WPR3_P64WP */
+#if defined (RAMCFG_WPR4_P96WP)
+  uint32_t page_mask_3 = 0U;
+#endif /* RAMCFG_WPR4_P96WP */
   /* Check the parameters */
   assert_param(IS_RAMCFG_WP_INSTANCE(hramcfg->Instance));
   assert_param(IS_RAMCFG_WRITEPROTECTION_PAGE(StartPage + NbPage));
@@ -624,7 +627,34 @@ HAL_StatusTypeDef HAL_RAMCFG_EnableWriteProtection(RAMCFG_HandleTypeDef *hramcfg
     /* Update RAMCFG peripheral state */
     hramcfg->State = HAL_RAMCFG_STATE_BUSY;
 
-#if defined (RAMCFG_WPR3_P64WP)
+#if defined (RAMCFG_WPR4_P96WP)
+    /* Repeat for page number to be protected */
+    for (uint32_t count = 0U; count < NbPage; count++)
+    {
+      if ((StartPage + count) < 32U)
+      {
+        page_mask_0 |= (1UL << (StartPage + count));
+      }
+      else if ((StartPage + count) < 64U)
+      {
+        page_mask_1 |= (1UL << ((StartPage + count) - 32U));
+      }
+      else if ((StartPage + count) < 96U)
+      {
+        page_mask_2 |= (1UL << ((StartPage + count) - 64U));
+      }
+      else
+      {
+        page_mask_3 |= (1UL << ((StartPage + count) - 96U));
+      }
+    }
+
+    /* Apply mask to protect pages */
+    SET_BIT(hramcfg->Instance->WPR1, page_mask_0);
+    SET_BIT(hramcfg->Instance->WPR2, page_mask_1);
+    SET_BIT(hramcfg->Instance->WPR3, page_mask_2);
+    SET_BIT(hramcfg->Instance->WPR4, page_mask_3);
+#elif defined (RAMCFG_WPR3_P64WP)
     /* Repeat for page number to be protected */
     for (uint32_t count = 0U; count < NbPage; count++)
     {

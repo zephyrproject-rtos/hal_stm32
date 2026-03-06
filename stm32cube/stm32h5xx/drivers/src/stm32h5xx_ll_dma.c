@@ -65,62 +65,142 @@
 /** @addtogroup DMA_LL_Private_Macros
   * @{
   */
-#define IS_LL_DMA_ALL_CHANNEL_INSTANCE(INSTANCE, Channel) ((((INSTANCE) == GPDMA1)                && \
-                                                            (((Channel)  == LL_DMA_CHANNEL_0)     || \
-                                                             ((Channel)  == LL_DMA_CHANNEL_1)     || \
-                                                             ((Channel)  == LL_DMA_CHANNEL_2)     || \
-                                                             ((Channel)  == LL_DMA_CHANNEL_3)     || \
-                                                             ((Channel)  == LL_DMA_CHANNEL_4)     || \
-                                                             ((Channel)  == LL_DMA_CHANNEL_5)     || \
-                                                             ((Channel)  == LL_DMA_CHANNEL_6)     || \
-                                                             ((Channel)  == LL_DMA_CHANNEL_7)     || \
-                                                             ((Channel)  == LL_DMA_CHANNEL_ALL))) || \
-                                                           (((INSTANCE) == GPDMA2)                && \
-                                                            (((Channel)  == LL_DMA_CHANNEL_0)     || \
-                                                             ((Channel)  == LL_DMA_CHANNEL_1)     || \
-                                                             ((Channel)  == LL_DMA_CHANNEL_2)     || \
-                                                             ((Channel)  == LL_DMA_CHANNEL_3)     || \
-                                                             ((Channel)  == LL_DMA_CHANNEL_4)     || \
-                                                             ((Channel)  == LL_DMA_CHANNEL_5)     || \
-                                                             ((Channel)  == LL_DMA_CHANNEL_6)     || \
-                                                             ((Channel)  == LL_DMA_CHANNEL_7)     || \
-                                                             ((Channel)  == LL_DMA_CHANNEL_ALL))))
+#if defined(GPDMA1_Channel11)
+#define IS_LL_DMA_ALL_CHANNEL_INSTANCE(INSTANCE, Channel)  ((((INSTANCE) == GPDMA1)               && \
+                                                             (((Channel)  == LL_DMA_CHANNEL_0)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_1)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_2)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_3)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_4)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_5)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_6)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_7)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_8)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_9)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_10)    || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_11)    || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_ALL))) || \
+                                                            (((INSTANCE) == GPDMA2)                && \
+                                                             (((Channel)  == LL_DMA_CHANNEL_0)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_1)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_2)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_3)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_4)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_5)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_6)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_7)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_8)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_9)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_10)    || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_11)    || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_ALL))))
+#else
+#define IS_LL_DMA_ALL_CHANNEL_INSTANCE(INSTANCE, Channel)  ((((INSTANCE) == GPDMA1)                && \
+                                                             (((Channel)  == LL_DMA_CHANNEL_0)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_1)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_2)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_3)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_4)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_5)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_6)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_7)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_ALL))) || \
+                                                            (((INSTANCE) == GPDMA2)                && \
+                                                             (((Channel)  == LL_DMA_CHANNEL_0)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_1)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_2)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_3)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_4)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_5)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_6)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_7)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_ALL))))
+#endif /* GPDMA1_Channel11 */
 
-#define IS_LL_GPDMA_CHANNEL_INSTANCE(INSTANCE, Channel)   ((((INSTANCE) == GPDMA1)                && \
-                                                            (((Channel)  == LL_DMA_CHANNEL_0)     || \
-                                                             ((Channel)  == LL_DMA_CHANNEL_1)     || \
-                                                             ((Channel)  == LL_DMA_CHANNEL_2)     || \
-                                                             ((Channel)  == LL_DMA_CHANNEL_3)     || \
-                                                             ((Channel)  == LL_DMA_CHANNEL_4)     || \
-                                                             ((Channel)  == LL_DMA_CHANNEL_5)     || \
-                                                             ((Channel)  == LL_DMA_CHANNEL_6)     || \
-                                                             ((Channel)  == LL_DMA_CHANNEL_7))) || \
-                                                           (((INSTANCE) == GPDMA2)                && \
-                                                            (((Channel)  == LL_DMA_CHANNEL_0)     || \
-                                                             ((Channel)  == LL_DMA_CHANNEL_1)     || \
-                                                             ((Channel)  == LL_DMA_CHANNEL_2)     || \
-                                                             ((Channel)  == LL_DMA_CHANNEL_3)     || \
-                                                             ((Channel)  == LL_DMA_CHANNEL_4)     || \
-                                                             ((Channel)  == LL_DMA_CHANNEL_5)     || \
-                                                             ((Channel)  == LL_DMA_CHANNEL_6)     || \
-                                                             ((Channel)  == LL_DMA_CHANNEL_7))))
+#if defined(GPDMA1_Channel11)
+#define IS_LL_GPDMA_CHANNEL_INSTANCE(INSTANCE, Channel)    ((((INSTANCE) == GPDMA1)                && \
+                                                             (((Channel)  == LL_DMA_CHANNEL_0)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_1)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_2)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_3)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_4)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_5)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_6)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_7)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_8)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_9)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_10)    || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_11))) || \
+                                                            (((INSTANCE) == GPDMA2)                && \
+                                                             (((Channel)  == LL_DMA_CHANNEL_0)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_1)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_2)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_3)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_4)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_5)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_6)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_7)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_8)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_9)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_10)    || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_11))))
+#else
+#define IS_LL_GPDMA_CHANNEL_INSTANCE(INSTANCE, Channel)    ((((INSTANCE) == GPDMA1)                && \
+                                                             (((Channel)  == LL_DMA_CHANNEL_0)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_1)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_2)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_3)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_4)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_5)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_6)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_7))) || \
+                                                            (((INSTANCE) == GPDMA2)                && \
+                                                             (((Channel)  == LL_DMA_CHANNEL_0)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_1)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_2)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_3)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_4)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_5)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_6)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_7))))
+#endif /* GPDMA1_Channel11 */
 
-#define IS_LL_DMA_2D_CHANNEL_INSTANCE(INSTANCE, Channel)  ((((INSTANCE) == GPDMA1)                && \
-                                                            (((Channel)  == LL_DMA_CHANNEL_6)     || \
-                                                             ((Channel)  == LL_DMA_CHANNEL_7))) || \
-                                                           (((INSTANCE) == GPDMA2)                && \
-                                                            (((Channel)  == LL_DMA_CHANNEL_6)     || \
-                                                             ((Channel)  == LL_DMA_CHANNEL_7))))
+#if defined(GPDMA1_Channel11)
+#define IS_LL_DMA_2D_CHANNEL_INSTANCE(INSTANCE, Channel)   ((((INSTANCE) == GPDMA1)                && \
+                                                             (((Channel)  == LL_DMA_CHANNEL_10)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_11))) || \
+                                                            (((INSTANCE) == GPDMA2)                && \
+                                                             (((Channel)  == LL_DMA_CHANNEL_10)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_11))))
+#else
+#define IS_LL_DMA_2D_CHANNEL_INSTANCE(INSTANCE, Channel)   ((((INSTANCE) == GPDMA1)                && \
+                                                             (((Channel)  == LL_DMA_CHANNEL_6)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_7))) || \
+                                                            (((INSTANCE) == GPDMA2)                && \
+                                                             (((Channel)  == LL_DMA_CHANNEL_6)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_7))))
+#endif /* GPDMA1_Channel11 */
 
 #define IS_LL_DMA_MODE(__VALUE__)                         (((__VALUE__) == LL_DMA_NORMAL) || \
                                                            ((__VALUE__) == LL_DMA_PFCTRL))
 
-#define IS_LL_DMA_PFREQ_INSTANCE(INSTANCE, Channel)       ((((INSTANCE) == GPDMA1)                && \
-                                                            (((Channel)  == LL_DMA_CHANNEL_0)     || \
-                                                             ((Channel)  == LL_DMA_CHANNEL_7)))   || \
-                                                           (((INSTANCE) == GPDMA2)                && \
-                                                            (((Channel)  == LL_DMA_CHANNEL_0)     || \
-                                                             ((Channel)  == LL_DMA_CHANNEL_7))))
+#if defined(GPDMA1_Channel11)
+#define IS_LL_DMA_PFREQ_INSTANCE(INSTANCE, Channel)        ((((INSTANCE) == GPDMA1)                && \
+                                                             (((Channel)  == LL_DMA_CHANNEL_0)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_1)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_11)))   || \
+                                                            (((INSTANCE) == GPDMA2)                && \
+                                                             (((Channel)  == LL_DMA_CHANNEL_0)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_1)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_11))))
+#else
+#define IS_LL_DMA_PFREQ_INSTANCE(INSTANCE, Channel)        ((((INSTANCE) == GPDMA1)                && \
+                                                             (((Channel)  == LL_DMA_CHANNEL_0)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_7)))   || \
+                                                            (((INSTANCE) == GPDMA2)                && \
+                                                             (((Channel)  == LL_DMA_CHANNEL_0)     || \
+                                                              ((Channel)  == LL_DMA_CHANNEL_7))))
+#endif /* GPDMA1_Channel11 */
 
 #define IS_LL_DMA_DIRECTION(__VALUE__)                    (((__VALUE__) == LL_DMA_DIRECTION_MEMORY_TO_MEMORY) || \
                                                            ((__VALUE__) == LL_DMA_DIRECTION_PERIPH_TO_MEMORY) || \
@@ -167,13 +247,17 @@
 #define IS_LL_DMA_BLKHW_REQUEST(__VALUE__)                (((__VALUE__) == LL_DMA_HWREQUEST_SINGLEBURST) || \
                                                            ((__VALUE__) == LL_DMA_HWREQUEST_BLK))
 
-#if defined (I3C2)
+#if defined (PLAY1)
+#define IS_LL_DMA_TRIGGER_SELECTION(__VALUE__)             ((__VALUE__) <= LL_GPDMA1_TRIGGER_PLAY1_OUT15)
+#elif defined (I3C2)
 #define IS_LL_DMA_TRIGGER_SELECTION(__VALUE__)             ((__VALUE__) <= LL_GPDMA1_TRIGGER_EVENTOUT)
 #else
 #define IS_LL_DMA_TRIGGER_SELECTION(__VALUE__)             ((__VALUE__) <= LL_GPDMA1_TRIGGER_LPTIM6_CH2)
 #endif /* I3C2 */
 
-#if defined (I3C2)
+#if defined (ADF1)
+#define IS_LL_DMA_REQUEST_SELECTION(__VALUE__)             ((__VALUE__) <= LL_GPDMA1_REQUEST_ADF1_FLT0)
+#elif defined (I3C2)
 #define IS_LL_DMA_REQUEST_SELECTION(__VALUE__)             ((__VALUE__) <= LL_GPDMA1_REQUEST_I3C2_RS)
 #else
 #define IS_LL_DMA_REQUEST_SELECTION(__VALUE__)             ((__VALUE__) <= LL_GPDMA1_REQUEST_LPTIM6_UE)
@@ -270,6 +354,11 @@
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval An ErrorStatus enumeration value:
   *          - SUCCESS : DMA registers are de-initialized.
   *          - ERROR   : DMA registers are not de-initialized.
@@ -380,6 +469,11 @@ uint32_t LL_DMA_DeInit(DMA_TypeDef *DMAx, uint32_t Channel)
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @param  DMA_InitStruct pointer to a @ref LL_DMA_InitTypeDef structure.
   * @retval An ErrorStatus enumeration value:
   *          - SUCCESS : DMA registers are initialized.
@@ -675,6 +769,11 @@ void LL_DMA_ListStructInit(LL_DMA_InitLinkedListTypeDef *DMA_InitLinkedListStruc
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @retval An ErrorStatus enumeration value:
   *          - SUCCESS : DMA registers are de-initialized.
   *          - ERROR   : DMA registers are not de-initialized.
@@ -702,6 +801,11 @@ uint32_t LL_DMA_List_DeInit(DMA_TypeDef *DMAx, uint32_t Channel)
   *         @arg @ref LL_DMA_CHANNEL_5
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
+  *         @arg @ref LL_DMA_CHANNEL_8 (*)
+  *         @arg @ref LL_DMA_CHANNEL_9 (*)
+  *         @arg @ref LL_DMA_CHANNEL_10 (*)
+  *         @arg @ref LL_DMA_CHANNEL_11 (*)
+  * @note   (*) Availability depends on devices.
   * @param  DMA_InitLinkedListStruct pointer to
   *         a @ref LL_DMA_InitLinkedListTypeDef structure.
   * @retval An ErrorStatus enumeration value:

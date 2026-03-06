@@ -595,6 +595,70 @@ __STATIC_INLINE uint32_t LL_PWR_IsEnabledAHBRAM2_Low_16K_ShutOff(void)
 }
 #endif /* PWR_PMCR_SRAM2_16LSO */
 
+#if defined(PWR_PMCR_SRAM2_48HSO)
+/**
+  * @brief  Enable the AHB RAM2 high 48K Bytes shut-off in Stop mode
+  * @rmtoll PMCR    SRAM2_48HSO     LL_PWR_EnableAHBRAM2_High_48K_ShutOff
+  * @retval None
+  */
+__STATIC_INLINE void LL_PWR_EnableAHBRAM2_High_48K_ShutOff(void)
+{
+  SET_BIT(PWR->PMCR, PWR_PMCR_SRAM2_48HSO);
+}
+
+/**
+  * @brief  Disable the AHB RAM2 high 48K Bytes shut-off in Stop mode
+  * @rmtoll PMCR    SRAM2_48HSO     LL_PWR_DisableAHBRAM2_High_48K_ShutOff
+  * @retval None
+  */
+__STATIC_INLINE void LL_PWR_DisableAHBRAM2_High_48K_ShutOff(void)
+{
+  CLEAR_BIT(PWR->PMCR, PWR_PMCR_SRAM2_48HSO);
+}
+
+/**
+  * @brief  Check if the high AHB RAM2 shut-off in Stop mode is enabled
+  * @rmtoll PMCR    SRAM2_48HSO     LL_PWR_IsEnabledAHBRAM2_High_48K_ShutOff
+  * @retval State of bit (1 or 0).
+  */
+__STATIC_INLINE uint32_t LL_PWR_IsEnabledAHBRAM2_High_48K_ShutOff(void)
+{
+  return ((READ_BIT(PWR->PMCR, PWR_PMCR_SRAM2_48HSO) == (PWR_PMCR_SRAM2_48HSO)) ? 1UL : 0UL);
+}
+#endif /* PWR_PMCR_SRAM2_48HSO */
+
+#if defined(PWR_PMCR_SRAM2_48LSO)
+/**
+  * @brief  Enable the AHB RAM2 low 48K Bytes shut-off in Stop mode
+  * @rmtoll PMCR    SRAM2_48LSO     LL_PWR_EnableAHBRAM2_Low_48K_ShutOff
+  * @retval None
+  */
+__STATIC_INLINE void LL_PWR_EnableAHBRAM2_Low_48K_ShutOff(void)
+{
+  SET_BIT(PWR->PMCR, PWR_PMCR_SRAM2_48LSO);
+}
+
+/**
+  * @brief  Disable the AHB RAM2 low 48K Bytes shut-off in Stop mode
+  * @rmtoll PMCR    SRAM2_48LSO     LL_PWR_DisableAHBRAM2_Low_48K_ShutOff
+  * @retval None
+  */
+__STATIC_INLINE void LL_PWR_DisableAHBRAM2_Low_48K_ShutOff(void)
+{
+  CLEAR_BIT(PWR->PMCR, PWR_PMCR_SRAM2_48LSO);
+}
+
+/**
+  * @brief  Check if the low 48K AHB RAM2 shut-off in Stop mode is enabled
+  * @rmtoll PMCR    SRAM2_48LSO     LL_PWR_IsEnabledAHBRAM2_Low_48K_ShutOff
+  * @retval State of bit (1 or 0).
+  */
+__STATIC_INLINE uint32_t LL_PWR_IsEnabledAHBRAM2_Low_48K_ShutOff(void)
+{
+  return ((READ_BIT(PWR->PMCR, PWR_PMCR_SRAM2_48LSO) == (PWR_PMCR_SRAM2_48LSO)) ? 1UL : 0UL);
+}
+#endif /* PWR_PMCR_SRAM2_48LSO */
+
 #if defined (PWR_PMCR_SRAM2SO)
 /**
   * @brief  Enable the AHB RAM2 shut-off in Stop mode
@@ -659,6 +723,70 @@ __STATIC_INLINE uint32_t LL_PWR_IsEnabledAHBRAM3ShutOff(void)
 }
 #endif /* PWR_PMCR_SRAM3SO */
 
+#if defined (PWR_PMCR_SRAM4SO)
+/**
+  * @brief  Enable the AHB RAM4 shut-off in Stop mode
+  * @rmtoll PMCR    SRAM4SO     LL_PWR_EnableAHBRAM4ShutOff
+  * @retval None
+  */
+__STATIC_INLINE void LL_PWR_EnableAHBRAM4ShutOff(void)
+{
+  SET_BIT(PWR->PMCR, PWR_PMCR_SRAM4SO);
+}
+
+/**
+  * @brief  Disable the AHB RAM4 shut-off in Stop mode
+  * @rmtoll PMCR    SRAM4SO     LL_PWR_DisableAHBRAM4ShutOff
+  * @retval None
+  */
+__STATIC_INLINE void LL_PWR_DisableAHBRAM4ShutOff(void)
+{
+  CLEAR_BIT(PWR->PMCR, PWR_PMCR_SRAM4SO);
+}
+
+/**
+  * @brief  Check if the AHB RAM4 shut-off in Stop mode is enabled
+  * @rmtoll PMCR    SRAM4SO     LL_PWR_IsEnabledAHBRAM4ShutOff
+  * @retval State of bit (1 or 0).
+  */
+__STATIC_INLINE uint32_t LL_PWR_IsEnabledAHBRAM4ShutOff(void)
+{
+  return ((READ_BIT(PWR->PMCR, PWR_PMCR_SRAM4SO) == (PWR_PMCR_SRAM4SO)) ? 1UL : 0UL);
+}
+#endif /* PWR_PMCR_SRAM4SO */
+
+#if defined (PWR_PMCR_SRAM5SO)
+/**
+  * @brief  Enable the AHB RAM5 shut-off in Stop mode
+  * @rmtoll PMCR    SRAM5SO     LL_PWR_EnableAHBRAM5ShutOff
+  * @retval None
+  */
+__STATIC_INLINE void LL_PWR_EnableAHBRAM5ShutOff(void)
+{
+  SET_BIT(PWR->PMCR, PWR_PMCR_SRAM5SO);
+}
+
+/**
+  * @brief  Disable the AHB RAM5 shut-off in Stop mode
+  * @rmtoll PMCR    SRAM5SO     LL_PWR_DisableAHBRAM5ShutOff
+  * @retval None
+  */
+__STATIC_INLINE void LL_PWR_DisableAHBRAM5ShutOff(void)
+{
+  CLEAR_BIT(PWR->PMCR, PWR_PMCR_SRAM5SO);
+}
+
+/**
+  * @brief  Check if the AHB RAM5 shut-off in Stop mode is enabled
+  * @rmtoll PMCR    SRAM5SO     LL_PWR_IsEnabledAHBRAM5ShutOff
+  * @retval State of bit (1 or 0).
+  */
+__STATIC_INLINE uint32_t LL_PWR_IsEnabledAHBRAM5ShutOff(void)
+{
+  return ((READ_BIT(PWR->PMCR, PWR_PMCR_SRAM5SO) == (PWR_PMCR_SRAM5SO)) ? 1UL : 0UL);
+}
+#endif /* PWR_PMCR_SRAM5SO */
+
 #if defined (PWR_PMCR_ETHERNETSO)
 /**
   * @brief  Enable the ETHERNET RAM shut-off in Stop mode
@@ -690,6 +818,38 @@ __STATIC_INLINE uint32_t LL_PWR_IsEnabledETHERNETRAMShutOff(void)
   return ((READ_BIT(PWR->PMCR, PWR_PMCR_ETHERNETSO) == (PWR_PMCR_ETHERNETSO)) ? 1UL : 0UL);
 }
 #endif /* PWR_PMCR_ETHERNETSO */
+
+#if defined (PWR_PMCR_LTDCSO)
+/**
+  * @brief  Enable the LTDC RAM shut-off in Stop mode
+  * @rmtoll PMCR    LTDCSO     LL_PWR_EnableLTDCRAMShutOff
+  * @retval None
+  */
+__STATIC_INLINE void LL_PWR_EnableLTDCRAMShutOff(void)
+{
+  SET_BIT(PWR->PMCR, PWR_PMCR_LTDCSO);
+}
+
+/**
+  * @brief  Disable the LTDC RAM shut-off in Stop mode
+  * @rmtoll PMCR    LTDCSO     LL_PWR_DisableLTDCRAMShutOff
+  * @retval None
+  */
+__STATIC_INLINE void LL_PWR_DisableLTDCRAMShutOff(void)
+{
+  CLEAR_BIT(PWR->PMCR, PWR_PMCR_LTDCSO);
+}
+
+/**
+  * @brief  Check if the LTDC RAM shut-off in Stop mode is enabled
+  * @rmtoll PMCR    LTDCSO     LL_PWR_IsEnabledLTDCRAMShutOff
+  * @retval State of bit (1 or 0).
+  */
+__STATIC_INLINE uint32_t LL_PWR_IsEnabledLTDCRAMShutOff(void)
+{
+  return ((READ_BIT(PWR->PMCR, PWR_PMCR_LTDCSO) == (PWR_PMCR_LTDCSO)) ? 1UL : 0UL);
+}
+#endif /* PWR_PMCR_LTDCSO */
 
 /**
   * @brief  Set the regulator supply output voltage.
@@ -1189,6 +1349,38 @@ __STATIC_INLINE uint32_t LL_PWR_IsEnabledVddUSB(void)
 }
 #define LL_PWR_IsEnabledVDDUSB  LL_PWR_IsEnabledVddUSB /* for API backward compatibility */
 #endif /* PWR_USBSCR_USB33DEN */
+
+#if defined (PWR_USBSCR_OTGHSEN)
+/**
+  * @brief  Enable the USB OTGHS phy
+  * @rmtoll USBSCR          OTGHSEN           LL_PWR_EnableUSBOTGHSPhy
+  * @retval None
+  */
+__STATIC_INLINE void LL_PWR_EnableUSBOTGHSPhy(void)
+{
+  SET_BIT(PWR->USBSCR, PWR_USBSCR_OTGHSEN);
+}
+
+/**
+  * @brief  Disable the USB OTGHS phy
+  * @rmtoll USBSCR          OTGHSEN           LL_PWR_DisableUSBOTGHSPhy
+  * @retval None
+  */
+__STATIC_INLINE void LL_PWR_DisableUSBOTGHSPhy(void)
+{
+  CLEAR_BIT(PWR->USBSCR, PWR_USBSCR_OTGHSEN);
+}
+
+/**
+  * @brief  Check if the USB OTGHS phy is enabled
+  * @rmtoll USBSCR          OTGHSEN           LL_PWR_IsEnabledUSBOTGHSPhy
+  * @retval State of bit (1 or 0).
+  */
+__STATIC_INLINE uint32_t LL_PWR_IsEnabledUSBOTGHSPhy(void)
+{
+  return ((READ_BIT(PWR->USBSCR, PWR_USBSCR_OTGHSEN) == (PWR_USBSCR_OTGHSEN)) ? 1UL : 0UL);
+}
+#endif /* PWR_USBSCR_OTGHSEN */
 
 /**
   * @brief  Enable the wake up pin_x.

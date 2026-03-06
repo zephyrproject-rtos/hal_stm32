@@ -851,7 +851,7 @@ HAL_StatusTypeDef HAL_ADCEx_InjectedStop_IT(ADC_HandleTypeDef *hadc)
   *         conversions.
   * @param hadc ADC handle of ADC master (handle of ADC slave must not be used)
   * @param pData Destination Buffer address.
-  * @param Length Length of data to be transferred from ADC peripheral to memory (in bytes).
+  * @param Length Length of data to be transferred from ADC peripheral to memory.
   * @retval HAL status
   */
 HAL_StatusTypeDef HAL_ADCEx_MultiModeStart_DMA(ADC_HandleTypeDef *hadc, uint32_t *pData, uint32_t Length)
@@ -866,7 +866,10 @@ HAL_StatusTypeDef HAL_ADCEx_MultiModeStart_DMA(ADC_HandleTypeDef *hadc, uint32_t
   assert_param(IS_ADC_MULTIMODE_MASTER_INSTANCE(hadc->Instance));
   assert_param(IS_FUNCTIONAL_STATE(hadc->Init.ContinuousConvMode));
   assert_param(IS_ADC_EXTTRIG_EDGE(hadc->Init.ExternalTrigConvEdge));
+#if   defined(ADC3)
+#else
   assert_param(IS_FUNCTIONAL_STATE(hadc->Init.DMAContinuousRequests));
+#endif /* ADC3 */
 
   if (LL_ADC_REG_IsConversionOngoing(hadc->Instance) != 0UL)
   {
@@ -2128,8 +2131,14 @@ HAL_StatusTypeDef HAL_ADCEx_InjectedConfigChannel(ADC_HandleTypeDef *hadc,
         }
       }
     }
+#if defined(ADC3)
+    else if (((pConfigInjected->InjectedChannel == ADC_CHANNEL_VBAT)
+              || (pConfigInjected->InjectedChannel == ADC_CHANNEL_VBAT_ADC3))
+             && ((tmp_config_internal_channel & LL_ADC_PATH_INTERNAL_VBAT) == 0UL))
+#else
     else if ((pConfigInjected->InjectedChannel == ADC_CHANNEL_VBAT)
              && ((tmp_config_internal_channel & LL_ADC_PATH_INTERNAL_VBAT) == 0UL))
+#endif /* ADC3 */
     {
       if (ADC_BATTERY_VOLTAGE_INSTANCE(hadc))
       {
@@ -2236,9 +2245,16 @@ HAL_StatusTypeDef HAL_ADCEx_MultiModeConfigChannel(ADC_HandleTypeDef *hadc, cons
     /* transition from multimode to independent mode).                        */
     if (pMultimode->Mode != ADC_MODE_INDEPENDENT)
     {
+#if   defined(ADC3)
+      MODIFY_REG(tmpADC_Common->CCR, ADC_CCR_MDMA | ADC_CCR_DMACFG,
+                 pMultimode->DMAAccessMode |
+                 ADC_CCR_MULTI_DMACONTREQ((hadc->Init.ConversionDataManagement & ADC_CFGR_DMACFG)
+                                          >> ADC_CFGR_DMACFG_Pos));
+#else
       MODIFY_REG(tmpADC_Common->CCR, ADC_CCR_MDMA | ADC_CCR_DMACFG,
                  pMultimode->DMAAccessMode |
                  ADC_CCR_MULTI_DMACONTREQ((uint32_t)hadc->Init.DMAContinuousRequests));
+#endif /* ADC3 */
 
       /* Parameters that can be updated only when ADC is disabled:                */
       /*  - Multimode mode selection                                              */

@@ -69,7 +69,8 @@ extern "C" {
   * @param  __CLOCKSOURCE__ output variable.
   * @retval IRDA clocking source, written in __CLOCKSOURCE__.
   */
-#if (defined(STM32H573xx) || defined(STM32H563xx) || defined(STM32H562xx))
+#if defined(STM32H573xx) || defined(STM32H563xx) || defined(STM32H562xx) \
+ || defined(STM32H5E4xx) || defined(STM32H5E5xx) || defined(STM32H5F4xx) || defined(STM32H5F5xx)
 #define IRDA_GETCLOCKSOURCE(__HANDLE__,__CLOCKSOURCE__)        \
   do {                                                         \
     if((__HANDLE__)->Instance == USART1)                       \
@@ -652,7 +653,9 @@ extern "C" {
     }                                                          \
   } while(0U)
 
-#endif /* (defined(STM32H573xx) || defined(STM32H563xx) || defined(STM32H562xx) */
+#endif /* defined(STM32H573xx) || defined(STM32H563xx) || defined(STM32H562xx) ||
+        * defined(STM32H5E4xx) || defined(STM32H5E5xx) || defined(STM32H5F4xx) || defined(STM32H5F5xx)
+        */
 
 /** @brief  Compute the mask to apply to retrieve the received data
   *         according to the word length and to the parity bits activation.
