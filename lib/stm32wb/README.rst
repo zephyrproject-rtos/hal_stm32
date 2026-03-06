@@ -11,34 +11,24 @@ Purpose
 | and a controller BLE firmware running on the Cortex-M0 core.
 
 Status:
-   version v1.23.0
+   version v1.24.0
 
 Coprocessor Binaries
 --------------------
-The table below details the history of the released binaries for the Cortex-M0 processor to be flashed to run BLE:
+The table below details the history, cleaned up from EOL Zephyr versions, of the released binaries for 
+the Cortex-M0 processor to be flashed to run BLE:
 
 +----------------+---------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Zephyr Version | STM32CubeWB Version | Binaries                                                                                                                                                                                                |
 +================+=====================+=========================================================================================================================================================================================================+
-| 3.0            | 1.12.1              | `stm32wb5x_BLE_HCILayer_fw.bin <https://github.com/STMicroelectronics/STM32CubeWB/blob/v1.12.1/Projects/STM32WB_Copro_Wireless_Binaries/STM32WB5x/stm32wb5x_BLE_HCILayer_fw.bin>`__                     |
-+----------------+---------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 3.1            | 1.13.2              | | `stm32wb5x_BLE_HCILayer_fw.bin <https://github.com/STMicroelectronics/STM32CubeWB/blob/v1.13.2/Projects/STM32WB_Copro_Wireless_Binaries/STM32WB5x/stm32wb5x_BLE_HCILayer_fw.bin>`__                   |
-|                |                     | | `stm32wb5x_BLE_HCILayer_extended_fw.bin <https://github.com/STMicroelectronics/STM32CubeWB/blob/v1.13.2/Projects/STM32WB_Copro_Wireless_Binaries/STM32WB5x/stm32wb5x_BLE_HCILayer_extended_fw.bin>`__ |
-+----------------+---------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 3.2            | 1.14.0              | | `stm32wb5x_BLE_HCILayer_fw.bin <https://github.com/STMicroelectronics/STM32CubeWB/blob/v1.14.0/Projects/STM32WB_Copro_Wireless_Binaries/STM32WB5x/stm32wb5x_BLE_HCILayer_fw.bin>`__                   |
-|                |                     | | `stm32wb5x_BLE_HCILayer_extended_fw.bin <https://github.com/STMicroelectronics/STM32CubeWB/blob/v1.14.0/Projects/STM32WB_Copro_Wireless_Binaries/STM32WB5x/stm32wb5x_BLE_HCILayer_extended_fw.bin>`__ |
-+----------------+---------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 3.4            | 1.16.0              | | `stm32wb5x_BLE_HCILayer_fw.bin <https://github.com/STMicroelectronics/STM32CubeWB/blob/v1.16.0/Projects/STM32WB_Copro_Wireless_Binaries/STM32WB5x/stm32wb5x_BLE_HCILayer_fw.bin>`__                   |
-|                |                     | | `stm32wb5x_BLE_HCILayer_extended_fw.bin <https://github.com/STMicroelectronics/STM32CubeWB/blob/v1.16.0/Projects/STM32WB_Copro_Wireless_Binaries/STM32WB5x/stm32wb5x_BLE_HCILayer_extended_fw.bin>`__ |
-+----------------+---------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 3.6            | 1.18.0              | | `stm32wb5x_BLE_HCILayer_fw.bin <https://github.com/STMicroelectronics/STM32CubeWB/blob/v1.18.0/Projects/STM32WB_Copro_Wireless_Binaries/STM32WB5x/stm32wb5x_BLE_HCILayer_fw.bin>`__                   |
-|                |                     | | `stm32wb5x_BLE_HCILayer_extended_fw.bin <https://github.com/STMicroelectronics/STM32CubeWB/blob/v1.18.0/Projects/STM32WB_Copro_Wireless_Binaries/STM32WB5x/stm32wb5x_BLE_HCILayer_extended_fw.bin>`__ |
-+----------------+---------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 3.7            | 1.19.1              | | `stm32wb5x_BLE_HCILayer_fw.bin <https://github.com/STMicroelectronics/STM32CubeWB/blob/v1.19.1/Projects/STM32WB_Copro_Wireless_Binaries/STM32WB5x/stm32wb5x_BLE_HCILayer_fw.bin>`__                   |
 |                |                     | | `stm32wb5x_BLE_HCILayer_extended_fw.bin <https://github.com/STMicroelectronics/STM32CubeWB/blob/v1.19.1/Projects/STM32WB_Copro_Wireless_Binaries/STM32WB5x/stm32wb5x_BLE_HCILayer_extended_fw.bin>`__ |
 +----------------+---------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 4.0            | 1.20.0              | | `stm32wb5x_BLE_HCILayer_fw.bin <https://github.com/STMicroelectronics/STM32CubeWB/blob/v1.20.0/Projects/STM32WB_Copro_Wireless_Binaries/STM32WB5x/stm32wb5x_BLE_HCILayer_fw.bin>`__                   |
-|                |                     | | `stm32wb5x_BLE_HCILayer_extended_fw.bin <https://github.com/STMicroelectronics/STM32CubeWB/blob/v1.20.0/Projects/STM32WB_Copro_Wireless_Binaries/STM32WB5x/stm32wb5x_BLE_HCILayer_extended_fw.bin>`__ |
+| 4.2            | 1.23.0              | | `stm32wb5x_BLE_HCILayer_fw.bin <https://github.com/STMicroelectronics/STM32CubeWB/blob/v1.23.0/Projects/STM32WB_Copro_Wireless_Binaries/STM32WB5x/stm32wb5x_BLE_HCILayer_fw.bin>`__                   |
+|                |                     | | `stm32wb5x_BLE_HCILayer_extended_fw.bin <https://github.com/STMicroelectronics/STM32CubeWB/blob/v1.23.0/Projects/STM32WB_Copro_Wireless_Binaries/STM32WB5x/stm32wb5x_BLE_HCILayer_extended_fw.bin>`__ |
++----------------+---------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| 4.3            | 1.24.0              | | `stm32wb5x_BLE_HCILayer_fw.bin <https://github.com/STMicroelectronics/STM32CubeWB/blob/v1.24.0/Projects/STM32WB_Copro_Wireless_Binaries/STM32WB5x/stm32wb5x_BLE_HCILayer_fw.bin>`__                   |
+|                |                     | | `stm32wb5x_BLE_HCILayer_extended_fw.bin <https://github.com/STMicroelectronics/STM32CubeWB/blob/v1.24.0/Projects/STM32WB_Copro_Wireless_Binaries/STM32WB5x/stm32wb5x_BLE_HCILayer_extended_fw.bin>`__ |
 +----------------+---------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 
 Description
@@ -78,7 +68,7 @@ URL
 https://github.com/STMicroelectronics/STM32CubeWB
 
 Commit:
-   24e69da13336e90cccce4fccf5b8fddfcd4959fc
+   7c5aa7dcd2c0abe787f922bb06a6213c724d08e4
 
 Maintained-by
 -------------
