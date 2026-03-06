@@ -66,8 +66,8 @@
 /* Private function prototypes -----------------------------------------------*/
 static HAL_StatusTypeDef CRYPEx_KeyDecrypt(CRYP_HandleTypeDef *hcryp, uint32_t Timeout);
 static HAL_StatusTypeDef CRYPEx_KeyEncrypt(CRYP_HandleTypeDef *hcryp, uint32_t Timeout);
-static HAL_StatusTypeDef CRYPEx_WaitFLAG(CRYP_HandleTypeDef *hcryp, uint32_t flag, FlagStatus Status, uint32_t Timeout);
 static HAL_StatusTypeDef CRYPEx_KeyGeneration(CRYP_HandleTypeDef *hcryp, uint32_t Timeout);
+static HAL_StatusTypeDef CRYPEx_WaitFLAG(CRYP_HandleTypeDef *hcryp, uint32_t flag, FlagStatus Status, uint32_t Timeout);
 /* Exported functions---------------------------------------------------------*/
 /** @addtogroup CRYPEx_Exported_Functions
   * @{
@@ -827,31 +827,6 @@ static HAL_StatusTypeDef CRYPEx_KeyEncrypt(CRYP_HandleTypeDef *hcryp, uint32_t T
   return HAL_OK;
 }
 /**
-  * @brief  Wait Instance Flag
-  * @param  hcryp cryp handle
-  * @param  flag Specifies the flag to check
-  * @param  Status Flag status (SET or RESET)
-  * @param  Timeout Timeout duration
-  * @retval HAL status.
-  */
-
-static HAL_StatusTypeDef CRYPEx_WaitFLAG(CRYP_HandleTypeDef *hcryp, uint32_t flag, FlagStatus Status, uint32_t Timeout)
-{
-  uint32_t tickstart = HAL_GetTick();
-  while (__HAL_CRYP_GET_FLAG(hcryp, flag) == Status)
-  {
-    if (((HAL_GetTick() - tickstart) > Timeout) || (Timeout == 0U))
-    {
-      CLEAR_BIT(hcryp->Instance->CR, AES_CR_EN);
-      /* Change state */
-      hcryp->ErrorCode |= HAL_CRYP_ERROR_TIMEOUT;
-      /* return error */
-      return HAL_ERROR;
-    }
-  }
-  return HAL_OK;
-}
-/**
   * @brief  Key Generation
   * @param  hcryp pointer to a CRYP_HandleTypeDef structure
   * @param  Timeout specify Timeout value
@@ -913,6 +888,31 @@ static HAL_StatusTypeDef CRYPEx_KeyGeneration(CRYP_HandleTypeDef *hcryp, uint32_
   hcryp->State = HAL_CRYP_STATE_READY;
   __HAL_UNLOCK(hcryp);
 
+  return HAL_OK;
+}
+/**
+  * @brief  Wait Instance Flag
+  * @param  hcryp cryp handle
+  * @param  flag Specifies the flag to check
+  * @param  Status Flag status (SET or RESET)
+  * @param  Timeout Timeout duration
+  * @retval HAL status.
+  */
+
+static HAL_StatusTypeDef CRYPEx_WaitFLAG(CRYP_HandleTypeDef *hcryp, uint32_t flag, FlagStatus Status, uint32_t Timeout)
+{
+  uint32_t tickstart = HAL_GetTick();
+  while (__HAL_CRYP_GET_FLAG(hcryp, flag) == Status)
+  {
+    if (((HAL_GetTick() - tickstart) > Timeout) || (Timeout == 0U))
+    {
+      CLEAR_BIT(hcryp->Instance->CR, AES_CR_EN);
+      /* Change state */
+      hcryp->ErrorCode |= HAL_CRYP_ERROR_TIMEOUT;
+      /* return error */
+      return HAL_ERROR;
+    }
+  }
   return HAL_OK;
 }
 

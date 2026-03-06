@@ -31,7 +31,7 @@ extern "C" {
   * @{
   */
 
-#if defined (ADC1) || defined (ADC2)
+#if defined (ADC1) || defined (ADC2) || defined(ADC3)
 
 /** @defgroup ADC_LL ADC
   * @{
@@ -359,17 +359,17 @@ extern "C" {
 
 /* ADC internal channels related definitions */
 /* Internal voltage reference VrefInt */
-#define VREFINT_CAL_ADDR                   ((uint16_t*) (0x08FFF810UL)) /* Internal voltage reference, address of
+#define VREFINT_CAL_ADDR                   ((const uint16_t*) (0x08FFF810UL)) /* Internal voltage reference, address of
                                            parameter VREFINT_CAL: VrefInt ADC raw data acquired at temperature 30 DegC
                                            (tolerance: +-5 DegC), Vref+ = 3.3 V (tolerance: +-10 mV). */
 #define VREFINT_CAL_VREF                   (3300UL)                     /* Analog voltage reference (Vref+) value
                                            with which VrefInt has been calibrated in production
                                            (tolerance: +-10 mV) (unit: mV). */
 /* Temperature sensor */
-#define TEMPSENSOR_CAL1_ADDR               ((uint16_t*) (0x08FFF814UL)) /* Address of parameter TS_CAL1: On STM32H5,
+#define TEMPSENSOR_CAL1_ADDR               ((const uint16_t*) (0x08FFF814UL)) /* Address of parameter TS_CAL1:
                                            temperature sensor ADC raw data acquired at temperature  30 DegC
                                            (tolerance: +-5 DegC), Vref+ = 3.3 V (tolerance: +-10 mV). */
-#define TEMPSENSOR_CAL2_ADDR               ((uint16_t*) (0x08FFF818UL)) /* Address of parameter TS_CAL2: On STM32H5,
+#define TEMPSENSOR_CAL2_ADDR               ((const uint16_t*) (0x08FFF818UL)) /* Address of parameter TS_CAL2:
                                            temperature sensor ADC raw data acquired at temperature 130 DegC
                                            (tolerance: +-5 DegC), Vref+ = 3.3 V (tolerance: +-10 mV). */
 #define TEMPSENSOR_CAL1_TEMP               (30L)                        /* Temperature at which temperature sensor
@@ -935,7 +935,7 @@ typedef struct
                                             | ADC_CHANNEL_18_BITFIELD) /*!< ADC channel ADCx_IN18 */
 #define LL_ADC_CHANNEL_19                  (ADC_CHANNEL_19_NUMBER | ADC_CHANNEL_19_SMP \
                                             | ADC_CHANNEL_19_BITFIELD) /*!< ADC channel ADCx_IN19 */
-#if defined (ADC2)
+#if defined (ADC2) || defined(ADC3)
 #define LL_ADC_CHANNEL_VREFINT             (LL_ADC_CHANNEL_17 | ADC_CHANNEL_ID_INTERNAL_CH)   /*!< ADC internal channel
                                            connected to VrefInt: Internal voltage reference.
                                            On STM32H563xx/573xx, ADC channel available only on ADC instance: ADC1. */
@@ -949,6 +949,19 @@ typedef struct
 #define LL_ADC_CHANNEL_VDDCORE             (LL_ADC_CHANNEL_17 | ADC_CHANNEL_ID_INTERNAL_CH_2) /*!< ADC internal channel
                                            connected to Vddcore.
                                            On STM32H563xx/573xx, ADC channel available only on ADC instance: ADC2. */
+#if defined(ADC3)
+#define LL_ADC_CHANNEL_VBAT_ADC3           (LL_ADC_CHANNEL_14 | ADC_CHANNEL_ID_INTERNAL_CH) /*!< ADC internal channel
+                                           connected to Vbat/4: Vbat voltage through a divider ladder of factor 1/4
+                                           to have channel voltage always below Vdda.
+                                           Channel specific to ADC3 */
+#define LL_ADC_CHANNEL_VDDCORE_ADC3        (LL_ADC_CHANNEL_15 | ADC_CHANNEL_ID_INTERNAL_CH) /*!< ADC internal channel
+                                           connected to Vddcore.
+                                           Channel specific to ADC3 */
+#define LL_ADC_CHANNEL_DAC1_CH1            (LL_ADC_CHANNEL_18 | ADC_CHANNEL_ID_INTERNAL_CH) /*!< ADC internal channel
+connected to DAC1 channel 1, channel specific to ADC2 */
+#define LL_ADC_CHANNEL_DAC1_CH2            (LL_ADC_CHANNEL_19 | ADC_CHANNEL_ID_INTERNAL_CH) /*!< ADC internal channel
+connected to DAC1 channel 1, channel specific to ADC2 */
+#endif /* ADC3 */
 #else
 #define LL_ADC_CHANNEL_VREFINT             (LL_ADC_CHANNEL_17 | ADC_CHANNEL_ID_INTERNAL_CH) /*!< ADC internal channel
                                            connected to VrefInt: Internal voltage reference. */
@@ -1032,6 +1045,12 @@ typedef struct
                                            Trigger edge set to rising edge (default setting). */
 
 /* Triggers specific to some devices of STM32H5 series */
+#if defined(ADC3)
+#define LL_ADC_REG_TRIG_EXT_PLAY_OUT7     (ADC_CFGR_EXTSEL_4 | ADC_CFGR_EXTSEL_2 \
+                                           | ADC_REG_TRIG_EXT_EDGE_DEFAULT)                       /*!< ADC group regular
+                                           conversion trigger from external peripheral: PLAY_OUT7 event.
+                                           Trigger edge set to rising edge (default setting). */
+#endif /* ADC3 */
 #if defined(TIM8)
 /* Devices STM32H563/H573xx */
 #define LL_ADC_REG_TRIG_EXT_TIM4_CH4       (ADC_CFGR_EXTSEL_2 | ADC_CFGR_EXTSEL_0 \
@@ -1128,6 +1147,20 @@ typedef struct
   * @}
   */
 
+#if   defined(ADC3)
+#if defined(ADC_CFGR_ADFCFG)
+/** @defgroup ADC_LL_EC_REG_MDF_TRANSFER  ADC group regular - ADC conversion data transfer to MDF peripheral
+  * @{
+  */
+#define LL_ADC_REG_MDF_TRANSFER_NONE       (0x00000000UL)     /*!< ADC conversions data are not transferred to MDF
+                                           peripheral */
+#define LL_ADC_REG_MDF_TRANSFER_ENABLE     (ADC_CFGR_ADFCFG)  /*!< ADC conversion data are transferred to MDF
+                                           peripheral. This configuration cannot be used if DMA transfer is enabled. */
+/**
+  * @}
+  */
+#endif /* ADC_CFGR_ADFCFG */
+#endif /* ADC3 */
 #if defined(ADC_SMPR1_SMPPLUS)
 /** @defgroup ADC_LL_EC_SAMPLINGTIME_COMMON_CONFIG ADC instance - ADC sampling time common configuration
   * @{
@@ -1325,6 +1358,12 @@ typedef struct
                                            edge set to rising edge (default setting). */
 
 /* Triggers specific to some devices of STM32H5 series */
+#if defined(ADC3)
+#define LL_ADC_INJ_TRIG_EXT_PLAY_OUT9     (ADC_JSQR_JEXTSEL_4 | ADC_JSQR_JEXTSEL_2 \
+                                           | ADC_INJ_TRIG_EXT_EDGE_DEFAULT)                      /*!< ADC group injected
+                                           conversion trigger from external peripheral: PLAY OUT 9. Trigger
+                                           edge set to rising edge (default setting). */
+#endif /* ADC3 */
 #if defined(TIM8)
 /* Devices STM32H563/H573xx */
 #define LL_ADC_INJ_TRIG_EXT_TIM4_TRGO      (ADC_JSQR_JEXTSEL_2 | ADC_JSQR_JEXTSEL_0 \
@@ -1775,7 +1814,67 @@ typedef struct
                                            of ADC internal channel connected to Vddcore,
                                            converted by either group regular or injected.
                                            On STM32H563xx/573xx, ADC channel available only on ADC instance: ADC2. */
-
+#if defined(ADC3)
+#define LL_ADC_AWD_CH_VBAT_ADC3_REG        ((LL_ADC_CHANNEL_VBAT_ADC3  & ADC_CHANNEL_ID_MASK) \
+                                            | ADC_CFGR_AWD1EN | ADC_CFGR_AWD1SGL)    /*!< ADC analog watchdog monitoring
+                                           of ADC internal channel connected to Vbat/4: Vbat voltage through
+                                           a divider ladder of factor 1/4 to have channel voltage always below Vdda,
+                                           converted by group regular only.
+                                           On STM32H563xx/573xx, ADC channel available only on ADC instance: ADC3. */
+#define LL_ADC_AWD_CH_VBAT_ADC3_INJ        ((LL_ADC_CHANNEL_VBAT_ADC3  & ADC_CHANNEL_ID_MASK) \
+                                            | ADC_CFGR_JAWD1EN | ADC_CFGR_AWD1SGL)   /*!< ADC analog watchdog monitoring
+                                           of ADC internal channel connected to Vbat/4: Vbat voltage through
+                                           a divider ladder of factor 1/4 to have channel voltage always below Vdda,
+                                           converted by group injected only.
+                                           On STM32H563xx/573xx, ADC channel available only on ADC instance: ADC3. */
+#define LL_ADC_AWD_CH_VBAT_ADC3_REG_INJ    ((LL_ADC_CHANNEL_VBAT_ADC3  & ADC_CHANNEL_ID_MASK) \
+                                            | ADC_CFGR_JAWD1EN | ADC_CFGR_AWD1EN \
+                                            | ADC_CFGR_AWD1SGL)                      /*!< ADC analog watchdog monitoring
+                                           of ADC internal channel connected to Vbat/4: Vbat voltage through
+                                           a divider ladder of factor 1/4 to have channel voltage always below Vdda.
+                                           On STM32H563xx/573xx, ADC channel available only on ADC instance: ADC3. */
+#define LL_ADC_AWD_CH_VDDCORE_ADC3_REG     ((LL_ADC_CHANNEL_VDDCORE_ADC3 & ADC_CHANNEL_ID_MASK) \
+                                            | ADC_CFGR_AWD1EN | ADC_CFGR_AWD1SGL)    /*!< ADC analog watchdog monitoring
+                                           of ADC internal channel connected to Vddcore, converted by group regular only
+                                           On STM32H563xx/573xx, ADC channel available only on ADC instance: ADC3. */
+#define LL_ADC_AWD_CH_VDDCORE_ADC3_INJ     ((LL_ADC_CHANNEL_VDDCORE_ADC3 & ADC_CHANNEL_ID_MASK) \
+                                            | ADC_CFGR_JAWD1EN | ADC_CFGR_AWD1SGL)   /*!< ADC analog watchdog monitoring
+                                           of ADC internal channel connected to Vddcore,
+                                           converted by group injected only.
+                                           On STM32H563xx/573xx, ADC channel available only on ADC instance: ADC3. */
+#define LL_ADC_AWD_CH_VDDCORE_ADC3_REG_INJ ((LL_ADC_CHANNEL_VDDCORE_ADC3 & ADC_CHANNEL_ID_MASK) \
+                                            | ADC_CFGR_JAWD1EN | ADC_CFGR_AWD1EN \
+                                            | ADC_CFGR_AWD1SGL)                      /*!< ADC analog watchdog monitoring
+                                           of ADC internal channel connected to Vddcore,
+                                           converted by either group regular or injected.
+                                           On STM32H563xx/573xx, ADC channel available only on ADC instance: ADC3. */
+#define LL_ADC_AWD_CH_DAC1CH1_REG         ((LL_ADC_CHANNEL_DAC1CH1      & ADC_CHANNEL_ID_MASK) \
+                                           | ADC_CFGR_AWD1EN | ADC_CFGR_AWD1SGL)    /*!< ADC analog watchdog monitoring
+                                          of ADC internal channel connected to DAC1 channel 1,
+                                          channel specific to ADC3, converted by group regular only */
+#define LL_ADC_AWD_CH_DAC1CH1_INJ         ((LL_ADC_CHANNEL_DAC1CH1      & ADC_CHANNEL_ID_MASK) \
+                                           | ADC_CFGR_JAWD1EN | ADC_CFGR_AWD1SGL)   /*!< ADC analog watchdog monitoring
+                                          of ADC internal channel connected to DAC1 channel 1,
+                                          channel specific to ADC3, converted by group injected only */
+#define LL_ADC_AWD_CH_DAC1CH1_REG_INJ     ((LL_ADC_CHANNEL_DAC1CH1      & ADC_CHANNEL_ID_MASK) \
+                                           | ADC_CFGR_JAWD1EN | ADC_CFGR_AWD1EN \
+                                           | ADC_CFGR_AWD1SGL)                      /*!< ADC analog watchdog monitoring
+                                          of ADC internal channel connected to DAC1 channel 1,
+                                          channel specific to ADC3, converted by either group regular or injected */
+#define LL_ADC_AWD_CH_DAC1CH2_REG         ((LL_ADC_CHANNEL_DAC1CH2     & ADC_CHANNEL_ID_MASK) \
+                                           | ADC_CFGR_AWD1EN | ADC_CFGR_AWD1SGL)    /*!< ADC analog watchdog monitoring
+                                          of ADC internal channel connected to DAC1 channel 1,
+                                          channel specific to ADC3, converted by group regular only */
+#define LL_ADC_AWD_CH_DAC1CH2_INJ         ((LL_ADC_CHANNEL_DAC1CH2     & ADC_CHANNEL_ID_MASK) \
+                                           | ADC_CFGR_JAWD1EN | ADC_CFGR_AWD1SGL)   /*!< ADC analog watchdog monitoring
+                                          of ADC internal channel connected to DAC1 channel 1,
+                                          channel specific to ADC3, converted by group injected only */
+#define LL_ADC_AWD_CH_DAC1CH2_REG_INJ     ((LL_ADC_CHANNEL_DAC1CH2     & ADC_CHANNEL_ID_MASK) \
+                                           | ADC_CFGR_JAWD1EN | ADC_CFGR_AWD1EN \
+                                           | ADC_CFGR_AWD1SGL)                      /*!< ADC analog watchdog monitoring
+                                          of ADC internal channel connected to DAC1 channel 1,
+                                          channel specific to ADC3, converted by either group regular or injected */
+#endif /* ADC3 */
 /* Definitions for backward compatibility with legacy STM32 series */
 #define LL_ADC_AWD_CH_VCORE_REG            LL_ADC_AWD_CH_VDDCORE_REG
 #define LL_ADC_AWD_CH_VCORE_INJ            LL_ADC_AWD_CH_VDDCORE_INJ
@@ -2683,7 +2782,15 @@ typedef struct
   * @param  __ADCx__ ADC instance
   * @retval ADC common register instance
   */
+#if defined(ADC3_COMMON)
+#define __LL_ADC_COMMON_INSTANCE(__ADCx__) \
+  ((((__ADCx__) == ADC1) || ((__ADCx__) == ADC2))                              \
+   ? (ADC12_COMMON)                                                            \
+   : (ADC3_COMMON)                                                             \
+  )
+#else
 #define __LL_ADC_COMMON_INSTANCE(__ADCx__)  (ADC12_COMMON)
+#endif /* ADC3_COMMON */
 /**
   * @brief  Helper macro to check if all ADC instances sharing the same
   *         ADC common instance are disabled.
@@ -2701,7 +2808,13 @@ typedef struct
   *         Value "1" if at least one ADC instance sharing the same ADC common instance
   *         is enabled.
   */
-#if defined(ADC2)
+#if defined(ADC3)
+#define __LL_ADC_IS_ENABLED_ALL_COMMON_INSTANCE(__ADCXY_COMMON__) \
+  (((__ADCXY_COMMON__) == ADC12_COMMON)                                        \
+   ? (LL_ADC_IsEnabled(ADC1) | LL_ADC_IsEnabled(ADC2))                         \
+   : (LL_ADC_IsEnabled(ADC3))                                                  \
+  )
+#elif defined(ADC2)
 #define __LL_ADC_IS_ENABLED_ALL_COMMON_INSTANCE(__ADCXY_COMMON__)              \
   (LL_ADC_IsEnabled(ADC1) | LL_ADC_IsEnabled(ADC2))
 #else
@@ -3255,7 +3368,9 @@ __STATIC_INLINE uint32_t LL_ADC_GetCommonPathInternalCh(const ADC_Common_TypeDef
   */
 __STATIC_INLINE void LL_ADC_EnableChannelVDDcore(ADC_TypeDef *ADCx)
 {
-  SET_BIT(ADCx->OR, ADC_OR_OP0);
+  /* Prevent unused argument(s) compilation warning */
+  (void)(ADCx);
+  SET_BIT(ADC2->OR, ADC_OR_OP0);
 }
 #else
 /**
@@ -3282,7 +3397,9 @@ __STATIC_INLINE void LL_ADC_EnableChannelVDDcore(ADC_TypeDef *ADCx)
   */
 __STATIC_INLINE void LL_ADC_DisableChannelVDDcore(ADC_TypeDef *ADCx)
 {
-  CLEAR_BIT(ADCx->OR, ADC_OR_OP0);
+  /* Prevent unused argument(s) compilation warning */
+  (void)(ADCx);
+  CLEAR_BIT(ADC2->OR, ADC_OR_OP0);
 }
 #else
 /**
@@ -3302,29 +3419,27 @@ __STATIC_INLINE void LL_ADC_DisableChannelVDDcore(ADC_TypeDef *ADCx)
   * @brief  Enable Channel 0 GPIO switch control.
   * @note   On this STM32 series, Channel 0 channel connection to GPIO is controlled via specific register.
   * @note   On this STM32 series, Channel 0 GPIO switch control must be enabled when INP0 is used.
+  * @note   On this STM32 series, LL_ADC_EnableChannel0_GPIO available on all instances but ADC2.
   * @rmtoll OR       OP0       LL_ADC_EnableChannel0_GPIO
   * @param  ADCx ADC instance
   * @retval None
   */
-__STATIC_INLINE void LL_ADC_EnableChannel0_GPIO(const ADC_TypeDef *ADCx)
+__STATIC_INLINE void LL_ADC_EnableChannel0_GPIO(ADC_TypeDef *ADCx)
 {
-  /* Prevent unused argument(s) compilation warning */
-  (void)(ADCx);
-  SET_BIT(ADC1->OR, ADC_OR_OP0);
+  SET_BIT(ADCx->OR, ADC_OR_OP0);
 }
 
 /**
   * @brief  Disable Channel 0 GPIO switch control.
   * @note   On this STM32 series, Channel 0 connection to GPIO is controlled via specific register.
+  * @note   On this STM32 series, LL_ADC_DisableChannel0_GPIO available on all instances but ADC2.
   * @rmtoll OR       OP0       LL_ADC_DisableChannel0_GPIO
   * @param  ADCx ADC instance
   * @retval None
   */
-__STATIC_INLINE void LL_ADC_DisableChannel0_GPIO(const ADC_TypeDef *ADCx)
+__STATIC_INLINE void LL_ADC_DisableChannel0_GPIO(ADC_TypeDef *ADCx)
 {
-  /* Prevent unused argument(s) compilation warning */
-  (void)(ADCx);
-  CLEAR_BIT(ADC1->OR, ADC_OR_OP0);
+  CLEAR_BIT(ADCx->OR, ADC_OR_OP0);
 }
 
 /**
@@ -4633,6 +4748,44 @@ __STATIC_INLINE uint32_t LL_ADC_REG_GetDMATransfer(const ADC_TypeDef *ADCx)
   return (uint32_t)(READ_BIT(ADCx->CFGR, ADC_CFGR_DMAEN | ADC_CFGR_DMACFG));
 }
 
+#if   defined(ADC3)
+#if defined(ADC_CFGR_ADFCFG)
+/**
+  * @brief  Set ADC group regular conversion data transfer to MDF (ADF).
+  * @note   MDF transfer cannot be used if DMA transfer is enabled.
+  * @note   To configure MDF source address (peripheral address),
+  *         use the same function as for DMA transfer:
+  *         function @ref LL_ADC_DMA_GetRegAddr().
+  * @note   On this STM32 series, setting of this feature is conditioned to
+  *         ADC state:
+  *         ADC must be disabled or enabled without conversion on going
+  *         on either groups regular or injected.
+  * @rmtoll CFGR     ADFCFG       LL_ADC_REG_GetMDFTransfer
+  * @param  ADCx ADC instance
+  * @param  MDFTransfer This parameter can be one of the following values:
+  *         @arg @ref LL_ADC_REG_MDF_TRANSFER_NONE
+  *         @arg @ref LL_ADC_REG_MDF_TRANSFER_ENABLE
+  * @retval None
+  */
+__STATIC_INLINE void LL_ADC_REG_SetMDFTransfer(ADC_TypeDef *ADCx, uint32_t MDFTransfer)
+{
+  MODIFY_REG(ADCx->CFGR, ADC_CFGR_ADFCFG, MDFTransfer);
+}
+
+/**
+  * @brief  Get ADC group regular conversion data transfer to MDF (ADF).
+  * @rmtoll CFGR     ADFCFG       LL_ADC_REG_GetMDFTransfer
+  * @param  ADCx ADC instance
+  * @retval Returned value can be one of the following values:
+  *         @arg @ref LL_ADC_REG_MDF_TRANSFER_NONE
+  *         @arg @ref LL_ADC_REG_MDF_TRANSFER_ENABLE
+  */
+__STATIC_INLINE uint32_t LL_ADC_REG_GetMDFTransfer(const ADC_TypeDef *ADCx)
+{
+  return (uint32_t)(READ_BIT(ADCx->CFGR, ADC_CFGR_ADFCFG));
+}
+#endif /* ADC_CFGR_ADFCFG */
+#endif /* ADC3 */
 /**
   * @brief  Set ADC group regular behavior in case of overrun:
   *         data preserved or overwritten.
@@ -8316,7 +8469,7 @@ void        LL_ADC_INJ_StructInit(LL_ADC_INJ_InitTypeDef *pADC_InjInitStruct);
   * @}
   */
 
-#endif /* ADC1 || ADC2 */
+#endif /* ADC1 || ADC2 || ADC3 */
 
 /**
   * @}

@@ -353,6 +353,65 @@ typedef struct
 
   uint32_t TimPresSelection;       /*!< Specifies TIM Clock Prescalers Selection.
                                        This parameter can be a value of @ref RCCEx_TIM_Prescaler_Selection */
+
+#if defined(PLAY1)
+  uint32_t PLAY1ClockSelection;      /*!< Specifies PLAY1 clock source.
+                                        This parameter can be a value of @ref RCCEx_PLAY1_Clock_Source */
+  uint32_t PLAY1ClockDivider;        /*!< Specifies PLAY1 clock divider.
+                                        This parameter can be a value of @ref RCCEx_PLAY1_Clock_Divider */
+#endif /* PLAY1 */
+
+#if defined(USB_OTG_FS)
+  uint32_t OtgfsClockSelection;      /*!< Specifies USB_OTG_FS clock source.
+                                        This parameter can be a value of @ref RCCEx_OTGFS_Clock_Source */
+#endif /* USB_OTG_FS */
+
+#if defined(USB_OTG_HS)
+  uint32_t OtghsClockSelection;       /*!< Specifies USB_OTG_HS clock source.
+                                        This parameter can be a value of @ref RCCEx_OTGHS_Clock_Source */
+#endif /* USB_OTG_HS */
+
+#if defined(OCTOSPI2)
+  uint32_t Ospi2ClockSelection;       /*!< Specifies OCTOSPI2 clock source.
+                                        This parameter can be a value of @ref RCCEx_OSPI2_Clock_Source */
+#endif /* OCTOSPI2 */
+
+#if defined(LTDC)
+  uint32_t LtdcClockSelection;       /*!< Specifies LTDC clock source.
+                                        This parameter can be a value of @ref RCCEx_LTDC_Clock_Source */
+#endif /* LTDC */
+
+#if defined(ADF1)
+  uint32_t Adf1ClockSelection;       /*!< Specifies ADF1 clock source.
+                                        This parameter can be a value of @ref RCCEx_ADF1_Clock_Source */
+#endif /* ADF1 */
+
+#if defined(MDF1)
+  uint32_t Mdf1ClockSelection;       /*!< Specifies MDF1 clock source.
+                                        This parameter can be a value of @ref RCCEx_MDF1_Clock_Source */
+#endif /* MDF1 */
+
+#if defined(RCC_CCIPR4_ETHCLKSEL)
+  uint32_t EthClockSelection;       /*!< Specifies ETH clock source.
+                                        This parameter can be a value of @ref RCCEx_ETH_Clock_Source */
+#endif /* RCC_CCIPR4_ETHCLKSEL */
+
+#if defined (RCC_CCIPR4_OTGPHYREFCKSEL)
+  uint32_t OtgPhyClockSelection;      /*!< Specifies OTGHS PHY clock source.
+                                        This parameter can be a value of @ref RCCEx_OTGPHYREFCK_Clock_Source */
+#endif /* RCC_CCIPR4_OTGPHYREFCKSEL */
+
+#if defined(RCC_CCIPR5_ETHPTPCLKSEL)
+  uint32_t EthptpClockSelection;       /*!< Specifies ETHPTP clock source.
+                                        This parameter can be a value of @ref RCCEx_ETHPTP_Clock_Source */
+  uint32_t EthptpClockDivider;        /*!< Specifies ETHPTP clock divider.
+                                        This parameter can be a value of @ref RCCEx_ETHPTP_Clock_Divider */
+#endif /* RCC_CCIPR5_ETHPTPCLKSEL */
+
+#if defined(RCC_CCIPR5_ETHREFCLKSEL)
+  uint32_t EthrefClockSelection;       /*!< Specifies ETHREF clock source.
+                                        This parameter can be a value of @ref RCCEx_ETHREF_Clock_Source */
+#endif /* RCC_CCIPR5_ETHREFCLKSEL */
 } RCC_PeriphCLKInitTypeDef;
 
 #if defined(CRS)
@@ -541,6 +600,40 @@ typedef struct
 #if defined(I3C2)
 #define RCC_PERIPHCLK_I3C2             ((uint64_t)0x100000000000U)
 #endif /* I3C2 */
+#if defined(PLAY1)
+#define RCC_PERIPHCLK_PLAY1            ((uint64_t)0x200000000000U)
+#endif /* PLAY1 */
+#if defined(USB_OTG_FS)
+#define RCC_PERIPHCLK_OTGFS            ((uint64_t)0x400000000000U)
+#endif /* USB_OTG_FS */
+#if defined(USB_OTG_HS)
+#define RCC_PERIPHCLK_OTGHS            ((uint64_t)0x800000000000U)
+#endif /* USB_OTG_HS */
+#if defined(OCTOSPI2)
+#define RCC_PERIPHCLK_OSPI2            ((uint64_t)0x1000000000000U)
+#endif /* OCTOSPI2 */
+#if defined(LTDC)
+#define RCC_PERIPHCLK_LTDC             ((uint64_t)0x2000000000000U)
+#endif /* LTDC */
+#if defined(ADF1)
+#define RCC_PERIPHCLK_ADF1             ((uint64_t)0x8000000000000U)
+#endif /* ADF1 */
+#if defined(MDF1)
+#define RCC_PERIPHCLK_MDF1             ((uint64_t)0x10000000000000U)
+#endif /* MDF1 */
+#if defined(RCC_CCIPR4_ETHCLKSEL)
+#define RCC_PERIPHCLK_ETH              ((uint64_t)0x20000000000000U)
+#endif /* RCC_CCIPR4_ETHCLKSEL */
+#if defined(RCC_CCIPR4_OTGPHYREFCKSEL)
+#define RCC_PERIPHCLK_OTGPHY           ((uint64_t)0x40000000000000U)
+#endif /* RCC_CCIPR4_OTGPHYREFCKSEL */
+#if defined(RCC_CCIPR5_ETHPTPCLKSEL)
+#define RCC_PERIPHCLK_ETHPTP           ((uint64_t)0x80000000000000U)
+#endif /* RCC_CCIPR5_ETHPTPCLKSEL */
+#if defined(RCC_CCIPR5_ETHREFCLKSEL)
+#define RCC_PERIPHCLK_ETHREF           ((uint64_t)0x200000000000000U)
+#endif /* RCC_CCIPR5_ETHREFCLKSEL */
+
 /**
   * @}
   */
@@ -684,7 +777,9 @@ typedef struct
   */
 #define RCC_UART4CLKSOURCE_PCLK1      ((uint32_t)0x00000000U)
 #define RCC_UART4CLKSOURCE_PLL2Q      RCC_CCIPR1_UART4SEL_0
+#if defined(RCC_CR_PLL3ON)
 #define RCC_UART4CLKSOURCE_PLL3Q      RCC_CCIPR1_UART4SEL_1
+#endif /* RCC_CR_PLL3ON */
 #define RCC_UART4CLKSOURCE_HSI        (RCC_CCIPR1_UART4SEL_0 | RCC_CCIPR1_UART4SEL_1)
 #define RCC_UART4CLKSOURCE_CSI        RCC_CCIPR1_UART4SEL_2
 #define RCC_UART4CLKSOURCE_LSE        (RCC_CCIPR1_UART4SEL_0 | RCC_CCIPR1_UART4SEL_2)
@@ -699,7 +794,9 @@ typedef struct
   */
 #define RCC_UART5CLKSOURCE_PCLK1      ((uint32_t)0x00000000U)
 #define RCC_UART5CLKSOURCE_PLL2Q      RCC_CCIPR1_UART5SEL_0
+#if defined(RCC_CR_PLL3ON)
 #define RCC_UART5CLKSOURCE_PLL3Q      RCC_CCIPR1_UART5SEL_1
+#endif /* RCC_CR_PLL3ON */
 #define RCC_UART5CLKSOURCE_HSI        (RCC_CCIPR1_UART5SEL_0 | RCC_CCIPR1_UART5SEL_1)
 #define RCC_UART5CLKSOURCE_CSI        RCC_CCIPR1_UART5SEL_2
 #define RCC_UART5CLKSOURCE_LSE        (RCC_CCIPR1_UART5SEL_0 | RCC_CCIPR1_UART5SEL_2)
@@ -714,7 +811,9 @@ typedef struct
   */
 #define RCC_USART6CLKSOURCE_PCLK1      ((uint32_t)0x00000000U)
 #define RCC_USART6CLKSOURCE_PLL2Q      RCC_CCIPR1_USART6SEL_0
+#if defined(RCC_CR_PLL3ON)
 #define RCC_USART6CLKSOURCE_PLL3Q      RCC_CCIPR1_USART6SEL_1
+#endif /* RCC_CR_PLL3ON */
 #define RCC_USART6CLKSOURCE_HSI        (RCC_CCIPR1_USART6SEL_0 | RCC_CCIPR1_USART6SEL_1)
 #define RCC_USART6CLKSOURCE_CSI        RCC_CCIPR1_USART6SEL_2
 #define RCC_USART6CLKSOURCE_LSE        (RCC_CCIPR1_USART6SEL_0 | RCC_CCIPR1_USART6SEL_2)
@@ -729,7 +828,9 @@ typedef struct
   */
 #define RCC_UART7CLKSOURCE_PCLK1      ((uint32_t)0x00000000U)
 #define RCC_UART7CLKSOURCE_PLL2Q      RCC_CCIPR1_UART7SEL_0
+#if defined(RCC_CR_PLL3ON)
 #define RCC_UART7CLKSOURCE_PLL3Q      RCC_CCIPR1_UART7SEL_1
+#endif /* RCC_CR_PLL3ON */
 #define RCC_UART7CLKSOURCE_HSI        (RCC_CCIPR1_UART7SEL_0 | RCC_CCIPR1_UART7SEL_1)
 #define RCC_UART7CLKSOURCE_CSI        RCC_CCIPR1_UART7SEL_2
 #define RCC_UART7CLKSOURCE_LSE        (RCC_CCIPR1_UART7SEL_0 | RCC_CCIPR1_UART7SEL_2)
@@ -744,7 +845,9 @@ typedef struct
   */
 #define RCC_UART8CLKSOURCE_PCLK1      ((uint32_t)0x00000000U)
 #define RCC_UART8CLKSOURCE_PLL2Q      RCC_CCIPR1_UART8SEL_0
+#if defined(RCC_CR_PLL3ON)
 #define RCC_UART8CLKSOURCE_PLL3Q      RCC_CCIPR1_UART8SEL_1
+#endif /* RCC_CR_PLL3ON */
 #define RCC_UART8CLKSOURCE_HSI        (RCC_CCIPR1_UART8SEL_0 | RCC_CCIPR1_UART8SEL_1)
 #define RCC_UART8CLKSOURCE_CSI        RCC_CCIPR1_UART8SEL_2
 #define RCC_UART8CLKSOURCE_LSE        (RCC_CCIPR1_UART8SEL_0 | RCC_CCIPR1_UART8SEL_2)
@@ -864,7 +967,11 @@ typedef struct
   * @{
   */
 #define RCC_I2C3CLKSOURCE_PCLK3        ((uint32_t)0x00000000U)
+#if defined(RCC_CR_PLL3ON)
 #define RCC_I2C3CLKSOURCE_PLL3R        RCC_CCIPR4_I2C3SEL_0
+#else
+#define RCC_I2C3CLKSOURCE_PLL2R        RCC_CCIPR4_I2C3SEL_0
+#endif /* RCC_CR_PLL3ON */
 #define RCC_I2C3CLKSOURCE_HSI          RCC_CCIPR4_I2C3SEL_1
 #define RCC_I2C3CLKSOURCE_CSI         (RCC_CCIPR4_I2C3SEL_0 | RCC_CCIPR4_I2C3SEL_1)
 /**
@@ -910,6 +1017,9 @@ typedef struct
 #define RCC_I3C2CLKSOURCE_PLL2R        RCC_CCIPR4_I3C2SEL_0
 #endif /* RCC_CR_PLL3ON */
 #define RCC_I3C2CLKSOURCE_HSI          RCC_CCIPR4_I3C2SEL_1
+#if defined(STM32H5E5xx) || defined(STM32H5E4xx) || defined(STM32H5F5xx) || defined(STM32H5F4xx)
+#define RCC_I3C2CLKSOURCE_CSI          (RCC_CCIPR4_I3C2SEL_0 | RCC_CCIPR4_I3C2SEL_1)
+#endif /* defined(STM32H5E5xx) || defined(STM32H5E4xx) || defined(STM32H5F5xx) || defined(STM32H5F4xx) */
 /**
   * @}
   */
@@ -974,7 +1084,9 @@ typedef struct
   */
 #define RCC_SPI4CLKSOURCE_PCLK2        ((uint32_t)0x00000000U)
 #define RCC_SPI4CLKSOURCE_PLL2Q         RCC_CCIPR3_SPI4SEL_0
+#if defined(RCC_CR_PLL3ON)
 #define RCC_SPI4CLKSOURCE_PLL3Q         RCC_CCIPR3_SPI4SEL_1
+#endif /* RCC_CR_PLL3ON */
 #define RCC_SPI4CLKSOURCE_HSI           (RCC_CCIPR3_SPI4SEL_0 | RCC_CCIPR3_SPI4SEL_1)
 #define RCC_SPI4CLKSOURCE_CSI           RCC_CCIPR3_SPI4SEL_2
 #define RCC_SPI4CLKSOURCE_HSE          (RCC_CCIPR3_SPI4SEL_0 | RCC_CCIPR3_SPI4SEL_2)
@@ -1237,6 +1349,208 @@ typedef struct
   */
 #endif /* USB_DRD_FS */
 
+#if defined(PLAY1)
+/** @defgroup RCCEx_PLAY1_Clock_Source  RCCEx PLAY1 Clock Source
+  * @{
+  */
+#define RCC_PLAY1CLKSOURCE_PCLK3          ((uint32_t)0x00000000U)
+#define RCC_PLAY1CLKSOURCE_PLL2P          RCC_CCIPR3_PLAY1SEL_0
+#if defined(RCC_CR_PLL3ON)
+#define RCC_PLAY1CLKSOURCE_PLL3R          RCC_CCIPR3_PLAY1SEL_1
+#endif /* RCC_CR_PLL3ON */
+#define RCC_PLAY1CLKSOURCE_LSE            (RCC_CCIPR3_PLAY1SEL_0 | RCC_CCIPR3_PLAY1SEL_1)
+#define RCC_PLAY1CLKSOURCE_LSI            RCC_CCIPR3_PLAY1SEL_2
+#define RCC_PLAY1CLKSOURCE_CLKP           (RCC_CCIPR3_PLAY1SEL_0 | RCC_CCIPR3_PLAY1SEL_2)
+/**
+  * @}
+  */
+
+/** @defgroup RCCEx_PLAY1_Clock_Divider RCCEx PLAY1 Clock Divider
+  * @{
+  */
+#define RCC_PLAY1_CLK_DIV_1     ((uint32_t)0x00000000U)                                                                          /*!< PLAY1 not divided (default) */
+#define RCC_PLAY1_CLK_DIV_2     RCC_CCIPR3_PLAY1DIV_0                                                                            /*!< PLAY1 divided by 2 */
+#define RCC_PLAY1_CLK_DIV_4     RCC_CCIPR3_PLAY1DIV_1                                                                            /*!< PLAY1 divided by 4 */
+#define RCC_PLAY1_CLK_DIV_8     (RCC_CCIPR3_PLAY1DIV_0 | RCC_CCIPR3_PLAY1DIV_1)                                                  /*!< PLAY1 divided by 8 */
+#define RCC_PLAY1_CLK_DIV_16    RCC_CCIPR3_PLAY1DIV_2                                                                            /*!< PLAY1 divided by 16 */
+#define RCC_PLAY1_CLK_DIV_32    (RCC_CCIPR3_PLAY1DIV_2 | RCC_CCIPR3_PLAY1DIV_0)                                                  /*!< PLAY1 divided by 32 */
+#define RCC_PLAY1_CLK_DIV_64    (RCC_CCIPR3_PLAY1DIV_2 | RCC_CCIPR3_PLAY1DIV_1)                                                  /*!< PLAY1 divided by 64 */
+#define RCC_PLAY1_CLK_DIV_128   (RCC_CCIPR3_PLAY1DIV_2 | RCC_CCIPR3_PLAY1DIV_1 | RCC_CCIPR3_PLAY1DIV_0)                          /*!< PLAY1 divided by 128 */
+#define RCC_PLAY1_CLK_DIV_256   RCC_CCIPR3_PLAY1DIV_3                                                                            /*!< PLAY1 divided by 256 */
+#define RCC_PLAY1_CLK_DIV_512   (RCC_CCIPR3_PLAY1DIV_3 | RCC_CCIPR3_PLAY1DIV_0)                                                  /*!< PLAY1 divided by 512 */
+#define RCC_PLAY1_CLK_DIV_1024  (RCC_CCIPR3_PLAY1DIV_3 | RCC_CCIPR3_PLAY1DIV_1)                                                  /*!< PLAY1 divided by 1024 */
+#define RCC_PLAY1_CLK_DIV_2048  (RCC_CCIPR3_PLAY1DIV_3 | RCC_CCIPR3_PLAY1DIV_1 | RCC_CCIPR3_PLAY1DIV_0)                          /*!< PLAY1 divided by 2048 */
+#define RCC_PLAY1_CLK_DIV_4096  (RCC_CCIPR3_PLAY1DIV_3 | RCC_CCIPR3_PLAY1DIV_2)                                                  /*!< PLAY1 divided by 4096 */
+#define RCC_PLAY1_CLK_DIV_8192  (RCC_CCIPR3_PLAY1DIV_3 | RCC_CCIPR3_PLAY1DIV_2 | RCC_CCIPR3_PLAY1DIV_0)                          /*!< PLAY1 divided by 8192 */
+#define RCC_PLAY1_CLK_DIV_16384 (RCC_CCIPR3_PLAY1DIV_3 | RCC_CCIPR3_PLAY1DIV_2 | RCC_CCIPR3_PLAY1DIV_1)                          /*!< PLAY1 divided by 16384 */
+#define RCC_PLAY1_CLK_DIV_32768 (RCC_CCIPR3_PLAY1DIV_3 | RCC_CCIPR3_PLAY1DIV_2 | RCC_CCIPR3_PLAY1DIV_1 | \
+                                 RCC_CCIPR3_PLAY1DIV_0)                                                                          /*!< PLAY1 divided by 32768 */
+/**
+  * @}
+  */
+#endif /* PLAY1 */
+
+#if defined(USB_OTG_FS)
+/** @defgroup RCCEx_OTGFS_Clock_Source  RCCEx USB_OTG_FS Clock Source
+  * @{
+  */
+#define RCC_OTGFSCLKSOURCE_HSI48          ((uint32_t)0x00000000U)
+#define RCC_OTGFSCLKSOURCE_PLL1Q          RCC_CCIPR4_OTGFSSEL_0
+#define RCC_OTGFSCLKSOURCE_PLL3Q          RCC_CCIPR4_OTGFSSEL_1
+#if defined(PWR_USBSCR_OTGHSEN)
+#define RCC_OTGFSCLKSOURCE_CLK48          (RCC_CCIPR4_OTGFSSEL_0 | RCC_CCIPR4_OTGFSSEL_1)
+#endif /* PWR_USBSCR_OTGHSEN */
+/**
+  * @}
+  */
+#endif /* USB_OTG_FS */
+
+#if defined(USB_OTG_HS)
+/** @defgroup RCCEx_OTGHS_Clock_Source  RCCEx USB_OTG_HS Clock Source
+  * @{
+  */
+#define RCC_OTGHSCLKSOURCE_HSE            ((uint32_t)0x00000000U)
+#define RCC_OTGHSCLKSOURCE_PLL3Q          RCC_CCIPR4_OTGHSSEL_0
+#define RCC_OTGHSCLKSOURCE_HSE_DIV2       RCC_CCIPR4_OTGHSSEL_1
+#define RCC_OTGHSCLKSOURCE_PLL1Q_DIV2     (RCC_CCIPR4_OTGHSSEL_0 | RCC_CCIPR4_OTGHSSEL_1)
+/**
+  * @}
+  */
+#endif /* USB_OTG_HS */
+
+#if defined(RCC_CCIPR4_OTGPHYREFCKSEL)
+/** @defgroup RCCEx_OTGPHYREFCK_Clock_Source    RCCEx OTGPHYREFCK Clock Source
+  * @{
+  */
+#define RCC_OTGPHYREFCKCLKSOURCE_16M            (RCC_CCIPR4_OTGPHYREFCKSEL_0 | RCC_CCIPR4_OTGPHYREFCKSEL_1)
+#define RCC_OTGPHYREFCKCLKSOURCE_19_2M          RCC_CCIPR4_OTGPHYREFCKSEL_3
+#define RCC_OTGPHYREFCKCLKSOURCE_20M            (RCC_CCIPR4_OTGPHYREFCKSEL_3 | RCC_CCIPR4_OTGPHYREFCKSEL_0)
+#define RCC_OTGPHYREFCKCLKSOURCE_24M            (RCC_CCIPR4_OTGPHYREFCKSEL_3 | RCC_CCIPR4_OTGPHYREFCKSEL_1)
+#define RCC_OTGPHYREFCKCLKSOURCE_26M            (RCC_CCIPR4_OTGPHYREFCKSEL_3 |\
+                                                 RCC_CCIPR4_OTGPHYREFCKSEL_2 | RCC_CCIPR4_OTGPHYREFCKSEL_1)
+#define RCC_OTGPHYREFCKCLKSOURCE_32M            (RCC_CCIPR4_OTGPHYREFCKSEL_3 |\
+                                                 RCC_CCIPR4_OTGPHYREFCKSEL_1 | RCC_CCIPR4_OTGPHYREFCKSEL_0)
+
+/**
+  * @}
+  */
+#endif /* RCC_CCIPR4_OTGPHYREFCKSEL */
+
+#if defined(RCC_CCIPR5_ETHPTPCLKSEL)
+/** @defgroup RCCEx_ETHPTP_Clock_Source  RCCEx ETHPTP Clock Source
+  * @{
+  */
+#define RCC_ETHPTPCLKSOURCE_HCLK               ((uint32_t)0x00000000U)
+#define RCC_ETHPTPCLKSOURCE_PLL1R              RCC_CCIPR5_ETHPTPCLKSEL_0
+#define RCC_ETHPTPCLKSOURCE_PLL1Q              RCC_CCIPR5_ETHPTPCLKSEL_1
+#if defined(RCC_CR_PLL3ON)
+#define RCC_ETHPTPCLKSOURCE_PLL3P              (RCC_CCIPR5_ETHPTPCLKSEL_0 | RCC_CCIPR5_ETHPTPCLKSEL_1)
+#endif /* RCC_CR_PLL3ON */
+/**
+  * @}
+  */
+#endif /* RCC_CCIPR5_ETHPTPCLKSEL */
+
+#if defined(RCC_CCIPR4_ETHPTPDIV)
+/** @defgroup RCCEx_ETHPTP_Clock_Divider RCCEx ETHPTP Clock Divider
+  * @{
+  */
+#define RCC_ETHPTP_CLK_DIV_1     ((uint32_t)0x00000000U)                                                     /*!< ETHPTP not divided (default) */
+#define RCC_ETHPTP_CLK_DIV_2     RCC_CCIPR4_ETHPTPDIV_0                                                      /*!< ETHPTP divided by 2 */
+#define RCC_ETHPTP_CLK_DIV_3     RCC_CCIPR4_ETHPTPDIV_1                                                      /*!< ETHPTP divided by 3 */
+#define RCC_ETHPTP_CLK_DIV_4     (RCC_CCIPR4_ETHPTPDIV_0 | RCC_CCIPR4_ETHPTPDIV_1)                           /*!< ETHPTP divided by 4 */
+#define RCC_ETHPTP_CLK_DIV_5     RCC_CCIPR4_ETHPTPDIV_2                                                      /*!< ETHPTP divided by 5 */
+#define RCC_ETHPTP_CLK_DIV_6     (RCC_CCIPR4_ETHPTPDIV_2 | RCC_CCIPR4_ETHPTPDIV_0)                           /*!< ETHPTP divided by 6 */
+#define RCC_ETHPTP_CLK_DIV_7     (RCC_CCIPR4_ETHPTPDIV_2 | RCC_CCIPR4_ETHPTPDIV_1)                           /*!< ETHPTP divided by 7 */
+#define RCC_ETHPTP_CLK_DIV_8     (RCC_CCIPR4_ETHPTPDIV_2 | RCC_CCIPR4_ETHPTPDIV_1 | RCC_CCIPR4_ETHPTPDIV_0)  /*!< ETHPTP divided by 8 */
+#define RCC_ETHPTP_CLK_DIV_9     RCC_CCIPR4_ETHPTPDIV_3                                                      /*!< ETHPTP divided by 9 */
+#define RCC_ETHPTP_CLK_DIV_10    (RCC_CCIPR4_ETHPTPDIV_3 | RCC_CCIPR4_ETHPTPDIV_0)                           /*!< ETHPTP divided by 10 */
+#define RCC_ETHPTP_CLK_DIV_11    (RCC_CCIPR4_ETHPTPDIV_3 | RCC_CCIPR4_ETHPTPDIV_1)                           /*!< ETHPTP divided by 11 */
+#define RCC_ETHPTP_CLK_DIV_12    (RCC_CCIPR4_ETHPTPDIV_3 | RCC_CCIPR4_ETHPTPDIV_1 | RCC_CCIPR4_ETHPTPDIV_0)  /*!< ETHPTP divided by 12 */
+#define RCC_ETHPTP_CLK_DIV_13    (RCC_CCIPR4_ETHPTPDIV_3 | RCC_CCIPR4_ETHPTPDIV_2)                           /*!< ETHPTP divided by 13 */
+#define RCC_ETHPTP_CLK_DIV_14    (RCC_CCIPR4_ETHPTPDIV_3 | RCC_CCIPR4_ETHPTPDIV_2 | RCC_CCIPR4_ETHPTPDIV_0)  /*!< ETHPTP divided by 14 */
+#define RCC_ETHPTP_CLK_DIV_15    (RCC_CCIPR4_ETHPTPDIV_3 | RCC_CCIPR4_ETHPTPDIV_2 | RCC_CCIPR4_ETHPTPDIV_1)  /*!< ETHPTP divided by 15 */
+#define RCC_ETHPTP_CLK_DIV_16    (RCC_CCIPR4_ETHPTPDIV_3 | RCC_CCIPR4_ETHPTPDIV_2 | \
+                                  RCC_CCIPR4_ETHPTPDIV_1 | RCC_CCIPR4_ETHPTPDIV_0)                           /*!< ETHPTP divided by 16 */
+
+
+#endif /* RCC_CCIPR4_ETHPTPDIV */
+
+#if defined(OCTOSPI2)
+/** @defgroup RCCEx_OSPI2_Clock_Source OctoSPI2 Clock Source
+  * @{
+  */
+#define RCC_OSPI2CLKSOURCE_HCLK      ((uint32_t)0x00000000U)
+#define RCC_OSPI2CLKSOURCE_PLL1Q      RCC_CCIPR5_OCTOSPI2SEL_0
+#define RCC_OSPI2CLKSOURCE_PLL2R      RCC_CCIPR5_OCTOSPI2SEL_1
+#define RCC_OSPI2CLKSOURCE_CLKP      (RCC_CCIPR5_OCTOSPI2SEL_0 | RCC_CCIPR5_OCTOSPI2SEL_1)
+/**
+  * @}
+  */
+#endif /* OCTOSPI2 */
+
+#if defined(LTDC)
+/** @defgroup RCCEx_LTDC_Clock_Source  RCCEx LTDC Clock Source
+  * @{
+  */
+#define RCC_LTDCCLKSOURCE_PLL3R               ((uint32_t)0x00000000U)
+#define RCC_LTDCCLKSOURCE_PLL2R               RCC_CCIPR5_LTDCSEL
+/**
+  * @}
+  */
+#endif /* LTDC */
+
+#if defined(RCC_CCIPR5_ETHREFCLKSEL)
+/** @defgroup RCCEx_ETHREF_Clock_Source  RCCEx ETHREF Clock Source
+  * @{
+  */
+#define RCC_ETHREFCLKSOURCE_PLL1Q               ((uint32_t)0x00000000U)
+#define RCC_ETHREFCLKSOURCE_PLL1R               RCC_CCIPR5_ETHREFCLKSEL
+/**
+  * @}
+  */
+#endif /* RCC_CCIPR5_ETHREFCLKSEL */
+
+#if defined(ADF1)
+/** @defgroup RCCEx_ADF1_Clock_Source  RCCEx ADF1 Clock Source
+  * @{
+  */
+#define RCC_ADF1CLKSOURCE_PLL1Q               ((uint32_t)0x00000000U)
+#define RCC_ADF1CLKSOURCE_PLL2P               RCC_CCIPR5_ADF1SEL_0
+#define RCC_ADF1CLKSOURCE_PLL3P               RCC_CCIPR5_ADF1SEL_1
+#define RCC_ADF1CLKSOURCE_PIN                 (RCC_CCIPR5_ADF1SEL_0 | RCC_CCIPR5_ADF1SEL_1)
+#define RCC_ADF1CLKSOURCE_CLKP                RCC_CCIPR5_ADF1SEL_2
+/**
+  * @}
+  */
+#endif /* ADF1 */
+
+#if defined(MDF1)
+/** @defgroup RCCEx_MDF1_Clock_Source  RCCEx MDF1 Clock Source
+  * @{
+  */
+#define RCC_MDF1CLKSOURCE_PLL1Q               ((uint32_t)0x00000000U)
+#define RCC_MDF1CLKSOURCE_PLL2P               RCC_CCIPR5_MDF1SEL_0
+#define RCC_MDF1CLKSOURCE_PLL3P               RCC_CCIPR5_MDF1SEL_1
+#define RCC_MDF1CLKSOURCE_PIN                 (RCC_CCIPR5_MDF1SEL_0 | RCC_CCIPR5_MDF1SEL_1)
+#define RCC_MDF1CLKSOURCE_CLKP                RCC_CCIPR5_MDF1SEL_2
+
+/**
+  * @}
+  */
+#endif /* MDF1 */
+
+#if defined(RCC_CCIPR4_ETHCLKSEL)
+/** @defgroup RCCEx_ETH_Clock_Source  RCCEx ETH Clock Source
+  * @{
+  */
+#define RCC_ETHCLKSOURCE_HSE                 ((uint32_t)0x00000000U)
+#define RCC_ETHCLKSOURCE_PLL1Q               RCC_CCIPR4_ETHCLKSEL
+/**
+  * @}
+  */
+#endif /* RCC_CCIPR4_ETHCLKSEL */
+
 /** @defgroup RCCEx_TIM_Prescaler_Selection RCCEx TIM Prescaler Selection
   * @{
   */
@@ -1270,7 +1584,12 @@ typedef struct
 #define RCC_CRS_SYNC_SOURCE_LSE        CRS_CFGR_SYNCSRC_0                          /*!< Synchro Signal source LSE */
 #if defined(USB_DRD_FS)
 #define RCC_CRS_SYNC_SOURCE_USB        CRS_CFGR_SYNCSRC_1                          /*!< Synchro Signal source USB SOF (default)*/
+#elif defined(USB_OTG_FS)
+#define RCC_CRS_SYNC_SOURCE_OTG_FS     CRS_CFGR_SYNCSRC_1                          /*!< Synchro Signal source USB SOF (default)*/
 #endif /* USB_DRD_FS */
+#if defined(USB_OTG_HS)
+#define RCC_CRS_SYNC_SOURCE_OTG_HS     (CRS_CFGR_SYNCSRC_0 | CRS_CFGR_SYNCSRC_1 )  /*!< Synchro Signal source USB SOF (default)*/
+#endif /* USB_OTG_HS */
 /**
   * @}
   */
@@ -1368,6 +1687,17 @@ typedef struct
 
 #endif /* CRS */
 
+#if defined (RCC_CCIPR4_OTGPDCTRL)
+/** @defgroup RCC_LL_EC_OTGPD_SUSPEND OTG PHY Suspend Power State
+  * @{
+  */
+#define RCC_OTGPD_SUSPEND_POWERDOWN   ((uint32_t)0x00000000U)         /*!< Power down the PHY state machine, bias, and PLL in SUSPEND mode. */
+#define RCC_OTGPD_SUSPEND_POWERON     RCC_CCIPR4_OTGPDCTRL            /*!< Keep the PHY powered in SUSPEND mode (default after reset). */
+/**
+  * @}
+  */
+#endif /* RCC_CCIPR4_OTGPDCTRL */
+
 /**
   * @}
   */
@@ -1383,6 +1713,18 @@ typedef struct
   */
 #define __HAL_RCC_TIMIC_ENABLE()  SET_BIT(RCC->CCIPR1, RCC_CCIPR1_TIMICSEL)     /*!< HSI/1024, CSI/128 and HSI/8 generation for Timers 12,15 and LPTimer2 Input capture */
 #define __HAL_RCC_TIMIC_DISABLE() CLEAR_BIT(RCC->CCIPR1, RCC_CCIPR1_TIMICSEL)   /*!< No clock available for Timers Input capture */
+
+#if defined (RCC_CCIPR4_OTGPDCTRL)
+/** @brief  Set the power state of the OTG PHY in SUSPEND mode.
+  * @param  _STATE_ the power state of the OTG PHY in SUSPEND mode.
+  *         This parameter can be one of the following values:
+  *            @arg @ref RCC_OTGPD_SUSPEND_POWERDOWN   OTG PHY is powered down when the system is in SUSPEND mode
+  *            @arg @ref RCC_OTGPD_SUSPEND_POWERON     OTG PHY is powered down when the system is in SUSPEND mode
+  * @retval None
+  */
+#define __HAL_RCC_OTGPD_CONFIG(_STATE_) \
+  MODIFY_REG(RCC->CCIPR4, RCC_CCIPR4_OTGPDCTRL, (uint32_t)(_STATE_))
+#endif /* RCC_CCIPR4_OTGPDCTRL */
 
 /** @brief  Macro to configure the PLL2 clock source.
   * @note   This function must be used only when all PLL2 is disabled.
@@ -2246,7 +2588,7 @@ typedef struct
   *            @arg @ref RCC_I2C1CLKSOURCE_CSI  CSI selected as I2C1 clock
   * @retval None
   *
-  *  (*) : For stm32h56xxx and stm32h57xxx family lines.
+  *  (*)  : For stm32h56xxx and stm32h57xxx family lines.
   *  (**) : For stm32h503xx family line.
   */
 #define __HAL_RCC_I2C1_CONFIG(__I2C1_CLKSOURCE__) \
@@ -2260,7 +2602,7 @@ typedef struct
   *            @arg @ref RCC_I2C1CLKSOURCE_HSI  HSI selected as I2C1 clock
   *            @arg @ref RCC_I2C1CLKSOURCE_CSI  CSI selected as I2C1 clock
   *
-  *  (*) : For stm32h56xxx and stm32h57xxx family lines.
+  *  (*)  : For stm32h56xxx and stm32h57xxx family lines.
   *  (**) : For stm32h503xx family line.
   */
 #define __HAL_RCC_GET_I2C1_SOURCE() ((uint32_t)(READ_BIT(RCC->CCIPR4, RCC_CCIPR4_I2C1SEL)))
@@ -2276,7 +2618,7 @@ typedef struct
   *            @arg @ref RCC_I2C2CLKSOURCE_CSI  CSI selected as I2C2 clock
   * @retval None
   *
-  *  (*) : For stm32h56xxx and stm32h57xxx family lines.
+  *  (*)  : For stm32h56xxx and stm32h57xxx family lines.
   *  (**) : For stm32h503xx family line.
   */
 #define __HAL_RCC_I2C2_CONFIG(__I2C2_CLKSOURCE__) \
@@ -2290,7 +2632,7 @@ typedef struct
   *            @arg @ref RCC_I2C2CLKSOURCE_HSI  HSI selected as I2C2 clock
   *            @arg @ref RCC_I2C2CLKSOURCE_CSI  CSI selected as I2C2 clock
   *
-  *  (*) : For stm32h56xxx and stm32h57xxx family lines.
+  *  (*)  : For stm32h56xxx and stm32h57xxx family lines.
   *  (**) : For stm32h503xx family line.
   */
 #define __HAL_RCC_GET_I2C2_SOURCE() ((uint32_t)(READ_BIT(RCC->CCIPR4, RCC_CCIPR4_I2C2SEL)))
@@ -2378,12 +2720,14 @@ typedef struct
   *          This parameter can be one of the following values:
   *            @arg @ref RCC_I3C2CLKSOURCE_PCLK3  PCLK3 selected as I3C2 clock
   *            @arg @ref RCC_I3C2CLKSOURCE_PLL3R  PLL3R selected as I3C2 clock (*)
-  *            @arg @ref RCC_I3C2CLKSOURCE_PLL2R  PLL2R selected as I3C2 clock
+  *            @arg @ref RCC_I3C2CLKSOURCE_PLL2R  PLL2R selected as I3C2 clock (**)
   *            @arg @ref RCC_I3C2CLKSOURCE_HSI    HSI selected as I3C2 clock
+  *            @arg @ref RCC_I3C2CLKSOURCE_CSI    CSI selected as I3C2 clock (*)
   *
   * @retval None
   *
   *  (*)  : Not available for all stm32h5xxxx family lines.
+  *  (**) : Not available for stm32h5exxx and stm32h5fxxx family lines.
   */
 #define __HAL_RCC_I3C2_CONFIG(__I3C2_CLKSOURCE__) \
   MODIFY_REG(RCC->CCIPR4, RCC_CCIPR4_I3C2SEL, (uint32_t)(__I3C2_CLKSOURCE__))
@@ -2392,10 +2736,12 @@ typedef struct
   * @retval The clock source can be one of the following values:
   *            @arg @ref RCC_I3C2CLKSOURCE_PCLK3  PCLK3 selected as I3C2 clock
   *            @arg @ref RCC_I3C2CLKSOURCE_PLL3R  PLL3R selected as I3C2 clock (*)
-  *            @arg @ref RCC_I3C2CLKSOURCE_PLL2R  PLL2R selected as I3C2 clock
+  *            @arg @ref RCC_I3C2CLKSOURCE_PLL2R  PLL2R selected as I3C2 clock (**)
   *            @arg @ref RCC_I3C2CLKSOURCE_HSI    HSI selected as I3C2 clock
+  *            @arg @ref RCC_I3C2CLKSOURCE_CSI    CSI selected as I3C2 clock (*)
   *
   *  (*)  : Not available for all stm32h5xxxx family lines.
+  *  (**) : Not available for stm32h5exxx and stm32h5fxxx family lines.
   */
 #define __HAL_RCC_GET_I3C2_SOURCE() ((uint32_t)(READ_BIT(RCC->CCIPR4, RCC_CCIPR4_I3C2SEL)))
 #endif /* I3C2 */
@@ -2972,6 +3318,358 @@ typedef struct
 #define __HAL_RCC_GET_USB_SOURCE() ((uint32_t)(READ_BIT(RCC->CCIPR4, RCC_CCIPR4_USBSEL)))
 #endif /* USB_DRD_FS */
 
+#if defined(PLAY1)
+/** @brief  Macro to configure the PLAY1 clock (PLAY1CLK).
+  * @param  __PLAY1CLKSource__ specifies the PLAY1 clock source.
+  *         This parameter can be one of the following values:
+  *            @arg RCC_PLAY1CLKSOURCE_PCLK3  PCLK3 selected as PLAY1 clock
+  *            @arg RCC_PLAY1CLKSOURCE_PLL2P  PLL2P selected as PLAY1 clock
+  *            @arg RCC_PLAY1CLKSOURCE_PLL3R  PLL3R selected as PLAY1 clock
+  *            @arg RCC_PLAY1CLKSOURCE_LSE    LSE selected as PLAY1 clock
+  *            @arg RCC_PLAY1CLKSOURCE_LSI    LSI selected as PLAY1 clock
+  *            @arg RCC_PLAY1CLKSOURCE_CLKP   CLKP selected as PLAY1 clock
+  *
+  */
+#define __HAL_RCC_PLAY1_CONFIG(__PLAY1CLKSource__) \
+  MODIFY_REG(RCC->CCIPR3, RCC_CCIPR3_PLAY1SEL, (uint32_t)(__PLAY1CLKSource__))
+
+/** @brief  Macro to get the PLAY1 clock source.
+  * @retval The clock source can be one of the following values:
+  *            @arg RCC_PLAY1CLKSOURCE_PCLK3  PCLK3 selected as PLAY1 clock
+  *            @arg RCC_PLAY1CLKSOURCE_PLL2P  PLL2P selected as PLAY1 clock
+  *            @arg RCC_PLAY1CLKSOURCE_PLL3R  PLL3R selected as PLAY1 clock
+  *            @arg RCC_PLAY1CLKSOURCE_LSE    LSE selected as PLAY1 clock
+  *            @arg RCC_PLAY1CLKSOURCE_LSI    LSI selected as PLAY1 clock
+  *            @arg RCC_PLAY1CLKSOURCE_CLKP   CLKP selected as PLAY1 clock
+  *
+  */
+#define __HAL_RCC_GET_PLAY1_SOURCE() ((uint32_t)(READ_BIT(RCC->CCIPR3, RCC_CCIPR3_PLAY1SEL)))
+
+/** @brief  Macro to configure the PLAY1 kernel clock divider.
+  * @param  __PLAY1_CLKDIV__ specifies the PLAY1 digital interface clock source.
+  *         This parameter can be one of the following values:
+  *            @arg @ref RCC_PLAY1_CLK_DIV_1       PLAY1 kernel clock divided by 1
+  *            @arg @ref RCC_PLAY1_CLK_DIV_2       PLAY1 kernel clock divided by 2
+  *            @arg @ref RCC_PLAY1_CLK_DIV_4       PLAY1 kernel clock divided by 4
+  *            @arg @ref RCC_PLAY1_CLK_DIV_8       PLAY1 kernel clock divided by 8
+  *            @arg @ref RCC_PLAY1_CLK_DIV_16      PLAY1 kernel clock divided by 16
+  *            @arg @ref RCC_PLAY1_CLK_DIV_32      PLAY1 kernel clock divided by 32
+  *            @arg @ref RCC_PLAY1_CLK_DIV_64      PLAY1 kernel clock divided by 64
+  *            @arg @ref RCC_PLAY1_CLK_DIV_128     PLAY1 kernel clock divided by 128
+  *            @arg @ref RCC_PLAY1_CLK_DIV_256     PLAY1 kernel clock divided by 256
+  *            @arg @ref RCC_PLAY1_CLK_DIV_512     PLAY1 kernel clock divided by 512
+  *            @arg @ref RCC_PLAY1_CLK_DIV_1024    PLAY1 kernel clock divided by 1024
+  *            @arg @ref RCC_PLAY1_CLK_DIV_2048    PLAY1 kernel clock divided by 2048
+  *            @arg @ref RCC_PLAY1_CLK_DIV_4096    PLAY1 kernel clock divided by 4096
+  *            @arg @ref RCC_PLAY1_CLK_DIV_8192    PLAY1 kernel clock divided by 8192
+  *            @arg @ref RCC_PLAY1_CLK_DIV_16384   PLAY1 kernel clock divided by 16384
+  *            @arg @ref RCC_PLAY1_CLK_DIV_32768   PLAY1 kernel clock divided by 32768
+  * @retval None
+  */
+#define __HAL_RCC_PLAY1_DIV_CONFIG(__PLAY1_CLKDIV__) \
+  MODIFY_REG(RCC->CCIPR3, RCC_CCIPR3_PLAY1DIV, (__PLAY1_CLKDIV__))
+
+/** @brief  Macro to get the PLAY1 kernel clock divider.
+  * @retval The clock source can be one of the following values:
+  *            @arg @ref RCC_PLAY1_CLK_DIV_1       PLAY1 kernel clock divided by 1
+  *            @arg @ref RCC_PLAY1_CLK_DIV_2       PLAY1 kernel clock divided by 2
+  *            @arg @ref RCC_PLAY1_CLK_DIV_4       PLAY1 kernel clock divided by 4
+  *            @arg @ref RCC_PLAY1_CLK_DIV_8       PLAY1 kernel clock divided by 8
+  *            @arg @ref RCC_PLAY1_CLK_DIV_16      PLAY1 kernel clock divided by 16
+  *            @arg @ref RCC_PLAY1_CLK_DIV_32      PLAY1 kernel clock divided by 32
+  *            @arg @ref RCC_PLAY1_CLK_DIV_64      PLAY1 kernel clock divided by 64
+  *            @arg @ref RCC_PLAY1_CLK_DIV_128     PLAY1 kernel clock divided by 128
+  *            @arg @ref RCC_PLAY1_CLK_DIV_256     PLAY1 kernel clock divided by 256
+  *            @arg @ref RCC_PLAY1_CLK_DIV_512     PLAY1 kernel clock divided by 512
+  *            @arg @ref RCC_PLAY1_CLK_DIV_1024    PLAY1 kernel clock divided by 1024
+  *            @arg @ref RCC_PLAY1_CLK_DIV_2048    PLAY1 kernel clock divided by 2048
+  *            @arg @ref RCC_PLAY1_CLK_DIV_4096    PLAY1 kernel clock divided by 4096
+  *            @arg @ref RCC_PLAY1_CLK_DIV_8192    PLAY1 kernel clock divided by 8192
+  *            @arg @ref RCC_PLAY1_CLK_DIV_16384   PLAY1 kernel clock divided by 16384
+  *            @arg @ref RCC_PLAY1_CLK_DIV_32768   PLAY1 kernel clock divided by 32768
+  */
+#define __HAL_RCC_GET_PLAY1_DIV()          READ_BIT(RCC->CCIPR3, RCC_CCIPR3_PLAY1DIV)
+#endif /* PLAY1 */
+
+#if defined(USB_OTG_FS)
+/** @brief  Macro to configure the USB_OTG_FS clock (OTGFSCLK).
+  * @param  __OTGFSCLKSource__ specifies the USB_OTG_FS clock source.
+  *         This parameter can be one of the following values:
+  *            @arg RCC_OTGFSCLKSOURCE_PCLK3       PCLK3 selected as USB_OTG_FS clock
+  *            @arg RCC_OTGFSCLKSOURCE_PLL2Q       PLL2Q selected as USB_OTG_FS clock
+  *            @arg RCC_OTGFSCLKSOURCE_PLL3Q      PLL3Q selected as USB_OTG_FS clock
+  *            @arg RCC_OTGFSCLKSOURCE_CLK48       OTG_HS PHY CLK48 output selected as USB_OTG_FS clock (*)
+  *
+  *  (*) : Available only on STM32H5E5x/STM32H5F5x when OTG_HS PHY is enabled.
+  */
+#define __HAL_RCC_OTGFS_CONFIG(__OTGFSCLKSource__) \
+  MODIFY_REG(RCC->CCIPR4, RCC_CCIPR4_OTGFSSEL, (uint32_t)(__OTGFSCLKSource__))
+
+/** @brief  Macro to get the USB_OTG_FS clock source.
+  * @retval The clock source can be one of the following values:
+  *            @arg RCC_OTGFSCLKSOURCE_PCLK3       PCLK3 selected as USB_OTG_FS clock
+  *            @arg RCC_OTGFSCLKSOURCE_PLL2Q       PLL2Q selected as USB_OTG_FS clock
+  *            @arg RCC_OTGFSCLKSOURCE_PLL3Q      PLL3Q selected as USB_OTG_FS clock
+  *            @arg RCC_OTGFSCLKSOURCE_CLK48       OTG_HS PHY CLK48 output selected as USB_OTG_FS clock (*)
+  *
+  *  (*) : Available only on STM32H5E5x/STM32H5F5x when OTG_HS PHY is enabled.
+  */
+#define __HAL_RCC_GET_OTGFS_SOURCE() ((uint32_t)(READ_BIT(RCC->CCIPR4, RCC_CCIPR4_OTGFSSEL)))
+#endif /* USB_OTG_FS */
+
+#if defined(USB_OTG_HS)
+/** @brief  Macro to configure the USB_OTG_HS clock (OTGHSCLK).
+  * @param  __OTGHSCLKSource__ specifies the USB_OTG_HS clock source.
+  *         This parameter can be one of the following values:
+  *            @arg RCC_OTGHSCLKSOURCE_HSE         HSE selected as USB_OTG_HS clock
+  *            @arg RCC_OTGHSCLKSOURCE_PLL3Q       PLL3Q selected as USB_OTG_HS clock
+  *            @arg RCC_OTGHSCLKSOURCE_HSE_DIV2    HSE_DIV2 selected as USB_OTG_HS clock
+  *            @arg RCC_OTGHSCLKSOURCE_PLL1Q_DIV2  PLL1Q_DIV2 selected as USB_OTG_HS clock
+  *
+  */
+#define __HAL_RCC_OTGHS_CONFIG(__OTGHSCLKSource__) \
+  MODIFY_REG(RCC->CCIPR4, RCC_CCIPR4_OTGHSSEL, (uint32_t)(__OTGHSCLKSource__))
+
+/** @brief  Macro to get the USB_OTG_HS clock source.
+  * @retval The clock source can be one of the following values:
+  *            @arg RCC_OTGHSCLKSOURCE_HSE         HSE selected as USB_OTG_HS clock
+  *            @arg RCC_OTGHSCLKSOURCE_PLL3Q       PLL3Q selected as USB_OTG_HS clock
+  *            @arg RCC_OTGHSCLKSOURCE_HSE_DIV2    HSE_DIV2 selected as USB_OTG_HS clock
+  *            @arg RCC_OTGHSCLKSOURCE_PLL1Q_DIV2  PLL1Q_DIV2 selected as USB_OTG_HS clock
+  *
+  */
+#define __HAL_RCC_GET_OTGHS_SOURCE() ((uint32_t)(READ_BIT(RCC->CCIPR4, RCC_CCIPR4_OTGHSSEL)))
+#endif /* USB_OTG_HS */
+
+#if defined(RCC_CCIPR4_OTGPHYREFCKSEL)
+/** @brief  Macro to configure the OTGPHY clock (OTGPHYCLK).
+  * @param  __OTGPHYCLKSource__ specifies the OTGPHY clock source.
+  *         This parameter can be one of the following values:
+  *            @arg RCC_OTGPHYREFCKCLKSOURCE_16M     16Mhz selected as OTGPHY clock
+  *            @arg RCC_OTGPHYREFCKCLKSOURCE_19_2M   19.2Mhz selected as OTGPHY clock
+  *            @arg RCC_OTGPHYREFCKCLKSOURCE_20M     20Mhz selected as OTGPHY clock
+  *            @arg RCC_OTGPHYREFCKCLKSOURCE_24M     24Mhz selected as OTGPHY clockk
+  *            @arg RCC_OTGPHYREFCKCLKSOURCE_26M     26Mhz selected as OTGPHY clockk
+  *            @arg RCC_OTGPHYREFCKCLKSOURCE_32M     32Mhz selected as OTGPHY clockk
+  *
+  */
+#define __HAL_RCC_OTGPHY_CONFIG(__OTGPHYCLKSource__) \
+  MODIFY_REG(RCC->CCIPR4, RCC_CCIPR4_OTGPHYREFCKSEL, (uint32_t)(__OTGPHYCLKSource__))
+
+/** @brief  Macro to get the OTGPHY clock source.
+  * @retval The clock source can be one of the following values:
+  *            @arg RCC_OTGPHYREFCKCLKSOURCE_16M     16Mhz selected as OTGPHY clock
+  *            @arg RCC_OTGPHYREFCKCLKSOURCE_19_2M   19.2Mhz selected as OTGPHY clock
+  *            @arg RCC_OTGPHYREFCKCLKSOURCE_20M     20Mhz selected as OTGPHY clock
+  *            @arg RCC_OTGPHYREFCKCLKSOURCE_24M     24Mhz selected as OTGPHY clockk
+  *            @arg RCC_OTGPHYREFCKCLKSOURCE_26M     26Mhz selected as OTGPHY clockk
+  *            @arg RCC_OTGPHYREFCKCLKSOURCE_32M     32Mhz selected as OTGPHY clockk
+  *
+  */
+#define __HAL_RCC_GET_OTGPHY_SOURCE() ((uint32_t)(READ_BIT(RCC->CCIPR4, RCC_CCIPR4_OTGPHYREFCKSEL)))
+#endif /* RCC_CCIPR4_OTGPHYREFCKSEL */
+
+#if defined(OCTOSPI2)
+/** @brief  Macro to configure the OctoSPI2 clock.
+  * @param  __OSPI2_CLKSOURCE__ specifies the OctoSPI2 clock source.
+  *         This parameter can be one of the following values:
+  *            @arg @ref RCC_OSPI2CLKSOURCE_HCLK    HCLK selected as OctoSPI2 clock
+  *            @arg @ref RCC_OSPI2CLKSOURCE_PLL1Q   PLL1Q divider clock selected as OctoSPI2 clock
+  *            @arg @ref RCC_OSPI2CLKSOURCE_PLL2R   PLL2R divider clock selected as OctoSPI2 clock
+  *            @arg @ref RCC_OSPI2CLKSOURCE_CLKP    CLKP selected as OctoSPI2 clock
+  * @retval None
+  */
+#define __HAL_RCC_OSPI2_CONFIG(__OSPI2_CLKSOURCE__) \
+  MODIFY_REG(RCC->CCIPR5, RCC_CCIPR5_OCTOSPI2SEL, (uint32_t)(__OSPI2_CLKSOURCE__))
+
+/** @brief  Macro to get the OctoSPI2 clock source.
+  * @retval The clock source can be one of the following values:
+  *            @arg @ref RCC_OSPI2CLKSOURCE_HCLK    HCLK selected as OctoSPI2 clock
+  *            @arg @ref RCC_OSPI2CLKSOURCE_PLL1Q   PLL1Q divider clock selected as OctoSPI2 clock
+  *            @arg @ref RCC_OSPI2CLKSOURCE_PLL2R   PLL2R divider clock selected as OctoSPI2 clock
+  *            @arg @ref RCC_OSPI2CLKSOURCE_CLKP    CLKP selected as OctoSPI2 clock
+  */
+#define __HAL_RCC_GET_OSPI2_SOURCE() ((uint32_t)(READ_BIT(RCC->CCIPR5, RCC_CCIPR5_OCTOSPI2SEL)))
+#endif /* OCTOSPI2 */
+
+#if defined(LTDC)
+/** @brief  Macro to configure the LTDC clock (LTDCCLK).
+  * @param  __LTDCCLKSource__ specifies the LTDC clock source.
+  *         This parameter can be one of the following values:
+  *            @arg RCC_LTDCCLKSOURCE_PLL3R      PLL3R Clock used as LTDC clock
+  *            @arg RCC_LTDCCLKSOURCE_PLL2R      PLL2R Clock used as LTDC clock
+  */
+#define __HAL_RCC_LTDC_CONFIG(__LTDCCLKSource__) \
+  MODIFY_REG(RCC->CCIPR5, RCC_CCIPR5_LTDCSEL, (uint32_t)(__LTDCCLKSource__))
+
+/** @brief  Macro to get the LTDC clock source.
+  * @retval The clock source can be one of the following values:
+  *            @arg RCC_LTDCCLKSOURCE_PLL3R      PLL3R Clock used as LTDC clock
+  *            @arg RCC_LTDCCLKSOURCE_PLL2R      PLL2R Clock used as LTDC clock
+  *
+  */
+#define __HAL_RCC_GET_LTDC_SOURCE() ((uint32_t)(READ_BIT(RCC->CCIPR5, RCC_CCIPR5_LTDCSEL)))
+#endif /* LTDC */
+
+#if defined(ADF1)
+/** @brief  Macro to configure the ADF1 clock (ADF1CLK).
+  * @param  __ADF1CLKSource__ specifies the ADF1 clock source.
+  *         This parameter can be one of the following values:
+  *            @arg RCC_ADF1CLKSOURCE_PLL1Q      PLL1Q Clock used as ADF1 clock
+  *            @arg RCC_ADF1CLKSOURCE_PLL2P      PLL2P Clock used as ADF1 clock
+  *            @arg RCC_ADF1CLKSOURCE_PLL3P      PLL3P Clock used as ADF1 clock
+  *            @arg RCC_ADF1CLKSOURCE_PIN        External Clock used as ADF1 clock
+  *            @arg RCC_ADF1CLKSOURCE_CLKP       CLKP Clock used as ADF1 clock
+  */
+#define __HAL_RCC_ADF1_CONFIG(__ADF1CLKSource__) \
+  MODIFY_REG(RCC->CCIPR5, RCC_CCIPR5_ADF1SEL, (uint32_t)(__ADF1CLKSource__))
+
+/** @brief  Macro to get the ADF1 clock source.
+  * @retval The clock source can be one of the following values:
+  *            @arg RCC_ADF1CLKSOURCE_PLL1Q      PLL1Q Clock used as ADF1 clock
+  *            @arg RCC_ADF1CLKSOURCE_PLL2P      PLL2P Clock used as ADF1 clock
+  *            @arg RCC_ADF1CLKSOURCE_PLL3P      PLL3P Clock used as ADF1 clock
+  *            @arg RCC_ADF1CLKSOURCE_PIN        External Clock used as ADF1 clock
+  *            @arg RCC_ADF1CLKSOURCE_CLKP       CLKP Clock used as ADF1 clock
+  *
+  */
+#define __HAL_RCC_GET_ADF1_SOURCE() ((uint32_t)(READ_BIT(RCC->CCIPR5, RCC_CCIPR5_ADF1SEL)))
+#endif /* ADF1 */
+
+#if defined(MDF1)
+/** @brief  Macro to configure the MDF1 clock (MDF1CLK).
+  * @param  __MDF1CLKSource__ specifies the MDF1 clock source.
+  *         This parameter can be one of the following values:
+  *            @arg RCC_MDF1CLKSOURCE_PLL1Q      PLL1Q Clock used as MDF1 clock
+  *            @arg RCC_MDF1CLKSOURCE_PLL2P      PLL2P Clock used as MDF1 clock
+  *            @arg RCC_MDF1CLKSOURCE_PLL3P      PLL3P Clock used as MDF1 clock
+  *            @arg RCC_MDF1CLKSOURCE_PIN        External Clock used as MDF1 clock
+  *            @arg RCC_MDF1CLKSOURCE_CLKP       CLKP Clock used as MDF1 clock
+  */
+#define __HAL_RCC_MDF1_CONFIG(__MDF1CLKSource__) \
+  MODIFY_REG(RCC->CCIPR5, RCC_CCIPR5_MDF1SEL, (uint32_t)(__MDF1CLKSource__))
+
+/** @brief  Macro to get the MDF1 clock source.
+  * @retval The clock source can be one of the following values:
+  *            @arg RCC_MDF1CLKSOURCE_PLL1Q      PLL1Q Clock used as MDF1 clock
+  *            @arg RCC_MDF1CLKSOURCE_PLL2P      PLL2P Clock used as MDF1 clock
+  *            @arg RCC_MDF1CLKSOURCE_PLL3P      PLL3P Clock used as MDF1 clock
+  *            @arg RCC_MDF1CLKSOURCE_PIN        External Clock used as MDF1 clock
+  *            @arg RCC_MDF1CLKSOURCE_CLKP       CLKP Clock used as MDF1 clock
+  *
+  */
+#define __HAL_RCC_GET_MDF1_SOURCE() ((uint32_t)(READ_BIT(RCC->CCIPR5, RCC_CCIPR5_MDF1SEL)))
+#endif /* MDF1 */
+
+#if defined(RCC_CCIPR4_ETHCLKSEL)
+/** @brief  Macro to configure the ETH clock (ETHCLK).
+  * @param  __ETHCLKSource__ specifies the ETH clock source.
+  *         This parameter can be one of the following values:
+  *            @arg RCC_ETHCLKSOURCE_HSE      HSE Clock used as ETH clock
+  *            @arg RCC_ETHCLKSOURCE_PLL1Q    PLL1Q Clock used as ETH clock
+  */
+#define __HAL_RCC_ETH_CONFIG(__ETHCLKSource__) \
+  MODIFY_REG(RCC->CCIPR4, RCC_CCIPR4_ETHCLKSEL, (uint32_t)(__ETHCLKSource__))
+
+/** @brief  Macro to get the ETH clock source.
+  * @retval The clock source can be one of the following values:
+  *            @arg RCC_ETHCLKSOURCE_HSE      HSE Clock used as ETH clock
+  *            @arg RCC_ETHCLKSOURCE_PLL1Q    PLL1Q Clock used as ETH clock
+  *
+  */
+#define __HAL_RCC_GET_ETH_SOURCE() ((uint32_t)(READ_BIT(RCC->CCIPR4, RCC_CCIPR4_ETHCLKSEL)))
+#endif /* RCC_CCIPR4_ETHCLKSEL */
+
+#if defined(RCC_CCIPR5_ETHPTPCLKSEL)
+/** @brief  Macro to configure the ETHPTP clock (ETHPTPCLK).
+  * @param  __ETHPTPCLKSource__ specifies the ETHPTP clock source.
+  *         This parameter can be one of the following values:
+  *            @arg RCC_ETHPTPCLKSOURCE_HCLK      HCLK Clock used as ETHPTP clock
+  *            @arg RCC_ETHPTPCLKSOURCE_PLL1R     PLL1R Clock used as ETHPTP clock
+  *            @arg RCC_ETHPTPCLKSOURCE_PLL1Q     PLL1Q Clock used as ETHPTP clock
+  *            @arg RCC_ETHPTPCLKSOURCE_PLL3P     PLL3P Clock used as ETHPTP clock
+  */
+#define __HAL_RCC_ETHPTP_CONFIG(__ETHPTPCLKSource__) \
+  MODIFY_REG(RCC->CCIPR5, RCC_CCIPR5_ETHPTPCLKSEL, (uint32_t)(__ETHPTPCLKSource__))
+
+/** @brief  Macro to get the ETHPTP clock source.
+  * @retval The clock source can be one of the following values:
+  *            @arg RCC_ETHPTPCLKSOURCE_HCLK      HCLK Clock used as ETHPTP clock
+  *            @arg RCC_ETHPTPCLKSOURCE_PLL1R     PLL1R Clock used as ETHPTP clock
+  *            @arg RCC_ETHPTPCLKSOURCE_PLL1Q     PLL1Q Clock used as ETHPTP clock
+  *            @arg RCC_ETHPTPCLKSOURCE_PLL3P     PLL3P Clock used as ETHPTP clock
+  *
+  */
+#define __HAL_RCC_GET_ETHPTP_SOURCE() ((uint32_t)(READ_BIT(RCC->CCIPR5, RCC_CCIPR5_ETHPTPCLKSEL)))
+#endif /* RCC_CCIPR5_ETHPTPCLKSEL */
+
+#if defined(RCC_CCIPR4_ETHPTPDIV)
+/** @brief  Macro to configure the ETHPTP kernel clock divider.
+  * @param  __ETHPTP_CLKDIV__ specifies the ETHPTP digital interface clock source.
+  *         This parameter can be one of the following values:
+  *            @arg @ref RCC_ETHPTP_CLK_DIV_1    ETHPTP kernel clock divided by 1
+  *            @arg @ref RCC_ETHPTP_CLK_DIV_2    ETHPTP kernel clock divided by 2
+  *            @arg @ref RCC_ETHPTP_CLK_DIV_3    ETHPTP kernel clock divided by 3
+  *            @arg @ref RCC_ETHPTP_CLK_DIV_4    ETHPTP kernel clock divided by 4
+  *            @arg @ref RCC_ETHPTP_CLK_DIV_5    ETHPTP kernel clock divided by 5
+  *            @arg @ref RCC_ETHPTP_CLK_DIV_6    ETHPTP kernel clock divided by 6
+  *            @arg @ref RCC_ETHPTP_CLK_DIV_7    ETHPTP kernel clock divided by 7
+  *            @arg @ref RCC_ETHPTP_CLK_DIV_8    ETHPTP kernel clock divided by 8
+  *            @arg @ref RCC_ETHPTP_CLK_DIV_9    ETHPTP kernel clock divided by 9
+  *            @arg @ref RCC_ETHPTP_CLK_DIV_10   ETHPTP kernel clock divided by 10
+  *            @arg @ref RCC_ETHPTP_CLK_DIV_11   ETHPTP kernel clock divided by 11
+  *            @arg @ref RCC_ETHPTP_CLK_DIV_12   ETHPTP kernel clock divided by 12
+  *            @arg @ref RCC_ETHPTP_CLK_DIV_13   ETHPTP kernel clock divided by 13
+  *            @arg @ref RCC_ETHPTP_CLK_DIV_14   ETHPTP kernel clock divided by 14
+  *            @arg @ref RCC_ETHPTP_CLK_DIV_15   ETHPTP kernel clock divided by 15
+  *            @arg @ref RCC_ETHPTP_CLK_DIV_16   ETHPTP kernel clock divided by 16
+  * @retval None
+  */
+#define __HAL_RCC_ETHPTP_DIV_CONFIG(__ETHPTP_CLKDIV__) \
+  MODIFY_REG(RCC->CCIPR4, RCC_CCIPR4_ETHPTPDIV, (__ETHPTP_CLKDIV__))
+
+/** @brief  Macro to get the ETHPTP kernel clock divider.
+  * @retval The clock source can be one of the following values:
+  *            @arg @ref RCC_ETHPTP_CLK_DIV_1    ETHPTP kernel clock divided by 1
+  *            @arg @ref RCC_ETHPTP_CLK_DIV_2    ETHPTP kernel clock divided by 2
+  *            @arg @ref RCC_ETHPTP_CLK_DIV_3    ETHPTP kernel clock divided by 3
+  *            @arg @ref RCC_ETHPTP_CLK_DIV_4    ETHPTP kernel clock divided by 4
+  *            @arg @ref RCC_ETHPTP_CLK_DIV_5    ETHPTP kernel clock divided by 5
+  *            @arg @ref RCC_ETHPTP_CLK_DIV_6    ETHPTP kernel clock divided by 6
+  *            @arg @ref RCC_ETHPTP_CLK_DIV_7    ETHPTP kernel clock divided by 7
+  *            @arg @ref RCC_ETHPTP_CLK_DIV_8    ETHPTP kernel clock divided by 8
+  *            @arg @ref RCC_ETHPTP_CLK_DIV_9    ETHPTP kernel clock divided by 9
+  *            @arg @ref RCC_ETHPTP_CLK_DIV_10   ETHPTP kernel clock divided by 10
+  *            @arg @ref RCC_ETHPTP_CLK_DIV_11   ETHPTP kernel clock divided by 11
+  *            @arg @ref RCC_ETHPTP_CLK_DIV_12   ETHPTP kernel clock divided by 12
+  *            @arg @ref RCC_ETHPTP_CLK_DIV_13   ETHPTP kernel clock divided by 13
+  *            @arg @ref RCC_ETHPTP_CLK_DIV_14   ETHPTP kernel clock divided by 14
+  *            @arg @ref RCC_ETHPTP_CLK_DIV_15   ETHPTP kernel clock divided by 15
+  *            @arg @ref RCC_ETHPTP_CLK_DIV_16   ETHPTP kernel clock divided by 16
+  */
+#define __HAL_RCC_GET_ETHPTP_DIV() \
+  ((uint32_t)(READ_BIT(RCC->CCIPR4, RCC_CCIPR4_ETHPTPDIV) >> RCC_CCIPR4_ETHPTPDIV_Pos) + 1)
+#endif /* RCC_CCIPR4_ETHPTPDIV */
+
+#if defined(RCC_CCIPR5_ETHREFCLKSEL)
+/** @brief  Macro to configure the ETHREF clock (ETHREFCLK).
+  * @param  __ETHREFCLKSource__ specifies the ETHREF clock source.
+  *         This parameter can be one of the following values:
+  *            @arg RCC_ETHREFCLKSOURCE_PLL1Q     PLL1Q Clock used as ETHREF clock
+  *            @arg RCC_ETHREFCLKSOURCE_PLL1R     PLL1R Clock used as ETHREF clock
+  */
+#define __HAL_RCC_ETHREF_CONFIG(__ETHREFCLKSource__) \
+  MODIFY_REG(RCC->CCIPR5, RCC_CCIPR5_ETHREFCLKSEL, (uint32_t)(__ETHREFCLKSource__))
+
+/** @brief  Macro to get the ETHREF clock source.
+  * @retval The clock source can be one of the following values:
+  *            @arg RCC_ETHREFCLKSOURCE_PLL1Q     PLL1Q Clock used as ETHREF clock
+  *            @arg RCC_ETHREFCLKSOURCE_PLL1R     PLL1R Clock used as ETHREF clock
+  *
+  */
+#define __HAL_RCC_GET_ETHREF_SOURCE() ((uint32_t)(READ_BIT(RCC->CCIPR5, RCC_CCIPR5_ETHREFCLKSEL)))
+#endif /* RCC_CCIPR5_ETHREFCLKSEL */
+
 /** @brief  Macro to configure the Timers clocks prescalers
   * @param  __PRESC__  specifies the Timers clocks prescalers selection
   *         This parameter can be one of the following values:
@@ -3154,7 +3852,60 @@ typedef struct
   * @{
   */
 /* Define used for IS_RCC_* macros below */
-#if defined(SDMMC2)
+#if defined(USB_OTG_HS)
+#define RCC_PERIPHCLOCK_ALL             (RCC_PERIPHCLK_USART1 | RCC_PERIPHCLK_USART2 | RCC_PERIPHCLK_USART3 | \
+                                         RCC_PERIPHCLK_UART4 | RCC_PERIPHCLK_UART5 | RCC_PERIPHCLK_USART6 | \
+                                         RCC_PERIPHCLK_UART7 | RCC_PERIPHCLK_UART8 | RCC_PERIPHCLK_UART9 | \
+                                         RCC_PERIPHCLK_USART10 | RCC_PERIPHCLK_USART11 | RCC_PERIPHCLK_UART12 | \
+                                         RCC_PERIPHCLK_LPUART1 | RCC_PERIPHCLK_I2C1 | RCC_PERIPHCLK_I2C2 | \
+                                         RCC_PERIPHCLK_I2C3 | RCC_PERIPHCLK_I2C4 | RCC_PERIPHCLK_I3C1 | \
+                                         RCC_PERIPHCLK_TIM | RCC_PERIPHCLK_LPTIM1 | RCC_PERIPHCLK_LPTIM2 | \
+                                         RCC_PERIPHCLK_LPTIM3 | RCC_PERIPHCLK_LPTIM4 | RCC_PERIPHCLK_LPTIM5 | \
+                                         RCC_PERIPHCLK_LPTIM6 | RCC_PERIPHCLK_SAI1 | RCC_PERIPHCLK_SAI2 | \
+                                         RCC_PERIPHCLK_ADCDAC | RCC_PERIPHCLK_DAC_LP | RCC_PERIPHCLK_RNG | \
+                                         RCC_PERIPHCLK_RTC | RCC_PERIPHCLK_SDMMC1 | RCC_PERIPHCLK_SDMMC2 | \
+                                         RCC_PERIPHCLK_SPI1 |  RCC_PERIPHCLK_SPI2 | RCC_PERIPHCLK_SPI3 | \
+                                         RCC_PERIPHCLK_SPI4 | RCC_PERIPHCLK_SPI5 | RCC_PERIPHCLK_SPI6 | \
+                                         RCC_PERIPHCLK_OSPI | RCC_PERIPHCLK_FDCAN | RCC_PERIPHCLK_CEC  | \
+                                         RCC_PERIPHCLK_CKPER | RCC_PERIPHCLK_PLAY1 | RCC_PERIPHCLK_I3C2 | \
+                                         RCC_PERIPHCLK_OTGFS | RCC_PERIPHCLK_OTGHS | RCC_PERIPHCLK_OSPI2 | \
+                                         RCC_PERIPHCLK_LTDC | RCC_PERIPHCLK_ADF1 | RCC_PERIPHCLK_MDF1 | \
+                                         RCC_PERIPHCLK_ETH |RCC_PERIPHCLK_ETHPTP | RCC_PERIPHCLK_ETHREF)
+#elif defined(PLAY1)
+#if defined(RCC_PERIPHCLK_UART9)
+#define RCC_PERIPHCLOCK_ALL             (RCC_PERIPHCLK_USART1 | RCC_PERIPHCLK_USART2 | RCC_PERIPHCLK_USART3 | \
+                                         RCC_PERIPHCLK_UART4 | RCC_PERIPHCLK_UART5 | RCC_PERIPHCLK_USART6 | \
+                                         RCC_PERIPHCLK_UART7 | RCC_PERIPHCLK_UART8 | RCC_PERIPHCLK_UART9 | \
+                                         RCC_PERIPHCLK_USART10 | RCC_PERIPHCLK_USART11 | RCC_PERIPHCLK_UART12 | \
+                                         RCC_PERIPHCLK_LPUART1 | RCC_PERIPHCLK_I2C1 | RCC_PERIPHCLK_I2C2 | \
+                                         RCC_PERIPHCLK_I2C3 | RCC_PERIPHCLK_I2C4 | RCC_PERIPHCLK_I3C1 | \
+                                         RCC_PERIPHCLK_TIM | RCC_PERIPHCLK_LPTIM1 | RCC_PERIPHCLK_LPTIM2 | \
+                                         RCC_PERIPHCLK_LPTIM3 | RCC_PERIPHCLK_LPTIM4 | RCC_PERIPHCLK_LPTIM5 | \
+                                         RCC_PERIPHCLK_LPTIM6 | RCC_PERIPHCLK_SAI1 | RCC_PERIPHCLK_SAI2 | \
+                                         RCC_PERIPHCLK_ADCDAC | RCC_PERIPHCLK_DAC_LP | RCC_PERIPHCLK_RNG | \
+                                         RCC_PERIPHCLK_RTC | RCC_PERIPHCLK_SDMMC1 | RCC_PERIPHCLK_SDMMC2 | \
+                                         RCC_PERIPHCLK_SPI1 |  RCC_PERIPHCLK_SPI2 | RCC_PERIPHCLK_SPI3 | \
+                                         RCC_PERIPHCLK_SPI4 | RCC_PERIPHCLK_SPI5 | RCC_PERIPHCLK_SPI6 | \
+                                         RCC_PERIPHCLK_OSPI | RCC_PERIPHCLK_FDCAN | RCC_PERIPHCLK_CEC  | \
+                                         RCC_PERIPHCLK_CKPER | RCC_PERIPHCLK_PLAY1 | RCC_PERIPHCLK_I3C2 | \
+                                         RCC_PERIPHCLK_OSPI2 | RCC_PERIPHCLK_OTGFS | RCC_PERIPHCLK_LTDC | \
+                                         RCC_PERIPHCLK_ADF1 | RCC_PERIPHCLK_MDF1 | RCC_PERIPHCLK_ETH | \
+                                         RCC_PERIPHCLK_ETHPTP | RCC_PERIPHCLK_ETHREF)
+#else
+#define RCC_PERIPHCLOCK_ALL             (RCC_PERIPHCLK_USART1 | RCC_PERIPHCLK_USART2 | RCC_PERIPHCLK_USART3 | \
+                                         RCC_PERIPHCLK_UART4 | RCC_PERIPHCLK_UART5 | RCC_PERIPHCLK_USART6 | \
+                                         RCC_PERIPHCLK_UART7 | RCC_PERIPHCLK_UART8 | RCC_PERIPHCLK_LPUART1|\
+                                         RCC_PERIPHCLK_I2C1 | RCC_PERIPHCLK_I2C2 | RCC_PERIPHCLK_I2C3 |  \
+                                         RCC_PERIPHCLK_I3C1 | RCC_PERIPHCLK_TIM | RCC_PERIPHCLK_LPTIM1 | \
+                                         RCC_PERIPHCLK_LPTIM2 | RCC_PERIPHCLK_ADCDAC | RCC_PERIPHCLK_DAC_LP | \
+                                         RCC_PERIPHCLK_RNG | RCC_PERIPHCLK_RTC | RCC_PERIPHCLK_SDMMC1 | \
+                                         RCC_PERIPHCLK_SPI1 |  RCC_PERIPHCLK_SPI2 | RCC_PERIPHCLK_SPI3 | \
+                                         RCC_PERIPHCLK_SPI4 | RCC_PERIPHCLK_OSPI | RCC_PERIPHCLK_FDCAN | \
+                                         RCC_PERIPHCLK_CEC  | RCC_PERIPHCLK_USB | RCC_PERIPHCLK_CKPER  | \
+                                         RCC_PERIPHCLK_PLAY1 | RCC_PERIPHCLK_I3C2 | RCC_PERIPHCLK_ETH  | \
+                                         RCC_PERIPHCLK_ETHPTP | RCC_PERIPHCLK_ETHREF)
+#endif /* RCC_PERIPHCLK_UART9 */
+#elif defined(SDMMC2)
 #define RCC_PERIPHCLOCK_ALL             (RCC_PERIPHCLK_USART1 | RCC_PERIPHCLK_USART2 | RCC_PERIPHCLK_USART3 | \
                                          RCC_PERIPHCLK_UART4 | RCC_PERIPHCLK_UART5 | RCC_PERIPHCLK_USART6 | \
                                          RCC_PERIPHCLK_UART7 | RCC_PERIPHCLK_UART8 | RCC_PERIPHCLK_UART9 | \
@@ -3319,6 +4070,7 @@ typedef struct
 #endif /* RCC_CR_PLL3ON */
 
 #if defined(UART4)
+#if defined(RCC_CR_PLL3ON)
 #define IS_RCC_UART4CLKSOURCE(__SOURCE__)  \
   (((__SOURCE__) == RCC_UART4CLKSOURCE_PCLK1) || \
    ((__SOURCE__) == RCC_UART4CLKSOURCE_PLL2Q) || \
@@ -3326,9 +4078,18 @@ typedef struct
    ((__SOURCE__) == RCC_UART4CLKSOURCE_HSI)   || \
    ((__SOURCE__) == RCC_UART4CLKSOURCE_CSI)   || \
    ((__SOURCE__) == RCC_UART4CLKSOURCE_LSE))
+#else
+#define IS_RCC_UART4CLKSOURCE(__SOURCE__)  \
+  (((__SOURCE__) == RCC_UART4CLKSOURCE_PCLK1) || \
+   ((__SOURCE__) == RCC_UART4CLKSOURCE_PLL2Q) || \
+   ((__SOURCE__) == RCC_UART4CLKSOURCE_HSI)   || \
+   ((__SOURCE__) == RCC_UART4CLKSOURCE_CSI)   || \
+   ((__SOURCE__) == RCC_UART4CLKSOURCE_LSE))
+#endif /* RCC_CR_PLL3ON */
 #endif /* UART4 */
 
 #if defined(UART5)
+#if defined(RCC_CR_PLL3ON)
 #define IS_RCC_UART5CLKSOURCE(__SOURCE__)  \
   (((__SOURCE__) == RCC_UART5CLKSOURCE_PCLK1) || \
    ((__SOURCE__) == RCC_UART5CLKSOURCE_PLL2Q) || \
@@ -3336,9 +4097,18 @@ typedef struct
    ((__SOURCE__) == RCC_UART5CLKSOURCE_HSI)   || \
    ((__SOURCE__) == RCC_UART5CLKSOURCE_CSI)   || \
    ((__SOURCE__) == RCC_UART5CLKSOURCE_LSE))
+#else
+#define IS_RCC_UART5CLKSOURCE(__SOURCE__)  \
+  (((__SOURCE__) == RCC_UART5CLKSOURCE_PCLK1) || \
+   ((__SOURCE__) == RCC_UART5CLKSOURCE_PLL2Q) || \
+   ((__SOURCE__) == RCC_UART5CLKSOURCE_HSI)   || \
+   ((__SOURCE__) == RCC_UART5CLKSOURCE_CSI)   || \
+   ((__SOURCE__) == RCC_UART5CLKSOURCE_LSE))
+#endif /* RCC_CR_PLL3ON */
 #endif /* UART5 */
 
 #if defined(USART6)
+#if defined(RCC_CR_PLL3ON)
 #define IS_RCC_USART6CLKSOURCE(__SOURCE__)  \
   (((__SOURCE__) == RCC_USART6CLKSOURCE_PCLK1) || \
    ((__SOURCE__) == RCC_USART6CLKSOURCE_PLL2Q) || \
@@ -3346,9 +4116,18 @@ typedef struct
    ((__SOURCE__) == RCC_USART6CLKSOURCE_HSI)   || \
    ((__SOURCE__) == RCC_USART6CLKSOURCE_CSI)   || \
    ((__SOURCE__) == RCC_USART6CLKSOURCE_LSE))
+#else
+#define IS_RCC_USART6CLKSOURCE(__SOURCE__)  \
+  (((__SOURCE__) == RCC_USART6CLKSOURCE_PCLK1) || \
+   ((__SOURCE__) == RCC_USART6CLKSOURCE_PLL2Q) || \
+   ((__SOURCE__) == RCC_USART6CLKSOURCE_HSI)   || \
+   ((__SOURCE__) == RCC_USART6CLKSOURCE_CSI)   || \
+   ((__SOURCE__) == RCC_USART6CLKSOURCE_LSE))
+#endif /* RCC_CR_PLL3ON */
 #endif /* USART6 */
 
 #if defined(UART7)
+#if defined(RCC_CR_PLL3ON)
 #define IS_RCC_UART7CLKSOURCE(__SOURCE__)  \
   (((__SOURCE__) == RCC_UART7CLKSOURCE_PCLK1) || \
    ((__SOURCE__) == RCC_UART7CLKSOURCE_PLL2Q) || \
@@ -3356,9 +4135,18 @@ typedef struct
    ((__SOURCE__) == RCC_UART7CLKSOURCE_HSI)   || \
    ((__SOURCE__) == RCC_UART7CLKSOURCE_CSI)   || \
    ((__SOURCE__) == RCC_UART7CLKSOURCE_LSE))
+#else
+#define IS_RCC_UART7CLKSOURCE(__SOURCE__)  \
+  (((__SOURCE__) == RCC_UART7CLKSOURCE_PCLK1) || \
+   ((__SOURCE__) == RCC_UART7CLKSOURCE_PLL2Q) || \
+   ((__SOURCE__) == RCC_UART7CLKSOURCE_HSI)   || \
+   ((__SOURCE__) == RCC_UART7CLKSOURCE_CSI)   || \
+   ((__SOURCE__) == RCC_UART7CLKSOURCE_LSE))
+#endif /* RCC_CR_PLL3ON */
 #endif /* UART7 */
 
 #if defined(UART8)
+#if defined(RCC_CR_PLL3ON)
 #define IS_RCC_UART8CLKSOURCE(__SOURCE__)  \
   (((__SOURCE__) == RCC_UART8CLKSOURCE_PCLK1) || \
    ((__SOURCE__) == RCC_UART8CLKSOURCE_PLL2Q) || \
@@ -3366,6 +4154,14 @@ typedef struct
    ((__SOURCE__) == RCC_UART8CLKSOURCE_HSI)   || \
    ((__SOURCE__) == RCC_UART8CLKSOURCE_CSI)   || \
    ((__SOURCE__) == RCC_UART8CLKSOURCE_LSE))
+#else
+#define IS_RCC_UART8CLKSOURCE(__SOURCE__)  \
+  (((__SOURCE__) == RCC_UART8CLKSOURCE_PCLK1) || \
+   ((__SOURCE__) == RCC_UART8CLKSOURCE_PLL2Q) || \
+   ((__SOURCE__) == RCC_UART8CLKSOURCE_HSI)   || \
+   ((__SOURCE__) == RCC_UART8CLKSOURCE_CSI)   || \
+   ((__SOURCE__) == RCC_UART8CLKSOURCE_LSE))
+#endif /* RCC_CR_PLL3ON */
 #endif /* UART8 */
 
 #if defined(UART9)
@@ -3457,11 +4253,19 @@ typedef struct
 
 
 #if defined(I2C3)
+#if defined(RCC_CR_PLL3ON)
 #define IS_RCC_I2C3CLKSOURCE(__SOURCE__)   \
   (((__SOURCE__) == RCC_I2C3CLKSOURCE_PCLK3) || \
    ((__SOURCE__) == RCC_I2C3CLKSOURCE_PLL3R) || \
    ((__SOURCE__) == RCC_I2C3CLKSOURCE_HSI  ) || \
    ((__SOURCE__) == RCC_I2C3CLKSOURCE_CSI))
+#else
+#define IS_RCC_I2C3CLKSOURCE(__SOURCE__)   \
+  (((__SOURCE__) == RCC_I2C3CLKSOURCE_PCLK3) || \
+   ((__SOURCE__) == RCC_I2C3CLKSOURCE_PLL2R) || \
+   ((__SOURCE__) == RCC_I2C3CLKSOURCE_HSI  ) || \
+   ((__SOURCE__) == RCC_I2C3CLKSOURCE_CSI))
+#endif /* RCC_CR_PLL3ON */
 #endif /* I2C3 */
 
 #if defined(I2C4)
@@ -3487,6 +4291,13 @@ typedef struct
 #endif /* RCC_CR_PLL3ON */
 
 #if defined(I3C2)
+#if defined(STM32H5E5xx) || defined(STM32H5E4xx) || defined(STM32H5F5xx) || defined(STM32H5F4xx)
+#define IS_RCC_I3C2CLKSOURCE(__SOURCE__)   \
+  (((__SOURCE__) == RCC_I3C2CLKSOURCE_PCLK3) || \
+   ((__SOURCE__) == RCC_I3C2CLKSOURCE_PLL3R) || \
+   ((__SOURCE__) == RCC_I3C2CLKSOURCE_CSI)   || \
+   ((__SOURCE__) == RCC_I3C2CLKSOURCE_HSI))
+#else
 #if defined(RCC_CR_PLL3ON)
 #define IS_RCC_I3C2CLKSOURCE(__SOURCE__)   \
   (((__SOURCE__) == RCC_I3C2CLKSOURCE_PCLK3) || \
@@ -3498,6 +4309,7 @@ typedef struct
    ((__SOURCE__) == RCC_I3C2CLKSOURCE_PLL2R) || \
    ((__SOURCE__) == RCC_I3C2CLKSOURCE_HSI))
 #endif /* PLL3 */
+#endif /* STM32H5E5xx || STM32H5E4xx || STM32H5F5xx || STM32H5F4xx */
 #endif /* I3C2 */
 
 #if defined(SAI1)
@@ -3507,7 +4319,6 @@ typedef struct
    ((__SOURCE__) == RCC_SAI1CLKSOURCE_PLL3P)|| \
    ((__SOURCE__) == RCC_SAI1CLKSOURCE_PIN)  || \
    ((__SOURCE__) == RCC_SAI1CLKSOURCE_CLKP))
-
 #endif /* SAI1 */
 
 #if defined(SAI2)
@@ -3561,7 +4372,6 @@ typedef struct
    ((__SOURCE__) == RCC_LPTIM3CLKSOURCE_LSE)   || \
    ((__SOURCE__) == RCC_LPTIM3CLKSOURCE_LSI)   || \
    ((__SOURCE__) == RCC_LPTIM3CLKSOURCE_CLKP))
-
 #endif /* LPTIM3 */
 
 #if defined(LPTIM4)
@@ -3572,7 +4382,6 @@ typedef struct
    ((__SOURCE__) == RCC_LPTIM4CLKSOURCE_LSE)   || \
    ((__SOURCE__) == RCC_LPTIM4CLKSOURCE_LSI)   || \
    ((__SOURCE__) == RCC_LPTIM4CLKSOURCE_CLKP))
-
 #endif /* LPTIM4 */
 
 #if defined(LPTIM5)
@@ -3681,6 +4490,7 @@ typedef struct
 #endif /* RCC_CR_PLL3ON */
 
 #if defined(SPI4)
+#if defined(RCC_CR_PLL3ON)
 #define IS_RCC_SPI4CLKSOURCE(__SOURCE__) \
   (((__SOURCE__) == RCC_SPI4CLKSOURCE_PCLK2) || \
    ((__SOURCE__) == RCC_SPI4CLKSOURCE_PLL2Q) || \
@@ -3688,6 +4498,14 @@ typedef struct
    ((__SOURCE__) == RCC_SPI4CLKSOURCE_HSI)   || \
    ((__SOURCE__) == RCC_SPI4CLKSOURCE_CSI)   || \
    ((__SOURCE__) == RCC_SPI4CLKSOURCE_HSE))
+#else
+#define IS_RCC_SPI4CLKSOURCE(__SOURCE__) \
+  (((__SOURCE__) == RCC_SPI4CLKSOURCE_PCLK2) || \
+   ((__SOURCE__) == RCC_SPI4CLKSOURCE_PLL2Q) || \
+   ((__SOURCE__) == RCC_SPI4CLKSOURCE_HSI)   || \
+   ((__SOURCE__) == RCC_SPI4CLKSOURCE_CSI)   || \
+   ((__SOURCE__) == RCC_SPI4CLKSOURCE_HSE))
+#endif /* RCC_CR_PLL3ON */
 #endif /* SPI4 */
 
 #if defined(SPI5)
@@ -3731,16 +4549,173 @@ typedef struct
    ((__SOURCE__) == RCC_CECCLKSOURCE_CSI_DIV122))
 #endif /*CEC*/
 
+#if defined(PLAY1)
+#if defined(RCC_CR_PLL3ON)
+#define IS_RCC_PLAY1CLKSOURCE(__SOURCE__) \
+  (((__SOURCE__) == RCC_PLAY1CLKSOURCE_PCLK3) || \
+   ((__SOURCE__) == RCC_PLAY1CLKSOURCE_PLL2P) || \
+   ((__SOURCE__) == RCC_PLAY1CLKSOURCE_PLL3R) || \
+   ((__SOURCE__) == RCC_PLAY1CLKSOURCE_LSE)   || \
+   ((__SOURCE__) == RCC_PLAY1CLKSOURCE_LSI)   || \
+   ((__SOURCE__) == RCC_PLAY1CLKSOURCE_CLKP))
+#else
+#define IS_RCC_PLAY1CLKSOURCE(__SOURCE__) \
+  (((__SOURCE__) == RCC_PLAY1CLKSOURCE_PCLK3) || \
+   ((__SOURCE__) == RCC_PLAY1CLKSOURCE_PLL2P) || \
+   ((__SOURCE__) == RCC_PLAY1CLKSOURCE_LSE)   || \
+   ((__SOURCE__) == RCC_PLAY1CLKSOURCE_LSI)   || \
+   ((__SOURCE__) == RCC_PLAY1CLKSOURCE_CLKP))
+#endif /* RCC_CR_PLL3ON */
+
+#define IS_RCC_PLAY1_DIV(__DIVIDER__) \
+  (((__DIVIDER__) == RCC_PLAY1_CLK_DIV_1 )    || \
+   ((__DIVIDER__) == RCC_PLAY1_CLK_DIV_2 )    || \
+   ((__DIVIDER__) == RCC_PLAY1_CLK_DIV_4 )    || \
+   ((__DIVIDER__) == RCC_PLAY1_CLK_DIV_8 )    || \
+   ((__DIVIDER__) == RCC_PLAY1_CLK_DIV_16)    || \
+   ((__DIVIDER__) == RCC_PLAY1_CLK_DIV_32)    || \
+   ((__DIVIDER__) == RCC_PLAY1_CLK_DIV_64)    || \
+   ((__DIVIDER__) == RCC_PLAY1_CLK_DIV_128)   || \
+   ((__DIVIDER__) == RCC_PLAY1_CLK_DIV_256)   || \
+   ((__DIVIDER__) == RCC_PLAY1_CLK_DIV_512)   || \
+   ((__DIVIDER__) == RCC_PLAY1_CLK_DIV_1024)  || \
+   ((__DIVIDER__) == RCC_PLAY1_CLK_DIV_2048)  || \
+   ((__DIVIDER__) == RCC_PLAY1_CLK_DIV_4096)  || \
+   ((__DIVIDER__) == RCC_PLAY1_CLK_DIV_8192)  || \
+   ((__DIVIDER__) == RCC_PLAY1_CLK_DIV_16384) || \
+   ((__DIVIDER__) == RCC_PLAY1_CLK_DIV_32768))
+#endif /* PLAY1 */
+
+#if defined(USB_OTG_FS)
+#if defined(PWR_USBSCR_OTGHSEN)
+#define IS_RCC_OTGFSCLKSOURCE(__SOURCE__) \
+  (((__SOURCE__) == RCC_OTGFSCLKSOURCE_HSI48) || \
+   ((__SOURCE__) == RCC_OTGFSCLKSOURCE_PLL1Q) || \
+   ((__SOURCE__) == RCC_OTGFSCLKSOURCE_PLL3Q) || \
+   ((__SOURCE__) == RCC_OTGFSCLKSOURCE_CLK48))
+#else
+#define IS_RCC_OTGFSCLKSOURCE(__SOURCE__) \
+  (((__SOURCE__) == RCC_OTGFSCLKSOURCE_HSI48) || \
+   ((__SOURCE__) == RCC_OTGFSCLKSOURCE_PLL1Q) || \
+   ((__SOURCE__) == RCC_OTGFSCLKSOURCE_PLL3Q))
+#endif /* PWR_USBSCR_OTGHSEN */
+#endif /* USB_OTG_FS */
+
+#if defined(USB_OTG_HS)
+#define IS_RCC_OTGHSCLKSOURCE(__SOURCE__) \
+  (((__SOURCE__) == RCC_OTGHSCLKSOURCE_HSE) || \
+   ((__SOURCE__) == RCC_OTGHSCLKSOURCE_PLL3Q) || \
+   ((__SOURCE__) == RCC_OTGHSCLKSOURCE_HSE_DIV2) || \
+   ((__SOURCE__) == RCC_OTGHSCLKSOURCE_PLL1Q_DIV2))
+#endif /* USB_OTG_HS */
+
+#if defined(RCC_CCIPR4_OTGPHYREFCKSEL)
+#define IS_RCC_OTGPHYCLKSOURCE(__SOURCE__) \
+  (((__SOURCE__) == RCC_OTGPHYREFCKCLKSOURCE_16M) || \
+   ((__SOURCE__) == RCC_OTGPHYREFCKCLKSOURCE_19_2M) || \
+   ((__SOURCE__) == RCC_OTGPHYREFCKCLKSOURCE_24M) || \
+   ((__SOURCE__) == RCC_OTGPHYREFCKCLKSOURCE_26M) || \
+   ((__SOURCE__) == RCC_OTGPHYREFCKCLKSOURCE_32M))
+#endif /* RCC_CCIPR4_OTGPHYREFCKSEL */
+
+#if defined(LTDC)
+#define IS_RCC_LTDCCLKSOURCE(__SOURCE__) \
+  (((__SOURCE__) == RCC_LTDCCLKSOURCE_PLL3R) || \
+   ((__SOURCE__) == RCC_LTDCCLKSOURCE_PLL2R))
+#endif /* LTDC */
+
+#if defined(OCTOSPI2)
+#define IS_RCC_OSPI2CLKSOURCE(__SOURCE__)  \
+  (((__SOURCE__) == RCC_OSPI2CLKSOURCE_HCLK)  || \
+   ((__SOURCE__) == RCC_OSPI2CLKSOURCE_PLL1Q) || \
+   ((__SOURCE__) == RCC_OSPI2CLKSOURCE_PLL2R) || \
+   ((__SOURCE__) == RCC_OSPI2CLKSOURCE_CLKP))
+#endif /* OCTOSPI2 */
+
+#if defined(ADF1)
+#define IS_RCC_ADF1CLKSOURCE(__SOURCE__) \
+  (((__SOURCE__) == RCC_ADF1CLKSOURCE_PLL1Q) || \
+   ((__SOURCE__) == RCC_ADF1CLKSOURCE_PLL2P) || \
+   ((__SOURCE__) == RCC_ADF1CLKSOURCE_PLL3P) || \
+   ((__SOURCE__) == RCC_ADF1CLKSOURCE_PIN) || \
+   ((__SOURCE__) == RCC_ADF1CLKSOURCE_CLKP))
+#endif /* ADF1 */
+
+#if defined(MDF1)
+#define IS_RCC_MDF1CLKSOURCE(__SOURCE__) \
+  (((__SOURCE__) == RCC_MDF1CLKSOURCE_PLL1Q) || \
+   ((__SOURCE__) == RCC_MDF1CLKSOURCE_PLL2P) || \
+   ((__SOURCE__) == RCC_MDF1CLKSOURCE_PLL3P) || \
+   ((__SOURCE__) == RCC_MDF1CLKSOURCE_PIN) || \
+   ((__SOURCE__) == RCC_MDF1CLKSOURCE_CLKP))
+#endif /* MDF1 */
+
+#if defined(RCC_CCIPR4_ETHCLKSEL)
+#define IS_RCC_ETHCLKSOURCE(__SOURCE__) \
+  (((__SOURCE__) == RCC_ETHCLKSOURCE_HSE) || \
+   ((__SOURCE__) == RCC_ETHCLKSOURCE_PLL1Q))
+#endif /* RCC_CCIPR4_ETHCLKSEL */
+
+#if defined(RCC_CCIPR5_ETHPTPCLKSEL)
+#if defined(RCC_CR_PLL3ON)
+#define IS_RCC_ETHPTPCLKSOURCE(__SOURCE__) \
+  (((__SOURCE__) == RCC_ETHPTPCLKSOURCE_HCLK) || \
+   ((__SOURCE__) == RCC_ETHPTPCLKSOURCE_PLL1R) || \
+   ((__SOURCE__) == RCC_ETHPTPCLKSOURCE_PLL1Q) || \
+   ((__SOURCE__) == RCC_ETHPTPCLKSOURCE_PLL3P))
+#else
+#define IS_RCC_ETHPTPCLKSOURCE(__SOURCE__) \
+  (((__SOURCE__) == RCC_ETHPTPCLKSOURCE_HCLK) || \
+   ((__SOURCE__) == RCC_ETHPTPCLKSOURCE_PLL1R) || \
+   ((__SOURCE__) == RCC_ETHPTPCLKSOURCE_PLL1Q))
+#endif /* RCC_CR_PLL3ON */
+#endif /* RCC_CCIPR5_ETHPTPCLKSEL */
+
+#if defined(RCC_CCIPR4_ETHPTPDIV)
+#define IS_RCC_ETHPTP_DIV(__DIVIDER__) \
+  (((__DIVIDER__) == RCC_ETHPTP_CLK_DIV_1)  || \
+   ((__DIVIDER__) == RCC_ETHPTP_CLK_DIV_2)  || \
+   ((__DIVIDER__) == RCC_ETHPTP_CLK_DIV_3)  || \
+   ((__DIVIDER__) == RCC_ETHPTP_CLK_DIV_4)  || \
+   ((__DIVIDER__) == RCC_ETHPTP_CLK_DIV_5)  || \
+   ((__DIVIDER__) == RCC_ETHPTP_CLK_DIV_6)  || \
+   ((__DIVIDER__) == RCC_ETHPTP_CLK_DIV_7)  || \
+   ((__DIVIDER__) == RCC_ETHPTP_CLK_DIV_8)  || \
+   ((__DIVIDER__) == RCC_ETHPTP_CLK_DIV_9)  || \
+   ((__DIVIDER__) == RCC_ETHPTP_CLK_DIV_10) || \
+   ((__DIVIDER__) == RCC_ETHPTP_CLK_DIV_11) || \
+   ((__DIVIDER__) == RCC_ETHPTP_CLK_DIV_12) || \
+   ((__DIVIDER__) == RCC_ETHPTP_CLK_DIV_13) || \
+   ((__DIVIDER__) == RCC_ETHPTP_CLK_DIV_14) || \
+   ((__DIVIDER__) == RCC_ETHPTP_CLK_DIV_15) || \
+   ((__DIVIDER__) == RCC_ETHPTP_CLK_DIV_16))
+#endif /* RCC_CCIPR4_ETHPTPDIV */
+
+#if defined(RCC_CCIPR5_ETHREFCLKSEL)
+#define IS_RCC_ETHREFCLKSOURCE(__SOURCE__) \
+  (((__SOURCE__) == RCC_ETHREFCLKSOURCE_PLL1Q) || \
+   ((__SOURCE__) == RCC_ETHREFCLKSOURCE_PLL1R))
+#endif /* RCC_CCIPR5_ETHREFCLKSEL */
+
 #define IS_RCC_TIMPRES(VALUE)  \
   (((VALUE) == RCC_TIMPRES_DEACTIVATED) || \
    ((VALUE) == RCC_TIMPRES_ACTIVATED))
 
 #if defined(CRS)
-#if defined(USB_DRD_FS)
+#if defined(USB_OTG_HS)
+#define IS_RCC_CRS_SYNC_SOURCE(__SOURCE__) (((__SOURCE__) == RCC_CRS_SYNC_SOURCE_GPIO) || \
+                                            ((__SOURCE__) == RCC_CRS_SYNC_SOURCE_LSE) || \
+                                            ((__SOURCE__) == RCC_CRS_SYNC_SOURCE_OTG_FS) || \
+                                            ((__SOURCE__) == RCC_CRS_SYNC_SOURCE_OTG_HS))
+#elif defined(USB_OTG_FS)
+#define IS_RCC_CRS_SYNC_SOURCE(__SOURCE__) (((__SOURCE__) == RCC_CRS_SYNC_SOURCE_GPIO) || \
+                                            ((__SOURCE__) == RCC_CRS_SYNC_SOURCE_LSE) || \
+                                            ((__SOURCE__) == RCC_CRS_SYNC_SOURCE_OTG_FS))
+#elif defined(USB_DRD_FS)
 #define IS_RCC_CRS_SYNC_SOURCE(__SOURCE__) (((__SOURCE__) == RCC_CRS_SYNC_SOURCE_GPIO) || \
                                             ((__SOURCE__) == RCC_CRS_SYNC_SOURCE_LSE) || \
                                             ((__SOURCE__) == RCC_CRS_SYNC_SOURCE_USB))
-#endif /* USB_DRD_FS */
+#endif /* USB_OTG_HS */
 
 #define IS_RCC_CRS_SYNC_DIV(__DIV__)       (((__DIV__) == RCC_CRS_SYNC_DIV1) || ((__DIV__) == RCC_CRS_SYNC_DIV2) || \
                                             ((__DIV__) == RCC_CRS_SYNC_DIV4) || ((__DIV__) == RCC_CRS_SYNC_DIV8) || \
@@ -3841,6 +4816,9 @@ void              HAL_RCCEx_CRS_ErrorCallback(uint32_t Error);
   * @}
   */
 
+/**
+  * @}
+  */
 #ifdef __cplusplus
 }
 #endif

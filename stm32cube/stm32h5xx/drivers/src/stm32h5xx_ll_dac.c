@@ -50,26 +50,44 @@
    || ((__DAC_CHANNEL__) == LL_DAC_CHANNEL_2)   \
   )
 
-#if defined(TIM8)
+#if defined(PLAY1)
+/* Devices STM32H5E5/H5F5xx */
+#define IS_LL_DAC_TRIGGER_SOURCE(__TRIGGER_SOURCE__)                           \
+  (   ((__TRIGGER_SOURCE__) == LL_DAC_TRIG_EXT_TIM1_TRGO)                      \
+      || ((__TRIGGER_SOURCE__) == LL_DAC_TRIG_EXT_TIM2_TRGO)                      \
+      || ((__TRIGGER_SOURCE__) == LL_DAC_TRIG_EXT_TIM4_TRGO)                      \
+      || ((__TRIGGER_SOURCE__) == LL_DAC_TRIG_EXT_TIM5_TRGO)                      \
+      || ((__TRIGGER_SOURCE__) == LL_DAC_TRIG_EXT_TIM6_TRGO)                      \
+      || ((__TRIGGER_SOURCE__) == LL_DAC_TRIG_EXT_TIM7_TRGO)                      \
+      || ((__TRIGGER_SOURCE__) == LL_DAC_TRIG_EXT_TIM8_TRGO)                      \
+      || ((__TRIGGER_SOURCE__) == LL_DAC_TRIG_EXT_TIM15_TRGO)                     \
+      || ((__TRIGGER_SOURCE__) == LL_DAC_TRIG_EXT_LPTIM1_CH1)                     \
+      || ((__TRIGGER_SOURCE__) == LL_DAC_TRIG_EXT_LPTIM2_CH1)                     \
+      || ((__TRIGGER_SOURCE__) == LL_DAC_TRIG_EXT_EXTI_LINE9)                     \
+      || ((__TRIGGER_SOURCE__) == LL_DAC_TRIG_EXT_PLAY1_OUT11)                    \
+      || ((__TRIGGER_SOURCE__) == LL_DAC_TRIG_EXT_PLAY1_OUT12)                    \
+      || ((__TRIGGER_SOURCE__) == LL_DAC_TRIG_SOFTWARE)                           \
+  )
+#elif defined(TIM8)
 /* Devices STM32H563/H573xx */
 #define IS_LL_DAC_TRIGGER_SOURCE(__TRIGGER_SOURCE__)                           \
   (   ((__TRIGGER_SOURCE__) == LL_DAC_TRIG_EXT_TIM1_TRGO)                      \
-   || ((__TRIGGER_SOURCE__) == LL_DAC_TRIG_EXT_TIM2_TRGO)                      \
-   || ((__TRIGGER_SOURCE__) == LL_DAC_TRIG_EXT_TIM4_TRGO)                      \
-   || ((__TRIGGER_SOURCE__) == LL_DAC_TRIG_EXT_TIM5_TRGO)                      \
-   || ((__TRIGGER_SOURCE__) == LL_DAC_TRIG_EXT_TIM6_TRGO)                      \
-   || ((__TRIGGER_SOURCE__) == LL_DAC_TRIG_EXT_TIM7_TRGO)                      \
-   || ((__TRIGGER_SOURCE__) == LL_DAC_TRIG_EXT_TIM8_TRGO)                      \
-   || ((__TRIGGER_SOURCE__) == LL_DAC_TRIG_EXT_TIM15_TRGO)                     \
-   || ((__TRIGGER_SOURCE__) == LL_DAC_TRIG_EXT_LPTIM1_CH1)                     \
-   || ((__TRIGGER_SOURCE__) == LL_DAC_TRIG_EXT_LPTIM2_CH1)                     \
-   || ((__TRIGGER_SOURCE__) == LL_DAC_TRIG_EXT_EXTI_LINE9)                     \
-   || ((__TRIGGER_SOURCE__) == LL_DAC_TRIG_SOFTWARE)                           \
+      || ((__TRIGGER_SOURCE__) == LL_DAC_TRIG_EXT_TIM2_TRGO)                      \
+      || ((__TRIGGER_SOURCE__) == LL_DAC_TRIG_EXT_TIM4_TRGO)                      \
+      || ((__TRIGGER_SOURCE__) == LL_DAC_TRIG_EXT_TIM5_TRGO)                      \
+      || ((__TRIGGER_SOURCE__) == LL_DAC_TRIG_EXT_TIM6_TRGO)                      \
+      || ((__TRIGGER_SOURCE__) == LL_DAC_TRIG_EXT_TIM7_TRGO)                      \
+      || ((__TRIGGER_SOURCE__) == LL_DAC_TRIG_EXT_TIM8_TRGO)                      \
+      || ((__TRIGGER_SOURCE__) == LL_DAC_TRIG_EXT_TIM15_TRGO)                     \
+      || ((__TRIGGER_SOURCE__) == LL_DAC_TRIG_EXT_LPTIM1_CH1)                     \
+      || ((__TRIGGER_SOURCE__) == LL_DAC_TRIG_EXT_LPTIM2_CH1)                     \
+      || ((__TRIGGER_SOURCE__) == LL_DAC_TRIG_EXT_EXTI_LINE9)                     \
+      || ((__TRIGGER_SOURCE__) == LL_DAC_TRIG_SOFTWARE)                           \
   )
 #else
 /* Devices STM32H503xx */
 #define IS_LL_DAC_TRIGGER_SOURCE(__TRIGGER_SOURCE__)                              \
-     (   ((__TRIGGER_SOURCE__) == LL_DAC_TRIG_EXT_TIM1_TRGO)                      \
+  (   ((__TRIGGER_SOURCE__) == LL_DAC_TRIG_EXT_TIM1_TRGO)                      \
       || ((__TRIGGER_SOURCE__) == LL_DAC_TRIG_EXT_TIM2_TRGO)                      \
       || ((__TRIGGER_SOURCE__) == LL_DAC_TRIG_EXT_TIM3_TRGO)                      \
       || ((__TRIGGER_SOURCE__) == LL_DAC_TRIG_EXT_TIM6_TRGO)                      \

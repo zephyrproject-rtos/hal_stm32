@@ -81,15 +81,16 @@
 
     (#) Disable the MPU using HAL_MPU_Disable().
     (#) Configure the necessary MPU memory attributes using HAL_MPU_ConfigMemoryAttributes().
-    (#) Configure the necessary MPU regions using HAL_MPU_ConfigRegion() ennsuring that the MPU region configuration link to
-        the right MPU attributes number.
+    (#) Configure the necessary MPU regions using HAL_MPU_ConfigRegion() ennsuring that the MPU region configuration
+        link to the right MPU attributes number.
     (#) Enable the MPU using HAL_MPU_Enable() function.
 
-     -@- The memory management fault exception is enabled in HAL_MPU_Enable() function and the system will enter the memory
-         management fault handler MemManage_Handler() when an illegal memory access is performed.
-     -@- If the MPU has previously been programmed, disable the unused regions to prevent any previous region configuration
-         from affecting the new MPU configuration.
-     -@- MPU APIs ending with '_NS' allow to control the non-secure Memory Protection Unit (MPU_NS) from the secure context
+     -@- The memory management fault exception is enabled in HAL_MPU_Enable() function and the system will enter
+         the memory management fault handler MemManage_Handler() when an illegal memory access is performed.
+     -@- If the MPU has previously been programmed, disable the unused regions to prevent any previous region
+         configuration from affecting the new MPU configuration.
+     -@- MPU APIs ending with '_NS' allow to control the non-secure Memory Protection Unit (MPU_NS) from the
+         secure context.
 
   @endverbatim
   ******************************************************************************

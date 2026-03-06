@@ -3433,6 +3433,12 @@ static void FDCAN_CalcultateRamBlockAddresses(FDCAN_HandleTypeDef *hfdcan)
     SramCanInstanceBase += SRAMCAN_SIZE;
   }
 #endif /* FDCAN2 */
+#if defined(FDCAN3)
+  if (hfdcan->Instance == FDCAN3)
+  {
+    SramCanInstanceBase += SRAMCAN_SIZE * 2U;
+  }
+#endif /* FDCAN3 */
 
   /* Standard filter list start address */
   hfdcan->msgRam.StandardFilterSA = SramCanInstanceBase + SRAMCAN_FLSSA;

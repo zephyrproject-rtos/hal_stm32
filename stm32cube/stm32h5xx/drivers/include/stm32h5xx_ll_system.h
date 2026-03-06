@@ -57,7 +57,7 @@ extern "C" {
   * @{
   */
 #define LL_SBS_HDPL_INCREMENT_VALUE   0x6AU                               /*!< Define used for the HDPL increment */
-#define LL_SBS_DBG_UNLOCK             (0xB4U << SBS_DBGCR_DBG_UNLOCK_Pos) /*!< Define used to unlock debug */
+#define LL_SBS_DBG_UNLOCK             (0xB4UL << SBS_DBGCR_DBG_UNLOCK_Pos) /*!< Define used to unlock debug */
 #define LL_SBS_ACCESS_PORT_UNLOCK     0xB4U                               /*!< Define used to unlock access port */
 #define LL_SBS_DBG_CONFIG_LOCK        0xC3U                               /*!< Define used to lock debug configuration */
 #define LL_SBS_DBG_CONFIG_UNLOCK      0xB4U                               /*!< Define used to unlock debug configuration */
@@ -189,6 +189,41 @@ extern "C" {
 /**
   * @}
   */
+#if defined(SBS_OTGHSPHYTUNER2_SQRXTUNE)
+/** @defgroup SYSTEM_LL_SBS_OTG_SQUELSH OTG High-speed (HS) PHY Squelch threshold adjustment
+  * @{
+  */
+#define LL_SBS_OTGHSPHY_SQUELCH_15PERCENT  0x00000000U                                                            /*!< +15% (recommended value) */
+#define LL_SBS_OTGHSPHY_SQUELCH_0PERCENT   (SBS_OTGHSPHYTUNER2_SQRXTUNE_0 | SBS_OTGHSPHYTUNER2_SQRXTUNE_1)  /*!< 0% (default value) */
+/**
+  * @}
+  */
+#endif /* SBS_OTGHSPHYTUNER2_SQRXTUNE */
+
+#if defined(SBS_OTGHSPHYTUNER2_COMPDISTUNE)
+/** @defgroup SYSTEM_LL_SBS_OTG_PHYTUNER_DISCONNECT_THRESTHOLD OTG High-speed (HS) PHYTUNER disconnect threshold
+  * @{
+  */
+#define LL_SBS_OTGHSPHY_DISCONNECT_5_9PERCENT  SBS_OTGHSPHYTUNER2_COMPDISTUNE_1  /*!< +5.9% (recommended value) */
+#define LL_SBS_OTGHSPHY_DISCONNECT_0PERCENT    SBS_OTGHSPHYTUNER2_COMPDISTUNE_0  /*!< 0% (default value) */
+/**
+  * @}
+  */
+#endif /* SBS_OTGHSPHYTUNER2_COMPDISTUNE */
+
+#if defined(SBS_OTGHSPHYTUNER2_TXPREEMPAMPTUNE)
+/** @defgroup SYSTEM_LL_SBS_OTG_TRANSMITTER_PREEMPHASIS_CURRENT OTG High-speed (HS) transmitter preemphasis current control
+  * @{
+  */
+#define LL_SBS_OTGHSPHY_PREEMP_DISABLED  0x00000000U                              /*!< HS transmitter preemphasis circuit disabled */
+#define LL_SBS_OTGHSPHY_PREEMP_1X        SBS_OTGHSPHYTUNER2_TXPREEMPAMPTUNE_0     /*!< HS transmitter preemphasis circuit sources 1x preemphasis current */
+#define LL_SBS_OTGHSPHY_PREEMP_2X        SBS_OTGHSPHYTUNER2_TXPREEMPAMPTUNE_1     /*!< HS transmitter preemphasis circuit sources 2x preemphasis current */
+#define LL_SBS_OTGHSPHY_PREEMP_3X       (SBS_OTGHSPHYTUNER2_TXPREEMPAMPTUNE_0 | \
+                                            SBS_OTGHSPHYTUNER2_TXPREEMPAMPTUNE_1) /*!< HS transmitter preemphasis circuit sources 3x preemphasis current */
+/**
+  * @}
+  */
+#endif /* SBS_OTGHSPHYTUNER2_TXPREEMPAMPTUNE */
 
 #if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
 /** @defgroup SYSTEM_LL_SBS_S_Lock_items SBS Lock items
@@ -797,7 +832,7 @@ __STATIC_INLINE uint32_t LL_SBS_GetAuthDbgHDPL(void)
 /**
   * @brief  Configure the authenticated debug security access.
   * @rmtoll SBS_DBGCR DBG_AUTH_SEC     LL_SBS_SetAuthDbgSec
-  * @param  Control debug opening secure/non-secure or non-secure only
+  * @param  Security debug opening secure/non-secure or non-secure only
   *         This parameter can be one of the following values:
   *            @arg LL_SBS_DEBUG_SEC_NSEC: debug opening for secure and non-secure.
   *            @arg LL_SBS_DEBUG_NSEC: debug opening for non-secure only.
@@ -1293,6 +1328,91 @@ __STATIC_INLINE uint32_t LL_SBS_GetVddIOCellCompensationCode(void)
 {
   return (uint32_t)(READ_BIT(SBS->CCCSR, SBS_CCCSR_CS2));
 }
+
+#if defined(SBS_OTGHSPHYTUNER2_COMPDISTUNE)
+/**
+  * @brief  Set the OTG high-speed PHY disconnect threshold adjustment.
+  * @rmtoll SBS_OTGHSPHYTUNER2   COMPDISTUNE   LL_SBS_SetOTGPHYDisconnectThresholdAdjustment
+  * @param  DisconnectThreshold This parameter can be one of the following values:
+  *         @arg @ref LL_SBS_OTGHSPHY_DISCONNECT_5_9PERCENT
+  *         @arg @ref LL_SBS_OTGHSPHY_DISCONNECT_0PERCENT
+  * @retval None
+  */
+__STATIC_INLINE void LL_SBS_SetOTGPHYDisconnectThresholdAdjustment(uint32_t DisconnectThreshold)
+{
+  MODIFY_REG(SBS->OTGHSPHYTUNER2, SBS_OTGHSPHYTUNER2_COMPDISTUNE, DisconnectThreshold);
+}
+
+/**
+  * @brief  Get the OTG high-speed PHY disconnect threshold adjustment.
+  * @rmtoll SBS_OTGHSPHYTUNER2   COMPDISTUNE   LL_SBS_GetOTGPHYDisconnectThresholdAdjustment
+  * @retval Returned value can be one of the following values:
+  *         @arg @ref LL_SBS_OTGHSPHY_DISCONNECT_5_9PERCENT
+  *         @arg @ref LL_SBS_OTGHSPHY_DISCONNECT_0PERCENT
+  */
+__STATIC_INLINE uint32_t LL_SBS_GetOTGPHYDisconnectThresholdAdjustment(void)
+{
+  return (uint32_t)(READ_BIT(SBS->OTGHSPHYTUNER2, SBS_OTGHSPHYTUNER2_COMPDISTUNE));
+}
+#endif /* SBS_OTGHSPHYTUNER2_COMPDISTUNE */
+
+#if defined(SBS_OTGHSPHYTUNER2_SQRXTUNE)
+/**
+  * @brief  Set the voltage level for the threshold used to detect valid high-speed data.
+  * @rmtoll SBS_OTGHSPHYTUNER2   SQRXTUNE   LL_SBS_SetOTGPHYSquelchThresholdAdjustment
+  * @param  SquelchThreshold This parameter can be one of the following values:
+  *         @arg @ref LL_SBS_OTGHSPHY_SQUELCH_15PERCENT
+  *         @arg @ref LL_SBS_OTGHSPHY_SQUELCH_0PERCENT
+  * @retval None
+  */
+__STATIC_INLINE void LL_SBS_SetOTGPHYSquelchThresholdAdjustment(uint32_t SquelchThreshold)
+{
+  MODIFY_REG(SBS->OTGHSPHYTUNER2, SBS_OTGHSPHYTUNER2_SQRXTUNE, SquelchThreshold);
+}
+
+/**
+  * @brief  Get the voltage level for the threshold used to detect valid high-speed data.
+  * @rmtoll SBS_OTGHSPHYTUNER2   SQRXTUNE   LL_SBS_GetOTGPHYSquelchThresholdAdjustment
+  * @retval Returned value can be one of the following values:
+  *         @arg @ref LL_SBS_OTGHSPHY_SQUELCH_15PERCENT
+  *         @arg @ref LL_SBS_OTGHSPHY_SQUELCH_0PERCENT
+  */
+__STATIC_INLINE uint32_t LL_SBS_GetOTGPHYSquelchThresholdAdjustment(void)
+{
+  return (uint32_t)(READ_BIT(SBS->OTGHSPHYTUNER2, SBS_OTGHSPHYTUNER2_SQRXTUNE));
+}
+#endif /* SBS_OTGHSPHYTUNER2_SQRXTUNE */
+
+#if defined(SBS_OTGHSPHYTUNER2_TXPREEMPAMPTUNE)
+/**
+  * @brief  Set the OTG high-speed PHY transmitter preemphasis current control.
+  * @rmtoll SBS_OTGHSPHYTUNER2   TXPREEMPAMPTUNE   LL_SBS_SetOTGPHYTransmitterPreemphasisCurrent
+  * @param  PreemphasisCurrent This parameter can be one of the following values:
+  *         @arg @ref LL_SBS_OTGHSPHY_PREEMP_DISABLED
+  *         @arg @ref LL_SBS_OTGHSPHY_PREEMP_1X
+  *         @arg @ref LL_SBS_OTGHSPHY_PREEMP_2X
+  *         @arg @ref LL_SBS_OTGHSPHY_PREEMP_3X
+  * @retval None
+  */
+__STATIC_INLINE void LL_SBS_SetOTGPHYTransmitterPreemphasisCurrent(uint32_t PreemphasisCurrent)
+{
+  MODIFY_REG(SBS->OTGHSPHYTUNER2, SBS_OTGHSPHYTUNER2_TXPREEMPAMPTUNE, PreemphasisCurrent);
+}
+
+/**
+  * @brief  Get the OTG high-speed PHY transmitter preemphasis current control.
+  * @rmtoll SBS_OTGHSPHYTUNER2   TXPREEMPAMPTUNE   LL_SBS_GetOTGPHYTransmitterPreemphasisCurrent
+  * @retval Returned value can be one of the following values:
+  *         @arg @ref LL_SBS_OTGHSPHY_PREEMP_DISABLED
+  *         @arg @ref LL_SBS_OTGHSPHY_PREEMP_1X
+  *         @arg @ref LL_SBS_OTGHSPHY_PREEMP_2X
+  *         @arg @ref LL_SBS_OTGHSPHY_PREEMP_3X
+  */
+__STATIC_INLINE uint32_t LL_SBS_GetOTGPHYTransmitterPreemphasisCurrent(void)
+{
+  return (uint32_t)(READ_BIT(SBS->OTGHSPHYTUNER2, SBS_OTGHSPHYTUNER2_TXPREEMPAMPTUNE));
+}
+#endif /* SBS_OTGHSPHYTUNER2_TXPREEMPAMPTUNE */
 
 /**
   * @}

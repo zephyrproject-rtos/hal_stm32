@@ -84,9 +84,25 @@ typedef struct
   uint32_t DelayBlockBypass;          /*!< It enables the delay block bypass, so the sampling is not affected
                                            by the delay block.
                                            This parameter can be a value of @ref XSPI_DelayBlockBypass */
+#if defined(XSPI_DCR3_MAXTRAN)
+  uint32_t MaxTran;                   /*!< It enables the communication regulation feature. The chip select is
+                                           released every MaxTran+1 bytes when the other XSPI request the access
+                                           to the bus.
+                                           This parameter can be a value between 0 and 0U */
+#endif /* XSPI_DCR3_MAXTRAN */
   uint32_t Refresh;                   /*!< It enables the refresh rate feature. The chip select is released every
                                            Refresh+1 clock cycles.
                                            This parameter can be a value between 0 and 0xFFFFFFFF */
+#if defined(XSPI_CR_CSSEL)
+  uint32_t MemorySelect;              /*!< It indicates if the output of nCS.
+                                           This parameter can be a value of @ref XSPI_MemorySelect  */
+#if defined(XSPI_DCR1_EXTENDMEM)
+  uint32_t MemoryExtended;            /*!< If available, It indicates if NCS1 and NCS2 are software or hardware controlled when one
+                                           XSPI drives two same size external memories located in contiguous places
+                                           in the memory map.
+                                           This parameter can be a value of @ref XSPI_MemoryExtended */
+#endif /* XSPI_DCR1_EXTENDMEM */
+#endif /* XSPI_CR_CSSEL */
 } XSPI_InitTypeDef;
 
 /**
@@ -173,10 +189,11 @@ typedef struct
                                            This parameter can be a value between 0 and 31U */
   uint32_t DQSMode;                   /*!< It enables or not the data strobe management.
                                            This parameter can be a value of @ref XSPI_DQSMode */
-  uint32_t SIOOMode;                  /*!< It enables or not the SIOO mode. When SIOO mode enabled,
-                                           instruction will be sent only once.
-                                           This parameter can be a value of @ref XSPI_SIOOMode */
+#if defined(XSPI_CCR_SIOO)
+  uint32_t SIOOMode;                  /*!< This field is deprecated and is not used by HAL driver anymore. */
+#endif /* XSPI_CCR_SIOO */
 } XSPI_RegularCmdTypeDef;
+
 /**
   * @brief  HAL XSPI Hyperbus Configuration Structure definition
   */
@@ -241,8 +258,29 @@ typedef struct
   uint32_t TimeoutPeriodClock;        /*!< Specifies the number of clock to wait when the FIFO is full before to
                                            release the chip select.
                                            This parameter can be any value between 0 and 0xFFFFU */
+#if defined(XSPI_CR_NOPREF)
+  uint32_t NoPrefetchData;            /*!< Specifies if the automatic prefetch in the external memory is enabled or not.
+                                           This parameter can be a value of @ref XSPI_NoPrefetchData */
+#endif /* XSPI_CR_NOPREF */
 } XSPI_MemoryMappedTypeDef;
 
+#if defined(OCTOSPIM)
+/**
+  * @brief HAL XSPI IO Manager Configuration structure definition
+  */
+typedef struct
+{
+  uint32_t nCSOverride;               /*!< It indicates Chip select selector override setting for XSPI.
+                                           This parameter can be a value @ref XSPIM_MemorySelect_Override */
+  uint32_t IOPort;                    /*!< It indicates which port of the XSPI IO Manager is used for the instance.
+                                           This parameter can be a value of @ref XSPI_IO_Manger_IOPort */
+  uint32_t Req2AckTime;               /*!< It indicates the minimum switching duration (in number of clock cycles)
+                                           expected if some signals are multiplexed in the XSPI IO Manager with the
+                                           other XSPI.
+                                           This parameter can be a value between 1 and 256 */
+} XSPIM_CfgTypeDef;
+
+#endif /* OCTOSPIM */
 #if defined(USE_HAL_XSPI_REGISTER_CALLBACKS) && (USE_HAL_XSPI_REGISTER_CALLBACKS == 1U)
 /**
   * @brief  HAL XSPI Callback ID enumeration definition
@@ -473,6 +511,28 @@ typedef void (*pXSPI_CallbackTypeDef)(XSPI_HandleTypeDef *hxspi);
   * @}
   */
 
+#if defined(XSPI_CR_CSSEL)
+/** @defgroup XSPI_MemorySelect XSPI Memory Select
+  * @{
+  */
+#define HAL_XSPI_CSSEL_NCS1                  (0x00000000U)             /*!<  The output of nCS is nCS1       */
+#define HAL_XSPI_CSSEL_NCS2                  ((uint32_t)XSPI_CR_CSSEL) /*!<  The output of nCS is nCS2       */
+/**
+  * @}
+  */
+
+#endif /* XSPI_CR_CSSEL */
+#if defined(XSPI_DCR1_EXTENDMEM)
+/** @defgroup XSPI_MemoryExtended XSPI Memory Extended
+  * @{
+  */
+#define HAL_XSPI_CSSEL_SW                  (0x00000000U)             /*!<  NCS1 and NCS2 are software controlled.      */
+#define HAL_XSPI_CSSEL_HW                  ((uint32_t)XSPI_DCR1_EXTENDMEM) /*!<  NCS1 and NCS2 are hardware controlled.      */
+/**
+  * @}
+  */
+
+#endif /* XSPI_DCR1_EXTENDMEM */
 /** @defgroup XSPI_OperationType XSPI Operation Type
   * @{
   */
@@ -621,6 +681,7 @@ typedef void (*pXSPI_CallbackTypeDef)(XSPI_HandleTypeDef *hxspi);
   * @}
   */
 
+#if defined(XSPI_CCR_SIOO)
 /** @defgroup XSPI_SIOOMode XSPI SIOO Mode
   * @{
   */
@@ -630,6 +691,7 @@ typedef void (*pXSPI_CallbackTypeDef)(XSPI_HandleTypeDef *hxspi);
   * @}
   */
 
+#endif /* XSPI_CCR_SIOO */
 /** @defgroup XSPI_WriteZeroLatency XSPI Hyperbus Write Zero Latency Activation
   * @{
   */
@@ -684,6 +746,17 @@ typedef void (*pXSPI_CallbackTypeDef)(XSPI_HandleTypeDef *hxspi);
   * @}
   */
 
+#if defined(XSPI_CR_NOPREF)
+/** @defgroup XSPI_NoPrefetchData XSPI No Prefetch Data
+  * @{
+  */
+#define HAL_XSPI_AUTOMATIC_PREFETCH_ENABLE     (0x00000000U)           /*!< Automatic prefetch enabled                               */
+#define HAL_XSPI_AUTOMATIC_PREFETCH_DISABLE    ((uint32_t)XSPI_CR_NOPREF)  /*!< Automatic prefetch disabled             */
+/**
+  * @}
+  */
+
+#endif /* XSPI_CR_NOPREF */
 /** @defgroup XSPI_Flags XSPI Flags
   * @{
   */
@@ -717,6 +790,29 @@ typedef void (*pXSPI_CallbackTypeDef)(XSPI_HandleTypeDef *hxspi);
   * @}
   */
 
+#if defined(OCTOSPIM)
+/** @defgroup XSPI_IO_Manger_IOPort XSPI IO Port
+  * @{
+  */
+#define HAL_XSPIM_IOPORT_1                 (0x00000000U)   /*!< Port 1 */
+#define HAL_XSPIM_IOPORT_2                 (0x00000001U)   /*!< Port 2 */
+/**
+  * @}
+  */
+
+#endif /* OCTOSPIM */
+#if defined(OCTOSPIM)
+/** @defgroup XSPIM_MemorySelect_Override XSPIM Memory Select Override
+  * @{
+  */
+#define HAL_XSPI_CSSEL_OVR_DISABLED         (0x00000000U)
+#define HAL_XSPI_CSSEL_OVR_NCS1             (0x00000010U)             /*!< The chip select signal from XSPI is sent to NCS1 */
+#define HAL_XSPI_CSSEL_OVR_NCS2             (0x00000070U)             /*!< The chip select signal from XSPI is sent to NCS2 */
+/**
+  * @}
+  */
+
+#endif /* OCTOSPIM */
 /**
   * @}
   */
@@ -849,29 +945,30 @@ void                  HAL_XSPI_MspDeInit(XSPI_HandleTypeDef *hxspi);
 void                  HAL_XSPI_IRQHandler(XSPI_HandleTypeDef *hxspi);
 
 /* XSPI command configuration functions */
-HAL_StatusTypeDef     HAL_XSPI_Command(XSPI_HandleTypeDef *hxspi, XSPI_RegularCmdTypeDef *const pCmd,
+HAL_StatusTypeDef     HAL_XSPI_Command(XSPI_HandleTypeDef *hxspi, const XSPI_RegularCmdTypeDef *pCmd,
                                        uint32_t Timeout);
-HAL_StatusTypeDef     HAL_XSPI_Command_IT(XSPI_HandleTypeDef *hxspi, XSPI_RegularCmdTypeDef *const pCmd);
-HAL_StatusTypeDef     HAL_XSPI_HyperbusCfg(XSPI_HandleTypeDef *hxspi, XSPI_HyperbusCfgTypeDef *const pCfg,
+HAL_StatusTypeDef     HAL_XSPI_Command_IT(XSPI_HandleTypeDef *hxspi, const XSPI_RegularCmdTypeDef *pCmd);
+HAL_StatusTypeDef     HAL_XSPI_HyperbusCfg(XSPI_HandleTypeDef *hxspi, const XSPI_HyperbusCfgTypeDef *pCfg,
                                            uint32_t Timeout);
-HAL_StatusTypeDef     HAL_XSPI_HyperbusCmd(XSPI_HandleTypeDef *hxspi, XSPI_HyperbusCmdTypeDef *const pCmd,
+HAL_StatusTypeDef     HAL_XSPI_HyperbusCmd(XSPI_HandleTypeDef *hxspi, const XSPI_HyperbusCmdTypeDef *pCmd,
                                            uint32_t Timeout);
 
 /* XSPI indirect mode functions */
 HAL_StatusTypeDef     HAL_XSPI_Transmit(XSPI_HandleTypeDef *hxspi, const uint8_t *pData, uint32_t Timeout);
-HAL_StatusTypeDef     HAL_XSPI_Receive(XSPI_HandleTypeDef *hxspi, uint8_t *const pData, uint32_t Timeout);
+HAL_StatusTypeDef     HAL_XSPI_Receive(XSPI_HandleTypeDef *hxspi, uint8_t *pData, uint32_t Timeout);
 HAL_StatusTypeDef     HAL_XSPI_Transmit_IT(XSPI_HandleTypeDef *hxspi, const uint8_t *pData);
-HAL_StatusTypeDef     HAL_XSPI_Receive_IT(XSPI_HandleTypeDef *hxspi, uint8_t *const pData);
+HAL_StatusTypeDef     HAL_XSPI_Receive_IT(XSPI_HandleTypeDef *hxspi, uint8_t *pData);
 HAL_StatusTypeDef     HAL_XSPI_Transmit_DMA(XSPI_HandleTypeDef *hxspi, const uint8_t *pData);
-HAL_StatusTypeDef     HAL_XSPI_Receive_DMA(XSPI_HandleTypeDef *hxspi, uint8_t *const pData);
+HAL_StatusTypeDef     HAL_XSPI_Receive_DMA(XSPI_HandleTypeDef *hxspi, uint8_t *pData);
 
 /* XSPI status flag polling mode functions */
-HAL_StatusTypeDef     HAL_XSPI_AutoPolling(XSPI_HandleTypeDef *hxspi, XSPI_AutoPollingTypeDef *const pCfg,
+HAL_StatusTypeDef     HAL_XSPI_AutoPolling(XSPI_HandleTypeDef *hxspi, const XSPI_AutoPollingTypeDef *pCfg,
                                            uint32_t Timeout);
-HAL_StatusTypeDef     HAL_XSPI_AutoPolling_IT(XSPI_HandleTypeDef *hxspi, XSPI_AutoPollingTypeDef *const pCfg);
+HAL_StatusTypeDef     HAL_XSPI_AutoPolling_IT(XSPI_HandleTypeDef *hxspi, const XSPI_AutoPollingTypeDef *pCfg);
 
 /* XSPI memory-mapped mode functions */
-HAL_StatusTypeDef     HAL_XSPI_MemoryMapped(XSPI_HandleTypeDef *hxspi,  XSPI_MemoryMappedTypeDef *const pCfg);
+HAL_StatusTypeDef     HAL_XSPI_MemoryMapped(XSPI_HandleTypeDef *hxspi,  const XSPI_MemoryMappedTypeDef *pCfg);
+uint32_t              HAL_XSPI_IsMemoryMapped(XSPI_HandleTypeDef *hxspi);
 
 /* Callback functions in non-blocking modes ***********************************/
 void                  HAL_XSPI_ErrorCallback(XSPI_HandleTypeDef *hxspi);
@@ -921,15 +1018,27 @@ uint32_t              HAL_XSPI_GetState(const XSPI_HandleTypeDef *hxspi);
   * @}
   */
 
+#if defined(OCTOSPIM)
+/* XSPI IO Manager configuration function  ************************************/
+/** @addtogroup XSPI_Exported_Functions_Group4  IO Manager configuration function
+  * @{
+  */
+HAL_StatusTypeDef     HAL_XSPIM_Config(XSPI_HandleTypeDef *hxspi, const XSPIM_CfgTypeDef *pCfg, uint32_t Timeout);
+
+/**
+  * @}
+  */
+
+#endif /* OCTOSPIM */
 /* XSPI Delay Block functions  ************************************/
-/** @addtogroup XSPI_Exported_Functions_Group4
+/** @addtogroup XSPI_Exported_Functions_Group5 Delay Block function
   * @{
   */
 
-HAL_StatusTypeDef      HAL_XSPI_DLYB_SetConfig(XSPI_HandleTypeDef *hxspi, HAL_XSPI_DLYB_CfgTypeDef *const pdlyb_cfg);
-HAL_StatusTypeDef      HAL_XSPI_DLYB_GetConfig(XSPI_HandleTypeDef *hxspi, HAL_XSPI_DLYB_CfgTypeDef *const pdlyb_cfg);
+HAL_StatusTypeDef      HAL_XSPI_DLYB_SetConfig(XSPI_HandleTypeDef *hxspi, const HAL_XSPI_DLYB_CfgTypeDef *pdlyb_cfg);
+HAL_StatusTypeDef      HAL_XSPI_DLYB_GetConfig(XSPI_HandleTypeDef *hxspi, HAL_XSPI_DLYB_CfgTypeDef *pdlyb_cfg);
 HAL_StatusTypeDef      HAL_XSPI_DLYB_GetClockPeriod(XSPI_HandleTypeDef *hxspi,
-                                                    HAL_XSPI_DLYB_CfgTypeDef  *const pdlyb_cfg);
+                                                    HAL_XSPI_DLYB_CfgTypeDef  *pdlyb_cfg);
 
 /**
   * @}
@@ -951,7 +1060,7 @@ HAL_StatusTypeDef      HAL_XSPI_DLYB_GetClockPeriod(XSPI_HandleTypeDef *hxspi,
 
 #define IS_XSPI_MEMORY_TYPE(TYPE)                 (((TYPE) == HAL_XSPI_MEMTYPE_MICRON)       || \
                                                    ((TYPE) == HAL_XSPI_MEMTYPE_MACRONIX)     || \
-                                                   ((TYPE) == HAL_XSPI_MEMTYPE_APMEM)     || \
+                                                   ((TYPE) == HAL_XSPI_MEMTYPE_APMEM)        || \
                                                    ((TYPE) == HAL_XSPI_MEMTYPE_MACRONIX_RAM) || \
                                                    ((TYPE) == HAL_XSPI_MEMTYPE_HYPERBUS)     || \
                                                    ((TYPE) == HAL_XSPI_MEMTYPE_APMEM_16BITS))
@@ -1047,7 +1156,20 @@ HAL_StatusTypeDef      HAL_XSPI_DLYB_GetClockPeriod(XSPI_HandleTypeDef *hxspi,
 #define IS_XSPI_DLYB_BYPASS(DLYB)                 (((DLYB) == HAL_XSPI_DELAY_BLOCK_ON) || \
                                                    ((DLYB) == HAL_XSPI_DELAY_BLOCK_BYPASS))
 
+#if defined(XSPI_DCR3_MAXTRAN)
+#define IS_XSPI_MAXTRAN(NB_BYTES)                 ((NB_BYTES) <= 0U)
+#endif /* XSPI_DCR3_MAXTRAN */
 
+#if defined(XSPI_CR_CSSEL)
+#define IS_XSPI_CSSEL(CSSEL)                      (((CSSEL) == HAL_XSPI_CSSEL_NCS1) || \
+                                                   ((CSSEL) == HAL_XSPI_CSSEL_NCS2))
+
+#endif /* XSPI_CR_CSSEL */
+#if defined(XSPI_DCR1_EXTENDMEM)
+#define IS_XSPI_EXTENDMEM(EXTENDMEM)              (((EXTENDMEM) == HAL_XSPI_CSSEL_SW) || \
+                                                   ((EXTENDMEM) == HAL_XSPI_CSSEL_HW))
+
+#endif /* XSPI_DCR1_EXTENDMEM */
 #define IS_XSPI_OPERATION_TYPE(TYPE)              (((TYPE) == HAL_XSPI_OPTYPE_COMMON_CFG) || \
                                                    ((TYPE) == HAL_XSPI_OPTYPE_READ_CFG)   || \
                                                    ((TYPE) == HAL_XSPI_OPTYPE_WRITE_CFG)  || \
@@ -1117,9 +1239,11 @@ HAL_StatusTypeDef      HAL_XSPI_DLYB_GetClockPeriod(XSPI_HandleTypeDef *hxspi,
 #define IS_XSPI_DQS_MODE(MODE)                    (((MODE) == HAL_XSPI_DQS_DISABLE) || \
                                                    ((MODE) == HAL_XSPI_DQS_ENABLE))
 
+#if defined(XSPI_CCR_SIOO)
 #define IS_XSPI_SIOO_MODE(MODE)                   (((MODE) == HAL_XSPI_SIOO_INST_EVERY_CMD) || \
                                                    ((MODE) == HAL_XSPI_SIOO_INST_ONLY_FIRST_CMD))
 
+#endif /* XSPI_CCR_SIOO */
 #define IS_XSPI_RW_RECOVERY_TIME_CYCLE(CYCLE)     ((CYCLE) <= 255U)
 
 #define IS_XSPI_ACCESS_TIME_CYCLE(CYCLE)          ((CYCLE) <= 255U)
@@ -1145,9 +1269,28 @@ HAL_StatusTypeDef      HAL_XSPI_DLYB_GetClockPeriod(XSPI_HandleTypeDef *hxspi,
 
 #define IS_XSPI_TIMEOUT_ACTIVATION(MODE)          (((MODE) == HAL_XSPI_TIMEOUT_COUNTER_DISABLE) || \
                                                    ((MODE) == HAL_XSPI_TIMEOUT_COUNTER_ENABLE))
+#if defined(XSPI_CR_NOPREF)
+#define IS_XSPI_NO_PREFETCH_DATA(MODE)            (((MODE) == HAL_XSPI_AUTOMATIC_PREFETCH_ENABLE) || \
+                                                   ((MODE) == HAL_XSPI_AUTOMATIC_PREFETCH_DISABLE))
+#endif /* XSPI_CR_NOPREF */
 
 #define IS_XSPI_TIMEOUT_PERIOD(PERIOD)            ((PERIOD) <= 0xFFFFU)
 
+#define IS_XSPI_PROG_DATA(SET_DATA, REQ_DATA)     ((SET_DATA) == (REQ_DATA))
+
+#define IS_XSPI_PROG_ADDR(SET_ADDR, REQ_ADDR)     ((SET_ADDR) == (REQ_ADDR))
+
+#if defined(OCTOSPIM)
+#define IS_XSPIM_IO_PORT(PORT)                    (((PORT) == HAL_XSPIM_IOPORT_1)   || \
+                                                   ((PORT) == HAL_XSPIM_IOPORT_2))
+
+#define IS_XSPIM_NCS_OVR(PORT)                    (((PORT) == HAL_XSPI_CSSEL_OVR_DISABLED) || \
+                                                   ((PORT) == HAL_XSPI_CSSEL_OVR_NCS1)     || \
+                                                   ((PORT) == HAL_XSPI_CSSEL_OVR_NCS2))
+
+#define IS_XSPIM_REQ2ACKTIME(TIME)                (((TIME) >= 1U) && ((TIME) <= 256U))
+
+#endif /* OCTOSPIM */
 /**
   @endcond
   */

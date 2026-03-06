@@ -523,7 +523,6 @@ HAL_StatusTypeDef HAL_NAND_Read_Page_8b(NAND_HandleTypeDef *hnand, const NAND_Ad
   uint32_t index;
   uint32_t tickstart;
   uint32_t deviceaddress;
-  uint32_t numpagesread = 0U;
   uint32_t nandaddress;
   uint32_t nbpages = NumPageToRead;
   uint8_t *buff = pBuffer;
@@ -638,12 +637,9 @@ HAL_StatusTypeDef HAL_NAND_Read_Page_8b(NAND_HandleTypeDef *hnand, const NAND_Ad
       /* Get Data into Buffer */
       for (index = 0U; index < hnand->Config.PageSize; index++)
       {
-        *buff = *(uint8_t *)deviceaddress;
+        *buff = *(__IO uint8_t *)deviceaddress;
         buff++;
       }
-
-      /* Increment read pages number */
-      numpagesread++;
 
       /* Decrement pages to read */
       nbpages--;
@@ -681,7 +677,6 @@ HAL_StatusTypeDef HAL_NAND_Read_Page_16b(NAND_HandleTypeDef *hnand, const NAND_A
   uint32_t index;
   uint32_t tickstart;
   uint32_t deviceaddress;
-  uint32_t numpagesread = 0U;
   uint32_t nandaddress;
   uint32_t nbpages = NumPageToRead;
   uint16_t *buff = pBuffer;
@@ -806,12 +801,9 @@ HAL_StatusTypeDef HAL_NAND_Read_Page_16b(NAND_HandleTypeDef *hnand, const NAND_A
       /* Get Data into Buffer */
       for (index = 0U; index < hnand->Config.PageSize; index++)
       {
-        *buff = *(uint16_t *)deviceaddress;
+        *buff = *(__IO uint16_t *)deviceaddress;
         buff++;
       }
-
-      /* Increment read pages number */
-      numpagesread++;
 
       /* Decrement pages to read */
       nbpages--;
@@ -849,7 +841,6 @@ HAL_StatusTypeDef HAL_NAND_Write_Page_8b(NAND_HandleTypeDef *hnand, const NAND_A
   uint32_t index;
   uint32_t tickstart;
   uint32_t deviceaddress;
-  uint32_t numpageswritten = 0U;
   uint32_t nandaddress;
   uint32_t nbpages = NumPageToWrite;
   const uint8_t *buff = pBuffer;
@@ -963,9 +954,6 @@ HAL_StatusTypeDef HAL_NAND_Write_Page_8b(NAND_HandleTypeDef *hnand, const NAND_A
         }
       }
 
-      /* Increment written pages number */
-      numpageswritten++;
-
       /* Decrement pages to write */
       nbpages--;
 
@@ -1002,7 +990,6 @@ HAL_StatusTypeDef HAL_NAND_Write_Page_16b(NAND_HandleTypeDef *hnand, const NAND_
   uint32_t index;
   uint32_t tickstart;
   uint32_t deviceaddress;
-  uint32_t numpageswritten = 0U;
   uint32_t nandaddress;
   uint32_t nbpages = NumPageToWrite;
   const uint16_t *buff = pBuffer;
@@ -1127,9 +1114,6 @@ HAL_StatusTypeDef HAL_NAND_Write_Page_16b(NAND_HandleTypeDef *hnand, const NAND_
         }
       }
 
-      /* Increment written pages number */
-      numpageswritten++;
-
       /* Decrement pages to write */
       nbpages--;
 
@@ -1166,7 +1150,6 @@ HAL_StatusTypeDef HAL_NAND_Read_SpareArea_8b(NAND_HandleTypeDef *hnand, const NA
   uint32_t index;
   uint32_t tickstart;
   uint32_t deviceaddress;
-  uint32_t numsparearearead = 0U;
   uint32_t nandaddress;
   uint32_t columnaddress;
   uint32_t nbspare = NumSpareAreaToRead;
@@ -1288,12 +1271,9 @@ HAL_StatusTypeDef HAL_NAND_Read_SpareArea_8b(NAND_HandleTypeDef *hnand, const NA
       /* Get Data into Buffer */
       for (index = 0U; index < hnand->Config.SpareAreaSize; index++)
       {
-        *buff = *(uint8_t *)deviceaddress;
+        *buff = *(__IO uint8_t *)deviceaddress;
         buff++;
       }
-
-      /* Increment read spare areas number */
-      numsparearearead++;
 
       /* Decrement spare areas to read */
       nbspare--;
@@ -1331,7 +1311,6 @@ HAL_StatusTypeDef HAL_NAND_Read_SpareArea_16b(NAND_HandleTypeDef *hnand, const N
   uint32_t index;
   uint32_t tickstart;
   uint32_t deviceaddress;
-  uint32_t numsparearearead = 0U;
   uint32_t nandaddress;
   uint32_t columnaddress;
   uint32_t nbspare = NumSpareAreaToRead;
@@ -1453,12 +1432,9 @@ HAL_StatusTypeDef HAL_NAND_Read_SpareArea_16b(NAND_HandleTypeDef *hnand, const N
       /* Get Data into Buffer */
       for (index = 0U; index < hnand->Config.SpareAreaSize; index++)
       {
-        *buff = *(uint16_t *)deviceaddress;
+        *buff = *(__IO uint16_t *)deviceaddress;
         buff++;
       }
-
-      /* Increment read spare areas number */
-      numsparearearead++;
 
       /* Decrement spare areas to read */
       nbspare--;
@@ -1496,7 +1472,6 @@ HAL_StatusTypeDef HAL_NAND_Write_SpareArea_8b(NAND_HandleTypeDef *hnand, const N
   uint32_t index;
   uint32_t tickstart;
   uint32_t deviceaddress;
-  uint32_t numspareareawritten = 0U;
   uint32_t nandaddress;
   uint32_t columnaddress;
   uint32_t nbspare = NumSpareAreaTowrite;
@@ -1620,9 +1595,6 @@ HAL_StatusTypeDef HAL_NAND_Write_SpareArea_8b(NAND_HandleTypeDef *hnand, const N
         }
       }
 
-      /* Increment written spare areas number */
-      numspareareawritten++;
-
       /* Decrement spare areas to write */
       nbspare--;
 
@@ -1659,7 +1631,6 @@ HAL_StatusTypeDef HAL_NAND_Write_SpareArea_16b(NAND_HandleTypeDef *hnand, const 
   uint32_t index;
   uint32_t tickstart;
   uint32_t deviceaddress;
-  uint32_t numspareareawritten = 0U;
   uint32_t nandaddress;
   uint32_t columnaddress;
   uint32_t nbspare = NumSpareAreaTowrite;
@@ -1783,9 +1754,6 @@ HAL_StatusTypeDef HAL_NAND_Write_SpareArea_16b(NAND_HandleTypeDef *hnand, const 
         }
       }
 
-      /* Increment written spare areas number */
-      numspareareawritten++;
-
       /* Decrement spare areas to write */
       nbspare--;
 
@@ -1905,11 +1873,13 @@ uint32_t HAL_NAND_Address_Inc(const NAND_HandleTypeDef *hnand, NAND_AddressTypeD
   * @param hnand : NAND handle
   * @param CallbackId : ID of the callback to be registered
   *        This parameter can be one of the following values:
-  *          @arg @ref HAL_NAND_MSP_INIT_CB_ID       NAND MspInit callback ID
-  *          @arg @ref HAL_NAND_MSP_DEINIT_CB_ID     NAND MspDeInit callback ID
-  *          @arg @ref HAL_NAND_IT_CB_ID             NAND IT callback ID
+  *          @arg @ref HAL_NAND_MSP_INIT_CB_ID       NAND MspInit callback ID (*)
+  *          @arg @ref HAL_NAND_MSP_DEINIT_CB_ID     NAND MspDeInit callback ID (*)
+  *          @arg @ref HAL_NAND_IT_CB_ID             NAND IT callback ID (*)
   * @param pCallback : pointer to the Callback function
   * @retval status
+  *
+  * (*) : For all h5 series
   */
 HAL_StatusTypeDef HAL_NAND_RegisterCallback(NAND_HandleTypeDef *hnand, HAL_NAND_CallbackIDTypeDef CallbackId,
                                             pNAND_CallbackTypeDef pCallback)
@@ -1971,10 +1941,12 @@ HAL_StatusTypeDef HAL_NAND_RegisterCallback(NAND_HandleTypeDef *hnand, HAL_NAND_
   * @param hnand : NAND handle
   * @param CallbackId : ID of the callback to be unregistered
   *        This parameter can be one of the following values:
-  *          @arg @ref HAL_NAND_MSP_INIT_CB_ID       NAND MspInit callback ID
-  *          @arg @ref HAL_NAND_MSP_DEINIT_CB_ID     NAND MspDeInit callback ID
-  *          @arg @ref HAL_NAND_IT_CB_ID             NAND IT callback ID
+  *          @arg @ref HAL_NAND_MSP_INIT_CB_ID       NAND MspInit callback ID (*)
+  *          @arg @ref HAL_NAND_MSP_DEINIT_CB_ID     NAND MspDeInit callback ID (*)
+  *          @arg @ref HAL_NAND_IT_CB_ID             NAND IT callback ID (*)
   * @retval status
+  *
+  * (*) : For all h5 series
   */
 HAL_StatusTypeDef HAL_NAND_UnRegisterCallback(NAND_HandleTypeDef *hnand, HAL_NAND_CallbackIDTypeDef CallbackId)
 {

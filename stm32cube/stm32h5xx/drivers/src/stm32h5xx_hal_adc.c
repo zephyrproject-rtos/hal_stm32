@@ -414,7 +414,11 @@ HAL_StatusTypeDef HAL_ADC_Init(ADC_HandleTypeDef *hadc)
   assert_param(IS_ADC_EXTTRIG_EDGE(hadc->Init.ExternalTrigConvEdge));
   assert_param(IS_ADC_EXTTRIG(hadc->Init.ExternalTrigConv));
   assert_param(IS_ADC_SAMPLINGMODE(hadc->Init.SamplingMode));
+#if   defined(ADC3)
+  assert_param(IS_ADC_CONVERSIONDATAMGT(hadc->Init.ConversionDataManagement));
+#else
   assert_param(IS_FUNCTIONAL_STATE(hadc->Init.DMAContinuousRequests));
+#endif /* ADC3*/
   assert_param(IS_ADC_EOC_SELECTION(hadc->Init.EOCSelection));
   assert_param(IS_ADC_OVERRUN(hadc->Init.Overrun));
   assert_param(IS_FUNCTIONAL_STATE(hadc->Init.LowPowerAutoWait));
@@ -605,6 +609,9 @@ HAL_StatusTypeDef HAL_ADC_Init(ADC_HandleTypeDef *hadc)
     {
       tmp_cfgr = (
                    ADC_CFGR_AUTOWAIT((uint32_t)hadc->Init.LowPowerAutoWait)        |
+#if  defined(ADC3)
+                   hadc->Init.ConversionDataManagement |
+#endif /* ADC3 */
                    ADC_CFGR_DMACONTREQ((uint32_t)hadc->Init.DMAContinuousRequests));
 
       MODIFY_REG(hadc->Instance->CFGR, ADC_CFGR_FIELDS_2, tmp_cfgr);
@@ -2981,8 +2988,14 @@ HAL_StatusTypeDef HAL_ADC_ConfigChannel(ADC_HandleTypeDef *hadc, const ADC_Chann
           }
         }
       }
+#if defined(ADC3)
+      else if (((pConfig->Channel == ADC_CHANNEL_VBAT)
+                || (pConfig->Channel == ADC_CHANNEL_VBAT_ADC3))
+               && ((tmp_config_internal_channel & LL_ADC_PATH_INTERNAL_VBAT) == 0UL))
+#else
       else if ((pConfig->Channel == ADC_CHANNEL_VBAT)
                && ((tmp_config_internal_channel & LL_ADC_PATH_INTERNAL_VBAT) == 0UL))
+#endif /* ADC3 */
       {
         if (ADC_BATTERY_VOLTAGE_INSTANCE(hadc))
         {
@@ -3001,10 +3014,17 @@ HAL_StatusTypeDef HAL_ADC_ConfigChannel(ADC_HandleTypeDef *hadc, const ADC_Chann
       }
       else if (pConfig->Channel == ADC_CHANNEL_VDDCORE)
       {
-        if (ADC_VDDCORE_INSTANCE(hadc))
-        {
-          LL_ADC_EnableChannelVDDcore(hadc->Instance);
-        }
+        /* Check the parameters */
+        assert_param(ADC_VDDCORE_INSTANCE(hadc));
+        LL_ADC_EnableChannelVDDcore(hadc->Instance);
+      }
+      else if (pConfig->Channel == ADC_CHANNEL_0)
+      {
+#if defined(ADC2)
+        /* Check the parameters */
+        assert_param(hadc->Instance != ADC2);
+#endif /* ADC2 */
+        LL_ADC_EnableChannel0_GPIO(hadc->Instance);
       }
       else
       {

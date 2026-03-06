@@ -685,6 +685,25 @@ HAL_StatusTypeDef HAL_FLASH_OB_Launch(void)
   return status;
 }
 
+#if defined(FLASH_CR_PUF_LAUNCH)
+/**
+  * @brief  Launch the PUF preparation.
+  * @retval HAL Status
+  */
+HAL_StatusTypeDef HAL_FLASHEx_PUF_Launch(void)
+{
+  HAL_StatusTypeDef status;
+
+  /* Set PUF_LAUNCH Bit */
+  SET_BIT(FLASH->NSCR, FLASH_CR_PUF_LAUNCH);
+
+  /* Wait for OB change operation to be completed */
+  status = FLASH_WaitForLastOperation(FLASH_TIMEOUT_VALUE);
+
+  return status;
+}
+#endif /* FLASH_CR_PUF_LAUNCH */
+
 /**
   * @}
   */

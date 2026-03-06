@@ -320,7 +320,7 @@ typedef struct
 
 /* Triggers specific to some devices of STM32H5 series */
 #if defined(TIM8)
-/* Devices STM32H563/H573xx */
+/* Devices STM32H563/H573xx and STM32H5Ex/H5Fxxx */
 #define ADC_EXTERNALTRIGINJEC_T4_TRGO      (LL_ADC_INJ_TRIG_EXT_TIM4_TRGO)       /*!< ADC group injected conversion
                                            trigger from external peripheral: TIM4 TRGO event.
                                            Specific to devices STM32H563/H573xx. */
@@ -335,12 +335,18 @@ typedef struct
 #define ADC_EXTERNALTRIGINJEC_T15_TRGO     (LL_ADC_INJ_TRIG_EXT_TIM15_TRGO)      /*!< ADC group injected conversion
                                            trigger from external peripheral: TIM15 TRGO event.
                                            Specific to devices STM32H563/H573xx. */
+#if defined(ADC3)
+/* Devices STM32H5Ex/H5Fxxx */
+#define ADC_EXTERNALTRIGINJEC_PLAY_OUT9    (LL_ADC_INJ_TRIG_EXT_PLAY_OUT9)       /*!< ADC group regular conversion
+                                           trigger from external peripheral: PLAY OUT9 event.
+                                           Specific to devices STM32H5Ex/H5Fxxx. */
+#endif /* ADC3 */
 #else
 /* Devices STM32H503xx */
 #define ADC_EXTERNALTRIGINJEC_T7_TRGO      (LL_ADC_INJ_TRIG_EXT_TIM7_TRGO)       /*!< ADC group injected conversion
                                            trigger from external peripheral: TIM7 TRGO event.
                                            Specific to devices STM32H503xx. */
-#endif /* Devices STM32H563/H573xx or STM32H503xx */
+#endif /* Devices STM32H563/H573xx, STM32H5Ex/H5Fxxx or STM32H503xx */
 /**
   * @}
   */
@@ -522,7 +528,15 @@ typedef struct
   */
 /* ADC_CFGR fields of parameters that can be updated when no conversion
    (neither regular nor injected) is on-going  */
+#if   defined(ADC3)
+#if defined(ADC_CFGR_ADFCFG)
+#define ADC_CFGR_FIELDS_2  ((ADC_CFGR_DMACFG | ADC_CFGR_ADFCFG | ADC_CFGR_AUTDLY))
+#else
 #define ADC_CFGR_FIELDS_2  ((ADC_CFGR_DMACFG | ADC_CFGR_AUTDLY))
+#endif /* ADC_CFGR_ADFCFG */
+#else
+#define ADC_CFGR_FIELDS_2  ((ADC_CFGR_DMACFG | ADC_CFGR_AUTDLY))
+#endif /* ADC3 */
 /**
   * @}
   */
@@ -583,7 +597,17 @@ typedef struct
   * @note  When multimode feature is not available, the macro always returns SET.
   * @retval SET (ADC is independent) or RESET (ADC is not).
   */
+#if defined(ADC3)
+#define ADC_IS_INDEPENDENT(__HANDLE__)    \
+  ( ( ( ((__HANDLE__)->Instance) == ADC3) \
+    )?                                    \
+    SET                                   \
+    :                                     \
+    RESET                                 \
+  )
+#else
 #define ADC_IS_INDEPENDENT(__HANDLE__)   (RESET)
+#endif /* ADC3 */
 
 /**
   * @brief Set the selected injected Channel rank.
@@ -748,7 +772,12 @@ typedef struct
   * @param __HANDLE__ ADC handle.
   * @retval SET (ADC instance is valid) or RESET (ADC instance is invalid)
   */
+#if defined(ADC3)
+#define ADC_TEMPERATURE_SENSOR_INSTANCE(__HANDLE__)  ((((__HANDLE__)->Instance) == ADC1) || \
+                                                      (((__HANDLE__)->Instance) == ADC3))
+#else
 #define ADC_TEMPERATURE_SENSOR_INSTANCE(__HANDLE__)  (((__HANDLE__)->Instance) == ADC1)
+#endif /* ADC3 */
 
 /**
   * @brief Verify the ADC instance connected to the battery voltage VBAT.
@@ -757,16 +786,24 @@ typedef struct
   */
 #if defined(ADC2)
 #define ADC_BATTERY_VOLTAGE_INSTANCE(__HANDLE__)  (((__HANDLE__)->Instance) == ADC2)
+#elif defined(ADC3)
+#define ADC_BATTERY_VOLTAGE_INSTANCE(__HANDLE__)  ((((__HANDLE__)->Instance) == ADC2) || \
+                                                   (((__HANDLE__)->Instance) == ADC3))
 #else
 #define ADC_BATTERY_VOLTAGE_INSTANCE(__HANDLE__)  (((__HANDLE__)->Instance) == ADC1)
-#endif /* ADC2 */
+#endif /* ADC3 */
 
 /**
   * @brief Verify the ADC instance connected to the internal voltage reference VREFINT.
   * @param __HANDLE__ ADC handle.
   * @retval SET (ADC instance is valid) or RESET (ADC instance is invalid)
   */
+#if defined(ADC3)
+#define ADC_VREFINT_INSTANCE(__HANDLE__)  ((((__HANDLE__)->Instance) == ADC1) || \
+                                           (((__HANDLE__)->Instance) == ADC3))
+#else
 #define ADC_VREFINT_INSTANCE(__HANDLE__)  (((__HANDLE__)->Instance) == ADC1)
+#endif /* ADC3 */
 
 /**
   * @brief Verify the ADC instance connected to the internal voltage reference VDDCORE.
@@ -774,7 +811,12 @@ typedef struct
   * @retval SET (ADC instance is valid) or RESET (ADC instance is invalid)
   */
 /* The internal voltage reference VDDCORE measurement path (channel 0) is available on ADC2 */
+#if defined(ADC3)
+#define ADC_VDDCORE_INSTANCE(__HANDLE__)  ((((__HANDLE__)->Instance) != ADC1) && \
+                                           (((__HANDLE__)->Instance) != ADC3))
+#else
 #define ADC_VDDCORE_INSTANCE(__HANDLE__)  (((__HANDLE__)->Instance) != ADC1)
+#endif /* ADC3 */
 
 /**
   * @brief Verify the length of scheduled injected conversions group.
@@ -798,6 +840,45 @@ typedef struct
   * @param __CHANNEL__ programmed ADC channel.
   * @retval SET (__CHANNEL__ is valid) or RESET (__CHANNEL__ is invalid)
   */
+#if defined(ADC3)
+#define IS_ADC_CHANNEL(__HANDLE__, __CHANNEL__) (((__CHANNEL__) == ADC_CHANNEL_0)              || \
+                                                 ((__CHANNEL__) == ADC_CHANNEL_1)              || \
+                                                 ((__CHANNEL__) == ADC_CHANNEL_2)              || \
+                                                 ((__CHANNEL__) == ADC_CHANNEL_3)              || \
+                                                 ((__CHANNEL__) == ADC_CHANNEL_4)              || \
+                                                 ((__CHANNEL__) == ADC_CHANNEL_5)              || \
+                                                 ((__CHANNEL__) == ADC_CHANNEL_6)              || \
+                                                 ((__CHANNEL__) == ADC_CHANNEL_7)              || \
+                                                 ((__CHANNEL__) == ADC_CHANNEL_8)              || \
+                                                 ((__CHANNEL__) == ADC_CHANNEL_9)              || \
+                                                 ((__CHANNEL__) == ADC_CHANNEL_10)             || \
+                                                 ((__CHANNEL__) == ADC_CHANNEL_11)             || \
+                                                 ((__CHANNEL__) == ADC_CHANNEL_12)             || \
+                                                 (((((__HANDLE__)->Instance) == ADC1) ||  \
+                                                   (((__HANDLE__)->Instance) == ADC2)) && \
+                                                  ((__CHANNEL__) == ADC_CHANNEL_12))        || \
+                                                 (((((__HANDLE__)->Instance) == ADC1) ||  \
+                                                   (((__HANDLE__)->Instance) == ADC2)) && \
+                                                  ((__CHANNEL__) == ADC_CHANNEL_13))           || \
+                                                 ((__CHANNEL__) == ADC_CHANNEL_14)             || \
+                                                 ((__CHANNEL__) == ADC_CHANNEL_15)             || \
+                                                 ((__CHANNEL__) == ADC_CHANNEL_16)             || \
+                                                 ((__CHANNEL__) == ADC_CHANNEL_17)             || \
+                                                 ((__CHANNEL__) == ADC_CHANNEL_18)             || \
+                                                 ((__CHANNEL__) == ADC_CHANNEL_19)             || \
+                                                 (((((__HANDLE__)->Instance) == ADC1) ||  \
+                                                   (((__HANDLE__)->Instance) == ADC3)) && \
+                                                  (((__CHANNEL__) == ADC_CHANNEL_VREFINT)      || \
+                                                   ((__CHANNEL__) == ADC_CHANNEL_TEMPSENSOR))) || \
+                                                 ((((__HANDLE__)->Instance) == ADC2)  && \
+                                                  ((__CHANNEL__) == ADC_CHANNEL_VBAT)          || \
+                                                  ((__CHANNEL__) == ADC_CHANNEL_VDDCORE))      || \
+                                                 ((((__HANDLE__)->Instance) == ADC3)  && \
+                                                  ((__CHANNEL__) == ADC_CHANNEL_VBAT_ADC3)     || \
+                                                  ((__CHANNEL__) == ADC_CHANNEL_VDDCORE_ADC3)  || \
+                                                  ((__CHANNEL__) == ADC_CHANNEL_DAC1_CH1)      || \
+                                                  ((__CHANNEL__) == ADC_CHANNEL_DAC1_CH2))       )
+#else
 #define IS_ADC_CHANNEL(__HANDLE__, __CHANNEL__) (((__CHANNEL__) == ADC_CHANNEL_0)           || \
                                                  ((__CHANNEL__) == ADC_CHANNEL_1)           || \
                                                  ((__CHANNEL__) == ADC_CHANNEL_2)           || \
@@ -822,6 +903,7 @@ typedef struct
                                                  ((__CHANNEL__) == ADC_CHANNEL_TEMPSENSOR)  || \
                                                  ((__CHANNEL__) == ADC_CHANNEL_VBAT)        || \
                                                  ((__CHANNEL__) == ADC_CHANNEL_VDDCORE)       )
+#endif /* ADC3 */
 
 /**
   * @brief Verify the ADC channel setting in differential mode.
@@ -829,6 +911,7 @@ typedef struct
   * @param __CHANNEL__ programmed ADC channel.
   * @retval SET (__CHANNEL__ is valid) or RESET (__CHANNEL__ is invalid)
   */
+#if defined(ADC2)
 /**
   * @brief Verify the ADC channel setting in differential mode for ADCx.
   * @param __HANDLE__ ADC instance
@@ -836,28 +919,35 @@ typedef struct
   * @retval SET (__CHANNEL__ is valid) or RESET (__CHANNEL__ is invalid)
   */
 #define IS_ADC_DIFF_CHANNEL(__HANDLE__, __CHANNEL__) \
-  ( ( ((__HANDLE__)->Instance == ADC1)                 \
-    )?                                                 \
-    (((__CHANNEL__) == ADC_CHANNEL_1)  ||              \
-     ((__CHANNEL__) == ADC_CHANNEL_2)  ||              \
-     ((__CHANNEL__) == ADC_CHANNEL_3)  ||              \
-     ((__CHANNEL__) == ADC_CHANNEL_4)  ||              \
-     ((__CHANNEL__) == ADC_CHANNEL_5)  ||              \
-     ((__CHANNEL__) == ADC_CHANNEL_10) ||              \
-     ((__CHANNEL__) == ADC_CHANNEL_11) ||              \
-     ((__CHANNEL__) == ADC_CHANNEL_12) ||              \
-     ((__CHANNEL__) == ADC_CHANNEL_18)   )             \
-    :                                                  \
-    (((__CHANNEL__) == ADC_CHANNEL_1)  ||              \
-     ((__CHANNEL__) == ADC_CHANNEL_2)  ||              \
-     ((__CHANNEL__) == ADC_CHANNEL_3)  ||              \
-     ((__CHANNEL__) == ADC_CHANNEL_4)  ||              \
-     ((__CHANNEL__) == ADC_CHANNEL_5)  ||              \
-     ((__CHANNEL__) == ADC_CHANNEL_10) ||              \
-     ((__CHANNEL__) == ADC_CHANNEL_11) ||              \
-     ((__CHANNEL__) == ADC_CHANNEL_12) ||              \
-     ((__CHANNEL__) == ADC_CHANNEL_18)   )             \
-  )
+  ( ( ((__HANDLE__)->Instance == ADC1) || ((__HANDLE__)->Instance == ADC2) ) && \
+    ( ((__CHANNEL__) == ADC_CHANNEL_1)  || \
+      ((__CHANNEL__) == ADC_CHANNEL_2)  || \
+      ((__CHANNEL__) == ADC_CHANNEL_3)  || \
+      ((__CHANNEL__) == ADC_CHANNEL_4)  || \
+      ((__CHANNEL__) == ADC_CHANNEL_5)  || \
+      ((__CHANNEL__) == ADC_CHANNEL_10) || \
+      ((__CHANNEL__) == ADC_CHANNEL_11) || \
+      ((__CHANNEL__) == ADC_CHANNEL_12) || \
+      ((__CHANNEL__) == ADC_CHANNEL_18) ) )
+#else
+/**
+  * @brief Verify the ADC channel setting in differential mode for ADCx.
+  * @param __HANDLE__ ADC instance
+  * @param __CHANNEL__: programmed ADC channel.
+  * @retval SET (__CHANNEL__ is valid) or RESET (__CHANNEL__ is invalid)
+  */
+#define IS_ADC_DIFF_CHANNEL(__HANDLE__, __CHANNEL__) \
+  ( ((__HANDLE__)->Instance == ADC1) && \
+    ( ((__CHANNEL__) == ADC_CHANNEL_1)  || \
+      ((__CHANNEL__) == ADC_CHANNEL_2)  || \
+      ((__CHANNEL__) == ADC_CHANNEL_3)  || \
+      ((__CHANNEL__) == ADC_CHANNEL_4)  || \
+      ((__CHANNEL__) == ADC_CHANNEL_5)  || \
+      ((__CHANNEL__) == ADC_CHANNEL_10) || \
+      ((__CHANNEL__) == ADC_CHANNEL_11) || \
+      ((__CHANNEL__) == ADC_CHANNEL_12) || \
+      ((__CHANNEL__) == ADC_CHANNEL_18) ) )
+#endif  /* ADC2 */
 
 /**
   * @brief Verify the ADC single-ended input or differential mode setting.
@@ -901,7 +991,7 @@ typedef struct
   * @param __INJTRIG__ programmed ADC injected conversions external trigger.
   * @retval SET (__INJTRIG__ is a valid value) or RESET (__INJTRIG__ is invalid)
   */
-#if defined(TIM8)
+#if defined(TIM8) && !defined(ADC3)
 /* Devices STM32H563/H573xx */
 #define IS_ADC_EXTTRIGINJEC(__INJTRIG__) (((__INJTRIG__) == ADC_EXTERNALTRIGINJEC_T1_TRGO)     || \
                                           ((__INJTRIG__) == ADC_EXTERNALTRIGINJEC_T1_CC4)      || \
@@ -921,6 +1011,28 @@ typedef struct
                                           ((__INJTRIG__) == ADC_EXTERNALTRIGINJEC_T15_TRGO)    || \
                                           ((__INJTRIG__) == ADC_EXTERNALTRIGINJEC_LPTIM1_CH1)  || \
                                           ((__INJTRIG__) == ADC_EXTERNALTRIGINJEC_LPTIM2_CH1)  || \
+                                          ((__INJTRIG__) == ADC_INJECTED_SOFTWARE_START)        )
+#elif defined(ADC3)
+/* Devices STM32H5Ex/H5Fxxx */
+#define IS_ADC_EXTTRIGINJEC(__INJTRIG__) (((__INJTRIG__) == ADC_EXTERNALTRIGINJEC_T1_TRGO)     || \
+                                          ((__INJTRIG__) == ADC_EXTERNALTRIGINJEC_T1_CC4)      || \
+                                          ((__INJTRIG__) == ADC_EXTERNALTRIGINJEC_T2_TRGO)     || \
+                                          ((__INJTRIG__) == ADC_EXTERNALTRIGINJEC_T2_CC1)      || \
+                                          ((__INJTRIG__) == ADC_EXTERNALTRIGINJEC_T3_CC4)      || \
+                                          ((__INJTRIG__) == ADC_EXTERNALTRIGINJEC_T4_TRGO)     || \
+                                          ((__INJTRIG__) == ADC_EXTERNALTRIGINJEC_EXT_IT15)    || \
+                                          ((__INJTRIG__) == ADC_EXTERNALTRIGINJEC_T8_CC4)      || \
+                                          ((__INJTRIG__) == ADC_EXTERNALTRIGINJEC_T1_TRGO2)    || \
+                                          ((__INJTRIG__) == ADC_EXTERNALTRIGINJEC_T8_TRGO)     || \
+                                          ((__INJTRIG__) == ADC_EXTERNALTRIGINJEC_T8_TRGO2)    || \
+                                          ((__INJTRIG__) == ADC_EXTERNALTRIGINJEC_T3_CC3)      || \
+                                          ((__INJTRIG__) == ADC_EXTERNALTRIGINJEC_T3_TRGO)     || \
+                                          ((__INJTRIG__) == ADC_EXTERNALTRIGINJEC_T3_CC1)      || \
+                                          ((__INJTRIG__) == ADC_EXTERNALTRIGINJEC_T6_TRGO)     || \
+                                          ((__INJTRIG__) == ADC_EXTERNALTRIGINJEC_T15_TRGO)    || \
+                                          ((__INJTRIG__) == ADC_EXTERNALTRIGINJEC_LPTIM1_CH1)  || \
+                                          ((__INJTRIG__) == ADC_EXTERNALTRIGINJEC_LPTIM2_CH1)  || \
+                                          ((__INJTRIG__) == ADC_EXTERNALTRIGINJEC_PLAY_OUT9)   || \
                                           ((__INJTRIG__) == ADC_INJECTED_SOFTWARE_START)        )
 #else
 /* Devices STM32H503xx */

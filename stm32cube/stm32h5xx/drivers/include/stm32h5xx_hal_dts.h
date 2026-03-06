@@ -156,6 +156,11 @@ typedef void (*pDTS_CallbackTypeDef)(DTS_HandleTypeDef *hdts);
 
 /* @brief External Interrupt Mode with EXTI13 trigger detection */
 #define DTS_TRIGGER_EXTI13    DTS_CFGR1_TS1_INTRIG_SEL_2
+
+#if defined(PLAY1)
+/* @brief External Interrupt Mode with PLAY_OUT13 trigger detection */
+#define DTS_TRIGGER_PLAY_OUT13 (DTS_CFGR1_TS1_INTRIG_SEL_0 | DTS_CFGR1_TS1_INTRIG_SEL_3)
+#endif /* defined(PLAY1) */
 /**
   * @}
   */
@@ -399,11 +404,12 @@ typedef void (*pDTS_CallbackTypeDef)(DTS_HandleTypeDef *hdts);
 /** @brief  Get Trigger
   * @param __HANDLE__ DTS handle.
   * @retval One of the following trigger
-  *     DTS_TRIGGER_HW_NONE : No HW trigger (SW trigger)
-  *     DTS_TRIGGER_LPTIMER1: LPTIMER1 trigger
-  *     DTS_TRIGGER_LPTIMER2: LPTIMER2 trigger
-  *     DTS_TRIGGER_LPTIMER3: LPTIMER3 trigger
-  *     DTS_TRIGGER_EXTI13  : EXTI13 trigger
+  *     DTS_TRIGGER_HW_NONE     : No HW trigger (SW trigger)
+  *     DTS_TRIGGER_LPTIMER1    : LPTIMER1 trigger
+  *     DTS_TRIGGER_LPTIMER2    : LPTIMER2 trigger
+  *     DTS_TRIGGER_LPTIMER3    : LPTIMER3 trigger
+  *     DTS_TRIGGER_EXTI13      : EXTI13 trigger
+  *     DTS_TRIGGER_PLAY_OUT13  : PLAY_OUT13 trigger (The option will be available only for the H5-4M.)
   */
 #define __HAL_DTS_GET_TRIGGER(__HANDLE__)  ((__HANDLE__)->Instance->CFGR1 & (DTS_CFGR1_TS1_INTRIG_SEL))
 /**
@@ -491,18 +497,37 @@ void HAL_DTS_AsyncHighCallback(DTS_HandleTypeDef *hdts);
 
 #define IS_DTS_REFCLK(__SEL__)      (((__SEL__) == DTS_REFCLKSEL_LSE) || \
                                      ((__SEL__) == DTS_REFCLKSEL_PCLK))
-#if defined(LPTIM3)
-#define IS_DTS_TRIGGERINPUT(__INPUT__)  (((__INPUT__) == DTS_TRIGGER_HW_NONE)   || \
-                                         ((__INPUT__) == DTS_TRIGGER_LPTIMER1)  || \
-                                         ((__INPUT__) == DTS_TRIGGER_LPTIMER2)  || \
-                                         ((__INPUT__) == DTS_TRIGGER_LPTIMER3)  || \
-                                         ((__INPUT__) == DTS_TRIGGER_EXTI13))
+
+
+#if defined(LPTIM3) && defined(PLAY1)
+#define IS_DTS_TRIGGERINPUT(__INPUT__)  ( \
+      ((__INPUT__) == DTS_TRIGGER_HW_NONE)   || \
+      ((__INPUT__) == DTS_TRIGGER_LPTIMER1)  || \
+      ((__INPUT__) == DTS_TRIGGER_LPTIMER2)  || \
+      ((__INPUT__) == DTS_TRIGGER_LPTIMER3)  || \
+      ((__INPUT__) == DTS_TRIGGER_EXTI13)    || \
+      ((__INPUT__) == DTS_TRIGGER_PLAY_OUT13))
+#elif defined(LPTIM3)
+#define IS_DTS_TRIGGERINPUT(__INPUT__)  ( \
+      ((__INPUT__) == DTS_TRIGGER_HW_NONE)   || \
+      ((__INPUT__) == DTS_TRIGGER_LPTIMER1)  || \
+      ((__INPUT__) == DTS_TRIGGER_LPTIMER2)  || \
+      ((__INPUT__) == DTS_TRIGGER_LPTIMER3)  || \
+      ((__INPUT__) == DTS_TRIGGER_EXTI13))
+#elif defined(PLAY1)
+#define IS_DTS_TRIGGERINPUT(__INPUT__)  ( \
+      ((__INPUT__) == DTS_TRIGGER_HW_NONE)   || \
+      ((__INPUT__) == DTS_TRIGGER_LPTIMER1)  || \
+      ((__INPUT__) == DTS_TRIGGER_LPTIMER2)  || \
+      ((__INPUT__) == DTS_TRIGGER_EXTI13)  || \
+      ((__INPUT__) == DTS_TRIGGER_PLAY_OUT13))
 #else
-#define IS_DTS_TRIGGERINPUT(__INPUT__)  (((__INPUT__) == DTS_TRIGGER_HW_NONE)   || \
-                                         ((__INPUT__) == DTS_TRIGGER_LPTIMER1)  || \
-                                         ((__INPUT__) == DTS_TRIGGER_LPTIMER2)  || \
-                                         ((__INPUT__) == DTS_TRIGGER_EXTI13))
-#endif /* defined(LPTIM3) */
+#define IS_DTS_TRIGGERINPUT(__INPUT__)  ( \
+      ((__INPUT__) == DTS_TRIGGER_HW_NONE)   || \
+      ((__INPUT__) == DTS_TRIGGER_LPTIMER1)  || \
+      ((__INPUT__) == DTS_TRIGGER_LPTIMER2)  || \
+      ((__INPUT__) == DTS_TRIGGER_EXTI13))
+#endif /* defined(LPTIM3) && defined(PLAY1) */
 
 #define IS_DTS_THRESHOLD(__THRESHOLD__)  ((__THRESHOLD__) <= 0xFFFFUL)
 

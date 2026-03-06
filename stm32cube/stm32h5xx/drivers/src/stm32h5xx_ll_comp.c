@@ -30,7 +30,7 @@
   * @{
   */
 
-#if defined (COMP1)
+#if defined (COMP1) || defined (COMP2)
 
 /** @addtogroup COMP_LL COMP
   * @{
@@ -54,21 +54,21 @@
    || ((__POWER_MODE__) == LL_COMP_POWERMODE_ULTRALOWPOWER)                 \
   )
 
-/* Note: On this STM32 series, comparator input plus parameters are           */
-/*       the same on all COMP instances.                                      */
-/*       However, comparator instance kept as macro parameter for             */
-/*       compatibility with other STM32 families.                             */
+#if defined(STM32H503xx)
 #define IS_LL_COMP_INPUT_PLUS(__COMP_INSTANCE__, __INPUT_PLUS__)            \
   (((__INPUT_PLUS__) == LL_COMP_INPUT_PLUS_IO1)                             \
    || ((__INPUT_PLUS__) == LL_COMP_INPUT_PLUS_IO2)                          \
    || ((__INPUT_PLUS__) == LL_COMP_INPUT_PLUS_IO3)                          \
    || ((__INPUT_PLUS__) == LL_COMP_INPUT_PLUS_DAC1_CH1))
+#else
+/* Note: check of COMP_INPUT_PLUS_DAC1_CH2 done through other literals with same value */
+#define IS_LL_COMP_INPUT_PLUS(__COMP_INSTANCE__, __INPUT_PLUS__)            \
+  (((__INPUT_PLUS__) == LL_COMP_INPUT_PLUS_IO1)                             \
+   || ((__INPUT_PLUS__) == LL_COMP_INPUT_PLUS_IO2)                          \
+   || ((__INPUT_PLUS__) == LL_COMP_INPUT_PLUS_DAC1_CH1))
+#endif /* STM32H503xx */
 
-
-/* Note: On this STM32 series, comparator input minus parameters are          */
-/*       the same on all COMP instances.                                      */
-/*       However, comparator instance kept as macro parameter for             */
-/*       compatibility with other STM32 families.                             */
+#if defined(STM32H503xx)
 #define IS_LL_COMP_INPUT_MINUS(__COMP_INSTANCE__, __INPUT_MINUS__)          \
   (((__INPUT_MINUS__) == LL_COMP_INPUT_MINUS_1_4VREFINT)                    \
    || ((__INPUT_MINUS__) == LL_COMP_INPUT_MINUS_1_2VREFINT)                 \
@@ -80,7 +80,20 @@
    || ((__INPUT_MINUS__) == LL_COMP_INPUT_MINUS_IO3)                        \
    || ((__INPUT_MINUS__) == LL_COMP_INPUT_MINUS_TEMPSENSOR)                 \
    || ((__INPUT_MINUS__) == LL_COMP_INPUT_MINUS_VBAT))
-
+#else
+/* Note: check of COMP_INPUT_MINUS_VDDCORE, COMP_INPUT_MINUS_IO3 done through other literals with same value */
+#define IS_LL_COMP_INPUT_MINUS(__COMP_INSTANCE__, __INPUT_MINUS__)          \
+  (((__INPUT_MINUS__) == LL_COMP_INPUT_MINUS_1_4VREFINT)                    \
+   || ((__INPUT_MINUS__) == LL_COMP_INPUT_MINUS_1_2VREFINT)                 \
+   || ((__INPUT_MINUS__) == LL_COMP_INPUT_MINUS_3_4VREFINT)                 \
+   || ((__INPUT_MINUS__) == LL_COMP_INPUT_MINUS_VREFINT)                    \
+   || ((__INPUT_MINUS__) == LL_COMP_INPUT_MINUS_DAC1_CH1)                   \
+   || ((__INPUT_MINUS__) == LL_COMP_INPUT_MINUS_DAC1_CH2)                   \
+   || ((__INPUT_MINUS__) == LL_COMP_INPUT_MINUS_IO1)                        \
+   || ((__INPUT_MINUS__) == LL_COMP_INPUT_MINUS_IO2)                        \
+   || ((__INPUT_MINUS__) == LL_COMP_INPUT_MINUS_TEMPSENSOR)                 \
+   || ((__INPUT_MINUS__) == LL_COMP_INPUT_MINUS_VBAT))
+#endif /* STM32H503xx */
 
 #define IS_LL_COMP_INPUT_HYSTERESIS(__INPUT_HYSTERESIS__)                   \
   (((__INPUT_HYSTERESIS__) == LL_COMP_HYSTERESIS_NONE)                      \
@@ -142,7 +155,9 @@ ErrorStatus LL_COMP_DeInit(COMP_TypeDef *COMPx)
   if (LL_COMP_IsLocked(COMPx) == 0UL)
   {
     LL_COMP_WriteReg(COMPx, CFGR1, 0x00000000UL);
+#if defined(STM32H503xx)
     LL_COMP_WriteReg(COMPx, CFGR2, 0x00000000UL);
+#endif /* STM32H503xx */
   }
   else
   {
@@ -191,6 +206,7 @@ ErrorStatus LL_COMP_Init(COMP_TypeDef *COMPx, const LL_COMP_InitTypeDef *COMP_In
     /*  - InputHysteresis                                                     */
     /*  - OutputPolarity                                                      */
     /*  - OutputBlankingSource                                                */
+#if defined(STM32H503xx)
     MODIFY_REG(COMPx->CFGR1,
                COMP_CFGR1_PWRMODE
                | COMP_CFGR1_INPSEL1
@@ -212,6 +228,36 @@ ErrorStatus LL_COMP_Init(COMP_TypeDef *COMPx, const LL_COMP_InitTypeDef *COMP_In
 
     MODIFY_REG(COMPx->CFGR2, COMP_CFGR2_INPSEL0,
                ((COMP_InitStruct->InputPlus == LL_COMP_INPUT_PLUS_IO2) ? COMP_CFGR2_INPSEL0 : 0U));
+#else
+    uint32_t input_minus = COMP_InitStruct->InputMinus;
+    if (COMPx == COMP2)
+    {
+      /* Adapt value of input minus literal for COMP2 */
+      if ((input_minus >= LL_COMP_INPUT_MINUS_IO1) && (input_minus <= LL_COMP_INPUT_MINUS_IO3))
+      {
+        input_minus += (1UL << COMP_CFGR1_INMSEL_Pos);
+      }
+    }
+
+    MODIFY_REG(COMPx->CFGR1,
+               COMP_CFGR1_PWRMODE
+               | COMP_CFGR1_INPSEL0
+               | COMP_CFGR1_INPSEL1
+               | COMP_CFGR1_SCALEN
+               | COMP_CFGR1_BRGEN
+               | COMP_CFGR1_INMSEL
+               | COMP_CFGR1_HYST
+               | COMP_CFGR1_POLARITY
+               | COMP_CFGR1_BLANKING
+               ,
+               COMP_InitStruct->PowerMode
+               | COMP_InitStruct->InputPlus
+               | input_minus
+               | COMP_InitStruct->InputHysteresis
+               | COMP_InitStruct->OutputPolarity
+               | COMP_InitStruct->OutputBlankingSource
+              );
+#endif /* STM32H503xx */
   }
   else
   {
@@ -251,7 +297,7 @@ void LL_COMP_StructInit(LL_COMP_InitTypeDef *COMP_InitStruct)
   * @}
   */
 
-#endif /* COMP1 */
+#endif /* COMP1 || COMP2 */
 
 /**
   * @}

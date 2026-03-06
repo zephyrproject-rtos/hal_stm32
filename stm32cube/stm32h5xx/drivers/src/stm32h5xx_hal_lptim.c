@@ -374,7 +374,7 @@ HAL_StatusTypeDef HAL_LPTIM_Init(LPTIM_HandleTypeDef *hlptim)
   hlptim->Instance->CFGR = tmpcfgr;
 
   /* Configure LPTIM input sources */
-  if ((hlptim->Instance == LPTIM1) || (hlptim->Instance == LPTIM2))
+  if (IS_LPTIM_ENCODER_INTERFACE_INSTANCE(hlptim->Instance) != 0U)
   {
     /* Check LPTIM Input1 and Input2 sources */
     assert_param(IS_LPTIM_INPUT1_SOURCE(hlptim->Instance, hlptim->Init.Input1Source));
@@ -385,7 +385,7 @@ HAL_StatusTypeDef HAL_LPTIM_Init(LPTIM_HandleTypeDef *hlptim)
   }
   else
   {
-    /* Check LPTIM2 Input1 source */
+    /* Check LPTIM Input1 source */
     assert_param(IS_LPTIM_INPUT1_SOURCE(hlptim->Instance, hlptim->Init.Input1Source));
 
     /* Configure LPTIM2 Input1 source */

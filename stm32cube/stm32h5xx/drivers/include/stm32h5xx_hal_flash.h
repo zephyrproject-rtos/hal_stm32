@@ -283,7 +283,7 @@ typedef struct
 #define FLASH_SECTOR_30            30U      /*!< Sector Number 30  */
 #define FLASH_SECTOR_31            31U      /*!< Sector Number 31  */
 #endif /* (FLASH_SECTOR_NB >= 32) */
-#if (FLASH_SECTOR_NB >= 128)
+#if (FLASH_SECTOR_NB >= 64)
 #define FLASH_SECTOR_32            32U      /*!< Sector Number 32  */
 #define FLASH_SECTOR_33            33U      /*!< Sector Number 33  */
 #define FLASH_SECTOR_34            34U      /*!< Sector Number 34  */
@@ -316,6 +316,8 @@ typedef struct
 #define FLASH_SECTOR_61            61U      /*!< Sector Number 61  */
 #define FLASH_SECTOR_62            62U      /*!< Sector Number 62  */
 #define FLASH_SECTOR_63            63U      /*!< Sector Number 63  */
+#endif /* (FLASH_SECTOR_NB >= 64) */
+#if (FLASH_SECTOR_NB >= 128)
 #define FLASH_SECTOR_64            64U      /*!< Sector Number 64  */
 #define FLASH_SECTOR_65            65U      /*!< Sector Number 65  */
 #define FLASH_SECTOR_66            66U      /*!< Sector Number 66  */
@@ -381,6 +383,136 @@ typedef struct
 #define FLASH_SECTOR_126           126U     /*!< Sector Number 126 */
 #define FLASH_SECTOR_127           127U     /*!< Sector Number 127 */
 #endif /* (FLASH_SECTOR_NB >= 128) */
+#if (FLASH_SECTOR_NB >= 256)
+#define FLASH_SECTOR_128           128U    /*!< Sector Number 128 */
+#define FLASH_SECTOR_129           129U    /*!< Sector Number 129 */
+#define FLASH_SECTOR_130           130U    /*!< Sector Number 130 */
+#define FLASH_SECTOR_131           131U    /*!< Sector Number 131 */
+#define FLASH_SECTOR_132           132U    /*!< Sector Number 132 */
+#define FLASH_SECTOR_133           133U    /*!< Sector Number 133 */
+#define FLASH_SECTOR_134           134U    /*!< Sector Number 134 */
+#define FLASH_SECTOR_135           135U    /*!< Sector Number 135 */
+#define FLASH_SECTOR_136           136U    /*!< Sector Number 136 */
+#define FLASH_SECTOR_137           137U    /*!< Sector Number 137 */
+#define FLASH_SECTOR_138           138U    /*!< Sector Number 138 */
+#define FLASH_SECTOR_139           139U    /*!< Sector Number 139 */
+#define FLASH_SECTOR_140           140U    /*!< Sector Number 140 */
+#define FLASH_SECTOR_141           141U    /*!< Sector Number 141 */
+#define FLASH_SECTOR_142           142U    /*!< Sector Number 142 */
+#define FLASH_SECTOR_143           143U    /*!< Sector Number 143 */
+#define FLASH_SECTOR_144           144U    /*!< Sector Number 144 */
+#define FLASH_SECTOR_145           145U    /*!< Sector Number 145 */
+#define FLASH_SECTOR_146           146U    /*!< Sector Number 146 */
+#define FLASH_SECTOR_147           147U    /*!< Sector Number 147 */
+#define FLASH_SECTOR_148           148U    /*!< Sector Number 148 */
+#define FLASH_SECTOR_149           149U    /*!< Sector Number 149 */
+#define FLASH_SECTOR_150           150U    /*!< Sector Number 150 */
+#define FLASH_SECTOR_151           151U    /*!< Sector Number 151 */
+#define FLASH_SECTOR_152           152U    /*!< Sector Number 152 */
+#define FLASH_SECTOR_153           153U    /*!< Sector Number 153 */
+#define FLASH_SECTOR_154           154U    /*!< Sector Number 154 */
+#define FLASH_SECTOR_155           155U    /*!< Sector Number 155 */
+#define FLASH_SECTOR_156           156U    /*!< Sector Number 156 */
+#define FLASH_SECTOR_157           157U    /*!< Sector Number 157 */
+#define FLASH_SECTOR_158           158U    /*!< Sector Number 158 */
+#define FLASH_SECTOR_159           159U    /*!< Sector Number 159 */
+#define FLASH_SECTOR_160           160U    /*!< Sector Number 160 */
+#define FLASH_SECTOR_161           161U    /*!< Sector Number 161 */
+#define FLASH_SECTOR_162           162U    /*!< Sector Number 162 */
+#define FLASH_SECTOR_163           163U    /*!< Sector Number 163 */
+#define FLASH_SECTOR_164           164U    /*!< Sector Number 164 */
+#define FLASH_SECTOR_165           165U    /*!< Sector Number 165 */
+#define FLASH_SECTOR_166           166U    /*!< Sector Number 166 */
+#define FLASH_SECTOR_167           167U    /*!< Sector Number 167 */
+#define FLASH_SECTOR_168           168U    /*!< Sector Number 168 */
+#define FLASH_SECTOR_169           169U    /*!< Sector Number 169 */
+#define FLASH_SECTOR_170           170U    /*!< Sector Number 170 */
+#define FLASH_SECTOR_171           171U    /*!< Sector Number 171 */
+#define FLASH_SECTOR_172           172U    /*!< Sector Number 172 */
+#define FLASH_SECTOR_173           173U    /*!< Sector Number 173 */
+#define FLASH_SECTOR_174           174U    /*!< Sector Number 174 */
+#define FLASH_SECTOR_175           175U    /*!< Sector Number 175 */
+#define FLASH_SECTOR_176           176U    /*!< Sector Number 176 */
+#define FLASH_SECTOR_177           177U    /*!< Sector Number 177 */
+#define FLASH_SECTOR_178           178U    /*!< Sector Number 178 */
+#define FLASH_SECTOR_179           179U    /*!< Sector Number 179 */
+#define FLASH_SECTOR_180           180U    /*!< Sector Number 180 */
+#define FLASH_SECTOR_181           181U    /*!< Sector Number 181 */
+#define FLASH_SECTOR_182           182U    /*!< Sector Number 182 */
+#define FLASH_SECTOR_183           183U    /*!< Sector Number 183 */
+#define FLASH_SECTOR_184           184U    /*!< Sector Number 184 */
+#define FLASH_SECTOR_185           185U    /*!< Sector Number 185 */
+#define FLASH_SECTOR_186           186U    /*!< Sector Number 186 */
+#define FLASH_SECTOR_187           187U    /*!< Sector Number 187 */
+#define FLASH_SECTOR_188           188U    /*!< Sector Number 188 */
+#define FLASH_SECTOR_189           189U    /*!< Sector Number 189 */
+#define FLASH_SECTOR_190           190U    /*!< Sector Number 190 */
+#define FLASH_SECTOR_191           191U    /*!< Sector Number 191 */
+#define FLASH_SECTOR_192           192U    /*!< Sector Number 192 */
+#define FLASH_SECTOR_193           193U    /*!< Sector Number 193 */
+#define FLASH_SECTOR_194           194U    /*!< Sector Number 194 */
+#define FLASH_SECTOR_195           195U    /*!< Sector Number 195 */
+#define FLASH_SECTOR_196           196U    /*!< Sector Number 196 */
+#define FLASH_SECTOR_197           197U    /*!< Sector Number 197 */
+#define FLASH_SECTOR_198           198U    /*!< Sector Number 198 */
+#define FLASH_SECTOR_199           199U    /*!< Sector Number 199 */
+#define FLASH_SECTOR_200           200U    /*!< Sector Number 200 */
+#define FLASH_SECTOR_201           201U    /*!< Sector Number 201 */
+#define FLASH_SECTOR_202           202U    /*!< Sector Number 202 */
+#define FLASH_SECTOR_203           203U    /*!< Sector Number 203 */
+#define FLASH_SECTOR_204           204U    /*!< Sector Number 204 */
+#define FLASH_SECTOR_205           205U    /*!< Sector Number 205 */
+#define FLASH_SECTOR_206           206U    /*!< Sector Number 206 */
+#define FLASH_SECTOR_207           207U    /*!< Sector Number 207 */
+#define FLASH_SECTOR_208           208U    /*!< Sector Number 208 */
+#define FLASH_SECTOR_209           209U    /*!< Sector Number 209 */
+#define FLASH_SECTOR_210           210U    /*!< Sector Number 210 */
+#define FLASH_SECTOR_211           211U    /*!< Sector Number 211 */
+#define FLASH_SECTOR_212           212U    /*!< Sector Number 212 */
+#define FLASH_SECTOR_213           213U    /*!< Sector Number 213 */
+#define FLASH_SECTOR_214           214U    /*!< Sector Number 214 */
+#define FLASH_SECTOR_215           215U    /*!< Sector Number 215 */
+#define FLASH_SECTOR_216           216U    /*!< Sector Number 216 */
+#define FLASH_SECTOR_217           217U    /*!< Sector Number 217 */
+#define FLASH_SECTOR_218           218U    /*!< Sector Number 218 */
+#define FLASH_SECTOR_219           219U    /*!< Sector Number 219 */
+#define FLASH_SECTOR_220           220U    /*!< Sector Number 220 */
+#define FLASH_SECTOR_221           221U    /*!< Sector Number 221 */
+#define FLASH_SECTOR_222           222U    /*!< Sector Number 222 */
+#define FLASH_SECTOR_223           223U    /*!< Sector Number 223 */
+#define FLASH_SECTOR_224           224U    /*!< Sector Number 224 */
+#define FLASH_SECTOR_225           225U    /*!< Sector Number 225 */
+#define FLASH_SECTOR_226           226U    /*!< Sector Number 226 */
+#define FLASH_SECTOR_227           227U    /*!< Sector Number 227 */
+#define FLASH_SECTOR_228           228U    /*!< Sector Number 228 */
+#define FLASH_SECTOR_229           229U    /*!< Sector Number 229 */
+#define FLASH_SECTOR_230           230U    /*!< Sector Number 230 */
+#define FLASH_SECTOR_231           231U    /*!< Sector Number 231 */
+#define FLASH_SECTOR_232           232U    /*!< Sector Number 232 */
+#define FLASH_SECTOR_233           233U    /*!< Sector Number 233 */
+#define FLASH_SECTOR_234           234U    /*!< Sector Number 234 */
+#define FLASH_SECTOR_235           235U    /*!< Sector Number 235 */
+#define FLASH_SECTOR_236           236U    /*!< Sector Number 236 */
+#define FLASH_SECTOR_237           237U    /*!< Sector Number 237 */
+#define FLASH_SECTOR_238           238U    /*!< Sector Number 238 */
+#define FLASH_SECTOR_239           239U    /*!< Sector Number 239 */
+#define FLASH_SECTOR_240           240U    /*!< Sector Number 240 */
+#define FLASH_SECTOR_241           241U    /*!< Sector Number 241 */
+#define FLASH_SECTOR_242           242U    /*!< Sector Number 242 */
+#define FLASH_SECTOR_243           243U    /*!< Sector Number 243 */
+#define FLASH_SECTOR_244           244U    /*!< Sector Number 244 */
+#define FLASH_SECTOR_245           245U    /*!< Sector Number 245 */
+#define FLASH_SECTOR_246           246U    /*!< Sector Number 246 */
+#define FLASH_SECTOR_247           247U    /*!< Sector Number 247 */
+#define FLASH_SECTOR_248           248U    /*!< Sector Number 248 */
+#define FLASH_SECTOR_249           249U    /*!< Sector Number 249 */
+#define FLASH_SECTOR_250           251U    /*!< Sector Number 251 */
+#define FLASH_SECTOR_251           251U    /*!< Sector Number 251 */
+#define FLASH_SECTOR_252           252U    /*!< Sector Number 252 */
+#define FLASH_SECTOR_253           253U    /*!< Sector Number 253 */
+#define FLASH_SECTOR_254           254U    /*!< Sector Number 254 */
+#define FLASH_SECTOR_255           255U    /*!< Sector Number 255 */
+#endif /* (FLASH_SECTOR_NB >= 256) */
 /**
   * @}
   */
@@ -650,6 +782,7 @@ HAL_StatusTypeDef HAL_FLASH_OB_Unlock(void);
 HAL_StatusTypeDef HAL_FLASH_OB_Lock(void);
 /* Option bytes control */
 HAL_StatusTypeDef HAL_FLASH_OB_Launch(void);
+HAL_StatusTypeDef HAL_FLASHEx_PUF_Launch(void);
 
 /**
   * @}
@@ -695,7 +828,11 @@ extern FLASH_ProcessTypeDef pFlash;
 
 #define FLASH_NON_SECURE_MASK           0x80000000U
 
+#if !defined(STM32H5F5xx)
 #define FLASH_EDATA_SECTOR_NB           8U       /*!< Maximum number of FLASH high-cycle data sectors */
+#else
+#define FLASH_EDATA_SECTOR_NB           16U      /*!< Maximum number of FLASH high-cycle data sectors */
+#endif /* STM32H5F5xx */
 /**
   * @}
   */

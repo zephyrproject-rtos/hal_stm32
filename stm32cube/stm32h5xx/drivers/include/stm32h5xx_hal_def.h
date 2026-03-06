@@ -208,7 +208,8 @@ typedef enum
 /**
   * @brief  __NOINLINE definition
   */
-#if defined ( __CC_ARM   ) || (defined(__ARMCC_VERSION) && (__ARMCC_VERSION >= ARMCC_MIN_VERSION)) || defined   (  __GNUC__  )
+#if defined ( __CC_ARM   ) || (defined(__ARMCC_VERSION) && (__ARMCC_VERSION >= ARMCC_MIN_VERSION)) || \
+    defined   (  __GNUC__  )
 /* ARM & GNUCompiler
 
 */
@@ -220,7 +221,7 @@ typedef enum
 */
 #define __NOINLINE _Pragma("optimize = no_inline")
 
-#endif /* ( __CC_ARM   ) || ((__ARMCC_VERSION) && (__ARMCC_VERSION >= ARMCC_MIN_VERSION)) || defined   (  __GNUC__  ) */
+#endif /* ( __CC_ARM   ) || ((__ARMCC_VERSION) && (__ARMCC_VERSION >= ARMCC_MIN_VERSION)) || defined   ( __GNUC__ ) */
 
 
 #ifdef __cplusplus

@@ -157,6 +157,7 @@ extern HAL_TickFreqTypeDef      uwTickFreq;
 #define IS_SBS_ETHERNET_CONFIG(CONFIG) (((CONFIG) == SBS_ETH_MII)        || \
                                         ((CONFIG) == SBS_ETH_RMII))
 
+
 /**
   * @}
   */
@@ -292,6 +293,54 @@ extern HAL_TickFreqTypeDef      uwTickFreq;
 /**
   * @}
   */
+
+#if defined(SBS_OTGHSPHYTUNER2_TXPREEMPAMPTUNE)
+/** @defgroup SBS_OTG_PHYTUNER_PreemphasisCurrent  OTG PHYTUNER Preemphasis Current
+  * @{
+  */
+
+/** @brief  High-speed (HS) transmitter preemphasis current control
+  */
+#define SBS_OTG_HS_PHY_PREEMP_DISABLED   0x00000000U                                                                       /*!< HS transmitter preemphasis circuit disabled */
+#define SBS_OTG_HS_PHY_PREEMP_1X         SBS_OTGHSPHYTUNER2_TXPREEMPAMPTUNE_0                                              /*!< HS transmitter preemphasis circuit sources 1x preemphasis current */
+#define SBS_OTG_HS_PHY_PREEMP_2X         SBS_OTGHSPHYTUNER2_TXPREEMPAMPTUNE_1                                              /*!< HS transmitter preemphasis circuit sources 2x preemphasis current */
+#define SBS_OTG_HS_PHY_PREEMP_3X         (SBS_OTGHSPHYTUNER2_TXPREEMPAMPTUNE_0 | SBS_OTGHSPHYTUNER2_TXPREEMPAMPTUNE_1)     /*!< HS transmitter preemphasis circuit sources 3x preemphasis current */
+
+/**
+  * @}
+  */
+#endif /* SBS_OTGHSPHYTUNER2_TXPREEMPAMPTUNE */
+
+#if defined(SBS_OTGHSPHYTUNER2_SQRXTUNE)
+/** @defgroup SBS_OTG_PHYTUNER_SquelchThreshold  OTG PHYTUNER Squelch Threshold
+  * @{
+  */
+
+/** @brief Squelch threshold adjustment
+  */
+#define SBS_OTG_HS_PHY_SQUELCH_15PERCENT       0x00000000U                                                                        /*!< +15% (recommended value) */
+#define SBS_OTG_HS_PHY_SQUELCH_0PERCENT        (SBS_OTGHSPHYTUNER2_SQRXTUNE_0 | SBS_OTGHSPHYTUNER2_SQRXTUNE_1)                   /*!< 0% (default value) */
+
+/**
+  * @}
+  */
+#endif /* SBS_OTGHSPHYTUNER2_SQRXTUNE */
+
+#if defined(SBS_OTGHSPHYTUNER2_COMPDISTUNE)
+/** @defgroup SBS_OTG_PHYTUNER_DisconnectThreshold  OTG PHYTUNER Disconnect Threshold
+  * @{
+  */
+
+/** @brief Disconnect threshold adjustment
+  */
+#define SBS_OTG_HS_PHY_DISCONNECT_5_9PERCENT    SBS_OTGHSPHYTUNER2_COMPDISTUNE_1     /*!< +5.9% (recommended value) */
+#define SBS_OTG_HS_PHY_DISCONNECT_0PERCENT      SBS_OTGHSPHYTUNER2_COMPDISTUNE_0     /*!< 0% (default value) */
+
+/**
+  * @}
+  */
+
+#endif /* SBS_OTGHSPHYTUNER2_COMPDISTUNE */
 
 /**
   * @}
@@ -710,6 +759,22 @@ extern HAL_TickFreqTypeDef      uwTickFreq;
 #define IS_SBS_ATTRIBUTES(__ATTRIBUTES__) (((__ATTRIBUTES__) == SBS_SEC)  ||\
                                            ((__ATTRIBUTES__) == SBS_NSEC))
 
+#if defined(SBS_OTGHSPHYTUNER2_COMPDISTUNE)
+#define IS_SBS_OTGPHY_DISCONNECT(__VALUE__)        (((__VALUE__) == SBS_OTG_HS_PHY_DISCONNECT_5_9PERCENT) || \
+                                                    ((__VALUE__) == SBS_OTG_HS_PHY_DISCONNECT_0PERCENT))
+#endif /* SBS_OTGHSPHYTUNER2_COMPDISTUNE*/
+#if defined(SBS_OTGHSPHYTUNER2_SQRXTUNE)
+#define IS_SBS_OTGPHY_SQUELCH(__VALUE__)           (((__VALUE__) == SBS_OTG_HS_PHY_SQUELCH_0PERCENT) || \
+                                                    ((__VALUE__) == SBS_OTG_HS_PHY_SQUELCH_15PERCENT))
+#endif /* SBS_OTGHSPHYTUNER2_SQRXTUNE */
+
+#if defined(SBS_OTGHSPHYTUNER2_TXPREEMPAMPTUNE)
+#define IS_SBS_OTGPHY_PREEMPHASIS(__VALUE__)       (((__VALUE__) == SBS_OTG_HS_PHY_PREEMP_DISABLED) || \
+                                                    ((__VALUE__) == SBS_OTG_HS_PHY_PREEMP_1X) || \
+                                                    ((__VALUE__) == SBS_OTG_HS_PHY_PREEMP_2X) || \
+                                                    ((__VALUE__) == SBS_OTG_HS_PHY_PREEMP_3X))
+#endif /* SBS_OTGHSPHYTUNER2_TXPREEMPAMPTUNE */
+
 #if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
 
 #define IS_SBS_LOCK_ITEMS(__ITEM__) ((((__ITEM__) & SBS_MPU_NSEC)       == SBS_MPU_NSEC)       || \
@@ -839,6 +904,12 @@ uint32_t             HAL_SBS_GetPMOSVddIO2CompensationValue(void);
 void                 HAL_SBS_FLASH_EnableECCNMI(void);
 void                 HAL_SBS_FLASH_DisableECCNMI(void);
 uint32_t             HAL_SBS_FLASH_ECCNMI_IsDisabled(void);
+void                 HAL_SBS_SetOTGPHYDisconnectThreshold(uint32_t DisconnectThreshold);
+uint32_t             HAL_SBS_GetOTGPHYDisconnectThreshold(void);
+void                 HAL_SBS_SetOTGPHYSquelchThreshold(uint32_t SquelchThreshold);
+uint32_t             HAL_SBS_GetOTGPHYSquelchThreshold(void);
+void                 HAL_SBS_SetOTGPHYPreemphasisCurrent(uint32_t PreemphasisCurrent);
+uint32_t             HAL_SBS_GetOTGPHYPreemphasisCurrent(void);
 
 /**
   * @}

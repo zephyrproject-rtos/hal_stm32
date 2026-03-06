@@ -343,9 +343,42 @@ typedef struct __DMA_QListTypeDef
 #if defined (COMP1)
 #define GPDMA1_TRIGGER_COMP1_OUT        44U      /*!< GPDMA1 HW Trigger signal is COMP1_OUT       */
 #endif /* COMP1 */
-#if defined (STM32H503xx) || defined(STM32H523xx) || defined(STM32H533xx)
-#define GPDMA1_TRIGGER_EVENTOUT         45U      /*!< GPDMA1 HW Trigger signal is EVENTOUT        */
-#endif /* STM32H503xx || STM32H523xx || STM32H533xx */
+#if defined (STM32H503xx) || defined(STM32H523xx) || defined(STM32H533xx) || defined(STM32H5F5xx) || defined(STM32H5F4xx) \
+    || defined(STM32H5E5xx) || defined(STM32H5E4xx) || defined(STM32H553xx) || defined(STM32H543xx)
+#define GPDMA1_TRIGGER_EVENTOUT         45U      /*!< GPDMA1 HW Trigger signal is EVENTOUT           */
+#endif /* STM32H503xx || STM32H523xx || STM32H533xx || STM32H5F5xx || STM32H5F4xx ||
+          STM32H5E5xx || STM32H5E4xx || STM32H553xx || STM32H543xx */
+#if defined(STM32H5F5xx) || defined(STM32H5F4xx) || defined(STM32H5E5xx) || defined(STM32H5E4xx) || defined(STM32H553xx) || defined(STM32H543xx)
+#define GPDMA1_TRIGGER_COMP2_OUT         46U      /*!< GPDMA1 HW Trigger signal is COMP1_OUT          */
+#if defined(STM32H5F5xx) || defined(STM32H5F4xx) || defined(STM32H5E5xx) || defined(STM32H5E4xx)
+#define GPDMA1_TRIGGER_DMA2D_TC_FLAG     47U      /*!< GPDMA1 HW Trigger signal is TC_FLAG            */
+#define GPDMA1_TRIGGER_DMA2D_CTC_FLAG    48U      /*!< GPDMA1 HW Trigger signal is CTC_FLAG           */
+#define GPDMA1_TRIGGER_DMA2D_TW_FLAG     49U      /*!< GPDMA1 HW Trigger signal is TW_FLAG            */
+#define GPDMA1_TRIGGER_DMA2D_GPFLAGS0    50U      /*!< GPDMA1 HW Trigger signal is GPFLAGS[0]         */
+#define GPDMA1_TRIGGER_DMA2D_GPFLAGS1    51U      /*!< GPDMA1 HW Trigger signal is GPFLAGS[1]         */
+#define GPDMA1_TRIGGER_DMA2D_GPFLAGS2    52U      /*!< GPDMA1 HW Trigger signal is GPFLAGS[2]         */
+#define GPDMA1_TRIGGER_DMA2D_GPFLAGS3    53U      /*!< GPDMA1 HW Trigger signal is GPFLAGS[3]         */
+#define GPDMA1_TRIGGER_JPEG_IFT_FLAG     54U      /*!< GPDMA1 HW Trigger signal is JPEG_IFT_FLAG      */
+#define GPDMA1_TRIGGER_JPEG_IFNF_FLAG    55U      /*!< GPDMA1 HW Trigger signal is JPEG_IFNF_FLAG     */
+#define GPDMA1_TRIGGER_JPEG_OFT_FLAG     56U      /*!< GPDMA1 HW Trigger signal is JPEG_OFT_FLAG      */
+#define GPDMA1_TRIGGER_JPEG_OFNE_FLAG    57U      /*!< GPDMA1 HW Trigger signal is JPEG_OFNE_FLAG     */
+#define GPDMA1_TRIGGER_JPEG_EOC_FLAG     58U      /*!< GPDMA1 HW Trigger signal is JPEG_EOC_FLAG      */
+#define GPDMA1_TRIGGER_GFXTIM_EVT1       59U      /*!< GPDMA1 HW Trigger signal is GFXTIM_EVT[1]      */
+#define GPDMA1_TRIGGER_GFXTIM_EVT2       60U      /*!< GPDMA1 HW Trigger signal is GFXTIM_EVT[2]      */
+#define GPDMA1_TRIGGER_GFXTIM_EVT3       61U      /*!< GPDMA1 HW Trigger signal is GFXTIM_EVT[2+4]    */
+#define GPDMA1_TRIGGER_GFXTIM_EVT4       62U      /*!< GPDMA1 HW Trigger signal is GFXTIM_EVT[4]      */
+#define GPDMA1_TRIGGER_LCD_CTRL_SCANLINE 63U      /*!< GPDMA1 HW Trigger signal is LCD_CTRL_SCANLINE  */
+#define GPDMA1_TRIGGER_GPDMA1_CH8_TCF    64U      /*!< GPDMA1 HW Trigger signal is GPDMA1_CH8_TC      */
+#define GPDMA1_TRIGGER_GPDMA1_CH9_TCF    65U      /*!< GPDMA1 HW Trigger signal is GPDMA1_CH9_TC      */
+#define GPDMA1_TRIGGER_GPDMA1_CH10_TCF   66U      /*!< GPDMA1 HW Trigger signal is GPDMA1_CH10_TC     */
+#define GPDMA1_TRIGGER_GPDMA1_CH11_TCF   67U      /*!< GPDMA1 HW Trigger signal is GPDMA1_CH11_TC     */
+#define GPDMA1_TRIGGER_GPDMA2_CH8_TCF    68U      /*!< GPDMA1 HW Trigger signal is GPDMA2_CH8_TC      */
+#define GPDMA1_TRIGGER_GPDMA2_CH9_TCF    69U      /*!< GPDMA1 HW Trigger signal is GPDMA2_CH9_TC      */
+#define GPDMA1_TRIGGER_GPDMA2_CH10_TCF   70U      /*!< GPDMA1 HW Trigger signal is GPDMA2_CH10_TC     */
+#define GPDMA1_TRIGGER_GPDMA2_CH11_TCF   71U      /*!< GPDMA1 HW Trigger signal is GPDMA2_CH11_TC     */
+#endif /* STM32H5F5xx || STM32H5F4xx || STM32H5E5xx || STM32H5E4xx */
+#define GPDMA1_TRIGGER_PLAY1_OUT15       72U      /*!< GPDMA1 HW Trigger signal is PLAY1_OUT15        */
+#endif /* STM32H5F5xx || STM32H5F4xx || STM32H5E5xx || STM32H5E4xx || STM32H553xx || STM32H543xx*/
 
 /* GPDMA2 triggers */
 #define GPDMA2_TRIGGER_EXTI_LINE0       0U       /*!< GPDMA2 HW Trigger signal is EXTI_LINE0      */
@@ -407,9 +440,42 @@ typedef struct __DMA_QListTypeDef
 #if defined (COMP1)
 #define GPDMA2_TRIGGER_COMP1_OUT        44U      /*!< GPDMA2 HW Trigger signal is COMP1_OUT       */
 #endif /* COMP1 */
-#if defined (STM32H503xx) || defined(STM32H523xx) || defined(STM32H533xx)
-#define GPDMA2_TRIGGER_EVENTOUT         45U      /*!< GPDMA2 HW Trigger signal is EVENTOUT        */
-#endif /* STM32H503xx || STM32H523xx || STM32H533xx */
+#if defined (STM32H503xx) || defined(STM32H523xx) || defined(STM32H533xx) || defined(STM32H5F5xx) || defined(STM32H5F4xx) \
+    || defined(STM32H5E5xx) || defined(STM32H5E4xx) || defined(STM32H553xx) || defined(STM32H543xx)
+#define GPDMA2_TRIGGER_EVENTOUT         45U      /*!< GPDMA2 HW Trigger signal is EVENTOUT           */
+#endif /* STM32H503xx || STM32H523xx || STM32H533xx || STM32H5F5xx || STM32H5F4xx ||
+          STM32H5E5xx || STM32H5E4xx || STM32H553xx || STM32H543xx */
+#if defined(STM32H5F5xx) || defined(STM32H5F4xx) || defined(STM32H5E5xx) || defined(STM32H5E4xx) || defined(STM32H553xx) || defined(STM32H543xx)
+#define GPDMA2_TRIGGER_COMP2_OUT         46U     /*!< GPDMA2 HW Trigger signal is COMP1_OUT          */
+#if defined(STM32H5F5xx) || defined(STM32H5F4xx) || defined(STM32H5E5xx) || defined(STM32H5E4xx)
+#define GPDMA2_TRIGGER_DMA2D_TC_FLAG     47U     /*!< GPDMA2 HW Trigger signal is TC_FLAG            */
+#define GPDMA2_TRIGGER_DMA2D_CTC_FLAG    48U     /*!< GPDMA2 HW Trigger signal is CTC_FLAG           */
+#define GPDMA2_TRIGGER_DMA2D_TW_FLAG     49U     /*!< GPDMA2 HW Trigger signal is TW_FLAG            */
+#define GPDMA2_TRIGGER_DMA2D_GPFLAGS0    50U     /*!< GPDMA2 HW Trigger signal is GPFLAGS[0]         */
+#define GPDMA2_TRIGGER_DMA2D_GPFLAGS1    51U     /*!< GPDMA2 HW Trigger signal is GPFLAGS[1]         */
+#define GPDMA2_TRIGGER_DMA2D_GPFLAGS2    52U     /*!< GPDMA2 HW Trigger signal is GPFLAGS[2]         */
+#define GPDMA2_TRIGGER_DMA2D_GPFLAGS3    53U     /*!< GPDMA2 HW Trigger signal is GPFLAGS[3]         */
+#define GPDMA2_TRIGGER_JPEG_IFT_FLAG     54U     /*!< GPDMA2 HW Trigger signal is JPEG_IFT_FLAG      */
+#define GPDMA2_TRIGGER_JPEG_IFNF_FLAG    55U     /*!< GPDMA2 HW Trigger signal is JPEG_IFNF_FLAG     */
+#define GPDMA2_TRIGGER_JPEG_OFT_FLAG     56U     /*!< GPDMA2 HW Trigger signal is JPEG_OFT_FLAG      */
+#define GPDMA2_TRIGGER_JPEG_OFNE_FLAG    57U     /*!< GPDMA2 HW Trigger signal is JPEG_OFNE_FLAG     */
+#define GPDMA2_TRIGGER_JPEG_EOC_FLAG     58U     /*!< GPDMA2 HW Trigger signal is JPEG_EOC_FLAG      */
+#define GPDMA2_TRIGGER_GFXTIM_EVT1       59U     /*!< GPDMA2 HW Trigger signal is GFXTIM_EVT[1]      */
+#define GPDMA2_TRIGGER_GFXTIM_EVT2       60U     /*!< GPDMA2 HW Trigger signal is GFXTIM_EVT[2]      */
+#define GPDMA2_TRIGGER_GFXTIM_EVT3       61U     /*!< GPDMA2 HW Trigger signal is GFXTIM_EVT[2+4]    */
+#define GPDMA2_TRIGGER_GFXTIM_EVT4       62U     /*!< GPDMA2 HW Trigger signal is GFXTIM_EVT[4]      */
+#define GPDMA2_TRIGGER_LCD_CTRL_SCANLINE 63U     /*!< GPDMA2 HW Trigger signal is LCD_CTRL_SCANLINE  */
+#define GPDMA2_TRIGGER_GPDMA1_CH8_TCF    64U     /*!< GPDMA2 HW Trigger signal is GPDMA1_CH8_TC      */
+#define GPDMA2_TRIGGER_GPDMA1_CH9_TCF    65U     /*!< GPDMA2 HW Trigger signal is GPDMA1_CH9_TC      */
+#define GPDMA2_TRIGGER_GPDMA1_CH10_TCF   66U     /*!< GPDMA2 HW Trigger signal is GPDMA1_CH10_TC     */
+#define GPDMA2_TRIGGER_GPDMA1_CH11_TCF   67U     /*!< GPDMA2 HW Trigger signal is GPDMA1_CH11_TC     */
+#define GPDMA2_TRIGGER_GPDMA2_CH8_TCF    68U     /*!< GPDMA2 HW Trigger signal is GPDMA2_CH8_TC      */
+#define GPDMA2_TRIGGER_GPDMA2_CH9_TCF    69U     /*!< GPDMA2 HW Trigger signal is GPDMA2_CH9_TC      */
+#define GPDMA2_TRIGGER_GPDMA2_CH10_TCF   70U     /*!< GPDMA2 HW Trigger signal is GPDMA2_CH10_TC     */
+#define GPDMA2_TRIGGER_GPDMA2_CH11_TCF   71U     /*!< GPDMA2 HW Trigger signal is GPDMA2_CH11_TC     */
+#endif /* STM32H5F5xx || STM32H5F4xx || STM32H5E5xx || STM32H5E4xx */
+#define GPDMA2_TRIGGER_PLAY1_OUT15       72U     /*!< GPDMA2 HW Trigger signal is PLAY1_OUT15        */
+#endif /* STM32H5F5xx || STM32H5F4xx || STM32H5E5xx || STM32H5E4xx || STM32H553xx || STM32H543xx*/
 /**
   * @}
   */
@@ -629,8 +695,8 @@ typedef struct
 #define NODE_CDAR_DEFAULT_OFFSET        (0x0004U) /* CDAR default offset                   */
 #define NODE_CTR3_DEFAULT_OFFSET        (0x0005U) /* CTR3 2D addressing default offset     */
 #define NODE_CBR2_DEFAULT_OFFSET        (0x0006U) /* CBR2 2D addressing default offset     */
-#define NODE_CLLR_2D_DEFAULT_OFFSET     (0x0007U) /* CLLR 2D addressing default offset     */
-#define NODE_CLLR_LINEAR_DEFAULT_OFFSET (0x0005U) /* CLLR linear addressing default offset */
+#define NODE_CLLR_2D_DEFAULT_OFFSET     (0x0007UL) /* CLLR 2D addressing default offset     */
+#define NODE_CLLR_LINEAR_DEFAULT_OFFSET (0x0005UL) /* CLLR linear addressing default offset */
 
 #define DMA_BURST_ADDR_OFFSET_MIN       (-8192L)  /* DMA burst minimum address offset      */
 #define DMA_BURST_ADDR_OFFSET_MAX       (8192L)   /* DMA burst maximum address offset      */
@@ -692,7 +758,9 @@ typedef struct
    ((POLARITY) == DMA_TRIG_POLARITY_RISING) || \
    ((POLARITY) == DMA_TRIG_POLARITY_FALLING))
 
-#if defined (I3C2)
+#if defined (PLAY1)
+#define IS_DMA_TRIGGER_SELECTION(TRIGGER)        ((TRIGGER) <= GPDMA1_TRIGGER_PLAY1_OUT15)
+#elif defined (I3C2)
 #define IS_DMA_TRIGGER_SELECTION(TRIGGER)        ((TRIGGER) <= GPDMA1_TRIGGER_EVENTOUT)
 #else
 #define IS_DMA_TRIGGER_SELECTION(TRIGGER)        ((TRIGGER) <= GPDMA1_TRIGGER_LPTIM6_CH2)

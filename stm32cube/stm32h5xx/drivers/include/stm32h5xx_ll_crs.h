@@ -109,7 +109,14 @@ extern "C" {
   */
 #define LL_CRS_SYNC_SOURCE_GPIO            0x00000000U                                   /*!< Synchro Signal source GPIO */
 #define LL_CRS_SYNC_SOURCE_LSE             CRS_CFGR_SYNCSRC_0                            /*!< Synchro Signal source LSE */
+#if defined(USB_DRD_FS)
 #define LL_CRS_SYNC_SOURCE_USB             CRS_CFGR_SYNCSRC_1                            /*!< Synchro Signal source USB SOF (default)*/
+#elif defined(USB_OTG_FS)
+#define LL_CRS_SYNC_SOURCE_OTG_FS          CRS_CFGR_SYNCSRC_1                            /*!< Synchro Signal source OTG_FS SOF (default)*/
+#endif /* USB_DRD_FS */
+#if defined(USB_OTG_HS)
+#define LL_CRS_SYNC_SOURCE_OTG_HS          (CRS_CFGR_SYNCSRC_0 | CRS_CFGR_SYNCSRC_1)     /*!< Synchro Signal source OTG_HS SOF */
+#endif /* USB_OTG_HS */
 /**
   * @}
   */
@@ -397,7 +404,10 @@ __STATIC_INLINE uint32_t LL_CRS_GetSyncDivider(void)
   * @param  Source This parameter can be one of the following values:
   *         @arg @ref LL_CRS_SYNC_SOURCE_GPIO
   *         @arg @ref LL_CRS_SYNC_SOURCE_LSE
-  *         @arg @ref LL_CRS_SYNC_SOURCE_USB
+  *         @arg @ref LL_CRS_SYNC_SOURCE_USB (*)
+  *         @arg @ref LL_CRS_SYNC_SOURCE_OTG_FS (*)
+  *         @arg @ref LL_CRS_SYNC_SOURCE_OTG_HS (*)
+  * (*)  : Not available for all stm32h5xxxx family lines.
   * @retval None
   */
 __STATIC_INLINE void LL_CRS_SetSyncSignalSource(uint32_t Source)
@@ -411,7 +421,10 @@ __STATIC_INLINE void LL_CRS_SetSyncSignalSource(uint32_t Source)
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_CRS_SYNC_SOURCE_GPIO
   *         @arg @ref LL_CRS_SYNC_SOURCE_LSE
-  *         @arg @ref LL_CRS_SYNC_SOURCE_USB
+  *         @arg @ref LL_CRS_SYNC_SOURCE_USB (*)
+  *         @arg @ref LL_CRS_SYNC_SOURCE_OTG_FS (*)
+  *         @arg @ref LL_CRS_SYNC_SOURCE_OTG_HS (*)
+  * (*)  : Not available for all stm32h5xxxx family lines.
   */
 __STATIC_INLINE uint32_t LL_CRS_GetSyncSignalSource(void)
 {
@@ -458,8 +471,10 @@ __STATIC_INLINE uint32_t LL_CRS_GetSyncPolarity(void)
   *         @arg @ref LL_CRS_SYNC_DIV_1 or @ref LL_CRS_SYNC_DIV_2 or @ref LL_CRS_SYNC_DIV_4 or @ref LL_CRS_SYNC_DIV_8
   *              or @ref LL_CRS_SYNC_DIV_16 or @ref LL_CRS_SYNC_DIV_32 or @ref LL_CRS_SYNC_DIV_64
   *              or @ref LL_CRS_SYNC_DIV_128
-  *         @arg @ref LL_CRS_SYNC_SOURCE_GPIO or @ref LL_CRS_SYNC_SOURCE_LSE or @ref LL_CRS_SYNC_SOURCE_USB
+  *         @arg @ref LL_CRS_SYNC_SOURCE_GPIO or @ref LL_CRS_SYNC_SOURCE_LSE or @ref LL_CRS_SYNC_SOURCE_USB (*)
+  *              or @arg @ref LL_CRS_SYNC_SOURCE_OTG_FS (*) or @arg @ref LL_CRS_SYNC_SOURCE_OTG_HS (*)
   *         @arg @ref LL_CRS_SYNC_POLARITY_RISING or @ref LL_CRS_SYNC_POLARITY_FALLING
+  * (*)  : Not available for all stm32h5xxxx family lines.
   * @retval None
   */
 __STATIC_INLINE void LL_CRS_ConfigSynchronization(uint32_t HSI48CalibrationValue, uint32_t ErrorLimitValue,

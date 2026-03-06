@@ -6457,6 +6457,10 @@ __STATIC_INLINE uint32_t LL_RTC_IsEnabledRemapRtcOut2(const RTC_TypeDef *RTCx)
 }
 #endif /* defined (RTC_OR_OUT2_RMP) */
 
+/**
+  * @}
+  */
+
 #if defined(USE_FULL_LL_DRIVER)
 /** @defgroup RTC_LL_EF_Init Initialization and de-initialization functions
   * @{
@@ -6480,11 +6484,11 @@ ErrorStatus LL_RTC_WaitForSynchro(RTC_TypeDef *RTCx);
 /**
   * @}
   */
-#endif /* USE_FULL_LL_DRIVER */
 
 /**
   * @}
   */
+#endif /* USE_FULL_LL_DRIVER */
 
 /**
   * @}

@@ -916,11 +916,13 @@ HAL_StatusTypeDef HAL_SDRAM_Write_DMA(SDRAM_HandleTypeDef *hsdram, uint32_t *pAd
   * @param hsdram : SDRAM handle
   * @param CallbackId : ID of the callback to be registered
   *        This parameter can be one of the following values:
-  *          @arg @ref HAL_SDRAM_MSP_INIT_CB_ID       SDRAM MspInit callback ID
-  *          @arg @ref HAL_SDRAM_MSP_DEINIT_CB_ID     SDRAM MspDeInit callback ID
-  *          @arg @ref HAL_SDRAM_REFRESH_ERR_CB_ID    SDRAM Refresh Error callback ID
+  *          @arg @ref HAL_SDRAM_MSP_INIT_CB_ID       SDRAM MspInit callback ID (*)
+  *          @arg @ref HAL_SDRAM_MSP_DEINIT_CB_ID     SDRAM MspDeInit callback ID (*)
+  *          @arg @ref HAL_SDRAM_REFRESH_ERR_CB_ID    SDRAM Refresh Error callback ID (*)
   * @param pCallback : pointer to the Callback function
   * @retval status
+  *
+  * (*) : For all h5 series
   */
 HAL_StatusTypeDef HAL_SDRAM_RegisterCallback(SDRAM_HandleTypeDef *hsdram, HAL_SDRAM_CallbackIDTypeDef CallbackId,
                                              pSDRAM_CallbackTypeDef pCallback)
@@ -984,12 +986,14 @@ HAL_StatusTypeDef HAL_SDRAM_RegisterCallback(SDRAM_HandleTypeDef *hsdram, HAL_SD
   * @param hsdram : SDRAM handle
   * @param CallbackId : ID of the callback to be unregistered
   *        This parameter can be one of the following values:
-  *          @arg @ref HAL_SDRAM_MSP_INIT_CB_ID       SDRAM MspInit callback ID
-  *          @arg @ref HAL_SDRAM_MSP_DEINIT_CB_ID     SDRAM MspDeInit callback ID
-  *          @arg @ref HAL_SDRAM_REFRESH_ERR_CB_ID    SDRAM Refresh Error callback ID
-  *          @arg @ref HAL_SDRAM_DMA_XFER_CPLT_CB_ID  SDRAM DMA Xfer Complete callback ID
-  *          @arg @ref HAL_SDRAM_DMA_XFER_ERR_CB_ID   SDRAM DMA Xfer Error callback ID
+  *          @arg @ref HAL_SDRAM_MSP_INIT_CB_ID       SDRAM MspInit callback ID (*)
+  *          @arg @ref HAL_SDRAM_MSP_DEINIT_CB_ID     SDRAM MspDeInit callback ID (*)
+  *          @arg @ref HAL_SDRAM_REFRESH_ERR_CB_ID    SDRAM Refresh Error callback ID (*)
+  *          @arg @ref HAL_SDRAM_DMA_XFER_CPLT_CB_ID  SDRAM DMA Xfer Complete callback ID (*)
+  *          @arg @ref HAL_SDRAM_DMA_XFER_ERR_CB_ID   SDRAM DMA Xfer Error callback ID (*)
   * @retval status
+  *
+  *  (*) : For all h5 series
   */
 HAL_StatusTypeDef HAL_SDRAM_UnRegisterCallback(SDRAM_HandleTypeDef *hsdram, HAL_SDRAM_CallbackIDTypeDef CallbackId)
 {
@@ -1053,10 +1057,12 @@ HAL_StatusTypeDef HAL_SDRAM_UnRegisterCallback(SDRAM_HandleTypeDef *hsdram, HAL_
   * @param hsdram : SDRAM handle
   * @param CallbackId : ID of the callback to be registered
   *        This parameter can be one of the following values:
-  *          @arg @ref HAL_SDRAM_DMA_XFER_CPLT_CB_ID  SDRAM DMA Xfer Complete callback ID
-  *          @arg @ref HAL_SDRAM_DMA_XFER_ERR_CB_ID   SDRAM DMA Xfer Error callback ID
+  *          @arg @ref HAL_SDRAM_DMA_XFER_CPLT_CB_ID  SDRAM DMA Xfer Complete callback ID (*)
+  *          @arg @ref HAL_SDRAM_DMA_XFER_ERR_CB_ID   SDRAM DMA Xfer Error callback ID (*)
   * @param pCallback : pointer to the Callback function
   * @retval status
+  *
+  * (*) : For all h5 series
   */
 HAL_StatusTypeDef HAL_SDRAM_RegisterDmaCallback(SDRAM_HandleTypeDef *hsdram, HAL_SDRAM_CallbackIDTypeDef CallbackId,
                                                 pSDRAM_DmaCallbackTypeDef pCallback)

@@ -283,11 +283,11 @@ typedef struct __DMA_HandleTypeDef
 #define GPDMA1_REQUEST_UART4_RX       27U     /*!< GPDMA1 HW request is UART4_RX      */
 #define GPDMA1_REQUEST_UART4_TX       28U     /*!< GPDMA1 HW request is UART4_TX      */
 #endif /* UART4 */
-#if defined (UART4)
+#if defined (UART5)
 #define GPDMA1_REQUEST_UART5_RX       29U     /*!< GPDMA1 HW request is UART5_RX      */
 #define GPDMA1_REQUEST_UART5_TX       30U     /*!< GPDMA1 HW request is UART5_TX      */
 #endif /* UART5 */
-#if defined (UART4)
+#if defined (USART6)
 #define GPDMA1_REQUEST_USART6_RX      31U     /*!< GPDMA1 HW request is USART6_RX     */
 #define GPDMA1_REQUEST_USART6_TX      32U     /*!< GPDMA1 HW request is USART6_TX     */
 #endif /* USART6 */
@@ -455,6 +455,27 @@ typedef struct __DMA_HandleTypeDef
 #define GPDMA1_REQUEST_I3C2_TC        138U    /*!< GPDMA1 HW request is I3C2_TC       */
 #define GPDMA1_REQUEST_I3C2_RS        139U    /*!< GPDMA1 HW request is I3C2_RS       */
 #endif /* I3C2 */
+#if defined (JPEG)
+#define GPDMA1_REQUEST_JPEG_RX_REQ    140U    /*!< GPDMA1 HW request is JPEG_TX_REQ   */
+#define GPDMA1_REQUEST_JPEG_TX_REQ    141U    /*!< GPDMA1 HW request is JPEG_TX_REQ   */
+#endif /* JPEG */
+#if defined (ADC3)
+#define GPDMA1_REQUEST_ADC3           142U    /*!< GPDMA1 HW request is ADC3          */
+#endif /* ADC3 */
+#if defined (OCTOSPI2)
+#define GPDMA1_REQUEST_OCTOSPI2       143U    /*!< GPDMA1 HW request is OCTOSPI2      */
+#endif /* OCTOSPI2 */
+#if defined (MDF1)
+#define GPDMA1_REQUEST_MDF1_FLT0      144U    /*!< GPDMA1 HW request is MDF1_FLT0     */
+#define GPDMA1_REQUEST_MDF1_FLT1      145U    /*!< GPDMA1 HW request is MDF1_FLT1     */
+#define GPDMA1_REQUEST_MDF1_FLT2      146U    /*!< GPDMA1 HW request is MDF1_FLT2     */
+#define GPDMA1_REQUEST_MDF1_FLT3      147U    /*!< GPDMA1 HW request is MDF1_FLT3     */
+#define GPDMA1_REQUEST_MDF1_FLT4      148U    /*!< GPDMA1 HW request is MDF1_FLT4     */
+#define GPDMA1_REQUEST_MDF1_FLT5      149U    /*!< GPDMA1 HW request is MDF1_FLT5     */
+#endif /* MDF1 */
+#if defined (ADF1)
+#define GPDMA1_REQUEST_ADF1_FLT0      150U    /*!< GPDMA1 HW request is ADF1_FLT0     */
+#endif /* ADF1 */
 
 /* GPDMA2 requests */
 #define GPDMA2_REQUEST_ADC1           0U      /*!< GPDMA2 HW request is ADC1          */
@@ -489,11 +510,11 @@ typedef struct __DMA_HandleTypeDef
 #define GPDMA2_REQUEST_UART4_RX       27U     /*!< GPDMA2 HW request is UART4_RX      */
 #define GPDMA2_REQUEST_UART4_TX       28U     /*!< GPDMA2 HW request is UART4_TX      */
 #endif /* UART4 */
-#if defined (UART4)
+#if defined (UART5)
 #define GPDMA2_REQUEST_UART5_RX       29U     /*!< GPDMA2 HW request is UART5_RX      */
 #define GPDMA2_REQUEST_UART5_TX       30U     /*!< GPDMA2 HW request is UART5_TX      */
 #endif /* UART5 */
-#if defined (UART4)
+#if defined (USART6)
 #define GPDMA2_REQUEST_USART6_RX      31U     /*!< GPDMA2 HW request is USART6_RX     */
 #define GPDMA2_REQUEST_USART6_TX      32U     /*!< GPDMA2 HW request is USART6_TX     */
 #endif /* USART6 */
@@ -661,6 +682,27 @@ typedef struct __DMA_HandleTypeDef
 #define GPDMA2_REQUEST_I3C2_TC        138U    /*!< GPDMA2 HW request is I3C2_TC       */
 #define GPDMA2_REQUEST_I3C2_RS        139U    /*!< GPDMA2 HW request is I3C2_RS       */
 #endif /* I3C2 */
+#if defined (JPEG)
+#define GPDMA2_REQUEST_JPEG_RX_REQ    140U    /*!< GPDMA2 HW request is JPEG_TX_REQ   */
+#define GPDMA2_REQUEST_JPEG_TX_REQ    141U    /*!< GPDMA2 HW request is JPEG_TX_REQ   */
+#endif /* JPEG */
+#if defined (ADC3)
+#define GPDMA2_REQUEST_ADC3           142U    /*!< GPDMA2 HW request is ADC3          */
+#endif /* ADC3 */
+#if defined (OCTOSPI2)
+#define GPDMA2_REQUEST_OCTOSPI2       143U    /*!< GPDMA2 HW request is OCTOSPI2      */
+#endif /* OCTOSPI2 */
+#if defined (MDF1)
+#define GPDMA2_REQUEST_MDF1_FLT0      144U    /*!< GPDMA2 HW request is MDF1_FLT0     */
+#define GPDMA2_REQUEST_MDF1_FLT1      145U    /*!< GPDMA2 HW request is MDF1_FLT1     */
+#define GPDMA2_REQUEST_MDF1_FLT2      146U    /*!< GPDMA2 HW request is MDF1_FLT2     */
+#define GPDMA2_REQUEST_MDF1_FLT3      147U    /*!< GPDMA2 HW request is MDF1_FLT3     */
+#define GPDMA2_REQUEST_MDF1_FLT4      148U    /*!< GPDMA2 HW request is MDF1_FLT4     */
+#define GPDMA2_REQUEST_MDF1_FLT5      149U    /*!< GPDMA2 HW request is MDF1_FLT5     */
+#endif /* MDF1 */
+#if defined (ADF1)
+#define GPDMA2_REQUEST_ADF1_FLT0      150U    /*!< GPDMA2 HW request is ADF1_FLT0     */
+#endif /* ADF1 */
 
 /* Software request */
 #define DMA_REQUEST_SW                DMA_CTR2_SWREQ /*!< DMA SW request              */
@@ -1108,7 +1150,9 @@ HAL_StatusTypeDef HAL_DMA_GetLockChannelAttributes(DMA_HandleTypeDef const *cons
 #define  IS_DMA_TRANSFER_ALLOCATED_PORT(ALLOCATED_PORT) \
   (((ALLOCATED_PORT) & (~(DMA_CTR1_SAP | DMA_CTR1_DAP))) == 0U)
 
-#if defined (I3C2)
+#if defined (ADF1)
+#define IS_DMA_REQUEST(REQUEST)        (((REQUEST) == DMA_REQUEST_SW) || ((REQUEST) <= GPDMA1_REQUEST_ADF1_FLT0))
+#elif defined (I3C2)
 #define IS_DMA_REQUEST(REQUEST)        (((REQUEST) == DMA_REQUEST_SW) || ((REQUEST) <= GPDMA1_REQUEST_I3C2_RS))
 #else
 #define IS_DMA_REQUEST(REQUEST)        (((REQUEST) == DMA_REQUEST_SW) || ((REQUEST) <= GPDMA1_REQUEST_LPTIM6_UE))

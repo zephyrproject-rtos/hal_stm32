@@ -227,8 +227,11 @@ typedef void (*pDAC_CallbackTypeDef)(DAC_HandleTypeDef *hdac);
 #else
 /* Devices STM32H503xx */
 #define DAC_TRIGGER_T3_TRGO              (                                DAC_CR_TSEL1_1  | DAC_CR_TSEL1_0 | DAC_CR_TEN1) /*!< TIM3 TRGO selected as external conversion trigger for DAC channel */
-
 #endif /* Devices STM32H563/H573xx or STM32H503xx */
+#if defined(PLAY1)
+#define DAC_TRIGGER_PLAY1_OUT11         (DAC_CR_TSEL1_3 | DAC_CR_TSEL1_2 | DAC_CR_TSEL1_1                  | DAC_CR_TEN1) /*!< PLAY OUT11 selected as external conversion trigger for DAC channel */
+#define DAC_TRIGGER_PLAY1_OUT12         (DAC_CR_TSEL1_3 | DAC_CR_TSEL1_2 | DAC_CR_TSEL1_1 | DAC_CR_TSEL1_0 | DAC_CR_TEN1) /*!< PLAY OUT12 selected as external conversion trigger for DAC channel */
+#endif /* Devices STM32H5E5/H5F5xx */
 
 /**
   * @}

@@ -372,55 +372,63 @@ HAL_StatusTypeDef HAL_RTC_Init(RTC_HandleTypeDef *hrtc)
     /* Check if the calendar has been not initialized */
     if (__HAL_RTC_IS_CALENDAR_INITIALIZED(hrtc) == 0U)
     {
-      /* Disable the write protection for RTC registers */
-      __HAL_RTC_WRITEPROTECTION_DISABLE(hrtc);
-
-      /* Enter Initialization mode */
-      status = RTC_EnterInitMode(hrtc);
-      if (status == HAL_OK)
+      /* Check that the RTC mode is not 'binary only' */
+      if (__HAL_RTC_GET_BINARY_MODE(hrtc) != RTC_BINARY_ONLY)
       {
-#if defined(RTC_CR_OSEL)
-        /* Clear RTC_CR FMT, OSEL and POL Bits */
-        CLEAR_BIT(RTC->CR, (RTC_CR_FMT | RTC_CR_POL | RTC_CR_OSEL | RTC_CR_TAMPOE));
+        /* Disable the write protection for RTC registers */
+        __HAL_RTC_WRITEPROTECTION_DISABLE(hrtc);
 
-        /* Set RTC_CR register */
-        SET_BIT(RTC->CR, (hrtc->Init.HourFormat | hrtc->Init.OutPut | hrtc->Init.OutPutPolarity));
-#else
-        /* Clear RTC_CR FMT Bits */
-        CLEAR_BIT(RTC->CR, RTC_CR_FMT);
-
-        /* Set RTC_CR register */
-        SET_BIT(RTC->CR, hrtc->Init.HourFormat);
-#endif /* RTC_CR_OSEL */
-
-        /* Configure the RTC PRER */
-        WRITE_REG(RTC->PRER, ((hrtc->Init.SynchPrediv) | (hrtc->Init.AsynchPrediv << RTC_PRER_PREDIV_A_Pos)));
-
-        /* Configure the Binary mode */
-        MODIFY_REG(RTC->ICSR, RTC_ICSR_BIN | RTC_ICSR_BCDU, hrtc->Init.BinMode | hrtc->Init.BinMixBcdU);
-
-        /* Exit Initialization mode */
-        status = RTC_ExitInitMode(hrtc);
-
-#if defined(RTC_CR_OSEL)
+        /* Enter Initialization mode */
+        status = RTC_EnterInitMode(hrtc);
         if (status == HAL_OK)
         {
-#if defined(RTC_CR_OUT2EN)
-          MODIFY_REG(RTC->CR, \
-                     RTC_CR_TAMPALRM_PU | RTC_CR_TAMPALRM_TYPE | RTC_CR_OUT2EN, \
-                     hrtc->Init.OutPutPullUp | hrtc->Init.OutPutType | hrtc->Init.OutPutRemap);
+#if defined(RTC_CR_OSEL)
+          /* Clear RTC_CR FMT, OSEL and POL Bits */
+          CLEAR_BIT(RTC->CR, (RTC_CR_FMT | RTC_CR_POL | RTC_CR_OSEL | RTC_CR_TAMPOE));
+
+          /* Set RTC_CR register */
+          SET_BIT(RTC->CR, (hrtc->Init.HourFormat | hrtc->Init.OutPut | hrtc->Init.OutPutPolarity));
 #else
-          MODIFY_REG(RTC->CR, \
-                     RTC_CR_TAMPALRM_PU | RTC_CR_TAMPALRM_TYPE, \
-                     hrtc->Init.OutPutPullUp | hrtc->Init.OutPutType);
-#endif /* RTC_CR_OUT2EN */
-        }
+          /* Clear RTC_CR FMT Bits */
+          CLEAR_BIT(RTC->CR, RTC_CR_FMT);
+
+          /* Set RTC_CR register */
+          SET_BIT(RTC->CR, hrtc->Init.HourFormat);
 #endif /* RTC_CR_OSEL */
-      }
+
+          /* Configure the RTC PRER */
+          WRITE_REG(RTC->PRER, ((hrtc->Init.SynchPrediv) | (hrtc->Init.AsynchPrediv << RTC_PRER_PREDIV_A_Pos)));
+
+          /* Configure the Binary mode */
+          MODIFY_REG(RTC->ICSR, RTC_ICSR_BIN | RTC_ICSR_BCDU, hrtc->Init.BinMode | hrtc->Init.BinMixBcdU);
+
+          /* Exit Initialization mode */
+          status = RTC_ExitInitMode(hrtc);
+
+#if defined(RTC_CR_OSEL)
+          if (status == HAL_OK)
+          {
+#if defined(RTC_CR_OUT2EN)
+            MODIFY_REG(RTC->CR, \
+                       RTC_CR_TAMPALRM_PU | RTC_CR_TAMPALRM_TYPE | RTC_CR_OUT2EN, \
+                       hrtc->Init.OutPutPullUp | hrtc->Init.OutPutType | hrtc->Init.OutPutRemap);
+#else
+            MODIFY_REG(RTC->CR, \
+                       RTC_CR_TAMPALRM_PU | RTC_CR_TAMPALRM_TYPE, \
+                       hrtc->Init.OutPutPullUp | hrtc->Init.OutPutType);
+#endif /* RTC_CR_OUT2EN */
+          }
+#endif /* RTC_CR_OSEL */
+        }
 
       /* Enable the write protection for RTC registers */
       __HAL_RTC_WRITEPROTECTION_ENABLE(hrtc);
-
+      }
+      else
+      {
+        /* The calendar does not need to be initialized as the 'binary only' mode is selected */
+        status = HAL_OK;
+      }
     }
     else
     {

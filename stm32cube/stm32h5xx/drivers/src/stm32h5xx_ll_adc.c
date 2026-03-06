@@ -31,7 +31,7 @@
   * @{
   */
 
-#if defined (ADC1) || defined (ADC2)
+#if defined (ADC1) || defined (ADC2) || defined(ADC3)
 
 /** @addtogroup ADC_LL ADC
   * @{
@@ -144,6 +144,31 @@
       || ((__REG_TRIG_SOURCE__) == LL_ADC_REG_TRIG_EXT_LPTIM1_CH1)              \
       || ((__REG_TRIG_SOURCE__) == LL_ADC_REG_TRIG_EXT_LPTIM2_CH1)              \
   )
+#elif defined(ADC3)
+/* Devices STM32H5Ex/H5Fxxx */
+#define IS_LL_ADC_REG_TRIG_SOURCE(__REG_TRIG_SOURCE__)                          \
+  (   ((__REG_TRIG_SOURCE__) == LL_ADC_REG_TRIG_SOFTWARE)                       \
+      || ((__REG_TRIG_SOURCE__) == LL_ADC_REG_TRIG_EXT_TIM1_CH1)                \
+      || ((__REG_TRIG_SOURCE__) == LL_ADC_REG_TRIG_EXT_TIM1_CH2)                \
+      || ((__REG_TRIG_SOURCE__) == LL_ADC_REG_TRIG_EXT_TIM1_CH3)                \
+      || ((__REG_TRIG_SOURCE__) == LL_ADC_REG_TRIG_EXT_TIM2_CH2)                \
+      || ((__REG_TRIG_SOURCE__) == LL_ADC_REG_TRIG_EXT_TIM3_TRGO)               \
+      || ((__REG_TRIG_SOURCE__) == LL_ADC_REG_TRIG_EXT_TIM4_CH4)                \
+      || ((__REG_TRIG_SOURCE__) == LL_ADC_REG_TRIG_EXT_EXTI_LINE11)             \
+      || ((__REG_TRIG_SOURCE__) == LL_ADC_REG_TRIG_EXT_TIM8_TRGO)               \
+      || ((__REG_TRIG_SOURCE__) == LL_ADC_REG_TRIG_EXT_TIM8_TRGO2)              \
+      || ((__REG_TRIG_SOURCE__) == LL_ADC_REG_TRIG_EXT_TIM1_TRGO)               \
+      || ((__REG_TRIG_SOURCE__) == LL_ADC_REG_TRIG_EXT_TIM1_TRGO2)              \
+      || ((__REG_TRIG_SOURCE__) == LL_ADC_REG_TRIG_EXT_TIM2_TRGO)               \
+      || ((__REG_TRIG_SOURCE__) == LL_ADC_REG_TRIG_EXT_TIM4_TRGO)               \
+      || ((__REG_TRIG_SOURCE__) == LL_ADC_REG_TRIG_EXT_TIM6_TRGO)               \
+      || ((__REG_TRIG_SOURCE__) == LL_ADC_REG_TRIG_EXT_TIM15_TRGO)              \
+      || ((__REG_TRIG_SOURCE__) == LL_ADC_REG_TRIG_EXT_TIM3_CH4)                \
+      || ((__REG_TRIG_SOURCE__) == LL_ADC_REG_TRIG_EXT_EXTI_LINE15)             \
+      || ((__REG_TRIG_SOURCE__) == LL_ADC_REG_TRIG_EXT_LPTIM1_CH1)              \
+      || ((__REG_TRIG_SOURCE__) == LL_ADC_REG_TRIG_EXT_LPTIM2_CH1)              \
+      || ((__REG_TRIG_SOURCE__) == LL_ADC_REG_TRIG_EXT_PLAY_OUT7)               \
+  )
 #else
 /* Devices STM32H503xx */
 #define IS_LL_ADC_REG_TRIG_SOURCE(__REG_TRIG_SOURCE__)                          \
@@ -237,6 +262,30 @@
       || ((__INJ_TRIG_SOURCE__) == LL_ADC_INJ_TRIG_EXT_TIM15_TRGO)              \
       || ((__INJ_TRIG_SOURCE__) == LL_ADC_INJ_TRIG_EXT_LPTIM1_CH1)              \
       || ((__INJ_TRIG_SOURCE__) == LL_ADC_INJ_TRIG_EXT_LPTIM2_CH1)              \
+  )
+#elif defined(ADC3)
+/* Devices STM32H5Ex/H5Fxxx */
+#define IS_LL_ADC_INJ_TRIG_SOURCE(__INJ_TRIG_SOURCE__)                          \
+  (   ((__INJ_TRIG_SOURCE__) == LL_ADC_INJ_TRIG_SOFTWARE)                       \
+      || ((__INJ_TRIG_SOURCE__) == LL_ADC_INJ_TRIG_EXT_TIM1_TRGO)               \
+      || ((__INJ_TRIG_SOURCE__) == LL_ADC_INJ_TRIG_EXT_TIM1_CH4)                \
+      || ((__INJ_TRIG_SOURCE__) == LL_ADC_INJ_TRIG_EXT_TIM2_TRGO)               \
+      || ((__INJ_TRIG_SOURCE__) == LL_ADC_INJ_TRIG_EXT_TIM2_CH1)                \
+      || ((__INJ_TRIG_SOURCE__) == LL_ADC_INJ_TRIG_EXT_TIM3_CH4)                \
+      || ((__INJ_TRIG_SOURCE__) == LL_ADC_INJ_TRIG_EXT_TIM4_TRGO)               \
+      || ((__INJ_TRIG_SOURCE__) == LL_ADC_INJ_TRIG_EXT_EXTI_LINE15)             \
+      || ((__INJ_TRIG_SOURCE__) == LL_ADC_INJ_TRIG_EXT_TIM8_CH4)                \
+      || ((__INJ_TRIG_SOURCE__) == LL_ADC_INJ_TRIG_EXT_TIM1_TRGO2)              \
+      || ((__INJ_TRIG_SOURCE__) == LL_ADC_INJ_TRIG_EXT_TIM8_TRGO)               \
+      || ((__INJ_TRIG_SOURCE__) == LL_ADC_INJ_TRIG_EXT_TIM8_TRGO2)              \
+      || ((__INJ_TRIG_SOURCE__) == LL_ADC_INJ_TRIG_EXT_TIM3_CH3)                \
+      || ((__INJ_TRIG_SOURCE__) == LL_ADC_INJ_TRIG_EXT_TIM3_TRGO)               \
+      || ((__INJ_TRIG_SOURCE__) == LL_ADC_INJ_TRIG_EXT_TIM3_CH1)                \
+      || ((__INJ_TRIG_SOURCE__) == LL_ADC_INJ_TRIG_EXT_TIM6_TRGO)               \
+      || ((__INJ_TRIG_SOURCE__) == LL_ADC_INJ_TRIG_EXT_TIM15_TRGO)              \
+      || ((__INJ_TRIG_SOURCE__) == LL_ADC_INJ_TRIG_EXT_LPTIM1_CH1)              \
+      || ((__INJ_TRIG_SOURCE__) == LL_ADC_INJ_TRIG_EXT_LPTIM2_CH1)              \
+      || ((__INJ_TRIG_SOURCE__) == LL_ADC_INJ_TRIG_EXT_PLAY_OUT9)               \
   )
 #else
 /* Devices STM32H503xx */
@@ -899,44 +948,53 @@ ErrorStatus LL_ADC_REG_Init(ADC_TypeDef *ADCx, const LL_ADC_REG_InitTypeDef *pAD
     /*    - Set ADC group regular overrun behavior                            */
     /* Note: On this STM32 series, ADC trigger edge is set to value 0x0 by    */
     /*       setting of trigger source to SW start.                           */
+    uint32_t tmp_cfgr_mask;
+    uint32_t tmp_cfgr_value;
+
+    /* Build the mask according to generator variants */
+#if   defined(ADC3)
+    tmp_cfgr_mask = ADC_CFGR_EXTSEL
+                    | ADC_CFGR_EXTEN
+                    | ADC_CFGR_DISCEN
+                    | ADC_CFGR_DISCNUM
+                    | ADC_CFGR_CONT
+#if defined(ADC_CFGR_ADFCFG)
+                    | ADC_CFGR_ADFCFG
+#endif /* ADC_CFGR_ADFCFG */
+                    | ADC_CFGR_DMAEN
+                    | ADC_CFGR_DMACFG
+                    | ADC_CFGR_OVRMOD;
+#else
+    tmp_cfgr_mask = ADC_CFGR_EXTSEL
+                    | ADC_CFGR_EXTEN
+                    | ADC_CFGR_DISCEN
+                    | ADC_CFGR_DISCNUM
+                    | ADC_CFGR_CONT
+                    | ADC_CFGR_DMAEN
+                    | ADC_CFGR_DMACFG
+                    | ADC_CFGR_OVRMOD;
+#endif /* generator variants */
+
+    /* Build the value depending on sequencer length (two variants as before) */
     if (pADC_RegInitStruct->SequencerLength != LL_ADC_REG_SEQ_SCAN_DISABLE)
     {
-      MODIFY_REG(ADCx->CFGR,
-                 ADC_CFGR_EXTSEL
-                 | ADC_CFGR_EXTEN
-                 | ADC_CFGR_DISCEN
-                 | ADC_CFGR_DISCNUM
-                 | ADC_CFGR_CONT
-                 | ADC_CFGR_DMAEN
-                 | ADC_CFGR_DMACFG
-                 | ADC_CFGR_OVRMOD
-                 ,
-                 pADC_RegInitStruct->TriggerSource
-                 | pADC_RegInitStruct->SequencerDiscont
-                 | pADC_RegInitStruct->ContinuousMode
-                 | pADC_RegInitStruct->DMATransfer
-                 | pADC_RegInitStruct->Overrun
-                );
+      tmp_cfgr_value = pADC_RegInitStruct->TriggerSource
+                       | pADC_RegInitStruct->SequencerDiscont
+                       | pADC_RegInitStruct->ContinuousMode
+                       | pADC_RegInitStruct->DMATransfer
+                       | pADC_RegInitStruct->Overrun;
     }
     else
     {
-      MODIFY_REG(ADCx->CFGR,
-                 ADC_CFGR_EXTSEL
-                 | ADC_CFGR_EXTEN
-                 | ADC_CFGR_DISCEN
-                 | ADC_CFGR_DISCNUM
-                 | ADC_CFGR_CONT
-                 | ADC_CFGR_DMAEN
-                 | ADC_CFGR_DMACFG
-                 | ADC_CFGR_OVRMOD
-                 ,
-                 pADC_RegInitStruct->TriggerSource
-                 | LL_ADC_REG_SEQ_DISCONT_DISABLE
-                 | pADC_RegInitStruct->ContinuousMode
-                 | pADC_RegInitStruct->DMATransfer
-                 | pADC_RegInitStruct->Overrun
-                );
+      tmp_cfgr_value = pADC_RegInitStruct->TriggerSource
+                       | LL_ADC_REG_SEQ_DISCONT_DISABLE
+                       | pADC_RegInitStruct->ContinuousMode
+                       | pADC_RegInitStruct->DMATransfer
+                       | pADC_RegInitStruct->Overrun;
     }
+
+    /* Single, simple MODIFY_REG call using identifiers only */
+    MODIFY_REG(ADCx->CFGR, tmp_cfgr_mask, tmp_cfgr_value);
 
     /* Set ADC group regular sequencer length and scan direction */
     LL_ADC_REG_SetSequencerLength(ADCx, pADC_RegInitStruct->SequencerLength);
@@ -1100,7 +1158,7 @@ void LL_ADC_INJ_StructInit(LL_ADC_INJ_InitTypeDef *pADC_InjInitStruct)
   * @}
   */
 
-#endif /* ADC1 || ADC2 */
+#endif /* ADC1 || ADC2 || ADC3 */
 
 /**
   * @}
