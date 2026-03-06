@@ -8,6 +8,8 @@
 #include <stm32f4xx_ll_dma2d.h>
 #elif defined(CONFIG_SOC_SERIES_STM32F7X)
 #include <stm32f7xx_ll_dma2d.h>
+#elif defined(CONFIG_SOC_SERIES_STM32H5X)
+#include <stm32h5xx_ll_dma2d.h>
 #elif defined(CONFIG_SOC_SERIES_STM32H7RSX)
 #include <stm32h7rsxx_ll_dma2d.h>
 #elif defined(CONFIG_SOC_SERIES_STM32H7X)
