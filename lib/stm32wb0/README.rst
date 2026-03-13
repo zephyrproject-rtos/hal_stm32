@@ -131,5 +131,7 @@ Patch List:
 	  Impacted file: bleplat.c
 	- Removed BLEPLAT_SetRadioTimerValue function:
 	  Impacted file: bleplat.c
+	- Rename assembly-with-preprocessing files from ".s" to ".S"
+	  Impacted files: blue_unit_conversion.s, osal_memcpy.s
 	- dos2unix applied
 	- trailing white spaces removed
