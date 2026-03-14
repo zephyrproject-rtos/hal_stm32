@@ -52,6 +52,7 @@ extern "C" {
 #define HAL_GTZC_MODULE_ENABLED
 #define HAL_HASH_MODULE_ENABLED
 #define HAL_HCD_MODULE_ENABLED
+#define HAL_HSP_MODULE_ENABLED
 #define HAL_I2C_MODULE_ENABLED
 #define HAL_I3C_MODULE_ENABLED
 #define HAL_ICACHE_MODULE_ENABLED
@@ -124,7 +125,7 @@ extern "C" {
 #if !defined  (LSI_VALUE)
 #define LSI_VALUE               32000UL   /*!< LSI Typical Value in Hz*/
 #endif /* LSI_VALUE */                    /*!< Value of the Internal Low Speed oscillator in Hz. The real value may
-                                               vary depending on the variations in voltage and temperature.*/
+vary depending on the variations in voltage and temperature.*/
 
 #if !defined  (LSI_STARTUP_TIMEOUT)
 #define LSI_STARTUP_TIMEOUT    130UL      /*!< Time out for LSI start up, in ms */
@@ -142,7 +143,7 @@ extern "C" {
 #define LSE_STARTUP_TIMEOUT    5000UL     /*!< Time out for LSE start up, in ms */
 #endif /* LSE_STARTUP_TIMEOUT */
 
-  /**
+/**
   * @brief Internal Multiple Speed oscillator (MSI) default value.
   *        These values are the default maximum frequencies of each MSI RC.
   *        These values are used by the RCC HAL module to compute the system frequency
@@ -217,6 +218,7 @@ extern "C" {
 #define USE_HAL_GTZC_REGISTER_CALLBACKS          1U
 #define USE_HAL_HASH_REGISTER_CALLBACKS          1U
 #define USE_HAL_HCD_REGISTER_CALLBACKS           1U
+#define USE_HAL_HSP_REGISTER_CALLBACKS           1U
 #define USE_HAL_I2C_REGISTER_CALLBACKS           1U
 #define USE_HAL_I3C_REGISTER_CALLBACKS           1U
 #define USE_HAL_ICACHE_REGISTER_CALLBACKS        1U
@@ -262,6 +264,7 @@ extern "C" {
 #define USE_HAL_GTZC_REGISTER_CALLBACKS          0U
 #define USE_HAL_HASH_REGISTER_CALLBACKS          0U
 #define USE_HAL_HCD_REGISTER_CALLBACKS           0U
+#define USE_HAL_HSP_REGISTER_CALLBACKS           0U
 #define USE_HAL_I2C_REGISTER_CALLBACKS           0U
 #define USE_HAL_I3C_REGISTER_CALLBACKS           0U
 #define USE_HAL_ICACHE_REGISTER_CALLBACKS        0U

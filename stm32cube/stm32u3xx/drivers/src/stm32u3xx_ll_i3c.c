@@ -87,6 +87,7 @@ ErrorStatus LL_I3C_DeInit(const I3C_TypeDef *I3Cx)
     /* Release reset of I3C clock */
     LL_APB1_GRP1_ReleaseReset(LL_APB1_GRP1_PERIPH_I3C1);
   }
+#if defined(I3C2)
   else if (I3Cx == I3C2)
   {
     /* Force reset of I3C clock */
@@ -96,6 +97,7 @@ ErrorStatus LL_I3C_DeInit(const I3C_TypeDef *I3Cx)
     LL_APB2_GRP1_ReleaseReset(LL_APB2_GRP1_PERIPH_I3C2);
 
   }
+#endif /* I3C2 */
   else
   {
     status = ERROR;

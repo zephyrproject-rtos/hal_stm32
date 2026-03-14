@@ -126,20 +126,17 @@ HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
 #if defined (RTC_CLOCK_SOURCE_LSE)
   /* Configure LSE as RTC clock source */
   RCC_OscInitStruct.OscillatorType      = RCC_OSCILLATORTYPE_LSE;
-  RCC_OscInitStruct.PLL.PLLState        = RCC_PLL_NONE;
-  RCC_OscInitStruct.LSEState            = RCC_LSE_RTC_ONLY;
+  RCC_OscInitStruct.LSEState            = RCC_LSE_ON;
   PeriphClkInitStruct.RTCClockSelection = RCC_RTCCLKSOURCE_LSE;
 #elif defined (RTC_CLOCK_SOURCE_LSI)
   /* Configure LSI as RTC clock source */
   RCC_OscInitStruct.OscillatorType      = RCC_OSCILLATORTYPE_LSI;
-  RCC_OscInitStruct.PLL.PLLState        = RCC_PLL_NONE;
   RCC_OscInitStruct.LSIState            = RCC_LSI_ON;
   RCC_OscInitStruct.LSIDiv              = RCC_LSI_DIV1;
   PeriphClkInitStruct.RTCClockSelection = RCC_RTCCLKSOURCE_LSI;
 #elif defined (RTC_CLOCK_SOURCE_HSE)
   /* Configure HSE as RTC clock source */
   RCC_OscInitStruct.OscillatorType      = RCC_OSCILLATORTYPE_HSE;
-  RCC_OscInitStruct.PLL.PLLState        = RCC_PLL_NONE;
   RCC_OscInitStruct.HSEState            = RCC_HSE_ON;
   PeriphClkInitStruct.RTCClockSelection = RCC_RTCCLKSOURCE_HSE_DIV32;
 #else

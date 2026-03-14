@@ -52,7 +52,9 @@
 /** @defgroup HAL_Private_Defines HAL Private Defines
   * @{
   */
+#if defined(VREFBUF)
 #define VREFBUF_TIMEOUT_VALUE           10U   /* 10 ms (to be confirmed) */
+#endif /* VREFBUF */
 /**
   * @}
   */
@@ -244,7 +246,7 @@ __weak HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
   }
 
   /* Check Clock source to calculate the tickNumber */
-  if(READ_BIT(SysTick->CTRL, SysTick_CTRL_CLKSOURCE_Msk) == SysTick_CTRL_CLKSOURCE_Msk)
+  if (READ_BIT(SysTick->CTRL, SysTick_CTRL_CLKSOURCE_Msk) == SysTick_CTRL_CLKSOURCE_Msk)
   {
     /* HCLK selected as SysTick clock source */
     ticknumber = SystemCoreClock / (1000UL / (uint32_t)uwTickFreq);
@@ -584,7 +586,7 @@ void HAL_DBGMCU_DisableDBGStandbyMode(void)
 @endverbatim
   * @{
   */
-
+#if defined(VREFBUF)
 /**
   * @brief Configure the internal voltage reference buffer voltage scale.
   * @param  VoltageScaling: specifies the output voltage to achieve
@@ -673,7 +675,7 @@ void HAL_SYSCFG_DisableVREFBUF(void)
 {
   CLEAR_BIT(VREFBUF->CSR, VREFBUF_CSR_ENVR);
 }
-
+#endif /* VREFBUF */
 /**
   * @brief  Enable the I/O analog switch voltage booster
   *
@@ -809,10 +811,10 @@ void HAL_SYSCFG_ConfigCompensationCell(uint32_t Selection, uint32_t Code, uint32
 
     offset = ((Selection == SYSCFG_IO_VDD_CELL) ? 0U : 8U);
 
-    MODIFY_REG(SYSCFG->CCCR, (0xFFU << offset), ((NmosValue << offset) | (PmosValue << (offset + 4U))));
+    MODIFY_REG(SYSCFG->CCCR, (0xFFUL << offset), ((NmosValue << offset) | (PmosValue << (offset + 4UL))));
   }
 
-  MODIFY_REG(SYSCFG->CCCSR, (Selection << 1U), (Code << (POSITION_VAL(Selection) + 1U)));
+  MODIFY_REG(SYSCFG->CCCSR, (Selection << 1UL), (Code << (POSITION_VAL(Selection) + 1UL)));
 }
 
 /**

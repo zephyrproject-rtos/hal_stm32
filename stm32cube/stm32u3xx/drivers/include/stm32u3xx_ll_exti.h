@@ -218,7 +218,6 @@ typedef struct
   */
 
 
-
 /* Exported functions --------------------------------------------------------*/
 /** @defgroup EXTI_LL_Exported_Functions EXTI Exported Functions
   * @{
@@ -1096,7 +1095,7 @@ __STATIC_INLINE uint32_t LL_EXTI_GetEXTISource(uint32_t Line)
 {
   return (uint32_t)(READ_BIT(EXTI->EXTICR[Line & 0x03U],
                              (EXTI_EXTICR1_EXTI0 << (Line >> LL_EXTI_REGISTER_PINPOS_SHFT))) >> \
-                             (Line >> LL_EXTI_REGISTER_PINPOS_SHFT));
+                    (Line >> LL_EXTI_REGISTER_PINPOS_SHFT));
 }
 /**
   * @}
@@ -1356,7 +1355,6 @@ __STATIC_INLINE uint32_t LL_EXTI_GetLockAttributes(void)
 /**
   * @}
   */
-
 
 
 #if defined(USE_FULL_LL_DRIVER)

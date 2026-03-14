@@ -86,7 +86,8 @@ typedef struct
                                  @ref FLASH_OB_USER_DUALBANK, @ref FLASH_OB_USER_SRAM2_PE,
                                  @ref FLASH_OB_USER_SRAM2_RST, @ref FLASH_OB_USER_NSWBOOT0,
                                  @ref FLASH_OB_USER_NBOOT0, @ref FLASH_OB_USER_IO_VDD_HSLV,
-                                 @ref FLASH_OB_USER_IO_VDDIO2_HSLV, @ref FLASH_OB_USER_TZEN */
+                                 @ref FLASH_OB_USER_IO_VDDIO2_HSLV, @ref FLASH_OB_USER_TZEN
+                                 @ref FLASH_OB_USER_SRAM3_PE */
 #if defined (CPU_IN_SECURE_STATE)
   uint32_t WMSecConfig;      /*!< Configuration of the Watermark-based Secure Area (used for @ref OPTIONBYTE_WMSEC).
                                   This parameter must be a value of @ref FLASH_OB_WMSEC */
@@ -338,6 +339,9 @@ typedef struct
 #define OB_USER_SWAP_BANK      FLASH_OPTR_SWAP_BANK      /*!< Swap banks */
 #define OB_USER_DUALBANK       FLASH_OPTR_DUALBANK       /*!< Dual-Bank on 1MB/512kB Flash memory devices */
 #define OB_USER_SRAM2_PE       FLASH_OPTR_SRAM2_PE       /*!< SRAM2 parity check enable */
+#if defined(FLASH_OPTR_SRAM3_PE)
+#define OB_USER_SRAM3_PE       FLASH_OPTR_SRAM3_PE       /*!< SRAM3 parity check enable */
+#endif /* FLASH_OPTR_SRAM3_PE */
 #define OB_USER_SRAM2_RST      FLASH_OPTR_SRAM2_RST      /*!< SRAM2 erase when system reset */
 #define OB_USER_NSWBOOT0       FLASH_OPTR_nSWBOOT0       /*!< Software BOOT0 */
 #define OB_USER_NBOOT0         FLASH_OPTR_nBOOT0         /*!< nBOOT0 option bit */
@@ -345,6 +349,15 @@ typedef struct
 #define OB_USER_IO_VDDIO2_HSLV FLASH_OPTR_IO_VDDIO2_HSLV /*!< High speed IO at low VDDIO2 voltage configuration bit */
 #define OB_USER_TZEN           FLASH_OPTR_TZEN           /*!< Global TrustZone security enable */
 
+#if defined(FLASH_OPTR_SRAM3_PE)
+#define OB_USER_ALL          (OB_USER_BOR_LEV    | OB_USER_BDRST_POR   | OB_USER_NRST_STOP      | \
+                              OB_USER_NRST_STDBY | OB_USER_NRST_SHDW   | OB_USER_SRAM1_RST      | \
+                              OB_USER_IWDG_SW    | OB_USER_IWDG_STOP   | OB_USER_IWDG_STDBY     | \
+                              OB_USER_WWDG_SW    | OB_USER_SWAP_BANK   | OB_USER_DUALBANK       | \
+                              OB_USER_SRAM2_PE   | OB_USER_SRAM2_RST   | OB_USER_NSWBOOT0       | \
+                              OB_USER_NBOOT0     | OB_USER_IO_VDD_HSLV | OB_USER_IO_VDDIO2_HSLV | \
+                              OB_USER_TZEN       | OB_USER_SRAM3_PE)  /*!< All User option bits */
+#else
 #define OB_USER_ALL          (OB_USER_BOR_LEV    | OB_USER_BDRST_POR   | OB_USER_NRST_STOP      | \
                               OB_USER_NRST_STDBY | OB_USER_NRST_SHDW   | OB_USER_SRAM1_RST      | \
                               OB_USER_IWDG_SW    | OB_USER_IWDG_STOP   | OB_USER_IWDG_STDBY     | \
@@ -352,6 +365,7 @@ typedef struct
                               OB_USER_SRAM2_PE   | OB_USER_SRAM2_RST   | OB_USER_NSWBOOT0       | \
                               OB_USER_NBOOT0     | OB_USER_IO_VDD_HSLV | OB_USER_IO_VDDIO2_HSLV | \
                               OB_USER_TZEN)     /*!< All User option bits */
+#endif /* FLASH_OPTR_SRAM3_PE */
 /**
   * @}
   */
@@ -472,6 +486,18 @@ typedef struct
   */
 #define OB_SRAM2_PE_ENABLE    0x00000000U         /*!< SRAM2 Parity check enable */
 #define OB_SRAM2_PE_DISABLE   FLASH_OPTR_SRAM2_PE /*!< SRAM2 Parity check disable */
+/**
+  * @}
+  */
+
+#if defined(FLASH_OPTR_SRAM3_PE)
+/** @defgroup FLASH_OB_USER_SRAM3_PE FLASH Option Bytes User SRAM3 Parity Check Enable
+  * @{
+  */
+#define OB_SRAM3_PE_ENABLE    0x00000000U         /*!< SRAM3 Parity check enable */
+#define OB_SRAM3_PE_DISABLE   FLASH_OPTR_SRAM3_PE /*!< SRAM3 Parity check disable */
+#endif /* FLASH_OPTR_SRAM3_PE */
+
 /**
   * @}
   */
@@ -1159,6 +1185,10 @@ HAL_StatusTypeDef FLASH_WaitForLastOperation(uint32_t Timeout);
 #define IS_OB_USER_DUALBANK(VALUE)         (((VALUE) == OB_DUALBANK_SINGLE) || ((VALUE) == OB_DUALBANK_DUAL))
 
 #define IS_OB_USER_SRAM2_PE(VALUE)         (((VALUE) == OB_SRAM2_PE_ENABLE) || ((VALUE) == OB_SRAM2_PE_DISABLE))
+
+#if defined(FLASH_OPTR_SRAM3_PE)
+#define IS_OB_USER_SRAM3_PE(VALUE)         (((VALUE) == OB_SRAM3_PE_ENABLE) || ((VALUE) == OB_SRAM3_PE_DISABLE))
+#endif /* FLASH_OPTR_SRAM3_PE */
 
 #define IS_OB_USER_SRAM2_RST(VALUE)        (((VALUE) == OB_SRAM2_RST_ERASE) || ((VALUE) == OB_SRAM2_RST_NOT_ERASE))
 

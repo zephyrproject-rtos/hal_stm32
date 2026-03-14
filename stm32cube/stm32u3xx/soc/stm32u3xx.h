@@ -56,9 +56,11 @@
    application
   */
 
-#if !defined (STM32U375xx)  && !defined (STM32U385xx)
+#if !defined (STM32U375xx)  && !defined (STM32U385xx) && !defined (STM32U3B5xx)  && !defined (STM32U3C5xx)
   /* #define STM32U375xx  */   /*!< STM32U37xx STM32U375EFGH Devices  */
   /* #define STM32U385xx  */   /*!< STM32U38xx STM32U385EFGH Devices  */
+  /* #define STM32U3B5xx  */   /*!< STM32UB5xx STM32U3B5EFGH Devices  */
+  /* #define STM32U3C5xx  */   /*!< STM32UC5xx STM32U3C5EFGH Devices  */
 #endif
 
 /*  Tip: To avoid modifying this file each time you need to switch between these
@@ -77,7 +79,7 @@
   * @brief CMSIS Device version number
   */
 #define __STM32U3_CMSIS_VERSION_MAIN   (0x01U) /*!< [31:24] main version */
-#define __STM32U3_CMSIS_VERSION_SUB1   (0x01U) /*!< [23:16] sub1 version */
+#define __STM32U3_CMSIS_VERSION_SUB1   (0x03U) /*!< [23:16] sub1 version */
 #define __STM32U3_CMSIS_VERSION_SUB2   (0x00U) /*!< [15:8]  sub2 version */
 #define __STM32U3_CMSIS_VERSION_RC     (0x00U) /*!< [7:0]  release candidate */
 #define __STM32U3_CMSIS_VERSION        ((__STM32U3_CMSIS_VERSION_MAIN << 24U)\
@@ -96,8 +98,12 @@
   #include "stm32u375xx.h"
 #elif defined(STM32U385xx)
   #include "stm32u385xx.h"
+#elif defined(STM32U3B5xx)
+  #include "stm32u3b5xx.h"
+#elif defined(STM32U3C5xx)
+  #include "stm32u3c5xx.h"
 #else
-  #error "Please select first the target STM32U3xx device used in your application (in stm32u3xx.h file)"
+ #error "Please select first the target STM32U3xx device used in your application (in stm32u3xx.h file)"
 #endif
 
 /**

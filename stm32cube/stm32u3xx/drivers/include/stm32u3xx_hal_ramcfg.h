@@ -344,9 +344,6 @@ HAL_RAMCFG_StateTypeDef HAL_RAMCFG_GetState(const RAMCFG_HandleTypeDef *hramcfg)
   */
 
 
-
-
-
 /* Private functions ---------------------------------------------------------*/
 
 /** @defgroup RAMCFG_Private_Functions RAMCFG Private Functions

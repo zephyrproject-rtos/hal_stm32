@@ -774,33 +774,33 @@ typedef struct
   * @retval The state of __FLAG__ (TRUE or FALSE).
   */
 #define __HAL_RTC_GET_FLAG(__HANDLE__, __FLAG__)( \
-                               ((__FLAG__) == RTC_FLAG_RECALPF) ? (READ_BIT(RTC->ICSR, RTC_ICSR_RECALPF) == \
-                                                                RTC_ICSR_RECALPF) : \
-                               ((__FLAG__) == RTC_FLAG_INITF)   ? (READ_BIT(RTC->ICSR, RTC_ICSR_INITF) == \
-                                                                RTC_ICSR_INITF) : \
-                               ((__FLAG__) == RTC_FLAG_RSF)     ? (READ_BIT(RTC->ICSR, RTC_ICSR_RSF) == \
-                                                                RTC_ICSR_RSF) : \
-                               ((__FLAG__) == RTC_FLAG_INITS)   ? (READ_BIT(RTC->ICSR, RTC_ICSR_INITS) == \
-                                                                RTC_ICSR_INITS) : \
-                               ((__FLAG__) == RTC_FLAG_SHPF)    ? (READ_BIT(RTC->ICSR, RTC_ICSR_SHPF) == \
-                                                                RTC_ICSR_SHPF) : \
-                               ((__FLAG__) == RTC_FLAG_WUTWF)   ? (READ_BIT(RTC->ICSR, RTC_ICSR_WUTWF) == \
-                                                                RTC_ICSR_WUTWF) : \
-                               ((__FLAG__) == RTC_FLAG_SSRUF)   ? (READ_BIT(RTC->SR, RTC_SR_SSRUF) == \
-                                                                RTC_SR_SSRUF) : \
-                               ((__FLAG__) == RTC_FLAG_ITSF)    ? (READ_BIT(RTC->SR, RTC_SR_ITSF) == \
-                                                                RTC_SR_ITSF) : \
-                               ((__FLAG__) == RTC_FLAG_TSOVF)   ? (READ_BIT(RTC->SR, RTC_SR_TSOVF) == \
-                                                                RTC_SR_TSOVF) : \
-                               ((__FLAG__) == RTC_FLAG_TSF)     ? (READ_BIT(RTC->SR, RTC_SR_TSF) == \
-                                                                RTC_SR_TSF): \
-                               ((__FLAG__) == RTC_FLAG_WUTF)    ? (READ_BIT(RTC->SR, RTC_SR_WUTF) == \
-                                                                RTC_SR_WUTF): \
-                               ((__FLAG__) == RTC_FLAG_ALRBF)   ? (READ_BIT(RTC->SR, RTC_SR_ALRBF) == \
-                                                                RTC_SR_ALRBF) : \
-                               ((__FLAG__) == RTC_FLAG_ALRAF)   ? (READ_BIT(RTC->SR, RTC_SR_ALRAF) == \
-                                                                RTC_SR_ALRAF) : \
-                               (0U)) /* Return 0 because it is an invalid parameter value */
+                                                  ((__FLAG__) == RTC_FLAG_RECALPF) ? \
+                                                  (READ_BIT(RTC->ICSR, RTC_ICSR_RECALPF) == RTC_ICSR_RECALPF) : \
+                                                  ((__FLAG__) == RTC_FLAG_INITF)   ? \
+                                                  (READ_BIT(RTC->ICSR, RTC_ICSR_INITF) == RTC_ICSR_INITF) : \
+                                                  ((__FLAG__) == RTC_FLAG_RSF)     ? \
+                                                  (READ_BIT(RTC->ICSR, RTC_ICSR_RSF) == RTC_ICSR_RSF) : \
+                                                  ((__FLAG__) == RTC_FLAG_INITS)   ? \
+                                                  (READ_BIT(RTC->ICSR, RTC_ICSR_INITS) == RTC_ICSR_INITS) : \
+                                                  ((__FLAG__) == RTC_FLAG_SHPF)    ? \
+                                                  (READ_BIT(RTC->ICSR, RTC_ICSR_SHPF) == RTC_ICSR_SHPF) : \
+                                                  ((__FLAG__) == RTC_FLAG_WUTWF)   ? \
+                                                  (READ_BIT(RTC->ICSR, RTC_ICSR_WUTWF) == RTC_ICSR_WUTWF) : \
+                                                  ((__FLAG__) == RTC_FLAG_SSRUF)   ? \
+                                                  (READ_BIT(RTC->SR, RTC_SR_SSRUF) == RTC_SR_SSRUF) : \
+                                                  ((__FLAG__) == RTC_FLAG_ITSF)    ? \
+                                                  (READ_BIT(RTC->SR, RTC_SR_ITSF) == RTC_SR_ITSF) : \
+                                                  ((__FLAG__) == RTC_FLAG_TSOVF)   ? \
+                                                  (READ_BIT(RTC->SR, RTC_SR_TSOVF) == RTC_SR_TSOVF) : \
+                                                  ((__FLAG__) == RTC_FLAG_TSF)     ? \
+                                                  (READ_BIT(RTC->SR, RTC_SR_TSF) == RTC_SR_TSF): \
+                                                  ((__FLAG__) == RTC_FLAG_WUTF)    ? \
+                                                  (READ_BIT(RTC->SR, RTC_SR_WUTF) == RTC_SR_WUTF): \
+                                                  ((__FLAG__) == RTC_FLAG_ALRBF)   ? \
+                                                  (READ_BIT(RTC->SR, RTC_SR_ALRBF) == RTC_SR_ALRBF) : \
+                                                  ((__FLAG__) == RTC_FLAG_ALRAF)   ? \
+                                                  (READ_BIT(RTC->SR, RTC_SR_ALRAF) == RTC_SR_ALRAF) : \
+                                                  (0U)) /* Return 0 because it is an invalid parameter value */
 
 /* ---------------------------------WAKEUPTIMER---------------------------------*/
 /** @defgroup RTCEx_WakeUp_Timer RTC WakeUp Timer
@@ -871,9 +871,12 @@ typedef struct
   * @retval The state of __FLAG__ (TRUE or FALSE).
   */
 #define __HAL_RTC_WAKEUPTIMER_GET_FLAG(__HANDLE__, __FLAG__)( \
-                            ((__FLAG__) == RTC_FLAG_WUTF)  ? (READ_BIT(RTC->SR, RTC_SR_WUTF) == RTC_SR_WUTF):\
-                            ((__FLAG__) == RTC_FLAG_WUTWF) ? (READ_BIT(RTC->ICSR, RTC_ICSR_WUTWF) == RTC_ICSR_WUTWF):\
-                            (0U)) /* Return 0 because it is an invalid parameter value */
+                                                              ((__FLAG__) == RTC_FLAG_WUTF)  ?\
+                                                              (READ_BIT(RTC->SR, RTC_SR_WUTF) == RTC_SR_WUTF):\
+                                                              ((__FLAG__) == RTC_FLAG_WUTWF) ?\
+                                                              (READ_BIT(RTC->ICSR, RTC_ICSR_WUTWF) == RTC_ICSR_WUTWF):\
+                                                              (0U)) /* Return 0 because it is an \
+                                                              invalid parameter value */
 
 /**
   * @brief  Clear the RTC Wake Up timers pending flags.
@@ -958,9 +961,12 @@ typedef struct
   * @retval The state of __FLAG__ (TRUE or FALSE) or 255 if invalid parameter.
   */
 #define __HAL_RTC_TIMESTAMP_GET_FLAG(__HANDLE__, __FLAG__)( \
-                                ((__FLAG__) == RTC_FLAG_TSF)   ? (READ_BIT(RTC->SR, RTC_SR_TSF) == RTC_SR_TSF):\
-                                ((__FLAG__) == RTC_FLAG_TSOVF) ? (READ_BIT(RTC->SR, RTC_SR_TSOVF) == RTC_SR_TSOVF):\
-                                (0U)) /* Return 0 because it is an invalid parameter value */
+                                                            ((__FLAG__) == RTC_FLAG_TSF)   ?\
+                                                            (READ_BIT(RTC->SR, RTC_SR_TSF) == RTC_SR_TSF):\
+                                                            ((__FLAG__) == RTC_FLAG_TSOVF) ?\
+                                                            (READ_BIT(RTC->SR, RTC_SR_TSOVF) == RTC_SR_TSOVF):\
+                                                            (0U)) /* Return 0 because it is an\
+                                                            invalid parameter value */
 
 /**
   * @brief  Clear the RTC Time Stamps pending flags.
@@ -972,9 +978,12 @@ typedef struct
   * @retval None
   */
 #define __HAL_RTC_TIMESTAMP_CLEAR_FLAG(__HANDLE__, __FLAG__)( \
-                                ((__FLAG__) == RTC_FLAG_TSF)   ? (WRITE_REG(RTC->SCR, RTC_SCR_CTSF)):\
-                                ((__FLAG__) == RTC_FLAG_TSOVF) ? (WRITE_REG(RTC->SCR, RTC_SCR_CTSOVF)):\
-                                (0U)) /* Dummy action because is an invalid parameter value */
+                                                              ((__FLAG__) == RTC_FLAG_TSF)   ?\
+                                                              (WRITE_REG(RTC->SCR, RTC_SCR_CTSF)):\
+                                                              ((__FLAG__) == RTC_FLAG_TSOVF) ?\
+                                                              (WRITE_REG(RTC->SCR, RTC_SCR_CTSOVF)):\
+                                                              (0U)) /* Dummy action because is\
+                                                              an invalid parameter value */
 
 /**
   * @brief  Enable the RTC internal TimeStamp peripheral.

@@ -167,6 +167,7 @@ ErrorStatus LL_USART_DeInit(const USART_TypeDef *USARTx)
     /* Release reset of UART clock */
     LL_APB1_GRP1_ReleaseReset(LL_APB1_GRP1_PERIPH_UART4);
   }
+#if defined(UART5)
   else if (USARTx == UART5)
   {
     /* Force reset of UART clock */
@@ -175,6 +176,7 @@ ErrorStatus LL_USART_DeInit(const USART_TypeDef *USARTx)
     /* Release reset of UART clock */
     LL_APB1_GRP1_ReleaseReset(LL_APB1_GRP1_PERIPH_UART5);
   }
+#endif /* UART5 */
   else
   {
     status = ERROR;
@@ -259,10 +261,12 @@ ErrorStatus LL_USART_Init(USART_TypeDef *USARTx, const LL_USART_InitTypeDef *USA
     {
       periphclk = LL_RCC_GetUARTClockFreq(LL_RCC_UART4_CLKSOURCE);
     }
+#if defined(UART5)
     else if (USARTx == UART5)
     {
       periphclk = LL_RCC_GetUARTClockFreq(LL_RCC_UART5_CLKSOURCE);
     }
+#endif /* UART5 */
     else
     {
       /* Nothing to do, as error code is already assigned to ERROR value */

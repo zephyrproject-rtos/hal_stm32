@@ -2282,6 +2282,26 @@ HAL_StatusTypeDef HAL_TIMEx_ConfigBreakInput(TIM_HandleTypeDef *htim,
       bkin_polarity_bitpos = TIM_AF1_BKCMP2P_Pos;
       break;
     }
+#if defined(HSP1)
+    case TIM_BREAKINPUTSOURCE_HSP1_BRK_OUT0:
+    case TIM_BREAKINPUTSOURCE_HSP1_BRK_OUT2:
+    {
+      bkin_enable_mask = TIM_AF1_BKCMP3E;;
+      bkin_enable_bitpos = TIM_AF1_BKCMP3E_Pos;
+      bkin_polarity_mask = TIM_AF1_BKCMP3P;
+      bkin_polarity_bitpos = TIM_AF1_BKCMP3P_Pos;
+      break;
+    }
+    case TIM_BREAKINPUTSOURCE_HSP1_BRK_OUT1:
+    case TIM_BREAKINPUTSOURCE_HSP1_BRK_OUT3:
+    {
+      bkin_enable_mask = TIM_AF1_BKCMP4E;;
+      bkin_enable_bitpos = TIM_AF1_BKCMP4E_Pos;
+      bkin_polarity_mask = TIM_AF1_BKCMP4P;
+      bkin_polarity_bitpos = TIM_AF1_BKCMP4P_Pos;
+      break;
+    }
+#endif /* HSP1 */
 
     default:
     {

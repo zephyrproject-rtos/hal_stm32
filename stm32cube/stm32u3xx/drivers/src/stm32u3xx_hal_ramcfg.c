@@ -377,12 +377,10 @@ __weak void HAL_RAMCFG_MspDeInit(RAMCFG_HandleTypeDef *hramcfg)
   * @param  hramcfg : Pointer to a RAMCFG_HandleTypeDef structure that contains
   *                   the configuration information for the specified RAMCFG
   *                   instance.
-#ifdef SRAM3_BASE
-  * @note   Parity error detection only available for SRAM2 and SRAM3
-#else
+  * @note   note with (*) are only available on STM32U3B5xx/STM32U3C5xx devices
+  * @note   Parity error detection only available for SRAM2 and SRAM3(*)
   * @note   Parity error detection only available for SRAM2
-#endif
-    @note   When parity is enabled by SRAMx_PE user option bit, the PCE bit is automatically set (in RAMCFG_MxCR) after
+  * @note   When parity is enabled by SRAMx_PE user option bit, the PCE bit is automatically set (in RAMCFG_MxCR) after
   *         system reset.
   * @retval HAL status.
   */
@@ -420,11 +418,9 @@ HAL_StatusTypeDef HAL_RAMCFG_EnableParityErrorDetection(RAMCFG_HandleTypeDef *hr
   * @param  hramcfg : Pointer to a RAMCFG_HandleTypeDef structure that contains
   *                   the configuration information for the specified RAMCFG
   *                   instance.
-#ifdef SRAM3_BASE
-  * @note   Parity error detection only available for SRAM2 and SRAM3
-#else
+  * @note   note with (*) are only available on STM32U3B5xx/STM32U3C5xx devices
+  * @note   Parity error detection only available for SRAM2 and SRAM3(*)
   * @note   Parity error detection only available for SRAM2
-#endif
   * @note   When parity is enabled by SRAMx_PE user option bit, the PCE bit is automatically set (in RAMCFG_M2CR) after
   *         system reset.
   * @retval HAL status.
@@ -466,8 +462,6 @@ HAL_StatusTypeDef HAL_RAMCFG_DisableParityErrorDetection(RAMCFG_HandleTypeDef *h
 
   return HAL_OK;
 }
-
-
 
 
 /**

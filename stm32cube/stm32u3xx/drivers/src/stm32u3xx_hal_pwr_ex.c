@@ -615,10 +615,9 @@ void HAL_PWREx_DisableUltraLowPowerMode(void)
   *                      This parameter can be one of the following values :
   *                      @arg PWR_SRAM1_POWERDOWN  : SRAM1 powered off.
   *                      @arg PWR_SRAM2_POWERDOWN  : SRAM2 powered off.
-#if defined(RAMCFG_SRAM3)
   *                      @arg PWR_SRAM3_POWERDOWN  : SRAM3 powered off. (*)
   *                      @arg PWR_SRAM4_POWERDOWN  : SRAM4 powered off. (*)
-#endif
+  * @note   SRAM3 and SRAM4 are only available on STM32U3B5xx/STM32U3C5xx
   * @retval None.
   */
 void HAL_PWREx_EnableRAMsPowerDown(uint32_t RAMSelection)
@@ -643,16 +642,13 @@ void HAL_PWREx_EnableRAMsPowerDown(uint32_t RAMSelection)
   *                      @arg PWR_SRAM1_PAGE3_STOP_RETENTION : SRAM1 page 3 retention.
   *                      @arg PWR_SRAM1_PAGE4_STOP_RETENTION : SRAM1 page 4 retention.
   *                      @arg PWR_SRAM1_PAGE5_STOP_RETENTION : SRAM1 page 5 retention.
-#if defined(PWR_CR2_SRAM1PDS6)
   *                      @arg PWR_SRAM1_PAGE6_STOP_RETENTION : SRAM1 page 6 retention. (*)
   *                      @arg PWR_SRAM1_PAGE7_STOP_RETENTION : SRAM1 page 7 retention. (*)
-#endif
   *                      @arg PWR_SRAM1_FULL_STOP_RETENTION  : SRAM1 full retention.
   *                      @arg PWR_SRAM2_PAGE1_STOP_RETENTION : SRAM2 page 1 retention.
   *                      @arg PWR_SRAM2_PAGE2_STOP_RETENTION : SRAM2 page 2 retention.
   *                      @arg PWR_SRAM2_PAGE3_STOP_RETENTION : SRAM2 page 3 retention.
   *                      @arg PWR_SRAM2_FULL_STOP_RETENTION  : SRAM2 full retention.
-#if defined(RAMCFG_SRAM3)
   *                      @arg PWR_SRAM3_PAGE1_STOP_RETENTION : SRAM3 page 1 retention. (**)
   *                      @arg PWR_SRAM3_PAGE2_STOP_RETENTION : SRAM3 page 2 retention. (**)
   *                      @arg PWR_SRAM3_PAGE3_STOP_RETENTION : SRAM3 page 3 retention. (**)
@@ -660,7 +656,6 @@ void HAL_PWREx_EnableRAMsPowerDown(uint32_t RAMSelection)
   *                      @arg PWR_SRAM3_PAGE5_STOP_RETENTION : SRAM3 page 5 retention. (**)
   *                      @arg PWR_SRAM3_FULL_STOP_RETENTION  : SRAM3 full retention. (**)
   *                      @arg PWR_SRAM4_FULL_STOP_RETENTION  : SRAM4 full retention. (**)
-#endif
   *                      @arg PWR_ICACHE_STOP_RETENTION      : I-CACHE SRAM retention.
   *                      @arg PWR_FDCAN_USB_STOP_RETENTION   : FDCAN & USB SRAM retention.
   *                      @arg PWR_PKA_STOP_RETENTION         : PKA SRAM retention.
@@ -688,16 +683,13 @@ void HAL_PWREx_EnableRAMsContentStopRetention(uint32_t RAMSelection)
   *                      @arg PWR_SRAM1_PAGE3_STOP_RETENTION : SRAM1 page 3 retention.
   *                      @arg PWR_SRAM1_PAGE4_STOP_RETENTION : SRAM1 page 4 retention.
   *                      @arg PWR_SRAM1_PAGE5_STOP_RETENTION : SRAM1 page 5 retention.
-#if defined(PWR_CR2_SRAM1PDS6)
   *                      @arg PWR_SRAM1_PAGE6_STOP_RETENTION : SRAM1 page 6 retention. (*)
   *                      @arg PWR_SRAM1_PAGE7_STOP_RETENTION : SRAM1 page 7 retention. (*)
-#endif
   *                      @arg PWR_SRAM1_FULL_STOP_RETENTION  : SRAM1 full retention.
   *                      @arg PWR_SRAM2_PAGE1_STOP_RETENTION : SRAM2 page 1 retention.
   *                      @arg PWR_SRAM2_PAGE2_STOP_RETENTION : SRAM2 page 2 retention.
   *                      @arg PWR_SRAM2_PAGE3_STOP_RETENTION : SRAM2 page 3 retention.
   *                      @arg PWR_SRAM2_FULL_STOP_RETENTION  : SRAM2 full retention.
-#if defined(RAMCFG_SRAM3)
   *                      @arg PWR_SRAM3_PAGE1_STOP_RETENTION : SRAM3 page 1 retention. (**)
   *                      @arg PWR_SRAM3_PAGE2_STOP_RETENTION : SRAM3 page 2 retention. (**)
   *                      @arg PWR_SRAM3_PAGE3_STOP_RETENTION : SRAM3 page 3 retention. (**)
@@ -705,7 +697,6 @@ void HAL_PWREx_EnableRAMsContentStopRetention(uint32_t RAMSelection)
   *                      @arg PWR_SRAM3_PAGE5_STOP_RETENTION : SRAM3 page 5 retention. (**)
   *                      @arg PWR_SRAM3_FULL_STOP_RETENTION  : SRAM3 full retention. (**)
   *                      @arg PWR_SRAM4_FULL_STOP_RETENTION  : SRAM4 full retention. (**)
-#endif
   *                      @arg PWR_ICACHE_STOP_RETENTION      : I-CACHE SRAM retention.
   *                      @arg PWR_FDCAN_USB_STOP_RETENTION   : FDCAN & USB SRAM retention.
   *                      @arg PWR_PKA_STOP_RETENTION         : PKA SRAM retention.

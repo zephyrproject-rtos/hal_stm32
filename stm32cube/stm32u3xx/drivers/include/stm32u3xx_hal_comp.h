@@ -289,6 +289,10 @@ typedef  void (*pCOMP_CallbackTypeDef)(COMP_HandleTypeDef *hcomp); /*!< pointer 
 #define COMP_BLANKINGSRC_TIM2_OC3        (COMP_CSR_BLANKSEL_1)   /*!< TIM2 OC3 selected as blanking source for COMP1  */
 #define COMP_BLANKINGSRC_TIM3_OC3        (COMP_CSR_BLANKSEL_2)   /*!< TIM3 OC3 selected as blanking source for COMP1  */
 #define COMP_BLANKINGSRC_TIM3_OC4        (COMP_CSR_BLANKSEL_0)   /*!< TIM3 OC4 selected as blanking source for COMP2  */
+#define COMP_BLANKINGSRC_TIM15_OC1       (COMP2_CSR_BLANKSEL_2)   /*!< TIM15 OC1 selected as blanking source for COMP2 (xx1xx) */
+#if defined(COMP2_CSR_BLANKSEL_1)
+#define COMP_BLANKINGSRC_TIM8_OC5        (COMP2_CSR_BLANKSEL_1)   /*!< TIM8 OC5 selected as blanking source for COMP2 (xxx1x) */
+#endif /* COMP_CSR_BLANKSEL_1 */
 /**
   * @}
   */
@@ -702,6 +706,32 @@ typedef  void (*pCOMP_CallbackTypeDef)(COMP_HandleTypeDef *hcomp); /*!< pointer 
 #define IS_COMP_OUTPUTPOL(__POL__)          (((__POL__) == COMP_OUTPUTPOL_NONINVERTED) || \
                                              ((__POL__) == COMP_OUTPUTPOL_INVERTED))
 
+#if defined(COMP2_CSR_BLANKSEL_1) && (COMP2_CSR_BLANKSEL_2)
+#define IS_COMP_BLANKINGSRC_INSTANCE(__INSTANCE__, __OUTPUT_BLANKING_SOURCE__)  \
+  (((__INSTANCE__) == COMP1)                                                    \
+   ? (((__OUTPUT_BLANKING_SOURCE__) == COMP_BLANKINGSRC_NONE)      ||           \
+      ((__OUTPUT_BLANKING_SOURCE__) == COMP_BLANKINGSRC_TIM1_OC5)  ||           \
+      ((__OUTPUT_BLANKING_SOURCE__) == COMP_BLANKINGSRC_TIM2_OC3)  ||           \
+      ((__OUTPUT_BLANKING_SOURCE__) == COMP_BLANKINGSRC_TIM3_OC3)    )          \
+   :                                                                            \
+   (((__OUTPUT_BLANKING_SOURCE__) == COMP_BLANKINGSRC_NONE)      ||             \
+    ((__OUTPUT_BLANKING_SOURCE__) == COMP_BLANKINGSRC_TIM15_OC1) ||             \
+    ((__OUTPUT_BLANKING_SOURCE__) == COMP_BLANKINGSRC_TIM8_OC5)  ||             \
+    ((__OUTPUT_BLANKING_SOURCE__) == COMP_BLANKINGSRC_TIM3_OC4)    )            \
+  )
+#elif defined(COMP2_CSR_BLANKSEL_2)
+#define IS_COMP_BLANKINGSRC_INSTANCE(__INSTANCE__, __OUTPUT_BLANKING_SOURCE__)  \
+  (((__INSTANCE__) == COMP1)                                                    \
+   ? (((__OUTPUT_BLANKING_SOURCE__) == COMP_BLANKINGSRC_NONE)      ||           \
+      ((__OUTPUT_BLANKING_SOURCE__) == COMP_BLANKINGSRC_TIM1_OC5)  ||           \
+      ((__OUTPUT_BLANKING_SOURCE__) == COMP_BLANKINGSRC_TIM2_OC3)  ||           \
+      ((__OUTPUT_BLANKING_SOURCE__) == COMP_BLANKINGSRC_TIM3_OC3)    )          \
+   :                                                                            \
+   (((__OUTPUT_BLANKING_SOURCE__) == COMP_BLANKINGSRC_NONE)      ||             \
+    ((__OUTPUT_BLANKING_SOURCE__) == COMP_BLANKINGSRC_TIM15_OC1) ||             \
+    ((__OUTPUT_BLANKING_SOURCE__) == COMP_BLANKINGSRC_TIM3_OC4)    )            \
+  )
+#else
 #define IS_COMP_BLANKINGSRC_INSTANCE(__INSTANCE__, __OUTPUT_BLANKING_SOURCE__)  \
   (((__INSTANCE__) == COMP1)                                                    \
    ? (((__OUTPUT_BLANKING_SOURCE__) == COMP_BLANKINGSRC_NONE)      ||           \
@@ -712,6 +742,7 @@ typedef  void (*pCOMP_CallbackTypeDef)(COMP_HandleTypeDef *hcomp); /*!< pointer 
    (((__OUTPUT_BLANKING_SOURCE__) == COMP_BLANKINGSRC_NONE)      ||             \
     ((__OUTPUT_BLANKING_SOURCE__) == COMP_BLANKINGSRC_TIM3_OC4)    )            \
   )
+#endif /* COMP2_CSR_BLANKSEL_2 */
 
 #define IS_COMP_TRIGGERMODE(__MODE__)       (((__MODE__) == COMP_TRIGGERMODE_NONE)                 || \
                                              ((__MODE__) == COMP_TRIGGERMODE_IT_RISING)            || \

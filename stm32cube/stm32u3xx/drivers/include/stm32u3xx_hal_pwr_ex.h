@@ -98,8 +98,8 @@ extern "C" {
 #define PWR_SRAM3_PAGE3_STOP_RETENTION PWR_CR2_SRAM3PDS3 /*!< SRAM3 page 3 retention in Stop modes (Stop 0, 1, 2, 3)  */
 #define PWR_SRAM3_PAGE4_STOP_RETENTION PWR_CR2_SRAM3PDS4 /*!< SRAM3 page 4 retention in Stop modes (Stop 0, 1, 2, 3)  */
 #define PWR_SRAM3_PAGE5_STOP_RETENTION PWR_CR2_SRAM3PDS5 /*!< SRAM3 page 5 retention in Stop modes (Stop 0, 1, 2, 3)  */
-#define PWR_SRAM3_FULL_STOP_RETENTION  (PWR_CR2_SRAM1PDS1 | PWR_CR2_SRAM1PDS2 | PWR_CR2_SRAM1PDS3 | PWR_CR2_SRAM1PDS4 |\
-                                        PWR_CR2_SRAM1PDS5)
+#define PWR_SRAM3_FULL_STOP_RETENTION  (PWR_CR2_SRAM3PDS1 | PWR_CR2_SRAM3PDS2 | PWR_CR2_SRAM3PDS3 | PWR_CR2_SRAM3PDS4 |\
+                                        PWR_CR2_SRAM3PDS5)
 /*!< SRAM3 full retention in Stop modes (Stop 0, 1, 2, 3)  */
 
 /* SRAM4 pages retention defines */
@@ -113,8 +113,10 @@ extern "C" {
 #define PWR_FDCAN_USB_STOP_RETENTION   PWR_CR2_PRAMPDS     /*!< FDCAN & USB SRAM retention in Stop modes
                                                                 (Stop 0, 1, 2, 3) */
 
+#if defined(PWR_CR2_PKARAMPDS)
 /* PKA SRAM retention defines */
 #define PWR_PKA_STOP_RETENTION         PWR_CR2_PKARAMPDS   /*!< PKA SRAM retention in Stop modes (Stop 0, 1, 2, 3) */
+#endif /* PWR_CR2_PKARAMPDS */
 /**
   * @}
   */
@@ -346,7 +348,7 @@ extern "C" {
 #endif /* RAMCFG_SRAM3 */
 
 /* RAMs retention in Stop mode check macro */
-#if defined(RAMCFG_SRAM3)
+#if defined(RAMCFG_SRAM3) && defined(PWR_PKA_STOP_RETENTION)
 #define IS_PWR_RAM_STOP_RETENTION(__RAM__)       (((__RAM__) == PWR_SRAM1_PAGE1_STOP_RETENTION) ||\
                                                   ((__RAM__) == PWR_SRAM1_PAGE2_STOP_RETENTION) ||\
                                                   ((__RAM__) == PWR_SRAM1_PAGE3_STOP_RETENTION) ||\
@@ -369,7 +371,7 @@ extern "C" {
                                                   ((__RAM__) == PWR_ICACHE_STOP_RETENTION)      ||\
                                                   ((__RAM__) == PWR_FDCAN_USB_STOP_RETENTION)   ||\
                                                   ((__RAM__) == PWR_PKA_STOP_RETENTION))
-#elif defined(PWR_SRAM1_PAGE6_STOP_RETENTION)
+#elif defined(RAMCFG_SRAM3) && !defined(PWR_PKA_STOP_RETENTION)
 #define IS_PWR_RAM_STOP_RETENTION(__RAM__)       (((__RAM__) == PWR_SRAM1_PAGE1_STOP_RETENTION) ||\
                                                   ((__RAM__) == PWR_SRAM1_PAGE2_STOP_RETENTION) ||\
                                                   ((__RAM__) == PWR_SRAM1_PAGE3_STOP_RETENTION) ||\
@@ -377,6 +379,60 @@ extern "C" {
                                                   ((__RAM__) == PWR_SRAM1_PAGE5_STOP_RETENTION) ||\
                                                   ((__RAM__) == PWR_SRAM1_PAGE6_STOP_RETENTION) ||\
                                                   ((__RAM__) == PWR_SRAM1_PAGE7_STOP_RETENTION) ||\
+                                                  ((__RAM__) == PWR_SRAM1_FULL_STOP_RETENTION)  ||\
+                                                  ((__RAM__) == PWR_SRAM2_PAGE1_STOP_RETENTION) ||\
+                                                  ((__RAM__) == PWR_SRAM2_PAGE2_STOP_RETENTION) ||\
+                                                  ((__RAM__) == PWR_SRAM2_PAGE3_STOP_RETENTION) ||\
+                                                  ((__RAM__) == PWR_SRAM2_FULL_STOP_RETENTION)  ||\
+                                                  ((__RAM__) == PWR_SRAM3_PAGE1_STOP_RETENTION) ||\
+                                                  ((__RAM__) == PWR_SRAM3_PAGE2_STOP_RETENTION) ||\
+                                                  ((__RAM__) == PWR_SRAM3_PAGE3_STOP_RETENTION) ||\
+                                                  ((__RAM__) == PWR_SRAM3_PAGE4_STOP_RETENTION) ||\
+                                                  ((__RAM__) == PWR_SRAM3_PAGE5_STOP_RETENTION) ||\
+                                                  ((__RAM__) == PWR_SRAM3_FULL_STOP_RETENTION)  ||\
+                                                  ((__RAM__) == PWR_SRAM4_FULL_STOP_RETENTION)  ||\
+                                                  ((__RAM__) == PWR_ICACHE_STOP_RETENTION)      ||\
+                                                  ((__RAM__) == PWR_FDCAN_USB_STOP_RETENTION))
+
+#elif defined(PWR_SRAM1_PAGE6_STOP_RETENTION) && defined(PWR_PKA_STOP_RETENTION)
+#define IS_PWR_RAM_STOP_RETENTION(__RAM__)       (((__RAM__) == PWR_SRAM1_PAGE1_STOP_RETENTION) ||\
+                                                  ((__RAM__) == PWR_SRAM1_PAGE2_STOP_RETENTION) ||\
+                                                  ((__RAM__) == PWR_SRAM1_PAGE3_STOP_RETENTION) ||\
+                                                  ((__RAM__) == PWR_SRAM1_PAGE4_STOP_RETENTION) ||\
+                                                  ((__RAM__) == PWR_SRAM1_PAGE5_STOP_RETENTION) ||\
+                                                  ((__RAM__) == PWR_SRAM1_PAGE6_STOP_RETENTION) ||\
+                                                  ((__RAM__) == PWR_SRAM1_PAGE7_STOP_RETENTION) ||\
+                                                  ((__RAM__) == PWR_SRAM1_FULL_STOP_RETENTION)  ||\
+                                                  ((__RAM__) == PWR_SRAM2_PAGE1_STOP_RETENTION) ||\
+                                                  ((__RAM__) == PWR_SRAM2_PAGE2_STOP_RETENTION) ||\
+                                                  ((__RAM__) == PWR_SRAM2_PAGE3_STOP_RETENTION) ||\
+                                                  ((__RAM__) == PWR_SRAM2_FULL_STOP_RETENTION)  ||\
+                                                  ((__RAM__) == PWR_ICACHE_STOP_RETENTION)      ||\
+                                                  ((__RAM__) == PWR_FDCAN_USB_STOP_RETENTION)   ||\
+                                                  ((__RAM__) == PWR_PKA_STOP_RETENTION))
+
+#elif defined(PWR_SRAM1_PAGE6_STOP_RETENTION) && !defined(PWR_PKA_STOP_RETENTION)
+#define IS_PWR_RAM_STOP_RETENTION(__RAM__)       (((__RAM__) == PWR_SRAM1_PAGE1_STOP_RETENTION) ||\
+                                                  ((__RAM__) == PWR_SRAM1_PAGE2_STOP_RETENTION) ||\
+                                                  ((__RAM__) == PWR_SRAM1_PAGE3_STOP_RETENTION) ||\
+                                                  ((__RAM__) == PWR_SRAM1_PAGE4_STOP_RETENTION) ||\
+                                                  ((__RAM__) == PWR_SRAM1_PAGE5_STOP_RETENTION) ||\
+                                                  ((__RAM__) == PWR_SRAM1_PAGE6_STOP_RETENTION) ||\
+                                                  ((__RAM__) == PWR_SRAM1_PAGE7_STOP_RETENTION) ||\
+                                                  ((__RAM__) == PWR_SRAM1_FULL_STOP_RETENTION)  ||\
+                                                  ((__RAM__) == PWR_SRAM2_PAGE1_STOP_RETENTION) ||\
+                                                  ((__RAM__) == PWR_SRAM2_PAGE2_STOP_RETENTION) ||\
+                                                  ((__RAM__) == PWR_SRAM2_PAGE3_STOP_RETENTION) ||\
+                                                  ((__RAM__) == PWR_SRAM2_FULL_STOP_RETENTION)  ||\
+                                                  ((__RAM__) == PWR_ICACHE_STOP_RETENTION)      ||\
+                                                  ((__RAM__) == PWR_FDCAN_USB_STOP_RETENTION))
+
+#elif defined(PWR_PKA_STOP_RETENTION) && !defined(PWR_SRAM1_PAGE6_STOP_RETENTION) && !defined(RAMCFG_SRAM3)
+#define IS_PWR_RAM_STOP_RETENTION(__RAM__)       (((__RAM__) == PWR_SRAM1_PAGE1_STOP_RETENTION) ||\
+                                                  ((__RAM__) == PWR_SRAM1_PAGE2_STOP_RETENTION) ||\
+                                                  ((__RAM__) == PWR_SRAM1_PAGE3_STOP_RETENTION) ||\
+                                                  ((__RAM__) == PWR_SRAM1_PAGE4_STOP_RETENTION) ||\
+                                                  ((__RAM__) == PWR_SRAM1_PAGE5_STOP_RETENTION) ||\
                                                   ((__RAM__) == PWR_SRAM1_FULL_STOP_RETENTION)  ||\
                                                   ((__RAM__) == PWR_SRAM2_PAGE1_STOP_RETENTION) ||\
                                                   ((__RAM__) == PWR_SRAM2_PAGE2_STOP_RETENTION) ||\
@@ -397,8 +453,7 @@ extern "C" {
                                                   ((__RAM__) == PWR_SRAM2_PAGE3_STOP_RETENTION) ||\
                                                   ((__RAM__) == PWR_SRAM2_FULL_STOP_RETENTION)  ||\
                                                   ((__RAM__) == PWR_ICACHE_STOP_RETENTION)      ||\
-                                                  ((__RAM__) == PWR_FDCAN_USB_STOP_RETENTION)   ||\
-                                                  ((__RAM__) == PWR_PKA_STOP_RETENTION))
+                                                  ((__RAM__) == PWR_FDCAN_USB_STOP_RETENTION))
 #endif /* RAMCFG_SRAM3 */
 
 /* SRAM2 retention in Standby mode check macro */

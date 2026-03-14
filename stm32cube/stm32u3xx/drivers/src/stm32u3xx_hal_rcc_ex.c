@@ -149,7 +149,7 @@ HAL_StatusTypeDef HAL_RCCEx_PeriphCLKConfig(const RCC_PeriphCLKInitTypeDef *Peri
     /* Configure the UART4 clock source */
     __HAL_RCC_UART4_CONFIG(PeriphClkInit->Uart4ClockSelection);
   }
-
+#if defined(UART5)
   /*-------------------------- UART5 clock source configuration -------------------*/
   if (((PeriphClkInit->PeriphClockSelection) & RCC_PERIPHCLK_UART5) == RCC_PERIPHCLK_UART5)
   {
@@ -159,7 +159,7 @@ HAL_StatusTypeDef HAL_RCCEx_PeriphCLKConfig(const RCC_PeriphCLKInitTypeDef *Peri
     /* Configure the UART5 clock source */
     __HAL_RCC_UART5_CONFIG(PeriphClkInit->Uart5ClockSelection);
   }
-
+#endif /* UART5 */
   /*-------------------------- I3C1 clock source configuration ---------------------*/
   if (((PeriphClkInit->PeriphClockSelection) & RCC_PERIPHCLK_I3C1) == RCC_PERIPHCLK_I3C1)
   {
@@ -298,6 +298,7 @@ HAL_StatusTypeDef HAL_RCCEx_PeriphCLKConfig(const RCC_PeriphCLKInitTypeDef *Peri
   }
 #endif /* ADF1 */
 
+#if defined(SPI3)
   /*-------------------------- SPI3 clock source configuration ----------------*/
   if (((PeriphClkInit->PeriphClockSelection) & RCC_PERIPHCLK_SPI3) == RCC_PERIPHCLK_SPI3)
   {
@@ -307,6 +308,7 @@ HAL_StatusTypeDef HAL_RCCEx_PeriphCLKConfig(const RCC_PeriphCLKInitTypeDef *Peri
     /* Configure the SPI3 clock source */
     __HAL_RCC_SPI3_CONFIG(PeriphClkInit->Spi3ClockSelection);
   }
+#endif /* SPI3 */
 
 #if defined(SAI1)
   /*-------------------------- SAI1 clock source configuration ---------------------*/
@@ -354,6 +356,7 @@ HAL_StatusTypeDef HAL_RCCEx_PeriphCLKConfig(const RCC_PeriphCLKInitTypeDef *Peri
     __HAL_RCC_DAC1SH_CONFIG(PeriphClkInit->Dac1SampleHoldClockSelection);
   }
 
+#if defined(OCTOSPI1)
   /*-------------------------- OCTOSPI1 clock source configuration ------------------*/
   if (((PeriphClkInit->PeriphClockSelection) & RCC_PERIPHCLK_OCTOSPI1) == RCC_PERIPHCLK_OCTOSPI1)
   {
@@ -363,6 +366,7 @@ HAL_StatusTypeDef HAL_RCCEx_PeriphCLKConfig(const RCC_PeriphCLKInitTypeDef *Peri
     /* Configure the OCTOSPI1 clock source */
     __HAL_RCC_OCTOSPI_CONFIG(PeriphClkInit->Octospi1ClockSelection);
   }
+#endif /* OCTOSPI1 */
 
   /*-------------------------- LPUART1 clock source configuration ------------------*/
   if (((PeriphClkInit->PeriphClockSelection) & RCC_PERIPHCLK_LPUART1) == RCC_PERIPHCLK_LPUART1)
@@ -539,11 +543,15 @@ void HAL_RCCEx_GetPeriphCLKConfig(RCC_PeriphCLKInitTypeDef *PeriphClkInit)
   /* Get the USART3 clock source ---------------------------------------------*/
   PeriphClkInit->Usart3ClockSelection = (tmpreg & RCC_CCIPR1_USART3SEL);
 
+#if defined(UART4)
   /* Get the UART4 clock source ----------------------------------------------*/
   PeriphClkInit->Uart4ClockSelection = (tmpreg & RCC_CCIPR1_UART4SEL);
+#endif /* UART4 */
 
+#if defined(UART5)
   /* Get the UART5 clock source ----------------------------------------------*/
   PeriphClkInit->Uart5ClockSelection = (tmpreg & RCC_CCIPR1_UART5SEL);
+#endif /* UART5 */
 
   /* Get the I3C1 clock source -----------------------------------------------*/
   PeriphClkInit->I3c1ClockSelection = (tmpreg & RCC_CCIPR1_I3C1SEL);
@@ -595,8 +603,10 @@ void HAL_RCCEx_GetPeriphCLKConfig(RCC_PeriphCLKInitTypeDef *PeriphClkInit)
   PeriphClkInit->Adf1ClockSelection = (tmpreg & RCC_CCIPR2_ADF1SEL);
 #endif /* ADF1 */
 
+#if defined(SPI3)
   /* Get the SPI3 clock source -----------------------------------------------*/
   PeriphClkInit->Spi3ClockSelection = (tmpreg & RCC_CCIPR2_SPI3SEL);
+#endif /* SPI3 */
 
 #if defined(SAI1)
   /* Get the SAI1 clock source -----------------------------------------------*/
@@ -615,8 +625,10 @@ void HAL_RCCEx_GetPeriphCLKConfig(RCC_PeriphCLKInitTypeDef *PeriphClkInit)
   /* Get the DAC Sample and hold clock source --------------------------------*/
   PeriphClkInit->Dac1SampleHoldClockSelection = (tmpreg & RCC_CCIPR2_DAC1SHSEL);
 
+#if defined(OCTOSPI1)
   /* Get the OCTOSPI1 clock source --------------------------------------------*/
   PeriphClkInit->Octospi1ClockSelection = (tmpreg & RCC_CCIPR2_OCTOSPISEL);
+#endif /* OCTOSPI1 */
 
   /* Get CCIPR3 register value */
   tmpreg = RCC->CCIPR3;
@@ -761,7 +773,7 @@ uint32_t HAL_RCCEx_GetPeriphCLKFreq(uint32_t PeriphClk)
         }
       }
       break;
-
+#if defined (UART5)
     case RCC_PERIPHCLK_UART5:
       /* Get the current UART5 source */
       srcclk = __HAL_RCC_GET_UART5_SOURCE();
@@ -778,7 +790,7 @@ uint32_t HAL_RCCEx_GetPeriphCLKFreq(uint32_t PeriphClk)
         }
       }
       break;
-
+#endif /* UART5 */
     case RCC_PERIPHCLK_I3C1:
       /* Get the current I3C1 source */
       srcclk = __HAL_RCC_GET_I3C1_SOURCE();
@@ -1014,23 +1026,30 @@ uint32_t HAL_RCCEx_GetPeriphCLKFreq(uint32_t PeriphClk)
       {
         frequency = HAL_RCC_GetHCLKFreq();
       }
+#if defined(SAI1)
       else if (srcclk == RCC_ADF1CLKSOURCE_PIN)
       {
         frequency = EXTERNAL_SAI1_CLOCK_VALUE;
       }
       else if (srcclk == RCC_ADF1CLKSOURCE_MSIK)
+#else
+      else /* srcclk == RCC_ADF1CLKSOURCE_MSIK */
+#endif /* SAI1 */
       {
         /* Do not check RDY flag as done in get frequency API */
         frequency = HAL_RCC_GetMSIKFreq();
       }
+#if defined(SAI1)
       else /* srcclk == RCC_ADF1CLKSOURCE_SAI1K */
       {
         /* Compute SAI1 frequency */
         frequency = HAL_RCCEx_GetPeriphCLKFreq(RCC_PERIPHCLK_SAI1);
       }
+#endif /* SAI1 */
       break;
 #endif /* ADF1 */
 
+#if defined(SPI3)
     case RCC_PERIPHCLK_SPI3:
       /* Get the current SPI3 kernel source */
       srcclk = __HAL_RCC_GET_SPI3_SOURCE();
@@ -1045,6 +1064,7 @@ uint32_t HAL_RCCEx_GetPeriphCLKFreq(uint32_t PeriphClk)
         frequency = HAL_RCC_GetMSIKFreq();
       }
       break;
+#endif /* SPI3 */
 
 #if defined(SAI1)
     case RCC_PERIPHCLK_SAI1:
@@ -1167,6 +1187,7 @@ uint32_t HAL_RCCEx_GetPeriphCLKFreq(uint32_t PeriphClk)
       }
       break;
 
+#if defined(OCTOSPI1)
     case RCC_PERIPHCLK_OCTOSPI1:
       /* Get the current OCTOSPI1 source */
       srcclk = __HAL_RCC_GET_OCTOSPI_SOURCE();
@@ -1181,6 +1202,7 @@ uint32_t HAL_RCCEx_GetPeriphCLKFreq(uint32_t PeriphClk)
         frequency = HAL_RCC_GetMSIKFreq();
       }
       break;
+#endif /* OCTOSPI1 */
 
     case RCC_PERIPHCLK_LPUART1:
       /* Get the current LPUART1 source */

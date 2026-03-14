@@ -86,11 +86,11 @@ extern "C" {
 #define LL_AHB1_GRP1_PERIPH_RAMCFG          RCC_AHB1ENR1_RAMCFGEN
 #define LL_AHB1_GRP1_PERIPH_GTZC1           RCC_AHB1ENR1_GTZC1EN
 #define LL_AHB1_GRP1_PERIPH_ICACHE          RCC_AHB1SLPENR1_ICACHESLPEN
-#if defined(SRAM4)
+#if defined(SRAM4_BASE)
 #define LL_AHB1_GRP1_PERIPH_SRAM4           RCC_AHB1ENR1_SRAM4EN
 #else
 #define LL_AHB1_GRP1_PERIPH_SRAM4           0U
-#endif /* #if defined(SRAM4) */
+#endif /* #if defined(SRAM4_BASE) */
 #define LL_AHB1_GRP1_PERIPH_SRAM1           RCC_AHB1ENR1_SRAM1EN
 #define LL_AHB1_GRP1_PERIPH_ALL             (LL_AHB1_GRP1_PERIPH_GPDMA1 | \
                                              LL_AHB1_GRP1_PERIPH_ADF1   | \
@@ -172,11 +172,11 @@ extern "C" {
 #define LL_AHB2_GRP1_PERIPH_SDMMC1          0U
 #endif /* SDMMC1 */
 #define LL_AHB2_GRP1_PERIPH_SRAM2           RCC_AHB2ENR1_SRAM2EN
-#if defined(SRAM3)
+#if defined(SRAM3_BASE)
 #define LL_AHB2_GRP1_PERIPH_SRAM3           RCC_AHB2ENR1_SRAM3EN
 #else
 #define LL_AHB2_GRP1_PERIPH_SRAM3           0U
-#endif /* #if defined(SRAM3) */
+#endif /* #if defined(SRAM3_BASE) */
 #define LL_AHB2_GRP1_PERIPH_ALL             (LL_AHB2_GRP1_PERIPH_GPIOA  | \
                                              LL_AHB2_GRP1_PERIPH_GPIOB  | \
                                              LL_AHB2_GRP1_PERIPH_GPIOC  | \

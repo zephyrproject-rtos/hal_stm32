@@ -204,7 +204,7 @@ void HAL_GPIO_Init(GPIO_TypeDef  *GPIOx, const GPIO_InitTypeDef *GPIO_Init)
       }
 
       if (((GPIO_Init->Mode & GPIO_MODE) != MODE_ANALOG) ||
-         (((GPIO_Init->Mode & GPIO_MODE) == MODE_ANALOG) && (GPIO_Init->Pull != GPIO_PULLUP)))
+          (((GPIO_Init->Mode & GPIO_MODE) == MODE_ANALOG) && (GPIO_Init->Pull != GPIO_PULLUP)))
       {
         /* Check the Pull parameter */
         assert_param(IS_GPIO_PULL(GPIO_Init->Pull));
@@ -225,7 +225,7 @@ void HAL_GPIO_Init(GPIO_TypeDef  *GPIOx, const GPIO_InitTypeDef *GPIO_Init)
 
         /* Configure Alternate function mapped with the current IO */
         temp = GPIOx->AFR[position >> 3U];
-        temp &= ~(0xFu << ((position & 0x07U) * GPIO_AFRL_AFSEL1_Pos));
+        temp &= ~(0xFUL << ((position & 0x07U) * GPIO_AFRL_AFSEL1_Pos));
         temp |= ((GPIO_Init->Alternate) << ((position & 0x07U) * GPIO_AFRL_AFSEL1_Pos));
         GPIOx->AFR[position >> 3U] = temp;
       }
@@ -334,7 +334,7 @@ void HAL_GPIO_DeInit(GPIO_TypeDef  *GPIOx, uint32_t GPIO_Pin)
       GPIOx->MODER |= (GPIO_MODER_MODE0 << (position * GPIO_MODER_MODE1_Pos));
 
       /* Configure the default Alternate Function in current IO */
-      GPIOx->AFR[position >> 3U] &= ~(0xFu << ((position & 0x07U) * GPIO_AFRL_AFSEL1_Pos)) ;
+      GPIOx->AFR[position >> 3U] &= ~(0xFUL << ((position & 0x07U) * GPIO_AFRL_AFSEL1_Pos)) ;
 
       /* Configure the default value for IO Speed */
       GPIOx->OSPEEDR &= ~(GPIO_OSPEEDR_OSPEED0 << (position * GPIO_OSPEEDR_OSPEED1_Pos));

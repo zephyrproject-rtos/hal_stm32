@@ -708,7 +708,8 @@ HAL_StatusTypeDef HAL_RCC_OscConfig(const RCC_OscInitTypeDef *RCC_OscInitStruct)
         if (sysclksrc == RCC_SYSCLKSOURCE_STATUS_MSIS)
         {
           /* Update the SystemCoreClock global variable */
-          SystemCoreClock = HAL_RCC_GetSysClockFreq() >> AHBPrescTable[(RCC->CFGR2 & RCC_CFGR2_HPRE) >> RCC_CFGR2_HPRE_Pos];
+          SystemCoreClock = HAL_RCC_GetSysClockFreq() >>
+                            AHBPrescTable[(RCC->CFGR2 & RCC_CFGR2_HPRE) >> RCC_CFGR2_HPRE_Pos];
 
           /* Configure the source of time base considering new system clocks settings*/
           if (HAL_InitTick(uwTickPrio) != HAL_OK)
@@ -773,7 +774,8 @@ HAL_StatusTypeDef HAL_RCC_OscConfig(const RCC_OscInitTypeDef *RCC_OscInitStruct)
       {
         /* Adjusts the MSIK source and divider, and force MSI selection to ICSCR1 */
         tmpreg1 = RCC->ICSCR1 & ~(RCC_ICSCR1_MSIKSEL | RCC_ICSCR1_MSIKDIV);
-        tmpreg1 |= (RCC_ICSCR1_MSIRGSEL | ((RCC_OscInitStruct->MSIKSource | RCC_OscInitStruct->MSIKDiv) >> (RCC_ICSCR1_MSISSEL_Pos - RCC_ICSCR1_MSIKSEL_Pos)));
+        tmpreg1 |= (RCC_ICSCR1_MSIRGSEL | ((RCC_OscInitStruct->MSIKSource | RCC_OscInitStruct->MSIKDiv) >>
+                                           (RCC_ICSCR1_MSISSEL_Pos - RCC_ICSCR1_MSIKSEL_Pos)));
         RCC->ICSCR1 = tmpreg1;
 
         /* Enable the MSIK */
@@ -1373,8 +1375,10 @@ void HAL_RCC_GetOscConfig(RCC_OscInitTypeDef *RCC_OscInitStruct)
     RCC_OscInitStruct->MSISDiv = (regvalue & RCC_ICSCR1_MSISDIV);
 
     /* Check which MSIRCx is selected as MSIK source and get prescaler */
-    RCC_OscInitStruct->MSIKSource = ((regvalue & RCC_ICSCR1_MSIKSEL) << (RCC_ICSCR1_MSISSEL_Pos - RCC_ICSCR1_MSIKSEL_Pos));
-    RCC_OscInitStruct->MSIKDiv = ((regvalue & RCC_ICSCR1_MSIKDIV) << (RCC_ICSCR1_MSISDIV_Pos - RCC_ICSCR1_MSIKDIV_Pos));
+    RCC_OscInitStruct->MSIKSource = ((regvalue & RCC_ICSCR1_MSIKSEL) <<
+                                     (RCC_ICSCR1_MSISSEL_Pos - RCC_ICSCR1_MSIKSEL_Pos));
+    RCC_OscInitStruct->MSIKDiv = ((regvalue & RCC_ICSCR1_MSIKDIV) <<
+                                  (RCC_ICSCR1_MSISDIV_Pos - RCC_ICSCR1_MSIKDIV_Pos));
   }
   else
   {
@@ -1529,7 +1533,7 @@ void HAL_RCC_ConfigAttributes(uint32_t Item, uint32_t Attributes)
 
 #if !defined(CPU_IN_SECURE_STATE)
   /* Prevent unused argument(s) compilation warning */
-  UNUSED( Item);
+  UNUSED(Item);
 #endif /* CPU_IN_SECURE_STATE */
 
   switch (Attributes)

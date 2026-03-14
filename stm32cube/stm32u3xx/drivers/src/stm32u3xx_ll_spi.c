@@ -282,6 +282,19 @@ ErrorStatus LL_SPI_DeInit(const SPI_TypeDef *SPIx)
     status = SUCCESS;
   }
 #endif /* SPI3 */
+#if defined(SPI4)
+  if (SPIx == SPI4)
+  {
+    /* Force reset of SPI clock */
+    LL_APB1_GRP1_ForceReset(LL_APB1_GRP1_PERIPH_SPI4);
+
+    /* Release reset of SPI clock */
+    LL_APB1_GRP1_ReleaseReset(LL_APB1_GRP1_PERIPH_SPI4);
+
+    /* Update the return status */
+    status = SUCCESS;
+  }
+#endif /* SPI4 */
 
   return status;
 }

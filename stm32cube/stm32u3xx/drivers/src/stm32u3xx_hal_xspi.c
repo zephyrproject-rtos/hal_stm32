@@ -134,6 +134,7 @@
     [..]
      After the configuration, the OctoSPI will be used as soon as an access on the AHB is done on
      the address range. HAL_XSPI_TimeOutCallback() will be called when the timeout expires.
+     HAL_XSPI_IsMemoryMapped() can be used to verify whether memory-mapped mode is configured or not.
 
     *** Errors management and abort functionality ***
     =================================================
@@ -228,7 +229,7 @@
      (+) MspInitCallback    : XSPI MspInit.
      (+) MspDeInitCallback  : XSPI MspDeInit.
     [..]
-     This function) takes as parameters the HAL peripheral handle and the Callback ID.
+     This function takes as parameters the HAL peripheral handle and the Callback ID.
 
     [..]
      By default, after the HAL_XSPI_Init() and if the state is HAL_XSPI_STATE_RESET
@@ -2037,6 +2038,29 @@ HAL_StatusTypeDef HAL_XSPI_MemoryMapped(XSPI_HandleTypeDef *hxspi, const XSPI_Me
 }
 
 /**
+  * @brief  Check whether the XSPI is configured in Memory-mapped mode or not.
+  * @param  hxspi   : XSPI handle
+  * @retval Status (0: Memory-mapped disabled or XSPI not initialized, 1: Memory-mapped enabled)
+  */
+uint32_t HAL_XSPI_IsMemoryMapped(XSPI_HandleTypeDef *hxspi)
+{
+  /* Check the XSPI handle allocation */
+  if (hxspi == NULL)
+  {
+    return (0UL);
+  }
+  /* Check if driver is in Reset state */
+  else if (hxspi->State == HAL_XSPI_STATE_RESET)
+  {
+    return (0UL);
+  }
+  else
+  {
+    return ((READ_BIT(hxspi->Instance->CR, XSPI_CR_FMODE) == XSPI_CR_FMODE) ? 1UL : 0UL);
+  }
+}
+
+/**
   * @brief  Transfer Error callback.
   * @param  hxspi : XSPI handle
   * @retval None
@@ -3302,6 +3326,12 @@ static HAL_StatusTypeDef XSPI_ConfigCmd(XSPI_HandleTypeDef *hxspi, const XSPI_Re
 
       /* Configure the AR register with the address value */
       hxspi->Instance->AR = pCmd->Address;
+
+      if (pCmd->OperationType == HAL_XSPI_OPTYPE_COMMON_CFG)
+      {
+        /* Verify if programmed address fit with requirement of Reference Manual 28.5 chapter */
+        assert_param(IS_XSPI_PROG_ADDR(hxspi->Instance->AR, pCmd->Address));
+      }
     }
     else
     {
@@ -3361,12 +3391,30 @@ static HAL_StatusTypeDef XSPI_ConfigCmd(XSPI_HandleTypeDef *hxspi, const XSPI_Re
 
       /* Configure the AR register with the instruction value */
       hxspi->Instance->AR = pCmd->Address;
+
+      if (pCmd->OperationType == HAL_XSPI_OPTYPE_COMMON_CFG)
+      {
+        /* Verify if programmed address fit with requirement of Reference Manual 28.5 chapter */
+        assert_param(IS_XSPI_PROG_ADDR(hxspi->Instance->AR, pCmd->Address));
+      }
     }
     else
     {
       /* ---- Invalid command configuration (no instruction, no address) ---- */
       status = HAL_ERROR;
       hxspi->ErrorCode = HAL_XSPI_ERROR_INVALID_PARAM;
+    }
+  }
+
+  if (pCmd->DataMode != HAL_XSPI_DATA_NONE)
+  {
+    if (pCmd->OperationType == HAL_XSPI_OPTYPE_COMMON_CFG)
+    {
+      /* Configure the DLR register with the number of data */
+      hxspi->Instance->DLR = (pCmd->DataLength - 1U);
+
+      /* Verify if programmed data fit with requirement of Reference Manual 28.5 chapter */
+      assert_param(IS_XSPI_PROG_DATA(hxspi->Instance->DLR, (pCmd->DataLength - 1U)));
     }
   }
 

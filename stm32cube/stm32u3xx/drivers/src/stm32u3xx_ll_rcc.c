@@ -294,17 +294,20 @@ uint32_t LL_RCC_GetUARTClockFreq(uint32_t UARTxSource)
   switch (LL_RCC_GetUARTClockSource(UARTxSource))
   {
     case LL_RCC_UART4_CLKSOURCE_HSI16:    /* UART4 Clock is HSI16 Osc. */
+#if defined (UART5)
     case LL_RCC_UART5_CLKSOURCE_HSI16:    /* UART5 Clock is HSI16 Osc. */
       if (LL_RCC_HSI_IsReady() != 0U)
       {
         UART_frequency = HSI_VALUE;
       }
       break;
-
+#endif /* UART5 */
     case LL_RCC_UART4_CLKSOURCE_PCLK1:  /* UART4 Clock is PCLK1 */
+#if defined (UART5)
     case LL_RCC_UART5_CLKSOURCE_PCLK1:  /* UART5 Clock is PCLK1 */
       UART_frequency = RCC_GetPCLK1ClockFreq(RCC_GetHCLKClockFreq(RCC_GetSystemClockFreq()));
       break;
+#endif /* UART5 */
 
     default:
       /* unreachable code */
@@ -421,6 +424,7 @@ uint32_t LL_RCC_GetSPIClockFreq(uint32_t SPIxSource)
         break;
     }
   }
+#if defined(SPI3)
   else if (SPIxSource == LL_RCC_SPI3_CLKSOURCE)
   {
     /* SPI3 CLK clock frequency */
@@ -442,6 +446,7 @@ uint32_t LL_RCC_GetSPIClockFreq(uint32_t SPIxSource)
         break;
     }
   }
+#endif /* SPI3 */
 #if defined (SPI4)
   else if (SPIxSource == LL_RCC_SPI4_CLKSOURCE)
   {
@@ -1075,11 +1080,11 @@ uint32_t LL_RCC_GetADFClockFreq(uint32_t ADFxSource)
     case LL_RCC_ADF1_CLKSOURCE_AUDCLKIN:         /* External input clock used as ADF1 clock source */
       adf_frequency = EXTERNAL_AUDIO_CLOCK_VALUE;
       break;
-
+#if defined(SAI1)
     case LL_RCC_ADF1_CLKSOURCE_SAI1:        /* ADF Clock is SAI1 clock */
       adf_frequency = LL_RCC_GetSAIClockFreq(LL_RCC_SAI1_CLKSOURCE);
       break;
-
+#endif /* SAI1 */
     default:
       /* unreachable code */
       break;

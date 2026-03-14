@@ -179,6 +179,12 @@ typedef struct
 #define TIM_BREAKINPUTSOURCE_BKIN     0x00000001U                               /*!< An external source (GPIO) is connected to the BKIN pin  */
 #define TIM_BREAKINPUTSOURCE_COMP1    0x00000002U                               /*!< The COMP1 output is connected to the break input */
 #define TIM_BREAKINPUTSOURCE_COMP2    0x00000004U                               /*!< The COMP2 output is connected to the break input */
+#if defined(HSP1)
+#define TIM_BREAKINPUTSOURCE_HSP1_BRK_OUT0    0x00000008U                       /*!< The HSP1_BRK_OUT0 output is connected to the break input */
+#define TIM_BREAKINPUTSOURCE_HSP1_BRK_OUT1    0x00000010U                       /*!< The HSP1_BRK_OUT1 output is connected to the break input */
+#define TIM_BREAKINPUTSOURCE_HSP1_BRK_OUT2    0x00000020U                       /*!< The HSP1_BRK_OUT2 output is connected to the break input */
+#define TIM_BREAKINPUTSOURCE_HSP1_BRK_OUT3    0x00000040U                       /*!< The HSP1_BRK_OUT3 output is connected to the break input */
+#endif /* HSP1 */
 /**
   * @}
   */
@@ -264,8 +270,8 @@ typedef struct
 #define TIM_TIM16_TI1_RTC_WKUP                TIM_TISEL_TI1SEL_2                                             /*!< TIM16 TI1 is connected to RTC wakeup interrupt */
 #define TIM_TIM16_TI1_LSE                     (TIM_TISEL_TI1SEL_2 | TIM_TISEL_TI1SEL_0)                      /*!< TIM16 TI1 is connected to LSE */
 #define TIM_TIM16_TI1_LSI                     (TIM_TISEL_TI1SEL_2 | TIM_TISEL_TI1SEL_1)                      /*!< TIM16 TI1 is connected to LSI */
-#define TIM_TIM16_TI1_MSI_1024                (TIM_TISEL_TI1SEL_2 | TIM_TISEL_TI1SEL_1 | TIM_TISEL_TI1SEL_0) /*!< TIM16 TI1 is connected to MSI DIV 1024 */
-#define TIM_TIM16_TI1_MSI_4                   TIM_TISEL_TI1SEL_3                                             /*!< TIM16 TI1 is connected to MSI DIV 4 */
+#define TIM_TIM16_TI1_MSIS_1024               (TIM_TISEL_TI1SEL_2 | TIM_TISEL_TI1SEL_1 | TIM_TISEL_TI1SEL_0) /*!< TIM16 TI1 is connected to MSIS DIV 1024 */
+#define TIM_TIM16_TI1_MSIS_4                  TIM_TISEL_TI1SEL_3                                             /*!< TIM16 TI1 is connected to MSIS DIV 4 */
 #define TIM_TIM16_TI1_HSI_256                 (TIM_TISEL_TI1SEL_3 | TIM_TISEL_TI1SEL_0)                      /*!< TIM16 TI1 is connected to MSI DIV 256 */
 #define TIM_TIM16_TI1_I3C1_IBIACK             (TIM_TISEL_TI1SEL_3 | TIM_TISEL_TI1SEL_1)                      /*!< TIM16 TI1 is connected to I3C1 IBIACK */
 
@@ -275,8 +281,8 @@ typedef struct
 #define TIM_TIM17_TI1_RTC_WKUP                TIM_TISEL_TI1SEL_2                                             /*!< TIM17 TI1 is connected to RTC wakeup interrupt */
 #define TIM_TIM17_TI1_LSE                     (TIM_TISEL_TI1SEL_2 | TIM_TISEL_TI1SEL_0)                      /*!< TIM17 TI1 is connected to LSE */
 #define TIM_TIM17_TI1_LSI                     (TIM_TISEL_TI1SEL_2 | TIM_TISEL_TI1SEL_1)                      /*!< TIM17 TI1 is connected to LSI */
-#define TIM_TIM17_TI1_MSI_1024                (TIM_TISEL_TI1SEL_2 | TIM_TISEL_TI1SEL_1 | TIM_TISEL_TI1SEL_0) /*!< TIM17 TI1 is connected to MSI DIV 1024 */
-#define TIM_TIM17_TI1_MSI_4                   TIM_TISEL_TI1SEL_3                                             /*!< TIM17 TI1 is connected to MSI DIV 4 */
+#define TIM_TIM17_TI1_MSIS_1024               (TIM_TISEL_TI1SEL_2 | TIM_TISEL_TI1SEL_1 | TIM_TISEL_TI1SEL_0) /*!< TIM17 TI1 is connected to MSIS DIV 1024 */
+#define TIM_TIM17_TI1_MSIS_4                  TIM_TISEL_TI1SEL_3                                             /*!< TIM17 TI1 is connected to MSIS DIV 4 */
 #define TIM_TIM17_TI1_HSI_256                 (TIM_TISEL_TI1SEL_3 | TIM_TISEL_TI1SEL_0)                      /*!< TIM17 TI1 is connected to MSI DIV 256 */
 #define TIM_TIM17_TI1_I3C2_IBIACK             (TIM_TISEL_TI1SEL_3 | TIM_TISEL_TI1SEL_1)                      /*!< TIM17 TI1 is connected to I3C2 IBIACK */
 /**
@@ -550,9 +556,19 @@ typedef struct
 #define IS_TIM_BREAKINPUT(__BREAKINPUT__)  (((__BREAKINPUT__) == TIM_BREAKINPUT_BRK)  || \
                                             ((__BREAKINPUT__) == TIM_BREAKINPUT_BRK2))
 
+#if defined (HSP1)
+#define IS_TIM_BREAKINPUTSOURCE(__SOURCE__)  (((__SOURCE__) == TIM_BREAKINPUTSOURCE_BKIN)          || \
+                                              ((__SOURCE__) == TIM_BREAKINPUTSOURCE_COMP1)         || \
+                                              ((__SOURCE__) == TIM_BREAKINPUTSOURCE_COMP2)         || \
+                                              ((__SOURCE__) == TIM_BREAKINPUTSOURCE_HSP1_BRK_OUT0) || \
+                                              ((__SOURCE__) == TIM_BREAKINPUTSOURCE_HSP1_BRK_OUT1) || \
+                                              ((__SOURCE__) == TIM_BREAKINPUTSOURCE_HSP1_BRK_OUT2) || \
+                                              ((__SOURCE__) == TIM_BREAKINPUTSOURCE_HSP1_BRK_OUT3))
+#else
 #define IS_TIM_BREAKINPUTSOURCE(__SOURCE__)  (((__SOURCE__) == TIM_BREAKINPUTSOURCE_BKIN)  || \
                                               ((__SOURCE__) == TIM_BREAKINPUTSOURCE_COMP1) || \
                                               ((__SOURCE__) == TIM_BREAKINPUTSOURCE_COMP2))
+#endif  /* HSP1 */
 
 #define IS_TIM_BREAKINPUTSOURCE_STATE(__STATE__)  (((__STATE__) == TIM_BREAKINPUTSOURCE_DISABLE)  || \
                                                    ((__STATE__) == TIM_BREAKINPUTSOURCE_ENABLE))

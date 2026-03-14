@@ -253,7 +253,7 @@ void        LL_mDelay(uint32_t Delay);
 void        LL_SetSystemCoreClock(uint32_t HCLKFrequency);
 ErrorStatus LL_ConfigSystemClock_HSI16(LL_UTILS_ClkInitTypeDef *UTILS_ClkInitStruct);
 ErrorStatus LL_ConfigSystemClock_HSE(uint32_t HSEFrequency,
-                                          LL_UTILS_ClkInitTypeDef *UTILS_ClkInitStruct);
+                                     LL_UTILS_ClkInitTypeDef *UTILS_ClkInitStruct);
 ErrorStatus LL_SetFlashLatency(uint32_t HCLK_Frequency);
 /**
   * @}

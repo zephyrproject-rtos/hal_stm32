@@ -270,6 +270,7 @@ HAL_StatusTypeDef HAL_SPIEx_GetConfigAutonomousMode(const SPI_HandleTypeDef *hsp
   autocr_tmp = hspi->Instance->AUTOCR;
 
   sConfig->TriggerState     = (autocr_tmp & SPI_AUTOCR_TRIGEN);
+#if defined(SPI_TRIG_GRP2)
   if (IS_SPI_GRP2_INSTANCE(hspi->Instance))
   {
     sConfig->TriggerSelection = ((autocr_tmp & SPI_AUTOCR_TRIGSEL) | SPI_TRIG_GRP2);
@@ -278,6 +279,9 @@ HAL_StatusTypeDef HAL_SPIEx_GetConfigAutonomousMode(const SPI_HandleTypeDef *hsp
   {
     sConfig->TriggerSelection = ((autocr_tmp & SPI_AUTOCR_TRIGSEL) | SPI_TRIG_GRP1);
   }
+#else
+  sConfig->TriggerSelection = ((autocr_tmp & SPI_AUTOCR_TRIGSEL) | SPI_TRIG_GRP1);
+#endif /* SPI_TRIG_GRP2 */
   sConfig->TriggerPolarity  = (autocr_tmp & SPI_AUTOCR_TRIGPOL);
 
   return HAL_OK;

@@ -1098,7 +1098,6 @@ uint32_t             HAL_SPI_GetError(const SPI_HandleTypeDef *hspi);
 #define IS_SPI_CRC_POLYNOMIAL_SIZE(POLYNOM, LENGTH) (((POLYNOM) >> (((LENGTH) >> SPI_CFG1_CRCSIZE_Pos) + 1UL)) == 0UL)
 
 
-
 #define IS_SPI_UNDERRUN_BEHAVIOUR(MODE)            (((MODE) == SPI_UNDERRUN_BEHAV_REGISTER_PATTERN) || \
                                                     ((MODE) == SPI_UNDERRUN_BEHAV_LAST_RECEIVED))
 

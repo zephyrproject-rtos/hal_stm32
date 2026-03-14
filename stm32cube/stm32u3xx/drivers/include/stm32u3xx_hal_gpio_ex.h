@@ -44,7 +44,9 @@ extern "C" {
 /** @defgroup GPIOEx_Alternate_function_selection GPIOEx Alternate function selection
   * @{
   */
-#if defined(STM32U356xx) || defined(STM32U366xx) || defined(STM32U385xx) || defined(STM32U375xx) || defined(STM32U3B5xx) || defined(STM32U3C5xx)
+#if defined(STM32U335xx) || defined(STM32U345xx) || defined(STM32U356xx) || defined(STM32U366xx) || \
+    defined(STM32U385xx) || defined(STM32U375xx) || defined(STM32U3B5xx) || defined(STM32U3C5xx) || \
+    defined(STM32U396xx) || defined(STM32U3A6xx)
 /**
   * @brief   AF 0 selection
   */
@@ -55,15 +57,24 @@ extern "C" {
 #define GPIO_AF0_RTC              ((uint8_t)0x00)   /*!< RTC Alternate Function mapping           */
 #define GPIO_AF0_SWJ              ((uint8_t)0x00)   /*!< SWD and JTAG Alternate Function mapping  */
 #define GPIO_AF0_TRACE            ((uint8_t)0x00)   /*!< TRACE Alternate Function mapping         */
+#if defined(STM32U396xx) || defined(STM32U3A6xx)
+#define GPIO_AF0_DMA2D            ((uint8_t)0x00)   /*!< DMA2D Alternate Function mapping         */
+#endif /* defined(STM32U396xx) || defined(STM32U3A6xx) */
+#if defined(STM32U356xx) || defined(STM32U366xx) || defined(STM32U396xx) || defined(STM32U3A6xx)
+#define GPIO_AF0_SYS              ((uint8_t)0x00)   /*!< SYS Alternate Function mapping         */
+#endif /* defined(STM32U356xx) || defined(STM32U366xx) || defined(STM32U396xx) || defined(STM32U3A6xx) */
 
 /**
   * @brief   AF 1 selection
   */
+#if defined(STM32U356xx) || defined(STM32U366xx) || defined(STM32U396xx) || defined(STM32U3A6xx)
+#define GPIO_AF1_USART3           ((uint8_t)0x01)   /*!< USART3 Alternate Function mapping      */
+#endif /* defined(STM32U356xx) || defined(STM32U366xx) || defined(STM32U396xx) || defined(STM32U3A6xx) */
 #define GPIO_AF1_IR               ((uint8_t)0x01)   /*!< IR Alternate Function mapping      */
 #define GPIO_AF1_LPTIM1           ((uint8_t)0x01)   /*!< LPTIM1 Alternate Function mapping  */
 #define GPIO_AF1_TIM1             ((uint8_t)0x01)   /*!< TIM1 Alternate Function mapping    */
 #define GPIO_AF1_TIM2             ((uint8_t)0x01)   /*!< TIM2 Alternate Function mapping    */
-#if defined(STM32U3B5xx) || defined(STM32U3C5xx)
+#if defined(STM32U3B5xx) || defined(STM32U3C5xx) || defined(STM32U396xx) || defined(STM32U3A6xx)
 #define GPIO_AF1_TIM8             ((uint8_t)0x01)   /*!< TIM8 Alternate Function mapping    */
 #endif /* defined(STM32U3B5xx) || defined(STM32U3C5xx) */
 
@@ -78,91 +89,125 @@ extern "C" {
 #define GPIO_AF2_TIM2             ((uint8_t)0x02)   /*!< TIM2 Alternate Function mapping    */
 #define GPIO_AF2_TIM3             ((uint8_t)0x02)   /*!< TIM3 Alternate Function mapping    */
 #define GPIO_AF2_TIM4             ((uint8_t)0x02)   /*!< TIM4 Alternate Function mapping    */
-#if defined(STM32U3B5xx) || defined(STM32U3C5xx)
+#if defined(STM32U3B5xx) || defined(STM32U3C5xx) || defined(STM32U396xx) || defined(STM32U3A6xx)
 #define GPIO_AF2_TIM12            ((uint8_t)0x02)   /*!< TIM12 Alternate Function mapping   */
 #endif /* defined(STM32U3B5xx) || defined(STM32U3C5xx) */
 
 /**
   * @brief   AF 3 selection
   */
-#define GPIO_AF3_ADF1             ((uint8_t)0x03)   /*!< ADF1 Alternate Function mapping      */
-#define GPIO_AF3_I2C1             ((uint8_t)0x03)   /*!< I2C1 Alternate Function mapping      */
 #if !(defined(STM32U356xx) || defined(STM32U366xx))
-#define GPIO_AF3_I2C2             ((uint8_t)0x03)   /*!< I2C2 Alternate Function mapping      */
+#define GPIO_AF3_ADF1             ((uint8_t)0x03)   /*!< ADF1 Alternate Function mapping                  */
 #endif /* !(defined(STM32U356xx) || defined(STM32U366xx)) */
-#define GPIO_AF3_I3C1             ((uint8_t)0x03)   /*!< I3C1 Alternate Function mapping      */
-#if !(defined(STM32U356xx) || defined(STM32U366xx))
-#define GPIO_AF3_I3C2             ((uint8_t)0x03)   /*!< I3C2 Alternate Function mapping      */
-#endif /* !(defined(STM32U356xx) || defined(STM32U366xx)) */
-#define GPIO_AF3_OCTOSPI1         ((uint8_t)0x03)   /*!< OCTOSPI1 Alternate Function mapping  */
-#if !(defined(STM32U356xx) || defined(STM32U366xx))
-#define GPIO_AF3_SAI1             ((uint8_t)0x03)   /*!< SAI1 Alternate Function mapping      */
-#endif /* !(defined(STM32U356xx) || defined(STM32U366xx)) */
-#define GPIO_AF3_SPI2             ((uint8_t)0x03)   /*!< SPI2 Alternate Function mapping      */
-#define GPIO_AF3_TIM1             ((uint8_t)0x03)   /*!< TIM1 Alternate Function mapping      */
-#if defined(STM32U3B5xx) || defined(STM32U3C5xx)
-#define GPIO_AF3_TIM8             ((uint8_t)0x03)   /*!< TIM8 Alternate Function mapping      */
-#endif /* defined(STM32U3B5xx) || defined(STM32U3C5xx) */
+#if defined(STM32U356xx) || defined(STM32U366xx) || defined(STM32U335xx) || defined(STM32U345xx)
+#define GPIO_AF3_I2C1             ((uint8_t)0x03)   /*!< I2C1 Alternate Function mapping                  */
+#else /* defined(STM32U356xx) || defined(STM32U366xx) || defined(STM32U335xx) || defined(STM32U345xx)     */
+#define GPIO_AF3_I2C2             ((uint8_t)0x03)   /*!< I2C2 Alternate Function mapping                  */
+#endif /* !(defined(STM32U356xx) || defined(STM32U366xx) || defined(STM32U335xx) || defined(STM32U345xx)) */
+#define GPIO_AF3_I3C1             ((uint8_t)0x03)   /*!< I3C1 Alternate Function mapping                  */
+#if !(defined(STM32U356xx) || defined(STM32U366xx) || defined(STM32U335xx) || defined(STM32U345xx))
+#define GPIO_AF3_I3C2             ((uint8_t)0x03)   /*!< I3C2 Alternate Function mapping                  */
+#endif /* !(defined(STM32U356xx) || defined(STM32U366xx) || defined(STM32U335xx) || defined(STM32U345xx)) */
+#define GPIO_AF3_OCTOSPI1         ((uint8_t)0x03)   /*!< OCTOSPI1 Alternate Function mapping              */
+#if !(defined(STM32U356xx) || defined(STM32U366xx) || defined(STM32U335xx) || defined(STM32U345xx))
+#define GPIO_AF3_SAI1             ((uint8_t)0x03)   /*!< SAI1 Alternate Function mapping                  */
+#endif /* !(defined(STM32U356xx) || defined(STM32U366xx) || defined(STM32U335xx) || defined(STM32U345xx)) */
+#define GPIO_AF3_SPI2             ((uint8_t)0x03)   /*!< SPI2 Alternate Function mapping                  */
+#if !(defined(STM32U335xx) || defined(STM32U345xx))
+#define GPIO_AF3_TIM1             ((uint8_t)0x03)   /*!< TIM1 Alternate Function mapping                  */
+#endif /*  !(defined(STM32U335xx) || defined(STM32U345xx)) */
+#if defined(STM32U3B5xx) || defined(STM32U3C5xx) || defined(STM32U396xx) || defined(STM32U3A6xx)
+#define GPIO_AF3_TIM8             ((uint8_t)0x03)   /*!< TIM8 Alternate Function mapping                  */
+#endif /* defined(STM32U3B5xx) || defined(STM32U3C5xx)|| defined(STM32U396xx) || defined(STM32U3A6xx)     */
+#if defined(STM32U375xx) || defined(STM32U385xx) || defined(STM32U356xx) || defined(STM32U366xx)
+#define GPIO_AF3_USB              ((uint8_t)0x03)   /*!< USB Alternate Function mapping                   */
+#endif /* defined(STM32U375xx) || defined(STM32U385xx)|| defined(STM32U356xx) || defined(STM32U366xx)     */
+#if defined(STM32U335xx) || defined(STM32U345xx)
+#define GPIO_AF3_USART3           ((uint8_t)0x03)   /*!< USART3 Alternate Function mapping                */
+#endif /* defined(STM32U335xx) || defined(STM32U345xx) */
 
 /**
   * @brief   AF 4 selection
   */
-#define GPIO_AF4_I2C1             ((uint8_t)0x04)   /*!< I2C1 Alternate Function mapping    */
-#if !(defined(STM32U356xx) || defined(STM32U366xx))
-#define GPIO_AF4_I2C2             ((uint8_t)0x04)   /*!< I2C2 Alternate Function mapping    */
-#endif /* !(defined(STM32U356xx) || defined(STM32U366xx)) */
-#define GPIO_AF4_I2C3             ((uint8_t)0x04)   /*!< I2C3 Alternate Function mapping    */
-#define GPIO_AF4_LPTIM3           ((uint8_t)0x04)   /*!< LPTIM3 Alternate Function mapping  */
-#if defined(STM32U3B5xx) || defined(STM32U3C5xx)
-#define GPIO_AF4_USART2           ((uint8_t)0x04)   /*!< USART2 Alternate Function mapping  */
-#endif /* defined(STM32U3B5xx) || defined(STM32U3C5xx) */
+#define GPIO_AF4_I2C1             ((uint8_t)0x04)   /*!< I2C1 Alternate Function mapping                  */
+#if !(defined(STM32U356xx) || defined(STM32U366xx) || defined(STM32U335xx) || defined(STM32U345xx))
+#define GPIO_AF4_I2C2             ((uint8_t)0x04)   /*!< I2C2 Alternate Function mapping                  */
+#endif /* !(defined(STM32U356xx) || defined(STM32U366xx) || defined(STM32U335xx) || defined(STM32U345xx)) */
+#define GPIO_AF4_I2C3             ((uint8_t)0x04)   /*!< I2C3 Alternate Function mapping                  */
+#define GPIO_AF4_LPTIM3           ((uint8_t)0x04)   /*!< LPTIM3 Alternate Function mapping                */
+#if defined(STM32U3B5xx) || defined(STM32U3C5xx) || defined(STM32U396xx) || defined(STM32U3A6xx)
+#define GPIO_AF4_USART2           ((uint8_t)0x04)   /*!< USART2 Alternate Function mapping                */
+#endif /* defined(STM32U3B5xx) || defined(STM32U3C5xx)  || defined(STM32U396xx) || defined(STM32U3A6xx)   */
 
 /**
   * @brief   AF 5 selection
   */
-#define GPIO_AF5_I2C3             ((uint8_t)0x05)   /*!< I2C3 Alternate Function mapping      */
-#define GPIO_AF5_I3C1             ((uint8_t)0x05)   /*!< I3C1 Alternate Function mapping      */
-#define GPIO_AF5_I3C2             ((uint8_t)0x05)   /*!< I3C2 Alternate Function mapping      */
-#define GPIO_AF5_OCTOSPI1         ((uint8_t)0x05)   /*!< OCTOSPI1 Alternate Function mapping  */
-#define GPIO_AF5_SPI1             ((uint8_t)0x05)   /*!< SPI1 Alternate Function mapping      */
-#define GPIO_AF5_SPI2             ((uint8_t)0x05)   /*!< SPI2 Alternate Function mapping      */
-#define GPIO_AF5_SPI3             ((uint8_t)0x05)   /*!< SPI3 Alternate Function mapping      */
+#define GPIO_AF5_I2C3             ((uint8_t)0x05)   /*!< I2C3 Alternate Function mapping                  */
+#define GPIO_AF5_I3C1             ((uint8_t)0x05)   /*!< I3C1 Alternate Function mapping                  */
+#if !(defined(STM32U356xx) || defined(STM32U366xx) || defined(STM32U335xx) || defined(STM32U345xx))
+#define GPIO_AF5_I3C2             ((uint8_t)0x05)   /*!< I3C2 Alternate Function mapping                  */
+#endif /* !(defined(STM32U356xx) || defined(STM32U366xx) || defined(STM32U335xx) || defined(STM32U345xx)) */
+#define GPIO_AF5_OCTOSPI1         ((uint8_t)0x05)   /*!< OCTOSPI1 Alternate Function mapping              */
+#if defined(STM32U396xx) || defined(STM32U3A6xx)
+#define GPIO_AF5_OCTOSPI2         ((uint8_t)0x05)   /*!< OCTOSPI2 Alternate Function mapping              */
+#endif /* defined(STM32U396xx) || defined(STM32U3A6xx) */
+#define GPIO_AF5_SPI1             ((uint8_t)0x05)   /*!< SPI1 Alternate Function mapping                  */
+#define GPIO_AF5_SPI2             ((uint8_t)0x05)   /*!< SPI2 Alternate Function mapping                  */
+#if !(defined(STM32U335xx) || defined(STM32U345xx))
+#define GPIO_AF5_SPI3             ((uint8_t)0x05)   /*!< SPI3 Alternate Function mapping                  */
+#endif /* !(defined(STM32U335xx) || defined(STM32U345xx)) */
 #if defined(STM32U3B5xx) || defined(STM32U3C5xx)
-#define GPIO_AF5_I2C4             ((uint8_t)0x05)   /*!< I2C4 Alternate Function mapping      */
-#define GPIO_AF5_SPI4             ((uint8_t)0x05)   /*!< SPI4 Alternate Function mapping      */
+#define GPIO_AF5_I2C4             ((uint8_t)0x05)   /*!< I2C4 Alternate Function mapping                  */
+#define GPIO_AF5_SPI4             ((uint8_t)0x05)   /*!< SPI4 Alternate Function mapping                  */
 #endif /* defined(STM32U3B5xx) || defined(STM32U3C5xx) */
 
 /**
   * @brief   AF 6 selection
   */
-#define GPIO_AF6_I3C1             ((uint8_t)0x06)   /*!< I3C1 Alternate Function mapping  */
-#if !(defined(STM32U356xx) || defined(STM32U366xx))
-#define GPIO_AF6_I3C2             ((uint8_t)0x06)   /*!< I3C2 Alternate Function mapping  */
-#endif /* !(defined(STM32U356xx) || defined(STM32U366xx)) */
-#define GPIO_AF6_SPI3             ((uint8_t)0x06)   /*!< SPI3 Alternate Function mapping  */
+#define GPIO_AF6_I3C1             ((uint8_t)0x06)   /*!< I3C1 Alternate Function mapping                  */
+#if !(defined(STM32U356xx) || defined(STM32U366xx) || defined(STM32U335xx) || defined(STM32U345xx))
+#define GPIO_AF6_I3C2             ((uint8_t)0x06)   /*!< I3C2 Alternate Function mapping                  */
+#endif /* !(defined(STM32U356xx) || defined(STM32U366xx) || defined(STM32U335xx) || defined(STM32U345xx)) */
+#if !(defined(STM32U335xx) || defined(STM32U345xx))
+#define GPIO_AF6_SPI3             ((uint8_t)0x06)   /*!< SPI3 Alternate Function mapping                  */
+#define GPIO_AF6_SPI2             ((uint8_t)0x06)   /*!< SPI2 Alternate Function mapping                  */
+#endif /* !(defined(STM32U335xx) || defined(STM32U345xx))                                                 */
 #if defined(STM32U3B5xx) || defined(STM32U3C5xx)
 #define GPIO_AF6_SPI4             ((uint8_t)0x06)   /*!< SPI4 Alternate Function mapping      */
 #endif /* defined(STM32U3B5xx) || defined(STM32U3C5xx) */
+#if defined(STM32U396xx) || defined(STM32U3A6xx)
+#define GPIO_AF6_OCTOSPI2         ((uint8_t)0x06)   /*!< OCTOSPI2 Alternate Function mapping              */
+#endif /* defined(STM32U396xx) || defined(STM32U3A6xx) */
 
 /**
   * @brief   AF 7 selection
   */
-#define GPIO_AF7_USART1           ((uint8_t)0x07)   /*!< USART1 Alternate Function mapping  */
-#if defined(STM32U3B5xx) || defined(STM32U3C5xx)
-#define GPIO_AF7_USART2           ((uint8_t)0x07)   /*!< USART2 Alternate Function mapping  */
-#endif /* defined(STM32U3B5xx) || defined(STM32U3C5xx) */
-#define GPIO_AF7_USART3           ((uint8_t)0x07)   /*!< USART3 Alternate Function mapping  */
-
+#define GPIO_AF7_USART1           ((uint8_t)0x07)   /*!< USART1 Alternate Function mapping                */
+#if defined(STM32U3B5xx) || defined(STM32U3C5xx) || defined(STM32U396xx) || defined(STM32U3A6xx)
+#define GPIO_AF7_USART2           ((uint8_t)0x07)   /*!< USART2 Alternate Function mapping                */
+#endif /* defined(STM32U3B5xx) || defined(STM32U3C5xx) || defined(STM32U396xx) || defined(STM32U3A6xx)    */
+#if !(defined(STM32U375xx) || defined(STM32U385xx) || defined(STM32U356xx) || defined(STM32U366xx))
+#define GPIO_AF7_I3C1             ((uint8_t)0x07)   /*!< I3C1 Alternate Function mapping                  */
+#endif /* !(defined(STM32U375xx) || defined(STM32U385xx) || defined(STM32U356xx) || defined(STM32U366xx)) */
+#define GPIO_AF7_USART3           ((uint8_t)0x07)   /*!< USART3 Alternate Function mapping                */
+#if defined(STM32U396xx) || defined(STM32U3A6xx)
+#define GPIO_AF7_OCTOSPI2         ((uint8_t)0x07)   /*!< OCTOSPI2 Alternate Function mapping              */
+#endif /* defined(STM32U396xx) || defined(STM32U3A6xx) */
 
 /**
   * @brief   AF 8 selection
   */
-#define GPIO_AF8_LPUART1          ((uint8_t)0x08)   /*!< LPUART1 Alternate Function mapping */
-#define GPIO_AF8_UART4            ((uint8_t)0x08)   /*!< UART4 Alternate Function mapping   */
-#define GPIO_AF8_UART5            ((uint8_t)0x08)   /*!< UART5 Alternate Function mapping   */
-#if !(defined(STM32U356xx) || defined(STM32U366xx))
-#define GPIO_AF8_SDMMC1           ((uint8_t)0x08)   /*!< SDMMC1 Alternate Function mapping  */
-#endif /* !(defined(STM32U356xx) || defined(STM32U366xx)) */
+#define GPIO_AF8_LPUART1          ((uint8_t)0x08)   /*!< LPUART1 Alternate Function mapping               */
+#define GPIO_AF8_UART4            ((uint8_t)0x08)   /*!< UART4 Alternate Function mapping                 */
+#if !(defined(STM32U335xx) || defined(STM32U345xx))
+#define GPIO_AF8_UART5            ((uint8_t)0x08)   /*!< UART5 Alternate Function mapping                 */
+#endif /* !(defined(STM32U335xx) || defined(STM32U345xx))                                                 */
+#if !(defined(STM32U356xx) || defined(STM32U366xx) || defined(STM32U335xx) || defined(STM32U345xx))
+#define GPIO_AF8_SDMMC1           ((uint8_t)0x08)   /*!< SDMMC1 Alternate Function mapping                */
+#endif /* !(defined(STM32U356xx) || defined(STM32U366xx) || defined(STM32U335xx) || defined(STM32U345xx)) */
+#if defined(STM32U335xx) || defined(STM32U345xx)
+#define GPIO_AF8_I2C1             ((uint8_t)0x08)   /*!< I2C1 Alternate Function mapping                 */
+#endif /* defined(STM32U335xx) || defined(STM32U345xx)                                                    */
 
 /**
   * @brief   AF 9 selection
@@ -171,10 +216,17 @@ extern "C" {
 #define GPIO_AF9_FDCAN1           ((uint8_t)0x09)   /*!< FDCAN1 Alternate Function mapping  */
 #endif /* !(defined(STM32U356xx) || defined(STM32U366xx)) */
 #define GPIO_AF9_TSC              ((uint8_t)0x09)   /*!< TSC Alternate Function mapping     */
+#if defined(STM32U356xx) || defined(STM32U366xx) || defined(STM32U396xx) || defined(STM32U3A6xx)
+#define GPIO_AF9_LCD              ((uint8_t)0x09)   /*!< LCD Alternate Function mapping     */
+#define GPIO_AF9_UART5            ((uint8_t)0x09)   /*!< UART5 Alternate Function mapping   */
+#endif /* !(defined(STM32U356xx) || defined(STM32U366xx))                                   */
 
 /**
   * @brief   AF 10 selection
   */
+#if defined(STM32U356xx) || defined(STM32U366xx) || defined(STM32U396xx) || defined(STM32U3A6xx)
+#define GPIO_AF10_USART1          ((uint8_t)0x0A)   /*!< USART1 Alternate Function mapping    */
+#endif /* defined(STM32U356xx) || defined(STM32U366xx) || defined(STM32U396xx) || defined(STM32U3A6xx) */
 #define GPIO_AF10_CRS             ((uint8_t)0x0A)   /*!< CRS Alternate Function mapping       */
 #define GPIO_AF10_OCTOSPI1        ((uint8_t)0x0A)   /*!< OCTOSPI1 Alternate Function mapping  */
 #define GPIO_AF10_USB             ((uint8_t)0x0A)   /*!< USB Alternate Function mapping       */
@@ -182,41 +234,48 @@ extern "C" {
 /**
   * @brief   AF 11 selection
   */
-#define GPIO_AF11_MCO2            ((uint8_t)0x0B)   /*!< MCO2 Alternate Function mapping    */
+#define GPIO_AF11_MCO2            ((uint8_t)0x0B)   /*!< MCO2 Alternate Function mapping               */
 #if defined(STM32U3B5xx) || defined(STM32U3C5xx)
-#define GPIO_AF11_I2C4            ((uint8_t)0x0B)   /*!< I2C4 Alternate Function mapping    */
-#define GPIO_AF11_FDCAN2          ((uint8_t)0x0B)   /*!< FDCAN2 Alternate Function mapping  */
+#define GPIO_AF11_HSP1            ((uint8_t)0x0B)   /*!< HSP1 Alternate Function mapping               */
+#define GPIO_AF11_I2C4            ((uint8_t)0x0B)   /*!< I2C4 Alternate Function mapping               */
+#define GPIO_AF11_FDCAN2          ((uint8_t)0x0B)   /*!< FDCAN2 Alternate Function mapping             */
 #endif /* defined(STM32U3B5xx) || defined(STM32U3C5xx) */
-#if defined(STM32U356xx) || defined(STM32U366xx)
-#define GPIO_AF11_LCD             ((uint8_t)0x0B)   /*!< LCD Alternate Function mapping  */
-#endif /* defined(STM32U356xx) || defined(STM32U366xx) */
+#if defined(STM32U356xx) || defined(STM32U366xx) || defined(STM32U396xx) || defined(STM32U3A6xx)
+#define GPIO_AF11_LCD             ((uint8_t)0x0B)   /*!< LCD Alternate Function mapping                */
+#endif /* defined(STM32U356xx) || defined(STM32U366xx) || defined(STM32U396xx) || defined(STM32U3A6xx) */
+#if defined(STM32U3B5xx) || defined(STM32U3C5xx) || defined(STM32U396xx) || defined(STM32U3A6xx)
+#define GPIO_AF11_SDMMC1          ((uint8_t)0x0B)   /*!< SDMMC1 Alternate Function mapping             */
+#endif /* defined(STM32U356xx) || defined(STM32U366xx) || defined(STM32U396xx) || defined(STM32U3A6xx) */
 
 /**
   * @brief   AF 12 selection
   */
-#define GPIO_AF12_COMP1           ((uint8_t)0x0C)   /*!< COMP1 Alternate Function mapping   */
-#define GPIO_AF12_COMP2           ((uint8_t)0x0C)   /*!< COMP2 Alternate Function mapping   */
-#if !(defined(STM32U356xx) || defined(STM32U366xx))
-#define GPIO_AF12_SDMMC1          ((uint8_t)0x0C)   /*!< SDMMC1 Alternate Function mapping  */
-#endif /* !(defined(STM32U356xx) || defined(STM32U366xx)) */
-#define GPIO_AF12_TRACE           ((uint8_t)0x0C)   /*!< TRACE Alternate Function mapping   */
+#define GPIO_AF12_COMP1           ((uint8_t)0x0C)   /*!< COMP1 Alternate Function mapping                 */
+#define GPIO_AF12_COMP2           ((uint8_t)0x0C)   /*!< COMP2 Alternate Function mapping                 */
+#if !(defined(STM32U356xx) || defined(STM32U366xx) || defined(STM32U335xx) || defined(STM32U345xx))
+#define GPIO_AF12_SDMMC1          ((uint8_t)0x0C)   /*!< SDMMC1 Alternate Function mapping                */
+#endif /* !(defined(STM32U356xx) || defined(STM32U366xx) || defined(STM32U335xx) || defined(STM32U345xx)) */
+#define GPIO_AF12_TRACE           ((uint8_t)0x0C)   /*!< TRACE Alternate Function mapping                 */
 #if defined(STM32U3B5xx) || defined(STM32U3C5xx)
-#define GPIO_AF12_I2C4            ((uint8_t)0x0C)   /*!< I2C4 Alternate Function mapping    */
-#endif /* defined(STM32U3B5xx) || defined(STM32U3C5xx) */
-
+#define GPIO_AF12_I2C4            ((uint8_t)0x0C)   /*!< I2C4 Alternate Function mapping                  */
+#endif /* defined(STM32U3B5xx) || defined(STM32U3C5xx)                                                    */
+#if defined(STM32U396xx) || defined(STM32U3A6xx)
+#define GPIO_AF12_HSP1            ((uint8_t)0x0C)   /*!< HSP1 Alternate Function mapping                  */
+#define GPIO_AF12_FMC             ((uint8_t)0x0C)   /*!< FMC Alternate Function mapping                   */
+#endif /* defined(STM32U396xx) || defined(STM32U3A6xx)                                                    */
 
 /**
   * @brief   AF 13 selection
   */
-#define GPIO_AF13_AUDIOCLK        ((uint8_t)0x0D)   /*!< AUDIOCLOCK Alternate Function mapping  */
-#define GPIO_AF13_LPTIM2          ((uint8_t)0x0D)   /*!< LPTIM2 Alternate Function mapping      */
-#define GPIO_AF13_LPTIM4          ((uint8_t)0x0D)   /*!< LPTIM4 Alternate Function mapping      */
-#if !(defined(STM32U356xx) || defined(STM32U366xx))
-#define GPIO_AF13_SAI1            ((uint8_t)0x0D)   /*!< SAI1 Alternate Function mapping        */
-#endif /* !(defined(STM32U356xx) || defined(STM32U366xx)) */
-#if defined(STM32U3B5xx) || defined(STM32U3C5xx)
-#define GPIO_AF13_TIM8            ((uint8_t)0x0D)   /*!< TIM8 Alternate Function mapping        */
-#endif /* defined(STM32U3B5xx) || defined(STM32U3C5xx) */
+#define GPIO_AF13_AUDIOCLK        ((uint8_t)0x0D)   /*!< AUDIOCLOCK Alternate Function mapping            */
+#define GPIO_AF13_LPTIM2          ((uint8_t)0x0D)   /*!< LPTIM2 Alternate Function mapping                */
+#define GPIO_AF13_LPTIM4          ((uint8_t)0x0D)   /*!< LPTIM4 Alternate Function mapping                */
+#if !(defined(STM32U356xx) || defined(STM32U366xx) || defined(STM32U335xx) || defined(STM32U345xx))
+#define GPIO_AF13_SAI1            ((uint8_t)0x0D)   /*!< SAI1 Alternate Function mapping                  */
+#endif /* !(defined(STM32U356xx) || defined(STM32U366xx) || defined(STM32U335xx) || defined(STM32U345xx)) */
+#if defined(STM32U3B5xx) || defined(STM32U3C5xx) || defined(STM32U396xx) || defined(STM32U3A6xx)
+#define GPIO_AF13_TIM8            ((uint8_t)0x0D)   /*!< TIM8 Alternate Function mapping                  */
+#endif /* defined(STM32U3B5xx) || defined(STM32U3C5xx) || defined(STM32U396xx) || defined(STM32U3A6xx)    */
 
 
 /**
@@ -228,6 +287,9 @@ extern "C" {
 #define GPIO_AF14_TIM15           ((uint8_t)0x0E)   /*!< TIM15 Alternate Function mapping   */
 #define GPIO_AF14_TIM16           ((uint8_t)0x0E)   /*!< TIM16 Alternate Function mapping   */
 #define GPIO_AF14_TIM17           ((uint8_t)0x0E)   /*!< TIM17 Alternate Function mapping   */
+#if defined(STM32U396xx) || defined(STM32U3A6xx)
+#define GPIO_AF14_HSP1            ((uint8_t)0x0E)   /*!< HSP1 Alternate Function mapping    */
+#endif /* defined(STM32U396xx) || defined(STM32U3A6xx) */
 
 /**
   * @brief   AF 15 selection
@@ -236,7 +298,9 @@ extern "C" {
 
 #define IS_GPIO_AF(AF)            ((AF) <= (uint8_t)0x0F)
 
-#endif /* defined(STM32U385xx) || defined(STM32U375xx) || defined(STM32U3B5xx) || defined(STM32U3C5xx) */
+#endif /* defined(STM32U335xx) || defined(STM32U345xx) || defined(STM32U356xx) || defined(STM32U366xx) ||
+          defined(STM32U385xx) || defined(STM32U375xx) || defined(STM32U3B5xx) || defined(STM32U3C5xx) ||
+          defined(STM32U396xx) || defined(STM32U3A6xx) */
 
 
 /**

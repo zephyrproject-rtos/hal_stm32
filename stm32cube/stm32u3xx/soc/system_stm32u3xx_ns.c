@@ -9,7 +9,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -66,6 +66,25 @@
 /** @addtogroup STM32U3xx_System_Private_Defines
   * @{
   */
+/** @addtogroup STM32U3xx_System_Private_Defines
+  * @{
+  */
+#if !defined  (HSE_VALUE)
+  #define HSE_VALUE             32000000U /*!< Value of the External oscillator in Hz */
+#endif /* HSE_VALUE */
+
+#if !defined  (HSI_VALUE)
+  #define HSI_VALUE             16000000U /*!< Value of the Internal oscillator in Hz*/
+#endif /* HSI_VALUE */
+
+#if !defined  (MSIRC0_VALUE)
+  #define MSIRC0_VALUE          96000000U /*!< Value of the Internal MSI RC0 oscillator in Hz*/
+#endif /* MSI_VALUE */
+
+#if !defined  (MSIRC1_VALUE)
+  #define MSIRC1_VALUE          24000000U /*!< Value of the Internal MSI RC1 oscillator in Hz*/
+#endif /* MSI_VALUE */
+
 /* Note: Following vector table addresses must be defined in line with linker
          configuration. */
 /*!< Uncomment the following line if you need to relocate the vector table

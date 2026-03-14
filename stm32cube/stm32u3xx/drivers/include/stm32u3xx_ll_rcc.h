@@ -239,6 +239,15 @@ typedef struct
   * @}
   */
 
+/** @defgroup RCC_LL_EC_LCD_CLKSOURCE  LCD Selection
+  * @{
+  */
+#define LL_RCC_LCD_CLKSOURCE_LSI          0U                     /*!< LSE selection for low speed clock  */
+#define LL_RCC_LCD_CLKSOURCE_LSE          RCC_BDCR_LCDSEL        /*!< LSI selection for low speed clock  */
+/**
+  * @}
+  */
+
 
 /** @defgroup RCC_LL_EC_SYS_CLKSOURCE  System clock switch
   * @{
@@ -487,9 +496,15 @@ typedef struct
 #if defined(USART2)
 #define LL_RCC_USART2_CLKSOURCE         ((RCC_OFFSET_CCIPR2 << 24U) | (RCC_CCIPR2_USART2SEL_Pos << 16U) | ((RCC_CCIPR2_USART2SEL_Msk >> RCC_CCIPR2_USART2SEL_Pos) << 8U))  /*!< Mask to get USART2SEL clock source      */
 #endif /* USART2 */
+#if defined(USART3)
 #define LL_RCC_USART3_CLKSOURCE         ((RCC_OFFSET_CCIPR1 << 24U) | (RCC_CCIPR1_USART3SEL_Pos << 16U) | ((RCC_CCIPR1_USART3SEL_Msk >> RCC_CCIPR1_USART3SEL_Pos) << 8U))  /*!< Mask to get USART3SEL clock source      */
+#endif /* USART3 */
+#if defined(UART4)
 #define LL_RCC_UART4_CLKSOURCE          ((RCC_OFFSET_CCIPR1 << 24U) | (RCC_CCIPR1_UART4SEL_Pos << 16U) | ((RCC_CCIPR1_UART4SEL_Msk >> RCC_CCIPR1_UART4SEL_Pos) << 8U))     /*!< Mask to get UART4SEL clock source      */
+#endif /* UART4 */
+#if defined(UART5)
 #define LL_RCC_UART5_CLKSOURCE          ((RCC_OFFSET_CCIPR1 << 24U) | (RCC_CCIPR1_UART5SEL_Pos << 16U) | ((RCC_CCIPR1_UART5SEL_Msk >> RCC_CCIPR1_UART5SEL_Pos) << 8U))     /*!< Mask to get UART5SEL clock source      */
+#endif /* UART5 */
 /**
   * @}
   */
@@ -510,8 +525,11 @@ typedef struct
 #define LL_RCC_UART4_CLKSOURCE_PCLK1   (LL_RCC_UART4_CLKSOURCE | 0U)                                                                                                      /*!< PCLK1 clock used as UART4 clock source */
 #define LL_RCC_UART4_CLKSOURCE_HSI16   (LL_RCC_UART4_CLKSOURCE | (RCC_CCIPR1_UART4SEL >> RCC_CCIPR1_UART4SEL_Pos))                                                        /*!< HSI16 clock used as UART4 clock source */
 
+#if defined (UART5)
 #define LL_RCC_UART5_CLKSOURCE_PCLK1   (LL_RCC_UART5_CLKSOURCE | 0U)                                                                                                      /*!< PCLK1 clock used as UART5 clock source */
 #define LL_RCC_UART5_CLKSOURCE_HSI16   (LL_RCC_UART5_CLKSOURCE | (RCC_CCIPR1_UART5SEL >> RCC_CCIPR1_UART5SEL_Pos))                                                        /*!< HSI16 clock used as UART5 clock source */
+#endif /* UART5 */
+
 /**
   * @}
   */
@@ -525,8 +543,12 @@ typedef struct
                                                ((__VALUE__) == LL_RCC_USART3_CLKSOURCE))
 #endif /* USART2 */
 
+#if defined(UART4) && defined(UART5)
 #define IS_LL_RCC_UART_CLKSOURCE(__VALUE__)  (((__VALUE__) == LL_RCC_UART4_CLKSOURCE) || \
                                               ((__VALUE__) == LL_RCC_UART5_CLKSOURCE))
+#elif defined(UART4) && !defined(UART5)
+#define IS_LL_RCC_UART_CLKSOURCE(__VALUE__)  (((__VALUE__) == LL_RCC_UART4_CLKSOURCE))
+#endif /* defined(UART4) && defined(UART5) */
 
 /** @defgroup RCC_LL_EC_I3C Peripheral I3Cx get clock source
   * @{
@@ -614,7 +636,9 @@ typedef struct
   */
 #define LL_RCC_SPI1_CLKSOURCE           ((RCC_OFFSET_CCIPR1 << 24U) | (RCC_CCIPR1_SPI1SEL_Pos << 16U) | ((RCC_CCIPR1_SPI1SEL_Msk >> RCC_CCIPR1_SPI1SEL_Pos) << 8U))     /*!< Mask to get SPI1SEL clock source       */
 #define LL_RCC_SPI2_CLKSOURCE           ((RCC_OFFSET_CCIPR1 << 24U) | (RCC_CCIPR1_SPI2SEL_Pos << 16U) | ((RCC_CCIPR1_SPI2SEL_Msk >> RCC_CCIPR1_SPI2SEL_Pos) << 8U))     /*!< Mask to get SPI2SEL clock source       */
+#if defined(SPI3)
 #define LL_RCC_SPI3_CLKSOURCE           ((RCC_OFFSET_CCIPR2 << 24U) | (RCC_CCIPR2_SPI3SEL_Pos << 16U) | ((RCC_CCIPR2_SPI3SEL_Msk >> RCC_CCIPR2_SPI3SEL_Pos) << 8U))     /*!< Mask to get SPI3SEL clock source       */
+#endif /* SPI3 */
 #if defined(SPI4)
 #define LL_RCC_SPI4_CLKSOURCE           ((RCC_OFFSET_CCIPR2 << 24U) | (RCC_CCIPR2_SPI4SEL_Pos << 16U) | ((RCC_CCIPR2_SPI4SEL_Msk >> RCC_CCIPR2_SPI4SEL_Pos) << 8U))     /*!< Mask to get SPI4SEL clock source       */
 #endif /* SPI4 */
@@ -630,8 +654,10 @@ typedef struct
 #define LL_RCC_SPI2_CLKSOURCE_PCLK1     (LL_RCC_SPI2_CLKSOURCE | 0U)                                                                                                   /*!< PCLK1 clock used as SPI2 clock source  */
 #define LL_RCC_SPI2_CLKSOURCE_MSIK      (LL_RCC_SPI2_CLKSOURCE | (RCC_CCIPR1_SPI2SEL >> RCC_CCIPR1_SPI2SEL_Pos))                                                       /*!< MSIK clock used as SPI2 clock source   */
 
+#if defined(SPI3)
 #define LL_RCC_SPI3_CLKSOURCE_PCLK1     (LL_RCC_SPI3_CLKSOURCE | 0U)                                                                                                   /*!< PCLK1 clock used as SPI3 clock source  */
 #define LL_RCC_SPI3_CLKSOURCE_MSIK      (LL_RCC_SPI3_CLKSOURCE | (RCC_CCIPR2_SPI3SEL >> RCC_CCIPR2_SPI3SEL_Pos))                                                       /*!< MSIK clock used as SPI3 clock source   */
+#endif /* SPI3 */
 
 #if defined(SPI4)
 #define LL_RCC_SPI4_CLKSOURCE_PCLK1     (LL_RCC_SPI4_CLKSOURCE | 0U)                                                                                                   /*!< PCLK1 clock used as SPI4 clock source  */
@@ -641,16 +667,19 @@ typedef struct
   * @}
   */
 
-#if defined(SPI4)
+#if defined(SPI1) && defined(SPI2) && defined(SPI3) && defined(SPI4)
 #define IS_LL_RCC_SPI_CLKSOURCE(__VALUE__)  (((__VALUE__) == LL_RCC_SPI1_CLKSOURCE) || \
                                              ((__VALUE__) == LL_RCC_SPI2_CLKSOURCE) || \
                                              ((__VALUE__) == LL_RCC_SPI3_CLKSOURCE) || \
                                              ((__VALUE__) == LL_RCC_SPI4_CLKSOURCE))
-#else
+#elif defined(SPI1) && defined(SPI2) && defined(SPI3)
 #define IS_LL_RCC_SPI_CLKSOURCE(__VALUE__)  (((__VALUE__) == LL_RCC_SPI1_CLKSOURCE) || \
                                              ((__VALUE__) == LL_RCC_SPI2_CLKSOURCE) || \
                                              ((__VALUE__) == LL_RCC_SPI3_CLKSOURCE))
-#endif /* SPI4 */
+#elif defined(SPI1) && defined(SPI2)
+#define IS_LL_RCC_SPI_CLKSOURCE(__VALUE__)  (((__VALUE__) == LL_RCC_SPI1_CLKSOURCE) || \
+                                             ((__VALUE__) == LL_RCC_SPI2_CLKSOURCE))
+#endif /* defined(SPI1) && defined(SPI2) && defined(SPI3) && defined(SPI4) */
 
 
 /** @defgroup RCC_LL_EC_LPTIM Peripheral LPTIMx get clock source
@@ -3110,8 +3139,8 @@ __STATIC_INLINE uint32_t LL_RCC_GetUSARTClockSource(uint32_t USARTx_clksource)
   * @param  UARTxSource This parameter can be one of the following values:
   *         @arg @ref LL_RCC_UART4_CLKSOURCE_PCLK1
   *         @arg @ref LL_RCC_UART4_CLKSOURCE_HSI16
-  *         @arg @ref LL_RCC_UART5_CLKSOURCE_PCLK1
-  *         @arg @ref LL_RCC_UART5_CLKSOURCE_HSI16
+  *         @arg @ref LL_RCC_UART5_CLKSOURCE_PCLK1 if UART5 present
+  *         @arg @ref LL_RCC_UART5_CLKSOURCE_HSI16 if UART5 present
   * @retval None
   */
 __STATIC_INLINE void LL_RCC_SetUARTClockSource(uint32_t UARTxSource)
@@ -3133,8 +3162,8 @@ __STATIC_INLINE void LL_RCC_SetUARTClockSource(uint32_t UARTxSource)
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_RCC_UART4_CLKSOURCE_PCLK1
   *         @arg @ref LL_RCC_UART4_CLKSOURCE_HSI16
-  *         @arg @ref LL_RCC_UART5_CLKSOURCE_PCLK1
-  *         @arg @ref LL_RCC_UART5_CLKSOURCE_HSI16
+  *         @arg @ref LL_RCC_UART5_CLKSOURCE_PCLK1 if UART5 present
+  *         @arg @ref LL_RCC_UART5_CLKSOURCE_HSI16 if UART5 present
   */
 __STATIC_INLINE uint32_t LL_RCC_GetUARTClockSource(uint32_t UARTx_clksource)
 {
