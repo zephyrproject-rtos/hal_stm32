@@ -159,7 +159,7 @@ static const uint8_t SHIFT_TAB_OISx[] =
   */
 
 #define OCREF_CLEAR_SELECT_POS (28U)
-#define OCREF_CLEAR_SELECT_MSK (0x1U << OCREF_CLEAR_SELECT_POS)                /*!< 0x10000000 */
+#define OCREF_CLEAR_SELECT_MSK (0x1UL << OCREF_CLEAR_SELECT_POS)               /*!< 0x10000000 */
 /**
   * @}
   */
@@ -1098,7 +1098,7 @@ typedef struct
   */
 
 #if defined(TIM8)
-/** @defgroup TIM_LL_EC_TIM8_ETRSOURCE External Trigger Source TIM2
+/** @defgroup TIM_LL_EC_TIM8_ETRSOURCE External Trigger Source TIM8
   * @{
   */
 #define LL_TIM_TIM8_ETRSOURCE_GPIO          0x00000000UL                                                /*!< TIM8_ETR is connected to I/O */
@@ -1215,8 +1215,11 @@ typedef struct
 #define LL_TIM_BKIN_SOURCE_BKCOMP1             TIM_AF1_BKCMP1E    /*!< internal signal: COMP1 output */
 #define LL_TIM_BKIN_SOURCE_BKCOMP2             TIM_AF1_BKCMP2E    /*!< internal signal: COMP2 output */
 #if defined(HSP1)
-#define LL_TIM_BKIN_SOURCE_BKCOMP3             TIM_AF1_BKCMP3E    /*!< internal signal: HSP Break output 0 */
-#define LL_TIM_BKIN_SOURCE_BKCOMP4             TIM_AF1_BKCMP4E    /*!< internal signal: HSP Break output 1 */
+#define LL_TIM_BKIN_SOURCE_HSP1_BRK_OUT0       TIM_AF1_BKCMP3E    /*!< internal signal: HSP1_BRK_OUT0 */
+#define LL_TIM_BKIN_SOURCE_HSP1_BRK_OUT1       TIM_AF1_BKCMP4E    /*!< internal signal: HSP1_BRK_OUT1 */
+#define LL_TIM_BKIN_SOURCE_HSP1_BRK_OUT2       TIM_AF1_BKCMP3E    /*!< internal signal: HSP1_BRK_OUT2 */
+#define LL_TIM_BKIN_SOURCE_HSP1_BRK_OUT3       TIM_AF1_BKCMP4E    /*!< internal signal: HSP1_BRK_OUT3 */
+
 #endif /*  HSP1 */
 /**
   * @}
@@ -1487,8 +1490,8 @@ typedef struct
 #define LL_TIM_TIM16_TI1_RMP_RTC               TIM_TISEL_TI1SEL_2                                             /*!< TIM16 TI1 is connected to RTC */
 #define LL_TIM_TIM16_TI1_RMP_LSE               (TIM_TISEL_TI1SEL_2 | TIM_TISEL_TI1SEL_0)                      /*!< TIM16 TI1 is connected to LSE */
 #define LL_TIM_TIM16_TI1_RMP_LSI               (TIM_TISEL_TI1SEL_2 | TIM_TISEL_TI1SEL_1)                      /*!< TIM16 TI1 is connected to LSI */
-#define LL_TIM_TIM16_TI1_RMP_MSI_1024          (TIM_TISEL_TI1SEL_2 | TIM_TISEL_TI1SEL_1 | TIM_TISEL_TI1SEL_0) /*!< TIM16 TI1 is connected to MSI/1024 */
-#define LL_TIM_TIM16_TI1_RMP_MSI_4             TIM_TISEL_TI1SEL_3                                             /*!< TIM16 TI1 is connected to MSI/4 */
+#define LL_TIM_TIM16_TI1_RMP_MSIS_1024         (TIM_TISEL_TI1SEL_2 | TIM_TISEL_TI1SEL_1 | TIM_TISEL_TI1SEL_0) /*!< TIM16 TI1 is connected to MSIS/1024 */
+#define LL_TIM_TIM16_TI1_RMP_MSIS_4            TIM_TISEL_TI1SEL_3                                             /*!< TIM16 TI1 is connected to MSIS/4 */
 #define LL_TIM_TIM16_TI1_RMP_HSI_256           (TIM_TISEL_TI1SEL_3 | TIM_TISEL_TI1SEL_0)                      /*!< TIM16 TI1 is connected to HSI/2564 */
 #define LL_TIM_TIM16_TI1_RMP_I3C1_IBIACK       (TIM_TISEL_TI1SEL_3 | TIM_TISEL_TI1SEL_1)                      /*!< TIM16 TI1 is connected to I3C1 IBIACK */
 /**
@@ -1504,8 +1507,8 @@ typedef struct
 #define LL_TIM_TIM17_TI1_RMP_RTC               TIM_TISEL_TI1SEL_2                                             /*!< TIM17 TI1 is connected to RTC */
 #define LL_TIM_TIM17_TI1_RMP_LSE               (TIM_TISEL_TI1SEL_2 | TIM_TISEL_TI1SEL_0)                      /*!< TIM17 TI1 is connected to LSE */
 #define LL_TIM_TIM17_TI1_RMP_LSI               (TIM_TISEL_TI1SEL_2 | TIM_TISEL_TI1SEL_1)                      /*!< TIM17 TI1 is connected to LSI */
-#define LL_TIM_TIM17_TI1_RMP_MSI_1024          (TIM_TISEL_TI1SEL_2 | TIM_TISEL_TI1SEL_1 | TIM_TISEL_TI1SEL_0) /*!< TIM17 TI1 is connected to MSI/1024 */
-#define LL_TIM_TIM17_TI1_RMP_MSI_4             TIM_TISEL_TI1SEL_3                                             /*!< TIM17 TI1 is connected to MSI/4 */
+#define LL_TIM_TIM17_TI1_RMP_MSIS_1024         (TIM_TISEL_TI1SEL_2 | TIM_TISEL_TI1SEL_1 | TIM_TISEL_TI1SEL_0) /*!< TIM17 TI1 is connected to MSIS/1024 */
+#define LL_TIM_TIM17_TI1_RMP_MSIS_4            TIM_TISEL_TI1SEL_3                                             /*!< TIM17 TI1 is connected to MSIS/4 */
 #define LL_TIM_TIM17_TI1_RMP_HSI_256           (TIM_TISEL_TI1SEL_3 | TIM_TISEL_TI1SEL_0)                      /*!< TIM17 TI1 is connected to HSI/2564 */
 #define LL_TIM_TIM17_TI1_RMP_I3C2_IBIACK       (TIM_TISEL_TI1SEL_3 | TIM_TISEL_TI1SEL_1)                      /*!< TIM17 TI1 is connected to I3C2 IBIACK */
 /**
@@ -4417,8 +4420,10 @@ __STATIC_INLINE uint32_t LL_TIM_IsEnabledAllOutputs(const TIM_TypeDef *TIMx)
   *         @arg @ref LL_TIM_BKIN_SOURCE_BKIN
   *         @arg @ref LL_TIM_BKIN_SOURCE_BKCOMP1
   *         @arg @ref LL_TIM_BKIN_SOURCE_BKCOMP2
-  *         @arg @ref LL_TIM_BKIN_SOURCE_BKCOMP3 (*)
-  *         @arg @ref LL_TIM_BKIN_SOURCE_BKCOMP4 (*)
+  *         @arg @ref LL_TIM_BKIN_SOURCE_HSP1_BRK_OUT0 (*)
+  *         @arg @ref LL_TIM_BKIN_SOURCE_HSP1_BRK_OUT1 (*)
+  *         @arg @ref LL_TIM_BKIN_SOURCE_HSP1_BRK_OUT2 (*)
+  *         @arg @ref LL_TIM_BKIN_SOURCE_HSP1_BRK_OUT3 (*)
   *
   *         (*)  Value not defined in all devices.
   * @retval None
@@ -4451,8 +4456,10 @@ __STATIC_INLINE void LL_TIM_EnableBreakInputSource(TIM_TypeDef *TIMx, uint32_t B
   *         @arg @ref LL_TIM_BKIN_SOURCE_BKIN
   *         @arg @ref LL_TIM_BKIN_SOURCE_BKCOMP1
   *         @arg @ref LL_TIM_BKIN_SOURCE_BKCOMP2
-  *         @arg @ref LL_TIM_BKIN_SOURCE_BKCOMP3 (*)
-  *         @arg @ref LL_TIM_BKIN_SOURCE_BKCOMP4 (*)
+  *         @arg @ref LL_TIM_BKIN_SOURCE_HSP1_BRK_OUT0 (*)
+  *         @arg @ref LL_TIM_BKIN_SOURCE_HSP1_BRK_OUT1 (*)
+  *         @arg @ref LL_TIM_BKIN_SOURCE_HSP1_BRK_OUT2 (*)
+  *         @arg @ref LL_TIM_BKIN_SOURCE_HSP1_BRK_OUT3 (*)
   *
   *         (*)  Value not defined in all devices.
   * @retval None
@@ -4485,8 +4492,10 @@ __STATIC_INLINE void LL_TIM_DisableBreakInputSource(TIM_TypeDef *TIMx, uint32_t 
   *         @arg @ref LL_TIM_BKIN_SOURCE_BKIN
   *         @arg @ref LL_TIM_BKIN_SOURCE_BKCOMP1
   *         @arg @ref LL_TIM_BKIN_SOURCE_BKCOMP2
-  *         @arg @ref LL_TIM_BKIN_SOURCE_BKCOMP3 (*)
-  *         @arg @ref LL_TIM_BKIN_SOURCE_BKCOMP4 (*)
+  *         @arg @ref LL_TIM_BKIN_SOURCE_HSP1_BRK_OUT0 (*)
+  *         @arg @ref LL_TIM_BKIN_SOURCE_HSP1_BRK_OUT1 (*)
+  *         @arg @ref LL_TIM_BKIN_SOURCE_HSP1_BRK_OUT2 (*)
+  *         @arg @ref LL_TIM_BKIN_SOURCE_HSP1_BRK_OUT3 (*)
   * @param  Polarity This parameter can be one of the following values:
   *         @arg @ref LL_TIM_BKIN_POLARITY_LOW
   *         @arg @ref LL_TIM_BKIN_POLARITY_HIGH

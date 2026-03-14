@@ -336,27 +336,27 @@ typedef struct
   */
 #define __HAL_PWR_GET_FLAG(__FLAG__)                                                                         \
   (                                                                                                          \
-    ((__FLAG__) == PWR_FLAG_STOPF)     ? (READ_BIT(PWR->SR, PWR_SR_STOPF)           == PWR_SR_STOPF)       : \
-    ((__FLAG__) == PWR_FLAG_SBF)       ? (READ_BIT(PWR->SR, PWR_SR_SBF)             == PWR_SR_SBF)         : \
-    ((__FLAG__) == PWR_FLAG_R1RDY)     ? (READ_BIT(PWR->VOSR, PWR_VOSR_R1RDY)       == PWR_VOSR_R1RDY)     : \
-    ((__FLAG__) == PWR_FLAG_R2RDY)     ? (READ_BIT(PWR->VOSR, PWR_VOSR_R2RDY)       == PWR_VOSR_R2RDY)     : \
-    ((__FLAG__) == PWR_FLAG_BOOSTRDY)  ? (READ_BIT(PWR->VOSR, PWR_VOSR_BOOSTRDY)    == PWR_VOSR_BOOSTRDY)  : \
-    ((__FLAG__) == PWR_FLAG_PVDO)      ? (READ_BIT(PWR->SVMSR, PWR_SVMSR_PVDO)      == PWR_SVMSR_PVDO)     : \
-    ((__FLAG__) == PWR_FLAG_REGS)      ? (READ_BIT(PWR->SVMSR, PWR_SVMSR_REGS)      == PWR_SVMSR_REGS)     : \
-    ((__FLAG__) == PWR_FLAG_VDDA1RDY)  ? (READ_BIT(PWR->SVMSR, PWR_SVMSR_VDDA1RDY)  == PWR_SVMSR_VDDA1RDY) : \
-    ((__FLAG__) == PWR_FLAG_VDDA2RDY)  ? (READ_BIT(PWR->SVMSR, PWR_SVMSR_VDDA2RDY)  == PWR_SVMSR_VDDA2RDY) : \
-    ((__FLAG__) == PWR_FLAG_VDDIO2RDY) ? (READ_BIT(PWR->SVMSR, PWR_SVMSR_VDDIO2RDY) == PWR_SVMSR_VDDIO2RDY): \
-    ((__FLAG__) == PWR_FLAG_VDDUSBRDY) ? (READ_BIT(PWR->SVMSR, PWR_SVMSR_VDDUSBRDY) == PWR_SVMSR_VDDUSBRDY): \
-    ((__FLAG__) == PWR_WAKEUP_FLAG1)   ? (READ_BIT(PWR->WUSR, PWR_WUSR_WUF1)        == PWR_WUSR_WUF1)      : \
-    ((__FLAG__) == PWR_WAKEUP_FLAG2)   ? (READ_BIT(PWR->WUSR, PWR_WUSR_WUF2)        == PWR_WUSR_WUF2)      : \
-    ((__FLAG__) == PWR_WAKEUP_FLAG3)   ? (READ_BIT(PWR->WUSR, PWR_WUSR_WUF3)        == PWR_WUSR_WUF3)      : \
-    ((__FLAG__) == PWR_WAKEUP_FLAG4)   ? (READ_BIT(PWR->WUSR, PWR_WUSR_WUF4)        == PWR_WUSR_WUF4)      : \
-    ((__FLAG__) == PWR_WAKEUP_FLAG5)   ? (READ_BIT(PWR->WUSR, PWR_WUSR_WUF5)        == PWR_WUSR_WUF5)      : \
-    ((__FLAG__) == PWR_WAKEUP_FLAG6)   ? (READ_BIT(PWR->WUSR, PWR_WUSR_WUF6)        == PWR_WUSR_WUF6)      : \
-    ((__FLAG__) == PWR_WAKEUP_FLAG7)   ? (READ_BIT(PWR->WUSR, PWR_WUSR_WUF7)        == PWR_WUSR_WUF7)      : \
-    ((__FLAG__) == PWR_WAKEUP_FLAG8)   ? (READ_BIT(PWR->WUSR, PWR_WUSR_WUF8)        == PWR_WUSR_WUF8)      : \
-    ((__FLAG__) == PWR_WAKEUP_FLAG9)   ? (READ_BIT(PWR->WUSR, PWR_WUSR_WUF9)        == PWR_WUSR_WUF9)      : \
-    (READ_BIT(PWR->WUSR, PWR_WUSR_WUF10) == PWR_WUSR_WUF10))
+      ((__FLAG__) == PWR_FLAG_STOPF)     ? (READ_BIT(PWR->SR, PWR_SR_STOPF)           == PWR_SR_STOPF)       : \
+      ((__FLAG__) == PWR_FLAG_SBF)       ? (READ_BIT(PWR->SR, PWR_SR_SBF)             == PWR_SR_SBF)         : \
+      ((__FLAG__) == PWR_FLAG_R1RDY)     ? (READ_BIT(PWR->VOSR, PWR_VOSR_R1RDY)       == PWR_VOSR_R1RDY)     : \
+      ((__FLAG__) == PWR_FLAG_R2RDY)     ? (READ_BIT(PWR->VOSR, PWR_VOSR_R2RDY)       == PWR_VOSR_R2RDY)     : \
+      ((__FLAG__) == PWR_FLAG_BOOSTRDY)  ? (READ_BIT(PWR->VOSR, PWR_VOSR_BOOSTRDY)    == PWR_VOSR_BOOSTRDY)  : \
+      ((__FLAG__) == PWR_FLAG_PVDO)      ? (READ_BIT(PWR->SVMSR, PWR_SVMSR_PVDO)      == PWR_SVMSR_PVDO)     : \
+      ((__FLAG__) == PWR_FLAG_REGS)      ? (READ_BIT(PWR->SVMSR, PWR_SVMSR_REGS)      == PWR_SVMSR_REGS)     : \
+      ((__FLAG__) == PWR_FLAG_VDDA1RDY)  ? (READ_BIT(PWR->SVMSR, PWR_SVMSR_VDDA1RDY)  == PWR_SVMSR_VDDA1RDY) : \
+      ((__FLAG__) == PWR_FLAG_VDDA2RDY)  ? (READ_BIT(PWR->SVMSR, PWR_SVMSR_VDDA2RDY)  == PWR_SVMSR_VDDA2RDY) : \
+      ((__FLAG__) == PWR_FLAG_VDDIO2RDY) ? (READ_BIT(PWR->SVMSR, PWR_SVMSR_VDDIO2RDY) == PWR_SVMSR_VDDIO2RDY): \
+      ((__FLAG__) == PWR_FLAG_VDDUSBRDY) ? (READ_BIT(PWR->SVMSR, PWR_SVMSR_VDDUSBRDY) == PWR_SVMSR_VDDUSBRDY): \
+      ((__FLAG__) == PWR_WAKEUP_FLAG1)   ? (READ_BIT(PWR->WUSR, PWR_WUSR_WUF1)        == PWR_WUSR_WUF1)      : \
+      ((__FLAG__) == PWR_WAKEUP_FLAG2)   ? (READ_BIT(PWR->WUSR, PWR_WUSR_WUF2)        == PWR_WUSR_WUF2)      : \
+      ((__FLAG__) == PWR_WAKEUP_FLAG3)   ? (READ_BIT(PWR->WUSR, PWR_WUSR_WUF3)        == PWR_WUSR_WUF3)      : \
+      ((__FLAG__) == PWR_WAKEUP_FLAG4)   ? (READ_BIT(PWR->WUSR, PWR_WUSR_WUF4)        == PWR_WUSR_WUF4)      : \
+      ((__FLAG__) == PWR_WAKEUP_FLAG5)   ? (READ_BIT(PWR->WUSR, PWR_WUSR_WUF5)        == PWR_WUSR_WUF5)      : \
+      ((__FLAG__) == PWR_WAKEUP_FLAG6)   ? (READ_BIT(PWR->WUSR, PWR_WUSR_WUF6)        == PWR_WUSR_WUF6)      : \
+      ((__FLAG__) == PWR_WAKEUP_FLAG7)   ? (READ_BIT(PWR->WUSR, PWR_WUSR_WUF7)        == PWR_WUSR_WUF7)      : \
+      ((__FLAG__) == PWR_WAKEUP_FLAG8)   ? (READ_BIT(PWR->WUSR, PWR_WUSR_WUF8)        == PWR_WUSR_WUF8)      : \
+      ((__FLAG__) == PWR_WAKEUP_FLAG9)   ? (READ_BIT(PWR->WUSR, PWR_WUSR_WUF9)        == PWR_WUSR_WUF9)      : \
+      (READ_BIT(PWR->WUSR, PWR_WUSR_WUF10) == PWR_WUSR_WUF10))
 #else
 /** @brief  Check PWR flags are set or not.
   * @param  __FLAG__ : Specifies the flag to check.
@@ -409,26 +409,26 @@ typedef struct
   */
 #define __HAL_PWR_GET_FLAG(__FLAG__)                                                                         \
   (                                                                                                          \
-    ((__FLAG__) == PWR_FLAG_STOPF)     ? (READ_BIT(PWR->SR, PWR_SR_STOPF)           == PWR_SR_STOPF)       : \
-    ((__FLAG__) == PWR_FLAG_SBF)       ? (READ_BIT(PWR->SR, PWR_SR_SBF)             == PWR_SR_SBF)         : \
-    ((__FLAG__) == PWR_FLAG_R1RDY)     ? (READ_BIT(PWR->VOSR, PWR_VOSR_R1RDY)       == PWR_VOSR_R1RDY)     : \
-    ((__FLAG__) == PWR_FLAG_R2RDY)     ? (READ_BIT(PWR->VOSR, PWR_VOSR_R2RDY)       == PWR_VOSR_R2RDY)     : \
-    ((__FLAG__) == PWR_FLAG_BOOSTRDY)  ? (READ_BIT(PWR->VOSR, PWR_VOSR_BOOSTRDY)    == PWR_VOSR_BOOSTRDY)  : \
-    ((__FLAG__) == PWR_FLAG_PVDO)      ? (READ_BIT(PWR->SVMSR, PWR_SVMSR_PVDO)      == PWR_SVMSR_PVDO)     : \
-    ((__FLAG__) == PWR_FLAG_REGS)      ? (READ_BIT(PWR->SVMSR, PWR_SVMSR_REGS)      == PWR_SVMSR_REGS)     : \
-    ((__FLAG__) == PWR_FLAG_VDDA1RDY)  ? (READ_BIT(PWR->SVMSR, PWR_SVMSR_VDDA1RDY)  == PWR_SVMSR_VDDA1RDY) : \
-    ((__FLAG__) == PWR_FLAG_VDDA2RDY)  ? (READ_BIT(PWR->SVMSR, PWR_SVMSR_VDDA2RDY)  == PWR_SVMSR_VDDA2RDY) : \
-    ((__FLAG__) == PWR_FLAG_VDDUSBRDY) ? (READ_BIT(PWR->SVMSR, PWR_SVMSR_VDDUSBRDY) == PWR_SVMSR_VDDUSBRDY): \
-    ((__FLAG__) == PWR_WAKEUP_FLAG1)   ? (READ_BIT(PWR->WUSR, PWR_WUSR_WUF1)        == PWR_WUSR_WUF1)      : \
-    ((__FLAG__) == PWR_WAKEUP_FLAG2)   ? (READ_BIT(PWR->WUSR, PWR_WUSR_WUF2)        == PWR_WUSR_WUF2)      : \
-    ((__FLAG__) == PWR_WAKEUP_FLAG3)   ? (READ_BIT(PWR->WUSR, PWR_WUSR_WUF3)        == PWR_WUSR_WUF3)      : \
-    ((__FLAG__) == PWR_WAKEUP_FLAG4)   ? (READ_BIT(PWR->WUSR, PWR_WUSR_WUF4)        == PWR_WUSR_WUF4)      : \
-    ((__FLAG__) == PWR_WAKEUP_FLAG5)   ? (READ_BIT(PWR->WUSR, PWR_WUSR_WUF5)        == PWR_WUSR_WUF5)      : \
-    ((__FLAG__) == PWR_WAKEUP_FLAG6)   ? (READ_BIT(PWR->WUSR, PWR_WUSR_WUF6)        == PWR_WUSR_WUF6)      : \
-    ((__FLAG__) == PWR_WAKEUP_FLAG7)   ? (READ_BIT(PWR->WUSR, PWR_WUSR_WUF7)        == PWR_WUSR_WUF7)      : \
-    ((__FLAG__) == PWR_WAKEUP_FLAG8)   ? (READ_BIT(PWR->WUSR, PWR_WUSR_WUF8)        == PWR_WUSR_WUF8)      : \
-    ((__FLAG__) == PWR_WAKEUP_FLAG9)   ? (READ_BIT(PWR->WUSR, PWR_WUSR_WUF9)        == PWR_WUSR_WUF9)      : \
-    (READ_BIT(PWR->WUSR, PWR_WUSR_WUF10) == PWR_WUSR_WUF10))
+      ((__FLAG__) == PWR_FLAG_STOPF)     ? (READ_BIT(PWR->SR, PWR_SR_STOPF)           == PWR_SR_STOPF)       : \
+      ((__FLAG__) == PWR_FLAG_SBF)       ? (READ_BIT(PWR->SR, PWR_SR_SBF)             == PWR_SR_SBF)         : \
+      ((__FLAG__) == PWR_FLAG_R1RDY)     ? (READ_BIT(PWR->VOSR, PWR_VOSR_R1RDY)       == PWR_VOSR_R1RDY)     : \
+      ((__FLAG__) == PWR_FLAG_R2RDY)     ? (READ_BIT(PWR->VOSR, PWR_VOSR_R2RDY)       == PWR_VOSR_R2RDY)     : \
+      ((__FLAG__) == PWR_FLAG_BOOSTRDY)  ? (READ_BIT(PWR->VOSR, PWR_VOSR_BOOSTRDY)    == PWR_VOSR_BOOSTRDY)  : \
+      ((__FLAG__) == PWR_FLAG_PVDO)      ? (READ_BIT(PWR->SVMSR, PWR_SVMSR_PVDO)      == PWR_SVMSR_PVDO)     : \
+      ((__FLAG__) == PWR_FLAG_REGS)      ? (READ_BIT(PWR->SVMSR, PWR_SVMSR_REGS)      == PWR_SVMSR_REGS)     : \
+      ((__FLAG__) == PWR_FLAG_VDDA1RDY)  ? (READ_BIT(PWR->SVMSR, PWR_SVMSR_VDDA1RDY)  == PWR_SVMSR_VDDA1RDY) : \
+      ((__FLAG__) == PWR_FLAG_VDDA2RDY)  ? (READ_BIT(PWR->SVMSR, PWR_SVMSR_VDDA2RDY)  == PWR_SVMSR_VDDA2RDY) : \
+      ((__FLAG__) == PWR_FLAG_VDDUSBRDY) ? (READ_BIT(PWR->SVMSR, PWR_SVMSR_VDDUSBRDY) == PWR_SVMSR_VDDUSBRDY): \
+      ((__FLAG__) == PWR_WAKEUP_FLAG1)   ? (READ_BIT(PWR->WUSR, PWR_WUSR_WUF1)        == PWR_WUSR_WUF1)      : \
+      ((__FLAG__) == PWR_WAKEUP_FLAG2)   ? (READ_BIT(PWR->WUSR, PWR_WUSR_WUF2)        == PWR_WUSR_WUF2)      : \
+      ((__FLAG__) == PWR_WAKEUP_FLAG3)   ? (READ_BIT(PWR->WUSR, PWR_WUSR_WUF3)        == PWR_WUSR_WUF3)      : \
+      ((__FLAG__) == PWR_WAKEUP_FLAG4)   ? (READ_BIT(PWR->WUSR, PWR_WUSR_WUF4)        == PWR_WUSR_WUF4)      : \
+      ((__FLAG__) == PWR_WAKEUP_FLAG5)   ? (READ_BIT(PWR->WUSR, PWR_WUSR_WUF5)        == PWR_WUSR_WUF5)      : \
+      ((__FLAG__) == PWR_WAKEUP_FLAG6)   ? (READ_BIT(PWR->WUSR, PWR_WUSR_WUF6)        == PWR_WUSR_WUF6)      : \
+      ((__FLAG__) == PWR_WAKEUP_FLAG7)   ? (READ_BIT(PWR->WUSR, PWR_WUSR_WUF7)        == PWR_WUSR_WUF7)      : \
+      ((__FLAG__) == PWR_WAKEUP_FLAG8)   ? (READ_BIT(PWR->WUSR, PWR_WUSR_WUF8)        == PWR_WUSR_WUF8)      : \
+      ((__FLAG__) == PWR_WAKEUP_FLAG9)   ? (READ_BIT(PWR->WUSR, PWR_WUSR_WUF9)        == PWR_WUSR_WUF9)      : \
+      (READ_BIT(PWR->WUSR, PWR_WUSR_WUF10) == PWR_WUSR_WUF10))
 #endif /* PWR_SVMSR_VDDIO2RDY */
 
 /** @brief  Clear PWR flags.
@@ -462,21 +462,22 @@ typedef struct
   * @retval None.
   */
 #define __HAL_PWR_CLEAR_FLAG(__FLAG__)                                             \
-(                                                                                  \
-    ((__FLAG__) == PWR_FLAG_STOPF)    ? (SET_BIT(PWR->SR, PWR_SR_CSSF))          : \
-    ((__FLAG__) == PWR_FLAG_SBF)      ? (SET_BIT(PWR->SR, PWR_SR_CSSF))          : \
-    ((__FLAG__) == PWR_WAKEUP_FLAG1)  ? (WRITE_REG(PWR->WUSCR, PWR_WUSCR_CWUF1)) : \
-    ((__FLAG__) == PWR_WAKEUP_FLAG2)  ? (WRITE_REG(PWR->WUSCR, PWR_WUSCR_CWUF2)) : \
-    ((__FLAG__) == PWR_WAKEUP_FLAG3)  ? (WRITE_REG(PWR->WUSCR, PWR_WUSCR_CWUF3)) : \
-    ((__FLAG__) == PWR_WAKEUP_FLAG4)  ? (WRITE_REG(PWR->WUSCR, PWR_WUSCR_CWUF4)) : \
-    ((__FLAG__) == PWR_WAKEUP_FLAG5)  ? (WRITE_REG(PWR->WUSCR, PWR_WUSCR_CWUF5)) : \
-    ((__FLAG__) == PWR_WAKEUP_FLAG6)  ? (WRITE_REG(PWR->WUSCR, PWR_WUSCR_CWUF6)) : \
-    ((__FLAG__) == PWR_WAKEUP_FLAG7)  ? (WRITE_REG(PWR->WUSCR, PWR_WUSCR_CWUF7)) : \
-    ((__FLAG__) == PWR_WAKEUP_FLAG8)  ? (WRITE_REG(PWR->WUSCR, PWR_WUSCR_CWUF8)) : \
-    ((__FLAG__) == PWR_WAKEUP_FLAG9)  ? (WRITE_REG(PWR->WUSCR, PWR_WUSCR_CWUF9)) : \
-    ((__FLAG__) == PWR_WAKEUP_FLAG10) ? (WRITE_REG(PWR->WUSCR, PWR_WUSCR_CWUF10)): \
-    (WRITE_REG(PWR->WUSCR, (PWR_WUSCR_CWUF1 | PWR_WUSCR_CWUF2 | PWR_WUSCR_CWUF3 | PWR_WUSCR_CWUF4 | PWR_WUSCR_CWUF5 | \
-                            PWR_WUSCR_CWUF6 | PWR_WUSCR_CWUF7 | PWR_WUSCR_CWUF8 | PWR_WUSCR_CWUF9 | PWR_WUSCR_CWUF10))))
+  (                                                                                  \
+      ((__FLAG__) == PWR_FLAG_STOPF)    ? (SET_BIT(PWR->SR, PWR_SR_CSSF))          : \
+      ((__FLAG__) == PWR_FLAG_SBF)      ? (SET_BIT(PWR->SR, PWR_SR_CSSF))          : \
+      ((__FLAG__) == PWR_WAKEUP_FLAG1)  ? (WRITE_REG(PWR->WUSCR, PWR_WUSCR_CWUF1)) : \
+      ((__FLAG__) == PWR_WAKEUP_FLAG2)  ? (WRITE_REG(PWR->WUSCR, PWR_WUSCR_CWUF2)) : \
+      ((__FLAG__) == PWR_WAKEUP_FLAG3)  ? (WRITE_REG(PWR->WUSCR, PWR_WUSCR_CWUF3)) : \
+      ((__FLAG__) == PWR_WAKEUP_FLAG4)  ? (WRITE_REG(PWR->WUSCR, PWR_WUSCR_CWUF4)) : \
+      ((__FLAG__) == PWR_WAKEUP_FLAG5)  ? (WRITE_REG(PWR->WUSCR, PWR_WUSCR_CWUF5)) : \
+      ((__FLAG__) == PWR_WAKEUP_FLAG6)  ? (WRITE_REG(PWR->WUSCR, PWR_WUSCR_CWUF6)) : \
+      ((__FLAG__) == PWR_WAKEUP_FLAG7)  ? (WRITE_REG(PWR->WUSCR, PWR_WUSCR_CWUF7)) : \
+      ((__FLAG__) == PWR_WAKEUP_FLAG8)  ? (WRITE_REG(PWR->WUSCR, PWR_WUSCR_CWUF8)) : \
+      ((__FLAG__) == PWR_WAKEUP_FLAG9)  ? (WRITE_REG(PWR->WUSCR, PWR_WUSCR_CWUF9)) : \
+      ((__FLAG__) == PWR_WAKEUP_FLAG10) ? (WRITE_REG(PWR->WUSCR, PWR_WUSCR_CWUF10)): \
+      (WRITE_REG(PWR->WUSCR, (PWR_WUSCR_CWUF1 | PWR_WUSCR_CWUF2 | PWR_WUSCR_CWUF3 | \
+                              PWR_WUSCR_CWUF4 | PWR_WUSCR_CWUF5 | PWR_WUSCR_CWUF6 | \
+                              PWR_WUSCR_CWUF7 | PWR_WUSCR_CWUF8 | PWR_WUSCR_CWUF9 | PWR_WUSCR_CWUF10))))
 
 /**
   * @brief  Enable the PVD Interrupt Line.

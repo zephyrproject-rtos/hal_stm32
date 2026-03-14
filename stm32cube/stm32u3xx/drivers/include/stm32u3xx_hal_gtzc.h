@@ -43,24 +43,24 @@ extern "C" {
   */
 
 /*!< Values needed for MPCBB_Attribute_ConfigTypeDef structure sizing */
-#define GTZC_MCPBB_NB_VCTR_REG_MAX      (12U)
-              /*!< Maximum number of super-blocks (32 consecutive blocks, block size is 512 bytes) */
+#define GTZC_MCPBB_NB_VCTR_REG_MAX      (20U)
+/*!< Maximum number of super-blocks (32 consecutive blocks, block size is 512 bytes) */
 #define GTZC_MCPBB_NB_LCK_VCTR_REG_MAX  (1U)
-              /*!< Maximum number of lock configuration registers to manage super-blocks */
+/*!< Maximum number of lock configuration registers to manage super-blocks */
 
-  typedef struct
+typedef struct
 {
   uint32_t MPCBB_SecConfig_array[GTZC_MCPBB_NB_VCTR_REG_MAX];
-                        /*!< Each element specifies secure access mode for a super-block.
-                             Each bit corresponds to a block inside the super-block.
-                             0 means non-secure, 1 means secure */
+  /*!< Each element specifies secure access mode for a super-block.
+       Each bit corresponds to a block inside the super-block.
+       0 means non-secure, 1 means secure */
   uint32_t MPCBB_PrivConfig_array[GTZC_MCPBB_NB_VCTR_REG_MAX];
-                        /*!< Each element specifies privilege access mode for a super-block.
-                             Each bit corresponds to a block inside the super-block.
-                             0 means non-privilege, 1 means privilege */
+  /*!< Each element specifies privilege access mode for a super-block.
+       Each bit corresponds to a block inside the super-block.
+       0 means non-privilege, 1 means privilege */
   uint32_t MPCBB_LockConfig_array[GTZC_MCPBB_NB_LCK_VCTR_REG_MAX];
-                        /*!< Each bit specifies the lock configuration of a super-block (32 blocks).
-                             0 means unlocked, 1 means locked */
+  /*!< Each bit specifies the lock configuration of a super-block (32 blocks).
+       0 means unlocked, 1 means locked */
 } MPCBB_Attribute_ConfigTypeDef;
 
 typedef struct

@@ -79,7 +79,7 @@ typedef struct
   * @{
   */
 #define SPI_TRIG_GRP1                   (0x10000000U)      /* Trigger Group for SPI1 and SPI2 */
-#define SPI_TRIG_GRP2                   (0x20000000U)      /* Trigger Group for SPI3 */
+#define SPI_TRIG_GRP2                   (0x20000000U)      /* Trigger Group for SPI3 and SPI4 */
 
 /* HW Trigger signal is GPDMA_CH0_TRG   */
 #define SPI_GRP1_GPDMA_CH0_TCF_TRG      (uint32_t)(SPI_TRIG_GRP1 | (0x00000000U))

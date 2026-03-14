@@ -31,7 +31,7 @@ stm32mp1xx      1.7.0
 stm32mp2xx      1.2.0
 stm32n6xx       1.3.0
 stm32u0xx       1.3.0
-stm32u3xx       1.2.0
+stm32u3xx       1.3.0
 stm32u5xx       1.8.0
 stm32wb0x       1.4.0
 stm32wbaxx      1.9.0

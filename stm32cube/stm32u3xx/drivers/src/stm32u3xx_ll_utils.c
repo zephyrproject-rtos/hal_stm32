@@ -62,7 +62,6 @@
   */
 
 
-
 #define IS_LL_UTILS_SYSCLK_DIV(__VALUE__) (((__VALUE__) == LL_RCC_HCLK_SYSCLK_DIV_1)      \
                                            || ((__VALUE__) == LL_RCC_HCLK_SYSCLK_DIV_2)   \
                                            || ((__VALUE__) == LL_RCC_HCLK_SYSCLK_DIV_4)   \
@@ -116,7 +115,8 @@ static ErrorStatus UTILS_SwitchSystem(uint32_t SYSCLK_Frequency,
   */
 
 /**
-  * @brief  This function configures the Cortex-M SysTick source to have 1ms time base with HCLK as SysTick clock source.
+  * @brief  This function configures the Cortex-M SysTick source to have 1ms time base with HCLK as SysTick
+  *         clock source.
   * @note   When a RTOS is used, it is recommended to avoid changing the Systick
   *         configuration by calling this function, for a delay use rather osDelay RTOS service.
   * @param  HCLKFrequency HCLK frequency in Hz
@@ -130,7 +130,8 @@ void LL_Init1msTick(uint32_t HCLKFrequency)
 }
 
 /**
-  * @brief  This function configures the Cortex-M SysTick source to have 1ms time base with HCLK/8 as SysTick clock source.
+  * @brief  This function configures the Cortex-M SysTick source to have 1ms time base with HCLK/8 as SysTick
+  *         clock source.
   * @note   When a RTOS is used, it is recommended to avoid changing the Systick
   *         configuration by calling this function, for a delay use rather osDelay RTOS service.
   * @param  HCLKFrequency HCLK frequency in Hz
@@ -260,9 +261,8 @@ void LL_SetSystemCoreClock(uint32_t HCLKFrequency)
 }
 
 
-
 /**
-  * @brief  This function configures system clock at maximum frequency with HSI as clock source 
+  * @brief  This function configures system clock at maximum frequency with HSI as clock source
   * @param  UTILS_ClkInitStruct pointer to a @ref LL_UTILS_ClkInitTypeDef structure that contains
   *                             the configuration information for the BUS prescalers.
   * @retval An ErrorStatus enumeration value:
@@ -283,7 +283,7 @@ ErrorStatus LL_ConfigSystemClock_HSI16(LL_UTILS_ClkInitTypeDef *UTILS_ClkInitStr
     }
   }
 
-  status = UTILS_SwitchSystem(HSI_VALUE,UTILS_ClkInitStruct);
+  status = UTILS_SwitchSystem(HSI_VALUE, UTILS_ClkInitStruct);
 
   return status;
 }
@@ -315,7 +315,7 @@ ErrorStatus LL_ConfigSystemClock_HSE(uint32_t HSEFrequency, LL_UTILS_ClkInitType
     }
   }
 
-  status = UTILS_SwitchSystem(HSEFrequency,UTILS_ClkInitStruct);
+  status = UTILS_SwitchSystem(HSEFrequency, UTILS_ClkInitStruct);
 
   return status;
 }

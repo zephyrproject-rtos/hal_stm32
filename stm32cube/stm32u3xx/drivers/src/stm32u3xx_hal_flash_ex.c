@@ -355,7 +355,8 @@ HAL_StatusTypeDef HAL_FLASHEx_OBProgram(FLASH_OBProgramInitTypeDef *pOBInit)
     if ((pOBInit->OptionType & OPTIONBYTE_RDPKEY) != 0U)
     {
       /* Configure the Read protection key */
-      FLASH_OB_RDPKeyConfig(pOBInit->RDPKeyType, pOBInit->RDPKey1, pOBInit->RDPKey2, pOBInit->RDPKey3, pOBInit->RDPKey4);
+      FLASH_OB_RDPKeyConfig(pOBInit->RDPKeyType, pOBInit->RDPKey1, pOBInit->RDPKey2, pOBInit->RDPKey3,
+                            pOBInit->RDPKey4);
     }
 
     /* User Configuration */
@@ -370,7 +371,8 @@ HAL_StatusTypeDef HAL_FLASHEx_OBProgram(FLASH_OBProgramInitTypeDef *pOBInit)
     if ((pOBInit->OptionType & OPTIONBYTE_WMSEC) != 0U)
     {
       /* Configure the watermark-based secure area */
-      FLASH_OB_WMSECConfig(pOBInit->WMSecConfig, pOBInit->WMSecStartPage, pOBInit->WMSecEndPage, pOBInit->WMHDPEndPage);
+      FLASH_OB_WMSECConfig(pOBInit->WMSecConfig, pOBInit->WMSecStartPage, pOBInit->WMSecEndPage,
+                           pOBInit->WMHDPEndPage);
     }
 
     /* Unique boot entry point configuration */
@@ -473,7 +475,7 @@ void HAL_FLASHEx_OBGetConfig(FLASH_OBProgramInitTypeDef *pOBInit)
   *
   * @retval  HAL Status
   */
-HAL_StatusTypeDef HAL_FLASHEx_ConfigBBAttributes(FLASH_BBAttributesTypeDef *pBBAttributes)
+HAL_StatusTypeDef HAL_FLASHEx_ConfigBBAttributes(const FLASH_BBAttributesTypeDef *pBBAttributes)
 {
   HAL_StatusTypeDef status;
   uint8_t index;
@@ -1386,8 +1388,8 @@ static void FLASH_OB_RDPKeyConfig(uint32_t RDPKeyType, uint32_t RDPKey1, uint32_
   *            @arg @ref FLASH_OB_USER_DUALBANK, @arg @ref FLASH_OB_USER_SRAM2_PE,
   *            @arg @ref FLASH_OB_USER_SRAM2_RST, @arg @ref FLASH_OB_USER_NSWBOOT0,
   *            @arg @ref FLASH_OB_USER_NBOOT0, @arg @ref FLASH_OB_USER_IO_VDD_HSLV,
-  *            @arg @ref FLASH_OB_USER_IO_VDDIO2_HSLV and @arg @ref FLASH_OB_USER_TZEN
-  *
+  *            @arg @ref FLASH_OB_USER_IO_VDDIO2_HSLV and @arg @ref FLASH_OB_USER_TZEN,
+  *            @arg @ref FLASH_OB_USER_SRAM3_PE
   * @retval  None
   */
 static void FLASH_OB_UserConfig(uint32_t UserType, uint32_t UserConfig)
@@ -1517,6 +1519,18 @@ static void FLASH_OB_UserConfig(uint32_t UserType, uint32_t UserConfig)
     optr_reg_val |= (UserConfig & FLASH_OPTR_DUALBANK);
     optr_reg_mask |= FLASH_OPTR_DUALBANK;
   }
+
+#if defined(FLASH_OPTR_SRAM3_PE)
+  if ((UserType & OB_USER_SRAM3_PE) != 0U)
+  {
+    /* SRAM3_PE option byte should be modified */
+    assert_param(IS_OB_USER_SRAM3_PE(UserConfig & FLASH_OPTR_SRAM3_PE));
+
+    /* Set value and mask for SRAM3_PE option byte */
+    optr_reg_val |= (UserConfig & FLASH_OPTR_SRAM3_PE);
+    optr_reg_mask |= FLASH_OPTR_SRAM3_PE;
+  }
+#endif /* FLASH_OPTR_SRAM3_PE */
 
   if ((UserType & OB_USER_SRAM2_PE) != 0U)
   {
@@ -1830,7 +1844,8 @@ static uint32_t FLASH_OB_GetRDP(void)
   *             @arg @ref FLASH_OB_USER_DUALBANK, @arg @ref FLASH_OB_USER_SRAM2_PE,
   *             @arg @ref FLASH_OB_USER_SRAM2_RST, @arg @ref FLASH_OB_USER_NSWBOOT0,
   *             @arg @ref FLASH_OB_USER_NBOOT0, @arg @ref FLASH_OB_USER_IO_VDD_HSLV,
-  *             @arg @ref FLASH_OB_USER_IO_VDDIO2_HSLV and @arg @ref FLASH_OB_USER_TZEN
+  *             @arg @ref FLASH_OB_USER_IO_VDDIO2_HSLV and @arg @ref FLASH_OB_USER_TZEN,
+  *             @arg @ref FLASH_OB_USER_SRAM3_PE
   */
 static uint32_t FLASH_OB_GetUser(void)
 {

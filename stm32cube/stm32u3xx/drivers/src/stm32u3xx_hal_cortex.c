@@ -103,15 +103,19 @@
     (#) device-GRE: new to Armv8-M
 
     A normal memory has the following attributes:
-    (#) Cache Allocation attribute : set when a cache line is allocated (no allocation, read/write/read-write allocation)
-    (#) Cache write policy : write through (write to cache AND memory), write back (memory is written when the cache line is evicted)
+    (#) Cache Allocation attribute : set when a cache line is allocated (no allocation, read/write/read-write
+        allocation)
+    (#) Cache write policy : write through (write to cache AND memory), write back (memory is written when the
+        cache line is evicted)
     (#) Transient : indicates that the region will be used for a short period of time
     For normal memory, attributes can be set for inner and outer caches separately.
-    Note that outer attributes set to 0 change the memory to device mode. Both inner and outer attributes should be set for normal memory.
+    Note that outer attributes set to 0 change the memory to device mode. Both inner and outer attributes should
+    be set for normal memory.
 
     Sample configurations
     (#) Inner-outer cacheable, write back, read-write allocate INNER_OUTER(MPU_RW_ALLOCATE | MPU_WRITE_BACK)
-    (#) Inner write back, read allocation, outer non-cacheable (MPU_R_ALLOCATE | MPU_WRITE_BACK) | OUTER(MPU_NOT_CACHEABLE)
+    (#) Inner write back, read allocation, outer non-cacheable
+        (MPU_R_ALLOCATE | MPU_WRITE_BACK) | OUTER(MPU_NOT_CACHEABLE)
     For detail on memory attributes, refer to the ARMv8-m MPU documentation.
 
     On STM32U3xx, the MPUs are split memory into regions (up to eight for the non-secure MPU,
@@ -120,8 +124,10 @@
 
     (#) Enable the MPU using HAL_MPU_Enable() function or HAL_MPU_Enable_NS function for non-secure MPU.
     (#) Disable the MPU using HAL_MPU_Disable() function or HAL_MPU_Disable_NS function for non-secure MPU.
-    (#) Enable the MPU region using HAL_MPU_EnableRegion() function or HAL_MPU_EnableRegion_NS function for non-secure MPU region.
-    (#) Disable the MPU region using HAL_MPU_DisableRegion() function or HAL_MPU_DisableRegion_NS function for non-secure MPU region.
+    (#) Enable the MPU region using HAL_MPU_EnableRegion() function or HAL_MPU_EnableRegion_NS function for
+        non-secure MPU region.
+    (#) Disable the MPU region using HAL_MPU_DisableRegion() function or HAL_MPU_DisableRegion_NS function
+        for non-secure MPU region.
     (#) Configure the MPU region using HAL_MPU_ConfigRegion() function or HAL_MPU_ConfigRegion_NS function
         for non-secure MPU.
     (#) Configure the MPU memory attributes using HAL_MPU_ConfigMemoryAttributes() function or
@@ -856,8 +862,8 @@ static void MPU_ConfigMemoryAttributes(MPU_Type *MPUx, const MPU_Attributes_Init
   }
 
   attr_values = *(p_mair);
-  attr_values &=  ~(0xFFU << (attr_number * 8U));
-  *(p_mair) = attr_values | ((uint32_t)pMPU_AttributesInit->Attributes << (attr_number * 8U));
+  attr_values &=  ~(0xFFUL << (attr_number * 8UL));
+  *(p_mair) = attr_values | ((uint32_t)pMPU_AttributesInit->Attributes << (attr_number * 8UL));
 }
 
 /**

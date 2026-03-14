@@ -350,8 +350,8 @@ typedef USB_HCTypeDef       USB_DRD_HCTypeDef;
   * @}
   */
 /********************  Bit definition for USB_COUNTn_RX register  *************/
-#define USB_CNTRX_NBLK_MSK                    (0x1FU << 26)
-#define USB_CNTRX_BLSIZE                      (0x1U << 31)
+#define USB_CNTRX_NBLK_MSK                    (0x1FUL << 26)
+#define USB_CNTRX_BLSIZE                      (0x1UL << 31)
 
 
 /*Set Channel/Endpoint to the USB Register */

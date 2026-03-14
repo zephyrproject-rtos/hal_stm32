@@ -30,7 +30,7 @@
   * @{
   */
 
-#if defined (I2C1) || defined (I2C2) || defined (I2C3)
+#if defined (I2C1) || defined (I2C2) || defined (I2C3) || defined (I2C4)
 
 /** @defgroup I2C_LL I2C
   * @{
@@ -98,6 +98,7 @@ ErrorStatus LL_I2C_DeInit(const I2C_TypeDef *I2Cx)
     /* Release reset of I2C clock */
     LL_APB1_GRP1_ReleaseReset(LL_APB1_GRP1_PERIPH_I2C1);
   }
+#if defined(I2C2)
   else if (I2Cx == I2C2)
   {
     /* Force reset of I2C clock */
@@ -107,6 +108,7 @@ ErrorStatus LL_I2C_DeInit(const I2C_TypeDef *I2Cx)
     LL_APB1_GRP1_ReleaseReset(LL_APB1_GRP1_PERIPH_I2C2);
 
   }
+#endif /* I2C2 */
   else if (I2Cx == I2C3)
   {
     /* Force reset of I2C clock */
@@ -115,6 +117,16 @@ ErrorStatus LL_I2C_DeInit(const I2C_TypeDef *I2Cx)
     /* Release reset of I2C clock */
     LL_APB3_GRP1_ReleaseReset(LL_APB3_GRP1_PERIPH_I2C3);
   }
+#if defined(I2C4)
+  else if (I2Cx == I2C4)
+  {
+    /* Force reset of I2C clock */
+    LL_APB1_GRP2_ForceReset(LL_APB1_GRP2_PERIPH_I2C4);
+
+    /* Release reset of I2C clock */
+    LL_APB1_GRP2_ReleaseReset(LL_APB1_GRP2_PERIPH_I2C4);
+  }
+#endif /* I2C4 */
   else
   {
     status = ERROR;
@@ -223,7 +235,7 @@ void LL_I2C_StructInit(LL_I2C_InitTypeDef *I2C_InitStruct)
   * @}
   */
 
-#endif /* I2C1 || I2C2 || I2C3 */
+#endif /* I2C1 || I2C2 || I2C3 || I2C4 */
 
 /**
   * @}

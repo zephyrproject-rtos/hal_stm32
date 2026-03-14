@@ -45,8 +45,12 @@ extern "C" {
 /** @defgroup SPI_LL_Private_Macros SPI Private Macros
   * @{
   */
+#if defined(IS_SPI_GRP2_INSTANCE)
 #define IS_LL_SPI_GRP1_INSTANCE(__INSTANCE__)    IS_SPI_GRP1_INSTANCE(__INSTANCE__)
 #define IS_LL_SPI_GRP2_INSTANCE(__INSTANCE__)    IS_SPI_GRP2_INSTANCE(__INSTANCE__)
+#else
+#define IS_LL_SPI_GRP1_INSTANCE(__INSTANCE__)    IS_SPI_GRP1_INSTANCE(__INSTANCE__)
+#endif /* SPI_TRIG_GRP2 */
 /**
   * @}
   */
@@ -493,7 +497,9 @@ typedef struct
   * @{
   */
 #define LL_SPI_TRIG_GRP1                   (0x10000000U)                    /*!< Trigger Group for SPI1 and SPI2 */
-#define LL_SPI_TRIG_GRP2                   (0x20000000U)                    /*!< Trigger Group for SPI3 */
+#if defined(SPI3)
+#define LL_SPI_TRIG_GRP2                   (0x20000000U)                    /*!< Trigger Group for SPI3 and SPI4 */
+#endif /* SPI3 */
 
 /*!< HW Trigger signal is GPDMA_CH0_TRG     */
 #define LL_SPI_GRP1_GPDMA_CH0_TCF_TRG      (uint32_t)(LL_SPI_TRIG_GRP1 | (0x00000000U))
@@ -520,6 +526,7 @@ typedef struct
 /*!< HW Trigger signal is RTC_WUT_TRG       */
 #define LL_SPI_GRP1_RTC_WUT_TRG            (uint32_t)(LL_SPI_TRIG_GRP1 | (0xBU << SPI_AUTOCR_TRIGSEL_Pos))
 
+#if defined(LL_SPI_TRIG_GRP2)
 /*!< HW Trigger signal is LPDMA_CH0_TRG     */
 #define LL_SPI_GRP2_GPDMA_CH0_TCF_TRG      (uint32_t)(LL_SPI_TRIG_GRP2 | (0x00000000U))
 /*!< HW Trigger signal is LPDMA_CH1_TRG     */
@@ -544,6 +551,7 @@ typedef struct
 #define LL_SPI_GRP2_RTC_ALRA_TRG           (uint32_t)(LL_SPI_TRIG_GRP2 | (0xAU << SPI_AUTOCR_TRIGSEL_Pos))
 /*!< HW Trigger signal is RTC_WUT_TRG       */
 #define LL_SPI_GRP2_RTC_WUT_TRG            (uint32_t)(LL_SPI_TRIG_GRP2 | (0xBU << SPI_AUTOCR_TRIGSEL_Pos))
+#endif /* LL_SPI_TRIG_GRP2 */
 /**
   * @}
   */
@@ -2677,6 +2685,7 @@ __STATIC_INLINE void LL_SPI_SetSelectedTrigger(SPI_TypeDef *SPIx, uint32_t Trigg
   */
 __STATIC_INLINE uint32_t LL_SPI_GetSelectedTrigger(const SPI_TypeDef *SPIx)
 {
+#if defined(LL_SPI_TRIG_GRP2)
   if (IS_LL_SPI_GRP2_INSTANCE(SPIx))
   {
     return (uint32_t)((READ_BIT(SPIx->AUTOCR, SPI_AUTOCR_TRIGSEL) | LL_SPI_TRIG_GRP2));
@@ -2685,6 +2694,9 @@ __STATIC_INLINE uint32_t LL_SPI_GetSelectedTrigger(const SPI_TypeDef *SPIx)
   {
     return (uint32_t)((READ_BIT(SPIx->AUTOCR, SPI_AUTOCR_TRIGSEL) | LL_SPI_TRIG_GRP1));
   }
+#else
+  return (uint32_t)((READ_BIT(SPIx->AUTOCR, SPI_AUTOCR_TRIGSEL) | LL_SPI_TRIG_GRP1));
+#endif /* LL_SPI_TRIG_GRP2 */
 }
 
 /**

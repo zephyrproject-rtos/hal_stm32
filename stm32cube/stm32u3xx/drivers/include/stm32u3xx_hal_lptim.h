@@ -527,8 +527,8 @@ typedef  void (*pLPTIM_CallbackTypeDef)(LPTIM_HandleTypeDef *hlptim);  /*!< poin
 #define LPTIM_IC2SOURCE_LSI                        LPTIM_CFGR2_IC2SEL_0                          /*!< For LPTIM1 */
 #define LPTIM_IC2SOURCE_LSE                        LPTIM_CFGR2_IC2SEL_1                          /*!< For LPTIM1 */
 #define LPTIM_IC2SOURCE_HSI_256                    LPTIM_CFGR2_IC2SEL_0                          /*!< For LPTIM2 */
-#define LPTIM_IC2SOURCE_MSI_1024                   LPTIM_CFGR2_IC2SEL_1                          /*!< For LPTIM2 */
-#define LPTIM_IC2SOURCE_MSI_4                      (LPTIM_CFGR2_IC2SEL_1 | LPTIM_CFGR2_IC2SEL_1) /*!< For LPTIM2 */
+#define LPTIM_IC2SOURCE_MSIS_1024                  LPTIM_CFGR2_IC2SEL_1                          /*!< For LPTIM2 */
+#define LPTIM_IC2SOURCE_MSIS_4                     (LPTIM_CFGR2_IC2SEL_1 | LPTIM_CFGR2_IC2SEL_1) /*!< For LPTIM2 */
 #define LPTIM_IC2SOURCE_I3C2_IBIACK                LPTIM_CFGR2_IC2SEL_0                          /*!< For LPTIM3 */
 /**
   * @}
@@ -1157,8 +1157,8 @@ HAL_LPTIM_StateTypeDef HAL_LPTIM_GetState(const LPTIM_HandleTypeDef *hlptim);
    (((__INSTANCE__) == LPTIM2) &&                     \
     (((__SOURCE__) == LPTIM_IC2SOURCE_GPIO)     ||    \
      ((__SOURCE__) == LPTIM_IC2SOURCE_HSI_256)  ||    \
-     ((__SOURCE__) == LPTIM_IC2SOURCE_MSI_1024) ||    \
-     ((__SOURCE__) == LPTIM_IC2SOURCE_MSI_4)))        \
+     ((__SOURCE__) == LPTIM_IC2SOURCE_MSIS_1024) ||    \
+     ((__SOURCE__) == LPTIM_IC2SOURCE_MSIS_4)))        \
    ||                                                 \
    (((__INSTANCE__) == LPTIM3) &&                     \
     (((__SOURCE__) == LPTIM_IC2SOURCE_GPIO)     ||    \

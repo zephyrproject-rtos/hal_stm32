@@ -1132,7 +1132,7 @@ HAL_StatusTypeDef USB_HC_Init(USB_DRD_TypeDef *USBx, uint8_t phy_ch_num,
                  USB_CHEP_KIND |
                  USB_CHEP_ERRTX |
                  USB_CHEP_ERRRX |
-                 (0xFU << 27));
+                 (0xFUL << 27));
 
   /* Set device address and Endpoint number associated to the channel */
   wChRegVal |= (((uint32_t)dev_address << USB_CHEP_DEVADDR_Pos) |

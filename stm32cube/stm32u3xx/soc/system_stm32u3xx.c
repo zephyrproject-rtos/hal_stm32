@@ -110,7 +110,7 @@
      in Sram else user remap will be done in Flash. */
 /*#define VECT_TAB_SRAM */
 #if defined(VECT_TAB_SRAM)
-#define VECT_TAB_BASE_ADDRESS   SRAM1_BASE      /*!< Vector Table base address field.
+#define VECT_TAB_BASE_ADDRESS   0x0A000000U      /*!< Vector Table base address field.
                                                      This value must be a multiple of 0x200. */
 #define VECT_TAB_OFFSET         0x00000000U     /*!< Vector Table base offset field.
                                                      This value must be a multiple of 0x200. */

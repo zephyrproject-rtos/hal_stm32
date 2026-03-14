@@ -113,26 +113,27 @@
 
 /* Definitions for GTZC TZSC & TZIC ALL register values */
 /* TZSC1 / TZIC1 instances */
-#if defined(LCD)
-#define TZSC1_SECCFGR1_ALL       (0x01E6BDF7UL)
+#if defined(STM32U356xx) || defined(STM32U366xx)
+#define TZSC1_SECCFGR1_ALL       (0x01E2BDF7UL)
 #define TZSC1_SECCFGR2_ALL       (0x0003FA7BUL)
 #define TZSC1_SECCFGR3_ALL       (0x00D1F958UL)
 
-#define TZSC1_PRIVCFGR1_ALL      (0x01E6BDF7UL)
+#define TZSC1_PRIVCFGR1_ALL      (0x01E2BDF7UL)
 #define TZSC1_PRIVCFGR2_ALL      (0x0003FA7BUL)
 #define TZSC1_PRIVCFGR3_ALL      (0x00D1F958UL)
 
-#define TZIC1_IER1_ALL           (0x01E6BDF7UL)
+#define TZIC1_IER1_ALL           (0x01E2BDF7UL)
 #define TZIC1_IER2_ALL           (0x0003FA7BUL)
 #define TZIC1_IER3_ALL           (0x00D1F958UL)
 #define TZIC1_IER4_ALL           (0x0F00C1FFUL)
 
-#define TZIC1_FCR1_ALL           (0x01E6BDF7UL)
+#define TZIC1_FCR1_ALL           (0x01E2BDF7UL)
 #define TZIC1_FCR2_ALL           (0x0003FA7BUL)
 #define TZIC1_FCR3_ALL           (0x00D1F958UL)
 #define TZIC1_FCR4_ALL           (0x0F00C1FFUL)
+#endif /* defined(STM32U356xx) || defined(STM32U366xx) */
 
-#elif !(defined(LCD) && defined(SRAM3_BASE))
+#if defined(STM32U375xx) || defined(STM32U385xx)
 #define TZSC1_SECCFGR1_ALL       (0x01E6FDF7UL)
 #define TZSC1_SECCFGR2_ALL       (0x0001FEFBUL)
 #define TZSC1_SECCFGR3_ALL       (0x01D3F958UL)
@@ -150,8 +151,9 @@
 #define TZIC1_FCR2_ALL           (0x0001FEFBUL)
 #define TZIC1_FCR3_ALL           (0x01D3F958UL)
 #define TZIC1_FCR4_ALL           (0x0F00C1FFUL)
+#endif /* defined(STM32U375xx) || defined(STM32U385xx) */
 
-#else
+#if defined(STM32U3B5xx) || defined(STM32U3C5xx)
 #define TZSC1_SECCFGR1_ALL       (0x03F7FFF7UL)
 #define TZSC1_SECCFGR2_ALL       (0x0001FFFFUL)
 #define TZSC1_SECCFGR3_ALL       (0x21D3F958UL)
@@ -169,7 +171,7 @@
 #define TZIC1_FCR2_ALL           (0x0001FFFFUL)
 #define TZIC1_FCR3_ALL           (0x21D3F958UL)
 #define TZIC1_FCR4_ALL           (0xFF00C1FFUL)
-#endif /* !defined(SRAM3_BASE) */
+#endif /* defined(STM32U3B5xx) || defined(STM32U3C5xx) */
 
 /**
   * @}
@@ -643,7 +645,7 @@ HAL_StatusTypeDef HAL_GTZC_MPCBB_ConfigMem(uint32_t MemBaseAddress,
 HAL_StatusTypeDef HAL_GTZC_MPCBB_GetConfigMem(uint32_t MemBaseAddress,
                                               MPCBB_ConfigTypeDef *pMPCBB_desc)
 {
-  GTZC_MPCBB_TypeDef *mpcbb_ptr;
+  GTZC_MPCBB_TypeDef const *mpcbb_ptr;
   uint32_t mem_size;
   uint32_t size_in_superblocks;
   uint32_t i;
@@ -850,7 +852,7 @@ HAL_StatusTypeDef HAL_GTZC_MPCBB_GetConfigMemAttributes(uint32_t MemAddress,
                                                         uint32_t NbBlocks,
                                                         uint32_t *pMemAttributes)
 {
-  GTZC_MPCBB_TypeDef *mpcbb_ptr;
+  GTZC_MPCBB_TypeDef const *mpcbb_ptr;
   uint32_t base_address;
   uint32_t end_address;
   uint32_t block_start;

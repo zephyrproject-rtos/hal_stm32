@@ -74,10 +74,10 @@ extern HAL_TickFreqTypeDef      uwTickFreq;
 /**
   * @brief STM32U3xx HAL Driver version number
    */
-#define __STM32U3xx_HAL_VERSION_MAIN   (0x01U) /*!< [31:24] main version */
-#define __STM32U3xx_HAL_VERSION_SUB1   (0x02U) /*!< [23:16] sub1 version */
-#define __STM32U3xx_HAL_VERSION_SUB2   (0x00U) /*!< [15:8]  sub2 version */
-#define __STM32U3xx_HAL_VERSION_RC     (0x00U) /*!< [7:0]  release candidate */
+#define __STM32U3xx_HAL_VERSION_MAIN   (0x01UL) /*!< [31:24] main version */
+#define __STM32U3xx_HAL_VERSION_SUB1   (0x02UL) /*!< [23:16] sub1 version */
+#define __STM32U3xx_HAL_VERSION_SUB2   (0x00UL) /*!< [15:8]  sub2 version */
+#define __STM32U3xx_HAL_VERSION_RC     (0x00UL) /*!< [7:0]  release candidate */
 #define __STM32U3xx_HAL_VERSION         ((__STM32U3xx_HAL_VERSION_MAIN << 24U)\
                                          |(__STM32U3xx_HAL_VERSION_SUB1 << 16U)\
                                          |(__STM32U3xx_HAL_VERSION_SUB2 << 8U )\
@@ -145,17 +145,15 @@ extern HAL_TickFreqTypeDef      uwTickFreq;
   * @}
   */
 
+#if defined(VREFBUF)
 /** @defgroup SYSCFG_VREFBUF_VoltageScale VREFBUF Voltage Scale
   * @{
   */
-#define SYSCFG_VREFBUF_VOLTAGE_SCALE0  ((uint32_t)0x00000000)
-                          /*!< Voltage reference scale 0 (VREF_OUT1) */
-#define SYSCFG_VREFBUF_VOLTAGE_SCALE1  VREFBUF_CSR_VRS_0
-                          /*!< Voltage reference scale 1 (VREF_OUT2) */
-#define SYSCFG_VREFBUF_VOLTAGE_SCALE2  VREFBUF_CSR_VRS_1
-                          /*!< Voltage reference scale 2 (VREF_OUT3) */
+#define SYSCFG_VREFBUF_VOLTAGE_SCALE0  ((uint32_t)0x00000000)  /*!< Voltage reference scale 0 (VREF_OUT1) */
+#define SYSCFG_VREFBUF_VOLTAGE_SCALE1  VREFBUF_CSR_VRS_0       /*!< Voltage reference scale 1 (VREF_OUT2) */
+#define SYSCFG_VREFBUF_VOLTAGE_SCALE2  VREFBUF_CSR_VRS_1       /*!< Voltage reference scale 2 (VREF_OUT3) */
 #define SYSCFG_VREFBUF_VOLTAGE_SCALE3  (VREFBUF_CSR_VRS_0 | VREFBUF_CSR_VRS_1)
-                          /*!< Voltage reference scale 3 (VREF_OUT4) */
+/*!< Voltage reference scale 3 (VREF_OUT4) */
 
 /**
   * @}
@@ -168,6 +166,7 @@ extern HAL_TickFreqTypeDef      uwTickFreq;
                                                                            Voltage reference buffer output */
 #define SYSCFG_VREFBUF_HIGH_IMPEDANCE_ENABLE   VREFBUF_CSR_HIZ        /*!< VREF_plus pin is high impedance */
 
+#endif /* VREFBUF */
 /**
   * @}
   */
@@ -195,22 +194,17 @@ extern HAL_TickFreqTypeDef      uwTickFreq;
   * @brief SYSCFG items to set lock on
   * @{
   */
-#define SYSCFG_MPU_NSEC              SYSCFG_CNSLCKR_LOCKNSMPU
-                                          /*!< Non-secure MPU lock (privileged secure or non-secure only) */
-#define SYSCFG_VTOR_NSEC             SYSCFG_CNSLCKR_LOCKNSVTOR
-                                          /*!< Non-secure VTOR lock (privileged secure or non-secure only) */
+#define SYSCFG_MPU_NSEC          SYSCFG_CNSLCKR_LOCKNSMPU  /*!< Non-secure MPU lock
+                                                                (privileged secure or non-secure only) */
+#define SYSCFG_VTOR_NSEC         SYSCFG_CNSLCKR_LOCKNSVTOR /*!< Non-secure VTOR lock
+                                                                (privileged secure or non-secure only) */
 #if defined (CPU_IN_SECURE_STATE)
-#define SYSCFG_SAU                   (SYSCFG_CSLCKR_LOCKSAU << 16U)
-                                          /*!< SAU lock (privileged secure code only) */
-#define SYSCFG_MPU_SEC               (SYSCFG_CSLCKR_LOCKSMPU << 16U)
-                                          /*!< Secure MPU lock (privileged secure code only) */
-#define SYSCFG_VTOR_AIRCR_SEC        (SYSCFG_CSLCKR_LOCKSVTAIRCR << 16U)
-                                          /*!< VTOR_S and AIRCR lock (privileged secure code only) */
-#define SYSCFG_LOCK_ALL              (SYSCFG_MPU_NSEC|SYSCFG_VTOR_NSEC|SYSCFG_SAU|SYSCFG_MPU_SEC|SYSCFG_VTOR_AIRCR_SEC)
-                                          /*!< All */
+#define SYSCFG_SAU               (SYSCFG_CSLCKR_LOCKSAU << 16U)      /*!< SAU lock (privileged secure code only) */
+#define SYSCFG_MPU_SEC           (SYSCFG_CSLCKR_LOCKSMPU << 16U)     /*!< Secure MPU lock (privileged secure code only) */
+#define SYSCFG_VTOR_AIRCR_SEC    (SYSCFG_CSLCKR_LOCKSVTAIRCR << 16U) /*!< VTOR_S and AIRCR lock (privileged secure code only) */
+#define SYSCFG_LOCK_ALL          (SYSCFG_MPU_NSEC|SYSCFG_VTOR_NSEC|SYSCFG_SAU|SYSCFG_MPU_SEC|SYSCFG_VTOR_AIRCR_SEC) /*!< All */
 #else
-#define SYSCFG_LOCK_ALL              (SYSCFG_MPU_NSEC|SYSCFG_VTOR_NSEC)
-                                          /*!< All (privileged secure or non-secure only) */
+#define SYSCFG_LOCK_ALL          (SYSCFG_MPU_NSEC|SYSCFG_VTOR_NSEC)  /*!< All (privileged secure or non-secure only) */
 #endif /* CPU_IN_SECURE_STATE */
 /**
   * @}
@@ -250,70 +244,85 @@ extern HAL_TickFreqTypeDef      uwTickFreq;
 
 /** @brief  Freeze/Unfreeze Peripherals in Debug mode
   */
-#if defined(DBGMCU_APB1FZR1_DBG_TIM2_STOP)
-#define __HAL_DBGMCU_FREEZE_TIM2()           SET_BIT(DBGMCU->APB1FZR1, DBGMCU_APB1FZR1_DBG_TIM2_STOP)
-#define __HAL_DBGMCU_UNFREEZE_TIM2()         CLEAR_BIT(DBGMCU->APB1FZR1, DBGMCU_APB1FZR1_DBG_TIM2_STOP)
-#endif /* DBGMCU_APB1FZR1_DBG_TIM2_STOP */
+#if defined(DBGMCU_APB1LFZR_DBG_TIM2_STOP)
+#define __HAL_DBGMCU_FREEZE_TIM2()           SET_BIT(DBGMCU->APB1LFZR, DBGMCU_APB1LFZR_DBG_TIM2_STOP)
+#define __HAL_DBGMCU_UNFREEZE_TIM2()         CLEAR_BIT(DBGMCU->APB1LFZR, DBGMCU_APB1LFZR_DBG_TIM2_STOP)
+#endif /* DBGMCU_APB1LFZR_DBG_TIM2_STOP */
 
-#if defined(DBGMCU_APB1FZR1_DBG_TIM3_STOP)
-#define __HAL_DBGMCU_FREEZE_TIM3()           SET_BIT(DBGMCU->APB1FZR1, DBGMCU_APB1FZR1_DBG_TIM3_STOP)
-#define __HAL_DBGMCU_UNFREEZE_TIM3()         CLEAR_BIT(DBGMCU->APB1FZR1, DBGMCU_APB1FZR1_DBG_TIM3_STOP)
-#endif /* DBGMCU_APB1FZR1_DBG_TIM3_STOP */
+#if defined(DBGMCU_APB1LFZR_DBG_TIM3_STOP)
+#define __HAL_DBGMCU_FREEZE_TIM3()           SET_BIT(DBGMCU->APB1LFZR, DBGMCU_APB1LFZR_DBG_TIM3_STOP)
+#define __HAL_DBGMCU_UNFREEZE_TIM3()         CLEAR_BIT(DBGMCU->APB1LFZR, DBGMCU_APB1LFZR_DBG_TIM3_STOP)
+#endif /* DBGMCU_APB1LFZR_DBG_TIM3_STOP */
 
-#if defined(DBGMCU_APB1FZR1_DBG_TIM4_STOP)
-#define __HAL_DBGMCU_FREEZE_TIM4()           SET_BIT(DBGMCU->APB1FZR1, DBGMCU_APB1FZR1_DBG_TIM4_STOP)
-#define __HAL_DBGMCU_UNFREEZE_TIM4()         CLEAR_BIT(DBGMCU->APB1FZR1, DBGMCU_APB1FZR1_DBG_TIM4_STOP)
-#endif /* DBGMCU_APB1FZR1_DBG_TIM4_STOP */
+#if defined(DBGMCU_APB1LFZR_DBG_TIM4_STOP)
+#define __HAL_DBGMCU_FREEZE_TIM4()           SET_BIT(DBGMCU->APB1LFZR, DBGMCU_APB1LFZR_DBG_TIM4_STOP)
+#define __HAL_DBGMCU_UNFREEZE_TIM4()         CLEAR_BIT(DBGMCU->APB1LFZR, DBGMCU_APB1LFZR_DBG_TIM4_STOP)
+#endif /* DBGMCU_APB1LFZR_DBG_TIM4_STOP */
 
-#if defined(DBGMCU_APB1FZR1_DBG_TIM6_STOP)
-#define __HAL_DBGMCU_FREEZE_TIM6()           SET_BIT(DBGMCU->APB1FZR1, DBGMCU_APB1FZR1_DBG_TIM6_STOP)
-#define __HAL_DBGMCU_UNFREEZE_TIM6()         CLEAR_BIT(DBGMCU->APB1FZR1, DBGMCU_APB1FZR1_DBG_TIM6_STOP)
-#endif /* DBGMCU_APB1FZR1_DBG_TIM6_STOP */
+#if defined(DBGMCU_APB1LFZR_DBG_TIM6_STOP)
+#define __HAL_DBGMCU_FREEZE_TIM6()           SET_BIT(DBGMCU->APB1LFZR, DBGMCU_APB1LFZR_DBG_TIM6_STOP)
+#define __HAL_DBGMCU_UNFREEZE_TIM6()         CLEAR_BIT(DBGMCU->APB1LFZR, DBGMCU_APB1LFZR_DBG_TIM6_STOP)
+#endif /* DBGMCU_APB1LFZR_DBG_TIM6_STOP */
 
-#if defined(DBGMCU_APB1FZR1_DBG_TIM7_STOP)
-#define __HAL_DBGMCU_FREEZE_TIM7()           SET_BIT(DBGMCU->APB1FZR1, DBGMCU_APB1FZR1_DBG_TIM7_STOP)
-#define __HAL_DBGMCU_UNFREEZE_TIM7()         CLEAR_BIT(DBGMCU->APB1FZR1, DBGMCU_APB1FZR1_DBG_TIM7_STOP)
-#endif /* DBGMCU_APB1FZR1_DBG_TIM7_STOP */
+#if defined(DBGMCU_APB1LFZR_DBG_TIM7_STOP)
+#define __HAL_DBGMCU_FREEZE_TIM7()           SET_BIT(DBGMCU->APB1LFZR, DBGMCU_APB1LFZR_DBG_TIM7_STOP)
+#define __HAL_DBGMCU_UNFREEZE_TIM7()         CLEAR_BIT(DBGMCU->APB1LFZR, DBGMCU_APB1LFZR_DBG_TIM7_STOP)
+#endif /* DBGMCU_APB1LFZR_DBG_TIM7_STOP */
 
-#if defined(DBGMCU_APB1FZR1_DBG_WWDG_STOP)
-#define __HAL_DBGMCU_FREEZE_WWDG()           SET_BIT(DBGMCU->APB1FZR1, DBGMCU_APB1FZR1_DBG_WWDG_STOP)
-#define __HAL_DBGMCU_UNFREEZE_WWDG()         CLEAR_BIT(DBGMCU->APB1FZR1, DBGMCU_APB1FZR1_DBG_WWDG_STOP)
-#endif /* DBGMCU_APB1FZR1_DBG_WWDG_STOP */
+#if defined(DBGMCU_APB1LFZR_DBG_WWDG_STOP)
+#define __HAL_DBGMCU_FREEZE_WWDG()           SET_BIT(DBGMCU->APB1LFZR, DBGMCU_APB1LFZR_DBG_WWDG_STOP)
+#define __HAL_DBGMCU_UNFREEZE_WWDG()         CLEAR_BIT(DBGMCU->APB1LFZR, DBGMCU_APB1LFZR_DBG_WWDG_STOP)
+#endif /* DBGMCU_APB1LFZR_DBG_WWDG_STOP */
 
-#if defined(DBGMCU_APB1FZR1_DBG_IWDG_STOP)
-#define __HAL_DBGMCU_FREEZE_IWDG()           SET_BIT(DBGMCU->APB1FZR1, DBGMCU_APB1FZR1_DBG_IWDG_STOP)
-#define __HAL_DBGMCU_UNFREEZE_IWDG()         CLEAR_BIT(DBGMCU->APB1FZR1, DBGMCU_APB1FZR1_DBG_IWDG_STOP)
-#endif /* DBGMCU_APB1FZR1_DBG_IWDG_STOP */
+#if defined(DBGMCU_APB1LFZR_DBG_IWDG_STOP)
+#define __HAL_DBGMCU_FREEZE_IWDG()           SET_BIT(DBGMCU->APB1LFZR, DBGMCU_APB1LFZR_DBG_IWDG_STOP)
+#define __HAL_DBGMCU_UNFREEZE_IWDG()         CLEAR_BIT(DBGMCU->APB1LFZR, DBGMCU_APB1LFZR_DBG_IWDG_STOP)
+#endif /* DBGMCU_APB1LFZR_DBG_IWDG_STOP */
 
-#if defined(DBGMCU_APB1FZR1_DBG_I2C1_STOP)
-#define __HAL_DBGMCU_FREEZE_I2C1()              SET_BIT(DBGMCU->APB1FZR1, DBGMCU_APB1FZR1_DBG_I2C1_STOP)
-#define __HAL_DBGMCU_UNFREEZE_I2C1()            CLEAR_BIT(DBGMCU->APB1FZR1, DBGMCU_APB1FZR1_DBG_I2C1_STOP)
-#endif /* DBGMCU_APB1FZR1_DBG_I2C1_STOP */
+#if defined(DBGMCU_APB1LFZR_DBG_I2C1_STOP)
+#define __HAL_DBGMCU_FREEZE_I2C1()              SET_BIT(DBGMCU->APB1LFZR, DBGMCU_APB1LFZR_DBG_I2C1_STOP)
+#define __HAL_DBGMCU_UNFREEZE_I2C1()            CLEAR_BIT(DBGMCU->APB1LFZR, DBGMCU_APB1LFZR_DBG_I2C1_STOP)
+#endif /* DBGMCU_APB1LFZR_DBG_I2C1_STOP */
 
-#if defined(DBGMCU_APB1FZR1_DBG_I2C2_STOP)
-#define __HAL_DBGMCU_FREEZE_I2C2()              SET_BIT(DBGMCU->APB1FZR1, DBGMCU_APB1FZR1_DBG_I2C2_STOP)
-#define __HAL_DBGMCU_UNFREEZE_I2C2()            CLEAR_BIT(DBGMCU->APB1FZR1, DBGMCU_APB1FZR1_DBG_I2C2_STOP)
-#endif /* DBGMCU_APB1FZR1_DBG_I2C2_STOP */
+#if defined(DBGMCU_APB1LFZR_DBG_I2C2_STOP)
+#define __HAL_DBGMCU_FREEZE_I2C2()              SET_BIT(DBGMCU->APB1LFZR, DBGMCU_APB1LFZR_DBG_I2C2_STOP)
+#define __HAL_DBGMCU_UNFREEZE_I2C2()            CLEAR_BIT(DBGMCU->APB1LFZR, DBGMCU_APB1LFZR_DBG_I2C2_STOP)
+#endif /* DBGMCU_APB1LFZR_DBG_I2C2_STOP */
 
-#if defined(DBGMCU_APB1FZR1_DBG_I3C1_STOP)
-#define __HAL_DBGMCU_FREEZE_I3C1()              SET_BIT(DBGMCU->APB1FZR1, DBGMCU_APB1FZR1_DBG_I3C1_STOP)
-#define __HAL_DBGMCU_UNFREEZE_I3C1()            CLEAR_BIT(DBGMCU->APB1FZR1, DBGMCU_APB1FZR1_DBG_I3C1_STOP)
-#endif /* DBGMCU_APB1FZR1_DBG_I3C1_STOP */
+#if defined(DBGMCU_APB1LFZR_DBG_I3C1_STOP)
+#define __HAL_DBGMCU_FREEZE_I3C1()              SET_BIT(DBGMCU->APB1LFZR, DBGMCU_APB1LFZR_DBG_I3C1_STOP)
+#define __HAL_DBGMCU_UNFREEZE_I3C1()            CLEAR_BIT(DBGMCU->APB1LFZR, DBGMCU_APB1LFZR_DBG_I3C1_STOP)
+#endif /* DBGMCU_APB1LFZR_DBG_I3C1_STOP */
 
-#if defined(DBGMCU_APB1FZR1_DBG_RTC_STOP)
-#define __HAL_DBGMCU_FREEZE_RTC()              SET_BIT(DBGMCU->APB1FZR1, DBGMCU_APB1FZR1_DBG_RTC_STOP)
-#define __HAL_DBGMCU_UNFREEZE_RTC()            CLEAR_BIT(DBGMCU->APB1FZR1, DBGMCU_APB1FZR1_DBG_RTC_STOP)
-#endif /* DBGMCU_APB1FZR1_DBG_RTC_STOP */
+#if defined(DBGMCU_APB1LFZR_DBG_RTC_STOP)
+#define __HAL_DBGMCU_FREEZE_RTC()              SET_BIT(DBGMCU->APB1LFZR, DBGMCU_APB1LFZR_DBG_RTC_STOP)
+#define __HAL_DBGMCU_UNFREEZE_RTC()            CLEAR_BIT(DBGMCU->APB1LFZR, DBGMCU_APB1LFZR_DBG_RTC_STOP)
+#endif /* DBGMCU_APB1LFZR_DBG_RTC_STOP */
 
-#if defined(DBGMCU_APB1FZR2_DBG_LPTIM2_STOP)
-#define __HAL_DBGMCU_FREEZE_LPTIM2()            SET_BIT(DBGMCU->APB1FZR2, DBGMCU_APB1FZR2_DBG_LPTIM2_STOP)
-#define __HAL_DBGMCU_UNFREEZE_LPTIM2()          CLEAR_BIT(DBGMCU->APB1FZR2, DBGMCU_APB1FZR2_DBG_LPTIM2_STOP)
-#endif /* DBGMCU_APB1FZR2_DBG_LPTIM2_STOP */
+#if defined(DBGMCU_APB1HFZR_DBG_LPTIM2_STOP)
+#define __HAL_DBGMCU_FREEZE_LPTIM2()            SET_BIT(DBGMCU->APB1HFZR, DBGMCU_APB1HFZR_DBG_LPTIM2_STOP)
+#define __HAL_DBGMCU_UNFREEZE_LPTIM2()          CLEAR_BIT(DBGMCU->APB1HFZR, DBGMCU_APB1HFZR_DBG_LPTIM2_STOP)
+#endif /* DBGMCU_APB1HFZR_DBG_LPTIM2_STOP */
+
+#if defined(DBGMCU_APB1HFZR_DBG_I2C4_STOP)
+#define __HAL_DBGMCU_FREEZE_I2C4()            SET_BIT(DBGMCU->APB1HFZR, DBGMCU_APB1HFZR_DBG_I2C4_STOP)
+#define __HAL_DBGMCU_UNFREEZE_I2C4()          CLEAR_BIT(DBGMCU->APB1HFZR, DBGMCU_APB1HFZR_DBG_I2C4_STOP)
+#endif /* DBGMCU_APB1HFZR_DBG_LPTIM2_STOP */
 
 #if defined(DBGMCU_APB2FZR_DBG_TIM1_STOP)
 #define __HAL_DBGMCU_FREEZE_TIM1()              SET_BIT(DBGMCU->APB2FZR, DBGMCU_APB2FZR_DBG_TIM1_STOP)
 #define __HAL_DBGMCU_UNFREEZE_TIM1()            CLEAR_BIT(DBGMCU->APB2FZR, DBGMCU_APB2FZR_DBG_TIM1_STOP)
 #endif /* DBGMCU_APB2FZR_DBG_TIM1_STOP */
+
+#if defined(DBGMCU_APB2FZR_DBG_TIM8_STOP)
+#define __HAL_DBGMCU_FREEZE_TIM8()              SET_BIT(DBGMCU->APB2FZR, DBGMCU_APB2FZR_DBG_TIM8_STOP)
+#define __HAL_DBGMCU_UNFREEZE_TIM8()            CLEAR_BIT(DBGMCU->APB2FZR, DBGMCU_APB2FZR_DBG_TIM8_STOP)
+#endif /* DBGMCU_APB2FZR_DBG_TIM8_STOP */
+
+#if defined(DBGMCU_APB2FZR_DBG_TIM12_STOP)
+#define __HAL_DBGMCU_FREEZE_TIM12()              SET_BIT(DBGMCU->APB2FZR, DBGMCU_APB2FZR_DBG_TIM12_STOP)
+#define __HAL_DBGMCU_UNFREEZE_TIM12()            CLEAR_BIT(DBGMCU->APB2FZR, DBGMCU_APB2FZR_DBG_TIM12_STOP)
+#endif /* DBGMCU_APB2FZR_DBG_TIM12_STOP */
 
 #if defined(DBGMCU_APB2FZR_DBG_TIM15_STOP)
 #define __HAL_DBGMCU_FREEZE_TIM15()             SET_BIT(DBGMCU->APB2FZR, DBGMCU_APB2FZR_DBG_TIM15_STOP)
@@ -415,6 +424,11 @@ extern HAL_TickFreqTypeDef      uwTickFreq;
 #define __HAL_DBGMCU_UNFREEZE_GPDMA11()         CLEAR_BIT(DBGMCU->AHB1FZR, DBGMCU_AHB1FZR_DBG_GPDMA11_STOP)
 #endif /* DBGMCU_AHB1FZR_DBG_GPDMA11_STOP */
 
+#if defined(DBGMCU_AHB1FZR_DBG_HSP1_STOP)
+#define __HAL_DBGMCU_FREEZE_HSP1()           SET_BIT(DBGMCU->AHB1FZR, DBGMCU_AHB1FZR_DBG_HSP1_STOP)
+#define __HAL_DBGMCU_UNFREEZE_HSP1()         CLEAR_BIT(DBGMCU->AHB1FZR, DBGMCU_AHB1FZR_DBG_HSP1_STOP)
+#endif /* DBGMCU_AHB1FZR_DBG_HSP1_STOP */
+
 /**
   * @}
   */
@@ -501,6 +515,7 @@ extern HAL_TickFreqTypeDef      uwTickFreq;
 #define IS_SYSCFG_FPU_INTERRUPT(__INTERRUPT__) ((((__INTERRUPT__) & SYSCFG_IT_FPU_ALL) != 0x00U) && \
                                                 (((__INTERRUPT__) & ~SYSCFG_IT_FPU_ALL) == 0x00U))
 
+#if defined(VREFBUF)
 #define IS_SYSCFG_VREFBUF_VOLTAGE_SCALE(__SCALE__)  (((__SCALE__) == SYSCFG_VREFBUF_VOLTAGE_SCALE0) || \
                                                      ((__SCALE__) == SYSCFG_VREFBUF_VOLTAGE_SCALE1) || \
                                                      ((__SCALE__) == SYSCFG_VREFBUF_VOLTAGE_SCALE2) || \
@@ -510,6 +525,7 @@ extern HAL_TickFreqTypeDef      uwTickFreq;
                                                       ((__VALUE__) == SYSCFG_VREFBUF_HIGH_IMPEDANCE_ENABLE))
 
 #define IS_SYSCFG_VREFBUF_TRIMMING(__VALUE__)  (((__VALUE__) > 0U) && ((__VALUE__) <= VREFBUF_CCR_TRIM))
+#endif /* VREFBUF */
 
 #define IS_SYSCFG_FASTMODEPLUS(__PIN__) ((((__PIN__) & SYSCFG_FASTMODEPLUS_ALL) != 0x00U) && \
                                          (((__PIN__) & ~SYSCFG_FASTMODEPLUS_ALL) == 0x00U))
@@ -612,11 +628,13 @@ void HAL_DBGMCU_DisableDBGStandbyMode(void);
   */
 
 /* SYSCFG Control functions  ****************************************************/
+#if defined(VREFBUF)
 void              HAL_SYSCFG_VREFBUF_VoltageScalingConfig(uint32_t VoltageScaling);
 void              HAL_SYSCFG_VREFBUF_HighImpedanceConfig(uint32_t Mode);
 void              HAL_SYSCFG_VREFBUF_TrimmingConfig(uint32_t TrimmingValue);
 HAL_StatusTypeDef HAL_SYSCFG_EnableVREFBUF(void);
 void              HAL_SYSCFG_DisableVREFBUF(void);
+#endif /* VREFBUF */
 void              HAL_SYSCFG_EnableIOAnalogBooster(void);
 void              HAL_SYSCFG_DisableIOAnalogBooster(void);
 void              HAL_SYSCFG_EnableIOAnalogSwitchVdd(void);

@@ -1,4 +1,4 @@
-# Copyright (c) 2025 STMicroelectronics
+# Copyright (c) 2020 STMicroelectronics
 #
 # SPDX-License-Identifier: Apache-2.0
 
@@ -27,12 +27,14 @@ zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_GPIO drivers/src/stm32u3xx_hal
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_GTZC drivers/src/stm32u3xx_hal_gtzc.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_HASH drivers/src/stm32u3xx_hal_hash.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_HCD drivers/src/stm32u3xx_hal_hcd.c)
+zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_HSP drivers/src/stm32u3xx_hal_hsp.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_I2C drivers/src/stm32u3xx_hal_i2c.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_I2C_EX drivers/src/stm32u3xx_hal_i2c_ex.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_I3C drivers/src/stm32u3xx_hal_i3c.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_ICACHE drivers/src/stm32u3xx_hal_icache.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_IRDA drivers/src/stm32u3xx_hal_irda.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_IWDG drivers/src/stm32u3xx_hal_iwdg.c)
+zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_LCD drivers/src/stm32u3xx_hal_lcd.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_LPTIM drivers/src/stm32u3xx_hal_lptim.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_MDF drivers/src/stm32u3xx_hal_mdf.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_MMC drivers/src/stm32u3xx_hal_mmc.c)

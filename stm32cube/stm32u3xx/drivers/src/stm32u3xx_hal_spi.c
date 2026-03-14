@@ -2026,8 +2026,6 @@ HAL_StatusTypeDef HAL_SPI_TransmitReceive_IT(SPI_HandleTypeDef *hspi, const uint
 }
 
 
-
-
 /**
   * @brief  Transmit an amount of data in non-blocking mode with DMA.
   * @param  hspi : pointer to a SPI_HandleTypeDef structure that contains

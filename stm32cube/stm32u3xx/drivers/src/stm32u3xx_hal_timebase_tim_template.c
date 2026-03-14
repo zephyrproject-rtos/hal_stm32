@@ -115,7 +115,7 @@ HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
   if (Status == HAL_OK)
   {
 #if (USE_HAL_TIM_REGISTER_CALLBACKS == 1U)
-  HAL_TIM_RegisterCallback(&TimHandle, HAL_TIM_PERIOD_ELAPSED_CB_ID, TimeBase_TIM_PeriodElapsedCallback);
+    HAL_TIM_RegisterCallback(&TimHandle, HAL_TIM_PERIOD_ELAPSED_CB_ID, TimeBase_TIM_PeriodElapsedCallback);
 #endif /* USE_HAL_TIM_REGISTER_CALLBACKS */
 
     /* Start the TIM time Base generation in interrupt mode */

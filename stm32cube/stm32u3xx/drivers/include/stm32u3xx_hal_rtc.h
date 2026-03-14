@@ -641,9 +641,12 @@ typedef  void (*pRTC_CallbackTypeDef)(RTC_HandleTypeDef *hrtc);  /*!< pointer to
   * @retval None
   */
 #define __HAL_RTC_ALARM_ENABLE_IT(__HANDLE__, __INTERRUPT__)( \
-                                ((__INTERRUPT__) == RTC_IT_ALRA) ? (SET_BIT(RTC->CR, RTC_CR_ALRAIE)):\
-                                ((__INTERRUPT__) == RTC_IT_ALRB) ? (SET_BIT(RTC->CR, RTC_CR_ALRBIE)):\
-                                (0U)) /* Dummy action because is an invalid parameter value */
+                                                              ((__INTERRUPT__) == RTC_IT_ALRA) ?\
+                                                              (SET_BIT(RTC->CR, RTC_CR_ALRAIE)):\
+                                                              ((__INTERRUPT__) == RTC_IT_ALRB) ?\
+                                                              (SET_BIT(RTC->CR, RTC_CR_ALRBIE)):\
+                                                              (0U)) /* Dummy action because is an\
+                                                              invalid parameter value */
 
 /**
   * @brief  Disable the RTC Alarm interrupt.
@@ -655,9 +658,12 @@ typedef  void (*pRTC_CallbackTypeDef)(RTC_HandleTypeDef *hrtc);  /*!< pointer to
   * @retval None
   */
 #define __HAL_RTC_ALARM_DISABLE_IT(__HANDLE__, __INTERRUPT__)( \
-                                ((__INTERRUPT__) == RTC_IT_ALRA) ? (CLEAR_BIT(RTC->CR, RTC_CR_ALRAIE)):\
-                                ((__INTERRUPT__) == RTC_IT_ALRB) ? (CLEAR_BIT(RTC->CR, RTC_CR_ALRBIE)):\
-                                (0U)) /* Dummy action because is an invalid parameter value */
+                                                               ((__INTERRUPT__) == RTC_IT_ALRA) ?\
+                                                               (CLEAR_BIT(RTC->CR, RTC_CR_ALRAIE)):\
+                                                               ((__INTERRUPT__) == RTC_IT_ALRB) ?\
+                                                               (CLEAR_BIT(RTC->CR, RTC_CR_ALRBIE)):\
+                                                               (0U)) /* Dummy action because is\
+                                                               an invalid parameter value */
 
 /**
   * @brief  Check whether the specified RTC Alarm interrupt has occurred or not.
@@ -669,9 +675,12 @@ typedef  void (*pRTC_CallbackTypeDef)(RTC_HandleTypeDef *hrtc);  /*!< pointer to
   * @retval The state of __INTERRUPT__ (TRUE or FALSE).
   */
 #define __HAL_RTC_ALARM_GET_IT(__HANDLE__, __INTERRUPT__)( \
-                          ((__INTERRUPT__) == RTC_IT_ALRA) ? (READ_BIT(RTC->MISR, RTC_MISR_ALRAMF) == RTC_MISR_ALRAMF):\
-                          ((__INTERRUPT__) == RTC_IT_ALRB) ? (READ_BIT(RTC->MISR, RTC_MISR_ALRBMF) == RTC_MISR_ALRBMF):\
-                          (0U)) /* Return 0 because it is an invalid parameter value */
+                                                           ((__INTERRUPT__) == RTC_IT_ALRA) ?\
+                                                           (READ_BIT(RTC->MISR, RTC_MISR_ALRAMF) == RTC_MISR_ALRAMF):\
+                                                           ((__INTERRUPT__) == RTC_IT_ALRB) ?\
+                                                           (READ_BIT(RTC->MISR, RTC_MISR_ALRBMF) == RTC_MISR_ALRBMF):\
+                                                           (0U)) /* Return 0 because it is an\
+                                                           invalid parameter value */
 
 /**
   * @brief  Check whether the specified RTC Alarm interrupt has been enabled or not.
@@ -683,9 +692,12 @@ typedef  void (*pRTC_CallbackTypeDef)(RTC_HandleTypeDef *hrtc);  /*!< pointer to
   * @retval The state of __INTERRUPT__ (TRUE or FALSE).
   */
 #define __HAL_RTC_ALARM_GET_IT_SOURCE(__HANDLE__, __INTERRUPT__)( \
-                                ((__INTERRUPT__) == RTC_IT_ALRA) ? (READ_BIT(RTC->CR, RTC_CR_ALRAIE) == RTC_CR_ALRAIE):\
-                                ((__INTERRUPT__) == RTC_IT_ALRB) ? (READ_BIT(RTC->CR, RTC_CR_ALRBIE) == RTC_CR_ALRBIE):\
-                                (0U)) /* Return 0 because it is an invalid parameter value */
+                                                                  ((__INTERRUPT__) == RTC_IT_ALRA) ?\
+                                                                  (READ_BIT(RTC->CR, RTC_CR_ALRAIE) == RTC_CR_ALRAIE):\
+                                                                  ((__INTERRUPT__) == RTC_IT_ALRB) ?\
+                                                                  (READ_BIT(RTC->CR, RTC_CR_ALRBIE) == RTC_CR_ALRBIE):\
+                                                                  (0U)) /* Return 0 because it is an\
+                                                                  invalid parameter value */
 
 /**
   * @brief  Get the selected RTC Alarms flag status.
@@ -697,9 +709,11 @@ typedef  void (*pRTC_CallbackTypeDef)(RTC_HandleTypeDef *hrtc);  /*!< pointer to
   * @retval The state of __FLAG__ (TRUE or FALSE).
   */
 #define __HAL_RTC_ALARM_GET_FLAG(__HANDLE__, __FLAG__)( \
-                                ((__FLAG__) == RTC_FLAG_ALRAF) ? (READ_BIT(RTC->SR, RTC_SR_ALRAF) == RTC_SR_ALRAF):\
-                                ((__FLAG__) == RTC_FLAG_ALRBF) ? (READ_BIT(RTC->SR, RTC_SR_ALRBF) == RTC_SR_ALRBF):\
-                                (0U)) /* Return 0 because it is an invalid parameter value */
+                                                        ((__FLAG__) == RTC_FLAG_ALRAF) ?\
+                                                        (READ_BIT(RTC->SR, RTC_SR_ALRAF) == RTC_SR_ALRAF):\
+                                                        ((__FLAG__) == RTC_FLAG_ALRBF) ?\
+                                                        (READ_BIT(RTC->SR, RTC_SR_ALRBF) == RTC_SR_ALRBF):\
+                                                        (0U)) /* Return 0 because it is an invalid parameter value */
 
 /**
   * @brief  Clear the RTC Alarms pending flags.
@@ -711,9 +725,12 @@ typedef  void (*pRTC_CallbackTypeDef)(RTC_HandleTypeDef *hrtc);  /*!< pointer to
   * @retval None
   */
 #define __HAL_RTC_ALARM_CLEAR_FLAG(__HANDLE__, __FLAG__)( \
-                                ((__FLAG__) == RTC_FLAG_ALRAF) ? (WRITE_REG(RTC->SCR, RTC_SCR_CALRAF)):\
-                                ((__FLAG__) == RTC_FLAG_ALRBF) ? (WRITE_REG(RTC->SCR, RTC_SCR_CALRBF)):\
-                                (0U)) /* Dummy action because is an invalid parameter value */
+                                                          ((__FLAG__) == RTC_FLAG_ALRAF) ?\
+                                                          (WRITE_REG(RTC->SCR, RTC_SCR_CALRAF)):\
+                                                          ((__FLAG__) == RTC_FLAG_ALRBF) ?\
+                                                          (WRITE_REG(RTC->SCR, RTC_SCR_CALRBF)):\
+                                                          (0U)) /* Dummy action because is an\
+                                                          invalid parameter value */
 
 /**
   * @brief  Check whether if the RTC Calendar is initialized.
@@ -721,6 +738,13 @@ typedef  void (*pRTC_CallbackTypeDef)(RTC_HandleTypeDef *hrtc);  /*!< pointer to
   * @retval The state of RTC Calendar initialization (TRUE or FALSE).
   */
 #define __HAL_RTC_IS_CALENDAR_INITIALIZED(__HANDLE__)  ((((RTC->ICSR) & (RTC_ICSR_INITS)) == RTC_ICSR_INITS))
+
+/**
+  * @brief  Get RTC Binary mode.
+  * @param  __HANDLE__ specifies the RTC handle.
+  * @retval The selected RTC Binary mode (RTC_BINARY_NONE, RTC_BINARY_ONLY, or RTC_BINARY_MIX).
+  */
+#define __HAL_RTC_GET_BINARY_MODE(__HANDLE__) (READ_REG(RTC->ICSR & RTC_ICSR_BIN))
 
 /**
   * @}

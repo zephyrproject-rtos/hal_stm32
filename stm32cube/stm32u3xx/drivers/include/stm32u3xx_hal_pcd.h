@@ -159,6 +159,7 @@ typedef struct
   */
 #define PCD_PHY_ULPI                 1U
 #define PCD_PHY_EMBEDDED             2U
+#define PCD_HS_PHY_EMBEDDED          3U
 #define PCD_PHY_UTMI                 3U
 /**
   * @}
@@ -361,7 +362,7 @@ PCD_StateTypeDef HAL_PCD_GetState(PCD_HandleTypeDef const *hpcd);
   */
 
 
-#define USB_WAKEUP_EXTI_LINE                                          (0x1U << 15)  /*!< USB FS EXTI Line WakeUp Interrupt */
+#define USB_WAKEUP_EXTI_LINE                                          (0x1UL << 15)  /*!< USB FS EXTI Line WakeUp Interrupt */
 
 
 /**

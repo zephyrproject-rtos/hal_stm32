@@ -41,11 +41,14 @@
 /** @addtogroup Secure_configuration_section
   * @{
   */
-
 #if defined(STM32U375xx)
   #include "partition_stm32u375xx.h"
 #elif defined(STM32U385xx)
   #include "partition_stm32u385xx.h"
+#elif defined(STM32U3B5xx)
+  #include "partition_stm32u3b5xx.h"
+#elif defined(STM32U3C5xx)
+  #include "partition_stm32u3c5xx.h"
 #else
   #error "Please select first the target STM32U3xx device used in your application (in stm32u3xx.h file)"
 #endif

@@ -229,6 +229,10 @@ typedef struct
 #define LL_COMP_BLANKINGSRC_TIM2_OC3        (COMP_CSR_BLANKSEL_1)   /*!< Comparator output blanking source TIM2 OC3 for COMP1 Instance  */
 #define LL_COMP_BLANKINGSRC_TIM3_OC3        (COMP_CSR_BLANKSEL_2)   /*!< Comparator output blanking source TIM3 OC3 for COMP1 Instance  */
 #define LL_COMP_BLANKINGSRC_TIM3_OC4        (COMP_CSR_BLANKSEL_0)   /*!< Comparator output blanking source TIM3 OC4 for COMP2 Instance  */
+#define LL_COMP_BLANKINGSRC_TIM15_OC1       (COMP2_CSR_BLANKSEL_2)  /*!< Comparator output blanking source TIM15 OC1 for COMP2 Instance  */
+#if defined(COMP2_CSR_BLANKSEL_1)
+#define LL_COMP_BLANKINGSRC_TIM8_OC5       (COMP2_CSR_BLANKSEL_1)  /*!< Comparator output blanking source TIM8 OC5 for COMP2 Instance  */
+#endif /* COMP_CSR_BLANKSEL_1 */
 /**
   * @}
   */
@@ -709,9 +713,12 @@ __STATIC_INLINE uint32_t LL_COMP_GetOutputPolarity(const COMP_TypeDef *COMPx)
   *         @arg @ref LL_COMP_BLANKINGSRC_TIM2_OC3 (1)
   *         @arg @ref LL_COMP_BLANKINGSRC_TIM3_OC3 (1)
   *         @arg @ref LL_COMP_BLANKINGSRC_TIM3_OC4 (2)
+  *         @arg @ref LL_COMP_BLANKINGSRC_TIM15_OC1 (2)
+  *         @arg @ref LL_COMP_BLANKINGSRC_TIM8_OC5 (2)(*)
   *
   *         (1) Available only on COMP instance: COMP1.
   *         (2) Available only on COMP instance: COMP2.
+  *         (*) Parameter available on devices: STM32U3C5x
   * @retval None
   */
 __STATIC_INLINE void LL_COMP_SetOutputBlankingSource(COMP_TypeDef *COMPx, uint32_t BlankingSource)
@@ -733,9 +740,12 @@ __STATIC_INLINE void LL_COMP_SetOutputBlankingSource(COMP_TypeDef *COMPx, uint32
   *         @arg @ref LL_COMP_BLANKINGSRC_TIM2_OC3 (1)
   *         @arg @ref LL_COMP_BLANKINGSRC_TIM3_OC3 (1)
   *         @arg @ref LL_COMP_BLANKINGSRC_TIM3_OC4 (2)
+  *         @arg @ref LL_COMP_BLANKINGSRC_TIM15_OC1 (2)
+  *         @arg @ref LL_COMP_BLANKINGSRC_TIM8_OC5 (2)(*)
   *
   *         (1) Available only on COMP instance: COMP1.
   *         (2) Available only on COMP instance: COMP2.
+  *         (*) Parameter available on devices: STM32U3C5x
   */
 __STATIC_INLINE uint32_t LL_COMP_GetOutputBlankingSource(const COMP_TypeDef *COMPx)
 {
