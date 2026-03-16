@@ -27,6 +27,8 @@ extern "C" {
 /* Includes ------------------------------------------------------------------*/
 #include "stm32wbaxx_hal_def.h"
 
+#if defined (WWDG)
+
 /** @addtogroup STM32WBAxx_HAL_Driver
   * @{
   */
@@ -298,6 +300,8 @@ void                  HAL_WWDG_EarlyWakeupCallback(WWDG_HandleTypeDef *hwwdg);
 /**
   * @}
   */
+
+#endif /* WWDG */
 
 #ifdef __cplusplus
 }
