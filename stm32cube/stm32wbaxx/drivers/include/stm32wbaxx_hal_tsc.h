@@ -27,6 +27,7 @@ extern "C" {
 /* Includes ------------------------------------------------------------------*/
 #include "stm32wbaxx_hal_def.h"
 
+#if defined (TSC)
 
 /** @addtogroup STM32WBAxx_HAL_Driver
   * @{
@@ -857,6 +858,8 @@ void HAL_TSC_ErrorCallback(TSC_HandleTypeDef *htsc);
 /**
   * @}
   */
+
+#endif /* TSC */
 
 #ifdef __cplusplus
 }

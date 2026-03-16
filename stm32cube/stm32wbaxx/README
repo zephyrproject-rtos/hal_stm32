@@ -53,4 +53,9 @@ Patch List:
      drivers/include/stm32wbaxx_hal_conf.h
      stm32cube/stm32wbaxx/CMakeLists.txt
 
+   *Fix to encapsulate the header files of WWDG and TSC to avoid build errors
+    due to missing definitions in the WBA2 SoC header files.
+    Impacted files:
+     drivers/include/stm32wbaxx_hal_tsc.h
+     drivers/include/stm32wbaxx_hal_wwdg.h
    See release_note.html from STM32Cube
