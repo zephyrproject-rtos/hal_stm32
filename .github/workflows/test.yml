@@ -30,7 +30,7 @@ jobs:
             --cov-report term \
             --cov-report html \
             -vv
-      - name: store coverage report 
+      - name: store coverage report
         uses: actions/upload-artifact@v4
         with:
           name: coverage-${{ matrix.python-version }}
