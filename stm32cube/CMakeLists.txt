@@ -45,36 +45,8 @@ zephyr_compile_definitions(
   -DUSE_FULL_LL_DRIVER
 )
 
-# List of all supported STM32 SoC series
-set(supported_series
-  stm32c0x
-  stm32f0x
-  stm32f1x
-  stm32f2x
-  stm32f3x
-  stm32f4x
-  stm32f7x
-  stm32g0x
-  stm32g4x
-  stm32h5x
-  stm32h7x
-  stm32h7rsx
-  stm32l0x
-  stm32l1x
-  stm32l4x
-  stm32l5x
-  stm32mp1x
-  stm32mp13x
-  stm32mp2x
-  stm32n6x
-  stm32u0x
-  stm32u3x
-  stm32u5x
-  stm32wb0x
-  stm32wbax
-  stm32wbx
-  stm32wlx
-)
+# Obtain list of supported series
+include(series_list.cmake)
 
 # On dual-core MCUs, we must inform Cube which CPU we are building for.
 # Provide the Cube definition based on the active CPU Kconfig symbols.
@@ -131,6 +103,9 @@ foreach(series ${supported_series})
     add_subdirectory(${cube_dir})
   endif()
 endforeach()
+
+# Add common header files to include directories
+zephyr_include_directories(common/include)
 
 # Enable HAL asserts if requested by Zephyr
 if(CONFIG_USE_STM32_ASSERT)
