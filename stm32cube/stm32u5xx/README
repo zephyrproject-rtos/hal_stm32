@@ -55,10 +55,21 @@ Patch List:
       stm32cube/stm32u5xx/drivers/src/stm32u5xx_hal_sdio.c
 
    *Fix SDIO polling mode data transfer issues
-     Fixes two related issues in the STM32U5 SDIO driver: incorrect block count calculation 
-     that caused the card to hang, and improper buffer size handling that led to misaligned FIFO writes. 
+     Fixes two related issues in the STM32U5 SDIO driver: incorrect block count calculation
+     that caused the card to hang, and improper buffer size handling that led to misaligned FIFO writes.
      Together, these changes ensure correct and stable data transfer in polling mode.
-     Impacted file: 
-      stm32cube/stm32u5xx/drivers/src/stm32u5xx_hal_sdio.c   
+     Impacted file:
+      stm32cube/stm32u5xx/drivers/src/stm32u5xx_hal_sdio.c
+
+   *Fix RNG Nist Compliance Values for stm32u535/545
+     Fixes an issue in RNG peripheral registers on stm32u535/545: one value was missing
+     and two values where not matching values from AN4230.
+     Impacted files:
+      stm32cube/stm32u5xx/soc/stm32u535xx.h
+      stm32cube/stm32u5xx/soc/stm32u545xx.h
+     Issue reference:
+      https://github.com/STMicroelectronics/STM32CubeU5/issues/63
+     See also:
+      https://github.com/zephyrproject-rtos/hal_stm32/pull/355
 
    See release_note.html from STM32Cube
