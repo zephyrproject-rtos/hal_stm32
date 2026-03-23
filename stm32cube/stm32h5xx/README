@@ -74,4 +74,10 @@ Patch List:
      Impacted file:
       stm32cube/stm32h5xx/drivers/src/stm32h5xx_hal_sdio.c
 
+   *Fix CPP compilation error
+     Moves the cpp guard outside MDF1.
+     Impacted file:
+      stm32cube/stm32h5xx/drivers/include/stm32h5xx_hal_mdf.h
+     ST internal bug : HAL1-27445
+
    See release_note.html from STM32Cube
