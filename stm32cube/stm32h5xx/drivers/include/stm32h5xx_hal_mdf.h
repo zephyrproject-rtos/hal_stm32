@@ -1150,10 +1150,10 @@ uint32_t             HAL_MDF_GetError(const MDF_HandleTypeDef *hmdf);
   * @}
   */
 
+#endif /* MDF1 */
+
 #ifdef __cplusplus
 }
 #endif
-
-#endif /* MDF1 */
 
 #endif /* STM32H5xx_HAL_MDF_H */
