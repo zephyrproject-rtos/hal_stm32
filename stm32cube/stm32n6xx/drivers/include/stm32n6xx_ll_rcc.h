@@ -4748,6 +4748,36 @@ __STATIC_INLINE uint32_t LL_RCC_IsEnabledRTC(void)
 }
 
 /**
+  * @brief  Enable RTC in Sleep mode
+  * @rmtoll APB4LPENSR1    RTCENS        LL_RCC_EnableRTC_LP
+  * @retval None
+  */
+__STATIC_INLINE void LL_RCC_EnableRTC_LP(void)
+{
+  WRITE_REG(RCC->APB4LPENSR1, RCC_APB4LPENSR1_RTCLPENS);
+}
+
+/**
+  * @brief  Disable RTC in Sleep mode
+  * @rmtoll APB4LPENCR1    RTCENC        LL_RCC_DisableRTC_LP
+  * @retval None
+  */
+__STATIC_INLINE void LL_RCC_DisableRTC_LP(void)
+{
+  WRITE_REG(RCC->APB4LPENCR1, RCC_APB4LPENCR1_RTCLPENC);
+}
+
+/**
+  * @brief  Check if RTC has been enabled or not in Sleep mode
+  * @rmtoll APB4LPENR1       RTCEN         LL_RCC_IsEnabledRTC_LP
+  * @retval State of bit (1 or 0).
+  */
+__STATIC_INLINE uint32_t LL_RCC_IsEnabledRTC_LP(void)
+{
+  return ((READ_BIT(RCC->APB4LPENR1, RCC_APB4LPENR1_RTCLPEN) == (RCC_APB4LPENR1_RTCLPEN)) ? 1UL : 0UL);
+}
+
+/**
   * @brief  Force the Backup domain reset
   * @rmtoll BDCR         VSWRST         LL_RCC_ForceBackupDomainReset
   * @retval None
