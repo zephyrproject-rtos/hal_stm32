@@ -80,6 +80,8 @@ file_list_wba = {
         + "ll_fw_config.h",
         "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/config/concurrent/"
         + "ble_15_4/ll_fw_config.h",
+        "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/config/concurrent/"
+        + "ble_basic_plus_15_4/ll_fw_config.h",
         "Middlewares/ST/STM32_WPAN/ble/stack/include/ble_bufsize.h",
         "Middlewares/ST/STM32_WPAN/ble/stack/include/ble_const.h",
         "Middlewares/ST/STM32_WPAN/ble/stack/include/ble_defs.h",
