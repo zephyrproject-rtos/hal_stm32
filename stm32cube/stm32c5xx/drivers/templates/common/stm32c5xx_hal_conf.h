@@ -246,7 +246,7 @@ extern "C" {
   */
 /* ########################## HAL_ETH Config #################################### */
 #define USE_HAL_ETH_MODULE                      1U
-#define USE_HAL_ETH_REGISTER_CALLBACKS          0U
+#define USE_HAL_ETH_REGISTER_CALLBACKS          1U
 #define USE_HAL_ETH_CLK_ENABLE_MODEL            HAL_CLK_ENABLE_NO
 #define USE_HAL_ETH_USER_DATA                   0U
 #define USE_HAL_ETH_GET_LAST_ERRORS             0U

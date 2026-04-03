@@ -40,4 +40,6 @@ Patch List:
     -dos2unix applied
     -trailing white spaces removed
 
+   *stm32c5xx_hal_conf.h: Enable USE_HAL_ETH_REGISTER_CALLBACKS
+
    See release_note.html from STM32Cube
