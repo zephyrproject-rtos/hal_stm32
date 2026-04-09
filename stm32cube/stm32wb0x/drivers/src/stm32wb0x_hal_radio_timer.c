@@ -1245,16 +1245,16 @@ static void _update_system_and_machine_time(void)
   RADIO_TIMER_Context.last_machine_time = LL_RADIO_TIMER_GetAbsoluteTime(WAKEUP);
   difftime = TIME_ABSDIFF(RADIO_TIMER_Context.last_machine_time, RADIO_TIMER_Context.last_calib_machine_time);
   new_time += blue_unit_conversion(difftime, RADIO_TIMER_Context.calibrationData.period1, MULT64_THR_PERIOD);
+  if (new_time < RADIO_TIMER_Context.last_system_time)
+  {
+    new_time += blue_unit_conversion(TIMER_MAX_VALUE, RADIO_TIMER_Context.calibrationData.period1, MULT64_THR_PERIOD);
+  }
 #ifdef __ZEPHYR__
   if (difftime > (TIMER_MAX_VALUE >> 2))
   {
     _update_calibration_time();
   }
 #endif /* __ZEPHYR__ */
-  if (new_time < RADIO_TIMER_Context.last_system_time)
-  {
-    new_time += blue_unit_conversion(TIMER_MAX_VALUE, RADIO_TIMER_Context.calibrationData.period1, MULT64_THR_PERIOD);
-  }
   RADIO_TIMER_Context.last_system_time = new_time;
   ATOMIC_SECTION_END();
 
