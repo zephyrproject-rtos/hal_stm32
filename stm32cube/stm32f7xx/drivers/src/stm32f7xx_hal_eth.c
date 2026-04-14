@@ -804,14 +804,14 @@ HAL_StatusTypeDef HAL_ETH_Start_IT(ETH_HandleTypeDef *heth)
     /* Enable the MAC transmission */
     SET_BIT(heth->Instance->MACCR, ETH_MACCR_TE);
 
+    /* Enable the MAC reception */
+    SET_BIT(heth->Instance->MACCR, ETH_MACCR_RE);
+
     /* Wait until the write operation will be taken into account :
     at least four TX_CLK/RX_CLK clock cycles */
     tmpreg1 = (heth->Instance)->MACCR;
     HAL_Delay(ETH_REG_WRITE_DELAY);
     (heth->Instance)->MACCR = tmpreg1;
-
-    /* Enable the MAC reception */
-    SET_BIT(heth->Instance->MACCR, ETH_MACCR_RE);
 
     /* Enable ETH DMA interrupts:
     - Tx complete interrupt

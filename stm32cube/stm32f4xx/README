@@ -60,4 +60,9 @@ Patch List:
     Impacted files:
      drivers/include/stm32f4xx_ll_fsmc.h
     ST Internal Reference: 223859
+
+   *Fix missing errata workaround after writing RE in ETH->MACCR
+    Impacted files:
+     drivers/src/stm32f4xx_hal_eth.c
+
    See release_note.html from STM32Cube
