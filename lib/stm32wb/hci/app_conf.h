@@ -236,19 +236,6 @@
 #define CFG_BLE_CENTRAL_SCA   0
 
 /**
- * LsSource
- * Some information for Low speed clock mapped in bits field
- * - bit 0:   1: Calibration for the RF system wakeup clock source   0: No calibration for the RF system wakeup clock source
- * - bit 1:   1: STM32WB5M Module device                             0: Other devices as STM32WBxx SOC, STM32WB1M module
- * - bit 2:   1: HSE/1024 Clock config                               0: LSE Clock config
- */
-#if defined(STM32WB5Mxx)
-  #define CFG_BLE_LS_SOURCE  (SHCI_C2_BLE_INIT_CFG_BLE_LS_NOCALIB | SHCI_C2_BLE_INIT_CFG_BLE_LS_MOD5MM_DEV | SHCI_C2_BLE_INIT_CFG_BLE_LS_CLK_LSE)
-#else
-  #define CFG_BLE_LS_SOURCE  (SHCI_C2_BLE_INIT_CFG_BLE_LS_NOCALIB | SHCI_C2_BLE_INIT_CFG_BLE_LS_OTHER_DEV | SHCI_C2_BLE_INIT_CFG_BLE_LS_CLK_LSE)
-#endif
-
-/**
  * Start up time of the high speed (16 or 32 MHz) crystal oscillator in units of 625/256 us (~2.44 us)
  */
 #define CFG_BLE_HSE_STARTUP_TIME  0x148
