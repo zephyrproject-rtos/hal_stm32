@@ -185,3 +185,7 @@ Patch List:
          * ll_sys_if.h
          * linklayer_plat.h
          * ll_sys_startup.c
+
+  * IEEE 802.15.4 feature support in Zephyr architecture requires :
+         * specific libraries accessible in https://github.com/stm32-hotspot/STM32WBA-Zephyr-custom-binaries
+         * additionnal files "stm32wba_802154.h" and "stm32wba_802154_callbacks.h" in hal/stm32/lib/stm32wba/STM32WPAN/ieee802154 folder
