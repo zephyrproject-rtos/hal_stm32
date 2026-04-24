@@ -55,4 +55,8 @@ Patch List:
     Impacted files:
      drivers/include/Legacy/stm32_hal_legacy.h
 
+   *Fix missing errata workaround after writing RE in ETH->MACCR
+    Impacted files:
+     drivers/src/stm32f7xx_hal_eth.c
+
    See release_note.html from STM32Cube
