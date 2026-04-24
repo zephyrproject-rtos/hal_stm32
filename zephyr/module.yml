@@ -47,30 +47,30 @@ blobs:
     url: https://github.com/STMicroelectronics/STM32CubeWB0/raw/v1.4.0/Middlewares/ST/STM32_BLE/stack/lib/stm32wb0x_ble_stack_controller_only.a
     description: "Binary Stack library for the STM32WB0 Bluetooth subsystem"
   - path: stm32wba/lib/WBA6_LinkLayer15_4_Zephyr.a
-    sha256: 6554070914cd2bbc2eac1985cbd2bbb9e6bd27671c33d151789aa0154833b8bb
+    sha256: cb3ec6c3cd921e927f0847ebf4efbe4dafd7e3ac4ee5c0bbe98e3368382f412c
     type: lib
     version: '1.9.0'
     license-path: zephyr/blobs/stm32wba/lib/license.md
-    url: https://github.com/stm32-hotspot/STM32WBA-Zephyr-custom-binaries/raw/a61f3fd1631a6909702f66d12cc08026c4672563/lib/WBA6_LinkLayer15_4_Zephyr.a
+    url: https://github.com/stm32-hotspot/STM32WBA-Zephyr-custom-binaries/raw/7343a38195df8a8fd4d31362a5d1568245d13c96/lib/WBA6_LinkLayer15_4_Zephyr.a
     description: "Binary Link Layer library for the STM32WBA6 802.15.4 subsystem"
   - path: stm32wba/lib/WBA6_LinkLayer_BLE_Basic_15_4_lib_Zephyr.a
-    sha256: 13d0fe1d1e3384cba3525ab1cb1819c6b7681f41e4477b106b1bf629aea0a8e8
+    sha256: f7d217d7da11b7bdc1c3f290983048688062009063c195e41344969f079105f3
     type: lib
     version: '1.9.0'
     license-path: zephyr/blobs/stm32wba/lib/license.md
-    url: https://github.com/stm32-hotspot/STM32WBA-Zephyr-custom-binaries/raw/a61f3fd1631a6909702f66d12cc08026c4672563/lib/WBA6_LinkLayer_BLE_Basic_15_4_lib_Zephyr.a
+    url: https://github.com/stm32-hotspot/STM32WBA-Zephyr-custom-binaries/raw/7343a38195df8a8fd4d31362a5d1568245d13c96/lib/WBA6_LinkLayer_BLE_Basic_15_4_lib_Zephyr.a
     description: "Binary Link Layer library including BLE Basic features for the STM32WBA6 BLE-802.15.4 Concurrent mode subsystem"
   - path: stm32wba/lib/WBA5_LinkLayer15_4_Zephyr.a
-    sha256: a103b90efc2b40dbb37670fff556f20c2e29ca5a1bea4f45ef23c375bb112b2a
+    sha256: 43dfa7347297b013af1e37501a2d27c239df82537161333bb80b97ec83ac4804
     type: lib
     version: '1.9.0'
     license-path: zephyr/blobs/stm32wba/lib/license.md
-    url: https://github.com/stm32-hotspot/STM32WBA-Zephyr-custom-binaries/raw/a61f3fd1631a6909702f66d12cc08026c4672563/lib/WBA5_LinkLayer15_4_Zephyr.a
+    url: https://github.com/stm32-hotspot/STM32WBA-Zephyr-custom-binaries/raw/7343a38195df8a8fd4d31362a5d1568245d13c96/lib/WBA5_LinkLayer15_4_Zephyr.a
     description: "Binary Link Layer library for the STM32WBA5 802.15.4 subsystem"
   - path: stm32wba/lib/WBA5_LinkLayer_BLE_Basic_15_4_lib_Zephyr.a
-    sha256: fc96af91d76d8332588261f83c02cdac813d6dd95bae6191ce912d14e80b9798
+    sha256: 1f7eafad212e1b58a73b625822f94482f8202a8557e21c30bfc7eb24aabc1b68
     type: lib
     version: '1.9.0'
     license-path: zephyr/blobs/stm32wba/lib/license.md
-    url: https://github.com/stm32-hotspot/STM32WBA-Zephyr-custom-binaries/raw/a61f3fd1631a6909702f66d12cc08026c4672563/lib/WBA5_LinkLayer_BLE_Basic_15_4_lib_Zephyr.a
+    url: https://github.com/stm32-hotspot/STM32WBA-Zephyr-custom-binaries/raw/7343a38195df8a8fd4d31362a5d1568245d13c96/lib/WBA5_LinkLayer_BLE_Basic_15_4_lib_Zephyr.a
     description: "Binary Link Layer library including BLE Basic features for the STM32WBA5 BLE-802.15.4 Concurrent mode subsystem"

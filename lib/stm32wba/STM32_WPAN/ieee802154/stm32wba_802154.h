@@ -49,31 +49,37 @@ extern "C" {
 #endif
 
 /**
- * @brief Errors reported during the frame transmission.
+ * @brief stm32wba_802154_ral_error_t - Radio Abstraction Layer error/status codes
+ *
+ * Enumerates the return codes used by the ST Radio Abstraction Layer (RAL)
+ * to indicate the result of API calls. Values represent success, specific
+ * failure conditions and transient states (for example: timeout, busy,
+ * invalid parameter). Callers should inspect returned stm32wba_802154_ral_error_t values
+ * to determine appropriate recovery or error handling actions.
  */
-typedef uint8_t stm32wba_802154_ral_tx_error_t;
-
-#define STM32WBA_802154_RAL_TX_ERROR_NONE                0x00 // !< There is no transmit error.
-#define STM32WBA_802154_RAL_TX_ERROR_BUSY_CHANNEL        0x0F // !< CCA reported busy channel before the transmission.
-#define STM32WBA_802154_RAL_TX_ERROR_NO_MEM              0x03 // !< No receive buffer is available to receive an ACK.
-#define STM32WBA_802154_RAL_TX_ERROR_NO_ACK              0x0E // !< ACK frame was not received during the timeout period.
-#define STM32WBA_802154_RAL_TX_ERROR_ABORTED             0x0B // !< Procedure was aborted by another operation.
-
-/**
- * @brief Possible errors during the frame reception.
- */
-typedef uint8_t stm32wba_802154_ral_rx_error_t;
-
-#define STM32WBA_802154_RAL_RX_ERROR_NONE                       0x00 // !< There is no receive error.
-#define STM32WBA_802154_RAL_RX_ERROR_FAILED                     0x01 // !< Process failed.
-#define STM32WBA_802154_RAL_RX_ERROR_NO_BUFFERS                 0x03 // !< Not enough buffers.
-#define STM32WBA_802154_RAL_RX_ERROR_NO_ACK                     0x0E // !< No acknowledgment was received after macMaxFrameRetries (IEEE 802.15.4-2006).
-#define STM32WBA_802154_RAL_RX_ERROR_FCS                        0x11 // !< FCS check failure.
-#define STM32WBA_802154_RAL_RX_ERROR_NO_FRAME_RECEIVED          0x12 // !< Not frame received.
-#define STM32WBA_802154_RAL_RX_ERROR_INVALID_SOURCE_ADDRESS     0x14 // !< No Src nor Dest Address.
-#define STM32WBA_802154_RAL_RX_ERROR_DEST_ADDRESS_FILTERED      0x16 // !< Destination Adress Error.
-#define STM32WBA_802154_RAL_RX_ERROR_GENERIC                    0xFF // !< Generic error.
-
+typedef enum stm32wba_802154_ral_error_t
+{
+    STM32WBA_802154_RAL_ERROR_NONE = 0,                           // !< No error.
+    STM32WBA_802154_RAL_ERROR_FAILED = -1,                        // !< Operational failed.
+    STM32WBA_802154_RAL_ERROR_DROP = -2,                          // !< Message was dropped.
+    STM32WBA_802154_RAL_ERROR_NO_BUFS = -3,                       // !< Insufficient buffers.
+    STM32WBA_802154_RAL_ERROR_BUSY = -4,                          // !< Service is busy and could not service the operation.
+    STM32WBA_802154_RAL_ERROR_INVALID_ARGS = -5,                  // !< Input arguments are invalid.
+    STM32WBA_802154_RAL_ERROR_SECURITY = -6,                      // !< Security checks failed.
+    STM32WBA_802154_RAL_ERROR_NO_ADDRESS = -7,                    // !< Address is not in the source match table.
+    STM32WBA_802154_RAL_ERROR_ABORT = -8,                         // !< Operation was aborted.
+    STM32WBA_802154_RAL_ERROR_NOT_IMPLEMENTED = -9,               // !< Function or method is not implemented.
+    STM32WBA_802154_RAL_ERROR_INVALID_STATE = -10,                // !< Cannot complete due to invalid state.
+    STM32WBA_802154_RAL_ERROR_NO_ACK = -11,                       // !< No acknowledgment was received after macMaxFrameRetries (IEEE 802.15.4-2006).
+    STM32WBA_802154_RAL_ERROR_CHANNEL_ACCESS_FAILURE = -12,       // !< A transmission could not take place due to activity on the channel, i.e., the CSMA-CA mechanism has failed (IEEE 802.15.4-2006).
+    STM32WBA_802154_RAL_ERROR_FCS = -13,                          // !< FCS check failure while receiving.
+    STM32WBA_802154_RAL_ERROR_NO_FRAME_RECEIVED = -14,            // !< No frame received.
+    STM32WBA_802154_RAL_ERROR_INVALID_SOURCE_ADDRESS = -15,       // !< Received a frame from an invalid source address.
+    STM32WBA_802154_RAL_ERROR_DESTINATION_ADDRESS_FILTERED = -16, // !< Received a frame filtered by the destination address check.
+    STM32WBA_802154_RAL_ERROR_NOT_FOUND = -17,                    // !< The requested item could not be found.
+    STM32WBA_802154_RAL_ERROR_GENERIC = -18,                      // !< Generic error.
+    STM32WBA_802154_RAL_ERROR_UNKNOWN = -255                      // !< Unknown error.
+} stm32wba_802154_ral_error_t;
 
 /**
  * @brief Structure with transmit request metadata for simple transmission request.
@@ -107,46 +113,28 @@ typedef struct
  */
 typedef struct
 {
-    uint8_t  length;                // !< Length of the received ACK payload.
-    int8_t   power;                 // !< RSSI of the received frame.
-    uint8_t  lqi;                   // !< LQI of the received frame.
-    uint64_t time;                  // !< Timestamp taken when the last symbol is received.
-    uint8_t error;                  // !< Error returned (if any)
+    uint8_t  length;                    // !< Length of the received ACK payload.
+    int8_t   power;                     // !< RSSI of the received frame.
+    uint8_t  lqi;                       // !< LQI of the received frame.
+    uint64_t time;                      // !< Timestamp taken when the last symbol is received.
+    stm32wba_802154_ral_error_t error;  // !< Error returned (if any)
 } stm32wba_802154_ral_receive_done_metadata_t;
 
 /**
- * @brief stm32wba_802154_ral_error_t - Radio Abstraction Layer error/status codes
+ * @brief stm32wba_802154_ral_state_t - Radio Abstraction Layer states
  *
- * Enumerates the return codes used by the ST Radio Abstraction Layer (RAL)
- * to indicate the result of API calls. Values represent success, specific
- * failure conditions and transient states (for example: timeout, busy,
- * invalid parameter). Callers should inspect returned stm32wba_802154_ral_error_t values
- * to determine appropriate recovery or error handling actions.
+ * Enumerates the states used by the ST Radio Abstraction Layer (RAL)
+ * to indicate the current state of the radio. Values represent different
+ * operational states of the radio, such as sleep, receive, transmit, and
+ * disabled.
  */
-typedef enum stm32wba_802154_ral_error_t
+typedef enum stm32wba_802154_ral_state_t
 {
-    STM32WBA_802154_RAL_ERROR_NONE = 0,                           // !< No error.
-    STM32WBA_802154_RAL_ERROR_FAILED = -1,                        // !< Operational failed.
-    STM32WBA_802154_RAL_ERROR_DROP = -2,                          // !< Message was dropped.
-    STM32WBA_802154_RAL_ERROR_NO_BUFS = -3,                       // !< Insufficient buffers.
-    STM32WBA_802154_RAL_ERROR_BUSY = -4,                          // !< Service is busy and could not service the operation.
-    STM32WBA_802154_RAL_ERROR_INVALID_ARGS = -5,                  // !< Input arguments are invalid.
-    STM32WBA_802154_RAL_ERROR_SECURITY = -6,                      // !< Security checks failed.
-    STM32WBA_802154_RAL_ERROR_NO_ADDRESS = -7,                    // !< Address is not in the source match table.
-    STM32WBA_802154_RAL_ERROR_ABORT = -8,                         // !< Operation was aborted.
-    STM32WBA_802154_RAL_ERROR_NOT_IMPLEMENTED = -9,               // !< Function or method is not implemented.
-    STM32WBA_802154_RAL_ERROR_INVALID_STATE = -10,                // !< Cannot complete due to invalid state.
-    STM32WBA_802154_RAL_ERROR_NO_ACK = -11,                       // !< No acknowledgment was received after macMaxFrameRetries (IEEE 802.15.4-2006).
-    STM32WBA_802154_RAL_ERROR_CHANNEL_ACCESS_FAILURE = -12,       // !< A transmission could not take place due to activity on the channel, i.e., the CSMA-CA mechanism has failed (IEEE 802.15.4-2006).
-    STM32WBA_802154_RAL_ERROR_FCS = -13,                          // !< FCS check failure while receiving.
-    STM32WBA_802154_RAL_ERROR_NO_FRAME_RECEIVED = -14,            // !< No frame received.
-    STM32WBA_802154_RAL_ERROR_INVALID_SOURCE_ADDRESS = -15,       // !< Received a frame from an invalid source address.
-    STM32WBA_802154_RAL_ERROR_DESTINATION_ADDRESS_FILTERED = -16, // !< Received a frame filtered by the destination address check.
-    STM32WBA_802154_RAL_ERROR_NOT_FOUND = -17,                    // !< The requested item could not be found.
-    STM32WBA_802154_RAL_ERROR_GENERIC = -18,                      // !< Generic error.
-    STM32WBA_802154_RAL_ERROR_UNKNOWN = -255                      // !< Unknown error.
-} stm32wba_802154_ral_error_t;
-
+    STM32WBA_802154_RAL_STATE_SLEEP,        // !< Sleep state.
+    STM32WBA_802154_RAL_STATE_RECEIVE,      // !< Receive state.
+    STM32WBA_802154_RAL_STATE_TRANSMIT,     // !< Transmit state.
+    STM32WBA_802154_RAL_STATE_DISABLED,     // !< Disabled state.
+} stm32wba_802154_ral_state_t;
 
 /**
  * @brief Initializes the 802.15.4 driver.
@@ -201,27 +189,27 @@ uint64_t stm32wba_802154_ral_time_get(void);
 /**
  * @brief Sets the PAN ID used by the device.
  *
- * @param[in]  pan_id  PAN ID.
+ * @note This function makes a copy of the PAN ID.
  *
- * This function makes a copy of the PAN ID.
+ * @param[in]  pan_id  PAN ID.
  */
 void stm32wba_802154_ral_pan_id_set(const uint16_t pan_id);
 
 /**
  * @brief Sets the extended address of the device.
  *
- * @param[in]  aExtAddress  Pointer to the extended address (8 bytes, little-endian).
+ * @note This function makes a copy of the address.
  *
- * This function makes a copy of the address.
+ * @param[in]  aExtAddress  Pointer to the extended address (8 bytes, little-endian).
  */
 void stm32wba_802154_ral_extended_address_set(const uint8_t * aExtAddress);
 
 /**
  * @brief Sets the short address of the device.
  *
- * @param[in]  short_address  Short address.
+ * @note This function makes a copy of the address.
  *
- * This function makes a copy of the address.
+ * @param[in]  short_address  Short address.
  */
 void stm32wba_802154_ral_short_address_set(const uint16_t short_address);
 
@@ -229,8 +217,6 @@ void stm32wba_802154_ral_short_address_set(const uint16_t short_address);
  * @brief Get the EUI 64 bits of the device.
  *
  * @param[in]  p_eui64  Pointer to the EUI 64 bits.
- *
- * This function makes a copy of the address.
  */
 void stm32wba_802154_ral_eui64_get(uint8_t *p_eui64);
 
@@ -383,13 +369,11 @@ stm32wba_802154_ral_error_t stm32wba_802154_ral_pending_bit_for_ext_addr_clear(c
 
 /**
  * @brief Removes all short addresses from the pending bit list.
- *
  */
 void stm32wba_802154_ral_pending_bit_for_short_addr_reset(void);
 
 /**
  * @brief Removes all extended addresses from the pending bit list.
-
  */
 void stm32wba_802154_ral_pending_bit_for_ext_addr_reset(void);
 
@@ -490,9 +474,7 @@ stm32wba_802154_ral_error_t stm32wba_802154_ral_radio_reset(void);
  */
 stm32wba_802154_ral_error_t stm32wba_802154_ral_mac_gen_rnd_num(uint8_t *ptr_rnd, uint16_t len, uint8_t check_cont_rx);
 
-
 /**
- *
  * @brief enable/disable antenna diversity
  *
  * @param[in]	enable	    : enable:1 / disable:0
@@ -502,12 +484,12 @@ stm32wba_802154_ral_error_t stm32wba_802154_ral_mac_gen_rnd_num(uint8_t *ptr_rnd
 stm32wba_802154_ral_error_t stm32wba_802154_ral_set_ant_div_enable(uint8_t enable);
 
 /**
- *
  * @brief A wrapper function to set configurable library parameters
  *
  * @param[in]	support_openthread_1_2	    : support_openthread_1_2: true / false
  * @param[in]	mac_layer_build	            : mac_layer_build: true / false
- * @retval Error code
+ *
+ * @returns  STM32WBA_802154_RAL_ERROR_NONE on success, or an error code on failure.
  */
 stm32wba_802154_ral_error_t stm32wba_802154_ral_set_config_lib_params(bool support_openthread_1_2, bool mac_layer_build);
 
@@ -535,10 +517,17 @@ void stm32wba_802154_ral_set_mac_frame_counter_if_larger(uint32_t aMacFrameCount
  * @param[in]  aNextKey     Pointer to the next key.
  */
 void stm32wba_802154_ral_set_mac_key(uint8_t                 aKeyIdMode,
-						 uint8_t                 aKeyId,
-						 const uint8_t           *aPrevKey,
-						 const uint8_t           *aCurrKey,
-						 const uint8_t           *aNextKey);
+									 uint8_t                 aKeyId,
+									 const uint8_t           *aPrevKey,
+									 const uint8_t           *aCurrKey,
+									 const uint8_t           *aNextKey);
+
+/**
+ * @brief Gets the current state of the STM32WBA radio.
+ *
+ * @returns  The current state of the radio.
+ */
+stm32wba_802154_ral_state_t stm32wba_802154_ral_get_state(void);
 
 /** @} */
 

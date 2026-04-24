@@ -66,15 +66,15 @@ struct stm32wba_802154_ral_cbk_dispatch_tbl{
 	 * @brief  callback function called after the end of transmission operation
 	 *
 	 * @param p_frame	Pointer to the transmitted frame.
-	 * @param error		Transmission error status of type stm32wba_802154_tx_error_t.
-	 *              	 Indicates whether the transmission was successful or if an
-	 *              	 error occurred.
-	 * @param p_metadata 	Pointer to metadata of type stm32wba_802154_transmit_done_metadata_t,
-	 * 			 containing additional information about the transmission.
+	 * @param error		Transmission error status of type stm32wba_802154_ral_error_t.
+	 * 			Indicates whether the transmission was successful or if an
+	 * 			error occurred.
+	 * @param p_metadata 	Pointer to metadata of type stm32wba_802154_transmit_done_metadata_t, 
+	 * 			containing additional information about the transmission.
 	 *
 	 * @retval none
 	 */
-	void (*stm32wba_802154_ral_cbk_tx_done)(uint8_t * p_frame, stm32wba_802154_ral_tx_error_t error, const stm32wba_802154_ral_transmit_done_metadata_t *p_metadata);
+	void (*stm32wba_802154_ral_cbk_tx_done)(uint8_t * p_frame, stm32wba_802154_ral_error_t error, const stm32wba_802154_ral_transmit_done_metadata_t *p_metadata);
 
 	/**
 	 * @brief  callback function called after the end of Reception operation
@@ -93,7 +93,7 @@ struct stm32wba_802154_ral_cbk_dispatch_tbl{
 	 *
 	 * @retval none
 	 */
-	void (*stm32wba_802154_ral_cbk_cca_done)(uint8_t error);
+	void (*stm32wba_802154_ral_cbk_cca_done)(stm32wba_802154_ral_error_t error);
 
 	/**
 	 * @brief callback function notifies about the start of the ACK frame transmission.
@@ -109,12 +109,9 @@ struct stm32wba_802154_ral_cbk_dispatch_tbl{
 
 /**
  * @brief  This function called from upper layer init function (mac_init in case of mac integration e.g. Zigbee stack)
- * 		   to register the upper layer callback functions
+ * 	   to register the upper layer callback functions
  *
- * @param  ptr_cbk_dispatch_tbl		pointer to callback function to be registered
- *
- * @retval none
- *
+ * @param  ptr_cbk_dispatch_tbl	Pointer to callback function to be registered
  */
 void stm32wba_802154_ral_call_back_funcs_init(struct stm32wba_802154_ral_cbk_dispatch_tbl * ptr_cbk_dispatch_tbl);
 
