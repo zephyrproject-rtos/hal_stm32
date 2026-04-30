@@ -60,4 +60,13 @@ Patch List:
     Impacted files:
      drivers/include/stm32f4xx_ll_fsmc.h
     ST Internal Reference: 223859
+
+   *Fix HAL_DFSDM_IRQHandler
+      HAL_DFSDM_IRQHandler handles IRQ flags in an if {} else if {} condition.
+      This causes interrupts to be handled once and only the first flag
+      encountered in the condition, while there can be several flags raised.
+     Impacted files:
+       drivers/src/stm32f7xx_hal_dfsdm.c
+     ST Internal Reference: HAL1-27454
+
    See release_note.html from STM32Cube

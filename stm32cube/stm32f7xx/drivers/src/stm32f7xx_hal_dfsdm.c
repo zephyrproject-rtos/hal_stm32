@@ -2897,7 +2897,7 @@ void HAL_DFSDM_IRQHandler(DFSDM_Filter_HandleTypeDef *hdfsdm_filter)
 #endif
   }
   /* Check if overrun occurs during injected conversion */
-  else if(((hdfsdm_filter->Instance->FLTISR & DFSDM_FLTISR_JOVRF) != 0) && \
+  if(((hdfsdm_filter->Instance->FLTISR & DFSDM_FLTISR_JOVRF) != 0) && \
           ((hdfsdm_filter->Instance->FLTCR2 & DFSDM_FLTCR2_JOVRIE) != 0))
   {
     /* Clear injected overrun flag */
@@ -2914,7 +2914,7 @@ void HAL_DFSDM_IRQHandler(DFSDM_Filter_HandleTypeDef *hdfsdm_filter)
 #endif
   }
   /* Check if end of regular conversion */
-  else if(((hdfsdm_filter->Instance->FLTISR & DFSDM_FLTISR_REOCF) != 0) && \
+  if(((hdfsdm_filter->Instance->FLTISR & DFSDM_FLTISR_REOCF) != 0) && \
           ((hdfsdm_filter->Instance->FLTCR2 & DFSDM_FLTCR2_REOCIE) != 0))
   {
     /* Call regular conversion complete callback */
@@ -2937,7 +2937,7 @@ void HAL_DFSDM_IRQHandler(DFSDM_Filter_HandleTypeDef *hdfsdm_filter)
     }
   }
   /* Check if end of injected conversion */
-  else if(((hdfsdm_filter->Instance->FLTISR & DFSDM_FLTISR_JEOCF) != 0) && \
+  if(((hdfsdm_filter->Instance->FLTISR & DFSDM_FLTISR_JEOCF) != 0) && \
           ((hdfsdm_filter->Instance->FLTCR2 & DFSDM_FLTCR2_JEOCIE) != 0))
   {
     /* Call injected conversion complete callback */
@@ -2967,7 +2967,7 @@ void HAL_DFSDM_IRQHandler(DFSDM_Filter_HandleTypeDef *hdfsdm_filter)
     }
   }
   /* Check if analog watchdog occurs */
-  else if(((hdfsdm_filter->Instance->FLTISR & DFSDM_FLTISR_AWDF) != 0) && \
+  if(((hdfsdm_filter->Instance->FLTISR & DFSDM_FLTISR_AWDF) != 0) && \
           ((hdfsdm_filter->Instance->FLTCR2 & DFSDM_FLTCR2_AWDIE) != 0))
   {
     uint32_t reg = 0;
@@ -2999,7 +2999,7 @@ void HAL_DFSDM_IRQHandler(DFSDM_Filter_HandleTypeDef *hdfsdm_filter)
 #endif
   }
   /* Check if clock absence occurs */
-  else if((hdfsdm_filter->Instance == DFSDM1_Filter0) && \
+  if((hdfsdm_filter->Instance == DFSDM1_Filter0) && \
          ((hdfsdm_filter->Instance->FLTISR & DFSDM_FLTISR_CKABF) != 0) && \
          ((hdfsdm_filter->Instance->FLTCR2 & DFSDM_FLTCR2_CKABIE) != 0))
   {
@@ -3032,7 +3032,7 @@ void HAL_DFSDM_IRQHandler(DFSDM_Filter_HandleTypeDef *hdfsdm_filter)
     }
   }
   /* Check if short circuit detection occurs */
-  else if((hdfsdm_filter->Instance == DFSDM1_Filter0) && \
+  if((hdfsdm_filter->Instance == DFSDM1_Filter0) && \
          ((hdfsdm_filter->Instance->FLTISR & DFSDM_FLTISR_SCDF) != 0) && \
          ((hdfsdm_filter->Instance->FLTCR2 & DFSDM_FLTCR2_SCDIE) != 0))
   {
