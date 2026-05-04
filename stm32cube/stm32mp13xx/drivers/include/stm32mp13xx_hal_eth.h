@@ -414,10 +414,13 @@ typedef enum
   */
 typedef enum
 {
-  HAL_ETH1_REF_CLK_RCC         = 0x00U,   /*!<  ETH1 reference clock (RMII mode) comes from the RCC */
-  HAL_ETH1_REF_CLK_RX_CLK_PIN  = 0x01U,   /*!<  ETH1 reference clock (RMII mode) comes from the ETH2_RX_CLK/ETH2_REF_CLK pin */
-  HAL_ETH2_REF_CLK_RCC         = 0x02U,   /*!<  ETH2 reference clock (RMII mode) comes from the RCC */
-  HAL_ETH2_REF_CLK_RX_CLK_PIN  = 0x03U,   /*!<  ETH2 reference clock (RMII mode) comes from the ETH2_RX_CLK/ETH2_REF_CLK pin */
+  HAL_ETH_REF_CLK_RCC             = 0x00U,  /*!<  ETH1/2 reference clock (RMII mode) comes from the RCC */
+  HAL_ETH_REF_CLK_RX_CLK_PIN      = 0x01U,  /*!<  ETH1/2 reference clock (RMII mode) comes from the ETH_RX_CLK/ETH_REF_CLK pin */
+
+  HAL_ETH1_REF_CLK_RCC            = HAL_ETH_REF_CLK_RCC,
+  HAL_ETH1_REF_CLK_RX_CLK_PIN     = HAL_ETH_REF_CLK_RX_CLK_PIN,
+  HAL_ETH2_REF_CLK_RCC            = HAL_ETH_REF_CLK_RCC,
+  HAL_ETH2_REF_CLK_RX_CLK_PIN     = HAL_ETH_REF_CLK_RX_CLK_PIN
 } ETH_ClkSrcTypeDef;
 
 /**
