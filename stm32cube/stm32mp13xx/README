@@ -73,4 +73,14 @@ Patch List:
        drivers/src/stm32mp13xx_hal_dfsdm.c
      ST Internal Reference: HAL1-27454
 
+   *ethernet: Modify RMII reference clock enumeration
+     The way the HAL implements the ETH_ClkSrcTypeDef is not instance
+     agnostic. Add generic enum members that can target either ETH1 or
+     ETH2. The HAL driver is responsible to know on which controller
+     instance we are.
+     Impacted file:
+      stm32cube/stm32mp13xx/drivers/include/stm32mp13xx_hal_eth.h
+      stm32cube/stm32mp13xx/drivers/src/stm32mp13xx_hal_eth.c
+     Internal reference: HAL1-27631
+
    See release_note.html from STM32Cube
