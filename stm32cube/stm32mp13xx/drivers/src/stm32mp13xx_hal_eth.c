@@ -369,7 +369,7 @@ HAL_StatusTypeDef HAL_ETH_Init(ETH_HandleTypeDef *heth)
     if (heth->Instance == ETH)
     {
       syscfg_config = SYSCFG_ETH1_RMII;
-      if (heth->Init.ClockSelection == HAL_ETH1_REF_CLK_RCC)
+      if (heth->Init.ClockSelection == HAL_ETH_REF_CLK_RCC)
       {
         syscfg_config |= SYSCFG_PMCSETR_ETH1_REF_CLK_SEL;
       }
@@ -378,7 +378,7 @@ HAL_StatusTypeDef HAL_ETH_Init(ETH_HandleTypeDef *heth)
     else
     {
       syscfg_config = SYSCFG_ETH2_RMII;
-      if (heth->Init.ClockSelection == HAL_ETH2_REF_CLK_RCC)
+      if (heth->Init.ClockSelection == HAL_ETH_REF_CLK_RCC)
       {
         syscfg_config |= SYSCFG_PMCSETR_ETH2_REF_CLK_SEL;
       }
