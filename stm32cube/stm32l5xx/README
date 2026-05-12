@@ -43,10 +43,6 @@ Patch List:
     -Added stm32cube/stm32l5xx/drivers/include/stm32_assert.h
     -Removed unused stm32cube/stm32l5xx/drivers/include/stm32_assert_template.h
 
-   *Fix to remove PAGESIZE definition which conflicts with POSIX
-    Impacted files:
-     drivers/include/Legacy/stm32_hal_legacy.h
-
    *Fix HAL_DFSDM_IRQHandler
       HAL_DFSDM_IRQHandler handles IRQ flags in an if {} else if {} condition.
       This causes interrupts to be handled once and only the first flag
