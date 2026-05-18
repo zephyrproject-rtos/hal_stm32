@@ -17,7 +17,7 @@ import logging
 from pathlib import Path
 import re
 import shutil
-from subprocess import check_output, STDOUT, CalledProcessError
+from subprocess import check_output, STDOUT, CalledProcessError, run
 import xml.etree.ElementTree as ET
 
 from jinja2 import Environment, FileSystemLoader
@@ -77,6 +77,11 @@ SUPPORTED_FAMILIES = [
     "stm32wl",
 ]
 """Supported SoC families"""
+
+HAL2_FAMILIES = [
+    "stm32c5",
+]
+"""SoC families relying on HAL2"""
 
 PIN_MODS = [
     "_C",  # Pins with analog switch (H7)
@@ -616,6 +621,13 @@ def main(data_path, output):
     if output.exists() and not FAMILY_FILTER.is_active():
         shutil.rmtree(output)
         output.mkdir(parents=True)
+        # Do not consider SoCs related to HAL2
+        for family in HAL2_FAMILIES:
+            family_path = output / "st" / family.removeprefix("stm32")
+            try:
+                run(["git", "checkout", "--", family_path], check=True)
+            except CalledProcessError:
+                break
 
     for family, refs in mcu_signals.items():
         # check family is supported
