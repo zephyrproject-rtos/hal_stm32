@@ -1928,6 +1928,168 @@
 		pinmux = <STM32_PINMUX('G', 6, AF7)>;
 	};
 
+	/* MDF */
+
+	/omit-if-no-ref/ mdf1_sdi0_pb1: mdf1_sdi0_pb1 {
+		pinmux = <STM32_PINMUX('B', 1, AF6)>;
+		slew-rate = "very-high-speed";
+	};
+
+	/omit-if-no-ref/ mdf1_cki0_pb2: mdf1_cki0_pb2 {
+		pinmux = <STM32_PINMUX('B', 2, AF6)>;
+		slew-rate = "very-high-speed";
+	};
+
+	/omit-if-no-ref/ mdf1_sdi5_pb6: mdf1_sdi5_pb6 {
+		pinmux = <STM32_PINMUX('B', 6, AF6)>;
+		slew-rate = "very-high-speed";
+	};
+
+	/omit-if-no-ref/ mdf1_cki5_pb7: mdf1_cki5_pb7 {
+		pinmux = <STM32_PINMUX('B', 7, AF6)>;
+		slew-rate = "very-high-speed";
+	};
+
+	/omit-if-no-ref/ mdf1_cck0_pb8: mdf1_cck0_pb8 {
+		pinmux = <STM32_PINMUX('B', 8, AF5)>;
+		slew-rate = "very-high-speed";
+	};
+
+	/omit-if-no-ref/ mdf1_sdi1_pb12: mdf1_sdi1_pb12 {
+		pinmux = <STM32_PINMUX('B', 12, AF6)>;
+		slew-rate = "very-high-speed";
+	};
+
+	/omit-if-no-ref/ mdf1_cki1_pb13: mdf1_cki1_pb13 {
+		pinmux = <STM32_PINMUX('B', 13, AF6)>;
+		slew-rate = "very-high-speed";
+	};
+
+	/omit-if-no-ref/ mdf1_sdi2_pb14: mdf1_sdi2_pb14 {
+		pinmux = <STM32_PINMUX('B', 14, AF6)>;
+		slew-rate = "very-high-speed";
+	};
+
+	/omit-if-no-ref/ mdf1_cki2_pb15: mdf1_cki2_pb15 {
+		pinmux = <STM32_PINMUX('B', 15, AF6)>;
+		slew-rate = "very-high-speed";
+	};
+
+	/omit-if-no-ref/ mdf1_sdi4_pc0: mdf1_sdi4_pc0 {
+		pinmux = <STM32_PINMUX('C', 0, AF6)>;
+		slew-rate = "very-high-speed";
+	};
+
+	/omit-if-no-ref/ mdf1_cki4_pc1: mdf1_cki4_pc1 {
+		pinmux = <STM32_PINMUX('C', 1, AF6)>;
+		slew-rate = "very-high-speed";
+	};
+
+	/omit-if-no-ref/ mdf1_cck1_pc2: mdf1_cck1_pc2 {
+		pinmux = <STM32_PINMUX('C', 2, AF6)>;
+		slew-rate = "very-high-speed";
+	};
+
+	/omit-if-no-ref/ mdf1_cki3_pc6: mdf1_cki3_pc6 {
+		pinmux = <STM32_PINMUX('C', 6, AF6)>;
+		slew-rate = "very-high-speed";
+	};
+
+	/omit-if-no-ref/ mdf1_sdi3_pc7: mdf1_sdi3_pc7 {
+		pinmux = <STM32_PINMUX('C', 7, AF6)>;
+		slew-rate = "very-high-speed";
+	};
+
+	/omit-if-no-ref/ mdf1_sdi0_pd3: mdf1_sdi0_pd3 {
+		pinmux = <STM32_PINMUX('D', 3, AF6)>;
+		slew-rate = "very-high-speed";
+	};
+
+	/omit-if-no-ref/ mdf1_cki0_pd4: mdf1_cki0_pd4 {
+		pinmux = <STM32_PINMUX('D', 4, AF6)>;
+		slew-rate = "very-high-speed";
+	};
+
+	/omit-if-no-ref/ mdf1_sdi1_pd6: mdf1_sdi1_pd6 {
+		pinmux = <STM32_PINMUX('D', 6, AF6)>;
+		slew-rate = "very-high-speed";
+	};
+
+	/omit-if-no-ref/ mdf1_cki1_pd7: mdf1_cki1_pd7 {
+		pinmux = <STM32_PINMUX('D', 7, AF6)>;
+		slew-rate = "very-high-speed";
+	};
+
+	/omit-if-no-ref/ mdf1_sdi3_pe4: mdf1_sdi3_pe4 {
+		pinmux = <STM32_PINMUX('E', 4, AF6)>;
+		slew-rate = "very-high-speed";
+	};
+
+	/omit-if-no-ref/ mdf1_cki3_pe5: mdf1_cki3_pe5 {
+		pinmux = <STM32_PINMUX('E', 5, AF6)>;
+		slew-rate = "very-high-speed";
+	};
+
+	/omit-if-no-ref/ mdf1_sdi2_pe7: mdf1_sdi2_pe7 {
+		pinmux = <STM32_PINMUX('E', 7, AF6)>;
+		slew-rate = "very-high-speed";
+	};
+
+	/omit-if-no-ref/ mdf1_cki2_pe8: mdf1_cki2_pe8 {
+		pinmux = <STM32_PINMUX('E', 8, AF6)>;
+		slew-rate = "very-high-speed";
+	};
+
+	/omit-if-no-ref/ mdf1_cck0_pe9: mdf1_cck0_pe9 {
+		pinmux = <STM32_PINMUX('E', 9, AF6)>;
+		slew-rate = "very-high-speed";
+	};
+
+	/omit-if-no-ref/ mdf1_sdi4_pe10: mdf1_sdi4_pe10 {
+		pinmux = <STM32_PINMUX('E', 10, AF6)>;
+		slew-rate = "very-high-speed";
+	};
+
+	/omit-if-no-ref/ mdf1_cki4_pe11: mdf1_cki4_pe11 {
+		pinmux = <STM32_PINMUX('E', 11, AF6)>;
+		slew-rate = "very-high-speed";
+	};
+
+	/omit-if-no-ref/ mdf1_sdi5_pe12: mdf1_sdi5_pe12 {
+		pinmux = <STM32_PINMUX('E', 12, AF6)>;
+		slew-rate = "very-high-speed";
+	};
+
+	/omit-if-no-ref/ mdf1_cki5_pe13: mdf1_cki5_pe13 {
+		pinmux = <STM32_PINMUX('E', 13, AF6)>;
+		slew-rate = "very-high-speed";
+	};
+
+	/omit-if-no-ref/ mdf1_cck0_pf3: mdf1_cck0_pf3 {
+		pinmux = <STM32_PINMUX('F', 3, AF6)>;
+		slew-rate = "very-high-speed";
+	};
+
+	/omit-if-no-ref/ mdf1_sdi0_pf4: mdf1_sdi0_pf4 {
+		pinmux = <STM32_PINMUX('F', 4, AF6)>;
+		slew-rate = "very-high-speed";
+	};
+
+	/omit-if-no-ref/ mdf1_cki0_pf5: mdf1_cki0_pf5 {
+		pinmux = <STM32_PINMUX('F', 5, AF6)>;
+		slew-rate = "very-high-speed";
+	};
+
+	/omit-if-no-ref/ mdf1_cck1_pf10: mdf1_cck1_pf10 {
+		pinmux = <STM32_PINMUX('F', 10, AF6)>;
+		slew-rate = "very-high-speed";
+	};
+
+	/omit-if-no-ref/ mdf1_cck0_pg7: mdf1_cck0_pg7 {
+		pinmux = <STM32_PINMUX('G', 7, AF6)>;
+		slew-rate = "very-high-speed";
+	};
+
 	/* OCTOSPI */
 
 	/omit-if-no-ref/ octospim_p2_ncs_pa0: octospim_p2_ncs_pa0 {
