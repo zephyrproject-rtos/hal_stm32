@@ -549,6 +549,10 @@
 
 	/* JTAG PORT */
 
+	/omit-if-no-ref/ debug_traceclk_pa8: debug_traceclk_pa8 {
+		pinmux = <STM32_PINMUX('A', 8, AF12)>;
+	};
+
 	/omit-if-no-ref/ debug_jtms_swdio_pa13: debug_jtms_swdio_pa13 {
 		pinmux = <STM32_PINMUX('A', 13, AF0)>;
 	};
@@ -1540,6 +1544,10 @@
 
 	/* USB */
 
+	/omit-if-no-ref/ usb_sof_pa8: usb_sof_pa8 {
+		pinmux = <STM32_PINMUX('A', 8, AF10)>;
+	};
+
 	/omit-if-no-ref/ usb_dm_pa11: usb_dm_pa11 {
 		pinmux = <STM32_PINMUX('A', 11, ANALOG)>;
 	};
@@ -1550,6 +1558,10 @@
 
 	/omit-if-no-ref/ usb_noe_pa13: usb_noe_pa13 {
 		pinmux = <STM32_PINMUX('A', 13, AF10)>;
+	};
+
+	/omit-if-no-ref/ usb_sof_pa14: usb_sof_pa14 {
+		pinmux = <STM32_PINMUX('A', 14, AF10)>;
 	};
 
 };

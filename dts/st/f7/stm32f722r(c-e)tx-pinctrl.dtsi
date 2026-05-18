@@ -605,6 +605,22 @@
 		pinmux = <STM32_PINMUX('B', 4, AF0)>;
 	};
 
+	/omit-if-no-ref/ sys_traced0_pc1: sys_traced0_pc1 {
+		pinmux = <STM32_PINMUX('C', 1, AF0)>;
+	};
+
+	/omit-if-no-ref/ sys_traced1_pc8: sys_traced1_pc8 {
+		pinmux = <STM32_PINMUX('C', 8, AF0)>;
+	};
+
+	/omit-if-no-ref/ sys_traced3_pc12: sys_traced3_pc12 {
+		pinmux = <STM32_PINMUX('C', 12, AF0)>;
+	};
+
+	/omit-if-no-ref/ sys_traced2_pd2: sys_traced2_pd2 {
+		pinmux = <STM32_PINMUX('D', 2, AF0)>;
+	};
+
 	/* QUADSPI */
 
 	/omit-if-no-ref/ quadspi_bk1_io3_pa1: quadspi_bk1_io3_pa1 {

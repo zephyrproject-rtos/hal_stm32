@@ -1277,6 +1277,42 @@
 		pinmux = <STM32_PINMUX('B', 4, AF0)>;
 	};
 
+	/omit-if-no-ref/ sys_traced0_pc1: sys_traced0_pc1 {
+		pinmux = <STM32_PINMUX('C', 1, AF0)>;
+	};
+
+	/omit-if-no-ref/ sys_traced1_pc8: sys_traced1_pc8 {
+		pinmux = <STM32_PINMUX('C', 8, AF0)>;
+	};
+
+	/omit-if-no-ref/ sys_traced3_pc12: sys_traced3_pc12 {
+		pinmux = <STM32_PINMUX('C', 12, AF0)>;
+	};
+
+	/omit-if-no-ref/ sys_traced2_pd2: sys_traced2_pd2 {
+		pinmux = <STM32_PINMUX('D', 2, AF0)>;
+	};
+
+	/omit-if-no-ref/ sys_traceclk_pe2: sys_traceclk_pe2 {
+		pinmux = <STM32_PINMUX('E', 2, AF0)>;
+	};
+
+	/omit-if-no-ref/ sys_traced0_pe3: sys_traced0_pe3 {
+		pinmux = <STM32_PINMUX('E', 3, AF0)>;
+	};
+
+	/omit-if-no-ref/ sys_traced1_pe4: sys_traced1_pe4 {
+		pinmux = <STM32_PINMUX('E', 4, AF0)>;
+	};
+
+	/omit-if-no-ref/ sys_traced2_pe5: sys_traced2_pe5 {
+		pinmux = <STM32_PINMUX('E', 5, AF0)>;
+	};
+
+	/omit-if-no-ref/ sys_traced3_pe6: sys_traced3_pe6 {
+		pinmux = <STM32_PINMUX('E', 6, AF0)>;
+	};
+
 	/* LPTIM */
 
 	/omit-if-no-ref/ lptim1_in1_pd12: lptim1_in1_pd12 {

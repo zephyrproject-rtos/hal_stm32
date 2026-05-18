@@ -305,6 +305,30 @@
 		slew-rate = "very-high-speed";
 	};
 
+	/* I2S_SDI */
+
+	/omit-if-no-ref/ i2s1_sdi_pa6: i2s1_sdi_pa6 {
+		pinmux = <STM32_PINMUX('A', 6, AF5)>;
+	};
+
+	/omit-if-no-ref/ i2s1_sdi_pb4: i2s1_sdi_pb4 {
+		pinmux = <STM32_PINMUX('B', 4, AF5)>;
+	};
+
+	/* I2S_SDO */
+
+	/omit-if-no-ref/ i2s1_sdo_pa7: i2s1_sdo_pa7 {
+		pinmux = <STM32_PINMUX('A', 7, AF5)>;
+	};
+
+	/omit-if-no-ref/ i2s1_sdo_pb15: i2s1_sdo_pb15 {
+		pinmux = <STM32_PINMUX('B', 15, AF6)>;
+	};
+
+	/omit-if-no-ref/ i2s2_sdo_pb15: i2s2_sdo_pb15 {
+		pinmux = <STM32_PINMUX('B', 15, AF5)>;
+	};
+
 	/* I2S_WS */
 
 	/omit-if-no-ref/ i2s1_ws_pa4: i2s1_ws_pa4 {
@@ -905,6 +929,10 @@
 	};
 
 	/* USB */
+
+	/omit-if-no-ref/ usb_sof_pa8: usb_sof_pa8 {
+		pinmux = <STM32_PINMUX('A', 8, AF10)>;
+	};
 
 	/omit-if-no-ref/ usb_dm_pa11: usb_dm_pa11 {
 		pinmux = <STM32_PINMUX('A', 11, AF10)>;

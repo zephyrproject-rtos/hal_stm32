@@ -176,6 +176,11 @@
 - name: LTDC
   match: "^LTDC_(?:DE|CLK|HSYNC|VSYNC|R[0-7]|G[0-7]|B[0-7])$"
 
+- name: MDF
+  match: "^MDF1_(?:CCK[0-1]|CKI[0-7]|SDI[0-7])$"
+  mode: alternate
+  slew-rate: very-high-speed
+
 - name: OCTOSPI
   match: "^OCTOSPI(.*)(?:CLK|NCS[1-2]?|DQS|IO[0-7])$"
   slew-rate: very-high-speed

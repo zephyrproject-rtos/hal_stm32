@@ -350,6 +350,10 @@
 
 	/* JTAG PORT */
 
+	/omit-if-no-ref/ debug_traceclk_pa8: debug_traceclk_pa8 {
+		pinmux = <STM32_PINMUX('A', 8, AF12)>;
+	};
+
 	/omit-if-no-ref/ debug_jtms_swdio_pa13: debug_jtms_swdio_pa13 {
 		pinmux = <STM32_PINMUX('A', 13, AF0)>;
 	};
@@ -442,6 +446,23 @@
 
 	/omit-if-no-ref/ lptim3_etr_pb14: lptim3_etr_pb14 {
 		pinmux = <STM32_PINMUX('B', 14, AF2)>;
+	};
+
+	/* MDF */
+
+	/omit-if-no-ref/ mdf1_sdi0_pb1: mdf1_sdi0_pb1 {
+		pinmux = <STM32_PINMUX('B', 1, AF6)>;
+		slew-rate = "very-high-speed";
+	};
+
+	/omit-if-no-ref/ mdf1_cck0_pb8: mdf1_cck0_pb8 {
+		pinmux = <STM32_PINMUX('B', 8, AF5)>;
+		slew-rate = "very-high-speed";
+	};
+
+	/omit-if-no-ref/ mdf1_cki1_pb13: mdf1_cki1_pb13 {
+		pinmux = <STM32_PINMUX('B', 13, AF6)>;
+		slew-rate = "very-high-speed";
 	};
 
 	/* OCTOSPI */
@@ -1138,6 +1159,10 @@
 
 	/* USB */
 
+	/omit-if-no-ref/ usb_sof_pa8: usb_sof_pa8 {
+		pinmux = <STM32_PINMUX('A', 8, AF10)>;
+	};
+
 	/omit-if-no-ref/ usb_dm_pa11: usb_dm_pa11 {
 		pinmux = <STM32_PINMUX('A', 11, ANALOG)>;
 	};
@@ -1148,6 +1173,10 @@
 
 	/omit-if-no-ref/ usb_noe_pa13: usb_noe_pa13 {
 		pinmux = <STM32_PINMUX('A', 13, AF10)>;
+	};
+
+	/omit-if-no-ref/ usb_sof_pa14: usb_sof_pa14 {
+		pinmux = <STM32_PINMUX('A', 14, AF10)>;
 	};
 
 };
