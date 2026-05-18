@@ -418,6 +418,10 @@
 
 	/* JTAG PORT */
 
+	/omit-if-no-ref/ debug_traceclk_pa8: debug_traceclk_pa8 {
+		pinmux = <STM32_PINMUX('A', 8, AF12)>;
+	};
+
 	/omit-if-no-ref/ debug_jtms_swdio_pa13: debug_jtms_swdio_pa13 {
 		pinmux = <STM32_PINMUX('A', 13, AF0)>;
 	};

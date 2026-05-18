@@ -748,6 +748,10 @@
 		pinmux = <STM32_PINMUX('B', 4, AF0)>;
 	};
 
+	/omit-if-no-ref/ sys_traced0_pc8: sys_traced0_pc8 {
+		pinmux = <STM32_PINMUX('C', 8, AF0)>;
+	};
+
 	/* QUADSPI */
 
 	/omit-if-no-ref/ quadspi_bk1_io3_pa1: quadspi_bk1_io3_pa1 {
