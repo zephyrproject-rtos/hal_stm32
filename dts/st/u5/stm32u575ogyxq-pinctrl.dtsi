@@ -863,6 +863,10 @@
 
 	/* JTAG PORT */
 
+	/omit-if-no-ref/ debug_traceclk_pa8: debug_traceclk_pa8 {
+		pinmux = <STM32_PINMUX('A', 8, AF12)>;
+	};
+
 	/omit-if-no-ref/ debug_jtms_swdio_pa13: debug_jtms_swdio_pa13 {
 		pinmux = <STM32_PINMUX('A', 13, AF0)>;
 	};
@@ -881,6 +885,42 @@
 
 	/omit-if-no-ref/ debug_njtrst_pb4: debug_njtrst_pb4 {
 		pinmux = <STM32_PINMUX('B', 4, AF0)>;
+	};
+
+	/omit-if-no-ref/ debug_traced0_pc1: debug_traced0_pc1 {
+		pinmux = <STM32_PINMUX('C', 1, AF0)>;
+	};
+
+	/omit-if-no-ref/ debug_traced0_pc9: debug_traced0_pc9 {
+		pinmux = <STM32_PINMUX('C', 9, AF0)>;
+	};
+
+	/omit-if-no-ref/ debug_traced1_pc10: debug_traced1_pc10 {
+		pinmux = <STM32_PINMUX('C', 10, AF0)>;
+	};
+
+	/omit-if-no-ref/ debug_traced3_pc12: debug_traced3_pc12 {
+		pinmux = <STM32_PINMUX('C', 12, AF0)>;
+	};
+
+	/omit-if-no-ref/ debug_traced2_pd2: debug_traced2_pd2 {
+		pinmux = <STM32_PINMUX('D', 2, AF0)>;
+	};
+
+	/omit-if-no-ref/ debug_traced0_pe3: debug_traced0_pe3 {
+		pinmux = <STM32_PINMUX('E', 3, AF0)>;
+	};
+
+	/omit-if-no-ref/ debug_traced1_pe4: debug_traced1_pe4 {
+		pinmux = <STM32_PINMUX('E', 4, AF0)>;
+	};
+
+	/omit-if-no-ref/ debug_traced2_pe5: debug_traced2_pe5 {
+		pinmux = <STM32_PINMUX('E', 5, AF0)>;
+	};
+
+	/omit-if-no-ref/ debug_traced3_pe6: debug_traced3_pe6 {
+		pinmux = <STM32_PINMUX('E', 6, AF0)>;
 	};
 
 	/* LPTIM */

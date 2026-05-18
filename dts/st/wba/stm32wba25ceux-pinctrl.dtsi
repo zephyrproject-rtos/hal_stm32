@@ -224,12 +224,32 @@
 		pinmux = <STM32_PINMUX('A', 15, AF0)>;
 	};
 
+	/omit-if-no-ref/ debug_traced0_pa15: debug_traced0_pa15 {
+		pinmux = <STM32_PINMUX('A', 15, AF6)>;
+	};
+
 	/omit-if-no-ref/ debug_jtdo_swo_pb3: debug_jtdo_swo_pb3 {
 		pinmux = <STM32_PINMUX('B', 3, AF0)>;
 	};
 
+	/omit-if-no-ref/ debug_traced1_pb3: debug_traced1_pb3 {
+		pinmux = <STM32_PINMUX('B', 3, AF6)>;
+	};
+
 	/omit-if-no-ref/ debug_njtrst_pb4: debug_njtrst_pb4 {
 		pinmux = <STM32_PINMUX('B', 4, AF0)>;
+	};
+
+	/omit-if-no-ref/ debug_traced2_pb4: debug_traced2_pb4 {
+		pinmux = <STM32_PINMUX('B', 4, AF6)>;
+	};
+
+	/omit-if-no-ref/ debug_traced3_pb5: debug_traced3_pb5 {
+		pinmux = <STM32_PINMUX('B', 5, AF6)>;
+	};
+
+	/omit-if-no-ref/ debug_traceclk_pb6: debug_traceclk_pb6 {
+		pinmux = <STM32_PINMUX('B', 6, AF6)>;
 	};
 
 	/* LPTIM */
@@ -618,6 +638,10 @@
 
 	/* USB */
 
+	/omit-if-no-ref/ usb_sof_pa8: usb_sof_pa8 {
+		pinmux = <STM32_PINMUX('A', 8, AF10)>;
+	};
+
 	/omit-if-no-ref/ usb_noe_pa13: usb_noe_pa13 {
 		pinmux = <STM32_PINMUX('A', 13, AF3)>;
 	};
@@ -628,6 +652,48 @@
 
 	/omit-if-no-ref/ usb_dm_pb9: usb_dm_pb9 {
 		pinmux = <STM32_PINMUX('B', 9, ANALOG)>;
+	};
+
+	/* XSPI */
+
+	/omit-if-no-ref/ xspi1_dqs_pa2: xspi1_dqs_pa2 {
+		pinmux = <STM32_PINMUX('A', 2, AF10)>;
+		slew-rate = "very-high-speed";
+	};
+
+	/omit-if-no-ref/ xspi1_clk_pa15: xspi1_clk_pa15 {
+		pinmux = <STM32_PINMUX('A', 15, AF13)>;
+		slew-rate = "very-high-speed";
+	};
+
+	/omit-if-no-ref/ xspi1_io0_pb3: xspi1_io0_pb3 {
+		pinmux = <STM32_PINMUX('B', 3, AF13)>;
+		slew-rate = "very-high-speed";
+	};
+
+	/omit-if-no-ref/ xspi1_io1_pb4: xspi1_io1_pb4 {
+		pinmux = <STM32_PINMUX('B', 4, AF11)>;
+		slew-rate = "very-high-speed";
+	};
+
+	/omit-if-no-ref/ xspi1_io2_pb5: xspi1_io2_pb5 {
+		pinmux = <STM32_PINMUX('B', 5, AF10)>;
+		slew-rate = "very-high-speed";
+	};
+
+	/omit-if-no-ref/ xspi1_io3_pb6: xspi1_io3_pb6 {
+		pinmux = <STM32_PINMUX('B', 6, AF10)>;
+		slew-rate = "very-high-speed";
+	};
+
+	/omit-if-no-ref/ xspi1_io2_pb8: xspi1_io2_pb8 {
+		pinmux = <STM32_PINMUX('B', 8, AF11)>;
+		slew-rate = "very-high-speed";
+	};
+
+	/omit-if-no-ref/ xspi1_io3_pb9: xspi1_io3_pb9 {
+		pinmux = <STM32_PINMUX('B', 9, AF11)>;
+		slew-rate = "very-high-speed";
 	};
 
 };

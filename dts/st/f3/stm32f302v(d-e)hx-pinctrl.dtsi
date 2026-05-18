@@ -1025,6 +1025,22 @@
 		pinmux = <STM32_PINMUX('B', 4, AF0)>;
 	};
 
+	/omit-if-no-ref/ sys_traced0_pe3: sys_traced0_pe3 {
+		pinmux = <STM32_PINMUX('E', 3, AF0)>;
+	};
+
+	/omit-if-no-ref/ sys_traced1_pe4: sys_traced1_pe4 {
+		pinmux = <STM32_PINMUX('E', 4, AF0)>;
+	};
+
+	/omit-if-no-ref/ sys_traced2_pe5: sys_traced2_pe5 {
+		pinmux = <STM32_PINMUX('E', 5, AF0)>;
+	};
+
+	/omit-if-no-ref/ sys_traced3_pe6: sys_traced3_pe6 {
+		pinmux = <STM32_PINMUX('E', 6, AF0)>;
+	};
+
 	/* OPAMP */
 
 	/omit-if-no-ref/ opamp1_vinp_pa1: opamp1_vinp_pa1 {

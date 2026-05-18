@@ -475,6 +475,26 @@
 		pinmux = <STM32_PINMUX('B', 4, AF0)>;
 	};
 
+	/omit-if-no-ref/ sys_traced3_pb11: sys_traced3_pb11 {
+		pinmux = <STM32_PINMUX('B', 11, AF0)>;
+	};
+
+	/omit-if-no-ref/ sys_traceclk_pc6: sys_traceclk_pc6 {
+		pinmux = <STM32_PINMUX('C', 6, AF0)>;
+	};
+
+	/omit-if-no-ref/ sys_traced0_pc10: sys_traced0_pc10 {
+		pinmux = <STM32_PINMUX('C', 10, AF0)>;
+	};
+
+	/omit-if-no-ref/ sys_traced1_pc11: sys_traced1_pc11 {
+		pinmux = <STM32_PINMUX('C', 11, AF0)>;
+	};
+
+	/omit-if-no-ref/ sys_traced2_pc12: sys_traced2_pc12 {
+		pinmux = <STM32_PINMUX('C', 12, AF0)>;
+	};
+
 	/* LPTIM */
 
 	/omit-if-no-ref/ lptim1_out_pb2: lptim1_out_pb2 {

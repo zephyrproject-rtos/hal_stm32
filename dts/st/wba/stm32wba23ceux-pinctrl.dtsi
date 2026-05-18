@@ -232,12 +232,32 @@
 		pinmux = <STM32_PINMUX('A', 15, AF0)>;
 	};
 
+	/omit-if-no-ref/ debug_traced0_pa15: debug_traced0_pa15 {
+		pinmux = <STM32_PINMUX('A', 15, AF6)>;
+	};
+
 	/omit-if-no-ref/ debug_jtdo_swo_pb3: debug_jtdo_swo_pb3 {
 		pinmux = <STM32_PINMUX('B', 3, AF0)>;
 	};
 
+	/omit-if-no-ref/ debug_traced1_pb3: debug_traced1_pb3 {
+		pinmux = <STM32_PINMUX('B', 3, AF6)>;
+	};
+
 	/omit-if-no-ref/ debug_njtrst_pb4: debug_njtrst_pb4 {
 		pinmux = <STM32_PINMUX('B', 4, AF0)>;
+	};
+
+	/omit-if-no-ref/ debug_traced2_pb4: debug_traced2_pb4 {
+		pinmux = <STM32_PINMUX('B', 4, AF6)>;
+	};
+
+	/omit-if-no-ref/ debug_traced3_pb5: debug_traced3_pb5 {
+		pinmux = <STM32_PINMUX('B', 5, AF6)>;
+	};
+
+	/omit-if-no-ref/ debug_traceclk_pb6: debug_traceclk_pb6 {
+		pinmux = <STM32_PINMUX('B', 6, AF6)>;
 	};
 
 	/* LPTIM */
