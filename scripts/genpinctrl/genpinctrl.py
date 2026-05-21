@@ -17,7 +17,7 @@ import logging
 from pathlib import Path
 import re
 import shutil
-from subprocess import check_output, STDOUT, CalledProcessError, run
+from subprocess import check_output, STDOUT, CalledProcessError
 import xml.etree.ElementTree as ET
 
 from jinja2 import Environment, FileSystemLoader
@@ -78,11 +78,6 @@ SUPPORTED_FAMILIES = [
     "stm32wl",
 ]
 """Supported SoC families"""
-
-HAL2_FAMILIES = [
-    "stm32c5",
-]
-"""SoC families relying on HAL2"""
 
 PIN_MODS = [
     "_C",  # Pins with analog switch (H7)
@@ -628,18 +623,6 @@ def main(data_path, output):
     gpio_ip_afs = get_gpio_ip_afs(data_path)
     mcu_signals = get_mcu_signals(data_path, gpio_ip_afs)
 
-    # erase output if we're about to generate for all families
-    if output.exists() and not FAMILY_FILTER.is_active():
-        shutil.rmtree(output)
-        output.mkdir(parents=True)
-        # Do not consider SoCs related to HAL2
-        for family in HAL2_FAMILIES:
-            family_path = output / "st" / family.removeprefix("stm32")
-            try:
-                run(["git", "checkout", "--", family_path], check=True)
-            except CalledProcessError:
-                break
-
     for family, refs in mcu_signals.items():
         # check family is supported
         if family.lower() not in SUPPORTED_FAMILIES:
@@ -648,8 +631,13 @@ def main(data_path, output):
         else:
             logger.info(f"Processing family {family}...")
 
-        # create destination directory for the family
+        # Create destination directory for the family,
+        # but wipe it first if we're generating for all
+        # families (i.e., family filter is not active).
         family_dir = output / "st" / family.lower().removeprefix("stm32")
+
+        if family_dir.exists() and not FAMILY_FILTER.is_active():
+            shutil.rmtree(family_dir)
         family_dir.mkdir(parents=True, exist_ok=True)
 
         # process each reference of the family
