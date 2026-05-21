@@ -66,6 +66,7 @@ SUPPORTED_FAMILIES = [
     "stm32l4",
     "stm32l5",
     "stm32mp1",
+    "stm32mp13",
     "stm32mp2",
     "stm32n6",
     "stm32u0",
@@ -456,6 +457,16 @@ def get_mcu_signals(data_path, gpio_ip_afs):
         family = mcu_root.get("Family").replace("+", "")
         ref = mcu_root.get("RefName")
 
+        # STM32MP13 line and STM32MP15 line SoCs are grouped under
+        # the same "STM32MP1" family in Open Pin Data, but we want
+        # to generate pinctrl for these lines in separate directories.
+        # Change family based on SoC model if this is an MP1 SoC.
+        if family == "STM32MP1":
+            if ref.lower().startswith("stm32mp13"):
+                family = "STM32MP13"
+            elif ref.lower().startswith("stm32mp15"):
+                family = "STM32MP1"
+
         gpio_ip_version = None
         for ip in mcu_root.findall(NS + "IP"):
             if ip.get("Name") == "GPIO":
@@ -637,15 +648,12 @@ def main(data_path, output):
         else:
             logger.info(f"Processing family {family}...")
 
-        # create directory for each family and process each reference
-        for ref in refs:
-            if ref["name"].lower().startswith("stm32mp13"):
-                family_dir = output / "st" / "mp13"
-            else:
-                family_dir = output / "st" / family.lower()[5:]
-            if not family_dir.exists():
-                family_dir.mkdir(parents=True)
+        # create destination directory for the family
+        family_dir = output / "st" / family.lower().removeprefix("stm32")
+        family_dir.mkdir(parents=True, exist_ok=True)
 
+        # process each reference of the family
+        for ref in refs:
             entries = dict()
 
             # process each pin in the current reference
