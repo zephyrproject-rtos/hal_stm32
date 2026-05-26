@@ -48,4 +48,12 @@ Patch List:
     Impacted files:
     stm32cube/stm32u0xx/drivers/include/Legacy/stm32_hal_legacy.h
 
+   *Fix HAL_MDF_IRQHandler
+      HAL_MDF_IRQHandler handles IRQ flags in an if {} else if {} condition.
+      This causes interrupts to be handled once and only the first flag
+      encountered in the condition, while there can be several flags raised.
+     Impacted files:
+       drivers/src/stm32u3xx_hal_mdf.c
+     ST Internal Reference: HAL1-27843
+
    See release_note.html from STM32Cube

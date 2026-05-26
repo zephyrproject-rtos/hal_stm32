@@ -72,4 +72,12 @@ Patch List:
      See also:
       https://github.com/zephyrproject-rtos/hal_stm32/pull/355
 
+   *Fix HAL_MDF_IRQHandler
+      HAL_MDF_IRQHandler handles IRQ flags in an if {} else if {} condition.
+      This causes interrupts to be handled once and only the first flag
+      encountered in the condition, while there can be several flags raised.
+     Impacted files:
+       drivers/src/stm32u5xx_hal_mdf.c
+     ST Internal Reference: HAL1-27843
+
    See release_note.html from STM32Cube
