@@ -1857,7 +1857,7 @@ void HAL_MDF_IRQHandler(MDF_HandleTypeDef *hmdf)
 #endif /* USE_HAL_MDF_REGISTER_CALLBACKS */
   }
   /* Check if RXFIFO threshold occurs */
-  else if ((interrupts & MDF_DFLTISR_FTHF) == MDF_DFLTISR_FTHF)
+  if ((interrupts & MDF_DFLTISR_FTHF) == MDF_DFLTISR_FTHF)
   {
     /* Call acquisition complete callback */
 #if (USE_HAL_MDF_REGISTER_CALLBACKS == 1)
@@ -1873,7 +1873,7 @@ void HAL_MDF_IRQHandler(MDF_HandleTypeDef *hmdf)
     }
   }
   /* Check if reshape filter overrun occurs */
-  else if ((interrupts & MDF_DFLTISR_RFOVRF) == MDF_DFLTISR_RFOVRF)
+  if ((interrupts & MDF_DFLTISR_RFOVRF) == MDF_DFLTISR_RFOVRF)
   {
     /* Clear reshape filter overrun flag */
     hmdf->Instance->DFLTISR |= MDF_DFLTISR_RFOVRF;
@@ -1889,7 +1889,7 @@ void HAL_MDF_IRQHandler(MDF_HandleTypeDef *hmdf)
 #endif /* USE_HAL_MDF_REGISTER_CALLBACKS */
   }
   /* Check if clock absence detection occurs */
-  else if ((interrupts & MDF_DFLTISR_CKABF) == MDF_DFLTISR_CKABF)
+  if ((interrupts & MDF_DFLTISR_CKABF) == MDF_DFLTISR_CKABF)
   {
     /* Clear clock absence detection flag */
     hmdf->Instance->DFLTISR |= MDF_DFLTISR_CKABF;
@@ -1905,7 +1905,7 @@ void HAL_MDF_IRQHandler(MDF_HandleTypeDef *hmdf)
 #endif /* USE_HAL_MDF_REGISTER_CALLBACKS */
   }
   /* Check if saturation occurs */
-  else if ((interrupts & MDF_DFLTISR_SATF) == MDF_DFLTISR_SATF)
+  if ((interrupts & MDF_DFLTISR_SATF) == MDF_DFLTISR_SATF)
   {
     /* Clear saturation flag */
     hmdf->Instance->DFLTISR |= MDF_DFLTISR_SATF;
@@ -1921,7 +1921,7 @@ void HAL_MDF_IRQHandler(MDF_HandleTypeDef *hmdf)
 #endif /* USE_HAL_MDF_REGISTER_CALLBACKS */
   }
   /* Check if sound activity detection occurs */
-  else if ((interrupts & MDF_DFLTISR_SDDETF) == MDF_DFLTISR_SDDETF)
+  if ((interrupts & MDF_DFLTISR_SDDETF) == MDF_DFLTISR_SDDETF)
   {
     /* Clear sound activity detection flag */
     hmdf->Instance->DFLTISR |= MDF_DFLTISR_SDDETF;
@@ -1933,30 +1933,27 @@ void HAL_MDF_IRQHandler(MDF_HandleTypeDef *hmdf)
     HAL_MDF_SadCallback(hmdf);
 #endif /* USE_HAL_MDF_REGISTER_CALLBACKS */
   }
-  else
+  /* Check if sound level ready occurs */
+  if ((interrupts & MDF_DFLTISR_SDLVLF) == MDF_DFLTISR_SDLVLF)
   {
-    /* Check if sound level ready occurs */
-    if ((interrupts & MDF_DFLTISR_SDLVLF) == MDF_DFLTISR_SDLVLF)
-    {
-      uint32_t sound_level;
-      uint32_t ambient_noise;
+    uint32_t sound_level;
+    uint32_t ambient_noise;
 
-      /* Get sound level */
-      sound_level = hmdf->Instance->SADSDLVR;
+    /* Get sound level */
+    sound_level = hmdf->Instance->SADSDLVR;
 
-      /* Get ambient noise */
-      ambient_noise = hmdf->Instance->SADANLVR;
+    /* Get ambient noise */
+    ambient_noise = hmdf->Instance->SADANLVR;
 
-      /* Clear sound level ready flag */
-      hmdf->Instance->DFLTISR |= MDF_DFLTISR_SDLVLF;
+    /* Clear sound level ready flag */
+    hmdf->Instance->DFLTISR |= MDF_DFLTISR_SDLVLF;
 
-      /* Call sound level callback */
+    /* Call sound level callback */
 #if (USE_HAL_MDF_REGISTER_CALLBACKS == 1)
-      hmdf->SndLvCallback(hmdf, sound_level, ambient_noise);
+    hmdf->SndLvCallback(hmdf, sound_level, ambient_noise);
 #else /* USE_HAL_MDF_REGISTER_CALLBACKS */
-      HAL_MDF_SndLvlCallback(hmdf, sound_level, ambient_noise);
+    HAL_MDF_SndLvlCallback(hmdf, sound_level, ambient_noise);
 #endif /* USE_HAL_MDF_REGISTER_CALLBACKS */
-    }
   }
 }
 
