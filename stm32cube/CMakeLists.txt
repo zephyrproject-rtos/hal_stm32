@@ -30,6 +30,12 @@ zephyr_library()
 string(TOUPPER ${CONFIG_SOC} _STM32CUBE_CPU)
 string(REPLACE "X" "x" STM32CUBE_CPU ${_STM32CUBE_CPU})
 
+if(STM32CUBE_CPU STREQUAL "STM32F401xD")
+  # The STM32F401xD SoC is supported by the STM32F4xx Cube package, but
+  # but uses STM32F401xE in the HAL/LL source files
+  set(STM32CUBE_CPU "STM32F401xE")
+endif()
+
 # Provide the minimal definitions needed by Cube to function
 # properly. This includes the SoC definition, but also the
 # USE_HAL_DRIVER and USE_FULL_LL_DRIVER defines, which control
