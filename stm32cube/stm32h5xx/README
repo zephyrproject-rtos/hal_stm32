@@ -57,6 +57,15 @@ Patch List:
      If the CTXT bit is set in the context descriptor then extract the timestamps
      ST internal bug : 161504
 
+   *Fix Ethernet RX timestamp context handling
+     Prevents stale or incomplete RX timestamps by clearing the cached timestamp,
+     reading only CPU-owned timestamp context descriptors, and advancing the RX
+     descriptor index after consuming a valid context descriptor. Packets with
+     timestamp context descriptors still owned by DMA are retried later.
+     Impacted file:
+      stm32cube/stm32h5xx/drivers/src/stm32h5xx_hal_eth.c
+     ST Internal Reference: 683183939fd90b986d0d8626d624ab85
+
    *Fix to remove PAGESIZE definition which conflicts with POSIX
     Impacted files:
      drivers/include/Legacy/stm32_hal_legacy.h
