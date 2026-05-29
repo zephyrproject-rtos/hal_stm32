@@ -1087,6 +1087,10 @@ HAL_StatusTypeDef HAL_ETH_ReadData(ETH_HandleTypeDef *heth, void **pAppBuff)
   dmarxdesc = (ETH_DMADescTypeDef *)heth->RxDescList.RxDesc[descidx];
   desccntmax = ETH_RX_DESC_CNT - heth->RxDescList.RxBuildDescCnt;
 
+  /* Initialize timestamp to an invalid value before checking received descriptors */
+  heth->RxDescList.TimeStamp.TimeStampHigh = UINT32_MAX;
+  heth->RxDescList.TimeStamp.TimeStampLow  = UINT32_MAX;
+
   /* Check if descriptor is not owned by DMA */
   while ((READ_BIT(dmarxdesc->DESC3, ETH_DMARXNDESCWBF_OWN) == (uint32_t)RESET) && (desccnt < desccntmax)
          && (rxdataready == 0U))
@@ -1110,9 +1114,6 @@ HAL_StatusTypeDef HAL_ETH_ReadData(ETH_HandleTypeDef *heth, void **pAppBuff)
         /* Save Last descriptor index */
         heth->RxDescList.pRxLastRxDesc = dmarxdesc->DESC3;
 
-        /* Packet ready */
-        rxdataready = 1;
-
         if (READ_BIT(dmarxdesc->DESC1, ETH_DMARXNDESCWBF_TSA) != (uint32_t)RESET)
         {
           descidx_next = descidx;
@@ -1120,14 +1121,29 @@ HAL_StatusTypeDef HAL_ETH_ReadData(ETH_HandleTypeDef *heth, void **pAppBuff)
 
           dmarxdesc_next = (ETH_DMADescTypeDef *)heth->RxDescList.RxDesc[descidx_next];
 
-          if (READ_BIT(dmarxdesc_next->DESC3, ETH_DMARXNDESCWBF_CTXT) != (uint32_t)RESET)
+          if (READ_BIT(dmarxdesc_next->DESC3, ETH_DMARXNDESCWBF_OWN) == (uint32_t)RESET)
           {
-            /* Get timestamp high */
-            heth->RxDescList.TimeStamp.TimeStampHigh = dmarxdesc_next->DESC1;
-            /* Get timestamp low */
-            heth->RxDescList.TimeStamp.TimeStampLow  = dmarxdesc_next->DESC0;
+            if (READ_BIT(dmarxdesc_next->DESC3, ETH_DMARXNDESCWBF_CTXT) != (uint32_t)RESET)
+            {
+              /* Get timestamp high */
+              heth->RxDescList.TimeStamp.TimeStampHigh = dmarxdesc_next->DESC1;
+              /* Get timestamp low */
+              heth->RxDescList.TimeStamp.TimeStampLow  = dmarxdesc_next->DESC0;
+
+              /* Increment current rx descriptor index */
+              INCR_RX_DESC_INDEX(descidx, 1U);
+              desccnt++;
+            }
+          }
+          else
+          {
+            /* timestamp context descriptor is not ready, exit and retry later */
+            break;
           }
         }
+
+        /* Packet ready */
+        rxdataready = 1;
       }
 
       /* Link data */
