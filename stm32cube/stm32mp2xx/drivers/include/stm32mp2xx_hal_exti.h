@@ -416,7 +416,7 @@ typedef struct
 #define EXTI2_LINE_33                        (EXTI_EXTI2|EXTI_DIRECT   |              0x21u)
 #endif
 #if defined (CORE_CA35)
-#define EXTI2_LINE_34                        (EXTI_EXTI2|EXTI_DIRECT   |              0x22u)
+#define EXTI2_LINE_34                        (EXTI_EXTI2|EXTI_RESERVED |              0x22u)
 #else   /* CORE_CA35 */
 #if defined(STM32MP21xxxx)
 #define EXTI2_LINE_34                        (EXTI_EXTI2|EXTI_CONFIG   |              0x22u)
@@ -431,15 +431,15 @@ typedef struct
 #define EXTI2_LINE_35                        (EXTI_EXTI2|EXTI_DIRECT   |              0x23u)
 #endif
 #else   /* CORE_CM33 */
-#define EXTI2_LINE_35                        (EXTI_EXTI2|EXTI_RESERVED |              0x23u)
+#define EXTI2_LINE_35                        (EXTI_EXTI2|EXTI_CONFIG   |              0x23u)
 #endif  /* CORE_CM33 */
 #if defined (CORE_CM0PLUS)
 #define EXTI2_LINE_36                        (EXTI_EXTI2|EXTI_DIRECT   |              0x24u)
 #else   /* CORE_CM0PLUS */
-#define EXTI2_LINE_36                        (EXTI_EXTI2|EXTI_RESERVED |              0x24u)
+#define EXTI2_LINE_36                        (EXTI_EXTI2|EXTI_CONFIG   |              0x24u)
 #endif  /* CORE_CM0PLUS */
 #if defined (CORE_CA35)
-#define EXTI2_LINE_37                        (EXTI_EXTI2|EXTI_DIRECT   |              0x25u)
+#define EXTI2_LINE_37                        (EXTI_EXTI2|EXTI_CONFIG   |              0x25u)
 #else   /* CORE_CA35 */
 #if defined(STM32MP21xxxx)
 #define EXTI2_LINE_37                        (EXTI_EXTI2|EXTI_CONFIG   |              0x25u)
@@ -456,7 +456,7 @@ typedef struct
 #else   /* CORE_CM33 */
 #define EXTI2_LINE_38                        (EXTI_EXTI2|EXTI_RESERVED |              0x26u)
 #endif  /* CORE_CM33 */
-#define EXTI2_LINE_39                        (EXTI_EXTI2|EXTI_RESERVED |              0x27u)
+#define EXTI2_LINE_39                        (EXTI_EXTI2|EXTI_DIRECT   |              0x27u)
 #if defined (CORE_CA35)
 #define EXTI2_LINE_40                        (EXTI_EXTI2|EXTI_DIRECT   |              0x28u)
 #else   /* CORE_CA35 */
@@ -471,13 +471,13 @@ typedef struct
 #define EXTI2_LINE_42                        (EXTI_EXTI2|EXTI_DIRECT   |              0x2Au)
 #else   /* CORE_CM0PLUS */
 #if defined(STM32MP21xxxx)
-#define EXTI2_LINE_42                        (EXTI_EXTI2|EXTI_DIRECT   |              0x2Au)
+#define EXTI2_LINE_42                        (EXTI_EXTI2|EXTI_RESERVED |              0x2Au)
 #else
 #define EXTI2_LINE_42                        (EXTI_EXTI2|EXTI_RESERVED |              0x2Au)
 #endif
 #endif  /* CORE_CM0PLUS */
 #if defined (CORE_CA35)
-#define EXTI2_LINE_43                        (EXTI_EXTI2|EXTI_DIRECT   |              0x2Bu)
+#define EXTI2_LINE_43                        (EXTI_EXTI2|EXTI_RESERVED   |              0x2Bu)
 #else   /* CORE_CA35 */
 #define EXTI2_LINE_43                        (EXTI_EXTI2|EXTI_RESERVED |              0x2Bu)
 #endif  /* CORE_CA35 */
@@ -519,7 +519,7 @@ typedef struct
 #define EXTI2_LINE_48                        (EXTI_EXTI2|EXTI_RESERVED |              0x30u)
 #endif  /* CORE_CA35 || CORE_CM33 */
 #if defined (CORE_CA35)
-#define EXTI2_LINE_49                        (EXTI_EXTI2|EXTI_CONFIG   |              0x31u)
+#define EXTI2_LINE_49                        (EXTI_EXTI2|EXTI_DIRECT   |              0x31u)
 #else   /* CORE_CA35 */
 #define EXTI2_LINE_49                        (EXTI_EXTI2|EXTI_RESERVED |              0x31u)
 #endif  /* CORE_CA35 */
@@ -535,8 +535,8 @@ typedef struct
 #define EXTI2_LINE_51                        (EXTI_EXTI2|EXTI_RESERVED |              0x33u)
 #endif  /* CORE_CA35 || CORE_CM33 */
 #if defined (CORE_CA35)
-#define EXTI2_LINE_52                        (EXTI_EXTI2|EXTI_DIRECT   |              0x34u)
-#define EXTI2_LINE_53                        (EXTI_EXTI2|EXTI_DIRECT   |              0x35u)
+#define EXTI2_LINE_52                        (EXTI_EXTI2|EXTI_CONFIG   |              0x34u)
+#define EXTI2_LINE_53                        (EXTI_EXTI2|EXTI_CONFIG   |              0x35u)
 #else   /* CORE_CA35 */
 #if defined(STM32MP21xxxx)
 #define EXTI2_LINE_52                        (EXTI_EXTI2|EXTI_CONFIG   |              0x34u)

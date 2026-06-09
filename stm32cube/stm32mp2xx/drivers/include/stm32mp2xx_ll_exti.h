@@ -3482,7 +3482,7 @@ __STATIC_INLINE uint32_t LL_EXTI_getEventCid(const EXTI_TypeDef *EXTIx, uint32_t
 }
 
 /**
-  * @brief  Enable/Disable CID filtering  to  control event configuration
+  * @brief  Enable CID filtering  to  control event configuration
   * @param  EXTIx EXTI Instance
   * @param  evtIndex : from 0 to 95. valid index depends on EXTI instance
   */
@@ -3492,13 +3492,13 @@ __STATIC_INLINE void LL_EXTI_EnableEventCidFiltering(EXTI_TypeDef *EXTIx, uint32
 }
 
 /**
-  * @brief  Enable/Disable CID filtering  to  control event configuration
+  * @brief  Disable CID filtering  to  control event configuration
   * @param  EXTIx EXTI Instance
   * @param  evtIndex : from 0 to 95. valid index depends on EXTI instance
   */
 __STATIC_INLINE void LL_EXTI_DisableEventCidFiltering(EXTI_TypeDef *EXTIx, uint32_t evtIndex)
 {
-  SET_BIT(EXTIx->ECIDCFGR[evtIndex], EXTI_EnCIDCFGR_CFEN);
+  CLEAR_BIT(EXTIx->ECIDCFGR[evtIndex], EXTI_EnCIDCFGR_CFEN);
 }
 
 /**

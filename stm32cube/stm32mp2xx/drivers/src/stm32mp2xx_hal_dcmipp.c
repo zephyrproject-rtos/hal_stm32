@@ -6774,7 +6774,8 @@ HAL_StatusTypeDef  HAL_DCMIPP_PIPE_EnableHistogram(DCMIPP_HandleTypeDef *hdcmipp
 
   if (Pipe == DCMIPP_PIPE1)
   {
-    __HAL_DCMIPP_ENABLE_IT(hdcmipp, DCMIPP_IT_PIPE1_STATS);
+    __HAL_DCMIPP_ENABLE_IT(hdcmipp, DCMIPP_IT_PIPE1_STATS | DCMIPP_IT_PIPE1_STATS_OVR | \
+                           DCMIPP_IT_PIPE1_STATS_BAD_CFG);
 
     SET_BIT(hdcmipp->Instance->P1HSCR, DCMIPP_P1HSCR_EN);
   }
