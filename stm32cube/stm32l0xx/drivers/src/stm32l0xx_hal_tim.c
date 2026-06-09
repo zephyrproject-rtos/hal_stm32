@@ -4281,7 +4281,6 @@ HAL_StatusTypeDef HAL_TIM_DMABurst_WriteStart(TIM_HandleTypeDef *htim, uint32_t 
                                             ((BurstLength) >> 8U) + 1U);
 
 
-
   return status;
 }
 
@@ -6813,9 +6812,13 @@ static void TIM_TI1_SetConfig(TIM_TypeDef *TIMx, uint32_t TIM_ICPolarity, uint32
   uint32_t tmpccmr1;
   uint32_t tmpccer;
 
-  /* Disable the Channel 1: Reset the CC1E Bit */
+  /* Get the TIMx CCER register value */
   tmpccer = TIMx->CCER;
+
+  /* Disable the Channel 1: Reset the CC1E Bit */
   TIMx->CCER &= ~TIM_CCER_CC1E;
+
+  /* Get the TIMx CCMR1 register value */
   tmpccmr1 = TIMx->CCMR1;
 
   /* Select the Input */
@@ -6859,9 +6862,13 @@ static void TIM_TI1_ConfigInputStage(TIM_TypeDef *TIMx, uint32_t TIM_ICPolarity,
   uint32_t tmpccmr1;
   uint32_t tmpccer;
 
-  /* Disable the Channel 1: Reset the CC1E Bit */
+  /* Get the TIMx CCER register value */
   tmpccer = TIMx->CCER;
+
+  /* Disable the Channel 1: Reset the CC1E Bit */
   TIMx->CCER &= ~TIM_CCER_CC1E;
+
+  /* Get the TIMx CCMR1 register value */
   tmpccmr1 = TIMx->CCMR1;
 
   /* Set the filter */
@@ -6903,9 +6910,13 @@ static void TIM_TI2_SetConfig(TIM_TypeDef *TIMx, uint32_t TIM_ICPolarity, uint32
   uint32_t tmpccmr1;
   uint32_t tmpccer;
 
-  /* Disable the Channel 2: Reset the CC2E Bit */
+  /* Get the TIMx CCER register value */
   tmpccer = TIMx->CCER;
+
+  /* Disable the Channel 2: Reset the CC2E Bit */
   TIMx->CCER &= ~TIM_CCER_CC2E;
+
+  /* Get the TIMx CCMR1 register value */
   tmpccmr1 = TIMx->CCMR1;
 
   /* Select the Input */
@@ -6942,9 +6953,13 @@ static void TIM_TI2_ConfigInputStage(TIM_TypeDef *TIMx, uint32_t TIM_ICPolarity,
   uint32_t tmpccmr1;
   uint32_t tmpccer;
 
-  /* Disable the Channel 2: Reset the CC2E Bit */
+  /* Get the TIMx CCER register value */
   tmpccer = TIMx->CCER;
+
+  /* Disable the Channel 2: Reset the CC2E Bit */
   TIMx->CCER &= ~TIM_CCER_CC2E;
+
+  /* Get the TIMx CCMR1 register value */
   tmpccmr1 = TIMx->CCMR1;
 
   /* Set the filter */
@@ -6986,9 +7001,13 @@ static void TIM_TI3_SetConfig(TIM_TypeDef *TIMx, uint32_t TIM_ICPolarity, uint32
   uint32_t tmpccmr2;
   uint32_t tmpccer;
 
-  /* Disable the Channel 3: Reset the CC3E Bit */
+  /* Get the TIMx CCER register value */
   tmpccer = TIMx->CCER;
+
+  /* Disable the Channel 3: Reset the CC3E Bit */
   TIMx->CCER &= ~TIM_CCER_CC3E;
+
+  /* Get the TIMx CCMR2 register value */
   tmpccmr2 = TIMx->CCMR2;
 
   /* Select the Input */
@@ -7034,9 +7053,13 @@ static void TIM_TI4_SetConfig(TIM_TypeDef *TIMx, uint32_t TIM_ICPolarity, uint32
   uint32_t tmpccmr2;
   uint32_t tmpccer;
 
-  /* Disable the Channel 4: Reset the CC4E Bit */
+  /* Get the TIMx CCER register value */
   tmpccer = TIMx->CCER;
+
+  /* Disable the Channel 4: Reset the CC4E Bit */
   TIMx->CCER &= ~TIM_CCER_CC4E;
+
+  /* Get the TIMx CCMR2 register value */
   tmpccmr2 = TIMx->CCMR2;
 
   /* Select the Input */
@@ -7123,10 +7146,10 @@ static void TIM_ETR_SetConfig(TIM_TypeDef *TIMx, uint32_t TIM_ExtTRGPrescaler,
   * @param  TIMx to select the TIM peripheral
   * @param  Channel specifies the TIM Channel
   *          This parameter can be one of the following values:
-  *            @arg TIM_CHANNEL_1: TIM Channel 1
-  *            @arg TIM_CHANNEL_2: TIM Channel 2
-  *            @arg TIM_CHANNEL_3: TIM Channel 3
-  *            @arg TIM_CHANNEL_4: TIM Channel 4
+  *            @arg TIM_CHANNEL_1: TIM Channel 1 selected
+  *            @arg TIM_CHANNEL_2: TIM Channel 2 selected
+  *            @arg TIM_CHANNEL_3: TIM Channel 3 selected
+  *            @arg TIM_CHANNEL_4: TIM Channel 4 selected
   * @param  ChannelState specifies the TIM Channel CCxE bit new state.
   *          This parameter can be: TIM_CCx_ENABLE or TIM_CCx_DISABLE.
   * @retval None
