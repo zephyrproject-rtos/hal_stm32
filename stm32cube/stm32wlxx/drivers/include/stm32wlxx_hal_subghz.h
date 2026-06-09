@@ -402,6 +402,9 @@ void HAL_SUBGHZ_LrFhssHopCallback(SUBGHZ_HandleTypeDef *hsubghz);
 /* Peripheral State and Error functions ***************************************/
 HAL_SUBGHZ_StateTypeDef HAL_SUBGHZ_GetState(const SUBGHZ_HandleTypeDef *hsubghz);
 uint32_t                HAL_SUBGHZ_GetError(const SUBGHZ_HandleTypeDef *hsubghz);
+
+HAL_StatusTypeDef HAL_SUBGHZ_WaitOnBusy(SUBGHZ_HandleTypeDef *hsubghz);
+HAL_StatusTypeDef HAL_SUBGHZ_CheckDeviceReady(SUBGHZ_HandleTypeDef *hsubghz);
 /**
   * @}
   */

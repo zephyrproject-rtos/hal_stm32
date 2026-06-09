@@ -407,15 +407,15 @@ typedef struct
 /** @defgroup RCC_LL_EC_LPTIMx_CLKSOURCE LPTIMx CLKSOURCE
   * @{
   */
-#define LL_RCC_LPTIM1_CLKSOURCE_PCLK1      (uint32_t)(RCC_CCIPR_LPTIM1SEL | (0x00000000U >> 16))           /*!< PCLK1 selected as LPTIM1 clock */
+#define LL_RCC_LPTIM1_CLKSOURCE_PCLK1      (uint32_t)(RCC_CCIPR_LPTIM1SEL | (0x00000000UL >> 16))           /*!< PCLK1 selected as LPTIM1 clock */
 #define LL_RCC_LPTIM1_CLKSOURCE_LSI        (uint32_t)(RCC_CCIPR_LPTIM1SEL | (RCC_CCIPR_LPTIM1SEL_0 >> 16)) /*!< LSI selected as LPTIM1 clock */
 #define LL_RCC_LPTIM1_CLKSOURCE_HSI        (uint32_t)(RCC_CCIPR_LPTIM1SEL | (RCC_CCIPR_LPTIM1SEL_1 >> 16)) /*!< HSI selected as LPTIM1 clock */
 #define LL_RCC_LPTIM1_CLKSOURCE_LSE        (uint32_t)(RCC_CCIPR_LPTIM1SEL | (RCC_CCIPR_LPTIM1SEL >> 16))   /*!< LSE selected as LPTIM1 clock */
-#define LL_RCC_LPTIM2_CLKSOURCE_PCLK1      (uint32_t)(RCC_CCIPR_LPTIM2SEL | (0x00000000U >> 16))           /*!< PCLK1 selected as LPTIM2 clock */
+#define LL_RCC_LPTIM2_CLKSOURCE_PCLK1      (uint32_t)(RCC_CCIPR_LPTIM2SEL | (0x00000000UL >> 16))           /*!< PCLK1 selected as LPTIM2 clock */
 #define LL_RCC_LPTIM2_CLKSOURCE_LSI        (uint32_t)(RCC_CCIPR_LPTIM2SEL | (RCC_CCIPR_LPTIM2SEL_0 >> 16)) /*!< LSI selected as LPTIM2 clock */
 #define LL_RCC_LPTIM2_CLKSOURCE_HSI        (uint32_t)(RCC_CCIPR_LPTIM2SEL | (RCC_CCIPR_LPTIM2SEL_1 >> 16)) /*!< HSI selected as LPTIM2 clock */
 #define LL_RCC_LPTIM2_CLKSOURCE_LSE        (uint32_t)(RCC_CCIPR_LPTIM2SEL | (RCC_CCIPR_LPTIM2SEL >> 16))   /*!< LSE selected as LPTIM2 clock */
-#define LL_RCC_LPTIM3_CLKSOURCE_PCLK1      (uint32_t)(RCC_CCIPR_LPTIM3SEL | (0x00000000U >> 16))           /*!< PCLK1 selected as LPTIM3 clock */
+#define LL_RCC_LPTIM3_CLKSOURCE_PCLK1      (uint32_t)(RCC_CCIPR_LPTIM3SEL | (0x00000000UL >> 16))           /*!< PCLK1 selected as LPTIM3 clock */
 #define LL_RCC_LPTIM3_CLKSOURCE_LSI        (uint32_t)(RCC_CCIPR_LPTIM3SEL | (RCC_CCIPR_LPTIM3SEL_0 >> 16)) /*!< LSI selected as LPTIM3 clock */
 #define LL_RCC_LPTIM3_CLKSOURCE_HSI        (uint32_t)(RCC_CCIPR_LPTIM3SEL | (RCC_CCIPR_LPTIM3SEL_1 >> 16)) /*!< HSI selected as LPTIM3 clock */
 #define LL_RCC_LPTIM3_CLKSOURCE_LSE        (uint32_t)(RCC_CCIPR_LPTIM3SEL | (RCC_CCIPR_LPTIM3SEL >> 16))   /*!< LSE selected as LPTIM3 clock */

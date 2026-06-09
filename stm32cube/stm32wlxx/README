@@ -6,7 +6,7 @@ Origin:
    http://www.st.com/en/embedded-software/stm32cubewb.html
 
 Status:
-   version v1.4.0
+   version v1.5.0
 
 Purpose:
    ST Microelectronics official MCU package for STM32WL series.
@@ -23,7 +23,7 @@ URL:
    https://github.com/STMicroelectronics/STM32CubeWL
 
 Commit:
-   cbbd003c2013d6847e08d6189926d12108533566
+   d28c690e930d5b910665fe196eca2a74a52b26ab
 
 Maintained-by:
    External
@@ -48,13 +48,6 @@ Patch List:
      register definitions.
     Impacted files:
      drivers/include/stm32wlxx_hal_conf.h
-
-   *Wrap define UNUSED with an ifndef
-     This will prevent a compiler warning for the case the UNUSED macro
-     is already defined elsewhere in the project
-     Impacted files:
-      drivers/include/stm32wlxx_hal_def.h
-     ST Internal Reference: 136825
 
    *Fix to remove PAGESIZE definition which conflicts with POSIX
     Impacted files:

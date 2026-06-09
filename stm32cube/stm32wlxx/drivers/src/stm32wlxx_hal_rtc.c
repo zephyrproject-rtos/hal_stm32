@@ -383,8 +383,9 @@ HAL_StatusTypeDef HAL_RTC_DeInit(RTC_HandleTypeDef *hrtc)
   status = RTC_EnterInitMode(hrtc);
   if (status == HAL_OK)
   {
-    /* Reset all RTC CR register bits */
+    /* Reset RTC registers */
     CLEAR_REG(RTC->CR);
+    CLEAR_REG(RTC->ICSR);
     WRITE_REG(RTC->DR, (uint32_t)(RTC_DR_WDU_0 | RTC_DR_MU_0 | RTC_DR_DU_0));
     CLEAR_REG(RTC->TR);
     WRITE_REG(RTC->WUTR, RTC_WUTR_WUT);

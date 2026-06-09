@@ -5030,8 +5030,8 @@ typedef struct
 #define HSEM_CR_COREID_Pos       (8U)
 #define HSEM_CR_COREID_Msk       (0xFUL << HSEM_CR_COREID_Pos)                 /*!< 0x00000F00 */
 #define HSEM_CR_COREID           HSEM_CR_COREID_Msk                            /*!<CoreID of semaphores to be cleared. */
-#define HSEM_CR_COREID_CPU1      (0x4U << HSEM_CR_COREID_Pos)
-#define HSEM_CR_COREID_CPU2      (0x8U << HSEM_CR_COREID_Pos)
+#define HSEM_CR_COREID_CPU1      (0x4UL << HSEM_CR_COREID_Pos)
+#define HSEM_CR_COREID_CPU2      (0x8UL << HSEM_CR_COREID_Pos)
 #define HSEM_CR_COREID_CURRENT   HSEM_CR_COREID_CPU1
 #define HSEM_CR_KEY_Pos          (16U)
 #define HSEM_CR_KEY_Msk          (0xFFFFUL << HSEM_CR_KEY_Pos)                 /*!< 0xFFFF0000 */

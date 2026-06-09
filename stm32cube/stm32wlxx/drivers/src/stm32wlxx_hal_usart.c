@@ -144,7 +144,7 @@
   */
 
 /** @defgroup USART USART
-  * @brief HAL USART Synchronous module driver
+  * @brief HAL USART Synchronous SPI module driver
   * @{
   */
 
@@ -225,8 +225,8 @@ static void USART_RxISR_16BIT_FIFOEN(USART_HandleTypeDef *husart);
  ===============================================================================
     [..]
     This subsection provides a set of functions allowing to initialize the USART
-    in asynchronous and in synchronous modes.
-      (+) For the asynchronous mode only these parameters can be configured:
+    in synchronous SPI master/slave mode.
+      (+) For the synchronous SPI mode only these parameters can be configured:
         (++) Baud Rate
         (++) Word Length
         (++) Stop Bit
@@ -238,7 +238,7 @@ static void USART_RxISR_16BIT_FIFOEN(USART_HandleTypeDef *husart);
         (++) Receiver/transmitter modes
 
     [..]
-    The HAL_USART_Init() function follows the USART  synchronous configuration
+    The HAL_USART_Init() function follows the USART synchronous SPI configuration
     procedure (details for the procedure are available in reference manual).
 
 @endverbatim
@@ -316,7 +316,7 @@ HAL_StatusTypeDef HAL_USART_Init(USART_HandleTypeDef *husart)
     return HAL_ERROR;
   }
 
-  /* In Synchronous mode, the following bits must be kept cleared:
+  /* In Synchronous SPI mode, the following bits must be kept cleared:
   - LINEN bit in the USART_CR2 register
   - HDSEL, SCEN and IREN bits in the USART_CR3 register.
   */
@@ -657,11 +657,10 @@ HAL_StatusTypeDef HAL_USART_UnRegisterCallback(USART_HandleTypeDef *husart, HAL_
  ===============================================================================
                       ##### IO operation functions #####
  ===============================================================================
-    [..] This subsection provides a set of functions allowing to manage the USART synchronous
+    [..] This subsection provides a set of functions allowing to manage the USART synchronous SPI
     data transfers.
 
-    [..] The USART supports master mode only: it cannot receive or send data related to an input
-         clock (SCLK is always an output).
+    [..] The USART Synchronous SPI supports master and slave modes (SCLK as output or input).
 
     [..]
 
@@ -735,12 +734,14 @@ HAL_StatusTypeDef HAL_USART_UnRegisterCallback(USART_HandleTypeDef *husart, HAL_
   * @note   When USART parity is not enabled (PCE = 0), and Word Length is configured to 9 bits (M1-M0 = 01),
   *         the sent data is handled as a set of u16. In this case, Size must indicate the number
   *         of u16 provided through pTxData.
+#if defined(CORE_CM0PLUS)
   * @note   Dual core specific: there is no support for unaligned accesses on the Cortex-M0+ processor.
   *         When USART parity is not enabled (PCE = 0), and Word Length is configured to 9 bits (M1-M0 = 01),
   *         address of user data buffer containing data to be sent, should be aligned on a half word frontier (16 bits)
   *         (as sent data will be handled using u16 pointer cast). Depending on compilation chain,
   *         use of specific alignment compilation directives or pragmas might be required
   *         to ensure proper alignment for pTxData.
+#endif
   * @param  husart USART handle.
   * @param  pTxData Pointer to data buffer (u8 or u16 data elements).
   * @param  Size Amount of data elements (u8 or u16) to be sent.
@@ -852,12 +853,14 @@ HAL_StatusTypeDef HAL_USART_Transmit(USART_HandleTypeDef *husart, const uint8_t 
   * @note   When USART parity is not enabled (PCE = 0), and Word Length is configured to 9 bits (M1-M0 = 01),
   *         the received data is handled as a set of u16. In this case, Size must indicate the number
   *         of u16 available through pRxData.
+#if defined(CORE_CM0PLUS)
   * @note   Dual core specific: there is no support for unaligned accesses on the Cortex-M0+ processor.
   *         When USART parity is not enabled (PCE = 0), and Word Length is configured to 9 bits (M1-M0 = 01),
   *         address of user data buffer for storing data to be received, should be aligned on a half word frontier
   *         (16 bits) (as received data will be handled using u16 pointer cast). Depending on compilation chain,
   *         use of specific alignment compilation directives or pragmas might be required to ensure
   *         proper alignment for pRxData.
+#endif
   * @param husart USART handle.
   * @param pRxData Pointer to data buffer (u8 or u16 data elements).
   * @param Size Amount of data elements (u8 or u16) to be received.
@@ -982,12 +985,14 @@ HAL_StatusTypeDef HAL_USART_Receive(USART_HandleTypeDef *husart, uint8_t *pRxDat
   * @note   When USART parity is not enabled (PCE = 0), and Word Length is configured to 9 bits (M1-M0 = 01),
   *         the sent data and the received data are handled as sets of u16. In this case, Size must indicate the number
   *         of u16 available through pTxData and through pRxData.
+#if defined(CORE_CM0PLUS)
   * @note   Dual core specific: there is no support for unaligned accesses on the Cortex-M0+ processor.
   *         When USART parity is not enabled (PCE = 0), and Word Length is configured to 9 bits (M1-M0 = 01),
   *         address of user data buffers containing data to be sent/received, should be aligned on a half word frontier
   *         (16 bits) (as sent/received data will be handled using u16 pointer cast). Depending on compilation chain,
   *         use of specific alignment compilation directives or pragmas might be required to ensure
   *         proper alignment for pTxData and pRxData.
+#endif
   * @param  husart USART handle.
   * @param  pTxData pointer to TX data buffer (u8 or u16 data elements).
   * @param  pRxData pointer to RX data buffer (u8 or u16 data elements).
@@ -1150,12 +1155,14 @@ HAL_StatusTypeDef HAL_USART_TransmitReceive(USART_HandleTypeDef *husart, const u
   * @note   When USART parity is not enabled (PCE = 0), and Word Length is configured to 9 bits (M1-M0 = 01),
   *         the sent data is handled as a set of u16. In this case, Size must indicate the number
   *         of u16 provided through pTxData.
+#if defined(CORE_CM0PLUS)
   * @note   Dual core specific: there is no support for unaligned accesses on the Cortex-M0+ processor.
   *         When USART parity is not enabled (PCE = 0), and Word Length is configured to 9 bits (M1-M0 = 01),
   *         address of user data buffer containing data to be sent, should be aligned on a half word frontier
   *         (16 bits) (as sent data will be handled using u16 pointer cast). Depending on compilation chain,
   *         use of specific alignment compilation directives or pragmas might be required to ensure
   *         proper alignment for pTxData.
+#endif
   * @param  husart USART handle.
   * @param  pTxData pointer to data buffer (u8 or u16 data elements).
   * @param  Size amount of data elements (u8 or u16) to be sent.
@@ -1252,12 +1259,14 @@ HAL_StatusTypeDef HAL_USART_Transmit_IT(USART_HandleTypeDef *husart, const uint8
   * @note   When USART parity is not enabled (PCE = 0), and Word Length is configured to 9 bits (M1-M0 = 01),
   *         the received data is handled as a set of u16. In this case, Size must indicate the number
   *         of u16 available through pRxData.
+#if defined(CORE_CM0PLUS)
   * @note   Dual core specific: there is no support for unaligned accesses on the Cortex-M0+ processor.
   *         When USART parity is not enabled (PCE = 0), and Word Length is configured to 9 bits (M1-M0 = 01),
   *         address of user data buffer for storing data to be received, should be aligned on a half word frontier
   *         (16 bits) (as received data will be handled using u16 pointer cast). Depending on compilation chain,
   *         use of specific alignment compilation directives or pragmas might be required to ensure
   *         proper alignment for pRxData.
+#endif
   * @param  husart USART handle.
   * @param  pRxData pointer to data buffer (u8 or u16 data elements).
   * @param  Size amount of data elements (u8 or u16) to be received.
@@ -1384,12 +1393,14 @@ HAL_StatusTypeDef HAL_USART_Receive_IT(USART_HandleTypeDef *husart, uint8_t *pRx
   * @note   When USART parity is not enabled (PCE = 0), and Word Length is configured to 9 bits (M1-M0 = 01),
   *         the sent data and the received data are handled as sets of u16. In this case, Size must indicate the number
   *         of u16 available through pTxData and through pRxData.
+#if defined(CORE_CM0PLUS)
   * @note   Dual core specific: there is no support for unaligned accesses on the Cortex-M0+ processor.
   *         When USART parity is not enabled (PCE = 0), and Word Length is configured to 9 bits (M1-M0 = 01),
   *         address of user data buffers containing data to be sent/received, should be aligned on a half word frontier
   *         (16 bits) (as sent/received data will be handled using u16 pointer cast). Depending on compilation chain,
   *         use of specific alignment compilation directives or pragmas might be required to ensure
   *         proper alignment for pTxData and pRxData.
+#endif
   * @param  husart USART handle.
   * @param  pTxData pointer to TX data buffer (u8 or u16 data elements).
   * @param  pRxData pointer to RX data buffer (u8 or u16 data elements).
@@ -1512,12 +1523,14 @@ HAL_StatusTypeDef HAL_USART_TransmitReceive_IT(USART_HandleTypeDef *husart, cons
   * @note   When USART parity is not enabled (PCE = 0), and Word Length is configured to 9 bits (M1-M0 = 01),
   *         the sent data is handled as a set of u16. In this case, Size must indicate the number
   *         of u16 provided through pTxData.
+#if defined(CORE_CM0PLUS)
   * @note   Dual core specific: there is no support for unaligned accesses on the Cortex-M0+ processor.
   *         When USART parity is not enabled (PCE = 0), and Word Length is configured to 9 bits (M1-M0 = 01),
   *         address of user data buffer containing data to be sent, should be aligned on a half word frontier (16 bits)
   *         (as sent data will be handled by DMA from halfword frontier). Depending on compilation chain,
   *         use of specific alignment compilation directives or pragmas might be required
   *         to ensure proper alignment for pTxData.
+#endif
   * @param  husart USART handle.
   * @param  pTxData pointer to data buffer (u8 or u16 data elements).
   * @param  Size amount of data elements (u8 or u16) to be sent.
@@ -1616,12 +1629,14 @@ HAL_StatusTypeDef HAL_USART_Transmit_DMA(USART_HandleTypeDef *husart, const uint
   * @note   When USART parity is not enabled (PCE = 0), and Word Length is configured to 9 bits (M1-M0 = 01),
   *         the received data is handled as a set of u16. In this case, Size must indicate the number
   *         of u16 available through pRxData.
+#if defined(CORE_CM0PLUS)
   * @note   Dual core specific: there is no support for unaligned accesses on the Cortex-M0+ processor.
   *         When USART parity is not enabled (PCE = 0), and Word Length is configured to 9 bits (M1-M0 = 01),
   *         address of user data buffer for storing data to be received, should be aligned on a half word frontier
   *         (16 bits)(as received data will be handled by DMA from halfword frontier). Depending on compilation chain,
   *         use of specific alignment compilation directives or pragmas might be required
   *         to ensure proper alignment for pRxData.
+#endif
   * @param  husart USART handle.
   * @param  pRxData pointer to data buffer (u8 or u16 data elements).
   * @param  Size amount of data elements (u8 or u16) to be received.
@@ -1754,12 +1769,14 @@ HAL_StatusTypeDef HAL_USART_Receive_DMA(USART_HandleTypeDef *husart, uint8_t *pR
   * @note   When USART parity is not enabled (PCE = 0), and Word Length is configured to 9 bits (M1-M0 = 01),
   *         the sent data and the received data are handled as sets of u16. In this case, Size must indicate the number
   *         of u16 available through pTxData and through pRxData.
+#if defined(CORE_CM0PLUS)
   * @note   Dual core specific: there is no support for unaligned accesses on the Cortex-M0+ processor.
   *         When USART parity is not enabled (PCE = 0), and Word Length is configured to 9 bits (M1-M0 = 01),
   *         address of user data buffers containing data to be sent/received, should be aligned on a half word frontier
   *         (16 bits)(as sent/received data will be handled by DMA from halfword frontier). Depending on compilation
   *         chain, use of specific alignment compilation directives or pragmas might be required
   *         to ensure proper alignment for pTxData and pRxData.
+#endif
   * @param  husart USART handle.
   * @param  pTxData pointer to TX data buffer (u8 or u16 data elements).
   * @param  pRxData pointer to RX data buffer (u8 or u16 data elements).
@@ -3079,7 +3096,7 @@ static HAL_StatusTypeDef USART_SetConfig(USART_HandleTypeDef *husart)
   /* Clear and configure the USART Clock, CPOL, CPHA, LBCL STOP and SLVEN bits:
    * set CPOL bit according to husart->Init.CLKPolarity value
    * set CPHA bit according to husart->Init.CLKPhase value
-   * set LBCL bit according to husart->Init.CLKLastBit value (used in SPI master mode only)
+   * set LBCL bit according to husart->Init.CLKLastBit value (used in USART Synchronous SPI master mode only)
    * set STOP[13:12] bits according to husart->Init.StopBits value */
   tmpreg = (uint32_t)(USART_CLOCK_ENABLE);
   tmpreg |= (uint32_t)husart->Init.CLKLastBit;
