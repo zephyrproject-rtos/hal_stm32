@@ -116,7 +116,12 @@
   * @{
   */
 /* Variables used for Erase pages under interruption*/
-FLASH_ProcessTypeDef pFlash;
+FLASH_ProcessTypeDef pFlash = {.ProcedureOnGoing = FLASH_PROC_NONE,
+                                .DataRemaining = 0U,
+                                .Address = 0U,
+                                .Data = 0U,
+                                .Lock = HAL_UNLOCKED,
+                                .ErrorCode = HAL_FLASH_ERROR_NONE};
 /**
   * @}
   */

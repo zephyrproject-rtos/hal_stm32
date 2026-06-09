@@ -5,9 +5,8 @@
   * @brief   WWDG HAL module driver.
   *          This file provides firmware functions to manage the following
   *          functionalities of the Window Watchdog (WWDG) peripheral:
-  *           + Initialization and de-initialization functions
+  *           + Initialization and Configuration functions
   *           + IO operation functions
-  *	      + Peripheral State functions
   ******************************************************************************
   * @attention
   *
@@ -190,12 +189,12 @@ HAL_StatusTypeDef HAL_WWDG_Init(WWDG_HandleTypeDef *hwwdg)
 
 #if (USE_HAL_WWDG_REGISTER_CALLBACKS == 1)
   /* Reset Callback pointers */
-  if(hwwdg->EwiCallback == NULL)
+  if (hwwdg->EwiCallback == NULL)
   {
     hwwdg->EwiCallback = HAL_WWDG_EarlyWakeupCallback;
   }
 
-  if(hwwdg->MspInitCallback == NULL)
+  if (hwwdg->MspInitCallback == NULL)
   {
     hwwdg->MspInitCallback = HAL_WWDG_MspInit;
   }
@@ -205,7 +204,7 @@ HAL_StatusTypeDef HAL_WWDG_Init(WWDG_HandleTypeDef *hwwdg)
 #else
   /* Init the low level hardware */
   HAL_WWDG_MspInit(hwwdg);
-#endif
+#endif /* USE_HAL_WWDG_REGISTER_CALLBACKS */
 
   /* Set WWDG Counter */
   WRITE_REG(hwwdg->Instance->CR, (WWDG_CR_WDGA | hwwdg->Init.Counter));
@@ -216,6 +215,7 @@ HAL_StatusTypeDef HAL_WWDG_Init(WWDG_HandleTypeDef *hwwdg)
   /* Return function status */
   return HAL_OK;
 }
+
 
 /**
   * @brief  Initialize the WWDG MSP.
@@ -249,17 +249,18 @@ __weak void HAL_WWDG_MspInit(WWDG_HandleTypeDef *hwwdg)
   * @param  pCallback pointer to the Callback function
   * @retval status
   */
-HAL_StatusTypeDef HAL_WWDG_RegisterCallback(WWDG_HandleTypeDef *hwwdg, HAL_WWDG_CallbackIDTypeDef CallbackID, pWWDG_CallbackTypeDef pCallback)
+HAL_StatusTypeDef HAL_WWDG_RegisterCallback(WWDG_HandleTypeDef *hwwdg, HAL_WWDG_CallbackIDTypeDef CallbackID,
+                                            pWWDG_CallbackTypeDef pCallback)
 {
   HAL_StatusTypeDef status = HAL_OK;
 
-  if(pCallback == NULL)
+  if (pCallback == NULL)
   {
     status = HAL_ERROR;
   }
   else
   {
-    switch(CallbackID)
+    switch (CallbackID)
     {
       case HAL_WWDG_EWI_CB_ID:
         hwwdg->EwiCallback = pCallback;
@@ -293,7 +294,7 @@ HAL_StatusTypeDef HAL_WWDG_UnRegisterCallback(WWDG_HandleTypeDef *hwwdg, HAL_WWD
 {
   HAL_StatusTypeDef status = HAL_OK;
 
-  switch(CallbackID)
+  switch (CallbackID)
   {
     case HAL_WWDG_EWI_CB_ID:
       hwwdg->EwiCallback = HAL_WWDG_EarlyWakeupCallback;
@@ -310,15 +311,15 @@ HAL_StatusTypeDef HAL_WWDG_UnRegisterCallback(WWDG_HandleTypeDef *hwwdg, HAL_WWD
 
   return status;
 }
-#endif
+#endif /* USE_HAL_WWDG_REGISTER_CALLBACKS */
 
 /**
   * @}
   */
 
 /** @defgroup WWDG_Exported_Functions_Group2 IO operation functions
- *  @brief    IO operation functions
- *
+  *  @brief    IO operation functions
+  *
 @verbatim
   ==============================================================================
                       ##### IO operation functions #####
@@ -378,14 +379,15 @@ void HAL_WWDG_IRQHandler(WWDG_HandleTypeDef *hwwdg)
 #else
       /* Early Wakeup callback */
       HAL_WWDG_EarlyWakeupCallback(hwwdg);
-#endif
+#endif /* USE_HAL_WWDG_REGISTER_CALLBACKS */
     }
   }
 }
 
+
 /**
   * @brief  WWDG Early Wakeup callback.
-  * @param  hwwdg : pointer to a WWDG_HandleTypeDef structure that contains
+  * @param  hwwdg  pointer to a WWDG_HandleTypeDef structure that contains
   *                the configuration information for the specified WWDG module.
   * @retval None
   */
