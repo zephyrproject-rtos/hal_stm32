@@ -3267,6 +3267,8 @@ HAL_StatusTypeDef HAL_I2C_IsDeviceReady(I2C_HandleTypeDef *hi2c, uint16_t DevAdd
 
   __IO uint32_t I2C_Trials = 0UL;
 
+  HAL_StatusTypeDef status = HAL_OK;
+
   FlagStatus tmp1;
   FlagStatus tmp2;
 
@@ -3324,37 +3326,64 @@ HAL_StatusTypeDef HAL_I2C_IsDeviceReady(I2C_HandleTypeDef *hi2c, uint16_t DevAdd
         /* Wait until STOPF flag is reset */
         if (I2C_WaitOnFlagUntilTimeout(hi2c, I2C_FLAG_STOPF, RESET, Timeout, tickstart) != HAL_OK)
         {
-          return HAL_ERROR;
+          /* A non acknowledge appear during STOP Flag waiting process, a new trial must be performed */
+          if (hi2c->ErrorCode == HAL_I2C_ERROR_AF)
+          {
+            /* Clear STOP Flag */
+            __HAL_I2C_CLEAR_FLAG(hi2c, I2C_FLAG_STOPF);
+
+            /* Reset the error code for next trial */
+            hi2c->ErrorCode = HAL_I2C_ERROR_NONE;
+          }
+          else
+          {
+            status = HAL_ERROR;
+          }
         }
+        else
+        {
+          /* A acknowledge appear during STOP Flag waiting process, this mean that device respond to its address */
 
-        /* Clear STOP Flag */
-        __HAL_I2C_CLEAR_FLAG(hi2c, I2C_FLAG_STOPF);
+          /* Clear STOP Flag */
+          __HAL_I2C_CLEAR_FLAG(hi2c, I2C_FLAG_STOPF);
 
-        /* Device is ready */
-        hi2c->State = HAL_I2C_STATE_READY;
+          /* Device is ready */
+          hi2c->State = HAL_I2C_STATE_READY;
 
-        /* Process Unlocked */
-        __HAL_UNLOCK(hi2c);
+          /* Process Unlocked */
+          __HAL_UNLOCK(hi2c);
 
-        return HAL_OK;
+          return HAL_OK;
+        }
       }
       else
       {
-        /* Wait until STOPF flag is reset */
-        if (I2C_WaitOnFlagUntilTimeout(hi2c, I2C_FLAG_STOPF, RESET, Timeout, tickstart) != HAL_OK)
-        {
-          return HAL_ERROR;
-        }
+        /* A non acknowledge is detected, this mean that device not respond to its address,
+           a new trial must be performed */
 
         /* Clear NACK Flag */
         __HAL_I2C_CLEAR_FLAG(hi2c, I2C_FLAG_AF);
 
-        /* Clear STOP Flag, auto generated with autoend*/
-        __HAL_I2C_CLEAR_FLAG(hi2c, I2C_FLAG_STOPF);
+        /* Wait until STOPF flag is reset */
+        if (I2C_WaitOnFlagUntilTimeout(hi2c, I2C_FLAG_STOPF, RESET, Timeout, tickstart) != HAL_OK)
+        {
+          status = HAL_ERROR;
+        }
+        else
+        {
+          /* Clear STOP Flag, auto generated with autoend*/
+          __HAL_I2C_CLEAR_FLAG(hi2c, I2C_FLAG_STOPF);
+        }
       }
 
       /* Increment Trials */
       I2C_Trials++;
+
+      if ((I2C_Trials < Trials) && (status == HAL_ERROR))
+      {
+        status = HAL_OK;
+      }
+
     } while (I2C_Trials < Trials);
 
     /* Update I2C state */

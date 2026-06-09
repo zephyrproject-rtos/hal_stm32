@@ -1810,7 +1810,12 @@ mode.
   */
 /* The counter of a timer instance is disabled only if all the CCx and CCxN
    channels have been disabled */
+#if defined(TIM_CCER_CC5E) && defined(TIM_CCER_CC6E)
+#define TIM_CCER_CCxE_MASK  ((uint32_t)(TIM_CCER_CC1E | TIM_CCER_CC2E | TIM_CCER_CC3E | TIM_CCER_CC4E | \
+                                        TIM_CCER_CC5E | TIM_CCER_CC6E))
+#else
 #define TIM_CCER_CCxE_MASK  ((uint32_t)(TIM_CCER_CC1E | TIM_CCER_CC2E | TIM_CCER_CC3E | TIM_CCER_CC4E))
+#endif /* TIM_CCER_CC5E && TIM_CCER_CC6E */
 #define TIM_CCER_CCxNE_MASK ((uint32_t)(TIM_CCER_CC1NE | TIM_CCER_CC2NE | TIM_CCER_CC3NE))
 /**
   * @}
@@ -2223,20 +2228,21 @@ mode.
    ((__CHANNEL__) == TIM_CHANNEL_5) ? ((__HANDLE__)->ChannelState[4] = (__CHANNEL_STATE__)) :\
    ((__HANDLE__)->ChannelState[5] = (__CHANNEL_STATE__)))
 
-#define TIM_CHANNEL_STATE_SET_ALL(__HANDLE__,  __CHANNEL_STATE__) do { \
-                                                                       (__HANDLE__)->ChannelState[0]  = \
-                                                                       (__CHANNEL_STATE__);  \
-                                                                       (__HANDLE__)->ChannelState[1]  = \
-                                                                       (__CHANNEL_STATE__);  \
-                                                                       (__HANDLE__)->ChannelState[2]  = \
-                                                                       (__CHANNEL_STATE__);  \
-                                                                       (__HANDLE__)->ChannelState[3]  = \
-                                                                       (__CHANNEL_STATE__);  \
-                                                                       (__HANDLE__)->ChannelState[4]  = \
-                                                                       (__CHANNEL_STATE__);  \
-                                                                       (__HANDLE__)->ChannelState[5]  = \
-                                                                       (__CHANNEL_STATE__);  \
-                                                                     } while(0)
+#define TIM_CHANNEL_STATE_SET_ALL(__HANDLE__,  __CHANNEL_STATE__)\
+  do {\
+    (__HANDLE__)->ChannelState[0]  = \
+    (__CHANNEL_STATE__);  \
+    (__HANDLE__)->ChannelState[1]  = \
+    (__CHANNEL_STATE__);  \
+    (__HANDLE__)->ChannelState[2]  = \
+    (__CHANNEL_STATE__);  \
+    (__HANDLE__)->ChannelState[3]  = \
+    (__CHANNEL_STATE__);  \
+    (__HANDLE__)->ChannelState[4]  = \
+    (__CHANNEL_STATE__);  \
+    (__HANDLE__)->ChannelState[5]  = \
+    (__CHANNEL_STATE__);  \
+  } while(0)
 #else
 #define TIM_CHANNEL_STATE_GET(__HANDLE__, __CHANNEL__)\
   (((__CHANNEL__) == TIM_CHANNEL_1) ? (__HANDLE__)->ChannelState[0] :\
@@ -2250,12 +2256,13 @@ mode.
    ((__CHANNEL__) == TIM_CHANNEL_3) ? ((__HANDLE__)->ChannelState[2] = (__CHANNEL_STATE__)) :\
    ((__HANDLE__)->ChannelState[3] = (__CHANNEL_STATE__)))
 
-#define TIM_CHANNEL_STATE_SET_ALL(__HANDLE__,  __CHANNEL_STATE__) do { \
-                                                                       (__HANDLE__)->ChannelState[0]  = (__CHANNEL_STATE__);  \
-                                                                       (__HANDLE__)->ChannelState[1]  = (__CHANNEL_STATE__);  \
-                                                                       (__HANDLE__)->ChannelState[2]  = (__CHANNEL_STATE__);  \
-                                                                       (__HANDLE__)->ChannelState[3]  = (__CHANNEL_STATE__);  \
-                                                                     } while(0)
+#define TIM_CHANNEL_STATE_SET_ALL(__HANDLE__,  __CHANNEL_STATE__)\
+  do {\
+    (__HANDLE__)->ChannelState[0]  = (__CHANNEL_STATE__);\
+    (__HANDLE__)->ChannelState[1]  = (__CHANNEL_STATE__);\
+    (__HANDLE__)->ChannelState[2]  = (__CHANNEL_STATE__);\
+    (__HANDLE__)->ChannelState[3]  = (__CHANNEL_STATE__);\
+  } while(0)
 #endif /* TIM_CCER_CC5E && TIM_CCER_CC6E */
 
 #define TIM_CHANNEL_N_STATE_GET(__HANDLE__, __CHANNEL__)\
@@ -2270,16 +2277,17 @@ mode.
    ((__CHANNEL__) == TIM_CHANNEL_3) ? ((__HANDLE__)->ChannelNState[2] = (__CHANNEL_STATE__)) :\
    ((__HANDLE__)->ChannelNState[3] = (__CHANNEL_STATE__)))
 
-#define TIM_CHANNEL_N_STATE_SET_ALL(__HANDLE__,  __CHANNEL_STATE__) do { \
-                                                                         (__HANDLE__)->ChannelNState[0] = \
-                                                                         (__CHANNEL_STATE__);  \
-                                                                         (__HANDLE__)->ChannelNState[1] = \
-                                                                         (__CHANNEL_STATE__);  \
-                                                                         (__HANDLE__)->ChannelNState[2] = \
-                                                                         (__CHANNEL_STATE__);  \
-                                                                         (__HANDLE__)->ChannelNState[3] = \
-                                                                         (__CHANNEL_STATE__);  \
-                                                                       } while(0)
+#define TIM_CHANNEL_N_STATE_SET_ALL(__HANDLE__,  __CHANNEL_STATE__)\
+  do {\
+    (__HANDLE__)->ChannelNState[0] = \
+    (__CHANNEL_STATE__);  \
+    (__HANDLE__)->ChannelNState[1] = \
+    (__CHANNEL_STATE__);  \
+    (__HANDLE__)->ChannelNState[2] = \
+    (__CHANNEL_STATE__);  \
+    (__HANDLE__)->ChannelNState[3] = \
+    (__CHANNEL_STATE__);  \
+  } while(0)
 
 /**
   * @}

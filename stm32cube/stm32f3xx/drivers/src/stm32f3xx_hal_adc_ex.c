@@ -2134,14 +2134,13 @@ HAL_StatusTypeDef HAL_ADC_Start_IT(ADC_HandleTypeDef* hadc)
           break;
       }
 
-      /* If overrun is set to overwrite previous data (default setting),      */
-      /* overrun interrupt is not activated (overrun event is not considered  */
-      /* as an error).                                                        */
-      /* (cf ref manual "Managing conversions without using the DMA and       */
-      /* without overrun ")                                                   */
+      /* Enable ADC overrun interrupt */
+      /* If hadc->Init.Overrun is set to ADC_OVR_DATA_PRESERVED, only then is
+         ADC_IT_OVR enabled; otherwise data overwrite is considered as normal
+         behavior and no CPU time is lost for a non-processed interruption */
       if (hadc->Init.Overrun == ADC_OVR_DATA_PRESERVED)
       {
-        __HAL_ADC_DISABLE_IT(hadc, ADC_IT_OVR);
+        __HAL_ADC_ENABLE_IT(hadc, ADC_IT_OVR);
       }
 
       /* Enable conversion of regular group.                                  */
