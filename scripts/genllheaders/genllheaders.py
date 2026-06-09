@@ -67,6 +67,10 @@ def main(hal_path, output):
 
         # obtain series LL headers
         series_headers = entry / "drivers" / "include"
+        if not series_headers.exists():
+            # STM32Cube HAL2 package has LL headers in a different location
+            series_headers = entry / "drivers" / "ll"
+
         for header in series_headers.iterdir():
             m = re.match(r"^stm32[a-z0-9]+_ll_([a-z0-9]+)\.h$", header.name)
             if not m:
