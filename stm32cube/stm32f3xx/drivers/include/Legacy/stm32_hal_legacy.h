@@ -7,7 +7,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2024 STMicroelectronics.
+  * Copyright (c) 2021 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -860,6 +860,10 @@ extern "C" {
 #define __HAL_HRTIM_SetCompare        __HAL_HRTIM_SETCOMPARE
 #define __HAL_HRTIM_GetCompare        __HAL_HRTIM_GETCOMPARE
 
+#if defined(STM32F3) || defined(STM32G4) || defined(STM32H7)
+#define HRTIMInterruptResquests  HRTIMInterruptRequests
+#endif /* STM32F3 || STM32G4 || STM32H7 */
+
 #if defined(STM32G4)
 #define HAL_HRTIM_ExternalEventCounterConfig    HAL_HRTIM_ExtEventCounterConfig
 #define HAL_HRTIM_ExternalEventCounterEnable    HAL_HRTIM_ExtEventCounterEnable
@@ -997,8 +1001,8 @@ extern "C" {
 #define HRTIM_CALIBRATIONRATE_910              (HRTIM_DLLCR_CALRTE_0)
 #define HRTIM_CALIBRATIONRATE_114              (HRTIM_DLLCR_CALRTE_1)
 #define HRTIM_CALIBRATIONRATE_14               (HRTIM_DLLCR_CALRTE_1 | HRTIM_DLLCR_CALRTE_0)
-
 #endif /* STM32F3 */
+
 /**
   * @}
   */

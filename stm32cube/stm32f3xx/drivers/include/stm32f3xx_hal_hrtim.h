@@ -60,7 +60,7 @@
   */
 typedef struct
 {
-  uint32_t HRTIMInterruptResquests;  /*!< Specifies which interrupts requests must enabled for the HRTIM instance.
+  uint32_t HRTIMInterruptRequests;  /*!< Specifies which interrupts requests must enabled for the HRTIM instance.
                                           This parameter can be any combination of  @ref HRTIM_Common_Interrupt_Enable */
   uint32_t SyncOptions;              /*!< Specifies how the HRTIM instance handles the external synchronization signals.
                                           The HRTIM instance can be configured to act as a slave (waiting for a trigger

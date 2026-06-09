@@ -361,7 +361,7 @@ PCD_StateTypeDef HAL_PCD_GetState(PCD_HandleTypeDef const *hpcd);
   */
 
 
-#define USB_WAKEUP_EXTI_LINE                                          (0x1U << 18)  /*!< USB FS EXTI Line WakeUp Interrupt */
+#define USB_WAKEUP_EXTI_LINE                                          (0x1UL << 18)  /*!< USB FS EXTI Line WakeUp Interrupt */
 
 
 /**
@@ -413,8 +413,8 @@ PCD_StateTypeDef HAL_PCD_GetState(PCD_HandleTypeDef const *hpcd);
   */
 
 /********************  Bit definition for USB_COUNTn_RX register  *************/
-#define USB_CNTRX_NBLK_MSK                    (0x1FU << 10)
-#define USB_CNTRX_BLSIZE                      (0x1U << 15)
+#define USB_CNTRX_NBLK_MSK                    (0x1FUL << 10)
+#define USB_CNTRX_BLSIZE                      (0x1UL << 15)
 
 /* SetENDPOINT */
 #define PCD_SET_ENDPOINT(USBx, bEpNum, wRegValue) \

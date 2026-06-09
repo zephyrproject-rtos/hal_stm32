@@ -549,7 +549,7 @@ HAL_StatusTypeDef HAL_HRTIM_Init(HRTIM_HandleTypeDef * hhrtim)
 
   /* Check the parameters */
   assert_param(IS_HRTIM_ALL_INSTANCE(hhrtim->Instance));
-  assert_param(IS_HRTIM_IT(hhrtim->Init.HRTIMInterruptResquests));
+  assert_param(IS_HRTIM_IT(hhrtim->Init.HRTIMInterruptRequests));
 
 #if (USE_HAL_HRTIM_REGISTER_CALLBACKS == 1)
   if (hhrtim->State == HAL_HRTIM_STATE_RESET)
@@ -5356,7 +5356,7 @@ HAL_StatusTypeDef HAL_HRTIM_WaveformCountStart_IT(HRTIM_HandleTypeDef * hhrtim,
   hhrtim->State = HAL_HRTIM_STATE_BUSY;
 
   /* Enable HRTIM interrupts (if required) */
-  __HAL_HRTIM_ENABLE_IT(hhrtim, hhrtim->Init.HRTIMInterruptResquests);
+  __HAL_HRTIM_ENABLE_IT(hhrtim, hhrtim->Init.HRTIMInterruptRequests);
 
   /* Enable master timer related interrupts (if required) */
   if ((Timers & HRTIM_TIMERID_MASTER) != 0U)
@@ -5422,7 +5422,7 @@ HAL_StatusTypeDef HAL_HRTIM_WaveformCountStop_IT(HRTIM_HandleTypeDef * hhrtim,
   hhrtim->State = HAL_HRTIM_STATE_BUSY;
 
   /* Disable HRTIM interrupts (if required) */
-  __HAL_HRTIM_DISABLE_IT(hhrtim, hhrtim->Init.HRTIMInterruptResquests);
+  __HAL_HRTIM_DISABLE_IT(hhrtim, hhrtim->Init.HRTIMInterruptRequests);
 
   /* Disable master timer related interrupts (if required) */
   if ((Timers & HRTIM_TIMERID_MASTER) != 0U)

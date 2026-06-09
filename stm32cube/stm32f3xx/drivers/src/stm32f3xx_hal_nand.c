@@ -657,7 +657,7 @@ HAL_StatusTypeDef HAL_NAND_Read_Page_8b(NAND_HandleTypeDef *hnand, const NAND_Ad
       /* Get Data into Buffer */
       for (index = 0U; index < hnand->Config.PageSize; index++)
       {
-        *buff = *(uint8_t *)deviceaddress;
+        *buff = *(__IO uint8_t *)deviceaddress;
         buff++;
       }
 
@@ -832,7 +832,7 @@ HAL_StatusTypeDef HAL_NAND_Read_Page_16b(NAND_HandleTypeDef *hnand, const NAND_A
       /* Get Data into Buffer */
       for (index = 0U; index < hnand->Config.PageSize; index++)
       {
-        *buff = *(uint16_t *)deviceaddress;
+        *buff = *(__IO uint16_t *)deviceaddress;
         buff++;
       }
 
@@ -1335,7 +1335,7 @@ HAL_StatusTypeDef HAL_NAND_Read_SpareArea_8b(NAND_HandleTypeDef *hnand, const NA
       /* Get Data into Buffer */
       for (index = 0U; index < hnand->Config.SpareAreaSize; index++)
       {
-        *buff = *(uint8_t *)deviceaddress;
+        *buff = *(__IO uint8_t *)deviceaddress;
         buff++;
       }
 
@@ -1507,7 +1507,7 @@ HAL_StatusTypeDef HAL_NAND_Read_SpareArea_16b(NAND_HandleTypeDef *hnand, const N
       /* Get Data into Buffer */
       for (index = 0U; index < hnand->Config.SpareAreaSize; index++)
       {
-        *buff = *(uint16_t *)deviceaddress;
+        *buff = *(__IO uint16_t *)deviceaddress;
         buff++;
       }
 
