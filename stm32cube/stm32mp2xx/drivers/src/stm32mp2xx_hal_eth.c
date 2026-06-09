@@ -2039,8 +2039,8 @@ void HAL_ETH_IRQHandler(ETH_HandleTypeDef *heth)
     /* Clear ETH WAKEUP Exti pending bit */
     __HAL_ETH_WAKEUP_EXTID2_CLEAR_FLAG(ETH_WAKEUP_EXTI_LINE);
 #if (USE_HAL_ETH_REGISTER_CALLBACKS == 1)
-      /* Call registered WakeUp callback*/
-      heth->WakeUpCallback(heth);
+    /* Call registered WakeUp callback*/
+    heth->WakeUpCallback(heth);
 #else
     /* ETH WAKEUP callback */
     HAL_ETH_WakeUpCallback(heth);
@@ -3117,7 +3117,11 @@ static uint32_t ETH_Prepare_Tx_Descriptors(ETH_HandleTypeDef *heth, const ETH_Tx
 
   ETH_BufferTypeDef  *txbuffer = pTxConfig->TxBuffer;
   uint32_t           bd_count = 0;
+#if defined(CORE_CA35)
+  uint32_t cpsr_state;
+#else
   uint32_t primask_bit;
+#endif /* CORE_CA35 or CORE_CM33 defined */
 
   /* Current Tx Descriptor Owned by DMA: cannot be used by the application  */
   if ((READ_BIT(dmatxdesc->DESC3, ETH_DMATXNDESCWBF_OWN) == ETH_DMATXNDESCWBF_OWN)
@@ -3376,14 +3380,32 @@ static uint32_t ETH_Prepare_Tx_Descriptors(ETH_HandleTypeDef *heth, const ETH_Tx
 
   dmatxdesclist->CurTxDesc = descidx;
 
+#if defined(CORE_CA35)
+  cpsr_state = __get_CPSR();
+  /* Check if interrupts are enabled then disable the interrupts */
+  if ((cpsr_state & 0x80) == 0)
+  {
+    __disable_irq();
+  }
+#else
   /* Enter critical section */
   primask_bit = __get_PRIMASK();
   __set_PRIMASK(1);
+#endif /* CORE_CA35 or CORE_CM33 defined */
 
   dmatxdesclist->BuffersInUse += bd_count + 1U;
 
+#if defined(CORE_CA35)
+  /* Exit critical section */
+  /* Check if interrupts are enabled then enable interrupts back */
+  if ((cpsr_state & 0x80) == 0)
+  {
+    __enable_irq();
+  }
+#else
   /* Exit critical section: restore previous priority mask */
   __set_PRIMASK(primask_bit);
+#endif /* CORE_CA35 or CORE_CM33 defined */
 
   /* Return function status */
   return HAL_ETH_ERROR_NONE;

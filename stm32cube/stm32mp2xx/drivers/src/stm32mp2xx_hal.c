@@ -52,7 +52,7 @@
   * @brief STM32MP2xx HAL Driver version number
    */
 #define __STM32MP2xx_HAL_VERSION_MAIN   (0x01UL) /*!< [31:24] main version */
-#define __STM32MP2xx_HAL_VERSION_SUB1   (0x02UL) /*!< [23:16] sub1 version */
+#define __STM32MP2xx_HAL_VERSION_SUB1   (0x03UL) /*!< [23:16] sub1 version */
 #define __STM32MP2xx_HAL_VERSION_SUB2   (0x00UL) /*!< [15:8]  sub2 version */
 #define __STM32MP2xx_HAL_VERSION_RC     (0x00UL) /*!< [7:0]  release candidate */
 #define __STM32MP2xx_HAL_VERSION         ((__STM32MP2xx_HAL_VERSION_MAIN << 24)\
@@ -667,6 +667,21 @@ void HAL_SYSCFG_ETH1ClockSelect(uint32_t SYSCFG_ETHClock)
 }
 
 /**
+  * @brief  Ethernet RMII 50 MHz Clock Selection
+  * @param  SYSCFG_ETHClock: Selects the RMII Ethernet Clock
+  *   This parameter can be one of the following values:
+  *   @arg SYSCFG_ETH_EXT_CLK : Select the External Clock
+  *   @arg SYSCFG_ETH_RCC_CLK : Select the RCC Internal Clock
+  * @retval None
+  */
+void HAL_SYSCFG_ETH1RefClockSelect(uint32_t SYSCFG_ETHClock)
+{
+  assert_param(IS_SYSCFG_ETHERNET_CLOCK_CONFIG(SYSCFG_ETHClock));
+
+  MODIFY_REG(SYSCFG->ETH1CR, SYSCFG_ETH1CR_ETH1_REF_CLK_SEL, (uint32_t)(SYSCFG_ETHClock));
+}
+
+/**
   * @brief  Ethernet RGMII 125 MHz Clock Selection
   * @param  SYSCFG_ETHClock: Selects the RGMII Ethernet Clock
   *   This parameter can be one of the following values:
@@ -681,6 +696,20 @@ void HAL_SYSCFG_ETH2ClockSelect(uint32_t SYSCFG_ETHClock)
   MODIFY_REG(SYSCFG->ETH2CR, SYSCFG_ETH2CR_ETH2_CLK_SEL, (uint32_t)(SYSCFG_ETHClock));
 }
 
+/**
+  * @brief  Ethernet RMII 50 MHz Clock Selection
+  * @param  SYSCFG_ETHClock: Selects the RMII Ethernet Clock
+  *   This parameter can be one of the following values:
+  *   @arg SYSCFG_ETH_EXT_CLK : Select the External Clock
+  *   @arg SYSCFG_ETH_RCC_CLK : Select the RCC Internal Clock
+  * @retval None
+  */
+void HAL_SYSCFG_ETH2RefClockSelect(uint32_t SYSCFG_ETHClock)
+{
+  assert_param(IS_SYSCFG_ETHERNET_CLOCK_CONFIG(SYSCFG_ETHClock));
+
+  MODIFY_REG(SYSCFG->ETH2CR, SYSCFG_ETH2CR_ETH2_REF_CLK_SEL, (uint32_t)(SYSCFG_ETHClock));
+}
 
 /**
   * @brief  Analog Switch control for analog connections.

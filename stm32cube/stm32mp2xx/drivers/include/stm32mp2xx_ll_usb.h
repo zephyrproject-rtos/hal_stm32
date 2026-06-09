@@ -20,9 +20,9 @@
   */
 
 /* Includes ------------------------------------------------------------------*/
-#if defined(STM32MP257Cxx)
+#if defined(STM32MP25xxxx)
 #include "stm32mp2xx_ll_usb_drd.h"
 #else
 #include "stm32mp2xx_ll_usb_otg.h"
-#endif /*STM32MP257Cxx*/
+#endif /*STM32MP25xxxx*/
 

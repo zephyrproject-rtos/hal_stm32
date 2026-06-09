@@ -235,6 +235,7 @@ extern "C" {
 
 /*!< Select the RCC Internal Clock */
 #define SYSCFG_ETH_RCC_CLK                  (0x1U << SYSCFG_ETH1CR_ETH1_CLK_SEL_Pos)
+#define SYSCFG_ETH_RCC_REF_CLK              (0x1U << SYSCFG_ETH1CR_ETH1_REF_CLK_SEL_Pos)
 
 #define IS_SYSCFG_ETHERNET_CLOCK_CONFIG(CONFIG) (((CONFIG) == SYSCFG_ETH_EXT_CLK) || \
                                                  ((CONFIG) == SYSCFG_ETH_RCC_CLK))
@@ -1447,6 +1448,8 @@ void                  HAL_SYSCFG_ETH1InterfaceSelect(uint32_t SYSCFG_ETHInterfac
 void                  HAL_SYSCFG_ETH2InterfaceSelect(uint32_t SYSCFG_ETHInterface);
 void                  HAL_SYSCFG_ETH1ClockSelect(uint32_t SYSCFG_ETHClock);
 void                  HAL_SYSCFG_ETH2ClockSelect(uint32_t SYSCFG_ETHClock);
+void                  HAL_SYSCFG_ETH1RefClockSelect(uint32_t SYSCFG_ETHClock);
+void                  HAL_SYSCFG_ETH2RefClockSelect(uint32_t SYSCFG_ETHClock);
 void                  HAL_SYSCFG_AnalogSwitchConfig(uint32_t SYSCFG_AnalogSwitch, uint32_t SYSCFG_SwitchState);
 void                  HAL_SYSCFG_EnableIOSpeedOptimize(uint32_t SYSCFG_HighSpeedSignal);
 void                  HAL_SYSCFG_DisableIOSpeedOptimize(uint32_t SYSCFG_HighSpeedSignal);

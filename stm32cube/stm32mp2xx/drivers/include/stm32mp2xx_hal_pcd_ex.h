@@ -20,9 +20,9 @@
   */
 
 /* Includes ------------------------------------------------------------------*/
-#if defined(STM32MP257Cxx)
+#if defined(STM32MP25xxxx)
 #include "stm32mp2xx_hal_pcd_drd_ex.h"
 #else
 #include "stm32mp2xx_hal_pcd_otg_ex.h"
-#endif /*STM32MP257Cxx*/
+#endif /*STM32MP25xxxx*/
 

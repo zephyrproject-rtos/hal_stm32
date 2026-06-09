@@ -575,9 +575,11 @@ typedef struct
 
 #if defined(OTFDEC2)
 #define RIF_NB_PERIPH_MAX              (RIF_GET_ARRAY_INDEX(RIF_PERIPH_OTFDEC2) + 1)
-#else
+#elif defined(OTFDEC1)
 #define RIF_NB_PERIPH_MAX              (RIF_GET_ARRAY_INDEX(RIF_PERIPH_OTFDEC1) + 1)
-#endif /* OTFDEC2 */
+#else
+#define RIF_NB_PERIPH_MAX              (RIF_GET_ARRAY_INDEX(RIF_PERIPH_RES124) + 1)
+#endif /* OTFDEC2/OTFDEC1 */
 #define RIF_NB_PERIPH_LAST             (RIF_GET_ARRAY_INDEX(RIF_PERIPH_RES191) + 1U)
 
 #define RIF_PERIPH_ALL                 (RIF_PERIPH_ALLIP_Msk)
@@ -622,6 +624,9 @@ typedef struct
   * @{
   */
 /* Master Fixed values */
+#define RIF_MCID_MAX                   (15U)
+#define RIF_MCID_UNKNOWN               (0xFFFFFFFFU)
+
 #define RIF_MCID_CPU1                  (0x01U)
 #define RIF_MCID_CPU2                  (0x02U)
 #if defined(RIF_CID_CPU3_CM0)
@@ -645,6 +650,8 @@ typedef struct
 #endif /* RISAF5 */
 #if defined(GPU)
 #define RIF_MCID_GPU                   (9U)
+#else
+#define RIF_MCID_GPU                   RIF_MCID_UNKNOWN
 #endif /* GPU */
 #define RIF_MCID_DCMIPP                (10U)
 #define RIF_MCID_LTDC_L1_L2            (11U)
@@ -654,9 +661,13 @@ typedef struct
 #endif /* RIF_DERIVATIVE1_RESOURCES */
 #if defined(VDEC)
 #define RIF_MCID_VDEC                  (14U)
+#else
+#define RIF_MCID_VDEC                  RIF_MCID_UNKNOWN
 #endif /* VDEC */
 #if defined(VENC)
 #define RIF_MCID_VENC                  (15U)
+#else
+#define RIF_MCID_VENC                  RIF_MCID_UNKNOWN
 #endif /* VENC */
 
 /* DAPCID specific value (highest level of debug access) */
@@ -898,52 +909,55 @@ void HAL_IAC_Callback(uint32_t PeriphId);
 #endif /* RIF_LPSRAM1 && RIF_LPSRAM2 && RIF_LPSRAM3 */
 #if defined(RIF_DERIVATIVE1_RESOURCES)
 #define IS_RIMC_MASTERID(cid) \
-  ( ( (uint32_t)(cid) == RIF_MCID_TRACE ) || \
-    ( (uint32_t)(cid) == RIF_MCID_SDMMC1 ) || \
-    ( (uint32_t)(cid) == RIF_MCID_SDMMC2 ) || \
-    ( (uint32_t)(cid) == RIF_MCID_SDMMC3 ) || \
-    ( (uint32_t)(cid) == RIF_MCID_OTG_HS ) || \
-    ( (uint32_t)(cid) == RIF_MCID_USBH ) || \
-    ( (uint32_t)(cid) == RIF_MCID_ETH1 ) || \
-    ( (uint32_t)(cid) == RIF_MCID_ETH2 ) || \
-    ( (uint32_t)(cid) == RIF_MCID_DCMIPP ) || \
-    ( (uint32_t)(cid) == RIF_MCID_LTDC_L1_L2 ) || \
-    ( (uint32_t)(cid) == RIF_MCID_LTDC_L3 ) )
+  ( ((uint32_t)(cid) <= RIF_MCID_MAX) && \
+    ( ((uint32_t)(cid) == RIF_MCID_TRACE ) || \
+      ((uint32_t)(cid) == RIF_MCID_SDMMC1 ) || \
+      ((uint32_t)(cid) == RIF_MCID_SDMMC2 ) || \
+      ((uint32_t)(cid) == RIF_MCID_SDMMC3 ) || \
+      ((uint32_t)(cid) == RIF_MCID_OTG_HS ) || \
+      ((uint32_t)(cid) == RIF_MCID_USBH ) || \
+      ((uint32_t)(cid) == RIF_MCID_ETH1 ) || \
+      ((uint32_t)(cid) == RIF_MCID_ETH2 ) || \
+      ((uint32_t)(cid) == RIF_MCID_DCMIPP ) || \
+      ((uint32_t)(cid) == RIF_MCID_LTDC_L1_L2 ) || \
+      ((uint32_t)(cid) == RIF_MCID_LTDC_L3 ) ) )
 #elif defined(RIF_DERIVATIVE2_RESOURCES)
 #define IS_RIMC_MASTERID(cid) \
-  ( ( (uint32_t)(cid) == RIF_MCID_TRACE ) || \
-    ( (uint32_t)(cid) == RIF_MCID_SDMMC1 ) || \
-    ( (uint32_t)(cid) == RIF_MCID_SDMMC2 ) || \
-    ( (uint32_t)(cid) == RIF_MCID_SDMMC3 ) || \
-    ( (uint32_t)(cid) == RIF_MCID_USB3DR ) || \
-    ( (uint32_t)(cid) == RIF_MCID_USBH ) || \
-    ( (uint32_t)(cid) == RIF_MCID_ETH1 ) || \
-    ( (uint32_t)(cid) == RIF_MCID_ETH2 ) || \
-    ( (uint32_t)(cid) == RIF_MCID_PCIE ) || \
-    ( (uint32_t)(cid) == RIF_MCID_GPU ) || \
-    ( (uint32_t)(cid) == RIF_MCID_DCMIPP ) || \
-    ( (uint32_t)(cid) == RIF_MCID_LTDC_L1_L2 ) || \
-    ( (uint32_t)(cid) == RIF_MCID_LTDC_L3 ) || \
-    ( (uint32_t)(cid) == RIF_MCID_LTDC_ROT ) || \
-    ( (uint32_t)(cid) == RIF_MCID_VDEC ) )
+  ( ((uint32_t)(cid) <= RIF_MCID_MAX) && \
+    ( ((uint32_t)(cid) == RIF_MCID_TRACE ) || \
+      ((uint32_t)(cid) == RIF_MCID_SDMMC1 ) || \
+      ((uint32_t)(cid) == RIF_MCID_SDMMC2 ) || \
+      ((uint32_t)(cid) == RIF_MCID_SDMMC3 ) || \
+      ((uint32_t)(cid) == RIF_MCID_USB3DR ) || \
+      ((uint32_t)(cid) == RIF_MCID_USBH ) || \
+      ((uint32_t)(cid) == RIF_MCID_ETH1 ) || \
+      ((uint32_t)(cid) == RIF_MCID_ETH2 ) || \
+      ((uint32_t)(cid) == RIF_MCID_PCIE ) || \
+      ((uint32_t)(cid) == RIF_MCID_GPU ) || \
+      ((uint32_t)(cid) == RIF_MCID_DCMIPP ) || \
+      ((uint32_t)(cid) == RIF_MCID_LTDC_L1_L2 ) || \
+      ((uint32_t)(cid) == RIF_MCID_LTDC_L3 ) || \
+      ((uint32_t)(cid) == RIF_MCID_LTDC_ROT ) || \
+      ((uint32_t)(cid) == RIF_MCID_VDEC ) ) )
 #else
 #define IS_RIMC_MASTERID(cid) \
-  ( ( (uint32_t)(cid) == RIF_MCID_TRACE ) || \
-    ( (uint32_t)(cid) == RIF_MCID_SDMMC1 ) || \
-    ( (uint32_t)(cid) == RIF_MCID_SDMMC2 ) || \
-    ( (uint32_t)(cid) == RIF_MCID_SDMMC3 ) || \
-    ( (uint32_t)(cid) == RIF_MCID_USB3DR ) || \
-    ( (uint32_t)(cid) == RIF_MCID_USBH ) || \
-    ( (uint32_t)(cid) == RIF_MCID_ETH1 ) || \
-    ( (uint32_t)(cid) == RIF_MCID_ETH2 ) || \
-    ( (uint32_t)(cid) == RIF_MCID_PCIE ) || \
-    ( (uint32_t)(cid) == RIF_MCID_GPU ) || \
-    ( (uint32_t)(cid) == RIF_MCID_DCMIPP ) || \
-    ( (uint32_t)(cid) == RIF_MCID_LTDC_L1_L2 ) || \
-    ( (uint32_t)(cid) == RIF_MCID_LTDC_L3 ) || \
-    ( (uint32_t)(cid) == RIF_MCID_LTDC_ROT ) || \
-    ( (uint32_t)(cid) == RIF_MCID_VDEC ) || \
-    ( (uint32_t)(cid) == RIF_MCID_VENC ) )
+  ( ((uint32_t)(cid) <= RIF_MCID_MAX) && \
+    ( ((uint32_t)(cid) == RIF_MCID_TRACE ) || \
+      ((uint32_t)(cid) == RIF_MCID_SDMMC1 ) || \
+      ((uint32_t)(cid) == RIF_MCID_SDMMC2 ) || \
+      ((uint32_t)(cid) == RIF_MCID_SDMMC3 ) || \
+      ((uint32_t)(cid) == RIF_MCID_USB3DR ) || \
+      ((uint32_t)(cid) == RIF_MCID_USBH ) || \
+      ((uint32_t)(cid) == RIF_MCID_ETH1 ) || \
+      ((uint32_t)(cid) == RIF_MCID_ETH2 ) || \
+      ((uint32_t)(cid) == RIF_MCID_PCIE ) || \
+      ((uint32_t)(cid) == RIF_MCID_GPU ) || \
+      ((uint32_t)(cid) == RIF_MCID_DCMIPP ) || \
+      ((uint32_t)(cid) == RIF_MCID_LTDC_L1_L2 ) || \
+      ((uint32_t)(cid) == RIF_MCID_LTDC_L3 ) || \
+      ((uint32_t)(cid) == RIF_MCID_LTDC_ROT ) || \
+      ((uint32_t)(cid) == RIF_MCID_VDEC ) || \
+      ((uint32_t)(cid) == RIF_MCID_VENC ) ) )
 #endif /* RIF_DERIVATIVE1_RESOURCES */
 
 #define IS_RIMC_TDCID(cid) \
