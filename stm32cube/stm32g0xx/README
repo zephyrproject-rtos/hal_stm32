@@ -6,7 +6,7 @@ Origin:
    http://www.st.com/en/embedded-software/stm32cubeg0.html
 
 Status:
-   version v1.6.2
+   version v1.6.3
 
 Purpose:
    ST Microelectronics official MCU package for STM32G0 series.
@@ -23,7 +23,7 @@ URL:
    https://github.com/STMicroelectronics/STM32CubeG0
 
 Commit:
-   a019f83e7693348cf50f1466756ea985d3a96163
+   878a6fd8ad440c70ee32bc6d7ad526babb6e04f4
 
 Maintained-by:
    External
@@ -35,7 +35,6 @@ License Link:
    https://opensource.org/licenses/BSD-3-Clause
 
 Patch List:
-
    *Changes from official delivery:
     -dos2unix applied
     -trailing white spaces removed
