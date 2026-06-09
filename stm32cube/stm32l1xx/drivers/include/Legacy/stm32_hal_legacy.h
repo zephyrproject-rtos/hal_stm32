@@ -4418,5 +4418,3 @@ extern "C" {
 #endif
 
 #endif /* STM32_HAL_LEGACY */
-
-

@@ -104,7 +104,6 @@ static const uint8_t SHIFT_TAB_CCxP[] =
 #define TIM3_OR_RMP_MASK   (TIM3_OR_ITR2_RMP << TIMx_OR_RMP_SHIFT)
 
 
-
 /**
   * @}
   */
@@ -446,7 +445,6 @@ typedef struct
   */
 
 
-
 /** @defgroup TIM_LL_EC_ACTIVEINPUT Active Input Selection
   * @{
   */
@@ -605,11 +603,6 @@ typedef struct
 /**
   * @}
   */
-
-
-
-
-
 
 
 /** @defgroup TIM_LL_EC_DMABURST_BASEADDR DMA Burst Base Address
