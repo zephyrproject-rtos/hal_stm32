@@ -14261,9 +14261,6 @@ typedef struct
 /*********************** HCD Instances ****************************************/
 #define IS_HCD_ALL_INSTANCE(INSTANCE) ((INSTANCE) == USB_OTG_FS)
 
-/****************************** ETH Instances ********************************/
-#define IS_ETH_ALL_INSTANCE(INSTANCE) ((INSTANCE) == ETH)
-
 #define RCC_HSE_MIN         3000000U
 #define RCC_HSE_MAX        25000000U
 
@@ -14336,4 +14333,3 @@ typedef struct
 #endif /* __cplusplus */
 
 #endif /* __STM32F105xC_H */
-

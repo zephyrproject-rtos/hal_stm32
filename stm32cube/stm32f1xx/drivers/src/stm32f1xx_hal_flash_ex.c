@@ -826,7 +826,7 @@ static HAL_StatusTypeDef FLASH_OB_DisableWRP(uint32_t WriteProtectPage)
 #if defined(FLASH_WRP0_WRP0)
       if(WRP0_Data != 0xFFU)
       {
-        OB->WRP0 |= WRP0_Data;
+        OB->WRP0 = WRP0_Data;
 
         /* Wait for last operation to be completed */
         status = FLASH_WaitForLastOperation((uint32_t)FLASH_TIMEOUT_VALUE);
@@ -836,7 +836,7 @@ static HAL_StatusTypeDef FLASH_OB_DisableWRP(uint32_t WriteProtectPage)
 #if defined(FLASH_WRP1_WRP1)
       if((status == HAL_OK) && (WRP1_Data != 0xFFU))
       {
-        OB->WRP1 |= WRP1_Data;
+        OB->WRP1 = WRP1_Data;
 
         /* Wait for last operation to be completed */
         status = FLASH_WaitForLastOperation((uint32_t)FLASH_TIMEOUT_VALUE);
@@ -846,7 +846,7 @@ static HAL_StatusTypeDef FLASH_OB_DisableWRP(uint32_t WriteProtectPage)
 #if defined(FLASH_WRP2_WRP2)
       if((status == HAL_OK) && (WRP2_Data != 0xFFU))
       {
-        OB->WRP2 |= WRP2_Data;
+        OB->WRP2 = WRP2_Data;
 
         /* Wait for last operation to be completed */
         status = FLASH_WaitForLastOperation((uint32_t)FLASH_TIMEOUT_VALUE);
@@ -856,7 +856,7 @@ static HAL_StatusTypeDef FLASH_OB_DisableWRP(uint32_t WriteProtectPage)
 #if defined(FLASH_WRP3_WRP3)
       if((status == HAL_OK) && (WRP3_Data != 0xFFU))
       {
-        OB->WRP3 |= WRP3_Data;
+        OB->WRP3 = WRP3_Data;
 
         /* Wait for last operation to be completed */
         status = FLASH_WaitForLastOperation((uint32_t)FLASH_TIMEOUT_VALUE);
