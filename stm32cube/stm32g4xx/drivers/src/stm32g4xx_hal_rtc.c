@@ -970,7 +970,7 @@ HAL_StatusTypeDef HAL_RTC_SetTime(RTC_HandleTypeDef *hrtc, RTC_TimeTypeDef *sTim
   *            @arg RTC_FORMAT_BCD: BCD data format
   * @retval HAL status
   */
-HAL_StatusTypeDef HAL_RTC_GetTime(RTC_HandleTypeDef *hrtc, RTC_TimeTypeDef *sTime, uint32_t Format)
+HAL_StatusTypeDef HAL_RTC_GetTime(RTC_HandleTypeDef const *hrtc, RTC_TimeTypeDef *sTime, uint32_t Format)
 {
   uint32_t tmpreg;
 
@@ -1098,7 +1098,7 @@ HAL_StatusTypeDef HAL_RTC_SetDate(RTC_HandleTypeDef *hrtc, RTC_DateTypeDef *sDat
   *            @arg RTC_FORMAT_BCD:  BCD data format
   * @retval HAL status
   */
-HAL_StatusTypeDef HAL_RTC_GetDate(RTC_HandleTypeDef *hrtc, RTC_DateTypeDef *sDate, uint32_t Format)
+HAL_StatusTypeDef HAL_RTC_GetDate(RTC_HandleTypeDef const *hrtc, RTC_DateTypeDef *sDate, uint32_t Format)
 {
   uint32_t datetmpreg;
 
@@ -1618,7 +1618,7 @@ HAL_StatusTypeDef HAL_RTC_DeactivateAlarm(RTC_HandleTypeDef *hrtc, uint32_t Alar
   *             @arg RTC_FORMAT_BCD: BCD data format
   * @retval HAL status
   */
-HAL_StatusTypeDef HAL_RTC_GetAlarm(RTC_HandleTypeDef *hrtc, RTC_AlarmTypeDef *sAlarm, uint32_t Alarm, uint32_t Format)
+HAL_StatusTypeDef HAL_RTC_GetAlarm(RTC_HandleTypeDef const *hrtc, RTC_AlarmTypeDef *sAlarm, uint32_t Alarm, uint32_t Format)
 {
   uint32_t tmpreg, subsecondtmpreg;
 
@@ -1843,7 +1843,7 @@ HAL_StatusTypeDef HAL_RTC_WaitForSynchro(RTC_HandleTypeDef *hrtc)
   * @param  hrtc RTC handle
   * @retval HAL state
   */
-HAL_RTCStateTypeDef HAL_RTC_GetState(RTC_HandleTypeDef *hrtc)
+HAL_RTCStateTypeDef HAL_RTC_GetState(RTC_HandleTypeDef const *hrtc)
 {
   /* Return RTC handle state */
   return hrtc->State;
@@ -2019,7 +2019,7 @@ void HAL_RTC_DST_ClearStoreOperation(RTC_HandleTypeDef *hrtc)
   * @param  hrtc RTC handle
   * @retval operation see RTC_StoreOperation_Definitions
   */
-uint32_t HAL_RTC_DST_ReadStoreOperation(RTC_HandleTypeDef *hrtc)
+uint32_t HAL_RTC_DST_ReadStoreOperation(RTC_HandleTypeDef const *hrtc)
 {
   return READ_BIT(hrtc->Instance->CR, RTC_CR_BKP);
 }

@@ -308,7 +308,7 @@ __STATIC_INLINE uint32_t LL_IWDG_IsActiveFlag_WVU(const IWDG_TypeDef *IWDGx)
   * @param  IWDGx IWDG Instance
   * @retval State of bits (1 or 0).
   */
-__STATIC_INLINE uint32_t LL_IWDG_IsReady(IWDG_TypeDef *IWDGx)
+__STATIC_INLINE uint32_t LL_IWDG_IsReady(const IWDG_TypeDef *IWDGx)
 {
   return ((READ_BIT(IWDGx->SR, IWDG_SR_PVU | IWDG_SR_RVU | IWDG_SR_WVU) == 0U) ? 1UL : 0UL);
 }

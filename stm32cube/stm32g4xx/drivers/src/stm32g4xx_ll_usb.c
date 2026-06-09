@@ -33,6 +33,9 @@
 
       (#) The upper HAL HCD/PCD driver will call the right routines for its internal processes.
 
+      (#)NOTE: For applications not using double buffer mode, define the symbol
+                'USE_USB_DOUBLE_BUFFER' as 0 to reduce the driver's memory footprint.
+
   @endverbatim
 
   ******************************************************************************
@@ -61,7 +64,7 @@
   *         the configuration information for the specified USBx peripheral.
   * @retval HAL status
   */
-HAL_StatusTypeDef USB_CoreInit(USB_TypeDef *USBx, USB_CfgTypeDef cfg)
+HAL_StatusTypeDef USB_CoreInit(USB_TypeDef const *USBx, USB_CfgTypeDef cfg)
 {
   /* Prevent unused argument(s) compilation warning */
   UNUSED(USBx);
@@ -130,7 +133,7 @@ HAL_StatusTypeDef USB_DisableGlobalInt(USB_TypeDef *USBx)
   *            @arg USB_DEVICE_MODE Peripheral mode
   * @retval HAL status
   */
-HAL_StatusTypeDef USB_SetCurrentMode(USB_TypeDef *USBx, USB_ModeTypeDef mode)
+HAL_StatusTypeDef USB_SetCurrentMode(USB_TypeDef const *USBx, USB_ModeTypeDef mode)
 {
   /* Prevent unused argument(s) compilation warning */
   UNUSED(USBx);
