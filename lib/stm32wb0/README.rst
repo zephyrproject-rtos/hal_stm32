@@ -6,7 +6,7 @@ Origin:
    https://github.com/STMicroelectronics/STM32CubeWB0
 
 Status:
-   version v1.4.0
+   version v1.4.1
 
 Purpose:
    This library is used on STM32WB0 series to port BLE controller library in
@@ -87,7 +87,7 @@ URL:
    https://github.com/STMicroelectronics/STM32CubeWB0
 
 Commit:
-   feb9b9624b10a3af4e5dccb390a01b0cc4d71771
+   78e292eb5758c4082658045c364f68c3d8ef7a62
 
 Maintained-by:
    External
@@ -99,6 +99,7 @@ License Link:
    opensource.org/licenses/BSD-3-Clause
 
 Patch List:
+--> please check that the following list is still valid:
 
 	* Changes from the official delivery:
 	- Removed "gatt_profile.h" and "gap_profile.h":
