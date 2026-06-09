@@ -364,7 +364,7 @@ void HAL_PWR_DisableBkUpAccess(void);
   */
 
 /* Peripheral Control functions  ************************************************/
-HAL_StatusTypeDef HAL_PWR_ConfigPVD(PWR_PVDTypeDef *sConfigPVD);
+HAL_StatusTypeDef HAL_PWR_ConfigPVD(PWR_PVDTypeDef const *sConfigPVD);
 void HAL_PWR_EnablePVD(void);
 void HAL_PWR_DisablePVD(void);
 

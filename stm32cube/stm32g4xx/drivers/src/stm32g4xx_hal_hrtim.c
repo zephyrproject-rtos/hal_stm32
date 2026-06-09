@@ -5087,9 +5087,6 @@ HAL_StatusTypeDef HAL_HRTIM_WaveformTimerControl(HRTIM_HandleTypeDef *hhrtim,
   /* Configure timing unit */
   HRTIM_TimingUnitWaveform_Control(hhrtim, TimerIdx, pTimerCtl);
 
-  /* Force a software update */
-  HRTIM_ForceRegistersUpdate(hhrtim, TimerIdx);
-
   hhrtim->State = HAL_HRTIM_STATE_READY;
 
   /* Process Unlocked */
@@ -9309,9 +9306,13 @@ static void  HRTIM_TimingUnitWaveform_Config(HRTIM_HandleTypeDef *hhrtim,
   hrtim_timfltr &= ~(HRTIM_FLTR_FLTLCK);
   hrtim_timfltr |= pTimerCfg->FaultLock;
 
-  /* Enable/Disable dead time insertion at timer level */
-  hrtim_timoutr &= ~(HRTIM_OUTR_DTEN);
-  hrtim_timoutr |= pTimerCfg->DeadTimeInsertion;
+  /* The deadtime cannot be used simultaneously with the push-pull mode */
+  if (pTimerCfg->PushPull == HRTIM_TIMPUSHPULLMODE_DISABLED)
+  {
+    /* Enable/Disable dead time insertion at timer level */
+    hrtim_timoutr &= ~(HRTIM_OUTR_DTEN);
+    hrtim_timoutr |= pTimerCfg->DeadTimeInsertion;
+  }
 
   /* Enable/Disable delayed protection at timer level
      Delayed Idle is available whatever the timer operating mode (regular, push-pull)
