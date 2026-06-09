@@ -190,15 +190,15 @@
 /** @defgroup GPIOEx_Get_Port_Index GPIO Get Port Index
   * @{
   */
-#define GPIO_GET_INDEX(__GPIOx__)    (uint8_t)(((__GPIOx__) == (GPIOA))? 0U :\
-                                               ((__GPIOx__) == (GPIOB))? 1U :\
-                                               ((__GPIOx__) == (GPIOC))? 2U :\
-                                               ((__GPIOx__) == (GPIOD))? 3U :\
-                                               ((__GPIOx__) == (GPIOE))? 4U :\
-                                               ((__GPIOx__) == (GPIOF))? 5U :\
-                                               ((__GPIOx__) == (GPIOG))? 6U :\
-                                               ((__GPIOx__) == (GPIOH))? 7U :\
-                                               ((__GPIOx__) == (GPIOI))? 8U : 9U)
+#define GPIO_GET_INDEX(__GPIOx__) (((__GPIOx__) == (GPIOA))? 0UL :\
+                                   ((__GPIOx__) == (GPIOB))? 1UL :\
+                                   ((__GPIOx__) == (GPIOC))? 2UL :\
+                                   ((__GPIOx__) == (GPIOD))? 3UL :\
+                                   ((__GPIOx__) == (GPIOE))? 4UL :\
+                                   ((__GPIOx__) == (GPIOF))? 5UL :\
+                                   ((__GPIOx__) == (GPIOG))? 6UL :\
+                                   ((__GPIOx__) == (GPIOH))? 7UL :\
+                                   ((__GPIOx__) == (GPIOI))? 8UL : 9UL)
 /**
   * @}
   */
