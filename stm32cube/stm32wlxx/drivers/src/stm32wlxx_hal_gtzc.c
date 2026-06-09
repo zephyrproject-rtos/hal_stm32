@@ -324,7 +324,7 @@ HAL_StatusTypeDef HAL_GTZC_TZSC_GetConfigPeriphAttributes(uint32_t PeriphId, uin
   *         The structure description is available in @ref GTZC_Exported_Types.
   * @retval HAL status.
   */
-HAL_StatusTypeDef HAL_GTZC_TZSC_MPCWM_ConfigMemAttributes(uint32_t MemBaseAddress, MPCWM_ConfigTypeDef *pMPCWM_Desc)
+HAL_StatusTypeDef HAL_GTZC_TZSC_MPCWM_ConfigMemAttributes(uint32_t MemBaseAddress, const MPCWM_ConfigTypeDef *pMPCWM_Desc)
 {
   __IO uint32_t *pregister;
   HAL_StatusTypeDef status = HAL_OK;

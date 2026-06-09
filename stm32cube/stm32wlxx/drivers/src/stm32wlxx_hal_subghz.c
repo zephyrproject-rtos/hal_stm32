@@ -1560,6 +1560,28 @@ uint32_t HAL_SUBGHZ_GetError(const SUBGHZ_HandleTypeDef *hsubghz)
 }
 
 /**
+  * @brief  Return Wait busy flag low from peripheral
+  * @param  hsubghz pointer to a SUBGHZ_HandleTypeDef structure that contains
+  *         the handle information for SUBGHZ module.
+  * @retval HAL status
+  */
+HAL_StatusTypeDef HAL_SUBGHZ_WaitOnBusy(SUBGHZ_HandleTypeDef *hsubghz)
+{
+  return SUBGHZ_WaitOnBusy(hsubghz);
+}
+
+/**
+  * @brief  Return wait busy flag low from peripheral
+  * @param  hsubghz pointer to a SUBGHZ_HandleTypeDef structure that contains
+  *         the handle information for SUBGHZ module.
+  * @retval HAL status
+  */
+HAL_StatusTypeDef HAL_SUBGHZ_CheckDeviceReady(SUBGHZ_HandleTypeDef *hsubghz)
+{
+  return SUBGHZ_CheckDeviceReady(hsubghz);
+}
+
+/**
   * @}
   */
 
