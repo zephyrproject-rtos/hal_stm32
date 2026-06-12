@@ -112,6 +112,10 @@ foreach(series ${supported_series})
     endif()
 
     add_subdirectory(${cube_dir})
+
+    # Remember the series' name for next steps
+    # (in the format of CONFIG_SOC_SERIES_<xxx>)
+    set(TARGET_SERIES ${series_to_upper})
   endif()
 endforeach()
 
@@ -122,3 +126,27 @@ endif()
 
 # Add the series-agnostic LL headers to include directories
 zephyr_include_directories(common_ll/include)
+
+# Legacy definitions header placeholder
+# (HAL1 only - not needed on HAL2 series)
+if(NOT CONFIG_STM32_HAL2)
+  # List of series containing buggy driver(s) which need some Legacy definitions.
+  # These series use their real Legacy definitions header - no placeholder.
+  #
+  # In a comment next to each series' name, please indicate:
+  # - which driver(s) are buggy and cause build issues
+  # - in parentheses, ST Internal Reference(s) tracking the issue(s)
+  set(legacy_dependent_series
+    # N.B.: no issue will occur if this list is empty
+    STM32F7X # HAL RCC (HAL1-19491)
+    STM32U5X # HAL PCD + LL USB (HAL1-9776)
+  )
+
+  list(FIND legacy_dependent_series ${TARGET_SERIES} index)
+  if(${index} EQUAL -1)
+    # Series not in exclude list: use the placeholder.
+    add_subdirectory(hal1_legacy_placeholder)
+  else()
+    # Target series uses its real header - don't use placeholder.
+  endif()
+endif()

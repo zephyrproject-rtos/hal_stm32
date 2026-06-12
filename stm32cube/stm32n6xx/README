@@ -43,10 +43,6 @@ Patch List:
     -Added stm32cube/stm32n6xx/drivers/include/stm32_assert.h
     -Removed unused stm32cube/stm32n6xx/drivers/include/stm32_assert_template.h
 
-   *Fix to remove PAGESIZE definition which conflicts with POSIX
-    Impacted files:
-     drivers/include/Legacy/stm32_hal_legacy.h
-
    *Fix FSBL configuration
     -Remove CMSE_NS_ENTRY modifier, which requires enabling CONFIG_ARM_FIRMWARE_HAS_SECURE_ENTRY_FUNCS
      which we don't need right now.
