@@ -207,7 +207,7 @@ HAL_StatusTypeDef HAL_GTZC_TZSC_GetConfigPeriphAttributes(uint32_t PeriphId, uin
   * @{
   */
 /* MPCWM Initialization and Configuration functions ***************************/
-HAL_StatusTypeDef HAL_GTZC_TZSC_MPCWM_ConfigMemAttributes(uint32_t MemBaseAddress, MPCWM_ConfigTypeDef *pMPCWM_Desc);
+HAL_StatusTypeDef HAL_GTZC_TZSC_MPCWM_ConfigMemAttributes(uint32_t MemBaseAddress, const MPCWM_ConfigTypeDef *pMPCWM_Desc);
 HAL_StatusTypeDef HAL_GTZC_TZSC_MPCWM_GetConfigMemAttributes(uint32_t MemBaseAddress, MPCWM_ConfigTypeDef *pMPCWM_Desc);
 /**
   * @}

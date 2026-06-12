@@ -262,11 +262,11 @@ typedef struct
   * @}
   */
 
-/** @defgroup OPAMP_LL_EC_INTERNAL_OUPUT_MODE OPAMP internal output mode
+/** @defgroup OPAMP_LL_EC_INTERNAL_OUTPUT_MODE OPAMP internal output mode
   * @{
   */
-#define LL_OPAMP_INTERNAL_OUPUT_DISABLED       (0x00000000UL)         /*!< OPAMP internal output to ADC disabled. */
-#define LL_OPAMP_INTERNAL_OUPUT_ENABLED        OPAMP_CSR_OPAMPINTEN   /*!< OPAMP internal output to ADC enabled.
+#define LL_OPAMP_INTERNAL_OUTPUT_DISABLED     (0x00000000UL)          /*!< OPAMP internal output to ADC disabled. */
+#define LL_OPAMP_INTERNAL_OUTPUT_ENABLED      OPAMP_CSR_OPAMPINTEN    /*!< OPAMP internal output to ADC enabled.
                                                                              - OPAMP1 internal output is connected to ADC1/Channel13
                                                                              - OPAMP2 internal output is connected to ADC2/Channel16
                                                                              - OPAMP3 internal output is connected to ADC2/Channel18 & ADC3/Channel13
@@ -274,6 +274,11 @@ typedef struct
                                                                              - OPAMP5 internal output is connected to ADC5/Channel3
                                                                              - OPAMP6 internal output is connected to ADC4/Channel17
                                                                            Note: On this STM32 series, all OPAMPx are not available on all devices. Refer to device datasheet for more details */
+
+/* Legacy definition kept for compatibility */
+#define LL_OPAMP_INTERNAL_OUPUT_DISABLED      LL_OPAMP_INTERNAL_OUTPUT_DISABLED
+#define LL_OPAMP_INTERNAL_OUPUT_ENABLED       LL_OPAMP_INTERNAL_OUTPUT_ENABLED
+
 /**
   * @}
   */
@@ -729,8 +734,8 @@ __STATIC_INLINE uint32_t LL_OPAMP_GetInputsMuxMode(OPAMP_TypeDef *OPAMPx)
   * @rmtoll CSR      OPAMPINTEN     LL_OPAMP_SetInternalOutput
   * @param  OPAMPx OPAMP instance
   * @param  InternalOutput This parameter can be one of the following values:
-  *         @arg @ref LL_OPAMP_INTERNAL_OUPUT_DISABLED
-  *         @arg @ref LL_OPAMP_INTERNAL_OUPUT_ENABLED
+  *         @arg @ref LL_OPAMP_INTERNAL_OUTPUT_DISABLED
+  *         @arg @ref LL_OPAMP_INTERNAL_OUTPUT_ENABLED
   * @retval None
   */
 __STATIC_INLINE void LL_OPAMP_SetInternalOutput(OPAMP_TypeDef *OPAMPx, uint32_t InternalOutput)
@@ -743,8 +748,8 @@ __STATIC_INLINE void LL_OPAMP_SetInternalOutput(OPAMP_TypeDef *OPAMPx, uint32_t 
   * @rmtoll CSR      OPAMPINTEN     LL_OPAMP_GetInternalOutput
   * @param  OPAMPx OPAMP instance
   * @retval Returned value can be one of the following values:
-  *         @arg @ref LL_OPAMP_INTERNAL_OUPUT_DISABLED
-  *         @arg @ref LL_OPAMP_INTERNAL_OUPUT_ENABLED
+  *         @arg @ref LL_OPAMP_INTERNAL_OUTPUT_DISABLED
+  *         @arg @ref LL_OPAMP_INTERNAL_OUTPUT_ENABLED
   */
 __STATIC_INLINE uint32_t LL_OPAMP_GetInternalOutput(OPAMP_TypeDef *OPAMPx)
 {
@@ -997,7 +1002,7 @@ __STATIC_INLINE uint32_t LL_OPAMP_IsTimerMuxLocked(OPAMP_TypeDef *OPAMPx)
   */
 
 ErrorStatus LL_OPAMP_DeInit(OPAMP_TypeDef *OPAMPx);
-ErrorStatus LL_OPAMP_Init(OPAMP_TypeDef *OPAMPx, LL_OPAMP_InitTypeDef *OPAMP_InitStruct);
+ErrorStatus LL_OPAMP_Init(OPAMP_TypeDef *OPAMPx, const LL_OPAMP_InitTypeDef *OPAMP_InitStruct);
 void        LL_OPAMP_StructInit(LL_OPAMP_InitTypeDef *OPAMP_InitStruct);
 
 /**

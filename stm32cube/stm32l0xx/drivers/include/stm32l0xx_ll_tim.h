@@ -108,7 +108,6 @@ static const uint8_t SHIFT_TAB_CCxP[] =
 #endif /* TIM3 */
 
 
-
 /**
   * @}
   */
@@ -450,7 +449,6 @@ typedef struct
   */
 
 
-
 /** @defgroup TIM_LL_EC_ACTIVEINPUT Active Input Selection
   * @{
   */
@@ -609,11 +607,6 @@ typedef struct
 /**
   * @}
   */
-
-
-
-
-
 
 
 /** @defgroup TIM_LL_EC_DMABURST_BASEADDR DMA Burst Base Address
@@ -783,7 +776,6 @@ typedef struct
   * @}
   */
 #endif /* defined(TIM22_OR_TI1_RMP) */
-
 
 
 /**

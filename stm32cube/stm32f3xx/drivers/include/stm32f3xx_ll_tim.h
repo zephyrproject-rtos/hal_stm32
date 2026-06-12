@@ -757,8 +757,10 @@ typedef struct
 /** Legacy definitions for compatibility purpose
 @cond 0
   */
+#if defined(TIM_CCMR1_OC1M_3)
 #define LL_TIM_OCMODE_ASSYMETRIC_PWM1 LL_TIM_OCMODE_ASYMMETRIC_PWM1
 #define LL_TIM_OCMODE_ASSYMETRIC_PWM2 LL_TIM_OCMODE_ASYMMETRIC_PWM2
+#endif /* TIM_CCMR1_OC1M_3 */
 /**
 @endcond
   */

@@ -106,7 +106,6 @@ static const uint8_t SHIFT_TAB_OISx[] =
   */
 
 
-
 /* Mask used to set the TDG[x:0] of the DTG bits of the TIMx_BDTR register */
 #define DT_DELAY_1 ((uint8_t)0x7F)
 #define DT_DELAY_2 ((uint8_t)0x3F)
@@ -458,6 +457,7 @@ typedef struct
 
                                       @note This bit-field can not be modified as long as LOCK level 1 has been
                                       programmed. */
+
 
   uint32_t AutomaticOutput;      /*!< Specifies whether the TIM Automatic Output feature is enabled or not.
                                       This parameter can be a value of @ref TIM_LL_EC_AUTOMATICOUTPUT_ENABLE
@@ -841,8 +841,6 @@ typedef struct
   */
 
 
-
-
 /** @defgroup TIM_LL_EC_OSSI OSSI
   * @{
   */
@@ -911,7 +909,6 @@ typedef struct
 /**
   * @}
   */
-
 
 
 /**

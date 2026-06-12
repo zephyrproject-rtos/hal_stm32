@@ -1252,7 +1252,7 @@ void HAL_PCD_IRQHandler(PCD_HandleTypeDef *hpcd)
 
         if ((hpcd->OUT_ep[epnum].type == EP_TYPE_ISOC) &&
             ((RegVal & USB_OTG_DOEPCTL_EPENA) == USB_OTG_DOEPCTL_EPENA) &&
-            ((RegVal & (0x1U << 16)) == (hpcd->FrameNumber & 0x1U)))
+            (((RegVal & (0x1UL << 16)) >> 16U) == (hpcd->FrameNumber & 0x1U)))
         {
           hpcd->OUT_ep[epnum].is_iso_incomplete = 1U;
 

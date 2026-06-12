@@ -3840,7 +3840,7 @@ __STATIC_INLINE uint32_t LL_ADC_GetChannelSamplingTime(const ADC_TypeDef *ADCx, 
   uint32_t smp_channel_posbit0 = ((smpr & ADC_SAMPLING_TIME_CH_MASK)
                                   >> ((((Channel & ADC_CHANNEL_ID_NUMBER_MASK) >> ADC_CHANNEL_ID_NUMBER_BITOFFSET_POS)
                                        + ADC_SMPR_SMPSEL0_BITOFFSET_POS)
-                                      & 0x1FUL));
+                                      & 0x1FUL)) & 0x01UL;
 
   /* Select sampling time bitfield depending on sampling time bit value 0 or 1.  */
   return ((~(smp_channel_posbit0) * LL_ADC_SAMPLINGTIME_COMMON_1)

@@ -2477,7 +2477,7 @@ void HAL_UART_IRQHandler(UART_HandleTypeDef *huart)
      If Reception till IDLE event has been selected : */
   if ((huart->ReceptionType == HAL_UART_RECEPTION_TOIDLE)
       && ((isrflags & USART_SR_IDLE) != 0U)
-      && ((cr1its & USART_SR_IDLE) != 0U))
+      && ((cr1its & USART_CR1_IDLEIE) != 0U))
   {
     __HAL_UART_CLEAR_IDLEFLAG(huart);
 

@@ -1425,7 +1425,7 @@ HAL_StatusTypeDef HAL_RTCEx_SetTamper_IT(RTC_HandleTypeDef *hrtc, RTC_TamperType
   tmpreg = READ_REG(TAMP->CR2);
   tmpreg &= ~((sTamper->Tamper << TAMP_CR2_TAMP1TRG_Pos) | (sTamper->Tamper << TAMP_CR2_TAMP1MSK_Pos) | (sTamper->Tamper << TAMP_CR2_TAMP1NOERASE_Pos));
 
-  if (sTamper->Trigger != RTC_TAMPERTRIGGER_RISINGEDGE)
+  if ((sTamper->Trigger == RTC_TAMPERTRIGGER_HIGHLEVEL) || (sTamper->Trigger == RTC_TAMPERTRIGGER_FALLINGEDGE))
   {
     tmpreg |= (sTamper->Tamper << TAMP_CR2_TAMP1TRG_Pos);
   }

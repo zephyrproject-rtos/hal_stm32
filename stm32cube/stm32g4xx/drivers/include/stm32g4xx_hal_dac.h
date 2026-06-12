@@ -509,13 +509,6 @@ typedef void (*pDAC_CallbackTypeDef)(DAC_HandleTypeDef *hdac);
    :                                    \
    (((CHANNEL) == DAC_CHANNEL_1)    || \
     ((CHANNEL) == DAC_CHANNEL_2)))
-#elif defined(STM32G411xB) || defined(STM32G411xC)
-#define IS_DAC_CHANNEL(DACX, CHANNEL)        \
-  (((DACX) == DAC1) ?                  \
-   ((CHANNEL) == DAC_CHANNEL_1)        \
-   :                                    \
-   (((CHANNEL) == DAC_CHANNEL_1)    || \
-    ((CHANNEL) == DAC_CHANNEL_2)))
 #else
 #define IS_DAC_CHANNEL(DACX, CHANNEL)        \
   (((CHANNEL) == DAC_CHANNEL_1)     || \

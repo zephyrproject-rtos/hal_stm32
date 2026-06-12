@@ -214,7 +214,7 @@
 #endif /* HAL_CAN_MODULE_ENABLED */
 
 #ifdef HAL_CAN_LEGACY_MODULE_ENABLED
-  #include "Legacy/stm32f0xx_hal_can_legacy.h"
+  #include "stm32f0xx_hal_can_legacy.h"
 #endif /* HAL_CAN_LEGACY_MODULE_ENABLED */
 
 #ifdef HAL_CEC_MODULE_ENABLED
@@ -319,5 +319,3 @@
 #endif
 
 #endif /* __STM32F0xx_HAL_CONF_H */
-
-

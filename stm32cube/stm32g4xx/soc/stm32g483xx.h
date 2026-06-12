@@ -3570,7 +3570,7 @@ typedef struct
 
 /********************  Bits definition for DMAMUX_CxCR register  **************/
 #define DMAMUX_CxCR_DMAREQ_ID_Pos                    (0U)
-#define DMAMUX_CxCR_DMAREQ_ID_Msk                    (0xFFUL << DMAMUX_CxCR_DMAREQ_ID_Pos)/*!< 0x000000FF */
+#define DMAMUX_CxCR_DMAREQ_ID_Msk                    (0x7FUL << DMAMUX_CxCR_DMAREQ_ID_Pos)/*!< 0x0000007F */
 #define DMAMUX_CxCR_DMAREQ_ID                        DMAMUX_CxCR_DMAREQ_ID_Msk
 #define DMAMUX_CxCR_DMAREQ_ID_0                      (0x01UL << DMAMUX_CxCR_DMAREQ_ID_Pos)/*!< 0x00000001 */
 #define DMAMUX_CxCR_DMAREQ_ID_1                      (0x02UL << DMAMUX_CxCR_DMAREQ_ID_Pos)/*!< 0x00000002 */
@@ -3579,6 +3579,8 @@ typedef struct
 #define DMAMUX_CxCR_DMAREQ_ID_4                      (0x10UL << DMAMUX_CxCR_DMAREQ_ID_Pos)/*!< 0x00000010 */
 #define DMAMUX_CxCR_DMAREQ_ID_5                      (0x20UL << DMAMUX_CxCR_DMAREQ_ID_Pos)/*!< 0x00000020 */
 #define DMAMUX_CxCR_DMAREQ_ID_6                      (0x40UL << DMAMUX_CxCR_DMAREQ_ID_Pos)/*!< 0x00000040 */
+
+/* Legacy defines */
 #define DMAMUX_CxCR_DMAREQ_ID_7                      (0x80UL << DMAMUX_CxCR_DMAREQ_ID_Pos)/*!< 0x00000080 */
 
 #define DMAMUX_CxCR_SOIE_Pos                         (8U)
@@ -9574,8 +9576,8 @@ typedef struct
 #define RNG_CR_IE_Msk       (0x1UL << RNG_CR_IE_Pos)                           /*!< 0x00000008 */
 #define RNG_CR_IE           RNG_CR_IE_Msk
 #define RNG_CR_CED_Pos      (5U)
-#define RNG_CR_CED_Msk      (0x1UL << RNG_CR_IE_Pos)                           /*!< 0x00000020 */
-#define RNG_CR_CED          RNG_CR_IE_Msk
+#define RNG_CR_CED_Msk      (0x1UL << RNG_CR_CED_Pos)                           /*!< 0x00000020 */
+#define RNG_CR_CED          RNG_CR_CED_Msk
 
 /********************  Bits definition for RNG_SR register  *******************/
 #define RNG_SR_DRDY_Pos     (0U)
@@ -12052,27 +12054,27 @@ typedef struct
 
 /*******************  Bit definition for TIM_CCR1 register  *******************/
 #define TIM_CCR1_CCR1_Pos         (0U)
-#define TIM_CCR1_CCR1_Msk         (0xFFFFUL << TIM_CCR1_CCR1_Pos)              /*!< 0x0000FFFF */
+#define TIM_CCR1_CCR1_Msk         (0xFFFFFFFFUL << TIM_CCR1_CCR1_Pos)          /*!< 0xFFFFFFFF */
 #define TIM_CCR1_CCR1             TIM_CCR1_CCR1_Msk                            /*!<Capture/Compare 1 Value */
 
 /*******************  Bit definition for TIM_CCR2 register  *******************/
 #define TIM_CCR2_CCR2_Pos         (0U)
-#define TIM_CCR2_CCR2_Msk         (0xFFFFUL << TIM_CCR2_CCR2_Pos)              /*!< 0x0000FFFF */
+#define TIM_CCR2_CCR2_Msk         (0xFFFFFFFFUL << TIM_CCR2_CCR2_Pos)          /*!< 0xFFFFFFFF */
 #define TIM_CCR2_CCR2             TIM_CCR2_CCR2_Msk                            /*!<Capture/Compare 2 Value */
 
 /*******************  Bit definition for TIM_CCR3 register  *******************/
 #define TIM_CCR3_CCR3_Pos         (0U)
-#define TIM_CCR3_CCR3_Msk         (0xFFFFUL << TIM_CCR3_CCR3_Pos)              /*!< 0x0000FFFF */
+#define TIM_CCR3_CCR3_Msk         (0xFFFFFFFFUL << TIM_CCR3_CCR3_Pos)          /*!< 0xFFFFFFFF */
 #define TIM_CCR3_CCR3             TIM_CCR3_CCR3_Msk                            /*!<Capture/Compare 3 Value */
 
 /*******************  Bit definition for TIM_CCR4 register  *******************/
 #define TIM_CCR4_CCR4_Pos         (0U)
-#define TIM_CCR4_CCR4_Msk         (0xFFFFUL << TIM_CCR4_CCR4_Pos)              /*!< 0x0000FFFF */
+#define TIM_CCR4_CCR4_Msk         (0xFFFFFFFFUL << TIM_CCR4_CCR4_Pos)          /*!< 0xFFFFFFFF */
 #define TIM_CCR4_CCR4             TIM_CCR4_CCR4_Msk                            /*!<Capture/Compare 4 Value */
 
 /*******************  Bit definition for TIM_CCR5 register  *******************/
 #define TIM_CCR5_CCR5_Pos         (0U)
-#define TIM_CCR5_CCR5_Msk         (0xFFFFFFFFUL << TIM_CCR5_CCR5_Pos)          /*!< 0xFFFFFFFF */
+#define TIM_CCR5_CCR5_Msk         (0xFFFFFUL << TIM_CCR5_CCR5_Pos)             /*!< 0x000FFFFF */
 #define TIM_CCR5_CCR5             TIM_CCR5_CCR5_Msk                            /*!<Capture/Compare 5 Value */
 #define TIM_CCR5_GC5C1_Pos        (29U)
 #define TIM_CCR5_GC5C1_Msk        (0x1UL << TIM_CCR5_GC5C1_Pos)                /*!< 0x20000000 */
@@ -12086,7 +12088,7 @@ typedef struct
 
 /*******************  Bit definition for TIM_CCR6 register  *******************/
 #define TIM_CCR6_CCR6_Pos         (0U)
-#define TIM_CCR6_CCR6_Msk         (0xFFFFUL << TIM_CCR6_CCR6_Pos)              /*!< 0x0000FFFF */
+#define TIM_CCR6_CCR6_Msk         (0xFFFFFUL << TIM_CCR6_CCR6_Pos)             /*!< 0x000FFFFF */
 #define TIM_CCR6_CCR6             TIM_CCR6_CCR6_Msk                            /*!<Capture/Compare 6 Value */
 
 /*******************  Bit definition for TIM_BDTR register  *******************/

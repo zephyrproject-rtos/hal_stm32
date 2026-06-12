@@ -172,7 +172,7 @@ typedef struct
 /* STM32F302x8                   */
 
 #ifndef USB_EP_RX_STRX
-#define USB_EP_RX_STRX                         (0x3U << 12)
+#define USB_EP_RX_STRX                         (0x3UL << 12)
 #endif /* USB_EP_RX_STRX */
 
 #define EP_ADDR_MSK                            0x7U

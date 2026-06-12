@@ -309,9 +309,9 @@ typedef USB_HCTypeDef       USB_OTG_HCTypeDef;
 /** @defgroup USB_LL_Core_PHY_Frequency USB Low Layer Core PHY Frequency
   * @{
   */
-#define DSTS_ENUMSPD_HS_PHY_30MHZ_OR_60MHZ     (0U << 1)
-#define DSTS_ENUMSPD_FS_PHY_30MHZ_OR_60MHZ     (1U << 1)
-#define DSTS_ENUMSPD_FS_PHY_48MHZ              (3U << 1)
+#define DSTS_ENUMSPD_HS_PHY_30MHZ_OR_60MHZ     (0UL << 1)
+#define DSTS_ENUMSPD_FS_PHY_30MHZ_OR_60MHZ     (1UL << 1)
+#define DSTS_ENUMSPD_FS_PHY_48MHZ              (3UL << 1)
 /**
   * @}
   */
@@ -419,9 +419,9 @@ typedef USB_HCTypeDef       USB_OTG_HCTypeDef;
 /** @defgroup USB_LL_HPRT0_PRTSPD_SPEED_Defines USB Low Layer HPRT0 PRTSPD Speed Defines
   * @{
   */
-#define HPRT0_PRTSPD_HIGH_SPEED                0U
-#define HPRT0_PRTSPD_FULL_SPEED                1U
-#define HPRT0_PRTSPD_LOW_SPEED                 2U
+#define HPRT0_PRTSPD_HIGH_SPEED                0UL
+#define HPRT0_PRTSPD_FULL_SPEED                1UL
+#define HPRT0_PRTSPD_LOW_SPEED                 2UL
 /**
   * @}
   */
@@ -451,6 +451,12 @@ typedef USB_HCTypeDef       USB_OTG_HCTypeDef;
 #define TEST_SE0_NAK                           3U
 #define TEST_PACKET                            4U
 #define TEST_FORCE_EN                          5U
+
+#define USB_OTG_GAHBCFG_HBSTLEN_SINGLE         (0x0UL << USB_OTG_GAHBCFG_HBSTLEN_Pos)
+#define USB_OTG_GAHBCFG_HBSTLEN_INCR           (0x1UL << USB_OTG_GAHBCFG_HBSTLEN_Pos)
+#define USB_OTG_GAHBCFG_HBSTLEN_INCR4          (0x3UL << USB_OTG_GAHBCFG_HBSTLEN_Pos)
+#define USB_OTG_GAHBCFG_HBSTLEN_INCR8          (0x5UL << USB_OTG_GAHBCFG_HBSTLEN_Pos)
+#define USB_OTG_GAHBCFG_HBSTLEN_INCR16         (0x7UL << USB_OTG_GAHBCFG_HBSTLEN_Pos)
 
 #define USBx_PCGCCTL    *(__IO uint32_t *)((uint32_t)USBx_BASE + USB_OTG_PCGCCTL_BASE)
 #define USBx_HPRT0      *(__IO uint32_t *)((uint32_t)USBx_BASE + USB_OTG_HOST_PORT_BASE)

@@ -2774,10 +2774,6 @@ HAL_StatusTypeDef HAL_ADC_ConfigChannel(ADC_HandleTypeDef *hadc, const ADC_Chann
   assert_param(IS_ADC_OFFSET_NUMBER(pConfig->OffsetNumber));
   assert_param(IS_ADC_RANGE(ADC_GET_RESOLUTION(hadc), pConfig->Offset));
 
-  /* if ROVSE is set, the value of the OFFSETy_EN bit in ADCx_OFRy register is
-     ignored (considered as reset) */
-  assert_param(!((pConfig->OffsetNumber != ADC_OFFSET_NONE) && (hadc->Init.OversamplingMode == ENABLE)));
-
   /* Verification of channel number */
   if (pConfig->SingleDiff != ADC_DIFFERENTIAL_ENDED)
   {

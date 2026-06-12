@@ -53,14 +53,6 @@
    (((__DAC_CHANNEL__) == LL_DAC_CHANNEL_1)                                \
     ||  ((__DAC_CHANNEL__) == LL_DAC_CHANNEL_2))                           \
   )
-#elif defined(STM32G411xB) || defined(STM32G411xC)
-#define IS_LL_DAC_CHANNEL(__DACX__, __DAC_CHANNEL__)                       \
-  (((__DACX__) == DAC1) ?                                                  \
-   ((__DAC_CHANNEL__) == LL_DAC_CHANNEL_1)                                 \
-   :                                                                       \
-   (((__DAC_CHANNEL__) == LL_DAC_CHANNEL_1)                                \
-    ||  ((__DAC_CHANNEL__) == LL_DAC_CHANNEL_2))                           \
-  )
 #else
 #define IS_LL_DAC_CHANNEL(__DACX__, __DAC_CHANNEL__)                       \
   (((__DAC_CHANNEL__) == LL_DAC_CHANNEL_1)                                 \

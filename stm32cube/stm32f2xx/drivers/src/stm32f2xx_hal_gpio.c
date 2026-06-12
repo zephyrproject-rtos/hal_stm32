@@ -224,7 +224,7 @@ void HAL_GPIO_Init(GPIO_TypeDef  *GPIOx, GPIO_InitTypeDef *GPIO_Init)
 
         /* Configure Alternate function mapped with the current IO */
         temp = GPIOx->AFR[position >> 3u];
-        temp &= ~(0xFu << ((position & 0x07u) * 4u));
+        temp &= ~(0xFUL << ((position & 0x07u) * 4u));
         temp |= ((GPIO_Init->Alternate) << ((position & 0x07u) * 4u));
         GPIOx->AFR[position >> 3u] = temp;
       }
@@ -337,7 +337,7 @@ void HAL_GPIO_DeInit(GPIO_TypeDef  *GPIOx, uint32_t GPIO_Pin)
       GPIOx->MODER &= ~(GPIO_MODER_MODER0 << (position * 2u));
 
       /* Configure the default Alternate Function in current IO */
-      GPIOx->AFR[position >> 3u] &= ~(0xFu << ((uint32_t)(position & 0x07u) * 4u));
+      GPIOx->AFR[position >> 3u] &= ~(0xFUL << ((uint32_t)(position & 0x07u) * 4u));
 
       /* Deactivate the Pull-up and Pull-down resistor for the current IO */
       GPIOx->PUPDR &= ~(GPIO_PUPDR_PUPDR0 << (position * 2U));

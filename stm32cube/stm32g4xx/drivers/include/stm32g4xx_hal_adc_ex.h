@@ -827,7 +827,7 @@ typedef struct
   */
 #if defined(STM32G474xx) || defined(STM32G484xx) || defined(STM32G473xx) || defined(STM32G483xx)
 #define ADC_BATTERY_VOLTAGE_INSTANCE(__HANDLE__) \
-  ((((__HANDLE__)->Instance) != ADC2) || (((__HANDLE__)->Instance) != ADC4))
+  ((((__HANDLE__)->Instance) != ADC2) && (((__HANDLE__)->Instance) != ADC4))
 #elif defined(STM32G411xB) || defined(STM32G411xC) || defined(STM32G414xx) || defined(STM32GBK1CB) || defined(STM32G431xx) || defined(STM32G441xx) || defined(STM32G471xx)
 #define ADC_BATTERY_VOLTAGE_INSTANCE(__HANDLE__)  (((__HANDLE__)->Instance) != ADC2)
 #elif defined(STM32G491xx) || defined(STM32G4A1xx)
