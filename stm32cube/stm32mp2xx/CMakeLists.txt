@@ -1,9 +1,9 @@
 # Copyright (C) 2025 Savoir-faire Linux, Inc.
-# Copyright (c) 2020 STMicroelectronics
+# Copyright (c) 2025 STMicroelectronics
 #
 # SPDX-License-Identifier: Apache-2.0
 
-zephyr_library_sources(soc/system_stm32mp2xx.c)
+zephyr_library_sources(soc/system_stm32mp2xx_m33.c)
 zephyr_library_sources(drivers/src/stm32mp2xx_hal.c)
 zephyr_library_sources(drivers/src/stm32mp2xx_hal_rcc.c)
 zephyr_library_sources(drivers/src/stm32mp2xx_hal_rcc_ex.c)
