@@ -419,6 +419,17 @@ extern "C" {
   * @}
   */
 
+/** @defgroup SYSTEM_LL_EC_VOLTAGE VREFBUF VOLTAGE
+  * @{
+  */
+#define LL_VREFBUF_VOLTAGE_SCALE0          VREFBUF_CSR_VRS_OUT1      /*!< Voltage reference scale 0 (VREF_OUT1) */
+#define LL_VREFBUF_VOLTAGE_SCALE1          VREFBUF_CSR_VRS_OUT2      /*!< Voltage reference scale 1 (VREF_OUT2) */
+#define LL_VREFBUF_VOLTAGE_SCALE2          VREFBUF_CSR_VRS_OUT3      /*!< Voltage reference scale 2 (VREF_OUT3) */
+#define LL_VREFBUF_VOLTAGE_SCALE3          VREFBUF_CSR_VRS_OUT4      /*!< Voltage reference scale 3 (VREF_OUT4) */
+/**
+  * @}
+  */
+
 /** @defgroup SYSTEM_LL_EC_LATENCY FLASH LATENCY
   * @{
   */
@@ -2317,6 +2328,114 @@ __STATIC_INLINE void LL_DBGMCU_APB4_GRP1_UnFreezePeriph(uint32_t Periphs)
 {
   CLEAR_BIT(DBGMCU->APB4FZ1, Periphs);
 }
+/**
+  * @}
+  */
+
+/** @defgroup SYSTEM_LL_EF_VREFBUF VREFBUF
+  * @{
+  */
+
+/**
+  * @brief  Enable Internal voltage reference
+  * @rmtoll VREFBUF_CSR  ENVR          LL_VREFBUF_Enable
+  * @retval None
+  */
+__STATIC_INLINE void LL_VREFBUF_Enable(void)
+{
+  SET_BIT(VREFBUF->CSR, VREFBUF_CSR_ENVR);
+}
+
+/**
+  * @brief  Disable Internal voltage reference
+  * @rmtoll VREFBUF_CSR  ENVR          LL_VREFBUF_Disable
+  * @retval None
+  */
+__STATIC_INLINE void LL_VREFBUF_Disable(void)
+{
+  CLEAR_BIT(VREFBUF->CSR, VREFBUF_CSR_ENVR);
+}
+
+/**
+  * @brief  Enable high impedance (VREF+pin is high impedance)
+  * @rmtoll VREFBUF_CSR  HIZ           LL_VREFBUF_EnableHIZ
+  * @retval None
+  */
+__STATIC_INLINE void LL_VREFBUF_EnableHIZ(void)
+{
+  SET_BIT(VREFBUF->CSR, VREFBUF_CSR_HIZ);
+}
+
+/**
+  * @brief  Disable high impedance (VREF+pin is internally connected to the voltage reference buffer output)
+  * @rmtoll VREFBUF_CSR  HIZ           LL_VREFBUF_DisableHIZ
+  * @retval None
+  */
+__STATIC_INLINE void LL_VREFBUF_DisableHIZ(void)
+{
+  CLEAR_BIT(VREFBUF->CSR, VREFBUF_CSR_HIZ);
+}
+
+/**
+  * @brief  Set the Voltage reference scale
+  * @rmtoll VREFBUF_CSR  VRS           LL_VREFBUF_SetVoltageScaling
+  * @param  Scale This parameter can be one of the following values:
+  *         @arg @ref LL_VREFBUF_VOLTAGE_SCALE0
+  *         @arg @ref LL_VREFBUF_VOLTAGE_SCALE1
+  *         @arg @ref LL_VREFBUF_VOLTAGE_SCALE2
+  *         @arg @ref LL_VREFBUF_VOLTAGE_SCALE3
+  * @retval None
+  */
+__STATIC_INLINE void LL_VREFBUF_SetVoltageScaling(uint32_t Scale)
+{
+  MODIFY_REG(VREFBUF->CSR, VREFBUF_CSR_VRS, Scale);
+}
+
+/**
+  * @brief  Get the Voltage reference scale
+  * @rmtoll VREFBUF_CSR  VRS           LL_VREFBUF_GetVoltageScaling
+  * @retval Returned value can be one of the following values:
+  *         @arg @ref LL_VREFBUF_VOLTAGE_SCALE0
+  *         @arg @ref LL_VREFBUF_VOLTAGE_SCALE1
+  *         @arg @ref LL_VREFBUF_VOLTAGE_SCALE2
+  *         @arg @ref LL_VREFBUF_VOLTAGE_SCALE3
+  */
+__STATIC_INLINE uint32_t LL_VREFBUF_GetVoltageScaling(void)
+{
+  return (uint32_t)(READ_BIT(VREFBUF->CSR, VREFBUF_CSR_VRS));
+}
+
+/**
+  * @brief  Check if Voltage reference buffer is ready
+  * @rmtoll VREFBUF_CSR  VRR           LL_VREFBUF_IsVREFReady
+  * @retval State of bit (1 or 0).
+  */
+__STATIC_INLINE uint32_t LL_VREFBUF_IsVREFReady(void)
+{
+  return ((READ_BIT(VREFBUF->CSR, VREFBUF_CSR_VRR) == VREFBUF_CSR_VRR) ? 1UL : 0UL);
+}
+
+/**
+  * @brief  Get the trimming code for VREFBUF calibration
+  * @rmtoll VREFBUF_CCR  TRIM          LL_VREFBUF_GetTrimming
+  * @retval Between 0 and 0x3F
+  */
+__STATIC_INLINE uint32_t LL_VREFBUF_GetTrimming(void)
+{
+  return (uint32_t)(READ_BIT(VREFBUF->CCR, VREFBUF_CCR_TRIM));
+}
+
+/**
+  * @brief  Set the trimming code for VREFBUF calibration (Tune the internal reference buffer voltage)
+  * @rmtoll VREFBUF_CCR  TRIM          LL_VREFBUF_SetTrimming
+  * @param  Value Between 0 and 0x3F
+  * @retval None
+  */
+__STATIC_INLINE void LL_VREFBUF_SetTrimming(uint32_t Value)
+{
+  MODIFY_REG(VREFBUF->CCR, VREFBUF_CCR_TRIM, Value);
+}
+
 /**
   * @}
   */
