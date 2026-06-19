@@ -63,4 +63,12 @@ Patch List:
      - Impacted file: drivers/include/stm32h7xx_ll_system.h
      - See also: https://github.com/zephyrproject-rtos/hal_stm32/pull/381
 
+   *Fix CCM partial-word output handling from next HAL release
+     Fixes CCM partial-word output handling for Non-Multiple of 4 Byte Payloads.
+     Fix applied from stm32h7xx-hal-driver repository:
+     https://github.com/STMicroelectronics/stm32h7xx-hal-driver/commit/cd566efa4e52854f5780e9c022a12af5bda1ad78
+     - Impacted file: drivers/src/stm32h7xx_hal_cryp.c
+     - See also: https://github.com/zephyrproject-rtos/hal_stm32/pull/380
+     - ST Internal Reference: 226589
+
    See release_note.html from STM32Cube

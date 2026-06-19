@@ -365,6 +365,7 @@ static HAL_StatusTypeDef CRYP_WaitOnIFEMFlag(const CRYP_HandleTypeDef *hcryp, ui
 static HAL_StatusTypeDef CRYP_WaitOnBUSYFlag(const CRYP_HandleTypeDef *hcryp, uint32_t Timeout);
 static HAL_StatusTypeDef CRYP_WaitOnOFNEFlag(const CRYP_HandleTypeDef *hcryp, uint32_t Timeout);
 static HAL_StatusTypeDef CRYP_TDES_Process(CRYP_HandleTypeDef *hcryp, uint32_t Timeout);
+static void CRYP_CopyPartialOutputWord(uint32_t *pOutputWord, uint32_t word, uint32_t dataType, uint32_t validBytes);
 
 /**
   * @}
@@ -2891,6 +2892,49 @@ static void CRYP_SetKey(CRYP_HandleTypeDef *hcryp, uint32_t KeySize)
   }
 }
 
+static void CRYP_CopyPartialOutputWord(uint32_t *pOutputWord, uint32_t word, uint32_t dataType, uint32_t validBytes)
+{
+  uint8_t *pDst = (uint8_t *)pOutputWord;
+  uint8_t *pSrc = (uint8_t *)&word;
+  uint32_t dstIndex = 0U;
+  uint32_t index;
+  uint32_t maskValue;
+  /* DataType-dependent byte maps used to keep only valid bytes from the last partial CCM word. */
+  const uint32_t mask[16] = {0x0U, 0xFF000000U, 0xFFFF0000U, 0xFFFFFF00U,
+                             0x0U, 0x0000FF00U, 0x0000FFFFU, 0xFF00FFFFU,
+                             0x0U, 0x000000FFU, 0x0000FFFFU, 0x00FFFFFFU,
+                             0x0U, 0x000000FFU, 0x0000FFFFU, 0x00FFFFFFU
+                            };
+
+  if (validBytes >= 4U)
+  {
+    *pOutputWord = word;
+    return;
+  }
+
+  /* Select bytes that are valid for the active DataType, then compact them at output start. */
+  maskValue = mask[((dataType >> 5U) * 2U) + validBytes];
+
+  for (index = 0U; index < 4U; index++)
+  {
+    if ((maskValue & (0xFFU << (index * 8U))) != 0U)
+    {
+      pDst[dstIndex] = pSrc[index];
+      dstIndex++;
+      if (dstIndex == validBytes)
+      {
+        break;
+      }
+    }
+  }
+
+  for (index = dstIndex; index < 4U; index++)
+  {
+    /* Zero-fill trailing bytes to keep deterministic output for non-aligned payload sizes. */
+    pDst[index] = 0U;
+  }
+}
+
 /**
   * @brief  Encryption/Decryption process in AES GCM mode and prepare the authentication TAG
   * @param  hcryp: pointer to a CRYP_HandleTypeDef structure that contains
@@ -2908,8 +2952,6 @@ static HAL_StatusTypeDef CRYP_AESGCM_Process(CRYP_HandleTypeDef *hcryp, uint32_t
   uint32_t tmp;
   uint32_t lastwordsize ;
   uint32_t lastoutputwordsize;
-  uint32_t nolastpaddingbytes;
-  uint8_t *pval;
   uint16_t outcount;  /* Temporary CrypOutCount Value */
   uint32_t DoKeyIVConfig = 1U; /* By default, carry out peripheral Key and IV configuration */
   const uint32_t mask[16] = {0x0U, 0xFF000000U, 0xFFFF0000U, 0xFFFFFF00U,  /* 32- bit data type */
@@ -3147,39 +3189,10 @@ static HAL_StatusTypeDef CRYP_AESGCM_Process(CRYP_HandleTypeDef *hcryp, uint32_t
 
         for (index = 0U; index < lastoutputwordsize; index++)
         {
-          pval = (uint8_t *)(hcryp->pCrypOutBuffPtr + (hcryp->CrypOutCount));
-
-          if (index == (lastoutputwordsize - 1U))
+          if ((index == (lastoutputwordsize - 1U)) && ((npblb % 4U) != 0U))
           {
-            nolastpaddingbytes = npblb % 4U;
-
-            switch (nolastpaddingbytes)
-            {
-              case 1:
-                *(pval) = (uint8_t)(temp[index]);
-                pval++;
-                *(pval) = (uint8_t)(temp[index] >> 8U);
-                pval++;
-                *(pval) = (uint8_t)(temp[index] >> 16U);
-                break;
-              case 2:
-                *(pval) = (uint8_t)(temp[index]);
-                pval++;
-                *(pval) = (uint8_t)(temp[index] >> 8U);
-                break;
-              case 3:
-                *(pval) = (uint8_t)(temp[index]);
-                break;
-              default:
-                *(pval) = (uint8_t)(temp[index]);
-                pval++;
-                *(pval) = (uint8_t)(temp[index] >> 8U);
-                pval++;
-                *(pval) = (uint8_t)(temp[index] >> 16U);
-                pval++;
-                *(pval) = (uint8_t)(temp[index] >> 24U);
-                break;
-            }
+            CRYP_CopyPartialOutputWord(hcryp->pCrypOutBuffPtr + hcryp->CrypOutCount, temp[index],
+                                       hcryp->Init.DataType, 4U - (npblb % 4U));
           }
           else
           {
@@ -3532,10 +3545,17 @@ static HAL_StatusTypeDef CRYP_AESCCM_Process(CRYP_HandleTypeDef *hcryp, uint32_t
   uint32_t wordsize = (uint32_t)(hcryp->Size) / 4U;
   uint32_t npblb ;
   uint32_t lastwordsize ;
+  uint32_t lastoutputwordsize;
   uint32_t temp[4] = {0};  /* Temporary CrypOutBuff */
   uint32_t index ;
+  uint32_t tmp;
   uint16_t outcount;  /* Temporary CrypOutCount Value */
   uint32_t DoKeyIVConfig = 1U; /* By default, carry out peripheral Key and IV configuration */
+  const uint32_t mask[16] = {0x0U, 0xFF000000U, 0xFFFF0000U, 0xFFFFFF00U,  /* 32- bit data type */
+                             0x0U, 0x0000FF00U, 0x0000FFFFU, 0xFF00FFFFU,  /* 16- bit data type */
+                             0x0U, 0x000000FFU, 0x0000FFFFU, 0x00FFFFFFU,  /* 8- bit data type */
+                             0x0U, 0x000000FFU, 0x0000FFFFU, 0x00FFFFFFU,  /* 1- bit data type */
+                            };
 
   if (hcryp->Init.KeyIVConfigSkip == CRYP_KEYIVCONFIG_ONCE)
   {
@@ -3747,20 +3767,21 @@ static HAL_StatusTypeDef CRYP_AESCCM_Process(CRYP_HandleTypeDef *hcryp, uint32_t
       }
 
       /* Number of valid words (lastwordsize) in last block */
-      if ((npblb % 4U) == 0U)
-      {
-        lastwordsize = (16U - npblb) / 4U;
-      }
-      else
-      {
-        lastwordsize = ((16U - npblb) / 4U) + 1U;
-      }
-
+      lastwordsize = (16U - npblb) / 4U;
       /* Write the last input block in the IN FIFO */
       for (index = 0U; index < lastwordsize; index ++)
       {
         hcryp->Instance->DIN  = *(uint32_t *)(hcryp->pCrypInBuffPtr + hcryp->CrypInCount);
         hcryp->CrypInCount++;
+      }
+      if ((npblb % 4U) != 0U)
+      {
+        /* Enter last bytes, padded with zeros */
+        tmp =  *(uint32_t *)(hcryp->pCrypInBuffPtr + hcryp->CrypInCount);
+        tmp &= mask[((hcryp->Init.DataType >> 5) * 2U) + ((16U - npblb) % 4U)];
+        hcryp->Instance->DIN = tmp;
+        index++;
+        lastwordsize = ((16U - npblb) / 4U) + 1U;
       }
 
       /* Pad the data with zeros to have a complete block */
@@ -3790,6 +3811,15 @@ static HAL_StatusTypeDef CRYP_AESCCM_Process(CRYP_HandleTypeDef *hcryp, uint32_t
         HAL_CRYP_ErrorCallback(hcryp);
 #endif /* USE_HAL_CRYP_REGISTER_CALLBACKS */
       }
+      /* Number of words in last block to read from DOUT*/
+      if ((npblb % 4U) == 0U)
+      {
+        lastoutputwordsize = (16U - npblb) / 4U;
+      }
+      else
+      {
+        lastoutputwordsize = ((16U - npblb) / 4U) + 1U;
+      }
 
       /*Read the output block from the output FIFO */
       if ((hcryp->Instance->SR & CRYP_FLAG_OFNE) != 0x0U)
@@ -3800,9 +3830,17 @@ static HAL_StatusTypeDef CRYP_AESCCM_Process(CRYP_HandleTypeDef *hcryp, uint32_t
           then get CrypOutBuff from temporary buffer */
           temp[index] = hcryp->Instance->DOUT;
         }
-        for (index = 0; index < lastwordsize; index++)
+        for (index = 0; index < lastoutputwordsize; index++)
         {
-          *(uint32_t *)(hcryp->pCrypOutBuffPtr + hcryp->CrypOutCount) = temp[index];
+          if ((index == (lastoutputwordsize - 1U)) && ((npblb % 4U) != 0U))
+          {
+            CRYP_CopyPartialOutputWord(hcryp->pCrypOutBuffPtr + hcryp->CrypOutCount, temp[index],
+                                       hcryp->Init.DataType, 4U - (npblb % 4U));
+          }
+          else
+          {
+            *(uint32_t *)(hcryp->pCrypOutBuffPtr + hcryp->CrypOutCount) = temp[index];
+          }
           hcryp->CrypOutCount++;
         }
       }
