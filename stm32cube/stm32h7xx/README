@@ -57,4 +57,10 @@ Patch List:
        drivers/src/stm32f7xx_hal_dfsdm.c
      ST Internal Reference: HAL1-27454
 
+   *Define new LL APIs for VREFBUF that will be part of the HAL next release.
+      Modifications applied from stm32h7xx-hal-driver repository:
+      https://github.com/STMicroelectronics/stm32h7xx-hal-driver/commit/13dbe01ff0be6a24e47d0b4d8cf4de3f22c754a
+     - Impacted file: drivers/include/stm32h7xx_ll_system.h
+     - See also: https://github.com/zephyrproject-rtos/hal_stm32/pull/381
+
    See release_note.html from STM32Cube
