@@ -3,6 +3,232 @@ name: Test
 on: [push, pull_request]
 
 jobs:
+  pinctrl-validation:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: check if pinctrl files were modified
+        id: changed
+        run: |
+          # Fetch the base commit so git diff can compare against it.
+          git fetch --no-tags --depth=1 origin "${{ github.event.pull_request.base.sha }}"
+
+          # Determine whether any pinctrl-relevant path changed:
+          #   - dts/**/*.dtsi      : generated pinctrl files
+          #   - dts/README.rst     : documents the HAL1 (STM32_open_pin_data) revision
+          #   - scripts/genpinctrl : the generation scripts themselves
+          pinctrl_changed=false
+          if ! git diff --quiet "${{ github.event.pull_request.base.sha }}" HEAD -- \
+            ':(glob)dts/**/*.dtsi' \
+            'dts/README.rst' \
+            'scripts/genpinctrl'; then
+            pinctrl_changed=true
+          fi
+
+          # For HAL2-based series (those with a dfp/ subdirectory), a bump of the
+          # series README also requires regenerating the pinctrl files.
+          # HAL1-based series READMEs are unrelated to pinctrl generation and must
+          # not trigger this job unnecessarily.
+          if [ "$pinctrl_changed" = false ]; then
+            for readme in $(git diff --name-only \
+                "${{ github.event.pull_request.base.sha }}" HEAD \
+                -- ':(glob)stm32cube/*/README'); do
+              series_dir=$(dirname "$readme")
+              if [ -d "$series_dir/dfp" ]; then
+                pinctrl_changed=true
+                break
+              fi
+            done
+          fi
+
+          echo "pinctrl=$pinctrl_changed" >> "$GITHUB_OUTPUT"
+
+      - name: Set up Python
+        if: steps.changed.outputs.pinctrl == 'true'
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: install dependencies
+        if: steps.changed.outputs.pinctrl == 'true'
+        run: |
+          pip3 install -r scripts/requirements.txt
+
+      - name: get expected STM32 Open Pin Data commit
+        if: steps.changed.outputs.pinctrl == 'true'
+        id: opendata
+        run: |
+          # Read the pinned STM32_open_pin_data commit hash from the "Commit:"
+          # field documented in dts/README.rst (the line immediately after the key).
+          commit=$(awk '/^Commit:/{getline; gsub(/^[[:space:]]+|[[:space:]]+$/, "", $0); print $0}' dts/README.rst)
+          if [ -z "$commit" ]; then
+            echo "Failed to find STM32 Open Pin Data commit in dts/README.rst"
+            exit 1
+          fi
+          echo "commit=$commit" >> "$GITHUB_OUTPUT"
+
+      - name: clone STM32 Open Pin Data
+        if: steps.changed.outputs.pinctrl == 'true'
+        run: |
+          git clone --depth 1 https://github.com/STMicroelectronics/STM32_open_pin_data.git /tmp/STM32_open_pin_data
+          git -C /tmp/STM32_open_pin_data fetch --depth 1 origin "${{ steps.opendata.outputs.commit }}"
+          git -C /tmp/STM32_open_pin_data checkout --detach "${{ steps.opendata.outputs.commit }}"
+
+      - name: clone STM32Cube DFP inputs
+        if: steps.changed.outputs.pinctrl == 'true'
+        run: |
+          mkdir -p /tmp/STM32Cube_DFP
+
+          # Each HAL2-capable series has a stm32cube/<series>/dfp/ directory.
+          # For each one, look up the pinned upstream commit from the series README,
+          # then resolve the DFP submodule URL and commit via the GitHub Contents API,
+          # and do a shallow clone of that exact commit.
+          for local_dfp in stm32cube/*/dfp; do
+            if [ ! -d "$local_dfp" ]; then
+              continue
+            fi
+
+            cube_dir=$(dirname "$local_dfp")
+            cube_name=$(basename "$cube_dir")
+            cube_readme="$cube_dir/README"
+            dfp_path="${cube_name}_dfp"
+
+            # Read the STM32Cube repo URL and commit hash documented in the series README.
+            cube_url=$(awk '/^URL:/{getline; gsub(/^[[:space:]]+|[[:space:]]+$/, "", $0); print $0}' "$cube_readme")
+            cube_commit=$(awk '/^Commit:/{getline; gsub(/^[[:space:]]+|[[:space:]]+$/, "", $0); print $0}' "$cube_readme")
+            if [ -z "$cube_url" ] || [ -z "$cube_commit" ]; then
+              echo "Failed to find STM32Cube URL or commit in $cube_readme"
+              exit 1
+            fi
+
+            # Query the GitHub Contents API to get the DFP submodule URL and commit
+            # at the documented STM32Cube revision.
+            cube_repo=${cube_url#https://github.com/}
+            cube_repo=${cube_repo%.git}
+            api_url="https://api.github.com/repos/$cube_repo/contents/$dfp_path?ref=$cube_commit"
+            curl -fsSL \
+              -H "Accept: application/vnd.github+json" \
+              -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+              -H "X-GitHub-Api-Version: 2022-11-28" \
+              "$api_url" > /tmp/dfp.json
+
+            dfp_url=$(jq -r '.submodule_git_url // ""' /tmp/dfp.json)
+            dfp_commit=$(jq -r '.sha // ""' /tmp/dfp.json)
+            dfp_type=$(jq -r '.type // ""' /tmp/dfp.json)
+            if [ "$dfp_type" != "submodule" ] || [ -z "$dfp_url" ] || [ -z "$dfp_commit" ]; then
+              echo "Failed to find DFP submodule information for $cube_name"
+              exit 1
+            fi
+
+            # Shallow-clone the DFP repository at the exact resolved commit.
+            mkdir -p "/tmp/STM32Cube_DFP/$dfp_path"
+            git -C "/tmp/STM32Cube_DFP/$dfp_path" init -q
+            git -C "/tmp/STM32Cube_DFP/$dfp_path" remote add origin "$dfp_url"
+            git -C "/tmp/STM32Cube_DFP/$dfp_path" fetch --depth 1 origin "$dfp_commit"
+            git -C "/tmp/STM32Cube_DFP/$dfp_path" checkout --detach "$dfp_commit"
+          done
+
+      - name: regenerate pinctrl files (HAL1)
+        if: steps.changed.outputs.pinctrl == 'true'
+        run: |
+          python3 scripts/genpinctrl/genpinctrl.py -p /tmp/STM32_open_pin_data -o dts
+
+      - name: regenerate pinctrl files (HAL2)
+        if: steps.changed.outputs.pinctrl == 'true'
+        run: |
+          python3 scripts/genpinctrl/genpinctrl_hal2.py -p /tmp/STM32Cube_DFP -o dts
+
+      - name: restore documented pinctrl patches
+        if: steps.changed.outputs.pinctrl == 'true'
+        run: |
+          # The generation scripts also regenerate dts/README.rst; restore it so
+          # the patch-list parsing below reads the committed version, not the
+          # regenerated one.
+          git restore -- dts/README.rst
+
+          # Parse the "Patch List:" section from dts/README.rst to get the list
+          # of pinctrl files that are known to carry manual (non-generated) patches.
+          mapfile -t patched_patterns < <(
+            awk '
+              /^Patch List:/ { in_patch_list = 1; next }
+              in_patch_list && /^[[:space:]]*- Impacted files:/ { in_files = 1; next }
+              in_files && /^[[:space:]]*dts\/.*-pinctrl\.dtsi[[:space:]]*$/ {
+                gsub(/^[[:space:]]+|[[:space:]]+$/, "", $0);
+                print;
+                next;
+              }
+              in_files && /^[[:space:]]*$/ { in_files = 0 }
+            ' dts/README.rst
+          )
+
+          # Collect all pinctrl files that differ from the freshly regenerated output.
+          mapfile -t modified_pinctrl_files < <(
+            git diff --name-only -- ':(glob)dts/**/*-pinctrl.dtsi'
+          )
+
+          patched_files=()
+          missing_patterns=()
+
+          # For each documented patch entry, verify that regeneration actually
+          # produced a diff for that file (i.e. the patch is still relevant).
+          for pattern in "${patched_patterns[@]}"; do
+            matched=false
+
+            for modified_file in "${modified_pinctrl_files[@]}"; do
+              if [[ "$modified_file" == $pattern ]]; then
+                patched_files+=("$modified_file")
+                matched=true
+              fi
+            done
+
+            if [ "$matched" = false ]; then
+              missing_patterns+=("$pattern")
+            fi
+          done
+
+          # Abort if a documented patch entry no longer matches any regenerated diff:
+          # the patch may have been upstreamed or its file path may be stale.
+          if [ "${#missing_patterns[@]}" -gt 0 ]; then
+            echo "Documented pinctrl patch entries did not match any regenerated diff:"
+            printf '  - %s\n' "${missing_patterns[@]}"
+            echo
+            echo "The documented patch may no longer be needed, or its impacted"
+            echo "file path/pattern may be stale. Update dts/README.rst before"
+            echo "rerunning the pinctrl validation."
+            exit 1
+          fi
+
+          # Restore the committed (patched) version of each manually-patched file
+          # so that the final diff check ignores intentional divergences.
+          if [ "${#patched_files[@]}" -gt 0 ]; then
+            git restore -- "${patched_files[@]}"
+          fi
+
+      - name: validate generated files are up to date
+        if: steps.changed.outputs.pinctrl == 'true'
+        run: |
+          if ! git diff --quiet -- dts; then
+            echo "Pinctrl validation failed."
+            echo
+            echo "The workflow regenerated pinctrl files from the documented"
+            echo "input revisions and script configuration, taking the documented"
+            echo "Patch List into account."
+            echo "The generated files differ from the committed batch of"
+            echo "-pinctrl.dtsi files, which should not be the case."
+            echo
+            echo "Unexpected files still modified after regeneration:"
+            git --no-pager diff --name-status -- dts
+            echo
+            echo "Generated pinctrl diff summary:"
+            git --no-pager diff --stat -- ':(glob)dts/**/*.dtsi'
+            echo
+            echo "This usually means the generated pinctrl files are incomplete,"
+            echo "were generated from the wrong source revision, or include an"
+            echo "undocumented manual change."
+            exit 1
+          fi
+
   build:
     runs-on: ubuntu-latest
     strategy:
