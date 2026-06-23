@@ -16,6 +16,14 @@
 #       (inverse conversion is performed by this script)
 #       - e.g.: CONFIG_SOC = "stm32f030xc" -> #define STM32F030xC
 #
+#   * CONFIG_STM32CUBE_SOC_NAME_OVERRIDE (optional): SoC name override
+#     There are a few cases where the value of CONFIG_SOC does not match
+#     what the HAL/LL model selection define should be. For example, on
+#     STM32F4 series, both STM32F401xD and STM32F401xE SoCs share the same
+#     define `STM32F401xE`. The value of CONFIG_STM32CUBE_SOC_NAME_OVERRIDE
+#     is used in place of CONFIG_SOC if the option exists (which is not the
+#     case by default, since most SoC names match the CMSIS define).
+#
 #   * CONFIG_SOC_SERIES_{SERIES_NAME}: name of the STM32 series
 #     - Corresponding STM32Cube package is included in the build
 #       - Found in subfolder "{SERIES_NAME}" or "{SERIES_NAME}x"
@@ -27,7 +35,13 @@ zephyr_library()
 
 # Convert the Zephyr lowercase SoC name to the value expected by STM32Cube
 # Example: "stm32f030xc" --TOUPPER--> "STM32F030XC" --REPLACE--> "STM32F030xC"
-string(TOUPPER ${CONFIG_SOC} _STM32CUBE_CPU)
+# Use CONFIG_STM32CUBE_SOC_NAME_OVERRIDE as source if it exists which indicates
+# a special case SoC; otherwise, CONFIG_SOC should have the right value.
+if(CONFIG_STM32CUBE_SOC_NAME_OVERRIDE)
+  string(TOUPPER ${CONFIG_STM32CUBE_SOC_NAME_OVERRIDE} _STM32CUBE_CPU)
+else()
+  string(TOUPPER ${CONFIG_SOC} _STM32CUBE_CPU)
+endif()
 string(REPLACE "X" "x" STM32CUBE_CPU ${_STM32CUBE_CPU})
 
 # Provide the minimal definitions needed by Cube to function
