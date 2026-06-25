@@ -770,8 +770,6 @@ HAL_StatusTypeDef HAL_ETH_Start(ETH_HandleTypeDef *heth)
   */
 HAL_StatusTypeDef HAL_ETH_Start_IT(ETH_HandleTypeDef *heth)
 {
-  uint32_t tmpreg1;
-
   if (heth->gState == HAL_ETH_STATE_READY)
   {
     heth->gState = HAL_ETH_STATE_BUSY;
@@ -785,33 +783,18 @@ HAL_StatusTypeDef HAL_ETH_Start_IT(ETH_HandleTypeDef *heth)
     /* Build all descriptors */
     ETH_UpdateDescriptor(heth);
 
-    /* Wait until the write operation will be taken into account :
+    /* Enable the DMA transmission and reception */
+    SET_BIT(heth->Instance->DMAOMR, (ETH_DMAOMR_ST | ETH_DMAOMR_SR));
+
+    /* Enable the MAC transmission and reception */
+    SET_BIT(heth->Instance->MACCR, (ETH_MACCR_TE | ETH_MACCR_RE));
+
+    /* Wait until the write operations will be taken into account :
     at least four TX_CLK/RX_CLK clock cycles */
-    tmpreg1 = (heth->Instance)->MACCR;
     HAL_Delay(ETH_REG_WRITE_DELAY);
-    (heth->Instance)->MACCR = tmpreg1;
-
-    /* Enable the DMA transmission */
-    SET_BIT(heth->Instance->DMAOMR, ETH_DMAOMR_ST);
-
-    /* Enable the DMA reception */
-    SET_BIT(heth->Instance->DMAOMR, ETH_DMAOMR_SR);
 
     /* Flush Transmit FIFO */
     ETH_FlushTransmitFIFO(heth);
-
-
-    /* Enable the MAC transmission */
-    SET_BIT(heth->Instance->MACCR, ETH_MACCR_TE);
-
-    /* Enable the MAC reception */
-    SET_BIT(heth->Instance->MACCR, ETH_MACCR_RE);
-
-    /* Wait until the write operation will be taken into account :
-    at least four TX_CLK/RX_CLK clock cycles */
-    tmpreg1 = (heth->Instance)->MACCR;
-    HAL_Delay(ETH_REG_WRITE_DELAY);
-    (heth->Instance)->MACCR = tmpreg1;
 
     /* Enable ETH DMA interrupts:
     - Tx complete interrupt
