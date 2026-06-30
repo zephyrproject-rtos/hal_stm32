@@ -1,0 +1,86 @@
+# SPDX-FileCopyrightText: Copyright (c) STMicroelectronics
+# SPDX-License-Identifier: Apache-2.0
+#
+# REUSE.toml — REUSE Specification 3.3 bulk annotations for hal_stm32
+# https://reuse.software/spec-3.3/
+#
+# This file provides SPDX license and copyright metadata for files that do not
+# carry in-file SPDX-License-Identifier or SPDX-FileCopyrightText tags.
+# In-file tags always take
+# precedence over entries below (REUSE spec §3.3).
+#
+# Licenses referenced here must have their full text under LICENSES/.
+
+version = 1
+
+# ---------------------------------------------------------------------------
+# Zephyr integration files (CMakeLists, module metadata, scripts, DTS, …)
+# ---------------------------------------------------------------------------
+[[annotations]]
+path = [
+  "CMakeLists.txt",
+  "README.rst",
+  "zephyr/module.yml",
+  "scripts/**",
+  "dts/**",
+  "lib/**/CMakeLists.txt",
+  "stm32cube/**/CMakeLists.txt",
+  "stm32cube/series_list.cmake",
+]
+SPDX-FileCopyrightText = "Copyright The Zephyr Project Contributors"
+SPDX-License-Identifier = "Apache-2.0"
+
+# ---------------------------------------------------------------------------
+# STM32Cube HAL1 SOC headers and startup files (Apache-2.0)
+# ---------------------------------------------------------------------------
+[[annotations]]
+path = "stm32cube/*/soc/**"
+SPDX-FileCopyrightText = "Copyright (c) STMicroelectronics"
+SPDX-License-Identifier = "Apache-2.0"
+
+# ---------------------------------------------------------------------------
+# STM32Cube HAL/LL driver files and HAL2 dfp (BSD-3-Clause)
+# ---------------------------------------------------------------------------
+[[annotations]]
+path = "stm32cube/*/drivers/**"
+SPDX-FileCopyrightText = "Copyright (c) STMicroelectronics"
+SPDX-License-Identifier = "BSD-3-Clause"
+
+# HAL2-based series: dfp
+[[annotations]]
+path = "stm32cube/*/dfp/**"
+SPDX-FileCopyrightText = "Copyright (c) STMicroelectronics"
+SPDX-License-Identifier = "BSD-3-Clause"
+
+# Common LL headers shared across series
+[[annotations]]
+path = "stm32cube/common_ll/**"
+SPDX-FileCopyrightText = "Copyright (c) STMicroelectronics"
+SPDX-License-Identifier = "Apache-2.0"
+
+# ---------------------------------------------------------------------------
+# Library components under lib/ (BSD-3-Clause, except ll_cmd_lib)
+# ---------------------------------------------------------------------------
+[[annotations]]
+path = [
+  "lib/stm32wb/**",
+  "lib/stm32wba/**",
+  "lib/stm32wb0/**",
+  "lib/vc8000nanoe/**",
+]
+SPDX-FileCopyrightText = "Copyright (c) STMicroelectronics"
+SPDX-License-Identifier = "BSD-3-Clause"
+
+# MIT exception: WBA link-layer command library
+[[annotations]]
+path = "lib/stm32wba/STM32_WPAN/link_layer/ll_cmd_lib/**"
+SPDX-FileCopyrightText = "Copyright (c) STMicroelectronics"
+SPDX-License-Identifier = "MIT"
+
+# ---------------------------------------------------------------------------
+# Binary blobs — ST proprietary SLA0044
+# ---------------------------------------------------------------------------
+[[annotations]]
+path = "zephyr/blobs/**"
+SPDX-FileCopyrightText = "Copyright (c) STMicroelectronics"
+SPDX-License-Identifier = "LicenseRef-ST-SLA0044"
