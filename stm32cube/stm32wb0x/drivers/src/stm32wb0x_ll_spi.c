@@ -439,7 +439,7 @@ ErrorStatus LL_I2S_Init(SPI_TypeDef *SPIx, LL_I2S_InitTypeDef *I2S_InitStruct)
       if (SPIx == SPI3)
       {
 #endif /* SPI2 */
-	/* Retrieve I2S3 Clock Source from RCC */
+        /* Retrieve I2S3 Clock Source from RCC */
         rcc_clock = LL_RCC_GetSPI3I2SClockSource();
 
         /* Update sourceclock to I2S3 frequency */
@@ -459,7 +459,7 @@ ErrorStatus LL_I2S_Init(SPI_TypeDef *SPIx, LL_I2S_InitTypeDef *I2S_InitStruct)
       }
       else /* SPI2/I2S2 not available on all devices */
       {
-	/* Retrieve I2S2 Clock Source from RCC */
+        /* Retrieve I2S2 Clock Source from RCC */
         rcc_clock = LL_RCC_GetSPI2I2SClockSource();
 
         /* Update sourceclock to I2S2 frequency */

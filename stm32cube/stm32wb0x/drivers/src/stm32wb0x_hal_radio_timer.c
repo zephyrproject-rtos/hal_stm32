@@ -1276,6 +1276,7 @@ static VTIMER_HandleType *_update_user_timeout(VTIMER_HandleType *rootNode, uint
 #if defined (STM32WB06) || defined (STM32WB07)
       bool share = FALSE;
       uint8_t dummy = _check_radio_activity(FALSE);
+      UNUSED(dummy);
 #endif
       delay = curr->expiryTime - RADIO_TIMER_Context.last_system_time;
       if (delay > 0)

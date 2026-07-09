@@ -223,7 +223,7 @@ void HAL_GPIO_Init(GPIO_TypeDef  *GPIOx, GPIO_InitTypeDef *GPIO_Init)
 
         /* Configure Alternate function mapped with the current IO */
         temp = GPIOx->AFR[position >> 3u];
-        temp &= ~(0xFu << ((position & 0x07u) * 4u));
+        temp &= ~(0xFUL << ((position & 0x07u) * 4u));
         temp |= ((GPIO_Init->Alternate) << ((position & 0x07u) * 4u));
         GPIOx->AFR[position >> 3u] = temp;
       }
@@ -396,7 +396,7 @@ void HAL_GPIO_DeInit(GPIO_TypeDef  *GPIOx, uint32_t GPIO_Pin)
       GPIOx->MODER |= (GPIO_MODER_MODE0 << (position * 2u));
 
       /* Configure the default Alternate Function in current IO */
-      GPIOx->AFR[position >> 3u] &= ~(0xFu << ((position & 0x07u) * 4u)) ;
+      GPIOx->AFR[position >> 3u] &= ~(0xFUL << ((position & 0x07u) * 4u)) ;
 
       /* Deactivate the Pull-up and Pull-down resistor for the current IO */
       GPIOx->PUPDR &= ~(GPIO_PUPDR_PUPD0 << (position * 2u));
@@ -487,7 +487,7 @@ void HAL_GPIO_WritePin(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin, GPIO_PinState Pin
   * @brief  Set and clear several pins of a dedicated port in same cycle.
   * @note   This function uses GPIOx_BSRR and GPIOx_BRR registers to allow atomic read/modify
   *         accesses.
-  * @param  GPIOx where x can be (A..F) to select the GPIO peripheral for STM32WLxx family
+  * @param  GPIOx where x can be (A..F) to select the GPIO peripheral for STM32WB0x family
   * @param  PinReset specifies the port bits to be reset
   *         This parameter can be any combination of GPIO_Pin_x where x can be (0..15) or zero.
   * @param  PinSet specifies the port bits to be set

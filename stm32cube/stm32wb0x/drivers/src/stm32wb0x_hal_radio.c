@@ -197,7 +197,7 @@ static uint8_t CondRoutineRxTrue(ActionPacket *p)
 /* Round up HOT_TABLE_SIZE to an integer number of words then add 4 words for table management pointers */
 volatile uint32_t hot_table_radio_config_u32[((HOT_TABLE_SIZE + 3) >> 2) + 4] = {0x00};
 
-#ifndef __ZEPHYR__ /** do not define __blue_RAM here, it is defined in Zephyr wtm32wb0x/soc.c */
+#ifndef __ZEPHYR__ /** do not define __blue_RAM here, it is defined in Zephyr stm32wb0x/soc.c */
 /* BLUE RAM, reserved for radio communication. Not usable from the application */
 __SECTION(".bss.__blue_RAM")
 __REQUIRED(uint8_t __blue_RAM[CFG_NUM_RADIO_TASKS * sizeof(STATMACH_TypeDef) + sizeof(GLOBALSTATMACH_TypeDef)]) = {0,};
