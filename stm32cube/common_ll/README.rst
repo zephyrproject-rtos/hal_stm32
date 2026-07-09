@@ -34,7 +34,7 @@ stm32n6xx       1.3.0
 stm32u0xx       1.3.0
 stm32u3xx       1.3.0
 stm32u5xx       1.8.0
-stm32wb0x       1.4.0
+stm32wb0x       1.5.0
 stm32wbaxx      1.9.0
 stm32wbxx       1.24.0
 stm32wlxx       1.5.0
