@@ -98,9 +98,12 @@
 /* Macros to force exclusion of some unnecessary HCI/ACI commands from DTM */
 #define HCI_DISCONNECT_FORCE_DISABLED                                                   1
 #define HCI_READ_TRANSMIT_POWER_LEVEL_FORCE_DISABLED                                    1
+#define HCI_READ_AFH_CHANNEL_ASSESSMENT_MODE_FORCE_DISABLED                             1
+#define HCI_READ_AUTHENTICATED_PAYLOAD_TIMEOUT_FORCE_DISABLED                           1
 #define HCI_READ_LOCAL_SUPPORTED_COMMANDS_FORCE_DISABLED                                1
 #define HCI_READ_LOCAL_SUPPORTED_FEATURES_FORCE_DISABLED                                1
 #define HCI_READ_BD_ADDR_FORCE_DISABLED                                                 1
+#define HCI_LE_SET_EVENT_MASK_FORCE_DISABLED                                            1
 #define HCI_LE_READ_BUFFER_SIZE_FORCE_DISABLED                                          1
 #define HCI_LE_READ_BUFFER_SIZE_V2_FORCE_DISABLED                                       1
 #define HCI_LE_READ_LOCAL_SUPPORTED_FEATURES_FORCE_DISABLED                             1
@@ -139,7 +142,9 @@
 #define HCI_LE_SET_EXTENDED_ADVERTISING_DATA_FORCE_DISABLED                             1
 #define HCI_LE_SET_EXTENDED_SCAN_RESPONSE_DATA_FORCE_DISABLED                           1
 #define HCI_LE_SET_EXTENDED_ADVERTISING_ENABLE_FORCE_DISABLED                           1
+#define HCI_LE_READ_MAXIMUM_ADVERTISING_DATA_LENGTH_FORCE_DISABLED                      1
 #define HCI_LE_READ_NUMBER_OF_SUPPORTED_ADVERTISING_SETS_FORCE_DISABLED                 1
+#define HCI_LE_SET_PERIODIC_ADVERTISING_PARAMETERS_FORCE_DISABLED                       1
 #define HCI_LE_REMOVE_ADVERTISING_SET_FORCE_DISABLED                                    1
 #define HCI_LE_CLEAR_ADVERTISING_SETS_FORCE_DISABLED                                    1
 #define HCI_LE_SET_EXTENDED_SCAN_PARAMETERS_FORCE_DISABLED                              1
@@ -148,7 +153,23 @@
 #define HCI_LE_READ_TRANSMIT_POWER_FORCE_DISABLED                                       1
 #define HCI_LE_READ_RF_PATH_COMPENSATION_FORCE_DISABLED                                 1
 #define HCI_LE_READ_ANTENNA_INFORMATION_FORCE_DISABLED                                  1
+#define HCI_LE_READ_BUFFER_SIZE_V2_FORCE_DISABLED                                       1
+#define HCI_LE_REQUEST_PEER_SCA_FORCE_DISABLED                                          1
+#define HCI_LE_SET_HOST_FEATURE_FORCE_DISABLED                                          1
+#define HCI_LE_SET_EXTENDED_ADVERTISING_PARAMETERS_V2_FORCE_DISABLED                    1
+#define HCI_LE_EXTENDED_CREATE_CONNECTION_V2_FORCE_DISABLED                             1
+#define HCI_LE_READ_ALL_LOCAL_SUPPORTED_FEATURES_FORCE_DISABLED                         1
+#define HCI_LE_SET_HOST_FEATURE_V2_FORCE_DISABLED                                       1
+#define HCI_LE_ADD_DEVICE_TO_MONITORED_ADVERTISERS_LIST_FORCE_DISABLED                  1
+#define HCI_LE_CLEAR_MONITORED_ADVERTISERS_LIST_FORCE_DISABLED                          1
+#define HCI_LE_READ_MONITORED_ADVERTISERS_LIST_SIZE_FORCE_DISABLED                      1
+#define HCI_LE_ENABLE_MONITORING_ADVERTISERS_FORCE_DISABLED                             1
+#define HCI_LE_REMOVE_DEVICE_FROM_MONITORED_ADVERTISERS_LIST_FORCE_DISABLED             1
 #define ACI_HAL_GET_FW_BUILD_NUMBER_FORCE_DISABLED                                      1
+#define ACI_HAL_GET_FIRMWARE_DETAILS_FORCE_DISABLED                                     0
+#define ACI_HAL_TRANSMITTER_TEST_PACKETS_FORCE_DISABLED                                 1
+#define ACI_HAL_PERIPHERAL_LATENCY_ENABLE_FORCE_DISABLED                                1
+#define ACI_HAL_GET_EVT_FIFO_MAX_LEVEL_FORCE_DISABLED                                   1
 #endif
 
 #endif /* _DTM_CMD_EN_H_ */

@@ -104,10 +104,22 @@ typedef enum
 #define CONN_SUP_TIMEOUT_MS(x) ((uint16_t)((x)/10.0f))
 #define CONN_CE_LENGTH_MS(x) ((uint16_t)((x)/0.625f))
 
-/* Transparent Mode/DTM version (Bluetooth LE stack v4.x) */
+/* USER CODE BEGIN EM */
 #define DTM_FW_VERSION_MAJOR    1
-#define DTM_FW_VERSION_MINOR    2
+#define DTM_FW_VERSION_MINOR    5
 #define DTM_FW_VERSION_PATCH    0
+/* USER CODE END EM */
+
+/* Transparent Mode/DTM version */
+#ifndef DTM_FW_VERSION_MAJOR
+#define DTM_FW_VERSION_MAJOR    1
+#endif
+#ifndef DTM_FW_VERSION_MINOR
+#define DTM_FW_VERSION_MINOR    0
+#endif
+#ifndef DTM_FW_VERSION_PATCH
+#define DTM_FW_VERSION_PATCH    0
+#endif
 
 #define UART_INTERFACE
 
@@ -117,9 +129,6 @@ typedef enum
 #ifdef SPI_INTERFACE
 #define DTM_VARIANT             2
 #endif
-/* USER CODE BEGIN EM */
-
-/* USER CODE END EM */
 
 /* Exported functions ---------------------------------------------*/
 void ModulesInit(void);

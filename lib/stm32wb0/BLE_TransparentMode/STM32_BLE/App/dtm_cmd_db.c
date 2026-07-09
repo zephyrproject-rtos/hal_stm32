@@ -501,10 +501,10 @@ typedef PACKED(struct) hci_le_read_buffer_size_rp0_s {
   uint8_t HC_Total_Num_LE_ACL_Data_Packets;
 } hci_le_read_buffer_size_rp0;
 
-typedef PACKED(struct) hci_le_read_local_supported_features_rp0_s {
+typedef PACKED(struct) hci_le_read_local_supported_features_page_0_rp0_s {
   uint8_t Status;
   uint8_t LE_Features[8];
-} hci_le_read_local_supported_features_rp0;
+} hci_le_read_local_supported_features_page_0_rp0;
 
 typedef PACKED(struct) hci_le_set_random_address_cp0_s {
   uint8_t Random_Address[6];
@@ -663,13 +663,13 @@ typedef PACKED(struct) hci_le_read_channel_map_rp0_s {
   uint8_t LE_Channel_Map[5];
 } hci_le_read_channel_map_rp0;
 
-typedef PACKED(struct) hci_le_read_remote_features_cp0_s {
+typedef PACKED(struct) hci_le_read_remote_features_page_0_cp0_s {
   uint16_t Connection_Handle;
-} hci_le_read_remote_features_cp0;
+} hci_le_read_remote_features_page_0_cp0;
 
-typedef PACKED(struct) hci_le_read_remote_features_rp0_s {
+typedef PACKED(struct) hci_le_read_remote_features_page_0_rp0_s {
   uint8_t Status;
-} hci_le_read_remote_features_rp0;
+} hci_le_read_remote_features_page_0_rp0;
 
 typedef PACKED(struct) hci_le_encrypt_cp0_s {
   uint8_t Key[16];
@@ -1804,6 +1804,68 @@ typedef PACKED(struct) hci_le_set_periodic_advertising_parameters_v2_rp0_s {
   uint8_t Status;
   uint8_t Advertising_Handle;
 } hci_le_set_periodic_advertising_parameters_v2_rp0;
+
+typedef PACKED(struct) hci_le_read_all_local_supported_features_rp0_s {
+  uint8_t Status;
+  uint8_t Max_Page;
+  uint8_t LE_Features[248];
+} hci_le_read_all_local_supported_features_rp0;
+
+typedef PACKED(struct) hci_le_read_all_remote_features_cp0_s {
+  uint16_t Connection_Handle;
+  uint8_t Pages_Requested;
+} hci_le_read_all_remote_features_cp0;
+
+typedef PACKED(struct) hci_le_read_all_remote_features_rp0_s {
+  uint8_t Status;
+} hci_le_read_all_remote_features_rp0;
+
+typedef PACKED(struct) hci_le_set_host_feature_v2_cp0_s {
+  uint16_t Bit_Number;
+  uint8_t Bit_Value;
+} hci_le_set_host_feature_v2_cp0;
+
+typedef PACKED(struct) hci_le_set_host_feature_v2_rp0_s {
+  uint8_t Status;
+} hci_le_set_host_feature_v2_rp0;
+
+typedef PACKED(struct) hci_le_add_device_to_monitored_advertisers_list_cp0_s {
+  uint8_t Address_Type;
+  uint8_t Address[6];
+  int8_t RSSI_Low_Threshold;
+  int8_t RSSI_High_Threshold;
+  uint8_t Timeout;
+} hci_le_add_device_to_monitored_advertisers_list_cp0;
+
+typedef PACKED(struct) hci_le_add_device_to_monitored_advertisers_list_rp0_s {
+  uint8_t Status;
+} hci_le_add_device_to_monitored_advertisers_list_rp0;
+
+typedef PACKED(struct) hci_le_remove_device_from_monitored_advertisers_list_cp0_s {
+  uint8_t Address_Type;
+  uint8_t Address[6];
+} hci_le_remove_device_from_monitored_advertisers_list_cp0;
+
+typedef PACKED(struct) hci_le_remove_device_from_monitored_advertisers_list_rp0_s {
+  uint8_t Status;
+} hci_le_remove_device_from_monitored_advertisers_list_rp0;
+
+typedef PACKED(struct) hci_le_clear_monitored_advertisers_list_rp0_s {
+  uint8_t Status;
+} hci_le_clear_monitored_advertisers_list_rp0;
+
+typedef PACKED(struct) hci_le_read_monitored_advertisers_list_size_rp0_s {
+  uint8_t Status;
+  uint8_t Number;
+} hci_le_read_monitored_advertisers_list_size_rp0;
+
+typedef PACKED(struct) hci_le_enable_monitoring_advertisers_cp0_s {
+  uint8_t Enable;
+} hci_le_enable_monitoring_advertisers_cp0;
+
+typedef PACKED(struct) hci_le_enable_monitoring_advertisers_rp0_s {
+  uint8_t Status;
+} hci_le_enable_monitoring_advertisers_rp0;
 
 typedef PACKED(struct) aci_hal_get_fw_build_number_rp0_s {
   uint8_t Status;
@@ -3075,7 +3137,7 @@ uint16_t hci_read_bd_addr_process(uint8_t *buffer_in, uint16_t buffer_in_length,
 uint16_t hci_read_rssi_process(uint8_t *buffer_in, uint16_t buffer_in_length, uint8_t *buffer_out, uint16_t buffer_out_max_length);
 uint16_t hci_le_set_event_mask_process(uint8_t *buffer_in, uint16_t buffer_in_length, uint8_t *buffer_out, uint16_t buffer_out_max_length);
 uint16_t hci_le_read_buffer_size_process(uint8_t *buffer_in, uint16_t buffer_in_length, uint8_t *buffer_out, uint16_t buffer_out_max_length);
-uint16_t hci_le_read_local_supported_features_process(uint8_t *buffer_in, uint16_t buffer_in_length, uint8_t *buffer_out, uint16_t buffer_out_max_length);
+uint16_t hci_le_read_local_supported_features_page_0_process(uint8_t *buffer_in, uint16_t buffer_in_length, uint8_t *buffer_out, uint16_t buffer_out_max_length);
 uint16_t hci_le_set_random_address_process(uint8_t *buffer_in, uint16_t buffer_in_length, uint8_t *buffer_out, uint16_t buffer_out_max_length);
 uint16_t hci_le_set_advertising_parameters_process(uint8_t *buffer_in, uint16_t buffer_in_length, uint8_t *buffer_out, uint16_t buffer_out_max_length);
 uint16_t hci_le_read_advertising_physical_channel_tx_power_process(uint8_t *buffer_in, uint16_t buffer_in_length, uint8_t *buffer_out, uint16_t buffer_out_max_length);
@@ -3093,7 +3155,7 @@ uint16_t hci_le_remove_device_from_filter_accept_list_process(uint8_t *buffer_in
 uint16_t hci_le_connection_update_process(uint8_t *buffer_in, uint16_t buffer_in_length, uint8_t *buffer_out, uint16_t buffer_out_max_length);
 uint16_t hci_le_set_host_channel_classification_process(uint8_t *buffer_in, uint16_t buffer_in_length, uint8_t *buffer_out, uint16_t buffer_out_max_length);
 uint16_t hci_le_read_channel_map_process(uint8_t *buffer_in, uint16_t buffer_in_length, uint8_t *buffer_out, uint16_t buffer_out_max_length);
-uint16_t hci_le_read_remote_features_process(uint8_t *buffer_in, uint16_t buffer_in_length, uint8_t *buffer_out, uint16_t buffer_out_max_length);
+uint16_t hci_le_read_remote_features_page_0_process(uint8_t *buffer_in, uint16_t buffer_in_length, uint8_t *buffer_out, uint16_t buffer_out_max_length);
 uint16_t hci_le_encrypt_process(uint8_t *buffer_in, uint16_t buffer_in_length, uint8_t *buffer_out, uint16_t buffer_out_max_length);
 uint16_t hci_le_rand_process(uint8_t *buffer_in, uint16_t buffer_in_length, uint8_t *buffer_out, uint16_t buffer_out_max_length);
 uint16_t hci_le_enable_encryption_process(uint8_t *buffer_in, uint16_t buffer_in_length, uint8_t *buffer_out, uint16_t buffer_out_max_length);
@@ -3200,6 +3262,14 @@ uint16_t hci_le_set_periodic_advertising_response_data_process(uint8_t *buffer_i
 uint16_t hci_le_set_periodic_sync_subevent_process(uint8_t *buffer_in, uint16_t buffer_in_length, uint8_t *buffer_out, uint16_t buffer_out_max_length);
 uint16_t hci_le_extended_create_connection_v2_process(uint8_t *buffer_in, uint16_t buffer_in_length, uint8_t *buffer_out, uint16_t buffer_out_max_length);
 uint16_t hci_le_set_periodic_advertising_parameters_v2_process(uint8_t *buffer_in, uint16_t buffer_in_length, uint8_t *buffer_out, uint16_t buffer_out_max_length);
+uint16_t hci_le_read_all_local_supported_features_process(uint8_t *buffer_in, uint16_t buffer_in_length, uint8_t *buffer_out, uint16_t buffer_out_max_length);
+uint16_t hci_le_read_all_remote_features_process(uint8_t *buffer_in, uint16_t buffer_in_length, uint8_t *buffer_out, uint16_t buffer_out_max_length);
+uint16_t hci_le_set_host_feature_v2_process(uint8_t *buffer_in, uint16_t buffer_in_length, uint8_t *buffer_out, uint16_t buffer_out_max_length);
+uint16_t hci_le_add_device_to_monitored_advertisers_list_process(uint8_t *buffer_in, uint16_t buffer_in_length, uint8_t *buffer_out, uint16_t buffer_out_max_length);
+uint16_t hci_le_remove_device_from_monitored_advertisers_list_process(uint8_t *buffer_in, uint16_t buffer_in_length, uint8_t *buffer_out, uint16_t buffer_out_max_length);
+uint16_t hci_le_clear_monitored_advertisers_list_process(uint8_t *buffer_in, uint16_t buffer_in_length, uint8_t *buffer_out, uint16_t buffer_out_max_length);
+uint16_t hci_le_read_monitored_advertisers_list_size_process(uint8_t *buffer_in, uint16_t buffer_in_length, uint8_t *buffer_out, uint16_t buffer_out_max_length);
+uint16_t hci_le_enable_monitoring_advertisers_process(uint8_t *buffer_in, uint16_t buffer_in_length, uint8_t *buffer_out, uint16_t buffer_out_max_length);
 uint16_t aci_hal_get_fw_build_number_process(uint8_t *buffer_in, uint16_t buffer_in_length, uint8_t *buffer_out, uint16_t buffer_out_max_length);
 uint16_t aci_hal_get_firmware_details_process(uint8_t *buffer_in, uint16_t buffer_in_length, uint8_t *buffer_out, uint16_t buffer_out_max_length);
 uint16_t aci_hal_get_firmware_details_v2_process(uint8_t *buffer_in, uint16_t buffer_in_length, uint8_t *buffer_out, uint16_t buffer_out_max_length);
@@ -3385,9 +3455,9 @@ const hci_command_table_type hci_command_table[] = {
   /* hci_le_read_buffer_size */
   {0x2002, hci_le_read_buffer_size_process},
 #endif
-#if (!defined(HCI_LE_READ_LOCAL_SUPPORTED_FEATURES_ENABLED) || HCI_LE_READ_LOCAL_SUPPORTED_FEATURES_ENABLED) && !HCI_LE_READ_LOCAL_SUPPORTED_FEATURES_FORCE_DISABLED
-  /* hci_le_read_local_supported_features */
-  {0x2003, hci_le_read_local_supported_features_process},
+#if (!defined(HCI_LE_READ_LOCAL_SUPPORTED_FEATURES_PAGE_0_ENABLED) || HCI_LE_READ_LOCAL_SUPPORTED_FEATURES_PAGE_0_ENABLED) && !HCI_LE_READ_LOCAL_SUPPORTED_FEATURES_PAGE_0_FORCE_DISABLED
+  /* hci_le_read_local_supported_features_page_0 */
+  {0x2003, hci_le_read_local_supported_features_page_0_process},
 #endif
 #if (!defined(HCI_LE_SET_RANDOM_ADDRESS_ENABLED) || HCI_LE_SET_RANDOM_ADDRESS_ENABLED) && !HCI_LE_SET_RANDOM_ADDRESS_FORCE_DISABLED
   /* hci_le_set_random_address */
@@ -3457,9 +3527,9 @@ const hci_command_table_type hci_command_table[] = {
   /* hci_le_read_channel_map */
   {0x2015, hci_le_read_channel_map_process},
 #endif
-#if (!defined(HCI_LE_READ_REMOTE_FEATURES_ENABLED) || HCI_LE_READ_REMOTE_FEATURES_ENABLED) && !HCI_LE_READ_REMOTE_FEATURES_FORCE_DISABLED
-  /* hci_le_read_remote_features */
-  {0x2016, hci_le_read_remote_features_process},
+#if (!defined(HCI_LE_READ_REMOTE_FEATURES_PAGE_0_ENABLED) || HCI_LE_READ_REMOTE_FEATURES_PAGE_0_ENABLED) && !HCI_LE_READ_REMOTE_FEATURES_PAGE_0_FORCE_DISABLED
+  /* hci_le_read_remote_features_page_0 */
+  {0x2016, hci_le_read_remote_features_page_0_process},
 #endif
 #if (!defined(HCI_LE_ENCRYPT_ENABLED) || HCI_LE_ENCRYPT_ENABLED) && !HCI_LE_ENCRYPT_FORCE_DISABLED
   /* hci_le_encrypt */
@@ -3884,6 +3954,38 @@ const hci_command_table_type hci_command_table[] = {
 #if (!defined(HCI_LE_SET_PERIODIC_ADVERTISING_PARAMETERS_V2_ENABLED) || HCI_LE_SET_PERIODIC_ADVERTISING_PARAMETERS_V2_ENABLED) && !HCI_LE_SET_PERIODIC_ADVERTISING_PARAMETERS_V2_FORCE_DISABLED
   /* hci_le_set_periodic_advertising_parameters_v2 */
   {0x2086, hci_le_set_periodic_advertising_parameters_v2_process},
+#endif
+#if (!defined(HCI_LE_READ_ALL_LOCAL_SUPPORTED_FEATURES_ENABLED) || HCI_LE_READ_ALL_LOCAL_SUPPORTED_FEATURES_ENABLED) && !HCI_LE_READ_ALL_LOCAL_SUPPORTED_FEATURES_FORCE_DISABLED
+  /* hci_le_read_all_local_supported_features */
+  {0x2087, hci_le_read_all_local_supported_features_process},
+#endif
+#if (!defined(HCI_LE_READ_ALL_REMOTE_FEATURES_ENABLED) || HCI_LE_READ_ALL_REMOTE_FEATURES_ENABLED) && !HCI_LE_READ_ALL_REMOTE_FEATURES_FORCE_DISABLED
+  /* hci_le_read_all_remote_features */
+  {0x2088, hci_le_read_all_remote_features_process},
+#endif
+#if (!defined(HCI_LE_SET_HOST_FEATURE_V2_ENABLED) || HCI_LE_SET_HOST_FEATURE_V2_ENABLED) && !HCI_LE_SET_HOST_FEATURE_V2_FORCE_DISABLED
+  /* hci_le_set_host_feature_v2 */
+  {0x2097, hci_le_set_host_feature_v2_process},
+#endif
+#if (!defined(HCI_LE_ADD_DEVICE_TO_MONITORED_ADVERTISERS_LIST_ENABLED) || HCI_LE_ADD_DEVICE_TO_MONITORED_ADVERTISERS_LIST_ENABLED) && !HCI_LE_ADD_DEVICE_TO_MONITORED_ADVERTISERS_LIST_FORCE_DISABLED
+  /* hci_le_add_device_to_monitored_advertisers_list */
+  {0x2098, hci_le_add_device_to_monitored_advertisers_list_process},
+#endif
+#if (!defined(HCI_LE_REMOVE_DEVICE_FROM_MONITORED_ADVERTISERS_LIST_ENABLED) || HCI_LE_REMOVE_DEVICE_FROM_MONITORED_ADVERTISERS_LIST_ENABLED) && !HCI_LE_REMOVE_DEVICE_FROM_MONITORED_ADVERTISERS_LIST_FORCE_DISABLED
+  /* hci_le_remove_device_from_monitored_advertisers_list */
+  {0x2099, hci_le_remove_device_from_monitored_advertisers_list_process},
+#endif
+#if (!defined(HCI_LE_CLEAR_MONITORED_ADVERTISERS_LIST_ENABLED) || HCI_LE_CLEAR_MONITORED_ADVERTISERS_LIST_ENABLED) && !HCI_LE_CLEAR_MONITORED_ADVERTISERS_LIST_FORCE_DISABLED
+  /* hci_le_clear_monitored_advertisers_list */
+  {0x209a, hci_le_clear_monitored_advertisers_list_process},
+#endif
+#if (!defined(HCI_LE_READ_MONITORED_ADVERTISERS_LIST_SIZE_ENABLED) || HCI_LE_READ_MONITORED_ADVERTISERS_LIST_SIZE_ENABLED) && !HCI_LE_READ_MONITORED_ADVERTISERS_LIST_SIZE_FORCE_DISABLED
+  /* hci_le_read_monitored_advertisers_list_size */
+  {0x209b, hci_le_read_monitored_advertisers_list_size_process},
+#endif
+#if (!defined(HCI_LE_ENABLE_MONITORING_ADVERTISERS_ENABLED) || HCI_LE_ENABLE_MONITORING_ADVERTISERS_ENABLED) && !HCI_LE_ENABLE_MONITORING_ADVERTISERS_FORCE_DISABLED
+  /* hci_le_enable_monitoring_advertisers */
+  {0x209c, hci_le_enable_monitoring_advertisers_process},
 #endif
 #if (!defined(ACI_HAL_GET_FW_BUILD_NUMBER_ENABLED) || ACI_HAL_GET_FW_BUILD_NUMBER_ENABLED) && !ACI_HAL_GET_FW_BUILD_NUMBER_FORCE_DISABLED
   /* aci_hal_get_fw_build_number */
@@ -4977,17 +5079,17 @@ fail:
 }
 #endif
 
-#if (!defined(HCI_LE_READ_LOCAL_SUPPORTED_FEATURES_ENABLED) || HCI_LE_READ_LOCAL_SUPPORTED_FEATURES_ENABLED) && !HCI_LE_READ_LOCAL_SUPPORTED_FEATURES_FORCE_DISABLED
-/* tBleStatus hci_le_read_local_supported_features(uint8_t LE_Features[8]);
+#if (!defined(HCI_LE_READ_LOCAL_SUPPORTED_FEATURES_PAGE_0_ENABLED) || HCI_LE_READ_LOCAL_SUPPORTED_FEATURES_PAGE_0_ENABLED) && !HCI_LE_READ_LOCAL_SUPPORTED_FEATURES_PAGE_0_FORCE_DISABLED
+/* tBleStatus hci_le_read_local_supported_features_page_0(uint8_t LE_Features[8]);
  */
 /* Command len: 0 */
 /* Response len: 1 + 8 */
-uint16_t hci_le_read_local_supported_features_process(uint8_t *buffer_in, uint16_t buffer_in_length, uint8_t *buffer_out, uint16_t buffer_out_max_length)
+uint16_t hci_le_read_local_supported_features_page_0_process(uint8_t *buffer_in, uint16_t buffer_in_length, uint8_t *buffer_out, uint16_t buffer_out_max_length)
 {
 
   int output_size = 1 + 8;
   /* Output params */
-  hci_le_read_local_supported_features_rp0 *rp0 = (hci_le_read_local_supported_features_rp0 *) (buffer_out + 6);
+  hci_le_read_local_supported_features_page_0_rp0 *rp0 = (hci_le_read_local_supported_features_page_0_rp0 *) (buffer_out + 6);
   uint8_t LE_Features[8] = {0};
 
   rp0->Status = BLE_ERROR_INVALID_HCI_CMD_PARAMS;
@@ -4997,7 +5099,7 @@ uint16_t hci_le_read_local_supported_features_process(uint8_t *buffer_in, uint16
     goto fail;
   }
 
-  rp0->Status = hci_le_read_local_supported_features(LE_Features);
+  rp0->Status = hci_le_read_local_supported_features_page_0(LE_Features);
 fail:
   Osal_MemCpy((void *) rp0->LE_Features,(const void *) LE_Features, 8);
   buffer_out[0] = 0x04;
@@ -5638,15 +5740,15 @@ fail:
 }
 #endif
 
-#if (!defined(HCI_LE_READ_REMOTE_FEATURES_ENABLED) || HCI_LE_READ_REMOTE_FEATURES_ENABLED) && !HCI_LE_READ_REMOTE_FEATURES_FORCE_DISABLED
-/* tBleStatus hci_le_read_remote_features(uint16_t Connection_Handle);
+#if (!defined(HCI_LE_READ_REMOTE_FEATURES_PAGE_0_ENABLED) || HCI_LE_READ_REMOTE_FEATURES_PAGE_0_ENABLED) && !HCI_LE_READ_REMOTE_FEATURES_PAGE_0_FORCE_DISABLED
+/* tBleStatus hci_le_read_remote_features_page_0(uint16_t Connection_Handle);
  */
 /* Command len: 2 */
 /* Response len: 1 */
-uint16_t hci_le_read_remote_features_process(uint8_t *buffer_in, uint16_t buffer_in_length, uint8_t *buffer_out, uint16_t buffer_out_max_length)
+uint16_t hci_le_read_remote_features_page_0_process(uint8_t *buffer_in, uint16_t buffer_in_length, uint8_t *buffer_out, uint16_t buffer_out_max_length)
 {
   /* Input params */
-  hci_le_read_remote_features_cp0 *cp0 = (hci_le_read_remote_features_cp0 *)(buffer_in + (0));
+  hci_le_read_remote_features_page_0_cp0 *cp0 = (hci_le_read_remote_features_page_0_cp0 *)(buffer_in + (0));
 
   int output_size = 1;
   /* Output params */
@@ -5659,7 +5761,7 @@ uint16_t hci_le_read_remote_features_process(uint8_t *buffer_in, uint16_t buffer
     goto fail;
   }
 
-  *status = hci_le_read_remote_features(cp0->Connection_Handle /* 2 */);
+  *status = hci_le_read_remote_features_page_0(cp0->Connection_Handle /* 2 */);
 fail:
   buffer_out[0] = 0x04;
   buffer_out[1] = 0x0F;
@@ -10112,6 +10214,286 @@ fail:
   buffer_out[2] = output_size + 3;
   buffer_out[3] = 0x01;
   buffer_out[4] = 0x86;
+  buffer_out[5] = 0x20;
+  return (output_size + 6);
+}
+#endif
+
+#if (!defined(HCI_LE_READ_ALL_LOCAL_SUPPORTED_FEATURES_ENABLED) || HCI_LE_READ_ALL_LOCAL_SUPPORTED_FEATURES_ENABLED) && !HCI_LE_READ_ALL_LOCAL_SUPPORTED_FEATURES_FORCE_DISABLED
+/* tBleStatus hci_le_read_all_local_supported_features(uint8_t *Max_Page,
+                                                    uint8_t LE_Features[248]);
+ */
+/* Command len: 0 */
+/* Response len: 1 + 1 + 248 */
+uint16_t hci_le_read_all_local_supported_features_process(uint8_t *buffer_in, uint16_t buffer_in_length, uint8_t *buffer_out, uint16_t buffer_out_max_length)
+{
+
+  int output_size = 1 + 1 + 248;
+  /* Output params */
+  hci_le_read_all_local_supported_features_rp0 *rp0 = (hci_le_read_all_local_supported_features_rp0 *) (buffer_out + 6);
+  uint8_t Max_Page = 0;
+  uint8_t LE_Features[248] = {0};
+
+  rp0->Status = BLE_ERROR_INVALID_HCI_CMD_PARAMS;
+  if (buffer_out_max_length < (1 + 1 + 248 + 6)) { return 0; }
+  if(buffer_in_length != 0)
+  {
+    goto fail;
+  }
+
+  rp0->Status = hci_le_read_all_local_supported_features(&Max_Page,
+                                                         LE_Features);
+fail:
+  rp0->Max_Page = Max_Page;
+  Osal_MemCpy((void *) rp0->LE_Features,(const void *) LE_Features, 248);
+  buffer_out[0] = 0x04;
+  buffer_out[1] = 0x0E;
+  buffer_out[2] = output_size + 3;
+  buffer_out[3] = 0x01;
+  buffer_out[4] = 0x87;
+  buffer_out[5] = 0x20;
+  return (output_size + 6);
+}
+#endif
+
+#if (!defined(HCI_LE_READ_ALL_REMOTE_FEATURES_ENABLED) || HCI_LE_READ_ALL_REMOTE_FEATURES_ENABLED) && !HCI_LE_READ_ALL_REMOTE_FEATURES_FORCE_DISABLED
+/* tBleStatus hci_le_read_all_remote_features(uint16_t Connection_Handle,
+                                           uint8_t Pages_Requested);
+ */
+/* Command len: 2 + 1 */
+/* Response len: 1 */
+uint16_t hci_le_read_all_remote_features_process(uint8_t *buffer_in, uint16_t buffer_in_length, uint8_t *buffer_out, uint16_t buffer_out_max_length)
+{
+  /* Input params */
+  hci_le_read_all_remote_features_cp0 *cp0 = (hci_le_read_all_remote_features_cp0 *)(buffer_in + (0));
+
+  int output_size = 1;
+  /* Output params */
+  uint8_t *status = (uint8_t *) (buffer_out + 3);
+
+  *status = BLE_ERROR_INVALID_HCI_CMD_PARAMS;
+  if (buffer_out_max_length < (1 + 6)) { return 0; }
+  if(buffer_in_length != 2 + 1)
+  {
+    goto fail;
+  }
+
+  *status = hci_le_read_all_remote_features(cp0->Connection_Handle /* 2 */,
+                                            cp0->Pages_Requested /* 1 */);
+fail:
+  buffer_out[0] = 0x04;
+  buffer_out[1] = 0x0F;
+  buffer_out[2] = output_size + 3;
+  buffer_out[4] = 0x01;
+  buffer_out[5] = 0x88;
+  buffer_out[6] = 0x20;
+  return (output_size + 6);
+}
+#endif
+
+#if (!defined(HCI_LE_SET_HOST_FEATURE_V2_ENABLED) || HCI_LE_SET_HOST_FEATURE_V2_ENABLED) && !HCI_LE_SET_HOST_FEATURE_V2_FORCE_DISABLED
+/* tBleStatus hci_le_set_host_feature_v2(uint16_t Bit_Number,
+                                      uint8_t Bit_Value);
+ */
+/* Command len: 2 + 1 */
+/* Response len: 1 */
+uint16_t hci_le_set_host_feature_v2_process(uint8_t *buffer_in, uint16_t buffer_in_length, uint8_t *buffer_out, uint16_t buffer_out_max_length)
+{
+  /* Input params */
+  hci_le_set_host_feature_v2_cp0 *cp0 = (hci_le_set_host_feature_v2_cp0 *)(buffer_in + (0));
+
+  int output_size = 1;
+  /* Output params */
+  uint8_t *status = (uint8_t *) (buffer_out + 6);
+
+  *status = BLE_ERROR_INVALID_HCI_CMD_PARAMS;
+  if (buffer_out_max_length < (1 + 6)) { return 0; }
+  if(buffer_in_length != 2 + 1)
+  {
+    goto fail;
+  }
+
+  *status = hci_le_set_host_feature_v2(cp0->Bit_Number /* 2 */,
+                                       cp0->Bit_Value /* 1 */);
+fail:
+  buffer_out[0] = 0x04;
+  buffer_out[1] = 0x0E;
+  buffer_out[2] = output_size + 3;
+  buffer_out[3] = 0x01;
+  buffer_out[4] = 0x97;
+  buffer_out[5] = 0x20;
+  return (output_size + 6);
+}
+#endif
+
+#if (!defined(HCI_LE_ADD_DEVICE_TO_MONITORED_ADVERTISERS_LIST_ENABLED) || HCI_LE_ADD_DEVICE_TO_MONITORED_ADVERTISERS_LIST_ENABLED) && !HCI_LE_ADD_DEVICE_TO_MONITORED_ADVERTISERS_LIST_FORCE_DISABLED
+/* tBleStatus hci_le_add_device_to_monitored_advertisers_list(uint8_t Address_Type,
+                                                           uint8_t Address[6],
+                                                           int8_t RSSI_Low_Threshold,
+                                                           int8_t RSSI_High_Threshold,
+                                                           uint8_t Timeout);
+ */
+/* Command len: 1 + 6 + 1 + 1 + 1 */
+/* Response len: 1 */
+uint16_t hci_le_add_device_to_monitored_advertisers_list_process(uint8_t *buffer_in, uint16_t buffer_in_length, uint8_t *buffer_out, uint16_t buffer_out_max_length)
+{
+  /* Input params */
+  hci_le_add_device_to_monitored_advertisers_list_cp0 *cp0 = (hci_le_add_device_to_monitored_advertisers_list_cp0 *)(buffer_in + (0));
+
+  int output_size = 1;
+  /* Output params */
+  uint8_t *status = (uint8_t *) (buffer_out + 6);
+
+  *status = BLE_ERROR_INVALID_HCI_CMD_PARAMS;
+  if (buffer_out_max_length < (1 + 6)) { return 0; }
+  if(buffer_in_length != 1 + 6 + 1 + 1 + 1)
+  {
+    goto fail;
+  }
+
+  *status = hci_le_add_device_to_monitored_advertisers_list(cp0->Address_Type /* 1 */,
+                                                            cp0->Address /* 6 */,
+                                                            cp0->RSSI_Low_Threshold /* 1 */,
+                                                            cp0->RSSI_High_Threshold /* 1 */,
+                                                            cp0->Timeout /* 1 */);
+fail:
+  buffer_out[0] = 0x04;
+  buffer_out[1] = 0x0E;
+  buffer_out[2] = output_size + 3;
+  buffer_out[3] = 0x01;
+  buffer_out[4] = 0x98;
+  buffer_out[5] = 0x20;
+  return (output_size + 6);
+}
+#endif
+
+#if (!defined(HCI_LE_REMOVE_DEVICE_FROM_MONITORED_ADVERTISERS_LIST_ENABLED) || HCI_LE_REMOVE_DEVICE_FROM_MONITORED_ADVERTISERS_LIST_ENABLED) && !HCI_LE_REMOVE_DEVICE_FROM_MONITORED_ADVERTISERS_LIST_FORCE_DISABLED
+/* tBleStatus hci_le_remove_device_from_monitored_advertisers_list(uint8_t Address_Type,
+                                                                uint8_t Address[6]);
+ */
+/* Command len: 1 + 6 */
+/* Response len: 1 */
+uint16_t hci_le_remove_device_from_monitored_advertisers_list_process(uint8_t *buffer_in, uint16_t buffer_in_length, uint8_t *buffer_out, uint16_t buffer_out_max_length)
+{
+  /* Input params */
+  hci_le_remove_device_from_monitored_advertisers_list_cp0 *cp0 = (hci_le_remove_device_from_monitored_advertisers_list_cp0 *)(buffer_in + (0));
+
+  int output_size = 1;
+  /* Output params */
+  uint8_t *status = (uint8_t *) (buffer_out + 6);
+
+  *status = BLE_ERROR_INVALID_HCI_CMD_PARAMS;
+  if (buffer_out_max_length < (1 + 6)) { return 0; }
+  if(buffer_in_length != 1 + 6)
+  {
+    goto fail;
+  }
+
+  *status = hci_le_remove_device_from_monitored_advertisers_list(cp0->Address_Type /* 1 */,
+                                                                 cp0->Address /* 6 */);
+fail:
+  buffer_out[0] = 0x04;
+  buffer_out[1] = 0x0E;
+  buffer_out[2] = output_size + 3;
+  buffer_out[3] = 0x01;
+  buffer_out[4] = 0x99;
+  buffer_out[5] = 0x20;
+  return (output_size + 6);
+}
+#endif
+
+#if (!defined(HCI_LE_CLEAR_MONITORED_ADVERTISERS_LIST_ENABLED) || HCI_LE_CLEAR_MONITORED_ADVERTISERS_LIST_ENABLED) && !HCI_LE_CLEAR_MONITORED_ADVERTISERS_LIST_FORCE_DISABLED
+/* tBleStatus hci_le_clear_monitored_advertisers_list(void);
+ */
+/* Command len: 0 */
+/* Response len: 1 */
+uint16_t hci_le_clear_monitored_advertisers_list_process(uint8_t *buffer_in, uint16_t buffer_in_length, uint8_t *buffer_out, uint16_t buffer_out_max_length)
+{
+
+  int output_size = 1;
+  /* Output params */
+  uint8_t *status = (uint8_t *) (buffer_out + 6);
+
+  *status = BLE_ERROR_INVALID_HCI_CMD_PARAMS;
+  if (buffer_out_max_length < (1 + 6)) { return 0; }
+  if(buffer_in_length != 0)
+  {
+    goto fail;
+  }
+
+  *status = hci_le_clear_monitored_advertisers_list();
+fail:
+  buffer_out[0] = 0x04;
+  buffer_out[1] = 0x0E;
+  buffer_out[2] = output_size + 3;
+  buffer_out[3] = 0x01;
+  buffer_out[4] = 0x9a;
+  buffer_out[5] = 0x20;
+  return (output_size + 6);
+}
+#endif
+
+#if (!defined(HCI_LE_READ_MONITORED_ADVERTISERS_LIST_SIZE_ENABLED) || HCI_LE_READ_MONITORED_ADVERTISERS_LIST_SIZE_ENABLED) && !HCI_LE_READ_MONITORED_ADVERTISERS_LIST_SIZE_FORCE_DISABLED
+/* tBleStatus hci_le_read_monitored_advertisers_list_size(uint8_t *Number);
+ */
+/* Command len: 0 */
+/* Response len: 1 + 1 */
+uint16_t hci_le_read_monitored_advertisers_list_size_process(uint8_t *buffer_in, uint16_t buffer_in_length, uint8_t *buffer_out, uint16_t buffer_out_max_length)
+{
+
+  int output_size = 1 + 1;
+  /* Output params */
+  hci_le_read_monitored_advertisers_list_size_rp0 *rp0 = (hci_le_read_monitored_advertisers_list_size_rp0 *) (buffer_out + 6);
+  uint8_t Number = 0;
+
+  rp0->Status = BLE_ERROR_INVALID_HCI_CMD_PARAMS;
+  if (buffer_out_max_length < (1 + 1 + 6)) { return 0; }
+  if(buffer_in_length != 0)
+  {
+    goto fail;
+  }
+
+  rp0->Status = hci_le_read_monitored_advertisers_list_size(&Number);
+fail:
+  rp0->Number = Number;
+  buffer_out[0] = 0x04;
+  buffer_out[1] = 0x0E;
+  buffer_out[2] = output_size + 3;
+  buffer_out[3] = 0x01;
+  buffer_out[4] = 0x9b;
+  buffer_out[5] = 0x20;
+  return (output_size + 6);
+}
+#endif
+
+#if (!defined(HCI_LE_ENABLE_MONITORING_ADVERTISERS_ENABLED) || HCI_LE_ENABLE_MONITORING_ADVERTISERS_ENABLED) && !HCI_LE_ENABLE_MONITORING_ADVERTISERS_FORCE_DISABLED
+/* tBleStatus hci_le_enable_monitoring_advertisers(uint8_t Enable);
+ */
+/* Command len: 1 */
+/* Response len: 1 */
+uint16_t hci_le_enable_monitoring_advertisers_process(uint8_t *buffer_in, uint16_t buffer_in_length, uint8_t *buffer_out, uint16_t buffer_out_max_length)
+{
+  /* Input params */
+  hci_le_enable_monitoring_advertisers_cp0 *cp0 = (hci_le_enable_monitoring_advertisers_cp0 *)(buffer_in + (0));
+
+  int output_size = 1;
+  /* Output params */
+  uint8_t *status = (uint8_t *) (buffer_out + 6);
+
+  *status = BLE_ERROR_INVALID_HCI_CMD_PARAMS;
+  if (buffer_out_max_length < (1 + 6)) { return 0; }
+  if(buffer_in_length != 1)
+  {
+    goto fail;
+  }
+
+  *status = hci_le_enable_monitoring_advertisers(cp0->Enable /* 1 */);
+fail:
+  buffer_out[0] = 0x04;
+  buffer_out[1] = 0x0E;
+  buffer_out[2] = output_size + 3;
+  buffer_out[3] = 0x01;
+  buffer_out[4] = 0x9c;
   buffer_out[5] = 0x20;
   return (output_size + 6);
 }
@@ -14770,6 +15152,7 @@ fail:
 #endif
 
 #endif /* if BLESTACK_CONTROLLER_ONLY==0 */
+
 /* aci_blue_initialized_event */
 /* Event len: 1 */
 /**
@@ -14793,7 +15176,7 @@ fail:
  */
 void aci_blue_initialized_event(uint8_t Reason_Code)
 {
-  uint8_t buffer_out[532];
+  uint8_t buffer_out[sizeof(aci_blue_initialized_event_rp0) + 6];
   /* Output params */
   aci_blue_initialized_event_rp0 *rp0 = (aci_blue_initialized_event_rp0 *) (buffer_out + 6);
   rp0->Reason_Code = Reason_Code;
@@ -14807,7 +15190,7 @@ void aci_blue_initialized_event(uint8_t Reason_Code)
 
 void aci_blue_initialized_legacy_event(uint8_t Reason_Code)
 {
-  uint8_t buffer_out[258];
+  uint8_t buffer_out[sizeof(aci_blue_initialized_event_rp0) + 5];
   /* Output params */
   aci_blue_initialized_event_rp0 *rp0 = (aci_blue_initialized_event_rp0 *) (buffer_out + 5);
   rp0->Reason_Code = Reason_Code;
@@ -14858,9 +15241,9 @@ void aci_blue_crash_info_event(uint8_t Crash_Type,
                                uint8_t Debug_Data_Length,
                                uint8_t Debug_Data[])
 {
-  uint8_t buffer_out[258];
+  uint8_t buffer_out[sizeof(aci_blue_crash_info_event_rp0) + 5];
   /* Output params */
-  aci_blue_crash_info_event_rp0 *rp0 = (aci_blue_crash_info_event_rp0 *) (buffer_out + 5);
+	aci_blue_crash_info_event_rp0 *rp0 = (aci_blue_crash_info_event_rp0 *) (buffer_out + 5);
   rp0->Crash_Type = Crash_Type;
   rp0->SP = SP;
   rp0->R0 = R0;
@@ -14891,7 +15274,7 @@ void aci_blue_crash_info_event(uint8_t Crash_Type,
  */
 void aci_hal_le_test_end_event(uint16_t Number_Of_Packets)
 {
-  uint8_t buffer_out[532];
+  uint8_t buffer_out[sizeof(aci_hal_le_test_end_event_rp0) + 6];
   /* Output params */
   aci_hal_le_test_end_event_rp0 *rp0 = (aci_hal_le_test_end_event_rp0 *) (buffer_out + 6);
   rp0->Number_Of_Packets = Number_Of_Packets;
@@ -14917,6 +15300,10 @@ void aci_hal_le_test_end_event(uint16_t Number_Of_Packets)
  * @param SDU_Data
  * @retval None
  */
+#ifdef __GNUC__
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Warray-bounds"
+#endif
 void aci_l2cap_cos_sdu_data_rx_nwk_event(uint16_t Connection_Handle,
                                          uint16_t CID,
                                          uint16_t RX_Credit_Balance,
@@ -14937,6 +15324,9 @@ void aci_l2cap_cos_sdu_data_rx_nwk_event(uint16_t Connection_Handle,
   buffer_out[5] = 0x08;
   send_event_2buffers(buffer_out, 6 + sizeof(aci_l2cap_cos_sdu_data_rx_nwk_event_rp0)-sizeof(((aci_l2cap_cos_sdu_data_rx_nwk_event_rp0*)0)->SDU_Data), SDU_Data, SDU_Length, -1);
 }
+#ifdef __GNUC__
+#pragma GCC diagnostic pop
+#endif
 
 /* aci_gatt_srv_authorize_nwk_event */
 /* Event len: 2 + 2 + 2 + 1 + 2 + 1 + rp0->Data_Length * (sizeof(uint8_t)) */
@@ -14973,7 +15363,7 @@ void aci_gatt_srv_authorize_nwk_event(uint16_t Conn_Handle,
                                       uint8_t Data_Length,
                                       uint8_t Data[])
 {
-  uint8_t buffer_out[532];
+  uint8_t buffer_out[sizeof(aci_gatt_srv_authorize_nwk_event_rp0) + 6];
   /* Output params */
   aci_gatt_srv_authorize_nwk_event_rp0 *rp0 = (aci_gatt_srv_authorize_nwk_event_rp0 *) (buffer_out + 6);
   rp0->Conn_Handle = Conn_Handle;
@@ -15015,7 +15405,7 @@ void aci_gatt_srv_attribute_modified_event(uint16_t Connection_Handle,
                                            uint16_t Attr_Data_Length,
                                            uint8_t Attr_Data[])
 {
-  uint8_t buffer_out[532];
+  uint8_t buffer_out[sizeof(aci_gatt_srv_attribute_modified_event_rp0) + 6];
 
   /* Output params */
   aci_gatt_srv_attribute_modified_event_rp0 *rp0 = (aci_gatt_srv_attribute_modified_event_rp0 *) (buffer_out + 6);

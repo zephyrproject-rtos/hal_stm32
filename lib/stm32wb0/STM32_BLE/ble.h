@@ -32,6 +32,7 @@ extern "C" {
 /**< core */
 #include "ble_stack.h"
 #include "ble_const.h"
+#include "ble_legacy.h"
 
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/

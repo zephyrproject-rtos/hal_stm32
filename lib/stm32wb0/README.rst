@@ -6,7 +6,7 @@ Origin:
    https://github.com/STMicroelectronics/STM32CubeWB0
 
 Status:
-   version v1.4.0
+   version v1.5.0
 
 Purpose:
    This library is used on STM32WB0 series to port BLE controller library in
@@ -16,6 +16,7 @@ Description:
 
    This library is using the following files extracted from the STM32CubeWB0 package:
       Middlewares/ST/STM32_BLE/ble.h
+      Middlewares/ST/STM32_BLE/ble_legacy.h
       Middlewares/ST/STM32_BLE/stack/config/ble_stack_user_cfg.c
       Middlewares/ST/STM32_BLE/stack/include/ble_api.h
       Middlewares/ST/STM32_BLE/stack/include/ble_const.h
@@ -87,7 +88,7 @@ URL:
    https://github.com/STMicroelectronics/STM32CubeWB0
 
 Commit:
-   feb9b9624b10a3af4e5dccb390a01b0cc4d71771
+   3f6d4383ab58cf6b776b3b8f063bc68e58a6ddbf
 
 Maintained-by:
    External
@@ -115,8 +116,6 @@ Patch List:
 	  Impacted file: stm32wb0x_hal_msp.c
 	- Replaced "main.h" with "stm32wb0x_hal.h":
 	  Impacted file: stm32wb0x_hal_msp.c
-	- Initialized Init_Delay to 0:
-	  Impacted file: bleplat_cntr.c
 	- Removed cryptolib directory
 	- Removed lib directory
 	- Removed doc directory
