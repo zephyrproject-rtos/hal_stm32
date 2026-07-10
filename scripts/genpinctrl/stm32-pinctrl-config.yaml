@@ -170,6 +170,9 @@
 - name: JTAG PORT
   match: "^(SYS|DEBUG)_((JTMS-?)?SWDIO|(JTCK-?)?SWCLK|JTDI|(JTDO-?)?(TRACESWO|SWO)?|(N)?JTRST|TRACECLK|TRACED\\d)$"
 
+- name: LCD
+  match: "^LCD_(SEG([0-9]|[1-4][0-9]|5[0-1])|COM[0-7])$"
+
 - name: LPTIM
   match: "^LPTIM[1-6]_(IN[1-2]|CH[1-4]|ETR|OUT)$"
 
