@@ -2550,6 +2550,65 @@ uint32_t HAL_OSPI_GetFifoThreshold(const OSPI_HandleTypeDef *hospi)
   return ((READ_BIT(hospi->Instance->CR, OCTOSPI_CR_FTHRES) >> OCTOSPI_CR_FTHRES_Pos) + 1U);
 }
 
+/** @brief  Set OSPI Memory Type.
+  * @param  hospi : OSPI handle.
+  * @param  Type : Memory Type.
+  * @retval HAL status
+  */
+HAL_StatusTypeDef HAL_OSPI_SetMemoryType(OSPI_HandleTypeDef *hospi, uint32_t Type)
+{
+  HAL_StatusTypeDef status = HAL_OK;
+
+  assert_param(IS_OSPI_MEMORY_TYPE(Type));
+
+  /* Check the state */
+  if ((hospi->State & OSPI_BUSY_STATE_MASK) == 0U)
+  {
+    /* Synchronize initialization structure with the new memory type value */
+    hospi->Init.MemoryType = Type;
+
+    /* Configure new memory type */
+    MODIFY_REG(hospi->Instance->DCR1, OCTOSPI_DCR1_MTYP, hospi->Init.MemoryType);
+  }
+  else
+  {
+    status = HAL_ERROR;
+    hospi->ErrorCode = HAL_OSPI_ERROR_INVALID_SEQUENCE;
+  }
+
+  return status;
+}
+
+/** @brief  Set OSPI Device Size.
+  * @param  hospi : OSPI handle.
+  * @param  Size : Device Size.
+  * @retval HAL status
+  */
+HAL_StatusTypeDef HAL_OSPI_SetDeviceSize(OSPI_HandleTypeDef *hospi, uint32_t Size)
+{
+  HAL_StatusTypeDef status = HAL_OK;
+
+  assert_param(IS_OSPI_MEMORY_SIZE(Size));
+
+  /* Check the state */
+  if ((hospi->State & OSPI_BUSY_STATE_MASK) == 0U)
+  {
+    /* Synchronize initialization structure with the new device size value */
+    hospi->Init.MemorySize = Size;
+
+    /* Configure new device size */
+    MODIFY_REG(hospi->Instance->DCR1, OCTOSPI_DCR1_DEVSIZE,
+               (hospi->Init.MemorySize << OCTOSPI_DCR1_DEVSIZE_Pos));
+  }
+  else
+  {
+    status = HAL_ERROR;
+    hospi->ErrorCode = HAL_OSPI_ERROR_INVALID_SEQUENCE;
+  }
+
+  return status;
+}
+
 /** @brief Set OSPI timeout.
   * @param  hospi   : OSPI handle.
   * @param  Timeout : Timeout for the memory access.
