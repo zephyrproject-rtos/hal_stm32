@@ -63,4 +63,8 @@ Patch List:
        drivers/src/stm32f7xx_hal_dfsdm.c
      ST Internal Reference: HAL1-27454
 
+   *Fix missing errata workaround after writing RE in ETH->MACCR
+    Impacted files:
+     drivers/src/stm32f7xx_hal_eth.c
+
    See release_note.html from STM32Cube
