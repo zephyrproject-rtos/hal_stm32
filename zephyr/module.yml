@@ -54,11 +54,11 @@ blobs:
     url: https://github.com/STMicroelectronics/stm32-mw-wpan/raw/v2.9.0/ble/stack/lib/stm32wba_ble_stack_llo.a
     description: "Binary Stack library including BLE Full features for the STM32WBA Bluetooth subsystem"
   - path: stm32wb0/lib/stm32wb0x_ble_stack_controller_only.a
-    sha256: f4d44401f8caba4d81e7c38e7549745b7525650d61f53541f5e030d1228e52b9
+    sha256: 376a019a95873fd0a71b2acee13073272b2027fb1e7d1b19efe742b5b904b566
     type: lib
-    version: '1.4.0'
+    version: '1.5.0'
     license-path: zephyr/blobs/stm32wb0/lib/license.md
-    url: https://github.com/STMicroelectronics/STM32CubeWB0/raw/v1.4.0/Middlewares/ST/STM32_BLE/stack/lib/stm32wb0x_ble_stack_controller_only.a
+    url: https://github.com/STMicroelectronics/STM32CubeWB0/raw/v1.5.0/Middlewares/ST/STM32_BLE/stack/lib/stm32wb0x_ble_stack_controller_only.a
     description: "Binary Stack library for the STM32WB0 Bluetooth subsystem"
   - path: stm32wba/lib/WBA6_LinkLayer15_4_Zephyr.a
     sha256: 9c57260975aeb493b2914bbcb149b59b8c0c647881b3d12d0544fd78ba314bae

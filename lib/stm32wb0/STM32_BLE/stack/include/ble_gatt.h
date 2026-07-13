@@ -99,10 +99,12 @@
 #define BLE_GATT_SRV_PERIPHERAL_PREFERRED_CONN_PARAMS_UUID   (0x2A04U)
 #define BLE_GATT_SRV_SERVICE_CHANGE_CHR_UUID            (0x2A05U)
 #define BLE_GATT_SRV_CENTRAL_ADDRESS_RESOLUTION_UUID    (0x2AA6U)
+#define BLE_GATT_SRV_RESOLVABLE_PRIVATE_ADDRESS_ONLY_UUID  (0x2AC9U)
 #define BLE_GATT_SRV_CLIENT_SUPP_FEATURE_CHR_UUID       (0x2B29U)
 #define BLE_GATT_SRV_DB_HASH_CHR_UUID                   (0x2B2AU)
 #define BLE_GATT_SRV_SUPPORTED_FEATURES_CHR_UUID        (0x2B3AU)
 #define BLE_GATT_SRV_ENCRYPTED_DATA_KEY_MATERIAL_UUID   (0x2B88U)
+#define BLE_GATT_SRV_LE_GATT_SECURITY_LEVELS_UUID       (0x2BF5U)
 
 #define BLE_GATT_SRV_GATT_SERVICE_UUID                  (0x1801U)
 #define BLE_GATT_SRV_GAP_SERVICE_UUID                   (0x1800U)
@@ -239,16 +241,24 @@
 #define BLE_GATT_SRV_PERM_NONE                          (0x00U)
 /** Attribute can be read only on authenticated links (MITM on). */
 #define BLE_GATT_SRV_PERM_AUTHEN_READ                   (0x01U)
+/** Attribute can be read only on authenticated links with Secure Connection. */
+#define BLE_GATT_SRV_PERM_AUTHEN_LEV4_READ              (0x02U)
 /** Attribute can be read only on encrypted links. */
 #define BLE_GATT_SRV_PERM_ENCRY_READ                    (0x04U)
 /** Attribute can be written only on authenticated links (MITM on). */
 #define BLE_GATT_SRV_PERM_AUTHEN_WRITE                  (0x08U)
+/** Attribute can be written only on authenticated links with Secure Connection. */
+#define BLE_GATT_SRV_PERM_AUTHEN_LEV4_WRITE             (0x10U)
 /** Attribute can be written only on encrypted links. */
 #define BLE_GATT_SRV_PERM_ENCRY_WRITE                   (0x20U)
 #define BLE_GATT_SRV_PERM_ALL                           (BLE_GATT_SRV_PERM_AUTHEN_READ | \
                                                          BLE_GATT_SRV_PERM_ENCRY_READ | \
                                                          BLE_GATT_SRV_PERM_AUTHEN_WRITE | \
                                                          BLE_GATT_SRV_PERM_ENCRY_WRITE)
+#define BLE_GATT_SRV_PERM_ALL_LEV4                      (BLE_GATT_SRV_PERM_ALL | \
+                                                         BLE_GATT_SRV_PERM_AUTHEN_LEV4_READ | \
+                                                         BLE_GATT_SRV_PERM_AUTHEN_LEV4_WRITE)
+
 /**
  *@}
  */

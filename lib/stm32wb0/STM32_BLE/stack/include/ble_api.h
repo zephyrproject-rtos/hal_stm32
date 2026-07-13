@@ -330,17 +330,17 @@ typedef struct Subevent_Data_Ptr_Parameters_t_s {
  *@{
  */
 /**
- * @brief The @ref hci_disconnect is used to terminate an existing connection.
- *        The Connection_Handle command parameter indicates which connection is
- *        to be disconnected. The Reason command parameter indicates the reason
- *        for ending the connection. The remote Controller will receive the
- *        Reason command parameter in the @ref hci_disconnection_complete_event_rp0
- *        event. All synchronous connections on a physical link should be
- *        disconnected before the ACL connection on the same physical connection
- *        is disconnected. (See Bluetooth Specification v.4.1, Vol. 2, Part E,
- *        7.1.6) It is important to leave an 100 ms blank window before sending
- *        any new command (including system hardware reset), since immediately
- *        after @ref hci_disconnection_complete_event_rp0 event, system could save
+ * @brief This command is used to terminate an existing connection. The
+ *        Connection_Handle command parameter indicates which connection is to
+ *        be disconnected. The Reason command parameter indicates the reason for
+ *        ending the connection. The remote Controller will receive the Reason
+ *        command parameter in the @ref hci_disconnection_complete_event_rp0 event.
+ *        All synchronous connections on a physical link should be disconnected
+ *        before the ACL connection on the same physical connection is
+ *        disconnected. (See Core Specification [Vol 4, Part E, 7.1.6]) It is
+ *        important to leave an 100 ms blank window before sending any new
+ *        command (including system hardware reset), since immediately after
+ *        @ref hci_disconnection_complete_event_rp0 event, system could save
  *        important information in non volatile memory.
  * @param Connection_Handle Connection handle that identifies the connection.
  *        Values:
@@ -361,8 +361,7 @@ tBleStatus hci_disconnect(uint16_t Connection_Handle,
  * @brief This command will obtain the values for the version information for
  *        the remote device identified by the Connection_Handle parameter. The
  *        Connection_Handle must be a Connection_Handle for an ACL or LE
- *        connection. (See Bluetooth Specification v.4.1, Vol. 2, Part E,
- *        7.1.23)
+ *        connection. (See Core Specification [Vol 4, Part E, 7.1.23])
  * @param Connection_Handle Specifies which Connection_Handle's version
  *        information to get.
  *        Values:
@@ -377,8 +376,8 @@ tBleStatus hci_read_remote_version_information(uint16_t Connection_Handle);
  *        For an LE Controller, the LE Meta Event bit in the Event_Mask shall
  *        enable or disable all LE events in the LE Meta Event (see Section
  *        7.7.65). The Host has to deal with each event that occurs. The event
- *        mask allows the Host to control how much it is interrupted. (See
- *        Bluetooth Specification v.4.1, Vol. 2, Part E, 7.3.1)
+ *        mask allows the Host to control how much it is interrupted. (See Core
+ *        Specification [Vol 4, Part E, 7.3.1])
  * @param Event_Mask Event mask. Default: 0x00001FFFFFFFFFFF
  *        Flags:
  *        - 0x0000000000000000: No events specified
@@ -438,7 +437,8 @@ tBleStatus hci_set_event_mask(uint8_t Event_Mask[8]);
  * @brief The HCI_Read_Connection_Accept_Timeout command will read the value for
  *        the Connection Accept Timeout configuration parameter, which allows
  *        the Controller to automatically deny a connection request after a
- *        specified period has occurred, and to refuse a new connection.
+ *        specified period has occurred, and to refuse a new connection. (See
+ *        Core Specification [Vol 4, Part E, 7.3.13]).
  * @param[out] Connection_Accept_Timeout Connection Accept Timeout. Interval
  *             Length = N * 0.625 ms
  *             Values:
@@ -462,8 +462,8 @@ tBleStatus hci_write_connection_accept_timeout(uint16_t Connection_Accept_Timeou
 /**
  * @brief This command reads the values for the Transmit_Power_Level parameter
  *        for the specified Connection_Handle. The Connection_Handle shall be a
- *        Connection_Handle for an ACL connection. (See Bluetooth Specification
- *        v.4.1, Vol. 2, Part E, 7.3.35)
+ *        Connection_Handle for an ACL connection. (See Core Specification [Vol
+ *        4, Part E, 7.3.35])
  * @param Connection_Handle Specifies which Connection_Handle's Transmit Power
  *        Level setting to read.
  *        Values:
@@ -516,9 +516,7 @@ tBleStatus hci_write_afh_channel_assessment_mode(uint8_t AFH_Channel_Assessment_
  *        use or represent events which it does not support. If the Host sets
  *        any of these bits to 1, the Controller shall act as if they were set
  *        to 0.
- * @param Event_Mask_Page_2 For the complete list of bits that can be set, see
- *        Core v5.1, Vol 2, part E, chapter 7.3.69. The only bit that is not
- *        ignored is: Bit 23: Authenticated Payload Timeout Expired event.
+ * @param Event_Mask_Page_2 Event mask page 2. Default: 0
  *        Flags:
  *        - 0x0000000000800000: AUTHENTICATED_PAYLOAD_TIMEOUT_EXPIRED_EVENT
  * @retval Value indicating success or error code.
@@ -561,8 +559,8 @@ tBleStatus hci_write_authenticated_payload_timeout(uint16_t Connection_Handle,
  *        information of the HCI layer. The LMP/PAL Version information defines
  *        the version of the LMP or PAL. The Manufacturer_Name information
  *        indicates the manufacturer of the local device. The HCI Revision and
- *        LMP/PAL Subversion are implementation dependent. (See Bluetooth
- *        Specification v.4.1, Vol. 2, Part E, 7.4.1)
+ *        LMP/PAL Subversion are implementation dependent. (See Core
+ *        Specification [Vol 4, Part E, 7.4.1])
  * @param[out] HCI_Version See Bluetooth Assigned Numbers
  *             (https://www.bluetooth.org/en-us/specification/assigned-numbers)
  * @param[out] HCI_Revision Revision of the Current HCI in the BR/EDR
@@ -587,7 +585,7 @@ tBleStatus hci_read_local_version_information(uint8_t *HCI_Version,
  *        Controller. This command shall return the Supported_Commands
  *        configuration parameter. It is implied that if a command is listed as
  *        supported, the feature underlying that command is also supported. (See
- *        Bluetooth Specification v.4.1, Vol. 2, Part E, 7.4.2)
+ *        Core Specification [Vol 4, Part E, 7.4.2])
  * @param[out] Supported_Commands Bit mask for each HCI Command. If a bit is 1,
  *             the Controller supports the corresponding command and the
  *             features required for the command. Unsupported or undefined
@@ -599,7 +597,7 @@ tBleStatus hci_read_local_supported_commands(uint8_t Supported_Commands[64]);
  * @brief This command requests a list of the supported features for the local
  *        Controller. This command will return a list of the LMP features. For
  *        details see Part C, Link Manager Protocol Specification on page 227.
- *        (See Bluetooth Specification v.4.1, Vol. 2, Part E, 7.4.3)
+ *        (See Core Specification [Vol 4, Part E, 7.4.3])
  * @param[out] LMP_Features Bit Mask List of LMP features.
  * @retval Value indicating success or error code.
  */
@@ -609,8 +607,8 @@ tBleStatus hci_read_local_supported_features(uint8_t LMP_Features[8]);
  *        as defined in [Vol 6] Part B, Section 1.3, Device Address. If this
  *        Controller does not have a Public Device Address, the value
  *        0x000000000000 shall be returned. On an LE Controller, the public
- *        address shall be the same as the BD_ADDR. (See Bluetooth Specification
- *        v.4.1, Vol. 2, Part E, 7.4.6)
+ *        address shall be the same as the BD_ADDR. (See Core Specification [Vol
+ *        4, Part E, 7.4.6])
  * @param[out] BD_ADDR BD_ADDR ( Bluetooth Device Address) of the Device.
  * @retval Value indicating success or error code.
  */
@@ -621,8 +619,7 @@ tBleStatus hci_read_bd_addr(uint8_t BD_ADDR[6]);
  *        used as the Handle command parameter and return parameter. The meaning
  *        of the RSSI metric is an absolute receiver signal strength value in
  *        dBm to +/- 6 dB accuracy. If the RSSI cannot be read, the RSSI metric
- *        shall be set to 127. (See Bluetooth Specification v.4.1, Vol. 2, Part
- *        E, 7.5.4)
+ *        shall be set to 127. (See Core Specification [Vol 4, Part E, 7.5.4])
  * @param Connection_Handle Connection handle that identifies the connection.
  *        Values:
  *        - 0x0000 ... 0x0EFF
@@ -643,7 +640,7 @@ tBleStatus hci_read_rssi(uint16_t Connection_Handle,
  *        will interrupt it. For LE events to be generated, the LE Meta-Event
  *        bit in the Event_Mask shall also be set. If that bit is not set, then
  *        LE events shall not be generated, regardless of how the LE_Event_Mask
- *        is set. (See Bluetooth Specification v.4.1, Vol. 2, Part E, 7.8.1)
+ *        is set. (See Core Specification [Vol 4, Part E, 7.8.1])
  * @param LE_Event_Mask LE event mask. Default: 0x000000000000001F.
  *        Flags:
  *        - 0x0000000000000000: No LE events specified
@@ -716,8 +713,8 @@ tBleStatus hci_le_set_event_mask(uint8_t LE_Event_Mask[8]);
  *        data buffers of the Controller. The Host determines how the buffers
  *        are to be divided between different Connection Handles. Note: The
  *        HC_LE_ACL_Data_Packet_Length return parameter does not include the
- *        length of the HCI Data Packet header. (See Bluetooth Specification
- *        v.4.1, Vol. 2, Part E, 7.8.2)
+ *        length of the HCI Data Packet header. (See Core Specification [Vol 4,
+ *        Part E, 7.8.2])
  * @param[out] HC_LE_ACL_Data_Packet_Length 0x0000: No dedicated LE Buffer
  *             exists. Use the HCI_Read_Buffer_Size command. 0x001B - 0xFFFF
  *             Maximum length (in octets) of the data portion of each HCI ACL
@@ -738,16 +735,16 @@ tBleStatus hci_le_read_buffer_size(uint16_t *HC_LE_ACL_Data_Packet_Length,
                                    uint8_t *HC_Total_Num_LE_ACL_Data_Packets);
 /**
  * @brief This command requests the list of the supported LE features for the
- *        Controller. (See Bluetooth Specification v.4.1, Vol. 2, Part E, 7.8.3)
+ *        Controller. (See Core Specification [Vol 4, Part E, 7.8.3])
  * @param[out] LE_Features Bit Mask List of LE features. See Core v4.1, Vol. 6,
  *             Part B, Section 4.6.
  * @retval Value indicating success or error code.
  */
-tBleStatus hci_le_read_local_supported_features(uint8_t LE_Features[8]);
+tBleStatus hci_le_read_local_supported_features_page_0(uint8_t LE_Features[8]);
 /**
  * @brief The LE_Set_Random_Address command is used by the Host to set the LE
  *        Random Device Address in the Controller (see [Vol 6] Part B, Section
- *        1.3). (See Bluetooth Specification v.4.1, Vol. 2, Part E, 7.8.4)
+ *        1.3). (See Core Specification [Vol 4, Part E, 7.8.4])
  * @param Random_Address Random Device Address.
  * @retval Value indicating success or error code.
  */
@@ -794,8 +791,8 @@ tBleStatus hci_le_set_random_address(uint8_t Random_Address[6]);
  *        and low duty cycle directed advertising. Time = N * 0.625 msec.
  *        Values:
  *        - 0x0020 (20.000 ms)  ... 0x4000 (10240.000 ms)
- * @param Advertising_Interval_Max Maximum advertising interval. Time = N *
- *        0.625 msec.
+ * @param Advertising_Interval_Max Maximum advertising interval for undirected
+ *        and low duty cycle directed advertising. Time = N * 0.625 msec.
  *        Values:
  *        - 0x0020 (20.000 ms)  ... 0x4000 (10240.000 ms)
  * @param Advertising_Type Advertising type.
@@ -816,17 +813,16 @@ tBleStatus hci_le_set_random_address(uint8_t Random_Address[6]);
  *        Values:
  *        - 0x00: Public Device Address
  *        - 0x01: Random Device Address
- *        - 0x02: Resolvable Private Address or Public Address
- *        - 0x03: Resolvable Private Address or Random Address
- * @param Peer_Address_Type Peer Address type.
+ *        - 0x02: Resolvable Private Address if available, otherwise Public Address
+ *        - 0x03: Resolvable Private Address if available, otherwise Random Address
+ * @param Peer_Address_Type Address type of the peer device.
  *        Values:
  *        - 0x00: Public Device Address or Public Identity Address
  *        - 0x01: Random Device Address or Random (static) Identity Address
  * @param Peer_Address Public Device Address, Random Device Address, Public
  *        Identity Address or Random (static) Identity Address of the device to
  *        be connected.
- * @param Advertising_Channel_Map Advertising channel map. Default: 00000111b
- *        (all channels enabled).
+ * @param Advertising_Channel_Map Advertising channel map.
  *        Flags:
  *        - 0x01: ch 37
  *        - 0x02: ch 38
@@ -858,8 +854,7 @@ tBleStatus hci_le_set_advertising_parameters(uint16_t Advertising_Interval_Min,
 /**
  * @brief The LE_Read_Advertising_Physical_Channel_Tx_Power command is used by
  *        the Host to read the transmit power level used for LE advertising
- *        channel packets. (See Bluetooth Specification v.4.1, Vol. 2, Part E,
- *        7.8.6)
+ *        channel packets. (See Core Specification [Vol 4, Part E, 7.8.6])
  * @param[out] Transmit_Power_Level Size: 1 Octet (signed integer) Units: dBm
  *             Accuracy: +/- 4 dBm
  *             Values:
@@ -876,8 +871,7 @@ tBleStatus hci_le_read_advertising_physical_channel_tx_power(int8_t *Transmit_Po
  *        with Advertising_Enable set to 0x00 (Advertising is disabled) or until
  *        a connection is created or until the Advertising is timed out due to
  *        high duty cycle Directed Advertising. In these cases, advertising is
- *        then disabled. (See Bluetooth Specification v.4.1, Vol. 2, Part E,
- *        7.8.9)
+ *        then disabled. (See Core Specification [Vol 4, Part E, 7.8.9])
  * @param Advertising_Enable Enable/disable advertise. Default is 0 (disabled).
  *        Values:
  *        - 0x00: Disable
@@ -898,9 +892,9 @@ tBleStatus hci_le_set_advertising_enable(uint8_t Advertising_Enable);
  *        used (Public or Random Device Address) when performing active scan.
  *        The Host shall not issue this command when scanning is enabled in the
  *        Controller; if it is the Command Disallowed error code shall be used.
- *        (See Bluetooth Specification v.4.1, Vol. 2, Part E, 7.8.10)
- * @param LE_Scan_Type Passive or active scanning. With active scanning SCAN_REQ
- *        packets are sent.
+ *        (See Core Specification [Vol 4, Part E, 7.8.10])
+ * @param LE_Scan_Type Passive or active scanning. With passive scanning, no
+ *        scan request PDUs are sent.
  *        Values:
  *        - 0x00: Passive Scanning
  *        - 0x01: Active scanning
@@ -909,8 +903,9 @@ tBleStatus hci_le_set_advertising_enable(uint8_t Advertising_Enable);
  *        scan. Time = N * 0.625 msec.
  *        Values:
  *        - 0x0004 (2.500 ms)  ... 0x4000 (10240.000 ms)
- * @param LE_Scan_Window The duration of the LE scan. LE_Scan_Window shall be
- *        less than or equal to LE_Scan_Interval. Time = N * 0.625 msec.
+ * @param LE_Scan_Window Amount of time for the duration of the LE scan.
+ *        LE_Scan_Window shall be less than or equal to LE_Scan_Interval. Time =
+ *        N * 0.625 msec.
  *        Values:
  *        - 0x0004 (2.500 ms)  ... 0x4000 (10240.000 ms)
  * @param Own_Address_Type Own address type.  - 0x00: Public Device Address  -
@@ -924,8 +919,8 @@ tBleStatus hci_le_set_advertising_enable(uint8_t Advertising_Enable);
  *        Values:
  *        - 0x00: Public Device Address
  *        - 0x01: Random Device Address
- *        - 0x02: Resolvable Private Address or Public Address
- *        - 0x03: Resolvable Private Address or Random Address
+ *        - 0x02: Resolvable Private Address if available, otherwise Public Address
+ *        - 0x03: Resolvable Private Address if available, otherwise Random Address
  * @param Scanning_Filter_Policy See Scanning filter policy in Bluetooth Core
  *        specification.
  *        Values:
@@ -945,8 +940,8 @@ tBleStatus hci_le_set_scan_parameters(uint8_t LE_Scan_Type,
  *        used to discover advertising devices nearby. The Filter_Duplicates
  *        parameter controls whether the Link Layer shall filter duplicate
  *        advertising reports to the Host, or if the Link Layer should generate
- *        advertising reports for each packet received. (See Bluetooth
- *        Specification v.4.1, Vol. 2, Part E, 7.8.11)
+ *        advertising reports for each packet received. (See Core Specification
+ *        [Vol 4, Part E, 7.8.11])
  * @param LE_Scan_Enable Enable/disable scan. Default is 0 (disabled).
  *        Values:
  *        - 0x00: Scanning disabled
@@ -990,14 +985,15 @@ tBleStatus hci_le_set_scan_enable(uint8_t LE_Scan_Enable,
  *        The Host shall not issue this command when another
  *        LE_Create_Connection is pending in the Controller; if this does occur
  *        the Controller shall return the Command Disallowed error code shall be
- *        used. (See Bluetooth Specification v.4.1, Vol. 2, Part E, 7.8.12)
+ *        used. (See Core Specification [Vol 4, Part E, 7.8.12])
  * @param LE_Scan_Interval This is defined as the time interval from when the
  *        Controller started its last LE scan until it begins the subsequent LE
  *        scan. Time = N * 0.625 msec.
  *        Values:
  *        - 0x0004 (2.500 ms)  ... 0x4000 (10240.000 ms)
- * @param LE_Scan_Window The duration of the LE scan. LE_Scan_Window shall be
- *        less than or equal to LE_Scan_Interval. Time = N * 0.625 msec.
+ * @param LE_Scan_Window Amount of time for the duration of the LE scan.
+ *        LE_Scan_Window shall be less than or equal to LE_Scan_Interval. Time =
+ *        N * 0.625 msec.
  *        Values:
  *        - 0x0004 (2.500 ms)  ... 0x4000 (10240.000 ms)
  * @param Initiator_Filter_Policy 0x00 Filter Accept List is not used to
@@ -1008,15 +1004,15 @@ tBleStatus hci_le_set_scan_enable(uint8_t LE_Scan_Enable,
  *        Values:
  *        - 0x00: Filter Accept List not used
  *        - 0x01: Filter Accept List used
- * @param Peer_Address_Type 0x00 Public Device Address 0x01 Random Device
- *        Address 0x02 Public Identity Address (Corresponds to Resolved Private
- *        Address) 0x03 Random (Static) Identity Address (Corresponds to
- *        Resolved Private Address)
+ * @param Peer_Address_Type 0x00: Public Device Address; 0x01: Random Device
+ *        Address; 0x02: Public Identity Address (Corresponds to Resolved
+ *        Private Address); 0x03: Random (Static) Identity Address (Corresponds
+ *        to Resolved Private Address).
  *        Values:
  *        - 0x00: Public Device Address
  *        - 0x01: Random Device Address
  *        - 0x02: Public Identity Address
- *        - 0x03: Random (Static) Identity Address
+ *        - 0x03: Random (static) Identity Address
  * @param Peer_Address Public Device Address, Random Device Address, Public
  *        Identity Address or Random (static) Identity Address of the
  *        advertising device.
@@ -1031,8 +1027,8 @@ tBleStatus hci_le_set_scan_enable(uint8_t LE_Scan_Enable,
  *        Values:
  *        - 0x00: Public Device Address
  *        - 0x01: Random Device Address
- *        - 0x02: Resolvable Private Address or Public Address
- *        - 0x03: Resolvable Private Address or Random Address
+ *        - 0x02: Resolvable Private Address if available, otherwise Public Address
+ *        - 0x03: Resolvable Private Address if available, otherwise Random Address
  * @param Connection_Interval_Min Minimum value for the connection event
  *        interval. This shall be less than or equal to Connection_Interval_Max.
  *        Time = N * 1.25 msec.
@@ -1075,8 +1071,8 @@ tBleStatus hci_le_create_connection(uint16_t LE_Scan_Interval,
  *        LE_Create_Connection command. This command shall only be issued after
  *        the LE_Create_Connection command has been issued, a Command Status
  *        event has been received for the LE Create Connection command and
- *        before the LE Connection Complete event. (See Bluetooth Specification
- *        v.4.1, Vol. 2, Part E, 7.8.13)
+ *        before the LE Connection Complete event. (See Core Specification [Vol
+ *        4, Part E, 7.8.13])
  * @retval Value indicating success or error code.
  */
 tBleStatus hci_le_create_connection_cancel(void);
@@ -1153,8 +1149,8 @@ tBleStatus hci_le_remove_device_from_filter_accept_list(uint8_t Address_Type,
  *        minimum and maximum length of the connection events. The Min_CE_Length
  *        shall be less than or equal to the Max_CE_Length. The actual parameter
  *        values selected by the Link Layer may be different from the parameter
- *        values provided by the Host through this command. (See Bluetooth
- *        Specification v.4.1, Vol. 2, Part E, 7.8.18)
+ *        values provided by the Host through this command. (See Core
+ *        Specification [Vol 4, Part E, 7.8.18])
  * @param Connection_Handle Connection handle that identifies the connection.
  *        Values:
  *        - 0x0000 ... 0x0EFF
@@ -1216,8 +1212,8 @@ tBleStatus hci_le_set_host_channel_classification(uint8_t LE_Channel_Map[5]);
  *        state of the Channel_Map specified by the last transmitted or received
  *        Channel_Map (in a CONNECT_REQ or LL_CHANNEL_MAP_REQ message) for the
  *        specified Connection_Handle, regardless of whether the Central has
- *        received an acknowledgement. (See Bluetooth Specification v.4.1, Vol.
- *        2, Part E, 7.8.20)
+ *        received an acknowledgement. (See Core Specification [Vol 4, Part E,
+ *        7.8.20])
  * @param Connection_Handle Connection handle that identifies the connection.
  *        Values:
  *        - 0x0000 ... 0x0EFF
@@ -1234,21 +1230,21 @@ tBleStatus hci_le_read_channel_map(uint16_t Connection_Handle,
  * @brief This command requests a list of the used LE features from the remote
  *        device. This command shall return a list of the used LE features. For
  *        details see [Vol 6] Part B, Section 4.6. This command may be issued on
- *        both the central and peripheral. (See Bluetooth Specification v.4.1,
- *        Vol. 2, Part E, 7.8.21)
+ *        both the central and peripheral. (See Core Specification [Vol 4, Part
+ *        E, 7.8.21])
  * @param Connection_Handle Connection handle that identifies the connection.
  *        Values:
  *        - 0x0000 ... 0x0EFF
  * @retval Value indicating success or error code.
  */
-tBleStatus hci_le_read_remote_features(uint16_t Connection_Handle);
+tBleStatus hci_le_read_remote_features_page_0(uint16_t Connection_Handle);
 /**
  * @brief The LE_Encrypt command is used to request the Controller to encrypt
  *        the Plaintext_Data in the command using the Key given in the command
  *        and returns the Encrypted_Data to the Host. The AES-128 bit block
  *        cypher is defined in NIST Publication FIPS-197
- *        (http://csrc.nist.gov/publications/fips/ fips197/fips-197.pdf). (See
- *        Bluetooth Specification v.4.1, Vol. 2, Part E, 7.8.22)
+ *        (http://csrc.nist.gov/publications/fips/fips197/fips-197.pdf). (See
+ *        Core Specification [Vol 4, Part E, 7.8.22])
  * @param Key 128 bit key for the encryption of the data given in the command.
  * @param Plaintext_Data 128 bit data block that is requested to be encrypted.
  * @param[out] Encrypted_Data 128 bit encrypted data block.
@@ -1261,8 +1257,8 @@ tBleStatus hci_le_encrypt(uint8_t Key[16],
  * @brief The LE_Rand command is used to request the Controller to generate 8
  *        octets of random data to be sent to the Host. The Random_Number shall
  *        be generated according to [Vol 2] Part H, Section 2 if the LE Feature
- *        (LL Encryption) is supported. (See Bluetooth Specification v.4.1, Vol.
- *        2, Part E, 7.8.23)
+ *        (LL Encryption) is supported. (See Core Specification [Vol 4, Part E,
+ *        7.8.23])
  * @param[out] Random_Number Random Number
  * @retval Value indicating success or error code.
  */
@@ -1297,7 +1293,7 @@ tBleStatus hci_le_enable_encryption(uint16_t Connection_Handle,
  *        Long Term Key Request event from the Controller, and specifies the
  *        Long_Term_Key parameter that shall be used for this Connection_Handle.
  *        The Long_Term_Key is used as defined in [Vol 6] Part B, Section 5.1.3.
- *        (See Bluetooth Specification v.4.1, Vol. 2, Part E, 7.8.25)
+ *        (See Core Specification [Vol 4, Part E, 7.8.25])
  * @param Connection_Handle Connection handle that identifies the connection.
  *        Values:
  *        - 0x0000 ... 0x0EFF
@@ -1309,8 +1305,8 @@ tBleStatus hci_le_long_term_key_request_reply(uint16_t Connection_Handle,
 /**
  * @brief The LE_Long_Term_Key_Request_Negative_Reply command is used to reply
  *        to an LE Long Term Key Request event from the Controller if the Host
- *        cannot provide a Long Term Key for this Connection_Handle. (See
- *        Bluetooth Specification v.4.1, Vol. 2, Part E, 7.8.26)
+ *        cannot provide a Long Term Key for this Connection_Handle. (See Core
+ *        Specification [Vol 4, Part E, 7.8.26])
  * @param Connection_Handle Connection handle that identifies the connection.
  *        Values:
  *        - 0x0000 ... 0x0EFF
@@ -1328,7 +1324,7 @@ tBleStatus hci_le_long_term_key_request_negative_reply(uint16_t Connection_Handl
  *        Advertising types and Central Role combination are set. All the
  *        Scanning types and the Initiate State combinations shall be set only
  *        if the corresponding Scanning types and Central Role combination are
- *        set. (See Bluetooth Specification v.4.1, Vol. 2, Part E, 7.8.27)
+ *        set. (See Core Specification [Vol 4, Part E, 7.8.27])
  * @param[out] LE_States State or state combination is supported by the
  *             Controller. See Core v4.1, Vol.2, part E, Ch. 7.8.27.
  * @retval Value indicating success or error code.
@@ -1368,13 +1364,14 @@ tBleStatus hci_le_set_data_length(uint16_t Connection_Handle,
  *        connInitialMaxTxTime - see ([Vol 6] Part B, Section 4.5.10).
  * @param[out] SuggestedMaxTxOctets The Host suggested value for the Controller
  *             maximum transmitted number of payload octets to be used for new
- *             connections - connInitialMaxTxOctets. Range 0x001B-0x00FB (0x0000
- *             - 0x001A and 0x00FC - 0xFFFF Reserved for future use) Default:
- *             0x001B
+ *             connections - connInitialMaxTxOctets. Default: 0x001B.
+ *             Values:
+ *             - 0x001B ... 0x00FB
  * @param[out] SuggestedMaxTxTime The Host suggested value for the Controller
  *             maximum packet transmission time to be used for new connections -
- *             connInitialMaxTx-Time. Range 0x0148-0x0848 (0x0000 - 0x0147 and
- *             0x0849 - 0xFFFF Reserved for future use) Default: 0x0148
+ *             connInitialMaxTx-Time. Default: 0x0148.
+ *             Values:
+ *             - 0x0148 ... 0x4290
  * @retval Value indicating success or error code.
  */
 tBleStatus hci_le_read_suggested_default_data_length(uint16_t *SuggestedMaxTxOctets,
@@ -1389,16 +1386,14 @@ tBleStatus hci_le_read_suggested_default_data_length(uint16_t *SuggestedMaxTxOct
  *        information.
  * @param SuggestedMaxTxOctets The Host suggested value for the Controller
  *        maximum transmitted number of payload octets to be used for new
- *        connections - connInitialMaxTxOctets. Range 0x001B-0x00FB (0x0000 -
- *        0x001A and 0x00FC - 0xFFFF Reserved for future use)
+ *        connections - connInitialMaxTxOctets. Default: 0x001B.
  *        Values:
  *        - 0x001B ... 0x00FB
  * @param SuggestedMaxTxTime The Host suggested value for the Controller maximum
  *        packet transmission time to be used for new connections -
- *        connInitialMaxTx-Time. Range 0x0148-0x0848 (0x0000 - 0x0147 and 0x0849
- *        - 0xFFFF Reserved for future use)
+ *        connInitialMaxTx-Time. Default: 0x0148.
  *        Values:
- *        - 0x0148 ... 0x0848
+ *        - 0x0148 ... 0x4290
  * @retval Value indicating success or error code.
  */
 tBleStatus hci_le_write_suggested_default_data_length(uint16_t SuggestedMaxTxOctets,
@@ -1407,7 +1402,7 @@ tBleStatus hci_le_write_suggested_default_data_length(uint16_t SuggestedMaxTxOct
  * @brief The LE_Read_Local_P-256_Public_Key command is used to return the local
  *        P-256 public key from the Controller. The Controller shall generate a
  *        new P-256 public/private key pair upon receipt of this command. (See
- *        Bluetooth Specification v.4.2, Vol. 2, Part E, 7.8.36)
+ *        Core Specification [Vol 4, Part E, 7.8.36])
  * @retval Value indicating success or error code.
  */
 tBleStatus hci_le_read_local_p256_public_key(void);
@@ -1416,10 +1411,10 @@ tBleStatus hci_le_read_local_p256_public_key(void);
  *        Diffie- Hellman key in the Controller for use over the LE transport.
  *        This command takes the remote P-256 public key as input. The Diffie-
  *        Hellman key generation uses the private key generated by
- *        LE_Read_Local_P256_Public_Key command. (See Bluetooth Specification
- *        v.4.2, Vol. 2, Part E, 7.8.37)
- * @param Remote_P256_Public_Key The remote P-256 public key: X, Y format Octets
- *        31-0: X coordinate Octets 63-32: Y coordinate Little Endian Format
+ *        LE_Read_Local_P256_Public_Key command. (See Core Specification [Vol 4,
+ *        Part E, 7.8.37])
+ * @param Remote_P256_Public_Key The remote P-256 public key (X, Y). Octets
+ *        31-0: X coordinate. Octets 63-32: Y coordinate. Little Endian Format.
  * @retval Value indicating success or error code.
  */
 tBleStatus hci_le_generate_dhkey(uint8_t Remote_P256_Public_Key[64]);
@@ -1432,8 +1427,8 @@ tBleStatus hci_le_generate_dhkey(uint8_t Remote_P256_Public_Key[64]);
  *        command can be used at any time when address translation is disabled
  *        in the Controller. When a Controller cannot add a device to the
  *        resolving list because the list is full, it shall respond with error
- *        code 0x07 (Memory Capacity Exceeded). (See Bluetooth Specification
- *        v.4.2, Vol. 2, Part E, 7.8.38)
+ *        code 0x07 (Memory Capacity Exceeded). (See Core Specification [Vol 4,
+ *        Part E, 7.8.38])
  * @param Peer_Identity_Address_Type Identity address type.
  *        Values:
  *        - 0x00: Public Identity Address
@@ -1458,8 +1453,7 @@ tBleStatus hci_le_add_device_to_resolving_list(uint8_t Peer_Identity_Address_Typ
  *        address translation is disabled in the Controller. When a Controller
  *        cannot remove a device from the resolving list because it is not
  *        found, it shall respond with error code 0x02 (Unknown Connection
- *        Identifier). (See Bluetooth Specification v.4.2, Vol. 2, Part E,
- *        7.8.39)
+ *        Identifier). (See Core Specification [Vol 4, Part E, 7.8.39])
  * @param Peer_Identity_Address_Type Identity address type.
  *        Values:
  *        - 0x00: Public Identity Address
@@ -1477,16 +1471,15 @@ tBleStatus hci_le_remove_device_from_resolving_list(uint8_t Peer_Identity_Addres
  *        translation is enabled in the Controller and: - Advertising is enabled
  *        - Scanning is enabled - Create connection command is outstanding This
  *        command can be used at any time when address translation is disabled
- *        in the Controller. (See Bluetooth Specification v.4.2, Vol. 2, Part E,
- *        7.8.40)
+ *        in the Controller. (See Core Specification [Vol 4, Part E, 7.8.40])
  * @retval Value indicating success or error code.
  */
 tBleStatus hci_le_clear_resolving_list(void);
 /**
  * @brief The LE_Read_Resolving_List_Size command is used to read the total
  *        number of address translation entries in the resolving list that can
- *        be stored in the Controller. (See Bluetooth Specification v.4.2, Vol.
- *        2, Part E, 7.8.41)
+ *        be stored in the Controller. (See Core Specification [Vol 4, Part E,
+ *        7.8.41])
  * @param[out] Resolving_List_Size Number of address translation entries in the
  *             resolving list
  * @retval Value indicating success or error code.
@@ -1500,7 +1493,7 @@ tBleStatus hci_le_read_resolving_list_size(uint8_t *Resolving_List_Size);
  *        command can be used at any time. When a Controller cannot find a
  *        Resolvable Private Address associated with the Peer Identity Address,
  *        it shall respond with error code 0x02 (Unknown Connection Identifier).
- *        (See Bluetooth Specification v.4.2, Vol. 2, Part E, 7.8.42)
+ *        (See Core Specification [Vol 4, Part E, 7.8.42])
  * @param Peer_Identity_Address_Type Identity address type.
  *        Values:
  *        - 0x00: Public Identity Address
@@ -1521,8 +1514,8 @@ tBleStatus hci_le_read_peer_resolvable_address(uint8_t Peer_Identity_Address_Typ
  *        being used may change after the command is called. This command can be
  *        used at any time. When a Controller cannot find a Resolvable Private
  *        Address associated with the Peer Identity Address, it shall respond
- *        with error code 0x02 (Unknown Connection Identifier). (See Bluetooth
- *        Specification v.4.2, Vol. 2, Part E, 7.8.43)
+ *        with error code 0x02 (Unknown Connection Identifier). (See Core
+ *        Specification [Vol 4, Part E, 7.8.43])
  * @param Peer_Identity_Address_Type Identity address type.
  *        Values:
  *        - 0x00: Public Identity Address
@@ -1543,7 +1536,7 @@ tBleStatus hci_le_read_local_resolvable_address(uint8_t Peer_Identity_Address_Ty
  *        Controller receives a local or peer Resolvable Private Address. This
  *        command can be used at any time except when: - Advertising is enabled
  *        - Scanning is enabled - Create connection command is outstanding (See
- *        Bluetooth Specification v.4.2, Vol. 2, Part E, 7.8.44)
+ *        Core Specification [Vol 4, Part E, 7.8.44])
  * @param Address_Resolution_Enable Enable/disable address resolution in the
  *        controller. 0x00: Address Resolution in controller disabled (default),
  *        0x01: Address Resolution in controller enabled
@@ -1558,7 +1551,7 @@ tBleStatus hci_le_set_address_resolution_enable(uint8_t Address_Resolution_Enabl
  *        of time the controller uses a Resolvable Private Address before a new
  *        resolvable private address is generated and starts being used. This
  *        timeout applies to all addresses generated by the controller. (See
- *        Bluetooth Specification v.4.2, Vol. 2, Part E, 7.8.45)
+ *        Core Specification [Vol 4, Part E, 7.8.45])
  * @param RPA_Timeout RPA_Timeout measured in seconds. Range for N: 0x0001 -
  *        0x0E10 (1 sec - 1 hour) Default: N= 0x0384 (900 secs or 15 minutes)
  *        Values:
@@ -1842,7 +1835,7 @@ tBleStatus hci_le_set_advertising_set_random_address(uint8_t Advertising_Handle,
  *        choose a power level lower than or equal to the one specified by the
  *        Host.
  *        Values:
- *        - -127 ... 126
+ *        - -127 ... 20
  *        - 127: No preference
  * @param Primary_Advertising_PHY The Primary_Advertising_PHY parameter
  *        indicates the PHY on which the advertising packets are transmitted on
@@ -1887,7 +1880,7 @@ tBleStatus hci_le_set_advertising_set_random_address(uint8_t Advertising_Handle,
  *             Controller. The Controller shall not change the transmit power
  *             for this advertising set without being directed to by the Host.
  *             Values:
- *             - -127 ... 126
+ *             - -127 ... 20
  * @retval Value indicating success or error code.
  */
 tBleStatus hci_le_set_extended_advertising_parameters(uint8_t Advertising_Handle,
@@ -2624,9 +2617,9 @@ tBleStatus hci_le_set_privacy_mode(uint8_t Peer_Identity_Address_Type,
  *        it should transmit as many as possible.
  *        Values:
  *        - 0x01 ... 0x10: The number of Constant Tone Extensions to transmit in each periodic advertising interval
- * @param Switching_Pattern_Length
+ * @param Switching_Pattern_Length The number of Antenna IDs in the pattern.
  *        Values:
- *        - 0x02 ... 0x4B: The number of Antenna IDs in the pattern.
+ *        - 0x02 ... 0x4B
  * @param Antenna_IDs List of Antenna IDs in the pattern
  * @retval Value indicating success or error code.
  */
@@ -2783,9 +2776,9 @@ tBleStatus hci_le_set_connectionless_iq_sampling_enable(uint16_t Sync_Handle,
  *        Values:
  *        - 0x01: CTE_SLOT_1us
  *        - 0x02: CTE_SLOT_2us
- * @param Switching_Pattern_Length
+ * @param Switching_Pattern_Length The number of Antenna IDs in the pattern.
  *        Values:
- *        - 0x02 ... 0x4B: The number of Antenna IDs in the pattern.
+ *        - 0x02 ... 0x4B
  * @param Antenna_IDs List of Antenna IDs in the pattern
  * @retval Value indicating success or error code.
  */
@@ -2825,9 +2818,9 @@ tBleStatus hci_le_set_connection_cte_receive_parameters(uint16_t Connection_Hand
  *        - 0x01: Allow AoA Constant Tone Extension Response
  *        - 0x02: Allow AoD Constant Tone Extension Response with 1 microsecond slots
  *        - 0x04: Allow AoD Constant Tone Extension Response with 2 microseconds slots
- * @param Switching_Pattern_Length
+ * @param Switching_Pattern_Length The number of Antenna IDs in the pattern.
  *        Values:
- *        - 0x02 ... 0x4B: The number of Antenna IDs in the pattern.
+ *        - 0x02 ... 0x4B
  * @param Antenna_IDs List of Antenna IDs in the pattern
  * @retval Value indicating success or error code.
  */
@@ -3626,39 +3619,36 @@ tBleStatus hci_le_reject_cis_request(uint16_t Connection_Handle,
  * @param Num_BIS Total number of BISes in the BIG.
  *        Values:
  *        - 0x01 ... 0x1F
- * @param SDU_Interval The interval, in microseconds, of periodic SDUs.
+ * @param SDU_Interval Interval, in microseconds, of periodic SDUs.
  *        Values:
  *        - 0x0000FF ... 0x0FFFFF
- * @param Max_SDU Maximum size of an SDU, in octets.
+ * @param Max_SDU Maximum size of an SDU in octets.
  *        Values:
  *        - 0x0001 ... 0x0FFF
  * @param Max_Transport_Latency Maximum transport latency, in milliseconds.
  *        Values:
- *        - 0x0005 ... 0x0FA0
- * @param RTN The number of times that every BIS Data PDU should be
- *        retransmitted.
+ *        - 5 ... 4000
+ * @param RTN Number of times that every BIS Data PDU should be retransmitted.
  *        Values:
  *        - 0x00 ... 0x1E
- * @param PHY Transmitter PHY of packets.
+ * @param PHY PHY used for transmission of PDUs of BISes in the BIG.
  *        Flags:
  *        - 0x01: LE_1M_PHY_BIT
  *        - 0x02: LE_2M_PHY_BIT
  *        - 0x04: LE_CODED_PHY_BIT
- * @param Packing Used to indicate the preferred method of arranging subevents
- *        of multiple BISes.
+ * @param Packing Preferred method of arranging subevents of multiple CISes.
  *        Values:
  *        - 0x00: Sequential
  *        - 0x01: Interleaved
- * @param Framing The format for sending BIS Data PDUs.
+ * @param Framing Format of the CIS Data PDUs.
  *        Values:
  *        - 0x00: Unframed
  *        - 0x01: Framed
- * @param Encryption The encryption mode of the BISes.
+ * @param Encryption Encryption mode of the BISes.
  *        Values:
  *        - 0x00: Unencrypted
  *        - 0x01: Encrypted
- * @param Broadcast_Code 128-bit code used for deriving the session key for
- *        decrypting payloads of BISes in the BIG.
+ * @param Broadcast_Code Code used to encrypt and decrypt BIS payloads.
  * @retval Value indicating success or error code.
  */
 tBleStatus hci_le_create_big(uint8_t BIG_Handle,
@@ -3854,8 +3844,6 @@ tBleStatus hci_le_remove_iso_data_path(uint16_t Connection_Handle,
  *        this command while the Controller has a connection to another device,
  *        the Controller shall return the error code Command Disallowed (0x0C).
  * @param Bit_Number Bit position in the FeatureSet.
- *        Values:
- *        - 0x00 ... 0x3F
  * @param Bit_Value If 0, the Host feature is disabled, if 1 the Host feature is
  *        enablded.
  *        Values:
@@ -4259,7 +4247,7 @@ tBleStatus hci_le_subrate_request(uint16_t Connection_Handle,
  *        choose a power level lower than or equal to the one specified by the
  *        Host.
  *        Values:
- *        - -127 ... 126
+ *        - -127 ... 20
  *        - 127: No preference
  * @param Primary_Advertising_PHY The Primary_Advertising_PHY parameter
  *        indicates the PHY on which the advertising packets are transmitted on
@@ -4320,7 +4308,7 @@ tBleStatus hci_le_subrate_request(uint16_t Connection_Handle,
  *             Controller. The Controller shall not change the transmit power
  *             for this advertising set without being directed to by the Host.
  *             Values:
- *             - -127 ... 126
+ *             - -127 ... 20
  * @retval Value indicating success or error code.
  */
 tBleStatus hci_le_set_extended_advertising_parameters_v2(uint8_t Advertising_Handle,
@@ -4551,6 +4539,121 @@ tBleStatus hci_le_set_periodic_advertising_parameters_v2(uint8_t Advertising_Han
                                                          uint8_t Response_Slot_Spacing,
                                                          uint8_t Num_Response_Slots);
 /**
+ * @brief This command requests the supported LE features for the Controller.
+ *        See Core Specification [Vol 4, Part E, 7.8.128].
+ * @param[out] Max_Page The number of the highest-numbered page of the supported
+ *             LE features that contains at least one bit set to 1.
+ *             Values:
+ *             - 0x01 ... 0x0A
+ * @param[out] LE_Features Bit Mask List of the supported LE features. See
+ *             Bluetooth spec. [Vol 6] Part B, Section 4.6.
+ * @retval Value indicating success or error code.
+ */
+tBleStatus hci_le_read_all_local_supported_features(uint8_t *Max_Page,
+                                                    uint8_t LE_Features[248]);
+/**
+ * @brief This command requests, from the remote device identified by the
+ *        Connection_Handle, the features used on the connection and the
+ *        features supported by the remote device. See Core Specification [Vol
+ *        4, Part E, 7.8.129].
+ * @param Connection_Handle Connection handle that identifies the connection.
+ *        Values:
+ *        - 0x0000 ... 0x0EFF
+ * @param Pages_Requested The number of the highest-numbered page of features
+ *        that the Host requires and the Controller shall obtain.
+ *        Values:
+ *        - 0x01 ... 0x0A
+ * @retval Value indicating success or error code.
+ */
+tBleStatus hci_le_read_all_remote_features(uint16_t Connection_Handle,
+                                           uint8_t Pages_Requested);
+/**
+ * @brief This command is used by the Host to set or clear a bit controlled by
+ *        the Host in the Link Layer FeatureSet stored in the Controller. See
+ *        Core Specification [Vol 4, Part E, 7.8.115].
+ * @param Bit_Number Bit position in the FeatureSet.
+ *        Values:
+ *        - 0x0000 ... 0x07BF
+ * @param Bit_Value If 0, the Host feature is disabled, if 1 the Host feature is
+ *        enablded.
+ *        Values:
+ *        - 0x00: DISABLED
+ *        - 0x01: ENABLED
+ * @retval Value indicating success or error code.
+ */
+tBleStatus hci_le_set_host_feature_v2(uint16_t Bit_Number,
+                                      uint8_t Bit_Value);
+/**
+ * @brief This command is used to add a single device to a list of devices
+ *        monitored while scanning. See Core Specification [Vol 4, Part E,
+ *        7.8.146].
+ * @param Address_Type Address type of the advertising device.
+ *        Values:
+ *        - 0x00: Public Device Address
+ *        - 0x01: Random Device Address
+ * @param Address Address  of the advertising device.
+ * @param RSSI_Low_Threshold RSSI value below which an
+ *        HCI_LE_Monitored_Advertisers_Report event shall be generated when the
+ *        associated timer expires for that device. Units: dBm.
+ *        Values:
+ *        - -127 ... 20
+ * @param RSSI_High_Threshold RSSI value equal to or above which an
+ *        HCI_LE_Monitored_Advertisers_Report event may be triggered for that
+ *        device. Units: dBm.
+ *        Values:
+ *        - -127 ... 20
+ * @param Timeout Time (in seconds) that the device from which advertisements
+ *        are received has an RSSI value that remains below the
+ *        RSSI_Threshold_Low before an event is generated.
+ *        Values:
+ *        - 0x01 ... 0xFF
+ * @retval Value indicating success or error code.
+ */
+tBleStatus hci_le_add_device_to_monitored_advertisers_list(uint8_t Address_Type,
+                                                           uint8_t Address[6],
+                                                           int8_t RSSI_Low_Threshold,
+                                                           int8_t RSSI_High_Threshold,
+                                                           uint8_t Timeout);
+/**
+ * @brief This command is used to remove a single device from the Monitored
+ *        Advertisers List.. See Core Specification [Vol 4, Part E, 7.8.147].
+ * @param Address_Type Address type of the advertising device.
+ *        Values:
+ *        - 0x00: Public Device Address
+ *        - 0x01: Random Device Address
+ * @param Address Address of the advertising device.
+ * @retval Value indicating success or error code.
+ */
+tBleStatus hci_le_remove_device_from_monitored_advertisers_list(uint8_t Address_Type,
+                                                                uint8_t Address[6]);
+/**
+ * @brief This command is used to remove all devices from the Monitored
+ *        Advertisers List. See Core Specification [Vol 4, Part E, 7.8.148].
+ * @retval Value indicating success or error code.
+ */
+tBleStatus hci_le_clear_monitored_advertisers_list(void);
+/**
+ * @brief This command is used to read the total number of entries in the
+ *        Monitored Advertisers List that the Controller can store. See Core
+ *        Specification [Vol 4, Part E, 7.8.150].
+ * @param[out] Number Number of entries allowed in the Monitored Advertisers
+ *             List.
+ * @retval Value indicating success or error code.
+ */
+tBleStatus hci_le_read_monitored_advertisers_list_size(uint8_t *Number);
+/**
+ * @brief This command is used by a Host to request the Controller to enable or
+ *        disable the monitoring of advertisers in the Monitored Advertisers
+ *        List and generate the HCI_LE_MONITORED_ADVERTISERS_REPORT_EVENT when
+ *        necessary. See Core Specification [Vol 4, Part E, 7.8.149].
+ * @param Enable Enables or disables the monitoring of advertisers.
+ *        Values:
+ *        - 0x00: Disable
+ *        - 0x01: Enable
+ * @retval Value indicating success or error code.
+ */
+tBleStatus hci_le_enable_monitoring_advertisers(uint8_t Enable);
+/**
  * @brief API used to send HCI ACL Data Packets to exchange data between the Host and Controller.
  *
  * @note The API name is only available in link layer only mode.
@@ -4606,11 +4709,10 @@ tBleStatus hci_tx_iso_data(uint16_t Connection_Handle,
 /**
  * @brief This command is used to start a test where the DUT receives test
  *        reference packets at a fixed interval. The tester generates the test
- *        reference packets. (See Bluetooth Specification v.4.1, Vol. 2, Part E,
- *        7.8.28)
- * @param RX_Frequency
+ *        reference packets. (See Core Specification [Vol 4, Part E, 7.8.28])
+ * @param RX_Frequency N = (F - 2402) / 2 Frequency Range: 2402 MHz to 2480 MHz
  *        Values:
- *        - 0x00 ... 0x27: N = (F - 2402) / 2.Frequency Range : 2402 MHz to 2480 MHz
+ *        - 0x00 ... 0x27
  * @retval Value indicating success or error code.
  */
 tBleStatus hci_le_receiver_test(uint8_t RX_Frequency);
@@ -4619,15 +4721,14 @@ tBleStatus hci_le_receiver_test(uint8_t RX_Frequency);
  *        reference packets at a fixed interval. The Controller shall transmit
  *        at maximum power. An LE Controller supporting the LE_Transmitter_Test
  *        command shall support Packet_Payload values 0x00, 0x01 and 0x02. An LE
- *        Controller may support other values of Packet_Payload. (See Bluetooth
- *        Specification v.4.1, Vol. 2, Part E, 7.8.29)
- * @param TX_Frequency N = (F - 2402) / 2. Frequency Range : 2402 MHz to 2480
- *        MHz
+ *        Controller may support other values of Packet_Payload. (See Core
+ *        Specification [Vol 4, Part E, 7.8.29])
+ * @param TX_Frequency N = (F - 2402) / 2 Frequency Range: 2402 MHz to 2480 MHz
  *        Values:
  *        - 0x00 ... 0x27
  * @param Length_Of_Test_Data Length in bytes of payload data in each packet.
- *        Supported ranges:       - (0x00,0x25) if data length extension is
- *        disabled.       - (0x00,0xFF) if data length extension is enabled.
+ *        Supported ranges: (0x00,0x25) if data length extension is disabled;
+ *        (0x00,0xFF) if data length extension is enabled.
  *        Values:
  *        - 0x00 ... 0xFF
  * @param Packet_Payload Content of the Payload of the test reference packets.
@@ -4656,8 +4757,7 @@ tBleStatus hci_le_transmitter_test(uint8_t TX_Frequency,
  * @brief This command is used to stop any test which is in progress. The
  *        Number_Of_Packets for a transmitter test shall be reported as 0x0000.
  *        The Number_Of_Packets is an unsigned number and contains the number of
- *        received packets. (See Bluetooth Specification v.4.1, Vol. 2, Part E,
- *        7.8.30)
+ *        received packets. (See Core Specification [Vol 4, Part E, 7.8.30])
  * @param[out] Number_Of_Packets Number of packets received.
  * @retval Value indicating success or error code.
  */
@@ -4697,8 +4797,8 @@ tBleStatus hci_le_receiver_test_v2(uint8_t RX_Channel,
  *        Values:
  *        - 0x00 ... 0x27: Frequency Range: 2402 MHz to 2480 MHz
  * @param Length_Of_Test_Data Length in bytes of payload data in each packet.
- *        Supported ranges:       - (0x00,0x25) if data length extension is
- *        disabled.       - (0x00,0xFF) if data length extension is enabled.
+ *        Supported ranges: (0x00,0x25) if data length extension is disabled;
+ *        (0x00,0xFF) if data length extension is enabled.
  *        Values:
  *        - 0x00 ... 0xFF
  * @param Packet_Payload Content of the Payload of the test reference packets.
@@ -4759,9 +4859,9 @@ tBleStatus hci_le_transmitter_test_v2(uint8_t TX_Channel,
  *        error code Unsupported Feature or Parameter Value (0x11). Note: Some
  *        Controllers may be unable to determine which values do or do not
  *        identify an antenna.
- * @param RX_Channel
+ * @param RX_Channel N = (F - 2402) / 2 Frequency Range: 2402 MHz to 2480 MHz
  *        Values:
- *        - 0x00 ... 0x27: N = (F - 2402) / 2.Frequency Range : 2402 MHz to 2480 MHz
+ *        - 0x00 ... 0x27
  * @param PHY PHY to be used by the receiver.
  *        Values:
  *        - 0x01: LE_1M_PHY
@@ -4784,9 +4884,9 @@ tBleStatus hci_le_transmitter_test_v2(uint8_t TX_Channel,
  *        Values:
  *        - 0x01: CTE_SLOT_1us
  *        - 0x02: CTE_SLOT_2us
- * @param Switching_Pattern_Length
+ * @param Switching_Pattern_Length The number of Antenna IDs in the pattern.
  *        Values:
- *        - 0x02 ... 0x4B: The number of Antenna IDs in the pattern.
+ *        - 0x02 ... 0x4B
  * @param Antenna_IDs List of Antenna IDs in the pattern
  * @retval Value indicating success or error code.
  */
@@ -4832,12 +4932,12 @@ tBleStatus hci_le_receiver_test_v3(uint8_t RX_Channel,
  *        be used by the transmitter. If the parameter is set to a value other
  *        than 0x7E or 0x7F, then the Controller shall make the requested change
  *        or shall make the nearest change that it is capable of doing.
- * @param TX_Channel N = (F - 2402) / 2. Frequency Range : 2402 MHz to 2480 MHz
+ * @param TX_Channel N = (F - 2402) / 2 Frequency Range: 2402 MHz to 2480 MHz
  *        Values:
  *        - 0x00 ... 0x27
  * @param Test_Data_Length Length in bytes of payload data in each packet.
- *        Supported ranges:       - (0x00,0x25) if data length extension is
- *        disabled.       - (0x00,0xFF) if data length extension is enabled.
+ *        Supported ranges: (0x00,0x25) if data length extension is disabled;
+ *        (0x00,0xFF) if data length extension is enabled.
  *        Values:
  *        - 0x00 ... 0xFF
  * @param Packet_Payload Content of the Payload of the test reference packets.
@@ -5068,53 +5168,50 @@ tBleStatus hci_le_set_cig_parameters_test(uint8_t CIG_ID,
  * @param Num_BIS Total number of BISes in the BIG.
  *        Values:
  *        - 0x01 ... 0x1F
- * @param SDU_Interval The interval, in microseconds, of periodic SDUs.
+ * @param SDU_Interval Interval, in microseconds, of periodic SDUs.
  *        Values:
  *        - 0x0000FF ... 0x0FFFFF
- * @param ISO_Interval The time between consecutive BIG anchor points. Time = N
- *        * 1.25 ms Time Range: 5 ms to 4 s
+ * @param ISO_Interval Time between consecutive BIG anchor points. Time = N *
+ *        1.25 ms.
  *        Values:
  *        - 0x0004 (5.00 ms)  ... 0x0C80 (4000.00 ms)
- * @param NSE The total number of subevents in each interval of each BIS in the
- *        BIG.
+ * @param NSE Total number of BISes in the BIG.
  *        Values:
  *        - 0x01 ... 0x1F
- * @param Max_SDU Maximum size of an SDU, in octets.
+ * @param Max_SDU Maximum size of an SDU in octets.
  *        Values:
  *        - 0x0001 ... 0x0FFF
- * @param Max_PDU Maximum size, in octets, of payload
+ * @param Max_PDU Maximum size, in octets, of payload.
  *        Values:
  *        - 0x0001 ... 0x00FB
- * @param PHY Transmitter PHY of packets.
+ * @param PHY PHY used for transmission of PDUs of BISes in the BIG.
  *        Flags:
  *        - 0x01: LE_1M_PHY_BIT
  *        - 0x02: LE_2M_PHY_BIT
  *        - 0x04: LE_CODED_PHY_BIT
- * @param Packing Used to indicate the preferred method of arranging subevents
- *        of multiple BISes.
+ * @param Packing Preferred method of arranging subevents of multiple CISes.
  *        Values:
  *        - 0x00: Sequential
  *        - 0x01: Interleaved
- * @param Framing The format for sending BIS Data PDUs.
+ * @param Framing Format of the CIS Data PDUs.
  *        Values:
  *        - 0x00: Unframed
  *        - 0x01: Framed
- * @param BN The number of new payloads in each interval for each BIS.
+ * @param BN Number of new payloads in each interval for each BIS.
  *        Values:
  *        - 0x01 ... 0x07
- * @param IRC The number of times the scheduled payload(s) are transmitted in a
- *        given event.
+ * @param IRC Number of times the scheduled payloads are transmitted in a given
+ *        event.
  *        Values:
  *        - 0x01 ... 0x0F
  * @param PTO Offset used for pre-transmissions.
  *        Values:
  *        - 0x00 ... 0x0F
- * @param Encryption The encryption mode of the BISes.
+ * @param Encryption Encryption mode of the BISes.
  *        Values:
  *        - 0x00: Unencrypted
  *        - 0x01: Encrypted
- * @param Broadcast_Code 128-bit code used for deriving the session key for
- *        decrypting payloads of BISes in the BIG.
+ * @param Broadcast_Code Code used to encrypt and decrypt BIS payloads.
  * @retval Value indicating success or error code.
  */
 tBleStatus hci_le_create_big_test(uint8_t BIG_Handle,
@@ -5251,12 +5348,12 @@ tBleStatus hci_le_iso_test_end(uint16_t Connection_Handle,
  *        be used by the transmitter. If the parameter is set to a value other
  *        than 0x7E or 0x7F, then the Controller shall make the requested change
  *        or shall make the nearest change that it is capable of doing.
- * @param TX_Channel N = (F - 2402) / 2. Frequency Range : 2402 MHz to 2480 MHz
+ * @param TX_Channel N = (F - 2402) / 2 Frequency Range: 2402 MHz to 2480 MHz
  *        Values:
  *        - 0x00 ... 0x27
  * @param Test_Data_Length Length in bytes of payload data in each packet.
- *        Supported ranges:       - (0x00,0x25) if data length extension is
- *        disabled.       - (0x00,0xFF) if data length extension is enabled.
+ *        Supported ranges: (0x00,0x25) if data length extension is disabled;
+ *        (0x00,0xFF) if data length extension is enabled.
  *        Values:
  *        - 0x00 ... 0xFF
  * @param Packet_Payload Content of the Payload of the test reference packets.
@@ -5291,9 +5388,9 @@ tBleStatus hci_le_iso_test_end(uint16_t Connection_Handle,
  *        - 0x00: Expect AoA Constant Tone Extension
  *        - 0x01: Expect AoD Constant Tone Extension with 1 microsecond slots
  *        - 0x02: Expect AoD Constant Tone Extension with 2 microseconds slots
- * @param Switching_Pattern_Length
+ * @param Switching_Pattern_Length The number of Antenna IDs in the pattern.
  *        Values:
- *        - 0x02 ... 0x4B: The number of Antenna IDs in the pattern.
+ *        - 0x02 ... 0x4B
  * @param Antenna_IDs List of Antenna IDs in the pattern
  * @param Transmit_Power_Level
  *        Values:
@@ -5355,12 +5452,13 @@ tBleStatus aci_hal_get_fw_build_number(uint16_t *Build_Number);
  *        of the one stored in NVM. - 0x2F: Value is a bit field that indicates
  *        the advertising channel indices that shall be used when scanning. At
  *        least one channel bit shall be set. Bit 0: ch. 37; bit 1: ch. 38; bit
- *        2: ch 39. - 0xD0: Use debug key for Secure connection: 1 byte - 0xD1:
- *        Set the maximum allowed parameter values for Data Length Extension: 8
- *        bytes, 2 bytes for each of the following parameters:
- *        supportedMaxTxOctets, supportedMaxTxTime, supportedMaxRxOctets,
- *        supportedMaxRxTime, in little-endian order.         (default
- *        251,2120,251,2120).
+ *        2: ch 39. - 0x50: Minimum proprietary connection interval in 1.25 ms
+ *        units, from 4 to 5 (i.e. from 5 ms to 6.25 ms): 2 bytes. - 0xD0: Use
+ *        debug key for Secure connection: 1 byte - 0xD1: Set the maximum
+ *        allowed parameter values for Data Length Extension: 8 bytes, 2 bytes
+ *        for each of the following parameters:         supportedMaxTxOctets,
+ *        supportedMaxTxTime, supportedMaxRxOctets, supportedMaxRxTime, in
+ *        little-endian order.         (default 251,2120,251,2120).
  *        Values:
  *        - 0x00: CONFIG_DATA_PUBADDR_OFFSET
  *        - 0x08: CONFIG_DATA_ER_OFFSET
@@ -5368,6 +5466,7 @@ tBleStatus aci_hal_get_fw_build_number(uint16_t *Build_Number);
  *        - 0x2C: LL_WITHOUT_HOST
  *        - 0x2E: CONFIG_DATA_STATIC_RANDOM_ADDRESS
  *        - 0x2F: CONFIG_DATA_SCAN_CH_MAP
+ *        - 0x50: CONFIG_DATA_MIN_CONN_INTERVAL
  *        - 0xD0: CONFIG_DATA_DEBUG_KEY
  *        - 0xD1: CONFIG_DATA_DLE
  * @param Length Length of data to be written
@@ -5847,7 +5946,7 @@ tBleStatus ll_set_periodic_advertising_response_data_ptr(uint16_t Sync_Handle,
  *        when the command is executed for the first time (unless the section is
  *        erased). Do not power off the device while this function is writing
  *        into Flash memory.
- * @param Privacy_Type Specify if privacy is enabled or not and which one .
+ * @param Privacy_Type Specify if privacy is enabled or not and which one.
  *        Values:
  *        - 0x00: Privacy disabled
  *        - 0x01: Privacy host enabled
@@ -6021,7 +6120,8 @@ tBleStatus aci_gap_get_security_level(uint16_t Connection_Handle,
                                       uint8_t *Security_Mode,
                                       uint8_t *Security_Level);
 /**
- * @brief
+ * @brief The command safely masks or unmasks HCI LE events. Events unmasked by
+ *        Host cannot be masked with this command.
  * @param LE_Event_Mask LE event mask. Default: 0x000000000000001F.
  *        Flags:
  *        - 0x0000000000000000: No LE events specified
@@ -6334,13 +6434,13 @@ tBleStatus aci_gap_get_oob_data(uint8_t OOB_Data_Type,
  *        Values:
  *        - 0x00: Local device
  *        - 0x01: Remote device
- * @param Address_Type Identity address type of the remote device. Ignored if
- *        Device_Type is 0.
+ * @param Address_Type Address type of the remote device. Ignored if Device_Type
+ *        is 0.
  *        Values:
- *        - 0x00: Public Identity Address
- *        - 0x01: Random (static) Identity Address
- * @param Address Public or Random (static) address of the peer device. Ignored
- *        if Device_Type is 0.
+ *        - 0x00: Public Address
+ *        - 0x01: Random Address
+ * @param Address Public or Random address of the peer device. Ignored if
+ *        Device_Type is 0.
  * @param OOB_Data_Type OOB Data type. - 0x00: Legacy Pairing (LP) v.4.1 TK
  *        (Temporary Key) - 0x01: Secure Connections (SC) v.4.2 Random value r
  *        used for generation of Confirm value - 0x02: Secure Connections (SC)
@@ -6454,7 +6554,7 @@ tBleStatus aci_gap_remove_bonded_device(uint8_t Peer_Identity_Address_Type,
  *        (Units: dBm). This parameter is ignored if extended advertising is not
  *        enabled.
  *        Values:
- *        - -127 ... 126
+ *        - -127 ... 20
  *        - 127: No preference
  * @param Primary_Advertising_PHY The Primary_Advertising_PHY parameter
  *        indicates the PHY on which the advertising packets are transmitted on
@@ -6961,7 +7061,7 @@ tBleStatus aci_gap_decrypt_adv_data(uint8_t Session_Key[16],
  * @brief Masks events from the GATT. The default configuration is all the
  *        events unmasked (enabled).
  * @param GATT_Evt_Mask GATT/ATT event mask.
- *        Values:
+ *        Flags:
  *        - 0x00000001: ACI_GATT_ATTRIBUTE_MODIFIED_EVENT
  *        - 0x00000002: ACI_GATT_PROC_TIMEOUT_EVENT
  *        - 0x00000004: ACI_ATT_EXCHANGE_MTU_RESP_EVENT
@@ -7771,8 +7871,8 @@ tBleStatus aci_l2cap_connection_parameter_update_req(uint16_t Connection_Handle,
  *        this LE connection. Time = N * 0.625 msec.
  * @param Max_CE_Length The maximum length of connection event recommended for
  *        this LE connection. Time = N * 0.625 msec.
- * @param Identifier Identifier received in ACI_L2CAP_Connection_Update_Req
- *        event.
+ * @param Identifier Identifier received in @ref
+ *        aci_l2cap_connection_update_req_event_rp0.
  * @param Accept Specify if connection update parameters are acceptable or not.
  *        Values:
  *        - 0x00: Reject

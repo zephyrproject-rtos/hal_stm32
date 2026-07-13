@@ -178,8 +178,7 @@ typedef PACKED(struct) hci_disconnection_complete_event_rp0_s {
  * the Secure_Connections_Host_Support parameter. When
  * Secure_Connections_Host_Support is 'disabled' or the Connection_Handle refers
  * to an LE link, the Controller shall only use Encryption_Enabled values 0x00
- * (OFF) and 0x01 (ON). (See Bluetooth Specification v.4.1, Vol. 2, Part E,
- * 7.7.8)
+ * (OFF) and 0x01 (ON). (See Core Specification [Vol 4, Part E, 7.7.8])
  */
 typedef PACKED(struct) hci_encryption_change_event_rp0_s {
 /**
@@ -218,7 +217,7 @@ typedef PACKED(struct) hci_encryption_change_event_rp0_s {
  * with an LE-U logical link, the Version event parameter shall be Link Layer
  * VersNr parameter, the Manufacturer_Name event parameter shall be the CompId
  * parameter, and the Subversion event parameter shall be the SubVersNr
- * parameter. (See Bluetooth Specification v.4.1, Vol. 2, Part E, 7.7.12)
+ * parameter. (See Core Specification [Vol 4, Part E, 7.7.12])
  */
 typedef PACKED(struct) hci_read_remote_version_information_complete_event_rp0_s {
 /**
@@ -393,7 +392,7 @@ typedef PACKED(struct) aci_blecore_event_s {
 #define HCI_LE_CONNECTION_COMPLETE_SUBEVT_CODE                                 0x01
 #define HCI_LE_ADVERTISING_REPORT_SUBEVT_CODE                                  0x02
 #define HCI_LE_CONNECTION_UPDATE_COMPLETE_SUBEVT_CODE                          0x03
-#define HCI_LE_READ_REMOTE_FEATURES_COMPLETE_SUBEVT_CODE                       0x04
+#define HCI_LE_READ_REMOTE_FEATURES_PAGE_0_COMPLETE_SUBEVT_CODE                0x04
 #define HCI_LE_LONG_TERM_KEY_REQUEST_SUBEVT_CODE                               0x05
 #define HCI_LE_DATA_LENGTH_CHANGE_SUBEVT_CODE                                  0x07
 #define HCI_LE_READ_LOCAL_P256_PUBLIC_KEY_COMPLETE_SUBEVT_CODE                 0x08
@@ -430,6 +429,9 @@ typedef PACKED(struct) aci_blecore_event_s {
 #define HCI_LE_PERIODIC_ADVERTISING_SUBEVENT_DATA_REQUEST_SUBEVT_CODE          0x27
 #define HCI_LE_PERIODIC_ADVERTISING_RESPONSE_REPORT_SUBEVT_CODE                0x28
 #define HCI_LE_ENHANCED_CONNECTION_COMPLETE_V2_SUBEVT_CODE                     0x29
+#define HCI_LE_READ_ALL_REMOTE_FEATURES_COMPLETE_SUBEVT_CODE                   0x2B
+#define HCI_LE_MONITORED_ADVERTISERS_REPORT_SUBEVT_CODE                        0x34
+
 /**
   * @}
   */
@@ -581,7 +583,7 @@ typedef PACKED(struct) hci_le_connection_update_complete_event_rp0_s {
  * of the process of the Controller obtaining the used features of the remote
  * Bluetooth device specified by the Connection_Handle event parameter.
  */
-typedef PACKED(struct) hci_le_read_remote_features_complete_event_rp0_s {
+typedef PACKED(struct) hci_le_read_remote_features_page_0_complete_event_rp0_s {
 /**
  * For standard error codes see Bluetooth specification, Vol. 2, part D. For
  * proprietary error code refer to Error codes section.
@@ -598,7 +600,7 @@ typedef PACKED(struct) hci_le_read_remote_features_complete_event_rp0_s {
  * specification.
  */
   uint8_t LE_Features[8];
-} hci_le_read_remote_features_complete_event_rp0;
+} hci_le_read_remote_features_page_0_complete_event_rp0;
 
 /**
  * The LE Long Term Key Request event indicates that the central device is
@@ -728,14 +730,14 @@ typedef PACKED(struct) hci_le_enhanced_connection_complete_event_rp0_s {
  */
   uint8_t Role;
 /**
- * 0x00 Public Device Address 0x01 Random Device Address 0x02 Public Identity
- * Address (Corresponds to Resolved Private Address) 0x03 Random (Static)
- * Identity Address (Corresponds to Resolved Private Address)
+ * 0x00: Public Device Address; 0x01: Random Device Address; 0x02: Public
+ * Identity Address (Corresponds to Resolved Private Address); 0x03: Random
+ * (Static) Identity Address (Corresponds to Resolved Private Address).
  * Values:
  * - 0x00: Public Device Address
  * - 0x01: Random Device Address
  * - 0x02: Public Identity Address
- * - 0x03: Random (Static) Identity Address
+ * - 0x03: Random (static) Identity Address
  */
   uint8_t Peer_Address_Type;
 /**
@@ -838,17 +840,17 @@ typedef PACKED(struct) hci_le_phy_update_complete_event_rp0_s {
 /**
  * The transmitter PHY for the connection
  * Values:
- * - 0x01: The transmitter PHY for the connection is LE 1M
- * - 0x02: The transmitter PHY for the connection is LE 2M
- * - 0x03: The transmitter PHY for the connection is LE Coded
+ * - 0x01: HCI_PHY_LE_1M
+ * - 0x02: HCI_PHY_LE_2M
+ * - 0x03: HCI_PHY_LE_CODED
  */
   uint8_t TX_PHY;
 /**
  * The receiver PHY for the connection
  * Values:
- * - 0x01: The receiver PHY for the connection is LE 1M
- * - 0x02: The receiver PHY for the connection is LE 2M
- * - 0x03: The receiver PHY for the connection is LE Coded
+ * - 0x01: HCI_PHY_LE_1M
+ * - 0x02: HCI_PHY_LE_2M
+ * - 0x03: HCI_PHY_LE_CODED
  */
   uint8_t RX_PHY;
 } hci_le_phy_update_complete_event_rp0;
@@ -989,7 +991,7 @@ typedef PACKED(struct) hci_le_periodic_advertising_report_event_rp0_s {
 /**
  * TX Power. Units: dBm
  * Values:
- * - -127 ... 126
+ * - -127 ... 20
  * - 127: NA
  */
   int8_t TX_Power;
@@ -2245,7 +2247,7 @@ typedef PACKED(struct) hci_le_periodic_advertising_report_v2_event_rp0_s {
 /**
  * TX Power. Units: dBm
  * Values:
- * - -127 ... 126
+ * - -127 ... 20
  * - 127: NA
  */
   int8_t TX_Power;
@@ -2535,14 +2537,14 @@ typedef PACKED(struct) hci_le_enhanced_connection_complete_v2_event_rp0_s {
  */
   uint8_t Role;
 /**
- * 0x00 Public Device Address 0x01 Random Device Address 0x02 Public Identity
- * Address (Corresponds to Resolved Private Address) 0x03 Random (Static)
- * Identity Address (Corresponds to Resolved Private Address)
+ * 0x00: Public Device Address; 0x01: Random Device Address; 0x02: Public
+ * Identity Address (Corresponds to Resolved Private Address); 0x03: Random
+ * (Static) Identity Address (Corresponds to Resolved Private Address).
  * Values:
  * - 0x00: Public Device Address
  * - 0x01: Random Device Address
  * - 0x02: Public Identity Address
- * - 0x03: Random (Static) Identity Address
+ * - 0x03: Random (static) Identity Address
  */
   uint8_t Peer_Address_Type;
 /**
@@ -2608,6 +2610,77 @@ typedef PACKED(struct) hci_le_enhanced_connection_complete_v2_event_rp0_s {
  */
   uint16_t Sync_Handle;
 } hci_le_enhanced_connection_complete_v2_event_rp0;
+
+/**
+ * This event is used to indicate the completion of the process of the
+ * Controller obtaining the features supported by the remote Bluetooth device
+ * specified by the Connection_Handle event parameter. See Bluetooth spec. v.6.0
+ * [Vol 4, Part E, 7.7.65.38].
+ */
+typedef PACKED(struct) hci_le_read_all_remote_features_complete_event_rp0_s {
+/**
+ * For standard error codes see Bluetooth specification, Vol. 2, part D. For
+ * proprietary error code refer to Error codes section.
+ */
+  uint8_t Status;
+/**
+ * Connection handle that identifies the connection.
+ * Values:
+ * - 0x0000 ... 0x0EFF
+ */
+  uint16_t Connection_Handle;
+/**
+ * The number of the highest-numbered page of the remote device's supported LE
+ * features that contains at least one bit set to 1.
+ * Values:
+ * - 0x01 ... 0x0A
+ */
+  uint8_t Max_Remote_Page;
+/**
+ * The number of the highest-numbered page of LE_Features that contains valid
+ * data.
+ * Values:
+ * - 0x01 ... 0x0A
+ */
+  uint8_t Max_Valid_Page;
+/**
+ * Bit Mask List of the supported LE features. See Bluetooth spec. [Vol 6] Part
+ * B, Section 4.6.
+ */
+  uint8_t LE_Features[248];
+} hci_le_read_all_remote_features_complete_event_rp0;
+
+/**
+ * This event indicates that an advertiser on the Monitored Advertisers List has
+ * met an RSSI threshold condition established by the @ref
+ * hci_le_enable_monitoring_advertisers command. See Core Specification [Vol 4,
+ * Part E, 7.7.65.47].
+ */
+typedef PACKED(struct) hci_le_monitored_advertisers_report_event_rp0_s {
+/**
+ * Values 0x02 and 0x03 correspond to resolved Private Address.
+ * Values:
+ * - 0x00: Public Device Address
+ * - 0x01: Random Device Address
+ * - 0x02: Public Identity Address
+ * - 0x03: Random (static) Identity Address
+ */
+  uint8_t Address_Type;
+/**
+ * Public Device Address, Random Device Address, Public Identity Address, or
+ * Random (static) Identity Address of the device being monitored.
+ */
+  uint8_t Address[6];
+/**
+ * RSSI threshold condition. 0: Received RSSI value below the RSSI low threshold
+ * for longer than the timeout period or no RSSI value received. 1: Received
+ * RSSI value greater than or equal to the RSSI high threshold.
+ * Values:
+ * - 0x00: RSSI_LOW
+ * - 0x01: RSSI_HIGH
+ */
+  uint8_t Condition;
+} hci_le_monitored_advertisers_report_event_rp0;
 
 /**
   * @}

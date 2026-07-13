@@ -154,6 +154,7 @@ wb0_ble_transparent_mode_app_path = "Projects/NUCLEO-WB09KE/Applications/BLE/" \
 file_list_wb0 = {
     "STM32_BLE": [
         "Middlewares/ST/STM32_BLE/ble.h",
+        "Middlewares/ST/STM32_BLE/ble_legacy.h",
         "Middlewares/ST/STM32_BLE/stack/config/ble_stack_user_cfg.c",
         "Middlewares/ST/STM32_BLE/stack/include/ble_api.h",
         "Middlewares/ST/STM32_BLE/stack/include/ble_const.h",

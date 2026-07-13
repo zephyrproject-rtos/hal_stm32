@@ -109,7 +109,7 @@ static void              FLASH_KeyWrite(void);
   */
 HAL_StatusTypeDef HAL_FLASHEx_Erase(FLASH_EraseInitTypeDef *pEraseInit, uint32_t *PageError)
 {
-  HAL_StatusTypeDef status;
+  HAL_StatusTypeDef status = HAL_OK;
   uint32_t index;
 
   /* Check the parameters */
@@ -167,7 +167,7 @@ HAL_StatusTypeDef HAL_FLASHEx_Erase(FLASH_EraseInitTypeDef *pEraseInit, uint32_t
   */
 HAL_StatusTypeDef HAL_FLASHEx_Erase_IT(FLASH_EraseInitTypeDef *pEraseInit)
 {
-  HAL_StatusTypeDef status;
+  HAL_StatusTypeDef status = HAL_OK;
   /* Check the parameters */
   assert_param(IS_FLASH_TYPE_ERASE(pEraseInit->TypeErase));
 
@@ -225,7 +225,7 @@ HAL_StatusTypeDef HAL_FLASHEx_Erase_IT(FLASH_EraseInitTypeDef *pEraseInit)
   */
 HAL_StatusTypeDef HAL_FLASHEx_OTPWrite(uint32_t Address, uint32_t Data)
 {
-  HAL_StatusTypeDef status;
+  HAL_StatusTypeDef status = HAL_OK;
 
   /* Check the parameters */
   assert_param(IS_ADDR_ALIGNED_32BITS(Address));
@@ -357,7 +357,7 @@ HAL_StatusTypeDef HAL_FLASHEx_PageProtection(FLASH_PageProtectionTypeDef *pagePr
   */
 HAL_StatusTypeDef HAL_FLASHEx_Protection_Config(uint32_t ProtectionLevel)
 {
-  HAL_StatusTypeDef status;
+  HAL_StatusTypeDef status = HAL_OK;
 
   /* Check the parameters */
   assert_param(IS_PROTECTION_LEVEL(ProtectionLevel));
@@ -464,7 +464,7 @@ HAL_StatusTypeDef HAL_FLASHEx_MassRead(uint32_t pattern)
   */
 HAL_StatusTypeDef HAL_FLASHEx_LFSRSignature(uint32_t *LFSR_Result)
 {
-  HAL_StatusTypeDef status;
+  HAL_StatusTypeDef status = HAL_OK;
 
   /* Wait for last operation to be completed */
   status = FLASH_WaitForLastOperation(FLASH_TIMEOUT_VALUE);

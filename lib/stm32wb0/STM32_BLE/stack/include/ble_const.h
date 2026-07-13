@@ -374,6 +374,7 @@
                                                                 after reset. */
 #define CONFIG_DATA_STATIC_RANDOM_ADDRESS           (0x2E) /**< To set the static random address used by the stack, instead of the one stored in NVM. */
 #define CONFIG_DATA_SCAN_CH_MAP                     (0x2F) /**< To set the channel map for scanning. */
+#define CONFIG_DATA_MIN_CONN_INTERVAL               (0x50) /**< Minimum connection interval below 7.5 ms */
 #define CONFIG_DATA_STORED_STATIC_RANDOM_ADDRESS    (0x80) /**< The static random address stored in NVM. */
 #define CONFIG_DATA_DEBUG_KEY                       (0xD0) /**< Use debug key for secure connections. */
 #define CONFIG_DATA_DLE                             (0xD1) /**< To set the maximum allowed parameter values for Data Length Extension */
@@ -392,6 +393,7 @@
 #define CONFIG_DATA_LL_WITHOUT_HOST_LEN         (1)
 #define CONFIG_DATA_STATIC_RANDOM_ADDRESS_LEN   (6)
 #define CONFIG_DATA_SCAN_CH_MAP_LEN             (1)
+#define CONFIG_DATA_MIN_CONN_INTERVAL_LEN       (2)
 #define CONFIG_DATA_DEBUG_KEY_LEN               (1)
 #define CONFIG_DATA_DLE_LEN                     (1)
 /**
