@@ -1,0 +1,48 @@
+STM32CubeWL3
+############
+
+Origin:
+   STMicroelectronics
+   https://www.st.com/en/embedded-software/stm32cubewl3.html
+
+Status:
+   version v1.5.0
+
+Purpose:
+   STMicroelectronics official MCU package for STM32WL3x series.
+
+Description:
+   This package is an extract of official STM32CubeWL3 package written by STMicroelectronics.
+   It is composed of STM32Cube hardware abstraction layer (HAL) and low layer (LL) drivers
+   plus the CMSIS device headers for the STM32WL3x series: a top-level stm32wl3x.h and the
+   device-group headers stm32wl3xx.h (STM32WL30/31/33) and stm32wl3rx.h (STM32WL3R).
+
+Dependencies:
+    None.
+
+URL:
+   https://github.com/STMicroelectronics/STM32CubeWL3
+
+Commit:
+   a9cdf2a35810b354c7c34d77465d862b9b8cd945
+
+Maintained-by:
+   External
+
+License:
+   BSD-3-Clause
+
+License Link:
+   https://opensource.org/licenses/BSD-3-Clause
+
+Patch List:
+
+   *Added patches to enable compilation with Zephyr
+    -Added stm32cube/stm32wl3x/drivers/include/stm32wl3x_hal_conf.h
+      . copied from the ST-provided stm32wl3x_hal_conf_template.h
+    -exclude stm32cube/stm32wl3x/soc/system_stm32wl3x.c from build
+      . Missing definitions moved to 'zephyr/soc/st/stm32/stm32wl3x/soc.c'
+        . SystemCoreClock (CMSIS global variable)
+        . RAM_VR          (STM32WL3x RAM virtual registers)
+    -in stm32cube/stm32wl3x/drivers/include/Legacy/stm32_hal_legacy.h
+      . Remove PAGESIZE definition which conflicts with POSIX
