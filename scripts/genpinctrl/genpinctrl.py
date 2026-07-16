@@ -76,6 +76,7 @@ SUPPORTED_FAMILIES = [
     "stm32wb",
     "stm32wb0",
     "stm32wl",
+    "stm32wl3",
 ]
 """Supported SoC families"""
 

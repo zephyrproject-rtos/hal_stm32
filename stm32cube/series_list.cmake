@@ -31,4 +31,5 @@ set(supported_series
   stm32wbax
   stm32wbx
   stm32wlx
+  stm32wl3x
 )

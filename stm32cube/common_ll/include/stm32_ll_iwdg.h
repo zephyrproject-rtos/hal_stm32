@@ -56,6 +56,8 @@
 #include <stm32wbaxx_ll_iwdg.h>
 #elif defined(CONFIG_SOC_SERIES_STM32WBX)
 #include <stm32wbxx_ll_iwdg.h>
+#elif defined(CONFIG_SOC_SERIES_STM32WL3X)
+#include <stm32wl3x_ll_iwdg.h>
 #elif defined(CONFIG_SOC_SERIES_STM32WLX)
 #include <stm32wlxx_ll_iwdg.h>
 #endif
