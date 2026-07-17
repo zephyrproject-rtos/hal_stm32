@@ -503,6 +503,10 @@
 		pinmux = <STM32_PINMUX('B', 1, AF11)>;
 	};
 
+	/omit-if-no-ref/ lcd_vlcd_pb2: lcd_vlcd_pb2 {
+		pinmux = <STM32_PINMUX('B', 2, AF11)>;
+	};
+
 	/omit-if-no-ref/ lcd_seg7_pb3: lcd_seg7_pb3 {
 		pinmux = <STM32_PINMUX('B', 3, AF11)>;
 	};
