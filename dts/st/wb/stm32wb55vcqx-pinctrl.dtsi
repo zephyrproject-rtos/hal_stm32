@@ -663,6 +663,10 @@
 		pinmux = <STM32_PINMUX('A', 15, AF11)>;
 	};
 
+	/omit-if-no-ref/ lcd_vlcd_pb2: lcd_vlcd_pb2 {
+		pinmux = <STM32_PINMUX('B', 2, AF11)>;
+	};
+
 	/omit-if-no-ref/ lcd_seg7_pb3: lcd_seg7_pb3 {
 		pinmux = <STM32_PINMUX('B', 3, AF11)>;
 	};
@@ -725,6 +729,10 @@
 
 	/omit-if-no-ref/ lcd_seg20_pc2: lcd_seg20_pc2 {
 		pinmux = <STM32_PINMUX('C', 2, AF11)>;
+	};
+
+	/omit-if-no-ref/ lcd_vlcd_pc3: lcd_vlcd_pc3 {
+		pinmux = <STM32_PINMUX('C', 3, AF11)>;
 	};
 
 	/omit-if-no-ref/ lcd_seg22_pc4: lcd_seg22_pc4 {
