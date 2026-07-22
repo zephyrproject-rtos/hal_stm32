@@ -84,7 +84,7 @@ extern const  uint8_t D1CorePrescTable[16] ; /*!< D1CorePrescTable prescalers ta
 
 extern void SystemInit(void);
 extern void SystemCoreClockUpdate(void);
-#if defined(__GNUC__) && !defined(__ARMCC_VERSION)
+#if defined(__GNUC__) && !defined(__ARMCC_VERSION) && !defined(__clang__)
   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
 #else
   extern void ExitRun0Mode(void);
