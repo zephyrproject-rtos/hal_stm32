@@ -1,4 +1,3 @@
-/* USER CODE BEGIN Header */
 /**
   ******************************************************************************
   * @file    log_module.h
@@ -16,7 +15,6 @@
   *
   ******************************************************************************
   */
-/* USER CODE END Header */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef LOG_MODULE_H
@@ -33,9 +31,6 @@ extern "C" {
 #include "log_module_conf.h"
 
 /* Private includes ----------------------------------------------------------*/
-/* USER CODE BEGIN Includes */
-
-/* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
 /* Log module types */
@@ -62,10 +57,6 @@ typedef struct
  */
 typedef void CallBack_TimeStamp(char * Data, uint16_t SizeMax, uint16_t * TimeStampSize);
 
-/* USER CODE BEGIN ET */
-
-/* USER CODE END ET */
-
 /* Exported constants --------------------------------------------------------*/
 /* Global const struct variables to make the life of the user easier */
 /**
@@ -87,10 +78,6 @@ extern const Log_Verbose_Level_t LOG_VERBOSE_DEFAULT;
  * @brief  A const enum variable to include all regions in the logs.
  */
 extern const Log_Region_t LOG_REGION_MASK_DEFAULT;
-
-/* USER CODE BEGIN EC */
-
-/* USER CODE END EC */
 
 /* Exported functions prototypes ---------------------------------------------*/
 /* Module API - Module configuration */
@@ -208,10 +195,6 @@ void Log_Module_Print(Log_Verbose_Level_t VerboseLevel, Log_Region_t Region, con
  * @return None.
  */
 void Log_Module_PrintWithArg(Log_Verbose_Level_t VerboseLevel, Log_Region_t Region, const char * Text, va_list Args);
-
-/* USER CODE BEGIN EFP */
-
-/* USER CODE END EFP */
 
 #ifdef __cplusplus
 }

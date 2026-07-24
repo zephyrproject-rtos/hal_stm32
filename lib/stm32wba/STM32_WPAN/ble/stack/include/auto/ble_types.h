@@ -2877,6 +2877,31 @@ typedef __PACKED_STRUCT
 
 typedef __PACKED_STRUCT
 {
+  uint8_t Enable;
+} aci_hal_pta_enable_cp0;
+
+typedef __PACKED_STRUCT
+{
+  uint8_t Status;
+} aci_hal_pta_enable_rp0;
+
+typedef __PACKED_STRUCT
+{
+  uint8_t Mode;
+  uint16_t Handle;
+  uint32_t Priority;
+  uint32_t Priority_Mask;
+  uint8_t Slots_Number;
+  uint8_t Limit_Timeout;
+} aci_hal_pta_set_priority_cp0;
+
+typedef __PACKED_STRUCT
+{
+  uint8_t Status;
+} aci_hal_pta_set_priority_rp0;
+
+typedef __PACKED_STRUCT
+{
   uint8_t Status;
 } aci_gap_set_non_discoverable_rp0;
 
@@ -3106,11 +3131,6 @@ typedef __PACKED_STRUCT
 
 typedef __PACKED_STRUCT
 {
-  uint8_t Status;
-} aci_gap_configure_filter_accept_list_rp0;
-
-typedef __PACKED_STRUCT
-{
   uint16_t Connection_Handle;
   uint8_t Reason;
 } aci_gap_terminate_cp0;
@@ -3140,32 +3160,6 @@ typedef __PACKED_STRUCT
   uint16_t LE_Scan_Interval;
   uint16_t LE_Scan_Window;
   uint8_t Own_Address_Type;
-  uint8_t Filter_Duplicates;
-} aci_gap_start_limited_discovery_proc_cp0;
-
-typedef __PACKED_STRUCT
-{
-  uint8_t Status;
-} aci_gap_start_limited_discovery_proc_rp0;
-
-typedef __PACKED_STRUCT
-{
-  uint16_t LE_Scan_Interval;
-  uint16_t LE_Scan_Window;
-  uint8_t Own_Address_Type;
-  uint8_t Filter_Duplicates;
-} aci_gap_start_general_discovery_proc_cp0;
-
-typedef __PACKED_STRUCT
-{
-  uint8_t Status;
-} aci_gap_start_general_discovery_proc_rp0;
-
-typedef __PACKED_STRUCT
-{
-  uint16_t LE_Scan_Interval;
-  uint16_t LE_Scan_Window;
-  uint8_t Own_Address_Type;
   uint16_t Conn_Interval_Min;
   uint16_t Conn_Interval_Max;
   uint16_t Conn_Latency;
@@ -3180,38 +3174,6 @@ typedef __PACKED_STRUCT
 {
   uint8_t Status;
 } aci_gap_start_auto_connection_establish_proc_rp0;
-
-typedef __PACKED_STRUCT
-{
-  uint8_t LE_Scan_Type;
-  uint16_t LE_Scan_Interval;
-  uint16_t LE_Scan_Window;
-  uint8_t Own_Address_Type;
-  uint8_t Scanning_Filter_Policy;
-  uint8_t Filter_Duplicates;
-} aci_gap_start_general_connection_establish_proc_cp0;
-
-typedef __PACKED_STRUCT
-{
-  uint8_t Status;
-} aci_gap_start_general_connection_establish_proc_rp0;
-
-typedef __PACKED_STRUCT
-{
-  uint8_t LE_Scan_Type;
-  uint16_t LE_Scan_Interval;
-  uint16_t LE_Scan_Window;
-  uint8_t Own_Address_Type;
-  uint8_t Scanning_Filter_Policy;
-  uint8_t Filter_Duplicates;
-  uint8_t Num_of_Peer_Entries;
-  Peer_Entry_t Peer_Entry[(BLE_CMD_MAX_PARAM_LEN - 9)/sizeof(Peer_Entry_t)];
-} aci_gap_start_selective_connection_establish_proc_cp0;
-
-typedef __PACKED_STRUCT
-{
-  uint8_t Status;
-} aci_gap_start_selective_connection_establish_proc_rp0;
 
 typedef __PACKED_STRUCT
 {
@@ -3290,21 +3252,6 @@ typedef __PACKED_STRUCT
 {
   uint8_t Status;
 } aci_gap_set_broadcast_mode_rp0;
-
-typedef __PACKED_STRUCT
-{
-  uint16_t LE_Scan_Interval;
-  uint16_t LE_Scan_Window;
-  uint8_t LE_Scan_Type;
-  uint8_t Own_Address_Type;
-  uint8_t Filter_Duplicates;
-  uint8_t Scanning_Filter_Policy;
-} aci_gap_start_observation_proc_cp0;
-
-typedef __PACKED_STRUCT
-{
-  uint8_t Status;
-} aci_gap_start_observation_proc_rp0;
 
 typedef __PACKED_STRUCT
 {
@@ -3586,12 +3533,12 @@ typedef __PACKED_STRUCT
   uint8_t Scanning_Filter_Policy;
   uint8_t Scanning_PHYs;
   Scan_Param_Phy_t Scan_Param_Phy[2];
-} aci_gap_ext_start_scan_cp0;
+} aci_gap_start_scan_cp0;
 
 typedef __PACKED_STRUCT
 {
   uint8_t Status;
-} aci_gap_ext_start_scan_rp0;
+} aci_gap_start_scan_rp0;
 
 typedef __PACKED_STRUCT
 {
@@ -4023,19 +3970,6 @@ typedef __PACKED_STRUCT
 {
   uint8_t Status;
 } aci_gatt_write_without_resp_rp0;
-
-typedef __PACKED_STRUCT
-{
-  uint16_t Connection_Handle;
-  uint16_t Attr_Handle;
-  uint8_t Attribute_Val_Length;
-  uint8_t Attribute_Val[BLE_CMD_MAX_PARAM_LEN - 5];
-} aci_gatt_signed_write_without_resp_cp0;
-
-typedef __PACKED_STRUCT
-{
-  uint8_t Status;
-} aci_gatt_signed_write_without_resp_rp0;
 
 typedef __PACKED_STRUCT
 {

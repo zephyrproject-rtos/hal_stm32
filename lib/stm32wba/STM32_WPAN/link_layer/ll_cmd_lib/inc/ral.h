@@ -1,9 +1,4 @@
-/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/branches/P10164613/2.00a-lca05_CombinedPatchV2/firmware/public_inc/ral.h#2 $*/
-/*
- * Version Info
- * V1: Original 2.00a-lca05_CombinedPatchV2
- * V2: Patch for Temperature Calibration
- */
+/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/2.00a-lca06/inc/ral.h#2 $*/
 /**
  ********************************************************************************
  * @file    ral.h
@@ -768,12 +763,14 @@ void ral_set_mac_chnl_clbr_pending(uint8_t channel);
  *
  */
 void ral_exec_mac_ch_phy_clbr_pending(void);
+#if SUPPORT_COEXISTENCE
 /**
  * @brief Get the duration of single MAC channel calibration in sleep timer steps
  *
  * @return Duration of single MAC channel calibration in sleep timer steps
  */
 uint32_t ral_get_mac_ch_clbr_durn(void);
+#endif /* SUPPORT_COEXISTENCE */
 #endif /* DEFAULT_PHY_CALIBRATION_PERIOD */
 /**  @ingroup ral_intf_cmn
 *  @{
@@ -1379,6 +1376,14 @@ int8_t ral_get_cca_ed_threshold(void);
  * @param[in] error : Status error returned from this transmission
  */
 void radio_coex_tx_error_cbk(uint32_t error);
+#if(SUPPORT_OPENTHREAD_1_2 && (CONFIG_MAC_CSL_RECEIVER_ENABLE))
+/**
+ * @brief	Radio RX  error callback (used in CSL receive AT case).
+ *
+ * @param[in] error : Status error returned from this reception
+ */
+void radio_coex_rx_error_cbk(uint32_t error);
+#endif /*(SUPPORT_OPENTHREAD_1_2 && (CONFIG_MAC_CSL_RECEIVER_ENABLE))*/
 #endif /*end of (SUPPORT_COEXISTENCE)*/
 #if (RADIO_CSMA) &&(!SUPPORT_COEXISTENCE)
 /**

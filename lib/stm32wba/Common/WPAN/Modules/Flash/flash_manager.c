@@ -405,6 +405,9 @@ void FM_BackgroundProcess (void)
 
   if (flashop_complete == true)
   {
+    /* Release flash ownership */
+    (void)FM_MutexRelease ();
+
     UTILS_ENTER_CRITICAL_SECTION();
 
     /* Release semaphore on flash */
@@ -485,26 +488,40 @@ static FM_Cmd_Status_t FM_CheckFlashManagerState(FM_CallbackNode_t *CallbackNode
   }
   else
   { /* Flash manager is available */
-
-    if ((CallbackNode != NULL) && (CallbackNode->Callback != NULL))
+    /* Request ownership of the flash */
+    if (FM_OK == FM_MutexTake())
     {
-      UTILS_ENTER_CRITICAL_SECTION();
+      if ((CallbackNode != NULL) && (CallbackNode->Callback != NULL))
+      {
+        UTILS_ENTER_CRITICAL_SECTION();
 
-      fm_running_cb = CallbackNode->Callback;
+        fm_running_cb = CallbackNode->Callback;
 
-      UTILS_EXIT_CRITICAL_SECTION();
+        UTILS_EXIT_CRITICAL_SECTION();
+      }
+      else
+      {
+        UTILS_ENTER_CRITICAL_SECTION();
+
+        fm_running_cb = NULL;
+
+        UTILS_EXIT_CRITICAL_SECTION();
+      }
+
+      status = FM_OK;
     }
     else
     {
-      UTILS_ENTER_CRITICAL_SECTION();
+      /* Append callback to the pending list */
+      if ((CallbackNode != NULL) && (CallbackNode->Callback != NULL))
+      {
+        LST_insert_tail(&fm_cb_pending_list, &(CallbackNode->NodeList));
+      }
 
-      fm_running_cb = NULL;
-
-      UTILS_EXIT_CRITICAL_SECTION();
+      status = FM_BUSY;
     }
-
-    status = FM_OK;
   }
+
   return status;
 }
 
@@ -521,4 +538,15 @@ static void FM_WindowAllowed_Callback(void)
 
   /* Flash operation to be executed in background */
   FM_ProcessRequest();
+}
+
+/* Weak function Definition --------------------------------------------------*/
+__WEAK FM_Cmd_Status_t FM_MutexTake (void)
+{
+  return FM_OK;
+}
+
+__WEAK FM_Cmd_Status_t FM_MutexRelease (void)
+{
+  return FM_OK;
 }

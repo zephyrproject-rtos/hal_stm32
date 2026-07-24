@@ -6,7 +6,7 @@ Origin:
    https://github.com/STMicroelectronics/STM32CubeWBA
 
 Status:
-   version v1.9.0
+   version v1.10.0
 
 Purpose:
    This library is used on STM32WBA series to port BLE and IEEE802154 controller libraries in
@@ -51,7 +51,7 @@ Description:
       - Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/config/ble_basic_plus/ll_fw_config.h
       - Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/config/ieee_15_4_basic/ll_fw_config.h
       - Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/config/thread/ll_fw_config.h
-      - Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/config/concurrent/ble_15_4/ll_fw_config.h
+      - Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/config/concurrent/ble_basic_15_4/ll_fw_config.h
       - Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/config/concurrent/ble_basic_plus_15_4/ll_fw_config.h
       - Middlewares/ST/STM32_WPAN/link_layer/ll_sys/inc/linklayer_plat.h
       - Middlewares/ST/STM32_WPAN/link_layer/ll_sys/inc/ll_sys.h
@@ -116,7 +116,7 @@ URL:
    https://github.com/STMicroelectronics/STM32CubeWBA
 
 Commit:
-   92e834c2c34cf473b73271d54674a91a9c78477d
+   e455b860ceb52aaa0332a98f1e7a10bbd7014fc9
 
 Maintained-by:
    External
@@ -185,7 +185,12 @@ Patch List:
          * app_conf.h
          * ll_sys_if.h
          * linklayer_plat.h
-         * ll_sys_startup.c
+
+  * Brought back CFG_LPM_STDBY_WAKEUP_TIME macro to avoid including multiple files. Impacted file:
+         * app_conf.h
+
+  * Added #ifndef __ZEPHYR__. Impacted file:
+         * app_common.h
 
   * IEEE 802.15.4 feature support in Zephyr architecture requires :
          * specific libraries accessible in https://github.com/stm32-hotspot/STM32WBA-Zephyr-custom-binaries

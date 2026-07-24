@@ -1,4 +1,4 @@
-/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/branches/P10164613/2.00a-lca05_CombinedPatchV2/firmware/public_inc/ll_intf.h#5 $*/
+/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/2.00a-lca06/inc/ll_intf.h#5 $*/
 /**
  ********************************************************************************
  * @file    ll_intf_cmds.h
@@ -4047,6 +4047,17 @@ ble_stat_t ll_intf_le_set_dp_slp_mode(uint8_t dp_slp_mode);
  */
 void ll_intf_le_set_phy_clbr_params(uint32_t phy_clbr_evnt_period, uint32_t phy_clbr_evnt_count);
 
+/*===============  LE Set PHY Calibration Context ===============*/
+/**
+ * @brief Used to configure the execution context for PHY calibration initialization.
+ *
+ * @param  phy_clbr_context: [in] Specifies the context in which the PHY
+ *         calibration initialization is executed.
+ *
+ * @retval None.
+ */
+void ll_intf_le_set_phy_clbr_context(uint8_t phy_clbr_context);
+
 #if ((SUPPORT_BRD_ISOCHRONOUS || SUPPORT_SYNC_ISOCHRONOUS) || (SUPPORT_CONNECTED_ISOCHRONOUS))
 #if SUPPORT_HW_AUDIO_SYNC_SIGNAL
 /**
@@ -4069,7 +4080,7 @@ ble_stat_t ll_intf_enable_audio_sync_signal(uint16_t conn_hndle);
 ble_stat_t ll_intf_force_audio_sync_signal_resync(uint16_t conn_hndle, uint8_t force_state);
 #endif /*SUPPORT_SYNC_ISOCHRONOUS*/
 #endif /*SUPPORT_HW_AUDIO_SYNC_SIGNAL*/
-/* BZ 219809 change */
+
 #if (SUPPORT_CONNECTED_ISOCHRONOUS)
 /*=============== Get CIG information ===============*/
 /**
@@ -4084,7 +4095,7 @@ ble_stat_t ll_intf_force_audio_sync_signal_resync(uint16_t conn_hndle, uint8_t f
 ble_stat_t ll_intf_get_cig_info (uint16_t cis_handle_id, ble_intf_get_cig_info_st *get_cig_info);
 
 #endif /*SUPPORT_CONNECTED_ISOCHRONOUS*/
-/* End BZ 219809 change */
+
 #endif /* ((SUPPORT_BRD_ISOCHRONOUS || SUPPORT_SYNC_ISOCHRONOUS) || (SUPPORT_CONNECTED_ISOCHRONOUS)) */
 
 /*===============  LE Set Get Remaining Time For Next Event ===============*/
@@ -4225,7 +4236,6 @@ void ll_intf_free_ll_pkt(void* pkt);
  */
 void ll_intf_free_ll_pkt_hndlr(ble_buff_hdr_t* pkt);
 
-/* BZ 223394 change */
 #if((SUPPORT_CONNECTED_ISOCHRONOUS) || (SUPPORT_BRD_ISOCHRONOUS))
 /*===============  ll_intf_free_iso_sdu ===============*/
 /**
@@ -4952,8 +4962,6 @@ ble_stat_t ll_intf_set_end_of_activity_mask(uint16_t mask);
  */
 ble_stat_t ll_intf_get_link_status(uint8_t *sm_status, uint8_t *link_conn_handle);
 
-
-/* BZ 143245 change */
 /**
  * @brief  This function disables or enables the Peripheral latency feature
  *         during a connection.
@@ -4963,7 +4971,6 @@ ble_stat_t ll_intf_get_link_status(uint8_t *sm_status, uint8_t *link_conn_handle
  * @retval ble_stat_t	: Command status.
  */
 ble_stat_t ll_intf_set_peripheral_latency(uint8_t enable);
-/* End BZ 143245 change */
 
 #if (SUPPORT_MASTER_CONNECTION && SUPPORT_CHANNEL_CLASSIFICATION)
 /**
@@ -5583,6 +5590,15 @@ void ll_intf_ADV5ms_support(uint8_t enable, uint32_t randomization);
  *              (0 : disable min at 5ms, 1 : enable min Conn Interval at 5ms)
  */
 void ll_intf_BLE5ms_interval_support(uint8_t enable);
+
+#if (SUPPORT_BRD_ISOCHRONOUS)
+/**
+ * @brief Proprietary commands to enable the mechanism to improve the BIG
+ *        synchronization time by rescheduling EXT_ADV
+ * @param enable  [in]: Enable/ Disable proprietary feature.
+ */
+void ll_intf_BIG_synchro_enhancement_support(uint8_t enable);
+#endif /*(SUPPORT_BRD_ISOCHRONOUS)*/
 /**@}
 */
 

@@ -1,4 +1,4 @@
-/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/branches/P10164613/2.00a-lca05_CombinedPatchV2/firmware/public_inc/event_manager.h#4 $*/
+/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/2.00a-lca06/inc/event_manager.h#4 $*/
 /**
  ********************************************************************************
  * @file    event_manager.h
@@ -96,7 +96,7 @@ typedef enum {
 #endif /* SUPPORT_LE_EXTENDED_ADVERTISING */
 #endif /*SUPPORT_BLE*/
 #if SUPPORT_MAC
-	RADIO_MAC_TX_DONE_EVENT,
+	RADIO_MAC_PENDING_DONE_EVENT,
 	RAL_SM_DONE_EVENT,
 	MAC_SM_DONE_EVENT,
 	ED_TMR_EVENT,

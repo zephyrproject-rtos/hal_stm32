@@ -1,4 +1,4 @@
-/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/branches/P10164613/2.00a-lca05_CombinedPatchV2/firmware/public_inc/bsp.h#5 $*/
+/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/2.00a-lca06/inc/bsp.h#5 $*/
 /**
  ********************************************************************************
  * @file    bsp.h
@@ -150,6 +150,7 @@ typedef enum Debug_GPIO_e{
 	DBG_IO_LLWCC_CMN_HG_ISR                                     ,
 	DBG_IO_LLHWC_CMN_LW_ISR                                     ,
 	DBG_IO_LLHWC_CMN_CLR_TIMER_ERROR                            ,
+	DBG_IO_LLHWC_CMN_CLR_ACTTMR_ERROR                           ,
 	DBG_IO_LLHWC_LL_ISR                                         ,
 	DBG_IO_LLHWC_SPLTMR_SET                                     ,
 	DBG_IO_LLHWC_SPLTMR_GET                                     ,
@@ -416,9 +417,7 @@ void logger_write(uint8_t *buffer, uint32_t size);
  *
  * @retval None
  */
-extern void enable_irq(
-			void
-);
+extern void enable_irq( void );
 /**
  * @brief   disable interrupt request function
  * This function disable the MCU interrupt ,after calling this function the LL code must not be interrupted as it is in critical section
@@ -426,9 +425,7 @@ extern void enable_irq(
  *
  * @retval None
  */
-extern void disable_irq(
-			void
-);
+extern void disable_irq(void);
 /**
  * @brief this function is used to enable a specific ISR
  * @param[in]  isr_type that holds specific ISR to be enabled by this function
@@ -505,17 +502,6 @@ int bsp_intr_set_pri(uint32_t intrNum, void (*intr_cb)(void), int32_t intpri);
  * @retval 0   the given pointer is not in LL BLE memory
  */
 int bsp_is_ptr_in_ble_mem(void* ptr);
-
-
-/**
- * @brief  make the mcu sleep in a certain power mode according to its idle time.
- *
- * @param  None.
- *
- * @retval None.
- */
-void bsp_mcu_slp(void);
-
 
 /**
  * @brief	Clear GPIO pin output value

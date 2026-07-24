@@ -69,7 +69,7 @@ struct stm32wba_802154_ral_cbk_dispatch_tbl{
 	 * @param error		Transmission error status of type stm32wba_802154_ral_error_t.
 	 * 			Indicates whether the transmission was successful or if an
 	 * 			error occurred.
-	 * @param p_metadata 	Pointer to metadata of type stm32wba_802154_transmit_done_metadata_t, 
+	 * @param p_metadata 	Pointer to metadata of type stm32wba_802154_transmit_done_metadata_t,
 	 * 			containing additional information about the transmission.
 	 *
 	 * @retval none

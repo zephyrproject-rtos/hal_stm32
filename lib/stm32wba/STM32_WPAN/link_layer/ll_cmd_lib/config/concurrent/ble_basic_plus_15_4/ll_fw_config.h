@@ -1,4 +1,4 @@
-/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/2.00a-lca04/firmware/public_inc/ll_fw_config.h#1 $*/
+/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/2.00a-lca06/firmware/public_inc/ll_fw_config.h#1 $*/
 /**
  ********************************************************************************
  * @file    ll_fw_config.h
@@ -200,10 +200,6 @@
 #ifndef SUPPORT_PROFILE
 #define SUPPORT_PROFILE                             PROFILE_LIGHTWEIGHT /* Enable\Disable profiling LL timing framework */
 #endif /* SUPPORT_PROFILE */
-
-#ifndef LL_BASIC
-#define LL_BASIC                                    0
-#endif /* LL_BASIC */
 
 /*************************** MAC Configuration *************************************/
 /*Configurations of MAC will apply only when MAC is enabled*/

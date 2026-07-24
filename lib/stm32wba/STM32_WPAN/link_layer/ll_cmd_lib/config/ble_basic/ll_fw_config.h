@@ -1,4 +1,4 @@
-/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/2.00a-lca01/firmware/public_inc/ll_fw_config.h#1 $*/
+/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/2.00a-lca06/firmware/public_inc/ll_fw_config.h#1 $*/
 /**
  ********************************************************************************
  * @file    ll_fw_config.h
@@ -88,7 +88,7 @@
 #endif /* SUPPORT_PERIODIC_SYNC_TRANSFER */
 
 #ifndef SUPPORT_SLEEP_CLOCK_ACCURCY_UPDATES
-#define SUPPORT_SLEEP_CLOCK_ACCURCY_UPDATES         1 /* Enable\Disable Sleep Clock Accuracy Updates Feature. Enable:1 - Disable:0 */
+#define SUPPORT_SLEEP_CLOCK_ACCURCY_UPDATES         0 /* Enable\Disable Sleep Clock Accuracy Updates Feature. Enable:1 - Disable:0 */
 #endif /* SUPPORT_SLEEP_CLOCK_ACCURCY_UPDATES */
 
 #ifndef SUPPORT_CONNECTED_ISOCHRONOUS
@@ -189,10 +189,6 @@
 #ifndef SUPPORT_PROFILE
 #define SUPPORT_PROFILE                             PROFILE_LIGHTWEIGHT /* Enable\Disable profiling LL timing framework */
 #endif /* SUPPORT_PROFILE */
-
-#ifndef LL_BASIC
-#define LL_BASIC                                    1
-#endif /* LL_BASIC */
 
 /*************************** MAC Configuration *************************************/
 /*Configurations of MAC will apply only when MAC is enabled*/

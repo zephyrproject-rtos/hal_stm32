@@ -35,6 +35,9 @@ extern "C"{
 #include "app_conf.h"
 #include "hw.h"
 #include "ll_sys.h"
+#ifndef __ZEPHYR__
+#include "wpan_utils.h"
+#endif /* __ZEPHYR__ */
 
 /* -------------------------------- *
  *  Basic definitions               *

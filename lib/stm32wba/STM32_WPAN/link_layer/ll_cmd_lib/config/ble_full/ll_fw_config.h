@@ -1,4 +1,4 @@
-/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/2.00a-lca04/firmware/public_inc/ll_fw_config.h#1 $*/
+/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/2.00a-lca06/firmware/public_inc/ll_fw_config.h#1 $*/
 /**
  ********************************************************************************
  * @file    ll_fw_config.h
@@ -231,9 +231,13 @@
 #define SUPPORT_PROFILE                             PROFILE_LIGHTWEIGHT /* Enable\Disable profiling LL timing framework */
 #endif /* SUPPORT_PROFILE */
 
-#ifndef LL_BASIC
-#define LL_BASIC  0
-#endif /* LL_BASIC */
+#ifndef SUPPORT_HW_AUDIO_SYNC_SIGNAL
+#if (defined(STM32WBA25xx) || defined(STM32WBA26xx)) && !defined(CFG_LL_BLE_FULL_INTERFACE)
+#define SUPPORT_HW_AUDIO_SYNC_SIGNAL                    0 /* Enable\Disable the HW audio synchronization signal. Enable:1 - Disable:0 */
+#else
+#define SUPPORT_HW_AUDIO_SYNC_SIGNAL                    1 /* Enable\Disable the HW audio synchronization signal. Enable:1 - Disable:0 */
+#endif
+#endif /* SUPPORT_HW_AUDIO_SYNC_SIGNAL */
 
 /*************************** MAC Configuration *************************************/
 /*Configurations of MAC will apply only when MAC is enabled*/

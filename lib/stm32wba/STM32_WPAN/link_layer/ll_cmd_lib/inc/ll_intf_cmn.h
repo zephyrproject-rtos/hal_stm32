@@ -1,4 +1,4 @@
-/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/branches/P10164613/2.00a-lca05_CombinedPatchV2/firmware/public_inc/ll_intf_cmn.h#3 $*/
+/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/2.00a-lca06/inc/ll_intf_cmn.h#3 $*/
 /**
  ********************************************************************************
  * @file    ll_intf_cmn.h
@@ -165,6 +165,7 @@ void ll_intf_cmn_gain_fix_init(
  * @param[in] phy_clbr_evnt_count 	: Indicate the number of the PHY calibration events to be executed.
  */
 void ll_intf_cmn_set_phy_clbr_period(uint32_t phy_clbr_evnt_period, uint32_t phy_clbr_evnt_count);
+
 /** @}
 */
 

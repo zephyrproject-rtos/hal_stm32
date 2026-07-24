@@ -1,4 +1,3 @@
-/* USER CODE BEGIN Header */
 /**
   ******************************************************************************
   * @file    log_module.c
@@ -16,7 +15,6 @@
   *
   ******************************************************************************
   */
-/* USER CODE END Header */
 
 /* Includes ------------------------------------------------------------------*/
 #include <stdio.h> /* vsnprintf */
@@ -26,27 +24,15 @@
 #include "utilities_conf.h"
 
 /* Private includes ----------------------------------------------------------*/
-/* USER CODE BEGIN Includes */
-
-/* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
-/* USER CODE BEGIN PTD */
-
-/* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
 /* Definition of 'End Of Line' */
 #define ENDOFLINE_SIZE          (0x01u)
 #define ENDOFLINE_CHAR          '\n'
-/* USER CODE BEGIN PD */
-
-/* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
-/* USER CODE BEGIN PM */
-
-/* USER CODE END PM */
 
 /* Exported constants --------------------------------------------------------*/
 /* Global const struct variables to make the life of the user easier */
@@ -68,22 +54,13 @@ const Log_Color_t LOG_COLOR_DEFAULT_CONFIGURATION[] =
   LOG_COLOR_CODE_GREEN,     // For Region Zigbee
   LOG_COLOR_CODE_GREEN,     // For Region Thread
   LOG_COLOR_CODE_DEFAULT,   // For Region RTOS
-  /* USER CODE BEGIN LOG_COLOR_DEFAULT_CONFIGURATION */
-
-  /* USER CODE END LOG_COLOR_DEFAULT_CONFIGURATION */
 };
-/* USER CODE BEGIN EC */
-
-/* USER CODE END EC */
 
 /* Private variables ---------------------------------------------------------*/
 static uint32_t                 current_region_mask;
 static Log_Verbose_Level_t      current_verbose_level;
 static Log_Color_t              current_color_list[32];
 CallBack_TimeStamp *            log_timestamp_function;
-/* USER CODE BEGIN PV */
-
-/* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 static uint32_t Get_Region_Mask(Log_Region_t Region);
@@ -91,9 +68,6 @@ static uint32_t Get_Region_Mask(Log_Region_t Region);
 #if (LOG_INSERT_COLOR_INSIDE_THE_TRACE != 0)
 static uint16_t RegionToColor(char * TextBuffer, uint16_t SizeMax, Log_Region_t Region);
 #endif /* LOG_INSERT_COLOR_INSIDE_THE_TRACE != 0  */
-/* USER CODE BEGIN PFP */
-
-/* USER CODE END PFP */
 
 /* Functions Definition ------------------------------------------------------*/
 #if (LOG_INSERT_COLOR_INSIDE_THE_TRACE != 0)
@@ -147,10 +121,6 @@ void Log_Module_PrintWithArg(Log_Verbose_Level_t VerboseLevel, Log_Region_t Regi
   uint16_t buffer_size = 0;
   char full_text[UTIL_ADV_TRACE_TMP_BUF_SIZE + 1u];
 
-  /* USER CODE BEGIN Log_Module_PrintWithArg_1 */
-
-  /* USER CODE END Log_Module_PrintWithArg_1 */
-
   /* If the verbose level of the given log is not enabled, then we do not print the log */
   if (VerboseLevel > current_verbose_level)
   {
@@ -182,10 +152,6 @@ void Log_Module_PrintWithArg(Log_Verbose_Level_t VerboseLevel, Log_Region_t Regi
   tmp_size = (uint16_t)vsnprintf(&full_text[buffer_size], (UTIL_ADV_TRACE_TMP_BUF_SIZE - buffer_size), Text, Args);
   buffer_size += tmp_size;
 
-  /* USER CODE BEGIN Log_Module_PrintWithArg_2 */
-
-  /* USER CODE END Log_Module_PrintWithArg_2 */
-
 #if (LOG_INSERT_EOL_INSIDE_THE_TRACE != 0)
   /* Add End Of Line if needed */
   if (buffer_size > 1)
@@ -197,10 +163,6 @@ void Log_Module_PrintWithArg(Log_Verbose_Level_t VerboseLevel, Log_Region_t Regi
     }
   }
 #endif /* LOG_INSERT_EOL_INSIDE_THE_TRACE != 0 */
-
-  /* USER CODE BEGIN Log_Module_PrintWithArg_3 */
-
-  /* USER CODE END Log_Module_PrintWithArg_3 */
 
   /* Send full_text to ADV Traces */
   UTIL_ADV_TRACE_Send((const uint8_t *)full_text, buffer_size);
@@ -292,7 +254,3 @@ void Log_Module_RegisterTimeStampFunction(CallBack_TimeStamp * TimeStampFunction
 {
   log_timestamp_function = TimeStampFunction;
 }
-
-/* USER CODE BEGIN 0 */
-
-/* USER CODE END 0 */

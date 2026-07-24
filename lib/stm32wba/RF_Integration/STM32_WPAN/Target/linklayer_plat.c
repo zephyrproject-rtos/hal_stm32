@@ -458,7 +458,7 @@ void LINKLAYER_PLAT_DisableSpecificIRQ(uint8_t isr_type)
       local_basepri_value = __get_BASEPRI();
 
       /* Mask all other interrupts with lower priority that link layer SW low ISR */
-      __set_BASEPRI_MAX(RADIO_INTR_PRIO_LOW<<4);
+      __set_BASEPRI_MAX(RADIO_INTR_PRIO_LOW << 4 );
     }
   }
 }

@@ -1,9 +1,4 @@
-/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/branches/P10164613/2.00a-lca05_CombinedPatchV2/firmware/public_inc/platform.h#2 $*/
-/*
- * Version Info
- * V1: Original 2.00a-lca05_CombinedPatchV2
- * V2: Patch for Temperature Calibration
- */
+/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/2.00a-lca06/inc/platform.h#2 $*/
 /**
  ********************************************************************************
  * @file    platform.h
@@ -456,12 +451,18 @@ void radio_run_phy_clbr_on_temp_change(void);
  * @retval Calibration state
  */
 uint8_t radio_get_mac_ch_clbr_state(uint8_t channel);
+#if SUPPORT_COEXISTENCE
 /**
  * @brief Get the duration of single MAC channel calibration in sleep timer steps
  *
  * @return Duration of single MAC channel calibration in sleep timer steps
  */
 uint32_t radio_get_mac_ch_clbr_durn(void);
+/**
+ * @brief Check any pending PHY calibration for MAC channels and run it before releasing the scheduler grant.
+ */
+void radio_check_mac_ch_phy_clbr_pending(void);
+#endif /* SUPPORT_COEXISTENCE */
 #endif /* DEFAULT_PHY_CALIBRATION_PERIOD */
 
 #if (!SUPPORT_COEXISTENCE)

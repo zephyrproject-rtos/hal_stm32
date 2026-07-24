@@ -1,4 +1,4 @@
-/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/branches/P10164613/2.00a-lca05_CombinedPatchV2/firmware/public_inc/ll_error.h#4 $*/
+/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/2.00a-lca06/inc/ll_error.h#4 $*/
 /**
  ********************************************************************************
  * @file    error.h
@@ -231,4 +231,4 @@ typedef enum _HW_ERROR_CODES
 #endif /* SUPPORT_BLE */
 #endif /* ERROR_H_ */
 
-/******************* (C) (C) COPYRIGHT 2025 SYNOPSYS, INC. *****END OF FILE****/
+/******************* (C) (C) COPYRIGHT 2026 SYNOPSYS, INC. *****END OF FILE****/

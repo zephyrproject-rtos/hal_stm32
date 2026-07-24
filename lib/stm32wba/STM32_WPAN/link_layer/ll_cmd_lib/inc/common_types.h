@@ -1,4 +1,4 @@
-/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/branches/P10164613/2.00a-lca05_CombinedPatchV2/firmware/public_inc/common_types.h#5 $*/
+/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/2.00a-lca06/inc/common_types.h#5 $*/
 /**
  ********************************************************************************
  * @file    common_types.h
@@ -161,7 +161,7 @@ extern os_mutex_id g_ll_lock;
 
 #if SUPPORT_MAC
 /** Maximum number of MAC TX done events. */
-#define RADIO_MAC_TX_DONE_EVENT_MAX     				1
+#define RADIO_MAC_PENDING_DONE_EVENT_MAX     				1
 /** Maximum number of RAL state machine done events. */
 #define RAL_SM_DONE_EVENT_MAX 							RADIO_TX_RX_PACKET_BLOCK_COUNT
 /** Maximum number of ED timer events allowed. */
@@ -410,9 +410,7 @@ typedef struct ble_buff_hdr_st {
 typedef struct _iso_pdu_buff_hdr_st {
 	ble_buff_hdr_t  pkt;	/* PDU Packet */
 #if(SUPPORT_CONNECTED_ISOCHRONOUS && (SUPPORT_MASTER_CONNECTION || SUPPORT_SLAVE_CONNECTION))
-/* BZ 220696 Change */
 	int8_t flsh_tmout_cnt;		/* flush timeout counter */
-/* End BZ 220696 Change */
 	uint8_t flsh_tmout_subevnt_cnt;		/* flush timeout subevent number */
 	uint8_t rx_flsh_tmout_cnt_updtd;	/* flush timeout count updated or not flag */
 #endif //(SUPPORT_CONNECTED_ISOCHRONOUS && (SUPPORT_MASTER_CONNECTION || SUPPORT_SLAVE_CONNECTION))
@@ -442,7 +440,7 @@ typedef struct _sdu_buf_hdr_st {
 	 *
 	 * */
 } iso_sdu_buf_hdr_st, *iso_sdu_buf_hdr_p;
-/* BZ 219809 change */
+
 /**
  * @brief Data contained in CIS Request event
  *
@@ -457,7 +455,6 @@ typedef struct _ble_intf_get_cig_info_st{
 	uint8_t cis_id;		/* CIS Identifier */
 	uint8_t cig_id;		/* CIG Identifier */
 } ble_intf_get_cig_info_st;
-/* End BZ 219809 change */
 #endif  /* (SUPPORT_BRD_ISOCHRONOUS || SUPPORT_SYNC_ISOCHRONOUSs ||  (SUPPORT_CONNECTED_ISOCHRONOUS && ( SUPPORT_MASTER_CONNECTION || SUPPORT_SLAVE_CONNECTION))) */
 
 #if SUPPORT_LE_PAWR_ADVERTISER_ROLE
@@ -537,6 +534,12 @@ typedef enum {
 #ifndef DEFAULT_PHY_CALIBRATION_PERIOD
 #define DEFAULT_PHY_CALIBRATION_PERIOD        		10	/* Time period for PHY calibration = 10s */
 #endif /* DEFAULT_PHY_CALIBRATION_PERIOD */
+
+/**
+ * The PHY calibrations initialization options of execution context.
+ */
+#define PHY_CALIBRATION_CONTEXT_BG                          0
+#define PHY_CALIBRATION_CONTEXT_ISR                         1
 
 #ifndef SUPPORT_MAC_PHY_CONT_TESTING_CMDS
 #define SUPPORT_MAC_PHY_CONT_TESTING_CMDS			1

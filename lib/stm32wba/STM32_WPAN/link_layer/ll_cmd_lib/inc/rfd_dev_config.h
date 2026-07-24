@@ -1,4 +1,4 @@
-/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/branches/P10164613/2.00a-lca05_CombinedPatchV2/firmware/public_inc/rfd_dev_config.h#4 $*/
+/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/2.00a-lca06/inc/rfd_dev_config.h#4 $*/
 /**
  ********************************************************************************
  * @file    rfd_dev_config.h

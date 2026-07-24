@@ -176,6 +176,9 @@ extern "C" {
 #define USE_RT_DEBUG_LLHWC_CMN_CLR_TIMER_ERROR                (0)
 #define GPIO_DEBUG_LLHWC_CMN_CLR_TIMER_ERROR                  {GPIOA, LL_PWR_GPIO_PIN_0}
 
+#define USE_RT_DEBUG_LLHWC_CMN_CLR_ACTTMR_ERROR               (0)
+#define GPIO_DEBUG_LLHWC_CMN_CLR_ACTTMR_ERROR                 {GPIOA, LL_PWR_GPIO_PIN_0}
+
 #define USE_RT_DEBUG_LLHWC_LL_ISR                             (0)
 #define GPIO_DEBUG_LLHWC_LL_ISR                               {GPIOA, LL_PWR_GPIO_PIN_0}
 

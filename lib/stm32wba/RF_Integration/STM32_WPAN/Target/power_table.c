@@ -37,6 +37,7 @@ typedef enum _vdd_ldo_value_e {
 /* Private macros ------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 
+/* Table ID 0: max power table, output range up to +10 dBm. */
 const power_table_entry ll_tx_power_table_max_power[] = {
   {0x02, 0x02, 0x01, -20}, /* Actual_Power = -20.4 dBm */
   {0x02, 0x03, 0x01, -19}, /* Actual_Power = -19.4 dBm */
@@ -71,6 +72,7 @@ const power_table_entry ll_tx_power_table_max_power[] = {
   {0x0D, 0x19, 0x01, 10},  /* Actual_Power = 10 dBm */
 };
 
+/* Table ID 1: low power table, output range up to +2.6 dBm. */
 const power_table_entry ll_tx_power_table_low_power[] = {
   {0x02, 0x02, 0x01, -20}, /* Actual_Power = -20.5 dBm */
   {0x02, 0x03, 0x01, -19}, /* Actual_Power = -19.5 dBm */
@@ -98,40 +100,6 @@ const power_table_entry ll_tx_power_table_low_power[] = {
   {0x02, 0x19, 0x01, 3},   /* Actual_Power = 2.6 dBm */
 };
 
-const power_table_entry ll_tx_power_table_external_PA[] = {
-  {0x00, 0x0A, 0x01, -20}, /* Actual_Power = -12.7 dBm */
-  {0x00, 0x0B, 0x01, -19}, /* Actual_Power = -11.7 dBm */
-  {0x00, 0x0C, 0x01, -18}, /* Actual_Power = -10.7 dBm */
-  {0x00, 0x0D, 0x01, -17}, /* Actual_Power = -9.7 dBm */
-  {0x00, 0x0E, 0x01, -16},  /* Actual_Power = -8.6 dBm */
-  {0x00, 0x0F, 0x01, -15},  /* Actual_Power = -7.5 dBm */
-  {0x00, 0x10, 0x01, -14},  /* Actual_Power = -6.6 dBm */
-  {0x00, 0x11, 0x01, -13},  /* Actual_Power = -5.6 dBm */
-  {0x00, 0x12, 0x01, -12},  /* Actual_Power = -5 dBm */
-  {0x00, 0x13, 0x01, -11},  /* Actual_Power = -4 dBm */
-  {0x02, 0x14, 0x01, -10},  /* Actual_Power = -3 dBm */
-  {0x02, 0x15, 0x01, -9},  /* Actual_Power = -2 dBm */
-  {0x00, 0x17, 0x01, -8},  /* Actual_Power = -1.45 dBm */
-  {0x02, 0x17, 0x01, -7},   /* Actual_Power = -0.7 dBm */
-  {0x02, 0x04, 0x00, -6},  /* Actual_Power = 0.5 dBm */   /*switch from Internal PA to External PA*/
-  {0x02, 0x05, 0x00, -5},  /* Actual_Power = 2.2 dBm */
-  {0x02, 0x06, 0x00, -4},  /* Actual_Power = 3.7 dBm */
-  {0x02, 0x07, 0x00, -3},  /* Actual_Power = 5 dBm */
-  {0x02, 0x08, 0x00, -2},  /* Actual_Power = 6.5 dBm */
-  {0x02, 0x09, 0x00, -1},  /* Actual_Power = 8 dBm */
-  {0x02, 0x0A, 0x00, 0},   /* Actual_Power = 9 dBm */
-  {0x02, 0x0B, 0x00, 1},   /* Actual_Power = 10 dBm */
-  {0x02, 0x0C, 0x00, 2},   /* Actual_Power = 11 dBm */
-  {0x02, 0x0D, 0x00, 3},   /* Actual_Power = 12 dBm */
-  {0x02, 0x0E, 0x00, 4},   /* Actual_Power = 13 dBm */
-  {0x00, 0x0F, 0x00, 5},   /* Actual_Power = 14 dBm */
-  {0x00, 0x10, 0x00, 6},   /* Actual_Power = 15 dBm */
-  {0x00, 0x11, 0x00, 7},   /* Actual_Power = 16 dBm */
-  {0x00, 0x12, 0x00, 8},   /* Actual_Power = 17 dBm */
-  {0x00, 0x13, 0x00, 9},   /* Actual_Power = 18 dBm */
-  {0x02, 0x14, 0x00, 10},  /* Actual_Power = 19 dBm */
-};
-
 /* USER CODE BEGIN ll_tx_power_table */
 
 /* USER CODE END ll_tx_power_table */
@@ -140,7 +108,6 @@ const power_table_entry ll_tx_power_table_external_PA[] = {
 const power_table_id_t ll_tx_power_tables[] = {
   {ll_tx_power_table_max_power, sizeof(ll_tx_power_table_max_power)/sizeof(ll_tx_power_table_max_power[0]), VDD_LDO_VALUE_MAX_POWER, VDD_LDO_VALUE_2_ID_0, 0},
   {ll_tx_power_table_low_power, sizeof(ll_tx_power_table_low_power)/sizeof(ll_tx_power_table_low_power[0]), VDD_LDO_VALUE_LOW_POWER, VDD_LDO_VALUE_2_ID_0, 1},
-  {ll_tx_power_table_external_PA, sizeof(ll_tx_power_table_external_PA)/sizeof(ll_tx_power_table_external_PA[0]), VDD_LDO_VALUE_LOW_POWER, VDD_LDO_VALUE_2_ID_0, 2},
   /* USER CODE BEGIN ll_tx_power_tables */
 
   /* USER CODE END ll_tx_power_tables */

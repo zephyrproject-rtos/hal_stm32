@@ -25,5 +25,6 @@ void ll_sys_ble_cntrl_init(hst_cbk hostCallback);
 #endif /* SUPPORT_BLE */
 void ll_sys_mac_cntrl_init(void);
 void ll_sys_thread_init(void);
+void ll_sys_handle_missed_event_cb(uint16_t length, uint8_t* data);
 
 #endif /* LL_SYS_STARTUP_H */

@@ -49,11 +49,7 @@
  */
 #define BLE_MEM_BLOCK_SIZE                   32
 
-#if (BLE_STACK_PERIPHERAL_ONLY || BLE_STACK_BASIC_FEATURES)
-#define BLE_MEM_BLOCK_X_PTX(n_link)           0
-#else
 #define BLE_MEM_BLOCK_X_PTX(n_link)           (n_link)
-#endif
 
 #define BLE_MEM_BLOCK_X_TX(mtu) \
         (DIVC((mtu) + 4U, BLE_MEM_BLOCK_SIZE) + 1)
@@ -73,7 +69,7 @@
 
 /*
  * BLE_MBLOCKS_CALC: minimum number of buffers needed by the stack.
- * This is the minimum racomanded value and depends on:
+ * This is the minimum recommended value and depends on:
  *  - pw: size of Prepare Write List
  *  - mtu: ATT_MTU size
  *  - n_link: maximum number of simultaneous connections
@@ -96,34 +92,17 @@
  * - a part, that may be considered "fixed", i.e. independent from the above
  *   mentioned parameters.
 */
-#if (BLE_STACK_PERIPHERAL_ONLY)
-#define BLE_FIXED_BUFFER_SIZE_BYTES     4   /* Peripheral Only */
-#elif (BLE_STACK_BASIC_FEATURES)
-#define BLE_FIXED_BUFFER_SIZE_BYTES     4   /* Basic Features */
-#else
-#define BLE_FIXED_BUFFER_SIZE_BYTES   272   /* Full stack / AF / Basic Plus */
-#endif
+#define BLE_FIXED_BUFFER_SIZE_BYTES   272
 
 /*
  * BLE_PER_LINK_SIZE_BYTES: additional memory size used per link
  */
-#if (BLE_STACK_PERIPHERAL_ONLY)
-#define BLE_PER_LINK_SIZE_BYTES       148   /* Peripheral Only */
-#elif (BLE_STACK_BASIC_FEATURES)
-#define BLE_PER_LINK_SIZE_BYTES       176   /* Basic Features */
-#else
-#define BLE_PER_LINK_SIZE_BYTES       192   /* Full stack / AF / Basic Plus */
-#endif
+#define BLE_PER_LINK_SIZE_BYTES       192
 
 /*
  * BLE_PER_ADD_BEARER_SIZE_BYTES: additional memory size used per add. bearer
  */
-
-#if (BLE_STACK_PERIPHERAL_ONLY || BLE_STACK_BASIC_FEATURES)
-#define BLE_PER_ADD_BEARER_SIZE_BYTES   0   /* Peripheral Only / BF */
-#else
-#define BLE_PER_ADD_BEARER_SIZE_BYTES  40   /* Full stack / AF / Basic Plus */
-#endif
+#define BLE_PER_ADD_BEARER_SIZE_BYTES  40
 
 /*
  * BLE_TOTAL_BUFFER_SIZE: this macro returns the amount of memory, in bytes,

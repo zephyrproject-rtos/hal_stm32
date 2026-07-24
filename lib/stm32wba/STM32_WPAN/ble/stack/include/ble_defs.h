@@ -32,10 +32,6 @@
  */
 #define BLE_STATUS_DEV_IN_BLACKLIST                     0x59U
 
-/* CSRK not found during validation of an incoming signed packet
- */
-#define BLE_STATUS_CSRK_NOT_FOUND                       0x5AU
-
 /* IRK not found (Currently not used)
  */
 #define BLE_STATUS_IRK_NOT_FOUND                        0x5BU
@@ -211,6 +207,7 @@
 #define GAP_SELECTIVE_CONNECTION_ESTABLISHMENT_PROC  0x20U
 #define GAP_DIRECT_CONNECTION_ESTABLISHMENT_PROC     0x40U
 #define GAP_OBSERVATION_PROC                         0x80U
+#define GAP_GENERIC_SCAN_PROC                        0xB0U
 
 /* GAP Address Type
  */
@@ -225,6 +222,7 @@
 #define GAP_ADD_DEV_MODE_CLEAR                       0x01U
 #define GAP_ADD_DEV_MODE_FILTER_ACC_LIST_ONLY        0x02U
 #define GAP_ADD_DEV_MODE_BOTH_LISTS                  0x04U
+#define GAP_ADD_DEV_MODE_CONFIGURE_FROM_SDB          0x08U
 
 /* ------------------------------------------------------------------------- */
 
@@ -344,8 +342,7 @@
 #define ATTR_ACCESS_WRITE_REQ_ONLY                 0x02U
 #define ATTR_ACCESS_READ_WRITE                     0x03U
 #define ATTR_ACCESS_WRITE_WITHOUT_RESPONSE         0x04U
-#define ATTR_ACCESS_SIGNED_WRITE_ALLOWED           0x08U
-#define ATTR_ACCESS_WRITE_ANY                      0x0EU
+#define ATTR_ACCESS_WRITE_ANY                      0x06U
 #define ATTR_ACCESS_ANY                            0x0FU
 
 /* Characteristic properties
@@ -357,7 +354,6 @@
 #define CHAR_PROP_WRITE                            0x08U
 #define CHAR_PROP_NOTIFY                           0x10u
 #define CHAR_PROP_INDICATE                         0x20U
-#define CHAR_PROP_SIGNED_WRITE                     0x40U
 #define CHAR_PROP_EXT                              0x80U
 
 /* Security permissions for an attribute
@@ -490,6 +486,7 @@
 #define CONFIG_DATA_LL_RSSI_GOLDEN_RANGE_OFFSET    0xC2U
 #define CONFIG_DATA_LL_RPA_MODE_OFFSET             0xC3U
 #define CONFIG_DATA_LL_RX_ACL_CTRL_OFFSET          0xC4U
+#define CONFIG_DATA_LL_ISO_SCHED_MODE_OFFSET       0xC5U
 #define CONFIG_DATA_LL_MAX_DATA_EXT_OFFSET         0xD1U
 
 /* Length for configuration values (see ACI_HAL_WRITE_CONFIG_DATA)
@@ -506,6 +503,7 @@
 #define CONFIG_DATA_LL_RSSI_GOLDEN_RANGE_LEN        2
 #define CONFIG_DATA_LL_RPA_MODE_LEN                 1
 #define CONFIG_DATA_LL_RX_ACL_CTRL_LEN              2
+#define CONFIG_DATA_LL_ISO_SCHED_MODE_LEN           1
 #define CONFIG_DATA_LL_MAX_DATA_EXT_LEN             8
 
 /* ------------------------------------------------------------------------- */
