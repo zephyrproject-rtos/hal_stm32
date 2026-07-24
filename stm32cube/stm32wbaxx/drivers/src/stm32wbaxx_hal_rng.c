@@ -207,13 +207,12 @@ HAL_StatusTypeDef HAL_RNG_Init(RNG_HandleTypeDef *hrng)
 #endif /* RNG_CR_NIST_VALUE */
 #if defined(RNG_HTCR_NIST_VALUE)
   /* Recommended value for NIST compliance, refer to application note AN4230 */
-#if defined(RNG_HTCR0_HTCFG)
+#if defined(RNG_HTCR3_HTCFG)
   WRITE_REG(hrng->Instance->HTCR[0], RNG_HTCR_NIST_VALUE);
 #else
   WRITE_REG(hrng->Instance->HTCR, RNG_HTCR_NIST_VALUE);
-#endif  /* defined(RNG_HTCR0_HTCFG) */
+#endif  /* RNG_HTCR0_HTCFG || RNG_HTCR1_HTCFG || RNG_HTCR2_HTCFG || RNG_HTCR3_HTCFG */
 #endif /* RNG_HTCR_NIST_VALUE */
-  WRITE_REG(hrng->Instance->NSCR, RNG_NSCR_NIST_VALUE);
 
   /* Writing bit CONDRST=0 */
   CLEAR_BIT(hrng->Instance->CR, RNG_CR_CONDRST);
@@ -648,7 +647,7 @@ HAL_StatusTypeDef HAL_RNG_GenerateRandomNumber(RNG_HandleTypeDef *hrng, uint32_t
     /* Change RNG peripheral state */
     hrng->State = HAL_RNG_STATE_BUSY;
     /* Check if there is a seed error */
-    if (__HAL_RNG_GET_IT(hrng, RNG_IT_SEI) != RESET)
+    if (__HAL_RNG_GET_FLAG(hrng, RNG_FLAG_SECS) != RESET)
     {
       /* Update the error code */
       hrng->ErrorCode = HAL_RNG_ERROR_SEED;
@@ -668,6 +667,14 @@ HAL_StatusTypeDef HAL_RNG_GenerateRandomNumber(RNG_HandleTypeDef *hrng, uint32_t
     /* Check if data register contains valid random data */
     while (__HAL_RNG_GET_FLAG(hrng, RNG_FLAG_DRDY) == RESET)
     {
+      if (__HAL_RNG_GET_FLAG(hrng, RNG_FLAG_SECS) != RESET)
+      {
+        /* Update the error code */
+        hrng->ErrorCode = HAL_RNG_ERROR_RECOVERSEED;
+        hrng->State = HAL_RNG_STATE_READY;
+        return HAL_ERROR;
+      }
+
       if ((HAL_GetTick() - tickstart) > RNG_TIMEOUT_VALUE)
       {
         /* New check to avoid false timeout detection in case of preemption */
@@ -814,7 +821,11 @@ void HAL_RNG_IRQHandler(RNG_HandleTypeDef *hrng)
 #endif /* USE_HAL_RNG_REGISTER_CALLBACKS */
 
     /* Clear the clock error flag */
+#if (defined(RNG_HTSR0_RPERRX) || defined(RNG_HTSR1_ADERRX))
+    __HAL_RNG_CLEAR_IT(hrng, RNG_IT_CEI);
+#else
     __HAL_RNG_CLEAR_IT(hrng, RNG_IT_CEI | RNG_IT_SEI);
+#endif /* RNG_HTSR0_RPERRX || RNG_HTSR1_ADERRX) */
 
     return;
   }

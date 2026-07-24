@@ -119,7 +119,6 @@ typedef struct
   uint32_t                BESL;
   uint32_t                FrameNumber; /*!< Store Current Frame number        */
 
-
   uint32_t lpm_active;                 /*!< Enable or disable the Link Power Management .
                                        This parameter can be set to ENABLE or DISABLE        */
 
@@ -226,7 +225,6 @@ typedef struct
 #define __HAL_PCD_CLEAR_FLAG(__HANDLE__, __INTERRUPT__)           (((__HANDLE__)->Instance->ISTR)\
                                                                    &= (uint16_t)(~(__INTERRUPT__)))
 #endif /* defined (USB_DRD_FS) */
-
 /**
   * @}
   */

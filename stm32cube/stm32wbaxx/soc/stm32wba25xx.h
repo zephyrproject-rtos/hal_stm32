@@ -739,7 +739,10 @@ typedef struct
   __IO uint32_t SR;      /*!< RNG status register,                    Address offset: 0x04 */
   __IO uint32_t DR;      /*!< RNG data register,                      Address offset: 0x08 */
   __IO uint32_t NSCR;    /*!< RNG noise source control register,      Address offset: 0x0C */
-  __IO uint32_t HTCR[4]; /*!< RNG health test control register,       Address offset: 0x10 - 0x1F */
+  __IO uint32_t HTCR[4]; /*!< RNG health test control register,       Address offset: 0x10 - 0x1C */
+  __IO uint32_t HTSR[2]; /*!< RNG health test status register,        Address offset: 0x20-0x24   */
+  uint32_t RESERVED1[2]; /*!< Reserved,                               Address offset: 0x28-0x2C   */
+  __IO uint32_t NSMR;    /*!< RNG noise source mask register,         Address offset: 0x30        */
 } RNG_TypeDef;
 
 /*
@@ -9748,41 +9751,41 @@ typedef struct
 /********************  Bits definition for RNG_CR register  *******************/
 #define RNG_CR_RNGEN_Pos                    (2UL)
 #define RNG_CR_RNGEN_Msk                    (0x1UL << RNG_CR_RNGEN_Pos)             /*!< 0x00000004 */
-#define RNG_CR_RNGEN                        RNG_CR_RNGEN_Msk
+#define RNG_CR_RNGEN                        RNG_CR_RNGEN_Msk                        /*!< True random number generator enable */
 #define RNG_CR_IE_Pos                       (3UL)
 #define RNG_CR_IE_Msk                       (0x1UL << RNG_CR_IE_Pos)                /*!< 0x00000008 */
-#define RNG_CR_IE                           RNG_CR_IE_Msk
+#define RNG_CR_IE                           RNG_CR_IE_Msk                           /*!< Interrupt enable */
 #define RNG_CR_CED_Pos                      (5UL)
 #define RNG_CR_CED_Msk                      (0x1UL << RNG_CR_CED_Pos)               /*!< 0x00000020 */
-#define RNG_CR_CED                          RNG_CR_CED_Msk
+#define RNG_CR_CED                          RNG_CR_CED_Msk                          /*!< Clock error detection */
 #define RNG_CR_ARDIS_Pos                    (7UL)
-#define RNG_CR_ARDIS_Msk                    (0x1UL << RNG_CR_ARDIS_Pos)
-#define RNG_CR_ARDIS                        RNG_CR_ARDIS_Msk
+#define RNG_CR_ARDIS_Msk                    (0x1UL << RNG_CR_ARDIS_Pos)             /*!< 0x00000080 */
+#define RNG_CR_ARDIS                        RNG_CR_ARDIS_Msk                        /*!< Auto reset disable */
 #define RNG_CR_RNG_CONFIG3_Pos              (8UL)
-#define RNG_CR_RNG_CONFIG3_Msk              (0xFUL << RNG_CR_RNG_CONFIG3_Pos)
-#define RNG_CR_RNG_CONFIG3                  RNG_CR_RNG_CONFIG3_Msk
+#define RNG_CR_RNG_CONFIG3_Msk              (0xFUL << RNG_CR_RNG_CONFIG3_Pos)       /*!< 0x00000F00 */
+#define RNG_CR_RNG_CONFIG3                  RNG_CR_RNG_CONFIG3_Msk                  /*!< RNG configuration 3 */
 #define RNG_CR_NISTC_Pos                    (12UL)
-#define RNG_CR_NISTC_Msk                    (0x1UL << RNG_CR_NISTC_Pos)
-#define RNG_CR_NISTC                        RNG_CR_NISTC_Msk
+#define RNG_CR_NISTC_Msk                    (0x1UL << RNG_CR_NISTC_Pos)             /*!< 0x00001000 */
+#define RNG_CR_NISTC                        RNG_CR_NISTC_Msk                        /*!< NIST custom */
 #define RNG_CR_RNG_CONFIG2_Pos              (13UL)
-#define RNG_CR_RNG_CONFIG2_Msk              (0x7UL << RNG_CR_RNG_CONFIG2_Pos)
-#define RNG_CR_RNG_CONFIG2                  RNG_CR_RNG_CONFIG2_Msk
+#define RNG_CR_RNG_CONFIG2_Msk              (0x7UL << RNG_CR_RNG_CONFIG2_Pos)       /*!< 0x0000E000 */
+#define RNG_CR_RNG_CONFIG2                  RNG_CR_RNG_CONFIG2_Msk                  /*!< RNG configuration 2 */
 #define RNG_CR_CLKDIV_Pos                   (16UL)
-#define RNG_CR_CLKDIV_Msk                   (0xFUL << RNG_CR_CLKDIV_Pos)
-#define RNG_CR_CLKDIV                       RNG_CR_CLKDIV_Msk
+#define RNG_CR_CLKDIV_Msk                   (0xFUL << RNG_CR_CLKDIV_Pos)            /*!< 0x000F0000 */
+#define RNG_CR_CLKDIV                       RNG_CR_CLKDIV_Msk                       /*!< Clock divider factor */
 #define RNG_CR_CLKDIV_0                     (0x1UL << RNG_CR_CLKDIV_Pos)            /*!< 0x00010000 */
 #define RNG_CR_CLKDIV_1                     (0x2UL << RNG_CR_CLKDIV_Pos)            /*!< 0x00020000 */
 #define RNG_CR_CLKDIV_2                     (0x4UL << RNG_CR_CLKDIV_Pos)            /*!< 0x00040000 */
 #define RNG_CR_CLKDIV_3                     (0x8UL << RNG_CR_CLKDIV_Pos)            /*!< 0x00080000 */
 #define RNG_CR_RNG_CONFIG1_Pos              (20UL)
-#define RNG_CR_RNG_CONFIG1_Msk              (0x3FUL << RNG_CR_RNG_CONFIG1_Pos)
-#define RNG_CR_RNG_CONFIG1                  RNG_CR_RNG_CONFIG1_Msk
+#define RNG_CR_RNG_CONFIG1_Msk              (0xFFUL << RNG_CR_RNG_CONFIG1_Pos)      /*!< 0x0FF00000 */
+#define RNG_CR_RNG_CONFIG1                  RNG_CR_RNG_CONFIG1_Msk                  /*!< RNG configuration 1 */
 #define RNG_CR_CONDRST_Pos                  (30UL)
-#define RNG_CR_CONDRST_Msk                  (0x1UL << RNG_CR_CONDRST_Pos)
-#define RNG_CR_CONDRST                      RNG_CR_CONDRST_Msk
+#define RNG_CR_CONDRST_Msk                  (0x1UL << RNG_CR_CONDRST_Pos)           /*!< 0x40000000 */
+#define RNG_CR_CONDRST                      RNG_CR_CONDRST_Msk                      /*!< Conditioning soft reset */
 #define RNG_CR_CONFIGLOCK_Pos               (31UL)
-#define RNG_CR_CONFIGLOCK_Msk               (0x1UL << RNG_CR_CONFIGLOCK_Pos)
-#define RNG_CR_CONFIGLOCK                   RNG_CR_CONFIGLOCK_Msk
+#define RNG_CR_CONFIGLOCK_Msk               (0x1UL << RNG_CR_CONFIGLOCK_Pos)        /*!< 0x80000000 */
+#define RNG_CR_CONFIGLOCK                   RNG_CR_CONFIGLOCK_Msk                   /*!< RNG configuration lock */
 
 /********************  Bits definition for RNG_SR register  *******************/
 #define RNG_SR_DRDY_Pos                     (0UL)
@@ -9819,7 +9822,6 @@ typedef struct
 #define RNG_NSCR_EN_OSC3_Pos (6UL)
 #define RNG_NSCR_EN_OSC3_Msk (0x7UL << RNG_NSCR_EN_OSC3_Pos) /*!< 0x000001C0 */
 #define RNG_NSCR_EN_OSC3     RNG_NSCR_EN_OSC3_Msk            /*!< EN_OSC3[2:0] bits (Each bit drives one oscillator enable signal input of instance number 3, gated with RNGEN bit in RNG_CR (set bit to enable the oscillator). Bit is ignored otherwise.) */
-
 /******************  Bit definition for RNG_HTCR0 register  *******************/
 #define RNG_HTCR0_HTCFG_Pos                (0UL)
 #define RNG_HTCR0_HTCFG_Msk                (0xFFFFFFFFU << RNG_HTCR0_HTCFG_Pos)     /*!< 0xFFFFFFFF */
@@ -9840,10 +9842,114 @@ typedef struct
 #define RNG_HTCR3_HTCFG_Msk                (0xFFFFFFFFU << RNG_HTCR3_HTCFG_Pos)     /*!< 0xFFFFFFFF */
 #define RNG_HTCR3_HTCFG                    RNG_HTCR3_HTCFG_Msk                      /*!< health test configuration */
 
+/*************************************  Bit definition for RNG_HTSR0 register  ************************************* */
+#define RNG_HTSR0_RPERRX_Pos                (0U)
+#define RNG_HTSR0_RPERRX_Msk                (0x1UL << RNG_HTSR0_RPERRX_Pos)         /*!< 0x00000001 */
+#define RNG_HTSR0_RPERRX                    RNG_HTSR0_RPERRX_Msk                    /*!< Repetitive error after the XOR */
+#define RNG_HTSR0_RPERR1_Pos                (1U)
+#define RNG_HTSR0_RPERR1_Msk                (0x1UL << RNG_HTSR0_RPERR1_Pos)         /*!< 0x00000002 */
+#define RNG_HTSR0_RPERR1                    RNG_HTSR0_RPERR1_Msk                    /*!< Repetitive error for oscillator i */
+#define RNG_HTSR0_RPERR2_Pos                (2U)
+#define RNG_HTSR0_RPERR2_Msk                (0x1UL << RNG_HTSR0_RPERR2_Pos)         /*!< 0x00000004 */
+#define RNG_HTSR0_RPERR2                    RNG_HTSR0_RPERR2_Msk                    /*!< Repetitive error for oscillator i */
+#define RNG_HTSR0_RPERR3_Pos                (3U)
+#define RNG_HTSR0_RPERR3_Msk                (0x1UL << RNG_HTSR0_RPERR3_Pos)         /*!< 0x00000008 */
+#define RNG_HTSR0_RPERR3                    RNG_HTSR0_RPERR3_Msk                    /*!< Repetitive error for oscillator i */
+#define RNG_HTSR0_RPERR4_Pos                (4U)
+#define RNG_HTSR0_RPERR4_Msk                (0x1UL << RNG_HTSR0_RPERR4_Pos)         /*!< 0x00000010 */
+#define RNG_HTSR0_RPERR4                    RNG_HTSR0_RPERR4_Msk                    /*!< Repetitive error for oscillator i */
+#define RNG_HTSR0_RPERR5_Pos                (5U)
+#define RNG_HTSR0_RPERR5_Msk                (0x1UL << RNG_HTSR0_RPERR5_Pos)         /*!< 0x00000020 */
+#define RNG_HTSR0_RPERR5                    RNG_HTSR0_RPERR5_Msk                    /*!< Repetitive error for oscillator i */
+#define RNG_HTSR0_RPERR6_Pos                (6U)
+#define RNG_HTSR0_RPERR6_Msk                (0x1UL << RNG_HTSR0_RPERR6_Pos)         /*!< 0x00000040 */
+#define RNG_HTSR0_RPERR6                    RNG_HTSR0_RPERR6_Msk                    /*!< Repetitive error for oscillator i */
+#define RNG_HTSR0_RPERR7_Pos                (7U)
+#define RNG_HTSR0_RPERR7_Msk                (0x1UL << RNG_HTSR0_RPERR7_Pos)         /*!< 0x00000080 */
+#define RNG_HTSR0_RPERR7                    RNG_HTSR0_RPERR7_Msk                    /*!< Repetitive error for oscillator i */
+#define RNG_HTSR0_RPERR8_Pos                (8U)
+#define RNG_HTSR0_RPERR8_Msk                (0x1UL << RNG_HTSR0_RPERR8_Pos)         /*!< 0x00000100 */
+#define RNG_HTSR0_RPERR8                    RNG_HTSR0_RPERR8_Msk                    /*!< Repetitive error for oscillator i */
+#define RNG_HTSR0_RPERR9_Pos                (9U)
+#define RNG_HTSR0_RPERR9_Msk                (0x1UL << RNG_HTSR0_RPERR9_Pos)         /*!< 0x00000200 */
+#define RNG_HTSR0_RPERR9                    RNG_HTSR0_RPERR9_Msk                    /*!< Repetitive error for oscillator i */
+
+/*************************************  Bit definition for RNG_HTSR1 register  **************************************/
+#define RNG_HTSR1_ADERRX_Pos                (0U)
+#define RNG_HTSR1_ADERRX_Msk                (0x1UL << RNG_HTSR1_ADERRX_Pos)         /*!< 0x00000001 */
+#define RNG_HTSR1_ADERRX                    RNG_HTSR1_ADERRX_Msk                    /*!< Adaptative error after the XOR */
+#define RNG_HTSR1_ADERR1_Pos                (1U)
+#define RNG_HTSR1_ADERR1_Msk                (0x1UL << RNG_HTSR1_ADERR1_Pos)         /*!< 0x00000002 */
+#define RNG_HTSR1_ADERR1                    RNG_HTSR1_ADERR1_Msk                    /*!< Adaptative error for oscillator i */
+#define RNG_HTSR1_ADERR2_Pos                (2U)
+#define RNG_HTSR1_ADERR2_Msk                (0x1UL << RNG_HTSR1_ADERR2_Pos)         /*!< 0x00000004 */
+#define RNG_HTSR1_ADERR2                    RNG_HTSR1_ADERR2_Msk                    /*!< Adaptative error for oscillator i */
+#define RNG_HTSR1_ADERR3_Pos                (3U)
+#define RNG_HTSR1_ADERR3_Msk                (0x1UL << RNG_HTSR1_ADERR3_Pos)         /*!< 0x00000008 */
+#define RNG_HTSR1_ADERR3                    RNG_HTSR1_ADERR3_Msk                    /*!< Adaptative error for oscillator i */
+#define RNG_HTSR1_ADERR4_Pos                (4U)
+#define RNG_HTSR1_ADERR4_Msk                (0x1UL << RNG_HTSR1_ADERR4_Pos)         /*!< 0x00000010 */
+#define RNG_HTSR1_ADERR4                    RNG_HTSR1_ADERR4_Msk                    /*!< Adaptative error for oscillator i */
+#define RNG_HTSR1_ADERR5_Pos                (5U)
+#define RNG_HTSR1_ADERR5_Msk                (0x1UL << RNG_HTSR1_ADERR5_Pos)         /*!< 0x00000020 */
+#define RNG_HTSR1_ADERR5                    RNG_HTSR1_ADERR5_Msk                    /*!< Adaptative error for oscillator i */
+#define RNG_HTSR1_ADERR6_Pos                (6U)
+#define RNG_HTSR1_ADERR6_Msk                (0x1UL << RNG_HTSR1_ADERR6_Pos)         /*!< 0x00000040 */
+#define RNG_HTSR1_ADERR6                    RNG_HTSR1_ADERR6_Msk                    /*!< Adaptative error for oscillator i */
+#define RNG_HTSR1_ADERR7_Pos                (7U)
+#define RNG_HTSR1_ADERR7_Msk                (0x1UL << RNG_HTSR1_ADERR7_Pos)         /*!< 0x00000080 */
+#define RNG_HTSR1_ADERR7                    RNG_HTSR1_ADERR7_Msk                    /*!< Adaptative error for oscillator i */
+#define RNG_HTSR1_ADERR8_Pos                (8U)
+#define RNG_HTSR1_ADERR8_Msk                (0x1UL << RNG_HTSR1_ADERR8_Pos)         /*!< 0x00000100 */
+#define RNG_HTSR1_ADERR8                    RNG_HTSR1_ADERR8_Msk                    /*!< Adaptative error for oscillator i */
+#define RNG_HTSR1_ADERR9_Pos                (9U)
+#define RNG_HTSR1_ADERR9_Msk                (0x1UL << RNG_HTSR1_ADERR9_Pos)         /*!< 0x00000200 */
+#define RNG_HTSR1_ADERR9                    RNG_HTSR1_ADERR9_Msk                    /*!< Adaptative error for oscillator i */
+
+/**************************************  Bit definition for RNG_NSMR register  ************************************* */
+#define RNG_NSMR_MOSC1_Pos                  (0U)
+#define RNG_NSMR_MOSC1_Msk                  (0x1UL << RNG_NSMR_MOSC1_Pos)           /*!< 0x00000001 */
+#define RNG_NSMR_MOSC1                      RNG_NSMR_MOSC1_Msk                      /*!< Mask oscillator i */
+#define RNG_NSMR_MOSC2_Pos                  (1U)
+#define RNG_NSMR_MOSC2_Msk                  (0x1UL << RNG_NSMR_MOSC2_Pos)           /*!< 0x00000002 */
+#define RNG_NSMR_MOSC2                      RNG_NSMR_MOSC2_Msk                      /*!< Mask oscillator i */
+#define RNG_NSMR_MOSC3_Pos                  (2U)
+#define RNG_NSMR_MOSC3_Msk                  (0x1UL << RNG_NSMR_MOSC3_Pos)           /*!< 0x00000004 */
+#define RNG_NSMR_MOSC3                      RNG_NSMR_MOSC3_Msk                      /*!< Mask oscillator i */
+#define RNG_NSMR_MOSC4_Pos                  (3U)
+#define RNG_NSMR_MOSC4_Msk                  (0x1UL << RNG_NSMR_MOSC4_Pos)           /*!< 0x00000008 */
+#define RNG_NSMR_MOSC4                      RNG_NSMR_MOSC4_Msk                      /*!< Mask oscillator i */
+#define RNG_NSMR_MOSC5_Pos                  (4U)
+#define RNG_NSMR_MOSC5_Msk                  (0x1UL << RNG_NSMR_MOSC5_Pos)           /*!< 0x00000010 */
+#define RNG_NSMR_MOSC5                      RNG_NSMR_MOSC5_Msk                      /*!< Mask oscillator i */
+#define RNG_NSMR_MOSC6_Pos                  (5U)
+#define RNG_NSMR_MOSC6_Msk                  (0x1UL << RNG_NSMR_MOSC6_Pos)           /*!< 0x00000020 */
+#define RNG_NSMR_MOSC6                      RNG_NSMR_MOSC6_Msk                      /*!< Mask oscillator i */
+#define RNG_NSMR_MOSC7_Pos                  (6U)
+#define RNG_NSMR_MOSC7_Msk                  (0x1UL << RNG_NSMR_MOSC7_Pos)           /*!< 0x00000040 */
+#define RNG_NSMR_MOSC7                     RNG_NSMR_MOSC7_Msk                       /*!< Mask oscillator i */
+#define RNG_NSMR_MOSC8_Pos                  (7U)
+#define RNG_NSMR_MOSC8_Msk                  (0x1UL << RNG_NSMR_MOSC8_Pos)           /*!< 0x00000080 */
+#define RNG_NSMR_MOSC8                      RNG_NSMR_MOSC8_Msk                      /*!< Mask oscillator i */
+#define RNG_NSMR_MOSC9_Pos                  (8U)
+#define RNG_NSMR_MOSC9_Msk                  (0x1UL << RNG_NSMR_MOSC9_Pos)           /*!< 0x00000100 */
+#define RNG_NSMR_MOSC9                      RNG_NSMR_MOSC9_Msk                      /*!< Mask oscillator i */
+
 /********************  RNG Nist Compliance Values  *******************/
+#define RNG_HTCRx_VALUE                     (0x0003FFFF)
 #define RNG_CR_NIST_VALUE                   (0x00200F00U)
 #define RNG_NSCR_NIST_VALUE                 (0x000001FFU)
 #define RNG_HTCR_NIST_VALUE                 (0xA2B0U)
+/********************  NIST candidate certification value *******************/
+#define RNG_CAND_NIST                        (0U)
+#define RNG_CAND_NIST_CR_VALUE               (0x08451F00)
+#define RNG_CAND_NIST_NSCR_VALUE             (0x000001FF)
+#define RNG_CAND_NIST_HTCR_VALUE             (0x0000AAC7)
+
+/********************  GermanBSI candidate certification value *******************/
+#define RNG_CAND_GermanBSI_CR_VALUE          (0x08301F00)
+#define RNG_CAND_GermanBSI_NSCR_VALUE        (0x000001FF)
+#define RNG_CAND_GermanBSI_HTCR_VALUE        (0x0000AAC7)
 
 /******************************************************************************/
 /*                                                                            */

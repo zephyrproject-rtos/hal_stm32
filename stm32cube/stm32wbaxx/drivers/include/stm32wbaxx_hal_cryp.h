@@ -26,6 +26,9 @@ extern "C" {
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32wbaxx_hal_def.h"
+#if (defined(RNG_HTSR0_RPERRX) || defined(RNG_HTSR1_ADERRX))
+#include "stm32wbaxx_ll_rng.h"
+#endif /* RNG_HTSR0_RPERRX || RNG_HTSR1_ADERRX */
 
 /** @addtogroup STM32WBAxx_HAL_Driver
   * @{
@@ -502,7 +505,8 @@ typedef  void (*pCRYP_CallbackTypeDef)(CRYP_HandleTypeDef *hcryp);    /*!< point
                                                        & (CRYP_FLAG_KEIF)) == (CRYP_FLAG_KEIF))?SET:RESET) : \
                                                    ((__FLAG__) == CRYP_FLAG_RWEIF )?((((__HANDLE__)->Instance->ISR \
                                                        & (CRYP_FLAG_RWEIF)) == (CRYP_FLAG_RWEIF))?SET:RESET) : \
-                                                   ((((__HANDLE__)->Instance->ISR & (CRYP_FLAG_CCF)) == (CRYP_FLAG_CCF)))?SET:RESET)
+                                                   ((((__HANDLE__)->Instance->ISR & (CRYP_FLAG_CCF)) == \
+                                                     (CRYP_FLAG_CCF)))?SET:RESET)
 
 /** @brief  Clear the CRYP pending status flag.
   * @param  __HANDLE__ specifies the CRYP handle.

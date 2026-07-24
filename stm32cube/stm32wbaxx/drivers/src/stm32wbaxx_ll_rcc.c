@@ -19,6 +19,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32wbaxx_ll_rcc.h"
+#include <math.h>
 #ifdef  USE_FULL_ASSERT
 #include "stm32_assert.h"
 #else
@@ -183,6 +184,7 @@ uint32_t RCC_GetPCLK7ClockFreq(uint32_t HCLK_Frequency);
 uint32_t RCC_PLL1R_GetFreqDomain(void);
 uint32_t RCC_PLL1P_GetFreqDomain(void);
 uint32_t RCC_PLL1Q_GetFreqDomain(void);
+uint32_t RCC_CalcPLLClockFreq(uint32_t PLLInputFreq, uint32_t M, uint32_t N, uint32_t FRACN, uint32_t PQR);
 /**
   * @}
   */
@@ -1202,9 +1204,9 @@ uint32_t RCC_GetPCLK7ClockFreq(uint32_t HCLK_Frequency)
   */
 uint32_t RCC_PLL1R_GetFreqDomain(void)
 {
-  uint32_t pllinputfreq, pllsource;
+  uint32_t pllinputfreq, pllsource, fracn;
 
-  /* PLL_VCO = (HSE_VALUE or HSI_VALUE/ PLLM) * PLLN
+  /* PLL_VCO = (HSE_VALUE or HSI_VALUE/ PLLM) * (PLLN with optional fractional part)
      SYSCLK = PLL_VCO / PLLR
     */
   pllsource = LL_RCC_PLL1_GetMainSource();
@@ -1223,8 +1225,17 @@ uint32_t RCC_PLL1R_GetFreqDomain(void)
       pllinputfreq = HSI_VALUE;
       break;
   }
-  return __LL_RCC_CALC_PLL1RCLK_FREQ(pllinputfreq, LL_RCC_PLL1_GetDivider(),
-                                     LL_RCC_PLL1_GetN(), LL_RCC_PLL1_GetR());
+
+  if (LL_RCC_PLL1FRACN_IsEnabled() == 0U)
+  {
+    fracn = 0U;
+  }
+  else
+  {
+    fracn = LL_RCC_PLL1_GetFRACN();
+  }
+
+  return RCC_CalcPLLClockFreq(pllinputfreq, LL_RCC_PLL1_GetDivider(), LL_RCC_PLL1_GetN(), fracn, LL_RCC_PLL1_GetR());
 }
 /**
   * @brief  Return PLL1P clock frequency used for ADC and SAI domains
@@ -1233,9 +1244,9 @@ uint32_t RCC_PLL1R_GetFreqDomain(void)
 uint32_t RCC_PLL1P_GetFreqDomain(void)
 {
   uint32_t pll1inputfreq, pll1outputfreq, pll1source;
-  uint32_t pll1n, pll1pdiv;
+  uint32_t pll1n, pll1pdiv, fracn;
 
-  /* PLL_VCO = (HSE_VALUE or HSI_VALUE / PLLM) * PLLN
+  /* PLL_VCO = (HSE_VALUE or HSI_VALUE / PLLM) * (PLLN with optional fractional part)
      Domain clock = PLL_VCO / PLL1P
     */
   pll1source = LL_RCC_PLL1_GetMainSource();
@@ -1255,12 +1266,20 @@ uint32_t RCC_PLL1P_GetFreqDomain(void)
       break;
   }
 
+  if (LL_RCC_PLL1FRACN_IsEnabled() == 0U)
+  {
+    fracn = 0U;
+  }
+  else
+  {
+    fracn = LL_RCC_PLL1_GetFRACN();
+  }
+
   pll1n = LL_RCC_PLL1_GetN();
   pll1pdiv = LL_RCC_PLL1_GetP();
   if ((pll1n >= 8U) && (pll1pdiv >= 2U))
   {
-    pll1outputfreq = __LL_RCC_CALC_PLL1PCLK_FREQ(pll1inputfreq, LL_RCC_PLL1_GetDivider(),
-                                                 pll1n, pll1pdiv);
+    pll1outputfreq = RCC_CalcPLLClockFreq(pll1inputfreq, LL_RCC_PLL1_GetDivider(), pll1n, fracn, pll1pdiv);
   }
   else
   {
@@ -1275,9 +1294,9 @@ uint32_t RCC_PLL1P_GetFreqDomain(void)
   */
 uint32_t RCC_PLL1Q_GetFreqDomain(void)
 {
-  uint32_t pll1inputfreq, pll1source;
+  uint32_t pll1inputfreq, pll1source, fracn;
 
-  /* PLL1_VCO = (HSE_VALUE or HSI_VALUE / PLL1M) * PLL1N
+  /* PLL1_VCO = (HSE_VALUE or HSI_VALUE / PLL1M) * (PLLN with optional fractional part)
      Domain clock = PLL1_VCO / PLL1Q
     */
   pll1source = LL_RCC_PLL1_GetMainSource();
@@ -1296,8 +1315,39 @@ uint32_t RCC_PLL1Q_GetFreqDomain(void)
       pll1inputfreq = HSI_VALUE;
       break;
   }
-  return __LL_RCC_CALC_PLL1QCLK_FREQ(pll1inputfreq, LL_RCC_PLL1_GetDivider(),
-                                     LL_RCC_PLL1_GetN(), LL_RCC_PLL1_GetQ());
+
+  if (LL_RCC_PLL1FRACN_IsEnabled() == 0U)
+  {
+    fracn = 0U;
+  }
+  else
+  {
+    fracn = LL_RCC_PLL1_GetFRACN();
+  }
+  return RCC_CalcPLLClockFreq(pll1inputfreq, LL_RCC_PLL1_GetDivider(), LL_RCC_PLL1_GetN(), fracn, LL_RCC_PLL1_GetQ());
+}
+
+/**
+  * @brief  Helper function to calculate the PLL1 frequency output
+  * @note ex: @ref LL_RCC_CalcPLLClockFreq (HSE_VALUE, @ref LL_RCC_PLL1_GetM (),
+  *           @ref LL_RCC_PLL1_GetN (), @ref LL_RCC_PLL1_GetFRACN (), @ref LL_RCC_PLL1_GetP ());
+  * @param  PLLInputFreq PLL Input frequency (based on HSE/(HSI/HSIDIV)/CSI)
+  * @param  M      Between 1 and 63
+  * @param  N      Between 4 and 512
+  * @param  FRACN  Between 0 and 0x1FFF
+  * @param  PQR    VCO output divider (P, Q or R)
+  *                Between 1 and 128, except for PLL1P Odd value not allowed
+  * @retval PLL1 output clock frequency (in Hz)
+  */
+uint32_t RCC_CalcPLLClockFreq(uint32_t PLLInputFreq, uint32_t M, uint32_t N, uint32_t FRACN, uint32_t PQR)
+{
+  float_t freq;
+
+  freq = ((float_t)PLLInputFreq / (float_t)M) * ((float_t)N + ((float_t)FRACN / (float_t)0x2000));
+
+  freq = freq / (float_t)PQR;
+
+  return (uint32_t)freq;
 }
 
 /**

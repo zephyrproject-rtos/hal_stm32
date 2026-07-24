@@ -3238,6 +3238,16 @@ void USB_ReadPMA(USB_DRD_TypeDef const *USBx, uint8_t *pbUsrBuf, uint16_t wPMABu
   }
 }
 
+/**
+  * @brief  Return Current Frame number
+  * @param  USBx Selected device
+  * @retval current frame number
+  */
+uint32_t USB_GetCurrentFrame(USB_DRD_TypeDef const *USBx)
+{
+  return (uint32_t)(USBx->FNR & 0x7FFU);
+}
+
 
 /*------------------------------------------------------------------------*/
 /*                                HOST API                                */
@@ -3315,16 +3325,6 @@ uint32_t USB_GetHostSpeed(USB_DRD_TypeDef const *USBx)
   {
     return USB_DRD_SPEED_FS;
   }
-}
-
-/**
-  * @brief  Return Host Current Frame number
-  * @param  USBx Selected device
-  * @retval current frame number
-  */
-uint32_t USB_GetCurrentFrame(USB_DRD_TypeDef const *USBx)
-{
-  return USBx->FNR & 0x7FFU;
 }
 
 #if defined (HAL_HCD_MODULE_ENABLED)
