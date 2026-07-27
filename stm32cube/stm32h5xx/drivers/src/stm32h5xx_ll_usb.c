@@ -86,46 +86,49 @@ static HAL_StatusTypeDef USB_CoreReset(USB_OTG_GlobalTypeDef *USBx);
 HAL_StatusTypeDef USB_CoreInit(USB_OTG_GlobalTypeDef *USBx, USB_OTG_CfgTypeDef cfg)
 {
   HAL_StatusTypeDef ret;
-#if defined (STM32H5F5xx) || defined (STM32H5E5xx)
-  if (cfg.phy_itface == USB_OTG_HS_EMBEDDED_PHY)
+#if defined (USB_OTG_HS)
+  if (USBx == USB_OTG_HS)
   {
-    /* Init The UTMI Interface */
-    USBx->GUSBCFG &= ~(USB_OTG_GUSBCFG_TSDPS);
-  }
+    if (cfg.phy_itface == USB_OTG_HS_EMBEDDED_PHY)
+    {
+      /* Init The UTMI Interface */
+      USBx->GUSBCFG &= ~(USB_OTG_GUSBCFG_TSDPS);
+    }
 
-  /* Reset after a PHY select */
-  ret = USB_CoreReset(USBx);
+    /* Reset after a PHY select */
+    ret = USB_CoreReset(USBx);
 
-  if (cfg.dma_enable == 1U)
-  {
-    /* make sure to reserve 18 fifo Locations for DMA buffers */
-    USBx->GDFIFOCFG &= ~(0xFFFFUL << 16);
-    USBx->GDFIFOCFG |= 0x3EEUL << 16;
+    if (cfg.dma_enable == 1U)
+    {
+      /* make sure to reserve 18 fifo Locations for DMA buffers */
+      USBx->GDFIFOCFG &= ~(0xFFFFUL << 16);
+      USBx->GDFIFOCFG |= 0x3EEUL << 16;
 
-    USBx->GAHBCFG &= ~(USB_OTG_GAHBCFG_HBSTLEN);
-    USBx->GAHBCFG |= USB_OTG_GAHBCFG_HBSTLEN_INCR4;
-    USBx->GAHBCFG |= USB_OTG_GAHBCFG_DMAEN;
-  }
-
-#else
-
-  /* Select FS Embedded PHY */
-  USBx->GUSBCFG |= USB_OTG_GUSBCFG_PHYSEL;
-
-  /* Reset after a PHY select */
-  ret = USB_CoreReset(USBx);
-
-  if (cfg.battery_charging_enable == 0U)
-  {
-    /* Activate the USB Transceiver */
-    USBx->GCCFG |= USB_OTG_GCCFG_PWRDWN;
+      USBx->GAHBCFG &= ~(USB_OTG_GAHBCFG_HBSTLEN);
+      USBx->GAHBCFG |= USB_OTG_GAHBCFG_HBSTLEN_INCR4;
+      USBx->GAHBCFG |= USB_OTG_GAHBCFG_DMAEN;
+    }
   }
   else
+#endif /* defined (USB_OTG_HS) */
   {
-    /* Deactivate the USB Transceiver */
-    USBx->GCCFG &= ~(USB_OTG_GCCFG_PWRDWN);
+    /* Select FS Embedded PHY */
+    USBx->GUSBCFG |= USB_OTG_GUSBCFG_PHYSEL;
+
+    /* Reset after a PHY select */
+    ret = USB_CoreReset(USBx);
+
+    if (cfg.battery_charging_enable == 0U)
+    {
+      /* Activate the USB Transceiver */
+      USBx->GCCFG |= USB_OTG_GCCFG_PWRDWN;
+    }
+    else
+    {
+      /* Deactivate the USB Transceiver */
+      USBx->GCCFG &= ~(USB_OTG_GCCFG_PWRDWN);
+    }
   }
-#endif /* defined (STM32H5F5xx) || defined (STM32H5E5xx) */
 
   return ret;
 }

@@ -97,4 +97,14 @@ Patch List:
        drivers/src/stm32h5xx_hal_mdf.c
      ST Internal Reference: HAL1-27843
 
+   *Fix incomplete OTGFS initialization on H5E5/H5F5
+      Due to an implementation defect, the USB_CoreInit() implementation
+      did not enable the FS PHY on STM32H5 lines with both OTG_FS and OTG_HS
+      (i.e., H5E5/H5F5), preventing usage of OTG_FS entirely. This fix is
+      cherry-picked from stm32h5xx-hal-driver. The original fix commit is
+      e73ad7e5c09abb40bed787b49068fb1f87343c19.
+     Impacted file:
+      stm32cube/stm32h5xx/drivers/src/stm32h5xx_ll_usb.c
+     ST Internal Reference: HAL1-27918
+
    See release_note.html from STM32Cube
