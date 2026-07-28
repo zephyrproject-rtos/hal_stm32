@@ -126,6 +126,7 @@ foreach(series ${supported_series})
     endif()
 
     add_subdirectory(${cube_dir})
+    break()
   endif()
 endforeach()
 
