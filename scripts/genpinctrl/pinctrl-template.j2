@@ -13,6 +13,7 @@
 &pinctrl {
 {{ newline }}
 	{% for group, group_entries in entries.items() %}
+	{% set group_loop = loop %}
 	/* {{ group }} */
 {{ newline }}
 	{% for entry in group_entries %}
@@ -41,7 +42,16 @@
 		slew-rate = "{{ entry["slew-rate"] }}";
 		{% endif %}
 	};
+{% if not (loop.last and group_loop.last) %}
+{# Zephyr's Devicetree Style Guidelines require one empty line
+ # to separate nodes at the same hierarchy level but disallow
+ # empty lines before a dedenting '};' such as the one closing
+ # the &pinctrl node here. To comply with the Guidelines, emit
+ # an empty line after all pin nodes except the very last one,
+ # as it is immediately followed by &pinctrl's dedenting '};'.
+ #}
 {{ newline }}
+{% endif %}
 	{% endfor %}
 	{% endfor %}
 };

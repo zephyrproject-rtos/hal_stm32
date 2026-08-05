@@ -44,5 +44,4 @@
 	/omit-if-no-ref/ uart1_tx_remap3_pa0: uart1_tx_remap3_pa0 {
 		pinmux = <STM32F1_PINMUX('A', 0, ALTERNATE, UART1_REMAP3)>;
 	};
-
 };

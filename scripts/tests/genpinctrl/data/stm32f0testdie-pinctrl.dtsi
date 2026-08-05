@@ -26,5 +26,4 @@
 		pinmux = <STM32_PINMUX('A', 0, AF0)>;
 		bias-pull-up;
 	};
-
 };
