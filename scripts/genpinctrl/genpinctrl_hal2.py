@@ -371,66 +371,51 @@ def combine_group_signals(path_yaml: Path, path_json: Path) -> Dict[str, List[Di
     return group_and_signals
 
 
-def get_soc_family_pinouts(directory_path: Path) -> Dict[str, List[Path]]:
+def get_series_pinout_files(root_or_dfp_path: Path) -> tuple[str, list[Path]]:
     """
-    Retrieves JSON file paths for each SoC family directory within a given
-    directory.
-
-    This function lists all directories within the specified directory path,
-    identifies each as an SoC family directory, and searches for JSON files
-    within the "Descriptors/pinout" subdirectory of each SoC family directory.
-    It returns a dictionary where the keys are the SoC family directory names
-    and the values are lists of JSON pinouts paths within those directories.
+    Probe an STM32Cube HAL2 package and returns the name of the package's series
+    as well as a list of all pinout JSON files contained in the DFP.
 
     Args:
-        directory_path (Path): The path to the directory containing SoC family
-                              directories.
+        root_or_dfp_path (Path): Path to root OR dfp folder of target HAL2 package
 
     Returns:
-        Dict[str, List[Path]]: A dictionary where the keys are SoC family directory
-                              names and the values are lists of JSON file paths
-                              within those directories.
-
-    Examples:
-        >>> soc_files = get_soc_family_pinouts(Path("/path/to/soc_families"))
-        >>> print(soc_files)
-        {
-            "stm32c5xx": [Path("path1/to/pinout1.json"), Path("path/to/pinout2.json"), ... ],
-            "stm32yzxx": [Path("path1/to/pinout1.json"), Path("path/to/pinout2.json"), ... ],
-             ...
-        }
+        tuple[str, list[Path]]: A tuple containing the series name and a list of all
+                                pinout JSON files contained in the package's DFP
     """
-    try:
-        # List all entries in the given directory
-        entries = directory_path.iterdir()
+    if root_or_dfp_path.is_file():
+        raise ValueError(f"Expected a directory path, got a file: '{root_or_dfp_path}'")
+    if not root_or_dfp_path.is_dir():
+        raise ValueError(f"'{root_or_dfp_path}' is not a valid directory path")
 
-        # Filter out only directories
-        soc_folders = [
-            entry
-            for entry in entries
-            if entry.is_dir()
-        ]
+    # Check if provided path points to a DFP folder: "stm32XXXXxx_dfp"
+    if root_or_dfp_path.name.endswith("_dfp"):
+        dfp_dir = root_or_dfp_path
+    else:
+        # Not a DFP folder: the path must point to a root.
+        # The DFP folder is a direct child of the root;
+        # check if it exists in the directory we were given.
+        if not (dfp_dirs := list(root_or_dfp_path.glob("*_dfp"))):
+            raise ValueError(f"No DFP folder found in '{root_or_dfp_path}'")
 
-        # Dictionary to store folder names and their JSON file paths
-        soc_folder_json_files = {}
+        if len(dfp_dirs) > 1:
+            logging.warning(f"More than one DFP folder found in '{root_or_dfp_path}'!")
+            logging.warning(f"Generating pinctrl from the first one: '{dfp_dirs[0]}'")
 
-        for soc_folder in soc_folders:
-            soc_path = soc_folder / "Descriptors/pinout"
-            # Find all JSON files in the folder
-            json_files = list(soc_path.glob("*.json"))
-            soc_folder_json_files[soc_folder.name] = json_files
+        dfp_dir = dfp_dirs[0]
 
-        return soc_folder_json_files
-
-    except FileNotFoundError:
-        logger.error(f"The directory {directory_path} does not exist.")
-        return {}
-    except PermissionError:
-        logger.error(f"Permission denied to access the directory {directory_path}.")
-        return {}
+    series_name = dfp_dir.stem.removesuffix("_dfp")
+    pinouts_dir = dfp_dir / "Descriptors/pinout"
+    return series_name, list(pinouts_dir.glob("*.json"))
 
 
-def main(data_path: Path, output: Path):
+def main(data_path: Path, output):
+    """Entry point.
+
+    Args:
+        data_path: Path to STM32Cube package root or dfp folder
+        output: Output directory
+    """
     env = Environment(loader=FileSystemLoader(SCRIPT_DIR),
                       keep_trailing_newline=True,
                       lstrip_blocks=True, trim_blocks=True,
@@ -438,73 +423,65 @@ def main(data_path: Path, output: Path):
     pinctrl_template = env.get_template(PINCTRL_TEMPLATE)
 
     # List of all JSON files in the soc_folder
-    soc_json_files = get_soc_family_pinouts(data_path)
+    soc, soc_files = get_series_pinout_files(data_path)
 
-    for soc, soc_files in soc_json_files.items():
-        family = soc[:7]
-        family_id = family[5:]
+    family = soc[:7]
+    family_id = family[5:]
 
+    try:
+        # Create the directory if it does not exist
+        family_dir = output / "st"
+        if not family_dir.exists():
+            family_dir.mkdir(parents=True)
+            logger.info("Directory st created or already exists.")
+    except Exception as e:
+        logger.error(f"An error occurred while creating the directory: {e}")
+
+    if family in SUPPORTED_FAMILIES:
+        logger.info(
+            f" ==== Processing SOC family : {soc},  id family :  {family_id} ===="
+        )
         try:
             # Create the directory if it does not exist
-            family_dir = output / "st"
-            if not family_dir.exists():
-                family_dir.mkdir(parents=True)
-                logger.info("Directory st created or already exists.")
+            OUTPUT_PATH = family_dir / family_id
+            OUTPUT_PATH.mkdir(parents=True, exist_ok=True)
+            logger.info(f"Directory '{OUTPUT_PATH}' created or already exists.")
         except Exception as e:
             logger.error(f"An error occurred while creating the directory: {e}")
-
-        if family in SUPPORTED_FAMILIES:
-            logger.info(
-                f" ==== Processing SOC family : {soc},  id family :  {family_id} ===="
+        for soc_file in soc_files:
+            all_signals = combine_group_signals(CONFIG_FILE, soc_file)
+            match = re.match(
+                r"([^/]+)_pinout\.json$", soc_file.name
             )
-            try:
-                # Create the directory if it does not exist
-                OUTPUT_PATH = family_dir / family_id
-                OUTPUT_PATH.mkdir(parents=True, exist_ok=True)
-                logger.info(f"Directory '{OUTPUT_PATH}' created or already exists.")
-            except Exception as e:
-                logger.error(f"An error occurred while creating the directory: {e}")
-            for soc_file in soc_files:
-                all_signals = combine_group_signals(CONFIG_FILE, soc_file)
-                match = re.match(
-                    r"([^/]+)_pinout\.json$", soc_file.name
-                )
 
-                if match:
-                    extracted_part = match.group(1)
-                    json_name = extracted_part.lower()
+            if match:
+                extracted_part = match.group(1)
+                json_name = extracted_part.lower()
 
-                    # output_file = output / family_id / f"{json_name}-pinctrl.dtsi"
-                    output_file = OUTPUT_PATH / f"{json_name}-pinctrl.dtsi"
+                # output_file = output / family_id / f"{json_name}-pinctrl.dtsi"
+                output_file = OUTPUT_PATH / f"{json_name}-pinctrl.dtsi"
 
-                    with open(output_file, "w") as f:
-                        f.write(
-                            pinctrl_template.render(hal2=True, entries=all_signals)
-                        )
-                else:
-                    logger.error(f"No soc/pinout file detected in: {soc_file}")
-        else:
-            logger.warning(
-                f"unsupported stm32 soc family {family}, missing peripheral address ?"
-            )
+                with open(output_file, "w") as f:
+                    f.write(
+                        pinctrl_template.render(hal2=True, entries=all_signals)
+                    )
+            else:
+                logger.error(f"No soc/pinout file detected in: {soc_file}")
+    else:
+        logger.warning(
+            f"unsupported stm32 soc family {family}, missing peripheral address ?"
+        )
 
 
 if __name__ == "__main__":
-
-    """Entry point.
-
-    Args:
-        data_path: Path to STM32 cube v2 package dfp folder.
-        output: Output directory.
-    """
-
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "-p",
         "--data-path",
         type=Path,
         required=True,
-        help="Path to STM32 cube v2 dfp folder",
+        help=("Path to STM32Cube package root or DFP folder "
+              "(the package must be in HAL2 format)"),
     )
     parser.add_argument(
         "-o",
