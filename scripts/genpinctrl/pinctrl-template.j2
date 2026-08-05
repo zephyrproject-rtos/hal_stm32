@@ -11,11 +11,9 @@
 {% endif %}
 
 &pinctrl {
-{{ newline }}
 	{% for group, group_entries in entries.items() %}
 	{% set group_loop = loop %}
 	/* {{ group }} */
-{{ newline }}
 	{% for entry in group_entries %}
 	{% if hal2 %}
 	{% set name = "%s_%s" | format(entry["name"] | lower, entry["signal"]) %}
