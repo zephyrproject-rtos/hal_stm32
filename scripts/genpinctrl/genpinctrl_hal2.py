@@ -33,7 +33,7 @@ REPO_ROOT = SCRIPT_DIR / ".." / ".."
 CONFIG_FILE = SCRIPT_DIR / "stm32-pinctrl-config.yaml"
 """Configuration file."""
 
-PINCTRL_TEMPLATE = "pinctrl-template_hal2.j2"
+PINCTRL_TEMPLATE = "pinctrl-template.j2"
 """pinctrl template file."""
 
 
@@ -483,7 +483,7 @@ def main(data_path, output):
 
                     with open(output_file, "w") as f:
                         f.write(
-                            pinctrl_template.render(entries=all_signals)
+                            pinctrl_template.render(hal2=True, entries=all_signals)
                         )
                 else:
                     logger.error(f"No soc/pinout file detected in: {normalized_path}")

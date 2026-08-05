@@ -711,7 +711,7 @@ def main(data_path, output):
             rendered = ""
             try:
                 rendered = pinctrl_template.render(
-                    family=family, entries=entries
+                    family=family, entries=entries, hal2=False,
                 )
             except Exception:
                 logger.error(f"Skipping '{pinctrl_filename}' (rendering failed)")
