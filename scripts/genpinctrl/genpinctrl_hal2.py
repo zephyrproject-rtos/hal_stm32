@@ -432,8 +432,8 @@ def get_soc_family_pinouts(directory_path: str) -> Dict[str, List[str]]:
 
 
 def main(data_path, output):
-
-    env = Environment(loader=FileSystemLoader(SCRIPT_DIR))
+    env = Environment(loader=FileSystemLoader(SCRIPT_DIR),
+                      lstrip_blocks=True, trim_blocks=True)
     pinctrl_template = env.get_template(PINCTRL_TEMPLATE)
 
     # List of all JSON files in the soc_folder

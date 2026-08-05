@@ -9,23 +9,23 @@
 
 &pinctrl {
 {{ newline }}
-	{%- for group, group_entries in entries.items() %}
+	{% for group, group_entries in entries.items() %}
 	/* {{ group }} */
-	{%- for entry in group_entries %}
-	{%- set name = "%s_%s" | format(entry["name"] | lower, entry["signal"]) %}
+	{% for entry in group_entries %}
+	{% set name = "%s_%s" | format(entry["name"] | lower, entry["signal"]) %}
 	/omit-if-no-ref/ {{ name }}: {{ name }} {
 		pinmux = <STM32_PINMUX('{{ entry["port"] | upper }}', {{ entry["pin"] }}, {{ entry["mode"]}})>;
-		{%- if entry["bias"] %}
+		{% if entry["bias"] %}
 		bias-{{ entry["bias"] }};
-		{%- endif %}
-		{%- if entry["drive"] %}
+		{% endif %}
+		{% if entry["drive"] %}
 		drive-{{ entry["drive"] }};
-		{%- endif %}
-		{%- if entry["slew-rate"] %}
+		{% endif %}
+		{% if entry["slew-rate"] %}
 		slew-rate = "{{ entry["slew-rate"] }}";
-		{%- endif %}
+		{% endif %}
 	};
 {{ newline }}
-	{%- endfor %}
-	{%- endfor %}
+	{% endfor %}
+	{% endfor %}
 };
