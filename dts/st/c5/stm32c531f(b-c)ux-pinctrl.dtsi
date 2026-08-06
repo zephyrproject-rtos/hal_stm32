@@ -4,11 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-
 #include <zephyr/dt-bindings/pinctrl/stm32-pinctrl.h>
 
 &pinctrl {
-
 	/* Analog */
 	/omit-if-no-ref/ analog_pa1: analog_pa1 {
 		pinmux = <STM32_PINMUX('A', 1, ANALOG)>;
@@ -859,5 +857,4 @@
 	/omit-if-no-ref/ usb_dp_pa12: usb_dp_pa12 {
 		pinmux = <STM32_PINMUX('A', 12, ANALOG)>;
 	};
-
 };

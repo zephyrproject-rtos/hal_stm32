@@ -7,9 +7,7 @@
 #include <zephyr/dt-bindings/pinctrl/stm32f1-pinctrl.h>
 
 &pinctrl {
-
 	/* ADC_IN */
-
 	/omit-if-no-ref/ adc1_in0_pa0: adc1_in0_pa0 {
 		pinmux = <STM32F1_PINMUX('A', 0, ANALOG, NO_REMAP)>;
 	};
@@ -139,7 +137,6 @@
 	};
 
 	/* Analog */
-
 	/omit-if-no-ref/ analog_pa0: analog_pa0 {
 		pinmux = <STM32F1_PINMUX('A', 0, ANALOG, NO_REMAP)>;
 	};
@@ -461,7 +458,6 @@
 	};
 
 	/* CAN_RX */
-
 	/omit-if-no-ref/ can_rx_pa11: can_rx_pa11 {
 		pinmux = <STM32F1_PINMUX('A', 11, GPIO_IN, CAN_REMAP0)>;
 	};
@@ -475,7 +471,6 @@
 	};
 
 	/* CAN_TX */
-
 	/omit-if-no-ref/ can_tx_pa12: can_tx_pa12 {
 		pinmux = <STM32F1_PINMUX('A', 12, ALTERNATE, CAN_REMAP0)>;
 	};
@@ -489,7 +484,6 @@
 	};
 
 	/* I2C_SCL */
-
 	/omit-if-no-ref/ i2c1_scl_pb6: i2c1_scl_pb6 {
 		pinmux = <STM32F1_PINMUX('B', 6, ALTERNATE, I2C1_REMAP0)>;
 		drive-open-drain;
@@ -506,7 +500,6 @@
 	};
 
 	/* I2C_SDA */
-
 	/omit-if-no-ref/ i2c1_sda_pb7: i2c1_sda_pb7 {
 		pinmux = <STM32F1_PINMUX('B', 7, ALTERNATE, I2C1_REMAP0)>;
 		drive-open-drain;
@@ -523,7 +516,6 @@
 	};
 
 	/* I2C_SMBA */
-
 	/omit-if-no-ref/ i2c1_smba_pb5: i2c1_smba_pb5 {
 		pinmux = <STM32F1_PINMUX('B', 5, ALTERNATE, NO_REMAP)>;
 	};
@@ -533,7 +525,6 @@
 	};
 
 	/* JTAG PORT */
-
 	/omit-if-no-ref/ sys_jtms_swdio_pa13: sys_jtms_swdio_pa13 {
 		pinmux = <STM32F1_PINMUX('A', 13, ALTERNATE, NO_REMAP)>;
 	};
@@ -551,13 +542,11 @@
 	};
 
 	/* RCC_MCO */
-
 	/omit-if-no-ref/ rcc_mco_pa8: rcc_mco_pa8 {
 		pinmux = <STM32F1_PINMUX('A', 8, ALTERNATE, NO_REMAP)>;
 	};
 
 	/* SPI_MASTER_MISO */
-
 	/omit-if-no-ref/ spi1_miso_master_pa6: spi1_miso_master_pa6 {
 		pinmux = <STM32F1_PINMUX('A', 6, GPIO_IN, SPI1_REMAP0)>;
 		bias-pull-down;
@@ -574,7 +563,6 @@
 	};
 
 	/* SPI_MASTER_MOSI */
-
 	/omit-if-no-ref/ spi1_mosi_master_pa7: spi1_mosi_master_pa7 {
 		pinmux = <STM32F1_PINMUX('A', 7, ALTERNATE, SPI1_REMAP0)>;
 	};
@@ -588,7 +576,6 @@
 	};
 
 	/* SPI_MASTER_NSS */
-
 	/omit-if-no-ref/ spi1_nss_master_pa4: spi1_nss_master_pa4 {
 		pinmux = <STM32F1_PINMUX('A', 4, ALTERNATE, SPI1_REMAP0)>;
 	};
@@ -602,7 +589,6 @@
 	};
 
 	/* SPI_MASTER_SCK */
-
 	/omit-if-no-ref/ spi1_sck_master_pa5: spi1_sck_master_pa5 {
 		pinmux = <STM32F1_PINMUX('A', 5, ALTERNATE, SPI1_REMAP0)>;
 	};
@@ -616,7 +602,6 @@
 	};
 
 	/* SPI_SLAVE_MISO */
-
 	/omit-if-no-ref/ spi1_miso_slave_pa6: spi1_miso_slave_pa6 {
 		pinmux = <STM32F1_PINMUX('A', 6, ALTERNATE, SPI1_REMAP0)>;
 	};
@@ -630,7 +615,6 @@
 	};
 
 	/* SPI_SLAVE_MOSI */
-
 	/omit-if-no-ref/ spi1_mosi_slave_pa7: spi1_mosi_slave_pa7 {
 		pinmux = <STM32F1_PINMUX('A', 7, GPIO_IN, SPI1_REMAP0)>;
 	};
@@ -644,7 +628,6 @@
 	};
 
 	/* SPI_SLAVE_NSS */
-
 	/omit-if-no-ref/ spi1_nss_slave_pa4: spi1_nss_slave_pa4 {
 		pinmux = <STM32F1_PINMUX('A', 4, GPIO_IN, SPI1_REMAP0)>;
 		bias-pull-up;
@@ -661,7 +644,6 @@
 	};
 
 	/* SPI_SLAVE_SCK */
-
 	/omit-if-no-ref/ spi1_sck_slave_pa5: spi1_sck_slave_pa5 {
 		pinmux = <STM32F1_PINMUX('A', 5, GPIO_IN, SPI1_REMAP0)>;
 	};
@@ -675,7 +657,6 @@
 	};
 
 	/* TIM_BKIN */
-
 	/omit-if-no-ref/ tim1_bkin_remap1_pa6: tim1_bkin_remap1_pa6 {
 		pinmux = <STM32F1_PINMUX('A', 6, GPIO_IN, TIM1_REMAP1)>;
 	};
@@ -689,7 +670,6 @@
 	};
 
 	/* TIM_CH_PWM_IN / TIM_CHN_PWM_IN */
-
 	/omit-if-no-ref/ tim1_ch1n_remap1_pwm_in_pa7: tim1_ch1n_remap1_pwm_in_pa7 {
 		pinmux = <STM32F1_PINMUX('A', 7, GPIO_IN, TIM1_REMAP1)>;
 	};
@@ -919,7 +899,6 @@
 	};
 
 	/* TIM_CH_PWM_OUT / TIM_CHN_PWM_OUT */
-
 	/omit-if-no-ref/ tim1_ch1n_remap1_pwm_out_pa7: tim1_ch1n_remap1_pwm_out_pa7 {
 		pinmux = <STM32F1_PINMUX('A', 7, ALTERNATE, TIM1_REMAP1)>;
 	};
@@ -1149,7 +1128,6 @@
 	};
 
 	/* UART_CTS / USART_CTS */
-
 	/omit-if-no-ref/ usart1_cts_pa11: usart1_cts_pa11 {
 		pinmux = <STM32F1_PINMUX('A', 11, GPIO_IN, NO_REMAP)>;
 		bias-pull-up;
@@ -1187,7 +1165,6 @@
 	};
 
 	/* UART_RTS / USART_RTS */
-
 	/omit-if-no-ref/ usart1_rts_pa12: usart1_rts_pa12 {
 		pinmux = <STM32F1_PINMUX('A', 12, ALTERNATE, NO_REMAP)>;
 	};
@@ -1213,7 +1190,6 @@
 	};
 
 	/* UART_RX / USART_RX */
-
 	/omit-if-no-ref/ usart1_rx_pa10: usart1_rx_pa10 {
 		pinmux = <STM32F1_PINMUX('A', 10, GPIO_IN, USART1_REMAP0)>;
 	};
@@ -1243,7 +1219,6 @@
 	};
 
 	/* UART_TX / USART_TX */
-
 	/omit-if-no-ref/ usart1_tx_pa9: usart1_tx_pa9 {
 		pinmux = <STM32F1_PINMUX('A', 9, ALTERNATE, USART1_REMAP0)>;
 	};
@@ -1273,7 +1248,6 @@
 	};
 
 	/* USB */
-
 	/omit-if-no-ref/ usb_dm_pa11: usb_dm_pa11 {
 		pinmux = <STM32F1_PINMUX('A', 11, GPIO_IN, NO_REMAP)>;
 	};
@@ -1281,5 +1255,4 @@
 	/omit-if-no-ref/ usb_dp_pa12: usb_dp_pa12 {
 		pinmux = <STM32F1_PINMUX('A', 12, GPIO_IN, NO_REMAP)>;
 	};
-
 };
