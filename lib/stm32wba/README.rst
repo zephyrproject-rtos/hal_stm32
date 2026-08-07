@@ -79,11 +79,11 @@ Description:
       - Projects/Common/WPAN/Modules/stm_list.c
       - Projects/Common/WPAN/Modules/stm_list.h
       - Projects/Common/WPAN/Modules/utilities_common.h
+      - Projects/Common/WPAN/Modules/pka_ctrl.c
+      - Projects/Common/WPAN/Modules/pka_ctrl.h
       - Projects/Common/WPAN/Interfaces/hw.h
       - Projects/Common/WPAN/Interfaces/hw_aes.c
       - Projects/Common/WPAN/Interfaces/hw_if.h
-      - Projects/Common/WPAN/Interfaces/hw_pka.c
-      - Projects/Common/WPAN/Interfaces/hw_pka_p256.c
       - Projects/Common/WPAN/Modules/Log/log_module.c
       - Projects/Common/WPAN/Modules/Log/log_module.h
       - Projects/Common/WPAN/Modules/BasicAES/baes.h
@@ -94,8 +94,6 @@ Description:
       - Projects/NUCLEO-WBA65RI/Applications/BLE/BLE_TransparentMode/System/Config/Debug_GPIO/app_debug.h
       - Projects/NUCLEO-WBA65RI/Applications/BLE/BLE_TransparentMode/System/Config/Log/log_module_conf.h
       - Projects/NUCLEO-WBA65RI/Applications/BLE/BLE_TransparentMode/STM32_WPAN/Target/power_table.c
-      - Projects/NUCLEO-WBA65RI/Applications/BLE/BLE_TransparentMode/STM32_WPAN/Target/bpka.c
-      - Projects/NUCLEO-WBA65RI/Applications/BLE/BLE_TransparentMode/STM32_WPAN/Target/bpka.h
       - Projects/NUCLEO-WBA65RI/Applications/BLE/BLE_TransparentMode/STM32_WPAN/Target/linklayer_plat.c
       - Projects/NUCLEO-WBA65RI/Applications/BLE/BLE_TransparentMode/STM32_WPAN/Target/ll_sys_if.c
       - Projects/NUCLEO-WBA65RI/Applications/BLE/BLE_TransparentMode/STM32_WPAN/Target/ll_sys_if.h

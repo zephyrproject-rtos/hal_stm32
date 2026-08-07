@@ -136,6 +136,8 @@ file_list_wba = {
         "Projects/Common/WPAN/Modules/stm_list.c",
         "Projects/Common/WPAN/Modules/stm_list.h",
         "Projects/Common/WPAN/Modules/utilities_common.h",
+        "Projects/Common/WPAN/Modules/pka_ctrl.c",
+        "Projects/Common/WPAN/Modules/pka_ctrl.h",
         "Projects/Common/WPAN/Interfaces/hw.h",
         "Projects/Common/WPAN/Interfaces/hw_aes.c",
         "Projects/Common/WPAN/Interfaces/hw_if.h",
