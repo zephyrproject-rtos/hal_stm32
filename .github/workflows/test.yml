@@ -89,6 +89,9 @@ jobs:
               continue
             fi
 
+            # Note how the DFP subdirectory is named "stm32XXXXxx_dfp":
+            # this is very important as this naming is expected by the
+            # genpinctrl_hal2.py script to identify the series.
             cube_dir=$(dirname "$local_dfp")
             cube_name=$(basename "$cube_dir")
             cube_readme="$cube_dir/README"
@@ -137,7 +140,11 @@ jobs:
       - name: regenerate pinctrl files (HAL2)
         if: steps.changed.outputs.pinctrl == 'true'
         run: |
-          python3 scripts/genpinctrl/genpinctrl_hal2.py -p /tmp/STM32Cube_DFP -o dts
+          # Run generation script for each series, done one series at a time
+          # because genpinctrl_hal2.py operated on exactly one series per call.
+          for dir in /tmp/STM32Cube_DFP/*/; do
+            python3 scripts/genpinctrl/genpinctrl_hal2.py -p "$dir" -o dts
+          done
 
       - name: restore documented pinctrl patches
         if: steps.changed.outputs.pinctrl == 'true'
