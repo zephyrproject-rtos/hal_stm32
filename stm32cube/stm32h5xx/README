@@ -42,11 +42,6 @@ Patch List:
    *Provision to enable hal & ll asserts added
     -Added stm32cube/stm32h5xx/drivers/include/stm32_assert.h
     -Removed unused stm32cube/stm32h5xx/drivers/include/stm32_assert_template.h
-    -in stm32cube/stm32h5xx/drivers/src/
-      . renamed stm32h5xx_hal_msp_template. c to stm32h5xx_hal_msp.c
-      . renamed stm32h5xx_hal_timebase_rtc_alarm_template. c to stm32h5xx_hal_timebase_rtc_alarm.c
-      . renamed stm32h5xx_hal_timebase_rtc_wakeup_template. c to stm32h5xx_hal_timebase_rtc_wakeup.c
-      . renamed stm32h5xx_hal_timebase_tim_template. c to stm32h5xx_hal_timebase_tim.c
 
    *fix to the V2 HAL API to get PTP to work
      impacted file : stm32h5xx_hal_eth.c
