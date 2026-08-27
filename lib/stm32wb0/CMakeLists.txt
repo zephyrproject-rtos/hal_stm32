@@ -21,8 +21,8 @@ zephyr_include_directories(Common/BLE/Modules/RTDebug)
 zephyr_include_directories(BLE_TransparentMode/Core/Inc)
 zephyr_include_directories(BLE_TransparentMode/STM32_BLE/App)
 
-target_link_directories(app PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../../zephyr/blobs/stm32wb0/lib)
-target_link_libraries(app PUBLIC -l:stm32wb0x_ble_stack_controller_only.a)
+set(WB0_BLOBS_DIR "${ZEPHYR_CURRENT_MODULE_DIR}/zephyr/blobs/stm32wb0/lib")
+zephyr_link_libraries("${WB0_BLOBS_DIR}/stm32wb0x_ble_stack_controller_only.a")
 
 function(min OUT_VAR)
   list(SORT ARGN COMPARE NATURAL ORDER ASCENDING)
