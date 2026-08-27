@@ -6,3 +6,6 @@ __pycache__
 .venv
 .coverage
 htmlcov/
+
+# blobs
+zephyr/blobs/**/*.a
