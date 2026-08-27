@@ -178,8 +178,7 @@ in voltage and temperature.*/
   * radio proprietary protocol with action packets.
   */
 #if !defined (USE_RADIO_PROPRIETARY_DRIVER)
-/** PATCH: Enable BLE stack instead of proprietary driver */
-#define USE_RADIO_PROPRIETARY_DRIVER  0U
+#define USE_RADIO_PROPRIETARY_DRIVER  1U
 #endif /* USE_RADIO_PROPRIETARY_DRIVER */
 
 /* Includes ------------------------------------------------------------------*/
