@@ -105,7 +105,9 @@ extern "C" {
 #define USE_HAL_ADC_REGISTER_CALLBACKS          0U
 #define USE_HAL_ADC_USER_DATA                   0U
 #define USE_HAL_ADC_GET_LAST_ERRORS             0U
+#ifdef CONFIG_USE_STM32_HAL_DMA
 #define USE_HAL_ADC_DMA                         1U
+#endif /* CONFIG_USE_STM32_HAL_DMA */
 /**
   * @}
   */
@@ -119,7 +121,9 @@ extern "C" {
 #define USE_HAL_AES_REGISTER_CALLBACKS          0U
 #define USE_HAL_AES_USER_DATA                   0U
 #define USE_HAL_AES_GET_LAST_ERRORS             0U
+#ifdef CONFIG_USE_STM32_HAL_DMA
 #define USE_HAL_AES_DMA                         1U
+#endif /* CONFIG_USE_STM32_HAL_DMA */
 #define USE_HAL_AES_ECB_CBC_ALGO                0U
 #define USE_HAL_AES_CTR_ALGO                    0U
 #define USE_HAL_AES_GCM_GMAC_ALGO               0U
@@ -166,7 +170,9 @@ extern "C" {
 #define USE_HAL_CORDIC_REGISTER_CALLBACKS       0U
 #define USE_HAL_CORDIC_USER_DATA                0U
 #define USE_HAL_CORDIC_GET_LAST_ERRORS          0U
+#ifdef CONFIG_USE_STM32_HAL_DMA
 #define USE_HAL_CORDIC_DMA                      1U
+#endif /* CONFIG_USE_STM32_HAL_DMA */
 /**
   * @}
   */
@@ -213,7 +219,9 @@ extern "C" {
 #define USE_HAL_DAC_REGISTER_CALLBACKS          0U
 #define USE_HAL_DAC_USER_DATA                   0U
 #define USE_HAL_DAC_GET_LAST_ERRORS             0U
+#ifdef CONFIG_USE_STM32_HAL_DMA
 #define USE_HAL_DAC_DMA                         1U
+#endif /* CONFIG_USE_STM32_HAL_DMA */
 #define USE_HAL_DAC_DUAL_CHANNEL                0U
 /**
   * @}
@@ -232,11 +240,13 @@ extern "C" {
   * @{
   */
 /* ########################## HAL_DMA Config #################################### */
+#ifdef CONFIG_USE_STM32_HAL_DMA
 #define USE_HAL_DMA_MODULE                      1U
 #define USE_HAL_DMA_CLK_ENABLE_MODEL            HAL_CLK_ENABLE_NO
 #define USE_HAL_DMA_USER_DATA                   0U
 #define USE_HAL_DMA_GET_LAST_ERRORS             0U
 #define USE_HAL_DMA_LINKEDLIST                  0U
+#endif /* CONFIG_USE_STM32_HAL_DMA */
 /**
   * @}
   */
@@ -327,7 +337,9 @@ extern "C" {
 #define USE_HAL_HASH_REGISTER_CALLBACKS         0U
 #define USE_HAL_HASH_USER_DATA                  0U
 #define USE_HAL_HASH_GET_LAST_ERRORS            0U
+#ifdef CONFIG_USE_STM32_HAL_DMA
 #define USE_HAL_HASH_DMA                        1U
+#endif /* CONFIG_USE_STM32_HAL_DMA */
 /**
   * @}
   */
@@ -356,7 +368,9 @@ extern "C" {
 #define USE_HAL_I2C_REGISTER_CALLBACKS          0U
 #define USE_HAL_I2C_USER_DATA                   0U
 #define USE_HAL_I2C_GET_LAST_ERRORS             0U
+#ifdef CONFIG_USE_STM32_HAL_DMA
 #define USE_HAL_I2C_DMA                         1U
+#endif /* CONFIG_USE_STM32_HAL_DMA */
 /**
   * @}
   */
@@ -370,7 +384,9 @@ extern "C" {
 #define USE_HAL_I3C_REGISTER_CALLBACKS          0U
 #define USE_HAL_I3C_USER_DATA                   0U
 #define USE_HAL_I3C_GET_LAST_ERRORS             0U
+#ifdef CONFIG_USE_STM32_HAL_DMA
 #define USE_HAL_I3C_DMA                         1U
+#endif /* CONFIG_USE_STM32_HAL_DMA */
 /**
   * @}
   */
@@ -385,7 +401,9 @@ extern "C" {
 #define USE_HAL_I2S_USER_DATA                   0U
 #define USE_HAL_I2S_GET_LAST_ERRORS             0U
 #define USE_HAL_I2S_OVR_UDR_ERRORS              0U
+#ifdef CONFIG_USE_STM32_HAL_DMA
 #define USE_HAL_I2S_DMA                         1U
+#endif /* CONFIG_USE_STM32_HAL_DMA */
 /**
   * @}
   */
@@ -433,7 +451,9 @@ extern "C" {
 #define USE_HAL_LPTIM_REGISTER_CALLBACKS        0U
 #define USE_HAL_LPTIM_USER_DATA                 0U
 #define USE_HAL_LPTIM_GET_LAST_ERRORS           0U
+#ifdef CONFIG_USE_STM32_HAL_DMA
 #define USE_HAL_LPTIM_DMA                       1U
+#endif /* CONFIG_USE_STM32_HAL_DMA */
 /**
   * @}
   */
@@ -549,7 +569,9 @@ extern "C" {
 #define USE_HAL_SMARTCARD_REGISTER_CALLBACKS    0U
 #define USE_HAL_SMARTCARD_USER_DATA             0U
 #define USE_HAL_SMARTCARD_GET_LAST_ERRORS       0U
+#ifdef CONFIG_USE_STM32_HAL_DMA
 #define USE_HAL_SMARTCARD_DMA                   1U
+#endif /* CONFIG_USE_STM32_HAL_DMA */
 /* #################### SMARTCARD FIFO configuration ######################## */
 #define USE_HAL_SMARTCARD_FIFO                  1U
 /**
@@ -578,7 +600,9 @@ extern "C" {
 #define USE_HAL_SPI_REGISTER_CALLBACKS          0U
 #define USE_HAL_SPI_USER_DATA                   0U
 #define USE_HAL_SPI_GET_LAST_ERRORS             0U
+#ifdef CONFIG_USE_STM32_HAL_DMA
 #define USE_HAL_SPI_DMA                         1U
+#endif /* CONFIG_USE_STM32_HAL_DMA */
 /* CRC FEATURE: Use to activate CRC feature inside HAL SPI Driver
  * Activated: CRC code is present inside driver
  * Deactivated: CRC code cleaned from driver
@@ -606,7 +630,9 @@ extern "C" {
 #define USE_HAL_TIM_REGISTER_CALLBACKS          0U
 #define USE_HAL_TIM_USER_DATA                   0U
 #define USE_HAL_TIM_GET_LAST_ERRORS             0U
+#ifdef CONFIG_USE_STM32_HAL_DMA
 #define USE_HAL_TIM_DMA                         1U
+#endif /* CONFIG_USE_STM32_HAL_DMA */
 /**
   * @}
   */
@@ -620,7 +646,9 @@ extern "C" {
 #define USE_HAL_UART_REGISTER_CALLBACKS         0U
 #define USE_HAL_UART_USER_DATA                  0U
 #define USE_HAL_UART_GET_LAST_ERRORS            0U
+#ifdef CONFIG_USE_STM32_HAL_DMA
 #define USE_HAL_UART_DMA                        1U
+#endif /* CONFIG_USE_STM32_HAL_DMA */
 /**
   * @}
   */
@@ -634,7 +662,9 @@ extern "C" {
 #define USE_HAL_USART_REGISTER_CALLBACKS        0U
 #define USE_HAL_USART_USER_DATA                 0U
 #define USE_HAL_USART_GET_LAST_ERRORS           0U
+#ifdef CONFIG_USE_STM32_HAL_DMA
 #define USE_HAL_USART_DMA                       1U
+#endif /* CONFIG_USE_STM32_HAL_DMA */
 #define USE_HAL_USART_FIFO                      0U
 /**
   * @}
@@ -667,7 +697,9 @@ extern "C" {
 #define USE_HAL_XSPI_REGISTER_CALLBACKS         0U
 #define USE_HAL_XSPI_USER_DATA                  0U
 #define USE_HAL_XSPI_GET_LAST_ERRORS            0U
+#ifdef CONFIG_USE_STM32_HAL_DMA
 #define USE_HAL_XSPI_DMA                        1U
+#endif /* CONFIG_USE_STM32_HAL_DMA */
 #define USE_HAL_XSPI_HYPERBUS                   1U
 /**
   * @}
