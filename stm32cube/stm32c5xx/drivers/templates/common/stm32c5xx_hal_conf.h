@@ -124,10 +124,17 @@ extern "C" {
 #ifdef CONFIG_USE_STM32_HAL_DMA
 #define USE_HAL_AES_DMA                         1U
 #endif /* CONFIG_USE_STM32_HAL_DMA */
+#ifdef __ZEPHYR__
+#define USE_HAL_AES_ECB_CBC_ALGO                1U
+#define USE_HAL_AES_CTR_ALGO                    1U
+#define USE_HAL_AES_GCM_GMAC_ALGO               1U
+#define USE_HAL_AES_CCM_ALGO                    1U
+#else /* __ZEPHYR__ */
 #define USE_HAL_AES_ECB_CBC_ALGO                0U
 #define USE_HAL_AES_CTR_ALGO                    0U
 #define USE_HAL_AES_GCM_GMAC_ALGO               0U
 #define USE_HAL_AES_CCM_ALGO                    0U
+#endif /* __ZEPHYR__ */
 #define USE_HAL_AES_SUSPEND_RESUME              1U
 /**
   * @}
