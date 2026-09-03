@@ -90,21 +90,24 @@ endif()
 
 # Search which STM32 series was selected
 foreach(series ${supported_series})
+  # Note the test performed: we check for a Kconfig option
+  # "CONFIG_SOC_SERIES_STM32*X", with an `X` suffix after
+  # the series name.
   string(TOUPPER ${series} series_to_upper)
-  if(CONFIG_SOC_SERIES_${series_to_upper})
+  if(CONFIG_SOC_SERIES_${series_to_upper}X)
     # Found the series - now look for its Cube package.
     # Depending on the naming convention used in the package,
-    # this will be either the raw ${series}, or ${series}
-    # suffixed with a single `x` (i.e., `${series}x`).
+    # this will be the series name suffixed with either one
+    # or two `x` characters (`${series}x` / `${series}xx`).
     #
-    # Check if the former exists:
-    #   - if yes, correct subdirectory is the raw variant
-    #   - if no, correct subdirectory is the suffixed variant
+    # Check if double-`x` variant subdirectory exists:
+    #   - if yes, Cube package is a double-`x` variant
+    #   - else, Cube package is a single-`x` variant
     #
     # Note that `IS_DIRECTORY` checks for existence, so it
     # is more appropriate than `EXISTS` for this usecase.
-    if (IS_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/${series}")
-      set(cube_dir ${series})
+    if (IS_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/${series}xx")
+      set(cube_dir ${series}xx)
     else()
       set(cube_dir ${series}x)
     endif()
