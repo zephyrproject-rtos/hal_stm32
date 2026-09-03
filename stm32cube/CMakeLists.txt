@@ -111,27 +111,29 @@ foreach(series ${supported_series})
     else()
       set(cube_dir ${series}x)
     endif()
-
-   if(CONFIG_STM32_HAL2)
-      zephyr_compile_definitions(USE_EXTERNAL_ENV)
-      zephyr_include_directories(
-        ${cube_dir}/dfp/Include
-        ${cube_dir}/dfp/Include/Templates
-        ${cube_dir}/drivers/hal
-        ${cube_dir}/drivers/ll
-        ${cube_dir}/drivers/templates/common
-      )
-   else()
-      zephyr_include_directories(
-        ${cube_dir}/soc
-        ${cube_dir}/drivers/include
-      )
-    endif()
-
-    add_subdirectory(${cube_dir})
     break()
   endif()
 endforeach()
+
+# Add series-specific STM32Cube headers to include directories
+if(CONFIG_STM32_HAL2)
+  zephyr_compile_definitions(USE_EXTERNAL_ENV)
+  zephyr_include_directories(
+    ${cube_dir}/dfp/Include
+    ${cube_dir}/dfp/Include/Templates
+    ${cube_dir}/drivers/hal
+    ${cube_dir}/drivers/ll
+    ${cube_dir}/drivers/templates/common
+  )
+else()
+  zephyr_include_directories(
+    ${cube_dir}/soc
+    ${cube_dir}/drivers/include
+  )
+endif()
+
+# Add STM32Cube package for the series to the build system
+add_subdirectory(${cube_dir})
 
 # Enable HAL asserts if requested by Zephyr
 if(CONFIG_USE_STM32_ASSERT)
