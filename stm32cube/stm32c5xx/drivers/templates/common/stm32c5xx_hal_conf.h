@@ -120,10 +120,10 @@ extern "C" {
 #define USE_HAL_AES_USER_DATA                   0U
 #define USE_HAL_AES_GET_LAST_ERRORS             0U
 #define USE_HAL_AES_DMA                         USE_HAL_DMA_MODULE
-#define USE_HAL_AES_ECB_CBC_ALGO                0U
-#define USE_HAL_AES_CTR_ALGO                    0U
-#define USE_HAL_AES_GCM_GMAC_ALGO               0U
-#define USE_HAL_AES_CCM_ALGO                    0U
+#define USE_HAL_AES_ECB_CBC_ALGO                1U
+#define USE_HAL_AES_CTR_ALGO                    1U
+#define USE_HAL_AES_GCM_GMAC_ALGO               1U
+#define USE_HAL_AES_CCM_ALGO                    1U
 #define USE_HAL_AES_SUSPEND_RESUME              1U
 #define USE_HAL_AES_RNG_RECOVERY                1U
 /**
