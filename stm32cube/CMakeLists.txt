@@ -54,9 +54,9 @@ string(REPLACE "X" "x" STM32CUBE_CPU ${_STM32CUBE_CPU})
 # build: this is controlled by the various USE_STM32_{HAL/LL}_<PPP>
 # Kconfig symbols instead (see per-series CMakeLists for details).
 zephyr_compile_definitions(
-  -D${STM32CUBE_CPU}
-  -DUSE_HAL_DRIVER
-  -DUSE_FULL_LL_DRIVER
+  ${STM32CUBE_CPU}
+  USE_HAL_DRIVER
+  USE_FULL_LL_DRIVER
 )
 
 # Include list of all supported STM32 SoC series
@@ -65,27 +65,26 @@ include(series_list.cmake)
 # On dual-core MCUs, we must inform Cube which CPU we are building for.
 # Provide the Cube definition based on the active CPU Kconfig symbols.
 if(CONFIG_CPU_CORTEX_M4)
-  zephyr_compile_definitions( -DCORE_CM4 )
+  zephyr_compile_definitions(CORE_CM4)
 elseif(CONFIG_CPU_CORTEX_M7)
-  zephyr_compile_definitions( -DCORE_CM7 )
+  zephyr_compile_definitions(CORE_CM7)
 elseif(CONFIG_CPU_CORTEX_M55)
-  zephyr_compile_definitions( -DCORE_CM55 )
+  zephyr_compile_definitions(CORE_CM55)
 elseif(CONFIG_CPU_CORTEX_A7)
-  zephyr_compile_definitions( -DCORE_CA7 )
+  zephyr_compile_definitions(CORE_CA7)
 elseif(CONFIG_CPU_CORTEX_M33)
-  zephyr_compile_definitions( -DCORE_CM33 )
+  zephyr_compile_definitions(CORE_CM33)
 endif()
 
 # Define the HSE frequency visible to Cube if a value is specified in Zephyr.
 if(CONFIG_CLOCK_STM32_HSE_CLOCK)
-  zephyr_compile_definitions( -DHSE_VALUE=${CONFIG_CLOCK_STM32_HSE_CLOCK} )
+  zephyr_compile_definitions(HSE_VALUE=${CONFIG_CLOCK_STM32_HSE_CLOCK})
 endif()
 
 # Ethernet HAL API v2 specifics
 if(CONFIG_ETH_STM32_HAL_API_V2)
   # Enable PTP support in HAL if requested by Zephyr
-  zephyr_compile_definitions_ifdef(CONFIG_PTP_CLOCK_STM32_HAL
-    -DHAL_ETH_USE_PTP)
+  zephyr_compile_definitions_ifdef(CONFIG_PTP_CLOCK_STM32_HAL HAL_ETH_USE_PTP)
 endif()
 
 # Search which STM32 series was selected
@@ -137,7 +136,7 @@ add_subdirectory(${cube_dir})
 
 # Enable HAL asserts if requested by Zephyr
 if(CONFIG_USE_STM32_ASSERT)
-	zephyr_compile_definitions( -DUSE_FULL_ASSERT )
+	zephyr_compile_definitions(USE_FULL_ASSERT)
 endif()
 
 # Add the series-agnostic LL headers to include directories
