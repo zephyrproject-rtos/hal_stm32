@@ -2,11 +2,10 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-# soc/system_stm32wl3x.c is not included on purpose
+# soc/system_stm32wl3x.c is not included in the build on purpose
 zephyr_library_sources(drivers/src/stm32wl3x_hal.c)
 zephyr_library_sources(drivers/src/stm32wl3x_hal_rcc.c)
 zephyr_library_sources(drivers/src/stm32wl3x_hal_rcc_ex.c)
-
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_ADC drivers/src/stm32wl3x_hal_adc.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_COMP drivers/src/stm32wl3x_hal_comp.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_CORTEX drivers/src/stm32wl3x_hal_cortex.c)
