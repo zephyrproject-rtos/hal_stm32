@@ -2,19 +2,19 @@ STM32CubeL1
 ###########
 
 Origin:
-   ST Microelectronics
-   http://www.st.com/en/embedded-software/stm32cubel1.html
+   STMicroelectronics
+   https://www.st.com/en/embedded-software/stm32cubel1.html
 
 Status:
-   version v1.10.6
+   version 1.10.6
 
 Purpose:
-   ST Microelectronics official MCU package for STM32L1 series.
+   STMicroelectronics official MCU package for STM32L1 series.
 
 Description:
-   This package is an extract of official STM32CubeL1 package written by ST Microelectronics.
+   This package is an extract of official STM32CubeL1 package written by STMicroelectronics.
    It is composed of STM32Cube hardware abstraction layer (HAL) and low layer (LL) plus a set
-   of CMSIS headers files, one for each SoC in STM32L1 series.
+   of CMSIS headers files, one for each SoC in the STM32L1 series.
 
 Dependencies:
     None.

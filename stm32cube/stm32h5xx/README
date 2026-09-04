@@ -2,19 +2,19 @@ STM32CubeH5
 ###########
 
 Origin:
-   ST Microelectronics
-   http://www.st.com/en/embedded-software/stm32cubeh5.html
+   STMicroelectronics
+   https://www.st.com/en/embedded-software/stm32cubeh5.html
 
 Status:
-   version v1.6.0
+   version 1.6.0
 
 Purpose:
-   ST Microelectronics official MCU package for STM32H5 series.
+   STMicroelectronics official MCU package for STM32H5 series.
 
 Description:
-   This package is an extract of official STM32CubeH5 package written by ST Microelectronics.
+   This package is an extract of official STM32CubeH5 package written by STMicroelectronics.
    It is composed of STM32Cube hardware abstraction layer (HAL) and low layer (LL) plus a set
-   of CMSIS headers files, one for each SoC in STM32H5 series.
+   of CMSIS headers files, one for each SoC in the STM32H5 series.
 
 Dependencies:
     None.
@@ -24,6 +24,7 @@ URL:
 
 Commit:
    e25dd1b1d0e8871627e79e2d1453687f0f22835c
+
 Maintained-by:
    External
 
@@ -34,7 +35,6 @@ License Link:
    https://opensource.org/licenses/BSD-3-Clause
 
 Patch List:
-
    *Changes from official delivery:
     -dos2unix applied
     -trailing white spaces removed
