@@ -49,11 +49,11 @@ zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_NOR drivers/src/stm32mp2xx_hal
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_OSPI drivers/src/stm32mp2xx_hal_ospi.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_OTFDEC drivers/src/stm32mp2xx_hal_otfdec.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_PCD drivers/src/stm32mp2xx_hal_pcd.c)
-zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_PCD_DRD drivers/src/stm32mp2xx_hal_pcd_drd.c)
-zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_PCD_DRD_EX drivers/src/stm32mp2xx_hal_pcd_drd_ex.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_PCD_EX drivers/src/stm32mp2xx_hal_pcd_ex.c)
-zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_PCD_OTG drivers/src/stm32mp2xx_hal_pcd_otg.c)
-zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_PCD_OTG_EX drivers/src/stm32mp2xx_hal_pcd_otg_ex.c)
+# drivers/src/stm32mp2xx_hal_pcd_drd.c is not included in the build on purpose
+# drivers/src/stm32mp2xx_hal_pcd_drd_ex.c is not included in the build on purpose
+# drivers/src/stm32mp2xx_hal_pcd_otg.c is not included in the build on purpose
+# drivers/src/stm32mp2xx_hal_pcd_otg_ex.c is not included in the build on purpose
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_PKA drivers/src/stm32mp2xx_hal_pka.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_PSSI drivers/src/stm32mp2xx_hal_pssi.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_HAL_PWR drivers/src/stm32mp2xx_hal_pwr.c)
@@ -105,6 +105,6 @@ zephyr_library_sources_ifdef(CONFIG_USE_STM32_LL_TIM drivers/src/stm32mp2xx_ll_t
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_LL_UCPD drivers/src/stm32mp2xx_ll_ucpd.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_LL_USART drivers/src/stm32mp2xx_ll_usart.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_LL_USB drivers/src/stm32mp2xx_ll_usb.c)
-zephyr_library_sources_ifdef(CONFIG_USE_STM32_LL_USB_DRD drivers/src/stm32mp2xx_ll_usb_drd.c)
-zephyr_library_sources_ifdef(CONFIG_USE_STM32_LL_USB_OTG drivers/src/stm32mp2xx_ll_usb_otg.c)
+# drivers/src/stm32mp2xx_ll_usb_drd.c is not included in the build on purpose
+# drivers/src/stm32mp2xx_ll_usb_otg.c is not included in the build on purpose
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_UTIL_I3C drivers/src/stm32mp2xx_util_i3c.c)
