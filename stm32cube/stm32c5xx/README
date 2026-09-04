@@ -2,19 +2,19 @@ STM32CubeC5
 ###########
 
 Origin:
-   ST Microelectronics
-   https://www.st.com/en/microcontrollers-microprocessors/stm32c5-series.html
+   STMicroelectronics
+   https://www.st.com/en/embedded-software/stm32cubec5.html
 
 Status:
    version 2.0.0
 
 Purpose:
-   ST Microelectronics official MCU package for STM32C5 series.
+   STMicroelectronics official MCU package for STM32C5 series.
 
 Description:
-   This package is an extract of official STM32CubeC5 package written by ST Microelectronics.
+   This package is an extract of official STM32CubeC5 package written by STMicroelectronics.
    It is composed of STM32Cube hardware abstraction layer (HAL) and low layer (LL) plus a set
-   of CMSIS headers files, one for each SoC in STM32C5 series.
+   of CMSIS headers files, one for each SoC in the STM32C5 series.
 
 Dependencies:
     None.
@@ -35,7 +35,6 @@ License Link:
    https://opensource.org/licenses/BSD-3-Clause
 
 Patch List:
-
    *Changes from official delivery:
     -dos2unix applied
     -trailing white spaces removed

@@ -2,19 +2,19 @@ STM32CubeH7RS
 #############
 
 Origin:
-   ST Microelectronics
-   http://www.st.com/en/embedded-software/stm32cubeh7rs.html
+   STMicroelectronics
+   https://www.st.com/en/embedded-software/stm32cubeh7rs.html
 
 Status:
-   version v1.3.0
+   version 1.3.0
 
 Purpose:
-   ST Microelectronics official MCU package for STM32H7RS series.
+   STMicroelectronics official MCU package for STM32H7RS series.
 
 Description:
-   This package is an extract of official STM32CubeH7RS package written by ST Microelectronics.
+   This package is an extract of official STM32CubeH7RS package written by STMicroelectronics.
    It is composed of STM32Cube hardware abstraction layer (HAL) and low layer (LL) plus a set
-   of CMSIS headers files, one for each SoC in STM32H7RS series.
+   of CMSIS headers files, one for each SoC in the STM32H7RS series.
 
 Dependencies:
     None.
@@ -35,7 +35,6 @@ License Link:
    https://opensource.org/licenses/BSD-3-Clause
 
 Patch List:
-
    *Changes from official delivery:
     -dos2unix applied
     -trailing white spaces removed

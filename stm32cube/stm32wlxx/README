@@ -1,20 +1,20 @@
-STM32CubeWB
+STM32CubeWL
 ###########
 
 Origin:
-   ST Microelectronics
-   http://www.st.com/en/embedded-software/stm32cubewb.html
+   STMicroelectronics
+   https://www.st.com/en/embedded-software/stm32cubewl.html
 
 Status:
-   version v1.5.0
+   version 1.5.0
 
 Purpose:
-   ST Microelectronics official MCU package for STM32WL series.
+   STMicroelectronics official MCU package for STM32WL series.
 
 Description:
-   This package is an extract of official STM32CubeWL package written by ST Microelectronics.
+   This package is an extract of official STM32CubeWL package written by STMicroelectronics.
    It is composed of STM32Cube hardware abstraction layer (HAL) and low layer (LL) plus a set
-   of CMSIS headers files, one for each SoC in STM32WL series.
+   of CMSIS headers files, one for each SoC in the STM32WL series.
 
 Dependencies:
     None.

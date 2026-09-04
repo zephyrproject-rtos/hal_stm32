@@ -2,19 +2,19 @@ STM32CubeF2
 ###########
 
 Origin:
-   ST Microelectronics
-   http://www.st.com/en/embedded-software/stm32cubef2.html
+   STMicroelectronics
+   https://www.st.com/en/embedded-software/stm32cubef2.html
 
 Status:
-   version v1.9.6
+   version 1.9.6
 
 Purpose:
-   ST Microelectronics official MCU package for STM32F2 series.
+   STMicroelectronics official MCU package for STM32F2 series.
 
 Description:
-   This package is an extract of official STM32CubeF2 package written by ST Microelectronics.
+   This package is an extract of official STM32CubeF2 package written by STMicroelectronics.
    It is composed of STM32Cube hardware abstraction layer (HAL) and low layer (LL) plus a set
-   of CMSIS headers files, one for each SoC in STM32F2 series.
+   of CMSIS headers files, one for each SoC in the STM32F2 series.
 
 Dependencies:
     None.
