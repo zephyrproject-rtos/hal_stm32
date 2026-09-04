@@ -59,7 +59,7 @@ zephyr_library_sources_ifdef(CONFIG_USE_STM32_LL_RCC drivers/src/stm32wl3x_ll_rc
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_LL_RNG drivers/src/stm32wl3x_ll_rng.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_LL_RTC drivers/src/stm32wl3x_ll_rtc.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_LL_SPI drivers/src/stm32wl3x_ll_spi.c)
-zephyr_library_sources_ifdef(CONFIG_USE_STM32_LL_SYSTEM drivers/src/stm32wl3x_ll_system.c)
+# drivers/src/stm32wl3x_ll_system.c is not included in the build on purpose
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_LL_TIM drivers/src/stm32wl3x_ll_tim.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_LL_USART drivers/src/stm32wl3x_ll_usart.c)
 zephyr_library_sources_ifdef(CONFIG_USE_STM32_LL_UTILS drivers/src/stm32wl3x_ll_utils.c)
