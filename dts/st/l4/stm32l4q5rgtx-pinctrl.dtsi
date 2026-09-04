@@ -1950,6 +1950,11 @@
 		bias-pull-up;
 	};
 
+	/omit-if-no-ref/ uart5_cts_pb5: uart5_cts_pb5 {
+		pinmux = <STM32_PINMUX('B', 5, AF8)>;
+		bias-pull-up;
+	};
+
 	/* UART_DE / USART_DE / LPUART_DE */
 	/omit-if-no-ref/ usart1_de_pa12: usart1_de_pa12 {
 		pinmux = <STM32_PINMUX('A', 12, AF7)>;
@@ -1998,6 +2003,11 @@
 
 	/omit-if-no-ref/ uart4_de_pa15: uart4_de_pa15 {
 		pinmux = <STM32_PINMUX('A', 15, AF8)>;
+		drive-push-pull;
+	};
+
+	/omit-if-no-ref/ uart5_de_pb4: uart5_de_pb4 {
+		pinmux = <STM32_PINMUX('B', 4, AF8)>;
 		drive-push-pull;
 	};
 
@@ -2052,6 +2062,11 @@
 		drive-push-pull;
 	};
 
+	/omit-if-no-ref/ uart5_rts_pb4: uart5_rts_pb4 {
+		pinmux = <STM32_PINMUX('B', 4, AF8)>;
+		drive-push-pull;
+	};
+
 	/* UART_RX / USART_RX / LPUART_RX */
 	/omit-if-no-ref/ lpuart1_rx_pa3: lpuart1_rx_pa3 {
 		pinmux = <STM32_PINMUX('A', 3, AF8)>;
@@ -2099,6 +2114,10 @@
 
 	/omit-if-no-ref/ uart4_rx_pc11: uart4_rx_pc11 {
 		pinmux = <STM32_PINMUX('C', 11, AF8)>;
+	};
+
+	/omit-if-no-ref/ uart5_rx_pd2: uart5_rx_pd2 {
+		pinmux = <STM32_PINMUX('D', 2, AF8)>;
 	};
 
 	/* UART_TX / USART_TX / LPUART_TX */
@@ -2154,6 +2173,11 @@
 
 	/omit-if-no-ref/ uart4_tx_pc10: uart4_tx_pc10 {
 		pinmux = <STM32_PINMUX('C', 10, AF8)>;
+		bias-pull-up;
+	};
+
+	/omit-if-no-ref/ uart5_tx_pc12: uart5_tx_pc12 {
+		pinmux = <STM32_PINMUX('C', 12, AF8)>;
 		bias-pull-up;
 	};
 

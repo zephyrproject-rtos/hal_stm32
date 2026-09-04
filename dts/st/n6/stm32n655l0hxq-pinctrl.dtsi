@@ -2802,10 +2802,6 @@
 		pinmux = <STM32_PINMUX('B', 0, AF0)>;
 	};
 
-	/omit-if-no-ref/ debug_jtdo_swo_pb3: debug_jtdo_swo_pb3 {
-		pinmux = <STM32_PINMUX('B', 3, ANALOG)>;
-	};
-
 	/omit-if-no-ref/ debug_traceclk_pb3: debug_traceclk_pb3 {
 		pinmux = <STM32_PINMUX('B', 3, AF0)>;
 	};

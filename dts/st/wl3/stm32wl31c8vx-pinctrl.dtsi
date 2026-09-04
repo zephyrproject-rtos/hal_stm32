@@ -7,9 +7,7 @@
 #include <zephyr/dt-bindings/pinctrl/stm32-pinctrl.h>
 
 &pinctrl {
-
 	/* ADC_VINM / ADC_VINP */
-
 	/omit-if-no-ref/ adc1_vinm2_pa2: adc1_vinm2_pa2 {
 		pinmux = <STM32_PINMUX('A', 2, ANALOG)>;
 	};
@@ -43,7 +41,6 @@
 	};
 
 	/* Analog */
-
 	/omit-if-no-ref/ analog_pa0: analog_pa0 {
 		pinmux = <STM32_PINMUX('A', 0, ANALOG)>;
 	};
@@ -173,7 +170,6 @@
 	};
 
 	/* I2C_SCL */
-
 	/omit-if-no-ref/ i2c1_scl_pa0: i2c1_scl_pa0 {
 		pinmux = <STM32_PINMUX('A', 0, AF0)>;
 		bias-pull-up;
@@ -193,7 +189,6 @@
 	};
 
 	/* I2C_SDA */
-
 	/omit-if-no-ref/ i2c1_sda_pa1: i2c1_sda_pa1 {
 		pinmux = <STM32_PINMUX('A', 1, AF0)>;
 		bias-pull-up;
@@ -213,7 +208,6 @@
 	};
 
 	/* I2C_SMBA */
-
 	/omit-if-no-ref/ i2c1_smba_pa12: i2c1_smba_pa12 {
 		pinmux = <STM32_PINMUX('A', 12, AF0)>;
 		bias-pull-up;
@@ -225,7 +219,6 @@
 	};
 
 	/* JTAG PORT */
-
 	/omit-if-no-ref/ debug_swdio_pa2: debug_swdio_pa2 {
 		pinmux = <STM32_PINMUX('A', 2, AF0)>;
 	};
@@ -251,7 +244,6 @@
 	};
 
 	/* RCC_MCO */
-
 	/omit-if-no-ref/ rcc_mco_pa5: rcc_mco_pa5 {
 		pinmux = <STM32_PINMUX('A', 5, AF0)>;
 		slew-rate = "very-high-speed";
@@ -268,7 +260,6 @@
 	};
 
 	/* SPI_MISO */
-
 	/omit-if-no-ref/ spi1_miso_pa14: spi1_miso_pa14 {
 		pinmux = <STM32_PINMUX('A', 14, AF3)>;
 		bias-pull-down;
@@ -300,7 +291,6 @@
 	};
 
 	/* SPI_MOSI */
-
 	/omit-if-no-ref/ spi1_mosi_pa15: spi1_mosi_pa15 {
 		pinmux = <STM32_PINMUX('A', 15, AF3)>;
 		bias-pull-down;
@@ -332,7 +322,6 @@
 	};
 
 	/* SPI_NSS */
-
 	/omit-if-no-ref/ spi1_nss_pa12: spi1_nss_pa12 {
 		pinmux = <STM32_PINMUX('A', 12, AF3)>;
 		bias-pull-up;
@@ -364,7 +353,6 @@
 	};
 
 	/* SPI_SCK */
-
 	/omit-if-no-ref/ spi1_sck_pa13: spi1_sck_pa13 {
 		pinmux = <STM32_PINMUX('A', 13, AF3)>;
 		bias-pull-down;
@@ -396,7 +384,6 @@
 	};
 
 	/* TIM_CH / TIM_CHN */
-
 	/omit-if-no-ref/ tim2_ch3_pa0: tim2_ch3_pa0 {
 		pinmux = <STM32_PINMUX('A', 0, AF4)>;
 	};
@@ -486,7 +473,6 @@
 	};
 
 	/* UART_CTS / USART_CTS / LPUART_CTS */
-
 	/omit-if-no-ref/ usart1_cts_pa0: usart1_cts_pa0 {
 		pinmux = <STM32_PINMUX('A', 0, AF1)>;
 		bias-pull-up;
@@ -518,7 +504,6 @@
 	};
 
 	/* UART_DE / USART_DE / LPUART_DE */
-
 	/omit-if-no-ref/ usart1_de_pa3: usart1_de_pa3 {
 		pinmux = <STM32_PINMUX('A', 3, AF1)>;
 		drive-push-pull;
@@ -550,7 +535,6 @@
 	};
 
 	/* UART_RTS / USART_RTS / LPUART_RTS */
-
 	/omit-if-no-ref/ usart1_rts_pa3: usart1_rts_pa3 {
 		pinmux = <STM32_PINMUX('A', 3, AF1)>;
 		drive-push-pull;
@@ -582,7 +566,6 @@
 	};
 
 	/* UART_RX / USART_RX / LPUART_RX */
-
 	/omit-if-no-ref/ lpuart1_rx_pa5: lpuart1_rx_pa5 {
 		pinmux = <STM32_PINMUX('A', 5, AF1)>;
 	};
@@ -616,7 +599,6 @@
 	};
 
 	/* UART_TX / USART_TX / LPUART_TX */
-
 	/omit-if-no-ref/ usart1_tx_pa1: usart1_tx_pa1 {
 		pinmux = <STM32_PINMUX('A', 1, AF1)>;
 		bias-pull-up;
@@ -656,5 +638,4 @@
 		pinmux = <STM32_PINMUX('B', 15, AF1)>;
 		bias-pull-up;
 	};
-
 };
