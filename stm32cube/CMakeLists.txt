@@ -38,11 +38,15 @@ zephyr_library()
 # Use CONFIG_STM32CUBE_SOC_NAME_OVERRIDE as source if it exists which indicates
 # a special case SoC; otherwise, CONFIG_SOC should have the right value.
 if(CONFIG_STM32CUBE_SOC_NAME_OVERRIDE)
-  string(TOUPPER ${CONFIG_STM32CUBE_SOC_NAME_OVERRIDE} _STM32CUBE_CPU)
+  # Override should be exactly what STM32Cube expects: use it verbatim.
+  # Avoiding the transforms done on CONFIG_SOC is very important because there
+  # are cases when the CPU name contains uppercase 'X' characters which would
+  # lowercased incorrectly by the transforms below.
+  set(STM32CUBE_CPU ${CONFIG_STM32CUBE_SOC_NAME_OVERRIDE})
 else()
   string(TOUPPER ${CONFIG_SOC} _STM32CUBE_CPU)
+  string(REPLACE "X" "x" STM32CUBE_CPU ${_STM32CUBE_CPU})
 endif()
-string(REPLACE "X" "x" STM32CUBE_CPU ${_STM32CUBE_CPU})
 
 # Provide the minimal definitions needed by Cube to function
 # properly. This includes the SoC definition, but also the
