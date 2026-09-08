@@ -250,11 +250,15 @@ extern "C" {
 /* #define USE_HAL_CRYP_ONLY       1U */
 /* #define USE_HAL_SAES_ONLY       0U */
 
+#ifndef USE_HAL_CRYP_SUSPEND_RESUME
 #define USE_HAL_CRYP_SUSPEND_RESUME   0U
+#endif /* USE_HAL_CRYP_SUSPEND_RESUME */
 
 /* ################## HASH peripheral configuration ########################## */
 
+#ifndef USE_HAL_HASH_SUSPEND_RESUME
 #define USE_HAL_HASH_SUSPEND_RESUME   0U
+#endif /* USE_HAL_HASH_SUSPEND_RESUME */
 
 /* ################## SDMMC peripheral configuration ######################### */
 
