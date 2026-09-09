@@ -869,6 +869,8 @@ HAL_StatusTypeDef     HAL_OSPI_Abort(OSPI_HandleTypeDef *hospi);
 HAL_StatusTypeDef     HAL_OSPI_Abort_IT(OSPI_HandleTypeDef *hospi);
 HAL_StatusTypeDef     HAL_OSPI_SetFifoThreshold(OSPI_HandleTypeDef *hospi, uint32_t Threshold);
 uint32_t              HAL_OSPI_GetFifoThreshold(const OSPI_HandleTypeDef *hospi);
+HAL_StatusTypeDef     HAL_OSPI_SetMemoryType(OSPI_HandleTypeDef *hospi, uint32_t Type);
+HAL_StatusTypeDef     HAL_OSPI_SetDeviceSize(OSPI_HandleTypeDef *hospi, uint32_t Size);
 HAL_StatusTypeDef     HAL_OSPI_SetTimeout(OSPI_HandleTypeDef *hospi, uint32_t Timeout);
 uint32_t              HAL_OSPI_GetError(const OSPI_HandleTypeDef *hospi);
 uint32_t              HAL_OSPI_GetState(const OSPI_HandleTypeDef *hospi);
