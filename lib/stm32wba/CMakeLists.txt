@@ -14,8 +14,6 @@ zephyr_include_directories(STM32_WPAN)
 
 zephyr_sources(Common/WPAN/Modules/RTDebug/RTDebug.c)
 zephyr_sources(Common/WPAN/Modules/Log/log_module.c)
-zephyr_sources(Common/WPAN/Interfaces/hw_pka.c)
-zephyr_sources(Common/WPAN/Interfaces/hw_pka_p256.c)
 
 if(CONFIG_FLASH)
   zephyr_sources(Common/WPAN/Modules/Flash/flash_manager.c)
@@ -23,6 +21,9 @@ if(CONFIG_FLASH)
   zephyr_sources(Common/WPAN/Modules/Flash/rf_timing_synchro.c)
 endif()
 zephyr_sources(Common/WPAN/Modules/stm_list.c)
+if(CONFIG_BT_STM32WBA)
+zephyr_sources(Common/WPAN/Modules/pka_ctrl.c)
+endif()
 
 zephyr_sources(Common/WPAN/Modules/BasicAES/baes_ccm.c)
 zephyr_sources(Common/WPAN/Modules/BasicAES/baes_cmac.c)
