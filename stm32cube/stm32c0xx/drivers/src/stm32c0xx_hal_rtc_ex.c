@@ -849,4 +849,3 @@ HAL_StatusTypeDef HAL_RTCEx_DisableBypassShadow(RTC_HandleTypeDef *hrtc)
 /**
   * @}
   */
-

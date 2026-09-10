@@ -1180,15 +1180,15 @@ __STATIC_INLINE void LL_RCC_SetSYSDivider(uint32_t Divider)
   * @brief  Set AHB prescaler
   * @rmtoll CFGR         HPRE          LL_RCC_SetAHBPrescaler
   * @param  Prescaler This parameter can be one of the following values:
-  *         @arg @ref LL_RCC_SYSCLK_DIV_1
-  *         @arg @ref LL_RCC_SYSCLK_DIV_2
-  *         @arg @ref LL_RCC_SYSCLK_DIV_4
-  *         @arg @ref LL_RCC_SYSCLK_DIV_8
-  *         @arg @ref LL_RCC_SYSCLK_DIV_16
-  *         @arg @ref LL_RCC_SYSCLK_DIV_64
-  *         @arg @ref LL_RCC_SYSCLK_DIV_128
-  *         @arg @ref LL_RCC_SYSCLK_DIV_256
-  *         @arg @ref LL_RCC_SYSCLK_DIV_512
+  *         @arg @ref LL_RCC_HCLK_DIV_1
+  *         @arg @ref LL_RCC_HCLK_DIV_2
+  *         @arg @ref LL_RCC_HCLK_DIV_4
+  *         @arg @ref LL_RCC_HCLK_DIV_8
+  *         @arg @ref LL_RCC_HCLK_DIV_16
+  *         @arg @ref LL_RCC_HCLK_DIV_64
+  *         @arg @ref LL_RCC_HCLK_DIV_128
+  *         @arg @ref LL_RCC_HCLK_DIV_256
+  *         @arg @ref LL_RCC_HCLK_DIV_512
   * @retval None
   */
 __STATIC_INLINE void LL_RCC_SetAHBPrescaler(uint32_t Prescaler)
@@ -1276,15 +1276,15 @@ __STATIC_INLINE uint32_t LL_RCC_GetSYSDivider(void)
   * @brief  Get AHB prescaler
   * @rmtoll CFGR         HPRE          LL_RCC_GetAHBPrescaler
   * @retval Returned value can be one of the following values:
-  *         @arg @ref LL_RCC_SYSCLK_DIV_1
-  *         @arg @ref LL_RCC_SYSCLK_DIV_2
-  *         @arg @ref LL_RCC_SYSCLK_DIV_4
-  *         @arg @ref LL_RCC_SYSCLK_DIV_8
-  *         @arg @ref LL_RCC_SYSCLK_DIV_16
-  *         @arg @ref LL_RCC_SYSCLK_DIV_64
-  *         @arg @ref LL_RCC_SYSCLK_DIV_128
-  *         @arg @ref LL_RCC_SYSCLK_DIV_256
-  *         @arg @ref LL_RCC_SYSCLK_DIV_512
+  *         @arg @ref LL_RCC_HCLK_DIV_1
+  *         @arg @ref LL_RCC_HCLK_DIV_2
+  *         @arg @ref LL_RCC_HCLK_DIV_4
+  *         @arg @ref LL_RCC_HCLK_DIV_8
+  *         @arg @ref LL_RCC_HCLK_DIV_16
+  *         @arg @ref LL_RCC_HCLK_DIV_64
+  *         @arg @ref LL_RCC_HCLK_DIV_128
+  *         @arg @ref LL_RCC_HCLK_DIV_256
+  *         @arg @ref LL_RCC_HCLK_DIV_512
   */
 __STATIC_INLINE uint32_t LL_RCC_GetAHBPrescaler(void)
 {
