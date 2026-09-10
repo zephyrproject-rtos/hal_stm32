@@ -1,0 +1,33 @@
+# SPDX-License-Identifier: Apache-2.0
+
+zephyr_library_link_libraries(tfpsacrypto)
+# Crypto drivers need access to internal TF-PSA-Crypto headers
+zephyr_library_include_directories($<TARGET_PROPERTY:tfpsacrypto,INCLUDE_DIRECTORIES>)
+
+zephyr_include_directories(config)
+zephyr_include_directories(include)
+zephyr_include_directories(dispatch/include)
+# psa_crypto_driver_wrappers.h located in dispatch/ is needed by interface/src/stm32_hal_psa_hash.c
+zephyr_include_directories(dispatch)
+
+zephyr_include_directories(stm32_psa_transparent_drivers/config)
+zephyr_include_directories(stm32_psa_transparent_drivers/core/include)
+zephyr_include_directories(stm32_psa_transparent_drivers/interface/include)
+
+if(CONFIG_USE_STM32_HAL_PSA_CRYPTO_DRIVERS_AES OR
+   CONFIG_USE_STM32_HAL_PSA_CRYPTO_DRIVERS_CRYP OR
+   CONFIG_USE_STM32_HAL_PSA_CRYPTO_DRIVERS_SAES)
+  zephyr_sources(stm32_psa_transparent_drivers/interface/src/stm32_hal_psa_aead.c)
+  zephyr_sources(stm32_psa_transparent_drivers/interface/src/stm32_hal_psa_cipher.c)
+endif()
+
+if(CONFIG_USE_STM32_HAL_PSA_CRYPTO_DRIVERS_HASH)
+  zephyr_sources(stm32_psa_transparent_drivers/interface/src/stm32_hal_psa_hash.c)
+endif()
+
+if(CONFIG_USE_STM32_HAL_PSA_CRYPTO_DRIVERS_RNG)
+  zephyr_compile_definitions(USE_STM32_HAL_PSA_RNG_DRIVER)
+
+  zephyr_sources(stm32_psa_transparent_drivers/core/src/stm32_hal_rng.c)
+  zephyr_sources(stm32_psa_transparent_drivers/interface/src/stm32_hal_psa_random.c)
+endif()

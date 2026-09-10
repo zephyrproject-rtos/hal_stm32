@@ -153,7 +153,14 @@ STM32Cube based libraries:
 
 For some specific features, in order to benefit from already available and
 validated code. Libraries from STM32Cube packages are extracted and made
-available in this module under `lib` folder.
+available in this module under ``lib`` folder.
 
-These libraries are updated automatically by the ``ble_library.py`` script in a separate commit
-directly after their STM32Cube package.
+The following libraries are updated automatically by the ``ble_library.py`` script
+in a separate commit directly after their STM32Cube package:
+* ``stm32wb``
+* ``stm32wb0``
+* ``stm32wba``
+
+The following libraries are updated manually when appropriate or necessary:
+* ``vcnano8000e``
+* ``stm32_psa_crypto_drivers``
