@@ -3030,5 +3030,3 @@ static void IRDA_Receive_IT(IRDA_HandleTypeDef *hirda)
 /**
   * @}
   */
-
-

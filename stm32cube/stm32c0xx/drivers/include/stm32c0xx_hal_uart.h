@@ -1744,4 +1744,3 @@ extern const uint16_t UARTPrescTable[12];
 #endif
 
 #endif /* STM32C0xx_HAL_UART_H */
-
