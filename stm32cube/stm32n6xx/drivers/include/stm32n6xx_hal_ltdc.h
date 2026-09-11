@@ -1131,4 +1131,3 @@ uint32_t              HAL_LTDC_GetError(const LTDC_HandleTypeDef *hltdc);
 #endif
 
 #endif /* STM32N6xx_HAL_LTDC_H */
-

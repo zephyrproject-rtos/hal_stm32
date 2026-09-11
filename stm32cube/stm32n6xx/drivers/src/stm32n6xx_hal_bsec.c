@@ -1822,4 +1822,3 @@ HAL_StatusTypeDef HAL_BSEC_GetNumberOfResets(BSEC_HandleTypeDef * hbsec, uint32_
 /**
   * @}
   */
-

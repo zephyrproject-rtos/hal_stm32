@@ -1138,4 +1138,3 @@ void              HAL_PWREx_ADCVM_Falling_Callback(void);
 
 
 #endif /* STM32N6xx_HAL_PWR_EX_H */
-

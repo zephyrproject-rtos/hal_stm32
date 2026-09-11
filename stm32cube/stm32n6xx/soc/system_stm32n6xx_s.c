@@ -67,11 +67,15 @@
   * @{
   */
 
+#ifdef __ZEPHYR__
+#  define CMSE_NS_ENTRY /* no-op */
+#else
 #if defined ( __ICCARM__ )
 #  define CMSE_NS_ENTRY __cmse_nonsecure_entry
 #else
 #  define CMSE_NS_ENTRY __attribute((cmse_nonsecure_entry))
 #endif
+#endif /* __ZEPHYR__ */
 
 /**
   * @}
@@ -410,7 +414,7 @@ void SystemCoreClockUpdate(void)
   *         other parameters.
   * @retval SystemCoreClock value
   */
-uint32_t SECURE_SystemCoreClockUpdate(void)
+CMSE_NS_ENTRY uint32_t SECURE_SystemCoreClockUpdate(void)
 {
   SystemCoreClockUpdate();
 

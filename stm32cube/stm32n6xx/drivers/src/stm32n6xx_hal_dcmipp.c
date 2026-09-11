@@ -8600,4 +8600,3 @@ static HAL_StatusTypeDef DCMIPP_CSI_VCStop(const DCMIPP_HandleTypeDef *hdcmipp, 
   */
 #endif /* DCMIPP */
 #endif /* HAL_DCMIPP_MODULE_ENABLED */
-

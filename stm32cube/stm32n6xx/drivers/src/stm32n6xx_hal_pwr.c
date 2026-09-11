@@ -1032,4 +1032,3 @@ HAL_StatusTypeDef HAL_PWR_GetConfigAttributes(uint32_t Item, uint32_t *pAttribut
 /**
   * @}
   */
-

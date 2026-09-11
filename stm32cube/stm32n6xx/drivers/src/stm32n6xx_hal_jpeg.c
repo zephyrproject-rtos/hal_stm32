@@ -3690,7 +3690,7 @@ static void JPEG_ReadInputData(JPEG_HandleTypeDef *hjpeg, uint32_t nbRequestWord
 
 /**
   * @brief  Start the JPEG DMA process (encoding/decoding)
-  * @note   The DMA interrupt must have a higher priority than the JPEG 
+  * @note   The DMA interrupt must have a higher priority than the JPEG
   *         interrupt to prevent the JPEG interrupt from preempting the DMA interrupt
   *         before the DMA state is updated to ready.
   * @param  hjpeg pointer to a JPEG_HandleTypeDef structure that contains
@@ -4282,4 +4282,3 @@ static uint32_t JPEG_GetQuality(const JPEG_HandleTypeDef *hjpeg)
 /**
   * @}
   */
-

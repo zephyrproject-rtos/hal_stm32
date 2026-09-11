@@ -595,4 +595,3 @@ HAL_StatusTypeDef HAL_SDIO_DisableIOAsynInterrupt(SDIO_HandleTypeDef *hsdio);
 
 
 #endif /* STM32N6xx_HAL_SDIO_H */
-
