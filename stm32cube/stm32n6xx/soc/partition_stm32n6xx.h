@@ -5,7 +5,7 @@
   * @brief   CMSIS STM32N6xx Device Header File for Initial Setup for
   *          Secure / Non-Secure Zones based on CMSIS CORE V5.3.1
   *
-  *          The file is included in system_stm32L5xx_s.c in secure application.
+  *          The file is included in system_stm32N6xx_s.c in secure application.
   *          It includes the configuration section that allows to select the
   *          STM32N6xx device partitioning file for system core secure attributes
   *          and interrupt secure and non-secure assignment.

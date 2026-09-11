@@ -7410,9 +7410,9 @@ typedef struct
 #define CSI_CR_VC3STOP                  CSI_CR_VC3STOP_Msk                       /*!< Virtual channel 3 stop */
 
 /*******************  Bit definition for CSI_PCR register  ********************/
-#define CSI_PCR_PWRDOWN_Pos             (0UL)
-#define CSI_PCR_PWRDOWN_Msk             (0x1UL << CSI_PCR_PWRDOWN_Pos)            /*!< 0x00000001 */
-#define CSI_PCR_PWRDOWN                 CSI_PCR_PWRDOWN_Msk                      /*!< Virtual channel 3 start */
+#define CSI_PCR_NPWRDOWN_Pos            (0UL)
+#define CSI_PCR_NPWRDOWN_Msk            (0x1UL << CSI_PCR_NPWRDOWN_Pos)            /*!< 0x00000001 */
+#define CSI_PCR_NPWRDOWN                CSI_PCR_NPWRDOWN_Msk                      /*!< Virtual channel 3 start */
 #define CSI_PCR_CLEN_Pos                (1UL)
 #define CSI_PCR_CLEN_Msk                (0x1UL << CSI_PCR_CLEN_Pos)               /*!< 0x00000002 */
 #define CSI_PCR_CLEN                    CSI_PCR_CLEN_Msk                         /*!< Clock lane enable */
@@ -38752,7 +38752,7 @@ typedef struct
 #define USB_OTG_GCCFG_FSVPLUS_Msk                (0x1U << USB_OTG_GCCFG_FSVPLUS_Pos)          /*!< 0x00000002 */
 #define USB_OTG_GCCFG_FSVPLUS                    USB_OTG_GCCFG_FSVPLUS_Msk                    /*!< Single-Ended DP2 indicator DP voltage level  */
 #define USB_OTG_GCCFG_FSVMINUS_Pos               (2UL)
-#define USB_OTG_GCCFG_FSVMINUS_Msk               0x1U << USB_OTG_GCCFG_FSVMINUS_Pos)         /*!< 0x00000004 */
+#define USB_OTG_GCCFG_FSVMINUS_Msk               (0x1U << USB_OTG_GCCFG_FSVMINUS_Pos)         /*!< 0x00000004 */
 #define USB_OTG_GCCFG_FSVMINUS                   USB_OTG_GCCFG_FSVMINUS_Msk                  /*!< Single-Ended DM2 indicator DM voltage level  */
 #define USB_OTG_GCCFG_SESSVLD_Pos                (3UL)
 #define USB_OTG_GCCFG_SESSVLD_Msk                (0x1U << USB_OTG_GCCFG_SESSVLD_Pos)          /*!< 0x00000008 */

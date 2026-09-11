@@ -3187,28 +3187,28 @@ void HAL_MDF_IRQHandler(MDF_HandleTypeDef *hmdf)
     HAL_MDF_SadCallback(hmdf);
 #endif /* USE_HAL_MDF_REGISTER_CALLBACKS */
   }
-  /* Check if sound level ready occurs */
-  if ((interrupts & MDF_DFLTISR_SDLVLF) == MDF_DFLTISR_SDLVLF)
-  {
-    uint32_t sound_level;
-    uint32_t ambient_noise;
+    /* Check if sound level ready occurs */
+    if ((interrupts & MDF_DFLTISR_SDLVLF) == MDF_DFLTISR_SDLVLF)
+    {
+      uint32_t sound_level;
+      uint32_t ambient_noise;
 
-    /* Get sound level */
-    sound_level = hmdf->Instance->SADSDLVR;
+      /* Get sound level */
+      sound_level = hmdf->Instance->SADSDLVR;
 
-    /* Get ambient noise */
-    ambient_noise = hmdf->Instance->SADANLVR;
+      /* Get ambient noise */
+      ambient_noise = hmdf->Instance->SADANLVR;
 
-    /* Clear sound level ready flag */
-    hmdf->Instance->DFLTISR |= MDF_DFLTISR_SDLVLF;
+      /* Clear sound level ready flag */
+      hmdf->Instance->DFLTISR |= MDF_DFLTISR_SDLVLF;
 
-    /* Call sound level callback */
+      /* Call sound level callback */
 #if (USE_HAL_MDF_REGISTER_CALLBACKS == 1)
-    hmdf->SndLvCallback(hmdf, sound_level, ambient_noise);
+      hmdf->SndLvCallback(hmdf, sound_level, ambient_noise);
 #else /* USE_HAL_MDF_REGISTER_CALLBACKS */
-    HAL_MDF_SndLvlCallback(hmdf, sound_level, ambient_noise);
+      HAL_MDF_SndLvlCallback(hmdf, sound_level, ambient_noise);
 #endif /* USE_HAL_MDF_REGISTER_CALLBACKS */
-  }
+    }
 }
 
 /**

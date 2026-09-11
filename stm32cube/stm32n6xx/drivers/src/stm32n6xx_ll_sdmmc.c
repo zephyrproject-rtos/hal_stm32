@@ -163,7 +163,7 @@
   */
 
 #if defined (SDMMC1) || defined (SDMMC2)
-#if defined (HAL_SD_MODULE_ENABLED) || defined (HAL_MMC_MODULE_ENABLED)  || defined (HAL_SDIO_MODULE_ENABLED)
+#if defined (HAL_SD_MODULE_ENABLED) || defined (HAL_MMC_MODULE_ENABLED) || defined (HAL_SDIO_MODULE_ENABLED)
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/

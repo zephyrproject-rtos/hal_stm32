@@ -918,7 +918,7 @@ __STATIC_INLINE uint32_t LL_I3C_IsEnabledHJAck(const I3C_TypeDef *I3Cx)
   */
 __STATIC_INLINE uint32_t LL_I3C_DMA_GetRegAddr(const I3C_TypeDef *I3Cx, uint32_t Direction)
 {
-  register uint32_t data_reg_addr;
+  uint32_t data_reg_addr;
 
   if (Direction == LL_I3C_DMA_REG_DATA_TRANSMIT_BYTE)
   {
