@@ -86,7 +86,9 @@ extern "C" {
 #define USE_HAL_USART_REGISTER_CALLBACKS     0u
 #define USE_HAL_WWDG_REGISTER_CALLBACKS      0u
 
+#ifndef USE_HAL_CRYP_SUSPEND_RESUME
 #define USE_HAL_CRYP_SUSPEND_RESUME 0u
+#endif /* USE_HAL_CRYP_SUSPEND_RESUME */
 
 /* ########################## Oscillator Values adaptation ####################*/
 /**
