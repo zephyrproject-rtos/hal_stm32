@@ -222,7 +222,7 @@ typedef struct
   * @{
   */
 #if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
-#define FLASH_TYPEERASE_PAGES        FLASH_SECCR_PER                                 /*!< Secure pages erase 
+#define FLASH_TYPEERASE_PAGES        FLASH_SECCR_PER                                 /*!< Secure pages erase
                                                                                           activation */
 #define FLASH_TYPEERASE_PAGES_NS     (FLASH_NSCR_PER   | FLASH_NON_SECURE_MASK)      /*!< Non-secure pages erase
                                                                                           activation */
@@ -1119,4 +1119,3 @@ HAL_StatusTypeDef FLASH_WaitForLastOperation(uint32_t Timeout);
 #endif
 
 #endif /* STM32U5xx_HAL_FLASH_H */
-

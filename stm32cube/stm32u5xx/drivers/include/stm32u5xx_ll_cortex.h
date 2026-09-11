@@ -77,7 +77,7 @@ extern "C" {
   */
 #define LL_SYSTICK_CLKSOURCE_EXTERNAL      0x00000000U                 /*!< External clock source selected as SysTick
                                                                             clock source */
-#define LL_SYSTICK_CLKSOURCE_HCLK          SysTick_CTRL_CLKSOURCE_Msk  /*!< AHB clock selected as SysTick 
+#define LL_SYSTICK_CLKSOURCE_HCLK          SysTick_CTRL_CLKSOURCE_Msk  /*!< AHB clock selected as SysTick
                                                                             clock source */
 /** Legacy definitions for backward compatibility purpose
   */
@@ -1317,4 +1317,3 @@ __STATIC_INLINE uint32_t LL_MPU_GetRegionAccess_NS(uint32_t Region)
 #endif
 
 #endif /* STM32U5xx_LL_CORTEX_H */
-

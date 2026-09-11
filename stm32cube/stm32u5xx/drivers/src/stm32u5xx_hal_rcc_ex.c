@@ -4318,4 +4318,3 @@ static HAL_StatusTypeDef RCCEx_PLL3_Config(const RCC_PLL3InitTypeDef *pll3)
 /**
   * @}
   */
-

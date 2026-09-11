@@ -771,4 +771,3 @@ static void FLASH_Program_Burst(uint32_t Address, uint32_t DataAddress)
 /**
   * @}
   */
-
