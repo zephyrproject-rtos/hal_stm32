@@ -486,7 +486,6 @@ ErrorStatus LL_PLL_ConfigSystemClock_MSI(LL_UTILS_PLLInitTypeDef *UTILS_PLLInitS
   ErrorStatus status = SUCCESS;
   uint32_t pllfreq;
   uint32_t msi_range;
-   uint32_t hpre = LL_RCC_SYSCLK_DIV_1;
 
   /* Check if one of the PLL is enabled */
   if (UTILS_PLL_IsBusy() == SUCCESS)
@@ -561,30 +560,9 @@ ErrorStatus LL_PLL_ConfigSystemClock_MSI(LL_UTILS_PLLInitTypeDef *UTILS_PLLInitS
       LL_RCC_PLL1_ConfigDomain_SYS(LL_RCC_PLL1SOURCE_MSIS, UTILS_PLLInitStruct->PLLM, UTILS_PLLInitStruct->PLLN,
                                    UTILS_PLLInitStruct->PLLR);
 
-      /* Prevent undershoot at highest frequency by applying intermediate AHB prescaler 2 */
-      if (pllfreq > 80000000U)
-      {
-        if (UTILS_ClkInitStruct->AHBCLKDivider == LL_RCC_SYSCLK_DIV_1)
-        {
-          UTILS_ClkInitStruct->AHBCLKDivider = LL_RCC_SYSCLK_DIV_2;
-          hpre = LL_RCC_SYSCLK_DIV_2;
-        }
-      }
       /* Enable PLL and switch system clock to PLL */
       status = UTILS_EnablePLLAndSwitchSystem(pllfreq, UTILS_ClkInitStruct);
 
-      /* Apply definitive AHB prescaler value if necessary */
-      if ((status == SUCCESS) && (hpre != LL_RCC_SYSCLK_DIV_1))
-      {
-        /* Set FLASH latency to highest latency */
-        status = LL_SetFlashLatency(pllfreq);
-        if (status == SUCCESS)
-        {
-          UTILS_ClkInitStruct->AHBCLKDivider = LL_RCC_SYSCLK_DIV_1;
-          LL_RCC_SetAHBPrescaler(UTILS_ClkInitStruct->AHBCLKDivider);
-          LL_SetSystemCoreClock(pllfreq);
-        }
-      }
     }
   }
   else

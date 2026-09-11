@@ -6,7 +6,7 @@ Origin:
    https://www.st.com/en/embedded-software/stm32cubec5.html
 
 Status:
-   version 2.0.0
+   version 2.1.0
 
 Purpose:
    STMicroelectronics official MCU package for STM32C5 series.
@@ -23,7 +23,7 @@ URL:
    https://github.com/STMicroelectronics/STM32CubeC5
 
 Commit:
-   bfb39f1c987ed1c6e49de19655d2c299a4aee462
+   abeee83eb7181ce278c65681196ede45c930a7ec
 
 Maintained-by:
    External

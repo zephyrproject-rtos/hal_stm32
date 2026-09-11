@@ -1162,4 +1162,3 @@ __weak void HAL_PWREx_PVM3Callback(void)
 /**
   * @}
   */
-

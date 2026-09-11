@@ -4858,7 +4858,7 @@ static uint32_t RCCEx_GetPSSICLKFreq(uint32_t PSSIxSource)
   * @retval RTC clock frequency (in Hz)
   *         - @ref  RCC_PERIPH_FREQUENCY_NO indicates that oscillator is not ready
   */
-static uint32_t RCCEx_GetRTCCLKFreq()
+static uint32_t RCCEx_GetRTCCLKFreq(void)
 {
   uint32_t rtc_frequency = RCC_PERIPH_FREQUENCY_NO;
 

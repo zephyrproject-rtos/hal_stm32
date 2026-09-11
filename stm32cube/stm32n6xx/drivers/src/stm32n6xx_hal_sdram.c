@@ -1429,4 +1429,3 @@ static void SDRAM_DMAError(DMA_HandleTypeDef *hdma)
 /**
   * @}
   */
-

@@ -862,32 +862,47 @@ typedef struct
   * @param __HANDLE__ ADC handle.
   * @retval SET (ADC instance is valid) or RESET (ADC instance is invalid)
   */
+#if defined(ADC1) && defined(ADC2)
 #define ADC_TEMPERATURE_SENSOR_INSTANCE(__HANDLE__)  ((((__HANDLE__)->Instance) == ADC1) || \
                                                       (((__HANDLE__)->Instance) == ADC2)  )
+#else
+#define ADC_TEMPERATURE_SENSOR_INSTANCE(__HANDLE__)  (((__HANDLE__)->Instance) == ADC1)
+#endif /* ADC1 && ADC2 */
 /**
   * @brief Verify the ADC instance connected to the battery voltage VBAT.
   * @param __HANDLE__ ADC handle.
   * @retval SET (ADC instance is valid) or RESET (ADC instance is invalid)
   */
+#if defined(ADC1) && defined(ADC2)
 #define ADC_BATTERY_VOLTAGE_INSTANCE(__HANDLE__)  ((((__HANDLE__)->Instance) == ADC1) ||\
                                                    (((__HANDLE__)->Instance) == ADC2) )
-
+#else
+#define ADC_BATTERY_VOLTAGE_INSTANCE(__HANDLE__)  (((__HANDLE__)->Instance) == ADC1)
+#endif /* ADC1 && ADC2 */
 
 /**
   * @brief Verify the ADC instance connected to the internal voltage reference VREFINT.
   * @param __HANDLE__ ADC handle.
   * @retval SET (ADC instance is valid) or RESET (ADC instance is invalid)
   */
+#if defined (ADC1) && defined (ADC2)
 #define ADC_VREFINT_INSTANCE(__HANDLE__)  ((((__HANDLE__)->Instance) == ADC1) ||\
                                            (((__HANDLE__)->Instance) == ADC2) )
+#else
+#define ADC_VREFINT_INSTANCE(__HANDLE__)  (((__HANDLE__)->Instance) == ADC1)
+#endif /* ADC1 && ADC2 */
 
 /**
   * @brief Verify the ADC instance connected to the internal VDDCore.
   * @param __HANDLE__ ADC handle.
   * @retval SET (ADC instance is valid) or RESET (ADC instance is invalid)
   */
+#if defined(ADC1) && defined(ADC2)
 #define ADC_VDDCORE_INSTANCE(__HANDLE__)  ((((__HANDLE__)->Instance) == ADC1) ||\
                                            (((__HANDLE__)->Instance) == ADC2) )
+#else
+#define ADC_VDDCORE_INSTANCE(__HANDLE__)  (((__HANDLE__)->Instance) == ADC1)
+#endif /* ADC1 && ADC2 */
 
 /**
   * @brief Verify the length of scheduled injected conversions group.
@@ -911,6 +926,7 @@ typedef struct
   * @param __CHANNEL__ programmed ADC channel.
   * @retval SET (__CHANNEL__ is valid) or RESET (__CHANNEL__ is invalid)
   */
+#if defined(ADC1) && defined(ADC2)
 #define IS_ADC_CHANNEL(__HANDLE__, __CHANNEL__) (((__CHANNEL__) == ADC_CHANNEL_0)                  || \
                                                  ((__CHANNEL__) == ADC_CHANNEL_1)                  || \
                                                  ((__CHANNEL__) == ADC_CHANNEL_2)                  || \
@@ -937,6 +953,31 @@ typedef struct
                                                  ((((__HANDLE__)->Instance) == ADC2)             &&   \
                                                   (((__CHANNEL__) == ADC_CHANNEL_DAC1CH1_ADC2) ||     \
                                                    ((__CHANNEL__) == ADC_CHANNEL_DAC1CH2_ADC2))))
+#else
+#define IS_ADC_CHANNEL(__HANDLE__, __CHANNEL__) (((__CHANNEL__) == ADC_CHANNEL_0)                  || \
+                                                 ((__CHANNEL__) == ADC_CHANNEL_1)                  || \
+                                                 ((__CHANNEL__) == ADC_CHANNEL_2)                  || \
+                                                 ((__CHANNEL__) == ADC_CHANNEL_3)                  || \
+                                                 ((__CHANNEL__) == ADC_CHANNEL_4)                  || \
+                                                 ((__CHANNEL__) == ADC_CHANNEL_5)                  || \
+                                                 ((__CHANNEL__) == ADC_CHANNEL_6)                  || \
+                                                 ((__CHANNEL__) == ADC_CHANNEL_7)                  || \
+                                                 ((__CHANNEL__) == ADC_CHANNEL_8)                  || \
+                                                 ((__CHANNEL__) == ADC_CHANNEL_9)                  || \
+                                                 ((__CHANNEL__) == ADC_CHANNEL_10)                 || \
+                                                 ((__CHANNEL__) == ADC_CHANNEL_11)                 || \
+                                                 ((__CHANNEL__) == ADC_CHANNEL_12)                 || \
+                                                 ((__CHANNEL__) == ADC_CHANNEL_13)                 || \
+                                                 ((__CHANNEL__) == ADC_CHANNEL_14)                 || \
+                                                 ((__CHANNEL__) == ADC_CHANNEL_15)                 || \
+                                                 ((__CHANNEL__) == ADC_CHANNEL_16)                 || \
+                                                 ((__CHANNEL__) == ADC_CHANNEL_17)                 || \
+                                                 ((__CHANNEL__) == ADC_CHANNEL_18)                 || \
+                                                 ((__CHANNEL__) == ADC_CHANNEL_VBAT)               || \
+                                                 ((__CHANNEL__) == ADC_CHANNEL_VDDCORE)            || \
+                                                 ((__CHANNEL__) == ADC_CHANNEL_TEMPSENSOR)         || \
+                                                 ((__CHANNEL__) == ADC_CHANNEL_VREFINT))
+#endif /* ADC1 && ADC2 */
 
 
 /**

@@ -479,6 +479,9 @@ typedef struct
                                              This feature can be modified afterwards using unitary function
                                              @ref LL_ADC_SetMultiTwoSamplingDelay(). */
 #endif /* ADC_MULTIMODE_SUPPORT */
+#if !defined(ADC_MULTIMODE_SUPPORT)
+  uint32_t Dummy; /*!< Reserved to avoid an empty struct when multimode is not supported. */
+#endif /* ADC_MULTIMODE_SUPPORT */
 
 } LL_ADC_CommonInitTypeDef;
 
@@ -942,16 +945,26 @@ to which the offset programmed will be applied (independently of channel mapped 
 #define LL_ADC_CHANNEL_16           (16UL | ADC_CHANNEL_EXTERNAL | LL_ADC_PATH_INTERNAL_NONE)  /*!< Channel ADCx_IN16 */
 #define LL_ADC_CHANNEL_17           (17UL | ADC_CHANNEL_EXTERNAL | LL_ADC_PATH_INTERNAL_NONE)  /*!< Channel ADCx_IN17 */
 #define LL_ADC_CHANNEL_18           (18UL | ADC_CHANNEL_EXTERNAL | LL_ADC_PATH_INTERNAL_NONE)  /*!< Channel ADCx_IN18 */
+#if defined(ADC1) && defined(ADC2)
 #define LL_ADC_CHANNEL_VREFINT      (0UL \
                                      | ADC_CHANNEL_INTERNAL_ADC1 | ADC_CHANNEL_INTERNAL_ADC2 \
                                      | LL_ADC_PATH_INTERNAL_VREFINT)                           /*!< ADC internal channel
                                      connected to VrefInt: Internal voltage reference. */
+#else
+#define LL_ADC_CHANNEL_VREFINT      (0UL \
+                                     | ADC_CHANNEL_INTERNAL_ADC1 \
+                                     | LL_ADC_PATH_INTERNAL_VREFINT)                           /*!< ADC internal channel
+                                     connected to VrefInt: Internal voltage reference. */
+#endif /* ADC1 && ADC2 */
+#if defined(ADC2)
 #define LL_ADC_CHANNEL_DAC1CH1_ADC2 (14UL \
                                      | ADC_CHANNEL_INTERNAL_ADC2)                              /*!< ADC internal channel
                                      DAC1 channel 1, channel specific to ADC2 */
 #define LL_ADC_CHANNEL_DAC1CH2_ADC2 (15UL \
                                      | ADC_CHANNEL_INTERNAL_ADC2)                              /*!< ADC internal channel
                                      DAC1 channel 2, channel specific to ADC2 */
+#endif /* ADC2 */
+#if defined(ADC1) && defined(ADC2)
 #define LL_ADC_CHANNEL_VBAT         (16UL \
                                      | ADC_CHANNEL_INTERNAL_ADC1 | ADC_CHANNEL_INTERNAL_ADC2 \
                                      | LL_ADC_PATH_INTERNAL_VBAT)                              /*!< ADC internal channel
@@ -965,6 +978,21 @@ to which the offset programmed will be applied (independently of channel mapped 
                                      | ADC_CHANNEL_INTERNAL_ADC1 | ADC_CHANNEL_INTERNAL_ADC2 \
                                      | LL_ADC_PATH_INTERNAL_VDDCORE)                           /*!< ADC internal channel
                                      Vddcore */
+#else
+#define LL_ADC_CHANNEL_VBAT         (16UL \
+                                     | ADC_CHANNEL_INTERNAL_ADC1 \
+                                     | LL_ADC_PATH_INTERNAL_VBAT)                              /*!< ADC internal channel
+                                     connected to Vbat/4: Vbat voltage through a divider ladder of factor 1/4 to have
+                                     Vbat always below Vdda. */
+#define LL_ADC_CHANNEL_TEMPSENSOR   (17UL \
+                                     | ADC_CHANNEL_INTERNAL_ADC1 \
+                                     | LL_ADC_PATH_INTERNAL_TEMPSENSOR)                        /*!< ADC internal channel
+                                     Temperature sensor */
+#define LL_ADC_CHANNEL_VDDCORE      (18UL \
+                                     | ADC_CHANNEL_INTERNAL_ADC1 \
+                                     | LL_ADC_PATH_INTERNAL_VDDCORE)                           /*!< ADC internal channel
+                                     Vddcore */
+#endif /* ADC1 && ADC2 */
 /**
   * @}
   */
@@ -1697,6 +1725,7 @@ to which the offset programmed will be applied (independently of channel mapped 
 #define LL_ADC_AWD_CH_TEMPSENSOR_REG_INJ   LL_ADC_AWD_CHANNEL_17_REG_INJ             /*!< ADC analog watchdog monitoring
                                            of ADC internal channel connected to Temperature sensor,
                                            converted by either group regular or injected */
+#if defined(ADC2)
 #define LL_ADC_AWD_CH_DAC1CH1_ADC2_REG     LL_ADC_AWD_CHANNEL_14_REG                 /*!< ADC analog watchdog monitoring
                                            of ADC internal channel connected to DAC1 Channel 1,
                                            converted by group regular only */
@@ -1715,6 +1744,7 @@ to which the offset programmed will be applied (independently of channel mapped 
 #define LL_ADC_AWD_CH_DAC1CH2_ADC2_REG_INJ LL_ADC_AWD_CHANNEL_15_REG_INJ             /*!< ADC analog watchdog monitoring
                                            of ADC internal channel connected to DAC1 Channel 2,
                                            converted by either group regular or injected */
+#endif /* ADC2 */
 /**
   * @}
   */
@@ -2273,6 +2303,7 @@ to which the offset programmed will be applied (independently of channel mapped 
   * @retval Value "0" if the internal channel selected is not available on the ADC instance selected.
   *         Value "1" if the internal channel selected is available on the ADC instance selected.
   */
+#if defined(ADC1) && defined(ADC2)
 #define __LL_ADC_IS_CHANNEL_INTERNAL_AVAILABLE(__ADC_INSTANCE__, __CHANNEL__)                                      \
   ((((__ADC_INSTANCE__) == ADC1)                                                                                   \
     &&(((__CHANNEL__ & ADC_CHANNEL_INTERNAL_ADC1) == ADC_CHANNEL_INTERNAL_ADC1))                                   \
@@ -2282,6 +2313,12 @@ to which the offset programmed will be applied (independently of channel mapped 
     &&(((__CHANNEL__ & ADC_CHANNEL_INTERNAL_ADC2) == ADC_CHANNEL_INTERNAL_ADC2))                                   \
    )                                                                                                               \
   )
+#else
+#define __LL_ADC_IS_CHANNEL_INTERNAL_AVAILABLE(__ADC_INSTANCE__, __CHANNEL__)                                      \
+  ((((__ADC_INSTANCE__) == ADC1)                                                                                   \
+    &&(((__CHANNEL__ & ADC_CHANNEL_INTERNAL_ADC1) == ADC_CHANNEL_INTERNAL_ADC1))                                   \
+   ))
+#endif /* ADC1 && ADC2 */
 
 /**
   * @brief  Helper macro to define ADC analog watchdog parameter:
@@ -2522,6 +2559,7 @@ to which the offset programmed will be applied (independently of channel mapped 
   * @param  __ADCx__ ADC instance
   * @retval __ADCx__ ADC instance master of the corresponding ADC common instance
   */
+#if defined(ADC1) && defined(ADC2)
 #define __LL_ADC_MULTI_INSTANCE_MASTER(__ADCx__) \
   ( ( ((__ADCx__) == ADC2)                                                     \
     )?                                                                         \
@@ -2529,6 +2567,9 @@ to which the offset programmed will be applied (independently of channel mapped 
     :                                                                          \
     (__ADCx__)                                                                 \
   )
+#else
+#define __LL_ADC_MULTI_INSTANCE_MASTER(__ADCx__) (ADC1)
+#endif /* ADC1 && ADC2 */
 #endif /* ADC_MULTIMODE_SUPPORT */
 
 /**
@@ -2541,7 +2582,11 @@ to which the offset programmed will be applied (independently of channel mapped 
   * @param  __ADCx__ ADC instance
   * @retval ADC common register instance
   */
+#if defined(ADC1) && defined(ADC2)
 #define __LL_ADC_COMMON_INSTANCE(__ADCx__)    (ADC12_COMMON)
+#else
+#define __LL_ADC_COMMON_INSTANCE(__ADCx__)    (ADC1_COMMON)
+#endif /* ADC1 && ADC2 */
 
 /**
   * @brief  Helper macro to check if all ADC instances sharing the same
@@ -2560,8 +2605,13 @@ to which the offset programmed will be applied (independently of channel mapped 
   *         Value "1" if at least one ADC instance sharing the same ADC common instance
   *         is enabled.
   */
+#if defined(ADC1) && defined(ADC2)
 #define __LL_ADC_IS_ENABLED_ALL_COMMON_INSTANCE(__ADCXY_COMMON__)              \
   (LL_ADC_IsEnabled(ADC1) | LL_ADC_IsEnabled(ADC2))
+#else
+#define __LL_ADC_IS_ENABLED_ALL_COMMON_INSTANCE(__ADCXY_COMMON__)              \
+  LL_ADC_IsEnabled(ADC1)
+#endif /* ADC1 && ADC2 */
 /**
   * @brief  Helper macro to define the ADC conversion data full-scale digital
   *         value corresponding to the selected ADC resolution.

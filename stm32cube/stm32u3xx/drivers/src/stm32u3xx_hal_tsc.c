@@ -1117,4 +1117,3 @@ static uint32_t TSC_extract_groups(uint32_t iomask)
 /**
   * @}
   */
-

@@ -102,4 +102,3 @@ extern void SystemCoreClockUpdate(void);
 /**
   * @}
   */
-

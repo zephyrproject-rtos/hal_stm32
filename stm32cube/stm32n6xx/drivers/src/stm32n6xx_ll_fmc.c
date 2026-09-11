@@ -463,7 +463,6 @@ HAL_StatusTypeDef FMC_NORSRAM_WriteOperation_Disable(FMC_NORSRAM_TypeDef *Device
   * @}
   */
 
-
 /** @defgroup FMC_LL_Exported_Functions_NAND FMC Low Layer NAND Exported Functions
   * @brief    NAND Controller functions
   *
@@ -735,7 +734,6 @@ HAL_StatusTypeDef FMC_NAND_GetECC(const FMC_NAND_TypeDef *Device, uint32_t *ECCv
 /**
   * @}
   */
-
 
 /** @defgroup FMC_LL_SDRAM
   * @brief    SDRAM Controller functions

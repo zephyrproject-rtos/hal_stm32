@@ -107,8 +107,10 @@ typedef struct
   uint8_t                    *pBuffPtr;     /*!< Address of the XSPI buffer for transfer               */
   __IO uint32_t              XferSize;      /*!< Number of data to transfer                            */
   __IO uint32_t              XferCount;     /*!< Counter of data transferred                           */
+#if defined(HAL_DMA_MODULE_ENABLED)
   DMA_HandleTypeDef          *hdmatx;       /*!< Handle of the DMA channel used for transmit           */
   DMA_HandleTypeDef          *hdmarx;       /*!< Handle of the DMA channel used for receive            */
+#endif /* HAL_DMA_MODULE_ENABLED */
   __IO uint32_t              State;         /*!< Internal state of the XSPI HAL driver                 */
   __IO uint32_t              ErrorCode;     /*!< Error code in case of HAL driver internal error       */
   uint32_t                   Timeout;       /*!< Timeout used for the XSPI external device access      */

@@ -492,11 +492,14 @@ static const uint8_t LL_LPTIM_SHIFT_TAB_CCRx[] =
    LL_LPTIM_ISR_EXTTRIG | \
    LL_LPTIM_ISR_ARRM)
 
+/**
+  * @}
+  */
+
 /* Exported macro ----------------------------------------------------------------------------------------------------*/
 /** @defgroup LPTIM_LL_Exported_Macros LL LPTIM Macros
   * @{
   */
-
 
 /** @defgroup LPTIM_LL_EM_WRITE_READ Common Write and read registers Macros
   * @{
@@ -1025,7 +1028,8 @@ __STATIC_INLINE void LL_LPTIM_SetInput1Source(LPTIM_TypeDef *lptimx, uint32_t sr
   * @rmtoll
   *  CFGR2      IN1SEL       LL_LPTIM_GetInput1Source
   * @param  lptimx Low-Power Timer instance
-  * @retval uint32_t Input1 source
+  *         @arg @ref LL_LPTIM_INPUT1_SRC_GPIO
+  *         @arg @ref LL_LPTIM_INPUT1_SRC_COMP1_OUT
   */
 __STATIC_INLINE uint32_t LL_LPTIM_GetInput1Source(const LPTIM_TypeDef *lptimx)
 {
@@ -1039,6 +1043,8 @@ __STATIC_INLINE uint32_t LL_LPTIM_GetInput1Source(const LPTIM_TypeDef *lptimx)
   * @param  lptimx Low-Power Timer instance
   * @param  src This parameter can be one of the following values:
   *         @arg @ref LL_LPTIM_INPUT2_SRC_GPIO
+  *         @arg @ref LL_LPTIM_INPUT2_SRC_COMP2_OUT (*)
+  *         (*)  Value not defined for all timer instances.
   */
 __STATIC_INLINE void LL_LPTIM_SetInput2Source(LPTIM_TypeDef *lptimx, uint32_t src)
 {
@@ -1052,6 +1058,8 @@ __STATIC_INLINE void LL_LPTIM_SetInput2Source(LPTIM_TypeDef *lptimx, uint32_t sr
   * @param  lptimx Low-Power Timer instance
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_LPTIM_INPUT2_SRC_GPIO
+  *         @arg @ref LL_LPTIM_INPUT2_SRC_COMP2_OUT (*)
+  *         (*)  Value not defined for all timer instances.
   */
 __STATIC_INLINE uint32_t LL_LPTIM_GetInput2Source(const LPTIM_TypeDef *lptimx)
 {
@@ -1068,7 +1076,7 @@ __STATIC_INLINE uint32_t LL_LPTIM_GetInput2Source(const LPTIM_TypeDef *lptimx)
   *         @arg @ref LL_LPTIM_LPTIM1_IC1_RMP_GPIO
   *         @arg @ref LL_LPTIM_LPTIM1_IC1_RMP_COMP1_OUT
   *         @arg @ref LL_LPTIM_LPTIM1_IC1_RMP_EVENTOUT
-  *         @arg @ref LL_LPTIM_LPTIM1_IC1_RMP_MC01
+  *         @arg @ref LL_LPTIM_LPTIM1_IC1_RMP_MCO1
   *         @arg @ref LL_LPTIM_LPTIM1_IC2_RMP_GPIO
   *         @arg @ref LL_LPTIM_LPTIM1_IC2_RMP_LSI
   *         @arg @ref LL_LPTIM_LPTIM1_IC2_RMP_LSE
@@ -1089,7 +1097,7 @@ __STATIC_INLINE void LL_LPTIM_SetRemap(LPTIM_TypeDef *lptimx, uint32_t src)
   *         @arg @ref LL_LPTIM_LPTIM1_IC1_RMP_GPIO
   *         @arg @ref LL_LPTIM_LPTIM1_IC1_RMP_COMP1_OUT
   *         @arg @ref LL_LPTIM_LPTIM1_IC1_RMP_EVENTOUT
-  *         @arg @ref LL_LPTIM_LPTIM1_IC1_RMP_MC01
+  *         @arg @ref LL_LPTIM_LPTIM1_IC1_RMP_MCO1
   *         @arg @ref LL_LPTIM_LPTIM1_IC2_RMP_GPIO
   *         @arg @ref LL_LPTIM_LPTIM1_IC2_RMP_LSI
   *         @arg @ref LL_LPTIM_LPTIM1_IC2_RMP_LSE
@@ -1280,7 +1288,7 @@ __STATIC_INLINE uint32_t LL_LPTIM_IC_GetPrescaler(const LPTIM_TypeDef *lptimx, u
   * @rmtoll
   *  CCR1         CCR1          LL_LPTIM_IC_GetCapturedValue \n
   *  CCR2         CCR2          LL_LPTIM_IC_GetCapturedValue
-  * @param  timx Timer instance
+  * @param  lptimx Timer instance
   * @param  channel This parameter can be one of the following values:
   *         @arg @ref LL_LPTIM_CHANNEL_CH1
   *         @arg @ref LL_LPTIM_CHANNEL_CH2
@@ -1381,7 +1389,7 @@ __STATIC_INLINE uint32_t  LL_LPTIM_CC_GetChannelMode(const LPTIM_TypeDef *lptimx
   * @param  lptimx Low-Power Timer instance
   * @note   The real capture value corresponding to the input capture trigger can be calculated using
   *         the formula hereafter : Real capture value = captured(LPTIM_CCRx) - offset
-  *         where offset can be retrieved by calling @ref LL_LPTIM_IC_GET_OFFSET
+  *         where offset can be retrieved by calling @ref LL_LPTIM_IC_GetOffset
   * @retval CapturedValue (between Min_Data=0 and Max_Data=65535)
   */
 __STATIC_INLINE uint32_t LL_LPTIM_IC_GetCaptureCH1(const LPTIM_TypeDef *lptimx)
@@ -1396,7 +1404,7 @@ __STATIC_INLINE uint32_t LL_LPTIM_IC_GetCaptureCH1(const LPTIM_TypeDef *lptimx)
   * @param  lptimx Low-Power Timer instance
   * @note   The real capture value corresponding to the input capture trigger can be calculated using
   *         the formula hereafter : Real capture value = captured(LPTIM_CCRx) - offset
-  *         where offset can be retrieved by calling @ref LL_LPTIM_IC_GET_OFFSET
+  *         where offset can be retrieved by calling @ref LL_LPTIM_IC_GetOffset
   * @retval CapturedValue (between Min_Data=0 and Max_Data=65535)
   */
 __STATIC_INLINE uint32_t LL_LPTIM_IC_GetCaptureCH2(const LPTIM_TypeDef *lptimx)
@@ -1477,8 +1485,8 @@ __STATIC_INLINE void LL_LPTIM_TrigSw(LPTIM_TypeDef *lptimx)
   *         @arg @ref LL_LPTIM_TRIG_SOURCE_GPIO
   *         @arg @ref LL_LPTIM_TRIG_SOURCE_RTC_ALRA_TRG
   *         @arg @ref LL_LPTIM_TRIG_SOURCE_RTC_ALRB_TRG
-  *         @arg @ref LL_LPTIM_TRIG_SOURCE_RTC_TAMP_TRG1
-  *         @arg @ref LL_LPTIM_TRIG_SOURCE_RTC_TAMP_TRG2
+  *         @arg @ref LL_LPTIM_TRIG_SOURCE_TAMP_TRG1
+  *         @arg @ref LL_LPTIM_TRIG_SOURCE_TAMP_TRG2
   *         @arg @ref LL_LPTIM_TRIG_SOURCE_LPDMA_CH1_TC
   *         @arg @ref LL_LPTIM_TRIG_SOURCE_COMP1_OUT
   *         @arg @ref LL_LPTIM_TRIG_SOURCE_EVENTOUT
@@ -1513,8 +1521,8 @@ __STATIC_INLINE void LL_LPTIM_ConfigTrigger(LPTIM_TypeDef *lptimx, uint32_t sour
   *         @arg @ref LL_LPTIM_TRIG_SOURCE_GPIO
   *         @arg @ref LL_LPTIM_TRIG_SOURCE_RTC_ALRA_TRG
   *         @arg @ref LL_LPTIM_TRIG_SOURCE_RTC_ALRB_TRG
-  *         @arg @ref LL_LPTIM_TRIG_SOURCE_RTC_TAMP_TRG1
-  *         @arg @ref LL_LPTIM_TRIG_SOURCE_RTC_TAMP_TRG2
+  *         @arg @ref LL_LPTIM_TRIG_SOURCE_TAMP_TRG1
+  *         @arg @ref LL_LPTIM_TRIG_SOURCE_TAMP_TRG2
   *         @arg @ref LL_LPTIM_TRIG_SOURCE_LPDMA_CH1_TC
   *         @arg @ref LL_LPTIM_TRIG_SOURCE_COMP1_OUT
   *         @arg @ref LL_LPTIM_TRIG_SOURCE_EVENTOUT
@@ -1533,8 +1541,8 @@ __STATIC_INLINE void LL_LPTIM_SetTriggerSource(LPTIM_TypeDef *lptimx, uint32_t s
   *         @arg @ref LL_LPTIM_TRIG_SOURCE_GPIO
   *         @arg @ref LL_LPTIM_TRIG_SOURCE_RTC_ALRA_TRG
   *         @arg @ref LL_LPTIM_TRIG_SOURCE_RTC_ALRB_TRG
-  *         @arg @ref LL_LPTIM_TRIG_SOURCE_RTC_TAMP_TRG1
-  *         @arg @ref LL_LPTIM_TRIG_SOURCE_RTC_TAMP_TRG2
+  *         @arg @ref LL_LPTIM_TRIG_SOURCE_TAMP_TRG1
+  *         @arg @ref LL_LPTIM_TRIG_SOURCE_TAMP_TRG2
   *         @arg @ref LL_LPTIM_TRIG_SOURCE_LPDMA_CH1_TC
   *         @arg @ref LL_LPTIM_TRIG_SOURCE_COMP1_OUT
   *         @arg @ref LL_LPTIM_TRIG_SOURCE_EVENTOUT
@@ -2871,6 +2879,10 @@ __STATIC_INLINE uint32_t LL_LPTIM_IsEnabledDMAReq_CC2(const LPTIM_TypeDef *lptim
 {
   return ((STM32_READ_BIT(lptimx->DIER, LPTIM_DIER_CC2DE) == (LPTIM_DIER_CC2DE)) ? 1UL : 0UL);
 }
+
+/**
+  * @}
+  */
 
 /**
   * @}

@@ -29,7 +29,7 @@ extern "C" {
 /** @addtogroup STM32C5xx_LL_Driver
   * @{
   */
-#if defined (OPAMP1)
+#if defined (OPAMP1) || defined (OPAMP2) || defined(OPAMP3)
 
 /** @defgroup OPAMP_LL OPAMP
   * @{
@@ -324,7 +324,7 @@ extern "C" {
   */
 #define LL_OPAMP_OUTPUT_CONNECT_EXTERNAL         (0x00000000UL) /*!< OPAMP output connected to OPAMP_VOUT pin. */
 #define LL_OPAMP_OUTPUT_CONNECT_INTERNAL         (OPAMP_CSR_OPAINTOEN) /*!< OPAMP output connected internally to
-                                                                            ADC/COMP channel. */
+                                                                            other peripherals (ADC, COMP, ...). */
 /**
   * @}
   */
@@ -658,7 +658,14 @@ __STATIC_INLINE uint32_t LL_OPAMP_GetConfig(const OPAMP_TypeDef *p_opamp)
   * @param  input_non_inverting This parameter can be one of the following values:
   *         @arg @ref LL_OPAMP_INPUT_NONINVERT_IO0
   *         @arg @ref LL_OPAMP_INPUT_NONINVERT_IO1
-  *         @arg @ref LL_OPAMP_INPUT_NONINVERT_DAC1_CH2
+  *         @arg LL_OPAMP_INPUT_NONINVERT_IO2 (1)
+  *         @arg LL_OPAMP_INPUT_NONINVERT_DAC1_CH2 (1)
+  *         @arg LL_OPAMP_INPUT_NONINVERT_DAC2_CH1 (2)(3)
+  *         @arg LL_OPAMP_INPUT_NONINVERT_DAC2_CH2 (2)
+  *
+  *         - (1) Parameters only available on STM32C542xx/532xx devices
+  *         - (2) Parameters only available on STM32C5P1xx/5Q1xx devices
+  *         - (3) Parameters only available on STM32C5J1xx/5K1xx devices
   */
 __STATIC_INLINE void LL_OPAMP_SetInputNonInverting(OPAMP_TypeDef *p_opamp, uint32_t input_non_inverting)
 {
@@ -674,7 +681,14 @@ __STATIC_INLINE void LL_OPAMP_SetInputNonInverting(OPAMP_TypeDef *p_opamp, uint3
   *         This parameter can be one of the following values:
   *         @arg @ref LL_OPAMP_INPUT_NONINVERT_IO0
   *         @arg @ref LL_OPAMP_INPUT_NONINVERT_IO1
-  *         @arg @ref LL_OPAMP_INPUT_NONINVERT_DAC1_CH2
+  *         @arg LL_OPAMP_INPUT_NONINVERT_IO2 (1)
+  *         @arg LL_OPAMP_INPUT_NONINVERT_DAC1_CH2 (1)
+  *         @arg LL_OPAMP_INPUT_NONINVERT_DAC2_CH1 (2)(3)
+  *         @arg LL_OPAMP_INPUT_NONINVERT_DAC2_CH2 (2)
+  *
+  *         - (1) Parameters only available on STM32C542xx/532xx devices
+  *         - (2) Parameters only available on STM32C5P1xx/5Q1xx devices
+  *         - (3) Parameters only available on STM32C5J1xx/5K1xx devices
   */
 __STATIC_INLINE uint32_t LL_OPAMP_GetInputNonInverting(const OPAMP_TypeDef *p_opamp)
 {
@@ -726,7 +740,14 @@ __STATIC_INLINE uint32_t LL_OPAMP_GetInputInverting(const OPAMP_TypeDef *p_opamp
   * @param  input_non_inverting This parameter can be one of the following values:
   *         @arg @ref LL_OPAMP_INPUT_NONINVERT_IO0
   *         @arg @ref LL_OPAMP_INPUT_NONINVERT_IO1
-  *         @arg @ref LL_OPAMP_INPUT_NONINVERT_DAC1_CH2
+  *         @arg LL_OPAMP_INPUT_NONINVERT_IO2 (1)
+  *         @arg LL_OPAMP_INPUT_NONINVERT_DAC1_CH2 (1)
+  *         @arg LL_OPAMP_INPUT_NONINVERT_DAC2_CH1 (2)(3)
+  *         @arg LL_OPAMP_INPUT_NONINVERT_DAC2_CH2 (2)
+  *
+  *         - (1) Parameters only available on STM32C542xx/532xx devices
+  *         - (2) Parameters only available on STM32C5P1xx/5Q1xx devices
+  *         - (3) Parameters only available on STM32C5J1xx/5K1xx devices
   * @param  input_inverting This parameter can be one of the following values:
   *         @arg @ref LL_OPAMP_INPUT_INVERT_IO0
   *         @arg @ref LL_OPAMP_INPUT_INVERT_IO1
@@ -757,7 +778,14 @@ __STATIC_INLINE void LL_OPAMP_SetInputs(OPAMP_TypeDef *p_opamp,
   *         for VP_SEL:
   *         @arg @ref LL_OPAMP_INPUT_NONINVERT_IO0
   *         @arg @ref LL_OPAMP_INPUT_NONINVERT_IO1
-  *         @arg @ref LL_OPAMP_INPUT_NONINVERT_DAC1_CH2
+  *         @arg LL_OPAMP_INPUT_NONINVERT_IO2 (1)
+  *         @arg LL_OPAMP_INPUT_NONINVERT_DAC1_CH2 (1)
+  *         @arg LL_OPAMP_INPUT_NONINVERT_DAC2_CH1 (2)(3)
+  *         @arg LL_OPAMP_INPUT_NONINVERT_DAC2_CH2 (2)
+  *
+  *         - (1) Parameters only available on STM32C542xx/532xx devices
+  *         - (2) Parameters only available on STM32C5P1xx/5Q1xx devices
+  *         - (3) Parameters only available on STM32C5J1xx/5K1xx devices
   *         for VM_SEL:
   *         @arg @ref LL_OPAMP_INPUT_INVERT_IO0
   *         @arg @ref LL_OPAMP_INPUT_INVERT_IO1
@@ -1106,7 +1134,14 @@ __STATIC_INLINE uint32_t LL_OPAMP_IsEnabled(const OPAMP_TypeDef *p_opamp)
   * @param  input_non_inverting_sec This parameter can be one of the following values:
   *         @arg @ref LL_OPAMP_INPUT_NONINVERT_IO0
   *         @arg @ref LL_OPAMP_INPUT_NONINVERT_IO1
-  *         @arg @ref LL_OPAMP_INPUT_NONINVERT_DAC1_CH2
+  *         @arg LL_OPAMP_INPUT_NONINVERT_IO2 (1)
+  *         @arg LL_OPAMP_INPUT_NONINVERT_DAC1_CH2 (1)
+  *         @arg LL_OPAMP_INPUT_NONINVERT_DAC2_CH1 (2)(3)
+  *         @arg LL_OPAMP_INPUT_NONINVERT_DAC2_CH2 (2)
+  *
+  *         - (1) Parameters only available on STM32C542xx/532xx devices
+  *         - (2) Parameters only available on STM32C5P1xx/5Q1xx devices
+  *         - (3) Parameters only available on STM32C5J1xx/5K1xx devices
   */
 __STATIC_INLINE void LL_OPAMP_SetInputMuxNonInvertingSecondary(OPAMP_TypeDef *p_opamp, uint32_t input_non_inverting_sec)
 {
@@ -1121,7 +1156,14 @@ __STATIC_INLINE void LL_OPAMP_SetInputMuxNonInvertingSecondary(OPAMP_TypeDef *p_
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_OPAMP_INPUT_NONINVERT_IO0
   *         @arg @ref LL_OPAMP_INPUT_NONINVERT_IO1
-  *         @arg @ref LL_OPAMP_INPUT_NONINVERT_DAC1_CH2
+  *         @arg LL_OPAMP_INPUT_NONINVERT_IO2 (1)
+  *         @arg LL_OPAMP_INPUT_NONINVERT_DAC1_CH2 (1)
+  *         @arg LL_OPAMP_INPUT_NONINVERT_DAC2_CH1 (2)(3)
+  *         @arg LL_OPAMP_INPUT_NONINVERT_DAC2_CH2 (2)
+  *
+  *         - (1) Parameters only available on STM32C542xx/532xx devices
+  *         - (2) Parameters only available on STM32C5P1xx/5Q1xx devices
+  *         - (3) Parameters only available on STM32C5J1xx/5K1xx devices
   */
 __STATIC_INLINE uint32_t LL_OPAMP_GetInputMuxNonInvertingSecondary(const OPAMP_TypeDef *p_opamp)
 {
@@ -1179,7 +1221,14 @@ __STATIC_INLINE uint32_t LL_OPAMP_GetInputMuxInvertingSecondary(const OPAMP_Type
   * @param  input_non_inverting_sec This parameter can be one of the following values:
   *         @arg @ref LL_OPAMP_INPUT_NONINVERT_IO0
   *         @arg @ref LL_OPAMP_INPUT_NONINVERT_IO1
-  *         @arg @ref LL_OPAMP_INPUT_NONINVERT_DAC1_CH2
+  *         @arg LL_OPAMP_INPUT_NONINVERT_IO2 (1)
+  *         @arg LL_OPAMP_INPUT_NONINVERT_DAC1_CH2 (1)
+  *         @arg LL_OPAMP_INPUT_NONINVERT_DAC2_CH1 (2)(3)
+  *         @arg LL_OPAMP_INPUT_NONINVERT_DAC2_CH2 (2)
+  *
+  *         - (1) Parameters only available on STM32C542xx/532xx devices
+  *         - (2) Parameters only available on STM32C5P1xx/5Q1xx devices
+  *         - (3) Parameters only available on STM32C5J1xx/5K1xx devices
   * @param  input_inverting_sec This parameter can be one of the following values:
   *         @arg @ref LL_OPAMP_INPUT_INVERT_IO0
   *         @arg @ref LL_OPAMP_INPUT_INVERT_IO1
@@ -1210,6 +1259,12 @@ __STATIC_INLINE void LL_OPAMP_SetInputsMuxSecondary(OPAMP_TypeDef *p_opamp,
   *         @arg @ref LL_OPAMP_MUX_INPUT_CTRL_TIM2_OC4
   *         @arg @ref LL_OPAMP_MUX_INPUT_CTRL_TIM12_OC1
   *         @arg @ref LL_OPAMP_MUX_INPUT_CTRL_TIM15_OC2
+  *         @arg LL_OPAMP_MUX_INPUT_CTRL_TIM8_OC6 (1)(2)
+  *         @arg LL_OPAMP_MUX_INPUT_CTRL_TIM20_OC6 (1)
+  *         @arg LL_OPAMP_MUX_INPUT_CTRL_TIM3_OC2 (1)(2)
+  *
+  *         - (1) Parameters only available on STM32C5P1xx/5Q1xx devices
+  *         - (2) Parameters only available on STM32C5J1xx/5K1xx devices
   */
 __STATIC_INLINE void LL_OPAMP_SetMuxInputCtrl(OPAMP_TypeDef *p_opamp, uint32_t mux_inputs_ctrl)
 {
@@ -1227,6 +1282,12 @@ __STATIC_INLINE void LL_OPAMP_SetMuxInputCtrl(OPAMP_TypeDef *p_opamp, uint32_t m
   *         @arg @ref LL_OPAMP_MUX_INPUT_CTRL_TIM2_OC4
   *         @arg @ref LL_OPAMP_MUX_INPUT_CTRL_TIM12_OC1
   *         @arg @ref LL_OPAMP_MUX_INPUT_CTRL_TIM15_OC2
+  *         @arg LL_OPAMP_MUX_INPUT_CTRL_TIM8_OC6 (1)(2)
+  *         @arg LL_OPAMP_MUX_INPUT_CTRL_TIM20_OC6 (1)
+  *         @arg LL_OPAMP_MUX_INPUT_CTRL_TIM3_OC2 (1)(2)
+  *
+  *         - (1) Parameters only available on STM32C5P1xx/5Q1xx devices
+  *         - (2) Parameters only available on STM32C5J1xx/5K1xx devices
   */
 __STATIC_INLINE uint32_t LL_OPAMP_GetMuxInputCtrl(const OPAMP_TypeDef *p_opamp)
 {
@@ -1286,8 +1347,16 @@ __STATIC_INLINE uint32_t LL_OPAMP_GetPGAGainMuxSecondary(const OPAMP_TypeDef *p_
   *         @arg @ref LL_OPAMP_MUX_PGA_GAIN_CTRL_DISABLE
   *         @arg @ref LL_OPAMP_MUX_PGA_GAIN_CTRL_TIM1_OC6
   *         @arg @ref LL_OPAMP_MUX_PGA_GAIN_CTRL_TIM2_OC4
-  *         @arg @ref LL_OPAMP_MUX_PGA_GAIN_CTRL_TIM12_OC2
+  *         @arg LL_OPAMP_MUX_PGA_GAIN_CTRL_TIM12_OC1 (1)(2)
+  *         @arg LL_OPAMP_MUX_PGA_GAIN_CTRL_TIM12_OC2 (3)
   *         @arg @ref LL_OPAMP_MUX_PGA_GAIN_CTRL_TIM15_OC2
+  *         @arg LL_OPAMP_MUX_PGA_GAIN_CTRL_TIM8_OC6 (1)(2)
+  *         @arg LL_OPAMP_MUX_PGA_GAIN_CTRL_TIM20_OC6 (1)
+  *         @arg LL_OPAMP_MUX_PGA_GAIN_CTRL_TIM3_OC2 (1)(2)
+  *
+  *         - (1) Parameters only available on STM32C5P1xx/5Q1xx devices
+  *         - (2) Parameters only available on STM32C5J1xx/5K1xx devices
+  *         - (3) Parameters only available on STM32C542xx/532xx devices
   */
 __STATIC_INLINE void LL_OPAMP_SetMuxPGAGainCtrl(OPAMP_TypeDef *p_opamp, uint32_t mux_pga_ctrl)
 {
@@ -1303,8 +1372,16 @@ __STATIC_INLINE void LL_OPAMP_SetMuxPGAGainCtrl(OPAMP_TypeDef *p_opamp, uint32_t
   *         @arg @ref LL_OPAMP_MUX_PGA_GAIN_CTRL_DISABLE
   *         @arg @ref LL_OPAMP_MUX_PGA_GAIN_CTRL_TIM1_OC6
   *         @arg @ref LL_OPAMP_MUX_PGA_GAIN_CTRL_TIM2_OC4
-  *         @arg @ref LL_OPAMP_MUX_PGA_GAIN_CTRL_TIM12_OC2
+  *         @arg LL_OPAMP_MUX_PGA_GAIN_CTRL_TIM12_OC1 (1)(2)
+  *         @arg LL_OPAMP_MUX_PGA_GAIN_CTRL_TIM12_OC2 (3)
   *         @arg @ref LL_OPAMP_MUX_PGA_GAIN_CTRL_TIM15_OC2
+  *         @arg LL_OPAMP_MUX_PGA_GAIN_CTRL_TIM8_OC6 (1)(2)
+  *         @arg LL_OPAMP_MUX_PGA_GAIN_CTRL_TIM20_OC6 (1)
+  *         @arg LL_OPAMP_MUX_PGA_GAIN_CTRL_TIM3_OC2 (1)(2)
+  *
+  *         - (1) Parameters only available on STM32C5P1xx/5Q1xx devices
+  *         - (2) Parameters only available on STM32C5J1xx/5K1xx devices
+  *         - (3) Parameters only available on STM32C542xx/532xx devices
   */
 __STATIC_INLINE uint32_t LL_OPAMP_GetMuxPGAGainCtrl(const OPAMP_TypeDef *p_opamp)
 {
@@ -1350,7 +1427,7 @@ __STATIC_INLINE uint32_t LL_OPAMP_GetOutputConnection(const OPAMP_TypeDef *p_opa
 /**
   * @}
   */
-#endif /* OPAMP1 */
+#endif /* OPAMP1 || OPAMP2 || OPAMP3 */
 
 /**
   * @}

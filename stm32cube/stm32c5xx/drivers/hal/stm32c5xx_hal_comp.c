@@ -27,7 +27,7 @@
 /** @addtogroup STM32C5xx_HAL_Driver
   * @{
   */
-#if defined(COMP1)
+#if defined(COMP1) || defined(COMP2)
 #if defined(USE_HAL_COMP_MODULE) && (USE_HAL_COMP_MODULE == 1)
 
 /** @addtogroup COMP
@@ -166,7 +166,7 @@ COMP_WINDOW_MODE_SUPPORT        | from DFP | None  | When defined, COMP window m
 #define COMP_GET_EXTI_LINE(instance)    (((instance) == HAL_COMP1) ? EXTI_COMP1 : EXTI_COMP2)
 #else
 #define COMP_GET_EXTI_LINE(instance)    EXTI_COMP1
-#endif /* COMP2 */
+#endif /* COMP3 && COMP4 */
 #endif /* USE_HAL_COMP_EXTI */
 
 /**
@@ -370,7 +370,14 @@ hal_status_t HAL_COMP_Init(hal_comp_handle_t *hcomp, hal_comp_t instance)
 
 #if defined(USE_HAL_COMP_CLK_ENABLE_MODEL) && (USE_HAL_COMP_CLK_ENABLE_MODEL > HAL_CLK_ENABLE_NO)
   /* Enable peripheral clock */
+#if defined(COMP1) && defined(COMP2)
+  if ((instance == HAL_COMP1) || (instance == HAL_COMP2))
+  {
+    HAL_RCC_COMP12_EnableClock();
+  }
+#else
   HAL_RCC_COMP12_EnableClock();
+#endif /* COMP1 && COMP2 */
 #endif /* USE_HAL_COMP_CLK_ENABLE_MODEL */
 
   /* Initialize HAL COMP state machine */
@@ -469,6 +476,10 @@ hal_status_t HAL_COMP_WINDOW_SetHandle(hal_comp_handle_t *hcomp_upper, hal_comp_
 
   /* Ensure new handle is not already linked */
   ASSERT_DBG_PARAM(hcomp_lower->p_link_next_handle == NULL);
+
+  /* Check whether selected COMP instances belong to the same COMP common instance */
+  ASSERT_DBG_PARAM(LL_COMP_COMMON_INSTANCE(COMP_GET_INSTANCE(hcomp_upper))
+                   == LL_COMP_COMMON_INSTANCE(COMP_GET_INSTANCE(hcomp_lower)));
 
   ASSERT_DBG_STATE(hcomp_upper->global_state,
                    (uint32_t)HAL_COMP_STATE_INIT |
@@ -975,6 +986,7 @@ void HAL_COMP_WINDOW_GetConfig(const hal_comp_handle_t *hcomp, hal_comp_window_c
   p_config->upper_threshold = (hal_comp_input_minus_t)LL_COMP_GetInputMinus(p_instance_upper);
   p_config->lower_threshold = (hal_comp_input_minus_t)LL_COMP_GetInputMinus(p_instance_lower);
 
+
   if (LL_COMP_GetCommonWindowOutput(p_instance_common) != LL_COMP_WINDOW_OUTPUT_INDEPT)
   {
     p_config->window_output_mode = HAL_COMP_WINDOW_OUTPUT_XOR;
@@ -1238,7 +1250,9 @@ void HAL_COMP_IRQHandler(hal_comp_handle_t *hcomp)
                area (low or high ) to the other "out of window" area (high or low).
                Both flags must be cleared to call comparator trigger callback is called once. */
       LL_EXTI_ClearRisingFlag_32_63(hcomp->exti_line | hcomp->p_link_next_handle->exti_line);
+#if defined(COMP_SR_C1IF)
       LL_COMP_ClearFlag_OutputTrig(COMP_GET_INSTANCE(hcomp->p_link_next_handle));
+#endif /* COMP_SR_C1IF */
     }
     else
 #endif /* USE_HAL_COMP_WINDOW_MODE */
@@ -1247,7 +1261,9 @@ void HAL_COMP_IRQHandler(hal_comp_handle_t *hcomp)
       /* Clear COMP EXTI line pending bit */
       LL_EXTI_ClearRisingFlag_32_63(hcomp->exti_line);
     }
+#if defined(COMP_SR_C1IF)
     LL_COMP_ClearFlag_OutputTrig(COMP_GET_INSTANCE(hcomp));
+#endif /* COMP_SR_C1IF */
 
 #if defined(USE_HAL_COMP_REGISTER_CALLBACKS) && (USE_HAL_COMP_REGISTER_CALLBACKS == 1)
     hcomp->p_output_trigger_cb(hcomp);
@@ -1267,7 +1283,9 @@ void HAL_COMP_IRQHandler(hal_comp_handle_t *hcomp)
                area (low or high ) to the other "out of window" area (high or low).
                Both flags must be cleared to call comparator trigger callback is called once. */
       LL_EXTI_ClearFallingFlag_32_63(hcomp->exti_line | hcomp->p_link_next_handle->exti_line);
+#if defined(COMP_SR_C1IF)
       LL_COMP_ClearFlag_OutputTrig(COMP_GET_INSTANCE(hcomp->p_link_next_handle));
+#endif /* COMP_SR_C1IF */
     }
     else
 #endif /* USE_HAL_COMP_WINDOW_MODE */
@@ -1276,7 +1294,9 @@ void HAL_COMP_IRQHandler(hal_comp_handle_t *hcomp)
       /* Clear COMP EXTI line pending bit */
       LL_EXTI_ClearFallingFlag_32_63(hcomp->exti_line);
     }
+#if defined(COMP_SR_C1IF)
     LL_COMP_ClearFlag_OutputTrig(COMP_GET_INSTANCE(hcomp));
+#endif /* COMP_SR_C1IF */
 
 #if defined(USE_HAL_COMP_REGISTER_CALLBACKS) && (USE_HAL_COMP_REGISTER_CALLBACKS == 1)
     hcomp->p_output_trigger_cb(hcomp);
@@ -2000,7 +2020,7 @@ static hal_status_t comp_window_activate(hal_comp_handle_t *hcomp_a, hal_comp_ha
   */
 
 #endif /* USE_HAL_COMP_MODULE */
-#endif /* COMP1 */
+#endif /* COMP1 || COMP2 || COMP3 || COMP4 */
 /**
   * @}
   */

@@ -2055,6 +2055,7 @@ typedef  void (*pADC_CallbackTypeDef)(ADC_HandleTypeDef *hadc); /*!< pointer to 
   * @note   ADC conversion data full-scale corresponds to voltage range
   *         determined by analog voltage references Vref+ and Vref-
   *         (refer to reference manual).
+  * @param  __ADC_INSTANCE__ ADC instance
   * @param  __ADC_RESOLUTION__ This parameter can be one of the following values:
   *         @arg @ref ADC_RESOLUTION_14B
   *         @arg @ref ADC_RESOLUTION_12B
@@ -2066,8 +2067,8 @@ typedef  void (*pADC_CallbackTypeDef)(ADC_HandleTypeDef *hadc); /*!< pointer to 
   *         (2) On STM32U5, parameter available only on ADC instance: ADC4.\n
   * @retval ADC conversion data full-scale digital value
   */
-#define __HAL_ADC_DIGITAL_SCALE(__ADC_RESOLUTION__)                             \
-  __LL_ADC_DIGITAL_SCALE((__ADC_RESOLUTION__))
+#define __HAL_ADC_DIGITAL_SCALE(__ADC_INSTANCE__, __ADC_RESOLUTION__)           \
+  __LL_ADC_DIGITAL_SCALE((__ADC_INSTANCE__), (__ADC_RESOLUTION__))
 
 /**
   * @brief  Helper macro to convert the ADC conversion data from

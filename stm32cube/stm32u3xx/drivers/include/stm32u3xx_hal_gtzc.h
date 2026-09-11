@@ -224,7 +224,13 @@ typedef struct
 #define GTZC_PERIPH_CRC           (GTZC_PERIPH_REG3 | GTZC_CFGR3_CRC_Pos)
 #define GTZC_PERIPH_TSC           (GTZC_PERIPH_REG3 | GTZC_CFGR3_TSC_Pos)
 #define GTZC_PERIPH_ICACHE_REG    (GTZC_PERIPH_REG3 | GTZC_CFGR3_ICACHE_REG_Pos)
-#define GTZC_PERIPH_ADC12         (GTZC_PERIPH_REG3 | GTZC_CFGR3_ADC12_Pos)
+#if defined(ADC1) && defined(ADC2)
+#define GTZC_PERIPH_ADC           (GTZC_PERIPH_REG3 | GTZC_CFGR3_ADC12_Pos)
+#define GTZC_PERIPH_ADC12         GTZC_PERIPH_ADC
+#elif defined(ADC1)
+#define GTZC_PERIPH_ADC           (GTZC_PERIPH_REG3 | GTZC_CFGR3_ADC1_Pos)
+#define GTZC_PERIPH_ADC1          GTZC_PERIPH_ADC
+#endif /* ADC1 and ADC2 */
 #if defined(AES)
 #define GTZC_PERIPH_AES           (GTZC_PERIPH_REG3 | GTZC_CFGR3_AES_Pos)
 #endif /* AES */
@@ -243,7 +249,9 @@ typedef struct
 #define GTZC_PERIPH_OCTOSPI1_REG  (GTZC_PERIPH_REG3 | GTZC_CFGR3_OCTOSPI1_REG_Pos)
 #define GTZC_PERIPH_RAMCFG        (GTZC_PERIPH_REG3 | GTZC_CFGR3_RAMCFG_Pos)
 #define GTZC_PERIPH_DAC1          (GTZC_PERIPH_REG3 | GTZC_CFGR3_DAC1_Pos)
+#if defined(ADF1)
 #define GTZC_PERIPH_ADF1          (GTZC_PERIPH_REG3 | GTZC_CFGR3_ADF1_Pos)
+#endif /* ADF1 */
 #if defined(HSP1)
 #define GTZC_PERIPH_HSP1          (GTZC_PERIPH_REG3 | GTZC_CFGR3_HSP1_Pos)
 #endif /* HSP1 */

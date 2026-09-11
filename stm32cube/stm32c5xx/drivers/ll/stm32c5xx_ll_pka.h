@@ -355,7 +355,7 @@ __STATIC_INLINE void LL_PKA_EnableIT_CMFIE(PKA_TypeDef *pkax)
   STM32_SET_BIT(pkax->CR, PKA_CR_CMFIE);
 }
 /** @brief  Enable the specified PKA interrupt.
-  * @param  pkax specifies the PKA Handle
+  * @param  pkax specifies the PKA instance.
   * @param  it_source specifies the interrupt source to enable.
   *         This parameter can be any combination of the following values:
   *            @arg @ref LL_PKA_IT_PROCEND End Of Operation interrupt enable
@@ -421,14 +421,14 @@ __STATIC_INLINE void LL_PKA_DisableIT_CMFIE(PKA_TypeDef *pkax)
   STM32_CLEAR_BIT(pkax->CR, PKA_CR_CMFIE);
 }
 /** @brief  Disable the specified PKA interrupt.
-  * @param  pkax specifies the PKA Handle
+  * @param  pkax specifies the PKA instance.
   * @param  it_source specifies the interrupt source to disable.
   *         This parameter can be any combination of the following values:
   *            @arg @ref LL_PKA_IT_PROCEND End Of Operation interrupt enable
   *            @arg @ref LL_PKA_IT_ADDRERR Address error interrupt enable
   *            @arg @ref LL_PKA_IT_RAMERR RAM error interrupt enable
   *            @arg @ref LL_PKA_IT_OPERR Operation error interrupt enable
-  *            @arg @ref LL_PKA_IT_CMFIE Operation error interrupt enable
+  *            @arg @ref LL_PKA_IT_CMFIE Chaining mode flags interrupt enable
   */
 __STATIC_INLINE void LL_PKA_DisableIT(PKA_TypeDef *pkax, uint32_t it_source)
 {
@@ -509,7 +509,7 @@ __STATIC_INLINE uint32_t LL_PKA_IsActiveFlag_ADDRERR(const PKA_TypeDef *pkax)
 /**
   * @brief  Get PKA RAM error flag.
   * @rmtoll
-  *  SR           RAMERRF       LL_PKA_IsActiveFlag_RAMERR
+  *  SR           RAMERRF      LL_PKA_IsActiveFlag_RAMERR
   * @param  pkax PKA Instance.
   * @retval State of bit (1 or 0).
   */
@@ -520,7 +520,7 @@ __STATIC_INLINE uint32_t LL_PKA_IsActiveFlag_RAMERR(const PKA_TypeDef *pkax)
 /**
   * @brief  Get PKA OPERATION error flag.
   * @rmtoll
-  *  SR           OPERRF       LL_PKA_IsActiveFlag_OPERR
+  *  SR           OPERRF      LL_PKA_IsActiveFlag_OPERR
   * @param  pkax PKA Instance.
   * @retval State of bit (1 or 0).
   */
@@ -640,7 +640,7 @@ __STATIC_INLINE void LL_PKA_ClearFlag_PROCEND(PKA_TypeDef *pkax)
   STM32_SET_BIT(pkax->CLRFR, PKA_CLRFR_PROCENDFC);
 }
 /** @brief  Clear the PKA pending flags which are cleared by writing 1 in a specific bit.
-  * @param  pkax specifies the PKA Handle
+  * @param  pkax specifies the PKA instance.
   * @param  clear_flag specifies the flag to clear.
   *         This parameter can be any combination of the following values:
   *            @arg @ref LL_PKA_FLAG_PROCEND End Of Operation

@@ -580,17 +580,19 @@ uint32_t HAL_FLASH_GetError(void)
 HAL_StatusTypeDef FLASH_WaitForLastOperation(uint32_t Timeout)
 {
   uint32_t error;
+  uint32_t tickstart = HAL_GetTick();
   /* Wait for the FLASH operation to complete by polling on BUSY flag to be reset.
      Even if the FLASH operation fails, the BUSY flag will be reset and an error
      flag will be set */
-  uint32_t timeout = HAL_GetTick() + Timeout;
 
-  /* Wait if any operation is ongoing */
   while (__HAL_FLASH_GET_FLAG(FLASH_FLAG_BSY) != 0x00U)
   {
-    if (HAL_GetTick() >= timeout)
+    if (Timeout != HAL_MAX_DELAY)
     {
-      return HAL_TIMEOUT;
+      if(((HAL_GetTick() - tickstart) >= Timeout) || (Timeout == 0U))
+      {
+        return HAL_TIMEOUT;
+      }
     }
   }
 
@@ -609,13 +611,15 @@ HAL_StatusTypeDef FLASH_WaitForLastOperation(uint32_t Timeout)
   }
 
   /* Wait for control register to be written */
-  timeout = HAL_GetTick() + Timeout;
 
   while (__HAL_FLASH_GET_FLAG(FLASH_FLAG_CFGBSY) != 0x00U)
   {
-    if (HAL_GetTick() >= timeout)
+    if (Timeout != HAL_MAX_DELAY)
     {
-      return HAL_TIMEOUT;
+      if((HAL_GetTick() - tickstart) >= Timeout)
+      {
+        return HAL_TIMEOUT;
+      }
     }
   }
 

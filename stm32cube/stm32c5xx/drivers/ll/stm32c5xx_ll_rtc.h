@@ -88,7 +88,7 @@ extern "C" {
   * @}
   */
 
-/** @defgroup RTC_LL_EC_ALMA_WEEKDAY_SELECTION RTC Alarm A Date WeekDay
+/** @defgroup RTC_LL_EC_ALMA_WEEKDAY_SELECTION RTC alarm A date weekday
   * @{
   */
 #define LL_RTC_ALMA_DATEWEEKDAYSEL_DATE    0U               /*!< Alarm A Date is selected    */
@@ -97,7 +97,7 @@ extern "C" {
   * @}
   */
 
-/** @defgroup RTC_LL_EC_ALMB_WEEKDAY_SELECTION RTC Alarm B Date WeekDay
+/** @defgroup RTC_LL_EC_ALMB_WEEKDAY_SELECTION RTC alarm B date weekday
   * @{
   */
 #define LL_RTC_ALMB_DATEWEEKDAYSEL_DATE    0U               /*!< Alarm B Date is selected    */
@@ -106,7 +106,7 @@ extern "C" {
   * @}
   */
 
-/** @defgroup RTC_LL_EC_TIMESTAMP_FLAGS Timestamp Flags Defines
+/** @defgroup RTC_LL_EC_TIMESTAMP_FLAGS Timestamp flags defines
   * @brief    Timestamp flags defines
   * @{
   */
@@ -116,7 +116,7 @@ extern "C" {
   * @}
   */
 
-/** @defgroup RTC_LL_EC_CLEAR_FLAG Clear Flags Defines
+/** @defgroup RTC_LL_EC_CLEAR_FLAG Clear flags defines
   * @brief    Flags defines which can be used with LL_RTC_WRITE_REG function
   * @{
   */
@@ -130,7 +130,7 @@ extern "C" {
   * @}
   */
 
-/** @defgroup RTC_LL_EC_GET_FLAG Get Flags Defines
+/** @defgroup RTC_LL_EC_GET_FLAG Get flags defines
   * @brief    Flags defines which can be used with LL_RTC_READ_REG function
   * @{
   */
@@ -144,7 +144,7 @@ extern "C" {
   * @}
   */
 
-/** @defgroup RTC_LL_EC_BCD BCD Defines
+/** @defgroup RTC_LL_EC_BCD BCD defines
   * @brief    BCD defines which can be used with LL_RTC_READ_REG and  LL_RTC_WRITE_REG functions
   * @{
   */
@@ -157,7 +157,7 @@ extern "C" {
   * @}
   */
 
-/** @defgroup RTC_LL_EC_IT IT Defines
+/** @defgroup RTC_LL_EC_IT IT defines
   * @brief    IT defines which can be  used with LL_RTC_READ_REG and  LL_RTC_WRITE_REG functions
   * @{
   */
@@ -169,7 +169,7 @@ extern "C" {
   * @}
   */
 
-/** @defgroup RTC_LL_EC_WEEKDAY  WEEKDAY
+/** @defgroup RTC_LL_EC_WEEKDAY  Weekday
   * @{
   */
 #define LL_RTC_WEEKDAY_MONDAY    (uint32_t)0x01 /*!< Monday    */
@@ -183,7 +183,7 @@ extern "C" {
   * @}
   */
 
-/** @defgroup RTC_LL_EC_MONTH  MONTH
+/** @defgroup RTC_LL_EC_MONTH  Month
   * @{
   */
 #define LL_RTC_MONTH_JANUARY   (uint32_t)0x01  /*!< January   */
@@ -202,7 +202,7 @@ extern "C" {
   * @}
   */
 
-/** @defgroup RTC_LL_EC_HOUR_FORMAT  HOUR FORMAT
+/** @defgroup RTC_LL_EC_HOUR_FORMAT  Hour format
   * @{
   */
 #define LL_RTC_HOUR_FORMAT_24HOUR 0U         /*!< 24 hour/day format */
@@ -229,7 +229,7 @@ extern "C" {
   * @}
   */
 
-/** @defgroup RTC_LL_EC_BKP_REGISTER Backup Register for daylight saving time
+/** @defgroup RTC_LL_EC_BKP_REGISTER Backup register for daylight saving time
   * @{
   */
 #define LL_RTC_BKP_REGISTER_UNSET 0U          /*!< Daylight time change has not been performed */
@@ -238,7 +238,7 @@ extern "C" {
   * @}
   */
 
-/** @defgroup RTC_LL_EC_ALARMOUT  ALARM OUTPUT
+/** @defgroup RTC_LL_EC_ALARMOUT  Alarm output
   * @{
   */
 #define LL_RTC_ALARMOUT_DISABLE 0U              /*!< Output disabled        */
@@ -249,7 +249,7 @@ extern "C" {
   * @}
   */
 
-/** @defgroup RTC_LL_EC_ALARM_OUTPUTTYPE  ALARM Output type
+/** @defgroup RTC_LL_EC_ALARM_OUTPUTTYPE  Alarm output type
   * @{
   */
 #define LL_RTC_ALARM_OUTPUTTYPE_PUSHPULL    0U                   /*!< RTC_ALARM is push-pull output  */
@@ -258,7 +258,7 @@ extern "C" {
   * @}
   */
 
-/** @defgroup RTC_LL_EC_ALARM_OUTPUT_PULLUP  ALARM Output pull-up
+/** @defgroup RTC_LL_EC_ALARM_OUTPUT_PULLUP  Alarm output pull-up
   * @{
   */
 #define LL_RTC_ALARM_OUTPUT_PULLUP_NONE   0U                 /*!< No pull-up is applied on TAMPALRM output */
@@ -267,7 +267,7 @@ extern "C" {
   * @}
   */
 
-/** @defgroup RTC_LL_EC_ALARM_OUTPUT_REMAP  ALARM Output REMAP
+/** @defgroup RTC_LL_EC_ALARM_OUTPUT_REMAP  Alarm output remap
   * @{
   */
 #define LL_RTC_ALARM_OUTPUT_REMAP_NONE  0U             /*!< RTC_OUT2 output disabled */
@@ -276,7 +276,7 @@ extern "C" {
   * @}
   */
 
-/** @defgroup RTC_LL_EC_OUTPUTPOLARITY_PIN  OUTPUT POLARITY PIN
+/** @defgroup RTC_LL_EC_OUTPUTPOLARITY_PIN  Output polarity pin
   * @{
   */
 #define LL_RTC_OUTPUTPOLARITY_PIN_HIGH  0U          /*!< Pin is high when selected TAMPALRM is asserted */
@@ -285,7 +285,7 @@ extern "C" {
   * @}
   */
 
-/** @defgroup RTC_LL_EC_TIME_FORMAT TIME FORMAT
+/** @defgroup RTC_LL_EC_TIME_FORMAT Time format
   * @{
   */
 #define LL_RTC_TIME_FORMAT_AM_24H     0U          /*!< AM or 24-hour format */
@@ -294,7 +294,7 @@ extern "C" {
   * @}
   */
 
-/** @defgroup RTC_LL_EC_SHIFT_SECOND  SHIFT SECOND
+/** @defgroup RTC_LL_EC_SHIFT_SECOND  Shift second
   * @{
   */
 #define LL_RTC_SHIFT_SECOND_DELAY   0U               /*!< Delay (seconds) = SUBFS / (PREDIV_S + 1)     */
@@ -303,7 +303,7 @@ extern "C" {
   * @}
   */
 
-/** @defgroup RTC_LL_EC_ALMA_MASK  ALARMA MASK
+/** @defgroup RTC_LL_EC_ALMA_MASK  ALARMA mask
   * @{
   */
 #define LL_RTC_ALMA_MASK_NONE        0U               /*!< No masks applied on alarm A                */
@@ -317,7 +317,7 @@ extern "C" {
   * @}
   */
 
-/** @defgroup RTC_LL_EC_ALMA_TIME_FORMAT  ALARMA TIME FORMAT
+/** @defgroup RTC_LL_EC_ALMA_TIME_FORMAT  ALARMA time format
   * @{
   */
 #define LL_RTC_ALMA_TIME_FORMAT_AM_24H  0U            /*!< AM or 24-hour format */
@@ -326,7 +326,7 @@ extern "C" {
   * @}
   */
 
-/** @defgroup RTC_LL_EC_ALMA_AUTOCLR RTC Alarm auto clear
+/** @defgroup RTC_LL_EC_ALMA_AUTOCLR RTC alarm auto clear
   * @{
   */
 #define LL_RTC_ALM_AUTOCLR_NO  0U              /*!< Alarm autoclear disabled */
@@ -335,7 +335,7 @@ extern "C" {
   * @}
   */
 
-/** @defgroup RTC_LL_EC_ALMA_SUBSECONDBIN_AUTOCLR  RTC Alarm Sub Seconds with binary mode auto clear Definitions
+/** @defgroup RTC_LL_EC_ALMA_SUBSECONDBIN_AUTOCLR  RTC alarm sub seconds with binary mode auto clear definitions
   * @{
   */
 #define LL_RTC_ALMA_SUBSECONDBIN_AUTOCLR_NO  0UL                /*!< The synchronous binary counter \
@@ -349,7 +349,7 @@ extern "C" {
   * @}
   */
 
-/** @defgroup RTC_LL_EC_ALMB_MASK  ALARMB MASK
+/** @defgroup RTC_LL_EC_ALMB_MASK  ALARMB mask
   * @{
   */
 #define LL_RTC_ALMB_MASK_NONE        0U              /*!< No masks applied on Alarm B                */
@@ -363,7 +363,7 @@ extern "C" {
   * @}
   */
 
-/** @defgroup RTC_LL_EC_ALMB_TIME_FORMAT  ALARMB TIME FORMAT
+/** @defgroup RTC_LL_EC_ALMB_TIME_FORMAT  ALARMB time format
   * @{
   */
 #define LL_RTC_ALMB_TIME_FORMAT_AM_24H 0U        /*!< AM or 24-hour format */
@@ -372,7 +372,7 @@ extern "C" {
   * @}
   */
 
-/** @defgroup RTC_LL_EC_ALMB_SUBSECONDBIN_AUTOCLR  Alarm Sub Seconds with binary mode auto clear Definitions
+/** @defgroup RTC_LL_EC_ALMB_SUBSECONDBIN_AUTOCLR  Alarm sub seconds with binary mode auto clear definitions
   * @{
   */
 #define LL_RTC_ALMB_SUBSECONDBIN_AUTOCLR_NO  0UL                /*!< The synchronous binary counter \
@@ -387,7 +387,7 @@ extern "C" {
   * @}
   */
 
-/** @defgroup RTC_LL_EC_TIMESTAMP_EDGE  TIMESTAMP EDGE
+/** @defgroup RTC_LL_EC_TIMESTAMP_EDGE  Timestamp edge
   * @{
   */
 #define LL_RTC_TIMESTAMP_EDGE_RISING  0U            /*!< RTC_TS input rising edge generates a time-stamp event */
@@ -416,7 +416,7 @@ extern "C" {
   * @}
   */
 
-/** @defgroup RTC_LL_EC_TS_TIME_FORMAT  TIMESTAMP TIME FORMAT
+/** @defgroup RTC_LL_EC_TS_TIME_FORMAT  Timestamp time format
   * @{
   */
 #define LL_RTC_TS_TIME_FORMAT_AM_24H 0U          /*!< AM or 24-hour format */
@@ -425,7 +425,7 @@ extern "C" {
   * @}
   */
 
-/** @defgroup RTC_LL_EC_WAKEUPCLOCK_DIV  WAKEUP CLOCK DIV
+/** @defgroup RTC_LL_EC_WAKEUPCLOCK_DIV  Wakeup clock div
   * @{
   */
 #define LL_RTC_WAKEUPCLOCK_DIV_16     0U                                    /*!< RTC/16 clock is selected */
@@ -500,7 +500,7 @@ extern "C" {
   * @}
   */
 
-/** @defgroup RTC_LL_EC_BINARY_MODE  Binary mode (Sub Second Register)
+/** @defgroup RTC_LL_EC_BINARY_MODE  Binary mode (sub second register)
   * @{
   */
 #define LL_RTC_BINARY_NONE 0U             /*!< Free-running BCD calendar mode (Binary mode disabled) */
@@ -510,7 +510,7 @@ extern "C" {
   * @}
   */
 
-/** @defgroup RTC_LL_EC_BINARY_MIX_BCDU  Calendar second incrementation in Binary mix mode
+/** @defgroup RTC_LL_EC_BINARY_MIX_BCDU  Calendar second incrementation in binary mix mode
   * @{
   */
 #define LL_RTC_BINARY_MIX_BCDU_SHIFT RTC_ICSR_BCDU_Pos
@@ -534,7 +534,7 @@ extern "C" {
   * @}
   */
 
-/** @defgroup RTC_privilege_attributes_configuration_items RTC attributes configuration items
+/** @defgroup RTC_privilege_attributes_configuration_items RTC privilege attributes configuration items
   * @{
   */
 #define LL_RTC_ATTR_NPRIV 0UL /*!< Non-privileged attribute */
@@ -555,7 +555,7 @@ extern "C" {
   * @}
   */
 
-/** @defgroup RTC_LL_EC_WAKEUP_TIMER_INTERRUPT wakeup timer interrupt definition
+/** @defgroup RTC_LL_EC_WAKEUP_TIMER_INTERRUPT Wakeup timer interrupt definition
   * @{
   */
 #define LL_RTC_WAKEUP_TIMER_IT_DISABLE 0U           /*!< Wake-up timer interrupt disable */
@@ -564,7 +564,7 @@ extern "C" {
   * @}
   */
 
-/** @defgroup RTC_LL_EC_ALARMA_INTERRUPT alarm a interrupt definition
+/** @defgroup RTC_LL_EC_ALARMA_INTERRUPT Alarm A interrupt definition
   * @{
   */
 #define LL_RTC_ALMA_IT_DISABLE 0U            /*!< Alarm A interrupt disable */
@@ -573,7 +573,7 @@ extern "C" {
   * @}
   */
 
-/** @defgroup RTC_LL_EC_ALARMB_INTERRUPT alarm b interrupt definition
+/** @defgroup RTC_LL_EC_ALARMB_INTERRUPT Alarm B interrupt definition
   * @{
   */
 #define LL_RTC_ALMB_IT_DISABLE 0U            /*!< Alarm B interrupt disable */
@@ -582,7 +582,7 @@ extern "C" {
   * @}
   */
 
-/** @defgroup RTC_LL_EC_TIMESTAMP_INTERRUPT timestamp interrupt definition
+/** @defgroup RTC_LL_EC_TIMESTAMP_INTERRUPT Timestamp interrupt definition
   * @{
   */
 #define LL_RTC_TIMESTAMP_IT_DISABLE 0U          /*!< Timestamp interrupt disable */
@@ -591,7 +591,7 @@ extern "C" {
   * @}
   */
 
-/** @defgroup RTC_LL_EC_SSRU_INTERRUPT sub seconds register underflow interrupt definition
+/** @defgroup RTC_LL_EC_SSRU_INTERRUPT Sub seconds register underflow interrupt definition
   * @{
   */
 #define LL_RTC_SSRU_IT_DISABLE 0U            /*!< SSR underflow interrupt disable */

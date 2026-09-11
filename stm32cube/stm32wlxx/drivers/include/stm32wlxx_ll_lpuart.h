@@ -2659,4 +2659,3 @@ void        LL_LPUART_StructInit(LL_LPUART_InitTypeDef *LPUART_InitStruct);
 #endif
 
 #endif /* STM32WLxx_LL_LPUART_H */
-

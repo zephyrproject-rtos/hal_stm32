@@ -7048,16 +7048,6 @@ static void I2C_DMAAbort(hal_dma_handle_t *hdma)
 {
   hal_i2c_handle_t *hi2c = (hal_i2c_handle_t *)(((hal_dma_handle_t *)hdma)->p_parent);
 
-  /* Reset p_xfer_abort_cb */
-  if (hi2c->hdma_tx != NULL)
-  {
-    hi2c->hdma_tx->p_xfer_abort_cb = NULL;
-  }
-  if (hi2c->hdma_rx != NULL)
-  {
-    hi2c->hdma_rx->p_xfer_abort_cb = NULL;
-  }
-
   I2C_TreatErrorCallback(hi2c);
 }
 #endif /* USE_HAL_I2C_DMA */

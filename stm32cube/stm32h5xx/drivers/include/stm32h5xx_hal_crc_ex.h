@@ -44,10 +44,23 @@ extern "C" {
 /** @defgroup CRCEx_Input_Data_Inversion Input Data Inversion Modes
   * @{
   */
+#if defined(CRC_CR_RTYPE_IN)
+#define CRC_INPUTDATA_INVERSION_NONE               0x00000000U                         /*!< No input data inversion                    */
+#define CRC_INPUTDATA_INVERSION_HALFWORD_BYWORD    (CRC_CR_RTYPE_IN | CRC_CR_REV_IN_0) /*!< Input data half-word-reversal done by word */
+#define CRC_INPUTDATA_INVERSION_BYTE_BYWORD        (CRC_CR_RTYPE_IN | CRC_CR_REV_IN_1) /*!< Input data byte-reversal done by word      */
+#define CRC_INPUTDATA_INVERSION_BIT_BYBYTE         CRC_CR_REV_IN_0                     /*!< Input data bit-reversal done by byte       */
+#define CRC_INPUTDATA_INVERSION_BIT_BYHALFWORD     CRC_CR_REV_IN_1                     /*!< Input data bit-reversal done by half-word  */
+#define CRC_INPUTDATA_INVERSION_BIT_BYWORD         CRC_CR_REV_IN                       /*!< Input data bit-reversal done by word       */
+
+#define CRC_INPUTDATA_INVERSION_BYTE               CRC_INPUTDATA_INVERSION_BIT_BYBYTE     /*!< Definition for compatibility with legacy code */
+#define CRC_INPUTDATA_INVERSION_HALFWORD           CRC_INPUTDATA_INVERSION_BIT_BYHALFWORD /*!< Definition for compatibility with legacy code */
+#define CRC_INPUTDATA_INVERSION_WORD               CRC_INPUTDATA_INVERSION_BIT_BYWORD     /*!< Definition for compatibility with legacy code */
+#else
 #define CRC_INPUTDATA_INVERSION_NONE               0x00000000U     /*!< No input data inversion            */
 #define CRC_INPUTDATA_INVERSION_BYTE               CRC_CR_REV_IN_0 /*!< Byte-wise input data inversion     */
 #define CRC_INPUTDATA_INVERSION_HALFWORD           CRC_CR_REV_IN_1 /*!< HalfWord-wise input data inversion */
 #define CRC_INPUTDATA_INVERSION_WORD               CRC_CR_REV_IN   /*!< Word-wise input data inversion     */
+#endif /* CRC_CR_RTYPE_IN */
 /**
   * @}
   */
@@ -55,8 +68,17 @@ extern "C" {
 /** @defgroup CRCEx_Output_Data_Inversion Output Data Inversion Modes
   * @{
   */
+#if defined(CRC_CR_RTYPE_OUT)
+#define CRC_OUTPUTDATA_INVERSION_DISABLE         0x00000000U                            /*!< No output data inversion                       */
+#define CRC_OUTPUTDATA_INVERSION_BIT             CRC_CR_REV_OUT_0                       /*!< Output data bit-reversal                       */
+#define CRC_OUTPUTDATA_INVERSION_HALFWORD        (CRC_CR_RTYPE_OUT | CRC_CR_REV_OUT_0)  /*!< Output data half-word-reversal done by word    */
+#define CRC_OUTPUTDATA_INVERSION_BYTE            (CRC_CR_RTYPE_OUT | CRC_CR_REV_OUT_1)  /*!< Output data byte-reversal done by word         */
+
+#define CRC_OUTPUTDATA_INVERSION_ENABLE          CRC_OUTPUTDATA_INVERSION_BIT           /*!<  Definition for compatibility with legacy code */
+#else
 #define CRC_OUTPUTDATA_INVERSION_DISABLE         0x00000000U       /*!< No output data inversion       */
 #define CRC_OUTPUTDATA_INVERSION_ENABLE          CRC_CR_REV_OUT    /*!< Bit-wise output data inversion */
+#endif /* CRC_CR_RTYPE_OUT */
 /**
   * @}
   */
@@ -70,6 +92,45 @@ extern "C" {
   * @{
   */
 
+#if defined(CRC_CR_RTYPE_OUT)
+/**
+  * @brief  Set CRC output bit-reversal
+  * @param  __HANDLE__ CRC handle
+  * @retval None
+  */
+#define  __HAL_CRC_OUTPUTREVERSAL_BIT_ENABLE(__HANDLE__) MODIFY_REG(((__HANDLE__)->Instance->CR),\
+                                                                    (CRC_CR_RTYPE_OUT | CRC_CR_REV_OUT),\
+                                                                    CRC_CR_REV_OUT_0);
+
+/**
+  * @brief  Set CRC output halfword-reversal
+  * @param  __HANDLE__ CRC handle
+  * @retval None
+  */
+#define  __HAL_CRC_OUTPUTREVERSAL_HALFWORD_ENABLE(__HANDLE__) MODIFY_REG(((__HANDLE__)->Instance->CR),\
+                                                                         (CRC_CR_RTYPE_OUT | CRC_CR_REV_OUT),\
+                                                                         (CRC_CR_RTYPE_OUT | CRC_CR_REV_OUT_0));
+
+/**
+  * @brief  Set CRC output byte-reversal
+  * @param  __HANDLE__ CRC handle
+  * @retval None
+  */
+#define  __HAL_CRC_OUTPUTREVERSAL_BYTE_ENABLE(__HANDLE__) MODIFY_REG(((__HANDLE__)->Instance->CR), \
+                                                                     (CRC_CR_RTYPE_OUT | CRC_CR_REV_OUT), \
+                                                                     (CRC_CR_RTYPE_OUT | CRC_CR_REV_OUT_1));
+
+/* Definition for compatibility with legacy code */
+#define  __HAL_CRC_OUTPUTREVERSAL_ENABLE(__HANDLE__)    __HAL_CRC_OUTPUTREVERSAL_BIT_ENABLE(__HANDLE__)
+
+/**
+  * @brief  Unset CRC output reversal
+  * @param  __HANDLE__ CRC handle
+  * @retval None
+  */
+#define __HAL_CRC_OUTPUTREVERSAL_DISABLE(__HANDLE__) ((__HANDLE__)->Instance->CR &= ~(CRC_CR_RTYPE_OUT |\
+                                                      CRC_CR_REV_OUT))
+#else
 /**
   * @brief  Set CRC output reversal
   * @param  __HANDLE__ CRC handle
@@ -83,6 +144,7 @@ extern "C" {
   * @retval None
   */
 #define __HAL_CRC_OUTPUTREVERSAL_DISABLE(__HANDLE__) ((__HANDLE__)->Instance->CR &= ~(CRC_CR_REV_OUT))
+#endif /* CRC_CR_RTYPE_OUT */
 
 /**
   * @brief  Set CRC non-default polynomial
@@ -101,13 +163,29 @@ extern "C" {
   * @{
   */
 
+#if defined(CRC_CR_RTYPE_IN)
+#define IS_CRC_INPUTDATA_INVERSION_MODE(MODE)     (((MODE) == CRC_INPUTDATA_INVERSION_NONE)            || \
+                                                   ((MODE) == CRC_INPUTDATA_INVERSION_HALFWORD_BYWORD) || \
+                                                   ((MODE) == CRC_INPUTDATA_INVERSION_BYTE_BYWORD)     || \
+                                                   ((MODE) == CRC_INPUTDATA_INVERSION_BIT_BYBYTE)      || \
+                                                   ((MODE) == CRC_INPUTDATA_INVERSION_BIT_BYHALFWORD)  || \
+                                                   ((MODE) == CRC_INPUTDATA_INVERSION_BIT_BYWORD))
+#else
 #define IS_CRC_INPUTDATA_INVERSION_MODE(MODE)     (((MODE) == CRC_INPUTDATA_INVERSION_NONE)     || \
                                                    ((MODE) == CRC_INPUTDATA_INVERSION_BYTE)     || \
                                                    ((MODE) == CRC_INPUTDATA_INVERSION_HALFWORD) || \
                                                    ((MODE) == CRC_INPUTDATA_INVERSION_WORD))
+#endif /* CRC_CR_RTYPE_IN */
 
+#if defined(CRC_CR_RTYPE_OUT)
+#define IS_CRC_OUTPUTDATA_INVERSION_MODE(MODE)    (((MODE) == CRC_OUTPUTDATA_INVERSION_DISABLE)  || \
+                                                   ((MODE) == CRC_OUTPUTDATA_INVERSION_BIT)      || \
+                                                   ((MODE) == CRC_OUTPUTDATA_INVERSION_HALFWORD) || \
+                                                   ((MODE) == CRC_OUTPUTDATA_INVERSION_BYTE))
+#else
 #define IS_CRC_OUTPUTDATA_INVERSION_MODE(MODE)    (((MODE) == CRC_OUTPUTDATA_INVERSION_DISABLE) || \
                                                    ((MODE) == CRC_OUTPUTDATA_INVERSION_ENABLE))
+#endif /* CRC_CR_RTYPE_OUT */
 
 /**
   * @}

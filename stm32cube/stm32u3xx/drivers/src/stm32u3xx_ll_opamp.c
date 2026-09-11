@@ -227,4 +227,3 @@ void LL_OPAMP_StructInit(LL_OPAMP_InitTypeDef *OPAMP_InitStruct)
   */
 
 #endif /* USE_FULL_LL_DRIVER */
-

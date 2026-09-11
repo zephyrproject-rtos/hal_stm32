@@ -871,4 +871,3 @@ void        LL_OPAMP_StructInit(LL_OPAMP_InitTypeDef *OPAMP_InitStruct);
 #endif
 
 #endif /* STM32U5xx_LL_OPAMP_H */
-

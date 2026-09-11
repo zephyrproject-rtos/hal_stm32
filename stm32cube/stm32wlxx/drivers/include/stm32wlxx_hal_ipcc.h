@@ -287,4 +287,3 @@ void HAL_IPCC_RxCallback(IPCC_HandleTypeDef *hipcc, uint32_t ChannelIndex, IPCC_
 #endif
 
 #endif /* STM32WLxx_HAL_IPCC_H */
-

@@ -1286,7 +1286,7 @@ typedef  void (*pUART_RxEventCallbackTypeDef)
   *         divided by the smallest oversampling used on the USART (i.e. 8)
   * @retval SET (__BAUDRATE__ is valid) or RESET (__BAUDRATE__ is invalid)
   */
-#define IS_UART_BAUDRATE(__BAUDRATE__) ((__BAUDRATE__) < 6000001U)
+#define IS_UART_BAUDRATE(__BAUDRATE__) ((__BAUDRATE__) <= 6000000U)
 
 /** @brief  Check UART assertion time.
   * @param  __TIME__ 5-bit value assertion time.
@@ -1740,4 +1740,3 @@ extern const uint16_t UARTPrescTable[12];
 #endif
 
 #endif /* STM32WLxx_HAL_UART_H */
-

@@ -78,6 +78,9 @@ extern "C" {
 /**
   * @brief  EXTI Line number.
   */
+#if defined(EXTI_IMR2_IM43)
+#define LL_EXTI_LINE_NB                     44U
+#else
 #if defined(EXTI_IMR2_EM37)
 #define LL_EXTI_LINE_NB                     39U
 #elif defined(EXTI_IMR2_EM36)
@@ -85,6 +88,7 @@ extern "C" {
 #else
 #define LL_EXTI_LINE_NB                     36U
 #endif /* defined(EXTI_IMR2_EM37) */
+#endif /* defined(EXTI_IMR2_IM43) */
 /**
   * @}
   */
@@ -162,6 +166,18 @@ extern "C" {
 #if defined(EXTI_IMR2_IM39)
 #define LL_EXTI_LINE_39               EXTI_IMR2_IM39          /*!< Extended line 39 */
 #endif /* EXTI_IMR2_IM39 */
+#if defined(EXTI_IMR2_IM41)
+#define LL_EXTI_LINE_41               EXTI_IMR2_IM41          /*!< Extended line 41 */
+#endif /* EXTI_IMR2_IM41 */
+#if defined(EXTI_IMR2_IM42)
+#define LL_EXTI_LINE_42               EXTI_IMR2_IM42          /*!< Extended line 42 */
+#endif /* EXTI_IMR2_IM42 */
+#if defined(EXTI_IMR2_IM43)
+#define LL_EXTI_LINE_43               EXTI_IMR2_IM43          /*!< Extended line 43 */
+#endif /* EXTI_IMR2_IM43 */
+#if defined(EXTI_IMR2_IM43)
+#define LL_EXTI_LINE_ALL_32_63        0x00000FFFU             /*!< All extended lines */
+#else
 #if defined(EXTI_IMR2_IM37)
 #define LL_EXTI_LINE_ALL_32_63        0x000000EFU             /*!< All extended lines */
 #elif defined(EXTI_IMR2_IM36)
@@ -169,6 +185,7 @@ extern "C" {
 #else
 #define LL_EXTI_LINE_ALL_32_63        0x0000000FU             /*!< All extended lines */
 #endif /* EXTI_IMR2_IM37 */
+#endif /* EXTI_IMR2_IM43 */
 /**
   * @}
   */
@@ -359,6 +376,18 @@ __STATIC_INLINE void LL_EXTI_EnableIT_0_31(uint32_t exti_line)
   * @if EXTI_IMR2_IM39
   *         @arg @ref LL_EXTI_LINE_39(*)
   * @endif
+  * @if EXTI_IMR2_IM40
+  *         @arg @ref LL_EXTI_LINE_40(*)
+  * @endif
+  * @if EXTI_IMR2_IM41
+  *         @arg @ref LL_EXTI_LINE_41(*)
+  * @endif
+  * @if EXTI_IMR2_IM42
+  *         @arg @ref LL_EXTI_LINE_42(*)
+  * @endif
+  * @if EXTI_IMR2_IM43
+  *         @arg @ref LL_EXTI_LINE_43(*)
+  * @endif
   *         @arg @ref LL_EXTI_LINE_ALL_32_63
   * @note The reset value for the direct or internal lines (see RM)
   *       is set to 1 in order to enable the interrupt by default.
@@ -439,6 +468,18 @@ __STATIC_INLINE void LL_EXTI_DisableIT_0_31(uint32_t exti_line)
   * @if EXTI_IMR2_IM39
   *         @arg @ref LL_EXTI_LINE_39(*)
   * @endif
+  * @if EXTI_IMR2_IM40
+  *         @arg @ref LL_EXTI_LINE_40(*)
+  * @endif
+  * @if EXTI_IMR2_IM41
+  *         @arg @ref LL_EXTI_LINE_41(*)
+  * @endif
+  * @if EXTI_IMR2_IM42
+  *         @arg @ref LL_EXTI_LINE_42(*)
+  * @endif
+  * @if EXTI_IMR2_IM43
+  *         @arg @ref LL_EXTI_LINE_43(*)
+  * @endif
   *         @arg @ref LL_EXTI_LINE_ALL_32_63
   * @note The reset value for the direct or internal lines (see RM)
   *       is set to 1 in order to enable the interrupt by default.
@@ -518,6 +559,18 @@ __STATIC_INLINE uint32_t LL_EXTI_IsEnabledIT_0_31(uint32_t exti_line)
   * @endif
   * @if EXTI_IMR2_IM39
   *         @arg @ref LL_EXTI_LINE_39(*)
+  * @endif
+  * @if EXTI_IMR2_IM40
+  *         @arg @ref LL_EXTI_LINE_40(*)
+  * @endif
+  * @if EXTI_IMR2_IM41
+  *         @arg @ref LL_EXTI_LINE_41(*)
+  * @endif
+  * @if EXTI_IMR2_IM42
+  *         @arg @ref LL_EXTI_LINE_42(*)
+  * @endif
+  * @if EXTI_IMR2_IM43
+  *         @arg @ref LL_EXTI_LINE_43(*)
   * @endif
   * @note The reset value for the direct or internal lines (see RM)
   *       is set to 1 in order to enable the interrupt by default.
@@ -604,6 +657,18 @@ __STATIC_INLINE void LL_EXTI_EnableEvent_0_31(uint32_t exti_line)
   * @if EXTI_IMR2_IM39
   *         @arg @ref LL_EXTI_LINE_39(*)
   * @endif
+  * @if EXTI_IMR2_IM40
+  *         @arg @ref LL_EXTI_LINE_40(*)
+  * @endif
+  * @if EXTI_IMR2_IM41
+  *         @arg @ref LL_EXTI_LINE_41(*)
+  * @endif
+  * @if EXTI_IMR2_IM42
+  *         @arg @ref LL_EXTI_LINE_42(*)
+  * @endif
+  * @if EXTI_IMR2_IM43
+  *         @arg @ref LL_EXTI_LINE_43(*)
+  * @endif
   *         @arg @ref LL_EXTI_LINE_ALL_32_63
   * @note   (*)Please check each device line mapping for EXTI Line availability
   */
@@ -678,6 +743,18 @@ __STATIC_INLINE void LL_EXTI_DisableEvent_0_31(uint32_t exti_line)
   * @if EXTI_IMR2_IM39
   *         @arg @ref LL_EXTI_LINE_39(*)
   * @endif
+  * @if EXTI_IMR2_IM40
+  *         @arg @ref LL_EXTI_LINE_40(*)
+  * @endif
+  * @if EXTI_IMR2_IM41
+  *         @arg @ref LL_EXTI_LINE_41(*)
+  * @endif
+  * @if EXTI_IMR2_IM42
+  *         @arg @ref LL_EXTI_LINE_42(*)
+  * @endif
+  * @if EXTI_IMR2_IM43
+  *         @arg @ref LL_EXTI_LINE_43(*)
+  * @endif
   *         @arg @ref LL_EXTI_LINE_ALL_32_63
   * @note   (*)Please check each device line mapping for EXTI Line availability
   */
@@ -751,6 +828,18 @@ __STATIC_INLINE uint32_t LL_EXTI_IsEnabledEvent_0_31(uint32_t exti_line)
   * @endif
   * @if EXTI_IMR2_IM39
   *         @arg @ref LL_EXTI_LINE_39(*)
+  * @endif
+  * @if EXTI_IMR2_IM40
+  *         @arg @ref LL_EXTI_LINE_40(*)
+  * @endif
+  * @if EXTI_IMR2_IM41
+  *         @arg @ref LL_EXTI_LINE_41(*)
+  * @endif
+  * @if EXTI_IMR2_IM42
+  *         @arg @ref LL_EXTI_LINE_42(*)
+  * @endif
+  * @if EXTI_IMR2_IM43
+  *         @arg @ref LL_EXTI_LINE_43(*)
   * @endif
   * @note   (*)Please check each device line mapping for EXTI Line availability
   * @retval State of bit (1 or 0).
@@ -1560,6 +1649,9 @@ __STATIC_INLINE void LL_EXTI_ClearFallingFlag_32_63(uint32_t exti_line)
   *         @arg @ref LL_EXTI_GPIO_PORTG(*)
   * @endif
   *         @arg @ref LL_EXTI_GPIO_PORTH
+  * @if GPIOI
+  *         @arg @ref LL_EXTI_GPIO_PORTI(*)
+  * @endif
   * @param line This parameter can be one of the following values:
   *         @arg @ref LL_EXTI_GPIO_LINE0
   *         @arg @ref LL_EXTI_GPIO_LINE1
@@ -1635,6 +1727,9 @@ __STATIC_INLINE void LL_EXTI_SetEXTISource(uint32_t port, uint32_t line)
   *         @arg @ref LL_EXTI_GPIO_PORTG(*)
   * @endif
   *         @arg @ref LL_EXTI_GPIO_PORTH
+  * @if GPIOI
+  *         @arg @ref LL_EXTI_GPIO_PORTI(*)
+  * @endif
   */
 __STATIC_INLINE uint32_t LL_EXTI_GetEXTISource(uint32_t line)
 {
@@ -1718,6 +1813,18 @@ __STATIC_INLINE void LL_EXTI_SetPrivAttr_0_31(uint32_t exti_line, uint32_t priv_
   * @if EXTI_IMR2_IM39
   *         @arg @ref LL_EXTI_LINE_39(*)
   * @endif
+  * @if EXTI_IMR2_IM40
+  *         @arg @ref LL_EXTI_LINE_40(*)
+  * @endif
+  * @if EXTI_IMR2_IM41
+  *         @arg @ref LL_EXTI_LINE_41(*)
+  * @endif
+  * @if EXTI_IMR2_IM42
+  *         @arg @ref LL_EXTI_LINE_42(*)
+  * @endif
+  * @if EXTI_IMR2_IM43
+  *         @arg @ref LL_EXTI_LINE_43(*)
+  * @endif
   *         @arg @ref LL_EXTI_LINE_ALL_32_63
   * @param priv_attr This parameter can be one of the following values:
   *        @arg @ref LL_EXTI_ATTR_PRIV
@@ -1796,6 +1903,18 @@ __STATIC_INLINE uint32_t LL_EXTI_GetPrivAttr_0_31(uint32_t exti_line)
   * @endif
   * @if EXTI_IMR2_IM39
   *         @arg @ref LL_EXTI_LINE_39(*)
+  * @endif
+  * @if EXTI_IMR2_IM40
+  *         @arg @ref LL_EXTI_LINE_40(*)
+  * @endif
+  * @if EXTI_IMR2_IM41
+  *         @arg @ref LL_EXTI_LINE_41(*)
+  * @endif
+  * @if EXTI_IMR2_IM42
+  *         @arg @ref LL_EXTI_LINE_42(*)
+  * @endif
+  * @if EXTI_IMR2_IM43
+  *         @arg @ref LL_EXTI_LINE_43(*)
   * @endif
   * @note (*)Please check each device line mapping for EXTI Line availability.
   * @retval Returned Value can be one of the following values:

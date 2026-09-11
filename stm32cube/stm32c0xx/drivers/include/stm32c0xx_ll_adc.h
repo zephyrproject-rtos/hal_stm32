@@ -268,7 +268,7 @@ extern "C" {
 
 /* ADC internal channels related definitions */
 /* Internal voltage reference VrefInt */
-#define VREFINT_CAL_ADDR                   ((uint16_t*) (0x1FFF756AUL)) /* Internal voltage reference, address of
+#define VREFINT_CAL_ADDR                   ((const uint16_t*) (0x1FFF756AUL)) /* Internal voltage reference, address of
                                            parameter VREFINT_CAL: VrefInt ADC raw data acquired at temperature 30 DegC
                                            (tolerance: +-5 DegC), Vref+ = 3.0 V (tolerance: +-10 mV). */
 #define VREFINT_CAL_VREF                   ( 3000UL)                    /* Analog voltage reference (Vref+)
@@ -282,7 +282,7 @@ extern "C" {
          by TEMPSENSOR_CAL1_ADDR
          (with taking into account conversion from digital value resolution 12 bit, analog voltage reference ratio
          between calibration and application environments) */
-#define TEMPSENSOR_CAL1_ADDR               ((uint16_t*) (0x1FFF7568UL)) /* Internal temperature sensor, address of
+#define TEMPSENSOR_CAL1_ADDR               ((const uint16_t*) (0x1FFF7568UL)) /* Internal temperature sensor, address of
                                            parameter TS_CAL1: On STM32C0, temperature sensor ADC raw data acquired at
                                            temperature  30 DegC (tolerance: +-5 DegC), Vref+ = 3.0 V
                                            (tolerance: +-10 mV). */
@@ -790,6 +790,11 @@ and auto power-off combined. See description with function @ref LL_ADC_SetLowPow
                                           | ADC_REG_TRIG_EXT_EDGE_DEFAULT) /*!< ADC group regular conversion trigger
                                          from external peripheral: TIM3 TRGO.
                                          Trigger edge set to rising edge (default setting). */
+#if defined(TIM15)
+#define LL_ADC_REG_TRIG_EXT_TIM15_TRGO   (ADC_CFGR1_EXTSEL_2 | ADC_REG_TRIG_EXT_EDGE_DEFAULT)   /*!< ADC group regular
+                                          conversion trigger from external peripheral: TIM15 TRGO.
+                                          Trigger edge set to rising edge (default setting). */
+#endif /* TIM15 */
 #define LL_ADC_REG_TRIG_EXT_EXTI_LINE11  (ADC_CFGR1_EXTSEL_2 | ADC_CFGR1_EXTSEL_1 \
                                           | ADC_CFGR1_EXTSEL_0 | ADC_REG_TRIG_EXT_EDGE_DEFAULT) /*!< ADC group regular
                                          conversion trigger from external peripheral: external interrupt line 11.
@@ -1290,33 +1295,33 @@ and auto power-off combined. See description with function @ref LL_ADC_SetLowPow
   *         number is returned, either defined with number
   *         or with bitfield (only one bit must be set).
   * @param  __CHANNEL__ This parameter can be one of the following values:
-  *         @arg @ref ADC_CHANNEL_0
-  *         @arg @ref ADC_CHANNEL_1
-  *         @arg @ref ADC_CHANNEL_2
-  *         @arg @ref ADC_CHANNEL_3
-  *         @arg @ref ADC_CHANNEL_4
-  *         @arg @ref ADC_CHANNEL_5
-  *         @arg @ref ADC_CHANNEL_6
-  *         @arg @ref ADC_CHANNEL_7
-  *         @arg @ref ADC_CHANNEL_8           (1)
-  *         @arg @ref ADC_CHANNEL_9           (1)
-  *         @arg @ref ADC_CHANNEL_10
-  *         @arg @ref ADC_CHANNEL_11
-  *         @arg @ref ADC_CHANNEL_12
-  *         @arg @ref ADC_CHANNEL_13
-  *         @arg @ref ADC_CHANNEL_14
-  *         @arg @ref ADC_CHANNEL_15          (1)
-  *         @arg @ref ADC_CHANNEL_16          (1)
-  *         @arg @ref ADC_CHANNEL_17          (3)
-  *         @arg @ref ADC_CHANNEL_18          (3)
-  *         @arg @ref ADC_CHANNEL_19          (3)
-  *         @arg @ref ADC_CHANNEL_20          (3)
-  *         @arg @ref ADC_CHANNEL_21          (3)
-  *         @arg @ref ADC_CHANNEL_22          (3)
-  *         @arg @ref ADC_CHANNEL_VREFINT     (2)
-  *         @arg @ref ADC_CHANNEL_TEMPSENSOR  (2)
-  *         @arg @ref ADC_CHANNEL_VDDA        (2)
-  *         @arg @ref ADC_CHANNEL_VSSA        (2)
+  *         @arg @ref LL_ADC_CHANNEL_0
+  *         @arg @ref LL_ADC_CHANNEL_1
+  *         @arg @ref LL_ADC_CHANNEL_2
+  *         @arg @ref LL_ADC_CHANNEL_3
+  *         @arg @ref LL_ADC_CHANNEL_4
+  *         @arg @ref LL_ADC_CHANNEL_5
+  *         @arg @ref LL_ADC_CHANNEL_6
+  *         @arg @ref LL_ADC_CHANNEL_7
+  *         @arg @ref LL_ADC_CHANNEL_8           (1)
+  *         @arg @ref LL_ADC_CHANNEL_9           (1)
+  *         @arg @ref LL_ADC_CHANNEL_10
+  *         @arg @ref LL_ADC_CHANNEL_11
+  *         @arg @ref LL_ADC_CHANNEL_12
+  *         @arg @ref LL_ADC_CHANNEL_13
+  *         @arg @ref LL_ADC_CHANNEL_14
+  *         @arg @ref LL_ADC_CHANNEL_15          (1)
+  *         @arg @ref LL_ADC_CHANNEL_16          (1)
+  *         @arg @ref LL_ADC_CHANNEL_17          (3)
+  *         @arg @ref LL_ADC_CHANNEL_18          (3)
+  *         @arg @ref LL_ADC_CHANNEL_19          (3)
+  *         @arg @ref LL_ADC_CHANNEL_20          (3)
+  *         @arg @ref LL_ADC_CHANNEL_21          (3)
+  *         @arg @ref LL_ADC_CHANNEL_22          (3)
+  *         @arg @ref LL_ADC_CHANNEL_VREFINT     (2)
+  *         @arg @ref LL_ADC_CHANNEL_TEMPSENSOR  (2)
+  *         @arg @ref LL_ADC_CHANNEL_VDDA        (2)
+  *         @arg @ref LL_ADC_CHANNEL_VSSA        (2)
   *
   *         (1) On STM32C0, parameter can be set in ADC group sequencer
   *             only if sequencer is set in mode "not fully configurable",
@@ -1324,7 +1329,7 @@ and auto power-off combined. See description with function @ref LL_ADC_SetLowPow
   *         (2) For ADC channel read back from ADC register,
   *             comparison with internal channel parameter to be done
   *             using helper macro @ref __LL_ADC_CHANNEL_INTERNAL_TO_EXTERNAL().
-  *         (3) ADC channels available on STM32C031xx device only.
+  *         (3) ADC channels not available on STM32C011xx device.
   * @retval Value between Min_Data=0 and Max_Data=18
   */
 #define __LL_ADC_CHANNEL_TO_DECIMAL_NB(__CHANNEL__)                                                         \
@@ -1366,33 +1371,33 @@ and auto power-off combined. See description with function @ref LL_ADC_SetLowPow
   *           will return a data equivalent to "LL_ADC_CHANNEL_4".
   * @param  __DECIMAL_NB__ Value between Min_Data=0 and Max_Data=18
   * @retval Returned value can be one of the following values:
-  *         @arg @ref ADC_CHANNEL_0
-  *         @arg @ref ADC_CHANNEL_1
-  *         @arg @ref ADC_CHANNEL_2
-  *         @arg @ref ADC_CHANNEL_3
-  *         @arg @ref ADC_CHANNEL_4
-  *         @arg @ref ADC_CHANNEL_5
-  *         @arg @ref ADC_CHANNEL_6
-  *         @arg @ref ADC_CHANNEL_7
-  *         @arg @ref ADC_CHANNEL_8           (1)
-  *         @arg @ref ADC_CHANNEL_9           (1)
-  *         @arg @ref ADC_CHANNEL_10
-  *         @arg @ref ADC_CHANNEL_11
-  *         @arg @ref ADC_CHANNEL_12
-  *         @arg @ref ADC_CHANNEL_13
-  *         @arg @ref ADC_CHANNEL_14
-  *         @arg @ref ADC_CHANNEL_15          (1)
-  *         @arg @ref ADC_CHANNEL_16          (1)
-  *         @arg @ref ADC_CHANNEL_17          (3)
-  *         @arg @ref ADC_CHANNEL_18          (3)
-  *         @arg @ref ADC_CHANNEL_19          (3)
-  *         @arg @ref ADC_CHANNEL_20          (3)
-  *         @arg @ref ADC_CHANNEL_21          (3)
-  *         @arg @ref ADC_CHANNEL_22          (3)
-  *         @arg @ref ADC_CHANNEL_VREFINT     (2)
-  *         @arg @ref ADC_CHANNEL_TEMPSENSOR  (2)
-  *         @arg @ref ADC_CHANNEL_VDDA        (2)
-  *         @arg @ref ADC_CHANNEL_VSSA        (2)
+  *         @arg @ref LL_ADC_CHANNEL_0
+  *         @arg @ref LL_ADC_CHANNEL_1
+  *         @arg @ref LL_ADC_CHANNEL_2
+  *         @arg @ref LL_ADC_CHANNEL_3
+  *         @arg @ref LL_ADC_CHANNEL_4
+  *         @arg @ref LL_ADC_CHANNEL_5
+  *         @arg @ref LL_ADC_CHANNEL_6
+  *         @arg @ref LL_ADC_CHANNEL_7
+  *         @arg @ref LL_ADC_CHANNEL_8           (1)
+  *         @arg @ref LL_ADC_CHANNEL_9           (1)
+  *         @arg @ref LL_ADC_CHANNEL_10
+  *         @arg @ref LL_ADC_CHANNEL_11
+  *         @arg @ref LL_ADC_CHANNEL_12
+  *         @arg @ref LL_ADC_CHANNEL_13
+  *         @arg @ref LL_ADC_CHANNEL_14
+  *         @arg @ref LL_ADC_CHANNEL_15          (1)
+  *         @arg @ref LL_ADC_CHANNEL_16          (1)
+  *         @arg @ref LL_ADC_CHANNEL_17          (3)
+  *         @arg @ref LL_ADC_CHANNEL_18          (3)
+  *         @arg @ref LL_ADC_CHANNEL_19          (3)
+  *         @arg @ref LL_ADC_CHANNEL_20          (3)
+  *         @arg @ref LL_ADC_CHANNEL_21          (3)
+  *         @arg @ref LL_ADC_CHANNEL_22          (3)
+  *         @arg @ref LL_ADC_CHANNEL_VREFINT     (2)
+  *         @arg @ref LL_ADC_CHANNEL_TEMPSENSOR  (2)
+  *         @arg @ref LL_ADC_CHANNEL_VDDA        (2)
+  *         @arg @ref LL_ADC_CHANNEL_VSSA        (2)
   *
   *         (1) On STM32C0, parameter can be set in ADC group sequencer
   *             only if sequencer is set in mode "not fully configurable",
@@ -1400,7 +1405,7 @@ and auto power-off combined. See description with function @ref LL_ADC_SetLowPow
   *         (2) For ADC channel read back from ADC register,
   *             comparison with internal channel parameter to be done
   *             using helper macro @ref __LL_ADC_CHANNEL_INTERNAL_TO_EXTERNAL().
-  *         (3) ADC channels available on STM32C031xx device only.
+  *         (3) ADC channels not available on STM32C011xx device.
   */
 #define __LL_ADC_DECIMAL_NB_TO_CHANNEL(__DECIMAL_NB__)                         \
   (((__DECIMAL_NB__) << ADC_CHANNEL_ID_NUMBER_BITOFFSET_POS) |                 \
@@ -1424,33 +1429,33 @@ and auto power-off combined. See description with function @ref LL_ADC_SetLowPow
   *         number in ADC registers. The differentiation is made only with
   *         parameters definitions of driver.
   * @param  __CHANNEL__ This parameter can be one of the following values:
-  *         @arg @ref ADC_CHANNEL_0
-  *         @arg @ref ADC_CHANNEL_1
-  *         @arg @ref ADC_CHANNEL_2
-  *         @arg @ref ADC_CHANNEL_3
-  *         @arg @ref ADC_CHANNEL_4
-  *         @arg @ref ADC_CHANNEL_5
-  *         @arg @ref ADC_CHANNEL_6
-  *         @arg @ref ADC_CHANNEL_7
-  *         @arg @ref ADC_CHANNEL_8           (1)
-  *         @arg @ref ADC_CHANNEL_9           (1)
-  *         @arg @ref ADC_CHANNEL_10
-  *         @arg @ref ADC_CHANNEL_11
-  *         @arg @ref ADC_CHANNEL_12
-  *         @arg @ref ADC_CHANNEL_13
-  *         @arg @ref ADC_CHANNEL_14
-  *         @arg @ref ADC_CHANNEL_15          (1)
-  *         @arg @ref ADC_CHANNEL_16          (1)
-  *         @arg @ref ADC_CHANNEL_17          (3)
-  *         @arg @ref ADC_CHANNEL_18          (3)
-  *         @arg @ref ADC_CHANNEL_19          (3)
-  *         @arg @ref ADC_CHANNEL_20          (3)
-  *         @arg @ref ADC_CHANNEL_21          (3)
-  *         @arg @ref ADC_CHANNEL_22          (3)
-  *         @arg @ref ADC_CHANNEL_VREFINT     (2)
-  *         @arg @ref ADC_CHANNEL_TEMPSENSOR  (2)
-  *         @arg @ref ADC_CHANNEL_VDDA        (2)
-  *         @arg @ref ADC_CHANNEL_VSSA        (2)
+  *         @arg @ref LL_ADC_CHANNEL_0
+  *         @arg @ref LL_ADC_CHANNEL_1
+  *         @arg @ref LL_ADC_CHANNEL_2
+  *         @arg @ref LL_ADC_CHANNEL_3
+  *         @arg @ref LL_ADC_CHANNEL_4
+  *         @arg @ref LL_ADC_CHANNEL_5
+  *         @arg @ref LL_ADC_CHANNEL_6
+  *         @arg @ref LL_ADC_CHANNEL_7
+  *         @arg @ref LL_ADC_CHANNEL_8           (1)
+  *         @arg @ref LL_ADC_CHANNEL_9           (1)
+  *         @arg @ref LL_ADC_CHANNEL_10
+  *         @arg @ref LL_ADC_CHANNEL_11
+  *         @arg @ref LL_ADC_CHANNEL_12
+  *         @arg @ref LL_ADC_CHANNEL_13
+  *         @arg @ref LL_ADC_CHANNEL_14
+  *         @arg @ref LL_ADC_CHANNEL_15          (1)
+  *         @arg @ref LL_ADC_CHANNEL_16          (1)
+  *         @arg @ref LL_ADC_CHANNEL_17          (3)
+  *         @arg @ref LL_ADC_CHANNEL_18          (3)
+  *         @arg @ref LL_ADC_CHANNEL_19          (3)
+  *         @arg @ref LL_ADC_CHANNEL_20          (3)
+  *         @arg @ref LL_ADC_CHANNEL_21          (3)
+  *         @arg @ref LL_ADC_CHANNEL_22          (3)
+  *         @arg @ref LL_ADC_CHANNEL_VREFINT     (2)
+  *         @arg @ref LL_ADC_CHANNEL_TEMPSENSOR  (2)
+  *         @arg @ref LL_ADC_CHANNEL_VDDA        (2)
+  *         @arg @ref LL_ADC_CHANNEL_VSSA        (2)
   *
   *         (1) On STM32C0, parameter can be set in ADC group sequencer
   *             only if sequencer is set in mode "not fully configurable",
@@ -1458,7 +1463,7 @@ and auto power-off combined. See description with function @ref LL_ADC_SetLowPow
   *         (2) For ADC channel read back from ADC register,
   *             comparison with internal channel parameter to be done
   *             using helper macro @ref __LL_ADC_CHANNEL_INTERNAL_TO_EXTERNAL().
-  *         (3) ADC channels available on STM32C031xx device only.
+  *         (3) ADC channels not available on STM32C011xx device.
   * @retval Value "0" if the channel corresponds to a parameter definition of a ADC external channel
   *         (channel connected to a GPIO pin).
   *         Value "1" if the channel corresponds to a parameter definition of a ADC internal channel.
@@ -1480,33 +1485,33 @@ and auto power-off combined. See description with function @ref LL_ADC_SetLowPow
   *         or a value from functions where a channel number is returned
   *         from ADC registers.
   * @param  __CHANNEL__ This parameter can be one of the following values:
-  *         @arg @ref ADC_CHANNEL_0
-  *         @arg @ref ADC_CHANNEL_1
-  *         @arg @ref ADC_CHANNEL_2
-  *         @arg @ref ADC_CHANNEL_3
-  *         @arg @ref ADC_CHANNEL_4
-  *         @arg @ref ADC_CHANNEL_5
-  *         @arg @ref ADC_CHANNEL_6
-  *         @arg @ref ADC_CHANNEL_7
-  *         @arg @ref ADC_CHANNEL_8           (1)
-  *         @arg @ref ADC_CHANNEL_9           (1)
-  *         @arg @ref ADC_CHANNEL_10
-  *         @arg @ref ADC_CHANNEL_11
-  *         @arg @ref ADC_CHANNEL_12
-  *         @arg @ref ADC_CHANNEL_13
-  *         @arg @ref ADC_CHANNEL_14
-  *         @arg @ref ADC_CHANNEL_15          (1)
-  *         @arg @ref ADC_CHANNEL_16          (1)
-  *         @arg @ref ADC_CHANNEL_17          (3)
-  *         @arg @ref ADC_CHANNEL_18          (3)
-  *         @arg @ref ADC_CHANNEL_19          (3)
-  *         @arg @ref ADC_CHANNEL_20          (3)
-  *         @arg @ref ADC_CHANNEL_21          (3)
-  *         @arg @ref ADC_CHANNEL_22          (3)
-  *         @arg @ref ADC_CHANNEL_VREFINT     (2)
-  *         @arg @ref ADC_CHANNEL_TEMPSENSOR  (2)
-  *         @arg @ref ADC_CHANNEL_VDDA        (2)
-  *         @arg @ref ADC_CHANNEL_VSSA        (2)
+  *         @arg @ref LL_ADC_CHANNEL_0
+  *         @arg @ref LL_ADC_CHANNEL_1
+  *         @arg @ref LL_ADC_CHANNEL_2
+  *         @arg @ref LL_ADC_CHANNEL_3
+  *         @arg @ref LL_ADC_CHANNEL_4
+  *         @arg @ref LL_ADC_CHANNEL_5
+  *         @arg @ref LL_ADC_CHANNEL_6
+  *         @arg @ref LL_ADC_CHANNEL_7
+  *         @arg @ref LL_ADC_CHANNEL_8           (1)
+  *         @arg @ref LL_ADC_CHANNEL_9           (1)
+  *         @arg @ref LL_ADC_CHANNEL_10
+  *         @arg @ref LL_ADC_CHANNEL_11
+  *         @arg @ref LL_ADC_CHANNEL_12
+  *         @arg @ref LL_ADC_CHANNEL_13
+  *         @arg @ref LL_ADC_CHANNEL_14
+  *         @arg @ref LL_ADC_CHANNEL_15          (1)
+  *         @arg @ref LL_ADC_CHANNEL_16          (1)
+  *         @arg @ref LL_ADC_CHANNEL_17          (3)
+  *         @arg @ref LL_ADC_CHANNEL_18          (3)
+  *         @arg @ref LL_ADC_CHANNEL_19          (3)
+  *         @arg @ref LL_ADC_CHANNEL_20          (3)
+  *         @arg @ref LL_ADC_CHANNEL_21          (3)
+  *         @arg @ref LL_ADC_CHANNEL_22          (3)
+  *         @arg @ref LL_ADC_CHANNEL_VREFINT     (2)
+  *         @arg @ref LL_ADC_CHANNEL_TEMPSENSOR  (2)
+  *         @arg @ref LL_ADC_CHANNEL_VDDA        (2)
+  *         @arg @ref LL_ADC_CHANNEL_VSSA        (2)
   *
   *         (1) On STM32C0, parameter can be set in ADC group sequencer
   *             only if sequencer is set in mode "not fully configurable",
@@ -1514,7 +1519,7 @@ and auto power-off combined. See description with function @ref LL_ADC_SetLowPow
   *         (2) For ADC channel read back from ADC register,
   *             comparison with internal channel parameter to be done
   *             using helper macro @ref __LL_ADC_CHANNEL_INTERNAL_TO_EXTERNAL().
-  *         (3) ADC channels available on STM32C031xx device only.
+  *         (3) ADC channels not available on STM32C011xx device.
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_ADC_CHANNEL_0
   *         @arg @ref LL_ADC_CHANNEL_1
@@ -1581,33 +1586,33 @@ and auto power-off combined. See description with function @ref LL_ADC_SetLowPow
   *             ADC1, LL_ADC_AWD1,
   *             __LL_ADC_ANALOGWD_CHANNEL_GROUP(LL_ADC_CHANNEL4, LL_ADC_GROUP_REGULAR))
   * @param  __CHANNEL__ This parameter can be one of the following values:
-  *         @arg @ref ADC_CHANNEL_0
-  *         @arg @ref ADC_CHANNEL_1
-  *         @arg @ref ADC_CHANNEL_2
-  *         @arg @ref ADC_CHANNEL_3
-  *         @arg @ref ADC_CHANNEL_4
-  *         @arg @ref ADC_CHANNEL_5
-  *         @arg @ref ADC_CHANNEL_6
-  *         @arg @ref ADC_CHANNEL_7
-  *         @arg @ref ADC_CHANNEL_8           (1)
-  *         @arg @ref ADC_CHANNEL_9           (1)
-  *         @arg @ref ADC_CHANNEL_10
-  *         @arg @ref ADC_CHANNEL_11
-  *         @arg @ref ADC_CHANNEL_12
-  *         @arg @ref ADC_CHANNEL_13
-  *         @arg @ref ADC_CHANNEL_14
-  *         @arg @ref ADC_CHANNEL_15          (1)
-  *         @arg @ref ADC_CHANNEL_16          (1)
-  *         @arg @ref ADC_CHANNEL_17          (3)
-  *         @arg @ref ADC_CHANNEL_18          (3)
-  *         @arg @ref ADC_CHANNEL_19          (3)
-  *         @arg @ref ADC_CHANNEL_20          (3)
-  *         @arg @ref ADC_CHANNEL_21          (3)
-  *         @arg @ref ADC_CHANNEL_22          (3)
-  *         @arg @ref ADC_CHANNEL_VREFINT     (2)
-  *         @arg @ref ADC_CHANNEL_TEMPSENSOR  (2)
-  *         @arg @ref ADC_CHANNEL_VDDA        (2)
-  *         @arg @ref ADC_CHANNEL_VSSA        (2)
+  *         @arg @ref LL_ADC_CHANNEL_0
+  *         @arg @ref LL_ADC_CHANNEL_1
+  *         @arg @ref LL_ADC_CHANNEL_2
+  *         @arg @ref LL_ADC_CHANNEL_3
+  *         @arg @ref LL_ADC_CHANNEL_4
+  *         @arg @ref LL_ADC_CHANNEL_5
+  *         @arg @ref LL_ADC_CHANNEL_6
+  *         @arg @ref LL_ADC_CHANNEL_7
+  *         @arg @ref LL_ADC_CHANNEL_8           (1)
+  *         @arg @ref LL_ADC_CHANNEL_9           (1)
+  *         @arg @ref LL_ADC_CHANNEL_10
+  *         @arg @ref LL_ADC_CHANNEL_11
+  *         @arg @ref LL_ADC_CHANNEL_12
+  *         @arg @ref LL_ADC_CHANNEL_13
+  *         @arg @ref LL_ADC_CHANNEL_14
+  *         @arg @ref LL_ADC_CHANNEL_15          (1)
+  *         @arg @ref LL_ADC_CHANNEL_16          (1)
+  *         @arg @ref LL_ADC_CHANNEL_17          (3)
+  *         @arg @ref LL_ADC_CHANNEL_18          (3)
+  *         @arg @ref LL_ADC_CHANNEL_19          (3)
+  *         @arg @ref LL_ADC_CHANNEL_20          (3)
+  *         @arg @ref LL_ADC_CHANNEL_21          (3)
+  *         @arg @ref LL_ADC_CHANNEL_22          (3)
+  *         @arg @ref LL_ADC_CHANNEL_VREFINT     (2)
+  *         @arg @ref LL_ADC_CHANNEL_TEMPSENSOR  (2)
+  *         @arg @ref LL_ADC_CHANNEL_VDDA        (2)
+  *         @arg @ref LL_ADC_CHANNEL_VSSA        (2)
   *
   *         (1) On STM32C0, parameter can be set in ADC group sequencer
   *             only if sequencer is set in mode "not fully configurable",
@@ -1615,7 +1620,7 @@ and auto power-off combined. See description with function @ref LL_ADC_SetLowPow
   *         (2) For ADC channel read back from ADC register,
   *             comparison with internal channel parameter to be done
   *             using helper macro @ref __LL_ADC_CHANNEL_INTERNAL_TO_EXTERNAL().
-  *         (3) ADC channels available on STM32C031xx device only.
+  *         (3) ADC channels not available on STM32C011xx device.
   * @param  __GROUP__ This parameter can be one of the following values:
   *         @arg @ref LL_ADC_GROUP_REGULAR
   * @retval Returned value can be one of the following values:
@@ -1648,7 +1653,7 @@ and auto power-off combined. See description with function @ref LL_ADC_SetLowPow
   *         @arg @ref LL_ADC_AWD_CH_TEMPSENSOR_REG
   *         @arg @ref LL_ADC_AWD_CH_VDDA_REG
   *         @arg @ref LL_ADC_AWD_CH_VSSA_REG
-  *         (1) On STM32C0, parameter not available on all devices: only on STM32C031xx.
+  *         (1) On STM32C0, parameter not available on STM32C011xx.
   */
 #define __LL_ADC_ANALOGWD_CHANNEL_GROUP(__CHANNEL__, __GROUP__)                                           \
   (((__CHANNEL__) & ADC_CHANNEL_ID_MASK) | ADC_CFGR1_AWD1EN | ADC_CFGR1_AWD1SGL)
@@ -3048,33 +3053,33 @@ __STATIC_INLINE uint32_t LL_ADC_REG_GetSequencerDiscont(const ADC_TypeDef *ADCx)
   *         @arg @ref LL_ADC_REG_RANK_7
   *         @arg @ref LL_ADC_REG_RANK_8
   * @param  Channel This parameter can be one of the following values:
-  *         @arg @ref ADC_CHANNEL_0
-  *         @arg @ref ADC_CHANNEL_1
-  *         @arg @ref ADC_CHANNEL_2
-  *         @arg @ref ADC_CHANNEL_3
-  *         @arg @ref ADC_CHANNEL_4
-  *         @arg @ref ADC_CHANNEL_5
-  *         @arg @ref ADC_CHANNEL_6
-  *         @arg @ref ADC_CHANNEL_7
-  *         @arg @ref ADC_CHANNEL_8           (1)
-  *         @arg @ref ADC_CHANNEL_9           (1)
-  *         @arg @ref ADC_CHANNEL_10
-  *         @arg @ref ADC_CHANNEL_11
-  *         @arg @ref ADC_CHANNEL_12
-  *         @arg @ref ADC_CHANNEL_13
-  *         @arg @ref ADC_CHANNEL_14
-  *         @arg @ref ADC_CHANNEL_15          (1)
-  *         @arg @ref ADC_CHANNEL_16          (1)
-  *         @arg @ref ADC_CHANNEL_17          (3)
-  *         @arg @ref ADC_CHANNEL_18          (3)
-  *         @arg @ref ADC_CHANNEL_19          (3)
-  *         @arg @ref ADC_CHANNEL_20          (3)
-  *         @arg @ref ADC_CHANNEL_21          (3)
-  *         @arg @ref ADC_CHANNEL_22          (3)
-  *         @arg @ref ADC_CHANNEL_VREFINT     (2)
-  *         @arg @ref ADC_CHANNEL_TEMPSENSOR  (2)
-  *         @arg @ref ADC_CHANNEL_VDDA        (2)
-  *         @arg @ref ADC_CHANNEL_VSSA        (2)
+  *         @arg @ref LL_ADC_CHANNEL_0
+  *         @arg @ref LL_ADC_CHANNEL_1
+  *         @arg @ref LL_ADC_CHANNEL_2
+  *         @arg @ref LL_ADC_CHANNEL_3
+  *         @arg @ref LL_ADC_CHANNEL_4
+  *         @arg @ref LL_ADC_CHANNEL_5
+  *         @arg @ref LL_ADC_CHANNEL_6
+  *         @arg @ref LL_ADC_CHANNEL_7
+  *         @arg @ref LL_ADC_CHANNEL_8           (1)
+  *         @arg @ref LL_ADC_CHANNEL_9           (1)
+  *         @arg @ref LL_ADC_CHANNEL_10
+  *         @arg @ref LL_ADC_CHANNEL_11
+  *         @arg @ref LL_ADC_CHANNEL_12
+  *         @arg @ref LL_ADC_CHANNEL_13
+  *         @arg @ref LL_ADC_CHANNEL_14
+  *         @arg @ref LL_ADC_CHANNEL_15          (1)
+  *         @arg @ref LL_ADC_CHANNEL_16          (1)
+  *         @arg @ref LL_ADC_CHANNEL_17          (3)
+  *         @arg @ref LL_ADC_CHANNEL_18          (3)
+  *         @arg @ref LL_ADC_CHANNEL_19          (3)
+  *         @arg @ref LL_ADC_CHANNEL_20          (3)
+  *         @arg @ref LL_ADC_CHANNEL_21          (3)
+  *         @arg @ref LL_ADC_CHANNEL_22          (3)
+  *         @arg @ref LL_ADC_CHANNEL_VREFINT     (2)
+  *         @arg @ref LL_ADC_CHANNEL_TEMPSENSOR  (2)
+  *         @arg @ref LL_ADC_CHANNEL_VDDA        (2)
+  *         @arg @ref LL_ADC_CHANNEL_VSSA        (2)
   *
   *         (1) On STM32C0, parameter can be set in ADC group sequencer
   *             only if sequencer is set in mode "not fully configurable",
@@ -3082,7 +3087,7 @@ __STATIC_INLINE uint32_t LL_ADC_REG_GetSequencerDiscont(const ADC_TypeDef *ADCx)
   *         (2) For ADC channel read back from ADC register,
   *             comparison with internal channel parameter to be done
   *             using helper macro @ref __LL_ADC_CHANNEL_INTERNAL_TO_EXTERNAL().
-  *         (3) ADC channels available on STM32C031xx device only.
+  *         (3) ADC channels not available on STM32C011xx device.
   * @retval None
   */
 __STATIC_INLINE void LL_ADC_REG_SetSequencerRanks(ADC_TypeDef *ADCx, uint32_t Rank, uint32_t Channel)
@@ -3136,33 +3141,33 @@ __STATIC_INLINE void LL_ADC_REG_SetSequencerRanks(ADC_TypeDef *ADCx, uint32_t Ra
   *         @arg @ref LL_ADC_REG_RANK_7
   *         @arg @ref LL_ADC_REG_RANK_8
   * @retval Returned value can be one of the following values:
-  *         @arg @ref ADC_CHANNEL_0
-  *         @arg @ref ADC_CHANNEL_1
-  *         @arg @ref ADC_CHANNEL_2
-  *         @arg @ref ADC_CHANNEL_3
-  *         @arg @ref ADC_CHANNEL_4
-  *         @arg @ref ADC_CHANNEL_5
-  *         @arg @ref ADC_CHANNEL_6
-  *         @arg @ref ADC_CHANNEL_7
-  *         @arg @ref ADC_CHANNEL_8           (1)
-  *         @arg @ref ADC_CHANNEL_9           (1)
-  *         @arg @ref ADC_CHANNEL_10
-  *         @arg @ref ADC_CHANNEL_11
-  *         @arg @ref ADC_CHANNEL_12
-  *         @arg @ref ADC_CHANNEL_13
-  *         @arg @ref ADC_CHANNEL_14
-  *         @arg @ref ADC_CHANNEL_15          (1)
-  *         @arg @ref ADC_CHANNEL_16          (1)
-  *         @arg @ref ADC_CHANNEL_17          (3)
-  *         @arg @ref ADC_CHANNEL_18          (3)
-  *         @arg @ref ADC_CHANNEL_19          (3)
-  *         @arg @ref ADC_CHANNEL_20          (3)
-  *         @arg @ref ADC_CHANNEL_21          (3)
-  *         @arg @ref ADC_CHANNEL_22          (3)
-  *         @arg @ref ADC_CHANNEL_VREFINT     (2)
-  *         @arg @ref ADC_CHANNEL_TEMPSENSOR  (2)
-  *         @arg @ref ADC_CHANNEL_VDDA        (2)
-  *         @arg @ref ADC_CHANNEL_VSSA        (2)
+  *         @arg @ref LL_ADC_CHANNEL_0
+  *         @arg @ref LL_ADC_CHANNEL_1
+  *         @arg @ref LL_ADC_CHANNEL_2
+  *         @arg @ref LL_ADC_CHANNEL_3
+  *         @arg @ref LL_ADC_CHANNEL_4
+  *         @arg @ref LL_ADC_CHANNEL_5
+  *         @arg @ref LL_ADC_CHANNEL_6
+  *         @arg @ref LL_ADC_CHANNEL_7
+  *         @arg @ref LL_ADC_CHANNEL_8           (1)
+  *         @arg @ref LL_ADC_CHANNEL_9           (1)
+  *         @arg @ref LL_ADC_CHANNEL_10
+  *         @arg @ref LL_ADC_CHANNEL_11
+  *         @arg @ref LL_ADC_CHANNEL_12
+  *         @arg @ref LL_ADC_CHANNEL_13
+  *         @arg @ref LL_ADC_CHANNEL_14
+  *         @arg @ref LL_ADC_CHANNEL_15          (1)
+  *         @arg @ref LL_ADC_CHANNEL_16          (1)
+  *         @arg @ref LL_ADC_CHANNEL_17          (3)
+  *         @arg @ref LL_ADC_CHANNEL_18          (3)
+  *         @arg @ref LL_ADC_CHANNEL_19          (3)
+  *         @arg @ref LL_ADC_CHANNEL_20          (3)
+  *         @arg @ref LL_ADC_CHANNEL_21          (3)
+  *         @arg @ref LL_ADC_CHANNEL_22          (3)
+  *         @arg @ref LL_ADC_CHANNEL_VREFINT     (2)
+  *         @arg @ref LL_ADC_CHANNEL_TEMPSENSOR  (2)
+  *         @arg @ref LL_ADC_CHANNEL_VDDA        (2)
+  *         @arg @ref LL_ADC_CHANNEL_VSSA        (2)
   *
   *         (1) On STM32C0, parameter can be set in ADC group sequencer
   *             only if sequencer is set in mode "not fully configurable",
@@ -3170,7 +3175,7 @@ __STATIC_INLINE void LL_ADC_REG_SetSequencerRanks(ADC_TypeDef *ADCx, uint32_t Ra
   *         (2) For ADC channel read back from ADC register,
   *             comparison with internal channel parameter to be done
   *             using helper macro @ref __LL_ADC_CHANNEL_INTERNAL_TO_EXTERNAL().
-  *         (3) ADC channels available on STM32C031xx device only.
+  *         (3) ADC channels not available on STM32C011xx device.
   */
 __STATIC_INLINE uint32_t LL_ADC_REG_GetSequencerRanks(const ADC_TypeDef *ADCx, uint32_t Rank)
 {
@@ -3238,33 +3243,33 @@ __STATIC_INLINE uint32_t LL_ADC_REG_GetSequencerRanks(const ADC_TypeDef *ADCx, u
   *         CHSELR   CHSEL18        LL_ADC_REG_SetSequencerChannels
   * @param  ADCx ADC instance
   * @param  Channel This parameter can be a combination of the following values:
-  *         @arg @ref ADC_CHANNEL_0
-  *         @arg @ref ADC_CHANNEL_1
-  *         @arg @ref ADC_CHANNEL_2
-  *         @arg @ref ADC_CHANNEL_3
-  *         @arg @ref ADC_CHANNEL_4
-  *         @arg @ref ADC_CHANNEL_5
-  *         @arg @ref ADC_CHANNEL_6
-  *         @arg @ref ADC_CHANNEL_7
-  *         @arg @ref ADC_CHANNEL_8           (1)
-  *         @arg @ref ADC_CHANNEL_9           (1)
-  *         @arg @ref ADC_CHANNEL_10
-  *         @arg @ref ADC_CHANNEL_11
-  *         @arg @ref ADC_CHANNEL_12
-  *         @arg @ref ADC_CHANNEL_13
-  *         @arg @ref ADC_CHANNEL_14
-  *         @arg @ref ADC_CHANNEL_15          (1)
-  *         @arg @ref ADC_CHANNEL_16          (1)
-  *         @arg @ref ADC_CHANNEL_17          (3)
-  *         @arg @ref ADC_CHANNEL_18          (3)
-  *         @arg @ref ADC_CHANNEL_19          (3)
-  *         @arg @ref ADC_CHANNEL_20          (3)
-  *         @arg @ref ADC_CHANNEL_21          (3)
-  *         @arg @ref ADC_CHANNEL_22          (3)
-  *         @arg @ref ADC_CHANNEL_VREFINT     (2)
-  *         @arg @ref ADC_CHANNEL_TEMPSENSOR  (2)
-  *         @arg @ref ADC_CHANNEL_VDDA        (2)
-  *         @arg @ref ADC_CHANNEL_VSSA        (2)
+  *         @arg @ref LL_ADC_CHANNEL_0
+  *         @arg @ref LL_ADC_CHANNEL_1
+  *         @arg @ref LL_ADC_CHANNEL_2
+  *         @arg @ref LL_ADC_CHANNEL_3
+  *         @arg @ref LL_ADC_CHANNEL_4
+  *         @arg @ref LL_ADC_CHANNEL_5
+  *         @arg @ref LL_ADC_CHANNEL_6
+  *         @arg @ref LL_ADC_CHANNEL_7
+  *         @arg @ref LL_ADC_CHANNEL_8           (1)
+  *         @arg @ref LL_ADC_CHANNEL_9           (1)
+  *         @arg @ref LL_ADC_CHANNEL_10
+  *         @arg @ref LL_ADC_CHANNEL_11
+  *         @arg @ref LL_ADC_CHANNEL_12
+  *         @arg @ref LL_ADC_CHANNEL_13
+  *         @arg @ref LL_ADC_CHANNEL_14
+  *         @arg @ref LL_ADC_CHANNEL_15          (1)
+  *         @arg @ref LL_ADC_CHANNEL_16          (1)
+  *         @arg @ref LL_ADC_CHANNEL_17          (3)
+  *         @arg @ref LL_ADC_CHANNEL_18          (3)
+  *         @arg @ref LL_ADC_CHANNEL_19          (3)
+  *         @arg @ref LL_ADC_CHANNEL_20          (3)
+  *         @arg @ref LL_ADC_CHANNEL_21          (3)
+  *         @arg @ref LL_ADC_CHANNEL_22          (3)
+  *         @arg @ref LL_ADC_CHANNEL_VREFINT     (2)
+  *         @arg @ref LL_ADC_CHANNEL_TEMPSENSOR  (2)
+  *         @arg @ref LL_ADC_CHANNEL_VDDA        (2)
+  *         @arg @ref LL_ADC_CHANNEL_VSSA        (2)
   *
   *         (1) On STM32C0, parameter can be set in ADC group sequencer
   *             only if sequencer is set in mode "not fully configurable",
@@ -3272,7 +3277,7 @@ __STATIC_INLINE uint32_t LL_ADC_REG_GetSequencerRanks(const ADC_TypeDef *ADCx, u
   *         (2) For ADC channel read back from ADC register,
   *             comparison with internal channel parameter to be done
   *             using helper macro @ref __LL_ADC_CHANNEL_INTERNAL_TO_EXTERNAL().
-  *         (3) ADC channels available on STM32C031xx device only.
+  *         (3) ADC channels not available on STM32C011xx device.
   * @retval None
   */
 __STATIC_INLINE void LL_ADC_REG_SetSequencerChannels(ADC_TypeDef *ADCx, uint32_t Channel)
@@ -3339,33 +3344,33 @@ __STATIC_INLINE void LL_ADC_REG_SetSequencerChannels(ADC_TypeDef *ADCx, uint32_t
   *         CHSELR   CHSEL18        LL_ADC_REG_SetSequencerChAdd
   * @param  ADCx ADC instance
   * @param  Channel This parameter can be a combination of the following values:
-  *         @arg @ref ADC_CHANNEL_0
-  *         @arg @ref ADC_CHANNEL_1
-  *         @arg @ref ADC_CHANNEL_2
-  *         @arg @ref ADC_CHANNEL_3
-  *         @arg @ref ADC_CHANNEL_4
-  *         @arg @ref ADC_CHANNEL_5
-  *         @arg @ref ADC_CHANNEL_6
-  *         @arg @ref ADC_CHANNEL_7
-  *         @arg @ref ADC_CHANNEL_8           (1)
-  *         @arg @ref ADC_CHANNEL_9           (1)
-  *         @arg @ref ADC_CHANNEL_10
-  *         @arg @ref ADC_CHANNEL_11
-  *         @arg @ref ADC_CHANNEL_12
-  *         @arg @ref ADC_CHANNEL_13
-  *         @arg @ref ADC_CHANNEL_14
-  *         @arg @ref ADC_CHANNEL_15          (1)
-  *         @arg @ref ADC_CHANNEL_16          (1)
-  *         @arg @ref ADC_CHANNEL_17          (3)
-  *         @arg @ref ADC_CHANNEL_18          (3)
-  *         @arg @ref ADC_CHANNEL_19          (3)
-  *         @arg @ref ADC_CHANNEL_20          (3)
-  *         @arg @ref ADC_CHANNEL_21          (3)
-  *         @arg @ref ADC_CHANNEL_22          (3)
-  *         @arg @ref ADC_CHANNEL_VREFINT     (2)
-  *         @arg @ref ADC_CHANNEL_TEMPSENSOR  (2)
-  *         @arg @ref ADC_CHANNEL_VDDA        (2)
-  *         @arg @ref ADC_CHANNEL_VSSA        (2)
+  *         @arg @ref LL_ADC_CHANNEL_0
+  *         @arg @ref LL_ADC_CHANNEL_1
+  *         @arg @ref LL_ADC_CHANNEL_2
+  *         @arg @ref LL_ADC_CHANNEL_3
+  *         @arg @ref LL_ADC_CHANNEL_4
+  *         @arg @ref LL_ADC_CHANNEL_5
+  *         @arg @ref LL_ADC_CHANNEL_6
+  *         @arg @ref LL_ADC_CHANNEL_7
+  *         @arg @ref LL_ADC_CHANNEL_8           (1)
+  *         @arg @ref LL_ADC_CHANNEL_9           (1)
+  *         @arg @ref LL_ADC_CHANNEL_10
+  *         @arg @ref LL_ADC_CHANNEL_11
+  *         @arg @ref LL_ADC_CHANNEL_12
+  *         @arg @ref LL_ADC_CHANNEL_13
+  *         @arg @ref LL_ADC_CHANNEL_14
+  *         @arg @ref LL_ADC_CHANNEL_15          (1)
+  *         @arg @ref LL_ADC_CHANNEL_16          (1)
+  *         @arg @ref LL_ADC_CHANNEL_17          (3)
+  *         @arg @ref LL_ADC_CHANNEL_18          (3)
+  *         @arg @ref LL_ADC_CHANNEL_19          (3)
+  *         @arg @ref LL_ADC_CHANNEL_20          (3)
+  *         @arg @ref LL_ADC_CHANNEL_21          (3)
+  *         @arg @ref LL_ADC_CHANNEL_22          (3)
+  *         @arg @ref LL_ADC_CHANNEL_VREFINT     (2)
+  *         @arg @ref LL_ADC_CHANNEL_TEMPSENSOR  (2)
+  *         @arg @ref LL_ADC_CHANNEL_VDDA        (2)
+  *         @arg @ref LL_ADC_CHANNEL_VSSA        (2)
   *
   *         (1) On STM32C0, parameter can be set in ADC group sequencer
   *             only if sequencer is set in mode "not fully configurable",
@@ -3373,7 +3378,7 @@ __STATIC_INLINE void LL_ADC_REG_SetSequencerChannels(ADC_TypeDef *ADCx, uint32_t
   *         (2) For ADC channel read back from ADC register,
   *             comparison with internal channel parameter to be done
   *             using helper macro @ref __LL_ADC_CHANNEL_INTERNAL_TO_EXTERNAL().
-  *         (3) ADC channels available on STM32C031xx device only.
+  *         (3) ADC channels not available on STM32C011xx device.
   * @retval None
   */
 __STATIC_INLINE void LL_ADC_REG_SetSequencerChAdd(ADC_TypeDef *ADCx, uint32_t Channel)
@@ -3440,33 +3445,33 @@ __STATIC_INLINE void LL_ADC_REG_SetSequencerChAdd(ADC_TypeDef *ADCx, uint32_t Ch
   *         CHSELR   CHSEL18        LL_ADC_REG_SetSequencerChRem
   * @param  ADCx ADC instance
   * @param  Channel This parameter can be a combination of the following values:
-  *         @arg @ref ADC_CHANNEL_0
-  *         @arg @ref ADC_CHANNEL_1
-  *         @arg @ref ADC_CHANNEL_2
-  *         @arg @ref ADC_CHANNEL_3
-  *         @arg @ref ADC_CHANNEL_4
-  *         @arg @ref ADC_CHANNEL_5
-  *         @arg @ref ADC_CHANNEL_6
-  *         @arg @ref ADC_CHANNEL_7
-  *         @arg @ref ADC_CHANNEL_8           (1)
-  *         @arg @ref ADC_CHANNEL_9           (1)
-  *         @arg @ref ADC_CHANNEL_10
-  *         @arg @ref ADC_CHANNEL_11
-  *         @arg @ref ADC_CHANNEL_12
-  *         @arg @ref ADC_CHANNEL_13
-  *         @arg @ref ADC_CHANNEL_14
-  *         @arg @ref ADC_CHANNEL_15          (1)
-  *         @arg @ref ADC_CHANNEL_16          (1)
-  *         @arg @ref ADC_CHANNEL_17          (3)
-  *         @arg @ref ADC_CHANNEL_18          (3)
-  *         @arg @ref ADC_CHANNEL_19          (3)
-  *         @arg @ref ADC_CHANNEL_20          (3)
-  *         @arg @ref ADC_CHANNEL_21          (3)
-  *         @arg @ref ADC_CHANNEL_22          (3)
-  *         @arg @ref ADC_CHANNEL_VREFINT     (2)
-  *         @arg @ref ADC_CHANNEL_TEMPSENSOR  (2)
-  *         @arg @ref ADC_CHANNEL_VDDA        (2)
-  *         @arg @ref ADC_CHANNEL_VSSA        (2)
+  *         @arg @ref LL_ADC_CHANNEL_0
+  *         @arg @ref LL_ADC_CHANNEL_1
+  *         @arg @ref LL_ADC_CHANNEL_2
+  *         @arg @ref LL_ADC_CHANNEL_3
+  *         @arg @ref LL_ADC_CHANNEL_4
+  *         @arg @ref LL_ADC_CHANNEL_5
+  *         @arg @ref LL_ADC_CHANNEL_6
+  *         @arg @ref LL_ADC_CHANNEL_7
+  *         @arg @ref LL_ADC_CHANNEL_8           (1)
+  *         @arg @ref LL_ADC_CHANNEL_9           (1)
+  *         @arg @ref LL_ADC_CHANNEL_10
+  *         @arg @ref LL_ADC_CHANNEL_11
+  *         @arg @ref LL_ADC_CHANNEL_12
+  *         @arg @ref LL_ADC_CHANNEL_13
+  *         @arg @ref LL_ADC_CHANNEL_14
+  *         @arg @ref LL_ADC_CHANNEL_15          (1)
+  *         @arg @ref LL_ADC_CHANNEL_16          (1)
+  *         @arg @ref LL_ADC_CHANNEL_17          (3)
+  *         @arg @ref LL_ADC_CHANNEL_18          (3)
+  *         @arg @ref LL_ADC_CHANNEL_19          (3)
+  *         @arg @ref LL_ADC_CHANNEL_20          (3)
+  *         @arg @ref LL_ADC_CHANNEL_21          (3)
+  *         @arg @ref LL_ADC_CHANNEL_22          (3)
+  *         @arg @ref LL_ADC_CHANNEL_VREFINT     (2)
+  *         @arg @ref LL_ADC_CHANNEL_TEMPSENSOR  (2)
+  *         @arg @ref LL_ADC_CHANNEL_VDDA        (2)
+  *         @arg @ref LL_ADC_CHANNEL_VSSA        (2)
   *
   *         (1) On STM32C0, parameter can be set in ADC group sequencer
   *             only if sequencer is set in mode "not fully configurable",
@@ -3474,7 +3479,7 @@ __STATIC_INLINE void LL_ADC_REG_SetSequencerChAdd(ADC_TypeDef *ADCx, uint32_t Ch
   *         (2) For ADC channel read back from ADC register,
   *             comparison with internal channel parameter to be done
   *             using helper macro @ref __LL_ADC_CHANNEL_INTERNAL_TO_EXTERNAL().
-  *         (3) ADC channels available on STM32C031xx device only.
+  *         (3) ADC channels not available on STM32C011xx device.
   * @retval None
   */
 __STATIC_INLINE void LL_ADC_REG_SetSequencerChRem(ADC_TypeDef *ADCx, uint32_t Channel)
@@ -3531,33 +3536,33 @@ __STATIC_INLINE void LL_ADC_REG_SetSequencerChRem(ADC_TypeDef *ADCx, uint32_t Ch
   *         CHSELR   CHSEL18        LL_ADC_REG_GetSequencerChannels
   * @param  ADCx ADC instance
   * @retval Returned value can be a combination of the following values:
-  *         @arg @ref ADC_CHANNEL_0
-  *         @arg @ref ADC_CHANNEL_1
-  *         @arg @ref ADC_CHANNEL_2
-  *         @arg @ref ADC_CHANNEL_3
-  *         @arg @ref ADC_CHANNEL_4
-  *         @arg @ref ADC_CHANNEL_5
-  *         @arg @ref ADC_CHANNEL_6
-  *         @arg @ref ADC_CHANNEL_7
-  *         @arg @ref ADC_CHANNEL_8           (1)
-  *         @arg @ref ADC_CHANNEL_9           (1)
-  *         @arg @ref ADC_CHANNEL_10
-  *         @arg @ref ADC_CHANNEL_11
-  *         @arg @ref ADC_CHANNEL_12
-  *         @arg @ref ADC_CHANNEL_13
-  *         @arg @ref ADC_CHANNEL_14
-  *         @arg @ref ADC_CHANNEL_15          (1)
-  *         @arg @ref ADC_CHANNEL_16          (1)
-  *         @arg @ref ADC_CHANNEL_17          (3)
-  *         @arg @ref ADC_CHANNEL_18          (3)
-  *         @arg @ref ADC_CHANNEL_19          (3)
-  *         @arg @ref ADC_CHANNEL_20          (3)
-  *         @arg @ref ADC_CHANNEL_21          (3)
-  *         @arg @ref ADC_CHANNEL_22          (3)
-  *         @arg @ref ADC_CHANNEL_VREFINT     (2)
-  *         @arg @ref ADC_CHANNEL_TEMPSENSOR  (2)
-  *         @arg @ref ADC_CHANNEL_VDDA        (2)
-  *         @arg @ref ADC_CHANNEL_VSSA        (2)
+  *         @arg @ref LL_ADC_CHANNEL_0
+  *         @arg @ref LL_ADC_CHANNEL_1
+  *         @arg @ref LL_ADC_CHANNEL_2
+  *         @arg @ref LL_ADC_CHANNEL_3
+  *         @arg @ref LL_ADC_CHANNEL_4
+  *         @arg @ref LL_ADC_CHANNEL_5
+  *         @arg @ref LL_ADC_CHANNEL_6
+  *         @arg @ref LL_ADC_CHANNEL_7
+  *         @arg @ref LL_ADC_CHANNEL_8           (1)
+  *         @arg @ref LL_ADC_CHANNEL_9           (1)
+  *         @arg @ref LL_ADC_CHANNEL_10
+  *         @arg @ref LL_ADC_CHANNEL_11
+  *         @arg @ref LL_ADC_CHANNEL_12
+  *         @arg @ref LL_ADC_CHANNEL_13
+  *         @arg @ref LL_ADC_CHANNEL_14
+  *         @arg @ref LL_ADC_CHANNEL_15          (1)
+  *         @arg @ref LL_ADC_CHANNEL_16          (1)
+  *         @arg @ref LL_ADC_CHANNEL_17          (3)
+  *         @arg @ref LL_ADC_CHANNEL_18          (3)
+  *         @arg @ref LL_ADC_CHANNEL_19          (3)
+  *         @arg @ref LL_ADC_CHANNEL_20          (3)
+  *         @arg @ref LL_ADC_CHANNEL_21          (3)
+  *         @arg @ref LL_ADC_CHANNEL_22          (3)
+  *         @arg @ref LL_ADC_CHANNEL_VREFINT     (2)
+  *         @arg @ref LL_ADC_CHANNEL_TEMPSENSOR  (2)
+  *         @arg @ref LL_ADC_CHANNEL_VDDA        (2)
+  *         @arg @ref LL_ADC_CHANNEL_VSSA        (2)
   *
   *         (1) On STM32C0, parameter can be set in ADC group sequencer
   *             only if sequencer is set in mode "not fully configurable",
@@ -3565,7 +3570,7 @@ __STATIC_INLINE void LL_ADC_REG_SetSequencerChRem(ADC_TypeDef *ADCx, uint32_t Ch
   *         (2) For ADC channel read back from ADC register,
   *             comparison with internal channel parameter to be done
   *             using helper macro @ref __LL_ADC_CHANNEL_INTERNAL_TO_EXTERNAL().
-  *         (3) ADC channels available on STM32C031xx device only.
+  *         (3) ADC channels not available on STM32C011xx device.
   */
 __STATIC_INLINE uint32_t LL_ADC_REG_GetSequencerChannels(const ADC_TypeDef *ADCx)
 {
@@ -3797,33 +3802,33 @@ __STATIC_INLINE uint32_t LL_ADC_REG_GetOverrun(const ADC_TypeDef *ADCx)
   *         SMPR     SMPSEL18       LL_ADC_SetChannelSamplingTime
   * @param  ADCx ADC instance
   * @param  Channel This parameter can be a combination of the following values:
-  *         @arg @ref ADC_CHANNEL_0
-  *         @arg @ref ADC_CHANNEL_1
-  *         @arg @ref ADC_CHANNEL_2
-  *         @arg @ref ADC_CHANNEL_3
-  *         @arg @ref ADC_CHANNEL_4
-  *         @arg @ref ADC_CHANNEL_5
-  *         @arg @ref ADC_CHANNEL_6
-  *         @arg @ref ADC_CHANNEL_7
-  *         @arg @ref ADC_CHANNEL_8           (1)
-  *         @arg @ref ADC_CHANNEL_9           (1)
-  *         @arg @ref ADC_CHANNEL_10
-  *         @arg @ref ADC_CHANNEL_11
-  *         @arg @ref ADC_CHANNEL_12
-  *         @arg @ref ADC_CHANNEL_13
-  *         @arg @ref ADC_CHANNEL_14
-  *         @arg @ref ADC_CHANNEL_15          (1)
-  *         @arg @ref ADC_CHANNEL_16          (1)
-  *         @arg @ref ADC_CHANNEL_17          (3)
-  *         @arg @ref ADC_CHANNEL_18          (3)
-  *         @arg @ref ADC_CHANNEL_19          (3)
-  *         @arg @ref ADC_CHANNEL_20          (3)
-  *         @arg @ref ADC_CHANNEL_21          (3)
-  *         @arg @ref ADC_CHANNEL_22          (3)
-  *         @arg @ref ADC_CHANNEL_VREFINT     (2)
-  *         @arg @ref ADC_CHANNEL_TEMPSENSOR  (2)
-  *         @arg @ref ADC_CHANNEL_VDDA        (2)
-  *         @arg @ref ADC_CHANNEL_VSSA        (2)
+  *         @arg @ref LL_ADC_CHANNEL_0
+  *         @arg @ref LL_ADC_CHANNEL_1
+  *         @arg @ref LL_ADC_CHANNEL_2
+  *         @arg @ref LL_ADC_CHANNEL_3
+  *         @arg @ref LL_ADC_CHANNEL_4
+  *         @arg @ref LL_ADC_CHANNEL_5
+  *         @arg @ref LL_ADC_CHANNEL_6
+  *         @arg @ref LL_ADC_CHANNEL_7
+  *         @arg @ref LL_ADC_CHANNEL_8           (1)
+  *         @arg @ref LL_ADC_CHANNEL_9           (1)
+  *         @arg @ref LL_ADC_CHANNEL_10
+  *         @arg @ref LL_ADC_CHANNEL_11
+  *         @arg @ref LL_ADC_CHANNEL_12
+  *         @arg @ref LL_ADC_CHANNEL_13
+  *         @arg @ref LL_ADC_CHANNEL_14
+  *         @arg @ref LL_ADC_CHANNEL_15          (1)
+  *         @arg @ref LL_ADC_CHANNEL_16          (1)
+  *         @arg @ref LL_ADC_CHANNEL_17          (3)
+  *         @arg @ref LL_ADC_CHANNEL_18          (3)
+  *         @arg @ref LL_ADC_CHANNEL_19          (3)
+  *         @arg @ref LL_ADC_CHANNEL_20          (3)
+  *         @arg @ref LL_ADC_CHANNEL_21          (3)
+  *         @arg @ref LL_ADC_CHANNEL_22          (3)
+  *         @arg @ref LL_ADC_CHANNEL_VREFINT     (2)
+  *         @arg @ref LL_ADC_CHANNEL_TEMPSENSOR  (2)
+  *         @arg @ref LL_ADC_CHANNEL_VDDA        (2)
+  *         @arg @ref LL_ADC_CHANNEL_VSSA        (2)
   *
   *         (1) On STM32C0, parameter can be set in ADC group sequencer
   *             only if sequencer is set in mode "not fully configurable",
@@ -3831,7 +3836,7 @@ __STATIC_INLINE uint32_t LL_ADC_REG_GetOverrun(const ADC_TypeDef *ADCx)
   *         (2) For ADC channel read back from ADC register,
   *             comparison with internal channel parameter to be done
   *             using helper macro @ref __LL_ADC_CHANNEL_INTERNAL_TO_EXTERNAL().
-  *         (3) ADC channels available on STM32C031xx device only.
+  *         (3) ADC channels not available on STM32C011xx device.
   * @param  SamplingTimeY This parameter can be one of the following values:
   *         @arg @ref LL_ADC_SAMPLINGTIME_COMMON_1
   *         @arg @ref LL_ADC_SAMPLINGTIME_COMMON_2
@@ -3876,33 +3881,33 @@ __STATIC_INLINE void LL_ADC_SetChannelSamplingTime(ADC_TypeDef *ADCx, uint32_t C
   *         SMPR     SMPSEL18       LL_ADC_GetChannelSamplingTime
   * @param  ADCx ADC instance
   * @param  Channel This parameter can be one of the following values:
-  *         @arg @ref ADC_CHANNEL_0
-  *         @arg @ref ADC_CHANNEL_1
-  *         @arg @ref ADC_CHANNEL_2
-  *         @arg @ref ADC_CHANNEL_3
-  *         @arg @ref ADC_CHANNEL_4
-  *         @arg @ref ADC_CHANNEL_5
-  *         @arg @ref ADC_CHANNEL_6
-  *         @arg @ref ADC_CHANNEL_7
-  *         @arg @ref ADC_CHANNEL_8           (1)
-  *         @arg @ref ADC_CHANNEL_9           (1)
-  *         @arg @ref ADC_CHANNEL_10
-  *         @arg @ref ADC_CHANNEL_11
-  *         @arg @ref ADC_CHANNEL_12
-  *         @arg @ref ADC_CHANNEL_13
-  *         @arg @ref ADC_CHANNEL_14
-  *         @arg @ref ADC_CHANNEL_15          (1)
-  *         @arg @ref ADC_CHANNEL_16          (1)
-  *         @arg @ref ADC_CHANNEL_17          (3)
-  *         @arg @ref ADC_CHANNEL_18          (3)
-  *         @arg @ref ADC_CHANNEL_19          (3)
-  *         @arg @ref ADC_CHANNEL_20          (3)
-  *         @arg @ref ADC_CHANNEL_21          (3)
-  *         @arg @ref ADC_CHANNEL_22          (3)
-  *         @arg @ref ADC_CHANNEL_VREFINT     (2)
-  *         @arg @ref ADC_CHANNEL_TEMPSENSOR  (2)
-  *         @arg @ref ADC_CHANNEL_VDDA        (2)
-  *         @arg @ref ADC_CHANNEL_VSSA        (2)
+  *         @arg @ref LL_ADC_CHANNEL_0
+  *         @arg @ref LL_ADC_CHANNEL_1
+  *         @arg @ref LL_ADC_CHANNEL_2
+  *         @arg @ref LL_ADC_CHANNEL_3
+  *         @arg @ref LL_ADC_CHANNEL_4
+  *         @arg @ref LL_ADC_CHANNEL_5
+  *         @arg @ref LL_ADC_CHANNEL_6
+  *         @arg @ref LL_ADC_CHANNEL_7
+  *         @arg @ref LL_ADC_CHANNEL_8           (1)
+  *         @arg @ref LL_ADC_CHANNEL_9           (1)
+  *         @arg @ref LL_ADC_CHANNEL_10
+  *         @arg @ref LL_ADC_CHANNEL_11
+  *         @arg @ref LL_ADC_CHANNEL_12
+  *         @arg @ref LL_ADC_CHANNEL_13
+  *         @arg @ref LL_ADC_CHANNEL_14
+  *         @arg @ref LL_ADC_CHANNEL_15          (1)
+  *         @arg @ref LL_ADC_CHANNEL_16          (1)
+  *         @arg @ref LL_ADC_CHANNEL_17          (3)
+  *         @arg @ref LL_ADC_CHANNEL_18          (3)
+  *         @arg @ref LL_ADC_CHANNEL_19          (3)
+  *         @arg @ref LL_ADC_CHANNEL_20          (3)
+  *         @arg @ref LL_ADC_CHANNEL_21          (3)
+  *         @arg @ref LL_ADC_CHANNEL_22          (3)
+  *         @arg @ref LL_ADC_CHANNEL_VREFINT     (2)
+  *         @arg @ref LL_ADC_CHANNEL_TEMPSENSOR  (2)
+  *         @arg @ref LL_ADC_CHANNEL_VDDA        (2)
+  *         @arg @ref LL_ADC_CHANNEL_VSSA        (2)
   *
   *         (1) On STM32C0, parameter can be set in ADC group sequencer
   *             only if sequencer is set in mode "not fully configurable",
@@ -3910,7 +3915,7 @@ __STATIC_INLINE void LL_ADC_SetChannelSamplingTime(ADC_TypeDef *ADCx, uint32_t C
   *         (2) For ADC channel read back from ADC register,
   *             comparison with internal channel parameter to be done
   *             using helper macro @ref __LL_ADC_CHANNEL_INTERNAL_TO_EXTERNAL().
-  *         (3) ADC channels available on STM32C031xx device only.
+  *         (3) ADC channels not available on STM32C011xx device.
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_ADC_SAMPLINGTIME_COMMON_1
   *         @arg @ref LL_ADC_SAMPLINGTIME_COMMON_2
@@ -3924,7 +3929,7 @@ __STATIC_INLINE uint32_t LL_ADC_GetChannelSamplingTime(const ADC_TypeDef *ADCx, 
   uint32_t smp_channel_posbit0 = ((smpr & ADC_SAMPLING_TIME_CH_MASK)
                                   >> ((((Channel & ADC_CHANNEL_ID_NUMBER_MASK) >> ADC_CHANNEL_ID_NUMBER_BITOFFSET_POS)
                                        + ADC_SMPR_SMPSEL0_BITOFFSET_POS)
-                                      & 0x1FUL));
+                                      & 0x1FUL)) & 0x01UL;
 
   /* Select sampling time bitfield depending on sampling time bit value 0 or 1.  */
   return ((~(smp_channel_posbit0) * LL_ADC_SAMPLINGTIME_COMMON_1)
@@ -3998,7 +4003,7 @@ __STATIC_INLINE uint32_t LL_ADC_GetChannelSamplingTime(const ADC_TypeDef *ADCx, 
   *         @arg @ref LL_ADC_AWD_CH_TEMPSENSOR_REG
   *         @arg @ref LL_ADC_AWD_CH_VDDA_REG
   *         @arg @ref LL_ADC_AWD_CH_VSSA_REG
-  *         (1) On STM32C0, parameter not available on all devices: only on STM32C031xx.
+  *         (1) On STM32C0, parameter not available on STM32C011xx.
   * @retval None
   */
 __STATIC_INLINE void LL_ADC_SetAnalogWDMonitChannels(ADC_TypeDef *ADCx, uint32_t AWDy, uint32_t AWDChannelGroup)
@@ -4007,7 +4012,7 @@ __STATIC_INLINE void LL_ADC_SetAnalogWDMonitChannels(ADC_TypeDef *ADCx, uint32_t
   /* in register and register position depending on parameter "AWDy".         */
   /* Parameters "AWDChannelGroup" and "AWDy" are used with masks because      */
   /* containing other bits reserved for other purpose.                        */
-  register __IO uint32_t *preg;
+  __IO uint32_t *preg;
 
   if (AWDy == LL_ADC_AWD1)
   {
@@ -4109,15 +4114,15 @@ __STATIC_INLINE void LL_ADC_SetAnalogWDMonitChannels(ADC_TypeDef *ADCx, uint32_t
   *         @arg @ref LL_ADC_AWD_CH_TEMPSENSOR_REG
   *         @arg @ref LL_ADC_AWD_CH_VDDA_REG
   *         @arg @ref LL_ADC_AWD_CH_VSSA_REG
-  *         (1) On STM32C0, parameter not available on all devices: only on STM32C031xx.
+  *         (1) On STM32C0, parameter not available on STM32C011xx.
   */__STATIC_INLINE uint32_t LL_ADC_GetAnalogWDMonitChannels(const ADC_TypeDef *ADCx, uint32_t AWDy)
 {
-  register __IO uint32_t *preg = __ADC_PTR_REG_OFFSET(ADCx->CFGR1,
+  __IO uint32_t *preg = __ADC_PTR_REG_OFFSET(ADCx->CFGR1,
                                                       ((AWDy & ADC_AWD_CRX_REGOFFSET_MASK) >> ADC_AWD_CRX_REGOFFSET_POS)
                                                       + ((AWDy & ADC_AWD_CR12_REGOFFSETGAP_MASK)
                                                          * ADC_AWD_CR12_REGOFFSETGAP_VAL));
 
-  register uint32_t AnalogWDMonitChannels = (READ_BIT(*preg, AWDy) & AWDy & ADC_AWD_CR_ALL_CHANNEL_MASK);
+  uint32_t AnalogWDMonitChannels = (READ_BIT(*preg, AWDy) & AWDy & ADC_AWD_CR_ALL_CHANNEL_MASK);
 
   /* If "AnalogWDMonitChannels" == 0, then the selected AWD is disabled       */
   /* (parameter value LL_ADC_AWD_DISABLE).                                    */

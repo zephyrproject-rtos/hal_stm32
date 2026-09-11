@@ -1415,7 +1415,7 @@ __STATIC_INLINE void LL_DMA2D_FGND_SetCLUTColorMode(DMA2D_TypeDef *DMA2Dx, uint3
   *         @arg @ref LL_DMA2D_CLUT_COLOR_MODE_ARGB1555
   *         @arg @ref LL_DMA2D_CLUT_COLOR_MODE_ARGB4444
   *         @arg @ref LL_DMA2D_CLUT_COLOR_MODE_ARGB2222
-*/
+  */
 __STATIC_INLINE uint32_t LL_DMA2D_FGND_GetCLUTColorMode(const DMA2D_TypeDef *DMA2Dx)
 {
   return (uint32_t)(READ_BIT(DMA2Dx->FGPFCCR, DMA2D_FGPFCCR_CM));

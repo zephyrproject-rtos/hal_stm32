@@ -297,8 +297,10 @@ extern "C" {
 #define HAL_TIM_BRK_TIM16_TIM15_BKIN   (LL_TIM_TIM16_BRK_TIM15_BKIN)
 /** TIM16 break input is connected to TIM17_BKIN */
 #define HAL_TIM_BRK_TIM16_TIM17_BKIN   (LL_TIM_TIM16_BRK_TIM17_BKIN)
+#endif /* TIM16 */
 
 
+#if defined(TIM17)
 /** TIM17 break input is connected to TIM17_BKIN */
 #define HAL_TIM_BRK_TIM17_GPIO         (LL_TIM_TIM17_BRK_GPIO)
 /** TIM17 break input is connected to comp1_out */
@@ -311,7 +313,7 @@ extern "C" {
 #define HAL_TIM_BRK_TIM17_TIM15_BKIN   (LL_TIM_TIM17_BRK_TIM15_BKIN)
 /** TIM17 break input is connected to TIM16_BKIN */
 #define HAL_TIM_BRK_TIM17_TIM16_BKIN   (LL_TIM_TIM17_BRK_TIM16_BKIN)
-#endif /* TIM16 */
+#endif /* TIM17 */
 
 /**
   * @brief  HAL TIM Break2 Input Sources.
@@ -363,9 +365,11 @@ typedef enum
 
 #if defined(TIM3)
   HAL_TIM3  = TIM3_BASE,
-
-  HAL_TIM4  = TIM4_BASE,
 #endif /* TIM3 */
+
+#if defined(TIM4)
+  HAL_TIM4  = TIM4_BASE,
+#endif /* TIM4 */
 
 #if defined(TIM5)
   HAL_TIM5  = TIM5_BASE,
@@ -386,6 +390,7 @@ typedef enum
 
   HAL_TIM17 = TIM17_BASE,
 #endif /* TIM16 */
+
 
 } hal_tim_t;
 
@@ -648,10 +653,12 @@ typedef enum
 #if defined(TIM3)
   /** Internal Trigger 3 (ITR3) */
   HAL_TIM_TRIG_ITR3    = LL_TIM_TS_ITR3,
+#endif /* TIM3 */
 
+#if defined(TIM4)
   /** Internal Trigger 4 (ITR4) */
   HAL_TIM_TRIG_ITR4    = LL_TIM_TS_ITR4,
-#endif /* TIM3 */
+#endif /* TIM4 */
 
 #if defined(TIM5)
   /** Internal Trigger 5 (ITR5) */
@@ -677,6 +684,7 @@ typedef enum
   /** Internal Trigger 11 (ITR11) */
   HAL_TIM_TRIG_ITR11   = LL_TIM_TS_ITR11,
 #endif /* TIM16 */
+
 
   /** Timer Input 1 Edge Detector (TI1F_ED)  */
   HAL_TIM_TRIG_TI1F_ED = LL_TIM_TS_TI1F_ED,
@@ -1499,6 +1507,7 @@ typedef enum
   HAL_TIM_EXT_TRIG_TIM1_COMP2_OUT = LL_TIM_TIM1_ETR_IN_COMP2_OUT,
 #endif /* COMP2 */
 
+
   /** TIM1 external trigger is connected to adc1_awd1 */
   HAL_TIM_EXT_TRIG_TIM1_ADC1_AWD1 = LL_TIM_TIM1_ETR_IN_ADC1_AWD1,
 
@@ -1520,6 +1529,7 @@ typedef enum
   HAL_TIM_EXT_TRIG_TIM2_COMP2_OUT = LL_TIM_TIM2_ETR_IN_COMP2_OUT,
 #endif /* COMP2 */
 
+
   /** TIM2 external trigger is connected to adc1_awd1 */
   HAL_TIM_EXT_TRIG_TIM2_ADC1_AWD1 = LL_TIM_TIM2_ETR_IN_ADC1_AWD1,
 
@@ -1538,10 +1548,12 @@ typedef enum
 #if defined(TIM3)
   /** TIM2 external trigger is connected to TIM3_ETR */
   HAL_TIM_EXT_TRIG_TIM2_TIM3_ETR = LL_TIM_TIM2_ETR_IN_TIM3_ETR,
+#endif /* TIM3 */
 
+#if defined(TIM4)
   /** TIM2 external trigger is connected to TIM4_ETR */
   HAL_TIM_EXT_TRIG_TIM2_TIM4_ETR = LL_TIM_TIM2_ETR_IN_TIM4_ETR,
-#endif /* TIM3 */
+#endif /* TIM4 */
 
 #if defined(TIM5)
   /** TIM2 external trigger is connected to TIM5_ETR */
@@ -1564,16 +1576,23 @@ typedef enum
   /** TIM3 external trigger is connected to TIM2_ETR */
   HAL_TIM_EXT_TRIG_TIM3_TIM2_ETR = LL_TIM_TIM3_ETR_IN_TIM2_ETR,
 
+#if defined(TIM4)
   /** TIM3 external trigger is connected to TIM4_ETR */
   HAL_TIM_EXT_TRIG_TIM3_TIM4_ETR = LL_TIM_TIM3_ETR_IN_TIM4_ETR,
+#endif /* TIM4 */
 
   /** TIM3 external trigger is connected to TIM5_ETR */
   HAL_TIM_EXT_TRIG_TIM3_TIM5_ETR = LL_TIM_TIM3_ETR_IN_TIM5_ETR,
 
+
+#if defined(ETH1)
   /** TIM3 external trigger is connected to eth1_ptp_pps_out */
   HAL_TIM_EXT_TRIG_TIM3_ETH1_PTP_PPS_OUT = LL_TIM_TIM3_ETR_IN_ETH1_PTP_PPS_OUT,
+#endif /* ETH1 */
+#endif /* TIM3 */
 
 
+#if defined(TIM4)
   /** TIM4 external trigger is connected to TIM4_ETR */
   HAL_TIM_EXT_TRIG_TIM4_GPIO  = LL_TIM_TIM4_ETR_IN_GPIO,
 
@@ -1597,7 +1616,7 @@ typedef enum
 
   /** TIM4 external trigger is connected to TIM5_ETR */
   HAL_TIM_EXT_TRIG_TIM4_TIM5_ETR = LL_TIM_TIM4_ETR_IN_TIM5_ETR,
-#endif /* TIM3 */
+#endif /* TIM4 */
 
 
 #if defined(TIM5)
@@ -1613,10 +1632,14 @@ typedef enum
 #if defined(TIM3)
   /** TIM5 external trigger is connected to TIM3_ETR */
   HAL_TIM_EXT_TRIG_TIM5_TIM3_ETR = LL_TIM_TIM5_ETR_IN_TIM3_ETR,
+#endif /* TIM3 */
 
+#if defined(TIM4)
   /** TIM5 external trigger is connected to TIM4_ETR */
   HAL_TIM_EXT_TRIG_TIM5_TIM4_ETR = LL_TIM_TIM5_ETR_IN_TIM4_ETR,
-#endif /* TIM3 */
+#endif /* TIM4 */
+
+
 #endif /* TIM5 */
 
 
@@ -1630,6 +1653,7 @@ typedef enum
   /** TIM8 external trigger is connected to comp2_out */
   HAL_TIM_EXT_TRIG_TIM8_COMP2_OUT = LL_TIM_TIM8_ETR_IN_COMP2_OUT,
 #endif /* COMP2 */
+
 
 #if defined(ADC1) && defined(ADC2)
   /** TIM8 external trigger is connected to adc2_awd1 */
@@ -1662,7 +1686,6 @@ typedef enum
   /** TIM8 external trigger is connected to adc3_awd3 */
   HAL_TIM_EXT_TRIG_TIM8_ADC3_AWD3 = LL_TIM_TIM8_ETR_IN_ADC3_AWD3,
 #endif /* ADC3 */
-
 
 } hal_tim_ext_trig_src_t;
 
@@ -1704,11 +1727,12 @@ typedef enum
 #if defined(COMP2)
   /** TIM2 TI1 is connected to comp2_out */
   HAL_TIM_INPUT_TIM2_TI1_COMP2_OUT = LL_TIM_TIM2_TI1_COMP2_OUT,
+#endif /* COMP2 */
 
-#elif defined(ETH1)
+#if defined(ETH1)
   /** TIM2 TI1 is connected to eth1_ptp_pps_out */
   HAL_TIM_INPUT_TIM2_TI1_ETH1_PTP_PPS_OUT = LL_TIM_TIM2_TI1_ETH1_PTP_PPS_OUT,
-#endif /* COMP2 */
+#endif /* ETH1 */
 
   /** TIM2 TI1 is connected to LSI */
   HAL_TIM_INPUT_TIM2_TI1_LSI = LL_TIM_TIM2_TI1_LSI,
@@ -1799,8 +1823,10 @@ typedef enum
 
   /** TIM3 TI4 is connected to TIM3_CH4 */
   HAL_TIM_INPUT_TIM3_TI4_GPIO = LL_TIM_TIM3_TI4_GPIO,
+#endif /* TIM3 */
 
-  /** TIM4 */
+#if defined(TIM4)
+  /* TIM4 */
   /** TIM4 TI1 is connected to TIM4_CH1 */
   HAL_TIM_INPUT_TIM4_TI1_GPIO = LL_TIM_TIM4_TI1_GPIO,
 
@@ -1815,7 +1841,7 @@ typedef enum
 
   /** TIM4 TI4 is connected to TIM4_CH4 */
   HAL_TIM_INPUT_TIM4_TI4_GPIO = LL_TIM_TIM4_TI4_GPIO,
-#endif /* TIM3 */
+#endif /* TIM4 */
 
 #if defined(TIM5)
   /* TIM5 */
@@ -1934,6 +1960,7 @@ typedef enum
   /** TIM16 TI1 is connected to MCO2 */
   HAL_TIM_INPUT_TIM16_TI1_MCO2 = LL_TIM_TIM16_TI1_MCO2,
 
+
   /* TIM17 */
   /** TIM17 TI1 is connected to TIM17_CH1 */
   HAL_TIM_INPUT_TIM17_TI1_GPIO = LL_TIM_TIM17_TI1_GPIO,
@@ -1952,7 +1979,7 @@ typedef enum
 
   /** TIM17 TI1 is connected to i3c1_ibi_ack */
   HAL_TIM_INPUT_TIM17_TI1_I3C1_IBI_ACK = LL_TIM_TIM17_TI1_I3C1_IBI_ACK,
-#endif /* TIM17 */
+#endif /* TIM16 */
 
 } hal_tim_channel_src_t;
 
@@ -2211,14 +2238,16 @@ typedef enum
 
   /** TIM3 OCREF clear input is connected to comp1_out */
   HAL_TIM_OCREF_CLR_TIM3_COMP1_OUT = LL_TIM_TIM3_OCREF_CLR_INT_COMP1_OUT,
+#endif /* TIM3 */
 
 
+#if defined(TIM4)
   /** TIM4 OCREF clear input is connected to tim4_etrf */
   HAL_TIM_OCREF_CLR_TIM4_ETR = LL_TIM_TIM4_OCREF_CLR_INT_ETR,
 
   /** TIM4 OCREF clear input is connected to comp1_out */
   HAL_TIM_OCREF_CLR_TIM4_COMP1_OUT = LL_TIM_TIM4_OCREF_CLR_INT_COMP1_OUT,
-#endif /* TIM3 */
+#endif /* TIM4 */
 
 
 #if defined(TIM5)
@@ -3131,12 +3160,12 @@ typedef struct
   */
 typedef struct
 {
+  /** Specifies the pulse width prescaler                  */
+  hal_tim_pulse_prescaler_t prescaler;
+
   /** Specifies the pulse width.
       This parameter can be a number between 0x00 and 0xFF */
   uint32_t pulse_width;
-
-  /** Specifies the pulse width prescaler                  */
-  hal_tim_pulse_prescaler_t prescaler;
 
 } hal_tim_pulse_generator_config_t;
 

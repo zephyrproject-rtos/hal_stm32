@@ -339,10 +339,11 @@ typedef struct
   */
 typedef struct
 {
-  __IO uint32_t CR;  /*!< RNG control register, Address offset: 0x00 */
-  __IO uint32_t SR;  /*!< RNG status register,  Address offset: 0x04 */
-  __IO uint32_t DR;  /*!< RNG data register,    Address offset: 0x08 */
-  __IO uint32_t HTCR;  /*!< RNG health test configuration register, Address offset: 0x10 */
+  __IO uint32_t CR;              /*!< RNG control register, Address offset: 0x00 */
+  __IO uint32_t SR;              /*!< RNG status register,  Address offset: 0x04 */
+  __IO uint32_t DR;              /*!< RNG data register,    Address offset: 0x08 */
+  __IO uint32_t NSCR;            /*!< RNG noise source control register ,     Address offset: 0x0C */
+  __IO uint32_t HTCR;            /*!< RNG health test configuration register, Address offset: 0x10 */
 } RNG_TypeDef;
 
 /**
@@ -2690,6 +2691,7 @@ typedef struct
 #define COMP_CFGR1_POLARITY_Msk      (0x1UL << COMP_CFGR1_POLARITY_Pos)    /*!< 0x00000008                            */
 #define COMP_CFGR1_POLARITY          COMP_CFGR1_POLARITY_Msk               /*!< COMP1 polarity selection bit          */
 
+
 #define COMP_CFGR1_ITEN_Pos          (6U)
 #define COMP_CFGR1_ITEN_Msk          (0x1UL << COMP_CFGR1_ITEN_Pos)        /*!< 0x00000040                            */
 #define COMP_CFGR1_ITEN              COMP_CFGR1_ITEN_Msk                   /*!< COMP1 interrupt enable                */
@@ -2705,6 +2707,7 @@ typedef struct
 #define COMP_CFGR1_PWRMODE           COMP_CFGR1_PWRMODE_Msk                /*!< COMP1 Power Mode of the comparator    */
 #define COMP_CFGR1_PWRMODE_0         (0x1UL << COMP_CFGR1_PWRMODE_Pos)     /*!< 0x00001000                            */
 #define COMP_CFGR1_PWRMODE_1         (0x2UL << COMP_CFGR1_PWRMODE_Pos)     /*!< 0x00002000                            */
+
 
 #define COMP_CFGR1_INMSEL_Pos        (16U)
 #define COMP_CFGR1_INMSEL_Msk        (0xFUL << COMP_CFGR1_INMSEL_Pos)      /*!< 0x000F0000                            */
@@ -2965,42 +2968,42 @@ typedef struct
 /******************************************************************************/
 /********************  Bits definition for RNG_CR register  *******************/
 #define RNG_CR_RNGEN_Pos                    (2U)
-#define RNG_CR_RNGEN_Msk                    (0x1UL << RNG_CR_RNGEN_Pos)             /*!< 0x00000004 */
-#define RNG_CR_RNGEN                        RNG_CR_RNGEN_Msk
+#define RNG_CR_RNGEN_Msk                    (0x1UL << RNG_CR_RNGEN_Pos)            /*!< 0x00000004 */
+#define RNG_CR_RNGEN                        RNG_CR_RNGEN_Msk                       /*!< True random number generator enable */
 #define RNG_CR_IE_Pos                       (3U)
-#define RNG_CR_IE_Msk                       (0x1UL << RNG_CR_IE_Pos)                /*!< 0x00000008 */
-#define RNG_CR_IE                           RNG_CR_IE_Msk
+#define RNG_CR_IE_Msk                       (0x1UL << RNG_CR_IE_Pos)               /*!< 0x00000008 */
+#define RNG_CR_IE                           RNG_CR_IE_Msk                          /*!< Interrupt enable */
 #define RNG_CR_CED_Pos                      (5U)
-#define RNG_CR_CED_Msk                      (0x1UL << RNG_CR_CED_Pos)               /*!< 0x00000020 */
-#define RNG_CR_CED                          RNG_CR_CED_Msk
+#define RNG_CR_CED_Msk                      (0x1UL << RNG_CR_CED_Pos)              /*!< 0x00000020 */
+#define RNG_CR_CED                          RNG_CR_CED_Msk                         /*!< Clock error detection */
 #define RNG_CR_ARDIS_Pos                    (7U)
-#define RNG_CR_ARDIS_Msk                    (0x1UL << RNG_CR_ARDIS_Pos)
-#define RNG_CR_ARDIS                        RNG_CR_ARDIS_Msk
+#define RNG_CR_ARDIS_Msk                    (0x1UL << RNG_CR_ARDIS_Pos)            /*!< 0x00000080 */
+#define RNG_CR_ARDIS                        RNG_CR_ARDIS_Msk                       /*!< Auto reset disable */
 #define RNG_CR_RNG_CONFIG3_Pos              (8U)
-#define RNG_CR_RNG_CONFIG3_Msk              (0xFUL << RNG_CR_RNG_CONFIG3_Pos)
-#define RNG_CR_RNG_CONFIG3                  RNG_CR_RNG_CONFIG3_Msk
+#define RNG_CR_RNG_CONFIG3_Msk              (0xFUL << RNG_CR_RNG_CONFIG3_Pos)      /*!< 0x00000F00 */
+#define RNG_CR_RNG_CONFIG3                  RNG_CR_RNG_CONFIG3_Msk                 /*!< RNG configuration 3 */
 #define RNG_CR_NISTC_Pos                    (12U)
-#define RNG_CR_NISTC_Msk                    (0x1UL << RNG_CR_NISTC_Pos)
-#define RNG_CR_NISTC                        RNG_CR_NISTC_Msk
+#define RNG_CR_NISTC_Msk                    (0x1UL << RNG_CR_NISTC_Pos)            /*!< 0x00001000 */
+#define RNG_CR_NISTC                        RNG_CR_NISTC_Msk                       /*!< NIST custom */
 #define RNG_CR_RNG_CONFIG2_Pos              (13U)
-#define RNG_CR_RNG_CONFIG2_Msk              (0x7UL << RNG_CR_RNG_CONFIG2_Pos)
-#define RNG_CR_RNG_CONFIG2                  RNG_CR_RNG_CONFIG2_Msk
+#define RNG_CR_RNG_CONFIG2_Msk              (0x7UL << RNG_CR_RNG_CONFIG2_Pos)      /*!< 0x0000E000 */
+#define RNG_CR_RNG_CONFIG2                  RNG_CR_RNG_CONFIG2_Msk                 /*!< RNG configuration 2 */
 #define RNG_CR_CLKDIV_Pos                   (16U)
-#define RNG_CR_CLKDIV_Msk                   (0xFUL << RNG_CR_CLKDIV_Pos)
-#define RNG_CR_CLKDIV                       RNG_CR_CLKDIV_Msk
-#define RNG_CR_CLKDIV_0                     (0x1UL << RNG_CR_CLKDIV_Pos)            /*!< 0x00010000 */
-#define RNG_CR_CLKDIV_1                     (0x2UL << RNG_CR_CLKDIV_Pos)            /*!< 0x00020000 */
-#define RNG_CR_CLKDIV_2                     (0x4UL << RNG_CR_CLKDIV_Pos)            /*!< 0x00040000 */
-#define RNG_CR_CLKDIV_3                     (0x8UL << RNG_CR_CLKDIV_Pos)            /*!< 0x00080000 */
+#define RNG_CR_CLKDIV_Msk                   (0xFUL << RNG_CR_CLKDIV_Pos)           /*!< 0x000F0000 */
+#define RNG_CR_CLKDIV                       RNG_CR_CLKDIV_Msk                      /*!< Clock divider factor */
+#define RNG_CR_CLKDIV_0                     (0x1UL << RNG_CR_CLKDIV_Pos)           /*!< 0x00010000 */
+#define RNG_CR_CLKDIV_1                     (0x2UL << RNG_CR_CLKDIV_Pos)           /*!< 0x00020000 */
+#define RNG_CR_CLKDIV_2                     (0x4UL << RNG_CR_CLKDIV_Pos)           /*!< 0x00040000 */
+#define RNG_CR_CLKDIV_3                     (0x8UL << RNG_CR_CLKDIV_Pos)           /*!< 0x00080000 */
 #define RNG_CR_RNG_CONFIG1_Pos              (20U)
-#define RNG_CR_RNG_CONFIG1_Msk              (0x3FUL << RNG_CR_RNG_CONFIG1_Pos)
-#define RNG_CR_RNG_CONFIG1                  RNG_CR_RNG_CONFIG1_Msk
+#define RNG_CR_RNG_CONFIG1_Msk              (0x3FUL << RNG_CR_RNG_CONFIG1_Pos)     /*!< 0x03F00000 */
+#define RNG_CR_RNG_CONFIG1                  RNG_CR_RNG_CONFIG1_Msk                 /*!< RNG configuration 1 */
 #define RNG_CR_CONDRST_Pos                  (30U)
-#define RNG_CR_CONDRST_Msk                  (0x1UL << RNG_CR_CONDRST_Pos)
-#define RNG_CR_CONDRST                      RNG_CR_CONDRST_Msk
+#define RNG_CR_CONDRST_Msk                  (0x1UL << RNG_CR_CONDRST_Pos)          /*!< 0x40000000 */
+#define RNG_CR_CONDRST                       RNG_CR_CONDRST_Msk                     /*!< Conditioning soft reset */
 #define RNG_CR_CONFIGLOCK_Pos               (31U)
-#define RNG_CR_CONFIGLOCK_Msk               (0x1UL << RNG_CR_CONFIGLOCK_Pos)
-#define RNG_CR_CONFIGLOCK                   RNG_CR_CONFIGLOCK_Msk
+#define RNG_CR_CONFIGLOCK_Msk               (0x1UL << RNG_CR_CONFIGLOCK_Pos)       /*!< 0x80000000 */
+#define RNG_CR_CONFIGLOCK                   RNG_CR_CONFIGLOCK_Msk                  /*!< RNG configuration lock */
 
 /********************  Bits definition for RNG_SR register  *******************/
 #define RNG_SR_DRDY_Pos                     (0U)
@@ -3019,6 +3022,25 @@ typedef struct
 #define RNG_SR_SEIS_Msk                     (0x1UL << RNG_SR_SEIS_Pos)              /*!< 0x00000040 */
 #define RNG_SR_SEIS                         RNG_SR_SEIS_Msk
 
+/********************  Bits definition for RNG_NSCR register  *******************/
+#define RNG_NSCR_EN_OSC1_Pos                (0U)
+#define RNG_NSCR_EN_OSC1_Msk                (0x7UL << RNG_NSCR_EN_OSC1_Pos)         /*!< 0x00000007 */
+#define RNG_NSCR_EN_OSC1                    RNG_NSCR_EN_OSC1_Msk
+#define RNG_NSCR_EN_OSC2_Pos                (3U)
+#define RNG_NSCR_EN_OSC2_Msk                (0x7UL << RNG_NSCR_EN_OSC2_Pos)         /*!< 0x00000038 */
+#define RNG_NSCR_EN_OSC2                    RNG_NSCR_EN_OSC2_Msk
+#define RNG_NSCR_EN_OSC3_Pos                (6U)
+#define RNG_NSCR_EN_OSC3_Msk                (0x7UL << RNG_NSCR_EN_OSC3_Pos)         /*!< 0x000001C0 */
+#define RNG_NSCR_EN_OSC3                    RNG_NSCR_EN_OSC3_Msk
+#define RNG_NSCR_EN_OSC4_Pos                (9U)
+#define RNG_NSCR_EN_OSC4_Msk                (0x7UL << RNG_NSCR_EN_OSC4_Pos)         /*!< 0x00000E00 */
+#define RNG_NSCR_EN_OSC4                    RNG_NSCR_EN_OSC4_Msk
+#define RNG_NSCR_EN_OSC5_Pos                (12U)
+#define RNG_NSCR_EN_OSC5_Msk                (0x7UL << RNG_NSCR_EN_OSC5_Pos)         /*!< 0x00007000 */
+#define RNG_NSCR_EN_OSC5                    RNG_NSCR_EN_OSC5_Msk
+#define RNG_NSCR_EN_OSC6_Pos                (15U)
+#define RNG_NSCR_EN_OSC6_Msk                (0x7UL << RNG_NSCR_EN_OSC6_Pos)         /*!< 0x00038000 */
+#define RNG_NSCR_EN_OSC6                    RNG_NSCR_EN_OSC6_Msk
 
 /********************  Bits definition for RNG_HTCR register  *******************/
 #define RNG_HTCR_HTCFG_Pos                  (0U)

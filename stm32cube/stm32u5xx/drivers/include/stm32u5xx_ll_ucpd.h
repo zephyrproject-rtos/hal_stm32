@@ -1893,4 +1893,3 @@ void        LL_UCPD_StructInit(LL_UCPD_InitTypeDef *UCPD_InitStruct);
 #endif
 
 #endif /* STM32U5xx_LL_UCPD_H */
-

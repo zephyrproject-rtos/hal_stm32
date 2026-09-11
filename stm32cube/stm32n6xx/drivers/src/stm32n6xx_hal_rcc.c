@@ -91,6 +91,7 @@
 #define RCC_MSI_TIMEOUT_VALUE         1U    /* 1 ms */
 #define RCC_HSI_TIMEOUT_VALUE         1U    /* 1 ms */
 #define RCC_HSE_TIMEOUT_VALUE         HSE_STARTUP_TIMEOUT
+#define RCC_HSE_LATENCY_VALUE         2U    /* 2 ms */
 #define RCC_LSI_TIMEOUT_VALUE         1U    /* 1 ms */
 #define RCC_CLOCKSWITCH_TIMEOUT_VALUE 5000U /* 5 s  */
 
@@ -397,7 +398,27 @@ HAL_StatusTypeDef HAL_RCC_OscConfig(const RCC_OscInitTypeDef  *pRCC_OscInitStruc
       {
         return HAL_ERROR;
       }
-      /* HSE ON , nothing to do */
+      else
+      {
+        /* Get Start Tick*/
+        tickstart = HAL_GetTick();
+
+        /* Wait till HSE is ready */
+        while ((READ_BIT(RCC->SR, RCC_SR_HSERDY) == 0U))
+        {
+          if ((HAL_GetTick() - tickstart) > RCC_HSE_TIMEOUT_VALUE)
+          {
+            return HAL_TIMEOUT;
+          }
+        }
+
+        /* Get Start Tick*/
+        tickstart = HAL_GetTick();
+
+        /* Wait 2 ms latency after HSE ready */
+        while ((HAL_GetTick() - tickstart) < RCC_HSE_LATENCY_VALUE)
+        {}
+      }
     }
     else
     {
@@ -774,7 +795,7 @@ HAL_StatusTypeDef HAL_RCC_OscConfig(const RCC_OscInitTypeDef  *pRCC_OscInitStruc
   if (pRCC_OscInitStruct->PLL3.PLLState != RCC_PLL_NONE)
   {
     uint32_t new_pll_config = RCC_PLL_IsNewConfig(RCC_PLL3_CONFIG, &(pRCC_OscInitStruct->PLL3));
-    uint32_t pll3_ready = LL_RCC_PLL1_IsReady();
+    uint32_t pll3_ready = LL_RCC_PLL3_IsReady();
     if (new_pll_config == 1U)
     {
       uint32_t ic1src = LL_RCC_IC1_GetSource();

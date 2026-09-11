@@ -135,6 +135,9 @@
     (#) To check if I2C target device is ready for communication, use the function HAL_I3C_Ctrl_IsDeviceI2C_Ready()
 
     (#) To send a message header {S + 0x7E + W + STOP}, use the function HAL_I3C_Ctrl_GenerateArbitration().
+
+    (#) To send a target reset pattern or HDR exit pattern, use the function HAL_I3C_Ctrl_GeneratePattern().
+
     (#) To insert a target reset pattern before the STOP of a transmitted frame containing a RSTACT CCC command,
         the application must enable the reset pattern configuration using HAL_I3C_Ctrl_SetConfigResetPattern()
         before calling HAL_I3C_Ctrl_TransmitCCC() or HAL_I3C_Ctrl_ReceiveCCC() interfaces.
@@ -1615,10 +1618,14 @@ void HAL_I3C_ER_IRQHandler(I3C_HandleTypeDef *hi3c)
   */
 void HAL_I3C_EV_IRQHandler(I3C_HandleTypeDef *hi3c) /* Derogation MISRAC2012-Rule-8.13 */
 {
+#if defined(I3C_MISR_CFNFMIS)
+  uint32_t it_masks   = READ_REG(hi3c->Instance->MISR);
+#else
   uint32_t it_flags   = READ_REG(hi3c->Instance->EVR);
   uint32_t it_sources = READ_REG(hi3c->Instance->IER);
 
   uint32_t it_masks   = (uint32_t)(it_flags & it_sources);
+#endif /* I3C_MISR_CFNFMIS */
 
   /* I3C events treatment */
   if (hi3c->XferISR != NULL)
@@ -1911,6 +1918,11 @@ HAL_StatusTypeDef HAL_I3C_Ctrl_Config(I3C_HandleTypeDef *hi3c, const I3C_CtrlCon
       assert_param(IS_I3C_DYNAMICADDRESS_VALUE(pConfig->DynamicAddr));
       assert_param(IS_I3C_FUNCTIONALSTATE_VALUE(pConfig->HighKeeperSDA));
       assert_param(IS_I3C_FUNCTIONALSTATE_VALUE(pConfig->HotJoinAllowed));
+#if defined(I3C_TIMINGR2_STALLL)
+      assert_param(IS_I3C_FUNCTIONALSTATE_VALUE(pConfig->ACKI2CAddrState));
+      assert_param(IS_I3C_FUNCTIONALSTATE_VALUE(pConfig->ACKI2CWriteState));
+      assert_param(IS_I3C_FUNCTIONALSTATE_VALUE(pConfig->ACKI2CReadState));
+#endif /* I3C_TIMINGR2_STALLL */
       assert_param(IS_I3C_FUNCTIONALSTATE_VALUE(pConfig->ACKStallState));
       assert_param(IS_I3C_FUNCTIONALSTATE_VALUE(pConfig->CCCStallState));
       assert_param(IS_I3C_FUNCTIONALSTATE_VALUE(pConfig->TxStallState));
@@ -1921,6 +1933,11 @@ HAL_StatusTypeDef HAL_I3C_Ctrl_Config(I3C_HandleTypeDef *hi3c, const I3C_CtrlCon
 
       /* Calculate value to be written in timing register 2 */
       timing2_value = (((uint32_t)pConfig->StallTime << I3C_TIMINGR2_STALL_Pos)      |
+#if defined(I3C_TIMINGR2_STALLL)
+                       ((uint32_t)pConfig->ACKI2CAddrState << I3C_TIMINGR2_STALLL_Pos) |
+                       ((uint32_t)pConfig->ACKI2CWriteState << I3C_TIMINGR2_STALLS_Pos) |
+                       ((uint32_t)pConfig->ACKI2CReadState << I3C_TIMINGR2_STALLR_Pos) |
+#endif /* I3C_TIMINGR2_STALLL */
                        ((uint32_t)pConfig->ACKStallState << I3C_TIMINGR2_STALLA_Pos) |
                        ((uint32_t)pConfig->CCCStallState << I3C_TIMINGR2_STALLC_Pos) |
                        ((uint32_t)pConfig->TxStallState << I3C_TIMINGR2_STALLD_Pos)  |
@@ -2716,6 +2733,8 @@ HAL_StatusTypeDef HAL_I3C_GetConfigFifo(I3C_HandleTypeDef *hi3c, I3C_FifoConfTyp
              during the Dynamic Address Assignment processus.
          (+) Call the function HAL_I3C_Ctrl_IsDeviceI3C_Ready() to check if I3C target device is ready.
          (+) Call the function HAL_I3C_Ctrl_IsDeviceI2C_Ready() to check if I2C target device is ready.
+         (+) Call the function HAL_I3C_Ctrl_GeneratePatterns() to send target reset pattern or HDR exit pattern with
+             arbitration in polling mode
          (+) Call the function HAL_I3C_Ctrl_GenerateArbitration to send arbitration
             (message header {S + 0x7E + W + STOP}) in polling mode
 
@@ -5118,6 +5137,8 @@ HAL_StatusTypeDef HAL_I3C_Ctrl_DynAddrAssign(I3C_HandleTypeDef  *hi3c,
           /* Check TX FIFO not full flag */
           if (__HAL_I3C_GET_FLAG(hi3c, HAL_I3C_FLAG_TXFNFF) == SET)
           {
+            *target_payload = 0UL;
+
             /* Check on the Rx FIFO threshold to know the Rx treatment process : byte or word */
             if (LL_I3C_GetRxFIFOThreshold(hi3c->Instance) == LL_I3C_RXFIFO_THRESHOLD_1_4)
             {
@@ -5348,6 +5369,123 @@ HAL_StatusTypeDef HAL_I3C_Ctrl_IsDeviceI2C_Ready(I3C_HandleTypeDef *hi3c,
 
     /* Check if the device is ready*/
     status = I3C_Ctrl_IsDevice_Ready(hi3c, &device, trials, timeout);
+  }
+
+  return status;
+}
+/**
+  * @brief Controller generates patterns (target reset pattern or HDR exit pattern) with arbitration in polling mode.
+  * @param  hi3c       : [IN] Pointer to an I3C_HandleTypeDef structure that contains
+  *                           the configuration information for the specified I3C.
+  * @param  pattern    : [IN] Specifies the generated pattern.
+  *                           It can be a value of @ref I3C_PATTERN_CONFIGURATION
+  * @param  timeout    : [IN] Timeout duration
+  * @retval HAL Status :      Value from HAL_StatusTypeDef enumeration.
+  */
+HAL_StatusTypeDef HAL_I3C_Ctrl_GeneratePatterns(I3C_HandleTypeDef *hi3c, uint32_t pattern, uint32_t timeout)
+{
+  HAL_StatusTypeDef status = HAL_OK;
+  HAL_I3C_StateTypeDef handle_state;
+  __IO uint32_t exit_condition;
+  uint32_t tickstart;
+
+  /* check on the handle */
+  if (hi3c == NULL)
+  {
+    status = HAL_ERROR;
+  }
+  else
+  {
+    /* Check the instance and the mode parameters */
+    assert_param(IS_I3C_ALL_INSTANCE(hi3c->Instance));
+    assert_param(IS_I3C_MODE(hi3c->Mode));
+    assert_param(IS_I3C_PATTERN(pattern));
+
+    /* Get I3C handle state */
+    handle_state = hi3c->State;
+
+    /* check on the Mode */
+    if (hi3c->Mode != HAL_I3C_MODE_CONTROLLER)
+    {
+      hi3c->ErrorCode = HAL_I3C_ERROR_NOT_ALLOWED;
+      status = HAL_ERROR;
+    }
+    /* check on the State */
+    else if ((handle_state != HAL_I3C_STATE_READY) && (handle_state != HAL_I3C_STATE_LISTEN))
+    {
+      status = HAL_BUSY;
+    }
+    else
+    {
+      hi3c->State = HAL_I3C_STATE_BUSY;
+
+      /* The target reset pattern is sent after the issued message header */
+      if (pattern == HAL_I3C_TARGET_RESET_PATTERN)
+      {
+        /* Enable reset pattern */
+        LL_I3C_EnableResetPattern(hi3c->Instance);
+
+        /* Disable exit pattern */
+        LL_I3C_DisableExitPattern(hi3c->Instance);
+      }
+      /* The HDR exit pattern is sent after the issued message header */
+      else
+      {
+        /* Disable reset pattern */
+        LL_I3C_DisableResetPattern(hi3c->Instance);
+
+        /* Enable exit pattern */
+        LL_I3C_EnableExitPattern(hi3c->Instance);
+      }
+
+      /* Write message control register */
+      WRITE_REG(hi3c->Instance->CR, LL_I3C_CONTROLLER_MTYPE_HEADER | LL_I3C_GENERATE_STOP);
+
+      /* Calculate exit_condition value based on Frame complete and error flags */
+      exit_condition = (READ_REG(hi3c->Instance->EVR) & (I3C_EVR_FCF | I3C_EVR_ERRF));
+
+      tickstart = HAL_GetTick();
+
+      while (exit_condition == 0U)
+      {
+        if (timeout != HAL_MAX_DELAY)
+        {
+          if (((HAL_GetTick() - tickstart) > timeout) || (timeout == 0U))
+          {
+            /* Update I3C error code */
+            hi3c->ErrorCode |= HAL_I3C_ERROR_TIMEOUT;
+            status = HAL_TIMEOUT;
+
+            break;
+          }
+        }
+        /* Calculate exit_condition value based on Frame complete and error flags */
+        exit_condition = (READ_REG(hi3c->Instance->EVR) & (I3C_EVR_FCF | I3C_EVR_ERRF));
+      }
+
+      if (status == HAL_OK)
+      {
+        /* Check if the FCF flag has been set */
+        if (__HAL_I3C_GET_FLAG(hi3c, I3C_EVR_FCF) == SET)
+        {
+          /* Clear frame complete flag */
+          LL_I3C_ClearFlag_FC(hi3c->Instance);
+        }
+        else
+        {
+          /* Clear error flag */
+          LL_I3C_ClearFlag_ERR(hi3c->Instance);
+
+          /* Update handle error code parameter */
+          I3C_GetErrorSources(hi3c);
+
+          /* Update returned status value */
+          status = HAL_ERROR;
+        }
+      }
+      /* At the end of Rx process update state to Previous state */
+      I3C_StateUpdate(hi3c);
+    }
   }
 
   return status;
@@ -7177,14 +7315,22 @@ static HAL_StatusTypeDef I3C_Tgt_Event_ISR(struct __I3C_HandleTypeDef *hi3c, uin
   uint32_t tmpevent = 0U;
 
   /* I3C Rx FIFO not empty interrupt Check */
+#if defined(I3C_MISR_CFNFMIS)
+  if (I3C_CHECK_FLAG(itMasks, HAL_I3C_IT_MASKS_RXFNEMIS) != RESET)
+#else
   if (I3C_CHECK_FLAG(itMasks, HAL_I3C_FLAG_RXFNEF) != RESET)
+#endif /* I3C_MISR_CFNFMIS */
   {
     /* Call receive treatment function */
     hi3c->ptrRxFunc(hi3c);
   }
 
   /* I3C target complete controller-role hand-off procedure (direct GETACCR CCC) event management --------------------*/
+#if defined(I3C_MISR_CFNFMIS)
+  if (I3C_CHECK_FLAG(itMasks, HAL_I3C_IT_MASKS_CRUPDMIS) != RESET)
+#else
   if (I3C_CHECK_FLAG(itMasks, I3C_EVR_CRUPDF) != RESET)
+#endif /* I3C_MISR_CFNFMIS */
   {
     /* Clear controller-role update flag */
     LL_I3C_ClearFlag_CRUPD(hi3c->Instance);
@@ -7194,7 +7340,11 @@ static HAL_StatusTypeDef I3C_Tgt_Event_ISR(struct __I3C_HandleTypeDef *hi3c, uin
   }
 
   /* I3C target receive any direct GETxxx CCC event management -------------------------------------------------------*/
+#if defined(I3C_MISR_CFNFMIS)
+  if (I3C_CHECK_FLAG(itMasks, HAL_I3C_IT_MASKS_GETMIS) != RESET)
+#else
   if (I3C_CHECK_FLAG(itMasks, I3C_EVR_GETF) != RESET)
+#endif /* I3C_MISR_CFNFMIS */
   {
     /* Clear GETxxx CCC flag */
     LL_I3C_ClearFlag_GET(hi3c->Instance);
@@ -7204,7 +7354,11 @@ static HAL_StatusTypeDef I3C_Tgt_Event_ISR(struct __I3C_HandleTypeDef *hi3c, uin
   }
 
   /* I3C target receive get status command (direct GETSTATUS CCC) event management -----------------------------------*/
+#if defined(I3C_MISR_CFNFMIS)
+  if (I3C_CHECK_FLAG(itMasks, HAL_I3C_IT_MASKS_STAMIS) != RESET)
+#else
   if (I3C_CHECK_FLAG(itMasks, I3C_EVR_STAF) != RESET)
+#endif /* I3C_MISR_CFNFMIS */
   {
     /* Clear GETSTATUS CCC flag */
     LL_I3C_ClearFlag_STA(hi3c->Instance);
@@ -7214,7 +7368,11 @@ static HAL_StatusTypeDef I3C_Tgt_Event_ISR(struct __I3C_HandleTypeDef *hi3c, uin
   }
 
   /* I3C target receive a dynamic address update (ENTDAA/RSTDAA/SETNEWDA CCC) event management -----------------------*/
+#if defined(I3C_MISR_CFNFMIS)
+  if (I3C_CHECK_FLAG(itMasks, HAL_I3C_IT_MASKS_DAUPDMIS) != RESET)
+#else
   if (I3C_CHECK_FLAG(itMasks, I3C_EVR_DAUPDF) != RESET)
+#endif /* I3C_MISR_CFNFMIS */
   {
     /* Clear dynamic address update flag */
     LL_I3C_ClearFlag_DAUPD(hi3c->Instance);
@@ -7224,7 +7382,11 @@ static HAL_StatusTypeDef I3C_Tgt_Event_ISR(struct __I3C_HandleTypeDef *hi3c, uin
   }
 
   /* I3C target receive maximum write length update (direct SETMWL CCC) event management -----------------------------*/
+#if defined(I3C_MISR_CFNFMIS)
+  if (I3C_CHECK_FLAG(itMasks, HAL_I3C_IT_MASKS_MWLUPDMIS) != RESET)
+#else
   if (I3C_CHECK_FLAG(itMasks, I3C_EVR_MWLUPDF) != RESET)
+#endif /* I3C_MISR_CFNFMIS */
   {
     /* Clear SETMWL CCC flag */
     LL_I3C_ClearFlag_MWLUPD(hi3c->Instance);
@@ -7234,7 +7396,11 @@ static HAL_StatusTypeDef I3C_Tgt_Event_ISR(struct __I3C_HandleTypeDef *hi3c, uin
   }
 
   /* I3C target receive maximum read length update(direct SETMRL CCC) event management -------------------------------*/
+#if defined(I3C_MISR_CFNFMIS)
+  if (I3C_CHECK_FLAG(itMasks, HAL_I3C_IT_MASKS_MRLUPDMIS) != RESET)
+#else
   if (I3C_CHECK_FLAG(itMasks, I3C_EVR_MRLUPDF) != RESET)
+#endif /* I3C_MISR_CFNFMIS */
   {
     /* Clear SETMRL CCC flag */
     LL_I3C_ClearFlag_MRLUPD(hi3c->Instance);
@@ -7244,7 +7410,11 @@ static HAL_StatusTypeDef I3C_Tgt_Event_ISR(struct __I3C_HandleTypeDef *hi3c, uin
   }
 
   /* I3C target detect reset pattern (broadcast or direct RSTACT CCC) event management -------------------------------*/
+#if defined(I3C_MISR_CFNFMIS)
+  if (I3C_CHECK_FLAG(itMasks, HAL_I3C_IT_MASKS_RSTMIS) != RESET)
+#else
   if (I3C_CHECK_FLAG(itMasks, I3C_EVR_RSTF) != RESET)
+#endif /* I3C_MISR_CFNFMIS */
   {
     /* Clear reset pattern flag */
     LL_I3C_ClearFlag_RST(hi3c->Instance);
@@ -7254,7 +7424,11 @@ static HAL_StatusTypeDef I3C_Tgt_Event_ISR(struct __I3C_HandleTypeDef *hi3c, uin
   }
 
   /* I3C target receive activity state update (direct or broadcast ENTASx) CCC event management ----------------------*/
+#if defined(I3C_MISR_CFNFMIS)
+  if (I3C_CHECK_FLAG(itMasks, HAL_I3C_IT_MASKS_ASUPDMIS) != RESET)
+#else
   if (I3C_CHECK_FLAG(itMasks, I3C_EVR_ASUPDF) != RESET)
+#endif /* I3C_MISR_CFNFMIS */
   {
     /* Clear ENTASx CCC flag */
     LL_I3C_ClearFlag_ASUPD(hi3c->Instance);
@@ -7264,7 +7438,11 @@ static HAL_StatusTypeDef I3C_Tgt_Event_ISR(struct __I3C_HandleTypeDef *hi3c, uin
   }
 
   /* I3C target receive a direct or broadcast ENEC/DISEC CCC event management ----------------------------------------*/
+#if defined(I3C_MISR_CFNFMIS)
+  if (I3C_CHECK_FLAG(itMasks, HAL_I3C_IT_MASKS_INTUPDMIS) != RESET)
+#else
   if (I3C_CHECK_FLAG(itMasks, I3C_EVR_INTUPDF) != RESET)
+#endif /* I3C_MISR_CFNFMIS */
   {
     /* Clear ENEC/DISEC CCC flag */
     LL_I3C_ClearFlag_INTUPD(hi3c->Instance);
@@ -7274,7 +7452,11 @@ static HAL_StatusTypeDef I3C_Tgt_Event_ISR(struct __I3C_HandleTypeDef *hi3c, uin
   }
 
   /* I3C target receive a broadcast DEFTGTS CCC event management -----------------------------------------------------*/
+#if defined(I3C_MISR_CFNFMIS)
+  if (I3C_CHECK_FLAG(itMasks, HAL_I3C_IT_MASKS_DEFMIS) != RESET)
+#else
   if (I3C_CHECK_FLAG(itMasks, I3C_EVR_DEFF) != RESET)
+#endif /* I3C_MISR_CFNFMIS */
   {
     /* Clear DEFTGTS CCC flag */
     LL_I3C_ClearFlag_DEF(hi3c->Instance);
@@ -7284,7 +7466,11 @@ static HAL_StatusTypeDef I3C_Tgt_Event_ISR(struct __I3C_HandleTypeDef *hi3c, uin
   }
 
   /* I3C target receive a group addressing (broadcast DEFGRPA CCC) event management ----------------------------------*/
+#if defined(I3C_MISR_CFNFMIS)
+  if (I3C_CHECK_FLAG(itMasks, HAL_I3C_IT_GRPMIS) != RESET)
+#else
   if (I3C_CHECK_FLAG(itMasks, I3C_EVR_GRPF) != RESET)
+#endif /* I3C_MISR_CFNFMIS */
   {
     /* Clear DEFGRPA CCC flag */
     LL_I3C_ClearFlag_GRP(hi3c->Instance);
@@ -7294,7 +7480,11 @@ static HAL_StatusTypeDef I3C_Tgt_Event_ISR(struct __I3C_HandleTypeDef *hi3c, uin
   }
 
   /* I3C target wakeup event management ----------------------------------*/
+#if defined(I3C_MISR_CFNFMIS)
+  if (I3C_CHECK_FLAG(itMasks, HAL_I3C_IT_MASKS_WKPMIS) != RESET)
+#else
   if (I3C_CHECK_FLAG(itMasks, I3C_EVR_WKPF) != RESET)
+#endif /* I3C_MISR_CFNFMIS */
   {
     /* Clear WKP flag */
     LL_I3C_ClearFlag_WKP(hi3c->Instance);
@@ -7330,7 +7520,11 @@ static HAL_StatusTypeDef I3C_Tgt_Event_ISR(struct __I3C_HandleTypeDef *hi3c, uin
 static HAL_StatusTypeDef I3C_Ctrl_Event_ISR(struct __I3C_HandleTypeDef *hi3c, uint32_t itMasks)
 {
   /* I3C controller receive IBI event management ---------------------------------------------------------------------*/
+#if defined(I3C_MISR_CFNFMIS)
+  if (I3C_CHECK_FLAG(itMasks, HAL_I3C_IT_IBIMIS) != RESET)
+#else
   if (I3C_CHECK_FLAG(itMasks, I3C_EVR_IBIF) != RESET)
+#endif /* I3C_MISR_CFNFMIS */
   {
     /* Clear IBI request flag */
     LL_I3C_ClearFlag_IBI(hi3c->Instance);
@@ -7345,7 +7539,11 @@ static HAL_StatusTypeDef I3C_Ctrl_Event_ISR(struct __I3C_HandleTypeDef *hi3c, ui
   }
 
   /* I3C controller controller-role request event management ---------------------------------------------------------*/
+#if defined(I3C_MISR_CFNFMIS)
+  if (I3C_CHECK_FLAG(itMasks, HAL_I3C_IT_CRMIS) != RESET)
+#else
   if (I3C_CHECK_FLAG(itMasks, I3C_EVR_CRF) != RESET)
+#endif /* I3C_MISR_CFNFMIS */
   {
     /* Clear controller-role request flag */
     LL_I3C_ClearFlag_CR(hi3c->Instance);
@@ -7360,7 +7558,11 @@ static HAL_StatusTypeDef I3C_Ctrl_Event_ISR(struct __I3C_HandleTypeDef *hi3c, ui
   }
 
   /* I3C controller hot-join event management ------------------------------------------------------------------------*/
+#if defined(I3C_MISR_CFNFMIS)
+  if (I3C_CHECK_FLAG(itMasks, HAL_I3C_IT_HJMIS) != RESET)
+#else
   if (I3C_CHECK_FLAG(itMasks, I3C_EVR_HJF) != RESET)
+#endif /* I3C_MISR_CFNFMIS */
   {
     /* Clear hot-join flag */
     LL_I3C_ClearFlag_HJ(hi3c->Instance);
@@ -7390,7 +7592,11 @@ static HAL_StatusTypeDef I3C_Ctrl_Event_ISR(struct __I3C_HandleTypeDef *hi3c, ui
 static HAL_StatusTypeDef I3C_Tgt_HotJoin_ISR(struct __I3C_HandleTypeDef *hi3c, uint32_t itMasks)
 {
   /* I3C target receive a dynamic address update event management */
+#if defined(I3C_MISR_CFNFMIS)
+  if (I3C_CHECK_FLAG(itMasks, HAL_I3C_IT_MASKS_DAUPDMIS) != RESET)
+#else
   if (I3C_CHECK_FLAG(itMasks, I3C_EVR_DAUPDF) != RESET)
+#endif /* I3C_MISR_CFNFMIS */
   {
     /* Clear dynamic address update flag */
     LL_I3C_ClearFlag_DAUPD(hi3c->Instance);
@@ -7435,7 +7641,11 @@ static HAL_StatusTypeDef I3C_Tgt_HotJoin_ISR(struct __I3C_HandleTypeDef *hi3c, u
 static HAL_StatusTypeDef I3C_Tgt_CtrlRole_ISR(struct __I3C_HandleTypeDef *hi3c, uint32_t itMasks)
 {
   /* I3C target complete controller-role hand-off procedure (direct GETACCR CCC) event management -------------------*/
+#if defined(I3C_MISR_CFNFMIS)
+  if (I3C_CHECK_FLAG(itMasks, HAL_I3C_IT_MASKS_CRUPDMIS) != RESET)
+#else
   if (I3C_CHECK_FLAG(itMasks, I3C_EVR_CRUPDF) != RESET)
+#endif /* I3C_MISR_CFNFMIS */
   {
     /* Clear controller-role update flag */
     LL_I3C_ClearFlag_CRUPD(hi3c->Instance);
@@ -7469,7 +7679,11 @@ static HAL_StatusTypeDef I3C_Tgt_CtrlRole_ISR(struct __I3C_HandleTypeDef *hi3c, 
 static HAL_StatusTypeDef I3C_Tgt_IBI_ISR(struct __I3C_HandleTypeDef *hi3c, uint32_t itMasks)
 {
   /* I3C target IBI end process event management ---------------------------------------------------------------------*/
+#if defined(I3C_MISR_CFNFMIS)
+  if (I3C_CHECK_FLAG(itMasks, HAL_I3C_IT_MASKS_IBIENDMIS) != RESET)
+#else
   if (I3C_CHECK_FLAG(itMasks, I3C_EVR_IBIENDF) != RESET)
+#endif /* I3C_MISR_CFNFMIS */
   {
     /* Clear IBI end flag */
     LL_I3C_ClearFlag_IBIEND(hi3c->Instance);
@@ -7506,7 +7720,11 @@ static HAL_StatusTypeDef I3C_Tgt_Tx_ISR(struct __I3C_HandleTypeDef *hi3c, uint32
   if (hi3c->State == HAL_I3C_STATE_BUSY_TX)
   {
     /* I3C Tx FIFO not full interrupt Check */
+#if defined(I3C_MISR_CFNFMIS)
+    if (I3C_CHECK_FLAG(itMasks, HAL_I3C_IT_MASKS_TXFNFMIS) != RESET)
+#else
     if (I3C_CHECK_FLAG(itMasks, I3C_EVR_TXFNFF) != RESET)
+#endif /* I3C_MISR_CFNFMIS */
     {
       if (hi3c->TxXferCount > 0U)
       {
@@ -7516,7 +7734,11 @@ static HAL_StatusTypeDef I3C_Tgt_Tx_ISR(struct __I3C_HandleTypeDef *hi3c, uint32
     }
 
     /* I3C target frame complete event Check */
+#if defined(I3C_MISR_CFNFMIS)
+    if (I3C_CHECK_FLAG(itMasks, HAL_I3C_IT_MASKS_FCMIS) != RESET)
+#else
     if (I3C_CHECK_FLAG(itMasks, I3C_EVR_FCF) != RESET)
+#endif /* I3C_MISR_CFNFMIS */
     {
       /* Clear frame complete flag */
       LL_I3C_ClearFlag_FC(hi3c->Instance);
@@ -7549,7 +7771,11 @@ static HAL_StatusTypeDef I3C_Tgt_Tx_ISR(struct __I3C_HandleTypeDef *hi3c, uint32
     }
 
     /* I3C target wakeup event management ----------------------------------*/
+#if defined(I3C_MISR_CFNFMIS)
+    if (I3C_CHECK_FLAG(itMasks, HAL_I3C_IT_MASKS_WKPMIS) != RESET)
+#else
     if (I3C_CHECK_FLAG(itMasks, I3C_EVR_WKPF) != RESET)
+#endif /* I3C_MISR_CFNFMIS */
     {
       /* Clear WKP flag */
       LL_I3C_ClearFlag_WKP(hi3c->Instance);
@@ -7580,7 +7806,11 @@ static HAL_StatusTypeDef I3C_Tgt_Rx_ISR(struct __I3C_HandleTypeDef *hi3c, uint32
   if (hi3c->State == HAL_I3C_STATE_BUSY_RX)
   {
     /* I3C Rx FIFO not empty interrupt Check */
+#if defined(I3C_MISR_CFNFMIS)
+    if (I3C_CHECK_FLAG(itMasks, HAL_I3C_IT_MASKS_RXFNEMIS) != RESET)
+#else
     if (I3C_CHECK_FLAG(itMasks, HAL_I3C_FLAG_RXFNEF) != RESET)
+#endif /* I3C_MISR_CFNFMIS */
     {
       if (hi3c->RxXferCount > 0U)
       {
@@ -7590,7 +7820,11 @@ static HAL_StatusTypeDef I3C_Tgt_Rx_ISR(struct __I3C_HandleTypeDef *hi3c, uint32
     }
 
     /* I3C target frame complete event Check */
+#if defined(I3C_MISR_CFNFMIS)
+    if (I3C_CHECK_FLAG(itMasks, HAL_I3C_IT_MASKS_FCMIS) != RESET)
+#else
     if (I3C_CHECK_FLAG(itMasks, I3C_EVR_FCF) != RESET)
+#endif /* I3C_MISR_CFNFMIS */
     {
       /* Clear frame complete flag */
       LL_I3C_ClearFlag_FC(hi3c->Instance);
@@ -7623,7 +7857,11 @@ static HAL_StatusTypeDef I3C_Tgt_Rx_ISR(struct __I3C_HandleTypeDef *hi3c, uint32
     }
 
     /* I3C target wakeup event management ----------------------------------*/
+#if defined(I3C_MISR_CFNFMIS)
+    if (I3C_CHECK_FLAG(itMasks, HAL_I3C_IT_MASKS_WKPMIS) != RESET)
+#else
     if (I3C_CHECK_FLAG(itMasks, I3C_EVR_WKPF) != RESET)
+#endif /* I3C_MISR_CFNFMIS */
     {
       /* Clear WKP flag */
       LL_I3C_ClearFlag_WKP(hi3c->Instance);
@@ -7655,7 +7893,11 @@ static HAL_StatusTypeDef I3C_Tgt_Tx_DMA_ISR(struct __I3C_HandleTypeDef *hi3c, ui
   if (hi3c->State == HAL_I3C_STATE_BUSY_TX)
   {
     /* I3C target frame complete event Check */
+#if defined(I3C_MISR_CFNFMIS)
+    if (I3C_CHECK_FLAG(itMasks, HAL_I3C_IT_MASKS_FCMIS) != RESET)
+#else
     if (I3C_CHECK_FLAG(itMasks, I3C_EVR_FCF) != RESET)
+#endif /* I3C_MISR_CFNFMIS */
     {
       /* Clear frame complete flag */
       LL_I3C_ClearFlag_FC(hi3c->Instance);
@@ -7691,7 +7933,11 @@ static HAL_StatusTypeDef I3C_Tgt_Tx_DMA_ISR(struct __I3C_HandleTypeDef *hi3c, ui
     }
 
     /* I3C target wakeup event management ----------------------------------*/
+#if defined(I3C_MISR_CFNFMIS)
+    if (I3C_CHECK_FLAG(itMasks, HAL_I3C_IT_MASKS_WKPMIS) != RESET)
+#else
     if (I3C_CHECK_FLAG(itMasks, I3C_EVR_WKPF) != RESET)
+#endif /* I3C_MISR_CFNFMIS */
     {
       /* Clear WKP flag */
       LL_I3C_ClearFlag_WKP(hi3c->Instance);
@@ -7722,7 +7968,11 @@ static HAL_StatusTypeDef I3C_Tgt_Rx_DMA_ISR(struct __I3C_HandleTypeDef *hi3c, ui
   if (hi3c->State == HAL_I3C_STATE_BUSY_RX)
   {
     /* I3C target frame complete event Check */
+#if defined(I3C_MISR_CFNFMIS)
+    if (I3C_CHECK_FLAG(itMasks, HAL_I3C_IT_MASKS_FCMIS) != RESET)
+#else
     if (I3C_CHECK_FLAG(itMasks, I3C_EVR_FCF) != RESET)
+#endif /* I3C_MISR_CFNFMIS */
     {
       /* Clear frame complete flag */
       LL_I3C_ClearFlag_FC(hi3c->Instance);
@@ -7758,7 +8008,11 @@ static HAL_StatusTypeDef I3C_Tgt_Rx_DMA_ISR(struct __I3C_HandleTypeDef *hi3c, ui
     }
 
     /* I3C target wakeup event management ----------------------------------*/
+#if defined(I3C_MISR_CFNFMIS)
+    if (I3C_CHECK_FLAG(itMasks, HAL_I3C_IT_MASKS_WKPMIS) != RESET)
+#else
     if (I3C_CHECK_FLAG(itMasks, I3C_EVR_WKPF) != RESET)
+#endif /* I3C_MISR_CFNFMIS */
     {
       /* Clear WKP flag */
       LL_I3C_ClearFlag_WKP(hi3c->Instance);
@@ -7790,7 +8044,11 @@ static HAL_StatusTypeDef I3C_Ctrl_Tx_ISR(struct __I3C_HandleTypeDef *hi3c, uint3
   if (hi3c->State == HAL_I3C_STATE_BUSY_TX)
   {
     /* Check if Control FIFO requests data */
+#if defined(I3C_MISR_CFNFMIS)
+    if (I3C_CHECK_FLAG(itMasks, HAL_I3C_IT_CFNFMIS) != RESET)
+#else
     if (I3C_CHECK_FLAG(itMasks, I3C_EVR_CFNFF) != RESET)
+#endif /* I3C_MISR_CFNFMIS */
     {
       if (hi3c->ControlXferCount > 0U)
       {
@@ -7800,7 +8058,11 @@ static HAL_StatusTypeDef I3C_Ctrl_Tx_ISR(struct __I3C_HandleTypeDef *hi3c, uint3
     }
 
     /* I3C Tx FIFO not full interrupt Check */
+#if defined(I3C_MISR_CFNFMIS)
+    if (I3C_CHECK_FLAG(itMasks, HAL_I3C_IT_MASKS_TXFNFMIS) != RESET)
+#else
     if (I3C_CHECK_FLAG(itMasks, I3C_EVR_TXFNFF) != RESET)
+#endif /* I3C_MISR_CFNFMIS */
     {
       if (hi3c->TxXferCount > 0U)
       {
@@ -7810,7 +8072,11 @@ static HAL_StatusTypeDef I3C_Ctrl_Tx_ISR(struct __I3C_HandleTypeDef *hi3c, uint3
     }
 
     /* I3C target frame complete event Check */
+#if defined(I3C_MISR_CFNFMIS)
+    if (I3C_CHECK_FLAG(itMasks, HAL_I3C_IT_MASKS_FCMIS) != RESET)
+#else
     if (I3C_CHECK_FLAG(itMasks, I3C_EVR_FCF) != RESET)
+#endif /* I3C_MISR_CFNFMIS */
     {
       /* Clear frame complete flag */
       LL_I3C_ClearFlag_FC(hi3c->Instance);
@@ -7865,7 +8131,11 @@ static HAL_StatusTypeDef I3C_Ctrl_Rx_ISR(struct __I3C_HandleTypeDef *hi3c, uint3
   if (hi3c->State == HAL_I3C_STATE_BUSY_RX)
   {
     /* Check if Control FIFO requests data */
+#if defined(I3C_MISR_CFNFMIS)
+    if (I3C_CHECK_FLAG(itMasks, HAL_I3C_IT_CFNFMIS) != RESET)
+#else
     if (I3C_CHECK_FLAG(itMasks, I3C_EVR_CFNFF) != RESET)
+#endif /* I3C_MISR_CFNFMIS */
     {
       if (hi3c->ControlXferCount > 0U)
       {
@@ -7875,7 +8145,11 @@ static HAL_StatusTypeDef I3C_Ctrl_Rx_ISR(struct __I3C_HandleTypeDef *hi3c, uint3
     }
 
     /* I3C Rx FIFO not empty interrupt Check */
+#if defined(I3C_MISR_CFNFMIS)
+    if (I3C_CHECK_FLAG(itMasks, HAL_I3C_IT_MASKS_RXFNEMIS) != RESET)
+#else
     if (I3C_CHECK_FLAG(itMasks, HAL_I3C_FLAG_RXFNEF) != RESET)
+#endif /* I3C_MISR_CFNFMIS */
     {
       if (hi3c->RxXferCount > 0U)
       {
@@ -7885,7 +8159,11 @@ static HAL_StatusTypeDef I3C_Ctrl_Rx_ISR(struct __I3C_HandleTypeDef *hi3c, uint3
     }
 
     /* I3C Tx FIFO not full interrupt Check */
+#if defined(I3C_MISR_CFNFMIS)
+    if (I3C_CHECK_FLAG(itMasks, HAL_I3C_IT_MASKS_TXFNFMIS) != RESET)
+#else
     if (I3C_CHECK_FLAG(itMasks, I3C_EVR_TXFNFF) != RESET)
+#endif /* I3C_MISR_CFNFMIS */
     {
       if (hi3c->TxXferCount > 0U)
       {
@@ -7895,7 +8173,11 @@ static HAL_StatusTypeDef I3C_Ctrl_Rx_ISR(struct __I3C_HandleTypeDef *hi3c, uint3
     }
 
     /* I3C target frame complete event Check */
+#if defined(I3C_MISR_CFNFMIS)
+    if (I3C_CHECK_FLAG(itMasks, HAL_I3C_IT_MASKS_FCMIS) != RESET)
+#else
     if (I3C_CHECK_FLAG(itMasks, I3C_EVR_FCF) != RESET)
+#endif /* I3C_MISR_CFNFMIS */
     {
       /* Clear frame complete flag */
       LL_I3C_ClearFlag_FC(hi3c->Instance);
@@ -7949,7 +8231,11 @@ static HAL_StatusTypeDef I3C_Ctrl_Multiple_Xfer_ISR(struct __I3C_HandleTypeDef *
   if (hi3c->State == HAL_I3C_STATE_BUSY_TX_RX)
   {
     /* Check if Control FIFO requests data */
+#if defined(I3C_MISR_CFNFMIS)
+    if (I3C_CHECK_FLAG(itMasks, HAL_I3C_IT_CFNFMIS) != RESET)
+#else
     if (I3C_CHECK_FLAG(itMasks, I3C_EVR_CFNFF) != RESET)
+#endif /* I3C_MISR_CFNFMIS */
     {
       if (hi3c->ControlXferCount > 0U)
       {
@@ -7959,7 +8245,11 @@ static HAL_StatusTypeDef I3C_Ctrl_Multiple_Xfer_ISR(struct __I3C_HandleTypeDef *
     }
 
     /* I3C Tx FIFO not full interrupt Check */
+#if defined(I3C_MISR_CFNFMIS)
+    if (I3C_CHECK_FLAG(itMasks, HAL_I3C_IT_MASKS_TXFNFMIS) != RESET)
+#else
     if (I3C_CHECK_FLAG(itMasks, I3C_EVR_TXFNFF) != RESET)
+#endif /* I3C_MISR_CFNFMIS */
     {
       if (hi3c->TxXferCount > 0U)
       {
@@ -7969,7 +8259,11 @@ static HAL_StatusTypeDef I3C_Ctrl_Multiple_Xfer_ISR(struct __I3C_HandleTypeDef *
     }
 
     /* I3C Rx FIFO not empty interrupt Check */
+#if defined(I3C_MISR_CFNFMIS)
+    if (I3C_CHECK_FLAG(itMasks, HAL_I3C_IT_MASKS_RXFNEMIS) != RESET)
+#else
     if (I3C_CHECK_FLAG(itMasks, HAL_I3C_FLAG_RXFNEF) != RESET)
+#endif /* I3C_MISR_CFNFMIS */
     {
       if (hi3c->RxXferCount > 0U)
       {
@@ -7979,7 +8273,11 @@ static HAL_StatusTypeDef I3C_Ctrl_Multiple_Xfer_ISR(struct __I3C_HandleTypeDef *
     }
 
     /* I3C target frame complete event Check */
+#if defined(I3C_MISR_CFNFMIS)
+    if (I3C_CHECK_FLAG(itMasks, HAL_I3C_IT_MASKS_FCMIS) != RESET)
+#else
     if (I3C_CHECK_FLAG(itMasks, I3C_EVR_FCF) != RESET)
+#endif /* I3C_MISR_CFNFMIS */
     {
       /* Clear frame complete flag */
       LL_I3C_ClearFlag_FC(hi3c->Instance);
@@ -8027,7 +8325,11 @@ static HAL_StatusTypeDef I3C_Ctrl_Multiple_Xfer_ISR(struct __I3C_HandleTypeDef *
 static HAL_StatusTypeDef I3C_Ctrl_Tx_Listen_Event_ISR(struct __I3C_HandleTypeDef *hi3c, uint32_t itMasks)
 {
   /* I3C controller receive IBI event management ---------------------------------------------------------------------*/
+#if defined(I3C_MISR_CFNFMIS)
+  if (I3C_CHECK_FLAG(itMasks, HAL_I3C_IT_IBIMIS) != RESET)
+#else
   if (I3C_CHECK_FLAG(itMasks, I3C_EVR_IBIF) != RESET)
+#endif /* I3C_MISR_CFNFMIS */
   {
     /* Clear IBI request flag */
     LL_I3C_ClearFlag_IBI(hi3c->Instance);
@@ -8042,7 +8344,11 @@ static HAL_StatusTypeDef I3C_Ctrl_Tx_Listen_Event_ISR(struct __I3C_HandleTypeDef
   }
 
   /* I3C controller controller-role request event management ---------------------------------------------------------*/
+#if defined(I3C_MISR_CFNFMIS)
+  if (I3C_CHECK_FLAG(itMasks, HAL_I3C_IT_CRMIS) != RESET)
+#else
   if (I3C_CHECK_FLAG(itMasks, I3C_EVR_CRF) != RESET)
+#endif /* I3C_MISR_CFNFMIS */
   {
     /* Clear controller-role request flag */
     LL_I3C_ClearFlag_CR(hi3c->Instance);
@@ -8057,7 +8363,11 @@ static HAL_StatusTypeDef I3C_Ctrl_Tx_Listen_Event_ISR(struct __I3C_HandleTypeDef
   }
 
   /* I3C controller hot-join event management ------------------------------------------------------------------------*/
+#if defined(I3C_MISR_CFNFMIS)
+  if (I3C_CHECK_FLAG(itMasks, HAL_I3C_IT_HJMIS) != RESET)
+#else
   if (I3C_CHECK_FLAG(itMasks, I3C_EVR_HJF) != RESET)
+#endif /* I3C_MISR_CFNFMIS */
   {
     /* Clear hot-join flag */
     LL_I3C_ClearFlag_HJ(hi3c->Instance);
@@ -8085,7 +8395,11 @@ static HAL_StatusTypeDef I3C_Ctrl_Tx_Listen_Event_ISR(struct __I3C_HandleTypeDef
 static HAL_StatusTypeDef I3C_Ctrl_Rx_Listen_Event_ISR(struct __I3C_HandleTypeDef *hi3c, uint32_t itMasks)
 {
   /* I3C controller receive IBI event management ---------------------------------------------------------------------*/
+#if defined(I3C_MISR_CFNFMIS)
+  if (I3C_CHECK_FLAG(itMasks, HAL_I3C_IT_IBIMIS) != RESET)
+#else
   if (I3C_CHECK_FLAG(itMasks, I3C_EVR_IBIF) != RESET)
+#endif /* I3C_MISR_CFNFMIS */
   {
     /* Clear IBI request flag */
     LL_I3C_ClearFlag_IBI(hi3c->Instance);
@@ -8100,7 +8414,11 @@ static HAL_StatusTypeDef I3C_Ctrl_Rx_Listen_Event_ISR(struct __I3C_HandleTypeDef
   }
 
   /* I3C controller controller-role request event management ---------------------------------------------------------*/
+#if defined(I3C_MISR_CFNFMIS)
+  if (I3C_CHECK_FLAG(itMasks, HAL_I3C_IT_CRMIS) != RESET)
+#else
   if (I3C_CHECK_FLAG(itMasks, I3C_EVR_CRF) != RESET)
+#endif /* I3C_MISR_CFNFMIS */
   {
     /* Clear controller-role request flag */
     LL_I3C_ClearFlag_CR(hi3c->Instance);
@@ -8115,7 +8433,11 @@ static HAL_StatusTypeDef I3C_Ctrl_Rx_Listen_Event_ISR(struct __I3C_HandleTypeDef
   }
 
   /* I3C controller hot-join event management ------------------------------------------------------------------------*/
+#if defined(I3C_MISR_CFNFMIS)
+  if (I3C_CHECK_FLAG(itMasks, HAL_I3C_IT_HJMIS) != RESET)
+#else
   if (I3C_CHECK_FLAG(itMasks, I3C_EVR_HJF) != RESET)
+#endif /* I3C_MISR_CFNFMIS */
   {
     /* Clear hot-join flag */
     LL_I3C_ClearFlag_HJ(hi3c->Instance);
@@ -8144,7 +8466,11 @@ static HAL_StatusTypeDef I3C_Ctrl_Rx_Listen_Event_ISR(struct __I3C_HandleTypeDef
 static HAL_StatusTypeDef I3C_Ctrl_Multiple_Xfer_Listen_Event_ISR(struct __I3C_HandleTypeDef *hi3c, uint32_t itMasks)
 {
   /* I3C controller receive IBI event management ---------------------------------------------------------------------*/
+#if defined(I3C_MISR_CFNFMIS)
+  if (I3C_CHECK_FLAG(itMasks, HAL_I3C_IT_IBIMIS) != RESET)
+#else
   if (I3C_CHECK_FLAG(itMasks, I3C_EVR_IBIF) != RESET)
+#endif /* I3C_MISR_CFNFMIS */
   {
     /* Clear IBI request flag */
     LL_I3C_ClearFlag_IBI(hi3c->Instance);
@@ -8159,7 +8485,11 @@ static HAL_StatusTypeDef I3C_Ctrl_Multiple_Xfer_Listen_Event_ISR(struct __I3C_Ha
   }
 
   /* I3C controller controller-role request event management ---------------------------------------------------------*/
+#if defined(I3C_MISR_CFNFMIS)
+  if (I3C_CHECK_FLAG(itMasks, HAL_I3C_IT_CRMIS) != RESET)
+#else
   if (I3C_CHECK_FLAG(itMasks, I3C_EVR_CRF) != RESET)
+#endif /* I3C_MISR_CFNFMIS */
   {
     /* Clear controller-role request flag */
     LL_I3C_ClearFlag_CR(hi3c->Instance);
@@ -8174,7 +8504,11 @@ static HAL_StatusTypeDef I3C_Ctrl_Multiple_Xfer_Listen_Event_ISR(struct __I3C_Ha
   }
 
   /* I3C controller hot-join event management ------------------------------------------------------------------------*/
+#if defined(I3C_MISR_CFNFMIS)
+  if (I3C_CHECK_FLAG(itMasks, HAL_I3C_IT_HJMIS) != RESET)
+#else
   if (I3C_CHECK_FLAG(itMasks, I3C_EVR_HJF) != RESET)
+#endif /* I3C_MISR_CFNFMIS */
   {
     /* Clear hot-join flag */
     LL_I3C_ClearFlag_HJ(hi3c->Instance);
@@ -8206,14 +8540,22 @@ static HAL_StatusTypeDef I3C_Ctrl_DAA_ISR(struct __I3C_HandleTypeDef *hi3c, uint
   if (hi3c->State == HAL_I3C_STATE_BUSY_DAA)
   {
     /* I3C Control FIFO not full interrupt Check */
+#if defined(I3C_MISR_CFNFMIS)
+    if (I3C_CHECK_FLAG(itMasks, HAL_I3C_IT_CFNFMIS) != RESET)
+#else
     if (I3C_CHECK_FLAG(itMasks, I3C_EVR_CFNFF) != RESET)
+#endif /* I3C_MISR_CFNFMIS */
     {
       /* Write ENTDAA CCC information in the control register */
       LL_I3C_ControllerHandleCCC(hi3c->Instance, I3C_BROADCAST_ENTDAA, 0U, LL_I3C_GENERATE_STOP);
     }
 
     /* I3C Tx FIFO not full interrupt Check */
+#if defined(I3C_MISR_CFNFMIS)
+    if (I3C_CHECK_FLAG(itMasks, HAL_I3C_IT_MASKS_TXFNFMIS) != RESET)
+#else
     if (I3C_CHECK_FLAG(itMasks, I3C_EVR_TXFNFF) != RESET)
+#endif /* I3C_MISR_CFNFMIS */
     {
       /* Check on the Rx FIFO threshold to know the Dynamic Address Assignment treatment process : byte or word */
       if (LL_I3C_GetRxFIFOThreshold(hi3c->Instance) == LL_I3C_RXFIFO_THRESHOLD_1_4)
@@ -8243,7 +8585,11 @@ static HAL_StatusTypeDef I3C_Ctrl_DAA_ISR(struct __I3C_HandleTypeDef *hi3c, uint
     }
 
     /* I3C frame complete event Check */
+#if defined(I3C_MISR_CFNFMIS)
+    if (I3C_CHECK_FLAG(itMasks, HAL_I3C_IT_MASKS_FCMIS) != RESET)
+#else
     if (I3C_CHECK_FLAG(itMasks, I3C_EVR_FCF) != RESET)
+#endif /* I3C_MISR_CFNFMIS */
     {
       /* Clear frame complete flag */
       LL_I3C_ClearFlag_FC(hi3c->Instance);
@@ -8281,7 +8627,11 @@ static HAL_StatusTypeDef I3C_Ctrl_Tx_DMA_ISR(struct __I3C_HandleTypeDef *hi3c, u
   if (hi3c->State == HAL_I3C_STATE_BUSY_TX)
   {
     /* I3C target frame complete event Check */
+#if defined(I3C_MISR_CFNFMIS)
+    if (I3C_CHECK_FLAG(itMasks, HAL_I3C_IT_MASKS_FCMIS) != RESET)
+#else
     if (I3C_CHECK_FLAG(itMasks, I3C_EVR_FCF) != RESET)
+#endif /* I3C_MISR_CFNFMIS */
     {
       /* Clear frame complete flag */
       LL_I3C_ClearFlag_FC(hi3c->Instance);
@@ -8349,7 +8699,11 @@ static HAL_StatusTypeDef I3C_Ctrl_Rx_DMA_ISR(struct __I3C_HandleTypeDef *hi3c, u
   if (hi3c->State == HAL_I3C_STATE_BUSY_RX)
   {
     /* I3C target frame complete event Check */
+#if defined(I3C_MISR_CFNFMIS)
+    if (I3C_CHECK_FLAG(itMasks, HAL_I3C_IT_MASKS_FCMIS) != RESET)
+#else
     if (I3C_CHECK_FLAG(itMasks, I3C_EVR_FCF) != RESET)
+#endif /* I3C_MISR_CFNFMIS */
     {
       /* Clear frame complete flag */
       LL_I3C_ClearFlag_FC(hi3c->Instance);
@@ -8417,7 +8771,11 @@ static HAL_StatusTypeDef I3C_Ctrl_Multiple_Xfer_DMA_ISR(struct __I3C_HandleTypeD
   if (hi3c->State == HAL_I3C_STATE_BUSY_TX_RX)
   {
     /* I3C target frame complete event Check */
+#if defined(I3C_MISR_CFNFMIS)
+    if (I3C_CHECK_FLAG(itMasks, HAL_I3C_IT_MASKS_FCMIS) != RESET)
+#else
     if (I3C_CHECK_FLAG(itMasks, I3C_EVR_FCF) != RESET)
+#endif /* I3C_MISR_CFNFMIS  */
     {
       /* Clear frame complete flag */
       LL_I3C_ClearFlag_FC(hi3c->Instance);
@@ -8492,7 +8850,11 @@ static HAL_StatusTypeDef I3C_Abort_ISR(struct __I3C_HandleTypeDef *hi3c, uint32_
   if (hi3c->State == HAL_I3C_STATE_ABORT)
   {
     /* I3C Rx FIFO not empty interrupt Check */
+#if defined(I3C_MISR_CFNFMIS)
+    if (I3C_CHECK_FLAG(itMasks, HAL_I3C_IT_MASKS_RXFNEMIS) != RESET)
+#else
     if (I3C_CHECK_FLAG(itMasks, HAL_I3C_FLAG_RXFNEF) != RESET)
+#endif /* I3C_MISR_CFNFMIS */
     {
       if (LL_I3C_IsActiveFlag_DOVR(hi3c->Instance) == 1U)
       {
@@ -8504,7 +8866,11 @@ static HAL_StatusTypeDef I3C_Abort_ISR(struct __I3C_HandleTypeDef *hi3c, uint32_
     /* I3C Abort frame complete event Check */
     /* Evenif abort is called, the Frame completion can arrive if abort is requested at the end of the processus */
     /* Evenif completion occurs, treat this end of processus as abort completion process */
+#if defined(I3C_MISR_CFNFMIS)
+    if (I3C_CHECK_FLAG(itMasks, HAL_I3C_IT_MASKS_FCMIS) != RESET)
+#else
     if (I3C_CHECK_FLAG(itMasks, I3C_EVR_FCF) != RESET)
+#endif /* I3C_MISR_CFNFMIS */
     {
       /* Clear frame complete flag */
       LL_I3C_ClearFlag_FC(hi3c->Instance);

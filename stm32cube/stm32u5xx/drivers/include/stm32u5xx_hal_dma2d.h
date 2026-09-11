@@ -658,7 +658,7 @@ uint32_t               HAL_DMA2D_GetError(const DMA2D_HandleTypeDef *hdma2d);
 #define IS_DMA2D_PIXEL(PIXEL)                 ((PIXEL) <= DMA2D_PIXEL)
 #define IS_DMA2D_OFFSET(OOFFSET)              ((OOFFSET) <= DMA2D_OFFSET)
 
-#if defined(DMA2D_FGPFCCR_CSS)
+#if   defined(DMA2D_FGPFCCR_CSS)
 #define IS_DMA2D_INPUT_COLOR_MODE(INPUT_CM)   (((INPUT_CM) == DMA2D_INPUT_ARGB8888) || \
                                                ((INPUT_CM) == DMA2D_INPUT_RGB888)   || \
                                                ((INPUT_CM) == DMA2D_INPUT_RGB565)   || \

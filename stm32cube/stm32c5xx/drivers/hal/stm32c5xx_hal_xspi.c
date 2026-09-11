@@ -291,16 +291,8 @@ USE_HAL_XSPI_CLK_ENABLE_MODEL   | from hal_conf.h | HAL_CLK_ENABLE_NO | Allows u
 #define XSPI_DLYB_GET_INSTANCE(instance) \
   ({                                     \
     STM32_UNUSED((instance));            \
-    DLYB_XSPI1;                       \
+    DLYB_XSPI1;                          \
   })
-
-/**
-  * @brief Check the functional mode.
-  */
-#define IS_XSPI_FUNCTIONAL_MODE(mode) (((mode) == XSPI_FUNCTIONAL_MODE_INDIRECT_WRITE)   \
-                                       || ((mode) == XSPI_FUNCTIONAL_MODE_INDIRECT_READ) \
-                                       || ((mode) == XSPI_FUNCTIONAL_MODE_AUTO_POLLING)  \
-                                       || ((mode) == XSPI_FUNCTIONAL_MODE_MEMORY_MAPPED))
 
 /**
   * @brief Check the FIFO threshold.
@@ -320,11 +312,18 @@ USE_HAL_XSPI_CLK_ENABLE_MODEL   | from hal_conf.h | HAL_CLK_ENABLE_NO | Allows u
 /**
   * @brief Check the Memory type
   */
+#if defined(XSPI_DCR1_MTYP_2)
 #define IS_XSPI_MEMORY_TYPE(type)                 (((type) == HAL_XSPI_MEMORY_TYPE_MICRON)          \
                                                    || ((type) == HAL_XSPI_MEMORY_TYPE_MACRONIX)     \
                                                    || ((type) == HAL_XSPI_MEMORY_TYPE_APMEM)        \
                                                    || ((type) == HAL_XSPI_MEMORY_TYPE_MACRONIX_RAM) \
                                                    || ((type) == HAL_XSPI_MEMORY_TYPE_HYPERBUS))
+#else
+#define IS_XSPI_MEMORY_TYPE(type)                 (((type) == HAL_XSPI_MEMORY_TYPE_MICRON)          \
+                                                   || ((type) == HAL_XSPI_MEMORY_TYPE_MACRONIX)     \
+                                                   || ((type) == HAL_XSPI_MEMORY_TYPE_APMEM)        \
+                                                   || ((type) == HAL_XSPI_MEMORY_TYPE_MACRONIX_RAM))
+#endif /* XSPI_DCR1_MTYP_2 */
 
 /**
   * @brief Check the Memory size
@@ -368,6 +367,7 @@ USE_HAL_XSPI_CLK_ENABLE_MODEL   | from hal_conf.h | HAL_CLK_ENABLE_NO | Allows u
 #define IS_XSPI_CS_HIGH_TIME_CYCLE(time)          (((time) >= 1U) && ((time) <= 64U))
 
 
+#if defined(XSPI_DCR2_WRAPSIZE)
 /**
   * @brief Check the Wrap size
   */
@@ -376,6 +376,7 @@ USE_HAL_XSPI_CLK_ENABLE_MODEL   | from hal_conf.h | HAL_CLK_ENABLE_NO | Allows u
                                                    || ((size) == HAL_XSPI_WRAP_32BYTE)     \
                                                    || ((size) == HAL_XSPI_WRAP_64BYTE)     \
                                                    || ((size) == HAL_XSPI_WRAP_128BYTE))
+#endif /* XSPI_DCR2_WRAPSIZE */
 
 /**
   * @brief Check the prescaler factor
@@ -394,6 +395,7 @@ USE_HAL_XSPI_CLK_ENABLE_MODEL   | from hal_conf.h | HAL_CLK_ENABLE_NO | Allows u
 #define IS_XSPI_DELAY_HOLD(cycle)                 (((cycle) == HAL_XSPI_DELAY_HOLD_NONE) \
                                                    || ((cycle) == HAL_XSPI_DELAY_HOLD_QUARTCYCLE))
 
+#if defined(XSPI_DCR3_CSBOUND)
 /**
   * @brief Check the chip select boundary
   */
@@ -429,6 +431,7 @@ USE_HAL_XSPI_CLK_ENABLE_MODEL   | from hal_conf.h | HAL_CLK_ENABLE_NO | Allows u
                                                    || ((size) == HAL_XSPI_CS_BOUNDARY_4GBIT)   \
                                                    || ((size) == HAL_XSPI_CS_BOUNDARY_8GBIT)   \
                                                    || ((size) == HAL_XSPI_CS_BOUNDARY_16GBIT))
+#endif /* XSPI_DCR3_CSBOUND */
 
 /**
   * @brief Check the delay block bypass
@@ -445,9 +448,13 @@ USE_HAL_XSPI_CLK_ENABLE_MODEL   | from hal_conf.h | HAL_CLK_ENABLE_NO | Allows u
 /**
   * @brief Check the Operation type
   */
+#if defined(XSPI_WIR_INSTRUCTION)
 #define IS_XSPI_OPERATION_TYPE(type)              (((type) == HAL_XSPI_OPERATION_READ_CFG)     \
                                                    || ((type) == HAL_XSPI_OPERATION_WRITE_CFG) \
                                                    || ((type) == HAL_XSPI_OPERATION_WRAP_CFG))
+#else
+#define IS_XSPI_OPERATION_TYPE(type)              ((type) == HAL_XSPI_OPERATION_READ_CFG)
+#endif /* XSPI_WIR_INSTRUCTION */
 
 /**
   * @brief Check the I/O select
@@ -656,8 +663,13 @@ static hal_status_t XSPI_WaitFlagStateUntilTimeout(hal_xspi_handle_t *hxspi, uin
                                                    hal_xspi_flag_status_t state, uint32_t timeout_ms);
 static hal_status_t XSPI_SendRegularCmd(hal_xspi_handle_t *hxspi, const hal_xspi_regular_cmd_t *p_cmd,
                                         uint32_t timeout_ms, hal_xspi_interrupt_state_t it_state);
+#if defined(XSPI_SR_SMF)
 static hal_status_t XSPI_ExecRegularAutoPoll(hal_xspi_handle_t *hxspi, const hal_xspi_auto_polling_config_t *p_config,
                                              uint32_t timeout_ms, hal_xspi_interrupt_state_t it_state);
+#else
+static hal_status_t XSPI_ExecRegularAutoPoll(hal_xspi_handle_t *hxspi, const hal_xspi_auto_polling_config_t *p_config,
+                                             uint32_t timeout_ms);
+#endif /* XSPI_SR_SMF */
 static hal_status_t XSPI_Abort(hal_xspi_handle_t *hxspi, uint32_t timeout_ms);
 
 #if defined(USE_HAL_XSPI_DMA) && (USE_HAL_XSPI_DMA == 1U)
@@ -825,14 +837,19 @@ hal_status_t HAL_XSPI_SetConfig(hal_xspi_handle_t *hxspi, const hal_xspi_config_
   ASSERT_DBG_PARAM(IS_XSPI_MEMORY_MODE(p_config->memory.mode));
   ASSERT_DBG_PARAM(IS_XSPI_MEMORY_TYPE(p_config->memory.type));
   ASSERT_DBG_PARAM(IS_XSPI_MEMORY_SIZE(p_config->memory.size_bit));
+#if defined(XSPI_DCR2_WRAPSIZE)
   ASSERT_DBG_PARAM(IS_XSPI_WRAP_SIZE(p_config->memory.wrap_size_byte));
+#endif /* XSPI_DCR2_WRAPSIZE */
+#if defined(XSPI_DCR3_CSBOUND)
   ASSERT_DBG_PARAM(IS_XSPI_CS_BOUNDARY(p_config->memory.cs_boundary));
+#endif /* XSPI_DCR3_CSBOUND */
   ASSERT_DBG_PARAM(IS_XSPI_CS_HIGH_TIME_CYCLE(p_config->timing.cs_high_time_cycle));
   ASSERT_DBG_PARAM(IS_XSPI_CLOCK_PRESCALER(p_config->timing.clk_prescaler));
   ASSERT_DBG_PARAM(IS_XSPI_SAMPLE_SHIFT(p_config->timing.shift));
   ASSERT_DBG_PARAM(IS_XSPI_DELAY_HOLD(p_config->timing.hold));
   ASSERT_DBG_PARAM(IS_XSPI_DLYB_BYPASS(p_config->timing.dlyb_state));
 #if defined(USE_HAL_XSPI_HYPERBUS) && (USE_HAL_XSPI_HYPERBUS == 1U)
+#if defined(XSPI_DCR1_MTYP_2)
   if (hxspi->type == HAL_XSPI_MEMORY_TYPE_HYPERBUS)
   {
     ASSERT_DBG_PARAM(IS_XSPI_WRITE_ZERO_LATENCY(p_config->hyperbus.write_zero_latency));
@@ -840,6 +857,7 @@ hal_status_t HAL_XSPI_SetConfig(hal_xspi_handle_t *hxspi, const hal_xspi_config_
     ASSERT_DBG_PARAM(IS_XSPI_ACCESS_TIME_CYCLE(p_config->hyperbus.access_time_cycle));
     ASSERT_DBG_PARAM(IS_XSPI_LATENCY_MODE(p_config->hyperbus.latency_mode));
   }
+#endif /* XSPI_DCR1_MTYP_2 */
 #endif /* USE_HAL_XSPI_HYPERBUS */
 
   ASSERT_DBG_STATE(hxspi->global_state, HAL_XSPI_STATE_INIT | HAL_XSPI_STATE_IDLE);
@@ -868,15 +886,21 @@ hal_status_t HAL_XSPI_SetConfig(hal_xspi_handle_t *hxspi, const hal_xspi_config_
     STM32_MODIFY_REG(XSPI_GET_INSTANCE(hxspi)->DCR1, XSPI_DCR1_DLYBYP, (uint32_t)(p_config->timing.dlyb_state));
   }
 
-  /* Configure wrap size */
+#if defined(XSPI_DCR2_WRAPSIZE)
+  /* Configure wrap size. */
   STM32_MODIFY_REG(XSPI_GET_INSTANCE(hxspi)->DCR2, XSPI_DCR2_WRAPSIZE, (uint32_t)(p_config->memory.wrap_size_byte));
+#endif /* XSPI_DCR2_WRAPSIZE */
 
-  /* Configure chip select boundary */
+#if defined(XSPI_DCR3_CSBOUND)
+  /* Configure chip select boundary. */
   STM32_MODIFY_REG(XSPI_GET_INSTANCE(hxspi)->DCR3, XSPI_DCR3_CSBOUND, ((uint32_t)(p_config->memory.cs_boundary)
                                                                        << XSPI_DCR3_CSBOUND_Pos));
+#endif /* XSPI_DCR3_CSBOUND */
 
-  /* Configure refresh */
+#if defined(XSPI_DCR4_REFRESH)
+  /* Configure refresh. */
   XSPI_GET_INSTANCE(hxspi)->DCR4 = p_config->timing.cs_refresh_time_cycle;
+#endif /* XSPI_DCR4_REFRESH */
 
   /* Configure new FIFO threshold. */
   STM32_MODIFY_REG(XSPI_GET_INSTANCE(hxspi)->CR, XSPI_CR_FTHRES, 0U);
@@ -906,7 +930,8 @@ hal_status_t HAL_XSPI_SetConfig(hal_xspi_handle_t *hxspi, const hal_xspi_config_
     return HAL_ERROR;
   }
 #if defined(USE_HAL_XSPI_HYPERBUS) && (USE_HAL_XSPI_HYPERBUS == 1U)
-  /* Configure Hyperbus Memory */
+#if defined(XSPI_DCR1_MTYP_2)
+  /* Configure Hyperbus Memory. */
   if (p_config->memory.type == HAL_XSPI_MEMORY_TYPE_HYPERBUS)
   {
     /* Wait till busy flag is reset. */
@@ -927,6 +952,7 @@ hal_status_t HAL_XSPI_SetConfig(hal_xspi_handle_t *hxspi, const hal_xspi_config_
       return HAL_ERROR;
     }
   }
+#endif /* XSPI_DCR1_MTYP_2 */
 #endif /* USE_HAL_XSPI_HYPERBUS */
 
   /* Enable XSPI. */
@@ -947,8 +973,12 @@ void HAL_XSPI_GetConfig(hal_xspi_handle_t *hxspi, hal_xspi_config_t *p_config)
 {
   uint32_t tmp_dcr1_reg;
   uint32_t tmp_dcr2_reg;
+#if defined(XSPI_DCR3_CSBOUND)
   uint32_t tmp_dcr3_reg;
+#endif /* XSPI_DCR3_CSBOUND */
+#if defined(XSPI_DCR4_REFRESH)
   uint32_t tmp_dcr4_reg;
+#endif /* XSPI_DCR4_REFRESH */
   uint32_t tmp_tcr_reg;
   uint32_t tmp_cr_reg;
   uint32_t tmp_reg;
@@ -959,14 +989,20 @@ void HAL_XSPI_GetConfig(hal_xspi_handle_t *hxspi, hal_xspi_config_t *p_config)
 
   tmp_dcr1_reg = STM32_READ_REG(XSPI_GET_INSTANCE(hxspi)->DCR1);
   tmp_dcr2_reg = STM32_READ_REG(XSPI_GET_INSTANCE(hxspi)->DCR2);
+#if defined(XSPI_DCR3_CSBOUND)
   tmp_dcr3_reg = STM32_READ_REG(XSPI_GET_INSTANCE(hxspi)->DCR3);
+#endif /* XSPI_DCR3_CSBOUND */
+#if defined(XSPI_DCR4_REFRESH)
   tmp_dcr4_reg = STM32_READ_REG(XSPI_GET_INSTANCE(hxspi)->DCR4);
+#endif /* XSPI_DCR4_REFRESH */
   tmp_cr_reg   = STM32_READ_REG(XSPI_GET_INSTANCE(hxspi)->CR) ;
   tmp_tcr_reg  = STM32_READ_REG(XSPI_GET_INSTANCE(hxspi)->TCR);
 
+#if defined(XSPI_DCR3_CSBOUND)
   /* Retrieve the value of chip select boundary */
   tmp_reg = STM32_READ_BIT(tmp_dcr3_reg, XSPI_DCR3_CSBOUND) >> XSPI_DCR3_CSBOUND_Pos;
   p_config->memory.cs_boundary = (hal_xspi_cs_boundary_t)tmp_reg;
+#endif /* XSPI_DCR3_CSBOUND */
 
   /* Retrieve the value of Memory mode */
   tmp_reg = STM32_READ_BIT(tmp_cr_reg, XSPI_CR_DMM);
@@ -982,9 +1018,11 @@ void HAL_XSPI_GetConfig(hal_xspi_handle_t *hxspi, hal_xspi_config_t *p_config)
   tmp_reg = STM32_READ_BIT(tmp_dcr1_reg, XSPI_DCR1_DEVSIZE);
   p_config->memory.size_bit = (hal_xspi_memory_size_t)tmp_reg;
 
+#if defined(XSPI_DCR2_WRAPSIZE)
   /* Retrieve the value of wrap size */
   tmp_reg = STM32_READ_BIT(tmp_dcr2_reg, XSPI_DCR2_WRAPSIZE);
   p_config->memory.wrap_size_byte = (hal_xspi_wrap_size_t)tmp_reg;
+#endif /* XSPI_DCR2_WRAPSIZE */
 
   /* Retrieve the value of chip select high time */
   tmp_reg = (STM32_READ_BIT(tmp_dcr1_reg, XSPI_DCR1_CSHT) >> XSPI_DCR1_CSHT_Pos) + 1U;
@@ -1010,11 +1048,14 @@ void HAL_XSPI_GetConfig(hal_xspi_handle_t *hxspi, hal_xspi_config_t *p_config)
     p_config->timing.dlyb_state = (hal_xspi_dlyb_state_t)tmp_reg;
   }
 
+#if defined(XSPI_DCR4_REFRESH)
   /* Retrieve the value of refresh */
   tmp_reg = STM32_READ_BIT(tmp_dcr4_reg, XSPI_DCR4_REFRESH);
   p_config->timing.cs_refresh_time_cycle = tmp_reg;
+#endif /* XSPI_DCR4_REFRESH */
 
 #if defined(USE_HAL_XSPI_HYPERBUS) && (USE_HAL_XSPI_HYPERBUS == 1U)
+#if defined(XSPI_DCR1_MTYP_2)
   uint32_t tmp_HLCR = STM32_READ_REG(XSPI_GET_INSTANCE(hxspi)->HLCR);
   /* Retrieve the XSPI hyperbus configuration */
   if (p_config->memory.type == HAL_XSPI_MEMORY_TYPE_HYPERBUS)
@@ -1031,6 +1072,7 @@ void HAL_XSPI_GetConfig(hal_xspi_handle_t *hxspi, hal_xspi_config_t *p_config)
     tmp_reg = STM32_READ_BIT(tmp_HLCR, XSPI_HLCR_LM);
     p_config->hyperbus.latency_mode = (hal_xspi_latency_mode_t)tmp_reg;
   }
+#endif /* XSPI_DCR1_MTYP_2 */
 #endif /* USE_HAL_XSPI_HYPERBUS */
 }
 
@@ -1508,10 +1550,17 @@ hal_status_t HAL_XSPI_SendRegularCmd(hal_xspi_handle_t *hxspi,
   ASSERT_DBG_STATE(hxspi->global_state, HAL_XSPI_STATE_IDLE);
 
 #if defined(USE_HAL_CHECK_PARAM) && (USE_HAL_CHECK_PARAM == 1U)
+#if defined(XSPI_DCR1_MTYP_2)
   if ((p_cmd == NULL) || (hxspi->type == HAL_XSPI_MEMORY_TYPE_HYPERBUS))
   {
     return HAL_INVALID_PARAM;
   }
+#else
+  if (p_cmd == NULL)
+  {
+    return HAL_INVALID_PARAM;
+  }
+#endif /* XSPI_DCR1_MTYP_2 */
 #endif /* USE_HAL_CHECK_PARAM */
 
   /* Check Data Length only if data are inside command. */
@@ -1568,12 +1617,19 @@ hal_status_t HAL_XSPI_SendRegularCmd_IT(hal_xspi_handle_t *hxspi, const hal_xspi
   ASSERT_DBG_STATE(hxspi->global_state, HAL_XSPI_STATE_IDLE);
 
 #if defined(USE_HAL_CHECK_PARAM) && (USE_HAL_CHECK_PARAM == 1U)
+#if defined(XSPI_DCR1_MTYP_2)
   if ((p_cmd == NULL)
       || (hxspi->type == HAL_XSPI_MEMORY_TYPE_HYPERBUS)
       || (p_cmd->operation_type != HAL_XSPI_OPERATION_COMMON_CFG))
   {
     return HAL_INVALID_PARAM;
   }
+#else
+  if ((p_cmd == NULL) || (p_cmd->operation_type != HAL_XSPI_OPERATION_COMMON_CFG))
+  {
+    return HAL_INVALID_PARAM;
+  }
+#endif /* XSPI_DCR1_MTYP_2 */
 #endif /* USE_HAL_CHECK_PARAM */
 
   /* Check Data Length only if data are inside command. */
@@ -1599,6 +1655,7 @@ hal_status_t HAL_XSPI_SendRegularCmd_IT(hal_xspi_handle_t *hxspi, const hal_xspi
 }
 
 #if defined(USE_HAL_XSPI_HYPERBUS) && (USE_HAL_XSPI_HYPERBUS == 1U)
+#if defined(XSPI_DCR1_MTYP_2)
 /**
   * @brief  Set the Hyperbus command configuration.
   * @param  hxspi             Pointer to a \ref hal_xspi_handle_t structure that contains
@@ -1683,6 +1740,7 @@ hal_status_t HAL_XSPI_SendHyperbusCmd(hal_xspi_handle_t *hxspi,
 
   return HAL_OK;
 }
+#endif /* XSPI_DCR1_MTYP_2 */
 #endif /* USE_HAL_XSPI_HYPERBUS */
 
 /**
@@ -1708,19 +1766,29 @@ hal_status_t HAL_XSPI_ExecRegularAutoPoll(hal_xspi_handle_t *hxspi,
   ASSERT_DBG_PARAM(hxspi != NULL);
   ASSERT_DBG_PARAM(p_config != NULL);
   ASSERT_DBG_PARAM(IS_XSPI_STATUS_BYTES_SIZE(XSPI_GET_INSTANCE(hxspi)->DLR + 1U));
+#if defined(XSPI_SR_SMF)
   ASSERT_DBG_PARAM(IS_XSPI_MATCH_MODE(p_config->match_mode));
+#endif /* XSPI_SR_SMF */
   ASSERT_DBG_PARAM(IS_XSPI_INTERVAL(p_config->interval_cycle));
   ASSERT_DBG_PARAM(IS_XSPI_AUTOMATIC_STOP(p_config->automatic_stop_status));
 
   ASSERT_DBG_STATE(hxspi->global_state, HAL_XSPI_STATE_IDLE);
 
 #if defined(USE_HAL_CHECK_PARAM) && (USE_HAL_CHECK_PARAM == 1U)
+#if defined(XSPI_DCR1_MTYP_2)
   if ((p_config == NULL)
       || (hxspi->type == HAL_XSPI_MEMORY_TYPE_HYPERBUS)
       || (p_config->automatic_stop_status != HAL_XSPI_AUTOMATIC_STOP_ENABLED))
   {
     return HAL_INVALID_PARAM;
   }
+#else
+  if ((p_config == NULL)
+      || (p_config->automatic_stop_status != HAL_XSPI_AUTOMATIC_STOP_ENABLED))
+  {
+    return HAL_INVALID_PARAM;
+  }
+#endif /* XSPI_DCR1_MTYP_2 */
 #endif /* USE_HAL_CHECK_PARAM */
 
   HAL_CHECK_UPDATE_STATE(hxspi, global_state, HAL_XSPI_STATE_IDLE, HAL_XSPI_STATE_AUTO_POLLING_ACTIVE);
@@ -1730,13 +1798,18 @@ hal_status_t HAL_XSPI_ExecRegularAutoPoll(hal_xspi_handle_t *hxspi,
 #endif /* USE_HAL_XSPI_GET_LAST_ERRORS */
 
   /* Execute regular auto-polling in blocking mode */
+#if defined(XSPI_SR_SMF)
   status = XSPI_ExecRegularAutoPoll(hxspi, p_config, timeout_ms, XSPI_INTERRUPT_DISABLE);
+#else
+  status = XSPI_ExecRegularAutoPoll(hxspi, p_config, timeout_ms);
+#endif /* XSPI_SR_SMF */
 
   hxspi->global_state = HAL_XSPI_STATE_IDLE;
 
   return status;
 }
 
+#if defined(XSPI_SR_SMF)
 /**
   * @brief  Execute the XSPI Automatic Polling Mode in non-blocking mode.
   * @param  hxspi             Pointer to a \ref hal_xspi_handle_t structure that contains
@@ -1753,7 +1826,9 @@ hal_status_t HAL_XSPI_ExecRegularAutoPoll_IT(hal_xspi_handle_t *hxspi, const hal
   ASSERT_DBG_PARAM(hxspi != NULL);
   ASSERT_DBG_PARAM(p_config != NULL);
   ASSERT_DBG_PARAM(IS_XSPI_STATUS_BYTES_SIZE(XSPI_GET_INSTANCE(hxspi)->DLR + 1U));
+#if defined(XSPI_SR_SMF)
   ASSERT_DBG_PARAM(IS_XSPI_MATCH_MODE(p_config->match_mode));
+#endif /* XSPI_SR_SMF */
   ASSERT_DBG_PARAM(IS_XSPI_INTERVAL(p_config->interval_cycle));
   ASSERT_DBG_PARAM(IS_XSPI_AUTOMATIC_STOP(p_config->automatic_stop_status));
 
@@ -1782,6 +1857,7 @@ hal_status_t HAL_XSPI_ExecRegularAutoPoll_IT(hal_xspi_handle_t *hxspi, const hal
 
   return HAL_OK;
 }
+#endif /* XSPI_SR_SMF */
 
 /**
   * @brief  Transmit an amount of data in blocking mode.
@@ -1909,7 +1985,8 @@ hal_status_t HAL_XSPI_Receive(hal_xspi_handle_t *hxspi, void *p_data, uint32_t t
   /* Configure the functional mode as indirect read. */
   STM32_MODIFY_REG(XSPI_GET_INSTANCE(hxspi)->CR, XSPI_CR_FMODE, XSPI_FUNCTIONAL_MODE_INDIRECT_READ);
 
-  /* Trig the transfer by re-writing address or instruction register */
+  /* Trig the transfer by re-writing address or instruction register. */
+#if defined(XSPI_DCR1_MTYP_2)
   if (hxspi->type == HAL_XSPI_MEMORY_TYPE_HYPERBUS)
   {
     STM32_WRITE_REG(XSPI_GET_INSTANCE(hxspi)->AR, addr_reg);
@@ -1925,10 +2002,20 @@ hal_status_t HAL_XSPI_Receive(hal_xspi_handle_t *hxspi, void *p_data, uint32_t t
       STM32_WRITE_REG(XSPI_GET_INSTANCE(hxspi)->IR, ir_reg);
     }
   }
+#else
+  if (STM32_READ_BIT(XSPI_GET_INSTANCE(hxspi)->CCR, XSPI_CCR_ADMODE) != (uint32_t)HAL_XSPI_ADDR_NONE)
+  {
+    STM32_WRITE_REG(XSPI_GET_INSTANCE(hxspi)->AR, addr_reg);
+  }
+  else
+  {
+    STM32_WRITE_REG(XSPI_GET_INSTANCE(hxspi)->IR, ir_reg);
+  }
+#endif /* XSPI_DCR1_MTYP_2 */
 
   do
   {
-    /* Wait till fifo threshold or transfer complete flags are set to read received data */
+    /* Wait until the FIFO threshold or transfer complete flags are set to read received data. */
     status = XSPI_WaitFlagStateUntilTimeout(hxspi, (uint32_t)HAL_XSPI_FLAG_FT | (uint32_t)HAL_XSPI_FLAG_TC,
                                             HAL_XSPI_FLAG_ACTIVE,  timeout_ms);
     if (status != HAL_OK)
@@ -2054,7 +2141,8 @@ hal_status_t HAL_XSPI_Receive_IT(hal_xspi_handle_t *hxspi, void *p_data)
   /* Enable the transfer complete, FIFO threshold, and transfer error interrupts. */
   HAL_XSPI_EnableIT(hxspi, (uint32_t)HAL_XSPI_IT_TC | (uint32_t)HAL_XSPI_IT_FT | (uint32_t)HAL_XSPI_IT_TE);
 
-  /* Trig the transfer by re-writing address or instruction register */
+  /* Trig the transfer by re-writing address or instruction register. */
+#if defined(XSPI_DCR1_MTYP_2)
   if (hxspi->type == HAL_XSPI_MEMORY_TYPE_HYPERBUS)
   {
     STM32_WRITE_REG(XSPI_GET_INSTANCE(hxspi)->AR, addr_reg);
@@ -2070,6 +2158,16 @@ hal_status_t HAL_XSPI_Receive_IT(hal_xspi_handle_t *hxspi, void *p_data)
       STM32_WRITE_REG(XSPI_GET_INSTANCE(hxspi)->IR, ir_reg);
     }
   }
+#else
+  if (STM32_READ_BIT(XSPI_GET_INSTANCE(hxspi)->CCR, XSPI_CCR_ADMODE) != (uint32_t)HAL_XSPI_ADDR_NONE)
+  {
+    STM32_WRITE_REG(XSPI_GET_INSTANCE(hxspi)->AR, addr_reg);
+  }
+  else
+  {
+    STM32_WRITE_REG(XSPI_GET_INSTANCE(hxspi)->IR, ir_reg);
+  }
+#endif /* XSPI_DCR1_MTYP_2 */
 
   return HAL_OK;
 }
@@ -2314,7 +2412,8 @@ hal_status_t HAL_XSPI_Receive_DMA(hal_xspi_handle_t *hxspi, void *p_data)
     /* Enable the transfer error interrupt. */
     HAL_XSPI_EnableIT(hxspi, (uint32_t)HAL_XSPI_IT_TE);
 
-    /* Trig the transfer by re-writing address or instruction register */
+    /* Trig the transfer by re-writing address or instruction register. */
+#if defined(XSPI_DCR1_MTYP_2)
     if (hxspi->type == HAL_XSPI_MEMORY_TYPE_HYPERBUS)
     {
       STM32_WRITE_REG(XSPI_GET_INSTANCE(hxspi)->AR, addr_reg);
@@ -2330,8 +2429,18 @@ hal_status_t HAL_XSPI_Receive_DMA(hal_xspi_handle_t *hxspi, void *p_data)
         STM32_WRITE_REG(XSPI_GET_INSTANCE(hxspi)->IR, ir_reg);
       }
     }
+#else
+    if (STM32_READ_BIT(XSPI_GET_INSTANCE(hxspi)->CCR, XSPI_CCR_ADMODE) != (uint32_t)HAL_XSPI_ADDR_NONE)
+    {
+      STM32_WRITE_REG(XSPI_GET_INSTANCE(hxspi)->AR, addr_reg);
+    }
+    else
+    {
+      STM32_WRITE_REG(XSPI_GET_INSTANCE(hxspi)->IR, ir_reg);
+    }
+#endif /* XSPI_DCR1_MTYP_2 */
 
-    /* Enable the DMA transfer */
+    /* Enable the DMA transfer. */
     STM32_SET_BIT(XSPI_GET_INSTANCE(hxspi)->CR, XSPI_CR_DMAEN);
   }
   else
@@ -2421,7 +2530,8 @@ hal_status_t HAL_XSPI_Receive_DMA_Opt(hal_xspi_handle_t *hxspi, void *p_data, ui
     /* Enable the transfer error interrupt. */
     HAL_XSPI_EnableIT(hxspi, (uint32_t)HAL_XSPI_IT_TE);
 
-    /* Trig the transfer by re-writing address or instruction register */
+    /* Trig the transfer by re-writing address or instruction register. */
+#if defined(XSPI_DCR1_MTYP_2)
     if (hxspi->type == HAL_XSPI_MEMORY_TYPE_HYPERBUS)
     {
       STM32_WRITE_REG(XSPI_GET_INSTANCE(hxspi)->AR, addr_reg);
@@ -2437,8 +2547,18 @@ hal_status_t HAL_XSPI_Receive_DMA_Opt(hal_xspi_handle_t *hxspi, void *p_data, ui
         STM32_WRITE_REG(XSPI_GET_INSTANCE(hxspi)->IR, ir_reg);
       }
     }
+#else
+    if (STM32_READ_BIT(XSPI_GET_INSTANCE(hxspi)->CCR, XSPI_CCR_ADMODE) != (uint32_t)HAL_XSPI_ADDR_NONE)
+    {
+      STM32_WRITE_REG(XSPI_GET_INSTANCE(hxspi)->AR, addr_reg);
+    }
+    else
+    {
+      STM32_WRITE_REG(XSPI_GET_INSTANCE(hxspi)->IR, ir_reg);
+    }
+#endif /* XSPI_DCR1_MTYP_2 */
 
-    /* Enable the DMA transfer */
+    /* Enable the DMA transfer. */
     STM32_SET_BIT(XSPI_GET_INSTANCE(hxspi)->CR, XSPI_CR_DMAEN);
   }
   else
@@ -2708,6 +2828,7 @@ void HAL_XSPI_IRQHandler(hal_xspi_handle_t *hxspi)
     }
   }
 
+#if defined(XSPI_SR_SMF)
   /* XSPI status match interrupt occurred ----------------------------------------------------------------------------*/
   if ((it_active & (uint32_t)HAL_XSPI_FLAG_SM) != 0U)
   {
@@ -2728,6 +2849,7 @@ void HAL_XSPI_IRQHandler(hal_xspi_handle_t *hxspi)
     HAL_XSPI_StatusMatchCallback(hxspi);
 #endif /* (USE_HAL_XSPI_REGISTER_CALLBACKS) && (USE_HAL_XSPI_REGISTER_CALLBACKS == 1U) */
   }
+#endif /* XSPI_SR_SMF */
 
   /* XSPI transfer error interrupt occurred --------------------------------------------------------------------------*/
   if ((it_active & (uint32_t)HAL_XSPI_FLAG_TE) != 0U)
@@ -2918,6 +3040,7 @@ __WEAK void HAL_XSPI_TxHalfCpltCallback(hal_xspi_handle_t *hxspi)
   */
 }
 
+#if defined(XSPI_SR_SMF)
 /**
   * @brief Status Match callback.
   * @param hxspi Pointer to a \ref hal_xspi_handle_t structure that contains
@@ -2932,6 +3055,7 @@ __WEAK void HAL_XSPI_StatusMatchCallback(hal_xspi_handle_t *hxspi)
   the HAL_XSPI_StatusMatchCallback could be implemented in the user file
   */
 }
+#endif /* XSPI_SR_SMF */
 
 #if defined (USE_HAL_XSPI_REGISTER_CALLBACKS) && (USE_HAL_XSPI_REGISTER_CALLBACKS == 1U)
 /**
@@ -3096,6 +3220,7 @@ hal_status_t HAL_XSPI_RegisterTxHalfCpltCallback(hal_xspi_handle_t *hxspi, hal_x
   return HAL_OK;
 }
 
+#if defined(XSPI_SR_SMF)
 /**
   * @brief  Register the XSPI Status Match Callback TO be used instead of
   *         the weak HAL_XSPI_StatusMatchCallback() predefined callback.
@@ -3122,6 +3247,7 @@ hal_status_t HAL_XSPI_RegisterStatusMatchCallback(hal_xspi_handle_t *hxspi, hal_
 
   return HAL_OK;
 }
+#endif /* XSPI_SR_SMF */
 
 /**
   * @brief  Register the XSPI Abort complete Callback TO be used instead of
@@ -3832,6 +3958,7 @@ static hal_status_t XSPI_SendRegularCmd(hal_xspi_handle_t *hxspi,
   return status;
 }
 
+#if defined(XSPI_SR_SMF)
 /**
   * @brief  Configure the XSPI Automatic Polling Mode for Regular protocol.
   * @param  hxspi       Pointer to a \ref hal_xspi_handle_t structure that contains
@@ -3924,6 +4051,99 @@ static hal_status_t XSPI_ExecRegularAutoPoll(hal_xspi_handle_t *hxspi,
 
   return HAL_OK;
 }
+#else
+/**
+  * @brief  Configure the XSPI Automatic Polling Mode for Regular protocol.
+  * @param  hxspi       Pointer to a \ref hal_xspi_handle_t structure that contains
+  *                     the handle information for the specified XSPI instance.
+  * @param  p_config    Pointer to structure that contains the polling configuration information.
+  * @param  timeout_ms  Timeout duration.
+  * @retval HAL_ERROR   An error has occurred.
+  * @retval HAL_TIMEOUT In case of user timeout.
+  * @retval HAL_BUSY    XSPI state is active when calling this API.
+  * @retval HAL_OK      Operation completed.
+  */
+static hal_status_t XSPI_ExecRegularAutoPoll(hal_xspi_handle_t *hxspi,
+                                             const hal_xspi_auto_polling_config_t *p_config,
+                                             uint32_t timeout_ms)
+{
+  hal_status_t status = HAL_ERROR;
+  uint32_t addr_reg = XSPI_GET_INSTANCE(hxspi)->AR;
+  uint32_t ir_reg = XSPI_GET_INSTANCE(hxspi)->IR;
+  volatile uint32_t *p_data_reg = &XSPI_GET_INSTANCE(hxspi)->DR;
+  uint32_t buffer = ~(p_config->match_value);
+
+  /* Wait till busy flag is reset. */
+  if (XSPI_WaitFlagStateUntilTimeout(hxspi, (uint32_t)HAL_XSPI_FLAG_BUSY, HAL_XSPI_FLAG_NOT_ACTIVE,
+                                     timeout_ms) == HAL_OK)
+  {
+    /* Wait till status match flag is set to go back in idle state. */
+    while ((buffer & p_config->match_mask) != (p_config->match_value & p_config->match_mask))
+    {
+      /* Configure counters and size. */
+      hxspi->xfer_count = STM32_READ_REG(XSPI_GET_INSTANCE(hxspi)->DLR) + 1U;
+      hxspi->xfer_size  = hxspi->xfer_count;
+      hxspi->p_buffer   = (uint8_t *)&buffer;
+
+      /* Configure the functional mode as indirect read. */
+      STM32_MODIFY_REG(XSPI_GET_INSTANCE(hxspi)->CR, XSPI_CR_FMODE, XSPI_FUNCTIONAL_MODE_INDIRECT_READ);
+
+      /* Trig the transfer by re-writing address or instruction register. */
+      if (STM32_READ_BIT(XSPI_GET_INSTANCE(hxspi)->CCR, XSPI_CCR_ADMODE) != (uint32_t)HAL_XSPI_ADDR_NONE)
+      {
+        STM32_WRITE_REG(XSPI_GET_INSTANCE(hxspi)->AR, addr_reg);
+      }
+      else
+      {
+        STM32_WRITE_REG(XSPI_GET_INSTANCE(hxspi)->IR, ir_reg);
+      }
+
+      do
+      {
+        /* Wait till fifo threshold or transfer complete flags are set to read received data. */
+        status = XSPI_WaitFlagStateUntilTimeout(hxspi, (uint32_t)HAL_XSPI_FLAG_FT | (uint32_t)HAL_XSPI_FLAG_TC,
+                                                HAL_XSPI_FLAG_ACTIVE,  timeout_ms);
+        if (status != HAL_OK)
+        {
+          break;
+        }
+
+        *hxspi->p_buffer = *((volatile uint8_t *)p_data_reg);
+        hxspi->p_buffer++;
+        hxspi->xfer_count--;
+
+      } while (hxspi->xfer_count > 0U);
+
+      if (status == HAL_OK)
+      {
+        /* Wait till transfer complete flag is set to go back in idle state. */
+        status = XSPI_WaitFlagStateUntilTimeout(hxspi, (uint32_t)HAL_XSPI_FLAG_TC, HAL_XSPI_FLAG_ACTIVE,
+                                                timeout_ms);
+
+        if (status == HAL_OK)
+        {
+          HAL_XSPI_ClearFlag(hxspi, (uint32_t)HAL_XSPI_FLAG_TC);
+        }
+      }
+
+      HAL_Delay(p_config->interval_cycle);
+    };
+  }
+  else
+  {
+#if defined(USE_HAL_XSPI_GET_LAST_ERRORS) && (USE_HAL_XSPI_GET_LAST_ERRORS == 1U)
+    if (HAL_XSPI_IsActiveFlag(hxspi, HAL_XSPI_FLAG_TE) != HAL_XSPI_FLAG_NOT_ACTIVE)
+    {
+      hxspi->last_error_codes = HAL_XSPI_ERROR_TRANSFER;
+    }
+#endif /* USE_HAL_XSPI_GET_LAST_ERRORS */
+
+    return HAL_TIMEOUT;
+  }
+
+  return HAL_OK;
+}
+#endif /* XSPI_SR_SMF */
 
 /**
   * @brief  Abort the current transmission.

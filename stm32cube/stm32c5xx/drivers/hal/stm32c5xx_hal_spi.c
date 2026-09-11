@@ -4151,7 +4151,14 @@ void HAL_SPI_IRQHandler(hal_spi_handle_t *hspi)
       }
     }
 
-    (void)SPI_CloseTransfer(hspi);
+    if (SPI_CloseTransfer(hspi) != HAL_OK)
+    {
+#if defined(USE_HAL_SPI_REGISTER_CALLBACKS) && (USE_HAL_SPI_REGISTER_CALLBACKS == 1)
+      hspi->p_error_cb(hspi);
+#else
+      HAL_SPI_ErrorCallback(hspi);
+#endif /* USE_HAL_SPI_REGISTER_CALLBACKS */
+    }
 
 #if defined(USE_HAL_SPI_REGISTER_CALLBACKS) && (USE_HAL_SPI_REGISTER_CALLBACKS == 1)
     /* Call appropriate user callback */
@@ -5253,17 +5260,21 @@ static hal_status_t SPI_CloseTransfer(hal_spi_handle_t *hspi)
   /* Clear the Status flags in the SR register */
   LL_SPI_ClearFlag((SPI_TypeDef *)((uint32_t)hspi->instance), LL_SPI_FLAG_EOT | LL_SPI_FLAG_TXTF);
 
-  LL_SPI_Disable((SPI_TypeDef *)((uint32_t)hspi->instance));
+#if (USE_HAL_SPI_CRC != 0UL)
+  /* Check if CRC error occurred */
+  if (LL_SPI_IsEnabledCRC((SPI_TypeDef *)((uint32_t)hspi->instance)) != 0UL)
+  {
+    if (LL_SPI_IsActiveFlag_CRCERR((SPI_TypeDef *)((uint32_t)hspi->instance)) != 0UL)
+    {
+#if defined(USE_HAL_SPI_GET_LAST_ERRORS) && (USE_HAL_SPI_GET_LAST_ERRORS == 1)
+      STM32_SET_BIT(hspi->last_error_codes, HAL_SPI_ERROR_CRC);
+#endif /* USE_HAL_SPI_GET_LAST_ERRORS */
+      LL_SPI_ClearFlag_CRCERR((SPI_TypeDef *)((uint32_t)hspi->instance));
 
-  /* Disable ITs */
-  LL_SPI_DisableIT((SPI_TypeDef *)((uint32_t)hspi->instance),
-                   LL_SPI_IT_EOT | LL_SPI_IT_TXP | LL_SPI_IT_RXP | LL_SPI_IT_DXP |
-                   LL_SPI_IT_UDR | LL_SPI_IT_OVR | LL_SPI_IT_TIFRE | LL_SPI_IT_MODF);
-
-#if defined(USE_HAL_SPI_DMA) && (USE_HAL_SPI_DMA == 1)
-  LL_SPI_DisableDMAReq_TX((SPI_TypeDef *)((uint32_t)hspi->instance));
-  LL_SPI_DisableDMAReq_RX((SPI_TypeDef *)((uint32_t)hspi->instance));
-#endif /* USE_HAL_SPI_DMA */
+      status = HAL_ERROR;
+    }
+  }
+#endif /* USE_HAL_SPI_CRC */
 
   /* Report Underrun error for non RX Only communication */
   if (hspi->global_state != HAL_SPI_STATE_RX_ACTIVE)
@@ -5291,22 +5302,6 @@ static hal_status_t SPI_CloseTransfer(hal_spi_handle_t *hspi)
 
       status = HAL_ERROR;
     }
-
-#if (USE_HAL_SPI_CRC != 0UL)
-    /* Check if CRC error occurred */
-    if (LL_SPI_IsEnabledCRC((SPI_TypeDef *)((uint32_t)hspi->instance)) != 0UL)
-    {
-      if (LL_SPI_IsActiveFlag_CRCERR((SPI_TypeDef *)((uint32_t)hspi->instance)) != 0UL)
-      {
-#if defined(USE_HAL_SPI_GET_LAST_ERRORS) && (USE_HAL_SPI_GET_LAST_ERRORS == 1)
-        STM32_SET_BIT(hspi->last_error_codes, HAL_SPI_ERROR_CRC);
-#endif /* USE_HAL_SPI_GET_LAST_ERRORS */
-        LL_SPI_ClearFlag_CRCERR((SPI_TypeDef *)((uint32_t)hspi->instance));
-
-        status = HAL_ERROR;
-      }
-    }
-#endif /* USE_HAL_SPI_CRC */
   }
 
   /* SPI Mode Fault error interrupt occurred -------------------------------*/
@@ -5333,6 +5328,19 @@ static hal_status_t SPI_CloseTransfer(hal_spi_handle_t *hspi)
 
     status = HAL_ERROR;
   }
+
+  LL_SPI_Disable((SPI_TypeDef *)((uint32_t)hspi->instance));
+
+  /* Disable ITs */
+  LL_SPI_DisableIT((SPI_TypeDef *)((uint32_t)hspi->instance),
+                   LL_SPI_IT_EOT | LL_SPI_IT_TXP | LL_SPI_IT_RXP | LL_SPI_IT_DXP |
+                   LL_SPI_IT_UDR | LL_SPI_IT_OVR | LL_SPI_IT_TIFRE | LL_SPI_IT_MODF);
+
+#if defined(USE_HAL_SPI_DMA) && (USE_HAL_SPI_DMA == 1)
+  LL_SPI_DisableDMAReq_TX((SPI_TypeDef *)((uint32_t)hspi->instance));
+  LL_SPI_DisableDMAReq_RX((SPI_TypeDef *)((uint32_t)hspi->instance));
+#endif /* USE_HAL_SPI_DMA */
+
   hspi->tx_xfer_count = (uint16_t)0UL;
   hspi->rx_xfer_count = (uint16_t)0UL;
 

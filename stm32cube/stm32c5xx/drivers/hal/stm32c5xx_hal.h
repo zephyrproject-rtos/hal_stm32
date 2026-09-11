@@ -45,7 +45,7 @@ extern "C" {
   * @{
   */
 #define HAL_VERSION_MAIN   (2UL) /*!< HAL driver version bitfield [31:24]: main version */
-#define HAL_VERSION_SUB1   (0UL) /*!< HAL driver version bitfield [23:16]: sub1 version */
+#define HAL_VERSION_SUB1   (1UL) /*!< HAL driver version bitfield [23:16]: sub1 version */
 #define HAL_VERSION_SUB2   (0UL) /*!< HAL driver version bitfield [15:8]:  sub2 version */
 #define HAL_VERSION_RC     (0UL) /*!< HAL driver version bitfield [7:0]:   release candidate */
 #define HAL_VERSION         ((HAL_VERSION_MAIN << 24U)\
@@ -115,7 +115,6 @@ hal_status_t HAL_Init(void);
 hal_status_t HAL_DeInit(void);
 hal_status_t HAL_InitTick(hal_tick_freq_t tick_freq, uint32_t tick_priority);
 hal_status_t HAL_UpdateCoreClock(void);
-
 /**
   * @}
   */

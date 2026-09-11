@@ -52,8 +52,8 @@
    - Advanced signal generation:
      - Noise
      - Triangle
-    - User-defined buffer transfer via DMA
-  - Sample-and-hold mode for low-power applications
+   - User-defined buffer transfer via DMA
+   - Sample-and-hold mode for low-power applications
   */
 /**
   * @}
@@ -247,7 +247,7 @@
 
        + Start the DAC peripheral on a given channel with HAL_DAC_StartChannel().
        + To change the data output value, use the HAL_DAC_SetChannelData() function.
-      + To read the last DAC data output value, use the HAL_DAC_GetChannelData() function.
+       + To read the last DAC data output value, use the HAL_DAC_GetChannelData() function.
        + Stop the DAC peripheral on a given channel with HAL_DAC_StopChannel().
 
     ### DMA mode, input and output operation
@@ -425,18 +425,18 @@ DAC_NB_OF_CHANNEL              | DFP                | NA | DAC channel count (va
 #endif /* DAC_NB_OF_CHANNEL */
 
 /*! Triggers */
-#define IS_DAC_TRIGGER(hdac, trigger) (((trigger) == HAL_DAC_TRIGGER_NONE)          \
-                                       || ((trigger) == HAL_DAC_TRIGGER_TIM1_TRGO)  \
-                                       || ((trigger) == HAL_DAC_TRIGGER_TIM2_TRGO)  \
-                                       || ((trigger) == HAL_DAC_TRIGGER_TIM5_TRGO)  \
-                                       || ((trigger) == HAL_DAC_TRIGGER_TIM6_TRGO)  \
-                                       || ((trigger) == HAL_DAC_TRIGGER_TIM7_TRGO)  \
-                                       || ((trigger) == HAL_DAC_TRIGGER_TIM8_TRGO)  \
-                                       || ((trigger) == HAL_DAC_TRIGGER_TIM12_TRGO) \
-                                       || ((trigger) == HAL_DAC_TRIGGER_TIM15_TRGO) \
-                                       || ((trigger) == HAL_DAC_TRIGGER_LPTIM1_OC1) \
-                                       || ((trigger) == HAL_DAC_TRIGGER_EXTI9)      \
-                                       || ((trigger) == HAL_DAC_TRIGGER_SOFTWARE))
+#define IS_DAC_TRIGGER(hdac, trigger)  (((trigger) == HAL_DAC_TRIGGER_NONE)          \
+                                        || ((trigger) == HAL_DAC_TRIGGER_TIM1_TRGO)  \
+                                        || ((trigger) == HAL_DAC_TRIGGER_TIM2_TRGO)  \
+                                        || ((trigger) == HAL_DAC_TRIGGER_TIM5_TRGO)  \
+                                        || ((trigger) == HAL_DAC_TRIGGER_TIM6_TRGO)  \
+                                        || ((trigger) == HAL_DAC_TRIGGER_TIM7_TRGO)  \
+                                        || ((trigger) == HAL_DAC_TRIGGER_TIM8_TRGO)  \
+                                        || ((trigger) == HAL_DAC_TRIGGER_TIM12_TRGO) \
+                                        || ((trigger) == HAL_DAC_TRIGGER_TIM15_TRGO) \
+                                        || ((trigger) == HAL_DAC_TRIGGER_LPTIM1_OC1) \
+                                        || ((trigger) == HAL_DAC_TRIGGER_EXTI9)      \
+                                        || ((trigger) == HAL_DAC_TRIGGER_SOFTWARE))
 
 /*! High Frequencies mode selection */
 #define  IS_DAC_HIGH_FREQUENCY_MODE(mode) (((mode) == HAL_DAC_HIGH_FREQ_MODE_DISABLED)       \
@@ -656,7 +656,6 @@ __STATIC_INLINE void DAC_IRQHandlerCH(hal_dac_handle_t *hdac, hal_dac_channel_t 
 hal_status_t HAL_DAC_Init(hal_dac_handle_t *hdac, hal_dac_t instance)
 {
   ASSERT_DBG_PARAM((hdac != NULL));
-
   ASSERT_DBG_PARAM(IS_DAC_ALL_INSTANCE((DAC_TypeDef *)((uint32_t)instance)));
 
 #if defined(USE_HAL_CHECK_PARAM) && (USE_HAL_CHECK_PARAM == 1)
@@ -792,7 +791,6 @@ hal_status_t HAL_DAC_SetConfig(hal_dac_handle_t *hdac, const hal_dac_config_t *p
   ASSERT_DBG_PARAM(IS_DAC_HIGH_FREQUENCY_MODE(p_config->high_frequency_mode));
 
   ASSERT_DBG_STATE(hdac->global_state, (uint32_t)DAC_STATE_CONFIG);
-
   ASSERT_DBG_STATE(hdac->channel_state[HAL_DAC_CHANNEL_1], (uint32_t)HAL_DAC_CHANNEL_STATE_IDLE);
 #if defined (DAC_NB_OF_CHANNEL) && (DAC_NB_OF_CHANNEL == 2)
   ASSERT_DBG_STATE(hdac->channel_state[HAL_DAC_CHANNEL_2], (uint32_t)HAL_DAC_CHANNEL_STATE_IDLE);
@@ -856,16 +854,16 @@ void HAL_DAC_ResetConfig(hal_dac_handle_t *hdac)
 
   ASSERT_DBG_PARAM((hdac != NULL));
 
-  p_instance = DAC_GET_INSTANCE(hdac);
-
   ASSERT_DBG_STATE(hdac->global_state, (uint32_t)DAC_STATE_CONFIG);
   ASSERT_DBG_STATE(hdac->channel_state[HAL_DAC_CHANNEL_1], (uint32_t)HAL_DAC_CHANNEL_STATE_IDLE);
 #if defined (DAC_NB_OF_CHANNEL) && (DAC_NB_OF_CHANNEL == 2)
   ASSERT_DBG_STATE(hdac->channel_state[HAL_DAC_CHANNEL_2], (uint32_t)HAL_DAC_CHANNEL_STATE_IDLE);
 
 #endif /* DAC_NB_OF_CHANNEL */
-  /* Reset the configuration items to their default/HW reset values */
 
+  p_instance = DAC_GET_INSTANCE(hdac);
+
+  /* Reset the configuration items to their default/HW reset values */
   for (uint32_t index = 0; index < DAC_NB_OF_CHANNEL; index++)
   {
 #if defined(USE_HAL_DAC_GET_LAST_ERRORS) && (USE_HAL_DAC_GET_LAST_ERRORS == 1)
@@ -949,10 +947,11 @@ hal_status_t HAL_DAC_CalibrateChannelBuffer(hal_dac_handle_t *hdac, hal_dac_chan
   }
 #endif /* USE_HAL_CHECK_PARAM */
 
-  p_instance = DAC_GET_INSTANCE(hdac);
   ASSERT_DBG_PARAM(IS_DAC_CHANNEL(hdac, channel));
 
   ASSERT_DBG_STATE(hdac->global_state, HAL_DAC_STATE_SEPARATE_CHANNEL_CONFIGURED);
+
+  p_instance = DAC_GET_INSTANCE(hdac);
 
   /* Store output buffer configuration */
   output_buffer_mode = LL_DAC_GetOutputBuffer(p_instance, lut_ch[channel]);
@@ -1035,12 +1034,12 @@ hal_status_t HAL_DAC_SetChannelBufferCalibrationValue(hal_dac_handle_t *hdac, ha
   DAC_TypeDef *p_instance;
 
   ASSERT_DBG_PARAM((hdac != NULL));
-  p_instance = DAC_GET_INSTANCE(hdac);
-
   ASSERT_DBG_PARAM(IS_DAC_CHANNEL(hdac, channel));
   ASSERT_DBG_PARAM(IS_DAC_TRIMMINGVALUE(value));
 
   ASSERT_DBG_STATE(hdac->global_state, HAL_DAC_STATE_SEPARATE_CHANNEL_CONFIGURED);
+
+  p_instance = DAC_GET_INSTANCE(hdac);
 
   LL_DAC_SetTrimmingValue(p_instance, lut_ch[channel], (value & DAC_CCR_OTRIM1));
 
@@ -1059,11 +1058,11 @@ uint32_t HAL_DAC_GetChannelBufferCalibrationValue(const hal_dac_handle_t *hdac, 
   DAC_TypeDef *p_instance;
 
   ASSERT_DBG_PARAM((hdac != NULL));
-  p_instance = DAC_GET_INSTANCE(hdac);
-
   ASSERT_DBG_PARAM(IS_DAC_CHANNEL(hdac, channel));
 
   ASSERT_DBG_STATE(hdac->global_state, DAC_STATE_ALL);
+
+  p_instance = DAC_GET_INSTANCE(hdac);
 
   return LL_DAC_GetTrimmingValue(p_instance, lut_ch[channel]);
 }
@@ -1273,7 +1272,6 @@ hal_status_t HAL_DAC_SetConfigDualChannel(hal_dac_handle_t *hdac, const hal_dac_
   ASSERT_DBG_PARAM(IS_DAC_ALIGN(p_config->alignment));
 
   ASSERT_DBG_STATE(hdac->global_state, (uint32_t)DAC_STATE_CONFIG);
-
   ASSERT_DBG_STATE(hdac->channel_state[HAL_DAC_CHANNEL_1], (uint32_t)HAL_DAC_CHANNEL_STATE_IDLE);
   ASSERT_DBG_STATE(hdac->channel_state[HAL_DAC_CHANNEL_2], (uint32_t)HAL_DAC_CHANNEL_STATE_IDLE);
 
@@ -1470,7 +1468,6 @@ hal_status_t HAL_DAC_TrigSWConversionChannel(hal_dac_handle_t *hdac, hal_dac_cha
   hal_status_t status = HAL_ERROR;
 
   ASSERT_DBG_PARAM((hdac != NULL));
-
   ASSERT_DBG_PARAM(IS_DAC_CHANNEL(hdac, channel));
 
   ASSERT_DBG_STATE(hdac->global_state, (uint32_t)HAL_DAC_STATE_SEPARATE_CHANNEL_CONFIGURED);
@@ -1910,7 +1907,6 @@ hal_status_t HAL_DAC_SetDualChannelData(hal_dac_handle_t *hdac, uint32_t data)
   volatile uint32_t *tmp;
 
   ASSERT_DBG_PARAM((hdac != NULL));
-
   ASSERT_DBG_PARAM(IS_DAC_DATA_DUAL(data));
 
   ASSERT_DBG_STATE(hdac->global_state, (uint32_t)HAL_DAC_STATE_DUAL_CHANNEL_CONFIGURED |
@@ -2198,6 +2194,7 @@ hal_status_t HAL_DAC_DisableChannelDMADoubleDataMode(hal_dac_handle_t *hdac, hal
 
   /* Update the MCR register */
   LL_DAC_DisableDMADoubleDataMode(p_instance, lut_ch[channel]);
+
   return HAL_OK;
 }
 
@@ -2241,7 +2238,6 @@ hal_status_t HAL_DAC_SetConfigChannelSampleAndHold(hal_dac_handle_t *hdac, hal_d
   uint32_t tickstart;
 
   ASSERT_DBG_PARAM((hdac != NULL));
-
   ASSERT_DBG_PARAM((p_config != NULL));
 
 #if defined(USE_HAL_CHECK_PARAM) && (USE_HAL_CHECK_PARAM == 1)
@@ -2300,7 +2296,6 @@ void HAL_DAC_GetConfigChannelSampleAndHold(const hal_dac_handle_t *hdac, hal_dac
   DAC_TypeDef *p_instance;
 
   ASSERT_DBG_PARAM((hdac != NULL));
-
   ASSERT_DBG_PARAM((p_config != NULL));
 
   ASSERT_DBG_STATE(hdac->global_state, (uint32_t)DAC_STATE_ALL);
@@ -2394,7 +2389,6 @@ hal_status_t HAL_DAC_EnableChannelAddingTriangleWave(hal_dac_handle_t *hdac, hal
   uint32_t cr_mask;
 
   ASSERT_DBG_PARAM((hdac != NULL));
-  p_instance = DAC_GET_INSTANCE(hdac);
 
   ASSERT_DBG_PARAM(IS_DAC_CHANNEL(hdac, channel));
   ASSERT_DBG_PARAM(IS_DAC_WAVE_AMPLITUDE(amplitude));
@@ -2403,6 +2397,8 @@ hal_status_t HAL_DAC_EnableChannelAddingTriangleWave(hal_dac_handle_t *hdac, hal
     So the DAC channel must be disabled */
   ASSERT_DBG_STATE(hdac->global_state, (uint32_t)DAC_STATE_CONFIG);
   ASSERT_DBG_STATE((hdac->channel_state[(uint32_t)channel]), (uint32_t)HAL_DAC_CHANNEL_STATE_IDLE);
+
+  p_instance = DAC_GET_INSTANCE(hdac);
 
   /** Set the triangle wave generation amplitude for the DAC channel,
     * and enable the triangle wave generation for the DAC channel
@@ -3430,7 +3426,7 @@ __STATIC_INLINE void DAC_IRQHandlerCH(hal_dac_handle_t *const hdac, hal_dac_chan
   */
 
 #endif /* USE_HAL_DAC_MODULE */
-#endif /* DAC1 */
+#endif /* DAC1 || DAC2 */
 /**
   * @}
   */

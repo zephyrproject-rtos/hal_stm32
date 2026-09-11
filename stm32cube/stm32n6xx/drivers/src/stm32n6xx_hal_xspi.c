@@ -297,10 +297,12 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* Private function prototypes -----------------------------------------------*/
+#if defined(HAL_DMA_MODULE_ENABLED)
 static void              XSPI_DMACplt(DMA_HandleTypeDef *hdma);
 static void              XSPI_DMAHalfCplt(DMA_HandleTypeDef *hdma);
 static void              XSPI_DMAError(DMA_HandleTypeDef *hdma);
 static void              XSPI_DMAAbortCplt(DMA_HandleTypeDef *hdma);
+#endif /* HAL_DMA_MODULE_ENABLED */
 static HAL_StatusTypeDef XSPI_WaitFlagStateUntilTimeout(XSPI_HandleTypeDef *hxspi, uint32_t Flag, FlagStatus State,
                                                         uint32_t Tickstart, uint32_t Timeout);
 static HAL_StatusTypeDef XSPI_ConfigCmd(XSPI_HandleTypeDef *hxspi, const XSPI_RegularCmdTypeDef *pCmd);
@@ -405,6 +407,11 @@ HAL_StatusTypeDef HAL_XSPI_Init(XSPI_HandleTypeDef *hxspi)
                  (hxspi->Init.MemoryType | ((hxspi->Init.MemorySize) << XSPI_DCR1_DEVSIZE_Pos) |
                   ((hxspi->Init.ChipSelectHighTimeCycle - 1U) << XSPI_DCR1_CSHT_Pos) | hxspi->Init.ClockMode));
 
+      if (hxspi->Init.MemoryExtended == HAL_XSPI_CSSEL_HW)
+      {
+        SET_BIT(hxspi->Instance->DCR1, XSPI_DCR1_EXTENDMEM);
+      }
+
       /* Configure wrap size */
       MODIFY_REG(hxspi->Instance->DCR2, XSPI_DCR2_WRAPSIZE, hxspi->Init.WrapSize);
 
@@ -454,11 +461,6 @@ HAL_StatusTypeDef HAL_XSPI_Init(XSPI_HandleTypeDef *hxspi)
         if (hxspi->Init.FreeRunningClock == HAL_XSPI_FREERUNCLK_ENABLE)
         {
           SET_BIT(hxspi->Instance->DCR1, XSPI_DCR1_FRCK);
-        }
-
-        if (hxspi->Init.MemoryExtended == HAL_XSPI_CSSEL_HW)
-        {
-          SET_BIT(hxspi->Instance->DCR1, XSPI_DCR1_EXTENDMEM);
         }
 
         /* Initialize the XSPI state */
@@ -753,6 +755,7 @@ void HAL_XSPI_IRQHandler(XSPI_HandleTypeDef *hxspi)
       /* Disable the DMA transfer on the XSPI side */
       CLEAR_BIT(hxspi->Instance->CR, XSPI_CR_DMAEN);
 
+#if defined(HAL_DMA_MODULE_ENABLED)
       /* Disable the DMA transmit on the DMA side */
       hxspi->hdmatx->XferAbortCallback = XSPI_DMAAbortCplt;
       if (HAL_DMA_Abort_IT(hxspi->hdmatx) != HAL_OK)
@@ -780,6 +783,7 @@ void HAL_XSPI_IRQHandler(XSPI_HandleTypeDef *hxspi)
         HAL_XSPI_ErrorCallback(hxspi);
 #endif /* (USE_HAL_XSPI_REGISTER_CALLBACKS) && (USE_HAL_XSPI_REGISTER_CALLBACKS == 1U) */
       }
+#endif /* HAL_DMA_MODULE_ENABLED */
     }
     else
     {
@@ -1434,6 +1438,7 @@ HAL_StatusTypeDef HAL_XSPI_Receive_IT(XSPI_HandleTypeDef *hxspi, uint8_t *pData)
   return status;
 }
 
+#if defined(HAL_DMA_MODULE_ENABLED)
 /**
   * @brief  Send an amount of data in non-blocking mode with DMA.
   * @param  hxspi : XSPI handle
@@ -1819,6 +1824,7 @@ HAL_StatusTypeDef HAL_XSPI_Receive_DMA(XSPI_HandleTypeDef *hxspi, uint8_t *pData
 
   return status;
 }
+#endif /* HAL_DMA_MODULE_ENABLED */
 
 /**
   * @brief  Configure the XSPI Automatic Polling Mode in blocking mode.
@@ -2465,6 +2471,7 @@ HAL_StatusTypeDef HAL_XSPI_Abort(XSPI_HandleTypeDef *hxspi)
   /* Check if the state is not in reset state */
   if (hxspi->State != HAL_XSPI_STATE_RESET)
   {
+#if defined(HAL_DMA_MODULE_ENABLED)
     /* Check if the DMA is enabled */
     if ((hxspi->Instance->CR & XSPI_CR_DMAEN) != 0U)
     {
@@ -2485,7 +2492,7 @@ HAL_StatusTypeDef HAL_XSPI_Abort(XSPI_HandleTypeDef *hxspi)
         hxspi->ErrorCode = HAL_XSPI_ERROR_DMA;
       }
     }
-
+#endif /* HAL_DMA_MODULE_ENABLED */
     if (HAL_XSPI_GET_FLAG(hxspi, HAL_XSPI_FLAG_BUSY) != RESET)
     {
       /* Perform an abort of the XSPI */
@@ -2551,6 +2558,7 @@ HAL_StatusTypeDef HAL_XSPI_Abort_IT(XSPI_HandleTypeDef *hxspi)
       /* Disable the DMA transfer on the XSPI side */
       CLEAR_BIT(hxspi->Instance->CR, XSPI_CR_DMAEN);
 
+#if defined(HAL_DMA_MODULE_ENABLED)
       /* Disable the DMA transmit on the DMA side */
       hxspi->hdmatx->XferAbortCallback = XSPI_DMAAbortCplt;
       if (HAL_DMA_Abort_IT(hxspi->hdmatx) != HAL_OK)
@@ -2578,6 +2586,7 @@ HAL_StatusTypeDef HAL_XSPI_Abort_IT(XSPI_HandleTypeDef *hxspi)
         HAL_XSPI_AbortCpltCallback(hxspi);
 #endif /* (USE_HAL_XSPI_REGISTER_CALLBACKS) && (USE_HAL_XSPI_REGISTER_CALLBACKS == 1U) */
       }
+#endif /*HAL_DMA_MODULE_ENABLED*/
     }
     else
     {
@@ -2828,7 +2837,7 @@ HAL_StatusTypeDef HAL_XSPIM_Config(XSPI_HandleTypeDef *hxspi, const XSPIM_CfgTyp
   }
 
   /********** Disable all XSPI to configure XSPI IO Manager **********/
- if (__HAL_RCC_XSPI1_IS_CLK_ENABLED() != 0U)
+  if (__HAL_RCC_XSPI1_IS_CLK_ENABLED() != 0U)
   {
     if ((XSPI1->CR & XSPI_CR_EN) != 0U)
     {
@@ -2853,35 +2862,14 @@ HAL_StatusTypeDef HAL_XSPIM_Config(XSPI_HandleTypeDef *hxspi, const XSPIM_CfgTyp
     }
   }
 
-  /***************** Deactivation of previous configuration *****************/
-  CLEAR_REG(XSPIM->CR);
-
-  /******************** Activation of new configuration *********************/
-  MODIFY_REG(XSPIM->CR, XSPIM_CR_REQ2ACK_TIME, ((pCfg->Req2AckTime - 1U) << XSPIM_CR_REQ2ACK_TIME_Pos));
-
+  /***************** Store Port assignment ***********************************/
   if (hxspi->Instance == XSPI1)
   {
     IOM_cfg[0].IOPort = pCfg->IOPort ;
-    if (pCfg->nCSOverride != HAL_XSPI_CSSEL_OVR_DISABLED)
-    {
-      MODIFY_REG(XSPIM->CR, (XSPIM_CR_CSSEL_OVR_O1 | XSPIM_CR_CSSEL_OVR_EN), (pCfg->nCSOverride));
-    }
-    else
-    {
-      /* Nothing to do */
-    }
   }
   else if (hxspi->Instance == XSPI2)
   {
     IOM_cfg[1].IOPort = pCfg->IOPort ;
-    if (pCfg->nCSOverride != HAL_XSPI_CSSEL_OVR_DISABLED)
-    {
-      MODIFY_REG(XSPIM->CR, (XSPIM_CR_CSSEL_OVR_O2 | XSPIM_CR_CSSEL_OVR_EN), (pCfg->nCSOverride));
-    }
-    else
-    {
-      /* Nothing to do */
-    }
   }
   else if (hxspi->Instance == XSPI3)
   {
@@ -2906,6 +2894,84 @@ HAL_StatusTypeDef HAL_XSPIM_Config(XSPI_HandleTypeDef *hxspi, const XSPIM_CfgTyp
     return HAL_ERROR;
   }
 
+  /******************** Store CSSEL_OVR settings before configuration ********/
+  uint32_t reg = XSPIM->CR;
+  uint32_t ovr_xspi1;
+  uint32_t ovr_xspi2;
+  if ((reg & XSPIM_CR_CSSEL_OVR_EN) == XSPIM_CR_CSSEL_OVR_EN)
+  {
+    if ((reg & XSPIM_CR_CSSEL_OVR_O1) == XSPIM_CR_CSSEL_OVR_O1)
+    {
+      ovr_xspi1 = HAL_XSPI_CSSEL_OVR_NCS2;
+    }
+    else
+    {
+      ovr_xspi1 = HAL_XSPI_CSSEL_OVR_NCS1;
+    }
+    if ((reg & XSPIM_CR_CSSEL_OVR_O2) == XSPIM_CR_CSSEL_OVR_O2)
+    {
+      ovr_xspi2 = HAL_XSPI_CSSEL_OVR_NCS2;
+    }
+    else
+    {
+      ovr_xspi2 = HAL_XSPI_CSSEL_OVR_NCS1;
+    }
+  }
+  else
+  {
+    ovr_xspi1 = HAL_XSPI_CSSEL_OVR_DISABLED;
+    ovr_xspi2 = HAL_XSPI_CSSEL_OVR_DISABLED;
+  }
+
+  /***************** Reset of previous configuration *************************/
+  CLEAR_REG(XSPIM->CR);
+
+  /******************** Activation of new configuration **********************/
+  MODIFY_REG(XSPIM->CR, XSPIM_CR_REQ2ACK_TIME, ((pCfg->Req2AckTime - 1U) << XSPIM_CR_REQ2ACK_TIME_Pos));
+
+  /******************** CSSEL_OVR management *********************************/
+  if (hxspi->Instance == XSPI1)
+  {
+    ovr_xspi1 = pCfg->nCSOverride;
+  }
+  else if (hxspi->Instance == XSPI2)
+  {
+    ovr_xspi2 = pCfg->nCSOverride;
+  }
+  else
+  {
+    /* Nothing to do */
+  }
+
+  uint32_t ovr_en = 0U;
+  if ((ovr_xspi1 != HAL_XSPI_CSSEL_OVR_DISABLED) || (ovr_xspi2 != HAL_XSPI_CSSEL_OVR_DISABLED))
+  {
+    ovr_en = XSPIM_CR_CSSEL_OVR_EN;
+  }
+  else
+  {
+    ovr_xspi1 = HAL_XSPI_CSSEL_OVR_NCS1;
+    ovr_xspi2 = HAL_XSPI_CSSEL_OVR_NCS1;
+  }
+
+  reg &= ~(XSPIM_CR_CSSEL_OVR_EN | XSPIM_CR_CSSEL_OVR_O1 | XSPIM_CR_CSSEL_OVR_O2);
+  if (ovr_en == XSPIM_CR_CSSEL_OVR_EN)
+  {
+    reg |= XSPIM_CR_CSSEL_OVR_EN;
+  }
+  if (ovr_xspi1 == HAL_XSPI_CSSEL_OVR_NCS2)
+  {
+    reg |= XSPIM_CR_CSSEL_OVR_O1;
+  }
+  if (ovr_xspi2 == HAL_XSPI_CSSEL_OVR_NCS2)
+  {
+    reg |= XSPIM_CR_CSSEL_OVR_O2;
+  }
+
+  MODIFY_REG(XSPIM->CR, (XSPIM_CR_CSSEL_OVR_EN | XSPIM_CR_CSSEL_OVR_O1 | XSPIM_CR_CSSEL_OVR_O2),
+             (reg & (XSPIM_CR_CSSEL_OVR_EN | XSPIM_CR_CSSEL_OVR_O1 | XSPIM_CR_CSSEL_OVR_O2)));
+
+  /******************** Management of MUXEN and MODE *************************/
   for (index = 0U; index < (XSPI_NB_INSTANCE - 2U); index++)
   {
     if (IOM_cfg[index].IOPort == IOM_cfg[index + 1U].IOPort)
@@ -2928,7 +2994,7 @@ HAL_StatusTypeDef HAL_XSPIM_Config(XSPI_HandleTypeDef *hxspi, const XSPIM_CfgTyp
     }
   }
 
-  /******* Re-enable both XSPI after configure XSPI IO Manager ********/
+  /******* Re-enable all XSPI after configure XSPI IO Manager ***************/
   if ((xspi_enabled & 0x1U) != 0U)
   {
     SET_BIT(XSPI1->CR, XSPI_CR_EN);
@@ -3083,6 +3149,7 @@ HAL_StatusTypeDef HAL_XSPI_SetDelayValue(XSPI_HandleTypeDef *hxspi, const XSPI_H
 /**
   @cond 0
   */
+#if defined(HAL_DMA_MODULE_ENABLED)
 /**
   * @brief  DMA XSPI process complete callback.
   * @param  hdma : DMA handle
@@ -3209,6 +3276,7 @@ static void XSPI_DMAAbortCplt(DMA_HandleTypeDef *hdma)
 #endif /* defined (USE_HAL_XSPI_REGISTER_CALLBACKS) && (USE_HAL_XSPI_REGISTER_CALLBACKS == 1U) */
   }
 }
+#endif /* HAL_DMA_MODULE_ENABLED */
 
 /**
   * @brief  Wait for a flag state until timeout.

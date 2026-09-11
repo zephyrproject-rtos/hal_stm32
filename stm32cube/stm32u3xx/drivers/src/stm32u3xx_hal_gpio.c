@@ -705,4 +705,3 @@ HAL_StatusTypeDef HAL_GPIO_GetConfigPinAttributes(const GPIO_TypeDef *GPIOx, uin
 /**
   * @}
   */
-

@@ -512,7 +512,6 @@ HAL_StatusTypeDef FMC_NORSRAM_WriteOperation_Disable(FMC_NORSRAM_TypeDef *Device
   * @}
   */
 #endif /* FMC_BANK1 */
-
 #if defined(FMC_BANK3)
 
 /** @defgroup FMC_LL_Exported_Functions_NAND FMC Low Layer NAND Exported Functions
@@ -787,7 +786,6 @@ HAL_StatusTypeDef FMC_NAND_GetECC(const FMC_NAND_TypeDef *Device, uint32_t *ECCv
   * @}
   */
 #endif /* FMC_BANK3 */
-
 
 /**
   * @}

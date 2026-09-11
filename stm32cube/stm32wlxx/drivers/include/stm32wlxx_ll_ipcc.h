@@ -718,4 +718,3 @@ __STATIC_INLINE uint32_t LL_C2_IPCC_IsActiveFlag_CHx(IPCC_TypeDef  const *const 
 #endif
 
 #endif /* STM32WLxx_LL_IPCC_H */
-

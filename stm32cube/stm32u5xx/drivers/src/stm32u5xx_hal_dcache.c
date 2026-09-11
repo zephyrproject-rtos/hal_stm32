@@ -192,6 +192,13 @@ HAL_StatusTypeDef  HAL_DCACHE_Init(DCACHE_HandleTypeDef *hdcache)
   assert_param(IS_DCACHE_ALL_INSTANCE(hdcache->Instance));
   assert_param(IS_DCACHE_READ_BURST_TYPE(hdcache->Init.ReadBurstType));
 
+#if defined (DCACHE2)
+  if (hdcache->Instance == DCACHE2)
+  {
+    HAL_DCACHE_Invalidate(hdcache);
+  }
+#endif /* DCACHE2 */
+
   if (hdcache->State == HAL_DCACHE_STATE_RESET)
   {
     /* Init the DCACHE Callback settings with legacy weak */

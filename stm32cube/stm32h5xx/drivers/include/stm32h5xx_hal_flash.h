@@ -778,6 +778,12 @@ void HAL_FLASH_OperationErrorCallback(uint32_t ReturnValue);
 /* Peripheral Control functions */
 HAL_StatusTypeDef HAL_FLASH_Unlock(void);
 HAL_StatusTypeDef HAL_FLASH_Lock(void);
+HAL_StatusTypeDef HAL_FLASH_Unlock_NS(void);
+HAL_StatusTypeDef HAL_FLASH_Lock_NS(void);
+#if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
+HAL_StatusTypeDef HAL_FLASH_Unlock_S(void);
+HAL_StatusTypeDef HAL_FLASH_Lock_S(void);
+#endif /* __ARM_FEATURE_CMSE && __ARM_FEATURE_CMSE == 3U */
 HAL_StatusTypeDef HAL_FLASH_OB_Unlock(void);
 HAL_StatusTypeDef HAL_FLASH_OB_Lock(void);
 /* Option bytes control */

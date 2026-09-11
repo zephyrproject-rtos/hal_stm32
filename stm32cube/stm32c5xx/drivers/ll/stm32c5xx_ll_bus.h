@@ -237,7 +237,6 @@ extern "C" {
 #define LL_AHB4_GRP1_PERIPH_ALL_LPEN_MASK RCC_AHB4LPENR_XSPI1LPEN
 #define LL_AHB4_GRP1_PERIPH_ALL_RST_MASK  RCC_AHB4RSTR_XSPI1RST
 #define LL_AHB4_GRP1_PERIPH_XSPI1         RCC_AHB4ENR_XSPI1EN
-
 /**
   * @}
   */ /* End of BUS_LL_EC_AHB4_GRP1_PERIPH */
@@ -383,21 +382,23 @@ extern "C" {
   */
 #define LL_APB2_GRP1_PERIPH_ALL           0xFFFFFFFFU
 #if defined(TIM16)
-#define LL_APB2_GRP1_PERIPH_ALL_EN_MASK   (RCC_APB2ENR_TIM1EN | RCC_APB2ENR_SPI1EN | RCC_APB2ENR_TIM8EN | \
+#define LL_APB2_GRP1_PERIPH_ALL_EN_MASK   (RCC_APB2ENR_TIM1EN   | RCC_APB2ENR_SPI1EN  | RCC_APB2ENR_TIM8EN  | \
                                            RCC_APB2ENR_USART1EN | RCC_APB2ENR_TIM15EN | RCC_APB2ENR_TIM16EN | \
-                                           RCC_APB2ENR_TIM17EN | RCC_APB2ENR_USBEN)
-#define LL_APB2_GRP1_PERIPH_ALL_LPEN_MASK (RCC_APB2LPENR_TIM1LPEN | RCC_APB2LPENR_SPI1LPEN | RCC_APB2LPENR_TIM8LPEN | \
-                                           RCC_APB2LPENR_USART1LPEN | RCC_APB2LPENR_TIM15LPEN | \
-                                           RCC_APB2LPENR_TIM16LPEN | RCC_APB2LPENR_TIM17LPEN | RCC_APB2LPENR_USBLPEN)
-#define LL_APB2_GRP1_PERIPH_ALL_RST_MASK  (RCC_APB2RSTR_TIM1RST | RCC_APB2RSTR_SPI1RST | RCC_APB2RSTR_TIM8RST | \
+                                           RCC_APB2ENR_TIM17EN  | RCC_APB2ENR_USBEN)
+#define LL_APB2_GRP1_PERIPH_ALL_LPEN_MASK (RCC_APB2LPENR_TIM1LPEN   | RCC_APB2LPENR_SPI1LPEN   | \
+                                           RCC_APB2LPENR_TIM8LPEN   | RCC_APB2LPENR_USART1LPEN | \
+                                           RCC_APB2LPENR_TIM15LPEN  | RCC_APB2LPENR_TIM16LPEN  | \
+                                           RCC_APB2LPENR_TIM17LPEN | RCC_APB2LPENR_USBLPEN)
+#define LL_APB2_GRP1_PERIPH_ALL_RST_MASK  (RCC_APB2RSTR_TIM1RST   | RCC_APB2RSTR_SPI1RST  | RCC_APB2RSTR_TIM8RST | \
                                            RCC_APB2RSTR_USART1RST | RCC_APB2RSTR_TIM15RST | RCC_APB2RSTR_TIM16RST | \
-                                           RCC_APB2RSTR_TIM17RST | RCC_APB2RSTR_USBRST)
+                                           RCC_APB2RSTR_TIM17RST  | RCC_APB2RSTR_USBRST)
 #else
-#define LL_APB2_GRP1_PERIPH_ALL_EN_MASK   (RCC_APB2ENR_TIM1EN | RCC_APB2ENR_SPI1EN | RCC_APB2ENR_TIM8EN | \
+#define LL_APB2_GRP1_PERIPH_ALL_EN_MASK   (RCC_APB2ENR_TIM1EN   | RCC_APB2ENR_SPI1EN  | RCC_APB2ENR_TIM8EN | \
                                            RCC_APB2ENR_USART1EN | RCC_APB2ENR_TIM15EN | RCC_APB2ENR_USBEN)
-#define LL_APB2_GRP1_PERIPH_ALL_LPEN_MASK (RCC_APB2LPENR_TIM1LPEN | RCC_APB2LPENR_SPI1LPEN | RCC_APB2LPENR_TIM8LPEN | \
-                                           RCC_APB2LPENR_USART1LPEN | RCC_APB2LPENR_TIM15LPEN | RCC_APB2LPENR_USBLPEN)
-#define LL_APB2_GRP1_PERIPH_ALL_RST_MASK  (RCC_APB2RSTR_TIM1RST | RCC_APB2RSTR_SPI1RST | RCC_APB2RSTR_TIM8RST | \
+#define LL_APB2_GRP1_PERIPH_ALL_LPEN_MASK (RCC_APB2LPENR_TIM1LPEN   | RCC_APB2LPENR_SPI1LPEN    | \
+                                           RCC_APB2LPENR_TIM8LPEN   |  RCC_APB2LPENR_USART1LPEN | \
+                                           RCC_APB2LPENR_TIM15LPEN | RCC_APB2LPENR_USBLPEN)
+#define LL_APB2_GRP1_PERIPH_ALL_RST_MASK  (RCC_APB2RSTR_TIM1RST   | RCC_APB2RSTR_SPI1RST  | RCC_APB2RSTR_TIM8RST | \
                                            RCC_APB2RSTR_USART1RST | RCC_APB2RSTR_TIM15RST | RCC_APB2RSTR_USBRST)
 #endif /* TIM16 */
 #define LL_APB2_GRP1_PERIPH_TIM1          RCC_APB2ENR_TIM1EN
@@ -528,7 +529,7 @@ __STATIC_INLINE void LL_AHB1_GRP1_EnableClock(uint32_t periphs)
   *  AHB1ENR         ETH1RXEN         LL_AHB1_GRP1_IsEnabledClock \n
   *  AHB1ENR         SRAM2EN          LL_AHB1_GRP1_IsEnabledClock \n
   *  AHB1ENR         SRAM1EN          LL_AHB1_GRP1_IsEnabledClock
-  * @param  periphs This parameter can be a combination of the following values:
+  * @param  periphs This parameter can be a one of the following values:
   *         @arg @ref LL_AHB1_GRP1_PERIPH_ALL
   *         @arg @ref LL_AHB1_GRP1_PERIPH_LPDMA1
   *         @arg @ref LL_AHB1_GRP1_PERIPH_LPDMA2
@@ -720,7 +721,7 @@ __STATIC_INLINE void LL_AHB1_GRP1_EnableClockLowPower(uint32_t periphs)
   *  AHB1LPENR         ICACHELPEN         LL_AHB1_GRP1_IsEnabledClockLowPower \n
   *  AHB1LPENR         SRAM2LPEN          LL_AHB1_GRP1_IsEnabledClockLowPower \n
   *  AHB1LPENR         SRAM1LPEN          LL_AHB1_GRP1_IsEnabledClockLowPower
-  * @param  periphs This parameter can be a combination of the following values:
+  * @param  periphs This parameter can be a one of the following values:
   *         @arg @ref LL_AHB1_GRP1_PERIPH_ALL
   *         @arg @ref LL_AHB1_GRP1_PERIPH_LPDMA1
   *         @arg @ref LL_AHB1_GRP1_PERIPH_LPDMA2
@@ -903,7 +904,7 @@ __STATIC_INLINE void LL_AHB2_GRP1_EnableClock(uint32_t periphs)
   *  AHB2ENR         SAESEN          LL_AHB2_GRP1_IsEnabledClock \n
   *  AHB2ENR         CCBEN           LL_AHB2_GRP1_IsEnabledClock \n
   *  AHB2ENR         ADC3EN          LL_AHB2_GRP1_IsEnabledClock
-  * @param  periphs This parameter can be a combination of the following values:
+  * @param  periphs This parameter can be a one of the following values:
   *         @arg @ref LL_AHB2_GRP1_PERIPH_ALL
   *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOA
   *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOB
@@ -1223,7 +1224,7 @@ __STATIC_INLINE void LL_AHB2_GRP1_EnableClockLowPower(uint32_t periphs)
   *  AHB2LPENR         SAESLPEN          LL_AHB2_GRP1_IsEnabledClockLowPower \n
   *  AHB2LPENR         CCBLPEN           LL_AHB2_GRP1_IsEnabledClockLowPower \n
   *  AHB2LPENR         ADC3LPEN          LL_AHB2_GRP1_IsEnabledClockLowPower
-  * @param  periphs This parameter can be a combination of the following values:
+  * @param  periphs This parameter can be a one of the following values:
   *         @arg @ref LL_AHB2_GRP1_PERIPH_ALL
   *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOA
   *         @arg @ref LL_AHB2_GRP1_PERIPH_GPIOB
@@ -1379,7 +1380,7 @@ __STATIC_INLINE void LL_AHB4_GRP1_EnableClock(uint32_t periphs)
   * @brief  Check if AHB4 peripheral clock is enabled.
   * @rmtoll
   *  AHB4ENR         XSPI1EN         LL_AHB4_GRP1_IsEnabledClock
-  * @param  periphs This parameter can be a combination of the following values:
+  * @param  periphs This parameter can be a one of the following values:
   *         @arg @ref LL_AHB4_GRP1_PERIPH_ALL
   *         @arg @ref LL_AHB4_GRP1_PERIPH_XSPI1
   *
@@ -1461,7 +1462,7 @@ __STATIC_INLINE void LL_AHB4_GRP1_EnableClockLowPower(uint32_t periphs)
   * @brief  Check if AHB4 peripheral clocks in low-power mode are enabled.
   * @rmtoll
   *  AHB4LPENR         XSPI1LPEN         LL_AHB4_GRP1_IsEnabledClockLowPower
-  * @param  periphs This parameter can be a combination of the following values:
+  * @param  periphs This parameter can be a one of the following values:
   *         @arg @ref LL_AHB4_GRP1_PERIPH_ALL
   *         @arg @ref LL_AHB4_GRP1_PERIPH_XSPI1
   * @retval State of periphs (1 or 0).
@@ -1615,7 +1616,7 @@ __STATIC_INLINE void LL_APB1_GRP1_EnableClock(uint32_t periphs)
   *  APB1LENR         CRSEN            LL_APB1_GRP1_IsEnabledClock \n
   *  APB1LENR         USART6EN         LL_APB1_GRP1_IsEnabledClock \n
   *  APB1LENR         UART7EN          LL_APB1_GRP1_IsEnabledClock
-  * @param  periphs This parameter can be a combination of the following values:
+  * @param  periphs This parameter can be a one of the following values:
   *         @arg @ref LL_APB1_GRP1_PERIPH_ALL
   *         @arg @ref LL_APB1_GRP1_PERIPH_TIM2
   * @if TIM3
@@ -1983,7 +1984,7 @@ __STATIC_INLINE void LL_APB1_GRP1_EnableClockLowPower(uint32_t periphs)
   *  APB1LLPENR         CRSLPEN            LL_APB1_GRP1_IsEnabledClockLowPower \n
   *  APB1LLPENR         USART6LPEN         LL_APB1_GRP1_IsEnabledClockLowPower \n
   *  APB1LLPENR         UART7LPEN          LL_APB1_GRP1_IsEnabledClockLowPower
-  * @param  periphs This parameter can be a combination of the following values:
+  * @param  periphs This parameter can be a one of the following values:
   *         @arg @ref LL_APB1_GRP1_PERIPH_ALL
   *         @arg @ref LL_APB1_GRP1_PERIPH_TIM2
   * @if TIM3
@@ -2132,7 +2133,7 @@ __STATIC_INLINE void LL_APB1_GRP2_EnableClock(uint32_t periphs)
   * @rmtoll
   *  APB1HENR         COMP12EN        LL_APB1_GRP2_IsEnabledClock \n
   *  APB1HENR         FDCANEN         LL_APB1_GRP2_IsEnabledClock
-  * @param  periphs This parameter can be a combination of the following values:
+  * @param  periphs This parameter can be a one of the following values:
   *         @arg @ref LL_APB1_GRP2_PERIPH_ALL
   *         @arg @ref LL_APB1_GRP2_PERIPH_COMP12
   * @if FDCAN
@@ -2233,7 +2234,7 @@ __STATIC_INLINE void LL_APB1_GRP2_EnableClockLowPower(uint32_t periphs)
   * @rmtoll
   *  APB1HLPENR         COMP12LPEN        LL_APB1_GRP2_IsEnabledClockLowPower \n
   *  APB1HLPENR         FDCANLPEN         LL_APB1_GRP2_IsEnabledClockLowPower
-  * @param  periphs This parameter can be a combination of the following values:
+  * @param  periphs This parameter can be a one of the following values:
   *         @arg @ref LL_APB1_GRP2_PERIPH_ALL
   *         @arg @ref LL_APB1_GRP2_PERIPH_COMP12
   * @if FDCAN
@@ -2309,6 +2310,10 @@ __STATIC_INLINE uint32_t LL_APB2_IsEnabledBusClock(void)
   *  APB2ENR         USBEN            LL_APB2_GRP1_EnableClock
   * @param  periphs This parameter can be a combination of the following values:
   *         @arg @ref LL_APB2_GRP1_PERIPH_ALL
+  * @if PLAY1
+  *         @arg @ref LL_APB2_GRP1_PERIPH_PLAY1APB (*)
+  *         @arg @ref LL_APB2_GRP1_PERIPH_PLAY1 (*)
+  * @endif
   *         @arg @ref LL_APB2_GRP1_PERIPH_TIM1
   *         @arg @ref LL_APB2_GRP1_PERIPH_SPI1
   *         @arg @ref LL_APB2_GRP1_PERIPH_TIM8
@@ -2342,8 +2347,12 @@ __STATIC_INLINE void LL_APB2_GRP1_EnableClock(uint32_t periphs)
   *  APB2ENR         TIM16EN          LL_APB2_GRP1_IsEnabledClock \n
   *  APB2ENR         TIM17EN          LL_APB2_GRP1_IsEnabledClock \n
   *  APB2ENR         USBEN            LL_APB2_GRP1_IsEnabledClock
-  * @param  periphs This parameter can be a combination of the following values:
+  * @param  periphs This parameter can be a one of the following values:
   *         @arg @ref LL_APB2_GRP1_PERIPH_ALL
+  * @if PLAY1
+  *         @arg @ref LL_APB2_GRP1_PERIPH_PLAY1APB (*)
+  *         @arg @ref LL_APB2_GRP1_PERIPH_PLAY1 (*)
+  * @endif
   *         @arg @ref LL_APB2_GRP1_PERIPH_TIM1
   *         @arg @ref LL_APB2_GRP1_PERIPH_SPI1
   *         @arg @ref LL_APB2_GRP1_PERIPH_TIM8
@@ -2387,6 +2396,10 @@ __STATIC_INLINE void LL_APB2_DisableBusClock(void)
   *  APB2ENR         USBEN            LL_APB2_GRP1_DisableClock
   * @param  periphs This parameter can be a combination of the following values:
   *         @arg @ref LL_APB2_GRP1_PERIPH_ALL
+  * @if PLAY1
+  *         @arg @ref LL_APB2_GRP1_PERIPH_PLAY1APB (*)
+  *         @arg @ref LL_APB2_GRP1_PERIPH_PLAY1 (*)
+  * @endif
   *         @arg @ref LL_APB2_GRP1_PERIPH_TIM1
   *         @arg @ref LL_APB2_GRP1_PERIPH_SPI1
   *         @arg @ref LL_APB2_GRP1_PERIPH_TIM8
@@ -2418,6 +2431,10 @@ __STATIC_INLINE void LL_APB2_GRP1_DisableClock(uint32_t periphs)
   *  APB2RSTR         USBRST            LL_APB2_GRP1_ForceReset
   * @param  periphs This parameter can be a combination of the following values:
   *         @arg @ref LL_APB2_GRP1_PERIPH_ALL
+  * @if PLAY1
+  *         @arg @ref LL_APB2_GRP1_PERIPH_PLAY1GLOBAL (*)
+  *         @arg @ref LL_APB2_GRP1_PERIPH_PLAY1APP (*)
+  * @endif
   *         @arg @ref LL_APB2_GRP1_PERIPH_TIM1
   *         @arg @ref LL_APB2_GRP1_PERIPH_SPI1
   *         @arg @ref LL_APB2_GRP1_PERIPH_TIM8
@@ -2449,6 +2466,10 @@ __STATIC_INLINE void LL_APB2_GRP1_ForceReset(uint32_t periphs)
   *  APB2RSTR         USBRST            LL_APB2_GRP1_ReleaseReset
   * @param  periphs This parameter can be a combination of the following values:
   *         @arg @ref LL_APB2_GRP1_PERIPH_ALL
+  * @if PLAY1
+  *         @arg @ref LL_APB2_GRP1_PERIPH_PLAY1GLOBAL (*)
+  *         @arg @ref LL_APB2_GRP1_PERIPH_PLAY1APP (*)
+  * @endif
   *         @arg @ref LL_APB2_GRP1_PERIPH_TIM1
   *         @arg @ref LL_APB2_GRP1_PERIPH_SPI1
   *         @arg @ref LL_APB2_GRP1_PERIPH_TIM8
@@ -2480,6 +2501,9 @@ __STATIC_INLINE void LL_APB2_GRP1_ReleaseReset(uint32_t periphs)
   *  APB2LPENR         USBLPEN            LL_APB2_GRP1_EnableClockLowPower
   * @param  periphs This parameter can be a combination of the following values:
   *         @arg @ref LL_APB2_GRP1_PERIPH_ALL
+  * @if PLAY1
+  *         @arg @ref LL_APB2_GRP1_PERIPH_PLAY1 (*)
+  * @endif
   *         @arg @ref LL_APB2_GRP1_PERIPH_TIM1
   *         @arg @ref LL_APB2_GRP1_PERIPH_SPI1
   *         @arg @ref LL_APB2_GRP1_PERIPH_TIM8
@@ -2513,8 +2537,11 @@ __STATIC_INLINE void LL_APB2_GRP1_EnableClockLowPower(uint32_t periphs)
   *  APB2LPENR         TIM16LPEN          LL_APB2_GRP1_IsEnabledClockLowPower \n
   *  APB2LPENR         TIM17LPEN          LL_APB2_GRP1_IsEnabledClockLowPower \n
   *  APB2LPENR         USBLPEN            LL_APB2_GRP1_IsEnabledClockLowPower
-  * @param  periphs This parameter can be a combination of the following values:
+  * @param  periphs This parameter can be a one of the following values:
   *         @arg @ref LL_APB2_GRP1_PERIPH_ALL
+  * @if PLAY1
+  *         @arg @ref LL_APB2_GRP1_PERIPH_PLAY1 (*)
+  * @endif
   *         @arg @ref LL_APB2_GRP1_PERIPH_TIM1
   *         @arg @ref LL_APB2_GRP1_PERIPH_SPI1
   *         @arg @ref LL_APB2_GRP1_PERIPH_TIM8
@@ -2549,6 +2576,9 @@ __STATIC_INLINE uint32_t LL_APB2_GRP1_IsEnabledClockLowPower(uint32_t periphs)
   *  APB2LPENR         USBLPEN            LL_APB2_GRP1_DisableClockLowPower
   * @param  periphs This parameter can be a combination of the following values:
   *         @arg @ref LL_APB2_GRP1_PERIPH_ALL
+  * @if PLAY1
+  *         @arg @ref LL_APB2_GRP1_PERIPH_PLAY1 (*)
+  * @endif
   *         @arg @ref LL_APB2_GRP1_PERIPH_TIM1
   *         @arg @ref LL_APB2_GRP1_PERIPH_SPI1
   *         @arg @ref LL_APB2_GRP1_PERIPH_TIM8
@@ -2627,7 +2657,7 @@ __STATIC_INLINE void LL_APB3_GRP1_EnableClock(uint32_t periphs)
   *  APB3ENR         LPUART1EN         LL_APB3_GRP1_IsEnabledClock \n
   *  APB3ENR         LPTIM1EN          LL_APB3_GRP1_IsEnabledClock \n
   *  APB3ENR         RTCAPBEN          LL_APB3_GRP1_IsEnabledClock
-  * @param  periphs This parameter can be a combination of the following values:
+  * @param  periphs This parameter can be a one of the following values:
   *         @arg @ref LL_APB3_GRP1_PERIPH_ALL
   *         @arg @ref LL_APB3_GRP1_PERIPH_SBS
   *         @arg @ref LL_APB3_GRP1_PERIPH_LPUART1
@@ -2735,7 +2765,7 @@ __STATIC_INLINE void LL_APB3_GRP1_EnableClockLowPower(uint32_t periphs)
   *  APB3LPENR         LPUART1LPEN         LL_APB3_GRP1_IsEnabledClockLowPower \n
   *  APB3LPENR         LPTIM1LPEN          LL_APB3_GRP1_IsEnabledClockLowPower \n
   *  APB3LPENR         RTCAPBLPEN          LL_APB3_GRP1_IsEnabledClockLowPower
-  * @param  periphs This parameter can be a combination of the following values:
+  * @param  periphs This parameter can be a one of the following values:
   *         @arg @ref LL_APB3_GRP1_PERIPH_ALL
   *         @arg @ref LL_APB3_GRP1_PERIPH_SBS
   *         @arg @ref LL_APB3_GRP1_PERIPH_LPUART1

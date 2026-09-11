@@ -465,7 +465,7 @@ HAL_StatusTypeDef HAL_SD_Init(SD_HandleTypeDef *hsd)
 HAL_StatusTypeDef HAL_SD_InitCard(SD_HandleTypeDef *hsd)
 {
   uint32_t errorstate;
-  SD_InitTypeDef Init;
+  SD_InitTypeDef Init = {0U};
   uint32_t sdmmc_clk;
 
   /* Default SDMMC peripheral configuration for SD card initialization */
@@ -493,7 +493,14 @@ HAL_StatusTypeDef HAL_SD_InitCard(SD_HandleTypeDef *hsd)
     hsd->ErrorCode = SDMMC_ERROR_INVALID_PARAMETER;
     return HAL_ERROR;
   }
-  Init.ClockDiv = sdmmc_clk / (2U * SD_INIT_FREQ);
+  if (sdmmc_clk <= SD_INIT_FREQ)
+  {
+    Init.ClockDiv = 0U;
+  }
+  else
+  {
+    Init.ClockDiv = (sdmmc_clk / (2U * SD_INIT_FREQ)) + 1U;
+  }
 
 #if (USE_SD_TRANSCEIVER != 0U)
   Init.TranceiverPresent = hsd->Init.TranceiverPresent;
@@ -3124,7 +3131,7 @@ static uint32_t SD_PowerON(SD_HandleTypeDef *hsd)
 
   /* CMD8: SEND_IF_COND: Command available only on V2.0 cards */
   errorstate = SDMMC_CmdOperCond(hsd->Instance);
-  if (errorstate == SDMMC_ERROR_TIMEOUT) /* No response to CMD8 */
+  if (errorstate == SDMMC_ERROR_CMD_RSP_TIMEOUT) /* No response to CMD8 */
   {
     hsd->SdCard.CardVersion = CARD_V1_X;
     /* CMD0: GO_IDLE_STATE */
@@ -3900,7 +3907,7 @@ static uint32_t SD_UltraHighSpeed(SD_HandleTypeDef *hsd, uint32_t UltraHighSpeed
       /* Enable DelayBlock Peripheral */
       /* SDMMC_FB_CLK tuned feedback clock selected as receive clock, for SDR104 */
       MODIFY_REG(hsd->Instance->CLKCR, SDMMC_CLKCR_SELCLKRX, SDMMC_CLKCR_SELCLKRX_1);
-
+      LL_DLYB_Enable(SD_GET_DLYB_INSTANCE(hsd->Instance));
 #endif /* (DLYB_SDMMC1) || (DLYB_SDMMC2) */
     }
   }
@@ -4027,7 +4034,7 @@ static uint32_t SD_DDR_Mode(SD_HandleTypeDef *hsd)
       /* Enable DelayBlock Peripheral */
       /* SDMMC_CKin feedback clock selected as receive clock, for DDR50 */
       MODIFY_REG(hsd->Instance->CLKCR, SDMMC_CLKCR_SELCLKRX, SDMMC_CLKCR_SELCLKRX_0);
-
+      LL_DLYB_Enable(SD_GET_DLYB_INSTANCE(hsd->Instance));
 #endif /* (DLYB_SDMMC1) || (DLYB_SDMMC2) */
     }
   }

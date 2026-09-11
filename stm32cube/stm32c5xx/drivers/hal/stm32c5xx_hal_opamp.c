@@ -28,7 +28,7 @@
 /** @addtogroup STM32C5xx_HAL_Driver
   * @{
   */
-#if defined (OPAMP1)
+#if defined (OPAMP1) || defined (OPAMP2) || defined(OPAMP3)
 #if defined(USE_HAL_OPAMP_MODULE) && (USE_HAL_OPAMP_MODULE == 1)
 
 /** @addtogroup OPAMP
@@ -60,7 +60,8 @@
 
   ## OPAMP instances
 
-   The C5 device integrates one operational amplifiers: OPAMP1
+   The C5 device integrates three operational amplifiers: OPAMP1 & OPAMP2 & OPAMP3 (1)
+   (1) OPAMP2 & OPAMP3 availability depends on the device
 
   ## OPAMP configuration mode
 
@@ -263,8 +264,8 @@ USE_ASSERT_DBG_STATE            | from PreProcessor env | None | When defined, e
                                                   || ((mux_inputs_ctrl) == HAL_OPAMP_MUX_INPUT_CTRL_TIM15_OC2))
 /*! Check multiplexer PGA mode */
 #define IS_OPAMP_MUX_PGA_GAIN_CTRL(mux_pga_ctrl) (((mux_pga_ctrl) == HAL_OPAMP_MUX_PGA_GAIN_CTRL_DISABLE) \
-                                                  || ((mux_pga_ctrl) == HAL_OPAMP_MUX_PGA_GAIN_CTRL_TIM1_OC6) \
-                                                  || ((mux_pga_ctrl) == HAL_OPAMP_MUX_PGA_GAIN_CTRL_TIM2_OC4) \
+                                                  || ((mux_pga_ctrl) == HAL_OPAMP_MUX_PGA_GAIN_CTRL_TIM1_OC6)  \
+                                                  || ((mux_pga_ctrl) == HAL_OPAMP_MUX_PGA_GAIN_CTRL_TIM2_OC4)  \
                                                   || ((mux_pga_ctrl) == HAL_OPAMP_MUX_PGA_GAIN_CTRL_TIM12_OC2) \
                                                   || ((mux_pga_ctrl) == HAL_OPAMP_MUX_PGA_GAIN_CTRL_TIM15_OC2))
 
@@ -351,7 +352,24 @@ hal_status_t HAL_OPAMP_Init(hal_opamp_handle_t *hopamp, hal_opamp_t instance)
 
 #if defined(USE_HAL_OPAMP_CLK_ENABLE_MODEL) && (USE_HAL_OPAMP_CLK_ENABLE_MODEL > HAL_CLK_ENABLE_NO)
   /* Enable kernel clock */
-  HAL_RCC_OPAMP1_EnableClock();
+  switch (instance)
+  {
+    case HAL_OPAMP1:
+      HAL_RCC_OPAMP1_EnableClock();
+      break;
+#if defined(OPAMP2)
+    case HAL_OPAMP2:
+      HAL_RCC_OPAMP2_EnableClock();
+      break;
+#endif /* OPAMP2 */
+#if defined(OPAMP3)
+    case HAL_OPAMP3:
+      HAL_RCC_OPAMP3_EnableClock();
+      break;
+#endif /* OPAMP3 */
+    default:
+      break;
+  }
 #endif /* USE_HAL_OPAMP_CLK_ENABLE_MODEL */
 
   hopamp->global_state = HAL_OPAMP_STATE_IDLE;
@@ -1400,7 +1418,7 @@ static void OPAMP_CalibrateSingle(hal_opamp_handle_t *hopamp, hal_opamp_power_mo
   */
 
 #endif /* USE_HAL_OPAMP_MODULE */
-#endif /* OPAMP1 */
+#endif /* OPAMP1 || OPAMP2 || OPAMP3 */
 /**
   * @}
   */

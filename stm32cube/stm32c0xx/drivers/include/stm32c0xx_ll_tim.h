@@ -31,7 +31,13 @@ extern "C" {
   * @{
   */
 
-#if defined (TIM1) || defined (TIM2) || defined (TIM3) || defined (TIM14) || defined (TIM15) || defined (TIM16) || defined (TIM17)
+#if defined (TIM1)  \
+ || defined (TIM2)  \
+ || defined (TIM3)  \
+ || defined (TIM14) \
+ || defined (TIM15) \
+ || defined (TIM16) \
+ || defined (TIM17)
 
 /** @defgroup TIM_LL TIM
   * @{
@@ -143,7 +149,7 @@ static const uint8_t SHIFT_TAB_OISx[] =
   */
 
 #define OCREF_CLEAR_SELECT_POS (16U)
-#define OCREF_CLEAR_SELECT_MSK (0x1U << OCREF_CLEAR_SELECT_POS)                /*!< 0x00010000 */
+#define OCREF_CLEAR_SELECT_MSK (0x1UL << OCREF_CLEAR_SELECT_POS)                /*!< 0x00010000 */
 /**
   * @}
   */

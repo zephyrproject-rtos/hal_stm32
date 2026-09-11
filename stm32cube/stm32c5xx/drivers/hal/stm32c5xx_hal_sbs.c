@@ -738,7 +738,7 @@ hal_sbs_core_reg_lock_status_t HAL_SBS_IsLockedCoreRegisters(uint32_t core_regs)
 
 /**
   * @}
- */
+  */
 
 #if defined(ETH1_BASE)
 /** @addtogroup SBS_Exported_Functions_Group9

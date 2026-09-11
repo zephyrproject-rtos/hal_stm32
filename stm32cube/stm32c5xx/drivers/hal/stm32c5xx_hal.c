@@ -100,12 +100,12 @@ This module provides 4 sets of APIs that allows to:
 
 /** @defgroup HAL_Configuration_Table HAL Configuration Table
   * @{
-## Configuration inside the HAL driver
+# Configuration inside the HAL driver
 
 Config defines            | Description           | Default value      | Note
 ------------------------- | --------------------- | ------------------ | -----------------------------------------------
 USE_HAL_CHECK_PARAM       | from hal_conf.h       | 0                  | Enable the runtime check parameters
-TICK_INT_PRIORITY         | from hal_conf.h       | bitfield range max | HAL tick interrupt priority (lowest by default)
+USE_HAL_TICK_INT_PRIORITY | from hal_conf.h       | bitfield range max | HAL tick interrupt priority (lowest by default)
 USE_HAL_FLASH_PREFETCH    | from hal_conf.h       | 0                  | When set, Flash prefetch is enabled
 
   */
@@ -213,7 +213,6 @@ hal_status_t HAL_Init(void)
 
   /* Update the SystemCoreClock global variable */
   SystemCoreClock = HAL_RCC_GetSYSCLKFreq() >> AHBPrescTable[LL_RCC_GetAHBPrescaler()];
-
 
   /* Set the SysTick clock source to the CPU internal free running clock. */
   HAL_CORTEX_SYSTICK_SetClkSource(HAL_CORTEX_SYSTICK_CLKSOURCE_INTERNAL);

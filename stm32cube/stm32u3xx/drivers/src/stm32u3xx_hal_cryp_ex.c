@@ -64,8 +64,10 @@
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 /* Private function prototypes -----------------------------------------------*/
+#if  defined(SAES)
 static HAL_StatusTypeDef CRYPEx_KeyDecrypt(CRYP_HandleTypeDef *hcryp, uint32_t Timeout);
 static HAL_StatusTypeDef CRYPEx_KeyEncrypt(CRYP_HandleTypeDef *hcryp, uint32_t Timeout);
+#endif /* defined(SAES) */
 static HAL_StatusTypeDef CRYPEx_WaitFLAG(CRYP_HandleTypeDef *hcryp, uint32_t flag, FlagStatus Status, uint32_t Timeout);
 /* Exported functions---------------------------------------------------------*/
 /** @addtogroup CRYPEx_Exported_Functions
@@ -308,6 +310,7 @@ HAL_StatusTypeDef HAL_CRYPEx_AESCCM_GenerateAuthTAG(CRYP_HandleTypeDef *hcryp, c
   * @}
   */
 
+#if  defined(SAES)
 
 /** @defgroup CRYPEx_Exported_Functions_Group2 Wrap and Unwrap key functions
   * @brief    Wrap and Unwrap key functions.
@@ -741,6 +744,7 @@ static HAL_StatusTypeDef CRYPEx_KeyEncrypt(CRYP_HandleTypeDef *hcryp, uint32_t T
   __HAL_UNLOCK(hcryp);
   return HAL_OK;
 }
+#endif /* defined(SAES)*/
 /**
   * @brief  Wait Instance Flag
   * @param  hcryp cryp handle

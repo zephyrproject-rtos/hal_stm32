@@ -22,6 +22,9 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32u3xx_hal_def.h"
+#if (defined(RNG_HTSR0_RPERRX) || defined(RNG_HTSR1_ADERRX))
+#include "stm32u3xx_ll_rng.h"
+#endif /* RNG_HTSR0_RPERRX) || RNG_HTSR1_ADERRX */
 
 /** @addtogroup STM32U3xx_HAL_Driver
   * @{
@@ -189,9 +192,9 @@ typedef struct
   * @{
   */
 #define HAL_CCB_USER_KEY_WRAPPED       (0x00000000U)    /*!< the wrapped key is a SW user key */
-#define HAL_CCB_USER_KEY_HW            AES_CR_KEYSEL_0  /*!< Hardware key : derived hardware 
+#define HAL_CCB_USER_KEY_HW            AES_CR_KEYSEL_0  /*!< Hardware key : derived hardware
                                                                       unique key (DHUK 256-bit) */
-#define HAL_CCB_USER_KEY_HSW           AES_CR_KEYSEL_2  /*!< DHUK XOR BHK Hardware unique 
+#define HAL_CCB_USER_KEY_HSW           AES_CR_KEYSEL_2  /*!< DHUK XOR BHK Hardware unique
                                                                       key XOR software key */
 
 /**

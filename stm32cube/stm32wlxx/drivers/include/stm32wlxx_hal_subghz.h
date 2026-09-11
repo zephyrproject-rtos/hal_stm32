@@ -426,4 +426,3 @@ HAL_StatusTypeDef HAL_SUBGHZ_CheckDeviceReady(SUBGHZ_HandleTypeDef *hsubghz);
 #endif
 
 #endif /* STM32WLxx_HAL_SUBGHZ_H */
-

@@ -1098,4 +1098,3 @@ static void UARTEx_SetNbDataToProcess(UART_HandleTypeDef *huart)
 /**
   * @}
   */
-

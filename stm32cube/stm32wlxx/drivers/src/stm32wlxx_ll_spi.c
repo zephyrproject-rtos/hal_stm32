@@ -529,4 +529,3 @@ void LL_I2S_ConfigPrescaler(SPI_TypeDef *SPIx, uint32_t PrescalerLinear, uint32_
   */
 
 #endif /* USE_FULL_LL_DRIVER */
-

@@ -245,6 +245,9 @@ extern "C" {
   *         @arg @ref LL_PWR_STOP0_MODE
   *         @arg @ref LL_PWR_STOP1_MODE
   *         @arg @ref LL_PWR_STANDBY_MODE
+  * @note   When Stop mode is selected, WFI or WFE instruction is required to enter Stop mode.
+  * @note   When Standby mode is selected, only WFI instruction is required to enter Standby mode.
+  * @note   Call DSB instruction to ensure there are no outstanding memory transactions prior to executing WFI or WFE.
   */
 __STATIC_INLINE void LL_PWR_SetPowerMode(uint32_t mode)
 {

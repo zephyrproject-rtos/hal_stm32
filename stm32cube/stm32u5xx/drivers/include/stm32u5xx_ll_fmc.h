@@ -641,12 +641,6 @@ typedef struct
 /** @defgroup FMC_LL_Private_Macros FMC_LL  Private Macros
   * @{
   */
-#if defined(FMC_BANK1)
-/** @defgroup FMC_LL_NOR_Macros FMC NOR/SRAM Macros
-  * @brief macros to handle NOR device enable/disable and read/write operations
-  * @{
-  */
-
 /**
   * @brief  Enable the FMC Peripheral.
   * @retval None
@@ -658,6 +652,11 @@ typedef struct
   * @retval None
   */
 #define __FMC_DISABLE()  (FMC_Bank1_R->BTCR[0] &= ~FMC_BCR1_FMCEN)
+#if defined(FMC_BANK1)
+/** @defgroup FMC_LL_NOR_Macros FMC NOR/SRAM Macros
+  * @brief macros to handle NOR device enable/disable and read/write operations
+  * @{
+  */
 
 /**
   * @brief  Enable the NORSRAM device access.
@@ -783,8 +782,8 @@ typedef struct
 /** @defgroup FMC_LL_Private_Functions FMC LL Private Functions
   *  @{
   */
-
 #if defined(FMC_BANK1)
+
 /** @defgroup FMC_LL_NORSRAM  NOR SRAM
   *  @{
   */
@@ -816,8 +815,8 @@ HAL_StatusTypeDef  FMC_NORSRAM_WriteOperation_Disable(FMC_NORSRAM_TypeDef *Devic
   * @}
   */
 #endif /* FMC_BANK1 */
-
 #if defined(FMC_BANK3)
+
 /** @defgroup FMC_LL_NAND NAND
   *  @{
   */
@@ -848,7 +847,6 @@ HAL_StatusTypeDef  FMC_NAND_GetECC(const FMC_NAND_TypeDef *Device, uint32_t *ECC
   * @}
   */
 #endif /* FMC_BANK3 */
-
 
 /**
   * @}

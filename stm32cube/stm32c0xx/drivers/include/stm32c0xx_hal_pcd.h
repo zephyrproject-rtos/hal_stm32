@@ -104,7 +104,7 @@ typedef struct
   uint32_t                Setup[12];   /*!< Setup packet buffer               */
   PCD_LPM_StateTypeDef    LPM_State;   /*!< LPM State                         */
   uint32_t                BESL;
-
+  uint32_t                FrameNumber; /*!< Store Current Frame number        */
 
   uint32_t lpm_active;                 /*!< Enable or disable the Link Power Management .
                                        This parameter can be set to ENABLE or DISABLE        */
@@ -159,6 +159,7 @@ typedef struct
   */
 #define PCD_PHY_ULPI                 1U
 #define PCD_PHY_EMBEDDED             2U
+#define PCD_HS_PHY_EMBEDDED          3U
 #define PCD_PHY_UTMI                 3U
 /**
   * @}
@@ -197,7 +198,6 @@ typedef struct
 
 #define __HAL_USB_WAKEUP_EXTI_ENABLE_IT()                         EXTI->IMR2 |= USB_WAKEUP_EXTI_LINE
 #define __HAL_USB_WAKEUP_EXTI_DISABLE_IT()                        EXTI->IMR2 &= ~(USB_WAKEUP_EXTI_LINE)
-
 
 /**
   * @}
@@ -361,7 +361,7 @@ PCD_StateTypeDef HAL_PCD_GetState(PCD_HandleTypeDef const *hpcd);
   */
 
 
-#define USB_WAKEUP_EXTI_LINE                                          (0x1U << 4)  /*!< USB FS EXTI Line WakeUp Interrupt */
+#define USB_WAKEUP_EXTI_LINE                                          (0x1UL << 4)  /*!< USB FS EXTI Line WakeUp Interrupt */
 
 
 /**

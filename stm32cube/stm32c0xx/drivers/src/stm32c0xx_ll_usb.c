@@ -33,6 +33,9 @@
 
       (#) The upper HAL HCD/PCD driver will call the right routines for its internal processes.
 
+      (#)NOTE: For applications not using double buffer mode, define the symbol
+                'USE_USB_DOUBLE_BUFFER' as 0 to reduce the driver's memory footprint.
+
   @endverbatim
 
   ******************************************************************************
@@ -55,6 +58,7 @@
 /* Private functions ---------------------------------------------------------*/
 
 static HAL_StatusTypeDef USB_CoreReset(USB_DRD_TypeDef *USBx);
+#if defined (HAL_HCD_MODULE_ENABLED)
 #if (USE_USB_DOUBLE_BUFFER == 1U)
 static HAL_StatusTypeDef USB_HC_BULK_DB_StartXfer(USB_DRD_TypeDef *USBx,
                                                   USB_DRD_HCTypeDef *hc,
@@ -65,6 +69,7 @@ static HAL_StatusTypeDef USB_HC_ISO_DB_StartXfer(USB_DRD_TypeDef *USBx,
                                                  USB_DRD_HCTypeDef *hc,
                                                  uint32_t len);
 #endif /* (USE_USB_DOUBLE_BUFFER == 1U) */
+#endif /* defined (HAL_HCD_MODULE_ENABLED) */
 
 /**
   * @brief  Reset the USB Core (needed after USB clock settings change)
@@ -970,6 +975,16 @@ void USB_ReadPMA(USB_DRD_TypeDef const *USBx, uint8_t *pbUsrBuf, uint16_t wPMABu
   }
 }
 
+/**
+  * @brief  Return Current Frame number
+  * @param  USBx Selected device
+  * @retval current frame number
+  */
+uint32_t USB_GetCurrentFrame(USB_DRD_TypeDef const *USBx)
+{
+  return (uint32_t)(USBx->FNR & 0x7FFU);
+}
+
 
 /*------------------------------------------------------------------------*/
 /*                                HOST API                                */
@@ -1049,43 +1064,7 @@ uint32_t USB_GetHostSpeed(USB_DRD_TypeDef const *USBx)
   }
 }
 
-/**
-  * @brief  Return Host Current Frame number
-  * @param  USBx Selected device
-  * @retval current frame number
-  */
-uint32_t USB_GetCurrentFrame(USB_DRD_TypeDef const *USBx)
-{
-  return USBx->FNR & 0x7FFU;
-}
-
-/**
-  * @brief  Set the channel Kind (Single/double buffer mode)
-  * @param  USBx Selected device
-  * @param  phy_ch_num Selected device
-  * @param  db_state double state can be USB_DRD_XXX_DBUFF_ENBALE/USB_DRD_XXX_DBUFF_DISABLE
-  * @retval HAL status
-  */
-HAL_StatusTypeDef USB_HC_DoubleBuffer(USB_DRD_TypeDef *USBx,
-                                      uint8_t phy_ch_num, uint8_t db_state)
-{
-  uint32_t tmp;
-
-  if ((db_state == USB_DRD_BULK_DBUFF_ENBALE) || (db_state == USB_DRD_ISOC_DBUFF_DISABLE))
-  {
-    tmp = (USB_DRD_GET_CHEP(USBx, phy_ch_num) | USB_CH_KIND) & USB_CHEP_DB_MSK;
-  }
-  else
-  {
-    tmp = USB_DRD_GET_CHEP(USBx, phy_ch_num) & (~USB_CH_KIND) & USB_CHEP_DB_MSK;
-  }
-
-  /* Set the device speed in case using HUB FS with device LS */
-  USB_DRD_SET_CHEP(USBx, phy_ch_num, tmp);
-
-  return HAL_OK;
-}
-
+#if defined (HAL_HCD_MODULE_ENABLED)
 /**
   * @brief  Initialize a host channel
   * @param  USBx Selected device
@@ -1153,7 +1132,7 @@ HAL_StatusTypeDef USB_HC_Init(USB_DRD_TypeDef *USBx, uint8_t phy_ch_num,
                  USB_CHEP_KIND |
                  USB_CHEP_ERRTX |
                  USB_CHEP_ERRRX |
-                 (0xFU << 27));
+                 (0xFUL << 27));
 
   /* Set device address and Endpoint number associated to the channel */
   wChRegVal |= (((uint32_t)dev_address << USB_CHEP_DEVADDR_Pos) |
@@ -1172,6 +1151,33 @@ HAL_StatusTypeDef USB_HC_Init(USB_DRD_TypeDef *USBx, uint8_t phy_ch_num,
   USB_DRD_SET_CHEP(USBx, phy_ch_num, (wChRegVal | USB_CH_VTRX | USB_CH_VTTX));
 
   return ret;
+}
+
+/**
+  * @brief  Set the channel Kind (Single/double buffer mode)
+  * @param  USBx Selected device
+  * @param  phy_ch_num Selected device
+  * @param  db_state double state can be USB_DRD_XXX_DBUFF_ENBALE/USB_DRD_XXX_DBUFF_DISABLE
+  * @retval HAL status
+  */
+HAL_StatusTypeDef USB_HC_DoubleBuffer(USB_DRD_TypeDef *USBx,
+                                      uint8_t phy_ch_num, uint8_t db_state)
+{
+  uint32_t tmp;
+
+  if ((db_state == USB_DRD_BULK_DBUFF_ENBALE) || (db_state == USB_DRD_ISOC_DBUFF_DISABLE))
+  {
+    tmp = (USB_DRD_GET_CHEP(USBx, phy_ch_num) | USB_CH_KIND) & USB_CHEP_DB_MSK;
+  }
+  else
+  {
+    tmp = USB_DRD_GET_CHEP(USBx, phy_ch_num) & (~USB_CH_KIND) & USB_CHEP_DB_MSK;
+  }
+
+  /* Set the device speed in case using HUB FS with device LS */
+  USB_DRD_SET_CHEP(USBx, phy_ch_num, tmp);
+
+  return HAL_OK;
 }
 
 /**
@@ -1414,14 +1420,13 @@ static HAL_StatusTypeDef USB_HC_BULK_DB_StartXfer(USB_DRD_TypeDef *USBx,
 /**
   * @brief  Halt a host channel in
   * @param  USBx Selected device
-  * @param  hc_num Host Channel number
-  *         This parameter can be a value from 1 to 15
+  * @param  phy_ch_num Host Channel number
   * @retval HAL state
   */
-HAL_StatusTypeDef USB_HC_IN_Halt(USB_DRD_TypeDef *USBx, uint8_t phy_ch)
+HAL_StatusTypeDef USB_HC_IN_Halt(USB_DRD_TypeDef *USBx, uint8_t phy_ch_num)
 {
   /* Set disable to Channel */
-  USB_DRD_SET_CHEP_RX_STATUS(USBx, phy_ch, USB_CH_RX_DIS);
+  USB_DRD_SET_CHEP_RX_STATUS(USBx, phy_ch_num, USB_CH_RX_DIS);
 
   return HAL_OK;
 }
@@ -1430,17 +1435,40 @@ HAL_StatusTypeDef USB_HC_IN_Halt(USB_DRD_TypeDef *USBx, uint8_t phy_ch)
 /**
   * @brief  Halt a host channel out
   * @param  USBx Selected device
-  * @param  hc_num Host Channel number
-  *         This parameter can be a value from 1 to 15
+  * @param  phy_ch_num Host Channel number
   * @retval HAL state
   */
-HAL_StatusTypeDef USB_HC_OUT_Halt(USB_DRD_TypeDef *USBx, uint8_t phy_ch)
+HAL_StatusTypeDef USB_HC_OUT_Halt(USB_DRD_TypeDef *USBx, uint8_t phy_ch_num)
 {
   /* Set disable to Channel */
-  USB_DRD_SET_CHEP_TX_STATUS(USBx, phy_ch, USB_CH_TX_DIS);
+  USB_DRD_SET_CHEP_TX_STATUS(USBx, phy_ch_num, USB_CH_TX_DIS);
 
   return HAL_OK;
 }
+
+/**
+  * @brief  Activate a host channel
+  * @param  USBx  Selected device
+  * @param  phy_ch_num  Host Channel number
+  * @param  ch_dir  Host Channel direction
+  * @retval HAL state
+  */
+HAL_StatusTypeDef USB_HC_Activate(USB_DRD_TypeDef *USBx, uint8_t phy_ch_num, uint8_t ch_dir)
+{
+  if (ch_dir == CH_IN_DIR)
+  {
+    /* Enable TX host Channel */
+    USB_DRD_SET_CHEP_TX_STATUS(USBx, phy_ch_num, USB_CH_TX_VALID);
+  }
+  else
+  {
+    /* Enable RX host Channel */
+    USB_DRD_SET_CHEP_RX_STATUS(USBx, phy_ch_num, USB_CH_RX_VALID);
+  }
+
+  return HAL_OK;
+}
+#endif /* defined (HAL_HCD_MODULE_ENABLED) */
 
 /**
   * @brief  Stop Host Core

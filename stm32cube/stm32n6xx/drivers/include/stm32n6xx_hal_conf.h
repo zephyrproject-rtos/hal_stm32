@@ -43,7 +43,7 @@
 #define HAL_DMA2D_MODULE_ENABLED
 #define HAL_DTS_MODULE_ENABLED
 #define HAL_ETH_MODULE_ENABLED
-#define HAL_EXTI_MODULE_ENABLED
+/*#define HAL_EXTI_MODULE_ENABLED     */
 #define HAL_FDCAN_MODULE_ENABLED
 #define HAL_GFXMMU_MODULE_ENABLED
 #define HAL_GFXTIM_MODULE_ENABLED
@@ -84,10 +84,12 @@
 #define HAL_USART_MODULE_ENABLED
 #define HAL_WWDG_MODULE_ENABLED
 #define HAL_XSPI_MODULE_ENABLED
-#define HAL_CACHEAXI_MODULE_ENABLED
+/*#define HAL_CACHEAXI_MODULE_ENABLED */
 #define HAL_MDIOS_MODULE_ENABLED
 #define HAL_GPU2D_MODULE_ENABLED
+#define HAL_CACHEAXI_MODULE_ENABLED
 #define HAL_GPIO_MODULE_ENABLED
+#define HAL_EXTI_MODULE_ENABLED
 #define HAL_DMA_MODULE_ENABLED
 #define HAL_RCC_MODULE_ENABLED
 #define HAL_PWR_MODULE_ENABLED
@@ -143,6 +145,15 @@
 #define LSI_VALUE               32000UL    /*!< LSI Typical Value in Hz */
 #endif /* LSI_VALUE */                     /*!< Value of the Internal Low Speed oscillator in Hz */
 /* The real value may vary depending on the variations in voltage and temperature.*/
+
+/**
+ * @brief External clock source for digital audio interfaces: SPI/I2S, SAI and ADF
+ *        This value is used by the RCC HAL module to provide the digital audio interfaces
+ *        frequency. This clock source is inserted directly through I2S_CKIN pad.
+ */
+#if !defined(EXTERNAL_CLOCK_VALUE)
+#define EXTERNAL_CLOCK_VALUE      12288000UL /*!< Value of the external clock source in Hz */
+#endif /* EXTERNAL_CLOCK_VALUE */
 
 /* Tip: To avoid modifying this file each time you need to use different HSE,
    ===  you can define the HSE value in your toolchain compiler preprocessor. */
@@ -314,6 +325,10 @@
 #include "stm32n6xx_hal_gfxtim.h"
 #endif /* HAL_GFXTIM_MODULE_ENABLED */
 
+#ifdef HAL_GPIO_MODULE_ENABLED
+#include "stm32n6xx_hal_gpio.h"
+#endif /* HAL_GPIO_MODULE_ENABLED */
+
 #ifdef HAL_GPU2D_MODULE_ENABLED
 #include "stm32n6xx_hal_gpu2d.h"
 #endif /* HAL_GPU2D_MODULE_ENABLED */
@@ -385,6 +400,10 @@
 #ifdef HAL_NOR_MODULE_ENABLED
 #include "stm32n6xx_hal_nor.h"
 #endif /* HAL_NOR_MODULE_ENABLED */
+
+#ifdef HAL_NAND_MODULE_ENABLED
+#include "stm32n6xx_hal_nand.h"
+#endif /* HAL_NAND_MODULE_ENABLED */
 
 #ifdef HAL_PCD_MODULE_ENABLED
 #include "stm32n6xx_hal_pcd.h"

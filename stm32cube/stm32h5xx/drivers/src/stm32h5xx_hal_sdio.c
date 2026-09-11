@@ -228,21 +228,21 @@
 /** @addtogroup SDIO_Private_Defines
   * @{
   */
-#define SDIO_INIT_FREQ         400000UL /*!< Initialization phase : 400 kHz max */
-#define SDIO_TIMEOUT           1000UL   /*!< SDIO timeout millisecond           */
+#define SDIO_INIT_FREQ         400000U /*!< Initialization phase : 400 kHz max */
+#define SDIO_TIMEOUT           1000U   /*!< SDIO timeout millisecond           */
 
-#define SDIO_FUNCTION_0        0x00UL   /*!< SDIO_Functions 0                   */
-#define SDIO_FUNCTION_1        0x01UL   /*!< SDIO_Functions 1                   */
+#define SDIO_FUNCTION_0        0x00UL  /*!< SDIO_Functions 0                   */
+#define SDIO_FUNCTION_1        0x01UL  /*!< SDIO_Functions 1                   */
 
-#define SDIO_READ              0x0UL    /*!< Read flag for cmd52 and cmd53      */
-#define SDIO_WRITE             0x1UL    /*!< Write flag for cmd52 and cmd53     */
+#define SDIO_READ              0x0UL   /*!< Read flag for cmd52 and cmd53      */
+#define SDIO_WRITE             0x1UL   /*!< Write flag for cmd52 and cmd53     */
 
-#define SDIO_BUS_SPEED_SDR12   0x00UL   /*!< SDIO bus speed mode SDR12          */
-#define SDIO_BUS_SPEED_SDR25   0x02UL   /*!< SDIO bus speed mode SDR25          */
-#define SDIO_BUS_SPEED_SDR50   0x04UL   /*!< SDIO bus speed mode SDR50          */
-#define SDIO_BUS_SPEED_DDR50   0x08UL   /*!< SDIO bus speed mode DDR50          */
+#define SDIO_BUS_SPEED_SDR12   0x00U   /*!< SDIO bus speed mode SDR12          */
+#define SDIO_BUS_SPEED_SDR25   0x02U   /*!< SDIO bus speed mode SDR25          */
+#define SDIO_BUS_SPEED_SDR50   0x04U   /*!< SDIO bus speed mode SDR50          */
+#define SDIO_BUS_SPEED_DDR50   0x08U   /*!< SDIO bus speed mode DDR50          */
 
-#define SDIO_CCCR_REG_NUMBER   0x16UL   /*!< SDIO card cccr register number     */
+#define SDIO_CCCR_REG_NUMBER   0x16U   /*!< SDIO card cccr register number     */
 
 #define SDIO_OCR_VDD_32_33     (1UL << 20U)
 #define SDIO_OCR_SDIO_S18R     (1UL << 24U)
@@ -314,6 +314,7 @@ HAL_StatusTypeDef HAL_SDIO_Init(SDIO_HandleTypeDef *hsdio)
 {
   SDIO_InitTypeDef Init = {0U};
   uint32_t sdmmc_clk = 0U;
+  uint8_t data;
 
   /* Check the parameters */
   assert_param(hsdio != NULL);
@@ -412,6 +413,12 @@ HAL_StatusTypeDef HAL_SDIO_Init(SDIO_HandleTypeDef *hsdio)
   Init.HardwareFlowControl = hsdio->Init.HardwareFlowControl;
   Init.ClockDiv            = hsdio->Init.ClockDiv;
   (void)SDMMC_Init(hsdio->Instance, Init);
+
+  data = (hsdio->Init.BusWide == HAL_SDIO_4_WIRES_MODE) ? 2U : 0U;
+  if (SDIO_WriteDirect(hsdio, SDMMC_SDIO_CCCR4_SD_BYTE3, HAL_SDIO_WRITE_ONLY, SDIO_FUNCTION_0, &data) != HAL_OK)
+  {
+    return HAL_ERROR;
+  }
 
   hsdio->Context = SDIO_CONTEXT_NONE;
   hsdio->State = HAL_SDIO_STATE_READY;
@@ -1029,7 +1036,14 @@ HAL_StatusTypeDef HAL_SDIO_ReadExtended(SDIO_HandleTypeDef *hsdio, const HAL_SDI
     cmd |= Argument->Block_Mode << 27U;
     cmd |= Argument->OpCode << 26U;
     cmd |= (Argument->Reg_Addr & 0x1FFFFU) << 9U;
-    cmd |= ((nbr_of_block == 0U)? Size_byte : nbr_of_block)& 0x1FFU;
+    if (Argument->Block_Mode == HAL_SDIO_MODE_BYTE)
+    {
+      cmd |= (((uint32_t)Size_byte) & 0x1FFU);
+    }
+    else /* HAL_SDIO_BLOCK_MODE_BLOCK */
+    {
+      cmd |= nbr_of_block & 0x1FFU;
+    }
     errorstate = SDMMC_SDIO_CmdReadWriteExtended(hsdio->Instance, cmd);
     if (errorstate != HAL_SDIO_ERROR_NONE)
     {
@@ -1174,7 +1188,7 @@ HAL_StatusTypeDef HAL_SDIO_WriteExtended(SDIO_HandleTypeDef *hsdio, const HAL_SD
   uint8_t byteCount;
   uint32_t data;
   uint32_t dataremaining;
-  uint32_t *u32tempbuff = (uint32_t *) pData;
+  uint32_t *u32tempbuff = (uint32_t *)(uint32_t)pData;
   uint32_t nbr_of_block;
 
   /* Check the parameters */
@@ -1234,7 +1248,14 @@ HAL_StatusTypeDef HAL_SDIO_WriteExtended(SDIO_HandleTypeDef *hsdio, const HAL_SD
     cmd |= Argument->Block_Mode << 27U;
     cmd |= Argument->OpCode << 26U;
     cmd |= (Argument->Reg_Addr & 0x1FFFFU) << 9U;
-    cmd |= ((nbr_of_block == 0U)? Size_byte : nbr_of_block)& 0x1FFU;
+    if (Argument->Block_Mode == HAL_SDIO_MODE_BYTE)
+    {
+      cmd |= (((uint32_t)Size_byte) & 0x1FFU);
+    }
+    else /* HAL_SDIO_BLOCK_MODE_BLOCK */
+    {
+      cmd |= nbr_of_block & 0x1FFU;
+    }
     errorstate = SDMMC_SDIO_CmdReadWriteExtended(hsdio->Instance, cmd);
     if (errorstate != HAL_SDIO_ERROR_NONE)
     {
@@ -1686,7 +1707,6 @@ void HAL_SDIO_IRQHandler(SDIO_HandleTypeDef *hsdio)
       }
 
       hsdio->Context = SDIO_CONTEXT_NONE;
-      hsdio->State = HAL_SDIO_STATE_READY;
     }
 
     if (hsdio->remaining_data != 0U)
@@ -2507,11 +2527,10 @@ HAL_StatusTypeDef HAL_SDIO_RegisterIOFunctionCallback(SDIO_HandleTypeDef *hsdio,
   */
 static HAL_StatusTypeDef SDIO_InitCard(SDIO_HandleTypeDef *hsdio)
 {
-  uint8_t data;
   uint32_t errorstate;
   uint32_t timeout = 0U;
   uint16_t sdio_rca = 1U;
-  uint32_t Resp4;
+  uint32_t Resp4 = 0U;
   uint32_t nbr_of_func;
 
   /* Identify card operating voltage */
@@ -2578,12 +2597,6 @@ static HAL_StatusTypeDef SDIO_InitCard(SDIO_HandleTypeDef *hsdio)
   /* Select the Card ( Sending CMD7)*/
   errorstate = SDMMC_CmdSelDesel(hsdio->Instance, (uint32_t)(((uint32_t)sdio_rca) << 16U));
   if (errorstate != HAL_SDIO_ERROR_NONE)
-  {
-    return HAL_ERROR;
-  }
-
-  data = (hsdio->Init.BusWide == HAL_SDIO_4_WIRES_MODE) ? 2U : 0U;
-  if (SDIO_WriteDirect(hsdio, SDMMC_SDIO_CCCR4_SD_BYTE3, HAL_SDIO_WRITE_ONLY, SDIO_FUNCTION_0, &data) != HAL_OK)
   {
     return HAL_ERROR;
   }
@@ -2858,7 +2871,7 @@ static uint8_t SDIO_Convert_Block_Size(const SDIO_HandleTypeDef *hsdio, uint32_t
 static HAL_StatusTypeDef SDIO_IOFunction_IRQHandler(SDIO_HandleTypeDef *hsdio)
 {
   uint8_t count;
-  uint8_t pendingInt;
+  uint8_t pendingInt = 0U;
 
   if (hsdio->IOInterruptNbr == 1U)
   {
