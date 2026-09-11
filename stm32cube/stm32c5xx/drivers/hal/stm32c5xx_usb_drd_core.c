@@ -35,6 +35,9 @@
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
+#define USB_DRD_CORE_MIN(a,b) (((a) < (b)) ? (a) : (b))
+#define USB_DRD_CORE_MAX(a,b) (((a) > (b)) ? (a) : (b))
+
 /* Private variables ---------------------------------------------------------*/
 /** @defgroup USB_DRD_CORE_Private_variables Private variables
   * @{
@@ -86,7 +89,7 @@ static usb_core_status_t USB_DRD_SetEp0ChannelState(usb_core_ch_t *p_ch);
 /**
   * @brief  Reset the USB core after a clock configuration change.
   * @param  instance Selected device
-  * @retval HAL status
+  * @retval USB core status
   */
 static usb_core_status_t USB_DRD_ResetCore(uint32_t instance)
 {
@@ -112,7 +115,6 @@ static usb_core_status_t USB_DRD_ResetCore(uint32_t instance)
 static usb_core_status_t USB_DRD_CH_BULK_DB_StartXfer(uint32_t instance, usb_core_ch_t *p_ch,
                                                       uint32_t ch_reg, uint32_t *p_length)
 {
-  /* Double Buffer Management */
   if (p_ch->xfer_size > p_ch->max_packet)
   {
     /* Enable double buffer mode */
@@ -121,7 +123,7 @@ static usb_core_status_t USB_DRD_CH_BULK_DB_StartXfer(uint32_t instance, usb_cor
     p_ch->xfer_size -= *p_length;
 
     /* Prepare two buffers before enabling host */
-    if ((ch_reg & USB_CH_DTOG_TX) == 0U)
+    if ((ch_reg & USB_CH_DTOGTX) == 0U)
     {
       /* Write Buffer0 */
       USB_DRD_SET_CHEP_DBUF0_CNT(instance, p_ch->phy_ch_num, USB_CORE_EP_IN_DIR, (uint16_t)*p_length);
@@ -147,7 +149,7 @@ static usb_core_status_t USB_DRD_CH_BULK_DB_StartXfer(uint32_t instance, usb_cor
       p_ch->xfer_size = 0U;
     }
 
-    if ((ch_reg & USB_CH_DTOG_TX) == 0U)
+    if ((ch_reg & USB_CH_DTOGTX) == 0U)
     {
       /* Write Buffer1 */
       USB_DRD_SET_CHEP_DBUF1_CNT(instance, p_ch->phy_ch_num, USB_CORE_EP_IN_DIR, (uint16_t)*p_length);
@@ -182,15 +184,13 @@ static usb_core_status_t USB_DRD_CH_BULK_DB_StartXfer(uint32_t instance, usb_cor
 static usb_core_status_t USB_DRD_CH_ISO_DB_StartXfer(uint32_t instance, usb_core_ch_t *p_ch, uint32_t size_byte)
 {
   /* Check the DTOG_TX to determine in which buffer to write */
-  if ((USB_DRD_GET_CHEP(instance, p_ch->phy_ch_num) & USB_CH_DTOG_TX) != 0U)
+  if ((USB_DRD_GET_CHEP(instance, p_ch->phy_ch_num) & USB_CH_DTOGTX) != 0U)
   {
     USB_DRD_SET_CHEP_DBUF0_CNT(instance, p_ch->phy_ch_num, USB_CORE_EP_IN_DIR, size_byte);
     USB_DRD_WritePMA(instance, p_ch->p_xfer_buffer, p_ch->pma_addr0, (uint16_t)size_byte);
   }
   else
   {
-    /* DTOGTX=0 */
-    /* Set the Double buffer counter for pmabuffer0 */
     USB_DRD_SET_CHEP_DBUF1_CNT(instance, p_ch->phy_ch_num, USB_CORE_EP_IN_DIR, size_byte);
     USB_DRD_WritePMA(instance, p_ch->p_xfer_buffer, p_ch->pma_addr1, (uint16_t)size_byte);
   }
@@ -329,7 +329,7 @@ static usb_core_phy_ch_t USB_DRD_GetFreePhysicalChannel(const usb_core_ch_t *p_c
     }
   }
 
-  /* Return error */
+  /* No free channel available */
   return USB_CORE_PHY_CHEP_FF;
 }
 
@@ -343,11 +343,11 @@ static uint16_t USB_DRD_GetFreePMA(uint16_t mps)
 {
   uint32_t entry;
   uint32_t free_blocks = 0U;
+  uint16_t nbr_req_blocks;
+  uint16_t mps_t = mps;
   uint8_t first_free_block_col = 0U;
   uint8_t first_free_block_line = 0U;
   uint8_t col_idx;
-  uint16_t nbr_req_blocks;
-  uint16_t mps_t = mps;
 
   /* Since PMA buffer descriptor RXBD allocate address according to BLSIZE, BLSIZE=1==> mps>64
     allocate PMA in 32-byte blocks */
@@ -358,7 +358,7 @@ static uint16_t USB_DRD_GetFreePMA(uint16_t mps)
     mps_t = (uint16_t)(((mps_t / 32U) + 1U) * 32U);
   }
 
-  /* Calculate the number of block(8byte) to allocate */
+  /* Calculate the number of 8-byte blocks to allocate */
   nbr_req_blocks = mps_t / 8U;
 
   /* Check if we need remaining Block */
@@ -405,7 +405,7 @@ static uint16_t USB_DRD_GetFreePMA(uint16_t mps)
         }
       }
       j++;
-    } /* End for j */
+    } /* End while j */
   } /* End for i */
 
   /* Free block found */
@@ -444,9 +444,9 @@ static uint16_t USB_DRD_GetFreePMA(uint16_t mps)
 static usb_core_status_t USB_DRD_PMAFree(uint32_t pma_base, uint16_t mps)
 {
   uint32_t block_nbr;
+  uint16_t mps_t = mps;
   uint8_t col_idx;
   uint8_t line_idx;
-  uint16_t mps_t = mps;
 
   /* Since PMA buffer descriptor RXBD allocate address according to BLSIZE, BLSIZE=1==> mps>64
     allocate PMA in 32-byte blocks */
@@ -457,7 +457,7 @@ static usb_core_status_t USB_DRD_PMAFree(uint32_t pma_base, uint16_t mps)
     mps_t = (uint16_t)(((mps_t / 32U) + 1U) * 32U);
   }
 
-  /* Calculate the number of needed block to Free */
+  /* Calculate the number of 8-byte blocks to free */
   if ((mps_t / 8U) != 0U)
   {
     block_nbr = ((uint32_t)mps_t / 8U);
@@ -472,7 +472,7 @@ static usb_core_status_t USB_DRD_PMAFree(uint32_t pma_base, uint16_t mps)
     block_nbr = 1U;
   }
 
-  /* Decode Col/Line of PMA_Base position in the PMA_LookupTable */
+  /* Decode Col/Line position of pma_base in the PMA lookup table */
   if (pma_base > 256U)
   {
     line_idx = (uint8_t)(pma_base / 256U);
@@ -519,9 +519,8 @@ static usb_core_status_t USB_DRD_PMAFree(uint32_t pma_base, uint16_t mps)
 static usb_core_status_t USB_DRD_PMAlloc(usb_core_ch_t *p_ch, uint16_t ch_kind)
 {
   uint16_t pma_addr0;
-  uint16_t pma_addr1; /* Used for double buffer mode if enabled */
+  uint16_t pma_addr1;
 
-  /* Get a FreePMA Address */
   pma_addr0 = USB_DRD_GetFreePMA(p_ch->max_packet);
 
   /* Check allocated pma address */
@@ -531,10 +530,8 @@ static usb_core_status_t USB_DRD_PMAlloc(usb_core_ch_t *p_ch, uint16_t ch_kind)
   }
   else
   {
-    /* Check whether the endpoint is single or double Buffer */
     if (ch_kind == (uint16_t)USB_DRD_SNG_BUF)
     {
-      /* Single Buffer */
       p_ch->double_buffer_en = (uint8_t)USB_CORE_CONFIG_DISABLED;
 
       if (p_ch->ep_num == USB_CORE_ENDPOINT_0)
@@ -544,7 +541,7 @@ static usb_core_status_t USB_DRD_PMAlloc(usb_core_ch_t *p_ch, uint16_t ch_kind)
         p_ch->max_packet = 64U;
       }
 
-      /* Configure the PMA */
+      /* Configure PMA for the given direction */
       if (p_ch->ch_dir == USB_CORE_CH_IN_DIR)
       {
         p_ch->pma_addr1 = pma_addr0;
@@ -567,36 +564,29 @@ static usb_core_status_t USB_DRD_PMAlloc(usb_core_ch_t *p_ch, uint16_t ch_kind)
         }
       }
 
-      /* Set the PmaAddress */
       p_ch->pma_address = pma_addr0;
     }
     else /* USB_DBL_BUF */
     {
-      /* Double Buffer Endpoint */
+      /* Double Buffer */
       p_ch->double_buffer_en = (uint8_t)USB_CORE_CONFIG_ENABLED;
 
-      /* Get a FreePMA Address for buffer 2 */
       pma_addr1 = USB_DRD_GetFreePMA(p_ch->max_packet);
 
       if (pma_addr1 == 0xFFFFU)
       {
-        /* Free the first buffer */
         (void)USB_DRD_PMAFree(pma_addr0, p_ch->max_packet);
         return USB_CORE_ERROR;
       }
       else
       {
-        /* Configure the PMA */
         p_ch->pma_addr0 = (uint16_t)(pma_addr0);
         p_ch->pma_addr1 = (uint16_t)(pma_addr1);
 
-        /* Set Buffer0 pma address */
         (USB_DRD_PMA_BUFF + (uint32_t)p_ch->phy_ch_num)->TXBD = pma_addr0;
-
-        /* Set Buffer1 pma address */
         (USB_DRD_PMA_BUFF + (uint32_t)p_ch->phy_ch_num)->RXBD = pma_addr1;
 
-        /* Used for Bulk DB MPS < 64bytes */
+        /* Select active PMA address based on direction */
         if (p_ch->ch_dir == USB_CORE_CH_IN_DIR)
         {
           p_ch->pma_address = p_ch->pma_addr1;
@@ -622,12 +612,11 @@ static usb_core_status_t USB_DRD_PMADeAlloc(usb_core_ch_t *p_ch)
   usb_core_status_t status;
   uint8_t error = 0U;
 
-  /* Single Buffer */
   if (p_ch->double_buffer_en == (uint8_t)USB_CORE_CONFIG_DISABLED)
   {
     status = USB_DRD_PMAFree(p_ch->pma_address, p_ch->max_packet);
   }
-  else   /* Double buffer */
+  else
   {
     status = USB_DRD_PMAFree(p_ch->pma_addr0, p_ch->max_packet);
     if (status != USB_CORE_OK)
@@ -655,7 +644,7 @@ static usb_core_status_t USB_DRD_PMADeAlloc(usb_core_ch_t *p_ch)
   * @param  instance Selected host
   * @param  phy_ch_num physical channel number
   * @param  db_status double state can be USB_DRD_XXX_DBUFF_ENABLE/USB_DRD_XXX_DBUFF_DISABLE
-  * @retval HAL status
+  * @retval USB core status
   */
 static usb_core_status_t USB_DRD_SetChannelDoubleBuffer(uint32_t instance, usb_core_phy_chep_t phy_ch_num,
                                                         usb_drd_db_status_t db_status)
@@ -664,14 +653,14 @@ static usb_core_status_t USB_DRD_SetChannelDoubleBuffer(uint32_t instance, usb_c
 
   if ((db_status == USB_DRD_BULK_DB_ENABLE) || (db_status == USB_DRD_ISOC_DB_DISABLE))
   {
-    ch_reg = (USB_DRD_GET_CHEP(instance, phy_ch_num) | USB_CH_KIND) & USB_CHEP_DB_MSK;
+    ch_reg = (USB_DRD_GET_CHEP(instance, phy_ch_num) | USB_CH_EPKIND) & USB_CHEP_DB_MSK;
   }
   else
   {
-    ch_reg = USB_DRD_GET_CHEP(instance, phy_ch_num) & (~USB_CH_KIND) & USB_CHEP_DB_MSK;
+    ch_reg = USB_DRD_GET_CHEP(instance, phy_ch_num) & (~USB_CH_EPKIND) & USB_CHEP_DB_MSK;
   }
 
-  /* Set the device speed in case using HUB FS with device LS */
+  /* Update the channel register */
   USB_DRD_SET_CHEP(instance, phy_ch_num, ch_reg);
 
   return USB_CORE_OK;
@@ -681,7 +670,7 @@ static usb_core_status_t USB_DRD_SetChannelDoubleBuffer(uint32_t instance, usb_c
   * @brief  Configure a host channel register.
   * @param  instance Selected host
   * @param  p_ch pointer to host Channel structure
-  * @retval HAL status
+  * @retval USB core status
   */
 static usb_core_status_t USB_DRD_SetChannelConfig(uint32_t instance, usb_core_ch_t *p_ch)
 {
@@ -691,7 +680,7 @@ static usb_core_status_t USB_DRD_SetChannelConfig(uint32_t instance, usb_core_ch
 
   ch_reg = USB_DRD_GET_CHEP(instance, p_ch->phy_ch_num) & USB_CH_T_MASK;
 
-  /* Initialize host Channel */
+  /* Set endpoint type */
   switch (p_ch->ep_type)
   {
     case USB_CORE_EP_TYPE_CTRL:
@@ -715,39 +704,35 @@ static usb_core_status_t USB_DRD_SetChannelConfig(uint32_t instance, usb_core_ch
       break;
   }
 
-  /* Clear device address, Endpoint number and Low Speed Endpoint fields */
+  /* Clear device address, endpoint number and low-speed endpoint fields */
   ch_reg &= ~(USB_CHEP_DEVADDR |
-              USB_CHEP_ADDR |
-              USB_CHEP_LSEP |
+              USB_CHEP_EA |
+              USB_CHEP_LS_EP |
               USB_CHEP_NAK |
-              USB_CHEP_KIND |
-              USB_CHEP_ERRTX |
-              USB_CHEP_ERRRX |
+              USB_CHEP_EPKIND |
+              USB_CHEP_ERR_TX |
+              USB_CHEP_ERR_RX |
               (0xFUL << 27U));
 
   /* Set device address and Endpoint number associated to the channel */
   ch_reg |= (((uint32_t)p_ch->dev_addr << USB_CHEP_DEVADDR_Pos) |
              (uint32_t)p_ch->ep_num);
 
-  /* Get Host core Speed */
   host_port_speed = USB_DRD_GetHostPortSpeed(instance);
 
   /* Set the device speed in case using HUB FS with device LS */
   if ((p_ch->speed == USB_CORE_DEVICE_SPEED_LS) && (host_port_speed == USB_CORE_PORT_SPEED_FS))
   {
-    ch_reg |= USB_CHEP_LSEP;
+    ch_reg |= USB_CHEP_LS_EP;
   }
 
-  /* Update the channel register value */
   USB_DRD_SET_CHEP(instance, p_ch->phy_ch_num, (ch_reg | USB_CH_VTRX | USB_CH_VTTX));
 
-  /* Check single buffer for isochronous channel */
   if ((p_ch->ep_type == USB_CORE_EP_TYPE_ISOC) && (EpDbState.is_iso_db != USB_DRD_DBL_BUF))
   {
     (void)USB_DRD_SetChannelDoubleBuffer(instance, p_ch->phy_ch_num, USB_DRD_ISOC_DB_DISABLE);
   }
 
-  /* Check double buffer for bulk channel */
   if ((p_ch->ep_type == USB_CORE_EP_TYPE_BULK) && (EpDbState.is_bulk_db == USB_DRD_DBL_BUF))
   {
     (void)USB_DRD_SetChannelDoubleBuffer(instance, p_ch->phy_ch_num, USB_DRD_BULK_DB_ENABLE);
@@ -833,7 +818,7 @@ static usb_core_status_t USB_DRD_SetEp0ChannelState(usb_core_ch_t *p_ch)
   * @param  instance USB Instance
   * @param  p_core_config USB Instance configuration parameters
   *         for the specified USB peripheral.
-  * @retval HAL status
+  * @retval USB core status
   */
 usb_core_status_t USB_DRD_InitCore(uint32_t instance, const usb_core_config_params_t *p_core_config)
 {
@@ -841,7 +826,6 @@ usb_core_status_t USB_DRD_InitCore(uint32_t instance, const usb_core_config_para
   usb_core_status_t ret;
   STM32_UNUSED(p_core_config);
 
-  /* Reset after a PHY select */
   ret = USB_DRD_ResetCore(instance);
 
   /* Clear pending interrupts */
@@ -853,14 +837,13 @@ usb_core_status_t USB_DRD_InitCore(uint32_t instance, const usb_core_config_para
 /**
   * @brief  Deinitialize the USB core.
   * @param  instance USB Instance
-  * @retval HAL status
+  * @retval USB core status
   */
 usb_core_status_t USB_DRD_DeInitCore(uint32_t instance)
 {
   STM32_UNUSED(instance);
   uint8_t idx;
 
-  /* Reset PMA Address */
   (void)USB_DRD_PMAReset();
 
   for (idx = 0U; idx < USB_DRD_MAX_CHEP_NBR; idx++)
@@ -875,7 +858,7 @@ usb_core_status_t USB_DRD_DeInitCore(uint32_t instance)
 /**
   * @brief  Enable global USB interrupts.
   * @param  instance Selected device
-  * @retval HAL status
+  * @retval USB core status
   */
 usb_core_status_t USB_DRD_EnableGlobalInterrupt(uint32_t instance)
 {
@@ -885,11 +868,10 @@ usb_core_status_t USB_DRD_EnableGlobalInterrupt(uint32_t instance)
   /* Clear pending interrupts */
   p_usb->ISTR = 0U;
 
-  /* Set winterruptmask variable */
   winterruptmask = USB_CNTR_CTRM  | USB_CNTR_WKUPM |
                    USB_CNTR_SUSPM | USB_CNTR_ERRM |
                    USB_CNTR_SOFM | USB_CNTR_ESOFM |
-                   USB_CNTR_RESETM | USB_CNTR_L1REQM;
+                   USB_CNTR_RST_DCONM | USB_CNTR_L1REQM;
 
   /* Set interrupt mask */
   p_usb->CNTR = winterruptmask;
@@ -900,7 +882,7 @@ usb_core_status_t USB_DRD_EnableGlobalInterrupt(uint32_t instance)
 /**
   * @brief  Disable global USB interrupts.
   * @param  instance Selected device
-  * @retval HAL status
+  * @retval USB core status
   */
 usb_core_status_t USB_DRD_DisableGlobalInterrupt(uint32_t instance)
 {
@@ -911,7 +893,7 @@ usb_core_status_t USB_DRD_DisableGlobalInterrupt(uint32_t instance)
   winterruptmask = USB_CNTR_CTRM  | USB_CNTR_WKUPM |
                    USB_CNTR_SUSPM | USB_CNTR_ERRM |
                    USB_CNTR_SOFM | USB_CNTR_ESOFM |
-                   USB_CNTR_RESETM | USB_CNTR_L1REQM;
+                   USB_CNTR_RST_DCONM | USB_CNTR_L1REQM;
 
   /* Clear interrupt mask */
   p_usb->CNTR &= ~winterruptmask;
@@ -925,7 +907,7 @@ usb_core_status_t USB_DRD_DisableGlobalInterrupt(uint32_t instance)
   * @param  core_mode current core mode
   *          This parameter can be one of the these values:
   *            @arg USB_CORE_XXX_MODE Peripheral mode
-  * @retval HAL status
+  * @retval USB core status
   */
 usb_core_status_t USB_DRD_SetCurrentMode(uint32_t instance, usb_core_mode_t core_mode)
 {
@@ -960,10 +942,10 @@ usb_core_status_t USB_DRD_SetCurrentMode(uint32_t instance, usb_core_mode_t core
 /**
   * @brief  Get the current USB core mode.
   * @param  instance  Selected device
-  * @retval return core mode : Host or Device
-  *          This parameter can be one of these values:
-  *           0 : USB_CORE_DEVICE_MODE
-  *           1 : USB_CORE_HOST_MODE
+  * @retval return core mode  Host or Device
+  *         This parameter can be one of these values:
+  *         USB_CORE_DEVICE_MODE
+  *         USB_CORE_HOST_MODE
   */
 usb_core_mode_t USB_DRD_GetCurrentMode(uint32_t instance)
 {
@@ -1042,14 +1024,13 @@ void USB_DRD_WritePMA(uint32_t instance, uint8_t *p_src, uint16_t pma_address, u
   {
     *p_pma_buffer_addr = __UNALIGNED_UINT32_READ(p_src_buffer);
     p_pma_buffer_addr++;
-    /* Increment p_src_buffer 4 Time as Word Increment */
     p_src_buffer++;
     p_src_buffer++;
     p_src_buffer++;
     p_src_buffer++;
   }
 
-  /* When number of data is not word aligned, write the remaining Byte */
+  /* When number of data is not word-aligned, write the remaining bytes */
   if (remaining_bytes != 0U)
   {
     remaining_data = 0U;
@@ -1117,7 +1098,7 @@ void USB_DRD_ReadPMA(uint32_t instance, uint8_t *p_dest, uint16_t pma_address, u
     p_dest_buffer++;
   }
 
-  /* When number of data is not word aligned, read the remaining byte */
+  /* When number of data is not word-aligned, read the remaining bytes */
   if (remaining_bytes != 0U)
   {
     remaining_data = *(__IO uint32_t *)p_pma_buffer_addr;
@@ -1189,8 +1170,6 @@ void USB_DRD_SET_CHEP(uint32_t instance, usb_core_phy_chep_t ch_ep_num, uint32_t
   usb_drd_global_t *p_usb = USB_DRD_GET_INSTANCE(instance);
 
   *(__IO uint32_t *)(&p_usb->CHEP0R + (uint32_t)ch_ep_num) = reg_value;
-
-  return;
 }
 
 /**
@@ -1216,9 +1195,7 @@ void USB_DRD_RX_DTOG(uint32_t instance, usb_core_phy_chep_t ch_ep_num)
   uint32_t reg_value;
 
   reg_value = USB_DRD_GET_CHEP(instance, ch_ep_num) & USB_CHEP_REG_MASK;
-  USB_DRD_SET_CHEP(instance, ch_ep_num, reg_value | USB_CHEP_VTRX | USB_CHEP_VTTX | USB_CHEP_DTOG_RX);
-
-  return;
+  USB_DRD_SET_CHEP(instance, ch_ep_num, reg_value | USB_CHEP_VTRX | USB_CHEP_VTTX | USB_CHEP_DTOGRX);
 }
 
 /**
@@ -1231,9 +1208,7 @@ void USB_DRD_TX_DTOG(uint32_t instance, usb_core_phy_chep_t ch_ep_num)
   uint32_t reg_value;
 
   reg_value = USB_DRD_GET_CHEP(instance, ch_ep_num) & USB_CHEP_REG_MASK;
-  USB_DRD_SET_CHEP(instance, ch_ep_num, reg_value | USB_CHEP_VTRX | USB_CHEP_VTTX | USB_CHEP_DTOG_TX);
-
-  return;
+  USB_DRD_SET_CHEP(instance, ch_ep_num, reg_value | USB_CHEP_VTRX | USB_CHEP_VTTX | USB_CHEP_DTOGTX);
 }
 
 /**
@@ -1249,8 +1224,6 @@ void USB_DRD_CHEP_TX_SETUP(uint32_t instance, usb_core_phy_chep_t ch_ep_num)
 
   /* Set Setup bit */
   USB_DRD_SET_CHEP(instance, ch_ep_num, reg_value | USB_CHEP_SETUP);
-
-  return;
 }
 
 /**
@@ -1263,10 +1236,10 @@ void USB_DRD_CLEAR_CHEP_RX_ERR(uint32_t instance, usb_core_phy_chep_t ch_ep_num)
   uint32_t reg_value;
 
   reg_value = USB_DRD_GET_CHEP(instance, ch_ep_num);
-  reg_value = (reg_value & USB_CHEP_REG_MASK & (~USB_CHEP_ERRRX) & (~USB_CHEP_VTRX)) | (USB_CHEP_VTTX | USB_CHEP_ERRTX);
-  USB_DRD_SET_CHEP(instance, ch_ep_num, reg_value);
+  reg_value = (reg_value & USB_CHEP_REG_MASK & (~USB_CHEP_ERR_RX)
+               & (~USB_CHEP_VTRX)) | (USB_CHEP_VTTX | USB_CHEP_ERR_TX);
 
-  return;
+  USB_DRD_SET_CHEP(instance, ch_ep_num, reg_value);
 }
 
 /**
@@ -1279,10 +1252,10 @@ void USB_DRD_CLEAR_CHEP_TX_ERR(uint32_t instance, usb_core_phy_chep_t ch_ep_num)
   uint32_t reg_value;
 
   reg_value = USB_DRD_GET_CHEP(instance, ch_ep_num);
-  reg_value = (reg_value & USB_CHEP_REG_MASK & (~USB_CHEP_ERRTX) & (~USB_CHEP_VTTX)) | (USB_CHEP_VTRX | USB_CHEP_ERRRX);
-  USB_DRD_SET_CHEP(instance, ch_ep_num, reg_value);
+  reg_value = (reg_value & USB_CHEP_REG_MASK & (~USB_CHEP_ERR_TX)
+               & (~USB_CHEP_VTTX)) | (USB_CHEP_VTRX | USB_CHEP_ERR_RX);
 
-  return;
+  USB_DRD_SET_CHEP(instance, ch_ep_num, reg_value);
 }
 
 /**
@@ -1297,21 +1270,17 @@ void USB_DRD_SET_CHEP_TX_STATUS(uint32_t instance, usb_core_phy_chep_t ch_ep_num
 
   reg_value = USB_DRD_GET_CHEP(instance, ch_ep_num) & USB_CHEP_TX_DTOGMASK;
 
-  /* toggle first bit ? */
   if ((USB_CHEP_TX_DTOG1 & ep_ch_state) != 0U)
   {
     reg_value ^= USB_CHEP_TX_DTOG1;
   }
 
-  /* toggle second bit ? */
   if ((USB_CHEP_TX_DTOG2 & ep_ch_state) != 0U)
   {
     reg_value ^= USB_CHEP_TX_DTOG2;
   }
 
   USB_DRD_SET_CHEP(instance, ch_ep_num, (reg_value | USB_CHEP_VTRX | USB_CHEP_VTTX));
-
-  return;
 }
 
 /**
@@ -1326,7 +1295,6 @@ void USB_DRD_SET_CHEP_RX_STATUS(uint32_t instance, usb_core_phy_chep_t ch_ep_num
 
   reg_value = USB_DRD_GET_CHEP(instance, ch_ep_num) & USB_CHEP_RX_DTOGMASK;
 
-  /* toggle first bit ? */
   if ((USB_CHEP_RX_DTOG1 & ep_ch_state) != 0U)
   {
     reg_value ^= USB_CHEP_RX_DTOG1;
@@ -1336,7 +1304,6 @@ void USB_DRD_SET_CHEP_RX_STATUS(uint32_t instance, usb_core_phy_chep_t ch_ep_num
     /* nothing to do */
   }
 
-  /* toggle second bit ? */
   if ((USB_CHEP_RX_DTOG2 & ep_ch_state) != 0U)
   {
     reg_value ^= USB_CHEP_RX_DTOG2;
@@ -1347,8 +1314,6 @@ void USB_DRD_SET_CHEP_RX_STATUS(uint32_t instance, usb_core_phy_chep_t ch_ep_num
   }
 
   USB_DRD_SET_CHEP(instance, ch_ep_num, (reg_value | USB_CHEP_VTRX | USB_CHEP_VTTX));
-
-  return;
 }
 
 /**
@@ -1359,7 +1324,7 @@ void USB_DRD_SET_CHEP_RX_STATUS(uint32_t instance, usb_core_phy_chep_t ch_ep_num
   */
 uint16_t USB_DRD_GET_CHEP_TX_STATUS(uint32_t instance, usb_core_phy_chep_t ch_ep_num)
 {
-  return (uint16_t)(USB_DRD_GET_CHEP(instance, ch_ep_num) & USB_CHEP_TX_STTX);
+  return (uint16_t)(USB_DRD_GET_CHEP(instance, ch_ep_num) & USB_CHEP_STATTX);
 }
 
 /**
@@ -1370,7 +1335,7 @@ uint16_t USB_DRD_GET_CHEP_TX_STATUS(uint32_t instance, usb_core_phy_chep_t ch_ep
   */
 uint16_t USB_DRD_GET_CHEP_RX_STATUS(uint32_t instance, usb_core_phy_chep_t ch_ep_num)
 {
-  return (uint16_t)(USB_DRD_GET_CHEP(instance, ch_ep_num) & USB_CHEP_RX_STRX);
+  return (uint16_t)(USB_DRD_GET_CHEP(instance, ch_ep_num) & USB_CHEP_STATRX);
 }
 
 /**
@@ -1383,9 +1348,7 @@ void USB_DRD_SET_CHEP_KIND(uint32_t instance, usb_core_phy_chep_t ch_ep_num)
   uint32_t reg_value;
 
   reg_value = USB_DRD_GET_CHEP(instance, ch_ep_num) & USB_CHEP_REG_MASK;
-  USB_DRD_SET_CHEP(instance, ch_ep_num, (reg_value | USB_CHEP_VTRX | USB_CHEP_VTTX | USB_CHEP_KIND));
-
-  return;
+  USB_DRD_SET_CHEP(instance, ch_ep_num, (reg_value | USB_CHEP_VTRX | USB_CHEP_VTTX | USB_CHEP_EPKIND));
 }
 
 /**
@@ -1399,8 +1362,6 @@ void USB_DRD_CLEAR_CHEP_KIND(uint32_t instance, usb_core_phy_chep_t ch_ep_num)
 
   reg_value = USB_DRD_GET_CHEP(instance, ch_ep_num) & USB_EP_KIND_MASK;
   USB_DRD_SET_CHEP(instance, ch_ep_num, (reg_value | USB_CHEP_VTRX | USB_CHEP_VTTX));
-
-  return;
 }
 
 /**
@@ -1414,8 +1375,6 @@ void USB_DRD_CLEAR_RX_CHEP_CTR(uint32_t instance, usb_core_phy_chep_t ch_ep_num)
 
   reg_value = USB_DRD_GET_CHEP(instance, ch_ep_num) & (0xFFFF7FFFU & USB_CHEP_REG_MASK);
   USB_DRD_SET_CHEP(instance, ch_ep_num, (reg_value | USB_CHEP_VTTX));
-
-  return;
 }
 
 /**
@@ -1429,8 +1388,6 @@ void USB_DRD_CLEAR_TX_CHEP_CTR(uint32_t instance, usb_core_phy_chep_t ch_ep_num)
 
   reg_value = USB_DRD_GET_CHEP(instance, ch_ep_num) & (0xFFFFFF7FU & USB_CHEP_REG_MASK);
   USB_DRD_SET_CHEP(instance, ch_ep_num, (reg_value | USB_CHEP_VTRX));
-
-  return;
 }
 
 /**
@@ -1444,16 +1401,10 @@ void USB_DRD_CLEAR_RX_DTOG(uint32_t instance, usb_core_phy_chep_t ch_ep_num)
 
   reg_value = USB_DRD_GET_CHEP(instance, ch_ep_num);
 
-  if ((reg_value & USB_CHEP_DTOG_RX) != 0U)
+  if ((reg_value & USB_CHEP_DTOGRX) != 0U)
   {
     USB_DRD_RX_DTOG(instance, ch_ep_num);
   }
-  else
-  {
-    /* nothing to do */
-  }
-
-  return;
 }
 
 /**
@@ -1467,16 +1418,10 @@ void USB_DRD_CLEAR_TX_DTOG(uint32_t instance, usb_core_phy_chep_t ch_ep_num)
 
   reg_value = USB_DRD_GET_CHEP(instance, ch_ep_num);
 
-  if ((reg_value & USB_CHEP_DTOG_TX) != 0U)
+  if ((reg_value & USB_CHEP_DTOGTX) != 0U)
   {
     USB_DRD_TX_DTOG(instance, ch_ep_num);
   }
-  else
-  {
-    /* nothing to do */
-  }
-
-  return;
 }
 
 /**
@@ -1489,13 +1434,11 @@ void USB_DRD_SET_CHEP_ADDRESS(uint32_t instance, usb_core_phy_chep_t ch_ep_num, 
 {
   uint32_t reg_value;
 
-  /* Read the CHEPx into reg_value, Reset(DTOGRX/STRX/DTOGTX/STTX) and set the endpoint address */
+  /* Read the CHEPx, reset toggle/status bits and set the endpoint address */
   reg_value = (USB_DRD_GET_CHEP(instance, ch_ep_num) & USB_CHEP_REG_MASK) | address;
 
-  /* Set reg_value in USB->CHEPx and set Transmit/Receive Valid Transfer  (x=ch_ep_num) */
+  /* Write back and preserve Valid Transfer bits */
   USB_DRD_SET_CHEP(instance, ch_ep_num, (reg_value | USB_CHEP_VTRX | USB_CHEP_VTTX));
-
-  return;
 }
 
 /* PMA API Buffer Descriptor Management ------------------------------------------------------------*/
@@ -1513,10 +1456,8 @@ void USB_DRD_SET_CHEP_TX_ADDRESS(uint32_t instance, usb_core_phy_chep_t ch_ep_nu
   /* Reset old Address */
   (USB_DRD_PMA_BUFF + (uint32_t)ch_ep_num)->TXBD &= USB_PMA_TXBD_ADDMSK;
 
-  /* Bit0 & Bit1 = 0 PMA is word-aligned */
+  /* Bit0 & Bit1 must be 0: PMA is word-aligned */
   (USB_DRD_PMA_BUFF + (uint32_t)ch_ep_num)->TXBD |= (uint32_t)(((uint32_t)address >> 2U) << 2U);
-
-  return;
 }
 
 /**
@@ -1532,10 +1473,8 @@ void USB_DRD_SET_CHEP_RX_ADDRESS(uint32_t instance, usb_core_phy_chep_t ch_ep_nu
   /* Reset old Address */
   (USB_DRD_PMA_BUFF + (uint32_t)ch_ep_num)->RXBD &= USB_PMA_RXBD_ADDMSK;
 
-  /* Bit0 & Bit1 = 0 PMA is word-aligned */
+  /* Bit0 & Bit1 must be 0: PMA is word-aligned */
   (USB_DRD_PMA_BUFF + (uint32_t)ch_ep_num)->RXBD |= (uint32_t)(((uint32_t)address >> 2U) << 2U);
-
-  return;
 }
 
 /**
@@ -1546,17 +1485,19 @@ void USB_DRD_SET_CHEP_RX_ADDRESS(uint32_t instance, usb_core_phy_chep_t ch_ep_nu
 void USB_DRD_SET_CHEP_CNT_RX_REG(volatile uint32_t *p_rx_count, uint32_t rx_count)
 {
   uint32_t nbr_blocks;
+  uint32_t reg_value;
 
   if (p_rx_count == (void *)0U)
   {
     return;
   }
 
-  *p_rx_count &= ~(USB_DRD_CNTRX_BLSIZE | USB_DRD_CNTRX_NBLK_MSK);
+  /* Build new register value locally and perform a single write-back */
+  reg_value = (*p_rx_count) & ~(USB_DRD_CNTRX_BLSIZE | USB_DRD_CNTRX_NBLK_MSK);
 
   if (rx_count == 0U)
   {
-    *p_rx_count |= USB_DRD_CNTRX_BLSIZE;
+    reg_value |= USB_DRD_CNTRX_BLSIZE;
   }
   else if (rx_count <= 62U)
   {
@@ -1567,7 +1508,7 @@ void USB_DRD_SET_CHEP_CNT_RX_REG(volatile uint32_t *p_rx_count, uint32_t rx_coun
       nbr_blocks++;
     }
 
-    *p_rx_count |= (uint32_t)(nbr_blocks << 26U);
+    reg_value |= (uint32_t)(nbr_blocks << 26U);
   }
   else
   {
@@ -1578,10 +1519,11 @@ void USB_DRD_SET_CHEP_CNT_RX_REG(volatile uint32_t *p_rx_count, uint32_t rx_coun
       nbr_blocks--;
     }
 
-    *p_rx_count |= (uint32_t)(((nbr_blocks << 26U)) | USB_DRD_CNTRX_BLSIZE);
+    reg_value |= (uint32_t)(((nbr_blocks << 26U)) | USB_DRD_CNTRX_BLSIZE);
   }
 
-  return;
+  /* Single write to the RX count register */
+  *p_rx_count = reg_value;
 }
 
 /**
@@ -1597,10 +1539,8 @@ void USB_DRD_SET_CHEP_TX_CNT(uint32_t instance, usb_core_phy_chep_t ch_ep_num, u
   /* Reset old TX_Count value */
   (USB_DRD_PMA_BUFF + (uint32_t)ch_ep_num)->TXBD &= USB_PMA_TXBD_COUNTMSK;
 
-  /* Set the tx count in the dedicated endpoint TX buffer */
+  /* Set the TX count */
   (USB_DRD_PMA_BUFF + (uint32_t)ch_ep_num)->TXBD |= (uint32_t)((uint32_t)tx_count << 16U);
-
-  return;
 }
 
 /**
@@ -1615,8 +1555,6 @@ void USB_DRD_SET_CHEP_RX_DBUF0_CNT(uint32_t instance, usb_core_phy_chep_t ch_ep_
 
   /* Set the rx count in the dedicated endpoint RX buffer */
   USB_DRD_SET_CHEP_CNT_RX_REG((volatile uint32_t *) & (USB_DRD_PMA_BUFF + (uint32_t)ch_ep_num)->TXBD, rx_count);
-
-  return;
 }
 
 /**
@@ -1631,8 +1569,6 @@ void USB_DRD_SET_CHEP_RX_CNT(uint32_t instance, usb_core_phy_chep_t ch_ep_num, u
 
   /* Set the rx count in the dedicated endpoint RX buffer */
   USB_DRD_SET_CHEP_CNT_RX_REG((volatile uint32_t *) & (USB_DRD_PMA_BUFF + (uint32_t)ch_ep_num)->RXBD, rx_count);
-
-  return;
 }
 
 /**
@@ -1668,8 +1604,6 @@ uint16_t USB_DRD_GET_CHEP_RX_CNT(uint32_t instance, usb_core_phy_chep_t ch_ep_nu
 void USB_DRD_SET_CHEP_DBUF0_ADDR(uint32_t instance, usb_core_phy_chep_t ch_ep_num, uint32_t buff0_addr)
 {
   USB_DRD_SET_CHEP_TX_ADDRESS(instance, ch_ep_num, buff0_addr);
-
-  return;
 }
 
 /**
@@ -1681,24 +1615,20 @@ void USB_DRD_SET_CHEP_DBUF0_ADDR(uint32_t instance, usb_core_phy_chep_t ch_ep_nu
 void USB_DRD_SET_CHEP_DBUF1_ADDR(uint32_t instance, usb_core_phy_chep_t ch_ep_num, uint32_t buff1_addr)
 {
   USB_DRD_SET_CHEP_RX_ADDRESS(instance, ch_ep_num, buff1_addr);
-
-  return;
 }
 
 /**
   * @brief  Set buffer addresses in a double-buffer endpoint.
   * @param  instance USB peripheral instance register address
   * @param  ch_ep_num Endpoint number
-  * @param  buff0_addr: buffer 0 address
-  * @param  buff1_addr = buffer 1 address
+  * @param  buff0_addr buffer 0 address
+  * @param  buff1_addr buffer 1 address
   */
 void USB_DRD_SET_CHEP_DBUF_ADDR(uint32_t instance, usb_core_phy_chep_t ch_ep_num,
                                 uint32_t buff0_addr, uint32_t buff1_addr)
 {
   USB_DRD_SET_CHEP_DBUF0_ADDR(instance, ch_ep_num, buff0_addr);
   USB_DRD_SET_CHEP_DBUF1_ADDR(instance, ch_ep_num, buff1_addr);
-
-  return;
 }
 
 /**
@@ -1721,8 +1651,6 @@ void USB_DRD_SET_CHEP_DBUF0_CNT(uint32_t instance, usb_core_phy_chep_t ch_ep_num
     /* IN endpoint */
     USB_DRD_SET_CHEP_TX_CNT(instance, ch_ep_num, count);
   }
-
-  return;
 }
 
 /**
@@ -1746,8 +1674,6 @@ void USB_DRD_SET_CHEP_DBUF1_CNT(uint32_t instance, usb_core_phy_chep_t ch_ep_num
     (USB_DRD_PMA_BUFF + (uint32_t)ch_ep_num)->RXBD &= USB_PMA_TXBD_COUNTMSK;
     (USB_DRD_PMA_BUFF + (uint32_t)ch_ep_num)->RXBD |= (uint32_t)((uint32_t)count << 16U);
   }
-
-  return;
 }
 
 /**
@@ -1755,15 +1681,13 @@ void USB_DRD_SET_CHEP_DBUF1_CNT(uint32_t instance, usb_core_phy_chep_t ch_ep_num
   * @param  instance USB peripheral instance register address
   * @param  ch_ep_num Endpoint number
   * @param  direction Endpoint direction (USB_CORE_EP_OUT_DIR or USB_CORE_EP_IN_DIR)
-  * @param  count: Endpoint count value
+  * @param  count Endpoint count value
   */
 void USB_DRD_SET_CHEP_DBUF_CNT(uint32_t instance, usb_core_phy_chep_t ch_ep_num,
                                usb_core_ep_direction_t direction, uint32_t count)
 {
   USB_DRD_SET_CHEP_DBUF0_CNT(instance, ch_ep_num, direction, count);
   USB_DRD_SET_CHEP_DBUF1_CNT(instance, ch_ep_num, direction, count);
-
-  return;
 }
 /**
   * @}
@@ -1850,14 +1774,14 @@ uint16_t USB_DRD_GET_CH_RX_CNT(uint32_t instance, usb_core_phy_chep_t phy_ch_num
   volatile uint32_t count = 10U;
 
   /* Count depends on device LS */
-  if (((p_usb->ISTR & USB_ISTR_LS_DCONN) == USB_ISTR_LS_DCONN) || ((ep_reg & USB_CHEP_LSEP) == USB_CHEP_LSEP))
+  if (((p_usb->ISTR & USB_ISTR_LS_DCON) == USB_ISTR_LS_DCON) || ((ep_reg & USB_CHEP_LS_EP) == USB_CHEP_LS_EP))
   {
-    count = (70U * (SystemCoreClock / 1000000U)) / 100U;
+    count = (75U * (SystemCoreClock / 1000000U)) / 100U;
   }
 
   if (count > 15U)
   {
-    count = USB_CORE_MAX_U32(10U, (count - 15U));
+    count = USB_DRD_CORE_MAX(10U, (count - 15U));
   }
 
   /* Few cycles for RX PMA descriptor to update */
@@ -1917,7 +1841,7 @@ uint16_t USB_DRD_GET_CH_DBUF1_CNT(uint32_t instance, usb_core_phy_chep_t phy_ch_
 /**
   * @brief  Initialize the USB DRD PCD driver interface.
   * @param  p_driver pointer to USB PCD driver structure
-  * @retval HAL status
+  * @retval USB core status
   */
 usb_core_status_t USB_DRD_PCD_InitDriver(usb_core_pcd_driver_t *p_driver)
 {
@@ -1964,20 +1888,10 @@ usb_core_status_t  USB_DRD_BCD_SetMode(uint32_t instance,
                                        usb_core_bcd_config_t bcd_config, usb_core_bcd_config_sts_t bcd_sts)
 {
   usb_drd_global_t *p_usb = USB_DRD_GET_INSTANCE(instance);
+  usb_core_status_t status = USB_CORE_OK;
 
   switch (bcd_config)
   {
-    case USB_CORE_BCD_CONFIG_DCD:
-      if (bcd_sts == USB_CORE_BCD_CONFIG_STS_SET)
-      {
-        p_usb->BCDR |= USB_BCDR_DCDEN;
-      }
-      else
-      {
-        p_usb->BCDR &= ~USB_BCDR_DCDEN;
-      }
-      break;
-
     case USB_CORE_BCD_CONFIG_PD:
       if (bcd_sts == USB_CORE_BCD_CONFIG_STS_SET)
       {
@@ -2001,11 +1915,11 @@ usb_core_status_t  USB_DRD_BCD_SetMode(uint32_t instance,
       break;
 
     default:
-      return USB_CORE_ERROR;
+      status = USB_CORE_ERROR;
       break;
   }
 
-  return USB_CORE_OK;
+  return status;
 }
 
 
@@ -2046,7 +1960,7 @@ usb_core_bcd_port_status_t USB_DRD_BCD_SetPortDetection(uint32_t instance, usb_c
   }
   else
   {
-    /* ... */
+    /* Nothing to Do */
   }
 
   return port_detection_status;
@@ -2055,19 +1969,17 @@ usb_core_bcd_port_status_t USB_DRD_BCD_SetPortDetection(uint32_t instance, usb_c
 /**
   * @brief  Enable the battery charging detection (BCD) feature.
   * @param  instance Selected instance
-  * @retval HAL status
+  * @retval USB core status
   */
 usb_core_status_t USB_DRD_BCD_Activate(uint32_t instance)
 {
   usb_drd_global_t *p_usb = USB_DRD_GET_INSTANCE(instance);
 
-  /* Enable BCD feature */
-  p_usb->BCDR |= USB_BCDR_BCDEN;
-
-  /* Enable DCD : Data Contact Detect */
   p_usb->BCDR &= ~(USB_BCDR_PDEN);
   p_usb->BCDR &= ~(USB_BCDR_SDEN);
-  p_usb->BCDR |= USB_BCDR_DCDEN;
+
+  /* Enable BCD feature */
+  p_usb->BCDR |= USB_BCDR_BCDEN;
 
   return USB_CORE_OK;
 }
@@ -2075,7 +1987,7 @@ usb_core_status_t USB_DRD_BCD_Activate(uint32_t instance)
 /**
   * @brief  Disable the battery charging detection (BCD) feature.
   * @param  instance Selected instance
-  * @retval HAL status
+  * @retval USB core status
   */
 usb_core_status_t USB_DRD_BCD_DeActivate(uint32_t instance)
 {
@@ -2091,13 +2003,13 @@ usb_core_status_t USB_DRD_BCD_DeActivate(uint32_t instance)
 /**
   * @brief  Enable Link Power Management (LPM).
   * @param  instance Selected instance
-  * @retval HAL status
+  * @retval USB core status
   */
 usb_core_status_t USB_DRD_LPM_Activate(uint32_t instance)
 {
   usb_drd_global_t *p_usb = USB_DRD_GET_INSTANCE(instance);
 
-  p_usb->LPMCSR |= USB_LPMCSR_LMPEN;
+  p_usb->LPMCSR |= USB_LPMCSR_LPMEN;
   p_usb->LPMCSR |= USB_LPMCSR_LPMACK;
 
   return USB_CORE_OK;
@@ -2106,13 +2018,13 @@ usb_core_status_t USB_DRD_LPM_Activate(uint32_t instance)
 /**
   * @brief  Disable Link Power Management (LPM).
   * @param  instance Selected instance
-  * @retval HAL status
+  * @retval USB core status
   */
 usb_core_status_t USB_DRD_LPM_DeActivate(uint32_t instance)
 {
   usb_drd_global_t *p_usb = USB_DRD_GET_INSTANCE(instance);
 
-  p_usb->LPMCSR &= ~(USB_LPMCSR_LMPEN);
+  p_usb->LPMCSR &= ~(USB_LPMCSR_LPMEN);
   p_usb->LPMCSR &= ~(USB_LPMCSR_LPMACK);
 
   return USB_CORE_OK;
@@ -2121,7 +2033,7 @@ usb_core_status_t USB_DRD_LPM_DeActivate(uint32_t instance)
 /**
   * @brief  Enable remote-wakeup signaling.
   * @param  instance Selected device
-  * @retval HAL status
+  * @retval USB core status
   */
 usb_core_status_t USB_DRD_ActivateRemoteWakeup(uint32_t instance)
 {
@@ -2135,7 +2047,7 @@ usb_core_status_t USB_DRD_ActivateRemoteWakeup(uint32_t instance)
 /**
   * @brief  Disable remote-wakeup signaling.
   * @param  instance Selected device
-  * @retval HAL status
+  * @retval USB core status
   */
 usb_core_status_t USB_DRD_DeActivateRemoteWakeup(uint32_t instance)
 {
@@ -2151,7 +2063,7 @@ usb_core_status_t USB_DRD_DeActivateRemoteWakeup(uint32_t instance)
   * @param  instance Selected device
   * @param  p_core_config USB Instance configuration parameters
   *         for the specified USB peripheral.
-  * @retval HAL status
+  * @retval USB core status
   */
 usb_core_status_t USB_DRD_InitDevice(uint32_t instance, const usb_core_config_params_t *p_core_config)
 {
@@ -2192,7 +2104,7 @@ usb_core_status_t USB_DRD_StartDevice(uint32_t instance)
 /**
   * @brief  Stop the USB device mode.
   * @param  instance Selected device
-  * @retval HAL status
+  * @retval USB core status
   */
 usb_core_status_t USB_DRD_StopDevice(uint32_t instance)
 {
@@ -2215,7 +2127,7 @@ usb_core_status_t USB_DRD_StopDevice(uint32_t instance)
   * @param  instance Selected device
   * @param  address new device address to be assigned
   *         This parameter can be a value from 0 to 255
-  * @retval HAL status
+  * @retval USB core status
   */
 usb_core_status_t USB_DRD_SetDeviceAddress(uint32_t instance, uint8_t address)
 {
@@ -2234,7 +2146,7 @@ usb_core_status_t USB_DRD_SetDeviceAddress(uint32_t instance, uint8_t address)
   * @brief  Get the device speed.
   * @param  instance  Selected device
   * @retval device_speed  device speed
-  *          @arg USB_CORE_DEVICE_SPEED_FS: Full speed mode
+  *          @arg USB_CORE_DEVICE_SPEED_FS Full speed mode
   */
 usb_core_device_speed_t USB_DRD_GetDeviceSpeed(uint32_t instance)
 {
@@ -2248,14 +2160,14 @@ usb_core_device_speed_t USB_DRD_GetDeviceSpeed(uint32_t instance)
 /**
   * @brief  Connect the USB device by enabling the pull-up/pull-down.
   * @param  instance Selected device
-  * @retval HAL status
+  * @retval USB core status
   */
 usb_core_status_t USB_DRD_ConnectDevice(uint32_t instance)
 {
   usb_drd_global_t *p_usb = USB_DRD_GET_INSTANCE(instance);
 
-  /* Enabling DP Pull-UP bit to Connect internal PU resistor on USB DP line */
-  p_usb->BCDR |= USB_BCDR_DPPU;
+  /* Enabling DP Pull-Up to connect internal pull-up resistor on USB DP line */
+  p_usb->BCDR |= USB_BCDR_DPPU_DPD;
 
   return USB_CORE_OK;
 }
@@ -2263,14 +2175,14 @@ usb_core_status_t USB_DRD_ConnectDevice(uint32_t instance)
 /**
   * @brief  Disconnect the USB device by disabling the pull-up/pull-down.
   * @param  instance Selected device
-  * @retval HAL status
+  * @retval USB core status
   */
 usb_core_status_t USB_DRD_DisconnectDevice(uint32_t instance)
 {
   usb_drd_global_t *p_usb = USB_DRD_GET_INSTANCE(instance);
 
-  /* Disable DP Pull-Up bit to disconnect the Internal PU resistor on USB DP line */
-  p_usb->BCDR &= ~(USB_BCDR_DPPU);
+  /* Disabling DP Pull-Up to disconnect internal pull-up resistor on USB DP line */
+  p_usb->BCDR &= ~(USB_BCDR_DPPU_DPD);
 
   return USB_CORE_OK;
 }
@@ -2279,14 +2191,13 @@ usb_core_status_t USB_DRD_DisconnectDevice(uint32_t instance)
   * @brief  Activate and configure an endpoint.
   * @param  instance Selected device
   * @param  p_ep pointer to endpoint structure
-  * @retval HAL status
+  * @retval USB core status
   */
 usb_core_status_t USB_DRD_ActivateEndpoint(uint32_t instance, usb_core_ep_t *p_ep)
 {
   usb_core_phy_ep_t phy_ep_num;
   uint32_t ep_value;
 
-  /* Get Endpoint Physical number */
   phy_ep_num = (usb_core_phy_ep_t)p_ep->num;
 
   ep_value = USB_DRD_PCD_GET_ENDPOINT(instance, phy_ep_num) & USB_EP_T_MASK;
@@ -2411,7 +2322,7 @@ usb_core_status_t USB_DRD_ActivateEndpoint(uint32_t instance, usb_core_ep_t *p_e
   * @brief  Deactivate and deinitialize an endpoint.
   * @param  instance Selected device
   * @param  p_ep pointer to endpoint structure
-  * @retval HAL status
+  * @retval USB core status
   */
 usb_core_status_t USB_DRD_DeactivateEndpoint(uint32_t instance, const usb_core_ep_t *p_ep)
 {
@@ -2422,7 +2333,6 @@ usb_core_status_t USB_DRD_DeactivateEndpoint(uint32_t instance, const usb_core_e
     return USB_CORE_ERROR;
   }
 
-  /* Get Endpoint Physical number */
   phy_ep_num = (usb_core_phy_ep_t)p_ep->num;
 
   if (p_ep->double_buffer_en == (uint8_t)USB_CORE_CONFIG_DISABLED)
@@ -2434,7 +2344,6 @@ usb_core_status_t USB_DRD_DeactivateEndpoint(uint32_t instance, const usb_core_e
       /* Configure DISABLE status for the Endpoint */
       USB_DRD_PCD_SET_EP_TX_STATUS(instance, phy_ep_num, USB_EP_TX_DIS);
     }
-
     else
     {
       USB_DRD_PCD_CLEAR_RX_DTOG(instance, phy_ep_num);
@@ -2478,7 +2387,7 @@ usb_core_status_t USB_DRD_DeactivateEndpoint(uint32_t instance, const usb_core_e
   * @brief  Set up and start a transfer on an endpoint.
   * @param  instance Selected device
   * @param  p_ep pointer to endpoint structure
-  * @retval HAL status
+  * @retval USB core status
   */
 usb_core_status_t USB_DRD_StartEndpointXfer(uint32_t instance, usb_core_ep_t *p_ep)
 {
@@ -2487,7 +2396,6 @@ usb_core_status_t USB_DRD_StartEndpointXfer(uint32_t instance, usb_core_ep_t *p_
   uint16_t pma_buffer;
   uint16_t ep_value;
 
-  /* Get Endpoint Physical number */
   phy_ep_num = (usb_core_phy_ep_t)p_ep->num;
 
   /* IN endpoint */
@@ -2525,7 +2433,7 @@ usb_core_status_t USB_DRD_StartEndpointXfer(uint32_t instance, usb_core_ep_t *p_
           p_ep->xfer_size -= length;
 
           /* Fill the two first buffer in the Buffer0 & Buffer1 */
-          if ((USB_DRD_PCD_GET_ENDPOINT(instance, phy_ep_num) & USB_EP_DTOG_TX) != 0U)
+          if ((USB_DRD_PCD_GET_ENDPOINT(instance, phy_ep_num) & USB_EP_DTOGTX) != 0U)
           {
             /* Set the Double buffer counter for pmabuffer1 */
             USB_DRD_PCD_SET_EP_DBUF1_CNT(instance, phy_ep_num, p_ep->dir, length);
@@ -2602,7 +2510,7 @@ usb_core_status_t USB_DRD_StartEndpointXfer(uint32_t instance, usb_core_ep_t *p_
         p_ep->xfer_size -= length;
 
         /* Fill the data buffer */
-        if ((USB_DRD_PCD_GET_ENDPOINT(instance, phy_ep_num) & USB_EP_DTOG_TX) != 0U)
+        if ((USB_DRD_PCD_GET_ENDPOINT(instance, phy_ep_num) & USB_EP_DTOGTX) != 0U)
         {
           /* Set the Double buffer counter for pmabuffer1 */
           USB_DRD_PCD_SET_EP_DBUF1_CNT(instance, phy_ep_num, p_ep->dir, length);
@@ -2661,8 +2569,8 @@ usb_core_status_t USB_DRD_StartEndpointXfer(uint32_t instance, usb_core_ep_t *p_
           ep_value = (uint16_t)USB_DRD_PCD_GET_ENDPOINT(instance, phy_ep_num);
 
           /* Blocking State */
-          if ((((ep_value & USB_EP_DTOG_RX) != 0U) && ((ep_value & USB_EP_DTOG_TX) != 0U))
-              || (((ep_value & USB_EP_DTOG_RX) == 0U) && ((ep_value & USB_EP_DTOG_TX) == 0U)))
+          if ((((ep_value & USB_EP_DTOGRX) != 0U) && ((ep_value & USB_EP_DTOGTX) != 0U))
+              || (((ep_value & USB_EP_DTOGRX) == 0U) && ((ep_value & USB_EP_DTOGTX) == 0U)))
           {
             /* OUT double buffered endpoint */
             USB_DRD_TX_DTOG(instance, phy_ep_num);
@@ -2692,13 +2600,12 @@ usb_core_status_t USB_DRD_StartEndpointXfer(uint32_t instance, usb_core_ep_t *p_
   * @brief  Set a STALL condition on an endpoint.
   * @param  instance Selected device
   * @param  p_ep pointer to endpoint structure
-  * @retval HAL status
+  * @retval USB core status
   */
 usb_core_status_t USB_DRD_SetEndpointStall(uint32_t instance, const usb_core_ep_t *p_ep)
 {
   usb_core_phy_ep_t phy_ep_num;
 
-  /* Get Endpoint Physical number */
   phy_ep_num = (usb_core_phy_ep_t)p_ep->num;
 
   if (p_ep->dir == USB_CORE_EP_IN_DIR)
@@ -2717,13 +2624,12 @@ usb_core_status_t USB_DRD_SetEndpointStall(uint32_t instance, const usb_core_ep_
   * @brief  Clear a STALL condition on an endpoint.
   * @param  instance Selected device
   * @param  p_ep pointer to endpoint structure
-  * @retval HAL status
+  * @retval USB core status
   */
 usb_core_status_t USB_DRD_ClearEndpointStall(uint32_t instance, const usb_core_ep_t *p_ep)
 {
   usb_core_phy_ep_t phy_ep_num;
 
-  /* Get Endpoint Physical number */
   phy_ep_num = (usb_core_phy_ep_t)p_ep->num;
 
   if (p_ep->dir == USB_CORE_EP_IN_DIR)
@@ -2751,7 +2657,7 @@ usb_core_status_t USB_DRD_ClearEndpointStall(uint32_t instance, const usb_core_e
   * @brief  Stop a transfer on an endpoint.
   * @param  instance  usb device instance
   * @param  p_ep pointer to endpoint structure
-  * @retval HAL status
+  * @retval USB core status
   */
 usb_core_status_t USB_DRD_StopEndpointXfer(uint32_t instance, const usb_core_ep_t *p_ep)
 {
@@ -2762,7 +2668,6 @@ usb_core_status_t USB_DRD_StopEndpointXfer(uint32_t instance, const usb_core_ep_
     return USB_CORE_ERROR;
   }
 
-  /* Get Endpoint Physical number */
   phy_ep_num = (usb_core_phy_ep_t)p_ep->num;
 
   /* IN endpoint */
@@ -2812,7 +2717,7 @@ usb_core_status_t USB_DRD_StopEndpointXfer(uint32_t instance, const usb_core_ep_
 /**
   * @brief  Initialize the USB DRD HCD driver interface.
   * @param  p_driver pointer USB HCD driver structure
-  * @retval HAL status
+  * @retval USB core status
   */
 usb_core_status_t USB_DRD_HCD_InitDriver(usb_core_hcd_driver_t *p_driver)
 {
@@ -2844,7 +2749,7 @@ usb_core_status_t USB_DRD_HCD_InitDriver(usb_core_hcd_driver_t *p_driver)
   * @param  instance Selected device
   * @param  p_core_config USB Instance configuration parameters
   *         for the specified USB peripheral.
-  * @retval HAL status
+  * @retval USB core status
   */
 usb_core_status_t USB_DRD_InitHost(uint32_t instance, const usb_core_config_params_t *p_core_config)
 {
@@ -2855,27 +2760,27 @@ usb_core_status_t USB_DRD_InitHost(uint32_t instance, const usb_core_config_para
 
   /* Disable all interrupts */
   p_usb->CNTR &= ~(USB_CNTR_CTRM | USB_CNTR_PMAOVRM | USB_CNTR_ERRM |
-                   USB_CNTR_WKUPM | USB_CNTR_SUSPM | USB_CNTR_DCON |
+                   USB_CNTR_WKUPM | USB_CNTR_SUSPM | USB_CNTR_RST_DCONM |
                    USB_CNTR_SOFM | USB_CNTR_ESOFM | USB_CNTR_L1REQM);
 
   /* Clear All Pending Interrupt */
   p_usb->ISTR = 0U;
 
-  /* Set the PullDown on the PHY */
-  p_usb->BCDR |= USB_BCDR_DPPD;
+  /* Enable PHY pull-down and global interrupts */
+  p_usb->BCDR |= USB_BCDR_DPPU_DPD;
 
   /* Enable Global interrupt */
   p_usb->CNTR |= (USB_CNTR_CTRM | USB_CNTR_PMAOVRM | USB_CNTR_ERRM |
-                  USB_CNTR_WKUPM | USB_CNTR_SUSPM | USB_CNTR_DCON |
+                  USB_CNTR_WKUPM | USB_CNTR_SUSPM | USB_CNTR_RST_DCONM |
                   USB_CNTR_SOFM | USB_CNTR_ESOFM | USB_CNTR_L1REQM);
 
-  /* Init PMA Address */
+  /* Init PMA */
   (void)USB_DRD_PMAReset();
 
-  /* Isochronous Ep single buffer state */
+  /* Isochronous endpoint double-buffer state */
   EpDbState.is_iso_db = (usb_drd_doublebuffer_t)p_core_config->iso_db_state;
 
-  /* Bulk Ep double buffer state  */
+  /* Bulk endpoint double-buffer state */
   EpDbState.is_bulk_db = (usb_drd_doublebuffer_t)p_core_config->bulk_db_state;
 
   return USB_CORE_OK;
@@ -3078,7 +2983,7 @@ usb_core_status_t USB_DRD_CloseChannel(uint32_t instance, usb_core_ch_t *p_ch)
   * @brief  Halt a host channel.
   * @param  instance Selected host
   * @param  p_ch pointer to host Channel structure
-  * @retval HAL status
+  * @retval USB core status
   */
 usb_core_status_t USB_DRD_HaltChannel(uint32_t instance, const usb_core_ch_t *p_ch)
 {
@@ -3222,7 +3127,7 @@ usb_core_status_t USB_DRD_StartChannelXfer(uint32_t instance, usb_core_ch_t *p_c
   * @param  instance Selected device
   * @param  phy_ch_num physical host Channel number
   *         This parameter can be a value from 1 to 15
-  * @retval status
+  * @retval USB core status
   */
 usb_core_status_t USB_DRD_HaltInChannel(uint32_t instance, usb_core_phy_chep_t phy_ch_num)
 {
@@ -3237,7 +3142,7 @@ usb_core_status_t USB_DRD_HaltInChannel(uint32_t instance, usb_core_phy_chep_t p
   * @param  instance Selected device
   * @param  phy_ch_num physical host Channel number
   *         This parameter can be a value from 1 to 15
-  * @retval status
+  * @retval USB core status
   */
 usb_core_status_t USB_DRD_HaltOutChannel(uint32_t instance, usb_core_phy_chep_t phy_ch_num)
 {
@@ -3260,7 +3165,7 @@ usb_core_status_t USB_DRD_StartHost(uint32_t instance)
   /* Remove PowerDown */
   p_usb->CNTR &= ~USB_CNTR_PDWN;
 
-  /* Few cycles to ensure exit from powerdown */
+  /* Wait for powerdown exit */
   while (count > 0U)
   {
     count--;
@@ -3297,7 +3202,6 @@ usb_core_status_t USB_DRD_StopHost(uint32_t instance)
   /* Clear all allocated virtual channels */
   USB_DRD_ClearPhysicalChannels();
 
-  /* Reset the PMA current pointer */
   (void)USB_DRD_PMAReset();
 
   return USB_CORE_OK;
@@ -3396,7 +3300,7 @@ usb_core_status_t USB_DRD_PortSuspend(uint32_t instance)
   * @brief  Control resume signaling on the host port.
   * @param  instance  Selected device
   * @param  resume_status  resume status
-  * @retval HAL status
+  * @retval USB core status
   */
 usb_core_status_t USB_DRD_PortResume(uint32_t instance, usb_core_port_resume_sts_t resume_status)
 {
@@ -3420,7 +3324,7 @@ usb_core_status_t USB_DRD_PortResume(uint32_t instance, usb_core_port_resume_sts
   * @brief  Control reset signaling on the host port.
   * @param  instance Selected device
   * @param  reset_status reset status
-  * @retval HAL status
+  * @retval USB core status
   * @note (1)Wait at least 10 ms before clearing the reset bit.
   */
 usb_core_status_t USB_DRD_PortReset(uint32_t instance, usb_core_port_reset_sts_t reset_status)
@@ -3453,7 +3357,7 @@ usb_core_port_speed_t USB_DRD_GetHostPortSpeed(uint32_t instance)
 {
   const usb_drd_global_t *p_usb = USB_DRD_GET_INSTANCE(instance);
 
-  if ((p_usb->ISTR & USB_ISTR_LS_DCONN) != 0U)
+  if ((p_usb->ISTR & USB_ISTR_LS_DCON) != 0U)
   {
     return USB_CORE_PORT_SPEED_LS;
   }

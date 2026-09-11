@@ -15,7 +15,7 @@
   **********************************************************************************************************************
   */
 
-/* Includes ----------------------------------------------------------------------------------------------------------*/
+/* Includes ---------------------------------------------------------------------------------------------------------*/
 #include "stm32_hal.h"
 
 
@@ -24,6 +24,7 @@
   */
 
 #if defined(ETH1)
+#if defined (USE_HAL_ETH_MODULE) && (USE_HAL_ETH_MODULE == 1UL)
 
 /** @addtogroup ETH
   * @{
@@ -271,15 +272,14 @@ USE_HAL_ETH_MAX_RX_CH_NB        | from hal_conf.h |     Defined     | User-defin
   * @}
   */
 
-#if defined (USE_HAL_ETH_MODULE) && (USE_HAL_ETH_MODULE == 1U)
 /* Private define ------------------------------------------------------------*/
 /** @defgroup ETH_Private_Constants ETH Private Constants
   * @{
   */
-#define ETH_MACQTXFCR_MASK              0xFFFF00F2U      /*!< ETH_MACQTXFCR Register Mask value */
-#define ETH_GIANT_PKT_SIZE_LIMIT_BYTE    (1518U)                /*!< Rx Giant Packet received size limit */
+#define ETH_MACQTXFCR_MASK              0xFFFF00F2UL            /*!< ETH_MACQTXFCR Register Mask value */
+#define ETH_GIANT_PKT_SIZE_LIMIT_BYTE    (1518UL)               /*!< Rx Giant Packet received size limit */
 #define ETH_CHANNEL_STATE_UNLOCKED       (0x00000000UL)         /*!< Channel is unlocked and available for access */
-#define ETH_CHANNEL_STATE_LOCKED         (0x00000001U)          /*!< Channel is locked and being accessed */
+#define ETH_CHANNEL_STATE_LOCKED         (0x00000001UL)         /*!< Channel is locked and being accessed */
 
 #ifndef ETH_SWRESET_TIMEOUT
 #define ETH_SWRESET_TIMEOUT_MS           (1000UL)               /*!< Timeout value for ETH software reset
@@ -382,6 +382,11 @@ USE_HAL_ETH_MAX_RX_CH_NB        | from hal_conf.h |     Defined     | User-defin
 #define ETH_MTLOMR_MASK                   (ETH_MTLOMR_DTXSTS)
 /** ETH_DMAMR Register Mask value */
 #define ETH_DMAMR_MASK                    (ETH_DMAMR_TXPR)
+/** ETH MMC RX interrupt mask value */
+#define ETH_MMC_RX_INTERRUPT_MASK_ALL     (0x0C020060UL)
+/** ETH MMC TX interrupt mask value */
+#define ETH_MMC_TX_INTERRUPT_MASK_ALL     (0x0C20C000UL)
+
 /** ETH_DMASBMR Register Mask value */
 #define ETH_DMASBMR_MASK                  (ETH_DMASBMR_AAL | ETH_DMASBMR_FB | ETH_DMASBMR_MB | ETH_DMASBMR_RB)
 /** ETH RX DMA Channel Event Mask */
@@ -415,13 +420,14 @@ USE_HAL_ETH_MAX_RX_CH_NB        | from hal_conf.h |     Defined     | User-defin
 #define ETH_RWK_OFFSET_MASK              (0xFFUL)          /*!< RWK offset field mask (8 bits) */
 #define ETH_RWK_CRC16_MASK               (0xFFFFUL)        /*!< RWK CRC16 field mask (16 bits) */
 
-#define ETH_MIN_DESC_CNT                 (4U)              /*!< ETH Minimum requested desc number */
-#define ETH_RX_CHANNEL_ID_POS            (16U)             /*!< ETH the Bit position of RX channel */
+#define ETH_MIN_DESC_CNT                 (4UL)             /*!< ETH Minimum requested desc number */
+#define ETH_MAX_DESC_PER_APP_BUF_CNT     (2UL)             /*!< Max descriptor count per application buffer */
+#define ETH_RX_CHANNEL_ID_POS            (16UL)            /*!< ETH the Bit position of RX channel */
 
-#define ETH_TPS_FIELD_WIDTH_BITS         (8U)              /*!< TX DMA process state field: width in bits and
+#define ETH_TPS_FIELD_WIDTH_BITS         (8UL)             /*!< TX DMA process state field: width in bits and
                                                                 channel mapping helpers */
-#define ETH_TX_DMA_CH_STATE_MAX_IDX      (2U)              /*!< Channels 0..2 in ETH_DMADSR */
-#define ETH_RPS_FIELD_WIDTH_BITS         (8U)              /*!< RX DMA process state field: width in bits
+#define ETH_TX_DMA_CH_STATE_MAX_IDX      (2UL)             /*!< Channels 0..2 in ETH_DMADSR */
+#define ETH_RPS_FIELD_WIDTH_BITS         (8UL)             /*!< RX DMA process state field: width in bits
                                                                 and channel mapping helpers */
 
 
@@ -441,7 +447,7 @@ USE_HAL_ETH_MAX_RX_CH_NB        | from hal_conf.h |     Defined     | User-defin
 #define ETH_DMA_RX_DESC_WBF_PL           0x00007FFFUL      /*!< RDES3 WBF : Packet Length */
 
 #define ETH_DMA_RX_DESC_RF_OWN           0x80000000UL      /*!< RDES3 RF : descriptor is owned by DMA engine */
-#define ETH_DMA_RX_DESC_RF_IOC           0x40000000U       /*!< RDES3 RF : Interrupt Enabled on Completion */
+#define ETH_DMA_RX_DESC_RF_IOC           0x40000000UL      /*!< RDES3 RF : Interrupt Enabled on Completion */
 #define ETH_DMA_RX_DESC_RF_BUF1V         0x01000000UL      /*!< RDES3 RF : Buffer 1 Address Valid */
 #define ETH_DMA_TX_DESC_CTXT_OWN         0x80000000UL      /*!< RDES3 RF : descriptor is owned by DMA engine */
 #define ETH_DMA_TX_DESC_CTXT_CTXT        0x40000000UL      /*!< RDES3 RF : Context Type */
@@ -529,36 +535,135 @@ USE_HAL_ETH_MAX_RX_CH_NB        | from hal_conf.h |     Defined     | User-defin
   (((ETH_MTL_Queue_TypeDef *)((heth)->rx_channels[queue].p_mtl_instance)))
 
 /**
-  * @brief  Check for a Channel Identifier is valid or not.
-  * @param  index : Channel identifier to check
-  * @retval True if valid. False otherwise
+  * @brief  Check whether a channel identifier has exactly one bit set.
+  *
+  * This macro verifies that @p index is a non-zero power-of-two value.
+  * It is typically used to validate Ethernet channel identifiers encoded
+  * as single-bit masks (e.g. @ref HAL_ETH_TX_CHANNEL_0,
+  * @ref HAL_ETH_RX_CHANNEL_0).
+  *
+  * The check is implemented using the classic "power of two" test:
+  * - @p index must be different from 0
+  * - @p index & (@p index - 1) must be equal to 0
+  *
+  * @param  index  Channel identifier to check. It is interpreted as
+  *                a 32-bit mask (one bit per channel).
+  *
+  * @retval bool   true if @p index is non-zero and has exactly one bit set,
+  *                false otherwise.
+  *
+  * @note  This macro is used internally by
+  *        @ref IS_ETH_CHANNEL_TX_INDEX and
+  *        @ref IS_ETH_CHANNEL_RX_INDEX to ensure that the channel
+  *        index represents a single channel.
+  */
+#define IS_ETH_SINGLE_BIT(index) ((((uint32_t)(index)) != 0UL) \
+                                  && ((((uint32_t)(index)) & (((uint32_t)(index)) - 1UL)) == 0UL))
+
+/**
+  * @brief  Check whether a TX channel identifier is valid.
+  *
+  * This macro validates that the given @p index corresponds to a valid
+  * Ethernet TX channel mask.
+  *
+  * The following conditions must all hold:
+  * - @p index passes @ref IS_ETH_SINGLE_BIT (i.e. exactly one bit set)
+  * - @p index is greater than or equal to @ref HAL_ETH_TX_CHANNEL_0
+  * - @p index is strictly less than
+  *   @c (HAL_ETH_TX_CHANNEL_0 << USE_HAL_ETH_MAX_TX_CH_NB)
+  *
+  * Conceptually, valid TX channel identifiers are:
+  * @code
+  * HAL_ETH_TX_CHANNEL_0 << n   with  0 <= n < USE_HAL_ETH_MAX_TX_CH_NB
+  * @endcode
+  *
+  * @param  index  TX channel identifier to check. It is interpreted as a
+  *                single-bit mask identifying one TX channel.
+  *
+  * @retval bool   true if @p index is a valid TX channel identifier,
+  *                false otherwise.
+  *
+  * @note  This macro relies on:
+  *        - @ref IS_ETH_SINGLE_BIT to enforce a single-bit mask.
+  *        - @ref HAL_ETH_TX_CHANNEL_0 as the base TX channel bit.
+  *        - @ref USE_HAL_ETH_MAX_TX_CH_NB to limit the maximum TX channels.
+  */
+#define IS_ETH_CHANNEL_TX_INDEX(index) (IS_ETH_SINGLE_BIT(index) \
+                                        && (((uint32_t)(index)) >= (uint32_t)HAL_ETH_TX_CHANNEL_0) \
+                                        && (((uint32_t)(index)) \
+                                            < (((uint32_t)HAL_ETH_TX_CHANNEL_0) << USE_HAL_ETH_MAX_TX_CH_NB)))
+
+/**
+  * @brief  Check whether a RX channel identifier is valid.
+  *
+  * This macro validates that the given @p index corresponds to a valid
+  * Ethernet RX channel mask.
+  *
+  * The following conditions must all hold:
+  * - @p index passes @ref IS_ETH_SINGLE_BIT (i.e. exactly one bit set)
+  * - @p index is greater than or equal to @ref HAL_ETH_RX_CHANNEL_0
+  * - @p index is strictly less than
+  *   @c (HAL_ETH_RX_CHANNEL_0 << USE_HAL_ETH_MAX_RX_CH_NB)
+  *
+  * Conceptually, valid RX channel identifiers are:
+  * @code
+  * HAL_ETH_RX_CHANNEL_0 << n   with  0 <= n < USE_HAL_ETH_MAX_RX_CH_NB
+  * @endcode
+  *
+  * @param  index  RX channel identifier to check. It is interpreted as a
+  *                single-bit mask identifying one RX channel.
+  *
+  * @retval bool   true if @p index is a valid RX channel identifier,
+  *                false otherwise.
+  *
+  * @note  This macro relies on:
+  *        - @ref IS_ETH_SINGLE_BIT to enforce a single-bit mask.
+  *        - @ref HAL_ETH_RX_CHANNEL_0 as the base RX channel bit.
+  *        - @ref USE_HAL_ETH_MAX_RX_CH_NB to limit the maximum RX channels.
+  */
+#define IS_ETH_CHANNEL_RX_INDEX(index) (IS_ETH_SINGLE_BIT(index) \
+                                        && (((uint32_t)(index)) >= (uint32_t)HAL_ETH_RX_CHANNEL_0) \
+                                        && (((uint32_t)(index)) \
+                                            < (((uint32_t)HAL_ETH_RX_CHANNEL_0) << USE_HAL_ETH_MAX_RX_CH_NB)))
+
+/**
+  * @brief  Check whether a TX/RX channel identifier is valid.
+  *
+  * This macro validates that the given @p index corresponds to a valid
+  * Ethernet TX or RX channel mask.
+  *
+  * A channel identifier is considered valid if it satisfies either:
+  * - @ref IS_ETH_CHANNEL_TX_INDEX (valid TX channel), or
+  * - @ref IS_ETH_CHANNEL_RX_INDEX (valid RX channel).
+  *
+  * Since both @ref IS_ETH_CHANNEL_TX_INDEX and @ref IS_ETH_CHANNEL_RX_INDEX
+  * internally rely on @ref IS_ETH_SINGLE_BIT, the @p index must:
+  * - be non-zero, and
+  * - have exactly one bit set (power-of-two mask).
+  *
+  * @param  index  Channel identifier to check. It is interpreted as a
+  *                single-bit mask corresponding to either a TX or RX channel.
+  *
+  * @retval bool   true if @p index is a valid TX or RX channel identifier,
+  *                false otherwise.
+  *
+  * @note  This macro is a convenience wrapper that combines
+  *        @ref IS_ETH_CHANNEL_TX_INDEX and
+  *        @ref IS_ETH_CHANNEL_RX_INDEX when the direction (TX/RX)
+  *        is not known or not relevant at the call site.
   */
 #define IS_ETH_CHANNEL_INDEX(index) ((IS_ETH_CHANNEL_TX_INDEX(index))          \
                                      || (IS_ETH_CHANNEL_RX_INDEX(index)))
 
-/**
-  * @brief  Check for TX Channel Identifier is valid or not.
-  * @param  index : Channel identifier to check
-  * @retval True if valid. False otherwise
-  */
-#define IS_ETH_CHANNEL_TX_INDEX(index) (((index) == HAL_ETH_TX_CHANNEL_0) && (USE_HAL_ETH_MAX_TX_CH_NB >= 1U))
-
-/**
-  * @brief  Check for RX Channel Identifier is valid or not.
-  * @param  index : Channel identifier to check
-  * @retval True if valid. False otherwise
-  */
-#define IS_ETH_CHANNEL_RX_INDEX(index)  (((index) == HAL_ETH_RX_CHANNEL_0) && (USE_HAL_ETH_MAX_RX_CH_NB >= 1U))
-
 /** @brief Validates input channel mask (TX/RX). */
-#define IS_ETH_CHANNEL_MASK(mask) (((mask) & ~(HAL_ETH_TX_CHANNEL_ALL | HAL_ETH_RX_CHANNEL_ALL)) == 0U)
+#define IS_ETH_CHANNEL_MASK(mask) (((mask) & ~(HAL_ETH_TX_CHANNEL_ALL | HAL_ETH_RX_CHANNEL_ALL)) == 0UL)
 
 /** @brief Validates Remote Wake-Up byte mask: bit 31 must be zero. */
 #define IS_ETH_RWK_BYTE_MASK(mask) (((mask) & 0x80000000UL) == 0UL)
 
 /** @brief Validates MDIO command attributes: only allow defined HAL MDIO flags/NTC values. */
 #define IS_ETH_MDIO_CMD_ATTR(attr) \
-  ((((attr)) & ~(ETH_MACMDIOAR_PSE | ETH_MACMDIOAR_BTB | ETH_MACMDIOAR_NTC)) == 0U)
+  ((((attr)) & ~(ETH_MACMDIOAR_PSE | ETH_MACMDIOAR_BTB | ETH_MACMDIOAR_NTC)) == 0UL)
 
 /** @brief Validates media interface selection. */
 #define IS_ETH_MEDIA_INTERFACE(media_interface) (((media_interface) == HAL_ETH_MEDIA_IF_MII) \
@@ -574,10 +679,10 @@ USE_HAL_ETH_MAX_RX_CH_NB        | from hal_conf.h |     Defined     | User-defin
 #define IS_ETH_MAC_LOOPBACK_CTRL(loopback) (((loopback) == HAL_ETH_MAC_LOOPBACK_DISABLE)                             \
                                             || ((loopback) == HAL_ETH_MAC_LOOPBACK_ENABLE))
 /** @brief Validates MAC source address control. */
-#define IS_ETH_MAC_SRC_ADDR_CTRL(srcaddr) (((srcaddr) == HAL_ETH_MAC_SA_DISABLE)                               \
-                                           || ((srcaddr) == HAL_ETH_MAC_SA_MAC0_INS)                       \
-                                           || ((srcaddr) == HAL_ETH_MAC_SA_MAC1_INS)                       \
-                                           || ((srcaddr) == HAL_ETH_MAC_SA_MAC0_REP)                      \
+#define IS_ETH_MAC_SRC_ADDR_CTRL(srcaddr) (((srcaddr) == HAL_ETH_MAC_SA_DISABLE)                                     \
+                                           || ((srcaddr) == HAL_ETH_MAC_SA_MAC0_INS)                                 \
+                                           || ((srcaddr) == HAL_ETH_MAC_SA_MAC1_INS)                                 \
+                                           || ((srcaddr) == HAL_ETH_MAC_SA_MAC0_REP)                                 \
                                            || ((srcaddr) == HAL_ETH_MAC_SA_MAC1_REP))
 /** @brief Validates MAC inter-packet gap. */
 #define IS_ETH_MAC_INTER_PKT_GAP(ipg) (((ipg) == HAL_ETH_MAC_INTER_PKT_GAP_96_BIT)                                   \
@@ -734,12 +839,11 @@ USE_HAL_ETH_MAX_RX_CH_NB        | from hal_conf.h |     Defined     | User-defin
                                          || ((evmode) == HAL_ETH_FIFO_EVENT_CYCLIC) )
 /** @brief Validates FIFO event parameters. */
 #define IS_ETH_FIFO_EVENT_PARAMS(evmode, evparams) ( ((evmode) == HAL_ETH_FIFO_EVENT_CYCLIC)                       \
-                                                     ? ((uint32_t)(evparams) > 0U)                                 \
-                                                     : (1U) )
+                                                     ? ((uint32_t)(evparams) > 0UL) : (1UL) )
 /** @brief Validates PMT control flags mask. */
-#define IS_ETH_PMT_CTRL_FLAGS(pmtctrl) ( (((uint32_t)(pmtctrl)) & ~(uint32_t)ETH_PMT_CTRL_MASK) == 0U )
+#define IS_ETH_PMT_CTRL_FLAGS(pmtctrl) ( (((uint32_t)(pmtctrl)) & ~(uint32_t)ETH_PMT_CTRL_MASK) == 0UL )
 /** @brief Validates LPI control flags mask. */
-#define IS_ETH_LPI_CTRL_FLAGS(lpictrl) ( (((uint32_t)(lpictrl)) & ~(uint32_t)ETH_LPI_TX_CLK_MASK) == 0U )
+#define IS_ETH_LPI_CTRL_FLAGS(lpictrl) ( (((uint32_t)(lpictrl)) & ~(uint32_t)ETH_LPI_TX_CLK_MASK) == 0UL )
 /** @brief Validates DMA Rx burst length. */
 #define IS_ETH_DMA_RX_BURST_LENGTH(rxburst)  ( ((rxburst) == HAL_ETH_DMA_RX_BLEN_1_BEAT)                           \
                                                || ((rxburst) == HAL_ETH_DMA_RX_BLEN_2_BEAT)                        \
@@ -749,12 +853,12 @@ USE_HAL_ETH_MAX_RX_CH_NB        | from hal_conf.h |     Defined     | User-defin
                                                || ((rxburst) == HAL_ETH_DMA_RX_BLEN_32_BEAT) )
 
 /** @brief Validates DMA Rx buffer length alignment. */
-#define IS_ETH_DMA_RX_BUFFER_LEN_ALIGNED(rxbuflen) ( (((rxbuflen) % ETH_BUS_DATA_WIDTH_BYTE) == 0U) )
+#define IS_ETH_DMA_RX_BUFFER_LEN_ALIGNED(rxbuflen) ( (((rxbuflen) % ETH_BUS_DATA_WIDTH_BYTE) == 0UL) )
 /** @brief Validates max application buffers number (inclusive range: 0x2..0x1FF). */
-#define IS_ETH_MAX_APP_BUFFERS_NUM(maxbuf) ( (((maxbuf) >= 0x2U) && ((maxbuf) <= 0x400U)) )
+#define IS_ETH_MAX_APP_BUFFERS_NUM(maxbuf) ( (((maxbuf) >= 0x2UL) && ((maxbuf) <= 0x400UL)) )
 /** @brief Validates descriptor size: >0 and multiple of configured TX descriptor length. */
-#define IS_ETH_DESC_SIZE_BYTE_VALID(desc_size, desc_len_byte ) \
-  (((desc_size) > 0U) && (((desc_size) % (desc_len_byte)) == 0U))
+#define IS_ETH_DESC_SIZE_BYTE_VALID(desc_size, desc_len_byte, total_desc_cnt) \
+  (((desc_size) > 0UL) && ((desc_size) >= ((desc_len_byte) * (total_desc_cnt))))
 /** @brief Validates MTL Rx queue operating mode. */
 #define IS_ETH_MTL_RX_OPS_MODE(qopmode) ( ((qopmode) == HAL_ETH_MTL_RX_QUEUE_ENABLED) )
 /** @brief Validates MTL Rx queue size. */
@@ -781,7 +885,7 @@ USE_HAL_ETH_MAX_RX_CH_NB        | from hal_conf.h |     Defined     | User-defin
   * @retval uint32_t Channel identifier mask (HAL_ETH_RX_CHANNEL_0 shifted by ch).
   */
 #define ETH_GET_RX_CH_ID(ch) \
-  (((uint32_t)HAL_ETH_RX_CHANNEL_0) << (ch))
+  (((uint32_t)HAL_ETH_RX_CHANNEL_0) << ((uint32_t)(ch)))
 
 /**
   * @brief  Return the TX channel identifier bit mask for a given zero-based index.
@@ -789,7 +893,7 @@ USE_HAL_ETH_MAX_RX_CH_NB        | from hal_conf.h |     Defined     | User-defin
   * @retval uint32_t Channel identifier mask (HAL_ETH_TX_CHANNEL_0 shifted by ch).
   */
 #define ETH_GET_TX_CH_ID(ch) \
-  (((uint32_t)HAL_ETH_TX_CHANNEL_0) << (ch))
+  (((uint32_t)HAL_ETH_TX_CHANNEL_0) << ((uint32_t)(ch)))
 
 /**
   * @brief  Enables the specified ETHERNET DMA interrupts for selected Channel.
@@ -824,16 +928,6 @@ USE_HAL_ETH_MAX_RX_CH_NB        | from hal_conf.h |     Defined     | User-defin
   ((eth_dma_descriptor_t *)((uint32_t)(desc_list).p_desc_list_addr + \
                             (((uint32_t)(index)) * ((uint32_t)(desc_list).desc_len_byte))))
 /**
-  * @brief  Increment FIFO event counter modulo configured offset.
-  * @param  fifo_event_cnt Variable that holds the FIFO event counter (in/out).
-  * @param  offset         Modulo value / offset used to wrap the counter.
-  * @note   Used to track FIFO events with a bounded counter.
-  */
-#define ETH_INCR_FIFO_EVENT_CNT(fifo_event_cnt, offset) \
-  do {\
-    (fifo_event_cnt) = (uint32_t)(((uint32_t)(fifo_event_cnt) + 1U) % (uint32_t)(offset));\
-  } while (0)
-/**
   * @brief  Increment a descriptor index, wrapping to zero when reaching offset.
   * @param  inx    Descriptor index variable (in/out).
   * @param  offset Total number of descriptors in the list (modulus).
@@ -841,7 +935,7 @@ USE_HAL_ETH_MAX_RX_CH_NB        | from hal_conf.h |     Defined     | User-defin
   */
 #define ETH_INCR_DESC_INDEX(inx, offset) \
   do {\
-    (inx) = (uint32_t)(((uint32_t)(inx) + 1U) % (uint32_t)(offset));\
+    (inx) = (uint32_t)(((uint32_t)(inx) + 1UL) % (uint32_t)(offset));\
   } while (0)
 
 /**
@@ -861,13 +955,13 @@ USE_HAL_ETH_MAX_RX_CH_NB        | from hal_conf.h |     Defined     | User-defin
   * @param[in] index
   *         Index of the RWK command field (0-based).
   *
-  * @retval uint32_t
-  *         Bit shift value for the command field at the given @p index.
-  *
   * @note Typical usage is when encoding/decoding RWK command fields into
   *       a 32-bit register where each field is one byte wide.
+  *
+  * @retval uint32_t
+  *         Bit shift value for the command field at the given @p index.
   */
-#define ETH_RWK_CMD_SHIFT(index)                         ((index) * 8U)
+#define ETH_RWK_CMD_SHIFT(index)                         ((index) * 8UL)
 
 /**
   * @brief  Compute the bit shift for a Remote Wakeup (RWK) offset field.
@@ -880,13 +974,13 @@ USE_HAL_ETH_MAX_RX_CH_NB        | from hal_conf.h |     Defined     | User-defin
   * @param[in] index
   *         Index of the RWK offset field (0-based).
   *
-  * @retval uint32_t
-  *         Bit shift value for the offset field at the given @p index.
-  *
   * @note Typical usage is when encoding/decoding RWK offset fields into
   *       a 32-bit register where each field is one byte wide.
+  *
+  * @retval uint32_t
+  *         Bit shift value for the offset field at the given @p index.
   */
-#define ETH_RWK_OFFSET_SHIFT(index)                      ((index) * 8U)
+#define ETH_RWK_OFFSET_SHIFT(index)                      ((index) * 8UL)
 
 /**
   * @brief  Compute the bit shift for a Remote Wakeup (RWK) CRC16 low word.
@@ -899,13 +993,13 @@ USE_HAL_ETH_MAX_RX_CH_NB        | from hal_conf.h |     Defined     | User-defin
   * @param[in] index
   *         Index of the RWK CRC16 low-word field (0-based).
   *
-  * @retval uint32_t
-  *         Bit shift value for the low 16-bit CRC field at the given @p index.
-  *
   * @note This is typically used when packing multiple CRC16 values into
   *       a 32-bit or wider register.
+  *
+  * @retval uint32_t
+  *         Bit shift value for the low 16-bit CRC field at the given @p index.
   */
-#define ETH_RWK_CRC16_SHIFT_LOW(index)                   ((index) * 16U)
+#define ETH_RWK_CRC16_SHIFT_LOW(index)                   ((index) * 16UL)
 
 /**
   * @brief  Compute the bit shift for a Remote Wakeup (RWK) CRC16 high word.
@@ -920,14 +1014,14 @@ USE_HAL_ETH_MAX_RX_CH_NB        | from hal_conf.h |     Defined     | User-defin
   *         than or equal to 2 so that the expression @c (index - 2) is valid
   *         in the context of the underlying layout.
   *
-  * @retval uint32_t
-  *         Bit shift value for the high 16-bit CRC field at the given @p index.
-  *
   * @note The subtraction by 2 reflects the placement of the high-word CRC16
   *       fields in the register layout (e.g. indexes 2 and 3 can correspond
   *       to the high words of CRC entries 0 and 1).
+  *
+  * @retval uint32_t
+  *         Bit shift value for the high 16-bit CRC field at the given @p index.
   */
-#define ETH_RWK_CRC16_SHIFT_HIGH(index)                  (((index) - 2U) * 16U)
+#define ETH_RWK_CRC16_SHIFT_HIGH(index)                  (((index) - 2UL) * 16UL)
 
 /**
   * @brief  Get number of descriptors that fit in the provided memory region.
@@ -950,9 +1044,9 @@ USE_HAL_ETH_MAX_RX_CH_NB        | from hal_conf.h |     Defined     | User-defin
   * @param  curr_desc_size Current descriptor size in bytes.
   * @retval Encoded skip length value shifted to DSL field position.
   */
-#define ETH_GET_SKIPLEN_SIZE(req_desc_size, curr_desc_size) \
-  ( (uint32_t)(( (uint32_t)(req_desc_size) - (uint32_t)(curr_desc_size) + 8U ) \
-               / (uint32_t)ETH_BUS_DATA_WIDTH_BYTE) << (uint32_t)ETH_DMACCR_DSL_Pos )
+#define ETH_GET_SKIPLEN_SIZE(req_desc_size, curr_desc_size)                              \
+  ((uint32_t)(( (uint32_t)(req_desc_size) - (uint32_t)(curr_desc_size) + 8UL )           \
+              / (uint32_t)ETH_BUS_DATA_WIDTH_BYTE) << ETH_DMACCR_DSL_Pos)
 
 /**
   * @brief  Copy selected bits from a source value into a destination variable.
@@ -1030,11 +1124,11 @@ USE_HAL_ETH_MAX_RX_CH_NB        | from hal_conf.h |     Defined     | User-defin
   */
 typedef struct
 {
-  volatile uint32_t DESC0;       /*!< ETH Descriptor Word 0      */
-  volatile uint32_t DESC1;       /*!< ETH Descriptor Word 1      */
-  volatile uint32_t DESC2;       /*!< ETH Descriptor Word 2      */
-  volatile uint32_t DESC3;       /*!< ETH Descriptor Word 3      */
-  void *p_pkt_addr;              /*!< Buffer Backup Address */
+  volatile uint32_t desc0;       /*!< ETH descriptor word 0      */
+  volatile uint32_t desc1;       /*!< ETH descriptor word 1      */
+  volatile uint32_t desc2;       /*!< ETH descriptor word 2      */
+  volatile uint32_t desc3;       /*!< ETH descriptor word 3      */
+  void *p_pkt_addr;              /*!< Buffer backup address */
   void *p_app_data;              /*!< Application data   */
 } eth_dma_descriptor_t;
 
@@ -1099,61 +1193,67 @@ typedef enum
 /** @defgroup ETH_Private_Functions ETH Private Functions
   * @{
   */
-static void ETH_MAC_Init(struct hal_eth_handle_s *heth);
-static void ETH_SetMACConfig(const hal_eth_handle_t *heth, const hal_eth_mac_config_t *macconf);
+static void ETH_MAC_SetConfigDefault(struct hal_eth_handle_s *heth);
+static void ETH_MAC_SetConfig(const hal_eth_handle_t *heth, const hal_eth_mac_config_t *p_mac_conf);
 static void ETH_SetMDIOClockRange(hal_eth_handle_t *heth);
 static uint32_t ETH_GetMDIOClockRange(uint32_t eth_hclk_freq);
-static void ETH_MTL_Init(struct hal_eth_handle_s *heth);
-static void ETH_SetMTLConfig(hal_eth_handle_t *heth, const hal_eth_mtl_config_t *mtlconf);
-static void ETH_DMA_Init(struct hal_eth_handle_s *heth);
-static void ETH_SetDMAConfig(hal_eth_handle_t *heth, const hal_eth_dma_config_t *dmaconf);
+static void ETH_MTL_SetConfigDefault(struct hal_eth_handle_s *heth);
+static void ETH_MTL_SetConfig(hal_eth_handle_t *heth, const hal_eth_mtl_config_t *p_mtl_conf);
+static void ETH_DMA_SetConfigDefault(struct hal_eth_handle_s *heth);
+static void ETH_DMA_SetConfig(hal_eth_handle_t *heth, const hal_eth_dma_config_t *p_dma_conf);
 #if defined (USE_HAL_ETH_REGISTER_CALLBACKS) && (USE_HAL_ETH_REGISTER_CALLBACKS == 1)
 static void ETH_InitCommonCallbacksToDefault(hal_eth_handle_t *heth);
 static void ETH_InitTxCallbacksToDefault(hal_eth_tx_channel_handle_t *hchannel);
 static void ETH_InitRxCallbacksToDefault(hal_eth_rx_channel_handle_t *hchannel);
 #endif /* USE_HAL_ETH_REGISTER_CALLBACKS */
-static void ETH_ChannelTxInit(hal_eth_handle_t *heth, uint32_t channel);
-static void ETH_SetDMATxChannelConfig(const hal_eth_handle_t *heth, uint32_t ch,
-                                      const hal_eth_dma_tx_channel_config_t *dmachconf);
+static void ETH_SetTxChannelDefaultConfig(hal_eth_handle_t *heth, uint32_t channel);
+static void ETH_DMA_SetConfigTxChannel(const hal_eth_handle_t *heth, uint32_t ch,
+                                       const hal_eth_dma_tx_channel_config_t *p_dma_tx_ch_conf);
 static void ETH_GetDMATxChannelConfig(const hal_eth_handle_t *heth, uint32_t ch,
-                                      hal_eth_dma_tx_channel_config_t *dmachconf);
-static void ETH_SetMtlTxChannelConfig(const hal_eth_handle_t *heth, uint32_t ch,
-                                      const hal_eth_mtl_tx_queue_config_t *mtlchconf);
+                                      hal_eth_dma_tx_channel_config_t *p_dma_tx_ch_conf);
+static void ETH_MTL_SetConfigTxChannel(const hal_eth_handle_t *heth, uint32_t ch,
+                                       const hal_eth_mtl_tx_queue_config_t *p_mtl_tx_q_conf);
 static void ETH_GetMtlTxChannelConfig(const hal_eth_handle_t *heth, uint32_t ch,
-                                      hal_eth_mtl_tx_queue_config_t *mtlchconf);
+                                      hal_eth_mtl_tx_queue_config_t *p_mtl_tx_q_conf);
 static hal_status_t ETH_RequestTxDMA(hal_eth_handle_t *heth, uint32_t ch, hal_eth_buffer_t *p_eth_buffer,
                                      uint32_t buffer_count, hal_eth_tx_pkt_config_t *p_tx_conf);
-static void ETH_SetTxFifoEven(hal_eth_handle_t *heth, uint32_t ch, eth_dma_descriptor_t *dmatxdesc,
-                              hal_eth_tx_pkt_notify_ctrl_t pkt_notify);
-static eth_tx_dma_process_state_t ETH_DMA_GetTxProcessState(const ETH_TypeDef *p_eth, uint32_t ch);
+static uint32_t ETH_ExecTxDataHandler(hal_eth_handle_t *heth, uint32_t ch);
+static hal_status_t ETH_StartTxChannel(hal_eth_handle_t *heth, uint32_t ch, uint32_t *p_desc_mem,
+                                       uint32_t total_mem_size_byte);
+static void ETH_SetTxFifoEvent(hal_eth_handle_t *heth, uint32_t ch, eth_dma_descriptor_t *p_dma_tx_desc,
+                               hal_eth_tx_pkt_notify_ctrl_t pkt_notify);
+static eth_tx_dma_process_state_t ETH_DMA_GetTxProcessState(const ETH_TypeDef *p_ethx, uint32_t ch);
 static void ETH_DMATxDescListInit(hal_eth_handle_t *heth, uint32_t ch, uint32_t *p_desc_mem,
                                   uint32_t total_mem_size_byte);
 static hal_status_t ETH_StopTxChannel(hal_eth_handle_t *heth, uint32_t ch);
 static void ETH_AbortTxChannel(hal_eth_handle_t *heth, uint32_t ch);
 static void ETH_RecycleTxDesc(hal_eth_handle_t *heth, uint32_t ch);
-static void ETH_ChannelRxInit(hal_eth_handle_t *heth, uint32_t channel);
-static void ETH_SetDMARxChannelConfig(hal_eth_handle_t *heth, uint32_t ch,
-                                      const hal_eth_dma_rx_channel_config_t *dmachconf);
+static void ETH_SetRxChannelDefaultConfig(hal_eth_handle_t *heth, uint32_t channel);
+static void ETH_DMA_SetConfigRxChannel(hal_eth_handle_t *heth, uint32_t ch,
+                                       const hal_eth_dma_rx_channel_config_t *p_dma_rx_ch_conf);
 static void ETH_GetDMARxChannelConfig(const hal_eth_handle_t *heth, uint32_t ch,
-                                      hal_eth_dma_rx_channel_config_t *dmachconf);
-static void ETH_SetMtlRxChannelConfig(const hal_eth_handle_t *heth, uint32_t ch,
-                                      const hal_eth_mtl_rx_queue_config_t *mtlchconf);
+                                      hal_eth_dma_rx_channel_config_t *p_dma_rx_ch_conf);
+static void ETH_MTL_SetConfigRxChannel(const hal_eth_handle_t *heth, uint32_t ch,
+                                       const hal_eth_mtl_rx_queue_config_t *p_mtl_rx_q_conf);
 static void ETH_GetMtlRxChannelConfig(const hal_eth_handle_t *heth, uint32_t ch,
-                                      hal_eth_mtl_rx_queue_config_t *mtlchconf);
+                                      hal_eth_mtl_rx_queue_config_t *p_mtl_rx_q_conf);
+static uint32_t ETH_ExecRxDataHandler(hal_eth_handle_t *heth, uint32_t ch);
+static hal_status_t ETH_StartRxChannel(hal_eth_handle_t *heth, uint32_t ch, uint32_t *p_desc_mem,
+                                       uint32_t total_mem_size_byte);
 static hal_status_t ETH_StopRxChannel(hal_eth_handle_t *heth, uint32_t ch);
 static void ETH_AbortRxChannel(hal_eth_handle_t *heth, uint32_t ch);
-static void ETH_ResetDMADesc(eth_dma_descriptor_t *p_dma_txDesc);
+static void ETH_ResetDMADesc(eth_dma_descriptor_t *p_dma_tx_desc);
 static void ETH_UpdateRxDesc(hal_eth_handle_t *heth, uint32_t ch);
 static void ETH_SetRxFifoEvent(hal_eth_handle_t *heth, uint32_t ch, eth_dma_descriptor_t *p_dma_rx_desc);
 static void ETH_DMARxDescListInit(hal_eth_handle_t *heth, uint32_t ch, uint32_t *p_desc_mem,
                                   uint32_t total_mem_size_byte);
 static void ETH_RecycleRxDesc(hal_eth_handle_t *heth, uint32_t ch);
-static eth_rx_dma_process_state_t ETH_DMA_GetRxProcessState(const ETH_TypeDef *p_eth, uint32_t ch);
-static hal_status_t ETH_AlignDescSize(uint32_t app_req_size, uint32_t *desc_size);
-__STATIC_INLINE void ETH_GetTXChIndex(uint32_t *p_TxCh, uint32_t channel);
-__STATIC_INLINE void ETH_GetRXChIndex(uint32_t *p_RxCh, uint32_t channel);
-__STATIC_INLINE hal_status_t ETH_LockChannel(volatile uint32_t *channel_lock_state);
-__STATIC_INLINE void ETH_UnlockChannel(volatile uint32_t *channel_lock_state);
+static eth_rx_dma_process_state_t ETH_DMA_GetRxProcessState(const ETH_TypeDef *p_ethx, uint32_t ch);
+static hal_status_t ETH_AlignDescSize(uint32_t app_req_size, uint32_t *p_desc_size);
+__STATIC_INLINE void ETH_GetTXChIndex(uint32_t *p_tx_ch, uint32_t channel);
+__STATIC_INLINE void ETH_GetRXChIndex(uint32_t *p_rx_ch, uint32_t channel);
+__STATIC_INLINE hal_status_t ETH_LockChannel(volatile uint32_t *p_channel_lock_state);
+__STATIC_INLINE void ETH_UnlockChannel(volatile uint32_t *p_channel_lock_state);
 __STATIC_INLINE uint32_t ETH_WakeupGetPendingIT(void);
 __STATIC_INLINE void ETH_WakeupClearPendingIT(uint32_t edge);
 /**
@@ -1191,9 +1291,6 @@ This subsection provides functions allowing to initialize and de-initialize the 
   * This function does not configure pins, descriptors, or low-level MAC, DMA or MTL
   * parameters; those are typically handled by separate configuration APIs.
   *
-  * @pre The system clock tree must be fully configured and provide a valid
-  *      clock to the Ethernet peripheral before calling this function.
-  *
   * @param[in,out] heth
   *         Pointer to an @ref hal_eth_handle_t structure that will be
   *         initialized. On successful return, its fields (instance, channels,
@@ -1203,14 +1300,8 @@ This subsection provides functions allowing to initialize and de-initialize the 
   *         Ethernet peripheral instance identifier. Must correspond to a
   *         valid ETH_TypeDef instance and satisfy IS_ETH_ALL_INSTANCE.
   *
-  * @retval HAL_OK
-  *         Initialization succeeded; the handle is now in
-  *         @ref HAL_ETH_STATE_INIT state.
-  * @retval HAL_ERROR
-  *         OS semaphore creation failed (when @c USE_HAL_MUTEX == 1).
-  * @retval HAL_INVALID_PARAM
-  *         @p heth is @c NULL (only when parameter checking is enabled via
-  *         @c USE_HAL_CHECK_PARAM).
+  * @pre The system clock tree must be fully configured and provide a valid
+  *      clock to the Ethernet peripheral before calling this function.
   *
   * @note When @c USE_HAL_ETH_CLK_ENABLE_MODEL is configured to be greater
   *       than or equal to @c HAL_CLK_ENABLE_PERIPH_ONLY, this function
@@ -1221,10 +1312,16 @@ This subsection provides functions allowing to initialize and de-initialize the 
   * @note The caller must perform further configuration (descriptors, DMA,
   *       MAC, MTL, interrupts, pins) before starting traffic.
   *
+  * @retval HAL_OK
+  *         Initialization succeeded; the handle is now in
+  *         @ref HAL_ETH_STATE_INIT state.
+  * @retval HAL_ERROR
+  *         OS semaphore creation failed (when @c USE_HAL_MUTEX == 1).
+  * @retval HAL_INVALID_PARAM
+  *         @p heth is @c NULL (only when parameter checking is enabled via
+  *         @c USE_HAL_CHECK_PARAM).
+  *
   * @sa HAL_ETH_DeInit
-  * @sa ETH_InitCommonCallbacksToDefault
-  * @sa ETH_InitTxCallbacksToDefault
-  * @sa ETH_InitRxCallbacksToDefault
   */
 hal_status_t HAL_ETH_Init(hal_eth_handle_t *heth, hal_eth_t instance)
 {
@@ -1237,6 +1334,13 @@ hal_status_t HAL_ETH_Init(hal_eth_handle_t *heth, hal_eth_t instance)
     return HAL_INVALID_PARAM;
   }
 #endif /* USE_HAL_CHECK_PARAM */
+
+#if defined(USE_HAL_MUTEX) && (USE_HAL_MUTEX == 1)
+  if (HAL_OS_SemaphoreCreate(&heth->semaphore) != HAL_OS_OK)
+  {
+    return HAL_ERROR;
+  }
+#endif /* USE_HAL_MUTEX */
 
   heth->instance = instance;
 
@@ -1251,49 +1355,40 @@ hal_status_t HAL_ETH_Init(hal_eth_handle_t *heth, hal_eth_t instance)
   ETH_InitCommonCallbacksToDefault(heth);
 #endif /* (USE_HAL_ETH_REGISTER_CALLBACKS) */
 
-#if defined(USE_HAL_MUTEX) && (USE_HAL_MUTEX == 1)
-  if (HAL_OS_SemaphoreCreate(&heth->semaphore) != HAL_OS_OK)
-  {
-    return HAL_ERROR;
-  }
-#endif /* USE_HAL_MUTEX */
-
 #if defined (USE_HAL_ETH_USER_DATA) && (USE_HAL_ETH_USER_DATA == 1)
   heth->p_user_data = NULL;
 #endif /* USE_HAL_ETH_USER_DATA */
-
 
 #if defined (USE_HAL_ETH_GET_LAST_ERRORS) && (USE_HAL_ETH_GET_LAST_ERRORS == 1)
   heth->last_error_codes = HAL_ETH_ERROR_NONE;
 #endif /* USE_HAL_ETH_GET_LAST_ERRORS */
 
-  /* Init Tx channels */
   for (uint32_t ch = 0; ch < USE_HAL_ETH_MAX_TX_CH_NB; ch++)
   {
     heth->tx_channels[ch].channel_state = HAL_ETH_CHANNEL_STATE_RESET;
     heth->tx_channels[ch].channel_lock_state = ETH_CHANNEL_STATE_UNLOCKED;
+    heth->tx_channels[ch].tx_desc_list.p_desc_list_addr = NULL;
+    heth->tx_channels[ch].tx_desc_list.total_desc_cnt = 0UL;
     heth->tx_channels[ch].p_tx_complete_cb = NULL;
-
 #if defined(USE_HAL_ETH_REGISTER_CALLBACKS) && (USE_HAL_ETH_REGISTER_CALLBACKS == 1)
     ETH_InitTxCallbacksToDefault(&heth->tx_channels[ch]);
 #endif /* (USE_HAL_ETH_REGISTER_CALLBACKS) */
   }
 
-  /* Init Rx channels */
   for (uint32_t ch = 0; ch < USE_HAL_ETH_MAX_RX_CH_NB; ch++)
   {
     heth->rx_channels[ch].channel_state = HAL_ETH_CHANNEL_STATE_RESET;
     heth->rx_channels[ch].channel_lock_state = ETH_CHANNEL_STATE_UNLOCKED;
+    heth->rx_channels[ch].rx_desc_list.p_desc_list_addr = NULL;
+    heth->rx_channels[ch].rx_desc_list.total_desc_cnt = 0UL;
     heth->rx_channels[ch].p_rx_complete_cb = NULL;
     heth->rx_channels[ch].p_rx_allocate_cb = NULL;
-
 #if defined(USE_HAL_ETH_REGISTER_CALLBACKS) && (USE_HAL_ETH_REGISTER_CALLBACKS == 1)
     ETH_InitRxCallbacksToDefault(&heth->rx_channels[ch]);
 #endif /* (USE_HAL_ETH_REGISTER_CALLBACKS) */
   }
 
   heth->global_state     = HAL_ETH_STATE_INIT;
-
   return HAL_OK;
 }
 
@@ -1309,13 +1404,13 @@ hal_status_t HAL_ETH_Init(hal_eth_handle_t *heth, hal_eth_t instance)
   * - Clears optional user data and last error codes stored in the handle.
   * - Iterates over all TX channels:
   *   - Stops any channel that is in @ref HAL_ETH_CHANNEL_STATE_ACTIVE or
-  *     @ref HAL_ETH_CHANNEL_STATE_SUSPENDED using @ref ETH_StopTxChannel().
+  *     @ref HAL_ETH_CHANNEL_STATE_SUSPENDED.
   *   - Resets the channel state to @ref HAL_ETH_CHANNEL_STATE_RESET.
   *   - Unlocks the channel (@ref ETH_CHANNEL_STATE_UNLOCKED).
   *   - Clears the TX-complete callback pointer.
   * - Iterates over all RX channels:
   *   - Stops any channel that is in @ref HAL_ETH_CHANNEL_STATE_ACTIVE or
-  *     @ref HAL_ETH_CHANNEL_STATE_SUSPENDED using @ref ETH_StopRxChannel().
+  *     @ref HAL_ETH_CHANNEL_STATE_SUSPENDED.
   *   - Resets the channel state to @ref HAL_ETH_CHANNEL_STATE_RESET.
   *   - Unlocks the channel (@ref ETH_CHANNEL_STATE_UNLOCKED).
   *   - Clears the RX-complete and RX-allocate callback pointers.
@@ -1335,6 +1430,8 @@ hal_status_t HAL_ETH_Init(hal_eth_handle_t *heth, hal_eth_t instance)
   * @note This function does not free user-allocated memory for descriptors or
   *       buffers; it only resets the HAL state and disables clocks and
   *       synchronization primitives tied to the handle.
+  * @warning This function is not thread-safe. Ensure that no concurrent call
+  *          to this function is made while it is executing.
   * @note After this function returns, @p heth is in the
   *       @ref HAL_ETH_STATE_RESET state and must be reinitialized via the
   *       dedicated initialization function before being used again.
@@ -1343,15 +1440,6 @@ void HAL_ETH_DeInit(hal_eth_handle_t *heth)
 {
   ASSERT_DBG_PARAM(heth != NULL);
 
-#if defined (USE_HAL_ETH_USER_DATA) && (USE_HAL_ETH_USER_DATA == 1)
-  heth->p_user_data = NULL;
-#endif /* USE_HAL_ETH_USER_DATA */
-
-#if defined (USE_HAL_ETH_GET_LAST_ERRORS) && (USE_HAL_ETH_GET_LAST_ERRORS == 1)
-  heth->last_error_codes = HAL_ETH_ERROR_NONE;
-#endif /* USE_HAL_ETH_GET_LAST_ERRORS */
-
-  /* Reset Tx channels */
   for (uint32_t ch = 0; ch < USE_HAL_ETH_MAX_TX_CH_NB; ch++)
   {
     ETH_AbortTxChannel(heth, ch);
@@ -1359,8 +1447,6 @@ void HAL_ETH_DeInit(hal_eth_handle_t *heth)
     heth->tx_channels[ch].channel_lock_state = ETH_CHANNEL_STATE_UNLOCKED;
     heth->tx_channels[ch].p_tx_complete_cb = NULL;
   }
-
-  /* Reset Rx channels */
   for (uint32_t ch = 0; ch < USE_HAL_ETH_MAX_RX_CH_NB; ch++)
   {
     ETH_AbortRxChannel(heth, ch);
@@ -1370,19 +1456,19 @@ void HAL_ETH_DeInit(hal_eth_handle_t *heth)
     heth->rx_channels[ch].p_rx_allocate_cb = NULL;
   }
 
-  heth->global_state = HAL_ETH_STATE_RESET;
-
-#if defined(USE_HAL_ETH_CLK_ENABLE_MODEL) && (USE_HAL_ETH_CLK_ENABLE_MODEL >= HAL_CLK_ENABLE_PERIPH_ONLY)
-  HAL_RCC_ETH1TX_DisableClock();
-  HAL_RCC_ETH1RX_DisableClock();
-  HAL_RCC_ETH1CK_DisableClock();
-  HAL_RCC_ETH1_DisableClock();
-#endif /* USE_HAL_ETH_CLK_ENABLE_MODEL */
-
 #if defined(USE_HAL_MUTEX) && (USE_HAL_MUTEX == 1)
-  /* Delete HAL ETH Semaphore*/
   (void)HAL_OS_SemaphoreDelete(&heth->semaphore);
 #endif /* USE_HAL_MUTEX  */
+
+#if defined (USE_HAL_ETH_GET_LAST_ERRORS) && (USE_HAL_ETH_GET_LAST_ERRORS == 1)
+  heth->last_error_codes = HAL_ETH_ERROR_NONE;
+#endif /* USE_HAL_ETH_GET_LAST_ERRORS */
+
+#if defined (USE_HAL_ETH_USER_DATA) && (USE_HAL_ETH_USER_DATA == 1)
+  heth->p_user_data = NULL;
+#endif /* USE_HAL_ETH_USER_DATA */
+
+  heth->global_state = HAL_ETH_STATE_RESET;
 }
 
 /**
@@ -1423,14 +1509,6 @@ This subsection provides functions allowing to configure the Ethernet peripheral
   *         - @c mac_addr[6]     : 6-byte MAC address to be programmed into
   *           MACA0 register (index 0 = lowest byte).
   *
-  * @retval HAL_OK
-  *         Configuration completed successfully.
-  * @retval HAL_ERROR
-  *         Timeout occurred while waiting for the software reset bit to clear.
-  * @retval HAL_INVALID_PARAM
-  *         @p heth or @p p_config is @c NULL (only when parameter checking is
-  *         enabled via @c USE_HAL_CHECK_PARAM).
-  *
   * @pre
   * - @p heth must have been initialized with @ref HAL_ETH_Init.
   * - @p heth->global_state must be either @ref HAL_ETH_STATE_INIT or
@@ -1441,18 +1519,25 @@ This subsection provides functions allowing to configure the Ethernet peripheral
   *       configuration in MAC/MTL/DMA registers is lost.
   * @note The function masks a set of MMC TX/RX interrupts by default.
   *
+  * @retval HAL_OK
+  *         Configuration completed successfully.
+  * @retval HAL_ERROR
+  *         Timeout occurred while waiting for the software reset bit to clear.
+  * @retval HAL_INVALID_PARAM
+  *         @p heth or @p p_config is @c NULL (only when parameter checking is
+  *         enabled via @c USE_HAL_CHECK_PARAM).
+  *
   * @sa HAL_ETH_Init
-  * @sa ETH_SetMDIOClockRange
-  * @sa ETH_MAC_Init
-  * @sa ETH_MTL_Init
-  * @sa ETH_DMA_Init
-  * @sa ETH_ChannelTxInit
-  * @sa ETH_ChannelRxInit
   */
 hal_status_t HAL_ETH_SetConfig(hal_eth_handle_t *heth, const hal_eth_config_t *p_config)
 {
+  uint32_t tick_start = 0UL;
+  ETH_TypeDef *p_ethx = NULL;
+
   ASSERT_DBG_PARAM(heth != NULL);
   ASSERT_DBG_PARAM(p_config != NULL);
+  ASSERT_DBG_PARAM(IS_ETH_MEDIA_INTERFACE(p_config->media_interface));
+  ASSERT_DBG_STATE(heth->global_state, (uint32_t)HAL_ETH_STATE_INIT | (uint32_t)HAL_ETH_STATE_CONFIGURED);
 
 #if defined(USE_HAL_CHECK_PARAM) && (USE_HAL_CHECK_PARAM == 1)
   if (p_config == NULL)
@@ -1461,15 +1546,6 @@ hal_status_t HAL_ETH_SetConfig(hal_eth_handle_t *heth, const hal_eth_config_t *p
   }
 #endif /* USE_HAL_CHECK_PARAM */
 
-  ASSERT_DBG_PARAM(IS_ETH_MEDIA_INTERFACE(p_config->media_interface));
-  ASSERT_DBG_STATE(heth->global_state, (uint32_t)HAL_ETH_STATE_INIT | (uint32_t)HAL_ETH_STATE_CONFIGURED);
-
-  uint32_t tickstart;
-  ETH_TypeDef *p_Ethx;
-
-  heth->global_state = HAL_ETH_STATE_CONFIGURED;
-
-  /*--------------------- Media Interface Configuration ----------------*/
   if (p_config->media_interface == HAL_ETH_MEDIA_IF_MII)
   {
     LL_SBS_SetETHPHYInterface(LL_SBS_PERIPH_ETH1, LL_SBS_ETHPHY_ITF_GMII_MII);
@@ -1479,79 +1555,58 @@ hal_status_t HAL_ETH_SetConfig(hal_eth_handle_t *heth, const hal_eth_config_t *p
     LL_SBS_SetETHPHYInterface(LL_SBS_PERIPH_ETH1, LL_SBS_ETHPHY_ITF_RMII);
   }
 
-  /* Ensure that Media Interface Configuration is performed */
-  __DSB();
+  p_ethx = ETH_GET_INSTANCE(heth);
 
-  /* Get Ethernet Instance */
-  p_Ethx = ETH_GET_INSTANCE(heth);
+  /* SWR after interface selection: reset MAC/MTL/DMA to a known baseline before config. */
+  STM32_SET_BIT(p_ethx->DMAMR, ETH_DMAMR_SWR);
 
-  /* Ethernet Software reset */
-  /* Set the SWR bit: resets all MAC subsystem internal registers and logic */
-  /* After reset all the registers holds their respective reset values */
-  STM32_SET_BIT(p_Ethx->DMAMR, ETH_DMAMR_SWR);
+  tick_start = HAL_GetTick();
 
-  /* Get tick */
-  tickstart = HAL_GetTick();
-
-  /* Wait for software reset */
-  while (STM32_READ_BIT(p_Ethx->DMAMR, ETH_DMAMR_SWR) > 0UL)
+  /*SWR clears when the internal reset completes, timeout usually indicates clock/reset/interface issues. */
+  while (STM32_READ_BIT(p_ethx->DMAMR, ETH_DMAMR_SWR) != 0UL)
   {
-    if (((HAL_GetTick() - tickstart) > ETH_SWRESET_TIMEOUT_MS))
+    if (((HAL_GetTick() - tick_start) > ETH_SWRESET_TIMEOUT_MS))
     {
-      heth->global_state = HAL_ETH_STATE_INIT;
-      return HAL_ERROR;
+      if (STM32_READ_BIT(p_ethx->DMAMR, ETH_DMAMR_SWR) != 0UL)
+      {
+        heth->global_state = HAL_ETH_STATE_INIT;
+        return HAL_ERROR;
+      }
     }
   }
 
-  /*------------------ Set MDIO clock --------------------*/
+  /* MDIO clock range depends on HCLK; configure before any PHY transactions. */
   ETH_SetMDIOClockRange(heth);
+  ETH_MAC_SetConfigDefault(heth);
+  ETH_MTL_SetConfigDefault(heth);
+  ETH_DMA_SetConfigDefault(heth);
 
-  /*------------------ MAC, MTL and DMA default Configurations -------------*/
-  ETH_MAC_Init(heth);
-  ETH_MTL_Init(heth);
-  ETH_DMA_Init(heth);
-
-  /* Apply All DMA and MTL Tx channels Default configurations */
+  /* Apply per-channel defaults so unused channels are still in a defined state. */
   for (uint32_t ch = 0; ch < USE_HAL_ETH_MAX_TX_CH_NB; ch++)
   {
-    ETH_ChannelTxInit(heth, ch);
+    ETH_SetTxChannelDefaultConfig(heth, ch);
   }
 
-  /* Apply All DMA and MTL Rx channels Default configurations */
   for (uint32_t ch = 0; ch < USE_HAL_ETH_MAX_RX_CH_NB; ch++)
   {
-    ETH_ChannelRxInit(heth, ch);
+    ETH_SetRxChannelDefaultConfig(heth, ch);
   }
 
-  /*--------------------- Ethernet MAC Address Configuration ------------------*/
-  /* Set MAC addr bits 32 to 47 */
-  STM32_WRITE_REG(p_Ethx->MACA0HR,
-                  (((uint32_t)p_config->mac_addr[5] << 8) |
+  STM32_WRITE_REG(p_ethx->MACA0HR,
+                  (((uint32_t)p_config->mac_addr[5] << 8U) |
                    (uint32_t)p_config->mac_addr[4]));
 
-  /* Set MAC addr bits 0 to 31 */
-  STM32_WRITE_REG(p_Ethx->MACA0LR,
-                  (((uint32_t)p_config->mac_addr[3] << 24) |
-                   ((uint32_t)p_config->mac_addr[2] << 16) |
-                   ((uint32_t)p_config->mac_addr[1] << 8)  |
+  STM32_WRITE_REG(p_ethx->MACA0LR,
+                  (((uint32_t)p_config->mac_addr[3] << 24U) |
+                   ((uint32_t)p_config->mac_addr[2] << 16U) |
+                   ((uint32_t)p_config->mac_addr[1] << 8U)  |
                    (uint32_t)p_config->mac_addr[0]));
 
-  /* Mask Rx MMC Interrupts */
-  STM32_SET_BIT(p_Ethx->MMC_RX_INTERRUPT_MASK,
-                ETH_MMC_RX_INTERRUPT_MASK_RXLPITRCIM  |
-                ETH_MMC_RX_INTERRUPT_MASK_RXLPIUSCIM  |
-                ETH_MMC_RX_INTERRUPT_MASK_RXUCGPIM    |
-                ETH_MMC_RX_INTERRUPT_MASK_RXALGNERPIM |
-                ETH_MMC_RX_INTERRUPT_MASK_RXCRCERPIM);
+  /* Mask MMC interrupts by default (stats-only, avoid IRQ noise). */
+  STM32_SET_BIT(p_ethx->MMC_RX_INTERRUPT_MASK, ETH_MMC_RX_INTERRUPT_MASK_ALL);
+  STM32_SET_BIT(p_ethx->MMC_TX_INTERRUPT_MASK, ETH_MMC_TX_INTERRUPT_MASK_ALL);
 
-  /* Mask Tx MMC Interrupts */
-  STM32_SET_BIT(p_Ethx->MMC_TX_INTERRUPT_MASK,
-                ETH_MMC_TX_INTERRUPT_MASK_TXLPITRCIM  |
-                ETH_MMC_TX_INTERRUPT_MASK_TXLPIUSCIM  |
-                ETH_MMC_TX_INTERRUPT_MASK_TXGPKTIM    |
-                ETH_MMC_TX_INTERRUPT_MASK_TXMCOLGPIM  |
-                ETH_MMC_TX_INTERRUPT_MASK_TXSCOLGPIM);
-
+  heth->global_state = HAL_ETH_STATE_CONFIGURED;
   return HAL_OK;
 }
 
@@ -1596,6 +1651,13 @@ void HAL_ETH_GetConfig(const hal_eth_handle_t *heth, hal_eth_config_t *p_config)
   ASSERT_DBG_PARAM(p_config != NULL);
   ASSERT_DBG_STATE(heth->global_state, (uint32_t)HAL_ETH_STATE_CONFIGURED);
 
+#if defined(USE_HAL_CHECK_PARAM) && (USE_HAL_CHECK_PARAM == 1)
+  if (p_config == NULL)
+  {
+    return;
+  }
+#endif /* USE_HAL_CHECK_PARAM */
+
   if (LL_SBS_GetETHPHYInterface(LL_SBS_PERIPH_ETH1) == LL_SBS_ETHPHY_ITF_GMII_MII)
   {
     p_config->media_interface = HAL_ETH_MEDIA_IF_MII;
@@ -1605,19 +1667,15 @@ void HAL_ETH_GetConfig(const hal_eth_handle_t *heth, hal_eth_config_t *p_config)
     p_config->media_interface = HAL_ETH_MEDIA_IF_RMII;
   }
 
-  /*--------------------- ETHERNET MAC Address Configuration ------------------*/
-  /* Get MAC addr bits 0 to 31 */
   uint32_t macaddrlr = STM32_READ_REG(ETH_GET_INSTANCE(heth)->MACA0LR);
-  /* Get MAC addr bits 32 to 47 */
   uint32_t macaddrhr = STM32_READ_REG(ETH_GET_INSTANCE(heth)->MACA0HR);
 
-  /* Fill MAC address (mac_addr[0] = lowest byte) */
-  p_config->mac_addr[0] = (uint8_t)((macaddrlr >> 0U)  & 0xFFU);
-  p_config->mac_addr[1] = (uint8_t)((macaddrlr >> 8U)  & 0xFFU);
-  p_config->mac_addr[2] = (uint8_t)((macaddrlr >> 16U) & 0xFFU);
-  p_config->mac_addr[3] = (uint8_t)((macaddrlr >> 24U) & 0xFFU);
-  p_config->mac_addr[4] = (uint8_t)((macaddrhr >> 0U)  & 0xFFU);
-  p_config->mac_addr[5] = (uint8_t)((macaddrhr >> 8U)  & 0xFFU);
+  p_config->mac_addr[0] = (uint8_t)(macaddrlr & 0xFFUL);
+  p_config->mac_addr[1] = (uint8_t)((macaddrlr >> 8U)  & 0xFFUL);
+  p_config->mac_addr[2] = (uint8_t)((macaddrlr >> 16U) & 0xFFUL);
+  p_config->mac_addr[3] = (uint8_t)((macaddrlr >> 24U) & 0xFFUL);
+  p_config->mac_addr[4] = (uint8_t)(macaddrhr & 0xFFUL);
+  p_config->mac_addr[5] = (uint8_t)((macaddrhr >> 8U)  & 0xFFUL);
 }
 
 /**
@@ -1675,15 +1733,15 @@ This subsection provides functions allowing to configure the Ethernet Sub-Blocks
   *                       that will be filled with the current MAC configuration
   *                       read from the hardware registers.
   *
+  * @pre @p heth must not be @c NULL.
+  * @pre @p p_macconf must not be @c NULL.
+  * @pre @p heth->global_state must be equal to @ref HAL_ETH_STATE_CONFIGURED.
+  *
   * @note This API only queries the hardware registers. It does not modify
   *       any MAC configuration.
   * @note The Ethernet HAL handle @p heth must be in the @ref HAL_ETH_STATE_CONFIGURED
   *       state when calling this function; otherwise an assertion can be raised
   *       in debug builds.
-  *
-  * @pre @p heth must not be @c NULL.
-  * @pre @p p_macconf must not be @c NULL.
-  * @pre @p heth->global_state must be equal to @ref HAL_ETH_STATE_CONFIGURED.
   */
 void HAL_ETH_MAC_GetConfig(const hal_eth_handle_t *heth, hal_eth_mac_config_t *p_macconf)
 {
@@ -1691,77 +1749,83 @@ void HAL_ETH_MAC_GetConfig(const hal_eth_handle_t *heth, hal_eth_mac_config_t *p
   ASSERT_DBG_PARAM(p_macconf != NULL);
   ASSERT_DBG_STATE(heth->global_state, (uint32_t)HAL_ETH_STATE_CONFIGURED);
 
-  const ETH_TypeDef *p_eth_instance = ETH_GET_INSTANCE(heth);
+#if defined(USE_HAL_CHECK_PARAM) && (USE_HAL_CHECK_PARAM == 1)
+  if (p_macconf == NULL)
+  {
+    return;
+  }
+#endif /* USE_HAL_CHECK_PARAM */
 
-  /* Get MAC parameters */
-  p_macconf->link_config.speed = (hal_eth_mac_speed_t)((uint32_t)STM32_READ_BIT(p_eth_instance->MACCR,
+  const ETH_TypeDef *p_ethx = ETH_GET_INSTANCE(heth);
+
+  p_macconf->link_config.speed = (hal_eth_mac_speed_t)((uint32_t)STM32_READ_BIT(p_ethx->MACCR,
                                                                                 (ETH_MACCR_FES)));
-  p_macconf->link_config.duplex_mode = (hal_eth_mac_duplex_mode_t)((uint32_t)STM32_READ_BIT(p_eth_instance->MACCR,
+  p_macconf->link_config.duplex_mode = (hal_eth_mac_duplex_mode_t)((uint32_t)STM32_READ_BIT(p_ethx->MACCR,
                                                                    ETH_MACCR_DM));
-  p_macconf->loopback_mode = (hal_eth_mac_loopback_ctrl_t)((uint32_t)STM32_READ_BIT(p_eth_instance->MACCR,
+  p_macconf->loopback_mode = (hal_eth_mac_loopback_ctrl_t)((uint32_t)STM32_READ_BIT(p_ethx->MACCR,
                                                            ETH_MACCR_LM));
-  p_macconf->src_addr_ctrl = (hal_eth_mac_src_addr_ctrl_t)((uint32_t)STM32_READ_BIT(p_eth_instance->MACCR,
+  p_macconf->src_addr_ctrl = (hal_eth_mac_src_addr_ctrl_t)((uint32_t)STM32_READ_BIT(p_ethx->MACCR,
                                                            ETH_MACCR_SARC));
-  p_macconf->inter_pkt_gap_value = (hal_eth_mac_inter_pkt_gap_t)((uint32_t)STM32_READ_BIT(p_eth_instance->MACCR,
+  p_macconf->inter_pkt_gap_value = (hal_eth_mac_inter_pkt_gap_t)((uint32_t)STM32_READ_BIT(p_ethx->MACCR,
                                                                  ETH_MACCR_IPG));
-  p_macconf->back_off_limit = (hal_eth_mac_back_off_limit_t)((uint32_t)STM32_READ_BIT(p_eth_instance->MACCR,
+  p_macconf->back_off_limit = (hal_eth_mac_back_off_limit_t)((uint32_t)STM32_READ_BIT(p_ethx->MACCR,
                                                              ETH_MACCR_BL));
-  p_macconf->preamble_length = (hal_eth_mac_preeamble_length_t)((uint32_t)STM32_READ_BIT(p_eth_instance->MACCR,
+  p_macconf->preamble_length = (hal_eth_mac_preeamble_length_t)((uint32_t)STM32_READ_BIT(p_ethx->MACCR,
                                                                 ETH_MACCR_PRELEN));
   p_macconf->giant_pkt_size_limit_ctrl = (hal_eth_mac_gpkt_sz_limit_ctrl_t)
-                                         ((uint32_t)STM32_READ_BIT(p_eth_instance->MACCR, ETH_MACCR_GPSLCE));
-  p_macconf->support_2K_pkt = (hal_eth_mac_2k_pkt_len_ctrl_t)((uint32_t)STM32_READ_BIT(p_eth_instance->MACCR,
+                                         ((uint32_t)STM32_READ_BIT(p_ethx->MACCR, ETH_MACCR_GPSLCE));
+  p_macconf->support_2K_pkt = (hal_eth_mac_2k_pkt_len_ctrl_t)((uint32_t)STM32_READ_BIT(p_ethx->MACCR,
                                                               ETH_MACCR_S2KP));
-  p_macconf->crc_strip_type_pkt = (hal_eth_mac_crc_strip_pkt_ctrl_t)((uint32_t)STM32_READ_BIT(p_eth_instance->MACCR,
+  p_macconf->crc_strip_type_pkt = (hal_eth_mac_crc_strip_pkt_ctrl_t)((uint32_t)STM32_READ_BIT(p_ethx->MACCR,
                                                                      ETH_MACCR_CST));
-  p_macconf->auto_pad_crc_strip = (hal_eth_mac_auto_pad_crc_s_ctrl_t)((uint32_t)STM32_READ_BIT(p_eth_instance->MACCR,
+  p_macconf->auto_pad_crc_strip = (hal_eth_mac_auto_pad_crc_s_ctrl_t)((uint32_t)STM32_READ_BIT(p_ethx->MACCR,
                                                                       ETH_MACCR_ACS));
-  p_macconf->tx_jabber = (hal_eth_mac_tx_jabber_tim_ctrl_t)((uint32_t)STM32_READ_BIT(p_eth_instance->MACCR,
+  p_macconf->tx_jabber = (hal_eth_mac_tx_jabber_tim_ctrl_t)((uint32_t)STM32_READ_BIT(p_ethx->MACCR,
                                                             ETH_MACCR_JD));
-  p_macconf->cs_before_transmit = (hal_eth_mac_cs_before_tr_ctrl_t)((uint32_t)STM32_READ_BIT(p_eth_instance->MACCR,
+  p_macconf->cs_before_transmit = (hal_eth_mac_cs_before_tr_ctrl_t)((uint32_t)STM32_READ_BIT(p_ethx->MACCR,
                                                                     ETH_MACCR_ECRSFD));
-  p_macconf->cs_during_transmit = (hal_eth_mac_cs_during_tr_ctrl_t)((uint32_t)STM32_READ_BIT(p_eth_instance->MACCR,
+  p_macconf->cs_during_transmit = (hal_eth_mac_cs_during_tr_ctrl_t)((uint32_t)STM32_READ_BIT(p_ethx->MACCR,
                                                                     ETH_MACCR_DCRS));
-  p_macconf->retry_transmission = (hal_eth_mac_retry_tr_ctrl_t)((uint32_t)STM32_READ_BIT(p_eth_instance->MACCR,
+  p_macconf->retry_transmission = (hal_eth_mac_retry_tr_ctrl_t)((uint32_t)STM32_READ_BIT(p_ethx->MACCR,
                                                                 ETH_MACCR_DR));
-  p_macconf->rx_watchdog = (hal_eth_mac_rx_wd_tim_ctrl_t)((uint32_t)STM32_READ_BIT(p_eth_instance->MACCR,
+  p_macconf->rx_watchdog = (hal_eth_mac_rx_wd_tim_ctrl_t)((uint32_t)STM32_READ_BIT(p_ethx->MACCR,
                                                           ETH_MACCR_WD));
-  p_macconf->rx_jumbo_pkt = (hal_eth_mac_rx_jumbo_pkt_ctrl_t)((uint32_t)STM32_READ_BIT(p_eth_instance->MACCR,
+  p_macconf->rx_jumbo_pkt = (hal_eth_mac_rx_jumbo_pkt_ctrl_t)((uint32_t)STM32_READ_BIT(p_ethx->MACCR,
                                                               ETH_MACCR_JE));
-  p_macconf->rx_csum_offload = (hal_eth_mac_rx_csum_pkt_ctrl_t)((uint32_t)STM32_READ_BIT(p_eth_instance->MACCR,
+  p_macconf->rx_csum_offload = (hal_eth_mac_rx_csum_pkt_ctrl_t)((uint32_t)STM32_READ_BIT(p_ethx->MACCR,
                                                                 ETH_MACCR_IPC));
-  p_macconf->rx_receive_own = (hal_eth_mac_rx_receive_own_ctrl_t)((uint32_t)STM32_READ_BIT(p_eth_instance->MACCR,
+  p_macconf->rx_receive_own = (hal_eth_mac_rx_receive_own_ctrl_t)((uint32_t)STM32_READ_BIT(p_ethx->MACCR,
                                                                   ETH_MACCR_DO));
   p_macconf->crc_checking_rx_pkts = (hal_eth_mac_rx_crc_pkt_chk_ctrl_t)
-                                    ((uint32_t)STM32_READ_BIT(p_eth_instance->MACECR,
+                                    ((uint32_t)STM32_READ_BIT(p_ethx->MACECR,
                                                               ETH_MACECR_DCRCC));
-  p_macconf->deferral_check = (hal_eth_mac_deferral_check_ctrl_t)((uint32_t)STM32_READ_BIT(p_eth_instance->MACCR,
+  p_macconf->deferral_check = (hal_eth_mac_deferral_check_ctrl_t)((uint32_t)STM32_READ_BIT(p_ethx->MACCR,
                                                                   ETH_MACCR_DC));
   p_macconf->uc_slow_proto_detect = (hal_eth_mac_uc_slow_proto_ctrl_t)
-                                    ((uint32_t)STM32_READ_BIT(p_eth_instance->MACECR,
+                                    ((uint32_t)STM32_READ_BIT(p_ethx->MACECR,
                                                               ETH_MACECR_USP));
-  p_macconf->slow_proto_detect = (hal_eth_mac_slow_proto_ctrl_t)((uint32_t)STM32_READ_BIT(p_eth_instance->MACECR,
+  p_macconf->slow_proto_detect = (hal_eth_mac_slow_proto_ctrl_t)((uint32_t)STM32_READ_BIT(p_ethx->MACECR,
                                                                  ETH_MACECR_SPEN));
-  p_macconf->giant_pkt_size_limit = STM32_READ_BIT(p_eth_instance->MACECR, ETH_MACECR_GPSL);
+  p_macconf->giant_pkt_size_limit = STM32_READ_BIT(p_ethx->MACECR, ETH_MACECR_GPSL);
   p_macconf->ext_inter_pkt_gap_ctrl = (hal_eth_mac_ex_int_pkt_gap_ctrl_t)((uint32_t)STM32_READ_BIT(
-                                                                            p_eth_instance->MACECR, ETH_MACECR_EIPGEN));
-  p_macconf->ext_inter_pkt_gap = (uint32_t)(STM32_READ_BIT(p_eth_instance->MACECR, ETH_MACECR_EIPG)
+                                                                            p_ethx->MACECR, ETH_MACECR_EIPGEN));
+  p_macconf->ext_inter_pkt_gap = (uint32_t)(STM32_READ_BIT(p_ethx->MACECR, ETH_MACECR_EIPG)
                                             >> ETH_MACECR_EIPG_Pos);
-  p_macconf->programmable_wd = (hal_eth_mac_prog_wd_ctrl_t)((uint32_t)STM32_READ_BIT(p_eth_instance->MACWJBTR,
+  p_macconf->programmable_wd = (hal_eth_mac_prog_wd_ctrl_t)((uint32_t)STM32_READ_BIT(p_ethx->MACWJBTR,
                                                             ETH_MACWJBTR_PWE));
-  p_macconf->rx_wd_timeout_byte = (hal_eth_mac_rx_wd_timeout_t)((uint32_t)STM32_READ_BIT(p_eth_instance->MACWJBTR,
+  p_macconf->rx_wd_timeout_byte = (hal_eth_mac_rx_wd_timeout_t)((uint32_t)STM32_READ_BIT(p_ethx->MACWJBTR,
                                                                 ETH_MACWJBTR_WTO));
-  p_macconf->tx_pause_time = (uint32_t)(STM32_READ_BIT(p_eth_instance->MACQTXFCR, ETH_MACQTXFCR_PT)
+  p_macconf->tx_pause_time = (uint32_t)(STM32_READ_BIT(p_ethx->MACQTXFCR, ETH_MACQTXFCR_PT)
                                         >> ETH_MACQTXFCR_PT_Pos);
-  p_macconf->zero_quanta_pause = (hal_eth_mac_zero_q_pause_ctrl_t)((uint32_t)STM32_READ_BIT(p_eth_instance->MACQTXFCR,
+  p_macconf->zero_quanta_pause = (hal_eth_mac_zero_q_pause_ctrl_t)((uint32_t)STM32_READ_BIT(p_ethx->MACQTXFCR,
                                                                    ETH_MACQTXFCR_DZPQ));
-  p_macconf->pause_low_threshold = (hal_eth_mac_pause_low_thr_t)((uint32_t)STM32_READ_BIT(p_eth_instance->MACQTXFCR,
+  p_macconf->pause_low_threshold = (hal_eth_mac_pause_low_thr_t)((uint32_t)STM32_READ_BIT(p_ethx->MACQTXFCR,
                                                                  ETH_MACQTXFCR_PLT));
-  p_macconf->tr_flow_ctrl = (hal_eth_mac_tr_flow_ctrl_t)((uint32_t)STM32_READ_BIT(p_eth_instance->MACQTXFCR,
+  p_macconf->tr_flow_ctrl = (hal_eth_mac_tr_flow_ctrl_t)((uint32_t)STM32_READ_BIT(p_ethx->MACQTXFCR,
                                                                                   ETH_MACQTXFCR_TFE));
   p_macconf->uc_pause_pkt_detect = (hal_eth_mac_uc_pause_pkt_ctrl_t)((uint32_t)STM32_READ_BIT(
-                                                                       p_eth_instance->MACRXFCR, ETH_MACRXFCR_UP));
-  p_macconf->receive_flow_ctrl = (hal_eth_mac_receive_flow_ctrl_t)((uint32_t)STM32_READ_BIT(p_eth_instance->MACRXFCR,
+                                                                       p_ethx->MACRXFCR, ETH_MACRXFCR_UP));
+  p_macconf->receive_flow_ctrl = (hal_eth_mac_receive_flow_ctrl_t)((uint32_t)STM32_READ_BIT(p_ethx->MACRXFCR,
                                                                    ETH_MACRXFCR_RFE));
 }
 
@@ -1815,30 +1879,21 @@ void HAL_ETH_MAC_GetConfig(const hal_eth_handle_t *heth, hal_eth_mac_config_t *p
   * @pre @p heth must not be @c NULL.
   * @pre @p p_macconf must not be @c NULL.
   * @pre @p heth->global_state must be equal to @ref HAL_ETH_STATE_CONFIGURED.
+  * @note In this implementation, invalid parameters are primarily handled
+  *       via debug assertions. When `USE_HAL_CHECK_PARAM` is enabled,
+  *       a `HAL_INVALID_PARAM` status can be returned when @p p_macconf
+  *       is @c NULL.
   *
   * @retval HAL_OK           MAC configuration has been successfully applied.
   * @retval HAL_INVALID_PARAM
   *         - @p p_macconf is @c NULL when `USE_HAL_CHECK_PARAM` is enabled, or
   *         - One or more fields of @p p_macconf are invalid (only if your
   *           implementation uses this status in addition to assertions).
-  *
-  * @note In this implementation, invalid parameters are primarily handled
-  *       via debug assertions. When `USE_HAL_CHECK_PARAM` is enabled,
-  *       a `HAL_INVALID_PARAM` status can be returned when @p p_macconf
-  *       is @c NULL.
   */
 hal_status_t HAL_ETH_MAC_SetConfig(hal_eth_handle_t *heth, const hal_eth_mac_config_t *p_macconf)
 {
   ASSERT_DBG_PARAM(heth != NULL);
   ASSERT_DBG_PARAM(p_macconf != NULL);
-
-#if defined(USE_HAL_CHECK_PARAM) && (USE_HAL_CHECK_PARAM == 1)
-  if (p_macconf == NULL)
-  {
-    return HAL_INVALID_PARAM;
-  }
-#endif /* USE_HAL_CHECK_PARAM */
-
   ASSERT_DBG_PARAM(IS_ETH_MAC_SPEED(p_macconf->link_config.speed));
   ASSERT_DBG_PARAM(IS_ETH_MAC_DUPLEX_MODE(p_macconf->link_config.duplex_mode));
   ASSERT_DBG_PARAM(IS_ETH_MAC_LOOPBACK_CTRL(p_macconf->loopback_mode));
@@ -1875,8 +1930,14 @@ hal_status_t HAL_ETH_MAC_SetConfig(hal_eth_handle_t *heth, const hal_eth_mac_con
   ASSERT_DBG_PARAM(IS_ETH_MAC_RECEIVE_FLOW_CTRL(p_macconf->receive_flow_ctrl));
   ASSERT_DBG_STATE(heth->global_state, (uint32_t)HAL_ETH_STATE_CONFIGURED);
 
-  /* Set the MAC configuration */
-  ETH_SetMACConfig(heth, p_macconf);
+#if defined(USE_HAL_CHECK_PARAM) && (USE_HAL_CHECK_PARAM == 1)
+  if (p_macconf == NULL)
+  {
+    return HAL_INVALID_PARAM;
+  }
+#endif /* USE_HAL_CHECK_PARAM */
+
+  ETH_MAC_SetConfig(heth, p_macconf);
 
   return HAL_OK;
 }
@@ -1905,15 +1966,15 @@ hal_status_t HAL_ETH_MAC_SetConfig(hal_eth_handle_t *heth, const hal_eth_mac_con
   *                       that will be filled with the current DMA configuration
   *                       read from the hardware registers.
   *
+  * @pre @p heth must not be @c NULL.
+  * @pre @p p_dmaconf must not be @c NULL.
+  * @pre @p heth->global_state must be equal to @ref HAL_ETH_STATE_CONFIGURED.
+  *
   * @note This API only queries the DMA configuration registers. It does not
   *       modify any configuration or DMA state.
   * @note The Ethernet HAL handle @p heth must be in the
   *       @ref HAL_ETH_STATE_CONFIGURED state when calling this function;
   *       otherwise an assertion is raised in debug builds.
-  *
-  * @pre @p heth must not be @c NULL.
-  * @pre @p p_dmaconf must not be @c NULL.
-  * @pre @p heth->global_state must be equal to @ref HAL_ETH_STATE_CONFIGURED.
   */
 void HAL_ETH_DMA_GetConfig(const hal_eth_handle_t *heth, hal_eth_dma_config_t *p_dmaconf)
 {
@@ -1921,18 +1982,25 @@ void HAL_ETH_DMA_GetConfig(const hal_eth_handle_t *heth, hal_eth_dma_config_t *p
   ASSERT_DBG_PARAM(p_dmaconf != NULL);
   ASSERT_DBG_STATE(heth->global_state, (uint32_t)HAL_ETH_STATE_CONFIGURED);
 
-  const ETH_TypeDef *p_eth_instance = ETH_GET_INSTANCE(heth);
+#if defined(USE_HAL_CHECK_PARAM) && (USE_HAL_CHECK_PARAM == 1)
+  if (p_dmaconf == NULL)
+  {
+    return;
+  }
+#endif /* USE_HAL_CHECK_PARAM */
 
-  p_dmaconf->addr_aligned_beats = (hal_eth_dma_addr_align_ctrl_t)((uint32_t)STM32_READ_BIT(p_eth_instance->DMASBMR,
+  const ETH_TypeDef *p_ethx = ETH_GET_INSTANCE(heth);
+
+  p_dmaconf->addr_aligned_beats = (hal_eth_dma_addr_align_ctrl_t)((uint32_t)STM32_READ_BIT(p_ethx->DMASBMR,
                                                                   ETH_DMASBMR_AAL));
-  p_dmaconf->burst_mode = (hal_eth_dma_burst_len_mode_t)((uint32_t)STM32_READ_BIT(p_eth_instance->DMASBMR,
+  p_dmaconf->burst_mode = (hal_eth_dma_burst_len_mode_t)((uint32_t)STM32_READ_BIT(p_ethx->DMASBMR,
                                                                                   ETH_DMASBMR_FB));
-  p_dmaconf->mixed_burst = (hal_eth_dma_mixed_burst_ctrl_t)((uint32_t)STM32_READ_BIT(p_eth_instance->DMASBMR,
+  p_dmaconf->mixed_burst = (hal_eth_dma_mixed_burst_ctrl_t)((uint32_t)STM32_READ_BIT(p_ethx->DMASBMR,
                                                             ETH_DMASBMR_MB));
-  p_dmaconf->rebuild_inc_burst = (hal_eth_dma_rebuild_inc_ctrl_t)((uint32_t)STM32_READ_BIT(p_eth_instance->DMASBMR,
+  p_dmaconf->rebuild_inc_burst = (hal_eth_dma_rebuild_inc_ctrl_t)((uint32_t)STM32_READ_BIT(p_ethx->DMASBMR,
                                                                   ETH_DMASBMR_RB));
   p_dmaconf->tr_priority = (hal_eth_dma_tr_prio_ctrl_t)((uint32_t)STM32_READ_BIT(
-                                                          p_eth_instance->DMAMR, ETH_DMAMR_TXPR));
+                                                          p_ethx->DMAMR, ETH_DMAMR_TXPR));
 }
 
 /**
@@ -1971,19 +2039,24 @@ void HAL_ETH_DMA_GetConfig(const hal_eth_handle_t *heth, hal_eth_dma_config_t *p
   * @pre @p heth must not be @c NULL.
   * @pre @p p_dmaconf must not be @c NULL.
   * @pre @p heth->global_state must be equal to @ref HAL_ETH_STATE_CONFIGURED.
+  * @note In this implementation, most invalid parameters are handled via
+  *       debug assertions. When `USE_HAL_CHECK_PARAM` is enabled, a
+  *       `HAL_INVALID_PARAM` status is returned if @p p_dmaconf is @c NULL.
   *
   * @retval HAL_OK           DMA configuration has been successfully applied.
   * @retval HAL_INVALID_PARAM
   *         - @p p_dmaconf is @c NULL when `USE_HAL_CHECK_PARAM` is enabled.
-  *
-  * @note In this implementation, most invalid parameters are handled via
-  *       debug assertions. When `USE_HAL_CHECK_PARAM` is enabled, a
-  *       `HAL_INVALID_PARAM` status is returned if @p p_dmaconf is @c NULL.
   */
 hal_status_t HAL_ETH_DMA_SetConfig(hal_eth_handle_t *heth, const hal_eth_dma_config_t *p_dmaconf)
 {
   ASSERT_DBG_PARAM(heth != NULL);
   ASSERT_DBG_PARAM(p_dmaconf != NULL);
+  ASSERT_DBG_PARAM(IS_ETH_DMA_ADDR_ALIGNED_BEATS(p_dmaconf->addr_aligned_beats));
+  ASSERT_DBG_PARAM(IS_ETH_DMA_BURST_LEN_MODE(p_dmaconf->burst_mode));
+  ASSERT_DBG_PARAM(IS_ETH_DMA_MIXED_BURST_CTRL(p_dmaconf->mixed_burst));
+  ASSERT_DBG_PARAM(IS_ETH_DMA_REBUILD_INC_CTRL(p_dmaconf->rebuild_inc_burst));
+  ASSERT_DBG_PARAM(IS_ETH_DMA_TR_PRIO_CTRL(p_dmaconf->tr_priority));
+  ASSERT_DBG_STATE(heth->global_state, (uint32_t)HAL_ETH_STATE_CONFIGURED);
 
 #if defined(USE_HAL_CHECK_PARAM) && (USE_HAL_CHECK_PARAM == 1)
   if (p_dmaconf == NULL)
@@ -1992,15 +2065,7 @@ hal_status_t HAL_ETH_DMA_SetConfig(hal_eth_handle_t *heth, const hal_eth_dma_con
   }
 #endif /* USE_HAL_CHECK_PARAM */
 
-  ASSERT_DBG_PARAM(IS_ETH_DMA_ADDR_ALIGNED_BEATS(p_dmaconf->addr_aligned_beats));
-  ASSERT_DBG_PARAM(IS_ETH_DMA_BURST_LEN_MODE(p_dmaconf->burst_mode));
-  ASSERT_DBG_PARAM(IS_ETH_DMA_MIXED_BURST_CTRL(p_dmaconf->mixed_burst));
-  ASSERT_DBG_PARAM(IS_ETH_DMA_REBUILD_INC_CTRL(p_dmaconf->rebuild_inc_burst));
-  ASSERT_DBG_PARAM(IS_ETH_DMA_TR_PRIO_CTRL(p_dmaconf->tr_priority));
-  ASSERT_DBG_STATE(heth->global_state, (uint32_t)HAL_ETH_STATE_CONFIGURED);
-
-  /* Set the DMA configuration */
-  ETH_SetDMAConfig(heth, p_dmaconf);
+  ETH_DMA_SetConfig(heth, p_dmaconf);
 
   return HAL_OK;
 }
@@ -2026,15 +2091,15 @@ hal_status_t HAL_ETH_DMA_SetConfig(hal_eth_handle_t *heth, const hal_eth_dma_con
   *                       that will be filled with the current MTL configuration
   *                       read from the hardware registers.
   *
+  * @pre @p heth must not be @c NULL.
+  * @pre @p p_mtlconf must not be @c NULL.
+  * @pre @p heth->global_state must be equal to @ref HAL_ETH_STATE_CONFIGURED.
+  *
   * @note This API only queries the MTL configuration registers. It does not
   *       modify any configuration or MTL state.
   * @note The Ethernet HAL handle @p heth must be in the
   *       @ref HAL_ETH_STATE_CONFIGURED state when calling this function;
   *       otherwise an assertion can be raised in debug builds.
-  *
-  * @pre @p heth must not be @c NULL.
-  * @pre @p p_mtlconf must not be @c NULL.
-  * @pre @p heth->global_state must be equal to @ref HAL_ETH_STATE_CONFIGURED.
   */
 void HAL_ETH_MTL_GetConfig(const hal_eth_handle_t *heth, hal_eth_mtl_config_t *p_mtlconf)
 {
@@ -2042,8 +2107,15 @@ void HAL_ETH_MTL_GetConfig(const hal_eth_handle_t *heth, hal_eth_mtl_config_t *p
   ASSERT_DBG_PARAM(p_mtlconf != NULL);
   ASSERT_DBG_STATE(heth->global_state, (uint32_t)HAL_ETH_STATE_CONFIGURED);
 
-  const ETH_TypeDef *p_eth_instance = ETH_GET_INSTANCE(heth);
-  p_mtlconf->tx_fwd_status = (hal_eth_mtl_tx_fwd_status_ctrl_t)((uint32_t)STM32_READ_BIT(p_eth_instance->MTLOMR,
+#if defined(USE_HAL_CHECK_PARAM) && (USE_HAL_CHECK_PARAM == 1)
+  if (p_mtlconf == NULL)
+  {
+    return;
+  }
+#endif /* USE_HAL_CHECK_PARAM */
+
+  const ETH_TypeDef *p_ethx = ETH_GET_INSTANCE(heth);
+  p_mtlconf->tx_fwd_status = (hal_eth_mtl_tx_fwd_status_ctrl_t)((uint32_t)STM32_READ_BIT(p_ethx->MTLOMR,
                                                                 ETH_MTLOMR_DTXSTS));
 }
 
@@ -2081,18 +2153,20 @@ void HAL_ETH_MTL_GetConfig(const hal_eth_handle_t *heth, hal_eth_mtl_config_t *p
   * @pre @p p_mtlconf must not be @c NULL.
   * @pre @p heth->global_state must be equal to @ref HAL_ETH_STATE_CONFIGURED.
   *
-  * @retval HAL_OK           MTL configuration has been successfully applied.
-  * @retval HAL_INVALID_PARAM
-  *         - @p p_mtlconf is @c NULL when `USE_HAL_CHECK_PARAM` is enabled.
-  *
   * @note In this implementation, most invalid parameters are handled via
   *       debug assertions. When `USE_HAL_CHECK_PARAM` is enabled, a
   *       `HAL_INVALID_PARAM` status is returned if @p p_mtlconf is @c NULL.
+  *
+  * @retval HAL_OK           MTL configuration has been successfully applied.
+  * @retval HAL_INVALID_PARAM
+  *         - @p p_mtlconf is @c NULL when `USE_HAL_CHECK_PARAM` is enabled.
   */
 hal_status_t HAL_ETH_MTL_SetConfig(hal_eth_handle_t *heth, const hal_eth_mtl_config_t *p_mtlconf)
 {
   ASSERT_DBG_PARAM(heth != NULL);
   ASSERT_DBG_PARAM(p_mtlconf != NULL);
+  ASSERT_DBG_PARAM(IS_ETH_MTL_TX_FWD_STATUS_CTRL(p_mtlconf->tx_fwd_status));
+  ASSERT_DBG_STATE(heth->global_state, (uint32_t)HAL_ETH_STATE_CONFIGURED);
 
 #if defined(USE_HAL_CHECK_PARAM) && (USE_HAL_CHECK_PARAM == 1)
   if (p_mtlconf == NULL)
@@ -2101,11 +2175,7 @@ hal_status_t HAL_ETH_MTL_SetConfig(hal_eth_handle_t *heth, const hal_eth_mtl_con
   }
 #endif /* USE_HAL_CHECK_PARAM */
 
-  ASSERT_DBG_PARAM(IS_ETH_MTL_TX_FWD_STATUS_CTRL(p_mtlconf->tx_fwd_status));
-  ASSERT_DBG_STATE(heth->global_state, (uint32_t)HAL_ETH_STATE_CONFIGURED);
-
-  /* Set the MTL configuration */
-  ETH_SetMTLConfig(heth, p_mtlconf);
+  ETH_MTL_SetConfig(heth, p_mtlconf);
 
   return HAL_OK;
 }
@@ -2160,33 +2230,33 @@ This subsection provides functions allowing to configure the Ethernet Channels:
   * @pre The Tx channel state must be @ref HAL_ETH_CHANNEL_STATE_RESET or
   *      @ref HAL_ETH_CHANNEL_STATE_CONFIGURED.
   *
+  * @note In this implementation, most invalid parameters are handled via
+  *       debug assertions. When `USE_HAL_CHECK_PARAM` is enabled, a
+  *       `HAL_INVALID_PARAM` status is returned if @p p_chconf is @c NULL
+  *       or @p channel is invalid, or if descriptor alignment fails.
+  *
+  * @note The internal descriptor ring size is multiplied by
+  *       @ref ETH_MAX_DESC_PER_APP_BUF_CNT to account for both context
+  *       descriptors and data descriptors.Therefore, the application can
+  *       start the channel with a descriptor ring size that differs from the
+  *       size implied by @p p_chconf->max_app_buffers_num.
+  *
   * @retval HAL_OK           Tx channel configuration has been successfully applied.
   * @retval HAL_INVALID_PARAM
   *         - @p p_chconf is @c NULL when `USE_HAL_CHECK_PARAM` is enabled.
   *         - @p channel is invalid when `USE_HAL_CHECK_PARAM` is enabled.
   *         - The requested descriptor alignment cannot be satisfied by
-  *           @ref ETH_AlignDescSize.
-  *
-  * @note In this implementation, most invalid parameters are handled via
-  *       debug assertions. When `USE_HAL_CHECK_PARAM` is enabled, a
-  *       `HAL_INVALID_PARAM` status is returned if @p p_chconf is @c NULL
-  *       or @p channel is invalid, or if descriptor alignment fails.
+  *           the DMA descriptor size alignment constraints.
   */
 hal_status_t HAL_ETH_SetConfigTxChannel(hal_eth_handle_t *heth, uint32_t channel,
                                         const hal_eth_tx_channel_config_t *p_chconf)
 {
+  uint32_t ch = 0;
+  uint32_t desc_size_aligned = 0;
+
   ASSERT_DBG_PARAM(heth != NULL);
   ASSERT_DBG_PARAM(p_chconf != NULL);
   ASSERT_DBG_PARAM(IS_ETH_CHANNEL_TX_INDEX(channel));
-
-#if defined(USE_HAL_CHECK_PARAM) && (USE_HAL_CHECK_PARAM == 1)
-  if ((p_chconf == NULL) || (IS_ETH_CHANNEL_TX_INDEX(channel) == 0U))
-  {
-    return HAL_INVALID_PARAM;
-  }
-#endif /* USE_HAL_CHECK_PARAM */
-
-  ASSERT_DBG_STATE(heth->global_state, (uint32_t)HAL_ETH_STATE_CONFIGURED);
   ASSERT_DBG_PARAM(IS_ETH_DMA_TX_PBL_X8_MODE(p_chconf->dma_channel_config.tx_pbl_x8_mode));
   ASSERT_DBG_PARAM(IS_ETH_DMA_TX_BURST_LENGTH(p_chconf->dma_channel_config.tx_dma_burst_length));
   ASSERT_DBG_PARAM(IS_ETH_DMA_TX_SEC_PKT_OP_CTRL(p_chconf->dma_channel_config.tx_second_pkt_operate));
@@ -2197,39 +2267,36 @@ hal_status_t HAL_ETH_SetConfigTxChannel(hal_eth_handle_t *heth, uint32_t channel
   ASSERT_DBG_PARAM(IS_ETH_FIFO_EVENT_MODE(p_chconf->fifo_event_config.event_mode));
   ASSERT_DBG_PARAM(IS_ETH_FIFO_EVENT_PARAMS(p_chconf->fifo_event_config.event_mode,
                                             p_chconf->fifo_event_config.event_params));
+  ASSERT_DBG_STATE(heth->global_state, (uint32_t)HAL_ETH_STATE_CONFIGURED);
 
-  uint32_t ch = 0;
-  uint32_t desc_size_aligned = 0;
+#if defined(USE_HAL_CHECK_PARAM) && (USE_HAL_CHECK_PARAM == 1)
+  if ((p_chconf == NULL) || (IS_ETH_CHANNEL_TX_INDEX(channel) == 0UL))
+  {
+    return HAL_INVALID_PARAM;
+  }
+#endif /* USE_HAL_CHECK_PARAM */
 
-  /* Retrieve the Channel Id. */
   ETH_GetTXChIndex(&ch, channel);
 
-  ASSERT_DBG_STATE(heth->tx_channels[ch].channel_state, (uint32_t)HAL_ETH_CHANNEL_STATE_RESET |
-                   (uint32_t)HAL_ETH_CHANNEL_STATE_CONFIGURED);
-
-  /* Compute aligned descriptor size and ensure hardware skip-length constraints are respected. */
+  /* Align descriptor size (DMA DSL constraints). */
   if (ETH_AlignDescSize(p_chconf->req_desc_size_align_byte, &desc_size_aligned) != HAL_OK)
   {
     return HAL_INVALID_PARAM;
   }
 
-  /* Move Tx channel state to configured. */
-  heth->tx_channels[ch].channel_state = HAL_ETH_CHANNEL_STATE_CONFIGURED;
-  /* Align the eth_dma_descriptor_t size to the requested alignment size. */
+  ASSERT_DBG_STATE(heth->tx_channels[ch].channel_state, (uint32_t)HAL_ETH_CHANNEL_STATE_RESET |
+                   (uint32_t)HAL_ETH_CHANNEL_STATE_CONFIGURED);
+
   heth->tx_channels[ch].tx_desc_list.desc_len_byte = desc_size_aligned;
+  heth->tx_channels[ch].tx_desc_list.total_desc_cnt = p_chconf->max_app_buffers_num * ETH_MAX_DESC_PER_APP_BUF_CNT;
+  heth->tx_channels[ch].fifo_event_config.event_mode = p_chconf->fifo_event_config.event_mode;
+  heth->tx_channels[ch].fifo_event_config.event_params = p_chconf->fifo_event_config.event_params;
 
-  /* Get the max buffer number requested. */
-  heth->tx_channels[ch].tx_desc_list.total_desc_cnt = p_chconf->max_app_buffers_num * 2UL;
-  /* Get the requested event mode. */
-  heth->tx_channels[ch].fifo_event_config.event_mode       = p_chconf->fifo_event_config.event_mode;
-  heth->tx_channels[ch].fifo_event_config.event_params     = p_chconf->fifo_event_config.event_params;
+  ETH_DMA_SetConfigTxChannel(heth, ch, &p_chconf->dma_channel_config);
 
-  /*------------------ Set DMA Tx Descriptors Configuration ----------------------*/
-  ETH_SetDMATxChannelConfig(heth, ch, &p_chconf->dma_channel_config);
+  ETH_MTL_SetConfigTxChannel(heth, ch, &p_chconf->mtl_queue_config);
 
-  /*------------------ Set MTL Tx Queue Configuration ---------------------------*/
-  ETH_SetMtlTxChannelConfig(heth, ch, &p_chconf->mtl_queue_config);
-
+  heth->tx_channels[ch].channel_state = HAL_ETH_CHANNEL_STATE_CONFIGURED;
   return HAL_OK;
 }
 
@@ -2255,8 +2322,7 @@ hal_status_t HAL_ETH_SetConfigTxChannel(hal_eth_handle_t *heth, uint32_t channel
   * - Validates the @p channel index and Rx channel parameters.
   * - Ensures the Rx buffer length is aligned to the bus data width
   *   (`ETH_BUS_DATA_WIDTH_BYTE`).
-  * - Checks and aligns the descriptor size to the requested alignment
-  *   using @ref ETH_AlignDescSize.
+  * - Checks and aligns the descriptor size to the requested alignment.
   * - Updates the internal Rx channel state to
   *   @ref HAL_ETH_CHANNEL_STATE_CONFIGURED when successful.
   *
@@ -2276,34 +2342,34 @@ hal_status_t HAL_ETH_SetConfigTxChannel(hal_eth_handle_t *heth, uint32_t channel
   * @pre The Rx channel state must be @ref HAL_ETH_CHANNEL_STATE_RESET or
   *      @ref HAL_ETH_CHANNEL_STATE_CONFIGURED.
   *
+  * @note In this implementation, most invalid parameters are handled via
+  *       debug assertions. When `USE_HAL_CHECK_PARAM` is enabled, a
+  *       `HAL_INVALID_PARAM` status is returned if @p p_chconf is @c NULL,
+  *       @p channel is invalid, or if buffer or descriptor alignment checks fail.
+  *
+  * @note The internal descriptor ring size is multiplied by
+  *       @ref ETH_MAX_DESC_PER_APP_BUF_CNT to account for both context
+  *       descriptors and data descriptors.Therefore, the application can
+  *       start the channel with a descriptor ring size that differs from the
+  *       size implied by @p p_chconf->max_app_buffers_num.
+  *
   * @retval HAL_OK           Rx channel configuration has been successfully applied.
   * @retval HAL_INVALID_PARAM
   *         - @p p_chconf is @c NULL when `USE_HAL_CHECK_PARAM` is enabled.
   *         - @p channel is invalid when `USE_HAL_CHECK_PARAM` is enabled.
   *         - The Rx buffer length is not aligned to `ETH_BUS_DATA_WIDTH_BYTE`.
   *         - The requested descriptor alignment cannot be satisfied by
-  *           @ref ETH_AlignDescSize.
-  *
-  * @note In this implementation, most invalid parameters are handled via
-  *       debug assertions. When `USE_HAL_CHECK_PARAM` is enabled, a
-  *       `HAL_INVALID_PARAM` status is returned if @p p_chconf is @c NULL,
-  *       @p channel is invalid, or if buffer or descriptor alignment checks fail.
+  *           the DMA descriptor size alignment constraints.
   */
 hal_status_t HAL_ETH_SetConfigRxChannel(hal_eth_handle_t *heth, uint32_t channel,
                                         const hal_eth_rx_channel_config_t *p_chconf)
 {
+  uint32_t ch = 0;
+  uint32_t desc_size_aligned = 0;
+
   ASSERT_DBG_PARAM(heth != NULL);
   ASSERT_DBG_PARAM(p_chconf != NULL);
   ASSERT_DBG_PARAM(IS_ETH_CHANNEL_RX_INDEX(channel));
-
-#if defined(USE_HAL_CHECK_PARAM) && (USE_HAL_CHECK_PARAM == 1)
-  if ((p_chconf == NULL) || (IS_ETH_CHANNEL_RX_INDEX(channel) == 0U))
-  {
-    return HAL_INVALID_PARAM;
-  }
-#endif /* USE_HAL_CHECK_PARAM */
-
-  ASSERT_DBG_STATE(heth->global_state, (uint32_t)HAL_ETH_STATE_CONFIGURED);
   ASSERT_DBG_PARAM(IS_ETH_DMA_RX_BURST_LENGTH(p_chconf->dma_channel_config.rx_dma_burst_length));
   ASSERT_DBG_PARAM(IS_ETH_DMA_RX_BUFFER_LEN_ALIGNED(p_chconf->dma_channel_config.rx_buffer_len_byte));
   ASSERT_DBG_PARAM(IS_ETH_MTL_RX_OPS_MODE(p_chconf->mtl_queue_config.queue_op_mode));
@@ -2316,43 +2382,38 @@ hal_status_t HAL_ETH_SetConfigRxChannel(hal_eth_handle_t *heth, uint32_t channel
   ASSERT_DBG_PARAM(IS_ETH_FIFO_EVENT_MODE(p_chconf->fifo_event_config.event_mode));
   ASSERT_DBG_PARAM(IS_ETH_FIFO_EVENT_PARAMS(p_chconf->fifo_event_config.event_mode,
                                             p_chconf->fifo_event_config.event_params));
-  uint32_t ch = 0;
-  uint32_t desc_size_aligned = 0;
+  ASSERT_DBG_STATE(heth->global_state, (uint32_t)HAL_ETH_STATE_CONFIGURED);
 
-  /* Retrieve the Channel Id. */
-  ETH_GetRXChIndex(&ch, channel);
+#if defined(USE_HAL_CHECK_PARAM) && (USE_HAL_CHECK_PARAM == 1)
+  if ((p_chconf == NULL) || (IS_ETH_CHANNEL_RX_INDEX(channel) == 0UL))
+  {
+    return HAL_INVALID_PARAM;
+  }
+#endif /* USE_HAL_CHECK_PARAM */
 
-  /* Assert on Channel State. */
-  ASSERT_DBG_STATE(heth->rx_channels[ch].channel_state, (uint32_t)HAL_ETH_CHANNEL_STATE_RESET |
-                   (uint32_t)HAL_ETH_CHANNEL_STATE_CONFIGURED);
-
-  /* Rx buffer length must be aligned to the `ETH_BUS_DATA_WIDTH_BYTE`. */
-  if (((p_chconf->dma_channel_config.rx_buffer_len_byte) % ((uint32_t)ETH_BUS_DATA_WIDTH_BYTE)) != 0UL)
+  if ((p_chconf->dma_channel_config.rx_buffer_len_byte % (uint32_t)ETH_BUS_DATA_WIDTH_BYTE) != 0UL)
   {
     return HAL_INVALID_PARAM;
   }
 
-  /* Compute aligned descriptor size and ensure hardware skip-length constraints are respected. */
+  ETH_GetRXChIndex(&ch, channel);
+
+  ASSERT_DBG_STATE(heth->rx_channels[ch].channel_state, (uint32_t)HAL_ETH_CHANNEL_STATE_RESET |
+                   (uint32_t)HAL_ETH_CHANNEL_STATE_CONFIGURED);
+
+  /* Align descriptor size (DMA DSL constraints). */
   if (ETH_AlignDescSize(p_chconf->req_desc_size_align_byte, &desc_size_aligned) != HAL_OK)
   {
     return HAL_INVALID_PARAM;
   }
 
-  /* Move Rx channel state to configured. */
-  heth->rx_channels[ch].channel_state = HAL_ETH_CHANNEL_STATE_CONFIGURED;
-  /* Align the eth_dma_descriptor_t size to the requested alignment size. */
   heth->rx_channels[ch].rx_desc_list.desc_len_byte = desc_size_aligned;
-  /* Get the max buffer number requested. */
-  heth->rx_channels[ch].rx_desc_list.total_desc_cnt = p_chconf->max_app_buffers_num * 2UL;
-  /* Get the requested event mode. */
-  heth->rx_channels[ch].fifo_event_config.event_mode       = p_chconf->fifo_event_config.event_mode;
-  heth->rx_channels[ch].fifo_event_config.event_params     = p_chconf->fifo_event_config.event_params;
-
-  /*------------------ Set DMA Rx Descriptors Configuration ----------------------*/
-  ETH_SetDMARxChannelConfig(heth, ch, &p_chconf->dma_channel_config);
-
-  /*------------------ Set MTL Rx Queue Configuration ---------------------------*/
-  ETH_SetMtlRxChannelConfig(heth, ch, &p_chconf->mtl_queue_config);
+  heth->rx_channels[ch].rx_desc_list.total_desc_cnt = p_chconf->max_app_buffers_num * ETH_MAX_DESC_PER_APP_BUF_CNT;
+  heth->rx_channels[ch].fifo_event_config.event_mode = p_chconf->fifo_event_config.event_mode;
+  heth->rx_channels[ch].fifo_event_config.event_params = p_chconf->fifo_event_config.event_params;
+  ETH_DMA_SetConfigRxChannel(heth, ch, &p_chconf->dma_channel_config);
+  ETH_MTL_SetConfigRxChannel(heth, ch, &p_chconf->mtl_queue_config);
+  heth->rx_channels[ch].channel_state = HAL_ETH_CHANNEL_STATE_CONFIGURED;
 
   return HAL_OK;
 }
@@ -2388,26 +2449,27 @@ hal_status_t HAL_ETH_SetConfigRxChannel(hal_eth_handle_t *heth, uint32_t channel
 void HAL_ETH_GetConfigTxChannel(const hal_eth_handle_t *heth, uint32_t channel,
                                 hal_eth_tx_channel_config_t *p_chconf)
 {
+  uint32_t ch = 0;
+
   ASSERT_DBG_PARAM(heth != NULL);
   ASSERT_DBG_PARAM(IS_ETH_CHANNEL_TX_INDEX(channel));
   ASSERT_DBG_PARAM(p_chconf != NULL);
   ASSERT_DBG_STATE(heth->global_state, (uint32_t)HAL_ETH_STATE_CONFIGURED);
 
-  uint32_t ch = 0;
+#if defined(USE_HAL_CHECK_PARAM) && (USE_HAL_CHECK_PARAM == 1)
+  if ((p_chconf == NULL) || (IS_ETH_CHANNEL_TX_INDEX(channel) == 0UL))
+  {
+    return;
+  }
+#endif /* USE_HAL_CHECK_PARAM */
 
-  /* Retrieve the Tx Channel Id. */
   ETH_GetTXChIndex(&ch, channel);
 
-  /*------------------ Get Tx Descriptors Configuration -------------------------*/
-  p_chconf->max_app_buffers_num       = heth->tx_channels[ch].tx_desc_list.total_desc_cnt;
-  p_chconf->req_desc_size_align_byte  = heth->tx_channels[ch].tx_desc_list.desc_len_byte;
-  p_chconf->fifo_event_config.event_mode   = heth->tx_channels[ch].fifo_event_config.event_mode;
+  p_chconf->max_app_buffers_num = heth->tx_channels[ch].tx_desc_list.total_desc_cnt / ETH_MAX_DESC_PER_APP_BUF_CNT;
+  p_chconf->req_desc_size_align_byte = heth->tx_channels[ch].tx_desc_list.desc_len_byte;
+  p_chconf->fifo_event_config.event_mode = heth->tx_channels[ch].fifo_event_config.event_mode;
   p_chconf->fifo_event_config.event_params = heth->tx_channels[ch].fifo_event_config.event_params;
-
-  /*------------------ Get DMA Tx Descriptors Configuration ---------------------*/
   ETH_GetDMATxChannelConfig(heth, ch, &p_chconf->dma_channel_config);
-
-  /*------------------ Get MTL Tx Queue Configuration ---------------------------*/
   ETH_GetMtlTxChannelConfig(heth, ch, &p_chconf->mtl_queue_config);
 }
 
@@ -2442,26 +2504,27 @@ void HAL_ETH_GetConfigTxChannel(const hal_eth_handle_t *heth, uint32_t channel,
 void HAL_ETH_GetConfigRxChannel(const hal_eth_handle_t *heth, uint32_t channel,
                                 hal_eth_rx_channel_config_t *p_chconf)
 {
+  uint32_t ch = 0;
+
   ASSERT_DBG_PARAM(heth != NULL);
   ASSERT_DBG_PARAM(p_chconf != NULL);
   ASSERT_DBG_PARAM(IS_ETH_CHANNEL_RX_INDEX(channel));
   ASSERT_DBG_STATE(heth->global_state, (uint32_t)HAL_ETH_STATE_CONFIGURED);
 
-  uint32_t ch = 0;
+#if defined(USE_HAL_CHECK_PARAM) && (USE_HAL_CHECK_PARAM == 1)
+  if ((p_chconf == NULL) || (IS_ETH_CHANNEL_RX_INDEX(channel) == 0UL))
+  {
+    return;
+  }
+#endif /* USE_HAL_CHECK_PARAM */
 
-  /* Retrieve the Rx Channel Id. */
   ETH_GetRXChIndex(&ch, channel);
 
-  /*------------------ Get Rx Descriptors Configuration -------------------------*/
-  p_chconf->max_app_buffers_num      = heth->rx_channels[ch].rx_desc_list.total_desc_cnt;
+  p_chconf->max_app_buffers_num = heth->rx_channels[ch].rx_desc_list.total_desc_cnt / ETH_MAX_DESC_PER_APP_BUF_CNT;
   p_chconf->req_desc_size_align_byte = heth->rx_channels[ch].rx_desc_list.desc_len_byte;
-  p_chconf->fifo_event_config.event_mode   = heth->rx_channels[ch].fifo_event_config.event_mode;
+  p_chconf->fifo_event_config.event_mode = heth->rx_channels[ch].fifo_event_config.event_mode;
   p_chconf->fifo_event_config.event_params = heth->rx_channels[ch].fifo_event_config.event_params;
-
-  /*------------------ Get DMA Rx Descriptors Configuration ---------------------*/
   ETH_GetDMARxChannelConfig(heth, ch, &p_chconf->dma_channel_config);
-
-  /*------------------ Get MTL Rx Queue Configuration ---------------------------*/
   ETH_GetMtlRxChannelConfig(heth, ch, &p_chconf->mtl_queue_config);
 }
 
@@ -2506,31 +2569,39 @@ void HAL_ETH_GetConfigRxChannel(const hal_eth_handle_t *heth, uint32_t channel,
 void HAL_ETH_GetChannelAllocNeeds(const hal_eth_handle_t *heth, uint32_t channel,
                                   hal_eth_channel_alloc_needs_t *p_ch_alloc_req)
 {
+  uint32_t ch = 0;
+  uint32_t desc_cnt = 0UL;
+  uint32_t desc_len_byte = 0UL;
+
   ASSERT_DBG_PARAM(heth != NULL);
   ASSERT_DBG_PARAM(p_ch_alloc_req != NULL);
   ASSERT_DBG_PARAM(IS_ETH_CHANNEL_INDEX(channel));
 
-  uint32_t ch;
-
   if ((channel & HAL_ETH_TX_CHANNEL_ALL) != 0UL)
   {
-    /* Retrieve Tx Channel Id. */
     ETH_GetTXChIndex(&ch, channel);
     ASSERT_DBG_STATE(heth->tx_channels[ch].channel_state, (uint32_t)HAL_ETH_CHANNEL_STATE_CONFIGURED);
 
-    p_ch_alloc_req->mem_size_byte       = heth->tx_channels[ch].tx_desc_list.total_desc_cnt *
-                                          heth->tx_channels[ch].tx_desc_list.desc_len_byte;
-    p_ch_alloc_req->mem_addr_align_byte = ETH_BUS_DATA_WIDTH_BYTE;
+    desc_cnt = heth->tx_channels[ch].tx_desc_list.total_desc_cnt;
+    desc_len_byte = heth->tx_channels[ch].tx_desc_list.desc_len_byte;
+
+    p_ch_alloc_req->mem_size_byte = desc_cnt * desc_len_byte;
+    p_ch_alloc_req->mem_addr_align_byte = (desc_len_byte == sizeof(eth_dma_descriptor_t))
+                                          ? ETH_BUS_DATA_WIDTH_BYTE
+                                          : desc_len_byte;
   }
   else
   {
-    /* Retrieve Rx Channel Id. */
     ETH_GetRXChIndex(&ch, channel);
     ASSERT_DBG_STATE(heth->rx_channels[ch].channel_state, (uint32_t)HAL_ETH_CHANNEL_STATE_CONFIGURED);
 
-    p_ch_alloc_req->mem_size_byte       = heth->rx_channels[ch].rx_desc_list.total_desc_cnt *
-                                          heth->rx_channels[ch].rx_desc_list.desc_len_byte;
-    p_ch_alloc_req->mem_addr_align_byte = ETH_BUS_DATA_WIDTH_BYTE;
+    desc_cnt = heth->rx_channels[ch].rx_desc_list.total_desc_cnt;
+    desc_len_byte = heth->rx_channels[ch].rx_desc_list.desc_len_byte;
+
+    p_ch_alloc_req->mem_size_byte = desc_cnt * desc_len_byte;
+    p_ch_alloc_req->mem_addr_align_byte = (desc_len_byte == sizeof(eth_dma_descriptor_t))
+                                          ? ETH_BUS_DATA_WIDTH_BYTE
+                                          : desc_len_byte;
   }
 }
 /**
@@ -2576,12 +2647,6 @@ This subsection provides functions allowing the control of the Ethernet Peripher
   *        the new link configuration parameters (e.g. @c speed and
   *        @c duplex_mode).
   *
-  * @retval HAL_OK
-  *         Link configuration was successfully updated.
-  * @retval HAL_INVALID_PARAM
-  *         One or more input parameters are invalid (only when parameter
-  *         checking is enabled via @c USE_HAL_CHECK_PARAM).
-  *
   * @pre
   * - @p heth must not be @c NULL.
   * - @p p_config must not be @c NULL.
@@ -2591,13 +2656,24 @@ This subsection provides functions allowing the control of the Ethernet Peripher
   *       register (speed and duplex). It does not initiate any PHY
   *       negotiation or check link status.
   *
+  * @retval HAL_OK
+  *         Link configuration was successfully updated.
+  * @retval HAL_INVALID_PARAM
+  *         One or more input parameters are invalid (only when parameter
+  *         checking is enabled via @c USE_HAL_CHECK_PARAM).
+  *
   * @sa hal_eth_handle_t
   * @sa hal_eth_link_config_t
   */
 hal_status_t HAL_ETH_UpdateConfigLink(hal_eth_handle_t *heth, const hal_eth_link_config_t *p_config)
 {
+  uint32_t link_reg_val = 0UL;
+
   ASSERT_DBG_PARAM(heth != NULL);
   ASSERT_DBG_PARAM(p_config != NULL);
+  ASSERT_DBG_PARAM(IS_ETH_MAC_SPEED(p_config->speed));
+  ASSERT_DBG_PARAM(IS_ETH_MAC_DUPLEX_MODE(p_config->duplex_mode));
+  ASSERT_DBG_STATE(heth->global_state, (uint32_t)HAL_ETH_STATE_CONFIGURED);
 
 #if defined(USE_HAL_CHECK_PARAM) && (USE_HAL_CHECK_PARAM == 1)
   if (p_config == NULL)
@@ -2606,15 +2682,9 @@ hal_status_t HAL_ETH_UpdateConfigLink(hal_eth_handle_t *heth, const hal_eth_link
   }
 #endif /* USE_HAL_CHECK_PARAM */
 
-  ASSERT_DBG_PARAM(IS_ETH_MAC_SPEED(p_config->speed));
-  ASSERT_DBG_PARAM(IS_ETH_MAC_DUPLEX_MODE(p_config->duplex_mode));
-  ASSERT_DBG_STATE(heth->global_state, (uint32_t)HAL_ETH_STATE_CONFIGURED);
-
-  uint32_t linkregval;
-  linkregval = ((uint32_t)p_config->speed |
-                (uint32_t)p_config->duplex_mode);
-  /*update link config bits */
-  STM32_MODIFY_REG(ETH_GET_INSTANCE(heth)->MACCR, ETH_MAC_LINK_CONFIG_MASK, linkregval);
+  link_reg_val = ((uint32_t)p_config->speed |
+                  (uint32_t)p_config->duplex_mode);
+  STM32_MODIFY_REG(ETH_GET_INSTANCE(heth)->MACCR, ETH_MAC_LINK_CONFIG_MASK, link_reg_val);
 
   return HAL_OK;
 }
@@ -2644,7 +2714,6 @@ void HAL_ETH_EnableARPOffload(hal_eth_handle_t *heth)
   ASSERT_DBG_PARAM(heth != NULL);
   ASSERT_DBG_STATE(heth->global_state, (uint32_t)HAL_ETH_STATE_CONFIGURED);
 
-  /* Enable ARP Offloading */
   STM32_SET_BIT(ETH_GET_INSTANCE(heth)->MACCR, ETH_MACCR_ARPEN);
 }
 
@@ -2668,7 +2737,6 @@ void HAL_ETH_DisableARPOffload(hal_eth_handle_t *heth)
   ASSERT_DBG_PARAM(heth != NULL);
   ASSERT_DBG_STATE(heth->global_state, (uint32_t)HAL_ETH_STATE_CONFIGURED);
 
-  /* Disable ARP Offloading */
   STM32_CLEAR_BIT(ETH_GET_INSTANCE(heth)->MACCR, ETH_MACCR_ARPEN);
 }
 
@@ -2752,12 +2820,6 @@ void HAL_ETH_SetARPTargetIP(hal_eth_handle_t *heth, uint32_t tpa)
   *         - Magic Packet enable
   *         - Other PMT-related control bits as defined by ETH_PMT_CTRL_MASK.
   *
-  * @retval HAL_OK
-  *         Power-Down sequence initiated successfully.
-  * @retval HAL_INVALID_PARAM
-  *         @p heth is @c NULL (only when parameter checking is enabled via
-  *         @c USE_HAL_CHECK_PARAM).
-  *
   * @pre
   * - @p heth must be in @ref HAL_ETH_STATE_CONFIGURED
   *   (checked with debug and optional runtime checks).
@@ -2766,6 +2828,12 @@ void HAL_ETH_SetARPTargetIP(hal_eth_handle_t *heth, uint32_t tpa)
   *       PMT wake-up source is enabled.
   * @note The system clock and other peripheral clocks would need to remain
   *       enabled as required by the PMT and wake-up scheme.
+  *
+  * @retval HAL_OK
+  *         Power-Down sequence initiated successfully.
+  * @retval HAL_INVALID_PARAM
+  *         @p heth is @c NULL (only when parameter checking is enabled via
+  *         @c USE_HAL_CHECK_PARAM).
   *
   * @sa HAL_ETH_ExitPowerDownMode
   * @sa HAL_ETH_PMT_CTRL_FWD_WAKEUP_PKT
@@ -2776,24 +2844,22 @@ void HAL_ETH_SetARPTargetIP(hal_eth_handle_t *heth, uint32_t tpa)
   */
 hal_status_t HAL_ETH_EnterPowerDownMode(hal_eth_handle_t *heth, uint32_t pmt_ctrl)
 {
+  ETH_TypeDef *p_ethx;
+
   ASSERT_DBG_PARAM(heth != NULL);
   ASSERT_DBG_PARAM(IS_ETH_PMT_CTRL_FLAGS(pmt_ctrl));
   ASSERT_DBG_STATE(heth->global_state, (uint32_t)HAL_ETH_STATE_CONFIGURED);
 
   HAL_CHECK_UPDATE_STATE(heth, global_state, HAL_ETH_STATE_CONFIGURED, HAL_ETH_STATE_POWER_DOWN);
 
-  /* Configure remote wake-up and magic packet sources */
-  STM32_MODIFY_REG(ETH_GET_INSTANCE(heth)->MACPCSR, ETH_PMT_CTRL_MASK, pmt_ctrl);
-
+  p_ethx = ETH_GET_INSTANCE(heth);
+  STM32_MODIFY_REG(p_ethx->MACPCSR, ETH_PMT_CTRL_MASK, pmt_ctrl);
   if ((pmt_ctrl & ETH_PMT_CTRL_MASK) != 0UL)
   {
-    /* Enable MAC receiver */
-    STM32_SET_BIT(ETH_GET_INSTANCE(heth)->MACCR, ETH_MACCR_RE);
-    /* Enable PMTIE Interrupt */
-    STM32_SET_BIT(ETH_GET_INSTANCE(heth)->MACIER, ETH_MACIER_PMTIE);
+    STM32_SET_BIT(p_ethx->MACCR, ETH_MACCR_RE);
+    STM32_SET_BIT(p_ethx->MACIER, ETH_MACIER_PMTIE);
   }
-  /* Initiate the Power-Down sequence */
-  STM32_SET_BIT(ETH_GET_INSTANCE(heth)->MACPCSR, ETH_MACPCSR_PWRDWN);
+  STM32_SET_BIT(p_ethx->MACPCSR, ETH_MACPCSR_PWRDWN);
   return HAL_OK;
 }
 
@@ -2824,12 +2890,6 @@ hal_status_t HAL_ETH_EnterPowerDownMode(hal_eth_handle_t *heth, uint32_t pmt_ctr
   *         Its @c global_state is updated back to
   *         @ref HAL_ETH_STATE_CONFIGURED on success.
   *
-  * @retval HAL_OK
-  *         Power-Down mode exited successfully.
-  * @retval HAL_INVALID_PARAM
-  *         @p heth is @c NULL (only when parameter checking is enabled via
-  *         @c USE_HAL_CHECK_PARAM).
-  *
   * @pre
   * - @p heth must be in @ref HAL_ETH_STATE_POWER_DOWN
   *   (checked with debug and optional runtime checks).
@@ -2838,28 +2898,34 @@ hal_status_t HAL_ETH_EnterPowerDownMode(hal_eth_handle_t *heth, uint32_t pmt_ctr
   *       MACA0 registers) would need to be revalidated or updated depending
   *       on the hardware behavior and application requirements.
   *
+  * @retval HAL_OK
+  *         Power-Down mode exited successfully.
+  * @retval HAL_INVALID_PARAM
+  *         @p heth is @c NULL (only when parameter checking is enabled via
+  *         @c USE_HAL_CHECK_PARAM).
+  *
   * @sa HAL_ETH_EnterPowerDownMode
   */
 hal_status_t HAL_ETH_ExitPowerDownMode(hal_eth_handle_t *heth)
 {
+  ETH_TypeDef *p_ethx;
+
   ASSERT_DBG_PARAM(heth != NULL);
   ASSERT_DBG_STATE(heth->global_state, (uint32_t)HAL_ETH_STATE_POWER_DOWN);
 
-  HAL_CHECK_UPDATE_STATE(heth, global_state, HAL_ETH_STATE_POWER_DOWN, HAL_ETH_STATE_CONFIGURED);
+  p_ethx = ETH_GET_INSTANCE(heth);
+  STM32_CLEAR_BIT(p_ethx->MACIER, ETH_MACIER_PMTIE);
+  STM32_CLEAR_BIT(p_ethx->MACPCSR, ETH_PMT_CTRL_MASK);
 
-  /* Disable PMTIE Interrupt */
-  STM32_CLEAR_BIT(ETH_GET_INSTANCE(heth)->MACIER, ETH_MACIER_PMTIE);
+  /* Perform write operation to MACCR/MACA0H/MACA0L, otherwise the MAC receiver can
+     remain enabled even though the Receive Enable bit is set to 0.*/
+  STM32_MODIFY_REG(p_ethx->MACCR, 0UL, 0UL);
+  STM32_MODIFY_REG(p_ethx->MACA0HR, 0UL, 0UL);
+  STM32_MODIFY_REG(p_ethx->MACA0LR, 0UL, 0UL);
 
-  /* Clear PMT control status register */
-  STM32_CLEAR_BIT(ETH_GET_INSTANCE(heth)->MACPCSR, ETH_PMT_CTRL_MASK);
+  STM32_CLEAR_BIT(p_ethx->MACPCSR, ETH_MACPCSR_PWRDWN);
 
-  /* Perform required write operations when exiting power-down */
-  STM32_MODIFY_REG(ETH_GET_INSTANCE(heth)->MACCR, 0UL, 0UL);
-  STM32_MODIFY_REG(ETH_GET_INSTANCE(heth)->MACA0HR, 0UL, 0UL);
-  STM32_MODIFY_REG(ETH_GET_INSTANCE(heth)->MACA0LR, 0UL, 0UL);
-
-  /* Exit Power-Down mode */
-  STM32_CLEAR_BIT(ETH_GET_INSTANCE(heth)->MACPCSR, ETH_MACPCSR_PWRDWN);
+  heth->global_state = HAL_ETH_STATE_CONFIGURED;
 
   return HAL_OK;
 }
@@ -2916,8 +2982,16 @@ hal_status_t HAL_ETH_ExitPowerDownMode(hal_eth_handle_t *heth)
 hal_status_t HAL_ETH_SetRemoteWakeUpPcktFilter(const hal_eth_handle_t *heth,
                                                const hal_eth_rwk_filter_lut_t *p_filter_lut)
 {
+  const hal_eth_rwk_filter_block_t *p_filter_block = NULL;
+  uint32_t commands_reg  = 0UL;
+  uint32_t offsets_reg   = 0UL;
+  uint32_t crc16_1_reg   = 0UL;
+  uint32_t crc16_2_reg   = 0UL;
+  ETH_TypeDef *p_ethx;
+
   ASSERT_DBG_PARAM(heth != NULL);
   ASSERT_DBG_PARAM(p_filter_lut != NULL);
+  ASSERT_DBG_STATE(heth->global_state, (uint32_t)HAL_ETH_STATE_CONFIGURED);
 
 #if defined (USE_HAL_CHECK_PARAM) && (USE_HAL_CHECK_PARAM == 1)
   if (p_filter_lut == NULL)
@@ -2926,28 +3000,23 @@ hal_status_t HAL_ETH_SetRemoteWakeUpPcktFilter(const hal_eth_handle_t *heth,
   }
 #endif /* USE_HAL_CHECK_PARAM */
 
-  const hal_eth_rwk_filter_block_t *p_filter_block = &(p_filter_lut->block0);
-  uint32_t commands_reg  = 0UL;
-  uint32_t offsets_reg   = 0UL;
-  uint32_t crc16_1_reg   = 0UL;
-  uint32_t crc16_2_reg   = 0UL;
-  ETH_TypeDef *p_Ethx = ETH_GET_INSTANCE(heth);
+  p_filter_block = &(p_filter_lut->block0);
+  p_ethx = ETH_GET_INSTANCE(heth);
 
-  /* Reset internal write pointer for remote wake-up filter programming. */
-  STM32_SET_BIT(p_Ethx->MACPCSR, ETH_MACPCSR_RWKFILTRST);
+  STM32_SET_BIT(p_ethx->MACPCSR, ETH_MACPCSR_RWKFILTRST);
 
   /* Write byte mask words then accumulate command/offset/CRC fields. */
   for (uint32_t index = 0UL; index < ETH_NB_OF_RWK_FILT_PER_BLOCK; index++)
   {
     ASSERT_DBG_PARAM(IS_ETH_RWK_BYTE_MASK(p_filter_block->filter[index].byte_mask));
-    STM32_WRITE_REG(p_Ethx->MACRWKPFR, p_filter_block->filter[index].byte_mask);
+    STM32_WRITE_REG(p_ethx->MACRWKPFR, p_filter_block->filter[index].byte_mask);
 
     commands_reg  |= ((((uint32_t)p_filter_block->filter[index].commands) & ETH_RWK_CMD_MASK)
                       << ETH_RWK_CMD_SHIFT(index));
     offsets_reg |= ((((uint32_t)p_filter_block->filter[index].offsets) & ETH_RWK_OFFSET_MASK)
                     << ETH_RWK_OFFSET_SHIFT(index));
 
-    if (index < 2U)
+    if (index < 2UL)
     {
       crc16_1_reg |= ((((uint32_t)p_filter_block->filter[index].crc16) & ETH_RWK_CRC16_MASK)
                       << ETH_RWK_CRC16_SHIFT_LOW(index));
@@ -2959,11 +3028,10 @@ hal_status_t HAL_ETH_SetRemoteWakeUpPcktFilter(const hal_eth_handle_t *heth,
     }
   }
 
-  /* Write command, offset, and CRC registers sequence. */
-  STM32_WRITE_REG(p_Ethx->MACRWKPFR, commands_reg);
-  STM32_WRITE_REG(p_Ethx->MACRWKPFR, offsets_reg);
-  STM32_WRITE_REG(p_Ethx->MACRWKPFR, crc16_1_reg);
-  STM32_WRITE_REG(p_Ethx->MACRWKPFR, crc16_2_reg);
+  STM32_WRITE_REG(p_ethx->MACRWKPFR, commands_reg);
+  STM32_WRITE_REG(p_ethx->MACRWKPFR, offsets_reg);
+  STM32_WRITE_REG(p_ethx->MACRWKPFR, crc16_1_reg);
+  STM32_WRITE_REG(p_ethx->MACRWKPFR, crc16_2_reg);
 
   return HAL_OK;
 }
@@ -3006,11 +3074,8 @@ void HAL_ETH_EnterLPIMode(hal_eth_handle_t *heth, uint32_t lpi_ctrl)
   ASSERT_DBG_PARAM(IS_ETH_LPI_CTRL_FLAGS(lpi_ctrl));
   ASSERT_DBG_STATE(heth->global_state, (uint32_t)HAL_ETH_STATE_CONFIGURED);
 
-  /* Write to LPI Control register: Enter low power mode. */
   STM32_MODIFY_REG(ETH_GET_INSTANCE(heth)->MACLCSR, ETH_LPI_TX_CLK_MASK, lpi_ctrl);
-  /* Enable LPI Interrupt. */
   STM32_SET_BIT(ETH_GET_INSTANCE(heth)->MACIER, ETH_MACIER_LPIIE);
-  /* Enable LPI mode. */
   STM32_SET_BIT(ETH_GET_INSTANCE(heth)->MACLCSR, ETH_MACLCSR_LPIEN);
 }
 
@@ -3037,12 +3102,8 @@ void HAL_ETH_ExitLPIMode(hal_eth_handle_t *heth)
 {
   ASSERT_DBG_PARAM(heth != NULL);
   ASSERT_DBG_STATE(heth->global_state, (uint32_t)HAL_ETH_STATE_CONFIGURED);
-
-  /* Clear the LPI configuration. */
   STM32_CLEAR_BIT(ETH_GET_INSTANCE(heth)->MACLCSR, ETH_LPI_TX_CLK_MASK);
-  /* Disable LPI interrupt. */
   STM32_CLEAR_BIT(ETH_GET_INSTANCE(heth)->MACIER, ETH_MACIER_LPIIE);
-  /* Disable LPI mode. */
   STM32_CLEAR_BIT(ETH_GET_INSTANCE(heth)->MACLCSR, ETH_MACLCSR_LPIEN);
 }
 
@@ -3096,20 +3157,19 @@ This subsection provides functions allowing the registration of the Ethernet Cha
 hal_status_t HAL_ETH_RegisterChannelRxAllocateCallback(hal_eth_handle_t *heth, uint32_t channel,
                                                        hal_eth_rx_allocate_cb_t p_callback)
 {
+  uint32_t ch = 0;
+
   ASSERT_DBG_PARAM(heth != NULL);
   ASSERT_DBG_PARAM(p_callback != NULL);
   ASSERT_DBG_PARAM(IS_ETH_CHANNEL_RX_INDEX(channel));
 
-  uint32_t ch;
-
 #if defined (USE_HAL_CHECK_PARAM) && (USE_HAL_CHECK_PARAM == 1)
-  if ((p_callback == NULL) || (IS_ETH_CHANNEL_RX_INDEX(channel) == 0U))
+  if ((p_callback == NULL) || (IS_ETH_CHANNEL_RX_INDEX(channel) == 0UL))
   {
     return HAL_INVALID_PARAM;
   }
 #endif /* USE_HAL_CHECK_PARAM */
 
-  /* Retrieve the Rx Channel Id. */
   ETH_GetRXChIndex(&ch, channel);
   heth->rx_channels[ch].p_rx_allocate_cb = p_callback;
 
@@ -3145,20 +3205,19 @@ hal_status_t HAL_ETH_RegisterChannelRxAllocateCallback(hal_eth_handle_t *heth, u
 hal_status_t HAL_ETH_RegisterChannelRxCptCallback(hal_eth_handle_t *heth, uint32_t channel,
                                                   hal_eth_rx_complete_cb_t p_callback)
 {
+  uint32_t ch = 0;
+
   ASSERT_DBG_PARAM(heth != NULL);
   ASSERT_DBG_PARAM(p_callback != NULL);
   ASSERT_DBG_PARAM(IS_ETH_CHANNEL_RX_INDEX(channel));
 
 #if defined (USE_HAL_CHECK_PARAM) && (USE_HAL_CHECK_PARAM == 1)
-  if ((p_callback == NULL) || (IS_ETH_CHANNEL_RX_INDEX(channel) == 0U))
+  if ((p_callback == NULL) || (IS_ETH_CHANNEL_RX_INDEX(channel) == 0UL))
   {
     return HAL_INVALID_PARAM;
   }
 #endif /* USE_HAL_CHECK_PARAM */
 
-  uint32_t ch;
-
-  /* Retrieve the Rx Channel Id. */
   ETH_GetRXChIndex(&ch, channel);
   heth->rx_channels[ch].p_rx_complete_cb = p_callback;
 
@@ -3194,20 +3253,19 @@ hal_status_t HAL_ETH_RegisterChannelRxCptCallback(hal_eth_handle_t *heth, uint32
 hal_status_t HAL_ETH_RegisterChannelTxCptCallback(hal_eth_handle_t *heth, uint32_t channel,
                                                   hal_eth_tx_complete_cb_t p_callback)
 {
+  uint32_t ch = 0;
+
   ASSERT_DBG_PARAM(heth != NULL);
   ASSERT_DBG_PARAM(p_callback != NULL);
   ASSERT_DBG_PARAM(IS_ETH_CHANNEL_TX_INDEX(channel));
 
 #if defined (USE_HAL_CHECK_PARAM) && (USE_HAL_CHECK_PARAM == 1)
-  if ((p_callback == NULL) || (IS_ETH_CHANNEL_TX_INDEX(channel) == 0U))
+  if ((p_callback == NULL) || (IS_ETH_CHANNEL_TX_INDEX(channel) == 0UL))
   {
     return HAL_INVALID_PARAM;
   }
 #endif /* USE_HAL_CHECK_PARAM */
 
-  uint32_t ch;
-
-  /* Retrieve the Tx Channel Id. */
   ETH_GetTXChIndex(&ch, channel);
   heth->tx_channels[ch].p_tx_complete_cb = p_callback;
 
@@ -3258,9 +3316,8 @@ hal_status_t HAL_ETH_RegisterDataCallback(hal_eth_handle_t *heth, hal_eth_cb_t p
   * @brief  Register a wakeup callback.
   *
   * This function registers a user-provided wakeup callback function for the
-  * Ethernet peripheral. The callback is typically invoked by the HAL when a
-  * wakeup event occurs, such as a remote wakeup packet or other low-power
-  * exit condition, depending on the driver implementation.
+  * Ethernet peripheral. The callback is typically invoked by the Ethernet wakeup
+  * event through EXTI line.
   *
   * @param[in,out] heth       Pointer to a @ref hal_eth_handle_t structure that
   *                           contains the configuration information for the
@@ -3454,9 +3511,9 @@ hal_status_t HAL_ETH_RegisterEventCallback(hal_eth_handle_t *heth, hal_eth_cb_t 
   *
   * This function registers a user-provided cache invalidate callback function
   * for the Ethernet peripheral. The callback is typically invoked by the HAL
-  * to invalidate data cache lines associated with Ethernet buffers before
-  * performing DMA operations or processing received data, depending on the
-  * system cache architecture and driver implementation.
+  * to invalidate data cache lines associated with internal driver memory areas
+  * allocated by the application (for DMA descriptor rings), depending
+  * on the system cache architecture and driver implementation.
   *
   * @param[in,out] heth       Pointer to a @ref hal_eth_handle_t structure that
   *                           contains the configuration information for the
@@ -3494,9 +3551,9 @@ hal_status_t HAL_ETH_RegisterCacheInvalidateCallback(hal_eth_handle_t *heth, hal
   *
   * This function registers a user-provided cache flush callback function
   * for the Ethernet peripheral. The callback is typically invoked by the HAL
-  * to flush (clean) data cache lines associated with Ethernet buffers before
-  * they are used by the DMA engine, depending on the system cache architecture
-  * and driver implementation.
+  * to flush data cache lines associated with internal driver memory areas
+  * allocated by the application (for DMA descriptor rings), depending
+  * on the system cache architecture and driver implementation.
   *
   * @param[in,out] heth       Pointer to a @ref hal_eth_handle_t structure that
   *                           contains the configuration information for the
@@ -3540,8 +3597,7 @@ hal_status_t HAL_ETH_RegisterCacheFlushCallback(hal_eth_handle_t *heth, hal_eth_
   * The function:
   * - Validates @p heth, @p p_callback, and @p channel (with debug and optional
   *   runtime checks).
-  * - Converts the RX channel bitmask @p channel into a channel index via
-  *   @ref ETH_GetRXChIndex.
+  * - Converts the RX channel bitmask @p channel into a channel index.
   * - Stores the callback pointer into
   *   @c heth->rx_channels[index].p_ch_event_cb.
   *
@@ -3556,40 +3612,36 @@ hal_status_t HAL_ETH_RegisterCacheFlushCallback(hal_eth_handle_t *heth, hal_eth_
   * @param[in]     p_callback
   *         Pointer to a function of type @ref hal_eth_channel_cb_t that will
   *         be called on RX channel events.
+  * @note This function only registers the callback; the user must ensure that
+  *       RX channel events are properly enabled and handled in the interrupt
+  *       or polling layer that triggers the callback.
   *
   * @retval HAL_OK
   *         Callback successfully registered for the selected RX channel.
   * @retval HAL_ERROR
-  *         RX channel index could not be derived from @p channel
-  *         (i.e. @ref ETH_GetRXChIndex returned an error).
+  *         RX channel index could not be derived from @p channel.
   * @retval HAL_INVALID_PARAM
   *         - @p heth or @p p_callback is @c NULL, or
   *         - @p channel is invalid (IS_ETH_CHANNEL_RX_INDEX() returns 0),
   *         and parameter checking is enabled via @c USE_HAL_CHECK_PARAM.
   *
-  * @note This function only registers the callback; the user must ensure that
-  *       RX channel events are properly enabled and handled in the interrupt
-  *       or polling layer that triggers the callback.
-  *
-  * @sa ETH_GetRXChIndex
   * @sa HAL_ETH_RegisterChannelTxEventCallback
   */
 hal_status_t HAL_ETH_RegisterChannelRxEventCallback(hal_eth_handle_t *heth, uint32_t channel,
                                                     hal_eth_channel_cb_t p_callback)
 {
+  uint32_t ch = 0;
+
   ASSERT_DBG_PARAM(heth != NULL);
   ASSERT_DBG_PARAM(p_callback != NULL);
   ASSERT_DBG_PARAM(IS_ETH_CHANNEL_RX_INDEX(channel));
 
 #if defined (USE_HAL_CHECK_PARAM) && (USE_HAL_CHECK_PARAM == 1)
-  if ((p_callback == NULL) || (IS_ETH_CHANNEL_RX_INDEX(channel) == 0U))
+  if ((p_callback == NULL) || (IS_ETH_CHANNEL_RX_INDEX(channel) == 0UL))
   {
     return HAL_INVALID_PARAM;
   }
 #endif /* USE_HAL_CHECK_PARAM */
-
-  uint32_t ch;
-
   ETH_GetRXChIndex(&ch, channel);
   heth->rx_channels[ch].p_ch_event_cb = p_callback;
 
@@ -3607,8 +3659,7 @@ hal_status_t HAL_ETH_RegisterChannelRxEventCallback(hal_eth_handle_t *heth, uint
   * The function:
   * - Validates @p heth, @p p_callback, and @p channel (with debug and optional
   *   runtime checks).
-  * - Converts the TX channel bitmask @p channel into a channel index via
-  *   @ref ETH_GetTXChIndex.
+  * - Converts the TX channel bitmask @p channel into a channel index.
   * - Stores the callback pointer into
   *   @c heth->tx_channels[index].p_ch_event_cb.
   *
@@ -3623,41 +3674,36 @@ hal_status_t HAL_ETH_RegisterChannelRxEventCallback(hal_eth_handle_t *heth, uint
   * @param[in]     p_callback
   *         Pointer to a function of type @ref hal_eth_channel_cb_t that will
   *         be called on TX channel events.
+  * @note This function only registers the callback; the user must ensure that
+  *       TX channel events are properly enabled and handled in the interrupt
+  *       or polling layer that triggers the callback.
   *
   * @retval HAL_OK
   *         Callback successfully registered for the selected TX channel.
   * @retval HAL_ERROR
-  *         TX channel index could not be derived from @p channel
-  *         (i.e. @ref ETH_GetTXChIndex returned an error).
+  *         TX channel index could not be derived from @p channel.
   * @retval HAL_INVALID_PARAM
   *         - @p heth or @p p_callback is @c NULL, or
   *         - @p channel is invalid (IS_ETH_CHANNEL_TX_INDEX() returns 0),
   *         and parameter checking is enabled via @c USE_HAL_CHECK_PARAM.
   *
-  * @note This function only registers the callback; the user must ensure that
-  *       TX channel events are properly enabled and handled in the interrupt
-  *       or polling layer that triggers the callback.
-  *
-  * @sa ETH_GetTXChIndex
   * @sa HAL_ETH_RegisterChannelRxEventCallback
   */
 hal_status_t HAL_ETH_RegisterChannelTxEventCallback(hal_eth_handle_t *heth, uint32_t channel,
                                                     hal_eth_channel_cb_t p_callback)
 {
+  uint32_t ch = 0;
+
   ASSERT_DBG_PARAM(heth != NULL);
   ASSERT_DBG_PARAM(p_callback != NULL);
   ASSERT_DBG_PARAM(IS_ETH_CHANNEL_TX_INDEX(channel));
 
 #if defined (USE_HAL_CHECK_PARAM) && (USE_HAL_CHECK_PARAM == 1)
-  if ((p_callback == NULL) || (IS_ETH_CHANNEL_TX_INDEX(channel) == 0U))
+  if ((p_callback == NULL) || (IS_ETH_CHANNEL_TX_INDEX(channel) == 0UL))
   {
     return HAL_INVALID_PARAM;
   }
 #endif /* USE_HAL_CHECK_PARAM */
-
-  uint32_t ch;
-
-  /* Retrieve the Rx Channel Id */
   ETH_GetTXChIndex(&ch, channel);
   heth->tx_channels[ch].p_ch_event_cb = p_callback;
 
@@ -3724,13 +3770,16 @@ This subsection provides Interrupts management functions.
   */
 void HAL_ETH_IRQHandler(hal_eth_handle_t *heth)
 {
+  ETH_TypeDef *p_ethx = ETH_GET_INSTANCE(heth);
   uint32_t ch_data_event = 0UL;
   uint32_t dma_error_code = 0UL;
-  uint32_t mac_event_code = STM32_READ_REG(ETH_GET_INSTANCE(heth)->MACRXTXSR);
+  uint32_t mac_pmt_csr = 0UL;
+  uint32_t mac_eee_csr = 0UL;
   uint32_t max_ch_nb = ETH_GET_MAX_VALUE(USE_HAL_ETH_MAX_TX_CH_NB, USE_HAL_ETH_MAX_RX_CH_NB);
 
-  /* Get MAC status register. */
-  uint32_t mac_status_flag = STM32_READ_REG(ETH_GET_INSTANCE(heth)->MACISR);
+  /* Snapshot MAC global interrupt status (PMT/LPI and other MAC-level sources). */
+  uint32_t mac_status_flag = STM32_READ_REG(p_ethx->MACISR);
+  uint32_t mac_event_code = STM32_READ_REG(p_ethx->MACRXTXSR) & ETH_MAC_EVENT_MASK;
 
   for (uint32_t dma_ch_id = 0; dma_ch_id < max_ch_nb; dma_ch_id++)
   {
@@ -3743,46 +3792,40 @@ void HAL_ETH_IRQHandler(hal_eth_handle_t *heth)
     uint32_t rx_ch_event = 0UL;
     uint32_t tx_ch_event = 0UL;
 
-    /* Packet transmitted by DMA Channel. */
+    /* Accumulate Tx data-ready channels only when the corresponding IRQ source is enabled. */
     if ((dma_ch_id < USE_HAL_ETH_MAX_TX_CH_NB)
         && (STM32_IS_BIT_SET(dma_ch_flag, ETH_DMACSR_TI))
         && (STM32_IS_BIT_SET(dma_ch_itsource, ETH_DMACIER_TIE)))
     {
-      /* Set Tx data event. */
       ch_data_event |= ETH_GET_TX_CH_ID(dma_ch_id);
     }
 
-    /* Packet received in DMA Channel. */
+    /* Accumulate Rx data-ready channels only when the corresponding IRQ source is enabled. */
     if ((dma_ch_id < USE_HAL_ETH_MAX_RX_CH_NB)
         && (STM32_IS_BIT_SET(dma_ch_flag, ETH_DMACSR_RI))
         && (STM32_IS_BIT_SET(dma_ch_itsource, ETH_DMACIER_RIE)))
     {
-      /* Set Rx data event. */
       ch_data_event |= ETH_GET_RX_CH_ID(dma_ch_id);
     }
 
-    /* ETH DMA Channel Error / event. */
+    /* Process channel events only when normal/abnormal summary interrupts are asserted. */
     if ((((dma_ch_flag & ETH_DMACSR_AIS) != 0UL) && ((dma_ch_itsource & ETH_DMACIER_AIE) != 0UL))
         || (((dma_ch_flag & ETH_DMACSR_NIS) != 0UL) && ((dma_ch_itsource & ETH_DMACIER_NIE) != 0UL)))
     {
-      /* If fatal error occurred. */
+      /* Read channel DMA error bits and block summary IRQs to avoid repeated storms. */
       if ((dma_ch_flag & ETH_ERROR_DMA_MASK) != 0UL)
       {
-        /* Set error code. */
         ETH_COPY_BITS(dma_error_code, ETH_ERROR_DMA_MASK, dma_ch_flag);
-        /* Disable channel interrupts. */
         ETH_DMA_CHX_DISABLE_IT(p_dma_instance,  ETH_DMACIER_NIE | ETH_DMACIER_AIE);
       }
 
-      /* If RX channel event occurred. */
+      /* Build Rx channel event bitmap from DMA and MTL status then notify callback. */
       if ((dma_ch_id < USE_HAL_ETH_MAX_RX_CH_NB)
           && (((dma_ch_flag & ETH_RX_DMA_CH_EVENT_MASK) != 0UL) || ((mtl_ch_event & ETH_RX_MTL_CH_EVENT_MASK) != 0UL)))
       {
-        /* Set event code. */
         ETH_COPY_BITS(rx_ch_event, ETH_RX_DMA_CH_EVENT_MASK, dma_ch_flag);
         ETH_COPY_BITS(rx_ch_event, ETH_RX_MTL_CH_EVENT_MASK, mtl_ch_event);
 
-        /* Call Rx channel event callback. */
 #if defined (USE_HAL_ETH_REGISTER_CALLBACKS) && (USE_HAL_ETH_REGISTER_CALLBACKS == 1)
         heth->rx_channels[dma_ch_id].p_ch_event_cb(heth, ETH_GET_RX_CH_ID(dma_ch_id), rx_ch_event);
 #else /* USE_HAL_ETH_REGISTER_CALLBACKS */
@@ -3790,15 +3833,13 @@ void HAL_ETH_IRQHandler(hal_eth_handle_t *heth)
 #endif  /* USE_HAL_ETH_REGISTER_CALLBACKS */
       }
 
-      /* If TX channel event occurred. */
+      /* Build Tx channel event bitmap from DMA and MTL status then notify callback. */
       if ((dma_ch_id < USE_HAL_ETH_MAX_TX_CH_NB)
           && (((dma_ch_flag & ETH_TX_DMA_CH_EVENT_MASK) != 0UL) || ((mtl_ch_event & ETH_TX_MTL_CH_EVENT_MASK) != 0UL)))
       {
-        /* Set event code. */
         ETH_COPY_BITS(tx_ch_event, ETH_TX_DMA_CH_EVENT_MASK, dma_ch_flag);
         ETH_COPY_BITS(tx_ch_event, ETH_TX_MTL_CH_EVENT_MASK, mtl_ch_event);
 
-        /* Call Tx channel event callback. */
 #if defined (USE_HAL_ETH_REGISTER_CALLBACKS) && (USE_HAL_ETH_REGISTER_CALLBACKS == 1)
         heth->tx_channels[dma_ch_id].p_ch_event_cb(heth, ETH_GET_TX_CH_ID(dma_ch_id), tx_ch_event);
 #else /* USE_HAL_ETH_REGISTER_CALLBACKS */
@@ -3821,20 +3862,19 @@ void HAL_ETH_IRQHandler(hal_eth_handle_t *heth)
 #endif  /* USE_HAL_ETH_REGISTER_CALLBACKS */
   }
 
-  /* Call MAC event callback if any MAC event occurred. */
-  if ((mac_event_code & ETH_MAC_EVENT_MASK) != 0UL)
+  if (mac_event_code != 0UL)
   {
 #if defined (USE_HAL_ETH_REGISTER_CALLBACKS) && (USE_HAL_ETH_REGISTER_CALLBACKS == 1)
-    heth->p_event_cb(heth, (mac_event_code & ETH_MAC_EVENT_MASK));
+    heth->p_event_cb(heth, mac_event_code);
 #else /* USE_HAL_ETH_REGISTER_CALLBACKS */
-    HAL_ETH_EventCallback(heth, (mac_event_code & ETH_MAC_EVENT_MASK));
+    HAL_ETH_EventCallback(heth, mac_event_code);
 #endif /* USE_HAL_ETH_REGISTER_CALLBACKS */
   }
 
-  /* Check for PMT event interrupt. */
+  /* Handle power management interrupt */
   if ((mac_status_flag & ETH_MACISR_PMTIS) != 0UL)
   {
-    uint32_t mac_pmt_csr = STM32_READ_BIT(ETH_GET_INSTANCE(heth)->MACPCSR, ETH_PMT_EVENT_MASK);
+    mac_pmt_csr = STM32_READ_BIT(p_ethx->MACPCSR, ETH_PMT_EVENT_MASK);
 #if defined (USE_HAL_ETH_REGISTER_CALLBACKS) && (USE_HAL_ETH_REGISTER_CALLBACKS == 1)
     heth->p_pmt_cb(heth, mac_pmt_csr);
 #else /* USE_HAL_ETH_REGISTER_CALLBACKS */
@@ -3842,10 +3882,10 @@ void HAL_ETH_IRQHandler(hal_eth_handle_t *heth)
 #endif /* USE_HAL_ETH_REGISTER_CALLBACKS */
   }
 
-  /* Check for EEE event interrupt. */
+  /* Handle energy efficient Ethernet interrupt */
   if ((mac_status_flag & ETH_MACISR_LPIIS) != 0UL)
   {
-    uint32_t mac_eee_csr = STM32_READ_BIT(ETH_GET_INSTANCE(heth)->MACLCSR, ETH_LPI_EVENT_MASK);
+    mac_eee_csr = STM32_READ_BIT(p_ethx->MACLCSR, ETH_LPI_EVENT_MASK);
 #if defined (USE_HAL_ETH_REGISTER_CALLBACKS) && (USE_HAL_ETH_REGISTER_CALLBACKS == 1)
     heth->p_eee_cb(heth, mac_eee_csr);
 #else /* USE_HAL_ETH_REGISTER_CALLBACKS */
@@ -3854,20 +3894,18 @@ void HAL_ETH_IRQHandler(hal_eth_handle_t *heth)
   }
 
 
-  /* Call error callback if any DMA error occurred. */
+  /* Handle fatal errors interrupt */
   if (dma_error_code != 0UL)
   {
+#if defined (USE_HAL_ETH_GET_LAST_ERRORS) && (USE_HAL_ETH_GET_LAST_ERRORS == 1)
+    heth->last_error_codes = dma_error_code;
+#endif /* USE_HAL_ETH_GET_LAST_ERRORS */
     heth->global_state = HAL_ETH_STATE_FAULT;
-
 #if defined (USE_HAL_ETH_REGISTER_CALLBACKS) && (USE_HAL_ETH_REGISTER_CALLBACKS == 1)
     heth->p_error_cb(heth, dma_error_code);
 #else /* USE_HAL_ETH_REGISTER_CALLBACKS */
     HAL_ETH_ErrorCallback(heth, dma_error_code);
 #endif /* USE_HAL_ETH_REGISTER_CALLBACKS */
-
-#if defined (USE_HAL_ETH_GET_LAST_ERRORS) && (USE_HAL_ETH_GET_LAST_ERRORS == 1)
-    heth->last_error_codes = dma_error_code;
-#endif /* USE_HAL_ETH_GET_LAST_ERRORS */
   }
 }
 
@@ -3891,7 +3929,6 @@ void HAL_ETH_IRQHandler(hal_eth_handle_t *heth)
   */
 void HAL_ETH_WKUP_IRQHandler(const hal_eth_handle_t *heth)
 {
-  /* Check for EXTI line interrupt. */
   uint32_t exti_event = ETH_WakeupGetPendingIT();
   if (exti_event != 0UL)
   {
@@ -3947,12 +3984,14 @@ This subsection provides Weak callback functions.
   *         The meaning of each bit depends on the HAL channel definitions
   *         (e.g. RX/TX channel indices).
   *
-  * @note This function is declared as @c __weak so that it can be overridden
-  *       by a user-defined implementation without modifying the HAL sources.
+  * @warning This function is declared as @c __WEAK so that it can be overridden
+  *          by a user-defined implementation without modifying the HAL sources.
+  * @warning This function must not be modified, when the callback is needed,
+  *           HAL_ETH_DataCallback can be implemented in the user file.
   * @note It can be used as a central notification for data-related activity
   *       in addition to more specific per-channel callbacks.
   */
-__weak void HAL_ETH_DataCallback(hal_eth_handle_t *heth, uint32_t channels_mask)
+__WEAK void HAL_ETH_DataCallback(hal_eth_handle_t *heth, uint32_t channels_mask)
 {
   STM32_UNUSED(heth);
   STM32_UNUSED(channels_mask);
@@ -3980,8 +4019,10 @@ __weak void HAL_ETH_DataCallback(hal_eth_handle_t *heth, uint32_t channels_mask)
   *         meaning of each bit depends on the Ethernet HAL error code
   *         definitions (e.g. @c HAL_ETH_ERROR_xxx).
   *
-  * @note This function is declared as @c __weak so that it can be overridden
-  *       by a user-defined implementation without modifying the HAL sources.
+  * @warning This function is declared as @c __WEAK so that it can be overridden
+  *          by a user-defined implementation without modifying the HAL sources.
+  * @warning This function must not be modified, when the callback is needed,
+  *           HAL_ETH_ErrorCallback can be implemented in the user file.
   * @note It can be used together with @ref HAL_ETH_GetLastErrorCodes (when
   *       enabled) to retrieve and interpret accumulated error codes.
   * @note The following Errors are supported:
@@ -3998,7 +4039,7 @@ __weak void HAL_ETH_DataCallback(hal_eth_handle_t *heth, uint32_t channels_mask)
   *   | HAL_ETH_ERROR_FBE_DMA_RX_WR  | Bus Fault Error during write transfer by Rx DMA     |
   *   | HAL_ETH_ERROR_FBE_DMA_RX_AC  | Bus Fault Error during descriptor access by Rx DMA  |
   */
-__weak void HAL_ETH_ErrorCallback(hal_eth_handle_t *heth, uint32_t errors)
+__WEAK void HAL_ETH_ErrorCallback(hal_eth_handle_t *heth, uint32_t errors)
 {
   STM32_UNUSED(heth);
   STM32_UNUSED(errors);
@@ -4022,8 +4063,10 @@ __weak void HAL_ETH_ErrorCallback(hal_eth_handle_t *heth, uint32_t errors)
   *         Bitmask of Ethernet events that occurred. The exact meaning of
   *         each bit is defined by the Ethernet HAL event definitions.
   *
-  * @note This function is declared as @c __weak so that it can be overridden
-  *       by a user-defined implementation without modifying the HAL sources.
+  * @warning This function is declared as @c __WEAK so that it can be overridden
+  *          by a user-defined implementation without modifying the HAL sources.
+  * @warning This function must not be modified, when the callback is needed,
+  *          HAL_ETH_EventCallback can be implemented in the user file.
   * @note The following Ethernet Peripheral Events are supported:
   *
   *   | Event                        | Description                 |
@@ -4036,7 +4079,7 @@ __weak void HAL_ETH_ErrorCallback(hal_eth_handle_t *heth, uint32_t errors)
   *   | HAL_ETH_EVENT_MAC_NCARR  | No Carrier Event.               |
   *   | HAL_ETH_EVENT_MAC_TJT    | Transmit Jabber Timeout Event.  |
   */
-__weak void HAL_ETH_EventCallback(hal_eth_handle_t *heth, uint32_t events)
+__WEAK void HAL_ETH_EventCallback(hal_eth_handle_t *heth, uint32_t events)
 {
   STM32_UNUSED(heth);
   STM32_UNUSED(events);
@@ -4067,8 +4110,10 @@ __weak void HAL_ETH_EventCallback(hal_eth_handle_t *heth, uint32_t events)
   *         The exact meaning of each bit depends on the Ethernet HAL PMT
   *         event definitions.
   *
-  * @note This function is declared as @c __weak so that it can be overridden
-  *       by a user-defined implementation without modifying the HAL sources.
+  * @warning This function is declared as @c __WEAK so that it can be overridden
+  *          by a user-defined implementation without modifying the HAL sources.
+  * @warning This function must not be modified, when the callback is needed,
+  *          HAL_ETH_PMTCallback can be implemented in the user file.
   * @note It is typically used together with power management APIs such as
   *       @ref HAL_ETH_EnterPowerDownMode and @ref HAL_ETH_ExitPowerDownMode.
   * @note The following Ethernet Peripheral PMT Events are supported:
@@ -4078,7 +4123,7 @@ __weak void HAL_ETH_EventCallback(hal_eth_handle_t *heth, uint32_t events)
   *   | HAL_ETH_EVENT_PMT_MAGIC_PACKET  | Magic Packet Received.          |
   *   | HAL_ETH_EVENT_PMT_RWK_PACKET    | Remote wake-up Packet Received. |
   */
-__weak void HAL_ETH_PMTCallback(hal_eth_handle_t *heth, uint32_t wake_up_event)
+__WEAK void HAL_ETH_PMTCallback(hal_eth_handle_t *heth, uint32_t wake_up_event)
 {
   STM32_UNUSED(heth);
   STM32_UNUSED(wake_up_event);
@@ -4106,8 +4151,10 @@ __weak void HAL_ETH_PMTCallback(hal_eth_handle_t *heth, uint32_t wake_up_event)
   *         meaning of each bit depends on the Ethernet HAL EEE/LPI event
   *         definitions.
   *
-  * @note This function is declared as @c __weak so that it can be overridden
-  *       by a user-defined implementation without modifying the HAL sources.
+  * @warning This function is declared as @c __WEAK so that it can be overridden
+  *          by a user-defined implementation without modifying the HAL sources.
+  * @warning This function must not be modified, when the callback is needed,
+  *          HAL_ETH_EEECallback can be implemented in the user file.
   * @note It is typically used when EEE support is enabled in the MAC/PHY and
   *       LPI events are monitored by the application together with low power
   *       interface APIs such as @ref HAL_ETH_EnterLPIMode and
@@ -4125,7 +4172,7 @@ __weak void HAL_ETH_PMTCallback(hal_eth_handle_t *heth, uint32_t wake_up_event)
   *   | HAL_ETH_EVENT_LPI_TX_LPI_EX  | Transmit LPI State Entry performed.  |
   *   | HAL_ETH_EVENT_LPI_RX_LPI_EX  | Receive LPI State Entry performed.   |
   */
-__weak void HAL_ETH_EEECallback(hal_eth_handle_t *heth, uint32_t lpi_event)
+__WEAK void HAL_ETH_EEECallback(hal_eth_handle_t *heth, uint32_t lpi_event)
 {
   STM32_UNUSED(heth);
   STM32_UNUSED(lpi_event);
@@ -4148,12 +4195,14 @@ __weak void HAL_ETH_EEECallback(hal_eth_handle_t *heth, uint32_t lpi_event)
   *         configuration and state of the Ethernet peripheral that triggered
   *         the wake-up.
   *
-  * @note This function is declared as @c __weak so that it can be overridden
-  *       by a user-defined implementation without modifying the HAL sources.
+  * @warning This function is declared as @c __WEAK so that it can be overridden
+  *          by a user-defined implementation without modifying the HAL sources.
+  * @warning This function must not be modified, when the callback is needed,
+  *          HAL_ETH_WakeUpCallback can be implemented in the user file.
   * @note It is typically used in conjunction with power management APIs such
   *       as @ref HAL_ETH_EnterPowerDownMode and @ref HAL_ETH_ExitPowerDownMode.
   */
-__weak void HAL_ETH_WakeUpCallback(const hal_eth_handle_t *heth)
+__WEAK void HAL_ETH_WakeUpCallback(const hal_eth_handle_t *heth)
 {
   STM32_UNUSED(heth);
 }
@@ -4186,13 +4235,15 @@ __weak void HAL_ETH_WakeUpCallback(const hal_eth_handle_t *heth)
   * @param[in] size
   *         Size in bytes of the memory region to be invalidated.
   *
-  * @note This function is declared as @c __weak so that it can be overridden
-  *       by a user-defined implementation without modifying the HAL sources.
+  * @warning This function is declared as @c __WEAK so that it can be overridden
+  *          by a user-defined implementation without modifying the HAL sources.
+  * @warning This function must not be modified, when the callback is needed,
+  *          HAL_ETH_CacheInvalidateCallback can be implemented in the user file.
   * @note On systems without data cache, this callback can remain unimplemented.
   *
   * @sa HAL_ETH_CacheFlushCallback
   */
-__weak void HAL_ETH_CacheInvalidateCallback(hal_eth_handle_t *heth, uint32_t channel, void *p_addr,
+__WEAK void HAL_ETH_CacheInvalidateCallback(hal_eth_handle_t *heth, uint32_t channel, void *p_addr,
                                             uint32_t size)
 {
   STM32_UNUSED(heth);
@@ -4229,13 +4280,15 @@ __weak void HAL_ETH_CacheInvalidateCallback(hal_eth_handle_t *heth, uint32_t cha
   * @param[in] size
   *         Size in bytes of the memory region to be flushed.
   *
-  * @note This function is declared as @c __weak so that it can be overridden
-  *       by a user-defined implementation without modifying the HAL sources.
+  * @warning This function is declared as @c __WEAK so that it can be overridden
+  *          by a user-defined implementation without modifying the HAL sources.
+  * @warning This function must not be modified, when the callback is needed,
+  *          HAL_ETH_CacheFlushCallback can be implemented in the user file.
   * @note On systems without data cache, this callback can remain unimplemented.
   *
   * @sa HAL_ETH_CacheInvalidateCallback
   */
-__weak void HAL_ETH_CacheFlushCallback(hal_eth_handle_t *heth, uint32_t channel, void *p_addr,
+__WEAK void HAL_ETH_CacheFlushCallback(hal_eth_handle_t *heth, uint32_t channel, void *p_addr,
                                        uint32_t size)
 {
   STM32_UNUSED(heth);
@@ -4267,8 +4320,10 @@ __weak void HAL_ETH_CacheFlushCallback(hal_eth_handle_t *heth, uint32_t channel,
   *         The exact meaning of each bit depends on the Ethernet HAL event
   *         definitions (e.g. TX complete, TX error, etc.).
   *
-  * @note This function is declared as @c __weak so that it can be overridden
-  *       by a user-defined implementation without modifying the HAL sources.
+  * @warning This function is declared as @c __WEAK so that it can be overridden
+  *          by a user-defined implementation without modifying the HAL sources.
+  * @warning This function must not be modified, when the callback is needed,
+  *          HAL_ETH_TxEventCallback can be implemented in the user file.
   * @note The HAL can also provide per-channel callbacks (registered via
   *       @ref HAL_ETH_RegisterChannelTxEventCallback) which can be used
   *       instead of this global callback.
@@ -4294,7 +4349,7 @@ __weak void HAL_ETH_CacheFlushCallback(hal_eth_handle_t *heth, uint32_t channel,
   * @sa HAL_ETH_RegisterChannelTxEventCallback
   * @sa hal_eth_channel_cb_t
   */
-__weak void HAL_ETH_TxEventCallback(hal_eth_handle_t *heth, uint32_t channel, uint32_t events)
+__WEAK void HAL_ETH_TxEventCallback(hal_eth_handle_t *heth, uint32_t channel, uint32_t events)
 {
   STM32_UNUSED(heth);
   STM32_UNUSED(channel);
@@ -4324,8 +4379,10 @@ __weak void HAL_ETH_TxEventCallback(hal_eth_handle_t *heth, uint32_t channel, ui
   *         The exact meaning of each bit depends on the Ethernet HAL event
   *         definitions (e.g. RX complete, RX error, etc.).
   *
-  * @note This function is declared as @c __weak so that it can be overridden
-  *       by a user-defined implementation without modifying the HAL sources.
+  * @warning This function is declared as @c __WEAK so that it can be overridden
+  *          by a user-defined implementation without modifying the HAL sources.
+  * @warning This function must not be modified, when the callback is needed,
+  *          HAL_ETH_RxEventCallback can be implemented in the user file.
   * @note The HAL can also provide per-channel callbacks (registered via
   *       @ref HAL_ETH_RegisterChannelRxEventCallback) which can be used
   *       instead of this global callback.
@@ -4351,7 +4408,7 @@ __weak void HAL_ETH_TxEventCallback(hal_eth_handle_t *heth, uint32_t channel, ui
   * @sa HAL_ETH_RegisterChannelRxEventCallback
   * @sa hal_eth_channel_cb_t
   */
-__weak void HAL_ETH_RxEventCallback(hal_eth_handle_t *heth, uint32_t channel, uint32_t events)
+__WEAK void HAL_ETH_RxEventCallback(hal_eth_handle_t *heth, uint32_t channel, uint32_t events)
 {
   STM32_UNUSED(heth);
   STM32_UNUSED(channel);
@@ -4382,7 +4439,7 @@ __weak void HAL_ETH_RxEventCallback(hal_eth_handle_t *heth, uint32_t channel, ui
   * - For each TX channel bit set in @p input_channel_mask:
   *   - Ensure the channel state is @ref HAL_ETH_CHANNEL_STATE_ACTIVE or
   *     @ref HAL_ETH_CHANNEL_STATE_SUSPENDED.
-  *   - Lock the TX channel with @ref ETH_LockChannel.
+  *   - Lock the TX channel.
   *     - If lock fails, set the corresponding bit in @p *p_output_channel_mask
   *       and continue with the next channel.
   *   - Iterate the used TX descriptors (from
@@ -4406,13 +4463,13 @@ __weak void HAL_ETH_RxEventCallback(hal_eth_handle_t *heth, uint32_t channel, ui
   *     - Flush cache for the descriptor.
   *     - Move to the next descriptor and decrement @c buff_in_use.
   *   - Store updated descriptor index and used count in the handle.
-  *   - Unlock the TX channel with @ref ETH_UnlockChannel.
+  *   - Unlock the TX channel.
   *
   * **RX path:**
   * - For each RX channel bit set in @p input_channel_mask:
   *   - Ensure the channel state is @ref HAL_ETH_CHANNEL_STATE_ACTIVE or
   *     @ref HAL_ETH_CHANNEL_STATE_SUSPENDED.
-  *   - Lock the RX channel with @ref ETH_LockChannel.
+  *   - Lock the RX channel.
   *     - If lock fails, set the channel bit in @p *p_output_channel_mask
   *       and continue with the next channel.
   *   - Iterate the used RX descriptors (from
@@ -4429,11 +4486,10 @@ __weak void HAL_ETH_RxEventCallback(hal_eth_handle_t *heth, uint32_t channel, ui
   *         - Set status bits (FD/LD).
   *         - If LD is set:
   *           - Copy additional status bits (IPCB, IPv4, IPv6, ARPNR, VLAN)
-  *             from DESC1/DESC2/DESC3.
+  *             from desc1/desc2/desc3.
   *           - If VLAN present:
-  *             - Copy VLAN tag value from DESC0 into @c vlan_tag_ids.
-  *         - Set error bits using DESC1/DESC3 (IPH, IPC, DB, REC, OFL,
-  *           RWT, GP, CRC).
+  *             - Copy VLAN tag value from desc0 into @c vlan_tag_ids.
+  *         - Set error bits using desc1/desc3 (IPH, IPC, DB, REC, OFL, RWT, GP, CRC).
   *         - Set application context from @c p_app_data.
   *       - Call the RX complete callback
   *         @c p_rx_complete_cb(heth, channel_id, p_pkt_addr, rec_pkt_size,
@@ -4445,8 +4501,8 @@ __weak void HAL_ETH_RxEventCallback(hal_eth_handle_t *heth, uint32_t channel, ui
   *     - Flush cache for the descriptor.
   *     - Move to the next descriptor and decrement @c buff_in_use.
   *   - Store updated descriptor index and used count in the handle.
-  *   - Call \c ETH_updateRxDesc to replenish RX descriptors.
-  *   - Unlock the RX channel with @ref ETH_UnlockChannel.
+  *   - Replenish RX descriptors.
+  *   - Unlock the RX channel.
   *
   * @param[in,out] heth
   *         Pointer to an @ref hal_eth_handle_t structure containing the
@@ -4466,13 +4522,6 @@ __weak void HAL_ETH_RxEventCallback(hal_eth_handle_t *heth, uint32_t channel, ui
   *         - The user TX/RX complete callback returned an error
   *           (descriptor kept for next execution).
   *
-  * @retval HAL_OK
-  *         Data handler executed; channels requiring further processing are
-  *         indicated via @p *p_output_channel_mask.
-  * @retval HAL_INVALID_PARAM
-  *         @p heth or @p p_output_channel_mask is @c NULL (only when
-  *         parameter checking is enabled via @c USE_HAL_CHECK_PARAM).
-  *
   * @pre
   * - @p heth must not be @c NULL.
   * - @p p_output_channel_mask must not be @c NULL.
@@ -4490,6 +4539,13 @@ __weak void HAL_ETH_RxEventCallback(hal_eth_handle_t *heth, uint32_t channel, ui
   *       mode (interrupt context). In a bare-metal integration, the application
   *       must implement a deferred call mechanism so that it is invoked later
   *      from thread mode (process context).
+  *
+  * @retval HAL_OK
+  *         Data handler executed; channels requiring further processing are
+  *         indicated via @p *p_output_channel_mask.
+  * @retval HAL_INVALID_PARAM
+  *         @p heth or @p p_output_channel_mask is @c NULL (only when
+  *         parameter checking is enabled via @c USE_HAL_CHECK_PARAM).
   */
 hal_status_t HAL_ETH_ExecDataHandler(hal_eth_handle_t *heth, uint32_t input_channel_mask,
                                      uint32_t *p_output_channel_mask)
@@ -4507,244 +4563,48 @@ hal_status_t HAL_ETH_ExecDataHandler(hal_eth_handle_t *heth, uint32_t input_chan
 
   ASSERT_DBG_STATE(heth->global_state, (uint32_t)HAL_ETH_STATE_CONFIGURED);
 
-  /*------------------ Exec Tx Handler ----------------------*/
   if ((input_channel_mask & HAL_ETH_TX_CHANNEL_ALL) != 0UL)
   {
-    for (uint32_t ch = 0; ch < USE_HAL_ETH_MAX_TX_CH_NB; ch++)
+    /* Scan TX channels by priority: highest channel index first, then down to lowest. */
+    for (int32_t ch = ((int32_t)USE_HAL_ETH_MAX_TX_CH_NB - 1L); ch >= 0L; ch--)
     {
       if ((input_channel_mask & ETH_GET_TX_CH_ID(ch)) != 0UL)
       {
         ASSERT_DBG_STATE(heth->tx_channels[ch].channel_state, (uint32_t)HAL_ETH_CHANNEL_STATE_ACTIVE |
                          (uint32_t)HAL_ETH_CHANNEL_STATE_SUSPENDED);
-        /* lock the Tx Channel */
         if (ETH_LockChannel(&heth->tx_channels[ch].channel_lock_state) != HAL_OK)
         {
-          /* Channel is locked, return channel ID */
+          /* TX channel busy, keep it in output mask so caller can retry later. */
           *p_output_channel_mask |= ETH_GET_TX_CH_ID(ch);
           continue;
         }
-
-        eth_dma_descriptor_t *p_dma_txDesc;
-        uint32_t tx_desc_idx        = heth->tx_channels[ch].tx_desc_list.built_desc_id;
-        uint32_t tx_total_used_desc = heth->tx_channels[ch].tx_desc_list.buff_in_use;
-        uint32_t tx_process_completed = 0UL;
-
-        while ((tx_total_used_desc != 0UL) && (tx_process_completed == 0UL))
-        {
-          /* get current built dma descriptor*/
-          p_dma_txDesc = ETH_GET_DESC_INDEX(heth->tx_channels[ch].tx_desc_list, tx_desc_idx);
-
-#if defined (USE_HAL_ETH_REGISTER_CALLBACKS) && (USE_HAL_ETH_REGISTER_CALLBACKS == 1)
-          /* cache invalidate descriptor */
-          heth->p_cache_invalidate_cb(heth, ETH_GET_TX_CH_ID(ch),
-                                      p_dma_txDesc, heth->tx_channels[ch].tx_desc_list.desc_len_byte);
-#else  /* USE_HAL_ETH_REGISTER_CALLBACKS */
-          HAL_ETH_CacheInvalidateCallback(heth, ETH_GET_TX_CH_ID(ch), p_dma_txDesc,
-                                          heth->tx_channels[ch].tx_desc_list.desc_len_byte);
-#endif /* USE_HAL_ETH_REGISTER_CALLBACKS */
-
-          /* Determine if the packet transmitted */
-          if ((p_dma_txDesc->DESC3 & ETH_DMA_TX_DESC_RF_OWN) == 0UL)
-          {
-            /*If No Packet attached,  reset descriptor and pass to next one .  */
-            if (p_dma_txDesc->p_pkt_addr == NULL)
-            {
-              /*Context Descriptor, reset Desc */
-              ETH_ResetDMADesc(p_dma_txDesc);
-            }
-            else
-            {
-              hal_eth_tx_cb_pkt_data_t tx_cb_pkt_data = {0};
-
-              /* Set Desc status */
-              ETH_COPY_BITS(tx_cb_pkt_data.status, HAL_ETH_TX_STATUS_FD | HAL_ETH_TX_STATUS_LD, p_dma_txDesc->DESC3);
-
-              /* Set Desc errors */
-              ETH_COPY_BITS(tx_cb_pkt_data.errors, (HAL_ETH_TX_ERROR_IH | HAL_ETH_TX_ERROR_ED |
-                                                    HAL_ETH_TX_ERROR_EC | HAL_ETH_TX_ERROR_LC |
-                                                    HAL_ETH_TX_ERROR_NC | HAL_ETH_TX_ERROR_LOC |
-                                                    HAL_ETH_TX_ERROR_PC | HAL_ETH_TX_ERROR_JT), p_dma_txDesc->DESC3);
-              /* Set Application context */
-              STM32_WRITE_REG(tx_cb_pkt_data.p_data, p_dma_txDesc->p_app_data);
-
-              /* Call channel Tx complete callback */
-              if (heth->tx_channels[ch].p_tx_complete_cb(heth, ETH_GET_TX_CH_ID(ch), p_dma_txDesc->p_pkt_addr,
-                                                         tx_cb_pkt_data) != HAL_OK)
-              {
-                /* tx_complete fail, return channel ID and keep the descriptor for the next iteration */
-                *p_output_channel_mask |= ETH_GET_TX_CH_ID(ch);
-                break;
-              }
-              /* p_tx_complete_cb succeeded, reset Desc */
-              ETH_ResetDMADesc(p_dma_txDesc);
-            }
-            /* Cache flush descriptor */
-#if defined (USE_HAL_ETH_REGISTER_CALLBACKS) && (USE_HAL_ETH_REGISTER_CALLBACKS == 1)
-            heth->p_cache_flush_cb(heth, ETH_GET_TX_CH_ID(ch), p_dma_txDesc,
-                                   heth->tx_channels[ch].tx_desc_list.desc_len_byte);
-#else  /* USE_HAL_ETH_REGISTER_CALLBACKS */
-            HAL_ETH_CacheFlushCallback(heth, ETH_GET_TX_CH_ID(ch), p_dma_txDesc,
-                                       heth->tx_channels[ch].tx_desc_list.desc_len_byte);
-#endif /* USE_HAL_ETH_REGISTER_CALLBACKS */
-
-            /* Pass to next desc */
-            ETH_INCR_DESC_INDEX(tx_desc_idx, heth->tx_channels[ch].tx_desc_list.total_desc_cnt);
-
-            /* Decriment total used desc */
-            tx_total_used_desc--;
-          }
-          else
-          {
-            /* Still owned by DMA, exit the loop */
-            tx_process_completed = 1UL;
-          }
-        }
-
-        /* Write back total used buffers */
-        heth->tx_channels[ch].tx_desc_list.buff_in_use = tx_total_used_desc;
-        heth->tx_channels[ch].tx_desc_list.built_desc_id = tx_desc_idx;
-
-        /* Unlock the Tx Channel */
+        *p_output_channel_mask |= ETH_ExecTxDataHandler(heth, (uint32_t)ch);
         ETH_UnlockChannel(&heth->tx_channels[ch].channel_lock_state);
       }
     }
   }
-  /*------------------ Exec Rx Handler ----------------------*/
   if ((input_channel_mask & HAL_ETH_RX_CHANNEL_ALL) != 0UL)
   {
-    for (uint32_t ch = 0; ch < USE_HAL_ETH_MAX_RX_CH_NB; ch++)
+    /* Scan RX channels by priority: highest channel index first, then down to lowest. */
+    for (int32_t ch = ((int32_t)USE_HAL_ETH_MAX_RX_CH_NB - 1L); ch >= 0L; ch--)
     {
       if ((input_channel_mask & ETH_GET_RX_CH_ID(ch)) != 0UL)
       {
         ASSERT_DBG_STATE(heth->rx_channels[ch].channel_state, (uint32_t)HAL_ETH_CHANNEL_STATE_ACTIVE |
                          (uint32_t)HAL_ETH_CHANNEL_STATE_SUSPENDED);
-        /* Lock the Rx Channel */
         if (ETH_LockChannel(&heth->rx_channels[ch].channel_lock_state) != HAL_OK)
         {
-          /* Channel is locked, return channel ID */
+          /* RX channel busy: keep it in output mask so caller can retry later. */
           *p_output_channel_mask |= ETH_GET_RX_CH_ID(ch);
           continue;
         }
 
-        eth_dma_descriptor_t *p_dma_RxDesc;
-        uint32_t rx_desc_idx        = heth->rx_channels[ch].rx_desc_list.built_desc_id;
-        uint32_t rx_total_used_desc = heth->rx_channels[ch].rx_desc_list.buff_in_use;
-        uint32_t rx_process_completed = 0UL;
+        *p_output_channel_mask |= ETH_ExecRxDataHandler(heth, (uint32_t)ch);
 
-        while ((rx_total_used_desc != 0UL) && (rx_process_completed == 0UL))
-        {
-          /* Get current built Rx dma descriptor*/
-          p_dma_RxDesc = ETH_GET_DESC_INDEX(heth->rx_channels[ch].rx_desc_list, rx_desc_idx);
-#if defined (USE_HAL_ETH_REGISTER_CALLBACKS) && (USE_HAL_ETH_REGISTER_CALLBACKS == 1)
-          /* Cache invalidate descriptor */
-          heth->p_cache_invalidate_cb(heth, ETH_GET_RX_CH_ID(ch), p_dma_RxDesc,
-                                      heth->rx_channels[ch].rx_desc_list.desc_len_byte);
-#else  /* USE_HAL_ETH_REGISTER_CALLBACKS */
-          HAL_ETH_CacheInvalidateCallback(heth, ETH_GET_RX_CH_ID(ch),
-                                          p_dma_RxDesc, heth->rx_channels[ch].rx_desc_list.desc_len_byte);
-#endif /* USE_HAL_ETH_REGISTER_CALLBACKS */
-
-          /* Determine if the packet Received */
-          if (STM32_READ_BIT(p_dma_RxDesc->DESC3, ETH_DMA_RX_DESC_WBF_OWN) == 0UL)
-          {
-            /* Determine if a context descriptor */
-            if (STM32_READ_BIT(p_dma_RxDesc->DESC3, ETH_DMA_RX_DESC_WBF_CTXT) != 0UL)
-            {
-              /* context descriptor keep the backup address and application context */
-              STM32_WRITE_REG(p_dma_RxDesc->DESC0, 0x0UL);
-              STM32_WRITE_REG(p_dma_RxDesc->DESC1, 0x0UL);
-              STM32_WRITE_REG(p_dma_RxDesc->DESC2, 0x0UL);
-              STM32_WRITE_REG(p_dma_RxDesc->DESC3, 0x0UL);
-            }
-            else
-            {
-              hal_eth_rx_cb_pkt_data_t rx_pkt_data = {0};
-
-              /* Write received pkt size */
-              uint32_t rec_pkt_size = STM32_READ_BIT(p_dma_RxDesc->DESC3, ETH_DMA_RX_DESC_WBF_PL);
-
-              /* set the received packet status */
-              ETH_COPY_BITS(rx_pkt_data.status, (HAL_ETH_RX_STATUS_FD | HAL_ETH_RX_STATUS_LD), p_dma_RxDesc->DESC3);
-
-              /* Determine if a last descriptor */
-              if (STM32_READ_BIT(p_dma_RxDesc->DESC3, HAL_ETH_RX_STATUS_LD) != 0UL)
-              {
-                ETH_COPY_BITS(rx_pkt_data.status, (HAL_ETH_RX_STATUS_IPCB | HAL_ETH_RX_STATUS_IPV4 |
-                                                   HAL_ETH_RX_STATUS_IPV6), p_dma_RxDesc->DESC1);
-
-                ETH_COPY_BITS(rx_pkt_data.status, HAL_ETH_RX_STATUS_ARPNR, p_dma_RxDesc->DESC2);
-                ETH_COPY_BITS(rx_pkt_data.status, HAL_ETH_RX_STATUS_VLAN, p_dma_RxDesc->DESC3);
-
-                /* Last Descriptor check if VLAN Tag received*/
-                if (STM32_READ_BIT(p_dma_RxDesc->DESC3, HAL_ETH_RX_STATUS_VLAN) != 0UL)
-                {
-                  /* set vlan tag present status*/
-                  ETH_COPY_BITS(rx_pkt_data.status, HAL_ETH_RX_STATUS_VLAN, p_dma_RxDesc->DESC3);
-                  /* copy vlan tag value */
-                  STM32_WRITE_REG(rx_pkt_data.vlan_tag_ids, p_dma_RxDesc->DESC0);
-                }
-              }
-
-              /* set the received packet errors */
-              if (STM32_READ_BIT(p_dma_RxDesc->DESC1, (HAL_ETH_RX_STATUS_IPV4 | HAL_ETH_RX_STATUS_IPV6)) != 0UL)
-              {
-                if (STM32_READ_BIT(p_dma_RxDesc->DESC1, HAL_ETH_RX_ERROR_IPH) != 0UL)
-                {
-                  /* set IP header error */
-                  ETH_COPY_BITS(rx_pkt_data.errors, HAL_ETH_RX_ERROR_IPH, p_dma_RxDesc->DESC1);
-                }
-              }
-              /* set Errors*/
-              ETH_COPY_BITS(rx_pkt_data.errors, HAL_ETH_RX_ERROR_IPC, p_dma_RxDesc->DESC1);
-              ETH_COPY_BITS(rx_pkt_data.errors, (HAL_ETH_RX_ERROR_DB | HAL_ETH_RX_ERROR_REC
-                                                 | HAL_ETH_RX_ERROR_OFL | HAL_ETH_RX_ERROR_RWT
-                                                 | HAL_ETH_RX_ERROR_GP | HAL_ETH_RX_ERROR_CRC), p_dma_RxDesc->DESC3);
-              /* Set Application context */
-              STM32_WRITE_REG(rx_pkt_data.p_data, p_dma_RxDesc->p_app_data);
-              /*call channel Rx complete callback */
-              if (heth->rx_channels[ch].p_rx_complete_cb(heth, ETH_GET_RX_CH_ID(ch),
-                                                         p_dma_RxDesc->p_pkt_addr, rec_pkt_size,
-                                                         rx_pkt_data) != HAL_OK)
-              {
-                /* rx_complete fail, return channel ID and keep the descriptor for the next iteration*/
-                *p_output_channel_mask |= ETH_GET_RX_CH_ID(ch);
-                break;
-              }
-              /* p_rx_complete_cb succeeded, resetle Desc */
-              ETH_ResetDMADesc(p_dma_RxDesc);
-            }
-            /* cache flush descriptor */
-#if defined (USE_HAL_ETH_REGISTER_CALLBACKS) && (USE_HAL_ETH_REGISTER_CALLBACKS == 1)
-            heth->p_cache_flush_cb(heth, ETH_GET_RX_CH_ID(ch), p_dma_RxDesc,
-                                   heth->rx_channels[ch].rx_desc_list.desc_len_byte);
-#else  /* USE_HAL_ETH_REGISTER_CALLBACKS */
-            HAL_ETH_CacheFlushCallback(heth, ETH_GET_RX_CH_ID(ch), p_dma_RxDesc,
-                                       heth->rx_channels[ch].rx_desc_list.desc_len_byte);
-#endif /* USE_HAL_ETH_REGISTER_CALLBACKS */
-
-            /* pass to next desc */
-            ETH_INCR_DESC_INDEX(rx_desc_idx, heth->rx_channels[ch].rx_desc_list.total_desc_cnt);
-            /* decriment total used desc*/
-            rx_total_used_desc--;
-          }
-          else
-          {
-            /* no more packet to process */
-            rx_process_completed = 1UL;
-          }
-        }
-
-        /* write back total used buffers */
-        heth->rx_channels[ch].rx_desc_list.buff_in_use = rx_total_used_desc;
-        heth->rx_channels[ch].rx_desc_list.built_desc_id = rx_desc_idx;
-        /* update Rx Descriptors */
-        ETH_UpdateRxDesc(heth, ch);
-        /* lock the Rx Channel */
         ETH_UnlockChannel(&heth->rx_channels[ch].channel_lock_state);
       }
     }
   }
-  /* Return function status */
   return HAL_OK;
 }
 
@@ -4758,13 +4618,11 @@ hal_status_t HAL_ETH_ExecDataHandler(hal_eth_handle_t *heth, uint32_t input_chan
   *
   * The function:
   * - Validates parameters and channel index.
-  * - Translates the @p channel bitmask into a TX channel index via
-  *   @ref ETH_GetTXChIndex.
+  * - Translates the @p channel bitmask into a TX channel index.
   * - Checks that the TX channel state is
   *   @ref HAL_ETH_CHANNEL_STATE_ACTIVE or
   *   @ref HAL_ETH_CHANNEL_STATE_SUSPENDED.
-  * - Locks the TX channel using @ref ETH_LockChannel; if the channel is
-  *   already locked, it returns HAL_BUSY.
+  * - Locks the TX channel; if the channel is already locked, it returns HAL_BUSY.
   * - Prepare DMA TX descriptors for the
   *   specified buffers and configuration.
   * - Unlocks the TX channel and returns the status.
@@ -4775,7 +4633,7 @@ hal_status_t HAL_ETH_ExecDataHandler(hal_eth_handle_t *heth, uint32_t input_chan
   * @param[in]     channel
   *         TX channel identifier (bitmask), must satisfy
   *         @ref IS_ETH_CHANNEL_TX_INDEX. If multiple bits are set, only the
-  *         resolved channel index returned by @ref ETH_GetTXChIndex is used.
+  *         first matching TX channel index is used.
   * @param[in]     p_buff_array
   *         Pointer to an array of @ref hal_eth_buffer_t structures describing
   *         the buffer(s) that make up the packet to transmit (address and size).
@@ -4784,17 +4642,6 @@ hal_status_t HAL_ETH_ExecDataHandler(hal_eth_handle_t *heth, uint32_t input_chan
   * @param[in]     p_tx_conf
   *         Pointer to a @ref hal_eth_tx_pkt_config_t structure that contains
   *         per-packet TX configuration (e.g. checksums, VLAN tagging, etc.).
-  *
-  * @retval HAL_OK
-  *         The packet was successfully queued for transmission via DMA.
-  * @retval HAL_BUSY
-  *         - The specified TX channel is currently locked and cannot accept
-  *         a new transmission request.
-  *         - Not enough free descriptors available to queue the packet.
-  * @retval HAL_INVALID_PARAM
-  *         - @p heth, @p p_buff_array, or @p p_tx_conf is @c NULL, or
-  *         - @p channel is invalid (IS_ETH_CHANNEL_TX_INDEX() returns 0),
-  *         and parameter checking is enabled via @c USE_HAL_CHECK_PARAM.
   *
   * @pre
   * - @p heth must have been initialized and configured
@@ -4809,43 +4656,49 @@ hal_status_t HAL_ETH_ExecDataHandler(hal_eth_handle_t *heth, uint32_t input_chan
   *       of transmission depends on the number of already queued packets
   *       which are still pending for execution by the Ethernet DMA engine.
   *
+  * @retval HAL_OK
+  *         The packet was successfully queued for transmission via DMA.
+  * @retval HAL_BUSY
+  *         - The specified TX channel is currently locked and cannot accept
+  *         a new transmission request.
+  *         - Not enough free descriptors available to queue the packet.
+  * @retval HAL_INVALID_PARAM
+  *         - @p heth, @p p_buff_array, or @p p_tx_conf is @c NULL, or
+  *         - @p channel is invalid (IS_ETH_CHANNEL_TX_INDEX() returns 0),
+  *         and parameter checking is enabled via @c USE_HAL_CHECK_PARAM.
+  *
   * @sa HAL_ETH_ExecDataHandler
   */
 hal_status_t HAL_ETH_RequestTx(hal_eth_handle_t *heth, uint32_t channel, hal_eth_buffer_t *p_buff_array,
                                uint32_t buf_count, hal_eth_tx_pkt_config_t *p_tx_conf)
 {
+  hal_status_t return_status ;
+  uint32_t ch = 0UL;
+
   ASSERT_DBG_PARAM(heth != NULL);
   ASSERT_DBG_PARAM(p_buff_array != NULL);
   ASSERT_DBG_PARAM(p_tx_conf != NULL);
   ASSERT_DBG_PARAM(IS_ETH_CHANNEL_TX_INDEX(channel));
 
 #if defined (USE_HAL_CHECK_PARAM) && (USE_HAL_CHECK_PARAM == 1)
-  if ((p_buff_array == NULL) || (p_tx_conf == NULL) || (IS_ETH_CHANNEL_TX_INDEX(channel) == 0U))
+  if ((p_buff_array == NULL) || (p_tx_conf == NULL) || (IS_ETH_CHANNEL_TX_INDEX(channel) == 0UL))
   {
     return HAL_INVALID_PARAM;
   }
 #endif /* USE_HAL_CHECK_PARAM */
 
   ASSERT_DBG_STATE(heth->global_state, (uint32_t)HAL_ETH_STATE_CONFIGURED);
-
-  hal_status_t return_status;
-  uint32_t ch;
-  /* Retrieve the Channel Id */
   ETH_GetTXChIndex(&ch, channel);
 
   ASSERT_DBG_STATE(heth->tx_channels[ch].channel_state, (uint32_t)HAL_ETH_CHANNEL_STATE_ACTIVE |
                    (uint32_t)HAL_ETH_CHANNEL_STATE_SUSPENDED);
-  /* Lock Tx Channel */
   if (ETH_LockChannel(&heth->tx_channels[ch].channel_lock_state) != HAL_OK)
   {
-    /* Channel is locked */
     return HAL_BUSY;
   }
 
-  /* Prepare DMA Tx descriptors for transmission */
   return_status = ETH_RequestTxDMA(heth, ch, p_buff_array, buf_count, p_tx_conf);
 
-  /* Unlock Tx Channel */
   ETH_UnlockChannel(&heth->tx_channels[ch].channel_lock_state);
 
   return return_status;
@@ -4864,23 +4717,23 @@ hal_status_t HAL_ETH_RequestTx(hal_eth_handle_t *heth, uint32_t channel, hal_eth
   * the selected channel.
   *
   * **TX channel start:**
-  * - Derive TX channel index via @ref ETH_GetTXChIndex.
+  * - Derive TX channel index from @p channel.
   * - Check channel state is @ref HAL_ETH_CHANNEL_STATE_CONFIGURED.
   * - Check mandatory TX callback @c p_tx_complete_cb is registered.
   * - Move channel state to @ref HAL_ETH_CHANNEL_STATE_ACTIVE using
   *   @ref ETH_STATES_CHECK_UPDATE.
-  * - Initialize TX descriptor list with @ref ETH_DMATxDescListInit.
+  * - Initialize the TX descriptor list.
   * - Enable TX DMA interrupts (NIE, AIE, CDEE, FBEE, TIE).
   * - Flush TX FIFO, start DMA TX, clear TX stopped status, enable MAC TX.
   *
   * **RX channel start:**
-  * - Derive RX channel index via @ref ETH_GetRXChIndex.
+  * - Derive RX channel index from @p channel.
   * - Check channel state is @ref HAL_ETH_CHANNEL_STATE_CONFIGURED.
   * - Check mandatory RX callbacks @c p_rx_complete_cb and
   *   @c p_rx_allocate_cb are registered.
   * - Move channel state to @ref HAL_ETH_CHANNEL_STATE_ACTIVE using
   *   @ref ETH_STATES_CHECK_UPDATE.
-  * - Initialize RX descriptor list with @ref ETH_DMARxDescListInit.
+  * - Initialize the RX descriptor list.
   * - Enable RX DMA interrupts (NIE, AIE, CDEE, FBEE, RIE, RBUE).
   * - Start DMA RX and enable MAC RX.
   *
@@ -4900,15 +4753,6 @@ hal_status_t HAL_ETH_RequestTx(hal_eth_handle_t *heth, uint32_t channel, hal_eth
   *         Size in bytes of the descriptor memory region pointed to by
   *         @p p_desc_mem.
   *
-  * @retval HAL_OK
-  *         The channel was successfully started.
-  * @retval HAL_INVALID_PARAM
-  *         - @p heth or @p p_desc_mem is @c NULL, or
-  *         - @p channel is invalid (IS_ETH_CHANNEL_INDEX() returns 0), or
-  *         - @p p_desc_mem is not aligned to ETH_BUS_DATA_WIDTH_BYTE, or
-  *         - Mandatory @p p_tx_complete_cb callback for the selected channel
-  *         is not set.
-  *
   * @pre
   * - @p heth must have been initialized and configured
   *   (@ref HAL_ETH_Init + @ref HAL_ETH_SetConfig).
@@ -4921,108 +4765,87 @@ hal_status_t HAL_ETH_RequestTx(hal_eth_handle_t *heth, uint32_t channel, hal_eth
   * @note For RX channels, the @c p_rx_allocate_cb callback is expected to
   *       allocate and attach buffers to the RX descriptors during operation.
   *
-  * @sa ETH_GetTXChIndex
-  * @sa ETH_GetRXChIndex
-  * @sa ETH_DMATxDescListInit
-  * @sa ETH_DMARxDescListInit
+  * @retval HAL_OK
+  *         The channel was successfully started.
+  * @retval HAL_INVALID_PARAM
+  *         - @p heth or @p p_desc_mem is @c NULL, or
+  *         - @p channel is invalid (IS_ETH_CHANNEL_INDEX() returns 0), or
+  *         - @p p_desc_mem is not aligned to ETH_BUS_DATA_WIDTH_BYTE, or
+  *         - Mandatory @p p_tx_complete_cb callback for the selected channel
+  *         is not set.
+  *
   */
 hal_status_t HAL_ETH_StartChannel(hal_eth_handle_t *heth, uint32_t channel, uint32_t *p_desc_mem,
                                   uint32_t desc_size_byte)
 {
+  uint32_t ch = 0UL;
+  hal_status_t return_status = HAL_ERROR;
+  uint32_t desc_align_byte = 0UL;
+
   ASSERT_DBG_PARAM(heth != NULL);
   ASSERT_DBG_PARAM(p_desc_mem != NULL);
-  ASSERT_DBG_PARAM(((uint32_t)p_desc_mem % ETH_BUS_DATA_WIDTH_BYTE) == 0UL);
   ASSERT_DBG_PARAM(IS_ETH_CHANNEL_INDEX(channel));
 
 #if defined (USE_HAL_CHECK_PARAM) && (USE_HAL_CHECK_PARAM == 1)
-  if ((p_desc_mem == NULL) || (IS_ETH_CHANNEL_INDEX(channel) == 0U)
-      || (((uint32_t)p_desc_mem % ETH_BUS_DATA_WIDTH_BYTE) != 0))
+  if ((p_desc_mem == NULL) || (IS_ETH_CHANNEL_INDEX(channel) == 0U))
   {
     return HAL_INVALID_PARAM;
   }
 #endif /* USE_HAL_CHECK_PARAM */
 
-  uint32_t ch;
-
   if ((channel & HAL_ETH_TX_CHANNEL_ALL) != 0UL)
   {
-    /*--------------------- Start Tx Channel --------------------------*/
-    /* Retrieve the Channel Id */
     ETH_GetTXChIndex(&ch, channel);
 
-    ASSERT_DBG_PARAM(IS_ETH_DESC_SIZE_BYTE_VALID(desc_size_byte, heth->tx_channels[ch].tx_desc_list.desc_len_byte));
+    ASSERT_DBG_PARAM(IS_ETH_DESC_SIZE_BYTE_VALID(desc_size_byte, heth->tx_channels[ch].tx_desc_list.desc_len_byte,
+                                                 heth->tx_channels[ch].tx_desc_list.total_desc_cnt));
     ASSERT_DBG_STATE(heth->tx_channels[ch].channel_state, (uint32_t)HAL_ETH_CHANNEL_STATE_CONFIGURED);
 
-    if (heth->tx_channels[ch].p_tx_complete_cb == NULL)
+    desc_align_byte = (heth->tx_channels[ch].tx_desc_list.desc_len_byte == sizeof(eth_dma_descriptor_t))
+                      ? ETH_BUS_DATA_WIDTH_BYTE
+                      : heth->tx_channels[ch].tx_desc_list.desc_len_byte;
+
+    if ((desc_align_byte == 0UL) || ((ETH_CAST_PTR_TO_U32(p_desc_mem) % desc_align_byte) != 0UL))
     {
       return HAL_INVALID_PARAM;
     }
 
-    /* Move channel state to active */
-    ETH_STATES_CHECK_UPDATE(heth->tx_channels[ch].channel_state, (uint32_t)HAL_ETH_CHANNEL_STATE_CONFIGURED,
-                            HAL_ETH_CHANNEL_STATE_ACTIVE);
-
-    ETH_DMA_Channel_TypeDef *p_dma_instance = ETH_DMA_GET_TX_INSTANCE(heth, ch);
-    ETH_MTL_Queue_TypeDef *p_mtl_instance = ETH_MTL_GET_TX_INSTANCE(heth, ch);
-
-    /* Initialize DMA TX Descriptors list */
-    ETH_DMATxDescListInit(heth, ch, p_desc_mem, desc_size_byte);
-
-    /* DSB instruction to avoid race condition */
-    __DSB();
-
-    /* Enable ETH DMA interrupts:*/
-    ETH_DMA_CHX_ENABLE_IT(p_dma_instance, (ETH_DMACIER_NIE | ETH_DMACIER_AIE | ETH_DMACIER_CDEE
-                                           | ETH_DMACIER_FBEE | ETH_DMACIER_TIE));
-
-    /* Set the Flush Transmit FIFO bit */
-    STM32_SET_BIT(p_mtl_instance->MTLTXQXOMR, ETH_MTLTXQOMR_FTQ);
-
-    /* Enable the DMA transmission */
-    STM32_SET_BIT(p_dma_instance->DMACXTXCR, ETH_DMACTXCR_ST);
-
-    /* Clear Tx process stopped flags */
-    STM32_CLEAR_BIT(p_dma_instance->DMACXSR, (ETH_DMACSR_TPS));
-
-    /* Enable the MAC transmission */
-    STM32_SET_BIT(ETH_GET_INSTANCE(heth)->MACCR, ETH_MACCR_TE);
+    if (heth->tx_channels[ch].p_tx_complete_cb != NULL)
+    {
+      return_status = ETH_StartTxChannel(heth, ch, p_desc_mem, desc_size_byte);
+    }
+    else
+    {
+      return_status = HAL_ERROR;
+    }
   }
   else
   {
-    /*--------------------- Start Rx Channel --------------------------*/
-    /* Retrieve the Channel Id */
     ETH_GetRXChIndex(&ch, channel);
 
-    ASSERT_DBG_PARAM(IS_ETH_DESC_SIZE_BYTE_VALID(desc_size_byte, heth->rx_channels[ch].rx_desc_list.desc_len_byte));
+    ASSERT_DBG_PARAM(IS_ETH_DESC_SIZE_BYTE_VALID(desc_size_byte, heth->rx_channels[ch].rx_desc_list.desc_len_byte,
+                                                 heth->rx_channels[ch].rx_desc_list.total_desc_cnt));
     ASSERT_DBG_STATE(heth->rx_channels[ch].channel_state, (uint32_t)HAL_ETH_CHANNEL_STATE_CONFIGURED);
 
-    /* Check for registered Rx mandatory callbacks */
-    if ((heth->rx_channels[ch].p_rx_complete_cb == NULL) || (heth->rx_channels[ch].p_rx_allocate_cb == NULL))
+    desc_align_byte = (heth->rx_channels[ch].rx_desc_list.desc_len_byte == sizeof(eth_dma_descriptor_t))
+                      ? ETH_BUS_DATA_WIDTH_BYTE
+                      : heth->rx_channels[ch].rx_desc_list.desc_len_byte;
+    if ((desc_align_byte == 0UL) || ((ETH_CAST_PTR_TO_U32(p_desc_mem) % desc_align_byte) != 0UL))
     {
       return HAL_INVALID_PARAM;
     }
 
-    /* Move channel state to started */
-    ETH_STATES_CHECK_UPDATE(heth->rx_channels[ch].channel_state, (uint32_t)HAL_ETH_CHANNEL_STATE_CONFIGURED,
-                            HAL_ETH_CHANNEL_STATE_ACTIVE);
-
-    ETH_DMA_Channel_TypeDef *p_dma_instance = ETH_DMA_GET_RX_INSTANCE(heth, ch);
-
-    /* Initialize DMA TX Descriptors list */
-    ETH_DMARxDescListInit(heth, ch, p_desc_mem, desc_size_byte);
-
-    /* Enable ETH DMA interrupts */
-    ETH_DMA_CHX_ENABLE_IT(p_dma_instance, (ETH_DMACIER_NIE | ETH_DMACIER_AIE
-                                           | ETH_DMACIER_CDEE | ETH_DMACIER_FBEE
-                                           | ETH_DMACIER_RIE | ETH_DMACIER_RBUE));
-
-    /* Enable the DMA reception */
-    STM32_SET_BIT(p_dma_instance->DMACXRXCR, ETH_DMACRXCR_SR);
-    /* Enable the MAC reception */
-    STM32_SET_BIT(ETH_GET_INSTANCE(heth)->MACCR, ETH_MACCR_RE);
+    if ((heth->rx_channels[ch].p_rx_complete_cb != NULL) && (heth->rx_channels[ch].p_rx_allocate_cb != NULL))
+    {
+      return_status = ETH_StartRxChannel(heth, ch, p_desc_mem, desc_size_byte);
+    }
+    else
+    {
+      return_status = HAL_ERROR;
+    }
   }
 
-  return HAL_OK;
+  return return_status;
 }
 
 /**
@@ -5034,25 +4857,25 @@ hal_status_t HAL_ETH_StartChannel(hal_eth_handle_t *heth, uint32_t channel, uint
   * the lock.
   *
   * **TX channel stop:**
-  * - Determine TX channel index via @ref ETH_GetTXChIndex.
+  * - Determine TX channel index from @p channel.
   * - Check channel state is @ref HAL_ETH_CHANNEL_STATE_ACTIVE.
   * - Move channel state to @ref HAL_ETH_CHANNEL_STATE_CONFIGURED using
   *   @ref ETH_STATES_CHECK_UPDATE.
-  * - Lock the TX channel via @ref ETH_LockChannel;
+  * - Lock the TX channel;
   *   - On failure, restore state to @ref HAL_ETH_CHANNEL_STATE_ACTIVE and
   *     return HAL_BUSY.
-  * - Call @ref ETH_StopTxChannel to stop DMA/MTL/MAC on this TX channel.
+  * - Stop DMA/MTL/MAC activity on this TX channel.
   * - Unlock the channel.
   *
   * **RX channel stop:**
-  * - Determine RX channel index via @ref ETH_GetRXChIndex.
+  * - Determine RX channel index from @p channel.
   * - Check channel state is @ref HAL_ETH_CHANNEL_STATE_ACTIVE.
   * - Move channel state to @ref HAL_ETH_CHANNEL_STATE_CONFIGURED using
   *   @ref ETH_STATES_CHECK_UPDATE.
-  * - Lock the RX channel via @ref ETH_LockChannel;
+  * - Lock the RX channel;
   *   - On failure, restore state to @ref HAL_ETH_CHANNEL_STATE_ACTIVE and
   *     return HAL_BUSY.
-  * - Call @ref ETH_StopRxChannel to stop DMA/MTL/MAC on this RX channel.
+  * - Stop DMA/MTL/MAC activity on this RX channel.
   * - Unlock the channel.
   *
   * @param[in,out] heth
@@ -5065,19 +4888,6 @@ hal_status_t HAL_ETH_StartChannel(hal_eth_handle_t *heth, uint32_t channel, uint
   *         @ref HAL_ETH_TX_CHANNEL_ALL, a TX channel is stopped;
   *         otherwise an RX channel is stopped.
   *
-  * @retval HAL_OK
-  *         The selected channel was successfully stopped.
-  * @retval HAL_BUSY
-  *         The selected channel could not be locked for stopping; its state
-  *         is restored to @ref HAL_ETH_CHANNEL_STATE_ACTIVE.
-  * @retval HAL_ERROR
-  *         Channel index could not be derived from @p channel
-  *         (@ref ETH_GetTXChIndex / @ref ETH_GetRXChIndex failed).
-  * @retval HAL_INVALID_PARAM
-  *         - @p heth is @c NULL, or
-  *         - @p channel is invalid (IS_ETH_CHANNEL_INDEX() returns 0),
-  *         and parameter checking is enabled via @c USE_HAL_CHECK_PARAM.
-  *
   * @pre
   * - The selected channel must be in @ref HAL_ETH_CHANNEL_STATE_ACTIVE.
   * - @p heth must have been initialized and configured.
@@ -5086,67 +4896,81 @@ hal_status_t HAL_ETH_StartChannel(hal_eth_handle_t *heth, uint32_t channel, uint
   *       stops the DMA/MAC activity for the specified channel. Descriptors
   *       can be reused after restarting the channel.
   *
+  * @retval HAL_OK
+  *         The selected channel was successfully stopped.
+  * @retval HAL_BUSY
+  *         The selected channel could not be locked for stopping; its state
+  *         is restored to @ref HAL_ETH_CHANNEL_STATE_ACTIVE.
+  * @retval HAL_ERROR
+  *         Hardware error occurred while stopping the channel.
+  * @retval HAL_INVALID_PARAM
+  *         - @p heth is @c NULL, or
+  *         - @p channel is invalid (IS_ETH_CHANNEL_INDEX() returns 0),
+  *         and parameter checking is enabled via @c USE_HAL_CHECK_PARAM.
+  *
   * @sa HAL_ETH_StartChannel
-  * @sa ETH_StopTxChannel
-  * @sa ETH_StopRxChannel
   */
 hal_status_t HAL_ETH_StopChannel(hal_eth_handle_t *heth, uint32_t channel)
 {
+  uint32_t ch = 0UL;
+  hal_status_t return_status;
+
   ASSERT_DBG_PARAM(heth != NULL);
   ASSERT_DBG_PARAM(IS_ETH_CHANNEL_INDEX(channel));
 
 #if defined (USE_HAL_CHECK_PARAM) && (USE_HAL_CHECK_PARAM == 1)
-  if (IS_ETH_CHANNEL_INDEX(channel) == 0U)
+  if (IS_ETH_CHANNEL_INDEX(channel) == 0UL)
   {
     return HAL_INVALID_PARAM;
   }
 #endif /* USE_HAL_CHECK_PARAM */
 
-  uint32_t    ch;
-  hal_status_t return_status;
-
   if ((channel & HAL_ETH_TX_CHANNEL_ALL) != 0UL)
   {
-    /*--------------------- Stop Tx Channel --------------------------*/
-    /* Retrieve Tx Channel Id */
     ETH_GetTXChIndex(&ch, channel);
-    ASSERT_DBG_STATE(heth->tx_channels[ch].channel_state, (uint32_t)HAL_ETH_CHANNEL_STATE_ACTIVE);
-    /* move channel state to Configured */
-    ETH_STATES_CHECK_UPDATE(heth->tx_channels[ch].channel_state, (uint32_t)HAL_ETH_CHANNEL_STATE_ACTIVE,
-                            HAL_ETH_CHANNEL_STATE_CONFIGURED);
+    ASSERT_DBG_STATE(heth->tx_channels[ch].channel_state, (uint32_t)HAL_ETH_CHANNEL_STATE_ACTIVE
+                     | (uint32_t)HAL_ETH_CHANNEL_STATE_SUSPENDED);
 
-    /* Lock the Tx Channel */
     if (ETH_LockChannel(&heth->tx_channels[ch].channel_lock_state) != HAL_OK)
     {
-      heth->tx_channels[ch].channel_state = HAL_ETH_CHANNEL_STATE_ACTIVE;
       return HAL_BUSY;
     }
-    /* Stop Tx Channel */
     return_status = ETH_StopTxChannel(heth, ch);
-
-    /* Unlock the Tx Channel */
+    if (return_status == HAL_OK)
+    {
+      heth->tx_channels[ch].channel_state = HAL_ETH_CHANNEL_STATE_CONFIGURED;
+    }
+    else
+    {
+#if defined (USE_HAL_ETH_GET_LAST_ERRORS) && (USE_HAL_ETH_GET_LAST_ERRORS == 1)
+      heth->last_error_codes = HAL_ETH_ERROR_UNDEFINED;
+#endif /* USE_HAL_ETH_GET_LAST_ERRORS */
+      heth->global_state     = HAL_ETH_STATE_FAULT;
+    }
     ETH_UnlockChannel(&heth->tx_channels[ch].channel_lock_state);
   }
   else
   {
-    /*--------------------- Stop Rx Channel --------------------------*/
-    /* Retrieve Rx Channel Id */
     ETH_GetRXChIndex(&ch, channel);
-    ASSERT_DBG_STATE(heth->rx_channels[ch].channel_state, (uint32_t)HAL_ETH_CHANNEL_STATE_ACTIVE);
-    /* move channel state to configured */
-    ETH_STATES_CHECK_UPDATE(heth->rx_channels[ch].channel_state, (uint32_t)HAL_ETH_CHANNEL_STATE_ACTIVE,
-                            HAL_ETH_CHANNEL_STATE_CONFIGURED);
-    /* lock the Rx Channel */
+    ASSERT_DBG_STATE(heth->rx_channels[ch].channel_state, (uint32_t)HAL_ETH_CHANNEL_STATE_ACTIVE
+                     | (uint32_t)HAL_ETH_CHANNEL_STATE_SUSPENDED);
+
     if (ETH_LockChannel(&heth->rx_channels[ch].channel_lock_state) != HAL_OK)
     {
-      heth->rx_channels[ch].channel_state = HAL_ETH_CHANNEL_STATE_ACTIVE;
       return HAL_BUSY;
     }
-
-    /* Stop Rx Channel */
     return_status = ETH_StopRxChannel(heth, ch);
-
-    /* Unlock the Rx Channel */
+    if (return_status == HAL_OK)
+    {
+      heth->rx_channels[ch].channel_state = HAL_ETH_CHANNEL_STATE_CONFIGURED;
+    }
+    else
+    {
+#if defined (USE_HAL_ETH_GET_LAST_ERRORS) && (USE_HAL_ETH_GET_LAST_ERRORS == 1)
+      heth->last_error_codes = HAL_ETH_ERROR_UNDEFINED;
+#endif /* USE_HAL_ETH_GET_LAST_ERRORS */
+      heth->global_state     = HAL_ETH_STATE_FAULT;
+    }
     ETH_UnlockChannel(&heth->rx_channels[ch].channel_lock_state);
   }
 
@@ -5163,7 +4987,7 @@ hal_status_t HAL_ETH_StopChannel(hal_eth_handle_t *heth, uint32_t channel)
   * @ref HAL_ETH_CHANNEL_STATE_SUSPENDED.
   *
   * **TX channel suspend:**
-  * - Determine TX channel index via @ref ETH_GetTXChIndex.
+  * - Determine TX channel index from @p channel.
   * - Check channel state is @ref HAL_ETH_CHANNEL_STATE_ACTIVE.
   * - Update channel state to @ref HAL_ETH_CHANNEL_STATE_SUSPENDED using
   *   @ref ETH_STATES_CHECK_UPDATE.
@@ -5173,7 +4997,7 @@ hal_status_t HAL_ETH_StopChannel(hal_eth_handle_t *heth, uint32_t channel)
   *   @ref ETH_TX_DMA_STOP_TIMEOUT elapses.
   *
   * **RX channel suspend:**
-  * - Determine RX channel index via @ref ETH_GetRXChIndex.
+  * - Determine RX channel index from @p channel.
   * - Check channel state is @ref HAL_ETH_CHANNEL_STATE_ACTIVE.
   * - Update channel state to @ref HAL_ETH_CHANNEL_STATE_SUSPENDED using
   *   @ref ETH_STATES_CHECK_UPDATE.
@@ -5189,16 +5013,6 @@ hal_status_t HAL_ETH_StopChannel(hal_eth_handle_t *heth, uint32_t channel)
   *         @ref HAL_ETH_TX_CHANNEL_ALL, a TX channel is suspended;
   *         otherwise an RX channel is suspended.
   *
-  * @retval HAL_OK
-  *         The selected channel was successfully suspended.
-  * @retval HAL_ERROR
-  *         - Channel index could not be derived from @p channel, or
-  *         - Timeout occurred while waiting for the TX queue to drain.
-  * @retval HAL_INVALID_PARAM
-  *         - @p heth is @c NULL, or
-  *         - @p channel is invalid (IS_ETH_CHANNEL_INDEX() returns 0),
-  *         and parameter checking is enabled via @c USE_HAL_CHECK_PARAM.
-  *
   * @pre
   * - The selected channel must be in @ref HAL_ETH_CHANNEL_STATE_ACTIVE.
   * - @p heth must have been initialized and configured.
@@ -5207,73 +5021,88 @@ hal_status_t HAL_ETH_StopChannel(hal_eth_handle_t *heth, uint32_t channel)
   *       configuration are preserved and can be resumed later by a dedicated
   *       resume/start API.
   *
+  * @retval HAL_OK
+  *         The selected channel was successfully suspended.
+  * @retval HAL_ERROR
+  *         - Timeout occurred while waiting for the TX queue to drain.
+  * @retval HAL_INVALID_PARAM
+  *         - @p heth is @c NULL, or
+  *         - @p channel is invalid (IS_ETH_CHANNEL_INDEX() returns 0),
+  *         and parameter checking is enabled via @c USE_HAL_CHECK_PARAM.
+  *
   * @sa HAL_ETH_StartChannel
   * @sa HAL_ETH_StopChannel
   */
 hal_status_t HAL_ETH_SuspendChannel(hal_eth_handle_t *heth, uint32_t channel)
 {
+  uint32_t tick_start = 0UL;
+  uint32_t ch = 0UL;
+  ETH_DMA_Channel_TypeDef *p_dma_instance = NULL;
+
   ASSERT_DBG_PARAM(heth != NULL);
   ASSERT_DBG_PARAM(IS_ETH_CHANNEL_INDEX(channel));
 
 #if defined (USE_HAL_CHECK_PARAM) && (USE_HAL_CHECK_PARAM == 1)
-  if (IS_ETH_CHANNEL_INDEX(channel) == 0U)
+  if (IS_ETH_CHANNEL_INDEX(channel) == 0UL)
   {
     return HAL_INVALID_PARAM;
   }
 #endif /* USE_HAL_CHECK_PARAM */
-
-  uint32_t tickstart;
-  uint32_t ch;
-
   if ((channel & HAL_ETH_TX_CHANNEL_ALL) != 0UL)
   {
-    /*--------------------- Suspend Tx Channel --------------------------*/
-    /* Retrieve Tx Channel Id */
     ETH_GetTXChIndex(&ch, channel);
 
     ASSERT_DBG_STATE(heth->tx_channels[ch].channel_state, HAL_ETH_CHANNEL_STATE_ACTIVE);
 
-    /* Move channel state to SUSPENDED */
     ETH_STATES_CHECK_UPDATE(heth->tx_channels[ch].channel_state,
                             (uint32_t)HAL_ETH_CHANNEL_STATE_ACTIVE,
                             HAL_ETH_CHANNEL_STATE_SUSPENDED);
 
-    ETH_DMA_Channel_TypeDef *p_dma_instance = ETH_DMA_GET_TX_INSTANCE(heth, ch);
+    p_dma_instance = ETH_DMA_GET_TX_INSTANCE(heth, ch);
 
-    /* Stop Tx DMA transmission */
     STM32_CLEAR_BIT(p_dma_instance->DMACXTXCR, ETH_DMACTXCR_ST);
 
-    /* Wait for the DMA TX process to stop */
-    tickstart = HAL_GetTick();
+    tick_start = HAL_GetTick();
     while (ETH_DMA_GetTxProcessState(ETH_GET_INSTANCE(heth), ch) != ETH_TX_DMA_PROCESS_STOPPED)
     {
-      if ((HAL_GetTick() - tickstart) > ETH_TX_DMA_STOP_TIMEOUT)
+      if ((HAL_GetTick() - tick_start) > ETH_TX_DMA_STOP_TIMEOUT)
       {
-        return HAL_ERROR;
+        if (ETH_DMA_GetTxProcessState(ETH_GET_INSTANCE(heth), ch) != ETH_TX_DMA_PROCESS_STOPPED)
+        {
+#if defined (USE_HAL_ETH_GET_LAST_ERRORS) && (USE_HAL_ETH_GET_LAST_ERRORS == 1)
+          heth->last_error_codes = HAL_ETH_ERROR_UNDEFINED;
+#endif /* USE_HAL_ETH_GET_LAST_ERRORS */
+          heth->global_state     = HAL_ETH_STATE_FAULT;
+
+          return HAL_ERROR;
+        }
       }
     }
   }
   else
   {
-    /*--------------------- Suspend Rx Channel --------------------------*/
-    /* Retrieve Rx Channel Id */
     ETH_GetRXChIndex(&ch, channel);
     ASSERT_DBG_STATE(heth->rx_channels[ch].channel_state, (uint32_t)HAL_ETH_CHANNEL_STATE_ACTIVE);
-    /* move channel state to suspended */
     ETH_STATES_CHECK_UPDATE(heth->rx_channels[ch].channel_state, (uint32_t)HAL_ETH_CHANNEL_STATE_ACTIVE,
                             HAL_ETH_CHANNEL_STATE_SUSPENDED);
 
-    ETH_DMA_Channel_TypeDef *p_dma_instance = ETH_DMA_GET_RX_INSTANCE(heth, ch);
-    /* Disable Rx DMA reception */
+    p_dma_instance = ETH_DMA_GET_RX_INSTANCE(heth, ch);
     STM32_CLEAR_BIT(p_dma_instance->DMACXRXCR, ETH_DMACRXCR_SR);
 
-    /* Wait for the DMA RX process to stop */
-    tickstart = HAL_GetTick();
+    tick_start = HAL_GetTick();
     while (ETH_DMA_GetRxProcessState(ETH_GET_INSTANCE(heth), ch) != ETH_RX_DMA_PROCESS_STOPPED)
     {
-      if ((HAL_GetTick() - tickstart) > ETH_RX_DMA_STOP_TIMEOUT)
+      if ((HAL_GetTick() - tick_start) > ETH_RX_DMA_STOP_TIMEOUT)
       {
-        return HAL_ERROR;
+        if (ETH_DMA_GetRxProcessState(ETH_GET_INSTANCE(heth), ch) != ETH_RX_DMA_PROCESS_STOPPED)
+        {
+#if defined (USE_HAL_ETH_GET_LAST_ERRORS) && (USE_HAL_ETH_GET_LAST_ERRORS == 1)
+          heth->last_error_codes = HAL_ETH_ERROR_UNDEFINED;
+#endif /* USE_HAL_ETH_GET_LAST_ERRORS */
+          heth->global_state     = HAL_ETH_STATE_FAULT;
+
+          return HAL_ERROR;
+        }
       }
     }
   }
@@ -5290,14 +5119,14 @@ hal_status_t HAL_ETH_SuspendChannel(hal_eth_handle_t *heth, uint32_t channel)
   * control bit.
   *
   * **TX channel resume:**
-  * - Determine TX channel index via @ref ETH_GetTXChIndex.
+  * - Determine TX channel index from @p channel.
   * - Check channel state is @ref HAL_ETH_CHANNEL_STATE_SUSPENDED.
   * - Update channel state to @ref HAL_ETH_CHANNEL_STATE_ACTIVE using
   *   @ref ETH_STATES_CHECK_UPDATE.
   * - Enable TX DMA transmission (set @c TXCR_ST).
   *
   * **RX channel resume:**
-  * - Determine RX channel index via @ref ETH_GetRXChIndex.
+  * - Determine RX channel index from @p channel.
   * - Check channel state is @ref HAL_ETH_CHANNEL_STATE_SUSPENDED.
   * - Update channel state to @ref HAL_ETH_CHANNEL_STATE_ACTIVE using
   *   @ref ETH_STATES_CHECK_UPDATE.
@@ -5313,16 +5142,6 @@ hal_status_t HAL_ETH_SuspendChannel(hal_eth_handle_t *heth, uint32_t channel)
   *         @ref HAL_ETH_TX_CHANNEL_ALL, a TX channel is resumed;
   *         otherwise an RX channel is resumed.
   *
-  * @retval HAL_OK
-  *         The selected channel was successfully resumed.
-  * @retval HAL_ERROR
-  *         Channel index could not be derived from @p channel
-  *         (@ref ETH_GetTXChIndex / @ref ETH_GetRXChIndex failed).
-  * @retval HAL_INVALID_PARAM
-  *         - @p heth is @c NULL, or
-  *         - @p channel is invalid (IS_ETH_CHANNEL_INDEX() returns 0),
-  *         and parameter checking is enabled via @c USE_HAL_CHECK_PARAM.
-  *
   * @pre
   * - The selected channel must be in @ref HAL_ETH_CHANNEL_STATE_SUSPENDED.
   * - @p heth must have been initialized, configured, and the channel
@@ -5331,54 +5150,53 @@ hal_status_t HAL_ETH_SuspendChannel(hal_eth_handle_t *heth, uint32_t channel)
   * @note This function only resumes DMA activity; descriptor lists and other
   *       channel settings are assumed to be valid from prior configuration.
   *
+  * @retval HAL_OK
+  *         The selected channel was successfully resumed.
+  * @retval HAL_ERROR
+  *         Channel index could not be derived from @p channel.
+  * @retval HAL_INVALID_PARAM
+  *         - @p heth is @c NULL, or
+  *         - @p channel is invalid (IS_ETH_CHANNEL_INDEX() returns 0),
+  *         and parameter checking is enabled via @c USE_HAL_CHECK_PARAM.
+  *
   * @sa HAL_ETH_SuspendChannel
   * @sa HAL_ETH_StartChannel
   */
 hal_status_t HAL_ETH_ResumeChannel(hal_eth_handle_t *heth, uint32_t channel)
 {
+  uint32_t ch = 0UL;
+  ETH_DMA_Channel_TypeDef *p_dma_instance = NULL;
+
   ASSERT_DBG_PARAM(heth != NULL);
   ASSERT_DBG_PARAM(IS_ETH_CHANNEL_INDEX(channel));
 
 #if defined (USE_HAL_CHECK_PARAM) && (USE_HAL_CHECK_PARAM == 1)
-  if (IS_ETH_CHANNEL_INDEX(channel) == 0U)
+  if (IS_ETH_CHANNEL_INDEX(channel) == 0UL)
   {
     return HAL_INVALID_PARAM;
   }
 #endif /* USE_HAL_CHECK_PARAM */
-
-  uint32_t ch;
-
   if ((channel & HAL_ETH_TX_CHANNEL_ALL) != 0UL)
   {
-    /*--------------------- Resume Tx Channel --------------------------*/
-    /* Retrieve Tx Channel Id */
     ETH_GetTXChIndex(&ch, channel);
 
     ASSERT_DBG_STATE(heth->tx_channels[ch].channel_state,
                      (uint32_t)HAL_ETH_CHANNEL_STATE_SUSPENDED);
 
-    /* Move channel state to ACTIVE */
     ETH_STATES_CHECK_UPDATE(heth->tx_channels[ch].channel_state,
                             (uint32_t)HAL_ETH_CHANNEL_STATE_SUSPENDED,
                             HAL_ETH_CHANNEL_STATE_ACTIVE);
 
-    ETH_DMA_Channel_TypeDef *p_dma_instance = ETH_DMA_GET_TX_INSTANCE(heth, ch);
-
-    /* Enable Tx DMA transmission */
+    p_dma_instance = ETH_DMA_GET_TX_INSTANCE(heth, ch);
     STM32_SET_BIT(p_dma_instance->DMACXTXCR, ETH_DMACTXCR_ST);
   }
   else
   {
-    /*--------------------- Resume Rx Channel --------------------------*/
-    /* Retrieve Rx Channel Id */
     ETH_GetRXChIndex(&ch, channel);
     ASSERT_DBG_STATE(heth->rx_channels[ch].channel_state, (uint32_t)HAL_ETH_CHANNEL_STATE_SUSPENDED);
-    /* move channel state to Active */
     ETH_STATES_CHECK_UPDATE(heth->rx_channels[ch].channel_state, (uint32_t)HAL_ETH_CHANNEL_STATE_SUSPENDED,
                             HAL_ETH_CHANNEL_STATE_ACTIVE);
-    ETH_DMA_Channel_TypeDef *p_dma_instance = ETH_DMA_GET_RX_INSTANCE(heth, ch);
-
-    /* Enable Rx DMA reception */
+    p_dma_instance = ETH_DMA_GET_RX_INSTANCE(heth, ch);
     STM32_SET_BIT(p_dma_instance->DMACXRXCR, ETH_DMACRXCR_SR);
   }
   return HAL_OK;
@@ -5386,6 +5204,10 @@ hal_status_t HAL_ETH_ResumeChannel(hal_eth_handle_t *heth, uint32_t channel)
 
 /**
   * @brief  Get the number of buffers in use (owned by the hardware) for a channel.
+  *
+  * The returned counter (TX/RX @c buff_in_use) is maintained by the driver and is
+  * updated when TX buffers are queued (via @ref HAL_ETH_RequestTx),
+  * and when RX/TX completions are processed (via @ref HAL_ETH_ExecDataHandler.
   *
   * This function returns the current number of buffers in use (owned by the
   * hardware) for the specified Ethernet channel (Tx or Rx). The channel type
@@ -5406,36 +5228,34 @@ hal_status_t HAL_ETH_ResumeChannel(hal_eth_handle_t *heth, uint32_t channel)
   *      @ref HAL_ETH_CHANNEL_STATE_CONFIGURED or
   *      @ref HAL_ETH_CHANNEL_STATE_ACTIVE.
   *
-  * @return Number of buffers currently in use (owned by the hardware) for the
+  * @retval Number of buffers currently in use (owned by the hardware) for the
             specified channel.
   */
 uint32_t HAL_ETH_GetChannelBufferInUseCount(const hal_eth_handle_t *heth, uint32_t channel)
 {
+  uint32_t ch;
+  uint32_t ch_buff_in_use = 0UL;
+
   ASSERT_DBG_PARAM(heth != NULL);
   ASSERT_DBG_PARAM(IS_ETH_CHANNEL_INDEX(channel));
   ASSERT_DBG_STATE(heth->global_state, (uint32_t)HAL_ETH_STATE_CONFIGURED);
 
-  uint32_t ch;
-  uint32_t ch_Buff_InUse;
-
   if ((channel & HAL_ETH_TX_CHANNEL_ALL) != 0UL)
   {
-    /* Retrieve Tx Channel Id. */
     ETH_GetTXChIndex(&ch, channel);
     ASSERT_DBG_STATE(heth->tx_channels[ch].channel_state,
                      (uint32_t)HAL_ETH_CHANNEL_STATE_CONFIGURED | (uint32_t)HAL_ETH_CHANNEL_STATE_ACTIVE);
-    ch_Buff_InUse = heth->tx_channels[ch].tx_desc_list.buff_in_use;
+    ch_buff_in_use = heth->tx_channels[ch].tx_desc_list.buff_in_use;
   }
   else
   {
-    /* Retrieve Rx Channel Id. */
     ETH_GetRXChIndex(&ch, channel);
     ASSERT_DBG_STATE(heth->rx_channels[ch].channel_state,
                      (uint32_t)HAL_ETH_CHANNEL_STATE_CONFIGURED | (uint32_t)HAL_ETH_CHANNEL_STATE_ACTIVE);
-    ch_Buff_InUse = heth->rx_channels[ch].rx_desc_list.buff_in_use;
+    ch_buff_in_use = heth->rx_channels[ch].rx_desc_list.buff_in_use;
   }
 
-  return ch_Buff_InUse;
+  return ch_buff_in_use;
 }
 /**
   * @}
@@ -5456,7 +5276,7 @@ This subsection provides the Ethernet Multi-Queue Functions.
   * @param[in] heth Pointer to a @ref hal_eth_handle_t structure.
   *                This parameter is currently unused.
   *
-  * @return Number of Rx DMA channels.
+  * @retval Number of Rx DMA channels.
   */
 uint32_t HAL_ETH_GetRxDMAChNumber(const hal_eth_handle_t *heth)
 {
@@ -5474,7 +5294,7 @@ uint32_t HAL_ETH_GetRxDMAChNumber(const hal_eth_handle_t *heth)
   * @param[in] heth Pointer to a @ref hal_eth_handle_t structure.
   *                This parameter is currently unused.
   *
-  * @return Number of Tx DMA channels.
+  * @retval Number of Tx DMA channels.
   */
 uint32_t HAL_ETH_GetTxDMAChNumber(const hal_eth_handle_t *heth)
 {
@@ -5492,7 +5312,7 @@ uint32_t HAL_ETH_GetTxDMAChNumber(const hal_eth_handle_t *heth)
   * @param[in] heth Pointer to a @ref hal_eth_handle_t structure.
   *                This parameter is currently unused.
   *
-  * @return Number of Rx MTL queues.
+  * @retval Number of Rx MTL queues.
   */
 uint32_t HAL_ETH_GetRxMTLQNumber(const hal_eth_handle_t *heth)
 {
@@ -5510,7 +5330,7 @@ uint32_t HAL_ETH_GetRxMTLQNumber(const hal_eth_handle_t *heth)
   * @param[in] heth Pointer to a @ref hal_eth_handle_t structure.
   *                This parameter is currently unused.
   *
-  * @return Number of Tx MTL queues.
+  * @retval Number of Tx MTL queues.
   */
 uint32_t HAL_ETH_GetTxMTLQNumber(const hal_eth_handle_t *heth)
 {
@@ -5539,6 +5359,9 @@ This subsection provides the Ethernet Peripheral and Channel State and Error Fun
   *         Pointer to a constant @ref hal_eth_handle_t structure that holds
   *         the Ethernet configuration and runtime state.
   *
+  * @note This function does not perform any synchronization; it simply
+  *       returns the current value of @c heth->global_state.
+  *
   * @retval hal_eth_state_t
   *         The current global Ethernet state, typically one of:
   *         - @ref HAL_ETH_STATE_RESET
@@ -5550,9 +5373,6 @@ This subsection provides the Ethernet Peripheral and Channel State and Error Fun
   * @retval HAL_ETH_STATE_RESET
   *         Returned if @p heth is @c NULL and parameter checking is enabled
   *         (@c USE_HAL_CHECK_PARAM == 1).
-  *
-  * @note This function does not perform any synchronization; it simply
-  *       returns the current value of @c heth->global_state.
   */
 hal_eth_state_t HAL_ETH_GetState(const hal_eth_handle_t *heth)
 {
@@ -5572,10 +5392,8 @@ hal_eth_state_t HAL_ETH_GetState(const hal_eth_handle_t *heth)
   * The function:
   * - Validates @p heth and @p channel (with debug and optional runtime checks).
   * - If @p channel matches any TX channel bit (@ref HAL_ETH_TX_CHANNEL_ALL),
-  *   it uses @ref ETH_GetTXChIndex to obtain the TX channel index and returns
-  *   @c heth->tx_channels[index].channel_state.
-  * - Otherwise, it uses @ref ETH_GetRXChIndex to obtain the RX channel index
-  *   and returns @c heth->rx_channels[index].channel_state.
+  *   it derives the TX channel index and returns @c heth->tx_channels[index].channel_state.
+  * - Otherwise, it derives the RX channel index and returns @c heth->rx_channels[index].channel_state.
   * - On any error (invalid index, parameter check failure), it returns
   *   @ref HAL_ETH_CHANNEL_STATE_RESET.
   *
@@ -5588,6 +5406,12 @@ hal_eth_state_t HAL_ETH_GetState(const hal_eth_handle_t *heth)
   *         @ref HAL_ETH_TX_CHANNEL_ALL, a TX channel state is returned;
   *         otherwise an RX channel state is returned.
   *
+  * @note If @p channel contains multiple channel bits, the first matching
+  *       channel (lowest index) is used.
+  * @note If parameter checking is enabled and @p heth is @c NULL or
+  *       @p channel is invalid, the function returns
+  *       @ref HAL_ETH_CHANNEL_STATE_RESET.
+  *
   * @retval hal_eth_channel_state_t
   *         The current state of the selected channel, typically one of:
   *         - @ref HAL_ETH_CHANNEL_STATE_RESET
@@ -5596,33 +5420,22 @@ hal_eth_state_t HAL_ETH_GetState(const hal_eth_handle_t *heth)
   *         - @ref HAL_ETH_CHANNEL_STATE_SUSPENDED
   *         (Actual values depend on the @ref hal_eth_channel_state_t enum.)
   *
-  * @note If @p channel contains multiple channel bits, the helper functions
-  *       @ref ETH_GetTXChIndex or @ref ETH_GetRXChIndex will use the first
-  *       matching channel (lowest index).
-  * @note If parameter checking is enabled and @p heth is @c NULL or
-  *       @p channel is invalid, the function returns
-  *       @ref HAL_ETH_CHANNEL_STATE_RESET.
-  *
-  * @sa ETH_GetTXChIndex
-  * @sa ETH_GetRXChIndex
   */
 hal_eth_channel_state_t HAL_ETH_GetChannelState(const hal_eth_handle_t *heth, uint32_t channel)
 {
+  hal_eth_channel_state_t channel_state;
+  uint32_t ch = 0UL;
+
   ASSERT_DBG_PARAM(heth != NULL);
   ASSERT_DBG_PARAM(IS_ETH_CHANNEL_INDEX(channel));
 
-  hal_eth_channel_state_t channel_state;
-  uint32_t ch;
-
   if ((channel & HAL_ETH_TX_CHANNEL_ALL) != 0UL)
   {
-    /* Retrieve Tx Channel Id */
     ETH_GetTXChIndex(&ch, channel);
     channel_state = heth->tx_channels[ch].channel_state;
   }
   else
   {
-    /* Retrieve Rx Channel Id */
     ETH_GetRXChIndex(&ch, channel);
     channel_state = heth->rx_channels[ch].channel_state;
   }
@@ -5644,6 +5457,11 @@ hal_eth_channel_state_t HAL_ETH_GetChannelState(const hal_eth_handle_t *heth, ui
   *         the runtime state of the Ethernet peripheral, including the
   *         @c last_error_codes field.
   *
+  * @note This API is available only when @c USE_HAL_ETH_GET_LAST_ERRORS is
+  *       defined and set to 1.
+  * @note The @c last_error_codes field is read-only from the user point of view
+  *       and is updated by the HAL internal error handling logic.
+  *
   * @retval uint32_t
   *         Bitmask containing the last error codes recorded for this handle.
   *         The exact meaning of each bit depends on the Ethernet HAL error
@@ -5651,11 +5469,6 @@ hal_eth_channel_state_t HAL_ETH_GetChannelState(const hal_eth_handle_t *heth, ui
   * @retval HAL_INVALID_PARAM
   *         If @p heth is @c NULL and parameter checking is enabled
   *         (@c USE_HAL_CHECK_PARAM == 1).
-  *
-  * @note This API is available only when @c USE_HAL_ETH_GET_LAST_ERRORS is
-  *       defined and set to 1.
-  * @note The @c last_error_codes field is read-only from the user point of view
-  *       and is updated by the HAL internal error handling logic.
   */
 uint32_t HAL_ETH_GetLastErrorCodes(const hal_eth_handle_t *heth)
 {
@@ -5720,24 +5533,19 @@ This subsection provides the Ethernet MDIO Control and PHY I/O Operations Functi
   */
 void HAL_ETH_MDIO_UpdateClockRange(hal_eth_handle_t *heth)
 {
+  uint32_t hclk = 0UL;
+  uint32_t tmpreg = 0UL;
+
   ASSERT_DBG_PARAM(heth != NULL);
   ASSERT_DBG_STATE(heth->global_state, (uint32_t)HAL_ETH_STATE_CONFIGURED);
 
-  uint32_t hclk;
-  uint32_t tmpreg;
-
-  /* Get the ETHERNET MACMDIOAR value */
   tmpreg = STM32_READ_REG(ETH_GET_INSTANCE(heth)->MACMDIOAR);
 
-  /* Clear CSR Clock Range bits */
   tmpreg &= ~ETH_MACMDIOAR_CR;
 
-  /* Get hclk frequency value */
   hclk = HAL_RCC_GetHCLKFreq();
 
   tmpreg |= ETH_GetMDIOClockRange(hclk);
-
-  /* Configure the CSR Clock Range */
   STM32_WRITE_REG(ETH_GET_INSTANCE(heth)->MACMDIOAR, tmpreg);
 }
 
@@ -5802,7 +5610,6 @@ void HAL_ETH_MDIO_SetOpAttributes(hal_eth_handle_t *heth, uint32_t cmd_attribute
   ASSERT_DBG_PARAM(IS_ETH_MDIO_CMD_ATTR(cmd_attributes));
   ASSERT_DBG_STATE(heth->global_state, (uint32_t)HAL_ETH_STATE_CONFIGURED);
 
-  /* Write the cmd_attributes value into the MDIO Address register */
   STM32_MODIFY_REG(ETH_GET_INSTANCE(heth)->MACMDIOAR, (ETH_MACMDIOAR_PSE | ETH_MACMDIOAR_BTB | ETH_MACMDIOAR_NTC),
                    cmd_attributes);
 }
@@ -5842,16 +5649,6 @@ void HAL_ETH_MDIO_SetOpAttributes(hal_eth_handle_t *heth, uint32_t cmd_attribute
   * @param[in] data
   *         16-bit data value to write into the specified register.
   *
-  * @retval HAL_OK
-  *         The register has been successfully written.
-  * @retval HAL_ERROR
-  *         - The MDIO controller was busy at the beginning of the operation.
-  *         - A timeout occurred while waiting for the @ref ETH_MACMDIOAR_BUSY
-  *           flag to clear.
-  * @retval HAL_INVALID_PARAM
-  *         The @p heth parameter is @c NULL (only when parameter checking is
-  *         enabled via @c USE_HAL_CHECK_PARAM).
-  *
   * @note Clause 22 mode is selected by clearing @c MACMDIOAR C45E bit.
   * @note IMPORTANT: When performing a complete / full configuration or update
   *       sequence of an external device over MDIO, the user must ensure that
@@ -5862,32 +5659,38 @@ void HAL_ETH_MDIO_SetOpAttributes(hal_eth_handle_t *heth, uint32_t cmd_attribute
   *       upper (application) level, typically by using a mutual exclusion or
   *       equivalent locking mechanism around the full MDIO access sequence.
   *
+  * @retval HAL_OK
+  *         The register has been successfully written.
+  * @retval HAL_ERROR
+  *         - The MDIO controller was busy at the beginning of the operation.
+  *         - A timeout occurred while waiting for the @ref ETH_MACMDIOAR_BUSY
+  *           flag to clear.
+  * @retval HAL_INVALID_PARAM
+  *         The @p heth parameter is @c NULL (only when parameter checking is
+  *         enabled via @c USE_HAL_CHECK_PARAM).
+  *
   * @sa HAL_ETH_MDIO_C22ReadData
   * @sa HAL_ETH_MDIO_C45WriteData
   */
 hal_status_t HAL_ETH_MDIO_C22WriteData(const hal_eth_handle_t *heth, uint8_t phy_dev_addr, uint8_t reg_addr,
                                        uint16_t data)
 {
+  uint32_t tick_start = 0UL;
+  uint32_t tmpreg = 0UL;
+  ETH_TypeDef *p_ethx;
+
   ASSERT_DBG_PARAM(heth != NULL);
   ASSERT_DBG_STATE(heth->global_state, (uint32_t)HAL_ETH_STATE_CONFIGURED);
 
-  uint32_t tickstart;
-  uint32_t tmpreg;
-
-  /* Check for the Busy flag */
-  if (STM32_READ_BIT(ETH_GET_INSTANCE(heth)->MACMDIOAR, ETH_MACMDIOAR_BUSY) != 0UL)
+  p_ethx = ETH_GET_INSTANCE(heth);
+  if (STM32_READ_BIT(p_ethx->MACMDIOAR, ETH_MACMDIOAR_BUSY) != 0UL)
   {
     return HAL_ERROR;
   }
 
-  /* Enable Clause 22 (disable Clause 45) */
-  STM32_CLEAR_BIT(ETH_GET_INSTANCE(heth)->MACMDIOAR, ETH_MACMDIOAR_C45E);
-
-  /* Write the data to the MDIO Data Register */
-  STM32_MODIFY_REG(ETH_GET_INSTANCE(heth)->MACMDIODR, ETH_MACMDIODR_DATA, data);
-
-  /* Get the MACMDIOAR value */
-  STM32_WRITE_REG(tmpreg, ETH_GET_INSTANCE(heth)->MACMDIOAR);
+  STM32_CLEAR_BIT(p_ethx->MACMDIOAR, ETH_MACMDIOAR_C45E);
+  STM32_MODIFY_REG(p_ethx->MACMDIODR, ETH_MACMDIODR_DATA, data);
+  STM32_WRITE_REG(tmpreg, p_ethx->MACMDIOAR);
 
   /* Prepare the MDIO Address Register value:
      - Set the PHY device address
@@ -5897,20 +5700,19 @@ hal_status_t HAL_ETH_MDIO_C22WriteData(const hal_eth_handle_t *heth, uint8_t phy
   STM32_MODIFY_REG(tmpreg, ETH_MACMDIOAR_RDA, (((uint32_t)reg_addr) << ETH_MACMDIOAR_RDA_Pos));
   STM32_MODIFY_REG(tmpreg, ETH_MACMDIOAR_GOC, ETH_GOC_OPERATION_WRITE);
 
-  /* Write the result value into the MDIO Address Register */
-  STM32_WRITE_REG(ETH_GET_INSTANCE(heth)->MACMDIOAR, tmpreg);
+  STM32_WRITE_REG(p_ethx->MACMDIOAR, tmpreg);
+  STM32_SET_BIT(p_ethx->MACMDIOAR, ETH_MACMDIOAR_BUSY);
 
-  /* Initialize a write access to MDIO */
-  STM32_SET_BIT(ETH_GET_INSTANCE(heth)->MACMDIOAR, ETH_MACMDIOAR_BUSY);
+  tick_start = HAL_GetTick();
 
-  tickstart = HAL_GetTick();
-
-  /* Wait for the Busy flag to clear */
-  while (STM32_READ_BIT(ETH_GET_INSTANCE(heth)->MACMDIOAR, ETH_MACMDIOAR_BUSY) > 0UL)
+  while (STM32_READ_BIT(p_ethx->MACMDIOAR, ETH_MACMDIOAR_BUSY) != 0UL)
   {
-    if (((HAL_GetTick() - tickstart) > ETH_MDIO_BUS_TIMEOUT))
+    if (((HAL_GetTick() - tick_start) > ETH_MDIO_BUS_TIMEOUT))
     {
-      return HAL_ERROR;
+      if (STM32_READ_BIT(p_ethx->MACMDIOAR, ETH_MACMDIOAR_BUSY) != 0UL)
+      {
+        return HAL_ERROR;
+      }
     }
   }
 
@@ -5952,16 +5754,6 @@ hal_status_t HAL_ETH_MDIO_C22WriteData(const hal_eth_handle_t *heth, uint8_t phy
   *         Pointer to a @c uint16_t variable where the read register value
   *         will be stored.
   *
-  * @retval HAL_OK
-  *         The register has been successfully read and @p *p_data updated.
-  * @retval HAL_ERROR
-  *         - The MDIO controller was busy at the beginning of the operation.
-  *         - A timeout occurred while waiting for the @ref ETH_MACMDIOAR_BUSY
-  *           flag to clear.
-  * @retval HAL_INVALID_PARAM
-  *         @p heth or @p p_data is @c NULL (only when parameter checking is
-  *         enabled via @c USE_HAL_CHECK_PARAM).
-  *
   * @note Clause 22 mode is selected by clearing @c MACMDIOAR C45E bit.
   * @note IMPORTANT: When performing a complete / full configuration or update
   *       sequence of an external device over MDIO, the user must ensure that
@@ -5972,11 +5764,25 @@ hal_status_t HAL_ETH_MDIO_C22WriteData(const hal_eth_handle_t *heth, uint8_t phy
   *       upper (application) level, typically by using a mutual exclusion or
   *       equivalent locking mechanism around the full MDIO access sequence.
   *
+  * @retval HAL_OK
+  *         The register has been successfully read and @p *p_data updated.
+  * @retval HAL_ERROR
+  *         - The MDIO controller was busy at the beginning of the operation.
+  *         - A timeout occurred while waiting for the @ref ETH_MACMDIOAR_BUSY
+  *           flag to clear.
+  * @retval HAL_INVALID_PARAM
+  *         @p heth or @p p_data is @c NULL (only when parameter checking is
+  *         enabled via @c USE_HAL_CHECK_PARAM).
+  *
   * @sa HAL_ETH_MDIO_C22WriteData
   * @sa HAL_ETH_MDIO_C45ReadData
   */
 hal_status_t HAL_ETH_MDIO_C22ReadData(hal_eth_handle_t *heth, uint8_t phy_dev_addr, uint8_t reg_addr, uint16_t *p_data)
 {
+  uint32_t tick_start = 0UL;
+  uint32_t tmpreg = 0UL;
+  ETH_TypeDef *p_ethx;
+
   ASSERT_DBG_PARAM(heth != NULL);
   ASSERT_DBG_PARAM(p_data != NULL);
   ASSERT_DBG_STATE(heth->global_state, (uint32_t)HAL_ETH_STATE_CONFIGURED);
@@ -5988,48 +5794,40 @@ hal_status_t HAL_ETH_MDIO_C22ReadData(hal_eth_handle_t *heth, uint8_t phy_dev_ad
   }
 #endif /* USE_HAL_CHECK_PARAM */
 
-  uint32_t tickstart;
-  uint32_t tmpreg;
+  p_ethx = ETH_GET_INSTANCE(heth);
 
-  /* Check for the Busy flag */
-  if (STM32_READ_BIT(ETH_GET_INSTANCE(heth)->MACMDIOAR, ETH_MACMDIOAR_BUSY) != 0UL)
+  if (STM32_READ_BIT(p_ethx->MACMDIOAR, ETH_MACMDIOAR_BUSY) != 0UL)
   {
     return HAL_ERROR;
   }
-
-  /* Enable Clause 22 (disable Clause 45) */
-  STM32_CLEAR_BIT(ETH_GET_INSTANCE(heth)->MACMDIOAR, ETH_MACMDIOAR_C45E);
-
-  /* Get the MACMDIOAR value */
-  STM32_WRITE_REG(tmpreg, ETH_GET_INSTANCE(heth)->MACMDIOAR);
+  STM32_CLEAR_BIT(p_ethx->MACMDIOAR, ETH_MACMDIOAR_C45E);
+  STM32_WRITE_REG(tmpreg, p_ethx->MACMDIOAR);
 
   /* Prepare the MDIO Address Register value:
-     - Set the PHY device address
-     - Set the PHY register address
-     - Set the read mode */
+     - Set the PHY address
+     - Set the register address
+     - Set the read access operation */
   STM32_MODIFY_REG(tmpreg, ETH_MACMDIOAR_PA, (((uint32_t)phy_dev_addr) << ETH_MACMDIOAR_PA_Pos));
   STM32_MODIFY_REG(tmpreg, ETH_MACMDIOAR_RDA, (((uint32_t)reg_addr) << ETH_MACMDIOAR_RDA_Pos));
   STM32_MODIFY_REG(tmpreg, ETH_MACMDIOAR_GOC, ETH_GOC_OPERATION_READ);
+  STM32_WRITE_REG(p_ethx->MACMDIOAR, tmpreg);
 
-  /* Write the result value into the MDIO Address Register */
-  STM32_WRITE_REG(ETH_GET_INSTANCE(heth)->MACMDIOAR, tmpreg);
+  STM32_SET_BIT(p_ethx->MACMDIOAR, ETH_MACMDIOAR_BUSY);
 
-  /* Initialize a read access to MDIO */
-  STM32_SET_BIT(ETH_GET_INSTANCE(heth)->MACMDIOAR, ETH_MACMDIOAR_BUSY);
+  tick_start = HAL_GetTick();
 
-  tickstart = HAL_GetTick();
-
-  /* Wait for the Busy flag to clear */
-  while (STM32_READ_BIT(ETH_GET_INSTANCE(heth)->MACMDIOAR, ETH_MACMDIOAR_BUSY) > 0UL)
+  while (STM32_READ_BIT(p_ethx->MACMDIOAR, ETH_MACMDIOAR_BUSY) != 0UL)
   {
-    if (((HAL_GetTick() - tickstart) > ETH_MDIO_BUS_TIMEOUT))
+    if (((HAL_GetTick() - tick_start) > ETH_MDIO_BUS_TIMEOUT))
     {
-      return HAL_ERROR;
+      if (STM32_READ_BIT(p_ethx->MACMDIOAR, ETH_MACMDIOAR_BUSY) != 0UL)
+      {
+        return HAL_ERROR;
+      }
     }
   }
 
-  /* Read access completed, get the data value */
-  STM32_WRITE_REG(*p_data, (uint16_t)ETH_GET_INSTANCE(heth)->MACMDIODR);
+  STM32_WRITE_REG(*p_data, (uint16_t)p_ethx->MACMDIODR);
 
   return HAL_OK;
 }
@@ -6071,16 +5869,6 @@ hal_status_t HAL_ETH_MDIO_C22ReadData(hal_eth_handle_t *heth, uint8_t phy_dev_ad
   * @param[in] data
   *         16-bit data value to write into the specified register.
   *
-  * @retval HAL_OK
-  *         The register has been successfully written.
-  * @retval HAL_ERROR
-  *         - The MDIO controller was busy at the beginning of the operation.
-  *         - A timeout occurred while waiting for the @ref ETH_MACMDIOAR_BUSY
-  *           flag to clear.
-  * @retval HAL_INVALID_PARAM
-  *         The @p heth parameter is @c NULL (only when parameter checking is
-  *         enabled via @c USE_HAL_CHECK_PARAM).
-  *
   * @note Clause 45 mode is enabled during this function through the
   *       @c MACMDIOAR C45E bit.
   * @note IMPORTANT: When performing a complete / full configuration or update
@@ -6092,36 +5880,39 @@ hal_status_t HAL_ETH_MDIO_C22ReadData(hal_eth_handle_t *heth, uint8_t phy_dev_ad
   *       upper (application) level, typically by using a mutual exclusion or
   *       equivalent locking mechanism around the full MDIO access sequence.
   *
+  * @retval HAL_OK
+  *         The register has been successfully written.
+  * @retval HAL_ERROR
+  *         - The MDIO controller was busy at the beginning of the operation.
+  *         - A timeout occurred while waiting for the @ref ETH_MACMDIOAR_BUSY
+  *           flag to clear.
+  * @retval HAL_INVALID_PARAM
+  *         The @p heth parameter is @c NULL (only when parameter checking is
+  *         enabled via @c USE_HAL_CHECK_PARAM).
+  *
   * @sa HAL_ETH_MDIO_C45ReadData
   * @sa HAL_ETH_MDIO_C45ReadDataRange
   */
 hal_status_t HAL_ETH_MDIO_C45WriteData(const hal_eth_handle_t *heth, uint8_t phy_addr, uint8_t dev_addr,
                                        uint16_t reg_addr, uint16_t data)
 {
+  uint32_t tick_start = 0UL;
+  uint32_t tmpreg = 0UL;
+  ETH_TypeDef *p_ethx;
+
   ASSERT_DBG_PARAM(heth != NULL);
   ASSERT_DBG_STATE(heth->global_state, (uint32_t)HAL_ETH_STATE_CONFIGURED);
 
-  uint32_t tickstart;
-  uint32_t tmpreg;
+  p_ethx = ETH_GET_INSTANCE(heth);
 
-  /* Check for the Busy flag */
-  if (STM32_READ_BIT(ETH_GET_INSTANCE(heth)->MACMDIOAR, ETH_MACMDIOAR_BUSY) != 0UL)
+  if (STM32_READ_BIT(p_ethx->MACMDIOAR, ETH_MACMDIOAR_BUSY) != 0UL)
   {
     return HAL_ERROR;
   }
-
-  /* Enable Clause 45 */
-  STM32_SET_BIT(ETH_GET_INSTANCE(heth)->MACMDIOAR, ETH_MACMDIOAR_C45E);
-
-  /* Write register address to MDIO Data Register */
-  STM32_MODIFY_REG(ETH_GET_INSTANCE(heth)->MACMDIODR, ETH_MACMDIODR_RA,
-                   (((uint32_t)reg_addr) << ETH_MACMDIODR_RA_Pos));
-
-  /* Write data to MDIO Data Register */
-  STM32_MODIFY_REG(ETH_GET_INSTANCE(heth)->MACMDIODR, ETH_MACMDIODR_DATA, data);
-
-  /* Get the MACMDIOAR value */
-  STM32_WRITE_REG(tmpreg, ETH_GET_INSTANCE(heth)->MACMDIOAR);
+  STM32_SET_BIT(p_ethx->MACMDIOAR, ETH_MACMDIOAR_C45E);
+  STM32_MODIFY_REG(p_ethx->MACMDIODR, ETH_MACMDIODR_RA, (((uint32_t)reg_addr) << ETH_MACMDIODR_RA_Pos));
+  STM32_MODIFY_REG(p_ethx->MACMDIODR, ETH_MACMDIODR_DATA, data);
+  STM32_WRITE_REG(tmpreg, p_ethx->MACMDIOAR);
 
   /* Prepare the MDIO Address Register value:
      - Set the PHY address
@@ -6130,25 +5921,23 @@ hal_status_t HAL_ETH_MDIO_C45WriteData(const hal_eth_handle_t *heth, uint8_t phy
   STM32_MODIFY_REG(tmpreg, ETH_MACMDIOAR_PA, (((uint32_t)phy_addr) << ETH_MACMDIOAR_PA_Pos));
   STM32_MODIFY_REG(tmpreg, ETH_MACMDIOAR_RDA, (((uint32_t)dev_addr) << ETH_MACMDIOAR_RDA_Pos));
   STM32_MODIFY_REG(tmpreg, ETH_MACMDIOAR_GOC, ETH_GOC_OPERATION_WRITE);
+  STM32_WRITE_REG(p_ethx->MACMDIOAR, tmpreg);
 
-  /* Write back the tmpreg value into the MDIO Address Register */
-  STM32_WRITE_REG(ETH_GET_INSTANCE(heth)->MACMDIOAR, tmpreg);
+  STM32_SET_BIT(p_ethx->MACMDIOAR, ETH_MACMDIOAR_BUSY);
 
-  /* Initialize a write operation */
-  STM32_SET_BIT(ETH_GET_INSTANCE(heth)->MACMDIOAR, ETH_MACMDIOAR_BUSY);
+  tick_start = HAL_GetTick();
 
-  tickstart = HAL_GetTick();
-
-  /* Wait for the Busy flag to clear */
-  while (STM32_READ_BIT(ETH_GET_INSTANCE(heth)->MACMDIOAR, ETH_MACMDIOAR_BUSY) > 0UL)
+  while (STM32_READ_BIT(p_ethx->MACMDIOAR, ETH_MACMDIOAR_BUSY) != 0UL)
   {
-    if (((HAL_GetTick() - tickstart) > ETH_MDIO_BUS_TIMEOUT))
+    if (((HAL_GetTick() - tick_start) > ETH_MDIO_BUS_TIMEOUT))
     {
-      return HAL_ERROR;
+      if (STM32_READ_BIT(p_ethx->MACMDIOAR, ETH_MACMDIOAR_BUSY) != 0UL)
+      {
+        return HAL_ERROR;
+      }
     }
   }
 
-  /* Write operation done */
   return HAL_OK;
 }
 
@@ -6189,16 +5978,6 @@ hal_status_t HAL_ETH_MDIO_C45WriteData(const hal_eth_handle_t *heth, uint8_t phy
   *         Pointer to a @c uint16_t variable where the read register value
   *         will be stored.
   *
-  * @retval HAL_OK
-  *         The register has been successfully read and @p *p_data updated.
-  * @retval HAL_ERROR
-  *         - The MDIO controller was busy at the beginning of the operation.
-  *         - A timeout occurred while waiting for the @ref ETH_MACMDIOAR_BUSY
-  *           flag to clear.
-  * @retval HAL_INVALID_PARAM
-  *         The @p heth parameter is @c NULL (only when parameter checking is
-  *         enabled via @c USE_HAL_CHECK_PARAM).
-  *
   * @note Clause 45 mode is enabled during this function through the
   *       @c MACMDIOAR C45E bit.
   * @note IMPORTANT: When performing a complete / full configuration or update
@@ -6210,11 +5989,25 @@ hal_status_t HAL_ETH_MDIO_C45WriteData(const hal_eth_handle_t *heth, uint8_t phy
   *       upper (application) level, typically by using a mutual exclusion or
   *       equivalent locking mechanism around the full MDIO access sequence.
   *
+  * @retval HAL_OK
+  *         The register has been successfully read and @p *p_data updated.
+  * @retval HAL_ERROR
+  *         - The MDIO controller was busy at the beginning of the operation.
+  *         - A timeout occurred while waiting for the @ref ETH_MACMDIOAR_BUSY
+  *           flag to clear.
+  * @retval HAL_INVALID_PARAM
+  *         The @p heth parameter is @c NULL (only when parameter checking is
+  *         enabled via @c USE_HAL_CHECK_PARAM).
+  *
   * @sa HAL_ETH_MDIO_C45ReadDataRange
   */
 hal_status_t HAL_ETH_MDIO_C45ReadData(hal_eth_handle_t *heth, uint8_t phy_addr, uint8_t dev_addr, uint16_t reg_addr,
                                       uint16_t *p_data)
 {
+  uint32_t tick_start = 0UL;
+  uint32_t tmpreg = 0UL;
+  ETH_TypeDef *p_ethx;
+
   ASSERT_DBG_PARAM(heth != NULL);
   ASSERT_DBG_PARAM(p_data != NULL);
   ASSERT_DBG_STATE(heth->global_state, (uint32_t)HAL_ETH_STATE_CONFIGURED);
@@ -6226,24 +6019,14 @@ hal_status_t HAL_ETH_MDIO_C45ReadData(hal_eth_handle_t *heth, uint8_t phy_addr, 
   }
 #endif /* USE_HAL_CHECK_PARAM */
 
-  uint32_t tickstart;
-  uint32_t tmpreg;
-
-  /* Check for the Busy flag */
-  if (STM32_READ_BIT(ETH_GET_INSTANCE(heth)->MACMDIOAR, ETH_MACMDIOAR_BUSY) != 0UL)
+  p_ethx = ETH_GET_INSTANCE(heth);
+  if (STM32_READ_BIT(p_ethx->MACMDIOAR, ETH_MACMDIOAR_BUSY) != 0UL)
   {
     return HAL_ERROR;
   }
-
-  /* Enable Clause 45 */
-  STM32_SET_BIT(ETH_GET_INSTANCE(heth)->MACMDIOAR, ETH_MACMDIOAR_C45E);
-
-  /* Write register address to MDIO Data Register */
-  STM32_MODIFY_REG(ETH_GET_INSTANCE(heth)->MACMDIODR, ETH_MACMDIODR_RA,
-                   (((uint32_t)reg_addr) << ETH_MACMDIODR_RA_Pos));
-
-  /* Get the MACMDIOAR value */
-  STM32_WRITE_REG(tmpreg, ETH_GET_INSTANCE(heth)->MACMDIOAR);
+  STM32_SET_BIT(p_ethx->MACMDIOAR, ETH_MACMDIOAR_C45E);
+  STM32_MODIFY_REG(p_ethx->MACMDIODR, ETH_MACMDIODR_RA, (((uint32_t)reg_addr) << ETH_MACMDIODR_RA_Pos));
+  STM32_WRITE_REG(tmpreg, p_ethx->MACMDIOAR);
 
   /* Prepare the MDIO Address Register value:
      - Set the PHY address
@@ -6252,27 +6035,23 @@ hal_status_t HAL_ETH_MDIO_C45ReadData(hal_eth_handle_t *heth, uint8_t phy_addr, 
   STM32_MODIFY_REG(tmpreg, ETH_MACMDIOAR_PA, (((uint32_t)phy_addr) << ETH_MACMDIOAR_PA_Pos));
   STM32_MODIFY_REG(tmpreg, ETH_MACMDIOAR_RDA, (((uint32_t)dev_addr) << ETH_MACMDIOAR_RDA_Pos));
   STM32_MODIFY_REG(tmpreg, ETH_MACMDIOAR_GOC, ETH_GOC_OPERATION_READ);
+  STM32_WRITE_REG(p_ethx->MACMDIOAR, tmpreg);
 
-  /* Write back the tmpreg value into the MDIO Address Register */
-  STM32_WRITE_REG(ETH_GET_INSTANCE(heth)->MACMDIOAR, tmpreg);
+  STM32_SET_BIT(p_ethx->MACMDIOAR, ETH_MACMDIOAR_BUSY);
 
-  /* Initialize a read operation */
-  STM32_SET_BIT(ETH_GET_INSTANCE(heth)->MACMDIOAR, ETH_MACMDIOAR_BUSY);
+  tick_start = HAL_GetTick();
 
-  tickstart = HAL_GetTick();
-
-  /* Wait for the Busy flag to clear */
-  while (STM32_READ_BIT(ETH_GET_INSTANCE(heth)->MACMDIOAR, ETH_MACMDIOAR_BUSY) > 0UL)
+  while (STM32_READ_BIT(p_ethx->MACMDIOAR, ETH_MACMDIOAR_BUSY) != 0UL)
   {
-    if (((HAL_GetTick() - tickstart) > ETH_MDIO_BUS_TIMEOUT))
+    if (((HAL_GetTick() - tick_start) > ETH_MDIO_BUS_TIMEOUT))
     {
-      return HAL_ERROR;
+      if (STM32_READ_BIT(p_ethx->MACMDIOAR, ETH_MACMDIOAR_BUSY) != 0UL)
+      {
+        return HAL_ERROR;
+      }
     }
   }
-
-  /* Read access operation completed, get the data value */
-  STM32_WRITE_REG(*p_data, (uint16_t)ETH_GET_INSTANCE(heth)->MACMDIODR);
-
+  STM32_WRITE_REG(*p_data, (uint16_t)p_ethx->MACMDIODR);
   return HAL_OK;
 }
 
@@ -6317,16 +6096,6 @@ hal_status_t HAL_ETH_MDIO_C45ReadData(hal_eth_handle_t *heth, uint8_t phy_addr, 
   *         Number of consecutive registers to read starting from
   *         @p start_reg_addr.
   *
-  * @retval HAL_OK
-  *         All requested registers have been successfully read.
-  * @retval HAL_ERROR
-  *         - The MDIO controller was busy at the beginning of the operation.
-  *         - A timeout occurred while waiting for the @ref ETH_MACMDIOAR_BUSY
-  *           flag to clear for any of the read operations.
-  * @retval HAL_INVALID_PARAM
-  *         @p heth or @p p_data is @c NULL (only when parameter checking is
-  *         enabled via @c USE_HAL_CHECK_PARAM).
-  *
   * @note Clause 45 mode is enabled for the duration of this function through
   *       the @c MACMDIOAR C45E bit.
   * @note IMPORTANT: When performing a complete / full configuration or update
@@ -6337,11 +6106,26 @@ hal_status_t HAL_ETH_MDIO_C45ReadData(hal_eth_handle_t *heth, uint8_t phy_addr, 
   *       device on the MDIO bus. This protection must be implemented at the
   *       upper (application) level, typically by using a mutual exclusion or
   *       equivalent locking mechanism around the full MDIO access sequence.
+  *
+  * @retval HAL_OK
+  *         All requested registers have been successfully read.
+  * @retval HAL_ERROR
+  *         - The MDIO controller was busy at the beginning of the operation.
+  *         - A timeout occurred while waiting for the @ref ETH_MACMDIOAR_BUSY
+  *           flag to clear for any of the read operations.
+  * @retval HAL_INVALID_PARAM
+  *         @p heth or @p p_data is @c NULL (only when parameter checking is
+  *         enabled via @c USE_HAL_CHECK_PARAM).
   */
 hal_status_t HAL_ETH_MDIO_C45ReadDataRange(hal_eth_handle_t *heth, uint8_t phy_addr, uint8_t dev_addr,
                                            uint16_t start_reg_addr,
                                            uint16_t *p_data, uint16_t count)
 {
+  uint32_t tick_start = 0UL;
+  uint32_t tmpreg = 0UL;
+  uint32_t index;
+  ETH_TypeDef *p_ethx;
+
   ASSERT_DBG_PARAM(heth != NULL);
   ASSERT_DBG_PARAM(p_data != NULL);
   ASSERT_DBG_STATE(heth->global_state, (uint32_t)HAL_ETH_STATE_CONFIGURED);
@@ -6353,20 +6137,14 @@ hal_status_t HAL_ETH_MDIO_C45ReadDataRange(hal_eth_handle_t *heth, uint8_t phy_a
   }
 #endif /* USE_HAL_CHECK_PARAM */
 
-  uint32_t tickstart;
-  uint32_t tmpreg;
+  p_ethx = ETH_GET_INSTANCE(heth);
 
-  /* Check for the Busy flag */
-  if (STM32_READ_BIT(ETH_GET_INSTANCE(heth)->MACMDIOAR, ETH_MACMDIOAR_BUSY) != 0UL)
+  if (STM32_READ_BIT(p_ethx->MACMDIOAR, ETH_MACMDIOAR_BUSY) != 0UL)
   {
     return HAL_ERROR;
   }
-
-  /* Enable Clause 45 */
-  STM32_SET_BIT(ETH_GET_INSTANCE(heth)->MACMDIOAR, ETH_MACMDIOAR_C45E);
-
-  /* Get the MACMDIOAR value */
-  STM32_WRITE_REG(tmpreg, ETH_GET_INSTANCE(heth)->MACMDIOAR);
+  STM32_SET_BIT(p_ethx->MACMDIOAR, ETH_MACMDIOAR_C45E);
+  STM32_WRITE_REG(tmpreg, p_ethx->MACMDIOAR);
 
   /* Prepare the MDIO Address Register value:
      - Set the PHY address
@@ -6375,33 +6153,28 @@ hal_status_t HAL_ETH_MDIO_C45ReadDataRange(hal_eth_handle_t *heth, uint8_t phy_a
   STM32_MODIFY_REG(tmpreg, ETH_MACMDIOAR_PA, (((uint32_t)phy_addr) << ETH_MACMDIOAR_PA_Pos));
   STM32_MODIFY_REG(tmpreg, ETH_MACMDIOAR_RDA, (((uint32_t)dev_addr) << ETH_MACMDIOAR_RDA_Pos));
   STM32_MODIFY_REG(tmpreg, ETH_MACMDIOAR_GOC, ETH_GOC_OPERATION_PRIAC45);
+  STM32_WRITE_REG(p_ethx->MACMDIOAR, tmpreg);
 
-  /* Write back the tmpreg value into the MDIO Address Register */
-  STM32_WRITE_REG(ETH_GET_INSTANCE(heth)->MACMDIOAR, tmpreg);
-
-  /* Write starting register address to MDIO Data Register */
-  STM32_MODIFY_REG(ETH_GET_INSTANCE(heth)->MACMDIODR, ETH_MACMDIODR_RA,
+  STM32_MODIFY_REG(p_ethx->MACMDIODR, ETH_MACMDIODR_RA,
                    (((uint32_t)start_reg_addr) << ETH_MACMDIODR_RA_Pos));
 
-  /* Initialize a read data range access to MDIO */
-  for (uint32_t index = 0; index < count; index++)
+  for (index = 0UL; index < count; index++)
   {
-    /* Start a post Read Increment Address Clause 45 PHY operation */
-    STM32_SET_BIT(ETH_GET_INSTANCE(heth)->MACMDIOAR, ETH_MACMDIOAR_BUSY);
+    STM32_SET_BIT(p_ethx->MACMDIOAR, ETH_MACMDIOAR_BUSY);
 
-    tickstart = HAL_GetTick();
+    tick_start = HAL_GetTick();
 
-    /* Wait for the Busy flag to clear */
-    while (STM32_READ_BIT(ETH_GET_INSTANCE(heth)->MACMDIOAR, ETH_MACMDIOAR_BUSY) > 0UL)
+    while (STM32_READ_BIT(p_ethx->MACMDIOAR, ETH_MACMDIOAR_BUSY) != 0UL)
     {
-      if (((HAL_GetTick() - tickstart) > ETH_MDIO_BUS_TIMEOUT))
+      if (((HAL_GetTick() - tick_start) > ETH_MDIO_BUS_TIMEOUT))
       {
-        return HAL_ERROR;
+        if (STM32_READ_BIT(p_ethx->MACMDIOAR, ETH_MACMDIOAR_BUSY) != 0UL)
+        {
+          return HAL_ERROR;
+        }
       }
     }
-
-    /* Read access operation completed, get the data value */
-    p_data[index] = (uint16_t) STM32_READ_REG(ETH_GET_INSTANCE(heth)->MACMDIODR);
+    p_data[index] = (uint16_t) STM32_READ_REG(p_ethx->MACMDIODR);
   }
 
   return HAL_OK;
@@ -6439,6 +6212,11 @@ This subsection provides the Ethernet Bus Operation Function.
   *         The special values (e.g. blocking forever) depend on the
   *         underlying OS implementation of HAL_OS_SemaphoreTake.
   *
+  * @note The caller must ensure that the Ethernet handle @p heth has been
+  *       properly initialized and its @c semaphore member correctly created.
+  * @note This function does not modify the hardware state of the Ethernet
+  *       peripheral; it only manages synchronization via an OS semaphore.
+  *
   * @retval HAL_OK
   *         The bus semaphore was successfully acquired within @p timeout_ms.
   * @retval HAL_ERROR
@@ -6448,19 +6226,13 @@ This subsection provides the Ethernet Bus Operation Function.
   *         The @p heth parameter is @c NULL (only when parameter checking is
   *         enabled via @c USE_HAL_CHECK_PARAM).
   *
-  * @note The caller must ensure that the Ethernet handle @p heth has been
-  *       properly initialized and its @c semaphore member correctly created.
-  * @note This function does not modify the hardware state of the Ethernet
-  *       peripheral; it only manages synchronization via an OS semaphore.
-  *
   * @sa HAL_ETH_ReleaseBus
   */
 hal_status_t HAL_ETH_AcquireBus(hal_eth_handle_t *heth, uint32_t timeout_ms)
 {
-  ASSERT_DBG_PARAM((heth != NULL));
-
   hal_status_t status = HAL_ERROR;
-  /* Take the semaphore */
+
+  ASSERT_DBG_PARAM((heth != NULL));
   if (HAL_OS_SemaphoreTake(&heth->semaphore, timeout_ms) == HAL_OS_OK)
   {
     status = HAL_OK;
@@ -6487,6 +6259,11 @@ hal_status_t HAL_ETH_AcquireBus(hal_eth_handle_t *heth, uint32_t timeout_ms)
   *         Pointer to an @ref hal_eth_handle_t structure that contains the
   *         Ethernet configuration and the OS semaphore used for bus protection.
   *
+  * @note The caller must ensure that the Ethernet handle @p heth has been
+  *       properly initialized and its @c semaphore member correctly created.
+  * @note This function does not change the hardware state of the Ethernet
+  *       peripheral; it only manages synchronization via an OS semaphore.
+  *
   * @retval HAL_OK
   *         The bus semaphore was successfully released.
   * @retval HAL_ERROR
@@ -6495,19 +6272,13 @@ hal_status_t HAL_ETH_AcquireBus(hal_eth_handle_t *heth, uint32_t timeout_ms)
   *         The @p heth parameter is @c NULL (only when parameter checking is
   *         enabled via @c USE_HAL_CHECK_PARAM).
   *
-  * @note The caller must ensure that the Ethernet handle @p heth has been
-  *       properly initialized and its @c semaphore member correctly created.
-  * @note This function does not change the hardware state of the Ethernet
-  *       peripheral; it only manages synchronization via an OS semaphore.
-  *
   * @sa HAL_ETH_AcquireBus
   */
 hal_status_t HAL_ETH_ReleaseBus(hal_eth_handle_t *heth)
 {
-  ASSERT_DBG_PARAM(heth != NULL);
-
   hal_status_t status = HAL_ERROR;
-  /* Release the semaphore */
+
+  ASSERT_DBG_PARAM(heth != NULL);
   if (HAL_OS_SemaphoreRelease(&heth->semaphore) == HAL_OS_OK)
   {
     status = HAL_OK;
@@ -6562,7 +6333,7 @@ void HAL_ETH_SetUserData(hal_eth_handle_t *heth, const void *p_user_data)
   *
   * @pre @p heth must not be @c NULL.
   *
-  * @return Pointer to user data associated with the Ethernet handle, or
+  * @retval Pointer to user data associated with the Ethernet handle, or
   *         @c NULL if no user data has been set.
   */
 const void *HAL_ETH_GetUserData(const hal_eth_handle_t *heth)
@@ -6583,154 +6354,136 @@ const void *HAL_ETH_GetUserData(const hal_eth_handle_t *heth)
   * @brief  Initialize MAC registers with driver default values.
   * @param  heth Pointer to a hal_eth_handle_t structure which contains the ETH instance.
   */
-static void ETH_MAC_Init(struct hal_eth_handle_s *heth)
+static void ETH_MAC_SetConfigDefault(struct hal_eth_handle_s *heth)
 {
-  hal_eth_mac_config_t macDefaultConf;
+  hal_eth_mac_config_t mac_default_conf;
 
-  /*--------------- ETHERNET MAC registers default Configuration --------------*/
+  mac_default_conf.link_config.speed = HAL_ETH_MAC_SPEED_100M;
+  mac_default_conf.link_config.duplex_mode = HAL_ETH_MAC_FULL_DUPLEX_MODE;
+  mac_default_conf.loopback_mode = HAL_ETH_MAC_LOOPBACK_DISABLE;
+  mac_default_conf.src_addr_ctrl = HAL_ETH_MAC_SA_MAC0_REP;
+  mac_default_conf.inter_pkt_gap_value = HAL_ETH_MAC_INTER_PKT_GAP_96_BIT;
+  mac_default_conf.back_off_limit = HAL_ETH_MAC_BACK_OFF_LIMIT_10;
+  mac_default_conf.preamble_length = HAL_ETH_MAC_PREAMBLE_LENGTH_7;
+  mac_default_conf.giant_pkt_size_limit_ctrl = HAL_ETH_MAC_GPKT_SZ_LIMIT_DISABLE;
+  mac_default_conf.support_2K_pkt = HAL_ETH_MAC_2K_PKT_LEN_DISABLE;
+  mac_default_conf.crc_strip_type_pkt = HAL_ETH_MAC_CRC_STRIP_PKT_ENABLE;
+  mac_default_conf.auto_pad_crc_strip = HAL_ETH_MAC_AUTO_PAD_CRC_S_ENABLE;
+  mac_default_conf.tx_jabber = HAL_ETH_MAC_TX_JABBER_TIM_DISABLE;
+  mac_default_conf.cs_before_transmit = HAL_ETH_MAC_CS_BEFORE_TR_DISABLE;
+  mac_default_conf.cs_during_transmit = HAL_ETH_MAC_CS_DURING_TR_DISABLE;
+  mac_default_conf.retry_transmission = HAL_ETH_MAC_RETRY_TR_ENABLE;
+  mac_default_conf.rx_watchdog = HAL_ETH_MAC_RX_WD_TIM_DISABLE;
+  mac_default_conf.rx_jumbo_pkt = HAL_ETH_MAC_RX_JUMBO_PKT_DISABLE;
+  mac_default_conf.rx_csum_offload = HAL_ETH_MAC_RX_CSUM_PKT_ENABLE;
+  mac_default_conf.rx_receive_own = HAL_ETH_MAC_RX_RECEIVE_OWN_ENABLE;
+  mac_default_conf.crc_checking_rx_pkts = HAL_ETH_MAC_RX_CRC_PKT_CHK_ENABLE;
+  mac_default_conf.deferral_check = HAL_ETH_MAC_DEFERRAL_CHECK_DISABLE;
+  mac_default_conf.uc_slow_proto_detect = HAL_ETH_MAC_UC_SLOW_PROTO_DISABLE;
+  mac_default_conf.slow_proto_detect = HAL_ETH_MAC_SLOW_PROTO_DISABLE;
+  mac_default_conf.giant_pkt_size_limit = ETH_GIANT_PKT_SIZE_LIMIT_BYTE;
+  mac_default_conf.ext_inter_pkt_gap_ctrl = HAL_ETH_MAC_E_INTER_PKT_GAP_DISABLE;
+  mac_default_conf.ext_inter_pkt_gap = 0UL;
+  mac_default_conf.programmable_wd = HAL_ETH_MAC_PROG_WD_DISABLE;
+  mac_default_conf.rx_wd_timeout_byte = HAL_ETH_MAC_RX_WDT_2KB;
+  mac_default_conf.tx_pause_time = 0UL;
+  mac_default_conf.zero_quanta_pause = HAL_ETH_MAC_ZERO_Q_PAUSE_ENABLE;
+  mac_default_conf.pause_low_threshold = HAL_ETH_MAC_PLT_MINUS_4_SLOT_TIME;
+  mac_default_conf.tr_flow_ctrl = HAL_ETH_MAC_TR_FLOW_CTRL_DISABLE;
+  mac_default_conf.uc_pause_pkt_detect = HAL_ETH_MAC_UC_PAUSE_PKT_DISABLE;
+  mac_default_conf.receive_flow_ctrl = HAL_ETH_MAC_RECEIVE_FLOW_DISABLE;
 
-  macDefaultConf.link_config.speed = HAL_ETH_MAC_SPEED_100M;
-  macDefaultConf.link_config.duplex_mode = HAL_ETH_MAC_FULL_DUPLEX_MODE;
-  macDefaultConf.loopback_mode = HAL_ETH_MAC_LOOPBACK_DISABLE;
-  macDefaultConf.src_addr_ctrl = HAL_ETH_MAC_SA_MAC0_REP;
-  macDefaultConf.inter_pkt_gap_value = HAL_ETH_MAC_INTER_PKT_GAP_96_BIT;
-  macDefaultConf.back_off_limit = HAL_ETH_MAC_BACK_OFF_LIMIT_10;
-  macDefaultConf.preamble_length = HAL_ETH_MAC_PREAMBLE_LENGTH_7;
-  macDefaultConf.giant_pkt_size_limit_ctrl = HAL_ETH_MAC_GPKT_SZ_LIMIT_DISABLE;
-  macDefaultConf.support_2K_pkt = HAL_ETH_MAC_2K_PKT_LEN_DISABLE;
-  macDefaultConf.crc_strip_type_pkt = HAL_ETH_MAC_CRC_STRIP_PKT_ENABLE;
-  macDefaultConf.auto_pad_crc_strip = HAL_ETH_MAC_AUTO_PAD_CRC_S_ENABLE;
-  macDefaultConf.tx_jabber = HAL_ETH_MAC_TX_JABBER_TIM_DISABLE;
-  macDefaultConf.cs_before_transmit = HAL_ETH_MAC_CS_BEFORE_TR_DISABLE;
-  macDefaultConf.cs_during_transmit = HAL_ETH_MAC_CS_DURING_TR_DISABLE;
-  macDefaultConf.retry_transmission = HAL_ETH_MAC_RETRY_TR_ENABLE;
-  macDefaultConf.rx_watchdog = HAL_ETH_MAC_RX_WD_TIM_DISABLE;
-  macDefaultConf.rx_jumbo_pkt = HAL_ETH_MAC_RX_JUMBO_PKT_DISABLE;
-  macDefaultConf.rx_csum_offload = HAL_ETH_MAC_RX_CSUM_PKT_ENABLE;
-  macDefaultConf.rx_receive_own = HAL_ETH_MAC_RX_RECEIVE_OWN_ENABLE;
-  macDefaultConf.crc_checking_rx_pkts = HAL_ETH_MAC_RX_CRC_PKT_CHK_ENABLE;
-  macDefaultConf.deferral_check = HAL_ETH_MAC_DEFERRAL_CHECK_DISABLE;
-  macDefaultConf.uc_slow_proto_detect = HAL_ETH_MAC_UC_SLOW_PROTO_DISABLE;
-  macDefaultConf.slow_proto_detect = HAL_ETH_MAC_SLOW_PROTO_DISABLE;
-  macDefaultConf.giant_pkt_size_limit = ETH_GIANT_PKT_SIZE_LIMIT_BYTE;
-  macDefaultConf.ext_inter_pkt_gap_ctrl = HAL_ETH_MAC_E_INTER_PKT_GAP_DISABLE;
-  macDefaultConf.ext_inter_pkt_gap = 0UL;
-  macDefaultConf.programmable_wd = HAL_ETH_MAC_PROG_WD_DISABLE;
-  macDefaultConf.rx_wd_timeout_byte = HAL_ETH_MAC_RX_WDT_2KB;
-  macDefaultConf.tx_pause_time = 0UL;
-  macDefaultConf.zero_quanta_pause = HAL_ETH_MAC_ZERO_Q_PAUSE_ENABLE;
-  macDefaultConf.pause_low_threshold = HAL_ETH_MAC_PLT_MINUS_4_SLOT_TIME;
-  macDefaultConf.tr_flow_ctrl = HAL_ETH_MAC_TR_FLOW_CTRL_DISABLE;
-  macDefaultConf.uc_pause_pkt_detect = HAL_ETH_MAC_UC_PAUSE_PKT_DISABLE;
-  macDefaultConf.receive_flow_ctrl = HAL_ETH_MAC_RECEIVE_FLOW_DISABLE;
-
-  /* MAC default configuration */
-  ETH_SetMACConfig(heth, &macDefaultConf);
+  ETH_MAC_SetConfig(heth, &mac_default_conf);
 }
 
 /**
   * @brief  Apply MAC configuration to hardware registers.
   * @param  heth    Pointer to a hal_eth_handle_t structure which contains the ETH instance.
-  * @param  macconf Pointer to a hal_eth_mac_config_t structure containing MAC settings.
+  * @param  p_mac_conf Pointer to a hal_eth_mac_config_t structure containing MAC settings.
   */
-static void ETH_SetMACConfig(const hal_eth_handle_t *heth, const hal_eth_mac_config_t *macconf)
+static void ETH_MAC_SetConfig(const hal_eth_handle_t *heth, const hal_eth_mac_config_t *p_mac_conf)
 {
   uint32_t macregval;
-  ETH_TypeDef *p_eth_instance = ETH_GET_INSTANCE(heth);
+  ETH_TypeDef *p_ethx = ETH_GET_INSTANCE(heth);
 
-  /*------------------------ MACCR Configuration --------------------*/
-  macregval = ((uint32_t)macconf->link_config.speed |
-               (uint32_t)macconf->link_config.duplex_mode |
-               (uint32_t)macconf->loopback_mode |
-               (uint32_t)macconf->src_addr_ctrl |
-               (uint32_t)macconf->inter_pkt_gap_value |
-               (uint32_t)macconf->back_off_limit |
-               (uint32_t)macconf->preamble_length |
-               (uint32_t)macconf->giant_pkt_size_limit_ctrl |
-               (uint32_t)macconf->support_2K_pkt |
-               (uint32_t)macconf->crc_strip_type_pkt |
-               (uint32_t)macconf->auto_pad_crc_strip |
-               (uint32_t)macconf->tx_jabber |
-               (uint32_t)macconf->cs_before_transmit |
-               (uint32_t)macconf->cs_during_transmit |
-               (uint32_t)macconf->retry_transmission |
-               (uint32_t)macconf->rx_watchdog |
-               (uint32_t)macconf->rx_jumbo_pkt |
-               (uint32_t)macconf->rx_csum_offload |
-               (uint32_t)macconf->rx_receive_own |
-               (uint32_t)macconf->deferral_check);
+  macregval = ((uint32_t)p_mac_conf->link_config.speed |
+               (uint32_t)p_mac_conf->link_config.duplex_mode |
+               (uint32_t)p_mac_conf->loopback_mode |
+               (uint32_t)p_mac_conf->src_addr_ctrl |
+               (uint32_t)p_mac_conf->inter_pkt_gap_value |
+               (uint32_t)p_mac_conf->back_off_limit |
+               (uint32_t)p_mac_conf->preamble_length |
+               (uint32_t)p_mac_conf->giant_pkt_size_limit_ctrl |
+               (uint32_t)p_mac_conf->support_2K_pkt |
+               (uint32_t)p_mac_conf->crc_strip_type_pkt |
+               (uint32_t)p_mac_conf->auto_pad_crc_strip |
+               (uint32_t)p_mac_conf->tx_jabber |
+               (uint32_t)p_mac_conf->cs_before_transmit |
+               (uint32_t)p_mac_conf->cs_during_transmit |
+               (uint32_t)p_mac_conf->retry_transmission |
+               (uint32_t)p_mac_conf->rx_watchdog |
+               (uint32_t)p_mac_conf->rx_jumbo_pkt |
+               (uint32_t)p_mac_conf->rx_csum_offload |
+               (uint32_t)p_mac_conf->rx_receive_own |
+               (uint32_t)p_mac_conf->deferral_check);
 
-  /* Write to MACCR */
-  STM32_MODIFY_REG(p_eth_instance->MACCR, ETH_MACCR_MASK, macregval);
+  STM32_MODIFY_REG(p_ethx->MACCR, ETH_MACCR_MASK, macregval);
 
-  /*------------------------ MACECR Configuration --------------------*/
-  macregval = ((uint32_t)macconf->crc_checking_rx_pkts |
-               (uint32_t)macconf->uc_slow_proto_detect |
-               (uint32_t)macconf->slow_proto_detect |
-               (uint32_t)macconf->giant_pkt_size_limit |
-               (uint32_t)macconf->ext_inter_pkt_gap_ctrl |
-               (uint32_t)(macconf->ext_inter_pkt_gap << ETH_MACECR_EIPG_Pos));
+  macregval = ((uint32_t)p_mac_conf->crc_checking_rx_pkts |
+               (uint32_t)p_mac_conf->uc_slow_proto_detect |
+               (uint32_t)p_mac_conf->slow_proto_detect |
+               (uint32_t)p_mac_conf->giant_pkt_size_limit |
+               (uint32_t)p_mac_conf->ext_inter_pkt_gap_ctrl |
+               (uint32_t)(p_mac_conf->ext_inter_pkt_gap << ETH_MACECR_EIPG_Pos));
 
-  /* Write to MACECR */
-  STM32_MODIFY_REG(p_eth_instance->MACECR, ETH_MACECR_MASK, macregval);
+  STM32_MODIFY_REG(p_ethx->MACECR, ETH_MACECR_MASK, macregval);
 
-  /*------------------------ MACWJBTR Configuration --------------------*/
-  macregval = ((uint32_t)macconf->programmable_wd |
-               (uint32_t)macconf->rx_wd_timeout_byte);
+  macregval = ((uint32_t)p_mac_conf->programmable_wd |
+               (uint32_t)p_mac_conf->rx_wd_timeout_byte);
 
-  /* Write to MACWJBTR */
-  STM32_MODIFY_REG(p_eth_instance->MACWJBTR, ETH_MACWJBTR_MASK, macregval);
+  STM32_MODIFY_REG(p_ethx->MACWJBTR, ETH_MACWJBTR_MASK, macregval);
 
-  /*------------------------ MACQ0TXFCR Configuration --------------------*/
-  macregval = ((uint32_t)(macconf->tx_pause_time << ETH_MACQTXFCR_PT_Pos) |
-               (uint32_t)macconf->zero_quanta_pause |
-               (uint32_t)macconf->pause_low_threshold |
-               (uint32_t)macconf->tr_flow_ctrl);
+  macregval = ((uint32_t)(p_mac_conf->tx_pause_time << ETH_MACQTXFCR_PT_Pos) |
+               (uint32_t)p_mac_conf->zero_quanta_pause |
+               (uint32_t)p_mac_conf->pause_low_threshold |
+               (uint32_t)p_mac_conf->tr_flow_ctrl);
 
-  /* Write to ETH_MACQTXFCR */
-  STM32_MODIFY_REG(p_eth_instance->MACQTXFCR, ETH_MACQTXFCR_MASK, macregval);
+  STM32_MODIFY_REG(p_ethx->MACQTXFCR, ETH_MACQTXFCR_MASK, macregval);
 
-  /*------------------------ MACRXFCR Configuration --------------------*/
-  macregval = ((uint32_t)macconf->uc_pause_pkt_detect |
-               (uint32_t)macconf->receive_flow_ctrl);
+  macregval = ((uint32_t)p_mac_conf->uc_pause_pkt_detect |
+               (uint32_t)p_mac_conf->receive_flow_ctrl);
 
-  /* Write to MACRXFCR */
-  STM32_MODIFY_REG(p_eth_instance->MACRXFCR, ETH_MACRXFCR_MASK, macregval);
+  STM32_MODIFY_REG(p_ethx->MACRXFCR, ETH_MACRXFCR_MASK, macregval);
 
-  /* Enable vlan tag on Rx status */
-  STM32_SET_BIT(p_eth_instance->MACVTR, ETH_MACVTR_EVLRXS);
+  /* Enable MAC to provide the outer VLAN tag in the RX status */
+  STM32_SET_BIT(p_ethx->MACVTR, ETH_MACVTR_EVLRXS);
 }
 
 /**
   * @brief  Initialize MTL registers with driver default values.
   * @param  heth Pointer to a hal_eth_handle_t structure which contains the ETH instance.
   */
-static void ETH_MTL_Init(struct hal_eth_handle_s *heth)
+static void ETH_MTL_SetConfigDefault(struct hal_eth_handle_s *heth)
 {
-  hal_eth_mtl_config_t mtlDefaultConf;
+  hal_eth_mtl_config_t mtl_default_conf;
 
-  /*--------------- ETHERNET MTL registers default Configuration --------------*/
-  /* Common configuration for Q0 and Q1*/
-  mtlDefaultConf.tx_fwd_status = HAL_ETH_MTL_TX_FWD_STATUS_ENABLE;
+  mtl_default_conf.tx_fwd_status = HAL_ETH_MTL_TX_FWD_STATUS_ENABLE;
 
-  /* MTL default configuration */
-  ETH_SetMTLConfig(heth, &mtlDefaultConf);
+  ETH_MTL_SetConfig(heth, &mtl_default_conf);
 }
 
 /**
   * @brief  Apply MTL configuration to hardware registers.
   * @param  heth    Pointer to a hal_eth_handle_t structure which contains the ETH instance.
-  * @param  mtlconf Pointer to a hal_eth_mtl_config_t structure containing MTL settings.
+  * @param  p_mtl_conf Pointer to a hal_eth_mtl_config_t structure containing MTL settings.
   */
-static void ETH_SetMTLConfig(hal_eth_handle_t *heth, const hal_eth_mtl_config_t *mtlconf)
+static void ETH_MTL_SetConfig(hal_eth_handle_t *heth, const hal_eth_mtl_config_t *p_mtl_conf)
 {
   uint32_t mtlregval;
 
-  /*------------------------ MTLOMR Configuration --------------------*/
-  mtlregval = ((uint32_t) mtlconf->tx_fwd_status);
+  mtlregval = ((uint32_t) p_mtl_conf->tx_fwd_status);
 
 
-  /* Write to MTLOMR */
   STM32_MODIFY_REG(ETH_GET_INSTANCE(heth)->MTLOMR, ETH_MTLOMR_MASK, mtlregval);
 }
 
@@ -6738,41 +6491,36 @@ static void ETH_SetMTLConfig(hal_eth_handle_t *heth, const hal_eth_mtl_config_t 
   * @brief  Initialize DMA registers with driver default values.
   * @param  heth Pointer to a hal_eth_handle_t structure which contains the ETH instance.
   */
-static void ETH_DMA_Init(struct hal_eth_handle_s *heth)
+static void ETH_DMA_SetConfigDefault(struct hal_eth_handle_s *heth)
 {
-  hal_eth_dma_config_t dmaDefaultConf;
+  hal_eth_dma_config_t dma_default_conf;
 
-  /*--------------- ETHERNET DMA registers default Configuration --------------*/
-  /* Common DMA configuration */
-  dmaDefaultConf.addr_aligned_beats = HAL_ETH_DMA_ADDR_ALIGN_ENABLE;
-  dmaDefaultConf.burst_mode = HAL_ETH_DMA_BURST_LEN_FIXED;
-  dmaDefaultConf.mixed_burst = HAL_ETH_DMA_MIXED_BURST_MODE_ENABLED;
-  dmaDefaultConf.rebuild_inc_burst = HAL_ETH_DMA_REBUILD_INC_BURST_ENABLED;
-  dmaDefaultConf.tr_priority = HAL_ETH_DMA_TR_PRIO_ENABLE;
+  dma_default_conf.addr_aligned_beats = HAL_ETH_DMA_ADDR_ALIGN_ENABLE;
+  dma_default_conf.burst_mode = HAL_ETH_DMA_BURST_LEN_FIXED;
+  dma_default_conf.mixed_burst = HAL_ETH_DMA_MIXED_BURST_MODE_ENABLED;
+  dma_default_conf.rebuild_inc_burst = HAL_ETH_DMA_REBUILD_INC_BURST_ENABLED;
+  dma_default_conf.tr_priority = HAL_ETH_DMA_TR_PRIO_ENABLE;
 
-  /* DMA default configuration */
-  ETH_SetDMAConfig(heth, &dmaDefaultConf);
+  ETH_DMA_SetConfig(heth, &dma_default_conf);
 }
 
 /**
   * @brief  Apply DMA configuration to hardware registers.
   * @param  heth    Pointer to a hal_eth_handle_t structure which contains the ETH instance.
-  * @param  dmaconf Pointer to a hal_eth_dma_config_t structure containing DMA settings.
+  * @param  p_dma_conf Pointer to a hal_eth_dma_config_t structure containing DMA settings.
   */
-static void ETH_SetDMAConfig(hal_eth_handle_t *heth, const hal_eth_dma_config_t *dmaconf)
+static void ETH_DMA_SetConfig(hal_eth_handle_t *heth, const hal_eth_dma_config_t *p_dma_conf)
 {
   uint32_t dmaregval;
 
-  /*------------------------ DMAMR Configuration --------------------*/
-  dmaregval = (uint32_t) dmaconf->tr_priority;
+  dmaregval = (uint32_t) p_dma_conf->tr_priority;
 
   STM32_MODIFY_REG(ETH_GET_INSTANCE(heth)->DMAMR, ETH_DMAMR_MASK, dmaregval);
 
-  /*------------------------ DMASBMR Configuration --------------------*/
-  dmaregval = ((uint32_t) dmaconf->addr_aligned_beats |
-               (uint32_t) dmaconf->mixed_burst |
-               (uint32_t) dmaconf->rebuild_inc_burst |
-               (uint32_t) dmaconf->burst_mode);
+  dmaregval = ((uint32_t) p_dma_conf->addr_aligned_beats |
+               (uint32_t) p_dma_conf->mixed_burst |
+               (uint32_t) p_dma_conf->rebuild_inc_burst |
+               (uint32_t) p_dma_conf->burst_mode);
 
   STM32_MODIFY_REG(ETH_GET_INSTANCE(heth)->DMASBMR, ETH_DMASBMR_MASK, dmaregval);
 }
@@ -6782,58 +6530,48 @@ static void ETH_SetDMAConfig(hal_eth_handle_t *heth, const hal_eth_dma_config_t 
   * @param  heth    Pointer to a hal_eth_handle_t structure which contains the ETH instance.
   * @param  channel Channel index (zero-based)
   */
-static void ETH_ChannelTxInit(hal_eth_handle_t *heth, uint32_t channel)
+static void ETH_SetTxChannelDefaultConfig(hal_eth_handle_t *heth, uint32_t channel)
 {
-  hal_eth_dma_tx_channel_config_t dmaTxChannelDefaultConf;
-  hal_eth_mtl_tx_queue_config_t   mtlTxQueueDefaultConf;
+  hal_eth_dma_tx_channel_config_t dma_tx_channel_default_conf;
+  hal_eth_mtl_tx_queue_config_t   mtl_tx_queue_default_conf;
 
-  /* set default desc alignment */
   heth->tx_channels[channel].tx_desc_list.desc_len_byte = sizeof(eth_dma_descriptor_t);
 
-  /*------------------ DMA Tx Descriptors Configuration ----------------------*/
-  /* Get the Tx DMA Channel Instance */
   heth->tx_channels[channel].p_dma_instance = ETH_GET_DMA_CHANNEL(heth, channel);
 
-  /* Tx Queues configuration */
-  dmaTxChannelDefaultConf.tx_pbl_x8_mode = HAL_ETH_DMA_TX_PBL_X8_DISABLE;
-  dmaTxChannelDefaultConf.tx_dma_burst_length = HAL_ETH_DMA_TX_BLEN_4_BEAT;
-  dmaTxChannelDefaultConf.tx_second_pkt_operate = HAL_ETH_DMA_TX_SEC_PKT_OP_DISABLE;
+  dma_tx_channel_default_conf.tx_pbl_x8_mode = HAL_ETH_DMA_TX_PBL_X8_DISABLE;
+  dma_tx_channel_default_conf.tx_dma_burst_length = HAL_ETH_DMA_TX_BLEN_4_BEAT;
+  dma_tx_channel_default_conf.tx_second_pkt_operate = HAL_ETH_DMA_TX_SEC_PKT_OP_DISABLE;
 
-  ETH_SetDMATxChannelConfig(heth, channel, &dmaTxChannelDefaultConf);
+  ETH_DMA_SetConfigTxChannel(heth, channel, &dma_tx_channel_default_conf);
 
-  /*------------------ MTL Tx Descriptors Configuration ----------------------*/
-  /* Get the Tx MTL Channel Instance */
   heth->tx_channels[channel].p_mtl_instance = ETH_GET_MTL_QUEUE(heth, channel);
 
-  /* Tx Queues configuration */
-  mtlTxQueueDefaultConf.transmit_queue_mode = HAL_ETH_MTL_TX_Q_STORE_AND_FORWARD;
-  mtlTxQueueDefaultConf.queue_op_mode = HAL_ETH_MTL_TX_QUEUE_ENABLED;
-  mtlTxQueueDefaultConf.queue_size_byte = HAL_ETH_MTL_TX_QUEUE_SZ_2048_BYTE;
+  mtl_tx_queue_default_conf.transmit_queue_mode = HAL_ETH_MTL_TX_Q_STORE_AND_FORWARD;
+  mtl_tx_queue_default_conf.queue_op_mode = HAL_ETH_MTL_TX_QUEUE_ENABLED;
+  mtl_tx_queue_default_conf.queue_size_byte = HAL_ETH_MTL_TX_QUEUE_SZ_2048_BYTE;
 
-  ETH_SetMtlTxChannelConfig(heth, channel, &mtlTxQueueDefaultConf);
+  ETH_MTL_SetConfigTxChannel(heth, channel, &mtl_tx_queue_default_conf);
 }
 
 /**
   * @brief  Configure DMA registers for a Tx channel.
   * @param  heth    Pointer to a hal_eth_handle_t structure which contains the ETH instance.
   * @param  ch      Channel index (zero-based)
-  * @param  dmachconf Pointer to hal_eth_dma_tx_channel_config_t containing channel DMA settings.
+  * @param  p_dma_tx_ch_conf Pointer to hal_eth_dma_tx_channel_config_t containing channel DMA settings.
   */
-static void ETH_SetDMATxChannelConfig(const hal_eth_handle_t *heth, uint32_t ch,
-                                      const hal_eth_dma_tx_channel_config_t *dmachconf)
+static void ETH_DMA_SetConfigTxChannel(const hal_eth_handle_t *heth, uint32_t ch,
+                                       const hal_eth_dma_tx_channel_config_t *p_dma_tx_ch_conf)
 {
   uint32_t dmaregval;
   ETH_DMA_Channel_TypeDef *p_dma_instance = ETH_DMA_GET_TX_INSTANCE(heth, ch);
 
-  /*------------------------ DMAC0CR Configuration --------------------*/
-  dmaregval = ((uint32_t)dmachconf->tx_pbl_x8_mode);
+  dmaregval = ((uint32_t)p_dma_tx_ch_conf->tx_pbl_x8_mode);
 
   STM32_MODIFY_REG(p_dma_instance->DMACXCR, ETH_DMACCR_PBLX8, dmaregval);
 
-
-  /*------------------------ DMAC0TXCR Configuration --------------------*/
-  dmaregval = ((uint32_t) dmachconf->tx_dma_burst_length         |
-               (uint32_t) dmachconf->tx_second_pkt_operate);
+  dmaregval = ((uint32_t) p_dma_tx_ch_conf->tx_dma_burst_length         |
+               (uint32_t) p_dma_tx_ch_conf->tx_second_pkt_operate);
 
   STM32_MODIFY_REG(p_dma_instance->DMACXTXCR, (ETH_DMACTXCR_TXPBL | ETH_DMACTXCR_OSF), dmaregval);
 }
@@ -6842,45 +6580,40 @@ static void ETH_SetDMATxChannelConfig(const hal_eth_handle_t *heth, uint32_t ch,
   * @brief  Retrieve current DMA Tx channel configuration from hardware registers.
   * @param  heth       Pointer to a hal_eth_handle_t structure (ETH handle)
   * @param  ch         Channel index
-  * @param  dmachconf  Pointer to a hal_eth_dma_tx_channel_config_t structure to fill
+  * @param  p_dma_tx_ch_conf  Pointer to a hal_eth_dma_tx_channel_config_t structure to fill
   */
 static void ETH_GetDMATxChannelConfig(const hal_eth_handle_t *heth, uint32_t ch,
-                                      hal_eth_dma_tx_channel_config_t *dmachconf)
+                                      hal_eth_dma_tx_channel_config_t *p_dma_tx_ch_conf)
 {
   const ETH_DMA_Channel_TypeDef *p_dma_instance = ETH_DMA_GET_TX_INSTANCE(heth, ch);
 
-  /*------------------------ Get DMACXCR Configuration --------------------*/
-  dmachconf->tx_pbl_x8_mode          = (hal_eth_dma_tx_pbl_x8_mode_ctrl_t)((uint32_t)STM32_READ_BIT(
-                                                                             p_dma_instance->DMACXCR,
-                                                                             ETH_DMACCR_PBLX8));
-  /*------------------------ DMACXTXCR Configuration --------------------*/
-  dmachconf->tx_dma_burst_length    = (hal_eth_dma_tx_burst_length_t)((uint32_t)STM32_READ_BIT(
-                                                                        p_dma_instance->DMACXTXCR,
-                                                                        ETH_DMACTXCR_TXPBL));
-  dmachconf->tx_second_pkt_operate  = (hal_eth_dma_tx_sec_pkt_op_ctrl_t)((uint32_t)STM32_READ_BIT(
-                                                                           p_dma_instance->DMACXTXCR,
-                                                                           ETH_DMACTXCR_OSF));
+  p_dma_tx_ch_conf->tx_pbl_x8_mode = (hal_eth_dma_tx_pbl_x8_mode_ctrl_t)
+                                     ((uint32_t)STM32_READ_BIT(p_dma_instance->DMACXCR, ETH_DMACCR_PBLX8));
+  p_dma_tx_ch_conf->tx_dma_burst_length = (hal_eth_dma_tx_burst_length_t)
+                                          ((uint32_t)STM32_READ_BIT(p_dma_instance->DMACXTXCR,
+                                                                    ETH_DMACTXCR_TXPBL));
+  p_dma_tx_ch_conf->tx_second_pkt_operate = (hal_eth_dma_tx_sec_pkt_op_ctrl_t)
+                                            ((uint32_t)STM32_READ_BIT(p_dma_instance->DMACXTXCR,
+                                                                      ETH_DMACTXCR_OSF));
 }
 
 /**
   * @brief  Configure MTL registers for a Tx queue.
   * @param  heth    Pointer to a hal_eth_handle_t structure which contains the ETH instance.
   * @param  ch      Queue index (zero-based)
-  * @param  mtlchconf Pointer to hal_eth_mtl_tx_queue_config_t containing queue settings.
+  * @param  p_mtl_tx_q_conf Pointer to hal_eth_mtl_tx_queue_config_t containing queue settings.
   */
-static void ETH_SetMtlTxChannelConfig(const hal_eth_handle_t *heth, uint32_t ch,
-                                      const hal_eth_mtl_tx_queue_config_t *mtlchconf)
+static void ETH_MTL_SetConfigTxChannel(const hal_eth_handle_t *heth, uint32_t ch,
+                                       const hal_eth_mtl_tx_queue_config_t *p_mtl_tx_q_conf)
 {
   uint32_t mtlregval;
 
   ETH_MTL_Queue_TypeDef *p_mtl_instance = ETH_MTL_GET_TX_INSTANCE(heth, ch);
 
-  /*------------------------ MTLTXQXOMR Configuration ----------------------*/
-  mtlregval = ((uint32_t) mtlchconf->queue_op_mode)       |
-              ((uint32_t) mtlchconf->transmit_queue_mode) |
-              ((uint32_t) mtlchconf->queue_size_byte);
+  mtlregval = ((uint32_t) p_mtl_tx_q_conf->queue_op_mode)       |
+              ((uint32_t) p_mtl_tx_q_conf->transmit_queue_mode) |
+              ((uint32_t) p_mtl_tx_q_conf->queue_size_byte);
 
-  /* Write to MTLTXQ3OMR */
   STM32_MODIFY_REG(p_mtl_instance->MTLTXQXOMR, ETH_MTLTXQXOMR_MASK, mtlregval);
 
 }
@@ -6889,22 +6622,24 @@ static void ETH_SetMtlTxChannelConfig(const hal_eth_handle_t *heth, uint32_t ch,
   * @brief  Retrieve current MTL Tx queue configuration from hardware registers.
   * @param  heth      Pointer to a hal_eth_handle_t structure (ETH handle)
   * @param  ch        Queue index
-  * @param  mtlchconf Pointer to a hal_eth_mtl_tx_queue_config_t structure to fill
+  * @param  p_mtl_tx_q_conf Pointer to a hal_eth_mtl_tx_queue_config_t structure to fill
   */
 static void ETH_GetMtlTxChannelConfig(const hal_eth_handle_t *heth, uint32_t ch,
-                                      hal_eth_mtl_tx_queue_config_t *mtlchconf)
+                                      hal_eth_mtl_tx_queue_config_t *p_mtl_tx_q_conf)
 {
 
   const ETH_MTL_Queue_TypeDef *p_mtl_instance = ETH_MTL_GET_TX_INSTANCE(heth, ch);
 
-  /*------------------------ Get DMACXCR Configuration --------------------*/
-  mtlchconf->queue_op_mode        = (hal_eth_mtl_tx_ops_mode_t)((uint32_t)STM32_READ_BIT(p_mtl_instance->MTLTXQXOMR,
-                                                                ETH_MTLTXQOMR_TXQEN));
-  mtlchconf->queue_size_byte      = (hal_eth_mtl_tx_queue_size_t)((uint32_t)STM32_READ_BIT(p_mtl_instance->MTLTXQXOMR,
-                                                                  ETH_MTLTXQOMR_TQS));
-  mtlchconf->transmit_queue_mode  = (hal_eth_mtl_tx_transmit_mode_t)
-                                    ((uint32_t)STM32_READ_BIT(p_mtl_instance->MTLTXQXOMR,
-                                                              (ETH_MTLTXQOMR_TSF | ETH_MTLTXQOMR_TTC)));
+  p_mtl_tx_q_conf->queue_op_mode        = (hal_eth_mtl_tx_ops_mode_t)
+                                          ((uint32_t)STM32_READ_BIT(p_mtl_instance->MTLTXQXOMR,
+                                                                    ETH_MTLTXQOMR_TXQEN));
+  p_mtl_tx_q_conf->queue_size_byte      = (hal_eth_mtl_tx_queue_size_t)
+                                          ((uint32_t)STM32_READ_BIT(p_mtl_instance->MTLTXQXOMR,
+                                                                    ETH_MTLTXQOMR_TQS));
+  p_mtl_tx_q_conf->transmit_queue_mode  = (hal_eth_mtl_tx_transmit_mode_t)
+                                          ((uint32_t)STM32_READ_BIT(p_mtl_instance->MTLTXQXOMR,
+                                                                    (ETH_MTLTXQOMR_TSF
+                                                                     | ETH_MTLTXQOMR_TTC)));
 
 }
 
@@ -6913,56 +6648,45 @@ static void ETH_GetMtlTxChannelConfig(const hal_eth_handle_t *heth, uint32_t ch,
   * @param  heth    Pointer to a hal_eth_handle_t structure which contains the ETH instance.
   * @param  channel Channel index (zero-based)
   */
-static void ETH_ChannelRxInit(hal_eth_handle_t *heth, uint32_t channel)
+static void ETH_SetRxChannelDefaultConfig(hal_eth_handle_t *heth, uint32_t channel)
 {
-  hal_eth_dma_rx_channel_config_t dmaRxChannelDefaultConf;
-  hal_eth_mtl_rx_queue_config_t   mtlRxQueueDefaultConf;
+  hal_eth_dma_rx_channel_config_t dma_rx_channel_default_conf;
+  hal_eth_mtl_rx_queue_config_t   mtl_rx_queue_default_conf;
 
-  /* set default desc alignments */
   heth->rx_channels[channel].rx_desc_list.desc_len_byte = sizeof(eth_dma_descriptor_t);
 
-  /*------------------ DMA Tx Descriptors Configuration ----------------------*/
-  /* Get the Rx DMA Channel Instance */
   heth->rx_channels[channel].p_dma_instance = (void *)ETH_GET_DMA_CHANNEL(heth, channel);
 
-  /* Rx Queues configuration */
-  dmaRxChannelDefaultConf.rx_dma_burst_length = HAL_ETH_DMA_RX_BLEN_4_BEAT;
-  dmaRxChannelDefaultConf.rx_buffer_len_byte = ETH_DMA_RX_BUFFER_SIZE_BYTE;
+  dma_rx_channel_default_conf.rx_dma_burst_length = HAL_ETH_DMA_RX_BLEN_4_BEAT;
+  dma_rx_channel_default_conf.rx_buffer_len_byte = ETH_DMA_RX_BUFFER_SIZE_BYTE;
 
-  ETH_SetDMARxChannelConfig(heth, channel, &dmaRxChannelDefaultConf);
+  ETH_DMA_SetConfigRxChannel(heth, channel, &dma_rx_channel_default_conf);
 
-  /*------------------ MTL Rx Descriptors Configuration ----------------------*/
-  /* Get the Rx MTL Channel Instance */
   heth->rx_channels[channel].p_mtl_instance = (void *)ETH_GET_MTL_QUEUE(heth, channel);
 
-  /* Rx Queues configuration */
-  mtlRxQueueDefaultConf.queue_op_mode = HAL_ETH_MTL_RX_QUEUE_ENABLED;
-  mtlRxQueueDefaultConf.queue_size_byte = HAL_ETH_MTL_RX_QUEUE_SZ_2048_BYTE;
-  mtlRxQueueDefaultConf.drop_tcp_ip_csum_error_pkt = HAL_ETH_MTL_RX_DROP_CS_ERR_ENABLE;
-  mtlRxQueueDefaultConf.fwd_error_pkt = HAL_ETH_MTL_RX_FWD_ERR_PKT_DISABLE;
-  mtlRxQueueDefaultConf.fwd_undersized_good_pkt = HAL_ETH_MTL_RX_FWD_USZ_PKT_ENABLE;
-  mtlRxQueueDefaultConf.receive_queue_mode = HAL_ETH_MTL_RX_Q_STORE_AND_FORWARD;
-  ETH_SetMtlRxChannelConfig(heth, channel, &mtlRxQueueDefaultConf);
+  mtl_rx_queue_default_conf.queue_op_mode = HAL_ETH_MTL_RX_QUEUE_ENABLED;
+  mtl_rx_queue_default_conf.queue_size_byte = HAL_ETH_MTL_RX_QUEUE_SZ_2048_BYTE;
+  mtl_rx_queue_default_conf.drop_tcp_ip_csum_error_pkt = HAL_ETH_MTL_RX_DROP_CS_ERR_ENABLE;
+  mtl_rx_queue_default_conf.fwd_error_pkt = HAL_ETH_MTL_RX_FWD_ERR_PKT_DISABLE;
+  mtl_rx_queue_default_conf.fwd_undersized_good_pkt = HAL_ETH_MTL_RX_FWD_USZ_PKT_ENABLE;
+  mtl_rx_queue_default_conf.receive_queue_mode = HAL_ETH_MTL_RX_Q_STORE_AND_FORWARD;
+  ETH_MTL_SetConfigRxChannel(heth, channel, &mtl_rx_queue_default_conf);
 }
 
 /**
   * @brief  Configure DMA registers for an Rx channel.
   * @param  heth    Pointer to a hal_eth_handle_t structure which contains the ETH instance.
   * @param  ch      Channel index (zero-based)
-  * @param  dmachconf Pointer to hal_eth_dma_rx_channel_config_t containing channel DMA settings.
+  * @param  p_dma_rx_ch_conf Pointer to hal_eth_dma_rx_channel_config_t containing channel DMA settings.
   */
-static void ETH_SetDMARxChannelConfig(hal_eth_handle_t *heth, uint32_t ch,
-                                      const hal_eth_dma_rx_channel_config_t *dmachconf)
+static void ETH_DMA_SetConfigRxChannel(hal_eth_handle_t *heth, uint32_t ch,
+                                       const hal_eth_dma_rx_channel_config_t *p_dma_rx_ch_conf)
 {
   uint32_t dmaregval;
   ETH_DMA_Channel_TypeDef *p_dma_instance = ETH_DMA_GET_RX_INSTANCE(heth, ch);
-
-  /*------------------------ set Channel Rx buffer size --------------------*/
-  heth->rx_channels[ch].rx_buff_size_byte = dmachconf->rx_buffer_len_byte;
-
-  /*------------------------ DMACXRXCR Configuration --------------------*/
-  dmaregval = ((uint32_t)(dmachconf->rx_dma_burst_length) |
-               (uint32_t)(dmachconf->rx_buffer_len_byte << ETH_DMACRXCR_RBSZ_Pos));
+  heth->rx_channels[ch].rx_buff_size_byte = p_dma_rx_ch_conf->rx_buffer_len_byte;
+  dmaregval = ((uint32_t)(p_dma_rx_ch_conf->rx_dma_burst_length) |
+               (uint32_t)(p_dma_rx_ch_conf->rx_buffer_len_byte << ETH_DMACRXCR_RBSZ_Pos));
 
   STM32_MODIFY_REG(p_dma_instance->DMACXRXCR,
                    (ETH_DMACRXCR_RXPBL | ETH_DMACRXCR_RPF | ETH_DMACRXCR_RBSZ),
@@ -6973,42 +6697,40 @@ static void ETH_SetDMARxChannelConfig(hal_eth_handle_t *heth, uint32_t ch,
   * @brief  Retrieve current DMA Rx channel configuration from hardware registers.
   * @param  heth       Pointer to a hal_eth_handle_t structure (ETH handle)
   * @param  ch         Channel index
-  * @param  dmachconf  Pointer to a hal_eth_dma_rx_channel_config_t structure to fill
+  * @param  p_dma_rx_ch_conf  Pointer to a hal_eth_dma_rx_channel_config_t structure to fill
   */
 static void ETH_GetDMARxChannelConfig(const hal_eth_handle_t *heth, uint32_t ch,
-                                      hal_eth_dma_rx_channel_config_t *dmachconf)
+                                      hal_eth_dma_rx_channel_config_t *p_dma_rx_ch_conf)
 {
   const ETH_DMA_Channel_TypeDef *p_dma_instance = ETH_DMA_GET_RX_INSTANCE(heth, ch);
 
-  /*------------------------ Get DMACXRXCR Configuration --------------------*/
-  dmachconf->rx_dma_burst_length = (hal_eth_dma_rx_burst_length_t)((uint32_t)STM32_READ_BIT(p_dma_instance->DMACXRXCR,
-                                                                   ETH_DMACRXCR_RXPBL));
-  dmachconf->rx_buffer_len_byte = (uint32_t)(STM32_READ_BIT(p_dma_instance->DMACXRXCR, ETH_DMACRXCR_RBSZ) >>
-                                             ETH_DMACRXCR_RBSZ_Pos);
+  p_dma_rx_ch_conf->rx_dma_burst_length = (hal_eth_dma_rx_burst_length_t)
+                                          ((uint32_t)STM32_READ_BIT(p_dma_instance->DMACXRXCR,
+                                                                    ETH_DMACRXCR_RXPBL));
+  p_dma_rx_ch_conf->rx_buffer_len_byte = (uint32_t)
+                                         (STM32_READ_BIT(p_dma_instance->DMACXRXCR, ETH_DMACRXCR_RBSZ)
+                                          >> ETH_DMACRXCR_RBSZ_Pos);
 }
 
 /**
   * @brief  Configure MTL registers for an Rx queue.
   * @param  heth    Pointer to a hal_eth_handle_t structure which contains the ETH instance.
   * @param  ch      Queue index (zero-based)
-  * @param  mtlchconf Pointer to hal_eth_mtl_rx_queue_config_t containing queue settings.
+  * @param  p_mtl_rx_q_conf Pointer to hal_eth_mtl_rx_queue_config_t containing queue settings.
   */
-static void ETH_SetMtlRxChannelConfig(const hal_eth_handle_t *heth, uint32_t ch,
-                                      const hal_eth_mtl_rx_queue_config_t *mtlchconf)
+static void ETH_MTL_SetConfigRxChannel(const hal_eth_handle_t *heth, uint32_t ch,
+                                       const hal_eth_mtl_rx_queue_config_t *p_mtl_rx_q_conf)
 {
   uint32_t mtlregval;
 
   ETH_MTL_Queue_TypeDef *p_mtl_instance = ETH_MTL_GET_RX_INSTANCE(heth, ch);
 
+  mtlregval = ((uint32_t) p_mtl_rx_q_conf->queue_size_byte)       |
+              ((uint32_t) p_mtl_rx_q_conf->drop_tcp_ip_csum_error_pkt) |
+              ((uint32_t) p_mtl_rx_q_conf->fwd_error_pkt) |
+              ((uint32_t) p_mtl_rx_q_conf->fwd_undersized_good_pkt) |
+              ((uint32_t) p_mtl_rx_q_conf->receive_queue_mode);
 
-  /*------------------------ MTLRXQXOMR Configuration ----------------------*/
-  mtlregval = ((uint32_t) mtlchconf->queue_size_byte)       |
-              ((uint32_t) mtlchconf->drop_tcp_ip_csum_error_pkt) |
-              ((uint32_t) mtlchconf->fwd_error_pkt) |
-              ((uint32_t) mtlchconf->fwd_undersized_good_pkt) |
-              ((uint32_t) mtlchconf->receive_queue_mode);
-
-  /* Write to MTLRXQXOMR */
   STM32_MODIFY_REG(p_mtl_instance->MTLRXQXOMR, ETH_MTLRXQXOMR_MASK, mtlregval);
 }
 
@@ -7016,33 +6738,170 @@ static void ETH_SetMtlRxChannelConfig(const hal_eth_handle_t *heth, uint32_t ch,
   * @brief  Retrieve current MTL Rx queue configuration from hardware registers.
   * @param  heth      Pointer to a hal_eth_handle_t structure (ETH handle)
   * @param  ch        Queue index (zero-based)
-  * @param  mtlchconf Pointer to a hal_eth_mtl_rx_queue_config_t structure to fill
+  * @param  p_mtl_rx_q_conf Pointer to a hal_eth_mtl_rx_queue_config_t structure to fill
   */
 static void ETH_GetMtlRxChannelConfig(const hal_eth_handle_t *heth, uint32_t ch,
-                                      hal_eth_mtl_rx_queue_config_t *mtlchconf)
+                                      hal_eth_mtl_rx_queue_config_t *p_mtl_rx_q_conf)
 {
   const ETH_MTL_Queue_TypeDef *p_mtl_instance = ETH_MTL_GET_RX_INSTANCE(heth, ch);
 
-  /* Rx Queue is always enabled */
-  mtlchconf->queue_op_mode = HAL_ETH_MTL_RX_QUEUE_ENABLED;
-
-  /*------------------------ Get MTLRXQXOMR Configuration ----------------------*/
-  mtlchconf->queue_size_byte = (hal_eth_mtl_rx_queue_size_t)((uint32_t)STM32_READ_BIT(p_mtl_instance->MTLRXQXOMR,
-                                                             ETH_MTLRXQOMR_RQS));
-  mtlchconf->drop_tcp_ip_csum_error_pkt = (hal_eth_mtl_rx_drop_cs_err_ctrl_t)
-                                          ((uint32_t)STM32_READ_BIT(p_mtl_instance->MTLRXQXOMR,
-                                                                    ETH_MTLRXQOMR_DIS_TCP_EF));
-  mtlchconf->fwd_error_pkt = (hal_eth_mtl_rx_fwd_err_pkt_ctrl_t)((uint32_t)STM32_READ_BIT(p_mtl_instance->MTLRXQXOMR,
-                                                                 ETH_MTLRXQOMR_FEP));
-  mtlchconf->fwd_undersized_good_pkt = (hal_eth_mtl_rx_fwd_usz_pkt_ctrl_t)((uint32_t)STM32_READ_BIT(
-                                                                             p_mtl_instance->MTLRXQXOMR,
-                                                                             ETH_MTLRXQOMR_FUP));
-  mtlchconf->receive_queue_mode = (hal_eth_mtl_rx_queue_mode_t)
-                                  ((uint32_t)STM32_READ_BIT(p_mtl_instance->MTLRXQXOMR,
-                                                            (ETH_MTLRXQOMR_RSF | ETH_MTLRXQOMR_RTC)));
-
+  /* Single RX queue: always enabled in hardware. */
+  p_mtl_rx_q_conf->queue_op_mode = HAL_ETH_MTL_RX_QUEUE_ENABLED;
+  p_mtl_rx_q_conf->queue_size_byte = (hal_eth_mtl_rx_queue_size_t)((uint32_t)STM32_READ_BIT(p_mtl_instance->MTLRXQXOMR,
+                                                                   ETH_MTLRXQOMR_RQS));
+  p_mtl_rx_q_conf->drop_tcp_ip_csum_error_pkt = (hal_eth_mtl_rx_drop_cs_err_ctrl_t)
+                                                ((uint32_t)STM32_READ_BIT(p_mtl_instance->MTLRXQXOMR,
+                                                                          ETH_MTLRXQOMR_DIS_TCP_EF));
+  p_mtl_rx_q_conf->fwd_error_pkt = (hal_eth_mtl_rx_fwd_err_pkt_ctrl_t)
+                                   ((uint32_t)STM32_READ_BIT(p_mtl_instance->MTLRXQXOMR, ETH_MTLRXQOMR_FEP));
+  p_mtl_rx_q_conf->fwd_undersized_good_pkt = (hal_eth_mtl_rx_fwd_usz_pkt_ctrl_t)
+                                             ((uint32_t)STM32_READ_BIT(p_mtl_instance->MTLRXQXOMR,
+                                                                       ETH_MTLRXQOMR_FUP));
+  p_mtl_rx_q_conf->receive_queue_mode = (hal_eth_mtl_rx_queue_mode_t)
+                                        ((uint32_t)STM32_READ_BIT(p_mtl_instance->MTLRXQXOMR,
+                                                                  (ETH_MTLRXQOMR_RSF
+                                                                   | ETH_MTLRXQOMR_RTC)));
 }
 
+/**
+  * @brief  Execute the RX data handler for a channel.
+  *
+  * This routine walks the RX descriptor ring of the selected channel and
+  * processes the descriptors that are no longer owned by the DMA engine.
+  * For each available descriptor:
+  * - If it is a context descriptor, it is cleared.
+  * - Otherwise, packet metadata is extracted and the channel RX complete
+  *   callback is invoked.
+  * - The descriptor is then reset and the ring indexes/counters are updated.
+  *
+  * Cache maintenance is performed on the descriptor before it is inspected,
+  * using the registered cache invalidate callback.
+  *
+  * @param[in,out] heth Pointer to a @ref hal_eth_handle_t structure.
+  * @param[in]     ch   Zero-based RX channel index.
+  *
+  * @pre The RX channel lock must be held by the caller.
+  * @pre The RX channel state must be @ref HAL_ETH_CHANNEL_STATE_ACTIVE or
+  *      @ref HAL_ETH_CHANNEL_STATE_SUSPENDED.
+  *
+  * @retval 0UL             Processing completed for this channel.
+  * @retval HAL_ETH_RX_CHANNEL_ID
+  *         Processing of the TX channel was stopped because the TX complete
+  *         callback execution failed; the channel can be processed again
+  *         later.
+  */
+static uint32_t ETH_ExecRxDataHandler(hal_eth_handle_t *heth, uint32_t ch)
+{
+  uint32_t output_channel = 0UL;
+  eth_dma_descriptor_t *p_dma_rx_desc = NULL;
+  uint32_t rx_desc_idx = 0UL;
+  uint32_t rx_total_used_desc = 0UL;
+  uint32_t rx_process_completed = 0UL;
+
+  rx_desc_idx = heth->rx_channels[ch].rx_desc_list.built_desc_id;
+  rx_total_used_desc = heth->rx_channels[ch].rx_desc_list.buff_in_use;
+  rx_process_completed = 0UL;
+
+  while ((rx_total_used_desc != 0UL) && (rx_process_completed == 0UL))
+  {
+    p_dma_rx_desc = ETH_GET_DESC_INDEX(heth->rx_channels[ch].rx_desc_list, rx_desc_idx);
+
+#if defined (USE_HAL_ETH_REGISTER_CALLBACKS) && (USE_HAL_ETH_REGISTER_CALLBACKS == 1)
+    heth->p_cache_invalidate_cb(heth, ETH_GET_RX_CH_ID(ch), p_dma_rx_desc,
+                                heth->rx_channels[ch].rx_desc_list.desc_len_byte);
+#else  /* USE_HAL_ETH_REGISTER_CALLBACKS */
+    HAL_ETH_CacheInvalidateCallback(heth, ETH_GET_RX_CH_ID(ch),
+                                    p_dma_rx_desc, heth->rx_channels[ch].rx_desc_list.desc_len_byte);
+#endif /* USE_HAL_ETH_REGISTER_CALLBACKS */
+
+    /* OWN cleared means DMA completed write-back and CPU can consume descriptor. */
+    if ((p_dma_rx_desc->desc3 & ETH_DMA_RX_DESC_WBF_OWN) == 0UL)
+    {
+      if ((p_dma_rx_desc->desc3 & ETH_DMA_RX_DESC_WBF_CTXT) != 0UL)
+      {
+        /* Context descriptors are metadata-only. */
+        p_dma_rx_desc->desc0 = 0x0UL;
+        p_dma_rx_desc->desc1 = 0x0UL;
+        p_dma_rx_desc->desc2 = 0x0UL;
+        p_dma_rx_desc->desc3 = 0x0UL;
+      }
+      else
+      {
+        hal_eth_rx_cb_pkt_data_t rx_pkt_data = {0};
+        uint32_t rec_pkt_size = p_dma_rx_desc->desc3 & ETH_DMA_RX_DESC_WBF_PL;
+
+        ETH_COPY_BITS(rx_pkt_data.status, (HAL_ETH_RX_STATUS_FD | HAL_ETH_RX_STATUS_LD), p_dma_rx_desc->desc3);
+        if ((p_dma_rx_desc->desc3 & HAL_ETH_RX_STATUS_LD) != 0UL)
+        {
+          ETH_COPY_BITS(rx_pkt_data.status, (HAL_ETH_RX_STATUS_IPCB | HAL_ETH_RX_STATUS_IPV4
+                                             | HAL_ETH_RX_STATUS_IPV6), p_dma_rx_desc->desc1);
+          ETH_COPY_BITS(rx_pkt_data.status, HAL_ETH_RX_STATUS_ARPNR, p_dma_rx_desc->desc2);
+          if ((p_dma_rx_desc->desc3 & HAL_ETH_RX_STATUS_VLAN) != 0UL)
+          {
+            ETH_COPY_BITS(rx_pkt_data.status, HAL_ETH_RX_STATUS_VLAN, p_dma_rx_desc->desc3);
+            rx_pkt_data.vlan_tag_ids = p_dma_rx_desc->desc0;
+          }
+        }
+        if ((p_dma_rx_desc->desc1 & (HAL_ETH_RX_STATUS_IPV4 | HAL_ETH_RX_STATUS_IPV6)) != 0UL)
+        {
+          ETH_COPY_BITS(rx_pkt_data.errors, HAL_ETH_RX_ERROR_IPH, p_dma_rx_desc->desc1);
+        }
+        ETH_COPY_BITS(rx_pkt_data.errors, HAL_ETH_RX_ERROR_IPC, p_dma_rx_desc->desc1);
+        ETH_COPY_BITS(rx_pkt_data.errors, (HAL_ETH_RX_ERROR_DB | HAL_ETH_RX_ERROR_REC
+                                           | HAL_ETH_RX_ERROR_OFL | HAL_ETH_RX_ERROR_RWT
+                                           | HAL_ETH_RX_ERROR_GP | HAL_ETH_RX_ERROR_CRC), p_dma_rx_desc->desc3);
+        rx_pkt_data.p_data = p_dma_rx_desc->p_app_data;
+
+        if (heth->rx_channels[ch].p_rx_complete_cb(heth, ETH_GET_RX_CH_ID(ch),
+                                                   p_dma_rx_desc->p_pkt_addr, rec_pkt_size, rx_pkt_data) != HAL_OK)
+        {
+          output_channel = ETH_GET_RX_CH_ID(ch);
+          break;
+        }
+        ETH_ResetDMADesc(p_dma_rx_desc);
+      }
+      ETH_INCR_DESC_INDEX(rx_desc_idx, heth->rx_channels[ch].rx_desc_list.total_desc_cnt);
+      rx_total_used_desc--;
+    }
+    else
+    {
+      /* Stop at first DMA-owned descriptor, following ones are not ready yet. */
+      rx_process_completed = 1UL;
+    }
+  }
+  heth->rx_channels[ch].rx_desc_list.buff_in_use = rx_total_used_desc;
+  heth->rx_channels[ch].rx_desc_list.built_desc_id = rx_desc_idx;
+  ETH_UpdateRxDesc(heth, ch);
+  return output_channel;
+}
+
+/**
+  * @brief  Initialize and start an Rx DMA channel.
+  * @param  heth Pointer to a hal_eth_handle_t structure.
+  * @param  ch   Zero-based Rx channel index.
+  * @param  p_desc_mem Pointer to descriptor memory base address.
+  * @param  desc_size_byte Total descriptor memory size in bytes.
+  * @retval HAL_OK Channel started successfully.
+  * @retval HAL_INVALID_PARAM Descriptor memory is smaller than one descriptor length.
+  */
+static hal_status_t ETH_StartRxChannel(hal_eth_handle_t *heth, uint32_t ch, uint32_t *p_desc_mem,
+                                       uint32_t desc_size_byte)
+{
+  ETH_STATES_CHECK_UPDATE(heth->rx_channels[ch].channel_state, (uint32_t)HAL_ETH_CHANNEL_STATE_CONFIGURED,
+                          HAL_ETH_CHANNEL_STATE_ACTIVE);
+
+  ETH_DMA_Channel_TypeDef *p_dma_instance = ETH_DMA_GET_RX_INSTANCE(heth, ch);
+
+  /* Build and publish the RX ring before enabling DMA reception. */
+  ETH_DMARxDescListInit(heth, ch, p_desc_mem, desc_size_byte);
+  ETH_DMA_CHX_ENABLE_IT(p_dma_instance, (ETH_DMACIER_NIE | ETH_DMACIER_AIE
+                                         | ETH_DMACIER_CDEE | ETH_DMACIER_FBEE
+                                         | ETH_DMACIER_RIE | ETH_DMACIER_RBUE));
+
+  STM32_SET_BIT(p_dma_instance->DMACXRXCR, ETH_DMACRXCR_SR);
+  STM32_SET_BIT(ETH_GET_INSTANCE(heth)->MACCR, ETH_MACCR_RE);
+  return HAL_OK;
+}
 /**
   * @brief  Stop an Rx DMA channel and disable MAC Rx if applicable.
   *
@@ -7056,33 +6915,31 @@ static void ETH_GetMtlRxChannelConfig(const hal_eth_handle_t *heth, uint32_t ch,
   */
 static hal_status_t ETH_StopRxChannel(hal_eth_handle_t *heth, uint32_t ch)
 {
-  uint32_t tickstart;
+  uint32_t tick_start;
   ETH_DMA_Channel_TypeDef *p_dma_instance = ETH_DMA_GET_RX_INSTANCE(heth, ch);
 
-  /* Disable the DMA transmission for Rx Channel */
   STM32_CLEAR_BIT(p_dma_instance->DMACXRXCR, ETH_DMACRXCR_SR);
 
-  /* Wait for the receive process to stop */
-  tickstart = HAL_GetTick();
+  tick_start = HAL_GetTick();
   while (ETH_DMA_GetRxProcessState(ETH_GET_INSTANCE(heth), ch) != ETH_RX_DMA_PROCESS_STOPPED)
   {
-    if ((HAL_GetTick() - tickstart) > ETH_RX_DMA_STOP_TIMEOUT)
+    if ((HAL_GetTick() - tick_start) > ETH_RX_DMA_STOP_TIMEOUT)
     {
-      return HAL_ERROR;
+      if (ETH_DMA_GetRxProcessState(ETH_GET_INSTANCE(heth), ch) != ETH_RX_DMA_PROCESS_STOPPED)
+      {
+        return HAL_ERROR;
+      }
     }
   }
 
-  /* Recycle all Rx descriptors */
+  /* Recycle descriptors once channel is stopped. */
   ETH_RecycleRxDesc(heth, ch);
+  heth->rx_channels[ch].rx_desc_list.p_desc_list_addr = NULL;
+  heth->rx_channels[ch].rx_desc_list.total_desc_cnt = 0UL;
+  heth->rx_channels[ch].rx_desc_list.curr_desc_id = 0UL;
+  heth->rx_channels[ch].rx_desc_list.built_desc_id = 0UL;
+  heth->rx_channels[ch].rx_desc_list.buff_in_use = 0UL;
 
-  /* Reset Rx desc list */
-  STM32_WRITE_REG(heth->rx_channels[ch].rx_desc_list.p_desc_list_addr, NULL);
-  STM32_WRITE_REG(heth->rx_channels[ch].rx_desc_list.total_desc_cnt, 0UL);
-  STM32_WRITE_REG(heth->rx_channels[ch].rx_desc_list.curr_desc_id, 0UL);
-  STM32_WRITE_REG(heth->rx_channels[ch].rx_desc_list.built_desc_id, 0UL);
-  STM32_WRITE_REG(heth->rx_channels[ch].rx_desc_list.buff_in_use, 0UL);
-
-  /* Stop the MAC receiver */
   STM32_CLEAR_BIT(ETH_GET_INSTANCE(heth)->MACCR, ETH_MACCR_RE);
   return HAL_OK;
 }
@@ -7102,46 +6959,47 @@ static hal_status_t ETH_StopRxChannel(hal_eth_handle_t *heth, uint32_t ch)
   */
 static hal_status_t ETH_StopTxChannel(hal_eth_handle_t *heth, uint32_t ch)
 {
-  uint32_t tickstart;
+  uint32_t tick_start;
   ETH_DMA_Channel_TypeDef *p_dma_instance = ETH_DMA_GET_TX_INSTANCE(heth, ch);
   ETH_MTL_Queue_TypeDef *p_mtl_instance = ETH_MTL_GET_TX_INSTANCE(heth, ch);
 
-  /* Stop the Tx DMA transmission */
+  /* Request TX DMA stop first, then wait for the process state machine to settle. */
   STM32_CLEAR_BIT(p_dma_instance->DMACXTXCR, ETH_DMACTXCR_ST);
 
-  /* Wait for the transmit process to stop */
-  tickstart = HAL_GetTick();
+  tick_start = HAL_GetTick();
   while (ETH_DMA_GetTxProcessState(ETH_GET_INSTANCE(heth), ch) != ETH_TX_DMA_PROCESS_STOPPED)
   {
-    if ((HAL_GetTick() - tickstart) > ETH_TX_DMA_STOP_TIMEOUT)
+    if ((HAL_GetTick() - tick_start) > ETH_TX_DMA_STOP_TIMEOUT)
     {
-      return HAL_ERROR;
+      if (ETH_DMA_GetTxProcessState(ETH_GET_INSTANCE(heth), ch) != ETH_TX_DMA_PROCESS_STOPPED)
+      {
+        return HAL_ERROR;
+      }
     }
   }
 
-  /* Flush Tx Queue */
+  /* Flush remaining queue data so no stale packets are left in MTL after DMA stop. */
   STM32_SET_BIT(p_mtl_instance->MTLTXQXOMR, ETH_MTLTXQOMR_FTQ);
-  /* Wait for the flush operation */
-  tickstart = HAL_GetTick();
+  tick_start = HAL_GetTick();
   while (STM32_READ_BIT(p_mtl_instance->MTLTXQXOMR, ETH_MTLTXQOMR_FTQ) != 0UL)
   {
-    if ((HAL_GetTick() - tickstart) > ETH_TX_Q_FLUSH_TIMEOUT)
+    if ((HAL_GetTick() - tick_start) > ETH_TX_Q_FLUSH_TIMEOUT)
     {
-      return HAL_ERROR;
+      if (STM32_READ_BIT(p_mtl_instance->MTLTXQXOMR, ETH_MTLTXQOMR_FTQ) != 0UL)
+      {
+        return HAL_ERROR;
+      }
     }
   }
 
-  /* Recycle all Tx descriptors */
+  /* Recycle descriptors after DMA/MTL drain. */
   ETH_RecycleTxDesc(heth, ch);
+  heth->tx_channels[ch].tx_desc_list.p_desc_list_addr = NULL;
+  heth->tx_channels[ch].tx_desc_list.total_desc_cnt = 0UL;
+  heth->tx_channels[ch].tx_desc_list.curr_desc_id = 0UL;
+  heth->tx_channels[ch].tx_desc_list.built_desc_id = 0UL;
+  heth->tx_channels[ch].tx_desc_list.buff_in_use = 0UL;
 
-  /* Reset Tx desc list */
-  STM32_WRITE_REG(heth->tx_channels[ch].tx_desc_list.p_desc_list_addr, NULL);
-  STM32_WRITE_REG(heth->tx_channels[ch].tx_desc_list.total_desc_cnt, 0UL);
-  STM32_WRITE_REG(heth->tx_channels[ch].tx_desc_list.curr_desc_id, 0UL);
-  STM32_WRITE_REG(heth->tx_channels[ch].tx_desc_list.built_desc_id, 0UL);
-  STM32_WRITE_REG(heth->tx_channels[ch].tx_desc_list.buff_in_use, 0UL);
-
-  /* Stop the MAC transmitter */
   STM32_CLEAR_BIT(ETH_GET_INSTANCE(heth)->MACCR, ETH_MACCR_TE);
   return HAL_OK;
 }
@@ -7149,50 +7007,45 @@ static hal_status_t ETH_StopTxChannel(hal_eth_handle_t *heth, uint32_t ch)
 
 /**
   * @brief  Retrieve Tx DMA process state for a channel.
-  * @param  p_eth Pointer to ETH peripheral instance.
+  * @param  p_ethx Pointer to ETH peripheral instance.
   * @param  ch    Zero-based Tx channel index.
   * @retval eth_tx_dma_process_state_t Current Tx DMA process state.
   */
-static eth_tx_dma_process_state_t ETH_DMA_GetTxProcessState(const ETH_TypeDef *p_eth, uint32_t ch)
+static eth_tx_dma_process_state_t ETH_DMA_GetTxProcessState(const ETH_TypeDef *p_ethx, uint32_t ch)
 {
   uint32_t process_masked;
   uint32_t process_pos;
-  eth_tx_dma_process_state_t state = ETH_TX_DMA_PROCESS_UNKNOWN;
+  eth_tx_dma_process_state_t state;
 
   if (ch <= ETH_TX_DMA_CH_STATE_MAX_IDX)
   {
-    /* Read raw Tx process field for channel `ch` */
-    process_masked = (uint32_t)STM32_READ_BIT(p_eth->DMADSR,
+    process_masked = (uint32_t)STM32_READ_BIT(p_ethx->DMADSR,
                                               (ETH_DMADSR_TPS0 << (ETH_TPS_FIELD_WIDTH_BITS * (ch))));
-    /* Compute bit position for the selected channel field */
     process_pos = (ETH_DMADSR_TPS0_Pos + (ETH_TPS_FIELD_WIDTH_BITS * (ch)));
-
-    /* Extract and cast to @ref eth_tx_dma_process_state_t */
     state = (eth_tx_dma_process_state_t)((uint32_t)(process_masked >> process_pos));
+  }
+  else
+  {
+    state = ETH_TX_DMA_PROCESS_UNKNOWN;
   }
   return state;
 }
 
 /**
   * @brief  Retrieve Rx DMA process state for a channel.
-  * @param  p_eth Pointer to ETH peripheral instance.
+  * @param  p_ethx Pointer to ETH peripheral instance.
   * @param  ch    Zero-based Rx channel index.
   * @retval eth_rx_dma_process_state_t Current Rx DMA process state.
   */
-static eth_rx_dma_process_state_t ETH_DMA_GetRxProcessState(const ETH_TypeDef *p_eth, uint32_t ch)
+static eth_rx_dma_process_state_t ETH_DMA_GetRxProcessState(const ETH_TypeDef *p_ethx, uint32_t ch)
 {
   uint32_t process_masked;
   uint32_t process_pos;
   eth_rx_dma_process_state_t state;
 
-  /* Read raw Rx process field for channel `ch` */
-  process_masked = (uint32_t)STM32_READ_BIT(p_eth->DMADSR,
+  process_masked = (uint32_t)STM32_READ_BIT(p_ethx->DMADSR,
                                             (ETH_DMADSR_RPS0 << (ETH_RPS_FIELD_WIDTH_BITS * (ch))));
-
-  /* Compute bit position for the selected channel field */
   process_pos = (ETH_DMADSR_RPS0_Pos + (ETH_RPS_FIELD_WIDTH_BITS * (ch)));
-
-  /* Extract and cast to @ref eth_rx_dma_process_state_t */
   state = (eth_rx_dma_process_state_t)((uint32_t)(process_masked >> process_pos));
 
   return state;
@@ -7209,28 +7062,21 @@ static eth_rx_dma_process_state_t ETH_DMA_GetRxProcessState(const ETH_TypeDef *p
   */
 static void ETH_AbortRxChannel(hal_eth_handle_t *heth, uint32_t ch)
 {
-  ETH_DMA_Channel_TypeDef *p_dma_instance = ETH_DMA_GET_RX_INSTANCE(heth, ch);
-
-  hal_eth_channel_state_t rx_state = heth->rx_channels[ch].channel_state;
-  if ((rx_state != HAL_ETH_CHANNEL_STATE_ACTIVE)
-      && (rx_state != HAL_ETH_CHANNEL_STATE_SUSPENDED))
+  if (heth->rx_channels[ch].rx_desc_list.p_desc_list_addr != NULL)
   {
-    return;
+    /* Abort path favors immediate shutdown over graceful wait loops. */
+    STM32_CLEAR_BIT(ETH_DMA_GET_RX_INSTANCE(heth, ch)->DMACXRXCR, ETH_DMACRXCR_SR);
+    STM32_CLEAR_BIT(ETH_GET_INSTANCE(heth)->MACCR, ETH_MACCR_RE);
+    ETH_DMA_CHX_DISABLE_IT(ETH_DMA_GET_RX_INSTANCE(heth, ch), (ETH_DMACIER_NIE | ETH_DMACIER_AIE
+                                                               | ETH_DMACIER_CDEE | ETH_DMACIER_FBEE
+                                                               | ETH_DMACIER_RIE | ETH_DMACIER_RBUE));
+    ETH_RecycleRxDesc(heth, ch);
+    heth->rx_channels[ch].rx_desc_list.p_desc_list_addr = NULL;
+    heth->rx_channels[ch].rx_desc_list.total_desc_cnt = 0UL;
+    heth->rx_channels[ch].rx_desc_list.curr_desc_id = 0UL;
+    heth->rx_channels[ch].rx_desc_list.built_desc_id = 0UL;
+    heth->rx_channels[ch].rx_desc_list.buff_in_use = 0UL;
   }
-  /* Disable the DMA transmission for Rx Channel */
-  STM32_CLEAR_BIT(p_dma_instance->DMACXRXCR, ETH_DMACRXCR_SR);
-
-  /* Recycle all Rx descriptors */
-  ETH_RecycleRxDesc(heth, ch);
-
-  /* Reset Rx desc list */
-  STM32_WRITE_REG(heth->rx_channels[ch].rx_desc_list.p_desc_list_addr, NULL);
-  STM32_WRITE_REG(heth->rx_channels[ch].rx_desc_list.total_desc_cnt, 0UL);
-  STM32_WRITE_REG(heth->rx_channels[ch].rx_desc_list.curr_desc_id, 0UL);
-  STM32_WRITE_REG(heth->rx_channels[ch].rx_desc_list.built_desc_id, 0UL);
-  STM32_WRITE_REG(heth->rx_channels[ch].rx_desc_list.buff_in_use, 0UL);
-  /* Stop the MAC receiver */
-  STM32_CLEAR_BIT(ETH_GET_INSTANCE(heth)->MACCR, ETH_MACCR_RE);
 }
 /**
   * @brief  Abort and reset a Tx DMA channel.
@@ -7243,32 +7089,22 @@ static void ETH_AbortRxChannel(hal_eth_handle_t *heth, uint32_t ch)
   */
 static void ETH_AbortTxChannel(hal_eth_handle_t *heth, uint32_t ch)
 {
-  ETH_DMA_Channel_TypeDef *p_dma_instance = ETH_DMA_GET_TX_INSTANCE(heth, ch);
-  ETH_MTL_Queue_TypeDef *p_mtl_instance = ETH_MTL_GET_TX_INSTANCE(heth, ch);
-
-  hal_eth_channel_state_t tx_state = heth->tx_channels[ch].channel_state;
-  if ((tx_state != HAL_ETH_CHANNEL_STATE_ACTIVE)
-      && (tx_state != HAL_ETH_CHANNEL_STATE_SUSPENDED))
+  if (heth->tx_channels[ch].tx_desc_list.p_desc_list_addr != NULL)
   {
-    return;
+    /* Abort path forcibly stops DMA/MTL and then recycles software descriptors. */
+    STM32_CLEAR_BIT(ETH_DMA_GET_TX_INSTANCE(heth, ch)->DMACXTXCR, ETH_DMACTXCR_ST);
+    STM32_SET_BIT(ETH_MTL_GET_TX_INSTANCE(heth, ch)->MTLTXQXOMR, ETH_MTLTXQOMR_FTQ);
+    STM32_CLEAR_BIT(ETH_GET_INSTANCE(heth)->MACCR, ETH_MACCR_TE);
+    ETH_DMA_CHX_DISABLE_IT(ETH_DMA_GET_TX_INSTANCE(heth, ch), (ETH_DMACIER_NIE | ETH_DMACIER_AIE
+                                                               | ETH_DMACIER_CDEE | ETH_DMACIER_FBEE
+                                                               | ETH_DMACIER_TIE));
+    ETH_RecycleTxDesc(heth, ch);
+    heth->tx_channels[ch].tx_desc_list.p_desc_list_addr = NULL;
+    heth->tx_channels[ch].tx_desc_list.total_desc_cnt = 0UL;
+    heth->tx_channels[ch].tx_desc_list.curr_desc_id = 0UL;
+    heth->tx_channels[ch].tx_desc_list.built_desc_id = 0UL;
+    heth->tx_channels[ch].tx_desc_list.buff_in_use = 0UL;
   }
-
-  /* Stop the Tx DMA transmission */
-  STM32_CLEAR_BIT(p_dma_instance->DMACXTXCR, ETH_DMACTXCR_ST);
-  /* Flush Tx Queue */
-  STM32_SET_BIT(p_mtl_instance->MTLTXQXOMR, ETH_MTLTXQOMR_FTQ);
-
-  /* Recycle all Tx descriptors */
-  ETH_RecycleTxDesc(heth, ch);
-
-  /* Reset Tx desc list */
-  STM32_WRITE_REG(heth->tx_channels[ch].tx_desc_list.p_desc_list_addr, NULL);
-  STM32_WRITE_REG(heth->tx_channels[ch].tx_desc_list.total_desc_cnt, 0UL);
-  STM32_WRITE_REG(heth->tx_channels[ch].tx_desc_list.curr_desc_id, 0UL);
-  STM32_WRITE_REG(heth->tx_channels[ch].tx_desc_list.built_desc_id, 0UL);
-  STM32_WRITE_REG(heth->tx_channels[ch].tx_desc_list.buff_in_use, 0UL);
-  /* Stop the MAC transmitter */
-  STM32_CLEAR_BIT(ETH_GET_INSTANCE(heth)->MACCR, ETH_MACCR_TE);
 }
 
 /**
@@ -7277,16 +7113,16 @@ static void ETH_AbortTxChannel(hal_eth_handle_t *heth, uint32_t ch)
   * This clears descriptor words and backup pointers so the descriptor can be
   * reused by the driver or re-initialized prior to programming for DMA.
   *
-  * @param  p_dma_txDesc Pointer to the DMA descriptor to reset
+  * @param  p_dma_tx_desc Pointer to the DMA descriptor to reset
   */
-static void ETH_ResetDMADesc(eth_dma_descriptor_t *p_dma_txDesc)
+static void ETH_ResetDMADesc(eth_dma_descriptor_t *p_dma_tx_desc)
 {
-  STM32_WRITE_REG(p_dma_txDesc->DESC0, 0x0UL);
-  STM32_WRITE_REG(p_dma_txDesc->DESC1, 0x0UL);
-  STM32_WRITE_REG(p_dma_txDesc->DESC2, 0x0UL);
-  STM32_WRITE_REG(p_dma_txDesc->DESC3, 0x0UL);
-  STM32_WRITE_REG(p_dma_txDesc->p_pkt_addr, NULL);
-  STM32_WRITE_REG(p_dma_txDesc->p_app_data, NULL);
+  p_dma_tx_desc->desc0 = 0x0UL;
+  p_dma_tx_desc->desc1 = 0x0UL;
+  p_dma_tx_desc->desc2 = 0x0UL;
+  p_dma_tx_desc->desc3 = 0x0UL;
+  p_dma_tx_desc->p_pkt_addr = NULL;
+  p_dma_tx_desc->p_app_data = NULL;
 }
 
 /**
@@ -7296,73 +7132,64 @@ static void ETH_ResetDMADesc(eth_dma_descriptor_t *p_dma_txDesc)
   */
 static void ETH_UpdateRxDesc(hal_eth_handle_t *heth, uint32_t ch)
 {
-  eth_dma_descriptor_t *p_dma_RxDesc;
-  ETH_DMA_Channel_TypeDef *p_dma_instance = ETH_DMA_GET_RX_INSTANCE(heth, ch);
-
   uint32_t rx_desc_idx        = heth->rx_channels[ch].rx_desc_list.curr_desc_id;
   uint32_t rx_total_used_desc = heth->rx_channels[ch].rx_desc_list.buff_in_use;
+  eth_dma_descriptor_t *p_dma_rx_desc = NULL;
+  ETH_DMA_Channel_TypeDef *p_dma_instance = ETH_DMA_GET_RX_INSTANCE(heth, ch);
 
   while (rx_total_used_desc < heth->rx_channels[ch].rx_desc_list.total_desc_cnt)
   {
-    p_dma_RxDesc = ETH_GET_DESC_INDEX(heth->rx_channels[ch].rx_desc_list, rx_desc_idx);
+    p_dma_rx_desc = ETH_GET_DESC_INDEX(heth->rx_channels[ch].rx_desc_list, rx_desc_idx);
 
-    if (p_dma_RxDesc->p_pkt_addr == NULL)
+    if (p_dma_rx_desc->p_pkt_addr == NULL)
     {
-      void *p_RxBuffer = NULL;
-      void *p_AppContext = NULL;
+      void *p_rx_buffer = NULL;
+      void *p_app_context = NULL;
 
-      /* Get App Rx buffer and App context*/
       heth->rx_channels[ch].p_rx_allocate_cb(heth, ETH_GET_RX_CH_ID(ch),
-                                             heth->rx_channels[ch].rx_buff_size_byte, &p_RxBuffer,
-                                             &p_AppContext);
-      if (p_RxBuffer != NULL)
+                                             heth->rx_channels[ch].rx_buff_size_byte, &p_rx_buffer,
+                                             &p_app_context);
+      if (p_rx_buffer != NULL)
       {
-        /* Set Rx Buffer Address */
-        STM32_WRITE_REG(p_dma_RxDesc->DESC0, ETH_CAST_PTR_TO_U32(p_RxBuffer));
-
-        /* Save Buffer reference in backup*/
-        STM32_WRITE_REG(p_dma_RxDesc->p_pkt_addr, p_RxBuffer);
-        /* Save Application Context*/
-        STM32_WRITE_REG(p_dma_RxDesc->p_app_data, p_AppContext);
+        p_dma_rx_desc->desc0 = ETH_CAST_PTR_TO_U32(p_rx_buffer);
+        p_dma_rx_desc->p_pkt_addr = p_rx_buffer;
+        p_dma_rx_desc->p_app_data = p_app_context;
       }
       else
       {
-        /* No buffer available, stop the allocation */
+        /* No buffer available, keep remaining descriptors untouched for a later refill pass. */
         break;
       }
     }
     else
     {
-      /* Descriptor was used as a context descriptor, buffer still unused */
-      STM32_WRITE_REG(p_dma_RxDesc->DESC0, ETH_CAST_PTR_TO_U32(p_dma_RxDesc->p_pkt_addr));
+      p_dma_rx_desc->desc0 = ETH_CAST_PTR_TO_U32(p_dma_rx_desc->p_pkt_addr);
     }
-    /* Set buffer 1 valid bit */
-    STM32_SET_BIT(p_dma_RxDesc->DESC3, ETH_DMA_RX_DESC_RF_BUF1V);
-    ETH_SetRxFifoEvent(heth, ch, p_dma_RxDesc);
-    /* Ensure completion of descriptor preparation before reception start */
-    __DSB();
+    STM32_SET_BIT(p_dma_rx_desc->desc3, ETH_DMA_RX_DESC_RF_BUF1V);
+    ETH_SetRxFifoEvent(heth, ch, p_dma_rx_desc);
 
-    /* Move Desc to DMA */
-    STM32_SET_BIT(p_dma_RxDesc->DESC3, ETH_DMA_RX_DESC_RF_OWN);
+    /* Publish descriptor then hand off ownership to DMA */
+    __DMB();
 
+    STM32_SET_BIT(p_dma_rx_desc->desc3, ETH_DMA_RX_DESC_RF_OWN);
+
+    /* Flush descriptor cache so DMA sees updated descriptor content and OWN bit. */
 #if defined (USE_HAL_ETH_REGISTER_CALLBACKS) && (USE_HAL_ETH_REGISTER_CALLBACKS == 1)
-    heth->p_cache_flush_cb(heth, ETH_GET_RX_CH_ID(ch), p_dma_RxDesc,
+    heth->p_cache_flush_cb(heth, ETH_GET_RX_CH_ID(ch), p_dma_rx_desc,
                            heth->rx_channels[ch].rx_desc_list.desc_len_byte);
 #else  /* USE_HAL_ETH_REGISTER_CALLBACKS */
-    HAL_ETH_CacheFlushCallback(heth, ETH_GET_RX_CH_ID(ch), p_dma_RxDesc,
+    HAL_ETH_CacheFlushCallback(heth, ETH_GET_RX_CH_ID(ch), p_dma_rx_desc,
                                heth->rx_channels[ch].rx_desc_list.desc_len_byte);
 #endif /* USE_HAL_ETH_REGISTER_CALLBACKS */
 
-    /* pass to next desc */
     ETH_INCR_DESC_INDEX(rx_desc_idx, heth->rx_channels[ch].rx_desc_list.total_desc_cnt);
     rx_total_used_desc++;
   }
-  /* Set Receive Descriptor Tail pointer Address for DMA Channel */
+  /* Ensure all descriptor writes/flushes complete before DMA kicks DMA via RXDTPR. */
+  __DSB();
   STM32_WRITE_REG(p_dma_instance->DMACXRXDTPR, 0UL);
 
-  /* incr built desc id */
   heth->rx_channels[ch].rx_desc_list.curr_desc_id = rx_desc_idx;
-  /* incr Buffer in use cnt*/
   heth->rx_channels[ch].rx_desc_list.buff_in_use = rx_total_used_desc;
 }
 
@@ -7383,150 +7210,244 @@ static void ETH_UpdateRxDesc(hal_eth_handle_t *heth, uint32_t ch)
 static hal_status_t ETH_RequestTxDMA(hal_eth_handle_t *heth, uint32_t ch, hal_eth_buffer_t *p_eth_buffer,
                                      uint32_t buffer_count, hal_eth_tx_pkt_config_t *p_tx_conf)
 {
-  eth_dma_descriptor_t *p_dma_txDesc;
-  uint32_t desc_idx;
-  ETH_DMA_Channel_TypeDef *p_dma_instance;
+  eth_dma_descriptor_t *p_dma_tx_desc = NULL;
+  uint32_t desc_idx = 0UL;
+  ETH_DMA_Channel_TypeDef *p_dma_instance = NULL;
+  ETH_TypeDef *p_ethx = NULL;
   uint32_t needed_desc_cnt = buffer_count;
 
-  /* Get Channel DMA instance */
   p_dma_instance = ETH_DMA_GET_TX_INSTANCE(heth, ch);
-  /* Get ETH Instance */
-  ETH_TypeDef *p_eth_instance = ETH_GET_INSTANCE(heth);
+  p_ethx = ETH_GET_INSTANCE(heth);
 
-  /* Get total needed descriptors for transmission */
-  if (STM32_READ_BIT(p_tx_conf->attributes, HAL_ETH_TX_PKT_CTRL_VLANTAG | HAL_ETH_TX_PKT_CTRL_INNERVLANTAG) != 0UL)
+  if ((p_tx_conf->attributes & (HAL_ETH_TX_PKT_CTRL_VLANTAG | HAL_ETH_TX_PKT_CTRL_INNERVLANTAG)) != 0UL)
   {
+    /* VLAN/inner-VLAN control requires one extra context descriptor before data descriptors. */
     needed_desc_cnt++;
   }
-  /* Check for available descriptors*/
   if (needed_desc_cnt >
       (heth->tx_channels[ch].tx_desc_list.total_desc_cnt - heth->tx_channels[ch].tx_desc_list.buff_in_use))
   {
-    /* No Free Descriptors available */
     return HAL_BUSY;
   }
-  /* Get Current available Tx Descriptor */
   desc_idx = heth->tx_channels[ch].tx_desc_list.curr_desc_id;
-  /* Get Descriptor Address */
-  p_dma_txDesc = ETH_GET_DESC_INDEX(heth->tx_channels[ch].tx_desc_list, desc_idx);
+  p_dma_tx_desc = ETH_GET_DESC_INDEX(heth->tx_channels[ch].tx_desc_list, desc_idx);
 
   /*****************    Context descriptor configuration *****************************/
-  /* check for VLAN Tag feature */
-  if (STM32_READ_BIT(p_tx_conf->attributes, HAL_ETH_TX_PKT_CTRL_VLANTAG) != 0UL)
+  if ((p_tx_conf->attributes & HAL_ETH_TX_PKT_CTRL_VLANTAG) != 0UL)
   {
-    /* Set vlan tag value */
-    STM32_MODIFY_REG(p_dma_txDesc->DESC3, ETH_DMA_TX_DESC_CTXT_VT, p_tx_conf->vlan_tag_id);
-    /* Set vlan tag valid bit */
-    STM32_SET_BIT(p_dma_txDesc->DESC3, ETH_DMA_TX_DESC_CTXT_VLTV);
-    /* Set Vlan Tag input */
-    STM32_SET_BIT(p_eth_instance->MACVIR, ETH_MACVIR_VLTI);
+    ETH_COPY_BITS(p_dma_tx_desc->desc3, ETH_DMA_TX_DESC_CTXT_VT, p_tx_conf->vlan_tag_id);
+    STM32_SET_BIT(p_dma_tx_desc->desc3, ETH_DMA_TX_DESC_CTXT_VLTV);
+    /* Set the descriptor as the vlan input source */
+    STM32_SET_BIT(p_ethx->MACVIR, ETH_MACVIR_VLTI);
   }
-  /* if inner VLAN is enabled */
-  if (STM32_READ_BIT(p_tx_conf->attributes, HAL_ETH_TX_PKT_CTRL_INNERVLANTAG) != 0UL)
+  if ((p_tx_conf->attributes & HAL_ETH_TX_PKT_CTRL_INNERVLANTAG) != 0UL)
   {
-    /* Set inner vlan tag value */
-    STM32_MODIFY_REG(p_dma_txDesc->DESC2, ETH_DMA_TX_DESC_CTXT_IVT, (p_tx_conf->inner_vlan_tag_id << 16));
-    /* Set inner vlan tag valid bit */
-    STM32_SET_BIT(p_dma_txDesc->DESC3, ETH_DMA_TX_DESC_CTXT_IVLTV);
-    /* Set Vlan Tag control */
-    STM32_MODIFY_REG(p_dma_txDesc->DESC3, ETH_DMA_TX_DESC_CTXT_IVTIR, (uint32_t)p_tx_conf->inner_vlan_ctrl);
+    ETH_COPY_BITS(p_dma_tx_desc->desc2, ETH_DMA_TX_DESC_CTXT_IVT, (p_tx_conf->inner_vlan_tag_id << 16U));
+    ETH_COPY_BITS(p_dma_tx_desc->desc3, ETH_DMA_TX_DESC_CTXT_IVTIR, (uint32_t)p_tx_conf->inner_vlan_ctrl);
+    STM32_SET_BIT(p_dma_tx_desc->desc3, ETH_DMA_TX_DESC_CTXT_IVLTV);
     /* Set the descriptor as the inner vlan input source */
-    STM32_SET_BIT(p_eth_instance->MACIVIR, ETH_MACIVIR_VLTI);
+    STM32_SET_BIT(p_ethx->MACIVIR, ETH_MACIVIR_VLTI);
     /* Enable double VLAN processing */
-    STM32_SET_BIT(p_eth_instance->MACVTR, ETH_MACVTR_EDVLP);
+    STM32_SET_BIT(p_ethx->MACVTR, ETH_MACVTR_EDVLP);
   }
-  if (STM32_READ_BIT(p_tx_conf->attributes, HAL_ETH_TX_PKT_CTRL_VLANTAG | HAL_ETH_TX_PKT_CTRL_INNERVLANTAG) != 0UL)
+  if ((p_tx_conf->attributes & (HAL_ETH_TX_PKT_CTRL_VLANTAG | HAL_ETH_TX_PKT_CTRL_INNERVLANTAG)) != 0UL)
   {
     /* Set as context descriptor */
-    STM32_SET_BIT(p_dma_txDesc->DESC3, ETH_DMA_TX_DESC_CTXT_CTXT);
-    /* Ensure rest of descriptor is written to RAM before the OWN bit */
+    STM32_SET_BIT(p_dma_tx_desc->desc3, ETH_DMA_TX_DESC_CTXT_CTXT);
+
+    /* Publish descriptor then hand off ownership to DMA */
     __DMB();
-    /* Set own bit */
-    STM32_SET_BIT(p_dma_txDesc->DESC3, ETH_DMA_TX_DESC_CTXT_OWN);
-    __DSB();
+    STM32_SET_BIT(p_dma_tx_desc->desc3, ETH_DMA_TX_DESC_CTXT_OWN);
+
 #if defined (USE_HAL_ETH_REGISTER_CALLBACKS) && (USE_HAL_ETH_REGISTER_CALLBACKS == 1)
-    heth->p_cache_flush_cb(heth, ETH_GET_TX_CH_ID(ch), p_dma_txDesc,
+    heth->p_cache_flush_cb(heth, ETH_GET_TX_CH_ID(ch), p_dma_tx_desc,
                            heth->tx_channels[ch].tx_desc_list.desc_len_byte);
 #else  /* USE_HAL_ETH_REGISTER_CALLBACKS */
-    HAL_ETH_CacheFlushCallback(heth, ETH_GET_TX_CH_ID(ch), p_dma_txDesc,
+    HAL_ETH_CacheFlushCallback(heth, ETH_GET_TX_CH_ID(ch), p_dma_tx_desc,
                                heth->tx_channels[ch].tx_desc_list.desc_len_byte);
 #endif /* USE_HAL_ETH_REGISTER_CALLBACKS */
-    /* Increment total used desc */
     heth->tx_channels[ch].tx_desc_list.buff_in_use++;
-    /* Increment current tx descriptor index */
     ETH_INCR_DESC_INDEX(desc_idx, heth->tx_channels[ch].tx_desc_list.total_desc_cnt);
-    /* Get current descriptor address */
-    p_dma_txDesc = ETH_GET_DESC_INDEX(heth->tx_channels[ch].tx_desc_list, desc_idx);
+    p_dma_tx_desc = ETH_GET_DESC_INDEX(heth->tx_channels[ch].tx_desc_list, desc_idx);
   }
 
   /*****************    Normal descriptors configuration     ******************************/
-  /* Mark it as First Descriptor */
-  STM32_SET_BIT(p_dma_txDesc->DESC3, ETH_DMA_TX_DESC_RF_FD);
+  STM32_SET_BIT(p_dma_tx_desc->desc3, ETH_DMA_TX_DESC_RF_FD);
   /* Check for CRC Padding feature, Valid only for first descriptor */
-  if (STM32_READ_BIT(p_tx_conf->attributes, HAL_ETH_TX_PKT_CTRL_CRCPAD) != 0UL)
+  if ((p_tx_conf->attributes & HAL_ETH_TX_PKT_CTRL_CRCPAD) != 0UL)
   {
-    /* Set CRC Padding control */
-    STM32_MODIFY_REG(p_dma_txDesc->DESC3, ETH_DMA_TX_DESC_RF_CPC, (uint32_t)p_tx_conf->crc_pad_ctrl);
+    ETH_COPY_BITS(p_dma_tx_desc->desc3, ETH_DMA_TX_DESC_RF_CPC, (uint32_t)p_tx_conf->crc_pad_ctrl);
   }
   for (uint32_t index = 0; index < buffer_count; index++)
   {
-    /* Set packet address */
-    STM32_WRITE_REG(p_dma_txDesc->DESC0, ETH_CAST_PTR_TO_U32(p_eth_buffer[index].p_buffer));
-    /* Set packet Length */
-    STM32_MODIFY_REG(p_dma_txDesc->DESC2, ETH_DMA_TX_DESC_RF_B1L, p_eth_buffer[index].len_byte);
-    /* Save packet reference in backup*/
-    STM32_WRITE_REG(p_dma_txDesc->p_pkt_addr, p_eth_buffer[index].p_buffer);
-    /* Save Application context */
-    STM32_WRITE_REG(p_dma_txDesc->p_app_data, p_tx_conf->p_data);
+    p_dma_tx_desc->desc0 = ETH_CAST_PTR_TO_U32(p_eth_buffer[index].p_buffer);
+    ETH_COPY_BITS(p_dma_tx_desc->desc2, ETH_DMA_TX_DESC_RF_B1L, p_eth_buffer[index].len_byte);
+    p_dma_tx_desc->p_pkt_addr = p_eth_buffer[index].p_buffer;
+    p_dma_tx_desc->p_app_data = p_tx_conf->p_data;
     /* Check CSUM feature */
-    if (STM32_READ_BIT(p_tx_conf->attributes, HAL_ETH_TX_PKT_CTRL_CSUM) != 0UL)
+    if ((p_tx_conf->attributes & HAL_ETH_TX_PKT_CTRL_CSUM) != 0UL)
     {
-      /* Set csum config */
-      STM32_MODIFY_REG(p_dma_txDesc->DESC3, ETH_DMA_TX_DESC_RF_CIC, (uint32_t)p_tx_conf->csum_ctrl);
+      ETH_COPY_BITS(p_dma_tx_desc->desc3, ETH_DMA_TX_DESC_RF_CIC, (uint32_t)p_tx_conf->csum_ctrl);
     }
     /* Check source address insertion/replacement */
-    if (STM32_READ_BIT(p_tx_conf->attributes, HAL_ETH_TX_PKT_CTRL_SAIC) != 0UL)
+    if ((p_tx_conf->attributes & HAL_ETH_TX_PKT_CTRL_SAIC) != 0UL)
     {
-      STM32_MODIFY_REG(p_dma_txDesc->DESC3, ETH_DMA_TX_DESC_RF_SAIC, (uint32_t)p_tx_conf->src_addr_ctrl);
+      ETH_COPY_BITS(p_dma_tx_desc->desc3, ETH_DMA_TX_DESC_RF_SAIC, (uint32_t)p_tx_conf->src_addr_ctrl);
     }
     /* Check for VLAN Tag feature */
-    if (STM32_READ_BIT(p_tx_conf->attributes, HAL_ETH_TX_PKT_CTRL_VLANTAG) != 0UL)
+    if ((p_tx_conf->attributes & HAL_ETH_TX_PKT_CTRL_VLANTAG) != 0UL)
     {
-      /* Set Vlan Tag control */
-      STM32_MODIFY_REG(p_dma_txDesc->DESC2, ETH_DMA_TX_DESC_RF_VTIR, (uint32_t)p_tx_conf->vlan_ctrl);
+      ETH_COPY_BITS(p_dma_tx_desc->desc2, ETH_DMA_TX_DESC_RF_VTIR, (uint32_t)p_tx_conf->vlan_ctrl);
     }
-    /* Check if Last Buffer to send */
     if (index == (buffer_count - 1UL))
     {
-      /* Mark it as LAST descriptor */
-      STM32_SET_BIT(p_dma_txDesc->DESC3, ETH_DMA_TX_DESC_RF_LD);
-      /* Set the fifo event interruption for last descriptor */
-      ETH_SetTxFifoEven(heth, ch, p_dma_txDesc, p_tx_conf->notify);
+      /* Last application buffer, closes frame and sets notification policy. */
+      STM32_SET_BIT(p_dma_tx_desc->desc3, ETH_DMA_TX_DESC_RF_LD);
+      ETH_SetTxFifoEvent(heth, ch, p_dma_tx_desc, p_tx_conf->notify);
     }
+
+    /* Publish descriptor then hand off ownership to DMA (OWN last). */
     __DMB();
-    /* Set Own bit */
-    STM32_SET_BIT(p_dma_txDesc->DESC3, ETH_DMA_TX_DESC_RF_OWN);
-    __DSB();
+    STM32_SET_BIT(p_dma_tx_desc->desc3, ETH_DMA_TX_DESC_RF_OWN);
 
 #if defined (USE_HAL_ETH_REGISTER_CALLBACKS) && (USE_HAL_ETH_REGISTER_CALLBACKS == 1)
-    heth->p_cache_flush_cb(heth, ETH_GET_TX_CH_ID(ch), p_dma_txDesc,
+    heth->p_cache_flush_cb(heth, ETH_GET_TX_CH_ID(ch), p_dma_tx_desc,
                            heth->tx_channels[ch].tx_desc_list.desc_len_byte);
 #else  /* USE_HAL_ETH_REGISTER_CALLBACKS */
-    HAL_ETH_CacheFlushCallback(heth, ETH_GET_TX_CH_ID(ch), p_dma_txDesc,
+    HAL_ETH_CacheFlushCallback(heth, ETH_GET_TX_CH_ID(ch), p_dma_tx_desc,
                                heth->tx_channels[ch].tx_desc_list.desc_len_byte);
 #endif /* USE_HAL_ETH_REGISTER_CALLBACKS */
 
-    /* Move to Next descriptor id */
-    ETH_INCR_DESC_INDEX(desc_idx, heth->tx_channels[ch].tx_desc_list.total_desc_cnt);
-    p_dma_txDesc = ETH_GET_DESC_INDEX(heth->tx_channels[ch].tx_desc_list, desc_idx);
+    /* Ensure descriptor publication is complete before DMA kicks */
+    __DSB();
 
-    /* issue a poll command to Tx DMA by writing address of the last valid descriptor */
+    /* TXDTPR write kicks DMA if it was waiting. */
     STM32_WRITE_REG(p_dma_instance->DMACXTXDTPR, 0UL);
-    /* Increment total used desc */
+
+    ETH_INCR_DESC_INDEX(desc_idx, heth->tx_channels[ch].tx_desc_list.total_desc_cnt);
+    p_dma_tx_desc = ETH_GET_DESC_INDEX(heth->tx_channels[ch].tx_desc_list, desc_idx);
     heth->tx_channels[ch].tx_desc_list.buff_in_use++;
   }
-  /* Set new Tx index */
   heth->tx_channels[ch].tx_desc_list.curr_desc_id = desc_idx;
+  return HAL_OK;
+}
+
+/**
+  * @brief  Execute the TX data handler for a channel.
+  *
+  * This routine walks the TX descriptor ring of the selected channel and
+  * processes the descriptors that are no longer owned by the DMA engine.
+  * For each available descriptor:
+  * - If it corresponds to a context/auxiliary descriptor (no packet address),
+  *   it is reset.
+  * - Otherwise, the channel TX complete callback is invoked with the
+  *   transmitted packet address and status/error information, then the
+  *   descriptor is reset.
+  *
+  * Cache maintenance is performed on the descriptor before it is inspected,
+  * using the registered cache invalidate callback.
+  *
+  * @param[in,out] heth Pointer to a @ref hal_eth_handle_t structure.
+  * @param[in]     ch   Zero-based TX channel index.
+  *
+  * @retval 0UL             Processing completed for this channel.
+  * @retval HAL_ETH_TX_CHANNEL_ID
+  *         Processing of the TX channel was stopped because the TX complete
+  *         callback execution failed; the channel can be processed again
+  *         later.
+  */
+static uint32_t ETH_ExecTxDataHandler(hal_eth_handle_t *heth, uint32_t ch)
+{
+  uint32_t output_channel = 0UL;
+  eth_dma_descriptor_t *p_dma_tx_desc = NULL;
+  uint32_t tx_desc_idx = 0UL;
+  uint32_t tx_total_used_desc = 0UL;
+  uint32_t tx_process_completed = 0UL;
+
+  tx_desc_idx = heth->tx_channels[ch].tx_desc_list.built_desc_id;
+  tx_total_used_desc = heth->tx_channels[ch].tx_desc_list.buff_in_use;
+  tx_process_completed = 0UL;
+
+  while ((tx_total_used_desc != 0UL) && (tx_process_completed == 0UL))
+  {
+    p_dma_tx_desc = ETH_GET_DESC_INDEX(heth->tx_channels[ch].tx_desc_list, tx_desc_idx);
+
+#if defined (USE_HAL_ETH_REGISTER_CALLBACKS) && (USE_HAL_ETH_REGISTER_CALLBACKS == 1)
+    heth->p_cache_invalidate_cb(heth, ETH_GET_TX_CH_ID(ch),
+                                p_dma_tx_desc, heth->tx_channels[ch].tx_desc_list.desc_len_byte);
+#else  /* USE_HAL_ETH_REGISTER_CALLBACKS */
+    HAL_ETH_CacheInvalidateCallback(heth, ETH_GET_TX_CH_ID(ch), p_dma_tx_desc,
+                                    heth->tx_channels[ch].tx_desc_list.desc_len_byte);
+#endif /* USE_HAL_ETH_REGISTER_CALLBACKS */
+
+    if ((p_dma_tx_desc->desc3 & ETH_DMA_TX_DESC_RF_OWN) == 0UL)
+    {
+      if (p_dma_tx_desc->p_pkt_addr == NULL)
+      {
+        /* Context descriptor: recycle, no packet callback. */
+        ETH_ResetDMADesc(p_dma_tx_desc);
+      }
+      else
+      {
+        hal_eth_tx_cb_pkt_data_t tx_cb_pkt_data = {0};
+
+        ETH_COPY_BITS(tx_cb_pkt_data.status, (HAL_ETH_TX_STATUS_FD | HAL_ETH_TX_STATUS_LD), p_dma_tx_desc->desc3);
+        ETH_COPY_BITS(tx_cb_pkt_data.errors, (HAL_ETH_TX_ERROR_IH | HAL_ETH_TX_ERROR_ED | HAL_ETH_TX_ERROR_EC
+                                              | HAL_ETH_TX_ERROR_LC | HAL_ETH_TX_ERROR_NC | HAL_ETH_TX_ERROR_LOC
+                                              | HAL_ETH_TX_ERROR_PC | HAL_ETH_TX_ERROR_JT), p_dma_tx_desc->desc3);
+        tx_cb_pkt_data.p_data = p_dma_tx_desc->p_app_data;
+
+        if (heth->tx_channels[ch].p_tx_complete_cb(heth, ETH_GET_TX_CH_ID(ch), p_dma_tx_desc->p_pkt_addr,
+                                                   tx_cb_pkt_data) != HAL_OK)
+        {
+          /* Callback asked to stop, report channel for deferred completion handling. */
+          output_channel = ETH_GET_TX_CH_ID(ch);
+          break;
+        }
+        ETH_ResetDMADesc(p_dma_tx_desc);
+      }
+      ETH_INCR_DESC_INDEX(tx_desc_idx, heth->tx_channels[ch].tx_desc_list.total_desc_cnt);
+      tx_total_used_desc--;
+    }
+    else
+    {
+      /* Stop at first DMA-owned descriptor, following ones are not ready yet. */
+      tx_process_completed = 1UL;
+    }
+  }
+
+  heth->tx_channels[ch].tx_desc_list.buff_in_use = tx_total_used_desc;
+  heth->tx_channels[ch].tx_desc_list.built_desc_id = tx_desc_idx;
+  return output_channel;
+}
+
+/**
+  * @brief  Initialize and start a Tx DMA channel.
+  * @param  heth Pointer to a hal_eth_handle_t structure.
+  * @param  ch   Zero-based Tx channel index.
+  * @param  p_desc_mem Pointer to descriptor memory base address.
+  * @param  desc_size_byte Total descriptor memory size in bytes.
+  * @retval HAL_OK Channel started successfully.
+  * @retval HAL_INVALID_PARAM Descriptor memory is smaller than one descriptor length.
+  */
+static hal_status_t ETH_StartTxChannel(hal_eth_handle_t *heth, uint32_t ch, uint32_t *p_desc_mem,
+                                       uint32_t desc_size_byte)
+{
+  ETH_STATES_CHECK_UPDATE(heth->tx_channels[ch].channel_state, (uint32_t)HAL_ETH_CHANNEL_STATE_CONFIGURED,
+                          HAL_ETH_CHANNEL_STATE_ACTIVE);
+
+  ETH_DMA_Channel_TypeDef *p_dma_instance = ETH_DMA_GET_TX_INSTANCE(heth, ch);
+  ETH_MTL_Queue_TypeDef *p_mtl_instance = ETH_MTL_GET_TX_INSTANCE(heth, ch);
+
+  ETH_DMATxDescListInit(heth, ch, p_desc_mem, desc_size_byte);
+
+  /* Flush any leftover queue state so TX starts cleanly. */
+  STM32_SET_BIT(p_mtl_instance->MTLTXQXOMR, ETH_MTLTXQOMR_FTQ);
+  STM32_SET_BIT(p_dma_instance->DMACXTXCR, ETH_DMACTXCR_ST);
+  STM32_CLEAR_BIT(p_dma_instance->DMACXSR, (ETH_DMACSR_TPS));
+  ETH_DMA_CHX_ENABLE_IT(p_dma_instance, (ETH_DMACIER_NIE | ETH_DMACIER_AIE | ETH_DMACIER_CDEE
+                                         | ETH_DMACIER_FBEE | ETH_DMACIER_TIE));
+  STM32_SET_BIT(ETH_GET_INSTANCE(heth)->MACCR, ETH_MACCR_TE);
   return HAL_OK;
 }
 
@@ -7547,18 +7468,17 @@ static void ETH_SetRxFifoEvent(hal_eth_handle_t *heth, uint32_t ch, eth_dma_desc
   {
     case HAL_ETH_FIFO_EVENT_ALWAYS :
     {
-      /* Set Interrupt Enabled on Completion */
-      STM32_SET_BIT(p_dma_rx_desc->DESC3, ETH_DMA_RX_DESC_RF_IOC);
+      STM32_SET_BIT(p_dma_rx_desc->desc3, ETH_DMA_RX_DESC_RF_IOC);
       break;
     }
     case HAL_ETH_FIFO_EVENT_CYCLIC :
     {
       if (heth->rx_channels[ch].event_cnt >= heth->rx_channels[ch].fifo_event_config.event_params)
       {
-        /* Set Interrupt Enabled on Completion */
-        STM32_SET_BIT(p_dma_rx_desc->DESC3, ETH_DMA_RX_DESC_RF_IOC);
+        STM32_SET_BIT(p_dma_rx_desc->desc3, ETH_DMA_RX_DESC_RF_IOC);
+        heth->rx_channels[ch].event_cnt = 0UL;
       }
-      ETH_INCR_FIFO_EVENT_CNT(heth->rx_channels[ch].event_cnt, heth->rx_channels[ch].fifo_event_config.event_params);
+      heth->rx_channels[ch].event_cnt++;
       break;
     }
     case HAL_ETH_FIFO_EVENT_NONE :
@@ -7575,30 +7495,34 @@ static void ETH_SetRxFifoEvent(hal_eth_handle_t *heth, uint32_t ch, eth_dma_desc
   *
   * @param  heth       Pointer to HAL ETH handle
   * @param  ch         TX channel index (zero-based)
-  * @param  dmatxdesc  Pointer to the DMA TX descriptor to update
+  * @param  p_dma_tx_desc Pointer to the DMA TX descriptor to update
   * @param  pkt_notify Packet notification control flags
   */
-static void ETH_SetTxFifoEven(hal_eth_handle_t *heth, uint32_t ch, eth_dma_descriptor_t *dmatxdesc,
-                              hal_eth_tx_pkt_notify_ctrl_t pkt_notify)
+static void ETH_SetTxFifoEvent(hal_eth_handle_t *heth, uint32_t ch, eth_dma_descriptor_t *p_dma_tx_desc,
+                               hal_eth_tx_pkt_notify_ctrl_t pkt_notify)
 {
   switch (heth->tx_channels[ch].fifo_event_config.event_mode)
   {
     case HAL_ETH_FIFO_EVENT_ALWAYS :
     {
-      /* Set Interrupt Enabled on Completion */
-      STM32_SET_BIT(dmatxdesc->DESC2, ETH_DMA_TX_DESC_RF_IOC);
+      STM32_SET_BIT(p_dma_tx_desc->desc2, ETH_DMA_TX_DESC_RF_IOC);
       break;
     }
     case HAL_ETH_FIFO_EVENT_CYCLIC :
     {
-      if ((heth->tx_channels[ch].event_cnt >= heth->tx_channels[ch].fifo_event_config.event_params)
-          || (pkt_notify == HAL_ETH_TX_PKT_NOTIFY_ENABLE))
+      if (heth->tx_channels[ch].event_cnt >= heth->tx_channels[ch].fifo_event_config.event_params)
       {
-        /* Set Interrupt Enabled on Completion */
-        STM32_SET_BIT(dmatxdesc->DESC2, ETH_DMA_TX_DESC_RF_IOC);
+        STM32_SET_BIT(p_dma_tx_desc->desc2, ETH_DMA_TX_DESC_RF_IOC);
         heth->tx_channels[ch].event_cnt = 0;
       }
-      ETH_INCR_FIFO_EVENT_CNT(heth->tx_channels[ch].event_cnt, heth->tx_channels[ch].fifo_event_config.event_params);
+      else if (pkt_notify == HAL_ETH_TX_PKT_NOTIFY_ENABLE)
+      {
+        STM32_SET_BIT(p_dma_tx_desc->desc2, ETH_DMA_TX_DESC_RF_IOC);
+      }
+      else
+      {
+        heth->tx_channels[ch].event_cnt++;
+      }
       break;
     }
     case HAL_ETH_FIFO_EVENT_NONE :
@@ -7623,23 +7547,20 @@ static void ETH_DMATxDescListInit(hal_eth_handle_t *heth, uint32_t ch, uint32_t 
 {
   eth_dma_descriptor_t *p_dma_txdesc;
   uint32_t i;
-
+  uint32_t skip_length = 0UL;
   ETH_DMA_Channel_TypeDef *p_dma_instance = ETH_DMA_GET_TX_INSTANCE(heth, ch);
 
-  /* Initialize the DMA Tx descriptor list */
-  STM32_WRITE_REG(heth->tx_channels[ch].tx_desc_list.p_desc_list_addr, p_desc_mem);
-  STM32_WRITE_REG(heth->tx_channels[ch].tx_desc_list.total_desc_cnt,
-                  ETH_GET_DESC_CNT(total_mem_size_byte, heth->tx_channels[ch].tx_desc_list));
-  STM32_WRITE_REG(heth->tx_channels[ch].tx_desc_list.curr_desc_id, 0UL);
-  STM32_WRITE_REG(heth->tx_channels[ch].tx_desc_list.built_desc_id, 0UL);
-  STM32_WRITE_REG(heth->tx_channels[ch].tx_desc_list.buff_in_use, 0UL);
+  heth->tx_channels[ch].tx_desc_list.p_desc_list_addr = p_desc_mem;
+  heth->tx_channels[ch].tx_desc_list.total_desc_cnt = ETH_GET_DESC_CNT(total_mem_size_byte,
+                                                                       heth->tx_channels[ch].tx_desc_list);
+  heth->tx_channels[ch].tx_desc_list.curr_desc_id = 0UL;
+  heth->tx_channels[ch].tx_desc_list.built_desc_id = 0UL;
+  heth->tx_channels[ch].tx_desc_list.buff_in_use = 0UL;
 
-  /* Set the Skip Length */
-  uint32_t SkipLength = ETH_GET_SKIPLEN_SIZE(heth->tx_channels[ch].tx_desc_list.desc_len_byte,
-                                             sizeof(eth_dma_descriptor_t));
-  STM32_MODIFY_REG(p_dma_instance->DMACXCR, ETH_DMACCR_DSL, SkipLength);
+  skip_length = ETH_GET_SKIPLEN_SIZE(heth->tx_channels[ch].tx_desc_list.desc_len_byte,
+                                     sizeof(eth_dma_descriptor_t));
+  STM32_MODIFY_REG(p_dma_instance->DMACXCR, ETH_DMACCR_DSL, skip_length);
 
-  /* Recycle DMATxDesc descriptors */
   for (i = 0; i < heth->tx_channels[ch].tx_desc_list.total_desc_cnt; i++)
   {
     p_dma_txdesc = ETH_GET_DESC_INDEX(heth->tx_channels[ch].tx_desc_list, i);
@@ -7654,14 +7575,8 @@ static void ETH_DMATxDescListInit(hal_eth_handle_t *heth, uint32_t ch, uint32_t 
                              heth->tx_channels[ch].tx_desc_list.p_desc_list_addr, total_mem_size_byte);
 #endif /* USE_HAL_ETH_REGISTER_CALLBACKS */
 
-  /* Set Transmit Descriptor Ring Length for DMA Channel  */
-  STM32_WRITE_REG(p_dma_instance->DMACXTXRLR, (heth->tx_channels[ch].tx_desc_list.total_desc_cnt - 1U));
-
-  /* Set Transmit Descriptor List Address for DMA Channel */
+  STM32_WRITE_REG(p_dma_instance->DMACXTXRLR, (heth->tx_channels[ch].tx_desc_list.total_desc_cnt - 1UL));
   STM32_WRITE_REG(p_dma_instance->DMACXTXDLAR, (uint32_t) heth->tx_channels[ch].tx_desc_list.p_desc_list_addr);
-
-  /* Set Transmit Descriptor Tail pointer for DMA Channel  */
-  STM32_WRITE_REG(p_dma_instance->DMACXTXDTPR, (uint32_t) heth->tx_channels[ch].tx_desc_list.p_desc_list_addr);
 }
 
 /**
@@ -7681,20 +7596,19 @@ static void ETH_DMARxDescListInit(hal_eth_handle_t *heth, uint32_t ch, uint32_t 
 {
   eth_dma_descriptor_t *p_dma_rxdesc;
   uint32_t i;
+  uint32_t skip_length = 0UL;
 
   ETH_DMA_Channel_TypeDef *p_dma_instance = ETH_DMA_GET_RX_INSTANCE(heth, ch);
-  /* Initialize the DMA Rx descriptor list */
-  STM32_WRITE_REG(heth->rx_channels[ch].rx_desc_list.p_desc_list_addr, p_desc_mem);
-  STM32_WRITE_REG(heth->rx_channels[ch].rx_desc_list.total_desc_cnt,
-                  ETH_GET_DESC_CNT(total_mem_size_byte, heth->rx_channels[ch].rx_desc_list));
-  STM32_WRITE_REG(heth->rx_channels[ch].rx_desc_list.curr_desc_id, 0UL);
-  STM32_WRITE_REG(heth->rx_channels[ch].rx_desc_list.built_desc_id, 0UL);
-  STM32_WRITE_REG(heth->rx_channels[ch].rx_desc_list.buff_in_use, 0UL);
+  heth->rx_channels[ch].rx_desc_list.p_desc_list_addr = p_desc_mem;
+  heth->rx_channels[ch].rx_desc_list.total_desc_cnt = ETH_GET_DESC_CNT(total_mem_size_byte,
+                                                                       heth->rx_channels[ch].rx_desc_list);
+  heth->rx_channels[ch].rx_desc_list.curr_desc_id = 0UL;
+  heth->rx_channels[ch].rx_desc_list.built_desc_id = 0UL;
+  heth->rx_channels[ch].rx_desc_list.buff_in_use = 0UL;
 
-  /* Set the Skip Length */
-  uint32_t SkipLength = ETH_GET_SKIPLEN_SIZE(heth->rx_channels[ch].rx_desc_list.desc_len_byte,
-                                             sizeof(eth_dma_descriptor_t));
-  STM32_MODIFY_REG(p_dma_instance->DMACXCR, ETH_DMACCR_DSL, SkipLength);
+  skip_length = ETH_GET_SKIPLEN_SIZE(heth->rx_channels[ch].rx_desc_list.desc_len_byte,
+                                     sizeof(eth_dma_descriptor_t));
+  STM32_MODIFY_REG(p_dma_instance->DMACXCR, ETH_DMACCR_DSL, skip_length);
 
   for (i = 0; i < heth->rx_channels[ch].rx_desc_list.total_desc_cnt; i++)
   {
@@ -7702,25 +7616,19 @@ static void ETH_DMARxDescListInit(hal_eth_handle_t *heth, uint32_t ch, uint32_t 
     ETH_ResetDMADesc(p_dma_rxdesc);
   }
 
-  /* Update Rx descriptor with attached app buffer */
   ETH_UpdateRxDesc(heth, ch);
 
 #if defined (USE_HAL_ETH_REGISTER_CALLBACKS) && (USE_HAL_ETH_REGISTER_CALLBACKS == 1)
-  /* Cache clean Rx descriptor */
   heth->p_cache_flush_cb(heth, ETH_GET_RX_CH_ID(ch),
                          heth->rx_channels[ch].rx_desc_list.p_desc_list_addr, total_mem_size_byte);
 #else  /* USE_HAL_ETH_REGISTER_CALLBACKS */
   HAL_ETH_CacheFlushCallback(heth, ETH_GET_RX_CH_ID(ch),
                              heth->rx_channels[ch].rx_desc_list.p_desc_list_addr, total_mem_size_byte);
 #endif /* USE_HAL_ETH_REGISTER_CALLBACKS */
-
-  /* Set Receive Descriptor Ring Length for DMA Channel */
+  /* DMA can fetch descriptors as soon as started, ensure descriptor writes are committed first. */
+  __DSB();
   STM32_WRITE_REG(p_dma_instance->DMACXRXRLR, (heth->rx_channels[ch].rx_desc_list.total_desc_cnt - 1UL));
-
-  /* Set Receive Descriptor List Address for DMA Channel */
   STM32_WRITE_REG(p_dma_instance->DMACXRXDLAR, (uint32_t) heth->rx_channels[ch].rx_desc_list.p_desc_list_addr);
-
-  /* Set Receive Descriptor Tail pointer Address for DMA Channel */
   STM32_WRITE_REG(p_dma_instance->DMACXRXDTPR,
                   (uint32_t)(ETH_GET_DESC_INDEX((heth->rx_channels[ch].rx_desc_list),
                                                 (heth->rx_channels[ch].rx_desc_list.total_desc_cnt - 1UL))));
@@ -7738,95 +7646,62 @@ static void ETH_DMARxDescListInit(hal_eth_handle_t *heth, uint32_t ch, uint32_t 
   */
 static void ETH_RecycleRxDesc(hal_eth_handle_t *heth, uint32_t ch)
 {
-  eth_dma_descriptor_t *p_dma_RxDesc;
+  eth_dma_descriptor_t *p_dma_rx_desc;
   uint32_t pkt_size = 0;
-
-  /* Get dma desc index */
   uint32_t rx_desc_idx        = heth->rx_channels[ch].rx_desc_list.built_desc_id;
   uint32_t rx_total_used_desc = heth->rx_channels[ch].rx_desc_list.buff_in_use;
-
-  /* Recycle all used desc */
   while (rx_total_used_desc != 0UL)
   {
     hal_eth_rx_cb_pkt_data_t rx_pkt_data = {0};
-    /* Get current built Rx dma descriptor */
-    p_dma_RxDesc = ETH_GET_DESC_INDEX(heth->rx_channels[ch].rx_desc_list, rx_desc_idx);
+    p_dma_rx_desc = ETH_GET_DESC_INDEX(heth->rx_channels[ch].rx_desc_list, rx_desc_idx);
 #if defined (USE_HAL_ETH_REGISTER_CALLBACKS) && (USE_HAL_ETH_REGISTER_CALLBACKS == 1)
-    /* Cache invalidate descriptor */
-    heth->p_cache_invalidate_cb(heth, ETH_GET_RX_CH_ID(ch), p_dma_RxDesc,
+    heth->p_cache_invalidate_cb(heth, ETH_GET_RX_CH_ID(ch), p_dma_rx_desc,
                                 heth->rx_channels[ch].rx_desc_list.desc_len_byte);
 #else  /* USE_HAL_ETH_REGISTER_CALLBACKS */
     HAL_ETH_CacheInvalidateCallback(heth, ETH_GET_RX_CH_ID(ch),
-                                    p_dma_RxDesc, heth->rx_channels[ch].rx_desc_list.desc_len_byte);
+                                    p_dma_rx_desc, heth->rx_channels[ch].rx_desc_list.desc_len_byte);
 #endif /* USE_HAL_ETH_REGISTER_CALLBACKS */
-
-    /* Determine if the packet Received  or a context descriptor */
-    if (STM32_READ_BIT(p_dma_RxDesc->DESC3, (ETH_DMA_RX_DESC_WBF_OWN | ETH_DMA_RX_DESC_WBF_CTXT)) != 0UL)
+    if (STM32_READ_BIT(p_dma_rx_desc->desc3, (ETH_DMA_RX_DESC_WBF_OWN | ETH_DMA_RX_DESC_WBF_CTXT)) != 0UL)
     {
-      /* Mark attached Rx Buffer as invalid */
+      /* Descriptor is not valid data payload for upper layer, report as invalid packet status. */
       STM32_SET_BIT(rx_pkt_data.status, HAL_ETH_RX_STATUS_INVALID);
       pkt_size = heth->rx_channels[ch].rx_buff_size_byte;
     }
     else
     {
-      /* Write received pkt size */
-      pkt_size = STM32_READ_BIT(p_dma_RxDesc->DESC3, ETH_DMA_RX_DESC_WBF_PL);
-
-      /* Determine if a last descriptor */
-      if (STM32_READ_BIT(p_dma_RxDesc->DESC3, HAL_ETH_RX_STATUS_LD) != 0UL)
+      pkt_size = STM32_READ_BIT(p_dma_rx_desc->desc3, ETH_DMA_RX_DESC_WBF_PL);
+      if (STM32_READ_BIT(p_dma_rx_desc->desc3, HAL_ETH_RX_STATUS_LD) != 0UL)
       {
         ETH_COPY_BITS(rx_pkt_data.status, (HAL_ETH_RX_STATUS_IPCB | HAL_ETH_RX_STATUS_IPV4 |
-                                           HAL_ETH_RX_STATUS_IPV6), p_dma_RxDesc->DESC1);
-        ETH_COPY_BITS(rx_pkt_data.status, HAL_ETH_RX_STATUS_ARPNR, p_dma_RxDesc->DESC2);
-        ETH_COPY_BITS(rx_pkt_data.status, HAL_ETH_RX_STATUS_VLAN, p_dma_RxDesc->DESC3);
-
-        /* Last Descriptor check if VLAN Tag received*/
-        if (STM32_READ_BIT(p_dma_RxDesc->DESC3, HAL_ETH_RX_STATUS_VLAN) != 0UL)
+                                           HAL_ETH_RX_STATUS_IPV6), p_dma_rx_desc->desc1);
+        ETH_COPY_BITS(rx_pkt_data.status, HAL_ETH_RX_STATUS_ARPNR, p_dma_rx_desc->desc2);
+        ETH_COPY_BITS(rx_pkt_data.status, HAL_ETH_RX_STATUS_VLAN, p_dma_rx_desc->desc3);
+        if (STM32_READ_BIT(p_dma_rx_desc->desc3, HAL_ETH_RX_STATUS_VLAN) != 0UL)
         {
-          /* Set vlan tag present status */
-          ETH_COPY_BITS(rx_pkt_data.status, HAL_ETH_RX_STATUS_VLAN, p_dma_RxDesc->DESC3);
-          /* Copy vlan tag value */
-          STM32_WRITE_REG(rx_pkt_data.vlan_tag_ids, p_dma_RxDesc->DESC0);
+          ETH_COPY_BITS(rx_pkt_data.status, HAL_ETH_RX_STATUS_VLAN, p_dma_rx_desc->desc3);
+          rx_pkt_data.vlan_tag_ids =  p_dma_rx_desc->desc0;
         }
       }
-
-      /* Set the received packet errors */
-      if (STM32_READ_BIT(p_dma_RxDesc->DESC1, (HAL_ETH_RX_STATUS_IPV4 | HAL_ETH_RX_STATUS_IPV6)) != 0UL)
+      if (STM32_READ_BIT(p_dma_rx_desc->desc1, (HAL_ETH_RX_STATUS_IPV4 | HAL_ETH_RX_STATUS_IPV6)) != 0UL)
       {
-        if (STM32_READ_BIT(p_dma_RxDesc->DESC1, HAL_ETH_RX_ERROR_IPH) != 0UL)
+        if (STM32_READ_BIT(p_dma_rx_desc->desc1, HAL_ETH_RX_ERROR_IPH) != 0UL)
         {
-          /* set IP header error */
-          ETH_COPY_BITS(rx_pkt_data.errors, HAL_ETH_RX_ERROR_IPH, p_dma_RxDesc->DESC1);
+          ETH_COPY_BITS(rx_pkt_data.errors, HAL_ETH_RX_ERROR_IPH, p_dma_rx_desc->desc1);
         }
       }
-      /* Set Errors */
-      ETH_COPY_BITS(rx_pkt_data.errors, HAL_ETH_RX_ERROR_IPC, p_dma_RxDesc->DESC1);
+      ETH_COPY_BITS(rx_pkt_data.errors, HAL_ETH_RX_ERROR_IPC, p_dma_rx_desc->desc1);
       ETH_COPY_BITS(rx_pkt_data.errors, (HAL_ETH_RX_ERROR_DB | HAL_ETH_RX_ERROR_REC
                                          | HAL_ETH_RX_ERROR_OFL | HAL_ETH_RX_ERROR_RWT
-                                         | HAL_ETH_RX_ERROR_GP | HAL_ETH_RX_ERROR_CRC), p_dma_RxDesc->DESC3);
+                                         | HAL_ETH_RX_ERROR_GP | HAL_ETH_RX_ERROR_CRC), p_dma_rx_desc->desc3);
     }
-    /* Set Application context */
-    STM32_WRITE_REG(rx_pkt_data.p_data, p_dma_RxDesc->p_app_data);
-    /* Call channel Rx complete callback */
-    heth->rx_channels[ch].p_rx_complete_cb(heth, ETH_GET_RX_CH_ID(ch), p_dma_RxDesc->p_pkt_addr,
+    rx_pkt_data.p_data = p_dma_rx_desc->p_app_data;
+    heth->rx_channels[ch].p_rx_complete_cb(heth, ETH_GET_RX_CH_ID(ch), p_dma_rx_desc->p_pkt_addr,
                                            pkt_size, rx_pkt_data);
-    /* Reset descriptor */
-    ETH_ResetDMADesc(p_dma_RxDesc);
+    ETH_ResetDMADesc(p_dma_rx_desc);
 
-#if defined (USE_HAL_ETH_REGISTER_CALLBACKS) && (USE_HAL_ETH_REGISTER_CALLBACKS == 1)
-    heth->p_cache_flush_cb(heth, ETH_GET_RX_CH_ID(ch), p_dma_RxDesc,
-                           heth->rx_channels[ch].rx_desc_list.desc_len_byte);
-#else  /* USE_HAL_ETH_REGISTER_CALLBACKS */
-    HAL_ETH_CacheFlushCallback(heth, ETH_GET_RX_CH_ID(ch), p_dma_RxDesc,
-                               heth->rx_channels[ch].rx_desc_list.desc_len_byte);
-#endif /* USE_HAL_ETH_REGISTER_CALLBACKS */
-
-    /* Pass to next desc */
     ETH_INCR_DESC_INDEX(rx_desc_idx, heth->rx_channels[ch].rx_desc_list.total_desc_cnt);
-    /* Decriment total used desc */
     rx_total_used_desc--;
   }
-  /* Reset total used buffers and desc id */
   heth->rx_channels[ch].rx_desc_list.buff_in_use = 0UL;
   heth->rx_channels[ch].rx_desc_list.built_desc_id = 0UL;
   heth->rx_channels[ch].rx_desc_list.curr_desc_id = 0UL;
@@ -7844,72 +7719,51 @@ static void ETH_RecycleRxDesc(hal_eth_handle_t *heth, uint32_t ch)
   */
 static void ETH_RecycleTxDesc(hal_eth_handle_t *heth, uint32_t ch)
 {
-  eth_dma_descriptor_t *p_dma_txDesc;
+  eth_dma_descriptor_t *p_dma_tx_desc;
   uint32_t tx_desc_idx        = heth->tx_channels[ch].tx_desc_list.built_desc_id;
   uint32_t tx_total_used_desc = heth->tx_channels[ch].tx_desc_list.buff_in_use;
 
   while (tx_total_used_desc != 0UL)
   {
-    /* Get current built dma descriptor */
-    p_dma_txDesc = ETH_GET_DESC_INDEX(heth->tx_channels[ch].tx_desc_list, tx_desc_idx);
+    p_dma_tx_desc = ETH_GET_DESC_INDEX(heth->tx_channels[ch].tx_desc_list, tx_desc_idx);
 
 #if defined (USE_HAL_ETH_REGISTER_CALLBACKS) && (USE_HAL_ETH_REGISTER_CALLBACKS == 1)
-    /* Cache invalidate descriptor */
-    heth->p_cache_invalidate_cb(heth, ETH_GET_TX_CH_ID(ch), p_dma_txDesc,
+    /* Invalidate descriptor cache before checking TX completion in recycle path. */
+    heth->p_cache_invalidate_cb(heth, ETH_GET_TX_CH_ID(ch), p_dma_tx_desc,
                                 heth->tx_channels[ch].tx_desc_list.desc_len_byte);
 #else  /* USE_HAL_ETH_REGISTER_CALLBACKS */
-    HAL_ETH_CacheInvalidateCallback(heth, ETH_GET_TX_CH_ID(ch), p_dma_txDesc,
+    HAL_ETH_CacheInvalidateCallback(heth, ETH_GET_TX_CH_ID(ch), p_dma_tx_desc,
                                     heth->tx_channels[ch].tx_desc_list.desc_len_byte);
 #endif /* USE_HAL_ETH_REGISTER_CALLBACKS */
 
-    if (p_dma_txDesc->p_pkt_addr == NULL)
+    if (p_dma_tx_desc->p_pkt_addr == NULL)
     {
-      /*No Packet attached,  recycle descriptor and pass to next one .  */
-      ETH_ResetDMADesc(p_dma_txDesc);
+      ETH_ResetDMADesc(p_dma_tx_desc);
     }
     else
     {
       hal_eth_tx_cb_pkt_data_t tx_cb_pkt_data = {0};
-
-      /* Determine if the packet has been transmitted.  */
-      if (STM32_READ_BIT(p_dma_txDesc->DESC3, ETH_DMA_TX_DESC_RF_OWN) != 0UL)
+      if (STM32_READ_BIT(p_dma_tx_desc->desc3, ETH_DMA_TX_DESC_RF_OWN) != 0UL)
       {
-        /* Packet not transmitted, declare it as invalid */
+        /* DMA still owns descriptor at recycle time, report invalid completion status. */
         STM32_SET_BIT(tx_cb_pkt_data.status, HAL_ETH_TX_STATUS_INVALID);
       }
       else
       {
-        /* Set Desc status */
-        ETH_COPY_BITS(tx_cb_pkt_data.status, HAL_ETH_TX_STATUS_FD | HAL_ETH_TX_STATUS_LD, p_dma_txDesc->DESC3);
-        /* Set Desc errors */
+        ETH_COPY_BITS(tx_cb_pkt_data.status, HAL_ETH_TX_STATUS_FD | HAL_ETH_TX_STATUS_LD, p_dma_tx_desc->desc3);
         ETH_COPY_BITS(tx_cb_pkt_data.errors, (HAL_ETH_TX_ERROR_IH | HAL_ETH_TX_ERROR_ED
                                               | HAL_ETH_TX_ERROR_EC | HAL_ETH_TX_ERROR_LC
                                               | HAL_ETH_TX_ERROR_NC | HAL_ETH_TX_ERROR_LOC
-                                              | HAL_ETH_TX_ERROR_PC | HAL_ETH_TX_ERROR_JT), p_dma_txDesc->DESC3);
+                                              | HAL_ETH_TX_ERROR_PC | HAL_ETH_TX_ERROR_JT), p_dma_tx_desc->desc3);
       }
-      /* Set Application context */
-      STM32_WRITE_REG(tx_cb_pkt_data.p_data, p_dma_txDesc->p_app_data);
-      /* Call channel Tx complete callback */
-      heth->tx_channels[ch].p_tx_complete_cb(heth, ETH_GET_TX_CH_ID(ch), p_dma_txDesc->p_pkt_addr, tx_cb_pkt_data);
-
-      /* Reset dma desc */
-      ETH_ResetDMADesc(p_dma_txDesc);
+      tx_cb_pkt_data.p_data = p_dma_tx_desc->p_app_data;
+      heth->tx_channels[ch].p_tx_complete_cb(heth, ETH_GET_TX_CH_ID(ch), p_dma_tx_desc->p_pkt_addr, tx_cb_pkt_data);
+      ETH_ResetDMADesc(p_dma_tx_desc);
     }
 
-#if defined (USE_HAL_ETH_REGISTER_CALLBACKS) && (USE_HAL_ETH_REGISTER_CALLBACKS == 1)
-    heth->p_cache_flush_cb(heth, ETH_GET_TX_CH_ID(ch), p_dma_txDesc,
-                           heth->tx_channels[ch].tx_desc_list.desc_len_byte);
-#else  /* USE_HAL_ETH_REGISTER_CALLBACKS */
-    HAL_ETH_CacheFlushCallback(heth, ETH_GET_TX_CH_ID(ch), p_dma_txDesc,
-                               heth->tx_channels[ch].tx_desc_list.desc_len_byte);
-#endif /* USE_HAL_ETH_REGISTER_CALLBACKS */
-
-    /* Pass to next desc */
     ETH_INCR_DESC_INDEX(tx_desc_idx, heth->tx_channels[ch].tx_desc_list.total_desc_cnt);
-    /* Decriment total used desc */
     tx_total_used_desc--;
   }
-  /* Reset total used buffers and desc id */
   heth->tx_channels[ch].tx_desc_list.buff_in_use = 0UL;
   heth->tx_channels[ch].tx_desc_list.built_desc_id = 0UL;
   heth->tx_channels[ch].tx_desc_list.curr_desc_id = 0UL;
@@ -7954,18 +7808,13 @@ static void ETH_SetMDIOClockRange(hal_eth_handle_t *heth)
   uint32_t hclk;
   uint32_t tmpreg;
 
-  /* Get the ETHERNET MACMDIOAR value */
   tmpreg = STM32_READ_REG(ETH_GET_INSTANCE(heth)->MACMDIOAR);
 
-  /* Clear CSR Clock Range bits */
   tmpreg &= ~ETH_MACMDIOAR_CR;
 
-  /* Get hclk frequency value */
   hclk = HAL_RCC_GetHCLKFreq();
 
   tmpreg |= ETH_GetMDIOClockRange(hclk);
-
-  /* Configure the CSR Clock Range */
   STM32_WRITE_REG(ETH_GET_INSTANCE(heth)->MACMDIOAR, tmpreg);
 }
 
@@ -7982,7 +7831,9 @@ static void ETH_SetMDIOClockRange(hal_eth_handle_t *heth)
   */
 static uint32_t ETH_GetMDIOClockRange(uint32_t eth_hclk_freq)
 {
-  /* Lookup table used by the MDIO clock-range selection */
+  uint32_t mdc_cr_sel = ETH_MDIOAR_CSR_CR_SEL_0;
+  uint32_t mdc_clk;
+
   const eth_mdio_clk_div_t eth_mdio_clk_div_lut[] =
   {
     {ETH_MDIOAR_CSR_CR_SEL_2,   ETH_MDC_CLK_DIV_16},
@@ -7995,21 +7846,16 @@ static uint32_t ETH_GetMDIOClockRange(uint32_t eth_hclk_freq)
     {ETH_MDIOAR_CSR_CR_SEL_7,   ETH_MDC_CLK_DIV_324}
   };
 
-  uint32_t mdc_cr_sel = ETH_MDIOAR_CSR_CR_SEL_0;
-
-  /* Get the size of the clock configuration table */
   const uint32_t clk_lut_size = (uint32_t)(sizeof(eth_mdio_clk_div_lut) / sizeof(eth_mdio_clk_div_lut[0]));
 
-  for (uint32_t clk_index = 0; clk_index < clk_lut_size; clk_index++)
+  for (uint32_t clk_index = 0UL; clk_index < clk_lut_size; clk_index++)
   {
-    /* Derive the resulting MDC frequency for this divider. */
-    uint32_t mdc_clk = eth_hclk_freq / eth_mdio_clk_div_lut[clk_index].clk_range_div;
+    /* Validate this divider keeps MDC within the allowed range. */
+    mdc_clk = eth_hclk_freq / eth_mdio_clk_div_lut[clk_index].clk_range_div;
 
-    /* Check if the mdc clock is within the allowed range */
     if ((mdc_clk >= ETH_MDC_CLK_MIN_HZ) && (mdc_clk <= ETH_MDC_CLK_MAX_HZ))
     {
       mdc_cr_sel = eth_mdio_clk_div_lut[clk_index].clk_range_sel;
-      /* Found a valid MDC clock range */
       break;
     }
   }
@@ -8020,19 +7866,19 @@ static uint32_t ETH_GetMDIOClockRange(uint32_t eth_hclk_freq)
 /**
   * @brief  Retrieve the zero-based TX channel index corresponding to a channel bitmask.
   *
-  * @param  p_TxCh      Pointer that will receive the channel index (output).
+  * @param  p_tx_ch   Pointer that will receive the channel index (output)
   * @param  channel Channel mask containing the selected TX channel bit(s) (input).
   *
   * @note   channel parameter must be a single TX channel bitmask of @ref ETH_Channel_Identifiers.
   */
-__STATIC_INLINE void ETH_GetTXChIndex(uint32_t *p_TxCh, uint32_t channel)
+__STATIC_INLINE void ETH_GetTXChIndex(uint32_t *p_tx_ch, uint32_t channel)
 {
-  *p_TxCh = HAL_ETH_TX_Q0;
+  *p_tx_ch = HAL_ETH_TX_Q0;
   for (uint32_t ch_index = 0; ch_index < USE_HAL_ETH_MAX_TX_CH_NB; ch_index++)
   {
     if ((channel & ETH_GET_TX_CH_ID(ch_index)) != 0UL)
     {
-      *p_TxCh = ch_index;
+      *p_tx_ch = ch_index;
       break;
     }
   }
@@ -8040,19 +7886,19 @@ __STATIC_INLINE void ETH_GetTXChIndex(uint32_t *p_TxCh, uint32_t channel)
 /**
   * @brief  Retrieve the zero-based RX channel index corresponding to a channel mask.
   *
-  * @param  p_RxCh      Pointer that will receive the channel index (output).
+  * @param  p_rx_ch   Pointer that will receive the channel index (output)
   * @param  channel Channel mask containing the selected RX channel bit(s) (input).
   *
   * @note   channel parameter must be a single RX channel bitmask of @ref ETH_Channel_Identifiers.
   */
-__STATIC_INLINE void ETH_GetRXChIndex(uint32_t *p_RxCh, uint32_t channel)
+__STATIC_INLINE void ETH_GetRXChIndex(uint32_t *p_rx_ch, uint32_t channel)
 {
-  *p_RxCh = HAL_ETH_RX_Q0;
+  *p_rx_ch = HAL_ETH_RX_Q0;
   for (uint32_t ch_index = 0; ch_index < USE_HAL_ETH_MAX_RX_CH_NB; ch_index++)
   {
     if (((channel) & ETH_GET_RX_CH_ID(ch_index)) != 0UL)
     {
-      *p_RxCh = ch_index;
+      *p_rx_ch = ch_index;
       break;
     }
   }
@@ -8065,26 +7911,26 @@ __STATIC_INLINE void ETH_GetRXChIndex(uint32_t *p_RxCh, uint32_t channel)
   * `USE_HAL_ETH_ATOMIC_CHANNEL_LOCK` is enabled, atomic exclusive access
   * (LDREX/STREX) and memory barriers are used to protect the update.
   *
-  * @param  channel_lock_state Pointer to the channel lock state variable.
+  * @param  p_channel_lock_state Pointer to the channel lock state variable
   * @retval HAL_OK   Lock acquired.
   * @retval HAL_BUSY Lock already held by another context.
   */
-__STATIC_INLINE hal_status_t ETH_LockChannel(volatile uint32_t *channel_lock_state)
+__STATIC_INLINE hal_status_t ETH_LockChannel(volatile uint32_t *p_channel_lock_state)
 {
 #if defined(USE_HAL_ETH_ATOMIC_CHANNEL_LOCK) && (USE_HAL_ETH_ATOMIC_CHANNEL_LOCK == 1)
   __DMB();
   do
   {
-    if (__LDREXW(channel_lock_state) == ETH_CHANNEL_STATE_LOCKED)
+    if (__LDREXW(p_channel_lock_state) == ETH_CHANNEL_STATE_LOCKED)
     {
-      /* Clear the lock before exiting */
+      /* Clear exclusive monitor before returning. */
       STM32_CLREX_TO_DEPRECATE(); /* Workaround linked to CMSIS IAR issue EWARM-11901 correction fix */
       return HAL_BUSY;
     }
-  } while (__STREXW(ETH_CHANNEL_STATE_LOCKED, channel_lock_state) != 0UL);
+  } while (__STREXW(ETH_CHANNEL_STATE_LOCKED, p_channel_lock_state) != 0UL);
   __DMB();
 #else /* USE_HAL_ETH_ATOMIC_CHANNEL_LOCK */
-  STM32_UNUSED(channel_lock_state);
+  STM32_UNUSED(p_channel_lock_state);
 #endif /* USE_HAL_ETH_ATOMIC_CHANNEL_LOCK */
 
   return HAL_OK;
@@ -8096,16 +7942,15 @@ __STATIC_INLINE hal_status_t ETH_LockChannel(volatile uint32_t *channel_lock_sta
   * Sets the lock state back to `ETH_CHANNEL_STATE_UNLOCKED` when atomic
   * locking is enabled. When `USE_HAL_ETH_ATOMIC_CHANNEL_LOCK` is disabled,
   * this function is a no-op.
-  * @param  channel_lock_state Pointer to the channel lock state variable.
+  * @param  p_channel_lock_state Pointer to the channel lock state variable
   */
-__STATIC_INLINE void ETH_UnlockChannel(volatile uint32_t *channel_lock_state)
+__STATIC_INLINE void ETH_UnlockChannel(volatile uint32_t *p_channel_lock_state)
 {
 #if defined(USE_HAL_ETH_ATOMIC_CHANNEL_LOCK) && (USE_HAL_ETH_ATOMIC_CHANNEL_LOCK == 1)
-  *channel_lock_state = ETH_CHANNEL_STATE_UNLOCKED;
+  *p_channel_lock_state = ETH_CHANNEL_STATE_UNLOCKED;
 #else /* USE_HAL_ETH_ATOMIC_CHANNEL_LOCK */
-  STM32_UNUSED(channel_lock_state);
+  STM32_UNUSED(p_channel_lock_state);
 #endif /* USE_HAL_ETH_ATOMIC_CHANNEL_LOCK */
-
 }
 
 /**
@@ -8118,37 +7963,32 @@ __STATIC_INLINE void ETH_UnlockChannel(volatile uint32_t *channel_lock_state)
   *
   * @param  app_req_size Requested alignment in bytes. Must be non-zero and a multiple
   *                      of `ETH_BUS_DATA_WIDTH_BYTE`.
-  * @param  desc_size    Output pointer that receives the aligned descriptor size in bytes.
+  * @param  p_desc_size  Output pointer that receives the aligned descriptor size in bytes
   *
-  * @retval HAL_OK       Alignment computed successfully and stored in @p desc_size.
+  * @retval HAL_OK       Alignment computed successfully and stored in @p p_desc_size
   * @retval HAL_ERROR    Invalid @p app_req_size or alignment would exceed the DMA
   *                      skip-length limit.
   */
-static hal_status_t ETH_AlignDescSize(uint32_t app_req_size, uint32_t *desc_size)
+static hal_status_t ETH_AlignDescSize(uint32_t app_req_size, uint32_t *p_desc_size)
 {
   uint32_t num_blocks;
   uint32_t skiplen_size;
   uint32_t total_desc_size;
   const uint32_t desc_struct_size = (uint32_t)sizeof(eth_dma_descriptor_t);
 
-  /* Validate requested alignment: must be non-zero and a multiple of the bus data width */
   if ((app_req_size == 0UL) || (((app_req_size % ((uint32_t)ETH_BUS_DATA_WIDTH_BYTE)) != 0UL)
                                 && (app_req_size != 1UL)))
   {
     return HAL_ERROR;
   }
-  /* Compute number of alignment quanta needed to fully contain one descriptor structure */
   num_blocks = (desc_struct_size + app_req_size - 1UL) / app_req_size;
-  /* Compute the aligned total descriptor size in bytes */
   total_desc_size = num_blocks * app_req_size;
-  /* Ensure the extra padding does not exceed the hardware skip-length capability */
   skiplen_size = ETH_GET_SKIPLEN_SIZE(total_desc_size, desc_struct_size);
   if ((skiplen_size & ((uint32_t)~(ETH_DMACCR_DSL))) != 0UL)
   {
     return HAL_ERROR;
   }
-  /* Return the aligned descriptor size */
-  *desc_size = total_desc_size;
+  *p_desc_size = total_desc_size;
 
   return HAL_OK;
 }
@@ -8174,7 +8014,6 @@ __STATIC_INLINE uint32_t ETH_WakeupGetPendingIT(void)
 
   if (LL_EXTI_IsActiveRisingFlag_32_63(ETH_WAKEUP_EXTI_LINE) != 0UL)
   {
-    /* ETH EXTI Rising edge trigger is pending */
     pending_edge = LL_EXTI_TRIGGER_RISING;
   }
 
@@ -8201,13 +8040,11 @@ __STATIC_INLINE void ETH_WakeupClearPendingIT(uint32_t edge)
 {
   if ((edge & LL_EXTI_TRIGGER_RISING) != 0UL)
   {
-    /* Clear rising edge trigger pending bit */
     LL_EXTI_ClearRisingFlag_32_63(ETH_WAKEUP_EXTI_LINE);
   }
 
   if ((edge & LL_EXTI_TRIGGER_FALLING) != 0UL)
   {
-    /* Clear falling edge trigger pending bit */
     LL_EXTI_ClearFallingFlag_32_63(ETH_WAKEUP_EXTI_LINE);
   }
 }
@@ -8218,7 +8055,6 @@ __STATIC_INLINE void ETH_WakeupClearPendingIT(uint32_t edge)
   */
 static void ETH_InitCommonCallbacksToDefault(hal_eth_handle_t *heth)
 {
-  /* Init the ETH Callback settings */
   heth->p_data_cb                 = HAL_ETH_DataCallback;             /* Legacy weak Data callback   */
   heth->p_error_cb                = HAL_ETH_ErrorCallback;            /* Legacy weak ErrorCallback   */
   heth->p_event_cb                = HAL_ETH_EventCallback;            /* Legacy weak EventCallback   */
@@ -8235,7 +8071,6 @@ static void ETH_InitCommonCallbacksToDefault(hal_eth_handle_t *heth)
   */
 static void ETH_InitTxCallbacksToDefault(hal_eth_tx_channel_handle_t *hchannel)
 {
-  /* Init the ETH Callback settings */
   hchannel->p_ch_event_cb      = HAL_ETH_TxEventCallback;   /* Legacy weak ErrorCallback    */
 }
 
@@ -8245,7 +8080,6 @@ static void ETH_InitTxCallbacksToDefault(hal_eth_tx_channel_handle_t *hchannel)
   */
 static void ETH_InitRxCallbacksToDefault(hal_eth_rx_channel_handle_t *hchannel)
 {
-  /* Init the ETH Callback settings */
   hchannel->p_ch_event_cb      = HAL_ETH_RxEventCallback;   /* Legacy weak ErrorCallback    */
 }
 #endif /* USE_HAL_ETH_REGISTER_CALLBACKS */

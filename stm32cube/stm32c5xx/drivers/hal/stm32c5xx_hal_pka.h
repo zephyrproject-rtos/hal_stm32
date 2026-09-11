@@ -25,6 +25,7 @@ extern "C" {
 /* Includes ----------------------------------------------------------------------------------------------------------*/
 #include "stm32c5xx_hal_def.h"
 #include "stm32c5xx_ll_pka.h"
+#include "stm32c5xx_ll_rng.h"
 
 /** @addtogroup STM32C5xx_HAL_Driver
   * @{
@@ -256,7 +257,6 @@ typedef struct
   uint8_t *p_s_sign; /*!< Pointer to signature part s */
 } hal_pka_ecdsa_signature_protect_result_t;
 
-
 /**
   * @brief PKA curve operations output structure definition
   */
@@ -264,8 +264,13 @@ typedef struct
 {
   uint8_t *p_pt_x; /*!< Pointer to point P coordinate xP */
   uint8_t *p_pt_y; /*!< Pointer to point P coordinate yP */
-} hal_pka_ecdsa_signature_result_ext_config_t, hal_pka_ecc_projective_to_affine_result_t,
-hal_pka_ecc_double_base_ladder_result_t, hal_pka_ecc_mul_protect_result_t;
+} hal_pka_ecdsa_signature_result_ext_config_t;
+
+typedef hal_pka_ecdsa_signature_result_ext_config_t hal_pka_ecc_projective_to_affine_result_t;
+typedef hal_pka_ecdsa_signature_result_ext_config_t hal_pka_ecc_double_base_ladder_result_t;
+
+
+typedef hal_pka_ecdsa_signature_result_ext_config_t hal_pka_ecc_mul_protect_result_t;
 
 /**
   * @brief PKA Modular exponentiation configuration structure definition

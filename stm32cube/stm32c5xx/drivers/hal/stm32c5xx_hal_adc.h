@@ -1,8 +1,8 @@
 /**
-  ******************************************************************************
+  **********************************************************************************************************************
   * @file    stm32c5xx_hal_adc.h
   * @brief   Header file of ADC HAL module.
-  ******************************************************************************
+  **********************************************************************************************************************
   * @attention
   *
   * Copyright (c) 2026 STMicroelectronics.
@@ -12,10 +12,11 @@
   * in the root directory of this software component.
   * If no LICENSE file comes with this software, it is provided AS-IS.
   *
-  ******************************************************************************
+  *
+  **********************************************************************************************************************
   */
 
-/* Define to prevent recursive inclusion -------------------------------------*/
+/* Define to prevent recursive inclusion -----------------------------------------------------------------------------*/
 #ifndef STM32C5XX_HAL_ADC_H
 #define STM32C5XX_HAL_ADC_H
 
@@ -23,7 +24,7 @@
 extern "C" {
 #endif /* __cplusplus */
 
-/* Includes ------------------------------------------------------------------*/
+/* Includes ----------------------------------------------------------------------------------------------------------*/
 #include "stm32c5xx_hal_def.h"
 #include "stm32c5xx_ll_adc.h"
 
@@ -37,7 +38,7 @@ extern "C" {
   * @{
   */
 
-/* Private constants ---------------------------------------------------------*/
+/* Private constants -------------------------------------------------------------------------------------------------*/
 /** @addtogroup ADC_Private_Constants
   *  @{
   */
@@ -52,8 +53,8 @@ extern "C" {
   * @}
   */
 
-/* Exported constants ---------------------------------------------------------*/
-/** @defgroup ADC_Exported_Constants HAL ADC Constants
+/* Exported constants ------------------------------------------------------------------------------------------------*/
+/** @defgroup ADC_Exported_Constants HAL ADC Exported Constants
   * @{
   */
 
@@ -126,11 +127,12 @@ extern "C" {
   * @}
   */
 
+
 /**
   * @}
   */
 
-/* Exported macro -------------------------------------------------------------*/
+/* Exported macro ----------------------------------------------------------------------------------------------------*/
 /** @defgroup ADC_Exported_Macro ADC Exported Macro
   * @{
   */
@@ -285,8 +287,8 @@ LL_ADC_CONVERT_DATA_RESOLUTION((data), \
   * @}
   */
 
-/* Exported types ------------------------------------------------------------*/
-/** @defgroup  ADC_Exported_Types HAL ADC Types
+/* Exported types ----------------------------------------------------------------------------------------------------*/
+/** @defgroup  ADC_Exported_Types ADC Exported Types
   * @{
   */
 
@@ -496,11 +498,13 @@ typedef enum
   HAL_ADC_REG_TRIG_TIM8_TRGO            = LL_ADC_REG_TRIG_TIM8_TRGO,     /*!< ADC group regular conversion
                                         trigger from periph: TIM8 TRGO */
   HAL_ADC_REG_TRIG_TIM8_TRGO2           = LL_ADC_REG_TRIG_TIM8_TRGO2,    /*!< ADC group regular conversion
-                                        trigger from periph: TIM5 TRGO */
+                                        trigger from periph: TIM8 TRGO2 */
   HAL_ADC_REG_TRIG_TIM15_TRGO           = LL_ADC_REG_TRIG_TIM15_TRGO,    /*!< ADC group regular conversion
                                         trigger from periph: TIM15 TRGO */
+#if defined(LPTIM1)
   HAL_ADC_REG_TRIG_LPTIM1_OC1           = LL_ADC_REG_TRIG_LPTIM1_OC1,    /*!< ADC group regular conversion
                                         trigger from periph: LPTIM1 channel 1. */
+#endif /* LPTIM1 */
 } hal_adc_reg_trig_src_t;
 
 /**
@@ -621,8 +625,10 @@ typedef enum
                                         trigger from external peripheral: TIM12 TRGO */
   HAL_ADC_INJ_TRIG_TIM15_TRGO           = LL_ADC_INJ_TRIG_TIM15_TRGO,      /*!< ADC group injected conversion
                                         trigger from external peripheral: TIM15 TRGO */
+#if defined(LPTIM1)
   HAL_ADC_INJ_TRIG_LPTIM1_OC1           = LL_ADC_INJ_TRIG_LPTIM1_OC1,      /*!< ADC group injected conversion
                                         trigger from external peripheral: LPTIM1 channel 1 */
+#endif /* LPTIM1 */
   HAL_ADC_INJ_TRIG_FROM_REGULAR         = LL_ADC_INJ_TRIG_FROM_REGULAR     /*!< ADC group injected conversion
                                         trigger from ADC group regular end of sequence (no action ADC group injected
                                         conversion start or stop).
@@ -1040,7 +1046,8 @@ typedef struct
   */
 typedef struct
 {
-  hal_adc_left_bit_shift_t              left_bit_shift;          /*!< ADC data post-processing: left bit shift */
+  hal_adc_left_bit_shift_t              left_bit_shift;          /*!< ADC data post-processing: left bit shift
+                                        for ADC groups regular and injected conversions. */
   uint32_t                              gain_compensation_x1000; /*!< ADC data post-processing: ADC gain coefficient
                                         applied to raw conversions data. Value multiplied by 1000 to have an integer
                                         value (example: to set coefficient 0.982, parameter value must be 982).
@@ -1048,7 +1055,8 @@ typedef struct
                                         Can be a number between: Min_Data = 0, Max_Data = 3999.
                                         Note: Coefficient resolution managed by ADC peripheral is higher than 1/1000,
                                               if needed to reach more accurate resolution, refer to function
-                                              LL_ADC_SetGainCompensation() */
+                                              LL_ADC_SetGainCompensation().
+                                        Note: Applies to ADC groups regular and injected conversions. */
 } hal_adc_post_processing_config_t;
 
 /**
@@ -1274,8 +1282,8 @@ struct hal_adc_handle_s
   * @}
   */
 
-/* Exported functions ---------------------------------------------------------*/
-/** @defgroup ADC_Exported_Functions HAL ADC Functions
+/* Exported functions ------------------------------------------------------------------------------------------------*/
+/** @defgroup ADC_Exported_Functions ADC Exported Functions
   * @{
   */
 
@@ -1398,7 +1406,7 @@ hal_status_t HAL_ADC_RegisterAwdOutOfWindowCallback(hal_adc_handle_t *hadc, hal_
   * @}
   */
 
-/** @defgroup ADC_Exported_Functions_Group4 Peripheral State, Error functions
+/** @defgroup ADC_Exported_Functions_Group4 Peripheral state, errors, kernel clock frequency functions
   * @{
   */
 hal_adc_state_t HAL_ADC_GetState(const hal_adc_handle_t *hadc);

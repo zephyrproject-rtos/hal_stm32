@@ -537,7 +537,6 @@ typedef  uint32_t (*rcc_cb_timeout_t)(void); /*!< RCC internal Callback pointer 
                                  ((RCC_ADCPRESC_BIT_VALUE) == 0x5U) ? 32U :  \
                                  ((RCC_ADCPRESC_BIT_VALUE) == 0x6U) ? 64U :  \
                                  ((RCC_ADCPRESC_BIT_VALUE) == 0x7U) ? 128U : 1U)
-
 #if defined(ETH1)
 /**
   * @brief Get the ETH1 kernel clock prescaler.
@@ -570,87 +569,6 @@ typedef  uint32_t (*rcc_cb_timeout_t)(void); /*!< RCC internal Callback pointer 
                                      ((RCC_ETH1PTPPRESC_BIT_VALUE) == 0xFU) ? 15U :   \
                                      ((RCC_ETH1PTPPRESC_BIT_VALUE) == 0x10U) ? 16U : 1U)
 #endif /* ETH1 */
-
-
-/*! Macro to reset all bus clock bit in CFGR2 register */
-#if defined(AHB4PERIPH_BASE)
-#define RCC_CFGR2_RESET (RCC_CFGR2_AHB1DIS | RCC_CFGR2_AHB2DIS \
-                         | RCC_CFGR2_AHB4DIS | RCC_CFGR2_APB1DIS | RCC_CFGR2_APB2DIS | RCC_CFGR2_APB3DIS)
-#else
-#define RCC_CFGR2_RESET (RCC_CFGR2_AHB1DIS | RCC_CFGR2_AHB2DIS \
-                         | RCC_CFGR2_APB1DIS | RCC_CFGR2_APB2DIS | RCC_CFGR2_APB3DIS)
-#endif /* AHB4PERIPH_BASE */
-
-/*! Macro to reset all clock source peripheral in CCIPR1 register */
-#if defined(UART7)
-#if defined(FDCAN1)
-#define RCC_CCIPR1_RESET (RCC_CCIPR1_USART1SEL | RCC_CCIPR1_USART2SEL | RCC_CCIPR1_USART3SEL | RCC_CCIPR1_UART4SEL \
-                          | RCC_CCIPR1_UART5SEL | RCC_CCIPR1_USART6SEL | RCC_CCIPR1_UART7SEL | RCC_CCIPR1_LPUART1SEL \
-                          | RCC_CCIPR1_SPI1SEL | RCC_CCIPR1_SPI2SEL | RCC_CCIPR1_SPI3SEL | RCC_CCIPR1_FDCANSEL)
-#else
-#define RCC_CCIPR1_RESET (RCC_CCIPR1_USART1SEL | RCC_CCIPR1_USART2SEL | RCC_CCIPR1_USART3SEL | RCC_CCIPR1_UART4SEL \
-                          | RCC_CCIPR1_UART5SEL | RCC_CCIPR1_USART6SEL | RCC_CCIPR1_UART7SEL | RCC_CCIPR1_LPUART1SEL \
-                          | RCC_CCIPR1_SPI1SEL | RCC_CCIPR1_SPI2SEL | RCC_CCIPR1_SPI3SEL)
-#endif /* FDCAN1 */
-#elif defined(SPI3)
-#if defined(FDCAN1)
-#define RCC_CCIPR1_RESET (RCC_CCIPR1_USART1SEL | RCC_CCIPR1_USART2SEL | RCC_CCIPR1_USART3SEL | RCC_CCIPR1_UART4SEL \
-                          | RCC_CCIPR1_UART5SEL | RCC_CCIPR1_LPUART1SEL | RCC_CCIPR1_SPI1SEL | RCC_CCIPR1_SPI2SEL \
-                          | RCC_CCIPR1_SPI3SEL | RCC_CCIPR1_FDCANSEL)
-#else
-#define RCC_CCIPR1_RESET (RCC_CCIPR1_USART1SEL | RCC_CCIPR1_USART2SEL | RCC_CCIPR1_USART3SEL | RCC_CCIPR1_UART4SEL \
-                          | RCC_CCIPR1_UART5SEL | RCC_CCIPR1_LPUART1SEL | RCC_CCIPR1_SPI1SEL | RCC_CCIPR1_SPI2SEL \
-                          | RCC_CCIPR1_SPI3SEL)
-#endif /* FDCAN1 */
-#else
-#if defined(FDCAN1)
-#define RCC_CCIPR1_RESET (RCC_CCIPR1_USART1SEL | RCC_CCIPR1_USART2SEL  | RCC_CCIPR1_UART4SEL | RCC_CCIPR1_UART5SEL \
-                          | RCC_CCIPR1_LPUART1SEL | RCC_CCIPR1_SPI1SEL | RCC_CCIPR1_SPI2SEL | RCC_CCIPR1_FDCANSEL)
-#else
-#define RCC_CCIPR1_RESET (RCC_CCIPR1_USART1SEL | RCC_CCIPR1_USART2SEL  | RCC_CCIPR1_UART4SEL | RCC_CCIPR1_UART5SEL \
-                          | RCC_CCIPR1_LPUART1SEL | RCC_CCIPR1_SPI1SEL | RCC_CCIPR1_SPI2SEL)
-#endif /* FDCAN1 */
-#endif /* UART7 */
-
-/*! Macro to reset all clock source peripheral in CCIPR2 register */
-#if defined(LPTIM1)
-#if defined(I2C2)
-#define RCC_CCIPR2_RESET (RCC_CCIPR2_I2C1SEL | RCC_CCIPR2_I2C2SEL | RCC_CCIPR2_I3C1SEL | RCC_CCIPR2_ADCDACSEL \
-                          | RCC_CCIPR2_ADCDACPRE | RCC_CCIPR2_DACSEL | RCC_CCIPR2_LPTIM1SEL | RCC_CCIPR2_CK48SEL \
-                          | RCC_CCIPR2_SYSTICKSEL)
-#else
-#define RCC_CCIPR2_RESET (RCC_CCIPR2_I2C1SEL  | RCC_CCIPR2_I3C1SEL | RCC_CCIPR2_ADCDACSEL | RCC_CCIPR2_DACSEL \
-                          | RCC_CCIPR2_ADCDACPRE | RCC_CCIPR2_LPTIM1SEL | RCC_CCIPR2_CK48SEL | RCC_CCIPR2_SYSTICKSEL)
-#endif /* I2C2 */
-#else
-#define RCC_CCIPR2_RESET (RCC_CCIPR2_I2C1SEL | RCC_CCIPR2_I2C2SEL | RCC_CCIPR2_I3C1SEL | RCC_CCIPR2_ADCDACSEL \
-                          | RCC_CCIPR2_ADCDACPRE | RCC_CCIPR2_DACSEL | RCC_CCIPR2_CK48SEL | RCC_CCIPR2_SYSTICKSEL)
-#endif /* LPTIM1 */
-
-/*! Macro to reset all clock source peripheral in CCIPR3 register */
-#if defined(ETH1)
-#define RCC_CCIPR3_RESET (RCC_CCIPR3_XSPI1SEL | RCC_CCIPR3_ETH1REFCLKSEL | RCC_CCIPR3_ETH1PTPCLKSEL \
-                          | RCC_CCIPR3_ETH1CLKSEL | RCC_CCIPR3_ETH1CLKDIV | RCC_CCIPR3_ETH1PTPDIV)
-#endif /* ETH1 */
-
-/*! Macro to reset all system clock source in CR1 register excepted HSE */
-#define RCC_CR1_RESET1 (RCC_CR1_HSISON | RCC_CR1_HSIKON | RCC_CR1_HSIKERON | RCC_CR1_PSISON | RCC_CR1_PSIDIV3ON \
-                        | RCC_CR1_PSIKON | RCC_CR1_PSIKERON | RCC_CR1_HSEON)
-
-/*! Macro to reset HSE bits in CR1 register */
-#define RCC_CR1_RESET2 (RCC_CR1_RESET1 | RCC_CR1_HSEBYP | RCC_CR1_HSEEXT)
-
-/*! Macro to reset all system clock source in CR2 register */
-#define RCC_CR2_RESET (RCC_CR2_HSIKDIV | RCC_CR2_PSIKDIV | RCC_CR2_PSIREFSRC | RCC_CR2_PSIREF | RCC_CR2_PSIFREQ)
-
-/*! Macro to reset all system bit in CFGR1 register */
-#if defined(USE_HAL_RCC_RESET_PERIPH_CLOCK_MANAGEMENT) && (USE_HAL_RCC_RESET_PERIPH_CLOCK_MANAGEMENT == 1U)
-#define RCC_CFGR1_RESET (RCC_CFGR1_STOPWUCK | RCC_CFGR1_RTCPRE | RCC_CFGR1_MCO1PRE | RCC_CFGR1_MCO1SEL \
-                         | RCC_CFGR1_MCO2PRE | RCC_CFGR1_MCO2SEL)
-#else
-#define RCC_CFGR1_RESET (RCC_CFGR1_STOPWUCK | RCC_CFGR1_MCO1PRE | RCC_CFGR1_MCO1SEL | RCC_CFGR1_MCO2PRE \
-                         | RCC_CFGR1_MCO2SEL)
-#endif /* USE_HAL_RCC_RESET_PERIPH_CLOCK_MANAGEMENT */
 
 /**
   * @}
@@ -698,9 +616,7 @@ void HAL_RCC_Reset(void)
 
 #if defined(USE_HAL_RCC_RESET_PERIPH_CLOCK_MANAGEMENT) && (USE_HAL_RCC_RESET_PERIPH_CLOCK_MANAGEMENT == 1U)
   /* Reset peripheral clock enable */
-  read_value = LL_RCC_READ_REG(CFGR2);
-
-  LL_RCC_WRITE_REG(CFGR2, (read_value & ~RCC_CFGR2_RESET));
+  LL_RCC_WRITE_REG(CFGR2, RCC_CFGR2_Rst);
 
   LL_AHB1_GRP1_DisableClock(LL_AHB1_GRP1_PERIPH_ALL & (~(RCC_AHB1ENR_FLASHEN | RCC_AHB1ENR_SRAM2EN |
                                                          RCC_AHB1ENR_SRAM1EN)));
@@ -724,18 +640,12 @@ void HAL_RCC_Reset(void)
   LL_APB3_GRP1_EnableClockLowPower(LL_APB3_GRP1_PERIPH_ALL);
 
   /* Reset peripheral clock source selection */
-  read_value = LL_RCC_READ_REG(CCIPR1);
+  LL_RCC_WRITE_REG(CCIPR1, RCC_CCIPR1_Rst);
+  LL_RCC_WRITE_REG(CCIPR2, RCC_CCIPR2_Rst);
+#if defined(RCC_CCIPR3_Rst)
+  LL_RCC_WRITE_REG(CCIPR3, RCC_CCIPR3_Rst);
+#endif /* RCC_CCIPR3_Rst */
 
-  LL_RCC_WRITE_REG(CCIPR1, (read_value & ~RCC_CCIPR1_RESET));
-
-  read_value = LL_RCC_READ_REG(CCIPR2);
-
-  LL_RCC_WRITE_REG(CCIPR2, (read_value & ~RCC_CCIPR2_RESET));
-
-#if defined(ETH1)
-  read_value = LL_RCC_READ_REG(CCIPR3);
-  LL_RCC_WRITE_REG(CCIPR3, (read_value & ~RCC_CCIPR3_RESET));
-#endif /* ETH1 */
 #endif /* USE_HAL_RCC_RESET_PERIPH_CLOCK_MANAGEMENT */
 
   /* Reset System clock */
@@ -777,17 +687,21 @@ void HAL_RCC_Reset(void)
 
   /* Reset all remaining oscillators not in backup domain (excepted the one used for System clock) */
   read_value = LL_RCC_READ_REG(CR1);
-
-  LL_RCC_WRITE_REG(CR1, (read_value & ~RCC_CR1_RESET1));
-  LL_RCC_WRITE_REG(CR1, (read_value & ~RCC_CR1_RESET2)); /* HSE EXT and BYP disabled only when HSE has been disabled */
-  read_value = LL_RCC_READ_REG(CR2);
-  LL_RCC_WRITE_REG(CR2, (read_value & ~RCC_CR2_RESET));
+  LL_RCC_WRITE_REG(CR1, (RCC_CR1_Rst | (read_value & (RCC_CR1_HSEBYP | RCC_CR1_HSEEXT))));
+  LL_RCC_WRITE_REG(CR1, RCC_CR1_Rst); /* HSE EXT and BYP disabled only when HSE has been disabled */
+  LL_RCC_WRITE_REG(CR2, RCC_CR2_Rst);
   LL_RCC_LSI_Disable();
 
   /* Reset MCO, RTC prescaler and wake up system clock */
+#if defined(USE_HAL_RCC_RESET_PERIPH_CLOCK_MANAGEMENT) && (USE_HAL_RCC_RESET_PERIPH_CLOCK_MANAGEMENT == 1U)
+  /* Reset MCOx and RTC prescaler */
+  LL_RCC_WRITE_REG(CFGR1, RCC_CFGR1_Rst);
+#else
+  /* Reset MCOx prescaler */
   read_value = LL_RCC_READ_REG(CFGR1);
 
-  LL_RCC_WRITE_REG(CFGR1, (read_value & ~RCC_CFGR1_RESET));
+  LL_RCC_WRITE_REG(CFGR1, (RCC_CFGR1_Rst | (read_value & RCC_CFGR1_RTCPRE)));
+#endif /* USE_HAL_RCC_RESET_PERIPH_CLOCK_MANAGEMENT */
 
   /* Clear RCC flags */
   LL_RCC_ClearFlag(LL_RCC_IT_LSIRDY | LL_RCC_IT_LSERDY | LL_RCC_IT_HSIRDY | LL_RCC_IT_HSIDIV3RDY | \
@@ -2562,48 +2476,29 @@ hal_status_t HAL_RCC_ETH1_SetKernelClkSource(hal_rcc_eth1_clk_src_t clk_src)
 /**
   * @brief  Set the RTC clock source.
   * @param  clk_src Clock source selection based on @ref hal_rcc_rtc_clk_src_t
-  * @note   Access to Backup domain has to be enabled.
+  * @warning Backup domain write access must be enabled before calling this function.
+  * @warning Modifying the RTC clock source after it has been configured requires
+  *          performing an RTC domain reset first.
   * @retval HAL_OK    RTC source clock has been selected
-  * @retval HAL_ERROR LSE activation failed after reset of Backup domain
+  * @retval HAL_ERROR RTC source clock has not been selected
   */
 hal_status_t HAL_RCC_RTC_SetKernelClkSource(hal_rcc_rtc_clk_src_t clk_src)
 {
-  hal_status_t status = HAL_OK;
 
   ASSERT_DBG_PARAM(IS_RCC_RTC_CLK(clk_src));
 
-  /* Reset the Backup domain only if the RTC Clock source selection is modified from default */
-  uint32_t tmpregister = LL_RCC_GetRTCClockSource();
+  /* Apply new RTC clock source selection */
+  LL_RCC_SetRTCClockSource((uint32_t)clk_src);
 
-  /* Reset the Backup domain only if the RTC Clock source selection is modified from the current one */
-  if (tmpregister == (uint32_t)clk_src)
+  /* Check that the clock source has been changed */
+  if (LL_RCC_GetRTCClockSource() != (uint32_t)clk_src)
   {
-    /* No change needed */
+    return HAL_ERROR;
+  }
+  else
+  {
     return HAL_OK;
   }
-
-  /* Store the content of RTCCR register before the reset of Backup Domain */
-  tmpregister = STM32_READ_BIT(RCC->RTCCR, ~(RCC_RTCCR_RTCSEL));
-  /* RTC Clock selection can be changed only if the Backup Domain is reset */
-  HAL_RCC_ResetRTCDomain();
-  /* Restore the Content of RTCCR register */
-  RCC->RTCCR = tmpregister;
-
-#if defined(LSE_VALUE)
-  /* Wait for LSE reactivation if LSE was enable prior to Backup Domain reset */
-  if (STM32_IS_BIT_SET(tmpregister, RCC_RTCCR_LSEON))
-  {
-    status = RCC_WaitForTimeout(LL_RCC_LSE_IsReady, RCC_LSE_TIMEOUT_VALUE, 1U);
-  }
-
-  if (status == HAL_OK)
-#endif /* LSE_VALUE */
-  {
-    /* Apply new RTC clock source selection */
-    LL_RCC_SetRTCClockSource((uint32_t)clk_src);
-  }
-
-  return status;
 }
 
 /**
@@ -3536,8 +3431,8 @@ uint32_t HAL_RCC_SPI_GetKernelClkFreq(const SPI_TypeDef *spix)
     case (uint32_t)SPI3:
       frequency = HAL_RCC_SPI3_GetKernelClkFreq();
       break;
-#endif /* SPI3 */
 
+#endif /* SPI3 */
     default:
       break;
   }
@@ -4237,6 +4132,8 @@ uint32_t HAL_RCC_ETH1_GetKernelClkFreq(void)
   return frequency;
 }
 #endif /* ETH1 */
+
+
 /**
   * @brief  Return the peripheral clock frequency for RTC.
   * @retval uint32_t Frequency in Hz

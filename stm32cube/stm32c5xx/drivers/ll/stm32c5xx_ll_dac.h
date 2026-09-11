@@ -250,6 +250,7 @@ extern "C" {
 /*!< DAC channel conversion trigger from external peripheral: TIM2 TRGO. */
 #define LL_DAC_TRIGGER_TIM2_TRGO    (                                   DAC_CR_TSEL1_1                  )
 
+
 /*!< DAC channel conversion trigger from external peripheral: TIM5 TRGO. */
 #define LL_DAC_TRIGGER_TIM5_TRGO    (                  DAC_CR_TSEL1_2                  | DAC_CR_TSEL1_0 )
 
@@ -268,11 +269,14 @@ extern "C" {
 /*!< DAC channel conversion trigger from external peripheral: TIM15 TRGO. */
 #define LL_DAC_TRIGGER_TIM15_TRGO   ( DAC_CR_TSEL1_3 |                  DAC_CR_TSEL1_1                  )
 
+#if defined(LPTIM1)
 /*!< DAC channel conversion trigger from external peripheral: LPTIM1 CH1. */
 #define LL_DAC_TRIGGER_LPTIM1_OC1   ( DAC_CR_TSEL1_3 |                  DAC_CR_TSEL1_1 | DAC_CR_TSEL1_0 )
+#endif /* LPTIM1 */
 
 /*!< DAC channel conversion trigger from external peripheral: external interrupt line 9. */
 #define LL_DAC_TRIGGER_EXTI9        ( DAC_CR_TSEL1_3 | DAC_CR_TSEL1_2                                   )
+
 
 /**
   * @}
@@ -821,15 +825,20 @@ __STATIC_INLINE uint32_t LL_DAC_GetTrimmingValue(const DAC_TypeDef *dacx, uint32
   *         @arg @ref LL_DAC_TRIGGER_SOFTWARE
   *         @arg @ref LL_DAC_TRIGGER_TIM1_TRGO
   *         @arg @ref LL_DAC_TRIGGER_TIM2_TRGO
+  *         @arg LL_DAC_TRIGGER_TIM3_TRGO (1)
   *         @arg @ref LL_DAC_TRIGGER_TIM5_TRGO
   *         @arg @ref LL_DAC_TRIGGER_TIM6_TRGO
-  *         @arg @ref LL_DAC_TRIGGER_TIM5_TRGO
   *         @arg @ref LL_DAC_TRIGGER_TIM7_TRGO
   *         @arg @ref LL_DAC_TRIGGER_TIM8_TRGO
   *         @arg @ref LL_DAC_TRIGGER_TIM12_TRGO
   *         @arg @ref LL_DAC_TRIGGER_TIM15_TRGO
-  *         @arg @ref LL_DAC_TRIGGER_LPTIM1_OC1
+  *         @arg LL_DAC_TRIGGER_LPTIM1_OC1 (3)
   *         @arg @ref LL_DAC_TRIGGER_EXTI9
+  *         @arg LL_DAC_TRIGGER_TIM20_TRGO (2)
+  *         @arg LL_DAC_TRIGGER_PLAY_OUT (2)
+  *         - (1) Parameters only available on STM32C5P1xx/5Q1xx and STM32C5J1xx/5K1xx devices
+  *         - (2) Parameters only available on STM32C5P1xx/5Q1xx devices
+  *         - (3) Parameters only available if LPTIMER1 instance is supported
   * @note   For conversion trigger source to be effective, DAC trigger
   *         must be enabled using function @ref LL_DAC_EnableTrigger().
   * @note   To set conversion trigger source, DAC channel must be disabled.
@@ -872,15 +881,20 @@ __STATIC_INLINE void LL_DAC_SetTriggerSource(DAC_TypeDef *dacx, uint32_t dac_cha
   *         @arg @ref LL_DAC_TRIGGER_SOFTWARE
   *         @arg @ref LL_DAC_TRIGGER_TIM1_TRGO
   *         @arg @ref LL_DAC_TRIGGER_TIM2_TRGO
+  *         @arg LL_DAC_TRIGGER_TIM3_TRGO (1)
   *         @arg @ref LL_DAC_TRIGGER_TIM5_TRGO
   *         @arg @ref LL_DAC_TRIGGER_TIM6_TRGO
-  *         @arg @ref LL_DAC_TRIGGER_TIM5_TRGO
   *         @arg @ref LL_DAC_TRIGGER_TIM7_TRGO
   *         @arg @ref LL_DAC_TRIGGER_TIM8_TRGO
   *         @arg @ref LL_DAC_TRIGGER_TIM12_TRGO
   *         @arg @ref LL_DAC_TRIGGER_TIM15_TRGO
-  *         @arg @ref LL_DAC_TRIGGER_LPTIM1_OC1
+  *         @arg LL_DAC_TRIGGER_LPTIM1_OC1 (3)
   *         @arg @ref LL_DAC_TRIGGER_EXTI9
+  *         @arg LL_DAC_TRIGGER_TIM20_TRGO (2)
+  *         @arg LL_DAC_TRIGGER_PLAY_OUT (2)
+  *         - (1) Parameters only available on STM32C5P1xx/5Q1xx and STM32C5J1xx/5K1xx devices
+  *         - (2) Parameters only available on STM32C5P1xx/5Q1xx devices
+  *         - (3) Parameters only available if LPTIMER1 instance is supported
   */
 __STATIC_INLINE uint32_t LL_DAC_GetTriggerSource(const DAC_TypeDef *dacx, uint32_t dac_channel)
 {
@@ -2684,7 +2698,7 @@ __STATIC_INLINE uint32_t LL_DAC_IsEnabledIT_DMAUDR2(const DAC_TypeDef *dacx)
   * @}
   */
 
-#endif /* DAC1 */
+#endif /* DAC1 || DAC2 */
 /**
   * @}
   */

@@ -181,6 +181,9 @@ USE_HAL_CHECK_PARAM  | from hal_conf.h    | 0U            | When set, parameters
 #else
 #define PWR_SRAM2_RETENTION_PAGES_MAX 0x01UL /*!< SRAM2 maximum page count     */
 #endif /* PWR_PMCR_SRAM2_1_SO */
+
+/*! Number of memory banks */
+#define PWR_MEMORY_BANKS_NUMBER (uint32_t)(sizeof(PWR_MemoryFullRetentionMap) / sizeof(PWR_MemoryFullRetentionMap[0]))
 /**
   * @}
   */
@@ -197,18 +200,11 @@ static const uint32_t PWR_MemoryFullRetentionMap[] =
 };
 
 /*! Memory maximum page retention mapping table */
-static const uint32_t PWR_MemoryMaxPagesRetentionMap[] =
+static const uint32_t PWR_MemoryMaxPagesRetentionMap[PWR_MEMORY_BANKS_NUMBER] =
 {
   PWR_SRAM1_RETENTION_PAGES_MAX,
   PWR_SRAM2_RETENTION_PAGES_MAX
 };
-
-#if defined(USE_ASSERT_DBG_PARAM)
-#if defined(PWR_PMCR_SRAM2_1_SO)
-/*! Number of SRAM banks */
-static const uint32_t PWR_SRAM_BANKS = (uint32_t)(sizeof(PWR_MemoryMaxPagesRetentionMap) / sizeof(uint32_t));
-#endif /* PWR_PMCR_SRAM2_1_SO */
-#endif /* USE_ASSERT_DBG_PARAM */
 /**
   * @}
   */
@@ -259,7 +255,7 @@ static const uint32_t PWR_SRAM_BANKS = (uint32_t)(sizeof(PWR_MemoryMaxPagesReten
   (((entry) == (uint32_t)HAL_PWR_LOW_PWR_MODE_WFE) || ((entry) == (uint32_t)HAL_PWR_LOW_PWR_MODE_WFI))
 
 /*! Stop mode check macro */
-#define IS_PWR_STOP_MODE(mode)       \
+#define IS_PWR_STOP_MODE(mode)                 \
   (((mode) == (uint32_t)HAL_PWR_STOP0_MODE)    \
    || (((mode) == (uint32_t)HAL_PWR_STOP1_MODE)))
 
@@ -268,13 +264,13 @@ static const uint32_t PWR_SRAM_BANKS = (uint32_t)(sizeof(PWR_MemoryMaxPagesReten
   (((mode) == ((uint32_t)HAL_PWR_CORE_SLEEP)) || ((mode) == ((uint32_t)HAL_PWR_CORE_DEEP_SLEEP)))
 
 /*! Memory retention check macro */
-#define IS_PWR_SINGLE_PAGE_MEMORY_RETENTION(memory)                 \
-  ((PWR_MemoryMaxPagesRetentionMap[memory]) == 1U)
+#define IS_PWR_SINGLE_PAGE_MEMORY_RETENTION(memory) \
+  ((((uint32_t)(memory)) < PWR_MEMORY_BANKS_NUMBER) && ((PWR_MemoryMaxPagesRetentionMap[memory]) == 1U))
 
 #if defined(PWR_PMCR_SRAM2_1_SO)
 /*! Memory page retention check macro */
 #define IS_PWR_MEMORY_PAGES_RETENTION(memory, page_idx, page_nbr)                     \
-  (((memory) < PWR_SRAM_BANKS)                                                        \
+  ((((uint32_t)(memory)) < PWR_MEMORY_BANKS_NUMBER)                                   \
    && ((((page_idx) - 1U) + (page_nbr)) <= (PWR_MemoryMaxPagesRetentionMap[memory]))  \
    && ((((PWR_MemoryMaxPagesRetentionMap[memory]) > 1U)))                             \
    && ((((page_idx) - 1U) + (page_nbr)) > 0U))
@@ -287,8 +283,8 @@ static const uint32_t PWR_SRAM_BANKS = (uint32_t)(sizeof(PWR_MemoryMaxPagesReten
    || ((io) == (uint32_t)HAL_PWR_IO_RETENTION_ALL))
 
 /*! I/O selection retention enabled check macro */
-#define IS_PWR_GET_IO_RETENTION(io)         \
-  (((io) == (uint32_t)HAL_PWR_IO_RETENTION_JTAGIO)    \
+#define IS_PWR_GET_IO_RETENTION(io)                 \
+  (((io) == (uint32_t)HAL_PWR_IO_RETENTION_JTAGIO)  \
    || ((io) == (uint32_t)HAL_PWR_IO_RETENTION_GPIO))
 
 /*! PWR set privilege item check macro */
@@ -608,6 +604,9 @@ void HAL_PWR_EnterSleepMode(hal_pwr_low_pwr_mode_entry_t sleep_entry)
   /* Clear SLEEPDEEP bit of Cortex System Control Register */
   SCB_DisableDeepSleep();
 
+  /* DSB to ensure there are no outstanding memory transactions prior to executing WFI/WFE and going to sleep. */
+  __DSB();
+
   if (sleep_entry == HAL_PWR_LOW_PWR_MODE_WFE)
   {
     /* Wait For Event Request */
@@ -635,6 +634,9 @@ void HAL_PWR_EnterStopMode(hal_pwr_low_pwr_mode_entry_t stop_entry, hal_pwr_stop
 
   LL_PWR_SetPowerMode((uint32_t)stop_mode);
 
+  /* DSB to ensure there are no outstanding memory transactions prior to executing WFI/WFE and going to stop. */
+  __DSB();
+
   if (stop_entry == HAL_PWR_LOW_PWR_MODE_WFE)
   {
     /* Wait For Event Request */
@@ -659,6 +661,9 @@ void HAL_PWR_EnterStandbyMode(void)
   SCB_EnableDeepSleep();
 
   LL_PWR_SetPowerMode(LL_PWR_STANDBY_MODE);
+
+  /* DSB to ensure there are no outstanding memory transactions prior to executing WFI and going to standby. */
+  __DSB();
 
   /* Wait For Interrupt Request */
   __WFI();
@@ -860,23 +865,35 @@ hal_pwr_pvd_out_t HAL_PWR_GetProgrammableVoltageDetectorOutput(void)
   * @brief  Enable memory retention in stop mode.
   * @param  memory This parameter is an element of @ref hal_pwr_memory_retention_t enumeration.
   * @retval HAL_OK Memory retention has been correctly enabled.
+  * @retval HAL_INVALID_PARAM The selected memory does not exist while USE_HAL_CHECK_PARAM is used.
   * @retval HAL_ERROR Selected memory is paginated, use HAL_PWR_LP_EnableMemoryPageRetention().
   */
 hal_status_t HAL_PWR_LP_EnableMemoryRetention(hal_pwr_memory_retention_t memory)
 {
   ASSERT_DBG_PARAM(IS_PWR_SINGLE_PAGE_MEMORY_RETENTION((uint32_t)memory));
 
-  /* Check if the selected memory is paginated or not */
-  if (PWR_MemoryMaxPagesRetentionMap[memory] == 1U)
+#if defined(USE_HAL_CHECK_PARAM) && (USE_HAL_CHECK_PARAM == 1)
+  /* Check if the selected memory exists */
+  if ((uint32_t)memory >= PWR_MEMORY_BANKS_NUMBER)
   {
-    /* Enable Memory Retention */
-    LL_PWR_EnableMemoryStopRetention(PWR_MemoryFullRetentionMap[memory]);
-    return HAL_OK;
+    /* Selected memory does not exist */
+    return HAL_INVALID_PARAM;
   }
   else
+#endif /* USE_HAL_CHECK_PARAM */
   {
-    /* Paginated SRAM are managed by HAL_PWR_LP_EnableMemoryPageRetention() */
-    return HAL_ERROR;
+    /* Check if the selected memory is paginated or not */
+    if (PWR_MemoryMaxPagesRetentionMap[memory] == 1U)
+    {
+      /* Enable Memory Retention */
+      LL_PWR_EnableMemoryStopRetention(PWR_MemoryFullRetentionMap[memory]);
+      return HAL_OK;
+    }
+    else
+    {
+      /* Paginated SRAM are managed by HAL_PWR_LP_EnableMemoryPageRetention() */
+      return HAL_ERROR;
+    }
   }
 }
 
@@ -884,30 +901,43 @@ hal_status_t HAL_PWR_LP_EnableMemoryRetention(hal_pwr_memory_retention_t memory)
   * @brief  Disable memory retention in stop mode.
   * @param  memory  This parameter is an element of @ref hal_pwr_memory_retention_t enumeration.
   * @retval HAL_OK  Memory retention has been correctly disabled.
+  * @retval HAL_INVALID_PARAM The selected memory does not exist while USE_HAL_CHECK_PARAM is used.
   * @retval HAL_ERROR Selected memory is paginated, use HAL_PWR_LP_DisableMemoryPageRetention().
   */
 hal_status_t HAL_PWR_LP_DisableMemoryRetention(hal_pwr_memory_retention_t memory)
 {
   ASSERT_DBG_PARAM(IS_PWR_SINGLE_PAGE_MEMORY_RETENTION((uint32_t)memory));
 
-  /* Check if the selected memory is paginated or not */
-  if (PWR_MemoryMaxPagesRetentionMap[memory] == 1U)
+#if defined(USE_HAL_CHECK_PARAM)
+  /* Check if the selected memory exists */
+  if ((uint32_t)memory >= PWR_MEMORY_BANKS_NUMBER)
   {
-    /* Disable Memory Retention */
-    LL_PWR_DisableMemoryStopRetention(PWR_MemoryFullRetentionMap[memory]);
-    return HAL_OK;
+    /* Selected memory does not exist */
+    return HAL_INVALID_PARAM;
   }
   else
+#endif /* USE_HAL_CHECK_PARAM */
   {
-    /* Paginated SRAM are managed by HAL_PWR_LP_DisableMemoryPageRetention() */
-    return HAL_ERROR;
+    /* Check if the selected memory is paginated or not */
+    if (PWR_MemoryMaxPagesRetentionMap[memory] == 1U)
+    {
+      /* Disable Memory Retention */
+      LL_PWR_DisableMemoryStopRetention(PWR_MemoryFullRetentionMap[memory]);
+      return HAL_OK;
+    }
+    else
+    {
+      /* Paginated SRAM are managed by HAL_PWR_LP_DisableMemoryPageRetention() */
+      return HAL_ERROR;
+    }
   }
 }
 
 /**
   * @brief  Get memory retention status.
   * @param  memory  This parameter is an element of @ref hal_pwr_memory_retention_t enumeration.
-  * @retval HAL_PWR_MEMORY_RETENTION_DISABLED if the selected memory is not retained in stop mode.
+  * @retval HAL_PWR_MEMORY_RETENTION_DISABLED if the selected memory is not retained in stop mode or
+  *         if the selected memory does not exist while USE_HAL_CHECK_PARAM is used.
   * @retval HAL_PWR_MEMORY_RETENTION_ENABLED  if the selected memory is retained in stop mode.
   * @note   If the ASSERT are disabled, HAL_PWR_MEMORY_RETENTION_DISABLED is returned for paginated memories.
   */
@@ -915,15 +945,27 @@ hal_pwr_memory_retention_status_t HAL_PWR_LP_IsEnabledMemoryRetention(hal_pwr_me
 {
   ASSERT_DBG_PARAM(IS_PWR_SINGLE_PAGE_MEMORY_RETENTION((uint32_t)memory));
 
-  if (PWR_MemoryMaxPagesRetentionMap[memory] == 1U)
+#if defined(USE_HAL_CHECK_PARAM) && (USE_HAL_CHECK_PARAM == 1)
+  /* Check if the selected memory exists */
+  if ((uint32_t)memory >= PWR_MEMORY_BANKS_NUMBER)
   {
-    /* Return the selected memory retention status */
-    return ((hal_pwr_memory_retention_status_t)LL_PWR_IsEnabledMemoryStopRetention(PWR_MemoryFullRetentionMap[memory]));
+    /* Selected memory does not exist */
+    return HAL_PWR_MEMORY_RETENTION_DISABLED;
   }
   else
+#endif /* USE_HAL_CHECK_PARAM */
   {
-    /* Paginated SRAM are managed by HAL_PWR_LP_IsEnabledMemoryPageRetention() */
-    return HAL_PWR_MEMORY_RETENTION_DISABLED;
+    if (PWR_MemoryMaxPagesRetentionMap[memory] == 1U)
+    {
+      /* Return the selected memory retention status */
+      return ((hal_pwr_memory_retention_status_t)
+              LL_PWR_IsEnabledMemoryStopRetention(PWR_MemoryFullRetentionMap[memory]));
+    }
+    else
+    {
+      /* Paginated SRAM are managed by HAL_PWR_LP_IsEnabledMemoryPageRetention() */
+      return HAL_PWR_MEMORY_RETENTION_DISABLED;
+    }
   }
 }
 
@@ -934,6 +976,8 @@ hal_pwr_memory_retention_status_t HAL_PWR_LP_IsEnabledMemoryRetention(hal_pwr_me
   * @param  page_idx  the index of memory page (starting from 1).
   * @param  page_nbr  The memory pages number.
   * @retval HAL_OK    Memory page retention has been correctly enabled.
+  * @retval HAL_INVALID_PARAM The selected memory does not exist, the page index is out of range or the selected number
+  *         of pages does not fit the memory.
   * @retval HAL_ERROR Memory page retention could not be enabled, the selected memory is not paginated.
   */
 hal_status_t HAL_PWR_LP_EnableMemoryPageRetention(hal_pwr_memory_retention_t memory,
@@ -946,51 +990,68 @@ hal_status_t HAL_PWR_LP_EnableMemoryPageRetention(hal_pwr_memory_retention_t mem
 
   ASSERT_DBG_PARAM(IS_PWR_MEMORY_PAGES_RETENTION((uint32_t)memory, page_idx, page_nbr));
 
-  if (PWR_MemoryMaxPagesRetentionMap[memory] != 1U)
+#if defined(USE_HAL_CHECK_PARAM) && (USE_HAL_CHECK_PARAM == 1)
+  /* Check if the selected memory exists, the page index is valid and if the selected number of pages fits the memory */
+  if (((uint32_t)memory >= PWR_MEMORY_BANKS_NUMBER)
+      || (page_idx > PWR_MemoryMaxPagesRetentionMap[memory])
+      || (((page_idx - 1U) + page_nbr) > PWR_MemoryMaxPagesRetentionMap[memory]))
   {
-    for (uint32_t i = 0; i < page_nbr; ++i)
-    {
-      logical_idx = page_idx + i;
-      switch (logical_idx)
-      {
-        /* SRAM2 Page 1 */
-        case 1:
-        {
-          pages |= LL_PWR_SRAM2_PAGE1_STOP_RETENTION;
-          break;
-        }
-
-        /* SRAM2 Page 2 */
-        case 2:
-        {
-          pages |= LL_PWR_SRAM2_PAGE2_STOP_RETENTION;
-          break;
-        }
-
-#if defined(PWR_PMCR_SRAM2_3_SO)
-        /* SRAM2 Page 3 */
-        case 3:
-        {
-          pages |= LL_PWR_SRAM2_PAGE3_STOP_RETENTION;
-          break;
-        }
-#endif /* PWR_PMCR_SRAM2_3_SO */
-
-        default:
-        {
-          /* Ignore out-of-range cases */
-          break;
-        }
-      }
-    }
-
-    /* Pages stop retention enabling */
-    LL_PWR_EnableSRAM2PagesStopRetention(pages);
+    status = HAL_INVALID_PARAM;
   }
   else
+#endif /* USE_HAL_CHECK_PARAM */
   {
-    /* Only SRAM2 memory supports page retention */
-    status = HAL_ERROR;
+    if (PWR_MemoryMaxPagesRetentionMap[memory] != 1U)
+    {
+      for (uint32_t i = 0; i < page_nbr; ++i)
+      {
+        logical_idx = page_idx + i;
+        switch (logical_idx)
+        {
+          /* SRAM2 Page 1 */
+          case 1:
+          {
+            pages |= LL_PWR_SRAM2_PAGE1_STOP_RETENTION;
+            break;
+          }
+
+          /* SRAM2 Page 2 */
+          case 2:
+          {
+            pages |= LL_PWR_SRAM2_PAGE2_STOP_RETENTION;
+            break;
+          }
+
+#if defined(PWR_PMCR_SRAM2_3_SO)
+          /* SRAM2 Page 3 */
+          case 3:
+          {
+            pages |= LL_PWR_SRAM2_PAGE3_STOP_RETENTION;
+            break;
+          }
+#endif /* PWR_PMCR_SRAM2_3_SO */
+
+          default:
+          {
+            /* Out-of-range cases */
+            status = HAL_ERROR;
+            break;
+          }
+        }
+      }
+
+      /* If no error occurred, enable the pages stop retention */
+      if (status == HAL_OK)
+      {
+        /* Pages stop retention enabling */
+        LL_PWR_EnableSRAM2PagesStopRetention(pages);
+      }
+    }
+    else
+    {
+      /* Non paginated SRAM are managed by HAL_PWR_LP_EnableMemoryRetention() */
+      status = HAL_ERROR;
+    }
   }
 
   return status;
@@ -1002,6 +1063,8 @@ hal_status_t HAL_PWR_LP_EnableMemoryPageRetention(hal_pwr_memory_retention_t mem
   * @param  page_idx  the index of memory page (starting from 1).
   * @param  page_nbr  The memory pages number.
   * @retval HAL_OK    Memory page retention has been correctly disabled.
+  * @retval HAL_INVALID_PARAM The selected memory does not exist, the page index is out of range or the selected number
+  *         of pages does not fit the memory.
   * @retval HAL_ERROR Memory page retention could not be disabled, the selected memory is not paginated.
   */
 hal_status_t HAL_PWR_LP_DisableMemoryPageRetention(hal_pwr_memory_retention_t memory,
@@ -1014,51 +1077,68 @@ hal_status_t HAL_PWR_LP_DisableMemoryPageRetention(hal_pwr_memory_retention_t me
 
   ASSERT_DBG_PARAM(IS_PWR_MEMORY_PAGES_RETENTION((uint32_t)memory, page_idx, page_nbr));
 
-  if (PWR_MemoryMaxPagesRetentionMap[memory] != 1U)
+#if defined(USE_HAL_CHECK_PARAM) && (USE_HAL_CHECK_PARAM == 1)
+  /* Check if the selected memory exists, the page index is valid and if the selected number of pages fits the memory */
+  if (((uint32_t)memory >= PWR_MEMORY_BANKS_NUMBER)
+      || (page_idx > PWR_MemoryMaxPagesRetentionMap[memory])
+      || (((page_idx - 1U) + page_nbr) > PWR_MemoryMaxPagesRetentionMap[memory]))
   {
-    for (uint32_t i = 0; i < page_nbr; ++i)
-    {
-      logical_idx = page_idx + i;
-      switch (logical_idx)
-      {
-        /* SRAM2 Page 1 */
-        case 1:
-        {
-          pages |= LL_PWR_SRAM2_PAGE1_STOP_RETENTION;
-          break;
-        }
-
-        /* SRAM2 Page 2 */
-        case 2:
-        {
-          pages |= LL_PWR_SRAM2_PAGE2_STOP_RETENTION;
-          break;
-        }
-
-#if defined(PWR_PMCR_SRAM2_3_SO)
-        /* SRAM2 Page 3 */
-        case 3:
-        {
-          pages |= LL_PWR_SRAM2_PAGE3_STOP_RETENTION;
-          break;
-        }
-#endif /* PWR_PMCR_SRAM2_3_SO */
-
-        default:
-        {
-          /* Ignore out-of-range cases */
-          break;
-        }
-      }
-    }
-
-    /* Pages stop retention disabling */
-    LL_PWR_DisableSRAM2PagesStopRetention(pages);
+    status = HAL_INVALID_PARAM;
   }
   else
+#endif /* USE_HAL_CHECK_PARAM */
   {
-    /* This API only supports paginated memory */
-    status = HAL_ERROR;
+    if (PWR_MemoryMaxPagesRetentionMap[memory] != 1U)
+    {
+      for (uint32_t i = 0; i < page_nbr; ++i)
+      {
+        logical_idx = page_idx + i;
+        switch (logical_idx)
+        {
+          /* SRAM2 Page 1 */
+          case 1:
+          {
+            pages |= LL_PWR_SRAM2_PAGE1_STOP_RETENTION;
+            break;
+          }
+
+          /* SRAM2 Page 2 */
+          case 2:
+          {
+            pages |= LL_PWR_SRAM2_PAGE2_STOP_RETENTION;
+            break;
+          }
+
+#if defined(PWR_PMCR_SRAM2_3_SO)
+          /* SRAM2 Page 3 */
+          case 3:
+          {
+            pages |= LL_PWR_SRAM2_PAGE3_STOP_RETENTION;
+            break;
+          }
+#endif /* PWR_PMCR_SRAM2_3_SO */
+
+          default:
+          {
+            /* Out-of-range cases */
+            status = HAL_ERROR;
+            break;
+          }
+        }
+      }
+
+      /* If no error occurred, disable the pages stop retention */
+      if (status == HAL_OK)
+      {
+        /* Pages stop retention disabling */
+        LL_PWR_DisableSRAM2PagesStopRetention(pages);
+      }
+    }
+    else
+    {
+      /* Non paginated SRAM are managed by HAL_PWR_LP_DisableMemoryRetention() */
+      status = HAL_ERROR;
+    }
   }
 
   return status;
@@ -1068,7 +1148,8 @@ hal_status_t HAL_PWR_LP_DisableMemoryPageRetention(hal_pwr_memory_retention_t me
   * @brief  Check the selected memory page retention in stop mode status.
   * @param  memory    This parameter is an element of @ref hal_pwr_memory_retention_t enumeration.
   * @param  page_idx  the index of memory page (starting from 1).
-  * @retval HAL_PWR_MEMORY_PAGE_RETENTION_DISABLED if the selected memory page is not retained in stop mode.
+  * @retval HAL_PWR_MEMORY_PAGE_RETENTION_DISABLED if the selected memory page is not retained in stop mode or
+  *         if the selected memory does not exist while USE_HAL_CHECK_PARAM is used.
   * @retval HAL_PWR_MEMORY_PAGE_RETENTION_ENABLED  if the selected memory page is retained in stop mode.
   * @note   If the ASSERT are disabled, HAL_PWR_MEMORY_PAGE_RETENTION_DISABLED is returned for out-of-range pages or
   *         non-paginated memories.
@@ -1081,44 +1162,56 @@ hal_pwr_memory_page_retention_status_t HAL_PWR_LP_IsEnabledMemoryPageRetention(h
 
   ASSERT_DBG_PARAM(IS_PWR_MEMORY_PAGES_RETENTION((uint32_t)memory, page_idx, 1U));
 
-  if (PWR_MemoryMaxPagesRetentionMap[memory] != 1U)
+#if defined(USE_HAL_CHECK_PARAM) && (USE_HAL_CHECK_PARAM == 1)
+  /* Check if the selected memory exists, the page index is valid and if the selected number of pages fits the memory */
+  if (((uint32_t)memory >= PWR_MEMORY_BANKS_NUMBER)
+      || (page_idx > PWR_MemoryMaxPagesRetentionMap[memory]))
   {
-    switch (page_idx)
+    /* Selected SRAM bank is not valid */
+    status = HAL_PWR_MEMORY_PAGE_RETENTION_DISABLED;
+  }
+  else
+#endif /* USE_HAL_CHECK_PARAM */
+  {
+    if (PWR_MemoryMaxPagesRetentionMap[memory] != 1U)
     {
-      /* SRAM2 Page 1 */
-      case 1:
+      switch (page_idx)
       {
-        page = LL_PWR_SRAM2_PAGE1_STOP_RETENTION;
-        break;
-      }
+        /* SRAM2 Page 1 */
+        case 1:
+        {
+          page = LL_PWR_SRAM2_PAGE1_STOP_RETENTION;
+          break;
+        }
 
-      /* SRAM2 Page 2 */
-      case 2:
-      {
-        page = LL_PWR_SRAM2_PAGE2_STOP_RETENTION;
-        break;
-      }
+        /* SRAM2 Page 2 */
+        case 2:
+        {
+          page = LL_PWR_SRAM2_PAGE2_STOP_RETENTION;
+          break;
+        }
 
 #if defined(PWR_PMCR_SRAM2_3_SO)
-      /* SRAM2 Page 3 */
-      case 3:
-      {
-        page = LL_PWR_SRAM2_PAGE3_STOP_RETENTION;
-        break;
-      }
+        /* SRAM2 Page 3 */
+        case 3:
+        {
+          page = LL_PWR_SRAM2_PAGE3_STOP_RETENTION;
+          break;
+        }
 #endif /* PWR_PMCR_SRAM2_3_SO */
 
-      default:
-      {
-        /* Ignore out-of-range cases */
-        break;
+        default:
+        {
+          /* Ignore out-of-range cases */
+          break;
+        }
       }
-    }
 
-    /* Get memory page retention status */
-    if ((LL_PWR_IsEnabledSRAM2PagesStopRetention(page) != 0UL) && (page != 0UL))
-    {
-      status = HAL_PWR_MEMORY_PAGE_RETENTION_ENABLED;
+      /* Get memory page retention status */
+      if ((LL_PWR_IsEnabledSRAM2PagesStopRetention(page) != 0UL) && (page != 0UL))
+      {
+        status = HAL_PWR_MEMORY_PAGE_RETENTION_ENABLED;
+      }
     }
   }
 

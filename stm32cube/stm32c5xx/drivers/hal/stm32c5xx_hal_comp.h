@@ -34,7 +34,7 @@ extern "C" {
   * @{
   */
 
-#if defined(COMP1)
+#if defined(COMP1) || defined(COMP2)
 
 /** @defgroup COMP COMP
   * @{
@@ -50,12 +50,10 @@ extern "C" {
   */
 typedef enum
 {
-#if defined(COMP2)
   HAL_COMP1 = COMP1_BASE,
-  HAL_COMP2 = COMP2_BASE
-#else
-  HAL_COMP1 = COMP1_BASE
-#endif
+#if defined(COMP2)
+  HAL_COMP2 = COMP2_BASE,
+#endif /* COMP2 */
 } hal_comp_t;
 
 /**
@@ -144,7 +142,7 @@ typedef enum
                                         to OPAMP1 output.
                                         Specific to COMP instances: COMP2 (available on devices STM32C53xx/54xx). */
 #endif /* COMP2 */
-  HAL_COMP_INPUT_MINUS_TEMPSENSOR     = LL_COMP_INPUT_MINUS_TEMPSENSOR, /*!< Comparator input minus connected
+  HAL_COMP_INPUT_MINUS_TEMPSENSOR       = LL_COMP_INPUT_MINUS_TEMPSENSOR, /*!< Comparator input minus connected
                                         to the internal temperature sensor (also accessible through the ADC
                                         peripheral).
                                         Note: Specific configuration with bitfields out of comparator registers
@@ -509,7 +507,7 @@ const void *HAL_COMP_GetUserData(const hal_comp_handle_t *hcomp);
   * @}
   */
 
-#endif /* COMP1 */
+#endif /* COMP1 || COMP2 || COMP3 || COMP4 */
 
 /**
   * @}

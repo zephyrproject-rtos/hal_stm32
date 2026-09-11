@@ -86,9 +86,9 @@ Use the UART HAL driver as follows:
       HAL_UART_Init(&huart, HAL_UART1);
 
 ## 4- Declare a hal_uart_config_t structure, fill it, and then call HAL_UART_SetConfig(). For example:
-      hal_uart_config_t my_config;
+        hal_uart_config_t my_config;
 
-  - In the configuration structure,
+   In the configuration structure,
     Program the baud rate, word length, stop bit, parity, prescaler value, hardware
     flow control, direction (Receiver/Transmitter), oversampling, and one-bit sampling.
 
@@ -97,8 +97,8 @@ Use the UART HAL driver as follows:
 ## 5- If required, enable a specific mode on the UART:
   - Half-duplex mode with HAL_UART_EnableHalfDuplexMode()
   - Multiprocessor mode with HAL_UART_EnableMultiProcessorMode()
-  - LIN mode with HAL_UART_EnableLINMode()
-  - RS-485 mode with HAL_UART_EnableRS485Mode()
+    - LIN mode with HAL_UART_EnableLINMode()
+    - RS-485 mode with HAL_UART_EnableRS485Mode()
 
   Or call UART advanced features (TX/RX pins swap, auto baud rate detection, ...) with a set of
   different configuration functions.
@@ -181,7 +181,7 @@ Use the UART HAL driver as follows:
 
   Register callbacks when the handle global_state is HAL_UART_STATE_INIT or HAL_UART_STATE_CONFIGURED.
 
-  When the compilation define USE_HAL_UART_REGISTER_CALLBACKS is set to 0U or not defined, the callback registration
+  When the compilation define USE_HAL_UART_REGISTER_CALLBACKS is set to 0 or not defined, the callback registration
   feature is not available and weak callbacks are used, represented by the default value in the table above.
 
 ## 8- Acquire/Release the HAL UART handle
@@ -1048,7 +1048,7 @@ hal_status_t HAL_UART_SetConfig(hal_uart_handle_t *huart, const hal_uart_config_
 
     LL_LPUART_ConfigXfer(p_uartx, reg_temp, (uint32_t)p_config->stop_bits);
   }
-  if (IS_UART_INSTANCE(p_uartx))
+  else
   {
     reg_temp = ((uint32_t)p_config->word_length | (uint32_t)p_config->parity
                 | (uint32_t)p_config->direction | (uint32_t)p_config->oversampling);
@@ -1076,7 +1076,7 @@ hal_status_t HAL_UART_SetConfig(hal_uart_handle_t *huart, const hal_uart_config_
                                                            p_config->baud_rate) == HAL_OK);
       LL_LPUART_SetBaudRate(p_uartx, instance_clock_freq, (uint32_t)p_config->clock_prescaler, p_config->baud_rate);
     }
-    if (IS_UART_INSTANCE(p_uartx))
+    else
     {
       ASSERT_DBG_PARAM(UART_Check_uart_baudrate_validity(instance_clock_freq, p_config->clock_prescaler,
                                                          p_config->baud_rate, p_config->oversampling) == HAL_OK);
@@ -1136,7 +1136,7 @@ void HAL_UART_GetConfig(const hal_uart_handle_t *huart, hal_uart_config_t *p_con
   {
     p_config->baud_rate = LL_LPUART_GetBaudRate(p_uartx, instance_clock_freq, (uint32_t)p_config->clock_prescaler);
   }
-  if (IS_UART_INSTANCE(p_uartx))
+  else
   {
     p_config->baud_rate = LL_USART_GetBaudRate(p_uartx, instance_clock_freq,
                                                (uint32_t)p_config->clock_prescaler, (uint32_t)p_config->oversampling);
@@ -1482,7 +1482,7 @@ hal_status_t HAL_UART_SetBaudRate(const hal_uart_handle_t *huart, uint32_t baud_
                                                          baud_rate) == HAL_OK);
     LL_LPUART_SetBaudRate(p_uartx, instance_clock_freq, instance_clock_prescaler, baud_rate);
   }
-  if (IS_UART_INSTANCE(p_uartx))
+  else
   {
     oversampling = (hal_uart_oversampling_t)LL_USART_GetOverSampling(p_uartx);
     ASSERT_DBG_PARAM(UART_Check_uart_baudrate_validity(instance_clock_freq, instance_clock_prescaler, baud_rate,
@@ -7349,7 +7349,7 @@ hal_status_t UART_Start_Receive_IT(hal_uart_handle_t *huart, uint8_t *p_data, ui
     LL_USART_EnableDirectionRx(p_uartx);
   }
 
-  if (IS_UART_INSTANCE(p_uartx))
+  if (!IS_LPUART_INSTANCE(p_uartx))
   {
     if (LL_USART_IsEnabledRxTimeout(p_uartx) != 0U)
     {
@@ -7711,7 +7711,7 @@ hal_status_t UART_Start_Receive_DMA(hal_uart_handle_t *huart, uint8_t *p_data, u
     LL_USART_EnableDirectionRx(p_uartx);
   }
 
-  if (IS_UART_INSTANCE(p_uartx))
+  if (!IS_LPUART_INSTANCE(p_uartx))
   {
     if (LL_USART_IsEnabledRxTimeout(p_uartx) != 0U)
     {
@@ -8736,7 +8736,7 @@ static void UART_RxISR_8BIT_FIFOEN(hal_uart_handle_t *huart)
                                          | LL_USART_CR1_RTOIE | LL_USART_CR1_CMIE));
 
         /* Disable the UART Error Interrupt: (Frame error, noise error, overrun error)
-           and RX FIFO Threshold interrupt */
+          and RX FIFO Threshold interrupt */
         LL_USART_DisableIT_CR3(p_uartx, (LL_USART_CR3_EIE | LL_USART_CR3_RXFTIE));
 
         LL_USART_DisableRxTimeout(p_uartx);
@@ -8888,7 +8888,7 @@ static void UART_RxISR_16BIT_FIFOEN(hal_uart_handle_t *huart)
         LL_USART_DisableRxTimeout(p_uartx);
 
         /* Disable the UART Error Interrupt: (Frame error, noise error, overrun error)
-           and RX FIFO Threshold interrupt */
+         and RX FIFO Threshold interrupt */
         LL_USART_DisableIT_CR3(p_uartx, (LL_USART_CR3_EIE | LL_USART_CR3_RXFTIE));
 
         huart->p_rx_isr = NULL;

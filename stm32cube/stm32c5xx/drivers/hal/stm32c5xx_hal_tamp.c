@@ -135,49 +135,38 @@ USE_ASSERT_DBG_PARAM          | PreProcessor env | NA                    | When 
   * @{
   */
 
-/** @addtogroup TAMP_Private_Macros_Assert_Tampers TAMP private macros for tampers.
-  * @{
-  */
+/*! Tests tampers */
 #define IS_TAMP_TAMPERS(tampers)  (((((tampers) & HAL_TAMP_TAMPER_1) == HAL_TAMP_TAMPER_1)     \
                                     || (((tampers) & HAL_TAMP_TAMPER_2) == HAL_TAMP_TAMPER_2)  \
                                     || (((tampers) & HAL_TAMP_TAMPER_3) == HAL_TAMP_TAMPER_3)) \
                                    && (((tampers) & (~HAL_TAMP_TAMPER_ALL)) == 0U))
-/*!< Tests tampers */
 
+/*! Tests tampers interruption */
 #define IS_TAMP_TAMPERS_IT(interruption) (((((interruption) & HAL_TAMP_IT_TAMPER_1) == HAL_TAMP_IT_TAMPER_1)    \
                                            || (((interruption) & HAL_TAMP_IT_TAMPER_2) == HAL_TAMP_IT_TAMPER_2) \
                                            || (((interruption) & HAL_TAMP_IT_TAMPER_3) == HAL_TAMP_IT_TAMPER_3) \
                                            || (interruption) == HAL_TAMP_IT_NONE) \
-                                          && (((interruption) & (~HAL_TAMP_IT_ALL))==0U))
-/*!< Tests tampers interruption */
-
-/**
-  * @}
-  */
+                                          && (((interruption) & (~HAL_TAMP_IT_ALL)) == 0U))
 
 
-/** @addtogroup TAMP_Private_Macros_Assert_Passive TAMP private macros for passive tampers.
-  * @{
-  */
-
-
+/*! Tests passive tamper precharge state */
 #define IS_TAMP_PASSIVE_PRECHARGE_STATE(state) (((state) == HAL_TAMP_PASSIVE_PULL_UP_PRECHARGE_DISABLE ) \
                                                 || ((state) == HAL_TAMP_PASSIVE_PULL_UP_PRECHARGE_ENABLE ))
-/*!< Tests passive tamper precharge state */
 
+/*! Tests passive tamper precharge duration */
 #define IS_TAMP_PASSIVE_PRECHARGE_DURATION(duration) \
   (((duration) == HAL_TAMP_PASSIVE_PULL_UP_PRECHARGE_1_RTCCLK )    \
    || ((duration) == HAL_TAMP_PASSIVE_PULL_UP_PRECHARGE_2_RTCCLK ) \
    || ((duration) == HAL_TAMP_PASSIVE_PULL_UP_PRECHARGE_4_RTCCLK ) \
    || ((duration) == HAL_TAMP_PASSIVE_PULL_UP_PRECHARGE_8_RTCCLK ))
-/*!< Tests passive tamper precharge duration */
 
+/*! Tests passive tamper filter */
 #define IS_TAMP_PASSIVE_FILTER(filter) (((filter) == HAL_TAMP_PASSIVE_FILTER_DISABLE )      \
                                         || ((filter) == HAL_TAMP_PASSIVE_FILTER_2_SAMPLES ) \
                                         || ((filter) == HAL_TAMP_PASSIVE_FILTER_4_SAMPLES ) \
                                         || ((filter) == HAL_TAMP_PASSIVE_FILTER_8_SAMPLES ))
-/*!< Tests passive tamper filter */
 
+/*! Tests passive tamper sample frequency */
 #define IS_TAMP_PASSIVE_SAMPLE_FREQUENCY(frequency) (((frequency) == HAL_TAMP_PASSIVE_SAMPLE_FREQ_DIV_256 )      \
                                                      || ((frequency) == HAL_TAMP_PASSIVE_SAMPLE_FREQ_DIV_512 )   \
                                                      || ((frequency) == HAL_TAMP_PASSIVE_SAMPLE_FREQ_DIV_1024 )  \
@@ -186,29 +175,22 @@ USE_ASSERT_DBG_PARAM          | PreProcessor env | NA                    | When 
                                                      || ((frequency) == HAL_TAMP_PASSIVE_SAMPLE_FREQ_DIV_8192 )  \
                                                      || ((frequency) == HAL_TAMP_PASSIVE_SAMPLE_FREQ_DIV_16384 ) \
                                                      || ((frequency) == HAL_TAMP_PASSIVE_SAMPLE_FREQ_DIV_32768 ))
-/*!< Tests passive tamper sample frequency*/
 
+/*! Tests passive tamper detection */
 #define IS_TAMP_PASSIVE_DETECTION(detection) (((detection) == HAL_TAMP_PASSIVE_TRIGGER_RISING )    \
                                               || ((detection) == HAL_TAMP_PASSIVE_TRIGGER_FALLING) \
                                               || ((detection) == HAL_TAMP_PASSIVE_TRIGGER_LOW)     \
                                               || ((detection) == HAL_TAMP_PASSIVE_TRIGGER_HIGH))
-/*!< Tests passive tamper detection */
 
+/*! Tests passive tamper erase mode */
 #define IS_TAMP_PASSIVE_ERASE(mode) (((mode) == HAL_TAMP_PASSIVE_SECRETS_ERASE ) \
                                      || ((mode) == HAL_TAMP_PASSIVE_SECRETS_NO_ERASE ))
-/*!< Tests passive tamper erase mode */
 
+/*! Tests passive tamper mask status */
 #define IS_TAMP_PASSIVE_MASK(mask) (((mask) == HAL_TAMP_PASSIVE_UNMASKED ) \
                                     || ((mask) == HAL_TAMP_PASSIVE_MASKED ))
-/*!< Tests passive tamper mask status */
 
-/**
-  * @}
-  */
-
-/** @addtogroup TAMP_Private_Macros_Assert_Internal TAMP private macros for internal tampers.
-  * @{
-  */
+/*! Tests internal tampers */
 #define IS_TAMP_INTERNAL_TAMPERS(tampers) (((((tampers) & HAL_TAMP_INTERNAL_TAMPER_3)     \
                                              == HAL_TAMP_INTERNAL_TAMPER_3)     \
                                             || (((tampers) & HAL_TAMP_INTERNAL_TAMPER_4)  \
@@ -224,6 +206,7 @@ USE_ASSERT_DBG_PARAM          | PreProcessor env | NA                    | When 
                                            && (((tampers) & (~HAL_TAMP_INTERNAL_ALL)) == 0U))
 /*!< Tests internal tampers */
 
+/*! Tests internal tampers interruption */
 #define IS_TAMP_INTERNAL_TAMPERS_IT(interruption) (((((interruption) & HAL_TAMP_INTERNAL_IT_TAMPER_3)     \
                                                      == HAL_TAMP_INTERNAL_IT_TAMPER_3)     \
                                                     || (((interruption) & HAL_TAMP_INTERNAL_IT_TAMPER_4)  \
@@ -240,42 +223,22 @@ USE_ASSERT_DBG_PARAM          | PreProcessor env | NA                    | When 
                                                    && (((interruption) & (~HAL_TAMP_INTERNAL_IT_ALL)) == 0U))
 /*!< Tests internal tamper interrupts */
 
+/*! Tests internal tamper erase mode */
 #define IS_TAMP_INTERNAL_ERASE(mode) (((mode) == HAL_TAMP_INTERNAL_SECRETS_ERASE ) \
                                       || ((mode) == HAL_TAMP_INTERNAL_SECRETS_NO_ERASE ))
-/*!< Tests internal tamper erase mode */
 
-/**
-  * @}
-  */
-
-
-/** @addtogroup TAMP_Private_Macros_Assert_Remap TAMP private macros for remap
-  * @{
-  */
+/*! Tests remap */
 #define IS_TAMP_REMAP(remap) (((remap) == HAL_TAMP_REMAP_TAMP_IN2_PA0_TO_PC1) \
                               || ((remap) == HAL_TAMP_REMAP_TAMP_IN3_PA1_TO_PA2))
 /*!< Tests remap */
 
-/**
-  * @}
-  */
-
-/** @addtogroup TAMP_Private_Macros_Assert_Backup_Register TAMP private macros for Backup registers.
-  * @{
-  */
-
+/*! Tests backup registers */
 #define IS_TAMP_BACKUP_REGISTER(backup) ((backup) < LL_TAMP_BACKUP_NB )
-/*!< Tests backup registers*/
 
-/**
-  * @}
-  */
-
-
-/*! TAMP privilege attribute value check macro */
+/*! Test privilege attribute value */
 #define IS_TAMP_ITEM_PRIV_ATTR(attribute) ((attribute == HAL_TAMP_PRIV) || (attribute == HAL_TAMP_NPRIV))
 
-/*! TAMP privilege item selector check macro*/
+/*! Test privilege item selector */
 #define IS_TAMP_PRIV_ITEM(item) (((item) == HAL_TAMP_PRIV_ITEM_TAMP) \
                                  || ((item) == HAL_TAMP_PRIV_ITEM_BACKUP_ZONE_1) \
                                  || ((item) == HAL_TAMP_PRIV_ITEM_BACKUP_ZONE_2))
@@ -283,7 +246,6 @@ USE_ASSERT_DBG_PARAM          | PreProcessor env | NA                    | When 
 /**
   * @}
   */
-
 
 /* Private functions ---------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
@@ -349,9 +311,8 @@ USE_ASSERT_DBG_PARAM          | PreProcessor env | NA                    | When 
   *
   * # Masked
   *
-  * Some of the tampers can be masked. This means that the application does not need to clear them
-  * after a trigger. If a tamper is masked, triggering the tamper event will not affect the device secrets in any way.
-  *
+  * The tampers can be masked. This means that the application does not need to clear them  after a trigger.
+  * If a tamper is masked, triggering the tamper event will not affect the device secrets in any way.
   * This feature is only available when using passive tampers in level mode and interrupts are disabled.
   *
   */
@@ -411,7 +372,6 @@ void HAL_TAMP_PASSIVE_GetConfig(hal_tamp_passive_config_t *p_config)
   *        @arg @ref HAL_TAMP_TAMPER_2
   *        @arg @ref HAL_TAMP_TAMPER_3
   * @param p_config Pointer to the passive tamper individual configuration instance.
-  * @note Only the three first tampers can be masked.
   * @retval HAL_OK, HAL_INVALID_PARAM if the parameter is invalid
   */
 hal_status_t HAL_TAMP_PASSIVE_SetConfigTampers(uint32_t tampers,
@@ -475,19 +435,15 @@ void HAL_TAMP_PASSIVE_GetConfigTamper(uint32_t tamper,
   */
 hal_status_t HAL_TAMP_PASSIVE_Start(uint32_t tampers, uint32_t interruption)
 {
-
   uint32_t masked_tampers = LL_TAMP_GetMasked((tampers << LL_TAMP_POSITION_FIRST_MASKED));
 
   ASSERT_DBG_PARAM(IS_TAMP_TAMPERS(tampers));
   ASSERT_DBG_PARAM(IS_TAMP_TAMPERS_IT(interruption));
 
-
   if ((masked_tampers & (interruption << LL_TAMP_POSITION_FIRST_MASKED)) != 0U)
   {
     return HAL_ERROR;
   }
-
-
   LL_TAMP_Enable(tampers);
   LL_TAMP_EnableIT(interruption);
 
@@ -554,7 +510,6 @@ hal_status_t HAL_TAMP_PASSIVE_PollForEvent(uint32_t tampers, uint32_t timeout_ms
   */
 
 /** @addtogroup TAMP_Exported_Functions_Internal
-  * @brief Internal tamper exported functions.
   * @{
   *
   * The internal tampers are tampers linked to a specific part of the microcontroller. They protect
@@ -724,11 +679,11 @@ hal_status_t HAL_TAMP_INTERNAL_PollForEvent(uint32_t internal_tampers,
   * @}
   */
 
-
 /** @addtogroup TAMP_Exported_Functions_IRQ
-  * @brief TAMP IRQ handler exported functions.
   * @{
+  *
   * IRQ handler functions to manage the different tamper event interrupts.
+  *
   */
 
 /**
@@ -885,10 +840,12 @@ hal_status_t HAL_TAMP_EraseDeviceSecrets(void)
 
 /** @addtogroup TAMP_Exported_Functions_Remap
   * @{
-  This section provides functions allowing to manage the Tamp remap pin features:
-  - Call HAL_TAMP_EnableRemap() to enable TAMP pin remap.
-  - Call HAL_TAMP_DisableRemap() to disable TAMP pin remap.
-  - Call HAL_TAMP_IsEnabledRemap() to check that the selected TAMP pin is remapped or not.
+  *
+  * This section provides functions allowing to manage the Tamp remap pin features:
+  * - Call HAL_TAMP_EnableRemap() to enable TAMP pin remap.
+  * - Call HAL_TAMP_DisableRemap() to disable TAMP pin remap.
+  * - Call HAL_TAMP_IsEnabledRemap() to check that the selected TAMP pin is remapped or not.
+  *
   */
 
 /**
@@ -937,11 +894,12 @@ hal_tamp_remap_status_t HAL_TAMP_IsEnabledRemap(uint32_t tamp_remap)
 
 /** @addtogroup TAMP_Exported_Functions_Attributes
   * @{
-  This section provides functions for managing security, privilege  configurations:
-  - Call HAL_TAMP_SetPrivAttr() to set the privilege attribute of specified TAMP item(s).
-  - Call HAL_TAMP_GetPrivAttr() to get the privilege attribute state of specified TAMP item.
+  *
+  * This section provides functions for managing security, privilege  configurations:
+  * - Call HAL_TAMP_SetPrivAttr() to set the privilege attribute of specified TAMP item(s).
+  * - Call HAL_TAMP_GetPrivAttr() to get the privilege attribute state of specified TAMP item.
+  *
   */
-
 
 /**
   * @brief  Set TAMP item(s) privilege configuration.
@@ -989,14 +947,14 @@ hal_tamp_priv_attr_t HAL_TAMP_GetPrivAttr(uint32_t item)
 
 /** @addtogroup TAMP_Exported_Functions_For_Backup_Zone
   * @{
-  * @brief This section provides functions to manage backup register
-  *        zones and their privilege configuration.
-  *        The backup register zone boundaries can be configured and
-  *        retrieved using:
-  *        - HAL_TAMP_SetBackupRegisterZones() to configure the end index of
-  *          Backup Register Zone 1 and Zone 2.
-  *        - HAL_TAMP_GetBackupRegisterZones() to get the last valid index
-  *          of Backup Register Zone 1 and Zone 2.
+  *
+  * This section provides functions to manage backup register
+  * zones and their privilege configuration.
+  * The backup register zone boundaries can be configured and retrieved using:
+  *  - HAL_TAMP_SetBackupRegisterZones() to configure the end index of Backup Register Zone 1 and Zone 2.
+  *  - HAL_TAMP_GetBackupRegisterZones() to get the last valid index
+  *    of Backup Register Zone 1 and Zone 2.
+  *
   */
 
 /**
@@ -1006,17 +964,11 @@ hal_tamp_priv_attr_t HAL_TAMP_GetPrivAttr(uint32_t item)
   * @param  zone2_backup_register_nbr  Last valid backup register index for Backup Register Zone 2.
   *                                    Value from 0 to 32.
   * @retval HAL_OK    Backup register zones have been set successfully.
-  * @retval HAL_ERROR Non-privileged write to a privileged-only register.
   */
 hal_status_t HAL_TAMP_SetBackupRegisterZones(uint32_t zone1_backup_register_nbr,
                                              uint32_t zone2_backup_register_nbr)
 {
   ASSERT_DBG_PARAM((zone1_backup_register_nbr + zone2_backup_register_nbr) <= LL_TAMP_BACKUP_NB);
-
-  if (STM32_IS_PRIVILEGED_EXECUTION() == 0U)
-  {
-    return HAL_ERROR;
-  }
 
   LL_TAMP_SetBackupRegProtection(zone1_backup_register_nbr, zone1_backup_register_nbr + zone2_backup_register_nbr);
 
@@ -1058,12 +1010,12 @@ hal_status_t HAL_TAMP_GetBackupRegisterZones(uint32_t *p_zone1_backup_register_n
   */
 
 /** @addtogroup TAMP_Exported_Functions_Callback HAL TAMP callback functions
-  * @brief Callback exported functions.
   * @{
   *
   * Callback functions that the user can overwrite for the different interrupts:
-  * * Internal tampers.
-  * * External tampers.
+  *  - Internal tampers.
+  *  - External tampers.
+  *
   */
 
 /**

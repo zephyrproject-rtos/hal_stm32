@@ -49,11 +49,17 @@ extern "C" {
   */
 #define HAL_XSPI_FLAG_BUSY XSPI_SR_BUSY                                                        /*!< Busy flag: operation is ongoing                                                                          */
 #define HAL_XSPI_FLAG_TO   XSPI_SR_TOF                                                         /*!< Timeout flag: timeout occurs in memory-mapped mode                                                       */
-#define HAL_XSPI_FLAG_SM   XSPI_SR_SMF                                                         /*!< Status match flag: received data matches in autopolling mode                                             */
-#define HAL_XSPI_FLAG_FT   XSPI_SR_FTF                                                         /*!< Fifo threshold flag: Fifo threshold reached or data left after read from memory is complete              */
+#if defined(XSPI_SR_SMF)
+#define HAL_XSPI_FLAG_SM   XSPI_SR_SMF                                                         /*!< Status match flag: received data matches in auto-polling mode                                            */
+#endif /* XSPI_SR_SMF */
+#define HAL_XSPI_FLAG_FT   XSPI_SR_FTF                                                         /*!< FIFO threshold flag: FIFO threshold reached or data left after read from memory is complete              */
 #define HAL_XSPI_FLAG_TC   XSPI_SR_TCF                                                         /*!< Transfer complete flag: programmed number of data have been transferred or the transfer has been aborted */
 #define HAL_XSPI_FLAG_TE   XSPI_SR_TEF                                                         /*!< Transfer error flag: invalid address is being accessed                                                   */
+#if defined(XSPI_SR_SMF)
 #define HAL_XSPI_FLAG_ALL  XSPI_SR_TOF | XSPI_SR_SMF | XSPI_SR_FTF | XSPI_SR_TCF | XSPI_SR_TEF /*!< All flags                                                                                                */
+#else
+#define HAL_XSPI_FLAG_ALL  XSPI_SR_TOF | XSPI_SR_FTF | XSPI_SR_TCF | XSPI_SR_TEF               /*!< All flags                                                                                                */
+#endif /* XSPI_SR_SMF */
 /**
   * @}
   */
@@ -66,7 +72,11 @@ extern "C" {
 #define HAL_XSPI_IT_FT  XSPI_CR_FTIE                                                             /*!< Interrupt on the FIFO threshold flag    */
 #define HAL_XSPI_IT_TC  XSPI_CR_TCIE                                                             /*!< Interrupt on the transfer complete flag */
 #define HAL_XSPI_IT_TE  XSPI_CR_TEIE                                                             /*!< Interrupt on the transfer error flag    */
-#define HAL_XSPI_IT_ALL XSPI_CR_TOIE | XSPI_CR_SMIE | XSPI_CR_FTIE | XSPI_CR_TCIE | XSPI_CR_TEIE /*!< All Interrupts                          */
+#if defined(XSPI_SR_SMF)
+#define HAL_XSPI_IT_ALL XSPI_CR_TOIE | XSPI_CR_SMIE | XSPI_CR_FTIE | XSPI_CR_TCIE | XSPI_CR_TEIE /*!< All interrupts                          */
+#else
+#define HAL_XSPI_IT_ALL XSPI_CR_TOIE | XSPI_CR_FTIE | XSPI_CR_TCIE | XSPI_CR_TEIE /*!< All interrupts                          */
+#endif /* XSPI_SR_SMF */
 /**
   * @}
   */
@@ -162,11 +172,13 @@ typedef enum
   */
 typedef enum
 {
-  HAL_XSPI_MEMORY_TYPE_MICRON       = 0U,                                                    /*!< Micron mode       */
+  HAL_XSPI_MEMORY_TYPE_MICRON       = 0U,                                    /*!< Micron mode       */
   HAL_XSPI_MEMORY_TYPE_MACRONIX     = XSPI_DCR1_MTYP_0,                      /*!< Macronix mode     */
   HAL_XSPI_MEMORY_TYPE_APMEM        = XSPI_DCR1_MTYP_1,                      /*!< AP Memory mode    */
   HAL_XSPI_MEMORY_TYPE_MACRONIX_RAM = (XSPI_DCR1_MTYP_1 | XSPI_DCR1_MTYP_0), /*!< Macronix RAM mode */
+#if defined(XSPI_DCR1_MTYP_2)
   HAL_XSPI_MEMORY_TYPE_HYPERBUS     = XSPI_DCR1_MTYP_2,                      /*!< Hyperbus mode     */
+#endif /* XSPI_DCR1_MTYP_2 */
 } hal_xspi_memory_type_t;
 
 /**
@@ -213,7 +225,7 @@ typedef enum
   */
 typedef enum
 {
-  HAL_XSPI_FREE_RUNNING_CLK_DISABLED = 0U,                            /*!< CLK is not free running          */
+  HAL_XSPI_FREE_RUNNING_CLK_DISABLED = 0U,            /*!< CLK is not free running          */
   HAL_XSPI_FREE_RUNNING_CLK_ENABLED  = XSPI_DCR1_FRCK /*!< CLK is always provided (running) */
 } hal_xspi_free_running_clk_status_t;
 
@@ -227,6 +239,7 @@ typedef enum
 } hal_xspi_prefetch_data_status_t;
 
 
+#if defined(XSPI_DCR2_WRAPSIZE)
 /**
   * @brief HAL XSPI Wrap Size enumeration definition.
   */
@@ -238,13 +251,14 @@ typedef enum
   HAL_XSPI_WRAP_64BYTE        = XSPI_DCR2_WRAPSIZE_2,                          /*!< external memory supports wrap size of 64 bytes  */
   HAL_XSPI_WRAP_128BYTE       = (XSPI_DCR2_WRAPSIZE_0 | XSPI_DCR2_WRAPSIZE_2)  /*!< external memory supports wrap size of 128 bytes */
 } hal_xspi_wrap_size_t;
+#endif /* XSPI_DCR2_WRAPSIZE */
 
 /**
   * @brief HAL XSPI Sample Shift enumeration definition.
   */
 typedef enum
 {
-  HAL_XSPI_SAMPLE_SHIFT_NONE      = 0U,                             /*!< No shift        */
+  HAL_XSPI_SAMPLE_SHIFT_NONE      = 0U,             /*!< No shift        */
   HAL_XSPI_SAMPLE_SHIFT_HALFCYCLE = XSPI_TCR_SSHIFT /*!< 1/2 cycle shift */
 } hal_xspi_sample_shift_t;
 
@@ -253,10 +267,11 @@ typedef enum
   */
 typedef enum
 {
-  HAL_XSPI_DELAY_HOLD_NONE       = 0U,                           /*!< No Delay             */
+  HAL_XSPI_DELAY_HOLD_NONE       = 0U,           /*!< No Delay             */
   HAL_XSPI_DELAY_HOLD_QUARTCYCLE = XSPI_TCR_DHQC /*!< Delay Hold 1/4 cycle */
 } hal_xspi_delay_hold_t;
 
+#if defined(XSPI_DCR3_CSBOUND)
 /**
   * @brief HAL XSPI Chip Select Boundary enumeration definition.
   */
@@ -295,13 +310,14 @@ typedef enum
   HAL_XSPI_CS_BOUNDARY_8GBIT   = 0x1EU, /*!<   8 Gbits (  1 GBytes = 2^(30)) */
   HAL_XSPI_CS_BOUNDARY_16GBIT  = 0x1FU  /*!<  16 Gbits (  2 GBytes = 2^(31)) */
 } hal_xspi_cs_boundary_t;
+#endif /* XSPI_DCR3_CSBOUND */
 
 /**
   * @brief HAL XSPI Delay Block Bypass enumeration definition.
   */
 typedef enum
 {
-  HAL_XSPI_DLYB_ON     = 0U,                                 /*!< Sampling clock is delayed by the delay block */
+  HAL_XSPI_DLYB_ON     = 0U,                 /*!< Sampling clock is delayed by the delay block */
   HAL_XSPI_DLYB_BYPASS = XSPI_DCR1_DLYBYP    /*!< Delay block is bypassed                      */
 } hal_xspi_dlyb_state_t;
 
@@ -310,7 +326,7 @@ typedef enum
   */
 typedef enum
 {
-  HAL_XSPI_MEMORY_SELECTION_NCS1 = 0U,                           /*!<  The output of nCS is nCS1       */
+  HAL_XSPI_MEMORY_SELECTION_NCS1 = 0U,           /*!<  The output of nCS is nCS1       */
   HAL_XSPI_MEMORY_SELECTION_NCS2 = XSPI_CR_CSSEL /*!<  The output of nCS is nCS2       */
 } hal_xspi_memory_selection_t;
 
@@ -321,8 +337,12 @@ typedef enum
 {
   HAL_XSPI_OPERATION_COMMON_CFG = 0x00U, /*!< Common configuration (indirect or auto-polling mode) */
   HAL_XSPI_OPERATION_READ_CFG   = 0x00U, /*!< Read configuration (memory-mapped mode)              */
+#if defined(XSPI_WIR_INSTRUCTION)
   HAL_XSPI_OPERATION_WRITE_CFG  = 0x80U, /*!< Write configuration (memory-mapped mode)             */
+#endif /* XSPI_WIR_INSTRUCTION */
+#if defined(XSPI_DCR2_WRAPSIZE)
   HAL_XSPI_OPERATION_WRAP_CFG   = 0x40U  /*!< Wrap configuration (memory-mapped mode)              */
+#endif /* XSPI_DCR2_WRAPSIZE */
 } hal_xspi_operation_type_t;
 
 /**
@@ -341,10 +361,10 @@ typedef enum
 typedef enum
 {
   HAL_XSPI_INSTRUCTION_NONE   = 0U,                                    /*!< No instruction               */
-  HAL_XSPI_INSTRUCTION_1LINE  = XSPI_CCR_IMODE_0,      /*!< Instruction on a single line */
-  HAL_XSPI_INSTRUCTION_2LINES = XSPI_CCR_IMODE_1,      /*!< Instruction on two lines     */
+  HAL_XSPI_INSTRUCTION_1LINE  = XSPI_CCR_IMODE_0,                      /*!< Instruction on a single line */
+  HAL_XSPI_INSTRUCTION_2LINES = XSPI_CCR_IMODE_1,                      /*!< Instruction on two lines     */
   HAL_XSPI_INSTRUCTION_4LINES = (XSPI_CCR_IMODE_0 | XSPI_CCR_IMODE_1), /*!< Instruction on four lines    */
-  HAL_XSPI_INSTRUCTION_8LINES = XSPI_CCR_IMODE_2       /*!< Instruction on eight lines   */
+  HAL_XSPI_INSTRUCTION_8LINES = XSPI_CCR_IMODE_2                       /*!< Instruction on eight lines   */
 } hal_xspi_instruction_mode_t;
 
 /**
@@ -363,7 +383,7 @@ typedef enum
   */
 typedef enum
 {
-  HAL_XSPI_INSTRUCTION_DTR_DISABLED = 0U,                           /*!< DTR mode disabled for instruction phase */
+  HAL_XSPI_INSTRUCTION_DTR_DISABLED = 0U,           /*!< DTR mode disabled for instruction phase */
   HAL_XSPI_INSTRUCTION_DTR_ENABLED  = XSPI_CCR_IDTR /*!< DTR mode enabled for instruction phase  */
 } hal_xspi_instruction_dtr_status_t;
 
@@ -372,7 +392,7 @@ typedef enum
   */
 typedef enum
 {
-  HAL_XSPI_ADDR_NONE    = 0U,                                                      /*!< No address               */
+  HAL_XSPI_ADDR_NONE    = 0U,                                      /*!< No address               */
   HAL_XSPI_ADDR_1LINE   = XSPI_CCR_ADMODE_0,                       /*!< Address on a single line */
   HAL_XSPI_ADDR_2LINES  = XSPI_CCR_ADMODE_1,                       /*!< Address on two lines     */
   HAL_XSPI_ADDR_4LINES  = (XSPI_CCR_ADMODE_0 | XSPI_CCR_ADMODE_1), /*!< Address on four lines    */
@@ -395,7 +415,7 @@ typedef enum
   */
 typedef enum
 {
-  HAL_XSPI_ADDR_DTR_DISABLED = 0U,                            /*!< DTR mode disabled for address phase */
+  HAL_XSPI_ADDR_DTR_DISABLED = 0U,            /*!< DTR mode disabled for address phase */
   HAL_XSPI_ADDR_DTR_ENABLED  = XSPI_CCR_ADDTR /*!< DTR mode enabled for address phase  */
 } hal_xspi_addr_dtr_status_t;
 
@@ -405,10 +425,10 @@ typedef enum
 typedef enum
 {
   HAL_XSPI_ALTERNATE_BYTES_NONE   = 0U,                                      /*!< No alternate bytes               */
-  HAL_XSPI_ALTERNATE_BYTES_1LINE  = XSPI_CCR_ABMODE_0,       /*!< Alternate bytes on a single line */
-  HAL_XSPI_ALTERNATE_BYTES_2LINES = XSPI_CCR_ABMODE_1,       /*!< Alternate bytes on two lines     */
+  HAL_XSPI_ALTERNATE_BYTES_1LINE  = XSPI_CCR_ABMODE_0,                       /*!< Alternate bytes on a single line */
+  HAL_XSPI_ALTERNATE_BYTES_2LINES = XSPI_CCR_ABMODE_1,                       /*!< Alternate bytes on two lines     */
   HAL_XSPI_ALTERNATE_BYTES_4LINES = (XSPI_CCR_ABMODE_0 | XSPI_CCR_ABMODE_1), /*!< Alternate bytes on four lines    */
-  HAL_XSPI_ALTERNATE_BYTES_8LINES = XSPI_CCR_ABMODE_2        /*!< Alternate bytes on eight lines   */
+  HAL_XSPI_ALTERNATE_BYTES_8LINES = XSPI_CCR_ABMODE_2                        /*!< Alternate bytes on eight lines   */
 } hal_xspi_alternate_bytes_mode_t;
 
 /**
@@ -416,7 +436,7 @@ typedef enum
   */
 typedef enum
 {
-  HAL_XSPI_ALTERNATE_BYTES_8BIT  = 0U,                                /*!< 8-bit alternate bytes  */
+  HAL_XSPI_ALTERNATE_BYTES_8BIT  = 0U,                /*!< 8-bit alternate bytes  */
   HAL_XSPI_ALTERNATE_BYTES_16BIT = XSPI_CCR_ABSIZE_0, /*!< 16-bit alternate bytes */
   HAL_XSPI_ALTERNATE_BYTES_24BIT = XSPI_CCR_ABSIZE_1, /*!< 24-bit alternate bytes */
   HAL_XSPI_ALTERNATE_BYTES_32BIT = XSPI_CCR_ABSIZE    /*!< 32-bit alternate bytes */
@@ -436,7 +456,7 @@ typedef enum
   */
 typedef enum
 {
-  HAL_XSPI_REGULAR_DATA_NONE     = 0U,                                                   /*!< No data               */
+  HAL_XSPI_REGULAR_DATA_NONE     = 0U,                                   /*!< No data               */
   HAL_XSPI_REGULAR_DATA_1LINE   = XSPI_CCR_DMODE_0,                      /*!< Data on a single line */
   HAL_XSPI_REGULAR_DATA_2LINES  = XSPI_CCR_DMODE_1,                      /*!< Data on two lines     */
   HAL_XSPI_REGULAR_DATA_4LINES  = (XSPI_CCR_DMODE_0 | XSPI_CCR_DMODE_1), /*!< Data on four lines    */
@@ -448,7 +468,7 @@ typedef enum
   */
 typedef enum
 {
-  HAL_XSPI_DATA_DTR_DISABLED = 0U,                           /*!< DTR mode disabled for data phase */
+  HAL_XSPI_DATA_DTR_DISABLED = 0U,           /*!< DTR mode disabled for data phase */
   HAL_XSPI_DATA_DTR_ENABLED  = XSPI_CCR_DDTR /*!< DTR mode enabled for data phase  */
 } hal_xspi_data_dtr_status_t;
 
@@ -457,17 +477,18 @@ typedef enum
   */
 typedef enum
 {
-  HAL_XSPI_DQS_DISABLED = 0U,                           /*!< DQS disabled */
+  HAL_XSPI_DQS_DISABLED = 0U,           /*!< DQS disabled */
   HAL_XSPI_DQS_ENABLED  = XSPI_CCR_DQSE /*!< DQS enabled  */
 } hal_xspi_dqs_status_t;
 
 #if defined(USE_HAL_XSPI_HYPERBUS) && (USE_HAL_XSPI_HYPERBUS == 1U)
+#if defined(XSPI_DCR1_MTYP_2)
 /**
   * @brief HAL XSPI Hyperbus Write Zero Latency Activation enumeration definition.
   */
 typedef enum
 {
-  HAL_XSPI_WRITE_ZERO_LATENCY_ENABLED  = 0U,                           /*!< Latency on write accesses    */
+  HAL_XSPI_WRITE_ZERO_LATENCY_ENABLED  = 0U,           /*!< Latency on write accesses    */
   HAL_XSPI_WRITE_ZERO_LATENCY_DISABLED = XSPI_HLCR_WZL /*!< No latency on write accesses */
 } hal_xspi_write_zero_latency_status_t;
 
@@ -476,7 +497,7 @@ typedef enum
   */
 typedef enum
 {
-  HAL_XSPI_LATENCY_VARIABLE = 0U,                          /*!< Variable initial latency */
+  HAL_XSPI_LATENCY_VARIABLE = 0U,          /*!< Variable initial latency */
   HAL_XSPI_LATENCY_FIXED    = XSPI_HLCR_LM /*!< Fixed latency            */
 } hal_xspi_latency_mode_t;
 
@@ -485,7 +506,7 @@ typedef enum
   */
 typedef enum
 {
-  HAL_XSPI_ADDR_MEMORY   = 0U,                              /*!< HyperBus memory mode   */
+  HAL_XSPI_ADDR_MEMORY   = 0U,              /*!< HyperBus memory mode   */
   HAL_XSPI_ADDR_REGISTER = XSPI_DCR1_MTYP_0 /*!< HyperBus register mode */
 } hal_xspi_addr_space_t;
 
@@ -496,25 +517,42 @@ typedef enum
 {
   HAL_XSPI_HYPERBUS_DATA_8LINES  = XSPI_CCR_DMODE_2,                     /*!< Data on eight lines   */
 } hal_xspi_hyperbus_data_mode_t;
+#endif /* XSPI_DCR1_MTYP_2 */
 #endif /* USE_HAL_XSPI_HYPERBUS */
 
 /**
   * @brief HAL XSPI Match Mode enumeration definition.
   */
+#if defined(XSPI_SR_SMF)
 typedef enum
 {
-  HAL_XSPI_MATCH_MODE_AND = 0U,                         /*!< AND match mode between unmasked bits */
+  HAL_XSPI_MATCH_MODE_AND = 0U,         /*!< AND match mode between unmasked bits */
   HAL_XSPI_MATCH_MODE_OR  = XSPI_CR_PMM /*!< OR match mode between unmasked bits  */
 } hal_xspi_match_mode_t;
+#else
+typedef enum
+{
+  HAL_XSPI_MATCH_MODE_AND = 0U,         /*!< AND match mode between unmasked bits */
+  HAL_XSPI_MATCH_MODE_OR  = 1U          /*!< OR match mode between unmasked bits  */
+} hal_xspi_match_mode_t;
+#endif /* XSPI_SR_SMF */
 
 /**
   * @brief HAL XSPI Automatic Stop enumeration definition.
   */
+#if defined(XSPI_SR_SMF)
 typedef enum
 {
-  HAL_XSPI_AUTOMATIC_STOP_DISABLED = 0U,                          /*!< AutoPolling stops only with abort or XSPI disabling */
+  HAL_XSPI_AUTOMATIC_STOP_DISABLED = 0U,          /*!< AutoPolling stops only with abort or XSPI disabling */
   HAL_XSPI_AUTOMATIC_STOP_ENABLED  = XSPI_CR_APMS /*!< AutoPolling stops as soon as there is a match       */
 } hal_xspi_automatic_stop_status_t;
+#else
+typedef enum
+{
+  HAL_XSPI_AUTOMATIC_STOP_DISABLED = 0U,          /*!< AutoPolling stops only with abort or XSPI disabling */
+  HAL_XSPI_AUTOMATIC_STOP_ENABLED  = 1U           /*!< AutoPolling stops as soon as there is a match       */
+} hal_xspi_automatic_stop_status_t;
+#endif /* XSPI_SR_SMF */
 
 /**
   * @brief HAL XSPI Timeout Activation enumeration definition.
@@ -527,6 +565,7 @@ typedef enum
 
 
 #if defined(USE_HAL_XSPI_HYPERBUS) && (USE_HAL_XSPI_HYPERBUS == 1U)
+#if defined(XSPI_DCR1_MTYP_2)
 /**
   * @brief HAL XSPI Hyperbus Configuration Structure definition.
   */
@@ -541,6 +580,7 @@ typedef struct
   hal_xspi_write_zero_latency_status_t write_zero_latency; /*!< It enables or disables the latency for the write access. */
   hal_xspi_latency_mode_t latency_mode;                    /*!< It configures the latency mode.                   */
 } hal_xspi_hyperbus_config_t;
+#endif /* XSPI_DCR1_MTYP_2 */
 #endif /* USE_HAL_XSPI_HYPERBUS */
 
 /**
@@ -558,9 +598,11 @@ typedef struct
   uint32_t cs_high_time_cycle;         /*!< It defines the minimum number of clocks which the chip
                                             select must remain high between commands.
                                             This parameter can be a value between 1 and 64.       */
+#if defined(XSPI_DCR4_REFRESH)
   uint32_t cs_refresh_time_cycle;      /*!< It enables the refresh rate feature. The chip select is
                                             released every Refresh+1 clock cycles.
-                                            This parameter can be a value between 0 and 0xFFFFFFFF */
+                                            This parameter can be a value between 0 and 0xFFFFFFFF. */
+#endif /* XSPI_DCR4_REFRESH */
   hal_xspi_dlyb_state_t dlyb_state;    /*!< It enables the delay block bypass, so the sampling is
                                             not affected by the delay block.                      */
 } hal_xspi_timing_config_t;
@@ -578,10 +620,14 @@ typedef struct
                                                  It corresponds to the number of address bits required to access
                                                  the external device.                                             */
 
-  hal_xspi_wrap_size_t wrap_size_byte;      /*!< It indicates the wrap-size corresponding the external device     */
+#if defined(XSPI_DCR2_WRAPSIZE)
+  hal_xspi_wrap_size_t wrap_size_byte;      /*!< It indicates the wrap-size corresponding to the external device. */
+#endif /* XSPI_DCR2_WRAPSIZE */
 
+#if defined(XSPI_DCR3_CSBOUND)
   hal_xspi_cs_boundary_t cs_boundary;       /*!< It enables the transaction boundary feature and
-                                                 defines the boundary of bytes to release the chip select         */
+                                                 defines the boundary of bytes to release the chip select.       */
+#endif /* XSPI_DCR3_CSBOUND */
 } hal_xspi_memory_config_t;
 
 /**
@@ -594,7 +640,9 @@ typedef struct
   hal_xspi_timing_config_t timing;     /*!< It specifies the XSPI timing configuration structure definition */
 
 #if defined(USE_HAL_XSPI_HYPERBUS) && (USE_HAL_XSPI_HYPERBUS == 1U)
-  hal_xspi_hyperbus_config_t hyperbus; /*!< It Specifies XSPI Hyperbus Configuration structure definition */
+#if defined(XSPI_DCR1_MTYP_2)
+  hal_xspi_hyperbus_config_t hyperbus; /*!< It specifies the XSPI Hyperbus configuration structure definition */
+#endif /* XSPI_DCR1_MTYP_2 */
 #endif /* USE_HAL_XSPI_HYPERBUS */
 } hal_xspi_config_t;
 
@@ -688,6 +736,7 @@ typedef struct
 } hal_xspi_regular_cmd_t;
 
 #if defined(USE_HAL_XSPI_HYPERBUS) && (USE_HAL_XSPI_HYPERBUS == 1U)
+#if defined(XSPI_DCR1_MTYP_2)
 /**
   * @brief HAL XSPI Hyperbus Command Structure definition.
   */
@@ -707,6 +756,7 @@ typedef struct
   hal_xspi_hyperbus_data_mode_t data_mode;       /*!< It indicates the data mode. Data mode specifies the number of lines for
                                                       data exchange (except no data).                       */
 } hal_xspi_hyperbus_cmd_t;
+#endif /* XSPI_DCR1_MTYP_2 */
 #endif /* USE_HAL_XSPI_HYPERBUS */
 
 /**
@@ -839,13 +889,17 @@ hal_status_t HAL_XSPI_SendRegularCmd(hal_xspi_handle_t *hxspi, const hal_xspi_re
 hal_status_t HAL_XSPI_SendRegularCmd_IT(hal_xspi_handle_t *hxspi, const hal_xspi_regular_cmd_t *p_cmd);
 
 #if defined(USE_HAL_XSPI_HYPERBUS) && (USE_HAL_XSPI_HYPERBUS == 1U)
+#if defined(XSPI_DCR1_MTYP_2)
 hal_status_t HAL_XSPI_SendHyperbusCmd(hal_xspi_handle_t *hxspi, const hal_xspi_hyperbus_cmd_t *p_cmd,
                                       uint32_t timeout_ms);
+#endif /* XSPI_DCR1_MTYP_2 */
 #endif /* USE_HAL_XSPI_HYPERBUS */
 
 hal_status_t HAL_XSPI_ExecRegularAutoPoll(hal_xspi_handle_t *hxspi, const hal_xspi_auto_polling_config_t *p_config,
                                           uint32_t timeout_ms);
+#if defined(XSPI_SR_SMF)
 hal_status_t HAL_XSPI_ExecRegularAutoPoll_IT(hal_xspi_handle_t *hxspi, const hal_xspi_auto_polling_config_t *p_config);
+#endif /* XSPI_SR_SMF */
 
 /* IO operation functions */
 hal_status_t HAL_XSPI_Transmit(hal_xspi_handle_t *hxspi, const void *p_data, uint32_t timeout_ms);
@@ -886,7 +940,9 @@ hal_status_t HAL_XSPI_RegisterRxCpltCallback(hal_xspi_handle_t *hxspi, hal_xspi_
 hal_status_t HAL_XSPI_RegisterTxCpltCallback(hal_xspi_handle_t *hxspi, hal_xspi_cb_t p_callback);
 hal_status_t HAL_XSPI_RegisterRxHalfCpltCallback(hal_xspi_handle_t *hxspi, hal_xspi_cb_t p_callback);
 hal_status_t HAL_XSPI_RegisterTxHalfCpltCallback(hal_xspi_handle_t *hxspi, hal_xspi_cb_t p_callback);
+#if defined(XSPI_SR_SMF)
 hal_status_t HAL_XSPI_RegisterStatusMatchCallback(hal_xspi_handle_t *hxspi, hal_xspi_cb_t p_callback);
+#endif /* XSPI_SR_SMF */
 hal_status_t HAL_XSPI_RegisterAbortCpltCallback(hal_xspi_handle_t *hxspi, hal_xspi_cb_t p_callback);
 hal_status_t HAL_XSPI_RegisterFifoThresholdCallback(hal_xspi_handle_t *hxspi, hal_xspi_cb_t p_callback);
 #endif /* USE_HAL_XSPI_REGISTER_CALLBACKS */

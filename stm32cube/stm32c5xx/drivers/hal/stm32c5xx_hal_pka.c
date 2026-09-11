@@ -201,6 +201,10 @@ USE_HAL_PKA_REGISTER_CALLBACKS| from hal_conf.h |       0       | Enable the reg
 #define PKA_RAM_SIZE                                  1334U                            /*!< PKA RAM size             */
 #define PKA_INITIALIZATION_TIMEOUT                    1000UL                           /*!< 1s is the timeout for
                                                                                             initializing PKA device  */
+#if defined (USE_HAL_PKA_RNG_RECOVERY) && (USE_HAL_PKA_RNG_RECOVERY == 1U)
+#define PKA_RNG_TIMEOUT_VALUE                         0x2UL                            /*!< PKA RNG timeout          */
+#endif /* USE_HAL_PKA_RNG_RECOVERY */
+
 #define PKA_OPERATION_ERROR_NONE                      0xD60DUL                         /*!< Point on the curve       */
 #define PKA_ROS_RESULT_MAX_SIZE                       520UL                            /*!< Max size of the RSA result
                                                                                             in bytes                 */
@@ -259,6 +263,11 @@ static hal_status_t PKA_WaitInitOkUntilTimeout(hal_pka_handle_t *hpka, uint32_t 
 static hal_status_t PKA_WaitPkaEnableUntilTimeout(hal_pka_handle_t *hpka, uint32_t flag_state,
                                                   uint32_t timeout_ms);
 static uint32_t     PKA_GetResultSize(const hal_pka_handle_t *hpka, uint32_t start_index, uint32_t max_size);
+#if defined (USE_HAL_PKA_RNG_RECOVERY) && (USE_HAL_PKA_RNG_RECOVERY == 1U)
+#if defined(RNG_HTSR0_RPERRX) || defined(RNG_HTSR1_ADERRX)
+hal_status_t PKA_RNG_ResilientRecoverSeedError(void);
+#endif /* RNG_HTSR0_RPERRX || RNG_HTSR1_ADERRX */
+#endif /* USE_HAL_PKA_RNG_RECOVERY */
 /**
   * @}
   */
@@ -2433,6 +2442,7 @@ hal_status_t HAL_PKA_Abort(hal_pka_handle_t *hpka)
   * @param  hpka      Pointer to @ref hal_pka_handle_t PKA handle.
   * @param  p_result  Pointer to operation result.
   * @retval size_byte Size of result in bytes.
+  * @note             The retrieved data are in big-endian format and start at the base address of the user buffer.
   * @retval 0         In case of invalid parameter.
   */
 uint32_t HAL_PKA_GetResultModExp(hal_pka_handle_t *hpka, uint8_t *p_result)
@@ -2462,6 +2472,7 @@ uint32_t HAL_PKA_GetResultModExp(hal_pka_handle_t *hpka, uint8_t *p_result)
   * @param  hpka      Pointer to @ref hal_pka_handle_t PKA handle.
   * @param  p_result  Pointer to operation result.
   * @retval size_byte Size of result in bytes.
+  * @note             The retrieved data are in big-endian format and start at the base address of the user buffer.
   * @retval 0         In case of invalid parameter.
   */
 uint32_t HAL_PKA_GetResultModExpFast(hal_pka_handle_t *hpka, uint8_t *p_result)
@@ -2491,6 +2502,7 @@ uint32_t HAL_PKA_GetResultModExpFast(hal_pka_handle_t *hpka, uint8_t *p_result)
   * @param  hpka      Pointer to @ref hal_pka_handle_t PKA handle.
   * @param  p_result  Pointer to operation result.
   * @retval size_byte Size of result in bytes.
+  * @note             The retrieved data are in big-endian format and start at the base address of the user buffer.
   * @retval 0         In case of result error or invalid parameter.
   */
 uint32_t HAL_PKA_GetResultModExpProtect(hal_pka_handle_t *hpka, uint8_t *p_result)
@@ -2525,6 +2537,9 @@ uint32_t HAL_PKA_GetResultModExpProtect(hal_pka_handle_t *hpka, uint8_t *p_resul
   * @param  p_result     Pointer to @ref hal_pka_ecdsa_signature_protect_result_t result structure.
   * @param  p_result_ext Pointer to @ref hal_pka_ecdsa_signature_result_ext_config_t structure (optional).
   * @retval size_byte    Size of result in bytes.
+  * @note                The retrieved data are in big-endian format and start at the base address of the user buffer.
+  *                      The returned size corresponds to the maximum effective size of the signature components and
+  *                      the coordinates.
   * @retval 0            In case of result error or invalid parameter.
   */
 uint32_t HAL_PKA_ECDSA_GetResultSignatureProtect(hal_pka_handle_t *hpka,
@@ -2533,6 +2548,10 @@ uint32_t HAL_PKA_ECDSA_GetResultSignatureProtect(hal_pka_handle_t *hpka,
 {
   PKA_TypeDef *pka_instance;
   uint32_t size_byte = 0U;
+  uint32_t size_byte_r = 0U;
+  uint32_t size_byte_s = 0U;
+  uint32_t size_byte_x = 0U;
+  uint32_t size_byte_y = 0U;
 
   ASSERT_DBG_PARAM(hpka != NULL);
   ASSERT_DBG_PARAM(p_result != NULL);
@@ -2556,7 +2575,14 @@ uint32_t HAL_PKA_ECDSA_GetResultSignatureProtect(hal_pka_handle_t *hpka,
 
   if (PKA_CheckRAMError(hpka, PKA_OPERATION_ECDSA_SIGN_PROT_ERROR_OFFSET) == HAL_PKA_ERROR_NONE)
   {
-    size_byte = PKA_GetResultSize(hpka, PKA_ECDSA_SIGN_OUT_SIGNATURE_R * 4U, PKA_EOS_RESULT_MAX_SIZE);
+    size_byte_r = PKA_GetResultSize(hpka, PKA_ECDSA_SIGN_OUT_SIGNATURE_R * 4U, PKA_EOS_RESULT_MAX_SIZE);
+    size_byte_s = PKA_GetResultSize(hpka, PKA_ECDSA_SIGN_OUT_SIGNATURE_S * 4U, PKA_EOS_RESULT_MAX_SIZE);
+    size_byte_x = PKA_GetResultSize(hpka, PKA_ECDSA_SIGN_OUT_FINAL_POINT_X * 4U, PKA_EOS_RESULT_MAX_SIZE);
+    size_byte_y = PKA_GetResultSize(hpka, PKA_ECDSA_SIGN_OUT_FINAL_POINT_Y * 4U, PKA_EOS_RESULT_MAX_SIZE);
+    size_byte = ((((size_byte_r > size_byte_s) ? size_byte_r : size_byte_s) >
+                  ((size_byte_x > size_byte_y) ? size_byte_x : size_byte_y)) ?
+                 ((size_byte_r > size_byte_s) ? size_byte_r : size_byte_s) :
+                 ((size_byte_x > size_byte_y) ? size_byte_x : size_byte_y));
     PKA_Memcpy_u8_to_u8(p_result->p_r_sign, &pka_instance->RAM[PKA_ECDSA_SIGN_OUT_SIGNATURE_R * 4UL],
                         size_byte);
     PKA_Memcpy_u8_to_u8(p_result->p_s_sign, &pka_instance->RAM[PKA_ECDSA_SIGN_OUT_SIGNATURE_S * 4UL],
@@ -2597,6 +2623,7 @@ hal_pka_ecdsa_signature_status_t HAL_PKA_ECDSA_IsValidVerifSignature(const hal_p
   * @param  hpka      Pointer to @ref hal_pka_handle_t PKA handle.
   * @param  p_result  Pointer to operation result.
   * @retval size_byte Size of result in bytes.
+  * @note             The retrieved data are in big-endian format and start at the base address of the user buffer.
   * @retval 0         In case of invalid parameter.
   */
 uint32_t HAL_PKA_RSA_GetResultCRTExp(hal_pka_handle_t *hpka, uint8_t *p_result)
@@ -2627,6 +2654,7 @@ uint32_t HAL_PKA_RSA_GetResultCRTExp(hal_pka_handle_t *hpka, uint8_t *p_result)
   * @param  hpka      Pointer to @ref hal_pka_handle_t PKA handle.
   * @param  p_result  Pointer to operation result.
   * @retval size_byte Size of result in bytes.
+  * @note             The retrieved data are in big-endian format and start at the base address of the user buffer.
   * @retval 0         In case of invalid parameter.
   */
 uint32_t HAL_PKA_RSA_GetResultSignature(hal_pka_handle_t *hpka, uint8_t *p_result)
@@ -2654,8 +2682,9 @@ uint32_t HAL_PKA_RSA_GetResultSignature(hal_pka_handle_t *hpka, uint8_t *p_resul
 /**
   * @brief  Retrieve RSA signature (fast) operation result.
   * @param  hpka      Pointer to @ref hal_pka_handle_t PKA handle.
-  * @param  p_result  Pointer to operation result.
+  * @param  p_result  Pointer to operation result buffer.
   * @retval size_byte Size of result in bytes.
+  * @note             The retrieved data are in big-endian format and start at the base address of the user buffer.
   * @retval 0         In case of invalid parameter.
   */
 uint32_t HAL_PKA_RSA_GetResultSignatureFast(hal_pka_handle_t *hpka, uint8_t *p_result)
@@ -2683,8 +2712,9 @@ uint32_t HAL_PKA_RSA_GetResultSignatureFast(hal_pka_handle_t *hpka, uint8_t *p_r
 /**
   * @brief  Retrieve RSA signature (protected) operation result.
   * @param  hpka      Pointer to @ref hal_pka_handle_t PKA handle.
-  * @param  p_result  Pointer to operation result.
+  * @param  p_result  Pointer to operation result buffer.
   * @retval size_byte Size of result in bytes.
+  * @note             The retrieved data are in big-endian format and start at the base address of the user buffer.
   * @retval 0         In case of invalid parameter.
   */
 uint32_t HAL_PKA_RSA_GetResultSignatureProtect(hal_pka_handle_t *hpka, uint8_t *p_result)
@@ -2717,6 +2747,8 @@ uint32_t HAL_PKA_RSA_GetResultSignatureProtect(hal_pka_handle_t *hpka, uint8_t *
   * @param  hpka                        Pointer to @ref hal_pka_handle_t PKA handle.
   * @param  p_hash                      Pointer to hashed message provided by the user.
   * @retval PKA_RSA_SIGNATURE_VALID     Signature validated.
+  * @note                               The verification result is checked against the effective output data
+  *                                     returned by the PKA in big-endian format.
   * @retval PKA_RSA_SIGNATURE_NOT_VALID In case of signature not validated or invalid parameter.
   */
 hal_pka_rsa_signature_status_t HAL_PKA_RSA_IsValidVerifSignature(hal_pka_handle_t *hpka, const uint8_t *p_hash)
@@ -2754,13 +2786,14 @@ hal_pka_rsa_signature_status_t HAL_PKA_RSA_IsValidVerifSignature(hal_pka_handle_
 /**
   * @brief  Retrieve Addition operation result.
   * @param  hpka      Pointer to @ref hal_pka_handle_t PKA handle.
-  * @param  p_result  Pointer to operation result.
+  * @param  p_result  Pointer to operation result buffer.
   * @retval size_byte Size of result in bytes.
+  * @note             The retrieved data are in big-endian format and start at the base address of the user buffer.
   * @retval 0         In case of invalid parameter.
   */
 uint32_t HAL_PKA_GetResultAdd(hal_pka_handle_t *hpka, uint8_t *p_result)
 {
-  uint32_t size_byte = 0;
+  uint32_t size_byte = 0U;
 
   ASSERT_DBG_PARAM(hpka != NULL);
   ASSERT_DBG_PARAM(p_result != NULL);
@@ -2783,13 +2816,14 @@ uint32_t HAL_PKA_GetResultAdd(hal_pka_handle_t *hpka, uint8_t *p_result)
 /**
   * @brief  Retrieve subtraction operation result.
   * @param  hpka      Pointer to @ref hal_pka_handle_t PKA handle.
-  * @param  p_result  Pointer to operation result.
+  * @param  p_result  Pointer to operation result buffer.
   * @retval size_byte Size of result in bytes.
+  * @note             The retrieved data are in big-endian format and start at the base address of the user buffer.
   * @retval 0         In case of invalid parameter.
   */
 uint32_t HAL_PKA_GetResultSub(hal_pka_handle_t *hpka, uint8_t *p_result)
 {
-  uint32_t size_byte = 0;
+  uint32_t size_byte = 0U;
 
   ASSERT_DBG_PARAM(hpka != NULL);
   ASSERT_DBG_PARAM(p_result != NULL);
@@ -2812,13 +2846,14 @@ uint32_t HAL_PKA_GetResultSub(hal_pka_handle_t *hpka, uint8_t *p_result)
 /**
   * @brief  Retrieve multiplication operation result.
   * @param  hpka      Pointer to @ref hal_pka_handle_t PKA handle.
-  * @param  p_result  Pointer to operation result.
+  * @param  p_result  Pointer to operation result buffer.
   * @retval size_byte Size of result in bytes.
+  * @note             The retrieved data are in big-endian format and start at the base address of the user buffer.
   * @retval 0         In case of invalid parameter.
   */
 uint32_t HAL_PKA_GetResultMul(hal_pka_handle_t *hpka, uint8_t *p_result)
 {
-  uint32_t size_byte = 0;
+  uint32_t size_byte = 0U;
 
   ASSERT_DBG_PARAM(hpka != NULL);
   ASSERT_DBG_PARAM(p_result != NULL);
@@ -2841,8 +2876,10 @@ uint32_t HAL_PKA_GetResultMul(hal_pka_handle_t *hpka, uint8_t *p_result)
 /**
   * @brief  Retrieve comparison operation result.
   * @param  hpka                Pointer to @ref hal_pka_handle_t PKA handle.
-  * @param  p_result            Pointer to operation result.
+  * @param  p_result            Pointer to operation result buffer.
   * @retval PKA_CMP_RESULT_SIZE Size of the comparison result in bytes.
+  * @note                       The comparison result is returned in big-endian format and start
+  *                             at the base address of the user buffer.
   * @retval 0                   In case of invalid parameter.
   */
 uint32_t HAL_PKA_GetResultCmp(hal_pka_handle_t *hpka, uint8_t *p_result)
@@ -2868,13 +2905,14 @@ uint32_t HAL_PKA_GetResultCmp(hal_pka_handle_t *hpka, uint8_t *p_result)
 /**
   * @brief  Retrieve Modular Addition operation result.
   * @param  hpka      Pointer to @ref hal_pka_handle_t PKA handle.
-  * @param  p_result  Pointer to operation result.
+  * @param  p_result  Pointer to operation result buffer.
   * @retval size_byte Size of result in bytes.
+  * @note             The retrieved data are in big-endian format and start at the base address of the user buffer.
   * @retval 0         In case of invalid parameter.
   */
 uint32_t HAL_PKA_GetResultModAdd(hal_pka_handle_t *hpka, uint8_t *p_result)
 {
-  uint32_t size_byte = 0;
+  uint32_t size_byte = 0U;
 
   ASSERT_DBG_PARAM(hpka != NULL);
   ASSERT_DBG_PARAM(p_result != NULL);
@@ -2897,13 +2935,14 @@ uint32_t HAL_PKA_GetResultModAdd(hal_pka_handle_t *hpka, uint8_t *p_result)
 /**
   * @brief  Retrieve Modular subtraction operation result.
   * @param  hpka      Pointer to @ref hal_pka_handle_t PKA handle.
-  * @param  p_result  Pointer to operation result.
+  * @param  p_result  Pointer to operation result buffer.
   * @retval size_byte Size of result in bytes.
+  * @note             The retrieved data are in big-endian format and start at the base address of the user buffer.
   * @retval 0         In case of invalid parameter.
   */
 uint32_t HAL_PKA_GetResultModSub(hal_pka_handle_t *hpka, uint8_t *p_result)
 {
-  uint32_t size_byte = 0;
+  uint32_t size_byte = 0U;
 
   ASSERT_DBG_PARAM(hpka != NULL);
   ASSERT_DBG_PARAM(p_result != NULL);
@@ -2926,13 +2965,14 @@ uint32_t HAL_PKA_GetResultModSub(hal_pka_handle_t *hpka, uint8_t *p_result)
 /**
   * @brief  Retrieve Modular Reduction operation result.
   * @param  hpka      Pointer to @ref hal_pka_handle_t PKA handle.
-  * @param  p_result  Pointer to operation result.
+  * @param  p_result  Pointer to operation result buffer.
   * @retval size_byte Size of result in bytes.
+  * @note             The retrieved data are in big-endian format and start at the base address of the user buffer.
   * @retval 0         In case of invalid parameter.
   */
 uint32_t HAL_PKA_GetResultModRed(hal_pka_handle_t *hpka, uint8_t *p_result)
 {
-  uint32_t size_byte = 0;
+  uint32_t size_byte = 0U;
 
   ASSERT_DBG_PARAM(hpka != NULL);
   ASSERT_DBG_PARAM(p_result != NULL);
@@ -2955,13 +2995,14 @@ uint32_t HAL_PKA_GetResultModRed(hal_pka_handle_t *hpka, uint8_t *p_result)
 /**
   * @brief  Retrieve Modular Inversion operation result.
   * @param  hpka      Pointer to @ref hal_pka_handle_t PKA handle.
-  * @param  p_result  Pointer to operation result.
+  * @param  p_result  Pointer to operation result buffer.
   * @retval size_byte Size of result in bytes.
+  * @note             The retrieved data are in big-endian format and start at the base address of the user buffer.
   * @retval 0         In case of invalid parameter.
   */
 uint32_t HAL_PKA_GetResultModInv(hal_pka_handle_t *hpka, uint8_t *p_result)
 {
-  uint32_t size_byte = 0;
+  uint32_t size_byte = 0U;
 
   ASSERT_DBG_PARAM(hpka != NULL);
   ASSERT_DBG_PARAM(p_result != NULL);
@@ -2985,13 +3026,14 @@ uint32_t HAL_PKA_GetResultModInv(hal_pka_handle_t *hpka, uint8_t *p_result)
 /**
   * @brief  Retrieve Montgomery multiplication operation result.
   * @param  hpka      Pointer to @ref hal_pka_handle_t PKA handle.
-  * @param  p_result  Pointer to operation result.
+  * @param  p_result  Pointer to operation result buffer.
   * @retval size_byte Size of result in bytes.
+  * @note             The retrieved data are in big-endian format and start at the base address of the user buffer.
   * @retval 0         In case of invalid parameter.
   */
 uint32_t HAL_PKA_GetResultMontgomeryMul(hal_pka_handle_t *hpka, uint8_t *p_result)
 {
-  uint32_t size_byte = 0;
+  uint32_t size_byte = 0U;
 
   ASSERT_DBG_PARAM(hpka != NULL);
   ASSERT_DBG_PARAM(p_result != NULL);
@@ -3014,13 +3056,14 @@ uint32_t HAL_PKA_GetResultMontgomeryMul(hal_pka_handle_t *hpka, uint8_t *p_resul
 /**
   * @brief  Retrieve Montgomery parameter operation result.
   * @param  hpka      Pointer to @ref hal_pka_handle_t PKA handle.
-  * @param  p_result  Pointer to operation result.
+  * @param  p_result  Pointer to operation result buffer.
   * @retval size_byte Size of result in bytes.
+  * @note             The retrieved data are in big-endian format and start at the base address of the user buffer.
   * @retval 0         In case of invalid parameter.
   */
 uint32_t HAL_PKA_GetResultMontgomery(hal_pka_handle_t *hpka, uint8_t *p_result)
 {
-  uint32_t size_byte = 0;
+  uint32_t size_byte = 0U;
 
   ASSERT_DBG_PARAM(hpka != NULL);
   ASSERT_DBG_PARAM(p_result != NULL);
@@ -3069,12 +3112,16 @@ hal_pka_ecc_point_status_t HAL_PKA_ECC_IsPointCheckOnCurve(const hal_pka_handle_
   * @param  hpka      Pointer to @ref hal_pka_handle_t PKA handle.
   * @param  p_result  Pointer to @ref hal_pka_ecc_mul_protect_result_t result structure.
   * @retval size_byte Size of result in bytes.
+  * @note             The retrieved data are in big-endian format and start at the base address of the user buffer.
+  *                   The returned size corresponds to the maximum effective size of the coordinates.
   * @retval 0         In case of result error or invalid parameter.
   */
 uint32_t HAL_PKA_ECC_GetResultMulProtect(hal_pka_handle_t *hpka, hal_pka_ecc_mul_protect_result_t *p_result)
 {
   PKA_TypeDef *pka_instance;
   uint32_t size_byte = 0U;
+  uint32_t size_byte_x = 0U;
+  uint32_t size_byte_y = 0U;
 
   ASSERT_DBG_PARAM(hpka != NULL);
   ASSERT_DBG_PARAM(p_result != NULL);
@@ -3094,7 +3141,9 @@ uint32_t HAL_PKA_ECC_GetResultMulProtect(hal_pka_handle_t *hpka, hal_pka_ecc_mul
 
   if (PKA_CheckRAMError(hpka, PKA_OPERATION_ECC_SCALAR_MUL_PROT_ERROR_OFFSET) == HAL_PKA_ERROR_NONE)
   {
-    size_byte = PKA_GetResultSize(hpka, PKA_ECC_SCALAR_MUL_OUT_RESULT_X * 4U, PKA_EOS_RESULT_MAX_SIZE);
+    size_byte_x = PKA_GetResultSize(hpka, PKA_ECC_SCALAR_MUL_OUT_RESULT_X * 4U, PKA_EOS_RESULT_MAX_SIZE);
+    size_byte_y = PKA_GetResultSize(hpka, PKA_ECC_SCALAR_MUL_OUT_RESULT_Y * 4U, PKA_EOS_RESULT_MAX_SIZE);
+    size_byte = (size_byte_x > size_byte_y) ? size_byte_x : size_byte_y;
     PKA_Memcpy_u8_to_u8(p_result->p_pt_x, &pka_instance->RAM[PKA_ECC_SCALAR_MUL_OUT_RESULT_X * 4UL],
                         size_byte);
     PKA_Memcpy_u8_to_u8(p_result->p_pt_y, &pka_instance->RAM[PKA_ECC_SCALAR_MUL_OUT_RESULT_Y * 4UL],
@@ -3109,6 +3158,8 @@ uint32_t HAL_PKA_ECC_GetResultMulProtect(hal_pka_handle_t *hpka, hal_pka_ecc_mul
   * @param  hpka      Pointer to @ref hal_pka_handle_t PKA handle.
   * @param  p_result  Pointer to @ref hal_pka_ecc_double_base_ladder_result_t result structure.
   * @retval size_byte Size of result in bytes.
+  * @note             The retrieved data are in big-endian format and start at the base address of the user buffer.
+  *                   The returned size corresponds to the maximum effective size of the coordinates.
   * @retval 0         In case of result error or invalid parameter.
   */
 uint32_t HAL_PKA_ECC_GetResultDoubleBaseLadder(hal_pka_handle_t *hpka,
@@ -3116,6 +3167,8 @@ uint32_t HAL_PKA_ECC_GetResultDoubleBaseLadder(hal_pka_handle_t *hpka,
 {
   PKA_TypeDef *pka_instance;
   uint32_t size_byte = 0U;
+  uint32_t size_byte_x = 0U;
+  uint32_t size_byte_y = 0U;
 
   ASSERT_DBG_PARAM(hpka != NULL);
   ASSERT_DBG_PARAM(p_result != NULL);
@@ -3135,7 +3188,9 @@ uint32_t HAL_PKA_ECC_GetResultDoubleBaseLadder(hal_pka_handle_t *hpka,
 
   if (PKA_CheckRAMError(hpka, PKA_OPERATION_ECC_DOUBLE_LADDER_ERROR_OFFSET) == HAL_PKA_ERROR_NONE)
   {
-    size_byte = PKA_GetResultSize(hpka, PKA_ECC_DOUBLE_LADDER_OUT_RESULT_X * 4U, PKA_EOS_RESULT_MAX_SIZE);
+    size_byte_x = PKA_GetResultSize(hpka, PKA_ECC_DOUBLE_LADDER_OUT_RESULT_X * 4U, PKA_EOS_RESULT_MAX_SIZE);
+    size_byte_y = PKA_GetResultSize(hpka, PKA_ECC_DOUBLE_LADDER_OUT_RESULT_Y * 4U, PKA_EOS_RESULT_MAX_SIZE);
+    size_byte = (size_byte_x > size_byte_y) ? size_byte_x : size_byte_y;
     PKA_Memcpy_u8_to_u8(p_result->p_pt_x, &pka_instance->RAM[PKA_ECC_DOUBLE_LADDER_OUT_RESULT_X * 4UL],
                         size_byte);
     PKA_Memcpy_u8_to_u8(p_result->p_pt_y, &pka_instance->RAM[PKA_ECC_DOUBLE_LADDER_OUT_RESULT_Y * 4UL],
@@ -3150,6 +3205,8 @@ uint32_t HAL_PKA_ECC_GetResultDoubleBaseLadder(hal_pka_handle_t *hpka,
   * @param  hpka      Pointer to @ref hal_pka_handle_t PKA handle.
   * @param  p_result  Pointer to @ref hal_pka_ecc_projective_to_affine_result_t result structure.
   * @retval size_byte Size of result in bytes.
+  * @note             The retrieved data are in big-endian format and start at the base address of the user buffer.
+  *                   The returned size corresponds to the maximum effective size of the coordinates.
   * @retval 0         In case of result error or invalid parameter.
   */
 uint32_t HAL_PKA_ECC_GetResultProjectiveToAffine(hal_pka_handle_t *hpka,
@@ -3157,6 +3214,8 @@ uint32_t HAL_PKA_ECC_GetResultProjectiveToAffine(hal_pka_handle_t *hpka,
 {
   PKA_TypeDef *pka_instance;
   uint32_t size_byte = 0U;
+  uint32_t size_byte_x = 0U;
+  uint32_t size_byte_y = 0U;
 
   ASSERT_DBG_PARAM(hpka != NULL);
   ASSERT_DBG_PARAM(p_result != NULL);
@@ -3176,7 +3235,9 @@ uint32_t HAL_PKA_ECC_GetResultProjectiveToAffine(hal_pka_handle_t *hpka,
 
   if (PKA_CheckRAMError(hpka, PKA_OPERATION_ECC_PROJECTIVE_AFF_ERROR_OFFSET) == HAL_PKA_ERROR_NONE)
   {
-    size_byte = PKA_GetResultSize(hpka, PKA_ECC_PROJECTIVE_AFF_OUT_RESULT_X * 4U, PKA_EOS_RESULT_MAX_SIZE);
+    size_byte_x = PKA_GetResultSize(hpka, PKA_ECC_PROJECTIVE_AFF_OUT_RESULT_X * 4U, PKA_EOS_RESULT_MAX_SIZE);
+    size_byte_y = PKA_GetResultSize(hpka, PKA_ECC_PROJECTIVE_AFF_OUT_RESULT_Y * 4U, PKA_EOS_RESULT_MAX_SIZE);
+    size_byte = (size_byte_x > size_byte_y) ? size_byte_x : size_byte_y;
     PKA_Memcpy_u8_to_u8(p_result->p_pt_x, &pka_instance->RAM[PKA_ECC_PROJECTIVE_AFF_OUT_RESULT_X * 4UL],
                         size_byte);
     PKA_Memcpy_u8_to_u8(p_result->p_pt_y, &pka_instance->RAM[PKA_ECC_PROJECTIVE_AFF_OUT_RESULT_Y * 4UL],
@@ -3191,12 +3252,17 @@ uint32_t HAL_PKA_ECC_GetResultProjectiveToAffine(hal_pka_handle_t *hpka,
   * @param  hpka      Pointer to @ref hal_pka_handle_t PKA handle.
   * @param  p_result  Pointer to @ref hal_pka_ecc_complete_add_result_t result structure.
   * @retval size_byte Size of result in bytes.
+  * @note             The retrieved data are in big-endian format and start at the base address of the user buffer.
+  *                   The returned size corresponds to the maximum effective size of the coordinates.
   * @retval 0         In case of invalid parameter.
   */
 uint32_t HAL_PKA_ECC_GetResultCompleteAdd(hal_pka_handle_t *hpka, hal_pka_ecc_complete_add_result_t *p_result)
 {
   PKA_TypeDef *pka_instance;
   uint32_t size_byte = 0;
+  uint32_t size_byte_x = 0U;
+  uint32_t size_byte_y = 0U;
+  uint32_t size_byte_z = 0U;
 
   ASSERT_DBG_PARAM(hpka != NULL);
   ASSERT_DBG_PARAM(p_result != NULL);
@@ -3216,7 +3282,11 @@ uint32_t HAL_PKA_ECC_GetResultCompleteAdd(hal_pka_handle_t *hpka, hal_pka_ecc_co
 
   pka_instance = PKA_GET_INSTANCE(hpka);
 
-  size_byte = PKA_GetResultSize(hpka, PKA_ECC_COMPLETE_ADD_OUT_RESULT_X * 4U, PKA_EOS_RESULT_MAX_SIZE);
+  size_byte_x = PKA_GetResultSize(hpka, PKA_ECC_COMPLETE_ADD_OUT_RESULT_X * 4U, PKA_EOS_RESULT_MAX_SIZE);
+  size_byte_y = PKA_GetResultSize(hpka, PKA_ECC_COMPLETE_ADD_OUT_RESULT_Y * 4U, PKA_EOS_RESULT_MAX_SIZE);
+  size_byte_z = PKA_GetResultSize(hpka, PKA_ECC_COMPLETE_ADD_OUT_RESULT_Z * 4U, PKA_EOS_RESULT_MAX_SIZE);
+  size_byte = (size_byte_x > size_byte_y) ? ((size_byte_x > size_byte_z) ? size_byte_x : size_byte_z)
+              : ((size_byte_y > size_byte_z) ? size_byte_y : size_byte_z);
 
   PKA_Memcpy_u8_to_u8(p_result->p_pt_x, &pka_instance->RAM[PKA_ECC_COMPLETE_ADD_OUT_RESULT_X * 4UL],
                       size_byte);
@@ -3604,6 +3674,20 @@ static hal_status_t PKA_WaitInitOkUntilTimeout(hal_pka_handle_t *hpka, uint32_t 
   uint32_t tickstart = HAL_GetTick();
   while (LL_PKA_IsActiveFlag_INITOK(PKA_GET_INSTANCE(hpka)) == flag_state)
   {
+#if defined (USE_HAL_PKA_RNG_RECOVERY) && (USE_HAL_PKA_RNG_RECOVERY == 1U)
+#if defined(RNG_HTSR0_RPERRX) || defined(RNG_HTSR1_ADERRX)
+    /*Check if there is an RNG seed error */
+    if (LL_RNG_IsActiveFlag_SECS(RNG) != 0U)
+    {
+      /* Attempt to recover from the seed error */
+      if (PKA_RNG_ResilientRecoverSeedError() != HAL_OK)
+      {
+        return HAL_ERROR;
+      }
+    }
+
+#endif /* RNG_HTSR0_RPERRX || RNG_HTSR1_ADERRX */
+#endif /* USE_HAL_PKA_RNG_RECOVERY */
     if (((HAL_GetTick() - tickstart) > timeout_ms) || (timeout_ms == 0U))
     {
       return HAL_TIMEOUT;
@@ -3645,7 +3729,7 @@ static hal_status_t PKA_WaitPkaEnableUntilTimeout(hal_pka_handle_t *hpka, uint32
   */
 static uint32_t PKA_GetResultSize(const hal_pka_handle_t *hpka, uint32_t start_index, uint32_t max_size)
 {
-  uint32_t current_index = max_size;
+  uint32_t current_index = max_size - 1U;
 
   while ((PKA_GET_INSTANCE(hpka)->RAM[start_index + current_index] == 0UL) && (current_index != 0UL))
   {
@@ -3655,6 +3739,184 @@ static uint32_t PKA_GetResultSize(const hal_pka_handle_t *hpka, uint32_t start_i
   return current_index + 1U;
 }
 
+#if defined (USE_HAL_PKA_RNG_RECOVERY) && (USE_HAL_PKA_RNG_RECOVERY == 1U)
+#if defined(RNG_HTSR0_RPERRX) || defined(RNG_HTSR1_ADERRX)
+/**
+  * @brief  Attempts a robust recovery of the RNG after a seed error.
+  *         Implements a sequence of health checks, oscillator re-masking
+  *         and conditional resets to restore a valid RNG operating state.
+  * @retval HAL_ERROR RNG could not be recovered within the configured timeouts.
+  * @retval HAL_OK    RNG successfully recovered and no seed error is pending.
+  */
+hal_status_t PKA_RNG_ResilientRecoverSeedError(void)
+{
+  uint32_t timeout;
+  uint32_t htsr_temp = 0U;
+  uint32_t htsr_previous_temp = 0U;
+  uint32_t htsr_count = 0U;
+  uint32_t nsmr_temp = 0U;
+  uint32_t tickstart1 = 0U;
+  uint32_t tickstart2 = 0U;
+  uint32_t tickstart3 = 0U;
+  uint32_t oscillators_count = 0U;
+  uint32_t config_b_fewer_than_6_osc_count = 0U;
+  uint8_t count = 0U;
+
+  /* timeout here is an emperic value */
+  timeout = (1UL + ((1UL << (STM32_READ_BIT(RNG->CR, RNG_CR_CLKDIV) >> 16UL)) * PKA_RNG_TIMEOUT_VALUE / 8UL));
+  LL_RNG_Enable(RNG);
+
+  tickstart1 = HAL_GetTick();
+
+  /* Check if seed error current status indicates no error and auto-reset succeeded */
+  if (LL_RNG_IsActiveFlag_SECS(RNG) == 0U)
+  {
+    /* Clear SEIS flag when automatic reset is activated */
+    LL_RNG_ClearFlag_SEIS(RNG);
+  }
+
+  else  /* Sequence to fully recover from a seed error*/
+  {
+    if (LL_RNG_IsConfigLocked(RNG) == 0U)
+    {
+      do
+      {
+        if (LL_RNG_IsActiveFlag_SECS(RNG) == 0U)
+        {
+          break;
+        }
+        /* Read oscillator status registers combined */
+        htsr_temp = LL_RNG_GetHealthTestStatus(RNG, 0U);
+        htsr_temp |= LL_RNG_GetHealthTestStatus(RNG, 1U);
+        if (htsr_temp > 0U)
+        {
+          /* If any oscillator status bits overlap with previous status, increment counter */
+          if ((htsr_temp & htsr_previous_temp) != 0U)
+          {
+            htsr_count++;
+          }
+
+          if (htsr_count > 3U)
+          {
+            /* if the same repetitive or adaptative error is detected 3 times */
+            nsmr_temp = LL_RNG_GetNoiseSourceMask(RNG);
+
+            /* deactivate the same osc in each triple oscillator (Mask oscillators with the seed error by
+            clearing bits shifted right by 1) */
+            nsmr_temp = nsmr_temp & ~(htsr_temp >> 1U);
+
+            /* Count the number of active oscillators in nsmr */
+            oscillators_count = 0U;
+            for (count = 0U; count < 9U; count++)
+            {
+              if (((nsmr_temp >> count) & 0x1U) != 0U)
+              {
+                /* increment count1 for each 1 in nsmr */
+                oscillators_count++;
+              }
+            }
+
+            if (oscillators_count < 6U)
+            {
+              /* If fewer than 6 oscillators remain active, unmask all oscillators --> Reset masking */
+              nsmr_temp = LL_RNG_GetOscNoiseSrc(RNG, LL_RNG_NOISE_SRC_1 | LL_RNG_NOISE_SRC_2 \
+                                                | LL_RNG_NOISE_SRC_3);
+              htsr_previous_temp = 0;
+              htsr_count = 0U;
+              if ((RNG->CR  & RNG_CR_CLKDIV_Msk) < ((uint32_t)RNG_CAND_NIST_CR_VALUE & RNG_CR_CLKDIV_Msk))
+              {
+                config_b_fewer_than_6_osc_count++;
+              }
+            }
+
+            if (config_b_fewer_than_6_osc_count > 2U)
+            {
+              /* Reset RNG condition */
+              STM32_WRITE_REG(RNG->CR, (RNG_CR_CONDRST_Msk | (uint32_t)RNG_CAND_NIST_CR_VALUE));
+
+              /* Update mask register with new oscillator mask */
+              LL_RNG_SetNoiseSourceMask(RNG, nsmr_temp);
+
+              /* Clear condition reset bit to resume operation */
+              LL_RNG_DisableCondReset(RNG);
+            }
+
+            else
+            {
+              /* Reset RNG condition */
+              STM32_WRITE_REG(RNG->CR, (RNG->CR & ~RNG_CR_RNGEN_Msk) | RNG_CR_CONDRST_Msk);
+
+              /* Update mask register with new oscillator mask */
+              LL_RNG_SetNoiseSourceMask(RNG, nsmr_temp);
+
+              /* Clear condition reset bit to resume operation */
+              LL_RNG_DisableCondReset(RNG);
+            }
+          }
+
+          else
+          {
+            /* Briefly toggle conditional reset to recover RNG */
+            STM32_WRITE_REG(RNG->CR, (RNG->CR & ~RNG_CR_RNGEN_Msk) | RNG_CR_CONDRST_Msk);
+
+            /* unmask all oscillators to find another working condition */
+            LL_RNG_SetNoiseSourceMask(RNG, LL_RNG_GetOscNoiseSrc(RNG, LL_RNG_OSC_1\
+                                                                 | LL_RNG_OSC_2 | LL_RNG_OSC_3));
+            LL_RNG_DisableCondReset(RNG);
+          }
+
+          /* Wait until RNG is not busy */
+          tickstart2 = HAL_GetTick();
+          do
+          {
+            if ((HAL_GetTick() - tickstart2) > PKA_RNG_TIMEOUT_VALUE)
+            {
+              /* New check to avoid false timeout detection in case of preemption */
+              LL_RNG_Disable(RNG);
+              return HAL_ERROR;
+            }
+          } while (STM32_IS_BIT_SET(RNG->CR, RNG_SR_BUSY));
+
+          /* No timeout --> Enable RNG */
+          LL_RNG_Enable(RNG);
+          tickstart3 = HAL_GetTick();
+          do
+          {
+            if (LL_RNG_IsActiveFlag_DRDY(RNG) != 0UL)
+            {
+              break;
+            }
+            if ((HAL_GetTick() - tickstart3) > timeout)
+            {
+              /* New check to avoid false timeout detection in case of preemption */
+              if (LL_RNG_IsActiveFlag_DRDY(RNG) == 0UL)
+              {
+                if (LL_RNG_IsActiveFlag_SECS(RNG) == 0UL)
+                {
+                  LL_RNG_Disable(RNG);
+                  return HAL_ERROR;
+                }
+              }
+            }
+          } while (LL_RNG_IsActiveFlag_SECS(RNG) == 0UL);
+
+          /* Accumulate seed error status bits */
+          htsr_previous_temp = htsr_previous_temp | htsr_temp;
+        }
+      } while ((HAL_GetTick() - tickstart1) <= timeout);
+    }
+  }
+
+  /*Check if seed error current status (SECS)is set */
+  if (LL_RNG_IsActiveFlag_SECS(RNG) != 0U)
+  {
+    return HAL_ERROR;
+  }
+
+  return HAL_OK;
+}
+#endif /* RNG_HTSR0_RPERRX || RNG_HTSR1_ADERRX */
+#endif /* USE_HAL_PKA_RNG_RECOVERY */
 /**
   * @}
   */

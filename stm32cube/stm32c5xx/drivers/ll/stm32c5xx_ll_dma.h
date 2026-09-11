@@ -61,15 +61,15 @@ extern "C" {
 /** @defgroup DMA_LL_Private_Variables DMA Private Variables
   * @{
   */
-#define LL_DMA_NODE_CTR1_REG_OFFSET          0U  /*!< DMA CTR1 register offset          */
-#define LL_DMA_NODE_CTR2_REG_OFFSET          1U  /*!< DMA CTR2 register offset          */
-#define LL_DMA_NODE_CBR1_REG_OFFSET          2U  /*!< DMA CBR1 register offset          */
-#define LL_DMA_NODE_CSAR_REG_OFFSET          3U  /*!< DMA CSAR register offset          */
-#define LL_DMA_NODE_CDAR_REG_OFFSET          4U  /*!< DMA CDAR register offset          */
-#define LL_DMA_NODE_CLLR_REG_OFFSET          5U  /*!< DMA CLLR register offset          */
+#define LL_DMA_NODE_CTR1_REG_OFFSET          (0U)  /*!< DMA CTR1 register offset          */
+#define LL_DMA_NODE_CTR2_REG_OFFSET          (1U)  /*!< DMA CTR2 register offset          */
+#define LL_DMA_NODE_CBR1_REG_OFFSET          (2U)  /*!< DMA CBR1 register offset          */
+#define LL_DMA_NODE_CSAR_REG_OFFSET          (3U)  /*!< DMA CSAR register offset          */
+#define LL_DMA_NODE_CDAR_REG_OFFSET          (4U)  /*!< DMA CDAR register offset          */
+#define LL_DMA_NODE_CLLR_REG_OFFSET          (5U)  /*!< DMA CLLR register offset          */
 
-#define LL_DMA_NODE_REGISTER_NUM             6U  /*!< DMA node register number          */
-#define LL_DMA_NODE_LINEAR_ADDRESSING_OFFSET 20U /*!< DMA node linear addressing offset */
+#define LL_DMA_NODE_REGISTER_NUM             (6U)  /*!< DMA node register number          */
+#define LL_DMA_NODE_LINEAR_ADDRESSING_OFFSET (20U) /*!< DMA node linear addressing offset */
 /**
   * @}
   */
@@ -120,6 +120,7 @@ extern "C" {
 #define LL_LPDMA1_CH7  LPDMA1_CH7  /*!< LL LPDMA1 channel 7  */
 #endif /* LPDMA1_CH7 */
 
+#if defined(LPDMA2)
 /* LPDMA2 channel instances */
 #define LL_LPDMA2_CH0  LPDMA2_CH0  /*!< LL LPDMA2 channel 0  */
 #define LL_LPDMA2_CH1  LPDMA2_CH1  /*!< LL LPDMA2 channel 1  */
@@ -137,11 +138,12 @@ extern "C" {
 #if defined(LPDMA2_CH7)
 #define LL_LPDMA2_CH7  LPDMA2_CH7  /*!< LL LPDMA2 channel 7  */
 #endif /* LPDMA2_CH7 */
+#endif /* LPDMA2 */
 /**
   * @}
   */
 
-/** @defgroup DMA_LL_EC_CLLR_OFFSET CLLR offset
+/** @defgroup DMA_LL_EC_INTERRUPTS DMA Interrupts
   * @{
   */
 #define LL_DMA_IT_TC   DMA_CCR_TCIE                                                     /*!< Transfer complete
@@ -164,7 +166,7 @@ extern "C" {
   * @}
   */
 
-/** @defgroup DMA_LL_EC_CLLR_OFFSET CLLR offset
+/** @defgroup DMA_LL_EC_FLAGS DMA Flags
   * @{
   */
 #define LL_DMA_FLAG_IDLE DMA_CSR_IDLEF                                                /*!< Idle flag                 */
@@ -186,7 +188,7 @@ extern "C" {
 /** @defgroup DMA_LL_EC_PRIORITY_LEVEL Priority Level
   * @{
   */
-#define LL_DMA_PRIORITY_LOW_WEIGHT_LOW  0U             /*!< Priority level : Low Priority, Low Weight  */
+#define LL_DMA_PRIORITY_LOW_WEIGHT_LOW  (0U)           /*!< Priority level : Low Priority, Low Weight  */
 #define LL_DMA_PRIORITY_LOW_WEIGHT_MID  DMA_CCR_PRIO_0 /*!< Priority level : Low Priority, Mid Weight  */
 #define LL_DMA_PRIORITY_LOW_WEIGHT_HIGH DMA_CCR_PRIO_1 /*!< Priority level : Low Priority, High Weight */
 #define LL_DMA_PRIORITY_HIGH            DMA_CCR_PRIO   /*!< Priority level : High Priority             */
@@ -198,7 +200,7 @@ extern "C" {
 /** @defgroup DMA_LL_EC_LINK_STEP_MODE Link Step Mode
   * @{
   */
-#define LL_DMA_LINKEDLIST_EXECUTION_Q    0U          /*!< Channel executed for the full linked list              */
+#define LL_DMA_LINKEDLIST_EXECUTION_Q    (0U)        /*!< Channel executed for the full linked list              */
 #define LL_DMA_LINKEDLIST_EXECUTION_NODE DMA_CCR_LSM /*!< Channel executed once for the current linked list item */
 /**
   * @}
@@ -208,7 +210,7 @@ extern "C" {
 /** @defgroup DMA_LL_EC_DESTINATION_INCREMENT_MODE Destination Increment Mode
   * @{
   */
-#define LL_DMA_DEST_ADDR_FIXED         0U            /*!< Destination fixed single/burst       */
+#define LL_DMA_DEST_ADDR_FIXED         (0U)          /*!< Destination fixed single/burst       */
 #define LL_DMA_DEST_ADDR_INCREMENTED   DMA_CTR1_DINC /*!< Destination incremented single/burst */
 /**
   * @}
@@ -217,7 +219,7 @@ extern "C" {
 /** @defgroup DMA_LL_EC_DESTINATION_DATA_WIDTH Destination Data Width
   * @{
   */
-#define LL_DMA_DEST_DATA_WIDTH_BYTE       0U                  /*!< Destination data width: byte        */
+#define LL_DMA_DEST_DATA_WIDTH_BYTE       (0U)                /*!< Destination data width: byte        */
 #define LL_DMA_DEST_DATA_WIDTH_HALFWORD   DMA_CTR1_DDW_LOG2_0 /*!< Destination data width: halfword    */
 #define LL_DMA_DEST_DATA_WIDTH_WORD       DMA_CTR1_DDW_LOG2_1 /*!< Destination data width: word        */
 /**
@@ -227,13 +229,13 @@ extern "C" {
 /** @defgroup DMA_LL_EC_DESTINATION_DATA_TRUNCATION_PADDING Destination Data Truncation and Padding
   * @{
   */
-#define LL_DMA_DEST_DATA_TRUNC_LEFT_PADD_ZERO  0U              /*!< If src data width < dest data width:
+#define LL_DMA_DEST_DATA_TRUNC_LEFT_PADD_ZERO  (0U)             /*!< If src data width < dest data width:
                                                                     => Right aligned, padded with 0
                                                                        up to the destination data width.
                                                                     If src data width > dest data width:
                                                                     => Right aligned, left truncated
                                                                        down to the destination data width.           */
-#define LL_DMA_DEST_DATA_TRUNC_RIGHT_PADD_SIGN DMA_CTR1_PAM_0  /*!< If src data width < dest data width:
+#define LL_DMA_DEST_DATA_TRUNC_RIGHT_PADD_SIGN DMA_CTR1_PAM_0   /*!< If src data width < dest data width:
                                                                     => Right aligned, padded with sign extended
                                                                        up to the destination data width.
                                                                     If src data width > dest data width:
@@ -246,7 +248,7 @@ extern "C" {
 /** @defgroup DMA_LL_EC_SOURCE_INCREMENT_MODE Source Increment Mode
   * @{
   */
-#define LL_DMA_SRC_ADDR_FIXED        0U            /*!< Source fixed single/burst       */
+#define LL_DMA_SRC_ADDR_FIXED        (0U)          /*!< Source fixed single/burst       */
 #define LL_DMA_SRC_ADDR_INCREMENTED  DMA_CTR1_SINC /*!< Source incremented single/burst */
 /**
   * @}
@@ -255,7 +257,7 @@ extern "C" {
 /** @defgroup DMA_LL_EC_SOURCE_DATA_WIDTH Source Data Width
   * @{
   */
-#define LL_DMA_SRC_DATA_WIDTH_BYTE     0U                  /*!< Source data width: byte        */
+#define LL_DMA_SRC_DATA_WIDTH_BYTE     (0U)                /*!< Source data width: byte        */
 #define LL_DMA_SRC_DATA_WIDTH_HALFWORD DMA_CTR1_SDW_LOG2_0 /*!< Source data width: halfword    */
 #define LL_DMA_SRC_DATA_WIDTH_WORD     DMA_CTR1_SDW_LOG2_1 /*!< Source data width: word        */
 /**
@@ -265,7 +267,7 @@ extern "C" {
 /** @defgroup DMA_LL_EC_BLKHW_REQUEST Block Hardware Request
   * @{
   */
-#define LL_DMA_HARDWARE_REQUEST_BURST   0U            /*!< Hardware request is driven by a peripheral with a hardware
+#define LL_DMA_HARDWARE_REQUEST_BURST   (0U)          /*!< Hardware request is driven by a peripheral with a hardware
                                                         request/acknowledge protocol at a burst level                */
 #define LL_DMA_HARDWARE_REQUEST_BLOCK   DMA_CTR2_BREQ /*!< Hardware request is driven by a peripheral with a hardware
                                                         request/acknowledge protocol at a block level                */
@@ -276,7 +278,7 @@ extern "C" {
 /** @defgroup DMA_LL_EC_TRANSFER_EVENT_MODE Transfer Event Mode
   * @{
   */
-#define LL_DMA_DIRECT_XFER_EVENT_BLOCK              0U               /*!< The TC (and the HT) event is generated at the
+#define LL_DMA_DIRECT_XFER_EVENT_BLOCK              (0U)              /*!< The TC (and the HT) event is generated at the
                                                                           (respectively half of the) end of a block  */
 #define LL_DMA_LINKEDLIST_XFER_EVENT_BLOCK          LL_DMA_DIRECT_XFER_EVENT_BLOCK  /*!< The TC (and the HT) event is
                                                                                          generated at the (respectively
@@ -294,11 +296,11 @@ extern "C" {
 /** @defgroup DMA_LL_EC_TRIGGER_POLARITY Trigger Polarity
   * @{
   */
-#define LL_DMA_TRIGGER_POLARITY_MASKED      0U                 /*!< No trigger of the selected DMA request.
+#define LL_DMA_TRIGGER_POLARITY_MASKED      (0U)                  /*!< No trigger of the selected DMA request.
                                                                     Masked trigger event                             */
-#define LL_DMA_TRIGGER_POLARITY_RISING      DMA_CTR2_TRIGPOL_0 /*!< Trigger of the selected DMA request on the rising
+#define LL_DMA_TRIGGER_POLARITY_RISING      DMA_CTR2_TRIGPOL_0  /*!< Trigger of the selected DMA request on the rising
                                                                     edge of the selected trigger event input         */
-#define LL_DMA_TRIGGER_POLARITY_FALLING     DMA_CTR2_TRIGPOL_1 /*!< Trigger of the selected DMA request on the falling
+#define LL_DMA_TRIGGER_POLARITY_FALLING     DMA_CTR2_TRIGPOL_1  /*!< Trigger of the selected DMA request on the falling
                                                                     edge of the selected trigger event input         */
 /**
   * @}
@@ -307,12 +309,12 @@ extern "C" {
 /** @defgroup DMA_LL_EC_TRIGGER_MODE Transfer Trigger Mode
   * @{
   */
-#define LL_DMA_TRIGGER_BLOCK_TRANSFER           0U                /*!< A block transfer is conditioned
-                                                                       by (at least)one hit trigger                  */
+#define LL_DMA_TRIGGER_BLOCK_TRANSFER           (0U)                /*!< A block transfer is conditioned
+                                                                        by (at least)one hit trigger                  */
 #define LL_DMA_TRIGGER_NODE_TRANSFER            DMA_CTR2_TRIGM_1  /*!< A LLI link transfer is conditioned
-                                                                       by (at least)one hit trigger                  */
+                                                                      by (at least)one hit trigger                    */
 #define LL_DMA_TRIGGER_SINGLE_BURST_TRANSFER    DMA_CTR2_TRIGM    /*!< A Single/Burst transfer is conditioned
-                                                                       by (at least) one hit trigger                 */
+                                                                      by (at least) one hit trigger                   */
 /**
   * @}
   */
@@ -320,10 +322,10 @@ extern "C" {
 /** @defgroup DMA_LL_EC_FLOW_CONTROL_MODE Flow Control Mode
   * @{
   */
-#define LL_DMA_FLOW_CONTROL_DMA    0U              /*!< Hardware request is driven by a peripheral with a hardware
-                                                        request/acknowledge protocol in DMA flow control mode */
-#define LL_DMA_FLOW_CONTROL_PERIPH DMA_CTR2_PFREQ  /*!< Hardware request is driven by a peripheral with a hardware
-                                                        request/acknowledge protocol in peripheral flow control mode */
+#define LL_DMA_FLOW_CONTROL_DMA    (0U)             /*!< Hardware request is driven by a peripheral with a hardware
+                                                        request/acknowledge protocol in DMA flow control mode         */
+#define LL_DMA_FLOW_CONTROL_PERIPH DMA_CTR2_PFREQ   /*!< Hardware request is driven by a peripheral with a hardware
+                                                        request/acknowledge protocol in peripheral flow control mode  */
 /**
   * @}
   */
@@ -332,8 +334,11 @@ extern "C" {
   * @{
   */
 #define LL_DMA_DIRECTION_MEMORY_TO_MEMORY DMA_CTR2_SWREQ /*!< Memory to memory direction     */
-#define LL_DMA_DIRECTION_PERIPH_TO_MEMORY 0U             /*!< Peripheral to memory direction */
-#define LL_DMA_DIRECTION_MEMORY_TO_PERIPH LL_DMA_DIRECTION_PERIPH_TO_MEMORY  /*!< Memory to peripheral direction */
+#define LL_DMA_DIRECTION_PERIPH_TO_MEMORY (0U)           /*!< Peripheral to memory direction.
+                                                             Retained to ensure compatibility with other STM32.*/
+#define LL_DMA_DIRECTION_MEMORY_TO_PERIPH LL_DMA_DIRECTION_PERIPH_TO_MEMORY  /*!< Memory to peripheral direction.
+                                                                                 Retained to ensure compatibility with
+                                                                                 other STM32.*/
 /**
   * @}
   */
@@ -341,8 +346,8 @@ extern "C" {
 /** @defgroup DMA_LL_EC_PRIVILEGE_ATTRIBUTE Privilege Attribute
   * @{
   */
-#define LL_DMA_ATTR_NPRIV 0U /*!< Non-privileged attribute */
-#define LL_DMA_ATTR_PRIV  1U /*!< Privileged attribute     */
+#define LL_DMA_ATTR_NPRIV (0U) /*!< Non-privileged attribute */
+#define LL_DMA_ATTR_PRIV  (1U) /*!< Privileged attribute     */
 /**
   * @}
   */
@@ -430,9 +435,11 @@ extern "C" {
 #define LL_LPDMA1_REQUEST_TIM17_CC1    50U /*!< LPDMA1 HW Request is TIM17_CC1    */
 #define LL_LPDMA1_REQUEST_TIM17_UPD    51U /*!< LPDMA1 HW Request is TIM17_UPD    */
 #endif /* TIM17 */
+#if defined(LPTIM1)
 #define LL_LPDMA1_REQUEST_LPTIM1_IC1   52U /*!< LPDMA1 HW Request is LPTIM1_IC1   */
 #define LL_LPDMA1_REQUEST_LPTIM1_IC2   53U /*!< LPDMA1 HW Request is LPTIM1_IC2   */
 #define LL_LPDMA1_REQUEST_LPTIM1_UE    54U /*!< LPDMA1 HW Request is LPTIM1_UE    */
+#endif /* LPTIM1 */
 #define LL_LPDMA1_REQUEST_CORDIC_RD    55U /*!< LPDMA1 HW Request is CORDIC_RD    */
 #define LL_LPDMA1_REQUEST_CORDIC_WR    56U /*!< LPDMA1 HW Request is CORDIC_WR    */
 #define LL_LPDMA1_REQUEST_I3C1_RX      57U /*!< LPDMA1 HW Request is I3C1_RX      */
@@ -492,6 +499,7 @@ extern "C" {
 #define LL_LPDMA1_REQUEST_XSPI1        94U /*!< LPDMA1 HW Request is XSPI1        */
 #endif /* XSPI1 */
 
+#if defined(LPDMA2)
 /* LPDMA2 Hardware Requests */
 #define LL_LPDMA2_REQUEST_ADC1         0U  /*!< LPDMA2 HW Request is ADC1         */
 #if defined(ADC2)
@@ -558,9 +566,11 @@ extern "C" {
 #define LL_LPDMA2_REQUEST_TIM17_CC1    50U /*!< LPDMA2 HW Request is TIM17_CC1    */
 #define LL_LPDMA2_REQUEST_TIM17_UPD    51U /*!< LPDMA2 HW Request is TIM17_UPD    */
 #endif /* TIM17 */
+#if defined(LPTIM1)
 #define LL_LPDMA2_REQUEST_LPTIM1_IC1   52U /*!< LPDMA2 HW Request is LPTIM1_IC1   */
 #define LL_LPDMA2_REQUEST_LPTIM1_IC2   53U /*!< LPDMA2 HW Request is LPTIM1_IC2   */
 #define LL_LPDMA2_REQUEST_LPTIM1_UE    54U /*!< LPDMA2 HW Request is LPTIM1_UE    */
+#endif /* LPTIM1 */
 #define LL_LPDMA2_REQUEST_CORDIC_RD    55U /*!< LPDMA2 HW Request is CORDIC_RD    */
 #define LL_LPDMA2_REQUEST_CORDIC_WR    56U /*!< LPDMA2 HW Request is CORDIC_WR    */
 #define LL_LPDMA2_REQUEST_I3C1_RX      57U /*!< LPDMA2 HW Request is I3C1_RX      */
@@ -619,6 +629,7 @@ extern "C" {
 #if defined(XSPI1)
 #define LL_LPDMA2_REQUEST_XSPI1        94U /*!< LPDMA2 HW Request is XSPI1        */
 #endif /* XSPI1 */
+#endif /* LPDMA2 */
 /**
   * @}
   */
@@ -638,8 +649,10 @@ extern "C" {
 #define LL_LPDMA1_TRIGGER_TAMP_TRG1        8U  /*!< LPDMA1 HW Trigger is TAMP_TRG1       */
 #define LL_LPDMA1_TRIGGER_TAMP_TRG2        9U  /*!< LPDMA1 HW Trigger is TAMP_TRG2       */
 #define LL_LPDMA1_TRIGGER_TAMP_TRG3        10U /*!< LPDMA1 HW Trigger is TAMP_TRG3       */
+#if defined(LPTIM1)
 #define LL_LPDMA1_TRIGGER_LPTIM1_CH1       11U /*!< LPDMA1 HW Trigger is LPTIM1_CH1      */
 #define LL_LPDMA1_TRIGGER_LPTIM1_CH2       12U /*!< LPDMA1 HW Trigger is LPTIM1_CH2      */
+#endif /* LPTIM1 */
 #define LL_LPDMA1_TRIGGER_RTC_ALRA_TRG     13U /*!< LPDMA1 HW Trigger is RTC_ALRA_TRG    */
 #define LL_LPDMA1_TRIGGER_RTC_ALRB_TRG     14U /*!< LPDMA1 HW Trigger is RTC_ALRB_TRG    */
 #define LL_LPDMA1_TRIGGER_RTC_WUT_TRG      15U /*!< LPDMA1 HW Trigger is RTC_WUT_TRG     */
@@ -663,6 +676,7 @@ extern "C" {
 #if defined (LPDMA1_CH7)
 #define LL_LPDMA1_TRIGGER_LPDMA1_CH7_TC    27U /*!< LPDMA1 HW Trigger is LPDMA1_CH7_TC   */
 #endif /* LPDMA1_CH7 */
+#if defined(LPDMA2)
 #define LL_LPDMA1_TRIGGER_LPDMA2_CH0_TC    28U /*!< LPDMA1 HW Trigger is LPDMA2_CH0_TC   */
 #define LL_LPDMA1_TRIGGER_LPDMA2_CH1_TC    29U /*!< LPDMA1 HW Trigger is LPDMA2_CH1_TC   */
 #define LL_LPDMA1_TRIGGER_LPDMA2_CH2_TC    30U /*!< LPDMA1 HW Trigger is LPDMA2_CH2_TC   */
@@ -679,10 +693,12 @@ extern "C" {
 #if defined (LPDMA2_CH7)
 #define LL_LPDMA1_TRIGGER_LPDMA2_CH7_TC    35U /*!< LPDMA1 HW Trigger is LPDMA2_CH7_TC   */
 #endif /* LPDMA2_CH7 */
+#endif /* LPDMA2 */
 #if defined(COMP2)
 #define LL_LPDMA1_TRIGGER_COMP2_OUT        36U /*!< LPDMA1 HW Trigger is COMP2_OUT       */
 #endif /* COMP2 */
 
+#if defined(LPDMA2)
 /* LPDMA2 Hardware Triggers */
 #define LL_LPDMA2_TRIGGER_EXTI0            0U  /*!< LPDMA2 HW Trigger is EXTI0           */
 #define LL_LPDMA2_TRIGGER_EXTI1            1U  /*!< LPDMA2 HW Trigger is EXTI1           */
@@ -695,8 +711,10 @@ extern "C" {
 #define LL_LPDMA2_TRIGGER_TAMP_TRG1        8U  /*!< LPDMA2 HW Trigger is TAMP_TRG1       */
 #define LL_LPDMA2_TRIGGER_TAMP_TRG2        9U  /*!< LPDMA2 HW Trigger is TAMP_TRG2       */
 #define LL_LPDMA2_TRIGGER_TAMP_TRG3        10U /*!< LPDMA2 HW Trigger is TAMP_TRG3       */
+#if defined(LPTIM1)
 #define LL_LPDMA2_TRIGGER_LPTIM1_CH1       11U /*!< LPDMA2 HW Trigger is LPTIM1_CH1      */
 #define LL_LPDMA2_TRIGGER_LPTIM1_CH2       12U /*!< LPDMA2 HW Trigger is LPTIM1_CH2      */
+#endif /* LPTIM1 */
 #define LL_LPDMA2_TRIGGER_RTC_ALRA_TRG     13U /*!< LPDMA2 HW Trigger is RTC_ALRA_TRG    */
 #define LL_LPDMA2_TRIGGER_RTC_ALRB_TRG     14U /*!< LPDMA2 HW Trigger is RTC_ALRB_TRG    */
 #define LL_LPDMA2_TRIGGER_RTC_WUT_TRG      15U /*!< LPDMA2 HW Trigger is RTC_WUT_TRG     */
@@ -739,6 +757,7 @@ extern "C" {
 #if defined(COMP2)
 #define LL_LPDMA2_TRIGGER_COMP2_OUT        36U /*!< LPDMA2 HW Trigger is COMP2_OUT       */
 #endif /* COMP2 */
+#endif /* LPDMA2 */
 /**
   * @}
   */
@@ -792,6 +811,7 @@ extern "C" {
   * @param  channel_instance dmax_CHy.
   * @retval dmax.
   */
+#if defined (LPDMA2)
 #if defined (LPDMA1_CH7)
 #define LL_DMA_GET_INSTANCE(channel_instance) \
   (((uint32_t)(channel_instance) > ((uint32_t)LPDMA1_CH7)) ?  LPDMA2 : LPDMA1)
@@ -799,12 +819,16 @@ extern "C" {
 #define LL_DMA_GET_INSTANCE(channel_instance) \
   (((uint32_t)(channel_instance) > ((uint32_t)LPDMA1_CH3)) ?  LPDMA2 : LPDMA1)
 #endif /* LPDMA1_CH7 */
+#else
+#define LL_DMA_GET_INSTANCE(channel_instance) LPDMA1
+#endif /* LPDMA2 */
 
 /**
   * @brief  Convert dmax_CHy into LL_DMA_CHANNEL_y.
   * @param  channel_instance dmax_CHy.
   * @retval LL_DMA_CHANNEL_y.
   */
+#if defined (LPDMA2)
 #if defined (LPDMA2_CH7)
 #define LL_DMA_GET_CHANNEL_IDX(channel_instance) \
   (((uint32_t)(channel_instance) == ((uint32_t)LPDMA1_CH0))  ? LL_DMA_CHANNEL_0  : \
@@ -846,6 +870,17 @@ extern "C" {
    ((uint32_t)(channel_instance) == ((uint32_t)LPDMA2_CH2))  ? LL_DMA_CHANNEL_2  : \
    LL_DMA_CHANNEL_3)
 #endif /* LPDMA2_CH7 */
+#else
+#define LL_DMA_GET_CHANNEL_IDX(channel_instance) \
+  (((uint32_t)(channel_instance) == ((uint32_t)LPDMA1_CH0))  ? LL_DMA_CHANNEL_0  : \
+   ((uint32_t)(channel_instance) == ((uint32_t)LPDMA1_CH1))  ? LL_DMA_CHANNEL_1  : \
+   ((uint32_t)(channel_instance) == ((uint32_t)LPDMA1_CH2))  ? LL_DMA_CHANNEL_2  : \
+   ((uint32_t)(channel_instance) == ((uint32_t)LPDMA1_CH3))  ? LL_DMA_CHANNEL_3  : \
+   ((uint32_t)(channel_instance) == ((uint32_t)LPDMA1_CH4))  ? LL_DMA_CHANNEL_4  : \
+   ((uint32_t)(channel_instance) == ((uint32_t)LPDMA1_CH5))  ? LL_DMA_CHANNEL_5  : \
+   ((uint32_t)(channel_instance) == ((uint32_t)LPDMA1_CH6))  ? LL_DMA_CHANNEL_6  : \
+   LL_DMA_CHANNEL_7)
+#endif /* LPDMA2 */
 
 /**
   * @brief  Convert DMA Instance dmax and LL_DMA_CHANNEL_y into dmax_CHy.
@@ -853,6 +888,7 @@ extern "C" {
   * @param  channel      LL_DMA_CHANNEL_y.
   * @retval dmax_CHy.
   */
+#if defined (LPDMA2)
 #if defined (LPDMA2_CH7)
 #define LL_DMA_GET_CHANNEL_INSTANCE(dma_instance, channel) \
   ((((uint32_t)(dma_instance) == ((uint32_t)LPDMA1)) && ((uint32_t)(channel) == ((uint32_t)LL_DMA_CHANNEL_0))) \
@@ -926,6 +962,23 @@ extern "C" {
    (((uint32_t)(dma_instance) == ((uint32_t)LPDMA1)) && ((uint32_t)(channel) == ((uint32_t)LL_DMA_CHANNEL_3))) \
    ? LPDMA1_CH3 :  LPDMA2_CH3)
 #endif /* LPDMA1_CH7 */
+#else
+#define LL_DMA_GET_CHANNEL_INSTANCE(dma_instance, channel) \
+  ((((uint32_t)(dma_instance) == ((uint32_t)LPDMA1)) && ((uint32_t)(channel) == ((uint32_t)LL_DMA_CHANNEL_0))) \
+   ? LPDMA1_CH0  :                                                                                             \
+   (((uint32_t)(dma_instance) == ((uint32_t)LPDMA1)) && ((uint32_t)(channel) == ((uint32_t)LL_DMA_CHANNEL_1))) \
+   ? LPDMA1_CH1  :                                                                                             \
+   (((uint32_t)(dma_instance) == ((uint32_t)LPDMA1)) && ((uint32_t)(channel) == ((uint32_t)LL_DMA_CHANNEL_2))) \
+   ? LPDMA1_CH2  :                                                                                             \
+   (((uint32_t)(dma_instance) == ((uint32_t)LPDMA1)) && ((uint32_t)(channel) == ((uint32_t)LL_DMA_CHANNEL_3))) \
+   ? LPDMA1_CH3  :                                                                                             \
+   (((uint32_t)(dma_instance) == ((uint32_t)LPDMA1)) && ((uint32_t)(channel) == ((uint32_t)LL_DMA_CHANNEL_4))) \
+   ? LPDMA1_CH4  :                                                                                             \
+   (((uint32_t)(dma_instance) == ((uint32_t)LPDMA1)) && ((uint32_t)(channel) == ((uint32_t)LL_DMA_CHANNEL_5))) \
+   ? LPDMA1_CH5  :                                                                                             \
+   (((uint32_t)(dma_instance) == ((uint32_t)LPDMA1)) && ((uint32_t)(channel) == ((uint32_t)LL_DMA_CHANNEL_6))) \
+   ? LPDMA1_CH6 :  LPDMA1_CH7)
+#endif /* LPDMA2 */
 
 /**
   * @}
@@ -965,25 +1018,32 @@ extern "C" {
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   */
 __STATIC_INLINE void LL_DMA_EnableChannel(DMA_Channel_TypeDef *channel)
 {
@@ -1011,29 +1071,36 @@ __STATIC_INLINE void LL_DMA_EnableChannel(DMA_Channel_TypeDef *channel)
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   */
 __STATIC_INLINE void LL_DMA_DisableChannel(DMA_Channel_TypeDef *channel)
 {
-  STM32_SET_BIT(channel->CCR, (DMA_CCR_SUSP | DMA_CCR_RESET));
+  STM32_MODIFY_REG(channel->CCR, (DMA_CCR_SUSP | DMA_CCR_RESET | DMA_CCR_EN), (DMA_CCR_SUSP | DMA_CCR_RESET));
 }
 
 /**
@@ -1057,25 +1124,32 @@ __STATIC_INLINE void LL_DMA_DisableChannel(DMA_Channel_TypeDef *channel)
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_DMA_IsEnabledChannel(const DMA_Channel_TypeDef *channel)
@@ -1104,29 +1178,36 @@ __STATIC_INLINE uint32_t LL_DMA_IsEnabledChannel(const DMA_Channel_TypeDef *chan
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   */
 __STATIC_INLINE void LL_DMA_ResetChannel(DMA_Channel_TypeDef *channel)
 {
-  STM32_SET_BIT(channel->CCR, DMA_CCR_RESET);
+  STM32_MODIFY_REG(channel->CCR, (DMA_CCR_RESET | DMA_CCR_EN), DMA_CCR_RESET);
 }
 
 /**
@@ -1150,29 +1231,36 @@ __STATIC_INLINE void LL_DMA_ResetChannel(DMA_Channel_TypeDef *channel)
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   */
 __STATIC_INLINE void LL_DMA_SuspendChannel(DMA_Channel_TypeDef *channel)
 {
-  STM32_SET_BIT(channel->CCR, DMA_CCR_SUSP);
+  STM32_MODIFY_REG(channel->CCR, (DMA_CCR_SUSP | DMA_CCR_EN), DMA_CCR_SUSP);
 }
 
 /**
@@ -1196,29 +1284,36 @@ __STATIC_INLINE void LL_DMA_SuspendChannel(DMA_Channel_TypeDef *channel)
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   */
 __STATIC_INLINE void LL_DMA_ResumeChannel(DMA_Channel_TypeDef *channel)
 {
-  STM32_CLEAR_BIT(channel->CCR, DMA_CCR_SUSP);
+  STM32_CLEAR_BIT(channel->CCR, (DMA_CCR_EN | DMA_CCR_SUSP));
 }
 
 /**
@@ -1242,25 +1337,32 @@ __STATIC_INLINE void LL_DMA_ResumeChannel(DMA_Channel_TypeDef *channel)
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_DMA_IsSuspendedChannel(const DMA_Channel_TypeDef *channel)
@@ -1290,25 +1392,32 @@ __STATIC_INLINE uint32_t LL_DMA_IsSuspendedChannel(const DMA_Channel_TypeDef *ch
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @param  linked_list_base_addr Between 0 and 0xFFFF0000 (where the 4 LSB bytes are always 0)
   */
 __STATIC_INLINE void LL_DMA_SetLinkedListBaseAddr(DMA_Channel_TypeDef *channel, uint32_t linked_list_base_addr)
@@ -1337,25 +1446,32 @@ __STATIC_INLINE void LL_DMA_SetLinkedListBaseAddr(DMA_Channel_TypeDef *channel, 
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @retval Value between 0 and 0xFFFF0000 (where the 4 LSB bytes are always 0)
   */
 __STATIC_INLINE uint32_t LL_DMA_GetLinkedListBaseAddr(const DMA_Channel_TypeDef *channel)
@@ -1386,25 +1502,32 @@ __STATIC_INLINE uint32_t LL_DMA_GetLinkedListBaseAddr(const DMA_Channel_TypeDef 
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @param  configuration This parameter must be a combination of all the following values:
   *         @arg @ref LL_DMA_PRIORITY_LOW_WEIGHT_LOW  or @ref LL_DMA_PRIORITY_LOW_WEIGHT_MID or
   *              @ref LL_DMA_PRIORITY_LOW_WEIGHT_HIGH or @ref LL_DMA_PRIORITY_HIGH
@@ -1412,7 +1535,7 @@ __STATIC_INLINE uint32_t LL_DMA_GetLinkedListBaseAddr(const DMA_Channel_TypeDef 
   */
 __STATIC_INLINE void LL_DMA_ConfigControl(DMA_Channel_TypeDef *channel, uint32_t configuration)
 {
-  STM32_MODIFY_REG(channel->CCR, (DMA_CCR_PRIO | DMA_CCR_LSM), configuration);
+  STM32_MODIFY_REG(channel->CCR, (DMA_CCR_PRIO | DMA_CCR_LSM | DMA_CCR_EN), configuration);
 }
 
 /**
@@ -1436,25 +1559,32 @@ __STATIC_INLINE void LL_DMA_ConfigControl(DMA_Channel_TypeDef *channel, uint32_t
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @param  priority This parameter can be one of the following values:
   *         @arg @ref LL_DMA_PRIORITY_LOW_WEIGHT_LOW
   *         @arg @ref LL_DMA_PRIORITY_LOW_WEIGHT_MID
@@ -1463,7 +1593,7 @@ __STATIC_INLINE void LL_DMA_ConfigControl(DMA_Channel_TypeDef *channel, uint32_t
   */
 __STATIC_INLINE void LL_DMA_SetChannelPriorityLevel(DMA_Channel_TypeDef *channel, uint32_t priority)
 {
-  STM32_MODIFY_REG(channel->CCR, DMA_CCR_PRIO, priority);
+  STM32_MODIFY_REG(channel->CCR, (DMA_CCR_EN | DMA_CCR_PRIO), priority);
 }
 
 /**
@@ -1487,25 +1617,32 @@ __STATIC_INLINE void LL_DMA_SetChannelPriorityLevel(DMA_Channel_TypeDef *channel
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_DMA_PRIORITY_LOW_WEIGHT_LOW
   *         @arg @ref LL_DMA_PRIORITY_LOW_WEIGHT_MID
@@ -1538,32 +1675,39 @@ __STATIC_INLINE uint32_t LL_DMA_GetChannelPriorityLevel(const DMA_Channel_TypeDe
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @param  link_step_mode This parameter can be one of the following values:
   *         @arg @ref LL_DMA_LINKEDLIST_EXECUTION_Q
   *         @arg @ref LL_DMA_LINKEDLIST_EXECUTION_NODE
   */
 __STATIC_INLINE void LL_DMA_SetLinkStepMode(DMA_Channel_TypeDef *channel, uint32_t link_step_mode)
 {
-  STM32_MODIFY_REG(channel->CCR, DMA_CCR_LSM, link_step_mode);
+  STM32_MODIFY_REG(channel->CCR, (DMA_CCR_EN | DMA_CCR_LSM), link_step_mode);
 }
 
 /**
@@ -1587,25 +1731,32 @@ __STATIC_INLINE void LL_DMA_SetLinkStepMode(DMA_Channel_TypeDef *channel, uint32
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_DMA_LINKEDLIST_EXECUTION_Q
   *         @arg @ref LL_DMA_LINKEDLIST_EXECUTION_NODE
@@ -1638,25 +1789,32 @@ __STATIC_INLINE uint32_t LL_DMA_GetLinkStepMode(const DMA_Channel_TypeDef *chann
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @param  configuration This parameter must be a combination of all the following values:
   *         @arg @ref LL_DMA_DEST_ADDR_FIXED          or @ref LL_DMA_DEST_ADDR_INCREMENTED
   *         @arg @ref LL_DMA_DEST_DATA_WIDTH_BYTE     or @ref LL_DMA_DEST_DATA_WIDTH_HALFWORD or
@@ -1697,25 +1855,32 @@ __STATIC_INLINE void LL_DMA_ConfigTransfer(DMA_Channel_TypeDef *channel, uint32_
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @param  configuration This parameter must be a combination of all the following values:
   *         @arg @ref LL_DMA_DEST_ADDR_FIXED
               or @ref LL_DMA_DEST_ADDR_INCREMENTED
@@ -1754,25 +1919,32 @@ __STATIC_INLINE void LL_DMA_ConfigDataTransfer(DMA_Channel_TypeDef *channel, uin
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @param  configuration This parameter must be a combination of all the following values:
   *         @arg @ref LL_DMA_DEST_DATA_TRUNC_LEFT_PADD_ZERO or @ref LL_DMA_DEST_DATA_TRUNC_RIGHT_PADD_SIGN
   */
@@ -1802,25 +1974,32 @@ __STATIC_INLINE void LL_DMA_ConfigDataHandling(DMA_Channel_TypeDef *channel, uin
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @param  dest_inc This parameter can be one of the following values:
   *         @arg @ref LL_DMA_DEST_ADDR_FIXED
   *         @arg @ref LL_DMA_DEST_ADDR_INCREMENTED
@@ -1851,25 +2030,32 @@ __STATIC_INLINE void LL_DMA_SetDestIncMode(DMA_Channel_TypeDef *channel, uint32_
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_DMA_DEST_ADDR_FIXED
   *         @arg @ref LL_DMA_DEST_ADDR_INCREMENTED
@@ -1900,25 +2086,32 @@ __STATIC_INLINE uint32_t LL_DMA_GetDestIncMode(const DMA_Channel_TypeDef *channe
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @param  dest_data_width This parameter can be one of the following values:
   *         @arg @ref LL_DMA_DEST_DATA_WIDTH_BYTE
   *         @arg @ref LL_DMA_DEST_DATA_WIDTH_HALFWORD
@@ -1950,25 +2143,32 @@ __STATIC_INLINE void LL_DMA_SetDestDataWidth(DMA_Channel_TypeDef *channel, uint3
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_DMA_DEST_DATA_WIDTH_BYTE
   *         @arg @ref LL_DMA_DEST_DATA_WIDTH_HALFWORD
@@ -2000,25 +2200,32 @@ __STATIC_INLINE uint32_t LL_DMA_GetDestDataWidth(const DMA_Channel_TypeDef *chan
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @param  data_trunc_padd This parameter can be one of the following values:
   *         @arg @ref LL_DMA_DEST_DATA_TRUNC_LEFT_PADD_ZERO
   *         @arg @ref LL_DMA_DEST_DATA_TRUNC_RIGHT_PADD_SIGN
@@ -2049,25 +2256,32 @@ __STATIC_INLINE void LL_DMA_SetDataTruncPadd(DMA_Channel_TypeDef *channel, uint3
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_DMA_DEST_DATA_TRUNC_LEFT_PADD_ZERO
   *         @arg @ref LL_DMA_DEST_DATA_TRUNC_RIGHT_PADD_SIGN
@@ -2098,25 +2312,32 @@ __STATIC_INLINE uint32_t LL_DMA_GetDataTruncPadd(const DMA_Channel_TypeDef *chan
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @param  data_alignment This parameter can be one of the following values:
   *         @arg @ref LL_DMA_DEST_DATA_TRUNC_LEFT_PADD_ZERO
   *         @arg @ref LL_DMA_DEST_DATA_TRUNC_RIGHT_PADD_SIGN
@@ -2147,25 +2368,32 @@ __STATIC_INLINE void LL_DMA_SetDataAlignment(DMA_Channel_TypeDef *channel, uint3
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_DMA_DEST_DATA_TRUNC_LEFT_PADD_ZERO
   *         @arg @ref LL_DMA_DEST_DATA_TRUNC_RIGHT_PADD_SIGN
@@ -2196,25 +2424,32 @@ __STATIC_INLINE uint32_t LL_DMA_GetDataAlignment(const DMA_Channel_TypeDef *chan
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @param  src_inc This parameter can be one of the following values:
   *         @arg @ref LL_DMA_SRC_ADDR_FIXED
   *         @arg @ref LL_DMA_SRC_ADDR_INCREMENTED
@@ -2245,25 +2480,32 @@ __STATIC_INLINE void LL_DMA_SetSrcIncMode(DMA_Channel_TypeDef *channel, uint32_t
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_DMA_SRC_ADDR_FIXED
   *         @arg @ref LL_DMA_SRC_ADDR_INCREMENTED
@@ -2294,25 +2536,32 @@ __STATIC_INLINE uint32_t LL_DMA_GetSrcIncMode(const DMA_Channel_TypeDef *channel
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @param  src_data_width This parameter can be one of the following values:
   *         @arg @ref LL_DMA_SRC_DATA_WIDTH_BYTE
   *         @arg @ref LL_DMA_SRC_DATA_WIDTH_HALFWORD
@@ -2344,25 +2593,32 @@ __STATIC_INLINE void LL_DMA_SetSrcDataWidth(DMA_Channel_TypeDef *channel, uint32
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_DMA_SRC_DATA_WIDTH_BYTE
   *         @arg @ref LL_DMA_SRC_DATA_WIDTH_HALFWORD
@@ -2398,25 +2654,32 @@ __STATIC_INLINE uint32_t LL_DMA_GetSrcDataWidth(const DMA_Channel_TypeDef *chann
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @param  configuration This parameter must be a combination of all the following values:
   *         @arg @ref LL_DMA_DIRECT_XFER_EVENT_BLOCK           or @ref LL_DMA_LINKEDLIST_XFER_EVENT_BLOCK
   *              @ref LL_DMA_LINKEDLIST_XFER_EVENT_NODE        or @ref LL_DMA_LINKEDLIST_XFER_EVENT_Q
@@ -2455,25 +2718,32 @@ __STATIC_INLINE void LL_DMA_ConfigChannelTransfer(DMA_Channel_TypeDef *channel, 
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @param  transfer_event_mode This parameter can be one of the following values:
   *         @arg @ref LL_DMA_DIRECT_XFER_EVENT_BLOCK
   *         @arg @ref LL_DMA_LINKEDLIST_XFER_EVENT_NODE
@@ -2505,25 +2775,32 @@ __STATIC_INLINE void LL_DMA_SetTransferEventMode(DMA_Channel_TypeDef *channel, u
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_DMA_DIRECT_XFER_EVENT_BLOCK
   *         @arg @ref LL_DMA_LINKEDLIST_XFER_EVENT_NODE
@@ -2557,25 +2834,32 @@ __STATIC_INLINE uint32_t LL_DMA_GetTransferEventMode(const DMA_Channel_TypeDef *
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @param  trigger_selection This parameter can be one of the following values:
   *         @arg @ref LL_LPDMA1_TRIGGER_EXTI0
   *         @arg @ref LL_LPDMA1_TRIGGER_EXTI1
@@ -2588,8 +2872,10 @@ __STATIC_INLINE uint32_t LL_DMA_GetTransferEventMode(const DMA_Channel_TypeDef *
   *         @arg @ref LL_LPDMA1_TRIGGER_TAMP_TRG1
   *         @arg @ref LL_LPDMA1_TRIGGER_TAMP_TRG2
   *         @arg @ref LL_LPDMA1_TRIGGER_TAMP_TRG3
+  * @if LPTIM1
   *         @arg @ref LL_LPDMA1_TRIGGER_LPTIM1_CH1
   *         @arg @ref LL_LPDMA1_TRIGGER_LPTIM1_CH2
+  * @endif
   *         @arg @ref LL_LPDMA1_TRIGGER_RTC_ALRA_TRG
   *         @arg @ref LL_LPDMA1_TRIGGER_RTC_ALRB_TRG
   *         @arg @ref LL_LPDMA1_TRIGGER_RTC_WUT_TRG
@@ -2613,6 +2899,7 @@ __STATIC_INLINE uint32_t LL_DMA_GetTransferEventMode(const DMA_Channel_TypeDef *
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_TRIGGER_LPDMA1_CH7_TC
   * @endif
+  * @if LPDMA2
   *         @arg @ref LL_LPDMA1_TRIGGER_LPDMA2_CH0_TC
   *         @arg @ref LL_LPDMA1_TRIGGER_LPDMA2_CH1_TC
   *         @arg @ref LL_LPDMA1_TRIGGER_LPDMA2_CH2_TC
@@ -2629,9 +2916,20 @@ __STATIC_INLINE uint32_t LL_DMA_GetTransferEventMode(const DMA_Channel_TypeDef *
   * @if LPDMA2_CH7
   *         @arg @ref LL_LPDMA1_TRIGGER_LPDMA2_CH7_TC
   * @endif
+  * @endif
   * @if COMP2
   *         @arg @ref LL_LPDMA1_TRIGGER_COMP2_OUT
   * @endif
+  * @if COMP3
+  *         @arg @ref LL_LPDMA1_TRIGGER_COMP3_OUT
+  * @endif
+  * @if COMP4
+  *         @arg @ref LL_LPDMA1_TRIGGER_COMP4_OUT
+  * @endif
+  * @if PLAY1
+  *         @arg @ref LL_LPDMA1_TRIGGER_PLAY_OUT3
+  * @endif
+  * @if LPDMA2
   *         @arg @ref LL_LPDMA2_TRIGGER_EXTI0
   *         @arg @ref LL_LPDMA2_TRIGGER_EXTI1
   *         @arg @ref LL_LPDMA2_TRIGGER_EXTI2
@@ -2643,8 +2941,10 @@ __STATIC_INLINE uint32_t LL_DMA_GetTransferEventMode(const DMA_Channel_TypeDef *
   *         @arg @ref LL_LPDMA2_TRIGGER_TAMP_TRG1
   *         @arg @ref LL_LPDMA2_TRIGGER_TAMP_TRG2
   *         @arg @ref LL_LPDMA2_TRIGGER_TAMP_TRG3
+  * @if LPTIM1
   *         @arg @ref LL_LPDMA2_TRIGGER_LPTIM1_CH1
   *         @arg @ref LL_LPDMA2_TRIGGER_LPTIM1_CH2
+  * @endif
   *         @arg @ref LL_LPDMA2_TRIGGER_RTC_ALRA_TRG
   *         @arg @ref LL_LPDMA2_TRIGGER_RTC_ALRB_TRG
   *         @arg @ref LL_LPDMA2_TRIGGER_RTC_WUT_TRG
@@ -2687,6 +2987,16 @@ __STATIC_INLINE uint32_t LL_DMA_GetTransferEventMode(const DMA_Channel_TypeDef *
   * @if COMP2
   *         @arg @ref LL_LPDMA2_TRIGGER_COMP2_OUT
   * @endif
+  * @if COMP3
+  *         @arg @ref LL_LPDMA2_TRIGGER_COMP3_OUT
+  * @endif
+  * @if COMP4
+  *         @arg @ref LL_LPDMA2_TRIGGER_COMP4_OUT
+  * @endif
+  * @if PLAY1
+  *         @arg @ref LL_LPDMA2_TRIGGER_PLAY_OUT15
+  * @endif
+  * @endif
   * @param  trigger_config This parameter must be a combination of all the following values:
   *         @arg @ref LL_DMA_TRIGGER_POLARITY_MASKED
   *           or @ref LL_DMA_TRIGGER_POLARITY_RISING
@@ -2723,25 +3033,32 @@ __STATIC_INLINE void LL_DMA_ConfigChannelTrigger(DMA_Channel_TypeDef *channel, u
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @param  trigger_polarity This parameter can be one of the following values:
   *         @arg @ref LL_DMA_TRIGGER_POLARITY_MASKED
   *         @arg @ref LL_DMA_TRIGGER_POLARITY_RISING
@@ -2773,25 +3090,32 @@ __STATIC_INLINE void LL_DMA_SetTriggerPolarity(DMA_Channel_TypeDef *channel, uin
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_DMA_TRIGGER_POLARITY_MASKED
   *         @arg @ref LL_DMA_TRIGGER_POLARITY_RISING
@@ -2823,25 +3147,32 @@ __STATIC_INLINE uint32_t LL_DMA_GetTriggerPolarity(const DMA_Channel_TypeDef *ch
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @param  trigger_mode This parameter can be one of the following values:
   *         @arg @ref LL_DMA_TRIGGER_BLOCK_TRANSFER
   *         @arg @ref LL_DMA_TRIGGER_NODE_TRANSFER
@@ -2873,25 +3204,32 @@ __STATIC_INLINE void LL_DMA_SetTriggerMode(DMA_Channel_TypeDef *channel, uint32_
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_DMA_TRIGGER_BLOCK_TRANSFER
   *         @arg @ref LL_DMA_TRIGGER_NODE_TRANSFER
@@ -2910,18 +3248,19 @@ __STATIC_INLINE uint32_t LL_DMA_GetTriggerMode(const DMA_Channel_TypeDef *channe
   *         @arg @ref LL_LPDMA1_CH0
   *         @arg @ref LL_LPDMA1_CH3 (*)
   * @if LPDMA1_CH7
-  *         @arg @ref LL_LPDMA1_CH7 (**)
+  *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH3 (***)
+  * @if LPDMA1_CH7
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA1_CH7
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (****)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)    Supported on STMC531xx, STMC532xx and STMC542xx devices only.
-  *         @note (**)   Supported on STMC551xx, STMC552xx, STMC562xx, STMC5A3xx, STMC591xx and STMC593xx devices only.
-  *         @note (***)  Supported on STMC551xx, STMC552xx, STMC562xx, STMC531xx, STMC532xx and STMC542xx devices only.
-  *         @note (****) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @param  flow_control_mode This parameter can be one of the following values:
   *         @arg @ref LL_DMA_FLOW_CONTROL_DMA
   *         @arg @ref LL_DMA_FLOW_CONTROL_PERIPH
@@ -2939,18 +3278,19 @@ __STATIC_INLINE void LL_DMA_SetFlowControlMode(DMA_Channel_TypeDef *channel, uin
   *         @arg @ref LL_LPDMA1_CH0
   *         @arg @ref LL_LPDMA1_CH3 (*)
   * @if LPDMA1_CH7
-  *         @arg @ref LL_LPDMA1_CH7 (**)
+  *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH3 (***)
+  * @if LPDMA1_CH7
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA1_CH7
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (****)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)    Supported on STMC531xx, STMC532xx and STMC542xx devices only.
-  *         @note (**)   Supported on STMC551xx, STMC552xx, STMC562xx, STMC5A3xx, STMC591xx and STMC593xx devices only.
-  *         @note (***)  Supported on STMC551xx, STMC552xx, STMC562xx, STMC531xx, STMC532xx and STMC542xx devices only.
-  *         @note (****) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_DMA_FLOW_CONTROL_DMA
   *         @arg @ref LL_DMA_FLOW_CONTROL_PERIPH
@@ -2981,25 +3321,32 @@ __STATIC_INLINE uint32_t LL_DMA_GetFlowControlMode(const DMA_Channel_TypeDef *ch
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @param  direction This parameter can be one of the following values:
   *         @arg @ref LL_DMA_DIRECTION_PERIPH_TO_MEMORY
   *         @arg @ref LL_DMA_DIRECTION_MEMORY_TO_PERIPH
@@ -3031,25 +3378,32 @@ __STATIC_INLINE void LL_DMA_SetDataTransferDirection(DMA_Channel_TypeDef *channe
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_DMA_DIRECTION_PERIPH_TO_MEMORY
   *         @arg @ref LL_DMA_DIRECTION_MEMORY_TO_PERIPH
@@ -3081,25 +3435,32 @@ __STATIC_INLINE uint32_t LL_DMA_GetDataTransferDirection(const DMA_Channel_TypeD
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @param  blk_hw_request This parameter can be one of the following values:
   *         @arg @ref LL_DMA_HARDWARE_REQUEST_BURST
   *         @arg @ref LL_DMA_HARDWARE_REQUEST_BLOCK
@@ -3130,25 +3491,32 @@ __STATIC_INLINE void LL_DMA_SetHWRequestMode(DMA_Channel_TypeDef *channel, uint3
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_DMA_HARDWARE_REQUEST_BURST
   *         @arg @ref LL_DMA_HARDWARE_REQUEST_BLOCK
@@ -3179,25 +3547,32 @@ __STATIC_INLINE uint32_t LL_DMA_GetHWRequestType(const DMA_Channel_TypeDef *chan
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @param  request This parameter can be one of the following values:
   *         @arg @ref LL_LPDMA1_REQUEST_ADC1
   * @if ADC2
@@ -3263,9 +3638,11 @@ __STATIC_INLINE uint32_t LL_DMA_GetHWRequestType(const DMA_Channel_TypeDef *chan
   *         @arg @ref LL_LPDMA1_REQUEST_TIM17_CC1
   *         @arg @ref LL_LPDMA1_REQUEST_TIM17_UPD
   * @endif
+  * @if LPTIM1
   *         @arg @ref LL_LPDMA1_REQUEST_LPTIM1_IC1
   *         @arg @ref LL_LPDMA1_REQUEST_LPTIM1_IC2
   *         @arg @ref LL_LPDMA1_REQUEST_LPTIM1_UE
+  * @endif
   *         @arg @ref LL_LPDMA1_REQUEST_CORDIC_RD
   *         @arg @ref LL_LPDMA1_REQUEST_CORDIC_WR
   *         @arg @ref LL_LPDMA1_REQUEST_I3C1_RX
@@ -3324,6 +3701,22 @@ __STATIC_INLINE uint32_t LL_DMA_GetHWRequestType(const DMA_Channel_TypeDef *chan
   * @if XSPI1
   *         @arg @ref LL_LPDMA1_REQUEST_XSPI1
   * @endif
+  * @if TIM20
+  *         @arg @ref LL_LPDMA1_REQUEST_TIM20_CC1
+  *         @arg @ref LL_LPDMA1_REQUEST_TIM20_CC2
+  *         @arg @ref LL_LPDMA1_REQUEST_TIM20_CC3
+  *         @arg @ref LL_LPDMA1_REQUEST_TIM20_CC4
+  *         @arg @ref LL_LPDMA1_REQUEST_TIM20_UPD
+  *         @arg @ref LL_LPDMA1_REQUEST_TIM20_TRGI
+  *         @arg @ref LL_LPDMA1_REQUEST_TIM20_COM
+  * @endif
+  * @if DAC2
+  *         @arg @ref LL_LPDMA1_REQUEST_DAC2_CH1
+  * @if (DAC_NB_OF_CHANNEL) && (DAC_NB_OF_CHANNEL == 2UL)
+  *         @arg @ref LL_LPDMA1_REQUEST_DAC2_CH2
+  * @endif
+  * @endif
+  * @if LPDMA2
   *         @arg @ref LL_LPDMA2_REQUEST_ADC1
   * @if ADC2
   *         @arg @ref LL_LPDMA2_REQUEST_ADC2
@@ -3388,9 +3781,11 @@ __STATIC_INLINE uint32_t LL_DMA_GetHWRequestType(const DMA_Channel_TypeDef *chan
   *         @arg @ref LL_LPDMA2_REQUEST_TIM17_CC1
   *         @arg @ref LL_LPDMA2_REQUEST_TIM17_UPD
   * @endif
+  * @if LPTIM1
   *         @arg @ref LL_LPDMA2_REQUEST_LPTIM1_IC1
   *         @arg @ref LL_LPDMA2_REQUEST_LPTIM1_IC2
   *         @arg @ref LL_LPDMA2_REQUEST_LPTIM1_UE
+  * @endif
   *         @arg @ref LL_LPDMA2_REQUEST_CORDIC_RD
   *         @arg @ref LL_LPDMA2_REQUEST_CORDIC_WR
   *         @arg @ref LL_LPDMA2_REQUEST_I3C1_RX
@@ -3449,6 +3844,22 @@ __STATIC_INLINE uint32_t LL_DMA_GetHWRequestType(const DMA_Channel_TypeDef *chan
   * @if XSPI1
   *         @arg @ref LL_LPDMA2_REQUEST_XSPI1
   * @endif
+  * @if TIM20
+  *         @arg @ref LL_LPDMA2_REQUEST_TIM20_CC1
+  *         @arg @ref LL_LPDMA2_REQUEST_TIM20_CC2
+  *         @arg @ref LL_LPDMA2_REQUEST_TIM20_CC3
+  *         @arg @ref LL_LPDMA2_REQUEST_TIM20_CC4
+  *         @arg @ref LL_LPDMA2_REQUEST_TIM20_UPD
+  *         @arg @ref LL_LPDMA2_REQUEST_TIM20_TRGI
+  *         @arg @ref LL_LPDMA2_REQUEST_TIM20_COM
+  * @endif
+  * @if DAC2
+  *         @arg @ref LL_LPDMA2_REQUEST_DAC2_CH1
+  * @if (DAC_NB_OF_CHANNEL) && (DAC_NB_OF_CHANNEL == 2UL)
+  *         @arg @ref LL_LPDMA2_REQUEST_DAC2_CH2
+  * @endif
+  * @endif
+  * @endif
   */
 __STATIC_INLINE void LL_DMA_SetPeriphRequest(DMA_Channel_TypeDef *channel, uint32_t request)
 {
@@ -3476,25 +3887,32 @@ __STATIC_INLINE void LL_DMA_SetPeriphRequest(DMA_Channel_TypeDef *channel, uint3
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_LPDMA1_REQUEST_ADC1
   * @if ADC2
@@ -3560,9 +3978,11 @@ __STATIC_INLINE void LL_DMA_SetPeriphRequest(DMA_Channel_TypeDef *channel, uint3
   *         @arg @ref LL_LPDMA1_REQUEST_TIM17_CC1
   *         @arg @ref LL_LPDMA1_REQUEST_TIM17_UPD
   * @endif
+  * @if LPTIM1
   *         @arg @ref LL_LPDMA1_REQUEST_LPTIM1_IC1
   *         @arg @ref LL_LPDMA1_REQUEST_LPTIM1_IC2
   *         @arg @ref LL_LPDMA1_REQUEST_LPTIM1_UE
+  * @endif
   *         @arg @ref LL_LPDMA1_REQUEST_CORDIC_RD
   *         @arg @ref LL_LPDMA1_REQUEST_CORDIC_WR
   *         @arg @ref LL_LPDMA1_REQUEST_I3C1_RX
@@ -3621,6 +4041,22 @@ __STATIC_INLINE void LL_DMA_SetPeriphRequest(DMA_Channel_TypeDef *channel, uint3
   * @if XSPI1
   *         @arg @ref LL_LPDMA1_REQUEST_XSPI1
   * @endif
+  * @if TIM20
+  *         @arg @ref LL_LPDMA1_REQUEST_TIM20_CC1
+  *         @arg @ref LL_LPDMA1_REQUEST_TIM20_CC2
+  *         @arg @ref LL_LPDMA1_REQUEST_TIM20_CC3
+  *         @arg @ref LL_LPDMA1_REQUEST_TIM20_CC4
+  *         @arg @ref LL_LPDMA1_REQUEST_TIM20_UPD
+  *         @arg @ref LL_LPDMA1_REQUEST_TIM20_TRGI
+  *         @arg @ref LL_LPDMA1_REQUEST_TIM20_COM
+  * @endif
+  * @if DAC2
+  *         @arg @ref LL_LPDMA1_REQUEST_DAC2_CH1
+  * @if (DAC_NB_OF_CHANNEL) && (DAC_NB_OF_CHANNEL == 2UL)
+  *         @arg @ref LL_LPDMA1_REQUEST_DAC2_CH2
+  * @endif
+  * @endif
+  * @if LPDMA2
   *         @arg @ref LL_LPDMA2_REQUEST_ADC1
   * @if ADC2
   *         @arg @ref LL_LPDMA2_REQUEST_ADC2
@@ -3685,9 +4121,11 @@ __STATIC_INLINE void LL_DMA_SetPeriphRequest(DMA_Channel_TypeDef *channel, uint3
   *         @arg @ref LL_LPDMA2_REQUEST_TIM17_CC1
   *         @arg @ref LL_LPDMA2_REQUEST_TIM17_UPD
   * @endif
+  * @if LPTIM1
   *         @arg @ref LL_LPDMA2_REQUEST_LPTIM1_IC1
   *         @arg @ref LL_LPDMA2_REQUEST_LPTIM1_IC2
   *         @arg @ref LL_LPDMA2_REQUEST_LPTIM1_UE
+  * @endif
   *         @arg @ref LL_LPDMA2_REQUEST_CORDIC_RD
   *         @arg @ref LL_LPDMA2_REQUEST_CORDIC_WR
   *         @arg @ref LL_LPDMA2_REQUEST_I3C1_RX
@@ -3746,6 +4184,22 @@ __STATIC_INLINE void LL_DMA_SetPeriphRequest(DMA_Channel_TypeDef *channel, uint3
   * @if XSPI1
   *         @arg @ref LL_LPDMA2_REQUEST_XSPI1
   * @endif
+  * @if TIM20
+  *         @arg @ref LL_LPDMA2_REQUEST_TIM20_CC1
+  *         @arg @ref LL_LPDMA2_REQUEST_TIM20_CC2
+  *         @arg @ref LL_LPDMA2_REQUEST_TIM20_CC3
+  *         @arg @ref LL_LPDMA2_REQUEST_TIM20_CC4
+  *         @arg @ref LL_LPDMA2_REQUEST_TIM20_UPD
+  *         @arg @ref LL_LPDMA2_REQUEST_TIM20_TRGI
+  *         @arg @ref LL_LPDMA2_REQUEST_TIM20_COM
+  * @endif
+  * @if DAC2
+  *         @arg @ref LL_LPDMA2_REQUEST_DAC2_CH1
+  * @if (DAC_NB_OF_CHANNEL) && (DAC_NB_OF_CHANNEL == 2UL)
+  *         @arg @ref LL_LPDMA2_REQUEST_DAC2_CH2
+  * @endif
+  * @endif
+  * @endif
   */
 __STATIC_INLINE uint32_t LL_DMA_GetPeriphRequest(const DMA_Channel_TypeDef *channel)
 {
@@ -3773,25 +4227,32 @@ __STATIC_INLINE uint32_t LL_DMA_GetPeriphRequest(const DMA_Channel_TypeDef *chan
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @param  trigger This parameter can be one of the following values:
   *         @arg @ref LL_LPDMA1_TRIGGER_EXTI0
   *         @arg @ref LL_LPDMA1_TRIGGER_EXTI1
@@ -3804,8 +4265,10 @@ __STATIC_INLINE uint32_t LL_DMA_GetPeriphRequest(const DMA_Channel_TypeDef *chan
   *         @arg @ref LL_LPDMA1_TRIGGER_TAMP_TRG1
   *         @arg @ref LL_LPDMA1_TRIGGER_TAMP_TRG2
   *         @arg @ref LL_LPDMA1_TRIGGER_TAMP_TRG3
+  * @if LPTIM1
   *         @arg @ref LL_LPDMA1_TRIGGER_LPTIM1_CH1
   *         @arg @ref LL_LPDMA1_TRIGGER_LPTIM1_CH2
+  * @endif
   *         @arg @ref LL_LPDMA1_TRIGGER_RTC_ALRA_TRG
   *         @arg @ref LL_LPDMA1_TRIGGER_RTC_ALRB_TRG
   *         @arg @ref LL_LPDMA1_TRIGGER_RTC_WUT_TRG
@@ -3829,6 +4292,7 @@ __STATIC_INLINE uint32_t LL_DMA_GetPeriphRequest(const DMA_Channel_TypeDef *chan
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_TRIGGER_LPDMA1_CH7_TC
   * @endif
+  * @if LPDMA2
   *         @arg @ref LL_LPDMA1_TRIGGER_LPDMA2_CH0_TC
   *         @arg @ref LL_LPDMA1_TRIGGER_LPDMA2_CH1_TC
   *         @arg @ref LL_LPDMA1_TRIGGER_LPDMA2_CH2_TC
@@ -3845,9 +4309,20 @@ __STATIC_INLINE uint32_t LL_DMA_GetPeriphRequest(const DMA_Channel_TypeDef *chan
   * @if LPDMA2_CH7
   *         @arg @ref LL_LPDMA1_TRIGGER_LPDMA2_CH7_TC
   * @endif
+  * @endif
   * @if COMP2
   *         @arg @ref LL_LPDMA1_TRIGGER_COMP2_OUT
   * @endif
+  * @if COMP3
+  *         @arg @ref LL_LPDMA1_TRIGGER_COMP3_OUT
+  * @endif
+  * @if COMP4
+  *         @arg @ref LL_LPDMA1_TRIGGER_COMP4_OUT
+  * @endif
+  * @if PLAY1
+  *         @arg @ref LL_LPDMA1_TRIGGER_PLAY_OUT3
+  * @endif
+  * @if LPDMA2
   *         @arg @ref LL_LPDMA2_TRIGGER_EXTI0
   *         @arg @ref LL_LPDMA2_TRIGGER_EXTI1
   *         @arg @ref LL_LPDMA2_TRIGGER_EXTI2
@@ -3859,8 +4334,10 @@ __STATIC_INLINE uint32_t LL_DMA_GetPeriphRequest(const DMA_Channel_TypeDef *chan
   *         @arg @ref LL_LPDMA2_TRIGGER_TAMP_TRG1
   *         @arg @ref LL_LPDMA2_TRIGGER_TAMP_TRG2
   *         @arg @ref LL_LPDMA2_TRIGGER_TAMP_TRG3
+  * @if LPTIM1
   *         @arg @ref LL_LPDMA2_TRIGGER_LPTIM1_CH1
   *         @arg @ref LL_LPDMA2_TRIGGER_LPTIM1_CH2
+  * @endif
   *         @arg @ref LL_LPDMA2_TRIGGER_RTC_ALRA_TRG
   *         @arg @ref LL_LPDMA2_TRIGGER_RTC_ALRB_TRG
   *         @arg @ref LL_LPDMA2_TRIGGER_RTC_WUT_TRG
@@ -3902,6 +4379,16 @@ __STATIC_INLINE uint32_t LL_DMA_GetPeriphRequest(const DMA_Channel_TypeDef *chan
   * @endif
   * @if COMP2
   *         @arg @ref LL_LPDMA2_TRIGGER_COMP2_OUT
+  * @endif
+  * @if COMP3
+  *         @arg @ref LL_LPDMA2_TRIGGER_COMP3_OUT
+  * @endif
+  * @if COMP4
+  *         @arg @ref LL_LPDMA2_TRIGGER_COMP4_OUT
+  * @endif
+  * @if PLAY1
+  *         @arg @ref LL_LPDMA2_TRIGGER_PLAY_OUT15
+  * @endif
   * @endif
   */
 __STATIC_INLINE void LL_DMA_SetHWTrigger(DMA_Channel_TypeDef *channel, uint32_t trigger)
@@ -3930,25 +4417,32 @@ __STATIC_INLINE void LL_DMA_SetHWTrigger(DMA_Channel_TypeDef *channel, uint32_t 
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_LPDMA1_TRIGGER_EXTI0
   *         @arg @ref LL_LPDMA1_TRIGGER_EXTI1
@@ -3961,8 +4455,10 @@ __STATIC_INLINE void LL_DMA_SetHWTrigger(DMA_Channel_TypeDef *channel, uint32_t 
   *         @arg @ref LL_LPDMA1_TRIGGER_TAMP_TRG1
   *         @arg @ref LL_LPDMA1_TRIGGER_TAMP_TRG2
   *         @arg @ref LL_LPDMA1_TRIGGER_TAMP_TRG3
+  * @if LPTIM1
   *         @arg @ref LL_LPDMA1_TRIGGER_LPTIM1_CH1
   *         @arg @ref LL_LPDMA1_TRIGGER_LPTIM1_CH2
+  * @endif
   *         @arg @ref LL_LPDMA1_TRIGGER_RTC_ALRA_TRG
   *         @arg @ref LL_LPDMA1_TRIGGER_RTC_ALRB_TRG
   *         @arg @ref LL_LPDMA1_TRIGGER_RTC_WUT_TRG
@@ -3986,6 +4482,7 @@ __STATIC_INLINE void LL_DMA_SetHWTrigger(DMA_Channel_TypeDef *channel, uint32_t 
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_TRIGGER_LPDMA1_CH7_TC
   * @endif
+  * @if LPDMA2
   *         @arg @ref LL_LPDMA1_TRIGGER_LPDMA2_CH0_TC
   *         @arg @ref LL_LPDMA1_TRIGGER_LPDMA2_CH1_TC
   *         @arg @ref LL_LPDMA1_TRIGGER_LPDMA2_CH2_TC
@@ -4002,9 +4499,20 @@ __STATIC_INLINE void LL_DMA_SetHWTrigger(DMA_Channel_TypeDef *channel, uint32_t 
   * @if LPDMA2_CH7
   *         @arg @ref LL_LPDMA1_TRIGGER_LPDMA2_CH7_TC
   * @endif
+  * @endif
   * @if COMP2
   *         @arg @ref LL_LPDMA1_TRIGGER_COMP2_OUT
   * @endif
+  * @if COMP3
+  *         @arg @ref LL_LPDMA1_TRIGGER_COMP3_OUT
+  * @endif
+  * @if COMP4
+  *         @arg @ref LL_LPDMA1_TRIGGER_COMP4_OUT
+  * @endif
+  * @if PLAY1
+  *         @arg @ref LL_LPDMA1_TRIGGER_PLAY_OUT3
+  * @endif
+  * @if LPDMA2
   *         @arg @ref LL_LPDMA2_TRIGGER_EXTI0
   *         @arg @ref LL_LPDMA2_TRIGGER_EXTI1
   *         @arg @ref LL_LPDMA2_TRIGGER_EXTI2
@@ -4016,8 +4524,10 @@ __STATIC_INLINE void LL_DMA_SetHWTrigger(DMA_Channel_TypeDef *channel, uint32_t 
   *         @arg @ref LL_LPDMA2_TRIGGER_TAMP_TRG1
   *         @arg @ref LL_LPDMA2_TRIGGER_TAMP_TRG2
   *         @arg @ref LL_LPDMA2_TRIGGER_TAMP_TRG3
+  * @if LPTIM1
   *         @arg @ref LL_LPDMA2_TRIGGER_LPTIM1_CH1
   *         @arg @ref LL_LPDMA2_TRIGGER_LPTIM1_CH2
+  * @endif
   *         @arg @ref LL_LPDMA2_TRIGGER_RTC_ALRA_TRG
   *         @arg @ref LL_LPDMA2_TRIGGER_RTC_ALRB_TRG
   *         @arg @ref LL_LPDMA2_TRIGGER_RTC_WUT_TRG
@@ -4060,6 +4570,16 @@ __STATIC_INLINE void LL_DMA_SetHWTrigger(DMA_Channel_TypeDef *channel, uint32_t 
   * @if COMP2
   *         @arg @ref LL_LPDMA2_TRIGGER_COMP2_OUT
   * @endif
+  * @if COMP3
+  *         @arg @ref LL_LPDMA2_TRIGGER_COMP3_OUT
+  * @endif
+  * @if COMP4
+  *         @arg @ref LL_LPDMA2_TRIGGER_COMP4_OUT
+  * @endif
+  * @if PLAY1
+  *         @arg @ref LL_LPDMA2_TRIGGER_PLAY_OUT15
+  * @endif
+  * @endif
   */
 __STATIC_INLINE  uint32_t LL_DMA_GetHWTrigger(const DMA_Channel_TypeDef *channel)
 {
@@ -4087,25 +4607,32 @@ __STATIC_INLINE  uint32_t LL_DMA_GetHWTrigger(const DMA_Channel_TypeDef *channel
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @param  blk_data_length Between 0 and 0x0000FFFF
   */
 __STATIC_INLINE void LL_DMA_SetBlkDataLength(DMA_Channel_TypeDef *channel, uint32_t blk_data_length)
@@ -4134,25 +4661,32 @@ __STATIC_INLINE void LL_DMA_SetBlkDataLength(DMA_Channel_TypeDef *channel, uint3
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @retval Between 0 and 0x0000FFFF
   */
 __STATIC_INLINE uint32_t LL_DMA_GetBlkDataLength(const DMA_Channel_TypeDef *channel)
@@ -4182,25 +4716,32 @@ __STATIC_INLINE uint32_t LL_DMA_GetBlkDataLength(const DMA_Channel_TypeDef *chan
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @param  src_address Between 0 and 0xFFFFFFFF
   * @param  dest_address Between 0 and 0xFFFFFFFF
   * @warning This API must not be called when the DMA channel is enabled.
@@ -4232,25 +4773,32 @@ __STATIC_INLINE void LL_DMA_ConfigAddresses(DMA_Channel_TypeDef *channel, uint32
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @param  src_address Between 0 and 0xFFFFFFFF
   */
 __STATIC_INLINE void LL_DMA_SetSrcAddress(DMA_Channel_TypeDef *channel, uint32_t src_address)
@@ -4279,25 +4827,32 @@ __STATIC_INLINE void LL_DMA_SetSrcAddress(DMA_Channel_TypeDef *channel, uint32_t
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @retval Between 0 and 0xFFFFFFFF
   */
 __STATIC_INLINE uint32_t LL_DMA_GetSrcAddress(const DMA_Channel_TypeDef *channel)
@@ -4326,25 +4881,32 @@ __STATIC_INLINE uint32_t LL_DMA_GetSrcAddress(const DMA_Channel_TypeDef *channel
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @param  dest_address Between 0 and 0xFFFFFFFF
   */
 __STATIC_INLINE void LL_DMA_SetDestAddress(DMA_Channel_TypeDef *channel, uint32_t dest_address)
@@ -4373,25 +4935,32 @@ __STATIC_INLINE void LL_DMA_SetDestAddress(DMA_Channel_TypeDef *channel, uint32_
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @retval Between 0 and 0xFFFFFFFF
   */
 __STATIC_INLINE uint32_t LL_DMA_GetDestAddress(const DMA_Channel_TypeDef *channel)
@@ -4425,25 +4994,32 @@ __STATIC_INLINE uint32_t LL_DMA_GetDestAddress(const DMA_Channel_TypeDef *channe
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @param  registers_update This parameter must be a combination of all the following values:
   *         @arg @ref LL_DMA_UPDATE_CTR1
   *         @arg @ref LL_DMA_UPDATE_CTR2
@@ -4483,25 +5059,32 @@ __STATIC_INLINE void LL_DMA_ConfigLinkUpdate(DMA_Channel_TypeDef *channel, uint3
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   */
 __STATIC_INLINE void LL_DMA_EnableCTR1Update(DMA_Channel_TypeDef *channel)
 {
@@ -4529,25 +5112,32 @@ __STATIC_INLINE void LL_DMA_EnableCTR1Update(DMA_Channel_TypeDef *channel)
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   */
 __STATIC_INLINE void LL_DMA_DisableCTR1Update(DMA_Channel_TypeDef *channel)
 {
@@ -4575,25 +5165,32 @@ __STATIC_INLINE void LL_DMA_DisableCTR1Update(DMA_Channel_TypeDef *channel)
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_DMA_IsEnabledCTR1Update(const DMA_Channel_TypeDef *channel)
@@ -4622,25 +5219,32 @@ __STATIC_INLINE uint32_t LL_DMA_IsEnabledCTR1Update(const DMA_Channel_TypeDef *c
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   */
 __STATIC_INLINE void LL_DMA_EnableCTR2Update(DMA_Channel_TypeDef *channel)
 {
@@ -4668,25 +5272,32 @@ __STATIC_INLINE void LL_DMA_EnableCTR2Update(DMA_Channel_TypeDef *channel)
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   */
 __STATIC_INLINE void LL_DMA_DisableCTR2Update(DMA_Channel_TypeDef *channel)
 {
@@ -4714,25 +5325,32 @@ __STATIC_INLINE void LL_DMA_DisableCTR2Update(DMA_Channel_TypeDef *channel)
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_DMA_IsEnabledCTR2Update(const DMA_Channel_TypeDef *channel)
@@ -4761,25 +5379,32 @@ __STATIC_INLINE uint32_t LL_DMA_IsEnabledCTR2Update(const DMA_Channel_TypeDef *c
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   */
 __STATIC_INLINE void LL_DMA_EnableCBR1Update(DMA_Channel_TypeDef *channel)
 {
@@ -4807,25 +5432,32 @@ __STATIC_INLINE void LL_DMA_EnableCBR1Update(DMA_Channel_TypeDef *channel)
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   */
 __STATIC_INLINE void LL_DMA_DisableCBR1Update(DMA_Channel_TypeDef *channel)
 {
@@ -4853,25 +5485,32 @@ __STATIC_INLINE void LL_DMA_DisableCBR1Update(DMA_Channel_TypeDef *channel)
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_DMA_IsEnabledCBR1Update(const DMA_Channel_TypeDef *channel)
@@ -4900,25 +5539,32 @@ __STATIC_INLINE uint32_t LL_DMA_IsEnabledCBR1Update(const DMA_Channel_TypeDef *c
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   */
 __STATIC_INLINE void LL_DMA_EnableCSARUpdate(DMA_Channel_TypeDef *channel)
 {
@@ -4946,25 +5592,32 @@ __STATIC_INLINE void LL_DMA_EnableCSARUpdate(DMA_Channel_TypeDef *channel)
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   */
 __STATIC_INLINE void LL_DMA_DisableCSARUpdate(DMA_Channel_TypeDef *channel)
 {
@@ -4992,25 +5645,32 @@ __STATIC_INLINE void LL_DMA_DisableCSARUpdate(DMA_Channel_TypeDef *channel)
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_DMA_IsEnabledCSARUpdate(const DMA_Channel_TypeDef *channel)
@@ -5039,25 +5699,32 @@ __STATIC_INLINE uint32_t LL_DMA_IsEnabledCSARUpdate(const DMA_Channel_TypeDef *c
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   */
 __STATIC_INLINE void LL_DMA_EnableCDARUpdate(DMA_Channel_TypeDef *channel)
 {
@@ -5085,25 +5752,32 @@ __STATIC_INLINE void LL_DMA_EnableCDARUpdate(DMA_Channel_TypeDef *channel)
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   */
 __STATIC_INLINE void LL_DMA_DisableCDARUpdate(DMA_Channel_TypeDef *channel)
 {
@@ -5131,25 +5805,32 @@ __STATIC_INLINE void LL_DMA_DisableCDARUpdate(DMA_Channel_TypeDef *channel)
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_DMA_IsEnabledCDARUpdate(const DMA_Channel_TypeDef *channel)
@@ -5178,25 +5859,32 @@ __STATIC_INLINE uint32_t LL_DMA_IsEnabledCDARUpdate(const DMA_Channel_TypeDef *c
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   */
 __STATIC_INLINE void LL_DMA_EnableCLLRUpdate(DMA_Channel_TypeDef *channel)
 {
@@ -5224,25 +5912,32 @@ __STATIC_INLINE void LL_DMA_EnableCLLRUpdate(DMA_Channel_TypeDef *channel)
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   */
 __STATIC_INLINE void LL_DMA_DisableCLLRUpdate(DMA_Channel_TypeDef *channel)
 {
@@ -5270,25 +5965,32 @@ __STATIC_INLINE void LL_DMA_DisableCLLRUpdate(DMA_Channel_TypeDef *channel)
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_DMA_IsEnabledCLLRUpdate(const DMA_Channel_TypeDef *channel)
@@ -5317,25 +6019,32 @@ __STATIC_INLINE uint32_t LL_DMA_IsEnabledCLLRUpdate(const DMA_Channel_TypeDef *c
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @param  linked_list_addr_offset Between 0 and 0x0000FFFC
   */
 __STATIC_INLINE void LL_DMA_SetLinkedListAddrOffset(DMA_Channel_TypeDef *channel, uint32_t linked_list_addr_offset)
@@ -5364,25 +6073,32 @@ __STATIC_INLINE void LL_DMA_SetLinkedListAddrOffset(DMA_Channel_TypeDef *channel
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @retval Between 0 and 0x0000FFFC.
   */
 __STATIC_INLINE uint32_t LL_DMA_GetLinkedListAddrOffset(const DMA_Channel_TypeDef *channel)
@@ -5405,8 +6121,8 @@ __STATIC_INLINE uint32_t LL_DMA_GetLinkedListAddrOffset(const DMA_Channel_TypeDe
   *         @arg @ref LL_DMA_CHANNEL_6 (*)
   *         @arg @ref LL_DMA_CHANNEL_7 (*)
   *         @arg @ref LL_DMA_CHANNEL_ALL
-  *         @note (*) Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @param  priv_attr This parameter can be one of the following values:
   *         @arg @ref LL_DMA_ATTR_PRIV
   *         @arg @ref LL_DMA_ATTR_NPRIV
@@ -5431,8 +6147,8 @@ __STATIC_INLINE void LL_DMA_SetPrivAttr(DMA_TypeDef *dmax, uint32_t channel, uin
   *         @arg @ref LL_DMA_CHANNEL_6 (*)
   *         @arg @ref LL_DMA_CHANNEL_7 (*)
   *         @arg @ref LL_DMA_CHANNEL_ALL
-  *         @note (*) Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_DMA_ATTR_PRIV
   *         @arg @ref LL_DMA_ATTR_NPRIV
@@ -5458,8 +6174,8 @@ __STATIC_INLINE uint32_t LL_DMA_GetPrivAttr(const DMA_TypeDef *dmax, uint32_t ch
   *         @arg @ref LL_DMA_CHANNEL_6 (*)
   *         @arg @ref LL_DMA_CHANNEL_7 (*)
   *         @arg @ref LL_DMA_CHANNEL_ALL
-  *         @note (*) Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   */
 __STATIC_INLINE void LL_DMA_LockAttr(DMA_TypeDef *dmax, uint32_t channel)
 {
@@ -5482,8 +6198,8 @@ __STATIC_INLINE void LL_DMA_LockAttr(DMA_TypeDef *dmax, uint32_t channel)
   *         @arg @ref LL_DMA_CHANNEL_6 (*)
   *         @arg @ref LL_DMA_CHANNEL_7 (*)
   *         @arg @ref LL_DMA_CHANNEL_ALL
-  *         @note (*) Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_DMA_IsLockedAttr(const DMA_TypeDef *dmax, uint32_t channel)
@@ -5525,25 +6241,32 @@ __STATIC_INLINE uint32_t LL_DMA_IsLockedAttr(const DMA_TypeDef *dmax, uint32_t c
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @param  flag This parameter must be a combination of all the following values:
   *         @arg @ref LL_DMA_FLAG_TO
   *         @arg @ref LL_DMA_FLAG_SUSP
@@ -5580,25 +6303,32 @@ __STATIC_INLINE void LL_DMA_ClearFlag(DMA_Channel_TypeDef *channel, uint32_t fla
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   */
 __STATIC_INLINE void LL_DMA_ClearFlag_TO(DMA_Channel_TypeDef *channel)
 {
@@ -5626,25 +6356,32 @@ __STATIC_INLINE void LL_DMA_ClearFlag_TO(DMA_Channel_TypeDef *channel)
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   */
 __STATIC_INLINE void LL_DMA_ClearFlag_SUSP(DMA_Channel_TypeDef *channel)
 {
@@ -5672,25 +6409,32 @@ __STATIC_INLINE void LL_DMA_ClearFlag_SUSP(DMA_Channel_TypeDef *channel)
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   */
 __STATIC_INLINE void LL_DMA_ClearFlag_USE(DMA_Channel_TypeDef *channel)
 {
@@ -5718,25 +6462,32 @@ __STATIC_INLINE void LL_DMA_ClearFlag_USE(DMA_Channel_TypeDef *channel)
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   */
 __STATIC_INLINE void LL_DMA_ClearFlag_ULE(DMA_Channel_TypeDef *channel)
 {
@@ -5764,25 +6515,32 @@ __STATIC_INLINE void LL_DMA_ClearFlag_ULE(DMA_Channel_TypeDef *channel)
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   */
 __STATIC_INLINE void LL_DMA_ClearFlag_DTE(DMA_Channel_TypeDef *channel)
 {
@@ -5810,25 +6568,32 @@ __STATIC_INLINE void LL_DMA_ClearFlag_DTE(DMA_Channel_TypeDef *channel)
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   */
 __STATIC_INLINE void LL_DMA_ClearFlag_HT(DMA_Channel_TypeDef *channel)
 {
@@ -5856,25 +6621,32 @@ __STATIC_INLINE void LL_DMA_ClearFlag_HT(DMA_Channel_TypeDef *channel)
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   */
 __STATIC_INLINE void LL_DMA_ClearFlag_TC(DMA_Channel_TypeDef *channel)
 {
@@ -5902,25 +6674,32 @@ __STATIC_INLINE void LL_DMA_ClearFlag_TC(DMA_Channel_TypeDef *channel)
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_DMA_IsActiveFlag_TO(const DMA_Channel_TypeDef *channel)
@@ -5949,25 +6728,32 @@ __STATIC_INLINE uint32_t LL_DMA_IsActiveFlag_TO(const DMA_Channel_TypeDef *chann
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_DMA_IsActiveFlag_SUSP(const DMA_Channel_TypeDef *channel)
@@ -5996,25 +6782,32 @@ __STATIC_INLINE uint32_t LL_DMA_IsActiveFlag_SUSP(const DMA_Channel_TypeDef *cha
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_DMA_IsActiveFlag_USE(const DMA_Channel_TypeDef *channel)
@@ -6043,25 +6836,32 @@ __STATIC_INLINE uint32_t LL_DMA_IsActiveFlag_USE(const DMA_Channel_TypeDef *chan
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_DMA_IsActiveFlag_ULE(const DMA_Channel_TypeDef *channel)
@@ -6090,25 +6890,32 @@ __STATIC_INLINE uint32_t LL_DMA_IsActiveFlag_ULE(const DMA_Channel_TypeDef *chan
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_DMA_IsActiveFlag_DTE(const DMA_Channel_TypeDef *channel)
@@ -6137,25 +6944,32 @@ __STATIC_INLINE uint32_t LL_DMA_IsActiveFlag_DTE(const DMA_Channel_TypeDef *chan
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_DMA_IsActiveFlag_HT(const DMA_Channel_TypeDef *channel)
@@ -6184,25 +6998,32 @@ __STATIC_INLINE uint32_t LL_DMA_IsActiveFlag_HT(const DMA_Channel_TypeDef *chann
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_DMA_IsActiveFlag_TC(const DMA_Channel_TypeDef *channel)
@@ -6231,25 +7052,32 @@ __STATIC_INLINE uint32_t LL_DMA_IsActiveFlag_TC(const DMA_Channel_TypeDef *chann
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_DMA_IsActiveFlag_IDLE(const DMA_Channel_TypeDef *channel)
@@ -6272,8 +7100,8 @@ __STATIC_INLINE uint32_t LL_DMA_IsActiveFlag_IDLE(const DMA_Channel_TypeDef *cha
   *         @arg @ref LL_DMA_CHANNEL_6 (*)
   *         @arg @ref LL_DMA_CHANNEL_7 (*)
   *         @arg @ref LL_DMA_CHANNEL_ALL
-  *         @note (*) Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_DMA_IsActiveFlag_MIS(const DMA_TypeDef *dmax, uint32_t channel)
@@ -6315,25 +7143,32 @@ __STATIC_INLINE uint32_t LL_DMA_IsActiveFlag_MIS(const DMA_TypeDef *dmax, uint32
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @param  interrupt This parameter must be a combination of all the following values:
   *         @arg @ref LL_DMA_IT_TO
   *         @arg @ref LL_DMA_IT_SUSP
@@ -6376,25 +7211,32 @@ __STATIC_INLINE void LL_DMA_EnableIT(DMA_Channel_TypeDef *channel, uint32_t inte
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @param  interrupt This parameter must be a combination of all the following values:
   *         @arg @ref LL_DMA_IT_TO
   *         @arg @ref LL_DMA_IT_SUSP
@@ -6431,25 +7273,32 @@ __STATIC_INLINE void LL_DMA_DisableIT(DMA_Channel_TypeDef *channel, uint32_t int
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   */
 __STATIC_INLINE void LL_DMA_EnableIT_TO(DMA_Channel_TypeDef *channel)
 {
@@ -6477,25 +7326,32 @@ __STATIC_INLINE void LL_DMA_EnableIT_TO(DMA_Channel_TypeDef *channel)
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   */
 __STATIC_INLINE void LL_DMA_EnableIT_SUSP(DMA_Channel_TypeDef *channel)
 {
@@ -6523,25 +7379,32 @@ __STATIC_INLINE void LL_DMA_EnableIT_SUSP(DMA_Channel_TypeDef *channel)
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   */
 __STATIC_INLINE void LL_DMA_EnableIT_USE(DMA_Channel_TypeDef *channel)
 {
@@ -6569,25 +7432,32 @@ __STATIC_INLINE void LL_DMA_EnableIT_USE(DMA_Channel_TypeDef *channel)
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   */
 __STATIC_INLINE void LL_DMA_EnableIT_ULE(DMA_Channel_TypeDef *channel)
 {
@@ -6615,25 +7485,32 @@ __STATIC_INLINE void LL_DMA_EnableIT_ULE(DMA_Channel_TypeDef *channel)
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   */
 __STATIC_INLINE void LL_DMA_EnableIT_DTE(DMA_Channel_TypeDef *channel)
 {
@@ -6661,25 +7538,32 @@ __STATIC_INLINE void LL_DMA_EnableIT_DTE(DMA_Channel_TypeDef *channel)
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   */
 __STATIC_INLINE void LL_DMA_EnableIT_HT(DMA_Channel_TypeDef *channel)
 {
@@ -6707,25 +7591,32 @@ __STATIC_INLINE void LL_DMA_EnableIT_HT(DMA_Channel_TypeDef *channel)
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   */
 __STATIC_INLINE void LL_DMA_EnableIT_TC(DMA_Channel_TypeDef *channel)
 {
@@ -6753,25 +7644,32 @@ __STATIC_INLINE void LL_DMA_EnableIT_TC(DMA_Channel_TypeDef *channel)
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   */
 __STATIC_INLINE void LL_DMA_DisableIT_TO(DMA_Channel_TypeDef *channel)
 {
@@ -6799,25 +7697,32 @@ __STATIC_INLINE void LL_DMA_DisableIT_TO(DMA_Channel_TypeDef *channel)
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   */
 __STATIC_INLINE void LL_DMA_DisableIT_SUSP(DMA_Channel_TypeDef *channel)
 {
@@ -6845,25 +7750,32 @@ __STATIC_INLINE void LL_DMA_DisableIT_SUSP(DMA_Channel_TypeDef *channel)
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   */
 __STATIC_INLINE void LL_DMA_DisableIT_USE(DMA_Channel_TypeDef *channel)
 {
@@ -6891,25 +7803,32 @@ __STATIC_INLINE void LL_DMA_DisableIT_USE(DMA_Channel_TypeDef *channel)
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   */
 __STATIC_INLINE void LL_DMA_DisableIT_ULE(DMA_Channel_TypeDef *channel)
 {
@@ -6937,25 +7856,32 @@ __STATIC_INLINE void LL_DMA_DisableIT_ULE(DMA_Channel_TypeDef *channel)
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   */
 __STATIC_INLINE void LL_DMA_DisableIT_DTE(DMA_Channel_TypeDef *channel)
 {
@@ -6983,25 +7909,32 @@ __STATIC_INLINE void LL_DMA_DisableIT_DTE(DMA_Channel_TypeDef *channel)
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   */
 __STATIC_INLINE void LL_DMA_DisableIT_HT(DMA_Channel_TypeDef *channel)
 {
@@ -7029,25 +7962,32 @@ __STATIC_INLINE void LL_DMA_DisableIT_HT(DMA_Channel_TypeDef *channel)
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   */
 __STATIC_INLINE void LL_DMA_DisableIT_TC(DMA_Channel_TypeDef *channel)
 {
@@ -7075,25 +8015,32 @@ __STATIC_INLINE void LL_DMA_DisableIT_TC(DMA_Channel_TypeDef *channel)
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_DMA_IsEnabledIT_TO(const DMA_Channel_TypeDef *channel)
@@ -7122,25 +8069,32 @@ __STATIC_INLINE uint32_t LL_DMA_IsEnabledIT_TO(const DMA_Channel_TypeDef *channe
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_DMA_IsEnabledIT_SUSP(const DMA_Channel_TypeDef *channel)
@@ -7169,25 +8123,32 @@ __STATIC_INLINE uint32_t LL_DMA_IsEnabledIT_SUSP(const DMA_Channel_TypeDef *chan
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_DMA_IsEnabledIT_USE(const DMA_Channel_TypeDef *channel)
@@ -7216,25 +8177,32 @@ __STATIC_INLINE uint32_t LL_DMA_IsEnabledIT_USE(const DMA_Channel_TypeDef *chann
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_DMA_IsEnabledIT_ULE(const DMA_Channel_TypeDef *channel)
@@ -7263,25 +8231,32 @@ __STATIC_INLINE uint32_t LL_DMA_IsEnabledIT_ULE(const DMA_Channel_TypeDef *chann
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_DMA_IsEnabledIT_DTE(const DMA_Channel_TypeDef *channel)
@@ -7310,25 +8285,32 @@ __STATIC_INLINE uint32_t LL_DMA_IsEnabledIT_DTE(const DMA_Channel_TypeDef *chann
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_DMA_IsEnabledIT_HT(const DMA_Channel_TypeDef *channel)
@@ -7357,25 +8339,32 @@ __STATIC_INLINE uint32_t LL_DMA_IsEnabledIT_HT(const DMA_Channel_TypeDef *channe
   * @if LPDMA1_CH7
   *         @arg @ref LL_LPDMA1_CH7 (*)
   * @endif
-  *         @arg @ref LL_LPDMA2_CH0
-  *         @arg @ref LL_LPDMA2_CH1
-  *         @arg @ref LL_LPDMA2_CH2
-  *         @arg @ref LL_LPDMA2_CH3
+  * @if LPDMA2_CH0
+  *         @arg @ref LL_LPDMA2_CH0 (*)
+  * @endif
+  * @if LPDMA2_CH1
+  *         @arg @ref LL_LPDMA2_CH1 (*)
+  * @endif
+  * @if LPDMA2_CH2
+  *         @arg @ref LL_LPDMA2_CH2 (*)
+  * @endif
+  * @if LPDMA2_CH3
+  *         @arg @ref LL_LPDMA2_CH3 (*)
+  * @endif
   * @if LPDMA2_CH4
-  *         @arg @ref LL_LPDMA2_CH4 (**)
+  *         @arg @ref LL_LPDMA2_CH4 (*)
   * @endif
   * @if LPDMA2_CH5
-  *         @arg @ref LL_LPDMA2_CH5 (**)
+  *         @arg @ref LL_LPDMA2_CH5 (*)
   * @endif
   * @if LPDMA2_CH6
-  *         @arg @ref LL_LPDMA2_CH6 (**)
+  *         @arg @ref LL_LPDMA2_CH6 (*)
   * @endif
   * @if LPDMA2_CH7
-  *         @arg @ref LL_LPDMA2_CH7 (**)
+  *         @arg @ref LL_LPDMA2_CH7 (*)
   * @endif
-  *         @note (*)  Supported on STMC5A3xx, STMC591xx, STMC593xx,  STMC551xx, STMC552xx and STMC562xx devices only.
-  *         @note (**) Supported on STMC5A3xx, STMC591xx and STMC593xx devices only.
-
+  *         @note (*) Availability depends on the selected device. \n
+  *                   Please refer to the reference manual for more details.
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_DMA_IsEnabledIT_TC(const DMA_Channel_TypeDef *channel)

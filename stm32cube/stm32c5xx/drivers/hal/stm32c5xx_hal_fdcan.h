@@ -201,7 +201,7 @@ extern "C" {
 /* FDCAN interrupt flags for Tx event FIFO */
 #define HAL_FDCAN_FLAG_TX_EVT_FIFO_ELEM_LOST  FDCAN_IR_TEFL  /*!< Tx event FIFO element lost                          */
 #define HAL_FDCAN_FLAG_TX_EVT_FIFO_FULL       FDCAN_IR_TEFF  /*!< Tx event FIFO full                                  */
-#define HAL_FDCAN_FLAG_TX_EVT_FIFO_NEW_DATA   FDCAN_IR_TEFN  /*!< Tx handler wrote Rx event FIFO element              */
+#define HAL_FDCAN_FLAG_TX_EVT_FIFO_NEW_DATA   FDCAN_IR_TEFN  /*!< New Tx event FIFO element written                   */
 
 /**
   * @}
@@ -268,6 +268,10 @@ extern "C" {
 
 /**
   * @brief  HAL FDCAN frame type.
+  * @note   When a Tx frame is configured as @ref HAL_FDCAN_FRAME_REMOTE, the FDCAN core always transmits a classic CAN
+  *         remote frame @ref HAL_FDCAN_HEADER_FRAME_FORMAT_CAN according to ISO 11898-1, even if CAN FD operation is
+  *         @ref HAL_FDCAN_FRAME_FORMAT_FD_NO_BRS or @ref HAL_FDCAN_FRAME_FORMAT_FD_BRS.
+  *         There is no remote frame in CAN FD format by design.
   */
 typedef enum
 {
@@ -286,6 +290,10 @@ typedef enum
 
 /**
   * @brief  HAL FDCAN error state indicator.
+  * @note   This field controls the ESI bit in the transmitted frame only for CAN FD data
+  *         @ref HAL_FDCAN_HEADER_FRAME_FORMAT_FD_CAN.
+  *         For classic CAN frames @ref HAL_FDCAN_HEADER_FRAME_FORMAT_CAN there is no ESI bit in the frame format;
+  *         in that case the core ignores this field and behaves according to its own CAN error state machine.
   */
 typedef enum
 {
@@ -295,6 +303,8 @@ typedef enum
 
 /**
   * @brief  HAL FDCAN bitrate switching.
+  * @note   Bit rate switch is only used for CAN FD data frames. For classic CAN @ref HAL_FDCAN_FRAME_FORMAT_CLASSIC_CAN
+  *         or remote frames @ref HAL_FDCAN_FRAME_REMOTE, this field is ignored by the hardware.
   */
 typedef enum
 {
@@ -304,11 +314,18 @@ typedef enum
 
 /**
   * @brief  HAL FDCAN header frame format.
+  * @note   This field reflects the intended frame format, but the FDCAN core will override it to classic format
+  *         to comply with the CAN/CAN FD protocol:
+  *         - When a Tx frame is configured as @ref HAL_FDCAN_FRAME_REMOTE, the core always transmits a classic CAN
+  *           remote frame, even if CAN FD operation is enabled i.e @ref HAL_FDCAN_FRAME_FORMAT_FD_NO_BRS or
+  *           @ref HAL_FDCAN_FRAME_FORMAT_FD_BRS and this field is set to @ref HAL_FDCAN_HEADER_FRAME_FORMAT_FD_CAN.
+  *         - When CAN FD operation is disabled @ref HAL_FDCAN_FRAME_FORMAT_CLASSIC_CAN, all frames are
+  *           transmitted as classic CAN frames @ref HAL_FDCAN_HEADER_FRAME_FORMAT_CAN regardless of this field.
   */
 typedef enum
 {
   HAL_FDCAN_HEADER_FRAME_FORMAT_CAN    = 0U, /*!< Standard frame format                        */
-  HAL_FDCAN_HEADER_FRAME_FORMAT_FD_CAN = 1U  /*!< CAN-FD frame format (new DLC-coding and CRC) */
+  HAL_FDCAN_HEADER_FRAME_FORMAT_FD_CAN = 1U  /*!< CAN FD frame format (new DLC-coding and CRC) */
 } hal_fdcan_header_frame_format_t;
 
 /**
@@ -346,9 +363,11 @@ typedef enum
   *          - For classic CAN:
   *            - 0 to 8 : received frame has 0 to 8 data bytes
   *            - 9 to 15: received frame has 8 data bytes (max)
-  *          - For CAN-FD:
+  *          - For CAN FD:
   *            - 0 to 8 : received frame has 0 to 8 data bytes
   *            - 9 to 15: received frame has 12/16/20/24/32/48/64 data bytes
+  * @note   For remote frames @ref HAL_FDCAN_FRAME_REMOTE, only the DLC encoded by this field is
+  *         transmitted; no data bytes are sent and the contents of the Tx data buffer are ignored by the core.
   */
 typedef enum
 {
@@ -385,9 +404,9 @@ typedef enum
   */
 typedef enum
 {
-  HAL_FDCAN_TIMESTAMP_SOURCE_ZERO        = 0U,                            /*!< Timestamp counter disabled (value is 0) */
-  HAL_FDCAN_TIMESTAMP_SOURCE_INTERNAL    = (0x1UL << FDCAN_TSCC_TSS_Pos), /*!< Internal timestamp counter              */
-  HAL_FDCAN_TIMESTAMP_SOURCE_EXTERNAL    = (0x2UL << FDCAN_TSCC_TSS_Pos), /*!< External timestamp counter              */
+  HAL_FDCAN_TIMESTAMP_SOURCE_ZERO     = 0U,                            /*!< Timestamp counter disabled (value is 0) */
+  HAL_FDCAN_TIMESTAMP_SOURCE_INTERNAL = (0x1UL << FDCAN_TSCC_TSS_Pos), /*!< Internal timestamp counter              */
+  HAL_FDCAN_TIMESTAMP_SOURCE_EXTERNAL = (0x2UL << FDCAN_TSCC_TSS_Pos), /*!< External timestamp counter              */
 } hal_fdcan_timestamp_source_t;
 
 /**
@@ -459,8 +478,8 @@ typedef enum
   */
 typedef enum
 {
-  HAL_FDCAN_TRANSMIT_PAUSE_DISABLE = 0U,             /*!< Enable transmitter transmit pause  */
-  HAL_FDCAN_TRANSMIT_PAUSE_ENABLE  = FDCAN_CCCR_TXP, /*!< Disable transmitter transmit pause */
+  HAL_FDCAN_TRANSMIT_PAUSE_DISABLE = 0U,             /*!< Disable transmitter transmit pause  */
+  HAL_FDCAN_TRANSMIT_PAUSE_ENABLE  = FDCAN_CCCR_TXP, /*!< Enable transmitter transmit pause */
 } hal_fdcan_transmit_pause_state_t;
 
 /**
@@ -531,8 +550,8 @@ typedef enum
   */
 typedef enum
 {
-  HAL_FDCAN_FIFO_STATUS_FREE = 0U,               /*!< Tx FIFO queue not full */
-  HAL_FDCAN_FIFO_STATUS_FULL = FDCAN_TXFQS_TFQF, /*!< Tx FIFO queue full     */
+  HAL_FDCAN_FIFO_STATUS_FREE = 0U,               /*!< Tx FIFO/Queue not full */
+  HAL_FDCAN_FIFO_STATUS_FULL = FDCAN_TXFQS_TFQF, /*!< Tx FIFO/Queue full     */
 } hal_fdcan_fifo_status_t;
 
 /**
@@ -877,7 +896,7 @@ typedef union
     hal_fdcan_frame_type_t            frame_type               : 1;  /*!< Frame type                                  */
     hal_fdcan_id_type_t               identifier_type          : 1;  /*!< Identifier type                             */
     hal_fdcan_error_state_indicator_t error_state_indicator    : 1;  /*!< Error state indicator                       */
-    uint32_t                                                   : 16; /*! Tx reserved field                            */
+    uint32_t                                                   : 16; /*!< Tx reserved field                           */
     hal_fdcan_data_length_code_t      data_length              : 4;  /*!< Data length code                            */
     hal_fdcan_bit_rate_switch_t       bit_rate_switch          : 1;  /*!< Bit rate switch                             */
     hal_fdcan_header_frame_format_t   frame_format             : 1;  /*!< Frame format                                */
@@ -1103,18 +1122,18 @@ typedef struct
   */
 typedef struct
 {
-  hal_fdcan_nominal_bit_timing_t         nominal_bit_timing;     /*!< Nominal bit timing                              */
-  hal_fdcan_data_bit_timing_t            data_bit_timing;        /*!< Data bit Timing                                 */
-  hal_fdcan_mode_t                       mode;                   /*!< Mode                                            */
-  hal_fdcan_frame_format_t               frame_format;           /*!< Frame format                                    */
-  hal_fdcan_auto_retransmission_state_t  auto_retransmission;    /*!< Automatic retransmission feature                */
-  hal_fdcan_transmit_pause_state_t       transmit_pause;         /*!< Transmit pause feature                          */
-  hal_fdcan_protocol_exception_state_t   protocol_exception;     /*!< Protocol exception handling                     */
-  uint32_t                               std_filters_nbr;        /*!< Number of standard message ID filters.
-                                                                    This parameter must be a number between 0 and 28  */
-  uint32_t                               ext_filters_nbr;        /*!< Number of extended message ID filters.
+  hal_fdcan_nominal_bit_timing_t        nominal_bit_timing;      /*!< Nominal bit timing                              */
+  hal_fdcan_data_bit_timing_t           data_bit_timing;         /*!< Data bit Timing                                 */
+  hal_fdcan_mode_t                      mode;                    /*!< Mode                                            */
+  hal_fdcan_frame_format_t              frame_format;            /*!< Frame format                                    */
+  hal_fdcan_auto_retransmission_state_t auto_retransmission;     /*!< Automatic retransmission feature                */
+  hal_fdcan_transmit_pause_state_t      transmit_pause;          /*!< Transmit pause feature                          */
+  hal_fdcan_protocol_exception_state_t  protocol_exception;      /*!< Protocol exception handling                     */
+  uint32_t                              std_filters_nbr;         /*!< Number of standard message ID filters.
+                                                                   This parameter must be a number between 0 and 28   */
+  uint32_t                              ext_filters_nbr;         /*!< Number of extended message ID filters.
                                                                    This parameter must be a number between 0 and 8    */
-  hal_fdcan_tx_mode_t                    tx_fifo_queue_mode;      /*!< Tx FIFO/queue mode selection                   */
+  hal_fdcan_tx_mode_t                   tx_fifo_queue_mode;      /*!< Tx FIFO/queue mode selection                    */
 } hal_fdcan_config_t;
 
 typedef struct hal_fdcan_handle_s hal_fdcan_handle_t; /*!< FDCAN handle structure type */
@@ -1125,12 +1144,12 @@ typedef struct hal_fdcan_handle_s hal_fdcan_handle_t; /*!< FDCAN handle structur
   */
 
 typedef void (*hal_fdcan_fifo_cb_t)(hal_fdcan_handle_t *hfdcan,
-                                    uint32_t interrupts_list);     /*!< Pointer to interrupts list FDCAN callback
-                                                                        function                                      */
+                                    uint32_t interrupts_list);      /*!< Pointer to interrupts list FDCAN callback
+                                                                         function                                     */
 typedef void (*hal_fdcan_tx_buffer_cb_t)(hal_fdcan_handle_t *hfdcan,
-                                         uint32_t tx_buffers_idx); /*!< Pointer to interrupts Tx buffer
-                                                                        complete/abort FDCAN callback function        */
-typedef void (*hal_fdcan_cb_t)(hal_fdcan_handle_t *hfdcan);        /*!< Pointer to a generic FDCAN callback function  */
+                                         uint32_t tx_buffers_idx);  /*!< Pointer to interrupts Tx buffer
+                                                                         complete/abort FDCAN callback function       */
+typedef void (*hal_fdcan_cb_t)(hal_fdcan_handle_t *hfdcan);         /*!< Pointer to a generic FDCAN callback function */
 
 #endif /* USE_HAL_FDCAN_REGISTER_CALLBACKS */
 
@@ -1159,15 +1178,15 @@ struct hal_fdcan_handle_s
 #endif /* USE_HAL_FDCAN_USER_DATA */
 
 #if defined(USE_HAL_FDCAN_REGISTER_CALLBACKS) && (USE_HAL_FDCAN_REGISTER_CALLBACKS == 1U)
-  hal_fdcan_fifo_cb_t      p_tx_event_fifo_cb;        /*!< Tx event FIFO callback                          */
-  hal_fdcan_fifo_cb_t      p_rx_fifo_0_cb;            /*!< Rx FIFO 0 callback                              */
-  hal_fdcan_fifo_cb_t      p_rx_fifo_1_cb;            /*!< Rx FIFO 1 callback                              */
-  hal_fdcan_cb_t           p_tx_fifo_empty_cb;        /*!< Tx FIFO empty callback                          */
-  hal_fdcan_tx_buffer_cb_t p_tx_buffer_complete_cb;   /*!< Tx buffer complete callback                     */
-  hal_fdcan_tx_buffer_cb_t p_tx_buffer_abort_cb;      /*!< Tx buffer abort callback                        */
-  hal_fdcan_cb_t           p_high_priority_msg_cb;    /*!< High priority message callback                  */
-  hal_fdcan_cb_t           p_ts_wraparound_cb;        /*!< Timestamp wraparound callback                   */
-  hal_fdcan_cb_t           p_error_cb;                /*!< Error callback                                  */
+  hal_fdcan_fifo_cb_t           p_tx_event_fifo_cb;         /*!< Tx event FIFO callback                          */
+  hal_fdcan_fifo_cb_t           p_rx_fifo_0_cb;             /*!< Rx FIFO 0 callback                              */
+  hal_fdcan_fifo_cb_t           p_rx_fifo_1_cb;             /*!< Rx FIFO 1 callback                              */
+  hal_fdcan_cb_t                p_tx_fifo_empty_cb;         /*!< Tx FIFO empty callback                          */
+  hal_fdcan_tx_buffer_cb_t      p_tx_buffer_complete_cb;    /*!< Tx buffer complete callback                     */
+  hal_fdcan_tx_buffer_cb_t      p_tx_buffer_abort_cb;       /*!< Tx buffer abort callback                        */
+  hal_fdcan_cb_t                p_high_priority_msg_cb;     /*!< High priority message callback                  */
+  hal_fdcan_cb_t                p_ts_wraparound_cb;         /*!< Timestamp wraparound callback                   */
+  hal_fdcan_cb_t                p_error_cb;                 /*!< Error callback                                  */
 #endif /* USE_HAL_FDCAN_REGISTER_CALLBACKS */
 };
 
@@ -1220,7 +1239,7 @@ void         HAL_FDCAN_GetNominalBitTiming(const hal_fdcan_handle_t *hfdcan,
 /* Data bit timing */
 hal_status_t HAL_FDCAN_SetDataBitTiming(const hal_fdcan_handle_t *hfdcan,
                                         const hal_fdcan_data_bit_timing_t *p_data_bit_timing);
-void       HAL_FDCAN_GetDataBitTiming(const hal_fdcan_handle_t *hfdcan, hal_fdcan_data_bit_timing_t *p_data_bit_timing);
+void HAL_FDCAN_GetDataBitTiming(const hal_fdcan_handle_t *hfdcan, hal_fdcan_data_bit_timing_t *p_data_bit_timing);
 
 /* Filter - To set/get the acceptance filters parameters for standard and extended filters */
 hal_status_t HAL_FDCAN_SetFilter(const hal_fdcan_handle_t *hfdcan, const hal_fdcan_filter_t *p_filter_config);
@@ -1252,13 +1271,11 @@ void         HAL_FDCAN_GetRxFifoOverwrite(const hal_fdcan_handle_t *hfdcan, hal_
 hal_status_t HAL_FDCAN_SetRamWatchdog(const hal_fdcan_handle_t *hfdcan, uint8_t counter_start_value);
 uint8_t      HAL_FDCAN_GetRamWatchdog(const hal_fdcan_handle_t *hfdcan);
 
-/* TimeStamp counter */
+/* Timestamp counter */
 hal_status_t HAL_FDCAN_SetConfigTimestampCounter(const hal_fdcan_handle_t *hfdcan,
                                                  const hal_fdcan_timestamp_config_t *p_timestamp_config);
 void         HAL_FDCAN_GetConfigTimestampCounter(const hal_fdcan_handle_t *hfdcan,
                                                  hal_fdcan_timestamp_config_t *p_timestamp_config);
-uint16_t     HAL_FDCAN_GetTimestampCounter(const hal_fdcan_handle_t *hfdcan);
-hal_status_t HAL_FDCAN_ResetTimestampCounter(const hal_fdcan_handle_t *hfdcan);
 
 /* Timeout counter */
 hal_status_t HAL_FDCAN_SetConfigTimeoutCounter(const hal_fdcan_handle_t *hfdcan,
@@ -1269,16 +1286,14 @@ hal_status_t HAL_FDCAN_EnableTimeoutCounter(const hal_fdcan_handle_t *hfdcan);
 hal_status_t HAL_FDCAN_DisableTimeoutCounter(const hal_fdcan_handle_t *hfdcan);
 hal_fdcan_timeout_counter_status_t HAL_FDCAN_IsEnabledTimeoutCounter(const hal_fdcan_handle_t *hfdcan);
 
-uint16_t     HAL_FDCAN_GetTimeoutCounter(const hal_fdcan_handle_t *hfdcan);
-hal_status_t HAL_FDCAN_ResetTimeoutCounter(const hal_fdcan_handle_t *hfdcan);
-
 /* Delay compensation mechanism to compensate the CAN transmitter loop delay */
 hal_status_t HAL_FDCAN_SetConfigTxDelayCompensation(const hal_fdcan_handle_t *hfdcan,
                                                     const hal_fdcan_tx_delay_comp_config_t *p_tx_delay_param);
 void         HAL_FDCAN_GetConfigTxDelayCompensation(const hal_fdcan_handle_t *hfdcan,
                                                     hal_fdcan_tx_delay_comp_config_t *p_tx_delay_param);
-hal_status_t HAL_FDCAN_EnableTxDelayCompensation(const hal_fdcan_handle_t *hfdcan);
-hal_status_t HAL_FDCAN_DisableTxDelayCompensation(const hal_fdcan_handle_t *hfdcan);
+
+hal_status_t                     HAL_FDCAN_EnableTxDelayCompensation(const hal_fdcan_handle_t *hfdcan);
+hal_status_t                     HAL_FDCAN_DisableTxDelayCompensation(const hal_fdcan_handle_t *hfdcan);
 hal_fdcan_tx_delay_comp_status_t HAL_FDCAN_IsEnabledTxDelayCompensation(const hal_fdcan_handle_t *hfdcan);
 
 /* ISO mode - ISO11898-1 or CAN FD specification V1.0 */
@@ -1370,6 +1385,8 @@ hal_fdcan_tx_fifo_free_level_t HAL_FDCAN_GetTxFifoFreeLevel(const hal_fdcan_hand
 hal_status_t                   HAL_FDCAN_ReqAbortOfTxBuffer(const hal_fdcan_handle_t *hfdcan, uint32_t tx_buffer_idx);
 hal_status_t                   HAL_FDCAN_GetTxEvent(const hal_fdcan_handle_t *hfdcan,
                                                     hal_fdcan_tx_evt_fifo_header_t *p_tx_event);
+void                           HAL_FDCAN_GetTxEventFifoFillLevel(const hal_fdcan_handle_t *hfdcan,
+                                                                 uint32_t *p_fill_level);
 hal_fdcan_tx_buffer_status_t   HAL_FDCAN_GetTxBufferMessageStatus(const hal_fdcan_handle_t *hfdcan,
                                                                   uint32_t tx_buffer_idx);
 
@@ -1378,6 +1395,12 @@ hal_status_t HAL_FDCAN_GetReceivedMessage(const hal_fdcan_handle_t *hfdcan, hal_
                                           hal_fdcan_rx_header_t *p_rx_header, uint8_t *p_rx_data);
 void         HAL_FDCAN_GetRxFifoFillLevel(const hal_fdcan_handle_t *hfdcan, hal_fdcan_rx_location_t rx_location_idx,
                                           uint32_t *p_fill_level);
+
+uint16_t     HAL_FDCAN_GetTimestampCounter(const hal_fdcan_handle_t *hfdcan);
+hal_status_t HAL_FDCAN_ResetTimestampCounter(const hal_fdcan_handle_t *hfdcan);
+
+uint16_t     HAL_FDCAN_GetTimeoutCounter(const hal_fdcan_handle_t *hfdcan);
+hal_status_t HAL_FDCAN_ResetTimeoutCounter(const hal_fdcan_handle_t *hfdcan);
 
 /* Functions involved in general Tx/Rx process */
 hal_status_t HAL_FDCAN_GetHighPriorityMessageStatus(const hal_fdcan_handle_t *hfdcan,
@@ -1398,6 +1421,8 @@ hal_status_t HAL_FDCAN_Recover(const hal_fdcan_handle_t *hfdcan);
   */
 
 void HAL_FDCAN_IRQHandler(hal_fdcan_handle_t *hfdcan);
+void HAL_FDCAN_Line0_IRQHandler(hal_fdcan_handle_t *hfdcan);
+void HAL_FDCAN_Line1_IRQHandler(hal_fdcan_handle_t *hfdcan);
 
 hal_status_t          HAL_FDCAN_EnableInterrupts(const hal_fdcan_handle_t *hfdcan, uint32_t interrupts);
 hal_status_t          HAL_FDCAN_DisableInterrupts(const hal_fdcan_handle_t *hfdcan, uint32_t interrupts);

@@ -32,6 +32,7 @@
 /** @addtogroup EXTI
   * @{
   */
+
 /** @defgroup EXTI_Introduction EXTI Introduction
   * @{
 
@@ -48,9 +49,11 @@
    - Manage interrupts for a specific line.
 
   This abstraction layer guarantees portability and ease of use across different STM32 series.
-  * @}
   */
 
+/**
+  * @}
+  */
 /** @defgroup EXTI_How_To_Use EXTI How To Use
   * @{
 
@@ -81,8 +84,13 @@
   using HAL_EXTI_ClearPending().
 
 ## The HAL EXTI driver allows management of EXTI security attributes:
-  - Set the privilege access level attribute for EXTI line(s) using HAL_EXTI_SetPrivAttr().
+  - Set the privilege access level attribute for an EXTI line using HAL_EXTI_SetPrivAttr().
   - Get the privilege access level attribute for an EXTI line using HAL_EXTI_GetPrivAttr().
+
+## The HAL EXTI driver allows to get the state and instance of lines:
+  - Get the current general state of the EXTI line using HAL_EXTI_GetState().
+  - Get the HAL EXTI line using HAL_EXTI_GetInstance().
+  - Get the LL EXTI line using HAL_EXTI_GetLLInstance().
   */
 
 /**
@@ -165,7 +173,7 @@ CMSE_SECURE_EXECUTION_ENVIRONMENT| from stm32tnxx.h |        NA       | Defined 
                                      || ((port) == HAL_EXTI_GPIOD) \
                                      || ((port) == HAL_EXTI_GPIOE) \
                                      || ((port) == HAL_EXTI_GPIOH))
-#endif /* GPIOF */
+#endif /* GPIOI */
 
 /*! Macro to check EXTI configurable line */
 #define IS_EXTI_CONFIG_LINE(line)    (((line) & LL_EXTI_CONFIG) == LL_EXTI_CONFIG)
@@ -886,6 +894,12 @@ const void *HAL_EXTI_GetUserData(const hal_exti_handle_t *hexti)
 
 ### Retrieve the global state of the current EXTI line using HAL_EXTI_GetState():
   - Provide the EXTI handle as a parameter.
+
+### Retrieve the HAL EXTI line using HAL_EXTI_GetInstance():
+  - Provide the EXTI handle as a parameter.
+
+### Retrieve the LL EXTI line using HAL_EXTI_GetLLInstance():
+  - Provide the EXTI handle as a parameter.
   */
 
 /**
@@ -901,6 +915,32 @@ hal_exti_state_t HAL_EXTI_GetState(const hal_exti_handle_t *hexti)
   ASSERT_DBG_PARAM(hexti != NULL);
 
   return hexti->global_state;
+}
+
+/**
+  * @brief  Get the HAL EXTI line.
+  * @param  hexti Pointer to a \ref hal_exti_handle_t structure.
+  * @retval The HAL EXTI line.
+  */
+hal_exti_line_t HAL_EXTI_GetInstance(const hal_exti_handle_t *hexti)
+{
+  ASSERT_DBG_PARAM(hexti != NULL);
+  ASSERT_DBG_PARAM(IS_EXTI_LINE((uint32_t)hexti->line));
+
+  return (hexti->line);
+}
+
+/**
+  * @brief  Get the LL instance from the handle.
+  * @param  hexti Pointer to a \ref hal_exti_handle_t structure.
+  * @retval The LL EXTI Line.
+  */
+uint32_t HAL_EXTI_GetLLInstance(const hal_exti_handle_t *hexti)
+{
+  ASSERT_DBG_PARAM(hexti != NULL);
+  ASSERT_DBG_PARAM(IS_EXTI_LINE((uint32_t)hexti->line));
+
+  return (hexti->ll_line);
 }
 /**
   * @}
@@ -919,13 +959,13 @@ hal_exti_state_t HAL_EXTI_GetState(const hal_exti_handle_t *hexti)
   */
 
 /**
-  * @brief  Set the privileged access level attribute for EXTI line(s).
-  * @param exti_line This parameter can be one of the values of @ref hal_exti_line_t.
+  * @brief  Set the privileged access level attribute for an EXTI line.
+  * @param exti_line This parameter can be a value of @ref hal_exti_line_t.
   * @param priv_attr This parameter can be one of the following values:
   *         @arg @ref HAL_EXTI_PRIV
   *         @arg @ref HAL_EXTI_NPRIV
-  * @retval HAL_OK Privilege attribute has been set successfully.
-  * @retval HAL_ERROR The function is called in unprivileged mode.
+  * @retval HAL_OK Privilege attribute has been set successfully
+  * @retval HAL_ERROR Non-privileged write to a privileged-only register.
   */
 hal_status_t HAL_EXTI_SetPrivAttr(hal_exti_line_t exti_line, hal_exti_priv_attr_t priv_attr)
 {

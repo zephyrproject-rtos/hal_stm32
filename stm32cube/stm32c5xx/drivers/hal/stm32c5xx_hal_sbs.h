@@ -208,6 +208,7 @@ typedef enum
   * @}
   */
 #endif /* SBS_PMCR_ADC1_IN2_REMAP */
+
 /**
   * @}
   */

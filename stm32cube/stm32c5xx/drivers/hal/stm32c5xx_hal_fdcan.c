@@ -94,15 +94,11 @@ capabilities of the CAN-FD bus.
   - HAL_FDCAN_GetRamWatchdog()
   - HAL_FDCAN_SetConfigTimestampCounter()
   - HAL_FDCAN_GetConfigTimestampCounter()
-  - HAL_FDCAN_GetTimestampCounter()
-  - HAL_FDCAN_ResetTimestampCounter()
   - HAL_FDCAN_SetConfigTimeoutCounter()
   - HAL_FDCAN_GetConfigTimeoutCounter()
-  - HAL_FDCAN_GetTimeoutCounter()
   - HAL_FDCAN_EnableTimeoutCounter()
   - HAL_FDCAN_DisableTimeoutCounter()
   - HAL_FDCAN_IsEnabledTimeoutCounter()
-  - HAL_FDCAN_ResetTimeoutCounter()
   - HAL_FDCAN_SetConfigTxDelayCompensation()
   - HAL_FDCAN_GetConfigTxDelayCompensation()
   - HAL_FDCAN_EnableTxDelayCompensation()
@@ -178,6 +174,7 @@ The control functions include the following set of functions:
   - HAL_FDCAN_GetTxFifoFreeLevel()
   - HAL_FDCAN_ReqAbortOfTxBuffer()
   - HAL_FDCAN_GetTxEvent()
+  - HAL_FDCAN_GetTxEventFifoFillLevel()
   - HAL_FDCAN_GetTxBufferMessageStatus()
   - HAL_FDCAN_GetReceivedMessage()
   - HAL_FDCAN_GetRxFifoFillLevel()
@@ -195,8 +192,11 @@ on the bus:
     - HAL_FDCAN_ReqAbortOfTxBuffer()
 
 - After submitting a Tx request in the Tx FIFO or queue, call HAL_FDCAN_GetLatestTxFifoQRequestBuffer() to determine
-  which Tx buffer was used for the request. The corresponding Tx request can then be
-  aborted later using the HAL_FDCAN_ReqAbortOfTxBuffer() function.
+  which Tx buffer was used for the latest request.
+  The corresponding Tx request can then be aborted later using the HAL_FDCAN_ReqAbortOfTxBuffer() function.
+
+- In Queue mode, check whether a new Tx request can be submitted with HAL_FDCAN_GetTxFifoStatus().
+- In FIFO mode, use HAL_FDCAN_GetTxFifoFreeLevel() to retrieve the number of available FIFO elements.
 
 - Retrieve a message received into the FDCAN message RAM using the HAL_FDCAN_GetReceivedMessage() function.
 
@@ -417,6 +417,28 @@ static const uint8_t fdcan_lut_dlc2bytes[] = {0U, 1U, 2U, 3U, 4U, 5U, 6U, 7U, 8U
 #define FDCAN_GET_INSTANCE(handle) ((FDCAN_GlobalTypeDef *)((uint32_t)(handle)->instance))
 
 /**
+  * @brief  Get the FDCAN CONFIG hardware instance from a handle.
+  * @param  handle Pointer to a @ref hal_fdcan_handle_t structure.
+  * @retval FDCAN_Config_TypeDef* Pointer to the FDCAN CONFIG peripheral instance.
+  */
+#define FDCAN_CONFIG_GET_INSTANCE(handle) FDCAN_MULTI_INSTANCE_CONFIG((FDCAN_GlobalTypeDef *) \
+                                                                      (uint32_t)(handle)->instance)
+
+/**
+  * @brief  Get the FDCAN message element size in 32-bit words.
+  * @param  element FDCAN data field size encoding. See @ref hal_fdcan_data_field_size_t.
+  * @retval uint32_t Element size in words, including the FDCAN header words.
+  */
+#define FDCAN_GET_ELEMENT_SIZE_WORDS(element) ((uint32_t)(fdcan_lut_eltsize2words[(uint32_t)element]))
+
+/**
+  * @brief  Get payload size in bytes from a Data Length Code (DLC).
+  * @param  data_length_code Data length code. See @ref hal_fdcan_data_length_code_t.
+  * @retval uint32_t Payload length in bytes.
+  */
+#define FDCAN_GET_DATA_LENGTH_BYTES(data_length_code) ((uint32_t)(fdcan_lut_dlc2bytes[(uint32_t)data_length_code]))
+
+/**
   * @brief  Check if the frame format value is valid.
   * @param  format Frame format value to check. See @ref hal_fdcan_frame_format_t.
   * @retval SET   Frame format is valid.
@@ -623,7 +645,6 @@ static const uint8_t fdcan_lut_dlc2bytes[] = {0U, 1U, 2U, 3U, 4U, 5U, 6U, 7U, 8U
 #define IS_FDCAN_TX_LOCATION_LIST(location) IS_FDCAN_IN_RANGE((location), HAL_FDCAN_TX_BUFFER_0, \
                                                               HAL_FDCAN_TX_BUFFER_ALL)
 
-
 /**
   * @brief  Check if the Rx FIFO selection is valid.
   * @param  fifo Rx FIFO selection value to check. See @ref hal_fdcan_rx_location_t.
@@ -803,6 +824,10 @@ static void FDCAN_GetDataBitTiming(const FDCAN_GlobalTypeDef *fdcan, hal_fdcan_d
 
 /* Private function to  calculate each RAM block start address and size */
 static void FDCAN_ComputeRAMBlockAddresses(hal_fdcan_handle_t *hfdcan, const hal_fdcan_config_t *p_config);
+
+/* Private function to get the message RAM configurations */
+static void FDCAN_GetMessageRAMConfig(const FDCAN_GlobalTypeDef *p_fdcan, hal_fdcan_config_t *p_config);
+
 /* Private function to copy Tx message to the message RAM */
 static void FDCAN_CopyMessageToRAM(const hal_fdcan_handle_t *hfdcan,
                                    const hal_fdcan_tx_header_t *p_tx_element_header,
@@ -820,6 +845,12 @@ static hal_status_t FDCAN_ResetClockStopRequest(FDCAN_GlobalTypeDef *fdcan);
 
 /* Private function to handle initialization request */
 static hal_status_t FDCAN_InitRequest(FDCAN_GlobalTypeDef *fdcan);
+
+/* Private function to handles and dispatches FDCAN interrupt flags for a given driver instance */
+static void FDCAN_HandleInterruptFlags(hal_fdcan_handle_t *hfdcan, uint32_t it_flags);
+
+/* Private function to returns interrupt flags associated with a specific interrupt line */
+static uint32_t FDCAN_GetLineSpecificInterruptFlags(const FDCAN_GlobalTypeDef *p_fdcanx, uint32_t it_line);
 /**
   * @}
   */
@@ -1043,12 +1074,8 @@ Items that can alter other config parameters must not be handled within unitary 
       - HAL_FDCAN_GetRamWatchdog()                   : Get the RAM watchdog value.
       - HAL_FDCAN_SetConfigTimestampCounter()        : Configure the timestamp counter.
       - HAL_FDCAN_GetConfigTimestampCounter()        : Get the timestamp counter configuration.
-      - HAL_FDCAN_GetTimestampCounter()              : Get the timestamp counter value.
-      - HAL_FDCAN_ResetTimestampCounter()            : Reset the timestamp counter to zero.
       - HAL_FDCAN_SetConfigTimeoutCounter()          : Configure the timeout counter.
       - HAL_FDCAN_GetConfigTimeoutCounter()          : Get the timeout counter configuration.
-      - HAL_FDCAN_GetTimeoutCounter()                : Get the timeout counter value.
-      - HAL_FDCAN_ResetTimeoutCounter()              : Reset the timeout counter to its starting value.
       - HAL_FDCAN_EnableTimeoutCounter()             : Enable the timeout counter.
       - HAL_FDCAN_DisableTimeoutCounter()            : Disable the timeout counter.
       - HAL_FDCAN_IsEnabledTimeoutCounter()          : Check if the timeout counter is enabled.
@@ -1134,17 +1161,11 @@ hal_status_t HAL_FDCAN_SetConfig(hal_fdcan_handle_t *hfdcan, const hal_fdcan_con
   ASSERT_DBG_PARAM(IS_FDCAN_NOMINAL_SJW(p_config->nominal_bit_timing.nominal_jump_width));
   ASSERT_DBG_PARAM(IS_FDCAN_NOMINAL_TSEG1(p_config->nominal_bit_timing.nominal_time_seg1));
   ASSERT_DBG_PARAM(IS_FDCAN_NOMINAL_TSEG2(p_config->nominal_bit_timing.nominal_time_seg2));
+  ASSERT_DBG_PARAM(IS_FDCAN_MAX_VALUE(p_config->nominal_bit_timing.nominal_jump_width,
+                                      p_config->nominal_bit_timing.nominal_time_seg2));
   ASSERT_DBG_PARAM(IS_FDCAN_MAX_VALUE(p_config->std_filters_nbr, FDCAN_RAM_FLS_NBR));
   ASSERT_DBG_PARAM(IS_FDCAN_MAX_VALUE(p_config->ext_filters_nbr, FDCAN_RAM_FLE_NBR));
   ASSERT_DBG_PARAM(IS_FDCAN_TX_MODE(p_config->tx_fifo_queue_mode));
-
-  if (p_config->frame_format == HAL_FDCAN_FRAME_FORMAT_FD_BRS)
-  {
-    ASSERT_DBG_PARAM(IS_FDCAN_DATA_PRESC(p_config->data_bit_timing.data_prescaler));
-    ASSERT_DBG_PARAM(IS_FDCAN_DATA_SJW(p_config->data_bit_timing.data_jump_width));
-    ASSERT_DBG_PARAM(IS_FDCAN_DATA_TSEG1(p_config->data_bit_timing.data_time_seg1));
-    ASSERT_DBG_PARAM(IS_FDCAN_DATA_TSEG2(p_config->data_bit_timing.data_time_seg2));
-  }
 
   ASSERT_DBG_STATE(hfdcan->global_state, (uint32_t)HAL_FDCAN_STATE_INIT | (uint32_t)HAL_FDCAN_STATE_IDLE);
 
@@ -1184,6 +1205,10 @@ hal_status_t HAL_FDCAN_SetConfig(hal_fdcan_handle_t *hfdcan, const hal_fdcan_con
 
   if (p_config->frame_format == HAL_FDCAN_FRAME_FORMAT_FD_BRS)
   {
+    ASSERT_DBG_PARAM(IS_FDCAN_DATA_PRESC(p_config->data_bit_timing.data_prescaler));
+    ASSERT_DBG_PARAM(IS_FDCAN_DATA_SJW(p_config->data_bit_timing.data_jump_width));
+    ASSERT_DBG_PARAM(IS_FDCAN_DATA_TSEG1(p_config->data_bit_timing.data_time_seg1));
+    ASSERT_DBG_PARAM(IS_FDCAN_DATA_TSEG2(p_config->data_bit_timing.data_time_seg2));
     FDCAN_SetDataBitTiming(p_fdcanx, &p_config->data_bit_timing);
   }
 
@@ -1227,10 +1252,7 @@ void HAL_FDCAN_GetConfig(const hal_fdcan_handle_t *hfdcan, hal_fdcan_config_t *p
   p_config->frame_format        = (hal_fdcan_frame_format_t)(uint32_t)
                                   STM32_READ_BIT(register_value, (FDCAN_CCCR_FDOE | FDCAN_CCCR_BRSE));
 
-  register_value = STM32_READ_REG(p_fdcanx->RXGFC);
-
-  p_config->std_filters_nbr = STM32_READ_BIT(register_value, FDCAN_RXGFC_LSS) >> FDCAN_RXGFC_LSS_Pos;
-  p_config->ext_filters_nbr = STM32_READ_BIT(register_value, FDCAN_RXGFC_LSE) >> FDCAN_RXGFC_LSE_Pos;
+  FDCAN_GetMessageRAMConfig(p_fdcanx, p_config);
 
   p_config->tx_fifo_queue_mode = (hal_fdcan_tx_mode_t)(uint32_t)(STM32_READ_BIT(p_fdcanx->TXBC, FDCAN_TXBC_TFQM));
 
@@ -1266,6 +1288,8 @@ hal_status_t HAL_FDCAN_SetNominalBitTiming(const hal_fdcan_handle_t *hfdcan,
   ASSERT_DBG_PARAM(IS_FDCAN_NOMINAL_SJW(p_nominal_bit_timing->nominal_jump_width));
   ASSERT_DBG_PARAM(IS_FDCAN_NOMINAL_TSEG1(p_nominal_bit_timing->nominal_time_seg1));
   ASSERT_DBG_PARAM(IS_FDCAN_NOMINAL_TSEG2(p_nominal_bit_timing->nominal_time_seg2));
+  ASSERT_DBG_PARAM(IS_FDCAN_MAX_VALUE(p_nominal_bit_timing->nominal_jump_width,
+                                      p_nominal_bit_timing->nominal_time_seg2));
 
   ASSERT_DBG_STATE(hfdcan->global_state, (uint32_t)HAL_FDCAN_STATE_IDLE);
 
@@ -1356,7 +1380,15 @@ hal_status_t HAL_FDCAN_SetFilter(const hal_fdcan_handle_t *hfdcan, const hal_fdc
   ASSERT_DBG_PARAM((p_filter_config != NULL));
 
 #if defined(USE_HAL_CHECK_PARAM) && (USE_HAL_CHECK_PARAM == 1)
-  if (p_filter_config == NULL)
+  hal_fdcan_config_t ram_config;
+
+  FDCAN_GetMessageRAMConfig(FDCAN_GET_INSTANCE(hfdcan), &ram_config);
+
+  if ((p_filter_config == NULL)
+      || ((p_filter_config->id_type == HAL_FDCAN_ID_STANDARD) && (p_filter_config->filter_index
+                                                                  >= ram_config.std_filters_nbr))
+      || ((p_filter_config->id_type == HAL_FDCAN_ID_EXTENDED) && (p_filter_config->filter_index
+                                                                  >= ram_config.ext_filters_nbr)))
   {
     return HAL_INVALID_PARAM;
   }
@@ -1369,9 +1401,8 @@ hal_status_t HAL_FDCAN_SetFilter(const hal_fdcan_handle_t *hfdcan, const hal_fdc
 
   if (p_filter_config->id_type == HAL_FDCAN_ID_STANDARD)
   {
-    ASSERT_DBG_PARAM(IS_FDCAN_MAX_VALUE(p_filter_config->filter_index, FDCAN_RAM_FLS_NBR - 1U));
     ASSERT_DBG_PARAM(IS_FDCAN_MAX_VALUE(p_filter_config->filter_id1,
-                                        FDCAN_STD_FILTER_ID2_MSK >> FDCAN_STD_FILTER_ID2_POS));
+                                        FDCAN_STD_FILTER_ID1_MSK >> FDCAN_STD_FILTER_ID1_POS));
     ASSERT_DBG_PARAM(IS_FDCAN_MAX_VALUE(p_filter_config->filter_id2,
                                         FDCAN_STD_FILTER_ID2_MSK >> FDCAN_STD_FILTER_ID2_POS));
     ASSERT_DBG_PARAM(IS_FDCAN_STD_FILTER_TYPE(p_filter_config->filter_type));
@@ -1379,7 +1410,7 @@ hal_status_t HAL_FDCAN_SetFilter(const hal_fdcan_handle_t *hfdcan, const hal_fdc
     /* Build filter element */
     filter_element_w1 = ((uint32_t)(p_filter_config->filter_type)
                          | ((uint32_t)(p_filter_config->filter_config) << FDCAN_STD_FILTER_CONFIG_POS)
-                         | ((uint32_t)(p_filter_config->filter_id1) << FDCAN_STD_FILTER_ID1_POS)
+                         | ((p_filter_config->filter_id1) << FDCAN_STD_FILTER_ID1_POS)
                          |  p_filter_config->filter_id2);
 
     /* Calculate filter address */
@@ -1391,10 +1422,8 @@ hal_status_t HAL_FDCAN_SetFilter(const hal_fdcan_handle_t *hfdcan, const hal_fdc
   }
   else /* p_filter_config->id_type == FDCAN_EXTENDED_ID */
   {
-    /* Check function parameters */
-    ASSERT_DBG_PARAM(IS_FDCAN_MAX_VALUE(p_filter_config->filter_index, FDCAN_RAM_FLE_NBR - 1U));
     ASSERT_DBG_PARAM(IS_FDCAN_MAX_VALUE(p_filter_config->filter_id1,
-                                        FDCAN_EXT_FILTER_ID2_MSK >> FDCAN_EXT_FILTER_ID2_POS));
+                                        FDCAN_EXT_FILTER_ID1_MSK >> FDCAN_EXT_FILTER_ID1_POS));
     ASSERT_DBG_PARAM(IS_FDCAN_MAX_VALUE(p_filter_config->filter_id2,
                                         FDCAN_EXT_FILTER_ID2_MSK >> FDCAN_EXT_FILTER_ID2_POS));
     ASSERT_DBG_PARAM(IS_FDCAN_EXT_FILTER_TYPE(p_filter_config->filter_type));
@@ -1442,10 +1471,14 @@ void HAL_FDCAN_GetFilter(const hal_fdcan_handle_t *hfdcan, hal_fdcan_filter_t *p
   ASSERT_DBG_STATE(hfdcan->global_state, (uint32_t)HAL_FDCAN_STATE_IDLE | (uint32_t)HAL_FDCAN_STATE_ACTIVE
                    | (uint32_t)HAL_FDCAN_STATE_POWER_DOWN);
 
+  p_filter_config->id_type = id_type;
+
   if (id_type == HAL_FDCAN_ID_STANDARD)
   {
-    /* Check parameter */
-    ASSERT_DBG_PARAM(IS_FDCAN_MAX_VALUE(filter_index, FDCAN_RAM_FLS_NBR - 1U));
+    /* Filter index must be within the range of configured filters */
+    ASSERT_DBG_PARAM(IS_FDCAN_MAX_VALUE(filter_index + 1U,
+                                        (STM32_READ_BIT(FDCAN_GET_INSTANCE(hfdcan)->RXGFC, FDCAN_RXGFC_LSS)
+                                         >> FDCAN_RXGFC_LSS_Pos)));
 
     /* Calculate filter address */
     filter_address = (uint32_t *)(hfdcan->msg_ram.std_filter_start_addr + (filter_index * FDCAN_RAM_FLS_SIZE));
@@ -1471,8 +1504,10 @@ void HAL_FDCAN_GetFilter(const hal_fdcan_handle_t *hfdcan, hal_fdcan_filter_t *p
   }
   else
   {
-    /* Check parameter */
-    ASSERT_DBG_PARAM(IS_FDCAN_MAX_VALUE(filter_index, FDCAN_RAM_FLE_NBR - 1U));
+    /* Filter index must be within the range of configured filters */
+    ASSERT_DBG_PARAM(IS_FDCAN_MAX_VALUE(filter_index + 1U,
+                                        (STM32_READ_BIT(FDCAN_GET_INSTANCE(hfdcan)->RXGFC, FDCAN_RXGFC_LSE)
+                                         >> FDCAN_RXGFC_LSE_Pos)));
 
     /* Calculate filter address */
     filter_address = (uint32_t *)(hfdcan->msg_ram.ext_filter_start_addr + (filter_index * FDCAN_RAM_FLE_SIZE));
@@ -1487,6 +1522,7 @@ void HAL_FDCAN_GetFilter(const hal_fdcan_handle_t *hfdcan, hal_fdcan_filter_t *p
     /* Extended filter ID 1 EFID1 */
     p_filter_config->filter_id1    = (STM32_READ_BIT(*filter_address, FDCAN_EXT_FILTER_ID1_MSK)
                                       >> FDCAN_EXT_FILTER_ID1_POS);
+    p_filter_config->filter_index  = filter_index;
 
     /* Read the next word - F1 word */
     filter_address++;
@@ -1623,12 +1659,8 @@ hal_status_t HAL_FDCAN_SetClockDivider(const hal_fdcan_handle_t *hfdcan, hal_fdc
 
   ASSERT_DBG_STATE(hfdcan->global_state, (uint32_t)HAL_FDCAN_STATE_IDLE);
 
-#if !defined(USE_ASSERT_DBG_STATE) && !defined(USE_ASSERT_DBG_PARAM)
-  STM32_UNUSED(hfdcan);
-#endif /* STM32_UNUSED */
-
   /* Configure clock divider */
-  STM32_WRITE_REG(FDCAN_CONFIG->CKDIV, (uint32_t)clock_divider);
+  STM32_WRITE_REG(FDCAN_CONFIG_GET_INSTANCE(hfdcan)->CKDIV, (uint32_t)clock_divider);
 
   return HAL_OK;
 }
@@ -1647,9 +1679,7 @@ hal_fdcan_clock_divider_t HAL_FDCAN_GetClockDivider(const hal_fdcan_handle_t *hf
 
   ASSERT_DBG_STATE(hfdcan->global_state, (uint32_t)HAL_FDCAN_STATE_IDLE | (uint32_t)HAL_FDCAN_STATE_ACTIVE);
 
-  STM32_UNUSED(hfdcan);
-
-  register_value = STM32_READ_BIT(FDCAN_CONFIG->CKDIV, FDCAN_CKDIV_PDIV);
+  register_value = STM32_READ_BIT(FDCAN_CONFIG_GET_INSTANCE(hfdcan)->CKDIV, FDCAN_CKDIV_PDIV);
 
   return (hal_fdcan_clock_divider_t)register_value;
 }
@@ -1664,23 +1694,25 @@ hal_fdcan_clock_divider_t HAL_FDCAN_GetClockDivider(const hal_fdcan_handle_t *hf
 hal_status_t HAL_FDCAN_SetRxFifoOverwrite(const hal_fdcan_handle_t *hfdcan, hal_fdcan_rx_location_t rx_location_idx,
                                           hal_fdcan_rx_fifo_mode_t operation_mode)
 {
+  FDCAN_GlobalTypeDef *p_fdcanx;
+
   ASSERT_DBG_PARAM((hfdcan != NULL));
   ASSERT_DBG_PARAM(IS_FDCAN_RX_FIFO(rx_location_idx));
   ASSERT_DBG_PARAM(IS_FDCAN_RX_FIFO_MODE(operation_mode));
 
   ASSERT_DBG_STATE(hfdcan->global_state, (uint32_t)HAL_FDCAN_STATE_IDLE);
 
+  p_fdcanx = FDCAN_GET_INSTANCE(hfdcan);
+
   if (rx_location_idx == HAL_FDCAN_RX_FIFO_0)
   {
     /* Select FIFO 0 operation mode */
-    STM32_MODIFY_REG(FDCAN_GET_INSTANCE(hfdcan)->RXGFC, FDCAN_RXGFC_F0OM, ((uint32_t)operation_mode
-                                                                           << FDCAN_RXGFC_F0OM_Pos));
+    STM32_MODIFY_REG(p_fdcanx->RXGFC, FDCAN_RXGFC_F0OM, ((uint32_t)operation_mode << FDCAN_RXGFC_F0OM_Pos));
   }
   else /* rx_location_idx == FDCAN_RX_FIFO_1 */
   {
     /* Select FIFO 1 operation mode */
-    STM32_MODIFY_REG(FDCAN_GET_INSTANCE(hfdcan)->RXGFC, FDCAN_RXGFC_F1OM, ((uint32_t)operation_mode
-                                                                           << FDCAN_RXGFC_F1OM_Pos));
+    STM32_MODIFY_REG(p_fdcanx->RXGFC, FDCAN_RXGFC_F1OM, ((uint32_t)operation_mode << FDCAN_RXGFC_F1OM_Pos));
   }
 
   return HAL_OK;
@@ -1778,10 +1810,9 @@ hal_status_t HAL_FDCAN_SetConfigTimestampCounter(const hal_fdcan_handle_t *hfdca
 
   ASSERT_DBG_STATE(hfdcan->global_state, (uint32_t)HAL_FDCAN_STATE_IDLE);
 
-  STM32_MODIFY_REG(FDCAN_GET_INSTANCE(hfdcan)->TSCC, FDCAN_TSCC_TCP | FDCAN_TSCC_TSS,
-                   ((uint32_t)(p_timestamp_config->timestamp_prescaler)
-                    | ((uint32_t)(p_timestamp_config->timestamp_source))));
-
+  STM32_MODIFY_REG(FDCAN_GET_INSTANCE(hfdcan)->TSCC, FDCAN_TSCC_TSS | FDCAN_TSCC_TCP,
+                   ((uint32_t)p_timestamp_config->timestamp_source
+                    | (uint32_t)p_timestamp_config->timestamp_prescaler));
   return HAL_OK;
 }
 
@@ -1810,46 +1841,6 @@ void HAL_FDCAN_GetConfigTimestampCounter(const hal_fdcan_handle_t *hfdcan,
   /* Get the timestamp counter prescaler */
   p_timestamp_config->timestamp_prescaler = (hal_fdcan_timestamp_prescaler_t)(uint32_t)
                                             STM32_READ_BIT(register_value, FDCAN_TSCC_TCP);
-}
-
-/**
-  * @brief  Get the timestamp counter value.
-  * @param  hfdcan Pointer to a @ref hal_fdcan_handle_t handle.
-  * @return uint16_t Current timestamp counter value (0x0000..0xFFFF).
-  */
-uint16_t HAL_FDCAN_GetTimestampCounter(const hal_fdcan_handle_t *hfdcan)
-{
-  ASSERT_DBG_PARAM((hfdcan != NULL));
-
-  ASSERT_DBG_STATE(hfdcan->global_state, (uint32_t)HAL_FDCAN_STATE_IDLE | (uint32_t)HAL_FDCAN_STATE_ACTIVE
-                   | (uint32_t)HAL_FDCAN_STATE_POWER_DOWN);
-
-  return ((uint16_t)(STM32_READ_REG(FDCAN_GET_INSTANCE(hfdcan)->TSCV)));
-}
-
-/**
-  * @brief  Reset the timestamp counter to zero.
-  * @param  hfdcan Pointer to a @ref hal_fdcan_handle_t handle.
-  * @retval HAL_OK    Operation completed successfully.
-  * @retval HAL_ERROR Timestamp counter source is not internal.
-  */
-hal_status_t HAL_FDCAN_ResetTimestampCounter(const hal_fdcan_handle_t *hfdcan)
-{
-  hal_status_t status = HAL_ERROR;
-
-  ASSERT_DBG_PARAM((hfdcan != NULL));
-
-  ASSERT_DBG_STATE(hfdcan->global_state, (uint32_t)HAL_FDCAN_STATE_IDLE | (uint32_t)HAL_FDCAN_STATE_ACTIVE
-                   | (uint32_t)HAL_FDCAN_STATE_POWER_DOWN);
-
-  if (STM32_READ_BIT(FDCAN_GET_INSTANCE(hfdcan)->TSCC, FDCAN_TSCC_TSS) == (uint32_t)HAL_FDCAN_TIMESTAMP_SOURCE_INTERNAL)
-  {
-    STM32_CLEAR_REG(FDCAN_GET_INSTANCE(hfdcan)->TSCV);
-
-    status = HAL_OK;
-  }
-
-  return status;
 }
 
 /**
@@ -1903,24 +1894,9 @@ void HAL_FDCAN_GetConfigTimeoutCounter(const hal_fdcan_handle_t *hfdcan, hal_fdc
   register_value = STM32_READ_REG(FDCAN_GET_INSTANCE(hfdcan)->TOCC);
 
   p_timeout_param->timeout_operation = (hal_fdcan_timeout_operation_t)(uint32_t)
-                                       (STM32_READ_BIT(register_value, FDCAN_TOCC_TOS) >> FDCAN_TOCC_TOS_Pos);
+                                       STM32_READ_BIT(register_value, FDCAN_TOCC_TOS);
   p_timeout_param->timeout_period    = (STM32_READ_BIT(register_value, FDCAN_TOCC_TOP) >> FDCAN_TOCC_TOP_Pos);
 
-}
-
-/**
-  * @brief  Get the timeout counter value.
-  * @param  hfdcan Pointer to a @ref hal_fdcan_handle_t handle.
-  * @return uint16_t Current timeout counter value (0x0000..0xFFFF).
-  */
-uint16_t HAL_FDCAN_GetTimeoutCounter(const hal_fdcan_handle_t *hfdcan)
-{
-  ASSERT_DBG_PARAM((hfdcan != NULL));
-
-  ASSERT_DBG_STATE(hfdcan->global_state, (uint32_t)HAL_FDCAN_STATE_IDLE | (uint32_t)HAL_FDCAN_STATE_ACTIVE
-                   | (uint32_t)HAL_FDCAN_STATE_POWER_DOWN);
-
-  return (uint16_t)STM32_READ_BIT(FDCAN_GET_INSTANCE(hfdcan)->TOCV, FDCAN_TOCV_TOC);
 }
 
 /**
@@ -1965,33 +1941,8 @@ hal_fdcan_timeout_counter_status_t HAL_FDCAN_IsEnabledTimeoutCounter(const hal_f
   ASSERT_DBG_STATE(hfdcan->global_state, (uint32_t)HAL_FDCAN_STATE_IDLE | (uint32_t)HAL_FDCAN_STATE_ACTIVE
                    | (uint32_t)HAL_FDCAN_STATE_POWER_DOWN);
 
-  return (hal_fdcan_timeout_counter_status_t)(uint32_t)STM32_READ_BIT(FDCAN_GET_INSTANCE(hfdcan)->TOCC,
-                                                                      FDCAN_TOCC_ETOC);
-}
-
-/**
-  * @brief  Reset the timeout counter to its start value.
-  * @param  hfdcan Pointer to a @ref hal_fdcan_handle_t handle.
-  * @retval HAL_OK    Operation completed successfully.
-  * @retval HAL_ERROR Timeout counter source is not continuous.
-  */
-hal_status_t HAL_FDCAN_ResetTimeoutCounter(const hal_fdcan_handle_t *hfdcan)
-{
-  hal_status_t status = HAL_ERROR;
-
-  ASSERT_DBG_PARAM((hfdcan != NULL));
-
-  ASSERT_DBG_STATE(hfdcan->global_state, (uint32_t)HAL_FDCAN_STATE_IDLE | (uint32_t)HAL_FDCAN_STATE_ACTIVE
-                   | (uint32_t)HAL_FDCAN_STATE_POWER_DOWN);
-
-  if (STM32_READ_BIT(FDCAN_GET_INSTANCE(hfdcan)->TOCC, FDCAN_TOCC_TOS) == (uint32_t)HAL_FDCAN_TIMEOUT_CONTINUOUS)
-  {
-    STM32_CLEAR_REG(FDCAN_GET_INSTANCE(hfdcan)->TOCV);
-
-    status = HAL_OK;
-  }
-
-  return status;
+  return (hal_fdcan_timeout_counter_status_t)
+         (uint32_t)STM32_READ_BIT(FDCAN_GET_INSTANCE(hfdcan)->TOCC, FDCAN_TOCC_ETOC);
 }
 
 /**
@@ -2097,8 +2048,7 @@ hal_fdcan_tx_delay_comp_status_t HAL_FDCAN_IsEnabledTxDelayCompensation(const ha
   ASSERT_DBG_STATE(hfdcan->global_state, (uint32_t)HAL_FDCAN_STATE_IDLE | (uint32_t)HAL_FDCAN_STATE_ACTIVE
                    | (uint32_t)HAL_FDCAN_STATE_POWER_DOWN);
 
-  return (hal_fdcan_tx_delay_comp_status_t)(uint32_t)STM32_READ_BIT(FDCAN_GET_INSTANCE(hfdcan)->DBTP,
-                                                                    FDCAN_DBTP_TDC);
+  return (hal_fdcan_tx_delay_comp_status_t)(uint32_t)STM32_READ_BIT(FDCAN_GET_INSTANCE(hfdcan)->DBTP, FDCAN_DBTP_TDC);
 }
 
 /**
@@ -2298,8 +2248,8 @@ hal_fdcan_restricted_op_mode_status_t HAL_FDCAN_IsEnabledRestrictedOperationMode
   ASSERT_DBG_STATE(hfdcan->global_state, (uint32_t)HAL_FDCAN_STATE_IDLE | (uint32_t)HAL_FDCAN_STATE_ACTIVE
                    | (uint32_t)HAL_FDCAN_STATE_POWER_DOWN);
 
-  return (hal_fdcan_restricted_op_mode_status_t)(uint32_t)STM32_READ_BIT(FDCAN_GET_INSTANCE(hfdcan)->CCCR,
-                                                                         FDCAN_CCCR_ASM);
+  return (hal_fdcan_restricted_op_mode_status_t)
+         (uint32_t)STM32_READ_BIT(FDCAN_GET_INSTANCE(hfdcan)->CCCR, FDCAN_CCCR_ASM);
 }
 
 /**
@@ -2333,8 +2283,8 @@ hal_fdcan_frame_format_t HAL_FDCAN_GetFrameFormat(const hal_fdcan_handle_t *hfdc
   ASSERT_DBG_STATE(hfdcan->global_state, (uint32_t)HAL_FDCAN_STATE_IDLE | (uint32_t)HAL_FDCAN_STATE_ACTIVE
                    | (uint32_t)HAL_FDCAN_STATE_POWER_DOWN);
 
-  return (hal_fdcan_frame_format_t)(uint32_t)STM32_READ_BIT(FDCAN_GET_INSTANCE(hfdcan)->CCCR,
-                                                            (FDCAN_CCCR_FDOE | FDCAN_CCCR_BRSE));
+  return (hal_fdcan_frame_format_t)
+         (uint32_t)STM32_READ_BIT(FDCAN_GET_INSTANCE(hfdcan)->CCCR, (FDCAN_CCCR_FDOE | FDCAN_CCCR_BRSE));
 }
 
 /**
@@ -2381,8 +2331,8 @@ hal_fdcan_auto_retransmission_state_t HAL_FDCAN_IsEnabledAutoRetransmission(cons
   ASSERT_DBG_STATE(hfdcan->global_state, (uint32_t)HAL_FDCAN_STATE_IDLE | (uint32_t)HAL_FDCAN_STATE_ACTIVE
                    | (uint32_t)HAL_FDCAN_STATE_POWER_DOWN);
 
-  return (hal_fdcan_auto_retransmission_state_t)(uint32_t)(STM32_READ_BIT(FDCAN_GET_INSTANCE(hfdcan)->CCCR,
-                                                                          FDCAN_CCCR_DAR));
+  return (hal_fdcan_auto_retransmission_state_t)
+         (uint32_t)(STM32_READ_BIT(FDCAN_GET_INSTANCE(hfdcan)->CCCR, FDCAN_CCCR_DAR));
 }
 
 /**
@@ -2476,8 +2426,8 @@ hal_fdcan_protocol_exception_state_t HAL_FDCAN_IsEnabledProtocolException(const 
   ASSERT_DBG_STATE(hfdcan->global_state, (uint32_t)HAL_FDCAN_STATE_IDLE | (uint32_t)HAL_FDCAN_STATE_ACTIVE
                    | (uint32_t)HAL_FDCAN_STATE_POWER_DOWN);
 
-  return (hal_fdcan_protocol_exception_state_t)(uint32_t)STM32_READ_BIT(FDCAN_GET_INSTANCE(hfdcan)->CCCR,
-                                                                        FDCAN_CCCR_PXHD);
+  return (hal_fdcan_protocol_exception_state_t)
+         (uint32_t)STM32_READ_BIT(FDCAN_GET_INSTANCE(hfdcan)->CCCR, FDCAN_CCCR_PXHD);
 }
 
 /**
@@ -2525,9 +2475,7 @@ uint32_t HAL_FDCAN_GetClockFreq(const hal_fdcan_handle_t *hfdcan)
   ASSERT_DBG_STATE(hfdcan->global_state, (uint32_t)HAL_FDCAN_STATE_INIT | (uint32_t)HAL_FDCAN_STATE_IDLE
                    | (uint32_t)HAL_FDCAN_STATE_ACTIVE | (uint32_t)HAL_FDCAN_STATE_POWER_DOWN);
 
-#if !defined(USE_ASSERT_DBG_STATE) && !defined(USE_ASSERT_DBG_PARAM)
   STM32_UNUSED(hfdcan);
-#endif /* STM32_UNUSED */
 
   return HAL_RCC_FDCAN_GetKernelClkFreq();
 }
@@ -2801,24 +2749,28 @@ hal_status_t HAL_FDCAN_RegisterErrorCallback(hal_fdcan_handle_t *hfdcan, hal_fdc
 /** @addtogroup FDCAN_Exported_Functions_Group5
   * @{
 A set of functions allowing to control the peripheral and initiate an operation on the bus:
-    - HAL_FDCAN_Start()                               : Start the FDCAN module.
-    - HAL_FDCAN_Stop()                                : Stop the FDCAN module.
-    - HAL_FDCAN_ReqTransmitMsgFromFIFOQ()             : Add a message to the Tx FIFO/Queue and activate
-                                                        the corresponding transmission request.
-    - HAL_FDCAN_GetLatestTxFifoQRequestBuffer()       : Get the Tx buffer index of latest Tx FIFO/Queue request.
-    - HAL_FDCAN_GetTxFifoFreeLevel()                  : Get the Tx FIFO free level.
-    - HAL_FDCAN_ReqAbortOfTxBuffer()                  : Abort transmission request.
-    - HAL_FDCAN_GetTxEvent()                          : Get a FDCAN Tx event from the Tx event FIFO zone
-                                                        into the message RAM.
-    - HAL_FDCAN_GetTxBufferMessageStatus()            : Check if a transmission request is pending on any
-                                                        of the selected Tx buffers.
-    - HAL_FDCAN_GetReceivedMessage()                  : Get a FDCAN frame from the Rx FIFO zone into the message RAM.
-    - HAL_FDCAN_GetRxFifoFillLevel()                  : Get the Rx FIFO fill level.
-    - HAL_FDCAN_GetHighPriorityMessageStatus()        : Get the high priority message status.
-    - HAL_FDCAN_GetProtocolStatus()                   : Get the protocol status.
-    - HAL_FDCAN_GetErrorCounters()                    : Get the error counter values.
-    - HAL_FDCAN_Recover()                             : Recover the bus-off error.
-
+    - HAL_FDCAN_Start()                          : Start the FDCAN module.
+    - HAL_FDCAN_Stop()                           : Stop the FDCAN module.
+    - HAL_FDCAN_ReqTransmitMsgFromFIFOQ()        : Add a message to the Tx FIFO/Queue and activate
+                                                   the corresponding transmission request.
+    - HAL_FDCAN_GetLatestTxFifoQRequestBuffer()  : Get the Tx buffer index of latest Tx FIFO/Queue request.
+    - HAL_FDCAN_GetTxFifoFreeLevel()             : Get the Tx FIFO free level.
+    - HAL_FDCAN_ReqAbortOfTxBuffer()             : Abort transmission request.
+    - HAL_FDCAN_GetTxEvent()                     : Get a FDCAN Tx event from the Tx event FIFO zone
+                                                   into the message RAM.
+    - HAL_FDCAN_GetTxEventFifoFillLevel()        : Get the Tx event FIFO fill level.
+    - HAL_FDCAN_GetTxBufferMessageStatus()       : Check if a transmission request is pending on any
+                                                   of the selected Tx buffers.
+    - HAL_FDCAN_GetReceivedMessage()             : Get a FDCAN frame from the Rx FIFO zone into the message RAM.
+    - HAL_FDCAN_GetRxFifoFillLevel()             : Get the Rx FIFO fill level.
+    - HAL_FDCAN_GetTimestampCounter()            : Get the timestamp counter value.
+    - HAL_FDCAN_ResetTimestampCounter()          : Reset the timestamp counter to zero.
+    - HAL_FDCAN_GetTimeoutCounter()              : Get the timeout counter value.
+    - HAL_FDCAN_ResetTimeoutCounter()            : Reset the timeout counter to its starting value.
+    - HAL_FDCAN_GetHighPriorityMessageStatus()   : Get the high priority message status.
+    - HAL_FDCAN_GetProtocolStatus()              : Get the protocol status.
+    - HAL_FDCAN_GetErrorCounters()               : Get the error counter values.
+    - HAL_FDCAN_Recover()                        : Recover the bus-off error.
   */
 
 /**
@@ -2928,28 +2880,25 @@ hal_status_t HAL_FDCAN_ReqTransmitMsgFromFIFOQ(hal_fdcan_handle_t *hfdcan,
   }
 #endif /* USE_HAL_CHECK_PARAM */
 
-  if (p_tx_element_header->b.identifier_type == HAL_FDCAN_ID_STANDARD)
+  p_fdcanx = FDCAN_GET_INSTANCE(hfdcan);
+
+  tx_element_header = *p_tx_element_header;
+
+  if (tx_element_header.b.identifier_type == HAL_FDCAN_ID_STANDARD)
   {
-    ASSERT_DBG_PARAM(IS_FDCAN_MAX_VALUE(p_tx_element_header->b.identifier,
+    ASSERT_DBG_PARAM(IS_FDCAN_MAX_VALUE(tx_element_header.b.identifier,
                                         FDCAN_STD_FILTER_ID2_MSK >> FDCAN_STD_FILTER_ID2_POS));
+
+    /* A standard identifier has to be written to ID[28:18] */
+    tx_element_header.b.identifier <<= FDCAN_STD_FILTER_ID_POS;
   }
 
   ASSERT_DBG_STATE(hfdcan->global_state, (uint32_t)HAL_FDCAN_STATE_IDLE | (uint32_t)HAL_FDCAN_STATE_ACTIVE
                    | (uint32_t)HAL_FDCAN_STATE_POWER_DOWN);
 
-  p_fdcanx = FDCAN_GET_INSTANCE(hfdcan);
-
   /* Check that the Tx FIFO/Queue is not full */
   if (STM32_READ_BIT(p_fdcanx->TXFQS, FDCAN_TXFQS_TFQF) == 0U)
   {
-    tx_element_header = *p_tx_element_header;
-
-    /* A standard identifier has to be written to ID[28:18] */
-    if (tx_element_header.b.identifier_type == HAL_FDCAN_ID_STANDARD)
-    {
-      tx_element_header.b.identifier <<= FDCAN_STD_FILTER_ID_POS;
-    }
-
     /* Get the Tx FIFO put_index */
     put_index = STM32_READ_BIT(p_fdcanx->TXFQS, FDCAN_TXFQS_TFQPI) >> FDCAN_TXFQS_TFQPI_Pos;
 
@@ -2969,9 +2918,9 @@ hal_status_t HAL_FDCAN_ReqTransmitMsgFromFIFOQ(hal_fdcan_handle_t *hfdcan,
 }
 
 /**
-  * @brief  Get the Tx FIFO status.
+  * @brief  Get the Tx FIFO/Queue status.
   * @param  hfdcan Pointer to a @ref hal_fdcan_handle_t handle.
-  * @return Current FIFO/queue status.
+  * @return Current FIFO/Queue status.
   */
 hal_fdcan_fifo_status_t HAL_FDCAN_GetTxFifoStatus(const hal_fdcan_handle_t *hfdcan)
 {
@@ -3001,10 +2950,12 @@ uint32_t HAL_FDCAN_GetLatestTxFifoQRequestBuffer(const hal_fdcan_handle_t *hfdca
 }
 
 /**
-  * @brief  Return the Tx FIFO free level - number of consecutive free Tx FIFO elements starting
-  *         from Tx FIFO get_index.
-  * @param  hfdcan Pointer to a @ref hal_fdcan_handle_t handle.
-  * @return Current Tx FIFO free level.
+  * @brief   Return the Tx FIFO free level - number of consecutive free Tx FIFO elements starting
+  *          from Tx FIFO get_index.
+  * @param   hfdcan Pointer to a @ref hal_fdcan_handle_t handle.
+  * @warning This function is relevant only when the Tx FIFO operates in FIFO mode.
+  *          In Queue mode, the Tx FIFO free level is always @ref HAL_FDCAN_TX_FIFO_FREE_LEVEL_0.
+  * @return  Current Tx FIFO free level.
   */
 hal_fdcan_tx_fifo_free_level_t HAL_FDCAN_GetTxFifoFreeLevel(const hal_fdcan_handle_t *hfdcan)
 {
@@ -3035,12 +2986,17 @@ hal_fdcan_tx_fifo_free_level_t HAL_FDCAN_GetTxFifoFreeLevel(const hal_fdcan_hand
   */
 hal_status_t HAL_FDCAN_ReqAbortOfTxBuffer(const hal_fdcan_handle_t *hfdcan, uint32_t tx_buffer_idx)
 {
+  FDCAN_GlobalTypeDef *p_fdcanx;
+
   ASSERT_DBG_PARAM((hfdcan != NULL));
+
+  p_fdcanx = FDCAN_GET_INSTANCE(hfdcan);
+
   ASSERT_DBG_PARAM(IS_FDCAN_TX_LOCATION_LIST(tx_buffer_idx));
 
   ASSERT_DBG_STATE(hfdcan->global_state, (uint32_t)HAL_FDCAN_STATE_ACTIVE | (uint32_t)HAL_FDCAN_STATE_POWER_DOWN);
 
-  STM32_WRITE_REG(FDCAN_GET_INSTANCE(hfdcan)->TXBCR, tx_buffer_idx);
+  STM32_WRITE_REG(p_fdcanx->TXBCR, tx_buffer_idx);
 
   return HAL_OK;
 }
@@ -3085,7 +3041,7 @@ hal_status_t HAL_FDCAN_GetTxEvent(const hal_fdcan_handle_t *hfdcan, hal_fdcan_tx
     tx_event_address = (uint32_t *)(hfdcan->msg_ram.tx_event_start_addr + (get_index * FDCAN_RAM_TEF_SIZE));
 
     /* Build the 64-bit Tx event header */
-    p_tx_event->d64 = ((uint64_t)tx_event_address[1] << 32U) | (uint64_t)tx_event_address[0];
+    p_tx_event->d64 = ((uint64_t)tx_event_address[1U] << 32U) | (uint64_t)tx_event_address[0U];
 
     /* A standard identifier has to be written to ID[28:18] */
     if (p_tx_event->b.identifier_type == HAL_FDCAN_ID_STANDARD)
@@ -3104,6 +3060,22 @@ hal_status_t HAL_FDCAN_GetTxEvent(const hal_fdcan_handle_t *hfdcan, hal_fdcan_tx
 }
 
 /**
+  * @brief  Return the number of unread Tx event FIFO elements.
+  * @param  hfdcan Pointer to a @ref hal_fdcan_handle_t handle.
+  * @param  p_fill_level Pointer to variable to receive the current fill level.
+  */
+void HAL_FDCAN_GetTxEventFifoFillLevel(const hal_fdcan_handle_t *hfdcan, uint32_t *p_fill_level)
+{
+  ASSERT_DBG_PARAM((hfdcan != NULL));
+  ASSERT_DBG_PARAM((p_fill_level != NULL));
+
+  ASSERT_DBG_STATE(hfdcan->global_state, (uint32_t)HAL_FDCAN_STATE_IDLE | (uint32_t)HAL_FDCAN_STATE_ACTIVE
+                   | (uint32_t)HAL_FDCAN_STATE_POWER_DOWN);
+
+  *p_fill_level = STM32_READ_BIT(FDCAN_GET_INSTANCE(hfdcan)->TXEFS, FDCAN_TXEFS_EFFL) >> FDCAN_TXEFS_EFFL_Pos;
+}
+
+/**
   * @brief  Check if a transmission request is pending on any of the selected Tx buffers.
   * @param  hfdcan        Pointer to a @ref hal_fdcan_handle_t handle.
   * @param  tx_buffer_idx Transmission buffer index.
@@ -3113,13 +3085,18 @@ hal_status_t HAL_FDCAN_GetTxEvent(const hal_fdcan_handle_t *hfdcan, hal_fdcan_tx
 hal_fdcan_tx_buffer_status_t HAL_FDCAN_GetTxBufferMessageStatus(const hal_fdcan_handle_t *hfdcan,
                                                                 uint32_t tx_buffer_idx)
 {
+  const FDCAN_GlobalTypeDef *p_fdcanx;
+
   ASSERT_DBG_PARAM((hfdcan != NULL));
+
+  p_fdcanx = FDCAN_GET_INSTANCE(hfdcan);
+
   ASSERT_DBG_PARAM(IS_FDCAN_TX_LOCATION_LIST(tx_buffer_idx));
 
   ASSERT_DBG_STATE(hfdcan->global_state, (uint32_t)HAL_FDCAN_STATE_IDLE | (uint32_t)HAL_FDCAN_STATE_ACTIVE
                    | (uint32_t)HAL_FDCAN_STATE_POWER_DOWN);
 
-  return STM32_IS_BIT_SET(FDCAN_GET_INSTANCE(hfdcan)->TXBRP, tx_buffer_idx) ? HAL_FDCAN_TX_BUFFER_PENDING
+  return STM32_IS_BIT_SET(p_fdcanx->TXBRP, tx_buffer_idx) ? HAL_FDCAN_TX_BUFFER_PENDING
          : HAL_FDCAN_TX_BUFFER_NOT_PENDING;
 }
 
@@ -3138,11 +3115,11 @@ hal_status_t HAL_FDCAN_GetReceivedMessage(const hal_fdcan_handle_t *hfdcan, hal_
 {
   FDCAN_GlobalTypeDef *p_fdcanx;
   uint32_t *rx_address;
-  uint8_t  *p_data;
   uint32_t byte_count;
   uint32_t get_index = 0U;
   uint32_t most_significant_word;
   uint32_t least_significant_word;
+  uint8_t  *p_data;
 
   ASSERT_DBG_PARAM((hfdcan != NULL));
   ASSERT_DBG_PARAM((p_rx_header != NULL));
@@ -3228,7 +3205,7 @@ hal_status_t HAL_FDCAN_GetReceivedMessage(const hal_fdcan_handle_t *hfdcan, hal_
   /* Get Rx payload */
   p_data = (uint8_t *)rx_address;
 
-  for (byte_count = 0; byte_count < fdcan_lut_dlc2bytes[(uint32_t)(p_rx_header->b.data_length)]; byte_count++)
+  for (byte_count = 0; byte_count < FDCAN_GET_DATA_LENGTH_BYTES(p_rx_header->b.data_length); byte_count++)
   {
     p_rx_data[byte_count] = p_data[byte_count];
   }
@@ -3272,6 +3249,93 @@ void HAL_FDCAN_GetRxFifoFillLevel(const hal_fdcan_handle_t *hfdcan, hal_fdcan_rx
   {
     *p_fill_level = STM32_READ_BIT(FDCAN_GET_INSTANCE(hfdcan)->RXF1S, FDCAN_RXF1S_F1FL);
   }
+}
+
+
+/**
+  * @brief  Get the timestamp counter value.
+  * @param  hfdcan Pointer to a @ref hal_fdcan_handle_t handle.
+  * @return uint16_t Current timestamp counter value (0x0000..0xFFFF).
+  */
+uint16_t HAL_FDCAN_GetTimestampCounter(const hal_fdcan_handle_t *hfdcan)
+{
+  ASSERT_DBG_PARAM((hfdcan != NULL));
+
+  ASSERT_DBG_STATE(hfdcan->global_state, (uint32_t)HAL_FDCAN_STATE_IDLE | (uint32_t)HAL_FDCAN_STATE_ACTIVE
+                   | (uint32_t)HAL_FDCAN_STATE_POWER_DOWN);
+
+  return ((uint16_t)(STM32_READ_REG(FDCAN_GET_INSTANCE(hfdcan)->TSCV)));
+}
+
+/**
+  * @brief  Reset the timestamp counter to zero.
+  * @param  hfdcan Pointer to a @ref hal_fdcan_handle_t handle.
+  * @retval HAL_OK    Operation completed successfully.
+  * @retval HAL_ERROR Timestamp counter source is not internal.
+  */
+hal_status_t HAL_FDCAN_ResetTimestampCounter(const hal_fdcan_handle_t *hfdcan)
+{
+  FDCAN_GlobalTypeDef *p_fdcanx;
+  hal_status_t status = HAL_ERROR;
+
+  ASSERT_DBG_PARAM((hfdcan != NULL));
+
+  ASSERT_DBG_STATE(hfdcan->global_state, (uint32_t)HAL_FDCAN_STATE_IDLE | (uint32_t)HAL_FDCAN_STATE_ACTIVE
+                   | (uint32_t)HAL_FDCAN_STATE_POWER_DOWN);
+
+  p_fdcanx = FDCAN_GET_INSTANCE(hfdcan);
+
+  if (STM32_READ_BIT(p_fdcanx->TSCC, FDCAN_TSCC_TSS) == (uint32_t)HAL_FDCAN_TIMESTAMP_SOURCE_INTERNAL)
+  {
+    STM32_CLEAR_REG(p_fdcanx->TSCV);
+
+    status = HAL_OK;
+  }
+
+  return status;
+}
+
+/**
+  * @brief  Get the timeout counter value.
+  * @param  hfdcan Pointer to a @ref hal_fdcan_handle_t handle.
+  * @return uint16_t Current timeout counter value (0x0000..0xFFFF).
+  */
+uint16_t HAL_FDCAN_GetTimeoutCounter(const hal_fdcan_handle_t *hfdcan)
+{
+  ASSERT_DBG_PARAM((hfdcan != NULL));
+
+  ASSERT_DBG_STATE(hfdcan->global_state, (uint32_t)HAL_FDCAN_STATE_IDLE | (uint32_t)HAL_FDCAN_STATE_ACTIVE
+                   | (uint32_t)HAL_FDCAN_STATE_POWER_DOWN);
+
+  return (uint16_t)STM32_READ_BIT(FDCAN_GET_INSTANCE(hfdcan)->TOCV, FDCAN_TOCV_TOC);
+}
+
+/**
+  * @brief  Reset the timeout counter to its start value.
+  * @param  hfdcan Pointer to a @ref hal_fdcan_handle_t handle.
+  * @retval HAL_OK    Operation completed successfully.
+  * @retval HAL_ERROR Timeout counter source is not continuous.
+  */
+hal_status_t HAL_FDCAN_ResetTimeoutCounter(const hal_fdcan_handle_t *hfdcan)
+{
+  FDCAN_GlobalTypeDef *p_fdcanx;
+  hal_status_t status = HAL_ERROR;
+
+  ASSERT_DBG_PARAM((hfdcan != NULL));
+
+  ASSERT_DBG_STATE(hfdcan->global_state, (uint32_t)HAL_FDCAN_STATE_IDLE | (uint32_t)HAL_FDCAN_STATE_ACTIVE
+                   | (uint32_t)HAL_FDCAN_STATE_POWER_DOWN);
+
+  p_fdcanx = FDCAN_GET_INSTANCE(hfdcan);
+
+  if (STM32_READ_BIT(p_fdcanx->TOCC, FDCAN_TOCC_TOS) == (uint32_t)HAL_FDCAN_TIMEOUT_CONTINUOUS)
+  {
+    STM32_CLEAR_REG(p_fdcanx->TOCV);
+
+    status = HAL_OK;
+  }
+
+  return status;
 }
 
 /**
@@ -3410,16 +3474,19 @@ hal_status_t HAL_FDCAN_GetErrorCounters(const hal_fdcan_handle_t *hfdcan,
   */
 hal_status_t HAL_FDCAN_Recover(const hal_fdcan_handle_t *hfdcan)
 {
+  FDCAN_GlobalTypeDef *p_fdcanx;
   ASSERT_DBG_PARAM((hfdcan != NULL));
 
   ASSERT_DBG_STATE(hfdcan->global_state, (uint32_t)HAL_FDCAN_STATE_ACTIVE);
 
+  p_fdcanx = FDCAN_GET_INSTANCE(hfdcan);
+
   /* If the controller is in bus-off state (FDCAN_PSR_BO set), clear the INIT bit in CCCR to start bus-off recovery.
      This allows the FDCAN to synchronize to the CAN bus and resume normal operation after the bus-off recovery
      sequence. */
-  if (STM32_READ_BIT(FDCAN_GET_INSTANCE(hfdcan)->PSR, FDCAN_PSR_BO) != (uint32_t)HAL_FDCAN_BUS_OFF_FLAG_RESET)
+  if (STM32_READ_BIT(p_fdcanx->PSR, FDCAN_PSR_BO) != (uint32_t)HAL_FDCAN_BUS_OFF_FLAG_RESET)
   {
-    STM32_CLEAR_BIT(FDCAN_GET_INSTANCE(hfdcan)->CCCR, FDCAN_CCCR_INIT);
+    STM32_CLEAR_BIT(p_fdcanx->CCCR, FDCAN_CCCR_INIT);
   }
 
   return HAL_OK;
@@ -3433,6 +3500,8 @@ hal_status_t HAL_FDCAN_Recover(const hal_fdcan_handle_t *hfdcan)
   * @{
 A set of functions allowing to deal with interruptions of the peripheral:
     - HAL_FDCAN_IRQHandler()                            : FDCAN interrupt request handler.
+    - HAL_FDCAN_Line0_IRQHandler()                      : FDCAN interrupt request handler for line 0 only.
+    - HAL_FDCAN_Line1_IRQHandler()                      : FDCAN interrupt request handler for line 1 only.
     - HAL_FDCAN_EnableInterrupts()                      : Enable interrupt sources.
     - HAL_FDCAN_DisableInterrupts()                     : Disable interrupt sources.
     - HAL_FDCAN_IsEnabledInterrupt()                    : Check if a given interrupt source is enabled.
@@ -3487,213 +3556,80 @@ The table below lists the additional, callback-specific API(s) required to trigg
          access errors, or timeouts.
 
   The actual callback triggered depends on the enabled interrupts and the process API in use.
+
+  @note  Recommended interrupt group dispatching when using
+         HAL_FDCAN_SetInterruptGroupsToLine() with dual-line NVIC integration:
+
+         | Interrupt Group                   | Representative Flags  | Recommended Line | Reason                    |
+         |-----------------------------------|-----------------------|------------------|---------------------------|
+         | HAL_FDCAN_IT_GROUP_RX_FIFO_0      | RF0N/RF0F/RF0L        | Line 1           | Latency critical Rx path  |
+         | HAL_FDCAN_IT_GROUP_RX_FIFO_1      | RF1N/RF1F/RF1L        | Line 1           | Latency critical Rx path  |
+         | HAL_FDCAN_IT_GROUP_STATUS_MSG     | HPM/TC/TCF            | Line 1           | Prioritize HPM latency    |
+         | HAL_FDCAN_IT_GROUP_MISC           | TSW/MRAF/TOO          | Line 1           | Prioritize MRAF handling  |
+         | HAL_FDCAN_IT_GROUP_TX_FIFO_ERROR  | TFE/TEFN/TEFF/TEFL    | Line 0           | Tx service and logging    |
+         | HAL_FDCAN_IT_GROUP_BIT_LINE_ERROR | ELO/EP                | Line 0           | Diagnostic                |
+         | HAL_FDCAN_IT_GROUP_PROTOCOL_ERROR | EW/BO/WDI/PEA/PED/ARA | Line 0           | Diagnostic and recovery   |
+
+  @note  NVIC does not give interrupt line 1 a higher priority than line 0 by itself.
+    The effective priority remains application-defined through the NVIC configuration of
+    the IRQs serving FDCANx_IT0 and FDCANx_IT1.
+    When following the recommendations above, assign FDCANx_IT1 a higher NVIC priority
+    than FDCANx_IT0, that is, use a lower priority value for FDCANx_IT1.
+
+  @note  For dual-line NVIC integration, prefer HAL_FDCAN_Line0_IRQHandler() and HAL_FDCAN_Line1_IRQHandler() to get
+         line-focused interrupt dispatching, clearer event attribution, and improved ISR readability.
   */
 
 /**
-  * @brief  Processes the FDCAN interrupt requests.
-  * @param  hfdcan Pointer to a @ref hal_fdcan_handle_t handle.
+  * @brief   Processes all enabled FDCAN interrupt requests (line-agnostic behavior).
+  * @param   hfdcan Pointer to a @ref hal_fdcan_handle_t handle.
+  * @warning Use HAL_FDCAN_Line0_IRQHandler() / HAL_FDCAN_Line1_IRQHandler() instead of this function when
+  *          line-specific interrupt dispatching is required.
   */
 void HAL_FDCAN_IRQHandler(hal_fdcan_handle_t *hfdcan)
 {
   FDCAN_GlobalTypeDef *p_fdcanx;
-
-  uint32_t specific_its;
-  uint32_t transmitted_buffers;
-  uint32_t aborted_buffers;
   uint32_t it_flags;
-
-#if defined(USE_HAL_FDCAN_GET_LAST_ERRORS) && (USE_HAL_FDCAN_GET_LAST_ERRORS == 1)
-  uint32_t error_code = HAL_FDCAN_ERROR_NONE;
-#endif /* USE_HAL_FDCAN_GET_LAST_ERRORS */
 
   ASSERT_DBG_PARAM((hfdcan != NULL));
 
   p_fdcanx = FDCAN_GET_INSTANCE(hfdcan);
 
-  /* Read the FDCAN interrupt register and filter only the enabled interrupts */
+  /* Retrieve all the current flags, independently of the configured line */
   it_flags = STM32_READ_REG(p_fdcanx->IR);
   it_flags &= STM32_READ_REG(p_fdcanx->IE);
 
+  FDCAN_HandleInterruptFlags(hfdcan, it_flags);
+}
 
-  /* High priority message interrupt management: FDCAN_IR_HPM */
-  if (STM32_IS_BIT_SET(it_flags, FDCAN_IR_HPM) != 0U)
-  {
-    /* Clear the high priority message flag */
-    STM32_SET_BIT(p_fdcanx->IR, FDCAN_IR_HPM);
+/**
+  * @brief  Processes only line 0 mapped and enabled FDCAN interrupt requests.
+  * @param  hfdcan Pointer to a @ref hal_fdcan_handle_t handle.
+  */
+void HAL_FDCAN_Line0_IRQHandler(hal_fdcan_handle_t *hfdcan)
+{
+  uint32_t it_flags;
 
-#if defined(USE_HAL_FDCAN_REGISTER_CALLBACKS) && (USE_HAL_FDCAN_REGISTER_CALLBACKS == 1)
-    /* Call registered callback */
-    hfdcan->p_high_priority_msg_cb(hfdcan);
-#else
-    /* High priority message callback */
-    HAL_FDCAN_HighPriorityMessageCallback(hfdcan);
-#endif /* USE_HAL_FDCAN_REGISTER_CALLBACKS */
-  }
+  ASSERT_DBG_PARAM((hfdcan != NULL));
 
-  /* Read if there is an IT related to Rx FIFO 0 group:
-        - Rx FIFO 0 new message interrupt       - RF0N
-        - Rx FIFO 0 full interrupt              - RF0F
-        - Rx FIFO 0 message lost interrupt      - RF0L          */
-  specific_its = it_flags & FDCAN_RX_FIFO_0_MSK;
+  it_flags = FDCAN_GetLineSpecificInterruptFlags(FDCAN_GET_INSTANCE(hfdcan), HAL_FDCAN_IT_LINE_0);
 
-  /* Rx FIFO 0 interrupts management: FDCAN_IR_RF0L, FDCAN_IR_RF0F, FDCAN_IR_RF0N */
-  if (specific_its != 0U)
-  {
-    /* Clear the Rx FIFO 0 flags */
-    STM32_SET_BIT(p_fdcanx->IR, specific_its);
+  FDCAN_HandleInterruptFlags(hfdcan, it_flags);
+}
 
-#if defined(USE_HAL_FDCAN_REGISTER_CALLBACKS) && (USE_HAL_FDCAN_REGISTER_CALLBACKS == 1)
-    /* Call registered callback */
-    hfdcan->p_rx_fifo_0_cb(hfdcan, specific_its);
-#else
-    /* Rx FIFO 0 callback */
-    HAL_FDCAN_RxFifo0Callback(hfdcan, specific_its);
-#endif /* USE_HAL_FDCAN_REGISTER_CALLBACKS */
-  }
+/**
+  * @brief  Processes only line 1 mapped and enabled FDCAN interrupt requests.
+  * @param  hfdcan Pointer to a @ref hal_fdcan_handle_t handle.
+  */
+void HAL_FDCAN_Line1_IRQHandler(hal_fdcan_handle_t *hfdcan)
+{
+  uint32_t it_flags;
 
-  /* Read if there is an IT related to Rx FIFO 1 group:
-        - Rx FIFO 1 new message interrupt       - RF1N
-        - Rx FIFO 1 full interrupt              - RF1F
-        - Rx FIFO 1 message lost interrupt      - RF1L          */
-  specific_its = it_flags & FDCAN_RX_FIFO_1_MSK;
+  ASSERT_DBG_PARAM((hfdcan != NULL));
 
-  /* Rx FIFO 1 interrupts management: FDCAN_IR_RF1L, FDCAN_IR_RF1F, FDCAN_IR_RF1N */
-  if (specific_its != 0U)
-  {
-    /* Clear the Rx FIFO 1 flags */
-    STM32_SET_BIT(p_fdcanx->IR, specific_its);
+  it_flags = FDCAN_GetLineSpecificInterruptFlags(FDCAN_GET_INSTANCE(hfdcan), HAL_FDCAN_IT_LINE_1);
 
-#if defined(USE_HAL_FDCAN_REGISTER_CALLBACKS) && (USE_HAL_FDCAN_REGISTER_CALLBACKS == 1)
-    /* Call registered callback */
-    hfdcan->p_rx_fifo_1_cb(hfdcan, specific_its);
-#else
-    /* Rx FIFO 1 callback */
-    HAL_FDCAN_RxFifo1Callback(hfdcan, specific_its);
-#endif /* USE_HAL_FDCAN_REGISTER_CALLBACKS */
-  }
-
-  /* Transmission abort interrupt management: FDCAN_IE_TCFE */
-  if (STM32_IS_BIT_SET(it_flags, FDCAN_IR_TCF) != 0U)
-  {
-    /* List of aborted monitored buffers */
-    aborted_buffers = STM32_READ_REG(p_fdcanx->TXBCF);
-    aborted_buffers &= STM32_READ_REG(p_fdcanx->TXBCIE);
-
-    /* Clear the transmission cancellation flag */
-    STM32_SET_BIT(p_fdcanx->IR, FDCAN_IR_TCF);
-
-#if defined(USE_HAL_FDCAN_REGISTER_CALLBACKS) && (USE_HAL_FDCAN_REGISTER_CALLBACKS == 1)
-    /* Call registered callback */
-    hfdcan->p_tx_buffer_abort_cb(hfdcan, aborted_buffers);
-#else
-    /* Transmission cancellation callback */
-    HAL_FDCAN_TxBufferAbortCallback(hfdcan, aborted_buffers);
-#endif /* USE_HAL_FDCAN_REGISTER_CALLBACKS */
-  }
-
-  /* Read if there is an IT related to Tx event group:
-        - Tx event FIFO new entry interrupt     - TEFN
-        - Tx event FIFO full interrupt          - TEFF
-        - Tx event FIFO element lost interrupt  - TEFL          */
-  specific_its = it_flags & FDCAN_TX_EVENT_FIFO_MSK;
-
-  /* Tx event FIFO interrupts management: FDCAN_IR_TEFL, FDCAN_IR_TEFF, FDCAN_IR_TEFN */
-  if (specific_its != 0U)
-  {
-    /* Clear the Tx event FIFO flags */
-    STM32_SET_BIT(p_fdcanx->IR, specific_its);
-
-#if defined(USE_HAL_FDCAN_REGISTER_CALLBACKS) && (USE_HAL_FDCAN_REGISTER_CALLBACKS == 1)
-    /* Call registered callback */
-    hfdcan->p_tx_event_fifo_cb(hfdcan, specific_its);
-#else
-    /* Tx event FIFO callback */
-    HAL_FDCAN_TxEventFifoCallback(hfdcan, specific_its);
-#endif /* USE_HAL_FDCAN_REGISTER_CALLBACKS */
-  }
-
-  /* Tx FIFO empty interrupt management: FDCAN_IR_TFE */
-  if (STM32_IS_BIT_SET(it_flags, FDCAN_IR_TFE) != 0U)
-  {
-    /* Clear the Tx FIFO empty flag */
-    STM32_SET_BIT(p_fdcanx->IR, FDCAN_IR_TFE);
-
-#if defined(USE_HAL_FDCAN_REGISTER_CALLBACKS) && (USE_HAL_FDCAN_REGISTER_CALLBACKS == 1)
-    /* Call registered callback */
-    hfdcan->p_tx_fifo_empty_cb(hfdcan);
-#else
-    /* Tx FIFO empty callback */
-    HAL_FDCAN_TxFifoEmptyCallback(hfdcan);
-#endif /* USE_HAL_FDCAN_REGISTER_CALLBACKS */
-  }
-
-  /* Transmission complete interrupt management: FDCAN_IR_TC */
-  if (STM32_IS_BIT_SET(it_flags, FDCAN_IR_TC) != 0U)
-  {
-    /* List of transmitted monitored buffers */
-    transmitted_buffers = STM32_READ_REG(p_fdcanx->TXBTO);
-    transmitted_buffers &= STM32_READ_REG(p_fdcanx->TXBTIE);
-
-    /* Clear the transmission complete flag */
-    STM32_SET_BIT(p_fdcanx->IR, FDCAN_IR_TC);
-
-#if defined(USE_HAL_FDCAN_REGISTER_CALLBACKS) && (USE_HAL_FDCAN_REGISTER_CALLBACKS == 1)
-    /* Call registered callback */
-    hfdcan->p_tx_buffer_complete_cb(hfdcan, transmitted_buffers);
-#else
-    /* Transmission complete callback */
-    HAL_FDCAN_TxBufferCompleteCallback(hfdcan, transmitted_buffers);
-#endif /* USE_HAL_FDCAN_REGISTER_CALLBACKS */
-  }
-
-  /* Timestamp wrap around interrupt management: FDCAN_IR_TSW */
-  if (STM32_IS_BIT_SET(it_flags, FDCAN_IR_TSW) != 0U)
-  {
-    /* Clear the timestamp wrap around flag */
-    STM32_SET_BIT(p_fdcanx->IR, FDCAN_IR_TSW);
-
-#if defined(USE_HAL_FDCAN_REGISTER_CALLBACKS) && (USE_HAL_FDCAN_REGISTER_CALLBACKS == 1)
-    /* Call registered callback */
-    hfdcan->p_ts_wraparound_cb(hfdcan);
-#else
-    /* Timestamp wrap around callback */
-    HAL_FDCAN_TimestampWraparoundCallback(hfdcan);
-#endif /* USE_HAL_FDCAN_REGISTER_CALLBACKS */
-  }
-
-#if defined(USE_HAL_FDCAN_GET_LAST_ERRORS) && (USE_HAL_FDCAN_GET_LAST_ERRORS == 1)
-  /* Error FDCAN interrupts management:
-        - Error logging overflow interrupt      - ELO
-        - Watchdog interrupt                    - WDI
-        - Protocol error in arbitration phase   - PEA
-        - Protocol error in data phase          - PED
-        - Access to reserved address            - ARA
-        - Message RAM access failure            - MRAF
-        - Timeout occurred                      - TOO
-        - Bus_Off                               - BO
-        - Warning status                        - EW
-        - Error passive                         - EP  */
-
-  error_code = it_flags & (FDCAN_IR_EP | FDCAN_IR_EW | FDCAN_IR_BO | FDCAN_IR_ELO | FDCAN_IR_WDI | FDCAN_IR_PEA
-                           | FDCAN_IR_PED | FDCAN_IR_ARA | FDCAN_IR_TOO | FDCAN_IR_MRAF);
-
-  if (error_code != 0U)
-  {
-    /* Clear the error flags */
-    STM32_SET_BIT(p_fdcanx->IR, error_code);
-
-    /* Update the last_error_codes according to the detected error flags */
-    hfdcan->last_error_codes |= error_code;
-
-#if defined(USE_HAL_FDCAN_REGISTER_CALLBACKS) && (USE_HAL_FDCAN_REGISTER_CALLBACKS == 1)
-    /* Call registered callback */
-    hfdcan->p_error_cb(hfdcan);
-#else
-    /* Error callback */
-    HAL_FDCAN_ErrorCallback(hfdcan);
-#endif /* USE_HAL_FDCAN_REGISTER_CALLBACKS */
-  }
-#endif /* USE_HAL_FDCAN_GET_LAST_ERRORS */
+  FDCAN_HandleInterruptFlags(hfdcan, it_flags);
 }
 
 /**
@@ -4449,6 +4385,20 @@ static void FDCAN_ComputeRAMBlockAddresses(hal_fdcan_handle_t *hfdcan, const hal
 }
 
 /**
+  * @brief  Get the FDCAN messgage RAM configuration.
+  * @param  p_fdcan  Pointer to a FDCANx hardware instance.
+  * @param  p_config Pointer to the configuration structure to be filled with current configuration.
+  *                  filled with current configuration.
+  */
+static void FDCAN_GetMessageRAMConfig(const FDCAN_GlobalTypeDef *p_fdcan, hal_fdcan_config_t *p_config)
+{
+  uint32_t register_value = STM32_READ_REG(p_fdcan->RXGFC);
+
+  p_config->std_filters_nbr = STM32_READ_BIT(register_value, FDCAN_RXGFC_LSS) >> FDCAN_RXGFC_LSS_Pos;
+  p_config->ext_filters_nbr = STM32_READ_BIT(register_value, FDCAN_RXGFC_LSE) >> FDCAN_RXGFC_LSE_Pos;
+}
+
+/**
   * @brief  Copy Tx message to the message RAM.
   * @param  hfdcan        Pointer to a @ref hal_fdcan_handle_t handle.
   * @param  p_tx_header   Pointer to a @ref hal_fdcan_tx_header_t structure containing the Tx header.
@@ -4459,42 +4409,51 @@ static void FDCAN_CopyMessageToRAM(const hal_fdcan_handle_t *hfdcan, const hal_f
                                    const uint8_t *p_tx_data, uint32_t tx_buffer_idx)
 {
   uint32_t *tx_address;
-  uint32_t byte_count;
-  uint32_t payload_bytes = fdcan_lut_dlc2bytes[(uint32_t)(p_tx_header->b.data_length)];
+  uint32_t word_count;
+  uint32_t payload_bytes = FDCAN_GET_DATA_LENGTH_BYTES(p_tx_header->b.data_length);
+  const uint8_t *p_data = p_tx_data;
   /* Calculate Tx element address */
   tx_address = (uint32_t *)(hfdcan->msg_ram.tx_fifo_start_addr + (tx_buffer_idx * FDCAN_RAM_TFQ_SIZE));
 
   /* Write the Tx header (64 bits = 2 x 32 bits) */
-  tx_address[0] = (uint32_t)(p_tx_header->d64 & 0x00000000FFFFFFFFU);
-  tx_address[1] = (uint32_t)(p_tx_header->d64 >> 32U);
+  tx_address[0U] = (uint32_t)(p_tx_header->d64 & 0x00000000FFFFFFFFU);
+  tx_address[1U] = (uint32_t)(p_tx_header->d64 >> 32U);
 
   /* Move pointer past header */
-  tx_address = &tx_address[2];
+  tx_address = &tx_address[2U];
 
   /* Write Tx payload to the message RAM in 32-bit words */
-  for (byte_count = 0; (byte_count + 4U) < payload_bytes; byte_count += 4U)
+  word_count = payload_bytes >> 2U;
+  while (word_count > 0U)
   {
-    *tx_address = (((uint32_t)p_tx_data[byte_count + 3U] << 24U)
-                   | ((uint32_t)p_tx_data[byte_count + 2U] << 16U)
-                   | ((uint32_t)p_tx_data[byte_count + 1U] << 8U)
-                   | (uint32_t)p_tx_data[byte_count]);
+    *tx_address = (((uint32_t)p_data[3U] << 24U)
+                   | ((uint32_t)p_data[2U] << 16U)
+                   | ((uint32_t)p_data[1U] << 8U)
+                   | (uint32_t)p_data[0U]);
+
+    p_data = &p_data[4U];
     tx_address++;
+    word_count--;
   }
 
   /* Handle remaining bytes if Data Length Code (DLC) is not a multiple of 4 */
-  if (byte_count < payload_bytes)
+  switch (payload_bytes & 0x3U)
   {
-    uint32_t last_word = 0U;
-    uint32_t shift = 0U;
+    case 3U:
+      *tx_address = ((uint32_t)p_data[2U] << 16U) | ((uint32_t)p_data[1U] << 8U) | (uint32_t)p_data[0U];
+      break;
 
-    while (byte_count < payload_bytes)
-    {
-      last_word |= ((uint32_t)p_tx_data[byte_count] << shift);
-      shift += 8U;
-      byte_count++;
-    }
+    case 2U:
+      *tx_address = ((uint32_t)p_data[1U] << 8U) | (uint32_t)p_data[0U];
+      break;
 
-    *tx_address = last_word;
+    case 1U:
+      *tx_address = (uint32_t)p_data[0U];
+      break;
+
+    default:
+      /* Nothing to write */
+      break;
   }
 }
 
@@ -4600,6 +4559,252 @@ static hal_status_t FDCAN_InitRequest(FDCAN_GlobalTypeDef *fdcan)
   }
 
   return HAL_ERROR;
+}
+
+
+/**
+  * @brief  Compute line-specific interrupt flags from current pending+enabled interrupts.
+  * @param  p_fdcanx Pointer to FDCAN registers.
+  * @param  it_line  Interrupt line selector.
+  * @retval Filtered interrupt flags for the requested line.
+  */
+static uint32_t FDCAN_GetLineSpecificInterruptFlags(const FDCAN_GlobalTypeDef *p_fdcanx, uint32_t it_line)
+{
+  uint32_t it_flags;
+
+  /* Read FDCAN interrupt register and keep only currently enabled interrupt sources. */
+  it_flags = STM32_READ_REG(p_fdcanx->IR);
+  it_flags &= STM32_READ_REG(p_fdcanx->IE);
+
+  uint32_t line1_groups = STM32_READ_REG(p_fdcanx->ILS) & HAL_FDCAN_IT_GROUP_MSK;
+  uint32_t line1_mask = 0U;
+
+  if ((line1_groups & HAL_FDCAN_IT_GROUP_RX_FIFO_0) != 0U)
+  {
+    line1_mask |= FDCAN_RX_FIFO_0_MSK;
+  }
+  if ((line1_groups & HAL_FDCAN_IT_GROUP_RX_FIFO_1) != 0U)
+  {
+    line1_mask |= FDCAN_RX_FIFO_1_MSK;
+  }
+  if ((line1_groups & HAL_FDCAN_IT_GROUP_STATUS_MSG) != 0U)
+  {
+    line1_mask |= (FDCAN_IR_HPM | FDCAN_IR_TC | FDCAN_IR_TCF);
+  }
+  if ((line1_groups & HAL_FDCAN_IT_GROUP_TX_FIFO_ERROR) != 0U)
+  {
+    line1_mask |= (FDCAN_IR_TFE | FDCAN_TX_EVENT_FIFO_MSK);
+  }
+  if ((line1_groups & HAL_FDCAN_IT_GROUP_MISC) != 0U)
+  {
+    line1_mask |= (FDCAN_IR_TSW | FDCAN_IR_MRAF | FDCAN_IR_TOO);
+  }
+  if ((line1_groups & HAL_FDCAN_IT_GROUP_BIT_LINE_ERROR) != 0U)
+  {
+    line1_mask |= (FDCAN_IR_ELO | FDCAN_IR_EP);
+  }
+  if ((line1_groups & HAL_FDCAN_IT_GROUP_PROTOCOL_ERROR) != 0U)
+  {
+    line1_mask |= (FDCAN_IR_EW | FDCAN_IR_BO | FDCAN_IR_WDI | FDCAN_IR_PEA | FDCAN_IR_PED | FDCAN_IR_ARA);
+  }
+
+  return ((it_line == HAL_FDCAN_IT_LINE_1) ? (it_flags & line1_mask)
+          : (it_flags & ((~line1_mask) & FDCAN_IR_MSK)));
+}
+
+/**
+  * @brief  Process a prepared list of FDCAN interrupt flags.
+  * @param  hfdcan   Pointer to a @ref hal_fdcan_handle_t handle.
+  * @param  it_flags Interrupt flags to process.
+  */
+static void FDCAN_HandleInterruptFlags(hal_fdcan_handle_t *hfdcan, uint32_t it_flags)
+{
+  FDCAN_GlobalTypeDef *p_fdcanx;
+  uint32_t specific_its;
+  uint32_t transmitted_buffers;
+  uint32_t aborted_buffers;
+
+  p_fdcanx = FDCAN_GET_INSTANCE(hfdcan);
+
+  /* High priority message interrupt management: FDCAN_IR_HPM */
+  if (STM32_IS_BIT_SET(it_flags, FDCAN_IR_HPM) != 0U)
+  {
+    /* Clear the high priority message flag */
+    STM32_WRITE_REG(p_fdcanx->IR, FDCAN_IR_HPM);
+
+#if defined(USE_HAL_FDCAN_REGISTER_CALLBACKS) && (USE_HAL_FDCAN_REGISTER_CALLBACKS == 1)
+    /* Call registered callback */
+    hfdcan->p_high_priority_msg_cb(hfdcan);
+#else
+    /* High priority message callback */
+    HAL_FDCAN_HighPriorityMessageCallback(hfdcan);
+#endif /* USE_HAL_FDCAN_REGISTER_CALLBACKS */
+  }
+
+  /* Read if there is an IT related to Rx FIFO 0 group:
+        - Rx FIFO 0 new message interrupt       - RF0N
+        - Rx FIFO 0 full interrupt              - RF0F
+        - Rx FIFO 0 message lost interrupt      - RF0L          */
+  specific_its = it_flags & FDCAN_RX_FIFO_0_MSK;
+
+  /* Rx FIFO 0 interrupts management: FDCAN_IR_RF0L, FDCAN_IR_RF0F, FDCAN_IR_RF0N */
+  if (specific_its != 0U)
+  {
+    /* Clear the Rx FIFO 0 flags */
+    STM32_WRITE_REG(p_fdcanx->IR, specific_its);
+
+#if defined(USE_HAL_FDCAN_REGISTER_CALLBACKS) && (USE_HAL_FDCAN_REGISTER_CALLBACKS == 1)
+    /* Call registered callback */
+    hfdcan->p_rx_fifo_0_cb(hfdcan, specific_its);
+#else
+    /* Rx FIFO 0 callback */
+    HAL_FDCAN_RxFifo0Callback(hfdcan, specific_its);
+#endif /* USE_HAL_FDCAN_REGISTER_CALLBACKS */
+  }
+
+  /* Read if there is an IT related to Rx FIFO 1 group:
+        - Rx FIFO 1 new message interrupt       - RF1N
+        - Rx FIFO 1 full interrupt              - RF1F
+        - Rx FIFO 1 message lost interrupt      - RF1L          */
+  specific_its = it_flags & FDCAN_RX_FIFO_1_MSK;
+
+  /* Rx FIFO 1 interrupts management: FDCAN_IR_RF1L, FDCAN_IR_RF1F, FDCAN_IR_RF1N */
+  if (specific_its != 0U)
+  {
+    /* Clear the Rx FIFO 1 flags */
+    STM32_WRITE_REG(p_fdcanx->IR, specific_its);
+
+#if defined(USE_HAL_FDCAN_REGISTER_CALLBACKS) && (USE_HAL_FDCAN_REGISTER_CALLBACKS == 1)
+    /* Call registered callback */
+    hfdcan->p_rx_fifo_1_cb(hfdcan, specific_its);
+#else
+    /* Rx FIFO 1 callback */
+    HAL_FDCAN_RxFifo1Callback(hfdcan, specific_its);
+#endif /* USE_HAL_FDCAN_REGISTER_CALLBACKS */
+  }
+
+  /* Transmission abort interrupt management: FDCAN_IE_TCFE */
+  if (STM32_IS_BIT_SET(it_flags, FDCAN_IR_TCF) != 0U)
+  {
+    /* List of aborted monitored buffers */
+    aborted_buffers = STM32_READ_REG(p_fdcanx->TXBCF);
+    aborted_buffers &= STM32_READ_REG(p_fdcanx->TXBCIE);
+
+    /* Clear the transmission cancellation flag */
+    STM32_WRITE_REG(p_fdcanx->IR, FDCAN_IR_TCF);
+
+#if defined(USE_HAL_FDCAN_REGISTER_CALLBACKS) && (USE_HAL_FDCAN_REGISTER_CALLBACKS == 1)
+    /* Call registered callback */
+    hfdcan->p_tx_buffer_abort_cb(hfdcan, aborted_buffers);
+#else
+    /* Transmission cancellation callback */
+    HAL_FDCAN_TxBufferAbortCallback(hfdcan, aborted_buffers);
+#endif /* USE_HAL_FDCAN_REGISTER_CALLBACKS */
+  }
+
+  /* Read if there is an IT related to Tx event group:
+        - Tx event FIFO new entry interrupt     - TEFN
+        - Tx event FIFO full interrupt          - TEFF
+        - Tx event FIFO element lost interrupt  - TEFL          */
+  specific_its = it_flags & FDCAN_TX_EVENT_FIFO_MSK;
+
+  /* Tx event FIFO interrupts management: FDCAN_IR_TEFL, FDCAN_IR_TEFF, FDCAN_IR_TEFN */
+  if (specific_its != 0U)
+  {
+    /* Clear the Tx event FIFO flags */
+    STM32_WRITE_REG(p_fdcanx->IR, specific_its);
+
+#if defined(USE_HAL_FDCAN_REGISTER_CALLBACKS) && (USE_HAL_FDCAN_REGISTER_CALLBACKS == 1)
+    /* Call registered callback */
+    hfdcan->p_tx_event_fifo_cb(hfdcan, specific_its);
+#else
+    /* Tx event FIFO callback */
+    HAL_FDCAN_TxEventFifoCallback(hfdcan, specific_its);
+#endif /* USE_HAL_FDCAN_REGISTER_CALLBACKS */
+  }
+
+  /* Tx FIFO empty interrupt management: FDCAN_IR_TFE */
+  if (STM32_IS_BIT_SET(it_flags, FDCAN_IR_TFE) != 0U)
+  {
+    /* Clear the Tx FIFO empty flag */
+    STM32_WRITE_REG(p_fdcanx->IR, FDCAN_IR_TFE);
+
+#if defined(USE_HAL_FDCAN_REGISTER_CALLBACKS) && (USE_HAL_FDCAN_REGISTER_CALLBACKS == 1)
+    /* Call registered callback */
+    hfdcan->p_tx_fifo_empty_cb(hfdcan);
+#else
+    /* Tx FIFO empty callback */
+    HAL_FDCAN_TxFifoEmptyCallback(hfdcan);
+#endif /* USE_HAL_FDCAN_REGISTER_CALLBACKS */
+  }
+
+  /* Transmission complete interrupt management: FDCAN_IR_TC */
+  if (STM32_IS_BIT_SET(it_flags, FDCAN_IR_TC) != 0U)
+  {
+    /* List of transmitted monitored buffers */
+    transmitted_buffers = STM32_READ_REG(p_fdcanx->TXBTO);
+    transmitted_buffers &= STM32_READ_REG(p_fdcanx->TXBTIE);
+
+    /* Clear the transmission complete flag */
+    STM32_WRITE_REG(p_fdcanx->IR, FDCAN_IR_TC);
+
+#if defined(USE_HAL_FDCAN_REGISTER_CALLBACKS) && (USE_HAL_FDCAN_REGISTER_CALLBACKS == 1)
+    /* Call registered callback */
+    hfdcan->p_tx_buffer_complete_cb(hfdcan, transmitted_buffers);
+#else
+    /* Transmission complete callback */
+    HAL_FDCAN_TxBufferCompleteCallback(hfdcan, transmitted_buffers);
+#endif /* USE_HAL_FDCAN_REGISTER_CALLBACKS */
+  }
+
+  /* Timestamp wrap around interrupt management: FDCAN_IR_TSW */
+  if (STM32_IS_BIT_SET(it_flags, FDCAN_IR_TSW) != 0U)
+  {
+    /* Clear the timestamp wrap around flag */
+    STM32_WRITE_REG(p_fdcanx->IR, FDCAN_IR_TSW);
+
+#if defined(USE_HAL_FDCAN_REGISTER_CALLBACKS) && (USE_HAL_FDCAN_REGISTER_CALLBACKS == 1)
+    /* Call registered callback */
+    hfdcan->p_ts_wraparound_cb(hfdcan);
+#else
+    /* Timestamp wrap around callback */
+    HAL_FDCAN_TimestampWraparoundCallback(hfdcan);
+#endif /* USE_HAL_FDCAN_REGISTER_CALLBACKS */
+  }
+
+  /* Error FDCAN interrupts management:
+        - Error logging overflow interrupt      - ELO
+        - Watchdog interrupt                    - WDI
+        - Protocol error in arbitration phase   - PEA
+        - Protocol error in data phase          - PED
+        - Access to reserved address            - ARA
+        - Message RAM access failure            - MRAF
+        - Timeout occurred                      - TOO
+        - Bus_Off                               - BO
+        - Warning status                        - EW
+        - Error passive                         - EP  */
+
+  specific_its = it_flags & (FDCAN_IR_EP | FDCAN_IR_EW | FDCAN_IR_BO | FDCAN_IR_ELO | FDCAN_IR_WDI | FDCAN_IR_PEA
+                             | FDCAN_IR_PED | FDCAN_IR_ARA | FDCAN_IR_TOO | FDCAN_IR_MRAF);
+
+  if (specific_its != 0U)
+  {
+    /* Clear the error flags */
+    STM32_WRITE_REG(p_fdcanx->IR, specific_its);
+
+#if defined(USE_HAL_FDCAN_GET_LAST_ERRORS) && (USE_HAL_FDCAN_GET_LAST_ERRORS == 1)
+    /* Update the last_error_codes according to the detected error flags */
+    hfdcan->last_error_codes |= specific_its;
+#endif /* USE_HAL_FDCAN_GET_LAST_ERRORS */
+
+#if defined(USE_HAL_FDCAN_REGISTER_CALLBACKS) && (USE_HAL_FDCAN_REGISTER_CALLBACKS == 1)
+    /* Call registered callback */
+    hfdcan->p_error_cb(hfdcan);
+#else
+    /* Error callback */
+    HAL_FDCAN_ErrorCallback(hfdcan);
+#endif /* USE_HAL_FDCAN_REGISTER_CALLBACKS */
+  }
 }
 
 /**

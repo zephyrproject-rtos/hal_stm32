@@ -362,6 +362,11 @@ USE_HAL_AES_USER_DATA          | from hal_conf.h | 0                 | Allows to
 #define AES_CTR_UNWRAP_LATENCY      100U /*!< The latency of CTR unwrap is 100 clock cycles */
 #endif /* USE_HAL_AES_CTR_ALGO */
 #endif /* SAES */
+#if defined (USE_HAL_AES_RNG_RECOVERY) && (USE_HAL_AES_RNG_RECOVERY == 1U)
+#if defined(RNG_HTSR0_RPERRX) || defined(RNG_HTSR1_ADERRX)
+#define AES_RNG_TIMEOUT_VALUE       0x00000002U
+#endif /* RNG_HTSR0_RPERRX || RNG_HTSR1_ADERRX */
+#endif /* USE_HAL_AES_RNG_RECOVERY */
 /**
   * @}
   */
@@ -489,6 +494,11 @@ static void AES_GCM_GMAC_CCM_DMAInCplt(hal_dma_handle_t *hdma);
 static void AES_GCM_GMAC_CCM_DMAOutCplt(hal_dma_handle_t *hdma);
 #endif /* USE_HAL_AES_DMA */
 #endif /* USE_HAL_AES_GCM_GMAC_ALGO or USE_HAL_AES_CCM_ALGO */
+#if defined (USE_HAL_AES_RNG_RECOVERY) && (USE_HAL_AES_RNG_RECOVERY == 1U)
+#if defined(RNG_HTSR0_RPERRX) || defined(RNG_HTSR1_ADERRX)
+hal_status_t AES_RNG_ResilientRecoverSeedError(void);
+#endif /* RNG_HTSR0_RPERRX || RNG_HTSR1_ADERRX */
+#endif /* USE_HAL_AES_RNG_RECOVERY */
 /**
   * @}
   */
@@ -680,6 +690,24 @@ hal_status_t HAL_AES_ECB_SetConfig(hal_aes_handle_t *haes)
   if (haes->instance == HAL_SAES)
 #endif /* USE_HAL_SECURE_CHECK_PARAM */
   {
+#if defined (USE_HAL_AES_RNG_RECOVERY) &&  (USE_HAL_AES_RNG_RECOVERY == 1U)
+#if defined(RNG_HTSR0_RPERRX) || defined(RNG_HTSR1_ADERRX)
+    /*Check if there is an RNG seed error */
+    if (LL_RNG_IsActiveFlag_SECS(RNG) != 0U)
+    {
+      /* Attempt to recover from the seed error */
+      if (AES_RNG_ResilientRecoverSeedError() != HAL_OK)
+      {
+        return HAL_ERROR;
+      }
+
+#if defined (AES_ICR_RNGEIF)
+      /* Clear Rng error interrupt flag */
+      STM32_SET_BIT(AES_GET_INSTANCE(haes)->ICR, AES_ICR_RNGEIF);
+#endif /* AES_ICR_RNGEIF */
+    }
+#endif /* RNG_HTSR0_RPERRX || RNG_HTSR1_ADERRX */
+#endif /* USE_HAL_AES_RNG_RECOVERY */
     if (AES_RNGFetchGetStatus(haes) != HAL_OK)
     {
       return HAL_ERROR;
@@ -746,6 +774,24 @@ hal_status_t HAL_AES_CBC_SetConfig(hal_aes_handle_t *haes, const uint32_t *p_ini
   if (haes->instance == HAL_SAES)
 #endif /* USE_HAL_SECURE_CHECK_PARAM */
   {
+#if defined (USE_HAL_AES_RNG_RECOVERY) && (USE_HAL_AES_RNG_RECOVERY == 1U)
+#if defined(RNG_HTSR0_RPERRX) || defined(RNG_HTSR1_ADERRX)
+    /*Check if there is an RNG seed error */
+    if (LL_RNG_IsActiveFlag_SECS(RNG) != 0U)
+    {
+      /* Attempt to recover from the seed error */
+      if (AES_RNG_ResilientRecoverSeedError() != HAL_OK)
+      {
+        return HAL_ERROR;
+      }
+
+#if defined (AES_ICR_RNGEIF)
+      /* Clear Rng error interrupt flag */
+      STM32_SET_BIT(AES_GET_INSTANCE(haes)->ICR, AES_ICR_RNGEIF);
+#endif /* AES_ICR_RNGEIF */
+    }
+#endif /* RNG_HTSR0_RPERRX || RNG_HTSR1_ADERRX */
+#endif /* USE_HAL_AES_RNG_RECOVERY */
     if (AES_RNGFetchGetStatus(haes) != HAL_OK)
     {
       return HAL_ERROR;
@@ -817,6 +863,24 @@ hal_status_t HAL_AES_CTR_SetConfig(hal_aes_handle_t *haes, const uint32_t *p_ini
   if (haes->instance == HAL_SAES)
 #endif /* USE_HAL_SECURE_CHECK_PARAM */
   {
+#if defined (USE_HAL_AES_RNG_RECOVERY) && (USE_HAL_AES_RNG_RECOVERY == 1U)
+#if defined(RNG_HTSR0_RPERRX) || defined(RNG_HTSR1_ADERRX)
+    /*Check if there is an RNG seed error */
+    if (LL_RNG_IsActiveFlag_SECS(RNG) != 0U)
+    {
+      /* Attempt to recover from the seed error */
+      if (AES_RNG_ResilientRecoverSeedError() != HAL_OK)
+      {
+        return HAL_ERROR;
+      }
+
+#if defined (AES_ICR_RNGEIF)
+      /* Clear Rng error interrupt flag */
+      STM32_SET_BIT(AES_GET_INSTANCE(haes)->ICR, AES_ICR_RNGEIF);
+#endif /* AES_ICR_RNGEIF */
+    }
+#endif /* RNG_HTSR0_RPERRX || RNG_HTSR1_ADERRX */
+#endif /* USE_HAL_AES_RNG_RECOVERY */
     if (AES_RNGFetchGetStatus(haes) != HAL_OK)
     {
       return HAL_ERROR;
@@ -893,6 +957,24 @@ hal_status_t HAL_AES_GCM_GMAC_SetConfig(hal_aes_handle_t *haes, const hal_aes_gc
   if (haes->instance == HAL_SAES)
 #endif /* USE_HAL_SECURE_CHECK_PARAM */
   {
+#if defined (USE_HAL_AES_RNG_RECOVERY) && (USE_HAL_AES_RNG_RECOVERY == 1U)
+#if defined(RNG_HTSR0_RPERRX) || defined(RNG_HTSR1_ADERRX)
+    /*Check if there is an RNG seed error */
+    if (LL_RNG_IsActiveFlag_SECS(RNG) != 0U)
+    {
+      /* Attempt to recover from the seed error */
+      if (AES_RNG_ResilientRecoverSeedError() != HAL_OK)
+      {
+        return HAL_ERROR;
+      }
+
+#if defined (AES_ICR_RNGEIF)
+      /* Clear Rng error interrupt flag */
+      STM32_SET_BIT(AES_GET_INSTANCE(haes)->ICR, AES_ICR_RNGEIF);
+#endif /* AES_ICR_RNGEIF */
+    }
+#endif /* RNG_HTSR0_RPERRX || RNG_HTSR1_ADERRX */
+#endif /* USE_HAL_AES_RNG_RECOVERY */
     if (AES_RNGFetchGetStatus(haes) != HAL_OK)
     {
       return HAL_ERROR;
@@ -971,6 +1053,24 @@ hal_status_t HAL_AES_CCM_SetConfig(hal_aes_handle_t *haes, const hal_aes_ccm_con
   if (haes->instance == HAL_SAES)
 #endif /* USE_HAL_SECURE_CHECK_PARAM */
   {
+#if defined (USE_HAL_AES_RNG_RECOVERY) && (USE_HAL_AES_RNG_RECOVERY == 1U)
+#if defined(RNG_HTSR0_RPERRX) || defined(RNG_HTSR1_ADERRX)
+    /*Check if there is an RNG seed error */
+    if (LL_RNG_IsActiveFlag_SECS(RNG) != 0U)
+    {
+      /* Attempt to recover from the seed error */
+      if (AES_RNG_ResilientRecoverSeedError() != HAL_OK)
+      {
+        return HAL_ERROR;
+      }
+
+#if defined (AES_ICR_RNGEIF)
+      /* Clear Rng error interrupt flag */
+      STM32_SET_BIT(AES_GET_INSTANCE(haes)->ICR, AES_ICR_RNGEIF);
+#endif /* AES_ICR_RNGEIF */
+    }
+#endif /* RNG_HTSR0_RPERRX || RNG_HTSR1_ADERRX */
+#endif /* USE_HAL_AES_RNG_RECOVERY */
     if (AES_RNGFetchGetStatus(haes) != HAL_OK)
     {
       return HAL_ERROR;
@@ -1318,12 +1418,16 @@ hal_status_t HAL_AES_Encrypt(hal_aes_handle_t *haes, const void *p_input, uint16
   haes->last_error_codes = HAL_AES_ERROR_NONE;
 #endif /* USE_HAL_AES_GET_LAST_ERRORS */
 
+#if defined(AES_CR_KMOD)
   /* SAES key mode must be normal to do encryption with any key:
      SAES configurable keys (normal,HW)
      or using a wrapped key
      or using a shared key (unshare)
      AES key mode must be normal when encrypt/decrypt */
   STM32_MODIFY_REG(AES_GET_INSTANCE(haes)->CR, AES_CR_MODE | AES_CR_KMOD, AES_OPERATING_MODE_ENCRYPT);
+#else
+  STM32_MODIFY_REG(AES_GET_INSTANCE(haes)->CR, AES_CR_MODE, AES_OPERATING_MODE_ENCRYPT);
+#endif /* defined(AES_CR_KMOD) */
 
   haes->p_in_buff = (const uint32_t *)p_input;
   haes->p_out_buff = (uint32_t *)p_output;
@@ -1475,6 +1579,7 @@ hal_status_t HAL_AES_Decrypt(hal_aes_handle_t *haes, const void *p_input, uint16
   haes->last_error_codes = HAL_AES_ERROR_NONE;
 #endif /* USE_HAL_AES_GET_LAST_ERRORS */
 
+#if defined(AES_CR_KMOD)
   /* Set decrypt mode
      SAES key mode must be normal to do decryption with any key:
      SAES configurable keys (normal,HW)
@@ -1482,6 +1587,9 @@ hal_status_t HAL_AES_Decrypt(hal_aes_handle_t *haes, const void *p_input, uint16
      or using a shared key (unshare)
      AES key mode must be normal when encrypt/decrypt */
   STM32_MODIFY_REG(AES_GET_INSTANCE(haes)->CR, AES_CR_MODE | AES_CR_KMOD, AES_OPERATING_MODE_DECRYPT);
+#else
+  STM32_MODIFY_REG(AES_GET_INSTANCE(haes)->CR, AES_CR_MODE, AES_OPERATING_MODE_DECRYPT);
+#endif /* defined(AES_CR_KMOD) */
 
   haes->p_in_buff = (const uint32_t *)p_input;
   haes->p_out_buff = (uint32_t *)p_output;
@@ -1611,12 +1719,16 @@ hal_status_t HAL_AES_Encrypt_IT(hal_aes_handle_t *haes, const void *p_input, uin
   haes->last_error_codes = HAL_AES_ERROR_NONE;
 #endif /* USE_HAL_AES_GET_LAST_ERRORS */
 
+#if defined(AES_CR_KMOD)
   /* SAES key mode must be normal to do encryption with any key:
      SAES configurable keys (normal,HW)
      or using a wrapped key
      or using a shared key (unshare)
      AES key mode must be normal when encrypt/decrypt */
   STM32_MODIFY_REG(AES_GET_INSTANCE(haes)->CR, AES_CR_MODE | AES_CR_KMOD, AES_OPERATING_MODE_ENCRYPT);
+#else
+  STM32_MODIFY_REG(AES_GET_INSTANCE(haes)->CR, AES_CR_MODE, AES_OPERATING_MODE_ENCRYPT);
+#endif /* defined(AES_CR_KMOD) */
 
   haes->p_in_buff = (const uint32_t *)p_input;
   haes->p_out_buff = (uint32_t *)p_output;
@@ -1763,6 +1875,7 @@ hal_status_t HAL_AES_Decrypt_IT(hal_aes_handle_t *haes, const void *p_input, uin
   haes->last_error_codes = HAL_AES_ERROR_NONE;
 #endif /* USE_HAL_AES_GET_LAST_ERRORS */
 
+#if defined(AES_CR_KMOD)
   /* Set decrypt mode
      SAES key mode must be normal to do a decryption with any key:
      SAES keys (normal,HW)
@@ -1770,6 +1883,9 @@ hal_status_t HAL_AES_Decrypt_IT(hal_aes_handle_t *haes, const void *p_input, uin
      or to use a shared key (unshare key)
      AES key mode must be normal when encrypt/decrypt */
   STM32_MODIFY_REG(AES_GET_INSTANCE(haes)->CR, AES_CR_MODE | AES_CR_KMOD, AES_OPERATING_MODE_DECRYPT);
+#else
+  STM32_MODIFY_REG(AES_GET_INSTANCE(haes)->CR, AES_CR_MODE, AES_OPERATING_MODE_DECRYPT);
+#endif /* defined(AES_CR_KMOD) */
 
   haes->p_in_buff = (const uint32_t *)p_input;
   haes->p_out_buff = (uint32_t *)p_output;
@@ -1896,12 +2012,16 @@ hal_status_t HAL_AES_Encrypt_DMA(hal_aes_handle_t *haes, const void *p_input, ui
   haes->last_error_codes = HAL_AES_ERROR_NONE;
 #endif /* USE_HAL_AES_GET_LAST_ERRORS */
 
+#if defined(AES_CR_KMOD)
   /* SAES key mode must be normal to do encryption with any key:
      SAES configurable keys (normal,HW)
      or using a wrapped key
      or using a shared key (unshare)
      AES key mode must be normal when encrypt/decrypt */
   STM32_MODIFY_REG(AES_GET_INSTANCE(haes)->CR, AES_CR_MODE | AES_CR_KMOD, AES_OPERATING_MODE_ENCRYPT);
+#else
+  STM32_MODIFY_REG(AES_GET_INSTANCE(haes)->CR, AES_CR_MODE, AES_OPERATING_MODE_ENCRYPT);
+#endif /* defined(AES_CR_KMOD) */
 
   haes->p_in_buff = (const uint32_t *)p_input;
   haes->p_out_buff = (uint32_t *)p_output;
@@ -2049,6 +2169,7 @@ hal_status_t HAL_AES_Decrypt_DMA(hal_aes_handle_t *haes, const void *p_input, ui
   haes->last_error_codes = HAL_AES_ERROR_NONE;
 #endif /* USE_HAL_AES_GET_LAST_ERRORS */
 
+#if defined(AES_CR_KMOD)
   /* Set decrypt mode
      SAES key mode must be normal to do decryption with any key:
      SAES configurable keys (normal,HW)
@@ -2056,6 +2177,9 @@ hal_status_t HAL_AES_Decrypt_DMA(hal_aes_handle_t *haes, const void *p_input, ui
      or using a shared key (unshare)
      AES key mode must be normal when encrypt/decrypt */
   STM32_MODIFY_REG(AES_GET_INSTANCE(haes)->CR, AES_CR_MODE | AES_CR_KMOD, AES_OPERATING_MODE_DECRYPT);
+#else
+  STM32_MODIFY_REG(AES_GET_INSTANCE(haes)->CR, AES_CR_MODE, AES_OPERATING_MODE_DECRYPT);
+#endif /* defined(AES_CR_KMOD) */
 
   haes->p_in_buff = (const uint32_t *)p_input;
   haes->p_out_buff = (uint32_t *)p_output;
@@ -2336,7 +2460,11 @@ hal_status_t HAL_AES_RestoreContext(hal_aes_handle_t *haes, const hal_aes_save_c
       return HAL_ERROR;
     }
 
+#if defined(AES_CR_KMOD)
     STM32_MODIFY_REG(aes_instance->CR, AES_CR_MODE | AES_CR_KMOD, AES_OPERATING_MODE_DECRYPT);
+#else
+    STM32_MODIFY_REG(aes_instance->CR, AES_CR_MODE, AES_OPERATING_MODE_DECRYPT);
+#endif /* defined(AES_CR_KMOD) */
   }
 #endif /* USE_HAL_AES_ECB_CBC_ALGO */
 
@@ -5353,6 +5481,185 @@ static void AES_GCM_GMAC_CCM_DMAOutCplt(hal_dma_handle_t *hdma)
 }
 #endif /* USE_HAL_AES_DMA */
 #endif /* USE_HAL_AES_GCM_GMAC_ALGO or USE_HAL_AES_CCM_ALGO */
+
+#if defined (USE_HAL_AES_RNG_RECOVERY) && (USE_HAL_AES_RNG_RECOVERY == 1U)
+#if defined(RNG_HTSR0_RPERRX) || defined(RNG_HTSR1_ADERRX)
+/**
+  * @brief  Attempts a robust recovery of the RNG after a seed error.
+  *         Implements a sequence of health checks, oscillator re-masking
+  *         and conditional resets to restore a valid RNG operating state.
+  * @retval HAL_ERROR RNG could not be recovered within the configured timeouts.
+  * @retval HAL_OK    RNG successfully recovered and no seed error is pending.
+  */
+hal_status_t AES_RNG_ResilientRecoverSeedError(void)
+{
+  uint32_t timeout;
+  uint32_t htsr_temp = 0U;
+  uint32_t htsr_previous_temp = 0U;
+  uint32_t htsr_count = 0U;
+  uint32_t nsmr_temp = 0U;
+  uint32_t tickstart1 = 0U;
+  uint32_t tickstart2 = 0U;
+  uint32_t tickstart3 = 0U;
+  uint32_t oscillators_count = 0U;
+  uint32_t config_b_fewer_than_6_osc_count = 0U;
+  uint8_t count = 0U;
+
+  /* timeout here is an emperic value */
+  timeout = (1UL + ((1UL << (STM32_READ_BIT(RNG->CR, RNG_CR_CLKDIV) >> 16UL)) * AES_RNG_TIMEOUT_VALUE / 8UL));
+  LL_RNG_Enable(RNG);
+
+  tickstart1 = HAL_GetTick();
+
+  /* Check if seed error current status indicates no error and auto-reset succeeded */
+  if (LL_RNG_IsActiveFlag_SECS(RNG) == 0U)
+  {
+    /* Clear SEIS flag when automatic reset is activated */
+    LL_RNG_ClearFlag_SEIS(RNG);
+  }
+
+  else  /* Sequence to fully recover from a seed error*/
+  {
+    if (LL_RNG_IsConfigLocked(RNG) == 0U)
+    {
+      do
+      {
+        if (LL_RNG_IsActiveFlag_SECS(RNG) == 0U)
+        {
+          break;
+        }
+        /* Read oscillator status registers combined */
+        htsr_temp = LL_RNG_GetHealthTestStatus(RNG, 0U);
+        htsr_temp |= LL_RNG_GetHealthTestStatus(RNG, 1U);
+        if (htsr_temp > 0U)
+        {
+          /* If any oscillator status bits overlap with previous status, increment counter */
+          if ((htsr_temp & htsr_previous_temp) != 0U)
+          {
+            htsr_count++;
+          }
+
+          if (htsr_count > 3U)
+          {
+            /* if the same repetitive or adaptative error is detected 3 times */
+            nsmr_temp = LL_RNG_GetNoiseSourceMask(RNG);
+
+            /* deactivate the same osc in each triple oscillator (Mask oscillators with the seed error by
+            clearing bits shifted right by 1) */
+            nsmr_temp = nsmr_temp & ~(htsr_temp >> 1U);
+
+            /* Count the number of active oscillators in nsmr */
+            oscillators_count = 0U;
+            for (count = 0U; count < 9U; count++)
+            {
+              if (((nsmr_temp >> count) & 0x1U) != 0U)
+              {
+                /* increment count1 for each 1 in nsmr */
+                oscillators_count++;
+              }
+            }
+
+            if (oscillators_count < 6U)
+            {
+              /* If fewer than 6 oscillators remain active, unmask all oscillators --> Reset masking */
+              nsmr_temp = LL_RNG_GetOscNoiseSrc(RNG, LL_RNG_NOISE_SRC_1 | LL_RNG_NOISE_SRC_2 \
+                                                | LL_RNG_NOISE_SRC_3);
+              htsr_previous_temp = 0;
+              htsr_count = 0U;
+              if ((RNG->CR  & RNG_CR_CLKDIV_Msk) < ((uint32_t)RNG_CAND_NIST_CR_VALUE & RNG_CR_CLKDIV_Msk))
+              {
+                config_b_fewer_than_6_osc_count++;
+              }
+            }
+
+            if (config_b_fewer_than_6_osc_count > 2U)
+            {
+              /* Reset RNG condition */
+              STM32_WRITE_REG(RNG->CR, (RNG_CR_CONDRST_Msk | (uint32_t)RNG_CAND_NIST_CR_VALUE));
+
+              /* Update mask register with new oscillator mask */
+              LL_RNG_SetNoiseSourceMask(RNG, nsmr_temp);
+
+              /* Clear condition reset bit to resume operation */
+              LL_RNG_DisableCondReset(RNG);
+            }
+
+            else
+            {
+              /* Reset RNG condition */
+              STM32_WRITE_REG(RNG->CR, (RNG->CR & ~RNG_CR_RNGEN_Msk) | RNG_CR_CONDRST_Msk);
+
+              /* Update mask register with new oscillator mask */
+              LL_RNG_SetNoiseSourceMask(RNG, nsmr_temp);
+
+              /* Clear condition reset bit to resume operation */
+              LL_RNG_DisableCondReset(RNG);
+            }
+          }
+
+          else
+          {
+            /* Briefly toggle conditional reset to recover RNG */
+            STM32_WRITE_REG(RNG->CR, (RNG->CR & ~RNG_CR_RNGEN_Msk) | RNG_CR_CONDRST_Msk);
+
+            /* unmask all oscillators to find another working condition */
+            LL_RNG_SetNoiseSourceMask(RNG, LL_RNG_GetOscNoiseSrc(RNG, LL_RNG_OSC_1\
+                                                                 | LL_RNG_OSC_2 | LL_RNG_OSC_3));
+            LL_RNG_DisableCondReset(RNG);
+          }
+
+          /* Wait until RNG is not busy */
+          tickstart2 = HAL_GetTick();
+          do
+          {
+            if ((HAL_GetTick() - tickstart2) > AES_RNG_TIMEOUT_VALUE)
+            {
+              /* New check to avoid false timeout detection in case of preemption */
+              LL_RNG_Disable(RNG);
+              return HAL_ERROR;
+            }
+          } while (STM32_IS_BIT_SET(RNG->CR, RNG_SR_BUSY));
+
+          /* No timeout --> Enable RNG */
+          LL_RNG_Enable(RNG);
+          tickstart3 = HAL_GetTick();
+          do
+          {
+            if (LL_RNG_IsActiveFlag_DRDY(RNG) != 0UL)
+            {
+              break;
+            }
+            if ((HAL_GetTick() - tickstart3) > timeout)
+            {
+              /* New check to avoid false timeout detection in case of preemption */
+              if (LL_RNG_IsActiveFlag_DRDY(RNG) == 0UL)
+              {
+                if (LL_RNG_IsActiveFlag_SECS(RNG) == 0UL)
+                {
+                  LL_RNG_Disable(RNG);
+                  return HAL_ERROR;
+                }
+              }
+            }
+          } while (LL_RNG_IsActiveFlag_SECS(RNG) == 0UL);
+
+          /* Accumulate seed error status bits */
+          htsr_previous_temp = htsr_previous_temp | htsr_temp;
+        }
+      } while ((HAL_GetTick() - tickstart1) <= timeout);
+    }
+  }
+
+  /*Check if seed error current status (SECS)is set */
+  if (LL_RNG_IsActiveFlag_SECS(RNG) != 0U)
+  {
+    return HAL_ERROR;
+  }
+
+  return HAL_OK;
+}
+#endif /* RNG_HTSR0_RPERRX || RNG_HTSR1_ADERRX */
+#endif /* USE_HAL_AES_RNG_RECOVERY */
 /**
   * @}
   */

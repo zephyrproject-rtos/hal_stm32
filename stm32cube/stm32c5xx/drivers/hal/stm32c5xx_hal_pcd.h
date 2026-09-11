@@ -16,8 +16,8 @@
   */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef STM32C5xx_HAL_PCD_H
-#define STM32C5xx_HAL_PCD_H
+#ifndef STM32C5XX_HAL_PCD_H
+#define STM32C5XX_HAL_PCD_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -73,10 +73,60 @@ extern "C" {
 #ifndef USE_HAL_PCD_MAX_ENDPOINT_NB
 #define USE_HAL_PCD_MAX_ENDPOINT_NB                                          8U
 #endif /* USE_HAL_PCD_MAX_ENDPOINT_NB */
+
+
+/**
+  * @brief  HAL USB PCD WAKEUP EXTI LINE.
+  */
+#define USB_WAKEUP_EXTI_LINE                                          (0x1U << 0U)
+
 /**
   * @}
   */
 
+/* Private macros ------------------------------------------------------------*/
+/** @defgroup PCD_Private_Macros Private Macros
+  * @{
+  */
+/*! Macro to get the min value */
+#define PCD_MIN(a,b) (((a) < (b)) ? (a) : (b))
+
+/*! Macro to get the max value */
+#define PCD_MAX(a,b) (((a) > (b)) ? (a) : (b))
+/**
+  * @}
+  */
+
+/* Exported constants --------------------------------------------------------*/
+/** @defgroup PCD_Exported_Constants Exported Constants
+  * @{
+  */
+#if defined (USE_HAL_PCD_GET_LAST_ERRORS) && (USE_HAL_PCD_GET_LAST_ERRORS == 1)
+/** @defgroup PCD_Error_Codes Error Codes
+  * @{
+  */
+#define HAL_PCD_ERROR_NONE                          (0x0U)           /*!< No error                   */
+#define HAL_PCD_ERROR_BCD                           (0x1U << 0U)     /*!< USB Battery Charging error */
+#define HAL_PCD_ERROR_IN_EP_AHB                     (0x1U << 1U)     /*!< USB IN EP AHB error        */
+#define HAL_PCD_ERROR_IN_EP_TIMEOUT                 (0x1U << 2U)     /*!< USB IN EP TIMEOUT error    */
+#define HAL_PCD_ERROR_IN_EP_BABBLE                  (0x1U << 3U)     /*!< USB IN EP BABBLE error     */
+#define HAL_PCD_ERROR_OUT_EP_AHB                    (0x1U << 4U)     /*!< USB OUT EP AHB error       */
+#define HAL_PCD_ERROR_OUT_EP_PACKET                 (0x1U << 5U)     /*!< USB OUT EP PACKET  error   */
+#define HAL_PCD_ERROR_CTR_STUCK                     (0x1U << 6U)     /*!< USB Transaction error      */
+#define HAL_PCD_ERROR_EP_INDEX                      (0x1U << 7U)     /*!< USB Endpoint index error   */
+
+/**
+  * @}
+  */
+#endif /* USE_HAL_PCD_GET_LAST_ERRORS */
+#define HAL_PCD_EP_ADDR_MSK                         (0x7FU)          /*!< Endpoint Address Mask      */
+#define HAL_PCD_EP_IN_DIR              (USB_CORE_EP_IN_DIR)          /*!< Endpoint IN direction      */
+#define HAL_PCD_EP_OUT_DIR            (USB_CORE_EP_OUT_DIR)          /*!< Endpoint OUT direction     */
+#define HAL_PCD_SNG_BUF                   (USB_DRD_SNG_BUF)          /*!< USB Endpoint single buffer */
+#define HAL_PCD_DBL_BUF                   (USB_DRD_DBL_BUF)          /*!< USB Endpoint double buffer */
+/**
+  * @}
+  */
 
 /* Exported types ------------------------------------------------------------*/
 /** @defgroup PCD_Exported_Types Exported Types
@@ -88,18 +138,15 @@ extern "C" {
   */
 typedef enum
 {
-#if defined (USB_DRD_FS)
   HAL_PCD_DRD_FS = USB_DRD_FS_BASE, /*!< USB DRD FS Instance */
-#endif /* defined (USB_DRD_FS) */
 } hal_pcd_t;
-
 
 /**
   * @brief  HAL USB PCD State structure definition.
   */
 typedef enum
 {
-  HAL_PCD_STATE_RESET     = 0x00U,         /*!< HAL PCD STATE RESET */
+  HAL_PCD_STATE_RESET     = 0U,            /*!< HAL PCD STATE RESET */
   HAL_PCD_STATE_INIT      = (1U << 31U),   /*!< HAL PCD STATE INIT  */
   HAL_PCD_STATE_IDLE      = (1U << 30U),   /*!< HAL PCD STATE IDLE  */
   HAL_PCD_STATE_ACTIVE    = (1U << 29U),   /*!< HAL PCD STATE ACTIVE */
@@ -187,7 +234,6 @@ typedef enum
 typedef enum
 {
   HAL_PCD_DEVICE_SPEED_FS    = USB_CORE_DEVICE_SPEED_FS,            /*!< HAL PCD DEVICE FULL SPEED    */
-  HAL_PCD_DEVICE_SPEED_HS    = USB_CORE_DEVICE_SPEED_HS,            /*!< HAL PCD DEVICE HIGH SPEED    */
   HAL_PCD_DEVICE_SPEED_ERROR = USB_CORE_DEVICE_SPEED_ERROR          /*!< HAL PCD DEVICE SPEED ERROR   */
 } hal_pcd_device_speed_t;
 
@@ -197,9 +243,7 @@ typedef enum
   */
 typedef enum
 {
-  HAL_PCD_PHY_EXTERNAL_ULPI = USB_CORE_PHY_EXTERNAL_ULPI,   /*!< PCD PHY ULPI     */
   HAL_PCD_PHY_EMBEDDED_FS   = USB_CORE_PHY_EMBEDDED_FS,     /*!< PCD PHY EMBEDDED */
-  HAL_PCD_PHY_EMBEDDED_HS   = USB_CORE_PHY_EMBEDDED_HS,     /*!< PCD PHY UTMI     */
 } hal_pcd_phy_module_t;
 
 
@@ -353,6 +397,7 @@ struct hal_pcd_handle_s
                                                                 This parameter depends on the used USB core.          */
 
   uint32_t setup[12];                                      /*!< Setup packet buffer                                   */
+  uint8_t *p_setup;                                        /*!< Setup packet buffer pointer                           */
 
   hal_pcd_ep_t in_ep[USE_HAL_PCD_MAX_ENDPOINT_NB];         /*!< IN endpoint parameters                                */
   hal_pcd_ep_t out_ep[USE_HAL_PCD_MAX_ENDPOINT_NB];        /*!< OUT endpoint parameters                               */
@@ -387,43 +432,12 @@ struct hal_pcd_handle_s
   hal_pcd_iso_cb_t p_iso_out_incomplete_cb;                /*!< USB HAL PCD ISO OUT Incomplete callback               */
   hal_pcd_iso_cb_t p_iso_in_incomplete_cb;                 /*!< USB HAL PCD ISO IN Incomplete callback                */
   hal_pcd_cb_t p_error_cb;                                 /*!< USB HAL PCD Error callback                            */
+  hal_pcd_data_cb_t p_ep_abort_transfer_cb;                /*!< USB HAL PCD Endpoint Abort Transfer callback          */
   hal_pcd_bcd_cb_t p_battery_charging_cb;                  /*!< USB HAL PCD Battery charging callback                 */
   hal_pcd_lpm_cb_t p_low_power_management_cb;              /*!< USB HAL PCD USB Link Power management callback        */
 #endif /* USE_HAL_PCD_REGISTER_CALLBACKS */
 };
 
-/**
-  * @}
-  */
-
-
-/* Exported constants --------------------------------------------------------*/
-/** @defgroup PCD_Exported_Constants Exported Constants
-  * @{
-  */
-#if defined (USE_HAL_PCD_GET_LAST_ERRORS) && (USE_HAL_PCD_GET_LAST_ERRORS == 1)
-/** @defgroup PCD_Error_Codes Error Codes
-  * @{
-  */
-#define HAL_PCD_ERROR_NONE                          (0x0U)           /*!< No error                   */
-#define HAL_PCD_ERROR_BCD                           (0x1U << 0U)     /*!< USB Battery Charging error */
-#define HAL_PCD_ERROR_IN_EP_AHB                     (0x1U << 1U)     /*!< USB IN EP AHB error        */
-#define HAL_PCD_ERROR_IN_EP_TIMEOUT                 (0x1U << 2U)     /*!< USB IN EP TIMEOUT error    */
-#define HAL_PCD_ERROR_IN_EP_BABBLE                  (0x1U << 3U)     /*!< USB IN EP BABBLE error     */
-#define HAL_PCD_ERROR_OUT_EP_AHB                    (0x1U << 4U)     /*!< USB OUT EP AHB error       */
-#define HAL_PCD_ERROR_OUT_EP_PACKET                 (0x1U << 5U)     /*!< USB OUT EP PACKET  error   */
-#define HAL_PCD_ERROR_CTR_STUCK                     (0x1U << 6U)     /*!< USB Transaction error      */
-#define HAL_PCD_ERROR_EP_INDEX                      (0x1U << 7U)     /*!< USB Endpoint index error   */
-
-/**
-  * @}
-  */
-#endif /* USE_HAL_PCD_GET_LAST_ERRORS */
-#define HAL_PCD_EP_ADDR_MSK                         (0x7FU)          /*!< Endpoint Address Mask      */
-#define HAL_PCD_EP_IN_DIR              (USB_CORE_EP_IN_DIR)          /*!< Endpoint IN direction      */
-#define HAL_PCD_EP_OUT_DIR            (USB_CORE_EP_OUT_DIR)          /*!< Endpoint OUT direction     */
-#define HAL_PCD_SNG_BUF                   (USB_DRD_SNG_BUF)          /*!< USB Endpoint single buffer */
-#define HAL_PCD_DBL_BUF                   (USB_DRD_DBL_BUF)          /*!< USB Endpoint double buffer */
 /**
   * @}
   */
@@ -505,7 +519,6 @@ hal_status_t HAL_PCD_BCD_Start(hal_pcd_handle_t *hpcd);
 hal_status_t HAL_PCD_BCD_Stop(hal_pcd_handle_t *hpcd);
 #endif /* defined (USE_HAL_PCD_USB_BCD) && (USE_HAL_PCD_USB_BCD == 1) */
 
-
 hal_status_t HAL_PCD_DeviceConnect(const hal_pcd_handle_t *hpcd);
 hal_status_t HAL_PCD_DeviceDisconnect(const hal_pcd_handle_t *hpcd);
 hal_pcd_device_speed_t HAL_PCD_GetDeviceSpeed(const hal_pcd_handle_t *hpcd);
@@ -572,6 +585,7 @@ void HAL_PCD_ISOINIncompleteCallback(hal_pcd_handle_t *hpcd, uint8_t ep_num);
 void HAL_PCD_LpmCallback(hal_pcd_handle_t *hpcd, hal_pcd_lpm_active_status_t lpm_status);
 void HAL_PCD_BcdCallback(hal_pcd_handle_t *hpcd, hal_pcd_bcd_port_type_t port_type);
 void HAL_PCD_ErrorCallback(hal_pcd_handle_t *hpcd);
+void HAL_PCD_EndpointAbortTransferCallback(hal_pcd_handle_t *hpcd, uint8_t ep_num);
 
 /**
   * @}
@@ -594,6 +608,7 @@ hal_status_t HAL_PCD_RegisterDataInStageCallback(hal_pcd_handle_t *hpcd, hal_pcd
 hal_status_t HAL_PCD_RegisterIsoOutIncpltCallback(hal_pcd_handle_t *hpcd, hal_pcd_iso_cb_t p_callback);
 hal_status_t HAL_PCD_RegisterIsoInIncpltCallback(hal_pcd_handle_t *hpcd, hal_pcd_iso_cb_t p_callback);
 hal_status_t HAL_PCD_RegisterErrorCallback(hal_pcd_handle_t *hpcd, hal_pcd_cb_t p_callback);
+hal_status_t HAL_PCD_RegisterEndpointAbortTransferCallback(hal_pcd_handle_t *hpcd, hal_pcd_data_cb_t p_callback);
 hal_status_t HAL_PCD_RegisterBcdCallback(hal_pcd_handle_t *hpcd, hal_pcd_bcd_cb_t p_callback);
 hal_status_t HAL_PCD_RegisterLpmCallback(hal_pcd_handle_t *hpcd, hal_pcd_lpm_cb_t p_callback);
 #endif /* USE_HAL_PCD_REGISTER_CALLBACKS */
@@ -607,37 +622,6 @@ hal_status_t HAL_PCD_RegisterLpmCallback(hal_pcd_handle_t *hpcd, hal_pcd_lpm_cb_
   */
 
 /* Private constants ---------------------------------------------------------*/
-/** @defgroup PCD_Private_Constants Private Constants
-  * @{
-  */
-/** @defgroup USB_EXTI_Line_Interrupt EXTI line interrupt
-  * @{
-  */
-
-/**
-  * @brief  HAL USB PCD WAKEUP EXTI LINE.
-  */
-#define USB_WAKEUP_EXTI_LINE                                          (0x1U << 15U)
-
-
-/**
-  * @}
-  */
-/**
-  * @}
-  */
-
-/* Private macros ------------------------------------------------------------*/
-/** @defgroup PCD_Private_Macros Private Macros
-  * @{
-  */
-/*! Macro to get the min value */
-#define PCD_MIN                   USB_CORE_MIN_U32
-/*! Macro to get the max value */
-#define PCD_MAX                   USB_CORE_MAX_U32
-/**
-  * @}
-  */
 
 /**
   * @}
@@ -651,4 +635,4 @@ hal_status_t HAL_PCD_RegisterLpmCallback(hal_pcd_handle_t *hpcd, hal_pcd_lpm_cb_
 }
 #endif /* defined __cplusplus */
 
-#endif /* STM32C5xx_HAL_PCD_H */
+#endif /* STM32C5XX_HAL_PCD_H */

@@ -847,9 +847,9 @@ typedef struct
 typedef struct
 {
   /*! This member configures the UART communication baud rate.
-      Value between Min_Data=0 and Max_Data=18000000.
-      For LPUART instances, Min_Data=0 and Max_Data=48000000.
-      The baud rate register is computed using the following formula:
+    Value between Min_Data=0 and Max_Data=18000000.
+    For LPUART instances, Min_Data=0 and Max_Data=48000000.
+    The baud rate register is computed using the following formula:
         - LPUART:
           - Baud Rate Register = ((256 * lpuart_ker_ckpres) / ((hal_uart_config_t->baud_rate)))
             where lpuart_ker_ck_pres is the UART input clock divided by a prescaler
@@ -889,8 +889,7 @@ typedef struct
   /*! Specifies whether single-sample or three-sample majority vote is selected. This parameter
    is not available for LPUART instances. */
   hal_uart_one_bit_sample_t one_bit_sampling;
-}
-hal_uart_config_t;
+} hal_uart_config_t;
 /**
   * @}
   */
@@ -904,10 +903,10 @@ hal_uart_config_t;
 typedef struct
 {
   /*! This member configures the IRDA communication baud rate (value to be set at 115200 baud following IRDA
-      specifications). You can, however, still set the value between Min_Data=0 and Max_Data=18000000 for
-      specific use cases. The baud rate register is computed using the following formula:
-        - Baud Rate Register = ((uart_ker_ckpres) / ((hal_uart_irda_config_t->baud_rate)))
-          where uart_ker_ck_pres is the UART input clock divided by a prescaler */
+    specifications). You can, however, still set the value between Min_Data=0 and Max_Data=18000000 for
+    specific use cases. The baud rate register is computed using the following formula:
+      - Baud Rate Register = ((uart_ker_ckpres) / ((hal_uart_irda_config_t->baud_rate)))
+        where uart_ker_ck_pres is the UART input clock divided by a prescaler */
   uint32_t baud_rate;
 
   /*! Specifies the prescaler value used to divide the IRDA clock source. */

@@ -129,11 +129,11 @@ typedef enum
   */
 typedef enum
 {
-  HAL_ICACHE_STATE_RESET       = 0U,           /*!< ICACHE driver not initialized and not started */
-  HAL_ICACHE_STATE_IDLE        = (1U << 31U),  /*!< ICACHE driver initialized and not started */
-  HAL_ICACHE_STATE_ACTIVE      = (1U << 30U),  /*!< ICACHE driver initialized and started */
-  HAL_ICACHE_STATE_MAINTENANCE = (1U << 29U)   /*!< ICACHE driver initialized, started and a maintenance operation is
-                                                 ongoing */
+  HAL_ICACHE_STATE_RESET       = 0UL,           /*!< ICACHE driver not initialized and not started */
+  HAL_ICACHE_STATE_IDLE        = (1UL << 31U),  /*!< ICACHE driver initialized and not started */
+  HAL_ICACHE_STATE_ACTIVE      = (1UL << 30U),  /*!< ICACHE driver initialized and started */
+  HAL_ICACHE_STATE_MAINTENANCE = (1UL << 29U)   /*!< ICACHE driver initialized, started and a maintenance operation is
+                                                  ongoing */
 } hal_icache_state_t;
 
 /**
@@ -346,16 +346,19 @@ uint32_t HAL_ICACHE_GetLastErrorCodes(const hal_icache_handle_t *hicache);
   * @}
   */
 
-#if defined(USE_HAL_ICACHE_USER_DATA) && (USE_HAL_ICACHE_USER_DATA == 1)
-/** @defgroup ICACHE_Exported_Functions_Group10 Set/Get user data functions
+/** @defgroup ICACHE_Exported_Functions_Group10 Accessor and Instance functions
   * @{
   */
+#if defined(USE_HAL_ICACHE_USER_DATA) && (USE_HAL_ICACHE_USER_DATA == 1)
 void HAL_ICACHE_SetUserData(hal_icache_handle_t *hicache, const void *p_user_data);
 const void *HAL_ICACHE_GetUserData(const hal_icache_handle_t *hicache);
+#endif /* USE_HAL_ICACHE_USER_DATA */
+
+hal_icache_t HAL_ICACHE_GetInstance(const hal_icache_handle_t *hicache);
+ICACHE_TypeDef *HAL_ICACHE_GetLLInstance(const hal_icache_handle_t *hicache);
 /**
   * @}
   */
-#endif /* USE_HAL_ICACHE_USER_DATA */
 
 /**
   * @}

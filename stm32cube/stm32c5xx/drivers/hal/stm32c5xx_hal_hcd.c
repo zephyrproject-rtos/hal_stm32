@@ -105,6 +105,7 @@
   | HAL_HCD_PortSuspendCallback()                    | HAL_HCD_RegisterPortSuspendCallback()
   | HAL_HCD_PortResumeCallback()                     | HAL_HCD_RegisterPortResumeCallback()
   | HAL_HCD_ChannelNotifyURBChangeCallback()         | HAL_HCD_RegisterChannelNotifyURBChangeCallback()
+  | HAL_HCD_ChannelAbortTransferCallback()           | HAL_HCD_RegisterChannelAbortTransferCallback()
   | HAL_HCD_ErrorCallback()                          | HAL_HCD_RegisterErrorCallback()
   */
 
@@ -140,6 +141,7 @@
 /** @defgroup HCD_Private_Macros Private Macros
   * @{
   */
+
 /*! Macro to check ep_type */
 #define HAL_HCD_CHECK_EP_TYPE(ep_type) ((((ep_type) == HAL_HCD_EP_TYPE_CTRL) \
                                          || ((ep_type) == HAL_HCD_EP_TYPE_BULK) \
@@ -198,14 +200,18 @@ static void HCD_DRD_CHANNEL_IN_IsocDb(hal_hcd_handle_t *hhcd, usb_core_channel_t
   */
 hal_status_t HAL_HCD_Init(hal_hcd_handle_t *hhcd, hal_hcd_t instance)
 {
-  /* Check hhcd handler */
-  ASSERT_DBG_PARAM((hhcd != NULL));
+  uint32_t ch_idx;
 
-  /* Check USB instance */
+  ASSERT_DBG_PARAM((hhcd != NULL));
   ASSERT_DBG_PARAM(IS_HCD_ALL_INSTANCE((usb_drd_global_t *)((uint32_t)instance)));
 
 #if defined (USE_HAL_CHECK_PARAM) && (USE_HAL_CHECK_PARAM == 1U)
   if (hhcd == NULL)
+  {
+    return HAL_INVALID_PARAM;
+  }
+
+  if (!IS_HCD_ALL_INSTANCE((usb_drd_global_t *)((uint32_t)instance)))
   {
     return HAL_INVALID_PARAM;
   }
@@ -215,8 +221,6 @@ hal_status_t HAL_HCD_Init(hal_hcd_handle_t *hhcd, hal_hcd_t instance)
 
   switch (instance)
   {
-
-#if defined (USB_DRD_FS)
     case HAL_HCD_DRD_FS:
 
       /* Register USB core instance operational functions */
@@ -224,13 +228,10 @@ hal_status_t HAL_HCD_Init(hal_hcd_handle_t *hhcd, hal_hcd_t instance)
 
       hhcd->p_irq_handler = HAL_HCD_DRD_IRQHandler;
 
-      /* Get the host channels number */
       hhcd->host_channels_nbr = (uint8_t)(USB_DRD_FS_CH_NBR);
       break;
-#endif /* defined (USB_DRD_FS) */
 
     default:
-      return HAL_ERROR;
       break;
   }
 
@@ -247,6 +248,7 @@ hal_status_t HAL_HCD_Init(hal_hcd_handle_t *hhcd, hal_hcd_t instance)
   hhcd->p_port_suspend_cb = HAL_HCD_PortSuspendCallback;
   hhcd->p_port_resume_cb = HAL_HCD_PortResumeCallback;
   hhcd->p_ch_notify_urb_change_cb = HAL_HCD_ChannelNotifyURBChangeCallback;
+  hhcd->p_ch_abort_transfer_cb = HAL_HCD_ChannelAbortTransferCallback;
   hhcd->p_error_cb = HAL_HCD_ErrorCallback;
 #endif /* (USE_HAL_HCD_REGISTER_CALLBACKS) */
 
@@ -254,6 +256,13 @@ hal_status_t HAL_HCD_Init(hal_hcd_handle_t *hhcd, hal_hcd_t instance)
   hhcd->p_user_data = (void *)NULL;
 #endif /* USE_HAL_HCD_USER_DATA */
 
+  for (ch_idx = 0U; ch_idx < HCD_MIN(hhcd->host_channels_nbr, USE_HAL_HCD_MAX_CHANNEL_NB); ch_idx++)
+  {
+    hhcd->channel[ch_idx].state = HAL_HCD_CHANNEL_STATE_RESET;
+    hhcd->channel[ch_idx].urb_state = HAL_HCD_CHANNEL_URB_STATE_RESET;
+  }
+
+  hhcd->port_state = HAL_HCD_PORT_STATE_DEV_DISCONNECT;
   hhcd->global_state = HAL_HCD_STATE_INIT;
 
   return HAL_OK;
@@ -265,22 +274,17 @@ hal_status_t HAL_HCD_Init(hal_hcd_handle_t *hhcd, hal_hcd_t instance)
   */
 void HAL_HCD_DeInit(hal_hcd_handle_t *hhcd)
 {
-  /* Check hhcd handler */
-  ASSERT_DBG_PARAM((hhcd != NULL));
+  uint32_t ch_idx;
 
-  /* Check USB instance */
+  ASSERT_DBG_PARAM((hhcd != NULL));
   ASSERT_DBG_PARAM(IS_HCD_ALL_INSTANCE((usb_drd_global_t *)((uint32_t)hhcd->instance)));
 
-  hhcd->driver.core_deinit((uint32_t)hhcd->instance);
-
-  /* Update Host Port State */
-  hhcd->port_state = HAL_HCD_PORT_STATE_DEV_DISCONNECT;
-
-  /* Disable global interrupt */
+  /* Prevent interrupts during deinitialization */
   (void)hhcd->driver.core_disable_interrupts((uint32_t)hhcd->instance);
 
+  (void)hhcd->driver.core_deinit((uint32_t)hhcd->instance);
+
 #if defined (USE_HAL_HCD_USER_DATA) && (USE_HAL_HCD_USER_DATA == 1U)
-  /* Reset the user data pointer to NULL */
   hhcd->p_user_data = (void *) NULL;
 #endif /* USE_HAL_HCD_USER_DATA */
 
@@ -288,6 +292,13 @@ void HAL_HCD_DeInit(hal_hcd_handle_t *hhcd)
   hhcd->last_error_codes = HAL_HCD_ERROR_NONE;
 #endif /* USE_HAL_HCD_GET_LAST_ERRORS */
 
+  for (ch_idx = 0U; ch_idx < HCD_MIN(hhcd->host_channels_nbr, USE_HAL_HCD_MAX_CHANNEL_NB); ch_idx++)
+  {
+    hhcd->channel[ch_idx].state = HAL_HCD_CHANNEL_STATE_RESET;
+    hhcd->channel[ch_idx].urb_state = HAL_HCD_CHANNEL_URB_STATE_RESET;
+  }
+
+  hhcd->port_state = HAL_HCD_PORT_STATE_DEV_DISCONNECT;
   hhcd->global_state = HAL_HCD_STATE_RESET;
 }
 /**
@@ -317,7 +328,6 @@ hal_status_t HAL_HCD_SetConfig(hal_hcd_handle_t *hhcd, const hal_hcd_config_t *p
   hal_status_t ret = HAL_OK;
   usb_core_config_params_t usb_core_config = {0U};
 
-  /* Check hhcd handler and configuration parameter */
   ASSERT_DBG_PARAM((hhcd != NULL));
   ASSERT_DBG_PARAM((p_config != NULL));
 
@@ -328,12 +338,10 @@ hal_status_t HAL_HCD_SetConfig(hal_hcd_handle_t *hhcd, const hal_hcd_config_t *p
   }
 #endif /* USE_HAL_CHECK_PARAM */
 
-  /* Check the global state */
   ASSERT_DBG_STATE(hhcd->global_state, HAL_HCD_STATE_INIT);
 
   switch (hhcd->instance)
   {
-#if defined (USB_DRD_FS)
     case HAL_HCD_DRD_FS:
 
       usb_core_config.phy_interface = (usb_core_phy_module_t)p_config->phy_interface;
@@ -344,43 +352,39 @@ hal_status_t HAL_HCD_SetConfig(hal_hcd_handle_t *hhcd, const hal_hcd_config_t *p
       usb_core_config.iso_db_state = (usb_core_config_status_t)p_config->iso_doublebuffer_enable;
 #endif /* defined (USE_HAL_HCD_USB_EP_TYPE_ISOC) && (USE_HAL_HCD_USB_EP_TYPE_ISOC == 1) */
       break;
-#endif /* defined (USB_DRD_FS) */
 
     default:
-      return HAL_ERROR;
       break;
   }
 
-  /* Disable the Interrupts */
+  /* Prevent interrupts during host core configuration */
   (void)hhcd->driver.core_disable_interrupts((uint32_t)hhcd->instance);
 
-  /* Init the Core (common init.) */
+  /* Initialize the USB core */
   if (hhcd->driver.core_init((uint32_t)hhcd->instance, &usb_core_config) != USB_CORE_OK)
   {
     hhcd->global_state = HAL_HCD_STATE_FAULT;
     return HAL_ERROR;
   }
 
-  /* Force Host Mode */
+  /* Switch the USB core to host mode */
   if (hhcd->driver.core_set_mode((uint32_t)hhcd->instance, USB_CORE_HOST_MODE) != USB_CORE_OK)
   {
     hhcd->global_state = HAL_HCD_STATE_FAULT;
     ret = HAL_ERROR;
   }
 
-  /* Init Host */
+  /* Initialize host-specific registers and configuration */
   if (hhcd->driver.host_init((uint32_t)hhcd->instance, &usb_core_config) != USB_CORE_OK)
   {
     hhcd->global_state = HAL_HCD_STATE_FAULT;
     ret = HAL_ERROR;
   }
 
-  /* Host Port State */
   hhcd->port_state = HAL_HCD_PORT_STATE_DEV_DISCONNECT;
 
   if (ret != HAL_ERROR)
   {
-    /* Set HCD Global state to IDLE */
     hhcd->global_state = HAL_HCD_STATE_IDLE;
   }
 
@@ -402,7 +406,6 @@ hal_status_t HAL_HCD_SetConfig(hal_hcd_handle_t *hhcd, const hal_hcd_config_t *p
   */
 uint32_t HAL_HCD_GetLastErrorCodes(const hal_hcd_handle_t *hhcd)
 {
-  /* Check hhcd handler */
   ASSERT_DBG_PARAM((hhcd != NULL));
 
   return (hhcd->last_error_codes);
@@ -418,11 +421,9 @@ uint32_t HAL_HCD_GetLastErrorCodes(const hal_hcd_handle_t *hhcd)
   */
 void HAL_HCD_SetUserData(hal_hcd_handle_t *hhcd, const void *p_user_data)
 {
-  /* Check hhcd handler */
   ASSERT_DBG_PARAM((hhcd != NULL));
 
   hhcd->p_user_data = p_user_data;
-  return;
 }
 
 /**
@@ -432,7 +433,6 @@ void HAL_HCD_SetUserData(hal_hcd_handle_t *hhcd, const void *p_user_data)
   */
 const void *HAL_HCD_GetUserData(const hal_hcd_handle_t *hhcd)
 {
-  /* Check hhcd handler */
   ASSERT_DBG_PARAM((hhcd != NULL));
 
   return (hhcd->p_user_data);
@@ -453,7 +453,6 @@ const void *HAL_HCD_GetUserData(const hal_hcd_handle_t *hhcd)
   */
 hal_status_t HAL_HCD_Start(hal_hcd_handle_t *hhcd)
 {
-  /* Check hhcd handler */
   ASSERT_DBG_PARAM((hhcd != NULL));
 
 #if defined (USE_HAL_CHECK_PARAM) && (USE_HAL_CHECK_PARAM == 1U)
@@ -463,13 +462,11 @@ hal_status_t HAL_HCD_Start(hal_hcd_handle_t *hhcd)
   }
 #endif /* USE_HAL_CHECK_PARAM */
 
-  /* Check the global state */
   ASSERT_DBG_STATE(hhcd->global_state, HAL_HCD_STATE_IDLE);
+  HAL_CHECK_UPDATE_STATE(hhcd, global_state, HAL_HCD_STATE_IDLE, HAL_HCD_STATE_ACTIVE);
 
-  /* start host */
+  /* Enable port power and start device connection detection */
   (void)hhcd->driver.host_start((uint32_t)hhcd->instance);
-
-  hhcd->global_state = HAL_HCD_STATE_ACTIVE;
 
   return HAL_OK;
 }
@@ -481,7 +478,6 @@ hal_status_t HAL_HCD_Start(hal_hcd_handle_t *hhcd)
   */
 hal_status_t HAL_HCD_Stop(hal_hcd_handle_t *hhcd)
 {
-  /* Check hhcd handler */
   ASSERT_DBG_PARAM((hhcd != NULL));
 
 #if defined (USE_HAL_CHECK_PARAM) && (USE_HAL_CHECK_PARAM == 1U)
@@ -491,8 +487,7 @@ hal_status_t HAL_HCD_Stop(hal_hcd_handle_t *hhcd)
   }
 #endif /* USE_HAL_CHECK_PARAM */
 
-  /* Check the global state */
-  ASSERT_DBG_STATE(hhcd->global_state, HAL_HCD_STATE_ACTIVE);
+  ASSERT_DBG_STATE(hhcd->global_state, HAL_HCD_STATE_ACTIVE | HAL_HCD_STATE_IDLE);
 
   (void)hhcd->driver.host_stop((uint32_t)hhcd->instance);
 
@@ -510,7 +505,6 @@ hal_status_t HAL_HCD_ResetPort(hal_hcd_handle_t *hhcd)
 {
   uint32_t wait_start;
 
-  /* Check hhcd handler */
   ASSERT_DBG_PARAM((hhcd != NULL));
 
 #if defined (USE_HAL_CHECK_PARAM) && (USE_HAL_CHECK_PARAM == 1U)
@@ -520,6 +514,13 @@ hal_status_t HAL_HCD_ResetPort(hal_hcd_handle_t *hhcd)
   }
 #endif /* USE_HAL_CHECK_PARAM */
 
+  ASSERT_DBG_STATE(hhcd->global_state, HAL_HCD_STATE_ACTIVE);
+  ASSERT_DBG_STATE(hhcd->port_state, (hal_hcd_port_state_t)((uint32_t)HAL_HCD_PORT_STATE_DEV_CONNECT
+                                                            | (uint32_t)HAL_HCD_PORT_STATE_DEV_RESET
+                                                            | (uint32_t)HAL_HCD_PORT_STATE_DEV_RUN
+                                                            | (uint32_t)HAL_HCD_PORT_STATE_DEV_SUSPEND
+                                                            | (uint32_t)HAL_HCD_PORT_STATE_DEV_RESUME));
+
   /* Reset the USB Port by inserting an SE0 on the bus */
   (void)hhcd->driver.host_port_reset((uint32_t)hhcd->instance, USB_CORE_PORT_RESET_STS_SET);
 
@@ -527,7 +528,6 @@ hal_status_t HAL_HCD_ResetPort(hal_hcd_handle_t *hhcd)
   wait_start = HAL_GetTick();
   while ((HAL_GetTick() - wait_start) < 100U)
   {
-    /* Busy-wait */
   }
 
   (void)hhcd->driver.host_port_reset((uint32_t)hhcd->instance, USB_CORE_PORT_RESET_STS_CLEAR);
@@ -536,13 +536,9 @@ hal_status_t HAL_HCD_ResetPort(hal_hcd_handle_t *hhcd)
   wait_start = HAL_GetTick();
   while ((HAL_GetTick() - wait_start) < 30U)
   {
-    /* Busy-wait */
   }
 
-  if (hhcd->port_state == HAL_HCD_PORT_STATE_DEV_CONNECT)
-  {
-    hhcd->port_state = HAL_HCD_PORT_STATE_DEV_RESET;
-  }
+  hhcd->port_state = HAL_HCD_PORT_STATE_DEV_RESET;
 
   return HAL_OK;
 }
@@ -556,7 +552,6 @@ hal_status_t HAL_HCD_SuspendPort(hal_hcd_handle_t *hhcd)
 {
   hal_status_t ret = HAL_OK;
 
-  /* Check hhcd handler */
   ASSERT_DBG_PARAM((hhcd != NULL));
 
 #if defined (USE_HAL_CHECK_PARAM) && (USE_HAL_CHECK_PARAM == 1U)
@@ -566,14 +561,16 @@ hal_status_t HAL_HCD_SuspendPort(hal_hcd_handle_t *hhcd)
   }
 #endif /* USE_HAL_CHECK_PARAM */
 
+  ASSERT_DBG_STATE(hhcd->global_state, HAL_HCD_STATE_ACTIVE);
+  ASSERT_DBG_STATE(hhcd->port_state, HAL_HCD_PORT_STATE_DEV_RUN);
+
   if (hhcd->driver.host_port_suspend((uint32_t)hhcd->instance) != USB_CORE_OK)
   {
     ret = HAL_ERROR;
   }
-
-  if (ret != HAL_ERROR)
+  else
   {
-    hhcd->port_state = HAL_HCD_PORT_STATE_DEV_SUSPEND;
+    HAL_CHECK_UPDATE_STATE(hhcd, port_state, HAL_HCD_PORT_STATE_DEV_RUN, HAL_HCD_PORT_STATE_DEV_SUSPEND);
   }
 
   return ret;
@@ -588,7 +585,6 @@ hal_status_t HAL_HCD_ResumePort(hal_hcd_handle_t *hhcd)
 {
   uint32_t wait_start;
 
-  /* Check hhcd handler */
   ASSERT_DBG_PARAM((hhcd != NULL));
 
 #if defined (USE_HAL_CHECK_PARAM) && (USE_HAL_CHECK_PARAM == 1U)
@@ -598,18 +594,20 @@ hal_status_t HAL_HCD_ResumePort(hal_hcd_handle_t *hhcd)
   }
 #endif /* USE_HAL_CHECK_PARAM */
 
+  ASSERT_DBG_STATE(hhcd->global_state, HAL_HCD_STATE_ACTIVE);
+  ASSERT_DBG_STATE(hhcd->port_state, HAL_HCD_PORT_STATE_DEV_SUSPEND);
+
   (void)hhcd->driver.host_port_resume((uint32_t)hhcd->instance, USB_CORE_PORT_RESUME_STS_SET);
 
   /* Wait for resume signaling duration */
   wait_start = HAL_GetTick();
   while ((HAL_GetTick() - wait_start) < 30U)
   {
-    /* Busy-wait */
   }
 
   (void)hhcd->driver.host_port_resume((uint32_t)hhcd->instance, USB_CORE_PORT_RESUME_STS_CLEAR);
 
-  hhcd->port_state = HAL_HCD_PORT_STATE_DEV_RESUME;
+  HAL_CHECK_UPDATE_STATE(hhcd, port_state, HAL_HCD_PORT_STATE_DEV_SUSPEND, HAL_HCD_PORT_STATE_DEV_RESUME);
 
   return HAL_OK;
 }
@@ -621,8 +619,9 @@ hal_status_t HAL_HCD_ResumePort(hal_hcd_handle_t *hhcd)
   */
 uint32_t HAL_HCD_GetCurrentFrame(const hal_hcd_handle_t *hhcd)
 {
-  /* Check hhcd handler */
   ASSERT_DBG_PARAM((hhcd != NULL));
+  ASSERT_DBG_STATE(hhcd->global_state, HAL_HCD_STATE_ACTIVE);
+  ASSERT_DBG_STATE(hhcd->port_state, HAL_HCD_PORT_STATE_DEV_RUN);
 
   return (hhcd->driver.host_get_current_frame((uint32_t)hhcd->instance));
 }
@@ -634,8 +633,9 @@ uint32_t HAL_HCD_GetCurrentFrame(const hal_hcd_handle_t *hhcd)
   */
 hal_hcd_port_speed_t HAL_HCD_GetPortSpeed(const hal_hcd_handle_t *hhcd)
 {
-  /* Check hhcd handler */
   ASSERT_DBG_PARAM((hhcd != NULL));
+  ASSERT_DBG_STATE(hhcd->global_state, HAL_HCD_STATE_ACTIVE);
+  ASSERT_DBG_STATE(hhcd->port_state, HAL_HCD_PORT_STATE_DEV_RUN);
 
   return (hal_hcd_port_speed_t)hhcd->driver.host_get_port_speed((uint32_t)hhcd->instance);
 }
@@ -647,7 +647,6 @@ hal_hcd_port_speed_t HAL_HCD_GetPortSpeed(const hal_hcd_handle_t *hhcd)
   */
 hal_hcd_dma_status_t HAL_HCD_IsEnabledDMA(const hal_hcd_handle_t *hhcd)
 {
-  /* Check hhcd handler */
   ASSERT_DBG_PARAM((hhcd != NULL));
 
   return (hal_hcd_dma_status_t)(hhcd->driver.core_get_dma_status((uint32_t)hhcd->instance));
@@ -662,10 +661,13 @@ hal_hcd_dma_status_t HAL_HCD_IsEnabledDMA(const hal_hcd_handle_t *hhcd)
   */
 uint32_t HAL_HCD_GetChannelTransferCount(const hal_hcd_handle_t *hhcd, hal_hcd_channel_t ch_num)
 {
-  /* Check hhcd handler */
   ASSERT_DBG_PARAM((hhcd != NULL));
-  /* Check channel number */
   ASSERT_DBG_PARAM(((uint8_t)ch_num < USE_HAL_HCD_MAX_CHANNEL_NB));
+  ASSERT_DBG_STATE(hhcd->global_state, HAL_HCD_STATE_ACTIVE);
+  ASSERT_DBG_STATE(hhcd->port_state, HAL_HCD_PORT_STATE_DEV_RUN);
+  ASSERT_DBG_STATE(hhcd->channel[ch_num].state,
+                   (hal_hcd_channel_state_t)((uint32_t)HAL_HCD_CHANNEL_STATE_HALTED
+                                             | (uint32_t)HAL_HCD_CHANNEL_STATE_XFRC));
 
   return hhcd->channel[ch_num].core_ch.xfer_count;
 }
@@ -681,10 +683,7 @@ hal_status_t HAL_HCD_HaltChannel(const hal_hcd_handle_t *hhcd, hal_hcd_channel_t
 {
   hal_status_t status = HAL_OK;
 
-  /* Check hhcd handler */
   ASSERT_DBG_PARAM((hhcd != NULL));
-
-  /* Check channel number */
   ASSERT_DBG_PARAM(((uint8_t)ch_num < USE_HAL_HCD_MAX_CHANNEL_NB));
 
 #if defined (USE_HAL_CHECK_PARAM) && (USE_HAL_CHECK_PARAM == 1U)
@@ -693,6 +692,8 @@ hal_status_t HAL_HCD_HaltChannel(const hal_hcd_handle_t *hhcd, hal_hcd_channel_t
     return HAL_INVALID_PARAM;
   }
 #endif /* USE_HAL_CHECK_PARAM */
+
+  ASSERT_DBG_STATE(hhcd->global_state, HAL_HCD_STATE_ACTIVE);
 
   hhcd->driver.host_channel_halt((uint32_t)hhcd->instance, &hhcd->channel[ch_num].core_ch);
 
@@ -712,13 +713,9 @@ hal_status_t HAL_HCD_SetConfigChannel(hal_hcd_handle_t *hhcd, hal_hcd_channel_t 
 {
   uint8_t ep_num;
 
-  /* Check hhcd handler */
   ASSERT_DBG_PARAM((hhcd != NULL));
-  /* Check channel config */
   ASSERT_DBG_PARAM((p_channel_config != NULL));
-  /* Check channel number */
   ASSERT_DBG_PARAM(((uint8_t)ch_num < USE_HAL_HCD_MAX_CHANNEL_NB));
-  /* Check EP Type */
   ASSERT_DBG_PARAM((HAL_HCD_CHECK_EP_TYPE(p_channel_config->ep_type) != 0U));
 
 #if defined (USE_HAL_CHECK_PARAM) && (USE_HAL_CHECK_PARAM == 1U)
@@ -730,9 +727,9 @@ hal_status_t HAL_HCD_SetConfigChannel(hal_hcd_handle_t *hhcd, hal_hcd_channel_t 
   }
 #endif /* USE_HAL_CHECK_PARAM */
 
-  ep_num = p_channel_config->ep_address & 0xFU;
+  ASSERT_DBG_STATE(hhcd->global_state, HAL_HCD_STATE_ACTIVE);
 
-  hhcd->channel[ch_num].core_ch.do_ping = 0U;
+  ep_num = p_channel_config->ep_address & 0xFU;
   hhcd->channel[ch_num].core_ch.dev_addr = p_channel_config->device_address;
   hhcd->channel[ch_num].core_ch.ch_num = (usb_core_channel_t)ch_num;
   hhcd->channel[ch_num].core_ch.ep_type = (usb_core_ep_type_t)p_channel_config->ep_type;
@@ -751,6 +748,7 @@ hal_status_t HAL_HCD_SetConfigChannel(hal_hcd_handle_t *hhcd, hal_hcd_channel_t 
 
   hhcd->channel[ch_num].core_ch.speed = (usb_core_device_speed_t)p_channel_config->device_speed;
   hhcd->channel[ch_num].core_ch.max_packet = p_channel_config->ep_mps;
+  hhcd->channel[ch_num].state = HAL_HCD_CHANNEL_STATE_IDLE;
 
   if (hhcd->driver.host_channel_init((uint32_t)hhcd->instance, &hhcd->channel[ch_num].core_ch) != USB_CORE_OK)
   {
@@ -761,7 +759,7 @@ hal_status_t HAL_HCD_SetConfigChannel(hal_hcd_handle_t *hhcd, hal_hcd_channel_t 
 }
 
 /**
-  * @brief  Submit a new URB transfer request for processing.
+  * @brief  Submit a new URB (USB Request Block) transfer request for processing.
   * @param  hhcd HCD handle
   * @param  ch_num Channel number.
   *         This parameter can be a value from 1 to 15
@@ -773,22 +771,29 @@ hal_status_t HAL_HCD_RequestChannelTransfer(hal_hcd_handle_t *hhcd, hal_hcd_chan
 {
   hal_status_t ret = HAL_OK;
 
-  /* Check hhcd handler */
-  ASSERT_DBG_PARAM((hhcd != NULL));
-  /* Check channel number */
-  ASSERT_DBG_PARAM(((uint8_t)ch_num < USE_HAL_HCD_MAX_CHANNEL_NB));
+  ASSERT_DBG_PARAM(hhcd != NULL);
+  ASSERT_DBG_PARAM(p_channel_transfer_req != NULL);
+  ASSERT_DBG_PARAM((uint8_t)ch_num < USE_HAL_HCD_MAX_CHANNEL_NB);
 
 #if defined (USE_HAL_CHECK_PARAM) && (USE_HAL_CHECK_PARAM == 1U)
-  if ((hhcd == NULL) || ((uint8_t)ch_num >= USE_HAL_HCD_MAX_CHANNEL_NB))
+  if ((hhcd == NULL) || (p_channel_transfer_req == NULL) || ((uint8_t)ch_num >= USE_HAL_HCD_MAX_CHANNEL_NB))
   {
     return HAL_INVALID_PARAM;
   }
 #endif /* USE_HAL_CHECK_PARAM */
 
+  ASSERT_DBG_STATE(hhcd->global_state, HAL_HCD_STATE_ACTIVE);
+  ASSERT_DBG_STATE(hhcd->channel[ch_num].state,
+                   (hal_hcd_channel_state_t)((uint32_t)HAL_HCD_CHANNEL_STATE_IDLE
+                                             | (uint32_t)HAL_HCD_CHANNEL_STATE_XFRC
+                                             | (uint32_t)HAL_HCD_CHANNEL_STATE_HALTED
+                                             | (uint32_t)HAL_HCD_CHANNEL_STATE_NAK
+                                             | (uint32_t)HAL_HCD_CHANNEL_STATE_STALL
+                                             | (uint32_t)HAL_HCD_CHANNEL_STATE_XACTERR));
+
   if (p_channel_transfer_req->token_type == 0U)
   {
     hhcd->channel[ch_num].core_ch.data_pid = USB_CORE_CH_PID_SETUP;
-    hhcd->channel[ch_num].core_ch.do_ping = p_channel_transfer_req->do_ping;
   }
   else
   {
@@ -809,15 +814,12 @@ hal_status_t HAL_HCD_RequestChannelTransfer(hal_hcd_handle_t *hhcd, hal_hcd_chan
             hhcd->channel[ch_num].toggle_out = 1U;
           }
 
-          /* Set the Data Toggle bit as per the Flag */
           if (hhcd->channel[ch_num].toggle_out == 0U)
           {
-            /* Put the PID 0 */
             hhcd->channel[ch_num].core_ch.data_pid = USB_CORE_CH_PID_DATA0;
           }
           else
           {
-            /* Put the PID 1 */
             hhcd->channel[ch_num].core_ch.data_pid = USB_CORE_CH_PID_DATA1;
           }
         }
@@ -827,15 +829,12 @@ hal_status_t HAL_HCD_RequestChannelTransfer(hal_hcd_handle_t *hhcd, hal_hcd_chan
     case HAL_HCD_EP_TYPE_BULK:
       if (p_channel_transfer_req->ch_dir == HAL_HCD_CH_OUT_DIR)
       {
-        /* Set the Data Toggle bit as per the Flag */
         if (hhcd->channel[ch_num].toggle_out == 0U)
         {
-          /* Put the PID 0 */
           hhcd->channel[ch_num].core_ch.data_pid = USB_CORE_CH_PID_DATA0;
         }
         else
         {
-          /* Put the PID 1 */
           hhcd->channel[ch_num].core_ch.data_pid = USB_CORE_CH_PID_DATA1;
         }
       }
@@ -855,15 +854,12 @@ hal_status_t HAL_HCD_RequestChannelTransfer(hal_hcd_handle_t *hhcd, hal_hcd_chan
     case HAL_HCD_EP_TYPE_INTR:
       if (p_channel_transfer_req->ch_dir == HAL_HCD_CH_OUT_DIR)
       {
-        /* Set the Data Toggle bit as per the Flag */
         if (hhcd->channel[ch_num].toggle_out == 0U)
         {
-          /* Put the PID 0 */
           hhcd->channel[ch_num].core_ch.data_pid = USB_CORE_CH_PID_DATA0;
         }
         else
         {
-          /* Put the PID 1 */
           hhcd->channel[ch_num].core_ch.data_pid = USB_CORE_CH_PID_DATA1;
         }
       }
@@ -897,7 +893,7 @@ hal_status_t HAL_HCD_RequestChannelTransfer(hal_hcd_handle_t *hhcd, hal_hcd_chan
   hhcd->channel[ch_num].core_ch.ep_type = (usb_core_ep_type_t)p_channel_transfer_req->ep_type;
   hhcd->channel[ch_num].core_ch.xfer_count = 0U;
   hhcd->channel[ch_num].core_ch.ch_num = (usb_core_channel_t)ch_num;
-  hhcd->channel[ch_num].state = HAL_HCD_CHANNEL_STATE_IDLE;
+  hhcd->channel[ch_num].state = HAL_HCD_CHANNEL_STATE_XFR;
 
   (void)hhcd->driver.host_channel_start((uint32_t)hhcd->instance, &hhcd->channel[ch_num].core_ch);
 
@@ -908,7 +904,7 @@ hal_status_t HAL_HCD_RequestChannelTransfer(hal_hcd_handle_t *hhcd, hal_hcd_chan
   * @brief  Set host channel hub information.
   * @param  hhcd HCD handle
   * @param  ch_num Channel number.
-  *         This parameter can be a value from 1 to 8
+  *         This parameter can be a value from 1 to 15
   * @param  hub_addr Hub address
   * @param  port_nbr Hub port number
   * @retval HAL status
@@ -916,10 +912,7 @@ hal_status_t HAL_HCD_RequestChannelTransfer(hal_hcd_handle_t *hhcd, hal_hcd_chan
 hal_status_t HAL_HCD_SetChannelHubInfo(hal_hcd_handle_t *hhcd, hal_hcd_channel_t ch_num,
                                        uint8_t hub_addr, uint8_t port_nbr)
 {
-  /* Check hhcd handler */
   ASSERT_DBG_PARAM((hhcd != NULL));
-
-  /* Check channel number */
   ASSERT_DBG_PARAM(((uint8_t)ch_num < USE_HAL_HCD_MAX_CHANNEL_NB));
 
 #if defined (USE_HAL_CHECK_PARAM) && (USE_HAL_CHECK_PARAM == 1U)
@@ -928,6 +921,8 @@ hal_status_t HAL_HCD_SetChannelHubInfo(hal_hcd_handle_t *hhcd, hal_hcd_channel_t
     return HAL_INVALID_PARAM;
   }
 #endif /* USE_HAL_CHECK_PARAM */
+
+  ASSERT_DBG_STATE(hhcd->global_state, HAL_HCD_STATE_ACTIVE);
 
 
   hhcd->channel[ch_num].core_ch.hub_addr = hub_addr;
@@ -940,15 +935,12 @@ hal_status_t HAL_HCD_SetChannelHubInfo(hal_hcd_handle_t *hhcd, hal_hcd_channel_t
   * @brief  Clear host channel hub information.
   * @param  hhcd HCD handle
   * @param  ch_num Channel number.
-  *         This parameter can be a value from 1 to 8
+  *         This parameter can be a value from 1 to 15
   * @retval HAL status
   */
 hal_status_t HAL_HCD_ClearChannelHubInfo(hal_hcd_handle_t *hhcd, hal_hcd_channel_t ch_num)
 {
-  /* Check hhcd handler */
   ASSERT_DBG_PARAM((hhcd != NULL));
-
-  /* Check channel number */
   ASSERT_DBG_PARAM(((uint8_t)ch_num < USE_HAL_HCD_MAX_CHANNEL_NB));
 
 #if defined (USE_HAL_CHECK_PARAM) && (USE_HAL_CHECK_PARAM == 1U)
@@ -958,13 +950,15 @@ hal_status_t HAL_HCD_ClearChannelHubInfo(hal_hcd_handle_t *hhcd, hal_hcd_channel
   }
 #endif /* USE_HAL_CHECK_PARAM */
 
+  ASSERT_DBG_STATE(hhcd->global_state, HAL_HCD_STATE_ACTIVE);
+
   hhcd->channel[ch_num].core_ch.hub_addr = 0U;
   hhcd->channel[ch_num].core_ch.hub_port_nbr = 0U;
 
   return HAL_OK;
 }
 
-#if defined (USB_DRD_FS)
+
 /**
   * @brief  Close host channel.
   * @param  hhcd HCD handle
@@ -974,10 +968,7 @@ hal_status_t HAL_HCD_ClearChannelHubInfo(hal_hcd_handle_t *hhcd, hal_hcd_channel
   */
 hal_status_t HAL_HCD_CloseChannel(hal_hcd_handle_t *hhcd, hal_hcd_channel_t ch_num)
 {
-  /* Check hhcd handler */
   ASSERT_DBG_PARAM((hhcd != NULL));
-
-  /* Check channel number */
   ASSERT_DBG_PARAM(((uint8_t)ch_num < USE_HAL_HCD_MAX_CHANNEL_NB));
 
 #if defined (USE_HAL_CHECK_PARAM) && (USE_HAL_CHECK_PARAM == 1U)
@@ -987,6 +978,8 @@ hal_status_t HAL_HCD_CloseChannel(hal_hcd_handle_t *hhcd, hal_hcd_channel_t ch_n
   }
 #endif /* USE_HAL_CHECK_PARAM */
 
+  ASSERT_DBG_STATE(hhcd->global_state, HAL_HCD_STATE_ACTIVE);
+
   if (hhcd->driver.host_channel_close((uint32_t)hhcd->instance, &hhcd->channel[ch_num].core_ch) != USB_CORE_OK)
   {
     return HAL_ERROR;
@@ -994,9 +987,15 @@ hal_status_t HAL_HCD_CloseChannel(hal_hcd_handle_t *hhcd, hal_hcd_channel_t ch_n
 
   hhcd->channel[ch_num].state = HAL_HCD_CHANNEL_STATE_HALTED;
 
+#if defined (USE_HAL_HCD_REGISTER_CALLBACKS) && (USE_HAL_HCD_REGISTER_CALLBACKS == 1U)
+  hhcd->p_ch_abort_transfer_cb(hhcd, ch_num);
+#else
+  HAL_HCD_ChannelAbortTransferCallback(hhcd, ch_num);
+#endif /* USE_HAL_HCD_REGISTER_CALLBACKS */
+
   return HAL_OK;
 }
-#endif /* defined (USB_DRD_FS) */
+
 
 /**
   * @}
@@ -1013,30 +1012,27 @@ hal_status_t HAL_HCD_CloseChannel(hal_hcd_handle_t *hhcd, hal_hcd_channel_t ch_n
   */
 hal_hcd_state_t HAL_HCD_GetState(const hal_hcd_handle_t *hhcd)
 {
-  /* Check hhcd handler */
   ASSERT_DBG_PARAM((hhcd != NULL));
 
   return hhcd->global_state;
 }
 
 /**
-  * @brief  Return  URB state for a channel.
+  * @brief  Return  URB (USB Request Block) state for a channel.
   * @param  hhcd HCD handle
   * @param  ch_num Channel number.
   *         This parameter can be a value from 1 to 15
   * @retval URB state.
   *          This parameter can be one of these values:
-  *            HAL_HCD_CHANNEL_URB_STATE_IDLE/
-  *            HAL_HCD_CHANNEL_URB_STATE_DONE/
-  *            HAL_HCD_CHANNEL_URB_STATE_NOTREADY/
-  *            HAL_HCD_CHANNEL_URB_STATE_ERROR/
+  *            HAL_HCD_CHANNEL_URB_STATE_IDLE
+  *            HAL_HCD_CHANNEL_URB_STATE_DONE
+  *            HAL_HCD_CHANNEL_URB_STATE_NOTREADY
+  *            HAL_HCD_CHANNEL_URB_STATE_ERROR
   *            HAL_HCD_CHANNEL_URB_STATE_STALL
   */
 hal_hcd_channel_urb_state_t HAL_HCD_GetChannelURBState(const hal_hcd_handle_t *hhcd, hal_hcd_channel_t ch_num)
 {
-  /* Check hhcd handler */
   ASSERT_DBG_PARAM((hhcd != NULL));
-  /* Check channel number */
   ASSERT_DBG_PARAM(((uint8_t)ch_num < USE_HAL_HCD_MAX_CHANNEL_NB));
 
   return hhcd->channel[ch_num].urb_state;
@@ -1053,18 +1049,14 @@ hal_hcd_channel_urb_state_t HAL_HCD_GetChannelURBState(const hal_hcd_handle_t *h
   *            HAL_HCD_CHANNEL_STATE_IDLE
   *            HAL_HCD_CHANNEL_STATE_XFRC
   *            HAL_HCD_CHANNEL_STATE_HALTED
-  *            HAL_HCD_CHANNEL_STATE_NYET
   *            HAL_HCD_CHANNEL_STATE_NAK
   *            HAL_HCD_CHANNEL_STATE_STALL
+  *            HAL_HCD_CHANNEL_STATE_XFR
   *            HAL_HCD_CHANNEL_STATE_XACTERR
-  *            HAL_HCD_CHANNEL_STATE_BBLERR
-  *            HAL_HCD_CHANNEL_STATE_DATATGLERR
   */
 hal_hcd_channel_state_t HAL_HCD_GetChannelState(const hal_hcd_handle_t *hhcd, hal_hcd_channel_t ch_num)
 {
-  /* Check hhcd handler */
   ASSERT_DBG_PARAM((hhcd != NULL));
-  /* Check channel number */
   ASSERT_DBG_PARAM(((uint8_t)ch_num < USE_HAL_HCD_MAX_CHANNEL_NB));
 
   return hhcd->channel[ch_num].state;
@@ -1083,18 +1075,14 @@ hal_hcd_channel_state_t HAL_HCD_GetChannelState(const hal_hcd_handle_t *hhcd, ha
   */
 void HAL_HCD_IRQHandler(hal_hcd_handle_t *hhcd)
 {
-  /* Check hhcd handler */
   ASSERT_DBG_PARAM((hhcd != NULL));
   ASSERT_DBG_PARAM((hhcd->p_irq_handler != NULL));
 
   hhcd->current_mode = hhcd->driver.core_get_mode((uint32_t)hhcd->instance);
 
   hhcd->p_irq_handler(hhcd);
-
-  return;
 }
 
-#if defined (USB_DRD_FS)
 
 /**
   * @brief  Handle HCD interrupt request.
@@ -1107,19 +1095,17 @@ void HAL_HCD_DRD_IRQHandler(hal_hcd_handle_t *hhcd)
   uint32_t ch_dir;
   uint32_t phy_ch_num;
 
-  /* Check hhcd handler */
   ASSERT_DBG_PARAM((hhcd != NULL));
 
-  istr_reg = USB_DRD_ReadInterrupts((uint32_t)hhcd->instance);
   p_usb = USB_DRD_GET_INSTANCE((uint32_t)hhcd->instance);
+  istr_reg = USB_DRD_ReadInterrupts((uint32_t)p_usb);
 
   /* Port Change Detected (Connection/Disconnection) */
   if ((istr_reg & USB_ISTR_DCON) == USB_ISTR_DCON)
   {
-    /* Clear Flag */
-    USB_DRD_ClearInterrupts((uint32_t)hhcd->instance, USB_ISTR_DCON);
 
-    /* Call Port IRQHandler */
+    USB_DRD_ClearInterrupts((uint32_t)p_usb, USB_ISTR_DCON);
+
     HCD_DRD_Port_IRQHandler(hhcd);
 
     return;
@@ -1157,7 +1143,7 @@ void HAL_HCD_DRD_IRQHandler(hal_hcd_handle_t *hhcd)
       p_usb->CNTR |= USB_CNTR_L2RES;
 
       /* Clear the wake-up flag */
-      USB_DRD_ClearInterrupts((uint32_t)hhcd->instance, USB_ISTR_WKUP);
+      USB_DRD_ClearInterrupts((uint32_t)p_usb, USB_ISTR_WKUP);
 
       /* Update the USB Software state machine */
 #if defined (USE_HAL_HCD_REGISTER_CALLBACKS) && (USE_HAL_HCD_REGISTER_CALLBACKS == 1U)
@@ -1165,12 +1151,13 @@ void HAL_HCD_DRD_IRQHandler(hal_hcd_handle_t *hhcd)
 #else
       HAL_HCD_PortResumeCallback(hhcd);
 #endif /* USE_HAL_HCD_REGISTER_CALLBACKS */
-      hhcd->port_state = HAL_HCD_PORT_STATE_DEV_RESUME;
+
+      hhcd->port_state = HAL_HCD_PORT_STATE_DEV_RUN;
     }
     else
     {
       /* Clear the wake-up flag */
-      USB_DRD_ClearInterrupts((uint32_t)hhcd->instance, USB_ISTR_WKUP);
+      USB_DRD_ClearInterrupts((uint32_t)p_usb, USB_ISTR_WKUP);
     }
 
     return;
@@ -1179,7 +1166,7 @@ void HAL_HCD_DRD_IRQHandler(hal_hcd_handle_t *hhcd)
   /* Global Error Flag Detected */
   if ((istr_reg & USB_ISTR_ERR) == USB_ISTR_ERR)
   {
-    USB_DRD_ClearInterrupts((uint32_t)hhcd->instance, USB_ISTR_ERR);
+    USB_DRD_ClearInterrupts((uint32_t)p_usb, USB_ISTR_ERR);
 
 #if defined (USE_HAL_HCD_REGISTER_CALLBACKS) && (USE_HAL_HCD_REGISTER_CALLBACKS == 1U)
     hhcd->p_error_cb(hhcd);
@@ -1193,7 +1180,7 @@ void HAL_HCD_DRD_IRQHandler(hal_hcd_handle_t *hhcd)
   /* PMA Overrun detected */
   if ((istr_reg & USB_ISTR_PMAOVR) == USB_ISTR_PMAOVR)
   {
-    USB_DRD_ClearInterrupts((uint32_t)hhcd->instance, USB_ISTR_PMAOVR);
+    USB_DRD_ClearInterrupts((uint32_t)p_usb, USB_ISTR_PMAOVR);
 
 #if defined (USE_HAL_HCD_REGISTER_CALLBACKS) && (USE_HAL_HCD_REGISTER_CALLBACKS == 1U)
     hhcd->p_error_cb(hhcd);
@@ -1204,17 +1191,16 @@ void HAL_HCD_DRD_IRQHandler(hal_hcd_handle_t *hhcd)
     return;
   }
 
-  /* Suspend Detected */
+  /* USB BUS suspend Detected */
   if ((istr_reg & USB_ISTR_SUSP) == USB_ISTR_SUSP)
   {
-    /* Set HAL Port State to Suspend */
     hhcd->port_state = HAL_HCD_PORT_STATE_DEV_SUSPEND;
 
     /* Force low-power mode in the macrocell */
     p_usb->CNTR |= USB_CNTR_SUSPEN;
 
     /* Clear the ISTR bit after setting CNTR_FSUSP */
-    USB_DRD_ClearInterrupts((uint32_t)hhcd->instance, USB_ISTR_SUSP);
+    USB_DRD_ClearInterrupts((uint32_t)p_usb, USB_ISTR_SUSP);
 
     /* Call suspend Callback */
 #if defined (USE_HAL_HCD_REGISTER_CALLBACKS) && (USE_HAL_HCD_REGISTER_CALLBACKS == 1U)
@@ -1235,14 +1221,10 @@ void HAL_HCD_DRD_IRQHandler(hal_hcd_handle_t *hhcd)
     HAL_HCD_SofCallback(hhcd);
 #endif /* USE_HAL_HCD_REGISTER_CALLBACKS */
 
-    USB_DRD_ClearInterrupts((uint32_t)hhcd->instance, USB_ISTR_SOF);
+    USB_DRD_ClearInterrupts((uint32_t)p_usb, USB_ISTR_SOF);
 
-    /* First SOF detected after USB_RESET, set port state to run */
     if (hhcd->port_state == HAL_HCD_PORT_STATE_DEV_RESET)
     {
-      /* HAL State */
-      hhcd->port_state = HAL_HCD_PORT_STATE_DEV_RUN;
-
 #if defined (USE_HAL_HCD_REGISTER_CALLBACKS) && (USE_HAL_HCD_REGISTER_CALLBACKS == 1U)
       hhcd->p_port_enable_cb(hhcd);
 #else
@@ -1250,10 +1232,11 @@ void HAL_HCD_DRD_IRQHandler(hal_hcd_handle_t *hhcd)
 #endif /* USE_HAL_HCD_REGISTER_CALLBACKS */
     }
 
+    hhcd->port_state = HAL_HCD_PORT_STATE_DEV_RUN;
+
     return;
   }
 }
-#endif /* defined (USB_DRD_FS) */
 
 /**
   * @}
@@ -1272,7 +1255,7 @@ __WEAK void HAL_HCD_SofCallback(hal_hcd_handle_t *hhcd)
   /* Prevent unused argument(s) compilation warning */
   STM32_UNUSED(hhcd);
 
-  /* WARNING : This function could not be modified, when the callback is needed,
+  /* WARNING : This function must not be modified, when the callback is needed,
             the HAL_HCD_SofCallback could be implemented in the user file
    */
 }
@@ -1286,7 +1269,7 @@ __WEAK void HAL_HCD_PortConnectCallback(hal_hcd_handle_t *hhcd)
   /* Prevent unused argument(s) compilation warning */
   STM32_UNUSED(hhcd);
 
-  /* WARNING : This function could not be modified, when the callback is needed,
+  /* WARNING : This function must not be modified, when the callback is needed,
             the HAL_HCD_PortConnectCallback could be implemented in the user file
    */
 }
@@ -1300,7 +1283,7 @@ __WEAK void HAL_HCD_PortDisconnectCallback(hal_hcd_handle_t *hhcd)
   /* Prevent unused argument(s) compilation warning */
   STM32_UNUSED(hhcd);
 
-  /* WARNING : This function could not be modified, when the callback is needed,
+  /* WARNING : This function must not be modified, when the callback is needed,
             the HAL_HCD_PortDisconnectCallback could be implemented in the user file
    */
 }
@@ -1314,7 +1297,7 @@ __WEAK void HAL_HCD_PortEnabledCallback(hal_hcd_handle_t *hhcd)
   /* Prevent unused argument(s) compilation warning */
   STM32_UNUSED(hhcd);
 
-  /* WARNING : This function could not be modified, when the callback is needed,
+  /* WARNING : This function must not be modified, when the callback is needed,
             the HAL_HCD_PortEnabledCallback could be implemented in the user file
    */
 }
@@ -1328,7 +1311,7 @@ __WEAK void HAL_HCD_PortDisabledCallback(hal_hcd_handle_t *hhcd)
   /* Prevent unused argument(s) compilation warning */
   STM32_UNUSED(hhcd);
 
-  /* WARNING : This function could not be modified, when the callback is needed,
+  /* WARNING : This function must not be modified, when the callback is needed,
             the HAL_HCD_PortDisabledCallback could be implemented in the user file
    */
 }
@@ -1342,7 +1325,7 @@ __WEAK void HAL_HCD_PortSuspendCallback(hal_hcd_handle_t *hhcd)
   /* Prevent unused argument(s) compilation warning */
   STM32_UNUSED(hhcd);
 
-  /* WARNING : This function could not be modified, when the callback is needed,
+  /* WARNING : This function must not be modified, when the callback is needed,
             the HAL_HCD_PortSuspendCallback could be implemented in the user file
   */
 
@@ -1357,13 +1340,13 @@ __WEAK void HAL_HCD_PortResumeCallback(hal_hcd_handle_t *hhcd)
   /* Prevent unused argument(s) compilation warning */
   STM32_UNUSED(hhcd);
 
-  /* WARNING : This function could not be modified, when the callback is needed,
+  /* WARNING : This function must not be modified, when the callback is needed,
             the HAL_HCD_PortResumeCallback could be implemented in the user file
   */
 }
 
 /**
-  * @brief  Notify URB state change callback.
+  * @brief  Notify URB (USB Request Block) state change callback.
   * @param  hhcd HCD handle
   * @param  ch_num Channel number.
   *         This parameter can be a value from 1 to 15
@@ -1383,7 +1366,7 @@ __WEAK void HAL_HCD_ChannelNotifyURBChangeCallback(hal_hcd_handle_t *hhcd, hal_h
   STM32_UNUSED(ch_num);
   STM32_UNUSED(urb_state);
 
-  /* WARNING : This function could not be modified, when the callback is needed,
+  /* WARNING : This function must not be modified, when the callback is needed,
             the HAL_HCD_ChannelNotifyURBChangeCallback could be implemented in the user file
    */
 }
@@ -1397,8 +1380,25 @@ __WEAK void HAL_HCD_ErrorCallback(hal_hcd_handle_t *hhcd)
   /* Prevent unused argument(s) compilation warning */
   STM32_UNUSED(hhcd);
 
-  /* WARNING : This function could not be modified, when the callback is needed,
+  /* WARNING : This function must not be modified, when the callback is needed,
             the HAL_HCD_ErrorCallback could be implemented in the user file
+   */
+}
+
+/**
+  * @brief  HCD Abort Transfer callback.
+  * @param  hhcd HCD handle
+  * @param  ch_num Channel number.
+  *         This parameter can be a value from 1 to 15
+  */
+__WEAK void HAL_HCD_ChannelAbortTransferCallback(hal_hcd_handle_t *hhcd, hal_hcd_channel_t ch_num)
+{
+  /* Prevent unused argument(s) compilation warning */
+  STM32_UNUSED(hhcd);
+  STM32_UNUSED(ch_num);
+
+  /* WARNING : This function must not be modified, when the callback is needed,
+            the HAL_HCD_ChannelAbortTransferCallback could be implemented in the user file
    */
 }
 
@@ -1587,7 +1587,7 @@ hal_status_t HAL_HCD_RegisterPortResumeCallback(hal_hcd_handle_t *hhcd, hal_hcd_
 
 
 /**
-  * @brief  Register USB HCD Host Channel Notify URB Change Callback
+  * @brief  Register USB HCD Host Channel Notify URB (USB Request Block) Change Callback
   *         To be used instead of the weak HAL_HCD_ChannelNotifyURBChangeCallback() predefined callback.
   * @param  hhcd HCD handle
   * @param  p_callback pointer to the USB HCD Host Channel Notify URB Change Callback function
@@ -1637,6 +1637,31 @@ hal_status_t HAL_HCD_RegisterErrorCallback(hal_hcd_handle_t *hhcd, hal_hcd_cb_t 
   return HAL_OK;
 }
 
+/**
+  * @brief  Register USB HCD Abort Transfer Callback
+  *         To be used instead of the weak HAL_HCD_ChannelAbortTransferCallback() predefined callback.
+  * @param  hhcd HCD handle
+  * @param  p_callback pointer to the USB HCD Channel Abort Transfer Callback function
+  * @retval HAL status
+  */
+hal_status_t HAL_HCD_RegisterChannelAbortTransferCallback(hal_hcd_handle_t *hhcd, hal_hcd_ch_cb_t p_callback)
+{
+  /* Check hhcd handler */
+  ASSERT_DBG_PARAM((hhcd != NULL));
+  ASSERT_DBG_PARAM((p_callback != NULL));
+
+#if defined (USE_HAL_CHECK_PARAM) && (USE_HAL_CHECK_PARAM == 1U)
+  if ((hhcd == NULL) || (p_callback == NULL))
+  {
+    return HAL_INVALID_PARAM;
+  }
+#endif /* USE_HAL_CHECK_PARAM */
+
+  hhcd->p_ch_abort_transfer_cb = p_callback;
+
+  return HAL_OK;
+}
+
 #endif /* USE_HAL_HCD_REGISTER_CALLBACKS */
 
 /**
@@ -1662,22 +1687,26 @@ hal_status_t HAL_HCD_RegisterErrorCallback(hal_hcd_handle_t *hhcd, hal_hcd_cb_t 
 static void HCD_DRD_CHANNEL_OUT_BulkDb(hal_hcd_handle_t *hhcd, usb_core_channel_t ch_num,
                                        usb_core_phy_chep_t phy_ch_num, uint32_t reg_value)
 {
-  uint16_t data_xfr;
-  uint16_t len;
+  const usb_drd_global_t *p_usb;
+  uint16_t data_xfr_bytes;
+  uint16_t len_bytes;
 
   /* Check hhcd handler */
   ASSERT_DBG_PARAM((hhcd != NULL));
+
   /* Check channel number */
   ASSERT_DBG_PARAM(((uint8_t)ch_num < USE_HAL_HCD_MAX_CHANNEL_NB));
 
-  /* Send Buffer0 */
-  if ((reg_value & USB_CH_DTOG_TX) != 0U)
-  {
-    data_xfr = (uint16_t)(((USB_DRD_PMA_BUFF + (uint32_t)phy_ch_num)->TXBD & 0x03FF0000U) >> 16U);
+  p_usb = USB_DRD_GET_INSTANCE((uint32_t)hhcd->instance);
 
-    if (hhcd->channel[ch_num].core_ch.xfer_length >= data_xfr)
+  /* Send Buffer0 */
+  if ((reg_value & USB_CH_DTOGTX) != 0U)
+  {
+    data_xfr_bytes = (uint16_t)(((USB_DRD_PMA_BUFF + (uint32_t)phy_ch_num)->TXBD & 0x03FF0000U) >> 16U);
+
+    if (hhcd->channel[ch_num].core_ch.xfer_length >= data_xfr_bytes)
     {
-      hhcd->channel[ch_num].core_ch.xfer_length -= data_xfr;
+      hhcd->channel[ch_num].core_ch.xfer_length -= data_xfr_bytes;
     }
     else
     {
@@ -1688,113 +1717,109 @@ static void HCD_DRD_CHANNEL_OUT_BulkDb(hal_hcd_handle_t *hhcd, usb_core_channel_
     if (hhcd->channel[ch_num].core_ch.xfer_length != 0U)
     {
       /* Manage multiple Xfer */
-      hhcd->channel[ch_num].core_ch.xfer_count += data_xfr;
+      hhcd->channel[ch_num].core_ch.xfer_count += data_xfr_bytes;
 
       /* Check if we need to free user buffer */
-      if ((reg_value & USB_CH_DTOG_RX) != 0U)
+      if ((reg_value & USB_CH_DTOGRX) != 0U)
       {
         /* Toggle SwBuff */
-        USB_DRD_HCD_CLEAR_TX_DTOG((uint32_t)hhcd->instance, phy_ch_num);
-        USB_DRD_HCD_CLEAR_RX_DTOG((uint32_t)hhcd->instance, phy_ch_num);
-        USB_DRD_HCD_TX_DTOG((uint32_t)hhcd->instance, phy_ch_num);
+        USB_DRD_HCD_CLEAR_TX_DTOG((uint32_t)p_usb, phy_ch_num);
+        USB_DRD_HCD_CLEAR_RX_DTOG((uint32_t)p_usb, phy_ch_num);
+        USB_DRD_HCD_TX_DTOG((uint32_t)p_usb, phy_ch_num);
       }
 
       if (hhcd->channel[ch_num].core_ch.xfer_size > 0U) /* Still data to fill in the buffer */
       {
-        hhcd->channel[ch_num].core_ch.p_xfer_buffer += data_xfr;
+        hhcd->channel[ch_num].core_ch.p_xfer_buffer += data_xfr_bytes;
 
         /* Calculate Length of new buffer to fill */
         if (hhcd->channel[ch_num].core_ch.xfer_size > hhcd->channel[ch_num].core_ch.max_packet)
         {
-          len = (uint16_t)hhcd->channel[ch_num].core_ch.max_packet;
-          hhcd->channel[ch_num].core_ch.xfer_size -= len;
+          len_bytes = (uint16_t)hhcd->channel[ch_num].core_ch.max_packet;
+          hhcd->channel[ch_num].core_ch.xfer_size -= len_bytes;
         }
         else
         {
-          len = (uint16_t)hhcd->channel[ch_num].core_ch.xfer_size;
+          len_bytes = (uint16_t)hhcd->channel[ch_num].core_ch.xfer_size;
           hhcd->channel[ch_num].core_ch.xfer_size = 0U; /* end of fill buffer */
         }
 
         /* Write remaining data to Buffer0 */
-        USB_DRD_HCD_SET_CH_DBUF0_CNT((uint32_t)hhcd->instance, phy_ch_num, USB_CORE_EP_IN_DIR, (uint16_t)len);
-        USB_DRD_WritePMA((uint32_t)hhcd->instance, hhcd->channel[ch_num].core_ch.p_xfer_buffer,
-                         hhcd->channel[ch_num].core_ch.pma_addr0, (uint16_t)len);
+        USB_DRD_HCD_SET_CH_DBUF0_CNT((uint32_t)p_usb, phy_ch_num, USB_CORE_EP_IN_DIR, (uint16_t)len_bytes);
+        USB_DRD_WritePMA((uint32_t)p_usb, hhcd->channel[ch_num].core_ch.p_xfer_buffer,
+                         hhcd->channel[ch_num].core_ch.pma_addr0, (uint16_t)len_bytes);
       }
       /* Start a new transfer */
-      USB_DRD_HCD_SET_CH_TX_STATUS((uint32_t)hhcd->instance, phy_ch_num, USB_CH_TX_VALID);
+      USB_DRD_HCD_SET_CH_TX_STATUS((uint32_t)p_usb, phy_ch_num, USB_CH_TX_VALID);
     }
     else
     {
-      /* Transfer complete state */
-      hhcd->channel[ch_num].core_ch.xfer_count += data_xfr;
+      hhcd->channel[ch_num].core_ch.xfer_count += data_xfr_bytes;
       hhcd->channel[ch_num].state = HAL_HCD_CHANNEL_STATE_XFRC;
       hhcd->channel[ch_num].urb_state  = HAL_HCD_CHANNEL_URB_STATE_DONE;
       hhcd->channel[ch_num].toggle_out ^= 1U;
       /* Close the Channel */
-      USB_DRD_HCD_SET_CH_TX_STATUS((uint32_t)hhcd->instance, phy_ch_num, USB_CH_TX_DIS);
+      USB_DRD_HCD_SET_CH_TX_STATUS((uint32_t)p_usb, phy_ch_num, USB_CH_TX_DIS);
     }
   }
   else
   {
     /* Send Buffer1 */
-    data_xfr = (uint16_t)(((USB_DRD_PMA_BUFF + (uint32_t)phy_ch_num)->RXBD & 0x03FF0000U) >> 16U);
+    data_xfr_bytes = (uint16_t)(((USB_DRD_PMA_BUFF + (uint32_t)phy_ch_num)->RXBD & 0x03FF0000U) >> 16U);
 
-    if (hhcd->channel[ch_num].core_ch.xfer_length >= data_xfr) /* updated */
+    if (hhcd->channel[ch_num].core_ch.xfer_length >= data_xfr_bytes)
     {
-      hhcd->channel[ch_num].core_ch.xfer_length -= data_xfr;
+      hhcd->channel[ch_num].core_ch.xfer_length -= data_xfr_bytes;
     }
 
     /* Transfer not yet finished only one packet of mps is transferred and ACKed from device */
     if (hhcd->channel[ch_num].core_ch.xfer_length != 0U)
     {
-      /* Manage multiple Xfer */
-      hhcd->channel[ch_num].core_ch.xfer_count += data_xfr;
+      hhcd->channel[ch_num].core_ch.xfer_count += data_xfr_bytes;
 
       /* Check if we need to free user buffer */
-      if ((reg_value & USB_CH_DTOG_RX) == 0U)
+      if ((reg_value & USB_CH_DTOGRX) == 0U)
       {
-        /* Toggle SwBuff */
-        USB_DRD_HCD_CLEAR_TX_DTOG((uint32_t)hhcd->instance, phy_ch_num);
-        USB_DRD_HCD_CLEAR_RX_DTOG((uint32_t)hhcd->instance, phy_ch_num);
-        USB_DRD_HCD_RX_DTOG((uint32_t)hhcd->instance, phy_ch_num);
+        USB_DRD_HCD_CLEAR_TX_DTOG((uint32_t)p_usb, phy_ch_num);
+        USB_DRD_HCD_CLEAR_RX_DTOG((uint32_t)p_usb, phy_ch_num);
+        USB_DRD_HCD_RX_DTOG((uint32_t)p_usb, phy_ch_num);
       }
 
       if (hhcd->channel[ch_num].core_ch.xfer_size > 0U) /* Still data to fill in the buffer */
       {
-        hhcd->channel[ch_num].core_ch.p_xfer_buffer += data_xfr;
+        hhcd->channel[ch_num].core_ch.p_xfer_buffer += data_xfr_bytes;
 
         /* Calculate length of new buffer to fill */
         if (hhcd->channel[ch_num].core_ch.xfer_size > hhcd->channel[ch_num].core_ch.max_packet)
         {
-          len = hhcd->channel[ch_num].core_ch.max_packet;
-          hhcd->channel[ch_num].core_ch.xfer_size -= len;
+          len_bytes = hhcd->channel[ch_num].core_ch.max_packet;
+          hhcd->channel[ch_num].core_ch.xfer_size -= len_bytes;
         }
         else
         {
-          len = (uint16_t)hhcd->channel[ch_num].core_ch.xfer_size;
+          len_bytes = (uint16_t)hhcd->channel[ch_num].core_ch.xfer_size;
           hhcd->channel[ch_num].core_ch.xfer_size = 0U; /* end of fill buffer */
         }
 
-        /* Write remaining data to Buffer0 */
-        USB_DRD_HCD_SET_CH_DBUF1_CNT((uint32_t)hhcd->instance, phy_ch_num, USB_CORE_EP_IN_DIR, (uint16_t)len);
+        /* Write remaining data to Buffer1 */
+        USB_DRD_HCD_SET_CH_DBUF1_CNT((uint32_t)p_usb, phy_ch_num, USB_CORE_EP_IN_DIR, (uint16_t)len_bytes);
 
-        USB_DRD_WritePMA((uint32_t)hhcd->instance, hhcd->channel[ch_num].core_ch.p_xfer_buffer,
-                         hhcd->channel[ch_num].core_ch.pma_addr1, (uint16_t)len);
+        USB_DRD_WritePMA((uint32_t)p_usb, hhcd->channel[ch_num].core_ch.p_xfer_buffer,
+                         hhcd->channel[ch_num].core_ch.pma_addr1, (uint16_t)len_bytes);
       }
 
       /* Start a new transfer */
-      USB_DRD_HCD_SET_CH_TX_STATUS((uint32_t)hhcd->instance, phy_ch_num, USB_CH_TX_VALID);
+      USB_DRD_HCD_SET_CH_TX_STATUS((uint32_t)p_usb, phy_ch_num, USB_CH_TX_VALID);
     }
     else
     {
-      /* Transfer complete state */
-      hhcd->channel[ch_num].core_ch.xfer_count += data_xfr;
+      hhcd->channel[ch_num].core_ch.xfer_count += data_xfr_bytes;
       hhcd->channel[ch_num].state = HAL_HCD_CHANNEL_STATE_XFRC;
       hhcd->channel[ch_num].urb_state  = HAL_HCD_CHANNEL_URB_STATE_DONE;
       hhcd->channel[ch_num].toggle_out ^= 1U;
 
       /* Close the channel */
-      USB_DRD_HCD_SET_CH_TX_STATUS((uint32_t)hhcd->instance, phy_ch_num, USB_CH_TX_DIS);
+      USB_DRD_HCD_SET_CH_TX_STATUS((uint32_t)p_usb, phy_ch_num, USB_CH_TX_DIS);
     }
   }
 }
@@ -1810,18 +1835,19 @@ static void HCD_DRD_CHANNEL_OUT_BulkDb(hal_hcd_handle_t *hhcd, usb_core_channel_
 static void HCD_DRD_CHANNEL_IN_BulkDb(hal_hcd_handle_t *hhcd, usb_core_channel_t ch_num,
                                       usb_core_phy_chep_t phy_ch_num, uint32_t reg_value)
 {
+  const usb_drd_global_t *p_usb;
   uint16_t received_bytes;
 
-  /* Check hhcd handler */
   ASSERT_DBG_PARAM((hhcd != NULL));
 
-  /* Check channel number */
   ASSERT_DBG_PARAM(((uint8_t)ch_num < USE_HAL_HCD_MAX_CHANNEL_NB));
 
+  p_usb = USB_DRD_GET_INSTANCE((uint32_t)hhcd->instance);
+
   /* Read from Buffer 0 */
-  if ((reg_value & USB_CH_DTOG_RX) != 0U)
+  if ((reg_value & USB_CH_DTOGRX) != 0U)
   {
-    received_bytes = (uint16_t)USB_DRD_HCD_GET_CH_DBUF0_CNT((uint32_t)hhcd->instance, phy_ch_num);
+    received_bytes = (uint16_t)USB_DRD_HCD_GET_CH_DBUF0_CNT((uint32_t)p_usb, phy_ch_num);
 
     if (hhcd->channel[ch_num].core_ch.xfer_length <= received_bytes)
     {
@@ -1832,21 +1858,20 @@ static void HCD_DRD_CHANNEL_IN_BulkDb(hal_hcd_handle_t *hhcd, usb_core_channel_t
       hhcd->channel[ch_num].core_ch.xfer_length -= received_bytes;
     }
 
-    /* Check if we Need to free the other buffer for the IP */
-    if ((hhcd->channel[ch_num].core_ch.xfer_length != 0U) && ((reg_value & USB_CH_DTOG_TX) != 0U))
+    /* Check if we need to free the other buffer for the IP */
+    if ((hhcd->channel[ch_num].core_ch.xfer_length != 0U) && ((reg_value & USB_CH_DTOGTX) != 0U))
     {
-      /* Toggle SwBuff */
-      USB_DRD_TX_DTOG((uint32_t)hhcd->instance, phy_ch_num);
+      USB_DRD_TX_DTOG((uint32_t)p_usb, phy_ch_num);
     }
 
-    /* Read the byte from PMA to user Buffer(System Memory) */
-    USB_DRD_ReadPMA((uint32_t)hhcd->instance, hhcd->channel[ch_num].core_ch.p_xfer_buffer,
+    /* Read the data from PMA to user buffer (system memory) */
+    USB_DRD_ReadPMA((uint32_t)p_usb, hhcd->channel[ch_num].core_ch.p_xfer_buffer,
                     hhcd->channel[ch_num].core_ch.pma_addr0, (uint16_t)received_bytes);
   }
   else
   {
     /* Read from Buffer 1 */
-    received_bytes = (uint16_t) USB_DRD_HCD_GET_CH_DBUF1_CNT((uint32_t)hhcd->instance, phy_ch_num);
+    received_bytes = (uint16_t) USB_DRD_HCD_GET_CH_DBUF1_CNT((uint32_t)p_usb, phy_ch_num);
 
     if (hhcd->channel[ch_num].core_ch.xfer_length <= received_bytes)
     {
@@ -1857,22 +1882,20 @@ static void HCD_DRD_CHANNEL_IN_BulkDb(hal_hcd_handle_t *hhcd, usb_core_channel_t
       hhcd->channel[ch_num].core_ch.xfer_length -= received_bytes;
     }
 
-    /* Check if we Need to free the other buffer for the IP */
-    if ((hhcd->channel[ch_num].core_ch.xfer_length != 0U) && ((reg_value & USB_CH_DTOG_TX) == 0U))
+    /* Check if we need to free the other buffer for the IP */
+    if ((hhcd->channel[ch_num].core_ch.xfer_length != 0U) && ((reg_value & USB_CH_DTOGTX) == 0U))
     {
-      /* Toggle SwBuff */
-      USB_DRD_TX_DTOG((uint32_t)hhcd->instance, phy_ch_num);
+      USB_DRD_TX_DTOG((uint32_t)p_usb, phy_ch_num);
     }
 
-    /* Read the byte from PMA to user Buffer(System Memory) */
-    USB_DRD_ReadPMA((uint32_t)hhcd->instance, hhcd->channel[ch_num].core_ch.p_xfer_buffer,
+    /* Read the data from PMA to user buffer (system memory) */
+    USB_DRD_ReadPMA((uint32_t)p_usb, hhcd->channel[ch_num].core_ch.p_xfer_buffer,
                     hhcd->channel[ch_num].core_ch.pma_addr1, (uint16_t)received_bytes);
   }
 
-  /* Update the global number of all received bytes */
+  /* Update the cumulative byte count for this transfer */
   hhcd->channel[ch_num].core_ch.xfer_count += received_bytes;
 
-  /* Transfer complete state */
   hhcd->channel[ch_num].state = HAL_HCD_CHANNEL_STATE_ACK;
   hhcd->channel[ch_num].err_cnt = 0U;
 
@@ -1882,15 +1905,14 @@ static void HCD_DRD_CHANNEL_IN_BulkDb(hal_hcd_handle_t *hhcd, usb_core_channel_t
     hhcd->channel[ch_num].urb_state = HAL_HCD_CHANNEL_URB_STATE_DONE;
     hhcd->channel[ch_num].state  = HAL_HCD_CHANNEL_STATE_XFRC;
 
-    /* disable channel */
-    USB_DRD_HCD_SET_CH_RX_STATUS((uint32_t)hhcd->instance, phy_ch_num, USB_CH_RX_DIS);
+    USB_DRD_HCD_SET_CH_RX_STATUS((uint32_t)p_usb, phy_ch_num, USB_CH_RX_DIS);
   }
   else
   {
     hhcd->channel[ch_num].core_ch.p_xfer_buffer += received_bytes;
 
-    /* Reactivate the Channel Submit an other URB since the Transfer is not yet completed */
-    USB_DRD_HCD_SET_CH_RX_STATUS((uint32_t)hhcd->instance, phy_ch_num, USB_CH_RX_STRX);
+    /* Reactivate the channel to submit another URB since the transfer is not yet completed */
+    USB_DRD_HCD_SET_CH_RX_STATUS((uint32_t)p_usb, phy_ch_num, USB_CH_STATRX);
   }
 }
 #endif /* defined (USE_HAL_HCD_USB_DOUBLE_BUFFER) && (USE_HAL_HCD_USB_DOUBLE_BUFFER == 1) */
@@ -1906,21 +1928,23 @@ static void HCD_DRD_CHANNEL_IN_BulkDb(hal_hcd_handle_t *hhcd, usb_core_channel_t
 static void HCD_DRD_CHANNEL_IN_IsocDb(hal_hcd_handle_t *hhcd, usb_core_channel_t ch_num,
                                       usb_core_phy_chep_t phy_ch_num, uint32_t reg_value)
 {
-  /* Check hhcd handler */
+  const usb_drd_global_t *p_usb;
+
   ASSERT_DBG_PARAM((hhcd != NULL));
 
-  /* Check channel number */
   ASSERT_DBG_PARAM(((uint8_t)ch_num < USE_HAL_HCD_MAX_CHANNEL_NB));
 
+  p_usb = USB_DRD_GET_INSTANCE((uint32_t)hhcd->instance);
+
   /* Check if Double buffer isochronous */
-  if ((reg_value & USB_CH_KIND) != 0U)
+  if ((reg_value & USB_CH_EPKIND) != 0U)
   {
     /* Get Data IN Packet */
-    hhcd->channel[ch_num].core_ch.xfer_count = USB_DRD_HCD_GET_CH_RX_CNT((uint32_t)hhcd->instance, phy_ch_num);
+    hhcd->channel[ch_num].core_ch.xfer_count = USB_DRD_HCD_GET_CH_RX_CNT((uint32_t)p_usb, phy_ch_num);
 
     if (hhcd->channel[ch_num].core_ch.xfer_count != 0U)
     {
-      USB_DRD_ReadPMA((uint32_t)hhcd->instance, hhcd->channel[ch_num].core_ch.p_xfer_buffer,
+      USB_DRD_ReadPMA((uint32_t)p_usb, hhcd->channel[ch_num].core_ch.p_xfer_buffer,
                       hhcd->channel[ch_num].core_ch.pma_address,
                       (uint16_t)hhcd->channel[ch_num].core_ch.xfer_count);
 
@@ -1931,15 +1955,14 @@ static void HCD_DRD_CHANNEL_IN_IsocDb(hal_hcd_handle_t *hhcd, usb_core_channel_t
   else  /* double buffer isochronous */
   {
     /* Read from Buffer0 */
-    if ((reg_value & USB_CH_DTOG_RX) != 0U)
+    if ((reg_value & USB_CH_DTOGRX) != 0U)
     {
-      /* Get number of Received byte in buffer0 */
-      hhcd->channel[ch_num].core_ch.xfer_count = USB_DRD_HCD_GET_CH_DBUF0_CNT((uint32_t)hhcd->instance, phy_ch_num);
+      /* Get number of received bytes in buffer0 */
+      hhcd->channel[ch_num].core_ch.xfer_count = USB_DRD_HCD_GET_CH_DBUF0_CNT((uint32_t)p_usb, phy_ch_num);
 
       if (hhcd->channel[ch_num].core_ch.xfer_count != 0U)
       {
-        /* Read from Buffer0 */
-        USB_DRD_ReadPMA((uint32_t)hhcd->instance, hhcd->channel[ch_num].core_ch.p_xfer_buffer,
+        USB_DRD_ReadPMA((uint32_t)p_usb, hhcd->channel[ch_num].core_ch.p_xfer_buffer,
                         hhcd->channel[ch_num].core_ch.pma_addr0,
                         (uint16_t)hhcd->channel[ch_num].core_ch.xfer_count);
 
@@ -1948,13 +1971,13 @@ static void HCD_DRD_CHANNEL_IN_IsocDb(hal_hcd_handle_t *hhcd, usb_core_channel_t
     }
     else
     {
-      /* Get number of Received byte in buffer1 */
-      hhcd->channel[ch_num].core_ch.xfer_count = USB_DRD_HCD_GET_CH_DBUF1_CNT((uint32_t)hhcd->instance, phy_ch_num);
+      /* Get number of received bytes in buffer1 */
+      hhcd->channel[ch_num].core_ch.xfer_count = USB_DRD_HCD_GET_CH_DBUF1_CNT((uint32_t)p_usb, phy_ch_num);
 
       if (hhcd->channel[ch_num].core_ch.xfer_count != 0U)
       {
         /* Read from Buffer1 */
-        USB_DRD_ReadPMA((uint32_t)hhcd->instance, hhcd->channel[ch_num].core_ch.p_xfer_buffer,
+        USB_DRD_ReadPMA((uint32_t)p_usb, hhcd->channel[ch_num].core_ch.p_xfer_buffer,
                         hhcd->channel[ch_num].core_ch.pma_addr1,
                         (uint16_t)hhcd->channel[ch_num].core_ch.xfer_count);
 
@@ -1964,11 +1987,10 @@ static void HCD_DRD_CHANNEL_IN_IsocDb(hal_hcd_handle_t *hhcd, usb_core_channel_t
   }
 #endif /* defined (USE_HAL_HCD_USB_DOUBLE_BUFFER) && (USE_HAL_HCD_USB_DOUBLE_BUFFER == 1) */
 
-  /* Transfer complete state */
   hhcd->channel[ch_num].state = HAL_HCD_CHANNEL_STATE_XFRC;
 
   /* Clear VTRX */
-  USB_DRD_HCD_CLEAR_RX_CH_CTR((uint32_t)hhcd->instance, phy_ch_num);
+  USB_DRD_HCD_CLEAR_RX_CH_CTR((uint32_t)p_usb, phy_ch_num);
 }
 #endif /* defined (USE_HAL_HCD_USB_EP_TYPE_ISOC) && (USE_HAL_HCD_USB_EP_TYPE_ISOC == 1) */
 
@@ -1976,17 +1998,16 @@ static void HCD_DRD_CHANNEL_IN_IsocDb(hal_hcd_handle_t *hhcd, usb_core_channel_t
   * @brief  Handle Host Channel IN interrupt requests.
   * @param  hhcd HCD handle
   * @param  phy_ch_num Channel number
-  *         This parameter can be a value from 1 to 8
+  *         This parameter can be a value from 1 to 7
   */
 static void HCD_DRD_CHANNEL_IN_IRQHandler(hal_hcd_handle_t *hhcd, usb_core_phy_chep_t phy_ch_num)
 {
+  const usb_drd_global_t *p_usb;
   uint16_t received_bytes;
   usb_core_channel_t ch_num = USB_DRD_GetLogicalChannel(phy_ch_num, USB_CORE_CH_IN_DIR);
 
-  /* Check hhcd handler */
   ASSERT_DBG_PARAM((hhcd != NULL));
 
-  /* Check channel number */
   ASSERT_DBG_PARAM(((uint8_t)ch_num < USE_HAL_HCD_MAX_CHANNEL_NB));
 
 #if defined (USE_HAL_CHECK_PARAM) && (USE_HAL_CHECK_PARAM == 1U)
@@ -1996,29 +2017,34 @@ static void HCD_DRD_CHANNEL_IN_IRQHandler(hal_hcd_handle_t *hhcd, usb_core_phy_c
   }
 #endif /* USE_HAL_CHECK_PARAM */
 
+  p_usb = USB_DRD_GET_INSTANCE((uint32_t)hhcd->instance);
+
   /* Take a Flag snapshot from the CHEP register, due to STRX bits are used for both control and status */
-  uint32_t ch_reg = USB_DRD_HCD_GET_CHANNEL((uint32_t)hhcd->instance, phy_ch_num);
+  uint32_t ch_reg = USB_DRD_HCD_GET_CHANNEL((uint32_t)p_usb, phy_ch_num);
 
   /* Manage Correct Transaction */
-  if ((ch_reg & USB_CH_ERRRX) == 0U)
+  if ((ch_reg & USB_CH_ERR_RX) == 0U)
   {
-    /* Manage all Non Isochronous Transaction */
+    /*
+     * Handle non-isochronous endpoints (control/bulk/interrupt) using handshake signaling (ACK/NAK/STALL)
+     * Isochronous endpoints: no handshake responses expected (no ACK/NAK/STALL) and no retry
+     * Report transaction completion through the isochronous specific path
+     */
     if ((ch_reg & USB_CH_UTYPE) != USB_EP_ISOCHRONOUS)
     {
-      /* manage ACK response single buffer */
-      if (((ch_reg) & USB_CH_RX_STRX) == USB_CH_RX_ACK_SBUF)
+      /* Manage ACK response (single buffer mode) */
+      if (((ch_reg) & USB_CH_STATRX) == USB_CH_RX_ACK_SBUF)
       {
         /* Get Control Data OUT Packet */
-        received_bytes = (uint16_t)USB_DRD_HCD_GET_CH_RX_CNT((uint32_t)hhcd->instance, phy_ch_num);
+        received_bytes = (uint16_t)USB_DRD_HCD_GET_CH_RX_CNT((uint32_t)p_usb, phy_ch_num);
 
-        /* Read the byte from PMA to user Buffer(System Memory) */
-        USB_DRD_ReadPMA((uint32_t)hhcd->instance, hhcd->channel[ch_num].core_ch.p_xfer_buffer,
+        /* Read the data from PMA to user buffer (system memory) */
+        USB_DRD_ReadPMA((uint32_t)p_usb, hhcd->channel[ch_num].core_ch.p_xfer_buffer,
                         hhcd->channel[ch_num].core_ch.pma_address, (uint16_t)received_bytes);
 
-        /* update the global number of all received bytes */
+        /* Update the cumulative byte count for this transfer */
         hhcd->channel[ch_num].core_ch.xfer_count += received_bytes;
 
-        /* Transfer complete state */
         hhcd->channel[ch_num].state = HAL_HCD_CHANNEL_STATE_ACK;
         hhcd->channel[ch_num].err_cnt = 0U;
 
@@ -2041,8 +2067,8 @@ static void HCD_DRD_CHANNEL_IN_IRQHandler(hal_hcd_handle_t *hhcd, usb_core_phy_c
         {
           hhcd->channel[ch_num].core_ch.p_xfer_buffer += received_bytes;
 
-          /* Reactivate the Channel to Submit another URB since the Transfer is not yet completed */
-          USB_DRD_HCD_SET_CH_RX_STATUS((uint32_t)hhcd->instance, phy_ch_num, USB_CH_RX_STRX);
+          /* Reactivate the channel to submit another URB since the transfer is not yet completed */
+          USB_DRD_HCD_SET_CH_RX_STATUS((uint32_t)p_usb, phy_ch_num, USB_CH_STATRX);
         }
 
         if ((hhcd->channel[ch_num].core_ch.ep_type == USB_CORE_EP_TYPE_BULK)
@@ -2051,8 +2077,7 @@ static void HCD_DRD_CHANNEL_IN_IRQHandler(hal_hcd_handle_t *hhcd, usb_core_phy_c
           hhcd->channel[ch_num].toggle_in ^= 1U;
         }
       }
-      /* Manage NACK Response */
-      else if (((ch_reg & USB_CH_RX_STRX) == USB_CH_RX_NAK)
+      else if (((ch_reg & USB_CH_STATRX) == USB_CH_RX_NAK)
                && (hhcd->channel[ch_num].urb_state != HAL_HCD_CHANNEL_URB_STATE_DONE))
       {
         hhcd->channel[ch_num].urb_state = HAL_HCD_CHANNEL_URB_STATE_NOTREADY;
@@ -2062,22 +2087,21 @@ static void HCD_DRD_CHANNEL_IN_IRQHandler(hal_hcd_handle_t *hhcd, usb_core_phy_c
         if (hhcd->channel[ch_num].core_ch.ep_type == USB_CORE_EP_TYPE_INTR)
         {
           /* Close the channel */
-          USB_DRD_HCD_SET_CH_RX_STATUS((uint32_t)hhcd->instance, phy_ch_num, USB_CH_RX_DIS);
+          USB_DRD_HCD_SET_CH_RX_STATUS((uint32_t)p_usb, phy_ch_num, USB_CH_RX_DIS);
         }
       }
-      /* Manage STALL Response */
-      else if ((ch_reg & USB_CH_RX_STRX) == USB_CH_RX_STALL)
+      else if ((ch_reg & USB_CH_STATRX) == USB_CH_RX_STALL)
       {
         (void)HAL_HCD_HaltChannel(hhcd, (hal_hcd_channel_t)ch_num);
         hhcd->channel[ch_num].state = HAL_HCD_CHANNEL_STATE_STALL;
         hhcd->channel[ch_num].urb_state = HAL_HCD_CHANNEL_URB_STATE_STALL;
 
         /* Close the channel */
-        USB_DRD_HCD_SET_CH_RX_STATUS((uint32_t)hhcd->instance, phy_ch_num, USB_CH_RX_DIS);
+        USB_DRD_HCD_SET_CH_RX_STATUS((uint32_t)p_usb, phy_ch_num, USB_CH_RX_DIS);
       }
 #if defined (USE_HAL_HCD_USB_DOUBLE_BUFFER) && (USE_HAL_HCD_USB_DOUBLE_BUFFER == 1)
       /* Double Buffer Management in case of Bulk Transaction */
-      else  if (((ch_reg & USB_CH_RX_STRX) == USB_CH_RX_ACK_DBUF) && ((ch_reg & USB_CH_KIND) != 0U))
+      else  if (((ch_reg & USB_CH_STATRX) == USB_CH_RX_ACK_DBUF) && ((ch_reg & USB_CH_EPKIND) != 0U))
       {
         /* Bulk IN Double Buffer ISR */
         HCD_DRD_CHANNEL_IN_BulkDb(hhcd, ch_num, phy_ch_num, ch_reg);
@@ -2085,8 +2109,7 @@ static void HCD_DRD_CHANNEL_IN_IRQHandler(hal_hcd_handle_t *hhcd, usb_core_phy_c
 #endif /* defined (USE_HAL_HCD_USB_DOUBLE_BUFFER) && (USE_HAL_HCD_USB_DOUBLE_BUFFER == 1) */
       else
       {
-        /*....*/
-        /* Not defined state: STRX=11 in single buffer no iso is not defined */
+        /* Nothing to do */
       }
 
 #if defined (USE_HAL_HCD_REGISTER_CALLBACKS) && (USE_HAL_HCD_REGISTER_CALLBACKS == 1U)
@@ -2096,7 +2119,7 @@ static void HCD_DRD_CHANNEL_IN_IRQHandler(hal_hcd_handle_t *hhcd, usb_core_phy_c
 #endif /* USE_HAL_HCD_REGISTER_CALLBACKS */
 
       /* Clear VTRX */
-      USB_DRD_HCD_CLEAR_RX_CH_CTR((uint32_t)hhcd->instance, phy_ch_num);
+      USB_DRD_HCD_CLEAR_RX_CH_CTR((uint32_t)p_usb, phy_ch_num);
     }
 #if defined (USE_HAL_HCD_USB_EP_TYPE_ISOC) && (USE_HAL_HCD_USB_EP_TYPE_ISOC == 1)
     /* Isochronous Channel */
@@ -2108,22 +2131,21 @@ static void HCD_DRD_CHANNEL_IN_IRQHandler(hal_hcd_handle_t *hhcd, usb_core_phy_c
   }
   else /* Error detected during last transaction */
   {
-    /* Set URB Error State */
     hhcd->channel[ch_num].urb_state = HAL_HCD_CHANNEL_URB_STATE_NOTREADY;
     hhcd->channel[ch_num].err_cnt++;
     hhcd->channel[ch_num].state = HAL_HCD_CHANNEL_STATE_XACTERR;
 
     /* Clear VTTRX & ERR_RX */
-    USB_DRD_HCD_CLEAR_RX_CH_ERR((uint32_t)hhcd->instance, phy_ch_num);
+    USB_DRD_HCD_CLEAR_RX_CH_ERR((uint32_t)p_usb, phy_ch_num);
 
-    /* Check Error number */
+    /* Disable channel after exceeding the maximum retry count */
     if (hhcd->channel[ch_num].err_cnt > 3U)
     {
       hhcd->channel[ch_num].urb_state = HAL_HCD_CHANNEL_URB_STATE_ERROR;
-      USB_DRD_HCD_SET_CH_RX_STATUS((uint32_t)hhcd->instance, phy_ch_num, USB_CH_RX_DIS);
+      USB_DRD_HCD_SET_CH_RX_STATUS((uint32_t)p_usb, phy_ch_num, USB_CH_RX_DIS);
 
       /* Clear pending err_tx */
-      USB_DRD_HCD_CLEAR_RX_CH_ERR((uint32_t)hhcd->instance, phy_ch_num);
+      USB_DRD_HCD_CLEAR_RX_CH_ERR((uint32_t)p_usb, phy_ch_num);
     }
 
 #if defined (USE_HAL_HCD_REGISTER_CALLBACKS) && (USE_HAL_HCD_REGISTER_CALLBACKS == 1U)
@@ -2138,19 +2160,17 @@ static void HCD_DRD_CHANNEL_IN_IRQHandler(hal_hcd_handle_t *hhcd, usb_core_phy_c
   * @brief  Handle Host Channel OUT interrupt requests.
   * @param  hhcd  HCD handle
   * @param  phy_ch_num Channel number
-  *         This parameter can be a value from 1 to 8
+  *         This parameter can be a value from 1 to 7
   */
 static void HCD_DRD_CHANNEL_OUT_IRQHandler(hal_hcd_handle_t *hhcd, usb_core_phy_chep_t phy_ch_num)
 {
   const usb_drd_global_t *p_usb;
   __IO uint32_t get_ch_reg;
-  uint16_t data_xfr;
+  uint16_t data_xfr_bytes;
   usb_core_channel_t ch_num = USB_DRD_GetLogicalChannel(phy_ch_num, USB_CORE_CH_OUT_DIR);
 
-  /* Check hhcd handler */
   ASSERT_DBG_PARAM((hhcd != NULL));
 
-  /* Check channel number */
   ASSERT_DBG_PARAM(((uint8_t)ch_num < USE_HAL_HCD_MAX_CHANNEL_NB));
 
   if ((uint8_t)ch_num >= USE_HAL_HCD_MAX_CHANNEL_NB)
@@ -2161,22 +2181,25 @@ static void HCD_DRD_CHANNEL_OUT_IRQHandler(hal_hcd_handle_t *hhcd, usb_core_phy_
   p_usb = USB_DRD_GET_INSTANCE((uint32_t)hhcd->instance);
 
   /* Take a Flag snapshot from the CHEP register, due to STRX bits are used for both control & status */
-  uint32_t ch_reg = *(__IO uint32_t *)((__IO uint32_t)(&(p_usb->CHEP0R) + (uint32_t)phy_ch_num));
+  uint32_t ch_reg = USB_DRD_HCD_GET_CHANNEL((uint32_t)p_usb, phy_ch_num);
 
   /*------ Manage Correct Transaction ------*/
-  if ((ch_reg & USB_CH_ERRTX) == 0U)
+  if ((ch_reg & USB_CH_ERR_TX) == 0U)
   {
-    /* Manage all Non Isochronous Transaction */
+    /*
+     * Handle non-isochronous endpoints (control/bulk/interrupt) using handshake signaling (ACK/NAK/STALL)
+     * Isochronous endpoints: no handshake responses expected (no ACK/NAK/STALL) and no retry
+     * Report transaction completion through the isochronous specific path
+     */
     if ((ch_reg & USB_CH_UTYPE) != USB_EP_ISOCHRONOUS)
     {
-      /* Check ACK response */
-      if ((ch_reg & USB_CH_TX_STTX) == USB_CH_TX_ACK_SBUF)
+      if ((ch_reg & USB_CH_STATTX) == USB_CH_TX_ACK_SBUF)
       {
-        data_xfr = (uint16_t)(((USB_DRD_PMA_BUFF + (uint32_t)phy_ch_num)->TXBD & 0x03FF0000U) >> 16U);
+        data_xfr_bytes = (uint16_t)(((USB_DRD_PMA_BUFF + (uint32_t)phy_ch_num)->TXBD & 0x03FF0000U) >> 16U);
 
-        if (hhcd->channel[ch_num].core_ch.xfer_length >= data_xfr)
+        if (hhcd->channel[ch_num].core_ch.xfer_length >= data_xfr_bytes)
         {
-          hhcd->channel[ch_num].core_ch.xfer_length -= data_xfr;
+          hhcd->channel[ch_num].core_ch.xfer_length -= data_xfr_bytes;
         }
         else
         {
@@ -2189,40 +2212,34 @@ static void HCD_DRD_CHANNEL_OUT_IRQHandler(hal_hcd_handle_t *hhcd, usb_core_phy_
           hhcd->channel[ch_num].toggle_out ^= 1U;
         }
 
-        /* Transfer no yet finished only one packet of mps is transferred and ACKed from device */
+        /* Transfer not yet finished: only one MPS packet was transferred and acknowledged by the device */
         if (hhcd->channel[ch_num].core_ch.xfer_length != 0U)
         {
-          /* Manage multiple Xfer */
-          hhcd->channel[ch_num].core_ch.p_xfer_buffer += data_xfr;
-          hhcd->channel[ch_num].core_ch.xfer_count += data_xfr;
+          hhcd->channel[ch_num].core_ch.p_xfer_buffer += data_xfr_bytes;
+          hhcd->channel[ch_num].core_ch.xfer_count += data_xfr_bytes;
 
           /* Start a new transfer */
-          (void)hhcd->driver.host_channel_start((uint32_t)hhcd->instance, &hhcd->channel[ch_num].core_ch);
+          (void)hhcd->driver.host_channel_start((uint32_t)p_usb, &hhcd->channel[ch_num].core_ch);
         }
         else
         {
-          /* Transfer complete */
-          hhcd->channel[ch_num].core_ch.xfer_count += data_xfr;
+          hhcd->channel[ch_num].core_ch.xfer_count += data_xfr_bytes;
           hhcd->channel[ch_num].state = HAL_HCD_CHANNEL_STATE_XFRC;
           hhcd->channel[ch_num].urb_state = HAL_HCD_CHANNEL_URB_STATE_DONE;
         }
       }
-      /* Check NACK Response */
-      else if (((ch_reg & USB_CHEP_NAK) == USB_CHEP_NAK) || ((ch_reg & USB_CH_TX_STTX) == USB_CH_TX_NAK))
+      else if (((ch_reg & USB_CHEP_NAK) == USB_CHEP_NAK) || ((ch_reg & USB_CH_STATTX) == USB_CH_TX_NAK))
       {
-        /* Update Channel status */
         hhcd->channel[ch_num].state = HAL_HCD_CHANNEL_STATE_NAK;
         hhcd->channel[ch_num].urb_state = HAL_HCD_CHANNEL_URB_STATE_NOTREADY;
         hhcd->channel[ch_num].err_cnt = 0U;
 
-        /* Get Channel register value */
-        get_ch_reg = *(__IO uint32_t *)((__IO uint32_t)(&(p_usb->CHEP0R) + (uint32_t)phy_ch_num));
+        get_ch_reg = USB_DRD_HCD_GET_CHANNEL((uint32_t)p_usb, phy_ch_num);
 
         /* Clear NAK status */
         get_ch_reg &= ~USB_CHEP_NAK & USB_CHEP_REG_MASK;
 
-        /* Update channel register Value */
-        USB_DRD_HCD_SET_CHANNEL((uint32_t)hhcd->instance, phy_ch_num, get_ch_reg);
+        USB_DRD_HCD_SET_CHANNEL((uint32_t)p_usb, phy_ch_num, get_ch_reg);
 
         if (hhcd->channel[ch_num].core_ch.double_buffer_en == 0U)
         {
@@ -2233,8 +2250,7 @@ static void HCD_DRD_CHANNEL_OUT_IRQHandler(hal_hcd_handle_t *hhcd, usb_core_phy_
 #endif /* USE_HAL_HCD_REGISTER_CALLBACKS */
         }
       }
-      /* Check STALL Response */
-      else if ((ch_reg & USB_CH_TX_STTX) == USB_CH_TX_STALL)
+      else if ((ch_reg & USB_CH_STATTX) == USB_CH_TX_STALL)
       {
         (void) HAL_HCD_HaltChannel(hhcd, (hal_hcd_channel_t)ch_num);
         hhcd->channel[ch_num].state = HAL_HCD_CHANNEL_STATE_STALL;
@@ -2242,7 +2258,7 @@ static void HCD_DRD_CHANNEL_OUT_IRQHandler(hal_hcd_handle_t *hhcd, usb_core_phy_
       }
 #if defined (USE_HAL_HCD_USB_DOUBLE_BUFFER) && (USE_HAL_HCD_USB_DOUBLE_BUFFER == 1)
       /* Check double buffer ACK in case of bulk transaction */
-      else if ((ch_reg & USB_CH_TX_STTX) == USB_CH_TX_ACK_DBUF)
+      else if ((ch_reg & USB_CH_STATTX) == USB_CH_TX_ACK_DBUF)
       {
         /* Double buffer management Bulk Out */
         (void)HCD_DRD_CHANNEL_OUT_BulkDb(hhcd, ch_num, phy_ch_num, ch_reg);
@@ -2250,10 +2266,10 @@ static void HCD_DRD_CHANNEL_OUT_IRQHandler(hal_hcd_handle_t *hhcd, usb_core_phy_
 #endif /* defined (USE_HAL_HCD_USB_DOUBLE_BUFFER) && (USE_HAL_HCD_USB_DOUBLE_BUFFER == 1) */
       else
       {
-        /*...*/
+        /* Nothing to do */
       }
 
-      if ((ch_reg & USB_CH_TX_STTX) != USB_CH_TX_NAK)
+      if ((ch_reg & USB_CH_STATTX) != USB_CH_TX_NAK)
       {
 #if defined (USE_HAL_HCD_REGISTER_CALLBACKS) && (USE_HAL_HCD_REGISTER_CALLBACKS == 1U)
         hhcd->p_ch_notify_urb_change_cb(hhcd, (hal_hcd_channel_t)ch_num, hhcd->channel[ch_num].urb_state);
@@ -2262,7 +2278,7 @@ static void HCD_DRD_CHANNEL_OUT_IRQHandler(hal_hcd_handle_t *hhcd, usb_core_phy_
 #endif /* USE_HAL_HCD_REGISTER_CALLBACKS */
       }
 
-      USB_DRD_HCD_CLEAR_TX_CH_CTR((uint32_t)hhcd->instance, phy_ch_num);
+      USB_DRD_HCD_CLEAR_TX_CH_CTR((uint32_t)p_usb, phy_ch_num);
     }
 #if defined (USE_HAL_HCD_USB_EP_TYPE_ISOC) && (USE_HAL_HCD_USB_EP_TYPE_ISOC == 1)
     /* Handle Isochronous channel */
@@ -2272,37 +2288,35 @@ static void HCD_DRD_CHANNEL_OUT_IRQHandler(hal_hcd_handle_t *hhcd, usb_core_phy_
       if ((p_usb->ISTR & USB_ISTR_ERR) == 0U)
       {
         /* Double buffer isochronous out */
-        if ((ch_reg & USB_CH_KIND) != 0U)
+        if ((ch_reg & USB_CH_EPKIND) != 0U)
         {
-          USB_DRD_HCD_SET_CH_TX_CNT((uint32_t)hhcd->instance, phy_ch_num, 0U);
+          USB_DRD_HCD_SET_CH_TX_CNT((uint32_t)p_usb, phy_ch_num, 0U);
         }
 #if defined (USE_HAL_HCD_USB_DOUBLE_BUFFER) && (USE_HAL_HCD_USB_DOUBLE_BUFFER == 1)
         else /* Double buffer isochronous out */
         {
           /* Odd Transaction */
-          if ((ch_reg & USB_CH_DTOG_TX) != 0U)
+          if ((ch_reg & USB_CH_DTOGTX) != 0U)
           {
-            USB_DRD_HCD_SET_CH_TX_CNT((uint32_t)hhcd->instance, phy_ch_num, 0U);
+            USB_DRD_HCD_SET_CH_TX_CNT((uint32_t)p_usb, phy_ch_num, 0U);
           }
           /* Even Transaction */
           else
           {
-            USB_DRD_HCD_SET_CH_RX_CNT((uint32_t)hhcd->instance, phy_ch_num, 0U);
+            USB_DRD_HCD_SET_CH_RX_CNT((uint32_t)p_usb, phy_ch_num, 0U);
           }
 
-          USB_DRD_SET_CHEP_TX_STATUS((uint32_t)hhcd->instance, phy_ch_num, USB_CH_TX_DIS);
+          USB_DRD_SET_CHEP_TX_STATUS((uint32_t)p_usb, phy_ch_num, USB_CH_TX_DIS);
         }
 #endif /* defined (USE_HAL_HCD_USB_DOUBLE_BUFFER) && (USE_HAL_HCD_USB_DOUBLE_BUFFER == 1) */
 
-        /* Transfer complete state */
         hhcd->channel[ch_num].state = HAL_HCD_CHANNEL_STATE_XFRC;
         hhcd->channel[ch_num].urb_state = HAL_HCD_CHANNEL_URB_STATE_DONE;
       }
 
       /* Clear Correct Transfer */
-      USB_DRD_HCD_CLEAR_TX_CH_CTR((uint32_t)hhcd->instance, phy_ch_num);
+      USB_DRD_HCD_CLEAR_TX_CH_CTR((uint32_t)p_usb, phy_ch_num);
 
-      /* TX COMPLETE */
 #if defined (USE_HAL_HCD_REGISTER_CALLBACKS) && (USE_HAL_HCD_REGISTER_CALLBACKS == 1U)
       hhcd->p_ch_notify_urb_change_cb(hhcd, (hal_hcd_channel_t)ch_num, hhcd->channel[ch_num].urb_state);
 #else
@@ -2312,13 +2326,13 @@ static void HCD_DRD_CHANNEL_OUT_IRQHandler(hal_hcd_handle_t *hhcd, usb_core_phy_
     }
 #endif /* defined (USE_HAL_HCD_USB_EP_TYPE_ISOC) && (USE_HAL_HCD_USB_EP_TYPE_ISOC == 1) */
   }
-  /*------ Manage Transaction Error------*/
+  /* Manage Transaction Error */
   else
   {
     hhcd->channel[ch_num].err_cnt++;
     if (hhcd->channel[ch_num].err_cnt > 3U)
     {
-      USB_DRD_HCD_SET_CH_TX_STATUS((uint32_t)hhcd->instance, phy_ch_num, USB_CH_TX_DIS);
+      USB_DRD_HCD_SET_CH_TX_STATUS((uint32_t)p_usb, phy_ch_num, USB_CH_TX_DIS);
       hhcd->channel[ch_num].urb_state = HAL_HCD_CHANNEL_URB_STATE_ERROR;
     }
     else
@@ -2328,8 +2342,7 @@ static void HCD_DRD_CHANNEL_OUT_IRQHandler(hal_hcd_handle_t *hhcd, usb_core_phy_
 
     hhcd->channel[ch_num].state = HAL_HCD_CHANNEL_STATE_XACTERR;
 
-    /* Clear ERR_TX */
-    USB_DRD_HCD_CLEAR_TX_CH_ERR((uint32_t)hhcd->instance, phy_ch_num);
+    USB_DRD_HCD_CLEAR_TX_CH_ERR((uint32_t)p_usb, phy_ch_num);
 
 #if defined (USE_HAL_HCD_REGISTER_CALLBACKS) && (USE_HAL_HCD_REGISTER_CALLBACKS == 1U)
     hhcd->p_ch_notify_urb_change_cb(hhcd, (hal_hcd_channel_t)ch_num, hhcd->channel[ch_num].urb_state);
@@ -2350,7 +2363,6 @@ static void HCD_DRD_Port_IRQHandler(hal_hcd_handle_t *hhcd)
   uint32_t fnr_reg;
   uint32_t istr_reg;
 
-  /* Check hhcd handler */
   ASSERT_DBG_PARAM((hhcd != NULL));
 
   p_usb = USB_DRD_GET_INSTANCE((uint32_t)hhcd->instance);
@@ -2360,7 +2372,6 @@ static void HCD_DRD_Port_IRQHandler(hal_hcd_handle_t *hhcd)
   /* SE0 detected USB Disconnected state */
   if ((fnr_reg & (USB_FNR_RXDP | USB_FNR_RXDM)) == 0U)
   {
-    /* Host Port State */
     hhcd->port_state = HAL_HCD_PORT_STATE_DEV_DISCONNECT;
 
     /* Clear all allocated virtual channel */
@@ -2369,7 +2380,6 @@ static void HCD_DRD_Port_IRQHandler(hal_hcd_handle_t *hhcd)
     /* Reset the PMA current pointer */
     (void)USB_DRD_PMAReset();
 
-    /* Disconnection Callback */
 #if defined (USE_HAL_HCD_REGISTER_CALLBACKS) && (USE_HAL_HCD_REGISTER_CALLBACKS == 1U)
     hhcd->p_port_disconnect_cb(hhcd);
 #else
@@ -2379,10 +2389,10 @@ static void HCD_DRD_Port_IRQHandler(hal_hcd_handle_t *hhcd)
     return;
   }
 
-  if ((hhcd->port_state == HAL_HCD_PORT_STATE_DEV_DISCONNECT) != 0U)
+  if (hhcd->port_state == HAL_HCD_PORT_STATE_DEV_DISCONNECT)
   {
     /* J-state or K-state detected & LastState=Disconnected */
-    if (((fnr_reg & USB_FNR_RXDP) != 0U) || ((istr_reg & USB_ISTR_LS_DCONN) != 0U))
+    if (((fnr_reg & USB_FNR_RXDP) != 0U) || ((istr_reg & USB_ISTR_LS_DCON) != 0U))
     {
       hhcd->port_state = HAL_HCD_PORT_STATE_DEV_CONNECT;
 
@@ -2396,9 +2406,8 @@ static void HCD_DRD_Port_IRQHandler(hal_hcd_handle_t *hhcd)
   else
   {
     /* J-state or K-state detected & lastState=Connected: a Missed disconnection is detected */
-    if (((fnr_reg & USB_FNR_RXDP) != 0U) || ((istr_reg & USB_ISTR_LS_DCONN) != 0U))
+    if (((fnr_reg & USB_FNR_RXDP) != 0U) || ((istr_reg & USB_ISTR_LS_DCON) != 0U))
     {
-      /* Host Port State */
       hhcd->port_state = HAL_HCD_PORT_STATE_DEV_DISCONNECT;
 
       /* Clear all allocated virtual channel */
@@ -2407,7 +2416,6 @@ static void HCD_DRD_Port_IRQHandler(hal_hcd_handle_t *hhcd)
       /* Reset the PMA current pointer */
       (void)USB_DRD_PMAReset();
 
-      /* Disconnection Callback */
 #if defined (USE_HAL_HCD_REGISTER_CALLBACKS) && (USE_HAL_HCD_REGISTER_CALLBACKS == 1U)
       hhcd->p_port_disconnect_cb(hhcd);
 #else

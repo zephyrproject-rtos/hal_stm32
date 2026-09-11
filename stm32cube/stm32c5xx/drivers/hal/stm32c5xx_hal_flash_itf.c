@@ -311,7 +311,8 @@ USE_ASSERT_DBG_PARAM         | from IDE        |      None       | Enables asser
 /*! Macro to check FLASH memory programming delay */
 #define IS_FLASH_ITF_PROGRAMMING_DELAY(value) (((value) == HAL_FLASH_ITF_PROGRAM_DELAY_0)  \
                                                || ((value) == HAL_FLASH_ITF_PROGRAM_DELAY_1)  \
-                                               || ((value) == HAL_FLASH_ITF_PROGRAM_DELAY_2))
+                                               || ((value) == HAL_FLASH_ITF_PROGRAM_DELAY_2)  \
+                                               || ((value) == HAL_FLASH_ITF_PROGRAM_DELAY_3))
 
 /*! Macro to check FLASH empty boot location status */
 #define IS_FLASH_ITF_EMPTY_BOOT_LOCATION(value) (((value) == HAL_FLASH_ITF_BOOT_LOCATION_PROGRAMMED) \

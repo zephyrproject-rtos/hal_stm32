@@ -16,8 +16,8 @@
   */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef STM32C5xx_USB_DRD_CORE_H
-#define STM32C5xx_USB_DRD_CORE_H
+#ifndef STM32C5XX_USB_DRD_CORE_H
+#define STM32C5XX_USB_DRD_CORE_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -45,6 +45,71 @@ extern "C" {
 #ifndef USB_DRD_TIMEOUT
 #define USB_DRD_TIMEOUT                                            (0xF000000U)
 #endif /* USB_DRD_TIMEOUT */
+
+#ifndef USB_EP_SETUP
+#define USB_EP_SETUP                                           (USB_CHEP_SETUP)
+#endif /* USB_EP_SETUP */
+
+#ifndef USB_EP_DTOGTX
+#define USB_EP_DTOGTX                                         (USB_CHEP_DTOGTX)
+#endif /* USB_EP_DTOGTX */
+
+#ifndef USB_CH_DTOGTX
+#define USB_CH_DTOGTX                                         (USB_CHEP_DTOGTX)
+#endif /* USB_EP_DTOGTX */
+
+#ifndef USB_EP_DTOGRX
+#define USB_EP_DTOGRX                                         (USB_CHEP_DTOGRX)
+#endif /* USB_EP_DTOGTX */
+
+#ifndef USB_CH_DTOGRX
+#define USB_CH_DTOGRX                                         (USB_CHEP_DTOGRX)
+#endif /* USB_EP_DTOGTX */
+
+#ifndef USB_EP_VTRX
+#define USB_EP_VTRX                                             (USB_CHEP_VTRX)
+#endif /* USB_EP_VTRX */
+
+#ifndef USB_CH_VTRX
+#define USB_CH_VTRX                                             (USB_CHEP_VTRX)
+#endif /* USB_CH_VTRX */
+
+#ifndef USB_EP_VTTX
+#define USB_EP_VTTX                                             (USB_CHEP_VTTX)
+#endif /* USB_EP_VTTX */
+
+#ifndef USB_CH_VTTX
+#define USB_CH_VTTX                                             (USB_CHEP_VTTX)
+#endif /* USB_CH_VTTX */
+
+#ifndef USB_EP_STATRX
+#define USB_EP_STATRX                                         (USB_CHEP_STATRX)
+#endif /* USB_EP_STATRX */
+
+#ifndef USB_CH_STATRX
+#define USB_CH_STATRX                                         (USB_CHEP_STATRX)
+#endif /* USB_CH_STATRX */
+
+#ifndef USB_CH_ERR_TX
+#define USB_CH_ERR_TX                                         (USB_CHEP_ERR_TX)
+#endif /* USB_CH_ERR_TX */
+
+#ifndef USB_CH_ERR_RX
+#define USB_CH_ERR_RX                                         (USB_CHEP_ERR_RX)
+#endif /* USB_CH_ERR_RX */
+
+#ifndef USB_EP_UTYPE
+#define USB_EP_UTYPE                                           (USB_CHEP_UTYPE)
+#endif /* USB_EP_UTYPE */
+
+#ifndef USB_CH_UTYPE
+#define USB_CH_UTYPE                                           (USB_CHEP_UTYPE)
+#endif /* USB_CH_UTYPE */
+
+#ifndef USB_CH_STATTX
+#define USB_CH_STATTX                                         (USB_CHEP_STATTX)
+#endif /* USB_CH_STATTX */
+
 
 /**
   * @brief  Maximum number of channels/endpoints.
@@ -632,4 +697,4 @@ uint16_t USB_DRD_GET_CH_DBUF1_CNT(uint32_t instance, usb_core_phy_chep_t phy_ch_
 }
 #endif /* __cplusplus */
 
-#endif /* STM32C5xx_USB_DRD_CORE_H */
+#endif /* STM32C5XX_USB_DRD_CORE_H */

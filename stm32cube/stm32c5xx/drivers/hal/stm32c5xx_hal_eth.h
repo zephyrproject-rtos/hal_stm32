@@ -37,10 +37,10 @@ extern "C" {
   * @{
   */
 /* Exported constants --------------------------------------------------------*/
-/** @defgroup ETH_Exported_Constants HAL ETH Constants
+/** @defgroup ETH_Exported_Constants HAL ETH constants
   * @{
   */
-/** @defgroup ETH_Peripheral_Global_Params ETH Peripheral Global Parameters
+/** @defgroup ETH_Peripheral_Global_Params ETH peripheral global parameters
   * @{
   */
 #ifndef USE_HAL_ETH_MAX_TX_CH_NB
@@ -54,81 +54,82 @@ extern "C" {
   * @}
   */
 
-/** @defgroup ETH_Frame_Settings ETH Frame Settings
+/** @defgroup ETH_Frame_Settings ETH frame settings
   * @{
   */
-#define HAL_ETH_MAX_PACKET_SIZE_BYTE          (1528U)             /*!< Ethernet Maximum Packet Size in bytes unit
+#define HAL_ETH_MAX_PACKET_SIZE_BYTE          (1528UL)            /*!< Ethernet Maximum Packet Size in bytes unit
                                                                        (ETH_HEADER + 2*VLAN_TAG + MAX_ETH_PAYLOAD
                                                                        + ETH_CRC) */
-#define HAL_ETH_HEADER_SIZE_BYTE              (14U)               /*!< Ethernet Header Size in bytes unit
+#define HAL_ETH_HEADER_SIZE_BYTE              (14UL)              /*!< Ethernet Header Size in bytes unit
                                                                        (6 byte Dest addr, 6 byte Src addr, 2 byte
                                                                        length/type) */
-#define HAL_ETH_CRC_SIZE_BYTE                 (4U)                /*!< Ethernet CRC Size in bytes unit */
-#define HAL_ETH_VLAN_TAG_SIZE_BYTE            (4U)                /*!< VLAN Tag Size in bytes unit (Optional 802.1q) */
-#define HAL_ETH_DOUBLE_VLAN_TAG_SIZE_BYTE     (8U)                /*!< Double VLAN Tag Size in bytes unit (Optional
+#define HAL_ETH_CRC_SIZE_BYTE                 (4UL)               /*!< Ethernet CRC Size in bytes unit */
+#define HAL_ETH_VLAN_TAG_SIZE_BYTE            (4UL)               /*!< VLAN Tag Size in bytes unit (Optional 802.1q) */
+#define HAL_ETH_DOUBLE_VLAN_TAG_SIZE_BYTE     (8UL)               /*!< Double VLAN Tag Size in bytes unit (Optional
                                                                        802.1q) */
-#define HAL_ETH_MIN_PAYLOAD_SIZE_BYTE         (46U)               /*!< Minimum Ethernet Payload Size in bytes unit */
-#define HAL_ETH_MAX_PAYLOAD_SIZE_BYTE         (1500U)             /*!< Maximum Ethernet Payload Size in bytes unit */
-#define HAL_ETH_JUMBO_FRAME_PAYLOAD_SIZE_BYTE (9000U)             /*!< Jumbo Frame Payload Size in bytes unit */
+#define HAL_ETH_MIN_PAYLOAD_SIZE_BYTE         (46UL)              /*!< Minimum Ethernet Payload Size in bytes unit */
+#define HAL_ETH_MAX_PAYLOAD_SIZE_BYTE         (1500UL)            /*!< Maximum Ethernet Payload Size in bytes unit */
+#define HAL_ETH_JUMBO_FRAME_PAYLOAD_SIZE_BYTE (9000UL)            /*!< Jumbo Frame Payload Size in bytes unit */
 /**
   * @}
   */
 
-/** @defgroup ETH_Channel_Identifiers ETH Tx and Rx Channel Identifiers
+/** @defgroup ETH_Channel_Identifiers ETH Tx and Rx channel identifiers
   * @{
   */
-#define HAL_ETH_TX_CHANNEL_0             0x00000001U               /*!< ETH Tx Channel 0 id         */
-#define HAL_ETH_TX_CHANNEL_ALL           0x00000001U               /*!< ETH All Tx Channels         */
-#define HAL_ETH_RX_CHANNEL_0             0x00010000U               /*!< ETH Rx Channel 0 id         */
-#define HAL_ETH_RX_CHANNEL_ALL           0x00010000U               /*!< ETH All Rx Channels         */
+#define HAL_ETH_TX_CHANNEL_0             0x00000001UL              /*!< ETH Tx Channel 0 id         */
+#define HAL_ETH_TX_CHANNEL_ALL           0x00000001UL               /*!< ETH All Tx Channels         */
+#define HAL_ETH_RX_CHANNEL_0             0x00010000UL              /*!< ETH Rx Channel 0 id         */
+#define HAL_ETH_RX_CHANNEL_ALL           0x00010000UL               /*!< ETH All Rx Channels         */
 #define HAL_ETH_CHANNEL_ALL              (HAL_ETH_TX_CHANNEL_ALL | \
                                           HAL_ETH_RX_CHANNEL_ALL)  /*!< ETH All Tx and Rx Channels  */
 /**
   * @}
   */
 
-/** @defgroup ETH_Queue_Indexes ETH Tx and Rx Queue Indexes
+/** @defgroup ETH_Queue_Indexes ETH Tx and Rx queue indexes
   * @{
   */
-#define HAL_ETH_TX_Q0                    0x00000000U               /*!< ETH Tx Queue0 Index */
-#define HAL_ETH_RX_Q0                    0x00000000U               /*!< ETH Rx Queue0 Index */
+#define HAL_ETH_TX_Q0                    0x00000000UL              /*!< ETH Tx Queue0 Index */
+#define HAL_ETH_RX_Q0                    0x00000000UL              /*!< ETH Rx Queue0 Index */
 /**
   * @}
   */
 
-/** @defgroup ETH_Error_Code ETH Peripheral Error Codes
+/** @defgroup ETH_Error_Code ETH peripheral error codes
   * @brief Error codes for the Ethernet (ETH) peripheral.
   *
   * These constants define the possible error codes returned by the Ethernet
   * (ETH) peripheral HAL layer. They are typically used as bitmasks, allowing
-  * multiple error conditions to be reported simultaneously.
+  * multiple errors conditions to be reported simultaneously.
   *
   * @note These error are synchronously reported through @p p_error_cb Callback.
   * @note Use @ref HAL_ETH_GetLastErrorCodes to retrieve the last error code.
   * @{
   */
-#define HAL_ETH_ERROR_NONE               0x00000000U                  /*!< No error                */
+#define HAL_ETH_ERROR_NONE               0x00000000UL                 /*!< No error                */
 #define HAL_ETH_ERROR_FBE                ETH_DMACSR_FBE               /*!< Fatal Bus Error          */
 #define HAL_ETH_ERROR_CDE                ETH_DMACSR_CDE               /*!< Context Descriptor Error */
 /* Errors set when a bus error occurs during Rx DMA operation */
-#define HAL_ETH_ERROR_FBE_DMA_RX_RD      (0x1U << ETH_DMACSR_REB_Pos) /*!< Bus Fault Error during read transfer
+#define HAL_ETH_ERROR_FBE_DMA_RX_RD      (0x1UL << ETH_DMACSR_REB_Pos) /*!< Bus Fault Error during read transfer
                                                                                  by Rx DMA */
-#define HAL_ETH_ERROR_FBE_DMA_RX_AC      (0x2U << ETH_DMACSR_REB_Pos) /*!< Bus Fault Error during descriptor
+#define HAL_ETH_ERROR_FBE_DMA_RX_AC      (0x2UL << ETH_DMACSR_REB_Pos) /*!< Bus Fault Error during descriptor
                                                                                  access by Rx DMA */
-#define HAL_ETH_ERROR_FBE_DMA_RX_WR      (0x4U << ETH_DMACSR_REB_Pos) /*!< Bus Fault Error during data transfer
+#define HAL_ETH_ERROR_FBE_DMA_RX_WR      (0x4UL << ETH_DMACSR_REB_Pos) /*!< Bus Fault Error during data transfer
                                                                                  by Rx DMA */
 /* Errors set when a bus error occurs during Tx DMA operation */
-#define HAL_ETH_ERROR_FBE_DMA_TX_RD      (0x1U << ETH_DMACSR_TEB_Pos) /*!< Bus Fault Error during read transfer
+#define HAL_ETH_ERROR_FBE_DMA_TX_RD      (0x1UL << ETH_DMACSR_TEB_Pos) /*!< Bus Fault Error during read transfer
                                                                                  by TxDMA */
-#define HAL_ETH_ERROR_FBE_DMA_TX_AC      (0x2U << ETH_DMACSR_TEB_Pos) /*!< Bus Fault Error during descriptor
+#define HAL_ETH_ERROR_FBE_DMA_TX_AC      (0x2UL << ETH_DMACSR_TEB_Pos) /*!< Bus Fault Error during descriptor
                                                                                  access by Tx DMA */
-#define HAL_ETH_ERROR_FBE_DMA_TX_WR      (0x4U << ETH_DMACSR_TEB_Pos) /*!< Bus Fault Error during data transfer
+#define HAL_ETH_ERROR_FBE_DMA_TX_WR      (0x4UL << ETH_DMACSR_TEB_Pos) /*!< Bus Fault Error during data transfer
                                                                                  by Tx DMA */
+#define HAL_ETH_ERROR_UNDEFINED          0x80000000UL                 /*!< Undefined or unexpected error */
 /**
   * @}
   */
 
-/** @defgroup ETH_MAC_Event_Codes ETH MAC Peripheral Status Events
+/** @defgroup ETH_MAC_Event_Codes ETH MAC peripheral status events
   * @brief MAC Event codes for the Ethernet (ETH) peripheral.
   *
   * These constants define the possible events codes returned by the Ethernet
@@ -150,7 +151,7 @@ extern "C" {
   * @}
   */
 
-/** @defgroup ETH_PMT_Event_Codes ETH PMT Peripheral Status Events
+/** @defgroup ETH_PMT_Event_Codes ETH PMT peripheral status events
   * @brief PMT Event codes for the Ethernet (ETH) peripheral.
   *
   * These constants define the possible events codes returned by the Ethernet
@@ -167,8 +168,8 @@ extern "C" {
   * @}
   */
 
-/** @defgroup ETH_LPI_Event_Codes ETH LPI Peripheral Status Events
-  * @brief PMT Event codes for the Ethernet (ETH) peripheral.
+/** @defgroup ETH_LPI_Event_Codes ETH LPI peripheral status events
+  * @brief LPI Event codes for the Ethernet (ETH) peripheral.
   *
   * These constants define the possible events codes returned by the Ethernet
   * (ETH) peripheral HAL layer. They are typically used as bitmasks, allowing
@@ -190,11 +191,11 @@ extern "C" {
   * @}
   */
 
-/** @defgroup ETH_Channel_Event_Codes ETH Channel Event Codes
-  * @brief Event codes for the Ethernet (ETH) Channel.
+/** @defgroup ETH_Channel_Event_Codes ETH channel event codes
+  * @brief Event codes for the Ethernet (ETH) channel.
   *
   * These constants define the possible events codes returned by the Ethernet
-  * (ETH) Channel HAL layer. They are typically used as bitmasks, allowing
+  * (ETH) channel HAL layer. They are typically used as bitmasks, allowing
   * multiple events conditions to be reported simultaneously.
   *
   * @note These events are reported through registered @p p_ch_event_cb to the user.
@@ -242,17 +243,17 @@ extern "C" {
   * @}
   */
 
-/** @defgroup ETH_Channel_Rx_Errors ETH Rx Channel Errors
-  * @brief Errors for the Ethernet (ETH) Rx Channel.
+/** @defgroup ETH_Channel_Rx_Errors ETH Rx channel errors
+  * @brief Errors for the Ethernet (ETH) Rx channel.
   *
   * These constants define the possible errors returned by the Ethernet
-  * (ETH) Channel HAL layer. They are typically used as bitmasks, allowing
+  * (ETH) channel HAL layer. They are typically used as bitmasks, allowing
   * multiple errors conditions to be reported simultaneously.
   *
   * @note These errors are reported through registered @p p_rx_complete_cb to the user.
   * @{
   */
-#define HAL_ETH_RX_ERROR_IPH             (1UL <<  3)               /*!< IP Header Error.
+#define HAL_ETH_RX_ERROR_IPH             (1UL <<  3U)              /*!< IP Header Error.
                                                                         When this error is reported, it indicates
                                                                         either of the following:
                                                                         * The 16-bit IPv4 header checksum calculated by
@@ -264,7 +265,7 @@ extern "C" {
                                                                         number of IP header bytes.
                                                                         This error is valid when IPv6 or IPv4 header
                                                                         is detected. */
-#define HAL_ETH_RX_ERROR_IPC             (1UL <<  7)               /*!< IP Payload Error.
+#define HAL_ETH_RX_ERROR_IPC             (1UL <<  7U)              /*!< IP Payload Error.
                                                                         When this error is reported, it indicates
                                                                         either of the following:
                                                                         * The 16-bit IP payload checksum (that is, the
@@ -279,12 +280,12 @@ extern "C" {
                                                                         UDP, or ICMP.
                                                                         This error is valid when IPv6 or IPv4 header is
                                                                         detected. */
-#define HAL_ETH_RX_ERROR_DB              (1UL << 19)               /*!< Dribble Bit Error.
+#define HAL_ETH_RX_ERROR_DB              (1UL << 19U)              /*!< Dribble Bit Error.
                                                                         When this error is reported, it indicates that
                                                                         the received packet has a noninteger multiple
                                                                         of bytes (odd nibbles). This bit is valid only
                                                                         in the MII Mode. */
-#define HAL_ETH_RX_ERROR_REC             (1UL << 20)               /*!< Receive Error.
+#define HAL_ETH_RX_ERROR_REC             (1UL << 20U)              /*!< Receive Error.
                                                                         When this error is reported, it indicates that
                                                                         the ETH_RX_ER signal is asserted while the
                                                                         ETH_RX_DV signal is asserted during packet
@@ -292,19 +293,19 @@ extern "C" {
                                                                         extension error in the GMII and Half-duplex
                                                                         mode. Error can be of less or no extension, or
                                                                         error (rxd!= 0f) during extension. */
-#define HAL_ETH_RX_ERROR_OFL             (1UL << 21)               /*!< Overflow Error.
+#define HAL_ETH_RX_ERROR_OFL             (1UL << 21U)              /*!< Overflow Error.
                                                                         When this error is reported, it indicates that
                                                                         the received packet is damaged because of
                                                                         buffer overflow in Rx FIFO.
                                                                         This error is reported only when the DMA
                                                                         transfers a partial packet to the application.
                                                                         */
-#define HAL_ETH_RX_ERROR_RWT             (1UL << 22)               /*!< Receive Watchdog Timeout.
+#define HAL_ETH_RX_ERROR_RWT             (1UL << 22U)              /*!< Receive Watchdog Timeout.
                                                                         When this error is reported, it indicates that
                                                                         the Receive Watchdog Timer has expired while
                                                                         receiving the current packet. The current
                                                                         packet is truncated after watchdog timeout. */
-#define HAL_ETH_RX_ERROR_GP              (1UL << 23)               /*!< Giant Packet.
+#define HAL_ETH_RX_ERROR_GP              (1UL << 23U)              /*!< Giant Packet.
                                                                         When this error is reported, it indicates that
                                                                         the packet length exceeds the specified maximum
                                                                         Ethernet size of 1518, 1522, or 2000 bytes
@@ -312,7 +313,7 @@ extern "C" {
                                                                         set).
                                                                         Giant packet indicates only the packet length.
                                                                         It does not cause any packet truncation. */
-#define HAL_ETH_RX_ERROR_CRC             (1UL << 24)               /*!< CRC Error.
+#define HAL_ETH_RX_ERROR_CRC             (1UL << 24U)              /*!< CRC Error.
                                                                         When this error is reported, it indicates that
                                                                         a Cyclic Redundancy Check (CRC) error occurred
                                                                         on the received packet. */
@@ -320,17 +321,17 @@ extern "C" {
   * @}
   */
 
-/** @defgroup ETH_Channel_Tx_Errors ETH Tx Channel Errors
-  * @brief Errors for the Ethernet (ETH) Tx Channel.
+/** @defgroup ETH_Channel_Tx_Errors ETH Tx channel errors
+  * @brief Errors for the Ethernet (ETH) Tx channel.
   *
   * These constants define the possible errors returned by the Ethernet
-  * (ETH) Channel HAL layer. They are typically used as bitmasks, allowing
+  * (ETH) channel HAL layer. They are typically used as bitmasks, allowing
   * multiple errors conditions to be reported simultaneously.
   *
   * @note These errors are reported through registered @p p_tx_complete_cb to the user.
   * @{
   */
-#define HAL_ETH_TX_ERROR_IH              (1UL <<  0)               /*!< IP Header Error.
+#define HAL_ETH_TX_ERROR_IH              (1UL <<  0U)              /*!< IP Header Error.
                                                                         This error indicates that the Checksum
                                                                         Offload engine detected an IP header error. If
                                                                         COE detects an IP header error, it still
@@ -340,101 +341,101 @@ extern "C" {
                                                                         and this bit is set, it indicates the frame
                                                                         drop status due to Frame Size error or Schedule
                                                                         Error. */
-#define HAL_ETH_TX_ERROR_DB              (1UL <<  1)               /*!< Deferred Bit.
+#define HAL_ETH_TX_ERROR_DB              (1UL <<  1U)              /*!< Deferred Bit.
                                                                         This error indicates that the MAC deferred
                                                                         before transmitting because of presence of
                                                                         carrier. */
-#define HAL_ETH_TX_ERROR_UF              (1UL <<  2)               /*!< Underflow Error.
+#define HAL_ETH_TX_ERROR_UF              (1UL <<  2U)              /*!< Underflow Error.
                                                                         This error indicates that the MAC aborted the
                                                                         packet because the data arrived late from the
                                                                         system memory. */
-#define HAL_ETH_TX_ERROR_ED              (1UL <<  3)               /*!< Excessive Deferral.
+#define HAL_ETH_TX_ERROR_ED              (1UL <<  3U)              /*!< Excessive Deferral.
                                                                         This error indicates that the transmission
                                                                         ended because of excessive deferral of over
                                                                         24,288 bit times (155,680 bits times in
                                                                         1000-Mbps mode or Jumbo Packet enabled mode).
                                                                         */
-#define HAL_ETH_TX_ERROR_EC              (1UL <<  8)               /*!< Excessive Collision.
+#define HAL_ETH_TX_ERROR_EC              (1UL <<  8U)              /*!< Excessive Collision.
                                                                         This error indicates that the transmission was
                                                                         aborted after 16 successive collisions while
                                                                         attempting to transmit the current packet. */
-#define HAL_ETH_TX_ERROR_LC              (1UL <<  9)               /*!< Late Collision.
+#define HAL_ETH_TX_ERROR_LC              (1UL <<  9U)              /*!< Late Collision.
                                                                         This error indicates that packet transmission
                                                                         was aborted because a collision occurred after
                                                                         the collision window (64 byte times including
                                                                         Preamble in MII mode and 512 byte times
                                                                         including Preamble and Carrier Extension in
                                                                         GMII mode). */
-#define HAL_ETH_TX_ERROR_NC              (1UL << 10)               /*!< No Carrier.
+#define HAL_ETH_TX_ERROR_NC              (1UL << 10U)              /*!< No Carrier.
                                                                         This error indicates that the carrier sense
                                                                         signal form the PHY was not asserted during
                                                                         transmission. */
-#define HAL_ETH_TX_ERROR_LOC             (1UL << 11)               /*!< Loss of Carrier.
+#define HAL_ETH_TX_ERROR_LOC             (1UL << 11U)              /*!< Loss of Carrier.
                                                                         This error indicates that Loss of Carrier
                                                                         occurred during packet transmission. */
-#define HAL_ETH_TX_ERROR_PC              (1UL << 12)               /*!< Payload Checksum Error.
+#define HAL_ETH_TX_ERROR_PC              (1UL << 12U)              /*!< Payload Checksum Error.
                                                                         This error indicates that the Checksum Offload
                                                                         engine had a failure and did not insert any
                                                                         checksum into the encapsulated TCP, UDP, or
                                                                         ICMP payload. */
-#define HAL_ETH_TX_ERROR_JT              (1UL << 14)               /*!< Jabber Timeout.
+#define HAL_ETH_TX_ERROR_JT              (1UL << 14U)              /*!< Jabber Timeout.
                                                                         This error indicates that the MAC transmitter
                                                                         has experienced a jabber timeout. */
-#define HAL_ETH_TX_ERROR_DE              (1UL << 23)               /*!< Descriptor Error.
+#define HAL_ETH_TX_ERROR_DE              (1UL << 23U)              /*!< Descriptor Error.
                                                                         This error indicates that the descriptor
                                                                         content is incorrect. */
 /**
   * @}
   */
 
-/** @defgroup ETH_Channel_Rx_Status ETH Rx Channel Status
-  * @brief Status for the Ethernet (ETH) Rx Channel.
+/** @defgroup ETH_Channel_Rx_Status ETH Rx channel status
+  * @brief Status for the Ethernet (ETH) Rx channel.
   *
   * These constants define the possible status returned by the Ethernet
-  * (ETH) Channel HAL layer. They are typically used as bitmasks, allowing
+  * (ETH) channel HAL layer. They are typically used as bitmasks, allowing
   * multiple status conditions to be reported simultaneously.
   *
   * @note These status are reported through registered @p p_rx_complete_cb to the user.
   * @{
   */
-#define HAL_ETH_RX_STATUS_IPV4           (1UL <<  4)               /*!< IPv4 header Present.
+#define HAL_ETH_RX_STATUS_IPV4           (1UL <<  4U)              /*!< IPv4 header Present.
                                                                       This status indicates that an IPV4 header is
                                                                       detected. */
-#define HAL_ETH_RX_STATUS_IPV6           (1UL <<  5)               /*!< IPv6 header Present.
+#define HAL_ETH_RX_STATUS_IPV6           (1UL <<  5U)              /*!< IPv6 header Present.
                                                                       This status indicates that an IPV6 header is
                                                                       detected. */
-#define HAL_ETH_RX_STATUS_IPCB           (1UL <<  6)               /*!< IP Checksum Bypassed.
+#define HAL_ETH_RX_STATUS_IPCB           (1UL <<  6U)              /*!< IP Checksum Bypassed.
                                                                       This status indicates that the checksum offload
                                                                       engine is bypassed. */
-#define HAL_ETH_RX_STATUS_ARPNR          (1UL << 10)               /*!< ARP Reply Not Generated.
+#define HAL_ETH_RX_STATUS_ARPNR          (1UL << 10U)              /*!< ARP Reply Not Generated.
                                                                       This status indicates that the MAC did not
                                                                       generate the ARP Reply for received ARP Request
                                                                       packet. This error is reported when the MAC is
                                                                       busy transmitting ARP reply to earlier ARP
                                                                       request (only one ARP request is processed at
                                                                       a time). */
-#define HAL_ETH_RX_STATUS_TSA            (1UL << 14)               /*!< Timestamp Available.
+#define HAL_ETH_RX_STATUS_TSA            (1UL << 14U)              /*!< Timestamp Available.
                                                                       This status indicates that the Timestamp value is
                                                                       available for the received packet.
                                                                       This is valid only when the last received frame
                                                                       of the packet is completed. */
-#define HAL_ETH_RX_STATUS_TD             (1UL << 15)               /*!< Timestamp Dropped.
+#define HAL_ETH_RX_STATUS_TD             (1UL << 15U)              /*!< Timestamp Dropped.
                                                                       This status indicates that the timestamp was
                                                                       captured for this packet but got dropped in the
                                                                       MTL Rx FIFO because of overflow. */
-#define HAL_ETH_RX_STATUS_VLAN           (1UL << 25)               /*!< Outer (and Inner) VLAG Tag Present.
+#define HAL_ETH_RX_STATUS_VLAN           (1UL << 25U)              /*!< Outer (and Inner) VLAG Tag Present.
                                                                       This status indicates that an Outer VLAG tag is
                                                                       detected. If Double VLAN tag processing and VLAN
                                                                       tag stripping are enabled the Inner VLAN tag is
                                                                       detected too. */
-#define HAL_ETH_RX_STATUS_LD             (1UL << 28)               /*!< Last Descriptor.
+#define HAL_ETH_RX_STATUS_LD             (1UL << 28U)              /*!< Last Descriptor.
                                                                       This status indicates indicates that the buffers
                                                                       to which this descriptor is pointing are the last
                                                                       segment of the packet. */
-#define HAL_ETH_RX_STATUS_FD             (1UL << 29)               /*!< First Descriptor.
+#define HAL_ETH_RX_STATUS_FD             (1UL << 29U)              /*!< First Descriptor.
                                                                       This status indicates that this descriptor
                                                                       contains the first segment of the packet. */
-#define HAL_ETH_RX_STATUS_INVALID        (1UL << 31)               /*!< Rx Buffer Status.
+#define HAL_ETH_RX_STATUS_INVALID        (1UL << 31U)              /*!< Rx Buffer Status.
                                                                       This status status indicates that the buffer
                                                                       which this descriptor is pointing is dirty (no
                                                                       data were received). */
@@ -442,28 +443,28 @@ extern "C" {
   * @}
   */
 
-/** @defgroup ETH_Channel_Tx_Status ETH Tx Channel Status
-  * @brief Status for the Ethernet (ETH) Tx Channel.
+/** @defgroup ETH_Channel_Tx_Status ETH Tx channel status
+  * @brief Status for the Ethernet (ETH) Tx channel.
   *
   * These constants define the possible status returned by the Ethernet
-  * (ETH) Channel HAL layer. They are typically used as bitmasks, allowing
+  * (ETH) channel HAL layer. They are typically used as bitmasks, allowing
   * multiple status conditions to be reported simultaneously.
   *
   * @note These status are reported through registered @p p_tx_complete_cb to the user.
   * @{
   */
-#define HAL_ETH_TX_STATUS_TTSS           (1UL << 17)               /*!< Tx Timestamp Status.
+#define HAL_ETH_TX_STATUS_TTSS           (1UL << 17U)              /*!< Tx Timestamp Status.
                                                                       This status indicates that a timestamp has been
                                                                       captured for the corresponding transmit packet.
                                                                       */
-#define HAL_ETH_TX_STATUS_LD             (1UL << 28)               /*!< Last Descriptor.
+#define HAL_ETH_TX_STATUS_LD             (1UL << 28U)              /*!< Last Descriptor.
                                                                       This status indicates indicates that the buffers
                                                                       to which this descriptor is pointing are the last
                                                                       segment of the packet. */
-#define HAL_ETH_TX_STATUS_FD             (1UL << 29)               /*!< First Descriptor.
+#define HAL_ETH_TX_STATUS_FD             (1UL << 29U)              /*!< First Descriptor.
                                                                       This status indicates that this descriptor
                                                                       contains the first segment of the packet. */
-#define HAL_ETH_TX_STATUS_INVALID        (1UL << 31)               /*!< Tx Buffer Status.
+#define HAL_ETH_TX_STATUS_INVALID        (1UL << 31U)              /*!< Tx Buffer Status.
                                                                       This status indicates that the buffer which this
                                                                       descriptor is pointing is dirty (not yet
                                                                       transmitted). */
@@ -482,7 +483,7 @@ extern "C" {
   * When this control is enabled, the hardware will automatically calculate and insert
   * the IP header checksum for the outgoing packet.
   */
-#define HAL_ETH_TX_PKT_CTRL_CSUM         0x00000001U
+#define HAL_ETH_TX_PKT_CTRL_CSUM         0x00000001UL
 
 /**
   * @def HAL_ETH_TX_PKT_CTRL_SAIC
@@ -491,7 +492,7 @@ extern "C" {
   * When this control is enabled, the hardware will insert or replace the source MAC address
   * in the outgoing packet as per the configuration.
   */
-#define HAL_ETH_TX_PKT_CTRL_SAIC         0x00000002U
+#define HAL_ETH_TX_PKT_CTRL_SAIC         0x00000002UL
 
 /**
   * @def HAL_ETH_TX_PKT_CTRL_VLANTAG
@@ -500,7 +501,7 @@ extern "C" {
   * When this control is enabled, the hardware will insert or replace the VLAN tag in the
   * outgoing packet according to the specified VLAN configuration.
   */
-#define HAL_ETH_TX_PKT_CTRL_VLANTAG      0x00000004U
+#define HAL_ETH_TX_PKT_CTRL_VLANTAG      0x00000004UL
 
 /**
   * @def HAL_ETH_TX_PKT_CTRL_INNERVLANTAG
@@ -509,7 +510,7 @@ extern "C" {
   * When this control is enabled, the hardware will insert or replace the inner VLAN tag
   * (for double-tagged or Q-in-Q packets) in the outgoing packet.
   */
-#define HAL_ETH_TX_PKT_CTRL_INNERVLANTAG 0x00000008U
+#define HAL_ETH_TX_PKT_CTRL_INNERVLANTAG 0x00000008UL
 
 /**
   * @def HAL_ETH_TX_PKT_CTRL_CRCPAD
@@ -518,12 +519,12 @@ extern "C" {
   * When this control is enabled, the hardware will automatically append the CRC and
   * perform padding to meet the minimum Ethernet frame size requirements.
   */
-#define HAL_ETH_TX_PKT_CTRL_CRCPAD       0x00000020U
+#define HAL_ETH_TX_PKT_CTRL_CRCPAD       0x00000020UL
 /**
   * @}
   */
 
-/** @defgroup ETH_Bus_Burst_Length ETH System Bus Burst Length
+/** @defgroup ETH_Bus_Burst_Length ETH system bus burst length
   * @{
   */
 #define HAL_ETH_BUS_BURST_LEN_4_BEAT     ETH_DMASBMR_BLEN4         /*!< System Bus Burst Length 4 beats   */
@@ -539,7 +540,7 @@ extern "C" {
   */
 
 /**************************************** PMT Control and Status definitions *****************************************/
-/** @defgroup ETH_PMT_Triggers ETH PMT Control Flags
+/** @defgroup ETH_PMT_Triggers ETH PMT control flags
   * @brief Constants for configuring Power Management Timer (PMT) control flags for Ethernet.
   * @{
   */
@@ -603,7 +604,7 @@ extern "C" {
   */
 
 /**************************************** LPI Control and Status definitions *****************************************/
-/** @defgroup ETH_LPI_Controls ETH LPI Controls
+/** @defgroup ETH_LPI_Controls ETH LPI controls
   * @brief Constants for configuring Low Power Idle (LPI) controls for Ethernet.
   * @{
   */
@@ -633,7 +634,7 @@ extern "C" {
   */
 
 /**************************************** MDIO Command Attributes definitions ****************************************/
-/** @defgroup ETH_MDIO_Command_Attributes ETH MDIO Command Attributes
+/** @defgroup ETH_MDIO_Command_Attributes ETH MDIO command attributes
   * @brief Constants for configuring MDIO (Management Data Input/Output) command attributes for Ethernet.
   * @{
   */
@@ -670,7 +671,7 @@ extern "C" {
   *
   * @see HAL_ETH_MDIO_SetOpAttributes
   */
-#define HAL_ETH_MDIO_NTC_1_CYCLE                             (1 << ETH_MACMDIOAR_NTC_Pos)
+#define HAL_ETH_MDIO_NTC_1_CYCLE                             (1UL << ETH_MACMDIOAR_NTC_Pos)
 
 /**
   * @def HAL_ETH_MDIO_NTC_2_CYCLES
@@ -680,7 +681,7 @@ extern "C" {
   *
   * @see HAL_ETH_MDIO_SetOpAttributes
   */
-#define HAL_ETH_MDIO_NTC_2_CYCLES                            (2 << ETH_MACMDIOAR_NTC_Pos)
+#define HAL_ETH_MDIO_NTC_2_CYCLES                            (2UL << ETH_MACMDIOAR_NTC_Pos)
 
 /**
   * @def HAL_ETH_MDIO_NTC_3_CYCLES
@@ -690,7 +691,7 @@ extern "C" {
   *
   * @see HAL_ETH_MDIO_SetOpAttributes
   */
-#define HAL_ETH_MDIO_NTC_3_CYCLES                            (3 << ETH_MACMDIOAR_NTC_Pos)
+#define HAL_ETH_MDIO_NTC_3_CYCLES                            (3UL << ETH_MACMDIOAR_NTC_Pos)
 
 /**
   * @def HAL_ETH_MDIO_NTC_4_CYCLES
@@ -700,7 +701,7 @@ extern "C" {
   *
   * @see HAL_ETH_MDIO_SetOpAttributes
   */
-#define HAL_ETH_MDIO_NTC_4_CYCLES                            (4 << ETH_MACMDIOAR_NTC_Pos)
+#define HAL_ETH_MDIO_NTC_4_CYCLES                            (4UL << ETH_MACMDIOAR_NTC_Pos)
 
 /**
   * @def HAL_ETH_MDIO_NTC_5_CYCLES
@@ -710,7 +711,7 @@ extern "C" {
   *
   * @see HAL_ETH_MDIO_SetOpAttributes
   */
-#define HAL_ETH_MDIO_NTC_5_CYCLES                            (5 << ETH_MACMDIOAR_NTC_Pos)
+#define HAL_ETH_MDIO_NTC_5_CYCLES                            (5UL << ETH_MACMDIOAR_NTC_Pos)
 
 /**
   * @def HAL_ETH_MDIO_NTC_6_CYCLES
@@ -720,7 +721,7 @@ extern "C" {
   *
   * @see HAL_ETH_MDIO_SetOpAttributes
   */
-#define HAL_ETH_MDIO_NTC_6_CYCLES                            (6 << ETH_MACMDIOAR_NTC_Pos)
+#define HAL_ETH_MDIO_NTC_6_CYCLES                            (6UL << ETH_MACMDIOAR_NTC_Pos)
 
 /**
   * @def HAL_ETH_MDIO_NTC_7_CYCLES
@@ -730,13 +731,13 @@ extern "C" {
   *
   * @see HAL_ETH_MDIO_SetOpAttributes
   */
-#define HAL_ETH_MDIO_NTC_7_CYCLES                            (7 << ETH_MACMDIOAR_NTC_Pos)
+#define HAL_ETH_MDIO_NTC_7_CYCLES                            (7UL << ETH_MACMDIOAR_NTC_Pos)
 /**
   * @}
   */
 
 /**************************************** Remote Wakeup Command List definitions *************************************/
-/** @defgroup ETH_RWK_Packet_Filters_Number ETH Remote Wake Up Filter Number
+/** @defgroup ETH_RWK_Packet_Filters_Number ETH remote wake-up filter number
   * @brief Constants defining the number of remote wake-up (RWK) packet filters supported by the Ethernet hardware.
   * @{
   */
@@ -768,7 +769,7 @@ extern "C" {
   * @}
   */
 
-/** @defgroup ETH_RWK_Filter_Commands ETH Remote Wakeup Command List
+/** @defgroup ETH_RWK_Filter_Commands ETH remote wake-up command list
   * @brief Constants for configuring the 4-bit filter command for remote wakeup filters.
   * @{
   */
@@ -782,7 +783,7 @@ extern "C" {
   * @see hal_eth_rwk_pkt_filter_t
   * @see HAL_ETH_SetRemoteWakeUpPcktFilter
   */
-#define HAL_ETH_RWK_FLT_CMD_ENABLE                           (1U << 0)
+#define HAL_ETH_RWK_FLT_CMD_ENABLE                           (1UL << 0U)
 
 /**
   * @def HAL_ETH_RWK_FLT_CMD_AND_PREVIOUS
@@ -795,7 +796,7 @@ extern "C" {
   * @see hal_eth_rwk_pkt_filter_t
   * @see HAL_ETH_SetRemoteWakeUpPcktFilter
   */
-#define HAL_ETH_RWK_FLT_CMD_AND_PREVIOUS                     (1U << 1)
+#define HAL_ETH_RWK_FLT_CMD_AND_PREVIOUS                     (1UL << 1U)
 
 /**
   * @def HAL_ETH_RWK_FLT_CMD_INVERSE_MODE
@@ -809,7 +810,7 @@ extern "C" {
   * @see hal_eth_rwk_pkt_filter_t
   * @see HAL_ETH_SetRemoteWakeUpPcktFilter
   */
-#define HAL_ETH_RWK_FLT_CMD_INVERSE_MODE                     (1U << 2)
+#define HAL_ETH_RWK_FLT_CMD_INVERSE_MODE                     (1UL << 2U)
 
 /**
   * @def HAL_ETH_RWK_FLT_CMD_MULTICAST
@@ -822,7 +823,7 @@ extern "C" {
   * @see hal_eth_rwk_pkt_filter_t
   * @see HAL_ETH_SetRemoteWakeUpPcktFilter
   */
-#define HAL_ETH_RWK_FLT_CMD_MULTICAST                        (1U << 3)
+#define HAL_ETH_RWK_FLT_CMD_MULTICAST                        (1UL << 3U)
 /**
   * @}
   */
@@ -831,7 +832,7 @@ extern "C" {
   */
 
 /* Exported types ------------------------------------------------------------*/
-/** @defgroup ETH_Exported_Types HAL ETH Types
+/** @defgroup ETH_Exported_Types HAL ETH types
   * @{
   */
 /** @defgroup ETH_Exported_Types_Group1 Enumerations
@@ -839,34 +840,34 @@ extern "C" {
   */
 /**************************************  ETH Peripheral Handle Enumerations  *****************************************/
 /**
-  * @brief HAL ETH Instance Definition
+  * @brief HAL ETH instances enumeration definition
   *
   */
 typedef enum
 {
-  HAL_ETH1                          = ETH1_BASE        /*!< Instance ETH */
+  HAL_ETH1  = ETH1_BASE        /*!< Instance ETH */
 } hal_eth_t;
 
 /********************************  ETH Peripheral and Channel State Enumerations  ************************************/
 /**
-  * @brief HAL ETH State Structure Definition
+  * @brief HAL ETH state enumeration definition
   */
 typedef enum
 {
-  HAL_ETH_STATE_RESET               = 0U,                  /*!< ETH Peripheral is not yet Initialized or De-Initialized
+  HAL_ETH_STATE_RESET               = 0UL,                 /*!< ETH Peripheral is not yet Initialized or De-Initialized
                                                                 */
-  HAL_ETH_STATE_INIT                = (1U << 31U),         /*!< ETH Peripheral is initialized but not yet configured
+  HAL_ETH_STATE_INIT                = (1UL << 31U),        /*!< ETH Peripheral is initialized but not yet configured
                                                                 */
-  HAL_ETH_STATE_CONFIGURED          = (1U << 30U),         /*!< ETH Peripheral initialized and a global config applied
+  HAL_ETH_STATE_CONFIGURED          = (1UL << 30U),        /*!< ETH Peripheral initialized and a global config applied
                                                                 */
-  HAL_ETH_STATE_POWER_DOWN          = (1U << 28U),         /*!< ETH peripheral is in power down mode
+  HAL_ETH_STATE_POWER_DOWN          = (1UL << 28U),        /*!< ETH peripheral is in power down mode
                                                                 */
-  HAL_ETH_STATE_FAULT               = (1U << 27U)          /*!< ETH Peripheral encountered an unrecoverable error and
+  HAL_ETH_STATE_FAULT               = (1UL << 27U)         /*!< ETH Peripheral encountered an unrecoverable error and
                                                                 a recovery sequence is needed */
 } hal_eth_state_t;
 
 /**
-  * @brief  HAL ETH Channel State structures definition
+  * @brief  HAL ETH channel state structures definition
   */
 typedef enum
 {
@@ -876,16 +877,16 @@ typedef enum
   HAL_ETH_CHANNEL_STATE_SUSPENDED   = (1UL << 29U)         /*!< Channel is started and suspended (Idle state) */
 } hal_eth_channel_state_t;
 
-/***********************************  ETH Request FIFO Event te Enumerations  ****************************************/
+/***********************************  ETH request FIFO event enumerations  ****************************************/
 /**
-  * @brief  ETH FIFO Event Mode type enum definition
+  * @brief  ETH FIFO event mode type enum definition
   */
 typedef enum
 {
-  HAL_ETH_FIFO_EVENT_NONE           = 0x00000001U,         /*!< ETH Interrupt is disabled - Polling mode, no interrupt
+  HAL_ETH_FIFO_EVENT_NONE           = 0x00000001UL,        /*!< ETH Interrupt is disabled - Polling mode, no interrupt
                                                                 */
-  HAL_ETH_FIFO_EVENT_ALWAYS         = 0x00000002U,         /*!< ETH FIFO event on every executed descriptor */
-  HAL_ETH_FIFO_EVENT_CYCLIC         = 0x00000004U          /*!< ETH Interrupt after every N descriptors.
+  HAL_ETH_FIFO_EVENT_ALWAYS         = 0x00000002UL,        /*!< ETH FIFO event on every executed descriptor */
+  HAL_ETH_FIFO_EVENT_CYCLIC         = 0x00000004UL         /*!< ETH Interrupt after every N descriptors.
                                                                 This mode reduces interrupt load for high-throughput
                                                                  operation. */
 } hal_eth_fifo_event_mode_t;
@@ -896,8 +897,8 @@ typedef enum
   */
 typedef enum
 {
-  HAL_ETH_MEDIA_IF_MII              = 0x00U,               /*!< Media Independent Interface               */
-  HAL_ETH_MEDIA_IF_RMII             = 0x02U,               /*!< Reduced Media Independent Interface       */
+  HAL_ETH_MEDIA_IF_MII              = 0x00UL,              /*!< Media Independent Interface               */
+  HAL_ETH_MEDIA_IF_RMII             = 0x02UL,              /*!< Reduced Media Independent Interface       */
 } hal_eth_media_interface_t;
 
 /************************************  ETH Transmit Packet Controls Enumerations  ************************************/
@@ -906,11 +907,11 @@ typedef enum
   */
 typedef enum
 {
-  HAL_ETH_TX_PKT_SRC_ADDR_CONTROL_DISABLE = 0x00000000U,    /*!< SA Insertion Control: Do not include the source
+  HAL_ETH_TX_PKT_SRC_ADDR_CONTROL_DISABLE = 0x00000000UL,   /*!< SA Insertion Control: Do not include the source
                                                                  address. */
-  HAL_ETH_TX_PKT_SRC_ADDR_INSERT    = 0x00800000U,          /*!< SA Insertion Control: Include or insert the source
+  HAL_ETH_TX_PKT_SRC_ADDR_INSERT    = 0x00800000UL,         /*!< SA Insertion Control: Include or insert the source
                                                                 address. */
-  HAL_ETH_TX_PKT_SRC_ADDR_REPLACE   = 0x01000000U           /*!< SA Insertion Control: Replace the source address */
+  HAL_ETH_TX_PKT_SRC_ADDR_REPLACE   = 0x01000000UL          /*!< SA Insertion Control: Replace the source address */
 } hal_eth_tx_pkt_src_addr_ctrl_t;
 
 /**
@@ -918,11 +919,11 @@ typedef enum
   */
 typedef enum
 {
-  HAL_ETH_TX_PKT_CRC_PAD_DISABLE    = 0x08000000U,         /*!< CRC Pad Control: Disable CRC Insertion */
-  HAL_ETH_TX_PKT_CRC_PAD_INSERT     = 0x00000000U,         /*!< CRC Pad Control: CRC and Pad Insertion */
-  HAL_ETH_TX_PKT_CRC_INSERT         = 0x04000000U,         /*!< CRC Pad Control: CRC Insertion (Disable Pad Insertion)
+  HAL_ETH_TX_PKT_CRC_PAD_DISABLE    = 0x08000000UL,        /*!< CRC Pad Control: Disable CRC Insertion */
+  HAL_ETH_TX_PKT_CRC_PAD_INSERT     = 0x00000000UL,        /*!< CRC Pad Control: CRC and Pad Insertion */
+  HAL_ETH_TX_PKT_CRC_INSERT         = 0x04000000UL,        /*!< CRC Pad Control: CRC Insertion (Disable Pad Insertion)
                                                                 */
-  HAL_ETH_TX_PKT_CRC_REPLACE        = 0x0C000000U          /*!< CRC Pad Control: CRC Replacement */
+  HAL_ETH_TX_PKT_CRC_REPLACE        = 0x0C000000UL         /*!< CRC Pad Control: CRC Replacement */
 } hal_eth_tx_pkt_crc_pad_ctrl_t;
 
 /**
@@ -930,14 +931,14 @@ typedef enum
   */
 typedef enum
 {
-  HAL_ETH_TX_PKT_CSUM_DISABLE               = 0x00000000U, /*!< Do Nothing: Checksum Engine is disabled */
-  HAL_ETH_TX_PKT_CSUM_HEADER_INSERT         = 0x00010000U, /*!< Only IP header checksum calculation and insertion are
+  HAL_ETH_TX_PKT_CSUM_DISABLE               = 0x00000000UL, /*!< Do Nothing: Checksum Engine is disabled */
+  HAL_ETH_TX_PKT_CSUM_HEADER_INSERT         = 0x00010000UL, /*!< Only IP header checksum calculation and insertion are
                                                                 enabled. */
-  HAL_ETH_TX_PKT_CSUM_PAYLOAD_INSERT        = 0x00020000U, /*!< IP header checksum and payload checksum calculation
+  HAL_ETH_TX_PKT_CSUM_PAYLOAD_INSERT        = 0x00020000UL, /*!< IP header checksum and payload checksum calculation
                                                                 and insertion are
                                                                 enabled, but pseudo header checksum is not calculated
                                                                 in hardware */
-  HAL_ETH_TX_PKT_CSUM_PAYLOAD_HEADER_INSERT = 0x00030000U  /*!< IP Header checksum and payload checksum calculation and
+  HAL_ETH_TX_PKT_CSUM_PAYLOAD_HEADER_INSERT = 0x00030000UL  /*!< IP Header checksum and payload checksum calculation and
                                                                 insertion are enabled, and pseudo header checksum is
                                                                 calculated in hardware. */
 } hal_eth_tx_pkt_csum_ctrl_t;
@@ -947,11 +948,11 @@ typedef enum
   */
 typedef enum
 {
-  HAL_ETH_TX_PKT_VLAN_DISABLE       = 0x00000000U,         /*!< Do not add a VLAN tag. */
-  HAL_ETH_TX_PKT_VLAN_REMOVE        = 0x00004000U,         /*!< Remove the VLAN tag from the packets before
+  HAL_ETH_TX_PKT_VLAN_DISABLE       = 0x00000000UL,        /*!< Do not add a VLAN tag. */
+  HAL_ETH_TX_PKT_VLAN_REMOVE        = 0x00004000UL,        /*!< Remove the VLAN tag from the packets before
                                                                 transmission. */
-  HAL_ETH_TX_PKT_VLAN_INSERT        = 0x00008000U,         /*!< Insert a VLAN tag. */
-  HAL_ETH_TX_PKT_VLAN_REPLACE       = 0x0000C000U          /*!< Replace the VLAN tag. */
+  HAL_ETH_TX_PKT_VLAN_INSERT        = 0x00008000UL,        /*!< Insert a VLAN tag. */
+  HAL_ETH_TX_PKT_VLAN_REPLACE       = 0x0000C000UL         /*!< Replace the VLAN tag. */
 } hal_eth_tx_pkt_vlan_ctrl_t;
 
 /**
@@ -959,11 +960,11 @@ typedef enum
   */
 typedef enum
 {
-  HAL_ETH_TX_PKT_INNER_VLAN_DISABLE = 0x00000000U,         /*!< Do not add the inner VLAN tag. */
-  HAL_ETH_TX_PKT_INNER_VLAN_REMOVE  = 0x00040000U,         /*!< Remove the inner VLAN tag from the packets before
+  HAL_ETH_TX_PKT_INNER_VLAN_DISABLE = 0x00000000UL,        /*!< Do not add the inner VLAN tag. */
+  HAL_ETH_TX_PKT_INNER_VLAN_REMOVE  = 0x00040000UL,        /*!< Remove the inner VLAN tag from the packets before
                                                                 transmission. */
-  HAL_ETH_TX_PKT_INNER_VLAN_INSERT  = 0x00080000U,         /*!< Insert the inner VLAN tag. */
-  HAL_ETH_TX_PKT_INNER_VLAN_REPLACE = 0x000C0000U          /*!< Replace the inner VLAN tag. */
+  HAL_ETH_TX_PKT_INNER_VLAN_INSERT  = 0x00080000UL,        /*!< Insert the inner VLAN tag. */
+  HAL_ETH_TX_PKT_INNER_VLAN_REPLACE = 0x000C0000UL         /*!< Replace the inner VLAN tag. */
 } hal_eth_tx_pkt_inner_vlan_ctrl_t;
 
 /**
@@ -971,9 +972,9 @@ typedef enum
   */
 typedef enum
 {
-  HAL_ETH_TX_PKT_NOTIFY_DISABLE     = 0U,                  /*!< Do not notify application when the packet transmit
+  HAL_ETH_TX_PKT_NOTIFY_DISABLE     = 0UL,                 /*!< Do not notify application when the packet transmit
                                                                 request is completed */
-  HAL_ETH_TX_PKT_NOTIFY_ENABLE      = 1U                   /*!< Notify application when the packet transmit request is
+  HAL_ETH_TX_PKT_NOTIFY_ENABLE      = 1UL                  /*!< Notify application when the packet transmit request is
                                                                 completed  */
 } hal_eth_tx_pkt_notify_ctrl_t;
 
@@ -983,7 +984,7 @@ typedef enum
   */
 typedef enum
 {
-  HAL_ETH_MAC_SPEED_10M             = 0x00000000U,        /*!< ETH MAC Speed 10M   */
+  HAL_ETH_MAC_SPEED_10M             = 0x00000000UL,       /*!< ETH MAC Speed 10M   */
   HAL_ETH_MAC_SPEED_100M            = ETH_MACCR_FES,      /*!< ETH MAC Speed 100M  */
 } hal_eth_mac_speed_t;
 
@@ -993,7 +994,7 @@ typedef enum
 typedef enum
 {
   HAL_ETH_MAC_FULL_DUPLEX_MODE      = ETH_MACCR_DM,        /*!< ETH MAC Full Duplex Mode */
-  HAL_ETH_MAC_HALF_DUPLEX_MODE      = 0x00000000U          /*!< ETH MAC Half Duplex Mode */
+  HAL_ETH_MAC_HALF_DUPLEX_MODE      = 0x00000000UL         /*!< ETH MAC Half Duplex Mode */
 } hal_eth_mac_duplex_mode_t;
 
 /**
@@ -1027,13 +1028,13 @@ typedef enum
   */
 typedef enum
 {
-  HAL_ETH_MAC_INTER_PKT_GAP_96_BIT  = 0x00000000U,         /*!< ETH MAC Inter Packet Gap 96 Bit  */
-  HAL_ETH_MAC_INTER_PKT_GAP_88_BIT  = 0x01000000U,         /*!< ETH MAC Inter Packet Gap 88 Bit  */
-  HAL_ETH_MAC_INTER_PKT_GAP_80_BIT  = 0x02000000U,         /*!< ETH MAC Inter Packet Gap 80 Bit  */
-  HAL_ETH_MAC_INTER_PKT_GAP_72_BIT  = 0x03000000U,         /*!< ETH MAC Inter Packet Gap 72 Bit  */
-  HAL_ETH_MAC_INTER_PKT_GAP_64_BIT  = 0x04000000U,         /*!< ETH MAC Inter Packet Gap 64 Bit  */
-  HAL_ETH_MAC_INTER_PKT_GAP_56_BIT  = 0x05000000U,         /*!< ETH MAC Inter Packet Gap 56 Bit  */
-  HAL_ETH_MAC_INTER_PKT_GAP_48_BIT  = 0x06000000U,         /*!< ETH MAC Inter Packet Gap 48 Bit  */
+  HAL_ETH_MAC_INTER_PKT_GAP_96_BIT  = 0x00000000UL,        /*!< ETH MAC Inter Packet Gap 96 Bit  */
+  HAL_ETH_MAC_INTER_PKT_GAP_88_BIT  = 0x01000000UL,        /*!< ETH MAC Inter Packet Gap 88 Bit  */
+  HAL_ETH_MAC_INTER_PKT_GAP_80_BIT  = 0x02000000UL,        /*!< ETH MAC Inter Packet Gap 80 Bit  */
+  HAL_ETH_MAC_INTER_PKT_GAP_72_BIT  = 0x03000000UL,        /*!< ETH MAC Inter Packet Gap 72 Bit  */
+  HAL_ETH_MAC_INTER_PKT_GAP_64_BIT  = 0x04000000UL,        /*!< ETH MAC Inter Packet Gap 64 Bit  */
+  HAL_ETH_MAC_INTER_PKT_GAP_56_BIT  = 0x05000000UL,        /*!< ETH MAC Inter Packet Gap 56 Bit  */
+  HAL_ETH_MAC_INTER_PKT_GAP_48_BIT  = 0x06000000UL,        /*!< ETH MAC Inter Packet Gap 48 Bit  */
   HAL_ETH_MAC_INTER_PKT_GAP_40_BIT  = ETH_MACCR_IPG        /*!< ETH MAC Inter Packet Gap 40 Bit  */
 } hal_eth_mac_inter_pkt_gap_t;
 
@@ -1042,9 +1043,9 @@ typedef enum
   */
 typedef enum
 {
-  HAL_ETH_MAC_BACK_OFF_LIMIT_10     = 0x00000000U,         /*!< ETH MAC Back Off Limit 10 */
-  HAL_ETH_MAC_BACK_OFF_LIMIT_8      = 0x00000020U,         /*!< ETH MAC Back Off Limit 8 */
-  HAL_ETH_MAC_BACK_OFF_LIMIT_4      = 0x00000040U,         /*!< ETH MAC Back Off Limit 4 */
+  HAL_ETH_MAC_BACK_OFF_LIMIT_10     = 0x00000000UL,        /*!< ETH MAC Back Off Limit 10 */
+  HAL_ETH_MAC_BACK_OFF_LIMIT_8      = 0x00000020UL,        /*!< ETH MAC Back Off Limit 8 */
+  HAL_ETH_MAC_BACK_OFF_LIMIT_4      = 0x00000040UL,        /*!< ETH MAC Back Off Limit 4 */
   HAL_ETH_MAC_BACK_OFF_LIMIT_1      = ETH_MACCR_BL         /*!< ETH MAC Back Off Limit 1 */
 } hal_eth_mac_back_off_limit_t;
 
@@ -1053,9 +1054,9 @@ typedef enum
   */
 typedef enum
 {
-  HAL_ETH_MAC_PREAMBLE_LENGTH_7     = 0x00000000U,         /*!< ETH MAC Preamble Length 7 */
-  HAL_ETH_MAC_PREAMBLE_LENGTH_5     = 0x00000004U,         /*!< ETH MAC Preamble Length 5 */
-  HAL_ETH_MAC_PREAMBLE_LENGTH_3     = 0x00000008U          /*!< ETH MAC Preamble Length 3 */
+  HAL_ETH_MAC_PREAMBLE_LENGTH_7     = 0x00000000UL,        /*!< ETH MAC Preamble Length 7 */
+  HAL_ETH_MAC_PREAMBLE_LENGTH_5     = 0x00000004UL,        /*!< ETH MAC Preamble Length 5 */
+  HAL_ETH_MAC_PREAMBLE_LENGTH_3     = 0x00000008UL         /*!< ETH MAC Preamble Length 3 */
 } hal_eth_mac_preeamble_length_t;
 
 /**
@@ -1063,21 +1064,21 @@ typedef enum
   */
 typedef enum
 {
-  HAL_ETH_MAC_RX_WDT_2KB            = 0x00000000U,         /*!< ETH MAC Watchdog Timeout 2KB  */
-  HAL_ETH_MAC_RX_WDT_3KB            = 0x00000001U,         /*!< ETH MAC Watchdog Timeout 3KB  */
-  HAL_ETH_MAC_RX_WDT_4KB            = 0x00000002U,         /*!< ETH MAC Watchdog Timeout 4KB  */
-  HAL_ETH_MAC_RX_WDT_5KB            = 0x00000003U,         /*!< ETH MAC Watchdog Timeout 5KB  */
-  HAL_ETH_MAC_RX_WDT_6KB            = 0x00000004U,         /*!< ETH MAC Watchdog Timeout 6KB  */
-  HAL_ETH_MAC_RX_WDT_7KB            = 0x00000005U,         /*!< ETH MAC Watchdog Timeout 7KB  */
-  HAL_ETH_MAC_RX_WDT_8KB            = 0x00000006U,         /*!< ETH MAC Watchdog Timeout 8KB  */
-  HAL_ETH_MAC_RX_WDT_9KB            = 0x00000007U,         /*!< ETH MAC Watchdog Timeout 9KB  */
-  HAL_ETH_MAC_RX_WDT_10KB           = 0x00000008U,         /*!< ETH MAC Watchdog Timeout 10KB */
-  HAL_ETH_MAC_RX_WDT_11KB           = 0x00000009U,         /*!< ETH MAC Watchdog Timeout 11KB */
-  HAL_ETH_MAC_RX_WDT_12KB           = 0x0000000AU,         /*!< ETH MAC Watchdog Timeout 12KB */
-  HAL_ETH_MAC_RX_WDT_13KB           = 0x0000000BU,         /*!< ETH MAC Watchdog Timeout 13KB */
-  HAL_ETH_MAC_RX_WDT_14KB           = 0x0000000CU,         /*!< ETH MAC Watchdog Timeout 14KB */
-  HAL_ETH_MAC_RX_WDT_15KB           = 0x0000000DU,         /*!< ETH MAC Watchdog Timeout 15KB */
-  HAL_ETH_MAC_RX_WDT_16KB           = 0x0000000EU          /*!< ETH MAC Watchdog Timeout 16KB */
+  HAL_ETH_MAC_RX_WDT_2KB            = 0x00000000UL,        /*!< ETH MAC Watchdog Timeout 2KB  */
+  HAL_ETH_MAC_RX_WDT_3KB            = 0x00000001UL,        /*!< ETH MAC Watchdog Timeout 3KB  */
+  HAL_ETH_MAC_RX_WDT_4KB            = 0x00000002UL,        /*!< ETH MAC Watchdog Timeout 4KB  */
+  HAL_ETH_MAC_RX_WDT_5KB            = 0x00000003UL,        /*!< ETH MAC Watchdog Timeout 5KB  */
+  HAL_ETH_MAC_RX_WDT_6KB            = 0x00000004UL,        /*!< ETH MAC Watchdog Timeout 6KB  */
+  HAL_ETH_MAC_RX_WDT_7KB            = 0x00000005UL,        /*!< ETH MAC Watchdog Timeout 7KB  */
+  HAL_ETH_MAC_RX_WDT_8KB            = 0x00000006UL,        /*!< ETH MAC Watchdog Timeout 8KB  */
+  HAL_ETH_MAC_RX_WDT_9KB            = 0x00000007UL,        /*!< ETH MAC Watchdog Timeout 9KB  */
+  HAL_ETH_MAC_RX_WDT_10KB           = 0x00000008UL,        /*!< ETH MAC Watchdog Timeout 10KB */
+  HAL_ETH_MAC_RX_WDT_11KB           = 0x00000009UL,        /*!< ETH MAC Watchdog Timeout 11KB */
+  HAL_ETH_MAC_RX_WDT_12KB           = 0x0000000AUL,        /*!< ETH MAC Watchdog Timeout 12KB */
+  HAL_ETH_MAC_RX_WDT_13KB           = 0x0000000BUL,        /*!< ETH MAC Watchdog Timeout 13KB */
+  HAL_ETH_MAC_RX_WDT_14KB           = 0x0000000CUL,        /*!< ETH MAC Watchdog Timeout 14KB */
+  HAL_ETH_MAC_RX_WDT_15KB           = 0x0000000DUL,        /*!< ETH MAC Watchdog Timeout 15KB */
+  HAL_ETH_MAC_RX_WDT_16KB           = 0x0000000EUL         /*!< ETH MAC Watchdog Timeout 16KB */
 } hal_eth_mac_rx_wd_timeout_t;
 
 /**
@@ -1292,12 +1293,12 @@ typedef enum
   */
 typedef enum
 {
-  HAL_ETH_MAC_PLT_MINUS_4_SLOT_TIME   = 0x00000000U,       /*!< ETH MAC Pause Low Threshold Minus 4   */
-  HAL_ETH_MAC_PLT_MINUS_28_SLOT_TIME  = 0x00000010U,       /*!< ETH MAC Pause Low Threshold Minus 28  */
-  HAL_ETH_MAC_PLT_MINUS_36_SLOT_TIME  = 0x00000020U,       /*!< ETH MAC Pause Low Threshold Minus 36  */
-  HAL_ETH_MAC_PLT_MINUS_144_SLOT_TIME = 0x00000030U,       /*!< ETH MAC Pause Low Threshold Minus 144 */
-  HAL_ETH_MAC_PLT_MINUS_256_SLOT_TIME = 0x00000040U,       /*!< ETH MAC Pause Low Threshold Minus 256 */
-  HAL_ETH_MAC_PLT_MINUS_512_SLOT_TIME = 0x00000050U        /*!< ETH MAC Pause Low Threshold Minus 512 */
+  HAL_ETH_MAC_PLT_MINUS_4_SLOT_TIME   = 0x00000000UL,      /*!< ETH MAC Pause Low Threshold Minus 4   */
+  HAL_ETH_MAC_PLT_MINUS_28_SLOT_TIME  = 0x00000010UL,      /*!< ETH MAC Pause Low Threshold Minus 28  */
+  HAL_ETH_MAC_PLT_MINUS_36_SLOT_TIME  = 0x00000020UL,      /*!< ETH MAC Pause Low Threshold Minus 36  */
+  HAL_ETH_MAC_PLT_MINUS_144_SLOT_TIME = 0x00000030UL,      /*!< ETH MAC Pause Low Threshold Minus 144 */
+  HAL_ETH_MAC_PLT_MINUS_256_SLOT_TIME = 0x00000040UL,      /*!< ETH MAC Pause Low Threshold Minus 256 */
+  HAL_ETH_MAC_PLT_MINUS_512_SLOT_TIME = 0x00000050UL       /*!< ETH MAC Pause Low Threshold Minus 512 */
 } hal_eth_mac_pause_low_thr_t;
 
 /**************************************  ETH DMA Configuration Enumerations  *****************************************/
@@ -1320,7 +1321,7 @@ typedef enum
   HAL_ETH_DMA_BURST_LEN_FIXED       = ETH_DMASBMR_FB,      /*!< Fixed Burst Length as specified by the BLEN256,
                                                                 BLEN128, BLEN64, BLEN32, BLEN16, BLEN8
                                                                 or BLEN4 field */
-  HAL_ETH_DMA_BURST_LEN_MAX_ALLOWED = 0x00000000U          /*!< Burst transfers of length equal to or less than the
+  HAL_ETH_DMA_BURST_LEN_MAX_ALLOWED = 0x00000000UL         /*!< Burst transfers of length equal to or less than the
                                                                 maximum allowed burst length */
 } hal_eth_dma_burst_len_mode_t;
 
@@ -1335,7 +1336,7 @@ typedef enum
                                                                 16 or more. For burst length of 16 or less, the BUS
                                                                 master performs fixed burst transfers
                                                                 (INCRx and SINGLE). */
-  HAL_ETH_DMA_MIXED_BURST_MODE_DISABLED  = 0U,             /*!<  Mixed Burst is disabled.*/
+  HAL_ETH_DMA_MIXED_BURST_MODE_DISABLED  = 0UL,            /*!<  Mixed Burst is disabled.*/
 } hal_eth_dma_mixed_burst_ctrl_t;
 
 /**
@@ -1351,8 +1352,9 @@ typedef enum
                                                                  SINGLE transfers. By default, the BUS master interface
                                                                  rebuilds the pending beats of an EBT with an
                                                                  unspecified (INCR) burst. */
-  HAL_ETH_DMA_REBUILD_INC_BURST_DISABLED  = 0U,             /*!< Bus Maximum Write (Tx) Outstanding Request Limit = 1
-                                                                 requests */
+  HAL_ETH_DMA_REBUILD_INC_BURST_DISABLED  = 0UL,            /*!< Rebuild INCRx Burst is disabled. For EBT/SPLIT/RETRY,
+                                                                 pending beats are rebuilt using unspecified-length
+                                                                 (INCR) bursts (default behavior) */
 } hal_eth_dma_rebuild_inc_ctrl_t;
 
 /**
@@ -1372,7 +1374,10 @@ typedef enum
 
 /**********************************  ETH DMA Tx Channel Configuration Enumerations  **********************************/
 /**
-  * @brief  Enables or disables the PBL multiplication by eight.
+  * @brief ETH DMA Tx PBLx8 mode control enumeration definition.
+  *
+  * This enumeration enables or disables the multiplication by eight of the
+  * programmable burst length (PBL) via the PBLX8 bit in ETH_DMACCR.
   */
 typedef enum
 {
@@ -1385,12 +1390,12 @@ typedef enum
   */
 typedef enum
 {
-  HAL_ETH_DMA_TX_BLEN_1_BEAT        = 0x00010000U,         /*!< DMA Transmit Programmable Burst Length = 1 beat   */
-  HAL_ETH_DMA_TX_BLEN_2_BEAT        = 0x00020000U,         /*!< DMA Transmit Programmable Burst Length = 2 beats  */
-  HAL_ETH_DMA_TX_BLEN_4_BEAT        = 0x00040000U,         /*!< DMA Transmit Programmable Burst Length = 4 beats  */
-  HAL_ETH_DMA_TX_BLEN_8_BEAT        = 0x00080000U,         /*!< DMA Transmit Programmable Burst Length = 8 beats  */
-  HAL_ETH_DMA_TX_BLEN_16_BEAT       = 0x00100000U,         /*!< DMA Transmit Programmable Burst Length = 16 beats */
-  HAL_ETH_DMA_TX_BLEN_32_BEAT       = 0x00200000U          /*!< DMA Transmit Programmable Burst Length = 32 beats */
+  HAL_ETH_DMA_TX_BLEN_1_BEAT        = 0x00010000UL,        /*!< DMA Transmit Programmable Burst Length = 1 beat   */
+  HAL_ETH_DMA_TX_BLEN_2_BEAT        = 0x00020000UL,        /*!< DMA Transmit Programmable Burst Length = 2 beats  */
+  HAL_ETH_DMA_TX_BLEN_4_BEAT        = 0x00040000UL,        /*!< DMA Transmit Programmable Burst Length = 4 beats  */
+  HAL_ETH_DMA_TX_BLEN_8_BEAT        = 0x00080000UL,        /*!< DMA Transmit Programmable Burst Length = 8 beats  */
+  HAL_ETH_DMA_TX_BLEN_16_BEAT       = 0x00100000UL,        /*!< DMA Transmit Programmable Burst Length = 16 beats */
+  HAL_ETH_DMA_TX_BLEN_32_BEAT       = 0x00200000UL         /*!< DMA Transmit Programmable Burst Length = 32 beats */
 } hal_eth_dma_tx_burst_length_t;
 
 /**
@@ -1409,12 +1414,12 @@ typedef enum
   */
 typedef enum
 {
-  HAL_ETH_DMA_RX_BLEN_1_BEAT        = 0x00010000U,         /*!< DMA Receive Programmable Burst Length = 1 beat   */
-  HAL_ETH_DMA_RX_BLEN_2_BEAT        = 0x00020000U,         /*!< DMA Receive Programmable Burst Length = 2 beats  */
-  HAL_ETH_DMA_RX_BLEN_4_BEAT        = 0x00040000U,         /*!< DMA Receive Programmable Burst Length = 4 beats  */
-  HAL_ETH_DMA_RX_BLEN_8_BEAT        = 0x00080000U,         /*!< DMA Receive Programmable Burst Length = 8 beats  */
-  HAL_ETH_DMA_RX_BLEN_16_BEAT       = 0x00100000U,         /*!< DMA Receive Programmable Burst Length = 16 beats */
-  HAL_ETH_DMA_RX_BLEN_32_BEAT       = 0x00200000U          /*!< DMA Receive Programmable Burst Length = 32 beats */
+  HAL_ETH_DMA_RX_BLEN_1_BEAT        = 0x00010000UL,        /*!< DMA Receive Programmable Burst Length = 1 beat   */
+  HAL_ETH_DMA_RX_BLEN_2_BEAT        = 0x00020000UL,        /*!< DMA Receive Programmable Burst Length = 2 beats  */
+  HAL_ETH_DMA_RX_BLEN_4_BEAT        = 0x00040000UL,        /*!< DMA Receive Programmable Burst Length = 4 beats  */
+  HAL_ETH_DMA_RX_BLEN_8_BEAT        = 0x00080000UL,        /*!< DMA Receive Programmable Burst Length = 8 beats  */
+  HAL_ETH_DMA_RX_BLEN_16_BEAT       = 0x00100000UL,        /*!< DMA Receive Programmable Burst Length = 16 beats */
+  HAL_ETH_DMA_RX_BLEN_32_BEAT       = 0x00200000UL         /*!< DMA Receive Programmable Burst Length = 32 beats */
 } hal_eth_dma_rx_burst_length_t;
 
 /**************************************  ETH MTL Configuration Enumerations  *****************************************/
@@ -1434,7 +1439,7 @@ typedef enum
   */
 typedef enum
 {
-  HAL_ETH_MTL_TX_QUEUE_ENABLED      = 0x00000008U          /*!< Transmit Queue Enabled            */
+  HAL_ETH_MTL_TX_QUEUE_ENABLED      = 0x00000008UL         /*!< Transmit Queue Enabled            */
 } hal_eth_mtl_tx_ops_mode_t;
 
 /**
@@ -1444,7 +1449,7 @@ typedef enum
   */
 typedef enum
 {
-  HAL_ETH_MTL_TX_QUEUE_SZ_2048_BYTE = (7U << ETH_MTLTXQOMR_TQS_Pos),  /*!< Transmit Queue Size 2048 bytes */
+  HAL_ETH_MTL_TX_QUEUE_SZ_2048_BYTE = (7UL << ETH_MTLTXQOMR_TQS_Pos), /*!< Transmit Queue Size 2048 bytes */
 } hal_eth_mtl_tx_queue_size_t;
 
 /**
@@ -1453,13 +1458,13 @@ typedef enum
 typedef enum
 {
   HAL_ETH_MTL_TX_Q_STORE_AND_FORWARD  = ETH_MTLTXQOMR_TSF,    /*!< Transmit Store and Forward Mode      */
-  HAL_ETH_MTL_TX_Q_THRESHOLD_32_BYTE  = 0x00000000U,           /*!< Transmit Threshold Control 32 bytes  */
-  HAL_ETH_MTL_TX_Q_THRESHOLD_64_BYTE  = 0x00000010U,           /*!< Transmit Threshold Control 64 bytes  */
-  HAL_ETH_MTL_TX_Q_THRESHOLD_96_BYTE  = 0x00000020U,           /*!< Transmit Threshold Control 96 bytes  */
-  HAL_ETH_MTL_TX_Q_THRESHOLD_128_BYTE = 0x00000030U,           /*!< Transmit Threshold Control 128 bytes */
-  HAL_ETH_MTL_TX_Q_THRESHOLD_192_BYTE = 0x00000040U,           /*!< Transmit Threshold Control 192 bytes */
-  HAL_ETH_MTL_TX_Q_THRESHOLD_256_BYTE = 0x00000050U,           /*!< Transmit Threshold Control 256 bytes */
-  HAL_ETH_MTL_TX_Q_THRESHOLD_384_BYTE = 0x00000060U,           /*!< Transmit Threshold Control 384 bytes */
+  HAL_ETH_MTL_TX_Q_THRESHOLD_32_BYTE  = 0x00000000UL,          /*!< Transmit Threshold Control 32 bytes  */
+  HAL_ETH_MTL_TX_Q_THRESHOLD_64_BYTE  = 0x00000010UL,          /*!< Transmit Threshold Control 64 bytes  */
+  HAL_ETH_MTL_TX_Q_THRESHOLD_96_BYTE  = 0x00000020UL,          /*!< Transmit Threshold Control 96 bytes  */
+  HAL_ETH_MTL_TX_Q_THRESHOLD_128_BYTE = 0x00000030UL,          /*!< Transmit Threshold Control 128 bytes */
+  HAL_ETH_MTL_TX_Q_THRESHOLD_192_BYTE = 0x00000040UL,          /*!< Transmit Threshold Control 192 bytes */
+  HAL_ETH_MTL_TX_Q_THRESHOLD_256_BYTE = 0x00000050UL,          /*!< Transmit Threshold Control 256 bytes */
+  HAL_ETH_MTL_TX_Q_THRESHOLD_384_BYTE = 0x00000060UL,          /*!< Transmit Threshold Control 384 bytes */
   HAL_ETH_MTL_TX_Q_THRESHOLD_512_BYTE = ETH_MTLTXQOMR_TTC     /*!< Transmit Threshold Control 512 bytes */
 } hal_eth_mtl_tx_transmit_mode_t;
 
@@ -1469,7 +1474,7 @@ typedef enum
   */
 typedef enum
 {
-  HAL_ETH_MTL_RX_QUEUE_ENABLED      = 0x00000002U,         /*!< Receive Queue Enabled            */
+  HAL_ETH_MTL_RX_QUEUE_ENABLED      = 0x00000002UL,        /*!< Receive Queue Enabled            */
 } hal_eth_mtl_rx_ops_mode_t;
 
 /**
@@ -1479,7 +1484,7 @@ typedef enum
   */
 typedef enum
 {
-  HAL_ETH_MTL_RX_QUEUE_SZ_2048_BYTE = (7U << ETH_MTLRXQOMR_RQS_Pos),  /*!< Receive Queue Size 2048 bytes */
+  HAL_ETH_MTL_RX_QUEUE_SZ_2048_BYTE = (7UL << ETH_MTLRXQOMR_RQS_Pos), /*!< Receive Queue Size 2048 bytes */
 } hal_eth_mtl_rx_queue_size_t;
 
 /**
@@ -1492,7 +1497,7 @@ typedef enum
 {
   HAL_ETH_MTL_RX_DROP_CS_ERR_DISABLE = ETH_MTLRXQOMR_DIS_TCP_EF,   /*!< TCP-IP Packets with checksum errors
                                                                          are forwarded to the application. */
-  HAL_ETH_MTL_RX_DROP_CS_ERR_ENABLE  = 0U                           /*!< TCP-IP Packets with checksum errors
+  HAL_ETH_MTL_RX_DROP_CS_ERR_ENABLE  = 0UL                          /*!< TCP-IP Packets with checksum errors
                                                                          are dropped and not forwarded to the
                                                                          application. */
 } hal_eth_mtl_rx_drop_cs_err_ctrl_t;
@@ -1505,7 +1510,7 @@ typedef enum
   */
 typedef enum
 {
-  HAL_ETH_MTL_RX_FWD_ERR_PKT_DISABLE = 0,                           /*!< Received packets with errors are discarded
+  HAL_ETH_MTL_RX_FWD_ERR_PKT_DISABLE = 0UL,                         /*!< Received packets with errors are discarded
                                                                          and not forwarded to the application. */
   HAL_ETH_MTL_RX_FWD_ERR_PKT_ENABLE  = ETH_MTLRXQOMR_FEP           /*!< Received packets with errors are
                                                                          forwarded to the application. */
@@ -1520,7 +1525,7 @@ typedef enum
   */
 typedef enum
 {
-  HAL_ETH_MTL_RX_FWD_USZ_PKT_DISABLE = 0,                           /*!< Received undersized good packets are discarded
+  HAL_ETH_MTL_RX_FWD_USZ_PKT_DISABLE = 0UL,                         /*!< Received undersized good packets are discarded
                                                                          and not forwarded to the application. */
   HAL_ETH_MTL_RX_FWD_USZ_PKT_ENABLE  = ETH_MTLRXQOMR_FUP          /*!< Received undersized good packets are forwarded
                                                                          to the application. */
@@ -1532,9 +1537,9 @@ typedef enum
 typedef enum
 {
   HAL_ETH_MTL_RX_Q_STORE_AND_FORWARD = ETH_MTLRXQOMR_RSF, /*!< Receive Store and Forward operating mode */
-  HAL_ETH_MTL_RX_Q_THRESHOLD_64      = 0x00000000U,        /*!< Receive Threshold Control                */
-  HAL_ETH_MTL_RX_Q_THRESHOLD_32      = 0x00000001U,        /*!< Receive Threshold Control                */
-  HAL_ETH_MTL_RX_Q_THRESHOLD_96      = 0x00000002U,        /*!< Receive Threshold Control                */
+  HAL_ETH_MTL_RX_Q_THRESHOLD_64      = 0x00000000UL,       /*!< Receive Threshold Control                */
+  HAL_ETH_MTL_RX_Q_THRESHOLD_32      = 0x00000001UL,       /*!< Receive Threshold Control                */
+  HAL_ETH_MTL_RX_Q_THRESHOLD_96      = 0x00000002UL,       /*!< Receive Threshold Control                */
   HAL_ETH_MTL_RX_Q_THRESHOLD_128     = ETH_MTLRXQOMR_RTC  /*!< Receive Threshold Control                */
 } hal_eth_mtl_rx_queue_mode_t;
 /**********************************  ETH MAC ARP Offloading Status Enumerations  *************************************/
@@ -1543,7 +1548,7 @@ typedef enum
   */
 typedef enum
 {
-  HAL_ETH_ARP_OFFLOAD_DISABLED      = 0U,                  /*!< ETH ARP Offloading Disabled */
+  HAL_ETH_ARP_OFFLOAD_DISABLED      = 0UL,                 /*!< ETH ARP Offloading Disabled */
   HAL_ETH_ARP_OFFLOAD_ENABLED       = ETH_MACCR_ARPEN      /*!< ETH ARP Offloading Enabled */
 } hal_eth_arp_offload_status_t;
 
@@ -1568,18 +1573,18 @@ typedef enum
   * @}
   */
 
-/** @defgroup ETH_Exported_Types_Group2 ETH Handles Types Definitions
+/** @defgroup ETH_Exported_Types_Group2 ETH handles types definitions
   * @{
   */
 /**
-  * @brief HAL ETH Handle Type Definition
+  * @brief HAL ETH handle type definition
   */
-typedef struct hal_eth_handle_s hal_eth_handle_t;          /*!< ETH handle type definition */
+typedef struct hal_eth_handle_s hal_eth_handle_t;         /*!< HAL ETH handle structure type */
 /**
   * @}
   */
 
-/** @defgroup ETH_Exported_Types_Group3 ETH DMA Descriptor Lists Types Definitions
+/** @defgroup ETH_Exported_Types_Group3 ETH DMA descriptor lists types definitions
   * @{
   */
 /**
@@ -1611,7 +1616,7 @@ typedef struct
   * @}
   */
 
-/** @defgroup ETH_Exported_Types_Group4 ETH Common Types Definitions
+/** @defgroup ETH_Exported_Types_Group4 ETH common types definitions
   * @{
   */
 /**
@@ -1663,7 +1668,7 @@ typedef struct
   * @}
   */
 
-/** @defgroup ETH_Exported_Types_Group5 ETH Callbacks Types Definitions
+/** @defgroup ETH_Exported_Types_Group5 ETH callbacks types definitions
   * @{
   */
 /**
@@ -2179,7 +2184,7 @@ struct hal_eth_handle_s
   * @}
   */
 
-/** @defgroup ETH_Exported_Types_Group6 ETH Peripheral Configuration structures
+/** @defgroup ETH_Exported_Types_Group6 ETH peripheral configuration structures
   * @{
   */
 /**
@@ -2217,11 +2222,11 @@ typedef struct
   * @}
   */
 
-/** @defgroup ETH_Exported_Types_Group7 ETH MAC - DMA - MTL Sub-Blocks Configuration structures
+/** @defgroup ETH_Exported_Types_Group7 ETH MAC - DMA - MTL Sub-Blocks configuration structures
   * @{
   */
 /**
-  * @brief  ETH MAC Configuration Structure definition
+  * @brief  ETH MAC Configuration structure definition
   */
 typedef struct
 {
@@ -2398,7 +2403,7 @@ typedef struct
   */
 typedef struct
 {
-  hal_eth_mtl_tx_ops_mode_t         queue_op_mode;         /*!< Queue Disabled, Enabled or AV Mode */
+  hal_eth_mtl_tx_ops_mode_t         queue_op_mode;         /*!< Specifies the Tx Queue operating mode */
 
   hal_eth_mtl_tx_queue_size_t       queue_size_byte;       /*!< Specifies the Tx Queue Size */
 
@@ -2411,7 +2416,7 @@ typedef struct
   */
 typedef struct
 {
-  hal_eth_mtl_rx_ops_mode_t         queue_op_mode;         /*!< Queue Disabled, Enabled or AV Mode. */
+  hal_eth_mtl_rx_ops_mode_t         queue_op_mode;         /*!< Specifies the Rx Queue operating mode */
 
   hal_eth_mtl_rx_queue_size_t       queue_size_byte;       /*!< Specifies the Rx Queue Size */
 
@@ -2429,7 +2434,7 @@ typedef struct
   * @}
   */
 
-/** @defgroup ETH_Exported_Types_Group8 ETH Channels Configuration structures
+/** @defgroup ETH_Exported_Types_Group8 ETH channels configuration structures
   * @{
   */
 /**
@@ -2458,7 +2463,6 @@ typedef struct
 
   hal_eth_fifo_event_config_t       fifo_event_config;     /*!< FIFO event Configuration */
 
-  /* add data callbcak here */
 } hal_eth_tx_channel_config_t;
 
 /**
@@ -2487,7 +2491,6 @@ typedef struct
 
   hal_eth_fifo_event_config_t       fifo_event_config;     /*!< FIFO event Configuration */
 
-  /* add data callbcak here */
 } hal_eth_rx_channel_config_t;
 
 /**
@@ -2516,7 +2519,7 @@ typedef struct
   * @}
   */
 
-/** @defgroup ETH_Exported_Types_Group9 ETH Channels Process and I/O structures
+/** @defgroup ETH_Exported_Types_Group9 ETH channels process and I/O structures
   * @{
   */
 /**
@@ -2560,7 +2563,7 @@ typedef struct
   * @}
   */
 
-/** @defgroup ETH_Exported_Types_Group10 ETH Peropheral Power Management structures
+/** @defgroup ETH_Exported_Types_Group10 ETH peripheral power management structures
   * @{
   */
 /**
@@ -2748,10 +2751,10 @@ typedef struct
   */
 
 /* Exported functions --------------------------------------------------------*/
-/** @defgroup ETH_Exported_Functions HAL ETH Functions
+/** @defgroup ETH_Exported_Functions HAL ETH functions
   * @{
   */
-/** @defgroup ETH_Exported_Functions_Group1 ETH Initialization and DeInitialization Functions
+/** @defgroup ETH_Exported_Functions_Group1 ETH initialization and deInitialization functions
   * @{
   */
 hal_status_t HAL_ETH_Init(hal_eth_handle_t *heth, hal_eth_t instance);
@@ -2760,7 +2763,7 @@ void HAL_ETH_DeInit(hal_eth_handle_t *heth);
   * @}
   */
 
-/** @defgroup ETH_Exported_Functions_Group2 ETH Peripheral Configuration Functions
+/** @defgroup ETH_Exported_Functions_Group2 ETH peripheral configuration functions
   * @{
   */
 hal_status_t HAL_ETH_SetConfig(hal_eth_handle_t *heth, const hal_eth_config_t *p_config);
@@ -2769,7 +2772,7 @@ void HAL_ETH_GetConfig(const hal_eth_handle_t *heth, hal_eth_config_t *p_config)
   * @}
   */
 
-/** @defgroup ETH_Exported_Functions_Group3 ETH Peripheral Sub-Blocks Configuration Functions
+/** @defgroup ETH_Exported_Functions_Group3 ETH peripheral sub-blocks configuration functions
   * @{
   */
 void HAL_ETH_MAC_GetConfig(const hal_eth_handle_t *heth, hal_eth_mac_config_t *p_macconf);
@@ -2782,7 +2785,7 @@ hal_status_t HAL_ETH_MTL_SetConfig(hal_eth_handle_t *heth, const hal_eth_mtl_con
   * @}
   */
 
-/** @defgroup ETH_Exported_Functions_Group4 ETH Channels Configuration Functions
+/** @defgroup ETH_Exported_Functions_Group4 ETH channels configuration functions
   * @{
   */
 hal_status_t HAL_ETH_SetConfigTxChannel(hal_eth_handle_t *heth, uint32_t channel,
@@ -2799,7 +2802,7 @@ void HAL_ETH_GetChannelAllocNeeds(const hal_eth_handle_t *heth, uint32_t channel
   * @}
   */
 
-/** @defgroup ETH_Exported_Functions_Group5 ETH Peripheral Optional Control Functions
+/** @defgroup ETH_Exported_Functions_Group5 ETH peripheral optional control functions
   * @{
   */
 hal_status_t                 HAL_ETH_UpdateConfigLink(hal_eth_handle_t *heth, const hal_eth_link_config_t *p_config);
@@ -2817,7 +2820,7 @@ void                         HAL_ETH_ExitLPIMode(hal_eth_handle_t *heth);
   * @}
   */
 
-/** @defgroup ETH_Exported_Functions_Group6 Callbacks Register functions
+/** @defgroup ETH_Exported_Functions_Group6 callbacks register functions
   * @{
   */
 hal_status_t HAL_ETH_RegisterChannelRxAllocateCallback(hal_eth_handle_t *heth, uint32_t channel,
@@ -2844,7 +2847,7 @@ hal_status_t HAL_ETH_RegisterChannelTxEventCallback(hal_eth_handle_t *heth, uint
   * @}
   */
 
-/** @defgroup ETH_Exported_Functions_Group7 Interrupts management functions.
+/** @defgroup ETH_Exported_Functions_Group7 interrupts management functions
   * @{
   */
 void         HAL_ETH_IRQHandler(hal_eth_handle_t *heth);
@@ -2870,7 +2873,7 @@ void         HAL_ETH_RxEventCallback(hal_eth_handle_t *heth, uint32_t channel, u
   * @}
   */
 
-/** @defgroup ETH_Exported_Functions_Group9 Process and I/O Operations Functions
+/** @defgroup ETH_Exported_Functions_Group9 Process and I/O operations functions
   * @{
   */
 /* ETH Peripheral I/O functions  **********************************************/
@@ -2889,7 +2892,7 @@ uint32_t     HAL_ETH_GetChannelBufferInUseCount(const hal_eth_handle_t *heth, ui
   * @}
   */
 
-/** @defgroup ETH_Exported_Functions_Group10 Multi-Queue Functions
+/** @defgroup ETH_Exported_Functions_Group10 Multi-Queue functions
   * @{
   */
 /* Multi-Queue functions *********************************************/
@@ -2901,7 +2904,7 @@ uint32_t     HAL_ETH_GetTxMTLQNumber(const hal_eth_handle_t *heth);
   * @}
   */
 
-/** @defgroup ETH_Exported_Functions_Group11 State and Error Functions
+/** @defgroup ETH_Exported_Functions_Group11 state and error functions
   * @{
   */
 /* Peripheral State functions  ************************************************/
@@ -2915,7 +2918,7 @@ uint32_t                 HAL_ETH_GetLastErrorCodes(const hal_eth_handle_t *heth)
   * @}
   */
 
-/** @defgroup ETH_Exported_Functions_Group12 MDIO Control and PHY I/O Operations Functions
+/** @defgroup ETH_Exported_Functions_Group12 MDIO control and PHY I/O operations functions
   * @{
   */
 void         HAL_ETH_MDIO_UpdateClockRange(hal_eth_handle_t *heth);
@@ -2937,7 +2940,7 @@ hal_status_t HAL_ETH_MDIO_C45ReadDataRange(hal_eth_handle_t *heth, uint8_t phy_a
   */
 
 #if defined(USE_HAL_MUTEX) && (USE_HAL_MUTEX == 1)
-/** @defgroup ETH_Exported_Functions_Group13 Bus Operation Function
+/** @defgroup ETH_Exported_Functions_Group13 bus operation functions
   * @{
   */
 hal_status_t HAL_ETH_AcquireBus(hal_eth_handle_t *heth, uint32_t timeout_ms);
@@ -2948,7 +2951,7 @@ hal_status_t HAL_ETH_ReleaseBus(hal_eth_handle_t *heth);
 #endif /* USE_HAL_MUTEX */
 
 #if defined (USE_HAL_ETH_USER_DATA) && (USE_HAL_ETH_USER_DATA == 1)
-/** @defgroup ETH_Exported_Functions_Group14 User Data Function
+/** @defgroup ETH_Exported_Functions_Group14 user data functions
   * @{
   */
 void        HAL_ETH_SetUserData(hal_eth_handle_t *heth, const void *p_user_data);
@@ -2958,7 +2961,7 @@ const void *HAL_ETH_GetUserData(const hal_eth_handle_t *heth);
   */
 #endif /* USE_HAL_ETH_USER_DATA */
 
-/** @defgroup ETH_Exported_Functions_Group15 ETH External WAKEUP Management Functions
+/** @defgroup ETH_Exported_Functions_Group15 ETH external WAKEUP management functions
   * @{
   */
 /**

@@ -205,7 +205,7 @@ __STATIC_INLINE uint32_t LL_CRC_GetPolynomialSize(const CRC_TypeDef *crcx)
 /**
   * @brief  Configure the reversal of the bit order of the input and Output data.
   * @rmtoll
-  *  CR           REV_X     LL_CRC_SetDataReverseMode
+  *  CR           REV_X     LL_CRC_SetDataReverseMode\n
   *  CR           RTYPE_X   LL_CRC_SetDataReverseMode
   * @param  crcx CRC Instance
   * @param  input_reverse_mode This parameter can be one of the following values:
@@ -233,7 +233,7 @@ __STATIC_INLINE void LL_CRC_SetDataReverseMode(CRC_TypeDef *crcx, uint32_t input
 /**
   * @brief  Configure the reversal of the bit order of the input data.
   * @rmtoll
-  *  CR           REV_IN        LL_CRC_SetInputDataReverseMode
+  *  CR           REV_IN        LL_CRC_SetInputDataReverseMode\n
   *  CR           RTYPE_IN      LL_CRC_SetInputDataReverseMode
   * @param  crcx CRC Instance
   * @param  input_reverse_mode This parameter can be one of the following values:
@@ -252,7 +252,7 @@ __STATIC_INLINE void LL_CRC_SetInputDataReverseMode(CRC_TypeDef *crcx, uint32_t 
 /**
   * @brief  Return type of reversal for input data bit order.
   * @rmtoll
-  *  CR           REV_IN        LL_CRC_GetInputDataReverseMode
+  *  CR           REV_IN        LL_CRC_GetInputDataReverseMode\n
   *  CR           RTYPE_IN      LL_CRC_GetInputDataReverseMode
   * @param  crcx CRC Instance
   * @retval Returned value can be one of the following values:
@@ -271,7 +271,7 @@ __STATIC_INLINE uint32_t LL_CRC_GetInputDataReverseMode(const CRC_TypeDef *crcx)
 /**
   * @brief  Configure the reversal of the bit order of the Output data.
   * @rmtoll
-  *  CR           REV_OUT       LL_CRC_SetOutputDataReverseMode
+  *  CR           REV_OUT       LL_CRC_SetOutputDataReverseMode\n
   *  CR           RTYPE_OUT     LL_CRC_SetOutputDataReverseMode
   * @param  crcx CRC Instance
   * @param  output_reverse_mode This parameter can be one of the following values:

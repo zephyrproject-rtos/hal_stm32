@@ -198,7 +198,7 @@ static const uint32_t LL_TIM_MASK_TAB_BKxBID[] =
   */
 
 /* Defines used for the bit position in the register and perform offsets */
-#define LL_TIM_TIM_POSITION_BRK_SOURCE(source)  \
+#define LL_TIM_POSITION_BRK_SOURCE(source)  \
   (STM32_POSITION_VAL((source)) & 0x1FUL)
 
 /** @brief  Convert channel id into channel index.
@@ -216,16 +216,16 @@ static const uint32_t LL_TIM_MASK_TAB_BKxBID[] =
   *         @arg @ref LL_TIM_CHANNEL_CH7
   * @retval Channel index.
   */
-#define LL_TIM_TIM_GET_CHANNEL_INDEX(channel) (((channel) == LL_TIM_CHANNEL_CH1) ? 0U  :\
-                                               ((channel) == LL_TIM_CHANNEL_CH1N) ? 1U :\
-                                               ((channel) == LL_TIM_CHANNEL_CH2) ? 2U  :\
-                                               ((channel) == LL_TIM_CHANNEL_CH2N) ? 3U :\
-                                               ((channel) == LL_TIM_CHANNEL_CH3) ? 4U  :\
-                                               ((channel) == LL_TIM_CHANNEL_CH3N) ? 5U :\
-                                               ((channel) == LL_TIM_CHANNEL_CH4) ? 6U  :\
-                                               ((channel) == LL_TIM_CHANNEL_CH4N) ? 7U :\
-                                               ((channel) == LL_TIM_CHANNEL_CH5) ? 8U  :\
-                                               ((channel) == LL_TIM_CHANNEL_CH6) ? 9U  : 10U)
+#define LL_TIM_GET_CHANNEL_INDEX(channel) (((channel) == LL_TIM_CHANNEL_CH1) ? 0U  :\
+                                           ((channel) == LL_TIM_CHANNEL_CH1N) ? 1U :\
+                                           ((channel) == LL_TIM_CHANNEL_CH2) ? 2U  :\
+                                           ((channel) == LL_TIM_CHANNEL_CH2N) ? 3U :\
+                                           ((channel) == LL_TIM_CHANNEL_CH3) ? 4U  :\
+                                           ((channel) == LL_TIM_CHANNEL_CH3N) ? 5U :\
+                                           ((channel) == LL_TIM_CHANNEL_CH4) ? 6U  :\
+                                           ((channel) == LL_TIM_CHANNEL_CH4N) ? 7U :\
+                                           ((channel) == LL_TIM_CHANNEL_CH5) ? 8U  :\
+                                           ((channel) == LL_TIM_CHANNEL_CH6) ? 9U  : 10U)
 
 /** @brief  Calculate the deadtime sampling period (in ps).
   * @param  tim_clk timer input clock frequency (in Hz).
@@ -236,13 +236,23 @@ static const uint32_t LL_TIM_MASK_TAB_BKxBID[] =
   *         @arg @ref LL_TIM_CLOCKDIVISION_DIV8
   * @retval Deadtime sampling period (in ps).
   */
-#define LL_TIM_TIM_CALC_DTS(tim_clk, clk_div) (((clk_div) == LL_TIM_CLOCKDIVISION_DIV1) ? \
-                                               ((uint64_t)1000000000000U/(tim_clk)) : \
-                                               ((clk_div) == LL_TIM_CLOCKDIVISION_DIV2) ? \
-                                               ((uint64_t)1000000000000U/((tim_clk) >> 1U)) : \
-                                               ((clk_div) == LL_TIM_CLOCKDIVISION_DIV4) ? \
-                                               ((uint64_t)1000000000000U/((tim_clk) >> 2U)) : \
-                                               ((uint64_t)1000000000000U/((tim_clk) >> 3U)))
+#define LL_TIM_CALC_DTS(tim_clk, clk_div) (((clk_div) == LL_TIM_CLOCKDIVISION_DIV1) ? \
+                                           ((uint64_t)1000000000000U/(tim_clk)) : \
+                                           ((clk_div) == LL_TIM_CLOCKDIVISION_DIV2) ? \
+                                           ((uint64_t)1000000000000U/((tim_clk) >> 1U)) : \
+                                           ((clk_div) == LL_TIM_CLOCKDIVISION_DIV4) ? \
+                                           ((uint64_t)1000000000000U/((tim_clk) >> 2U)) : \
+                                           ((uint64_t)1000000000000U/((tim_clk) >> 3U)))
+
+/** Legacy definitions for compatibility purpose
+  * @cond LEGACY_DEFINITIONS
+  */
+#define LL_TIM_TIM_POSITION_BRK_SOURCE(source)  LL_TIM_POSITION_BRK_SOURCE(source)
+#define LL_TIM_TIM_GET_CHANNEL_INDEX(channel)  LL_TIM_GET_CHANNEL_INDEX(channel)
+#define LL_TIM_TIM_CALC_DTS(tim_clk, clk_div)  LL_TIM_CALC_DTS(tim_clk, clk_div)
+/**
+  * @endcond
+  */
 /**
   * @}
   */
@@ -877,9 +887,11 @@ static const uint32_t LL_TIM_MASK_TAB_BKxBID[] =
 #if defined(TIM3)
 #define LL_TIM_TS_ITR3      (TIM_SMCR_TS_0 | TIM_SMCR_TS_1)        /*!< Internal Trigger 3 (ITR3) is used as
                                                                    trigger input */
+#endif /* TIM3 */
+#if defined(TIM4)
 #define LL_TIM_TS_ITR4      (TIM_SMCR_TS_3)                        /*!< Internal Trigger 4 (ITR4) is used as
                                                                    trigger input */
-#endif /* TIM3 */
+#endif /* TIM4 */
 #if defined(TIM5)
 #define LL_TIM_TS_ITR5      (TIM_SMCR_TS_0 | TIM_SMCR_TS_3)        /*!< Internal Trigger 5 (ITR5) is used as
                                                                    trigger input */
@@ -996,7 +1008,7 @@ static const uint32_t LL_TIM_MASK_TAB_BKxBID[] =
 #define LL_TIM_TIM1_ETR_IN_COMP1_OUT         TIM_AF1_ETRSEL_0                                                               /*!< tim1_etr_in is connected to comp1_out */
 #if defined(COMP2)
 #define LL_TIM_TIM1_ETR_IN_COMP2_OUT         TIM_AF1_ETRSEL_1                                                               /*!< tim1_etr_in is connected to comp2_out */
-#endif /* COMP2 */
+#endif /* COMP2 && !COMP3 */
 #define LL_TIM_TIM1_ETR_IN_ADC1_AWD1         (TIM_AF1_ETRSEL_1 | TIM_AF1_ETRSEL_0)                                          /*!< tim1_etr_in is connected to adc1_awd1 */
 #define LL_TIM_TIM1_ETR_IN_ADC1_AWD2         TIM_AF1_ETRSEL_2                                                               /*!< tim1_etr_in is connected to adc1_awd2 */
 #define LL_TIM_TIM1_ETR_IN_ADC1_AWD3         (TIM_AF1_ETRSEL_2 | TIM_AF1_ETRSEL_0)                                          /*!< tim1_etr_in is connected to adc1_awd3 */
@@ -1011,7 +1023,7 @@ static const uint32_t LL_TIM_MASK_TAB_BKxBID[] =
 #define LL_TIM_TIM2_ETR_IN_COMP1_OUT         TIM_AF1_ETRSEL_0                                                               /*!< tim2_etr_in is connected to comp1_out */
 #if defined(COMP2)
 #define LL_TIM_TIM2_ETR_IN_COMP2_OUT         TIM_AF1_ETRSEL_1                                                               /*!< tim2_etr_in is connected to comp2_out */
-#endif /* COMP2 */
+#endif /* COMP2 && !COMP3 */
 #define LL_TIM_TIM2_ETR_IN_ADC1_AWD1         (TIM_AF1_ETRSEL_1 | TIM_AF1_ETRSEL_0)                                          /*!< tim2_etr_in is connected to adc1_awd1 */
 #define LL_TIM_TIM2_ETR_IN_ADC1_AWD2         TIM_AF1_ETRSEL_2                                                               /*!< tim2_etr_in is connected to adc1_awd2 */
 #define LL_TIM_TIM2_ETR_IN_ADC1_AWD3         (TIM_AF1_ETRSEL_2 | TIM_AF1_ETRSEL_0)                                          /*!< tim2_etr_in is connected to adc1_awd3 */
@@ -1019,8 +1031,10 @@ static const uint32_t LL_TIM_MASK_TAB_BKxBID[] =
 #define LL_TIM_TIM2_ETR_IN_MCO1              (TIM_AF1_ETRSEL_2 | TIM_AF1_ETRSEL_1 | TIM_AF1_ETRSEL_0)                       /*!< tim2_etr_in is connected to MCO1 */
 #if defined(TIM3)
 #define LL_TIM_TIM2_ETR_IN_TIM3_ETR          (TIM_AF1_ETRSEL_3 | TIM_AF1_ETRSEL_0)                                          /*!< tim2_etr_in is connected to TIM3_ETR */
-#define LL_TIM_TIM2_ETR_IN_TIM4_ETR          (TIM_AF1_ETRSEL_3 | TIM_AF1_ETRSEL_1)                                          /*!< tim2_etr_in is connected to TIM4_ETR */
 #endif /* TIM3 */
+#if defined(TIM4)
+#define LL_TIM_TIM2_ETR_IN_TIM4_ETR          (TIM_AF1_ETRSEL_3 | TIM_AF1_ETRSEL_1)                                          /*!< tim2_etr_in is connected to TIM4_ETR */
+#endif /* TIM4 */
 #if defined(TIM5)
 #define LL_TIM_TIM2_ETR_IN_TIM5_ETR          (TIM_AF1_ETRSEL_3 | TIM_AF1_ETRSEL_1 | TIM_AF1_ETRSEL_0)                       /*!< tim2_etr_in is connected to TIM5_ETR */
 #endif /* TIM5 */
@@ -1038,13 +1052,19 @@ static const uint32_t LL_TIM_MASK_TAB_BKxBID[] =
 #define LL_TIM_TIM3_ETR_IN_GPIO              0x00000000U                                                                    /*!< tim3_etr_in is connected to TIM3_ETR */
 #define LL_TIM_TIM3_ETR_IN_COMP1_OUT         TIM_AF1_ETRSEL_0                                                               /*!< tim3_etr_in is connected to comp1_out */
 #define LL_TIM_TIM3_ETR_IN_TIM2_ETR          TIM_AF1_ETRSEL_3                                                               /*!< tim3_etr_in is connected to TIM2_ETR */
+#if defined(TIM4)
 #define LL_TIM_TIM3_ETR_IN_TIM4_ETR          (TIM_AF1_ETRSEL_3 | TIM_AF1_ETRSEL_1)                                          /*!< tim3_etr_in is connected to TIM4_ETR */
+#endif /* TIM4 */
 #define LL_TIM_TIM3_ETR_IN_TIM5_ETR          (TIM_AF1_ETRSEL_3 | TIM_AF1_ETRSEL_1 | TIM_AF1_ETRSEL_0)                       /*!< tim3_etr_in is connected to TIM5_ETR */
+#if defined(ETH1)
 #define LL_TIM_TIM3_ETR_IN_ETH1_PTP_PPS_OUT  (TIM_AF1_ETRSEL_3 | TIM_AF1_ETRSEL_2 | TIM_AF1_ETRSEL_1)                       /*!< tim3_etr_in is connected to eth1_ptp_pps_out */
+#endif /* ETH1 */
 /**
   * @}
   */
+#endif /* TIM3 */
 
+#if defined(TIM4)
 /** @defgroup TIM_LL_EC_TIM4_ETR_IN  TIM4 External Trigger Input
   * @{
   */
@@ -1059,7 +1079,7 @@ static const uint32_t LL_TIM_MASK_TAB_BKxBID[] =
 /**
   * @}
   */
-#endif /* TIM3 */
+#endif /* TIM4 */
 
 #if defined(TIM5)
 /** @defgroup TIM_LL_EC_TIM5_ETR_IN  TIM5 External Trigger Input
@@ -1070,8 +1090,10 @@ static const uint32_t LL_TIM_MASK_TAB_BKxBID[] =
 #define LL_TIM_TIM5_ETR_IN_TIM2_ETR          TIM_AF1_ETRSEL_3                                                               /*!< tim5_etr_in is connected to TIM2_ETR */
 #if defined(TIM3)
 #define LL_TIM_TIM5_ETR_IN_TIM3_ETR          (TIM_AF1_ETRSEL_3 | TIM_AF1_ETRSEL_0)                                          /*!< tim5_etr_in is connected to TIM3_ETR */
-#define LL_TIM_TIM5_ETR_IN_TIM4_ETR          (TIM_AF1_ETRSEL_3 | TIM_AF1_ETRSEL_1)                                          /*!< tim5_etr_in is connected to TIM4_ETR */
 #endif /* TIM3 */
+#if defined(TIM4)
+#define LL_TIM_TIM5_ETR_IN_TIM4_ETR          (TIM_AF1_ETRSEL_3 | TIM_AF1_ETRSEL_1)                                          /*!< tim5_etr_in is connected to TIM4_ETR */
+#endif /* TIM4 */
 /**
   * @}
   */
@@ -1084,7 +1106,7 @@ static const uint32_t LL_TIM_MASK_TAB_BKxBID[] =
 #define LL_TIM_TIM8_ETR_IN_COMP1_OUT         TIM_AF1_ETRSEL_0                                                               /*!< tim8_etr_in is connected to comp1_out */
 #if defined(COMP2)
 #define LL_TIM_TIM8_ETR_IN_COMP2_OUT         TIM_AF1_ETRSEL_1                                                               /*!< tim8_etr_in is connected to comp2_out */
-#endif /* COMP2 */
+#endif /* COMP2 && !COMP3 */
 #if defined(ADC1) && defined(ADC2)
 #define LL_TIM_TIM8_ETR_IN_ADC2_AWD1         (TIM_AF1_ETRSEL_1 | TIM_AF1_ETRSEL_0)                                          /*!< tim8_etr_in is connected to adc2_awd1 */
 #define LL_TIM_TIM8_ETR_IN_ADC2_AWD2         TIM_AF1_ETRSEL_2                                                               /*!< tim8_etr_in is connected to adc2_awd2 */
@@ -1102,6 +1124,7 @@ static const uint32_t LL_TIM_MASK_TAB_BKxBID[] =
 /**
   * @}
   */
+
 
 /** @defgroup TIM_LL_EC_BREAK_POLARITY break polarity
   * @{
@@ -1278,7 +1301,9 @@ static const uint32_t LL_TIM_MASK_TAB_BKxBID[] =
 /**
   * @}
   */
+#endif /* TIM16 */
 
+#if defined(TIM17)
 /** @defgroup TIM_LL_EC_TIM17_BRK  TIM17 Break Input
   * @{
   */
@@ -1292,6 +1317,7 @@ static const uint32_t LL_TIM_MASK_TAB_BKxBID[] =
   * @}
   */
 #endif /* TIM17 */
+
 
 /** @defgroup TIM_LL_EC_TIM1_BRK2  TIM1 Break2 Input
   * @{
@@ -1318,6 +1344,7 @@ static const uint32_t LL_TIM_MASK_TAB_BKxBID[] =
 /**
   * @}
   */
+
 /**
   * @}
   */
@@ -1573,7 +1600,7 @@ static const uint32_t LL_TIM_MASK_TAB_BKxBID[] =
 #define LL_TIM_TIM1_TI1_COMP1_OUT            TIM_TISEL_TI1SEL_0                                              /*!< tim1_ti1 is connected to comp1_out */
 #if defined(COMP2)
 #define LL_TIM_TIM1_TI1_COMP2_OUT            TIM_TISEL_TI1SEL_1                                              /*!< tim1_ti1 is connected to comp2_out */
-#endif /* COMP2 */
+#endif /* COMP2 && !COMP3 */
 /**
   * @}
   */
@@ -1611,7 +1638,7 @@ static const uint32_t LL_TIM_MASK_TAB_BKxBID[] =
 #define LL_TIM_TIM2_TI1_COMP2_OUT            TIM_TISEL_TI1SEL_1                                              /*!< tim2_ti1 is connected to comp2_out */
 #elif defined(ETH1)
 #define LL_TIM_TIM2_TI1_ETH1_PTP_PPS_OUT     TIM_TISEL_TI1SEL_1                                              /*!< tim2_ti1 is connected to eth1_ptp_pps_out */
-#endif /* COMP2 */
+#endif /* COMP2 && !COMP3 */
 #define LL_TIM_TIM2_TI1_LSI                  (TIM_TISEL_TI1SEL_1 | TIM_TISEL_TI1SEL_0)                       /*!< tim2_ti1 is connected to LSI */
 #define LL_TIM_TIM2_TI1_LSE                  TIM_TISEL_TI1SEL_2                                              /*!< tim2_ti1 is connected to LSE */
 #define LL_TIM_TIM2_TI1_RTC_WUT_TRG          (TIM_TISEL_TI1SEL_2 | TIM_TISEL_TI1SEL_0)                       /*!< tim2_ti1 is connected to rtc_wut_trg */
@@ -1706,6 +1733,9 @@ static const uint32_t LL_TIM_MASK_TAB_BKxBID[] =
   * @}
   */
 
+#endif /* TIM3 */
+
+#if defined(TIM4)
 /** @defgroup TIM_LL_EC_TIM4_TI1  TIM4 Input Ch1
   * @{
   */
@@ -1738,7 +1768,7 @@ static const uint32_t LL_TIM_MASK_TAB_BKxBID[] =
 /**
   * @}
   */
-#endif /* TIM3 */
+#endif /* TIM4 */
 
 #if defined(TIM5)
 /** @defgroup TIM_LL_EC_TIM5_TI1  TIM5 Input Ch1
@@ -1782,7 +1812,7 @@ static const uint32_t LL_TIM_MASK_TAB_BKxBID[] =
 #define LL_TIM_TIM8_TI1_COMP1_OUT            TIM_TISEL_TI1SEL_0                                              /*!< tim8_ti1 is connected to comp1_out */
 #if defined(COMP2)
 #define LL_TIM_TIM8_TI1_COMP2_OUT            TIM_TISEL_TI1SEL_1                                              /*!< tim8_ti1 is connected to comp2_out */
-#endif /* COMP2 */
+#endif /* COMP2 && !COMP3 */
 /**
   * @}
   */
@@ -1818,7 +1848,7 @@ static const uint32_t LL_TIM_MASK_TAB_BKxBID[] =
 #define LL_TIM_TIM12_TI1_COMP1_OUT           TIM_TISEL_TI1SEL_0                                              /*!< tim12_ti1 is connected to comp1_out */
 #if defined(COMP2)
 #define LL_TIM_TIM12_TI1_COMP2_OUT           TIM_TISEL_TI1SEL_1                                              /*!< tim12_ti1 is connected to comp2_out */
-#endif /* COMP2 */
+#endif /* COMP2 && !COMP3 */
 #define LL_TIM_TIM12_TI1_MCO1                (TIM_TISEL_TI1SEL_1 | TIM_TISEL_TI1SEL_0)                       /*!< tim12_ti1 is connected to MCO1 */
 #define LL_TIM_TIM12_TI1_MCO2                TIM_TISEL_TI1SEL_2                                              /*!< tim12_ti1 is connected to MCO2 */
 #define LL_TIM_TIM12_TI1_HSE_RTC             (TIM_TISEL_TI1SEL_2 | TIM_TISEL_TI1SEL_0)                       /*!< tim12_ti1 is connected to hse_1M_ck */
@@ -1842,7 +1872,7 @@ static const uint32_t LL_TIM_MASK_TAB_BKxBID[] =
 #define LL_TIM_TIM15_TI1_COMP1_OUT           TIM_TISEL_TI1SEL_0                                              /*!< tim15_ti1 is connected to comp1_out */
 #if defined(COMP2)
 #define LL_TIM_TIM15_TI1_COMP2_OUT           TIM_TISEL_TI1SEL_1                                              /*!< tim15_ti1 is connected to comp2_out */
-#endif /* COMP2 */
+#endif /* COMP2 && !COMP3 */
 #define LL_TIM_TIM15_TI1_LSE                 (TIM_TISEL_TI1SEL_2 | TIM_TISEL_TI1SEL_0)                       /*!< tim15_ti1 is connected to LSE */
 #if defined(FDCAN2)
 #define LL_TIM_TIM15_TI1_FDCAN2_RXEOF_EVT    (TIM_TISEL_TI1SEL_2 | TIM_TISEL_TI1SEL_1 | TIM_TISEL_TI1SEL_0)  /*!< tim15_ti1 is connected to fdcan2_rxeof_evt */
@@ -1891,6 +1921,7 @@ static const uint32_t LL_TIM_MASK_TAB_BKxBID[] =
   */
 #endif /* TIM16 */
 
+
 /** @defgroup TIM_LL_EC_OCREF_CLR_INT OCREF clear input selection
   * @{
   */
@@ -1927,7 +1958,9 @@ static const uint32_t LL_TIM_MASK_TAB_BKxBID[] =
 /**
   * @}
   */
+#endif /* TIM3 */
 
+#if defined(TIM4)
 /** @defgroup TIM_LL_EC_TIM4_OCREF_CLR_INT  TIM4 OCRef Clear Input
   * @{
   */
@@ -1936,7 +1969,7 @@ static const uint32_t LL_TIM_MASK_TAB_BKxBID[] =
 /**
   * @}
   */
-#endif /* TIM3 */
+#endif /* TIM4 */
 
 #if defined(TIM5)
 /** @defgroup TIM_LL_EC_TIM5_OCREF_CLR_INT  TIM5 OCRef Clear Input
@@ -1989,6 +2022,7 @@ static const uint32_t LL_TIM_MASK_TAB_BKxBID[] =
   * @}
   */
 #endif /* TIM16 */
+
 /**
   * @}
   */
@@ -2130,16 +2164,16 @@ static const uint32_t LL_TIM_MASK_TAB_BKxBID[] =
   * @retval DTG[0:7]
   */
 #define LL_TIM_CALC_DEADTIME(tim_clk, clk_div, dt)  \
-  ( (((uint64_t)((dt)*1000U)) < ((LL_TIM_DT_DELAY_1+1U) * LL_TIM_TIM_CALC_DTS((tim_clk), (clk_div))))    ?  \
-    (uint8_t)(((uint64_t)((dt)*1000U) / LL_TIM_TIM_CALC_DTS((tim_clk), (clk_div)))  & LL_TIM_DT_DELAY_1) :      \
-    (((uint64_t)((dt)*1000U)) < ((64U + (LL_TIM_DT_DELAY_2+1U)) * 2U * LL_TIM_TIM_CALC_DTS((tim_clk), (clk_div))))  ?  \
-    (uint8_t)(LL_TIM_DT_RANGE_2 | ((uint8_t)((uint8_t)((((uint64_t)((dt)*1000U))/ LL_TIM_TIM_CALC_DTS((tim_clk),   \
+  ( (((uint64_t)((dt)*1000U)) < ((LL_TIM_DT_DELAY_1+1U) * LL_TIM_CALC_DTS((tim_clk), (clk_div))))    ?  \
+    (uint8_t)(((uint64_t)((dt)*1000U) / LL_TIM_CALC_DTS((tim_clk), (clk_div)))  & LL_TIM_DT_DELAY_1) :      \
+    (((uint64_t)((dt)*1000U)) < ((64U + (LL_TIM_DT_DELAY_2+1U)) * 2U * LL_TIM_CALC_DTS((tim_clk), (clk_div))))  ?  \
+    (uint8_t)(LL_TIM_DT_RANGE_2 | ((uint8_t)((uint8_t)((((uint64_t)((dt)*1000U))/ LL_TIM_CALC_DTS((tim_clk),   \
                                                         (clk_div))) >> 1U) - (uint8_t) 64) & LL_TIM_DT_DELAY_2)) :\
-    (((uint64_t)((dt)*1000U)) < ((32U + (LL_TIM_DT_DELAY_3+1U)) * 8U * LL_TIM_TIM_CALC_DTS((tim_clk), (clk_div))))  ?  \
-    (uint8_t)(LL_TIM_DT_RANGE_3 | ((uint8_t)((uint8_t)(((((uint64_t)(dt)*1000U))/ LL_TIM_TIM_CALC_DTS((tim_clk),  \
+    (((uint64_t)((dt)*1000U)) < ((32U + (LL_TIM_DT_DELAY_3+1U)) * 8U * LL_TIM_CALC_DTS((tim_clk), (clk_div))))  ?  \
+    (uint8_t)(LL_TIM_DT_RANGE_3 | ((uint8_t)((uint8_t)(((((uint64_t)(dt)*1000U))/ LL_TIM_CALC_DTS((tim_clk),  \
                                                         (clk_div))) >> 3U) - (uint8_t) 32) & LL_TIM_DT_DELAY_3)) :\
-    (((uint64_t)((dt)*1000U)) < ((32U + (LL_TIM_DT_DELAY_4+1U)) * 16U * LL_TIM_TIM_CALC_DTS((tim_clk), (clk_div)))) ?  \
-    (uint8_t)(LL_TIM_DT_RANGE_4 | ((uint8_t)((uint8_t)(((((uint64_t)(dt)*1000U))/ LL_TIM_TIM_CALC_DTS((tim_clk),  \
+    (((uint64_t)((dt)*1000U)) < ((32U + (LL_TIM_DT_DELAY_4+1U)) * 16U * LL_TIM_CALC_DTS((tim_clk), (clk_div)))) ?  \
+    (uint8_t)(LL_TIM_DT_RANGE_4 | ((uint8_t)((uint8_t)(((((uint64_t)(dt)*1000U))/ LL_TIM_CALC_DTS((tim_clk),  \
                                                         (clk_div))) >> 4U) - (uint8_t) 32) & LL_TIM_DT_DELAY_4)) :\
     0U)
 
@@ -3078,7 +3112,7 @@ __STATIC_INLINE uint32_t LL_TIM_CC_IsEnabledChannel(const TIM_TypeDef *timx, uin
   */
 __STATIC_INLINE void LL_TIM_OC_ConfigOutput(TIM_TypeDef *timx, uint32_t channel, uint32_t configuration)
 {
-  uint32_t ichannel = LL_TIM_TIM_GET_CHANNEL_INDEX(channel);
+  uint32_t ichannel = LL_TIM_GET_CHANNEL_INDEX(channel);
   __IO uint32_t *pReg = (__IO uint32_t *)((uint32_t)((uint32_t)(&timx->CCMR1) + LL_TIM_OFFSET_TAB_CCMRx[ichannel]));
   STM32_CLEAR_BIT(*pReg, (TIM_CCMR1_CC1S << LL_TIM_SHIFT_TAB_OCxx[ichannel]));
   STM32_MODIFY_REG(timx->CCER, (TIM_CCER_CC1P << LL_TIM_SHIFT_TAB_CCxP[ichannel]),
@@ -3137,7 +3171,7 @@ __STATIC_INLINE void LL_TIM_OC_ConfigOutput(TIM_TypeDef *timx, uint32_t channel,
   */
 __STATIC_INLINE void LL_TIM_OC_SetMode(TIM_TypeDef *timx, uint32_t channel, uint32_t mode)
 {
-  uint32_t ichannel = LL_TIM_TIM_GET_CHANNEL_INDEX(channel);
+  uint32_t ichannel = LL_TIM_GET_CHANNEL_INDEX(channel);
   __IO uint32_t *pReg = (__IO uint32_t *)((uint32_t)((uint32_t)(&timx->CCMR1) + LL_TIM_OFFSET_TAB_CCMRx[ichannel]));
   STM32_MODIFY_REG(*pReg, ((TIM_CCMR1_OC1M  | TIM_CCMR1_CC1S) << LL_TIM_SHIFT_TAB_OCxx[ichannel]),
                    mode << LL_TIM_SHIFT_TAB_OCxx[ichannel]);
@@ -3192,7 +3226,7 @@ __STATIC_INLINE void LL_TIM_OC_SetMode(TIM_TypeDef *timx, uint32_t channel, uint
   */
 __STATIC_INLINE uint32_t LL_TIM_OC_GetMode(const TIM_TypeDef *timx, uint32_t channel)
 {
-  uint32_t ichannel = LL_TIM_TIM_GET_CHANNEL_INDEX(channel);
+  uint32_t ichannel = LL_TIM_GET_CHANNEL_INDEX(channel);
   const __IO uint32_t *pReg = (__IO uint32_t *)((uint32_t)((uint32_t)(&timx->CCMR1) + \
                                                            LL_TIM_OFFSET_TAB_CCMRx[ichannel]));
   return (STM32_READ_BIT(*pReg, ((TIM_CCMR1_OC1M | TIM_CCMR1_CC1S) << LL_TIM_SHIFT_TAB_OCxx[ichannel])) \
@@ -3232,7 +3266,7 @@ __STATIC_INLINE uint32_t LL_TIM_OC_GetMode(const TIM_TypeDef *timx, uint32_t cha
   */
 __STATIC_INLINE void LL_TIM_OC_SetPolarity(TIM_TypeDef *timx, uint32_t channel, uint32_t polarity)
 {
-  uint32_t ichannel = LL_TIM_TIM_GET_CHANNEL_INDEX(channel);
+  uint32_t ichannel = LL_TIM_GET_CHANNEL_INDEX(channel);
   STM32_MODIFY_REG(timx->CCER, (TIM_CCER_CC1P << LL_TIM_SHIFT_TAB_CCxP[ichannel]),
                    polarity << LL_TIM_SHIFT_TAB_CCxP[ichannel]);
 }
@@ -3270,7 +3304,7 @@ __STATIC_INLINE void LL_TIM_OC_SetPolarity(TIM_TypeDef *timx, uint32_t channel, 
   */
 __STATIC_INLINE uint32_t LL_TIM_OC_GetPolarity(const TIM_TypeDef *timx, uint32_t channel)
 {
-  uint32_t ichannel = LL_TIM_TIM_GET_CHANNEL_INDEX(channel);
+  uint32_t ichannel = LL_TIM_GET_CHANNEL_INDEX(channel);
   return (STM32_READ_BIT(timx->CCER, (TIM_CCER_CC1P << LL_TIM_SHIFT_TAB_CCxP[ichannel])) \
           >> LL_TIM_SHIFT_TAB_CCxP[ichannel]);
 }
@@ -3312,7 +3346,7 @@ __STATIC_INLINE uint32_t LL_TIM_OC_GetPolarity(const TIM_TypeDef *timx, uint32_t
   */
 __STATIC_INLINE void LL_TIM_OC_SetIdleState(TIM_TypeDef *timx, uint32_t channel, uint32_t idle_state)
 {
-  uint32_t ichannel = LL_TIM_TIM_GET_CHANNEL_INDEX(channel);
+  uint32_t ichannel = LL_TIM_GET_CHANNEL_INDEX(channel);
   STM32_MODIFY_REG(timx->CR2, (TIM_CR2_OIS1 << LL_TIM_SHIFT_TAB_OISx[ichannel]), \
                    idle_state << LL_TIM_SHIFT_TAB_OISx[ichannel]);
 }
@@ -3350,7 +3384,7 @@ __STATIC_INLINE void LL_TIM_OC_SetIdleState(TIM_TypeDef *timx, uint32_t channel,
   */
 __STATIC_INLINE uint32_t LL_TIM_OC_GetIdleState(const TIM_TypeDef *timx, uint32_t channel)
 {
-  uint32_t ichannel = LL_TIM_TIM_GET_CHANNEL_INDEX(channel);
+  uint32_t ichannel = LL_TIM_GET_CHANNEL_INDEX(channel);
   return (STM32_READ_BIT(timx->CR2, (TIM_CR2_OIS1 << LL_TIM_SHIFT_TAB_OISx[ichannel])) \
           >> LL_TIM_SHIFT_TAB_OISx[ichannel]);
 }
@@ -3385,7 +3419,7 @@ __STATIC_INLINE uint32_t LL_TIM_OC_GetIdleState(const TIM_TypeDef *timx, uint32_
   */
 __STATIC_INLINE void LL_TIM_OC_SetOverrideState(TIM_TypeDef *timx, uint32_t channel, uint32_t override_state)
 {
-  uint32_t ichannel = LL_TIM_TIM_GET_CHANNEL_INDEX(channel);
+  uint32_t ichannel = LL_TIM_GET_CHANNEL_INDEX(channel);
   STM32_MODIFY_REG(timx->OOR, (TIM_OOR_OOS1 << ichannel), (override_state << ichannel));
 }
 
@@ -3416,7 +3450,7 @@ __STATIC_INLINE void LL_TIM_OC_SetOverrideState(TIM_TypeDef *timx, uint32_t chan
   */
 __STATIC_INLINE uint32_t LL_TIM_OC_GetOverrideState(const TIM_TypeDef *timx, uint32_t channel)
 {
-  uint32_t ichannel = LL_TIM_TIM_GET_CHANNEL_INDEX(channel);
+  uint32_t ichannel = LL_TIM_GET_CHANNEL_INDEX(channel);
   return (STM32_READ_BIT(timx->OOR, (TIM_OOR_OOS1 << ichannel)) >> ichannel);
 }
 
@@ -3479,7 +3513,7 @@ __STATIC_INLINE uint32_t LL_TIM_OC_IsEnabledOutputOverride(const TIM_TypeDef *ti
   */
 __STATIC_INLINE void LL_TIM_OC_EnableFast(TIM_TypeDef *timx, uint32_t channel)
 {
-  uint32_t ichannel = LL_TIM_TIM_GET_CHANNEL_INDEX(channel);
+  uint32_t ichannel = LL_TIM_GET_CHANNEL_INDEX(channel);
   __IO uint32_t *pReg = (__IO uint32_t *)((uint32_t)((uint32_t)(&timx->CCMR1) + LL_TIM_OFFSET_TAB_CCMRx[ichannel]));
   STM32_SET_BIT(*pReg, (TIM_CCMR1_OC1FE << LL_TIM_SHIFT_TAB_OCxx[ichannel]));
 
@@ -3507,7 +3541,7 @@ __STATIC_INLINE void LL_TIM_OC_EnableFast(TIM_TypeDef *timx, uint32_t channel)
   */
 __STATIC_INLINE void LL_TIM_OC_DisableFast(TIM_TypeDef *timx, uint32_t channel)
 {
-  uint32_t ichannel = LL_TIM_TIM_GET_CHANNEL_INDEX(channel);
+  uint32_t ichannel = LL_TIM_GET_CHANNEL_INDEX(channel);
   __IO uint32_t *pReg = (__IO uint32_t *)((uint32_t)((uint32_t)(&timx->CCMR1) + LL_TIM_OFFSET_TAB_CCMRx[ichannel]));
   STM32_CLEAR_BIT(*pReg, (TIM_CCMR1_OC1FE << LL_TIM_SHIFT_TAB_OCxx[ichannel]));
 
@@ -3536,7 +3570,7 @@ __STATIC_INLINE void LL_TIM_OC_DisableFast(TIM_TypeDef *timx, uint32_t channel)
   */
 __STATIC_INLINE uint32_t LL_TIM_OC_IsEnabledFast(const TIM_TypeDef *timx, uint32_t channel)
 {
-  uint32_t ichannel = LL_TIM_TIM_GET_CHANNEL_INDEX(channel);
+  uint32_t ichannel = LL_TIM_GET_CHANNEL_INDEX(channel);
   const __IO uint32_t *pReg = (__IO uint32_t *)((uint32_t)((uint32_t)(&timx->CCMR1) + \
                                                            LL_TIM_OFFSET_TAB_CCMRx[ichannel]));
   uint32_t bitfield = TIM_CCMR1_OC1FE << LL_TIM_SHIFT_TAB_OCxx[ichannel];
@@ -3565,7 +3599,7 @@ __STATIC_INLINE uint32_t LL_TIM_OC_IsEnabledFast(const TIM_TypeDef *timx, uint32
   */
 __STATIC_INLINE void LL_TIM_OC_EnablePreload(TIM_TypeDef *timx, uint32_t channel)
 {
-  uint32_t ichannel = LL_TIM_TIM_GET_CHANNEL_INDEX(channel);
+  uint32_t ichannel = LL_TIM_GET_CHANNEL_INDEX(channel);
   __IO uint32_t *pReg = (__IO uint32_t *)((uint32_t)((uint32_t)(&timx->CCMR1) + LL_TIM_OFFSET_TAB_CCMRx[ichannel]));
   STM32_SET_BIT(*pReg, (TIM_CCMR1_OC1PE << LL_TIM_SHIFT_TAB_OCxx[ichannel]));
 }
@@ -3592,7 +3626,7 @@ __STATIC_INLINE void LL_TIM_OC_EnablePreload(TIM_TypeDef *timx, uint32_t channel
   */
 __STATIC_INLINE void LL_TIM_OC_DisablePreload(TIM_TypeDef *timx, uint32_t channel)
 {
-  uint32_t ichannel = LL_TIM_TIM_GET_CHANNEL_INDEX(channel);
+  uint32_t ichannel = LL_TIM_GET_CHANNEL_INDEX(channel);
   __IO uint32_t *pReg = (__IO uint32_t *)((uint32_t)((uint32_t)(&timx->CCMR1) + LL_TIM_OFFSET_TAB_CCMRx[ichannel]));
   STM32_CLEAR_BIT(*pReg, (TIM_CCMR1_OC1PE << LL_TIM_SHIFT_TAB_OCxx[ichannel]));
 }
@@ -3620,7 +3654,7 @@ __STATIC_INLINE void LL_TIM_OC_DisablePreload(TIM_TypeDef *timx, uint32_t channe
   */
 __STATIC_INLINE uint32_t LL_TIM_OC_IsEnabledPreload(const TIM_TypeDef *timx, uint32_t channel)
 {
-  uint32_t ichannel = LL_TIM_TIM_GET_CHANNEL_INDEX(channel);
+  uint32_t ichannel = LL_TIM_GET_CHANNEL_INDEX(channel);
   const __IO uint32_t *pReg = (__IO uint32_t *)((uint32_t)((uint32_t)(&timx->CCMR1) + \
                                                            LL_TIM_OFFSET_TAB_CCMRx[ichannel]));
   uint32_t bitfield = TIM_CCMR1_OC1PE << LL_TIM_SHIFT_TAB_OCxx[ichannel];
@@ -3652,7 +3686,7 @@ __STATIC_INLINE uint32_t LL_TIM_OC_IsEnabledPreload(const TIM_TypeDef *timx, uin
   */
 __STATIC_INLINE void LL_TIM_OC_EnableClear(TIM_TypeDef *timx, uint32_t channel)
 {
-  uint32_t ichannel = LL_TIM_TIM_GET_CHANNEL_INDEX(channel);
+  uint32_t ichannel = LL_TIM_GET_CHANNEL_INDEX(channel);
   __IO uint32_t *pReg = (__IO uint32_t *)((uint32_t)((uint32_t)(&timx->CCMR1) + LL_TIM_OFFSET_TAB_CCMRx[ichannel]));
   STM32_SET_BIT(*pReg, (TIM_CCMR1_OC1CE << LL_TIM_SHIFT_TAB_OCxx[ichannel]));
 }
@@ -3681,7 +3715,7 @@ __STATIC_INLINE void LL_TIM_OC_EnableClear(TIM_TypeDef *timx, uint32_t channel)
   */
 __STATIC_INLINE void LL_TIM_OC_DisableClear(TIM_TypeDef *timx, uint32_t channel)
 {
-  uint32_t ichannel = LL_TIM_TIM_GET_CHANNEL_INDEX(channel);
+  uint32_t ichannel = LL_TIM_GET_CHANNEL_INDEX(channel);
   __IO uint32_t *pReg = (__IO uint32_t *)((uint32_t)((uint32_t)(&timx->CCMR1) + LL_TIM_OFFSET_TAB_CCMRx[ichannel]));
   STM32_CLEAR_BIT(*pReg, (TIM_CCMR1_OC1CE << LL_TIM_SHIFT_TAB_OCxx[ichannel]));
 }
@@ -3713,7 +3747,7 @@ __STATIC_INLINE void LL_TIM_OC_DisableClear(TIM_TypeDef *timx, uint32_t channel)
   */
 __STATIC_INLINE uint32_t LL_TIM_OC_IsEnabledClear(const TIM_TypeDef *timx, uint32_t channel)
 {
-  uint32_t ichannel = LL_TIM_TIM_GET_CHANNEL_INDEX(channel);
+  uint32_t ichannel = LL_TIM_GET_CHANNEL_INDEX(channel);
   const __IO uint32_t *pReg = (__IO uint32_t *)((uint32_t)((uint32_t)(&timx->CCMR1) + \
                                                            LL_TIM_OFFSET_TAB_CCMRx[ichannel]));
   uint32_t bitfield = TIM_CCMR1_OC1CE << LL_TIM_SHIFT_TAB_OCxx[ichannel];
@@ -3750,7 +3784,7 @@ __STATIC_INLINE uint32_t LL_TIM_OC_IsEnabledClear(const TIM_TypeDef *timx, uint3
   */
 __STATIC_INLINE void LL_TIM_OC_SetBreakMode(TIM_TypeDef *timx, uint32_t channel, uint32_t break_mode)
 {
-  uint32_t ichannel_shift = (uint32_t)(LL_TIM_TIM_GET_CHANNEL_INDEX(channel)) << 1U;
+  uint32_t ichannel_shift = (uint32_t)(LL_TIM_GET_CHANNEL_INDEX(channel)) << 1U;
   STM32_MODIFY_REG(timx->MPR1, (TIM_MPR1_BK1M << ichannel_shift), break_mode << ichannel_shift);
 }
 
@@ -3782,7 +3816,7 @@ __STATIC_INLINE void LL_TIM_OC_SetBreakMode(TIM_TypeDef *timx, uint32_t channel,
   */
 __STATIC_INLINE uint32_t LL_TIM_OC_GetBreakMode(const TIM_TypeDef *timx, uint32_t channel)
 {
-  uint32_t ichannel_shift = (uint32_t)(LL_TIM_TIM_GET_CHANNEL_INDEX(channel)) << 1U;
+  uint32_t ichannel_shift = (uint32_t)(LL_TIM_GET_CHANNEL_INDEX(channel)) << 1U;
   return (uint32_t)((STM32_READ_BIT(timx->MPR1, (TIM_MPR1_BK1M << ichannel_shift))) >> ichannel_shift);
 }
 
@@ -4292,7 +4326,7 @@ __STATIC_INLINE uint32_t LL_TIM_OC_GetPulseWidth(const TIM_TypeDef *timx)
   */
 __STATIC_INLINE void LL_TIM_IC_Config(TIM_TypeDef *timx, uint32_t channel, uint32_t configuration)
 {
-  uint32_t ichannel = LL_TIM_TIM_GET_CHANNEL_INDEX(channel);
+  uint32_t ichannel = LL_TIM_GET_CHANNEL_INDEX(channel);
   __IO uint32_t *pReg = (__IO uint32_t *)((uint32_t)((uint32_t)(&timx->CCMR1) + LL_TIM_OFFSET_TAB_CCMRx[ichannel]));
   STM32_MODIFY_REG(*pReg, ((TIM_CCMR1_IC1F | TIM_CCMR1_IC1PSC | TIM_CCMR1_CC1S) << LL_TIM_SHIFT_TAB_ICxx[ichannel]),
                    ((configuration >> 16U) & (TIM_CCMR1_IC1F | TIM_CCMR1_IC1PSC | TIM_CCMR1_CC1S))                \
@@ -4321,15 +4355,21 @@ __STATIC_INLINE void LL_TIM_IC_Config(TIM_TypeDef *timx, uint32_t channel, uint3
   *            LL_TIM_TIM1_TI1_GPIO:                tim1_ti1 is connected to TIM1_CH1
   *            LL_TIM_TIM1_TI1_COMP1_OUT:           tim1_ti1 is connected to comp1_out
   *            LL_TIM_TIM1_TI1_COMP2_OUT:           tim1_ti1 is connected to comp2_out (*)
+  *            LL_TIM_TIM1_TI1_COMP3_OUT:           tim1_ti1 is connected to comp3_out (*)
+  *            LL_TIM_TIM1_TI1_COMP4_OUT:           tim1_ti1 is connected to comp4_out (*)
+  *            LL_TIM_TIM1_TI1_PLAY1_OUT0:          tim1_ti1 is connected to play1_out0 (*)
   *
   *            . . TI2_RMP can be one of the following values
   *            LL_TIM_TIM1_TI2_GPIO:                tim1_ti2 is connected to TIM1_CH2
+  *            LL_TIM_TIM1_TI2_PLAY1_OUT2:          tim1_ti2 is connected to play1_out2 (*)
   *
   *            . . TI3_RMP can be one of the following values
   *            LL_TIM_TIM1_TI3_GPIO:                tim1_ti3 is connected to TIM1_CH3
+  *            LL_TIM_TIM1_TI3_PLAY1_OUT1:          tim1_ti3 is connected to play1_out1 (*)
   *
   *            . . TI4_RMP can be one of the following values
   *            LL_TIM_TIM1_TI4_GPIO:                tim1_ti4 is connected to TIM1_CH4
+  *            LL_TIM_TIM1_TI4_PLAY1_OUT8:          tim1_ti4 is connected to play1_out8 (*)
   *
   *         TIM2: one of the following values:
   *
@@ -4341,24 +4381,30 @@ __STATIC_INLINE void LL_TIM_IC_Config(TIM_TypeDef *timx, uint32_t channel, uint3
   *            LL_TIM_TIM2_TI1_LSI:                 tim2_ti1 is connected to LSI
   *            LL_TIM_TIM2_TI1_LSE:                 tim2_ti1 is connected to LSE
   *            LL_TIM_TIM2_TI1_RTC_WUT_TRG:         tim2_ti1 is connected to rtc_wut_trg
-  *            LL_TIM_TIM2_TI1_TIM5_CH1:            tim2_ti1 is connected to TIM5_CH1
-  *            LL_TIM_TIM2_TI1_FDCAN1_RXEOF_EVT:    tim2_ti1 is connected to fdcan1_rxeof_evt
+  *            LL_TIM_TIM2_TI1_TIM5_CH1:            tim2_ti1 is connected to TIM5_CH1 (*)
+  *            LL_TIM_TIM2_TI1_FDCAN1_RXEOF_EVT:    tim2_ti1 is connected to fdcan1_rxeof_evt (*)
+  *            LL_TIM_TIM2_TI1_COMP3_OUT:           tim2_ti1 is connected to comp3_out (*)
+  *            LL_TIM_TIM2_TI1_COMP4_OUT:           tim2_ti1 is connected to comp4_out (*)
+  *            LL_TIM_TIM2_TI1_PLAY1_OUT15:         tim2_ti1 is connected to play1_out15 (*)
   *
   *            . . TI2_RMP can be one of the following values
   *            LL_TIM_TIM2_TI2_GPIO:                tim2_ti2 is connected to TIM2_CH2
   *            LL_TIM_TIM2_TI2_HSE_RTC:             tim2_ti2 is connected to hse_1M_ck
   *            LL_TIM_TIM2_TI2_MCO1:                tim2_ti2 is connected to MCO1
   *            LL_TIM_TIM2_TI2_MCO2:                tim2_ti2 is connected to MCO2
-  *            LL_TIM_TIM2_TI2_FDCAN1_TXEOF_EVT:    tim2_ti2 is connected to fdcan1_txeof_evt
+  *            LL_TIM_TIM2_TI2_FDCAN1_TXEOF_EVT:    tim2_ti2 is connected to fdcan1_txeof_evt (*)
+  *            LL_TIM_TIM2_TI2_PLAY1_OUT15:         tim2_ti2 is connected to play1_out15 (*)
   *
   *            . . TI3_RMP can be one of the following values
   *            LL_TIM_TIM2_TI3_GPIO:                tim2_ti3 is connected to TIM2_CH3
+  *            LL_TIM_TIM2_TI3_PLAY1_OUT3:          tim2_ti3 is connected to play1_out3 (*)
   *            LL_TIM_TIM2_TI3_FDCAN2_RXEOF_EVT:    tim2_ti3 is connected to fdcan2_rxeof_evt (*)
   *
   *            . . TI4_RMP can be one of the following values
   *            LL_TIM_TIM2_TI4_GPIO:                tim2_ti4 is connected to TIM2_CH4
   *            LL_TIM_TIM2_TI4_COMP1_OUT:           tim2_ti4 is connected to comp1_out
   *            LL_TIM_TIM2_TI4_COMP2_OUT:           tim2_ti4 is connected to comp2_out (*)
+  *            LL_TIM_TIM2_TI4_PLAY1_OUT0:          tim2_ti4 is connected to play1_out0 (*)
   *            LL_TIM_TIM2_TI4_FDCAN2_TXEOF_EVT:    tim2_ti4 is connected to fdcan2_txeof_evt (*)
   *
   *         TIM3: one of the following values: (**)
@@ -4366,20 +4412,27 @@ __STATIC_INLINE void LL_TIM_IC_Config(TIM_TypeDef *timx, uint32_t channel, uint3
   *            . . TI1_RMP can be one of the following values
   *            LL_TIM_TIM3_TI1_GPIO:                tim3_ti1 is connected to TIM3_CH1
   *            LL_TIM_TIM3_TI1_COMP1_OUT:           tim3_ti1 is connected to comp1_out
-  *            LL_TIM_TIM3_TI1_ETH1_PTP_PPS_OUT:    tim3_ti1 is connected to eth1_ptp_pps_out
-  *            LL_TIM_TIM3_TI1_FDCAN2_RXEOF_EVT:    tim3_ti1 is connected to fdcan2_rxeof_evt
+  *            LL_TIM_TIM3_TI1_ETH1_PTP_PPS_OUT:    tim3_ti1 is connected to eth1_ptp_pps_out (*)
+  *            LL_TIM_TIM3_TI1_FDCAN2_RXEOF_EVT:    tim3_ti1 is connected to fdcan2_rxeof_evt (*)
+  *            LL_TIM_TIM3_TI1_COMP2_OUT:           tim3_ti1 is connected to comp2_out (*)
+  *            LL_TIM_TIM3_TI1_COMP3_OUT:           tim3_ti1 is connected to comp3_out (*)
+  *            LL_TIM_TIM3_TI1_COMP4_OUT:           tim3_ti1 is connected to comp4_out (*)
+  *            LL_TIM_TIM3_TI1_PLAY1_OUT8:          tim3_ti1 is connected to play1_out8 (*)
   *
   *            . . TI2_RMP can be one of the following values
   *            LL_TIM_TIM3_TI2_GPIO:                tim3_ti2 is connected to TIM3_CH2
-  *            LL_TIM_TIM3_TI2_FDCAN2_TXEOF_EVT:    tim3_ti2 is connected to fdcan2_txeof_evt
+  *            LL_TIM_TIM3_TI2_FDCAN2_TXEOF_EVT:    tim3_ti2 is connected to fdcan2_txeof_evt (*)
+  *            LL_TIM_TIM3_TI2_PLAY1_OUT9:          tim3_ti2 is connected to play1_out9 (*)
   *
   *            . . TI3_RMP can be one of the following values
   *            LL_TIM_TIM3_TI3_GPIO:                tim3_ti3 is connected to TIM3_CH3
+  *            LL_TIM_TIM3_TI3_PLAY1_OUT10:         tim3_ti3 is connected to play1_out10 (*)
   *
   *            . . TI4_RMP can be one of the following values
   *            LL_TIM_TIM3_TI4_GPIO:                tim3_ti4 is connected to TIM3_CH4
+  *            LL_TIM_TIM3_TI4_PLAY1_OUT11:         tim3_ti4 is connected to play1_out11 (*)
   *
-  *        TIM4: one of the following values: (**)
+  *         TIM4: one of the following values: (**)
   *
   *            . . TI1_RMP can be one of the following values
   *            LL_TIM_TIM4_TI1_GPIO:                tim4_ti1 is connected to TIM4_CH1
@@ -4399,6 +4452,9 @@ __STATIC_INLINE void LL_TIM_IC_Config(TIM_TypeDef *timx, uint32_t channel, uint3
   *            . . TI1_RMP can be one of the following values
   *            LL_TIM_TIM5_TI1_GPIO:                tim5_ti1 is connected to TIM5_CH1
   *            LL_TIM_TIM5_TI1_COMP1_OUT:           tim5_ti1 is connected to comp1_out
+  *            LL_TIM_TIM5_TI1_COMP2_OUT:           tim5_ti1 is connected to comp2_out (*)
+  *            LL_TIM_TIM5_TI1_COMP3_OUT:           tim5_ti1 is connected to comp3_out (*)
+  *            LL_TIM_TIM5_TI1_COMP4_OUT:           tim5_ti1 is connected to comp4_out (*)
   *
   *            . . TI2_RMP can be one of the following values
   *            LL_TIM_TIM5_TI2_GPIO:                tim5_ti2 is connected to TIM5_CH2
@@ -4415,15 +4471,21 @@ __STATIC_INLINE void LL_TIM_IC_Config(TIM_TypeDef *timx, uint32_t channel, uint3
   *            LL_TIM_TIM8_TI1_GPIO:                tim8_ti1 is connected to TIM8_CH1
   *            LL_TIM_TIM8_TI1_COMP1_OUT:           tim8_ti1 is connected to comp1_out
   *            LL_TIM_TIM8_TI1_COMP2_OUT:           tim8_ti1 is connected to comp2_out (*)
+  *            LL_TIM_TIM8_TI1_COMP3_OUT:           tim8_ti1 is connected to comp3_out (*)
+  *            LL_TIM_TIM8_TI1_COMP4_OUT:           tim8_ti1 is connected to comp4_out (*)
+  *            LL_TIM_TIM8_TI1_PLAY1_OUT14:         tim8_ti1 is connected to play1_out14 (*)
   *
   *            . . TI2_RMP can be one of the following values
   *            LL_TIM_TIM8_TI2_GPIO:                tim8_ti2 is connected to TIM8_CH2
+  *            LL_TIM_TIM8_TI2_PLAY1_OUT10:         tim8_ti2 is connected to play1_out10 (*)
   *
   *            . . TI3_RMP can be one of the following values
   *            LL_TIM_TIM8_TI3_GPIO:                tim8_ti3 is connected to TIM8_CH3
+  *            LL_TIM_TIM8_TI3_PLAY1_OUT12:         tim8_ti3 is connected to play1_out12 (*)
   *
   *            . . TI4_RMP can be one of the following values
   *            LL_TIM_TIM8_TI4_GPIO:                tim8_ti4 is connected to TIM8_CH4
+  *            LL_TIM_TIM8_TI4_PLAY1_OUT5:          tim8_ti4 is connected to play1_out5 (*)
   *
   *         TIM12: one of the following values:
   *
@@ -4435,22 +4497,30 @@ __STATIC_INLINE void LL_TIM_IC_Config(TIM_TypeDef *timx, uint32_t channel, uint3
   *            LL_TIM_TIM12_TI1_MCO2:               tim12_ti1 is connected to MCO2
   *            LL_TIM_TIM12_TI1_HSE_RTC:            tim12_ti1 is connected to hse_1M_ck
   *            LL_TIM_TIM12_TI1_I3C1_IBI_ACK:       tim12_ti1 is connected to i3c1_ibi_ack
+  *            LL_TIM_TIM12_TI1_COMP3_OUT:          tim12_ti1 is connected to comp3_out (*)
+  *            LL_TIM_TIM12_TI1_COMP4_OUT:          tim12_ti1 is connected to comp4_out (*)
+  *            LL_TIM_TIM12_TI1_PLAY1_OUT7:         tim12_ti1 is connected to play1_out7 (*)
   *
   *            . . TI2_RMP can be one of the following values
   *            LL_TIM_TIM12_TI2_GPIO:               tim12_ti2 is connected to TIM12_CH2
+  *            LL_TIM_TIM12_TI2_PLAY1_OUT14:        tim12_ti2 is connected to play1_out14 (*)
   *
   *         TIM15: one of the following values:
   *
   *            . . TI1_RMP can be one of the following values
   *            LL_TIM_TIM15_TI1_GPIO:               tim15_ti1 is connected to TIM15_CH1
   *            LL_TIM_TIM15_TI1_COMP1_OUT:          tim15_ti1 is connected to comp1_out
-  *            LL_TIM_TIM15_TI1_COMP2_OUT:          tim15_ti1 is connected to comp2_out
+  *            LL_TIM_TIM15_TI1_COMP2_OUT:          tim15_ti1 is connected to comp2_out (*)
   *            LL_TIM_TIM15_TI1_LSE:                tim15_ti1 is connected to LSE
-  *            LL_TIM_TIM15_TI1_FDCAN2_RXEOF_EVT:   tim15_ti1 is connected to fdcan2_rxeof_evt
+  *            LL_TIM_TIM15_TI1_FDCAN2_RXEOF_EVT:   tim15_ti1 is connected to fdcan2_rxeof_evt (*)
+  *            LL_TIM_TIM15_TI1_COMP3_OUT:          tim15_ti1 is connected to comp3_out (*)
+  *            LL_TIM_TIM15_TI1_COMP4_OUT:          tim15_ti1 is connected to comp4_out (*)
+  *            LL_TIM_TIM15_TI1_PLAY1_OUT4:         tim15_ti1 is connected to play1_out4 (*)
   *
   *            . . TI2_RMP can be one of the following values
   *            LL_TIM_TIM15_TI2_GPIO:               tim15_ti2 is connected to TIM15_CH2
-  *            LL_TIM_TIM15_TI2_FDCAN2_TXEOF_EVT:   tim15_ti2 is connected to fdcan2_txeof_evt
+  *            LL_TIM_TIM15_TI2_FDCAN2_TXEOF_EVT:   tim15_ti2 is connected to fdcan2_txeof_evt (*)
+  *            LL_TIM_TIM15_TI2_PLAY1_OUT5:         tim15_ti2 is connected to play1_out5 (*)
   *
   *         TIM16: one of the following values: (**)
   *            LL_TIM_TIM16_TI1_GPIO:               tim16_ti1 is connected to TIM16_CH1
@@ -4460,6 +4530,10 @@ __STATIC_INLINE void LL_TIM_IC_Config(TIM_TypeDef *timx, uint32_t channel, uint3
   *            LL_TIM_TIM16_TI1_RTC_WUT_TRG:        tim16_ti1 is connected to rtc_wut_trg
   *            LL_TIM_TIM16_TI1_MCO1:               tim16_ti1 is connected to MCO1
   *            LL_TIM_TIM16_TI1_MCO2:               tim16_ti1 is connected to MCO2
+  *            LL_TIM_TIM16_TI1_COMP2_OUT:          tim16_ti1 is connected to comp2_out (*)
+  *            LL_TIM_TIM16_TI1_COMP3_OUT:          tim16_ti1 is connected to comp3_out (*)
+  *            LL_TIM_TIM16_TI1_COMP4_OUT:          tim16_ti1 is connected to comp4_out (*)
+  *            LL_TIM_TIM16_TI1_PLAY1_OUT5:         tim16_ti1 is connected to play1_out5 (*)
   *
   *         TIM17: one of the following values: (**)
   *            LL_TIM_TIM17_TI1_GPIO:               tim17_ti1 is connected to TIM17_CH1
@@ -4468,6 +4542,32 @@ __STATIC_INLINE void LL_TIM_IC_Config(TIM_TypeDef *timx, uint32_t channel, uint3
   *            LL_TIM_TIM17_TI1_MCO1:               tim17_ti1 is connected to MCO1
   *            LL_TIM_TIM17_TI1_MCO2:               tim17_ti1 is connected to MCO2
   *            LL_TIM_TIM17_TI1_I3C1_IBI_ACK:       tim17_ti1 is connected to i3c1_ibi_ack
+  *            LL_TIM_TIM17_TI1_COMP2_OUT:          tim17_ti1 is connected to comp2_out (*)
+  *            LL_TIM_TIM17_TI1_COMP3_OUT:          tim17_ti1 is connected to comp3_out (*)
+  *            LL_TIM_TIM17_TI1_COMP4_OUT:          tim17_ti1 is connected to comp4_out (*)
+  *            LL_TIM_TIM17_TI1_PLAY1_OUT9:         tim17_ti1 is connected to play1_out9 (*)
+  *
+  *         TIM20: one of the following values: (**)
+  *
+  *            . . TI1_RMP can be one of the following values
+  *            LL_TIM_TIM20_TI1_GPIO:               tim20_ti1 is connected to TIM20_CH1
+  *            LL_TIM_TIM20_TI1_COMP1_OUT:          tim20_ti1 is connected to comp1_out
+  *            LL_TIM_TIM20_TI1_COMP2_OUT:          tim20_ti1 is connected to comp2_out (*)
+  *            LL_TIM_TIM20_TI1_COMP3_OUT:          tim20_ti1 is connected to comp3_out (*)
+  *            LL_TIM_TIM20_TI1_COMP4_OUT:          tim20_ti1 is connected to comp4_out (*)
+  *            LL_TIM_TIM20_TI1_PLAY1_OUT3:         tim20_ti1 is connected to play1_out3 (*)
+  *
+  *            . . TI2_RMP can be one of the following values
+  *            LL_TIM_TIM20_TI2_GPIO:               tim20_ti2 is connected to TIM20_CH2
+  *            LL_TIM_TIM20_TI2_PLAY1_OUT7:         tim20_ti2 is connected to play1_out7 (*)
+  *
+  *            . . TI3_RMP can be one of the following values
+  *            LL_TIM_TIM20_TI3_GPIO:               tim20_ti3 is connected to TIM20_CH3
+  *            LL_TIM_TIM20_TI3_PLAY1_OUT8:         tim20_ti3 is connected to play1_out8 (*)
+  *
+  *            . . TI4_RMP can be one of the following values
+  *            LL_TIM_TIM20_TI4_GPIO:               tim20_ti4 is connected to TIM20_CH4
+  *            LL_TIM_TIM20_TI4_PLAY1_OUT9:         tim20_ti4 is connected to play1_out9 (*)
   *
   *         (*)  Value not defined in all devices.
   *         (**) Timer instance not available on all devices.
@@ -4500,15 +4600,21 @@ __STATIC_INLINE void LL_TIM_IC_SetSource(TIM_TypeDef *timx, uint32_t ti_source)
   *            LL_TIM_TIM1_TI1_GPIO:                tim1_ti1 is connected to TIM1_CH1
   *            LL_TIM_TIM1_TI1_COMP1_OUT:           tim1_ti1 is connected to comp1_out
   *            LL_TIM_TIM1_TI1_COMP2_OUT:           tim1_ti1 is connected to comp2_out (*)
+  *            LL_TIM_TIM1_TI1_COMP3_OUT:           tim1_ti1 is connected to comp3_out (*)
+  *            LL_TIM_TIM1_TI1_COMP4_OUT:           tim1_ti1 is connected to comp4_out (*)
+  *            LL_TIM_TIM1_TI1_PLAY1_OUT0:          tim1_ti1 is connected to play1_out0 (*)
   *
   *            . . TI2_RMP can be one of the following values
   *            LL_TIM_TIM1_TI2_GPIO:                tim1_ti2 is connected to TIM1_CH2
+  *            LL_TIM_TIM1_TI2_PLAY1_OUT2:          tim1_ti2 is connected to play1_out2 (*)
   *
   *            . . TI3_RMP can be one of the following values
   *            LL_TIM_TIM1_TI3_GPIO:                tim1_ti3 is connected to TIM1_CH3
+  *            LL_TIM_TIM1_TI3_PLAY1_OUT1:          tim1_ti3 is connected to play1_out1 (*)
   *
   *            . . TI4_RMP can be one of the following values
   *            LL_TIM_TIM1_TI4_GPIO:                tim1_ti4 is connected to TIM1_CH4
+  *            LL_TIM_TIM1_TI4_PLAY1_OUT8:          tim1_ti4 is connected to play1_out8 (*)
   *
   *         TIM2: one of the following values:
   *
@@ -4520,24 +4626,30 @@ __STATIC_INLINE void LL_TIM_IC_SetSource(TIM_TypeDef *timx, uint32_t ti_source)
   *            LL_TIM_TIM2_TI1_LSI:                 tim2_ti1 is connected to LSI
   *            LL_TIM_TIM2_TI1_LSE:                 tim2_ti1 is connected to LSE
   *            LL_TIM_TIM2_TI1_RTC_WUT_TRG:         tim2_ti1 is connected to rtc_wut_trg
-  *            LL_TIM_TIM2_TI1_TIM5_CH1:            tim2_ti1 is connected to TIM5_CH1
-  *            LL_TIM_TIM2_TI1_FDCAN1_RXEOF_EVT:    tim2_ti1 is connected to fdcan1_rxeof_evt
+  *            LL_TIM_TIM2_TI1_TIM5_CH1:            tim2_ti1 is connected to TIM5_CH1 (*)
+  *            LL_TIM_TIM2_TI1_FDCAN1_RXEOF_EVT:    tim2_ti1 is connected to fdcan1_rxeof_evt (*)
+  *            LL_TIM_TIM2_TI1_COMP3_OUT:           tim2_ti1 is connected to comp3_out (*)
+  *            LL_TIM_TIM2_TI1_COMP4_OUT:           tim2_ti1 is connected to comp4_out (*)
+  *            LL_TIM_TIM2_TI1_PLAY1_OUT15:         tim2_ti1 is connected to play1_out15 (*)
   *
   *            . . TI2_RMP can be one of the following values
   *            LL_TIM_TIM2_TI2_GPIO:                tim2_ti2 is connected to TIM2_CH2
   *            LL_TIM_TIM2_TI2_HSE_RTC:             tim2_ti2 is connected to hse_1M_ck
   *            LL_TIM_TIM2_TI2_MCO1:                tim2_ti2 is connected to MCO1
   *            LL_TIM_TIM2_TI2_MCO2:                tim2_ti2 is connected to MCO2
-  *            LL_TIM_TIM2_TI2_FDCAN1_TXEOF_EVT:    tim2_ti2 is connected to fdcan1_txeof_evt
+  *            LL_TIM_TIM2_TI2_FDCAN1_TXEOF_EVT:    tim2_ti2 is connected to fdcan1_txeof_evt (*)
+  *            LL_TIM_TIM2_TI2_PLAY1_OUT15:         tim2_ti2 is connected to play1_out15 (*)
   *
   *            . . TI3_RMP can be one of the following values
   *            LL_TIM_TIM2_TI3_GPIO:                tim2_ti3 is connected to TIM2_CH3
+  *            LL_TIM_TIM2_TI3_PLAY1_OUT3:          tim2_ti3 is connected to play1_out3 (*)
   *            LL_TIM_TIM2_TI3_FDCAN2_RXEOF_EVT:    tim2_ti3 is connected to fdcan2_rxeof_evt (*)
   *
   *            . . TI4_RMP can be one of the following values
   *            LL_TIM_TIM2_TI4_GPIO:                tim2_ti4 is connected to TIM2_CH4
   *            LL_TIM_TIM2_TI4_COMP1_OUT:           tim2_ti4 is connected to comp1_out
   *            LL_TIM_TIM2_TI4_COMP2_OUT:           tim2_ti4 is connected to comp2_out (*)
+  *            LL_TIM_TIM2_TI4_PLAY1_OUT0:          tim2_ti4 is connected to play1_out0 (*)
   *            LL_TIM_TIM2_TI4_FDCAN2_TXEOF_EVT:    tim2_ti4 is connected to fdcan2_txeof_evt (*)
   *
   *         TIM3: one of the following values: (**)
@@ -4545,20 +4657,27 @@ __STATIC_INLINE void LL_TIM_IC_SetSource(TIM_TypeDef *timx, uint32_t ti_source)
   *            . . TI1_RMP can be one of the following values
   *            LL_TIM_TIM3_TI1_GPIO:                tim3_ti1 is connected to TIM3_CH1
   *            LL_TIM_TIM3_TI1_COMP1_OUT:           tim3_ti1 is connected to comp1_out
-  *            LL_TIM_TIM3_TI1_ETH1_PTP_PPS_OUT:    tim3_ti1 is connected to eth1_ptp_pps_out
-  *            LL_TIM_TIM3_TI1_FDCAN2_RXEOF_EVT:    tim3_ti1 is connected to fdcan2_rxeof_evt
+  *            LL_TIM_TIM3_TI1_ETH1_PTP_PPS_OUT:    tim3_ti1 is connected to eth1_ptp_pps_out (*)
+  *            LL_TIM_TIM3_TI1_FDCAN2_RXEOF_EVT:    tim3_ti1 is connected to fdcan2_rxeof_evt (*)
+  *            LL_TIM_TIM3_TI1_COMP2_OUT:           tim3_ti1 is connected to comp2_out (*)
+  *            LL_TIM_TIM3_TI1_COMP3_OUT:           tim3_ti1 is connected to comp3_out (*)
+  *            LL_TIM_TIM3_TI1_COMP4_OUT:           tim3_ti1 is connected to comp4_out (*)
+  *            LL_TIM_TIM3_TI1_PLAY1_OUT8:          tim3_ti1 is connected to play1_out8 (*)
   *
   *            . . TI2_RMP can be one of the following values
   *            LL_TIM_TIM3_TI2_GPIO:                tim3_ti2 is connected to TIM3_CH2
-  *            LL_TIM_TIM3_TI2_FDCAN2_TXEOF_EVT:    tim3_ti2 is connected to fdcan2_txeof_evt
+  *            LL_TIM_TIM3_TI2_FDCAN2_TXEOF_EVT:    tim3_ti2 is connected to fdcan2_txeof_evt (*)
+  *            LL_TIM_TIM3_TI2_PLAY1_OUT9:          tim3_ti2 is connected to play1_out9 (*)
   *
   *            . . TI3_RMP can be one of the following values
   *            LL_TIM_TIM3_TI3_GPIO:                tim3_ti3 is connected to TIM3_CH3
+  *            LL_TIM_TIM3_TI3_PLAY1_OUT10:         tim3_ti3 is connected to play1_out10 (*)
   *
   *            . . TI4_RMP can be one of the following values
   *            LL_TIM_TIM3_TI4_GPIO:                tim3_ti4 is connected to TIM3_CH4
+  *            LL_TIM_TIM3_TI4_PLAY1_OUT11:         tim3_ti4 is connected to play1_out11 (*)
   *
-  *        TIM4: one of the following values: (**)
+  *         TIM4: one of the following values: (**)
   *
   *            . . TI1_RMP can be one of the following values
   *            LL_TIM_TIM4_TI1_GPIO:                tim4_ti1 is connected to TIM4_CH1
@@ -4578,6 +4697,9 @@ __STATIC_INLINE void LL_TIM_IC_SetSource(TIM_TypeDef *timx, uint32_t ti_source)
   *            . . TI1_RMP can be one of the following values
   *            LL_TIM_TIM5_TI1_GPIO:                tim5_ti1 is connected to TIM5_CH1
   *            LL_TIM_TIM5_TI1_COMP1_OUT:           tim5_ti1 is connected to comp1_out
+  *            LL_TIM_TIM5_TI1_COMP2_OUT:           tim5_ti1 is connected to comp2_out (*)
+  *            LL_TIM_TIM5_TI1_COMP3_OUT:           tim5_ti1 is connected to comp3_out (*)
+  *            LL_TIM_TIM5_TI1_COMP4_OUT:           tim5_ti1 is connected to comp4_out (*)
   *
   *            . . TI2_RMP can be one of the following values
   *            LL_TIM_TIM5_TI2_GPIO:                tim5_ti2 is connected to TIM5_CH2
@@ -4594,15 +4716,21 @@ __STATIC_INLINE void LL_TIM_IC_SetSource(TIM_TypeDef *timx, uint32_t ti_source)
   *            LL_TIM_TIM8_TI1_GPIO:                tim8_ti1 is connected to TIM8_CH1
   *            LL_TIM_TIM8_TI1_COMP1_OUT:           tim8_ti1 is connected to comp1_out
   *            LL_TIM_TIM8_TI1_COMP2_OUT:           tim8_ti1 is connected to comp2_out (*)
+  *            LL_TIM_TIM8_TI1_COMP3_OUT:           tim8_ti1 is connected to comp3_out (*)
+  *            LL_TIM_TIM8_TI1_COMP4_OUT:           tim8_ti1 is connected to comp4_out (*)
+  *            LL_TIM_TIM8_TI1_PLAY1_OUT14:         tim8_ti1 is connected to play1_out14 (*)
   *
   *            . . TI2_RMP can be one of the following values
   *            LL_TIM_TIM8_TI2_GPIO:                tim8_ti2 is connected to TIM8_CH2
+  *            LL_TIM_TIM8_TI2_PLAY1_OUT10:         tim8_ti2 is connected to play1_out10 (*)
   *
   *            . . TI3_RMP can be one of the following values
   *            LL_TIM_TIM8_TI3_GPIO:                tim8_ti3 is connected to TIM8_CH3
+  *            LL_TIM_TIM8_TI3_PLAY1_OUT12:         tim8_ti3 is connected to play1_out12 (*)
   *
   *            . . TI4_RMP can be one of the following values
   *            LL_TIM_TIM8_TI4_GPIO:                tim8_ti4 is connected to TIM8_CH4
+  *            LL_TIM_TIM8_TI4_PLAY1_OUT5:          tim8_ti4 is connected to play1_out5 (*)
   *
   *         TIM12: one of the following values:
   *
@@ -4614,22 +4742,30 @@ __STATIC_INLINE void LL_TIM_IC_SetSource(TIM_TypeDef *timx, uint32_t ti_source)
   *            LL_TIM_TIM12_TI1_MCO2:               tim12_ti1 is connected to MCO2
   *            LL_TIM_TIM12_TI1_HSE_RTC:            tim12_ti1 is connected to hse_1M_ck
   *            LL_TIM_TIM12_TI1_I3C1_IBI_ACK:       tim12_ti1 is connected to i3c1_ibi_ack
+  *            LL_TIM_TIM12_TI1_COMP3_OUT:          tim12_ti1 is connected to comp3_out (*)
+  *            LL_TIM_TIM12_TI1_COMP4_OUT:          tim12_ti1 is connected to comp4_out (*)
+  *            LL_TIM_TIM12_TI1_PLAY1_OUT7:         tim12_ti1 is connected to play1_out7 (*)
   *
   *            . . TI2_RMP can be one of the following values
   *            LL_TIM_TIM12_TI2_GPIO:               tim12_ti2 is connected to TIM12_CH2
+  *            LL_TIM_TIM12_TI2_PLAY1_OUT14:        tim12_ti2 is connected to play1_out14 (*)
   *
   *         TIM15: one of the following values:
   *
   *            . . TI1_RMP can be one of the following values
   *            LL_TIM_TIM15_TI1_GPIO:               tim15_ti1 is connected to TIM15_CH1
   *            LL_TIM_TIM15_TI1_COMP1_OUT:          tim15_ti1 is connected to comp1_out
-  *            LL_TIM_TIM15_TI1_COMP2_OUT:          tim15_ti1 is connected to comp2_out
+  *            LL_TIM_TIM15_TI1_COMP2_OUT:          tim15_ti1 is connected to comp2_out (*)
   *            LL_TIM_TIM15_TI1_LSE:                tim15_ti1 is connected to LSE
-  *            LL_TIM_TIM15_TI1_FDCAN2_RXEOF_EVT:   tim15_ti1 is connected to fdcan2_rxeof_evt
+  *            LL_TIM_TIM15_TI1_FDCAN2_RXEOF_EVT:   tim15_ti1 is connected to fdcan2_rxeof_evt (*)
+  *            LL_TIM_TIM15_TI1_COMP3_OUT:          tim15_ti1 is connected to comp3_out (*)
+  *            LL_TIM_TIM15_TI1_COMP4_OUT:          tim15_ti1 is connected to comp4_out (*)
+  *            LL_TIM_TIM15_TI1_PLAY1_OUT4:         tim15_ti1 is connected to play1_out4 (*)
   *
   *            . . TI2_RMP can be one of the following values
   *            LL_TIM_TIM15_TI2_GPIO:               tim15_ti2 is connected to TIM15_CH2
-  *            LL_TIM_TIM15_TI2_FDCAN2_TXEOF_EVT:   tim15_ti2 is connected to fdcan2_txeof_evt
+  *            LL_TIM_TIM15_TI2_FDCAN2_TXEOF_EVT:   tim15_ti2 is connected to fdcan2_txeof_evt (*)
+  *            LL_TIM_TIM15_TI2_PLAY1_OUT5:         tim15_ti2 is connected to play1_out5 (*)
   *
   *         TIM16: one of the following values: (**)
   *            LL_TIM_TIM16_TI1_GPIO:               tim16_ti1 is connected to TIM16_CH1
@@ -4639,6 +4775,10 @@ __STATIC_INLINE void LL_TIM_IC_SetSource(TIM_TypeDef *timx, uint32_t ti_source)
   *            LL_TIM_TIM16_TI1_RTC_WUT_TRG:        tim16_ti1 is connected to rtc_wut_trg
   *            LL_TIM_TIM16_TI1_MCO1:               tim16_ti1 is connected to MCO1
   *            LL_TIM_TIM16_TI1_MCO2:               tim16_ti1 is connected to MCO2
+  *            LL_TIM_TIM16_TI1_COMP2_OUT:          tim16_ti1 is connected to comp2_out (*)
+  *            LL_TIM_TIM16_TI1_COMP3_OUT:          tim16_ti1 is connected to comp3_out (*)
+  *            LL_TIM_TIM16_TI1_COMP4_OUT:          tim16_ti1 is connected to comp4_out (*)
+  *            LL_TIM_TIM16_TI1_PLAY1_OUT5:         tim16_ti1 is connected to play1_out5 (*)
   *
   *         TIM17: one of the following values: (**)
   *            LL_TIM_TIM17_TI1_GPIO:               tim17_ti1 is connected to TIM17_CH1
@@ -4647,6 +4787,32 @@ __STATIC_INLINE void LL_TIM_IC_SetSource(TIM_TypeDef *timx, uint32_t ti_source)
   *            LL_TIM_TIM17_TI1_MCO1:               tim17_ti1 is connected to MCO1
   *            LL_TIM_TIM17_TI1_MCO2:               tim17_ti1 is connected to MCO2
   *            LL_TIM_TIM17_TI1_I3C1_IBI_ACK:       tim17_ti1 is connected to i3c1_ibi_ack
+  *            LL_TIM_TIM17_TI1_COMP2_OUT:          tim17_ti1 is connected to comp2_out (*)
+  *            LL_TIM_TIM17_TI1_COMP3_OUT:          tim17_ti1 is connected to comp3_out (*)
+  *            LL_TIM_TIM17_TI1_COMP4_OUT:          tim17_ti1 is connected to comp4_out (*)
+  *            LL_TIM_TIM17_TI1_PLAY1_OUT9:         tim17_ti1 is connected to play1_out9 (*)
+  *
+  *         TIM20: one of the following values: (**)
+  *
+  *            . . TI1_RMP can be one of the following values
+  *            LL_TIM_TIM20_TI1_GPIO:               tim20_ti1 is connected to TIM20_CH1
+  *            LL_TIM_TIM20_TI1_COMP1_OUT:          tim20_ti1 is connected to comp1_out
+  *            LL_TIM_TIM20_TI1_COMP2_OUT:          tim20_ti1 is connected to comp2_out (*)
+  *            LL_TIM_TIM20_TI1_COMP3_OUT:          tim20_ti1 is connected to comp3_out (*)
+  *            LL_TIM_TIM20_TI1_COMP4_OUT:          tim20_ti1 is connected to comp4_out (*)
+  *            LL_TIM_TIM20_TI1_PLAY1_OUT3:         tim20_ti1 is connected to play1_out3 (*)
+  *
+  *            . . TI2_RMP can be one of the following values
+  *            LL_TIM_TIM20_TI2_GPIO:               tim20_ti2 is connected to TIM20_CH2
+  *            LL_TIM_TIM20_TI2_PLAY1_OUT7:         tim20_ti2 is connected to play1_out7 (*)
+  *
+  *            . . TI3_RMP can be one of the following values
+  *            LL_TIM_TIM20_TI3_GPIO:               tim20_ti3 is connected to TIM20_CH3
+  *            LL_TIM_TIM20_TI3_PLAY1_OUT8:         tim20_ti3 is connected to play1_out8 (*)
+  *
+  *            . . TI4_RMP can be one of the following values
+  *            LL_TIM_TIM20_TI4_GPIO:               tim20_ti4 is connected to TIM20_CH4
+  *            LL_TIM_TIM20_TI4_PLAY1_OUT9:         tim20_ti4 is connected to play1_out9 (*)
   *
   *         (*)  Value not defined in all devices.
   *         (**) Timer instance not available on all devices.
@@ -4655,7 +4821,7 @@ __STATIC_INLINE void LL_TIM_IC_SetSource(TIM_TypeDef *timx, uint32_t ti_source)
   */
 __STATIC_INLINE uint32_t LL_TIM_IC_GetSource(const TIM_TypeDef *timx, uint32_t channel)
 {
-  uint32_t ichannel = LL_TIM_TIM_GET_CHANNEL_INDEX(channel);
+  uint32_t ichannel = LL_TIM_GET_CHANNEL_INDEX(channel);
   uint32_t shift = (ichannel << 2U) & 0x18U;
   return (uint32_t)(STM32_READ_BIT(timx->TISEL, TIM_TISEL_TI1SEL << shift));
 }
@@ -4680,7 +4846,7 @@ __STATIC_INLINE uint32_t LL_TIM_IC_GetSource(const TIM_TypeDef *timx, uint32_t c
   */
 __STATIC_INLINE void LL_TIM_IC_SetActiveInput(TIM_TypeDef *timx, uint32_t channel, uint32_t ic_active_input)
 {
-  uint32_t ichannel = LL_TIM_TIM_GET_CHANNEL_INDEX(channel);
+  uint32_t ichannel = LL_TIM_GET_CHANNEL_INDEX(channel);
   __IO uint32_t *pReg = (__IO uint32_t *)((uint32_t)((uint32_t)(&timx->CCMR1) + LL_TIM_OFFSET_TAB_CCMRx[ichannel]));
   STM32_MODIFY_REG(*pReg, ((TIM_CCMR1_CC1S) << LL_TIM_SHIFT_TAB_ICxx[ichannel]),
                    (ic_active_input >> LL_TIM_IC_CONFIG_POS) << LL_TIM_SHIFT_TAB_ICxx[ichannel]);
@@ -4706,7 +4872,7 @@ __STATIC_INLINE void LL_TIM_IC_SetActiveInput(TIM_TypeDef *timx, uint32_t channe
   */
 __STATIC_INLINE uint32_t LL_TIM_IC_GetActiveInput(const TIM_TypeDef *timx, uint32_t channel)
 {
-  uint32_t ichannel = LL_TIM_TIM_GET_CHANNEL_INDEX(channel);
+  uint32_t ichannel = LL_TIM_GET_CHANNEL_INDEX(channel);
   const __IO uint32_t *pReg = (__IO uint32_t *)((uint32_t)((uint32_t)(&timx->CCMR1) + \
                                                            LL_TIM_OFFSET_TAB_CCMRx[ichannel]));
   return ((STM32_READ_BIT(*pReg, ((TIM_CCMR1_CC1S) << LL_TIM_SHIFT_TAB_ICxx[ichannel])) \
@@ -4734,7 +4900,7 @@ __STATIC_INLINE uint32_t LL_TIM_IC_GetActiveInput(const TIM_TypeDef *timx, uint3
   */
 __STATIC_INLINE void LL_TIM_IC_SetPrescaler(TIM_TypeDef *timx, uint32_t channel, uint32_t ic_prescaler)
 {
-  uint32_t ichannel = LL_TIM_TIM_GET_CHANNEL_INDEX(channel);
+  uint32_t ichannel = LL_TIM_GET_CHANNEL_INDEX(channel);
   __IO uint32_t *pReg = (__IO uint32_t *)((uint32_t)((uint32_t)(&timx->CCMR1) + LL_TIM_OFFSET_TAB_CCMRx[ichannel]));
   STM32_MODIFY_REG(*pReg, ((TIM_CCMR1_IC1PSC) << LL_TIM_SHIFT_TAB_ICxx[ichannel]),
                    (ic_prescaler >> LL_TIM_IC_CONFIG_POS) << LL_TIM_SHIFT_TAB_ICxx[ichannel]);
@@ -4761,7 +4927,7 @@ __STATIC_INLINE void LL_TIM_IC_SetPrescaler(TIM_TypeDef *timx, uint32_t channel,
   */
 __STATIC_INLINE uint32_t LL_TIM_IC_GetPrescaler(const TIM_TypeDef *timx, uint32_t channel)
 {
-  uint32_t ichannel = LL_TIM_TIM_GET_CHANNEL_INDEX(channel);
+  uint32_t ichannel = LL_TIM_GET_CHANNEL_INDEX(channel);
   const __IO uint32_t *pReg = (__IO uint32_t *)((uint32_t)((uint32_t)(&timx->CCMR1) + \
                                                            LL_TIM_OFFSET_TAB_CCMRx[ichannel]));
   return ((STM32_READ_BIT(*pReg, ((TIM_CCMR1_IC1PSC) << LL_TIM_SHIFT_TAB_ICxx[ichannel])) \
@@ -4801,7 +4967,7 @@ __STATIC_INLINE uint32_t LL_TIM_IC_GetPrescaler(const TIM_TypeDef *timx, uint32_
   */
 __STATIC_INLINE void LL_TIM_IC_SetFilter(TIM_TypeDef *timx, uint32_t channel, uint32_t ic_filter)
 {
-  uint32_t ichannel = LL_TIM_TIM_GET_CHANNEL_INDEX(channel);
+  uint32_t ichannel = LL_TIM_GET_CHANNEL_INDEX(channel);
   __IO uint32_t *pReg = (__IO uint32_t *)((uint32_t)((uint32_t)(&timx->CCMR1) + LL_TIM_OFFSET_TAB_CCMRx[ichannel]));
   STM32_MODIFY_REG(*pReg, ((TIM_CCMR1_IC1F) << LL_TIM_SHIFT_TAB_ICxx[ichannel]),
                    (ic_filter >> LL_TIM_IC_CONFIG_POS) << LL_TIM_SHIFT_TAB_ICxx[ichannel]);
@@ -4840,7 +5006,7 @@ __STATIC_INLINE void LL_TIM_IC_SetFilter(TIM_TypeDef *timx, uint32_t channel, ui
   */
 __STATIC_INLINE uint32_t LL_TIM_IC_GetFilter(const TIM_TypeDef *timx, uint32_t channel)
 {
-  uint32_t ichannel = LL_TIM_TIM_GET_CHANNEL_INDEX(channel);
+  uint32_t ichannel = LL_TIM_GET_CHANNEL_INDEX(channel);
   const __IO uint32_t *pReg = (__IO uint32_t *)((uint32_t)((uint32_t)(&timx->CCMR1) + \
                                                            LL_TIM_OFFSET_TAB_CCMRx[ichannel]));
   return ((STM32_READ_BIT(*pReg, ((TIM_CCMR1_IC1F) << LL_TIM_SHIFT_TAB_ICxx[ichannel])) \
@@ -4871,7 +5037,7 @@ __STATIC_INLINE uint32_t LL_TIM_IC_GetFilter(const TIM_TypeDef *timx, uint32_t c
   */
 __STATIC_INLINE void LL_TIM_IC_SetPolarity(TIM_TypeDef *timx, uint32_t channel, uint32_t ic_polarity)
 {
-  uint32_t ichannel = LL_TIM_TIM_GET_CHANNEL_INDEX(channel);
+  uint32_t ichannel = LL_TIM_GET_CHANNEL_INDEX(channel);
   STM32_MODIFY_REG(timx->CCER, ((TIM_CCER_CC1NP | TIM_CCER_CC1P) << LL_TIM_SHIFT_TAB_CCxP[ichannel]),
                    ic_polarity << LL_TIM_SHIFT_TAB_CCxP[ichannel]);
 }
@@ -4900,7 +5066,7 @@ __STATIC_INLINE void LL_TIM_IC_SetPolarity(TIM_TypeDef *timx, uint32_t channel, 
   */
 __STATIC_INLINE uint32_t LL_TIM_IC_GetPolarity(const TIM_TypeDef *timx, uint32_t channel)
 {
-  uint32_t ichannel = LL_TIM_TIM_GET_CHANNEL_INDEX(channel);
+  uint32_t ichannel = LL_TIM_GET_CHANNEL_INDEX(channel);
   return (STM32_READ_BIT(timx->CCER, ((TIM_CCER_CC1NP | TIM_CCER_CC1P) << LL_TIM_SHIFT_TAB_CCxP[ichannel])) >>
           LL_TIM_SHIFT_TAB_CCxP[ichannel]);
 }
@@ -4957,7 +5123,7 @@ __STATIC_INLINE uint32_t LL_TIM_IC_GetXORGatePosition(TIM_TypeDef *timx)
   */
 __STATIC_INLINE void LL_TIM_IC_EnableXORGateInputInversion(TIM_TypeDef *timx, uint32_t channel)
 {
-  uint32_t ichannel_shift = ((uint32_t)(LL_TIM_TIM_GET_CHANNEL_INDEX(channel)) >> 1U) % 3U;
+  uint32_t ichannel_shift = ((uint32_t)(LL_TIM_GET_CHANNEL_INDEX(channel)) >> 1U) % 3U;
   STM32_SET_BIT(timx->CR2, (TIM_CR2_TI1INV << ichannel_shift));
 }
 
@@ -4977,7 +5143,7 @@ __STATIC_INLINE void LL_TIM_IC_EnableXORGateInputInversion(TIM_TypeDef *timx, ui
   */
 __STATIC_INLINE void LL_TIM_IC_DisableXORGateInputInversion(TIM_TypeDef *timx, uint32_t channel)
 {
-  uint32_t ichannel_shift = ((uint32_t)(LL_TIM_TIM_GET_CHANNEL_INDEX(channel)) >> 1U) % 3U;
+  uint32_t ichannel_shift = ((uint32_t)(LL_TIM_GET_CHANNEL_INDEX(channel)) >> 1U) % 3U;
   STM32_CLEAR_BIT(timx->CR2, (TIM_CR2_TI1INV << ichannel_shift));
 }
 
@@ -4998,7 +5164,7 @@ __STATIC_INLINE void LL_TIM_IC_DisableXORGateInputInversion(TIM_TypeDef *timx, u
   */
 __STATIC_INLINE uint32_t LL_TIM_IC_IsEnabledXORGateInputInversion(const TIM_TypeDef *timx, uint32_t channel)
 {
-  uint32_t ichannel_shift = ((uint32_t)(LL_TIM_TIM_GET_CHANNEL_INDEX(channel)) >> 1U) % 3U;
+  uint32_t ichannel_shift = ((uint32_t)(LL_TIM_GET_CHANNEL_INDEX(channel)) >> 1U) % 3U;
   uint32_t inv = TIM_CR2_TI1INV << ichannel_shift;
   return ((STM32_READ_BIT(timx->CR2, inv) == inv) ? 1UL : 0UL);
 }
@@ -5136,7 +5302,7 @@ __STATIC_INLINE uint32_t LL_TIM_IC_GetCaptureCH4(const TIM_TypeDef *timx)
   */
 __STATIC_INLINE uint32_t LL_TIM_IC_GetCapturedValue(const TIM_TypeDef *timx, uint32_t channel)
 {
-  uint32_t ichannel = LL_TIM_TIM_GET_CHANNEL_INDEX(channel);
+  uint32_t ichannel = LL_TIM_GET_CHANNEL_INDEX(channel);
   ichannel >>= 1U; /* Divide by 2 to comply with LL_TIM_OFFSET_TAB_CCRx indexes */
   const __IO uint32_t *pReg = (__IO uint32_t *)((uint32_t)((uint32_t)(&timx->CCR1) + \
                                                            LL_TIM_OFFSET_TAB_CCRx[ichannel]));
@@ -5162,7 +5328,7 @@ __STATIC_INLINE uint32_t LL_TIM_IC_GetCapturedValue(const TIM_TypeDef *timx, uin
   */
 __STATIC_INLINE uint32_t LL_TIM_IC_GetInputStatus(TIM_TypeDef *timx, uint32_t channel)
 {
-  uint32_t ichannel_shift = ((uint32_t)(LL_TIM_TIM_GET_CHANNEL_INDEX(channel)) >> 1U) & 0x3U;
+  uint32_t ichannel_shift = ((uint32_t)(LL_TIM_GET_CHANNEL_INDEX(channel)) >> 1U) & 0x3U;
   uint32_t status_shifted = TIM_SR_TI1FS << ichannel_shift;
   return ((STM32_READ_BIT(timx->SR, status_shifted) == status_shifted) ? LL_TIM_IC_SIGNAL_HIGH : LL_TIM_IC_SIGNAL_LOW);
 }
@@ -5488,10 +5654,10 @@ __STATIC_INLINE uint32_t LL_TIM_GetSlaveMode(const TIM_TypeDef *timx)
   *         LL_TIM_TS_ITR1
   *         LL_TIM_TS_ITR2
   * @if TIM3
-  *         LL_TIM_TS_ITR3 (*)
-  *         LL_TIM_TS_ITR4 (*)
-  *
-  *         (*) value not defined in all devices.
+  *         LL_TIM_TS_ITR3
+  * @endif
+  * @if TIM4
+  *         LL_TIM_TS_ITR4
   * @endif
   * @if TIM5
   *         LL_TIM_TS_ITR5
@@ -5501,10 +5667,14 @@ __STATIC_INLINE uint32_t LL_TIM_GetSlaveMode(const TIM_TypeDef *timx)
   *         LL_TIM_TS_ITR8
   *         LL_TIM_TS_ITR9
   * @if TIM16
-  *         LL_TIM_TS_ITR10 (*)
-  *         LL_TIM_TS_ITR11 (*)
-  *
-  *         (*) value not defined in all devices.
+  *         LL_TIM_TS_ITR10
+  * @endif
+  * @if TIM17
+  *         LL_TIM_TS_ITR11
+  * @endif
+  * #if TIM20
+  *         LL_TIM_TS_ITR12
+  *         LL_TIM_TS_ITR13
   * @endif
   *         LL_TIM_TS_TI1F_ED
   *         LL_TIM_TS_TI1FP1
@@ -5530,10 +5700,10 @@ __STATIC_INLINE void LL_TIM_SetTriggerInput(TIM_TypeDef *timx, uint32_t trigger_
   *         LL_TIM_TS_ITR1
   *         LL_TIM_TS_ITR2
   * @if TIM3
-  *         LL_TIM_TS_ITR3 (*)
-  *         LL_TIM_TS_ITR4 (*)
-  *
-  *         (*) value not defined in all devices.
+  *         LL_TIM_TS_ITR3
+  * @endif
+  * @if TIM4
+  *         LL_TIM_TS_ITR4
   * @endif
   * @if TIM5
   *         LL_TIM_TS_ITR5
@@ -5543,10 +5713,14 @@ __STATIC_INLINE void LL_TIM_SetTriggerInput(TIM_TypeDef *timx, uint32_t trigger_
   *         LL_TIM_TS_ITR8
   *         LL_TIM_TS_ITR9
   * @if TIM16
-  *         LL_TIM_TS_ITR10 (*)
-  *         LL_TIM_TS_ITR11 (*)
-  *
-  *         (*) value not defined in all devices.
+  *         LL_TIM_TS_ITR10
+  * @endif
+  * @if TIM17
+  *         LL_TIM_TS_ITR11
+  * @endif
+  * #if TIM20
+  *         LL_TIM_TS_ITR12
+  *         LL_TIM_TS_ITR13
   * @endif
   *         LL_TIM_TS_TI1F_ED
   *         LL_TIM_TS_TI1FP1
@@ -5700,6 +5874,10 @@ __STATIC_INLINE void LL_TIM_GetConfigETR(TIM_TypeDef *timx, uint32_t *p_etr_pola
   *            LL_TIM_TIM1_ETR_IN_ADC1_AWD1:         tim1_etr_in is connected to adc1_awd1
   *            LL_TIM_TIM1_ETR_IN_ADC1_AWD2:         tim1_etr_in is connected to adc1_awd2
   *            LL_TIM_TIM1_ETR_IN_ADC1_AWD3:         tim1_etr_in is connected to adc1_awd3
+  *            LL_TIM_TIM1_ETR_IN_COMP3_OUT:         tim1_etr_in is connected to comp3_out (*)
+  *            LL_TIM_TIM1_ETR_IN_COMP4_OUT:         tim1_etr_in is connected to comp4_out (*)
+  *            LL_TIM_TIM1_ETR_IN_PLAY1_OUT6:        tim1_etr_in is connected to play1_out6 (*)
+  *            LL_TIM_TIM1_ETR_IN_PLAY1_OUT8:        tim1_etr_in is connected to play1_out8 (*)
   *
   *         TIM2: one of the following values:
   *            LL_TIM_TIM2_ETR_IN_GPIO:              tim2_etr_in is connected to TIM2_ETR
@@ -5712,16 +5890,28 @@ __STATIC_INLINE void LL_TIM_GetConfigETR(TIM_TypeDef *timx, uint32_t *p_etr_pola
   *            LL_TIM_TIM2_ETR_IN_MCO1:              tim2_etr_in is connected to MCO1
   *            LL_TIM_TIM2_ETR_IN_TIM3_ETR:          tim2_etr_in is connected to TIM3_ETR (*)
   *            LL_TIM_TIM2_ETR_IN_TIM4_ETR:          tim2_etr_in is connected to TIM4_ETR (*)
-  *            LL_TIM_TIM2_ETR_IN_TIM5_ETR:          tim2_etr_in is connected to TIM5_ETR
+  *            LL_TIM_TIM2_ETR_IN_TIM5_ETR:          tim2_etr_in is connected to TIM5_ETR (*)
   *            LL_TIM_TIM2_ETR_IN_ETH1_PTP_PPS_OUT:  tim2_etr_in is connected to eth1_ptp_pps_out (*)
+  *            LL_TIM_TIM2_ETR_IN_COMP3_OUT:         tim2_etr_in is connected to comp3_out (*)
+  *            LL_TIM_TIM2_ETR_IN_COMP4_OUT:         tim2_etr_in is connected to comp4_out (*)
+  *            LL_TIM_TIM2_ETR_IN_PLAY1_OUT4:        tim2_etr_in is connected to play1_out4 (*)
+  *            LL_TIM_TIM2_ETR_IN_PLAY1_OUT2:        tim2_etr_in is connected to play1_out2 (*)
   *
   *         TIM3: one of the following values: (**)
   *            LL_TIM_TIM3_ETR_IN_GPIO:              tim3_etr_in is connected to TIM3_ETR
   *            LL_TIM_TIM3_ETR_IN_COMP1_OUT:         tim3_etr_in is connected to comp1_out
+  *            LL_TIM_TIM3_ETR_IN_ADC2_AWD1:         tim3_etr_in is connected to adc2_awd1 (*)
+  *            LL_TIM_TIM3_ETR_IN_ADC2_AWD2:         tim3_etr_in is connected to adc2_awd2 (*)
+  *            LL_TIM_TIM3_ETR_IN_ADC2_AWD3:         tim3_etr_in is connected to adc2_awd3 (*)
   *            LL_TIM_TIM3_ETR_IN_TIM2_ETR:          tim3_etr_in is connected to TIM2_ETR
   *            LL_TIM_TIM3_ETR_IN_TIM4_ETR:          tim3_etr_in is connected to TIM4_ETR
   *            LL_TIM_TIM3_ETR_IN_TIM5_ETR:          tim3_etr_in is connected to TIM5_ETR
-  *            LL_TIM_TIM3_ETR_IN_ETH1_PTP_PPS_OUT:  tim3_etr_in is connected to eth1_ptp_pps_out
+  *            LL_TIM_TIM3_ETR_IN_ETH1_PTP_PPS_OUT:  tim3_etr_in is connected to eth1_ptp_pps_out (*)
+  *            LL_TIM_TIM3_ETR_IN_COMP2_OUT:         tim3_etr_in is connected to comp2_out (*)
+  *            LL_TIM_TIM3_ETR_IN_COMP3_OUT:         tim3_etr_in is connected to comp3_out (*)
+  *            LL_TIM_TIM3_ETR_IN_COMP4_OUT:         tim3_etr_in is connected to comp4_out (*)
+  *            LL_TIM_TIM3_ETR_IN_PLAY1_OUT4:        tim3_etr_in is connected to play1_out4 (*)
+  *            LL_TIM_TIM3_ETR_IN_PLAY1_OUT13:       tim3_etr_in is connected to play1_out13 (*)
   *
   *         TIM4: one of the following values: (**)
   *            LL_TIM_TIM4_ETR_IN_GPIO:              tim4_etr_in is connected to TIM4_ETR
@@ -5733,12 +5923,18 @@ __STATIC_INLINE void LL_TIM_GetConfigETR(TIM_TypeDef *timx, uint32_t *p_etr_pola
   *            LL_TIM_TIM4_ETR_IN_TIM3_ETR:          tim4_etr_in is connected to TIM3_ETR
   *            LL_TIM_TIM4_ETR_IN_TIM5_ETR:          tim4_etr_in is connected to TIM5_ETR
   *
-  *         TIM5: one of the following values:
+  *         TIM5: one of the following values: (**)
   *            LL_TIM_TIM5_ETR_IN_GPIO:              tim5_etr_in is connected to TIM5_ETR
   *            LL_TIM_TIM5_ETR_IN_COMP1_OUT:         tim5_etr_in is connected to comp1_out
+  *            LL_TIM_TIM5_ETR_IN_ADC3_AWD1:         tim5_etr_in is connected to adc3_awd1 (*)
+  *            LL_TIM_TIM5_ETR_IN_ADC3_AWD2:         tim5_etr_in is connected to adc3_awd2 (*)
+  *            LL_TIM_TIM5_ETR_IN_ADC3_AWD3:         tim5_etr_in is connected to adc3_awd3 (*)
   *            LL_TIM_TIM5_ETR_IN_TIM2_ETR:          tim5_etr_in is connected to TIM2_ETR
   *            LL_TIM_TIM5_ETR_IN_TIM3_ETR:          tim5_etr_in is connected to TIM3_ETR (*)
   *            LL_TIM_TIM5_ETR_IN_TIM4_ETR:          tim5_etr_in is connected to TIM4_ETR (*)
+  *            LL_TIM_TIM5_ETR_IN_COMP2_OUT:         tim5_etr_in is connected to comp2_out (*)
+  *            LL_TIM_TIM5_ETR_IN_COMP3_OUT:         tim5_etr_in is connected to comp3_out (*)
+  *            LL_TIM_TIM5_ETR_IN_COMP4_OUT:         tim5_etr_in is connected to comp4_out (*)
   *
   *         TIM8: one of the following values:
   *            LL_TIM_TIM8_ETR_IN_GPIO:              tim8_etr_in is connected to TIM8_ETR
@@ -5753,6 +5949,22 @@ __STATIC_INLINE void LL_TIM_GetConfigETR(TIM_TypeDef *timx, uint32_t *p_etr_pola
   *            LL_TIM_TIM8_ETR_IN_ADC3_AWD1:         tim8_etr_in is connected to adc3_awd1 (*)
   *            LL_TIM_TIM8_ETR_IN_ADC3_AWD2:         tim8_etr_in is connected to adc3_awd2 (*)
   *            LL_TIM_TIM8_ETR_IN_ADC3_AWD3:         tim8_etr_in is connected to adc3_awd3 (*)
+  *            LL_TIM_TIM8_ETR_IN_COMP3_OUT:         tim8_etr_in is connected to comp3_out (*)
+  *            LL_TIM_TIM8_ETR_IN_COMP4_OUT:         tim8_etr_in is connected to comp4_out (*)
+  *            LL_TIM_TIM8_ETR_IN_PLAY1_OUT6:        tim8_etr_in is connected to play1_out6 (*)
+  *            LL_TIM_TIM8_ETR_IN_PLAY1_OUT10:       tim8_etr_in is connected to play1_out10 (*)
+  *
+  *         TIM20: one of the following values: (**)
+  *            LL_TIM_TIM20_ETR_IN_GPIO:             tim20_etr_in is connected to TIM20_ETR
+  *            LL_TIM_TIM20_ETR_IN_COMP1_OUT:        tim20_etr_in is connected to comp1_out
+  *            LL_TIM_TIM20_ETR_IN_ADC3_AWD1:        tim20_etr_in is connected to adc3_awd1 (*)
+  *            LL_TIM_TIM20_ETR_IN_ADC3_AWD2:        tim20_etr_in is connected to adc3_awd2 (*)
+  *            LL_TIM_TIM20_ETR_IN_ADC3_AWD3:        tim20_etr_in is connected to adc3_awd3 (*)
+  *            LL_TIM_TIM20_ETR_IN_COMP2_OUT:        tim20_etr_in is connected to comp2_out (*)
+  *            LL_TIM_TIM20_ETR_IN_COMP3_OUT:        tim20_etr_in is connected to comp3_out (*)
+  *            LL_TIM_TIM20_ETR_IN_COMP4_OUT:        tim20_etr_in is connected to comp4_out (*)
+  *            LL_TIM_TIM20_ETR_IN_PLAY1_OUT6:       tim20_etr_in is connected to play1_out6 (*)
+  *            LL_TIM_TIM20_ETR_IN_PLAY1_OUT14:      tim20_etr_in is connected to play1_out14 (*)
   *
   *         (*) Value not defined in all devices.
   *         (**) Timer instance not available on all devices.
@@ -5780,6 +5992,10 @@ __STATIC_INLINE void LL_TIM_SetETRSource(TIM_TypeDef *timx, uint32_t etr_source)
   *            LL_TIM_TIM1_ETR_IN_ADC1_AWD1:         tim1_etr_in is connected to adc1_awd1
   *            LL_TIM_TIM1_ETR_IN_ADC1_AWD2:         tim1_etr_in is connected to adc1_awd2
   *            LL_TIM_TIM1_ETR_IN_ADC1_AWD3:         tim1_etr_in is connected to adc1_awd3
+  *            LL_TIM_TIM1_ETR_IN_COMP3_OUT:         tim1_etr_in is connected to comp3_out (*)
+  *            LL_TIM_TIM1_ETR_IN_COMP4_OUT:         tim1_etr_in is connected to comp4_out (*)
+  *            LL_TIM_TIM1_ETR_IN_PLAY1_OUT6:        tim1_etr_in is connected to play1_out6 (*)
+  *            LL_TIM_TIM1_ETR_IN_PLAY1_OUT8:        tim1_etr_in is connected to play1_out8 (*)
   *
   *         TIM2: one of the following values:
   *            LL_TIM_TIM2_ETR_IN_GPIO:              tim2_etr_in is connected to TIM2_ETR
@@ -5792,16 +6008,28 @@ __STATIC_INLINE void LL_TIM_SetETRSource(TIM_TypeDef *timx, uint32_t etr_source)
   *            LL_TIM_TIM2_ETR_IN_MCO1:              tim2_etr_in is connected to MCO1
   *            LL_TIM_TIM2_ETR_IN_TIM3_ETR:          tim2_etr_in is connected to TIM3_ETR (*)
   *            LL_TIM_TIM2_ETR_IN_TIM4_ETR:          tim2_etr_in is connected to TIM4_ETR (*)
-  *            LL_TIM_TIM2_ETR_IN_TIM5_ETR:          tim2_etr_in is connected to TIM5_ETR
+  *            LL_TIM_TIM2_ETR_IN_TIM5_ETR:          tim2_etr_in is connected to TIM5_ETR (*)
   *            LL_TIM_TIM2_ETR_IN_ETH1_PTP_PPS_OUT:  tim2_etr_in is connected to eth1_ptp_pps_out (*)
+  *            LL_TIM_TIM2_ETR_IN_COMP3_OUT:         tim2_etr_in is connected to comp3_out (*)
+  *            LL_TIM_TIM2_ETR_IN_COMP4_OUT:         tim2_etr_in is connected to comp4_out (*)
+  *            LL_TIM_TIM2_ETR_IN_PLAY1_OUT4:        tim2_etr_in is connected to play1_out4 (*)
+  *            LL_TIM_TIM2_ETR_IN_PLAY1_OUT2:        tim2_etr_in is connected to play1_out2 (*)
   *
   *         TIM3: one of the following values: (**)
   *            LL_TIM_TIM3_ETR_IN_GPIO:              tim3_etr_in is connected to TIM3_ETR
   *            LL_TIM_TIM3_ETR_IN_COMP1_OUT:         tim3_etr_in is connected to comp1_out
+  *            LL_TIM_TIM3_ETR_IN_ADC2_AWD1:         tim3_etr_in is connected to adc2_awd1 (*)
+  *            LL_TIM_TIM3_ETR_IN_ADC2_AWD2:         tim3_etr_in is connected to adc2_awd2 (*)
+  *            LL_TIM_TIM3_ETR_IN_ADC2_AWD3:         tim3_etr_in is connected to adc2_awd3 (*)
   *            LL_TIM_TIM3_ETR_IN_TIM2_ETR:          tim3_etr_in is connected to TIM2_ETR
   *            LL_TIM_TIM3_ETR_IN_TIM4_ETR:          tim3_etr_in is connected to TIM4_ETR
   *            LL_TIM_TIM3_ETR_IN_TIM5_ETR:          tim3_etr_in is connected to TIM5_ETR
-  *            LL_TIM_TIM3_ETR_IN_ETH1_PTP_PPS_OUT:  tim3_etr_in is connected to eth1_ptp_pps_out
+  *            LL_TIM_TIM3_ETR_IN_ETH1_PTP_PPS_OUT:  tim3_etr_in is connected to eth1_ptp_pps_out (*)
+  *            LL_TIM_TIM3_ETR_IN_COMP2_OUT:         tim3_etr_in is connected to comp2_out (*)
+  *            LL_TIM_TIM3_ETR_IN_COMP3_OUT:         tim3_etr_in is connected to comp3_out (*)
+  *            LL_TIM_TIM3_ETR_IN_COMP4_OUT:         tim3_etr_in is connected to comp4_out (*)
+  *            LL_TIM_TIM3_ETR_IN_PLAY1_OUT4:        tim3_etr_in is connected to play1_out4 (*)
+  *            LL_TIM_TIM3_ETR_IN_PLAY1_OUT13:       tim3_etr_in is connected to play1_out13 (*)
   *
   *         TIM4: one of the following values: (**)
   *            LL_TIM_TIM4_ETR_IN_GPIO:              tim4_etr_in is connected to TIM4_ETR
@@ -5813,12 +6041,18 @@ __STATIC_INLINE void LL_TIM_SetETRSource(TIM_TypeDef *timx, uint32_t etr_source)
   *            LL_TIM_TIM4_ETR_IN_TIM3_ETR:          tim4_etr_in is connected to TIM3_ETR
   *            LL_TIM_TIM4_ETR_IN_TIM5_ETR:          tim4_etr_in is connected to TIM5_ETR
   *
-  *         TIM5: one of the following values:
+  *         TIM5: one of the following values: (**)
   *            LL_TIM_TIM5_ETR_IN_GPIO:              tim5_etr_in is connected to TIM5_ETR
   *            LL_TIM_TIM5_ETR_IN_COMP1_OUT:         tim5_etr_in is connected to comp1_out
+  *            LL_TIM_TIM5_ETR_IN_ADC3_AWD1:         tim5_etr_in is connected to adc3_awd1 (*)
+  *            LL_TIM_TIM5_ETR_IN_ADC3_AWD2:         tim5_etr_in is connected to adc3_awd2 (*)
+  *            LL_TIM_TIM5_ETR_IN_ADC3_AWD3:         tim5_etr_in is connected to adc3_awd3 (*)
   *            LL_TIM_TIM5_ETR_IN_TIM2_ETR:          tim5_etr_in is connected to TIM2_ETR
   *            LL_TIM_TIM5_ETR_IN_TIM3_ETR:          tim5_etr_in is connected to TIM3_ETR (*)
   *            LL_TIM_TIM5_ETR_IN_TIM4_ETR:          tim5_etr_in is connected to TIM4_ETR (*)
+  *            LL_TIM_TIM5_ETR_IN_COMP2_OUT:         tim5_etr_in is connected to comp2_out (*)
+  *            LL_TIM_TIM5_ETR_IN_COMP3_OUT:         tim5_etr_in is connected to comp3_out (*)
+  *            LL_TIM_TIM5_ETR_IN_COMP4_OUT:         tim5_etr_in is connected to comp4_out (*)
   *
   *         TIM8: one of the following values:
   *            LL_TIM_TIM8_ETR_IN_GPIO:              tim8_etr_in is connected to TIM8_ETR
@@ -5833,6 +6067,22 @@ __STATIC_INLINE void LL_TIM_SetETRSource(TIM_TypeDef *timx, uint32_t etr_source)
   *            LL_TIM_TIM8_ETR_IN_ADC3_AWD1:         tim8_etr_in is connected to adc3_awd1 (*)
   *            LL_TIM_TIM8_ETR_IN_ADC3_AWD2:         tim8_etr_in is connected to adc3_awd2 (*)
   *            LL_TIM_TIM8_ETR_IN_ADC3_AWD3:         tim8_etr_in is connected to adc3_awd3 (*)
+  *            LL_TIM_TIM8_ETR_IN_COMP3_OUT:         tim8_etr_in is connected to comp3_out (*)
+  *            LL_TIM_TIM8_ETR_IN_COMP4_OUT:         tim8_etr_in is connected to comp4_out (*)
+  *            LL_TIM_TIM8_ETR_IN_PLAY1_OUT6:        tim8_etr_in is connected to play1_out6 (*)
+  *            LL_TIM_TIM8_ETR_IN_PLAY1_OUT10:       tim8_etr_in is connected to play1_out10 (*)
+  *
+  *         TIM20: one of the following values: (**)
+  *            LL_TIM_TIM20_ETR_IN_GPIO:             tim20_etr_in is connected to TIM20_ETR
+  *            LL_TIM_TIM20_ETR_IN_COMP1_OUT:        tim20_etr_in is connected to comp1_out
+  *            LL_TIM_TIM20_ETR_IN_ADC3_AWD1:        tim20_etr_in is connected to adc3_awd1 (*)
+  *            LL_TIM_TIM20_ETR_IN_ADC3_AWD2:        tim20_etr_in is connected to adc3_awd2 (*)
+  *            LL_TIM_TIM20_ETR_IN_ADC3_AWD3:        tim20_etr_in is connected to adc3_awd3 (*)
+  *            LL_TIM_TIM20_ETR_IN_COMP2_OUT:        tim20_etr_in is connected to comp2_out (*)
+  *            LL_TIM_TIM20_ETR_IN_COMP3_OUT:        tim20_etr_in is connected to comp3_out (*)
+  *            LL_TIM_TIM20_ETR_IN_COMP4_OUT:        tim20_etr_in is connected to comp4_out (*)
+  *            LL_TIM_TIM20_ETR_IN_PLAY1_OUT6:       tim20_etr_in is connected to play1_out6 (*)
+  *            LL_TIM_TIM20_ETR_IN_PLAY1_OUT14:      tim20_etr_in is connected to play1_out14 (*)
   *
   *         (*) Value not defined in all devices.
   *         (**) Timer instance not available on all devices.
@@ -6648,14 +6898,27 @@ __STATIC_INLINE uint32_t LL_TIM_GetBreakInputAFMode(const TIM_TypeDef *timx, uin
   * @rmtoll
   *  AF1          BKINE         LL_TIM_EnableBreakInputSource \n
   *  AF1          BKCMP1E       LL_TIM_EnableBreakInputSource \n
+  *  AF1          BKCMP2E       LL_TIM_EnableBreakInputSource \n
+  *  AF1          BKCMP3E       LL_TIM_EnableBreakInputSource \n
+  *  AF1          BKCMP4E       LL_TIM_EnableBreakInputSource \n
   *  AF1          BKCMP5E       LL_TIM_EnableBreakInputSource \n
   *  AF1          BKCMP6E       LL_TIM_EnableBreakInputSource \n
   *  AF1          BKCMP8E       LL_TIM_EnableBreakInputSource \n
   *  AF1          BKCMP9E       LL_TIM_EnableBreakInputSource \n
   *  AF1          BKCMP10E      LL_TIM_EnableBreakInputSource \n
+  *  AF1          BKCMP11E      LL_TIM_EnableBreakInputSource \n
+  *  AF1          BKCMP13E      LL_TIM_EnableBreakInputSource \n
+  *  AF1          BKCMP14E      LL_TIM_EnableBreakInputSource \n
   *  AF2          BK2INE        LL_TIM_EnableBreakInputSource \n
+  *  AF2          BK2CMP1E      LL_TIM_EnableBreakInputSource \n
+  *  AF2          BK2CMP2E      LL_TIM_EnableBreakInputSource \n
+  *  AF2          BK2CMP3E      LL_TIM_EnableBreakInputSource \n
+  *  AF2          BK2CMP4E      LL_TIM_EnableBreakInputSource \n
   *  AF2          BK2CMP5E      LL_TIM_EnableBreakInputSource \n
-  *  AF2          BK2CMP6E      LL_TIM_EnableBreakInputSource
+  *  AF2          BK2CMP6E      LL_TIM_EnableBreakInputSource \n
+  *  AF2          BK2CMP7E      LL_TIM_EnableBreakInputSource \n
+  *  AF2          BK2CMP13E     LL_TIM_EnableBreakInputSource \n
+  *  AF2          BK2CMP14E     LL_TIM_EnableBreakInputSource
   * @param  timx Timer instance
   * @param  break_input This parameter can be one of the following values:
   *         @arg @ref LL_TIM_BREAK_INPUT_1
@@ -6674,22 +6937,42 @@ __STATIC_INLINE uint32_t LL_TIM_GetBreakInputAFMode(const TIM_TypeDef *timx, uin
   * @if COMP2
   *            LL_TIM_TIM1_BRK_COMP2_OUT (*)
   * @endif
+  * @if COMP3
+  *            LL_TIM_TIM1_BRK_COMP3_OUT (*)
+  *            LL_TIM_TIM1_BRK_COMP4_OUT (*)
+  * @endif
   *            LL_TIM_TIM1_BRK_TIM8_BKIN
   *            LL_TIM_TIM1_BRK_TIM15_BKIN
   * @if TIM16
   *            LL_TIM_TIM1_BRK_TIM16_BKIN (*)
-  * @endif
-  * @if TIM17
   *            LL_TIM_TIM1_BRK_TIM17_BKIN (*)
   * @endif
+  * @if TIM20
+  *            LL_TIM_TIM1_BRK_TIM20_BKIN (*)
+  * @endif
+  * @if PLAY1
+  *            LL_TIM_TIM1_BRK_PLAY1_OUT0 (*)
+  *            LL_TIM_TIM1_BRK_PLAY1_OUT1 (*)
+  * @endif
   *
+  * @if TIM20
   *            . . BREAK2 can be a combination of the following values
   *            LL_TIM_TIM1_BRK2_GPIO
   *            LL_TIM_TIM1_BRK2_COMP1_OUT
   * @if COMP2
   *            LL_TIM_TIM1_BRK2_COMP2_OUT (*)
   * @endif
+  * @if COMP3
+  *            LL_TIM_TIM1_BRK2_COMP3_OUT (*)
+  *            LL_TIM_TIM1_BRK2_COMP4_OUT (*)
+  * @endif
   *            LL_TIM_TIM1_BRK2_TIM8_BKIN2
+  *            LL_TIM_TIM1_BRK2_TIM20_BKIN2 (*)
+  * @if PLAY1
+  *            LL_TIM_TIM1_BRK2_PLAY1_OUT2 (*)
+  *            LL_TIM_TIM1_BRK2_PLAY1_OUT3 (*)
+  * @endif
+  * @endif
   *
   *         TIM8: combination of the following values:
   *
@@ -6699,22 +6982,42 @@ __STATIC_INLINE uint32_t LL_TIM_GetBreakInputAFMode(const TIM_TypeDef *timx, uin
   * @if COMP2
   *            LL_TIM_TIM8_BRK_COMP2_OUT (*)
   * @endif
+  * @if COMP3
+  *            LL_TIM_TIM8_BRK_COMP3_OUT (*)
+  *            LL_TIM_TIM8_BRK_COMP4_OUT (*)
+  * @endif
   *            LL_TIM_TIM8_BRK_TIM1_BKIN
   *            LL_TIM_TIM8_BRK_TIM15_BKIN
   * @if TIM16
   *            LL_TIM_TIM8_BRK_TIM16_BKIN (*)
-  * @endif
-  * @if TIM17
   *            LL_TIM_TIM8_BRK_TIM17_BKIN (*)
   * @endif
+  * @if TIM20
+  *            LL_TIM_TIM8_BRK_TIM20_BKIN (*)
+  * @endif
+  * @if PLAY1
+  *            LL_TIM_TIM8_BRK_PLAY1_OUT0 (*)
+  *            LL_TIM_TIM8_BRK_PLAY1_OUT13 (*)
+  * @endif
   *
+  * @if TIM20
   *            . . BREAK2 can be a combination of the following values
   *            LL_TIM_TIM8_BRK2_GPIO
   *            LL_TIM_TIM8_BRK2_COMP1_OUT
   * @if COMP2
   *            LL_TIM_TIM8_BRK2_COMP2_OUT (*)
   * @endif
+  * @if COMP3
+  *            LL_TIM_TIM8_BRK2_COMP3_OUT (*)
+  *            LL_TIM_TIM8_BRK2_COMP4_OUT (*)
+  * @endif
   *            LL_TIM_TIM8_BRK2_TIM1_BKIN2
+  *            LL_TIM_TIM8_BRK2_TIM20_BKIN2 (*)
+  * @if PLAY1
+  *            LL_TIM_TIM8_BRK2_PLAY1_OUT2 (*)
+  *            LL_TIM_TIM8_BRK2_PLAY1_OUT15 (*)
+  * @endif
+  * @endif
   *
   *         TIM15: combination of the following values:
   *
@@ -6724,37 +7027,107 @@ __STATIC_INLINE uint32_t LL_TIM_GetBreakInputAFMode(const TIM_TypeDef *timx, uin
   * @if COMP2
   *            LL_TIM_TIM15_BRK_COMP2_OUT (*)
   * @endif
-  *           LL_TIM_TIM15_BRK_TIM1_BKIN
-  *           LL_TIM_TIM15_BRK_TIM8_BKIN
-  * @if TIM16
-  *           LL_TIM_TIM15_BRK_TIM16_BKIN (*)
+  * @if COMP3
+  *            LL_TIM_TIM15_BRK_COMP3_OUT (*)
+  *            LL_TIM_TIM15_BRK_COMP4_OUT (*)
   * @endif
-  * @if TIM17
-  *           LL_TIM_TIM15_BRK_TIM17_BKIN (*)
+  *            LL_TIM_TIM15_BRK_TIM1_BKIN
+  *            LL_TIM_TIM15_BRK_TIM8_BKIN
+  * @if TIM16
+  *            LL_TIM_TIM15_BRK_TIM16_BKIN (*)
+  *            LL_TIM_TIM15_BRK_TIM17_BKIN (*)
+  * @endif
+  * @if TIM20
+  *            LL_TIM_TIM15_BRK_TIM20_BKIN (*)
+  * @endif
+  * @if PLAY1
+  *            LL_TIM_TIM15_BRK_PLAY1_OUT4 (*)
+  *            LL_TIM_TIM15_BRK_PLAY1_OUT5 (*)
   * @endif
   *
   * @if TIM16
-  *        TIM16: combination of the following values: (**)
+  *         TIM16: combination of the following values: (**)
   *
   *            . . BREAK can be a combination of the following values
   *            LL_TIM_TIM16_BRK_GPIO
   *            LL_TIM_TIM16_BRK_COMP1_OUT
+  * @if COMP3
+  *            LL_TIM_TIM16_BRK_COMP2_OUT (*)
+  *            LL_TIM_TIM16_BRK_COMP3_OUT (*)
+  *            LL_TIM_TIM16_BRK_COMP4_OUT (*)
+  * @endif
   *            LL_TIM_TIM16_BRK_TIM1_BKIN
   *            LL_TIM_TIM16_BRK_TIM8_BKIN
   *            LL_TIM_TIM16_BRK_TIM15_BKIN
   *            LL_TIM_TIM16_BRK_TIM17_BKIN
+  * @if TIM20
+  *            LL_TIM_TIM16_BRK_TIM20_BKIN (*)
+  * @endif
+  * @if PLAY1
+  *            LL_TIM_TIM16_BRK_PLAY1_OUT4 (*)
+  *            LL_TIM_TIM16_BRK_PLAY1_OUT7 (*)
+  * @endif
   * @endif
   *
   * @if TIM17
-  *   TIM17: combination of the following values: (**)
+  *         TIM17: combination of the following values: (**)
   *
   *            . . BREAK can be a combination of the following values
   *            LL_TIM_TIM17_BRK_GPIO
   *            LL_TIM_TIM17_BRK_COMP1_OUT
+  * @if COMP3
+  *            LL_TIM_TIM17_BRK_COMP2_OUT (*)
+  *            LL_TIM_TIM17_BRK_COMP3_OUT (*)
+  *            LL_TIM_TIM17_BRK_COMP4_OUT (*)
+  * @endif
   *            LL_TIM_TIM17_BRK_TIM1_BKIN
   *            LL_TIM_TIM17_BRK_TIM8_BKIN
   *            LL_TIM_TIM17_BRK_TIM15_BKIN
   *            LL_TIM_TIM17_BRK_TIM16_BKIN
+  * @if TIM20
+  *            LL_TIM_TIM17_BRK_TIM20_BKIN (*)
+  * @endif
+  * @if PLAY1
+  *            LL_TIM_TIM17_BRK_PLAY1_OUT4 (*)
+  *            LL_TIM_TIM17_BRK_PLAY1_OUT12 (*)
+  * @endif
+  * @endif
+  *
+  * @if TIM20
+  *         TIM20: combination of the following values: (**)
+  *
+  *            . . BREAK can be a combination of the following values
+  *            LL_TIM_TIM20_BRK_GPIO
+  *            LL_TIM_TIM20_BRK_COMP1_OUT
+  * @if COMP3
+  *            LL_TIM_TIM20_BRK_COMP2_OUT (*)
+  *            LL_TIM_TIM20_BRK_COMP3_OUT (*)
+  *            LL_TIM_TIM20_BRK_COMP4_OUT (*)
+  * @endif
+  *            LL_TIM_TIM20_BRK_TIM1_BKIN
+  *            LL_TIM_TIM20_BRK_TIM8_BKIN
+  *            LL_TIM_TIM20_BRK_TIM15_BKIN
+  *            LL_TIM_TIM20_BRK_TIM16_BKIN
+  *            LL_TIM_TIM20_BRK_TIM17_BKIN
+  * @if PLAY1
+  *            LL_TIM_TIM20_BRK_PLAY1_OUT0 (*)
+  *            LL_TIM_TIM20_BRK_PLAY1_OUT9 (*)
+  * @endif
+  *
+  *            . . BREAK2 can be a combination of the following values
+  *            LL_TIM_TIM20_BRK2_GPIO
+  *            LL_TIM_TIM20_BRK2_COMP1_OUT
+  * @if COMP3
+  *            LL_TIM_TIM20_BRK2_COMP2_OUT (*)
+  *            LL_TIM_TIM20_BRK2_COMP3_OUT (*)
+  *            LL_TIM_TIM20_BRK2_COMP4_OUT (*)
+  * @endif
+  *            LL_TIM_TIM20_BRK2_TIM1_BKIN2
+  *            LL_TIM_TIM20_BRK2_TIM8_BKIN2
+  * @if PLAY1
+  *            LL_TIM_TIM20_BRK2_PLAY1_OUT2 (*)
+  *            LL_TIM_TIM20_BRK2_PLAY1_OUT11 (*)
+  * @endif
   * @endif
   *
   *         (*)  Value not defined in all devices.
@@ -6773,14 +7146,27 @@ __STATIC_INLINE void LL_TIM_EnableBreakInputSource(TIM_TypeDef *timx, uint32_t b
   * @rmtoll
   *  AF1          BKINE         LL_TIM_DisableBreakInputSource \n
   *  AF1          BKCMP1E       LL_TIM_DisableBreakInputSource \n
+  *  AF1          BKCMP2E       LL_TIM_DisableBreakInputSource \n
+  *  AF1          BKCMP3E       LL_TIM_DisableBreakInputSource \n
+  *  AF1          BKCMP4E       LL_TIM_DisableBreakInputSource \n
   *  AF1          BKCMP5E       LL_TIM_DisableBreakInputSource \n
   *  AF1          BKCMP6E       LL_TIM_DisableBreakInputSource \n
   *  AF1          BKCMP8E       LL_TIM_DisableBreakInputSource \n
   *  AF1          BKCMP9E       LL_TIM_DisableBreakInputSource \n
   *  AF1          BKCMP10E      LL_TIM_DisableBreakInputSource \n
+  *  AF1          BKCMP11E      LL_TIM_DisableBreakInputSource \n
+  *  AF1          BKCMP13E      LL_TIM_DisableBreakInputSource \n
+  *  AF1          BKCMP14E      LL_TIM_DisableBreakInputSource \n
   *  AF2          BK2INE        LL_TIM_DisableBreakInputSource \n
+  *  AF2          BK2CMP1E      LL_TIM_DisableBreakInputSource \n
+  *  AF2          BK2CMP2E      LL_TIM_DisableBreakInputSource \n
+  *  AF2          BK2CMP3E      LL_TIM_DisableBreakInputSource \n
+  *  AF2          BK2CMP4E      LL_TIM_DisableBreakInputSource \n
   *  AF2          BK2CMP5E      LL_TIM_DisableBreakInputSource \n
-  *  AF2          BK2CMP6E      LL_TIM_DisableBreakInputSource
+  *  AF2          BK2CMP6E      LL_TIM_DisableBreakInputSource \n
+  *  AF2          BK2CMP7E      LL_TIM_DisableBreakInputSource \n
+  *  AF2          BK2CMP13E     LL_TIM_DisableBreakInputSource \n
+  *  AF2          BK2CMP14E     LL_TIM_DisableBreakInputSource
   * @param  timx Timer instance
   * @param  break_input This parameter can be one of the following values:
   *         @arg @ref LL_TIM_BREAK_INPUT_1
@@ -6799,22 +7185,42 @@ __STATIC_INLINE void LL_TIM_EnableBreakInputSource(TIM_TypeDef *timx, uint32_t b
   * @if COMP2
   *            LL_TIM_TIM1_BRK_COMP2_OUT (*)
   * @endif
+  * @if COMP3
+  *            LL_TIM_TIM1_BRK_COMP3_OUT (*)
+  *            LL_TIM_TIM1_BRK_COMP4_OUT (*)
+  * @endif
   *            LL_TIM_TIM1_BRK_TIM8_BKIN
   *            LL_TIM_TIM1_BRK_TIM15_BKIN
   * @if TIM16
   *            LL_TIM_TIM1_BRK_TIM16_BKIN (*)
-  * @endif
-  * @if TIM17
   *            LL_TIM_TIM1_BRK_TIM17_BKIN (*)
   * @endif
+  * @if TIM20
+  *            LL_TIM_TIM1_BRK_TIM20_BKIN (*)
+  * @endif
+  * @if PLAY1
+  *            LL_TIM_TIM1_BRK_PLAY1_OUT0 (*)
+  *            LL_TIM_TIM1_BRK_PLAY1_OUT1 (*)
+  * @endif
   *
+  * @if TIM20
   *            . . BREAK2 can be a combination of the following values
   *            LL_TIM_TIM1_BRK2_GPIO
   *            LL_TIM_TIM1_BRK2_COMP1_OUT
   * @if COMP2
   *            LL_TIM_TIM1_BRK2_COMP2_OUT (*)
   * @endif
+  * @if COMP3
+  *            LL_TIM_TIM1_BRK2_COMP3_OUT (*)
+  *            LL_TIM_TIM1_BRK2_COMP4_OUT (*)
+  * @endif
   *            LL_TIM_TIM1_BRK2_TIM8_BKIN2
+  *            LL_TIM_TIM1_BRK2_TIM20_BKIN2 (*)
+  * @if PLAY1
+  *            LL_TIM_TIM1_BRK2_PLAY1_OUT2 (*)
+  *            LL_TIM_TIM1_BRK2_PLAY1_OUT3 (*)
+  * @endif
+  * @endif
   *
   *         TIM8: combination of the following values:
   *
@@ -6824,22 +7230,42 @@ __STATIC_INLINE void LL_TIM_EnableBreakInputSource(TIM_TypeDef *timx, uint32_t b
   * @if COMP2
   *            LL_TIM_TIM8_BRK_COMP2_OUT (*)
   * @endif
+  * @if COMP3
+  *            LL_TIM_TIM8_BRK_COMP3_OUT (*)
+  *            LL_TIM_TIM8_BRK_COMP4_OUT (*)
+  * @endif
   *            LL_TIM_TIM8_BRK_TIM1_BKIN
   *            LL_TIM_TIM8_BRK_TIM15_BKIN
   * @if TIM16
   *            LL_TIM_TIM8_BRK_TIM16_BKIN (*)
-  * @endif
-  * @if TIM17
   *            LL_TIM_TIM8_BRK_TIM17_BKIN (*)
   * @endif
+  * @if TIM20
+  *            LL_TIM_TIM8_BRK_TIM20_BKIN (*)
+  * @endif
+  * @if PLAY1
+  *            LL_TIM_TIM8_BRK_PLAY1_OUT0 (*)
+  *            LL_TIM_TIM8_BRK_PLAY1_OUT13 (*)
+  * @endif
   *
+  * @if TIM20
   *            . . BREAK2 can be a combination of the following values
   *            LL_TIM_TIM8_BRK2_GPIO
   *            LL_TIM_TIM8_BRK2_COMP1_OUT
   * @if COMP2
   *            LL_TIM_TIM8_BRK2_COMP2_OUT (*)
   * @endif
+  * @if COMP3
+  *            LL_TIM_TIM8_BRK2_COMP3_OUT (*)
+  *            LL_TIM_TIM8_BRK2_COMP4_OUT (*)
+  * @endif
   *            LL_TIM_TIM8_BRK2_TIM1_BKIN2
+  *            LL_TIM_TIM8_BRK2_TIM20_BKIN2 (*)
+  * @if PLAY1
+  *            LL_TIM_TIM8_BRK2_PLAY1_OUT2 (*)
+  *            LL_TIM_TIM8_BRK2_PLAY1_OUT15 (*)
+  * @endif
+  * @endif
   *
   *         TIM15: combination of the following values:
   *
@@ -6849,37 +7275,107 @@ __STATIC_INLINE void LL_TIM_EnableBreakInputSource(TIM_TypeDef *timx, uint32_t b
   * @if COMP2
   *            LL_TIM_TIM15_BRK_COMP2_OUT (*)
   * @endif
-  *           LL_TIM_TIM15_BRK_TIM1_BKIN
-  *           LL_TIM_TIM15_BRK_TIM8_BKIN
-  * @if TIM16
-  *           LL_TIM_TIM15_BRK_TIM16_BKIN (*)
+  * @if COMP3
+  *            LL_TIM_TIM15_BRK_COMP3_OUT (*)
+  *            LL_TIM_TIM15_BRK_COMP4_OUT (*)
   * @endif
-  * @if TIM17
-  *           LL_TIM_TIM15_BRK_TIM17_BKIN (*)
+  *            LL_TIM_TIM15_BRK_TIM1_BKIN
+  *            LL_TIM_TIM15_BRK_TIM8_BKIN
+  * @if TIM16
+  *            LL_TIM_TIM15_BRK_TIM16_BKIN (*)
+  *            LL_TIM_TIM15_BRK_TIM17_BKIN (*)
+  * @endif
+  * @if TIM20
+  *            LL_TIM_TIM15_BRK_TIM20_BKIN (*)
+  * @endif
+  * @if PLAY1
+  *            LL_TIM_TIM15_BRK_PLAY1_OUT4 (*)
+  *            LL_TIM_TIM15_BRK_PLAY1_OUT5 (*)
   * @endif
   *
   * @if TIM16
-  *        TIM16: combination of the following values: (**)
+  *         TIM16: combination of the following values: (**)
   *
   *            . . BREAK can be a combination of the following values
   *            LL_TIM_TIM16_BRK_GPIO
   *            LL_TIM_TIM16_BRK_COMP1_OUT
+  * @if COMP3
+  *            LL_TIM_TIM16_BRK_COMP2_OUT (*)
+  *            LL_TIM_TIM16_BRK_COMP3_OUT (*)
+  *            LL_TIM_TIM16_BRK_COMP4_OUT (*)
+  * @endif
   *            LL_TIM_TIM16_BRK_TIM1_BKIN
   *            LL_TIM_TIM16_BRK_TIM8_BKIN
   *            LL_TIM_TIM16_BRK_TIM15_BKIN
   *            LL_TIM_TIM16_BRK_TIM17_BKIN
+  * @if TIM20
+  *            LL_TIM_TIM16_BRK_TIM20_BKIN (*)
+  * @endif
+  * @if PLAY1
+  *            LL_TIM_TIM16_BRK_PLAY1_OUT4 (*)
+  *            LL_TIM_TIM16_BRK_PLAY1_OUT7 (*)
+  * @endif
   * @endif
   *
   * @if TIM17
-  *   TIM17: combination of the following values: (**)
+  *         TIM17: combination of the following values: (**)
   *
   *            . . BREAK can be a combination of the following values
   *            LL_TIM_TIM17_BRK_GPIO
   *            LL_TIM_TIM17_BRK_COMP1_OUT
+  * @if COMP3
+  *            LL_TIM_TIM17_BRK_COMP2_OUT (*)
+  *            LL_TIM_TIM17_BRK_COMP3_OUT (*)
+  *            LL_TIM_TIM17_BRK_COMP4_OUT (*)
+  * @endif
   *            LL_TIM_TIM17_BRK_TIM1_BKIN
   *            LL_TIM_TIM17_BRK_TIM8_BKIN
   *            LL_TIM_TIM17_BRK_TIM15_BKIN
   *            LL_TIM_TIM17_BRK_TIM16_BKIN
+  * @if TIM20
+  *            LL_TIM_TIM17_BRK_TIM20_BKIN (*)
+  * @endif
+  * @if PLAY1
+  *            LL_TIM_TIM17_BRK_PLAY1_OUT4 (*)
+  *            LL_TIM_TIM17_BRK_PLAY1_OUT12 (*)
+  * @endif
+  * @endif
+  *
+  * @if TIM20
+  *         TIM20: combination of the following values: (**)
+  *
+  *            . . BREAK can be a combination of the following values
+  *            LL_TIM_TIM20_BRK_GPIO
+  *            LL_TIM_TIM20_BRK_COMP1_OUT
+  * @if COMP3
+  *            LL_TIM_TIM20_BRK_COMP2_OUT (*)
+  *            LL_TIM_TIM20_BRK_COMP3_OUT (*)
+  *            LL_TIM_TIM20_BRK_COMP4_OUT (*)
+  * @endif
+  *            LL_TIM_TIM20_BRK_TIM1_BKIN
+  *            LL_TIM_TIM20_BRK_TIM8_BKIN
+  *            LL_TIM_TIM20_BRK_TIM15_BKIN
+  *            LL_TIM_TIM20_BRK_TIM16_BKIN
+  *            LL_TIM_TIM20_BRK_TIM17_BKIN
+  * @if PLAY1
+  *            LL_TIM_TIM20_BRK_PLAY1_OUT0 (*)
+  *            LL_TIM_TIM20_BRK_PLAY1_OUT9 (*)
+  * @endif
+  *
+  *            . . BREAK2 can be a combination of the following values
+  *            LL_TIM_TIM20_BRK2_GPIO
+  *            LL_TIM_TIM20_BRK2_COMP1_OUT
+  * @if COMP3
+  *            LL_TIM_TIM20_BRK2_COMP2_OUT (*)
+  *            LL_TIM_TIM20_BRK2_COMP3_OUT (*)
+  *            LL_TIM_TIM20_BRK2_COMP4_OUT (*)
+  * @endif
+  *            LL_TIM_TIM20_BRK2_TIM1_BKIN2
+  *            LL_TIM_TIM20_BRK2_TIM8_BKIN2
+  * @if PLAY1
+  *            LL_TIM_TIM20_BRK2_PLAY1_OUT2 (*)
+  *            LL_TIM_TIM20_BRK2_PLAY1_OUT11 (*)
+  * @endif
   * @endif
   *
   *         (*)  Value not defined in all devices.
@@ -6898,14 +7394,27 @@ __STATIC_INLINE void LL_TIM_DisableBreakInputSource(TIM_TypeDef *timx, uint32_t 
   * @rmtoll
   *  AF1          BKINE         LL_TIM_IsEnabledBreakInputSource \n
   *  AF1          BKCMP1E       LL_TIM_IsEnabledBreakInputSource \n
+  *  AF1          BKCMP2E       LL_TIM_IsEnabledBreakInputSource \n
+  *  AF1          BKCMP3E       LL_TIM_IsEnabledBreakInputSource \n
+  *  AF1          BKCMP4E       LL_TIM_IsEnabledBreakInputSource \n
   *  AF1          BKCMP5E       LL_TIM_IsEnabledBreakInputSource \n
   *  AF1          BKCMP6E       LL_TIM_IsEnabledBreakInputSource \n
   *  AF1          BKCMP8E       LL_TIM_IsEnabledBreakInputSource \n
   *  AF1          BKCMP9E       LL_TIM_IsEnabledBreakInputSource \n
   *  AF1          BKCMP10E      LL_TIM_IsEnabledBreakInputSource \n
+  *  AF1          BKCMP11E      LL_TIM_IsEnabledBreakInputSource \n
+  *  AF1          BKCMP13E      LL_TIM_IsEnabledBreakInputSource \n
+  *  AF1          BKCMP14E      LL_TIM_IsEnabledBreakInputSource \n
   *  AF2          BK2INE        LL_TIM_IsEnabledBreakInputSource \n
+  *  AF2          BK2CMP1E      LL_TIM_IsEnabledBreakInputSource \n
+  *  AF2          BK2CMP2E      LL_TIM_IsEnabledBreakInputSource \n
+  *  AF2          BK2CMP3E      LL_TIM_IsEnabledBreakInputSource \n
+  *  AF2          BK2CMP4E      LL_TIM_IsEnabledBreakInputSource \n
   *  AF2          BK2CMP5E      LL_TIM_IsEnabledBreakInputSource \n
-  *  AF2          BK2CMP6E      LL_TIM_IsEnabledBreakInputSource
+  *  AF2          BK2CMP6E      LL_TIM_IsEnabledBreakInputSource \n
+  *  AF2          BK2CMP7E      LL_TIM_IsEnabledBreakInputSource \n
+  *  AF2          BK2CMP13E     LL_TIM_IsEnabledBreakInputSource \n
+  *  AF2          BK2CMP14E     LL_TIM_IsEnabledBreakInputSource
   * @param  timx Timer instance
   * @param  break_input This parameter can be one of the following values:
   *         @arg @ref LL_TIM_BREAK_INPUT_1
@@ -6924,22 +7433,42 @@ __STATIC_INLINE void LL_TIM_DisableBreakInputSource(TIM_TypeDef *timx, uint32_t 
   * @if COMP2
   *            LL_TIM_TIM1_BRK_COMP2_OUT (*)
   * @endif
+  * @if COMP3
+  *            LL_TIM_TIM1_BRK_COMP3_OUT (*)
+  *            LL_TIM_TIM1_BRK_COMP4_OUT (*)
+  * @endif
   *            LL_TIM_TIM1_BRK_TIM8_BKIN
   *            LL_TIM_TIM1_BRK_TIM15_BKIN
   * @if TIM16
   *            LL_TIM_TIM1_BRK_TIM16_BKIN (*)
-  * @endif
-  * @if TIM17
   *            LL_TIM_TIM1_BRK_TIM17_BKIN (*)
   * @endif
+  * @if TIM20
+  *            LL_TIM_TIM1_BRK_TIM20_BKIN (*)
+  * @endif
+  * @if PLAY1
+  *            LL_TIM_TIM1_BRK_PLAY1_OUT0 (*)
+  *            LL_TIM_TIM1_BRK_PLAY1_OUT1 (*)
+  * @endif
   *
+  * @if TIM20
   *            . . BREAK2 can be a combination of the following values
   *            LL_TIM_TIM1_BRK2_GPIO
   *            LL_TIM_TIM1_BRK2_COMP1_OUT
   * @if COMP2
   *            LL_TIM_TIM1_BRK2_COMP2_OUT (*)
   * @endif
+  * @if COMP3
+  *            LL_TIM_TIM1_BRK2_COMP3_OUT (*)
+  *            LL_TIM_TIM1_BRK2_COMP4_OUT (*)
+  * @endif
   *            LL_TIM_TIM1_BRK2_TIM8_BKIN2
+  *            LL_TIM_TIM1_BRK2_TIM20_BKIN2 (*)
+  * @if PLAY1
+  *            LL_TIM_TIM1_BRK2_PLAY1_OUT2 (*)
+  *            LL_TIM_TIM1_BRK2_PLAY1_OUT3 (*)
+  * @endif
+  * @endif
   *
   *         TIM8: combination of the following values:
   *
@@ -6949,22 +7478,42 @@ __STATIC_INLINE void LL_TIM_DisableBreakInputSource(TIM_TypeDef *timx, uint32_t 
   * @if COMP2
   *            LL_TIM_TIM8_BRK_COMP2_OUT (*)
   * @endif
+  * @if COMP3
+  *            LL_TIM_TIM8_BRK_COMP3_OUT (*)
+  *            LL_TIM_TIM8_BRK_COMP4_OUT (*)
+  * @endif
   *            LL_TIM_TIM8_BRK_TIM1_BKIN
   *            LL_TIM_TIM8_BRK_TIM15_BKIN
   * @if TIM16
   *            LL_TIM_TIM8_BRK_TIM16_BKIN (*)
-  * @endif
-  * @if TIM17
   *            LL_TIM_TIM8_BRK_TIM17_BKIN (*)
   * @endif
+  * @if TIM20
+  *            LL_TIM_TIM8_BRK_TIM20_BKIN (*)
+  * @endif
+  * @if PLAY1
+  *            LL_TIM_TIM8_BRK_PLAY1_OUT0 (*)
+  *            LL_TIM_TIM8_BRK_PLAY1_OUT13 (*)
+  * @endif
   *
+  * @if TIM20
   *            . . BREAK2 can be a combination of the following values
   *            LL_TIM_TIM8_BRK2_GPIO
   *            LL_TIM_TIM8_BRK2_COMP1_OUT
   * @if COMP2
   *            LL_TIM_TIM8_BRK2_COMP2_OUT (*)
   * @endif
+  * @if COMP3
+  *            LL_TIM_TIM8_BRK2_COMP3_OUT (*)
+  *            LL_TIM_TIM8_BRK2_COMP4_OUT (*)
+  * @endif
   *            LL_TIM_TIM8_BRK2_TIM1_BKIN2
+  *            LL_TIM_TIM8_BRK2_TIM20_BKIN2 (*)
+  * @if PLAY1
+  *            LL_TIM_TIM8_BRK2_PLAY1_OUT2 (*)
+  *            LL_TIM_TIM8_BRK2_PLAY1_OUT15 (*)
+  * @endif
+  * @endif
   *
   *         TIM15: combination of the following values:
   *
@@ -6974,37 +7523,107 @@ __STATIC_INLINE void LL_TIM_DisableBreakInputSource(TIM_TypeDef *timx, uint32_t 
   * @if COMP2
   *            LL_TIM_TIM15_BRK_COMP2_OUT (*)
   * @endif
-  *           LL_TIM_TIM15_BRK_TIM1_BKIN
-  *           LL_TIM_TIM15_BRK_TIM8_BKIN
-  * @if TIM16
-  *           LL_TIM_TIM15_BRK_TIM16_BKIN (*)
+  * @if COMP3
+  *            LL_TIM_TIM15_BRK_COMP3_OUT (*)
+  *            LL_TIM_TIM15_BRK_COMP4_OUT (*)
   * @endif
-  * @if TIM17
-  *           LL_TIM_TIM15_BRK_TIM17_BKIN (*)
+  *            LL_TIM_TIM15_BRK_TIM1_BKIN
+  *            LL_TIM_TIM15_BRK_TIM8_BKIN
+  * @if TIM16
+  *            LL_TIM_TIM15_BRK_TIM16_BKIN (*)
+  *            LL_TIM_TIM15_BRK_TIM17_BKIN (*)
+  * @endif
+  * @if TIM20
+  *            LL_TIM_TIM15_BRK_TIM20_BKIN (*)
+  * @endif
+  * @if PLAY1
+  *            LL_TIM_TIM15_BRK_PLAY1_OUT4 (*)
+  *            LL_TIM_TIM15_BRK_PLAY1_OUT5 (*)
   * @endif
   *
   * @if TIM16
-  *        TIM16: combination of the following values: (**)
+  *         TIM16: combination of the following values: (**)
   *
   *            . . BREAK can be a combination of the following values
   *            LL_TIM_TIM16_BRK_GPIO
   *            LL_TIM_TIM16_BRK_COMP1_OUT
+  * @if COMP3
+  *            LL_TIM_TIM16_BRK_COMP2_OUT (*)
+  *            LL_TIM_TIM16_BRK_COMP3_OUT (*)
+  *            LL_TIM_TIM16_BRK_COMP4_OUT (*)
+  * @endif
   *            LL_TIM_TIM16_BRK_TIM1_BKIN
   *            LL_TIM_TIM16_BRK_TIM8_BKIN
   *            LL_TIM_TIM16_BRK_TIM15_BKIN
   *            LL_TIM_TIM16_BRK_TIM17_BKIN
+  * @if TIM20
+  *            LL_TIM_TIM16_BRK_TIM20_BKIN (*)
+  * @endif
+  * @if PLAY1
+  *            LL_TIM_TIM16_BRK_PLAY1_OUT4 (*)
+  *            LL_TIM_TIM16_BRK_PLAY1_OUT7 (*)
+  * @endif
   * @endif
   *
   * @if TIM17
-  *   TIM17: combination of the following values: (**)
+  *         TIM17: combination of the following values: (**)
   *
   *            . . BREAK can be a combination of the following values
   *            LL_TIM_TIM17_BRK_GPIO
   *            LL_TIM_TIM17_BRK_COMP1_OUT
+  * @if COMP3
+  *            LL_TIM_TIM17_BRK_COMP2_OUT (*)
+  *            LL_TIM_TIM17_BRK_COMP3_OUT (*)
+  *            LL_TIM_TIM17_BRK_COMP4_OUT (*)
+  * @endif
   *            LL_TIM_TIM17_BRK_TIM1_BKIN
   *            LL_TIM_TIM17_BRK_TIM8_BKIN
   *            LL_TIM_TIM17_BRK_TIM15_BKIN
   *            LL_TIM_TIM17_BRK_TIM16_BKIN
+  * @if TIM20
+  *            LL_TIM_TIM17_BRK_TIM20_BKIN (*)
+  * @endif
+  * @if PLAY1
+  *            LL_TIM_TIM17_BRK_PLAY1_OUT4 (*)
+  *            LL_TIM_TIM17_BRK_PLAY1_OUT12 (*)
+  * @endif
+  * @endif
+  *
+  * @if TIM20
+  *         TIM20: combination of the following values: (**)
+  *
+  *            . . BREAK can be a combination of the following values
+  *            LL_TIM_TIM20_BRK_GPIO
+  *            LL_TIM_TIM20_BRK_COMP1_OUT
+  * @if COMP3
+  *            LL_TIM_TIM20_BRK_COMP2_OUT (*)
+  *            LL_TIM_TIM20_BRK_COMP3_OUT (*)
+  *            LL_TIM_TIM20_BRK_COMP4_OUT (*)
+  * @endif
+  *            LL_TIM_TIM20_BRK_TIM1_BKIN
+  *            LL_TIM_TIM20_BRK_TIM8_BKIN
+  *            LL_TIM_TIM20_BRK_TIM15_BKIN
+  *            LL_TIM_TIM20_BRK_TIM16_BKIN
+  *            LL_TIM_TIM20_BRK_TIM17_BKIN
+  * @if PLAY1
+  *            LL_TIM_TIM20_BRK_PLAY1_OUT0 (*)
+  *            LL_TIM_TIM20_BRK_PLAY1_OUT9 (*)
+  * @endif
+  *
+  *            . . BREAK2 can be a combination of the following values
+  *            LL_TIM_TIM20_BRK2_GPIO
+  *            LL_TIM_TIM20_BRK2_COMP1_OUT
+  * @if COMP3
+  *            LL_TIM_TIM20_BRK2_COMP2_OUT (*)
+  *            LL_TIM_TIM20_BRK2_COMP3_OUT (*)
+  *            LL_TIM_TIM20_BRK2_COMP4_OUT (*)
+  * @endif
+  *            LL_TIM_TIM20_BRK2_TIM1_BKIN2
+  *            LL_TIM_TIM20_BRK2_TIM8_BKIN2
+  * @if PLAY1
+  *            LL_TIM_TIM20_BRK2_PLAY1_OUT2 (*)
+  *            LL_TIM_TIM20_BRK2_PLAY1_OUT11 (*)
+  * @endif
   * @endif
   *
   *         (*)  Value not defined in all devices.
@@ -7025,8 +7644,14 @@ __STATIC_INLINE uint32_t LL_TIM_IsEnabledBreakInputSource(const TIM_TypeDef *tim
   * @rmtoll
   *  AF1          BKINP         LL_TIM_SetBreakInputSourcePolarity \n
   *  AF1          BKCMP1P       LL_TIM_SetBreakInputSourcePolarity \n
+  *  AF1          BKCMP2P       LL_TIM_SetBreakInputSourcePolarity \n
+  *  AF1          BKCMP3P       LL_TIM_SetBreakInputSourcePolarity \n
+  *  AF1          BKCMP4P       LL_TIM_SetBreakInputSourcePolarity \n
   *  AF2          BK2INP        LL_TIM_SetBreakInputSourcePolarity \n
-  *  AF2          BK2CMP1P      LL_TIM_SetBreakInputSourcePolarity
+  *  AF2          BK2CMP1P      LL_TIM_SetBreakInputSourcePolarity \n
+  *  AF2          BK2CMP2P      LL_TIM_SetBreakInputSourcePolarity \n
+  *  AF2          BK2CMP3P      LL_TIM_SetBreakInputSourcePolarity \n
+  *  AF2          BK2CMP4P      LL_TIM_SetBreakInputSourcePolarity
   * @param  timx Timer instance
   * @param  break_input This parameter can be one of the following values:
   *         @arg @ref LL_TIM_BREAK_INPUT_1
@@ -7045,12 +7670,22 @@ __STATIC_INLINE uint32_t LL_TIM_IsEnabledBreakInputSource(const TIM_TypeDef *tim
   * @if COMP2
   *            LL_TIM_TIM1_BRK_COMP2_OUT (*)
   * @endif
+  * @if COMP3
+  *            LL_TIM_TIM1_BRK_COMP3_OUT (*)
+  *            LL_TIM_TIM1_BRK_COMP4_OUT (*)
+  * @endif
   *
+  * @if TIM20
   *            . . BREAK2 can be one of the following values
   *            LL_TIM_TIM1_BRK2_GPIO
   *            LL_TIM_TIM1_BRK2_COMP1_OUT
   * @if COMP2
   *            LL_TIM_TIM1_BRK2_COMP2_OUT (*)
+  * @endif
+  * @if COMP3
+  *            LL_TIM_TIM1_BRK2_COMP3_OUT (*)
+  *            LL_TIM_TIM1_BRK2_COMP4_OUT (*)
+  * @endif
   * @endif
   *
   *         TIM8: one of the following values:
@@ -7061,12 +7696,22 @@ __STATIC_INLINE uint32_t LL_TIM_IsEnabledBreakInputSource(const TIM_TypeDef *tim
   * @if COMP2
   *            LL_TIM_TIM8_BRK_COMP2_OUT (*)
   * @endif
+  * @if COMP3
+  *            LL_TIM_TIM8_BRK_COMP3_OUT (*)
+  *            LL_TIM_TIM8_BRK_COMP4_OUT (*)
+  * @endif
   *
+  * @if TIM20
   *            . . BREAK2 can be one of the following values
   *            LL_TIM_TIM8_BRK2_GPIO
   *            LL_TIM_TIM8_BRK2_COMP1_OUT
   * @if COMP2
   *            LL_TIM_TIM8_BRK2_COMP2_OUT (*)
+  * @endif
+  * @if COMP3
+  *            LL_TIM_TIM8_BRK2_COMP3_OUT (*)
+  *            LL_TIM_TIM8_BRK2_COMP4_OUT (*)
+  * @endif
   * @endif
   *
   *         TIM15: one of the following values:
@@ -7077,21 +7722,57 @@ __STATIC_INLINE uint32_t LL_TIM_IsEnabledBreakInputSource(const TIM_TypeDef *tim
   * @if COMP2
   *            LL_TIM_TIM15_BRK_COMP2_OUT (*)
   * @endif
+  * @if COMP3
+  *            LL_TIM_TIM15_BRK_COMP3_OUT (*)
+  *            LL_TIM_TIM15_BRK_COMP4_OUT (*)
+  * @endif
   *
   * @if TIM16
-  *        TIM16: one of the following values: (**)
+  *         TIM16: one of the following values: (**)
   *
   *            . . BREAK can be one of the following values
   *            LL_TIM_TIM16_BRK_GPIO
   *            LL_TIM_TIM16_BRK_COMP1_OUT
+  * @if COMP3
+  *            LL_TIM_TIM16_BRK_COMP2_OUT (*)
+  *            LL_TIM_TIM16_BRK_COMP3_OUT (*)
+  *            LL_TIM_TIM16_BRK_COMP4_OUT (*)
+  * @endif
   * @endif
   *
   * @if TIM17
-  *   TIM17: one of the following values: (**)
+  *         TIM17: one of the following values: (**)
   *
   *            . . BREAK can be one of the following values
   *            LL_TIM_TIM17_BRK_GPIO
   *            LL_TIM_TIM17_BRK_COMP1_OUT
+  * @if COMP3
+  *            LL_TIM_TIM17_BRK_COMP2_OUT (*)
+  *            LL_TIM_TIM17_BRK_COMP3_OUT (*)
+  *            LL_TIM_TIM17_BRK_COMP4_OUT (*)
+  * @endif
+  * @endif
+  *
+  * @if TIM20
+  *         TIM20: one of the following values: (**)
+  *
+  *            . . BREAK can be one of the following values
+  *            LL_TIM_TIM20_BRK_GPIO
+  *            LL_TIM_TIM20_BRK_COMP1_OUT
+  * @if COMP3
+  *            LL_TIM_TIM20_BRK_COMP2_OUT (*)
+  *            LL_TIM_TIM20_BRK_COMP3_OUT (*)
+  *            LL_TIM_TIM20_BRK_COMP4_OUT (*)
+  * @endif
+  *
+  *            . . BREAK2 can be one of the following values
+  *            LL_TIM_TIM20_BRK2_GPIO
+  *            LL_TIM_TIM20_BRK2_COMP1_OUT
+  * @if COMP3
+  *            LL_TIM_TIM20_BRK2_COMP2_OUT (*)
+  *            LL_TIM_TIM20_BRK2_COMP3_OUT (*)
+  *            LL_TIM_TIM20_BRK2_COMP4_OUT (*)
+  * @endif
   * @endif
   *
   *         (*)  Value not defined in all devices.
@@ -7107,8 +7788,8 @@ __STATIC_INLINE void LL_TIM_SetBreakInputSourcePolarity(TIM_TypeDef *timx, uint3
                                                         uint32_t polarity)
 {
   __IO uint32_t *pReg = (__IO uint32_t *)((uint32_t)((uint32_t)(&timx->AF1) + (break_input << 2)));
-  STM32_MODIFY_REG(*pReg, (TIM_AF1_BKINP << LL_TIM_TIM_POSITION_BRK_SOURCE(source)), \
-                   (polarity << LL_TIM_TIM_POSITION_BRK_SOURCE(source)));
+  STM32_MODIFY_REG(*pReg, (TIM_AF1_BKINP << LL_TIM_POSITION_BRK_SOURCE(source)), \
+                   (polarity << LL_TIM_POSITION_BRK_SOURCE(source)));
 }
 
 /**
@@ -7116,8 +7797,14 @@ __STATIC_INLINE void LL_TIM_SetBreakInputSourcePolarity(TIM_TypeDef *timx, uint3
   * @rmtoll
   *  AF1          BKINP         LL_TIM_GetBreakInputSourcePolarity \n
   *  AF1          BKCMP1P       LL_TIM_GetBreakInputSourcePolarity \n
+  *  AF1          BKCMP2P       LL_TIM_GetBreakInputSourcePolarity \n
+  *  AF1          BKCMP3P       LL_TIM_GetBreakInputSourcePolarity \n
+  *  AF1          BKCMP4P       LL_TIM_GetBreakInputSourcePolarity \n
   *  AF2          BK2INP        LL_TIM_GetBreakInputSourcePolarity \n
-  *  AF2          BK2CMP1P      LL_TIM_GetBreakInputSourcePolarity
+  *  AF2          BK2CMP1P      LL_TIM_GetBreakInputSourcePolarity \n
+  *  AF2          BK2CMP2P      LL_TIM_GetBreakInputSourcePolarity \n
+  *  AF2          BK2CMP3P      LL_TIM_GetBreakInputSourcePolarity \n
+  *  AF2          BK2CMP4P      LL_TIM_GetBreakInputSourcePolarity
   * @param  timx Timer instance
   * @param  break_input This parameter can be one of the following values:
   *         @arg @ref LL_TIM_BREAK_INPUT_1
@@ -7136,12 +7823,22 @@ __STATIC_INLINE void LL_TIM_SetBreakInputSourcePolarity(TIM_TypeDef *timx, uint3
   * @if COMP2
   *            LL_TIM_TIM1_BRK_COMP2_OUT (*)
   * @endif
+  * @if COMP3
+  *            LL_TIM_TIM1_BRK_COMP3_OUT (*)
+  *            LL_TIM_TIM1_BRK_COMP4_OUT (*)
+  * @endif
   *
+  * @if TIM20
   *            . . BREAK2 can be one of the following values
   *            LL_TIM_TIM1_BRK2_GPIO
   *            LL_TIM_TIM1_BRK2_COMP1_OUT
   * @if COMP2
   *            LL_TIM_TIM1_BRK2_COMP2_OUT (*)
+  * @endif
+  * @if COMP3
+  *            LL_TIM_TIM1_BRK2_COMP3_OUT (*)
+  *            LL_TIM_TIM1_BRK2_COMP4_OUT (*)
+  * @endif
   * @endif
   *
   *         TIM8: one of the following values:
@@ -7152,12 +7849,22 @@ __STATIC_INLINE void LL_TIM_SetBreakInputSourcePolarity(TIM_TypeDef *timx, uint3
   * @if COMP2
   *            LL_TIM_TIM8_BRK_COMP2_OUT (*)
   * @endif
+  * @if COMP3
+  *            LL_TIM_TIM8_BRK_COMP3_OUT (*)
+  *            LL_TIM_TIM8_BRK_COMP4_OUT (*)
+  * @endif
   *
+  * @if TIM20
   *            . . BREAK2 can be one of the following values
   *            LL_TIM_TIM8_BRK2_GPIO
   *            LL_TIM_TIM8_BRK2_COMP1_OUT
   * @if COMP2
   *            LL_TIM_TIM8_BRK2_COMP2_OUT (*)
+  * @endif
+  * @if COMP3
+  *            LL_TIM_TIM8_BRK2_COMP3_OUT (*)
+  *            LL_TIM_TIM8_BRK2_COMP4_OUT (*)
+  * @endif
   * @endif
   *
   *         TIM15: one of the following values:
@@ -7168,21 +7875,57 @@ __STATIC_INLINE void LL_TIM_SetBreakInputSourcePolarity(TIM_TypeDef *timx, uint3
   * @if COMP2
   *            LL_TIM_TIM15_BRK_COMP2_OUT (*)
   * @endif
+  * @if COMP3
+  *            LL_TIM_TIM15_BRK_COMP3_OUT (*)
+  *            LL_TIM_TIM15_BRK_COMP4_OUT (*)
+  * @endif
   *
   * @if TIM16
-  *        TIM16: one of the following values: (**)
+  *         TIM16: one of the following values: (**)
   *
   *            . . BREAK can be one of the following values
   *            LL_TIM_TIM16_BRK_GPIO
   *            LL_TIM_TIM16_BRK_COMP1_OUT
+  * @if COMP3
+  *            LL_TIM_TIM16_BRK_COMP2_OUT (*)
+  *            LL_TIM_TIM16_BRK_COMP3_OUT (*)
+  *            LL_TIM_TIM16_BRK_COMP4_OUT (*)
+  * @endif
   * @endif
   *
   * @if TIM17
-  *   TIM17: one of the following values: (**)
+  *         TIM17: one of the following values: (**)
   *
   *            . . BREAK can be one of the following values
   *            LL_TIM_TIM17_BRK_GPIO
   *            LL_TIM_TIM17_BRK_COMP1_OUT
+  * @if COMP3
+  *            LL_TIM_TIM17_BRK_COMP2_OUT (*)
+  *            LL_TIM_TIM17_BRK_COMP3_OUT (*)
+  *            LL_TIM_TIM17_BRK_COMP4_OUT (*)
+  * @endif
+  * @endif
+  *
+  * @if TIM20
+  *         TIM20: one of the following values: (**)
+  *
+  *            . . BREAK can be one of the following values
+  *            LL_TIM_TIM20_BRK_GPIO
+  *            LL_TIM_TIM20_BRK_COMP1_OUT
+  * @if COMP3
+  *            LL_TIM_TIM20_BRK_COMP2_OUT (*)
+  *            LL_TIM_TIM20_BRK_COMP3_OUT (*)
+  *            LL_TIM_TIM20_BRK_COMP4_OUT (*)
+  * @endif
+  *
+  *            . . BREAK2 can be one of the following values
+  *            LL_TIM_TIM20_BRK2_GPIO
+  *            LL_TIM_TIM20_BRK2_COMP1_OUT
+  * @if COMP3
+  *            LL_TIM_TIM20_BRK2_COMP2_OUT (*)
+  *            LL_TIM_TIM20_BRK2_COMP3_OUT (*)
+  *            LL_TIM_TIM20_BRK2_COMP4_OUT (*)
+  * @endif
   * @endif
   *
   *         (*)  Value not defined in all devices.
@@ -7198,7 +7941,7 @@ __STATIC_INLINE uint32_t LL_TIM_GetBreakInputSourcePolarity(const TIM_TypeDef *t
                                                             uint32_t source)
 {
   const __IO uint32_t *pReg = (__IO uint32_t *)((uint32_t)((uint32_t)(&timx->AF1) + (break_input << 2)));
-  uint32_t bitfield = TIM_AF1_BKINP << LL_TIM_TIM_POSITION_BRK_SOURCE(source);
+  uint32_t bitfield = TIM_AF1_BKINP << LL_TIM_POSITION_BRK_SOURCE(source);
   return ((STM32_READ_BIT(*pReg, bitfield) == bitfield) ? \
           LL_TIM_BREAK_INPUT_SRC_INVERTED : LL_TIM_BREAK_INPUT_SRC_NONINVERTED);
 }
@@ -7802,51 +8545,129 @@ __STATIC_INLINE void LL_TIM_ConfigEncoderIndex(TIM_TypeDef *timx, uint32_t confi
   *         The description below summarizes specific "Timer Instance" and "OCRef clear input source"
   *         parameter possibilities:
   *
-  *         TIM1: combination of the following values:
+  *         TIM1: one of the following values:
   *            LL_TIM_TIM1_OCREF_CLR_INT_ETR
   *            LL_TIM_TIM1_OCREF_CLR_INT_COMP1_OUT
   * @if COMP2
   *            LL_TIM_TIM1_OCREF_CLR_INT_COMP2_OUT (*)
   * @endif
+  * @if COMP3
+  *            LL_TIM_TIM1_OCREF_CLR_INT_COMP3_OUT (*)
+  *            LL_TIM_TIM1_OCREF_CLR_INT_COMP4_OUT (*)
+  * @endif
+  * @if PLAY1
+  *            LL_TIM_TIM1_OCREF_CLR_INT_PLAY1_OUT0 (*)
+  *            LL_TIM_TIM1_OCREF_CLR_INT_PLAY1_OUT6 (*)
+  * @endif
   *
-  *         TIM2: combination of the following values:
+  *         TIM2: one of the following values:
   *            LL_TIM_TIM2_OCREF_CLR_INT_ETR
   *            LL_TIM_TIM2_OCREF_CLR_INT_COMP1_OUT
   * @if COMP2
   *            LL_TIM_TIM2_OCREF_CLR_INT_COMP2_OUT (*)
   * @endif
+  * @if COMP3
+  *            LL_TIM_TIM2_OCREF_CLR_INT_COMP3_OUT (*)
+  *            LL_TIM_TIM2_OCREF_CLR_INT_COMP4_OUT (*)
+  * @endif
+  * @if PLAY1
+  *            LL_TIM_TIM2_OCREF_CLR_INT_PLAY1_OUT15 (*)
+  *            LL_TIM_TIM2_OCREF_CLR_INT_PLAY1_OUT7 (*)
+  * @endif
   *
-  *         TIM3: combination of the following values: (**)
+  *         TIM3: one of the following values: (**)
   *            LL_TIM_TIM3_OCREF_CLR_INT_ETR
   *            LL_TIM_TIM3_OCREF_CLR_INT_COMP1_OUT
+  * @if COMP3
+  *            LL_TIM_TIM3_OCREF_CLR_INT_COMP2_OUT (*)
+  *            LL_TIM_TIM3_OCREF_CLR_INT_COMP3_OUT (*)
+  *            LL_TIM_TIM3_OCREF_CLR_INT_COMP4_OUT (*)
+  * @endif
+  * @if PLAY1
+  *            LL_TIM_TIM3_OCREF_CLR_INT_PLAY1_OUT3 (*)
+  *            LL_TIM_TIM3_OCREF_CLR_INT_PLAY1_OUT2 (*)
+  * @endif
   *
-  *         TIM4: combination of the following values: (**)
+  *         TIM4: one of the following values: (**)
   *            LL_TIM_TIM4_OCREF_CLR_INT_ETR
   *            LL_TIM_TIM4_OCREF_CLR_INT_COMP1_OUT
   *
-  *         TIM5: combination of the following values: (**)
+  *         TIM5: one of the following values: (**)
   *            LL_TIM_TIM5_OCREF_CLR_INT_ETR
   *            LL_TIM_TIM5_OCREF_CLR_INT_COMP1_OUT
+  * @if COMP3
+  *            LL_TIM_TIM5_OCREF_CLR_INT_COMP2_OUT (*)
+  *            LL_TIM_TIM5_OCREF_CLR_INT_COMP3_OUT (*)
+  *            LL_TIM_TIM5_OCREF_CLR_INT_COMP4_OUT (*)
+  * @endif
   *
-  *         TIM8: combination of the following values:
+  *         TIM8: one of the following values:
   *            LL_TIM_TIM8_OCREF_CLR_INT_ETR
   *            LL_TIM_TIM8_OCREF_CLR_INT_COMP1_OUT
   * @if COMP2
   *            LL_TIM_TIM8_OCREF_CLR_INT_COMP2_OUT (*)
   * @endif
+  * @if COMP3
+  *            LL_TIM_TIM8_OCREF_CLR_INT_COMP3_OUT (*)
+  *            LL_TIM_TIM8_OCREF_CLR_INT_COMP4_OUT (*)
+  * @endif
+  * @if PLAY1
+  *            LL_TIM_TIM8_OCREF_CLR_INT_PLAY1_OUT5 (*)
+  *            LL_TIM_TIM8_OCREF_CLR_INT_PLAY1_OUT14 (*)
+  * @endif
   *
-  *         TIM15: combination of the following values:
+  *         TIM15: one of the following values:
   *            LL_TIM_TIM15_OCREF_CLR_INT_COMP1_OUT
   * @if COMP2
   *            LL_TIM_TIM15_OCREF_CLR_INT_COMP2_OUT (*)
   * @endif
+  * @if COMP3
+  *            LL_TIM_TIM15_OCREF_CLR_INT_COMP3_OUT (*)
+  *            LL_TIM_TIM15_OCREF_CLR_INT_COMP4_OUT (*)
+  * @endif
+  * @if PLAY1
+  *            LL_TIM_TIM15_OCREF_CLR_INT_PLAY1_OUT7 (*)
+  *            LL_TIM_TIM15_OCREF_CLR_INT_PLAY1_OUT8 (*)
+  * @endif
   *
   * @if TIM16
-  *         TIM16: combination of the following values:
+  *         TIM16: one of the following values: (**)
   *            LL_TIM_TIM16_OCREF_CLR_INT_COMP1_OUT
+  * @if COMP3
+  *            LL_TIM_TIM16_OCREF_CLR_INT_COMP2_OUT (*)
+  *            LL_TIM_TIM16_OCREF_CLR_INT_COMP3_OUT (*)
+  *            LL_TIM_TIM16_OCREF_CLR_INT_COMP4_OUT (*)
+  * @endif
+  * @if PLAY1
+  *            LL_TIM_TIM16_OCREF_CLR_INT_PLAY1_OUT9 (*)
+  *            LL_TIM_TIM16_OCREF_CLR_INT_PLAY1_OUT10 (*)
+  * @endif
   *
-  *         TIM17: combination of the following values:
+  *         TIM17: one of the following values: (**)
   *            LL_TIM_TIM17_OCREF_CLR_INT_COMP1_OUT
+  * @if COMP3
+  *            LL_TIM_TIM17_OCREF_CLR_INT_COMP2_OUT (*)
+  *            LL_TIM_TIM17_OCREF_CLR_INT_COMP3_OUT (*)
+  *            LL_TIM_TIM17_OCREF_CLR_INT_COMP4_OUT (*)
+  * @endif
+  * @if PLAY1
+  *            LL_TIM_TIM17_OCREF_CLR_INT_PLAY1_OUT11 (*)
+  *            LL_TIM_TIM17_OCREF_CLR_INT_PLAY1_OUT13 (*)
+  * @endif
+  * @endif
+  *
+  * @if TIM20
+  *         TIM20: one of the following values: (**)
+  *            LL_TIM_TIM20_OCREF_CLR_INT_COMP1_OUT
+  * @if COMP3
+  *            LL_TIM_TIM20_OCREF_CLR_INT_COMP2_OUT (*)
+  *            LL_TIM_TIM20_OCREF_CLR_INT_COMP3_OUT (*)
+  *            LL_TIM_TIM20_OCREF_CLR_INT_COMP4_OUT (*)
+  * @endif
+  * @if PLAY1
+  *            LL_TIM_TIM20_OCREF_CLR_INT_PLAY1_OUT12 (*)
+  *            LL_TIM_TIM20_OCREF_CLR_INT_PLAY1_OUT1 (*)
+  * @endif
   * @endif
   *
   *         (*)  Value not defined in all devices.
@@ -7871,51 +8692,129 @@ __STATIC_INLINE void LL_TIM_SetOCRefClearInputSource(TIM_TypeDef *timx, uint32_t
   *         The description below summarizes specific "Timer Instance" and "OCRef clear input source"
   *         parameter possibilities:
   *
-  *         TIM1: combination of the following values:
+  *         TIM1: one of the following values:
   *            LL_TIM_TIM1_OCREF_CLR_INT_ETR
   *            LL_TIM_TIM1_OCREF_CLR_INT_COMP1_OUT
   * @if COMP2
   *            LL_TIM_TIM1_OCREF_CLR_INT_COMP2_OUT (*)
   * @endif
+  * @if COMP3
+  *            LL_TIM_TIM1_OCREF_CLR_INT_COMP3_OUT (*)
+  *            LL_TIM_TIM1_OCREF_CLR_INT_COMP4_OUT (*)
+  * @endif
+  * @if PLAY1
+  *            LL_TIM_TIM1_OCREF_CLR_INT_PLAY1_OUT0 (*)
+  *            LL_TIM_TIM1_OCREF_CLR_INT_PLAY1_OUT6 (*)
+  * @endif
   *
-  *         TIM2: combination of the following values:
+  *         TIM2: one of the following values:
   *            LL_TIM_TIM2_OCREF_CLR_INT_ETR
   *            LL_TIM_TIM2_OCREF_CLR_INT_COMP1_OUT
   * @if COMP2
   *            LL_TIM_TIM2_OCREF_CLR_INT_COMP2_OUT (*)
   * @endif
+  * @if COMP3
+  *            LL_TIM_TIM2_OCREF_CLR_INT_COMP3_OUT (*)
+  *            LL_TIM_TIM2_OCREF_CLR_INT_COMP4_OUT (*)
+  * @endif
+  * @if PLAY1
+  *            LL_TIM_TIM2_OCREF_CLR_INT_PLAY1_OUT15 (*)
+  *            LL_TIM_TIM2_OCREF_CLR_INT_PLAY1_OUT7 (*)
+  * @endif
   *
-  *         TIM3: combination of the following values: (**)
+  *         TIM3: one of the following values: (**)
   *            LL_TIM_TIM3_OCREF_CLR_INT_ETR
   *            LL_TIM_TIM3_OCREF_CLR_INT_COMP1_OUT
+  * @if COMP3
+  *            LL_TIM_TIM3_OCREF_CLR_INT_COMP2_OUT (*)
+  *            LL_TIM_TIM3_OCREF_CLR_INT_COMP3_OUT (*)
+  *            LL_TIM_TIM3_OCREF_CLR_INT_COMP4_OUT (*)
+  * @endif
+  * @if PLAY1
+  *            LL_TIM_TIM3_OCREF_CLR_INT_PLAY1_OUT3 (*)
+  *            LL_TIM_TIM3_OCREF_CLR_INT_PLAY1_OUT2 (*)
+  * @endif
   *
-  *         TIM4: combination of the following values: (**)
+  *         TIM4: one of the following values: (**)
   *            LL_TIM_TIM4_OCREF_CLR_INT_ETR
   *            LL_TIM_TIM4_OCREF_CLR_INT_COMP1_OUT
   *
-  *         TIM5: combination of the following values: (**)
+  *         TIM5: one of the following values: (**)
   *            LL_TIM_TIM5_OCREF_CLR_INT_ETR
   *            LL_TIM_TIM5_OCREF_CLR_INT_COMP1_OUT
+  * @if COMP3
+  *            LL_TIM_TIM5_OCREF_CLR_INT_COMP2_OUT (*)
+  *            LL_TIM_TIM5_OCREF_CLR_INT_COMP3_OUT (*)
+  *            LL_TIM_TIM5_OCREF_CLR_INT_COMP4_OUT (*)
+  * @endif
   *
-  *         TIM8: combination of the following values:
+  *         TIM8: one of the following values:
   *            LL_TIM_TIM8_OCREF_CLR_INT_ETR
   *            LL_TIM_TIM8_OCREF_CLR_INT_COMP1_OUT
   * @if COMP2
   *            LL_TIM_TIM8_OCREF_CLR_INT_COMP2_OUT (*)
   * @endif
+  * @if COMP3
+  *            LL_TIM_TIM8_OCREF_CLR_INT_COMP3_OUT (*)
+  *            LL_TIM_TIM8_OCREF_CLR_INT_COMP4_OUT (*)
+  * @endif
+  * @if PLAY1
+  *            LL_TIM_TIM8_OCREF_CLR_INT_PLAY1_OUT5 (*)
+  *            LL_TIM_TIM8_OCREF_CLR_INT_PLAY1_OUT14 (*)
+  * @endif
   *
-  *         TIM15: combination of the following values:
+  *         TIM15: one of the following values:
   *            LL_TIM_TIM15_OCREF_CLR_INT_COMP1_OUT
   * @if COMP2
   *            LL_TIM_TIM15_OCREF_CLR_INT_COMP2_OUT (*)
   * @endif
+  * @if COMP3
+  *            LL_TIM_TIM15_OCREF_CLR_INT_COMP3_OUT (*)
+  *            LL_TIM_TIM15_OCREF_CLR_INT_COMP4_OUT (*)
+  * @endif
+  * @if PLAY1
+  *            LL_TIM_TIM15_OCREF_CLR_INT_PLAY1_OUT7 (*)
+  *            LL_TIM_TIM15_OCREF_CLR_INT_PLAY1_OUT8 (*)
+  * @endif
   *
   * @if TIM16
-  *         TIM16: combination of the following values:
+  *         TIM16: one of the following values: (**)
   *            LL_TIM_TIM16_OCREF_CLR_INT_COMP1_OUT
+  * @if COMP3
+  *            LL_TIM_TIM16_OCREF_CLR_INT_COMP2_OUT (*)
+  *            LL_TIM_TIM16_OCREF_CLR_INT_COMP3_OUT (*)
+  *            LL_TIM_TIM16_OCREF_CLR_INT_COMP4_OUT (*)
+  * @endif
+  * @if PLAY1
+  *            LL_TIM_TIM16_OCREF_CLR_INT_PLAY1_OUT9 (*)
+  *            LL_TIM_TIM16_OCREF_CLR_INT_PLAY1_OUT10 (*)
+  * @endif
   *
-  *         TIM17: combination of the following values:
+  *         TIM17: one of the following values: (**)
   *            LL_TIM_TIM17_OCREF_CLR_INT_COMP1_OUT
+  * @if COMP3
+  *            LL_TIM_TIM17_OCREF_CLR_INT_COMP2_OUT (*)
+  *            LL_TIM_TIM17_OCREF_CLR_INT_COMP3_OUT (*)
+  *            LL_TIM_TIM17_OCREF_CLR_INT_COMP4_OUT (*)
+  * @endif
+  * @if PLAY1
+  *            LL_TIM_TIM17_OCREF_CLR_INT_PLAY1_OUT11 (*)
+  *            LL_TIM_TIM17_OCREF_CLR_INT_PLAY1_OUT13 (*)
+  * @endif
+  * @endif
+  *
+  * @if TIM20
+  *         TIM20: one of the following values: (**)
+  *            LL_TIM_TIM20_OCREF_CLR_INT_COMP1_OUT
+  * @if COMP3
+  *            LL_TIM_TIM20_OCREF_CLR_INT_COMP2_OUT (*)
+  *            LL_TIM_TIM20_OCREF_CLR_INT_COMP3_OUT (*)
+  *            LL_TIM_TIM20_OCREF_CLR_INT_COMP4_OUT (*)
+  * @endif
+  * @if PLAY1
+  *            LL_TIM_TIM20_OCREF_CLR_INT_PLAY1_OUT12 (*)
+  *            LL_TIM_TIM20_OCREF_CLR_INT_PLAY1_OUT1 (*)
+  * @endif
   * @endif
   *
   *         (*)  Value not defined in all devices.

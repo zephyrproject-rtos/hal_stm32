@@ -16,8 +16,8 @@
   */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef STM32C5xx_HAL_HCD_H
-#define STM32C5xx_HAL_HCD_H
+#ifndef STM32C5XX_HAL_HCD_H
+#define STM32C5XX_HAL_HCD_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -35,6 +35,19 @@ extern "C" {
 /** @defgroup HCD USB Host controller driver
   * @{
   */
+/* Private macros ------------------------------------------------------------*/
+/** @defgroup PCD_Private_Macros Private Macros
+  * @{
+  */
+/*! Macro to get the min value */
+#define HCD_MIN(a,b) (((a) < (b)) ? (a) : (b))
+
+/*! Macro to get the max value */
+#define HCD_MAX(a,b) (((a) > (b)) ? (a) : (b))
+/**
+  * @}
+  */
+
 /* Private constants ---------------------------------------------------------*/
 /** @defgroup HCD_Private_Constants Private Constants
   * @{
@@ -53,13 +66,38 @@ extern "C" {
 #define USE_HAL_HCD_USB_EP_TYPE_ISOC                                         1U
 #endif /* USE_HAL_HCD_USB_EP_TYPE_ISOC */
 
-
 /**
   * @brief  USE HAL HCD USB Channel Double buffer.
   */
 #ifndef USE_HAL_HCD_USB_DOUBLE_BUFFER
 #define USE_HAL_HCD_USB_DOUBLE_BUFFER                                        1U
 #endif /* USE_HAL_HCD_USB_DOUBLE_BUFFER */
+/**
+  * @}
+  */
+
+/* Exported constants --------------------------------------------------------*/
+/** @defgroup HCD_Exported_Constants Exported Constants
+  * @{
+  */
+
+#if defined (USE_HAL_HCD_GET_LAST_ERRORS) && (USE_HAL_HCD_GET_LAST_ERRORS == 1)
+/** @defgroup HCD_Error_Codes Error Codes
+  * @{
+  */
+/*!< No error */
+#define HAL_HCD_ERROR_NONE                                               (0UL)
+/*!< HAL HCD CHANNEL transfer ERROR */
+#define HAL_HCD_ERROR_CHANNEL_TRANSFER                                   (1UL << 0U)
+/*!< HAL HCD CHANNEL babble ERROR */
+#define HAL_HCD_ERROR_CHANNEL_BABBLE                                     (1UL << 1U)
+/*!< HAL HCD CHANNEL DATA Toggle ERROR */
+#define HAL_HCD_ERROR_CHANNEL_DATA_TOGGLE                                (1UL << 2U)
+/**
+  * @}
+  */
+#endif /* USE_HAL_HCD_GET_LAST_ERRORS */
+
 /**
   * @}
   */
@@ -74,9 +112,7 @@ extern "C" {
   */
 typedef enum
 {
-#if defined (USB_DRD_FS)
-  HAL_HCD_DRD_FS = USB_DRD_FS_BASE,     /*!< USB OTG DRD Instance */
-#endif /* defined (USB_DRD_FS) */
+  HAL_HCD_DRD_FS = USB_DRD_FS_BASE, /*!< USB DRD FS Instance */
 } hal_hcd_t;
 
 
@@ -85,7 +121,7 @@ typedef enum
   */
 typedef enum
 {
-  HAL_HCD_STATE_RESET  = 0x00U,         /*!< HAL HCD STATE RESET  */
+  HAL_HCD_STATE_RESET  = 0U,            /*!< HAL HCD STATE RESET  */
   HAL_HCD_STATE_INIT   = (1U << 31U),   /*!< HAL HCD STATE INIT   */
   HAL_HCD_STATE_IDLE   = (1U << 30U),   /*!< HAL HCD STATE IDLE   */
   HAL_HCD_STATE_ACTIVE = (1U << 29U),   /*!< HAL HCD STATE ACTIVE */
@@ -118,11 +154,9 @@ typedef enum
   HAL_HCD_CHANNEL_STATE_HALTED     = (1U << 28U),   /*!< HAL HCD CHANNEL STATE HALTED     */
   HAL_HCD_CHANNEL_STATE_ACK        = (1U << 27U),   /*!< HAL HCD CHANNEL STATE ACK        */
   HAL_HCD_CHANNEL_STATE_NAK        = (1U << 26U),   /*!< HAL HCD CHANNEL STATE NAK        */
-  HAL_HCD_CHANNEL_STATE_NYET       = (1U << 25U),   /*!< HAL HCD CHANNEL STATE NYET       */
-  HAL_HCD_CHANNEL_STATE_STALL      = (1U << 24U),   /*!< HAL HCD CHANNEL STATE STALL      */
+  HAL_HCD_CHANNEL_STATE_STALL      = (1U << 25U),   /*!< HAL HCD CHANNEL STATE STALL      */
+  HAL_HCD_CHANNEL_STATE_XFR        = (1U << 24U),   /*!< HAL HCD CHANNEL STATE XFR        */
   HAL_HCD_CHANNEL_STATE_XACTERR    = (1U << 23U),   /*!< HAL HCD CHANNEL STATE XACTERR    */
-  HAL_HCD_CHANNEL_STATE_BBLERR     = (1U << 22U),   /*!< HAL HCD CHANNEL STATE BBLERR     */
-  HAL_HCD_CHANNEL_STATE_DATATGLERR = (1U << 21U),   /*!< HAL HCD CHANNEL STATE DATATGLERR */
 } hal_hcd_channel_state_t;
 
 
@@ -181,7 +215,6 @@ typedef enum
 {
   HAL_HCD_DEVICE_SPEED_LS    = USB_CORE_DEVICE_SPEED_LS,     /*!< HAL HCD DEVICE SPEED LOW   */
   HAL_HCD_DEVICE_SPEED_FS    = USB_CORE_DEVICE_SPEED_FS,     /*!< HAL HCD DEVICE SPEED FULL  */
-  HAL_HCD_DEVICE_SPEED_HS    = USB_CORE_DEVICE_SPEED_HS,     /*!< HAL HCD DEVICE SPEED HIGH  */
   HAL_HCD_DEVICE_SPEED_ERROR = USB_CORE_DEVICE_SPEED_ERROR   /*!< HAL HCD DEVICE SPEED ERROR */
 } hal_hcd_device_speed_t;
 
@@ -191,7 +224,6 @@ typedef enum
   */
 typedef enum
 {
-  HAL_HCD_PORT_SPEED_HS = USB_CORE_PORT_SPEED_HS,   /*!< HAL HCD PORT SPEED HIGH */
   HAL_HCD_PORT_SPEED_FS = USB_CORE_PORT_SPEED_FS,   /*!< HAL HCD PORT SPEED FULL */
   HAL_HCD_PORT_SPEED_LS = USB_CORE_PORT_SPEED_LS,   /*!< HAL HCD PORT SPEED LOW  */
 } hal_hcd_port_speed_t;
@@ -202,9 +234,7 @@ typedef enum
   */
 typedef enum
 {
-  HAL_HCD_PHY_EXTERNAL_ULPI = USB_CORE_PHY_EXTERNAL_ULPI,   /*!< HAL HCD ULPI External PHY    */
   HAL_HCD_PHY_EMBEDDED_FS   = USB_CORE_PHY_EMBEDDED_FS,     /*!< HAL HCD EMBEDDED FS PHY      */
-  HAL_HCD_PHY_EMBEDDED_HS   = USB_CORE_PHY_EMBEDDED_HS,     /*!< HAL HCD EMBEDDED HS UTMI PHY */
 } hal_hcd_phy_module_t;
 
 
@@ -342,6 +372,11 @@ typedef void (*hal_hcd_cb_t)(hal_hcd_handle_t *hhcd);
 typedef void (*hal_hcd_ch_notify_urb_change_cb_t)(hal_hcd_handle_t *hhcd, hal_hcd_channel_t ch_num,
                                                   hal_hcd_channel_urb_state_t urb_state);
 
+/**
+  * @brief  HAL USB HCD Host Channel Callback pointer definition
+  */
+typedef void (*hal_hcd_ch_cb_t)(hal_hcd_handle_t *hhcd, hal_hcd_channel_t ch_num);
+
 #endif /* (USE_HAL_HCD_REGISTER_CALLBACKS) && (USE_HAL_HCD_REGISTER_CALLBACKS == 1U) */
 
 /**
@@ -380,35 +415,10 @@ struct hal_hcd_handle_s
   hal_hcd_cb_t p_port_resume_cb;                                /*!< USB HCD Port Resume callback                     */
   hal_hcd_cb_t p_sof_cb;                                        /*!< USB HCD SOF callback                             */
   hal_hcd_ch_notify_urb_change_cb_t p_ch_notify_urb_change_cb;  /*!< USB HCD Host Channel Notify URB Change callback  */
+  hal_hcd_ch_cb_t p_ch_abort_transfer_cb;                       /*!< USB HCD Channel Abort Transfer callback          */
   hal_hcd_cb_t p_error_cb;                                      /*!< USB HCD Error callback                           */
 #endif /* USE_HAL_HCD_REGISTER_CALLBACKS */
 };
-
-/**
-  * @}
-  */
-
-/* Exported constants --------------------------------------------------------*/
-/** @defgroup HCD_Exported_Constants Exported Constants
-  * @{
-  */
-
-#if defined (USE_HAL_HCD_GET_LAST_ERRORS) && (USE_HAL_HCD_GET_LAST_ERRORS == 1)
-/** @defgroup HCD_Error_Codes Error Codes
-  * @{
-  */
-/*!< No error */
-#define HAL_HCD_ERROR_NONE                                               (0UL)
-/*!< HAL HCD CHANNEL transfer ERROR */
-#define HAL_HCD_ERROR_CHANNEL_TRANSFER                                   (1UL << 0U)
-/*!< HAL HCD CHANNEL babble ERROR */
-#define HAL_HCD_ERROR_CHANNEL_BABBLE                                     (1UL << 1U)
-/*!< HAL HCD CHANNEL DATA Toggle ERROR */
-#define HAL_HCD_ERROR_CHANNEL_DATA_TOGGLE                                (1UL << 2U)
-/**
-  * @}
-  */
-#endif /* USE_HAL_HCD_GET_LAST_ERRORS */
 
 /**
   * @}
@@ -524,6 +534,7 @@ void HAL_HCD_PortSuspendCallback(hal_hcd_handle_t *hhcd);
 void HAL_HCD_PortResumeCallback(hal_hcd_handle_t *hhcd);
 void HAL_HCD_ChannelNotifyURBChangeCallback(hal_hcd_handle_t *hhcd, hal_hcd_channel_t ch_num,
                                             hal_hcd_channel_urb_state_t urb_state);
+void HAL_HCD_ChannelAbortTransferCallback(hal_hcd_handle_t *hhcd, hal_hcd_channel_t ch_num);
 
 /**
   * @}
@@ -543,6 +554,7 @@ hal_status_t HAL_HCD_RegisterPortResumeCallback(hal_hcd_handle_t *hhcd, hal_hcd_
 hal_status_t HAL_HCD_RegisterErrorCallback(hal_hcd_handle_t *hhcd, hal_hcd_cb_t p_callback);
 hal_status_t HAL_HCD_RegisterChannelNotifyURBChangeCallback(hal_hcd_handle_t *hhcd,
                                                             hal_hcd_ch_notify_urb_change_cb_t p_callback);
+hal_status_t HAL_HCD_RegisterChannelAbortTransferCallback(hal_hcd_handle_t *hhcd, hal_hcd_ch_cb_t p_callback);
 #endif /* USE_HAL_HCD_REGISTER_CALLBACKS */
 
 /**
@@ -552,17 +564,7 @@ hal_status_t HAL_HCD_RegisterChannelNotifyURBChangeCallback(hal_hcd_handle_t *hh
 /**
   * @}
   */
-/* Private macros ------------------------------------------------------------*/
-/** @defgroup HCD_Private_Macros Private Macros
-  * @{
-  */
-/*! Macro to get the min value */
-#define HCD_MIN                   USB_CORE_MIN_U32
-/*! Macro to get the max value */
-#define HCD_MAX                   USB_CORE_MAX_U32
-/**
-  * @}
-  */
+
 /**
   * @}
   */
@@ -576,4 +578,4 @@ hal_status_t HAL_HCD_RegisterChannelNotifyURBChangeCallback(hal_hcd_handle_t *hh
 }
 #endif /* defined __cplusplus */
 
-#endif /* STM32C5xx_HAL_HCD_H */
+#endif /* STM32C5XX_HAL_HCD_H */

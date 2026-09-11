@@ -35,7 +35,7 @@ extern "C"
   * @{
   */
 
-/** @defgroup RTC_Exported_Types HAL RTC Types
+/** @defgroup RTC_Exported_Types HAL RTC types
   * @{
   */
 
@@ -111,7 +111,7 @@ typedef enum
   */
 typedef enum
 {
-  HAL_RTC_CALENDAR_SHADOW_REG_KEEP   = LL_RTC_SHADOW_REG_KEEP,  /*!< Keep shadow registers   */
+  HAL_RTC_CALENDAR_SHADOW_REG_KEEP   = LL_RTC_SHADOW_REG_KEEP,  /*!< Keep shadow registers */
   HAL_RTC_CALENDAR_SHADOW_REG_BYPASS = LL_RTC_SHADOW_REG_BYPASS /*!< Bypass shadow registers */
 } hal_rtc_calendar_shadow_reg_bypass_t;
 
@@ -147,7 +147,7 @@ typedef enum
   */
 
 /* Date and time  exported enumerations ------------------------------------------------------------------------------*/
-/** @defgroup RTC_Exported_Enums_Date_Time RTC exported datetime enumerations.
+/** @defgroup RTC_Exported_Enums_Date_Time RTC exported date and time enumerations.
   * @{
   */
 
@@ -235,10 +235,8 @@ typedef enum
   */
 typedef enum
 {
-  HAL_RTC_OUTPUT_TAMPALARM_TYPE_PUSHPULL  = LL_RTC_ALARM_OUTPUTTYPE_PUSHPULL,  /*!< Tampalarm output is
-                                                                                    a push-pull */
-  HAL_RTC_OUTPUT_TAMPALARM_TYPE_OPENDRAIN = LL_RTC_ALARM_OUTPUTTYPE_OPENDRAIN, /*!< Tampalarm output is
-                                                                                    an open-drain */
+  HAL_RTC_OUTPUT_TAMPALARM_TYPE_PUSHPULL  = LL_RTC_ALARM_OUTPUTTYPE_PUSHPULL,  /*!< Tampalarm output is a push-pull */
+  HAL_RTC_OUTPUT_TAMPALARM_TYPE_OPENDRAIN = LL_RTC_ALARM_OUTPUTTYPE_OPENDRAIN, /*!< Tampalarm output is an open-drain */
 } hal_rtc_output_tampalarm_type_t;
 
 /**
@@ -246,10 +244,8 @@ typedef enum
   */
 typedef enum
 {
-  HAL_RTC_OUTPUT_TAMPALARM_PULLUP_DISABLE = LL_RTC_ALARM_OUTPUT_PULLUP_NONE, /*!< Tampalarm output
-                                                                                  pull-up disable */
-  HAL_RTC_OUTPUT_TAMPALARM_PULLUP_ENABLE  = LL_RTC_ALARM_OUTPUT_PULLUP_ON    /*!< Tampalarm output
-                                                                                  pull-up enable */
+  HAL_RTC_OUTPUT_TAMPALARM_PULLUP_DISABLE = LL_RTC_ALARM_OUTPUT_PULLUP_NONE, /*!< Tampalarm output pull-up disable */
+  HAL_RTC_OUTPUT_TAMPALARM_PULLUP_ENABLE  = LL_RTC_ALARM_OUTPUT_PULLUP_ON    /*!< Tampalarm output pull-up enable */
 } hal_rtc_output_tampalarm_pullup_t;
 
 /**
@@ -257,12 +253,8 @@ typedef enum
   */
 typedef enum
 {
-  HAL_RTC_OUTPUT_CALIBRATION_SYNCHRONOUS        = LL_RTC_CALIB_FREQUENCY_1HZ,  /*!< Calibration output comes from
-                                                                                    the synchronous prescaler (1Hz
-                                                                                    prescalers at default values) */
-  HAL_RTC_OUTPUT_CALIBRATION_ASYNCHRONOUS_DIV64 = LL_RTC_CALIB_FREQUENCY_512HZ /*!< Calibration output comes from the
-                                                                                    asynchronous prescaler (512Hz
-                                                                                    prescalers at default values) */
+  HAL_RTC_OUTPUT_CALIBRATION_SYNCHRONOUS        = LL_RTC_CALIB_FREQUENCY_1HZ,  /*!< 1Hz for RTCCLK at 32768 Hz and prescalers at their default values (PREDIV_A = 127 and PREDIV_S = 255) */
+  HAL_RTC_OUTPUT_CALIBRATION_ASYNCHRONOUS_DIV64 = LL_RTC_CALIB_FREQUENCY_512HZ /*!< 512Hz for RTCCLK at 32768 Hz and prescalers at their default values (PREDIV_A = 127 and PREDIV_S = 255) */
 } hal_rtc_output_calibration_frequency_t;
 
 /**
@@ -270,62 +262,39 @@ typedef enum
   */
 typedef enum
 {
-  HAL_RTC_OUTPUT_OUT1_ALARMA                 = LL_RTC_ALARMOUT_ALARM_A,
-  /*!< Alarm A event is routed to output 1 */
-  HAL_RTC_OUTPUT_OUT1_ALARMB                 = LL_RTC_ALARMOUT_ALARM_B,
-  /*!< Alarm B event is routed to output 1 */
-  HAL_RTC_OUTPUT_OUT1_WAKEUP                 = LL_RTC_ALARMOUT_WAKEUP,
-  /*!< Wake-up timer event is routed to output 1 */
-  HAL_RTC_OUTPUT_OUT1_TAMP                   = LL_RTC_OUTPUT_TAMPER_ENABLE,
-  /*!< Tamper event is routed to output 1 */
-  HAL_RTC_OUTPUT_OUT1_CALIB                  = LL_RTC_CALIB_OUTPUT_ENABLE,
-  /*!< Calibration is routed to output 1 */
-  HAL_RTC_OUTPUT_OUT2_ALARMA                 = (LL_RTC_ALARMOUT_ALARM_A | LL_RTC_ALARM_OUTPUT_REMAP_POS1),
-  /*!< Alarm A event is routed to output 2 */
-  HAL_RTC_OUTPUT_OUT2_ALARMB                 = (LL_RTC_ALARMOUT_ALARM_B | LL_RTC_ALARM_OUTPUT_REMAP_POS1),
-  /*!< Alarm B event is routed to output 2 */
-  HAL_RTC_OUTPUT_OUT2_WAKEUP                 = (LL_RTC_ALARMOUT_WAKEUP | LL_RTC_ALARM_OUTPUT_REMAP_POS1),
-  /*!< Wake-up timer event is routed to output 2 */
-  HAL_RTC_OUTPUT_OUT2_TAMP                   = (LL_RTC_OUTPUT_TAMPER_ENABLE | LL_RTC_ALARM_OUTPUT_REMAP_POS1),
-  /*!< Tamper event is routed to output 2 */
-  HAL_RTC_OUTPUT_OUT2_CALIB                  = (LL_RTC_CALIB_OUTPUT_ENABLE | LL_RTC_ALARM_OUTPUT_REMAP_POS1),
-  /*!< Calibration is routed to output 2 */
-  HAL_RTC_OUTPUT_OUT1_ALARMA_TAMP            = (LL_RTC_ALARMOUT_ALARM_A | LL_RTC_OUTPUT_TAMPER_ENABLE),
-  /*!< Alarm A and tamper event are routed to output 1 */
-  HAL_RTC_OUTPUT_OUT1_ALARMB_TAMP            = (LL_RTC_ALARMOUT_ALARM_B | LL_RTC_OUTPUT_TAMPER_ENABLE),
-  /*!< Alarm B and tamper event are routed to output 1 */
-  HAL_RTC_OUTPUT_OUT1_WAKEUP_TAMP            = (LL_RTC_ALARMOUT_WAKEUP | LL_RTC_OUTPUT_TAMPER_ENABLE),
-  /*!< Wake-up timer and tamper event are routed to output 1 */
+  HAL_RTC_OUTPUT_OUT1_ALARMA                 = LL_RTC_ALARMOUT_ALARM_A,  /*!< Alarm A event is routed to output 1 */
+  HAL_RTC_OUTPUT_OUT1_ALARMB                 = LL_RTC_ALARMOUT_ALARM_B,  /*!< Alarm B event is routed to output 1 */
+  HAL_RTC_OUTPUT_OUT1_WAKEUP                 = LL_RTC_ALARMOUT_WAKEUP,  /*!< Wake-up timer event is routed to output 1 */
+  HAL_RTC_OUTPUT_OUT1_TAMP                   = LL_RTC_OUTPUT_TAMPER_ENABLE,  /*!< Tamper event is routed to output 1 */
+  HAL_RTC_OUTPUT_OUT1_CALIB                  = LL_RTC_CALIB_OUTPUT_ENABLE,  /*!< Calibration is routed to output 1 */
+  HAL_RTC_OUTPUT_OUT2_ALARMA                 = (LL_RTC_ALARMOUT_ALARM_A | LL_RTC_ALARM_OUTPUT_REMAP_POS1),  /*!< Alarm A event is routed to output 2 */
+  HAL_RTC_OUTPUT_OUT2_ALARMB                 = (LL_RTC_ALARMOUT_ALARM_B | LL_RTC_ALARM_OUTPUT_REMAP_POS1),  /*!< Alarm B event is routed to output 2 */
+  HAL_RTC_OUTPUT_OUT2_WAKEUP                 = (LL_RTC_ALARMOUT_WAKEUP | LL_RTC_ALARM_OUTPUT_REMAP_POS1),  /*!< Wake-up timer event is routed to output 2 */
+  HAL_RTC_OUTPUT_OUT2_TAMP                   = (LL_RTC_OUTPUT_TAMPER_ENABLE | LL_RTC_ALARM_OUTPUT_REMAP_POS1),  /*!< Tamper event is routed to output 2 */
+  HAL_RTC_OUTPUT_OUT2_CALIB                  = (LL_RTC_CALIB_OUTPUT_ENABLE | LL_RTC_ALARM_OUTPUT_REMAP_POS1),  /*!< Calibration is routed to output 2 */
+  HAL_RTC_OUTPUT_OUT1_ALARMA_TAMP            = (LL_RTC_ALARMOUT_ALARM_A | LL_RTC_OUTPUT_TAMPER_ENABLE),  /*!< Alarm A and tamper event are routed to output 1 */
+  HAL_RTC_OUTPUT_OUT1_ALARMB_TAMP            = (LL_RTC_ALARMOUT_ALARM_B | LL_RTC_OUTPUT_TAMPER_ENABLE),  /*!< Alarm B and tamper event are routed to output 1 */
+  HAL_RTC_OUTPUT_OUT1_WAKEUP_TAMP            = (LL_RTC_ALARMOUT_WAKEUP | LL_RTC_OUTPUT_TAMPER_ENABLE),  /*!< Wake-up timer and tamper event are routed to output 1 */
   HAL_RTC_OUTPUT_OUT2_ALARMA_TAMP            = (LL_RTC_ALARMOUT_ALARM_A | LL_RTC_OUTPUT_TAMPER_ENABLE |
-                                                LL_RTC_ALARM_OUTPUT_REMAP_POS1),
-  /*!< Alarm A and tamper event are routed to output 2 */
+                                                LL_RTC_ALARM_OUTPUT_REMAP_POS1),   /*!< Alarm A and tamper event are routed to output 2 */
   HAL_RTC_OUTPUT_OUT2_ALARMB_TAMP            = (LL_RTC_ALARMOUT_ALARM_B | LL_RTC_OUTPUT_TAMPER_ENABLE |
-                                                LL_RTC_ALARM_OUTPUT_REMAP_POS1),
-  /*!< Alarm B and tamper event are routed to output 2 */
+                                                LL_RTC_ALARM_OUTPUT_REMAP_POS1),   /*!< Alarm B and tamper event are routed to output 2 */
   HAL_RTC_OUTPUT_OUT2_WAKEUP_TAMP            = (LL_RTC_ALARMOUT_WAKEUP | LL_RTC_OUTPUT_TAMPER_ENABLE |
-                                                LL_RTC_ALARM_OUTPUT_REMAP_POS1),
-  /*!< Wake-up timer and tamper event are routed to output 2 */
+                                                LL_RTC_ALARM_OUTPUT_REMAP_POS1),   /*!< Wake-up timer and tamper event are routed to output 2 */
   HAL_RTC_OUTPUT_OUT1_ALARMA_OUT2_CALIB      = (LL_RTC_ALARMOUT_ALARM_A | LL_RTC_CALIB_OUTPUT_ENABLE |
-                                                LL_RTC_ALARM_OUTPUT_REMAP_POS1),
-  /*!< Alarm A event is routed to output 1 and calibration to output 2 */
+                                                LL_RTC_ALARM_OUTPUT_REMAP_POS1),  /*!< Alarm A event is routed to output 1 and calibration to output 2 */
   HAL_RTC_OUTPUT_OUT1_ALARMB_OUT2_CALIB      = (LL_RTC_ALARMOUT_ALARM_B | LL_RTC_CALIB_OUTPUT_ENABLE |
-                                                LL_RTC_ALARM_OUTPUT_REMAP_POS1),
-  /*!< Alarm B event is routed to output 1 and calibration to output 2 */
+                                                LL_RTC_ALARM_OUTPUT_REMAP_POS1),  /*!< Alarm B event is routed to output 1 and calibration to output 2 */
   HAL_RTC_OUTPUT_OUT1_WAKEUP_OUT2_CALIB      = (LL_RTC_ALARMOUT_WAKEUP | LL_RTC_CALIB_OUTPUT_ENABLE |
-                                                LL_RTC_ALARM_OUTPUT_REMAP_POS1),
-  /*!< Wake-up timer event is routed to output 1 and calibration to output 2 */
+                                                LL_RTC_ALARM_OUTPUT_REMAP_POS1),  /*!< Wake-up timer event is routed to output 1 and calibration to output 2 */
   HAL_RTC_OUTPUT_OUT1_TAMP_OUT2_CALIB        = (LL_RTC_OUTPUT_TAMPER_ENABLE | LL_RTC_CALIB_OUTPUT_ENABLE |
-                                                LL_RTC_ALARM_OUTPUT_REMAP_POS1),
-  /*!< Tamper event is routed to output 1 and calibration to output 2 */
+                                                LL_RTC_ALARM_OUTPUT_REMAP_POS1),  /*!< Tamper event is routed to output 1 and calibration to output 2 */
   HAL_RTC_OUTPUT_OUT1_ALARMA_TAMP_OUT2_CALIB = (LL_RTC_ALARMOUT_ALARM_A | LL_RTC_OUTPUT_TAMPER_ENABLE |
-                                                LL_RTC_CALIB_OUTPUT_ENABLE | LL_RTC_ALARM_OUTPUT_REMAP_POS1),
-  /*!< Alarm A and tamper event are routed to output 1 and calibration to output 2 */
+                                                LL_RTC_CALIB_OUTPUT_ENABLE | LL_RTC_ALARM_OUTPUT_REMAP_POS1),  /*!< Alarm A and tamper event are routed to output 1 and calibration to output 2 */
   HAL_RTC_OUTPUT_OUT1_ALARMB_TAMP_OUT2_CALIB = (LL_RTC_ALARMOUT_ALARM_B | LL_RTC_OUTPUT_TAMPER_ENABLE |
-                                                LL_RTC_CALIB_OUTPUT_ENABLE | LL_RTC_ALARM_OUTPUT_REMAP_POS1),
-  /*!< Alarm B and tamper event are routed to output 1 and calibration to output 2 */
+                                                LL_RTC_CALIB_OUTPUT_ENABLE | LL_RTC_ALARM_OUTPUT_REMAP_POS1),  /*!< Alarm B and tamper event are routed to output 1 and calibration to output 2 */
   HAL_RTC_OUTPUT_OUT1_WAKEUP_TAMP_OUT2_CALIB = (LL_RTC_ALARMOUT_WAKEUP | LL_RTC_OUTPUT_TAMPER_ENABLE |
-                                                LL_RTC_CALIB_OUTPUT_ENABLE | LL_RTC_ALARM_OUTPUT_REMAP_POS1),
-  /*!< Wake-up timer and tamper event are routed to output 1 and calibration to output 2 */
+                                                LL_RTC_CALIB_OUTPUT_ENABLE | LL_RTC_ALARM_OUTPUT_REMAP_POS1),  /*!< Wake-up timer and tamper event are routed to output 1 and calibration to output 2 */
 } hal_rtc_output_t;
 
 /**
@@ -351,8 +320,7 @@ typedef enum
   */
 typedef enum
 {
-  HAL_RTC_ALARM_DAY_TYPE_SEL_MONTHDAY = LL_RTC_ALMA_DATEWEEKDAYSEL_DATE,   /*!< Alarm day corresponds to the month
-                                                                                day */
+  HAL_RTC_ALARM_DAY_TYPE_SEL_MONTHDAY = LL_RTC_ALMA_DATEWEEKDAYSEL_DATE, /*!< Alarm day corresponds to the month day */
   HAL_RTC_ALARM_DAY_TYPE_SEL_WEEKDAY  = LL_RTC_ALMA_DATEWEEKDAYSEL_WEEKDAY /*!< Alarm day corresponds to the weekday */
 } hal_rtc_alarm_day_type_selection_t;
 
@@ -379,12 +347,8 @@ typedef enum
   */
 typedef enum
 {
-  HAL_RTC_ALARM_SUBSECONDS_AUTO_RELOAD_DISABLE = LL_RTC_ALMA_SUBSECONDBIN_AUTOCLR_NO, /*!< Disables the autoreload
-                                                                                           of calendar subseconds
-                                                                                           register */
-  HAL_RTC_ALARM_SUBSECONDS_AUTO_RELOAD_ENABLE = LL_RTC_ALMA_SUBSECONDBIN_AUTOCLR_YES  /*!< Enables the autoreload
-                                                                                           of the subseconds
-                                                                                           register */
+  HAL_RTC_ALARM_SUBSECONDS_AUTO_RELOAD_DISABLE = LL_RTC_ALMA_SUBSECONDBIN_AUTOCLR_NO, /*!< Disables the autoreload of calendar subseconds register */
+  HAL_RTC_ALARM_SUBSECONDS_AUTO_RELOAD_ENABLE = LL_RTC_ALMA_SUBSECONDBIN_AUTOCLR_YES  /*!< Enables the autoreload of the subseconds register */
 } hal_rtc_alarm_subseconds_auto_reload_t;
 
 /**
@@ -402,10 +366,8 @@ typedef enum
   */
 typedef enum
 {
-  HAL_RTC_TIMESTAMP_EDGE_RISING  = LL_RTC_TIMESTAMP_EDGE_RISING, /*!< Create a timestamp event when a
-                                                                      rising edge is detected in the input pin */
-  HAL_RTC_TIMESTAMP_EDGE_FALLING = LL_RTC_TIMESTAMP_EDGE_FALLING /*!< Create a timestamp event when a
-                                                                      falling edge is detected in the input pin */
+  HAL_RTC_TIMESTAMP_EDGE_RISING  = LL_RTC_TIMESTAMP_EDGE_RISING, /*!< Create a timestamp event when a rising edge is detected in the input pin */
+  HAL_RTC_TIMESTAMP_EDGE_FALLING = LL_RTC_TIMESTAMP_EDGE_FALLING /*!< Create a timestamp event when a falling edge is detected in the input pin */
 } hal_rtc_timestamp_source_pin_edge_t;
 
 /**
@@ -441,8 +403,8 @@ typedef enum
   */
 typedef enum
 {
-  HAL_RTC_TIMESTAMP_NO_EVENT       = 0U,               /*!< No timestamp event       */
-  HAL_RTC_TIMESTAMP_EVENT          = LL_RTC_SR_TSF,    /*!< Timestamp event          */
+  HAL_RTC_TIMESTAMP_NO_EVENT       = 0U,               /*!< No timestamp event */
+  HAL_RTC_TIMESTAMP_EVENT          = LL_RTC_SR_TSF,    /*!< Timestamp event */
   HAL_RTC_TIMESTAMP_OVERFLOW_EVENT = LL_RTC_SR_TSOVF,  /*!< Timestamp overflow event */
 } hal_rtc_timestamp_event_flag_t;
 
@@ -462,19 +424,12 @@ typedef enum
   */
 typedef enum
 {
-  HAL_RTC_WAKEUP_TIMER_CLOCK_RTCCLK_DIV2   = LL_RTC_WAKEUPCLOCK_DIV_2,  /*!< Wakeup timer decrement frequency
-                                                                             is RTCCLK frequency divided by 2      */
-  HAL_RTC_WAKEUP_TIMER_CLOCK_RTCCLK_DIV4   = LL_RTC_WAKEUPCLOCK_DIV_4,  /*!< Wakeup timer decrement frequency
-                                                                             is RTCCLK frequency divided by 4      */
-  HAL_RTC_WAKEUP_TIMER_CLOCK_RTCCLK_DIV8   = LL_RTC_WAKEUPCLOCK_DIV_8,  /*!< Wakeup timer decrement frequency
-                                                                             is RTCCLK frequency divided by 8      */
-  HAL_RTC_WAKEUP_TIMER_CLOCK_RTCCLK_DIV16  = LL_RTC_WAKEUPCLOCK_DIV_16, /*!< Wakeup timer decrement frequency
-                                                                             is RTCCLK frequency divided by 16     */
-  HAL_RTC_WAKEUP_TIMER_CLOCK_BCD_UPDATE    = LL_RTC_WAKEUPCLOCK_CKSPRE, /*!< Wakeup timer decrement is based on
-                                                                             the BCD update */
-  HAL_RTC_WAKEUP_TIMER_CLOCK_BCD_UPDATE_ADD_1BIT = LL_RTC_WAKEUPCLOCK_CKSPRE_WUT /*!< Wakeup timer decrement is
-                                                                                      based on the BCD update and
-                                                                                      1 bit is added               */
+  HAL_RTC_WAKEUP_TIMER_CLOCK_RTCCLK_DIV2   = LL_RTC_WAKEUPCLOCK_DIV_2,  /*!< Wakeup timer clock is the RTCCLK divided by 2 */
+  HAL_RTC_WAKEUP_TIMER_CLOCK_RTCCLK_DIV4   = LL_RTC_WAKEUPCLOCK_DIV_4,  /*!< Wakeup timer clock is the RTCCLK divided by 4 */
+  HAL_RTC_WAKEUP_TIMER_CLOCK_RTCCLK_DIV8   = LL_RTC_WAKEUPCLOCK_DIV_8,  /*!< Wakeup timer clock is the RTCCLK divided by 8 */
+  HAL_RTC_WAKEUP_TIMER_CLOCK_RTCCLK_DIV16  = LL_RTC_WAKEUPCLOCK_DIV_16, /*!< Wakeup timer clock is the RTCCLK divided by 16 */
+  HAL_RTC_WAKEUP_TIMER_CLOCK_BCD_UPDATE    = LL_RTC_WAKEUPCLOCK_CKSPRE, /*!< Wakeup timer clock is the BCD update */
+  HAL_RTC_WAKEUP_TIMER_CLOCK_BCD_UPDATE_ADD_1BIT = LL_RTC_WAKEUPCLOCK_CKSPRE_WUT /*!< Wakeup timer clock is the BCD update and 1 bit is added to the wakeup timer */
 } hal_rtc_wakeup_timer_clock_t;
 
 /**
@@ -501,8 +456,7 @@ typedef enum
 typedef enum
 {
   HAL_RTC_CALIBRATION_PULSE_NOT_INSERTED = LL_RTC_CALIB_INSERTPULSE_NONE, /*!< No increase of the frequency */
-  HAL_RTC_CALIBRATION_PULSE_INSERTED     = LL_RTC_CALIB_INSERTPULSE_SET   /*!< Increase of the frequency by one
-                                                                               pulse every 2^11 pulses */
+  HAL_RTC_CALIBRATION_PULSE_INSERTED     = LL_RTC_CALIB_INSERTPULSE_SET   /*!< Increase of the frequency by one pulse every 2^11 pulses */
 } hal_rtc_calibration_pulse_t;
 
 /**
@@ -532,11 +486,11 @@ typedef enum
 typedef enum
 {
   HAL_RTC_NPRIV = LL_RTC_ATTR_NPRIV, /*!< RTC Non-privileged attribute */
-  HAL_RTC_PRIV  = LL_RTC_ATTR_PRIV   /*!< RTC privileged attribute     */
+  HAL_RTC_PRIV  = LL_RTC_ATTR_PRIV   /*!< RTC privileged attribute */
 } hal_rtc_priv_attr_t;
 
 /* Exported Unions ---------------------------------------------------------------------------------------------------*/
-/** @defgroup RTC_Exported_Unions HAL RTC Unions
+/** @defgroup RTC_Exported_Unions HAL RTC unions
   * @{
   */
 
@@ -573,8 +527,7 @@ typedef struct
                                         This parameter must be a number between 0x00 and 0x7FFF.
                                         This parameter is used when the mode is HAL_RTC_MODE_BCD. */
 
-  hal_rtc_bcd_update_t bcd_update; /*!< BCD update.
-                                        This parameter is when the mode is HAL_RTC_MODE_BINARY or HAL_RTC_MODE_MIX */
+  hal_rtc_bcd_update_t bcd_update; /*!< BCD update. This parameter is when the mode is HAL_RTC_MODE_BINARY or HAL_RTC_MODE_MIX */
 } hal_rtc_config_t;
 
 /**
@@ -629,13 +582,10 @@ typedef struct
                                              This parameter must be a number between 0 and 999.
                                              It is only used when configuring the wake-up timer time */
 
-  uint32_t                    hour;     /*!< Time hour.
-                                             This parameter must be a number between 0 and 12 if the calendar hour
-                                             format is 12 hours.
-                                             This parameter must be a number between 0 and 24 if the calendar hour
-                                             format is 24 hours.
-                                             This parameter must be a number between 0 and 36 when using it with the
-                                             wake-up timer */
+  uint32_t                    hour;     /*!< Time hour. This parameter must be a number between:
+                                             0 and 12 if the calendar hour format is 12 hours.
+                                             0 and 24 if the calendar hour format is 24 hours.
+                                             0 and 36 when using it with the wake-up timer */
 
   uint32_t                    min;      /*!< Time minutes. This parameter must be a number between 0 and 59 */
 
@@ -650,7 +600,8 @@ typedef struct
   hal_rtc_weekday_t wday; /*!< Weekday */
   hal_rtc_month_t   mon;  /*!< Month */
   uint32_t          mday; /*!< Day. This parameter must be a number between 1 and 31 */
-  uint32_t          year; /*!< Year. This parameter must be a number between 0 and 99 */
+  uint32_t          year; /*!< Year. This parameter must be a number between 0 and 99.
+                               Due to register limitations, the year is forced to 0 when reading the timestamp. */
 } hal_rtc_date_t;
 
 /**
@@ -658,9 +609,7 @@ typedef struct
   */
 typedef struct
 {
-  hal_rtc_alarm_subseconds_auto_reload_t subsec_auto_reload; /*!< Subsecond register reload.
-                                                                  Enable is only allowed in binary mode */
-
+  hal_rtc_alarm_subseconds_auto_reload_t subsec_auto_reload; /*!< Subsecond register reload. Enable is only allowed in binary mode */
   hal_rtc_alarm_auto_clear_t             auto_clear;         /*!< Alarm event automatic clear by hardware */
 } hal_rtc_alarm_config_t;
 
@@ -723,7 +672,7 @@ typedef struct
 
 /* Exported defines --------------------------------------------------------------------------------------------------*/
 
-/** @defgroup RTC_Exported_Constants HAL RTC Constants
+/** @defgroup RTC_Exported_Constants HAL RTC constants
   * @{
   */
 
@@ -731,12 +680,12 @@ typedef struct
   * @{
   */
 
-#define HAL_RTC_ALARM_MASK_NONE     LL_RTC_ALMA_MASK_NONE         /*!< The alarms takes in account all day and time parameters */
-#define HAL_RTC_ALARM_MASK_DAY      LL_RTC_ALMA_MASK_DATEWEEKDAY  /*!< The alarm does not use the day/weekday bits */
-#define HAL_RTC_ALARM_MASK_HOURS    LL_RTC_ALMA_MASK_HOURS        /*!< The alarm does not use the hours bits */
-#define HAL_RTC_ALARM_MASK_MINUTES  LL_RTC_ALMA_MASK_MINUTES      /*!< The alarm does not use the minutes bits */
-#define HAL_RTC_ALARM_MASK_SECONDS  LL_RTC_ALMA_MASK_SECONDS      /*!< The alarm does not use the second bits */
-#define HAL_RTC_ALARM_MASK_ALL      LL_RTC_ALMA_MASK_ALL          /*!< The alarm masks everything */
+#define HAL_RTC_ALARM_MASK_NONE     LL_RTC_ALMA_MASK_NONE         /*!< All day and time values are considered to trigger the alarm */
+#define HAL_RTC_ALARM_MASK_DAY      LL_RTC_ALMA_MASK_DATEWEEKDAY  /*!< The day/weekday value is ignored */
+#define HAL_RTC_ALARM_MASK_HOURS    LL_RTC_ALMA_MASK_HOURS        /*!< The hour value is ignored */
+#define HAL_RTC_ALARM_MASK_MINUTES  LL_RTC_ALMA_MASK_MINUTES      /*!< The minute value is ignored */
+#define HAL_RTC_ALARM_MASK_SECONDS  LL_RTC_ALMA_MASK_SECONDS      /*!< The second value is ignored */
+#define HAL_RTC_ALARM_MASK_ALL      LL_RTC_ALMA_MASK_ALL          /*!< All day and time values are ignored */
 
 /**
   * @}
@@ -747,7 +696,7 @@ typedef struct
   */
 
 #define HAL_RTC_WAKEUP_IT_DISABLE LL_RTC_WAKEUP_TIMER_IT_DISABLE /*!< Wake-up interrupts are disabled */
-#define HAL_RTC_WAKEUP_IT_ENABLE  LL_RTC_WAKEUP_TIMER_IT_ENABLE  /*!< Wake-up interrupts are enabled  */
+#define HAL_RTC_WAKEUP_IT_ENABLE  LL_RTC_WAKEUP_TIMER_IT_ENABLE  /*!< Wake-up interrupts are enabled */
 
 /**
   * @}
@@ -758,7 +707,7 @@ typedef struct
   */
 
 #define HAL_RTC_ALARM_IT_DISABLE LL_RTC_ALMA_IT_DISABLE /*!< Alarm interrupts are disabled */
-#define HAL_RTC_ALARM_IT_ENABLE  LL_RTC_ALMA_IT_ENABLE  /*!< Alarm interrupts are enabled  */
+#define HAL_RTC_ALARM_IT_ENABLE  LL_RTC_ALMA_IT_ENABLE  /*!< Alarm interrupts are enabled */
 
 /**
   * @}
@@ -769,16 +718,14 @@ typedef struct
   * @{
   */
 
-#define HAL_RTC_PRIV_ITEM_ALRAPRIV LL_RTC_PRIV_ITEM_ALRAPRIV /*!< Privilege attribute of Alarm A and
-                                                                  underflow protection                                */
-#define HAL_RTC_PRIV_ITEM_ALRBPRIV LL_RTC_PRIV_ITEM_ALRBPRIV /*!< Privilege attribute of Alarm B protection           */
-#define HAL_RTC_PRIV_ITEM_WUTPRIV  LL_RTC_PRIV_ITEM_WUTPRIV  /*!< Privilege attribute of Wake-up timer protection     */
-#define HAL_RTC_PRIV_ITEM_TSPRIV   LL_RTC_PRIV_ITEM_TSPRIV   /*!< Privilege attribute of Timestamp protection         */
-#define HAL_RTC_PRIV_ITEM_CALPRIV  LL_RTC_PRIV_ITEM_CALPRIV  /*!< Privilege attribute of  Shift register, daylight
-                                                                  saving, calibration and reference clock protection  */
-#define HAL_RTC_PRIV_ITEM_INITPRIV LL_RTC_PRIV_ITEM_INITPRIV /*!< Privilege attribute of Initialization protection    */
-#define HAL_RTC_PRIV_ITEM_PRIV     LL_RTC_PRIV_ITEM_PRIV     /*!< Privilege attribute of RTC global protection        */
-#define HAL_RTC_PRIV_ITEM_ALL      LL_RTC_PRIV_ITEM_ALL      /*!< Privilege attribute of All RTC resources            */
+#define HAL_RTC_PRIV_ITEM_ALRAPRIV LL_RTC_PRIV_ITEM_ALRAPRIV /*!< Privilege attribute of alarm A and underflow protection */
+#define HAL_RTC_PRIV_ITEM_ALRBPRIV LL_RTC_PRIV_ITEM_ALRBPRIV /*!< Privilege attribute of alarm B protection */
+#define HAL_RTC_PRIV_ITEM_WUTPRIV  LL_RTC_PRIV_ITEM_WUTPRIV  /*!< Privilege attribute of wake-up timer protection */
+#define HAL_RTC_PRIV_ITEM_TSPRIV   LL_RTC_PRIV_ITEM_TSPRIV   /*!< Privilege attribute of timestamp protection */
+#define HAL_RTC_PRIV_ITEM_CALPRIV  LL_RTC_PRIV_ITEM_CALPRIV  /*!< Privilege attribute of shift register, daylight saving, calibration and reference clock protection  */
+#define HAL_RTC_PRIV_ITEM_INITPRIV LL_RTC_PRIV_ITEM_INITPRIV /*!< Privilege attribute of initialization protection */
+#define HAL_RTC_PRIV_ITEM_PRIV     LL_RTC_PRIV_ITEM_PRIV     /*!< Privilege attribute of RTC global protection */
+#define HAL_RTC_PRIV_ITEM_ALL      LL_RTC_PRIV_ITEM_ALL      /*!< Privilege attribute of all RTC resources */
 
 /**
   * @}
@@ -791,7 +738,7 @@ typedef struct
 
 /* Exported macros ---------------------------------------------------------------------------------------------------*/
 
-/** @defgroup RTC_Exported_Macros HAL RTC Macros
+/** @defgroup RTC_Exported_Macros HAL RTC macros
   * @{
   */
 
@@ -808,35 +755,32 @@ typedef struct
   * @return Converted byte
   */
 #define HAL_RTC_CONVERT_BCD2DEC(value) LL_RTC_CONVERT_BCD2BIN(value)
-
 /**
   * @}
   */
 
 /* Exported functions ------------------------------------------------------------------------------------------------*/
-/** @defgroup RTC_Exported_Functions HAL RTC Functions
+/** @defgroup RTC_Exported_Functions HAL RTC functions
   * @{
   */
 
 /** @defgroup RTC_Exported_Functions_Write_Init RTC exported write protection and initialization mode functions.
   * @{
   */
-
 hal_status_t HAL_RTC_EnableWriteProtection(void);
 hal_status_t HAL_RTC_DisableWriteProtection(void);
+
 hal_status_t HAL_RTC_EnterInitMode(void);
 hal_status_t HAL_RTC_ExitInitMode(void);
-
 /**
   * @}
   */
+
 /** @defgroup RTC_Exported_Functions_Config RTC exported configuration functions
   * @{
   */
-
 hal_status_t HAL_RTC_SetConfig(const hal_rtc_config_t *p_config);
-void         HAL_RTC_GetConfig(hal_rtc_config_t *p_config);
-
+void HAL_RTC_GetConfig(hal_rtc_config_t *p_config);
 /**
   * @}
   */
@@ -844,11 +788,9 @@ void         HAL_RTC_GetConfig(hal_rtc_config_t *p_config);
 /** @defgroup RTC_Exported_Functions_Low_Power RTC exported low power configuration functions
   * @{
   */
-
-hal_status_t                          HAL_RTC_EnableUltraLowPowerMode(void);
-hal_status_t                          HAL_RTC_DisableUltraLowPowerMode(void);
+hal_status_t HAL_RTC_EnableUltraLowPowerMode(void);
+hal_status_t HAL_RTC_DisableUltraLowPowerMode(void);
 hal_rtc_ultra_low_power_mode_status_t HAL_RTC_IsEnabledUltraLowPowerMode(void);
-
 /**
   * @}
   */
@@ -856,31 +798,36 @@ hal_rtc_ultra_low_power_mode_status_t HAL_RTC_IsEnabledUltraLowPowerMode(void);
 /** @defgroup RTC_Exported_Functions_Calendar RTC exported calendar functions
   *  @{
   */
-
 hal_status_t HAL_RTC_CALENDAR_SetConfig(const hal_rtc_calendar_config_t *p_config_calendar);
-void         HAL_RTC_CALENDAR_GetConfig(hal_rtc_calendar_config_t *p_config_calendar);
+void HAL_RTC_CALENDAR_GetConfig(hal_rtc_calendar_config_t *p_config_calendar);
+
 hal_status_t HAL_RTC_CALENDAR_SetDateTime(const hal_rtc_date_t *p_date, const hal_rtc_time_t *p_time);
 hal_status_t HAL_RTC_CALENDAR_GetDateTime(hal_rtc_date_t *p_date, hal_rtc_time_t *p_time);
+
 hal_status_t HAL_RTC_CALENDAR_SetTime(const hal_rtc_time_t *p_time);
 hal_status_t HAL_RTC_CALENDAR_GetTime(hal_rtc_time_t *p_time);
+
 hal_status_t HAL_RTC_CALENDAR_SetDate(const hal_rtc_date_t *p_date);
 hal_status_t HAL_RTC_CALENDAR_GetDate(hal_rtc_date_t *p_date);
+
 hal_status_t HAL_RTC_CALENDAR_EnableReferenceClock(void);
 hal_status_t HAL_RTC_CALENDAR_DisableReferenceClock(void);
+
 hal_status_t HAL_RTC_CALENDAR_EnableSummerTimeMemorization(void);
 hal_status_t HAL_RTC_CALENDAR_DisableSummerTimeMemorization(void);
+
 hal_status_t HAL_RTC_CALENDAR_AddOneHour(void);
 hal_status_t HAL_RTC_CALENDAR_SubtractOneHour(void);
-uint32_t     HAL_RTC_CALENDAR_GetBinaryTime(void);
 
-hal_rtc_calendar_status_t                 HAL_RTC_CALENDAR_IsInitialized(void);
+uint32_t HAL_RTC_CALENDAR_GetBinaryTime(void);
+
+hal_rtc_calendar_status_t HAL_RTC_CALENDAR_IsInitialized(void);
 hal_rtc_calendar_reference_clock_status_t HAL_RTC_CALENDAR_IsEnabledReferenceClock(void);
-hal_rtc_calendar_summer_time_status_t     HAL_RTC_CALENDAR_IsEnabledSummerTimeMemorization(void);
+hal_rtc_calendar_summer_time_status_t HAL_RTC_CALENDAR_IsEnabledSummerTimeMemorization(void);
 
-hal_status_t                              HAL_RTC_CALENDAR_EnableITSubSecondsUnderflow(void);
-hal_status_t                              HAL_RTC_CALENDAR_DisableITSubSecondsUnderflow(void);
-hal_rtc_calendar_it_underflow_status_t    HAL_RTC_CALENDAR_IsEnabledITSubSecondsUnderflow(void);
-
+hal_status_t HAL_RTC_CALENDAR_EnableITSubSecondsUnderflow(void);
+hal_status_t HAL_RTC_CALENDAR_DisableITSubSecondsUnderflow(void);
+hal_rtc_calendar_it_underflow_status_t HAL_RTC_CALENDAR_IsEnabledITSubSecondsUnderflow(void);
 /**
   * @}
   */
@@ -888,30 +835,30 @@ hal_rtc_calendar_it_underflow_status_t    HAL_RTC_CALENDAR_IsEnabledITSubSeconds
 /** @defgroup RTC_Exported_Functions_Output RTC exported output functions
   * @{
   */
-hal_status_t            HAL_RTC_OUTPUT_SetConfigTampalarm(const hal_rtc_output_tampalarm_config_t  *p_config);
-void                    HAL_RTC_OUTPUT_GetConfigTampalarm(hal_rtc_output_tampalarm_config_t  *p_config);
-hal_status_t            HAL_RTC_OUTPUT_SetConfigCalib(const hal_rtc_output_calib_config_t *p_config);
-void                    HAL_RTC_OUTPUT_GetConfigCalib(hal_rtc_output_calib_config_t *p_config);
-hal_status_t            HAL_RTC_OUTPUT_Enable(hal_rtc_output_t output);
-hal_status_t            HAL_RTC_OUTPUT_Disable(void);
-hal_rtc_output_status_t HAL_RTC_OUTPUT_IsEnabled(hal_rtc_output_t output);
+hal_status_t HAL_RTC_OUTPUT_SetConfigTampalarm(const hal_rtc_output_tampalarm_config_t *p_config);
+void HAL_RTC_OUTPUT_GetConfigTampalarm(hal_rtc_output_tampalarm_config_t *p_config);
 
+hal_status_t HAL_RTC_OUTPUT_SetConfigCalib(const hal_rtc_output_calib_config_t *p_config);
+void HAL_RTC_OUTPUT_GetConfigCalib(hal_rtc_output_calib_config_t *p_config);
+
+hal_status_t HAL_RTC_OUTPUT_Enable(hal_rtc_output_t output);
+hal_status_t HAL_RTC_OUTPUT_Disable(void);
+hal_rtc_output_status_t HAL_RTC_OUTPUT_IsEnabled(hal_rtc_output_t output);
 /**
   * @}
   */
 
-/** @defgroup RTC_Exported_Functions_Calibration RTC exported calendar calibration functions
+/** @defgroup RTC_Exported_Functions_Calibration RTC exported calibration functions
   * @{
   */
-
-hal_status_t                 HAL_RTC_EnableCalibration(hal_rtc_calibration_period_t calibration_period,
-                                                       hal_rtc_calibration_pulse_t pulse_add,
-                                                       uint32_t subtracted_pulses);
-hal_status_t                 HAL_RTC_DisableCalibration(void);
+hal_status_t HAL_RTC_EnableCalibration(hal_rtc_calibration_period_t calibration_period,
+                                       hal_rtc_calibration_pulse_t pulse_add,
+                                       uint32_t subtracted_pulses);
+hal_status_t HAL_RTC_DisableCalibration(void);
 hal_rtc_calibration_status_t HAL_RTC_IsEnabledCalibration(void);
-hal_status_t                 HAL_RTC_ShiftCalibration(hal_rtc_calibration_shift_second_t add_one_sec,
-                                                      uint32_t fraction_sec_to_subtract);
 
+hal_status_t HAL_RTC_ShiftCalibration(hal_rtc_calibration_shift_second_t add_one_sec,
+                                      uint32_t fraction_sec_to_subtract);
 /**
   * @}
   */
@@ -919,44 +866,47 @@ hal_status_t                 HAL_RTC_ShiftCalibration(hal_rtc_calibration_shift_
 /** @defgroup RTC_Exported_Functions_Alarms RTC exported alarm functions
   * @{
   */
-
 hal_status_t HAL_RTC_ALARM_SetConfig(hal_rtc_alarm_t alarm, const hal_rtc_alarm_config_t *p_config_alarm);
-void         HAL_RTC_ALARM_GetConfig(hal_rtc_alarm_t alarm, hal_rtc_alarm_config_t *p_config_alarm);
+void HAL_RTC_ALARM_GetConfig(hal_rtc_alarm_t alarm, hal_rtc_alarm_config_t *p_config_alarm);
+
 hal_status_t HAL_RTC_ALARM_SetDateTime(hal_rtc_alarm_t alarm, const hal_rtc_alarm_date_time_t *p_date_time);
-void         HAL_RTC_ALARM_GetDateTime(hal_rtc_alarm_t alarm, hal_rtc_alarm_date_time_t *p_date_time);
+void HAL_RTC_ALARM_GetDateTime(hal_rtc_alarm_t alarm, hal_rtc_alarm_date_time_t *p_date_time);
+
 hal_status_t HAL_RTC_ALARM_Start(hal_rtc_alarm_t alarm, uint32_t interruption);
 hal_status_t HAL_RTC_ALARM_Stop(hal_rtc_alarm_t alarm);
 hal_status_t HAL_RTC_ALARM_PollForEvent(hal_rtc_alarm_t alarm, uint32_t timeout_ms);
-hal_status_t HAL_RTC_ALARM_SetBinaryTime(hal_rtc_alarm_t alarm, uint32_t alarm_subsecond);
-uint32_t     HAL_RTC_ALARM_GetBinaryTime(hal_rtc_alarm_t alarm);
-hal_status_t HAL_RTC_ALARM_SetBinarySubSecondMask(hal_rtc_alarm_t alarm, uint32_t alarm_subsecond_mask);
-uint32_t     HAL_RTC_ALARM_GetBinarySubSecondMask(hal_rtc_alarm_t alarm);
 
+hal_status_t HAL_RTC_ALARM_SetBinaryTime(hal_rtc_alarm_t alarm, uint32_t alarm_subsecond);
+uint32_t HAL_RTC_ALARM_GetBinaryTime(hal_rtc_alarm_t alarm);
+hal_status_t HAL_RTC_ALARM_SetBinarySubSecondMask(hal_rtc_alarm_t alarm, uint32_t alarm_subsecond_mask);
+uint32_t HAL_RTC_ALARM_GetBinarySubSecondMask(hal_rtc_alarm_t alarm);
 /**
   * @}
   */
 
-/** @defgroup RTC_Exported_Functions_Timestamp RTC exported time stamp functions
+/** @defgroup RTC_Exported_Functions_Timestamp RTC exported timestamp functions
   * @{
   */
+hal_status_t HAL_RTC_TIMESTAMP_SetConfig(const hal_rtc_timestamp_config_t *p_config_timestamp);
+void HAL_RTC_TIMESTAMP_GetConfig(hal_rtc_timestamp_config_t *p_config_timestamp);
+hal_status_t HAL_RTC_TIMESTAMP_EnablePinSource(void);
+hal_status_t HAL_RTC_TIMESTAMP_DisablePinSource(void);
+hal_rtc_timestamp_status_t HAL_RTC_TIMESTAMP_IsEnabledPinSource(void);
 
-hal_status_t                  HAL_RTC_TIMESTAMP_SetConfig(const hal_rtc_timestamp_config_t *p_config_timestamp);
-void                          HAL_RTC_TIMESTAMP_GetConfig(hal_rtc_timestamp_config_t *p_config_timestamp);
-hal_status_t                  HAL_RTC_TIMESTAMP_EnablePinSource(void);
-hal_status_t                  HAL_RTC_TIMESTAMP_DisablePinSource(void);
-hal_rtc_timestamp_status_t    HAL_RTC_TIMESTAMP_IsEnabledPinSource(void);
-hal_status_t                      HAL_RTC_TIMESTAMP_EnableTamperSource(void);
-hal_status_t                      HAL_RTC_TIMESTAMP_DisableTamperSource(void);
+hal_status_t HAL_RTC_TIMESTAMP_EnableTamperSource(void);
+hal_status_t HAL_RTC_TIMESTAMP_DisableTamperSource(void);
 hal_rtc_timestamp_tamper_status_t HAL_RTC_TIMESTAMP_IsEnabledTamperSource(void);
-hal_status_t                  HAL_RTC_TIMESTAMP_EnableIT(void);
-hal_status_t                  HAL_RTC_TIMESTAMP_DisableIT(void);
+
+hal_status_t HAL_RTC_TIMESTAMP_EnableIT(void);
+hal_status_t HAL_RTC_TIMESTAMP_DisableIT(void);
 hal_rtc_timestamp_it_status_t HAL_RTC_TIMESTAMP_IsEnabledIT(void);
-hal_status_t                  HAL_RTC_TIMESTAMP_GetDateTime(hal_rtc_time_t *p_time,
-                                                            hal_rtc_date_t *p_date,
-                                                            hal_rtc_timestamp_information_t *p_info);
-hal_status_t                  HAL_RTC_TIMESTAMP_PollForEvent(uint32_t timeout_ms);
-hal_status_t                  HAL_RTC_TIMESTAMP_GetBinaryTime(uint32_t *p_time_subseconds,
-                                                              hal_rtc_timestamp_information_t *p_info);
+
+hal_status_t HAL_RTC_TIMESTAMP_GetDateTime(hal_rtc_time_t *p_time, hal_rtc_date_t *p_date,
+                                           hal_rtc_timestamp_information_t *p_info);
+
+hal_status_t HAL_RTC_TIMESTAMP_PollForEvent(uint32_t timeout_ms);
+
+hal_status_t HAL_RTC_TIMESTAMP_GetBinaryTime(uint32_t *p_time_subseconds, hal_rtc_timestamp_information_t *p_info);
 /**
   * @}
   */
@@ -965,19 +915,21 @@ hal_status_t                  HAL_RTC_TIMESTAMP_GetBinaryTime(uint32_t *p_time_s
   * @{
   */
 hal_status_t HAL_RTC_WAKEUP_SetConfig(const hal_rtc_wakeup_config_t *p_config_wakeup_timer);
-void         HAL_RTC_WAKEUP_GetConfig(hal_rtc_wakeup_config_t *p_config_wakeup_timer);
+void HAL_RTC_WAKEUP_GetConfig(hal_rtc_wakeup_config_t *p_config_wakeup_timer);
+
 hal_status_t HAL_RTC_WAKEUP_SetPeriod(const hal_rtc_time_t *p_auto_reload_time,
                                       const hal_rtc_time_t *p_auto_clear_time);
-void         HAL_RTC_WAKEUP_GetPeriod(hal_rtc_time_t *p_auto_reload_time,
-                                      hal_rtc_time_t *p_auto_clear_time);
+void HAL_RTC_WAKEUP_GetPeriod(hal_rtc_time_t *p_auto_reload_time,
+                              hal_rtc_time_t *p_auto_clear_time);
+
 hal_status_t HAL_RTC_WAKEUP_Start(uint32_t interruption);
 hal_status_t HAL_RTC_WAKEUP_Stop(void);
 hal_status_t HAL_RTC_WAKEUP_PollForEvent(uint32_t timeout_ms);
+
 hal_status_t HAL_RTC_WAKEUP_SetAutoReloadAndAutoClear(uint32_t wakeup_timer_auto_reload,
                                                       uint32_t wakeup_timer_auto_clear);
-uint32_t     HAL_RTC_WAKEUP_GetAutoReload(void);
-uint32_t     HAL_RTC_WAKEUP_GetAutoClear(void);
-
+uint32_t HAL_RTC_WAKEUP_GetAutoReload(void);
+uint32_t HAL_RTC_WAKEUP_GetAutoClear(void);
 /**
   * @}
   */
@@ -985,13 +937,11 @@ uint32_t     HAL_RTC_WAKEUP_GetAutoClear(void);
 /** @defgroup RTC_Exported_Functions_IRQ RTC exported IRQ functions
   * @{
   */
-
 void HAL_RTC_IRQHandler(void);
 void HAL_RTC_ALARM_IRQHandler(void);
 void HAL_RTC_TIMESTAMP_IRQHandler(void);
 void HAL_RTC_WAKEUP_IRQHandler(void);
 void HAL_RTC_SubSecondsUnderflow_IRQHandler(void);
-
 /**
   * @}
   */
@@ -999,27 +949,25 @@ void HAL_RTC_SubSecondsUnderflow_IRQHandler(void);
 /** @defgroup RTC_Exported_Functions_Callback RTC exported callback functions
   * @{
   */
-
 void HAL_RTC_AlarmAEventCallback(void);
 void HAL_RTC_AlarmBEventCallback(void);
 void HAL_RTC_TimestampEventCallback(void);
 void HAL_RTC_WakeUpTimerEventCallback(void);
 void HAL_RTC_SubSecondsUnderflowEventCallback(void);
-
 /**
   * @}
   */
 
-/** @defgroup RTC_Exported_Functions_Attributes management functions
+/** @defgroup RTC_Exported_Functions_Attributes RTC exported attribute management functions
   * @{
   */
 
 hal_status_t HAL_RTC_SetPrivAttr(uint32_t item, hal_rtc_priv_attr_t priv_attr);
 hal_rtc_priv_attr_t HAL_RTC_GetPrivAttr(uint32_t item);
-
 /**
   * @}
   */
+
 /**
   * @}
   */

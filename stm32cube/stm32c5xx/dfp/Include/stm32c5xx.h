@@ -52,10 +52,10 @@ extern "C" {
 #endif /* STM32C5 */
 
 /**
-  * @brief STM32C5xx CMSIS Device version number 2.0.0
+  * @brief STM32C5xx CMSIS Device version number 2.1.0
   */
 #define STM32C5_CMSIS_VERSION_MAIN   (2) /*!< [31:24] main version */
-#define STM32C5_CMSIS_VERSION_SUB1   (0) /*!< [23:16] sub1 version */
+#define STM32C5_CMSIS_VERSION_SUB1   (1) /*!< [23:16] sub1 version */
 #define STM32C5_CMSIS_VERSION_SUB2   (0) /*!< [15:8]  sub2 version */
 #define STM32C5_CMSIS_VERSION_RC     (0) /*!< [7:0]  release candidate */
 #define STM32C5_CMSIS_VERSION        ((STM32C5_CMSIS_VERSION_MAIN << 24U)   \

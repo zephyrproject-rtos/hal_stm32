@@ -50,7 +50,7 @@ extern "C" {
 /** @defgroup DMA_Error_Code Error code definition reflecting asynchronous process errors
   * @{
   */
-#define HAL_DMA_ERROR_NONE    0U             /*!< DMA channel no error                              */
+#define HAL_DMA_ERROR_NONE    (0U)           /*!< DMA channel no error                              */
 #define HAL_DMA_ERROR_DTE     (0x01UL << 0U) /*!< DMA channel data transfer error                   */
 #define HAL_DMA_ERROR_USE     (0x01UL << 1U) /*!< DMA channel user setting error                    */
 #define HAL_DMA_ERROR_TO      (0x01UL << 2U) /*!< DMA channel trigger overrun error                 */
@@ -65,11 +65,19 @@ extern "C" {
 /** @defgroup DMA_Optional_Interrupt Optional interrupts
   * @{
   */
-#define HAL_DMA_OPT_IT_NONE    0U                                      /*!< DMA channel optional interrupts disabled      */
-#define HAL_DMA_OPT_IT_HT      (0x01UL << 9U)                          /*!< DMA channel half transfer interrupt enabled   */
-#define HAL_DMA_OPT_IT_TO      (0x01UL << 14U)                         /*!< DMA channel trigger overrun interrupt enabled */
-#define HAL_DMA_OPT_IT_DEFAULT (HAL_DMA_OPT_IT_HT | HAL_DMA_OPT_IT_TO) /*!< DMA channel all optional interrupts enabled   */
-#define HAL_DMA_OPT_IT_SILENT  0xFFFFFFFFU                             /*!< DMA channel all interrupts disabled           */
+#define HAL_DMA_OPT_IT_NONE    (0U)                                    /*!< DMA channel optional interrupts Half
+                                                                            Transfer(HT) and Trigger Overrun (TO)
+                                                                            are disabled */
+#define HAL_DMA_OPT_IT_HT      (0x01UL << 9U)                          /*!< DMA channel Half Transfer interrupt
+                                                                            enabled   */
+#define HAL_DMA_OPT_IT_TO      (0x01UL << 14U)                         /*!< DMA channel Trigger Overrun interrupt
+                                                                            enabled */
+#define HAL_DMA_OPT_IT_DEFAULT (HAL_DMA_OPT_IT_HT | HAL_DMA_OPT_IT_TO) /*!< DMA channel all optional interrupts
+                                                                            i.e Half Transfer(HT) and
+                                                                            Trigger Overrun (TO) are enabled */
+#define HAL_DMA_OPT_IT_SILENT  ((uint32_t)0xFFFFFFFFU)                 /*!< DMA channel all interrupts are disabled,
+                                                                            the DMA transfer will not issue any
+                                                                            interrupt */
 /**
   * @}
   */
@@ -104,6 +112,7 @@ typedef enum
   HAL_LPDMA1_CH7 = LPDMA1_CH7_BASE,  /*!< LPDMA1 Channel 7  */
 #endif /* LPDMA1_CH7 */
 
+#if defined(LPDMA2)
   /* LPDMA2 channel instances */
   HAL_LPDMA2_CH0 = LPDMA2_CH0_BASE,  /*!< LPDMA2 Channel 0 */
   HAL_LPDMA2_CH1 = LPDMA2_CH1_BASE,  /*!< LPDMA2 Channel 1 */
@@ -121,6 +130,7 @@ typedef enum
 #if defined(LPDMA2_CH7)
   HAL_LPDMA2_CH7 = LPDMA2_CH7_BASE   /*!< LPDMA2 Channel 7  */
 #endif /* LPDMA2_CH7 */
+#endif /* LPDMA2 */
 } hal_dma_channel_t;
 
 /*! DMA channel state enumeration definition */
@@ -219,9 +229,11 @@ typedef enum
   HAL_LPDMA1_REQUEST_TIM17_CC1     = LL_LPDMA1_REQUEST_TIM17_CC1,    /*!< LPDMA1 HW request is TIM17_CC1    */
   HAL_LPDMA1_REQUEST_TIM17_UPD     = LL_LPDMA1_REQUEST_TIM17_UPD,    /*!< LPDMA1 HW request is TIM17_UPD    */
 #endif /* TIM17 */
+#if defined(LPTIM1)
   HAL_LPDMA1_REQUEST_LPTIM1_IC1    = LL_LPDMA1_REQUEST_LPTIM1_IC1,   /*!< LPDMA1 HW request is LPTIM1_IC1   */
   HAL_LPDMA1_REQUEST_LPTIM1_IC2    = LL_LPDMA1_REQUEST_LPTIM1_IC2,   /*!< LPDMA1 HW request is LPTIM1_IC2   */
   HAL_LPDMA1_REQUEST_LPTIM1_UE     = LL_LPDMA1_REQUEST_LPTIM1_UE,    /*!< LPDMA1 HW request is LPTIM1_UE    */
+#endif /* LPTIM1 */
   HAL_LPDMA1_REQUEST_CORDIC_RD     = LL_LPDMA1_REQUEST_CORDIC_RD,    /*!< LPDMA1 HW request is CORDIC_RD    */
   HAL_LPDMA1_REQUEST_CORDIC_WR     = LL_LPDMA1_REQUEST_CORDIC_WR,    /*!< LPDMA1 HW request is CORDIC_WR    */
   HAL_LPDMA1_REQUEST_I3C1_RX       = LL_LPDMA1_REQUEST_I3C1_RX,      /*!< LPDMA1 HW request is I3C1_RX      */
@@ -281,6 +293,7 @@ typedef enum
   HAL_LPDMA1_REQUEST_XSPI1         = LL_LPDMA1_REQUEST_XSPI1,        /*!< LPDMA1 HW request is XSPI1        */
 #endif /* XSPI1 */
 
+#if defined(LPDMA2)
   /* LPDMA2 requests */
   HAL_LPDMA2_REQUEST_ADC1          = LL_LPDMA2_REQUEST_ADC1,         /*!< LPDMA2 HW request is ADC1         */
 #if defined(ADC2)
@@ -346,9 +359,11 @@ typedef enum
   HAL_LPDMA2_REQUEST_TIM17_CC1     = LL_LPDMA2_REQUEST_TIM17_CC1,    /*!< LPDMA2 HW request is TIM17_CC1    */
   HAL_LPDMA2_REQUEST_TIM17_UPD     = LL_LPDMA2_REQUEST_TIM17_UPD,    /*!< LPDMA2 HW request is TIM17_UPD    */
 #endif /* TIM17 */
+#if defined(LPTIM1)
   HAL_LPDMA2_REQUEST_LPTIM1_IC1    = LL_LPDMA2_REQUEST_LPTIM1_IC1,   /*!< LPDMA2 HW request is LPTIM1_IC1   */
   HAL_LPDMA2_REQUEST_LPTIM1_IC2    = LL_LPDMA2_REQUEST_LPTIM1_IC2,   /*!< LPDMA2 HW request is LPTIM1_IC2   */
   HAL_LPDMA2_REQUEST_LPTIM1_UE     = LL_LPDMA2_REQUEST_LPTIM1_UE,    /*!< LPDMA2 HW request is LPTIM1_UE    */
+#endif /* LPTIM1 */
   HAL_LPDMA2_REQUEST_CORDIC_RD     = LL_LPDMA2_REQUEST_CORDIC_RD,    /*!< LPDMA2 HW request is CORDIC_RD    */
   HAL_LPDMA2_REQUEST_CORDIC_WR     = LL_LPDMA2_REQUEST_CORDIC_WR,    /*!< LPDMA2 HW request is CORDIC_WR    */
   HAL_LPDMA2_REQUEST_I3C1_RX       = LL_LPDMA2_REQUEST_I3C1_RX,      /*!< LPDMA2 HW request is I3C1_RX      */
@@ -407,6 +422,7 @@ typedef enum
 #if defined(XSPI1)
   HAL_LPDMA2_REQUEST_XSPI1         = LL_LPDMA2_REQUEST_XSPI1,        /*!< LPDMA2 HW request is XSPI1        */
 #endif /* XSPI1 */
+#endif /* LPDMA2 */
 
   /* Software request */
   HAL_DMA_REQUEST_SW               = DMA_CTR2_SWREQ                  /*!< DMA SW request                    */
@@ -500,8 +516,10 @@ typedef enum
   HAL_LPDMA1_TRIGGER_TAMP_TRG1     = LL_LPDMA1_TRIGGER_TAMP_TRG1,      /*!< LPDMA1 HW Trigger is TAMP_TRG1     */
   HAL_LPDMA1_TRIGGER_TAMP_TRG2     = LL_LPDMA1_TRIGGER_TAMP_TRG2,      /*!< LPDMA1 HW Trigger is TAMP_TRG2     */
   HAL_LPDMA1_TRIGGER_TAMP_TRG3     = LL_LPDMA1_TRIGGER_TAMP_TRG3,      /*!< LPDMA1 HW Trigger is TAMP_TRG3     */
+#if defined(LPTIM1)
   HAL_LPDMA1_TRIGGER_LPTIM1_CH1    = LL_LPDMA1_TRIGGER_LPTIM1_CH1,     /*!< LPDMA1 HW Trigger is LPTIM1_CH1    */
   HAL_LPDMA1_TRIGGER_LPTIM1_CH2    = LL_LPDMA1_TRIGGER_LPTIM1_CH2,     /*!< LPDMA1 HW Trigger is LPTIM1_CH2    */
+#endif /* LPTIM1 */
   HAL_LPDMA1_TRIGGER_RTC_ALRA_TRG  = LL_LPDMA1_TRIGGER_RTC_ALRA_TRG,   /*!< LPDMA1 HW Trigger is RTC_ALRA_TRG  */
   HAL_LPDMA1_TRIGGER_RTC_ALRB_TRG  = LL_LPDMA1_TRIGGER_RTC_ALRB_TRG,   /*!< LPDMA1 HW Trigger is RTC_ALRB_TRG  */
   HAL_LPDMA1_TRIGGER_RTC_WUT_TRG   = LL_LPDMA1_TRIGGER_RTC_WUT_TRG,    /*!< LPDMA1 HW Trigger is RTC_WUT_TRG   */
@@ -525,6 +543,7 @@ typedef enum
 #if defined (LPDMA1_CH7)
   HAL_LPDMA1_TRIGGER_LPDMA1_CH7_TC = LL_LPDMA1_TRIGGER_LPDMA1_CH7_TC,  /*!< LPDMA1 HW Trigger is LPDMA1_CH7_TC */
 #endif /* LPDMA1_CH7 */
+#if defined(LPDMA2)
   HAL_LPDMA1_TRIGGER_LPDMA2_CH0_TC = LL_LPDMA1_TRIGGER_LPDMA2_CH0_TC,  /*!< LPDMA1 HW Trigger is LPDMA2_CH0_TC */
   HAL_LPDMA1_TRIGGER_LPDMA2_CH1_TC = LL_LPDMA1_TRIGGER_LPDMA2_CH1_TC,  /*!< LPDMA1 HW Trigger is LPDMA2_CH1_TC */
   HAL_LPDMA1_TRIGGER_LPDMA2_CH2_TC = LL_LPDMA1_TRIGGER_LPDMA2_CH2_TC,  /*!< LPDMA1 HW Trigger is LPDMA2_CH2_TC */
@@ -541,10 +560,12 @@ typedef enum
 #if defined (LPDMA2_CH7)
   HAL_LPDMA1_TRIGGER_LPDMA2_CH7_TC = LL_LPDMA1_TRIGGER_LPDMA2_CH7_TC,  /*!< LPDMA1 HW Trigger is LPDMA2_CH7_TC */
 #endif /* LPDMA2_CH7 */
+#endif /* LPDMA2 */
 #if defined(COMP2)
   HAL_LPDMA1_TRIGGER_COMP2_OUT     = LL_LPDMA1_TRIGGER_COMP2_OUT,      /*!< LPDMA1 HW Trigger is COMP2_OUT     */
 #endif /* COMP2 */
 
+#if defined(LPDMA2)
   /* LPDMA2 triggers */
   HAL_LPDMA2_TRIGGER_EXTI0         = LL_LPDMA2_TRIGGER_EXTI0,          /*!< LPDMA2 HW Trigger is EXTI0         */
   HAL_LPDMA2_TRIGGER_EXTI1         = LL_LPDMA2_TRIGGER_EXTI1,          /*!< LPDMA2 HW Trigger is EXTI1         */
@@ -557,8 +578,10 @@ typedef enum
   HAL_LPDMA2_TRIGGER_TAMP_TRG1     = LL_LPDMA2_TRIGGER_TAMP_TRG1,      /*!< LPDMA2 HW Trigger is TAMP_TRG1     */
   HAL_LPDMA2_TRIGGER_TAMP_TRG2     = LL_LPDMA2_TRIGGER_TAMP_TRG2,      /*!< LPDMA2 HW Trigger is TAMP_TRG2     */
   HAL_LPDMA2_TRIGGER_TAMP_TRG3     = LL_LPDMA2_TRIGGER_TAMP_TRG3,      /*!< LPDMA2 HW Trigger is TAMP_TRG3     */
+#if defined(LPTIM1)
   HAL_LPDMA2_TRIGGER_LPTIM1_CH1    = LL_LPDMA2_TRIGGER_LPTIM1_CH1,     /*!< LPDMA2 HW Trigger is LPTIM1_CH1    */
   HAL_LPDMA2_TRIGGER_LPTIM1_CH2    = LL_LPDMA2_TRIGGER_LPTIM1_CH2,     /*!< LPDMA2 HW Trigger is LPTIM1_CH2    */
+#endif /* LPTIM1 */
   HAL_LPDMA2_TRIGGER_RTC_ALRA_TRG  = LL_LPDMA2_TRIGGER_RTC_ALRA_TRG,   /*!< LPDMA2 HW Trigger is RTC_ALRA_TRG  */
   HAL_LPDMA2_TRIGGER_RTC_ALRB_TRG  = LL_LPDMA2_TRIGGER_RTC_ALRB_TRG,   /*!< LPDMA2 HW Trigger is RTC_ALRB_TRG  */
   HAL_LPDMA2_TRIGGER_RTC_WUT_TRG   = LL_LPDMA2_TRIGGER_RTC_WUT_TRG,    /*!< LPDMA2 HW Trigger is RTC_WUT_TRG   */
@@ -601,6 +624,7 @@ typedef enum
 #if defined(COMP2)
   HAL_LPDMA2_TRIGGER_COMP2_OUT     = LL_LPDMA2_TRIGGER_COMP2_OUT,      /*!< LPDMA2 HW Trigger is COMP2_OUT     */
 #endif /* COMP2 */
+#endif /* LPDMA2 */
 } hal_dma_trigger_source_t;
 
 /*! DMA channel trigger polarity enumeration definition */

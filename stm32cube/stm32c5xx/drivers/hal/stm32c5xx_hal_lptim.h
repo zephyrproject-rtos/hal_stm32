@@ -1267,11 +1267,6 @@ void HAL_LPTIM_InputOverCaptureCallback(hal_lptim_handle_t *hlptim,
 void HAL_LPTIM_CompareMatchCallback(hal_lptim_handle_t *hlptim,
                                     hal_lptim_channel_t channel);
 
-#if defined(USE_HAL_LPTIM_DMA) && (USE_HAL_LPTIM_DMA == 1)
-void HAL_LPTIM_CompareMatchHalfCpltCallback(hal_lptim_handle_t *hlptim,
-                                            hal_lptim_channel_t channel);
-#endif /* USE_HAL_LPTIM_DMA */
-
 void HAL_LPTIM_CompareUpdateCallback(hal_lptim_handle_t *hlptim,
                                      hal_lptim_channel_t channel);
 

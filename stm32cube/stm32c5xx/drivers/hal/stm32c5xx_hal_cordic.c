@@ -145,7 +145,9 @@
 
 6. Call HAL_CORDIC_DeInit() to deinitialize the CORDIC peripheral.
 
-7. Callback definitions in interrupt or DMA mode:
+7. Call HAL_CORDIC_GetInstance() or HAL_CORDIC_GetLLInstance() to retrieve the CORDIC instance.
+
+8. Callback definition in Interrupt or DMA mode:
 
   When the preprocessor directive USE_HAL_CORDIC_REGISTER_CALLBACKS is set to 1, the user can dynamically configure the
   driver callbacks using their own method:
@@ -2040,15 +2042,16 @@ hal_cordic_state_t HAL_CORDIC_GetState(const hal_cordic_handle_t *hcordic)
   * @}
   */
 
-#if defined(USE_HAL_CORDIC_USER_DATA) && (USE_HAL_CORDIC_USER_DATA == 1)
 /** @addtogroup CORDIC_Exported_Functions_Group8
   * @{
 
 This section provides functions to set user-specific data to a CORDIC instance:
     - HAL_CORDIC_SetUserData(): Set user data in handler.
     - HAL_CORDIC_GetUserData(): Get user data from handler.
+    - HAL_CORDIC_GetInstance(): Get the HAL CORDIC instance.
+    - HAL_CORDIC_GetLLInstance(): Get the hardware CORDIC instance.
   */
-
+#if defined(USE_HAL_CORDIC_USER_DATA) && (USE_HAL_CORDIC_USER_DATA == 1)
 /**
   * @brief Store user data pointer into the handle.
   * @param   hcordic     Pointer to a \ref hal_cordic_handle_t.
@@ -2072,10 +2075,36 @@ const void *HAL_CORDIC_GetUserData(const hal_cordic_handle_t *hcordic)
 
   return (hcordic->p_user_data);
 }
+#endif /* USE_HAL_CORDIC_USER_DATA */
+
+/**
+  * @brief  Get the CORDIC instance.
+  * @param  hcordic Pointer to a \ref hal_cordic_handle_t structure.
+  * @retval HAL_CORDIC HAL CORDIC instance.
+  */
+hal_cordic_t HAL_CORDIC_GetInstance(const hal_cordic_handle_t *hcordic)
+{
+  ASSERT_DBG_PARAM(hcordic != NULL);
+  ASSERT_DBG_PARAM(IS_CORDIC_ALL_INSTANCE((CORDIC_TypeDef *)((uint32_t)hcordic->instance)));
+
+  return hcordic->instance;
+}
+
+/**
+  * @brief  Get the hardware CORDIC instance.
+  * @param  hcordic Pointer to a \ref hal_cordic_handle_t structure.
+  * @retval CORDIC CORDIC peripheral instance.
+  */
+CORDIC_TypeDef *HAL_CORDIC_GetLLInstance(const hal_cordic_handle_t *hcordic)
+{
+  ASSERT_DBG_PARAM(hcordic != NULL);
+  ASSERT_DBG_PARAM(IS_CORDIC_ALL_INSTANCE((CORDIC_TypeDef *)((uint32_t)hcordic->instance)));
+
+  return ((CORDIC_TypeDef *)((uint32_t)((hcordic)->instance)));
+}
 /**
   * @}
   */
-#endif /* USE_HAL_CORDIC_USER_DATA */
 
 /**
   * @}

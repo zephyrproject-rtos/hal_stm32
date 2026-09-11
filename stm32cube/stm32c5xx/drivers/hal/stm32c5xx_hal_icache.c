@@ -44,7 +44,7 @@
   and data from internal and external memories.
 
   It simplifies the configuration, initialization, and management of the ICACHE by supporting features such as cache
-  associativity modes, memory address remapping, performance monitoring, and error detection with interrupt
+  associativity modes, memory address remapping, performance monitoring and error detection with interrupt
   capabilities.
 
   This abstraction layer guarantees portability and ease of use across different STM32 series. The HAL ICACHE driver
@@ -70,7 +70,7 @@ The main features of ICACHE are described below:
 
 - Bus interface
   - one 32-bit AHB slave port, the execution port (input from Cortex-M33 C-AHB code interface)
-  - two AHB master ports: master1 and master2 ports (outputs to Fast and Slow buses of main AHB bus matrix,
+  - two 32-bit AHB master ports: master1 and master2 ports (outputs to Fast and Slow buses of main AHB bus matrix,
   respectively)
   - one 32-bit AHB slave port for control (input from AHB peripherals interconnect, for ICACHE register access)
 
@@ -160,6 +160,12 @@ The HAL_ICACHE_ResetMonitors() function allows you to clear any monitor values.
 ## HAL ICACHE Driver State
 - Use HAL_ICACHE_GetState() to return the HAL ICACHE state.
 
+## HAL ICACHE Driver Accessor and Instance
+- Use HAL_ICACHE_SetUserData() to set user data associated to the ICACHE handle.
+- Use HAL_ICACHE_GetUserData() to get user data associated to the ICACHE handle.
+- Use HAL_ICACHE_GetInstance() function to return the HAL ICACHE instance associated to the handle.
+- Use HAL_ICACHE_GetLLInstance() function to return the LL ICACHE instance associated to the handle.
+
   */
 /**
   * @}
@@ -174,9 +180,9 @@ Config defines                    | Description     | Default value | Note      
 USE_HAL_ICACHE_MODULE             | From hal_conf.h |       1       | Allows the use of the HAL ICACHE module.      |
 USE_HAL_ICACHE_REGISTER_CALLBACKS | From hal_conf.h |       0       | Allows the use of the register callbacks.     |
 USE_HAL_CHECK_PARAM               | From hal_conf.h |       0       | Allows the use of run-time check parameters.  |
-USE_ASSERT_DBG_PARAM              | From IDE        |       NA      | Allows the use of assert check parameters.    |
-USE_ASSERT_DBG_STATE              | From IDE        |       NA      | Allows the use of assert check states.        |
-USE_HAL_ICACHE_GET_LAST_ERRORS    | From hal_conf.h |       1       | Allows the use of the error code mechanism.   |
+USE_ASSERT_DBG_PARAM              | From IDE        |     None      | Allows the use of assert check parameters.    |
+USE_ASSERT_DBG_STATE              | From IDE        |     None      | Allows the use of assert check states.        |
+USE_HAL_ICACHE_GET_LAST_ERRORS    | From hal_conf.h |       0       | Allows the use of the error code mechanism.   |
 USE_HAL_ICACHE_USER_DATA          | From hal_conf.h |       0       | Allows the use of user data.                  |
   */
 /**
@@ -185,7 +191,6 @@ USE_HAL_ICACHE_USER_DATA          | From hal_conf.h |       0       | Allows the
 
 /* Private defines -----------------------------------------------------------*/
 /** @defgroup ICACHE_Private_Defines ICACHE Private Defines
-
   * @{
   */
 #define ICACHE_MAINTENANCE_TIMEOUT_VALUE           1U   /*!< 1ms */
@@ -858,6 +863,7 @@ This section provides functions to launch maintenance operations:
   * @brief  Invalidate the ICACHE.
   * @param  hicache Pointer to the ICACHE handle.
   * @retval HAL_OK ICACHE invalidate operation completed successfully.
+  * @retval HAL_TIMEOUT ICACHE invalidate operation timeout.
   * @retval HAL_ERROR Operation error.
   */
 hal_status_t HAL_ICACHE_Invalidate(hal_icache_handle_t *hicache)
@@ -1191,14 +1197,16 @@ uint32_t HAL_ICACHE_GetLastErrorCodes(const hal_icache_handle_t *hicache)
   */
 #endif /* USE_HAL_ICACHE_GET_LAST_ERRORS */
 
-#if defined(USE_HAL_ICACHE_USER_DATA) && (USE_HAL_ICACHE_USER_DATA == 1)
 /** @addtogroup ICACHE_Exported_Functions_Group10
   * @{
 This section provides functions to set and get user data:
 - HAL_ICACHE_SetUserData() to store the user data into the ICACHE handle.
 - HAL_ICACHE_GetUserData() retrieve the user data from the ICACHE handle.
+- HAL_ICACHE_GetInstance() to get the HAL ICACHE instance.
+- HAL_ICACHE_GetLLInstance() to get the hardware ICACHE instance.
   */
 
+#if defined(USE_HAL_ICACHE_USER_DATA) && (USE_HAL_ICACHE_USER_DATA == 1)
 /**
   * @brief Store the user data into the ICACHE handle.
   * @param hicache Pointer to a hal_icache_handle_t structure that contains
@@ -1227,10 +1235,37 @@ const void *HAL_ICACHE_GetUserData(const hal_icache_handle_t *hicache)
 
   return (hicache->p_user_data);
 }
+#endif /* USE_HAL_ICACHE_USER_DATA */
+
+/**
+  * @brief  Get the HAL ICACHE instance.
+  * @param  hicache Pointer to a \ref hal_icache_handle_t structure.
+  * @retval The HAL ICACHE instance.
+  */
+hal_icache_t HAL_ICACHE_GetInstance(const hal_icache_handle_t *hicache)
+{
+  ASSERT_DBG_PARAM(hicache != NULL);
+  ASSERT_DBG_PARAM(IS_ICACHE_ALL_INSTANCE((ICACHE_TypeDef *)((uint32_t)hicache->instance)));
+
+  return (hicache->instance);
+}
+
+/**
+  * @brief  Get the hardware ICACHE instance.
+  * @param  hicache Pointer to a \ref hal_icache_handle_t structure.
+  * @retval The hardware ICACHE instance.
+  */
+ICACHE_TypeDef *HAL_ICACHE_GetLLInstance(const hal_icache_handle_t *hicache)
+{
+  ASSERT_DBG_PARAM(hicache != NULL);
+  ASSERT_DBG_PARAM(IS_ICACHE_ALL_INSTANCE((ICACHE_TypeDef *)((uint32_t)hicache->instance)));
+
+  return ((ICACHE_TypeDef *)((uint32_t)((hicache)->instance)));
+}
+
 /**
   * @}
   */
-#endif /* USE_HAL_ICACHE_USER_DATA */
 
 /**
   * @}

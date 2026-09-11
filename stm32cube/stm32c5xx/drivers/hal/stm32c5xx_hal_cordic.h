@@ -415,16 +415,19 @@ hal_cordic_state_t HAL_CORDIC_GetState(const hal_cordic_handle_t *hcordic);
   * @}
   */
 
-#if defined (USE_HAL_CORDIC_USER_DATA) && (USE_HAL_CORDIC_USER_DATA == 1)
-/** @defgroup CORDIC_Exported_Functions_Group8 User Data functions
+/** @defgroup CORDIC_Exported_Functions_Group8 User Data and retrieve functions
   * @{
   */
+#if defined (USE_HAL_CORDIC_USER_DATA) && (USE_HAL_CORDIC_USER_DATA == 1)
 void HAL_CORDIC_SetUserData(hal_cordic_handle_t *hcordic, const void *p_user_data);
 const void *HAL_CORDIC_GetUserData(const hal_cordic_handle_t *hcordic);
+#endif /* USE_HAL_CORDIC_USER_DATA */
+
+hal_cordic_t HAL_CORDIC_GetInstance(const hal_cordic_handle_t *hcordic);
+CORDIC_TypeDef *HAL_CORDIC_GetLLInstance(const hal_cordic_handle_t *hcordic);
 /**
   * @}
   */
-#endif /* USE_HAL_CORDIC_USER_DATA */
 
 /**
   * @}

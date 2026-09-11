@@ -45,9 +45,9 @@ extern "C" {
 /** @defgroup HASH_Error_Definition HASH Error Definition
   * @{
   */
-#define HAL_HASH_ERROR_NONE  0x00000000U /*!< No error                */
+#define HAL_HASH_ERROR_NONE  (0x00000000U) /*!< No error                */
 #if defined(USE_HAL_HASH_DMA) && (USE_HAL_HASH_DMA == 1U)
-#define HAL_HASH_ERROR_DMA   0x00000002U /*!< DMA-based process error */
+#define HAL_HASH_ERROR_DMA   (0x00000002U) /*!< DMA-based process error */
 #endif /* USE_HAL_HASH_DMA */
 /**
   * @}
@@ -167,8 +167,8 @@ typedef enum
 /*! HASH Configuration structure definition */
 typedef struct
 {
-  hal_hash_data_swapping_t data_swapping; /*!< No swap (32-bit data), half word swap (16-bit data), byte swap
-                                               (8-bit data) or bit swap (1-bit data).
+  hal_hash_data_swapping_t data_swapping; /*!< Data swapping mode: No swap (32-bit data), half word swap (16-bit data),
+                                               byte swap (8-bit data) or bit swap (1-bit data).
                                                This parameter can be a value of @ref hal_hash_data_swapping_t. */
   hal_hash_algo_t          algorithm;     /*!< HASH algorithm SHA-1, SHA2-224, SHA2-256, and on some supported
                     devices SHA2-384, SHA2-512224, SHA2-512256 and SHA2-512.

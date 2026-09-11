@@ -30,7 +30,7 @@ extern "C" {
   * @{
   */
 
-#if defined(COMP1)
+#if defined(COMP1) || defined(COMP2)
 
 /** @defgroup COMP_LL COMP
   * @{
@@ -42,6 +42,7 @@ extern "C" {
 /** @defgroup COMP_LL_Private_Constants COMP Private Constants
   * @{
   */
+#define LL_COMP_REG(__COMP__) ((__COMP__)->CFGR1)
 
 /* Internal masks and bitfields for pair of comparators instances window mode
 To select into literals LL_COMP_WINDOW_x the relevant bits for (concatenation of multiple bits used in different
@@ -54,9 +55,16 @@ registers):
                                         offset vs register of COMP instance odd */
 #define LL_COMP_WINDOW_COMP_REGOFFSET_MASK (LL_COMP_WINDOW_COMP_ODD_REGOFFSET_MASK \
                                             | LL_COMP_WINDOW_COMP_EVEN_REGOFFSET_MASK)
+#if defined(COMP_CFGR1_WINMODE)
 #define LL_COMP_WINDOW_COMP_X_SETTING_MASK (COMP_CFGR1_WINMODE) /* Bitfield to select window mode */
 #define LL_COMP_WINDOW_OUT_SETTING_MASK (COMP_CFGR1_WINOUT) /* Bitfield to select window output */
 #define LL_COMP_WINDOW_OUT_XOR_BOTH_MASK (COMP_CFGR1_WINOUT << 1UL) /* Differentiator of window output settings */
+#else
+#define LL_COMP_WINDOW_COMP_X_SETTING_MASK (COMP_CSR_INPSEL)  /* Bitfield to select window mode */
+#define LL_COMP_WINDOW_OUT_SETTING_MASK (COMP_CSR_WINOUT) /* Bitfield to select window output */
+#define LL_COMP_WINDOW_OUT_XOR_BOTH_MASK (COMP_CSR_WINOUT << 1UL) /* Differentiator of window output settings */
+#endif /* COMP_CFGR1_WINMODE */
+
 #define LL_COMP_WINDOW_OUT_XOR_BOTH_POS_VS_WINDOW (1UL) /* Bitfields position differences between
                                         LL_COMP_WINDOW_OUT_XOR_BOTH_MASK and LL_COMP_WINDOW_COMP_X_SETTING_MASK */
 
@@ -101,6 +109,7 @@ registers):
   * @{
   */
 #define LL_COMP_WINDOW_DISABLE          (0x00000000UL) /*!< Window mode disable: comparators pair are independent */
+#if defined(COMP_CFGR1_WINMODE)
 #define LL_COMP_WINDOW_INPUT_PLUS_ODD   (COMP_CFGR1_WINMODE | LL_COMP_WINDOW_COMP_EVEN_REGOFFSET_MASK) /*!< Window mode
                                         enable: comparators instances pair have their input plus connected together.
                                         The common input is the one of instance index odd (COMP1, ...).
@@ -109,6 +118,18 @@ registers):
                                         enable: comparators instances pair have their input plus connected together.
                                         The common input is the one of instance index even (COMP2, ...).
                                         Input plus of the other comparator is no more accessible. */
+#else
+#define LL_COMP_WINDOW_INPUT_PLUS_ODD   (COMP_CSR_INPSEL_0 | COMP_CSR_INPSEL_1 | COMP_CSR_INPSEL_2 | \
+                                         LL_COMP_WINDOW_COMP_EVEN_REGOFFSET_MASK) /*!< Window mode
+                                        enable: comparators instances pair have their input plus connected together.
+                                        The common input is the one of instance index odd (COMP1, ...).
+                                        Input plus of the other comparator is no more accessible. */
+#define LL_COMP_WINDOW_INPUT_PLUS_EVEN  (COMP_CSR_INPSEL_0 | COMP_CSR_INPSEL_1 | COMP_CSR_INPSEL_2 | \
+                                         LL_COMP_WINDOW_COMP_ODD_REGOFFSET_MASK) /*!< Window mode
+                                        enable: comparators instances pair have their input plus connected together.
+                                        The common input is the one of instance index even (COMP2, ...).
+                                        Input plus of the other comparator is no more accessible. */
+#endif /* COMP_CFGR1_WINMODE */
 /**
   * @}
   */
@@ -120,6 +141,7 @@ registers):
                                         both comparators output are independent, indicating each their own state.
                                         Note: To know signal state versus window thresholds, read each comparator
                                               output and perform a logical "exclusive or" operation. */
+#if defined(COMP_CFGR1_WINMODE)
 #define LL_COMP_WINDOW_OUTPUT_XOR_ODD   (COMP_CFGR1_WINOUT | LL_COMP_WINDOW_COMP_ODD_REGOFFSET_MASK)  /*!< Window output
                                         synthesized on COMP1 output: COMP1 output is no more indicating its own state,
                                         but global window mode state. Logical high means monitored signal is within
@@ -149,6 +171,37 @@ registers):
                                               lines, timers, ...), does not impact output digital state
                                               (@ref LL_COMP_ReadOutputLevel()) always reflecting each comparator
                                               output state.*/
+#else
+#define LL_COMP_WINDOW_OUTPUT_XOR_ODD   (COMP_CSR_WINOUT | LL_COMP_WINDOW_COMP_ODD_REGOFFSET_MASK)  /*!< Window output
+                                        synthesized on COMP1 output: COMP1 output is no more indicating its own state,
+                                        but global window mode state. Logical high means monitored signal is within
+                                        comparators window.
+                                        Note: impacts only comparator output signal level (propagated to GPIO, EXTI
+                                              lines, timers, ...), does not impact output digital state
+                                              (@ref LL_COMP_ReadOutputLevel()) always reflecting each comparator
+                                              output state.*/
+#define LL_COMP_WINDOW_OUTPUT_XOR_EVEN  (COMP_CSR_WINOUT | LL_COMP_WINDOW_COMP_EVEN_REGOFFSET_MASK) /*!< Window output
+                                        synthesized on COMP2 output: COMP2 output is no more indicating its own state,
+                                        but global window mode state. Logical high means monitored signal is within
+                                        comparators window.
+                                        Note: impacts only comparator output signal level (propagated to GPIO, EXTI
+                                              lines, timers, ...), does not impact output digital state
+                                              (@ref LL_COMP_ReadOutputLevel()) always reflecting each comparator
+                                              output state.*/
+#define LL_COMP_WINDOW_OUTPUT_XOR_BOTH  (COMP_CSR_WINOUT | LL_COMP_WINDOW_COMP_EVEN_REGOFFSET_MASK \
+                                         | LL_COMP_WINDOW_OUT_XOR_BOTH_MASK) /*!< Window output synthesized on both
+                                        comparators output of pair of comparator selected (COMP1 and COMP2):
+                                        both comparators outputs are no more indicating their own state, but global
+                                        window mode state (XOR: logical "exclusive or"). Logical high means monitored
+                                        signal is within comparators window thresholds).
+                                        This is a specific configuration (technically possible but not relevant from
+                                        application point of view: 2 comparators output used for the same signal level),
+                                        standard configuration for window mode is one of the settings above.
+                                        Note: impacts only comparator output signal level (propagated to GPIO, EXTI
+                                              lines, timers, ...), does not impact output digital state
+                                              (@ref LL_COMP_ReadOutputLevel()) always reflecting each comparator
+                                              output state.*/
+#endif /* COMP_CFGR1_WINMODE */
 /**
   * @}
   */
@@ -192,7 +245,6 @@ registers):
                                         connected to DAC1 channel 2.
                                         Specific to COMP instance: COMP2 (available on devices STM32C53xx/54xx). */
 #endif /* COMP2 */
-
 /**
   * @}
   */
@@ -456,6 +508,7 @@ __STATIC_INLINE void LL_COMP_SetCommonWindowMode(COMP_Common_TypeDef *p_comp_com
   /* Note: On this STM32 series, window mode can be set from any instance     */
   /*       of the pair of comparator instances.                               */
 
+#if defined(COMP_CFGR1_WINMODE)
   __IO uint32_t *preg = LL_COMP_PTR_REG_OFFSET(p_comp_common->CFGR1,
                                                (window_mode & LL_COMP_WINDOW_COMP_REGOFFSET_MASK));
 
@@ -467,6 +520,14 @@ __STATIC_INLINE void LL_COMP_SetCommonWindowMode(COMP_Common_TypeDef *p_comp_com
 
   /* Set window mode */
   STM32_MODIFY_REG(*preg, COMP_CFGR1_WINMODE, (window_mode & LL_COMP_WINDOW_COMP_X_SETTING_MASK));
+#else
+  __IO uint32_t *preg = LL_COMP_PTR_REG_OFFSET(p_comp_common->CSR_ODD,
+                                               (window_mode & LL_COMP_WINDOW_COMP_REGOFFSET_MASK));
+
+  /* Set window mode */
+  STM32_MODIFY_REG(*preg, COMP_CSR_INPSEL, (window_mode & LL_COMP_WINDOW_COMP_X_SETTING_MASK));
+#endif /* COMP_CFGR1_WINMODE */
+
 }
 
 /**
@@ -486,6 +547,7 @@ __STATIC_INLINE uint32_t LL_COMP_GetCommonWindowMode(const COMP_Common_TypeDef *
   /* Note: On this STM32 series, window mode can be set from any instance      */
   /*       of the pair of comparator instances.                               */
 
+#if defined(COMP_CFGR1_WINMODE)
   const uint32_t window_mode_comp_odd = (uint32_t)STM32_READ_BIT(p_comp_common->CFGR1, COMP_CFGR1_WINMODE);
   const uint32_t window_mode_comp_even = (uint32_t)STM32_READ_BIT(p_comp_common->CFGR2, COMP_CFGR1_WINMODE);
 
@@ -493,6 +555,15 @@ __STATIC_INLINE uint32_t LL_COMP_GetCommonWindowMode(const COMP_Common_TypeDef *
                     | window_mode_comp_even
                     | (window_mode_comp_even >> COMP_CFGR1_WINMODE_Pos)
                    );
+#else
+  const uint32_t window_mode_comp_odd = (uint32_t)STM32_READ_BIT(p_comp_common->CSR_ODD, COMP_CSR_INPSEL);
+  const uint32_t window_mode_comp_even = (uint32_t)STM32_READ_BIT(p_comp_common->CSR_EVEN, COMP_CSR_INPSEL);
+
+  return (uint32_t)(window_mode_comp_odd
+                    | window_mode_comp_even
+                    | ((window_mode_comp_even >> COMP_CSR_INPSEL_Pos) & LL_COMP_WINDOW_COMP_EVEN_REGOFFSET_MASK)
+                   );
+#endif /* COMP_CFGR1_WINMODE */
 }
 
 /**
@@ -512,6 +583,7 @@ __STATIC_INLINE uint32_t LL_COMP_GetCommonWindowMode(const COMP_Common_TypeDef *
   */
 __STATIC_INLINE void LL_COMP_SetCommonWindowOutput(COMP_Common_TypeDef *p_comp_common, uint32_t window_output)
 {
+#if defined(COMP_CFGR1_WINMODE)
   __IO uint32_t *preg = LL_COMP_PTR_REG_OFFSET(p_comp_common->CFGR1,
                                                (window_output & LL_COMP_WINDOW_COMP_REGOFFSET_MASK));
 
@@ -531,6 +603,31 @@ __STATIC_INLINE void LL_COMP_SetCommonWindowOutput(COMP_Common_TypeDef *p_comp_c
                    COMP_CFGR1_WINOUT,
                    (window_output & LL_COMP_WINDOW_OUT_SETTING_MASK)
                   );
+#else
+  /* Note: On this STM32 series, window mode can be set from any instance     */
+  /*       of the pair of comparator instances.                               */
+
+  __IO uint32_t *preg = LL_COMP_PTR_REG_OFFSET(p_comp_common->CSR_ODD,
+                                               (window_output & LL_COMP_WINDOW_COMP_REGOFFSET_MASK));
+
+  /* Clear the potential previous setting of window output on the relevant comparator instance */
+  /* (clear bit of window output unless specific case of setting of comparator both output selected) */
+  __IO uint32_t *preg_clear = LL_COMP_PTR_REG_OFFSET(p_comp_common->CSR_ODD,
+                                                     ((~(window_output & LL_COMP_WINDOW_COMP_REGOFFSET_MASK)
+                                                       & 0x1UL))
+                                                    );
+  STM32_MODIFY_REG(*preg_clear,
+                   COMP_CSR_WINOUT,
+                   ((window_output & LL_COMP_WINDOW_OUT_XOR_BOTH_MASK)
+                    >> LL_COMP_WINDOW_OUT_XOR_BOTH_POS_VS_WINDOW)
+                  );
+
+  /* Set window output */
+  STM32_MODIFY_REG(*preg,
+                   COMP_CSR_WINOUT,
+                   (window_output & LL_COMP_WINDOW_OUT_SETTING_MASK)
+                  );
+#endif /* COMP_CFGR1_WINMODE */
 }
 
 /**
@@ -548,6 +645,7 @@ __STATIC_INLINE void LL_COMP_SetCommonWindowOutput(COMP_Common_TypeDef *p_comp_c
   */
 __STATIC_INLINE uint32_t LL_COMP_GetCommonWindowOutput(const COMP_Common_TypeDef *p_comp_common)
 {
+#if defined(COMP_CFGR1_WINMODE)
   const uint32_t window_output_comp_odd = (uint32_t)STM32_READ_BIT(p_comp_common->CFGR1, COMP_CFGR1_WINOUT);
   const uint32_t window_output_comp_even = (uint32_t)STM32_READ_BIT(p_comp_common->CFGR2, COMP_CFGR1_WINOUT);
 
@@ -556,6 +654,17 @@ __STATIC_INLINE uint32_t LL_COMP_GetCommonWindowOutput(const COMP_Common_TypeDef
                     | window_output_comp_even
                     | ((window_output_comp_even >> COMP_CFGR1_WINOUT_Pos) * LL_COMP_WINDOW_COMP_EVEN_REGOFFSET_MASK)
                     | (window_output_comp_odd + window_output_comp_even));
+
+#else
+  const uint32_t window_output_comp_odd = (uint32_t)STM32_READ_BIT(p_comp_common->CSR_ODD, COMP_CSR_WINOUT);
+  const uint32_t window_output_comp_even = (uint32_t)STM32_READ_BIT(p_comp_common->CSR_EVEN, COMP_CSR_WINOUT);
+
+  /* Construct value corresponding to LL_COMP_WINDOWOUTPUT_xxx */
+  return (uint32_t)(window_output_comp_odd
+                    | window_output_comp_even
+                    | ((window_output_comp_even >> COMP_CSR_WINOUT_Pos) * LL_COMP_WINDOW_COMP_EVEN_REGOFFSET_MASK)
+                    | (window_output_comp_odd + window_output_comp_even));
+#endif /* COMP_CFGR1_WINMODE */
 }
 /**
   * @}
@@ -579,7 +688,7 @@ __STATIC_INLINE uint32_t LL_COMP_GetCommonWindowOutput(const COMP_Common_TypeDef
   */
 __STATIC_INLINE void LL_COMP_SetPowerMode(COMP_TypeDef *p_comp, uint32_t power_mode)
 {
-  STM32_MODIFY_REG(p_comp->CFGR1, COMP_CFGR1_PWRMODE, power_mode);
+  STM32_MODIFY_REG(LL_COMP_REG(p_comp), COMP_CFGR1_PWRMODE, power_mode);
 }
 
 /**
@@ -594,7 +703,7 @@ __STATIC_INLINE void LL_COMP_SetPowerMode(COMP_TypeDef *p_comp, uint32_t power_m
   */
 __STATIC_INLINE uint32_t LL_COMP_GetPowerMode(const COMP_TypeDef *p_comp)
 {
-  return (uint32_t)(STM32_READ_BIT(p_comp->CFGR1, COMP_CFGR1_PWRMODE));
+  return (uint32_t)(STM32_READ_BIT(LL_COMP_REG(p_comp), COMP_CFGR1_PWRMODE));
 }
 
 /**
@@ -629,9 +738,14 @@ __STATIC_INLINE uint32_t LL_COMP_GetPowerMode(const COMP_TypeDef *p_comp)
   *         @arg @ref LL_COMP_INPUT_MINUS_DAC1_CH2   (2)
   *         @arg @ref LL_COMP_INPUT_MINUS_OPAMP1_OUT (2)
   * @endif
+  *         @arg @ref LL_COMP_INPUT_MINUS_DAC2_CH1 (3)
+  *         @arg @ref LL_COMP_INPUT_MINUS_DAC2_CH2 (3)(4)
   *
   *         (1) Specific to COMP instance: COMP1
   *         (2) Specific to COMP instance: COMP2 (available on devices STM32C53xx/54xx)
+  *         (3) Parameters only available on STM32C5J1xx/5K1xx devices
+  *         (4) Parameters only available on STM32C5P1xx/5Q1xx devices
+
   * @param  input_plus This parameter can be one of the following values:
   *         @arg @ref LL_COMP_INPUT_PLUS_IO1
   *         @arg @ref LL_COMP_INPUT_PLUS_IO2
@@ -642,9 +756,17 @@ __STATIC_INLINE uint32_t LL_COMP_GetPowerMode(const COMP_TypeDef *p_comp)
   * @if COMP2
   *         @arg @ref LL_COMP_INPUT_PLUS_DAC1_CH2 (2)
   * @endif
+  *         @arg @ref LL_COMP_INPUT_PLUS_OPAMP1_OUT (3)(4)
+  *         @arg @ref LL_COMP_INPUT_PLUS_OPAMP2_OUT (3)(4)
+  *         @arg @ref LL_COMP_INPUT_PLUS_OPAMP3_OUT (3)(4)
+  *         @arg @ref LL_COMP_INPUT_PLUS_DAC2_CH1 (3)(4)
+  *         @arg @ref LL_COMP_INPUT_PLUS_DAC2_CH2 (4)
   *
   *         (1) Specific to COMP instance: COMP1
   *         (2) Specific to COMP instance: COMP2 (available on devices STM32C53xx/54xx)
+  *         (3) Parameters only available on STM32C5J1xx/5K1xx devices
+  *         (4) Parameters only available on STM32C5P1xx/5Q1xx devices
+
   * @note   In case of comparator input selected to be connected to IO:
   *         GPIO pins are specific to each comparator instance.
   *         Refer to description of parameters or to reference manual.
@@ -659,7 +781,7 @@ __STATIC_INLINE uint32_t LL_COMP_GetPowerMode(const COMP_TypeDef *p_comp)
   */
 __STATIC_INLINE void LL_COMP_ConfigInputs(COMP_TypeDef *p_comp, uint32_t input_minus, uint32_t input_plus)
 {
-  STM32_MODIFY_REG(p_comp->CFGR1,
+  STM32_MODIFY_REG(LL_COMP_REG(p_comp),
                    COMP_CFGR1_INMSEL | COMP_CFGR1_INPSEL | COMP_CFGR1_SCALEN | COMP_CFGR1_BRGEN,
                    input_minus | input_plus);
 }
@@ -679,16 +801,24 @@ __STATIC_INLINE void LL_COMP_ConfigInputs(COMP_TypeDef *p_comp, uint32_t input_m
   * @if COMP2
   *         @arg @ref LL_COMP_INPUT_PLUS_DAC1_CH2 (2)
   * @endif
+  *         @arg @ref LL_COMP_INPUT_PLUS_OPAMP1_OUT (3)(4)
+  *         @arg @ref LL_COMP_INPUT_PLUS_OPAMP2_OUT (3)(4)
+  *         @arg @ref LL_COMP_INPUT_PLUS_OPAMP3_OUT (3)(4)
+  *         @arg @ref LL_COMP_INPUT_PLUS_DAC2_CH1 (3)(4)
+  *         @arg @ref LL_COMP_INPUT_PLUS_DAC2_CH2 (4)
   *
   *         (1) Specific to COMP instance: COMP1
   *         (2) Specific to COMP instance: COMP2 (available on devices STM32C53xx/54xx)
+  *         (3) Parameters only available on STM32C5J1xx/5K1xx devices
+  *         (4) Parameters only available on STM32C5P1xx/5Q1xx devices
+
   * @note   In case of comparator input selected to be connected to IO:
   *         GPIO pins are specific to each comparator instance.
   *         Refer to description of parameters or to reference manual.
   */
 __STATIC_INLINE void LL_COMP_SetInputPlus(COMP_TypeDef *p_comp, uint32_t input_plus)
 {
-  STM32_MODIFY_REG(p_comp->CFGR1, COMP_CFGR1_INPSEL, input_plus);
+  STM32_MODIFY_REG(LL_COMP_REG(p_comp), COMP_CFGR1_INPSEL, input_plus);
 }
 
 /**
@@ -709,13 +839,21 @@ __STATIC_INLINE void LL_COMP_SetInputPlus(COMP_TypeDef *p_comp, uint32_t input_p
   * @if COMP2
   *         @arg @ref LL_COMP_INPUT_PLUS_DAC1_CH2 (2)
   * @endif
+  *         @arg @ref LL_COMP_INPUT_PLUS_OPAMP1_OUT (3)(4)
+  *         @arg @ref LL_COMP_INPUT_PLUS_OPAMP2_OUT (3)(4)
+  *         @arg @ref LL_COMP_INPUT_PLUS_OPAMP3_OUT (3)(4)
+  *         @arg @ref LL_COMP_INPUT_PLUS_DAC2_CH1 (3)(4)
+  *         @arg @ref LL_COMP_INPUT_PLUS_DAC2_CH2 (4)
   *
   *         (1) Specific to COMP instance: COMP1
   *         (2) Specific to COMP instance: COMP2 (available on devices STM32C53xx/54xx)
+  *         (3) Parameters only available on STM32C5J1xx/5K1xx devices
+  *         (4) Parameters only available on STM32C5P1xx/5Q1xx devices
+
   */
 __STATIC_INLINE uint32_t LL_COMP_GetInputPlus(const COMP_TypeDef *p_comp)
 {
-  return (uint32_t)(STM32_READ_BIT(p_comp->CFGR1, COMP_CFGR1_INPSEL));
+  return (uint32_t)(STM32_READ_BIT(LL_COMP_REG(p_comp), COMP_CFGR1_INPSEL));
 }
 
 /**
@@ -741,9 +879,14 @@ __STATIC_INLINE uint32_t LL_COMP_GetInputPlus(const COMP_TypeDef *p_comp)
   *         @arg @ref LL_COMP_INPUT_MINUS_DAC1_CH2   (2)
   *         @arg @ref LL_COMP_INPUT_MINUS_OPAMP1_OUT (2)
   * @endif
+  *         @arg @ref LL_COMP_INPUT_MINUS_DAC2_CH1 (3)
+  *         @arg @ref LL_COMP_INPUT_MINUS_DAC2_CH2 (3)(4)
   *
   *         (1) Specific to COMP instance: COMP1
   *         (2) Specific to COMP instance: COMP2 (available on devices STM32C53xx/54xx)
+  *         (3) Parameters only available on STM32C5J1xx/5K1xx devices
+  *         (4) Parameters only available on STM32C5P1xx/5Q1xx devices
+
   * @note   In case of comparator input selected to be connected to IO:
   *         GPIO pins are specific to each comparator instance.
   *         Refer to description of parameters or to reference manual.
@@ -753,7 +896,7 @@ __STATIC_INLINE uint32_t LL_COMP_GetInputPlus(const COMP_TypeDef *p_comp)
   */
 __STATIC_INLINE void LL_COMP_SetInputMinus(COMP_TypeDef *p_comp, uint32_t input_minus)
 {
-  STM32_MODIFY_REG(p_comp->CFGR1, COMP_CFGR1_INMSEL | COMP_CFGR1_SCALEN | COMP_CFGR1_BRGEN, input_minus);
+  STM32_MODIFY_REG(LL_COMP_REG(p_comp), COMP_CFGR1_INMSEL | COMP_CFGR1_SCALEN | COMP_CFGR1_BRGEN, input_minus);
 }
 
 /**
@@ -782,13 +925,18 @@ __STATIC_INLINE void LL_COMP_SetInputMinus(COMP_TypeDef *p_comp, uint32_t input_
   *         @arg @ref LL_COMP_INPUT_MINUS_DAC1_CH2   (2)
   *         @arg @ref LL_COMP_INPUT_MINUS_OPAMP1_OUT (2)
   * @endif
+  *         @arg @ref LL_COMP_INPUT_MINUS_DAC2_CH1 (3)
+  *         @arg @ref LL_COMP_INPUT_MINUS_DAC2_CH2 (3)(4)
   *
   *         (1) Specific to COMP instance: COMP1
   *         (2) Specific to COMP instance: COMP2 (available on devices STM32C53xx/54xx)
+  *         (3) Parameters only available on STM32C5J1xx/5K1xx devices
+  *         (4) Parameters only available on STM32C5P1xx/5Q1xx devices
+
   */
 __STATIC_INLINE uint32_t LL_COMP_GetInputMinus(const COMP_TypeDef *p_comp)
 {
-  return (uint32_t)(STM32_READ_BIT(p_comp->CFGR1, COMP_CFGR1_INMSEL | COMP_CFGR1_SCALEN | COMP_CFGR1_BRGEN));
+  return (uint32_t)(STM32_READ_BIT(LL_COMP_REG(p_comp), COMP_CFGR1_INMSEL | COMP_CFGR1_SCALEN | COMP_CFGR1_BRGEN));
 }
 
 /**
@@ -804,7 +952,7 @@ __STATIC_INLINE uint32_t LL_COMP_GetInputMinus(const COMP_TypeDef *p_comp)
   */
 __STATIC_INLINE uint32_t LL_COMP_IsInputScalerEnabled(const COMP_TypeDef *p_comp)
 {
-  return ((STM32_READ_BIT(p_comp->CFGR1, (COMP_CFGR1_SCALEN | COMP_CFGR1_BRGEN)) != 0UL) ? 1UL : 0UL);
+  return ((STM32_READ_BIT(LL_COMP_REG(p_comp), (COMP_CFGR1_SCALEN | COMP_CFGR1_BRGEN)) != 0UL) ? 1UL : 0UL);
 }
 
 /**
@@ -879,7 +1027,7 @@ __STATIC_INLINE uint32_t LL_COMP_IsInputTempSensorBufferEnabled(COMP_TypeDef *p_
   */
 __STATIC_INLINE void LL_COMP_SetInputHysteresis(COMP_TypeDef *p_comp, uint32_t input_hysteresis)
 {
-  STM32_MODIFY_REG(p_comp->CFGR1, COMP_CFGR1_HYST, input_hysteresis);
+  STM32_MODIFY_REG(LL_COMP_REG(p_comp), COMP_CFGR1_HYST, input_hysteresis);
 }
 
 /**
@@ -895,7 +1043,7 @@ __STATIC_INLINE void LL_COMP_SetInputHysteresis(COMP_TypeDef *p_comp, uint32_t i
   */
 __STATIC_INLINE uint32_t LL_COMP_GetInputHysteresis(const COMP_TypeDef *p_comp)
 {
-  return (uint32_t)(STM32_READ_BIT(p_comp->CFGR1, COMP_CFGR1_HYST));
+  return (uint32_t)(STM32_READ_BIT(LL_COMP_REG(p_comp), COMP_CFGR1_HYST));
 }
 
 /** @defgroup COMP_LL_EF_Configuration_comparator_output Configuration of comparator output
@@ -913,7 +1061,7 @@ __STATIC_INLINE uint32_t LL_COMP_GetInputHysteresis(const COMP_TypeDef *p_comp)
   */
 __STATIC_INLINE void LL_COMP_SetOutputPolarity(COMP_TypeDef *p_comp, uint32_t output_polarity)
 {
-  STM32_MODIFY_REG(p_comp->CFGR1, COMP_CFGR1_POLARITY, output_polarity);
+  STM32_MODIFY_REG(LL_COMP_REG(p_comp), COMP_CFGR1_POLARITY, output_polarity);
 }
 
 /**
@@ -927,7 +1075,7 @@ __STATIC_INLINE void LL_COMP_SetOutputPolarity(COMP_TypeDef *p_comp, uint32_t ou
   */
 __STATIC_INLINE uint32_t LL_COMP_GetOutputPolarity(const COMP_TypeDef *p_comp)
 {
-  return (uint32_t)(STM32_READ_BIT(p_comp->CFGR1, COMP_CFGR1_POLARITY));
+  return (uint32_t)(STM32_READ_BIT(LL_COMP_REG(p_comp), COMP_CFGR1_POLARITY));
 }
 
 /**
@@ -945,9 +1093,18 @@ __STATIC_INLINE uint32_t LL_COMP_GetOutputPolarity(const COMP_TypeDef *p_comp)
   *         @arg @ref LL_COMP_BLANKINGSRC_TIM8_OC5
   *         @arg @ref LL_COMP_BLANKINGSRC_TIM15_OC2
   *         @arg @ref LL_COMP_BLANKINGSRC_LPTIM1_OC1 (2)
+  *         @arg @ref LL_COMP_BLANKINGSRC_TIM8_OC6 (3)
+  *         @arg @ref LL_COMP_BLANKINGSRC_PLAY_OUT6 (3)
+  *         @arg @ref LL_COMP_BLANKINGSRC_TIM1_OC6 (3)
+  *         @arg @ref LL_COMP_BLANKINGSRC_TIM2_OC4 (3)
+  *         @arg @ref LL_COMP_BLANKINGSRC_TIM3_OC3 (3)
+  *         @arg @ref LL_COMP_BLANKINGSRC_TIM3_OC4 (3)
+  *         @arg @ref LL_COMP_BLANKINGSRC_PLAY_OUT7 (3)
   *
   *         (1) On STM32C5, parameter available only on COMP instance: COMP1.
   *         (2) On STM32C5, parameter available only on COMP instance: COMP2.
+  *         (3) On STM32C5, parameters available only on COMP instances: COMP3 and COMP4.
+
   * @note   Availability of parameters of blanking source from peripherals
   *         depends on their availability on the selected device.
   * @note   Blanking source can be specific to each comparator instance.
@@ -955,7 +1112,7 @@ __STATIC_INLINE uint32_t LL_COMP_GetOutputPolarity(const COMP_TypeDef *p_comp)
   */
 __STATIC_INLINE void LL_COMP_SetOutputBlankingSource(COMP_TypeDef *p_comp, uint32_t blanking_source)
 {
-  STM32_MODIFY_REG(p_comp->CFGR1, COMP_CFGR1_BLANKING, blanking_source);
+  STM32_MODIFY_REG(LL_COMP_REG(p_comp), COMP_CFGR1_BLANKING, blanking_source);
 }
 
 /**
@@ -977,13 +1134,22 @@ __STATIC_INLINE void LL_COMP_SetOutputBlankingSource(COMP_TypeDef *p_comp, uint3
   *         @arg @ref LL_COMP_BLANKINGSRC_TIM8_OC5
   *         @arg @ref LL_COMP_BLANKINGSRC_TIM15_OC2
   *         @arg @ref LL_COMP_BLANKINGSRC_LPTIM1_OC1 (2)
+  *         @arg @ref LL_COMP_BLANKINGSRC_TIM8_OC6 (3)
+  *         @arg @ref LL_COMP_BLANKINGSRC_PLAY_OUT6 (3)
+  *         @arg @ref LL_COMP_BLANKINGSRC_TIM1_OC6 (3)
+  *         @arg @ref LL_COMP_BLANKINGSRC_TIM2_OC4 (3)
+  *         @arg @ref LL_COMP_BLANKINGSRC_TIM3_OC3 (3)
+  *         @arg @ref LL_COMP_BLANKINGSRC_TIM3_OC4 (3)
+  *         @arg @ref LL_COMP_BLANKINGSRC_PLAY_OUT7 (3)
   *
   *         (1) On STM32C5, parameter available only on COMP instance: COMP1.
   *         (2) On STM32C5, parameter available only on COMP instance: COMP2.
+  *         (3) On STM32C5, parameters available only on COMP instances: COMP3 and COMP4.
+
   */
 __STATIC_INLINE uint32_t LL_COMP_GetOutputBlankingSource(const COMP_TypeDef *p_comp)
 {
-  return (uint32_t)(STM32_READ_BIT(p_comp->CFGR1, COMP_CFGR1_BLANKING));
+  return (uint32_t)(STM32_READ_BIT(LL_COMP_REG(p_comp), COMP_CFGR1_BLANKING));
 }
 
 /**
@@ -1008,7 +1174,7 @@ __STATIC_INLINE uint32_t LL_COMP_GetOutputBlankingSource(const COMP_TypeDef *p_c
   */
 __STATIC_INLINE void LL_COMP_Enable(COMP_TypeDef *p_comp)
 {
-  STM32_SET_BIT(p_comp->CFGR1, COMP_CFGR1_EN);
+  STM32_SET_BIT(LL_COMP_REG(p_comp), COMP_CFGR1_EN);
 }
 
 /**
@@ -1019,7 +1185,7 @@ __STATIC_INLINE void LL_COMP_Enable(COMP_TypeDef *p_comp)
   */
 __STATIC_INLINE void LL_COMP_Disable(COMP_TypeDef *p_comp)
 {
-  STM32_CLEAR_BIT(p_comp->CFGR1, COMP_CFGR1_EN);
+  STM32_CLEAR_BIT(LL_COMP_REG(p_comp), COMP_CFGR1_EN);
 }
 
 /**
@@ -1031,7 +1197,7 @@ __STATIC_INLINE void LL_COMP_Disable(COMP_TypeDef *p_comp)
   */
 __STATIC_INLINE uint32_t LL_COMP_IsEnabled(const COMP_TypeDef *p_comp)
 {
-  return ((STM32_READ_BIT(p_comp->CFGR1, COMP_CFGR1_EN) == (COMP_CFGR1_EN)) ? 1UL : 0UL);
+  return ((STM32_READ_BIT(LL_COMP_REG(p_comp), COMP_CFGR1_EN) == (COMP_CFGR1_EN)) ? 1UL : 0UL);
 }
 
 /**
@@ -1044,7 +1210,7 @@ __STATIC_INLINE uint32_t LL_COMP_IsEnabled(const COMP_TypeDef *p_comp)
   */
 __STATIC_INLINE void LL_COMP_Lock(COMP_TypeDef *p_comp)
 {
-  STM32_SET_BIT(p_comp->CFGR1, COMP_CFGR1_LOCK);
+  STM32_SET_BIT(LL_COMP_REG(p_comp), COMP_CFGR1_LOCK);
 }
 
 /**
@@ -1058,7 +1224,7 @@ __STATIC_INLINE void LL_COMP_Lock(COMP_TypeDef *p_comp)
   */
 __STATIC_INLINE uint32_t LL_COMP_IsLocked(const COMP_TypeDef *p_comp)
 {
-  return ((STM32_READ_BIT(p_comp->CFGR1, COMP_CFGR1_LOCK) == (COMP_CFGR1_LOCK)) ? 1UL : 0UL);
+  return ((STM32_READ_BIT(LL_COMP_REG(p_comp), COMP_CFGR1_LOCK) == (COMP_CFGR1_LOCK)) ? 1UL : 0UL);
 }
 
 /**
@@ -1087,6 +1253,9 @@ __STATIC_INLINE uint32_t LL_COMP_IsLocked(const COMP_TypeDef *p_comp)
   */
 __STATIC_INLINE uint32_t LL_COMP_ReadOutputLevel(const COMP_TypeDef *p_comp)
 {
+#if defined(COMP_CSR_VALUE)
+  return (uint32_t)(STM32_READ_BIT(p_comp->CSR, COMP_CSR_VALUE) >> COMP_CSR_VALUE_Pos);
+#else
 #if defined(COMP2)
   if (p_comp == COMP1)
   {
@@ -1099,12 +1268,14 @@ __STATIC_INLINE uint32_t LL_COMP_ReadOutputLevel(const COMP_TypeDef *p_comp)
 #else
   return (uint32_t)(STM32_READ_BIT(p_comp->SR, COMP_SR_C1VAL));
 #endif
+#endif /* COMP_CSR_VALUE */
 }
 
 /**
   * @}
   */
 
+#if defined(COMP_SR_C1IF)
 /** @defgroup COMP_LL_EF_FLAG_Management Comparator flag Management
   * @{
   */
@@ -1163,7 +1334,9 @@ __STATIC_INLINE void LL_COMP_ClearFlag_OutputTrig(COMP_TypeDef *p_comp)
 /**
   * @}
   */
+#endif /* COMP_SR_C1IF */
 
+#if defined(COMP_CFGR1_ITEN)
 /** @defgroup COMP_LL_EF_IT_Management Comparator IT management
   * @{
   */
@@ -1176,7 +1349,7 @@ __STATIC_INLINE void LL_COMP_ClearFlag_OutputTrig(COMP_TypeDef *p_comp)
   */
 __STATIC_INLINE void LL_COMP_EnableIT_OutputTrig(COMP_TypeDef *p_comp)
 {
-  STM32_SET_BIT(p_comp->CFGR1, COMP_CFGR1_ITEN);
+  STM32_SET_BIT(LL_COMP_REG(p_comp), COMP_CFGR1_ITEN);
 }
 
 /**
@@ -1187,7 +1360,7 @@ __STATIC_INLINE void LL_COMP_EnableIT_OutputTrig(COMP_TypeDef *p_comp)
   */
 __STATIC_INLINE void LL_COMP_DisableIT_OutputTrig(COMP_TypeDef *p_comp)
 {
-  STM32_CLEAR_BIT(p_comp->CFGR1, COMP_CFGR1_ITEN);
+  STM32_CLEAR_BIT(LL_COMP_REG(p_comp), COMP_CFGR1_ITEN);
 }
 
 /**
@@ -1199,12 +1372,13 @@ __STATIC_INLINE void LL_COMP_DisableIT_OutputTrig(COMP_TypeDef *p_comp)
   */
 __STATIC_INLINE uint32_t LL_COMP_IsEnabledIT_OutputTrig(const COMP_TypeDef *p_comp)
 {
-  return ((STM32_READ_BIT(p_comp->CFGR1, COMP_CFGR1_ITEN) == (COMP_CFGR1_ITEN)) ? 1UL : 0UL);
+  return ((STM32_READ_BIT(LL_COMP_REG(p_comp), COMP_CFGR1_ITEN) == (COMP_CFGR1_ITEN)) ? 1UL : 0UL);
 }
 
 /**
   * @}
   */
+#endif /* COMP_CFGR1_ITEN */
 
 /**
   * @}
@@ -1218,7 +1392,7 @@ __STATIC_INLINE uint32_t LL_COMP_IsEnabledIT_OutputTrig(const COMP_TypeDef *p_co
   * @}
   */
 
-#endif /* COMP1 */
+#endif /* COMP1 || COMP2 || COMP3 || COMP4 */
 
 /**
   * @}

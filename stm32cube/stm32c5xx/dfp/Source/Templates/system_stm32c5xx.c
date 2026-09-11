@@ -185,7 +185,7 @@ void SystemInit(void)
   *              in voltage and temperature.
   *
   *         (***) HSE_VALUE is a constant defined in stm32_external_env.h file (default value
-  *               24 MHz), user has to ensure that HSE_VALUE is same as the real
+  *               24 MHz or 48MHz), user has to ensure that HSE_VALUE is same as the real
   *               frequency of the crystal used. Otherwise, this function can
   *               have wrong result.
   *
@@ -200,15 +200,9 @@ void SystemCoreClockUpdate(void)
   /* Get SYSCLK source -------------------------------------------------------*/
   switch ((RCC->CFGR1 & RCC_CFGR1_SWS) >> RCC_CFGR1_SWS_Pos)
   {
-#if defined(RCC_CR1_HSIDIV4ON)
-    case 0x00UL:  /* HSIDIV4 used as system clock source */
-      SystemCoreClock = (uint32_t)(HSI_VALUE / 4U);
-      break;
-#else
     case 0x00UL:  /* HSIDIV3 used as system clock source */
       SystemCoreClock = (uint32_t)(HSI_VALUE / 3U);
       break;
-#endif /* RCC_CR1_HSIDIV4ON */
 
     case 0x01UL:  /* HSIS used as system clock source */
       SystemCoreClock = (uint32_t) HSI_VALUE;
@@ -229,27 +223,6 @@ void SystemCoreClockUpdate(void)
 
       switch (psifreq)
       {
-#if defined(RCC_CR1_HSIDIV4ON)
-        case 0x00UL:
-          SystemCoreClock = (uint32_t)200000000U; /* 200 MHz */
-          break;
-
-        case 0x01UL:
-          SystemCoreClock = (uint32_t)144000000U; /* 144 MHz */
-          break;
-
-        case 0x02UL:
-          SystemCoreClock = (uint32_t)160000000U; /* 160 MHz */
-          break;
-
-        case 0x03UL:
-          SystemCoreClock = (uint32_t)192000000U; /* 192 MHz */
-          break;
-
-        default:
-          SystemCoreClock = (uint32_t)200000000U; /* 200 MHz */
-          break;
-#else
         case 0x00UL:
           SystemCoreClock = (uint32_t)100000000U; /* 100 MHz */
           break;
@@ -266,17 +239,12 @@ void SystemCoreClockUpdate(void)
         default:
           SystemCoreClock = (uint32_t)100000000U; /* 100 MHz */
           break;
-#endif /* RCC_CR1_HSIDIV4ON */
       }
     }
     break;
 
     default:
-#if defined(RCC_CR1_HSIDIV4ON)
-      SystemCoreClock = (uint32_t)(HSI_VALUE / 4U);
-#else
       SystemCoreClock = (uint32_t)(HSI_VALUE / 3U);
-#endif /* RCC_CR1_HSIDIV4ON */
       break;
   }
   /* Compute HCLK clock frequency --------------------------------------------*/

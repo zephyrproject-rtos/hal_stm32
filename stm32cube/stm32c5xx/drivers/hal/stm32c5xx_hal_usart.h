@@ -74,7 +74,7 @@ typedef enum
   HAL_USART_STATE_IDLE                      = (1UL << 30U),
   /*! Peripheral Reception process is ongoing */
   HAL_USART_STATE_RX_ACTIVE                 = (1UL << 29U),
-  /*! Peripheral Reception process is ongoing */
+  /*! Peripheral Transmit process is ongoing */
   HAL_USART_STATE_TX_ACTIVE                 = (1UL << 28U),
   /*! Peripheral Transmit/Receive process is ongoing */
   HAL_USART_STATE_TX_RX_ACTIVE              = (1UL << 27U),

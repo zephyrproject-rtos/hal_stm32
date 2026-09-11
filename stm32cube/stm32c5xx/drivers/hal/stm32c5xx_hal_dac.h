@@ -52,7 +52,7 @@ extern "C" {
   */
 typedef enum
 {
-  HAL_DAC1 = DAC1_BASE, /*!<  DAC1 */
+  HAL_DAC1 = DAC1_BASE, /*!< DAC1 */
 } hal_dac_t;
 
 /**
@@ -113,7 +113,9 @@ typedef enum
   HAL_DAC_TRIGGER_TIM8_TRGO           = LL_DAC_TRIGGER_TIM8_TRGO,           /*!< TIM8 TRGO selected as external conversion trigger for DAC channel. */
   HAL_DAC_TRIGGER_TIM12_TRGO          = LL_DAC_TRIGGER_TIM12_TRGO,          /*!< TIM12 TRGO selected as external conversion trigger for DAC channel. */
   HAL_DAC_TRIGGER_TIM15_TRGO          = LL_DAC_TRIGGER_TIM15_TRGO,          /*!< TIM15 TRGO selected as external conversion trigger for DAC channel. */
+#if defined(LPTIM1)
   HAL_DAC_TRIGGER_LPTIM1_OC1          = LL_DAC_TRIGGER_LPTIM1_OC1,          /*!< LPTIM1 CH1 selected as external conversion trigger for DAC channel. */
+#endif /* LPTIM1 */
   HAL_DAC_TRIGGER_EXTI9               = LL_DAC_TRIGGER_EXTI9,               /*!< EXTI Line9 event selected as external conversion trigger for DAC channel. */
 } hal_dac_trigger_t;
 
@@ -678,7 +680,7 @@ const void *HAL_DAC_GetUserData(const hal_dac_handle_t *hdac);
   * @}
   */
 
-#endif /* DAC1 */
+#endif /* DAC1 || DAC2 */
 
 /**
   * @}

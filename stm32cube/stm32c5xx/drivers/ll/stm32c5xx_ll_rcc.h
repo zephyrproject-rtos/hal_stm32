@@ -581,14 +581,15 @@ extern "C" {
 /** @defgroup RCC_LL_EC_XSPI_CLKSOURCE  Peripheral XSPI clock source selection
   * @{
   */
-#define LL_RCC_XSPI1_CLKSOURCE_HCLK        0U                        /*!< HCLK clock used as XSPI1 clock source */
-#define LL_RCC_XSPI1_CLKSOURCE_PSIK        RCC_CCIPR3_XSPI1SEL_0     /*!< PSIK clock used as XSPI1 clock source */
-#define LL_RCC_XSPI1_CLKSOURCE_HSIK        RCC_CCIPR3_XSPI1SEL_1     /*!< HSIK clock used as XSPI1 clock source */
+#define LL_RCC_XSPI1_CLKSOURCE_HCLK        LL_CLKSOURCE(RCC_OFFSET_CCIPR3, (uint32_t)RCC_CCIPR3_XSPI1SEL_Pos, RCC_CCIPR3_XSPI1SEL, 0UL)                       /*!< HCLK clock used as XSPI1 clock source */
+#define LL_RCC_XSPI1_CLKSOURCE_PSIK        LL_CLKSOURCE(RCC_OFFSET_CCIPR3, (uint32_t)RCC_CCIPR3_XSPI1SEL_Pos, RCC_CCIPR3_XSPI1SEL, RCC_CCIPR3_XSPI1SEL_0)     /*!< PSIK clock used as XSPI1 clock source */
+#define LL_RCC_XSPI1_CLKSOURCE_HSIK        LL_CLKSOURCE(RCC_OFFSET_CCIPR3, (uint32_t)RCC_CCIPR3_XSPI1SEL_Pos, RCC_CCIPR3_XSPI1SEL, RCC_CCIPR3_XSPI1SEL_1)     /*!< HSIK clock used as XSPI1 clock source */
+
 /**
   * @}
   */ /* End of RCC_LL_EC_XSPI_CLKSOURCE */
-
 #endif /* XSPI1*/
+
 #if defined(ETH1)
 /** @defgroup RCC_LL_EC_ETH1_CLKSOURCE  Peripheral ETH1 clock source selection
   * @{
@@ -609,15 +610,12 @@ extern "C" {
   * @}
   */ /* End of RCC_LL_EC_ETH1_CLKSOURCE */
 
-#if defined(RCC_CR1_HSIDIV3ON)
 /** @defgroup RCC_LL_EC_ETH1_PRESCALER  ETH1 prescaler
   * @{
   */
 #define LL_RCC_ETH1_PRESCALER_1               0U                                  /*!< ETH1 clock not divided  */
 #define LL_RCC_ETH1_PRESCALER_2               RCC_CCIPR3_ETH1CLKDIV_0             /*!< ETH1 clock divided by 2 */
 #define LL_RCC_ETH1_PRESCALER_4               RCC_CCIPR3_ETH1CLKDIV_1             /*!< ETH1 clock divided by 4 */
-
-#endif /* RCC_CR1_HSIDIV3ON */
 /**
   * @}
   */ /* End of RCC_LL_EC_ETH1_PRESCALER */
@@ -734,7 +732,7 @@ extern "C" {
 /** @defgroup RCC_LL_EC_XSPI  Peripheral XSPI1 get clock source
   * @{
   */
-#define LL_RCC_XSPI1_CLKSOURCE                RCC_CCIPR3_XSPI1SEL /*!< XSPI1 Clock source selection */
+#define LL_RCC_XSPI1_CLKSOURCE                LL_CLKSOURCE(RCC_OFFSET_CCIPR3, (uint32_t)RCC_CCIPR3_XSPI1SEL_Pos, RCC_CCIPR3_XSPI1SEL, 0UL) /*!< XSPI1 Clock source selection */
 /**
   * @}
   */
@@ -752,7 +750,6 @@ extern "C" {
   */
 
 #endif /* ETH1 */
-
 /** @defgroup RCC_LL_FLAGS RCC Flags
   * @{
   */
@@ -2347,6 +2344,11 @@ __STATIC_INLINE void LL_RCC_ConfigMCO(uint32_t mcox_source, uint32_t mcox_presca
   *         @arg @ref LL_RCC_ETH1_CLKSOURCE_PSIK     (*)
   *         @arg @ref LL_RCC_ETH1_CLKSOURCE_HSE      (*)
   * @endif
+  * @if XSPI1
+  *         @arg @ref LL_RCC_XSPI1_CLKSOURCE_HCLK    (*)
+  *         @arg @ref LL_RCC_XSPI1_CLKSOURCE_PSIK    (*)
+  *         @arg @ref LL_RCC_XSPI1_CLKSOURCE_HSIK    (*)
+  * @endif
   *
   *         (*) value not defined in all devices.
   */
@@ -2588,7 +2590,7 @@ __STATIC_INLINE void LL_RCC_SetCK48ClockSource(uint32_t clk_src)
   */
 __STATIC_INLINE void LL_RCC_SetXSPIClockSource(uint32_t clk_src)
 {
-  STM32_MODIFY_REG(RCC->CCIPR3, RCC_CCIPR3_XSPI1SEL, clk_src);
+  LL_RCC_SetClockSource(clk_src);
 }
 
 #endif /* XSPI1 */
@@ -2642,7 +2644,6 @@ __STATIC_INLINE void LL_RCC_SetETH1PTPPrescaler(uint32_t prescaler)
 }
 
 #endif /* ETH1 */
-
 /**
   * @brief  Configure ADCDACx.
   * @rmtoll
@@ -2858,6 +2859,11 @@ __STATIC_INLINE void LL_RCC_GetConfigETH1PTP(uint32_t *p_eth_source, uint32_t *p
   *         @arg @ref LL_RCC_ETH1_CLKSOURCE_PSIS     (*)
   *         @arg @ref LL_RCC_ETH1_CLKSOURCE_PSIK     (*)
   *         @arg @ref LL_RCC_ETH1_CLKSOURCE_HSE      (*)
+  * @endif
+  * @if XSPI1
+  *         @arg @ref LL_RCC_XSPI1_CLKSOURCE_HCLK    (*)
+  *         @arg @ref LL_RCC_XSPI1_CLKSOURCE_PSIK    (*)
+  *         @arg @ref LL_RCC_XSPI1_CLKSOURCE_HSIK    (*)
   * @endif
   *
   *         (*) value not defined in all devices.
@@ -3154,8 +3160,7 @@ __STATIC_INLINE uint32_t LL_RCC_GetCKClockSource(uint32_t Periph)
   */
 __STATIC_INLINE uint32_t LL_RCC_GetXSPIClockSource(uint32_t Periph)
 {
-  UNUSED(Periph);
-  return (uint32_t)(STM32_READ_BIT(RCC->CCIPR3, RCC_CCIPR3_XSPI1SEL));
+  return LL_RCC_GetClockSource(Periph);
 }
 
 #endif /* XSPI1 */
@@ -3213,7 +3218,6 @@ __STATIC_INLINE uint32_t LL_RCC_GetETH1PTPPrescaler(void)
 }
 
 #endif /* ETH1 */
-
 /**
   * @}
   */ /* End of RCC_LL_EF_Peripheral_Clock_Source */
