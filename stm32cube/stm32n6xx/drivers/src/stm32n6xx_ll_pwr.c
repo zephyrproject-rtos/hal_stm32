@@ -105,4 +105,3 @@ ErrorStatus LL_PWR_DeInit(void)
   */
 
 #endif /* defined (USE_FULL_LL_DRIVER) */
-

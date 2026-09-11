@@ -1543,4 +1543,3 @@ void      HAL_RIF_ILA_Callback(uint32_t PeriphId);
 #endif
 
 #endif /* STM32N6xx_HAL_RIF_H */
-

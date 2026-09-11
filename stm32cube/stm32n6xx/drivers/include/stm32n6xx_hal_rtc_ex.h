@@ -1846,4 +1846,3 @@ HAL_StatusTypeDef HAL_RTCEx_PrivilegeModeGet(const RTC_HandleTypeDef *hrtc, RTC_
 #endif
 
 #endif /* STM32N6xx_HAL_RTC_EX_H */
-

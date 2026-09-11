@@ -410,4 +410,3 @@ uint32_t          HAL_EXTI_GetLockAttributes(void);
 #endif
 
 #endif /* STM32N6xx_HAL_EXTI_H */
-
