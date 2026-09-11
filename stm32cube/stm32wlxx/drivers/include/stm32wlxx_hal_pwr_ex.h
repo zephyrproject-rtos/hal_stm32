@@ -649,4 +649,3 @@ void              HAL_PWREx_PVM3Callback(void);
 
 
 #endif /* STM32WLxx_HAL_PWR_EX_H */
-

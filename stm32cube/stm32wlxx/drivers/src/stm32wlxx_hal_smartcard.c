@@ -3179,4 +3179,3 @@ static void SMARTCARD_RxISR_FIFOEN(SMARTCARD_HandleTypeDef *hsmartcard)
 /**
   * @}
   */
-

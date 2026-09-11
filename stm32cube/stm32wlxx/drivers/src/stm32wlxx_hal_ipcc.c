@@ -778,4 +778,3 @@ void IPCC_Reset_Register(IPCC_CommonTypeDef *Instance)
   * @}
   */
 #endif /* IPCC */
-

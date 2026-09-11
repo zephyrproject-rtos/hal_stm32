@@ -70,4 +70,3 @@ HAL_StatusTypeDef HAL_SPIEx_FlushRxFifo(const SPI_HandleTypeDef *hspi);
 #endif
 
 #endif /* STM32WLxx_HAL_SPI_EX_H */
-

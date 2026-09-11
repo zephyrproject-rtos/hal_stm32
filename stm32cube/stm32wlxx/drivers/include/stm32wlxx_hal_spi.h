@@ -852,4 +852,3 @@ uint32_t             HAL_SPI_GetError(const SPI_HandleTypeDef *hspi);
 #endif
 
 #endif /* STM32WLxx_HAL_SPI_H */
-

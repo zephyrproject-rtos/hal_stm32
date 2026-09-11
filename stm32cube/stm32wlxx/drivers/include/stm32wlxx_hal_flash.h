@@ -1023,4 +1023,3 @@ HAL_StatusTypeDef  FLASH_WaitForLastOperation(uint32_t Timeout);
 #endif
 
 #endif /* STM32WLxx_HAL_FLASH_H */
-

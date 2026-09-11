@@ -130,4 +130,3 @@ void              FLASH_PageErase(uint32_t Page);
 #endif
 
 #endif /* STM32WLxx_HAL_FLASH_EX_H */
-
