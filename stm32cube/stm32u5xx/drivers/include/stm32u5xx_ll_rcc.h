@@ -6,8 +6,8 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
-  * All rights reserved.</center></h2>
+  * Copyright (c) 2021 STMicroelectronics.
+  * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
   * in the root directory of this software component.
@@ -6118,5 +6118,3 @@ uint32_t    LL_RCC_GetLTDCClockFreq(uint32_t LTDCxSource);
 #endif
 
 #endif /* STM32u5xx_LL_RCC_H */
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

@@ -1181,4 +1181,3 @@ uint32_t HAL_RAMCFG_GetError(const RAMCFG_HandleTypeDef *hramcfg)
 /**
   * @}
   */
-

@@ -1181,4 +1181,3 @@ HAL_StatusTypeDef HAL_OPAMP_UnRegisterCallback(OPAMP_HandleTypeDef *hopamp, HAL_
 /**
   * @}
   */
-

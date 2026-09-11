@@ -237,4 +237,3 @@ void FLASH_PageErase(uint32_t Page, uint32_t Banks);
 #endif
 
 #endif /* STM32U5xx_HAL_FLASH_EX_H */
-
