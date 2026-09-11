@@ -4402,10 +4402,8 @@ typedef struct
 #define RCC_CSR1_LSEBYP_Msk              (0x1UL << RCC_CSR1_LSEBYP_Pos)         /*!< 0x00000004 */
 #define RCC_CSR1_LSEBYP                  RCC_CSR1_LSEBYP_Msk
 #define RCC_CSR1_LSEDRV_Pos              (3U)
-#define RCC_CSR1_LSEDRV_Msk              (0x3UL << RCC_CSR1_LSEDRV_Pos)         /*!< 0x00000018 */
+#define RCC_CSR1_LSEDRV_Msk              (0x1UL << RCC_CSR1_LSEDRV_Pos)         /*!< 0x00000008 */
 #define RCC_CSR1_LSEDRV                  RCC_CSR1_LSEDRV_Msk
-#define RCC_CSR1_LSEDRV_0                (0x1UL << RCC_CSR1_LSEDRV_Pos)         /*!< 0x00000008 */
-#define RCC_CSR1_LSEDRV_1                (0x2UL << RCC_CSR1_LSEDRV_Pos)         /*!< 0x00000010 */
 #define RCC_CSR1_LSECSSON_Pos            (5U)
 #define RCC_CSR1_LSECSSON_Msk            (0x1UL << RCC_CSR1_LSECSSON_Pos)       /*!< 0x00000020 */
 #define RCC_CSR1_LSECSSON                RCC_CSR1_LSECSSON_Msk

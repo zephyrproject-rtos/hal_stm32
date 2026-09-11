@@ -508,31 +508,31 @@ typedef struct
 /* @endcond */
 
 #define RCC_MCO1_PA8           (RCC_MCO1_INDEX |\
-                                (GPIO_AF0_MCO << RCC_MCO_GPIOAF_POS) | \
+                                ((uint32_t)GPIO_AF0_MCO << RCC_MCO_GPIOAF_POS) | \
                                 (GPIO_GET_INDEX(GPIOA) << RCC_MCO_GPIOPORT_POS) | GPIO_PIN_8)
 #define RCC_MCO1_PA9           (RCC_MCO1_INDEX |\
-                                (GPIO_AF0_MCO << RCC_MCO_GPIOAF_POS) | \
+                                ((uint32_t)GPIO_AF0_MCO << RCC_MCO_GPIOAF_POS) | \
                                 (GPIO_GET_INDEX(GPIOA) << RCC_MCO_GPIOPORT_POS) | GPIO_PIN_9)
 #define RCC_MCO1_PF2           (RCC_MCO1_INDEX |\
-                                (GPIO_AF0_MCO << RCC_MCO_GPIOAF_POS) | \
+                                ((uint32_t)GPIO_AF0_MCO << RCC_MCO_GPIOAF_POS) | \
                                 (GPIO_GET_INDEX(GPIOF) << RCC_MCO_GPIOPORT_POS) | GPIO_PIN_2)
 #define RCC_MCO1               RCC_MCO1_PA8         /*!< Alias for compatibility */
 
 #define RCC_MCO2_PA8           (RCC_MCO2_INDEX |\
-                                (GPIO_AF15_MCO2 << RCC_MCO_GPIOAF_POS) | \
+                                ((uint32_t)GPIO_AF15_MCO2 << RCC_MCO_GPIOAF_POS) | \
                                 (GPIO_GET_INDEX(GPIOA) << RCC_MCO_GPIOPORT_POS) | GPIO_PIN_8)
 #define RCC_MCO2_PA10          (RCC_MCO2_INDEX |\
-                                (GPIO_AF3_MCO2 << RCC_MCO_GPIOAF_POS) | \
+                                ((uint32_t)GPIO_AF3_MCO2 << RCC_MCO_GPIOAF_POS) | \
                                 (GPIO_GET_INDEX(GPIOA) << RCC_MCO_GPIOPORT_POS) | GPIO_PIN_10)
 #define RCC_MCO2_PA14          (RCC_MCO2_INDEX |\
-                                (GPIO_AF11_MCO2 << RCC_MCO_GPIOAF_POS) | \
+                                ((uint32_t)GPIO_AF11_MCO2 << RCC_MCO_GPIOAF_POS) | \
                                 (GPIO_GET_INDEX(GPIOA) << RCC_MCO_GPIOPORT_POS) | GPIO_PIN_14)
 #if !defined(STM32C011xx)
 #define RCC_MCO2_PA15          (RCC_MCO2_INDEX |\
-                                (GPIO_AF3_MCO2 << RCC_MCO_GPIOAF_POS) | \
+                                ((uint32_t)GPIO_AF3_MCO2 << RCC_MCO_GPIOAF_POS) | \
                                 (GPIO_GET_INDEX(GPIOA) << RCC_MCO_GPIOPORT_POS) | GPIO_PIN_15)
 #define RCC_MCO2_PB2           (RCC_MCO2_INDEX |\
-                                (GPIO_AF3_MCO2 << RCC_MCO_GPIOAF_POS) | \
+                                ((uint32_t)GPIO_AF3_MCO2 << RCC_MCO_GPIOAF_POS) | \
                                 (GPIO_GET_INDEX(GPIOB) << RCC_MCO_GPIOPORT_POS) | GPIO_PIN_2)
 #endif /* STM32C011xx */
 #define RCC_MCO2               RCC_MCO2_PA10         /*!< Alias for compatibility */
@@ -666,10 +666,8 @@ typedef struct
 /** @defgroup RCC_LSEDrive_Config LSE Drive Configuration
   * @{
   */
-#define RCC_LSEDRIVE_LOW                 0x00000000U            /*!< LSE low drive capability */
-#define RCC_LSEDRIVE_MEDIUMLOW           RCC_CSR1_LSEDRV_0      /*!< LSE medium low drive capability */
-#define RCC_LSEDRIVE_MEDIUMHIGH          RCC_CSR1_LSEDRV_1      /*!< LSE medium high drive capability */
-#define RCC_LSEDRIVE_HIGH                RCC_CSR1_LSEDRV        /*!< LSE high drive capability */
+#define RCC_LSEDRIVE_MEDIUMHIGH          0x00000000U      /*!< LSE medium high drive capability */
+#define RCC_LSEDRIVE_HIGH                RCC_CSR1_LSEDRV  /*!< LSE high drive capability */
 /**
   * @}
   */
@@ -1967,8 +1965,6 @@ typedef struct
   * @brief  Macro to configure the External Low Speed oscillator (LSE) drive capability.
   * @param  __LSEDRIVE__ specifies the new state of the LSE drive capability.
   *          This parameter can be one of the following values:
-  *            @arg @ref RCC_LSEDRIVE_LOW LSE oscillator low drive capability.
-  *            @arg @ref RCC_LSEDRIVE_MEDIUMLOW LSE oscillator medium low drive capability.
   *            @arg @ref RCC_LSEDRIVE_MEDIUMHIGH LSE oscillator medium high drive capability.
   *            @arg @ref RCC_LSEDRIVE_HIGH LSE oscillator high drive capability.
   * @retval None

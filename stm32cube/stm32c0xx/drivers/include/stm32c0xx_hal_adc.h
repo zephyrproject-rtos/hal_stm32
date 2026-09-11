@@ -1410,7 +1410,7 @@ typedef  void (*pADC_CallbackTypeDef)(ADC_HandleTypeDef *hadc); /*!< pointer to 
   *         (2) For ADC channel read back from ADC register,
   *             comparison with internal channel parameter to be done
   *             using helper macro @ref __LL_ADC_CHANNEL_INTERNAL_TO_EXTERNAL().
-  *         (3) ADC channels available on STM32C031xx device only.
+  *         (3) ADC channels not available on STM32C011xx device.
   * @retval Value between Min_Data=0 and Max_Data=18
   */
 #define __HAL_ADC_CHANNEL_TO_DECIMAL_NB(__CHANNEL__)                           \
@@ -1458,7 +1458,7 @@ typedef  void (*pADC_CallbackTypeDef)(ADC_HandleTypeDef *hadc); /*!< pointer to 
   *         (2) For ADC channel read back from ADC register,
   *             comparison with internal channel parameter to be done
   *             using helper macro @ref __LL_ADC_CHANNEL_INTERNAL_TO_EXTERNAL().
-  *         (3) ADC channels available on STM32C031xx device only.
+  *         (3) ADC channels not available on STM32C011xx device.
   */
 #define __HAL_ADC_DECIMAL_NB_TO_CHANNEL(__DECIMAL_NB__)                        \
   __LL_ADC_DECIMAL_NB_TO_CHANNEL((__DECIMAL_NB__))
@@ -1515,7 +1515,7 @@ typedef  void (*pADC_CallbackTypeDef)(ADC_HandleTypeDef *hadc); /*!< pointer to 
   *         (2) For ADC channel read back from ADC register,
   *             comparison with internal channel parameter to be done
   *             using helper macro @ref __LL_ADC_CHANNEL_INTERNAL_TO_EXTERNAL().
-  *         (3) ADC channels available on STM32C031xx device only.
+  *         (3) ADC channels not available on STM32C011xx device.
   * @retval Value "0" if the channel corresponds to a parameter definition of a
   *         ADC external channel (channel connected to a GPIO pin).
   *         Value "1" if the channel corresponds to a parameter definition of
@@ -1572,7 +1572,7 @@ typedef  void (*pADC_CallbackTypeDef)(ADC_HandleTypeDef *hadc); /*!< pointer to 
   *         (2) For ADC channel read back from ADC register,
   *             comparison with internal channel parameter to be done
   *             using helper macro @ref __LL_ADC_CHANNEL_INTERNAL_TO_EXTERNAL().
-  *         (3) ADC channels available on STM32C031xx device only.
+  *         (3) ADC channels not available on STM32C011xx device.
   * @retval Returned value can be one of the following values:
   *         @arg @ref ADC_CHANNEL_0
   *         @arg @ref ADC_CHANNEL_1

@@ -181,10 +181,12 @@ typedef struct
 /** @defgroup RCC_LL_EC_LSEDRIVE  LSE oscillator drive capability
   * @{
   */
-#define LL_RCC_LSEDRIVE_LOW                0x00000000U             /*!< Xtal mode lower driving capability */
-#define LL_RCC_LSEDRIVE_MEDIUMLOW          RCC_CSR1_LSEDRV_0       /*!< Xtal mode medium low driving capability */
-#define LL_RCC_LSEDRIVE_MEDIUMHIGH         RCC_CSR1_LSEDRV_1       /*!< Xtal mode medium high driving capability */
-#define LL_RCC_LSEDRIVE_HIGH               RCC_CSR1_LSEDRV         /*!< Xtal mode higher driving capability */
+#define LL_RCC_LSEDRIVE_MEDIUMHIGH         0x00000000U       /*!< Xtal mode medium high driving capability */
+#define LL_RCC_LSEDRIVE_HIGH               RCC_CSR1_LSEDRV   /*!< Xtal mode higher driving capability */
+
+/*  Aliases */
+#define LL_RCC_LSEDRIVE_LOW                LL_RCC_LSEDRIVE_MEDIUMHIGH
+#define LL_RCC_LSEDRIVE_MEDIUMLOW          LL_RCC_LSEDRIVE_MEDIUMHIGH
 /**
   * @}
   */
@@ -956,8 +958,6 @@ __STATIC_INLINE void LL_RCC_LSE_DisableBypass(void)
   * @note The oscillator is in Xtal mode when it is not in bypass mode.
   * @rmtoll CSR1         LSEDRV        LL_RCC_LSE_SetDriveCapability
   * @param  LSEDrive This parameter can be one of the following values:
-  *         @arg @ref LL_RCC_LSEDRIVE_LOW
-  *         @arg @ref LL_RCC_LSEDRIVE_MEDIUMLOW
   *         @arg @ref LL_RCC_LSEDRIVE_MEDIUMHIGH
   *         @arg @ref LL_RCC_LSEDRIVE_HIGH
   * @retval None
@@ -971,8 +971,6 @@ __STATIC_INLINE void LL_RCC_LSE_SetDriveCapability(uint32_t LSEDrive)
   * @brief  Get LSE oscillator drive capability
   * @rmtoll CSR1         LSEDRV        LL_RCC_LSE_GetDriveCapability
   * @retval Returned value can be one of the following values:
-  *         @arg @ref LL_RCC_LSEDRIVE_LOW
-  *         @arg @ref LL_RCC_LSEDRIVE_MEDIUMLOW
   *         @arg @ref LL_RCC_LSEDRIVE_MEDIUMHIGH
   *         @arg @ref LL_RCC_LSEDRIVE_HIGH
   */

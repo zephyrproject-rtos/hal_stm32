@@ -528,10 +528,6 @@ HAL_StatusTypeDef HAL_DMA_Abort_IT(DMA_HandleTypeDef *hdma)
 {
   HAL_StatusTypeDef status = HAL_OK;
 
-  /* Process Unlocked/locked */
-  __HAL_UNLOCK(hdma);
-  __HAL_LOCK(hdma);
-
   if (HAL_DMA_STATE_BUSY != hdma->State)
   {
     /* no transfer ongoing */
