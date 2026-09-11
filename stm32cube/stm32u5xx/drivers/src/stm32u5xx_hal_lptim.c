@@ -464,6 +464,11 @@ HAL_StatusTypeDef HAL_LPTIM_DeInit(LPTIM_HandleTypeDef *hlptim)
   /* Disable the LPTIM Peripheral Clock */
   __HAL_LPTIM_DISABLE(hlptim);
 
+  if (HAL_LPTIM_GetState(hlptim) == HAL_LPTIM_STATE_TIMEOUT)
+  {
+    return HAL_TIMEOUT;
+  }
+
   hlptim->Instance->CFGR = 0;
   hlptim->Instance->CFGR2 = 0;
 
@@ -621,6 +626,11 @@ HAL_StatusTypeDef HAL_LPTIM_PWM_Stop(LPTIM_HandleTypeDef *hlptim, uint32_t Chann
   /* Disable the Peripheral */
   __HAL_LPTIM_DISABLE(hlptim);
 
+  if (HAL_LPTIM_GetState(hlptim) == HAL_LPTIM_STATE_TIMEOUT)
+  {
+    return HAL_TIMEOUT;
+  }
+
   /* Set the LPTIM channel state */
   LPTIM_CHANNEL_STATE_SET(hlptim, Channel, HAL_LPTIM_CHANNEL_STATE_READY);
 
@@ -737,6 +747,11 @@ HAL_StatusTypeDef HAL_LPTIM_PWM_Stop_IT(LPTIM_HandleTypeDef *hlptim, uint32_t Ch
 
   /* Disable the Peripheral */
   __HAL_LPTIM_DISABLE(hlptim);
+
+  if (HAL_LPTIM_GetState(hlptim) == HAL_LPTIM_STATE_TIMEOUT)
+  {
+    return HAL_TIMEOUT;
+  }
 
   /* Enable the Peripheral */
   __HAL_LPTIM_ENABLE(hlptim);
@@ -1017,6 +1032,11 @@ HAL_StatusTypeDef HAL_LPTIM_OnePulse_Stop(LPTIM_HandleTypeDef *hlptim, uint32_t 
   /* Disable the Peripheral */
   __HAL_LPTIM_DISABLE(hlptim);
 
+  if (HAL_LPTIM_GetState(hlptim) == HAL_LPTIM_STATE_TIMEOUT)
+  {
+    return HAL_TIMEOUT;
+  }
+
   /* Set the LPTIM channel state */
   LPTIM_CHANNEL_STATE_SET(hlptim, Channel, HAL_LPTIM_CHANNEL_STATE_READY);
 
@@ -1133,6 +1153,11 @@ HAL_StatusTypeDef HAL_LPTIM_OnePulse_Stop_IT(LPTIM_HandleTypeDef *hlptim, uint32
 
   /* Disable the Peripheral */
   __HAL_LPTIM_DISABLE(hlptim);
+
+  if (HAL_LPTIM_GetState(hlptim) == HAL_LPTIM_STATE_TIMEOUT)
+  {
+    return HAL_TIMEOUT;
+  }
 
 
   /* Enable the Peripheral */
@@ -1258,6 +1283,11 @@ HAL_StatusTypeDef HAL_LPTIM_SetOnce_Stop(LPTIM_HandleTypeDef *hlptim, uint32_t C
   /* Disable the Peripheral */
   __HAL_LPTIM_DISABLE(hlptim);
 
+  if (HAL_LPTIM_GetState(hlptim) == HAL_LPTIM_STATE_TIMEOUT)
+  {
+    return HAL_TIMEOUT;
+  }
+
   /* Set the LPTIM channel state */
   LPTIM_CHANNEL_STATE_SET(hlptim, Channel, HAL_LPTIM_CHANNEL_STATE_READY);
 
@@ -1372,6 +1402,11 @@ HAL_StatusTypeDef HAL_LPTIM_SetOnce_Stop_IT(LPTIM_HandleTypeDef *hlptim, uint32_
 
   /* Disable the Peripheral */
   __HAL_LPTIM_DISABLE(hlptim);
+
+  if (HAL_LPTIM_GetState(hlptim) == HAL_LPTIM_STATE_TIMEOUT)
+  {
+    return HAL_TIMEOUT;
+  }
 
   /* Enable the Peripheral */
   __HAL_LPTIM_ENABLE(hlptim);
@@ -1489,6 +1524,11 @@ HAL_StatusTypeDef HAL_LPTIM_Encoder_Stop(LPTIM_HandleTypeDef *hlptim)
   /* Disable the Peripheral */
   __HAL_LPTIM_DISABLE(hlptim);
 
+  if (HAL_LPTIM_GetState(hlptim) == HAL_LPTIM_STATE_TIMEOUT)
+  {
+    return HAL_TIMEOUT;
+  }
+
   /* Reset ENC bit to disable the encoder interface */
   hlptim->Instance->CFGR &= ~LPTIM_CFGR_ENC;
 
@@ -1574,6 +1614,11 @@ HAL_StatusTypeDef HAL_LPTIM_Encoder_Stop_IT(LPTIM_HandleTypeDef *hlptim)
 
   /* Disable the Peripheral */
   __HAL_LPTIM_DISABLE(hlptim);
+
+  if (HAL_LPTIM_GetState(hlptim) == HAL_LPTIM_STATE_TIMEOUT)
+  {
+    return HAL_TIMEOUT;
+  }
 
   /* Reset ENC bit to disable the encoder interface */
   hlptim->Instance->CFGR &= ~LPTIM_CFGR_ENC;
@@ -1664,6 +1709,11 @@ HAL_StatusTypeDef HAL_LPTIM_TimeOut_Stop(LPTIM_HandleTypeDef *hlptim)
   /* Disable the Peripheral */
   __HAL_LPTIM_DISABLE(hlptim);
 
+  if (HAL_LPTIM_GetState(hlptim) == HAL_LPTIM_STATE_TIMEOUT)
+  {
+    return HAL_TIMEOUT;
+  }
+
   /* Reset TIMOUT bit to enable the timeout function */
   hlptim->Instance->CFGR &= ~LPTIM_CFGR_TIMOUT;
 
@@ -1748,6 +1798,11 @@ HAL_StatusTypeDef HAL_LPTIM_TimeOut_Stop_IT(LPTIM_HandleTypeDef *hlptim)
   /* Disable the Peripheral */
   __HAL_LPTIM_DISABLE(hlptim);
 
+  if (HAL_LPTIM_GetState(hlptim) == HAL_LPTIM_STATE_TIMEOUT)
+  {
+    return HAL_TIMEOUT;
+  }
+
   /* Reset TIMOUT bit to enable the timeout function */
   hlptim->Instance->CFGR &= ~LPTIM_CFGR_TIMOUT;
 
@@ -1768,6 +1823,12 @@ HAL_StatusTypeDef HAL_LPTIM_TimeOut_Stop_IT(LPTIM_HandleTypeDef *hlptim)
 
   /* Disable the Peripheral */
   __HAL_LPTIM_DISABLE(hlptim);
+
+  if (HAL_LPTIM_GetState(hlptim) == HAL_LPTIM_STATE_TIMEOUT)
+  {
+    return HAL_TIMEOUT;
+  }
+
 
   /* Change the LPTIM state */
   hlptim->State = HAL_LPTIM_STATE_READY;
@@ -1827,6 +1888,11 @@ HAL_StatusTypeDef HAL_LPTIM_Counter_Stop(LPTIM_HandleTypeDef *hlptim)
 
   /* Disable the Peripheral */
   __HAL_LPTIM_DISABLE(hlptim);
+
+  if (HAL_LPTIM_GetState(hlptim) == HAL_LPTIM_STATE_TIMEOUT)
+  {
+    return HAL_TIMEOUT;
+  }
 
   /* Change the LPTIM state */
   hlptim->State = HAL_LPTIM_STATE_READY;
@@ -1898,6 +1964,11 @@ HAL_StatusTypeDef HAL_LPTIM_Counter_Stop_IT(LPTIM_HandleTypeDef *hlptim)
 
   /* Disable the Peripheral */
   __HAL_LPTIM_DISABLE(hlptim);
+
+  if (HAL_LPTIM_GetState(hlptim) == HAL_LPTIM_STATE_TIMEOUT)
+  {
+    return HAL_TIMEOUT;
+  }
 
 
   /* Enable the Peripheral */
@@ -3540,6 +3611,135 @@ void LPTIM_DMAUpdateEventHalfCplt(DMA_HandleTypeDef *hdma)
 #endif /* USE_HAL_LPTIM_REGISTER_CALLBACKS */
 
   hlptim->Channel = HAL_LPTIM_ACTIVE_CHANNEL_CLEARED;
+}
+/**
+  * @brief  Disable LPTIM HW instance.
+  * @param  hlptim pointer to a LPTIM_HandleTypeDef structure that contains
+  *                the configuration information for LPTIM module.
+  * @note   The following sequence is required to solve LPTIM disable HW limitation.
+  *         Please check Errata Sheet ES0335 for more details under "MCU may remain
+  *         stuck in LPTIM interrupt when entering Stop mode" section.
+  * @retval None
+  */
+void LPTIM_Disable(LPTIM_HandleTypeDef *hlptim)
+{
+  uint32_t tmpDIER;
+  uint32_t tmpCFGR;
+  uint32_t tmpCCR1;
+  uint32_t tmpARR;
+  uint32_t primask_bit;
+  uint32_t tmpCFGR2;
+  uint32_t tmpRCR;
+  uint32_t tmpCCMR1;
+  uint32_t tmpCCR2;
+
+  /* Enter critical section */
+  primask_bit = __get_PRIMASK();
+  __set_PRIMASK(1) ;
+
+  /* Save LPTIM configuration registers */
+  tmpDIER = hlptim->Instance->DIER;
+  tmpCFGR = hlptim->Instance->CFGR;
+  tmpCCR1 = hlptim->Instance->CCR1;
+  tmpARR = hlptim->Instance->ARR;
+  tmpCFGR2 = hlptim->Instance->CFGR2;
+  tmpRCR = hlptim->Instance->RCR;
+  tmpCCMR1 = hlptim->Instance->CCMR1;
+  tmpCCR2 = hlptim->Instance->CCR2;
+
+  /*********** Reset LPTIM ***********/
+  switch ((uint32_t)hlptim->Instance)
+  {
+    case LPTIM1_BASE:
+      __HAL_RCC_LPTIM1_FORCE_RESET();
+      __HAL_RCC_LPTIM1_RELEASE_RESET();
+      break;
+    case LPTIM2_BASE:
+      __HAL_RCC_LPTIM2_FORCE_RESET();
+      __HAL_RCC_LPTIM2_RELEASE_RESET();
+      break;
+    case LPTIM3_BASE:
+      __HAL_RCC_LPTIM3_FORCE_RESET();
+      __HAL_RCC_LPTIM3_RELEASE_RESET();
+      break;
+    case LPTIM4_BASE:
+      __HAL_RCC_LPTIM4_FORCE_RESET();
+      __HAL_RCC_LPTIM4_RELEASE_RESET();
+      break;
+    default:
+      break;
+  }
+
+  /*********** Restore LPTIM Config ***********/
+  if ((tmpCCR1 != 0UL) || (tmpCCR2 != 0UL) || (tmpARR != 0UL) || (tmpRCR != 0UL))
+  {
+    if (tmpCCR1 != 0UL)
+    {
+      /* Restore tmpCCR1 register (LPTIM should be enabled first) */
+      hlptim->Instance->CR |= LPTIM_CR_ENABLE;
+      hlptim->Instance->CCR1 = tmpCCR1;
+
+      /* Wait for the completion of the write operation to the LPTIM_CCR1 register */
+      if (LPTIM_WaitForFlag(hlptim, LPTIM_FLAG_CMP1OK) == HAL_TIMEOUT)
+      {
+        hlptim->State = HAL_LPTIM_STATE_TIMEOUT;
+      }
+      __HAL_LPTIM_CLEAR_FLAG(hlptim, LPTIM_FLAG_CMP1OK);
+    }
+
+    if (tmpCCR2 != 0UL)
+    {
+      /* Restore tmpCCR1 register (LPTIM should be enabled first) */
+      hlptim->Instance->CR |= LPTIM_CR_ENABLE;
+      hlptim->Instance->CCR2 = tmpCCR2;
+
+      /* Wait for the completion of the write operation to the LPTIM_CCR2 register */
+      if (LPTIM_WaitForFlag(hlptim, LPTIM_FLAG_CMP2OK) == HAL_TIMEOUT)
+      {
+        hlptim->State = HAL_LPTIM_STATE_TIMEOUT;
+      }
+      __HAL_LPTIM_CLEAR_FLAG(hlptim, LPTIM_FLAG_CMP2OK);
+    }
+
+    if (tmpARR != 0UL)
+    {
+      /* Restore ARR register (LPTIM should be enabled first) */
+      hlptim->Instance->CR |= LPTIM_CR_ENABLE;
+      hlptim->Instance->ARR = tmpARR;
+
+      /* Wait for the completion of the write operation to the LPTIM_ARR register */
+      if (LPTIM_WaitForFlag(hlptim, LPTIM_FLAG_ARROK) == HAL_TIMEOUT)
+      {
+        hlptim->State = HAL_LPTIM_STATE_TIMEOUT;
+      }
+
+      __HAL_LPTIM_CLEAR_FLAG(hlptim, LPTIM_FLAG_ARROK);
+    }
+
+    if (tmpRCR != 0UL)
+    {
+      /* Restore RCR register (LPTIM should be enabled first) */
+      hlptim->Instance->CR |= LPTIM_CR_ENABLE;
+      hlptim->Instance->RCR = tmpRCR;
+
+      /* Wait for the completion of the write operation to the LPTIM_RCR register */
+      if (LPTIM_WaitForFlag(hlptim, LPTIM_FLAG_REPOK) == HAL_TIMEOUT)
+      {
+        hlptim->State = HAL_LPTIM_STATE_TIMEOUT;
+      }
+      __HAL_LPTIM_CLEAR_FLAG(hlptim, LPTIM_FLAG_REPOK);
+    }
+  }
+
+  /* Restore configuration registers (LPTIM should be disabled first) */
+  hlptim->Instance->CR &= ~(LPTIM_CR_ENABLE);
+  hlptim->Instance->DIER = tmpDIER;
+  hlptim->Instance->CFGR = tmpCFGR;
+  hlptim->Instance->CFGR2 = tmpCFGR2;
+  hlptim->Instance->CCMR1 = tmpCCMR1;
+
+  /* Exit critical section: restore previous priority mask */
+  __set_PRIMASK(primask_bit);
 }
 /**
   * @brief  LPTimer Output Compare 1 configuration

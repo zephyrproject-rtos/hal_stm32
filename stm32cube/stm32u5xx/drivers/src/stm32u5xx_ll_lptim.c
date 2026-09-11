@@ -181,6 +181,125 @@ ErrorStatus LL_LPTIM_Init(LPTIM_TypeDef *LPTIMx, const LL_LPTIM_InitTypeDef *LPT
 }
 
 /**
+  * @brief  Disable the LPTIM instance
+  * @rmtoll CR           ENABLE        LL_LPTIM_Disable
+  * @param  LPTIMx Low-Power Timer instance
+  * @note   The following sequence is required to solve LPTIM disable HW limitation.
+  *         Please check Errata Sheet ES0335 for more details under "MCU may remain
+  *         stuck in LPTIM interrupt when entering Stop mode" section.
+  * @retval None
+  */
+void LL_LPTIM_Disable(LPTIM_TypeDef *LPTIMx)
+{
+  LL_RCC_ClocksTypeDef rcc_clock;
+  uint32_t tmpDIER;
+  uint32_t tmpCFGR;
+  uint32_t tmpCCR1;
+  uint32_t tmpARR;
+  uint32_t primask_bit;
+  uint32_t tmpCFGR2;
+  uint32_t tmpRCR;
+  uint32_t tmpCCMR1;
+  uint32_t tmpCCR2;
+
+  /* Check the parameters */
+  assert_param(IS_LPTIM_INSTANCE(LPTIMx));
+
+  /* Enter critical section */
+  primask_bit = __get_PRIMASK();
+  __set_PRIMASK(1) ;
+
+  /* Save LPTIM configuration registers */
+  tmpDIER = LPTIMx->DIER;
+  tmpCFGR = LPTIMx->CFGR;
+  tmpCCR1 = LPTIMx->CCR1;
+  tmpARR = LPTIMx->ARR;
+  tmpCFGR2 = LPTIMx->CFGR2;
+  tmpRCR = LPTIMx->RCR;
+  tmpCCMR1 = LPTIMx->CCMR1;
+  tmpCCR2 = LPTIMx->CCR2;
+
+  /************* Reset LPTIM ************/
+  (void)LL_LPTIM_DeInit(LPTIMx);
+
+  /********* Restore LPTIM Config *******/
+  LL_RCC_GetSystemClocksFreq(&rcc_clock);
+
+  if ((tmpCCR1 != 0UL) || (tmpCCR2 != 0UL) || (tmpARR != 0UL) || (tmpRCR != 0UL))
+  {
+    if (tmpCCR1 != 0UL)
+    {
+      /* Restore CMP and ARR registers (LPTIM should be enabled first) */
+      LPTIMx->CR |= LPTIM_CR_ENABLE;
+      LPTIMx->CCR1 = tmpCCR1;
+
+      /* Polling on CMP write ok status after above restore operation */
+      do
+      {
+        rcc_clock.SYSCLK_Frequency--; /* Used for timeout */
+      } while (((LL_LPTIM_IsActiveFlag_CMP1OK(LPTIMx) != 1UL)) && ((rcc_clock.SYSCLK_Frequency) > 0UL));
+
+      LL_LPTIM_ClearFlag_CMP1OK(LPTIMx);
+    }
+
+    if (tmpCCR2 != 0UL)
+    {
+      /* Restore CMP and ARR registers (LPTIM should be enabled first) */
+      LPTIMx->CR |= LPTIM_CR_ENABLE;
+      LPTIMx->CCR2 = tmpCCR2;
+
+      /* Polling on CMP write ok status after above restore operation */
+      do
+      {
+        rcc_clock.SYSCLK_Frequency--; /* Used for timeout */
+      } while (((LL_LPTIM_IsActiveFlag_CMP2OK(LPTIMx) != 1UL)) && ((rcc_clock.SYSCLK_Frequency) > 0UL));
+
+      LL_LPTIM_ClearFlag_CMP2OK(LPTIMx);
+    }
+
+    if (tmpARR != 0UL)
+    {
+      LPTIMx->CR |= LPTIM_CR_ENABLE;
+      LPTIMx->ARR = tmpARR;
+
+      LL_RCC_GetSystemClocksFreq(&rcc_clock);
+      /* Polling on ARR write ok status after above restore operation */
+      do
+      {
+        rcc_clock.SYSCLK_Frequency--; /* Used for timeout */
+      } while (((LL_LPTIM_IsActiveFlag_ARROK(LPTIMx) != 1UL)) && ((rcc_clock.SYSCLK_Frequency) > 0UL));
+
+      LL_LPTIM_ClearFlag_ARROK(LPTIMx);
+    }
+
+    if (tmpRCR != 0UL)
+    {
+      LPTIMx->CR |= LPTIM_CR_ENABLE;
+      LPTIMx->RCR = tmpRCR;
+
+      LL_RCC_GetSystemClocksFreq(&rcc_clock);
+      /* Polling on RCR write ok status after above restore operation */
+      do
+      {
+        rcc_clock.SYSCLK_Frequency--; /* Used for timeout */
+      } while (((LL_LPTIM_IsActiveFlag_REPOK(LPTIMx) != 1UL)) && ((rcc_clock.SYSCLK_Frequency) > 0UL));
+
+      LL_LPTIM_ClearFlag_REPOK(LPTIMx);
+    }
+  }
+
+  /* Restore configuration registers (LPTIM should be disabled first) */
+  LPTIMx->CR &= ~(LPTIM_CR_ENABLE);
+  LPTIMx->DIER = tmpDIER;
+  LPTIMx->CFGR = tmpCFGR;
+  LPTIMx->CFGR2 = tmpCFGR2;
+  LPTIMx->CCMR1 = tmpCCMR1;
+
+  /* Exit critical section: restore previous priority mask */
+  __set_PRIMASK(primask_bit);
+}
+
+/**
   * @}
   */
 

@@ -558,6 +558,7 @@ typedef struct
 ErrorStatus LL_LPTIM_DeInit(const LPTIM_TypeDef *LPTIMx);
 void LL_LPTIM_StructInit(LL_LPTIM_InitTypeDef *LPTIM_InitStruct);
 ErrorStatus LL_LPTIM_Init(LPTIM_TypeDef *LPTIMx, const LL_LPTIM_InitTypeDef *LPTIM_InitStruct);
+void LL_LPTIM_Disable(LPTIM_TypeDef *LPTIMx);
 /**
   * @}
   */
@@ -578,17 +579,6 @@ ErrorStatus LL_LPTIM_Init(LPTIM_TypeDef *LPTIMx, const LL_LPTIM_InitTypeDef *LPT
 __STATIC_INLINE void LL_LPTIM_Enable(LPTIM_TypeDef *LPTIMx)
 {
   SET_BIT(LPTIMx->CR, LPTIM_CR_ENABLE);
-}
-
-/**
-  * @brief  Disable the LPTIM instance
-  * @rmtoll CR           ENABLE        LL_LPTIM_Disable
-  * @param  LPTIMx Low-Power Timer instance
-  * @retval None
-  */
-__STATIC_INLINE void LL_LPTIM_Disable(LPTIM_TypeDef *LPTIMx)
-{
-  CLEAR_BIT(LPTIMx->CR, LPTIM_CR_ENABLE);
 }
 
 /**

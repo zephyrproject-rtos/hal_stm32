@@ -77,8 +77,8 @@
 /*                - fck must be in the range [3 x baudrate, 4096 x baudrate]  */
 /*                - LPUART_BRR register value should be >= 0x300              */
 /*                - LPUART_BRR register value should be <= 0xFFFFF (20 bits)  */
-/*              Baudrate specified by the user should belong to [8, 33000000].*/
-#define IS_LL_LPUART_BAUDRATE(__BAUDRATE__) (((__BAUDRATE__) <= 33000000U) && ((__BAUDRATE__) >= 8U))
+/*              Baudrate specified by the user should belong to [8, 53000000].*/
+#define IS_LL_LPUART_BAUDRATE(__BAUDRATE__) (((__BAUDRATE__) <= 53000000U) && ((__BAUDRATE__) >= 8U))
 
 /* __VALUE__ BRR content must be greater than or equal to 0x300. */
 #define IS_LL_LPUART_BRR_MIN(__VALUE__)   ((__VALUE__) >= 0x300U)

@@ -510,9 +510,9 @@ typedef USB_HCTypeDef       USB_DRD_HCTypeDef;
 /** @defgroup USB_LL_HPRT0_PRTSPD_SPEED_Defines USB Low Layer HPRT0 PRTSPD Speed Defines
   * @{
   */
-#define HPRT0_PRTSPD_HIGH_SPEED                0U
-#define HPRT0_PRTSPD_FULL_SPEED                1U
-#define HPRT0_PRTSPD_LOW_SPEED                 2U
+#define HPRT0_PRTSPD_HIGH_SPEED                0UL
+#define HPRT0_PRTSPD_FULL_SPEED                1UL
+#define HPRT0_PRTSPD_LOW_SPEED                 2UL
 /**
   * @}
   */
@@ -955,21 +955,21 @@ typedef USB_HCTypeDef       USB_DRD_HCTypeDef;
 #define USB_DRD_SET_CHEP_CNT_RX_REG(pdwReg, wCount) \
   do { \
     uint32_t wNBlocks; \
-    \
-    (pdwReg) &= ~(USB_CNTRX_BLSIZE | USB_CNTRX_NBLK_MSK); \
+    uint32_t wRegVal = (uint32_t)(pdwReg) & ~(USB_CNTRX_BLSIZE | USB_CNTRX_NBLK_MSK); \
     \
     if ((wCount) == 0U) \
     { \
-      (pdwReg) |= USB_CNTRX_BLSIZE; \
+      wRegVal |= USB_CNTRX_BLSIZE; \
     } \
     else if ((wCount) <= 62U) \
     { \
-      USB_DRD_CALC_BLK2((pdwReg), (wCount), wNBlocks); \
+      USB_DRD_CALC_BLK2(wRegVal, (wCount), wNBlocks); \
     } \
     else \
     { \
-      USB_DRD_CALC_BLK32((pdwReg), (wCount), wNBlocks); \
+      USB_DRD_CALC_BLK32(wRegVal, (wCount), wNBlocks); \
     } \
+    (pdwReg) = wRegVal; \
   } while(0) /* USB_DRD_SET_CHEP_CNT_RX_REG */
 
 
@@ -1181,7 +1181,7 @@ HAL_StatusTypeDef USB_HC_StartXfer(USB_OTG_GlobalTypeDef *USBx,
 
 uint32_t          USB_HC_ReadInterrupt(const USB_OTG_GlobalTypeDef *USBx);
 HAL_StatusTypeDef USB_HC_Halt(const USB_OTG_GlobalTypeDef *USBx, uint8_t hc_num);
-HAL_StatusTypeDef USB_HC_Activate(USB_OTG_GlobalTypeDef *USBx, uint8_t ch_num, uint8_t ch_dir);
+HAL_StatusTypeDef USB_HC_Activate(const USB_OTG_GlobalTypeDef *USBx, uint8_t ch_num, uint8_t ch_dir);
 #endif /* defined (HAL_HCD_MODULE_ENABLED) */
 
 HAL_StatusTypeDef USB_ActivateRemoteWakeup(const USB_OTG_GlobalTypeDef *USBx);
@@ -1228,8 +1228,9 @@ HAL_StatusTypeDef USB_HC_Activate(USB_DRD_TypeDef *USBx, uint8_t phy_ch_num, uin
 #endif /* defined (HAL_HCD_MODULE_ENABLED) */
 
 uint32_t          USB_GetHostSpeed(USB_DRD_TypeDef const *USBx);
-uint32_t          USB_GetCurrentFrame(USB_DRD_TypeDef const *USBx);
 HAL_StatusTypeDef USB_StopHost(USB_DRD_TypeDef *USBx);
+
+uint32_t          USB_GetCurrentFrame(USB_DRD_TypeDef const *USBx);
 
 HAL_StatusTypeDef USB_ActivateRemoteWakeup(USB_DRD_TypeDef *USBx);
 HAL_StatusTypeDef USB_DeActivateRemoteWakeup(USB_DRD_TypeDef *USBx);

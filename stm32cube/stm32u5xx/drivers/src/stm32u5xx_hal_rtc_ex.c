@@ -1872,7 +1872,7 @@ HAL_StatusTypeDef HAL_RTCEx_SetBoothardwareKey(RTC_HandleTypeDef *hrtc)
 {
   /* Prevent unused argument(s) compilation warning */
   UNUSED(hrtc);
-  WRITE_REG(TAMP->SECCFGR, TAMP_SECCFGR_BHKLOCK);
+  SET_BIT(TAMP->SECCFGR, TAMP_SECCFGR_BHKLOCK);
 
   return HAL_OK;
 }
@@ -2743,7 +2743,7 @@ uint32_t HAL_RTCEx_BKUPRead(RTC_HandleTypeDef *hrtc, uint32_t BackupRegister)
 void  HAL_RTCEx_BKUPErase(RTC_HandleTypeDef *hrtc)
 {
   UNUSED(hrtc);
-  WRITE_REG(TAMP->CR2, TAMP_CR2_BKERASE);
+  SET_BIT(TAMP->CR2, TAMP_CR2_BKERASE);
 }
 
 /**
@@ -2754,7 +2754,7 @@ void  HAL_RTCEx_BKUPErase(RTC_HandleTypeDef *hrtc)
 void  HAL_RTCEx_BKUPBlock_Enable(RTC_HandleTypeDef *hrtc)
 {
   UNUSED(hrtc);
-  WRITE_REG(TAMP->CR2, TAMP_CR2_BKBLOCK);
+  SET_BIT(TAMP->CR2, TAMP_CR2_BKBLOCK);
 }
 
 /**
