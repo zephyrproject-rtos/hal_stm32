@@ -188,7 +188,7 @@
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 /* Private function prototypes -----------------------------------------------*/
-static void LTDC_SetConfig(LTDC_HandleTypeDef *hltdc, LTDC_LayerCfgTypeDef *pLayerCfg, uint32_t LayerIdx);
+static void LTDC_SetConfig(LTDC_HandleTypeDef *hltdc, const LTDC_LayerCfgTypeDef *pLayerCfg, uint32_t LayerIdx);
 /* Private functions ---------------------------------------------------------*/
 
 /** @defgroup LTDC_Exported_Functions LTDC Exported Functions
@@ -279,24 +279,20 @@ HAL_StatusTypeDef HAL_LTDC_Init(LTDC_HandleTypeDef *hltdc)
                                      hltdc->Init.DEPolarity | hltdc->Init.PCPolarity);
 
   /* Set Synchronization size */
-  hltdc->Instance->SSCR &= ~(LTDC_SSCR_VSH | LTDC_SSCR_HSW);
   tmp = (hltdc->Init.HorizontalSync << 16U);
-  hltdc->Instance->SSCR |= (tmp | hltdc->Init.VerticalSync);
+  WRITE_REG(hltdc->Instance->SSCR, (tmp | hltdc->Init.VerticalSync));
 
   /* Set Accumulated Back porch */
-  hltdc->Instance->BPCR &= ~(LTDC_BPCR_AVBP | LTDC_BPCR_AHBP);
   tmp = (hltdc->Init.AccumulatedHBP << 16U);
-  hltdc->Instance->BPCR |= (tmp | hltdc->Init.AccumulatedVBP);
+  WRITE_REG(hltdc->Instance->BPCR, (tmp | hltdc->Init.AccumulatedVBP));
 
   /* Set Accumulated Active Width */
-  hltdc->Instance->AWCR &= ~(LTDC_AWCR_AAH | LTDC_AWCR_AAW);
   tmp = (hltdc->Init.AccumulatedActiveW << 16U);
-  hltdc->Instance->AWCR |= (tmp | hltdc->Init.AccumulatedActiveH);
+  WRITE_REG(hltdc->Instance->AWCR, (tmp | hltdc->Init.AccumulatedActiveH));
 
   /* Set Total Width */
-  hltdc->Instance->TWCR &= ~(LTDC_TWCR_TOTALH | LTDC_TWCR_TOTALW);
   tmp = (hltdc->Init.TotalWidth << 16U);
-  hltdc->Instance->TWCR |= (tmp | hltdc->Init.TotalHeigh);
+  WRITE_REG(hltdc->Instance->TWCR, (tmp | hltdc->Init.TotalHeigh));
 
   /* Set the background color value */
   tmp = ((uint32_t)(hltdc->Init.Backcolor.Green) << 8U);
@@ -1351,7 +1347,9 @@ HAL_StatusTypeDef HAL_LTDC_SetAlpha(LTDC_HandleTypeDef *hltdc, uint32_t Alpha, u
   return HAL_OK;
 }
 /**
+  *
   * @brief  Reconfigure the frame buffer Address.
+  *
   * @param  hltdc     pointer to a LTDC_HandleTypeDef structure that contains
   *                   the configuration information for the LTDC.
   * @param  Address   new address value.
@@ -1899,7 +1897,6 @@ HAL_StatusTypeDef HAL_LTDC_SetPitch_NoReload(LTDC_HandleTypeDef *hltdc, uint32_t
   return HAL_OK;
 }
 
-
 /**
   * @brief  Configure the color keying without reloading.
   *         Variant of the function HAL_LTDC_ConfigColorKeying without immediate reload.
@@ -2130,7 +2127,7 @@ uint32_t HAL_LTDC_GetError(const LTDC_HandleTypeDef *hltdc)
   *                   This parameter can be one of the following values: LTDC_LAYER_1 (0) or LTDC_LAYER_2 (1)
   * @retval None
   */
-static void LTDC_SetConfig(LTDC_HandleTypeDef *hltdc, LTDC_LayerCfgTypeDef *pLayerCfg, uint32_t LayerIdx)
+static void LTDC_SetConfig(LTDC_HandleTypeDef *hltdc, const LTDC_LayerCfgTypeDef *pLayerCfg, uint32_t LayerIdx)
 {
   uint32_t tmp;
   uint32_t tmp1;

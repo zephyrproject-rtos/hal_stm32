@@ -545,10 +545,10 @@ typedef struct
 #define RTC_FLAG_INT_TAMP_11                TAMP_SR_ITAMP11F
 #define RTC_FLAG_INT_TAMP_12                TAMP_SR_ITAMP12F
 #define RTC_FLAG_INT_TAMP_13                TAMP_SR_ITAMP13F
-#define RTC_FLAG_INT_TAMP_ALL               (RTC_FLAG_INT_TAMP_1 | RTC_FLAG_INT_TAMP2 |\
-                                             RTC_FLAG_INT_TAMP_3 | RTC_FLAG_INT_TAMP5 |\
-                                             RTC_FLAG_INT_TAMP_6 | RTC_FLAG_INT_TAMP7 |\
-                                             RTC_FLAG_INT_TAMP_8 | RTC_FLAG_INT_TAMP9 |\
+#define RTC_FLAG_INT_TAMP_ALL               (RTC_FLAG_INT_TAMP_1 | RTC_FLAG_INT_TAMP_2 |\
+                                             RTC_FLAG_INT_TAMP_3 | RTC_FLAG_INT_TAMP_5 |\
+                                             RTC_FLAG_INT_TAMP_6 | RTC_FLAG_INT_TAMP_7 |\
+                                             RTC_FLAG_INT_TAMP_8 | RTC_FLAG_INT_TAMP_9 |\
                                              RTC_FLAG_INT_TAMP_11|RTC_FLAG_INT_TAMP_12|\
                                              RTC_FLAG_INT_TAMP_13)
 /**

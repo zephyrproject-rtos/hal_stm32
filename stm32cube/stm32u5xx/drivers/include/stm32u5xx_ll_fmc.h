@@ -782,8 +782,8 @@ typedef struct
 /** @defgroup FMC_LL_Private_Functions FMC LL Private Functions
   *  @{
   */
-
 #if defined(FMC_BANK1)
+
 /** @defgroup FMC_LL_NORSRAM  NOR SRAM
   *  @{
   */
@@ -815,8 +815,8 @@ HAL_StatusTypeDef  FMC_NORSRAM_WriteOperation_Disable(FMC_NORSRAM_TypeDef *Devic
   * @}
   */
 #endif /* FMC_BANK1 */
-
 #if defined(FMC_BANK3)
+
 /** @defgroup FMC_LL_NAND NAND
   *  @{
   */
@@ -847,7 +847,6 @@ HAL_StatusTypeDef  FMC_NAND_GetECC(const FMC_NAND_TypeDef *Device, uint32_t *ECC
   * @}
   */
 #endif /* FMC_BANK3 */
-
 
 /**
   * @}
