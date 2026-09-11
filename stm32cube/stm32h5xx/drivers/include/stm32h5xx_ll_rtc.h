@@ -748,6 +748,24 @@ typedef struct
   * @}
   */
 
+#if defined(TAMP_OR_IN2_RMP) || defined(TAMP_OR_IN3_RMP) || defined(TAMP_OR_IN4_RMP) || \
+    defined(TAMP_OR_OUT3_RMP) || defined(TAMP_OR_OUT5_RMP)
+/** @defgroup RTC_LL_EC_TAMPER_REMAP   TAMPER REMAP
+  * @{
+  */
+#define LL_RTC_TAMPER_RMP_TAMP_IN2_PA0_TO_PI8       TAMP_OR_IN2_RMP
+#define LL_RTC_TAMPER_RMP_TAMP_IN3_PC1_TO_PE6       TAMP_OR_IN3_RMP
+#define LL_RTC_TAMPER_RMP_TAMP_IN4_PA2_TO_PI11      TAMP_OR_IN4_RMP
+#define LL_RTC_TAMPER_RMP_TAMP_OUT3_PC13_TO_PI8     TAMP_OR_OUT3_RMP_0
+#define LL_RTC_TAMPER_RMP_TAMP_OUT3_PC13_TO_PE3     TAMP_OR_OUT3_RMP_1
+#define LL_RTC_TAMPER_RMP_TAMP_OUT3_PC13_TO_PA2     TAMP_OR_OUT3_RMP
+#define LL_RTC_TAMPER_RMP_TAMP_OUT5_PI11_TO_PC1     TAMP_OR_OUT5_RMP
+/**
+  * @}
+  */
+#endif /* defined(TAMP_OR_IN2_RMP) || defined(TAMP_OR_IN3_RMP) || defined(TAMP_OR_IN4_RMP) || \
+          defined(TAMP_OR_OUT3_RMP) || defined(TAMP_OR_OUT5_RMP) */
+
 /** @defgroup RTC_LL_EC_BKP  BACKUP
   * @{
   */
@@ -3730,6 +3748,83 @@ __STATIC_INLINE uint32_t LL_RTC_IsActiveFlag_ATAMP_SEEDF(void)
 /**
   * @}
   */
+
+#if defined(TAMP_OR_IN2_RMP) || defined(TAMP_OR_IN3_RMP) || defined(TAMP_OR_IN4_RMP) || \
+    defined(TAMP_OR_OUT3_RMP) || defined(TAMP_OR_OUT5_RMP)
+/** @defgroup RTC_LL_EF_Remap_Tamper Remap Tamper
+  * @{
+  */
+/**
+  * @brief  Enable remap of TAMP INx on a different pin.
+  * @rmtoll
+  *  TAMP_OR           IN2_RMP       LL_RTC_TAMPER_EnableRemap \n
+  *  TAMP_OR           IN3_RMP       LL_RTC_TAMPER_EnableRemap \n
+  *  TAMP_OR           IN4_RMP       LL_RTC_TAMPER_EnableRemap \n
+  *  TAMP_OR           OUT3_RMP      LL_RTC_TAMPER_EnableRemap \n
+  *  TAMP_OR           OUT5_RMP      LL_RTC_TAMPER_EnableRemap
+  * @param  tamp_remap This parameter can be a combination of the following values:
+  *         @arg @ref LL_RTC_TAMPER_RMP_TAMP_IN2_PA0_TO_PI8
+  *         @arg @ref LL_RTC_TAMPER_RMP_TAMP_IN3_PC1_TO_PE6
+  *         @arg @ref LL_RTC_TAMPER_RMP_TAMP_IN4_PA2_TO_PI11
+  *         @arg @ref LL_RTC_TAMPER_RMP_TAMP_OUT3_PC13_TO_PI8
+  *         @arg @ref LL_RTC_TAMPER_RMP_TAMP_OUT3_PC13_TO_PE3
+  *         @arg @ref LL_RTC_TAMPER_RMP_TAMP_OUT3_PC13_TO_PA2
+  *         @arg @ref LL_RTC_TAMPER_RMP_TAMP_OUT5_PI11_TO_PC1
+  */
+__STATIC_INLINE void LL_RTC_TAMPER_EnableRemap(uint32_t tamp_remap)
+{
+  SET_BIT(TAMP->OR, tamp_remap);
+}
+
+/**
+  * @brief  Disable remap of TAMP INx on a different pin.
+  * @rmtoll
+  *  TAMP_OR           IN2_RMP       LL_RTC_TAMPER_EnableRemap \n
+  *  TAMP_OR           IN3_RMP       LL_RTC_TAMPER_EnableRemap \n
+  *  TAMP_OR           IN4_RMP       LL_RTC_TAMPER_EnableRemap \n
+  *  TAMP_OR           OUT3_RMP      LL_RTC_TAMPER_EnableRemap \n
+  *  TAMP_OR           OUT5_RMP      LL_RTC_TAMPER_EnableRemap
+  * @param  tamp_remap This parameter can be a combination of the following values:
+  *         @arg @ref LL_RTC_TAMPER_RMP_TAMP_IN2_PA0_TO_PI8
+  *         @arg @ref LL_RTC_TAMPER_RMP_TAMP_IN3_PC1_TO_PE6
+  *         @arg @ref LL_RTC_TAMPER_RMP_TAMP_IN4_PA2_TO_PI11
+  *         @arg @ref LL_RTC_TAMPER_RMP_TAMP_OUT3_PC13_TO_PI8
+  *         @arg @ref LL_RTC_TAMPER_RMP_TAMP_OUT3_PC13_TO_PE3
+  *         @arg @ref LL_RTC_TAMPER_RMP_TAMP_OUT3_PC13_TO_PA2
+  *         @arg @ref LL_RTC_TAMPER_RMP_TAMP_OUT5_PI11_TO_PC1
+  */
+__STATIC_INLINE void LL_RTC_TAMPER_DisableRemap(uint32_t tamp_remap)
+{
+  CLEAR_BIT(TAMP->OR, tamp_remap);
+}
+
+/**
+  * @brief  Check if remap of TAMP INx is enabled or disabled.
+  * @rmtoll
+  *  TAMP_OR           IN2_RMP       LL_RTC_TAMPER_EnableRemap \n
+  *  TAMP_OR           IN3_RMP       LL_RTC_TAMPER_EnableRemap \n
+  *  TAMP_OR           IN4_RMP       LL_RTC_TAMPER_EnableRemap \n
+  *  TAMP_OR           OUT3_RMP      LL_RTC_TAMPER_EnableRemap \n
+  *  TAMP_OR           OUT5_RMP      LL_RTC_TAMPER_EnableRemap
+  * @param  tamp_remap This parameter can be a combination of the following values:
+  *         @arg @ref LL_RTC_TAMPER_RMP_TAMP_IN2_PA0_TO_PI8
+  *         @arg @ref LL_RTC_TAMPER_RMP_TAMP_IN3_PC1_TO_PE6
+  *         @arg @ref LL_RTC_TAMPER_RMP_TAMP_IN4_PA2_TO_PI11
+  *         @arg @ref LL_RTC_TAMPER_RMP_TAMP_OUT3_PC13_TO_PI8
+  *         @arg @ref LL_RTC_TAMPER_RMP_TAMP_OUT3_PC13_TO_PE3
+  *         @arg @ref LL_RTC_TAMPER_RMP_TAMP_OUT3_PC13_TO_PA2
+  *         @arg @ref LL_RTC_TAMPER_RMP_TAMP_OUT5_PI11_TO_PC1
+  * @retval State of bit (1 or 0).
+  */
+__STATIC_INLINE uint32_t LL_RTC_TAMPER_IsEnabledRemap(uint32_t tamp_remap)
+{
+  return ((READ_BIT(TAMP->OR, tamp_remap) == tamp_remap) ? 1UL : 0UL);
+}
+/**
+  * @}
+  */
+#endif /* defined(TAMP_OR_IN2_RMP) || defined(TAMP_OR_IN3_RMP) || defined(TAMP_OR_IN4_RMP) || \
+          defined(TAMP_OR_OUT3_RMP) || defined(TAMP_OR_OUT5_RMP)*/
 
 /** @defgroup RTC_LL_EF_Wakeup Wakeup
   * @{

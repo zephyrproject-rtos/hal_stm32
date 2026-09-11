@@ -29,52 +29,51 @@
   [..]
     The PLAY HAL driver can be used as follows:
 
-    (#) Declare a HAL_PLAY_HandleTypeDef handle structure (eg. HAL_PLAY_HandleTypeDef hplay).
-    (#) Initialize the PLAY low level resources by implementing the HAL_PLAY_MspInit() API:
-        (##) Select the PLAY kernel clock source with RCC API
-        (##) Configure the PLAY kernel clock prescaler with RCC API
-        (##) Enable the PLAY interface clock using __HAL_RCC_PLAYx_CLK_ENABLE()
+    (#) Declare a HAL_PLAY_HandleTypeDef handle structure, for example:
+        HAL_PLAY_HandleTypeDef hplay;
+    (#) Initialize the PLAY low-level resources by implementing the HAL_PLAY_MspInit() API:
+        (##) Select the PLAY kernel clock source
+        (##) Configure the PLAY kernel clock prescaler
+        (##) Enable the PLAY interface clock
         (##) PLAY pins configuration:
             (+++) Enable the clock for the PLAY GPIOs
-            (+++) Configure these PLAY pins as alternate function
+            (+++) Configure PLAY pins as alternate function
         (##) NVIC configuration if you need to use interrupt process:
             (+++) Configure the PLAY interrupt priority.
-            (+++) Enable the NVIC PLAY IRQ handler.
+            (+++) Enable the NVIC PLAY IRQ.
         (##) Optionally, reset the peripheral either by a full reset of all registers or
-             by an "application" reset for only the functional registers (refer to the RCC API)
+             by an "application" reset for only the functional registers (refer to the RCC APIs)
 
     (#) Initialize PLAY registers by calling the HAL_PLAY_Init() API which calls HAL_PLAY_MspInit()
 
     (#) To configure PLAY, call the following APIs:
            - HAL_PLAY_INPUT_SetConfig() : to select the input signals and configure filters
-           - HAL_PLAY_LUT_SetConfig() : to configure the Look-Up Tables
-
-        Finalize the configuration by calling the API HAL_PLAY_OUTPUT_SetConfig.
-        This one allows to output some Look-Up Table Outputs and
-        indicates that the peripheral is ready to start (handle state = HAL_PLAY_STATE_READY).
+           - HAL_PLAY_LUT_SetConfig() : to configure the Look-Up Tables (LUTs)
+           - Finalize the configuration by calling the API HAL_PLAY_OUTPUT_SetConfig().
+             This one allows to output some Look-Up Table Outputs and
+             indicates that the peripheral is ready to start (handle state = @ref HAL_PLAY_STATE_READY).
 
     (#) After ending the configuration, start the PLAY with HAL_PLAY_Start() to:
-          - lock the PLAYx configuration registers to prevent any accidental write access.
-            The kernel clock becomes operational. Then LUT Synchronized Outputs, Filters, SW Triggers and Edge Triggers
-            become functional.
-          - set a first configuration of Edge Trigger on LUT Outputs.
+          - Lock the PLAYx configuration registers to prevent any accidental write access.
+            The kernel clock becomes operational: LUT registered outputs, filters, software triggers and edge triggers
+            are functional.
+          - Set a first configuration of edge trigger on LUT outputs.
 
-        At this step, the PLAY Outputs can be connected to GPIOs or internal IPs.
+        At this step, the PLAY Outputs can be connected to GPIOs or internal peripherals.
 
-    (#) Stop the PLAY with the API HAL_PLAY_Stop.
-        This function disables all Look-Up Table Output ITs and unlocks the configuration.
-        The handle state is back to HAL_PLAY_STATE_READY and allows the Application to update the peripheral.
+    (#) Stop the PLAY with the API HAL_PLAY_Stop().
+        This function disables all Look-Up Table (LUT) output interrupts and unlocks the configuration.
+        The handle state is back to @ref HAL_PLAY_STATE_READY and allows the Application to update the peripheral.
 
-        Before updating the PLAY configuration, it is strongly recommended to disconnect all peripherals connected
-        to PLAY Outputs to avoid any glitches.
+        Disconnect all peripherals connected to PLAY outputs before updating the configuration to avoid glitches.
 
-    (#) At then end of the PLAY processor User application, call the function HAL_PLAY_DeInit()
-        to restore the default configuration which calls HAL_PLAY_MspDeInit().
+    (#) At the end of the PLAY processor User application, call the function HAL_PLAY_DeInit() to restore the default
+        configuration which calls HAL_PLAY_MspDeInit().
 
   *** Look-Up Table Output ***
   ============================
   [..]
-    (+) The Truth Table of a Look-Up table is composed of 16 combinations (with 4 inputs):
+    (+) The Truth Table of a Look-Up Table is composed of 16 combinations (with 4 inputs):
       Combination ID | IN3 | IN2 | IN1 | IN0 | OUT O(y)
       -------------- | --- | --- | --- | --- | --------
              0       |  0  |  0  |  0  |  0  |  O0
@@ -98,8 +97,8 @@
 
           (O0 * 2^0) + (O1 * 2^1) + (O2 * 2^2) + ... + ((O15 * 2^15))
 
-      There are several Truth Table values for a logic gate depending of the selected inputs.
-      For example the Truth Table value for the logic 'AND' are (non-exhaustive list):
+      There are several Truth Table values for a logic gate depending on the selected inputs.
+      For example the Truth Table values for the logic 'AND' are (non-exhaustive list):
         - for IN1 & IN0: 0x8888
         - for IN2 & IN1: 0xC0C0
         - for IN3 & IN2: 0xF000
@@ -107,32 +106,32 @@
         - for IN3, IN2, IN1 & IN0: 0x8000
         - ...
     (+) A Look-Up Table generates a single output which can be stored with a register.
-        Each output has a flag which is triggered on a Rising or Falling edge (depends of user configuration).
+        Each output has a flag which is triggered on a rising or falling edge (depending on the user configuration).
 
-        The best way to use PLAY is to use the LUT Output interrupts to be advise when an output is changed.
-        You can also configure the interrupt mode using the HAL_PLAY_OUTPUT_EnableIT() function.
-        When an IT is triggered the callback HAL_PLAY_LUTOutputRisingCallback() or HAL_PLAY_LUTOutputFallingCallback()
-        is called (depending of the edge trigger configuration).
+        The LUT output interrupts can be enabled to advise when an output state change using the
+        HAL_PLAY_OUTPUT_EnableIT() function.
+        When an interrupt is triggered, the callbacks HAL_PLAY_LUTOutputRisingCallback()
+        or HAL_PLAY_LUTOutputFallingCallback() are called (depending on the edge trigger configuration).
 
-        Otherwise, you can work in polling mode by using the HAL_PLAY_OUTPUT_PollForEdgeTrigger(), but the LUT output
-        could changed in the time frame between the end of polling and the treatment to do for the related output.
+        In polling mode, HAL_PLAY_OUTPUT_PollForEdgeTrigger() can be used, but the LUT output might change in the time
+        frame between the end of polling and the treatment to do for the related output.
 
   *** Callback registration ***
   =============================
   [..]
-      The compilation define USE_HAL_PLAY_REGISTER_CALLBACKS, when set to 1,
-      allows the user to configure dynamically the driver callbacks.
+      The compilation define USE_HAL_PLAY_REGISTER_CALLBACKS, when set to 1, allows the user to configure
+      dynamically the driver callbacks.
 
   [..]
       Use the function HAL_PLAY_RegisterCallback() to register a callback taking only the HAL peripheral handle
       as parameter.
-      Use the function HAL_PLAY_RegisterLUTOutputCallback() to register a callback taking
-      2 parameters (handle + uint32_t) and which is dedicated to perform action when almost a LUT Output state changed.
+      Use the function HAL_PLAY_RegisterLUTOutputCallback() to register a callback taking two parameters
+      (handle + uint32_t) and which is dedicated to perform action when almost a LUT Output state changed.
 
       Both HAL_PLAY_RegisterCallback() and HAL_PLAY_RegisterLUTOutputCallback() take as parameters:
-        - the HAL peripheral handle,
-        - the Callback ID,
-        - the pointer to the user callback function.
+        - The HAL peripheral handle
+        - The Callback ID
+        - The pointer to the user callback function
 
   [..]
       Use function HAL_PLAY_UnRegisterCallback() and HAL_PLAY_UnRegisterLUTOutputCallback() to reset a callback
@@ -141,8 +140,8 @@
       handle and the Callback ID.
 
   [..]
-      Use respectively, the functions HAL_PLAY_RegisterCallback() / HAL_PLAY_UnRegisterCallback(),
-      to register / unregister following callbacks:
+      Use respectively, the functions HAL_PLAY_RegisterCallback() / HAL_PLAY_UnRegisterCallback() to register or
+      unregister following callbacks:
         (+) MspInitCallback              : PLAY MspInit.
         (+) MspDeInitCallback            : PLAY MspDeInit.
         (+) SWTriggerWriteCpltCallback   : Software Trigger Write Complete callback.
@@ -151,31 +150,29 @@
   [..]
       Use respectively, the functions HAL_PLAY_RegisterLUTOutputCallback() / HAL_PLAY_UnRegisterLUTOutputCallback(),
       to register / unregister following callbacks:
-        (+) HAL_PLAY_LUTOutputRisingCallback()  : Look-Up Table Output Rising Edge triggered callback.
-        (+) HAL_PLAY_LUTOutputFallingCallback() : Look-Up Table Output Falling Edge triggered callback.
+        (+) HAL_PLAY_LUTOutputRisingCallback()  : Look-Up Table output rising edge triggered callback.
+        (+) HAL_PLAY_LUTOutputFallingCallback() : Look-Up Table output falling edge triggered callback.
 
   [..]
-      By default, after the HAL_PLAY_Init and when the state is HAL_PLAY_STATE_RESET,
-      all callbacks are reset to the corresponding legacy weak functions.
+      By default, after the HAL_PLAY_Init() and when the state is @ref HAL_PLAY_STATE_RESET, all callbacks are reset
+      to the corresponding legacy weak functions.
 
-      Exception done for MspInit and MspDeInit callbacks that are respectively
-      reset to the legacy weak function in the HAL_PLAY_Init() and HAL_PLAY_DeInit() only when
-      these callbacks are NULL (not registered beforehand).
-      If not, MspInit or MspDeInit are not NULL, the HAL_PLAY_Init() and HAL_PLAY_DeInit()
-      keep and use the user MspInit/MspDeInit callbacks (registered beforehand).
-
-  [..]
-      Callbacks can be registered/unregistered in HAL_PLAY_STATE_READY state only.
-      Exception done for MspInit/MspDeInit callbacks that can be registered/unregistered
-      in HAL_PLAY_STATE_READY or HAL_PLAY_STATE_RESET state,
-      thus registered (user) MspInit/DeInit callbacks can be used during the Init/DeInit.
-      In that case, first register the MspInit/MspDeInit user callbacks
-      using HAL_PLAY_RegisterCallback before calling HAL_PLAY_DeInit() or HAL_PLAY_Init() function.
+      Exception done for MspInit and MspDeInit callbacks that are respectively reset to the legacy weak function in
+      the HAL_PLAY_Init() and HAL_PLAY_DeInit() only when these callbacks are NULL (not registered beforehand).
+      If not, MspInit or MspDeInit are not NULL, the HAL_PLAY_Init() and HAL_PLAY_DeInit() keep and use the user
+      MspInit/MspDeInit callbacks (registered beforehand).
 
   [..]
-      When the compilation define USE_HAL_PLAY_REGISTER_CALLBACKS is set to 0 or
-      not defined, the callback registering feature is not available and all callbacks
-      are set to the corresponding weak functions.
+      Callbacks can be registered/unregistered in @ref HAL_PLAY_STATE_INIT and @ref HAL_PLAY_STATE_READY states only.
+      Exception done for MspInit/MspDeInit callbacks that can also be registered/unregistered in
+      @ref HAL_PLAY_STATE_RESET state, thus registered (user) MspInit/DeInit callbacks can be used during
+      the Init/DeInit.
+      To do so, register the MspInit/MspDeInit user callbacks using HAL_PLAY_RegisterCallback() before calling
+      HAL_PLAY_DeInit() or HAL_PLAY_Init() functions.
+
+  [..]
+      When the compilation define USE_HAL_PLAY_REGISTER_CALLBACKS is set to 0 or not defined, the callback registering
+      feature is not available and all callbacks are set to the corresponding weak functions.
 
   @endverbatim
   ******************************************************************************
@@ -212,13 +209,13 @@
 /**
   * @brief PLAY Interrupt Definition
   */
-#define PLAY_IT_STATUS_SW_TRIGGER_WRITE_COMPLETE   LL_PLAY_IER_SWINWC_IEN  /*!< Interrupt Software Trigger write complete */
-#define PLAY_IT_STATUS_EDGE_TRIGGER_WRITE_COMPLETE LL_PLAY_IER_FLCTLWC_IEN /*!< Interrupt Edge Trigger write complete     */
+#define PLAY_IT_STATUS_SW_TRIGGER_WRITE_COMPLETE   LL_PLAY_IER_SWINWC_IEN  /*!< Software trigger write complete interrupt */
+#define PLAY_IT_STATUS_EDGE_TRIGGER_WRITE_COMPLETE LL_PLAY_IER_FLCTLWC_IEN /*!< Edge trigger write complete interrupt     */
 
 /**
   * @brief Maximum Timeout for any write on Software Trigger or Edge Trigger register.
   *
-  * With a LSI as PLAY kernel clock source and a prescaler of 32768, the play_clk cycle is 1s.
+  * With LSI as PLAY kernel clock source and a prescaler of 32768, the play_clk cycle is 1s.
   * A write takes 3 cycles of play_clk + 2 cycles of PCLK, then a write can take almost 3s.
   */
 #define PLAY_WRITE_TIMEOUT_MS (4000U) /*!< Maximum Write Timeout for Software Trigger or Edge Trigger register: 4000 ms */
@@ -235,35 +232,64 @@
 /**
   * @brief Retrieve the bit status in a given register.
   * @param  reg The register to check.
-  * @param  bit The bit to check to check.
-  * @retval 1   Bit is set.
-  * @retval 0   Bit is reset.
+  * @param  bit The bit to check.
+  * @retval 1   bit is set.
+  * @retval 0   bit is reset.
   */
 #define IS_PLAY_BIT_SET(reg, bit)  (((reg) & (bit)) == (bit))
 
 /**
   * @brief Retrieve the PLAY hardware CMSIS instance from the hal handle.
-  * @param handle specifies the peripheral Handle.
+  * @param handle specifies the peripheral handle.
   */
 #define PLAY_GET_INSTANCE(handle)  ((handle)->instance)
 
 /**
   * @brief Retrieve the PLAYx instance ID from the HAL handle.
-  * @param handle Specifies the peripheral Handle.
+  * @param handle Specifies the peripheral handle.
   */
 #define PLAY_GET_INSTANCE_ID(handle)  \
   (HAL_PLAY1_INSTANCE_ID)
 
 /**
-  * @brief Verifies the PLAY TrustZone access control value.
-  * @param  access Value of TZ access control.
-  * @retval 1    access is a valid value.
-  * @retval 0    access is an invalid value.
+  * @brief Verifies the PLAY privileged access level attribute.
+  * @param  attribute Value of PLAY attribute.
+  * @retval 1         attribute is a valid value.
+  * @retval 0         attribute is an invalid value.
   */
-#define IS_PLAY_TZ_ACCESS_CONTROL(access)            \
-  (((access) == HAL_PLAY_TZ_REG_UNPROTECTED)         \
-   || ((access) == HAL_PLAY_TZ_CONFIG_REG_PROTECTED) \
-   || ((access) == HAL_PLAY_TZ_ALL_REG_PROTECTED))
+#define IS_PLAY_ITEM_PRIV_ATTR(attribute) \
+  (((attribute) == HAL_PLAY_NPRIV)        \
+   || ((attribute) == HAL_PLAY_PRIV))
+
+/**
+  * @brief Verifies the PLAY privileged item value.
+  * @param  item Value of PLAY privileged item.
+  * @retval 1    item is a valid value.
+  * @retval 0    item is an invalid value.
+  */
+#define IS_PLAY_PRIV_ITEM(item)              \
+  (((item) == HAL_PLAY_PRIV_ITEM_CONFIG)     \
+   || ((item) == HAL_PLAY_PRIV_ITEM_ALL))
+
+/**
+  * @brief Verifies the PLAY security access level attribute.
+  * @param  attribute Value of PLAY attribute.
+  * @retval 1         attribute is a valid value.
+  * @retval 0         attribute is an invalid value.
+  */
+#define IS_PLAY_ITEM_SEC_ATTR(attribute) \
+  (((attribute) == HAL_PLAY_NSEC)        \
+   || ((attribute) == HAL_PLAY_SEC))
+
+/**
+  * @brief Verifies the PLAY security item value.
+  * @param  item Value of PLAY security item.
+  * @retval 1    item is a valid value.
+  * @retval 0    item is an invalid value.
+  */
+#define IS_PLAY_SEC_ITEM(item)             \
+  (((item) == HAL_PLAY_SEC_ITEM_CONFIG)    \
+   || ((item) == HAL_PLAY_SEC_ITEM_ALL))
 
 /**
   * @brief Verifies the minimum pulse width value.
@@ -291,7 +317,7 @@
   * @retval 1   mux is a valid value.
   * @retval 0   mux is an invalid value.
   */
-#define IS_PLAY_IN_ID(mux)      \
+#define IS_PLAY_IN(mux)         \
   (((mux) == HAL_PLAY_IN0)      \
    || ((mux) == HAL_PLAY_IN1)   \
    || ((mux) == HAL_PLAY_IN2)   \
@@ -455,7 +481,7 @@
 
 /**
   * @brief Verifies the value of input multiplexer source.
-  * @param  instance PLAYx instance (@ref PLAY_TypeDef). (*)
+  * @param  instance PLAYx instance (PLAY_TypeDef). (*)
   * @param  source   Input signal (@ref HAL_PLAY_IN_SourceTypeDef).
   * @retval 1        source is a valid value.
   * @retval 0        source is an invalid value.
@@ -491,7 +517,7 @@
 
 /**
   * @brief Verifies the Look-Up Table.
-  * @param  instance PLAYx instance (@ref PLAY_TypeDef). (*)
+  * @param  instance PLAYx instance (PLAY_TypeDef). (*)
   * @param  lut      Look-Up Table (@ref HAL_PLAY_LUTTypeDef).
   * @retval 1        lut is a valid value.
   * @retval 0        lut is an invalid value.
@@ -855,7 +881,7 @@
 
 /**
   * @brief Verifies the input source of a look-up table
-  * @param  instance     PLAYx instance (@ref PLAY_TypeDef). (*)
+  * @param  instance     PLAYx instance (PLAY_TypeDef). (*)
   * @param  lut          Look-Up Table (@ref HAL_PLAY_LUTTypeDef).
   * @param  input_source Value of input source (@ref HAL_PLAY_LUT_InputSourceTypeDef).
   * @retval 1            input_source is a valid value.
@@ -927,7 +953,7 @@
 
 /**
   * @brief Verifies the Clock Gate value.
-  * @param  instance PLAYx instance (@ref PLAY_TypeDef). (*)
+  * @param  instance PLAYx instance (PLAY_TypeDef). (*)
   * @param  source   Signal source for Clock Gate.
   * @retval 1        source is a valid value.
   * @retval 0        source is an invalid value.
@@ -1011,7 +1037,7 @@
 
 /**
   * @brief Verifies the Output Multiplexer source.
-  * @param  instance PLAYx instance (@ref PLAY_TypeDef). (*)
+  * @param  instance PLAYx instance (PLAY_TypeDef). (*)
   * @param  source   Value of output source.
   * @retval 1        source is a valid value.
   * @retval 0        source is an invalid value.
@@ -1072,7 +1098,7 @@
   * @retval 0      swtrig is an invalid value.
   */
 #define IS_PLAY_SWTRIGGER_MSK(swtrig_msk) \
-  ((((uint32_t)(swtrig_msk) & HAL_PLAY_SWTRIG_ALL) != 0x00U) \
+  ((((uint32_t)(swtrig_msk) & HAL_PLAY_SWTRIG_ALL) != 0x00U)      \
    && (((uint32_t)(swtrig_msk) & ~HAL_PLAY_SWTRIG_ALL) == 0x00U))
 
 /**
@@ -1101,72 +1127,55 @@ static HAL_StatusTypeDef PLAY_LUT_SetEdgeTrigger(const HAL_PLAY_HandleTypeDef *h
 /** @addtogroup PLAY_Exported_Functions_Group1
   * @{
 A set of functions allowing to initialize and deinitialize the PLAYx peripheral:
- - HAL_PLAY_Init() : initialize the selected device with the PLAY instance.
- - HAL_PLAY_DeInit() : de-initialize the selected PLAYx peripheral and reset the handle and status flags.
- - HAL_PLAY_MSPInit() : initialize the PLAY MSP (MCU Specific Package).
- - HAL_PLAY_MSPDeInit() : de-initialize the PLAY MSP.
+ - HAL_PLAY_Init()      Initialize the selected device with the PLAY instance.
+ - HAL_PLAY_DeInit()    De-initialize the selected PLAYx peripheral and reset the handle and status flags.
+ - HAL_PLAY_MSPInit()   Initialize the PLAY MSP (MCU Specific Package).
+ - HAL_PLAY_MSPDeInit() De-initialize the PLAY MSP.
   */
 
 /**
   * @brief  Initialize the PLAY according to the associated handle.
   * @param  hplay Pointer to a @ref HAL_PLAY_HandleTypeDef.
-  * @retval HAL_OK            PLAY instance has been correctly initialized.
-  * @retval HAL_INVALID_PARAM PLAY handle is NULL
+  * @retval HAL_OK    PLAY instance has been correctly initialized.
+  * @retval HAL_ERROR Invalid parameter.
   */
 HAL_StatusTypeDef HAL_PLAY_Init(HAL_PLAY_HandleTypeDef *hplay)
 {
-  const PLAY_TypeDef *p_playx;
-
-  /* Check the PLAY handle allocation */
+  /* Check the parameters */
   if (hplay == NULL)
   {
     return HAL_ERROR;
   }
 
-  p_playx = PLAY_GET_INSTANCE(hplay);
+  assert_param(IS_PLAY_ALL_INSTANCE(PLAY_GET_INSTANCE(hplay)));
 
-  if (p_playx == NULL)
-  {
-    hplay->last_error_codes = HAL_PLAY_ERROR_INVALID_PARAM;
-
-    return HAL_ERROR;
-  }
-
-  /* Check the parameters */
-  assert_param(IS_PLAY_ALL_INSTANCE(p_playx));
-
-  /* Init the peripheral */
-  if (hplay->global_state == HAL_PLAY_STATE_RESET)
+  /* Initialize the peripheral */
+  if (hplay->State == HAL_PLAY_STATE_RESET)
   {
 #if (USE_HAL_PLAY_REGISTER_CALLBACKS == 1)
     /* Register the default callback functions */
-    hplay->SWTriggerWriteCpltCallback = HAL_PLAY_SWTriggerWriteCpltCallback;
+    hplay->SWTriggerWriteCpltCallback   = HAL_PLAY_SWTriggerWriteCpltCallback;
     hplay->EdgeTriggerWriteCpltCallback = HAL_PLAY_EdgeTriggerWriteCpltCallback;
-    hplay->LUTOutputRisingCallback = HAL_PLAY_LUTOutputRisingCallback;
-    hplay->LUTOutputFallingCallback = HAL_PLAY_LUTOutputFallingCallback;
+    hplay->LUTOutputRisingCallback      = HAL_PLAY_LUTOutputRisingCallback;
+    hplay->LUTOutputFallingCallback     = HAL_PLAY_LUTOutputFallingCallback;
 
-    if (NULL == hplay->MspInitCallback)
+    if (hplay->MspInitCallback == NULL)
     {
       hplay->MspInitCallback = HAL_PLAY_MspInit;
     }
 
-    if (NULL == hplay->MspDeInitCallback)
-    {
-      hplay->MspDeInitCallback = HAL_PLAY_MspDeInit;
-    }
-
-    /* Init the low level hardware */
+    /* Initialize the low-level hardware */
     hplay->MspInitCallback(hplay);
 #else
-    /* Init the low level hardware */
+    /* Initialize the low-level hardware */
     HAL_PLAY_MspInit(hplay);
 #endif /* USE_HAL_PLAY_REGISTER_CALLBACKS */
   }
 
   /* Reset error code */
-  hplay->last_error_codes = HAL_PLAY_ERROR_NONE;
+  hplay->ErrorCode = HAL_PLAY_ERROR_NONE;
 
-  hplay->global_state = HAL_PLAY_STATE_INIT;
+  hplay->State = HAL_PLAY_STATE_INIT;
 
   return HAL_OK;
 }
@@ -1174,7 +1183,7 @@ HAL_StatusTypeDef HAL_PLAY_Init(HAL_PLAY_HandleTypeDef *hplay)
 /**
   * @brief DeInitialize the PLAY peripheral.
   * @param hplay Pointer to a @ref HAL_PLAY_HandleTypeDef.
-  * @note  HAL_PLAY_DeInit does not reset all PLAY registers.
+  * @note  HAL_PLAY_DeInit() does not reset all PLAY registers.
   *        The Application must call RCC API to force the reset of all PLAY registers.
   * @retval HAL_OK     Operation completed successfully.
   * @retval HAL_ERROR  Invalid parameter.
@@ -1183,7 +1192,7 @@ HAL_StatusTypeDef HAL_PLAY_DeInit(HAL_PLAY_HandleTypeDef *hplay)
 {
   PLAY_TypeDef *p_playx;
 
-  /* Check the PLAY handle allocation */
+  /* Check the parameters */
   if (hplay == NULL)
   {
     return HAL_ERROR;
@@ -1191,17 +1200,7 @@ HAL_StatusTypeDef HAL_PLAY_DeInit(HAL_PLAY_HandleTypeDef *hplay)
 
   p_playx = PLAY_GET_INSTANCE(hplay);
 
-  if (p_playx == NULL)
-  {
-    hplay->last_error_codes = HAL_PLAY_ERROR_INVALID_PARAM;
-
-    return HAL_ERROR;
-  }
-
-  /* Check the parameters */
   assert_param(IS_PLAY_ALL_INSTANCE(p_playx));
-
-  p_playx = PLAY_GET_INSTANCE(hplay);
 
   /* Clear only interrupts & flags. The rest of configuration must be reset by the application with MspDeInit */
   LL_PLAY_LUT_DisableIT(p_playx, LL_PLAY_LUT_ALL_OUT_REGISTERED | LL_PLAY_LUT_ALL_OUT_DIRECT);
@@ -1214,59 +1213,56 @@ HAL_StatusTypeDef HAL_PLAY_DeInit(HAL_PLAY_HandleTypeDef *hplay)
   LL_PLAY_Unlock(p_playx);
 
 #if (USE_HAL_PLAY_REGISTER_CALLBACKS == 1)
-  /* Register the default callback functions */
-  hplay->SWTriggerWriteCpltCallback = HAL_PLAY_SWTriggerWriteCpltCallback;
-  hplay->EdgeTriggerWriteCpltCallback = HAL_PLAY_EdgeTriggerWriteCpltCallback;
-  hplay->LUTOutputRisingCallback = HAL_PLAY_LUTOutputRisingCallback;
-  hplay->LUTOutputFallingCallback = HAL_PLAY_LUTOutputFallingCallback;
-  hplay->MspInitCallback = HAL_PLAY_MspInit;
-
   if (hplay->MspDeInitCallback == NULL)
   {
-    /* DeInit Callback not initialized as expected then force it to default MspDeInit */
+    /* MspDeInit callback not set; reset to default HAL_PLAY_MspDeInit */
     hplay->MspDeInitCallback = HAL_PLAY_MspDeInit;
   }
 
-  /* DeInit the low level hardware */
+  /* DeInitialize the low-level hardware */
   hplay->MspDeInitCallback(hplay);
 #else
-  /* DeInit the low level hardware */
+  /* DeInitialize the low-level hardware */
   HAL_PLAY_MspDeInit(hplay);
 #endif /* USE_HAL_PLAY_REGISTER_CALLBACKS == 1 */
 
   /* Reset error code */
-  hplay->last_error_codes = HAL_PLAY_ERROR_NONE;
+  hplay->ErrorCode = HAL_PLAY_ERROR_NONE;
 
-  hplay->global_state = HAL_PLAY_STATE_RESET;
+  hplay->State = HAL_PLAY_STATE_RESET;
 
   return HAL_OK;
 }
 
 /**
-  * @brief  Initialize the PLAY MSP.
-  * @param  hplay Pointer to a @ref HAL_PLAY_HandleTypeDef.
+  * @brief   Initialize the PLAY MSP.
+  * @param   hplay Pointer to a @ref HAL_PLAY_HandleTypeDef.
+  * @warning This weak function must not be modified. When the callback is needed,
+  *          it must be implemented in the user file.
   */
 __weak void HAL_PLAY_MspInit(HAL_PLAY_HandleTypeDef *hplay)
 {
   /* Prevent unused argument(s) compilation warning */
   UNUSED(hplay);
 
-  /* NOTE: This function must not be modified, when the callback is needed,
-           the HAL_PLAY_MspInit can be implemented in the user file
+  /* WARNING: This function must not be modified, when the callback is needed,
+              function HAL_PLAY_MspInit() must be implemented in the user file.
    */
 }
 
 /**
-  * @brief  DeInitialize the PLAY MSP.
-  * @param  hplay Pointer to a @ref HAL_PLAY_HandleTypeDef.
+  * @brief   DeInitialize the PLAY MSP.
+  * @param   hplay Pointer to a @ref HAL_PLAY_HandleTypeDef.
+  * @warning This weak function must not be modified. When the callback is needed,
+  *          it must be implemented in the user file.
   */
 __weak void HAL_PLAY_MspDeInit(HAL_PLAY_HandleTypeDef *hplay)
 {
   /* Prevent unused argument(s) compilation warning */
   UNUSED(hplay);
 
-  /* NOTE: This function must not be modified, when the callback is needed,
-           the HAL_PLAY_MspDeInit can be implemented in the user file
+  /* WARNING: This function must not be modified, when the callback is needed,
+              function HAL_PLAY_MspDeInit() must be implemented in the user file.
    */
 }
 
@@ -1308,14 +1304,15 @@ A set of functions allowing to configure the PLAYx peripheral:
   * @brief  Configure multiple input multiplexers for the PLAY peripheral.
   * @param  hplay      Pointer to a @ref HAL_PLAY_HandleTypeDef.
   * @param  p_config   Pointer to an array of @ref HAL_PLAY_IN_ConfTypeDef.
-  * @param  array_size Number of configuration in the array.
+  * @param  array_size Number of configurations in the array.
   * @retval HAL_OK     Operation completed successfully.
-  * @retval HAL_ERROR  Array pointer or handle is NULL.
+  * @retval HAL_ERROR  Invalid parameter or wrong state.
   */
 HAL_StatusTypeDef HAL_PLAY_INPUT_SetConfig(HAL_PLAY_HandleTypeDef *hplay, const HAL_PLAY_IN_ConfTypeDef *p_config,
                                            uint32_t array_size)
 {
   PLAY_TypeDef *p_playx;
+  HAL_PLAY_StateTypeDef tmp_state;
   uint32_t is_locked;
 
   /* Check the parameters */
@@ -1326,32 +1323,25 @@ HAL_StatusTypeDef HAL_PLAY_INPUT_SetConfig(HAL_PLAY_HandleTypeDef *hplay, const 
 
   p_playx = PLAY_GET_INSTANCE(hplay);
 
-  if (p_playx == NULL)
+  if ((p_config == NULL) || (array_size > PLAY_INPUT_MUX_NBR(p_playx)))
   {
-    hplay->last_error_codes = HAL_PLAY_ERROR_INVALID_PARAM;
+    hplay->ErrorCode |= HAL_PLAY_ERROR_INVALID_PARAM;
 
     return HAL_ERROR;
   }
 
-  if (p_config == NULL)
-  {
-    hplay->last_error_codes |= HAL_PLAY_ERROR_INVALID_PARAM;
-
-    return HAL_ERROR;
-  }
-
-  assert_param(IS_PLAY_ALL_INSTANCE(p_playx));
   assert_param(((array_size > 0U) && (array_size <= PLAY_INPUT_MUX_NBR(p_playx))));
 
   /* Check the peripheral state */
-  if ((hplay->global_state != HAL_PLAY_STATE_INIT) && (hplay->global_state != HAL_PLAY_STATE_READY))
+  tmp_state = hplay->State;
+  if ((tmp_state != HAL_PLAY_STATE_INIT) && (tmp_state != HAL_PLAY_STATE_READY))
   {
     return HAL_ERROR;
   }
 
-  /* UnLock the configuration if not already done */
+  /* Unlock the configuration if not already done */
   is_locked = LL_PLAY_IsLocked(p_playx);
-  if (is_locked == 1U)
+  if (is_locked != 0U)
   {
     LL_PLAY_Unlock(p_playx);
   }
@@ -1379,7 +1369,7 @@ HAL_StatusTypeDef HAL_PLAY_INPUT_SetConfig(HAL_PLAY_HandleTypeDef *hplay, const 
   *        where array_size specifies the number of configurations.
   * @param  hplay      Pointer to a @ref HAL_PLAY_HandleTypeDef.
   * @param  p_config   Pointer to an array of @ref HAL_PLAY_IN_ConfTypeDef to be filled.
-  * @param  array_size Number of configuration in the array.
+  * @param  array_size Number of configurations in the array.
   * @retval HAL_OK     Operation completed successfully.
   * @retval HAL_ERROR  Invalid parameter.
   */
@@ -1396,21 +1386,13 @@ HAL_StatusTypeDef HAL_PLAY_INPUT_GetConfig(HAL_PLAY_HandleTypeDef *hplay, HAL_PL
 
   p_playx = PLAY_GET_INSTANCE(hplay);
 
-  if (p_playx == NULL)
+  if ((p_config == NULL) || (array_size > PLAY_INPUT_MUX_NBR(p_playx)))
   {
-    hplay->last_error_codes |= HAL_PLAY_ERROR_INVALID_PARAM;
+    hplay->ErrorCode = HAL_PLAY_ERROR_INVALID_PARAM;
 
     return HAL_ERROR;
   }
 
-  if (p_config == NULL)
-  {
-    hplay->last_error_codes = HAL_PLAY_ERROR_INVALID_PARAM;
-
-    return HAL_ERROR;
-  }
-
-  assert_param(IS_PLAY_ALL_INSTANCE(p_playx));
   assert_param(((array_size > 0U) && (array_size <= PLAY_INPUT_MUX_NBR(p_playx))));
 
   /* Rebuild the input source signal */
@@ -1434,17 +1416,18 @@ HAL_StatusTypeDef HAL_PLAY_INPUT_GetConfig(HAL_PLAY_HandleTypeDef *hplay, HAL_PL
   * @brief  Configure multiple lookup tables for the PLAY peripheral.
   * @param  hplay     Pointer to a @ref HAL_PLAY_HandleTypeDef.
   * @param  p_config  Pointer to an array of HAL_PLAY_LUT_ConfTypeDef.
-  * @param  array_size Number of configuration in the array.
+  * @param  array_size Number of configurations in the array.
   * @retval HAL_OK     Operation completed successfully.
-  * @retval HAL_ERROR  Invalid parameter.
+  * @retval HAL_ERROR  Invalid parameter or wrong state.
   */
 HAL_StatusTypeDef HAL_PLAY_LUT_SetConfig(HAL_PLAY_HandleTypeDef *hplay, const HAL_PLAY_LUT_ConfTypeDef *p_config,
                                          uint32_t array_size)
 {
   PLAY_TypeDef *p_playx;
+  HAL_PLAY_StateTypeDef tmp_state;
   uint32_t is_locked;
 
-  /* Check handle parameter */
+  /* Check the parameters */
   if (hplay == NULL)
   {
     return HAL_ERROR;
@@ -1452,32 +1435,25 @@ HAL_StatusTypeDef HAL_PLAY_LUT_SetConfig(HAL_PLAY_HandleTypeDef *hplay, const HA
 
   p_playx = PLAY_GET_INSTANCE(hplay);
 
-  if (p_playx == NULL)
+  if ((p_config == NULL) || (array_size > PLAY_INPUT_MUX_NBR(p_playx)))
   {
-    hplay->last_error_codes |= HAL_PLAY_ERROR_INVALID_PARAM;
+    hplay->ErrorCode |= HAL_PLAY_ERROR_INVALID_PARAM;
 
     return HAL_ERROR;
   }
 
-  if (p_config == NULL)
-  {
-    hplay->last_error_codes |= HAL_PLAY_ERROR_INVALID_PARAM;
-
-    return HAL_ERROR;
-  }
-
-  assert_param(IS_PLAY_ALL_INSTANCE(p_playx));
   assert_param(((array_size > 0UL) && (array_size <= PLAY_LUT_NBR(p_playx))));
 
   /* Check the peripheral state */
-  if ((hplay->global_state != HAL_PLAY_STATE_INIT) && (hplay->global_state != HAL_PLAY_STATE_READY))
+  tmp_state = hplay->State;
+  if ((tmp_state != HAL_PLAY_STATE_INIT) && (tmp_state != HAL_PLAY_STATE_READY))
   {
     return HAL_ERROR;
   }
 
-  /* UnLock the configuration if not already done */
+  /* Unlock the configuration if not already done */
   is_locked = LL_PLAY_IsLocked(p_playx);
-  if (is_locked == 1U)
+  if (is_locked != 0U)
   {
     LL_PLAY_Unlock(p_playx);
   }
@@ -1511,9 +1487,9 @@ HAL_StatusTypeDef HAL_PLAY_LUT_SetConfig(HAL_PLAY_HandleTypeDef *hplay, const HA
 /**
   * @brief Retrieve the lookup table configurations of the PLAY peripheral in order from 0 to (array_size - 1),
   *        where array_size specifies the number of configurations.
-  * @param  hplay     Pointer to a @ref HAL_PLAY_HandleTypeDef.
-  * @param  p_config  Pointer to an array of @ref HAL_PLAY_LUT_ConfTypeDef.
-  * @param  array_size Number of configuration in the array.
+  * @param  hplay      Pointer to a @ref HAL_PLAY_HandleTypeDef.
+  * @param  p_config   Pointer to an array of @ref HAL_PLAY_LUT_ConfTypeDef.
+  * @param  array_size Number of configurations in the array.
   * @retval HAL_OK     Operation completed successfully.
   * @retval HAL_ERROR  Invalid parameter.
   */
@@ -1522,7 +1498,7 @@ HAL_StatusTypeDef HAL_PLAY_LUT_GetConfig(HAL_PLAY_HandleTypeDef *hplay, HAL_PLAY
 {
   const PLAY_TypeDef *p_playx;
 
-  /* Check handle parameter */
+  /* Check the parameters */
   if (hplay == NULL)
   {
     return HAL_ERROR;
@@ -1530,22 +1506,13 @@ HAL_StatusTypeDef HAL_PLAY_LUT_GetConfig(HAL_PLAY_HandleTypeDef *hplay, HAL_PLAY
 
   p_playx = PLAY_GET_INSTANCE(hplay);
 
-  /* Check parameter setting */
-  if (p_playx == NULL)
+  if ((p_config == NULL) || (array_size > PLAY_INPUT_MUX_NBR(p_playx)))
   {
-    hplay->last_error_codes |= HAL_PLAY_ERROR_INVALID_PARAM;
+    hplay->ErrorCode |= HAL_PLAY_ERROR_INVALID_PARAM;
 
     return HAL_ERROR;
   }
 
-  if (p_config == NULL)
-  {
-    hplay->last_error_codes |= HAL_PLAY_ERROR_INVALID_PARAM;
-
-    return HAL_ERROR;
-  }
-
-  assert_param(IS_PLAY_ALL_INSTANCE(p_playx));
   assert_param(((array_size > 0UL) && (array_size <= PLAY_LUT_NBR(p_playx))));
 
   for (uint32_t idx = 0; idx < array_size; idx++)
@@ -1567,16 +1534,18 @@ HAL_StatusTypeDef HAL_PLAY_LUT_GetConfig(HAL_PLAY_HandleTypeDef *hplay, HAL_PLAY
 }
 
 /**
-  * @brief  Configure a set of Output Multiplexer.
+  * @brief  Configure a set of output multiplexers for the PLAY peripheral.
   * @param  hplay      Pointer to a @ref HAL_PLAY_HandleTypeDef.
   * @param  p_config   Pointer to an array of @ref HAL_PLAY_OUT_ConfTypeDef.
-  * @param  array_size Number of configuration in the array.
-  * @return HAL status.
+  * @param  array_size Number of configurations in the array.
+  * @retval HAL_OK     Operation completed successfully.
+  * @retval HAL_ERROR  Invalid parameter or wrong state.
   */
 HAL_StatusTypeDef HAL_PLAY_OUTPUT_SetConfig(HAL_PLAY_HandleTypeDef *hplay, const HAL_PLAY_OUT_ConfTypeDef *p_config,
                                             uint32_t array_size)
 {
   PLAY_TypeDef *p_playx;
+  HAL_PLAY_StateTypeDef tmp_state;
   uint32_t is_locked;
 
   /* Check the parameters */
@@ -1587,25 +1556,25 @@ HAL_StatusTypeDef HAL_PLAY_OUTPUT_SetConfig(HAL_PLAY_HandleTypeDef *hplay, const
 
   p_playx = PLAY_GET_INSTANCE(hplay);
 
-  if (p_playx == NULL)
+  if ((p_config == NULL) || (array_size > PLAY_INPUT_MUX_NBR(p_playx)))
   {
-    hplay->last_error_codes = HAL_PLAY_ERROR_INVALID_PARAM;
+    hplay->ErrorCode = HAL_PLAY_ERROR_INVALID_PARAM;
 
     return HAL_ERROR;
   }
 
-  assert_param(IS_PLAY_ALL_INSTANCE(p_playx));
   assert_param(((array_size > 0UL) && (array_size <= PLAY_OUTPUT_MUX_NBR(p_playx))));
 
   /* Check the peripheral state */
-  if ((hplay->global_state != HAL_PLAY_STATE_INIT) && (hplay->global_state != HAL_PLAY_STATE_READY))
+  tmp_state = hplay->State;
+  if ((tmp_state != HAL_PLAY_STATE_INIT) && (tmp_state != HAL_PLAY_STATE_READY))
   {
     return HAL_ERROR;
   }
 
-  /* UnLock the configuration if not already done */
+  /* Unlock the configuration if not already done */
   is_locked = LL_PLAY_IsLocked(p_playx);
-  if (is_locked == 1U)
+  if (is_locked != 0U)
   {
     LL_PLAY_Unlock(p_playx);
   }
@@ -1619,7 +1588,7 @@ HAL_StatusTypeDef HAL_PLAY_OUTPUT_SetConfig(HAL_PLAY_HandleTypeDef *hplay, const
     LL_PLAY_OUTPUT_SetSource(p_playx, (uint32_t)p_config[idx].output_mux, (uint32_t)p_config[idx].lut_output);
   }
 
-  hplay->global_state = HAL_PLAY_STATE_READY;
+  hplay->State = HAL_PLAY_STATE_READY;
 
   return HAL_OK;
 }
@@ -1629,7 +1598,7 @@ HAL_StatusTypeDef HAL_PLAY_OUTPUT_SetConfig(HAL_PLAY_HandleTypeDef *hplay, const
   *        where array_size specifies the number of configurations.
   * @param  hplay      Pointer to a @ref HAL_PLAY_HandleTypeDef.
   * @param  p_config   Pointer to an array of @ref HAL_PLAY_OUT_ConfTypeDef.
-  * @param  array_size Number of configuration in the array.
+  * @param  array_size Number of configurations in the array.
   * @retval HAL_OK     Operation completed successfully.
   * @retval HAL_ERROR  Invalid parameter.
   */
@@ -1646,21 +1615,13 @@ HAL_StatusTypeDef HAL_PLAY_OUTPUT_GetConfig(HAL_PLAY_HandleTypeDef *hplay, HAL_P
 
   p_playx = PLAY_GET_INSTANCE(hplay);
 
-  if (p_playx == NULL)
+  if ((p_config == NULL) || (array_size > PLAY_INPUT_MUX_NBR(p_playx)))
   {
-    hplay->last_error_codes = HAL_PLAY_ERROR_INVALID_PARAM;
+    hplay->ErrorCode = HAL_PLAY_ERROR_INVALID_PARAM;
 
     return HAL_ERROR;
   }
 
-  if (p_config == NULL)
-  {
-    hplay->last_error_codes = HAL_PLAY_ERROR_INVALID_PARAM;
-
-    return HAL_ERROR;
-  }
-
-  assert_param(IS_PLAY_ALL_INSTANCE(p_playx));
   assert_param(((array_size > 0UL) && (array_size <= PLAY_OUTPUT_MUX_NBR(p_playx))));
 
   for (uint32_t idx = 0; idx < array_size; idx++)
@@ -1679,9 +1640,9 @@ HAL_StatusTypeDef HAL_PLAY_OUTPUT_GetConfig(HAL_PLAY_HandleTypeDef *hplay, HAL_P
   * @param  hplay  Pointer to a @ref HAL_PLAY_HandleTypeDef.
   * @param  source Input source signal.
   * @retval HAL_OK    Operation completed successfully.
-  * @retval HAL_ERROR Invalid parameter or current state is not @ref HAL_PLAY_STATE_READY.
+  * @retval HAL_ERROR Invalid parameter or wrong state.
   */
-HAL_StatusTypeDef HAL_PLAY_INPUT_SetSource(HAL_PLAY_HandleTypeDef *hplay, HAL_PLAY_IN_SourceTypeDef source)
+HAL_StatusTypeDef HAL_PLAY_INPUT_SetSource(const HAL_PLAY_HandleTypeDef *hplay, HAL_PLAY_IN_SourceTypeDef source)
 {
   PLAY_TypeDef *p_playx;
 
@@ -1693,14 +1654,13 @@ HAL_StatusTypeDef HAL_PLAY_INPUT_SetSource(HAL_PLAY_HandleTypeDef *hplay, HAL_PL
 
   p_playx = PLAY_GET_INSTANCE(hplay);
 
-  if (p_playx == NULL)
-  {
-    hplay->last_error_codes = HAL_PLAY_ERROR_INVALID_PARAM;
+  assert_param(IS_PLAY_IN_SOURCE(p_playx, source));
 
+  /* Check the peripheral state */
+  if (hplay->State != HAL_PLAY_STATE_READY)
+  {
     return HAL_ERROR;
   }
-
-  assert_param(IS_PLAY_IN_SOURCE(p_playx, source));
 
   uint32_t src_u32 = (uint32_t)source;
 
@@ -1708,13 +1668,6 @@ HAL_StatusTypeDef HAL_PLAY_INPUT_SetSource(HAL_PLAY_HandleTypeDef *hplay, HAL_PL
   uint32_t input_mux = (src_u32 & PLAY_IN_MUX_MASK) >> HAL_PLAY_IN_MUX_POS;
   uint32_t mux_sel = src_u32 & PLAY_IN_MUX_VALUE_MASK;
 
-  /* Check the peripheral state */
-  if (hplay->global_state != HAL_PLAY_STATE_READY)
-  {
-    return HAL_ERROR;
-  }
-
-  /* Set the source signal */
   LL_PLAY_INPUT_SetSource(p_playx, input_mux, mux_sel);
 
   return HAL_OK;
@@ -1724,34 +1677,23 @@ HAL_StatusTypeDef HAL_PLAY_INPUT_SetSource(HAL_PLAY_HandleTypeDef *hplay, HAL_PL
   * @brief  Retrieve the signal source for an input multiplexer of the PLAY peripheral.
   * @param  hplay     Pointer to a @ref HAL_PLAY_HandleTypeDef.
   * @param  input_mux Input multiplexer.
-  * @return Input source signal.
   * @note   Function will return @ref HAL_PLAY_IN_SOURCE_INVALID if the parameters are invalid.
+  * @return Input source signal.
   */
 HAL_PLAY_IN_SourceTypeDef HAL_PLAY_INPUT_GetSource(const HAL_PLAY_HandleTypeDef *hplay, HAL_PLAY_INTypeDef input_mux)
 {
-  const PLAY_TypeDef *p_playx;
-
   /* Check the parameters */
   if (hplay == NULL)
   {
-    /* Return 0 as default value */
     return HAL_PLAY_IN_SOURCE_INVALID;
   }
 
-  p_playx = PLAY_GET_INSTANCE(hplay);
-
-  if (p_playx == NULL)
-  {
-    /* Return 0 as default value */
-    return HAL_PLAY_IN_SOURCE_INVALID;
-  }
-
-  assert_param(IS_PLAY_IN_ID(input_mux));
+  assert_param(IS_PLAY_IN(input_mux));
 
   /* Rebuild the source signal */
   uint32_t instance_id = (uint32_t)PLAY_GET_INSTANCE_ID(hplay);
   uint32_t mux_sel = (uint32_t)input_mux << HAL_PLAY_IN_MUX_POS;
-  uint32_t source = LL_PLAY_INPUT_GetSource(p_playx, (uint32_t)input_mux);
+  uint32_t source = LL_PLAY_INPUT_GetSource(PLAY_GET_INSTANCE(hplay), (uint32_t)input_mux);
 
   uint32_t ret = (instance_id | mux_sel | source);
 
@@ -1765,38 +1707,27 @@ HAL_PLAY_IN_SourceTypeDef HAL_PLAY_INPUT_GetSource(const HAL_PLAY_HandleTypeDef 
   * @param  width     Pulse width in play_clk clock cycles, in range [0..255].
   *                   Value 0 means that the filter is bypassed.
   * @retval HAL_OK    Operation completed successfully.
-  * @retval HAL_ERROR Invalid parameter or current state is not @ref HAL_PLAY_STATE_READY.
+  * @retval HAL_ERROR Invalid parameter or wrong state.
   */
-HAL_StatusTypeDef HAL_PLAY_INPUT_SetMinPulseWidth(HAL_PLAY_HandleTypeDef *hplay, HAL_PLAY_INTypeDef input_mux,
+HAL_StatusTypeDef HAL_PLAY_INPUT_SetMinPulseWidth(const HAL_PLAY_HandleTypeDef *hplay, HAL_PLAY_INTypeDef input_mux,
                                                   uint32_t width)
 {
-  PLAY_TypeDef *p_playx;
-
-  /* Check parameters */
+  /* Check the parameters */
   if (hplay == NULL)
   {
     return HAL_ERROR;
   }
 
-  p_playx = PLAY_GET_INSTANCE(hplay);
-
-  if (p_playx == NULL)
-  {
-    hplay->last_error_codes |= HAL_PLAY_ERROR_INVALID_PARAM;
-
-    return HAL_ERROR;
-  }
-
-  assert_param(IS_PLAY_IN_ID(input_mux));
+  assert_param(IS_PLAY_IN(input_mux));
   assert_param(IS_PLAY_MIN_PULSE_WIDTH(width));
 
   /* Check the peripheral state */
-  if (hplay->global_state != HAL_PLAY_STATE_READY)
+  if (hplay->State != HAL_PLAY_STATE_READY)
   {
     return HAL_ERROR;
   }
 
-  LL_PLAY_INPUT_SetMinimumPulseWidth(p_playx, (uint32_t)input_mux, width);
+  LL_PLAY_INPUT_SetMinimumPulseWidth(PLAY_GET_INSTANCE(hplay), (uint32_t)input_mux, width);
 
   return HAL_OK;
 }
@@ -1805,29 +1736,20 @@ HAL_StatusTypeDef HAL_PLAY_INPUT_SetMinPulseWidth(HAL_PLAY_HandleTypeDef *hplay,
   * @brief  Retrieve the minimum pulse width configured for an input filter of the PLAY peripheral.
   * @param  hplay     Pointer to a @ref HAL_PLAY_HandleTypeDef.
   * @param  input_mux Input multiplexer.
-  * @return Pulse width in play_clk clock cycles, in range [0..255]. Value 0 means that the filter is bypassed.
   * @note   Function will return 0 if the parameters are invalid.
+  * @return Pulse width in play_clk clock cycles, in range [0..255]. Value 0 means that the filter is bypassed.
   */
 uint32_t HAL_PLAY_INPUT_GetMinPulseWidth(const HAL_PLAY_HandleTypeDef *hplay, HAL_PLAY_INTypeDef input_mux)
 {
-  const PLAY_TypeDef *p_playx;
-
-  /* Check parameters */
+  /* Check the parameters */
   if (hplay == NULL)
   {
     return 0U;
   }
 
-  p_playx = PLAY_GET_INSTANCE(hplay);
+  assert_param(IS_PLAY_IN(input_mux));
 
-  if (p_playx == NULL)
-  {
-    return 0U;
-  }
-
-  assert_param(IS_PLAY_IN_ID(input_mux));
-
-  return LL_PLAY_INPUT_GetMinimumPulseWidth(p_playx, (uint32_t)input_mux);
+  return LL_PLAY_INPUT_GetMinimumPulseWidth(PLAY_GET_INSTANCE(hplay), (uint32_t)input_mux);
 }
 
 /**
@@ -1836,38 +1758,27 @@ uint32_t HAL_PLAY_INPUT_GetMinPulseWidth(const HAL_PLAY_HandleTypeDef *hplay, HA
   * @param  input_mux Input multiplexer.
   * @param  mode      Mode of Edge Detection.
   * @retval HAL_OK    Operation completed successfully.
-  * @retval HAL_ERROR Invalid parameter or current state is not @ref HAL_PLAY_STATE_READY.
+  * @retval HAL_ERROR Invalid parameter or wrong state.
   */
-HAL_StatusTypeDef HAL_PLAY_INPUT_SetEdgeDetectionMode(HAL_PLAY_HandleTypeDef *hplay, HAL_PLAY_INTypeDef input_mux,
+HAL_StatusTypeDef HAL_PLAY_INPUT_SetEdgeDetectionMode(const HAL_PLAY_HandleTypeDef *hplay, HAL_PLAY_INTypeDef input_mux,
                                                       HAL_PLAY_EdgeDetectionModeTypeDef mode)
 {
-  PLAY_TypeDef *p_playx;
-
-  /* Check parameters */
+  /* Check the parameters */
   if (hplay == NULL)
   {
     return HAL_ERROR;
   }
 
-  p_playx = PLAY_GET_INSTANCE(hplay);
-
-  if (p_playx == NULL)
-  {
-    hplay->last_error_codes |= HAL_PLAY_ERROR_INVALID_PARAM;
-
-    return HAL_ERROR;
-  }
-
-  assert_param(IS_PLAY_IN_ID(input_mux));
+  assert_param(IS_PLAY_IN(input_mux));
   assert_param(IS_PLAY_EDGE_DETECTION_MODE(mode));
 
   /* Check the peripheral state */
-  if (hplay->global_state != HAL_PLAY_STATE_READY)
+  if (hplay->State != HAL_PLAY_STATE_READY)
   {
     return HAL_ERROR;
   }
 
-  LL_PLAY_INPUT_SetEdgeDetectionMode(p_playx, (uint32_t)input_mux, (uint32_t)mode);
+  LL_PLAY_INPUT_SetEdgeDetectionMode(PLAY_GET_INSTANCE(hplay), (uint32_t)input_mux, (uint32_t)mode);
 
   return HAL_OK;
 }
@@ -1876,32 +1787,22 @@ HAL_StatusTypeDef HAL_PLAY_INPUT_SetEdgeDetectionMode(HAL_PLAY_HandleTypeDef *hp
   * @brief  Retrieve the edge detection mode configured for an input filter of the PLAY peripheral.
   * @param  hplay     Pointer to a @ref HAL_PLAY_HandleTypeDef.
   * @param  input_mux Input multiplexer.
-  * @return Edge Detection mode.
   * @note   Function will return @ref HAL_PLAY_EDGE_DETECTION_BYPASSED if the parameters are invalid.
+  * @return Edge Detection mode.
   */
 HAL_PLAY_EdgeDetectionModeTypeDef HAL_PLAY_INPUT_GetEdgeDetectionMode(const HAL_PLAY_HandleTypeDef *hplay,
                                                                       HAL_PLAY_INTypeDef input_mux)
 {
-  const PLAY_TypeDef *p_playx;
-
-  /* Check parameters */
+  /* Check the parameters */
   if (hplay == NULL)
   {
-    /* Return HAL_PLAY_EDGE_DETECTION_BYPASSED as default value */
     return HAL_PLAY_EDGE_DETECTION_BYPASSED;
   }
 
-  p_playx = PLAY_GET_INSTANCE(hplay);
+  assert_param(IS_PLAY_IN(input_mux));
 
-  if (p_playx == NULL)
-  {
-    /* Return HAL_PLAY_EDGE_DETECTION_BYPASSED as default value */
-    return HAL_PLAY_EDGE_DETECTION_BYPASSED;
-  }
-
-  assert_param(IS_PLAY_IN_ID(input_mux));
-
-  return (HAL_PLAY_EdgeDetectionModeTypeDef)LL_PLAY_INPUT_GetEdgeDetectionMode(p_playx, (uint32_t)input_mux);
+  return (HAL_PLAY_EdgeDetectionModeTypeDef)LL_PLAY_INPUT_GetEdgeDetectionMode(PLAY_GET_INSTANCE(hplay),
+                                                                               (uint32_t)input_mux);
 }
 
 /* PLAY Configuration - Unitary functions for lookup table *********************/
@@ -1912,14 +1813,14 @@ HAL_PLAY_EdgeDetectionModeTypeDef HAL_PLAY_INPUT_GetEdgeDetectionMode(const HAL_
   * @param  lut               Lookup table.
   * @param  truth_table_value The value can be in range [0..0xFFFF].
   * @retval HAL_OK Operation completed successfully.
-  * @retval HAL_ERROR Invalid parameter or current state is not @ref HAL_PLAY_STATE_READY.
+  * @retval HAL_ERROR Invalid parameter or wrong state.
   */
-HAL_StatusTypeDef HAL_PLAY_LUT_SetTruthTable(HAL_PLAY_HandleTypeDef *hplay, HAL_PLAY_LUTTypeDef lut,
+HAL_StatusTypeDef HAL_PLAY_LUT_SetTruthTable(const HAL_PLAY_HandleTypeDef *hplay, HAL_PLAY_LUTTypeDef lut,
                                              uint32_t truth_table_value)
 {
   PLAY_TypeDef *p_playx;
 
-  /* Check parameters */
+  /* Check the parameters */
   if (hplay == NULL)
   {
     return HAL_ERROR;
@@ -1927,18 +1828,11 @@ HAL_StatusTypeDef HAL_PLAY_LUT_SetTruthTable(HAL_PLAY_HandleTypeDef *hplay, HAL_
 
   p_playx = PLAY_GET_INSTANCE(hplay);
 
-  if (p_playx == NULL)
-  {
-    hplay->last_error_codes |= HAL_PLAY_ERROR_INVALID_PARAM;
-
-    return HAL_ERROR;
-  }
-
   assert_param(IS_PLAY_LUT(p_playx, lut));
   assert_param(IS_PLAY_LUT_TRUTH_TABLE_VALUE(truth_table_value));
 
   /* Check the peripheral state */
-  if (hplay->global_state != HAL_PLAY_STATE_READY)
+  if (hplay->State != HAL_PLAY_STATE_READY)
   {
     return HAL_ERROR;
   }
@@ -1953,27 +1847,20 @@ HAL_StatusTypeDef HAL_PLAY_LUT_SetTruthTable(HAL_PLAY_HandleTypeDef *hplay, HAL_
   * @brief  Retrieve the truth table value for a lookup table in the PLAY peripheral.
   * @param  hplay Pointer to a @ref HAL_PLAY_HandleTypeDef.
   * @param  lut   Lookup table.
-  * @return Value in range [0..0xFFFF].
   * @note   Function will return 0 if the parameters are invalid.
+  * @return Value in range [0..0xFFFF].
   */
 uint32_t HAL_PLAY_LUT_GetTruthTable(const HAL_PLAY_HandleTypeDef *hplay, HAL_PLAY_LUTTypeDef lut)
 {
   const PLAY_TypeDef *p_playx;
 
-  /* Check parameters */
+  /* Check the parameters */
   if (hplay == NULL)
   {
-    /* Return 0 as default value */
     return 0U;
   }
 
   p_playx = PLAY_GET_INSTANCE(hplay);
-
-  if (p_playx == NULL)
-  {
-    /* Return 0 as default value */
-    return 0U;
-  }
 
   assert_param(IS_PLAY_LUT(p_playx, lut));
 
@@ -1987,15 +1874,15 @@ uint32_t HAL_PLAY_LUT_GetTruthTable(const HAL_PLAY_HandleTypeDef *hplay, HAL_PLA
   * @param  lut_input    Lookup table Input.
   * @param  input_source Signal source.
   * @retval HAL_OK       Operation completed successfully.
-  * @retval HAL_ERROR    Invalid parameter or current state is not @ref HAL_PLAY_STATE_READY.
+  * @retval HAL_ERROR    Invalid parameter or wrong state.
   */
-HAL_StatusTypeDef HAL_PLAY_LUT_SetSource(HAL_PLAY_HandleTypeDef *hplay, HAL_PLAY_LUTTypeDef lut,
+HAL_StatusTypeDef HAL_PLAY_LUT_SetSource(const HAL_PLAY_HandleTypeDef *hplay, HAL_PLAY_LUTTypeDef lut,
                                          HAL_PLAY_LUT_InputTypeDef lut_input,
                                          HAL_PLAY_LUT_InputSourceTypeDef input_source)
 {
   PLAY_TypeDef *p_playx;
 
-  /* Check parameters */
+  /* Check the parameters */
   if (hplay == NULL)
   {
     return HAL_ERROR;
@@ -2003,19 +1890,12 @@ HAL_StatusTypeDef HAL_PLAY_LUT_SetSource(HAL_PLAY_HandleTypeDef *hplay, HAL_PLAY
 
   p_playx = PLAY_GET_INSTANCE(hplay);
 
-  if (p_playx == NULL)
-  {
-    hplay->last_error_codes |= HAL_PLAY_ERROR_INVALID_PARAM;
-
-    return HAL_ERROR;
-  }
-
   assert_param(IS_PLAY_LUT(p_playx, lut));
   assert_param(IS_PLAY_LUT_INPUT(lut_input));
   assert_param(IS_PLAY_LUT_INPUT_SOURCE(p_playx, lut, input_source));
 
   /* Check the peripheral state */
-  if (hplay->global_state != HAL_PLAY_STATE_READY)
+  if (hplay->State != HAL_PLAY_STATE_READY)
   {
     return HAL_ERROR;
   }
@@ -2030,28 +1910,21 @@ HAL_StatusTypeDef HAL_PLAY_LUT_SetSource(HAL_PLAY_HandleTypeDef *hplay, HAL_PLAY
   * @param  hplay     Pointer to a @ref HAL_PLAY_HandleTypeDef.
   * @param  lut       Lookup table.
   * @param  lut_input Lookup table Input.
-  * @return Lookup table input source.
   * @note   Function will return @ref HAL_PLAY_LUT_INPUT_DEFAULT if the parameters are invalid.
+  * @return Lookup table input source.
   */
 HAL_PLAY_LUT_InputSourceTypeDef HAL_PLAY_LUT_GetSource(const HAL_PLAY_HandleTypeDef *hplay, HAL_PLAY_LUTTypeDef lut,
                                                        HAL_PLAY_LUT_InputTypeDef lut_input)
 {
   const PLAY_TypeDef *p_playx;
 
-  /* Check parameters */
+  /* Check the parameters */
   if (hplay == NULL)
   {
-    /* Return HAL_PLAY_LUT_INPUT_DEFAULT as default value */
     return HAL_PLAY_LUT_INPUT_DEFAULT;
   }
 
   p_playx = PLAY_GET_INSTANCE(hplay);
-
-  if (p_playx == NULL)
-  {
-    /* Return HAL_PLAY_LUT_INPUT_DEFAULT as default value */
-    return HAL_PLAY_LUT_INPUT_DEFAULT;
-  }
 
   assert_param(IS_PLAY_LUT(p_playx, lut));
   assert_param(IS_PLAY_LUT_INPUT(lut_input));
@@ -2065,14 +1938,14 @@ HAL_PLAY_LUT_InputSourceTypeDef HAL_PLAY_LUT_GetSource(const HAL_PLAY_HandleType
   * @param  lut    Lookup table.
   * @param  source Signal source.
   * @retval HAL_OK    Operation completed successfully.
-  * @retval HAL_ERROR Invalid parameter or current state is not @ref HAL_PLAY_STATE_READY.
+  * @retval HAL_ERROR Invalid parameter or wrong state.
   */
-HAL_StatusTypeDef HAL_PLAY_LUT_SetClockGateSource(HAL_PLAY_HandleTypeDef *hplay, HAL_PLAY_LUTTypeDef lut,
+HAL_StatusTypeDef HAL_PLAY_LUT_SetClockGateSource(const HAL_PLAY_HandleTypeDef *hplay, HAL_PLAY_LUTTypeDef lut,
                                                   HAL_PLAY_LUT_ClkGateSourceTypeDef source)
 {
   PLAY_TypeDef *p_playx;
 
-  /* Check parameters */
+  /* Check the parameters */
   if (hplay == NULL)
   {
     return HAL_ERROR;
@@ -2080,18 +1953,11 @@ HAL_StatusTypeDef HAL_PLAY_LUT_SetClockGateSource(HAL_PLAY_HandleTypeDef *hplay,
 
   p_playx = PLAY_GET_INSTANCE(hplay);
 
-  if (p_playx == NULL)
-  {
-    hplay->last_error_codes |= HAL_PLAY_ERROR_INVALID_PARAM;
-
-    return HAL_ERROR;
-  }
-
   assert_param(IS_PLAY_LUT(p_playx, lut));
   assert_param(IS_PLAY_LUT_CLOCK_GATE_SOURCE(p_playx, source));
 
   /* Check the peripheral state */
-  if (hplay->global_state != HAL_PLAY_STATE_READY)
+  if (hplay->State != HAL_PLAY_STATE_READY)
   {
     return HAL_ERROR;
   }
@@ -2105,28 +1971,21 @@ HAL_StatusTypeDef HAL_PLAY_LUT_SetClockGateSource(HAL_PLAY_HandleTypeDef *hplay,
   * @brief  Retrieve the clock gate source for a lookup table in the PLAY peripheral.
   * @param  hplay Pointer to a @ref HAL_PLAY_HandleTypeDef.
   * @param  lut   Lookup table.
-  * @return Lookup table clock gate source.
   * @note   Function will return @ref HAL_PLAY_LUT_CLK_GATE_OFF if the parameters are invalid.
+  * @return Lookup table clock gate source.
   */
 HAL_PLAY_LUT_ClkGateSourceTypeDef HAL_PLAY_LUT_GetClockGateSource(const HAL_PLAY_HandleTypeDef *hplay,
                                                                   HAL_PLAY_LUTTypeDef lut)
 {
   const PLAY_TypeDef *p_playx;
 
-  /* Check parameters */
+  /* Check the parameters */
   if (hplay == NULL)
   {
-    /* Return HAL_PLAY_LUT_CLK_GATE_OFF as default value */
     return HAL_PLAY_LUT_CLK_GATE_OFF;
   }
 
   p_playx = PLAY_GET_INSTANCE(hplay);
-
-  if (p_playx == NULL)
-  {
-    /* Return HAL_PLAY_LUT_CLK_GATE_OFF as default value */
-    return HAL_PLAY_LUT_CLK_GATE_OFF;
-  }
 
   assert_param(IS_PLAY_LUT(p_playx, lut));
 
@@ -2140,47 +1999,47 @@ HAL_PLAY_LUT_ClkGateSourceTypeDef HAL_PLAY_LUT_GetClockGateSource(const HAL_PLAY
   * @param  hplay      Pointer to a @ref HAL_PLAY_HandleTypeDef.
   * @param  output_mux Output multiplexer.
   * @param  source     Lookup table output. This parameter can be one of the following values:
-  *         @arg @ref HAL_PLAY_LUT0_OUT_DIRECT
-  *         @arg @ref HAL_PLAY_LUT1_OUT_DIRECT
-  *         @arg @ref HAL_PLAY_LUT2_OUT_DIRECT
-  *         @arg @ref HAL_PLAY_LUT3_OUT_DIRECT
-  *         @arg @ref HAL_PLAY_LUT4_OUT_DIRECT
-  *         @arg @ref HAL_PLAY_LUT5_OUT_DIRECT
-  *         @arg @ref HAL_PLAY_LUT6_OUT_DIRECT
-  *         @arg @ref HAL_PLAY_LUT7_OUT_DIRECT
-  *         @arg @ref HAL_PLAY_LUT8_OUT_DIRECT
-  *         @arg @ref HAL_PLAY_LUT9_OUT_DIRECT
-  *         @arg @ref HAL_PLAY_LUT10_OUT_DIRECT
-  *         @arg @ref HAL_PLAY_LUT11_OUT_DIRECT
-  *         @arg @ref HAL_PLAY_LUT12_OUT_DIRECT
-  *         @arg @ref HAL_PLAY_LUT13_OUT_DIRECT
-  *         @arg @ref HAL_PLAY_LUT14_OUT_DIRECT
-  *         @arg @ref HAL_PLAY_LUT15_OUT_DIRECT
-  *         @arg @ref HAL_PLAY_LUT0_OUT_REGISTERED
-  *         @arg @ref HAL_PLAY_LUT1_OUT_REGISTERED
-  *         @arg @ref HAL_PLAY_LUT2_OUT_REGISTERED
-  *         @arg @ref HAL_PLAY_LUT3_OUT_REGISTERED
-  *         @arg @ref HAL_PLAY_LUT4_OUT_REGISTERED
-  *         @arg @ref HAL_PLAY_LUT5_OUT_REGISTERED
-  *         @arg @ref HAL_PLAY_LUT6_OUT_REGISTERED
-  *         @arg @ref HAL_PLAY_LUT7_OUT_REGISTERED
-  *         @arg @ref HAL_PLAY_LUT8_OUT_REGISTERED
-  *         @arg @ref HAL_PLAY_LUT9_OUT_REGISTERED
-  *         @arg @ref HAL_PLAY_LUT10_OUT_REGISTERED
-  *         @arg @ref HAL_PLAY_LUT11_OUT_REGISTERED
-  *         @arg @ref HAL_PLAY_LUT12_OUT_REGISTERED
-  *         @arg @ref HAL_PLAY_LUT13_OUT_REGISTERED
-  *         @arg @ref HAL_PLAY_LUT14_OUT_REGISTERED
-  *         @arg @ref HAL_PLAY_LUT15_OUT_REGISTERED
+  *                    @arg @ref HAL_PLAY_LUT0_OUT_DIRECT
+  *                    @arg @ref HAL_PLAY_LUT1_OUT_DIRECT
+  *                    @arg @ref HAL_PLAY_LUT2_OUT_DIRECT
+  *                    @arg @ref HAL_PLAY_LUT3_OUT_DIRECT
+  *                    @arg @ref HAL_PLAY_LUT4_OUT_DIRECT
+  *                    @arg @ref HAL_PLAY_LUT5_OUT_DIRECT
+  *                    @arg @ref HAL_PLAY_LUT6_OUT_DIRECT
+  *                    @arg @ref HAL_PLAY_LUT7_OUT_DIRECT
+  *                    @arg @ref HAL_PLAY_LUT8_OUT_DIRECT
+  *                    @arg @ref HAL_PLAY_LUT9_OUT_DIRECT
+  *                    @arg @ref HAL_PLAY_LUT10_OUT_DIRECT
+  *                    @arg @ref HAL_PLAY_LUT11_OUT_DIRECT
+  *                    @arg @ref HAL_PLAY_LUT12_OUT_DIRECT
+  *                    @arg @ref HAL_PLAY_LUT13_OUT_DIRECT
+  *                    @arg @ref HAL_PLAY_LUT14_OUT_DIRECT
+  *                    @arg @ref HAL_PLAY_LUT15_OUT_DIRECT
+  *                    @arg @ref HAL_PLAY_LUT0_OUT_REGISTERED
+  *                    @arg @ref HAL_PLAY_LUT1_OUT_REGISTERED
+  *                    @arg @ref HAL_PLAY_LUT2_OUT_REGISTERED
+  *                    @arg @ref HAL_PLAY_LUT3_OUT_REGISTERED
+  *                    @arg @ref HAL_PLAY_LUT4_OUT_REGISTERED
+  *                    @arg @ref HAL_PLAY_LUT5_OUT_REGISTERED
+  *                    @arg @ref HAL_PLAY_LUT6_OUT_REGISTERED
+  *                    @arg @ref HAL_PLAY_LUT7_OUT_REGISTERED
+  *                    @arg @ref HAL_PLAY_LUT8_OUT_REGISTERED
+  *                    @arg @ref HAL_PLAY_LUT9_OUT_REGISTERED
+  *                    @arg @ref HAL_PLAY_LUT10_OUT_REGISTERED
+  *                    @arg @ref HAL_PLAY_LUT11_OUT_REGISTERED
+  *                    @arg @ref HAL_PLAY_LUT12_OUT_REGISTERED
+  *                    @arg @ref HAL_PLAY_LUT13_OUT_REGISTERED
+  *                    @arg @ref HAL_PLAY_LUT14_OUT_REGISTERED
+  *                    @arg @ref HAL_PLAY_LUT15_OUT_REGISTERED
   * @retval HAL_OK    Operation completed successfully.
-  * @retval HAL_ERROR Invalid parameter or current state is not @ref HAL_PLAY_STATE_READY.
+  * @retval HAL_ERROR Invalid parameter or wrong state.
   */
-HAL_StatusTypeDef HAL_PLAY_OUTPUT_SetSource(HAL_PLAY_HandleTypeDef *hplay, HAL_PLAY_OUTTypeDef output_mux,
+HAL_StatusTypeDef HAL_PLAY_OUTPUT_SetSource(const HAL_PLAY_HandleTypeDef *hplay, HAL_PLAY_OUTTypeDef output_mux,
                                             uint32_t source)
 {
   PLAY_TypeDef *p_playx;
 
-  /* Check parameters */
+  /* Check the parameters */
   if (hplay == NULL)
   {
     return HAL_ERROR;
@@ -2188,18 +2047,11 @@ HAL_StatusTypeDef HAL_PLAY_OUTPUT_SetSource(HAL_PLAY_HandleTypeDef *hplay, HAL_P
 
   p_playx = PLAY_GET_INSTANCE(hplay);
 
-  if (p_playx == NULL)
-  {
-    hplay->last_error_codes |= HAL_PLAY_ERROR_INVALID_PARAM;
-
-    return HAL_ERROR;
-  }
-
   assert_param(IS_PLAY_OUT(output_mux));
   assert_param(IS_PLAY_OUT_SOURCE(p_playx, source));
 
   /* Check the peripheral state */
-  if (hplay->global_state != HAL_PLAY_STATE_READY)
+  if (hplay->State != HAL_PLAY_STATE_READY)
   {
     return HAL_ERROR;
   }
@@ -2250,26 +2102,15 @@ HAL_StatusTypeDef HAL_PLAY_OUTPUT_SetSource(HAL_PLAY_HandleTypeDef *hplay, HAL_P
   */
 uint32_t HAL_PLAY_OUTPUT_GetSource(const HAL_PLAY_HandleTypeDef *hplay, HAL_PLAY_OUTTypeDef output_mux)
 {
-  const PLAY_TypeDef *p_playx;
-
-  /* Check parameters */
+  /* Check the parameters */
   if (hplay == NULL)
   {
-    /* Return 0 as default value */
-    return 0U;
-  }
-
-  p_playx = PLAY_GET_INSTANCE(hplay);
-
-  if (p_playx == NULL)
-  {
-    /* Return 0 as default value */
     return 0U;
   }
 
   assert_param(IS_PLAY_OUT(output_mux));
 
-  return LL_PLAY_OUTPUT_GetSource(p_playx, (uint32_t)output_mux);
+  return LL_PLAY_OUTPUT_GetSource(PLAY_GET_INSTANCE(hplay), (uint32_t)output_mux);
 }
 
 /**
@@ -2290,14 +2131,14 @@ A set of functions allowing to start/stop the PLAYx peripheral:
   * @note   The falling and rising edge configuration is exclusive and thus, a lookup table output cannot be
   *         configured for both rising and falling edges at the same time.
   * @retval HAL_OK    Operation completed successfully.
-  * @retval HAL_ERROR Invalid parameter.
+  * @retval HAL_ERROR Invalid parameter or wrong state.
   */
 HAL_StatusTypeDef HAL_PLAY_Start(HAL_PLAY_HandleTypeDef *hplay, const HAL_PLAY_EdgeTriggerConfTypeDef *p_config)
 {
   PLAY_TypeDef *p_playx;
   uint32_t is_locked;
 
-  /* Check parameters */
+  /* Check the parameters */
   if (hplay == NULL)
   {
     return HAL_ERROR;
@@ -2307,28 +2148,20 @@ HAL_StatusTypeDef HAL_PLAY_Start(HAL_PLAY_HandleTypeDef *hplay, const HAL_PLAY_E
 
   if (p_config == NULL)
   {
-    hplay->last_error_codes |= HAL_PLAY_ERROR_INVALID_PARAM;
+    hplay->ErrorCode |= HAL_PLAY_ERROR_INVALID_PARAM;
 
     return HAL_ERROR;
   }
 
-  if (p_playx == NULL)
-  {
-    hplay->last_error_codes |= HAL_PLAY_ERROR_INVALID_PARAM;
-
-    return HAL_ERROR;
-  }
-
-  assert_param(IS_PLAY_ALL_INSTANCE(p_playx));
   assert_param((p_config->lut_out_falling_mask & p_config->lut_out_rising_mask) == 0U);
 
   /* Check the peripheral state */
-  if (hplay->global_state != HAL_PLAY_STATE_READY)
+  if (hplay->State != HAL_PLAY_STATE_READY)
   {
     return HAL_ERROR;
   }
 
-  /* Lock the configuration only if already done.
+  /* Lock the configuration only if it is currently unlocked.
      In context where configuration register requires a privilege and/or secure write access:
      - this check prevents generating an unexpected illegal access (ilac) event if the caller does not have
        the required permissions.
@@ -2341,7 +2174,7 @@ HAL_StatusTypeDef HAL_PLAY_Start(HAL_PLAY_HandleTypeDef *hplay, const HAL_PLAY_E
     LL_PLAY_Lock(p_playx);
   }
 
-  hplay->global_state = HAL_PLAY_STATE_BUSY;
+  hplay->State = HAL_PLAY_STATE_BUSY;
 
   return PLAY_LUT_SetEdgeTrigger(hplay, p_config, PLAY_WRITE_TIMEOUT_MS);
 }
@@ -2358,7 +2191,7 @@ HAL_StatusTypeDef HAL_PLAY_Stop(HAL_PLAY_HandleTypeDef *hplay)
 {
   PLAY_TypeDef *p_playx;
 
-  /* Check parameters */
+  /* Check the parameters */
   if (hplay == NULL)
   {
     return HAL_ERROR;
@@ -2366,17 +2199,8 @@ HAL_StatusTypeDef HAL_PLAY_Stop(HAL_PLAY_HandleTypeDef *hplay)
 
   p_playx = PLAY_GET_INSTANCE(hplay);
 
-  if (p_playx == NULL)
-  {
-    hplay->last_error_codes |= HAL_PLAY_ERROR_INVALID_PARAM;
-
-    return HAL_ERROR;
-  }
-
-  assert_param(IS_PLAY_ALL_INSTANCE(p_playx));
-
   /* Check the peripheral state */
-  if (hplay->global_state != HAL_PLAY_STATE_BUSY)
+  if (hplay->State != HAL_PLAY_STATE_BUSY)
   {
     return HAL_ERROR;
   }
@@ -2386,7 +2210,7 @@ HAL_StatusTypeDef HAL_PLAY_Stop(HAL_PLAY_HandleTypeDef *hplay)
 
   LL_PLAY_Unlock(p_playx);
 
-  hplay->global_state = HAL_PLAY_STATE_READY;
+  hplay->State = HAL_PLAY_STATE_READY;
 
   return HAL_OK;
 }
@@ -2415,41 +2239,29 @@ A set of functions allowing to manage the lookup table Output of PLAYx periphera
   * @note   The falling and rising edge configuration is exclusive and thus, a lookup table output cannot be
   *         configured for both rising and falling edges at the same time.
   * @retval HAL_OK    Operation completed successfully.
-  * @retval HAL_ERROR Invalid parameter.
   * @retval HAL_BUSY  A write is pending.
+  * @retval HAL_ERROR Invalid parameter or wrong state.
   */
 HAL_StatusTypeDef HAL_PLAY_LUT_SetEdgeTrigger(HAL_PLAY_HandleTypeDef *hplay,
                                               const HAL_PLAY_EdgeTriggerConfTypeDef *p_config,
                                               uint32_t timeout_ms)
 {
-  PLAY_TypeDef *p_playx;
-
-  /* Check parameters */
+  /* Check the parameters */
   if (hplay == NULL)
   {
     return HAL_ERROR;
   }
 
-  p_playx = PLAY_GET_INSTANCE(hplay);
-
-  if (p_playx == NULL)
-  {
-    hplay->last_error_codes |= HAL_PLAY_ERROR_INVALID_PARAM;
-
-    return HAL_ERROR;
-  }
-
   if (p_config == NULL)
   {
-    hplay->last_error_codes |= HAL_PLAY_ERROR_INVALID_PARAM;
+    hplay->ErrorCode |= HAL_PLAY_ERROR_INVALID_PARAM;
 
     return HAL_ERROR;
   }
 
-  assert_param(IS_PLAY_ALL_INSTANCE(p_playx));
   assert_param((p_config->lut_out_falling_mask & p_config->lut_out_rising_mask) == 0U);
 
-  if (hplay->global_state != HAL_PLAY_STATE_BUSY)
+  if (hplay->State != HAL_PLAY_STATE_BUSY)
   {
     return HAL_ERROR;
   }
@@ -2458,21 +2270,21 @@ HAL_StatusTypeDef HAL_PLAY_LUT_SetEdgeTrigger(HAL_PLAY_HandleTypeDef *hplay,
 }
 
 /**
-  * @brief  Configure the Edge Triggers in  mode: flag transition of lookup table outputs.
+  * @brief  Configure the Edge Triggers in interrupt mode: flag transition of lookup table outputs.
   * @param  hplay    Pointer to a @ref HAL_PLAY_HandleTypeDef.
   * @param  p_config Pointer to a @ref HAL_PLAY_EdgeTriggerConfTypeDef structure for the Edge Triggers configuration.
   * @note   The falling and rising edge configuration is exclusive and thus, a lookup table output cannot be
   *         configured for both rising and falling edges at the same time.
   * @retval HAL_OK    Operation completed successfully.
-  * @retval HAL_ERROR Invalid parameter.
   * @retval HAL_BUSY  A write is pending.
+  * @retval HAL_ERROR Invalid parameter or wrong state.
   */
 HAL_StatusTypeDef HAL_PLAY_LUT_SetEdgeTrigger_IT(HAL_PLAY_HandleTypeDef *hplay,
                                                  const HAL_PLAY_EdgeTriggerConfTypeDef *p_config)
 {
   PLAY_TypeDef *p_playx;
 
-  /* Check parameters */
+  /* Check the parameters */
   if (hplay == NULL)
   {
     return HAL_ERROR;
@@ -2480,24 +2292,16 @@ HAL_StatusTypeDef HAL_PLAY_LUT_SetEdgeTrigger_IT(HAL_PLAY_HandleTypeDef *hplay,
 
   p_playx = PLAY_GET_INSTANCE(hplay);
 
-  if (p_playx == NULL)
-  {
-    hplay->last_error_codes |= HAL_PLAY_ERROR_INVALID_PARAM;
-
-    return HAL_ERROR;
-  }
-
   if (p_config == NULL)
   {
-    hplay->last_error_codes |= HAL_PLAY_ERROR_INVALID_PARAM;
+    hplay->ErrorCode |= HAL_PLAY_ERROR_INVALID_PARAM;
 
     return HAL_ERROR;
   }
 
-  assert_param(IS_PLAY_ALL_INSTANCE(p_playx));
   assert_param((p_config->lut_out_falling_mask & p_config->lut_out_rising_mask) == 0U);
 
-  if (hplay->global_state != HAL_PLAY_STATE_BUSY)
+  if (hplay->State != HAL_PLAY_STATE_BUSY)
   {
     return HAL_ERROR;
   }
@@ -2527,7 +2331,7 @@ HAL_StatusTypeDef HAL_PLAY_LUT_GetEdgeTrigger(HAL_PLAY_HandleTypeDef *hplay, HAL
 {
   const PLAY_TypeDef *p_playx;
 
-  /* Check parameters */
+  /* Check the parameters */
   if (hplay == NULL)
   {
     return HAL_ERROR;
@@ -2535,21 +2339,12 @@ HAL_StatusTypeDef HAL_PLAY_LUT_GetEdgeTrigger(HAL_PLAY_HandleTypeDef *hplay, HAL
 
   p_playx = PLAY_GET_INSTANCE(hplay);
 
-  if (p_playx == NULL)
-  {
-    hplay->last_error_codes |= HAL_PLAY_ERROR_INVALID_PARAM;
-
-    return HAL_ERROR;
-  }
-
   if (p_config == NULL)
   {
-    hplay->last_error_codes |= HAL_PLAY_ERROR_INVALID_PARAM;
+    hplay->ErrorCode |= HAL_PLAY_ERROR_INVALID_PARAM;
 
     return HAL_ERROR;
   }
-
-  assert_param(IS_PLAY_ALL_INSTANCE(p_playx));
 
   /* Retrieve the configuration */
   p_config->lut_out_rising_mask = LL_PLAY_LUT_GetEdgeTrigger(p_playx);
@@ -2564,45 +2359,45 @@ HAL_StatusTypeDef HAL_PLAY_LUT_GetEdgeTrigger(HAL_PLAY_HandleTypeDef *hplay, HAL
   * @param  poll_mode               Polling mode of type @ref HAL_PLAY_PollingEdgeTriggerTypeDef.
   * @param  edge_trig_mask          Mask of flags to poll.
   *                                 This parameter can be a combination of the following values:
-  *                                 @arg @ref HAL_PLAY_LUT0_OUT_DIRECT :        The Flag of LUT0 direct output
-  *                                 @arg @ref HAL_PLAY_LUT1_OUT_DIRECT :        The Flag of LUT1 direct output
-  *                                 @arg @ref HAL_PLAY_LUT2_OUT_DIRECT :        The Flag of LUT2 direct output
-  *                                 @arg @ref HAL_PLAY_LUT3_OUT_DIRECT :        The Flag of LUT3 direct output
-  *                                 @arg @ref HAL_PLAY_LUT4_OUT_DIRECT :        The Flag of LUT4 direct output
-  *                                 @arg @ref HAL_PLAY_LUT5_OUT_DIRECT :        The Flag of LUT5 direct output
-  *                                 @arg @ref HAL_PLAY_LUT6_OUT_DIRECT :        The Flag of LUT6 direct output
-  *                                 @arg @ref HAL_PLAY_LUT7_OUT_DIRECT :        The Flag of LUT7 direct output
-  *                                 @arg @ref HAL_PLAY_LUT8_OUT_DIRECT :        The Flag of LUT8 direct output
-  *                                 @arg @ref HAL_PLAY_LUT9_OUT_DIRECT :        The Flag of LUT9 direct output
-  *                                 @arg @ref HAL_PLAY_LUT10_OUT_DIRECT :       The Flag of LUT10 direct output
-  *                                 @arg @ref HAL_PLAY_LUT11_OUT_DIRECT :       The Flag of LUT11 direct output
-  *                                 @arg @ref HAL_PLAY_LUT12_OUT_DIRECT :       The Flag of LUT12 direct output
-  *                                 @arg @ref HAL_PLAY_LUT13_OUT_DIRECT :       The Flag of LUT13 direct output
-  *                                 @arg @ref HAL_PLAY_LUT14_OUT_DIRECT :       The Flag of LUT14 direct output
-  *                                 @arg @ref HAL_PLAY_LUT15_OUT_DIRECT :       The Flag of LUT15 direct output
-  *                                 @arg @ref HAL_PLAY_LUT_ALL_OUT_DIRECT :     All Flags of LUTs direct outputs
-  *                                 @arg @ref HAL_PLAY_LUT0_OUT_REGISTERED :    The Flag of LUT0 registered output
-  *                                 @arg @ref HAL_PLAY_LUT1_OUT_REGISTERED :    The Flag of LUT1 registered output
-  *                                 @arg @ref HAL_PLAY_LUT2_OUT_REGISTERED :    The Flag of LUT2 registered output
-  *                                 @arg @ref HAL_PLAY_LUT3_OUT_REGISTERED :    The Flag of LUT3 registered output
-  *                                 @arg @ref HAL_PLAY_LUT4_OUT_REGISTERED :    The Flag of LUT4 registered output
-  *                                 @arg @ref HAL_PLAY_LUT5_OUT_REGISTERED :    The Flag of LUT5 registered output
-  *                                 @arg @ref HAL_PLAY_LUT6_OUT_REGISTERED :    The Flag of LUT6 registered output
-  *                                 @arg @ref HAL_PLAY_LUT7_OUT_REGISTERED :    The Flag of LUT7 registered output
-  *                                 @arg @ref HAL_PLAY_LUT8_OUT_REGISTERED :    The Flag of LUT8 registered output
-  *                                 @arg @ref HAL_PLAY_LUT9_OUT_REGISTERED :    The Flag of LUT9 registered output
-  *                                 @arg @ref HAL_PLAY_LUT10_OUT_REGISTERED :   The Flag of LUT10 registered output
-  *                                 @arg @ref HAL_PLAY_LUT11_OUT_REGISTERED :   The Flag of LUT11 registered output
-  *                                 @arg @ref HAL_PLAY_LUT12_OUT_REGISTERED :   The Flag of LUT12 registered output
-  *                                 @arg @ref HAL_PLAY_LUT13_OUT_REGISTERED :   The Flag of LUT13 registered output
-  *                                 @arg @ref HAL_PLAY_LUT14_OUT_REGISTERED :   The Flag of LUT14 registered output
-  *                                 @arg @ref HAL_PLAY_LUT15_OUT_REGISTERED :   The Flag of LUT15 registered output
-  *                                 @arg @ref HAL_PLAY_LUT_ALL_OUT_REGISTERED : All Flags of LUTs registered outputs
+  *                                 @arg @ref HAL_PLAY_LUT0_OUT_DIRECT :        The flag of LUT0 direct output
+  *                                 @arg @ref HAL_PLAY_LUT1_OUT_DIRECT :        The flag of LUT1 direct output
+  *                                 @arg @ref HAL_PLAY_LUT2_OUT_DIRECT :        The flag of LUT2 direct output
+  *                                 @arg @ref HAL_PLAY_LUT3_OUT_DIRECT :        The flag of LUT3 direct output
+  *                                 @arg @ref HAL_PLAY_LUT4_OUT_DIRECT :        The flag of LUT4 direct output
+  *                                 @arg @ref HAL_PLAY_LUT5_OUT_DIRECT :        The flag of LUT5 direct output
+  *                                 @arg @ref HAL_PLAY_LUT6_OUT_DIRECT :        The flag of LUT6 direct output
+  *                                 @arg @ref HAL_PLAY_LUT7_OUT_DIRECT :        The flag of LUT7 direct output
+  *                                 @arg @ref HAL_PLAY_LUT8_OUT_DIRECT :        The flag of LUT8 direct output
+  *                                 @arg @ref HAL_PLAY_LUT9_OUT_DIRECT :        The flag of LUT9 direct output
+  *                                 @arg @ref HAL_PLAY_LUT10_OUT_DIRECT :       The flag of LUT10 direct output
+  *                                 @arg @ref HAL_PLAY_LUT11_OUT_DIRECT :       The flag of LUT11 direct output
+  *                                 @arg @ref HAL_PLAY_LUT12_OUT_DIRECT :       The flag of LUT12 direct output
+  *                                 @arg @ref HAL_PLAY_LUT13_OUT_DIRECT :       The flag of LUT13 direct output
+  *                                 @arg @ref HAL_PLAY_LUT14_OUT_DIRECT :       The flag of LUT14 direct output
+  *                                 @arg @ref HAL_PLAY_LUT15_OUT_DIRECT :       The flag of LUT15 direct output
+  *                                 @arg @ref HAL_PLAY_LUT_ALL_OUT_DIRECT :     All flags of LUTs direct outputs
+  *                                 @arg @ref HAL_PLAY_LUT0_OUT_REGISTERED :    The flag of LUT0 registered output
+  *                                 @arg @ref HAL_PLAY_LUT1_OUT_REGISTERED :    The flag of LUT1 registered output
+  *                                 @arg @ref HAL_PLAY_LUT2_OUT_REGISTERED :    The flag of LUT2 registered output
+  *                                 @arg @ref HAL_PLAY_LUT3_OUT_REGISTERED :    The flag of LUT3 registered output
+  *                                 @arg @ref HAL_PLAY_LUT4_OUT_REGISTERED :    The flag of LUT4 registered output
+  *                                 @arg @ref HAL_PLAY_LUT5_OUT_REGISTERED :    The flag of LUT5 registered output
+  *                                 @arg @ref HAL_PLAY_LUT6_OUT_REGISTERED :    The flag of LUT6 registered output
+  *                                 @arg @ref HAL_PLAY_LUT7_OUT_REGISTERED :    The flag of LUT7 registered output
+  *                                 @arg @ref HAL_PLAY_LUT8_OUT_REGISTERED :    The flag of LUT8 registered output
+  *                                 @arg @ref HAL_PLAY_LUT9_OUT_REGISTERED :    The flag of LUT9 registered output
+  *                                 @arg @ref HAL_PLAY_LUT10_OUT_REGISTERED :   The flag of LUT10 registered output
+  *                                 @arg @ref HAL_PLAY_LUT11_OUT_REGISTERED :   The flag of LUT11 registered output
+  *                                 @arg @ref HAL_PLAY_LUT12_OUT_REGISTERED :   The flag of LUT12 registered output
+  *                                 @arg @ref HAL_PLAY_LUT13_OUT_REGISTERED :   The flag of LUT13 registered output
+  *                                 @arg @ref HAL_PLAY_LUT14_OUT_REGISTERED :   The flag of LUT14 registered output
+  *                                 @arg @ref HAL_PLAY_LUT15_OUT_REGISTERED :   The flag of LUT15 registered output
+  *                                 @arg @ref HAL_PLAY_LUT_ALL_OUT_REGISTERED : All flags of LUTs registered outputs
   * @param  timeout_ms              Timeout duration (in ms).
   * @param  p_edge_trig_mask_status Pointer to return the triggered lookup table output flags.
   * @retval HAL_OK      Operation completed successfully.
   * @retval HAL_TIMEOUT Operation timed out.
-  * @retval HAL_ERROR   Invalid parameter.
+  * @retval HAL_ERROR   Invalid parameter or wrong state.
   */
 HAL_StatusTypeDef HAL_PLAY_LUT_PollForEdgeTrigger(HAL_PLAY_HandleTypeDef *hplay,
                                                   HAL_PLAY_PollingEdgeTriggerTypeDef poll_mode,
@@ -2612,7 +2407,7 @@ HAL_StatusTypeDef HAL_PLAY_LUT_PollForEdgeTrigger(HAL_PLAY_HandleTypeDef *hplay,
   PLAY_TypeDef *p_playx;
   uint32_t tickstart;
 
-  /* Check parameters */
+  /* Check the parameters */
   if (hplay == NULL)
   {
     return HAL_ERROR;
@@ -2620,28 +2415,23 @@ HAL_StatusTypeDef HAL_PLAY_LUT_PollForEdgeTrigger(HAL_PLAY_HandleTypeDef *hplay,
 
   p_playx = PLAY_GET_INSTANCE(hplay);
 
-  if (p_playx == NULL)
+  if (p_edge_trig_mask_status == NULL)
   {
-    hplay->last_error_codes |= HAL_PLAY_ERROR_INVALID_PARAM;
+    hplay->ErrorCode |= HAL_PLAY_ERROR_INVALID_PARAM;
 
-
-    /* Return error status */
     return HAL_ERROR;
   }
 
   assert_param(IS_PLAY_POLL_MODE(poll_mode));
   assert_param((edge_trig_mask != 0U));
-  assert_param((p_edge_trig_mask_status != NULL));
-
-  assert_param(IS_PLAY_ALL_INSTANCE(p_playx));
 
   /* Check the peripheral state */
-  if (hplay->global_state != HAL_PLAY_STATE_BUSY)
+  if (hplay->State != HAL_PLAY_STATE_BUSY)
   {
     return HAL_ERROR;
   }
 
-  /* Get tick count */
+  /* Get the current tick value */
   tickstart = HAL_GetTick();
 
   /* Check selected event flag */
@@ -2684,71 +2474,59 @@ HAL_StatusTypeDef HAL_PLAY_LUT_PollForEdgeTrigger(HAL_PLAY_HandleTypeDef *hplay,
   * @param  hplay    Pointer to a @ref HAL_PLAY_HandleTypeDef.
   * @param  its_mask Mask of lookup table output interrupt to enable.
   *                  This parameter can be a combination of the following values:
-  *                  @arg @ref HAL_PLAY_LUT0_OUT_DIRECT :        The Interrupt of LUT0 direct output
-  *                  @arg @ref HAL_PLAY_LUT1_OUT_DIRECT :        The Interrupt of LUT1 direct output
-  *                  @arg @ref HAL_PLAY_LUT2_OUT_DIRECT :        The Interrupt of LUT2 direct output
-  *                  @arg @ref HAL_PLAY_LUT3_OUT_DIRECT :        The Interrupt of LUT3 direct output
-  *                  @arg @ref HAL_PLAY_LUT4_OUT_DIRECT :        The Interrupt of LUT4 direct output
-  *                  @arg @ref HAL_PLAY_LUT5_OUT_DIRECT :        The Interrupt of LUT5 direct output
-  *                  @arg @ref HAL_PLAY_LUT6_OUT_DIRECT :        The Interrupt of LUT6 direct output
-  *                  @arg @ref HAL_PLAY_LUT7_OUT_DIRECT :        The Interrupt of LUT7 direct output
-  *                  @arg @ref HAL_PLAY_LUT8_OUT_DIRECT :        The Interrupt of LUT8 direct output
-  *                  @arg @ref HAL_PLAY_LUT9_OUT_DIRECT :        The Interrupt of LUT9 direct output
-  *                  @arg @ref HAL_PLAY_LUT10_OUT_DIRECT :       The Interrupt of LUT10 direct output
-  *                  @arg @ref HAL_PLAY_LUT11_OUT_DIRECT :       The Interrupt of LUT11 direct output
-  *                  @arg @ref HAL_PLAY_LUT12_OUT_DIRECT :       The Interrupt of LUT12 direct output
-  *                  @arg @ref HAL_PLAY_LUT13_OUT_DIRECT :       The Interrupt of LUT13 direct output
-  *                  @arg @ref HAL_PLAY_LUT14_OUT_DIRECT :       The Interrupt of LUT14 direct output
-  *                  @arg @ref HAL_PLAY_LUT15_OUT_DIRECT :       The Interrupt of LUT15 direct output
-  *                  @arg @ref HAL_PLAY_LUT_ALL_OUT_DIRECT :     All Interrupts of LUTs direct outputs
-  *                  @arg @ref HAL_PLAY_LUT0_OUT_REGISTERED :    The Interrupt of LUT0 registered output
-  *                  @arg @ref HAL_PLAY_LUT1_OUT_REGISTERED :    The Interrupt of LUT1 registered output
-  *                  @arg @ref HAL_PLAY_LUT2_OUT_REGISTERED :    The Interrupt of LUT2 registered output
-  *                  @arg @ref HAL_PLAY_LUT3_OUT_REGISTERED :    The Interrupt of LUT3 registered output
-  *                  @arg @ref HAL_PLAY_LUT4_OUT_REGISTERED :    The Interrupt of LUT4 registered output
-  *                  @arg @ref HAL_PLAY_LUT5_OUT_REGISTERED :    The Interrupt of LUT5 registered output
-  *                  @arg @ref HAL_PLAY_LUT6_OUT_REGISTERED :    The Interrupt of LUT6 registered output
-  *                  @arg @ref HAL_PLAY_LUT7_OUT_REGISTERED :    The Interrupt of LUT7 registered output
-  *                  @arg @ref HAL_PLAY_LUT8_OUT_REGISTERED :    The Interrupt of LUT8 registered output
-  *                  @arg @ref HAL_PLAY_LUT9_OUT_REGISTERED :    The Interrupt of LUT9 registered output
-  *                  @arg @ref HAL_PLAY_LUT10_OUT_REGISTERED :   The Interrupt of LUT10 registered output
-  *                  @arg @ref HAL_PLAY_LUT11_OUT_REGISTERED :   The Interrupt of LUT11 registered output
-  *                  @arg @ref HAL_PLAY_LUT12_OUT_REGISTERED :   The Interrupt of LUT12 registered output
-  *                  @arg @ref HAL_PLAY_LUT13_OUT_REGISTERED :   The Interrupt of LUT13 registered output
-  *                  @arg @ref HAL_PLAY_LUT14_OUT_REGISTERED :   The Interrupt of LUT14 registered output
-  *                  @arg @ref HAL_PLAY_LUT15_OUT_REGISTERED :   The Interrupt of LUT15 registered output
-  *                  @arg @ref HAL_PLAY_LUT_ALL_OUT_REGISTERED : All Interrupts of LUTs registered outputs
+  *                  @arg @ref HAL_PLAY_LUT0_OUT_DIRECT :        The interrupt of LUT0 direct output
+  *                  @arg @ref HAL_PLAY_LUT1_OUT_DIRECT :        The interrupt of LUT1 direct output
+  *                  @arg @ref HAL_PLAY_LUT2_OUT_DIRECT :        The interrupt of LUT2 direct output
+  *                  @arg @ref HAL_PLAY_LUT3_OUT_DIRECT :        The interrupt of LUT3 direct output
+  *                  @arg @ref HAL_PLAY_LUT4_OUT_DIRECT :        The interrupt of LUT4 direct output
+  *                  @arg @ref HAL_PLAY_LUT5_OUT_DIRECT :        The interrupt of LUT5 direct output
+  *                  @arg @ref HAL_PLAY_LUT6_OUT_DIRECT :        The interrupt of LUT6 direct output
+  *                  @arg @ref HAL_PLAY_LUT7_OUT_DIRECT :        The interrupt of LUT7 direct output
+  *                  @arg @ref HAL_PLAY_LUT8_OUT_DIRECT :        The interrupt of LUT8 direct output
+  *                  @arg @ref HAL_PLAY_LUT9_OUT_DIRECT :        The interrupt of LUT9 direct output
+  *                  @arg @ref HAL_PLAY_LUT10_OUT_DIRECT :       The interrupt of LUT10 direct output
+  *                  @arg @ref HAL_PLAY_LUT11_OUT_DIRECT :       The interrupt of LUT11 direct output
+  *                  @arg @ref HAL_PLAY_LUT12_OUT_DIRECT :       The interrupt of LUT12 direct output
+  *                  @arg @ref HAL_PLAY_LUT13_OUT_DIRECT :       The interrupt of LUT13 direct output
+  *                  @arg @ref HAL_PLAY_LUT14_OUT_DIRECT :       The interrupt of LUT14 direct output
+  *                  @arg @ref HAL_PLAY_LUT15_OUT_DIRECT :       The interrupt of LUT15 direct output
+  *                  @arg @ref HAL_PLAY_LUT_ALL_OUT_DIRECT :     All interrupts of LUTs direct outputs
+  *                  @arg @ref HAL_PLAY_LUT0_OUT_REGISTERED :    The interrupt of LUT0 registered output
+  *                  @arg @ref HAL_PLAY_LUT1_OUT_REGISTERED :    The interrupt of LUT1 registered output
+  *                  @arg @ref HAL_PLAY_LUT2_OUT_REGISTERED :    The interrupt of LUT2 registered output
+  *                  @arg @ref HAL_PLAY_LUT3_OUT_REGISTERED :    The interrupt of LUT3 registered output
+  *                  @arg @ref HAL_PLAY_LUT4_OUT_REGISTERED :    The interrupt of LUT4 registered output
+  *                  @arg @ref HAL_PLAY_LUT5_OUT_REGISTERED :    The interrupt of LUT5 registered output
+  *                  @arg @ref HAL_PLAY_LUT6_OUT_REGISTERED :    The interrupt of LUT6 registered output
+  *                  @arg @ref HAL_PLAY_LUT7_OUT_REGISTERED :    The interrupt of LUT7 registered output
+  *                  @arg @ref HAL_PLAY_LUT8_OUT_REGISTERED :    The interrupt of LUT8 registered output
+  *                  @arg @ref HAL_PLAY_LUT9_OUT_REGISTERED :    The interrupt of LUT9 registered output
+  *                  @arg @ref HAL_PLAY_LUT10_OUT_REGISTERED :   The interrupt of LUT10 registered output
+  *                  @arg @ref HAL_PLAY_LUT11_OUT_REGISTERED :   The interrupt of LUT11 registered output
+  *                  @arg @ref HAL_PLAY_LUT12_OUT_REGISTERED :   The interrupt of LUT12 registered output
+  *                  @arg @ref HAL_PLAY_LUT13_OUT_REGISTERED :   The interrupt of LUT13 registered output
+  *                  @arg @ref HAL_PLAY_LUT14_OUT_REGISTERED :   The interrupt of LUT14 registered output
+  *                  @arg @ref HAL_PLAY_LUT15_OUT_REGISTERED :   The interrupt of LUT15 registered output
+  *                  @arg @ref HAL_PLAY_LUT_ALL_OUT_REGISTERED : All interrupts of LUTs registered outputs
   * @retval HAL_OK    Operation completed successfully.
-  * @retval HAL_ERROR Invalid parameter.
+  * @retval HAL_ERROR Invalid parameter or wrong state.
   */
-HAL_StatusTypeDef HAL_PLAY_LUT_EnableIT(HAL_PLAY_HandleTypeDef *hplay, uint32_t its_mask)
+HAL_StatusTypeDef HAL_PLAY_LUT_EnableIT(const HAL_PLAY_HandleTypeDef *hplay, uint32_t its_mask)
 {
-  PLAY_TypeDef *p_playx;
-
-  /* Check parameters */
+  /* Check the parameters */
   if (hplay == NULL)
   {
     return HAL_ERROR;
   }
 
-  p_playx = PLAY_GET_INSTANCE(hplay);
-
-  if (p_playx == NULL)
-  {
-    hplay->last_error_codes |= HAL_PLAY_ERROR_INVALID_PARAM;
-
-    return HAL_ERROR;
-  }
-
-  assert_param(IS_PLAY_ALL_INSTANCE(p_playx));
   assert_param((its_mask != 0U));
 
-  if (hplay->global_state != HAL_PLAY_STATE_BUSY)
+  if (hplay->State != HAL_PLAY_STATE_BUSY)
   {
     return HAL_ERROR;
   }
 
-  LL_PLAY_LUT_EnableIT(p_playx, its_mask);
+  LL_PLAY_LUT_EnableIT(PLAY_GET_INSTANCE(hplay), its_mask);
 
   return HAL_OK;
 }
@@ -2758,70 +2536,59 @@ HAL_StatusTypeDef HAL_PLAY_LUT_EnableIT(HAL_PLAY_HandleTypeDef *hplay, uint32_t 
   * @param  hplay    Pointer to a @ref HAL_PLAY_HandleTypeDef.
   * @param  its_mask Mask of lookup table output interrupt to disable
   *                  This parameter can be a combination of the following values:
-  *                  @arg @ref HAL_PLAY_LUT0_OUT_DIRECT :        The Interrupt of LUT0 direct output
-  *                  @arg @ref HAL_PLAY_LUT1_OUT_DIRECT :        The Interrupt of LUT1 direct output
-  *                  @arg @ref HAL_PLAY_LUT2_OUT_DIRECT :        The Interrupt of LUT2 direct output
-  *                  @arg @ref HAL_PLAY_LUT3_OUT_DIRECT :        The Interrupt of LUT3 direct output
-  *                  @arg @ref HAL_PLAY_LUT4_OUT_DIRECT :        The Interrupt of LUT4 direct output
-  *                  @arg @ref HAL_PLAY_LUT5_OUT_DIRECT :        The Interrupt of LUT5 direct output
-  *                  @arg @ref HAL_PLAY_LUT6_OUT_DIRECT :        The Interrupt of LUT6 direct output
-  *                  @arg @ref HAL_PLAY_LUT7_OUT_DIRECT :        The Interrupt of LUT7 direct output
-  *                  @arg @ref HAL_PLAY_LUT8_OUT_DIRECT :        The Interrupt of LUT8 direct output
-  *                  @arg @ref HAL_PLAY_LUT9_OUT_DIRECT :        The Interrupt of LUT9 direct output
-  *                  @arg @ref HAL_PLAY_LUT10_OUT_DIRECT :       The Interrupt of LUT10 direct output
-  *                  @arg @ref HAL_PLAY_LUT11_OUT_DIRECT :       The Interrupt of LUT11 direct output
-  *                  @arg @ref HAL_PLAY_LUT12_OUT_DIRECT :       The Interrupt of LUT12 direct output
-  *                  @arg @ref HAL_PLAY_LUT13_OUT_DIRECT :       The Interrupt of LUT13 direct output
-  *                  @arg @ref HAL_PLAY_LUT14_OUT_DIRECT :       The Interrupt of LUT14 direct output
-  *                  @arg @ref HAL_PLAY_LUT15_OUT_DIRECT :       The Interrupt of LUT15 direct output
-  *                  @arg @ref HAL_PLAY_LUT_ALL_OUT_DIRECT :     All Interrupts of LUTs direct outputs
-  *                  @arg @ref HAL_PLAY_LUT0_OUT_REGISTERED :    The Interrupt of LUT0 registered output
-  *                  @arg @ref HAL_PLAY_LUT1_OUT_REGISTERED :    The Interrupt of LUT1 registered output
-  *                  @arg @ref HAL_PLAY_LUT2_OUT_REGISTERED :    The Interrupt of LUT2 registered output
-  *                  @arg @ref HAL_PLAY_LUT3_OUT_REGISTERED :    The Interrupt of LUT3 registered output
-  *                  @arg @ref HAL_PLAY_LUT4_OUT_REGISTERED :    The Interrupt of LUT4 registered output
-  *                  @arg @ref HAL_PLAY_LUT5_OUT_REGISTERED :    The Interrupt of LUT5 registered output
-  *                  @arg @ref HAL_PLAY_LUT6_OUT_REGISTERED :    The Interrupt of LUT6 registered output
-  *                  @arg @ref HAL_PLAY_LUT7_OUT_REGISTERED :    The Interrupt of LUT7 registered output
-  *                  @arg @ref HAL_PLAY_LUT8_OUT_REGISTERED :    The Interrupt of LUT8 registered output
-  *                  @arg @ref HAL_PLAY_LUT9_OUT_REGISTERED :    The Interrupt of LUT9 registered output
-  *                  @arg @ref HAL_PLAY_LUT10_OUT_REGISTERED :   The Interrupt of LUT10 registered output
-  *                  @arg @ref HAL_PLAY_LUT11_OUT_REGISTERED :   The Interrupt of LUT11 registered output
-  *                  @arg @ref HAL_PLAY_LUT12_OUT_REGISTERED :   The Interrupt of LUT12 registered output
-  *                  @arg @ref HAL_PLAY_LUT13_OUT_REGISTERED :   The Interrupt of LUT13 registered output
-  *                  @arg @ref HAL_PLAY_LUT14_OUT_REGISTERED :   The Interrupt of LUT14 registered output
-  *                  @arg @ref HAL_PLAY_LUT15_OUT_REGISTERED :   The Interrupt of LUT15 registered output
-  *                  @arg @ref HAL_PLAY_LUT_ALL_OUT_REGISTERED : All Interrupts of LUTs registered outputs
+  *                  @arg @ref HAL_PLAY_LUT0_OUT_DIRECT :        The interrupt of LUT0 direct output
+  *                  @arg @ref HAL_PLAY_LUT1_OUT_DIRECT :        The interrupt of LUT1 direct output
+  *                  @arg @ref HAL_PLAY_LUT2_OUT_DIRECT :        The interrupt of LUT2 direct output
+  *                  @arg @ref HAL_PLAY_LUT3_OUT_DIRECT :        The interrupt of LUT3 direct output
+  *                  @arg @ref HAL_PLAY_LUT4_OUT_DIRECT :        The interrupt of LUT4 direct output
+  *                  @arg @ref HAL_PLAY_LUT5_OUT_DIRECT :        The interrupt of LUT5 direct output
+  *                  @arg @ref HAL_PLAY_LUT6_OUT_DIRECT :        The interrupt of LUT6 direct output
+  *                  @arg @ref HAL_PLAY_LUT7_OUT_DIRECT :        The interrupt of LUT7 direct output
+  *                  @arg @ref HAL_PLAY_LUT8_OUT_DIRECT :        The interrupt of LUT8 direct output
+  *                  @arg @ref HAL_PLAY_LUT9_OUT_DIRECT :        The interrupt of LUT9 direct output
+  *                  @arg @ref HAL_PLAY_LUT10_OUT_DIRECT :       The interrupt of LUT10 direct output
+  *                  @arg @ref HAL_PLAY_LUT11_OUT_DIRECT :       The interrupt of LUT11 direct output
+  *                  @arg @ref HAL_PLAY_LUT12_OUT_DIRECT :       The interrupt of LUT12 direct output
+  *                  @arg @ref HAL_PLAY_LUT13_OUT_DIRECT :       The interrupt of LUT13 direct output
+  *                  @arg @ref HAL_PLAY_LUT14_OUT_DIRECT :       The interrupt of LUT14 direct output
+  *                  @arg @ref HAL_PLAY_LUT15_OUT_DIRECT :       The interrupt of LUT15 direct output
+  *                  @arg @ref HAL_PLAY_LUT_ALL_OUT_DIRECT :     All interrupts of LUTs direct outputs
+  *                  @arg @ref HAL_PLAY_LUT0_OUT_REGISTERED :    The interrupt of LUT0 registered output
+  *                  @arg @ref HAL_PLAY_LUT1_OUT_REGISTERED :    The interrupt of LUT1 registered output
+  *                  @arg @ref HAL_PLAY_LUT2_OUT_REGISTERED :    The interrupt of LUT2 registered output
+  *                  @arg @ref HAL_PLAY_LUT3_OUT_REGISTERED :    The interrupt of LUT3 registered output
+  *                  @arg @ref HAL_PLAY_LUT4_OUT_REGISTERED :    The interrupt of LUT4 registered output
+  *                  @arg @ref HAL_PLAY_LUT5_OUT_REGISTERED :    The interrupt of LUT5 registered output
+  *                  @arg @ref HAL_PLAY_LUT6_OUT_REGISTERED :    The interrupt of LUT6 registered output
+  *                  @arg @ref HAL_PLAY_LUT7_OUT_REGISTERED :    The interrupt of LUT7 registered output
+  *                  @arg @ref HAL_PLAY_LUT8_OUT_REGISTERED :    The interrupt of LUT8 registered output
+  *                  @arg @ref HAL_PLAY_LUT9_OUT_REGISTERED :    The interrupt of LUT9 registered output
+  *                  @arg @ref HAL_PLAY_LUT10_OUT_REGISTERED :   The interrupt of LUT10 registered output
+  *                  @arg @ref HAL_PLAY_LUT11_OUT_REGISTERED :   The interrupt of LUT11 registered output
+  *                  @arg @ref HAL_PLAY_LUT12_OUT_REGISTERED :   The interrupt of LUT12 registered output
+  *                  @arg @ref HAL_PLAY_LUT13_OUT_REGISTERED :   The interrupt of LUT13 registered output
+  *                  @arg @ref HAL_PLAY_LUT14_OUT_REGISTERED :   The interrupt of LUT14 registered output
+  *                  @arg @ref HAL_PLAY_LUT15_OUT_REGISTERED :   The interrupt of LUT15 registered output
+  *                  @arg @ref HAL_PLAY_LUT_ALL_OUT_REGISTERED : All interrupts of LUTs registered outputs
   * @retval HAL_OK    Operation completed successfully.
-  * @retval HAL_ERROR Invalid parameter.
+  * @retval HAL_ERROR Invalid parameter or wrong state.
   */
-HAL_StatusTypeDef HAL_PLAY_LUT_DisableIT(HAL_PLAY_HandleTypeDef *hplay, uint32_t its_mask)
+HAL_StatusTypeDef HAL_PLAY_LUT_DisableIT(const HAL_PLAY_HandleTypeDef *hplay, uint32_t its_mask)
 {
-  PLAY_TypeDef *p_playx;
-
-  /* Check parameters */
+  /* Check the parameters */
   if (hplay == NULL)
   {
     return HAL_ERROR;
   }
 
-  p_playx = PLAY_GET_INSTANCE(hplay);
+  assert_param((its_mask != 0U));
 
-  if (p_playx == NULL)
-  {
-    hplay->last_error_codes |= HAL_PLAY_ERROR_INVALID_PARAM;
-
-    return HAL_ERROR;
-  }
-
-  assert_param(IS_PLAY_ALL_INSTANCE(p_playx));
-
-  if (hplay->global_state != HAL_PLAY_STATE_BUSY)
+  if (hplay->State != HAL_PLAY_STATE_BUSY)
   {
     return HAL_ERROR;
   }
 
-  LL_PLAY_LUT_DisableIT(p_playx, its_mask);
+  LL_PLAY_LUT_DisableIT(PLAY_GET_INSTANCE(hplay), its_mask);
 
   return HAL_OK;
 }
@@ -2831,57 +2598,48 @@ HAL_StatusTypeDef HAL_PLAY_LUT_DisableIT(HAL_PLAY_HandleTypeDef *hplay, uint32_t
   * @param  hplay Pointer to a @ref HAL_PLAY_HandleTypeDef.
   * @return Mask of enabled lookup table output interrupts.
   *         This returned parameter can be a combination of the following values:
-  *         @arg @ref HAL_PLAY_LUT0_OUT_DIRECT :      The Interrupt of LUT0 direct output
-  *         @arg @ref HAL_PLAY_LUT1_OUT_DIRECT :      The Interrupt of LUT1 direct output
-  *         @arg @ref HAL_PLAY_LUT2_OUT_DIRECT :      The Interrupt of LUT2 direct output
-  *         @arg @ref HAL_PLAY_LUT3_OUT_DIRECT :      The Interrupt of LUT3 direct output
-  *         @arg @ref HAL_PLAY_LUT4_OUT_DIRECT :      The Interrupt of LUT4 direct output
-  *         @arg @ref HAL_PLAY_LUT5_OUT_DIRECT :      The Interrupt of LUT5 direct output
-  *         @arg @ref HAL_PLAY_LUT6_OUT_DIRECT :      The Interrupt of LUT6 direct output
-  *         @arg @ref HAL_PLAY_LUT7_OUT_DIRECT :      The Interrupt of LUT7 direct output
-  *         @arg @ref HAL_PLAY_LUT8_OUT_DIRECT :      The Interrupt of LUT8 direct output
-  *         @arg @ref HAL_PLAY_LUT9_OUT_DIRECT :      The Interrupt of LUT9 direct output
-  *         @arg @ref HAL_PLAY_LUT10_OUT_DIRECT :     The Interrupt of LUT10 direct output
-  *         @arg @ref HAL_PLAY_LUT11_OUT_DIRECT :     The Interrupt of LUT11 direct output
-  *         @arg @ref HAL_PLAY_LUT12_OUT_DIRECT :     The Interrupt of LUT12 direct output
-  *         @arg @ref HAL_PLAY_LUT13_OUT_DIRECT :     The Interrupt of LUT13 direct output
-  *         @arg @ref HAL_PLAY_LUT14_OUT_DIRECT :     The Interrupt of LUT14 direct output
-  *         @arg @ref HAL_PLAY_LUT15_OUT_DIRECT :     The Interrupt of LUT15 direct output
-  *         @arg @ref HAL_PLAY_LUT0_OUT_REGISTERED :  The Interrupt of LUT0 registered output
-  *         @arg @ref HAL_PLAY_LUT1_OUT_REGISTERED :  The Interrupt of LUT1 registered output
-  *         @arg @ref HAL_PLAY_LUT2_OUT_REGISTERED :  The Interrupt of LUT2 registered output
-  *         @arg @ref HAL_PLAY_LUT3_OUT_REGISTERED :  The Interrupt of LUT3 registered output
-  *         @arg @ref HAL_PLAY_LUT4_OUT_REGISTERED :  The Interrupt of LUT4 registered output
-  *         @arg @ref HAL_PLAY_LUT5_OUT_REGISTERED :  The Interrupt of LUT5 registered output
-  *         @arg @ref HAL_PLAY_LUT6_OUT_REGISTERED :  The Interrupt of LUT6 registered output
-  *         @arg @ref HAL_PLAY_LUT7_OUT_REGISTERED :  The Interrupt of LUT7 registered output
-  *         @arg @ref HAL_PLAY_LUT8_OUT_REGISTERED :  The Interrupt of LUT8 registered output
-  *         @arg @ref HAL_PLAY_LUT9_OUT_REGISTERED :  The Interrupt of LUT9 registered output
-  *         @arg @ref HAL_PLAY_LUT10_OUT_REGISTERED : The Interrupt of LUT10 registered output
-  *         @arg @ref HAL_PLAY_LUT11_OUT_REGISTERED : The Interrupt of LUT11 registered output
-  *         @arg @ref HAL_PLAY_LUT12_OUT_REGISTERED : The Interrupt of LUT12 registered output
-  *         @arg @ref HAL_PLAY_LUT13_OUT_REGISTERED : The Interrupt of LUT13 registered output
-  *         @arg @ref HAL_PLAY_LUT14_OUT_REGISTERED : The Interrupt of LUT14 registered output
-  *         @arg @ref HAL_PLAY_LUT15_OUT_REGISTERED : The Interrupt of LUT15 registered output
+  *         @arg @ref HAL_PLAY_LUT0_OUT_DIRECT :      The interrupt of LUT0 direct output
+  *         @arg @ref HAL_PLAY_LUT1_OUT_DIRECT :      The interrupt of LUT1 direct output
+  *         @arg @ref HAL_PLAY_LUT2_OUT_DIRECT :      The interrupt of LUT2 direct output
+  *         @arg @ref HAL_PLAY_LUT3_OUT_DIRECT :      The interrupt of LUT3 direct output
+  *         @arg @ref HAL_PLAY_LUT4_OUT_DIRECT :      The interrupt of LUT4 direct output
+  *         @arg @ref HAL_PLAY_LUT5_OUT_DIRECT :      The interrupt of LUT5 direct output
+  *         @arg @ref HAL_PLAY_LUT6_OUT_DIRECT :      The interrupt of LUT6 direct output
+  *         @arg @ref HAL_PLAY_LUT7_OUT_DIRECT :      The interrupt of LUT7 direct output
+  *         @arg @ref HAL_PLAY_LUT8_OUT_DIRECT :      The interrupt of LUT8 direct output
+  *         @arg @ref HAL_PLAY_LUT9_OUT_DIRECT :      The interrupt of LUT9 direct output
+  *         @arg @ref HAL_PLAY_LUT10_OUT_DIRECT :     The interrupt of LUT10 direct output
+  *         @arg @ref HAL_PLAY_LUT11_OUT_DIRECT :     The interrupt of LUT11 direct output
+  *         @arg @ref HAL_PLAY_LUT12_OUT_DIRECT :     The interrupt of LUT12 direct output
+  *         @arg @ref HAL_PLAY_LUT13_OUT_DIRECT :     The interrupt of LUT13 direct output
+  *         @arg @ref HAL_PLAY_LUT14_OUT_DIRECT :     The interrupt of LUT14 direct output
+  *         @arg @ref HAL_PLAY_LUT15_OUT_DIRECT :     The interrupt of LUT15 direct output
+  *         @arg @ref HAL_PLAY_LUT0_OUT_REGISTERED :  The interrupt of LUT0 registered output
+  *         @arg @ref HAL_PLAY_LUT1_OUT_REGISTERED :  The interrupt of LUT1 registered output
+  *         @arg @ref HAL_PLAY_LUT2_OUT_REGISTERED :  The interrupt of LUT2 registered output
+  *         @arg @ref HAL_PLAY_LUT3_OUT_REGISTERED :  The interrupt of LUT3 registered output
+  *         @arg @ref HAL_PLAY_LUT4_OUT_REGISTERED :  The interrupt of LUT4 registered output
+  *         @arg @ref HAL_PLAY_LUT5_OUT_REGISTERED :  The interrupt of LUT5 registered output
+  *         @arg @ref HAL_PLAY_LUT6_OUT_REGISTERED :  The interrupt of LUT6 registered output
+  *         @arg @ref HAL_PLAY_LUT7_OUT_REGISTERED :  The interrupt of LUT7 registered output
+  *         @arg @ref HAL_PLAY_LUT8_OUT_REGISTERED :  The interrupt of LUT8 registered output
+  *         @arg @ref HAL_PLAY_LUT9_OUT_REGISTERED :  The interrupt of LUT9 registered output
+  *         @arg @ref HAL_PLAY_LUT10_OUT_REGISTERED : The interrupt of LUT10 registered output
+  *         @arg @ref HAL_PLAY_LUT11_OUT_REGISTERED : The interrupt of LUT11 registered output
+  *         @arg @ref HAL_PLAY_LUT12_OUT_REGISTERED : The interrupt of LUT12 registered output
+  *         @arg @ref HAL_PLAY_LUT13_OUT_REGISTERED : The interrupt of LUT13 registered output
+  *         @arg @ref HAL_PLAY_LUT14_OUT_REGISTERED : The interrupt of LUT14 registered output
+  *         @arg @ref HAL_PLAY_LUT15_OUT_REGISTERED : The interrupt of LUT15 registered output
   */
 uint32_t HAL_PLAY_LUT_GetIT(const HAL_PLAY_HandleTypeDef *hplay)
 {
-  const PLAY_TypeDef *p_playx;
-
-  /* Check parameters */
+  /* Check the parameters */
   if (hplay == NULL)
   {
     return 0U;
   }
 
-  p_playx = PLAY_GET_INSTANCE(hplay);
-
-  if (p_playx == NULL)
-  {
-    return 0U;
-  }
-
-  return LL_PLAY_LUT_GetIT(p_playx);
+  return LL_PLAY_LUT_GetIT(PLAY_GET_INSTANCE(hplay));
 }
 
 /**
@@ -2923,16 +2681,16 @@ A set of functions allowing to manage the Software Triggers:
   * @param  state       State to set of type @ref HAL_PLAY_SWTriggerStateTypeDef.
   * @param  timeout_ms  Timeout duration (in ms).
   * @retval HAL_OK      Operation completed successfully.
-  * @retval HAL_ERROR   Invalid parameter.
   * @retval HAL_BUSY    A write is pending.
   * @retval HAL_TIMEOUT Timeout reached.
+  * @retval HAL_ERROR   Invalid parameter or wrong state.
   */
-HAL_StatusTypeDef HAL_PLAY_WriteSWTrigger(HAL_PLAY_HandleTypeDef *hplay, uint32_t sw_triggers,
+HAL_StatusTypeDef HAL_PLAY_WriteSWTrigger(const HAL_PLAY_HandleTypeDef *hplay, uint32_t sw_triggers,
                                           HAL_PLAY_SWTriggerStateTypeDef state, uint32_t timeout_ms)
 {
   PLAY_TypeDef *p_playx;
 
-  /* Check parameters */
+  /* Check the parameters */
   if (hplay == NULL)
   {
     return HAL_ERROR;
@@ -2940,17 +2698,10 @@ HAL_StatusTypeDef HAL_PLAY_WriteSWTrigger(HAL_PLAY_HandleTypeDef *hplay, uint32_
 
   p_playx = PLAY_GET_INSTANCE(hplay);
 
-  if (p_playx == NULL)
-  {
-    hplay->last_error_codes |= HAL_PLAY_ERROR_INVALID_PARAM;
-
-    return HAL_ERROR;
-  }
-
-  assert_param(IS_PLAY_ALL_INSTANCE(p_playx));
   assert_param(IS_PLAY_SWTRIGGER_MSK(sw_triggers));
+  assert_param(IS_PLAY_SWTRIGGER_STATE(state));
 
-  if (hplay->global_state != HAL_PLAY_STATE_BUSY)
+  if (hplay->State != HAL_PLAY_STATE_BUSY)
   {
     return HAL_ERROR;
   }
@@ -3016,15 +2767,15 @@ HAL_StatusTypeDef HAL_PLAY_WriteSWTrigger(HAL_PLAY_HandleTypeDef *hplay, uint32_
   *                     @arg @ref HAL_PLAY_SWTRIG_ALL : All software triggers
   * @param  state       State to set of type @ref HAL_PLAY_SWTriggerStateTypeDef.
   * @retval HAL_OK      Operation completed successfully.
-  * @retval HAL_ERROR   Invalid parameter.
   * @retval HAL_BUSY    A write is pending.
+  * @retval HAL_ERROR   Invalid parameter or wrong state.
   */
-HAL_StatusTypeDef HAL_PLAY_WriteSWTrigger_IT(HAL_PLAY_HandleTypeDef *hplay, uint32_t sw_triggers,
+HAL_StatusTypeDef HAL_PLAY_WriteSWTrigger_IT(const HAL_PLAY_HandleTypeDef *hplay, uint32_t sw_triggers,
                                              HAL_PLAY_SWTriggerStateTypeDef state)
 {
   PLAY_TypeDef *p_playx;
 
-  /* Check parameters */
+  /* Check the parameters */
   if (hplay == NULL)
   {
     return HAL_ERROR;
@@ -3032,17 +2783,10 @@ HAL_StatusTypeDef HAL_PLAY_WriteSWTrigger_IT(HAL_PLAY_HandleTypeDef *hplay, uint
 
   p_playx = PLAY_GET_INSTANCE(hplay);
 
-  if (p_playx == NULL)
-  {
-    hplay->last_error_codes |= HAL_PLAY_ERROR_INVALID_PARAM;
-
-    return HAL_ERROR;
-  }
-
-  assert_param(IS_PLAY_ALL_INSTANCE(p_playx));
   assert_param(IS_PLAY_SWTRIGGER_MSK(sw_triggers));
+  assert_param(IS_PLAY_SWTRIGGER_STATE(state));
 
-  if (hplay->global_state != HAL_PLAY_STATE_BUSY)
+  if (hplay->State != HAL_PLAY_STATE_BUSY)
   {
     return HAL_ERROR;
   }
@@ -3093,15 +2837,16 @@ HAL_StatusTypeDef HAL_PLAY_WriteSWTrigger_IT(HAL_PLAY_HandleTypeDef *hplay, uint
   *                     @arg @ref HAL_PLAY_SWTRIG_ALL : All software triggers
   * @param  timeout_ms  Timeout duration (in ms).
   * @retval HAL_OK      Operation completed successfully.
-  * @retval HAL_ERROR   Invalid parameter.
   * @retval HAL_BUSY    A write is pending.
   * @retval HAL_TIMEOUT Timeout reached.
+  * @retval HAL_ERROR   Invalid parameter or wrong state.
   */
-HAL_StatusTypeDef HAL_PLAY_ToggleSWTrigger(HAL_PLAY_HandleTypeDef *hplay, uint32_t sw_triggers, uint32_t timeout_ms)
+HAL_StatusTypeDef HAL_PLAY_ToggleSWTrigger(const HAL_PLAY_HandleTypeDef *hplay, uint32_t sw_triggers,
+                                           uint32_t timeout_ms)
 {
   PLAY_TypeDef *p_playx;
 
-  /* Check parameters */
+  /* Check the parameters */
   if (hplay == NULL)
   {
     return HAL_ERROR;
@@ -3109,17 +2854,9 @@ HAL_StatusTypeDef HAL_PLAY_ToggleSWTrigger(HAL_PLAY_HandleTypeDef *hplay, uint32
 
   p_playx = PLAY_GET_INSTANCE(hplay);
 
-  if (p_playx == NULL)
-  {
-    hplay->last_error_codes |= HAL_PLAY_ERROR_INVALID_PARAM;
-
-    return HAL_ERROR;
-  }
-
-  assert_param(IS_PLAY_ALL_INSTANCE(p_playx));
   assert_param(IS_PLAY_SWTRIGGER_MSK(sw_triggers));
 
-  if (hplay->global_state != HAL_PLAY_STATE_BUSY)
+  if (hplay->State != HAL_PLAY_STATE_BUSY)
   {
     return HAL_ERROR;
   }
@@ -3177,14 +2914,14 @@ HAL_StatusTypeDef HAL_PLAY_ToggleSWTrigger(HAL_PLAY_HandleTypeDef *hplay, uint32
   *                     @arg @ref HAL_PLAY_SWTRIG15 :   Software trigger 15
   *                     @arg @ref HAL_PLAY_SWTRIG_ALL : All software triggers
   * @retval HAL_OK      Operation completed successfully.
-  * @retval HAL_ERROR   Invalid parameter.
   * @retval HAL_BUSY    A write is pending.
+  * @retval HAL_ERROR   Invalid parameter or wrong state.
   */
-HAL_StatusTypeDef HAL_PLAY_ToggleSWTrigger_IT(HAL_PLAY_HandleTypeDef *hplay, uint32_t sw_triggers)
+HAL_StatusTypeDef HAL_PLAY_ToggleSWTrigger_IT(const HAL_PLAY_HandleTypeDef *hplay, uint32_t sw_triggers)
 {
   PLAY_TypeDef *p_playx;
 
-  /* Check parameters */
+  /* Check the parameters */
   if (hplay == NULL)
   {
     return HAL_ERROR;
@@ -3192,17 +2929,9 @@ HAL_StatusTypeDef HAL_PLAY_ToggleSWTrigger_IT(HAL_PLAY_HandleTypeDef *hplay, uin
 
   p_playx = PLAY_GET_INSTANCE(hplay);
 
-  if (p_playx == NULL)
-  {
-    hplay->last_error_codes |= HAL_PLAY_ERROR_INVALID_PARAM;
-
-    return HAL_ERROR;
-  }
-
-  assert_param(IS_PLAY_ALL_INSTANCE(p_playx));
   assert_param(IS_PLAY_SWTRIGGER_MSK(sw_triggers));
 
-  if (hplay->global_state != HAL_PLAY_STATE_BUSY)
+  if (hplay->State != HAL_PLAY_STATE_BUSY)
   {
     return HAL_ERROR;
   }
@@ -3241,33 +2970,22 @@ HAL_StatusTypeDef HAL_PLAY_ToggleSWTrigger_IT(HAL_PLAY_HandleTypeDef *hplay, uin
   *                 @arg @ref HAL_PLAY_SWTRIG13 : Software trigger 13
   *                 @arg @ref HAL_PLAY_SWTRIG14 : Software trigger 14
   *                 @arg @ref HAL_PLAY_SWTRIG15 : Software trigger 15
-  * @note   This function will return HAL_PLAY_SW_TRIGGER_RESET in case of wrong parameter.
+  * @note   This function will return @ref HAL_PLAY_SW_TRIGGER_RESET in case of wrong parameter.
   * @return State of Software Trigger.
   */
 HAL_PLAY_SWTriggerStateTypeDef HAL_PLAY_ReadSWTrigger(const HAL_PLAY_HandleTypeDef *hplay, uint32_t sw_trig)
 {
-  const PLAY_TypeDef *p_playx;
-
-  /* Check parameters */
+  /* Check the parameters */
   if (hplay == NULL)
   {
-    /* Return HAL_PLAY_SW_TRIGGER_RESET as default value */
     return HAL_PLAY_SW_TRIGGER_RESET;
   }
 
-  p_playx = PLAY_GET_INSTANCE(hplay);
-
-  if (p_playx == NULL)
-  {
-    /* Return HAL_PLAY_SW_TRIGGER_RESET as default value */
-    return HAL_PLAY_SW_TRIGGER_RESET;
-  }
-
-  /* Check the parameters */
-  assert_param(IS_PLAY_ALL_INSTANCE(hplay->instance));
+  assert_param(IS_PLAY_SWTRIGGER(sw_trig));
 
   /* Read the SW Trigger values */
-  return ((LL_PLAY_IsSWTriggerSet(p_playx, sw_trig) != 0U) ? HAL_PLAY_SW_TRIGGER_SET : HAL_PLAY_SW_TRIGGER_RESET);
+  return ((LL_PLAY_IsSWTriggerSet(PLAY_GET_INSTANCE(hplay), sw_trig) != 0U)
+          ? HAL_PLAY_SW_TRIGGER_SET : HAL_PLAY_SW_TRIGGER_RESET);
 }
 
 /**
@@ -3282,7 +3000,7 @@ A set of functions allowing to handle the PLAY interrupts in asynchronous mode.
   - HAL_PLAY_IRQHandler()
 
 - Callback functions:
-  - Depending on the process function used, different callback might be triggered:
+  - Depending on the process function used, different callbacks might be triggered:
 
   | Process API \n \ \n Callbacks           | HAL_PLAY_WriteSWTrigger_IT() | HAL_PLAY_ToggleSWTrigger_IT() |
   |-----------------------------------------|:----------------------------:|:-----------------------------:|
@@ -3313,7 +3031,6 @@ void HAL_PLAY_IRQHandler(HAL_PLAY_HandleTypeDef *hplay)
   PLAY_TypeDef *p_playx;
 
   p_playx = PLAY_GET_INSTANCE(hplay);
-  assert_param(IS_PLAY_ALL_INSTANCE(p_playx));
 
   /* Get status of general interrupts */
   uint32_t reg_ier = LL_PLAY_READ_REG(p_playx, IER);
@@ -3399,13 +3116,13 @@ void HAL_PLAY_IRQHandler(HAL_PLAY_HandleTypeDef *hplay)
   * @warning This weak function must not be modified. When the callback is needed,
   *          it must be implemented in the user file.
   */
-__WEAK void HAL_PLAY_SWTriggerWriteCpltCallback(HAL_PLAY_HandleTypeDef *hplay)
+__weak void HAL_PLAY_SWTriggerWriteCpltCallback(HAL_PLAY_HandleTypeDef *hplay)
 {
   /* Prevent unused argument(s) compilation warning */
   UNUSED(hplay);
 
   /* WARNING: This function must not be modified. When the callback is needed,
-              function HAL_PLAY_SWTriggerWriteCpltCallback must be implemented in the user file.
+              function HAL_PLAY_SWTriggerWriteCpltCallback() must be implemented in the user file.
    */
 }
 
@@ -3415,13 +3132,13 @@ __WEAK void HAL_PLAY_SWTriggerWriteCpltCallback(HAL_PLAY_HandleTypeDef *hplay)
   * @warning This weak function must not be modified. When the callback is needed,
   *          it must be implemented in the user file.
   */
-__WEAK void HAL_PLAY_EdgeTriggerWriteCpltCallback(HAL_PLAY_HandleTypeDef *hplay)
+__weak void HAL_PLAY_EdgeTriggerWriteCpltCallback(HAL_PLAY_HandleTypeDef *hplay)
 {
   /* Prevent unused argument(s) compilation warning */
   UNUSED(hplay);
 
   /* WARNING: This function must not be modified. When the callback is needed,
-              function HAL_PLAY_EdgeTriggerWriteCpltCallback must be implemented in the user file.
+              function HAL_PLAY_EdgeTriggerWriteCpltCallback() must be implemented in the user file.
    */
 }
 
@@ -3439,7 +3156,7 @@ __weak void HAL_PLAY_LUTOutputRisingCallback(HAL_PLAY_HandleTypeDef *hplay, uint
   UNUSED(edge_trig_mask_status);
 
   /* WARNING: This function must not be modified. When the callback is needed,
-              function HAL_PLAY_LUTOutputRisingCallback must be implemented in the user file.
+              function HAL_PLAY_LUTOutputRisingCallback() must be implemented in the user file.
    */
 }
 
@@ -3450,55 +3167,55 @@ __weak void HAL_PLAY_LUTOutputRisingCallback(HAL_PLAY_HandleTypeDef *hplay, uint
   * @warning This weak function must not be modified. When the callback is needed,
   *          it must be implemented in the user file.
   */
-__WEAK void HAL_PLAY_LUTOutputFallingCallback(HAL_PLAY_HandleTypeDef *hplay, uint32_t edge_trig_mask_status)
+__weak void HAL_PLAY_LUTOutputFallingCallback(HAL_PLAY_HandleTypeDef *hplay, uint32_t edge_trig_mask_status)
 {
   /* Prevent unused argument(s) compilation warning */
   UNUSED(hplay);
   UNUSED(edge_trig_mask_status);
 
   /* WARNING: This function must not be modified. When the callback is needed,
-              function HAL_PLAY_LUTOutputFallingCallback must be implemented in the user file.
+              function HAL_PLAY_LUTOutputFallingCallback() must be implemented in the user file.
    */
 }
 
 #if (USE_HAL_PLAY_REGISTER_CALLBACKS == 1)
 /**
-  * @brief  Register an User PLAY Callback.
-  * @note   The User PLAY Callback is to be used instead of the weak predefined callback.
-  * @param  hplay  Pointer to a @ref HAL_PLAY_HandleTypeDef.
-  * @param  CallbackID  ID of the callback to be registered.
-  *         This parameter can be one of the following values:
-  *          @arg @ref HAL_PLAY_SW_TRIGGER_WRITE_CPLT_CB_ID SWIN Write Complete callback ID
-  *          @arg @ref HAL_PLAY_EDGE_TRIGGER_WRITE_CPLT_CB_ID Edge Trigger Write Complete callback ID
-  *          @arg @ref HAL_PLAY_MSPINIT_CB_ID MspInit callback ID
-  *          @arg @ref HAL_PLAY_MSPDEINIT_CB_ID MspDeInit callback ID
+  * @brief  Register a user PLAY Callback.
+  * @param  hplay      Pointer to a @ref HAL_PLAY_HandleTypeDef.
+  * @param  CallbackID ID of the callback to be registered.
+  *                    This parameter can be one of the following values:
+  *                    @arg @ref HAL_PLAY_SW_TRIGGER_WRITE_CPLT_CB_ID SWIN Write Complete callback ID
+  *                    @arg @ref HAL_PLAY_EDGE_TRIGGER_WRITE_CPLT_CB_ID Edge Trigger Write Complete callback ID
+  *                    @arg @ref HAL_PLAY_MSPINIT_CB_ID MspInit callback ID
+  *                    @arg @ref HAL_PLAY_MSPDEINIT_CB_ID MspDeInit callback ID
   * @param  pCallback  Pointer to the callback function.
-  * @note   The HAL_PLAY_RegisterCallback() may be called before HAL_PLAY_Init() in HAL_PLAY_STATE_RESET
-  *         to register callbacks for HAL_PLAY_MSPINIT_CB_ID and HAL_PLAY_MSPDEINIT_CB_ID only.
-  * @return HAL status.
+  * @note   The HAL_PLAY_RegisterCallback() must be called before HAL_PLAY_Init() in @ref HAL_PLAY_STATE_RESET
+  *         to register callbacks for @ref HAL_PLAY_MSPINIT_CB_ID and @ref HAL_PLAY_MSPDEINIT_CB_ID only.
+  * @retval HAL_OK    Operation completed successfully.
+  * @retval HAL_ERROR Invalid parameter.
   */
 HAL_StatusTypeDef HAL_PLAY_RegisterCallback(HAL_PLAY_HandleTypeDef *hplay, HAL_PLAY_CallbackIDTypeDef CallbackID,
                                             pPLAY_CallbackTypeDef pCallback)
 {
   HAL_StatusTypeDef status = HAL_OK;
+  HAL_PLAY_StateTypeDef tmp_state;
 
-  /* Check the PLAY handle allocation */
+  /* Check the parameters */
   if (hplay == NULL)
   {
     return HAL_ERROR;
   }
 
-  /* Check the parameters */
-  assert_param(IS_PLAY_ALL_INSTANCE(hplay->instance));
-
   if (pCallback == NULL)
   {
-    hplay->last_error_codes |= HAL_PLAY_ERROR_INVALID_PARAM;
+    hplay->ErrorCode |= HAL_PLAY_ERROR_INVALID_PARAM;
 
     return HAL_ERROR;
   }
 
-  if (hplay->global_state == HAL_PLAY_STATE_READY)
+  /* Check the peripheral state */
+  tmp_state = hplay->State;
+  if ((tmp_state == HAL_PLAY_STATE_INIT) || (tmp_state == HAL_PLAY_STATE_READY))
   {
     switch (CallbackID)
     {
@@ -3519,13 +3236,13 @@ HAL_StatusTypeDef HAL_PLAY_RegisterCallback(HAL_PLAY_HandleTypeDef *hplay, HAL_P
         break;
 
       default :
-        hplay->last_error_codes |= HAL_PLAY_ERROR_INVALID_CALLBACK;
+        hplay->ErrorCode |= HAL_PLAY_ERROR_INVALID_CALLBACK;
 
         status = HAL_ERROR;
         break;
     }
   }
-  else if (hplay->global_state == HAL_PLAY_STATE_RESET)
+  else if (tmp_state == HAL_PLAY_STATE_RESET)
   {
     switch (CallbackID)
     {
@@ -3538,7 +3255,7 @@ HAL_StatusTypeDef HAL_PLAY_RegisterCallback(HAL_PLAY_HandleTypeDef *hplay, HAL_P
         break;
 
       default :
-        hplay->last_error_codes |= HAL_PLAY_ERROR_INVALID_CALLBACK;
+        hplay->ErrorCode |= HAL_PLAY_ERROR_INVALID_CALLBACK;
 
         status = HAL_ERROR;
         break;
@@ -3546,49 +3263,49 @@ HAL_StatusTypeDef HAL_PLAY_RegisterCallback(HAL_PLAY_HandleTypeDef *hplay, HAL_P
   }
   else
   {
-    hplay->last_error_codes |= HAL_PLAY_ERROR_INVALID_CALLBACK;
+    hplay->ErrorCode |= HAL_PLAY_ERROR_INVALID_CALLBACK;
 
     status = HAL_ERROR;
   }
 
-  /* Return error status */
   return status;
 }
 
 /**
-  * @brief  Register a User PLAY LUT Output Callback.
-  * @param  hplay Pointer to a @ref HAL_PLAY_HandleTypeDef.
-  * @param  CallbackID  ID of the callback to be registered.
-  *         This parameter can be one of the following values:
-  *          @arg @ref HAL_PLAY_LUT_OUTPUT_RISING_CB_ID LUT output rising callback ID
-  *          @arg @ref HAL_PLAY_LUT_OUTPUT_FALLING_CB_ID LUT output falling callback ID
+  * @brief  Register a user PLAY LUT Output Callback.
+  * @param  hplay      Pointer to a @ref HAL_PLAY_HandleTypeDef.
+  * @param  CallbackID ID of the callback to be registered.
+  *                    This parameter can be one of the following values:
+  *                    @arg @ref HAL_PLAY_LUT_OUTPUT_RISING_CB_ID LUT output rising callback ID
+  *                    @arg @ref HAL_PLAY_LUT_OUTPUT_FALLING_CB_ID LUT output falling callback ID
   * @param  pCallback  Pointer to the callback function.
-  * @note   The User PLAY Callback is to be used instead of the weak predefined callback.
-  * @return HAL status.
+  * @note   The user PLAY Callback is to be used instead of the weak predefined callback.
+  * @retval HAL_OK    Operation completed successfully.
+  * @retval HAL_ERROR Invalid parameter.
   */
 HAL_StatusTypeDef HAL_PLAY_RegisterLUTOutputCallback(HAL_PLAY_HandleTypeDef *hplay,
                                                      HAL_PLAY_CallbackIDTypeDef CallbackID,
                                                      pPLAY_LUTOutputCallbackTypeDef pCallback)
 {
   HAL_StatusTypeDef status = HAL_OK;
+  HAL_PLAY_StateTypeDef tmp_state;
 
-  /* Check the PLAY handle allocation */
+  /* Check the parameters */
   if (hplay == NULL)
   {
     return HAL_ERROR;
   }
 
-  /* Check the parameters */
-  assert_param(IS_PLAY_ALL_INSTANCE(PLAY_GET_INSTANCE(hplay)));
-
   if (pCallback == NULL)
   {
-    hplay->last_error_codes |= HAL_PLAY_ERROR_INVALID_PARAM;
+    hplay->ErrorCode |= HAL_PLAY_ERROR_INVALID_PARAM;
 
     return HAL_ERROR;
   }
 
-  if (hplay->global_state == HAL_PLAY_STATE_READY)
+  /* Check the peripheral state */
+  tmp_state = hplay->State;
+  if ((tmp_state == HAL_PLAY_STATE_INIT) || (tmp_state == HAL_PLAY_STATE_READY))
   {
     switch (CallbackID)
     {
@@ -3602,7 +3319,7 @@ HAL_StatusTypeDef HAL_PLAY_RegisterLUTOutputCallback(HAL_PLAY_HandleTypeDef *hpl
 
       default :
 
-        hplay->last_error_codes |= HAL_PLAY_ERROR_INVALID_CALLBACK;
+        hplay->ErrorCode |= HAL_PLAY_ERROR_INVALID_CALLBACK;
 
         status = HAL_ERROR;
         break;
@@ -3611,7 +3328,7 @@ HAL_StatusTypeDef HAL_PLAY_RegisterLUTOutputCallback(HAL_PLAY_HandleTypeDef *hpl
   else
   {
 
-    hplay->last_error_codes |= HAL_PLAY_ERROR_INVALID_CALLBACK;
+    hplay->ErrorCode |= HAL_PLAY_ERROR_INVALID_CALLBACK;
 
     status = HAL_ERROR;
   }
@@ -3620,33 +3337,33 @@ HAL_StatusTypeDef HAL_PLAY_RegisterLUTOutputCallback(HAL_PLAY_HandleTypeDef *hpl
 }
 
 /**
-  * @brief  Unregister an User PLAY Callback.
-  * @param  hplay Pointer to a @ref HAL_PLAY_HandleTypeDef.
+  * @brief  Unregister a user PLAY Callback. The PLAY callback will be redirected to the weak predefined callback.
+  * @param  hplay       Pointer to a @ref HAL_PLAY_HandleTypeDef.
   * @param  CallbackID  ID of the callback to be unregistered
-  *         This parameter can be one of the following values:
-  *          @arg @ref HAL_PLAY_SW_TRIGGER_WRITE_CPLT_CB_ID SW trigger write complete callback ID
-  *          @arg @ref HAL_PLAY_EDGE_TRIGGER_WRITE_CPLT_CB_ID Edge trigger write complete callback ID
-  *          @arg @ref HAL_PLAY_MSPINIT_CB_ID MspInit callback ID
-  *          @arg @ref HAL_PLAY_MSPDEINIT_CB_ID MspDeInit callback ID
-  * @note   The PLAY callback is redirected to the weak predefined callback.
-  * @note   The HAL_PLAY_UnRegisterCallback() can be called before HAL_PLAY_Init() in HAL_PLAY_STATE_RESET
-  *         to unregister callbacks for HAL_PLAY_MSPINIT_CB_ID and HAL_PLAY_MSPDEINIT_CB_ID only.
-  * @return HAL status.
+  *                     This parameter can be one of the following values:
+  *                     @arg @ref HAL_PLAY_SW_TRIGGER_WRITE_CPLT_CB_ID SW trigger write complete callback ID
+  *                     @arg @ref HAL_PLAY_EDGE_TRIGGER_WRITE_CPLT_CB_ID Edge trigger write complete callback ID
+  *                     @arg @ref HAL_PLAY_MSPINIT_CB_ID MspInit callback ID
+  *                     @arg @ref HAL_PLAY_MSPDEINIT_CB_ID MspDeInit callback ID
+  * @note   The HAL_PLAY_UnRegisterCallback() can be called before HAL_PLAY_Init() in @ref HAL_PLAY_STATE_RESET
+  *         to unregister callbacks for @ref HAL_PLAY_MSPINIT_CB_ID and @ref HAL_PLAY_MSPDEINIT_CB_ID only.
+  * @retval HAL_OK    Operation completed successfully.
+  * @retval HAL_ERROR Invalid parameter.
   */
 HAL_StatusTypeDef HAL_PLAY_UnRegisterCallback(HAL_PLAY_HandleTypeDef *hplay, HAL_PLAY_CallbackIDTypeDef CallbackID)
 {
   HAL_StatusTypeDef status = HAL_OK;
+  HAL_PLAY_StateTypeDef tmp_state;
 
-  /* Check the PLAY handle allocation */
+  /* Check the parameters */
   if (hplay == NULL)
   {
     return HAL_ERROR;
   }
 
-  /* Check the parameters */
-  assert_param(IS_PLAY_ALL_INSTANCE(PLAY_GET_INSTANCE(hplay)));
-
-  if (hplay->global_state == HAL_PLAY_STATE_READY)
+  /* Check the peripheral state */
+  tmp_state = hplay->State;
+  if ((tmp_state == HAL_PLAY_STATE_INIT) || (tmp_state == HAL_PLAY_STATE_READY))
   {
     switch (CallbackID)
     {
@@ -3668,12 +3385,12 @@ HAL_StatusTypeDef HAL_PLAY_UnRegisterCallback(HAL_PLAY_HandleTypeDef *hplay, HAL
 
       default:
         /* Update the error code */
-        hplay->last_error_codes |= HAL_PLAY_ERROR_INVALID_CALLBACK;
+        hplay->ErrorCode |= HAL_PLAY_ERROR_INVALID_CALLBACK;
         status = HAL_ERROR;
         break;
     }
   }
-  else if (hplay->global_state == HAL_PLAY_STATE_RESET)
+  else if (tmp_state == HAL_PLAY_STATE_RESET)
   {
     switch (CallbackID)
     {
@@ -3687,14 +3404,14 @@ HAL_StatusTypeDef HAL_PLAY_UnRegisterCallback(HAL_PLAY_HandleTypeDef *hplay, HAL
 
       default:
         /* Update the error code */
-        hplay->last_error_codes |= HAL_PLAY_ERROR_INVALID_CALLBACK;
+        hplay->ErrorCode |= HAL_PLAY_ERROR_INVALID_CALLBACK;
         status = HAL_ERROR;
         break;
     }
   }
   else
   {
-    hplay->last_error_codes |= HAL_PLAY_ERROR_INVALID_CALLBACK;
+    hplay->ErrorCode |= HAL_PLAY_ERROR_INVALID_CALLBACK;
     status = HAL_ERROR;
   }
 
@@ -3702,30 +3419,31 @@ HAL_StatusTypeDef HAL_PLAY_UnRegisterCallback(HAL_PLAY_HandleTypeDef *hplay, HAL
 }
 
 /**
-  * @brief  Unregister a User PLAY LUT Output Callback.
-  * @note   The PLAY callback is redirected to the weak predefined callback.
-  * @param  hplay Pointer to a @ref HAL_PLAY_HandleTypeDef.
-  * @param  CallbackID  ID of the callback to be unregistered
-  *         This parameter can be one of the following values:
-  *          @arg @ref HAL_PLAY_LUT_OUTPUT_RISING_CB_ID LUT output rising callback ID
-  *          @arg @ref HAL_PLAY_LUT_OUTPUT_FALLING_CB_ID LUT output falling callback ID
-  * @return HAL status.
+  * @brief  Unregister a user PLAY LUT Output Callback. The PLAY callback will be redirected to the weak
+  *         predefined callback.
+  * @param  hplay      Pointer to a @ref HAL_PLAY_HandleTypeDef.
+  * @param  CallbackID ID of the callback to be unregistered
+  *                    This parameter can be one of the following values:
+  *                    @arg @ref HAL_PLAY_LUT_OUTPUT_RISING_CB_ID LUT output rising callback ID
+  *                    @arg @ref HAL_PLAY_LUT_OUTPUT_FALLING_CB_ID LUT output falling callback ID
+  * @retval HAL_OK    Operation completed successfully.
+  * @retval HAL_ERROR Invalid parameter.
   */
 HAL_StatusTypeDef HAL_PLAY_UnRegisterLUTOutputCallback(HAL_PLAY_HandleTypeDef *hplay,
                                                        HAL_PLAY_CallbackIDTypeDef CallbackID)
 {
   HAL_StatusTypeDef status = HAL_OK;
+  HAL_PLAY_StateTypeDef tmp_state;
 
-  /* Check the PLAY handle allocation */
+  /* Check the parameters */
   if (hplay == NULL)
   {
     return HAL_ERROR;
   }
 
-  /* Check the parameters */
-  assert_param(IS_PLAY_ALL_INSTANCE(PLAY_GET_INSTANCE(hplay)));
-
-  if (hplay->global_state == HAL_PLAY_STATE_READY)
+  /* Check the peripheral state */
+  tmp_state = hplay->State;
+  if ((tmp_state == HAL_PLAY_STATE_INIT) || (tmp_state == HAL_PLAY_STATE_READY))
   {
     switch (CallbackID)
     {
@@ -3738,14 +3456,14 @@ HAL_StatusTypeDef HAL_PLAY_UnRegisterLUTOutputCallback(HAL_PLAY_HandleTypeDef *h
         break;
 
       default :
-        hplay->last_error_codes |= HAL_PLAY_ERROR_INVALID_CALLBACK;
+        hplay->ErrorCode |= HAL_PLAY_ERROR_INVALID_CALLBACK;
         status = HAL_ERROR;
         break;
     }
   }
   else
   {
-    hplay->last_error_codes |= HAL_PLAY_ERROR_INVALID_CALLBACK;
+    hplay->ErrorCode |= HAL_PLAY_ERROR_INVALID_CALLBACK;
     status = HAL_ERROR;
   }
 
@@ -3759,44 +3477,40 @@ HAL_StatusTypeDef HAL_PLAY_UnRegisterLUTOutputCallback(HAL_PLAY_HandleTypeDef *h
 
 /** @addtogroup PLAY_Exported_Functions_Group7
   * @{
-A set of functions allowing to retrieve peripheral state,last process errors and kernel clock frequency.
-- HAL_PLAY_GetState() : Return the PLAY handle state.
-- HAL_PLAY_GetError() : Returns errors limited to the last process.
+A set of functions allowing to retrieve peripheral state and last process errors.
+- HAL_PLAY_GetState() Return the PLAY handle state.
+- HAL_PLAY_GetError() Returns errors limited to the last process.
   */
 /**
   * @brief  Return the HAL PLAY handle state.
   * @param  hplay Pointer to a @ref HAL_PLAY_HandleTypeDef.
+  * @note   This function will return @ref HAL_PLAY_STATE_RESET in case of wrong parameter.
   * @return Current PLAY state.
-  * @note   This function will return HAL_PLAY_STATE_RESET in case of wrong parameter.
   */
 HAL_PLAY_StateTypeDef HAL_PLAY_GetState(const HAL_PLAY_HandleTypeDef *hplay)
 {
-  /* Check parameters */
   if (hplay == NULL)
   {
-    /* Return HAL_PLAY_STATE_RESET in case of wrong parameter */
     return HAL_PLAY_STATE_RESET;
   }
 
-  return hplay->global_state;
+  return hplay->State;
 }
 
 /**
   * @brief  Get the HAL PLAY last error codes.
   * @param  hplay Pointer to a @ref HAL_PLAY_HandleTypeDef.
   * @note   This function will return 0 in case of wrong parameter.
-  * @return PLAY Error Code.
+  * @return PLAY Error Code. This value is a combination of @ref PLAY_Error_Codes values.
   */
 uint32_t HAL_PLAY_GetError(const HAL_PLAY_HandleTypeDef *hplay)
 {
-  /* Check parameters */
   if (hplay == NULL)
   {
-    /* Return 0 in case of wrong parameter */
     return 0U;
   }
 
-  return hplay->last_error_codes;
+  return hplay->ErrorCode;
 }
 
 /**
@@ -3805,94 +3519,151 @@ uint32_t HAL_PLAY_GetError(const HAL_PLAY_HandleTypeDef *hplay)
 
 /** @addtogroup PLAY_Exported_Functions_Group8
   * @{
+A set of functions allowing to manage security and privileged access levels attributes:
+ - HAL_PLAY_SetSecAttr() Set the security access level attribute.
+ - HAL_PLAY_GetSecAttr() Get the security access level attribute.
+ - HAL_PLAY_SetPrivAttr() Set the privileged access level attribute.
+ - HAL_PLAY_GetPrivAttr() Get the privileged access level attribute.
   */
+
+#if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
 /**
-  * @brief  Configure the Secure & Privilege attributes.
-  * @param  hplay     Pointer to a @ref HAL_PLAY_HandleTypeDef.
-  * @param  p_config  Pointer to a @ref HAL_PLAY_AccessControlConfTypeDef structure
-  * @return HAL status.
+  * @brief  Set the security access level attribute for item(s).
+  * @param  hplay    Pointer to a @ref HAL_PLAY_HandleTypeDef.
+  * @param  item     This parameter can be one or a combination of the following values:
+  *                  @arg @ref HAL_PLAY_SEC_ITEM_CONFIG
+  *                  @arg @ref HAL_PLAY_SEC_ITEM_ALL
+  * @param  sec_attr This parameter can be one of the following values:
+  *                  @arg @ref HAL_PLAY_SEC
+  *                  @arg @ref HAL_PLAY_NSEC
+  * @retval HAL_OK    Security attribute has been set successfully.
+  * @retval HAL_ERROR Invalid parameter or wrong state.
   */
-HAL_StatusTypeDef HAL_PLAY_ConfigAttributes(HAL_PLAY_HandleTypeDef *hplay,
-                                            const HAL_PLAY_AccessControlConfTypeDef *p_config)
+HAL_StatusTypeDef HAL_PLAY_SetSecAttr(const HAL_PLAY_HandleTypeDef *hplay, uint32_t item,
+                                      HAL_PLAY_SecAttrTypeDef sec_attr)
 {
   PLAY_TypeDef *p_playx;
+  HAL_PLAY_StateTypeDef tmp_state;
 
-  /* Check parameters */
+  /* Check the parameters */
   if (hplay == NULL)
   {
-    return HAL_ERROR;
-  }
-
-  if (p_config == NULL)
-  {
-    hplay->last_error_codes |= HAL_PLAY_ERROR_INVALID_PARAM;
-
     return HAL_ERROR;
   }
 
   p_playx = PLAY_GET_INSTANCE(hplay);
 
   assert_param(IS_PLAY_ALL_INSTANCE(p_playx));
-  assert_param(IS_PLAY_TZ_ACCESS_CONTROL(p_config->SecureAccess));
-  assert_param(IS_PLAY_TZ_ACCESS_CONTROL(p_config->PrivilegeAccess));
+  assert_param(IS_PLAY_SEC_ITEM(item));
+  assert_param(IS_PLAY_ITEM_SEC_ATTR(sec_attr));
 
-  if (hplay->global_state != HAL_PLAY_STATE_RESET)
+  /* Check the peripheral state */
+  tmp_state = hplay->State;
+  if ((tmp_state != HAL_PLAY_STATE_INIT) && (tmp_state != HAL_PLAY_STATE_READY))
   {
     return HAL_ERROR;
   }
 
-  /* Set Secure access */
-  uint32_t reg_value = (uint32_t)(p_config->SecureAccess) << PLAY_SECCFGR_SEC_Pos;
-  ATOMIC_MODIFY_REG(p_playx->SECCFGR, PLAY_SECCFGR_SEC, reg_value);
+  LL_PLAY_SetSecAttr(p_playx, item, (uint32_t)sec_attr);
 
-  /* Set Privilege access */
-  reg_value = (uint32_t)(p_config->PrivilegeAccess) << PLAY_PRIVCFGR_PRIV_Pos;
-  ATOMIC_MODIFY_REG(p_playx->PRIVCFGR, PLAY_PRIVCFGR_PRIV, reg_value);
+  return HAL_OK;
+}
+#endif /* __ARM_FEATURE_CMSE */
+
+/**
+  * @brief  Get the security access level attribute of an item.
+  * @param  hplay Pointer to a @ref HAL_PLAY_HandleTypeDef.
+  * @param  item  This parameter can be one of the following values:
+  *               @arg @ref HAL_PLAY_SEC_ITEM_CONFIG
+  *               @arg @ref HAL_PLAY_SEC_ITEM_ALL
+  * @note   This function returns @ref HAL_PLAY_NSEC if the handle is NULL.
+  * @return The security access level attribute.
+  */
+HAL_PLAY_SecAttrTypeDef HAL_PLAY_GetSecAttr(const HAL_PLAY_HandleTypeDef *hplay, uint32_t item)
+{
+  const PLAY_TypeDef *p_playx;
+
+  /* Check the parameters */
+  if (hplay == NULL)
+  {
+    return HAL_PLAY_NSEC;
+  }
+
+  p_playx = PLAY_GET_INSTANCE(hplay);
+
+  assert_param(IS_PLAY_ALL_INSTANCE(p_playx));
+  assert_param(IS_PLAY_SEC_ITEM(item));
+
+  return ((HAL_PLAY_SecAttrTypeDef)LL_PLAY_GetSecAttr(p_playx, item));
+}
+
+/**
+  * @brief  Set the privileged access level attribute for item(s).
+  * @param  hplay     Pointer to a @ref HAL_PLAY_HandleTypeDef.
+  * @param  item      This parameter can be one or a combination of the following values:
+  *                   @arg @ref HAL_PLAY_PRIV_ITEM_CONFIG
+  *                   @arg @ref HAL_PLAY_PRIV_ITEM_ALL
+  * @param  priv_attr This parameter can be one of the following values:
+  *                   @arg @ref HAL_PLAY_PRIV
+  *                   @arg @ref HAL_PLAY_NPRIV
+  * @retval HAL_OK    Privileged attribute has been set successfully.
+  * @retval HAL_ERROR Invalid parameter or wrong state.
+  */
+HAL_StatusTypeDef HAL_PLAY_SetPrivAttr(const HAL_PLAY_HandleTypeDef *hplay, uint32_t item,
+                                       HAL_PLAY_PrivAttrTypeDef priv_attr)
+{
+  PLAY_TypeDef *p_playx;
+  HAL_PLAY_StateTypeDef tmp_state;
+
+  /* Check the parameters */
+  if (hplay == NULL)
+  {
+    return HAL_ERROR;
+  }
+
+  p_playx = PLAY_GET_INSTANCE(hplay);
+
+  assert_param(IS_PLAY_ALL_INSTANCE(p_playx));
+  assert_param(IS_PLAY_PRIV_ITEM(item));
+  assert_param(IS_PLAY_ITEM_PRIV_ATTR(priv_attr));
+
+  /* Check the peripheral state */
+  tmp_state = hplay->State;
+  if ((tmp_state != HAL_PLAY_STATE_INIT) && (tmp_state != HAL_PLAY_STATE_READY))
+  {
+    return HAL_ERROR;
+  }
+
+  LL_PLAY_SetPrivAttr(p_playx, item, (uint32_t)priv_attr);
 
   return HAL_OK;
 }
 
 /**
-  * @brief  Get the Secure & Privilege attributes configuration.
-  * @param  hplay    Pointer to a @ref HAL_PLAY_HandleTypeDef.
-  * @param  p_config Pointer to a @ref HAL_PLAY_AccessControlConfTypeDef structure.
-  * @return HAL status.
+  * @brief  Get the privileged access level attribute of an item.
+  * @param  hplay Pointer to a @ref HAL_PLAY_HandleTypeDef.
+  * @param  item  This parameter can be one of the following values:
+  *               @arg @ref HAL_PLAY_PRIV_ITEM_CONFIG
+  *               @arg @ref HAL_PLAY_PRIV_ITEM_ALL
+  * @note   This function returns @ref HAL_PLAY_NPRIV if the handle is NULL.
+  * @return The privileged access level attribute.
   */
-HAL_StatusTypeDef HAL_PLAY_GetConfigAttributes(HAL_PLAY_HandleTypeDef *hplay,
-                                               HAL_PLAY_AccessControlConfTypeDef *p_config)
+HAL_PLAY_PrivAttrTypeDef HAL_PLAY_GetPrivAttr(const HAL_PLAY_HandleTypeDef *hplay, uint32_t item)
 {
   const PLAY_TypeDef *p_playx;
-  uint32_t reg_value;
-  uint32_t sec_value;
-  uint32_t priv_value;
 
-  /* Check parameters */
+  /* Check the parameters */
   if (hplay == NULL)
   {
-    return HAL_ERROR;
+    return HAL_PLAY_NPRIV;
   }
+
   p_playx = PLAY_GET_INSTANCE(hplay);
 
-  if (p_config == NULL)
-  {
-    hplay->last_error_codes |= HAL_PLAY_ERROR_INVALID_PARAM;
-
-    return HAL_ERROR;
-  }
-
   assert_param(IS_PLAY_ALL_INSTANCE(p_playx));
+  assert_param(IS_PLAY_PRIV_ITEM(item));
 
-  /* Read Secure access */
-  reg_value = READ_REG(p_playx->SECCFGR);
-  sec_value = (reg_value & PLAY_SECCFGR_SEC_Msk) >> PLAY_SECCFGR_SEC_Pos;
-  p_config->SecureAccess = (HAL_PLAY_TrustZone_AccessControlTypeDef)(sec_value);
-
-  /* Read Privilege access */
-  reg_value = READ_REG(p_playx->PRIVCFGR);
-  priv_value = (reg_value & PLAY_PRIVCFGR_PRIV_Msk) >> PLAY_PRIVCFGR_PRIV_Pos;
-  p_config->PrivilegeAccess = (HAL_PLAY_TrustZone_AccessControlTypeDef)(priv_value);
-
-  return HAL_OK;
+  return ((HAL_PLAY_PrivAttrTypeDef)LL_PLAY_GetPrivAttr(p_playx, item));
 }
 
 /**

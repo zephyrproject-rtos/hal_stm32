@@ -277,6 +277,9 @@
   */
 #define PKA_RAM_SIZE 1334U
 #define PKA_RAM_ERASE_TIMEOUT 1000U
+#if (defined(RNG_HTSR0_RPERRX) || defined(RNG_HTSR1_ADERRX))
+#define PKA_RNG_TIMEOUT_VALUE           2U
+#endif /* RNG_HTSR0_RPERRX || RNG_HTSR1_ADERRX */
 
 /* Private macro -------------------------------------------------------------*/
 #define __PKA_RAM_PARAM_END(TAB,INDEX)                do{                                   \
@@ -324,6 +327,9 @@ void PKA_ECCCompleteAddition_Set(PKA_HandleTypeDef *hpka, PKA_ECCCompleteAdditio
 HAL_StatusTypeDef PKA_WaitOnFlagUntilTimeout(PKA_HandleTypeDef *hpka, uint32_t Flag, FlagStatus Status,
                                              uint32_t Tickstart, uint32_t Timeout);
 uint32_t PKA_Result_GetSize(const PKA_HandleTypeDef *hpka, uint32_t Startindex, uint32_t Maxsize);
+#if (defined(RNG_HTSR0_RPERRX) || defined(RNG_HTSR1_ADERRX))
+HAL_StatusTypeDef PKA_RNG_ResilientRecoverSeedError(void);
+#endif /* RNG_HTSR0_RPERRX || RNG_HTSR1_ADERRX */
 /**
   * @}
   */
@@ -393,6 +399,17 @@ HAL_StatusTypeDef HAL_PKA_Init(PKA_HandleTypeDef *hpka)
       HAL_PKA_MspInit(hpka);
 #endif /* USE_HAL_PKA_REGISTER_CALLBACKS */
     }
+#if (defined(RNG_HTSR0_RPERRX) || defined(RNG_HTSR1_ADERRX))
+    /*Check if there is an RNG seed error */
+    if (LL_RNG_IsActiveFlag_SECS(RNG) != 0U)
+    {
+      /* Attempt to recover from the seed error */
+      if (PKA_RNG_ResilientRecoverSeedError() != HAL_OK)
+      {
+        return HAL_ERROR;
+      }
+    }
+#endif /* RNG_HTSR0_RPERRX || RNG_HTSR1_ADERRX */
 
     /* Set the state to busy */
     hpka->State = HAL_PKA_STATE_BUSY;
@@ -526,6 +543,18 @@ __weak void HAL_PKA_MspDeInit(PKA_HandleTypeDef *hpka)
   /* Release PKA from reset state */
   __HAL_RCC_PKA_RELEASE_RESET();
 
+#if (defined(RNG_HTSR0_RPERRX) || defined(RNG_HTSR1_ADERRX))
+  /*Check if there is an RNG seed error */
+  if (LL_RNG_IsActiveFlag_SECS(RNG) != 0U)
+  {
+    /* Attempt to recover from the seed error */
+    if (PKA_RNG_ResilientRecoverSeedError() != HAL_OK)
+    {
+      hpka->State = HAL_PKA_STATE_ERROR;
+    }
+  }
+
+#endif /* RNG_HTSR0_RPERRX || RNG_HTSR1_ADERRX */
   /* Wait the INITOK flag Setting */
   while (hpka->Instance->CR != PKA_CR_EN)
   {
@@ -2389,20 +2418,20 @@ void PKA_ModExpFastMode_Set(PKA_HandleTypeDef *hpka, PKA_ModExpFastModeInTypeDef
 
   /* Move the input parameters pOp1 to PKA RAM */
   PKA_Memcpy_u8_to_u32(&hpka->Instance->RAM[PKA_MODULAR_EXP_IN_EXPONENT_BASE], in->pOp1, in->OpSize);
-  __PKA_RAM_PARAM_END(hpka->Instance->RAM, PKA_MODULAR_EXP_IN_EXPONENT_BASE + (in->OpSize / 4UL));
+  __PKA_RAM_PARAM_END(hpka->Instance->RAM, PKA_MODULAR_EXP_IN_EXPONENT_BASE + ((in->OpSize + 3UL) / 4UL));
 
   /* Move the exponent to PKA RAM */
   PKA_Memcpy_u8_to_u32(&hpka->Instance->RAM[PKA_MODULAR_EXP_IN_EXPONENT], in->pExp, in->expSize);
-  __PKA_RAM_PARAM_END(hpka->Instance->RAM, PKA_MODULAR_EXP_IN_EXPONENT + (in->expSize / 4UL));
+  __PKA_RAM_PARAM_END(hpka->Instance->RAM, PKA_MODULAR_EXP_IN_EXPONENT + ((in->expSize + 3UL) / 4UL));
 
   /* Move the modulus to PKA RAM */
   PKA_Memcpy_u8_to_u32(&hpka->Instance->RAM[PKA_MODULAR_EXP_IN_MODULUS], in->pMod, in->OpSize);
-  __PKA_RAM_PARAM_END(hpka->Instance->RAM, PKA_MODULAR_EXP_IN_MODULUS + (in->OpSize / 4UL));
+  __PKA_RAM_PARAM_END(hpka->Instance->RAM, PKA_MODULAR_EXP_IN_MODULUS + ((in->OpSize + 3UL) / 4UL));
 
   /* Move the Montgomery parameter to PKA RAM */
   PKA_Memcpy_u32_to_u32(&hpka->Instance->RAM[PKA_MODULAR_EXP_IN_MONTGOMERY_PARAM], in->pMontgomeryParam,
                         in->OpSize / 4UL);
-  __PKA_RAM_PARAM_END(hpka->Instance->RAM, PKA_MODULAR_EXP_IN_MONTGOMERY_PARAM + (in->OpSize / 4UL));
+  __PKA_RAM_PARAM_END(hpka->Instance->RAM, PKA_MODULAR_EXP_IN_MONTGOMERY_PARAM + ((in->OpSize + 3UL) / 4UL));
 }
 
 /**
@@ -2420,19 +2449,19 @@ void PKA_ModExpProtectMode_Set(PKA_HandleTypeDef *hpka, PKA_ModExpProtectModeInT
 
   /* Move the input parameters pOp1 to PKA RAM */
   PKA_Memcpy_u8_to_u32(&hpka->Instance->RAM[PKA_MODULAR_EXP_PROTECT_IN_EXPONENT_BASE], in->pOp1, in->OpSize);
-  __PKA_RAM_PARAM_END(hpka->Instance->RAM, PKA_MODULAR_EXP_PROTECT_IN_EXPONENT_BASE + (in->OpSize / 4UL));
+  __PKA_RAM_PARAM_END(hpka->Instance->RAM, PKA_MODULAR_EXP_PROTECT_IN_EXPONENT_BASE + ((in->OpSize + 3UL) / 4UL));
 
   /* Move the exponent to PKA RAM */
   PKA_Memcpy_u8_to_u32(&hpka->Instance->RAM[PKA_MODULAR_EXP_PROTECT_IN_EXPONENT], in->pExp, in->expSize);
-  __PKA_RAM_PARAM_END(hpka->Instance->RAM, PKA_MODULAR_EXP_PROTECT_IN_EXPONENT + (in->expSize / 4UL));
+  __PKA_RAM_PARAM_END(hpka->Instance->RAM, PKA_MODULAR_EXP_PROTECT_IN_EXPONENT + ((in->expSize + 3UL) / 4UL));
 
   /* Move the modulus to PKA RAM */
   PKA_Memcpy_u8_to_u32(&hpka->Instance->RAM[PKA_MODULAR_EXP_PROTECT_IN_MODULUS], in->pMod, in->OpSize);
-  __PKA_RAM_PARAM_END(hpka->Instance->RAM, PKA_MODULAR_EXP_PROTECT_IN_MODULUS + (in->OpSize / 4UL));
+  __PKA_RAM_PARAM_END(hpka->Instance->RAM, PKA_MODULAR_EXP_PROTECT_IN_MODULUS + ((in->OpSize + 3UL) / 4UL));
 
   /* Move Phi value to PKA RAM */
   PKA_Memcpy_u8_to_u32(&hpka->Instance->RAM[PKA_MODULAR_EXP_PROTECT_IN_PHI], in->pPhi, in->OpSize);
-  __PKA_RAM_PARAM_END(hpka->Instance->RAM, PKA_MODULAR_EXP_PROTECT_IN_PHI + (in->OpSize / 4UL));
+  __PKA_RAM_PARAM_END(hpka->Instance->RAM, PKA_MODULAR_EXP_PROTECT_IN_PHI + ((in->OpSize + 3UL) / 4UL));
 }
 
 /**
@@ -3066,6 +3095,179 @@ uint32_t PKA_Result_GetSize(const PKA_HandleTypeDef *hpka, uint32_t Startindex, 
 
   return size;
 }
+#if (defined(RNG_HTSR0_RPERRX) || defined(RNG_HTSR1_ADERRX))
+/**
+  * @brief  RNG sequence to resilient recover from a seed error
+  * @retval HAL status
+  */
+HAL_StatusTypeDef PKA_RNG_ResilientRecoverSeedError(void)
+{
+  uint32_t timeout;
+  uint32_t htsr_temp = 0U;
+  uint32_t htsr_previous_temp = 0U;
+  uint32_t htsr_count = 0U;
+  uint32_t nsmr_temp = 0U;
+  uint32_t tickstart1 = 0U;
+  uint32_t tickstart2 = 0U;
+  uint32_t tickstart3 = 0U;
+  uint32_t oscillators_count = 0U;
+  uint32_t config_b_fewer_than_6_osc_count = 0U;
+  uint8_t count = 0U;
+
+  /* timeout here is an emperic value */
+  timeout = (1UL + ((1UL << (READ_BIT(RNG->CR, RNG_CR_CLKDIV) >> 16UL)) * PKA_RNG_TIMEOUT_VALUE / 8UL));
+  LL_RNG_Enable(RNG);
+
+  tickstart1 = HAL_GetTick();
+
+  /* Check if seed error current status indicates no error and auto-reset succeeded */
+  if (LL_RNG_IsActiveFlag_SECS(RNG) == 0U)
+  {
+    /* Clear SEIS flag when automatic reset is activated */
+    LL_RNG_ClearFlag_SEIS(RNG);
+  }
+
+  else  /* Sequence to fully recover from a seed error*/
+  {
+    if (LL_RNG_IsConfigLocked(RNG) == 0U)
+    {
+      do
+      {
+        if (LL_RNG_IsActiveFlag_SECS(RNG) == 0U)
+        {
+          break;
+        }
+        /* Read oscillator status registers combined */
+        htsr_temp = LL_RNG_GetHealthTestStatus(RNG, 0U);
+        htsr_temp |= LL_RNG_GetHealthTestStatus(RNG, 1U);
+        if (htsr_temp > 0U)
+        {
+          /* If any oscillator status bits overlap with previous status, increment counter */
+          if ((htsr_temp & htsr_previous_temp) != 0U)
+          {
+            htsr_count++;
+          }
+
+          if (htsr_count > 3U)
+          {
+            /* if the same repetitive or adaptative error is detected 3 times */
+            nsmr_temp = LL_RNG_GetNoiseSourceMask(RNG);
+
+            /* deactivate the same osc in each triple oscillator (Mask oscillators with the seed error by
+            clearing bits shifted right by 1) */
+            nsmr_temp = nsmr_temp & ~(htsr_temp >> 1U);
+
+            /* Count the number of active oscillators in nsmr */
+            oscillators_count = 0U;
+            for (count = 0U; count < 9U; count++)
+            {
+              if (((nsmr_temp >> count) & 0x1U) != 0U)
+              {
+                /* increment count1 for each 1 in nsmr */
+                oscillators_count++;
+              }
+            }
+
+            if (oscillators_count < 6U)
+            {
+              /* If fewer than 6 oscillators remain active, unmask all oscillators --> Reset masking */
+              nsmr_temp = LL_RNG_GetOscNoiseSrc(RNG, LL_RNG_NOISE_SRC_1 | LL_RNG_NOISE_SRC_2 \
+                                                | LL_RNG_NOISE_SRC_3);
+              htsr_previous_temp = 0;
+              htsr_count = 0U;
+              if ((RNG->CR  & RNG_CR_CLKDIV_Msk) < ((uint32_t)RNG_CAND_NIST_CR_VALUE & RNG_CR_CLKDIV_Msk))
+              {
+                config_b_fewer_than_6_osc_count++;
+              }
+            }
+
+            if (config_b_fewer_than_6_osc_count > 2U)
+            {
+              /* Reset RNG condition */
+              WRITE_REG(RNG->CR, (RNG_CR_CONDRST_Msk | (uint32_t)RNG_CAND_NIST_CR_VALUE));
+
+              /* Update mask register with new oscillator mask */
+              LL_RNG_SetNoiseSourceMask(RNG, nsmr_temp);
+
+              /* Clear condition reset bit to resume operation */
+              LL_RNG_DisableCondReset(RNG);
+            }
+
+            else
+            {
+              /* Reset RNG condition */
+              WRITE_REG(RNG->CR, (RNG->CR & ~RNG_CR_RNGEN_Msk) | RNG_CR_CONDRST_Msk);
+
+              /* Update mask register with new oscillator mask */
+              LL_RNG_SetNoiseSourceMask(RNG, nsmr_temp);
+
+              /* Clear condition reset bit to resume operation */
+              LL_RNG_DisableCondReset(RNG);
+            }
+          }
+
+          else
+          {
+            /* Briefly toggle conditional reset to recover RNG */
+            WRITE_REG(RNG->CR, (RNG->CR & ~RNG_CR_RNGEN_Msk) | RNG_CR_CONDRST_Msk);
+
+            /* unmask all oscillators to find another working condition */
+            LL_RNG_SetNoiseSourceMask(RNG, LL_RNG_GetOscNoiseSrc(RNG, LL_RNG_OSC_1\
+                                                                 | LL_RNG_OSC_2 | LL_RNG_OSC_3));
+            LL_RNG_DisableCondReset(RNG);
+          }
+
+          /* Wait until RNG is not busy */
+          tickstart2 = HAL_GetTick();
+          do
+          {
+            if ((HAL_GetTick() - tickstart2) > PKA_RNG_TIMEOUT_VALUE)
+            {
+              /* New check to avoid false timeout detection in case of preemption */
+              LL_RNG_Disable(RNG);
+              return HAL_ERROR;
+            }
+          } while (HAL_IS_BIT_SET(RNG->SR, RNG_SR_BUSY));
+
+          /* No timeout --> Enable RNG */
+          LL_RNG_Enable(RNG);
+          tickstart3 = HAL_GetTick();
+          do
+          {
+            if (LL_RNG_IsActiveFlag_DRDY(RNG) != 0UL)
+            {
+              break;
+            }
+            if ((HAL_GetTick() - tickstart3) > timeout)
+            {
+              /* New check to avoid false timeout detection in case of preemption */
+              if (LL_RNG_IsActiveFlag_DRDY(RNG) == 0UL)
+              {
+                if (LL_RNG_IsActiveFlag_SECS(RNG) == 0UL)
+                {
+                  LL_RNG_Disable(RNG);
+                  return HAL_ERROR;
+                }
+              }
+            }
+          } while (LL_RNG_IsActiveFlag_SECS(RNG) == 0UL);
+
+          /* Accumulate seed error status bits */
+          htsr_previous_temp = htsr_previous_temp | htsr_temp;
+        }
+      } while ((HAL_GetTick() - tickstart1) <= timeout);
+    }
+  }
+
+  /*Check if seed error current status (SECS)is set */
+  if (LL_RNG_IsActiveFlag_SECS(RNG) != 0U)
+  {
+    return HAL_ERROR;
+  }
+
+  return HAL_OK;
+}
+#endif /* RNG_HTSR0_RPERRX || RNG_HTSR1_ADERRX */
 
 /**
   * @}

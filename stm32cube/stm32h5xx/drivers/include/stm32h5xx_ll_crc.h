@@ -58,7 +58,46 @@ extern "C" {
 /**
   * @}
   */
+#if defined(CRC_CR_RTYPE_IN)
 
+/** @defgroup CRC_LL_EC_INPUT_REVERSE_TYPE Input Reverse Type
+  * @{
+  */
+#define LL_CRC_INDATA_REVERSETYPE_BIT             0x00000000U               /*!< Input Data reverse type at bit level granularity */
+#define LL_CRC_INDATA_REVERSETYPE_BYTE_HALFWORD   CRC_CR_RTYPE_IN           /*!< Input Data reverse type at byte or half-word level granularity */
+/**
+  * @}
+  */
+#endif /* CRC_CR_RTYPE_IN */
+#if defined(CRC_CR_RTYPE_OUT)
+
+/** @defgroup CRC_LL_EC_OUTPUT_REVERSE_TYPE Output Reverse Type
+  * @{
+  */
+#define LL_CRC_OUTDATA_REVERSETYPE_BIT            0x00000000U              /*!< Output Data reverse type at bit level granularity */
+#define LL_CRC_OUTDATA_REVERSETYPE_BYTE_HALFWORD  CRC_CR_RTYPE_OUT         /*!< Output Data reverse type at byte or half-word level granularity */
+/**
+  * @}
+  */
+#endif /* CRC_CR_RTYPE_OUT */
+
+#if defined(CRC_CR_RTYPE_IN)
+/** @defgroup CRC_LL_EC_INDATA_REVERSE Input Data Reverse
+  * @{
+  */
+#define LL_CRC_INDATA_REVERSE_NONE             0x00000000U                          /*!< Input Data bit order not affected */
+#define LL_CRC_INDATA_REVERSE_BIT_BYBYTE       CRC_CR_REV_IN_0                      /*!< Input Data bit reversal done by byte */
+#define LL_CRC_INDATA_REVERSE_BYTE             LL_CRC_INDATA_REVERSE_BIT_BYBYTE     /*!< Definition for compatibility with legacy code */
+#define LL_CRC_INDATA_REVERSE_HALFWORD_BYWORD  (CRC_CR_RTYPE_IN | CRC_CR_REV_IN_0)  /*!< Input Data half-word reversal done by word */
+#define LL_CRC_INDATA_REVERSE_BIT_BYHALFWORD   CRC_CR_REV_IN_1                      /*!< Input Data bit reversal done by half-word */
+#define LL_CRC_INDATA_REVERSE_HALFWORD         LL_CRC_INDATA_REVERSE_BIT_BYHALFWORD /*!< Definition for compatibility with legacy code */
+#define LL_CRC_INDATA_REVERSE_BYTE_BYWORD      (CRC_CR_RTYPE_IN | CRC_CR_REV_IN_1)  /*!< Input Data byte reversal done by word */
+#define LL_CRC_INDATA_REVERSE_BIT_BYWORD       (CRC_CR_REV_IN_1 | CRC_CR_REV_IN_0)  /*!< Input Data bit reversal done by word */
+#define LL_CRC_INDATA_REVERSE_WORD             LL_CRC_INDATA_REVERSE_BIT_BYWORD     /*!< Definition for compatibility with legacy code */
+/**
+  * @}
+  */
+#else
 /** @defgroup CRC_LL_EC_INDATA_REVERSE Input Data Reverse
   * @{
   */
@@ -69,7 +108,20 @@ extern "C" {
 /**
   * @}
   */
+#endif /* CRC_CR_RTYPE_IN */
 
+#if defined(CRC_CR_RTYPE_OUT)
+/** @defgroup CRC_LL_EC_OUTDATA_REVERSE Output Data Reverse
+  * @{
+  */
+#define LL_CRC_OUTDATA_REVERSE_NONE        0x00000000U                           /*!< Output Data bit order not affected */
+#define LL_CRC_OUTDATA_REVERSE_BIT         CRC_CR_REV_OUT_0                      /*!< Output Data bit reversal done by bit */
+#define LL_CRC_OUTDATA_REVERSE_HALFWORD    (CRC_CR_RTYPE_OUT | CRC_CR_REV_OUT_0) /*!< Output Data half-word reversal done by word */
+#define LL_CRC_OUTDATA_REVERSE_BYTE        (CRC_CR_RTYPE_OUT | CRC_CR_REV_OUT_1) /*!< Output Data byte reversal done by word */
+/**
+  * @}
+  */
+#else
 /** @defgroup CRC_LL_EC_OUTDATA_REVERSE Output Data Reverse
   * @{
   */
@@ -78,6 +130,7 @@ extern "C" {
 /**
   * @}
   */
+#endif /* CRC_CR_RTYPE_OUT */
 
 /** @defgroup CRC_LL_EC_Default_Polynomial_Value    Default CRC generating polynomial value
   * @brief    Normal representation of this polynomial value is
@@ -189,6 +242,127 @@ __STATIC_INLINE uint32_t LL_CRC_GetPolynomialSize(const CRC_TypeDef *CRCx)
   return (uint32_t)(READ_BIT(CRCx->CR, CRC_CR_POLYSIZE));
 }
 
+#if defined(CRC_CR_RTYPE_OUT)
+/**
+  * @brief  Configure the reversal type of the input data
+  * @rmtoll CR           RTYPE_IN        LL_CRC_SetInputDataReverseType
+  * @param  CRCx CRC Instance
+  * @param  ReverseType This parameter can be one of the following values:
+  *         @arg @ref LL_CRC_INDATA_REVERSETYPE_BIT
+  *         @arg @ref LL_CRC_INDATA_REVERSETYPE_BYTE_HALFWORD
+  * @retval None
+  */
+__STATIC_INLINE void LL_CRC_SetInputDataReverseType(CRC_TypeDef *CRCx, uint32_t ReverseType)
+{
+  MODIFY_REG(CRCx->CR, CRC_CR_RTYPE_IN, ReverseType);
+}
+
+/**
+  * @brief  Return input data type of reversal
+  * @rmtoll CR           RTYPE_IN        LL_CRC_GetInputDataReverseType
+  * @param  CRCx CRC Instance
+  * @retval Returned value can be one of the following values:
+  *         @arg @ref LL_CRC_INDATA_REVERSETYPE_BIT
+  *         @arg @ref LL_CRC_INDATA_REVERSETYPE_BYTE_HALFWORD
+  */
+__STATIC_INLINE uint32_t LL_CRC_GetInputDataReverseType(CRC_TypeDef *CRCx)
+{
+  return (uint32_t)(READ_BIT(CRCx->CR, CRC_CR_RTYPE_IN));
+}
+
+/**
+  * @brief  Configure the reversal type of the output data
+  * @rmtoll CR           RTYPE_OUT        LL_CRC_SetOutputDataReverseType
+  * @param  CRCx CRC Instance
+  * @param  ReverseType This parameter can be one of the following values:
+  *         @arg @ref LL_CRC_OUTDATA_REVERSETYPE_BIT
+  *         @arg @ref LL_CRC_OUTDATA_REVERSETYPE_BYTE_HALFWORD
+  * @retval None
+  */
+__STATIC_INLINE void LL_CRC_SetOutputDataReverseType(CRC_TypeDef *CRCx, uint32_t ReverseType)
+{
+  MODIFY_REG(CRCx->CR, CRC_CR_RTYPE_OUT, ReverseType);
+}
+
+/**
+  * @brief  Return output data type of reversal
+  * @rmtoll CR           RTYPE_OUT        LL_CRC_GetOutputDataReverseType
+  * @param  CRCx CRC Instance
+  * @retval Returned value can be one of the following values:
+  *         @arg @ref LL_CRC_OUTDATA_REVERSETYPE_BIT
+  *         @arg @ref LL_CRC_OUTDATA_REVERSETYPE_BYTE_HALFWORD
+  */
+__STATIC_INLINE uint32_t LL_CRC_GetOutputDataReverseType(CRC_TypeDef *CRCx)
+{
+  return (uint32_t)(READ_BIT(CRCx->CR, CRC_CR_RTYPE_OUT));
+}
+
+/**
+  * @brief  Configure the reversal of the bit order of the input data
+  * @rmtoll CR           REV_IN        LL_CRC_SetInputDataReverseMode
+  * @param  CRCx CRC Instance
+  * @param  ReverseMode This parameter can be one of the following values:
+  *         @arg @ref LL_CRC_INDATA_REVERSE_NONE
+  *         @arg @ref LL_CRC_INDATA_REVERSE_BIT_BYBYTE
+  *         @arg @ref LL_CRC_INDATA_REVERSE_HALFWORD_BYWORD
+  *         @arg @ref LL_CRC_INDATA_REVERSE_BIT_BYHALFWORD
+  *         @arg @ref LL_CRC_INDATA_REVERSE_BYTE_BYWORD
+  *         @arg @ref LL_CRC_INDATA_REVERSE_BIT_BYWORD
+  * @retval None
+  */
+__STATIC_INLINE void LL_CRC_SetInputDataReverseMode(CRC_TypeDef *CRCx, uint32_t ReverseMode)
+{
+  MODIFY_REG(CRCx->CR, (CRC_CR_RTYPE_IN | CRC_CR_REV_IN), ReverseMode);
+}
+
+/**
+  * @brief  Return mode of reversal for input data bit order
+  * @rmtoll CR           REV_IN        LL_CRC_GetInputDataReverseMode
+  * @param  CRCx CRC Instance
+  * @retval Returned value can be one of the following values:
+  *         @arg @ref LL_CRC_INDATA_REVERSE_NONE
+  *         @arg @ref LL_CRC_INDATA_REVERSE_BIT_BYBYTE
+  *         @arg @ref LL_CRC_INDATA_REVERSE_HALFWORD_BYWORD
+  *         @arg @ref LL_CRC_INDATA_REVERSE_BIT_BYHALFWORD
+  *         @arg @ref LL_CRC_INDATA_REVERSE_BYTE_BYWORD
+  *         @arg @ref LL_CRC_INDATA_REVERSE_BIT_BYWORD
+  */
+__STATIC_INLINE uint32_t LL_CRC_GetInputDataReverseMode(const CRC_TypeDef *CRCx)
+{
+  return (uint32_t)(READ_BIT(CRCx->CR, (CRC_CR_RTYPE_IN | CRC_CR_REV_IN)));
+}
+
+/**
+  * @brief  Configure the reversal of the bit order of the Output data
+  * @rmtoll CR           REV_OUT       LL_CRC_SetOutputDataReverseMode
+  * @param  CRCx CRC Instance
+  * @param  ReverseMode This parameter can be one of the following values:
+  *         @arg @ref LL_CRC_OUTDATA_REVERSE_NONE
+  *         @arg @ref LL_CRC_OUTDATA_REVERSE_BIT
+  *         @arg @ref LL_CRC_OUTDATA_REVERSE_HALFWORD
+  *         @arg @ref LL_CRC_OUTDATA_REVERSE_BYTE
+  * @retval None
+  */
+__STATIC_INLINE void LL_CRC_SetOutputDataReverseMode(CRC_TypeDef *CRCx, uint32_t ReverseMode)
+{
+  MODIFY_REG(CRCx->CR, (CRC_CR_RTYPE_OUT | CRC_CR_REV_OUT), ReverseMode);
+}
+
+/**
+  * @brief Return mode of reversal of the bit order of the Output data
+  * @rmtoll CR           REV_OUT       LL_CRC_GetOutputDataReverseMode
+  * @param  CRCx CRC Instance
+  * @retval Returned value can be one of the following values:
+  *         @arg @ref LL_CRC_OUTDATA_REVERSE_NONE
+  *         @arg @ref LL_CRC_OUTDATA_REVERSE_BIT
+  *         @arg @ref LL_CRC_OUTDATA_REVERSE_HALFWORD
+  *         @arg @ref LL_CRC_OUTDATA_REVERSE_BYTE
+  */
+__STATIC_INLINE uint32_t LL_CRC_GetOutputDataReverseMode(const CRC_TypeDef *CRCx)
+{
+  return (uint32_t)(READ_BIT(CRCx->CR, (CRC_CR_RTYPE_OUT | CRC_CR_REV_OUT)));
+}
+#else
 /**
   * @brief  Configure the reversal of the bit order of the input data
   * @rmtoll CR           REV_IN        LL_CRC_SetInputDataReverseMode
@@ -246,6 +420,7 @@ __STATIC_INLINE uint32_t LL_CRC_GetOutputDataReverseMode(const CRC_TypeDef *CRCx
 {
   return (uint32_t)(READ_BIT(CRCx->CR, CRC_CR_REV_OUT));
 }
+#endif /* CRC_CR_RTYPE_OUT */
 
 /**
   * @brief  Initialize the Programmable initial CRC value.

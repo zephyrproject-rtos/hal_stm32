@@ -624,7 +624,7 @@ __STATIC_INLINE uint32_t LL_APB_IsDisabledClock(uint32_t APBx)
   *         @arg @ref LL_AHB1_GRP1_PERIPH_FLASH
   *         @arg @ref LL_AHB1_GRP1_PERIPH_CRC
   *         @arg @ref LL_AHB1_GRP1_PERIPH_CORDIC (*)
-  *         @arg @ref LL_AHB1_GRP1_PERIPH_FMAC
+  *         @arg @ref LL_AHB1_GRP1_PERIPH_FMAC (*)
   *         @arg @ref LL_AHB1_GRP1_PERIPH_RAMCFG
   *         @arg @ref LL_AHB1_GRP1_PERIPH_ETH (*)
   *         @arg @ref LL_AHB1_GRP1_PERIPH_ETHTX (*)
@@ -633,7 +633,7 @@ __STATIC_INLINE uint32_t LL_APB_IsDisabledClock(uint32_t APBx)
   *         @arg @ref LL_AHB1_GRP1_PERIPH_BKPSRAM
   *         @arg @ref LL_AHB1_GRP1_PERIPH_DCACHE1 (*)
   *         @arg @ref LL_AHB1_GRP1_PERIPH_SRAM1
-  *         @arg @ref LL_AHB1_GRP1_PERIPH_MDF1
+  *         @arg @ref LL_AHB1_GRP1_PERIPH_MDF1 (*)
   *
   *  (*)  : Not available for all stm32h5xxxx family lines.
   * @retval None
@@ -681,7 +681,7 @@ __STATIC_INLINE void LL_AHB1_GRP1_EnableClock(uint32_t Periphs)
   *         @arg @ref LL_AHB1_GRP1_PERIPH_BKPSRAM
   *         @arg @ref LL_AHB1_GRP1_PERIPH_DCACHE1 (*)
   *         @arg @ref LL_AHB1_GRP1_PERIPH_SRAM1
-  *         @arg @ref LL_AHB1_GRP1_PERIPH_MDF1
+  *         @arg @ref LL_AHB1_GRP1_PERIPH_MDF1 (*)
   *
   *  (*)  : Not available for all stm32h5xxxx family lines.
   * @retval State of Periphs (1 or 0).
@@ -725,7 +725,7 @@ __STATIC_INLINE uint32_t LL_AHB1_GRP1_IsEnabledClock(uint32_t Periphs)
   *         @arg @ref LL_AHB1_GRP1_PERIPH_BKPSRAM
   *         @arg @ref LL_AHB1_GRP1_PERIPH_DCACHE1 (*)
   *         @arg @ref LL_AHB1_GRP1_PERIPH_SRAM1
-  *         @arg @ref LL_AHB1_GRP1_PERIPH_MDF1
+  *         @arg @ref LL_AHB1_GRP1_PERIPH_MDF1 (*)
   *
   *  (*)  : Not available for all stm32h5xxxx family lines.
   * @retval None
@@ -785,7 +785,7 @@ __STATIC_INLINE void LL_AHB1_GRP1_ForceReset(uint32_t Periphs)
   *         @arg @ref LL_AHB1_GRP1_PERIPH_RAMCFG
   *         @arg @ref LL_AHB1_GRP1_PERIPH_ETH (*)
   *         @arg @ref LL_AHB1_GRP1_PERIPH_GTZC1
-  *         @arg @ref LL_AHB1_GRP1_PERIPH_MDF1
+  *         @arg @ref LL_AHB1_GRP1_PERIPH_MDF1 (*)
   *
   *  (*)  : Not available for all stm32h5xxxx family lines.
   * @retval None
@@ -877,7 +877,7 @@ __STATIC_INLINE void LL_AHB1_GRP1_EnableClockSleep(uint32_t Periphs)
   *         @arg @ref LL_AHB1_GRP1_PERIPH_BKPSRAM
   *         @arg @ref LL_AHB1_GRP1_PERIPH_DCACHE1 (*)
   *         @arg @ref LL_AHB1_GRP1_PERIPH_SRAM1
-  *         @arg @ref LL_AHB1_GRP1_PERIPH_MDF1
+  *         @arg @ref LL_AHB1_GRP1_PERIPH_MDF1 (*)
   *
   *  (*)  : Not available for all stm32h5xxxx family lines.
   * @retval State of Periphs (1 or 0).
@@ -921,7 +921,7 @@ __STATIC_INLINE uint32_t LL_AHB1_GRP1_IsEnabledClockSleep(uint32_t Periphs)
   *         @arg @ref LL_AHB1_GRP1_PERIPH_BKPSRAM
   *         @arg @ref LL_AHB1_GRP1_PERIPH_DCACHE1 (*)
   *         @arg @ref LL_AHB1_GRP1_PERIPH_SRAM1
-  *         @arg @ref LL_AHB1_GRP1_PERIPH_MDF1
+  *         @arg @ref LL_AHB1_GRP1_PERIPH_MDF1 (*)
   *
   *  (*)  : Not available for all stm32h5xxxx family lines.
   * @retval None
@@ -1417,7 +1417,7 @@ __STATIC_INLINE void LL_AHB2_GRP1_DisableClockSleep(uint32_t Periphs)
   *         @arg @ref LL_AHB4_GRP1_PERIPH_SDMMC2 (*)
   *         @arg @ref LL_AHB4_GRP1_PERIPH_FMC
   *         @arg @ref LL_AHB4_GRP1_PERIPH_OSPI1
-  *         @arg @ref LL_AHB4_GRP1_PERIPH_OSPI2
+  *         @arg @ref LL_AHB4_GRP1_PERIPH_OSPI2 (*)
   *
   *  (*)  : Not available for all stm32h5xxxx family lines.
   * @retval None
@@ -1443,11 +1443,13 @@ __STATIC_INLINE void LL_AHB4_GRP1_EnableClock(uint32_t Periphs)
   *         @arg @ref LL_AHB4_GRP1_PERIPH_ALL
   *         @arg @ref LL_AHB4_GRP1_PERIPH_OTFDEC
   *         @arg @ref LL_AHB4_GRP1_PERIPH_SDMMC1
-  *         @arg @ref LL_AHB4_GRP1_PERIPH_SDMMC2
+  *         @arg @ref LL_AHB4_GRP1_PERIPH_SDMMC2 (*)
   *         @arg @ref LL_AHB4_GRP1_PERIPH_FMC
   *         @arg @ref LL_AHB4_GRP1_PERIPH_OSPI1
-  *         @arg @ref LL_AHB4_GRP1_PERIPH_OSPI2
+  *         @arg @ref LL_AHB4_GRP1_PERIPH_OSPI2 (*)
   * @retval State of Periphs (1 or 0).
+  *
+  * (*)  : Not available for all stm32h5xxxx family lines.
   */
 __STATIC_INLINE uint32_t LL_AHB4_GRP1_IsEnabledClock(uint32_t Periphs)
 {
@@ -1466,11 +1468,13 @@ __STATIC_INLINE uint32_t LL_AHB4_GRP1_IsEnabledClock(uint32_t Periphs)
   *         @arg @ref LL_AHB4_GRP1_PERIPH_ALL
   *         @arg @ref LL_AHB4_GRP1_PERIPH_OTFDEC
   *         @arg @ref LL_AHB4_GRP1_PERIPH_SDMMC1
-  *         @arg @ref LL_AHB4_GRP1_PERIPH_SDMMC2
+  *         @arg @ref LL_AHB4_GRP1_PERIPH_SDMMC2 (*)
   *         @arg @ref LL_AHB4_GRP1_PERIPH_FMC
   *         @arg @ref LL_AHB4_GRP1_PERIPH_OSPI1
-  *         @arg @ref LL_AHB4_GRP1_PERIPH_OSPI2
+  *         @arg @ref LL_AHB4_GRP1_PERIPH_OSPI2 (*)
   * @retval None
+  *
+  * (*)  : Not available for all stm32h5xxxx family lines.
   */
 __STATIC_INLINE void LL_AHB4_GRP1_DisableClock(uint32_t Periphs)
 {
@@ -1489,10 +1493,12 @@ __STATIC_INLINE void LL_AHB4_GRP1_DisableClock(uint32_t Periphs)
   *         @arg @ref LL_AHB4_GRP1_PERIPH_ALL
   *         @arg @ref LL_AHB4_GRP1_PERIPH_OTFDEC
   *         @arg @ref LL_AHB4_GRP1_PERIPH_SDMMC1
-  *         @arg @ref LL_AHB4_GRP1_PERIPH_SDMMC2
+  *         @arg @ref LL_AHB4_GRP1_PERIPH_SDMMC2 (*)
   *         @arg @ref LL_AHB4_GRP1_PERIPH_FMC
-  *         @arg @ref LL_AHB4_GRP1_PERIPH_OSPI2
+  *         @arg @ref LL_AHB4_GRP1_PERIPH_OSPI2 (*)
   * @retval None
+  *
+  * (*)  : Not available for all stm32h5xxxx family lines.
   */
 __STATIC_INLINE void LL_AHB4_GRP1_ForceReset(uint32_t Periphs)
 {
@@ -1511,11 +1517,13 @@ __STATIC_INLINE void LL_AHB4_GRP1_ForceReset(uint32_t Periphs)
   *         @arg @ref LL_AHB4_GRP1_PERIPH_ALL
   *         @arg @ref LL_AHB4_GRP1_PERIPH_OTFDEC
   *         @arg @ref LL_AHB4_GRP1_PERIPH_SDMMC1
-  *         @arg @ref LL_AHB4_GRP1_PERIPH_SDMMC2
+  *         @arg @ref LL_AHB4_GRP1_PERIPH_SDMMC2 (*)
   *         @arg @ref LL_AHB4_GRP1_PERIPH_FMC
   *         @arg @ref LL_AHB4_GRP1_PERIPH_OSPI1
-  *         @arg @ref LL_AHB4_GRP1_PERIPH_OSPI2
+  *         @arg @ref LL_AHB4_GRP1_PERIPH_OSPI2 (*)
   * @retval None
+  *
+  * (*)  : Not available for all stm32h5xxxx family lines.
   */
 __STATIC_INLINE void LL_AHB4_GRP1_ReleaseReset(uint32_t Periphs)
 {
@@ -1534,11 +1542,13 @@ __STATIC_INLINE void LL_AHB4_GRP1_ReleaseReset(uint32_t Periphs)
   *         @arg @ref LL_AHB4_GRP1_PERIPH_ALL
   *         @arg @ref LL_AHB4_GRP1_PERIPH_OTFDEC
   *         @arg @ref LL_AHB4_GRP1_PERIPH_SDMMC1
-  *         @arg @ref LL_AHB4_GRP1_PERIPH_SDMMC2
+  *         @arg @ref LL_AHB4_GRP1_PERIPH_SDMMC2 (*)
   *         @arg @ref LL_AHB4_GRP1_PERIPH_FMC
   *         @arg @ref LL_AHB4_GRP1_PERIPH_OSPI1
-  *         @arg @ref LL_AHB4_GRP1_PERIPH_OSPI2
+  *         @arg @ref LL_AHB4_GRP1_PERIPH_OSPI2 (*)
   * @retval None
+  *
+  * (*)  : Not available for all stm32h5xxxx family lines.
   */
 __STATIC_INLINE void LL_AHB4_GRP1_EnableClockSleep(uint32_t Periphs)
 {
@@ -1561,11 +1571,13 @@ __STATIC_INLINE void LL_AHB4_GRP1_EnableClockSleep(uint32_t Periphs)
   *         @arg @ref LL_AHB4_GRP1_PERIPH_ALL
   *         @arg @ref LL_AHB4_GRP1_PERIPH_OTFDEC
   *         @arg @ref LL_AHB4_GRP1_PERIPH_SDMMC1
-  *         @arg @ref LL_AHB4_GRP1_PERIPH_SDMMC2
+  *         @arg @ref LL_AHB4_GRP1_PERIPH_SDMMC2 (*)
   *         @arg @ref LL_AHB4_GRP1_PERIPH_FMC
   *         @arg @ref LL_AHB4_GRP1_PERIPH_OSPI1
-  *         @arg @ref LL_AHB4_GRP1_PERIPH_OSPI2
+  *         @arg @ref LL_AHB4_GRP1_PERIPH_OSPI2 (*)
   * @retval State of Periphs (1 or 0).
+  *
+  * (*)  : Not available for all stm32h5xxxx family lines.
   */
 __STATIC_INLINE uint32_t LL_AHB4_GRP1_IsEnabledClockSleep(uint32_t Periphs)
 {
@@ -1584,11 +1596,13 @@ __STATIC_INLINE uint32_t LL_AHB4_GRP1_IsEnabledClockSleep(uint32_t Periphs)
   *         @arg @ref LL_AHB4_GRP1_PERIPH_ALL
   *         @arg @ref LL_AHB4_GRP1_PERIPH_OTFDEC
   *         @arg @ref LL_AHB4_GRP1_PERIPH_SDMMC1
-  *         @arg @ref LL_AHB4_GRP1_PERIPH_SDMMC2
+  *         @arg @ref LL_AHB4_GRP1_PERIPH_SDMMC2 (*)
   *         @arg @ref LL_AHB4_GRP1_PERIPH_FMC
   *         @arg @ref LL_AHB4_GRP1_PERIPH_OSPI1
-  *         @arg @ref LL_AHB4_GRP1_PERIPH_OSPI2
+  *         @arg @ref LL_AHB4_GRP1_PERIPH_OSPI2 (*)
   * @retval None
+  *
+  * (*)  : Not available for all stm32h5xxxx family lines.
   */
 __STATIC_INLINE void LL_AHB4_GRP1_DisableClockSleep(uint32_t Periphs)
 {
@@ -2176,7 +2190,7 @@ __STATIC_INLINE void LL_APB1_GRP1_EnableClockSleep(uint32_t Periphs)
   *         @arg @ref LL_APB1_GRP1_PERIPH_CRS
   *         @arg @ref LL_APB1_GRP1_PERIPH_USART6 (*)
   *         @arg @ref LL_APB1_GRP1_PERIPH_USART10 (*)
-  *         @arg @ref LL_APB1_GRP1_PERIPH_USART11
+  *         @arg @ref LL_APB1_GRP1_PERIPH_USART11 (*)
   *         @arg @ref LL_APB1_GRP1_PERIPH_CEC (*)
   *         @arg @ref LL_APB1_GRP1_PERIPH_UART7 (*)
   *         @arg @ref LL_APB1_GRP1_PERIPH_UART8 (*)
@@ -2372,7 +2386,7 @@ __STATIC_INLINE void LL_APB1_GRP2_DisableClockSleep(uint32_t Periphs)
   *         @arg @ref LL_APB2_GRP1_PERIPH_SAI1 (*)
   *         @arg @ref LL_APB2_GRP1_PERIPH_SAI2 (*)
   *         @arg @ref LL_APB2_GRP1_PERIPH_USB  (*)
-  *         @arg @ref LL_APB2_GRP1_PERIPH_LTDC
+  *         @arg @ref LL_APB2_GRP1_PERIPH_LTDC (*)
   *
   *  (*)  : Not available for all stm32h5xxxx family lines.
   * @retval None
@@ -2454,7 +2468,7 @@ __STATIC_INLINE uint32_t LL_APB2_GRP1_IsEnabledClock(uint32_t Periphs)
   *         @arg @ref LL_APB2_GRP1_PERIPH_SAI1 (*)
   *         @arg @ref LL_APB2_GRP1_PERIPH_SAI2 (*)
   *         @arg @ref LL_APB2_GRP1_PERIPH_USB (*)
-  *         @arg @ref LL_APB2_GRP1_PERIPH_LTDC
+  *         @arg @ref LL_APB2_GRP1_PERIPH_LTDC (*)
   *
   *  (*)  : Not available for all stm32h5xxxx family lines.
   * @retval None
@@ -2493,7 +2507,7 @@ __STATIC_INLINE void LL_APB2_GRP1_DisableClock(uint32_t Periphs)
   *         @arg @ref LL_APB2_GRP1_PERIPH_SAI1 (*)
   *         @arg @ref LL_APB2_GRP1_PERIPH_SAI2 (*)
   *         @arg @ref LL_APB2_GRP1_PERIPH_USB (*)
-  *         @arg @ref LL_APB2_GRP1_PERIPH_LTDC
+  *         @arg @ref LL_APB2_GRP1_PERIPH_LTDC (*)
   *
   *  (*)  : Not available for all stm32h5xxxx family lines.
   * @retval None
@@ -2532,7 +2546,7 @@ __STATIC_INLINE void LL_APB2_GRP1_ForceReset(uint32_t Periphs)
   *         @arg @ref LL_APB2_GRP1_PERIPH_SAI1 (*)
   *         @arg @ref LL_APB2_GRP1_PERIPH_SAI2 (*)
   *         @arg @ref LL_APB2_GRP1_PERIPH_USB (*)
-  *         @arg @ref LL_APB2_GRP1_PERIPH_LTDC
+  *         @arg @ref LL_APB2_GRP1_PERIPH_LTDC (*)
   *
   *  (*)  : Not available for all stm32h5xxxx family lines.
   * @retval None
@@ -2571,7 +2585,7 @@ __STATIC_INLINE void LL_APB2_GRP1_ReleaseReset(uint32_t Periphs)
   *         @arg @ref LL_APB2_GRP1_PERIPH_SAI1 (*)
   *         @arg @ref LL_APB2_GRP1_PERIPH_SAI2 (*)
   *         @arg @ref LL_APB2_GRP1_PERIPH_USB (*)
-  *         @arg @ref LL_APB2_GRP1_PERIPH_LTDC
+  *         @arg @ref LL_APB2_GRP1_PERIPH_LTDC (*)
   *
   *  (*)  : Not available for all stm32h5xxxx family lines.
   * @retval None
@@ -2654,7 +2668,7 @@ __STATIC_INLINE uint32_t LL_APB2_GRP1_IsEnabledClockSleep(uint32_t Periphs)
   *         @arg @ref LL_APB2_GRP1_PERIPH_SAI1 (*)
   *         @arg @ref LL_APB2_GRP1_PERIPH_SAI2 (*)
   *         @arg @ref LL_APB2_GRP1_PERIPH_USB (*)
-  *         @arg @ref LL_APB2_GRP1_PERIPH_LTDC
+  *         @arg @ref LL_APB2_GRP1_PERIPH_LTDC (*)
   *
   *  (*)  : Not available for all stm32h5xxxx family lines.
   * @retval None

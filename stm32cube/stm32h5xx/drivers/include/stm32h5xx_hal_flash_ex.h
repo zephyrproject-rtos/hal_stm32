@@ -905,18 +905,6 @@ byte configuration */
 #define __HAL_FLASH_PREFETCH_BUFFER_DISABLE()   CLEAR_BIT(FLASH->ACR, FLASH_ACR_PRFTEN)
 
 /**
-  * @brief  Enable the FLASH smart prefetch buffer.
-  * @retval None
-  */
-#define __HAL_FLASH_SMART_PREFETCH_BUFFER_ENABLE()    SET_BIT(FLASH->ACR, FLASH_ACR_S_PRFTEN)
-
-/**
-  * @brief  Disable the FLASH smart prefetch buffer.
-  * @retval None
-  */
-#define __HAL_FLASH_SMART_PREFETCH_BUFFER_DISABLE()   CLEAR_BIT(FLASH->ACR, FLASH_ACR_S_PRFTEN)
-
-/**
   * @brief  Set the FLASH Programming Delay.
   * @param  __DELAY__ FLASH Programming Delay
   *         This parameter can be a value of @ref FLASH_Programming_Delay

@@ -472,19 +472,21 @@ typedef struct
   uint32_t                    TimestampMaster;              /*!< Enable Timestamp Snapshot for Event Messages */
   uint32_t                    TimestampSnapshots;           /*!< Select PTP packets for Taking Snapshots */
   uint32_t                    TimestampFilter;              /*!< Enable MAC Address for PTP Packet Filtering */
-#if !defined(STM32H5E5xx) && !defined(STM32H5E4xx) && !defined(STM32H5F5xx) && !defined(STM32H5F4xx)
+#if defined(STM32H563xx) || defined(STM32H573xx)
   uint32_t
   TimestampChecksumCorrection;  /*!< Enable checksum correction during OST for PTP over UDP/IPv4 packets */
-#endif /*  !defined(STM32H5E5xx) && !defined(STM32H5E4xx) && !defined(STM32H5F5xx) && !defined(STM32H5F4xx) */
+#endif /* defined(STM32H563xx) || defined(STM32H573xx) */
   uint32_t                    TimestampStatusMode;          /*!< Transmit Timestamp Status Mode */
   uint32_t                    TimestampAddend;              /*!< Timestamp addend value */
   uint32_t                    TimestampSubsecondInc;        /*!< Subsecond Increment */
-#if defined(STM32H5E5xx) || defined(STM32H5E4xx) || defined(STM32H5F5xx) || defined(STM32H5F4xx)
+#if defined(STM32H5E5xx) || defined(STM32H5E4xx) || defined(STM32H5F5xx) || defined(STM32H5F4xx) \
+    || defined(STM32H553xx) || defined(STM32H543xx)
   uint32_t                    TimestampPCS;                /*!< Enable PCS latencies */
   uint32_t                    TimestampCapturing;          /*!< Enable Timestamp Capturing in PTP Clock Domain */
   uint32_t                    TimestampLatencyAccuracy;    /*!< Latency Input Based Timestamp Accuracy Disable */
   uint32_t                    AV8021ASMEN;                 /*!< Enable AV 802.1AS Mode */
-#endif /* defined(STM32H5E5xx) || defined(STM32H5E4xx) || defined(STM32H5F5xx) || defined(STM32H5F4xx) */
+#endif /* defined(STM32H5E5xx) || defined(STM32H5E4xx) || defined(STM32H5F5xx) || defined(STM32H5F4xx) ||
+          defined(STM32H553xx) || defined(STM32H543xx) */
 
 } ETH_PTP_ConfigTypeDef;
 /**
@@ -1334,7 +1336,8 @@ typedef struct
   * @}
   */
 
-#if defined(STM32H5E5xx) || defined(STM32H5E4xx) || defined(STM32H5F5xx) || defined(STM32H5F4xx)
+#if defined(STM32H5E5xx) || defined(STM32H5E4xx) || defined(STM32H5F5xx) || defined(STM32H5F4xx) \
+    || defined(STM32H553xx) || defined(STM32H543xx)
 /** @defgroup ETH_Watchdog_Jabber_Timeout ETH Watchdog Jabber Timeout
   * @{
   */
@@ -1393,7 +1396,8 @@ typedef struct
 /**
   * @}
   */
-#endif /*  defined(STM32H5E5xx) || defined(STM32H5E4xx) || defined(STM32H5F5xx) || defined(STM32H5F4xx) */
+#endif /* defined(STM32H5E5xx) || defined(STM32H5E4xx) || defined(STM32H5F5xx) || defined(STM32H5F4xx) ||
+          defined(STM32H553xx) || defined(STM32H543xx) */
 
 /** @defgroup ETH_Inter_Packet_Gap ETH Inter Packet Gap
   * @{

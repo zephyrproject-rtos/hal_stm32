@@ -56,6 +56,10 @@
   #include "partition_stm32h563xx.h"
 #elif defined(STM32H562xx)
   #include "partition_stm32h562xx.h"
+#elif defined(STM32H553xx)
+  #include "partition_stm32h553xx.h"
+#elif defined(STM32H543xx)
+  #include "partition_stm32h543xx.h"
 #elif defined(STM32H533xx)
   #include "partition_stm32h533xx.h"
 #elif defined(STM32H523xx)

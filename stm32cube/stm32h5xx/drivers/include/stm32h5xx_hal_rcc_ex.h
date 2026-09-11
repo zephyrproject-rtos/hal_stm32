@@ -2843,11 +2843,13 @@ typedef struct
   *          This parameter can be one of the following values:
   *            @arg @ref RCC_UART4CLKSOURCE_PCLK1  PCLK1 selected as UART4 clock
   *            @arg @ref RCC_UART4CLKSOURCE_PLL2Q  PLL2Q Clock selected as UART4 clock
-  *            @arg @ref RCC_UART4CLKSOURCE_PLL3Q  PLL3Q Clock selected as UART4 clock
+  *            @arg @ref RCC_UART4CLKSOURCE_PLL3Q  PLL3Q Clock selected as UART4 clock (*)
   *            @arg @ref RCC_UART4CLKSOURCE_HSI   HSI selected as UART4 clock
   *            @arg @ref RCC_UART4CLKSOURCE_CSI   CSI selected as UART4 clock
   *            @arg @ref RCC_UART4CLKSOURCE_LSE   LSE selected as UART4 clock
   * @retval None
+  *
+  *  (*) : Not available for stm32h553xx and stm32h543xx family lines.
   */
 #define __HAL_RCC_UART4_CONFIG(__UART4_CLKSOURCE__) \
   MODIFY_REG(RCC->CCIPR1, RCC_CCIPR1_UART4SEL, (uint32_t)(__UART4_CLKSOURCE__))
@@ -2856,10 +2858,12 @@ typedef struct
   * @retval The clock source can be one of the following values:
   *            @arg @ref RCC_UART4CLKSOURCE_PCLK1  PCLK1 selected as UART4 clock
   *            @arg @ref RCC_UART4CLKSOURCE_PLL2Q  PLL2Q Clock selected as UART4 clock
-  *            @arg @ref RCC_UART4CLKSOURCE_PLL3Q  PLL3Q Clock selected as UART4 clock
+  *            @arg @ref RCC_UART4CLKSOURCE_PLL3Q  PLL3Q Clock selected as UART4 clock (*)
   *            @arg @ref RCC_UART4CLKSOURCE_HSI   HSI selected as UART4 clock
   *            @arg @ref RCC_UART4CLKSOURCE_CSI   CSI selected as UART4 clock
   *            @arg @ref RCC_UART4CLKSOURCE_LSE   LSE selected as UART4 clock
+  *
+  *  (*) : Not available for stm32h553xx and stm32h543xx family lines.
   */
 #define __HAL_RCC_GET_UART4_SOURCE() ((uint32_t)(READ_BIT(RCC->CCIPR1, RCC_CCIPR1_UART4SEL)))
 #endif /* UART4 */
@@ -2871,11 +2875,13 @@ typedef struct
   *          This parameter can be one of the following values:
   *            @arg @ref RCC_UART5CLKSOURCE_PCLK1  PCLK1 selected as UART5 clock
   *            @arg @ref RCC_UART5CLKSOURCE_PLL2Q  PLL2Q Clock selected as UART5 clock
-  *            @arg @ref RCC_UART5CLKSOURCE_PLL3Q  PLL3Q Clock selected as UART5 clock
+  *            @arg @ref RCC_UART5CLKSOURCE_PLL3Q  PLL3Q Clock selected as UART5 clock (*)
   *            @arg @ref RCC_UART5CLKSOURCE_HSI   HSI selected as UART5 clock
   *            @arg @ref RCC_UART5CLKSOURCE_CSI   CSI selected as UART5 clock
   *            @arg @ref RCC_UART5CLKSOURCE_LSE   LSE selected as UART5 clock
   * @retval None
+  *
+  *  (*) : Not available for stm32h553xx and stm32h543xx family lines.
   */
 #define __HAL_RCC_UART5_CONFIG(__UART5_CLKSOURCE__) \
   MODIFY_REG(RCC->CCIPR1, RCC_CCIPR1_UART5SEL, (uint32_t)(__UART5_CLKSOURCE__))
@@ -2884,10 +2890,12 @@ typedef struct
   * @retval The clock source can be one of the following values:
   *            @arg @ref RCC_UART5CLKSOURCE_PCLK1  PCLK1 selected as UART5 clock
   *            @arg @ref RCC_UART5CLKSOURCE_PLL2Q  PLL2Q Clock selected as UART5 clock
-  *            @arg @ref RCC_UART5CLKSOURCE_PLL3Q  PLL3Q Clock selected as UART5 clock
+  *            @arg @ref RCC_UART5CLKSOURCE_PLL3Q  PLL3Q Clock selected as UART5 clock (*)
   *            @arg @ref RCC_UART5CLKSOURCE_HSI   HSI selected as UART5 clock
   *            @arg @ref RCC_UART5CLKSOURCE_CSI   CSI selected as UART5 clock
   *            @arg @ref RCC_UART5CLKSOURCE_LSE   LSE selected as UART5 clock
+  *
+  *  (*) : Not available for stm32h553xx and stm32h543xx family lines.
   */
 #define __HAL_RCC_GET_UART5_SOURCE() ((uint32_t)(READ_BIT(RCC->CCIPR1, RCC_CCIPR1_UART5SEL)))
 #endif /* UART5 */
@@ -2899,11 +2907,13 @@ typedef struct
   *          This parameter can be one of the following values:
   *            @arg @ref RCC_USART6CLKSOURCE_PCLK1  PCLK2 selected as USART6 clock
   *            @arg @ref RCC_USART6CLKSOURCE_PLL2Q  PLL2Q selected as USART6 clock
-  *            @arg @ref RCC_USART6CLKSOURCE_PLL3Q  PLL3Q selected as USART6 clock
+  *            @arg @ref RCC_USART6CLKSOURCE_PLL3Q  PLL3Q selected as USART6 clock (*)
   *            @arg @ref RCC_USART6CLKSOURCE_HSI  HSI selected as USART6 clock
   *            @arg @ref RCC_USART6CLKSOURCE_CSI  CSI selected as USART6 clock
   *            @arg @ref RCC_USART6CLKSOURCE_LSE  LSE selected as USART6 clock
   * @retval None
+  *
+  * (*) : Not available for stm32h553xx and stm32h543xx family lines.
   */
 #define __HAL_RCC_USART6_CONFIG(__USART6_CLKSOURCE__) \
   MODIFY_REG(RCC->CCIPR1, RCC_CCIPR1_USART6SEL, (uint32_t)(__USART6_CLKSOURCE__))
@@ -2912,10 +2922,12 @@ typedef struct
   * @retval The clock source can be one of the following values:
   *            @arg @ref RCC_USART6CLKSOURCE_PCLK1  PCLK1 selected as USART6 clock
   *            @arg @ref RCC_USART6CLKSOURCE_PLL2Q  PLL2Q selected as USART6 clock
-  *            @arg @ref RCC_USART6CLKSOURCE_PLL3Q  PLL3Q selected as USART6 clock
+  *            @arg @ref RCC_USART6CLKSOURCE_PLL3Q  PLL3Q selected as USART6 clock (*)
   *            @arg @ref RCC_USART6CLKSOURCE_HSI  HSI selected as USART6 clock
   *            @arg @ref RCC_USART6CLKSOURCE_CSI  CSI selected as USART6 clock
   *            @arg @ref RCC_USART6CLKSOURCE_LSE  LSE selected as USART6 clock
+  *
+  * (*) : Not available for stm32h553xx and stm32h543xx family lines.
   */
 #define __HAL_RCC_GET_USART6_SOURCE() ((uint32_t)(READ_BIT(RCC->CCIPR1, RCC_CCIPR1_USART6SEL)))
 #endif /* USART6 */
@@ -2927,11 +2939,13 @@ typedef struct
   *          This parameter can be one of the following values:
   *            @arg @ref RCC_UART7CLKSOURCE_PCLK1  PCLK1 selected as UART7 clock
   *            @arg @ref RCC_UART7CLKSOURCE_PLL2Q  PLL2Q selected as UART7 clock
-  *            @arg @ref RCC_UART7CLKSOURCE_PLL3Q  PLL3Q selected as UART7 clock
+  *            @arg @ref RCC_UART7CLKSOURCE_PLL3Q  PLL3Q selected as UART7 clock (*)
   *            @arg @ref RCC_UART7CLKSOURCE_HSI  HSI selected as UART7 clock
   *            @arg @ref RCC_UART7CLKSOURCE_CSI  CSI selected as UART7 clock
   *            @arg @ref RCC_UART7CLKSOURCE_LSE  LSE selected as UART7 clock
   * @retval None
+  *
+  * (*) : Not available for stm32h553xx and stm32h543xx family lines.
   */
 #define __HAL_RCC_UART7_CONFIG(__UART7_CLKSOURCE__) \
   MODIFY_REG(RCC->CCIPR1, RCC_CCIPR1_UART7SEL, (uint32_t)(__UART7_CLKSOURCE__))
@@ -2940,10 +2954,12 @@ typedef struct
   * @retval The clock source can be one of the following values:
   *            @arg @ref RCC_UART7CLKSOURCE_PCLK1  PCLK1 selected as UART7 clock
   *            @arg @ref RCC_UART7CLKSOURCE_PLL2Q  PLL2Q selected as UART7 clock
-  *            @arg @ref RCC_UART7CLKSOURCE_PLL3Q  PLL3Q selected as UART7 clock
+  *            @arg @ref RCC_UART7CLKSOURCE_PLL3Q  PLL3Q selected as UART7 clock (*)
   *            @arg @ref RCC_UART7CLKSOURCE_HSI  HSI selected as UART7 clock
   *            @arg @ref RCC_UART7CLKSOURCE_CSI  CSI selected as UART7 clock
   *            @arg @ref RCC_UART7CLKSOURCE_LSE  LSE selected as UART7 clock
+  *
+  * (*) : Not available for stm32h553xx and stm32h543xx family lines.
   */
 #define __HAL_RCC_GET_UART7_SOURCE() ((uint32_t)(READ_BIT(RCC->CCIPR1, RCC_CCIPR1_UART7SEL)))
 #endif /* UART5 */
@@ -2955,11 +2971,13 @@ typedef struct
   *          This parameter can be one of the following values:
   *            @arg @ref RCC_UART8CLKSOURCE_PCLK1  PCLK1 selected as UART8 clock
   *            @arg @ref RCC_UART8CLKSOURCE_PLL2Q  PLL2Q selected as UART8 clock
-  *            @arg @ref RCC_UART8CLKSOURCE_PLL3Q  PLL3Q selected as UART8 clock
+  *            @arg @ref RCC_UART8CLKSOURCE_PLL3Q  PLL3Q selected as UART8 clock (*)
   *            @arg @ref RCC_UART8CLKSOURCE_HSI  HSI selected as UART8 clock
   *            @arg @ref RCC_UART8CLKSOURCE_CSI  CSI selected as UART8 clock
   *            @arg @ref RCC_UART8CLKSOURCE_LSE  LSE selected as UART8 clock
   * @retval None
+  *
+  * (*) : Not available for stm32h553xx and stm32h543xx family lines.
   */
 #define __HAL_RCC_UART8_CONFIG(__UART8_CLKSOURCE__) \
   MODIFY_REG(RCC->CCIPR1, RCC_CCIPR1_UART8SEL, (uint32_t)(__UART8_CLKSOURCE__))
@@ -2968,10 +2986,12 @@ typedef struct
   * @retval The clock source can be one of the following values:
   *            @arg @ref RCC_UART8CLKSOURCE_PCLK1  PCLK1 selected as UART8 clock
   *            @arg @ref RCC_UART8CLKSOURCE_PLL2Q  PLL2Q selected as UART8 clock
-  *            @arg @ref RCC_UART8CLKSOURCE_PLL3Q  PLL3Q selected as UART8 clock
+  *            @arg @ref RCC_UART8CLKSOURCE_PLL3Q  PLL3Q selected as UART8 clock (*)
   *            @arg @ref RCC_UART8CLKSOURCE_HSI  HSI selected as UART8 clock
   *            @arg @ref RCC_UART8CLKSOURCE_CSI  CSI selected as UART8 clock
   *            @arg @ref RCC_UART8CLKSOURCE_LSE  LSE selected as UART8 clock
+  *
+  * (*) : Not available for stm32h553xx and stm32h543xx family lines.
   */
 #define __HAL_RCC_GET_UART8_SOURCE() ((uint32_t)(READ_BIT(RCC->CCIPR1, RCC_CCIPR1_UART8SEL)))
 #endif /* UART8 */

@@ -89,7 +89,7 @@ ErrorStatus LL_EXTI_DeInit(void)
   LL_EXTI_WriteReg(IMR2,   0x07DBFFFFU);
 #elif defined(STM32H503xx)
   LL_EXTI_WriteReg(IMR2,   0x001BFFFFU);
-#elif defined(STM32H5F5xx) || defined(STM32H5F4xx) || defined(STM32H5E5xx) ||defined(STM32H5E4xx)
+#elif defined(STM32H5F5xx) || defined(STM32H5F4xx) || defined(STM32H5E5xx) || defined(STM32H5E4xx) || defined(STM32H553xx) || defined(STM32H543xx)
   LL_EXTI_WriteReg(IMR2,   0xF3D9BFFFU);
 #else
   LL_EXTI_WriteReg(IMR2,   0x03DBBFFFU);

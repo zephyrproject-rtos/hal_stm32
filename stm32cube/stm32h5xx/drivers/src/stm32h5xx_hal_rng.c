@@ -115,7 +115,7 @@
 /** @defgroup RNG_Private_Constants RNG Private Constants
   * @{
   */
-#define RNG_TIMEOUT_VALUE     4U
+#define RNG_TIMEOUT_VALUE     6U
 /**
   * @}
   */
@@ -206,7 +206,11 @@ HAL_StatusTypeDef HAL_RNG_Init(RNG_HandleTypeDef *hrng)
 #endif /* RNG_CR_NIST_VALUE */
 #if defined(RNG_HTCR_NIST_VALUE)
   /* Recommended value for NIST compliance, refer to application note AN4230 */
+#if defined(RNG_HTCR3_HTCFG)
+  WRITE_REG(hrng->Instance->HTCR[0], RNG_HTCR_NIST_VALUE);
+#else
   WRITE_REG(hrng->Instance->HTCR, RNG_HTCR_NIST_VALUE);
+#endif  /* RNG_HTCR0_HTCFG || RNG_HTCR1_HTCFG || RNG_HTCR2_HTCFG || RNG_HTCR3_HTCFG */
 #endif /* RNG_HTCR_NIST_VALUE */
 #if defined(RNG_NSCR_NIST_VALUE)
   WRITE_REG(hrng->Instance->NSCR, RNG_NSCR_NIST_VALUE);
@@ -645,11 +649,12 @@ HAL_StatusTypeDef HAL_RNG_GenerateRandomNumber(RNG_HandleTypeDef *hrng, uint32_t
     /* Change RNG peripheral state */
     hrng->State = HAL_RNG_STATE_BUSY;
     /* Check if there is a seed error */
-    if (__HAL_RNG_GET_IT(hrng, RNG_IT_SEI) != RESET)
+    if (__HAL_RNG_GET_FLAG(hrng, RNG_FLAG_SECS) != RESET)
     {
       /* Update the error code */
       hrng->ErrorCode = HAL_RNG_ERROR_SEED;
       /* Reset from seed error */
+#if !((defined(RNG_HTSR0_RPERRX) || defined(RNG_HTSR1_ADERRX)))
       status = RNG_RecoverSeedError(hrng);
       if (status == HAL_ERROR)
       {
@@ -657,6 +662,7 @@ HAL_StatusTypeDef HAL_RNG_GenerateRandomNumber(RNG_HandleTypeDef *hrng, uint32_t
         hrng->ErrorCode = HAL_RNG_ERROR_RECOVERSEED;
         return status;
       }
+#endif /* RNG_HTSR0_RPERRX || RNG_HTSR1_ADERRX) */
     }
 
     /* Get tick */
@@ -665,6 +671,16 @@ HAL_StatusTypeDef HAL_RNG_GenerateRandomNumber(RNG_HandleTypeDef *hrng, uint32_t
     /* Check if data register contains valid random data */
     while (__HAL_RNG_GET_FLAG(hrng, RNG_FLAG_DRDY) == RESET)
     {
+      if (__HAL_RNG_GET_FLAG(hrng, RNG_FLAG_SECS) != RESET)
+      {
+#if !((defined(RNG_HTSR0_RPERRX) || defined(RNG_HTSR1_ADERRX)))
+        /* Update the error code */
+        hrng->ErrorCode = HAL_RNG_ERROR_RECOVERSEED;
+#endif /* RNG_HTSR0_RPERRX || RNG_HTSR1_ADERRX) */
+        hrng->State = HAL_RNG_STATE_READY;
+        return HAL_ERROR;
+      }
+
       if ((HAL_GetTick() - tickstart) > RNG_TIMEOUT_VALUE)
       {
         /* New check to avoid false timeout detection in case of preemption */
@@ -811,7 +827,11 @@ void HAL_RNG_IRQHandler(RNG_HandleTypeDef *hrng)
 #endif /* USE_HAL_RNG_REGISTER_CALLBACKS */
 
     /* Clear the clock error flag */
+#if (defined(RNG_HTSR0_RPERRX) || defined(RNG_HTSR1_ADERRX))
+    __HAL_RNG_CLEAR_IT(hrng, RNG_IT_CEI);
+#else
     __HAL_RNG_CLEAR_IT(hrng, RNG_IT_CEI | RNG_IT_SEI);
+#endif /* RNG_HTSR0_RPERRX || RNG_HTSR1_ADERRX) */
 
     return;
   }
@@ -1002,7 +1022,7 @@ HAL_StatusTypeDef RNG_RecoverSeedError(RNG_HandleTypeDef *hrng)
       if (count == 0U)
       {
         hrng->State = HAL_RNG_STATE_READY;
-        hrng->ErrorCode |= HAL_RNG_ERROR_TIMEOUT;
+
         /* Process Unlocked */
         __HAL_UNLOCK(hrng);
 #if (USE_HAL_RNG_REGISTER_CALLBACKS == 1)
@@ -1017,6 +1037,10 @@ HAL_StatusTypeDef RNG_RecoverSeedError(RNG_HandleTypeDef *hrng)
     } while (HAL_IS_BIT_SET(hrng->Instance->SR, RNG_FLAG_SECS));
   }
   /* Update the error code */
+  if (__HAL_RNG_GET_FLAG(hrng, RNG_FLAG_SECS) != RESET)
+  {
+    return HAL_ERROR;
+  }
   hrng->ErrorCode &= ~ HAL_RNG_ERROR_SEED;
   return HAL_OK;
 }

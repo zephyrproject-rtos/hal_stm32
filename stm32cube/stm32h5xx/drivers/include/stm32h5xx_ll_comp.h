@@ -676,7 +676,8 @@ __STATIC_INLINE uint32_t LL_COMP_GetPowerMode(const COMP_TypeDef *COMPx)
   *         @arg @ref LL_COMP_INPUT_PLUS_DAC1_CH1
   * @retval None
   *
-  *  (*): Not available for stm32h5exxx and stm32h5fxxx family lines.
+  *  (*): Not available for stm32h5exxx and stm32h5fxxx and
+  *       stm32h553xx ans stm32h543xx family lines.
   */
 __STATIC_INLINE void LL_COMP_ConfigInputs(COMP_TypeDef *COMPx, uint32_t InputMinus, uint32_t InputPlus)
 {

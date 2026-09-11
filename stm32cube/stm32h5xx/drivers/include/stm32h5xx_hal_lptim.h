@@ -386,12 +386,14 @@ typedef  void (*pLPTIM_CallbackTypeDef)(LPTIM_HandleTypeDef *hlptim);  /*!< poin
   */
 
 #define LPTIM_INPUT1SOURCE_GPIO          0x00000000U             /*!< For LPTIM1 and LPTIM2, LPTIM3, LPTIM4, LPTIM5 and LPTIM6 when supported */
+#if !defined(STM32H553xx) && !defined(STM32H543xx)
 #if defined(COMP1)
 #define LPTIM_INPUT1SOURCE_COMP1         LPTIM_CFGR2_IN1SEL_0    /*!< For LPTIM1 and LPTIM2, LPTIM3, LPTIM4, LPTIM5 and LPTIM6 when supported */
 #endif /* COMP1 */
 #if defined(PLAY1)
 #define LPTIM_INPUT1SOURCE_PLAY1_OUT3    LPTIM_CFGR2_IN1SEL_1     /*!<For LPTIM1 and LPTIM2, LPTIM3, LPTIM4, LPTIM5 and LPTIM6 when supported */
 #endif /* PLAY1 */
+#endif /* STM32H553xx && STM32H543xx */
 #if defined(STM32H503xx)
 #define LPTIM_INPUT1SOURCE_LPTIM2_CH1    LPTIM_CFGR2_IN1SEL_1    /*!< For LPTIM1 */
 #define LPTIM_INPUT1SOURCE_LPTIM1_CH2    LPTIM_CFGR2_IN1SEL_1    /*!< For LPTIM2 */
@@ -405,12 +407,14 @@ typedef  void (*pLPTIM_CallbackTypeDef)(LPTIM_HandleTypeDef *hlptim);  /*!< poin
   */
 
 #define LPTIM_INPUT2SOURCE_GPIO         0x00000000U              /*!< For LPTIM1 and LPTIM2, LPTIM3, LPTIM4, LPTIM5 and LPTIM6 when supported */
+#if !defined(STM32H553xx) && !defined(STM32H543xx)
 #if defined(COMP2)
 #define LPTIM_INPUT2SOURCE_COMP2         LPTIM_CFGR2_IN2SEL_0    /*!< For LPTIM1 and LPTIM2, LPTIM3, LPTIM5 and LPTIM6 when supported */
 #endif /* COMP1 */
 #if defined(PLAY1)
 #define LPTIM_INPUT2SOURCE_PLAY1_OUT4    LPTIM_CFGR2_IN2SEL_1     /*!<For LPTIM1 and LPTIM2, LPTIM3, LPTIM5 and LPTIM6 when supported */
 #endif /* PLAY1 */
+#endif /* STM32H553xx && STM32H543xx */
 /**
   * @}
   */
@@ -532,6 +536,7 @@ typedef  void (*pLPTIM_CallbackTypeDef)(LPTIM_HandleTypeDef *hlptim);  /*!< poin
   * @{
   */
 #define LPTIM_IC1SOURCE_GPIO                       0x00000000UL                                 /*!< For LPTIM1 and LPTIM2, LPTIM3, LPTIM4, LPTIM5 and LPTIM6 when supported */
+#if !defined(STM32H553xx) && !defined(STM32H543xx)
 #if defined(COMP1)
 #define LPTIM_IC1SOURCE_COMP1                      LPTIM_CFGR2_IC1SEL_0                         /*!< For LPTIM1 and LPTIM2, LPTIM3, LPTIM5 and LPTIM6 when supported */
 #endif /* COMP1 */
@@ -541,6 +546,7 @@ typedef  void (*pLPTIM_CallbackTypeDef)(LPTIM_HandleTypeDef *hlptim);  /*!< poin
 #if defined(PLAY1)
 #define LPTIM_IC1SOURCE_PLAY1_OUT5                 (LPTIM_CFGR2_IC1SEL_0 | LPTIM_CFGR2_IC1SEL_1)/*!< For LPTIM1 */
 #endif /* PLAY1 */
+#endif /* STM32H553xx && STM32H543xx */
 #if defined(STM32H5E5xx) || defined(STM32H5E4xx) || defined(STM32H5F5xx) || defined(STM32H5F4xx)
 #define LPTIM_IC1SOURCE_I3C1_IBIACK                (LPTIM_CFGR2_IC1SEL_0 | LPTIM_CFGR2_IC1SEL_1)/*!< For LPTIM5 */
 #define LPTIM_IC1SOURCE_I3C2_IBIACK                (LPTIM_CFGR2_IC1SEL_0 | LPTIM_CFGR2_IC1SEL_1)/*!< For LPTIM6 */

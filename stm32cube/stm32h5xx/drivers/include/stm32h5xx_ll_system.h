@@ -1559,14 +1559,16 @@ __STATIC_INLINE uint32_t LL_DBGMCU_GetTracePinAssignment(void)
   *         @arg @ref LL_DBGMCU_APB1_GRP1_TIM6_STOP
   *         @arg @ref LL_DBGMCU_APB1_GRP1_TIM7_STOP
   *         @arg @ref LL_DBGMCU_APB1_GRP1_TIM12_STOP
-  *         @arg @ref LL_DBGMCU_APB1_GRP1_TIM13_STOP
-  *         @arg @ref LL_DBGMCU_APB1_GRP1_TIM14_STOP
+  *         @arg @ref LL_DBGMCU_APB1_GRP1_TIM13_STOP (*)
+  *         @arg @ref LL_DBGMCU_APB1_GRP1_TIM14_STOP (*)
   *         @arg @ref LL_DBGMCU_APB1_GRP1_WWDG_STOP
   *         @arg @ref LL_DBGMCU_APB1_GRP1_IWDG_STOP
   *         @arg @ref LL_DBGMCU_APB1_GRP1_I2C1_STOP
   *         @arg @ref LL_DBGMCU_APB1_GRP1_I2C2_STOP
   *         @arg @ref LL_DBGMCU_APB1_GRP1_I3C1_STOP
   * @retval None
+  *
+  * (*) value not defined in all devices
   */
 __STATIC_INLINE void LL_DBGMCU_APB1_GRP1_FreezePeriph(uint32_t Periphs)
 {
@@ -1596,14 +1598,16 @@ __STATIC_INLINE void LL_DBGMCU_APB1_GRP2_FreezePeriph(uint32_t Periphs)
   *         @arg @ref LL_DBGMCU_APB1_GRP1_TIM6_STOP
   *         @arg @ref LL_DBGMCU_APB1_GRP1_TIM7_STOP
   *         @arg @ref LL_DBGMCU_APB1_GRP1_TIM12_STOP
-  *         @arg @ref LL_DBGMCU_APB1_GRP1_TIM13_STOP
-  *         @arg @ref LL_DBGMCU_APB1_GRP1_TIM14_STOP
+  *         @arg @ref LL_DBGMCU_APB1_GRP1_TIM13_STOP (*)
+  *         @arg @ref LL_DBGMCU_APB1_GRP1_TIM14_STOP (*)
   *         @arg @ref LL_DBGMCU_APB1_GRP1_WWDG_STOP
   *         @arg @ref LL_DBGMCU_APB1_GRP1_IWDG_STOP
   *         @arg @ref LL_DBGMCU_APB1_GRP1_I2C1_STOP
   *         @arg @ref LL_DBGMCU_APB1_GRP1_I2C2_STOP
   *         @arg @ref LL_DBGMCU_APB1_GRP1_I3C1_STOP
   * @retval None
+  *
+  * (*) value not defined in all devices
   */
 __STATIC_INLINE void LL_DBGMCU_APB1_GRP1_UnFreezePeriph(uint32_t Periphs)
 {
@@ -1629,9 +1633,11 @@ __STATIC_INLINE void LL_DBGMCU_APB1_GRP2_UnFreezePeriph(uint32_t Periphs)
   *         @arg @ref LL_DBGMCU_APB2_GRP1_TIM1_STOP
   *         @arg @ref LL_DBGMCU_APB2_GRP1_TIM8_STOP
   *         @arg @ref LL_DBGMCU_APB2_GRP1_TIM15_STOP
-  *         @arg @ref LL_DBGMCU_APB2_GRP1_TIM16_STOP
-  *         @arg @ref LL_DBGMCU_APB2_GRP1_TIM17_STOP
+  *         @arg @ref LL_DBGMCU_APB2_GRP1_TIM16_STOP (*)
+  *         @arg @ref LL_DBGMCU_APB2_GRP1_TIM17_STOP (*)
   * @retval None
+  *
+  * (*) value not defined in all devices
   */
 __STATIC_INLINE void LL_DBGMCU_APB2_GRP1_FreezePeriph(uint32_t Periphs)
 {
@@ -1645,9 +1651,11 @@ __STATIC_INLINE void LL_DBGMCU_APB2_GRP1_FreezePeriph(uint32_t Periphs)
   *         @arg @ref LL_DBGMCU_APB2_GRP1_TIM1_STOP
   *         @arg @ref LL_DBGMCU_APB2_GRP1_TIM8_STOP
   *         @arg @ref LL_DBGMCU_APB2_GRP1_TIM15_STOP
-  *         @arg @ref LL_DBGMCU_APB2_GRP1_TIM16_STOP
-  *         @arg @ref LL_DBGMCU_APB2_GRP1_TIM17_STOP
+  *         @arg @ref LL_DBGMCU_APB2_GRP1_TIM16_STOP (*)
+  *         @arg @ref LL_DBGMCU_APB2_GRP1_TIM17_STOP (*)
   * @retval None
+  *
+  * (*) value not defined in all devices
   */
 __STATIC_INLINE void LL_DBGMCU_APB2_GRP1_UnFreezePeriph(uint32_t Periphs)
 {
@@ -1659,10 +1667,12 @@ __STATIC_INLINE void LL_DBGMCU_APB2_GRP1_UnFreezePeriph(uint32_t Periphs)
   * @rmtoll DBGMCU_APB3FZ DBG_TIMx_STOP  LL_DBGMCU_APB3_GRP1_FreezePeriph
   * @param  Periphs This parameter can be a combination of the following values:
   *         @arg @ref LL_DBGMCU_APB3_GRP1_I2C3_STOP
-  *         @arg @ref LL_DBGMCU_APB3_GRP1_I2C4_STOP
+  *         @arg @ref LL_DBGMCU_APB3_GRP1_I2C4_STOP (*)
   *         @arg @ref LL_DBGMCU_APB3_GRP1_LPTIM1_STOP
   *         @arg @ref LL_DBGMCU_APB3_GRP1_RTC_STOP
   * @retval None
+  *
+  * (*) value not defined in all devices
   */
 __STATIC_INLINE void LL_DBGMCU_APB3_GRP1_FreezePeriph(uint32_t Periphs)
 {
@@ -1674,10 +1684,12 @@ __STATIC_INLINE void LL_DBGMCU_APB3_GRP1_FreezePeriph(uint32_t Periphs)
   * @rmtoll DBGMCU_APB3FZR DBG_TIMx_STOP  LL_DBGMCU_APB3_GRP1_UnFreezePeriph
   * @param  Periphs This parameter can be a combination of the following values:
   *         @arg @ref LL_DBGMCU_APB3_GRP1_I2C3_STOP
-  *         @arg @ref LL_DBGMCU_APB3_GRP1_I2C4_STOP
+  *         @arg @ref LL_DBGMCU_APB3_GRP1_I2C4_STOP (*)
   *         @arg @ref LL_DBGMCU_APB3_GRP1_LPTIM1_STOP
   *         @arg @ref LL_DBGMCU_APB3_GRP1_RTC_STOP
   * @retval None
+  *
+  * (*) value not defined in all devices
   */
 __STATIC_INLINE void LL_DBGMCU_APB3_GRP1_UnFreezePeriph(uint32_t Periphs)
 {

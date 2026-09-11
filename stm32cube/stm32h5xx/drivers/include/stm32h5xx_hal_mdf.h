@@ -17,8 +17,8 @@
   */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef STM32N6xx_HAL_MDF_H
-#define STM32N6xx_HAL_MDF_H
+#ifndef STM32H5xx_HAL_MDF_H
+#define STM32H5xx_HAL_MDF_H
 
 #ifdef __cplusplus
 extern "C" {

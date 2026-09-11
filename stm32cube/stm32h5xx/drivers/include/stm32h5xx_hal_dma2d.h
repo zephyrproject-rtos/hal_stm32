@@ -79,10 +79,14 @@ typedef struct
   */
 typedef struct
 {
-  uint32_t PixelPerLines;   /*!< The number of pixel per lines of the Scaler                       */
-  uint32_t NumberOfLines;   /*!< The number of lines of the Scaler                                 */
+  uint32_t PixelPerLines;   /*!< Source width, in pixels, to be processed by the scaler            */
+  uint32_t NumberOfLines;   /*!< Source height, in lines, to be processed by the scaler            */
   uint16_t VRatio;          /*!< The Vertical scaling Ratio                                        */
+  uint16_t VRatioDiv;       /*!< The Vertical scaling Ratio divider: The output height is computed
+                                 from NumberOfLines * VRatio / VRatioDiv                           */
   uint16_t HRatio;          /*!< Horizontal scaling Ratio                                          */
+  uint16_t HRatioDiv;       /*!< Horizontal scaling Ratio divider: The output width is computed
+                                 from PixelPerLines * HRatio / HRatioDiv                           */
   uint32_t VPhase;          /*!< Vertical Phase (This allows partial redrawing of scaled images)   */
   uint32_t HPhase;          /*!< Horizontal Phase (This allows partial redrawing of scaled images) */
 } DMA2D_DownscalingCfgTypeDef;
@@ -344,8 +348,8 @@ typedef void (*pDMA2D_CL_GeneralPurposeEventCallbackTypeDef)(DMA2D_CL_HandleType
 #define DMA2D_OUTPUT_RGB565         DMA2D_OPFCCR_CM_1                     /*!< RGB565 DMA2D color mode   */
 #define DMA2D_OUTPUT_ARGB1555       (DMA2D_OPFCCR_CM_0|DMA2D_OPFCCR_CM_1) /*!< ARGB1555 DMA2D color mode */
 #define DMA2D_OUTPUT_ARGB4444       DMA2D_OPFCCR_CM_2                     /*!< ARGB4444 DMA2D color mode */
-#define DMA2D_OUTPUT_ARGB2222       (DMA2D_OPFCCR_CM_1 | DMA2D_OPFCCR_CM_2 | DMA2D_OPFCCR_CM_3)
-                                                                          /*!< ARGB2222 DMA2D color mode */
+#define DMA2D_OUTPUT_ARGB2222       (DMA2D_OPFCCR_CM_1 | DMA2D_OPFCCR_CM_2 | DMA2D_OPFCCR_CM_3) /*!< ARGB2222
+                                                                               DMA2D color mode */
 /**
   * @}
   */
@@ -899,7 +903,30 @@ HAL_DMA2D_StateTypeDef HAL_DMA2D_GetState(const DMA2D_HandleTypeDef *hdma2d);
 uint32_t               HAL_DMA2D_GetError(const DMA2D_HandleTypeDef *hdma2d);
 #endif /* USE_DMA2D_COMMAND_LIST_MODE == 0 */
 #if (USE_DMA2D_COMMAND_LIST_MODE == 1)
-/** @addtogroup DMA2D_Exported_Functions_Group5 IO operation functions
+/** @addtogroup DMA2D_Exported_Functions_Group5 DMA2D Command List (CL) functions
+  * @brief DMA2D Command List mode exported functions
+  *
+@verbatim
+ ===============================================================================
+                ##### Command List (CL) mode functions #####
+ ===============================================================================
+    [..]  This section provides functions allowing to:
+      (+) Initialize and de-initialize the DMA2D in Command List mode
+          using HAL_DMA2D_CL_Init() and HAL_DMA2D_CL_DeInit().
+      (+) Build command lists using APIs such as
+          HAL_DMA2D_CL_Init_CommandList(), HAL_DMA2D_CL_AddConfigLayerCMD(),
+          HAL_DMA2D_CL_AddConfigRotationCMD(), HAL_DMA2D_CL_AddConfigStencilCMD(),
+          HAL_DMA2D_CL_AddConfigDownscalingCMD(),
+          HAL_DMA2D_CL_AddProgramLineEventCMD(), HAL_DMA2D_CL_AddCopyCMD(),
+          HAL_DMA2D_CL_AddBlendingCMD(), HAL_DMA2D_CL_AddCLUTStartLoadCMD().
+      (+) Insert prepared command lists into the ring buffer and start
+          execution using HAL_DMA2D_CL_InsertCommandList(), HAL_DMA2D_CL_Start()
+          and HAL_DMA2D_CL_StartOpt().
+      (+) Handle DMA2D CL interrupts through HAL_DMA2D_CL_IRQHandler() and
+          related callbacks, and control execution using
+          HAL_DMA2D_CL_Suspend(), HAL_DMA2D_CL_Resume() and HAL_DMA2D_CL_Abort().
+
+@endverbatim
   * @{
   */
 HAL_StatusTypeDef HAL_DMA2D_CL_Init(DMA2D_CL_HandleTypeDef *hdma2d);
@@ -914,9 +941,13 @@ HAL_StatusTypeDef HAL_DMA2D_CL_RegisterCallback(DMA2D_CL_HandleTypeDef *hdma2d,
                                                 pDMA2D_CL_CallbackTypeDef pCallback);
 HAL_StatusTypeDef HAL_DMA2D_CL_UnRegisterCallback(DMA2D_CL_HandleTypeDef *hdma2d,
                                                   HAL_DMA2D_CL_CallbackIDTypeDef CallbackID);
-HAL_StatusTypeDef HAL_DMA2D_CL_Register_GeneralPurposeEvent_Callback(DMA2D_CL_HandleTypeDef *hdma2d, HAL_DMA2D_CL_CallbackIDTypeDef CallbackID,
-                                                                   pDMA2D_CL_GeneralPurposeEventCallbackTypeDef pCallback);
-HAL_StatusTypeDef HAL_DMA2D_CL_UnRegister_GeneralPurposeEvent_Callback(DMA2D_CL_HandleTypeDef *hdma2d, HAL_DMA2D_CL_CallbackIDTypeDef CallbackID);
+HAL_StatusTypeDef HAL_DMA2D_CL_Register_GeneralPurposeEvent_Callback(DMA2D_CL_HandleTypeDef *hdma2d,
+                                                                     HAL_DMA2D_CL_CallbackIDTypeDef
+                                                                     CallbackID,
+                                                                     pDMA2D_CL_GeneralPurposeEventCallbackTypeDef
+                                                                     pCallback);
+HAL_StatusTypeDef HAL_DMA2D_CL_UnRegister_GeneralPurposeEvent_Callback(DMA2D_CL_HandleTypeDef *hdma2d,
+                                                                       HAL_DMA2D_CL_CallbackIDTypeDef CallbackID);
 #endif /* USE_HAL_DMA2D_REGISTER_CALLBACKS */
 
 
@@ -936,18 +967,19 @@ HAL_StatusTypeDef HAL_DMA2D_CL_AddConfigLayerCMD(DMA2D_CL_HandleTypeDef *hdma2d,
 HAL_StatusTypeDef HAL_DMA2D_CL_AddConfigRotationCMD(DMA2D_CL_HandleTypeDef *hdma2d, uint32_t Source,
                                                     uint32_t Mirroring_Type);
 HAL_StatusTypeDef HAL_DMA2D_CL_AddConfigStencilCMD(DMA2D_CL_HandleTypeDef *hdma2d, uint32_t Source,
-                                                 DMA2D_StencilCfgTypeDef *pStencilCfg);
+                                                   DMA2D_StencilCfgTypeDef *pStencilCfg);
 HAL_StatusTypeDef HAL_DMA2D_CL_AddConfigDownscalingCMD(DMA2D_CL_HandleTypeDef *hdma2d, uint32_t Source,
                                                        DMA2D_DownscalingCfgTypeDef *pDownscalingCfg);
 HAL_StatusTypeDef HAL_DMA2D_CL_AddProgramLineEventCMD(DMA2D_CL_HandleTypeDef *hdma2d, uint32_t Line);
-HAL_StatusTypeDef HAL_DMA2D_CL_AddCLUTStartLoadCMD(DMA2D_CL_HandleTypeDef *hdma2d,uint32_t LayerIdx,
-                                              const DMA2D_CLUTCfgTypeDef *CLUTCfg,
-                                              DMA2D_CL_CommandListTypeDef *pCommandList);
+HAL_StatusTypeDef HAL_DMA2D_CL_AddCLUTStartLoadCMD(DMA2D_CL_HandleTypeDef *hdma2d, uint32_t LayerIdx,
+                                                   const DMA2D_CLUTCfgTypeDef *CLUTCfg,
+                                                   DMA2D_CL_CommandListTypeDef *pCommandList);
 HAL_StatusTypeDef HAL_DMA2D_CL_AddCopyCMD(DMA2D_CL_HandleTypeDef *hdma2d, uint32_t pdata, uint32_t DstAddress,
-                                            uint32_t Width, uint32_t Height, DMA2D_CL_CommandListTypeDef *pCommandList);
+                                          uint32_t Width, uint32_t Height,
+                                          DMA2D_CL_CommandListTypeDef *pCommandList);
 HAL_StatusTypeDef HAL_DMA2D_CL_AddBlendingCMD(DMA2D_CL_HandleTypeDef *hdma2d, uint32_t SrcAddress1,
                                               uint32_t SrcAddress2, uint32_t DstAddress, uint32_t Width,
-                                              uint32_t Height,DMA2D_CL_CommandListTypeDef *pCommandList);
+                                              uint32_t Height ,DMA2D_CL_CommandListTypeDef *pCommandList);
 HAL_StatusTypeDef HAL_DMA2D_CL_Init_CommandList(uint32_t *Address, uint32_t Size,
                                                 DMA2D_CL_CommandListTypeDef *pCommandList);
 HAL_StatusTypeDef HAL_DMA2D_CL_ResetIndex(DMA2D_CL_CommandListTypeDef *pCommandList);

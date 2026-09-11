@@ -238,7 +238,8 @@
                  the HAL_DMA2D_CL_AddConfigDownscalingCMD() function for the foreground layer, background layer,
                  or blender output.
 
-                (#) Optionally, configure the line watermark in using the function HAL_DMA2D_CL_AddLineEventCMD().
+                (#) Optionally, configure the line watermark in using the function
+                HAL_DMA2D_CL_AddProgramLineEventCMD().
 
       [...] Command List Copy ans Data Transfers Enable
                  Use the following APIs to enable data transfer for the selected operating mode and to copy
@@ -407,6 +408,7 @@ const uint32_t LDM_Decoder[HAL_DMA2D_CL_LDM_REG_NUM] =
 #define DMA2D_CL_LDM_WRITE_REG(HANDLE, REG, VALUE) \
   ((HANDLE)->LDM_Reg_values[(REG)] = (VALUE), \
    (HANDLE)->LDM_Instruction |= LDM_Decoder[(REG)])
+#define RBS_TO_RING_BUFFER_SIZE(val)  (1UL << ((val) + 6U))
 #endif /* USE_DMA2D_COMMAND_LIST_MODE == 1 */
 /**
   * @}
@@ -2179,8 +2181,8 @@ HAL_StatusTypeDef HAL_DMA2D_ConfigRotation(DMA2D_HandleTypeDef *hdma2d, uint32_t
 /**
   * @brief  Configures the DMA2D Downscaling for the selected source Foreground, Background or Blender output
   * @param  hdma2d           Pointer to DMA2D handle structure.
-  * @param Source           Specifies the source of the tile buffer.
-  *                         This parameter can be a value from @ref DMA2D_SOURCE
+  * @param  Source           Specifies the source of the tile buffer.
+  *                          This parameter can be a value from @ref DMA2D_SOURCE
   * @param  pDownscalingCfg  Pointer to DMA2D_DownscalingCfgTypeDef that contains
   *                          the configuration information for downscaling.
   * @retval HAL status
@@ -2188,35 +2190,55 @@ HAL_StatusTypeDef HAL_DMA2D_ConfigRotation(DMA2D_HandleTypeDef *hdma2d, uint32_t
 HAL_StatusTypeDef HAL_DMA2D_ConfigDownscaling(DMA2D_HandleTypeDef *hdma2d, uint32_t Source,
                                               DMA2D_DownscalingCfgTypeDef *pDownscalingCfg)
 {
-  /* HSEP and VSTEP  Calculation */
-  uint16_t hstep = (4096U / (pDownscalingCfg->HRatio) - 1U);
-  uint16_t vstep = (4096U / (pDownscalingCfg->VRatio) - 1U);
+  uint32_t hstep;
+  uint32_t vstep;
+  uint32_t hq12;
+  uint32_t vq12;
 
   /* Check parameters */
+  if ((hdma2d == NULL) || (pDownscalingCfg == NULL))
+  {
+    return HAL_ERROR;
+  }
+
   assert_param(IS_DMA2D_ALL_INSTANCE(hdma2d->Instance));
   assert_param(IS_DMA2D_SCALE_SRC(Source));
-  assert_param(IS_DMA2D_SCALE_HSTEP(hstep));
-  assert_param(IS_DMA2D_SCALE_VSTEP(vstep));
   assert_param(IS_DMA2D_SCALE_PIXEL_PER_LINE(pDownscalingCfg->PixelPerLines));
   assert_param(IS_DMA2D_SCALE_NUMBER_OF_LINES(pDownscalingCfg->NumberOfLines));
   assert_param(IS_DMA2D_SCALE_HPHASE(pDownscalingCfg->HPhase));
   assert_param(IS_DMA2D_SCALE_VPHASE(pDownscalingCfg->VPhase));
 
+  if ((pDownscalingCfg->HRatioDiv == 0U) || (pDownscalingCfg->VRatioDiv == 0U))
+  {
+    return HAL_ERROR;
+  }
+
+  hq12 = (((uint32_t)pDownscalingCfg->HRatio * 4096U) / (uint32_t)pDownscalingCfg->HRatioDiv);
+  vq12 = (((uint32_t)pDownscalingCfg->VRatio * 4096U) / (uint32_t)pDownscalingCfg->VRatioDiv);
+
+  hstep = hq12 - 1U;
+  vstep = vq12 - 1U;
+
+  assert_param(IS_DMA2D_SCALE_HSTEP(hstep));
+  assert_param(IS_DMA2D_SCALE_VSTEP(vstep));
+
   /* Config scaling source */
   MODIFY_REG(hdma2d->Instance->SCR, DMA2D_SCR_SRC, Source);
 
-  /* Config scaling Height and Width */
-  MODIFY_REG(hdma2d->Instance->SNLR, (DMA2D_SNLR_NL | DMA2D_SNLR_PL), (pDownscalingCfg->NumberOfLines |
-                                                                       (pDownscalingCfg->PixelPerLines <<
-                                                                        DMA2D_SNLR_PL_Pos)));
+  /* Config scaling height and width */
+  MODIFY_REG(hdma2d->Instance->SNLR,
+             (DMA2D_SNLR_NL | DMA2D_SNLR_PL),
+             (pDownscalingCfg->NumberOfLines |
+              (pDownscalingCfg->PixelPerLines << DMA2D_SNLR_PL_Pos)));
 
-  /* Config scaling HSEP and VSTEP */
-  MODIFY_REG(hdma2d->Instance->SSR, (DMA2D_SSR_HSTEP | DMA2D_SSR_VSTEP), (hstep | (((uint32_t)vstep) <<
-                                                                                    DMA2D_SSR_VSTEP_Pos)));
+  /* Config scaling HSTEP and VSTEP */
+  WRITE_REG(hdma2d->Instance->SSR, (hstep | (vstep << DMA2D_SSR_VSTEP_Pos)));
 
   /* Config scaling HPHASE and VPHASE */
-  MODIFY_REG(hdma2d->Instance->SPR, (DMA2D_SPR_HPHASE | DMA2D_SPR_VPHASE),
-            (pDownscalingCfg->HPhase | (((uint32_t)pDownscalingCfg->VPhase) << DMA2D_SPR_VPHASE_Pos)));
+  MODIFY_REG(hdma2d->Instance->SPR,
+             (DMA2D_SPR_HPHASE | DMA2D_SPR_VPHASE),
+             (pDownscalingCfg->HPhase |
+              ((uint32_t)pDownscalingCfg->VPhase << DMA2D_SPR_VPHASE_Pos)));
 
   return HAL_OK;
 }
@@ -2476,6 +2498,32 @@ static void DMA2D_SetConfig(DMA2D_HandleTypeDef *hdma2d, uint32_t pdata, uint32_
 }
 #endif /* USE_DMA2D_COMMAND_LIST_MODE == 0 */
 #if (USE_DMA2D_COMMAND_LIST_MODE == 1)
+/** @defgroup DMA2D_Exported_Functions_Group5 DMA2D Command List (CL) functions
+  *  @brief   Initialization and IO/Control functions for Command List mode
+  *
+@verbatim
+ ===============================================================================
+                ##### Command List (CL) mode functions #####
+ ===============================================================================
+    [..]  This section provides functions allowing to:
+      (+) Initialize and de-initialize the DMA2D in Command List mode
+          using HAL_DMA2D_CL_Init() and HAL_DMA2D_CL_DeInit().
+      (+) Prepare command lists using APIs such as:
+          HAL_DMA2D_CL_Init_CommandList(), HAL_DMA2D_CL_AddConfigLayerCMD(),
+          HAL_DMA2D_CL_AddConfigRotationCMD(), HAL_DMA2D_CL_AddConfigStencilCMD(),
+          HAL_DMA2D_CL_AddConfigDownscalingCMD(),
+          HAL_DMA2D_CL_AddProgramLineEventCMD(), HAL_DMA2D_CL_AddCopyCMD(),
+          HAL_DMA2D_CL_AddBlendingCMD(), HAL_DMA2D_CL_AddCLUTStartLoadCMD().
+      (+) Insert prepared command lists into the ring buffer and start
+          execution using HAL_DMA2D_CL_InsertCommandList(), HAL_DMA2D_CL_Start()
+          and HAL_DMA2D_CL_StartOpt().
+      (+) Handle DMA2D CL interrupts through HAL_DMA2D_CL_IRQHandler() and
+          related callbacks, and control execution using
+          HAL_DMA2D_CL_Suspend(), HAL_DMA2D_CL_Resume() and HAL_DMA2D_CL_Abort().
+
+@endverbatim
+  * @{
+  */
 /**
   * @brief  Initialize the DMA2D CL (Command List) Mode
   *         This function configures the DMA2D ring buffer according to RingBuffer parameter of DMA2D_CL_HandleTypeDef
@@ -2776,25 +2824,37 @@ HAL_StatusTypeDef HAL_DMA2D_CL_AddConfigRotationCMD(DMA2D_CL_HandleTypeDef *hdma
 HAL_StatusTypeDef HAL_DMA2D_CL_AddConfigDownscalingCMD(DMA2D_CL_HandleTypeDef *const hdma2d, uint32_t Source,
                                                        DMA2D_DownscalingCfgTypeDef *pDownscalingCfg)
 {
-  /* HSET and VSTEP  Calculation */
-  uint16_t hstep = (4096 / (pDownscalingCfg->HRatio) - 1);
-  uint16_t vstep = (4096 / (pDownscalingCfg->VRatio) - 1);
+  uint32_t hstep;
+  uint32_t vstep;
+  uint32_t hq12;
+  uint32_t vq12;
 
-  /* Check the DMA2D channel handle parameter */
-  if (hdma2d == NULL)
+  /* Check parameters */
+  if ((hdma2d == NULL) || (pDownscalingCfg == NULL))
   {
     return HAL_ERROR;
   }
 
-  /* Check parameters */
   assert_param(IS_DMA2D_ALL_INSTANCE(hdma2d->Instance));
   assert_param(IS_DMA2D_SCALE_SRC(Source));
-  assert_param(IS_DMA2D_SCALE_HSTEP(hstep));
-  assert_param(IS_DMA2D_SCALE_VSTEP(vstep));
   assert_param(IS_DMA2D_SCALE_PIXEL_PER_LINE(pDownscalingCfg->PixelPerLines));
   assert_param(IS_DMA2D_SCALE_NUMBER_OF_LINES(pDownscalingCfg->NumberOfLines));
   assert_param(IS_DMA2D_SCALE_HPHASE(pDownscalingCfg->HPhase));
   assert_param(IS_DMA2D_SCALE_VPHASE(pDownscalingCfg->VPhase));
+
+  if ((pDownscalingCfg->HRatioDiv == 0U) || (pDownscalingCfg->VRatioDiv == 0U))
+  {
+    return HAL_ERROR;
+  }
+
+  hq12 = (((uint32_t)pDownscalingCfg->HRatio * 4096U) / (uint32_t)pDownscalingCfg->HRatioDiv);
+  vq12 = (((uint32_t)pDownscalingCfg->VRatio * 4096U) / (uint32_t)pDownscalingCfg->VRatioDiv);
+
+  hstep = hq12 - 1U;
+  vstep = vq12 - 1U;
+
+  assert_param(IS_DMA2D_SCALE_HSTEP(hstep));
+  assert_param(IS_DMA2D_SCALE_VSTEP(vstep));
 
   /* Config scaling source */
   DMA2D_CL_LDM_WRITE_REG(hdma2d, DMA2D_CL_SCR_REG, Source);
@@ -2804,7 +2864,7 @@ HAL_StatusTypeDef HAL_DMA2D_CL_AddConfigDownscalingCMD(DMA2D_CL_HandleTypeDef *c
                                                      (pDownscalingCfg->PixelPerLines << DMA2D_SNLR_PL_Pos)));
 
   /* Config scaling HSEP and VSTEP */
-  DMA2D_CL_LDM_WRITE_REG(hdma2d, DMA2D_CL_SSR_REG, (hstep | (vstep << DMA2D_SSR_VSTEP_Pos)));
+  DMA2D_CL_LDM_WRITE_REG(hdma2d, DMA2D_CL_SSR_REG, (hstep |(vstep << DMA2D_SSR_VSTEP_Pos)));
 
   /* Config scaling HPHASE and VPHASE */
   DMA2D_CL_LDM_WRITE_REG(hdma2d, DMA2D_CL_SPR_REG, (pDownscalingCfg->HPhase |
@@ -2858,6 +2918,36 @@ HAL_StatusTypeDef HAL_DMA2D_CL_AddConfigStencilCMD(DMA2D_CL_HandleTypeDef *hdma2
   /* Set stencil buffer memory skip: Horizontal pre/trail pixels */
   DMA2D_CL_LDM_MODIFY_REG(hdma2d, DMA2D_CL_SBMSR_REG, (DMA2D_SBMSR_HPRE | DMA2D_SBMSR_HTRAIL),
                           (pStencilCfg->HPre | (pStencilCfg->HTrail << DMA2D_SBMSR_HTRAIL_Pos)));
+
+  return HAL_OK;
+}
+
+/**
+  * @brief  Configure the line watermark in Command List (CL) mode.
+  * @param  hdma2d pointer to a DMA2D_CL_HandleTypeDef structure that contains the configuration information
+  * @param  Line   Line Watermark configuration (maximum 16-bit long value expected).
+  * @note   This API programs the line watermark register and enables the transfer watermark interrupt.
+  * @retval HAL status
+  */
+HAL_StatusTypeDef HAL_DMA2D_CL_AddProgramLineEventCMD(DMA2D_CL_HandleTypeDef *hdma2d, uint32_t Line)
+{
+  /* Check the DMA2D channel handle parameter */
+  if (hdma2d == NULL)
+  {
+    return HAL_ERROR;
+  }
+
+  /* Check the parameters */
+  if (Line > DMA2D_LWR_LW)
+  {
+    return HAL_ERROR;
+  }
+
+  /* Sets the Line watermark configuration */
+  WRITE_REG(hdma2d->Instance->LWR, Line);
+
+  /* Enable the Line interrupt (transfer watermark) */
+  __HAL_DMA2D_ENABLE_IT(hdma2d, DMA2D_IT_TW);
 
   return HAL_OK;
 }
@@ -3155,17 +3245,22 @@ HAL_StatusTypeDef HAL_DMA2D_CL_Init_CommandList(uint32_t *Address, uint32_t Size
   *                         Must be a valid pre/post flag operation.
   * @retval HAL status
   */
-#define RBS_TO_RING_BUFFER_SIZE(val)  (1U << ((val) + 6))
 HAL_StatusTypeDef HAL_DMA2D_CL_InsertCommandList(DMA2D_CL_HandleTypeDef *hdma2d,
                                                  DMA2D_CL_CommandListTypeDef *pCommandList,
                                                  uint32_t gpflag, uint32_t post_flag_config, uint32_t pre_flag_config)
 {
   uint32_t write_ptr;
   uint64_t *descriptor;
+
+  if ((hdma2d == NULL) || (pCommandList == NULL))
+  {
+    return HAL_ERROR;
+  }
+
   uint32_t *CLaddress = (uint32_t *)pCommandList->Address;
 
   uint32_t ring_buffer_size = RBS_TO_RING_BUFFER_SIZE(((hdma2d->Instance->CLCR & DMA2D_CLCR_RBS_Msk) >>
-                                                        DMA2D_CLCR_RBS_Pos));
+                                                       DMA2D_CLCR_RBS_Pos));
 
 
   assert_param(IS_DMA2D_CL_GPFLAG(gpflag));
@@ -3174,10 +3269,6 @@ HAL_StatusTypeDef HAL_DMA2D_CL_InsertCommandList(DMA2D_CL_HandleTypeDef *hdma2d,
   assert_param(IS_DMA2D_CL_ADDRESS_VALID((uint32_t)pCommandList->Address));
   assert_param(IS_DMA2D_CL_SIZE(pCommandList->Size));
 
-  if ((hdma2d == NULL) || (pCommandList == NULL))
-  {
-    return HAL_ERROR;
-  }
 
   if (pCommandList->Address[pCommandList->Index] != 0xFFFFFFFF)
   {
@@ -3507,15 +3598,15 @@ void HAL_DMA2D_CL_IRQHandler(DMA2D_CL_HandleTypeDef *hdma2d)
       __HAL_DMA2D_DISABLE_IT(hdma2d, DMA2D_IT_CLE);
 
       /* Check the error source */
-      if ((clsrflags & DMA2D_CLSR_LCLMSE) != 0U)
+      if ((clsrflags & DMA2D_FLAG_LCLMSE) != 0U)
       {
         hdma2d->ErrorCode |= HAL_DMA2D_ERROR_LCLMSE;
       }
-      if ((clsrflags & DMA2D_CLSR_LCLIE) != 0U)
+      if ((clsrflags & DMA2D_FLAG_LCLIE) != 0U)
       {
         hdma2d->ErrorCode |= HAL_DMA2D_ERROR_LCLIE ;
       }
-      if ((clsrflags & DMA2D_CLSR_LCLRE) != 0U)
+      if ((clsrflags & DMA2D_FLAG_LCLRE) != 0U)
       {
         hdma2d->ErrorCode |= HAL_DMA2D_ERROR_LCLRE;
       }
@@ -4124,6 +4215,10 @@ HAL_StatusTypeDef HAL_DMA2D_CL_UnRegister_GeneralPurposeEvent_Callback(DMA2D_CL_
   return HAL_OK;
 }
 #endif /* USE_HAL_DMA2D_REGISTER_CALLBACKS */
+
+/**
+  * @}
+  */
 
 /** @defgroup DMA2D_Exported_Functions_Group4 Peripheral State and Error functions
   *  @brief    Peripheral State functions

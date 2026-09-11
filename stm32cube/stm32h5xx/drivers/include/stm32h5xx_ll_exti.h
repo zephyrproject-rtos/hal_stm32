@@ -414,10 +414,10 @@ __STATIC_INLINE void LL_EXTI_EnableIT_0_31(uint32_t ExtiLine)
   * @rmtoll IMR2         IMx           LL_EXTI_EnableIT_32_63
   * @param  ExtiLine This parameter can be one of the following values:
   *         @arg @ref LL_EXTI_LINE_32
-  *         @arg @ref LL_EXTI_LINE_33
-  *         @arg @ref LL_EXTI_LINE_34
-  *         @arg @ref LL_EXTI_LINE_35
-  *         @arg @ref LL_EXTI_LINE_36
+  *         @arg @ref LL_EXTI_LINE_33 (*)
+  *         @arg @ref LL_EXTI_LINE_34 (*)
+  *         @arg @ref LL_EXTI_LINE_35 (*)
+  *         @arg @ref LL_EXTI_LINE_36 (*)
   *         @arg @ref LL_EXTI_LINE_37
   *         @arg @ref LL_EXTI_LINE_38
   *         @arg @ref LL_EXTI_LINE_39
@@ -425,20 +425,20 @@ __STATIC_INLINE void LL_EXTI_EnableIT_0_31(uint32_t ExtiLine)
   *         @arg @ref LL_EXTI_LINE_41
   *         @arg @ref LL_EXTI_LINE_42
   *         @arg @ref LL_EXTI_LINE_43
-  *         @arg @ref LL_EXTI_LINE_44
-  *         @arg @ref LL_EXTI_LINE_45
+  *         @arg @ref LL_EXTI_LINE_44 (*)
+  *         @arg @ref LL_EXTI_LINE_45 (*)
   *         @arg @ref LL_EXTI_LINE_46
   *         @arg @ref LL_EXTI_LINE_47
   *         @arg @ref LL_EXTI_LINE_48
   *         @arg @ref LL_EXTI_LINE_49
   *         @arg @ref LL_EXTI_LINE_50
   *         @arg @ref LL_EXTI_LINE_51
-  *         @arg @ref LL_EXTI_LINE_52
+  *         @arg @ref LL_EXTI_LINE_52 (*)
   *         @arg @ref LL_EXTI_LINE_53
-  *         @arg @ref LL_EXTI_LINE_54
-  *         @arg @ref LL_EXTI_LINE_55
-  *         @arg @ref LL_EXTI_LINE_56
-  *         @arg @ref LL_EXTI_LINE_57
+  *         @arg @ref LL_EXTI_LINE_54 (*)
+  *         @arg @ref LL_EXTI_LINE_55 (*)
+  *         @arg @ref LL_EXTI_LINE_56 (*)
+  *         @arg @ref LL_EXTI_LINE_57 (*)
   *         @arg @ref LL_EXTI_LINE_58
   *         @arg @ref LL_EXTI_LINE_59 (*)
   *         @arg @ref LL_EXTI_LINE_60 (*)
@@ -528,10 +528,10 @@ __STATIC_INLINE void LL_EXTI_DisableIT_0_31(uint32_t ExtiLine)
   * @rmtoll IMR2         IMx           LL_EXTI_DisableIT_32_63
   * @param  ExtiLine This parameter can be one of the following values:
   *         @arg @ref LL_EXTI_LINE_32
-  *         @arg @ref LL_EXTI_LINE_33
-  *         @arg @ref LL_EXTI_LINE_34
-  *         @arg @ref LL_EXTI_LINE_35
-  *         @arg @ref LL_EXTI_LINE_36
+  *         @arg @ref LL_EXTI_LINE_33 (*)
+  *         @arg @ref LL_EXTI_LINE_34 (*)
+  *         @arg @ref LL_EXTI_LINE_35 (*)
+  *         @arg @ref LL_EXTI_LINE_36 (*)
   *         @arg @ref LL_EXTI_LINE_37
   *         @arg @ref LL_EXTI_LINE_38
   *         @arg @ref LL_EXTI_LINE_39
@@ -539,20 +539,20 @@ __STATIC_INLINE void LL_EXTI_DisableIT_0_31(uint32_t ExtiLine)
   *         @arg @ref LL_EXTI_LINE_41
   *         @arg @ref LL_EXTI_LINE_42
   *         @arg @ref LL_EXTI_LINE_43
-  *         @arg @ref LL_EXTI_LINE_44
-  *         @arg @ref LL_EXTI_LINE_45
+  *         @arg @ref LL_EXTI_LINE_44 (*)
+  *         @arg @ref LL_EXTI_LINE_45 (*)
   *         @arg @ref LL_EXTI_LINE_46
   *         @arg @ref LL_EXTI_LINE_47
   *         @arg @ref LL_EXTI_LINE_48
   *         @arg @ref LL_EXTI_LINE_49
   *         @arg @ref LL_EXTI_LINE_50
   *         @arg @ref LL_EXTI_LINE_51
-  *         @arg @ref LL_EXTI_LINE_52
+  *         @arg @ref LL_EXTI_LINE_52 (*)
   *         @arg @ref LL_EXTI_LINE_53
-  *         @arg @ref LL_EXTI_LINE_54
-  *         @arg @ref LL_EXTI_LINE_55
-  *         @arg @ref LL_EXTI_LINE_56
-  *         @arg @ref LL_EXTI_LINE_57
+  *         @arg @ref LL_EXTI_LINE_54 (*)
+  *         @arg @ref LL_EXTI_LINE_55 (*)
+  *         @arg @ref LL_EXTI_LINE_56 (*)
+  *         @arg @ref LL_EXTI_LINE_57 (*)
   *         @arg @ref LL_EXTI_LINE_58
   *         @arg @ref LL_EXTI_LINE_59 (*)
   *         @arg @ref LL_EXTI_LINE_60 (*)
@@ -642,10 +642,10 @@ __STATIC_INLINE uint32_t LL_EXTI_IsEnabledIT_0_31(uint32_t ExtiLine)
   * @rmtoll IMR2         IMx           LL_EXTI_IsEnabledIT_32_63
   * @param  ExtiLine This parameter can be one of the following values:
   *         @arg @ref LL_EXTI_LINE_32
-  *         @arg @ref LL_EXTI_LINE_33
-  *         @arg @ref LL_EXTI_LINE_34
-  *         @arg @ref LL_EXTI_LINE_35
-  *         @arg @ref LL_EXTI_LINE_36
+  *         @arg @ref LL_EXTI_LINE_33 (*)
+  *         @arg @ref LL_EXTI_LINE_34 (*)
+  *         @arg @ref LL_EXTI_LINE_35 (*)
+  *         @arg @ref LL_EXTI_LINE_36 (*)
   *         @arg @ref LL_EXTI_LINE_37
   *         @arg @ref LL_EXTI_LINE_38
   *         @arg @ref LL_EXTI_LINE_39
@@ -653,20 +653,20 @@ __STATIC_INLINE uint32_t LL_EXTI_IsEnabledIT_0_31(uint32_t ExtiLine)
   *         @arg @ref LL_EXTI_LINE_41
   *         @arg @ref LL_EXTI_LINE_42
   *         @arg @ref LL_EXTI_LINE_43
-  *         @arg @ref LL_EXTI_LINE_44
-  *         @arg @ref LL_EXTI_LINE_45
+  *         @arg @ref LL_EXTI_LINE_44 (*)
+  *         @arg @ref LL_EXTI_LINE_45 (*)
   *         @arg @ref LL_EXTI_LINE_46
   *         @arg @ref LL_EXTI_LINE_47
   *         @arg @ref LL_EXTI_LINE_48
   *         @arg @ref LL_EXTI_LINE_49
   *         @arg @ref LL_EXTI_LINE_50
   *         @arg @ref LL_EXTI_LINE_51
-  *         @arg @ref LL_EXTI_LINE_52
+  *         @arg @ref LL_EXTI_LINE_52 (*)
   *         @arg @ref LL_EXTI_LINE_53
-  *         @arg @ref LL_EXTI_LINE_54
-  *         @arg @ref LL_EXTI_LINE_55
-  *         @arg @ref LL_EXTI_LINE_56
-  *         @arg @ref LL_EXTI_LINE_57
+  *         @arg @ref LL_EXTI_LINE_54 (*)
+  *         @arg @ref LL_EXTI_LINE_55 (*)
+  *         @arg @ref LL_EXTI_LINE_56 (*)
+  *         @arg @ref LL_EXTI_LINE_57 (*)
   *         @arg @ref LL_EXTI_LINE_58
   *         @arg @ref LL_EXTI_LINE_59 (*)
   *         @arg @ref LL_EXTI_LINE_60 (*)
@@ -760,10 +760,10 @@ __STATIC_INLINE void LL_EXTI_EnableEvent_0_31(uint32_t ExtiLine)
   * @rmtoll EMR2         EMx           LL_EXTI_EnableEvent_32_63
   * @param  ExtiLine This parameter can be a combination of the following values:
   *         @arg @ref LL_EXTI_LINE_32
-  *         @arg @ref LL_EXTI_LINE_33
-  *         @arg @ref LL_EXTI_LINE_34
-  *         @arg @ref LL_EXTI_LINE_35
-  *         @arg @ref LL_EXTI_LINE_36
+  *         @arg @ref LL_EXTI_LINE_33 (*)
+  *         @arg @ref LL_EXTI_LINE_34 (*)
+  *         @arg @ref LL_EXTI_LINE_35 (*)
+  *         @arg @ref LL_EXTI_LINE_36 (*)
   *         @arg @ref LL_EXTI_LINE_37
   *         @arg @ref LL_EXTI_LINE_38
   *         @arg @ref LL_EXTI_LINE_39
@@ -771,20 +771,20 @@ __STATIC_INLINE void LL_EXTI_EnableEvent_0_31(uint32_t ExtiLine)
   *         @arg @ref LL_EXTI_LINE_41
   *         @arg @ref LL_EXTI_LINE_42
   *         @arg @ref LL_EXTI_LINE_43
-  *         @arg @ref LL_EXTI_LINE_44
+  *         @arg @ref LL_EXTI_LINE_44 (*)
   *         @arg @ref LL_EXTI_LINE_46
-  *         @arg @ref LL_EXTI_LINE_45
+  *         @arg @ref LL_EXTI_LINE_45 (*)
   *         @arg @ref LL_EXTI_LINE_47
   *         @arg @ref LL_EXTI_LINE_48
   *         @arg @ref LL_EXTI_LINE_49
   *         @arg @ref LL_EXTI_LINE_50
   *         @arg @ref LL_EXTI_LINE_51
-  *         @arg @ref LL_EXTI_LINE_52
+  *         @arg @ref LL_EXTI_LINE_52 (*)
   *         @arg @ref LL_EXTI_LINE_53
-  *         @arg @ref LL_EXTI_LINE_54
-  *         @arg @ref LL_EXTI_LINE_55
-  *         @arg @ref LL_EXTI_LINE_56
-  *         @arg @ref LL_EXTI_LINE_57
+  *         @arg @ref LL_EXTI_LINE_54 (*)
+  *         @arg @ref LL_EXTI_LINE_55 (*)
+  *         @arg @ref LL_EXTI_LINE_56 (*)
+  *         @arg @ref LL_EXTI_LINE_57 (*)
   *         @arg @ref LL_EXTI_LINE_58
   *         @arg @ref LL_EXTI_LINE_59 (*)
   *         @arg @ref LL_EXTI_LINE_60 (*)
@@ -870,10 +870,10 @@ __STATIC_INLINE void LL_EXTI_DisableEvent_0_31(uint32_t ExtiLine)
   * @rmtoll EMR2         EMx           LL_EXTI_DisableEvent_32_63
   * @param  ExtiLine This parameter can be a combination of the following values:
   *         @arg @ref LL_EXTI_LINE_32
-  *         @arg @ref LL_EXTI_LINE_33
-  *         @arg @ref LL_EXTI_LINE_34
-  *         @arg @ref LL_EXTI_LINE_35
-  *         @arg @ref LL_EXTI_LINE_36
+  *         @arg @ref LL_EXTI_LINE_33 (*)
+  *         @arg @ref LL_EXTI_LINE_34 (*)
+  *         @arg @ref LL_EXTI_LINE_35 (*)
+  *         @arg @ref LL_EXTI_LINE_36 (*)
   *         @arg @ref LL_EXTI_LINE_37
   *         @arg @ref LL_EXTI_LINE_38
   *         @arg @ref LL_EXTI_LINE_39
@@ -881,19 +881,19 @@ __STATIC_INLINE void LL_EXTI_DisableEvent_0_31(uint32_t ExtiLine)
   *         @arg @ref LL_EXTI_LINE_41
   *         @arg @ref LL_EXTI_LINE_42
   *         @arg @ref LL_EXTI_LINE_43
-  *         @arg @ref LL_EXTI_LINE_44
+  *         @arg @ref LL_EXTI_LINE_44 (*)
   *         @arg @ref LL_EXTI_LINE_46
   *         @arg @ref LL_EXTI_LINE_47
   *         @arg @ref LL_EXTI_LINE_48
   *         @arg @ref LL_EXTI_LINE_49
   *         @arg @ref LL_EXTI_LINE_50
   *         @arg @ref LL_EXTI_LINE_51
-  *         @arg @ref LL_EXTI_LINE_52
+  *         @arg @ref LL_EXTI_LINE_52 (*)
   *         @arg @ref LL_EXTI_LINE_53
-  *         @arg @ref LL_EXTI_LINE_54
-  *         @arg @ref LL_EXTI_LINE_55
-  *         @arg @ref LL_EXTI_LINE_56
-  *         @arg @ref LL_EXTI_LINE_57
+  *         @arg @ref LL_EXTI_LINE_54 (*)
+  *         @arg @ref LL_EXTI_LINE_55 (*)
+  *         @arg @ref LL_EXTI_LINE_56 (*)
+  *         @arg @ref LL_EXTI_LINE_57 (*)
   *         @arg @ref LL_EXTI_LINE_58
   *         @arg @ref LL_EXTI_LINE_59 (*)
   *         @arg @ref LL_EXTI_LINE_60 (*)
@@ -980,10 +980,10 @@ __STATIC_INLINE uint32_t LL_EXTI_IsEnabledEvent_0_31(uint32_t ExtiLine)
   * @rmtoll EMR2         EMx           LL_EXTI_IsEnabledEvent_32_63
   * @param  ExtiLine This parameter can be a combination of the following values:
   *         @arg @ref LL_EXTI_LINE_32
-  *         @arg @ref LL_EXTI_LINE_33
-  *         @arg @ref LL_EXTI_LINE_34
-  *         @arg @ref LL_EXTI_LINE_35
-  *         @arg @ref LL_EXTI_LINE_36
+  *         @arg @ref LL_EXTI_LINE_33 (*)
+  *         @arg @ref LL_EXTI_LINE_34 (*)
+  *         @arg @ref LL_EXTI_LINE_35 (*)
+  *         @arg @ref LL_EXTI_LINE_36 (*)
   *         @arg @ref LL_EXTI_LINE_37
   *         @arg @ref LL_EXTI_LINE_38
   *         @arg @ref LL_EXTI_LINE_39
@@ -991,19 +991,19 @@ __STATIC_INLINE uint32_t LL_EXTI_IsEnabledEvent_0_31(uint32_t ExtiLine)
   *         @arg @ref LL_EXTI_LINE_41
   *         @arg @ref LL_EXTI_LINE_42
   *         @arg @ref LL_EXTI_LINE_43
-  *         @arg @ref LL_EXTI_LINE_44
+  *         @arg @ref LL_EXTI_LINE_44 (*)
   *         @arg @ref LL_EXTI_LINE_46
   *         @arg @ref LL_EXTI_LINE_47
   *         @arg @ref LL_EXTI_LINE_48
   *         @arg @ref LL_EXTI_LINE_49
   *         @arg @ref LL_EXTI_LINE_50
   *         @arg @ref LL_EXTI_LINE_51
-  *         @arg @ref LL_EXTI_LINE_52
+  *         @arg @ref LL_EXTI_LINE_52 (*)
   *         @arg @ref LL_EXTI_LINE_53
-  *         @arg @ref LL_EXTI_LINE_54
-  *         @arg @ref LL_EXTI_LINE_55
-  *         @arg @ref LL_EXTI_LINE_56
-  *         @arg @ref LL_EXTI_LINE_57
+  *         @arg @ref LL_EXTI_LINE_54 (*)
+  *         @arg @ref LL_EXTI_LINE_55 (*)
+  *         @arg @ref LL_EXTI_LINE_56 (*)
+  *         @arg @ref LL_EXTI_LINE_57 (*)
   *         @arg @ref LL_EXTI_LINE_58
   *         @arg @ref LL_EXTI_LINE_59 (*)
   *         @arg @ref LL_EXTI_LINE_60 (*)
@@ -2227,10 +2227,10 @@ __STATIC_INLINE void LL_EXTI_EnableSecure_0_31(uint32_t ExtiLine)
   * @rmtoll SECCFGR2     SECx          LL_EXTI_EnableSecure_32_63
   * @param  ExtiLine This parameter can be one of the following values:
   *         @arg @ref LL_EXTI_LINE_32
-  *         @arg @ref LL_EXTI_LINE_33
-  *         @arg @ref LL_EXTI_LINE_34
-  *         @arg @ref LL_EXTI_LINE_35
-  *         @arg @ref LL_EXTI_LINE_36
+  *         @arg @ref LL_EXTI_LINE_33 (*)
+  *         @arg @ref LL_EXTI_LINE_34 (*)
+  *         @arg @ref LL_EXTI_LINE_35 (*)
+  *         @arg @ref LL_EXTI_LINE_36 (*)
   *         @arg @ref LL_EXTI_LINE_37
   *         @arg @ref LL_EXTI_LINE_38
   *         @arg @ref LL_EXTI_LINE_39
@@ -2238,19 +2238,19 @@ __STATIC_INLINE void LL_EXTI_EnableSecure_0_31(uint32_t ExtiLine)
   *         @arg @ref LL_EXTI_LINE_41
   *         @arg @ref LL_EXTI_LINE_42
   *         @arg @ref LL_EXTI_LINE_43
-  *         @arg @ref LL_EXTI_LINE_44
+  *         @arg @ref LL_EXTI_LINE_44 (*)
   *         @arg @ref LL_EXTI_LINE_46
   *         @arg @ref LL_EXTI_LINE_47
   *         @arg @ref LL_EXTI_LINE_48
   *         @arg @ref LL_EXTI_LINE_49
   *         @arg @ref LL_EXTI_LINE_50
   *         @arg @ref LL_EXTI_LINE_51
-  *         @arg @ref LL_EXTI_LINE_52
+  *         @arg @ref LL_EXTI_LINE_52 (*)
   *         @arg @ref LL_EXTI_LINE_53
-  *         @arg @ref LL_EXTI_LINE_54
-  *         @arg @ref LL_EXTI_LINE_55
-  *         @arg @ref LL_EXTI_LINE_56
-  *         @arg @ref LL_EXTI_LINE_57
+  *         @arg @ref LL_EXTI_LINE_54 (*)
+  *         @arg @ref LL_EXTI_LINE_55 (*)
+  *         @arg @ref LL_EXTI_LINE_56 (*)
+  *         @arg @ref LL_EXTI_LINE_57 (*)
   *         @arg @ref LL_EXTI_LINE_58
   *         @arg @ref LL_EXTI_LINE_59
   *         @arg @ref LL_EXTI_LINE_60
@@ -2334,10 +2334,10 @@ __STATIC_INLINE void LL_EXTI_DisableSecure_0_31(uint32_t ExtiLine)
   * @rmtoll SECCFGR2     SECx          LL_EXTI_DisableSecure_32_63
   * @param  ExtiLine This parameter can be one of the following values:
   *         @arg @ref LL_EXTI_LINE_32
-  *         @arg @ref LL_EXTI_LINE_33
-  *         @arg @ref LL_EXTI_LINE_34
-  *         @arg @ref LL_EXTI_LINE_35
-  *         @arg @ref LL_EXTI_LINE_36
+  *         @arg @ref LL_EXTI_LINE_33 (*)
+  *         @arg @ref LL_EXTI_LINE_34 (*)
+  *         @arg @ref LL_EXTI_LINE_35 (*)
+  *         @arg @ref LL_EXTI_LINE_36 (*)
   *         @arg @ref LL_EXTI_LINE_37
   *         @arg @ref LL_EXTI_LINE_38
   *         @arg @ref LL_EXTI_LINE_39
@@ -2345,19 +2345,19 @@ __STATIC_INLINE void LL_EXTI_DisableSecure_0_31(uint32_t ExtiLine)
   *         @arg @ref LL_EXTI_LINE_41
   *         @arg @ref LL_EXTI_LINE_42
   *         @arg @ref LL_EXTI_LINE_43
-  *         @arg @ref LL_EXTI_LINE_44
+  *         @arg @ref LL_EXTI_LINE_44 (*)
   *         @arg @ref LL_EXTI_LINE_46
   *         @arg @ref LL_EXTI_LINE_47
   *         @arg @ref LL_EXTI_LINE_48
   *         @arg @ref LL_EXTI_LINE_49
   *         @arg @ref LL_EXTI_LINE_50
   *         @arg @ref LL_EXTI_LINE_51
-  *         @arg @ref LL_EXTI_LINE_52
+  *         @arg @ref LL_EXTI_LINE_52 (*)
   *         @arg @ref LL_EXTI_LINE_53
-  *         @arg @ref LL_EXTI_LINE_54
-  *         @arg @ref LL_EXTI_LINE_55
-  *         @arg @ref LL_EXTI_LINE_56
-  *         @arg @ref LL_EXTI_LINE_57
+  *         @arg @ref LL_EXTI_LINE_54 (*)
+  *         @arg @ref LL_EXTI_LINE_55 (*)
+  *         @arg @ref LL_EXTI_LINE_56 (*)
+  *         @arg @ref LL_EXTI_LINE_57 (*)
   *         @arg @ref LL_EXTI_LINE_58
   *         @arg @ref LL_EXTI_LINE_59
   *         @arg @ref LL_EXTI_LINE_60
@@ -2444,10 +2444,10 @@ __STATIC_INLINE uint32_t LL_EXTI_IsEnabledSecure_0_31(uint32_t ExtiLine)
   * @rmtoll SECCFGR2     SECx          LL_EXTI_IsEnabledSecure_32_63
   * @param  ExtiLine This parameter can be one of the following values:
   *         @arg @ref LL_EXTI_LINE_32
-  *         @arg @ref LL_EXTI_LINE_33
-  *         @arg @ref LL_EXTI_LINE_34
-  *         @arg @ref LL_EXTI_LINE_35
-  *         @arg @ref LL_EXTI_LINE_36
+  *         @arg @ref LL_EXTI_LINE_33 (*)
+  *         @arg @ref LL_EXTI_LINE_34 (*)
+  *         @arg @ref LL_EXTI_LINE_35 (*)
+  *         @arg @ref LL_EXTI_LINE_36 (*)
   *         @arg @ref LL_EXTI_LINE_37
   *         @arg @ref LL_EXTI_LINE_38
   *         @arg @ref LL_EXTI_LINE_39
@@ -2455,19 +2455,19 @@ __STATIC_INLINE uint32_t LL_EXTI_IsEnabledSecure_0_31(uint32_t ExtiLine)
   *         @arg @ref LL_EXTI_LINE_41
   *         @arg @ref LL_EXTI_LINE_42
   *         @arg @ref LL_EXTI_LINE_43
-  *         @arg @ref LL_EXTI_LINE_44
+  *         @arg @ref LL_EXTI_LINE_44 (*)
   *         @arg @ref LL_EXTI_LINE_46
   *         @arg @ref LL_EXTI_LINE_47
   *         @arg @ref LL_EXTI_LINE_48
   *         @arg @ref LL_EXTI_LINE_49
   *         @arg @ref LL_EXTI_LINE_50
   *         @arg @ref LL_EXTI_LINE_51
-  *         @arg @ref LL_EXTI_LINE_52
+  *         @arg @ref LL_EXTI_LINE_52 (*)
   *         @arg @ref LL_EXTI_LINE_53
-  *         @arg @ref LL_EXTI_LINE_54
-  *         @arg @ref LL_EXTI_LINE_55
-  *         @arg @ref LL_EXTI_LINE_56
-  *         @arg @ref LL_EXTI_LINE_57
+  *         @arg @ref LL_EXTI_LINE_54 (*)
+  *         @arg @ref LL_EXTI_LINE_55 (*)
+  *         @arg @ref LL_EXTI_LINE_56 (*)
+  *         @arg @ref LL_EXTI_LINE_57 (*)
   *         @arg @ref LL_EXTI_LINE_58
   *         @arg @ref LL_EXTI_LINE_59
   *         @arg @ref LL_EXTI_LINE_60
@@ -2560,10 +2560,10 @@ __STATIC_INLINE void LL_EXTI_EnablePrivilege_0_31(uint32_t ExtiLine)
   * @rmtoll PRIVCFGR2    PRIVx         LL_EXTI_EnablePrivilege_32_63
   * @param  ExtiLine This parameter can be one of the following values:
   *         @arg @ref LL_EXTI_LINE_32
-  *         @arg @ref LL_EXTI_LINE_33
-  *         @arg @ref LL_EXTI_LINE_34
-  *         @arg @ref LL_EXTI_LINE_35
-  *         @arg @ref LL_EXTI_LINE_36
+  *         @arg @ref LL_EXTI_LINE_33 (*)
+  *         @arg @ref LL_EXTI_LINE_34 (*)
+  *         @arg @ref LL_EXTI_LINE_35 (*)
+  *         @arg @ref LL_EXTI_LINE_36 (*)
   *         @arg @ref LL_EXTI_LINE_37
   *         @arg @ref LL_EXTI_LINE_38
   *         @arg @ref LL_EXTI_LINE_39
@@ -2571,19 +2571,19 @@ __STATIC_INLINE void LL_EXTI_EnablePrivilege_0_31(uint32_t ExtiLine)
   *         @arg @ref LL_EXTI_LINE_41
   *         @arg @ref LL_EXTI_LINE_42
   *         @arg @ref LL_EXTI_LINE_43
-  *         @arg @ref LL_EXTI_LINE_44
+  *         @arg @ref LL_EXTI_LINE_44 (*)
   *         @arg @ref LL_EXTI_LINE_46
   *         @arg @ref LL_EXTI_LINE_47
   *         @arg @ref LL_EXTI_LINE_48
   *         @arg @ref LL_EXTI_LINE_49
   *         @arg @ref LL_EXTI_LINE_50
   *         @arg @ref LL_EXTI_LINE_51
-  *         @arg @ref LL_EXTI_LINE_52
+  *         @arg @ref LL_EXTI_LINE_52 (*)
   *         @arg @ref LL_EXTI_LINE_53
-  *         @arg @ref LL_EXTI_LINE_54
-  *         @arg @ref LL_EXTI_LINE_55
-  *         @arg @ref LL_EXTI_LINE_56
-  *         @arg @ref LL_EXTI_LINE_57
+  *         @arg @ref LL_EXTI_LINE_54 (*)
+  *         @arg @ref LL_EXTI_LINE_55 (*)
+  *         @arg @ref LL_EXTI_LINE_56 (*)
+  *         @arg @ref LL_EXTI_LINE_57 (*)
   *         @arg @ref LL_EXTI_LINE_58
   *         @arg @ref LL_EXTI_LINE_59
   *         @arg @ref LL_EXTI_LINE_60
@@ -2667,10 +2667,10 @@ __STATIC_INLINE void LL_EXTI_DisablePrivilege_0_31(uint32_t ExtiLine)
   * @rmtoll PRIVCFGR2    PRIVx         LL_EXTI_DisablePrivilege_32_63
   * @param  ExtiLine This parameter can be one of the following values:
   *         @arg @ref LL_EXTI_LINE_32
-  *         @arg @ref LL_EXTI_LINE_33
-  *         @arg @ref LL_EXTI_LINE_34
-  *         @arg @ref LL_EXTI_LINE_35
-  *         @arg @ref LL_EXTI_LINE_36
+  *         @arg @ref LL_EXTI_LINE_33 (*)
+  *         @arg @ref LL_EXTI_LINE_34 (*)
+  *         @arg @ref LL_EXTI_LINE_35 (*)
+  *         @arg @ref LL_EXTI_LINE_36 (*)
   *         @arg @ref LL_EXTI_LINE_37
   *         @arg @ref LL_EXTI_LINE_38
   *         @arg @ref LL_EXTI_LINE_39
@@ -2678,19 +2678,19 @@ __STATIC_INLINE void LL_EXTI_DisablePrivilege_0_31(uint32_t ExtiLine)
   *         @arg @ref LL_EXTI_LINE_41
   *         @arg @ref LL_EXTI_LINE_42
   *         @arg @ref LL_EXTI_LINE_43
-  *         @arg @ref LL_EXTI_LINE_44
+  *         @arg @ref LL_EXTI_LINE_44 (*)
   *         @arg @ref LL_EXTI_LINE_46
   *         @arg @ref LL_EXTI_LINE_47
   *         @arg @ref LL_EXTI_LINE_48
   *         @arg @ref LL_EXTI_LINE_49
   *         @arg @ref LL_EXTI_LINE_50
   *         @arg @ref LL_EXTI_LINE_51
-  *         @arg @ref LL_EXTI_LINE_52
+  *         @arg @ref LL_EXTI_LINE_52 (*)
   *         @arg @ref LL_EXTI_LINE_53
-  *         @arg @ref LL_EXTI_LINE_54
-  *         @arg @ref LL_EXTI_LINE_55
-  *         @arg @ref LL_EXTI_LINE_56
-  *         @arg @ref LL_EXTI_LINE_57
+  *         @arg @ref LL_EXTI_LINE_54 (*)
+  *         @arg @ref LL_EXTI_LINE_55 (*)
+  *         @arg @ref LL_EXTI_LINE_56 (*)
+  *         @arg @ref LL_EXTI_LINE_57 (*)
   *         @arg @ref LL_EXTI_LINE_58
   *         @arg @ref LL_EXTI_LINE_59
   *         @arg @ref LL_EXTI_LINE_60
@@ -2774,10 +2774,10 @@ __STATIC_INLINE uint32_t LL_EXTI_IsEnabledPrivilege_0_31(uint32_t ExtiLine)
   * @rmtoll PRIVCFGR2    PRIVx         LL_EXTI_IsEnabledPrivilege_32_63
   * @param  ExtiLine This parameter can be one of the following values:
   *         @arg @ref LL_EXTI_LINE_32
-  *         @arg @ref LL_EXTI_LINE_33
-  *         @arg @ref LL_EXTI_LINE_34
-  *         @arg @ref LL_EXTI_LINE_35
-  *         @arg @ref LL_EXTI_LINE_36
+  *         @arg @ref LL_EXTI_LINE_33 (*)
+  *         @arg @ref LL_EXTI_LINE_34 (*)
+  *         @arg @ref LL_EXTI_LINE_35 (*)
+  *         @arg @ref LL_EXTI_LINE_36 (*)
   *         @arg @ref LL_EXTI_LINE_37
   *         @arg @ref LL_EXTI_LINE_38
   *         @arg @ref LL_EXTI_LINE_39
@@ -2785,19 +2785,19 @@ __STATIC_INLINE uint32_t LL_EXTI_IsEnabledPrivilege_0_31(uint32_t ExtiLine)
   *         @arg @ref LL_EXTI_LINE_41
   *         @arg @ref LL_EXTI_LINE_42
   *         @arg @ref LL_EXTI_LINE_43
-  *         @arg @ref LL_EXTI_LINE_44
+  *         @arg @ref LL_EXTI_LINE_44 (*)
   *         @arg @ref LL_EXTI_LINE_46
   *         @arg @ref LL_EXTI_LINE_47
   *         @arg @ref LL_EXTI_LINE_48
   *         @arg @ref LL_EXTI_LINE_49
   *         @arg @ref LL_EXTI_LINE_50
   *         @arg @ref LL_EXTI_LINE_51
-  *         @arg @ref LL_EXTI_LINE_52
+  *         @arg @ref LL_EXTI_LINE_52 (*)
   *         @arg @ref LL_EXTI_LINE_53
-  *         @arg @ref LL_EXTI_LINE_54
-  *         @arg @ref LL_EXTI_LINE_55
-  *         @arg @ref LL_EXTI_LINE_56
-  *         @arg @ref LL_EXTI_LINE_57
+  *         @arg @ref LL_EXTI_LINE_54 (*)
+  *         @arg @ref LL_EXTI_LINE_55 (*)
+  *         @arg @ref LL_EXTI_LINE_56 (*)
+  *         @arg @ref LL_EXTI_LINE_57 (*)
   *         @arg @ref LL_EXTI_LINE_58
   *         @arg @ref LL_EXTI_LINE_59
   *         @arg @ref LL_EXTI_LINE_60

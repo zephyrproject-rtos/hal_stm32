@@ -516,7 +516,14 @@ HAL_StatusTypeDef HAL_MMC_InitCard(MMC_HandleTypeDef *hmmc)
     hmmc->ErrorCode = SDMMC_ERROR_INVALID_PARAMETER;
     return HAL_ERROR;
   }
-  Init.ClockDiv = sdmmc_clk / (2U * MMC_INIT_FREQ);
+  if (sdmmc_clk <= MMC_INIT_FREQ)
+  {
+    Init.ClockDiv = 0U;
+  }
+  else
+  {
+    Init.ClockDiv = (sdmmc_clk / (2U * MMC_INIT_FREQ)) + 1U;
+  }
 
 #if (USE_SD_TRANSCEIVER != 0U)
   Init.TranceiverPresent = SDMMC_TRANSCEIVER_NOT_PRESENT;
@@ -3381,7 +3388,7 @@ HAL_StatusTypeDef HAL_MMC_SleepDevice(MMC_HandleTypeDef *hmmc)
                   {
                     /* Send CMD5 CMD_MMC_SLEEP_AWAKE with RCA and SLEEP as argument */
                     errorstate = SDMMC_CmdSleepMmc(hmmc->Instance,
-                                                   ((hmmc->MmcCard.RelCardAdd << 16U) | (0x1UL << 15U)));
+                                                   ((hmmc->MmcCard.RelCardAdd << 16UL) | (0x1UL << 15UL)));
                     if (errorstate == HAL_MMC_ERROR_NONE)
                     {
                       /* Wait that the device is ready by checking the D0 line */

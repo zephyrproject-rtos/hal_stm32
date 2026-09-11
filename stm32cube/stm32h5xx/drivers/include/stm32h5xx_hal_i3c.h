@@ -98,6 +98,20 @@ typedef struct
                                        when receiving a hot join request from target.
                                        This parameter can be set to ENABLE or DISABLE                                 */
 
+#if defined(I3C_TIMINGR2_STALLL)
+  FunctionalState ACKI2CAddrState;  /*!< Specifies the Enable/Disable state of the controller clock stall
+                                         on data ACK/NACK bit of legacy I2C address phase.
+                                         This parameter can be set to ENABLE or DISABLE                               */
+
+  FunctionalState ACKI2CWriteState; /*!< Specifies the Enable/Disable state of the controller clock stall
+                                         on ACK/NACK bit of legacy I2C write message phase.
+                                         This parameter can be set to ENABLE or DISABLE                               */
+
+  FunctionalState ACKI2CReadState;  /*!< Specifies the Enable/Disable state of the controller clock stall
+                                         on ACK/NACK bit of legacy I2C read message phase.
+                                         This parameter can be set to ENABLE or DISABLE                               */
+
+#endif /* I3C_TIMINGR2_STALLL */
   FunctionalState ACKStallState;  /*!< Specifies the Enable/Disable state of the controller clock stall
                                        on the ACK phase.
                                        This parameter can be set to ENABLE or DISABLE                                 */
@@ -761,6 +775,10 @@ typedef  void (*pI3C_TgtReqDynamicAddrCallbackTypeDef)(I3C_HandleTypeDef *hi3c, 
   */
 #define HAL_I3C_SDA_HOLD_TIME_0_5  LL_I3C_SDA_HOLD_TIME_0_5 /*!< SDA hold time equal to 0.5 x ti3cclk */
 #define HAL_I3C_SDA_HOLD_TIME_1_5  LL_I3C_SDA_HOLD_TIME_1_5 /*!< SDA hold time equal to 1.5 x ti3cclk */
+#if defined(I3C_TIMINGR1_SDA_HD_1)
+#define HAL_I3C_SDA_HOLD_TIME_2_5  LL_I3C_SDA_HOLD_TIME_2_5 /*!< SDA hold time equal to 2.5 x ti3cclk */
+#define HAL_I3C_SDA_HOLD_TIME_3_5  LL_I3C_SDA_HOLD_TIME_3_5 /*!< SDA hold time equal to 3.5 x ti3cclk */
+#endif /* I3C_TIMINGR1_SDA_HD_1 */
 /**
   * @}
   */
@@ -959,6 +977,61 @@ typedef  void (*pI3C_TgtReqDynamicAddrCallbackTypeDef)(I3C_HandleTypeDef *hi3c, 
 /**
   * @}
   */
+#if defined(I3C_MISR_CFNFMIS)
+
+/** @defgroup I3C_COMMON_INTERRUPT_MASKS I3C COMMON INTERRUPT MASKS
+  * @{
+  */
+#define HAL_I3C_IT_MASKS_TXFNFMIS      LL_I3C_MISR_TXFNFMIS /*!< Tx FIFO not full interrupt mask      */
+#define HAL_I3C_IT_MASKS_RXFNEMIS      LL_I3C_MISR_RXFNEMIS /*!< Rx FIFO not empty interrupt mask     */
+#define HAL_I3C_IT_MASKS_FCMIS         LL_I3C_MISR_FCMIS    /*!< Frame complete interrupt mask        */
+#define HAL_I3C_IT_MASKS_ERRMIS        LL_I3C_MISR_ERRMIS   /*!< Error interrupt mask                 */
+#define HAL_I3C_ALL_COMMON_ITS_MASK    (uint32_t)(LL_I3C_MISR_TXFNFMIS | LL_I3C_MISR_RXFNEMIS | \
+                                                  LL_I3C_MISR_FCMIS    | LL_I3C_MISR_ERRMIS)
+/**
+  * @}
+  */
+
+/** @defgroup I3C_TARGET_INTERRUPT_MASKS I3C TARGET INTERRUPT MASKS
+  * @{
+  */
+#define HAL_I3C_IT_MASKS_IBIENDMIS     LL_I3C_MISR_IBIENDMIS /*!< IBI end interrupt mask                    */
+#define HAL_I3C_IT_MASKS_CRUPDMIS      LL_I3C_MISR_CRUPDMIS  /*!< controller-role update interrupt mask     */
+#define HAL_I3C_IT_MASKS_WKPMIS        LL_I3C_MISR_WKPMIS    /*!< wakeup interrupt mask                     */
+#define HAL_I3C_IT_MASKS_GETMIS        LL_I3C_MISR_GETMIS    /*!< GETxxx CCC interrupt mask                 */
+#define HAL_I3C_IT_MASKS_STAMIS        LL_I3C_MISR_STAMIS    /*!< GETSTATUS CCC interrupt mask              */
+#define HAL_I3C_IT_MASKS_DAUPDMIS      LL_I3C_MISR_DAUPDMIS  /*!< ENTDAA/RSTDAA/SETNEWDA CCC interrupt mask */
+#define HAL_I3C_IT_MASKS_MWLUPDMIS     LL_I3C_MISR_MWLUPDMIS /*!< SETMWL CCC interrupt mask                 */
+#define HAL_I3C_IT_MASKS_MRLUPDMIS     LL_I3C_MISR_MRLUPDMIS /*!< SETMRL CCC interrupt mask                 */
+#define HAL_I3C_IT_MASKS_RSTMIS        LL_I3C_MISR_RSTMIS    /*!< reset pattern interrupt mask              */
+#define HAL_I3C_IT_MASKS_ASUPDMIS      LL_I3C_MISR_ASUPDMIS  /*!< ENTASx CCC interrupt mask                 */
+#define HAL_I3C_IT_MASKS_INTUPDMIS     LL_I3C_MISR_INTUPDMIS /*!< ENEC/DISEC CCC interrupt mask             */
+#define HAL_I3C_IT_MASKS_DEFMIS        LL_I3C_MISR_DEFMIS    /*!< DEFTGTS CCC interrupt mask                */
+#define HAL_I3C_IT_GRPMIS              LL_I3C_MISR_GRPMIS    /*!< DEFGRPA CCC interrupt mask                */
+#define HAL_I3C_ALL_TGT_ITS_MASK     (uint32_t)(LL_I3C_MISR_IBIENDMIS | LL_I3C_MISR_CRUPDMIS  | LL_I3C_MISR_WKPMIS   | \
+                                                LL_I3C_MISR_GETMIS    | LL_I3C_MISR_STAMIS    | LL_I3C_MISR_DAUPDMIS | \
+                                                LL_I3C_MISR_MWLUPDMIS | LL_I3C_MISR_MRLUPDMIS | LL_I3C_MISR_RSTMIS   | \
+                                                LL_I3C_MISR_ASUPDMIS  | LL_I3C_MISR_INTUPDMIS | LL_I3C_MISR_DEFMIS   | \
+                                                LL_I3C_MISR_GRPMIS)
+/**
+  * @}
+  */
+
+/** @defgroup I3C_CONTROLLER_INTERRUPT I3C CONTROLLER INTERRUPT
+  * @{
+  */
+#define HAL_I3C_IT_CFNFMIS              LL_I3C_MISR_CFNFMIS     /*!< Control FIFO not full interrupt mask     */
+#define HAL_I3C_IT_SFNEMIS              LL_I3C_MISR_SFNEMIS     /*!< Status FIFO not empty interrupt mask     */
+#define HAL_I3C_IT_HJMIS                LL_I3C_MISR_HJMIS       /*!< Hot-join interrupt mask                  */
+#define HAL_I3C_IT_CRMIS                LL_I3C_MISR_CRMIS       /*!< Controller-role request interrupt mask   */
+#define HAL_I3C_IT_IBIMIS               LL_I3C_MISR_IBIMIS      /*!< IBI request interrupt mask               */
+#define HAL_I3C_IT_RXTGTENDMIS          LL_I3C_MISR_RXTGTENDMIS /*!< Target-initiated read end interrupt mask */
+#define HAL_I3C_ALL_CTRL_ITS_MASK       (uint32_t)(LL_I3C_MISR_CFNFMIS | LL_I3C_MISR_SFNEMIS | LL_I3C_MISR_HJMIS | \
+                                                   LL_I3C_MISR_CRMIS   | LL_I3C_MISR_IBIMIS  | LL_I3C_MISR_RXTGTENDMIS)
+/**
+  * @}
+  */
+#endif /* I3C_MISR_CFNFMIS */
 
 /** @defgroup I3C_BCR_IN_PAYLOAD I3C BCR IN PAYLOAD
   * @{
@@ -1230,6 +1303,8 @@ HAL_StatusTypeDef HAL_I3C_Ctrl_IsDeviceI2C_Ready(I3C_HandleTypeDef *hi3c,
                                                  uint8_t            devAddress,
                                                  uint32_t           trials,
                                                  uint32_t           timeout);
+/* Controller patterns APIs */
+HAL_StatusTypeDef HAL_I3C_Ctrl_GeneratePatterns(I3C_HandleTypeDef *hi3c, uint32_t pattern, uint32_t timeout);
 /* Controller arbitration APIs */
 HAL_StatusTypeDef HAL_I3C_Ctrl_GenerateArbitration(I3C_HandleTypeDef *hi3c, uint32_t timeout);
 
@@ -1304,8 +1379,15 @@ HAL_StatusTypeDef HAL_I3C_Get_ENTDAA_Payload_Info(I3C_HandleTypeDef *hi3c,
 #define IS_I3C_ENTDAA_OPTION(__OPTION__) (((__OPTION__) == I3C_RSTDAA_THEN_ENTDAA) || \
                                           ((__OPTION__) == I3C_ONLY_ENTDAA))
 
+#if defined(I3C_TIMINGR1_SDA_HD_1)
+#define IS_I3C_SDAHOLDTIME_VALUE(__VALUE__) (((__VALUE__) == HAL_I3C_SDA_HOLD_TIME_0_5) || \
+                                             ((__VALUE__) == HAL_I3C_SDA_HOLD_TIME_1_5) || \
+                                             ((__VALUE__) == HAL_I3C_SDA_HOLD_TIME_2_5) || \
+                                             ((__VALUE__) == HAL_I3C_SDA_HOLD_TIME_3_5))
+#else
 #define IS_I3C_SDAHOLDTIME_VALUE(__VALUE__) (((__VALUE__) == HAL_I3C_SDA_HOLD_TIME_0_5) || \
                                              ((__VALUE__) == HAL_I3C_SDA_HOLD_TIME_1_5))
+#endif /* I3C_TIMINGR1_SDA_HD_1 */
 
 #define IS_I3C_WAITTIME_VALUE(__VALUE__) (((__VALUE__) == HAL_I3C_OWN_ACTIVITY_STATE_0) || \
                                           ((__VALUE__) == HAL_I3C_OWN_ACTIVITY_STATE_1) || \
@@ -1367,6 +1449,9 @@ HAL_StatusTypeDef HAL_I3C_Get_ENTDAA_Payload_Info(I3C_HandleTypeDef *hi3c,
 #define IS_I3C_DMADESTINATIONWORD_VALUE(__VALUE__) ((__VALUE__) == DMA_DEST_DATAWIDTH_WORD)
 
 #define I3C_GET_DMA_REMAIN_DATA(__HANDLE__) (__HAL_DMA_GET_COUNTER(__HANDLE__) + HAL_DMAEx_GetFifoLevel(__HANDLE__))
+#define IS_I3C_PATTERN(__PATTERN__) (((__PATTERN__) == HAL_I3C_TARGET_RESET_PATTERN) || \
+                                     ((__PATTERN__) == HAL_I3C_HDR_EXIT_PATTERN))
+
 #define IS_I3C_RESET_PATTERN(__RSTPTRN__) (((__RSTPTRN__) == HAL_I3C_RESET_PATTERN_ENABLE)   || \
                                            ((__RSTPTRN__) == HAL_I3C_RESET_PATTERN_DISABLE))
 /**

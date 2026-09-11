@@ -61,7 +61,8 @@
     && !defined (STM32H5F4xx) && !defined (STM32H5E4xx) \
     && !defined (STM32H573xx) && !defined (STM32H563xx) \
     && !defined (STM32H562xx) && !defined (STM32H503xx) \
-    && !defined (STM32H533xx) && !defined (STM32H523xx)
+    && !defined (STM32H533xx) && !defined (STM32H523xx) \
+	&& !defined (STM32H543xx) && !defined (STM32H553xx)
   /* #define STM32H543xx  */   /*!< STM32H543xx Devices   */
   /* #define STM32H553xx  */   /*!< STM32H553xx Devices   */
   /* #define STM32H5F5xx  */   /*!< STM32H5F5xx Devices   */
@@ -92,7 +93,7 @@
   * @brief CMSIS Device version number 1.4.0
   */
 #define __STM32H5_CMSIS_VERSION_MAIN   (0x01U) /*!< [31:24] main version */
-#define __STM32H5_CMSIS_VERSION_SUB1   (0x06U) /*!< [23:16] sub1 version */
+#define __STM32H5_CMSIS_VERSION_SUB1   (0x07U) /*!< [23:16] sub1 version */
 #define __STM32H5_CMSIS_VERSION_SUB2   (0x00U) /*!< [15:8]  sub2 version */
 #define __STM32H5_CMSIS_VERSION_RC     (0x00U) /*!< [7:0]  release candidate */
 #define __STM32H5_CMSIS_VERSION        ((__STM32H5_CMSIS_VERSION_MAIN << 24U)\
@@ -107,8 +108,11 @@
 /** @addtogroup Device_Included
   * @{
   */
-
-#if defined(STM32H5F5xx)
+#if defined(STM32H543xx)
+  #include "stm32h543xx.h"
+#elif defined(STM32H553xx)
+  #include "stm32h553xx.h"
+#elif defined(STM32H5F5xx)
   #include "stm32h5f5xx.h"
 #elif defined(STM32H5F4xx)
   #include "stm32h5f4xx.h"

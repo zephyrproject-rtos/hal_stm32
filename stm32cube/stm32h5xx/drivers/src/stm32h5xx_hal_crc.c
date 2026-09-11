@@ -154,11 +154,19 @@ HAL_StatusTypeDef HAL_CRC_Init(CRC_HandleTypeDef *hcrc)
 
   /* set input data inversion mode */
   assert_param(IS_CRC_INPUTDATA_INVERSION_MODE(hcrc->Init.InputDataInversionMode));
+#if defined(CRC_CR_RTYPE_OUT)
+  MODIFY_REG(hcrc->Instance->CR, (CRC_CR_RTYPE_IN | CRC_CR_REV_IN), hcrc->Init.InputDataInversionMode);
+#else
   MODIFY_REG(hcrc->Instance->CR, CRC_CR_REV_IN, hcrc->Init.InputDataInversionMode);
+#endif /* CRC_CR_RTYPE_OUT */
 
   /* set output data inversion mode */
   assert_param(IS_CRC_OUTPUTDATA_INVERSION_MODE(hcrc->Init.OutputDataInversionMode));
+#if defined(CRC_CR_RTYPE_OUT)
+  MODIFY_REG(hcrc->Instance->CR, (CRC_CR_RTYPE_OUT | CRC_CR_REV_OUT), hcrc->Init.OutputDataInversionMode);
+#else
   MODIFY_REG(hcrc->Instance->CR, CRC_CR_REV_OUT, hcrc->Init.OutputDataInversionMode);
+#endif /* CRC_CR_RTYPE_OUT */
 
   /* makes sure the input data format (bytes, halfwords or words stream)
    * is properly specified by user */
