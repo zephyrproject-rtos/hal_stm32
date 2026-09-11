@@ -166,4 +166,3 @@ extern "C" {
 #endif
 
 #endif /* STM32U3xx_HAL_IRDA_EX_H */
-

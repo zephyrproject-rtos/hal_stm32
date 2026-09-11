@@ -19796,4 +19796,3 @@ typedef struct
 #endif
 
 #endif  /* STM32U356xx_H */
-

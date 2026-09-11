@@ -473,4 +473,3 @@ HAL_StatusTypeDef HAL_UARTEx_ClearConfigAutonomousMode(UART_HandleTypeDef *huart
 #endif
 
 #endif /* STM32U3xx_HAL_UART_EX_H */
-

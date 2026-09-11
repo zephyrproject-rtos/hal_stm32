@@ -367,4 +367,3 @@ extern "C" {
 #endif /* __cplusplus */
 
 #endif /* STM32U3xx_HAL_GPIO_EX_H */
-

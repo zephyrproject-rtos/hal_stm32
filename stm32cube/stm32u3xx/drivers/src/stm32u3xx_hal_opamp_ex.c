@@ -433,4 +433,3 @@ HAL_StatusTypeDef HAL_OPAMPEx_Unlock(OPAMP_HandleTypeDef *hopamp)
 /**
   * @}
   */
-

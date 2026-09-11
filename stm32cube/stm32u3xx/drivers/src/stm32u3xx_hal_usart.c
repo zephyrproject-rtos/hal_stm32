@@ -3919,4 +3919,3 @@ static void USART_RxISR_16BIT_FIFOEN(USART_HandleTypeDef *husart)
 /**
   * @}
   */
-

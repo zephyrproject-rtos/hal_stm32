@@ -34,7 +34,7 @@ extern "C" {
 /** @addtogroup STM32U3xx_System_Includes
   * @{
   */
-  
+
 /**
   * @}
   */
@@ -104,4 +104,3 @@ extern uint32_t SECURE_SystemCoreClockUpdate(void);
 /**
   * @}
   */
-

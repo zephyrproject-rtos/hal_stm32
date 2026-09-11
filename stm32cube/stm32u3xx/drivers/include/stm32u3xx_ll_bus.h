@@ -2936,4 +2936,3 @@ __STATIC_INLINE void LL_APB3_GRP1_DisableClockStop(uint32_t Periphs)
 #endif
 
 #endif /* STM32U3xx_LL_BUS_H */
-

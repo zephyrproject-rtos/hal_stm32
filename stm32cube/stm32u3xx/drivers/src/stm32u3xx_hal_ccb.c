@@ -3161,7 +3161,7 @@ static HAL_StatusTypeDef CCB_BlobUse_InitialPhase(CCB_HandleTypeDef *hccb, const
   * @brief  Final phase processing when blob creation
   * @param  hccb CCB handle
   * @param  Operation Operation
-  * @param  Tag pointer to the Tag
+  * @param  pTag pointer to the Tag
   * @param  sizeparam size of parameters
   * @retval HAL status
   */

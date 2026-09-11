@@ -428,4 +428,3 @@ HAL_StatusTypeDef HAL_OPAMP_UnRegisterCallback(OPAMP_HandleTypeDef *hopamp, HAL_
 #endif
 
 #endif /* STM32U3xx_HAL_OPAMP_H */
-
