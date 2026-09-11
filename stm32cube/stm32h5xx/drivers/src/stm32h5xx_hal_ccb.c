@@ -93,7 +93,9 @@
 #ifndef HAL_CCB_TIMEOUT_DEFAULT_VALUE
 #define HAL_CCB_TIMEOUT_DEFAULT_VALUE      0xFFFFU         /* CCB Timeout.*/
 #endif /*HAL_CCB_TIMEOUT_DEFAULT_VALUE */
-
+#if (defined(RNG_HTSR0_RPERRX) || defined(RNG_HTSR1_ADERRX))
+#define CCB_RNG_TIMEOUT_VALUE              0x00000002U
+#endif /* RNG_HTSR0_RPERRX || RNG_HTSR1_ADERRX */
 /**
   * @}
   */
@@ -118,12 +120,12 @@
 /** @defgroup CCB_PKA_Mode CCB PKA mode
   * @{
   */
-#define CCB_PKA_MODE_MODULAR_EXP_PROTECT     (0x00000003U)  /*!< PKA Modular exponentiation */
-#define CCB_PKA_ECC_MUL_MODE                 (0x00000020U)  /*!< PKA ECC scalar multiplication */
-#define CCB_PKA_ECDSA_SIGNATURE_MODE         (0x00000024U)  /*!< PKA ECDSA signature */
-#define CCB_PKA_MODE_ECDSA_VERIFICATION      (0x00000026U)  /*!< PKA ECDSA verification */
-#define CCB_PKA_ERROR_OPERATION_NONE         (0x0000D60DU)  /*!< No PKA Hardware operation error */
-#define CCB_PKA_RAM_SIZE                     (0x00000536U)  /*!< CCB PKA Ram Size */
+#define CCB_PKA_MODE_MODULAR_EXP_PROTECT     (0x00000003UL)  /*!< PKA Modular exponentiation */
+#define CCB_PKA_ECC_MUL_MODE                 (0x00000020UL)  /*!< PKA ECC scalar multiplication */
+#define CCB_PKA_ECDSA_SIGNATURE_MODE         (0x00000024UL)  /*!< PKA ECDSA signature */
+#define CCB_PKA_MODE_ECDSA_VERIFICATION      (0x00000026UL)  /*!< PKA ECDSA verification */
+#define CCB_PKA_ERROR_OPERATION_NONE         (0x0000D60DUL)  /*!< No PKA Hardware operation error */
+#define CCB_PKA_RAM_SIZE                     (0x00000536UL)  /*!< CCB PKA Ram Size */
 
 /**
   * @}
@@ -162,14 +164,37 @@
 #define HAL_CCB_GET_FLAG(__HANDLE__, __FLAG__)                  (((((__HANDLE__)->Instance->SR)\
                                                                    & (__FLAG__)) == (__FLAG__)) ? SET : RESET)
 
-#define HAL_CCB_GET_SAES_FLAG(__FLAG__)           (((__FLAG__)>1U)  ?                    \
-                                                   (((SAES->SR & (__FLAG__)) == (__FLAG__)) ? SET : RESET) :\
-                                                   (((SAES->ISR & (__FLAG__)) == (__FLAG__)) ? SET : RESET) )
+#if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
+#define HAL_CCB_GET_SAES_INSTANCE(__HANDLE__)                   (((__HANDLE__)->Instance == CCB_S)?\
+                                                                 SAES_S : SAES_NS)
+#else
+#define HAL_CCB_GET_SAES_INSTANCE(__HANDLE__)                    SAES_NS
+#endif /* USE_HAL_SECURE_CHECK_PARAM */
 
-#define HAL_CCB_GET_PKA_FLAG(__FLAG__)              ((((PKA->SR)\
-                                                       & (__FLAG__)) == (__FLAG__)) ? SET : RESET)
+#if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
+#define HAL_CCB_GET_PKA_INSTANCE(__HANDLE__)                   (((__HANDLE__)->Instance == CCB_S)?\
+                                                                PKA_S : PKA_NS)
+#else
+#define HAL_CCB_GET_PKA_INSTANCE(__HANDLE__)                    PKA_NS
+#endif /* USE_HAL_SECURE_CHECK_PARAM */
 
-#define HAL_CCB_CLEAR_PKA_FLAG(__FLAG__)            WRITE_REG(PKA->CLRFR, (__FLAG__))
+#if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
+#define HAL_CCB_GET_RNG_INSTANCE(__HANDLE__)                   (((__HANDLE__)->Instance == CCB_S)?\
+                                                                RNG_S : RNG_NS)
+#else
+#define HAL_CCB_GET_RNG_INSTANCE(__HANDLE__)                    RNG_NS
+#endif /* USE_HAL_SECURE_CHECK_PARAM */
+
+#define HAL_CCB_GET_SAES_FLAG(__HANDLE__,__FLAG__)           (((__FLAG__)>1U)  ?                    \
+                                                              (((HAL_CCB_GET_SAES_INSTANCE(__HANDLE__)->SR\
+                                                                 & (__FLAG__)) == (__FLAG__)) ? SET : RESET) :\
+                                                              (((HAL_CCB_GET_SAES_INSTANCE(__HANDLE__)->ISR\
+                                                                 & (__FLAG__)) == (__FLAG__)) ? SET : RESET) )
+
+#define HAL_CCB_GET_PKA_FLAG(__HANDLE__,__FLAG__)              ((((HAL_CCB_GET_PKA_INSTANCE(__HANDLE__)->SR)\
+                                                                  & (__FLAG__)) == (__FLAG__)) ? SET : RESET)
+
+#define HAL_CCB_CLEAR_PKA_FLAG(__HANDLE__,__FLAG__)  WRITE_REG(HAL_CCB_GET_PKA_INSTANCE(__HANDLE__)->CLRFR, (__FLAG__))
 
 /**
   * @}
@@ -183,8 +208,8 @@
 static HAL_StatusTypeDef CCB_WaitOperStep(CCB_HandleTypeDef *hccb, uint32_t step, uint32_t Timeout);
 static HAL_StatusTypeDef CCB_WaitFLAG(CCB_HandleTypeDef *hccb, uint32_t flag, uint32_t Timeout);
 static HAL_StatusTypeDef Protect_PKA_WaitFLAG(CCB_HandleTypeDef *hccb, uint32_t flag, uint32_t Timeout);
-static HAL_StatusTypeDef Unprotect_PKA_WaitFLAG(uint32_t flag, uint32_t Timeout);
-static HAL_StatusTypeDef CCB_RNG_Wait_SET_FLAG(uint32_t flag, uint32_t Timeout);
+static HAL_StatusTypeDef Unprotect_PKA_WaitFLAG(CCB_HandleTypeDef *hccb, uint32_t flag, uint32_t Timeout);
+static HAL_StatusTypeDef CCB_RNG_Wait_SET_FLAG(CCB_HandleTypeDef *hccb, uint32_t flag, uint32_t Timeout);
 static HAL_StatusTypeDef Protect_SAES_WaitFLAG(CCB_HandleTypeDef *hccb, uint32_t flag, FlagStatus Status,
                                                uint32_t Timeout);
 
@@ -197,8 +222,8 @@ static HAL_StatusTypeDef CCB_SetPram(CCB_HandleTypeDef *hccb, uint32_t modulusSi
 
 /* Initialization Private function */
 static HAL_StatusTypeDef Protect_PKA_Init(CCB_HandleTypeDef *hccb, uint32_t Operation);
-static HAL_StatusTypeDef Unprotected_PKA_Init(void);
-static HAL_StatusTypeDef CCB_RNG_Init(void);
+static HAL_StatusTypeDef Unprotected_PKA_Init(CCB_HandleTypeDef *hccb);
+static HAL_StatusTypeDef CCB_RNG_Init(CCB_HandleTypeDef *hccb);
 
 /* Wrapping Private function */
 static HAL_StatusTypeDef WrappingKeyConfiguration(CCB_HandleTypeDef *hccb, uint32_t Operation,
@@ -225,15 +250,15 @@ static HAL_StatusTypeDef CCB_BlobCreation_FinalPhase(CCB_HandleTypeDef *hccb, ui
 static HAL_StatusTypeDef CCB_BlobUse_FinalPhase(CCB_HandleTypeDef *hccb, uint32_t Operation, uint32_t sizeparam);
 static HAL_StatusTypeDef CCB_ECDSA_SignBlobCreation(CCB_HandleTypeDef *hccb, CCB_ECDSACurveParamTypeDef *pCurveParam,
                                                     const uint8_t *pClearPrivateKey,
-                                                    CCB_WrappingKeyTypeDef *pWrappingKey,
-                                                    uint32_t *pIV, uint32_t *pTag, uint32_t *pWarappedKey,
-                                                    uint8_t CCB_Operation);
+                                                    CCB_WrappingKeyTypeDef *pWrappingKey, uint32_t *pIV,
+                                                    uint32_t *pTag, uint32_t *pWarappedKey, uint8_t *pHash,
+                                                    CCB_ECDSASignTypeDef *pSignature, uint8_t CCB_Operation);
 static HAL_StatusTypeDef CCB_ECC_ScalarMulBlobCreation(CCB_HandleTypeDef *hccb,
                                                        CCB_ECCMulCurveParamTypeDef *pCurveParam,
                                                        const uint8_t *pClearPrivateKey,
                                                        CCB_WrappingKeyTypeDef *pWrappingKey,
                                                        uint32_t *pIV, uint32_t *pTag, uint32_t *pWarappedKey,
-                                                       uint8_t CCB_Operation);
+                                                       uint32_t PublicKey[2U][20U], uint8_t CCB_Operation);
 static HAL_StatusTypeDef CCB_ECC_ComputeScalarMul(CCB_HandleTypeDef *hccb, CCB_ECCMulCurveParamTypeDef *pCurveParam,
                                                   CCB_WrappingKeyTypeDef *pWrappingKey,
                                                   uint32_t *pIV, uint32_t *pTag, uint32_t *pWarappedKey,
@@ -244,27 +269,34 @@ static HAL_StatusTypeDef CCB_ECC_ComputeScalarMul(CCB_HandleTypeDef *hccb, CCB_E
 static HAL_StatusTypeDef CCB_RSA_ExpBlobCreation(CCB_HandleTypeDef *hccb, CCB_RSAParamTypeDef *pParam,
                                                  const CCB_RSAClearKeyTypeDef *pRSAClearPrivateKey,
                                                  CCB_WrappingKeyTypeDef *pWrappingKey, uint32_t *pIV,
-                                                 uint32_t *pTag, uint32_t *pWrappedExp, uint32_t *pWrappedPhi);
+                                                 uint32_t *pTag, uint32_t *pWrappedExp, uint32_t *pWrappedPhi,
+                                                 uint8_t *pOperand, uint32_t *pReferenceModularExp);
 static HAL_StatusTypeDef CCB_RSA_ComputeModularExp(CCB_HandleTypeDef *hccb, CCB_RSAParamTypeDef *pParam,
                                                    CCB_WrappingKeyTypeDef *pWrappingKey, uint32_t *pIV,
                                                    uint32_t *pTag, uint32_t *pWrappedExp, uint32_t *pWrappedPhi,
                                                    const uint8_t *pOperand, uint8_t *pModularExp,
                                                    const uint32_t *pReferenceModularExp, uint8_t VerifOperation);
-static HAL_StatusTypeDef PKA_ECDSASign(CCB_ECDSACurveParamTypeDef *pCurveParam,
+#if  defined(SW_SANITY_CHECK_SUPPORT)
+static HAL_StatusTypeDef PKA_ECDSASign(CCB_HandleTypeDef *hccb, CCB_ECDSACurveParamTypeDef *pCurveParam,
                                        const uint8_t *pClearPrivateKey, uint8_t *pInteger, uint8_t *pHash,
                                        CCB_ECDSASignTypeDef *pSignature);
 
-static HAL_StatusTypeDef PKA_ECC_ComputeScalarMul(CCB_ECCMulCurveParamTypeDef *pCurveParam,
+static HAL_StatusTypeDef PKA_ECC_ComputeScalarMul(CCB_HandleTypeDef *hccb, CCB_ECCMulCurveParamTypeDef *pCurveParam,
                                                   const uint8_t *pClearPrivateKey, uint32_t PublicKey[2][20]);
-static HAL_StatusTypeDef PKA_RSA_ComputeModularExp(CCB_RSAParamTypeDef *pParam,
+static HAL_StatusTypeDef PKA_RSA_ComputeModularExp(CCB_HandleTypeDef *hccb, CCB_RSAParamTypeDef *pParam,
                                                    const CCB_RSAClearKeyTypeDef *pRSAClearPrivateKey,
                                                    uint8_t *pOp1, uint32_t *pReferenceModularExp);
-static HAL_StatusTypeDef PKA_ECDSAVerif(CCB_ECDSACurveParamTypeDef *pCurveParam,
+static HAL_StatusTypeDef PKA_RAM_Erase(CCB_HandleTypeDef *hccb);
+#endif /* GENERATOR_SW_SANITY_CHECK_AVAILABLE_ALL_DEVICES */
+static HAL_StatusTypeDef PKA_ECDSAVerif(CCB_HandleTypeDef *hccb, CCB_ECDSACurveParamTypeDef *pCurveParam,
                                         CCB_ECCMulPointTypeDef *pPublicKeyOut, const uint8_t *pHash,
                                         CCB_ECDSASignTypeDef *pSignature);
-static uint32_t PKA_ECDSAVerif_Result(void);
-static HAL_StatusTypeDef PKA_RAM_Erase(void);
-static void CCB_PKA_RAMReset(void);
+static uint32_t PKA_ECDSAVerif_Result(CCB_HandleTypeDef *hccb);
+static void CCB_PKA_RAMReset(CCB_HandleTypeDef *hccb);
+#if (defined(RNG_HTSR0_RPERRX) || defined(RNG_HTSR1_ADERRX))
+HAL_StatusTypeDef CCB_RNG_ResilientRecoverSeedError(CCB_HandleTypeDef *hccb);
+#endif /* RNG_HTSR0_RPERRX || RNG_HTSR1_ADERRX */
+
 /** @defgroup CCB_Exported_Functions_Group1 Initialization/de-initialization functions
   *  @brief Initialization and Configuration functions
   *
@@ -306,7 +338,7 @@ HAL_StatusTypeDef HAL_CCB_Init(CCB_HandleTypeDef *hccb)
   HAL_CCB_MspInit(hccb);
 
   /* PKA RAM RESET*/
-  CCB_PKA_RAMReset();
+  CCB_PKA_RAMReset(hccb);
 
   /* Update the CCB state */
   hccb->State = HAL_CCB_STATE_READY;
@@ -527,7 +559,10 @@ HAL_StatusTypeDef HAL_CCB_ECDSA_WrapPrivateKey(CCB_HandleTypeDef *hccb, CCB_ECDS
 {
   uint32_t count;
   __IO uint16_t f_count;
+#if  defined(SW_SANITY_CHECK_SUPPORT)
   uint16_t random0 = 0;
+  uint8_t integer[80U] = {0};
+#endif /* GENERATOR_SW_SANITY_CHECK_AVAILABLE_ALL_DEVICES */
   uint16_t random1 = 0;
   uint16_t random2 = 0;
   uint16_t random3 = 0;
@@ -539,7 +574,6 @@ HAL_StatusTypeDef HAL_CCB_ECDSA_WrapPrivateKey(CCB_HandleTypeDef *hccb, CCB_ECDS
   uint8_t s_sign[80U] = {0};
   uint8_t point_x[80U] = {0};
   uint8_t point_y[80U] = {0};
-  uint8_t integer[80U] = {0};
   uint32_t iv_temp[4] = {0};
   uint32_t tag_temp[4] = {0};
   uint32_t wrapped_key_temp[80U] = {0};
@@ -547,7 +581,7 @@ HAL_StatusTypeDef HAL_CCB_ECDSA_WrapPrivateKey(CCB_HandleTypeDef *hccb, CCB_ECDS
   CCB_ECDSASignTypeDef signature = {r_sign, s_sign};
   CCB_ECCMulPointTypeDef publicKeyOut = {(uint8_t *)point_x, (uint8_t *)point_y};
 
-  if (CCB_RNG_Init() != HAL_OK)
+  if (CCB_RNG_Init(hccb) != HAL_OK)
   {
     /* Set state and return error */
     hccb->State = HAL_CCB_STATE_ERROR;
@@ -556,7 +590,7 @@ HAL_StatusTypeDef HAL_CCB_ECDSA_WrapPrivateKey(CCB_HandleTypeDef *hccb, CCB_ECDS
 
   for (count = 0U; count < (pCurveParam->primeOrderSizeByte); count++)
   {
-    if (CCB_RNG_Wait_SET_FLAG(RNG_SR_DRDY, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+    if (CCB_RNG_Wait_SET_FLAG(hccb, RNG_SR_DRDY, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
     {
       return HAL_ERROR;
     }
@@ -565,7 +599,7 @@ HAL_StatusTypeDef HAL_CCB_ECDSA_WrapPrivateKey(CCB_HandleTypeDef *hccb, CCB_ECDS
 
     while (hash[count] == 0U)
     {
-      hash[count] = (uint8_t)((RNG->DR) & 0x000000FFU);
+      hash[count] = (uint8_t)((HAL_CCB_GET_RNG_INSTANCE(hccb)->DR) & 0x000000FFU);
       if ((HAL_GetTick() - tickstart) > HAL_CCB_TIMEOUT_DEFAULT_VALUE)
       {
         /* Set state and return error */
@@ -574,24 +608,7 @@ HAL_StatusTypeDef HAL_CCB_ECDSA_WrapPrivateKey(CCB_HandleTypeDef *hccb, CCB_ECDS
     }
   }
 
-  if (CCB_RNG_Wait_SET_FLAG(RNG_SR_DRDY, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
-  {
-    return HAL_ERROR;
-  }
-
-  tickstart = HAL_GetTick();
-
-  while (random0 == 0U)
-  {
-    random0 = (uint16_t)(RNG->DR & 0x3FFU);
-    if ((HAL_GetTick() - tickstart) > HAL_CCB_TIMEOUT_DEFAULT_VALUE)
-    {
-      /* Set state and return error */
-      return HAL_ERROR;
-    }
-  }
-
-  if (CCB_RNG_Wait_SET_FLAG(RNG_SR_DRDY, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+  if (CCB_RNG_Wait_SET_FLAG(hccb, RNG_SR_DRDY, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
   {
     return HAL_ERROR;
   }
@@ -600,7 +617,7 @@ HAL_StatusTypeDef HAL_CCB_ECDSA_WrapPrivateKey(CCB_HandleTypeDef *hccb, CCB_ECDS
 
   while (random1 == 0U)
   {
-    random1 = (uint16_t)(RNG->DR & 0x3FFU);
+    random1 = (uint16_t)(HAL_CCB_GET_RNG_INSTANCE(hccb)->DR & 0x3FFU);
     if ((HAL_GetTick() - tickstart) > HAL_CCB_TIMEOUT_DEFAULT_VALUE)
     {
       /* Set state and return error */
@@ -608,7 +625,7 @@ HAL_StatusTypeDef HAL_CCB_ECDSA_WrapPrivateKey(CCB_HandleTypeDef *hccb, CCB_ECDS
     }
   }
 
-  if (CCB_RNG_Wait_SET_FLAG(RNG_SR_DRDY, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+  if (CCB_RNG_Wait_SET_FLAG(hccb, RNG_SR_DRDY, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
   {
     return HAL_ERROR;
   }
@@ -617,7 +634,7 @@ HAL_StatusTypeDef HAL_CCB_ECDSA_WrapPrivateKey(CCB_HandleTypeDef *hccb, CCB_ECDS
 
   while (random2 == 0U)
   {
-    random2 = (uint16_t)(RNG->DR & 0x3FFU);
+    random2 = (uint16_t)(HAL_CCB_GET_RNG_INSTANCE(hccb)->DR & 0x3FFU);
     if ((HAL_GetTick() - tickstart) > HAL_CCB_TIMEOUT_DEFAULT_VALUE)
     {
       /* Set state and return error */
@@ -625,7 +642,7 @@ HAL_StatusTypeDef HAL_CCB_ECDSA_WrapPrivateKey(CCB_HandleTypeDef *hccb, CCB_ECDS
     }
   }
 
-  if (CCB_RNG_Wait_SET_FLAG(RNG_SR_DRDY, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+  if (CCB_RNG_Wait_SET_FLAG(hccb, RNG_SR_DRDY, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
   {
     return HAL_ERROR;
   }
@@ -634,21 +651,21 @@ HAL_StatusTypeDef HAL_CCB_ECDSA_WrapPrivateKey(CCB_HandleTypeDef *hccb, CCB_ECDS
 
   while (random3 == 0U)
   {
-    random3 = (uint16_t)(RNG->DR & 0x3FFU);
+    random3 = (uint16_t)(HAL_CCB_GET_RNG_INSTANCE(hccb)->DR & 0x3FFU);
     if ((HAL_GetTick() - tickstart) > HAL_CCB_TIMEOUT_DEFAULT_VALUE)
     {
       /* Set state and return error */
       return HAL_ERROR;
     }
   }
-
-  for (count = 0U; count < (pCurveParam->primeOrderSizeByte); count++)
+  if (hccb->State == HAL_CCB_STATE_READY)
   {
+#if  defined(SW_SANITY_CHECK_SUPPORT)
     tickstart = HAL_GetTick();
 
-    while (integer[count] == 0U)
+    while (random0 == 0U)
     {
-      integer[count] = (uint8_t)((RNG->DR) & 0x000000FFU);
+      random0 = (uint16_t)(HAL_CCB_GET_RNG_INSTANCE(hccb)->DR & 0x3FFU);
       if ((HAL_GetTick() - tickstart) > HAL_CCB_TIMEOUT_DEFAULT_VALUE)
       {
         /* Set state and return error */
@@ -656,26 +673,42 @@ HAL_StatusTypeDef HAL_CCB_ECDSA_WrapPrivateKey(CCB_HandleTypeDef *hccb, CCB_ECDS
       }
     }
 
-    if (CCB_RNG_Wait_SET_FLAG(RNG_SR_DRDY, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+    if (CCB_RNG_Wait_SET_FLAG(hccb, RNG_SR_DRDY, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
     {
       return HAL_ERROR;
     }
-  }
 
-  if (hccb->State == HAL_CCB_STATE_READY)
-  {
+    for (count = 0U; count < (pCurveParam->primeOrderSizeByte); count++)
+    {
+      tickstart = HAL_GetTick();
 
-    if (Unprotected_PKA_Init() != HAL_OK)
+      while (integer[count] == 0U)
+      {
+        integer[count] = (uint8_t)((HAL_CCB_GET_RNG_INSTANCE(hccb)->DR) & 0x000000FFU);
+        if ((HAL_GetTick() - tickstart) > HAL_CCB_TIMEOUT_DEFAULT_VALUE)
+        {
+          /* Set state and return error */
+          return HAL_ERROR;
+        }
+      }
+
+      if (CCB_RNG_Wait_SET_FLAG(hccb, RNG_SR_DRDY, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+      {
+        return HAL_ERROR;
+      }
+    }
+
+    if (Unprotected_PKA_Init(hccb) != HAL_OK)
     {
       /* Set state and return error */
       hccb->State = HAL_CCB_STATE_ERROR;
       return HAL_ERROR;
     }
 
-    if (PKA_ECDSASign(pCurveParam, pClearPrivateKey, (uint8_t *)integer, (uint8_t *)hash,
+    if (PKA_ECDSASign(hccb, pCurveParam, pClearPrivateKey, (uint8_t *)integer, (uint8_t *)hash,
                       &signature) != HAL_OK)
     {
-      if (PKA_RAM_Erase() != HAL_OK)
+      if (PKA_RAM_Erase(hccb) != HAL_OK)
       {
         hccb->ErrorCode |= HAL_CCB_ERROR_PKARAM_ERASE;
       }
@@ -690,7 +723,7 @@ HAL_StatusTypeDef HAL_CCB_ECDSA_WrapPrivateKey(CCB_HandleTypeDef *hccb, CCB_ECDS
 
     /* Signature blob creation */
     if (CCB_ECDSA_SignBlobCreation(hccb, pCurveParam, pClearPrivateKey, pWrappingKey, iv_temp, tag_temp,
-                                   wrapped_key_temp, CCB_ECDSA_SIGN_CPU_BLOB_CREATION) != HAL_OK)
+                                   wrapped_key_temp, NULL, NULL, CCB_ECDSA_SIGN_CPU_BLOB_CREATION) != HAL_OK)
     {
       /* Set state, and intrusion error */
       hccb->State = HAL_CCB_STATE_ERROR;
@@ -701,9 +734,17 @@ HAL_StatusTypeDef HAL_CCB_ECDSA_WrapPrivateKey(CCB_HandleTypeDef *hccb, CCB_ECDS
     for (uint32_t index = 0U; index < CCB_PKA_RAM_SIZE; index++)
     {
       /* Clear the content */
-      PKA->RAM[index] = 0UL;
+      HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[index] = 0UL;
+    }
+#elif   defined (HW_SANITY_CHECK_SUPPORT)
+    /* Signature blob creation */
+    if (CCB_ECDSA_SignBlobCreation(hccb, pCurveParam, pClearPrivateKey, pWrappingKey, iv_temp, tag_temp,
+                                   wrapped_key_temp, hash, &signature, CCB_ECDSA_SIGN_CPU_BLOB_CREATION) != HAL_OK)
+    {
+      return HAL_ERROR;
     }
 
+#endif /* GENERATOR_SW_SANITY_CHECK_AVAILABLE_ALL_DEVICES */
     /* Create ECDSA public key */
     if (CCB_ECC_ComputeScalarMul(hccb, pCurveParam, pWrappingKey, iv_temp, tag_temp,
                                  wrapped_key_temp, NULL, &publicKeyOut, NULL,
@@ -714,7 +755,7 @@ HAL_StatusTypeDef HAL_CCB_ECDSA_WrapPrivateKey(CCB_HandleTypeDef *hccb, CCB_ECDS
       HAL_CCB_IntrusionCallback(hccb);
     }
 
-    if (Unprotected_PKA_Init() != HAL_OK)
+    if (Unprotected_PKA_Init(hccb) != HAL_OK)
     {
       /* Set state, and intrusion error */
       hccb->State = HAL_CCB_STATE_ERROR;
@@ -722,7 +763,7 @@ HAL_StatusTypeDef HAL_CCB_ECDSA_WrapPrivateKey(CCB_HandleTypeDef *hccb, CCB_ECDS
     }
 
     /* PKA ECDSA valid R & S signature */
-    if (PKA_ECDSAVerif(pCurveParam, &publicKeyOut, hash, &signature) != HAL_OK)
+    if (PKA_ECDSAVerif(hccb, pCurveParam, &publicKeyOut, hash, &signature) != HAL_OK)
     {
       /* Set state, and intrusion error */
       hccb->State = HAL_CCB_STATE_ERROR;
@@ -736,7 +777,7 @@ HAL_StatusTypeDef HAL_CCB_ECDSA_WrapPrivateKey(CCB_HandleTypeDef *hccb, CCB_ECDS
     }
 
     /* Check if it is valid signature and improve robustness against intrusion (intentional) */
-    if ((PKA_ECDSAVerif_Result() != CCB_PKA_ECDSA_VERIF_OK) || (f_count != random1) || (f_count == 0U))
+    if ((PKA_ECDSAVerif_Result(hccb) != CCB_PKA_ECDSA_VERIF_OK) || (f_count != random1) || (f_count == 0U))
     {
       /* Set state, and intrusion error */
       hccb->State = HAL_CCB_STATE_ERROR;
@@ -750,7 +791,7 @@ HAL_StatusTypeDef HAL_CCB_ECDSA_WrapPrivateKey(CCB_HandleTypeDef *hccb, CCB_ECDS
     }
 
     /* Check if it is valid signature and improve robustness against intrusion (intentional) */
-    if ((PKA_ECDSAVerif_Result() != CCB_PKA_ECDSA_VERIF_OK) || (f_count != random2) || (f_count == 0U))
+    if ((PKA_ECDSAVerif_Result(hccb) != CCB_PKA_ECDSA_VERIF_OK) || (f_count != random2) || (f_count == 0U))
     {
       /* Set state, and intrusion error */
       hccb->State = HAL_CCB_STATE_ERROR;
@@ -764,7 +805,7 @@ HAL_StatusTypeDef HAL_CCB_ECDSA_WrapPrivateKey(CCB_HandleTypeDef *hccb, CCB_ECDS
     }
 
     /* Check if it is valid signature and improve robustness against intrusion (intentional) */
-    if ((PKA_ECDSAVerif_Result() != CCB_PKA_ECDSA_VERIF_OK) || (f_count != random3) || (f_count == 0U))
+    if ((PKA_ECDSAVerif_Result(hccb) != CCB_PKA_ECDSA_VERIF_OK) || (f_count != random3) || (f_count == 0U))
     {
       /* Set state, and intrusion error */
       hccb->State = HAL_CCB_STATE_ERROR;
@@ -812,23 +853,195 @@ HAL_StatusTypeDef HAL_CCB_ECDSA_GenerateWrapPrivateKey(CCB_HandleTypeDef *hccb,
                                                        CCB_WrappingKeyTypeDef *pWrappingKey,
                                                        CCB_ECDSAKeyBlobTypeDef *pWrappedPrivateKeyBlob)
 {
-  uint32_t count;
+  uint32_t  count;
   uint32_t key_size;
   uint32_t iv_temp[4] = {0};
   uint32_t tag_temp[4] = {0};
   uint32_t wrapped_key_temp[80U] = {0};
 
+#if   defined (HW_SANITY_CHECK_SUPPORT)
+  uint32_t tickstart;
+  __IO uint16_t f_count;
+  uint16_t random1 = 0;
+  uint16_t random2 = 0;
+  uint16_t random3 = 0;
+  uint8_t hash[80U] = {0};
+  uint8_t r_sign[80U] = {0};
+  uint8_t s_sign[80U] = {0};
+  uint8_t point_x[80U] = {0};
+  uint8_t point_y[80U] = {0};
+
+  CCB_ECDSASignTypeDef signature = {r_sign, s_sign};
+  CCB_ECCMulPointTypeDef public_key_out = {(uint8_t *)point_x, (uint8_t *)point_y};
+#endif /* GENERATOR_HW_SANITY_CHECK_AVAILABLE_ALL_DEVICES */
+
   if (hccb->State == HAL_CCB_STATE_READY)
   {
-
+#if  defined(SW_SANITY_CHECK_SUPPORT)
     /* Signature blob creation */
     if (CCB_ECDSA_SignBlobCreation(hccb, pCurveParam, NULL, pWrappingKey, iv_temp, tag_temp, wrapped_key_temp,
-                                   CCB_ECDSA_SIGN_RNG_BLOB_CREATION) != HAL_OK)
+                                   NULL, NULL, CCB_ECDSA_SIGN_RNG_BLOB_CREATION) != HAL_OK)
     {
       /* Set state, error code and return error */
       hccb->State = HAL_CCB_STATE_ERROR;
       return HAL_ERROR;
     }
+#elif   defined (HW_SANITY_CHECK_SUPPORT)
+    if (CCB_RNG_Init(hccb) != HAL_OK)
+    {
+      /* Set state and return error */
+      hccb->State = HAL_CCB_STATE_ERROR;
+      return HAL_ERROR;
+    }
+
+    tickstart = HAL_GetTick();
+
+    while (random1 == 0U)
+    {
+      random1 = (uint16_t)(HAL_CCB_GET_RNG_INSTANCE(hccb)->DR & 0x3FFU);
+      if ((HAL_GetTick() - tickstart) > HAL_CCB_TIMEOUT_DEFAULT_VALUE)
+      {
+        /* Set state and return error */
+        return HAL_ERROR;
+      }
+    }
+
+    if (CCB_RNG_Wait_SET_FLAG(hccb, RNG_SR_DRDY, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+    {
+      return HAL_ERROR;
+    }
+
+    tickstart = HAL_GetTick();
+
+    while (random2 == 0U)
+    {
+      random2 = (uint16_t)(HAL_CCB_GET_RNG_INSTANCE(hccb)->DR & 0x3FFU);
+      if ((HAL_GetTick() - tickstart) > HAL_CCB_TIMEOUT_DEFAULT_VALUE)
+      {
+        /* Set state and return error */
+        return HAL_ERROR;
+      }
+    }
+
+    if (CCB_RNG_Wait_SET_FLAG(hccb, RNG_SR_DRDY, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+    {
+      return HAL_ERROR;
+    }
+
+    tickstart = HAL_GetTick();
+
+    while (random3 == 0U)
+    {
+      random3 = (uint16_t)(HAL_CCB_GET_RNG_INSTANCE(hccb)->DR & 0x3FFU);
+      if ((HAL_GetTick() - tickstart) > HAL_CCB_TIMEOUT_DEFAULT_VALUE)
+      {
+        /* Set state and return error */
+        return HAL_ERROR;
+      }
+    }
+
+    for (count = 0U; count < (pCurveParam->primeOrderSizeByte); count++)
+    {
+      if (CCB_RNG_Wait_SET_FLAG(hccb, RNG_SR_DRDY, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+      {
+        return HAL_ERROR;
+      }
+
+      tickstart = HAL_GetTick();
+
+      while (hash[count] == 0U)
+      {
+        hash[count] = (uint8_t)((HAL_CCB_GET_RNG_INSTANCE(hccb)->DR) & 0x000000FFU);
+        if ((HAL_GetTick() - tickstart) > HAL_CCB_TIMEOUT_DEFAULT_VALUE)
+        {
+          /* Set state and return error */
+          return HAL_ERROR;
+        }
+      }
+    }
+    /* Signature blob creation */
+    if (CCB_ECDSA_SignBlobCreation(hccb, pCurveParam, NULL, pWrappingKey, iv_temp, tag_temp, wrapped_key_temp,
+                                   (uint8_t *)hash,
+                                   &signature, CCB_ECDSA_SIGN_RNG_BLOB_CREATION) != HAL_OK)
+
+    {
+      /* Set state, error code and return error */
+      hccb->State = HAL_CCB_STATE_ERROR;
+      return HAL_ERROR;
+    }
+
+    /* Reset each element in the PKA RAM */
+    for (uint32_t index = 0U; index < CCB_PKA_RAM_SIZE; index++)
+    {
+      /* Clear the content */
+      HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[index] = 0UL;
+    }
+    /* Create ECDSA public key */
+    if (CCB_ECC_ComputeScalarMul(hccb, pCurveParam, pWrappingKey, iv_temp, tag_temp, wrapped_key_temp, NULL,
+                                 &public_key_out, NULL, CCB_COMPUTE_PUBLIC_KEY) != HAL_OK)
+    {
+      /* Set state, and intrusion error */
+      hccb->State = HAL_CCB_STATE_ERROR;
+      HAL_CCB_IntrusionCallback(hccb);
+    }
+
+    if (Unprotected_PKA_Init(hccb) != HAL_OK)
+    {
+      /* Set state, and intrusion error */
+      hccb->State = HAL_CCB_STATE_ERROR;
+      HAL_CCB_IntrusionCallback(hccb);
+    }
+
+    /* PKA ECDSA valid R & S signature */
+    if (PKA_ECDSAVerif(hccb, pCurveParam, &public_key_out, hash, &signature) != HAL_OK)
+    {
+      /* Set state, and intrusion error */
+      hccb->State = HAL_CCB_STATE_ERROR;
+      HAL_CCB_IntrusionCallback(hccb);
+    }
+
+    f_count = 0;
+    while (f_count < random1)
+    {
+      f_count++;
+    }
+
+    /* Check if it is valid signature and improve robustness against intrusion (intentional) */
+    if ((PKA_ECDSAVerif_Result(hccb) != CCB_PKA_ECDSA_VERIF_OK) || (f_count != random1) || (f_count == 0U))
+    {
+      /* Set state, and intrusion error */
+      hccb->State = HAL_CCB_STATE_ERROR;
+      HAL_CCB_IntrusionCallback(hccb);
+    }
+
+    f_count = 0;
+    while (f_count < random2)
+    {
+      f_count++;
+    }
+
+    /* Check if it is valid signature and improve robustness against intrusion (intentional) */
+    if ((PKA_ECDSAVerif_Result(hccb) != CCB_PKA_ECDSA_VERIF_OK) || (f_count != random2) || (f_count == 0U))
+    {
+      /* Set state, and intrusion error */
+      hccb->State = HAL_CCB_STATE_ERROR;
+      HAL_CCB_IntrusionCallback(hccb);
+    }
+
+    f_count = 0;
+    while (f_count < random3)
+    {
+      f_count++;
+    }
+
+    /* Check if it is valid signature and improve robustness against intrusion (intentional) */
+    if ((PKA_ECDSAVerif_Result(hccb) != CCB_PKA_ECDSA_VERIF_OK) || (f_count != random3) || (f_count == 0U))
+    {
+      /* Set state, and intrusion error */
+      hccb->State = HAL_CCB_STATE_ERROR;
+      HAL_CCB_IntrusionCallback(hccb);
+    }
+#endif /* GENERATOR_HW_SANITY_CHECK_AVAILABLE_ALL_DEVICES */
   }
   else
   {
@@ -892,7 +1105,7 @@ HAL_StatusTypeDef HAL_CCB_ECDSA_Sign(CCB_HandleTypeDef *hccb, CCB_ECDSACurvePara
     }
 
     /* Initialize RNG */
-    if (CCB_RNG_Init() != HAL_OK)
+    if (CCB_RNG_Init(hccb) != HAL_OK)
     {
       /* Set state and return error */
       hccb->State = HAL_CCB_STATE_ERROR;
@@ -910,12 +1123,22 @@ HAL_StatusTypeDef HAL_CCB_ECDSA_Sign(CCB_HandleTypeDef *hccb, CCB_ECDSACurvePara
     /*  Initialize SAES */
     if (Protect_SAES_WaitFLAG(hccb, AES_SR_BUSY, RESET, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
     {
-      /* Disable the SAES peripheral */
-      SAES->CR &=  ~AES_CR_EN;
+#if (defined(RNG_HTSR0_RPERRX) || defined(RNG_HTSR1_ADERRX))
+      /*Check if there is an RNG seed error */
+      if (LL_RNG_IsActiveFlag_SECS(RNG) != 0U)
+      {
+        /* Attempt to recover from the seed error */
+        if (CCB_RNG_ResilientRecoverSeedError(hccb) != HAL_OK)
+        {
+          /* Disable the SAES peripheral */
+          HAL_CCB_GET_SAES_INSTANCE(hccb)->CR &=  ~AES_CR_EN;
 
-      /* Set state and return error */
-      hccb->State = HAL_CCB_STATE_ERROR;
-      return HAL_ERROR;
+          /* Set state and return error */
+          hccb->State = HAL_CCB_STATE_ERROR;
+          return HAL_ERROR;
+        }
+      }
+#endif /* RNG_HTSR0_RPERRX || RNG_HTSR1_ADERRX */
     }
 
     /* Update the state */
@@ -952,7 +1175,8 @@ HAL_StatusTypeDef HAL_CCB_ECDSA_Sign(CCB_HandleTypeDef *hccb, CCB_ECDSACurvePara
     }
 
     /* Set Hash message */
-    CCB_Memcpy_u8_to_u32(&PKA->RAM[PKA_ECDSA_SIGN_IN_HASH_E ], pHash, pCurveParam->modulusSizeByte);
+    CCB_Memcpy_u8_to_u32(&HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECDSA_SIGN_IN_HASH_E ], pHash,
+                         pCurveParam->modulusSizeByte);
 
     /* Initial Phase Processing */
     if (CCB_BlobUse_InitialPhase(hccb, pWrappedPrivateKeyBlob->pIV, pWrappedPrivateKeyBlob->pTag) != HAL_OK)
@@ -976,7 +1200,7 @@ HAL_StatusTypeDef HAL_CCB_ECDSA_Sign(CCB_HandleTypeDef *hccb, CCB_ECDSACurvePara
     }
 
     /* Set SAES GCMPH Payload phase and trig OPSTEP that trig OPSTEP transition 0x13 --> 0x14 */
-    MODIFY_REG(SAES->CR, AES_CR_GCMPH, AES_CR_GCMPH_1);
+    MODIFY_REG(HAL_CCB_GET_SAES_INSTANCE(hccb)->CR, AES_CR_GCMPH, AES_CR_GCMPH_1);
 
     /* Wait until OPSTEP is set to 0x14 */
     if (CCB_WaitOperStep(hccb, 0x14, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
@@ -988,7 +1212,8 @@ HAL_StatusTypeDef HAL_CCB_ECDSA_Sign(CCB_HandleTypeDef *hccb, CCB_ECDSACurvePara
     /* Write encrypted Key*/
     for (offset = 0UL; offset < cipherkey_size; offset++)
     {
-      WRITE_REG(SAES->DINR, pWrappedPrivateKeyBlob->pWrappedKey[cipherkey_size - (offset + 1UL)]);
+      WRITE_REG(HAL_CCB_GET_SAES_INSTANCE(hccb)->DINR, \
+                pWrappedPrivateKeyBlob->pWrappedKey[cipherkey_size - (offset + 1UL)]);
 
       if ((offset % 4UL) == 0x3UL)
       {
@@ -1002,7 +1227,7 @@ HAL_StatusTypeDef HAL_CCB_ECDSA_Sign(CCB_HandleTypeDef *hccb, CCB_ECDSACurvePara
         /* Write key in PKA RAM */
         for (count = 0UL; count < 4UL; count++)
         {
-          PKA->RAM[PKA_ECDSA_SIGN_IN_PRIVATE_KEY_D + count_block + count] = CCB_MAGIC_VALUE;
+          HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECDSA_SIGN_IN_PRIVATE_KEY_D + count_block + count] = CCB_MAGIC_VALUE;
         }
         count_block += 4UL;
       }
@@ -1010,7 +1235,7 @@ HAL_StatusTypeDef HAL_CCB_ECDSA_Sign(CCB_HandleTypeDef *hccb, CCB_ECDSACurvePara
 
     if ((operand_size % 4UL) != 0UL)
     {
-      RAM_PARAM_END(PKA->RAM, PKA_ECDSA_SIGN_IN_PRIVATE_KEY_D + cipherkey_size);
+      RAM_PARAM_END(HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM, PKA_ECDSA_SIGN_IN_PRIVATE_KEY_D + cipherkey_size);
     }
     /* Wait until DATAOKF flag is SET in PKA and trig OPSTEP transition 0x14 --> 0x16 */
     if (Protect_PKA_WaitFLAG(hccb, PKA_SR_DATAOKF, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
@@ -1030,16 +1255,16 @@ HAL_StatusTypeDef HAL_CCB_ECDSA_Sign(CCB_HandleTypeDef *hccb, CCB_ECDSACurvePara
     for (offset = 0UL; offset < (operand_size - 2UL); offset++)
     {
       /* Wait for RNG Data Ready flag */
-      if (CCB_RNG_Wait_SET_FLAG(RNG_SR_DRDY, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+      if (CCB_RNG_Wait_SET_FLAG(hccb, RNG_SR_DRDY, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
       {
         /* return error */
         return HAL_ERROR;
       }
-      PKA->RAM[PKA_ECDSA_SIGN_IN_K + offset] = CCB_FAKE_VALUE;
+      HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECDSA_SIGN_IN_K + offset] = CCB_FAKE_VALUE;
     }
 
     /*  Padding at zero */
-    RAM_PARAM_END(PKA->RAM, PKA_ECDSA_SIGN_IN_K + offset);
+    RAM_PARAM_END(HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM, PKA_ECDSA_SIGN_IN_K + offset);
 
     /* Wait for PKA RNGOK flag : GCMPH = 0x3 (final phase) as events that trig OPSTEP transition 0x16 --> 0x17 */
     if (Protect_PKA_WaitFLAG(hccb, PKA_SR_RNGOKF, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
@@ -1070,7 +1295,7 @@ HAL_StatusTypeDef HAL_CCB_ECDSA_Sign(CCB_HandleTypeDef *hccb, CCB_ECDSACurvePara
     }
 
     /* SET PKA START operation bit and trig OPSTEP transition 0x18 --> 0x19 */
-    SET_BIT(PKA->CR, PKA_CR_START);
+    SET_BIT(HAL_CCB_GET_PKA_INSTANCE(hccb)->CR, PKA_CR_START);
 
     /* Wait until OPSTEP is set to 0x19 */
     if (CCB_WaitOperStep(hccb, 0x19, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
@@ -1094,16 +1319,18 @@ HAL_StatusTypeDef HAL_CCB_ECDSA_Sign(CCB_HandleTypeDef *hccb, CCB_ECDSACurvePara
     }
 
     /* Check PKA Operation error result */
-    if ((PKA->RAM[PKA_ECDSA_SIGN_OUT_ERROR]) !=  CCB_PKA_ERROR_OPERATION_NONE)
+    if ((HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECDSA_SIGN_OUT_ERROR]) !=  CCB_PKA_ERROR_OPERATION_NONE)
     {
       /* Set state and return error */
       hccb->State = HAL_CCB_STATE_ERROR;
       return HAL_ERROR;
     }
     /* Read r part signature */
-    CCB_Memcpy_u32_to_u8(pSignature->pRSign, &PKA->RAM[PKA_ECDSA_SIGN_OUT_SIGNATURE_R], pCurveParam->modulusSizeByte);
+    CCB_Memcpy_u32_to_u8(pSignature->pRSign, &HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECDSA_SIGN_OUT_SIGNATURE_R],
+                         pCurveParam->modulusSizeByte);
     /* Read s part signature */
-    CCB_Memcpy_u32_to_u8(pSignature->pSSign, &PKA->RAM[PKA_ECDSA_SIGN_OUT_SIGNATURE_S], pCurveParam->modulusSizeByte);
+    CCB_Memcpy_u32_to_u8(pSignature->pSSign, &HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECDSA_SIGN_OUT_SIGNATURE_S],
+                         pCurveParam->modulusSizeByte);
 
 
     /* set CCB IPRST  */
@@ -1183,43 +1410,45 @@ HAL_StatusTypeDef HAL_CCB_ECC_WrapPrivateKey(CCB_HandleTypeDef *hccb, CCB_ECCMul
                                              const uint8_t *pClearPrivateKey, CCB_WrappingKeyTypeDef *pWrappingKey,
                                              CCB_ECCMulKeyBlobTypeDef *pWrappedPrivateKeyBlob)
 {
+#if  defined(SW_SANITY_CHECK_SUPPORT)
   uint8_t random = 0;
-  uint32_t public_key[2][20] = {{0UL}, {0UL}};
   __IO uint8_t f_count;
+  uint32_t tickstart;
+#endif /* GENERATOR_SW_SANITY_CHECK_AVAILABLE_ALL_DEVICES */
+  uint32_t public_key[2][20] = {{0UL}, {0UL}};
   uint32_t count;
   uint32_t key_size;
   uint32_t iv_temp[4] = {0};
   uint32_t tag_temp[4] = {0};
   uint32_t wrapped_key_temp[80] = {0};
-  uint32_t tickstart;
 
   if (hccb->State == HAL_CCB_STATE_READY)
   {
-
-    if (Unprotected_PKA_Init() != HAL_OK)
+#if  defined(SW_SANITY_CHECK_SUPPORT)
+    if (Unprotected_PKA_Init(hccb) != HAL_OK)
     {
       /* Set state and return error */
       hccb->State = HAL_CCB_STATE_ERROR;
       return HAL_ERROR;
     }
 
-    if (CCB_RNG_Init() != HAL_OK)
+    if (CCB_RNG_Init(hccb) != HAL_OK)
     {
       /* Set state and return error */
       hccb->State = HAL_CCB_STATE_ERROR;
       return HAL_ERROR;
     }
 
-    if (PKA_ECC_ComputeScalarMul(pCurveParam, pClearPrivateKey, public_key) != HAL_OK)
+    if (PKA_ECC_ComputeScalarMul(hccb, pCurveParam, pClearPrivateKey, public_key) != HAL_OK)
     {
-      if (PKA_RAM_Erase() != HAL_OK)
+      if (PKA_RAM_Erase(hccb) != HAL_OK)
       {
         hccb->ErrorCode |= HAL_CCB_ERROR_PKARAM_ERASE;
       }
       return HAL_ERROR;
     }
 
-    if (CCB_RNG_Wait_SET_FLAG(RNG_SR_DRDY, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+    if (CCB_RNG_Wait_SET_FLAG(hccb, RNG_SR_DRDY, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
     {
       return HAL_ERROR;
     }
@@ -1228,7 +1457,7 @@ HAL_StatusTypeDef HAL_CCB_ECC_WrapPrivateKey(CCB_HandleTypeDef *hccb, CCB_ECCMul
 
     while (random == 0U)
     {
-      random = (uint8_t)(RNG->DR & 0xFFU);
+      random = (uint8_t)(HAL_CCB_GET_RNG_INSTANCE(hccb)->DR & 0xFFU);
       if ((HAL_GetTick() - tickstart) > HAL_CCB_TIMEOUT_DEFAULT_VALUE)
       {
         /* Set state and return error */
@@ -1243,7 +1472,7 @@ HAL_StatusTypeDef HAL_CCB_ECC_WrapPrivateKey(CCB_HandleTypeDef *hccb, CCB_ECCMul
     }
 
     if (CCB_ECC_ScalarMulBlobCreation(hccb, pCurveParam, pClearPrivateKey, pWrappingKey,
-                                      iv_temp, tag_temp, wrapped_key_temp,
+                                      iv_temp, tag_temp, wrapped_key_temp, NULL,
                                       CCB_ECC_SCALAR_MUL_CPU_BLOB_CREATION) != HAL_OK)
     {
       /* Set state, and intrusion error */
@@ -1251,6 +1480,16 @@ HAL_StatusTypeDef HAL_CCB_ECC_WrapPrivateKey(CCB_HandleTypeDef *hccb, CCB_ECCMul
       HAL_CCB_IntrusionCallback(hccb);
     }
 
+#elif   defined (HW_SANITY_CHECK_SUPPORT)
+    /* CCB ECC generate private wrap key */
+    if (CCB_ECC_ScalarMulBlobCreation(hccb, pCurveParam, pClearPrivateKey, pWrappingKey,
+                                      iv_temp, tag_temp, wrapped_key_temp, public_key,
+                                      CCB_ECC_SCALAR_MUL_CPU_BLOB_CREATION) != HAL_OK)
+    {
+      return HAL_ERROR;
+    }
+
+#endif /* GENERATOR_HW_SANITY_CHECK_AVAILABLE_ALL_DEVICES */
     /* Compute CCB public key */
     if (CCB_ECC_ComputeScalarMul(hccb, pCurveParam, pWrappingKey, iv_temp, tag_temp, wrapped_key_temp, NULL,
                                  NULL, &public_key[0][0], CCB_VERIF_OPERATION_ENABLED) != HAL_OK)
@@ -1303,17 +1542,43 @@ HAL_StatusTypeDef HAL_CCB_ECC_GenerateWrapPrivateKey(CCB_HandleTypeDef *hccb,
                                                      CCB_WrappingKeyTypeDef *pWrappingKey,
                                                      CCB_ECCMulKeyBlobTypeDef *pWrappedPrivateKeyBlob)
 {
-
+#if   defined (HW_SANITY_CHECK_SUPPORT)
+  uint32_t PublicKey[2U][20U] = {0U};
+#endif /* GENERATOR_HW_SANITY_CHECK_AVAILABLE_ALL_DEVICES */
+  uint32_t count;
+  uint32_t key_size;
+  uint32_t iv_temp[4] = {0};
+  uint32_t tag_temp[4] = {0};
+  uint32_t wrapped_key_temp[80] = {0};
   if (hccb->State == HAL_CCB_STATE_READY)
   {
+#if   defined (HW_SANITY_CHECK_SUPPORT)
     /* CCB ECC generate private wrap key */
     if (CCB_ECC_ScalarMulBlobCreation(hccb, pCurveParam, NULL, pWrappingKey,
-                                      pWrappedPrivateKeyBlob->pIV, pWrappedPrivateKeyBlob->pTag,
-                                      pWrappedPrivateKeyBlob->pWrappedKey,
+                                      iv_temp, tag_temp, wrapped_key_temp, PublicKey,
                                       CCB_ECC_SCALAR_MUL_RNG_BLOB_CREATION) != HAL_OK)
     {
       return HAL_ERROR;
     }
+
+    /* Compute ECC public key */
+    if (CCB_ECC_ComputeScalarMul(hccb, pCurveParam, pWrappingKey, iv_temp, tag_temp, wrapped_key_temp,
+                                 NULL, NULL, &PublicKey[0][0], CCB_VERIF_OPERATION_ENABLED) != HAL_OK)
+    {
+      /* Set state, and intrusion error */
+      hccb->State = HAL_CCB_STATE_ERROR;
+      HAL_CCB_IntrusionCallback(hccb);
+    }
+#elif  defined(SW_SANITY_CHECK_SUPPORT)
+
+    /* CCB ECC generate private wrap key */
+    if (CCB_ECC_ScalarMulBlobCreation(hccb, pCurveParam, NULL, pWrappingKey,
+                                      iv_temp, tag_temp, wrapped_key_temp, NULL,
+                                      CCB_ECC_SCALAR_MUL_RNG_BLOB_CREATION) != HAL_OK)
+    {
+      return HAL_ERROR;
+    }
+#endif /* GENERATOR_HW_SANITY_CHECK_AVAILABLE_ALL_DEVICES */
   }
   else
   {
@@ -1325,6 +1590,17 @@ HAL_StatusTypeDef HAL_CCB_ECC_GenerateWrapPrivateKey(CCB_HandleTypeDef *hccb,
 
   /* Update the CCB state */
   hccb->State = HAL_CCB_STATE_READY;
+  /* Export created Blob */
+  key_size = CCB_get_cipherkey_size(pCurveParam);
+  for (count = 0U; count < key_size; count++)
+  {
+    if (count < CCB_BLOCK_SIZE)
+    {
+      pWrappedPrivateKeyBlob->pIV[count] = iv_temp[count];
+      pWrappedPrivateKeyBlob->pTag[count] = tag_temp[count];
+    }
+    pWrappedPrivateKeyBlob->pWrappedKey[count] = wrapped_key_temp[count];
+  }
 
   /* Return HAL OK */
   return HAL_OK;
@@ -1384,8 +1660,10 @@ HAL_StatusTypeDef HAL_CCB_RSA_WrapPrivateKey(CCB_HandleTypeDef *hccb, CCB_RSAPar
 {
   uint8_t  exp_base[520U] = {0};
   uint32_t count;
+#if  defined(SW_SANITY_CHECK_SUPPORT)
   __IO uint16_t f_count;
   uint16_t random0 = 0;
+#endif /* GENERATOR_SW_SANITY_CHECK_AVAILABLE_ALL_DEVICES */
   uint32_t modular_exp_ref[520U] = {0};
   uint32_t operand_size;
   uint32_t cipherkey_size;
@@ -1397,7 +1675,7 @@ HAL_StatusTypeDef HAL_CCB_RSA_WrapPrivateKey(CCB_HandleTypeDef *hccb, CCB_RSAPar
 
   if (hccb->State == HAL_CCB_STATE_READY)
   {
-    if (CCB_RNG_Init() != HAL_OK)
+    if (CCB_RNG_Init(hccb) != HAL_OK)
     {
       /* Set state and return error */
       hccb->State = HAL_CCB_STATE_ERROR;
@@ -1406,7 +1684,7 @@ HAL_StatusTypeDef HAL_CCB_RSA_WrapPrivateKey(CCB_HandleTypeDef *hccb, CCB_RSAPar
 
     for (uint32_t offset = 0U; offset < pParam->modulusSizeByte; offset++)
     {
-      if (CCB_RNG_Wait_SET_FLAG(RNG_SR_DRDY, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+      if (CCB_RNG_Wait_SET_FLAG(hccb, RNG_SR_DRDY, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
       {
         return HAL_ERROR;
       }
@@ -1415,7 +1693,7 @@ HAL_StatusTypeDef HAL_CCB_RSA_WrapPrivateKey(CCB_HandleTypeDef *hccb, CCB_RSAPar
 
       while (exp_base[offset] == 0U)
       {
-        exp_base[offset] = (uint8_t)(RNG->DR & 0xFFU);
+        exp_base[offset] = (uint8_t)(HAL_CCB_GET_RNG_INSTANCE(hccb)->DR & 0xFFU);
         if ((HAL_GetTick() - tickstart) > HAL_CCB_TIMEOUT_DEFAULT_VALUE)
         {
           /* Set state and return error */
@@ -1424,7 +1702,8 @@ HAL_StatusTypeDef HAL_CCB_RSA_WrapPrivateKey(CCB_HandleTypeDef *hccb, CCB_RSAPar
       }
     }
 
-    if (CCB_RNG_Wait_SET_FLAG(RNG_SR_DRDY, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+#if  defined(SW_SANITY_CHECK_SUPPORT)
+    if (CCB_RNG_Wait_SET_FLAG(hccb, RNG_SR_DRDY, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
     {
       return HAL_ERROR;
     }
@@ -1433,7 +1712,7 @@ HAL_StatusTypeDef HAL_CCB_RSA_WrapPrivateKey(CCB_HandleTypeDef *hccb, CCB_RSAPar
 
     while (random0 == 0U)
     {
-      random0 = (uint16_t)(RNG->DR & 0x3FFU);
+      random0 = (uint16_t)(HAL_CCB_GET_RNG_INSTANCE(hccb)->DR & 0x3FFU);
       if ((HAL_GetTick() - tickstart) > HAL_CCB_TIMEOUT_DEFAULT_VALUE)
       {
         /* Set state and return error */
@@ -1441,30 +1720,23 @@ HAL_StatusTypeDef HAL_CCB_RSA_WrapPrivateKey(CCB_HandleTypeDef *hccb, CCB_RSAPar
       }
     }
 
-    if (Unprotected_PKA_Init() != HAL_OK)
+    if (Unprotected_PKA_Init(hccb) != HAL_OK)
     {
       /* Set state and return error */
       hccb->State = HAL_CCB_STATE_ERROR;
       return HAL_ERROR;
     }
 
-    if (PKA_RSA_ComputeModularExp(pParam, pRSAClearPrivateKey, (uint8_t *)exp_base, modular_exp_ref) != HAL_OK)
+    if (PKA_RSA_ComputeModularExp(hccb, pParam, pRSAClearPrivateKey, (uint8_t *)exp_base, modular_exp_ref) != HAL_OK)
     {
-      if (PKA_RAM_Erase() != HAL_OK)
+      if (PKA_RAM_Erase(hccb) != HAL_OK)
       {
         hccb->ErrorCode |= HAL_CCB_ERROR_PKARAM_ERASE;
       }
       return  HAL_ERROR;
     }
 
-    if (CCB_RNG_Init() != HAL_OK)
-    {
-      /* Set state and return error */
-      hccb->State = HAL_CCB_STATE_ERROR;
-      return HAL_ERROR;
-    }
-
-    if (CCB_RNG_Wait_SET_FLAG(RNG_SR_DRDY, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+    if (CCB_RNG_Wait_SET_FLAG(hccb, RNG_SR_DRDY, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
     {
       return HAL_ERROR;
     }
@@ -1476,12 +1748,21 @@ HAL_StatusTypeDef HAL_CCB_RSA_WrapPrivateKey(CCB_HandleTypeDef *hccb, CCB_RSAPar
     }
 
     if (CCB_RSA_ExpBlobCreation(hccb, pParam, pRSAClearPrivateKey, pWrappingKey, iv_temp, tag_temp, wrapped_exp,
-                                wrapped_phi) != HAL_OK)
+                                wrapped_phi, NULL, NULL) != HAL_OK)
     {
       /* Set state, and intrusion error */
       hccb->State = HAL_CCB_STATE_ERROR;
       HAL_CCB_IntrusionCallback(hccb);
     }
+#elif   defined (HW_SANITY_CHECK_SUPPORT)
+    if (CCB_RSA_ExpBlobCreation(hccb, pParam, pRSAClearPrivateKey, pWrappingKey, iv_temp, tag_temp, wrapped_exp,
+                                wrapped_phi, (uint8_t *)exp_base, modular_exp_ref) != HAL_OK)
+    {
+      /* Set state, and intrusion error */
+      hccb->State = HAL_CCB_STATE_ERROR;
+      HAL_CCB_IntrusionCallback(hccb);
+    }
+#endif /* GENERATOR_SW_SANITY_CHECK_AVAILABLE_ALL_DEVICES */
 
     if (CCB_RSA_ComputeModularExp(hccb, pParam, pWrappingKey, iv_temp, tag_temp, wrapped_exp, wrapped_phi,
                                   (uint8_t *)exp_base, NULL, modular_exp_ref,
@@ -1662,11 +1943,11 @@ static HAL_StatusTypeDef Protect_PKA_WaitFLAG(CCB_HandleTypeDef *hccb, uint32_t 
 {
   uint32_t tickstart = HAL_GetTick();
 
-  while (HAL_IS_BIT_CLR(PKA->SR, flag))
+  while (HAL_IS_BIT_CLR(HAL_CCB_GET_PKA_INSTANCE(hccb)->SR, flag))
   {
     if (((HAL_GetTick() - tickstart) > Timeout) || (Timeout == 0U))
     {
-      CLEAR_BIT(PKA->CR, PKA_CR_EN);
+      CLEAR_BIT(HAL_CCB_GET_PKA_INSTANCE(hccb)->CR, PKA_CR_EN);
 
       /* Set state and return error */
       hccb->State = HAL_CCB_STATE_ERROR;
@@ -1675,7 +1956,7 @@ static HAL_StatusTypeDef Protect_PKA_WaitFLAG(CCB_HandleTypeDef *hccb, uint32_t 
   }
 
   /* Clear flag */
-  SET_BIT(PKA->CLRFR, flag);
+  SET_BIT(HAL_CCB_GET_PKA_INSTANCE(hccb)->CLRFR, flag);
 
   /* Return function status */
   return HAL_OK;
@@ -1683,19 +1964,20 @@ static HAL_StatusTypeDef Protect_PKA_WaitFLAG(CCB_HandleTypeDef *hccb, uint32_t 
 
 /**
   * @brief  Wait PKA Flag
+  * @param  hccb CCB handle
   * @param  flag Specifies the flag to check
   * @param  Timeout Timeout duration
   * @retval HAL status.
   */
-static HAL_StatusTypeDef Unprotect_PKA_WaitFLAG(uint32_t flag, uint32_t Timeout)
+static HAL_StatusTypeDef Unprotect_PKA_WaitFLAG(CCB_HandleTypeDef *hccb, uint32_t flag, uint32_t Timeout)
 {
   uint32_t tickstart = HAL_GetTick();
 
-  while (HAL_IS_BIT_CLR(PKA->SR, flag))
+  while (HAL_IS_BIT_CLR(HAL_CCB_GET_PKA_INSTANCE(hccb)->SR, flag))
   {
     if (((HAL_GetTick() - tickstart) > Timeout) || (Timeout == 0U))
     {
-      CLEAR_BIT(PKA->CR, PKA_CR_EN);
+      CLEAR_BIT(HAL_CCB_GET_PKA_INSTANCE(hccb)->CR, PKA_CR_EN);
 
       /* return error */
       return HAL_ERROR;
@@ -1703,7 +1985,7 @@ static HAL_StatusTypeDef Unprotect_PKA_WaitFLAG(uint32_t flag, uint32_t Timeout)
   }
 
   /* Clear flag */
-  SET_BIT(PKA->CLRFR, flag);
+  SET_BIT(HAL_CCB_GET_PKA_INSTANCE(hccb)->CLRFR, flag);
 
   /* Return function status */
   return HAL_OK;
@@ -1711,19 +1993,20 @@ static HAL_StatusTypeDef Unprotect_PKA_WaitFLAG(uint32_t flag, uint32_t Timeout)
 
 /**
   * @brief  Wait RNG Flag
+  * @param  hccb CCB handle
   * @param  flag Specifies the flag to check
   * @param  Timeout Timeout duration
   * @retval HAL status
   */
-static HAL_StatusTypeDef CCB_RNG_Wait_SET_FLAG(uint32_t flag, uint32_t Timeout)
+static HAL_StatusTypeDef CCB_RNG_Wait_SET_FLAG(CCB_HandleTypeDef *hccb, uint32_t flag, uint32_t Timeout)
 {
   uint32_t tickstart = HAL_GetTick();
 
-  while (HAL_IS_BIT_CLR(RNG->SR, flag))
+  while (HAL_IS_BIT_CLR(HAL_CCB_GET_RNG_INSTANCE(hccb)->SR, flag))
   {
     if (((HAL_GetTick() - tickstart) > Timeout) || (Timeout == 0U))
     {
-      RNG->CR &= ~RNG_CR_RNGEN;
+      HAL_CCB_GET_RNG_INSTANCE(hccb)->CR &= ~RNG_CR_RNGEN;
 
       /* Set state and return error */
       return HAL_ERROR;
@@ -1747,11 +2030,11 @@ static HAL_StatusTypeDef Protect_SAES_WaitFLAG(CCB_HandleTypeDef *hccb, uint32_t
 {
   uint32_t tickstart = HAL_GetTick();
 
-  while (HAL_CCB_GET_SAES_FLAG(flag) != Status)
+  while (HAL_CCB_GET_SAES_FLAG(hccb, flag) != Status)
   {
     if (((HAL_GetTick() - tickstart) > Timeout) || (Timeout == 0U))
     {
-      SAES->CR &= ~AES_CR_EN;
+      HAL_CCB_GET_SAES_INSTANCE(hccb)->CR &= ~AES_CR_EN;
 
       /* Set state and return error */
       hccb->State = HAL_CCB_STATE_ERROR;
@@ -1760,7 +2043,7 @@ static HAL_StatusTypeDef Protect_SAES_WaitFLAG(CCB_HandleTypeDef *hccb, uint32_t
   }
 
   /* Clear flag */
-  SET_BIT(SAES->ICR, flag);
+  SET_BIT(HAL_CCB_GET_SAES_INSTANCE(hccb)->ICR, flag);
 
 
   /* Return function status */
@@ -1776,9 +2059,9 @@ static HAL_StatusTypeDef Protect_SAES_WaitFLAG(CCB_HandleTypeDef *hccb, uint32_t
 static HAL_StatusTypeDef CCB_ECDSASign_SetPram(CCB_HandleTypeDef *hccb, CCB_ECDSACurveParamTypeDef *in)
 {
   /* Get the prime order n length */
-  PKA->RAM[PKA_ECDSA_SIGN_IN_ORDER_NB_BITS]
+  HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECDSA_SIGN_IN_ORDER_NB_BITS]
     = GetOptBitSize_u8(in->primeOrderSizeByte, *(in->pPrimeOrder));
-  PKA->RAM[PKA_ECDSA_SIGN_IN_ORDER_NB_BITS + 1U] = 0x0U;
+  HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECDSA_SIGN_IN_ORDER_NB_BITS + 1U] = 0x0U;
   if (Protect_SAES_WaitFLAG(hccb, AES_ISR_CCF, SET, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
   {
     hccb->State = HAL_CCB_STATE_ERROR;
@@ -1786,8 +2069,9 @@ static HAL_StatusTypeDef CCB_ECDSASign_SetPram(CCB_HandleTypeDef *hccb, CCB_ECDS
   }
 
   /* Get the modulus p length */
-  PKA->RAM[PKA_ECDSA_SIGN_IN_MOD_NB_BITS] = GetOptBitSize_u8(in->modulusSizeByte, *(in->pModulus));
-  PKA->RAM[PKA_ECDSA_SIGN_IN_MOD_NB_BITS + 1U] = 0x0U;
+  HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECDSA_SIGN_IN_MOD_NB_BITS] = GetOptBitSize_u8(in->modulusSizeByte,
+                                                                       *(in->pModulus));
+  HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECDSA_SIGN_IN_MOD_NB_BITS + 1U] = 0x0U;
   if (Protect_SAES_WaitFLAG(hccb, AES_ISR_CCF, SET, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
   {
     hccb->State = HAL_CCB_STATE_ERROR;
@@ -1795,8 +2079,8 @@ static HAL_StatusTypeDef CCB_ECDSASign_SetPram(CCB_HandleTypeDef *hccb, CCB_ECDS
   }
 
   /* Get the coefficient a sign */
-  PKA->RAM[PKA_ECDSA_SIGN_IN_A_COEFF_SIGN] = in->coefSignA;
-  PKA->RAM[PKA_ECDSA_SIGN_IN_A_COEFF_SIGN + 1U] = 0x0;
+  HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECDSA_SIGN_IN_A_COEFF_SIGN] = in->coefSignA;
+  HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECDSA_SIGN_IN_A_COEFF_SIGN + 1U] = 0x0;
   if (Protect_SAES_WaitFLAG(hccb, AES_ISR_CCF, SET, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
   {
     hccb->State = HAL_CCB_STATE_ERROR;
@@ -1852,9 +2136,9 @@ static HAL_StatusTypeDef CCB_ECDSASign_SetPram(CCB_HandleTypeDef *hccb, CCB_ECDS
 static HAL_StatusTypeDef CCB_ECCMul_SetPram(CCB_HandleTypeDef *hccb, CCB_ECCMulCurveParamTypeDef *in)
 {
   /* Get the prime order n length */
-  PKA->RAM[PKA_ECC_SCALAR_MUL_IN_EXP_NB_BITS]
+  HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECC_SCALAR_MUL_IN_EXP_NB_BITS]
     = GetOptBitSize_u8(in->primeOrderSizeByte, *(in->pPrimeOrder));
-  PKA->RAM[PKA_ECC_SCALAR_MUL_IN_EXP_NB_BITS + 1U] = 0x0;
+  HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECC_SCALAR_MUL_IN_EXP_NB_BITS + 1U] = 0x0;
   if (Protect_SAES_WaitFLAG(hccb, AES_ISR_CCF, SET, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
   {
     hccb->State = HAL_CCB_STATE_ERROR;
@@ -1862,8 +2146,9 @@ static HAL_StatusTypeDef CCB_ECCMul_SetPram(CCB_HandleTypeDef *hccb, CCB_ECCMulC
   }
 
   /* Get the modulus p length */
-  PKA->RAM[PKA_ECC_SCALAR_MUL_IN_OP_NB_BITS] = GetOptBitSize_u8(in->modulusSizeByte, *(in->pModulus));
-  PKA->RAM[PKA_ECC_SCALAR_MUL_IN_OP_NB_BITS + 1U] = 0x0;
+  HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECC_SCALAR_MUL_IN_OP_NB_BITS] = GetOptBitSize_u8(in->modulusSizeByte,
+                                                                          *(in->pModulus));
+  HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECC_SCALAR_MUL_IN_OP_NB_BITS + 1U] = 0x0;
   if (Protect_SAES_WaitFLAG(hccb, AES_ISR_CCF, SET, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
   {
     hccb->State = HAL_CCB_STATE_ERROR;
@@ -1871,8 +2156,8 @@ static HAL_StatusTypeDef CCB_ECCMul_SetPram(CCB_HandleTypeDef *hccb, CCB_ECCMulC
   }
 
   /* Get the coefficient a sign */
-  PKA->RAM[PKA_ECC_SCALAR_MUL_IN_A_COEFF_SIGN] = in->coefSignA;
-  PKA->RAM[PKA_ECC_SCALAR_MUL_IN_A_COEFF_SIGN + 1U] = 0x0;
+  HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECC_SCALAR_MUL_IN_A_COEFF_SIGN] = in->coefSignA;
+  HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECC_SCALAR_MUL_IN_A_COEFF_SIGN + 1U] = 0x0;
   if (Protect_SAES_WaitFLAG(hccb, AES_ISR_CCF, SET, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
   {
     hccb->State = HAL_CCB_STATE_ERROR;
@@ -1916,8 +2201,9 @@ static HAL_StatusTypeDef CCB_ECCMul_SetPram(CCB_HandleTypeDef *hccb, CCB_ECCMulC
 static HAL_StatusTypeDef CCB_RSAModExp_SetPram(CCB_HandleTypeDef *hccb, CCB_RSAParamTypeDef *in)
 {
   /* Get the exp length */
-  PKA->RAM[PKA_MODULAR_EXP_IN_EXP_NB_BITS] = GetOptBitSize_u8(in->expSizeByte, *(in->pMod));
-  PKA->RAM[PKA_MODULAR_EXP_IN_EXP_NB_BITS + 1U] = 0x0U;
+  HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_MODULAR_EXP_IN_EXP_NB_BITS] = GetOptBitSize_u8(in->expSizeByte,
+                                                                        *(in->pMod));
+  HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_MODULAR_EXP_IN_EXP_NB_BITS + 1U] = 0x0U;
   if (Protect_SAES_WaitFLAG(hccb, AES_ISR_CCF, SET, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
   {
     hccb->State = HAL_CCB_STATE_ERROR;
@@ -1925,8 +2211,9 @@ static HAL_StatusTypeDef CCB_RSAModExp_SetPram(CCB_HandleTypeDef *hccb, CCB_RSAP
   }
 
   /* Get the modulus n length */
-  PKA->RAM[PKA_MODULAR_EXP_IN_OP_NB_BITS] = GetOptBitSize_u8(in->modulusSizeByte, *(in->pMod));
-  PKA->RAM[PKA_MODULAR_EXP_IN_OP_NB_BITS + 1U] = 0x0U;
+  HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_MODULAR_EXP_IN_OP_NB_BITS] = GetOptBitSize_u8(in->modulusSizeByte,
+                                                                       *(in->pMod));
+  HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_MODULAR_EXP_IN_OP_NB_BITS + 1U] = 0x0U;
   if (Protect_SAES_WaitFLAG(hccb, AES_ISR_CCF, SET, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
   {
     hccb->State = HAL_CCB_STATE_ERROR;
@@ -1962,7 +2249,7 @@ static HAL_StatusTypeDef CCB_SetPram(CCB_HandleTypeDef *hccb, uint32_t modulusSi
   {
     for (offset = 0; offset < (operand_size - 4UL); offset += 2UL)
     {
-      CCB_Memcpy_u8_to_u64(&PKA->RAM[dst_address + offset],
+      CCB_Memcpy_u8_to_u64(&HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[dst_address + offset],
                            &src[(modulusSizeByte) - ((offset * 4UL) + 1UL)]);
       if (Protect_SAES_WaitFLAG(hccb, AES_ISR_CCF, SET, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
       {
@@ -1971,7 +2258,7 @@ static HAL_StatusTypeDef CCB_SetPram(CCB_HandleTypeDef *hccb, uint32_t modulusSi
       }
     }
 
-    CCB_Memcpy_Not_Align(&PKA->RAM[dst_address + offset],
+    CCB_Memcpy_Not_Align(&HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[dst_address + offset],
                          &src[(modulusSizeByte) - ((offset * 4UL) + 1UL)], modulusSizeByte % 8UL);
 
     if (Protect_SAES_WaitFLAG(hccb, AES_ISR_CCF, SET, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
@@ -1979,7 +2266,7 @@ static HAL_StatusTypeDef CCB_SetPram(CCB_HandleTypeDef *hccb, uint32_t modulusSi
       hccb->State = HAL_CCB_STATE_ERROR;
       return HAL_ERROR;
     }
-    RAM_PARAM_END(PKA->RAM, dst_address + ((modulusSizeByte + 7UL) / 4UL));
+    RAM_PARAM_END(HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM, dst_address + ((modulusSizeByte + 7UL) / 4UL));
     if (Protect_SAES_WaitFLAG(hccb, AES_ISR_CCF, SET, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
     {
       hccb->State = HAL_CCB_STATE_ERROR;
@@ -1991,7 +2278,7 @@ static HAL_StatusTypeDef CCB_SetPram(CCB_HandleTypeDef *hccb, uint32_t modulusSi
   {
     for (offset = 0; offset < (operand_size - 2UL); offset += 2UL)
     {
-      CCB_Memcpy_u8_to_u64(&PKA->RAM[dst_address + offset],
+      CCB_Memcpy_u8_to_u64(&HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[dst_address + offset],
                            &src[(modulusSizeByte) - ((offset * 4UL) + 1UL)]);
       if (Protect_SAES_WaitFLAG(hccb, AES_ISR_CCF, SET, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
       {
@@ -2000,7 +2287,7 @@ static HAL_StatusTypeDef CCB_SetPram(CCB_HandleTypeDef *hccb, uint32_t modulusSi
       }
     }
 
-    RAM_PARAM_END(PKA->RAM, dst_address
+    RAM_PARAM_END(HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM, dst_address
                   + ((modulusSizeByte + 3UL) / 4UL));
     if (Protect_SAES_WaitFLAG(hccb, AES_ISR_CCF, SET, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
     {
@@ -2022,23 +2309,34 @@ static HAL_StatusTypeDef CCB_SetPram(CCB_HandleTypeDef *hccb, uint32_t modulusSi
 static HAL_StatusTypeDef Protect_PKA_Init(CCB_HandleTypeDef *hccb, uint32_t Operation)
 {
   /* Reset the control register and enable the PKA */
-  PKA->CR = PKA_CR_EN;
+  HAL_CCB_GET_PKA_INSTANCE(hccb)->CR = PKA_CR_EN;
 
   /* Wait the INITOK flag Setting */
   if (Protect_PKA_WaitFLAG(hccb, PKA_SR_INITOK, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
   {
-    return HAL_ERROR;
+#if (defined(RNG_HTSR0_RPERRX) || defined(RNG_HTSR1_ADERRX))
+    /*Check if there is an RNG seed error */
+    if (LL_RNG_IsActiveFlag_SECS(RNG) != 0U)
+    {
+      /* Attempt to recover from the seed error */
+      if (CCB_RNG_ResilientRecoverSeedError(hccb) != HAL_OK)
+      {
+        return HAL_ERROR;
+      }
+    }
+#endif /* RNG_HTSR0_RPERRX || RNG_HTSR1_ADERRX */
   }
 
   /* Reset any pending flag */
-  SET_BIT(PKA->CLRFR, PKA_CLRFR_PROCENDFC | PKA_CLRFR_RAMERRFC | PKA_CLRFR_ADDRERRFC | PKA_CLRFR_OPERRFC);
+  SET_BIT(HAL_CCB_GET_PKA_INSTANCE(hccb)->CLRFR,
+          PKA_CLRFR_PROCENDFC | PKA_CLRFR_RAMERRFC | PKA_CLRFR_ADDRERRFC | PKA_CLRFR_OPERRFC);
 
   /* Set the mode and deactivate the interrupts */
   if ((Operation == CCB_ECDSA_SIGN_CPU_BLOB_CREATION)
       || (Operation == CCB_ECDSA_SIGN_RNG_BLOB_CREATION)
       || (Operation == CCB_ECDSA_SIGN_BLOB_USE))
   {
-    MODIFY_REG(PKA->CR, PKA_CR_MODE | PKA_CR_PROCENDIE | PKA_CR_RAMERRIE | PKA_CR_ADDRERRIE
+    MODIFY_REG(HAL_CCB_GET_PKA_INSTANCE(hccb)->CR, PKA_CR_MODE | PKA_CR_PROCENDIE | PKA_CR_RAMERRIE | PKA_CR_ADDRERRIE
                | PKA_CR_OPERRIE, CCB_PKA_ECDSA_SIGNATURE_MODE << PKA_CR_MODE_Pos);
   }
 
@@ -2046,14 +2344,14 @@ static HAL_StatusTypeDef Protect_PKA_Init(CCB_HandleTypeDef *hccb, uint32_t Oper
            || (Operation == CCB_ECC_SCALAR_MUL_RNG_BLOB_CREATION)
            || (Operation == CCB_ECC_SCALAR_MUL_BLOB_USE))
   {
-    MODIFY_REG(PKA->CR, PKA_CR_MODE | PKA_CR_PROCENDIE | PKA_CR_RAMERRIE | PKA_CR_ADDRERRIE
+    MODIFY_REG(HAL_CCB_GET_PKA_INSTANCE(hccb)->CR, PKA_CR_MODE | PKA_CR_PROCENDIE | PKA_CR_RAMERRIE | PKA_CR_ADDRERRIE
                | PKA_CR_OPERRIE, CCB_PKA_ECC_MUL_MODE << PKA_CR_MODE_Pos);
   }
 
   else if ((Operation == CCB_MODULAR_EXP_CPU_BLOB_CREATION)
            || (Operation == CCB_MODULAR_EXP_BLOB_USE))
   {
-    MODIFY_REG(PKA->CR, PKA_CR_MODE | PKA_CR_PROCENDIE | PKA_CR_RAMERRIE | PKA_CR_ADDRERRIE
+    MODIFY_REG(HAL_CCB_GET_PKA_INSTANCE(hccb)->CR, PKA_CR_MODE | PKA_CR_PROCENDIE | PKA_CR_RAMERRIE | PKA_CR_ADDRERRIE
                | PKA_CR_OPERRIE, CCB_PKA_MODE_MODULAR_EXP_PROTECT << PKA_CR_MODE_Pos);
   }
   else
@@ -2067,16 +2365,17 @@ static HAL_StatusTypeDef Protect_PKA_Init(CCB_HandleTypeDef *hccb, uint32_t Oper
 
 /**
   * @brief  Unprotected PKA Initialization
+  * @param  hccb CCB handle
   * @retval HAL status.
   */
-static HAL_StatusTypeDef Unprotected_PKA_Init(void)
+static HAL_StatusTypeDef Unprotected_PKA_Init(CCB_HandleTypeDef *hccb)
 {
   uint32_t tickstart = HAL_GetTick();
 
   /* Reset the control register and enable the PKA (wait the end of PKA RAM erase) */
-  while ((PKA->CR & PKA_CR_EN) != PKA_CR_EN)
+  while ((HAL_CCB_GET_PKA_INSTANCE(hccb)->CR & PKA_CR_EN) != PKA_CR_EN)
   {
-    PKA->CR = PKA_CR_EN;
+    HAL_CCB_GET_PKA_INSTANCE(hccb)->CR = PKA_CR_EN;
 
     /* Check the Timeout */
     if ((HAL_GetTick() - tickstart) > HAL_CCB_TIMEOUT_DEFAULT_VALUE)
@@ -2086,55 +2385,67 @@ static HAL_StatusTypeDef Unprotected_PKA_Init(void)
     }
   }
   /* Wait the INITOK flag Setting */
-  if (Unprotect_PKA_WaitFLAG(PKA_SR_INITOK, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+  if (Unprotect_PKA_WaitFLAG(hccb, PKA_SR_INITOK, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
   {
-    return HAL_ERROR;
+#if (defined(RNG_HTSR0_RPERRX) || defined(RNG_HTSR1_ADERRX))
+    /*Check if there is an RNG seed error */
+    if (LL_RNG_IsActiveFlag_SECS(RNG) != 0U)
+    {
+      /* Attempt to recover from the seed error */
+      if (CCB_RNG_ResilientRecoverSeedError(hccb) != HAL_OK)
+      {
+        return HAL_ERROR;
+      }
+    }
+#endif /* RNG_HTSR0_RPERRX || RNG_HTSR1_ADERRX */
   }
 
   /* Reset any pending flag */
-  SET_BIT(PKA->CLRFR, PKA_CLRFR_PROCENDFC | PKA_CLRFR_RAMERRFC | PKA_CLRFR_ADDRERRFC | PKA_CLRFR_OPERRFC);
+  SET_BIT(HAL_CCB_GET_PKA_INSTANCE(hccb)->CLRFR,
+          PKA_CLRFR_PROCENDFC | PKA_CLRFR_RAMERRFC | PKA_CLRFR_ADDRERRFC | PKA_CLRFR_OPERRFC);
 
   return HAL_OK;
 }
 
 /**
   * @brief  Initialize the RNG
+  * @param  hccb CCB handle
   * @retval HAL status
   */
-static HAL_StatusTypeDef CCB_RNG_Init(void)
+static HAL_StatusTypeDef CCB_RNG_Init(CCB_HandleTypeDef *hccb)
 {
   uint32_t tickstart;
 
   /* Disable RNG */
-  RNG->CR &= ~RNG_CR_RNGEN;
+  HAL_CCB_GET_RNG_INSTANCE(hccb)->CR &= ~RNG_CR_RNGEN;
 
   /* Clock Error Detection Configuration when CONDRT bit is set to 1 */
-  MODIFY_REG(RNG->CR, RNG_CR_CONDRST,  RNG_CR_CONDRST);
+  MODIFY_REG(HAL_CCB_GET_RNG_INSTANCE(hccb)->CR, RNG_CR_CONDRST,  RNG_CR_CONDRST);
 #if defined(RNG_CR_NIST_VALUE)
   /* Recommended value for NIST compliance, refer to application note AN4230 */
-  WRITE_REG(RNG->CR, RNG_CR_NIST_VALUE | RNG_CR_CONDRST);
+  WRITE_REG(HAL_CCB_GET_RNG_INSTANCE(hccb)->CR, RNG_CR_NIST_VALUE | RNG_CR_CONDRST);
 #endif /* defined(RNG_CR_NIST_VALUE) */
 #if defined(RNG_HTCR_NIST_VALUE)
   /* Recommended value for NIST compliance, refer to application note AN4230 */
-  WRITE_REG(RNG->HTCR, RNG_HTCR_NIST_VALUE);
+  WRITE_REG(HAL_CCB_GET_RNG_INSTANCE(hccb)->HTCR[0], RNG_HTCR_NIST_VALUE);
 #endif /* defined(RNG_HTCR_NIST_VALUE) */
 #if defined(RNG_NSCR_NIST_VALUE)
-  WRITE_REG(RNG->NSCR, RNG_NSCR_NIST_VALUE);
+  WRITE_REG(HAL_CCB_GET_RNG_INSTANCE(hccb)->NSCR, RNG_NSCR_NIST_VALUE);
 #endif /* defined(RNG_NSCR_NIST_VALUE) */
 
   /* Writing bit CONDRST=0 */
-  CLEAR_BIT(RNG->CR, RNG_CR_CONDRST);
+  CLEAR_BIT(HAL_CCB_GET_RNG_INSTANCE(hccb)->CR, RNG_CR_CONDRST);
 
   /* Get tick */
   tickstart = HAL_GetTick();
 
   /* Wait for conditioning reset process to be completed */
-  while (HAL_IS_BIT_SET(RNG->CR, RNG_CR_CONDRST))
+  while (HAL_IS_BIT_SET(HAL_CCB_GET_RNG_INSTANCE(hccb)->CR, RNG_CR_CONDRST))
   {
     if ((HAL_GetTick() - tickstart) > HAL_CCB_TIMEOUT_DEFAULT_VALUE)
     {
       /* New check to avoid false timeout detection in case of preemption */
-      if (HAL_IS_BIT_SET(RNG->CR, RNG_CR_CONDRST))
+      if (HAL_IS_BIT_SET(HAL_CCB_GET_RNG_INSTANCE(hccb)->CR, RNG_CR_CONDRST))
       {
         /* Set state and return error */
         return HAL_ERROR;
@@ -2143,19 +2454,32 @@ static HAL_StatusTypeDef CCB_RNG_Init(void)
   }
 
   /* Enable the RNG Peripheral */
-  RNG->CR |=  RNG_CR_RNGEN;
+  HAL_CCB_GET_RNG_INSTANCE(hccb)->CR |=  RNG_CR_RNGEN;
 
-  /* verify that no seed error */
-  if ((RNG->SR & (RNG_SR_SEIS)) != (uint32_t)RESET)
-  {
-    /* Set state and return error */
-    return HAL_ERROR;
-  }
+  tickstart = HAL_GetTick();
 
   /* Check if data register contains valid random data */
-  if (CCB_RNG_Wait_SET_FLAG(RNG_SR_DRDY, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+  while (HAL_IS_BIT_CLR(HAL_CCB_GET_RNG_INSTANCE(hccb)->SR, RNG_SR_DRDY))
   {
-    return HAL_ERROR;
+#if (defined(RNG_HTSR0_RPERRX) || defined(RNG_HTSR1_ADERRX))
+    /*Check if there is an RNG seed error */
+    if (LL_RNG_IsActiveFlag_SECS(RNG) != 0U)
+    {
+      /* Attempt to recover from the seed error */
+      if (CCB_RNG_ResilientRecoverSeedError(hccb) != HAL_OK)
+      {
+        return HAL_ERROR;
+      }
+    }
+#endif /* RNG_HTSR0_RPERRX || RNG_HTSR1_ADERRX */
+
+    if ((HAL_GetTick() - tickstart) > HAL_CCB_TIMEOUT_DEFAULT_VALUE)
+    {
+      HAL_CCB_GET_RNG_INSTANCE(hccb)->CR &= ~RNG_CR_RNGEN;
+
+      /* Set state and return error */
+      return HAL_ERROR;
+    }
   }
 
   /* Return function status */
@@ -2189,14 +2513,15 @@ static HAL_StatusTypeDef WrappingKeyConfiguration(CCB_HandleTypeDef *hccb, uint3
           || (Operation == CCB_MODULAR_EXP_CPU_BLOB_CREATION))
       {
         /* SAES: GCMPH = 0x0 (initial phase) as event that trig OPSTEP 0x1 --> 0x2 */
-        WRITE_REG(SAES->CR, AES_CR_KEYSIZE | AES_CR_CHMOD_0 | AES_CR_CHMOD_1);
+        WRITE_REG(HAL_CCB_GET_SAES_INSTANCE(hccb)->CR, AES_CR_KEYSIZE
+                  | AES_CR_CHMOD_0 | AES_CR_CHMOD_1);
       }
 
       else if ((Operation == CCB_ECDSA_SIGN_BLOB_USE) || (Operation == CCB_ECC_SCALAR_MUL_BLOB_USE)
                || (Operation == CCB_MODULAR_EXP_BLOB_USE))
       {
         /* SAES: GCMPH = 0x0 (initial phase) as event that trig OPSTEP 0x1 --> 0x12 */
-        WRITE_REG(SAES->CR, AES_CR_KEYSIZE | AES_CR_CHMOD_0
+        WRITE_REG(HAL_CCB_GET_SAES_INSTANCE(hccb)->CR, AES_CR_KEYSIZE | AES_CR_CHMOD_0
                   | AES_CR_CHMOD_1 | AES_CR_MODE_1);
       }
 
@@ -2214,16 +2539,16 @@ static HAL_StatusTypeDef WrappingKeyConfiguration(CCB_HandleTypeDef *hccb, uint3
           || (Operation == CCB_MODULAR_EXP_CPU_BLOB_CREATION))
       {
         /* SAES: GCMPH = 0x0 (initial phase) as event that trig OPSTEP 0x1 --> 0x2 */
-        WRITE_REG(SAES->CR, AES_CR_KEYSEL_0 | AES_CR_KEYSIZE | AES_CR_CHMOD_0
-                  | AES_CR_CHMOD_1);
+        WRITE_REG(HAL_CCB_GET_SAES_INSTANCE(hccb)->CR, AES_CR_KEYSEL_0 | AES_CR_KEYSIZE
+                  | AES_CR_CHMOD_0  | AES_CR_CHMOD_1);
       }
 
       else if ((Operation == CCB_ECDSA_SIGN_BLOB_USE) || (Operation == CCB_ECC_SCALAR_MUL_BLOB_USE)
                || (Operation == CCB_MODULAR_EXP_BLOB_USE))
       {
         /* SAES: GCMPH = 0x0 (initial phase) as event that trig OPSTEP 0x1 --> 0x12 */
-        WRITE_REG(SAES->CR, AES_CR_KEYSEL_0 | AES_CR_KEYSIZE | AES_CR_CHMOD_0
-                  | AES_CR_CHMOD_1 | AES_CR_MODE_1);
+        WRITE_REG(HAL_CCB_GET_SAES_INSTANCE(hccb)->CR, AES_CR_KEYSEL_0 | AES_CR_KEYSIZE
+                  | AES_CR_CHMOD_0 | AES_CR_CHMOD_1 | AES_CR_MODE_1);
       }
 
       else
@@ -2251,16 +2576,16 @@ static HAL_StatusTypeDef WrappingKeyConfiguration(CCB_HandleTypeDef *hccb, uint3
           || (Operation == CCB_MODULAR_EXP_CPU_BLOB_CREATION))
       {
         /* SAES: GCMPH = 0x0 (initial phase) as event that trig OPSTEP 0x1 --> 0x2 */
-        WRITE_REG(SAES->CR, AES_CR_KEYSEL_0 | AES_CR_KEYSIZE | AES_CR_CHMOD_0
-                  | AES_CR_CHMOD_1);
+        WRITE_REG(HAL_CCB_GET_SAES_INSTANCE(hccb)->CR, AES_CR_KEYSEL_0 | AES_CR_KEYSIZE
+                  | AES_CR_CHMOD_0 | AES_CR_CHMOD_1);
       }
 
       else if ((Operation == CCB_ECDSA_SIGN_BLOB_USE) || (Operation == CCB_ECC_SCALAR_MUL_BLOB_USE)
                || (Operation == CCB_MODULAR_EXP_BLOB_USE))
       {
         /* SAES: GCMPH = 0x0 (initial phase) as event that trig OPSTEP 0x1 --> 0x12 */
-        WRITE_REG(SAES->CR, AES_CR_KEYSEL_0 | AES_CR_KEYSIZE | AES_CR_CHMOD_0 |
-                  AES_CR_CHMOD_1 | AES_CR_MODE_1);
+        WRITE_REG(HAL_CCB_GET_SAES_INSTANCE(hccb)->CR, AES_CR_KEYSEL_0 | AES_CR_KEYSIZE
+                  | AES_CR_CHMOD_0 | AES_CR_CHMOD_1 | AES_CR_MODE_1);
       }
 
       else
@@ -2322,11 +2647,13 @@ static HAL_StatusTypeDef Protect_SAES_UnwrapKey(CCB_HandleTypeDef *hccb, const C
 
   if (pWrappingKey->AES_Algorithm != CCB_AES_ECB)
   {
-    WRITE_REG(SAES->CR, AES_CR_KEYSEL_0 | AES_CR_KMOD_0 | AES_CR_KEYSIZE | AES_CR_CHMOD_0);
+    WRITE_REG(HAL_CCB_GET_SAES_INSTANCE(hccb)->CR, AES_CR_KEYSEL_0 | AES_CR_KMOD_0
+              | AES_CR_KEYSIZE | AES_CR_CHMOD_0);
   }
   else
   {
-    WRITE_REG(SAES->CR, AES_CR_KEYSEL_0 | AES_CR_KMOD_0 | AES_CR_KEYSIZE);
+    WRITE_REG(HAL_CCB_GET_SAES_INSTANCE(hccb)->CR, AES_CR_KEYSEL_0
+              | AES_CR_KMOD_0 | AES_CR_KEYSIZE);
   }
 
   /* Wait for Key valid to be set */
@@ -2336,14 +2663,14 @@ static HAL_StatusTypeDef Protect_SAES_UnwrapKey(CCB_HandleTypeDef *hccb, const C
   }
 
   /* Disable the SAES peripheral */
-  SAES->CR &=  ~AES_CR_EN;
+  HAL_CCB_GET_SAES_INSTANCE(hccb)->CR &=  ~AES_CR_EN;
 
   /* wait for key valid */
-  while (HAL_IS_BIT_CLR(SAES->SR, AES_SR_KEYVALID))
+  while (HAL_IS_BIT_CLR(HAL_CCB_GET_SAES_INSTANCE(hccb)->SR, AES_SR_KEYVALID))
   {
     if (((HAL_GetTick() - tickstart) > Timeout) || (Timeout == 0U))
     {
-      SAES->CR &= ~AES_CR_EN;
+      HAL_CCB_GET_SAES_INSTANCE(hccb)->CR &= ~AES_CR_EN;
 
       /* Set state and return error */
       hccb->State = HAL_CCB_STATE_ERROR;
@@ -2352,13 +2679,13 @@ static HAL_StatusTypeDef Protect_SAES_UnwrapKey(CCB_HandleTypeDef *hccb, const C
   }
 
   /* Set the operating mode*/
-  MODIFY_REG(SAES->CR, AES_CR_KMOD, AES_CR_KMOD_0);
+  MODIFY_REG(HAL_CCB_GET_SAES_INSTANCE(hccb)->CR, AES_CR_KMOD, AES_CR_KMOD_0);
 
   /* key preparation for decryption, operating mode 2*/
-  MODIFY_REG(SAES->CR, AES_CR_MODE, AES_CR_MODE_0);
+  MODIFY_REG(HAL_CCB_GET_SAES_INSTANCE(hccb)->CR, AES_CR_MODE, AES_CR_MODE_0);
 
   /* Enable SAES */
-  SAES->CR |= AES_CR_EN;
+  HAL_CCB_GET_SAES_INSTANCE(hccb)->CR |= AES_CR_EN;
 
   /* wait  CCF in SAES */
   if (Protect_SAES_WaitFLAG(hccb, AES_ISR_CCF, SET, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
@@ -2367,30 +2694,30 @@ static HAL_StatusTypeDef Protect_SAES_UnwrapKey(CCB_HandleTypeDef *hccb, const C
   }
 
   /* Return to decryption operating mode(Mode 3)*/
-  MODIFY_REG(SAES->CR, AES_CR_MODE, AES_CR_MODE_1);
+  MODIFY_REG(HAL_CCB_GET_SAES_INSTANCE(hccb)->CR, AES_CR_MODE, AES_CR_MODE_1);
 
   if (pWrappingKey->AES_Algorithm != CCB_AES_ECB)
   {
     /* Set the Initialization Vector */
-    SAES->IVR3 = *(uint32_t *)(pWrappingKey->pInitVect);
-    SAES->IVR2 = *(uint32_t *)(pWrappingKey->pInitVect + 1U);
-    SAES->IVR1 = *(uint32_t *)(pWrappingKey->pInitVect + 2U);
-    SAES->IVR0 = *(uint32_t *)(pWrappingKey->pInitVect + 3U);
+    HAL_CCB_GET_SAES_INSTANCE(hccb)->IVR3 = *(uint32_t *)(pWrappingKey->pInitVect);
+    HAL_CCB_GET_SAES_INSTANCE(hccb)->IVR2 = *(uint32_t *)(pWrappingKey->pInitVect + 1U);
+    HAL_CCB_GET_SAES_INSTANCE(hccb)->IVR1 = *(uint32_t *)(pWrappingKey->pInitVect + 2U);
+    HAL_CCB_GET_SAES_INSTANCE(hccb)->IVR0 = *(uint32_t *)(pWrappingKey->pInitVect + 3U);
   }
   /* Enable CRYP */
-  SAES->CR |= AES_CR_EN;
+  HAL_CCB_GET_SAES_INSTANCE(hccb)->CR |= AES_CR_EN;
 
   /* Set the phase */
   while (in_count < 8UL) /* symmetric key size is always 256 */
   {
     /* Write four times to input the key to encrypt */
-    SAES->DINR  = pWrappingKey->pUserWrappedWrappingKey[in_count];
+    HAL_CCB_GET_SAES_INSTANCE(hccb)->DINR  = pWrappingKey->pUserWrappedWrappingKey[in_count];
     in_count++;
-    SAES->DINR  = pWrappingKey->pUserWrappedWrappingKey[in_count];
+    HAL_CCB_GET_SAES_INSTANCE(hccb)->DINR  = pWrappingKey->pUserWrappedWrappingKey[in_count];
     in_count++;
-    SAES->DINR  = pWrappingKey->pUserWrappedWrappingKey[in_count];
+    HAL_CCB_GET_SAES_INSTANCE(hccb)->DINR  = pWrappingKey->pUserWrappedWrappingKey[in_count];
     in_count++;
-    SAES->DINR  = pWrappingKey->pUserWrappedWrappingKey[in_count];
+    HAL_CCB_GET_SAES_INSTANCE(hccb)->DINR  = pWrappingKey->pUserWrappedWrappingKey[in_count];
     in_count++;
 
     /* wait  CCF in SAES */
@@ -2401,8 +2728,8 @@ static HAL_StatusTypeDef Protect_SAES_UnwrapKey(CCB_HandleTypeDef *hccb, const C
   }
 
   /* Disable the SAES */
-  SAES->CR &=  ~AES_CR_EN;
-  SAES->ICR |=  0x0EUL;
+  HAL_CCB_GET_SAES_INSTANCE(hccb)->CR &=  ~AES_CR_EN;
+  HAL_CCB_GET_SAES_INSTANCE(hccb)->ICR |=  0x0EUL;
 
   /* Return function status */
   return HAL_OK;
@@ -2659,7 +2986,7 @@ static HAL_StatusTypeDef CCB_WrapSymmetricKey(CCB_HandleTypeDef *hccb, const uin
     }
 
     /* Initialize RNG */
-    if (CCB_RNG_Init() != HAL_OK)
+    if (CCB_RNG_Init(hccb) != HAL_OK)
     {
       /* Set state and return error */
       hccb->State = HAL_CCB_STATE_ERROR;
@@ -2669,12 +2996,22 @@ static HAL_StatusTypeDef CCB_WrapSymmetricKey(CCB_HandleTypeDef *hccb, const uin
     /*  Initialize SAES */
     if (Protect_SAES_WaitFLAG(hccb, AES_SR_BUSY, RESET, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
     {
-      /* Disable the SAES peripheral clock */
-      SAES->CR &=  ~AES_CR_EN;
+#if (defined(RNG_HTSR0_RPERRX) || defined(RNG_HTSR1_ADERRX))
+      /*Check if there is an RNG seed error */
+      if (LL_RNG_IsActiveFlag_SECS(RNG) != 0U)
+      {
+        /* Attempt to recover from the seed error */
+        if (CCB_RNG_ResilientRecoverSeedError(hccb) != HAL_OK)
+        {
+          /* Disable the SAES peripheral */
+          HAL_CCB_GET_SAES_INSTANCE(hccb)->CR &=  ~AES_CR_EN;
 
-      /* Set state and return error */
-      hccb->State = HAL_CCB_STATE_ERROR;
-      return HAL_ERROR;
+          /* Set state and return error */
+          hccb->State = HAL_CCB_STATE_ERROR;
+          return HAL_ERROR;
+        }
+      }
+#endif /* RNG_HTSR0_RPERRX || RNG_HTSR1_ADERRX */
     }
 
     /* Update the state */
@@ -2682,12 +3019,14 @@ static HAL_StatusTypeDef CCB_WrapSymmetricKey(CCB_HandleTypeDef *hccb, const uin
 
     if (pWrappingKey->AES_Algorithm != CCB_AES_ECB)
     {
-      WRITE_REG(SAES->CR, AES_CR_KEYSEL_0 | AES_CR_KMOD_0 | AES_CR_KEYSIZE | AES_CR_CHMOD_0);
+      WRITE_REG(HAL_CCB_GET_SAES_INSTANCE(hccb)->CR, AES_CR_KEYSEL_0 | AES_CR_KMOD_0 \
+                | AES_CR_KEYSIZE | AES_CR_CHMOD_0);
     }
 
     else
     {
-      WRITE_REG(SAES->CR, AES_CR_KEYSEL_0 | AES_CR_KMOD_0 | AES_CR_KEYSIZE);
+      WRITE_REG(HAL_CCB_GET_SAES_INSTANCE(hccb)->CR, AES_CR_KEYSEL_0 | AES_CR_KMOD_0 \
+                | AES_CR_KEYSIZE);
     }
 
     /* Wait for Key valid to be set */
@@ -2697,31 +3036,31 @@ static HAL_StatusTypeDef CCB_WrapSymmetricKey(CCB_HandleTypeDef *hccb, const uin
     }
 
     /* Disable the CRYP peripheral clock */
-    SAES->CR &=  ~AES_CR_EN;
+    HAL_CCB_GET_SAES_INSTANCE(hccb)->CR &=  ~AES_CR_EN;
 
     /* Set the operating mode*/
-    MODIFY_REG(SAES->CR, AES_CR_KMOD, AES_CR_KMOD_0);
+    MODIFY_REG(HAL_CCB_GET_SAES_INSTANCE(hccb)->CR, AES_CR_KMOD, AES_CR_KMOD_0);
 
     /* Encryption operating mode(Mode 0)*/
-    MODIFY_REG(SAES->CR, AES_CR_MODE, 0x0UL); /*!< Encryption mode   */
+    MODIFY_REG(HAL_CCB_GET_SAES_INSTANCE(hccb)->CR, AES_CR_MODE, 0x0UL); /*!< Encryption mode   */
 
     if (pWrappingKey->AES_Algorithm != CCB_AES_ECB)
     {
       /* Set the Initialization Vector */
-      SAES->IVR3 = *(uint32_t *)(pWrappingKey->pInitVect);
-      SAES->IVR2 = *(uint32_t *)(pWrappingKey->pInitVect + 1U);
-      SAES->IVR1 = *(uint32_t *)(pWrappingKey->pInitVect + 2U);
-      SAES->IVR0 = *(uint32_t *)(pWrappingKey->pInitVect + 3U);
+      HAL_CCB_GET_SAES_INSTANCE(hccb)->IVR3 = *(uint32_t *)(pWrappingKey->pInitVect);
+      HAL_CCB_GET_SAES_INSTANCE(hccb)->IVR2 = *(uint32_t *)(pWrappingKey->pInitVect + 1U);
+      HAL_CCB_GET_SAES_INSTANCE(hccb)->IVR1 = *(uint32_t *)(pWrappingKey->pInitVect + 2U);
+      HAL_CCB_GET_SAES_INSTANCE(hccb)->IVR0 = *(uint32_t *)(pWrappingKey->pInitVect + 3U);
     }
 
     /* Enable CRYP */
-    SAES->CR |= AES_CR_EN;
+    HAL_CCB_GET_SAES_INSTANCE(hccb)->CR |= AES_CR_EN;
 
     while (cryp_in_count < CCB_SIZE_SKEY_INWORD)
     {
       for (i = 0UL; i < 4UL; i++)
       {
-        SAES->DINR  = pcryp_in_buff[cryp_in_count];
+        HAL_CCB_GET_SAES_INSTANCE(hccb)->DINR  = pcryp_in_buff[cryp_in_count];
         cryp_in_count++;
       }
 
@@ -2732,13 +3071,13 @@ static HAL_StatusTypeDef CCB_WrapSymmetricKey(CCB_HandleTypeDef *hccb, const uin
       }
 
       /* Clear CCF Flag */
-      SET_BIT(SAES->ICR, AES_ICR_CCF);
+      SET_BIT(HAL_CCB_GET_SAES_INSTANCE(hccb)->ICR, AES_ICR_CCF);
 
       /* Read the output block from the output FIFO and put them in temporary buffer then
       get CrypOutBuff from temporary buffer */
       for (i = 0UL; i < 4UL; i++)
       {
-        pcryp_out_buff[cryp_out_count] = SAES->DOUTR;
+        pcryp_out_buff[cryp_out_count] = HAL_CCB_GET_SAES_INSTANCE(hccb)->DOUTR;
         cryp_out_count++;
       }
     }
@@ -2779,33 +3118,33 @@ static HAL_StatusTypeDef CCB_WrapSymmetricKey(CCB_HandleTypeDef *hccb, const uin
 static HAL_StatusTypeDef CCB_BlobCreation_InitialPhase(CCB_HandleTypeDef *hccb, uint32_t *pIV)
 {
   /* Load IVs from RNG to SAES */
-  SAES->IVR0 = CCB_IV0_VALUE;  /* SAES_IVR0 that must be equal to 0x2 */
-  if (CCB_RNG_Wait_SET_FLAG(RNG_SR_DRDY, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+  HAL_CCB_GET_SAES_INSTANCE(hccb)->IVR0 = CCB_IV0_VALUE;  /* SAES_IVR0 that must be equal to 0x2 */
+  if (CCB_RNG_Wait_SET_FLAG(hccb, RNG_SR_DRDY, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
   {
     return HAL_ERROR;
   }
 
   /* For IV1, IV2 and IV3, random generated values are loaded from RNG to SAES by CCB */
-  SAES->IVR1 = CCB_FAKE_VALUE;
-  if (CCB_RNG_Wait_SET_FLAG(RNG_SR_DRDY, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+  HAL_CCB_GET_SAES_INSTANCE(hccb)->IVR1 = CCB_FAKE_VALUE;
+  if (CCB_RNG_Wait_SET_FLAG(hccb, RNG_SR_DRDY, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
   {
     return HAL_ERROR;
   }
 
-  SAES->IVR2 = CCB_FAKE_VALUE;
-  if (CCB_RNG_Wait_SET_FLAG(RNG_SR_DRDY, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+  HAL_CCB_GET_SAES_INSTANCE(hccb)->IVR2 = CCB_FAKE_VALUE;
+  if (CCB_RNG_Wait_SET_FLAG(hccb, RNG_SR_DRDY, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
   {
     return HAL_ERROR;
   }
 
-  SAES->IVR3 = CCB_FAKE_VALUE;
-  if (CCB_RNG_Wait_SET_FLAG(RNG_SR_DRDY, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+  HAL_CCB_GET_SAES_INSTANCE(hccb)->IVR3 = CCB_FAKE_VALUE;
+  if (CCB_RNG_Wait_SET_FLAG(hccb, RNG_SR_DRDY, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
   {
     return HAL_ERROR;
   }
 
   /* if an error occurs, RNGERRF flag is set in PKA */
-  if (HAL_CCB_GET_PKA_FLAG(PKA_SR_RNGERRF) == SET)
+  if (HAL_CCB_GET_PKA_FLAG(hccb, PKA_SR_RNGERRF) == SET)
   {
     /* Set state and return error */
     hccb->State = HAL_CCB_STATE_ERROR;
@@ -2815,14 +3154,14 @@ static HAL_StatusTypeDef CCB_BlobCreation_InitialPhase(CCB_HandleTypeDef *hccb, 
   else
   {
     /* Read back IVs from SAES */
-    pIV[3] = SAES->IVR3;
-    pIV[2] = SAES->IVR2;
-    pIV[1] = SAES->IVR1;
-    pIV[0] = SAES->IVR0;
+    pIV[3] = HAL_CCB_GET_SAES_INSTANCE(hccb)->IVR3;
+    pIV[2] = HAL_CCB_GET_SAES_INSTANCE(hccb)->IVR2;
+    pIV[1] = HAL_CCB_GET_SAES_INSTANCE(hccb)->IVR1;
+    pIV[0] = HAL_CCB_GET_SAES_INSTANCE(hccb)->IVR0;
   }
 
   /* Set EN in SAES_CR*/
-  SAES->CR |= AES_CR_EN;
+  HAL_CCB_GET_SAES_INSTANCE(hccb)->CR |= AES_CR_EN;
 
   /* Wait until CCF is SET in SAES_ISR (end of GCM init) */
   if (Protect_SAES_WaitFLAG(hccb, AES_ISR_CCF, SET, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
@@ -2831,7 +3170,7 @@ static HAL_StatusTypeDef CCB_BlobCreation_InitialPhase(CCB_HandleTypeDef *hccb, 
   }
 
   /* Set SAES GCMPH Header phase and trig OPSTEP transition 0x2 --> 0x3 */
-  MODIFY_REG(SAES->CR, AES_CR_GCMPH, AES_CR_GCMPH_0 | AES_CR_EN);
+  MODIFY_REG(HAL_CCB_GET_SAES_INSTANCE(hccb)->CR, AES_CR_GCMPH, AES_CR_GCMPH_0 | AES_CR_EN);
 
   /* Return function status */
   return HAL_OK;
@@ -2849,13 +3188,13 @@ static HAL_StatusTypeDef CCB_BlobUse_InitialPhase(CCB_HandleTypeDef *hccb, const
   uint16_t count;
 
   /* Set IVs from created Blob */
-  SAES->IVR0 = pIV[0];
-  SAES->IVR1 = pIV[1];
-  SAES->IVR2 = pIV[2];
-  SAES->IVR3 = pIV[3];
+  HAL_CCB_GET_SAES_INSTANCE(hccb)->IVR0 = pIV[0];
+  HAL_CCB_GET_SAES_INSTANCE(hccb)->IVR1 = pIV[1];
+  HAL_CCB_GET_SAES_INSTANCE(hccb)->IVR2 = pIV[2];
+  HAL_CCB_GET_SAES_INSTANCE(hccb)->IVR3 = pIV[3];
 
   /* Set EN in SAES_CR*/
-  SAES->CR |= AES_CR_EN;
+  HAL_CCB_GET_SAES_INSTANCE(hccb)->CR |= AES_CR_EN;
 
   /* Wait until CCF is SET in SAES_ISR (end of GCM init) */
   if (Protect_SAES_WaitFLAG(hccb, AES_ISR_CCF, SET, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
@@ -2870,7 +3209,7 @@ static HAL_StatusTypeDef CCB_BlobUse_InitialPhase(CCB_HandleTypeDef *hccb, const
   }
 
   /* Set SAES GCMPH Header phase and trig OPSTEP transition 0x12 --> 0x13 */
-  MODIFY_REG(SAES->CR, AES_CR_GCMPH | AES_CR_EN,
+  MODIFY_REG(HAL_CCB_GET_SAES_INSTANCE(hccb)->CR, AES_CR_GCMPH | AES_CR_EN,
              AES_CR_GCMPH_0 | AES_CR_EN);
 
   /* Return function status */
@@ -2904,7 +3243,7 @@ static HAL_StatusTypeDef CCB_BlobCreation_FinalPhase(CCB_HandleTypeDef *hccb, ui
     cipherkey_size = operand_size;
   }
   /* Clear the CMF flag and the chaining mode status bits in 8 to 15 in PKA_SR */
-  HAL_CCB_CLEAR_PKA_FLAG(PKA_CLRFR_CMFC);
+  HAL_CCB_CLEAR_PKA_FLAG(hccb, PKA_CLRFR_CMFC);
 
   /* Preparing last Block */
   if (Operation == CCB_MODULAR_EXP_CPU_BLOB_CREATION)
@@ -2938,7 +3277,7 @@ static HAL_StatusTypeDef CCB_BlobCreation_FinalPhase(CCB_HandleTypeDef *hccb, ui
 
   for (count = 0; count < CCB_BLOCK_SIZE; count++)
   {
-    SAES->DINR = last_block[count];
+    HAL_CCB_GET_SAES_INSTANCE(hccb)->DINR = last_block[count];
   }
 
   /* Wait until CCF flag is SET in SAES */
@@ -2950,7 +3289,7 @@ static HAL_StatusTypeDef CCB_BlobCreation_FinalPhase(CCB_HandleTypeDef *hccb, ui
   /* Read Authentif Tag */
   for (count = 0U; count < CCB_BLOCK_SIZE; count++)
   {
-    pTag[count] = SAES->DOUTR;
+    pTag[count] = HAL_CCB_GET_SAES_INSTANCE(hccb)->DOUTR;
   }
 
   /* Return function status */
@@ -2983,7 +3322,8 @@ static HAL_StatusTypeDef CCB_BlobUse_FinalPhase(CCB_HandleTypeDef *hccb, uint32_
   }
 
   /* Set SAES GCMPH final phase */
-  MODIFY_REG(SAES->CR, AES_CR_GCMPH, AES_CR_GCMPH_0 | AES_CR_GCMPH_1);
+  MODIFY_REG(HAL_CCB_GET_SAES_INSTANCE(hccb)->CR, AES_CR_GCMPH,
+             AES_CR_GCMPH_0 | AES_CR_GCMPH_1);
 
   /* Preparing last Block */
   if (Operation == CCB_MODULAR_EXP_BLOB_USE)
@@ -3017,7 +3357,7 @@ static HAL_StatusTypeDef CCB_BlobUse_FinalPhase(CCB_HandleTypeDef *hccb, uint32_
 
   for (count = 0U; count < CCB_BLOCK_SIZE; count++)
   {
-    SAES->DINR = last_block[count];
+    HAL_CCB_GET_SAES_INSTANCE(hccb)->DINR = last_block[count];
   }
 
   /* Wait until CCF flag is SET in SAES  */
@@ -3029,7 +3369,7 @@ static HAL_StatusTypeDef CCB_BlobUse_FinalPhase(CCB_HandleTypeDef *hccb, uint32_
   /* Read Authentif Tag and check integrity of Blob as event that trig OPSTEP transition 0x17 --> 0x18 */
   for (count = 0U; count < CCB_BLOCK_SIZE; count++)
   {
-    if ((SAES->DOUTR) != 0UL)
+    if ((HAL_CCB_GET_SAES_INSTANCE(hccb)->DOUTR) != 0UL)
     {
       /* Set state, error code and return error */
       hccb->State = HAL_CCB_STATE_ERROR;
@@ -3051,13 +3391,16 @@ static HAL_StatusTypeDef CCB_BlobUse_FinalPhase(CCB_HandleTypeDef *hccb, uint32_
   * @param  pIV pointer to the IV.
   * @param  pTag pointer to the Tag.
   * @param  pWarappedKey pointer to the Warapped Key.
+  * @param  pHash pointer to the Hash.
+  * @param  pSignature pointer to the Signature.
   * @param  CCB_Operation is the CCB Operations.
   * @retval HAL status.
   */
 static HAL_StatusTypeDef CCB_ECDSA_SignBlobCreation(CCB_HandleTypeDef *hccb, CCB_ECDSACurveParamTypeDef *pCurveParam,
                                                     const uint8_t *pClearPrivateKey,
                                                     CCB_WrappingKeyTypeDef *pWrappingKey, uint32_t *pIV,
-                                                    uint32_t *pTag, uint32_t *pWarappedKey, uint8_t CCB_Operation)
+                                                    uint32_t *pTag, uint32_t *pWarappedKey, uint8_t *pHash,
+                                                    CCB_ECDSASignTypeDef *pSignature, uint8_t CCB_Operation)
 {
   uint16_t count;
   uint32_t countBlock = 0UL;
@@ -3076,7 +3419,7 @@ static HAL_StatusTypeDef CCB_ECDSA_SignBlobCreation(CCB_HandleTypeDef *hccb, CCB
   }
 
   /* Initialize RNG */
-  if (CCB_RNG_Init() != HAL_OK)
+  if (CCB_RNG_Init(hccb) != HAL_OK)
   {
     /* Set state and return error */
     hccb->State = HAL_CCB_STATE_ERROR;
@@ -3091,15 +3434,37 @@ static HAL_StatusTypeDef CCB_ECDSA_SignBlobCreation(CCB_HandleTypeDef *hccb, CCB
     return HAL_ERROR;
   }
 
+#if   defined (HW_SANITY_CHECK_SUPPORT)
+  /* Move the input hash value to PKA RAM */
+  CCB_Memcpy_u8_to_u32(&HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECDSA_SIGN_IN_HASH_E], pHash,
+                       pCurveParam->primeOrderSizeByte);
+  RAM_PARAM_END(HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM,
+                PKA_ECDSA_SIGN_IN_HASH_E + ((pCurveParam->primeOrderSizeByte + 3UL) / 4UL));
+
+#else
+  /* Prevent unused argument(s) compilation warning */
+  UNUSED(pHash);
+
+#endif /* GENERATOR_HW_SANITY_CHECK_AVAILABLE_ALL_DEVICES */
   /*  Initialize SAES */
   if (Protect_SAES_WaitFLAG(hccb, AES_SR_BUSY, RESET, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
   {
-    /* Disable the SAES peripheral clock */
-    SAES->CR &=  ~AES_CR_EN;
+#if (defined(RNG_HTSR0_RPERRX) || defined(RNG_HTSR1_ADERRX))
+    /*Check if there is an RNG seed error */
+    if (LL_RNG_IsActiveFlag_SECS(RNG) != 0U)
+    {
+      /* Attempt to recover from the seed error */
+      if (CCB_RNG_ResilientRecoverSeedError(hccb) != HAL_OK)
+      {
+        /* Disable the SAES peripheral */
+        HAL_CCB_GET_SAES_INSTANCE(hccb)->CR &=  ~AES_CR_EN;
 
-    /* Set state and return error */
-    hccb->State = HAL_CCB_STATE_ERROR;
-    return HAL_ERROR;
+        /* Set state and return error */
+        hccb->State = HAL_CCB_STATE_ERROR;
+        return HAL_ERROR;
+      }
+    }
+#endif /* RNG_HTSR0_RPERRX || RNG_HTSR1_ADERRX */
   }
 
   /* Update the state */
@@ -3156,7 +3521,7 @@ static HAL_StatusTypeDef CCB_ECDSA_SignBlobCreation(CCB_HandleTypeDef *hccb, CCB
   }
 
   /* Set SAES GCMPH Payload phase and trig OPSTEP that trig OPSTEP transition 0x3 --> 0x4 */
-  MODIFY_REG(SAES->CR, AES_CR_GCMPH, AES_CR_GCMPH_1);
+  MODIFY_REG(HAL_CCB_GET_SAES_INSTANCE(hccb)->CR, AES_CR_GCMPH, AES_CR_GCMPH_1);
 
   if (CCB_Operation == CCB_ECDSA_SIGN_CPU_BLOB_CREATION)
   {
@@ -3168,31 +3533,31 @@ static HAL_StatusTypeDef CCB_ECDSA_SignBlobCreation(CCB_HandleTypeDef *hccb, CCB
     }
 
     /* Clear the CMF flag and the chaining mode status bits in 8 to 15 in PKA_SR */
-    HAL_CCB_CLEAR_PKA_FLAG(PKA_CLRFR_CMFC);
+    HAL_CCB_CLEAR_PKA_FLAG(hccb, PKA_CLRFR_CMFC);
 
     /* Write private Key d by CPU  (user key) */
     if ((pCurveParam->modulusSizeByte % 8UL) != 0UL)
     {
       for (offset = 0UL; offset < (operand_size - 4UL); offset += 2UL)
       {
-        CCB_Memcpy_u8_to_u64(&PKA->RAM[PKA_ECDSA_SIGN_IN_PRIVATE_KEY_D + offset],
+        CCB_Memcpy_u8_to_u64(&HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECDSA_SIGN_IN_PRIVATE_KEY_D + offset],
                              &pClearPrivateKey[(pCurveParam->modulusSizeByte) - ((offset * 4UL) + 1UL)]);
       }
 
-      CCB_Memcpy_Not_Align(&PKA->RAM[PKA_ECDSA_SIGN_IN_PRIVATE_KEY_D + offset],
+      CCB_Memcpy_Not_Align(&HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECDSA_SIGN_IN_PRIVATE_KEY_D + offset],
                            &pClearPrivateKey[(pCurveParam->modulusSizeByte) - ((offset * 4UL) + 1UL)],
                            pCurveParam->modulusSizeByte % 8UL);
-      RAM_PARAM_END(PKA->RAM, PKA_ECDSA_SIGN_IN_PRIVATE_KEY_D + offset + 2UL);
+      RAM_PARAM_END(HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM, PKA_ECDSA_SIGN_IN_PRIVATE_KEY_D + offset + 2UL);
     }
     else
     {
       for (offset = 0UL; offset < (operand_size - 2UL); offset += 2UL)
       {
-        CCB_Memcpy_u8_to_u64(&PKA->RAM[PKA_ECDSA_SIGN_IN_PRIVATE_KEY_D + offset],
+        CCB_Memcpy_u8_to_u64(&HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECDSA_SIGN_IN_PRIVATE_KEY_D + offset],
                              &pClearPrivateKey[(pCurveParam->modulusSizeByte) - ((offset * 4UL) + 1UL)]);
       }
 
-      RAM_PARAM_END(PKA->RAM, PKA_ECDSA_SIGN_IN_PRIVATE_KEY_D + offset);
+      RAM_PARAM_END(HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM, PKA_ECDSA_SIGN_IN_PRIVATE_KEY_D + offset);
     }
     /* Wait until DATAOKF flag is SET in PKA and trig OPSTEP transition 0x4 --> 0x8 */
     if (Protect_PKA_WaitFLAG(hccb, PKA_SR_DATAOKF, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
@@ -3211,25 +3576,25 @@ static HAL_StatusTypeDef CCB_ECDSA_SignBlobCreation(CCB_HandleTypeDef *hccb, CCB
     }
 
     /* Clear the CMF flag and the chaining mode status bits in 8 to 15 in PKA_SR */
-    HAL_CCB_CLEAR_PKA_FLAG(PKA_CLRFR_CMFC);
+    HAL_CCB_CLEAR_PKA_FLAG(hccb, PKA_CLRFR_CMFC);
 
     /* Write private d Key from RNG */
 
     for (offset = 0UL; offset < (operand_size - 2UL); offset++)
     {
-      if (CCB_RNG_Wait_SET_FLAG(RNG_SR_DRDY, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+      if (CCB_RNG_Wait_SET_FLAG(hccb, RNG_SR_DRDY, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
       {
         /* return error */
         return HAL_ERROR;
       }
-      PKA->RAM[PKA_ECDSA_SIGN_IN_PRIVATE_KEY_D + offset] = CCB_FAKE_VALUE;
+      HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECDSA_SIGN_IN_PRIVATE_KEY_D + offset] = CCB_FAKE_VALUE;
     }
 
-    RAM_PARAM_END(PKA->RAM, PKA_ECDSA_SIGN_IN_PRIVATE_KEY_D
+    RAM_PARAM_END(HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM, PKA_ECDSA_SIGN_IN_PRIVATE_KEY_D
                   + offset);
 
     /* Check RNG Error Flag in PKA */
-    if (HAL_CCB_GET_PKA_FLAG(PKA_SR_RNGERRF) != RESET)
+    if (HAL_CCB_GET_PKA_FLAG(hccb, PKA_SR_RNGERRF) != RESET)
     {
       /* Set state and  return error */
       hccb->State = HAL_CCB_STATE_ERROR;
@@ -3256,12 +3621,12 @@ static HAL_StatusTypeDef CCB_ECDSA_SignBlobCreation(CCB_HandleTypeDef *hccb, CCB
   }
 
   /* Clear the CMF flag and the chaining mode status bits in 8 to 15 in PKA_SR */
-  HAL_CCB_CLEAR_PKA_FLAG(PKA_CLRFR_CMFC);
+  HAL_CCB_CLEAR_PKA_FLAG(hccb, PKA_CLRFR_CMFC);
 
   /* Read clear-text private key d for encryption */
   for (offset = 0; offset < cipherkey_size; offset++)
   {
-    PKA->RAM[PKA_ECDSA_SIGN_IN_PRIVATE_KEY_D + offset] = CCB_MAGIC_VALUE;
+    HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECDSA_SIGN_IN_PRIVATE_KEY_D + offset] = CCB_MAGIC_VALUE;
 
     if ((offset % 4UL) == 3UL)
     {
@@ -3276,7 +3641,7 @@ static HAL_StatusTypeDef CCB_ECDSA_SignBlobCreation(CCB_HandleTypeDef *hccb, CCB
       for (count = 0U; count < CCB_BLOCK_SIZE; count++)
       {
         pWarappedKey[cipherkey_size - (countBlock + count + 1UL)]
-          = READ_REG(SAES->DOUTR);
+          = READ_REG(HAL_CCB_GET_SAES_INSTANCE(hccb)->DOUTR);
       }
       countBlock += 4UL;
     }
@@ -3285,12 +3650,21 @@ static HAL_StatusTypeDef CCB_ECDSA_SignBlobCreation(CCB_HandleTypeDef *hccb, CCB
   /* Wait for Galois Filter End of Computation */
   if (Protect_SAES_WaitFLAG(hccb, AES_SR_BUSY, RESET, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
   {
-    /* return error */
-    return HAL_ERROR;
+#if (defined(RNG_HTSR0_RPERRX) || defined(RNG_HTSR1_ADERRX))
+    /*Check if there is an RNG seed error */
+    if (LL_RNG_IsActiveFlag_SECS(RNG) != 0U)
+    {
+      /* Attempt to recover from the seed error */
+      if (CCB_RNG_ResilientRecoverSeedError(hccb) != HAL_OK)
+      {
+        return HAL_ERROR;
+      }
+    }
+#endif /* RNG_HTSR0_RPERRX || RNG_HTSR1_ADERRX */
   }
   if ((operand_size % 4UL) != 0UL)
   {
-    RAM_PARAM_END(PKA->RAM, PKA_ECDSA_SIGN_IN_PRIVATE_KEY_D
+    RAM_PARAM_END(HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM, PKA_ECDSA_SIGN_IN_PRIVATE_KEY_D
                   + cipherkey_size);
   }
   /* Wait until DATAOKF flag is SET in PKA and trig OPSTEP transition 0x08 --> 0x09 */
@@ -3299,9 +3673,35 @@ static HAL_StatusTypeDef CCB_ECDSA_SignBlobCreation(CCB_HandleTypeDef *hccb, CCB
     /* return error */
     return HAL_ERROR;
   }
+#if   defined (HW_SANITY_CHECK_SUPPORT)
+  /* Wait until OPSTEP is set to 0x9 */
+  if (CCB_WaitOperStep(hccb, 0x09, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+  {
+    /* return error */
+    return HAL_ERROR;
+  }
+  /* Write random k */
+  for (offset = 0U; offset < (operand_size - 2U); offset++)
+  {
+    if (CCB_RNG_Wait_SET_FLAG(hccb, RNG_SR_DRDY, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+    {
+      /* return error */
+      return HAL_ERROR;
+    }
+    HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECDSA_SIGN_IN_K + offset] = CCB_MAGIC_VALUE;
+  }
+  RAM_PARAM_END(HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM, PKA_ECDSA_SIGN_IN_K + offset);
+  /* Wait for PKA RNGOK flag : GCMPH = 0x3 (final phase) as events that trig OPSTEP transition 0x09 --> 0x0A */
+  if (Protect_PKA_WaitFLAG(hccb, PKA_SR_RNGOKF, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+  {
+    /* return error */
+    return HAL_ERROR;
+  }
 
+#endif /* GENERATOR_HW_SANITY_CHECK_AVAILABLE_ALL_DEVICES */
   /* Set SAES GCMPH final phase */
-  MODIFY_REG(SAES->CR, AES_CR_GCMPH, AES_CR_GCMPH_0 | AES_CR_GCMPH_1);
+  MODIFY_REG(HAL_CCB_GET_SAES_INSTANCE(hccb)->CR, AES_CR_GCMPH,
+             AES_CR_GCMPH_0 | AES_CR_GCMPH_1);
 
   /* Wait until OPSTEP is set to 0x0A */
   if (CCB_WaitOperStep(hccb, 0x0A, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
@@ -3318,7 +3718,46 @@ static HAL_StatusTypeDef CCB_ECDSA_SignBlobCreation(CCB_HandleTypeDef *hccb, CCB
     return HAL_ERROR;
   }
 
+#if   defined (HW_SANITY_CHECK_SUPPORT)
+  /* SET PKA START operation bit and trig OPSTEP transition 0x0A --> 0x19 */
+  SET_BIT(HAL_CCB_GET_PKA_INSTANCE(hccb)->CR, PKA_CR_START);
+  /* Wait until OPSTEP is set to 0x19 */
+  if (CCB_WaitOperStep(hccb, 0x19, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+  {
+    /* return error */
+    return HAL_ERROR;
+  }
+  /* Wait until end of operation flag is SET in PKA and trig OPSTEP transition 0x19 --> 0x1A */
+  if (Protect_PKA_WaitFLAG(hccb, PKA_SR_PROCENDF, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+  {
+    /* return error */
+    return HAL_ERROR;
+  }
+  /* Wait until OPSTEP is set to 0x1A */
+  if (CCB_WaitOperStep(hccb, 0x1A, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+  {
+    /* return error */
+    return HAL_ERROR;
+  }
+  /* Check PKA Operation error result */
+  if ((HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECDSA_SIGN_OUT_ERROR]) !=  CCB_PKA_ERROR_OPERATION_NONE)
+  {
+    /* Set state and return error */
+    hccb->State = HAL_CCB_STATE_ERROR;
+    return HAL_ERROR;
+  }
+  /* Read r part signature */
+  CCB_Memcpy_u32_to_u8(pSignature->pRSign, &HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECDSA_SIGN_OUT_SIGNATURE_R],
+                       pCurveParam->modulusSizeByte);
+  /* Read s part signature */
+  CCB_Memcpy_u32_to_u8(pSignature->pSSign, &HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECDSA_SIGN_OUT_SIGNATURE_S],
+                       pCurveParam->modulusSizeByte);
 
+#else
+  /* Prevent unused argument(s) compilation warning */
+  UNUSED(pSignature);
+
+#endif /* GENERATOR_HW_SANITY_CHECK_AVAILABLE_ALL_DEVICES */
   /* CCB IPRST set */
   SET_BIT(hccb->Instance->CR, CCB_CR_IPRST);
 
@@ -3349,6 +3788,7 @@ static HAL_StatusTypeDef CCB_ECDSA_SignBlobCreation(CCB_HandleTypeDef *hccb, CCB
   * @param  pIV pointer to the IV.
   * @param  pTag pointer to the Tag.
   * @param  pWarappedKey pointer to the Warapped Key.
+  * @param  PublicKey is table of two coordinates X and Y of the publicKey.
   * @param  CCB_Operation is the CCB Operations.
   * @retval HAL status.
   */
@@ -3357,7 +3797,7 @@ static HAL_StatusTypeDef CCB_ECC_ScalarMulBlobCreation(CCB_HandleTypeDef *hccb,
                                                        const uint8_t *pClearPrivateKey,
                                                        CCB_WrappingKeyTypeDef *pWrappingKey,
                                                        uint32_t *pIV, uint32_t *pTag, uint32_t *pWarappedKey,
-                                                       uint8_t CCB_Operation)
+                                                       uint32_t PublicKey[2U][20U], uint8_t CCB_Operation)
 {
   uint16_t count;
   uint32_t countBlock = 0UL;
@@ -3378,7 +3818,7 @@ static HAL_StatusTypeDef CCB_ECC_ScalarMulBlobCreation(CCB_HandleTypeDef *hccb,
     }
 
     /* Initialize RNG */
-    if (CCB_RNG_Init() != HAL_OK)
+    if (CCB_RNG_Init(hccb) != HAL_OK)
     {
       /* return state and error */
       hccb->State = HAL_CCB_STATE_ERROR;
@@ -3393,15 +3833,38 @@ static HAL_StatusTypeDef CCB_ECC_ScalarMulBlobCreation(CCB_HandleTypeDef *hccb,
       return HAL_ERROR;
     }
 
+#if   defined (HW_SANITY_CHECK_SUPPORT)
+    /* Write  point G coordinate */
+    CCB_Memcpy_u8_to_u32(&HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECC_SCALAR_MUL_IN_INITIAL_POINT_X ],
+                         pCurveParam->pPointX, pCurveParam->primeOrderSizeByte);
+    RAM_PARAM_END(HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM,
+                  PKA_ECC_SCALAR_MUL_IN_INITIAL_POINT_X + ((pCurveParam->primeOrderSizeByte + 3UL) / 4UL));
+
+    CCB_Memcpy_u8_to_u32(&HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECC_SCALAR_MUL_IN_INITIAL_POINT_Y ],
+                         pCurveParam->pPointY, pCurveParam->primeOrderSizeByte);
+    RAM_PARAM_END(HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM,
+                  PKA_ECC_SCALAR_MUL_IN_INITIAL_POINT_Y + ((pCurveParam->primeOrderSizeByte + 3UL) / 4UL));
+
+#endif /* GENERATOR_HW_SANITY_CHECK_AVAILABLE_ALL_DEVICES */
     /*  Initialize SAES */
     if (Protect_SAES_WaitFLAG(hccb, AES_SR_BUSY, RESET, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
     {
-      /* Disable the SAES peripheral clock */
-      SAES->CR &=  ~AES_CR_EN;
+#if (defined(RNG_HTSR0_RPERRX) || defined(RNG_HTSR1_ADERRX))
+      /*Check if there is an RNG seed error */
+      if (LL_RNG_IsActiveFlag_SECS(RNG) != 0U)
+      {
+        /* Attempt to recover from the seed error */
+        if (CCB_RNG_ResilientRecoverSeedError(hccb) != HAL_OK)
+        {
+          /* Disable the SAES peripheral */
+          HAL_CCB_GET_SAES_INSTANCE(hccb)->CR &=  ~AES_CR_EN;
 
-      /* Set state and return error */
-      hccb->State = HAL_CCB_STATE_ERROR;
-      return HAL_ERROR;
+          /* Set state and return error */
+          hccb->State = HAL_CCB_STATE_ERROR;
+          return HAL_ERROR;
+        }
+      }
+#endif /* RNG_HTSR0_RPERRX || RNG_HTSR1_ADERRX */
     }
 
     /* Update the state */
@@ -3457,7 +3920,7 @@ static HAL_StatusTypeDef CCB_ECC_ScalarMulBlobCreation(CCB_HandleTypeDef *hccb,
     }
 
     /* Set SAES GCMPH Payload phase and trig OPSTEP that trig OPSTEP transition 0x3 --> 0x4 */
-    MODIFY_REG(SAES->CR, AES_CR_GCMPH, AES_CR_GCMPH_1);
+    MODIFY_REG(HAL_CCB_GET_SAES_INSTANCE(hccb)->CR, AES_CR_GCMPH, AES_CR_GCMPH_1);
 
     /* Wait until OPSTEP is set to 0x04 */
     if (CCB_WaitOperStep(hccb, 0x04, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
@@ -3467,7 +3930,7 @@ static HAL_StatusTypeDef CCB_ECC_ScalarMulBlobCreation(CCB_HandleTypeDef *hccb,
     }
 
     /* Clear the CMF flag and the chaining mode status bits in 8 to 15 in PKA_SR */
-    HAL_CCB_CLEAR_PKA_FLAG(PKA_CLRFR_CMFC);
+    HAL_CCB_CLEAR_PKA_FLAG(hccb, PKA_CLRFR_CMFC);
 
     if (CCB_Operation == CCB_ECC_SCALAR_MUL_CPU_BLOB_CREATION)
     {
@@ -3477,24 +3940,24 @@ static HAL_StatusTypeDef CCB_ECC_ScalarMulBlobCreation(CCB_HandleTypeDef *hccb,
       {
         for (offset = 0UL; offset < (operand_size - 4UL); offset += 2UL)
         {
-          CCB_Memcpy_u8_to_u64(&PKA->RAM[PKA_ECC_SCALAR_MUL_IN_K + offset],
+          CCB_Memcpy_u8_to_u64(&HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECC_SCALAR_MUL_IN_K + offset],
                                &pClearPrivateKey[(pCurveParam->modulusSizeByte) - ((offset * 4UL) + 1UL)]);
         }
 
-        CCB_Memcpy_Not_Align(&PKA->RAM[PKA_ECC_SCALAR_MUL_IN_K + offset],
+        CCB_Memcpy_Not_Align(&HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECC_SCALAR_MUL_IN_K + offset],
                              &pClearPrivateKey[(pCurveParam->modulusSizeByte) - ((offset * 4UL) + 1UL)],
                              pCurveParam->modulusSizeByte % 8UL);
-        RAM_PARAM_END(PKA->RAM, PKA_ECC_SCALAR_MUL_IN_K + offset + 2UL);
+        RAM_PARAM_END(HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM, PKA_ECC_SCALAR_MUL_IN_K + offset + 2UL);
       }
       else
       {
         for (offset = 0UL; offset < (operand_size - 2UL); offset += 2UL)
         {
-          CCB_Memcpy_u8_to_u64(&PKA->RAM[PKA_ECC_SCALAR_MUL_IN_K + offset],
+          CCB_Memcpy_u8_to_u64(&HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECC_SCALAR_MUL_IN_K + offset],
                                &pClearPrivateKey[(pCurveParam->modulusSizeByte) - ((offset * 4UL) + 1UL)]);
         }
 
-        RAM_PARAM_END(PKA->RAM, PKA_ECC_SCALAR_MUL_IN_K + offset);
+        RAM_PARAM_END(HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM, PKA_ECC_SCALAR_MUL_IN_K + offset);
       }
       /* Wait until DATAOKF flag is SET in PKA and trig OPSTEP transition 0x4 --> 0x8 */
       if (Protect_PKA_WaitFLAG(hccb, PKA_SR_DATAOKF, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
@@ -3508,17 +3971,17 @@ static HAL_StatusTypeDef CCB_ECC_ScalarMulBlobCreation(CCB_HandleTypeDef *hccb,
       /* Write scalar k when RNG */
       for (offset = 0UL; offset < (operand_size - 2UL); offset++)
       {
-        if (CCB_RNG_Wait_SET_FLAG(RNG_SR_DRDY, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+        if (CCB_RNG_Wait_SET_FLAG(hccb, RNG_SR_DRDY, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
         {
           /* return error */
           return HAL_ERROR;
         }
-        PKA->RAM[PKA_ECC_SCALAR_MUL_IN_K + offset] = CCB_FAKE_VALUE;
+        HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECC_SCALAR_MUL_IN_K + offset] = CCB_FAKE_VALUE;
       }
-      RAM_PARAM_END(PKA->RAM, PKA_ECC_SCALAR_MUL_IN_K + offset);
+      RAM_PARAM_END(HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM, PKA_ECC_SCALAR_MUL_IN_K + offset);
 
       /* PKA: Check RNG Error Flag */
-      if (HAL_CCB_GET_PKA_FLAG(PKA_SR_RNGERRF) != RESET)
+      if (HAL_CCB_GET_PKA_FLAG(hccb, PKA_SR_RNGERRF) != RESET)
       {
         /* Set state and return error */
         hccb->State = HAL_CCB_STATE_ERROR;
@@ -3545,13 +4008,13 @@ static HAL_StatusTypeDef CCB_ECC_ScalarMulBlobCreation(CCB_HandleTypeDef *hccb,
     }
 
     /* Clear the CMF flag and the chaining mode status bits in 8 to 15 in PKA_SR */
-    HAL_CCB_CLEAR_PKA_FLAG(PKA_CLRFR_CMFC);
+    HAL_CCB_CLEAR_PKA_FLAG(hccb, PKA_CLRFR_CMFC);
 
     /* Read clear-text scalar K for encryption */
     for (offset = 0; offset < cipherkey_size; offset++)
     {
 
-      PKA->RAM[PKA_ECC_SCALAR_MUL_IN_K + offset] = CCB_MAGIC_VALUE;
+      HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECC_SCALAR_MUL_IN_K + offset] = CCB_MAGIC_VALUE;
 
       if ((offset % 4UL) == 3UL)
       {
@@ -3566,7 +4029,7 @@ static HAL_StatusTypeDef CCB_ECC_ScalarMulBlobCreation(CCB_HandleTypeDef *hccb,
         for (count = 0U; count < CCB_BLOCK_SIZE; count++)
         {
           pWarappedKey[cipherkey_size - (countBlock + count + 1U)]
-            = READ_REG(SAES->DOUTR);
+            = READ_REG(HAL_CCB_GET_SAES_INSTANCE(hccb)->DOUTR);
         }
         countBlock += 4UL;
       }
@@ -3575,13 +4038,22 @@ static HAL_StatusTypeDef CCB_ECC_ScalarMulBlobCreation(CCB_HandleTypeDef *hccb,
     /* Wait for Galois Filter End of Computation */
     if (Protect_SAES_WaitFLAG(hccb, AES_SR_BUSY, RESET, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
     {
-      /* return error */
-      return HAL_ERROR;
+#if (defined(RNG_HTSR0_RPERRX) || defined(RNG_HTSR1_ADERRX))
+      /*Check if there is an RNG seed error */
+      if (LL_RNG_IsActiveFlag_SECS(RNG) != 0U)
+      {
+        /* Attempt to recover from the seed error */
+        if (CCB_RNG_ResilientRecoverSeedError(hccb) != HAL_OK)
+        {
+          return HAL_ERROR;
+        }
+      }
+#endif /* RNG_HTSR0_RPERRX || RNG_HTSR1_ADERRX */
     }
 
     if ((operand_size % 4UL) != 0UL)
     {
-      RAM_PARAM_END(PKA->RAM, PKA_ECC_SCALAR_MUL_IN_K
+      RAM_PARAM_END(HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM, PKA_ECC_SCALAR_MUL_IN_K
                     + cipherkey_size);
     }
 
@@ -3593,7 +4065,8 @@ static HAL_StatusTypeDef CCB_ECC_ScalarMulBlobCreation(CCB_HandleTypeDef *hccb,
     }
 
     /* Set SAES GCMPH final phase */
-    MODIFY_REG(SAES->CR, AES_CR_GCMPH, AES_CR_GCMPH_0 | AES_CR_GCMPH_1);
+    MODIFY_REG(HAL_CCB_GET_SAES_INSTANCE(hccb)->CR, AES_CR_GCMPH,
+               AES_CR_GCMPH_0 | AES_CR_GCMPH_1);
 
     /* Wait until OPSTEP is set to 0x0A */
     if (CCB_WaitOperStep(hccb, 0x0A, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
@@ -3610,7 +4083,45 @@ static HAL_StatusTypeDef CCB_ECC_ScalarMulBlobCreation(CCB_HandleTypeDef *hccb,
       return HAL_ERROR;
     }
 
+#if   defined (HW_SANITY_CHECK_SUPPORT)
+    /* SET PKA START operation bit and trig OPSTEP transition 0x0A --> 0x19 */
+    SET_BIT(HAL_CCB_GET_PKA_INSTANCE(hccb)->CR, PKA_CR_START);
+    /* Wait until OPSTEP is set to 0x19 */
+    if (CCB_WaitOperStep(hccb, 0x19, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+    {
+      /* return error */
+      return HAL_ERROR;
+    }
+    /* Wait until end of operation flag is SET in PKA and trig OPSTEP transition 0x19 --> 0x1A */
+    if (Protect_PKA_WaitFLAG(hccb, PKA_SR_PROCENDF, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+    {
+      /* return error */
+      return HAL_ERROR;
+    }
+    /* Wait until OPSTEP is set to 0x1A */
+    if (CCB_WaitOperStep(hccb, 0x1A, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+    {
+      /* return error */
+      return HAL_ERROR;
+    }
+    /* Check PKA Operation error result */
+    if ((HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECC_SCALAR_MUL_OUT_ERROR]) !=  CCB_PKA_ERROR_OPERATION_NONE)
+    {
+      /* Set state and return error */
+      hccb->State = HAL_CCB_STATE_ERROR;
+      return HAL_ERROR;
+    }
+    /* Move the result from appropriate location */
+    CCB_Memcpy_u32_to_u32(PublicKey[0], &HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECC_SCALAR_MUL_OUT_RESULT_X],
+                          ((pCurveParam->modulusSizeByte + 3) / 4));
+    CCB_Memcpy_u32_to_u32(PublicKey[1], &HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECC_SCALAR_MUL_OUT_RESULT_Y],
+                          ((pCurveParam->modulusSizeByte + 3) / 4));
 
+#else
+    /* Prevent unused argument(s) compilation warning */
+    UNUSED(PublicKey);
+
+#endif /* GENERATOR_HW_SANITY_CHECK_AVAILABLE_ALL_DEVICES */
     /* CCB IPRST set */
     SET_BIT(hccb->Instance->CR, CCB_CR_IPRST);
 
@@ -3683,14 +4194,14 @@ static HAL_StatusTypeDef CCB_ECC_ComputeScalarMul(CCB_HandleTypeDef *hccb, CCB_E
   }
 
   /* Initialize RNG */
-  if (CCB_RNG_Init() != HAL_OK)
+  if (CCB_RNG_Init(hccb) != HAL_OK)
   {
     /* Set state and return error */
     hccb->State = HAL_CCB_STATE_ERROR;
     return HAL_ERROR;
   }
 
-  if (CCB_RNG_Wait_SET_FLAG(RNG_SR_DRDY, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+  if (CCB_RNG_Wait_SET_FLAG(hccb, RNG_SR_DRDY, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
   {
     return HAL_ERROR;
   }
@@ -3699,7 +4210,7 @@ static HAL_StatusTypeDef CCB_ECC_ComputeScalarMul(CCB_HandleTypeDef *hccb, CCB_E
 
   while (random1 == 0U)
   {
-    random1 = (uint16_t)(RNG->DR & 0x3FFU);
+    random1 = (uint16_t)(HAL_CCB_GET_RNG_INSTANCE(hccb)->DR & 0x3FFU);
     if ((HAL_GetTick() - tickstart) > HAL_CCB_TIMEOUT_DEFAULT_VALUE)
     {
       /* Set state and return error */
@@ -3707,7 +4218,7 @@ static HAL_StatusTypeDef CCB_ECC_ComputeScalarMul(CCB_HandleTypeDef *hccb, CCB_E
     }
   }
 
-  if (CCB_RNG_Wait_SET_FLAG(RNG_SR_DRDY, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+  if (CCB_RNG_Wait_SET_FLAG(hccb, RNG_SR_DRDY, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
   {
     return HAL_ERROR;
   }
@@ -3716,7 +4227,7 @@ static HAL_StatusTypeDef CCB_ECC_ComputeScalarMul(CCB_HandleTypeDef *hccb, CCB_E
 
   while (random2 == 0U)
   {
-    random2 = (uint16_t)(RNG->DR & 0x3FFU);
+    random2 = (uint16_t)(HAL_CCB_GET_RNG_INSTANCE(hccb)->DR & 0x3FFU);
     if ((HAL_GetTick() - tickstart) > HAL_CCB_TIMEOUT_DEFAULT_VALUE)
     {
       /* Set state and return error */
@@ -3724,7 +4235,7 @@ static HAL_StatusTypeDef CCB_ECC_ComputeScalarMul(CCB_HandleTypeDef *hccb, CCB_E
     }
   }
 
-  if (CCB_RNG_Wait_SET_FLAG(RNG_SR_DRDY, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+  if (CCB_RNG_Wait_SET_FLAG(hccb, RNG_SR_DRDY, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
   {
     return HAL_ERROR;
   }
@@ -3733,7 +4244,7 @@ static HAL_StatusTypeDef CCB_ECC_ComputeScalarMul(CCB_HandleTypeDef *hccb, CCB_E
 
   while (random3 == 0U)
   {
-    random3 = (uint16_t)(RNG->DR & 0x3FFU);
+    random3 = (uint16_t)(HAL_CCB_GET_RNG_INSTANCE(hccb)->DR & 0x3FFU);
     if ((HAL_GetTick() - tickstart) > HAL_CCB_TIMEOUT_DEFAULT_VALUE)
     {
       /* Set state and return error */
@@ -3753,22 +4264,26 @@ static HAL_StatusTypeDef CCB_ECC_ComputeScalarMul(CCB_HandleTypeDef *hccb, CCB_E
   if (VerifOperation == CCB_VERIF_OPERATION_DISABLED)
   {
     /* Write Customized point coordinate */
-    CCB_Memcpy_u8_to_u32(&PKA->RAM[PKA_ECC_SCALAR_MUL_IN_INITIAL_POINT_X ], pInputPoint->pPointX,
-                         pCurveParam->modulusSizeByte);
-    RAM_PARAM_END(PKA->RAM, PKA_ECC_SCALAR_MUL_IN_INITIAL_POINT_X + ((pCurveParam->modulusSizeByte + 3UL) / 4UL));
-    CCB_Memcpy_u8_to_u32(&PKA->RAM[PKA_ECC_SCALAR_MUL_IN_INITIAL_POINT_Y ], pInputPoint->pPointY,
-                         pCurveParam->modulusSizeByte);
-    RAM_PARAM_END(PKA->RAM, PKA_ECC_SCALAR_MUL_IN_INITIAL_POINT_Y + ((pCurveParam->modulusSizeByte + 3UL) / 4UL));
+    CCB_Memcpy_u8_to_u32(&HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECC_SCALAR_MUL_IN_INITIAL_POINT_X ],
+                         pInputPoint->pPointX, pCurveParam->modulusSizeByte);
+    RAM_PARAM_END(HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM,
+                  PKA_ECC_SCALAR_MUL_IN_INITIAL_POINT_X + ((pCurveParam->modulusSizeByte + 3UL) / 4UL));
+    CCB_Memcpy_u8_to_u32(&HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECC_SCALAR_MUL_IN_INITIAL_POINT_Y ],
+                         pInputPoint->pPointY, pCurveParam->modulusSizeByte);
+    RAM_PARAM_END(HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM,
+                  PKA_ECC_SCALAR_MUL_IN_INITIAL_POINT_Y + ((pCurveParam->modulusSizeByte + 3UL) / 4UL));
   }
   else if (VerifOperation == CCB_VERIF_OPERATION_ENABLED)
   {
     /* Write  point G coordinate */
-    CCB_Memcpy_u8_to_u32(&PKA->RAM[PKA_ECC_SCALAR_MUL_IN_INITIAL_POINT_X ], pCurveParam->pPointX,
-                         pCurveParam->modulusSizeByte);
-    RAM_PARAM_END(PKA->RAM, PKA_ECC_SCALAR_MUL_IN_INITIAL_POINT_X + ((pCurveParam->modulusSizeByte + 3UL) / 4UL));
-    CCB_Memcpy_u8_to_u32(&PKA->RAM[PKA_ECC_SCALAR_MUL_IN_INITIAL_POINT_Y ], pCurveParam->pPointY,
-                         pCurveParam->modulusSizeByte);
-    RAM_PARAM_END(PKA->RAM, PKA_ECC_SCALAR_MUL_IN_INITIAL_POINT_Y + ((pCurveParam->modulusSizeByte + 3UL) / 4UL));
+    CCB_Memcpy_u8_to_u32(&HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECC_SCALAR_MUL_IN_INITIAL_POINT_X ],
+                         pCurveParam->pPointX, pCurveParam->modulusSizeByte);
+    RAM_PARAM_END(HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM,
+                  PKA_ECC_SCALAR_MUL_IN_INITIAL_POINT_X + ((pCurveParam->modulusSizeByte + 3UL) / 4UL));
+    CCB_Memcpy_u8_to_u32(&HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECC_SCALAR_MUL_IN_INITIAL_POINT_Y ],
+                         pCurveParam->pPointY, pCurveParam->modulusSizeByte);
+    RAM_PARAM_END(HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM,
+                  PKA_ECC_SCALAR_MUL_IN_INITIAL_POINT_Y + ((pCurveParam->modulusSizeByte + 3UL) / 4UL));
   }
   else
   {
@@ -3778,12 +4293,22 @@ static HAL_StatusTypeDef CCB_ECC_ComputeScalarMul(CCB_HandleTypeDef *hccb, CCB_E
   /*  Initialize SAES */
   if (Protect_SAES_WaitFLAG(hccb, AES_SR_BUSY, RESET, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
   {
-    /* Disable the SAES peripheral */
-    SAES->CR &=  ~AES_CR_EN;
+#if (defined(RNG_HTSR0_RPERRX) || defined(RNG_HTSR1_ADERRX))
+    /*Check if there is an RNG seed error */
+    if (LL_RNG_IsActiveFlag_SECS(RNG) != 0U)
+    {
+      /* Attempt to recover from the seed error */
+      if (CCB_RNG_ResilientRecoverSeedError(hccb) != HAL_OK)
+      {
+        /* Disable the SAES peripheral */
+        HAL_CCB_GET_SAES_INSTANCE(hccb)->CR &=  ~AES_CR_EN;
 
-    /* Set state and return error */
-    hccb->State = HAL_CCB_STATE_ERROR;
-    return HAL_ERROR;
+        /* Set state and return error */
+        hccb->State = HAL_CCB_STATE_ERROR;
+        return HAL_ERROR;
+      }
+    }
+#endif /* RNG_HTSR0_RPERRX || RNG_HTSR1_ADERRX */
   }
 
   /* Update the state */
@@ -3852,7 +4377,7 @@ static HAL_StatusTypeDef CCB_ECC_ComputeScalarMul(CCB_HandleTypeDef *hccb, CCB_E
   }
 
   /* Set SAES GCMPH Payload phase and trig OPSTEP that trig OPSTEP transition 0x13 --> 0x14 */
-  MODIFY_REG(SAES->CR, AES_CR_GCMPH, AES_CR_GCMPH_1);
+  MODIFY_REG(HAL_CCB_GET_SAES_INSTANCE(hccb)->CR, AES_CR_GCMPH, AES_CR_GCMPH_1);
 
   /* Wait until OPSTEP is set to 0x14 */
   if (CCB_WaitOperStep(hccb, 0x14, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
@@ -3864,7 +4389,7 @@ static HAL_StatusTypeDef CCB_ECC_ComputeScalarMul(CCB_HandleTypeDef *hccb, CCB_E
   for (offset = 0UL; offset < cipherkey_size; offset++)
   {
     /* Write Wrapped scalar k in PKA RAM */
-    WRITE_REG(SAES->DINR, pWarappedKey[cipherkey_size - (offset + 1UL)]);
+    WRITE_REG(HAL_CCB_GET_SAES_INSTANCE(hccb)->DINR, pWarappedKey[cipherkey_size - (offset + 1UL)]);
 
     if ((offset % 4UL) == 0x3UL)
     {
@@ -3878,14 +4403,14 @@ static HAL_StatusTypeDef CCB_ECC_ComputeScalarMul(CCB_HandleTypeDef *hccb, CCB_E
       /* Write Unrapped scalar k in PKA RAM */
       for (count_ram = 0U; count_ram < 4U; count_ram++)
       {
-        PKA->RAM[PKA_ECDSA_SIGN_IN_K + (count_block + count_ram)] = CCB_MAGIC_VALUE;
+        HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECDSA_SIGN_IN_K + (count_block + count_ram)] = CCB_MAGIC_VALUE;
       }
       count_block += 4UL;
     }
   }
   if ((operand_size % 4UL) != 0UL)
   {
-    RAM_PARAM_END(PKA->RAM, PKA_ECDSA_SIGN_IN_K
+    RAM_PARAM_END(HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM, PKA_ECDSA_SIGN_IN_K
                   + cipherkey_size);
   }
 
@@ -3922,7 +4447,7 @@ static HAL_StatusTypeDef CCB_ECC_ComputeScalarMul(CCB_HandleTypeDef *hccb, CCB_E
   }
 
   /* SET PKA START operation bit and trig OPSTEP transition 0x18 --> 0x19 */
-  SET_BIT(PKA->CR, PKA_CR_START);
+  SET_BIT(HAL_CCB_GET_PKA_INSTANCE(hccb)->CR, PKA_CR_START);
 
   /* Wait until OPSTEP is set to 0x19 */
   if (CCB_WaitOperStep(hccb, 0x19, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
@@ -3946,7 +4471,7 @@ static HAL_StatusTypeDef CCB_ECC_ComputeScalarMul(CCB_HandleTypeDef *hccb, CCB_E
   }
 
   /* Check PKA Operation error result */
-  if ((PKA->RAM[PKA_ECC_SCALAR_MUL_OUT_ERROR]) !=  CCB_PKA_ERROR_OPERATION_NONE)
+  if ((HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECC_SCALAR_MUL_OUT_ERROR]) !=  CCB_PKA_ERROR_OPERATION_NONE)
   {
     /* Set state and return error */
     hccb->State = HAL_CCB_STATE_ERROR;
@@ -3956,21 +4481,25 @@ static HAL_StatusTypeDef CCB_ECC_ComputeScalarMul(CCB_HandleTypeDef *hccb, CCB_E
   if (VerifOperation == CCB_VERIF_OPERATION_DISABLED)
   {
     /* P coordinate x */
-    CCB_Memcpy_u32_to_u8(pOutputPoint->pPointX, &PKA->RAM[PKA_ECC_SCALAR_MUL_OUT_RESULT_X],
+    CCB_Memcpy_u32_to_u8(pOutputPoint->pPointX,
+                         &HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECC_SCALAR_MUL_OUT_RESULT_X],
                          pCurveParam->modulusSizeByte);
 
     /* P coordinate y */
-    CCB_Memcpy_u32_to_u8(pOutputPoint->pPointY, &PKA->RAM[PKA_ECC_SCALAR_MUL_OUT_RESULT_Y],
+    CCB_Memcpy_u32_to_u8(pOutputPoint->pPointY,
+                         &HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECC_SCALAR_MUL_OUT_RESULT_Y],
                          pCurveParam->modulusSizeByte);
   }
   else if (VerifOperation == CCB_COMPUTE_PUBLIC_KEY)
   {
     /* P coordinate x */
-    CCB_Memcpy_u32_to_u8(pOutputPoint->pPointX, &PKA->RAM[PKA_ECC_SCALAR_MUL_OUT_RESULT_X],
+    CCB_Memcpy_u32_to_u8(pOutputPoint->pPointX,
+                         &HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECC_SCALAR_MUL_OUT_RESULT_X],
                          pCurveParam->modulusSizeByte);
 
     /* P coordinate y */
-    CCB_Memcpy_u32_to_u8(pOutputPoint->pPointY, &PKA->RAM[PKA_ECC_SCALAR_MUL_OUT_RESULT_Y],
+    CCB_Memcpy_u32_to_u8(pOutputPoint->pPointY,
+                         &HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECC_SCALAR_MUL_OUT_RESULT_Y],
                          pCurveParam->modulusSizeByte);
   }
   else /* (VerifOperation == CCB_VERIF_OPERATION_ENABLED) */
@@ -3985,7 +4514,7 @@ static HAL_StatusTypeDef CCB_ECC_ComputeScalarMul(CCB_HandleTypeDef *hccb, CCB_E
     for (offset = 0UL; offset < ((pCurveParam->modulusSizeByte + 3UL) / 4UL); offset++)
     {
       /* Check  public key coordinate x and improve robustness against intrusion (intentional) */
-      if (((PKA->RAM[PKA_ECC_SCALAR_MUL_OUT_RESULT_X + offset] != pPublicKey[offset]) ||
+      if (((HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECC_SCALAR_MUL_OUT_RESULT_X + offset] != pPublicKey[offset]) ||
            (f_count != random1) || (f_count == 0U)))
       {
         /* Set state, and intrusion error */
@@ -3999,8 +4528,8 @@ static HAL_StatusTypeDef CCB_ECC_ComputeScalarMul(CCB_HandleTypeDef *hccb, CCB_E
     for (offset = 0UL; offset < ((pCurveParam->modulusSizeByte + 3UL) / 4UL); offset++)
     {
       /* Check  public key coordinate y and improve robustness against intrusion (intentional) */
-      if (((PKA->RAM[PKA_ECC_SCALAR_MUL_OUT_RESULT_Y + offset] != pPublicKey[offset + 20U]) ||
-           (f_count != random1) || (f_count == 0U)))
+      if (((HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECC_SCALAR_MUL_OUT_RESULT_Y + offset]
+            != pPublicKey[offset + 20U]) || (f_count != random1) || (f_count == 0U)))
       {
         /* Set state, and intrusion error */
         hccb->State = HAL_CCB_STATE_ERROR;
@@ -4018,7 +4547,7 @@ static HAL_StatusTypeDef CCB_ECC_ComputeScalarMul(CCB_HandleTypeDef *hccb, CCB_E
     for (offset = 0UL; offset < ((pCurveParam->modulusSizeByte + 3UL) / 4UL); offset++)
     {
       /* Check  public key coordinate x and improve robustness against intrusion (intentional) */
-      if (((PKA->RAM[PKA_ECC_SCALAR_MUL_OUT_RESULT_X + offset] != pPublicKey[offset]) ||
+      if (((HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECC_SCALAR_MUL_OUT_RESULT_X + offset] != pPublicKey[offset]) ||
            (f_count != random2) || (f_count == 0U)))
       {
         /* Set state, and intrusion error */
@@ -4032,8 +4561,8 @@ static HAL_StatusTypeDef CCB_ECC_ComputeScalarMul(CCB_HandleTypeDef *hccb, CCB_E
     for (offset = 0UL; offset < ((pCurveParam->modulusSizeByte + 3UL) / 4UL); offset++)
     {
       /* Check  public key coordinate y and improve robustness against intrusion (intentional) */
-      if (((PKA->RAM[PKA_ECC_SCALAR_MUL_OUT_RESULT_Y + offset] != pPublicKey[offset + 20U]) ||
-           (f_count != random2) || (f_count == 0U)))
+      if (((HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECC_SCALAR_MUL_OUT_RESULT_Y + offset] !=
+            pPublicKey[offset + 20U]) || (f_count != random2) || (f_count == 0U)))
       {
         /* Set state, and intrusion error */
         hccb->State = HAL_CCB_STATE_ERROR;
@@ -4051,7 +4580,7 @@ static HAL_StatusTypeDef CCB_ECC_ComputeScalarMul(CCB_HandleTypeDef *hccb, CCB_E
     for (offset = 0UL; offset < ((pCurveParam->modulusSizeByte + 3UL) / 4UL); offset++)
     {
       /* Check  public key coordinate x and improve robustness against intrusion (intentional) */
-      if (((PKA->RAM[PKA_ECC_SCALAR_MUL_OUT_RESULT_X + offset] != pPublicKey[offset]) ||
+      if (((HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECC_SCALAR_MUL_OUT_RESULT_X + offset] != pPublicKey[offset]) ||
            (f_count != random3) || (f_count == 0U)))
       {
         /* Set state, and intrusion error */
@@ -4065,8 +4594,8 @@ static HAL_StatusTypeDef CCB_ECC_ComputeScalarMul(CCB_HandleTypeDef *hccb, CCB_E
     for (offset = 0UL; offset < ((pCurveParam->modulusSizeByte + 3UL) / 4UL); offset++)
     {
       /* Check  public key coordinate y and improve robustness against intrusion (intentional) */
-      if (((PKA->RAM[PKA_ECC_SCALAR_MUL_OUT_RESULT_Y + offset] != pPublicKey[offset + 20U]) ||
-           (f_count != random3) || (f_count == 0U)))
+      if (((HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECC_SCALAR_MUL_OUT_RESULT_Y + offset] !=
+            pPublicKey[offset + 20U]) || (f_count != random3) || (f_count == 0U)))
       {
         /* Set state, and intrusion error */
         hccb->State = HAL_CCB_STATE_ERROR;
@@ -4104,12 +4633,15 @@ static HAL_StatusTypeDef CCB_ECC_ComputeScalarMul(CCB_HandleTypeDef *hccb, CCB_E
   * @param  pTag pointer to the Tag.
   * @param  pWrappedExp pointer to the Warapped Exp.
   * @param  pWrappedPhi pointer to the Warapped Phi.
+  * @param  pOperand pointer to the constant K as operand A.
+  * @param  pReferenceModularExp pointer to the output ReferenceModularExp.
   * @retval HAL status.
   */
 static HAL_StatusTypeDef CCB_RSA_ExpBlobCreation(CCB_HandleTypeDef *hccb, CCB_RSAParamTypeDef *pParam,
                                                  const CCB_RSAClearKeyTypeDef *pRSAClearPrivateKey,
                                                  CCB_WrappingKeyTypeDef *pWrappingKey, uint32_t *pIV,
-                                                 uint32_t *pTag, uint32_t *pWrappedExp, uint32_t *pWrappedPhi)
+                                                 uint32_t *pTag, uint32_t *pWrappedExp, uint32_t *pWrappedPhi,
+                                                 uint8_t *pOperand, uint32_t *pReferenceModularExp)
 {
   uint16_t count;
   uint32_t countBlock = 0UL;
@@ -4128,7 +4660,7 @@ static HAL_StatusTypeDef CCB_RSA_ExpBlobCreation(CCB_HandleTypeDef *hccb, CCB_RS
   }
 
   /* Initialize RNG */
-  if (CCB_RNG_Init() != HAL_OK)
+  if (CCB_RNG_Init(hccb) != HAL_OK)
   {
     /* Set state and return error */
     hccb->State = HAL_CCB_STATE_ERROR;
@@ -4143,15 +4675,37 @@ static HAL_StatusTypeDef CCB_RSA_ExpBlobCreation(CCB_HandleTypeDef *hccb, CCB_RS
     return HAL_ERROR;
   }
 
+#if   defined (HW_SANITY_CHECK_SUPPORT)
+  /* Write a constant K as operand A (base of exponentiation) in the PKA RAM */
+  CCB_Memcpy_u8_to_u32(&HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_MODULAR_EXP_PROTECT_IN_EXPONENT_BASE ], pOperand,
+                       pParam->modulusSizeByte);
+  RAM_PARAM_END(HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM,
+                PKA_MODULAR_EXP_PROTECT_IN_EXPONENT_BASE + ((pParam->modulusSizeByte + 3UL)));
+
+#else
+  /* Prevent unused argument(s) compilation warning */
+  UNUSED(pOperand);
+
+#endif /* GENERATOR_SW_SANITY_CHECK_AVAILABLE_ALL_DEVICES */
   /*  Initialize SAES */
   if (Protect_SAES_WaitFLAG(hccb, AES_SR_BUSY, RESET, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
   {
-    /* Disable the SAES peripheral clock */
-    SAES->CR &=  ~AES_CR_EN;
+#if (defined(RNG_HTSR0_RPERRX) || defined(RNG_HTSR1_ADERRX))
+    /*Check if there is an RNG seed error */
+    if (LL_RNG_IsActiveFlag_SECS(RNG) != 0U)
+    {
+      /* Attempt to recover from the seed error */
+      if (CCB_RNG_ResilientRecoverSeedError(hccb) != HAL_OK)
+      {
+        /* Disable the SAES peripheral */
+        HAL_CCB_GET_SAES_INSTANCE(hccb)->CR &=  ~AES_CR_EN;
 
-    /* Set state, error code and return error */
-    hccb->State = HAL_CCB_STATE_ERROR;
-    return HAL_ERROR;
+        /* Set state and return error */
+        hccb->State = HAL_CCB_STATE_ERROR;
+        return HAL_ERROR;
+      }
+    }
+#endif /* RNG_HTSR0_RPERRX || RNG_HTSR1_ADERRX */
   }
 
   /* Update the state */
@@ -4207,7 +4761,7 @@ static HAL_StatusTypeDef CCB_RSA_ExpBlobCreation(CCB_HandleTypeDef *hccb, CCB_RS
   }
 
   /* Set SAES GCMPH Payload phase and trig OPSTEP that trig OPSTEP transition 0x3 --> 0x4 */
-  MODIFY_REG(SAES->CR, AES_CR_GCMPH, AES_CR_GCMPH_1);
+  MODIFY_REG(HAL_CCB_GET_SAES_INSTANCE(hccb)->CR, AES_CR_GCMPH, AES_CR_GCMPH_1);
 
   /* Wait until OPSTEP is set to 0x04 */
   if (CCB_WaitOperStep(hccb, 0x04, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
@@ -4217,31 +4771,31 @@ static HAL_StatusTypeDef CCB_RSA_ExpBlobCreation(CCB_HandleTypeDef *hccb, CCB_RS
   }
 
   /* Clear the CMF flag and the chaining mode status bits in 8 to 15 in PKA_SR */
-  HAL_CCB_CLEAR_PKA_FLAG(PKA_CLRFR_CMFC);
+  HAL_CCB_CLEAR_PKA_FLAG(hccb, PKA_CLRFR_CMFC);
 
   /* Write clear-text exponent e  */
   if ((pParam->modulusSizeByte % 8UL) != 0UL)
   {
     for (offset = 0UL; offset < (operand_size - 4UL); offset += 2UL)
     {
-      CCB_Memcpy_u8_to_u64(&PKA->RAM[PKA_MODULAR_EXP_PROTECT_IN_EXPONENT + offset],
+      CCB_Memcpy_u8_to_u64(&HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_MODULAR_EXP_PROTECT_IN_EXPONENT + offset],
                            &pRSAClearPrivateKey->pExp[(pParam->modulusSizeByte) - ((offset * 4UL) + 1UL)]);
     }
 
-    CCB_Memcpy_Not_Align(&PKA->RAM[PKA_MODULAR_EXP_PROTECT_IN_EXPONENT + offset],
+    CCB_Memcpy_Not_Align(&HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_MODULAR_EXP_PROTECT_IN_EXPONENT + offset],
                          &pRSAClearPrivateKey->pExp[(pParam->modulusSizeByte) - ((offset * 4UL) + 1UL)],
                          pParam->modulusSizeByte % 8UL);
-    RAM_PARAM_END(PKA->RAM, PKA_MODULAR_EXP_PROTECT_IN_EXPONENT + offset + 2UL);
+    RAM_PARAM_END(HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM, PKA_MODULAR_EXP_PROTECT_IN_EXPONENT + offset + 2UL);
   }
   else
   {
     for (offset = 0; offset < (operand_size - 2UL); offset += 2UL)
     {
-      CCB_Memcpy_u8_to_u64(&PKA->RAM[PKA_MODULAR_EXP_PROTECT_IN_EXPONENT + offset],
+      CCB_Memcpy_u8_to_u64(&HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_MODULAR_EXP_PROTECT_IN_EXPONENT + offset],
                            &pRSAClearPrivateKey->pExp[(pParam->modulusSizeByte) - ((offset * 4UL) + 1UL)]);
     }
 
-    RAM_PARAM_END(PKA->RAM, PKA_MODULAR_EXP_PROTECT_IN_EXPONENT
+    RAM_PARAM_END(HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM, PKA_MODULAR_EXP_PROTECT_IN_EXPONENT
                   + offset);
   }
 
@@ -4261,31 +4815,31 @@ static HAL_StatusTypeDef CCB_RSA_ExpBlobCreation(CCB_HandleTypeDef *hccb, CCB_RS
   }
 
   /* Clear the CMF flag and the chaining mode status bits in 8 to 15 in PKA_SR */
-  HAL_CCB_CLEAR_PKA_FLAG(PKA_CLRFR_CMFC);
+  HAL_CCB_CLEAR_PKA_FLAG(hccb, PKA_CLRFR_CMFC);
 
   /* Write clear-text phi  */
   if ((pParam->modulusSizeByte % 8UL) != 0UL)
   {
     for (offset = 0; offset < (operand_size - 4UL); offset += 2UL)
     {
-      CCB_Memcpy_u8_to_u64(&PKA->RAM[PKA_MODULAR_EXP_PROTECT_IN_PHI + offset],
+      CCB_Memcpy_u8_to_u64(&HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_MODULAR_EXP_PROTECT_IN_PHI + offset],
                            &pRSAClearPrivateKey->pPhi[(pParam->modulusSizeByte) - ((offset * 4UL) + 1UL)]);
     }
 
-    CCB_Memcpy_Not_Align(&PKA->RAM[PKA_MODULAR_EXP_PROTECT_IN_PHI + offset],
+    CCB_Memcpy_Not_Align(&HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_MODULAR_EXP_PROTECT_IN_PHI + offset],
                          &pRSAClearPrivateKey->pPhi[(pParam->modulusSizeByte) - ((offset * 4UL) + 1UL)],
                          pParam->modulusSizeByte % 8UL);
-    RAM_PARAM_END(PKA->RAM, PKA_MODULAR_EXP_PROTECT_IN_PHI + offset + 2UL);
+    RAM_PARAM_END(HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM, PKA_MODULAR_EXP_PROTECT_IN_PHI + offset + 2UL);
   }
   else
   {
     for (offset = 0; offset < (operand_size - 2UL); offset += 2UL)
     {
-      CCB_Memcpy_u8_to_u64(&PKA->RAM[PKA_MODULAR_EXP_PROTECT_IN_PHI + offset],
+      CCB_Memcpy_u8_to_u64(&HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_MODULAR_EXP_PROTECT_IN_PHI + offset],
                            &pRSAClearPrivateKey->pPhi[(pParam->modulusSizeByte) - ((offset * 4UL) + 1UL)]);
     }
 
-    RAM_PARAM_END(PKA->RAM, PKA_MODULAR_EXP_PROTECT_IN_PHI + offset);
+    RAM_PARAM_END(HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM, PKA_MODULAR_EXP_PROTECT_IN_PHI + offset);
   }
 
   /* Wait until DATAOKF flag is SET in PKA and trig OPSTEP transition 0x5 --> 0x8:   */
@@ -4303,13 +4857,13 @@ static HAL_StatusTypeDef CCB_RSA_ExpBlobCreation(CCB_HandleTypeDef *hccb, CCB_RS
   }
 
   /* Clear the CMF flag and the chaining mode status bits in 8 to 15 in PKA_SR */
-  HAL_CCB_CLEAR_PKA_FLAG(PKA_CLRFR_CMFC);
+  HAL_CCB_CLEAR_PKA_FLAG(hccb, PKA_CLRFR_CMFC);
 
   /* Read clear exponent e for encryption  */
   for (offset = 0UL; offset < cipherkey_size; offset++)
   {
 
-    PKA->RAM[PKA_MODULAR_EXP_PROTECT_IN_EXPONENT + offset] = CCB_MAGIC_VALUE;
+    HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_MODULAR_EXP_PROTECT_IN_EXPONENT + offset] = CCB_MAGIC_VALUE;
 
     if ((offset % 4UL) == 3UL)
     {
@@ -4324,7 +4878,7 @@ static HAL_StatusTypeDef CCB_RSA_ExpBlobCreation(CCB_HandleTypeDef *hccb, CCB_RS
       for (count = 0U; count < CCB_BLOCK_SIZE; count++)
       {
         pWrappedExp[cipherkey_size - (countBlock + count + 1UL)]
-          = READ_REG(SAES->DOUTR);
+          = READ_REG(HAL_CCB_GET_SAES_INSTANCE(hccb)->DOUTR);
       }
       countBlock += 4UL;
     }
@@ -4333,13 +4887,22 @@ static HAL_StatusTypeDef CCB_RSA_ExpBlobCreation(CCB_HandleTypeDef *hccb, CCB_RS
   /* Wait for Galois Filter End of Computation */
   if (Protect_SAES_WaitFLAG(hccb, AES_SR_BUSY, RESET, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
   {
-    /* return error */
-    return HAL_ERROR;
+#if (defined(RNG_HTSR0_RPERRX) || defined(RNG_HTSR1_ADERRX))
+    /*Check if there is an RNG seed error */
+    if (LL_RNG_IsActiveFlag_SECS(RNG) != 0U)
+    {
+      /* Attempt to recover from the seed error */
+      if (CCB_RNG_ResilientRecoverSeedError(hccb) != HAL_OK)
+      {
+        return HAL_ERROR;
+      }
+    }
+#endif /* RNG_HTSR0_RPERRX || RNG_HTSR1_ADERRX */
   }
 
   if ((operand_size % 4UL) != 0UL)
   {
-    RAM_PARAM_END(PKA->RAM, PKA_MODULAR_EXP_PROTECT_IN_EXPONENT
+    RAM_PARAM_END(HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM, PKA_MODULAR_EXP_PROTECT_IN_EXPONENT
                   + cipherkey_size);
   }
 
@@ -4358,7 +4921,7 @@ static HAL_StatusTypeDef CCB_RSA_ExpBlobCreation(CCB_HandleTypeDef *hccb, CCB_RS
   }
 
   /* Clear the CMF flag and the chaining mode status bits in 8 to 15 in PKA_SR */
-  HAL_CCB_CLEAR_PKA_FLAG(PKA_CLRFR_CMFC);
+  HAL_CCB_CLEAR_PKA_FLAG(hccb, PKA_CLRFR_CMFC);
 
   countBlock = 0U;
 
@@ -4366,7 +4929,7 @@ static HAL_StatusTypeDef CCB_RSA_ExpBlobCreation(CCB_HandleTypeDef *hccb, CCB_RS
   for (offset = 0; offset < cipherkey_size; offset++)
   {
 
-    PKA->RAM[PKA_MODULAR_EXP_PROTECT_IN_PHI + offset] = CCB_MAGIC_VALUE;
+    HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_MODULAR_EXP_PROTECT_IN_PHI + offset] = CCB_MAGIC_VALUE;
 
     if ((offset % 4UL) == 3UL)
     {
@@ -4381,7 +4944,7 @@ static HAL_StatusTypeDef CCB_RSA_ExpBlobCreation(CCB_HandleTypeDef *hccb, CCB_RS
       for (count = 0U; count < CCB_BLOCK_SIZE; count++)
       {
         pWrappedPhi[cipherkey_size - (countBlock + count + 1UL)]
-          = READ_REG(SAES->DOUTR);
+          = READ_REG(HAL_CCB_GET_SAES_INSTANCE(hccb)->DOUTR);
       }
       countBlock += 4UL;
     }
@@ -4390,13 +4953,22 @@ static HAL_StatusTypeDef CCB_RSA_ExpBlobCreation(CCB_HandleTypeDef *hccb, CCB_RS
   /* Wait for Galois Filter End of Computation */
   if (Protect_SAES_WaitFLAG(hccb, AES_SR_BUSY, RESET, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
   {
-    /* return error */
-    return HAL_ERROR;
+#if (defined(RNG_HTSR0_RPERRX) || defined(RNG_HTSR1_ADERRX))
+    /*Check if there is an RNG seed error */
+    if (LL_RNG_IsActiveFlag_SECS(RNG) != 0U)
+    {
+      /* Attempt to recover from the seed error */
+      if (CCB_RNG_ResilientRecoverSeedError(hccb) != HAL_OK)
+      {
+        return HAL_ERROR;
+      }
+    }
+#endif /* RNG_HTSR0_RPERRX || RNG_HTSR1_ADERRX */
   }
 
   if ((operand_size % 4UL) != 0UL)
   {
-    RAM_PARAM_END(PKA->RAM, PKA_MODULAR_EXP_PROTECT_IN_PHI
+    RAM_PARAM_END(HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM, PKA_MODULAR_EXP_PROTECT_IN_PHI
                   + cipherkey_size);
   }
 
@@ -4408,7 +4980,8 @@ static HAL_StatusTypeDef CCB_RSA_ExpBlobCreation(CCB_HandleTypeDef *hccb, CCB_RS
   }
 
   /* Set SAES GCMPH final phase */
-  MODIFY_REG(SAES->CR, AES_CR_GCMPH, AES_CR_GCMPH_0 | AES_CR_GCMPH_1);
+  MODIFY_REG(HAL_CCB_GET_SAES_INSTANCE(hccb)->CR, AES_CR_GCMPH,
+             AES_CR_GCMPH_0 | AES_CR_GCMPH_1);
 
   /* Wait until OPSTEP is set to 0x0A */
   if (CCB_WaitOperStep(hccb, 0x0A, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
@@ -4425,6 +4998,45 @@ static HAL_StatusTypeDef CCB_RSA_ExpBlobCreation(CCB_HandleTypeDef *hccb, CCB_RS
     return HAL_ERROR;
   }
 
+#if   defined (HW_SANITY_CHECK_SUPPORT)
+  /* SET PKA START operation bit and trig OPSTEP transition 0x0A --> 0x19 */
+  SET_BIT(HAL_CCB_GET_PKA_INSTANCE(hccb)->CR, PKA_CR_START);
+  /* Wait until OPSTEP is set to 0x19 */
+  if (CCB_WaitOperStep(hccb, 0x19, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+  {
+    /* return error */
+    return HAL_ERROR;
+  }
+  /* Wait until end of operation flag is SET in PKA and trig OPSTEP transition 0x19 --> 0x1A */
+  if (Protect_PKA_WaitFLAG(hccb, PKA_SR_PROCENDF, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+  {
+    /* return error */
+    return HAL_ERROR;
+  }
+  /* Wait until OPSTEP is set to 0x1A */
+  if (CCB_WaitOperStep(hccb, 0x1A, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+  {
+    /* return error */
+    return HAL_ERROR;
+  }
+  /* Check PKA Operation error result */
+  if ((HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_MODULAR_EXP_OUT_ERROR]) !=  CCB_PKA_ERROR_OPERATION_NONE)
+  {
+    /* Set state and return error */
+    hccb->State = HAL_CCB_STATE_ERROR;
+    return HAL_ERROR;
+  }
+  /* Read result output */
+  for (offset = 0U; offset < (pParam->modulusSizeByte + 3) / 4; offset++)
+  {
+    pReferenceModularExp[offset] = HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_MODULAR_EXP_OUT_RESULT + offset];
+  }
+
+#else
+  /* Prevent unused argument(s) compilation warning */
+  UNUSED(pReferenceModularExp);
+
+#endif /* GENERATOR_HW_SANITY_CHECK_AVAILABLE_ALL_DEVICES */
   /* CCB IPRST set */
   SET_BIT(hccb->Instance->CR, CCB_CR_IPRST);
 
@@ -4487,14 +5099,14 @@ static HAL_StatusTypeDef CCB_RSA_ComputeModularExp(CCB_HandleTypeDef *hccb, CCB_
   }
 
   /* Initialize RNG */
-  if (CCB_RNG_Init() != HAL_OK)
+  if (CCB_RNG_Init(hccb) != HAL_OK)
   {
     /* Set State and return error */
     hccb->State = HAL_CCB_STATE_ERROR;
     return HAL_ERROR;
   }
 
-  if (CCB_RNG_Wait_SET_FLAG(RNG_SR_DRDY, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+  if (CCB_RNG_Wait_SET_FLAG(hccb, RNG_SR_DRDY, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
   {
     return HAL_ERROR;
   }
@@ -4503,7 +5115,7 @@ static HAL_StatusTypeDef CCB_RSA_ComputeModularExp(CCB_HandleTypeDef *hccb, CCB_
 
   while (random1 == 0U)
   {
-    random1 = (uint16_t)(RNG->DR & 0x3FFU);
+    random1 = (uint16_t)(HAL_CCB_GET_RNG_INSTANCE(hccb)->DR & 0x3FFU);
     if ((HAL_GetTick() - tickstart) > HAL_CCB_TIMEOUT_DEFAULT_VALUE)
     {
       /* Set state and return error */
@@ -4511,7 +5123,7 @@ static HAL_StatusTypeDef CCB_RSA_ComputeModularExp(CCB_HandleTypeDef *hccb, CCB_
     }
   }
 
-  if (CCB_RNG_Wait_SET_FLAG(RNG_SR_DRDY, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+  if (CCB_RNG_Wait_SET_FLAG(hccb, RNG_SR_DRDY, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
   {
     return HAL_ERROR;
   }
@@ -4520,7 +5132,7 @@ static HAL_StatusTypeDef CCB_RSA_ComputeModularExp(CCB_HandleTypeDef *hccb, CCB_
 
   while (random2 == 0U)
   {
-    random2 = (uint16_t)(RNG->DR & 0x3FFU);
+    random2 = (uint16_t)(HAL_CCB_GET_RNG_INSTANCE(hccb)->DR & 0x3FFU);
     if ((HAL_GetTick() - tickstart) > HAL_CCB_TIMEOUT_DEFAULT_VALUE)
     {
       /* Set state and return error */
@@ -4528,7 +5140,7 @@ static HAL_StatusTypeDef CCB_RSA_ComputeModularExp(CCB_HandleTypeDef *hccb, CCB_
     }
   }
 
-  if (CCB_RNG_Wait_SET_FLAG(RNG_SR_DRDY, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+  if (CCB_RNG_Wait_SET_FLAG(hccb, RNG_SR_DRDY, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
   {
     return HAL_ERROR;
   }
@@ -4537,7 +5149,7 @@ static HAL_StatusTypeDef CCB_RSA_ComputeModularExp(CCB_HandleTypeDef *hccb, CCB_
 
   while (random3 == 0U)
   {
-    random3 = (uint16_t)(RNG->DR & 0x3FFU);
+    random3 = (uint16_t)(HAL_CCB_GET_RNG_INSTANCE(hccb)->DR & 0x3FFU);
     if ((HAL_GetTick() - tickstart) > HAL_CCB_TIMEOUT_DEFAULT_VALUE)
     {
       /* Set state and return error */
@@ -4556,12 +5168,22 @@ static HAL_StatusTypeDef CCB_RSA_ComputeModularExp(CCB_HandleTypeDef *hccb, CCB_
   /*  Initialize SAES */
   if (Protect_SAES_WaitFLAG(hccb, AES_SR_BUSY, RESET, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
   {
-    /* Disable the SAES peripheral */
-    SAES->CR &=  ~AES_CR_EN;
+#if (defined(RNG_HTSR0_RPERRX) || defined(RNG_HTSR1_ADERRX))
+    /*Check if there is an RNG seed error */
+    if (LL_RNG_IsActiveFlag_SECS(RNG) != 0U)
+    {
+      /* Attempt to recover from the seed error */
+      if (CCB_RNG_ResilientRecoverSeedError(hccb) != HAL_OK)
+      {
+        /* Disable the SAES peripheral */
+        HAL_CCB_GET_SAES_INSTANCE(hccb)->CR &=  ~AES_CR_EN;
 
-    /* Set state and return error */
-    hccb->State = HAL_CCB_STATE_ERROR;
-    return HAL_ERROR;
+        /* Set state and return error */
+        hccb->State = HAL_CCB_STATE_ERROR;
+        return HAL_ERROR;
+      }
+    }
+#endif /* RNG_HTSR0_RPERRX || RNG_HTSR1_ADERRX */
   }
 
   /* Update the state */
@@ -4598,8 +5220,10 @@ static HAL_StatusTypeDef CCB_RSA_ComputeModularExp(CCB_HandleTypeDef *hccb, CCB_
   }
 
   /* Set Operand A - base of exponentiation */
-  CCB_Memcpy_u8_to_u32(&PKA->RAM[PKA_MODULAR_EXP_PROTECT_IN_EXPONENT_BASE ], pOperand, pParam->modulusSizeByte);
-  RAM_PARAM_END(PKA->RAM, PKA_MODULAR_EXP_PROTECT_IN_EXPONENT_BASE + ((pParam->modulusSizeByte + 3UL)));
+  CCB_Memcpy_u8_to_u32(&HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_MODULAR_EXP_PROTECT_IN_EXPONENT_BASE ], pOperand,
+                       pParam->modulusSizeByte);
+  RAM_PARAM_END(HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM,
+                PKA_MODULAR_EXP_PROTECT_IN_EXPONENT_BASE + ((pParam->modulusSizeByte + 3UL)));
 
   /* Initial Phase Processing */
   if (CCB_BlobUse_InitialPhase(hccb, pIV, pTag) != HAL_OK)
@@ -4623,7 +5247,7 @@ static HAL_StatusTypeDef CCB_RSA_ComputeModularExp(CCB_HandleTypeDef *hccb, CCB_
   }
 
   /* Set SAES GCMPH Payload phase and trig OPSTEP that trig OPSTEP transition 0x13 --> 0x14 */
-  MODIFY_REG(SAES->CR, AES_CR_GCMPH, AES_CR_GCMPH_1);
+  MODIFY_REG(HAL_CCB_GET_SAES_INSTANCE(hccb)->CR, AES_CR_GCMPH, AES_CR_GCMPH_1);
 
   /* Wait until OPSTEP is set to 0x14 */
   if (CCB_WaitOperStep(hccb, 0x14, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
@@ -4635,7 +5259,7 @@ static HAL_StatusTypeDef CCB_RSA_ComputeModularExp(CCB_HandleTypeDef *hccb, CCB_
   /* Write encrypted exponent e in DINR of SAES */
   for (offset = 0UL; offset < cipherkey_size; offset++)
   {
-    WRITE_REG(SAES->DINR, pWrappedExp[cipherkey_size - (offset + 1U)]);
+    WRITE_REG(HAL_CCB_GET_SAES_INSTANCE(hccb)->DINR, pWrappedExp[cipherkey_size - (offset + 1U)]);
 
     if ((offset % 4UL) == 0x3UL)
     {
@@ -4649,7 +5273,8 @@ static HAL_StatusTypeDef CCB_RSA_ComputeModularExp(CCB_HandleTypeDef *hccb, CCB_
       /* Write key in PKA RAM */
       for (count_ram = 0U; count_ram < 4U; count_ram++)
       {
-        PKA->RAM[PKA_MODULAR_EXP_PROTECT_IN_EXPONENT + (count_block + count_ram)] = CCB_MAGIC_VALUE;
+        HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_MODULAR_EXP_PROTECT_IN_EXPONENT
+                                            + (count_block + count_ram)] = CCB_MAGIC_VALUE;
       }
       count_block += 4UL;
     }
@@ -4657,7 +5282,7 @@ static HAL_StatusTypeDef CCB_RSA_ComputeModularExp(CCB_HandleTypeDef *hccb, CCB_
 
   if ((operand_size % 4UL) != 0UL)
   {
-    RAM_PARAM_END(PKA->RAM, PKA_MODULAR_EXP_PROTECT_IN_EXPONENT + cipherkey_size);
+    RAM_PARAM_END(HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM, PKA_MODULAR_EXP_PROTECT_IN_EXPONENT + cipherkey_size);
   }
 
   /* Wait until DATAOKF flag is SET in PKA and trig OPSTEP transition 0x14 --> 0x15 */
@@ -4674,14 +5299,14 @@ static HAL_StatusTypeDef CCB_RSA_ComputeModularExp(CCB_HandleTypeDef *hccb, CCB_
   }
 
   /* Clear the CMF flag and the chaining mode status bits in 8 to 15 in PKA_SR */
-  HAL_CCB_CLEAR_PKA_FLAG(PKA_CLRFR_CMFC);
+  HAL_CCB_CLEAR_PKA_FLAG(hccb, PKA_CLRFR_CMFC);
 
   count_block = 0UL;
   /* Write encrypted phi in DINR of SAES */
 
   for (offset = 0UL; offset < cipherkey_size; offset++)
   {
-    WRITE_REG(SAES->DINR, pWrappedPhi[cipherkey_size - (offset + 1UL)]);
+    WRITE_REG(HAL_CCB_GET_SAES_INSTANCE(hccb)->DINR, pWrappedPhi[cipherkey_size - (offset + 1UL)]);
 
     if ((offset % 4UL) == 0x3UL)
     {
@@ -4695,7 +5320,8 @@ static HAL_StatusTypeDef CCB_RSA_ComputeModularExp(CCB_HandleTypeDef *hccb, CCB_
       /* Write key in PKA RAM */
       for (count_ram = 0U; count_ram < 4U; count_ram++)
       {
-        PKA->RAM[PKA_MODULAR_EXP_PROTECT_IN_PHI + (count_block + count_ram)] = CCB_MAGIC_VALUE;
+        HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_MODULAR_EXP_PROTECT_IN_PHI
+                                            + (count_block + count_ram)] = CCB_MAGIC_VALUE;
       }
       count_block += 4UL;
     }
@@ -4703,7 +5329,7 @@ static HAL_StatusTypeDef CCB_RSA_ComputeModularExp(CCB_HandleTypeDef *hccb, CCB_
 
   if ((operand_size % 4UL) != 0UL)
   {
-    RAM_PARAM_END(PKA->RAM, PKA_MODULAR_EXP_PROTECT_IN_PHI + cipherkey_size);
+    RAM_PARAM_END(HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM, PKA_MODULAR_EXP_PROTECT_IN_PHI + cipherkey_size);
   }
 
   /* Wait until DATAOKF flag is SET in PKA and trig OPSTEP transition 0x15 --> 0x17 */
@@ -4735,7 +5361,7 @@ static HAL_StatusTypeDef CCB_RSA_ComputeModularExp(CCB_HandleTypeDef *hccb, CCB_
   }
 
   /* SET PKA START operation bit and trig OPSTEP transition 0x18 --> 0x19 */
-  SET_BIT(PKA->CR, PKA_CR_START);
+  SET_BIT(HAL_CCB_GET_PKA_INSTANCE(hccb)->CR, PKA_CR_START);
 
   /* Wait until OPSTEP is set to 0x19 */
   if (CCB_WaitOperStep(hccb, 0x19, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
@@ -4759,7 +5385,7 @@ static HAL_StatusTypeDef CCB_RSA_ComputeModularExp(CCB_HandleTypeDef *hccb, CCB_
   }
 
   /* Check PKA Operation error result */
-  if ((PKA->RAM[PKA_MODULAR_EXP_OUT_ERROR]) !=  CCB_PKA_ERROR_OPERATION_NONE)
+  if ((HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_MODULAR_EXP_OUT_ERROR]) !=  CCB_PKA_ERROR_OPERATION_NONE)
   {
     /* Set state and return error */
     hccb->State = HAL_CCB_STATE_ERROR;
@@ -4769,7 +5395,8 @@ static HAL_StatusTypeDef CCB_RSA_ComputeModularExp(CCB_HandleTypeDef *hccb, CCB_
   if (VerifOperation == CCB_VERIF_OPERATION_DISABLED)
   {
     /* Read result output */
-    CCB_Memcpy_u32_to_u8(pModularExp, &PKA->RAM[PKA_MODULAR_EXP_OUT_RESULT], pParam->modulusSizeByte);
+    CCB_Memcpy_u32_to_u8(pModularExp, &HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_MODULAR_EXP_OUT_RESULT],
+                         pParam->modulusSizeByte);
   }
   else /* CCB_VERIF_OPERATION_ENABLED */
   {
@@ -4782,7 +5409,8 @@ static HAL_StatusTypeDef CCB_RSA_ComputeModularExp(CCB_HandleTypeDef *hccb, CCB_
     for (offset = 0UL; offset < ((pParam->modulusSizeByte + 3UL) / 4UL); offset++)
     {
       /* Check Modular Exponentiation and improve robustness against intrusion (intentional) */
-      if (((PKA->RAM[PKA_MODULAR_EXP_OUT_RESULT + offset] != pReferenceModularExp[offset]) || (f_count != random1) ||
+      if (((HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_MODULAR_EXP_OUT_RESULT + offset] != pReferenceModularExp[offset])
+           || (f_count != random1) ||
            (f_count == 0U)))
       {
         /* Set state, and intrusion error */
@@ -4801,7 +5429,8 @@ static HAL_StatusTypeDef CCB_RSA_ComputeModularExp(CCB_HandleTypeDef *hccb, CCB_
     for (offset = 0UL; offset < ((pParam->modulusSizeByte + 3UL) / 4UL); offset++)
     {
       /* Check Modular Exponentiation and improve robustness against intrusion (intentional) */
-      if (((PKA->RAM[PKA_MODULAR_EXP_OUT_RESULT + offset] != pReferenceModularExp[offset]) || (f_count != random2) ||
+      if (((HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_MODULAR_EXP_OUT_RESULT + offset] != pReferenceModularExp[offset])
+           || (f_count != random2) ||
            (f_count == 0U)))
       {
         /* Set state, and intrusion error */
@@ -4819,7 +5448,8 @@ static HAL_StatusTypeDef CCB_RSA_ComputeModularExp(CCB_HandleTypeDef *hccb, CCB_
     for (offset = 0UL; offset < ((pParam->modulusSizeByte + 3UL) / 4UL); offset++)
     {
       /* Check Modular Exponentiation and improve robustness against intrusion (intentional) */
-      if (((PKA->RAM[PKA_MODULAR_EXP_OUT_RESULT + offset] != pReferenceModularExp[offset]) || (f_count != random3) ||
+      if (((HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_MODULAR_EXP_OUT_RESULT + offset] != pReferenceModularExp[offset])
+           || (f_count != random3) ||
            (f_count == 0U)))
       {
         /* Set state, and intrusion error */
@@ -4848,32 +5478,34 @@ static HAL_StatusTypeDef CCB_RSA_ComputeModularExp(CCB_HandleTypeDef *hccb, CCB_
   return HAL_OK;
 }
 
+#if  defined(SW_SANITY_CHECK_SUPPORT)
 /**
   * @brief  Erase the PKA RAM.
+  * @param  hccb CCB handle.
   * @retval HAL status.
   */
-static HAL_StatusTypeDef PKA_RAM_Erase(void)
+static HAL_StatusTypeDef PKA_RAM_Erase(CCB_HandleTypeDef *hccb)
 {
   uint32_t index;
   __IO uint8_t random_nbr = 0U;
   uint32_t tickstart;
 
-  PKA->RAM[CCB_PKA_RAM_SIZE - 1U] = CCB_MAGIC_VALUE;
+  HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[CCB_PKA_RAM_SIZE - 1U] = CCB_MAGIC_VALUE;
 
   /* For each element in the PKA RAM */
   for (index = 0; index < CCB_PKA_RAM_SIZE; index++)
   {
-    if (CCB_RNG_Wait_SET_FLAG(RNG_SR_DRDY, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+    if (CCB_RNG_Wait_SET_FLAG(hccb, RNG_SR_DRDY, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
     {
       return HAL_ERROR;
     }
     /* Clear the content */
-    PKA->RAM[index] = RNG->DR;
+    HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[index] = HAL_CCB_GET_RNG_INSTANCE(hccb)->DR;
   }
 
-  if (PKA->RAM[CCB_PKA_RAM_SIZE - 1U] == CCB_MAGIC_VALUE)
+  if (HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[CCB_PKA_RAM_SIZE - 1U] == CCB_MAGIC_VALUE)
   {
-    if (CCB_RNG_Wait_SET_FLAG(RNG_SR_DRDY, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+    if (CCB_RNG_Wait_SET_FLAG(hccb, RNG_SR_DRDY, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
     {
       return HAL_ERROR;
     }
@@ -4882,7 +5514,7 @@ static HAL_StatusTypeDef PKA_RAM_Erase(void)
 
     while (random_nbr == 0U)
     {
-      random_nbr = (uint8_t)(RNG->DR & 0xFFU);
+      random_nbr = (uint8_t)(HAL_CCB_GET_RNG_INSTANCE(hccb)->DR & 0xFFU);
       if ((HAL_GetTick() - tickstart) > HAL_CCB_TIMEOUT_DEFAULT_VALUE)
       {
         /* Set state and return error */
@@ -4898,15 +5530,15 @@ static HAL_StatusTypeDef PKA_RAM_Erase(void)
     /* For each element in the PKA RAM */
     for (index = 0; index < CCB_PKA_RAM_SIZE; index++)
     {
-      if (CCB_RNG_Wait_SET_FLAG(RNG_SR_DRDY, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+      if (CCB_RNG_Wait_SET_FLAG(hccb, RNG_SR_DRDY, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
       {
         return HAL_ERROR;
       }
       /* Clear the content */
-      PKA->RAM[index] = RNG->DR;
+      HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[index] = HAL_CCB_GET_RNG_INSTANCE(hccb)->DR;
     }
 
-    if (PKA->RAM[CCB_PKA_RAM_SIZE - 1U] == CCB_MAGIC_VALUE)
+    if (HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[CCB_PKA_RAM_SIZE - 1U] == CCB_MAGIC_VALUE)
     {
       return HAL_ERROR;
     }
@@ -4919,6 +5551,7 @@ static HAL_StatusTypeDef PKA_RAM_Erase(void)
 
 /**
   * @brief  CCB PKA ECDSA Signature.
+  * @param  hccb CCB handle.
   * @param  pCurveParam pointer to the Curve parameters.
   * @param  pClearPrivateKey pointer to the clear private key.
   * @param  pInteger pointer to the integer k.
@@ -4926,7 +5559,7 @@ static HAL_StatusTypeDef PKA_RAM_Erase(void)
   * @param  pSignature Pointer to output signature
   * @retval HAL status.
   */
-static HAL_StatusTypeDef PKA_ECDSASign(CCB_ECDSACurveParamTypeDef *pCurveParam,
+static HAL_StatusTypeDef PKA_ECDSASign(CCB_HandleTypeDef *hccb, CCB_ECDSACurveParamTypeDef *pCurveParam,
                                        const uint8_t *pClearPrivateKey, uint8_t *pInteger, uint8_t *pHash,
                                        CCB_ECDSASignTypeDef *pSignature)
 {
@@ -4934,73 +5567,90 @@ static HAL_StatusTypeDef PKA_ECDSASign(CCB_ECDSACurveParamTypeDef *pCurveParam,
   uint32_t timeout = HAL_CCB_TIMEOUT_DEFAULT_VALUE;
 
   /* Get the prime order n length */
-  PKA->RAM[PKA_ECDSA_SIGN_IN_ORDER_NB_BITS] = GetOptBitSize_u8(pCurveParam->primeOrderSizeByte,
-                                                               *(pCurveParam->pPrimeOrder));
+  HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECDSA_SIGN_IN_ORDER_NB_BITS] \
+    = GetOptBitSize_u8(pCurveParam->primeOrderSizeByte, *(pCurveParam->pPrimeOrder));
 
   /* Get the modulus p length */
-  PKA->RAM[PKA_ECDSA_SIGN_IN_MOD_NB_BITS] = GetOptBitSize_u8(pCurveParam->modulusSizeByte, *(pCurveParam->pModulus));
+  HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECDSA_SIGN_IN_MOD_NB_BITS] \
+    = GetOptBitSize_u8(pCurveParam->modulusSizeByte, *(pCurveParam->pModulus));
 
   /* Get the coefficient a sign */
-  PKA->RAM[PKA_ECDSA_SIGN_IN_A_COEFF_SIGN] = pCurveParam->coefSignA;
+  HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECDSA_SIGN_IN_A_COEFF_SIGN] = pCurveParam->coefSignA;
 
   /* Move the input parameters coefficient |a| to PKA RAM */
-  CCB_Memcpy_u8_to_u32(&PKA->RAM[PKA_ECDSA_SIGN_IN_A_COEFF], pCurveParam->pAbsCoefA, pCurveParam->modulusSizeByte);
-  RAM_PARAM_END(PKA->RAM, PKA_ECDSA_SIGN_IN_A_COEFF + ((pCurveParam->modulusSizeByte + 3UL) / 4UL));
+  CCB_Memcpy_u8_to_u32(&HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECDSA_SIGN_IN_A_COEFF], pCurveParam->pAbsCoefA,
+                       pCurveParam->modulusSizeByte);
+  RAM_PARAM_END(HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM,
+                PKA_ECDSA_SIGN_IN_A_COEFF + ((pCurveParam->modulusSizeByte + 3UL) / 4UL));
 
   /* Move the input parameters coefficient B to PKA RAM */
-  CCB_Memcpy_u8_to_u32(&PKA->RAM[PKA_ECDSA_SIGN_IN_B_COEFF], pCurveParam->pCoefB, pCurveParam->modulusSizeByte);
-  RAM_PARAM_END(PKA->RAM, PKA_ECDSA_SIGN_IN_B_COEFF + ((pCurveParam->modulusSizeByte + 3UL) / 4UL));
+  CCB_Memcpy_u8_to_u32(&HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECDSA_SIGN_IN_B_COEFF], pCurveParam->pCoefB,
+                       pCurveParam->modulusSizeByte);
+  RAM_PARAM_END(HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM,
+                PKA_ECDSA_SIGN_IN_B_COEFF + ((pCurveParam->modulusSizeByte + 3UL) / 4UL));
 
   /* Move the input parameters modulus value p to PKA RAM */
-  CCB_Memcpy_u8_to_u32(&PKA->RAM[PKA_ECDSA_SIGN_IN_MOD_GF], pCurveParam->pModulus, pCurveParam->modulusSizeByte);
-  RAM_PARAM_END(PKA->RAM, PKA_ECDSA_SIGN_IN_MOD_GF + ((pCurveParam->modulusSizeByte + 3UL) / 4UL));
+  CCB_Memcpy_u8_to_u32(&HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECDSA_SIGN_IN_MOD_GF], pCurveParam->pModulus,
+                       pCurveParam->modulusSizeByte);
+  RAM_PARAM_END(HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM,
+                PKA_ECDSA_SIGN_IN_MOD_GF + ((pCurveParam->modulusSizeByte + 3UL) / 4UL));
 
   /* Move the input parameters integer k to PKA RAM */
-  CCB_Memcpy_u8_to_u32(&PKA->RAM[PKA_ECDSA_SIGN_IN_K], pInteger, pCurveParam->primeOrderSizeByte);
-  RAM_PARAM_END(PKA->RAM, PKA_ECDSA_SIGN_IN_K + ((pCurveParam->primeOrderSizeByte + 3UL) / 4UL));
+  CCB_Memcpy_u8_to_u32(&HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECDSA_SIGN_IN_K], pInteger,
+                       pCurveParam->primeOrderSizeByte);
+  RAM_PARAM_END(HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM,
+                PKA_ECDSA_SIGN_IN_K + ((pCurveParam->primeOrderSizeByte + 3UL) / 4UL));
 
   /* Move the input parameters base point G coordinate x to PKA RAM */
-  CCB_Memcpy_u8_to_u32(&PKA->RAM[PKA_ECDSA_SIGN_IN_INITIAL_POINT_X], pCurveParam->pPointX,
-                       pCurveParam->modulusSizeByte);
-  RAM_PARAM_END(PKA->RAM, PKA_ECDSA_SIGN_IN_INITIAL_POINT_X + ((pCurveParam->modulusSizeByte + 3UL) / 4UL));
+  CCB_Memcpy_u8_to_u32(&HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECDSA_SIGN_IN_INITIAL_POINT_X],
+                       pCurveParam->pPointX, pCurveParam->modulusSizeByte);
+  RAM_PARAM_END(HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM,
+                PKA_ECDSA_SIGN_IN_INITIAL_POINT_X + ((pCurveParam->modulusSizeByte + 3UL) / 4UL));
 
   /* Move the input parameters base point G coordinate y to PKA RAM */
-  CCB_Memcpy_u8_to_u32(&PKA->RAM[PKA_ECDSA_SIGN_IN_INITIAL_POINT_Y], pCurveParam->pPointY,
-                       pCurveParam->modulusSizeByte);
-  RAM_PARAM_END(PKA->RAM, PKA_ECDSA_SIGN_IN_INITIAL_POINT_Y + ((pCurveParam->modulusSizeByte + 3UL) / 4UL));
+  CCB_Memcpy_u8_to_u32(&HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECDSA_SIGN_IN_INITIAL_POINT_Y],
+                       pCurveParam->pPointY, pCurveParam->modulusSizeByte);
+  RAM_PARAM_END(HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM,
+                PKA_ECDSA_SIGN_IN_INITIAL_POINT_Y + ((pCurveParam->modulusSizeByte + 3UL) / 4UL));
 
   /* Move the input parameters hash of message z to PKA RAM */
-  CCB_Memcpy_u8_to_u32(&PKA->RAM[PKA_ECDSA_SIGN_IN_HASH_E], pHash, pCurveParam->primeOrderSizeByte);
-  RAM_PARAM_END(PKA->RAM, PKA_ECDSA_SIGN_IN_HASH_E + ((pCurveParam->primeOrderSizeByte + 3UL) / 4UL));
+  CCB_Memcpy_u8_to_u32(&HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECDSA_SIGN_IN_HASH_E], pHash,
+                       pCurveParam->primeOrderSizeByte);
+  RAM_PARAM_END(HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM,
+                PKA_ECDSA_SIGN_IN_HASH_E + ((pCurveParam->primeOrderSizeByte + 3UL) / 4UL));
 
   /* Move the input parameters private key d to PKA RAM */
-  CCB_Memcpy_u8_to_u32(&PKA->RAM[PKA_ECDSA_SIGN_IN_PRIVATE_KEY_D], pClearPrivateKey, pCurveParam->primeOrderSizeByte);
-  RAM_PARAM_END(PKA->RAM, PKA_ECDSA_SIGN_IN_PRIVATE_KEY_D + ((pCurveParam->primeOrderSizeByte + 3UL) / 4UL));
+  CCB_Memcpy_u8_to_u32(&HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECDSA_SIGN_IN_PRIVATE_KEY_D],
+                       pClearPrivateKey, pCurveParam->primeOrderSizeByte);
+  RAM_PARAM_END(HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM,
+                PKA_ECDSA_SIGN_IN_PRIVATE_KEY_D + ((pCurveParam->primeOrderSizeByte + 3UL) / 4UL));
 
   /* Move the input parameters prime order n to PKA RAM */
-  CCB_Memcpy_u8_to_u32(&PKA->RAM[PKA_ECDSA_SIGN_IN_ORDER_N], pCurveParam->pPrimeOrder,
-                       pCurveParam->primeOrderSizeByte);
-  RAM_PARAM_END(PKA->RAM, PKA_ECDSA_SIGN_IN_ORDER_N + ((pCurveParam->primeOrderSizeByte + 3UL) / 4UL));
+  CCB_Memcpy_u8_to_u32(&HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECDSA_SIGN_IN_ORDER_N],
+                       pCurveParam->pPrimeOrder, pCurveParam->primeOrderSizeByte);
+  RAM_PARAM_END(HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM,
+                PKA_ECDSA_SIGN_IN_ORDER_N + ((pCurveParam->primeOrderSizeByte + 3UL) / 4UL));
 
   /* Init tickstart for timeout management*/
   tickstart = HAL_GetTick();
 
   /* Set the mode and deactivate the interrupts */
-  MODIFY_REG(PKA->CR, PKA_CR_MODE | PKA_CR_PROCENDIE | PKA_CR_RAMERRIE | PKA_CR_ADDRERRIE | PKA_CR_OPERRIE,
+  MODIFY_REG(HAL_CCB_GET_PKA_INSTANCE(hccb)->CR,
+             PKA_CR_MODE | PKA_CR_PROCENDIE | PKA_CR_RAMERRIE | PKA_CR_ADDRERRIE | PKA_CR_OPERRIE,
              CCB_PKA_ECDSA_SIGNATURE_MODE << PKA_CR_MODE_Pos);
 
   /* Start the computation */
-  PKA->CR |= PKA_CR_START;
+  HAL_CCB_GET_PKA_INSTANCE(hccb)->CR |= PKA_CR_START;
 
   /* Wait for the end of operation or timeout */
-  while ((PKA->SR & PKA_SR_PROCENDF) == 0UL)
+  while ((HAL_CCB_GET_PKA_INSTANCE(hccb)->SR & PKA_SR_PROCENDF) == 0UL)
   {
     if (((HAL_GetTick() - tickstart) > timeout) || (timeout == 0UL))
     {
       /* Abort any ongoing operation */
-      CLEAR_BIT(PKA->CR, PKA_CR_EN);
+      CLEAR_BIT(HAL_CCB_GET_PKA_INSTANCE(hccb)->CR, PKA_CR_EN);
       /* Make ready for the next operation */
-      SET_BIT(PKA->CR, PKA_CR_EN);
+      SET_BIT(HAL_CCB_GET_PKA_INSTANCE(hccb)->CR, PKA_CR_EN);
 
       return HAL_TIMEOUT;
     }
@@ -5008,12 +5658,15 @@ static HAL_StatusTypeDef PKA_ECDSASign(CCB_ECDSACurveParamTypeDef *pCurveParam,
   }
 
   /* Clear all flags */
-  PKA->CLRFR |= (PKA_CLRFR_PROCENDFC | PKA_CLRFR_RAMERRFC | PKA_CLRFR_ADDRERRFC | PKA_CLRFR_OPERRFC);
+  HAL_CCB_GET_PKA_INSTANCE(hccb)->CLRFR |= (PKA_CLRFR_PROCENDFC | PKA_CLRFR_RAMERRFC | PKA_CLRFR_ADDRERRFC
+                                            | PKA_CLRFR_OPERRFC);
 
-  CCB_Memcpy_u32_to_u8(pSignature->pRSign, &PKA->RAM[PKA_ECDSA_SIGN_OUT_SIGNATURE_R], pCurveParam->primeOrderSizeByte);
-  CCB_Memcpy_u32_to_u8(pSignature->pSSign, &PKA->RAM[PKA_ECDSA_SIGN_OUT_SIGNATURE_S], pCurveParam->primeOrderSizeByte);
+  CCB_Memcpy_u32_to_u8(pSignature->pRSign, &HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECDSA_SIGN_OUT_SIGNATURE_R],
+                       pCurveParam->primeOrderSizeByte);
+  CCB_Memcpy_u32_to_u8(pSignature->pSSign, &HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECDSA_SIGN_OUT_SIGNATURE_S],
+                       pCurveParam->primeOrderSizeByte);
 
-  if (PKA_RAM_Erase() != HAL_OK)
+  if (PKA_RAM_Erase(hccb) != HAL_OK)
   {
     /* return error */
     return HAL_ERROR;
@@ -5024,95 +5677,110 @@ static HAL_StatusTypeDef PKA_ECDSASign(CCB_ECDSACurveParamTypeDef *pCurveParam,
 
 /**
   * @brief  Blob Usage: ECC Compute Scalar Multiplication.
+  * @param  hccb CCB handle.
   * @param  pCurveParam pointer to the Curve parameters.
   * @param  pClearPrivateKey pointer to the related wrapped Private Key Blob.
   * @param  PublicKey is table of two coordinates X and Y of the publicKey.
   * @retval HAL status.
   */
-static HAL_StatusTypeDef PKA_ECC_ComputeScalarMul(CCB_ECCMulCurveParamTypeDef *pCurveParam,
+static HAL_StatusTypeDef PKA_ECC_ComputeScalarMul(CCB_HandleTypeDef *hccb, CCB_ECCMulCurveParamTypeDef *pCurveParam,
                                                   const uint8_t *pClearPrivateKey, uint32_t PublicKey[2][20])
 {
   uint32_t tickstart;
   uint32_t timeout = HAL_CCB_TIMEOUT_DEFAULT_VALUE;
 
-  /*********************************************************************************** Set input parameter in PKA RAM */
+  /********************************************************************************** Set input parameter in PKA RAM */
   /* Get the prime order n length */
-  PKA->RAM[PKA_ECC_SCALAR_MUL_IN_EXP_NB_BITS] = GetOptBitSize_u8(pCurveParam->primeOrderSizeByte,
-                                                                 *(pCurveParam->pPrimeOrder));
+  HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECC_SCALAR_MUL_IN_EXP_NB_BITS]\
+    = GetOptBitSize_u8(pCurveParam->primeOrderSizeByte, *(pCurveParam->pPrimeOrder));
 
   /* Get the modulus length */
-  PKA->RAM[PKA_ECC_SCALAR_MUL_IN_OP_NB_BITS] = GetOptBitSize_u8(pCurveParam->modulusSizeByte,
-                                                                *(pCurveParam->pModulus));
+  HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECC_SCALAR_MUL_IN_OP_NB_BITS]\
+    = GetOptBitSize_u8(pCurveParam->modulusSizeByte, *(pCurveParam->pModulus));
 
   /* Get the coefficient a sign */
-  PKA->RAM[PKA_ECC_SCALAR_MUL_IN_A_COEFF_SIGN] = pCurveParam->coefSignA;
+  HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECC_SCALAR_MUL_IN_A_COEFF_SIGN] = pCurveParam->coefSignA;
 
   /* Move the input parameters coefficient |a| to PKA RAM */
-  CCB_Memcpy_u8_to_u32(&PKA->RAM[PKA_ECC_SCALAR_MUL_IN_A_COEFF], pCurveParam->pAbsCoefA, pCurveParam->modulusSizeByte);
-  RAM_PARAM_END(PKA->RAM, PKA_ECC_SCALAR_MUL_IN_A_COEFF + ((pCurveParam->modulusSizeByte + 3UL) / 4UL));
+  CCB_Memcpy_u8_to_u32(&HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECC_SCALAR_MUL_IN_A_COEFF], pCurveParam->pAbsCoefA,
+                       pCurveParam->modulusSizeByte);
+  RAM_PARAM_END(HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM,
+                PKA_ECC_SCALAR_MUL_IN_A_COEFF + ((pCurveParam->modulusSizeByte + 3UL) / 4UL));
 
   /* Move the input parameters coefficient b to PKA RAM */
-  CCB_Memcpy_u8_to_u32(&PKA->RAM[PKA_ECC_SCALAR_MUL_IN_B_COEFF], pCurveParam->pCoefB, pCurveParam->modulusSizeByte);
-  RAM_PARAM_END(PKA->RAM, PKA_ECC_SCALAR_MUL_IN_B_COEFF + ((pCurveParam->modulusSizeByte + 3UL) / 4UL));
+  CCB_Memcpy_u8_to_u32(&HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECC_SCALAR_MUL_IN_B_COEFF], pCurveParam->pCoefB,
+                       pCurveParam->modulusSizeByte);
+  RAM_PARAM_END(HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM,
+                PKA_ECC_SCALAR_MUL_IN_B_COEFF + ((pCurveParam->modulusSizeByte + 3UL) / 4UL));
 
   /* Move the input parameters modulus value p to PKA RAM */
-  CCB_Memcpy_u8_to_u32(&PKA->RAM[PKA_ECC_SCALAR_MUL_IN_MOD_GF], pCurveParam->pModulus, pCurveParam->modulusSizeByte);
-  RAM_PARAM_END(PKA->RAM, PKA_ECC_SCALAR_MUL_IN_MOD_GF + ((pCurveParam->modulusSizeByte + 3UL) / 4UL));
+  CCB_Memcpy_u8_to_u32(&HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECC_SCALAR_MUL_IN_MOD_GF], pCurveParam->pModulus,
+                       pCurveParam->modulusSizeByte);
+  RAM_PARAM_END(HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM,
+                PKA_ECC_SCALAR_MUL_IN_MOD_GF + ((pCurveParam->modulusSizeByte + 3UL) / 4UL));
 
   /* Move the input parameters scalar multiplier k to PKA RAM */
-  CCB_Memcpy_u8_to_u32(&PKA->RAM[PKA_ECC_SCALAR_MUL_IN_K], pClearPrivateKey, pCurveParam->primeOrderSizeByte);
-  RAM_PARAM_END(PKA->RAM, PKA_ECC_SCALAR_MUL_IN_K + ((pCurveParam->primeOrderSizeByte + 3UL) / 4UL));
+  CCB_Memcpy_u8_to_u32(&HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECC_SCALAR_MUL_IN_K], pClearPrivateKey,
+                       pCurveParam->primeOrderSizeByte);
+  RAM_PARAM_END(HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM,
+                PKA_ECC_SCALAR_MUL_IN_K + ((pCurveParam->primeOrderSizeByte + 3UL) / 4UL));
 
   /* Move the input parameters Point P coordinate x to PKA RAM */
-  CCB_Memcpy_u8_to_u32(&PKA->RAM[PKA_ECC_SCALAR_MUL_IN_INITIAL_POINT_X], pCurveParam->pPointX,
-                       pCurveParam->modulusSizeByte);
-  RAM_PARAM_END(PKA->RAM, PKA_ECC_SCALAR_MUL_IN_INITIAL_POINT_X + ((pCurveParam->modulusSizeByte + 3UL) / 4UL));
+  CCB_Memcpy_u8_to_u32(&HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECC_SCALAR_MUL_IN_INITIAL_POINT_X],
+                       pCurveParam->pPointX, pCurveParam->modulusSizeByte);
+  RAM_PARAM_END(HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM,
+                PKA_ECC_SCALAR_MUL_IN_INITIAL_POINT_X + ((pCurveParam->modulusSizeByte + 3UL) / 4UL));
 
   /* Move the input parameters Point P coordinate y to PKA RAM */
-  CCB_Memcpy_u8_to_u32(&PKA->RAM[PKA_ECC_SCALAR_MUL_IN_INITIAL_POINT_Y], pCurveParam->pPointY,
-                       pCurveParam->modulusSizeByte);
-  RAM_PARAM_END(PKA->RAM, PKA_ECC_SCALAR_MUL_IN_INITIAL_POINT_Y + ((pCurveParam->modulusSizeByte + 3UL) / 4UL));
+  CCB_Memcpy_u8_to_u32(&HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECC_SCALAR_MUL_IN_INITIAL_POINT_Y],
+                       pCurveParam->pPointY, pCurveParam->modulusSizeByte);
+  RAM_PARAM_END(HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM,
+                PKA_ECC_SCALAR_MUL_IN_INITIAL_POINT_Y + ((pCurveParam->modulusSizeByte + 3UL) / 4UL));
 
   /* Move the input parameters curve prime order N to PKA RAM */
-  CCB_Memcpy_u8_to_u32(&PKA->RAM[PKA_ECC_SCALAR_MUL_IN_N_PRIME_ORDER], pCurveParam->pPrimeOrder,
+  CCB_Memcpy_u8_to_u32(&HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECC_SCALAR_MUL_IN_N_PRIME_ORDER],
+                       pCurveParam->pPrimeOrder,
                        pCurveParam->modulusSizeByte);
-  RAM_PARAM_END(PKA->RAM, PKA_ECC_SCALAR_MUL_IN_N_PRIME_ORDER + ((pCurveParam->modulusSizeByte + 3UL) / 4UL));
+  RAM_PARAM_END(HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM,
+                PKA_ECC_SCALAR_MUL_IN_N_PRIME_ORDER + ((pCurveParam->modulusSizeByte + 3UL) / 4UL));
 
-  /********************************************************************************************** Start the operation */
+  /******************************************************************************************** Start the operation */
   /* Init tickstart for timeout management*/
   tickstart = HAL_GetTick();
 
   /* Set the mode and deactivate the interrupts */
-  MODIFY_REG(PKA->CR, PKA_CR_MODE | PKA_CR_PROCENDIE | PKA_CR_RAMERRIE | PKA_CR_ADDRERRIE | PKA_CR_OPERRIE,
+  MODIFY_REG(HAL_CCB_GET_PKA_INSTANCE(hccb)->CR,
+             PKA_CR_MODE | PKA_CR_PROCENDIE | PKA_CR_RAMERRIE | PKA_CR_ADDRERRIE | PKA_CR_OPERRIE,
              CCB_PKA_ECC_MUL_MODE << PKA_CR_MODE_Pos);
 
   /* Start the computation */
-  PKA->CR |= PKA_CR_START;
+  HAL_CCB_GET_PKA_INSTANCE(hccb)->CR |= PKA_CR_START;
 
   /* Wait for the end of operation or timeout */
-  while ((PKA->SR & PKA_SR_PROCENDF) == 0UL)
+  while ((HAL_CCB_GET_PKA_INSTANCE(hccb)->SR & PKA_SR_PROCENDF) == 0UL)
   {
     if (((HAL_GetTick() - tickstart) > timeout) || (timeout == 0UL))
     {
       /* Abort any ongoing operation */
-      CLEAR_BIT(PKA->CR, PKA_CR_EN);
+      CLEAR_BIT(HAL_CCB_GET_PKA_INSTANCE(hccb)->CR, PKA_CR_EN);
       /* Make ready for the next operation */
-      SET_BIT(PKA->CR, PKA_CR_EN);
+      SET_BIT(HAL_CCB_GET_PKA_INSTANCE(hccb)->CR, PKA_CR_EN);
 
       return HAL_TIMEOUT;
     }
   }
 
   /* Clear all flags */
-  PKA->CLRFR |= (PKA_CLRFR_PROCENDFC | PKA_CLRFR_RAMERRFC | PKA_CLRFR_ADDRERRFC | PKA_CLRFR_OPERRFC);
+  HAL_CCB_GET_PKA_INSTANCE(hccb)->CLRFR |= (PKA_CLRFR_PROCENDFC | PKA_CLRFR_RAMERRFC | PKA_CLRFR_ADDRERRFC
+                                            | PKA_CLRFR_OPERRFC);
   /* get PublicKey result */
   /* Move the result from appropriate location (with opprand size in 32bit word ) */
-  CCB_Memcpy_u32_to_u32(PublicKey[0], &PKA->RAM[PKA_ECC_SCALAR_MUL_OUT_RESULT_X],
+  CCB_Memcpy_u32_to_u32(PublicKey[0], &HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECC_SCALAR_MUL_OUT_RESULT_X],
                         ((pCurveParam->modulusSizeByte + 3UL) / 4UL));
-  CCB_Memcpy_u32_to_u32(PublicKey[1], &PKA->RAM[PKA_ECC_SCALAR_MUL_OUT_RESULT_Y],
+  CCB_Memcpy_u32_to_u32(PublicKey[1], &HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECC_SCALAR_MUL_OUT_RESULT_Y],
                         ((pCurveParam->modulusSizeByte + 3UL) / 4UL));
 
-  if (PKA_RAM_Erase() != HAL_OK)
+  if (PKA_RAM_Erase(hccb) != HAL_OK)
   {
     /* return error */
     return HAL_ERROR;
@@ -5123,69 +5791,80 @@ static HAL_StatusTypeDef PKA_ECC_ComputeScalarMul(CCB_ECCMulCurveParamTypeDef *p
 
 /**
   * @brief  Compute CCB Modular exponentiation.
+  * @param  hccb CCB handle.
   * @param  pParam pointer to the modular exponatiation parameters.
   * @param  pRSAClearPrivateKey pointer to the clear Private Key.
   * @param  pOp1 Pointer to Operand 1 (Array of size elements).
   * @param  pReferenceModularExp pointer to the ReferenceModularExp computed in modular exponentiation Blob creation.
   * @retval HAL status.
   */
-static HAL_StatusTypeDef PKA_RSA_ComputeModularExp(CCB_RSAParamTypeDef *pParam,
+static HAL_StatusTypeDef PKA_RSA_ComputeModularExp(CCB_HandleTypeDef *hccb, CCB_RSAParamTypeDef *pParam,
                                                    const CCB_RSAClearKeyTypeDef *pRSAClearPrivateKey,
                                                    uint8_t *pOp1, uint32_t *pReferenceModularExp)
 {
   uint32_t tickstart = HAL_GetTick();
 
   /* Get the number of bit per operand */
-  PKA->RAM[PKA_MODULAR_EXP_IN_OP_NB_BITS] = pParam->modulusSizeByte * 8U;
+  HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_MODULAR_EXP_IN_OP_NB_BITS] = pParam->modulusSizeByte * 8U;
 
   /* Get the number of bit of the exponent */
-  PKA->RAM[PKA_MODULAR_EXP_IN_EXP_NB_BITS] = pParam->expSizeByte * 8U;
+  HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_MODULAR_EXP_IN_EXP_NB_BITS] = pParam->expSizeByte * 8U;
 
   /* Move the input parameters pOp1 to PKA RAM */
-  CCB_Memcpy_u8_to_u32(&PKA->RAM[PKA_MODULAR_EXP_PROTECT_IN_EXPONENT_BASE], pOp1, pParam->modulusSizeByte);
-  RAM_PARAM_END(PKA->RAM, PKA_MODULAR_EXP_PROTECT_IN_EXPONENT_BASE + ((pParam->modulusSizeByte + 3UL) / 4UL));
+  CCB_Memcpy_u8_to_u32(&HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_MODULAR_EXP_PROTECT_IN_EXPONENT_BASE], pOp1,
+                       pParam->modulusSizeByte);
+  RAM_PARAM_END(HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM,
+                PKA_MODULAR_EXP_PROTECT_IN_EXPONENT_BASE + ((pParam->modulusSizeByte + 3UL) / 4UL));
 
   /* Move the exponent to PKA RAM */
-  CCB_Memcpy_u8_to_u32(&PKA->RAM[PKA_MODULAR_EXP_PROTECT_IN_EXPONENT], pRSAClearPrivateKey->pExp, pParam->expSizeByte);
-  RAM_PARAM_END(PKA->RAM, PKA_MODULAR_EXP_PROTECT_IN_EXPONENT + ((pParam->expSizeByte + 3UL) / 4UL));
+  CCB_Memcpy_u8_to_u32(&HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_MODULAR_EXP_PROTECT_IN_EXPONENT],
+                       pRSAClearPrivateKey->pExp, pParam->expSizeByte);
+  RAM_PARAM_END(HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM,
+                PKA_MODULAR_EXP_PROTECT_IN_EXPONENT + ((pParam->expSizeByte + 3UL) / 4UL));
 
   /* Move the modulus to PKA RAM */
-  CCB_Memcpy_u8_to_u32(&PKA->RAM[PKA_MODULAR_EXP_PROTECT_IN_MODULUS], pParam->pMod, pParam->modulusSizeByte);
-  RAM_PARAM_END(PKA->RAM, PKA_MODULAR_EXP_PROTECT_IN_MODULUS + ((pParam->modulusSizeByte + 3UL) / 4UL));
+  CCB_Memcpy_u8_to_u32(&HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_MODULAR_EXP_PROTECT_IN_MODULUS], pParam->pMod,
+                       pParam->modulusSizeByte);
+  RAM_PARAM_END(HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM,
+                PKA_MODULAR_EXP_PROTECT_IN_MODULUS + ((pParam->modulusSizeByte + 3UL) / 4UL));
 
   /* Move Phi value to PKA RAM */
-  CCB_Memcpy_u8_to_u32(&PKA->RAM[PKA_MODULAR_EXP_PROTECT_IN_PHI], pRSAClearPrivateKey->pPhi, pParam->modulusSizeByte);
-  RAM_PARAM_END(PKA->RAM, PKA_MODULAR_EXP_PROTECT_IN_PHI + ((pParam->modulusSizeByte + 3UL) / 4UL));
+  CCB_Memcpy_u8_to_u32(&HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_MODULAR_EXP_PROTECT_IN_PHI],
+                       pRSAClearPrivateKey->pPhi, pParam->modulusSizeByte);
+  RAM_PARAM_END(HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM,
+                PKA_MODULAR_EXP_PROTECT_IN_PHI + ((pParam->modulusSizeByte + 3UL) / 4UL));
 
   /* Set the mode and deactivate the interrupts */
-  MODIFY_REG(PKA->CR, PKA_CR_MODE | PKA_CR_PROCENDIE | PKA_CR_RAMERRIE | PKA_CR_ADDRERRIE | PKA_CR_OPERRIE,
+  MODIFY_REG(HAL_CCB_GET_PKA_INSTANCE(hccb)->CR,
+             PKA_CR_MODE | PKA_CR_PROCENDIE | PKA_CR_RAMERRIE | PKA_CR_ADDRERRIE | PKA_CR_OPERRIE,
              CCB_PKA_MODE_MODULAR_EXP_PROTECT << PKA_CR_MODE_Pos);
 
   /* Start the computation */
-  PKA->CR |= PKA_CR_START;
+  HAL_CCB_GET_PKA_INSTANCE(hccb)->CR |= PKA_CR_START;
 
   /* Wait for the end of operation or timeout */
-  while ((PKA->SR & PKA_SR_PROCENDF) == 0UL)
+  while ((HAL_CCB_GET_PKA_INSTANCE(hccb)->SR & PKA_SR_PROCENDF) == 0UL)
   {
     /* Check if timeout is disabled (set to infinite wait) */
     if ((HAL_GetTick() - tickstart) > HAL_CCB_TIMEOUT_DEFAULT_VALUE)
     {
       /* Abort any ongoing operation */
-      CLEAR_BIT(PKA->CR, PKA_CR_EN);
+      CLEAR_BIT(HAL_CCB_GET_PKA_INSTANCE(hccb)->CR, PKA_CR_EN);
       /* Make ready for the next operation */
-      SET_BIT(PKA->CR, PKA_CR_EN);
+      SET_BIT(HAL_CCB_GET_PKA_INSTANCE(hccb)->CR, PKA_CR_EN);
       return HAL_TIMEOUT;
     }
   }
 
   /* Clear all flags */
-  PKA->CLRFR |= (PKA_CLRFR_PROCENDFC | PKA_CLRFR_RAMERRFC | PKA_CLRFR_ADDRERRFC | PKA_CLRFR_OPERRFC);
+  HAL_CCB_GET_PKA_INSTANCE(hccb)->CLRFR |= (PKA_CLRFR_PROCENDFC | PKA_CLRFR_RAMERRFC | PKA_CLRFR_ADDRERRFC
+                                            | PKA_CLRFR_OPERRFC);
 
   /* Move the result from appropriate location (with opprand size in 32bit word ) */
-  CCB_Memcpy_u32_to_u32(pReferenceModularExp, &PKA->RAM[PKA_MODULAR_EXP_OUT_RESULT],
+  CCB_Memcpy_u32_to_u32(pReferenceModularExp, &HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_MODULAR_EXP_OUT_RESULT],
                         ((pParam->modulusSizeByte + 3UL) / 4UL));
 
-  if (PKA_RAM_Erase() != HAL_OK)
+  if (PKA_RAM_Erase(hccb) != HAL_OK)
   {
     /* return error */
     return HAL_ERROR;
@@ -5194,15 +5873,17 @@ static HAL_StatusTypeDef PKA_RSA_ComputeModularExp(CCB_RSAParamTypeDef *pParam,
   return HAL_OK;
 }
 
+#endif /* GENERATOR_SW_SANITY_CHECK_AVAILABLE_ALL_DEVICES */
 /**
  @brief  Verify the validity of a signature using elliptic curves over prime fields in blocking mode.
+  * @param  hccb CCB handle.
   * @param  pCurveParam pointer to the Curve parameters.
   * @param  pPublicKeyOut pointer to the public key.
   * @param  pHash pointer to the hash.
   * @param  pSignature Pointer to input signature
   * @retval HAL status.
   */
-static HAL_StatusTypeDef PKA_ECDSAVerif(CCB_ECDSACurveParamTypeDef *pCurveParam,
+static HAL_StatusTypeDef PKA_ECDSAVerif(CCB_HandleTypeDef *hccb, CCB_ECDSACurveParamTypeDef *pCurveParam,
                                         CCB_ECCMulPointTypeDef *pPublicKeyOut, const uint8_t *pHash,
                                         CCB_ECDSASignTypeDef *pSignature)
 {
@@ -5211,102 +5892,124 @@ static HAL_StatusTypeDef PKA_ECDSAVerif(CCB_ECDSACurveParamTypeDef *pCurveParam,
 
   /* Set CCB input parameter in PKA RAM */
   /* Get the prime order n length */
-  PKA->RAM[PKA_ECDSA_VERIF_IN_ORDER_NB_BITS] = GetOptBitSize_u8(pCurveParam->primeOrderSizeByte,
-                                                                *(pCurveParam->pPrimeOrder));
+  HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECDSA_VERIF_IN_ORDER_NB_BITS] \
+    = GetOptBitSize_u8(pCurveParam->primeOrderSizeByte, *(pCurveParam->pPrimeOrder));
 
   /* Get the modulus p length */
-  PKA->RAM[PKA_ECDSA_VERIF_IN_MOD_NB_BITS] = GetOptBitSize_u8(pCurveParam->modulusSizeByte, *(pCurveParam->pModulus));
+  HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECDSA_VERIF_IN_MOD_NB_BITS] \
+    = GetOptBitSize_u8(pCurveParam->modulusSizeByte, *(pCurveParam->pModulus));
 
   /* Get the coefficient a sign */
-  PKA->RAM[PKA_ECDSA_VERIF_IN_A_COEFF_SIGN] = pCurveParam->coefSignA;
+  HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECDSA_VERIF_IN_A_COEFF_SIGN] = pCurveParam->coefSignA;
 
   /* Move the input parameters coefficient |a| to PKA RAM */
-  CCB_Memcpy_u8_to_u32(&PKA->RAM[PKA_ECDSA_VERIF_IN_A_COEFF], pCurveParam->pAbsCoefA, pCurveParam->modulusSizeByte);
-  RAM_PARAM_END(PKA->RAM, PKA_ECDSA_VERIF_IN_A_COEFF + ((pCurveParam->modulusSizeByte + 3UL) / 4UL));
+  CCB_Memcpy_u8_to_u32(&HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECDSA_VERIF_IN_A_COEFF], pCurveParam->pAbsCoefA,
+                       pCurveParam->modulusSizeByte);
+  RAM_PARAM_END(HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM,
+                PKA_ECDSA_VERIF_IN_A_COEFF + ((pCurveParam->modulusSizeByte + 3UL) / 4UL));
 
   /* Move the input parameters modulus value p to PKA RAM */
-  CCB_Memcpy_u8_to_u32(&PKA->RAM[PKA_ECDSA_VERIF_IN_MOD_GF], pCurveParam->pModulus, pCurveParam->modulusSizeByte);
-  RAM_PARAM_END(PKA->RAM, PKA_ECDSA_VERIF_IN_MOD_GF + ((pCurveParam->modulusSizeByte + 3UL) / 4UL));
+  CCB_Memcpy_u8_to_u32(&HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECDSA_VERIF_IN_MOD_GF], pCurveParam->pModulus,
+                       pCurveParam->modulusSizeByte);
+  RAM_PARAM_END(HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM,
+                PKA_ECDSA_VERIF_IN_MOD_GF + ((pCurveParam->modulusSizeByte + 3UL) / 4UL));
 
   /* Move the input parameters base point G coordinate x to PKA RAM */
-  CCB_Memcpy_u8_to_u32(&PKA->RAM[PKA_ECDSA_VERIF_IN_INITIAL_POINT_X], pCurveParam->pPointX,
-                       pCurveParam->modulusSizeByte);
-  RAM_PARAM_END(PKA->RAM, PKA_ECDSA_VERIF_IN_INITIAL_POINT_X + ((pCurveParam->modulusSizeByte + 3UL) / 4UL));
+  CCB_Memcpy_u8_to_u32(&HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECDSA_VERIF_IN_INITIAL_POINT_X],
+                       pCurveParam->pPointX, pCurveParam->modulusSizeByte);
+  RAM_PARAM_END(HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM,
+                PKA_ECDSA_VERIF_IN_INITIAL_POINT_X + ((pCurveParam->modulusSizeByte + 3UL) / 4UL));
 
   /* Move the input parameters base point G coordinate y to PKA RAM */
-  CCB_Memcpy_u8_to_u32(&PKA->RAM[PKA_ECDSA_VERIF_IN_INITIAL_POINT_Y], pCurveParam->pPointY,
-                       pCurveParam->modulusSizeByte);
-  RAM_PARAM_END(PKA->RAM, PKA_ECDSA_VERIF_IN_INITIAL_POINT_Y + ((pCurveParam->modulusSizeByte + 3UL) / 4UL));
+  CCB_Memcpy_u8_to_u32(&HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECDSA_VERIF_IN_INITIAL_POINT_Y],
+                       pCurveParam->pPointY, pCurveParam->modulusSizeByte);
+  RAM_PARAM_END(HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM,
+                PKA_ECDSA_VERIF_IN_INITIAL_POINT_Y + ((pCurveParam->modulusSizeByte + 3UL) / 4UL));
 
   /* Move the input parameters public-key curve point Q coordinate xQ to PKA RAM */
-  CCB_Memcpy_u8_to_u32(&PKA->RAM[PKA_ECDSA_VERIF_IN_PUBLIC_KEY_POINT_X], pPublicKeyOut->pPointX,
+  CCB_Memcpy_u8_to_u32(&HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECDSA_VERIF_IN_PUBLIC_KEY_POINT_X],
+                       pPublicKeyOut->pPointX,
                        pCurveParam->modulusSizeByte);
-  RAM_PARAM_END(PKA->RAM, PKA_ECDSA_VERIF_IN_PUBLIC_KEY_POINT_X + ((pCurveParam->modulusSizeByte + 3UL) / 4UL));
+  RAM_PARAM_END(HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM,
+                PKA_ECDSA_VERIF_IN_PUBLIC_KEY_POINT_X + ((pCurveParam->modulusSizeByte + 3UL) / 4UL));
 
   /* Move the input parameters public-key curve point Q coordinate xQ to PKA RAM */
-  CCB_Memcpy_u8_to_u32(&PKA->RAM[PKA_ECDSA_VERIF_IN_PUBLIC_KEY_POINT_Y], pPublicKeyOut->pPointY,
+  CCB_Memcpy_u8_to_u32(&HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECDSA_VERIF_IN_PUBLIC_KEY_POINT_Y],
+                       pPublicKeyOut->pPointY,
                        pCurveParam->modulusSizeByte);
-  RAM_PARAM_END(PKA->RAM, PKA_ECDSA_VERIF_IN_PUBLIC_KEY_POINT_Y + ((pCurveParam->modulusSizeByte + 3UL) / 4UL));
+  RAM_PARAM_END(HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM,
+                PKA_ECDSA_VERIF_IN_PUBLIC_KEY_POINT_Y + ((pCurveParam->modulusSizeByte + 3UL) / 4UL));
 
   /* Move the input parameters signature part r to PKA RAM */
-  CCB_Memcpy_u8_to_u32(&PKA->RAM[PKA_ECDSA_VERIF_IN_SIGNATURE_R], pSignature->pRSign, pCurveParam->primeOrderSizeByte);
-  RAM_PARAM_END(PKA->RAM, PKA_ECDSA_VERIF_IN_SIGNATURE_R + ((pCurveParam->primeOrderSizeByte + 3UL) / 4UL));
+  CCB_Memcpy_u8_to_u32(&HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECDSA_VERIF_IN_SIGNATURE_R], pSignature->pRSign,
+                       pCurveParam->primeOrderSizeByte);
+  RAM_PARAM_END(HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM,
+                PKA_ECDSA_VERIF_IN_SIGNATURE_R + ((pCurveParam->primeOrderSizeByte + 3UL) / 4UL));
 
   /* Move the input parameters signature part s to PKA RAM */
-  CCB_Memcpy_u8_to_u32(&PKA->RAM[PKA_ECDSA_VERIF_IN_SIGNATURE_S], pSignature->pSSign, pCurveParam->primeOrderSizeByte);
-  RAM_PARAM_END(PKA->RAM, PKA_ECDSA_VERIF_IN_SIGNATURE_S + ((pCurveParam->primeOrderSizeByte + 3UL) / 4UL));
+  CCB_Memcpy_u8_to_u32(&HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECDSA_VERIF_IN_SIGNATURE_S], pSignature->pSSign,
+                       pCurveParam->primeOrderSizeByte);
+  RAM_PARAM_END(HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM,
+                PKA_ECDSA_VERIF_IN_SIGNATURE_S + ((pCurveParam->primeOrderSizeByte + 3UL) / 4UL));
 
   /* Move the input parameters hash of message z to PKA RAM */
-  CCB_Memcpy_u8_to_u32(&PKA->RAM[PKA_ECDSA_VERIF_IN_HASH_E], pHash, pCurveParam->primeOrderSizeByte);
-  RAM_PARAM_END(PKA->RAM, PKA_ECDSA_VERIF_IN_HASH_E + ((pCurveParam->primeOrderSizeByte + 3UL) / 4UL));
+  CCB_Memcpy_u8_to_u32(&HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECDSA_VERIF_IN_HASH_E], pHash,
+                       pCurveParam->primeOrderSizeByte);
+  RAM_PARAM_END(HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM,
+                PKA_ECDSA_VERIF_IN_HASH_E + ((pCurveParam->primeOrderSizeByte + 3UL) / 4UL));
 
   /* Move the input parameters curve prime order n to PKA RAM */
-  CCB_Memcpy_u8_to_u32(&PKA->RAM[PKA_ECDSA_VERIF_IN_ORDER_N], pCurveParam->pPrimeOrder,
+  CCB_Memcpy_u8_to_u32(&HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECDSA_VERIF_IN_ORDER_N], pCurveParam->pPrimeOrder,
                        pCurveParam->primeOrderSizeByte);
-  RAM_PARAM_END(PKA->RAM, PKA_ECDSA_VERIF_IN_ORDER_N + ((pCurveParam->primeOrderSizeByte + 3UL) / 4UL));
+  RAM_PARAM_END(HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM,
+                PKA_ECDSA_VERIF_IN_ORDER_N + ((pCurveParam->primeOrderSizeByte + 3UL) / 4UL));
 
 
   /* Set the mode and deactivate the interrupts */
-  MODIFY_REG(PKA->CR, PKA_CR_MODE | PKA_CR_PROCENDIE | PKA_CR_RAMERRIE | PKA_CR_ADDRERRIE | PKA_CR_OPERRIE,
+  MODIFY_REG(HAL_CCB_GET_PKA_INSTANCE(hccb)->CR,
+             PKA_CR_MODE | PKA_CR_PROCENDIE | PKA_CR_RAMERRIE | PKA_CR_ADDRERRIE | PKA_CR_OPERRIE,
              CCB_PKA_MODE_ECDSA_VERIFICATION << PKA_CR_MODE_Pos);
 
   /* Start the computation */
-  PKA->CR |= PKA_CR_START;
+  HAL_CCB_GET_PKA_INSTANCE(hccb)->CR |= PKA_CR_START;
 
   tickstart = HAL_GetTick();
   /* Wait for the end of operation or timeout */
-  while ((PKA->SR & PKA_SR_PROCENDF) == 0UL)
+  while ((HAL_CCB_GET_PKA_INSTANCE(hccb)->SR & PKA_SR_PROCENDF) == 0UL)
   {
     if (((HAL_GetTick() - tickstart) > timeout) || (timeout == 0UL))
     {
       /* Abort any ongoing operation */
-      CLEAR_BIT(PKA->CR, PKA_CR_EN);
+      CLEAR_BIT(HAL_CCB_GET_PKA_INSTANCE(hccb)->CR, PKA_CR_EN);
       /* Make ready for the next operation */
-      SET_BIT(PKA->CR, PKA_CR_EN);
+      SET_BIT(HAL_CCB_GET_PKA_INSTANCE(hccb)->CR, PKA_CR_EN);
       return HAL_TIMEOUT;
     }
   }
 
   /* Clear all flags */
-  PKA->CLRFR |= (PKA_CLRFR_PROCENDFC | PKA_CLRFR_RAMERRFC | PKA_CLRFR_ADDRERRFC | PKA_CLRFR_OPERRFC);
+  HAL_CCB_GET_PKA_INSTANCE(hccb)->CLRFR |= (PKA_CLRFR_PROCENDFC | PKA_CLRFR_RAMERRFC | PKA_CLRFR_ADDRERRFC
+                                            | PKA_CLRFR_OPERRFC);
 
   return HAL_OK;
 }
 
 /**
   * @brief  Return the result of the ECDSA verification operation.
+  * @param  hccb CCB handle.
   * @retval 1 if signature is verified, 0 in other case
   */
-static uint32_t PKA_ECDSAVerif_Result(void)
+static uint32_t PKA_ECDSAVerif_Result(CCB_HandleTypeDef *hccb)
 {
-  return (PKA->RAM[PKA_ECDSA_VERIF_OUT_RESULT]);
+  return (HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECDSA_VERIF_OUT_RESULT]);
 }
 
 /**
   * @brief  Reset the PKA RAM.
+  * @param  hccb CCB handle.
   * @retval None
   */
-static void CCB_PKA_RAMReset(void)
+static void CCB_PKA_RAMReset(CCB_HandleTypeDef *hccb)
 {
   uint32_t index;
 
@@ -5314,9 +6017,191 @@ static void CCB_PKA_RAMReset(void)
   for (index = 0; index < CCB_PKA_RAM_SIZE; index++)
   {
     /* Clear the content */
-    PKA->RAM[index] = 0UL;
+    HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[index] = 0UL;
   }
 }
+
+#if (defined(RNG_HTSR0_RPERRX) || defined(RNG_HTSR1_ADERRX))
+/**
+  * @brief  RNG sequence to resilient recover from a seed error
+  * @retval HAL status
+  */
+HAL_StatusTypeDef CCB_RNG_ResilientRecoverSeedError(CCB_HandleTypeDef *hccb)
+{
+  uint32_t timeout;
+  uint32_t htsr_temp = 0U;
+  uint32_t htsr_previous_temp = 0U;
+  uint32_t htsr_count = 0U;
+  uint32_t nsmr_temp = 0U;
+  uint32_t tickstart1 = 0U;
+  uint32_t tickstart2 = 0U;
+  uint32_t tickstart3 = 0U;
+  uint32_t oscillators_count = 0U;
+  uint32_t config_b_fewer_than_6_osc_count = 0U;
+  uint8_t count = 0U;
+
+  /* timeout here is an emperic value */
+  timeout = (1UL + ((1UL << (READ_BIT(HAL_CCB_GET_RNG_INSTANCE(hccb)->CR, RNG_CR_CLKDIV) >> 16UL))
+                    * CCB_RNG_TIMEOUT_VALUE / 8UL));
+  LL_RNG_Enable(HAL_CCB_GET_RNG_INSTANCE(hccb));
+
+  tickstart1 = HAL_GetTick();
+
+  /* Check if seed error current status indicates no error and auto-reset succeeded */
+  if (LL_RNG_IsActiveFlag_SECS(HAL_CCB_GET_RNG_INSTANCE(hccb)) == 0U)
+  {
+    /* Clear SEIS flag when automatic reset is activated */
+    LL_RNG_ClearFlag_SEIS(HAL_CCB_GET_RNG_INSTANCE(hccb));
+  }
+
+  else  /* Sequence to fully recover from a seed error*/
+  {
+    if (LL_RNG_IsConfigLocked(HAL_CCB_GET_RNG_INSTANCE(hccb)) == 0U)
+    {
+      do
+      {
+        if (LL_RNG_IsActiveFlag_SECS(HAL_CCB_GET_RNG_INSTANCE(hccb)) == 0U)
+        {
+          break;
+        }
+        /* Read oscillator status registers combined */
+        htsr_temp = LL_RNG_GetHealthTestStatus(HAL_CCB_GET_RNG_INSTANCE(hccb), 0U);
+        htsr_temp |= LL_RNG_GetHealthTestStatus(HAL_CCB_GET_RNG_INSTANCE(hccb), 1U);
+        if (htsr_temp > 0U)
+        {
+          /* If any oscillator status bits overlap with previous status, increment counter */
+          if ((htsr_temp & htsr_previous_temp) != 0U)
+          {
+            htsr_count++;
+          }
+
+          if (htsr_count > 3U)
+          {
+            /* if the same repetitive or adaptative error is detected 3 times */
+            nsmr_temp = LL_RNG_GetNoiseSourceMask(HAL_CCB_GET_RNG_INSTANCE(hccb));
+
+            /* deactivate the same osc in each triple oscillator (Mask oscillators with the seed error by
+            clearing bits shifted right by 1) */
+            nsmr_temp = nsmr_temp & ~(htsr_temp >> 1U);
+
+            /* Count the number of active oscillators in nsmr */
+            oscillators_count = 0U;
+            for (count = 0U; count < 9U; count++)
+            {
+              if (((nsmr_temp >> count) & 0x1U) != 0U)
+              {
+                /* increment count1 for each 1 in nsmr */
+                oscillators_count++;
+              }
+            }
+
+            if (oscillators_count < 6U)
+            {
+              /* If fewer than 6 oscillators remain active, unmask all oscillators --> Reset masking */
+              nsmr_temp = LL_RNG_GetOscNoiseSrc(HAL_CCB_GET_RNG_INSTANCE(hccb),
+                                                LL_RNG_NOISE_SRC_1 | LL_RNG_NOISE_SRC_2 | LL_RNG_NOISE_SRC_3);
+              htsr_previous_temp = 0;
+              htsr_count = 0U;
+              if ((HAL_CCB_GET_RNG_INSTANCE(hccb)->CR  & RNG_CR_CLKDIV_Msk) <
+                  ((uint32_t)RNG_CAND_NIST_CR_VALUE & RNG_CR_CLKDIV_Msk))
+              {
+                config_b_fewer_than_6_osc_count++;
+              }
+            }
+
+            if (config_b_fewer_than_6_osc_count > 2U)
+            {
+              /* Reset RNG condition */
+              WRITE_REG(HAL_CCB_GET_RNG_INSTANCE(hccb)->CR, (RNG_CR_CONDRST_Msk | (uint32_t)RNG_CAND_NIST_CR_VALUE));
+
+              /* Update mask register with new oscillator mask */
+              LL_RNG_SetNoiseSourceMask(HAL_CCB_GET_RNG_INSTANCE(hccb), nsmr_temp);
+
+              /* Clear condition reset bit to resume operation */
+              LL_RNG_DisableCondReset(HAL_CCB_GET_RNG_INSTANCE(hccb));
+            }
+
+            else
+            {
+              /* Reset RNG condition */
+              WRITE_REG(HAL_CCB_GET_RNG_INSTANCE(hccb)->CR,
+                        (HAL_CCB_GET_RNG_INSTANCE(hccb)->CR & ~RNG_CR_RNGEN_Msk) | RNG_CR_CONDRST_Msk);
+
+              /* Update mask register with new oscillator mask */
+              LL_RNG_SetNoiseSourceMask(HAL_CCB_GET_RNG_INSTANCE(hccb), nsmr_temp);
+
+              /* Clear condition reset bit to resume operation */
+              LL_RNG_DisableCondReset(HAL_CCB_GET_RNG_INSTANCE(hccb));
+            }
+          }
+
+          else
+          {
+            /* Briefly toggle conditional reset to recover RNG */
+            WRITE_REG(HAL_CCB_GET_RNG_INSTANCE(hccb)->CR,
+                      (HAL_CCB_GET_RNG_INSTANCE(hccb)->CR & ~RNG_CR_RNGEN_Msk) | RNG_CR_CONDRST_Msk);
+
+            /* unmask all oscillators to find another working condition */
+            LL_RNG_SetNoiseSourceMask(HAL_CCB_GET_RNG_INSTANCE(hccb),
+                                      LL_RNG_GetOscNoiseSrc(RNG, LL_RNG_OSC_1 | LL_RNG_OSC_2 | LL_RNG_OSC_3));
+            LL_RNG_DisableCondReset(HAL_CCB_GET_RNG_INSTANCE(hccb));
+          }
+
+          /* Wait until RNG is not busy */
+          tickstart2 = HAL_GetTick();
+          do
+          {
+            if ((HAL_GetTick() - tickstart2) > CCB_RNG_TIMEOUT_VALUE)
+            {
+              /* New check to avoid false timeout detection in case of preemption */
+              LL_RNG_Disable(HAL_CCB_GET_RNG_INSTANCE(hccb));
+              return HAL_ERROR;
+            }
+          } while (HAL_IS_BIT_SET(HAL_CCB_GET_RNG_INSTANCE(hccb)->SR, RNG_SR_BUSY));
+
+          /* No timeout --> Enable RNG */
+          LL_RNG_Enable(HAL_CCB_GET_RNG_INSTANCE(hccb));
+          tickstart3 = HAL_GetTick();
+          do
+          {
+            if (LL_RNG_IsActiveFlag_DRDY(HAL_CCB_GET_RNG_INSTANCE(hccb)) != 0UL)
+            {
+              break;
+            }
+            if ((HAL_GetTick() - tickstart3) > timeout)
+            {
+              /* New check to avoid false timeout detection in case of preemption */
+              if (LL_RNG_IsActiveFlag_DRDY(HAL_CCB_GET_RNG_INSTANCE(hccb)) == 0UL)
+              {
+                if (LL_RNG_IsActiveFlag_SECS(HAL_CCB_GET_RNG_INSTANCE(hccb)) == 0UL)
+                {
+                  LL_RNG_Disable(HAL_CCB_GET_RNG_INSTANCE(hccb));
+                  return HAL_ERROR;
+                }
+              }
+            }
+          } while (LL_RNG_IsActiveFlag_SECS(HAL_CCB_GET_RNG_INSTANCE(hccb)) == 0UL);
+
+          /* Accumulate seed error status bits */
+          htsr_previous_temp = htsr_previous_temp | htsr_temp;
+        }
+      } while ((HAL_GetTick() - tickstart1) <= timeout);
+    }
+  }
+
+  /*Check if seed error current status (SECS)is set */
+  if (LL_RNG_IsActiveFlag_SECS(HAL_CCB_GET_RNG_INSTANCE(hccb)) != 0U)
+  {
+    return HAL_ERROR;
+  }
+
+  return HAL_OK;
+}
+#endif /* RNG_HTSR0_RPERRX || RNG_HTSR1_ADERRX */
+
+/**
+  * @}
+  */
 
 /**
   * @}

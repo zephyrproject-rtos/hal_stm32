@@ -551,7 +551,7 @@ uint32_t HAL_I2S_GetError(const I2S_HandleTypeDef *hi2s);
 /** @defgroup I2S_Private_Functions I2S Private Functions
   * @{
   */
-/* Private functions are defined in stm32h7xx_hal_i2S.c file */
+/* Private functions are defined in stm32xxxx_hal_i2S.c file */
 /**
   * @}
   */

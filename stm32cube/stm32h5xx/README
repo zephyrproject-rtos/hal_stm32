@@ -6,7 +6,7 @@ Origin:
    https://www.st.com/en/embedded-software/stm32cubeh5.html
 
 Status:
-   version 1.6.0
+   version 1.7.0
 
 Purpose:
    STMicroelectronics official MCU package for STM32H5 series.
@@ -23,7 +23,7 @@ URL:
    https://github.com/STMicroelectronics/STM32CubeH5
 
 Commit:
-   e25dd1b1d0e8871627e79e2d1453687f0f22835c
+   4e039436d8561003a1d88b78a1520f3f81eadd24
 
 Maintained-by:
    External
@@ -55,12 +55,6 @@ Patch List:
    *Fix to remove PAGESIZE definition which conflicts with POSIX
     Impacted files:
      drivers/include/Legacy/stm32_hal_legacy.h
-
-   *Fix CPP compilation error
-     Moves the cpp guard outside MDF1.
-     Impacted file:
-      stm32cube/stm32h5xx/drivers/include/stm32h5xx_hal_mdf.h
-     ST internal bug : HAL1-27445
 
    *Fix HAL_MDF_IRQHandler
       HAL_MDF_IRQHandler handles IRQ flags in an if {} else if {} condition.

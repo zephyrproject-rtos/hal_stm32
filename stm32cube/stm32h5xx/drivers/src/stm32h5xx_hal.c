@@ -51,7 +51,7 @@
   * @brief STM32H5xx HAL Driver version number 1.6.0
    */
 #define __STM32H5XX_HAL_VERSION_MAIN   (0x01UL) /*!< [31:24] main version */
-#define __STM32H5XX_HAL_VERSION_SUB1   (0x06UL) /*!< [23:16] sub1 version */
+#define __STM32H5XX_HAL_VERSION_SUB1   (0x07UL) /*!< [23:16] sub1 version */
 #define __STM32H5XX_HAL_VERSION_SUB2   (0x00UL) /*!< [15:8]  sub2 version */
 #define __STM32H5XX_HAL_VERSION_RC     (0x00UL) /*!< [7:0]  release candidate */
 #define __STM32H5XX_HAL_VERSION         ((__STM32H5XX_HAL_VERSION_MAIN << 24U)\

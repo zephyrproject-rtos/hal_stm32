@@ -505,6 +505,24 @@ typedef struct
   * @}
   */
 
+#if defined(TAMP_OR_IN2_RMP) || defined(TAMP_OR_IN3_RMP) || defined(TAMP_OR_IN4_RMP) || \
+    defined(TAMP_OR_OUT3_RMP) || defined(TAMP_OR_OUT5_RMP)
+/** @defgroup RTCEx_Tamper_Remap RTCEx Tamper Remap
+  * @{
+  */
+#define RTC_TAMPER_RMP_TAMP_IN2_PA0_TO_PI8       TAMP_OR_IN2_RMP
+#define RTC_TAMPER_RMP_TAMP_IN3_PC1_TO_PE6       TAMP_OR_IN3_RMP
+#define RTC_TAMPER_RMP_TAMP_IN4_PA2_TO_PI11      TAMP_OR_IN4_RMP
+#define RTC_TAMPER_RMP_TAMP_OUT3_PC13_TO_PI8     TAMP_OR_OUT3_RMP_0
+#define RTC_TAMPER_RMP_TAMP_OUT3_PC13_TO_PE3     TAMP_OR_OUT3_RMP_1
+#define RTC_TAMPER_RMP_TAMP_OUT3_PC13_TO_PA2     TAMP_OR_OUT3_RMP
+#define RTC_TAMPER_RMP_TAMP_OUT5_PI11_TO_PC1     TAMP_OR_OUT5_RMP
+/**
+  * @}
+  */
+#endif /* defined(TAMP_OR_IN2_RMP) || defined(TAMP_OR_IN3_RMP) || defined(TAMP_OR_IN4_RMP) || \
+          defined(TAMP_OR_OUT3_RMP) || defined(TAMP_OR_OUT5_RMP) */
+
 
 /** @defgroup RTCEx_Tamper_Interrupt  RTCEx Tamper Interrupt
   * @{
@@ -1321,6 +1339,41 @@ typedef struct
   *            @arg  RTC_TAMPER_8: Tamper8
   */
 #define __HAL_RTC_TAMPER_DISABLE(__HANDLE__, __TAMPER__)           (TAMP->CR1 &= ~(__TAMPER__))
+
+
+#if defined(TAMP_OR_IN2_RMP) || defined(TAMP_OR_IN3_RMP) || defined(TAMP_OR_IN4_RMP) || \
+    defined(TAMP_OR_OUT3_RMP) || defined(TAMP_OR_OUT5_RMP)
+/**
+  * @brief  Enable remap of TAMP INx on a different pin.
+  * @param  __REMAP__ specifies the RTC Tamper remap to be enabled.
+  *         This parameter can be any combination of the following values:
+  *            @arg  RTC_TAMPER_RMP_TAMP_IN2_PA0_TO_PI8
+  *            @arg  RTC_TAMPER_RMP_TAMP_IN3_PC1_TO_PE6
+  *            @arg  RTC_TAMPER_RMP_TAMP_IN4_PA2_TO_PI11
+  *            @arg  RTC_TAMPER_RMP_TAMP_OUT3_PC13_TO_PI8
+  *            @arg  RTC_TAMPER_RMP_TAMP_OUT3_PC13_TO_PE3
+  *            @arg  RTC_TAMPER_RMP_TAMP_OUT3_PC13_TO_PA2
+  *            @arg  RTC_TAMPER_RMP_TAMP_OUT5_PI11_TO_PC1
+  * @retval None
+  */
+#define __HAL_RTC_TAMPER_REMAP_ENABLE(__REMAP__)                   (TAMP->OR |= (__REMAP__))
+
+/**
+  * @brief  Disable remap of TAMP INx on a different pin.
+  * @param  __REMAP__ specifies the RTC Tamper remap to be disabled.
+  *         This parameter can be any combination of the following values:
+  *            @arg  RTC_TAMPER_RMP_TAMP_IN2_PA0_TO_PI8
+  *            @arg  RTC_TAMPER_RMP_TAMP_IN3_PC1_TO_PE6
+  *            @arg  RTC_TAMPER_RMP_TAMP_IN4_PA2_TO_PI11
+  *            @arg  RTC_TAMPER_RMP_TAMP_OUT3_PC13_TO_PI8
+  *            @arg  RTC_TAMPER_RMP_TAMP_OUT3_PC13_TO_PE3
+  *            @arg  RTC_TAMPER_RMP_TAMP_OUT3_PC13_TO_PA2
+  *            @arg  RTC_TAMPER_RMP_TAMP_OUT5_PI11_TO_PC1
+  * @retval None
+  */
+#define __HAL_RTC_TAMPER_REMAP_DISABLE(__REMAP__)                  (TAMP->OR &= ~(__REMAP__))
+#endif /* defined(TAMP_OR_IN2_RMP) || defined(TAMP_OR_IN3_RMP) || defined(TAMP_OR_IN4_RMP) || \
+          defined(TAMP_OR_OUT3_RMP) || defined(TAMP_OR_OUT5_RMP) */
 
 
 /**************************************************************************************************/

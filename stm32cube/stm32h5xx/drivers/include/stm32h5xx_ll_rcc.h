@@ -2933,7 +2933,7 @@ __STATIC_INLINE void LL_RCC_ConfigMCO(uint32_t MCOxSource, uint32_t MCOxPrescale
   *         @arg @ref LL_RCC_I3C2_CLKSOURCE_NONE (**)
   *         @arg @ref LL_RCC_SPI1_CLKSOURCE_PLL1Q
   *         @arg @ref LL_RCC_SPI1_CLKSOURCE_PLL2P
-  *         @arg @ref LL_RCC_SPI1_CLKSOURCE_PLL3P
+  *         @arg @ref LL_RCC_SPI1_CLKSOURCE_PLL3P (*)
   *         @arg @ref LL_RCC_SPI1_CLKSOURCE_PIN
   *         @arg @ref LL_RCC_SPI1_CLKSOURCE_CLKP
   *         @arg @ref LL_RCC_SPI2_CLKSOURCE_PLL1Q
@@ -2966,7 +2966,7 @@ __STATIC_INLINE void LL_RCC_ConfigMCO(uint32_t MCOxSource, uint32_t MCOxPrescale
   *         @arg @ref LL_RCC_SPI6_CLKSOURCE_HSE (*)
   *         @arg @ref LL_RCC_LPTIM1_CLKSOURCE_PCLK3
   *         @arg @ref LL_RCC_LPTIM1_CLKSOURCE_PLL2P
-  *         @arg @ref LL_RCC_LPTIM1_CLKSOURCE_PLL3R
+  *         @arg @ref LL_RCC_LPTIM1_CLKSOURCE_PLL3R (*)
   *         @arg @ref LL_RCC_LPTIM1_CLKSOURCE_LSE
   *         @arg @ref LL_RCC_LPTIM1_CLKSOURCE_LSI
   *         @arg @ref LL_RCC_LPTIM1_CLKSOURCE_CLKP
@@ -3105,13 +3105,13 @@ __STATIC_INLINE void LL_RCC_SetUSARTClockSource(uint32_t USARTxSource)
   *         @arg @ref LL_RCC_UART5_CLKSOURCE_LSE
   *         @arg @ref LL_RCC_UART7_CLKSOURCE_PCLK1
   *         @arg @ref LL_RCC_UART7_CLKSOURCE_PLL2Q
-  *         @arg @ref LL_RCC_UART7_CLKSOURCE_PLL3Q
+  *         @arg @ref LL_RCC_UART7_CLKSOURCE_PLL3Q (*)
   *         @arg @ref LL_RCC_UART7_CLKSOURCE_HSI
   *         @arg @ref LL_RCC_UART7_CLKSOURCE_CSI
   *         @arg @ref LL_RCC_UART7_CLKSOURCE_LSE
   *         @arg @ref LL_RCC_UART8_CLKSOURCE_PCLK1
   *         @arg @ref LL_RCC_UART8_CLKSOURCE_PLL2Q
-  *         @arg @ref LL_RCC_UART8_CLKSOURCE_PLL3Q
+  *         @arg @ref LL_RCC_UART8_CLKSOURCE_PLL3Q (*)
   *         @arg @ref LL_RCC_UART8_CLKSOURCE_HSI
   *         @arg @ref LL_RCC_UART8_CLKSOURCE_CSI
   *         @arg @ref LL_RCC_UART8_CLKSOURCE_LSE
@@ -3128,6 +3128,8 @@ __STATIC_INLINE void LL_RCC_SetUSARTClockSource(uint32_t USARTxSource)
   *         @arg @ref LL_RCC_UART12_CLKSOURCE_CSI
   *         @arg @ref LL_RCC_UART12_CLKSOURCE_LSE
   * @retval None
+  *
+  * (*) value not defined in all devices
   */
 __STATIC_INLINE void LL_RCC_SetUARTClockSource(uint32_t UARTxSource)
 {
@@ -3864,7 +3866,7 @@ __STATIC_INLINE void LL_RCC_SetETHPTPClockDivider(uint32_t ETHPTPxDivider)
   *         @arg @ref LL_RCC_I2C1_CLKSOURCE_HSI
   *         @arg @ref LL_RCC_I2C1_CLKSOURCE_CSI
   *         @arg @ref LL_RCC_I2C2_CLKSOURCE_PCLK1
-  *         @arg @ref LL_RCC_I2C2_CLKSOURCE_PLL3R
+  *         @arg @ref LL_RCC_I2C2_CLKSOURCE_PLL3R (*)
   *         @arg @ref LL_RCC_I2C2_CLKSOURCE_PLL2R (**)
   *         @arg @ref LL_RCC_I2C2_CLKSOURCE_HSI
   *         @arg @ref LL_RCC_I2C2_CLKSOURCE_CSI
@@ -3888,7 +3890,7 @@ __STATIC_INLINE void LL_RCC_SetETHPTPClockDivider(uint32_t ETHPTPxDivider)
   *         @arg @ref LL_RCC_I3C2_CLKSOURCE_NONE (**)
   *         @arg @ref LL_RCC_SPI1_CLKSOURCE_PLL1Q
   *         @arg @ref LL_RCC_SPI1_CLKSOURCE_PLL2P
-  *         @arg @ref LL_RCC_SPI1_CLKSOURCE_PLL3P
+  *         @arg @ref LL_RCC_SPI1_CLKSOURCE_PLL3P (*)
   *         @arg @ref LL_RCC_SPI1_CLKSOURCE_PIN
   *         @arg @ref LL_RCC_SPI1_CLKSOURCE_CLKP
   *         @arg @ref LL_RCC_SPI2_CLKSOURCE_PLL1Q
@@ -3921,7 +3923,7 @@ __STATIC_INLINE void LL_RCC_SetETHPTPClockDivider(uint32_t ETHPTPxDivider)
   *         @arg @ref LL_RCC_SPI6_CLKSOURCE_HSE (*)
   *         @arg @ref LL_RCC_LPTIM1_CLKSOURCE_PCLK3
   *         @arg @ref LL_RCC_LPTIM1_CLKSOURCE_PLL2P
-  *         @arg @ref LL_RCC_LPTIM1_CLKSOURCE_PLL3R
+  *         @arg @ref LL_RCC_LPTIM1_CLKSOURCE_PLL3R (*)
   *         @arg @ref LL_RCC_LPTIM1_CLKSOURCE_LSE
   *         @arg @ref LL_RCC_LPTIM1_CLKSOURCE_LSI
   *         @arg @ref LL_RCC_LPTIM1_CLKSOURCE_CLKP
@@ -4072,13 +4074,13 @@ __STATIC_INLINE uint32_t LL_RCC_GetUSARTClockSource(uint32_t USARTx)
   *         @arg @ref LL_RCC_UART5_CLKSOURCE_LSE
   *         @arg @ref LL_RCC_UART7_CLKSOURCE_PCLK1
   *         @arg @ref LL_RCC_UART7_CLKSOURCE_PLL2Q
-  *         @arg @ref LL_RCC_UART7_CLKSOURCE_PLL3Q
+  *         @arg @ref LL_RCC_UART7_CLKSOURCE_PLL3Q (*)
   *         @arg @ref LL_RCC_UART7_CLKSOURCE_HSI
   *         @arg @ref LL_RCC_UART7_CLKSOURCE_CSI
   *         @arg @ref LL_RCC_UART7_CLKSOURCE_LSE
   *         @arg @ref LL_RCC_UART8_CLKSOURCE_PCLK1
   *         @arg @ref LL_RCC_UART8_CLKSOURCE_PLL2Q
-  *         @arg @ref LL_RCC_UART8_CLKSOURCE_PLL3Q
+  *         @arg @ref LL_RCC_UART8_CLKSOURCE_PLL3Q (*)
   *         @arg @ref LL_RCC_UART8_CLKSOURCE_HSI
   *         @arg @ref LL_RCC_UART8_CLKSOURCE_CSI
   *         @arg @ref LL_RCC_UART8_CLKSOURCE_LSE
@@ -4094,6 +4096,8 @@ __STATIC_INLINE uint32_t LL_RCC_GetUSARTClockSource(uint32_t USARTx)
   *         @arg @ref LL_RCC_UART12_CLKSOURCE_HSI
   *         @arg @ref LL_RCC_UART12_CLKSOURCE_CSI
   *         @arg @ref LL_RCC_UART12_CLKSOURCE_LSE
+  *
+  * (*) value not defined in all devices
   */
 __STATIC_INLINE uint32_t LL_RCC_GetUARTClockSource(uint32_t UARTx)
 {
@@ -4362,8 +4366,8 @@ __STATIC_INLINE uint32_t LL_RCC_GetFDCANClockSource(uint32_t FDCANx)
   * @rmtoll CCIPR2       SAI1SEL       LL_RCC_GetSAIClockSource\n
   *         CCIPR2       SAI2SEL       LL_RCC_GetSAIClockSource
   * @param  SAIx This parameter can be one of the following values:
-  *         @arg @ref LL_RCC_SAI1_CLKSOURCE
-  *         @arg @ref LL_RCC_SAI2_CLKSOURCE
+  *         @arg @ref LL_RCC_SAI1_CLKSOURCE (*)
+  *         @arg @ref LL_RCC_SAI2_CLKSOURCE (*)
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_RCC_SAI1_CLKSOURCE_PLL1Q
   *         @arg @ref LL_RCC_SAI1_CLKSOURCE_PLL2P
@@ -4375,6 +4379,7 @@ __STATIC_INLINE uint32_t LL_RCC_GetFDCANClockSource(uint32_t FDCANx)
   *         @arg @ref LL_RCC_SAI2_CLKSOURCE_PLL3P
   *         @arg @ref LL_RCC_SAI2_CLKSOURCE_PIN
   *         @arg @ref LL_RCC_SAI2_CLKSOURCE_CLKP
+  * (*) value not defined in all devices.
   */
 __STATIC_INLINE uint32_t LL_RCC_GetSAIClockSource(uint32_t SAIx)
 {

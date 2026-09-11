@@ -935,20 +935,26 @@ typedef struct
                                             | ADC_CHANNEL_18_BITFIELD) /*!< ADC channel ADCx_IN18 */
 #define LL_ADC_CHANNEL_19                  (ADC_CHANNEL_19_NUMBER | ADC_CHANNEL_19_SMP \
                                             | ADC_CHANNEL_19_BITFIELD) /*!< ADC channel ADCx_IN19 */
-#if defined (ADC2) || defined(ADC3)
+#if defined (ADC2)
 #define LL_ADC_CHANNEL_VREFINT             (LL_ADC_CHANNEL_17 | ADC_CHANNEL_ID_INTERNAL_CH)   /*!< ADC internal channel
                                            connected to VrefInt: Internal voltage reference.
-                                           On STM32H563xx/573xx, ADC channel available only on ADC instance: ADC1. */
+                                           On STM32H563xx/573xx, ADC channel available only on ADC instance: ADC1.
+                                           On STM32H553xx/H543xx/H5Exxx/H5Fxxx, ADC channel available only on ADC
+                                           instances: ADC1 and ADC3 */
 #define LL_ADC_CHANNEL_TEMPSENSOR          (LL_ADC_CHANNEL_16 | ADC_CHANNEL_ID_INTERNAL_CH)   /*!< ADC internal channel
                                            connected to internal temperature sensor.
-                                           On STM32H563xx/573xx, ADC channel available only on ADC instance: ADC1. */
+                                           On STM32H563xx/573xx, ADC channel available only on ADC instance: ADC1.
+                                           On STM32H553xx/H543xx/H5Exxx/H5Fxxx, ADC channel available only on ADC
+                                           instances: ADC1 and ADC3 */
 #define LL_ADC_CHANNEL_VBAT                (LL_ADC_CHANNEL_16 | ADC_CHANNEL_ID_INTERNAL_CH_2) /*!< ADC internal channel
                                            connected to Vbat/4: Vbat voltage through a divider ladder of factor 1/4
                                            to have channel voltage always below Vdda.
-                                           On STM32H563xx/573xx, ADC channel available only on ADC instance: ADC2. */
+                                           On STM32H563xx/573xx/H553xx/H543xx/H5Exxx/H5Fxxx, ADC channel available only
+                                           on ADC instance: ADC2. */
 #define LL_ADC_CHANNEL_VDDCORE             (LL_ADC_CHANNEL_17 | ADC_CHANNEL_ID_INTERNAL_CH_2) /*!< ADC internal channel
                                            connected to Vddcore.
-                                           On STM32H563xx/573xx, ADC channel available only on ADC instance: ADC2. */
+                                           On STM32H563xx/573xx/H553xx/H543xx/H5Exxx/H5Fxxx, ADC channel available only
+                                           on ADC instance: ADC2. */
 #if defined(ADC3)
 #define LL_ADC_CHANNEL_VBAT_ADC3           (LL_ADC_CHANNEL_14 | ADC_CHANNEL_ID_INTERNAL_CH) /*!< ADC internal channel
                                            connected to Vbat/4: Vbat voltage through a divider ladder of factor 1/4
@@ -958,9 +964,11 @@ typedef struct
                                            connected to Vddcore.
                                            Channel specific to ADC3 */
 #define LL_ADC_CHANNEL_DAC1_CH1            (LL_ADC_CHANNEL_18 | ADC_CHANNEL_ID_INTERNAL_CH) /*!< ADC internal channel
-connected to DAC1 channel 1, channel specific to ADC2 */
+                                           connected to DAC1 channel 1.
+                                           channel specific to ADC3 */
 #define LL_ADC_CHANNEL_DAC1_CH2            (LL_ADC_CHANNEL_19 | ADC_CHANNEL_ID_INTERNAL_CH) /*!< ADC internal channel
-connected to DAC1 channel 1, channel specific to ADC2 */
+                                           connected to DAC1 channel 2.
+                                           channel specific to ADC3 */
 #endif /* ADC3 */
 #else
 #define LL_ADC_CHANNEL_VREFINT             (LL_ADC_CHANNEL_17 | ADC_CHANNEL_ID_INTERNAL_CH) /*!< ADC internal channel
@@ -2496,7 +2504,28 @@ connected to DAC1 channel 1, channel specific to ADC2 */
   * @retval Value "0" if the internal channel selected is not available on the ADC instance selected.
   *         Value "1" if the internal channel selected is available on the ADC instance selected.
   */
-#if defined(ADC2)
+#if defined(ADC3)
+#define __LL_ADC_IS_CHANNEL_INTERNAL_AVAILABLE(__ADC_INSTANCE__, __CHANNEL__)  \
+  ((((__ADC_INSTANCE__) == ADC1)                                               \
+    &&(((__CHANNEL__) == LL_ADC_CHANNEL_TEMPSENSOR     ) ||                    \
+       ((__CHANNEL__) == LL_ADC_CHANNEL_VREFINT))                              \
+   )                                                                           \
+   ||                                                                          \
+   (((__ADC_INSTANCE__) == ADC2)                                               \
+    &&(((__CHANNEL__) == LL_ADC_CHANNEL_VBAT)            ||                    \
+       ((__CHANNEL__) == LL_ADC_CHANNEL_VDDCORE))                              \
+   )                                                                           \
+   ||                                                                          \
+   (((__ADC_INSTANCE__) == ADC3)                                               \
+    &&(((__CHANNEL__) == LL_ADC_CHANNEL_VREFINT)            ||                 \
+       ((__CHANNEL__) == LL_ADC_CHANNEL_TEMPSENSOR)         ||                 \
+       ((__CHANNEL__) == LL_ADC_CHANNEL_VDDCORE_ADC3)       ||                 \
+       ((__CHANNEL__) == LL_ADC_CHANNEL_VBAT_ADC3)          ||                 \
+       ((__CHANNEL__) == LL_ADC_CHANNEL_DAC1_CH1)           ||                 \
+       ((__CHANNEL__) == LL_ADC_CHANNEL_DAC1_CH2))                             \
+   )                                                                           \
+  )
+#elif defined(ADC2)
 #define __LL_ADC_IS_CHANNEL_INTERNAL_AVAILABLE(__ADC_INSTANCE__, __CHANNEL__)  \
   ((((__ADC_INSTANCE__) == ADC1)                                               \
     &&(((__CHANNEL__) == LL_ADC_CHANNEL_TEMPSENSOR     ) ||                    \
@@ -2515,7 +2544,7 @@ connected to DAC1 channel 1, channel specific to ADC2 */
    ((__CHANNEL__) == LL_ADC_CHANNEL_VDDCORE)    ||                             \
    ((__CHANNEL__) == LL_ADC_CHANNEL_VBAT)                                      \
   )
-#endif /* ADC2 */
+#endif /* ADC3 */
 
 /**
   * @brief  Helper macro to define ADC analog watchdog parameter:
@@ -3415,11 +3444,52 @@ __STATIC_INLINE void LL_ADC_DisableChannelVDDcore(ADC_TypeDef *ADCx)
 }
 #endif /* ADC2 */
 
+#if defined (ADC2)
 /**
   * @brief  Enable Channel 0 GPIO switch control.
   * @note   On this STM32 series, Channel 0 channel connection to GPIO is controlled via specific register.
   * @note   On this STM32 series, Channel 0 GPIO switch control must be enabled when INP0 is used.
-  * @note   On this STM32 series, LL_ADC_EnableChannel0_GPIO available on all instances but ADC2.
+  * @rmtoll OR       OP0       LL_ADC_EnableChannel0_GPIO
+  * @param  ADCx ADC instance
+  * @retval None
+  */
+__STATIC_INLINE void LL_ADC_EnableChannel0_GPIO(ADC_TypeDef *ADCx)
+{
+  if (ADCx == ADC2)
+  {
+    /* ADC2_INP0 switch is controlled by ADC1 */
+    SET_BIT(ADC1->OR, ADC_OR_OP0);
+  }
+  else
+  {
+    SET_BIT(ADCx->OR, ADC_OR_OP0);
+  }
+}
+
+/**
+  * @brief  Disable Channel 0 GPIO switch control.
+  * @note   On this STM32 series, Channel 0 connection to GPIO is controlled via specific register.
+  * @rmtoll OR       OP0       LL_ADC_DisableChannel0_GPIO
+  * @param  ADCx ADC instance
+  * @retval None
+  */
+__STATIC_INLINE void LL_ADC_DisableChannel0_GPIO(ADC_TypeDef *ADCx)
+{
+  if (ADCx == ADC2)
+  {
+    /* ADC2_INP0 switch is controlled by ADC1 */
+    CLEAR_BIT(ADC1->OR, ADC_OR_OP0);
+  }
+  else
+  {
+    CLEAR_BIT(ADCx->OR, ADC_OR_OP0);
+  }
+}
+#else
+/**
+  * @brief  Enable Channel 0 GPIO switch control.
+  * @note   On this STM32 series, Channel 0 channel connection to GPIO is controlled via specific register.
+  * @note   On this STM32 series, Channel 0 GPIO switch control must be enabled when INP0 is used.
   * @rmtoll OR       OP0       LL_ADC_EnableChannel0_GPIO
   * @param  ADCx ADC instance
   * @retval None
@@ -3432,7 +3502,6 @@ __STATIC_INLINE void LL_ADC_EnableChannel0_GPIO(ADC_TypeDef *ADCx)
 /**
   * @brief  Disable Channel 0 GPIO switch control.
   * @note   On this STM32 series, Channel 0 connection to GPIO is controlled via specific register.
-  * @note   On this STM32 series, LL_ADC_DisableChannel0_GPIO available on all instances but ADC2.
   * @rmtoll OR       OP0       LL_ADC_DisableChannel0_GPIO
   * @param  ADCx ADC instance
   * @retval None
@@ -3441,6 +3510,7 @@ __STATIC_INLINE void LL_ADC_DisableChannel0_GPIO(ADC_TypeDef *ADCx)
 {
   CLEAR_BIT(ADCx->OR, ADC_OR_OP0);
 }
+#endif /* ADC2 */
 
 /**
   * @brief  Set ADC calibration factor in the mode single-ended

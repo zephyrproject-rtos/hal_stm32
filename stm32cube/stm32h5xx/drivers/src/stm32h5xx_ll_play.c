@@ -54,9 +54,8 @@
 /**
   * @brief  De-Initialize PLAY peripheral registers to their default reset values.
   * @param  PLAYx PLAY Instance
-  * @retval An ErrorStatus enumeration value:
-  *          - SUCCESS: PLAY registers are de-initialized
-  *          - ERROR: PLAY registers are not de-initialized
+  * @retval SUCCESS Operation completed successfully.
+  * @retval ERROR   Invalid instance.
   */
 ErrorStatus LL_PLAY_DeInit(PLAY_TypeDef *PLAYx)
 {
@@ -70,7 +69,6 @@ ErrorStatus LL_PLAY_DeInit(PLAY_TypeDef *PLAYx)
     /* Unlock the Configuration Registers */
     LL_PLAY_Unlock(PLAYx);
 
-    /* Reset Configuration Registers which are not reset by  */
     /* Force PLAY reset */
     LL_APB3_GRP1_ForceReset(LL_APB3_GRP1_PERIPH_PLAY1APB);
 
@@ -78,11 +76,11 @@ ErrorStatus LL_PLAY_DeInit(PLAY_TypeDef *PLAYx)
     LL_APB3_GRP1_ReleaseReset(LL_APB3_GRP1_PERIPH_PLAY1APB);
 
     /* Privilege register set to default reset values */
-    LL_PLAY_ConfigPrivilege(PLAYx, LL_PLAY_NPRIV);
+    LL_PLAY_SetPrivAttr(PLAYx, LL_PLAY_PRIV_ITEM_ALL, LL_PLAY_ATTR_NPRIV);
 
 #if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
     /* Secure register set to default reset values */
-    LL_PLAY_ConfigSecure(PLAYx, LL_PLAY_NSEC);
+    LL_PLAY_SetSecAttr(PLAYx, LL_PLAY_SEC_ITEM_ALL, LL_PLAY_ATTR_NSEC);
 #endif /* __ARM_FEATURE_CMSE */
   }
   else

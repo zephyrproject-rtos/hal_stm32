@@ -26,6 +26,9 @@ extern "C" {
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32h5xx_hal_def.h"
+#if (defined(RNG_HTSR0_RPERRX) || defined(RNG_HTSR1_ADERRX))
+#include "stm32h5xx_ll_rng.h"
+#endif /* RNG_HTSR0_RPERRX || RNG_HTSR1_ADERRX */
 
 /** @addtogroup STM32H5xx_HAL_Driver
   * @{

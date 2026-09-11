@@ -47,8 +47,8 @@ extern "C" {
   */
 
 #define HAL_PLAY_LUT_INPUT_SOURCE_NBR         LL_PLAY_LUT_INPUT_SOURCE_NBR           /*!< Number of input sources per lookup table */
-#define HAL_PLAY_LUT_TRUTH_TABLE_VALUE_MAX    (LL_PLAY_LUT_TRUTH_TABLE_VALUE_MAX)    /*!< Maximal Lookup table value               */
-#define HAL_PLAY_INPUT_FILTER_WIDTH_VALUE_MAX (LL_PLAY_INPUT_FILTER_WIDTH_VALUE_MAX) /*!< Maximal pulse width value                */
+#define HAL_PLAY_LUT_TRUTH_TABLE_VALUE_MAX    (LL_PLAY_LUT_TRUTH_TABLE_VALUE_MAX)    /*!< Maximum Lookup table value               */
+#define HAL_PLAY_INPUT_FILTER_WIDTH_VALUE_MAX (LL_PLAY_INPUT_FILTER_WIDTH_VALUE_MAX) /*!< Maximum pulse width value                */
 
 /**
   * @}
@@ -61,6 +61,10 @@ extern "C" {
 #define HAL_PLAY_ERROR_NONE              (0U)         /*!< No error                              */
 #define HAL_PLAY_ERROR_INVALID_PARAM     (1UL << 1U)  /*!< Invalid parameter                     */
 #define HAL_PLAY_ERROR_INVALID_CALLBACK  (1UL << 2U)  /*!< Invalid Callback ID                   */
+#if defined(GENERATOR_SECURITY_RIF_SUPPORTED)
+#define HAL_PLAY_ERROR_MUTEX_LOCKED      (1UL << 5U)  /*!< PLAY Mutex taken by another instance  */
+#define HAL_PLAY_ERROR_MUTEX_NOT_LOCKED  (1UL << 6U)  /*!< PLAY Mutex not taken                  */
+#endif /* GENERATOR_SECURITY_RIF_SUPPORTED */
 
 /**
   * @}
@@ -112,7 +116,7 @@ extern "C" {
 #define HAL_PLAY_LUT13_OUT_DIRECT       LL_PLAY_LUT13_OUT_DIRECT       /*!< PLAY direct output of LUT 13            */
 #define HAL_PLAY_LUT14_OUT_DIRECT       LL_PLAY_LUT14_OUT_DIRECT       /*!< PLAY direct output of LUT 14            */
 #define HAL_PLAY_LUT15_OUT_DIRECT       LL_PLAY_LUT15_OUT_DIRECT       /*!< PLAY direct output of LUT 15            */
-#define HAL_PLAY_LUT_ALL_OUT_DIRECT     LL_PLAY_LUT_ALL_OUT_DIRECT     /*!< PLAY direct output of LUTs 0 to 15      */
+#define HAL_PLAY_LUT_ALL_OUT_DIRECT     LL_PLAY_LUT_ALL_OUT_DIRECT     /*!< PLAY direct outputs of LUTs 0 to 15     */
 
 #define HAL_PLAY_LUT0_OUT_REGISTERED    LL_PLAY_LUT0_OUT_REGISTERED    /*!< PLAY registered output of LUT 0         */
 #define HAL_PLAY_LUT1_OUT_REGISTERED    LL_PLAY_LUT1_OUT_REGISTERED    /*!< PLAY registered output of LUT 1         */
@@ -154,7 +158,10 @@ extern "C" {
   * @}
   */
 
-/* Exported macros -----------------------------------------------------------*/
+/**
+  * @}
+  */
+
 /* Exported types ------------------------------------------------------------*/
 /** @defgroup PLAY_Exported_Types  PLAY Exported Types
   * @{
@@ -163,11 +170,6 @@ extern "C" {
 /** @defgroup PLAY_Exported_Types_Group1  PLAY Global Enumerations
   * @{
   */
-
-/**
-  * @brief HAL PLAY instance
-  */
-
 
 /**
   * @brief  PLAY Polling Mode on Lookup Table Output Edge Trigger enumeration
@@ -491,24 +493,24 @@ typedef enum
   HAL_PLAY_LUT_INPUT_FILTER14             = LL_PLAY_LUT_SOURCE_FILTER14,             /*!< PLAY input signal IN14 selected as input source                 */
   HAL_PLAY_LUT_INPUT_FILTER15             = LL_PLAY_LUT_SOURCE_FILTER15,             /*!< PLAY input signal IN15 selected as input source                 */
 
-  HAL_PLAY_LUT_INPUT_SWTRIG0              = LL_PLAY_LUT_SOURCE_SWTRIG0,              /*!< PLAY software trigger input 0 selected as input source           */
-  HAL_PLAY_LUT_INPUT_SWTRIG1              = LL_PLAY_LUT_SOURCE_SWTRIG1,              /*!< PLAY software trigger input 1 selected as input source           */
-  HAL_PLAY_LUT_INPUT_SWTRIG2              = LL_PLAY_LUT_SOURCE_SWTRIG2,              /*!< PLAY software trigger input 2 selected as input source           */
-  HAL_PLAY_LUT_INPUT_SWTRIG3              = LL_PLAY_LUT_SOURCE_SWTRIG3,              /*!< PLAY software trigger input 3 selected as input source           */
-  HAL_PLAY_LUT_INPUT_SWTRIG4              = LL_PLAY_LUT_SOURCE_SWTRIG4,              /*!< PLAY software trigger input 4 selected as input source           */
-  HAL_PLAY_LUT_INPUT_SWTRIG5              = LL_PLAY_LUT_SOURCE_SWTRIG5,              /*!< PLAY software trigger input 5 selected as input source           */
-  HAL_PLAY_LUT_INPUT_SWTRIG6              = LL_PLAY_LUT_SOURCE_SWTRIG6,              /*!< PLAY software trigger input 6 selected as input source           */
-  HAL_PLAY_LUT_INPUT_SWTRIG7              = LL_PLAY_LUT_SOURCE_SWTRIG7,              /*!< PLAY software trigger input 7 selected as input source           */
-  HAL_PLAY_LUT_INPUT_SWTRIG8              = LL_PLAY_LUT_SOURCE_SWTRIG8,              /*!< PLAY software trigger input 8 selected as input source           */
-  HAL_PLAY_LUT_INPUT_SWTRIG9              = LL_PLAY_LUT_SOURCE_SWTRIG9,              /*!< PLAY software trigger input 9 selected as input source           */
-  HAL_PLAY_LUT_INPUT_SWTRIG10             = LL_PLAY_LUT_SOURCE_SWTRIG10,             /*!< PLAY software trigger input 10 selected as input source          */
-  HAL_PLAY_LUT_INPUT_SWTRIG11             = LL_PLAY_LUT_SOURCE_SWTRIG11,             /*!< PLAY software trigger input 11 selected as input source          */
-  HAL_PLAY_LUT_INPUT_SWTRIG12             = LL_PLAY_LUT_SOURCE_SWTRIG12,             /*!< PLAY software trigger input 12 selected as input source          */
-  HAL_PLAY_LUT_INPUT_SWTRIG13             = LL_PLAY_LUT_SOURCE_SWTRIG13,             /*!< PLAY software trigger input 13 selected as input source          */
-  HAL_PLAY_LUT_INPUT_SWTRIG14             = LL_PLAY_LUT_SOURCE_SWTRIG14,             /*!< PLAY software trigger input 14 selected as input source          */
-  HAL_PLAY_LUT_INPUT_SWTRIG15             = LL_PLAY_LUT_SOURCE_SWTRIG15,             /*!< PLAY software trigger input 15 selected as input source          */
+  HAL_PLAY_LUT_INPUT_SWTRIG0              = LL_PLAY_LUT_SOURCE_SWTRIG0,              /*!< PLAY software trigger input 0 selected as input source          */
+  HAL_PLAY_LUT_INPUT_SWTRIG1              = LL_PLAY_LUT_SOURCE_SWTRIG1,              /*!< PLAY software trigger input 1 selected as input source          */
+  HAL_PLAY_LUT_INPUT_SWTRIG2              = LL_PLAY_LUT_SOURCE_SWTRIG2,              /*!< PLAY software trigger input 2 selected as input source          */
+  HAL_PLAY_LUT_INPUT_SWTRIG3              = LL_PLAY_LUT_SOURCE_SWTRIG3,              /*!< PLAY software trigger input 3 selected as input source          */
+  HAL_PLAY_LUT_INPUT_SWTRIG4              = LL_PLAY_LUT_SOURCE_SWTRIG4,              /*!< PLAY software trigger input 4 selected as input source          */
+  HAL_PLAY_LUT_INPUT_SWTRIG5              = LL_PLAY_LUT_SOURCE_SWTRIG5,              /*!< PLAY software trigger input 5 selected as input source          */
+  HAL_PLAY_LUT_INPUT_SWTRIG6              = LL_PLAY_LUT_SOURCE_SWTRIG6,              /*!< PLAY software trigger input 6 selected as input source          */
+  HAL_PLAY_LUT_INPUT_SWTRIG7              = LL_PLAY_LUT_SOURCE_SWTRIG7,              /*!< PLAY software trigger input 7 selected as input source          */
+  HAL_PLAY_LUT_INPUT_SWTRIG8              = LL_PLAY_LUT_SOURCE_SWTRIG8,              /*!< PLAY software trigger input 8 selected as input source          */
+  HAL_PLAY_LUT_INPUT_SWTRIG9              = LL_PLAY_LUT_SOURCE_SWTRIG9,              /*!< PLAY software trigger input 9 selected as input source          */
+  HAL_PLAY_LUT_INPUT_SWTRIG10             = LL_PLAY_LUT_SOURCE_SWTRIG10,             /*!< PLAY software trigger input 10 selected as input source         */
+  HAL_PLAY_LUT_INPUT_SWTRIG11             = LL_PLAY_LUT_SOURCE_SWTRIG11,             /*!< PLAY software trigger input 11 selected as input source         */
+  HAL_PLAY_LUT_INPUT_SWTRIG12             = LL_PLAY_LUT_SOURCE_SWTRIG12,             /*!< PLAY software trigger input 12 selected as input source         */
+  HAL_PLAY_LUT_INPUT_SWTRIG13             = LL_PLAY_LUT_SOURCE_SWTRIG13,             /*!< PLAY software trigger input 13 selected as input source         */
+  HAL_PLAY_LUT_INPUT_SWTRIG14             = LL_PLAY_LUT_SOURCE_SWTRIG14,             /*!< PLAY software trigger input 14 selected as input source         */
+  HAL_PLAY_LUT_INPUT_SWTRIG15             = LL_PLAY_LUT_SOURCE_SWTRIG15,             /*!< PLAY software trigger input 15 selected as input source         */
 
-  HAL_PLAY_LUT_INPUT_DEFAULT              = LL_PLAY_LUT_SOURCE_SWTRIG15,             /*!< Default value                                                    */
+  HAL_PLAY_LUT_INPUT_DEFAULT              = LL_PLAY_LUT_SOURCE_SWTRIG15,             /*!< Default value                                                   */
 } HAL_PLAY_LUT_InputSourceTypeDef;
 
 /**
@@ -643,32 +645,6 @@ typedef struct
   * @}
   */
 
-/** @defgroup PLAY_ACCESS_CONTROL  PLAY Access Control
-  * @{
-  */
-
-/**
-  * @brief  PLAY Access Control TrustZone enumeration
-  */
-typedef enum
-{
-  HAL_PLAY_TZ_REG_UNPROTECTED      = 0U, /*!< All registers are unprotected       */
-  HAL_PLAY_TZ_CONFIG_REG_PROTECTED = 1U, /*!< Only config registers are protected */
-  HAL_PLAY_TZ_ALL_REG_PROTECTED    = 3U, /*!< All registers are protected         */
-} HAL_PLAY_TrustZone_AccessControlTypeDef;
-
-
-typedef struct
-{
-  HAL_PLAY_TrustZone_AccessControlTypeDef SecureAccess;    /*!< PLAY Secure access configuration    */
-  HAL_PLAY_TrustZone_AccessControlTypeDef PrivilegeAccess; /*!< PLAY Privilege access configuration */
-} HAL_PLAY_AccessControlConfTypeDef;
-
-
-/**
-  * @}
-  */
-
 /** @defgroup PLAY_Exported_Types_Group5  PLAY Handle
   * @{
   */
@@ -693,12 +669,12 @@ typedef struct __HAL_PLAY_HandleTypeDef
 typedef struct
 #endif /* USE_HAL_PLAY_REGISTER_CALLBACKS */
 {
-  PLAY_TypeDef               *instance;  /*!< Register base address  */
+  PLAY_TypeDef              *instance; /*!< Register base address  */
 
-  __IO HAL_PLAY_StateTypeDef global_state;  /*!< PLAY peripheral state  */
+  __IO HAL_PLAY_StateTypeDef State;    /*!< PLAY peripheral state  */
 
-  __IO uint32_t last_error_codes;  /*!< Errors limited to the last process.
-                                        This parameter can be a combination of @ref PLAY_Error_Codes */
+  __IO uint32_t ErrorCode;             /*!< Errors codes of the peripheral.
+                                            This parameter can be a combination of @ref PLAY_Error_Codes */
 
 #if (USE_HAL_PLAY_REGISTER_CALLBACKS == 1)
   void (* SWTriggerWriteCpltCallback)(struct __HAL_PLAY_HandleTypeDef *hplay);
@@ -741,6 +717,42 @@ typedef void (*pPLAY_LUTOutputCallbackTypeDef)(HAL_PLAY_HandleTypeDef *hplay, ui
   * @}
   */
 
+/** @defgroup PLAY_Attributes PLAY security/privilege attributes
+  * @{
+  */
+
+/**
+  * @brief Security access level attribute
+  */
+typedef enum
+{
+  HAL_PLAY_NSEC = LL_PLAY_ATTR_NSEC, /*!< Non-secure access level attribute */
+  HAL_PLAY_SEC  = LL_PLAY_ATTR_SEC   /*!< Secure access level attribute     */
+} HAL_PLAY_SecAttrTypeDef;
+
+/**
+  * @brief Privileged access level attribute
+  */
+typedef enum
+{
+  HAL_PLAY_NPRIV = LL_PLAY_ATTR_NPRIV, /*!< Non-privileged access level attribute */
+  HAL_PLAY_PRIV  = LL_PLAY_ATTR_PRIV   /*!< Privileged access level attribute     */
+} HAL_PLAY_PrivAttrTypeDef;
+
+/**
+  * @brief PLAY attributes configuration items
+  */
+
+#define HAL_PLAY_SEC_ITEM_CONFIG  LL_PLAY_SEC_ITEM_CONFIG  /*!< PLAY configuration registers items */
+#define HAL_PLAY_SEC_ITEM_ALL     LL_PLAY_SEC_ITEM_ALL     /*!< All PLAY registers items           */
+
+#define HAL_PLAY_PRIV_ITEM_CONFIG LL_PLAY_PRIV_ITEM_CONFIG /*!< PLAY configuration registers items */
+#define HAL_PLAY_PRIV_ITEM_ALL    LL_PLAY_PRIV_ITEM_ALL    /*!< All PLAY registers items           */
+
+/**
+  * @}
+  */
+
 /* Exported macros -----------------------------------------------------------*/
 /** @defgroup PLAY_Exported_Macros PLAY Exported Macros
   * @{
@@ -753,12 +765,12 @@ typedef void (*pPLAY_LUTOutputCallbackTypeDef)(HAL_PLAY_HandleTypeDef *hplay, ui
 #if (USE_HAL_PLAY_REGISTER_CALLBACKS == 1)
 #define __HAL_PLAY_RESET_HANDLE_STATE(__HANDLE__)       \
   do {                                                  \
-    (__HANDLE__)->global_state = HAL_PLAY_STATE_RESET;  \
+    (__HANDLE__)->State = HAL_PLAY_STATE_RESET;         \
     (__HANDLE__)->MspInitCallback = NULL;               \
     (__HANDLE__)->MspDeInitCallback = NULL;             \
   } while (0U)
 #else
-#define __HAL_PLAY_RESET_HANDLE_STATE(__HANDLE__)  ((__HANDLE__)->global_state = HAL_PLAY_STATE_RESET)
+#define __HAL_PLAY_RESET_HANDLE_STATE(__HANDLE__)  ((__HANDLE__)->State = HAL_PLAY_STATE_RESET)
 #endif /* USE_HAL_PLAY_REGISTER_CALLBACKS */
 
 /**
@@ -776,6 +788,7 @@ typedef void (*pPLAY_LUTOutputCallbackTypeDef)(HAL_PLAY_HandleTypeDef *hplay, ui
 
 HAL_StatusTypeDef HAL_PLAY_Init(HAL_PLAY_HandleTypeDef *hplay);
 HAL_StatusTypeDef HAL_PLAY_DeInit(HAL_PLAY_HandleTypeDef *hplay);
+
 void HAL_PLAY_MspInit(HAL_PLAY_HandleTypeDef *hplay);
 void HAL_PLAY_MspDeInit(HAL_PLAY_HandleTypeDef *hplay);
 
@@ -804,32 +817,33 @@ HAL_StatusTypeDef HAL_PLAY_OUTPUT_GetConfig(HAL_PLAY_HandleTypeDef *hplay, HAL_P
                                             uint32_t size_array);
 
 /* PLAY Configuration unitary functions for Input *****************************/
-HAL_StatusTypeDef HAL_PLAY_INPUT_SetSource(HAL_PLAY_HandleTypeDef *hplay, HAL_PLAY_IN_SourceTypeDef source);
+HAL_StatusTypeDef HAL_PLAY_INPUT_SetSource(const HAL_PLAY_HandleTypeDef *hplay, HAL_PLAY_IN_SourceTypeDef source);
 HAL_PLAY_IN_SourceTypeDef HAL_PLAY_INPUT_GetSource(const HAL_PLAY_HandleTypeDef *hplay, HAL_PLAY_INTypeDef mux_id);
-HAL_StatusTypeDef HAL_PLAY_INPUT_SetMinPulseWidth(HAL_PLAY_HandleTypeDef *hplay, HAL_PLAY_INTypeDef mux_id,
+HAL_StatusTypeDef HAL_PLAY_INPUT_SetMinPulseWidth(const HAL_PLAY_HandleTypeDef *hplay, HAL_PLAY_INTypeDef mux_id,
                                                   uint32_t width);
 uint32_t HAL_PLAY_INPUT_GetMinPulseWidth(const HAL_PLAY_HandleTypeDef *hplay, HAL_PLAY_INTypeDef mux_id);
-HAL_StatusTypeDef HAL_PLAY_INPUT_SetEdgeDetectionMode(HAL_PLAY_HandleTypeDef *hplay, HAL_PLAY_INTypeDef mux_id,
+HAL_StatusTypeDef HAL_PLAY_INPUT_SetEdgeDetectionMode(const HAL_PLAY_HandleTypeDef *hplay, HAL_PLAY_INTypeDef mux_id,
                                                       HAL_PLAY_EdgeDetectionModeTypeDef mode);
 HAL_PLAY_EdgeDetectionModeTypeDef HAL_PLAY_INPUT_GetEdgeDetectionMode(const HAL_PLAY_HandleTypeDef *hplay,
                                                                       HAL_PLAY_INTypeDef mux_id);
 
 /* PLAY Configuration unitary functions for Lookup table *********************/
-HAL_StatusTypeDef HAL_PLAY_LUT_SetTruthTable(HAL_PLAY_HandleTypeDef *hplay, HAL_PLAY_LUTTypeDef lut,
+HAL_StatusTypeDef HAL_PLAY_LUT_SetTruthTable(const HAL_PLAY_HandleTypeDef *hplay, HAL_PLAY_LUTTypeDef lut,
                                              uint32_t truth_table_value);
 uint32_t HAL_PLAY_LUT_GetTruthTable(const HAL_PLAY_HandleTypeDef *hplay, HAL_PLAY_LUTTypeDef lut);
-HAL_StatusTypeDef HAL_PLAY_LUT_SetSource(HAL_PLAY_HandleTypeDef *hplay, HAL_PLAY_LUTTypeDef lut,
+HAL_StatusTypeDef HAL_PLAY_LUT_SetSource(const HAL_PLAY_HandleTypeDef *hplay, HAL_PLAY_LUTTypeDef lut,
                                          HAL_PLAY_LUT_InputTypeDef lut_input,
                                          HAL_PLAY_LUT_InputSourceTypeDef source);
 HAL_PLAY_LUT_InputSourceTypeDef HAL_PLAY_LUT_GetSource(const HAL_PLAY_HandleTypeDef *hplay, HAL_PLAY_LUTTypeDef lut,
                                                        HAL_PLAY_LUT_InputTypeDef lut_input);
-HAL_StatusTypeDef HAL_PLAY_LUT_SetClockGateSource(HAL_PLAY_HandleTypeDef *hplay, HAL_PLAY_LUTTypeDef lut,
+HAL_StatusTypeDef HAL_PLAY_LUT_SetClockGateSource(const HAL_PLAY_HandleTypeDef *hplay, HAL_PLAY_LUTTypeDef lut,
                                                   HAL_PLAY_LUT_ClkGateSourceTypeDef source);
 HAL_PLAY_LUT_ClkGateSourceTypeDef HAL_PLAY_LUT_GetClockGateSource(const HAL_PLAY_HandleTypeDef *hplay,
                                                                   HAL_PLAY_LUTTypeDef lut_id);
 
 /* PLAY Configuration unitary functions for Output ****************************/
-HAL_StatusTypeDef HAL_PLAY_OUTPUT_SetSource(HAL_PLAY_HandleTypeDef *hplay, HAL_PLAY_OUTTypeDef mux_id, uint32_t source);
+HAL_StatusTypeDef HAL_PLAY_OUTPUT_SetSource(const HAL_PLAY_HandleTypeDef *hplay, HAL_PLAY_OUTTypeDef mux_id,
+                                            uint32_t source);
 uint32_t HAL_PLAY_OUTPUT_GetSource(const HAL_PLAY_HandleTypeDef *hplay, HAL_PLAY_OUTTypeDef mux_id);
 
 /**
@@ -865,8 +879,8 @@ HAL_StatusTypeDef HAL_PLAY_LUT_PollForEdgeTrigger(HAL_PLAY_HandleTypeDef *hplay,
                                                   uint32_t timeout_ms);
 
 /* PLAY APIs to manage interrupts on lookup table output */
-HAL_StatusTypeDef HAL_PLAY_LUT_EnableIT(HAL_PLAY_HandleTypeDef *hplay, uint32_t its_mask);
-HAL_StatusTypeDef HAL_PLAY_LUT_DisableIT(HAL_PLAY_HandleTypeDef *hplay, uint32_t its_mask);
+HAL_StatusTypeDef HAL_PLAY_LUT_EnableIT(const HAL_PLAY_HandleTypeDef *hplay, uint32_t its_mask);
+HAL_StatusTypeDef HAL_PLAY_LUT_DisableIT(const HAL_PLAY_HandleTypeDef *hplay, uint32_t its_mask);
 uint32_t HAL_PLAY_LUT_GetIT(const HAL_PLAY_HandleTypeDef *hplay);
 
 /**
@@ -877,12 +891,13 @@ uint32_t HAL_PLAY_LUT_GetIT(const HAL_PLAY_HandleTypeDef *hplay);
   * @{
   */
 
-HAL_StatusTypeDef HAL_PLAY_WriteSWTrigger(HAL_PLAY_HandleTypeDef *hplay, uint32_t sw_triggers,
+HAL_StatusTypeDef HAL_PLAY_WriteSWTrigger(const HAL_PLAY_HandleTypeDef *hplay, uint32_t sw_triggers,
                                           HAL_PLAY_SWTriggerStateTypeDef state, uint32_t timeout_ms);
-HAL_StatusTypeDef HAL_PLAY_WriteSWTrigger_IT(HAL_PLAY_HandleTypeDef *hplay, uint32_t sw_triggers,
+HAL_StatusTypeDef HAL_PLAY_WriteSWTrigger_IT(const HAL_PLAY_HandleTypeDef *hplay, uint32_t sw_triggers,
                                              HAL_PLAY_SWTriggerStateTypeDef state);
-HAL_StatusTypeDef HAL_PLAY_ToggleSWTrigger(HAL_PLAY_HandleTypeDef *hplay, uint32_t sw_triggers, uint32_t timeout_ms);
-HAL_StatusTypeDef HAL_PLAY_ToggleSWTrigger_IT(HAL_PLAY_HandleTypeDef *hplay, uint32_t sw_triggers);
+HAL_StatusTypeDef HAL_PLAY_ToggleSWTrigger(const HAL_PLAY_HandleTypeDef *hplay, uint32_t sw_triggers,
+                                           uint32_t timeout_ms);
+HAL_StatusTypeDef HAL_PLAY_ToggleSWTrigger_IT(const HAL_PLAY_HandleTypeDef *hplay, uint32_t sw_triggers);
 HAL_PLAY_SWTriggerStateTypeDef HAL_PLAY_ReadSWTrigger(const HAL_PLAY_HandleTypeDef *hplay, uint32_t sw_trig);
 
 /**
@@ -927,14 +942,19 @@ uint32_t HAL_PLAY_GetError(const HAL_PLAY_HandleTypeDef *hplay);
   * @}
   */
 
-/** @defgroup PLAY_Exported_Functions_Group8  Access control functions
+/** @defgroup PLAY_Exported_Functions_Group8  Security and privileged access levels attributes management
   * @{
   */
 
-HAL_StatusTypeDef HAL_PLAY_ConfigAttributes(HAL_PLAY_HandleTypeDef *hplay,
-                                            const HAL_PLAY_AccessControlConfTypeDef *p_config);
-HAL_StatusTypeDef HAL_PLAY_GetConfigAttributes(HAL_PLAY_HandleTypeDef *hplay,
-                                               HAL_PLAY_AccessControlConfTypeDef *p_config);
+#if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
+HAL_StatusTypeDef HAL_PLAY_SetSecAttr(const HAL_PLAY_HandleTypeDef *hplay, uint32_t item,
+                                      HAL_PLAY_SecAttrTypeDef sec_attr);
+#endif /* __ARM_FEATURE_CMSE */
+HAL_PLAY_SecAttrTypeDef HAL_PLAY_GetSecAttr(const HAL_PLAY_HandleTypeDef *hplay, uint32_t item);
+
+HAL_StatusTypeDef HAL_PLAY_SetPrivAttr(const HAL_PLAY_HandleTypeDef *hplay, uint32_t item,
+                                       HAL_PLAY_PrivAttrTypeDef priv_attr);
+HAL_PLAY_PrivAttrTypeDef HAL_PLAY_GetPrivAttr(const HAL_PLAY_HandleTypeDef *hplay, uint32_t item);
 
 /**
   * @}

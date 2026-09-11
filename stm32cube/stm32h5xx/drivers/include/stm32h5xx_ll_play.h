@@ -91,22 +91,22 @@ extern "C" {
   * @{
   */
 
-#define LL_PLAY_LUT0    (0U)  /*!< Lookup table 0   */
-#define LL_PLAY_LUT1    (1U)  /*!< Lookup table 1   */
-#define LL_PLAY_LUT2    (2U)  /*!< Lookup table 2   */
-#define LL_PLAY_LUT3    (3U)  /*!< Lookup table 3   */
-#define LL_PLAY_LUT4    (4U)  /*!< Lookup table 4   */
-#define LL_PLAY_LUT5    (5U)  /*!< Lookup table 5   */
-#define LL_PLAY_LUT6    (6U)  /*!< Lookup table 6   */
-#define LL_PLAY_LUT7    (7U)  /*!< Lookup table 7   */
-#define LL_PLAY_LUT8    (8U)  /*!< Lookup table 8   */
-#define LL_PLAY_LUT9    (9U)  /*!< Lookup table 9   */
-#define LL_PLAY_LUT10   (10U) /*!< Lookup table 10  */
-#define LL_PLAY_LUT11   (11U) /*!< Lookup table 11  */
-#define LL_PLAY_LUT12   (12U) /*!< Lookup table 12  */
-#define LL_PLAY_LUT13   (13U) /*!< Lookup table 13  */
-#define LL_PLAY_LUT14   (14U) /*!< Lookup table 14  */
-#define LL_PLAY_LUT15   (15U) /*!< Lookup table 15  */
+#define LL_PLAY_LUT0    (0U)  /*!< Lookup table 0    */
+#define LL_PLAY_LUT1    (1U)  /*!< Lookup table 1    */
+#define LL_PLAY_LUT2    (2U)  /*!< Lookup table 2    */
+#define LL_PLAY_LUT3    (3U)  /*!< Lookup table 3    */
+#define LL_PLAY_LUT4    (4U)  /*!< Lookup table 4    */
+#define LL_PLAY_LUT5    (5U)  /*!< Lookup table 5    */
+#define LL_PLAY_LUT6    (6U)  /*!< Lookup table 6    */
+#define LL_PLAY_LUT7    (7U)  /*!< Lookup table 7    */
+#define LL_PLAY_LUT8    (8U)  /*!< Lookup table 8    */
+#define LL_PLAY_LUT9    (9U)  /*!< Lookup table 9    */
+#define LL_PLAY_LUT10   (10U) /*!< Lookup table 10   */
+#define LL_PLAY_LUT11   (11U) /*!< Lookup table 11   */
+#define LL_PLAY_LUT12   (12U) /*!< Lookup table 12   */
+#define LL_PLAY_LUT13   (13U) /*!< Lookup table 13   */
+#define LL_PLAY_LUT14   (14U) /*!< Lookup table 14   */
+#define LL_PLAY_LUT15   (15U) /*!< Lookup table 15   */
 #define LL_PLAY_LUT_MAX (16U) /*!< Maximum LUT index */
 
 /**
@@ -128,7 +128,7 @@ extern "C" {
 
 /** @defgroup PLAY_LL_EC_LUT_INPUT_SOURCE  Lookup table Input Source Definitions
   * @brief    Lookup table Input Source definitions which can be used with LL_PLAY_WriteReg function.
-  * @note      Depending of Lookup table, some LUT direct output sources can not be connected.
+  * @note     Depending on the lookup table, some LUT direct output sources cannot be connected.
   *           For example, configuring the LUT direct output 0 as input of LUT 4 will
   *           have no effect and the input signal will stay always at 0.
   * @{
@@ -227,38 +227,38 @@ extern "C" {
 #define LL_PLAY_LUT_CLK_GATE_LUT13_OUT_REGISTERED (0x1DUL) /*!< LUT registered output 13         */
 #define LL_PLAY_LUT_CLK_GATE_LUT14_OUT_REGISTERED (0x1EUL) /*!< LUT registered output 14         */
 #define LL_PLAY_LUT_CLK_GATE_LUT15_OUT_REGISTERED (0x1FUL) /*!< LUT registered output 15         */
-#define LL_PLAY_LUT_CLK_GATE_FILTER0              (0x20UL) /*!< Signal from Input Multiplexer 0  */
-#define LL_PLAY_LUT_CLK_GATE_FILTER1              (0x21UL) /*!< Signal from Input Multiplexer 1  */
-#define LL_PLAY_LUT_CLK_GATE_FILTER2              (0x22UL) /*!< Signal from Input Multiplexer 2  */
-#define LL_PLAY_LUT_CLK_GATE_FILTER3              (0x23UL) /*!< Signal from Input Multiplexer 3  */
-#define LL_PLAY_LUT_CLK_GATE_FILTER4              (0x24UL) /*!< Signal from Input Multiplexer 4  */
-#define LL_PLAY_LUT_CLK_GATE_FILTER5              (0x25UL) /*!< Signal from Input Multiplexer 5  */
-#define LL_PLAY_LUT_CLK_GATE_FILTER6              (0x26UL) /*!< Signal from Input Multiplexer 6  */
-#define LL_PLAY_LUT_CLK_GATE_FILTER7              (0x27UL) /*!< Signal from Input Multiplexer 7  */
-#define LL_PLAY_LUT_CLK_GATE_FILTER8              (0x28UL) /*!< Signal from Input Multiplexer 8  */
-#define LL_PLAY_LUT_CLK_GATE_FILTER9              (0x29UL) /*!< Signal from Input Multiplexer 9  */
-#define LL_PLAY_LUT_CLK_GATE_FILTER10             (0x2AUL) /*!< Signal from Input Multiplexer 10 */
-#define LL_PLAY_LUT_CLK_GATE_FILTER11             (0x2BUL) /*!< Signal from Input Multiplexer 11 */
-#define LL_PLAY_LUT_CLK_GATE_FILTER12             (0x2CUL) /*!< Signal from Input Multiplexer 12 */
-#define LL_PLAY_LUT_CLK_GATE_FILTER13             (0x2DUL) /*!< Signal from Input Multiplexer 13 */
-#define LL_PLAY_LUT_CLK_GATE_FILTER14             (0x2EUL) /*!< Signal from Input Multiplexer 14 */
-#define LL_PLAY_LUT_CLK_GATE_FILTER15             (0x2FUL) /*!< Signal from Input Multiplexer 15 */
-#define LL_PLAY_LUT_CLK_GATE_SWTRIG0              (0x30UL) /*!< Software Trigger 0               */
-#define LL_PLAY_LUT_CLK_GATE_SWTRIG1              (0x31UL) /*!< Software Trigger 1               */
-#define LL_PLAY_LUT_CLK_GATE_SWTRIG2              (0x32UL) /*!< Software Trigger 2               */
-#define LL_PLAY_LUT_CLK_GATE_SWTRIG3              (0x33UL) /*!< Software Trigger 3               */
-#define LL_PLAY_LUT_CLK_GATE_SWTRIG4              (0x34UL) /*!< Software Trigger 4               */
-#define LL_PLAY_LUT_CLK_GATE_SWTRIG5              (0x35UL) /*!< Software Trigger 5               */
-#define LL_PLAY_LUT_CLK_GATE_SWTRIG6              (0x36UL) /*!< Software Trigger 6               */
-#define LL_PLAY_LUT_CLK_GATE_SWTRIG7              (0x37UL) /*!< Software Trigger 7               */
-#define LL_PLAY_LUT_CLK_GATE_SWTRIG8              (0x38UL) /*!< Software Trigger 8               */
-#define LL_PLAY_LUT_CLK_GATE_SWTRIG9              (0x39UL) /*!< Software Trigger 9               */
-#define LL_PLAY_LUT_CLK_GATE_SWTRIG10             (0x3AUL) /*!< Software Trigger 10              */
-#define LL_PLAY_LUT_CLK_GATE_SWTRIG11             (0x3BUL) /*!< Software Trigger 11              */
-#define LL_PLAY_LUT_CLK_GATE_SWTRIG12             (0x3CUL) /*!< Software Trigger 12              */
-#define LL_PLAY_LUT_CLK_GATE_SWTRIG13             (0x3DUL) /*!< Software Trigger 13              */
-#define LL_PLAY_LUT_CLK_GATE_SWTRIG14             (0x3EUL) /*!< Software Trigger 14              */
-#define LL_PLAY_LUT_CLK_GATE_SWTRIG15             (0x3FUL) /*!< Software Trigger 15              */
+#define LL_PLAY_LUT_CLK_GATE_FILTER0              (0x20UL) /*!< Signal from input multiplexer 0  */
+#define LL_PLAY_LUT_CLK_GATE_FILTER1              (0x21UL) /*!< Signal from input multiplexer 1  */
+#define LL_PLAY_LUT_CLK_GATE_FILTER2              (0x22UL) /*!< Signal from input multiplexer 2  */
+#define LL_PLAY_LUT_CLK_GATE_FILTER3              (0x23UL) /*!< Signal from input multiplexer 3  */
+#define LL_PLAY_LUT_CLK_GATE_FILTER4              (0x24UL) /*!< Signal from input multiplexer 4  */
+#define LL_PLAY_LUT_CLK_GATE_FILTER5              (0x25UL) /*!< Signal from input multiplexer 5  */
+#define LL_PLAY_LUT_CLK_GATE_FILTER6              (0x26UL) /*!< Signal from input multiplexer 6  */
+#define LL_PLAY_LUT_CLK_GATE_FILTER7              (0x27UL) /*!< Signal from input multiplexer 7  */
+#define LL_PLAY_LUT_CLK_GATE_FILTER8              (0x28UL) /*!< Signal from input multiplexer 8  */
+#define LL_PLAY_LUT_CLK_GATE_FILTER9              (0x29UL) /*!< Signal from input multiplexer 9  */
+#define LL_PLAY_LUT_CLK_GATE_FILTER10             (0x2AUL) /*!< Signal from input multiplexer 10 */
+#define LL_PLAY_LUT_CLK_GATE_FILTER11             (0x2BUL) /*!< Signal from input multiplexer 11 */
+#define LL_PLAY_LUT_CLK_GATE_FILTER12             (0x2CUL) /*!< Signal from input multiplexer 12 */
+#define LL_PLAY_LUT_CLK_GATE_FILTER13             (0x2DUL) /*!< Signal from input multiplexer 13 */
+#define LL_PLAY_LUT_CLK_GATE_FILTER14             (0x2EUL) /*!< Signal from input multiplexer 14 */
+#define LL_PLAY_LUT_CLK_GATE_FILTER15             (0x2FUL) /*!< Signal from input multiplexer 15 */
+#define LL_PLAY_LUT_CLK_GATE_SWTRIG0              (0x30UL) /*!< Software trigger 0               */
+#define LL_PLAY_LUT_CLK_GATE_SWTRIG1              (0x31UL) /*!< Software trigger 1               */
+#define LL_PLAY_LUT_CLK_GATE_SWTRIG2              (0x32UL) /*!< Software trigger 2               */
+#define LL_PLAY_LUT_CLK_GATE_SWTRIG3              (0x33UL) /*!< Software trigger 3               */
+#define LL_PLAY_LUT_CLK_GATE_SWTRIG4              (0x34UL) /*!< Software trigger 4               */
+#define LL_PLAY_LUT_CLK_GATE_SWTRIG5              (0x35UL) /*!< Software trigger 5               */
+#define LL_PLAY_LUT_CLK_GATE_SWTRIG6              (0x36UL) /*!< Software trigger 6               */
+#define LL_PLAY_LUT_CLK_GATE_SWTRIG7              (0x37UL) /*!< Software trigger 7               */
+#define LL_PLAY_LUT_CLK_GATE_SWTRIG8              (0x38UL) /*!< Software trigger 8               */
+#define LL_PLAY_LUT_CLK_GATE_SWTRIG9              (0x39UL) /*!< Software trigger 9               */
+#define LL_PLAY_LUT_CLK_GATE_SWTRIG10             (0x3AUL) /*!< Software trigger 10              */
+#define LL_PLAY_LUT_CLK_GATE_SWTRIG11             (0x3BUL) /*!< Software trigger 11              */
+#define LL_PLAY_LUT_CLK_GATE_SWTRIG12             (0x3CUL) /*!< Software trigger 12              */
+#define LL_PLAY_LUT_CLK_GATE_SWTRIG13             (0x3DUL) /*!< Software trigger 13              */
+#define LL_PLAY_LUT_CLK_GATE_SWTRIG14             (0x3EUL) /*!< Software trigger 14              */
+#define LL_PLAY_LUT_CLK_GATE_SWTRIG15             (0x3FUL) /*!< Software trigger 15              */
 
 /**
   * @}
@@ -404,7 +404,7 @@ extern "C" {
 #define LL_PLAY_SWTRIG14 PLAY_SWIN_SWIN14 /*!< Software Trigger 14 */
 #define LL_PLAY_SWTRIG15 PLAY_SWIN_SWIN15 /*!< Software Trigger 15 */
 
-/*! All Software Triggers */
+/*! All software triggers */
 #define LL_PLAY_SWTRIG_ALL \
   (LL_PLAY_SWTRIG0         \
    | LL_PLAY_SWTRIG1       \
@@ -432,11 +432,11 @@ extern "C" {
   * @{
   */
 
-#define LL_PLAY_ISR_SWINWC     PLAY_ISR_SWINWC     /*!< Software Trigger write complete               */
-#define LL_PLAY_ISR_FLCTLWC    PLAY_ISR_FLCTLWC    /*!< Edge Trigger write complete                   */
-#define LL_PLAY_ISR_FLAGS      PLAY_ISR_FLAGS      /*!< One or more bits in FLSTAT register is active */
-#define LL_PLAY_MSR_SWINWBFS   PLAY_MSR_SWINWBFS   /*!< Software Trigger write busy                   */
-#define LL_PLAY_MSR_FLCTLWBFS  PLAY_MSR_FLCTLWBFS  /*!< Edge Trigger write busy                       */
+#define LL_PLAY_ISR_SWINWC    PLAY_ISR_SWINWC    /*!< Software Trigger write complete               */
+#define LL_PLAY_ISR_FLCTLWC   PLAY_ISR_FLCTLWC   /*!< Edge Trigger write complete                   */
+#define LL_PLAY_ISR_FLAGS     PLAY_ISR_FLAGS     /*!< One or more bits in FLSTAT register is active */
+#define LL_PLAY_MSR_SWINWBFS  PLAY_MSR_SWINWBFS  /*!< Software Trigger write busy                   */
+#define LL_PLAY_MSR_FLCTLWBFS PLAY_MSR_FLCTLWBFS /*!< Edge Trigger write busy                       */
 
 /**
   * @}
@@ -447,8 +447,8 @@ extern "C" {
   * @{
   */
 
-#define LL_PLAY_IER_SWINWC_IEN   PLAY_IER_SWINWC_IEN   /*!< Software Trigger write complete */
-#define LL_PLAY_IER_FLCTLWC_IEN  PLAY_IER_FLCTLWC_IEN  /*!< Edge Trigger write complete     */
+#define LL_PLAY_IER_SWINWC_IEN  PLAY_IER_SWINWC_IEN  /*!< Software Trigger write complete */
+#define LL_PLAY_IER_FLCTLWC_IEN PLAY_IER_FLCTLWC_IEN /*!< Edge Trigger write complete     */
 
 /**
   * @}
@@ -458,8 +458,8 @@ extern "C" {
   * @{
   */
 
-#define LL_PLAY_LUT_EDGE_TRIGGER_FALLING  (0x00000000UL) /*!< Falling edge trigger  */
-#define LL_PLAY_LUT_EDGE_TRIGGER_RISING   (0xFFFFFFFFUL) /*!< Rising edge trigger   */
+#define LL_PLAY_LUT_EDGE_TRIGGER_FALLING (0x00000000UL) /*!< Falling edge trigger  */
+#define LL_PLAY_LUT_EDGE_TRIGGER_RISING  (0xFFFFFFFFUL) /*!< Rising edge trigger   */
 
 /**
   * @}
@@ -469,33 +469,40 @@ extern "C" {
   * @{
   */
 
-#define LL_PLAY_EDGE_DETECTION_MODE_BYPASSED        (0U)                        /*!< Bypassed mode: No edge detection            */
-#define LL_PLAY_EDGE_DETECTION_MODE_RISING          (PLAY_FILTxCFG_EDGEDET_0)   /*!< Rising edge detection mode                  */
-#define LL_PLAY_EDGE_DETECTION_MODE_FALLING         (PLAY_FILTxCFG_EDGEDET_1)   /*!< Falling edge detection mode                 */
-#define LL_PLAY_EDGE_DETECTION_MODE_RISING_FALLING  (PLAY_FILTxCFG_EDGEDET_0 \
-                                                     | PLAY_FILTxCFG_EDGEDET_1) /*!< Both rising and falling edge detection mode */
+#define LL_PLAY_EDGE_DETECTION_MODE_BYPASSED       (0U)                        /*!< Bypassed mode: No edge detection            */
+#define LL_PLAY_EDGE_DETECTION_MODE_RISING         (PLAY_FILTxCFG_EDGEDET_0)   /*!< Rising edge detection mode                  */
+#define LL_PLAY_EDGE_DETECTION_MODE_FALLING        (PLAY_FILTxCFG_EDGEDET_1)   /*!< Falling edge detection mode                 */
+#define LL_PLAY_EDGE_DETECTION_MODE_RISING_FALLING (PLAY_FILTxCFG_EDGEDET_0 \
+                                                    | PLAY_FILTxCFG_EDGEDET_1) /*!< Both rising and falling edge detection mode */
 
 /**
   * @}
   */
 
-/** @defgroup PLAY_LL_EC_TRUSTZONE_ATTRIBUTES  TrustZone Attributes Definitions
+/** @defgroup PLAY_LL_EC_ATTRIBUTES PLAY Secure/Privilege attributes
   * @{
   */
 
-#define LL_PLAY_NPRIV        (0U)                                          /*!< Non-Privileged mode           */
-#define LL_PLAY_CONFIG_PRIV  (PLAY_PRIVCFGR_PRIV_0)                        /*!< Configuration Privileged mode */
-#define LL_PLAY_FULL_PRIV    (PLAY_PRIVCFGR_PRIV_0 | PLAY_PRIVCFGR_PRIV_1) /*!< Full Privileged mode          */
+#define LL_PLAY_ATTR_NSEC  (0U) /*!< Non-secure attribute                            */
+#define LL_PLAY_ATTR_SEC   (1U) /*!< Secure attribute on configuration registers     */
 
-#if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
-#define LL_PLAY_NSEC         (0U)                                          /*!< Non-Secure mode               */
-#define LL_PLAY_CONFIG_SEC   (PLAY_SECCFGR_SEC_0)                          /*!< Configuration Secure mode     */
-#define LL_PLAY_FULL_SEC     (PLAY_SECCFGR_SEC_0 | PLAY_SECCFGR_SEC_1)     /*!< Full Secure mode              */
+#define LL_PLAY_ATTR_NPRIV (0U) /*!< Non-privileged attribute                        */
+#define LL_PLAY_ATTR_PRIV  (1U) /*!< Privileged attribute on configuration registers */
 
-#endif /* defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U) */
 /**
   * @}
   */
+
+/** @defgroup PLAY_LL_EC_ITEMS PLAY Attributes Items
+  * @{
+  */
+
+#define LL_PLAY_SEC_ITEM_CONFIG  (PLAY_SECCFGR_SEC_0)                          /*!< PLAY configuration registers items */
+#define LL_PLAY_SEC_ITEM_ALL     (PLAY_SECCFGR_SEC_0 | PLAY_SECCFGR_SEC_1)     /*!< All PLAY registers items           */
+
+#define LL_PLAY_PRIV_ITEM_CONFIG (PLAY_PRIVCFGR_PRIV_0)                        /*!< PLAY configuration registers items */
+#define LL_PLAY_PRIV_ITEM_ALL    (PLAY_PRIVCFGR_PRIV_0 | PLAY_PRIVCFGR_PRIV_1) /*!< All PLAY registers items           */
+
 
 /**
   * @}
@@ -519,6 +526,9 @@ extern "C" {
   */
 
 /* Exported macro ------------------------------------------------------------*/
+/** @defgroup PLAY_LL_Exported_Macros  LL PLAY Macros
+  * @{
+  */
 /** @defgroup PLAY_LL_EM_WRITE_READ  Common Write and Read registers Macros
   * @{
   */
@@ -558,9 +568,10 @@ extern "C" {
 
 /**
   * @brief  Configure the filter of a Logic Array input.
-  * @rmtoll FILTxCFG          PREMUXSEL     LL_PLAY_INPUT_Config\n
-  *         FILTxCFG          EDGEDET       LL_PLAY_INPUT_Config\n
-  *         FILTxCFG          WIDTH         LL_PLAY_INPUT_Config
+  * @rmtoll
+  *  FILTxCFG          PREMUXSEL     LL_PLAY_INPUT_Config \n
+  *  FILTxCFG          EDGEDET       LL_PLAY_INPUT_Config \n
+  *  FILTxCFG          WIDTH         LL_PLAY_INPUT_Config
   * @param  playx     PLAY Instance.
   * @param  input_mux Value can be one of the following values:
   *         @arg @ref LL_PLAY_IN0
@@ -586,7 +597,7 @@ extern "C" {
   *         @arg @ref LL_PLAY_EDGE_DETECTION_MODE_FALLING
   *         @arg @ref LL_PLAY_EDGE_DETECTION_MODE_RISING_FALLING
   * @param  min_pulse_width Value in range 0x0000 to 0x00FF.
-  * @note   This function set all parameters of a Logic Array input.
+  * @note   This function sets all parameters of a Logic Array input.
   *         These parameters can also be set individually using
   *         dedicated functions:
   *         - @ref LL_PLAY_INPUT_SetMinimumPulseWidth()
@@ -597,7 +608,7 @@ __STATIC_INLINE void LL_PLAY_INPUT_Config(PLAY_TypeDef *playx,
                                           uint32_t input_mux, uint32_t premuxsel_value,
                                           uint32_t edge_detection_mode, uint32_t min_pulse_width)
 {
-  MODIFY_REG(playx->FILTCFG[input_mux & 0x0FU],
+  MODIFY_REG(playx->FILTCFG[input_mux & (LL_PLAY_IN_MAX - 1U)],
              (PLAY_FILTxCFG_WIDTH | PLAY_FILTxCFG_EDGEDET | PLAY_FILTxCFG_PREMUXSEL),
              ((min_pulse_width << PLAY_FILTxCFG_WIDTH_Pos) | edge_detection_mode
               | (premuxsel_value << PLAY_FILTxCFG_PREMUXSEL_Pos)));
@@ -605,10 +616,12 @@ __STATIC_INLINE void LL_PLAY_INPUT_Config(PLAY_TypeDef *playx,
 
 /**
   * @brief  Configure the inputs and the clock enable of a LUT.
-  * @rmtoll LExCFG2          IN_0_SEL     LL_PLAY_LUT_ConfigInputs\n
-  *         LExCFG2          IN_1_SEL     LL_PLAY_LUT_ConfigInputs\n
-  *         LExCFG2          IN_2_SEL     LL_PLAY_LUT_ConfigInputs\n
-  *         LExCFG2          IN_3_SEL     LL_PLAY_LUT_ConfigInputs
+  * @rmtoll
+  *  LExCFG2          IN_0_SEL     LL_PLAY_LUT_ConfigInputs \n
+  *  LExCFG2          IN_1_SEL     LL_PLAY_LUT_ConfigInputs \n
+  *  LExCFG2          IN_2_SEL     LL_PLAY_LUT_ConfigInputs \n
+  *  LExCFG2          IN_3_SEL     LL_PLAY_LUT_ConfigInputs \n
+  *  LExCFG2          CK_SEL       LL_PLAY_LUT_ConfigInputs
   * @param  playx  PLAY Instance.
   * @param  lut    Value can be one of the following values:
   *         @arg @ref LL_PLAY_LUT0
@@ -747,7 +760,7 @@ __STATIC_INLINE void LL_PLAY_INPUT_Config(PLAY_TypeDef *playx,
   *         @arg @ref LL_PLAY_LUT_CLK_GATE_SWTRIG13
   *         @arg @ref LL_PLAY_LUT_CLK_GATE_SWTRIG14
   *         @arg @ref LL_PLAY_LUT_CLK_GATE_SWTRIG15
-  * @note   This function set some parameters of a LUT.
+  * @note   This function sets some parameters of a LUT.
   *         These parameters can also be set individually using
   *         dedicated functions:
   *         - @ref LL_PLAY_LUT_SetSource()
@@ -758,7 +771,7 @@ __STATIC_INLINE void LL_PLAY_LUT_ConfigInputs(PLAY_TypeDef *playx, uint32_t lut,
                                               uint32_t source_sel2, uint32_t source_sel3,
                                               uint32_t clk_enable)
 {
-  MODIFY_REG(playx->LECFG2[lut],
+  MODIFY_REG(playx->LECFG2[lut & (LL_PLAY_LUT_MAX - 1U)],
              (PLAY_LExCFG2_IN0_SEL | PLAY_LExCFG2_IN1_SEL | PLAY_LExCFG2_IN2_SEL | PLAY_LExCFG2_IN3_SEL
               | PLAY_LExCFG2_CK_SEL),
              ((source_sel0 << PLAY_LExCFG2_IN0_SEL_Pos) | (source_sel1 << PLAY_LExCFG2_IN1_SEL_Pos)
@@ -768,7 +781,8 @@ __STATIC_INLINE void LL_PLAY_LUT_ConfigInputs(PLAY_TypeDef *playx, uint32_t lut,
 
 /**
   * @brief  Lock the Configuration registers.
-  * @rmtoll CFGCR        UNLOCK        LL_PLAY_Lock
+  * @rmtoll
+  *  CFGCR        UNLOCK        LL_PLAY_Lock
   * @param  playx PLAY Instance.
   */
 __STATIC_INLINE void LL_PLAY_Lock(PLAY_TypeDef *playx)
@@ -778,7 +792,8 @@ __STATIC_INLINE void LL_PLAY_Lock(PLAY_TypeDef *playx)
 
 /**
   * @brief  Unlock the Configuration registers.
-  * @rmtoll CFGCR        UNLOCK        LL_PLAY_Unlock
+  * @rmtoll
+  *  CFGCR        UNLOCK        LL_PLAY_Unlock
   * @param  playx PLAY Instance.
   */
 __STATIC_INLINE void LL_PLAY_Unlock(PLAY_TypeDef *playx)
@@ -788,9 +803,10 @@ __STATIC_INLINE void LL_PLAY_Unlock(PLAY_TypeDef *playx)
 
 /**
   * @brief  Indicates whether the PLAY Configuration registers are locked.
-  * @rmtoll CFGCR          UNLOCK        LL_PLAY_IsLocked
+  * @rmtoll
+  *  CFGCR          UNLOCK        LL_PLAY_IsLocked
   * @param  playx PLAY Instance.
-  * @return Status of bit (1 or 0).
+  * @return 1: locked, 0: unlocked.
   */
 __STATIC_INLINE uint32_t LL_PLAY_IsLocked(const PLAY_TypeDef *playx)
 {
@@ -799,7 +815,8 @@ __STATIC_INLINE uint32_t LL_PLAY_IsLocked(const PLAY_TypeDef *playx)
 
 /**
   * @brief  Configure Minimum Pulse Width of an input filter.
-  * @rmtoll FILTxCFG          WIDTH          LL_PLAY_INPUT_SetMinimumPulseWidth
+  * @rmtoll
+  *  FILTxCFG          WIDTH          LL_PLAY_INPUT_SetMinimumPulseWidth
   * @param  playx     PLAY Instance.
   * @param  input_mux Value can be one of the following values:
   *         @arg @ref LL_PLAY_IN0
@@ -823,12 +840,14 @@ __STATIC_INLINE uint32_t LL_PLAY_IsLocked(const PLAY_TypeDef *playx)
 __STATIC_INLINE void LL_PLAY_INPUT_SetMinimumPulseWidth(PLAY_TypeDef *playx, uint32_t input_mux,
                                                         uint32_t min_pulse_width)
 {
-  MODIFY_REG(playx->FILTCFG[input_mux & 0x0FU], PLAY_FILTxCFG_WIDTH, (min_pulse_width << PLAY_FILTxCFG_WIDTH_Pos));
+  MODIFY_REG(playx->FILTCFG[input_mux & (LL_PLAY_IN_MAX - 1U)], PLAY_FILTxCFG_WIDTH,
+             (min_pulse_width << PLAY_FILTxCFG_WIDTH_Pos));
 }
 
 /**
   * @brief  Get the Minimum Pulse Width.
-  * @rmtoll FILTxCFG          WIDTH          LL_PLAY_INPUT_GetMinimumPulseWidth
+  * @rmtoll
+  *  FILTxCFG          WIDTH          LL_PLAY_INPUT_GetMinimumPulseWidth
   * @param  playx     PLAY Instance.
   * @param  input_mux Value can be one of the following values:
   *         @arg @ref LL_PLAY_IN0
@@ -851,12 +870,14 @@ __STATIC_INLINE void LL_PLAY_INPUT_SetMinimumPulseWidth(PLAY_TypeDef *playx, uin
   */
 __STATIC_INLINE uint32_t LL_PLAY_INPUT_GetMinimumPulseWidth(const PLAY_TypeDef *playx, uint32_t input_mux)
 {
-  return (uint32_t)(READ_BIT(playx->FILTCFG[input_mux], PLAY_FILTxCFG_WIDTH));
+  return (uint32_t)(READ_BIT(playx->FILTCFG[input_mux & (LL_PLAY_IN_MAX - 1U)],
+                             PLAY_FILTxCFG_WIDTH) >> PLAY_FILTxCFG_WIDTH_Pos);
 }
 
 /**
   * @brief  Configure Filtering Edge mode.
-  * @rmtoll FILTxCFG          EDGEDET     LL_PLAY_INPUT_SetEdgeDetectionMode
+  * @rmtoll
+  *  FILTxCFG          EDGEDET     LL_PLAY_INPUT_SetEdgeDetectionMode
   * @param  playx     PLAY Instance.
   * @param  input_mux Value can be one of the following values:
   *         @arg @ref LL_PLAY_IN0
@@ -884,12 +905,13 @@ __STATIC_INLINE uint32_t LL_PLAY_INPUT_GetMinimumPulseWidth(const PLAY_TypeDef *
 __STATIC_INLINE void LL_PLAY_INPUT_SetEdgeDetectionMode(PLAY_TypeDef *playx, uint32_t input_mux,
                                                         uint32_t edge_detection_mode)
 {
-  MODIFY_REG(playx->FILTCFG[input_mux], PLAY_FILTxCFG_EDGEDET, edge_detection_mode);
+  MODIFY_REG(playx->FILTCFG[input_mux & (LL_PLAY_IN_MAX - 1U)], PLAY_FILTxCFG_EDGEDET, edge_detection_mode);
 }
 
 /**
   * @brief  Get the Filtering Edge Detection Mode configuration of a PLAY input.
-  * @rmtoll FILTxCFG          EDGEDET     LL_PLAY_INPUT_GetEdgeDetectionMode
+  * @rmtoll
+  *  FILTxCFG          EDGEDET     LL_PLAY_INPUT_GetEdgeDetectionMode
   * @param  playx     PLAY Instance.
   * @param  input_mux Value can be one of the following values:
   *         @arg @ref LL_PLAY_IN0
@@ -916,12 +938,13 @@ __STATIC_INLINE void LL_PLAY_INPUT_SetEdgeDetectionMode(PLAY_TypeDef *playx, uin
   */
 __STATIC_INLINE uint32_t LL_PLAY_INPUT_GetEdgeDetectionMode(const PLAY_TypeDef *playx, uint32_t input_mux)
 {
-  return (uint32_t)(READ_BIT(playx->FILTCFG[input_mux], PLAY_FILTxCFG_EDGEDET));
+  return (uint32_t)(READ_BIT(playx->FILTCFG[input_mux & (LL_PLAY_IN_MAX - 1U)], PLAY_FILTxCFG_EDGEDET));
 }
 
 /**
   * @brief  Configure the signal source of a PLAY input.
-  * @rmtoll FILTxCFG          PREMUXSEL     LL_PLAY_INPUT_SetSource
+  * @rmtoll
+  *  FILTxCFG          PREMUXSEL     LL_PLAY_INPUT_SetSource
   * @param  playx     PLAY Instance.
   * @param  input_mux Value can be one of the following values:
   *         @arg @ref LL_PLAY_IN0
@@ -950,7 +973,8 @@ __STATIC_INLINE void LL_PLAY_INPUT_SetSource(PLAY_TypeDef *playx, uint32_t input
 
 /**
   * @brief  Return the signal source of a PLAY input.
-  * @rmtoll FILTxCFG          PREMUXSEL     LL_PLAY_INPUT_GetSource
+  * @rmtoll
+  *  FILTxCFG          PREMUXSEL     LL_PLAY_INPUT_GetSource
   * @param  playx     PLAY Instance.
   * @param  input_mux Value can be one of the following values:
   *         @arg @ref LL_PLAY_IN0
@@ -979,7 +1003,8 @@ __STATIC_INLINE uint32_t LL_PLAY_INPUT_GetSource(const PLAY_TypeDef *playx, uint
 
 /**
   * @brief  Configure the TruthTable value of a Lookup table.
-  * @rmtoll LExCFG1          LUT     LL_PLAY_LUT_SetTruthTable
+  * @rmtoll
+  *  LExCFG1          LUT     LL_PLAY_LUT_SetTruthTable
   * @param  playx PLAY Instance.
   * @param  lut   Value can be one of the following values:
   *         @arg @ref LL_PLAY_LUT0
@@ -1007,7 +1032,8 @@ __STATIC_INLINE void LL_PLAY_LUT_SetTruthTable(PLAY_TypeDef *playx, uint32_t lut
 
 /**
   * @brief  Get the LUT value of a Lookup table.
-  * @rmtoll LExCFG1          LUT     LL_PLAY_LUT_GetTruthTable
+  * @rmtoll
+  *  LExCFG1          LUT     LL_PLAY_LUT_GetTruthTable
   * @param  playx PLAY Instance.
   * @param  lut   Value can be one of the following values:
   *         @arg @ref LL_PLAY_LUT0
@@ -1030,15 +1056,16 @@ __STATIC_INLINE void LL_PLAY_LUT_SetTruthTable(PLAY_TypeDef *playx, uint32_t lut
   */
 __STATIC_INLINE uint32_t LL_PLAY_LUT_GetTruthTable(const PLAY_TypeDef *playx, uint32_t lut)
 {
-  return (uint32_t)(READ_BIT(playx->LECFG1[lut], PLAY_LExCFG1_LUT) >> PLAY_LExCFG1_LUT_Pos);
+  return (uint32_t)(READ_BIT(playx->LECFG1[lut & (LL_PLAY_LUT_MAX - 1U)], PLAY_LExCFG1_LUT) >> PLAY_LExCFG1_LUT_Pos);
 }
 
 /**
   * @brief  Configure an Input of a Lookup table.
-  * @rmtoll LExCFG2          IN0_SEL     LL_PLAY_LUT_SetSource\n
-  *         LExCFG2          IN1_SEL     LL_PLAY_LUT_SetSource\n
-  *         LExCFG2          IN2_SEL     LL_PLAY_LUT_SetSource\n
-  *         LExCFG2          IN3_SEL     LL_PLAY_LUT_SetSource
+  * @rmtoll
+  *  LExCFG2          IN0_SEL     LL_PLAY_LUT_SetSource \n
+  *  LExCFG2          IN1_SEL     LL_PLAY_LUT_SetSource \n
+  *  LExCFG2          IN2_SEL     LL_PLAY_LUT_SetSource \n
+  *  LExCFG2          IN3_SEL     LL_PLAY_LUT_SetSource
   * @param  playx PLAY Instance.
   * @param  lut   Value can be one of the following values:
   *         @arg @ref LL_PLAY_LUT0
@@ -1130,16 +1157,18 @@ __STATIC_INLINE uint32_t LL_PLAY_LUT_GetTruthTable(const PLAY_TypeDef *playx, ui
   */
 __STATIC_INLINE void LL_PLAY_LUT_SetSource(PLAY_TypeDef *playx, uint32_t lut, uint32_t input_idx, uint32_t source_sel)
 {
-  MODIFY_REG(playx->LECFG2[lut], (PLAY_LExCFG2_IN0_SEL << (input_idx * PLAY_LExCFG2_IN1_SEL_Pos)),
+  MODIFY_REG(playx->LECFG2[lut & (LL_PLAY_LUT_MAX - 1U)],
+             (PLAY_LExCFG2_IN0_SEL << (input_idx * PLAY_LExCFG2_IN1_SEL_Pos)),
              (source_sel << (input_idx * PLAY_LExCFG2_IN1_SEL_Pos)));
 }
 
 /**
   * @brief  Get the value of an input of a Lookup table.
-  * @rmtoll LExCFG2          IN0_SEL     LL_PLAY_LUT_GetSource\n
-  *         LExCFG2          IN1_SEL     LL_PLAY_LUT_GetSource\n
-  *         LExCFG2          IN2_SEL     LL_PLAY_LUT_GetSource\n
-  *         LExCFG2          IN3_SEL     LL_PLAY_LUT_GetSource
+  * @rmtoll
+  *  LExCFG2          IN0_SEL     LL_PLAY_LUT_GetSource \n
+  *  LExCFG2          IN1_SEL     LL_PLAY_LUT_GetSource \n
+  *  LExCFG2          IN2_SEL     LL_PLAY_LUT_GetSource \n
+  *  LExCFG2          IN3_SEL     LL_PLAY_LUT_GetSource
   * @param  playx PLAY Instance.
   * @param  lut   Value can be one of the following values:
   *         @arg @ref LL_PLAY_LUT0
@@ -1231,14 +1260,15 @@ __STATIC_INLINE void LL_PLAY_LUT_SetSource(PLAY_TypeDef *playx, uint32_t lut, ui
   */
 __STATIC_INLINE uint32_t LL_PLAY_LUT_GetSource(const PLAY_TypeDef *playx, uint32_t lut, uint32_t input_idx)
 {
-  return (uint32_t)((READ_BIT(playx->LECFG2[lut],
+  return (uint32_t)((READ_BIT(playx->LECFG2[lut & (LL_PLAY_LUT_MAX - 1U)],
                               (PLAY_LExCFG2_IN0_SEL << (input_idx * PLAY_LExCFG2_IN1_SEL_Pos))))
                     >> (input_idx * PLAY_LExCFG2_IN1_SEL_Pos));
 }
 
 /**
   * @brief  Configure the Clock Gate of a Lookup table.
-  * @rmtoll LExCFG2          CK_SEL     LL_PLAY_LUT_SetClockGate
+  * @rmtoll
+  *  LExCFG2          CK_SEL     LL_PLAY_LUT_SetClockGate
   * @param  playx PLAY Instance.
   * @param  lut   Value can be one of the following values:
   *         @arg @ref LL_PLAY_LUT0
@@ -1312,12 +1342,14 @@ __STATIC_INLINE uint32_t LL_PLAY_LUT_GetSource(const PLAY_TypeDef *playx, uint32
   */
 __STATIC_INLINE void LL_PLAY_LUT_SetClockGate(PLAY_TypeDef *playx, uint32_t lut, uint32_t clk_gate)
 {
-  MODIFY_REG(playx->LECFG2[lut], PLAY_LExCFG2_CK_SEL, clk_gate << PLAY_LExCFG2_CK_SEL_Pos);
+  MODIFY_REG(playx->LECFG2[lut & (LL_PLAY_LUT_MAX - 1U)],
+             PLAY_LExCFG2_CK_SEL, clk_gate << PLAY_LExCFG2_CK_SEL_Pos);
 }
 
 /**
   * @brief  Get the Clock Gate of a Lookup table.
-  * @rmtoll LExCFG2          CK_SEL     LL_PLAY_LUT_GetClockGate
+  * @rmtoll
+  *  LExCFG2          CK_SEL     LL_PLAY_LUT_GetClockGate
   * @param  playx PLAY Instance.
   * @param  lut   Value can be one of the following values:
   *         @arg @ref LL_PLAY_LUT0
@@ -1391,13 +1423,15 @@ __STATIC_INLINE void LL_PLAY_LUT_SetClockGate(PLAY_TypeDef *playx, uint32_t lut,
   */
 __STATIC_INLINE uint32_t LL_PLAY_LUT_GetClockGate(const PLAY_TypeDef *playx, uint32_t lut)
 {
-  return (uint32_t)(READ_BIT(playx->LECFG2[lut], PLAY_LExCFG2_CK_SEL) >> PLAY_LExCFG2_CK_SEL_Pos);
+  return (uint32_t)(READ_BIT(playx->LECFG2[lut & (LL_PLAY_LUT_MAX - 1U)],
+                             PLAY_LExCFG2_CK_SEL) >> PLAY_LExCFG2_CK_SEL_Pos);
 }
 
 /**
   * @brief  Get LUT Output status.
-  * @rmtoll OSR          LEOUTD           LL_PLAY_LUT_GetStatus
-  * @rmtoll OSR          LEOUTR           LL_PLAY_LUT_GetStatus
+  * @rmtoll
+  *  OSR          LEOUTD           LL_PLAY_LUT_GetStatus \n
+  *  OSR          LEOUTR           LL_PLAY_LUT_GetStatus
   * @param  playx  PLAY Instance.
   * @param  output Value can be a one of the following values:
   *         @arg @ref LL_PLAY_LUT0_OUT_DIRECT
@@ -1442,7 +1476,8 @@ __STATIC_INLINE uint32_t LL_PLAY_LUT_GetStatus(const PLAY_TypeDef *playx, uint32
 
 /**
   * @brief  Configure the source of an PLAY output.
-  * @rmtoll OUTxCFG          SEL     LL_PLAY_OUTPUT_SetSource
+  * @rmtoll
+  *  OUTxCFG          SEL     LL_PLAY_OUTPUT_SetSource
   * @param  playx      PLAY Instance.
   * @param  output_mux Value can be one of the following values:
   *         @arg @ref LL_PLAY_OUT0
@@ -1497,12 +1532,14 @@ __STATIC_INLINE uint32_t LL_PLAY_LUT_GetStatus(const PLAY_TypeDef *playx, uint32
   */
 __STATIC_INLINE void LL_PLAY_OUTPUT_SetSource(PLAY_TypeDef *playx, uint32_t output_mux, uint32_t source)
 {
-  MODIFY_REG(playx->OUTCFG[output_mux], PLAY_OUTxCFG_SEL, (POSITION_VAL(source)) << PLAY_OUTxCFG_SEL_Pos);
+  MODIFY_REG(playx->OUTCFG[output_mux & (LL_PLAY_OUT_MAX - 1U)], PLAY_OUTxCFG_SEL,
+             (POSITION_VAL(source)) << PLAY_OUTxCFG_SEL_Pos);
 }
 
 /**
   * @brief  Get the source of an PLAY output.
-  * @rmtoll OUTxCFG          SEL     LL_PLAY_OUTPUT_GetSource
+  * @rmtoll
+  *  OUTxCFG          SEL     LL_PLAY_OUTPUT_GetSource
   * @param  playx      PLAY Instance.
   * @param  output_mux Value can be one of the following values:
   *         @arg @ref LL_PLAY_OUT0
@@ -1557,7 +1594,8 @@ __STATIC_INLINE void LL_PLAY_OUTPUT_SetSource(PLAY_TypeDef *playx, uint32_t outp
   */
 __STATIC_INLINE uint32_t LL_PLAY_OUTPUT_GetSource(const PLAY_TypeDef *playx, uint32_t output_mux)
 {
-  return (uint32_t)(1UL << (READ_BIT(playx->OUTCFG[output_mux], PLAY_OUTxCFG_SEL) >> PLAY_OUTxCFG_SEL_Pos));
+  return (uint32_t)(1UL << (READ_BIT(playx->OUTCFG[output_mux & (LL_PLAY_OUT_MAX - 1U)],
+                                     PLAY_OUTxCFG_SEL) >> PLAY_OUTxCFG_SEL_Pos));
 }
 
 /**
@@ -1570,7 +1608,8 @@ __STATIC_INLINE uint32_t LL_PLAY_OUTPUT_GetSource(const PLAY_TypeDef *playx, uin
 
 /**
   * @brief  Set High level to a Software Trigger input.
-  * @rmtoll SWINSET          SWIN           LL_PLAY_SetSWTrigger
+  * @rmtoll
+  *  SWINSET          SWIN           LL_PLAY_SetSWTrigger
   * @param  playx          PLAY Instance.
   * @param  msk_swtriggers Value can be a combination of the following values:
   *         @arg @ref LL_PLAY_SWTRIG0
@@ -1598,7 +1637,8 @@ __STATIC_INLINE void LL_PLAY_SetSWTrigger(PLAY_TypeDef *playx, uint32_t msk_swtr
 
 /**
   * @brief  Set Low level to a Software Trigger input.
-  * @rmtoll SWINCLR          SWIN           LL_PLAY_ResetSWTrigger
+  * @rmtoll
+  *  SWINCLR          SWIN           LL_PLAY_ResetSWTrigger
   * @param  playx          PLAY Instance.
   * @param  msk_swtriggers Value can be a combination of the following values:
   *         @arg @ref LL_PLAY_SWTRIG0
@@ -1626,7 +1666,8 @@ __STATIC_INLINE void LL_PLAY_ResetSWTrigger(PLAY_TypeDef *playx, uint32_t msk_sw
 
 /**
   * @brief  Get the level of a Software Trigger input.
-  * @rmtoll SWIN          SWIN           LL_PLAY_IsSWTriggerSet
+  * @rmtoll
+  *  SWIN          SWIN           LL_PLAY_IsSWTriggerSet
   * @param  playx     PLAY Instance.
   * @param  swtrigger Value can be a one of the following values:
   *         @arg @ref LL_PLAY_SWTRIG0
@@ -1654,7 +1695,8 @@ __STATIC_INLINE uint32_t LL_PLAY_IsSWTriggerSet(const PLAY_TypeDef *playx, uint3
 
 /**
   * @brief  Toggle the level of Software Trigger input.
-  * @rmtoll SWIN          SWIN           LL_PLAY_ToggleSWTrigger
+  * @rmtoll
+  *  SWIN          SWIN           LL_PLAY_ToggleSWTrigger
   * @param  playx          PLAY Instance.
   * @param  msk_swtriggers Value can be a combination of the following values:
   *         @arg @ref LL_PLAY_SWTRIG0
@@ -1691,8 +1733,9 @@ __STATIC_INLINE void LL_PLAY_ToggleSWTrigger(PLAY_TypeDef *playx, uint32_t msk_s
 
 /**
   * @brief  Enable lookup table output flag interrupt.
-  * @rmtoll FLIER          FLAGD_IEN           LL_PLAY_LUT_EnableIT
-  * @rmtoll FLIER          FLAGR_IEN           LL_PLAY_LUT_EnableIT
+  * @rmtoll
+  *  FLIER          FLAGD_IEN           LL_PLAY_LUT_EnableIT \n
+  *  FLIER          FLAGR_IEN           LL_PLAY_LUT_EnableIT
   * @param  playx   PLAY Instance.
   * @param  msk_its Value can be a combination of the following values:
   *         @arg @ref LL_PLAY_LUT0_OUT_DIRECT
@@ -1737,8 +1780,9 @@ __STATIC_INLINE void LL_PLAY_LUT_EnableIT(PLAY_TypeDef *playx, uint32_t msk_its)
 
 /**
   * @brief  Disable lookup table output flag interrupt.
-  * @rmtoll FLIER          FLAGD_IEN           LL_PLAY_LUT_DisableIT
-  * @rmtoll FLIER          FLAGR_IEN           LL_PLAY_LUT_DisableIT
+  * @rmtoll
+  *  FLIER          FLAGD_IEN           LL_PLAY_LUT_DisableIT \n
+  *  FLIER          FLAGR_IEN           LL_PLAY_LUT_DisableIT
   * @param  playx   PLAY Instance.
   * @param  msk_its Value can be a combination of the following values:
   *         @arg @ref LL_PLAY_LUT0_OUT_DIRECT
@@ -1783,8 +1827,9 @@ __STATIC_INLINE void LL_PLAY_LUT_DisableIT(PLAY_TypeDef *playx, uint32_t msk_its
 
 /**
   * @brief  Check lookup table output flag interrupt.
-  * @rmtoll FLIER          FLAGD_IEN           LL_PLAY_LUT_IsEnabledIT
-  * @rmtoll FLIER          FLAGR_IEN           LL_PLAY_LUT_IsEnabledIT
+  * @rmtoll
+  *  FLIER          FLAGD_IEN           LL_PLAY_LUT_IsEnabledIT \n
+  *  FLIER          FLAGR_IEN           LL_PLAY_LUT_IsEnabledIT
   * @param  playx PLAY Instance.
   * @param  flag  Value can be a one of the following values:
   *         @arg @ref LL_PLAY_LUT0_OUT_DIRECT
@@ -1828,8 +1873,9 @@ __STATIC_INLINE uint32_t LL_PLAY_LUT_IsEnabledIT(const PLAY_TypeDef *playx, uint
 
 /**
   * @brief  Get the lookup table output flag interrupt mask.
-  * @rmtoll FLIER          FLAGD_IEN           LL_PLAY_LUT_GetIT
-  * @rmtoll FLIER          FLAGR_IEN           LL_PLAY_LUT_GetIT
+  * @rmtoll
+  *  FLIER          FLAGD_IEN           LL_PLAY_LUT_GetIT \n
+  *  FLIER          FLAGR_IEN           LL_PLAY_LUT_GetIT
   * @param  playx PLAY Instance.
   * @return Mask of enabled Lookup table output interrupts.
   */
@@ -1840,7 +1886,8 @@ __STATIC_INLINE uint32_t LL_PLAY_LUT_GetIT(const PLAY_TypeDef *playx)
 
 /**
   * @brief  Enable Software Trigger write complete interrupt.
-  * @rmtoll IER          SWINWC_IEN           LL_PLAY_EnableIT_SWTriggerWriteComplete
+  * @rmtoll
+  *  IER          SWINWC_IEN           LL_PLAY_EnableIT_SWTriggerWriteComplete
   * @param  playx PLAY Instance.
   */
 __STATIC_INLINE void LL_PLAY_EnableIT_SWTriggerWriteComplete(PLAY_TypeDef *playx)
@@ -1850,7 +1897,8 @@ __STATIC_INLINE void LL_PLAY_EnableIT_SWTriggerWriteComplete(PLAY_TypeDef *playx
 
 /**
   * @brief  Disable Software Trigger write complete interrupt.
-  * @rmtoll IER          SWINWC_IEN           LL_PLAY_DisableIT_SWTriggerWriteComplete
+  * @rmtoll
+  *  IER          SWINWC_IEN           LL_PLAY_DisableIT_SWTriggerWriteComplete
   * @param  playx PLAY Instance.
   */
 __STATIC_INLINE void LL_PLAY_DisableIT_SWTriggerWriteComplete(PLAY_TypeDef *playx)
@@ -1860,7 +1908,8 @@ __STATIC_INLINE void LL_PLAY_DisableIT_SWTriggerWriteComplete(PLAY_TypeDef *play
 
 /**
   * @brief  Check Software Trigger write complete interrupt.
-  * @rmtoll IER          SWINWC_IEN           LL_PLAY_IsEnabledIT_SWTriggerWriteComplete
+  * @rmtoll
+  *  IER          SWINWC_IEN           LL_PLAY_IsEnabledIT_SWTriggerWriteComplete
   * @param  playx PLAY Instance.
   * @return State of bit (1 or 0).
   */
@@ -1871,7 +1920,8 @@ __STATIC_INLINE uint32_t LL_PLAY_IsEnabledIT_SWTriggerWriteComplete(const PLAY_T
 
 /**
   * @brief  Enable Edge Trigger write complete interrupt.
-  * @rmtoll IER          FLCTLWC_IEN           LL_PLAY_LUT_EnableIT_EdgeTriggerWriteComplete
+  * @rmtoll
+  *  IER          FLCTLWC_IEN           LL_PLAY_LUT_EnableIT_EdgeTriggerWriteComplete
   * @param  playx PLAY Instance.
   */
 __STATIC_INLINE void LL_PLAY_LUT_EnableIT_EdgeTriggerWriteComplete(PLAY_TypeDef *playx)
@@ -1881,7 +1931,8 @@ __STATIC_INLINE void LL_PLAY_LUT_EnableIT_EdgeTriggerWriteComplete(PLAY_TypeDef 
 
 /**
   * @brief  Disable Edge Trigger write complete interrupt.
-  * @rmtoll IER          FLCTLWC_IEN           LL_PLAY_LUT_DisableIT_EdgeTriggerWriteComplete
+  * @rmtoll
+  *  IER          FLCTLWC_IEN           LL_PLAY_LUT_DisableIT_EdgeTriggerWriteComplete
   * @param  playx PLAY Instance.
   */
 __STATIC_INLINE void LL_PLAY_LUT_DisableIT_EdgeTriggerWriteComplete(PLAY_TypeDef *playx)
@@ -1891,7 +1942,8 @@ __STATIC_INLINE void LL_PLAY_LUT_DisableIT_EdgeTriggerWriteComplete(PLAY_TypeDef
 
 /**
   * @brief  Check Edge Trigger write complete interrupt.
-  * @rmtoll IER          FLCTLWC_IEN           LL_PLAY_LUT_IsEnabledIT_EdgeTriggerWriteComplete
+  * @rmtoll
+  *  IER          FLCTLWC_IEN           LL_PLAY_LUT_IsEnabledIT_EdgeTriggerWriteComplete
   * @param  playx PLAY Instance.
   * @return State of bit (1 or 0).
   */
@@ -1910,8 +1962,9 @@ __STATIC_INLINE uint32_t LL_PLAY_LUT_IsEnabledIT_EdgeTriggerWriteComplete(const 
 
 /**
   * @brief  Set flag transition of all lookup table outputs.
-  * @rmtoll FLCTL          FLAGD_EDGE          LL_PLAY_LUT_ConfigEdgeTrigger
-  * @rmtoll FLCTL          FLAGR_EDGE          LL_PLAY_LUT_ConfigEdgeTrigger
+  * @rmtoll
+  *  FLCTL          FLAGD_EDGE          LL_PLAY_LUT_ConfigEdgeTrigger \n
+  *  FLCTL          FLAGR_EDGE          LL_PLAY_LUT_ConfigEdgeTrigger
   * @param  playx            PLAY Instance.
   * @param  msk_rising_flags Mask of flags to configure on rising edge.
   *         The others flag  will be configured on falling edge.
@@ -1960,8 +2013,9 @@ __STATIC_INLINE void LL_PLAY_LUT_ConfigEdgeTrigger(PLAY_TypeDef *playx, uint32_t
 
 /**
   * @brief  Set flag transition for lookup table output.
-  * @rmtoll FLCTL          FLAGD_EDGE          LL_PLAY_LUT_SetEdgeTrigger
-  * @rmtoll FLCTL          FLAGR_EDGE          LL_PLAY_LUT_SetEdgeTrigger
+  * @rmtoll
+  *  FLCTL          FLAGD_EDGE          LL_PLAY_LUT_SetEdgeTrigger \n
+  *  FLCTL          FLAGR_EDGE          LL_PLAY_LUT_SetEdgeTrigger
   * @param  playx           PLAY Instance.
   * @param  msk_out_falling Value can be a combination of the following values:
   *         @arg @ref LL_PLAY_LUT0_OUT_DIRECT
@@ -2045,8 +2099,9 @@ __STATIC_INLINE void LL_PLAY_LUT_SetEdgeTrigger(PLAY_TypeDef *playx, uint32_t ms
 
 /**
   * @brief  Get flag transitions of all lookup table outputs.
-  * @rmtoll FLCTL          FLAGD_EDGE          LL_PLAY_LUT_GetEdgeTrigger
-  * @rmtoll FLCTL          FLAGR_EDGE          LL_PLAY_LUT_GetEdgeTrigger
+  * @rmtoll
+  *  FLCTL          FLAGD_EDGE          LL_PLAY_LUT_GetEdgeTrigger \n
+  *  FLCTL          FLAGR_EDGE          LL_PLAY_LUT_GetEdgeTrigger
   * @param  playx PLAY Instance.
   */
 __STATIC_INLINE uint32_t LL_PLAY_LUT_GetEdgeTrigger(const PLAY_TypeDef *playx)
@@ -2056,8 +2111,9 @@ __STATIC_INLINE uint32_t LL_PLAY_LUT_GetEdgeTrigger(const PLAY_TypeDef *playx)
 
 /**
   * @brief  Check lookup table output flag status.
-  * @rmtoll FLSTAT          FLAGD          LL_PLAY_LUT_IsActiveFlag
-  * @rmtoll FLSTAT          FLAGR          LL_PLAY_LUT_IsActiveFlag
+  * @rmtoll
+  *  FLSTAT          FLAGD          LL_PLAY_LUT_IsActiveFlag \n
+  *  FLSTAT          FLAGR          LL_PLAY_LUT_IsActiveFlag
   * @param  playx PLAY Instance.
   * @param  flag  Value can be a one of the following values:
   *         @arg @ref LL_PLAY_LUT0_OUT_DIRECT
@@ -2101,8 +2157,9 @@ __STATIC_INLINE uint32_t LL_PLAY_LUT_IsActiveFlag(const PLAY_TypeDef *playx, uin
 
 /**
   * @brief  Clear lookup table output flag.
-  * @rmtoll FLCLR          FLAGD_CLR       LL_PLAY_LUT_ClearFlag
-  * @rmtoll FLCLR          FLAGR_CLR       LL_PLAY_LUT_ClearFlag
+  * @rmtoll
+  *  FLCLR          FLAGD_CLR       LL_PLAY_LUT_ClearFlag \n
+  *  FLCLR          FLAGR_CLR       LL_PLAY_LUT_ClearFlag
   * @param  playx PLAY Instance.
   * @param  msk_flags  Value can be a one of the following values:
   *         @arg @ref LL_PLAY_LUT0_OUT_DIRECT
@@ -2145,8 +2202,9 @@ __STATIC_INLINE void LL_PLAY_LUT_ClearFlag(PLAY_TypeDef *playx, uint32_t msk_fla
 
 /**
   * @brief  Set lookup table output flag.
-  * @rmtoll FLSET          FLAGD_SET       LL_PLAY_LUT_SetFlag
-  * @rmtoll FLSET          FLAGR_SET       LL_PLAY_LUT_SetFlag
+  * @rmtoll
+  *  FLSET          FLAGD_SET       LL_PLAY_LUT_SetFlag \n
+  *  FLSET          FLAGR_SET       LL_PLAY_LUT_SetFlag
   * @param  playx PLAY Instance.
   * @param  msk_flags  Value can be a one of the following values:
   *         @arg @ref LL_PLAY_LUT0_OUT_DIRECT
@@ -2191,8 +2249,9 @@ __STATIC_INLINE void LL_PLAY_LUT_SetFlag(PLAY_TypeDef *playx, uint32_t msk_flags
 
 /**
   * @brief  Retrieve the status of all lookup table flags.
-  * @rmtoll FLSTAT          FLAGD          LL_PLAY_LUT_GetFlags
-  * @rmtoll FLSTAT          FLAGR          LL_PLAY_LUT_GetFlags
+  * @rmtoll
+  *  FLSTAT          FLAGD          LL_PLAY_LUT_GetFlags \n
+  *  FLSTAT          FLAGR          LL_PLAY_LUT_GetFlags
   * @param  playx PLAY Instance.
   * @return Flags status (bit mask).
   *         This value can be a combination of the following values:
@@ -2236,7 +2295,8 @@ __STATIC_INLINE uint32_t LL_PLAY_LUT_GetFlags(const PLAY_TypeDef *playx)
 
 /**
   * @brief  Check Software Trigger write busy flag status.
-  * @rmtoll MSR          SWINWBFS          LL_PLAY_IsSWTriggerWriteBusy
+  * @rmtoll
+  *  MSR          SWINWBFS          LL_PLAY_IsSWTriggerWriteBusy
   * @param  playx PLAY Instance.
   * @return State of bit (1 or 0).
   */
@@ -2247,7 +2307,8 @@ __STATIC_INLINE uint32_t LL_PLAY_IsSWTriggerWriteBusy(const PLAY_TypeDef *playx)
 
 /**
   * @brief  Check Software Trigger write complete flag status.
-  * @rmtoll ISR          SWINWC          LL_PLAY_IsSWTriggerWriteComplete
+  * @rmtoll
+  *  ISR          SWINWC          LL_PLAY_IsSWTriggerWriteComplete
   * @param  playx PLAY Instance.
   * @return State of bit (1 or 0).
   */
@@ -2257,7 +2318,8 @@ __STATIC_INLINE uint32_t LL_PLAY_IsSWTriggerWriteComplete(const PLAY_TypeDef *pl
 }
 /**
   * @brief  Clear Software Trigger write complete flag.
-  * @rmtoll ICR          SWINWC_CLR       LL_PLAY_ClearFlag_SWTriggerWriteComplete
+  * @rmtoll
+  *  ICR          SWINWC_CLR       LL_PLAY_ClearFlag_SWTriggerWriteComplete
   * @param  playx PLAY Instance.
   */
 __STATIC_INLINE void LL_PLAY_ClearFlag_SWTriggerWriteComplete(PLAY_TypeDef *playx)
@@ -2267,7 +2329,8 @@ __STATIC_INLINE void LL_PLAY_ClearFlag_SWTriggerWriteComplete(PLAY_TypeDef *play
 
 /**
   * @brief  Check Edge Trigger write busy flag status.
-  * @rmtoll MSR          FLCTLWBFS          LL_PLAY_LUT_IsEdgeTriggerWriteBusy
+  * @rmtoll
+  *  MSR          FLCTLWBFS          LL_PLAY_LUT_IsEdgeTriggerWriteBusy
   * @param  playx PLAY Instance.
   * @return State of bit (1 or 0).
   */
@@ -2278,7 +2341,8 @@ __STATIC_INLINE uint32_t LL_PLAY_LUT_IsEdgeTriggerWriteBusy(const PLAY_TypeDef *
 
 /**
   * @brief  Check Edge Trigger write complete flag status.
-  * @rmtoll ISR          FLCTLWC          LL_PLAY_LUT_IsEdgeTriggerWriteComplete
+  * @rmtoll
+  *  ISR          FLCTLWC          LL_PLAY_LUT_IsEdgeTriggerWriteComplete
   * @param  playx PLAY Instance.
   * @return State of bit (1 or 0).
   */
@@ -2289,7 +2353,8 @@ __STATIC_INLINE uint32_t LL_PLAY_LUT_IsEdgeTriggerWriteComplete(const PLAY_TypeD
 
 /**
   * @brief  Clear Edge Trigger write complete flag.
-  * @rmtoll ICR          FLCTLWC_CLR       LL_PLAY_LUT_ClearFlag_EdgeTriggerWriteComplete
+  * @rmtoll
+  *  ICR          FLCTLWC_CLR       LL_PLAY_LUT_ClearFlag_EdgeTriggerWriteComplete
   * @param  playx PLAY Instance.
   */
 __STATIC_INLINE void LL_PLAY_LUT_ClearFlag_EdgeTriggerWriteComplete(PLAY_TypeDef *playx)
@@ -2299,7 +2364,8 @@ __STATIC_INLINE void LL_PLAY_LUT_ClearFlag_EdgeTriggerWriteComplete(PLAY_TypeDef
 
 /**
   * @brief  Check Flags flag status.
-  * @rmtoll ISR          FLAGS          LL_PLAY_LUT_IsActiveFlag_FLAGS
+  * @rmtoll
+  *  ISR          FLAGS          LL_PLAY_LUT_IsActiveFlag_FLAGS
   * @param  playx PLAY Instance.
   * @return State of bit (1 or 0).
   */
@@ -2312,114 +2378,87 @@ __STATIC_INLINE uint32_t LL_PLAY_LUT_IsActiveFlag_FLAGS(const PLAY_TypeDef *play
   * @}
   */
 
-/** @defgroup PLAY_LL_EF_TrustZone  TrustZone management functions
+/** @defgroup PLAY_LL_EF_Privilege_Services Privilege Services
   * @{
   */
 
 /**
-  * @brief  Configure Privilege mode.
-  * @rmtoll PRIVCFGR          PRIV          LL_PLAY_ConfigPrivilege
-  * @param  playx     PLAY Instance.
-  * @param  attribute Value can be a one of the following values:
-  *         @arg @ref LL_PLAY_NPRIV
-  *         @arg @ref LL_PLAY_CONFIG_PRIV
-  *         @arg @ref LL_PLAY_FULL_PRIV
+  * @brief  Set the privileged access level attribute for item(s).
+  * @rmtoll
+  *  PRIVCFGR          PRIV          LL_PLAY_SetPrivAttr
+  * @param  playx PLAY Instance.
+  * @param  item This parameter can be one or a combination of the following values:
+  *         @arg @ref LL_PLAY_PRIV_ITEM_CONFIG
+  *         @arg @ref LL_PLAY_PRIV_ITEM_ALL
+  * @param priv_attr This parameter can be one of the following values:
+  *        @arg @ref LL_PLAY_ATTR_NPRIV
+  *        @arg @ref LL_PLAY_ATTR_PRIV
   */
-__STATIC_INLINE void LL_PLAY_ConfigPrivilege(PLAY_TypeDef *playx, uint32_t attribute)
+__STATIC_INLINE void LL_PLAY_SetPrivAttr(PLAY_TypeDef *playx, uint32_t item, uint32_t priv_attr)
 {
-  MODIFY_REG(playx->PRIVCFGR, PLAY_PRIVCFGR_PRIV_Msk, attribute);
+  MODIFY_REG(playx->PRIVCFGR, PLAY_PRIVCFGR_PRIV, (item & ((~priv_attr) + 1U)));
 }
 
 /**
-  * @brief  Get Privilege mode configuration.
-  * @rmtoll PRIVCFGR          PRIV          LL_PLAY_GetConfigPrivilege
+  * @brief  Get the privileged access level attribute of an item.
+  * @rmtoll
+  *  PRIVCFGR          PRIV          LL_PLAY_GetPrivAttr
   * @param  playx PLAY Instance.
-  * @return Returned value can be one of the following values:
-  *         @arg @ref LL_PLAY_NPRIV
-  *         @arg @ref LL_PLAY_CONFIG_PRIV
-  *         @arg @ref LL_PLAY_FULL_PRIV
+  * @param  item This parameter can be one of the following values:
+  *         @arg @ref LL_PLAY_PRIV_ITEM_CONFIG
+  *         @arg @ref LL_PLAY_PRIV_ITEM_ALL
+  * @return Current privileged level attributes:
+  *         @arg @ref LL_PLAY_ATTR_NPRIV
+  *         @arg @ref LL_PLAY_ATTR_PRIV
   */
-__STATIC_INLINE uint32_t LL_PLAY_GetConfigPrivilege(const PLAY_TypeDef *playx)
+__STATIC_INLINE uint32_t LL_PLAY_GetPrivAttr(const PLAY_TypeDef *playx, uint32_t item)
 {
-  return (uint32_t)(READ_BIT(playx->PRIVCFGR, PLAY_PRIVCFGR_PRIV_Msk));
+  return ((READ_BIT(playx->PRIVCFGR, item) == item) ? LL_PLAY_ATTR_PRIV : LL_PLAY_ATTR_NPRIV);
 }
 
 /**
-  * @brief  Indicates if the PLAY Configuration registers require a Privilege access.
-  * @rmtoll PRIVCFGR          PRIV          LL_PLAY_IsEnabledConfigPrivilege
-  * @param  playx PLAY Instance.
-  * @return State of bit (1 or 0).
+  * @}
   */
-__STATIC_INLINE uint32_t LL_PLAY_IsEnabledConfigPrivilege(const PLAY_TypeDef *playx)
-{
-  return ((READ_BIT(playx->PRIVCFGR, PLAY_PRIVCFGR_PRIV_Msk) == LL_PLAY_CONFIG_PRIV) ? 1UL : 0UL);
-}
 
-/**
-  * @brief  Indicates if all PLAY registers require a Privilege access.
-  * @rmtoll PRIVCFGR          PRIV          LL_PLAY_IsEnabledFullPrivilege
-  * @param  playx PLAY Instance.
-  * @return State of bit (1 or 0).
+/** @defgroup PLAY_LL_EF_Security_Services Security Services
+  * @{
   */
-__STATIC_INLINE uint32_t LL_PLAY_IsEnabledFullPrivilege(const PLAY_TypeDef *playx)
-{
-  return ((READ_BIT(playx->PRIVCFGR, PLAY_PRIVCFGR_PRIV_Msk) == LL_PLAY_FULL_PRIV) ? 1UL : 0UL);
-}
 
 #if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
 /**
-  * @brief  Configure Secure mode
-  * @rmtoll SECCFGR          SEC          LL_PLAY_ConfigSecure
-  * @param  playx     PLAY Instance.
-  * @param  attribute Value can be a one of the following values:
-  *         @arg @ref LL_PLAY_NSEC
-  *         @arg @ref LL_PLAY_CONFIG_SEC
-  *         @arg @ref LL_PLAY_FULL_SEC
-  * @note Only available when system implements security (TZEN=1).
+  * @brief  Set the security access level attribute for item(s).
+  * @rmtoll
+  *  SECCFGR           SEC          LL_PLAY_SetSecAttr
+  * @param  playx PLAY Instance.
+  * @param  item This parameter can be one or a combination of the following values:
+  *         @arg @ref LL_PLAY_SEC_ITEM_CONFIG
+  *         @arg @ref LL_PLAY_SEC_ITEM_ALL
+  * @param sec_attr This parameter can be one of the following values:
+  *        @arg @ref LL_PLAY_ATTR_NSEC
+  *        @arg @ref LL_PLAY_ATTR_SEC
   */
-__STATIC_INLINE void LL_PLAY_ConfigSecure(PLAY_TypeDef *playx, uint32_t attribute)
+__STATIC_INLINE void LL_PLAY_SetSecAttr(PLAY_TypeDef *playx, uint32_t item, uint32_t sec_attr)
 {
-  MODIFY_REG(playx->SECCFGR, PLAY_SECCFGR_SEC_Msk, attribute);
+  MODIFY_REG(playx->SECCFGR, PLAY_SECCFGR_SEC, (item & ((~sec_attr) + 1U)));
 }
+#endif /* __ARM_FEATURE_CMSE */
 
 /**
-  * @brief  Get Secure mode configuration
-  * @rmtoll SECCFGR          SEC          LL_PLAY_GetConfigSecure
+  * @brief  Get the security access level attribute of an item.
+  * @rmtoll
+  *  SECCFGR           SEC          LL_PLAY_GetSecAttr
   * @param  playx PLAY Instance.
-  * @note Only available when system implements security (TZEN=1).
-  * @return Returned value of configuration can be one of the following values:
-  *         @arg @ref LL_PLAY_NSEC
-  *         @arg @ref LL_PLAY_CONFIG_SEC
-  *         @arg @ref LL_PLAY_FULL_SEC
+  * @param  item This parameter can be one of the following values:
+  *         @arg @ref LL_PLAY_SEC_ITEM_CONFIG
+  *         @arg @ref LL_PLAY_SEC_ITEM_ALL
+  * @return Current security level attributes:
+  *         @arg @ref LL_PLAY_ATTR_NSEC
+  *         @arg @ref LL_PLAY_ATTR_SEC
   */
-__STATIC_INLINE uint32_t LL_PLAY_GetConfigSecure(const PLAY_TypeDef *playx)
+__STATIC_INLINE uint32_t LL_PLAY_GetSecAttr(const PLAY_TypeDef *playx, uint32_t item)
 {
-  return (uint32_t)(READ_BIT(playx->SECCFGR, PLAY_SECCFGR_SEC_Msk));
+  return ((READ_BIT(playx->SECCFGR, item) == item) ? LL_PLAY_ATTR_SEC : LL_PLAY_ATTR_NSEC);
 }
-
-/**
-  * @brief  Indicates if the PLAY Configuration registers require a Secure access.
-  * @rmtoll SECCFGR          SEC          LL_PLAY_IsEnabledConfigSecure
-  * @param  playx PLAY Instance.
-  * @return State of bit (1 or 0).
-  */
-__STATIC_INLINE uint32_t LL_PLAY_IsEnabledConfigSecure(const PLAY_TypeDef *playx)
-{
-  return ((READ_BIT(playx->SECCFGR, PLAY_SECCFGR_SEC_Msk) == LL_PLAY_CONFIG_SEC) ? 1UL : 0UL);
-}
-
-/**
-  * @brief  Indicates if all PLAY registers require a Secure access.
-  * @rmtoll SECCFGR          SEC          LL_PLAY_IsEnabledFullSecure
-  * @param  playx PLAY Instance.
-  * @return State of bit (1 or 0).
-  */
-__STATIC_INLINE uint32_t LL_PLAY_IsEnabledFullSecure(const PLAY_TypeDef *playx)
-{
-  return ((READ_BIT(playx->SECCFGR, PLAY_SECCFGR_SEC_Msk) == LL_PLAY_FULL_SEC) ? 1UL : 0UL);
-}
-
-#endif /* defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U) */
 
 /**
   * @}
