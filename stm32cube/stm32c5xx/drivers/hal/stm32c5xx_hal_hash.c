@@ -55,7 +55,7 @@
 The HASH HAL driver can be used as follows:
 
 1. Initialize and de-initialize the logical HASH object :
-  - To initialize the HASH peripheral, Use the HAL_HASH_Init() function to initialize the HAL HASH driver for the given
+  - To initialize the HASH peripheral, use the HAL_HASH_Init() function to initialize the HAL HASH driver for the given
     handle object
     - The HAL_HASH_Init() API allows you to associate physical instance to logical object(handle) and
       initialize the internal parameters of the handle.
@@ -98,7 +98,7 @@ The HASH HAL driver can be used as follows:
     These APIs process the data and wait until the digest computation is finished.
     Use the function HAL_HASH_Compute() for HASH or HAL_HASH_HMAC_Compute() for HMAC.
    - Interrupt mode: processing APIs are not blocking functions.
-    It processes the data under interruption.
+     It processes the data in interrupt mode
      Use the function HAL_HASH_Compute_IT() for HASH or HAL_HASH_HMAC_Compute_IT() for HMAC.
    - DMA mode: processing APIs are not blocking functions and the CPU is not used for data transfer.
      The data transfer is ensured by DMA.
@@ -156,7 +156,7 @@ The HASH HAL driver can be used as follows:
    into the handle).
 
 7. Remarks on message length:
- - HAL in interruption mode (interruptions driven):
+ - HAL in interrupt mode (interrupt-driven):
     - Due to HASH peripheral hardware design, the peripheral interruption is triggered every 64 bytes.
 
  - HAL in DMA mode
@@ -229,10 +229,9 @@ static hal_status_t HASH_ResumeDMA(hal_hash_handle_t *hhash);
 static void HASH_WriteKey(hal_hash_handle_t *hhash, const uint8_t *p_key, uint32_t key_size_byte);
 static void HASH_GetDigestMsg(const hal_hash_handle_t *hhash, uint8_t *p_msg_digest, uint8_t input_size_byte);
 static uint32_t HASH_GetDigestLength(hal_hash_algo_t algorithm);
-static hal_status_t HASH_WaitOnFlagUntilTimeout(hal_hash_handle_t *hhash, uint32_t flag, uint32_t flag_state,
-                                                uint32_t timeout_ms);
-static hal_status_t HASH_WaitOnFlag_NonBlocking(hal_hash_handle_t *hhash, uint32_t flag, uint32_t flag_state,
-                                                uint32_t timeout_ms);
+static hal_status_t HASH_WaitUntilTimeout(hal_hash_handle_t *hhash, uint32_t timeout_ms, uint32_t tick_start);
+static hal_status_t HASH_WaitOnFlag(hal_hash_handle_t *hhash, uint32_t flag, uint32_t flag_state,
+                                    uint32_t timeout_ms);
 static void HASH_SetHMACMode(const hal_hash_handle_t *hhash, uint32_t key_size_bytes);
 static void HASH_WriteRemainingByte(hal_hash_handle_t *hhash, const uint8_t *p_in_buff, uint32_t input_size_bytes);
 static void HASH_WriteBlock(hal_hash_handle_t *hhash);
@@ -252,33 +251,26 @@ static void HASH_HMAC_SwitchToStep3(hal_hash_handle_t *hhash);
 /** @defgroup HASH_Private_Constants HASH Private Constants
   * @{
   */
-#define HASH_TIMEOUT_MS               1000U          /*!< Time-out value in millisecond                          */
-#define HAL_DIGEST_SIZE_20B            20U           /*!< Digest size in bytes of SHA1                           */
-#define HAL_DIGEST_SIZE_28B            28U           /*!< Digest size in bytes of SHA224                         */
-#define HAL_DIGEST_SIZE_32B            32U           /*!< Digest size in bytes of SHA256                         */
+#define HASH_MAX_BLOCK_PROCESS_CYCLE   (500U) /*!< Max block processing time in clock cycles        */
+
+#define HAL_DIGEST_SIZE_20B            (20U)           /*!< Digest size in bytes of SHA1                      */
+#define HAL_DIGEST_SIZE_28B            (28U)           /*!< Digest size in bytes of SHA224                    */
+#define HAL_DIGEST_SIZE_32B            (32U)           /*!< Digest size in bytes of SHA256                    */
 #if defined(HASH_CR_ALGO_2) && defined(HASH_CR_ALGO_3)
-#define HAL_DIGEST_SIZE_48B            48U           /*!< Digest Size in bytes of SHA384                         */
+#define HAL_DIGEST_SIZE_48B            (48U)           /*!< Digest size in bytes of SHA384                    */
 #endif /* HASH_CR_ALGO_2 | HASH_CR_ALGO_3 */
 #if defined(HASH_CR_ALGO_2) && defined(HASH_CR_ALGO_3)
-#define HAL_DIGEST_SIZE_64B            64U           /*!< Digest Size in bytes of SHA512                         */
+#define HAL_DIGEST_SIZE_64B            (64U)           /*!< Digest size in bytes of SHA512                    */
 #endif /* HASH_CR_ALGO_2 | HASH_CR_ALGO_3 */
 
-#define HASH_PHASE_READY              0x01U   /*!< HASH peripheral is ready to start                          */
-#define HASH_PHASE_PROCESS            0x02U   /*!< HASH peripheral is in HASH processing phase                */
-#define HASH_PHASE_HMAC_STEP_1        0x03U   /*!< HASH peripheral is in HMAC step 1 processing phase
-                                                   (It consists in entering the inner hash function key)      */
-#define HASH_PHASE_HMAC_STEP_2        0x04U   /*!< HASH peripheral is in HMAC step 2 processing phase
-                                                    (It consists in entering the message text)                */
-#define HASH_PHASE_HMAC_STEP_3        0x05U   /*!< HASH peripheral is in HMAC step 3 processing phase
-                                                (It consists in entering the outer hash function key)         */
+#define HASH_PHASE_READY                 (0x01U) /*!< HASH peripheral is ready to start                       */
+#define HASH_PHASE_PROCESS               (0x02U) /*!< HASH peripheral is in HASH processing phase             */
+#define HASH_PHASE_HMAC_MESSAGE_ENTRY    (0x03U) /*!< HASH peripheral is in HMAC step 2 processing phase
+                                                      (It consists in entering the message text)              */
+#define HASH_PHASE_HMAC_OUTER_KEY_ENTRY  (0x04U) /*!< HASH peripheral is in HMAC step 3 processing phase
+                                                       (It consists in entering the outer hash function key)  */
 
-#define HASH_FLAG_STATE_RESET         0x00U   /*!< HASH flag is in reset state                                */
-#define HASH_FLAG_STATE_SET           0x01U   /*!< HASH flag is in set state                                  */
-
-#define HASH_SUSPEND_NONE             0x00U   /*!< HASH peripheral suspension not requested                   */
-#define HASH_SUSPEND                  0x01U   /*!< HASH peripheral suspension is requested                    */
-
-#define HASH_WORD_SIZE_BYTE           4U      /*!< HASH peripheral transfers must be word-aligned (4 bytes) */
+#define HASH_WORD_SIZE_BYTE           (4U)      /*!< HASH peripheral transfers must be word-aligned (4 bytes) */
 /**
   * @}
   */
@@ -369,10 +361,8 @@ hal_status_t HAL_HASH_Init(hal_hash_handle_t *hhash, hal_hash_t instance)
   hhash->hdma_in = (hal_dma_handle_t *)NULL;
 #endif /* USE_HAL_HASH_DMA */
 
-#if defined (USE_HAL_HASH_CLK_ENABLE_MODEL) && (USE_HAL_HASH_CLK_ENABLE_MODEL == HAL_CLK_ENABLE_PERIPH_ONLY)
-#if defined(HASH)
+#if defined (USE_HAL_HASH_CLK_ENABLE_MODEL) && (USE_HAL_HASH_CLK_ENABLE_MODEL > HAL_CLK_ENABLE_NO)
   HAL_RCC_HASH_EnableClock();
-#endif /* HASH */
 #endif /* USE_HAL_HASH_CLK_ENABLE_MODEL */
 
 #if defined (USE_HAL_HASH_REGISTER_CALLBACKS) && (USE_HAL_HASH_REGISTER_CALLBACKS == 1)
@@ -464,8 +454,11 @@ hal_status_t HAL_HASH_SetConfig(hal_hash_handle_t *hhash, const hal_hash_config_
 #endif /* USE_HAL_SECURE_CHECK_PARAM */
 
   HASH_TypeDef *hash_instance = HASH_GET_INSTANCE(hhash);
+
+  STM32_CLEAR_BIT(hash_instance->CR, HASH_CR_LKEY);
+
   /* Set the data type and algorithm */
-  STM32_MODIFY_REG(hash_instance->CR, HASH_CR_INIT | HASH_CR_DATATYPE | HASH_CR_ALGO | HASH_CR_INIT,
+  STM32_MODIFY_REG(hash_instance->CR, HASH_CR_DATATYPE | HASH_CR_ALGO | HASH_CR_INIT,
                    ((uint32_t)p_config->data_swapping | (uint32_t)p_config->algorithm | HASH_CR_INIT));
 
   /* Get the digest size in bytes according to the selected algorithm */
@@ -476,7 +469,7 @@ hal_status_t HAL_HASH_SetConfig(hal_hash_handle_t *hhash, const hal_hash_config_
 
   hhash->remain_bytes_number = 0U;
   hhash->phase               = HASH_PHASE_READY;
-  hhash->suspend_request     = HASH_SUSPEND_NONE;
+  hhash->suspend_request     = 0U;
   hhash->global_state        = HAL_HASH_STATE_CONFIGURED;
 
   return HAL_OK;
@@ -493,7 +486,9 @@ void HAL_HASH_GetConfig(const hal_hash_handle_t *hhash, hal_hash_config_t *p_con
   ASSERT_DBG_PARAM(p_config != NULL);
 
   ASSERT_DBG_STATE(hhash->global_state, (uint32_t)HAL_HASH_STATE_CONFIGURED
-                   | (uint32_t)HAL_HASH_STATE_COMPUTE_ACTIVE | (uint32_t)HAL_HASH_STATE_UPDATE_ACTIVE);
+                   | (uint32_t)HAL_HASH_STATE_COMPUTE_ACTIVE | (uint32_t)HAL_HASH_STATE_UPDATE_ACTIVE
+                   | (uint32_t)HAL_HASH_HMAC_STATE_CONFIGURED | (uint32_t)HAL_HASH_HMAC_STATE_COMPUTE_ACTIVE
+                   | (uint32_t)HAL_HASH_HMAC_STATE_UPDATE_ACTIVE | (uint32_t)HAL_HASH_STATE_SUSPENDED);
 
   const HASH_TypeDef *hash_instance = HASH_GET_INSTANCE(hhash);
 
@@ -544,6 +539,7 @@ hal_status_t HAL_HASH_Compute(hal_hash_handle_t *hhash, const void *p_input_buff
 {
   uint32_t digest_copy_length = 0U;
   uint32_t valid_blocks_nbr   = 0U;
+  uint32_t tickstart;
 
   ASSERT_DBG_PARAM(hhash != NULL);
   ASSERT_DBG_PARAM(p_input_buffer != NULL);
@@ -571,6 +567,8 @@ hal_status_t HAL_HASH_Compute(hal_hash_handle_t *hhash, const void *p_input_buff
 #endif /* USE_HAL_CHECK_PARAM || USE_HAL_SECURE_CHECK_PARAM */
 
   HAL_CHECK_UPDATE_STATE(hhash, global_state, HAL_HASH_STATE_CONFIGURED, HAL_HASH_STATE_COMPUTE_ACTIVE);
+
+  tickstart = HAL_GetTick();
 
   HASH_TypeDef *hash_instance = HASH_GET_INSTANCE(hhash);
 
@@ -608,17 +606,23 @@ hal_status_t HAL_HASH_Compute(hal_hash_handle_t *hhash, const void *p_input_buff
   /* Start the message Digest calculation */
   STM32_SET_BIT(HASH_GET_INSTANCE(hhash)->STR, HASH_STR_DCAL);
 
-  if (HASH_WaitOnFlag_NonBlocking(hhash, HAL_HASH_FLAG_DCI, HASH_FLAG_STATE_RESET, timeout_ms) != HAL_OK)
+  if (HASH_WaitOnFlag(hhash, HAL_HASH_FLAG_DCI, 0U, HASH_MAX_BLOCK_PROCESS_CYCLE) != HAL_OK)
   {
     hhash->phase = HASH_PHASE_READY;
     hhash->global_state = HAL_HASH_STATE_CONFIGURED;
-    return HAL_TIMEOUT;
+    return HAL_ERROR;
   }
 
   digest_copy_length = (hhash->output_size_byte > hhash->block_size_byte)
                        ? hhash->block_size_byte : hhash->output_size_byte;
   HASH_GetDigestMsg(hhash, (uint8_t *)hhash->p_output_buff, (uint8_t)digest_copy_length);
 
+  if (HASH_WaitUntilTimeout(hhash, timeout_ms, tickstart) != HAL_OK)
+  {
+    hhash->phase = HASH_PHASE_READY;
+    hhash->global_state = HAL_HASH_STATE_CONFIGURED;
+    return HAL_TIMEOUT;
+  }
 
   hhash->phase = HASH_PHASE_READY;
   hhash->global_state = HAL_HASH_STATE_CONFIGURED;
@@ -697,7 +701,7 @@ hal_status_t HAL_HASH_Compute_IT(hal_hash_handle_t *hhash, const void *p_input_b
     }
   }
 
-  HAL_HASH_EnableIT(hhash, HAL_HASH_IT_DIN);
+  HAL_HASH_EnableIT(hhash, HAL_HASH_IT_DIN | HAL_HASH_IT_DC);
 
   return HAL_OK;
 }
@@ -821,6 +825,7 @@ hal_status_t HAL_HASH_Update(hal_hash_handle_t *hhash, const void *p_add_input_b
   uint32_t valid_blocks_nbr    = 0U;
   uint32_t remain_bytes_nbr    = 0U;
   uint32_t remaining_words_nbr = 0U;
+  uint32_t tick_start;
 
   ASSERT_DBG_PARAM(hhash != NULL);
   ASSERT_DBG_PARAM(p_add_input_buffer != NULL);
@@ -844,6 +849,8 @@ hal_status_t HAL_HASH_Update(hal_hash_handle_t *hhash, const void *p_add_input_b
   HASH_CHECK_UPDATE_STATE(hhash, global_state,
                           ((uint32_t)HAL_HASH_STATE_CONFIGURED | (uint32_t)HAL_HASH_STATE_UPDATE_ACTIVE),
                           HAL_HASH_STATE_UPDATE_ACTIVE);
+
+  tick_start = HAL_GetTick();
 
   hhash->p_input_buff          = (const uint8_t *)p_add_input_buffer;
   hhash->input_data_count_byte = 0U;
@@ -888,7 +895,7 @@ hal_status_t HAL_HASH_Update(hal_hash_handle_t *hhash, const void *p_add_input_b
     }
   }
 
-  if (HASH_WaitOnFlagUntilTimeout(hhash, HAL_HASH_FLAG_BUSY, HASH_FLAG_STATE_SET, timeout_ms) != HAL_OK)
+  if (HASH_WaitUntilTimeout(hhash, timeout_ms, tick_start) != HAL_OK)
   {
     hhash->phase = HASH_PHASE_READY;
     hhash->global_state = HAL_HASH_STATE_CONFIGURED;
@@ -1102,13 +1109,13 @@ hal_status_t HAL_HASH_Update_DMA(hal_hash_handle_t *hhash, const void *p_add_inp
   * @retval HAL_INVALID_PARAM        Invalid parameter.
   * @retval HAL_TIMEOUT              A timeout has occurred.
   * @retval HAL_ERROR                An error has occurred.
-  * @retval HAL_BUSY                 Process is already ongoing.
   * @retval HAL_OK                   Hash operation correctly completed and digest available in the output buffer.
   */
 hal_status_t HAL_HASH_Finish(hal_hash_handle_t *hhash, void *p_output_buffer, uint32_t output_buffer_size_byte,
                              uint32_t *p_output_hash_size_byte, uint32_t timeout_ms)
 {
   uint32_t digest_copy_length = 0U;
+  uint32_t tickstart;
 
   ASSERT_DBG_PARAM(hhash != NULL);
   ASSERT_DBG_PARAM(p_output_buffer != NULL);
@@ -1133,6 +1140,8 @@ hal_status_t HAL_HASH_Finish(hal_hash_handle_t *hhash, void *p_output_buffer, ui
   }
 #endif /* USE_HAL_CHECK_PARAM || USE_HAL_SECURE_CHECK_PARAM */
 
+  tickstart = HAL_GetTick();
+
   HASH_TypeDef *hash_instance = HASH_GET_INSTANCE(hhash);
 
   hhash->output_size_byte        = output_buffer_size_byte;
@@ -1156,17 +1165,23 @@ hal_status_t HAL_HASH_Finish(hal_hash_handle_t *hhash, void *p_output_buffer, ui
   /* Start the message padding then the Digest calculation */
   STM32_SET_BIT(HASH_GET_INSTANCE(hhash)->STR, HASH_STR_DCAL);
 
-  if (HASH_WaitOnFlag_NonBlocking(hhash, HAL_HASH_FLAG_DCI, HASH_FLAG_STATE_RESET, timeout_ms) != HAL_OK)
+  if (HASH_WaitOnFlag(hhash, HAL_HASH_FLAG_DCI, 0U, HASH_MAX_BLOCK_PROCESS_CYCLE) != HAL_OK)
   {
     hhash->phase = HASH_PHASE_READY;
     hhash->global_state = HAL_HASH_STATE_CONFIGURED;
-    return HAL_TIMEOUT;
+    return HAL_ERROR;
   }
 
   digest_copy_length = (hhash->output_size_byte > hhash->block_size_byte)
                        ? hhash->block_size_byte : hhash->output_size_byte;
   HASH_GetDigestMsg(hhash, (uint8_t *)hhash->p_output_buff, (uint8_t)digest_copy_length);
 
+  if (HASH_WaitUntilTimeout(hhash, timeout_ms, tickstart) != HAL_OK)
+  {
+    hhash->phase = HASH_PHASE_READY;
+    hhash->global_state = HAL_HASH_STATE_CONFIGURED;
+    return HAL_TIMEOUT;
+  }
 
   if (STM32_IS_BIT_SET(hash_instance->CR, HASH_CR_MDMAT))
   {
@@ -1260,15 +1275,15 @@ hal_status_t HAL_HASH_HMAC_SetConfig(hal_hash_handle_t *hhash, const hal_hash_hm
   /* Start the Key padding then the Digest calculation */
   STM32_SET_BIT(hash_instance->STR, HASH_STR_DCAL);
 
-  if (HASH_WaitOnFlagUntilTimeout(hhash, HAL_HASH_FLAG_BUSY, HASH_FLAG_STATE_SET, HASH_TIMEOUT_MS) != HAL_OK)
+  if (HASH_WaitOnFlag(hhash, HAL_HASH_FLAG_DCI, 1U, HASH_MAX_BLOCK_PROCESS_CYCLE) != HAL_OK)
   {
     hhash->phase = HASH_PHASE_READY;
     hhash->global_state = HAL_HASH_HMAC_STATE_CONFIGURED;
     return HAL_ERROR;
   }
 
-  hhash->phase           = HASH_PHASE_HMAC_STEP_2;
-  hhash->suspend_request = HASH_SUSPEND_NONE;
+  hhash->phase           = HASH_PHASE_HMAC_MESSAGE_ENTRY;
+  hhash->suspend_request = 0U;
   hhash->global_state    = HAL_HASH_HMAC_STATE_CONFIGURED;
 
   return HAL_OK;
@@ -1284,8 +1299,10 @@ void HAL_HASH_HMAC_GetConfig(const hal_hash_handle_t *hhash, hal_hash_hmac_confi
   ASSERT_DBG_PARAM(hhash != NULL);
   ASSERT_DBG_PARAM(p_config != NULL);
 
-  ASSERT_DBG_STATE(hhash->global_state, (uint32_t)HAL_HASH_HMAC_STATE_CONFIGURED
-                   | (uint32_t)HAL_HASH_HMAC_STATE_COMPUTE_ACTIVE | (uint32_t)HAL_HASH_HMAC_STATE_UPDATE_ACTIVE);
+  ASSERT_DBG_STATE(hhash->global_state, (uint32_t)HAL_HASH_STATE_CONFIGURED
+                   | (uint32_t)HAL_HASH_STATE_COMPUTE_ACTIVE | (uint32_t)HAL_HASH_STATE_UPDATE_ACTIVE
+                   | (uint32_t)HAL_HASH_HMAC_STATE_CONFIGURED | (uint32_t)HAL_HASH_HMAC_STATE_COMPUTE_ACTIVE
+                   | (uint32_t)HAL_HASH_HMAC_STATE_UPDATE_ACTIVE | (uint32_t)HAL_HASH_STATE_SUSPENDED);
 
   const HASH_TypeDef *hash_instance = HASH_GET_INSTANCE(hhash);
 
@@ -1337,6 +1354,7 @@ hal_status_t HAL_HASH_HMAC_Compute(hal_hash_handle_t *hhash, const void *p_input
 {
   uint32_t digest_copy_length = 0U;
   uint32_t valid_blocks_nbr   = 0U;
+  uint32_t tickstart;
 
   ASSERT_DBG_PARAM(hhash != NULL);
   ASSERT_DBG_PARAM(p_input_buffer != NULL);
@@ -1365,6 +1383,8 @@ hal_status_t HAL_HASH_HMAC_Compute(hal_hash_handle_t *hhash, const void *p_input
 
   HASH_TypeDef *hash_instance = HASH_GET_INSTANCE(hhash);
   HAL_CHECK_UPDATE_STATE(hhash, global_state, HAL_HASH_HMAC_STATE_CONFIGURED, HAL_HASH_HMAC_STATE_COMPUTE_ACTIVE);
+
+  tickstart = HAL_GetTick();
 
   hhash->phase                   = HASH_PHASE_READY;
   hhash->p_input_buff            = (const uint8_t *)p_input_buffer;
@@ -1398,11 +1418,11 @@ hal_status_t HAL_HASH_HMAC_Compute(hal_hash_handle_t *hhash, const void *p_input
   /* Start the message padding then the Digest calculation */
   STM32_SET_BIT(hash_instance->STR, HASH_STR_DCAL);
 
-  if (HASH_WaitOnFlagUntilTimeout(hhash, HAL_HASH_FLAG_BUSY, HASH_FLAG_STATE_SET, timeout_ms) != HAL_OK)
+  if (HASH_WaitOnFlag(hhash, HAL_HASH_FLAG_BUSY, 1U, HASH_MAX_BLOCK_PROCESS_CYCLE) != HAL_OK)
   {
     hhash->phase        = HASH_PHASE_READY;
     hhash->global_state = HAL_HASH_HMAC_STATE_CONFIGURED;
-    return HAL_TIMEOUT;
+    return HAL_ERROR;
   }
 
   /* Configure the number of valid bits in last word of the Key */
@@ -1413,16 +1433,23 @@ hal_status_t HAL_HASH_HMAC_Compute(hal_hash_handle_t *hhash, const void *p_input
   /* Start the message padding then the Digest calculation */
   STM32_SET_BIT(HASH_GET_INSTANCE(hhash)->STR, HASH_STR_DCAL);
 
-  if (HASH_WaitOnFlagUntilTimeout(hhash, HAL_HASH_FLAG_DCI, HASH_FLAG_STATE_RESET, timeout_ms) != HAL_OK)
+  if (HASH_WaitOnFlag(hhash, HAL_HASH_FLAG_DCI, 0U, HASH_MAX_BLOCK_PROCESS_CYCLE) != HAL_OK)
   {
     hhash->phase = HASH_PHASE_READY;
     hhash->global_state = HAL_HASH_HMAC_STATE_CONFIGURED;
-    return HAL_TIMEOUT;
+    return HAL_ERROR;
   }
 
   digest_copy_length = (output_buffer_size_byte < hhash->digest_size_byte) ? output_buffer_size_byte :
                        hhash->digest_size_byte;
   HASH_GetDigestMsg(hhash, (uint8_t *)p_output_buffer, (uint8_t)digest_copy_length);
+
+  if (HASH_WaitUntilTimeout(hhash, timeout_ms, tickstart) != HAL_OK)
+  {
+    hhash->phase = HASH_PHASE_READY;
+    hhash->global_state = HAL_HASH_HMAC_STATE_CONFIGURED;
+    return HAL_TIMEOUT;
+  }
 
   hhash->phase        = HASH_PHASE_READY;
   hhash->global_state = HAL_HASH_HMAC_STATE_CONFIGURED;
@@ -1485,7 +1512,7 @@ hal_status_t HAL_HASH_HMAC_Compute_IT(hal_hash_handle_t *hhash, const void *p_in
   hhash->p_output_hash_size_byte = p_output_hash_size_byte;
   *p_output_hash_size_byte       = hhash->digest_size_byte;
 
-  hhash->phase = HASH_PHASE_HMAC_STEP_2;
+  hhash->phase = HASH_PHASE_HMAC_MESSAGE_ENTRY;
 
   /* Configure the number of valid bits in last word of the message */
   STM32_MODIFY_REG(HASH_GET_INSTANCE(hhash)->STR, HASH_STR_NBLW, 8U * ((hhash->input_size_byte) % HASH_WORD_SIZE_BYTE));
@@ -1496,12 +1523,12 @@ hal_status_t HAL_HASH_HMAC_Compute_IT(hal_hash_handle_t *hhash, const void *p_in
     if (HASH_WriteBlock_IT(hhash) != HAL_OK)
     {
       hhash->phase = HASH_PHASE_READY;
-      hhash->global_state = HAL_HASH_STATE_CONFIGURED;
+      hhash->global_state = HAL_HASH_HMAC_STATE_CONFIGURED;
       return HAL_ERROR;
     }
   }
 
-  HAL_HASH_EnableIT(hhash, HAL_HASH_IT_DIN);
+  HAL_HASH_EnableIT(hhash, HAL_HASH_IT_DIN | HAL_HASH_IT_DC);
 
   return HAL_OK;
 }
@@ -1572,7 +1599,7 @@ hal_status_t HAL_HASH_HMAC_Compute_DMA(hal_hash_handle_t *hhash, const void *p_i
 
   STM32_CLEAR_BIT(hash_instance->CR, HASH_CR_MDMAT);
 
-  hhash->phase = HASH_PHASE_HMAC_STEP_2;
+  hhash->phase = HASH_PHASE_HMAC_MESSAGE_ENTRY;
   /* Configure the number of valid bits in last word of the message */
   STM32_MODIFY_REG(hash_instance->STR, HASH_STR_NBLW, 8U * ((hhash->input_size_byte) % HASH_WORD_SIZE_BYTE));
 
@@ -1623,6 +1650,7 @@ hal_status_t HAL_HASH_HMAC_Update(hal_hash_handle_t *hhash, const void *p_add_in
   uint32_t valid_blocks_nbr    = 0U;
   uint32_t remain_bytes_nbr    = 0U;
   uint32_t remaining_words_nbr = 0U;
+  uint32_t tickstart;
 
   ASSERT_DBG_PARAM(hhash != NULL);
   ASSERT_DBG_PARAM(p_add_input_buffer != NULL);
@@ -1647,6 +1675,8 @@ hal_status_t HAL_HASH_HMAC_Update(hal_hash_handle_t *hhash, const void *p_add_in
   HASH_CHECK_UPDATE_STATE(hhash, global_state,
                           ((uint32_t)HAL_HASH_HMAC_STATE_CONFIGURED | (uint32_t)HAL_HASH_HMAC_STATE_UPDATE_ACTIVE),
                           HAL_HASH_HMAC_STATE_UPDATE_ACTIVE);
+
+  tickstart = HAL_GetTick();
 
   hhash->p_input_buff = (const uint8_t *)p_add_input_buffer;
   hhash->input_size_byte = input_size_byte;
@@ -1684,7 +1714,7 @@ hal_status_t HAL_HASH_HMAC_Update(hal_hash_handle_t *hhash, const void *p_add_in
     HASH_SaveRemainingBytes(hhash, remain_bytes_nbr);
   }
 
-  if (HASH_WaitOnFlagUntilTimeout(hhash, HAL_HASH_FLAG_BUSY, HASH_FLAG_STATE_SET, timeout_ms) != HAL_OK)
+  if (HASH_WaitUntilTimeout(hhash, timeout_ms, tickstart) != HAL_OK)
   {
     hhash->phase = HASH_PHASE_READY;
     hhash->global_state = HAL_HASH_HMAC_STATE_CONFIGURED;
@@ -1741,7 +1771,7 @@ hal_status_t HAL_HASH_HMAC_Update_IT(hal_hash_handle_t *hhash, const void *p_add
   hhash->p_input_buff          = (const uint8_t *)p_add_input_buffer;
   hhash->input_data_count_byte = 0U;
   hhash->input_size_byte       = input_size_byte;
-  hhash->phase                 = HASH_PHASE_HMAC_STEP_2;
+  hhash->phase                 = HASH_PHASE_HMAC_MESSAGE_ENTRY;
 
   /* Configure the number of valid bits in last word of the message */
   STM32_MODIFY_REG(HASH_GET_INSTANCE(hhash)->STR, HASH_STR_NBLW, 8U * ((hhash->input_size_byte) % HASH_WORD_SIZE_BYTE));
@@ -1901,13 +1931,14 @@ hal_status_t HAL_HASH_HMAC_Update_DMA(hal_hash_handle_t *hhash, const void *p_ad
   * @param  timeout_ms               Specify timeout value in millisecond.
   * @retval HAL_INVALID_PARAM        Invalid parameter.
   * @retval HAL_TIMEOUT              A timeout has occurred.
-  * @retval HAL_BUSY                 Process is already ongoing.
+  * @retval HAL_ERROR                An error has occurred.
   * @retval HAL_OK                   Hash operation correctly completed and digest available in the output buffer.
   */
 hal_status_t HAL_HASH_HMAC_Finish(hal_hash_handle_t *hhash, void *p_output_buffer, uint32_t output_buffer_size_byte,
                                   uint32_t *p_output_hash_size_byte, uint32_t timeout_ms)
 {
   uint32_t digest_copy_length = 0U;
+  uint32_t tickstart;
 
   ASSERT_DBG_PARAM(hhash != NULL);
   ASSERT_DBG_PARAM(p_output_buffer != NULL);
@@ -1932,6 +1963,8 @@ hal_status_t HAL_HASH_HMAC_Finish(hal_hash_handle_t *hhash, void *p_output_buffe
   }
 #endif /* USE_HAL_CHECK_PARAM || USE_HAL_SECURE_CHECK_PARAM */
 
+  tickstart = HAL_GetTick();
+
   HASH_TypeDef *hash_instance = HASH_GET_INSTANCE(hhash);
   hhash->output_size_byte        = output_buffer_size_byte;
   hhash->p_output_buff           = (uint8_t *)p_output_buffer;
@@ -1953,11 +1986,11 @@ hal_status_t HAL_HASH_HMAC_Finish(hal_hash_handle_t *hhash, void *p_output_buffe
   /* Start the message padding then the Digest calculation */
   STM32_SET_BIT(hash_instance->STR, HASH_STR_DCAL);
 
-  if (HASH_WaitOnFlag_NonBlocking(hhash, HAL_HASH_FLAG_BUSY, HASH_FLAG_STATE_SET, timeout_ms) != HAL_OK)
+  if (HASH_WaitOnFlag(hhash, HAL_HASH_FLAG_BUSY, 1U, HASH_MAX_BLOCK_PROCESS_CYCLE) != HAL_OK)
   {
     hhash->phase        = HASH_PHASE_READY;
     hhash->global_state = HAL_HASH_HMAC_STATE_CONFIGURED;
-    return HAL_TIMEOUT;
+    return HAL_ERROR;
   }
 
   hhash->input_data_count_byte = 0U;
@@ -1968,11 +2001,11 @@ hal_status_t HAL_HASH_HMAC_Finish(hal_hash_handle_t *hhash, void *p_output_buffe
   /* Start the message padding then the Digest calculation */
   STM32_SET_BIT(HASH_GET_INSTANCE(hhash)->STR, HASH_STR_DCAL);
 
-  if (HASH_WaitOnFlag_NonBlocking(hhash, HAL_HASH_FLAG_DCI, HASH_FLAG_STATE_RESET, timeout_ms) != HAL_OK)
+  if (HASH_WaitOnFlag(hhash, HAL_HASH_FLAG_DCI, 0U, HASH_MAX_BLOCK_PROCESS_CYCLE) != HAL_OK)
   {
     hhash->phase = HASH_PHASE_READY;
     hhash->global_state = HAL_HASH_HMAC_STATE_CONFIGURED;
-    return HAL_TIMEOUT;
+    return HAL_ERROR;
   }
 
   if (STM32_IS_BIT_SET(hash_instance->CR, HASH_CR_MDMAT))
@@ -1983,6 +2016,13 @@ hal_status_t HAL_HASH_HMAC_Finish(hal_hash_handle_t *hhash, void *p_output_buffe
   digest_copy_length = (output_buffer_size_byte < hhash->digest_size_byte) ? output_buffer_size_byte :
                        hhash->digest_size_byte;
   HASH_GetDigestMsg(hhash, (uint8_t *)p_output_buffer, (uint8_t)digest_copy_length);
+
+  if (HASH_WaitUntilTimeout(hhash, timeout_ms, tickstart) != HAL_OK)
+  {
+    hhash->phase = HASH_PHASE_READY;
+    hhash->global_state = HAL_HASH_HMAC_STATE_CONFIGURED;
+    return HAL_TIMEOUT;
+  }
 
   hhash->remain_bytes_number = 0U;
 #if defined (USE_HAL_HASH_DMA) && (USE_HAL_HASH_DMA == 1)
@@ -2014,9 +2054,12 @@ This section provides functions allowing to:
   */
 hal_status_t HAL_HASH_Abort(hal_hash_handle_t *hhash, uint32_t timeout_ms)
 {
+  uint32_t tick_start;
   hal_hash_state_t tmp_state;
   uint8_t is_hash_compute_active;
   uint8_t is_hash_update_active;
+  uint8_t was_hash_compute_active;
+  uint8_t was_hash_update_active;
 
   ASSERT_DBG_PARAM(hhash != NULL);
 
@@ -2031,23 +2074,28 @@ hal_status_t HAL_HASH_Abort(hal_hash_handle_t *hhash, uint32_t timeout_ms)
   }
 #endif /* USE_HAL_SECURE_CHECK_PARAM */
 
+  tick_start = HAL_GetTick();
+
   HASH_TypeDef *hash_instance = HASH_GET_INSTANCE(hhash);
   tmp_state = hhash->global_state;
-  is_hash_compute_active = (uint8_t)(hhash->previous_state == HAL_HASH_STATE_COMPUTE_ACTIVE);
-  is_hash_update_active  = (uint8_t)(hhash->previous_state == HAL_HASH_STATE_UPDATE_ACTIVE);
+  is_hash_compute_active = (uint8_t)(tmp_state == HAL_HASH_STATE_COMPUTE_ACTIVE);
+  is_hash_update_active  = (uint8_t)(tmp_state == HAL_HASH_STATE_UPDATE_ACTIVE);
   hhash->global_state = HAL_HASH_STATE_ABORT;
-  HAL_HASH_DisableIT(hhash, HAL_HASH_FLAG_DCI | HAL_HASH_FLAG_DINI);
+  HAL_HASH_DisableIT(hhash, HAL_HASH_IT_DC | HAL_HASH_IT_DIN);
   if (tmp_state == HAL_HASH_STATE_SUSPENDED)
   {
+    was_hash_compute_active = (uint8_t)(hhash->previous_state == HAL_HASH_STATE_COMPUTE_ACTIVE);
+    was_hash_update_active  = (uint8_t)(hhash->previous_state == HAL_HASH_STATE_UPDATE_ACTIVE);
+
     HAL_HASH_ClearFlag(hhash, (uint32_t)HAL_HASH_FLAG_DCI | HAL_HASH_FLAG_DINI);
     /* Reset the hash processor core */
     STM32_SET_BIT(hash_instance->CR, HASH_CR_INIT);
 
     hhash->input_data_count_byte = 0U;
     hhash->input_size_byte       = 0U;
-    hhash->suspend_request       = HASH_SUSPEND_NONE;
+    hhash->suspend_request       = 0U;
     hhash->phase                 = HASH_PHASE_READY;
-    hhash->global_state = ((is_hash_compute_active == 1U) || (is_hash_update_active == 1U)) ?
+    hhash->global_state = ((was_hash_compute_active == 1U) || (was_hash_update_active == 1U)) ?
                           HAL_HASH_STATE_CONFIGURED : HAL_HASH_HMAC_STATE_CONFIGURED;
 
     return HAL_OK;
@@ -2064,10 +2112,11 @@ hal_status_t HAL_HASH_Abort(hal_hash_handle_t *hhash, uint32_t timeout_ms)
     }
   }
 #endif /* USE_HAL_HASH_DMA */
-  if (HASH_WaitOnFlagUntilTimeout(hhash, HAL_HASH_FLAG_BUSY, HASH_FLAG_STATE_SET, timeout_ms) != HAL_OK)
+
+  if (HASH_WaitUntilTimeout(hhash, timeout_ms, tick_start) != HAL_OK)
   {
-    hhash->global_state = ((is_hash_compute_active == 1U) || (is_hash_update_active == 1U)) ?
-                          HAL_HASH_STATE_CONFIGURED : HAL_HASH_HMAC_STATE_CONFIGURED;
+    hhash->phase = HASH_PHASE_READY;
+    hhash->global_state = HAL_HASH_STATE_CONFIGURED;
     return HAL_TIMEOUT;
   }
 
@@ -2090,8 +2139,12 @@ hal_status_t HAL_HASH_Abort(hal_hash_handle_t *hhash, uint32_t timeout_ms)
 hal_status_t HAL_HASH_Abort_IT(hal_hash_handle_t *hhash)
 {
   hal_hash_state_t tmp_state;
+#if defined(USE_HAL_HASH_DMA) && (USE_HAL_HASH_DMA == 1)
   uint8_t is_hash_compute_active;
   uint8_t is_hash_update_active;
+#endif /* USE_HAL_HASH_DMA */
+  uint8_t was_hash_compute_active;
+  uint8_t was_hash_update_active;
 
   ASSERT_DBG_PARAM(hhash != NULL);
 
@@ -2107,23 +2160,27 @@ hal_status_t HAL_HASH_Abort_IT(hal_hash_handle_t *hhash)
 #endif /* USE_HAL_SECURE_CHECK_PARAM */
 
   HASH_TypeDef *hash_instance = HASH_GET_INSTANCE(hhash);
-  is_hash_compute_active = (uint8_t)(hhash->previous_state == HAL_HASH_STATE_COMPUTE_ACTIVE);
-  is_hash_update_active  = (uint8_t)(hhash->previous_state == HAL_HASH_STATE_UPDATE_ACTIVE);
+  was_hash_compute_active = (uint8_t)(hhash->previous_state == HAL_HASH_STATE_COMPUTE_ACTIVE);
+  was_hash_update_active  = (uint8_t)(hhash->previous_state == HAL_HASH_STATE_UPDATE_ACTIVE);
   tmp_state = hhash->global_state;
+#if defined(USE_HAL_HASH_DMA) && (USE_HAL_HASH_DMA == 1)
+  is_hash_compute_active = (uint8_t)(tmp_state == HAL_HASH_STATE_COMPUTE_ACTIVE);
+  is_hash_update_active  = (uint8_t)(tmp_state == HAL_HASH_STATE_UPDATE_ACTIVE);
+#endif /* USE_HAL_HASH_DMA */
   hhash->previous_state = tmp_state;
   hhash->global_state = HAL_HASH_STATE_ABORT;
 
   if (tmp_state == HAL_HASH_STATE_SUSPENDED)
   {
-    HAL_HASH_DisableIT(hhash, HAL_HASH_FLAG_DCI | HAL_HASH_FLAG_DINI);
+    HAL_HASH_DisableIT(hhash, HAL_HASH_IT_DC | HAL_HASH_IT_DIN);
     HAL_HASH_ClearFlag(hhash, (uint32_t)HAL_HASH_FLAG_DCI | HAL_HASH_FLAG_DINI);
     /* Reset the hash processor core */
     STM32_SET_BIT(hash_instance->CR, HASH_CR_INIT);
     hhash->input_data_count_byte = 0U;
     hhash->input_size_byte       = 0U;
-    hhash->suspend_request       = HASH_SUSPEND_NONE;
+    hhash->suspend_request       = 0U;
     hhash->phase                 = HASH_PHASE_READY;
-    hhash->global_state = ((is_hash_compute_active == 1U) || (is_hash_update_active == 1U))
+    hhash->global_state = ((was_hash_compute_active == 1U) || (was_hash_update_active == 1U))
                           ? HAL_HASH_STATE_CONFIGURED : HAL_HASH_HMAC_STATE_CONFIGURED;
     return HAL_OK;
   }
@@ -2186,7 +2243,7 @@ void HAL_HASH_IRQHandler(hal_hash_handle_t *hhash)
   itsource = hash_instance->IMR;
   itflag   = hash_instance->SR;
 
-  if ((itflag & HAL_HASH_FLAG_DCI) == HAL_HASH_FLAG_DCI)
+  if (((itflag & HAL_HASH_FLAG_DCI) == HAL_HASH_FLAG_DCI) && ((itsource & HAL_HASH_IT_DC) == HAL_HASH_IT_DC))
   {
     digest_copy_length = (hhash->output_size_byte > hhash->block_size_byte)
                          ? hhash->block_size_byte : hhash->output_size_byte;
@@ -2205,7 +2262,7 @@ void HAL_HASH_IRQHandler(hal_hash_handle_t *hhash)
 
   if (hhash->suspend_request == 1U)
   {
-    hhash->suspend_request = HASH_SUSPEND_NONE;
+    hhash->suspend_request = 0U;
     HAL_HASH_DisableIT(hhash, HAL_HASH_IT_DIN | HAL_HASH_IT_DC);
     hhash->previous_state = state;
     hhash->global_state = HAL_HASH_STATE_SUSPENDED;
@@ -2239,14 +2296,15 @@ void HAL_HASH_IRQHandler(hal_hash_handle_t *hhash)
 
       if ((state == HAL_HASH_STATE_COMPUTE_ACTIVE) || (state == HAL_HASH_HMAC_STATE_COMPUTE_ACTIVE))
       {
-        if ((hhash->phase == HASH_PHASE_HMAC_STEP_2) || (hhash->phase == HASH_PHASE_HMAC_STEP_3)
+        if ((hhash->phase == HASH_PHASE_HMAC_MESSAGE_ENTRY) || (hhash->phase == HASH_PHASE_HMAC_OUTER_KEY_ENTRY)
             || (hhash->phase == HASH_PHASE_PROCESS))
         {
           if (HASH_HMAC_ComputeProcessData_IT(hhash) != HAL_OK)
           {
             HAL_HASH_DisableIT(hhash, HAL_HASH_IT_DIN | HAL_HASH_IT_DC);
             hhash->phase = HASH_PHASE_READY;
-            hhash->global_state = HAL_HASH_STATE_CONFIGURED;
+            hhash->global_state = (state == HAL_HASH_STATE_COMPUTE_ACTIVE)
+                                  ? HAL_HASH_STATE_CONFIGURED : HAL_HASH_HMAC_STATE_CONFIGURED;
 #if defined (USE_HAL_HASH_REGISTER_CALLBACKS) && (USE_HAL_HASH_REGISTER_CALLBACKS == 1)
             hhash->p_error_callback(hhash);
 #else
@@ -2257,7 +2315,8 @@ void HAL_HASH_IRQHandler(hal_hash_handle_t *hhash)
         }
 
         if (((hhash->input_size_byte == hhash->input_data_count_byte) && (hhash->phase == HASH_PHASE_PROCESS))
-            || ((hhash->phase == HASH_PHASE_HMAC_STEP_3) && (hhash->key_size_byte == hhash->input_data_count_byte)))
+            || ((hhash->phase == HASH_PHASE_HMAC_OUTER_KEY_ENTRY)
+                && (hhash->key_size_byte == hhash->input_data_count_byte)))
         {
 #if defined (USE_HAL_HASH_REGISTER_CALLBACKS) && (USE_HAL_HASH_REGISTER_CALLBACKS == 1)
           hhash->p_input_cplt_callback(hhash);
@@ -2266,18 +2325,6 @@ void HAL_HASH_IRQHandler(hal_hash_handle_t *hhash)
 #endif /* USE_HAL_HASH_REGISTER_CALLBACKS */
           /* Start the Digest calculation */
           STM32_SET_BIT(HASH_GET_INSTANCE(hhash)->STR, HASH_STR_DCAL);
-          if (HASH_WaitOnFlag_NonBlocking(hhash, HAL_HASH_FLAG_DCI, HASH_FLAG_STATE_RESET, HASH_TIMEOUT_MS) != HAL_OK)
-          {
-            HAL_HASH_DisableIT(hhash, HAL_HASH_IT_DIN | HAL_HASH_IT_DC);
-            hhash->phase = HASH_PHASE_READY;
-            hhash->global_state = HAL_HASH_STATE_CONFIGURED;
-#if defined (USE_HAL_HASH_REGISTER_CALLBACKS) && (USE_HAL_HASH_REGISTER_CALLBACKS == 1)
-            hhash->p_error_callback(hhash);
-#else
-            HAL_HASH_ErrorCallback(hhash);
-#endif /* USE_HAL_HASH_REGISTER_CALLBACKS */
-            return;
-          }
         }
       }
 
@@ -2310,7 +2357,7 @@ void HAL_HASH_IRQHandler(hal_hash_handle_t *hhash)
   * @brief Input data transfer complete callback.
   * @param hhash Pointer to a hal_hash_handle_t structure.
   * @warning HAL_HASH_InputCpltCallback() is called when the complete input message has been fed to the peripheral.
-  *          This API is invoked only when input data are entered under interruption or through DMA.
+  *          This API is invoked only when input data are entered in interrupt mode or through DMA mode.
   * @warning In case of HASH or HMAC update DMA feeding case, HAL_HASH_InputCpltCallback() is
   *          called at the end of each buffer feeding to the peripheral.
   */
@@ -2327,7 +2374,7 @@ __WEAK void HAL_HASH_InputCpltCallback(hal_hash_handle_t *hhash)
 /**
   * @brief Digest computation complete callback.
   * @param hhash Pointer to a hal_hash_handle_t structure.
-  * @note  HAL_HASH_DigestCpltCallback() is used under interruption, is not relevant with DMA.
+  * @note  HAL_HASH_DigestCpltCallback() is used in interrupt mode and is not relevant in DMA mode.
   */
 __WEAK void HAL_HASH_DigestCpltCallback(hal_hash_handle_t *hhash)
 {
@@ -2569,8 +2616,8 @@ hal_status_t HAL_HASH_RequestSuspendComputation(hal_hash_handle_t *hhash)
 #endif /* USE_HAL_SECURE_CHECK_PARAM */
 
 #if defined (USE_HAL_HASH_DMA) && (USE_HAL_HASH_DMA == 1)
-  /* suspension in DMA mode*/
-  if (HAL_HASH_IsActiveFlag(hhash, HAL_HASH_FLAG_DMA) != HASH_FLAG_STATE_RESET)
+  /* suspension in DMA mode */
+  if (HAL_HASH_IsActiveFlag(hhash, HAL_HASH_FLAG_DMA) != 0U)
   {
     if (HASH_SuspendDMA(hhash) != HAL_OK)
     {
@@ -2582,10 +2629,10 @@ hal_status_t HAL_HASH_RequestSuspendComputation(hal_hash_handle_t *hhash)
       hhash->global_state = HAL_HASH_STATE_SUSPENDED;
     }
   }
-  else /* suspension when in interruption mode*/
+  else /* suspension when in interruption mode */
   {
 #endif /* USE_HAL_HASH_DMA */
-    hhash->suspend_request = HASH_SUSPEND;
+    hhash->suspend_request = 1U;
 #if defined (USE_HAL_HASH_DMA) && (USE_HAL_HASH_DMA == 1)
   }
 #endif /* USE_HAL_HASH_DMA */
@@ -2625,7 +2672,7 @@ hal_status_t HAL_HASH_ResumeComputation(hal_hash_handle_t *hhash)
   else
   {
 #endif /* USE_HAL_HASH_DMA */
-    HAL_HASH_EnableIT(hhash, HAL_HASH_IT_DIN);
+    HAL_HASH_EnableIT(hhash, HAL_HASH_IT_DIN | HAL_HASH_IT_DC);
 #if defined (USE_HAL_HASH_DMA) && (USE_HAL_HASH_DMA == 1)
   }
 #endif /* USE_HAL_HASH_DMA */
@@ -2655,8 +2702,8 @@ hal_status_t HAL_HASH_RequestSuspendUpdate(hal_hash_handle_t *hhash)
 #endif /* USE_HAL_SECURE_CHECK_PARAM */
 
 #if defined (USE_HAL_HASH_DMA) && (USE_HAL_HASH_DMA == 1)
-  /* suspension in DMA mode*/
-  if (HAL_HASH_IsActiveFlag(hhash, HAL_HASH_FLAG_DMA) != HASH_FLAG_STATE_RESET)
+  /* suspension in DMA mode */
+  if (HAL_HASH_IsActiveFlag(hhash, HAL_HASH_FLAG_DMA) != 0U)
   {
     if (HASH_SuspendDMA(hhash) != HAL_OK)
     {
@@ -2668,10 +2715,10 @@ hal_status_t HAL_HASH_RequestSuspendUpdate(hal_hash_handle_t *hhash)
       hhash->global_state = HAL_HASH_STATE_SUSPENDED;
     }
   }
-  else /* suspension when in interruption mode*/
+  else /* Suspension in interrupt mode */
   {
 #endif /* USE_HAL_HASH_DMA */
-    hhash->suspend_request = HASH_SUSPEND;
+    hhash->suspend_request = 1U;
 #if defined (USE_HAL_HASH_DMA) && (USE_HAL_HASH_DMA == 1)
   }
 #endif /* USE_HAL_HASH_DMA */
@@ -2980,7 +3027,7 @@ static void HASH_ComputeDMAXferCplt(hal_dma_handle_t *hdma)
   HAL_HASH_InputCpltCallback(hhash);
 #endif /* USE_HAL_HASH_REGISTER_CALLBACKS */
 
-  if (HASH_WaitOnFlag_NonBlocking(hhash, HAL_HASH_FLAG_DCI, HASH_FLAG_STATE_RESET, HASH_TIMEOUT_MS) != HAL_OK)
+  if (HASH_WaitOnFlag(hhash, HAL_HASH_FLAG_DCI, 0U, HASH_MAX_BLOCK_PROCESS_CYCLE) != HAL_OK)
   {
     hhash->phase        = HASH_PHASE_READY;
     hhash->global_state = HAL_HASH_STATE_CONFIGURED;
@@ -3024,7 +3071,7 @@ static void HASH_HMAC_ComputeDMAXferCplt(hal_dma_handle_t *hdma)
   HAL_HASH_InputCpltCallback(hhash);
 #endif /* USE_HAL_HASH_REGISTER_CALLBACKS */
 
-  hhash->phase = HASH_PHASE_HMAC_STEP_3;
+  hhash->phase = HASH_PHASE_HMAC_OUTER_KEY_ENTRY;
   /* Configure the number of valid bits in last word of the Key */
   STM32_MODIFY_REG(hash_instance->STR, HASH_STR_NBLW, 8U * ((hhash->key_size_byte) % HASH_WORD_SIZE_BYTE));
   HASH_WriteKey(hhash, hhash->p_hmac_key_saved, hhash->key_size_byte);
@@ -3032,7 +3079,7 @@ static void HASH_HMAC_ComputeDMAXferCplt(hal_dma_handle_t *hdma)
   /* Start the Key padding then the Digest calculation */
   STM32_SET_BIT(hash_instance->STR, HASH_STR_DCAL);
 
-  if (HASH_WaitOnFlag_NonBlocking(hhash, HAL_HASH_FLAG_DCI, HASH_FLAG_STATE_RESET, HASH_TIMEOUT_MS) != HAL_OK)
+  if (HASH_WaitOnFlag(hhash, HAL_HASH_FLAG_DCI, 0U, HASH_MAX_BLOCK_PROCESS_CYCLE) != HAL_OK)
   {
     hhash->phase        = HASH_PHASE_READY;
     hhash->global_state = HAL_HASH_HMAC_STATE_CONFIGURED;
@@ -3111,7 +3158,7 @@ static void HASH_DMAAbort(hal_dma_handle_t *hdma)
   STM32_SET_BIT(HASH_GET_INSTANCE(hhash)->CR, HASH_CR_INIT);
   hhash->input_data_count_byte = 0U;
   hhash->input_size_byte = 0U;
-  hhash->suspend_request = HASH_SUSPEND_NONE;
+  hhash->suspend_request = 0U;
   hhash->phase           = HASH_PHASE_READY;
   hhash->global_state = ((is_hash_compute_active == 1U) || (is_hash_update_active == 1U))
                         ? HAL_HASH_STATE_CONFIGURED : HAL_HASH_HMAC_STATE_CONFIGURED;
@@ -3203,26 +3250,21 @@ static void HASH_GetDigestMsg(const hal_hash_handle_t *hhash, uint8_t *p_msg_dig
 /**
   * @brief Handle HASH processing timeout.
   * @param hhash        Pointer to a HASH handle structure.
-  * @param flag         Specifies the HASH flag to check.
-  * @param flag_state   The Flag status (SET or RESET).
   * @param timeout_ms   Specify timeout value in millisecond.
+  * @param tick_start   Specify HAL tick start value in milliseconds.
   * @retval HAL_TIMEOUT A timeout has occurred.
   * @retval HAL_OK      Operation completed.
   */
-static hal_status_t HASH_WaitOnFlagUntilTimeout(hal_hash_handle_t *hhash, uint32_t flag, uint32_t flag_state,
-                                                uint32_t timeout_ms)
+static hal_status_t HASH_WaitUntilTimeout(hal_hash_handle_t *hhash, uint32_t timeout_ms, uint32_t tick_start)
 {
-  uint32_t tickstart = HAL_GetTick();
+  STM32_UNUSED(hhash);
 
-  while (HAL_HASH_IsActiveFlag(hhash, flag) == flag_state)
+  /* Check for the timeout */
+  if (timeout_ms != HAL_MAX_DELAY)
   {
-    /* Check for the timeout */
-    if (timeout_ms != HAL_MAX_DELAY)
+    if (((HAL_GetTick() - tick_start) > timeout_ms) || (timeout_ms == 0U))
     {
-      if (((HAL_GetTick() - tickstart) > timeout_ms) || (timeout_ms == 0U))
-      {
-        return HAL_TIMEOUT;
-      }
+      return HAL_TIMEOUT;
     }
   }
 
@@ -3232,7 +3274,7 @@ static hal_status_t HASH_WaitOnFlagUntilTimeout(hal_hash_handle_t *hhash, uint32
 /**
   * @brief Set HASH HMAC mode.
   * @param hhash          Pointer to a HASH handle structure.
-  * @param key_size_bytes Specifie size inputs in bytes.
+  * @param key_size_bytes Specifies the key size in bytes.
   */
 static void HASH_SetHMACMode(const hal_hash_handle_t *hhash, uint32_t key_size_bytes)
 {
@@ -3263,7 +3305,7 @@ static hal_status_t HASH_SuspendDMA(hal_hash_handle_t *hhash)
   STM32_CLEAR_BIT(HASH_GET_INSTANCE(hhash)->CR, HASH_CR_DMAE);
 
   /* Wait until the last DMA transfer is complete (DMAS = 0 in the HASH_SR register) */
-  if (HASH_WaitOnFlagUntilTimeout(hhash, HAL_HASH_FLAG_DMA, HASH_FLAG_STATE_SET, HASH_TIMEOUT_MS) != HAL_OK)
+  if (HASH_WaitOnFlag(hhash, HAL_HASH_FLAG_DMA, 1U, HASH_MAX_BLOCK_PROCESS_CYCLE) != HAL_OK)
   {
     return HAL_TIMEOUT;
   }
@@ -3288,12 +3330,12 @@ static hal_status_t HASH_SuspendDMA(hal_hash_handle_t *hhash)
   }
 
   /* Wait until the hash processor is ready (no block is being processed), that is wait for DINIS=1 in HASH_SR */
-  if (HASH_WaitOnFlagUntilTimeout(hhash, HAL_HASH_FLAG_DINI, HASH_FLAG_STATE_RESET, HASH_TIMEOUT_MS) != HAL_OK)
+  if (HASH_WaitOnFlag(hhash, HAL_HASH_FLAG_DINI, 0U, HASH_MAX_BLOCK_PROCESS_CYCLE) != HAL_OK)
   {
     return HAL_TIMEOUT;
   }
 
-  if (HAL_HASH_IsActiveFlag(hhash, HAL_HASH_FLAG_DCI) != HASH_FLAG_STATE_RESET)
+  if (HAL_HASH_IsActiveFlag(hhash, HAL_HASH_FLAG_DCI) != 0U)
   {
     return HAL_ERROR;
   }
@@ -3437,7 +3479,7 @@ static void HASH_WriteRemainingByte(hal_hash_handle_t *hhash, const uint8_t *p_i
   */
 static void HASH_WriteBlock(hal_hash_handle_t *hhash)
 {
-  uint32_t inputaddr = (uint32_t)hhash->p_input_buff;
+  volatile uint32_t inputaddr = (uint32_t)hhash->p_input_buff;
   uint32_t buffer_counter = 0U;
 
   for (; buffer_counter < hhash->block_size_byte; buffer_counter += 4U)
@@ -3458,10 +3500,12 @@ static void HASH_WriteBlock(hal_hash_handle_t *hhash)
   */
 static hal_status_t HASH_WriteBlock_IT(hal_hash_handle_t *hhash)
 {
-  uint32_t inputaddr = (uint32_t)hhash->p_input_buff;
+  HASH_TypeDef *hash_instance = HASH_GET_INSTANCE(hhash);
 
-  /* Nb byte  to enter in HASH fifo to trig a partial HASH computation */
-  uint32_t NbrOfWordsExpected = (((STM32_READ_REG(HASH_GET_INSTANCE(hhash)->SR) >> HASH_SR_NBWE_Pos)) << 2U);
+  volatile uint32_t inputaddr = (uint32_t)hhash->p_input_buff;
+
+  /* Number of bytes to enter in HASH FIFO to trigger partial HASH */
+  uint32_t NbrOfWordsExpected = (((STM32_READ_REG(hash_instance->SR) >> HASH_SR_NBWE_Pos)) << 2U);
 
   for (uint32_t buffer_counter = 0U; buffer_counter < NbrOfWordsExpected; buffer_counter += 4U)
   {
@@ -3470,16 +3514,16 @@ static hal_status_t HASH_WriteBlock_IT(hal_hash_handle_t *hhash)
       break;
     }
     /* Write input data 4 bytes at a time */
-    HASH_GET_INSTANCE(hhash)->DIN = *(uint32_t *)inputaddr;
+    hash_instance->DIN = *(uint32_t *)inputaddr;
     inputaddr += 4U;
     hhash->p_input_buff += 4U;
     hhash->input_data_count_byte += 4U;
   }
 
-  if (HASH_WaitOnFlag_NonBlocking(hhash, HAL_HASH_FLAG_BUSY, HASH_FLAG_STATE_SET, HASH_TIMEOUT_MS) != HAL_OK)
+  if (HASH_WaitOnFlag(hhash, HAL_HASH_FLAG_BUSY, 1U, HASH_MAX_BLOCK_PROCESS_CYCLE) != HAL_OK)
   {
     HAL_HASH_DisableIT(hhash, HAL_HASH_IT_DIN);
-    return HAL_TIMEOUT;
+    return HAL_ERROR;
   }
 
   return HAL_OK;
@@ -3512,7 +3556,7 @@ static hal_status_t HASH_WriteLastBlock(hal_hash_handle_t *hhash)
 }
 
 /**
-  * @brief Feed the remaining words for the incompleted block to HASH_DIN register.
+  * @brief Feed the remaining words for the incompleted block to the HASH_DIN register.
   * @param hhash               Pointer to a hal_hash_handle_t structure.
   * @param remaining_words_nbr Number of remaining word to write to HASH_DIN register.
   * @retval HAL_TIMEOUT HASH digest computation exceeds timeout
@@ -3531,9 +3575,9 @@ static hal_status_t HASH_WriteIncompleteBlock(hal_hash_handle_t *hhash, uint32_t
     hhash->input_data_count_byte += 4U;
   }
 
-  if (HASH_WaitOnFlag_NonBlocking(hhash, HAL_HASH_FLAG_BUSY, HASH_FLAG_STATE_SET, HASH_TIMEOUT_MS) != HAL_OK)
+  if (HASH_WaitOnFlag(hhash, HAL_HASH_FLAG_BUSY, 1U, HASH_MAX_BLOCK_PROCESS_CYCLE) != HAL_OK)
   {
-    return HAL_TIMEOUT;
+    return HAL_ERROR;
   }
 
   return HAL_OK;
@@ -3544,24 +3588,24 @@ static hal_status_t HASH_WriteIncompleteBlock(hal_hash_handle_t *hhash, uint32_t
   * @param hhash        Pointer to a HASH handle structure.
   * @param flag         Specifies the HASH flag to check.
   * @param flag_state   The Flag status (SET or RESET).
-  * @param timeout_ms   Specify timeout value in millisecond.
-  * @retval HAL_TIMEOUT HASH digest computation exceeds timeout
-  * @retval HAL_OK      HASH digest computation is completed
+  * @param wait_cycles  Specify wait cycles value in millisecond.
+  * @retval HAL_ERROR   An error has been occurred.
+  * @retval HAL_OK      Operation completed.
   */
-static hal_status_t HASH_WaitOnFlag_NonBlocking(hal_hash_handle_t *hhash, uint32_t flag, uint32_t flag_state,
-                                                uint32_t timeout_ms)
+static hal_status_t HASH_WaitOnFlag(hal_hash_handle_t *hhash, uint32_t flag, uint32_t flag_state,
+                                    uint32_t wait_cycles)
 {
-  /* Convert timeout to clock cycle for non blocking operation */
-  uint32_t count = ((timeout_ms * HAL_RCC_GetSYSCLKFreq()) / HASH_TIMEOUT_MS);
+  uint32_t count = wait_cycles;
 
-  do
+  /* Simple polling loop with cycle counter, approximate CPU cycles with iterations */
+  while ((HAL_HASH_IsActiveFlag(hhash, flag) == flag_state) && (count > 0U))
   {
     count--;
-  } while ((HAL_HASH_IsActiveFlag(hhash, flag) == flag_state) && (count != 0U));
+  }
 
   if (count == 0U)
   {
-    return HAL_TIMEOUT;
+    return HAL_ERROR;
   }
 
   return HAL_OK;
@@ -3637,7 +3681,7 @@ static hal_status_t HASH_HMAC_ComputeProcessData_IT(hal_hash_handle_t *hhash)
     }
   }
 
-  if ((hhash->phase == HASH_PHASE_HMAC_STEP_2) && (hhash->input_size_byte == hhash->input_data_count_byte))
+  if ((hhash->phase == HASH_PHASE_HMAC_MESSAGE_ENTRY) && (hhash->input_size_byte == hhash->input_data_count_byte))
   {
     HASH_HMAC_SwitchToStep3(hhash);
   }
@@ -3696,7 +3740,6 @@ static hal_status_t HASH_HMAC_UpdateProcessData_IT(hal_hash_handle_t *hhash)
   *         It finalizes padding of the inner hash and reconfigures
   *         the context to process the HMAC key (outer hash).
   * @param  hhash Pointer to a HASH handle structure.
-  * @retval None
   */
 static void HASH_HMAC_SwitchToStep3(hal_hash_handle_t *hhash)
 {
@@ -3709,7 +3752,7 @@ static void HASH_HMAC_SwitchToStep3(hal_hash_handle_t *hhash)
   hhash->p_input_buff          = hhash->p_hmac_key_buff;
   hhash->input_size_byte       = hhash->key_size_byte;
   hhash->input_data_count_byte = 0U;
-  hhash->phase                 = HASH_PHASE_HMAC_STEP_3;
+  hhash->phase                 = HASH_PHASE_HMAC_OUTER_KEY_ENTRY;
 }
 /**
   * @}

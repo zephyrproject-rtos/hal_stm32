@@ -307,6 +307,13 @@ static const uint32_t ll_tim_channels[HAL_TIM_CHANNELS] =
   * @brief Shift to switch from dma burst source to dma index.
   */
 #define TIM_DMABURST_DMAINDEX_SHIFT  (TIM_DCR_DBSS_Pos)
+
+/**
+  * @brief mask for all dma requests.
+  */
+#define TIM_DMAREQ_REQUESTS_MASK     (LL_TIM_DIER_UDE | LL_TIM_DIER_CC1DE | LL_TIM_DIER_CC2DE \
+                                      | LL_TIM_DIER_CC3DE | LL_TIM_DIER_CC4DE | LL_TIM_DIER_COMDE \
+                                      | LL_TIM_DIER_TDE)
 #endif /* USE_HAL_TIM_DMA */
 
 /**
@@ -348,8 +355,13 @@ static const uint32_t ll_tim_channels[HAL_TIM_CHANNELS] =
   * @brief Encoder optional interrupts mask.
   */
 #define TIM_ENCODER_OPTIONAL_INTERRUPTS_MASK \
-  (HAL_TIM_OPT_IT_ENCODER_INDEX | HAL_TIM_OPT_IT_ENCODER_DIRECTION \
-   | HAL_TIM_OPT_IT_ENCODER_INDEX_ERROR | HAL_TIM_OPT_IT_ENCODER_TRANSITION_ERROR)
+  (HAL_TIM_OPT_IT_ENCODER_DIRECTION | HAL_TIM_OPT_IT_ENCODER_TRANSITION_ERROR)
+
+/**
+  * @brief Encoder index optional interrupts mask.
+  */
+#define TIM_ENCODER_IDX_OPTIONAL_INTERRUPTS_MASK \
+  (HAL_TIM_OPT_IT_ENCODER_INDEX | HAL_TIM_OPT_IT_ENCODER_INDEX_ERROR)
 
 /**
   * @brief Mask for all combined 3-phase pwm modes.
@@ -372,12 +384,12 @@ static const uint32_t ll_tim_channels[HAL_TIM_CHANNELS] =
   (HAL_TIM_BRK_TIM1_GPIO | HAL_TIM_BRK_TIM1_COMP1_OUT \
    | HAL_TIM_BRK_TIM1_TIM8_BKIN | HAL_TIM_BRK_TIM1_TIM15_BKIN \
    | HAL_TIM_BRK_TIM1_TIM16_BKIN | HAL_TIM_BRK_TIM1_TIM17_BKIN)
-#else
+#elif defined(COMP2)
 #define TIM1_BRK_SOURCE_MASK \
   (HAL_TIM_BRK_TIM1_GPIO | HAL_TIM_BRK_TIM1_COMP1_OUT \
    | HAL_TIM_BRK_TIM1_COMP2_OUT | HAL_TIM_BRK_TIM1_TIM8_BKIN \
    | HAL_TIM_BRK_TIM1_TIM15_BKIN)
-#endif /* TIM16 */
+#endif /* TIM20 && PLAY1 */
 
 /**
   * @brief Mask for specific TIM8 break input sources.
@@ -387,12 +399,12 @@ static const uint32_t ll_tim_channels[HAL_TIM_CHANNELS] =
   (HAL_TIM_BRK_TIM8_GPIO | HAL_TIM_BRK_TIM8_COMP1_OUT \
    | HAL_TIM_BRK_TIM8_TIM1_BKIN | HAL_TIM_BRK_TIM8_TIM15_BKIN \
    | HAL_TIM_BRK_TIM8_TIM16_BKIN | HAL_TIM_BRK_TIM8_TIM17_BKIN)
-#else
+#elif defined(COMP2)
 #define TIM8_BRK_SOURCE_MASK \
   (HAL_TIM_BRK_TIM8_GPIO | HAL_TIM_BRK_TIM8_COMP1_OUT \
    | HAL_TIM_BRK_TIM8_COMP2_OUT | HAL_TIM_BRK_TIM8_TIM1_BKIN \
    | HAL_TIM_BRK_TIM8_TIM15_BKIN)
-#endif /* TIM16 */
+#endif /* TIM20 && PLAY1 */
 
 /**
   * @brief Mask for specific TIM15 break input sources.
@@ -402,12 +414,12 @@ static const uint32_t ll_tim_channels[HAL_TIM_CHANNELS] =
   (HAL_TIM_BRK_TIM15_GPIO | HAL_TIM_BRK_TIM15_COMP1_OUT \
    | HAL_TIM_BRK_TIM15_TIM1_BKIN | HAL_TIM_BRK_TIM15_TIM8_BKIN \
    | HAL_TIM_BRK_TIM15_TIM16_BKIN | HAL_TIM_BRK_TIM15_TIM17_BKIN)
-#else
+#elif defined(COMP2)
 #define TIM15_BRK_SOURCE_MASK \
   (HAL_TIM_BRK_TIM15_GPIO | HAL_TIM_BRK_TIM15_COMP1_OUT \
    | HAL_TIM_BRK_TIM15_COMP2_OUT | HAL_TIM_BRK_TIM15_TIM1_BKIN \
    | HAL_TIM_BRK_TIM15_TIM8_BKIN)
-#endif /* TIM16 */
+#endif /* TIM20 && PLAY1 */
 
 #if defined(TIM16)
 /**
@@ -417,7 +429,9 @@ static const uint32_t ll_tim_channels[HAL_TIM_CHANNELS] =
   (HAL_TIM_BRK_TIM16_GPIO | HAL_TIM_BRK_TIM16_COMP1_OUT \
    | HAL_TIM_BRK_TIM16_TIM1_BKIN | HAL_TIM_BRK_TIM16_TIM8_BKIN \
    | HAL_TIM_BRK_TIM16_TIM15_BKIN | HAL_TIM_BRK_TIM16_TIM17_BKIN)
+#endif /* TIM16 */
 
+#if defined(TIM17)
 /**
   * @brief Mask for specific TIM17 break input sources.
   */
@@ -425,33 +439,35 @@ static const uint32_t ll_tim_channels[HAL_TIM_CHANNELS] =
   (HAL_TIM_BRK_TIM17_GPIO | HAL_TIM_BRK_TIM17_COMP1_OUT \
    | HAL_TIM_BRK_TIM17_TIM1_BKIN | HAL_TIM_BRK_TIM17_TIM8_BKIN \
    | HAL_TIM_BRK_TIM17_TIM15_BKIN | HAL_TIM_BRK_TIM17_TIM16_BKIN)
-#endif /* TIM16 */
+#endif /* TIM17 */
+
 
 /**
   * @brief Mask for specific TIM1 break2 input sources.
   */
-#if defined(TIM16)
-#define TIM1_BRK2_SOURCE_MASK \
-  (HAL_TIM_BRK2_TIM1_GPIO | HAL_TIM_BRK2_TIM1_COMP1_OUT \
-   | HAL_TIM_BRK2_TIM1_TIM8_BKIN2)
-#else
+#if defined(COMP2)
 #define TIM1_BRK2_SOURCE_MASK \
   (HAL_TIM_BRK2_TIM1_GPIO | HAL_TIM_BRK2_TIM1_COMP1_OUT \
    | HAL_TIM_BRK2_TIM1_COMP2_OUT | HAL_TIM_BRK2_TIM1_TIM8_BKIN2)
-#endif /* TIM16 */
+#else
+#define TIM1_BRK2_SOURCE_MASK \
+  (HAL_TIM_BRK2_TIM1_GPIO | HAL_TIM_BRK2_TIM1_COMP1_OUT \
+   | HAL_TIM_BRK2_TIM1_TIM8_BKIN2)
+#endif /* TIM20 && PLAY1 */
 
 /**
   * @brief Mask for specific TIM8 break2 input sources.
   */
-#if defined(TIM16)
-#define TIM8_BRK2_SOURCE_MASK \
-  (HAL_TIM_BRK2_TIM8_GPIO | HAL_TIM_BRK2_TIM8_COMP1_OUT \
-   | HAL_TIM_BRK2_TIM8_TIM1_BKIN2)
-#else
+#if defined(COMP2)
 #define TIM8_BRK2_SOURCE_MASK \
   (HAL_TIM_BRK2_TIM8_GPIO | HAL_TIM_BRK2_TIM8_COMP1_OUT \
    | HAL_TIM_BRK2_TIM8_COMP2_OUT | HAL_TIM_BRK2_TIM8_TIM1_BKIN2)
-#endif /* TIM16 */
+#else
+#define TIM8_BRK2_SOURCE_MASK \
+  (HAL_TIM_BRK2_TIM8_GPIO | HAL_TIM_BRK2_TIM8_COMP1_OUT \
+   | HAL_TIM_BRK2_TIM8_TIM1_BKIN2)
+#endif /* TIM20 && PLAY1 */
+
 
 /**
   *  @}
@@ -474,7 +490,9 @@ static const uint32_t ll_tim_channels[HAL_TIM_CHANNELS] =
    && !(((interrupts) & HAL_TIM_OPT_IT_COMMUTATION) && !IS_TIM_COMMUTATION_EVENT_INSTANCE((instance))) \
    && !(((interrupts) & HAL_TIM_OPT_IT_TRIGGER_INPUT) && !IS_TIM_SLAVE_INSTANCE((instance))) \
    && !(((interrupts) & HAL_TIM_OPT_IT_BREAK) && !IS_TIM_BREAK_INSTANCE((instance))) \
-   && !(((interrupts) & TIM_ENCODER_OPTIONAL_INTERRUPTS_MASK) && !IS_TIM_ENCODER_INTERFACE_INSTANCE((instance))))
+   && !(((interrupts) & TIM_ENCODER_OPTIONAL_INTERRUPTS_MASK) && !IS_TIM_ENCODER_INTERFACE_INSTANCE((instance))) \
+   && !(((interrupts) & TIM_ENCODER_IDX_OPTIONAL_INTERRUPTS_MASK) && !IS_TIM_ENCODER_INTERFACE_INSTANCE((instance))) \
+   && !(((interrupts) & TIM_ENCODER_IDX_OPTIONAL_INTERRUPTS_MASK) && !IS_TIM_ETR_INSTANCE((instance))))
 
 #if defined(USE_HAL_TIM_DMA) && (USE_HAL_TIM_DMA == 1)
 /**
@@ -1033,7 +1051,7 @@ static const uint32_t ll_tim_channels[HAL_TIM_CHANNELS] =
   * @param  trigger   The trigger selection to check (@ref hal_tim_trig_sel_t).
   * @retval SET (trigger selection is valid) or RESET (trigger selection is invalid).
   */
-#if defined(TIM3)
+#if defined(TIM4)
 #define IS_TIM_TRIG_SEL(instance, trigger) \
   (((((trigger) == HAL_TIM_TRIG_ITR0) \
      || ((trigger) == HAL_TIM_TRIG_ITR1)) \
@@ -1089,6 +1107,50 @@ static const uint32_t ll_tim_channels[HAL_TIM_CHANNELS] =
        && (IS_TIM_SLAVE_INSTANCE((instance)))) \
    || (((trigger) == HAL_TIM_TRIG_ETRF) \
        && (IS_TIM_ETR_INSTANCE((instance)))))
+#elif defined(TIM3)
+#define IS_TIM_TRIG_SEL(instance, trigger) \
+  (((((trigger) == HAL_TIM_TRIG_ITR0) \
+     || ((trigger) == HAL_TIM_TRIG_ITR1)) \
+    && (((instance) == TIM2) || ((instance) == TIM3) \
+        || ((instance) == TIM5) || ((instance) == TIM8) \
+        || ((instance) == TIM12) || ((instance) == TIM15))) \
+   || (((trigger) == HAL_TIM_TRIG_ITR2) \
+       && (((instance) == TIM1) || ((instance) == TIM3) \
+           || ((instance) == TIM5) || ((instance) == TIM8) \
+           || ((instance) == TIM12) || ((instance) == TIM15))) \
+   || (((trigger) == HAL_TIM_TRIG_ITR3) \
+       && (((instance) == TIM1) || ((instance) == TIM2) \
+           || ((instance) == TIM5) || ((instance) == TIM8) \
+           || ((instance) == TIM12) || ((instance) == TIM15))) \
+   || (((trigger) == HAL_TIM_TRIG_ITR5) \
+       && (((instance) == TIM1) || ((instance) == TIM2) \
+           || ((instance) == TIM3) || ((instance) == TIM8) \
+           || ((instance) == TIM12) || ((instance) == TIM15))) \
+   || ((((trigger) == HAL_TIM_TRIG_ITR6) \
+        || ((trigger) == HAL_TIM_TRIG_ITR7)) \
+       && (((instance) == TIM1) || ((instance) == TIM2) \
+           || ((instance) == TIM3) || ((instance) == TIM5) \
+           || ((instance) == TIM12) || ((instance) == TIM15))) \
+   || (((trigger) == HAL_TIM_TRIG_ITR8) \
+       && (((instance) == TIM1) || ((instance) == TIM2) \
+           || ((instance) == TIM3) || ((instance) == TIM5) \
+           || ((instance) == TIM8) || ((instance) == TIM15))) \
+   || (((trigger) == HAL_TIM_TRIG_ITR9) \
+       && (((instance) == TIM1) || ((instance) == TIM2) \
+           || ((instance) == TIM3) || ((instance) == TIM5) \
+           || ((instance) == TIM8) || ((instance) == TIM12))) \
+   || ((((trigger) == HAL_TIM_TRIG_ITR10) \
+        || ((trigger) == HAL_TIM_TRIG_ITR11)) \
+       && (((instance) == TIM1) || ((instance) == TIM2) \
+           || ((instance) == TIM3) || ((instance) == TIM5) \
+           || ((instance) == TIM8) || ((instance) == TIM12) \
+           || ((instance) == TIM15))) \
+   || ((((trigger) == HAL_TIM_TRIG_TI1F_ED) \
+        || ((trigger) == HAL_TIM_TRIG_TI1FP1) \
+        || ((trigger) == HAL_TIM_TRIG_TI2FP2)) \
+       && (IS_TIM_SLAVE_INSTANCE((instance)))) \
+   || (((trigger) == HAL_TIM_TRIG_ETRF) \
+       && (IS_TIM_ETR_INSTANCE((instance)))))
 #elif defined(TIM5)
 #define IS_TIM_TRIG_SEL(instance, trigger) \
   (((((trigger) == HAL_TIM_TRIG_ITR0) \
@@ -1128,7 +1190,7 @@ static const uint32_t ll_tim_channels[HAL_TIM_CHANNELS] =
        && (IS_TIM_SLAVE_INSTANCE((instance)))) \
    || (((trigger) == HAL_TIM_TRIG_ETRF) \
        && (IS_TIM_ETR_INSTANCE((instance)))))
-#else /* TIM3 */
+#else
 #define IS_TIM_TRIG_SEL(instance, trigger) \
   (((((trigger) == HAL_TIM_TRIG_ITR0) \
      || ((trigger) == HAL_TIM_TRIG_ITR1)) \
@@ -1153,7 +1215,7 @@ static const uint32_t ll_tim_channels[HAL_TIM_CHANNELS] =
        && (IS_TIM_SLAVE_INSTANCE((instance)))) \
    || (((trigger) == HAL_TIM_TRIG_ETRF) \
        && (IS_TIM_ETR_INSTANCE((instance)))))
-#endif /* TIM3 */
+#endif /* TIM20 */
 
 /**
   * @brief  Check if the timer instance supports external clock mode 1.
@@ -1548,14 +1610,14 @@ static const uint32_t ll_tim_channels[HAL_TIM_CHANNELS] =
    || ((src) == HAL_TIM_EXT_TRIG_TIM1_ADC1_AWD1) \
    || ((src) == HAL_TIM_EXT_TRIG_TIM1_ADC1_AWD2) \
    || ((src) == HAL_TIM_EXT_TRIG_TIM1_ADC1_AWD3))
-#endif /* COMP2 */
+#endif /* PLAY1 && COMP3 */
 
 /**
   * @brief  Check the validity of the TIM2 external trigger sources.
   * @param  src  The external trigger source to check (@ref hal_tim_ext_trig_src_t).
   * @return Validity of TIM2 external trigger source.
   */
-#if defined(TIM3)
+#if defined(TIM4)
 #define IS_TIM2_EXT_TRG_SRC(src) \
   (((src) == HAL_TIM_EXT_TRIG_TIM2_GPIO) \
    || ((src) == HAL_TIM_EXT_TRIG_TIM2_COMP1_OUT) \
@@ -1588,7 +1650,7 @@ static const uint32_t ll_tim_channels[HAL_TIM_CHANNELS] =
    || ((src) == HAL_TIM_EXT_TRIG_TIM2_ADC1_AWD3) \
    || ((src) == HAL_TIM_EXT_TRIG_TIM2_LSE) \
    || ((src) == HAL_TIM_EXT_TRIG_TIM2_MCO1))
-#endif /* TIM3 */
+#endif /* PLAY1 */
 
 #if defined(TIM3)
 /**
@@ -1596,6 +1658,7 @@ static const uint32_t ll_tim_channels[HAL_TIM_CHANNELS] =
   * @param  src  The external trigger source to check (@ref hal_tim_ext_trig_src_t).
   * @return Validity of TIM3 external trigger source.
   */
+#if defined(TIM4)
 #define IS_TIM3_EXT_TRG_SRC(src) \
   (((src) == HAL_TIM_EXT_TRIG_TIM3_GPIO) \
    || ((src) == HAL_TIM_EXT_TRIG_TIM3_COMP1_OUT) \
@@ -1603,7 +1666,10 @@ static const uint32_t ll_tim_channels[HAL_TIM_CHANNELS] =
    || ((src) == HAL_TIM_EXT_TRIG_TIM3_TIM4_ETR) \
    || ((src) == HAL_TIM_EXT_TRIG_TIM3_TIM5_ETR) \
    || ((src) == HAL_TIM_EXT_TRIG_TIM3_ETH1_PTP_PPS_OUT))
+#endif /* PLAY1 */
+#endif /* TIM3 */
 
+#if defined(TIM4)
 /**
   * @brief  Check the validity of the TIM4 external trigger sources.
   * @param  src  The external trigger source to check (@ref hal_tim_ext_trig_src_t).
@@ -1618,26 +1684,34 @@ static const uint32_t ll_tim_channels[HAL_TIM_CHANNELS] =
    || ((src) == HAL_TIM_EXT_TRIG_TIM4_TIM2_ETR) \
    || ((src) == HAL_TIM_EXT_TRIG_TIM4_TIM3_ETR) \
    || ((src) == HAL_TIM_EXT_TRIG_TIM4_TIM5_ETR))
-#endif /* TIM3 */
+#endif /* TIM4 */
 
+#if defined(TIM5)
 /**
   * @brief  Check the validity of the TIM5 external trigger sources.
   * @param  src  The external trigger source to check (@ref hal_tim_ext_trig_src_t).
   * @return Validity of TIM5 external trigger source.
   */
-#if defined(TIM3)
+#if defined(TIM4)
 #define IS_TIM5_EXT_TRG_SRC(src) \
   (((src) == HAL_TIM_EXT_TRIG_TIM5_GPIO) \
    || ((src) == HAL_TIM_EXT_TRIG_TIM5_COMP1_OUT) \
    || ((src) == HAL_TIM_EXT_TRIG_TIM5_TIM2_ETR) \
    || ((src) == HAL_TIM_EXT_TRIG_TIM5_TIM3_ETR) \
    || ((src) == HAL_TIM_EXT_TRIG_TIM5_TIM4_ETR))
-#elif defined(TIM5)
+#elif defined(TIM3)
+#define IS_TIM5_EXT_TRG_SRC(src) \
+  (((src) == HAL_TIM_EXT_TRIG_TIM5_GPIO) \
+   || ((src) == HAL_TIM_EXT_TRIG_TIM5_COMP1_OUT) \
+   || ((src) == HAL_TIM_EXT_TRIG_TIM5_TIM2_ETR) \
+   || ((src) == HAL_TIM_EXT_TRIG_TIM5_TIM3_ETR))
+#else
 #define IS_TIM5_EXT_TRG_SRC(src) \
   (((src) == HAL_TIM_EXT_TRIG_TIM5_GPIO) \
    || ((src) == HAL_TIM_EXT_TRIG_TIM5_COMP1_OUT) \
    || ((src) == HAL_TIM_EXT_TRIG_TIM5_TIM2_ETR))
-#endif /* TIM3 */
+#endif /* COMP3 */
+#endif /* TIM5 */
 
 /**
   * @brief  Check the validity of the TIM8 external trigger sources.
@@ -1654,14 +1728,14 @@ static const uint32_t ll_tim_channels[HAL_TIM_CHANNELS] =
    || ((src) == HAL_TIM_EXT_TRIG_TIM8_ADC3_AWD1) \
    || ((src) == HAL_TIM_EXT_TRIG_TIM8_ADC3_AWD2) \
    || ((src) == HAL_TIM_EXT_TRIG_TIM8_ADC3_AWD3))
-#elif defined(ADC1) && defined(ADC2)
+#elif defined(ADC2)
 #define IS_TIM8_EXT_TRG_SRC(src) \
   (((src) == HAL_TIM_EXT_TRIG_TIM8_GPIO) \
    || ((src) == HAL_TIM_EXT_TRIG_TIM8_COMP1_OUT) \
    || ((src) == HAL_TIM_EXT_TRIG_TIM8_ADC2_AWD1) \
    || ((src) == HAL_TIM_EXT_TRIG_TIM8_ADC2_AWD2) \
    || ((src) == HAL_TIM_EXT_TRIG_TIM8_ADC2_AWD3))
-#elif defined(ADC1) && defined(COMP2)
+#elif defined(COMP2)
 #define IS_TIM8_EXT_TRG_SRC(src) \
   (((src) == HAL_TIM_EXT_TRIG_TIM8_GPIO) \
    || ((src) == HAL_TIM_EXT_TRIG_TIM8_COMP1_OUT) \
@@ -1669,7 +1743,8 @@ static const uint32_t ll_tim_channels[HAL_TIM_CHANNELS] =
    || ((src) == HAL_TIM_EXT_TRIG_TIM8_ADC1_AWD1) \
    || ((src) == HAL_TIM_EXT_TRIG_TIM8_ADC1_AWD2) \
    || ((src) == HAL_TIM_EXT_TRIG_TIM8_ADC1_AWD3))
-#endif /* ADC3 */
+#endif /* PLAY1 */
+
 
 /**
   * @brief  Check the validity of the external trigger sources.
@@ -1677,12 +1752,19 @@ static const uint32_t ll_tim_channels[HAL_TIM_CHANNELS] =
   * @param  src       The external trigger source to check (@ref hal_tim_ext_trig_src_t).
   * @return Validity of external trigger source.
   */
-#if defined(TIM3)
+#if defined(TIM4)
 #define IS_TIM_EXT_TRIG_SRC(instance, src) \
   ((((instance) == TIM1) && IS_TIM1_EXT_TRG_SRC((src))) \
    || (((instance) == TIM2) && IS_TIM2_EXT_TRG_SRC((src))) \
    || (((instance) == TIM3) && IS_TIM3_EXT_TRG_SRC((src))) \
    || (((instance) == TIM4) && IS_TIM4_EXT_TRG_SRC((src))) \
+   || (((instance) == TIM5) && IS_TIM5_EXT_TRG_SRC((src))) \
+   || (((instance) == TIM8) && IS_TIM8_EXT_TRG_SRC((src))))
+#elif defined(TIM3)
+#define IS_TIM_EXT_TRIG_SRC(instance, src) \
+  ((((instance) == TIM1) && IS_TIM1_EXT_TRG_SRC((src))) \
+   || (((instance) == TIM2) && IS_TIM2_EXT_TRG_SRC((src))) \
+   || (((instance) == TIM3) && IS_TIM3_EXT_TRG_SRC((src))) \
    || (((instance) == TIM5) && IS_TIM5_EXT_TRG_SRC((src))) \
    || (((instance) == TIM8) && IS_TIM8_EXT_TRG_SRC((src))))
 #elif defined(TIM5)
@@ -1696,7 +1778,7 @@ static const uint32_t ll_tim_channels[HAL_TIM_CHANNELS] =
   ((((instance) == TIM1) && IS_TIM1_EXT_TRG_SRC((src))) \
    || (((instance) == TIM2) && IS_TIM2_EXT_TRG_SRC((src))) \
    || (((instance) == TIM8) && IS_TIM8_EXT_TRG_SRC((src))))
-#endif /* TIM3 */
+#endif /* TIM20 */
 
 /**
   * @brief  Check the validity of the TIM1 channel sources.
@@ -1727,7 +1809,7 @@ static const uint32_t ll_tim_channels[HAL_TIM_CHANNELS] =
        && ((src) == HAL_TIM_INPUT_TIM1_TI3_GPIO)) \
    || (((channel) == HAL_TIM_CHANNEL_4) \
        && ((src) == HAL_TIM_INPUT_TIM1_TI4_GPIO)))
-#endif /* COMP2 */
+#endif /* PLAY1 */
 
 /**
   * @brief  Check the validity of the TIM2 channel sources.
@@ -1843,7 +1925,7 @@ static const uint32_t ll_tim_channels[HAL_TIM_CHANNELS] =
        && (((src) == HAL_TIM_INPUT_TIM2_TI4_GPIO) \
            || ((src) == HAL_TIM_INPUT_TIM2_TI4_COMP1_OUT) \
            || ((src) == HAL_TIM_INPUT_TIM2_TI4_COMP2_OUT))))
-#endif /* TIM5 */
+#endif /* PLAY1 */
 
 #if defined(TIM3)
 /**
@@ -1877,8 +1959,10 @@ static const uint32_t ll_tim_channels[HAL_TIM_CHANNELS] =
        && ((src) == HAL_TIM_INPUT_TIM3_TI3_GPIO)) \
    || (((channel) == HAL_TIM_CHANNEL_4) \
        && ((src) == HAL_TIM_INPUT_TIM3_TI4_GPIO)))
-#endif /* FDCAN2 */
+#endif /* PLAY1 */
+#endif /* TIM3 */
 
+#if defined(TIM4)
 /**
   * @brief  Check the validity of the TIM4 channel sources.
   * @param  channel   The channel to check (@ref hal_tim_channel_t).
@@ -1895,7 +1979,7 @@ static const uint32_t ll_tim_channels[HAL_TIM_CHANNELS] =
        && ((src) == HAL_TIM_INPUT_TIM4_TI3_GPIO)) \
    || (((channel) == HAL_TIM_CHANNEL_4) \
        && ((src) == HAL_TIM_INPUT_TIM4_TI4_GPIO)))
-#endif /* TIM3 */
+#endif /* TIM4 */
 
 #if defined(TIM5)
 /**
@@ -1945,7 +2029,7 @@ static const uint32_t ll_tim_channels[HAL_TIM_CHANNELS] =
        && ((src) == HAL_TIM_INPUT_TIM8_TI3_GPIO)) \
    || (((channel) == HAL_TIM_CHANNEL_4) \
        && ((src) == HAL_TIM_INPUT_TIM8_TI4_GPIO)))
-#endif /* COMP2 */
+#endif /* PLAY1 */
 
 /**
   * @brief  Check the validity of the TIM12 channel sources.
@@ -1976,7 +2060,7 @@ static const uint32_t ll_tim_channels[HAL_TIM_CHANNELS] =
         || ((src) == HAL_TIM_INPUT_TIM12_TI1_I3C1_IBI_ACK))) \
    || (((channel) == HAL_TIM_CHANNEL_2) \
        && ((src) == HAL_TIM_INPUT_TIM12_TI2_GPIO)))
-#endif /* COMP2 */
+#endif /* PLAY1 */
 
 /**
   * @brief  Check the validity of the TIM15 channel sources.
@@ -2022,7 +2106,7 @@ static const uint32_t ll_tim_channels[HAL_TIM_CHANNELS] =
         || ((src) == HAL_TIM_INPUT_TIM15_TI1_LSE))) \
    || (((channel) == HAL_TIM_CHANNEL_2) \
        && ((src) == HAL_TIM_INPUT_TIM15_TI2_GPIO)))
-#endif /* COMP2 && FDCAN2 */
+#endif /* PLAY1 */
 
 #if defined(TIM16)
 /**
@@ -2057,6 +2141,7 @@ static const uint32_t ll_tim_channels[HAL_TIM_CHANNELS] =
        || ((src) == HAL_TIM_INPUT_TIM17_TI1_I3C1_IBI_ACK)))
 #endif /* TIM16 */
 
+
 /**
   * @brief  Check the validity of the channel sources.
   * @param  instance  TIM instance.
@@ -2064,12 +2149,23 @@ static const uint32_t ll_tim_channels[HAL_TIM_CHANNELS] =
   * @param  src       The channel source to check (@ref hal_tim_channel_src_t).
   * @retval SET (channel source is valid) or RESET (channel source is invalid).
   */
-#if defined(TIM3)
+#if defined(TIM4)
 #define IS_TIM_CHANNEL_SRC(instance, channel, src) \
   ((((instance) == TIM1) && IS_TIM1_CHANNEL_SRC((channel), (src))) \
    || (((instance) == TIM2) && IS_TIM2_CHANNEL_SRC((channel), (src))) \
    || (((instance) == TIM3) && IS_TIM3_CHANNEL_SRC((channel), (src))) \
    || (((instance) == TIM4) && IS_TIM4_CHANNEL_SRC((channel), (src))) \
+   || (((instance) == TIM5) && IS_TIM5_CHANNEL_SRC((channel), (src))) \
+   || (((instance) == TIM8) && IS_TIM8_CHANNEL_SRC((channel), (src))) \
+   || (((instance) == TIM12) && IS_TIM12_CHANNEL_SRC((channel), (src))) \
+   || (((instance) == TIM15) && IS_TIM15_CHANNEL_SRC((channel), (src))) \
+   || (((instance) == TIM16) && IS_TIM16_CHANNEL_SRC((channel), (src))) \
+   || (((instance) == TIM17) && IS_TIM17_CHANNEL_SRC((channel), (src))))
+#elif defined(TIM3)
+#define IS_TIM_CHANNEL_SRC(instance, channel, src) \
+  ((((instance) == TIM1) && IS_TIM1_CHANNEL_SRC((channel), (src))) \
+   || (((instance) == TIM2) && IS_TIM2_CHANNEL_SRC((channel), (src))) \
+   || (((instance) == TIM3) && IS_TIM3_CHANNEL_SRC((channel), (src))) \
    || (((instance) == TIM5) && IS_TIM5_CHANNEL_SRC((channel), (src))) \
    || (((instance) == TIM8) && IS_TIM8_CHANNEL_SRC((channel), (src))) \
    || (((instance) == TIM12) && IS_TIM12_CHANNEL_SRC((channel), (src))) \
@@ -2093,7 +2189,7 @@ static const uint32_t ll_tim_channels[HAL_TIM_CHANNELS] =
    || (((instance) == TIM8) && IS_TIM8_CHANNEL_SRC((channel), (src))) \
    || (((instance) == TIM12) && IS_TIM12_CHANNEL_SRC((channel), (src))) \
    || (((instance) == TIM15) && IS_TIM15_CHANNEL_SRC((channel), (src))))
-#endif /* TIM3 */
+#endif /* TIM20 && TIM4 */
 
 /**
   * @brief  Check the validity of the slave mode.
@@ -2209,7 +2305,7 @@ static const uint32_t ll_tim_channels[HAL_TIM_CHANNELS] =
 #define IS_TIM1_OCREF_CLR_SRC(src) \
   (((src) == HAL_TIM_OCREF_CLR_TIM1_ETR) \
    || ((src) == HAL_TIM_OCREF_CLR_TIM1_COMP1_OUT))
-#endif /* COMP2 */
+#endif /* PLAY1 */
 
 /**
   * @brief  Check the validity of the TIM2 OCref clear sources.
@@ -2225,7 +2321,7 @@ static const uint32_t ll_tim_channels[HAL_TIM_CHANNELS] =
 #define IS_TIM2_OCREF_CLR_SRC(src) \
   (((src) == HAL_TIM_OCREF_CLR_TIM2_ETR) \
    || ((src) == HAL_TIM_OCREF_CLR_TIM2_COMP1_OUT))
-#endif /* COMP2 */
+#endif /* PLAY1 */
 
 #if defined(TIM3)
 /**
@@ -2236,7 +2332,9 @@ static const uint32_t ll_tim_channels[HAL_TIM_CHANNELS] =
 #define IS_TIM3_OCREF_CLR_SRC(src) \
   (((src) == HAL_TIM_OCREF_CLR_TIM3_ETR) \
    || ((src) == HAL_TIM_OCREF_CLR_TIM3_COMP1_OUT))
+#endif /* TIM3 */
 
+#if defined(TIM4)
 /**
   * @brief  Check the validity of the TIM4 OCref clear sources.
   * @param  src  The OCref clear source to check (@ref hal_tim_ocref_clr_src_t).
@@ -2245,7 +2343,7 @@ static const uint32_t ll_tim_channels[HAL_TIM_CHANNELS] =
 #define IS_TIM4_OCREF_CLR_SRC(src) \
   (((src) == HAL_TIM_OCREF_CLR_TIM4_ETR) \
    || ((src) == HAL_TIM_OCREF_CLR_TIM4_COMP1_OUT))
-#endif /* TIM3 */
+#endif /* TIM4 */
 
 #if defined(TIM5)
 /**
@@ -2272,7 +2370,7 @@ static const uint32_t ll_tim_channels[HAL_TIM_CHANNELS] =
 #define IS_TIM8_OCREF_CLR_SRC(src) \
   (((src) == HAL_TIM_OCREF_CLR_TIM8_ETR) \
    || ((src) == HAL_TIM_OCREF_CLR_TIM8_COMP1_OUT))
-#endif /* COMP2 */
+#endif /* PLAY1 */
 
 /**
   * @brief  Check the validity of the TIM15 OCref clear sources.
@@ -2286,7 +2384,7 @@ static const uint32_t ll_tim_channels[HAL_TIM_CHANNELS] =
 #else
 #define IS_TIM15_OCREF_CLR_SRC(src) \
   ((src) == HAL_TIM_OCREF_CLR_TIM15_COMP1_OUT)
-#endif /* COMP2 */
+#endif /* PLAY1 */
 
 #if defined(TIM16)
 /**
@@ -2306,13 +2404,14 @@ static const uint32_t ll_tim_channels[HAL_TIM_CHANNELS] =
   ((src) == HAL_TIM_OCREF_CLR_TIM17_COMP1_OUT)
 #endif /* TIM16 */
 
+
 /**
   * @brief  Check the validity of the OCref clear sources.
   * @param  instance  TIM instance.
   * @param  src  The OCref clear source to check (@ref hal_tim_ocref_clr_src_t).
   * @retval SET (OCref clear source is valid) or RESET (OCref clear source is invalid).
   */
-#if defined(TIM3)
+#if defined(TIM4)
 #define IS_TIM_OCREF_CLR_SRC(instance, src) \
   ((((instance) == TIM1) && IS_TIM1_OCREF_CLR_SRC((src))) \
    || (((instance) == TIM2) && IS_TIM2_OCREF_CLR_SRC((src))) \
@@ -2323,7 +2422,17 @@ static const uint32_t ll_tim_channels[HAL_TIM_CHANNELS] =
    || (((instance) == TIM15) && IS_TIM15_OCREF_CLR_SRC((src))) \
    || (((instance) == TIM16) && IS_TIM16_OCREF_CLR_SRC((src))) \
    || (((instance) == TIM17) && IS_TIM17_OCREF_CLR_SRC((src))))
-#elif defined(TIM16)
+#elif defined(TIM3)
+#define IS_TIM_OCREF_CLR_SRC(instance, src) \
+  ((((instance) == TIM1) && IS_TIM1_OCREF_CLR_SRC((src))) \
+   || (((instance) == TIM2) && IS_TIM2_OCREF_CLR_SRC((src))) \
+   || (((instance) == TIM3) && IS_TIM3_OCREF_CLR_SRC((src))) \
+   || (((instance) == TIM5) && IS_TIM5_OCREF_CLR_SRC((src))) \
+   || (((instance) == TIM8) && IS_TIM8_OCREF_CLR_SRC((src))) \
+   || (((instance) == TIM15) && IS_TIM15_OCREF_CLR_SRC((src))) \
+   || (((instance) == TIM16) && IS_TIM16_OCREF_CLR_SRC((src))) \
+   || (((instance) == TIM17) && IS_TIM17_OCREF_CLR_SRC((src))))
+#elif defined(TIM5)
 #define IS_TIM_OCREF_CLR_SRC(instance, src) \
   ((((instance) == TIM1) && IS_TIM1_OCREF_CLR_SRC((src))) \
    || (((instance) == TIM2) && IS_TIM2_OCREF_CLR_SRC((src))) \
@@ -2338,7 +2447,7 @@ static const uint32_t ll_tim_channels[HAL_TIM_CHANNELS] =
    || (((instance) == TIM2) && IS_TIM2_OCREF_CLR_SRC((src))) \
    || (((instance) == TIM8) && IS_TIM8_OCREF_CLR_SRC((src))) \
    || (((instance) == TIM15) && IS_TIM15_OCREF_CLR_SRC((src))))
-#endif /* TIM3 */
+#endif /* TIM20 && TIM4 */
 
 /**
   * @brief  Check the validity of the DMA index.
@@ -2501,11 +2610,11 @@ static const uint32_t ll_tim_channels[HAL_TIM_CHANNELS] =
    && ((((id) == HAL_TIM_BREAK_INPUT_1) \
         && ((((instance) == TIM1) && (((brkinsrc) & ~(TIM1_BRK_SOURCE_MASK)) == 0U)) \
             || (((instance) == TIM8) && (((brkinsrc) & ~(TIM8_BRK_SOURCE_MASK)) == 0U)) \
-            || (((instance) == TIM15) && (((brkinsrc) & ~(TIM15_BRK_SOURCE_MASK)) == 0U))))\
+            || (((instance) == TIM15) && (((brkinsrc) & ~(TIM15_BRK_SOURCE_MASK)) == 0U)))) \
        || (((id) == HAL_TIM_BREAK_INPUT_2) \
            && ((((instance) == TIM1) && (((brkinsrc) & ~(TIM1_BRK2_SOURCE_MASK)) == 0U)) \
                || (((instance) == TIM8) && (((brkinsrc) & ~(TIM8_BRK2_SOURCE_MASK)) == 0U))))))
-#endif /* TIM16 */
+#endif /* TIM20 */
 
 /**
   * @brief  Check that only one break input source is selected and supported.
@@ -3013,6 +3122,26 @@ __STATIC_INLINE hal_tim_dma_index_t TIM_DMARequestToDMAIndex(uint32_t dma_req)
 
   switch (dma_req)
   {
+    case LL_TIM_DIER_CC1DE:
+    {
+      dma_index = HAL_TIM_DMA_ID_CC1;
+      break;
+    }
+    case LL_TIM_DIER_CC2DE:
+    {
+      dma_index = HAL_TIM_DMA_ID_CC2;
+      break;
+    }
+    case LL_TIM_DIER_CC3DE:
+    {
+      dma_index = HAL_TIM_DMA_ID_CC3;
+      break;
+    }
+    case LL_TIM_DIER_CC4DE:
+    {
+      dma_index = HAL_TIM_DMA_ID_CC4;
+      break;
+    }
     case LL_TIM_DIER_COMDE:
     {
       dma_index = HAL_TIM_DMA_ID_COM;
@@ -3454,10 +3583,12 @@ __STATIC_FORCEINLINE void TIM_EnableClock(hal_tim_t instance)
     case HAL_TIM3:
       HAL_RCC_TIM3_EnableClock();
       break;
+#endif /* TIM3 */
+#if defined(TIM4)
     case HAL_TIM4:
       HAL_RCC_TIM4_EnableClock();
       break;
-#endif /* TIM3 */
+#endif /* TIM4 */
 #if defined(TIM5)
     case HAL_TIM5:
       HAL_RCC_TIM5_EnableClock();
@@ -3566,16 +3697,18 @@ hal_status_t HAL_TIM_Init(hal_tim_handle_t *htim, hal_tim_t instance)
 }
 
 /**
-  * @brief De-initialize the TIM instance handle.
-  * @param htim  Pointer to the handler of the TIM instance.
-  * @note  Stop all current operations and reset states: \n
-  *        @arg stop the counter
-  *        @arg disable interrupts / DMA transfers
-  *        @arg clear status flags
-  *        @arg set channels' states to RESET
-  *        @arg set global state to RESET
-  * @note  HAL_TIM_DeInit does not reset all TIM registers.
-  *        The Application must call RCC API to force the reset of all TIM registers.
+  * @brief   De-initialize the TIM instance handle.
+  * @param   htim  Pointer to the handler of the TIM instance.
+  * @note    Stop all current operations and reset states: \n
+  *          @arg stop the counter
+  *          @arg disable interrupts / DMA transfers
+  *          @arg clear status flags
+  *          @arg set channels' states to RESET
+  *          @arg set global state to RESET
+  * @note    HAL_TIM_DeInit does not reset all TIM registers.
+  *          The Application must call RCC API to force the reset of all TIM registers.
+  * @warning If a DMA transfer is ongoing, HAL_TIM_DeInit must be performed before
+  *          calling HAL_DMA_DeInit to avoid asserts.
   */
 void HAL_TIM_DeInit(hal_tim_handle_t *htim)
 {
@@ -3585,11 +3718,32 @@ void HAL_TIM_DeInit(hal_tim_handle_t *htim)
 
   ASSERT_DBG_PARAM(IS_TIM_INSTANCE(p_tim));
 
+#if defined (USE_HAL_TIM_DMA) && (USE_HAL_TIM_DMA == 1)
+  /* Abort potential DMA in progress */
+  uint32_t dma_req = LL_TIM_READ_REG(p_tim, DIER) & TIM_DMAREQ_REQUESTS_MASK;
+#endif /* USE_HAL_TIM_DMA */
+
   LL_TIM_DisableCounter(p_tim);
 
   LL_TIM_WRITE_REG(p_tim, DIER, 0U);
 
   LL_TIM_WRITE_REG(p_tim, SR, 0U);
+
+#if defined (USE_HAL_TIM_DMA) && (USE_HAL_TIM_DMA == 1)
+  while (dma_req != 0U)
+  {
+    uint32_t active_dma_req = dma_req & (~dma_req + 1U);
+    hal_tim_dma_index_t dma_idx = TIM_DMARequestToDMAIndex(active_dma_req);
+    hal_dma_handle_t *hdma = htim->hdma[(uint32_t)dma_idx];
+
+    if (hdma != NULL)
+    {
+      (void)HAL_DMA_Abort(hdma);
+    }
+
+    dma_req &= ~active_dma_req;
+  }
+#endif /* USE_HAL_TIM_DMA */
 
   /* Reset channels state */
   for (uint32_t i = 0; i < HAL_TIM_CHANNELS; ++i)
@@ -5199,11 +5353,7 @@ hal_status_t HAL_TIM_OC_SetConfigChannel(hal_tim_handle_t *htim,
   /* Check the channel is supported by the instance */
   ASSERT_DBG_PARAM((IS_TIM_OC_CHANNEL(p_tim, channel)));
 
-  /* Check channel configuration parameters */
   ASSERT_DBG_PARAM(IS_TIM_OC_POLARITY(p_config->polarity));
-  ASSERT_DBG_PARAM(IS_TIM_OC_IDLE_STATE(p_config->idle_state));
-  ASSERT_DBG_PARAM(IS_TIM_OC_OVERRIDE_STATE(p_config->override_state));
-  ASSERT_DBG_PARAM(IS_TIM_OC_BREAK_MODE(p_config->break_mode));
 
   ASSERT_DBG_STATE(htim->channel_states[channel],
                    (HAL_TIM_CHANNEL_STATE_RESET | TIM_CHANNEL_STATE_IDLE));
@@ -5212,9 +5362,12 @@ hal_status_t HAL_TIM_OC_SetConfigChannel(hal_tim_handle_t *htim,
 
   if (IS_TIM_BREAK_INSTANCE(p_tim))
   {
+    ASSERT_DBG_PARAM(IS_TIM_OC_IDLE_STATE(p_config->idle_state));
     LL_TIM_OC_SetIdleState(p_tim, ll_tim_channels[channel], (uint32_t)p_config->idle_state);
     if (!(IS_TIM_OC_INTERNAL_CHANNEL(channel)))
     {
+      ASSERT_DBG_PARAM(IS_TIM_OC_OVERRIDE_STATE(p_config->override_state));
+      ASSERT_DBG_PARAM(IS_TIM_OC_BREAK_MODE(p_config->break_mode));
       LL_TIM_OC_SetOverrideState(p_tim, ll_tim_channels[channel], (uint32_t)p_config->override_state);
       LL_TIM_OC_SetBreakMode(p_tim, ll_tim_channels[channel], (uint32_t)p_config->break_mode);
     }
@@ -5362,9 +5515,9 @@ hal_status_t HAL_TIM_OC_SetPulseGenerator(hal_tim_handle_t *htim,
   ASSERT_DBG_PARAM(IS_TIM_PULSE_PRESCALER(p_config->prescaler));
   ASSERT_DBG_PARAM(IS_TIM_OC_PULSE_WIDTH(p_config->pulse_width));
 
-  LL_TIM_OC_SetPulseWidth(p_tim, p_config->pulse_width);
-
   LL_TIM_OC_SetPulseWidthPrescaler(p_tim, (uint32_t)p_config->prescaler);
+
+  LL_TIM_OC_SetPulseWidth(p_tim, p_config->pulse_width);
 
   return HAL_OK;
 }
@@ -5387,9 +5540,9 @@ void HAL_TIM_OC_GetPulseGenerator(const hal_tim_handle_t *htim,
 
   tim_t *p_tim = TIM_INSTANCE(htim);
 
-  p_config->pulse_width = LL_TIM_OC_GetPulseWidth(p_tim);
-
   p_config->prescaler = (hal_tim_pulse_prescaler_t)LL_TIM_OC_GetPulseWidthPrescaler(p_tim);
+
+  p_config->pulse_width = LL_TIM_OC_GetPulseWidth(p_tim);
 }
 
 /**
@@ -6756,6 +6909,7 @@ hal_status_t HAL_TIM_SetConfigEncoderIndex(hal_tim_handle_t *htim,
   tim_t *p_tim = TIM_INSTANCE(htim);
 
   ASSERT_DBG_PARAM(IS_TIM_ENCODER_INTERFACE_INSTANCE(p_tim));
+  ASSERT_DBG_PARAM(IS_TIM_ETR_INSTANCE(p_tim));
 
   ASSERT_DBG_STATE(htim->global_state, HAL_TIM_STATE_IDLE);
 
@@ -6794,6 +6948,7 @@ void HAL_TIM_GetConfigEncoderIndex(const hal_tim_handle_t *htim,
   tim_t *p_tim = TIM_INSTANCE(htim);
 
   ASSERT_DBG_PARAM(IS_TIM_ENCODER_INTERFACE_INSTANCE(p_tim));
+  ASSERT_DBG_PARAM(IS_TIM_ETR_INSTANCE(p_tim));
 
   ASSERT_DBG_STATE(htim->global_state,
                    (HAL_TIM_STATE_IDLE | HAL_TIM_STATE_ACTIVE));
@@ -6824,6 +6979,7 @@ hal_status_t HAL_TIM_EnableEncoderIndex(hal_tim_handle_t *htim)
   tim_t *p_tim = TIM_INSTANCE(htim);
 
   ASSERT_DBG_PARAM(IS_TIM_ENCODER_INTERFACE_INSTANCE(p_tim));
+  ASSERT_DBG_PARAM(IS_TIM_ETR_INSTANCE(p_tim));
 
   ASSERT_DBG_STATE(htim->global_state,
                    (HAL_TIM_STATE_IDLE | HAL_TIM_STATE_ACTIVE));
@@ -6845,6 +7001,7 @@ hal_status_t HAL_TIM_DisableEncoderIndex(hal_tim_handle_t *htim)
   tim_t *p_tim = TIM_INSTANCE(htim);
 
   ASSERT_DBG_PARAM(IS_TIM_ENCODER_INTERFACE_INSTANCE(p_tim));
+  ASSERT_DBG_PARAM(IS_TIM_ETR_INSTANCE(p_tim));
 
   ASSERT_DBG_STATE(htim->global_state,
                    (HAL_TIM_STATE_IDLE | HAL_TIM_STATE_ACTIVE));
@@ -6869,6 +7026,7 @@ hal_tim_encoder_index_status_t HAL_TIM_IsEnabledEncoderIndex(const hal_tim_handl
   tim_t *p_tim = TIM_INSTANCE(htim);
 
   ASSERT_DBG_PARAM(IS_TIM_ENCODER_INTERFACE_INSTANCE(p_tim));
+  ASSERT_DBG_PARAM(IS_TIM_ETR_INSTANCE(p_tim));
 
   return (hal_tim_encoder_index_status_t)LL_TIM_IsEnabledEncoderIndex(p_tim);
 }
@@ -8240,47 +8398,102 @@ hal_status_t HAL_TIM_BREAK_RearmInput(hal_tim_handle_t *htim,
   * @param  brkinsrc  This parameter can be one of the following values: \n
   *         The description below summarizes "Timer Instance" and "BREAK(2) input source" possibilities:
   *
-  *         TIM1: combination of the following values:
+  *         TIM1: one of the following values:
   *            @arg @ref HAL_TIM_BRK_TIM1_GPIO
   *            @arg @ref HAL_TIM_BRK_TIM1_COMP1_OUT
   * @if COMP2
   *            @arg @ref HAL_TIM_BRK_TIM1_COMP2_OUT (*)
   * @endif
+  * @if COMP3
+  *            @arg @ref HAL_TIM_BRK_TIM1_COMP3_OUT (*)
+  *            @arg @ref HAL_TIM_BRK_TIM1_COMP4_OUT (*)
+  * @endif
   *
+  * @if TIM20
   *            @arg @ref HAL_TIM_BRK2_TIM1_GPIO
   *            @arg @ref HAL_TIM_BRK2_TIM1_COMP1_OUT
   * @if COMP2
   *            @arg @ref HAL_TIM_BRK2_TIM1_COMP2_OUT (*)
   * @endif
+  * @if COMP3
+  *            @arg @ref HAL_TIM_BRK2_TIM1_COMP3_OUT (*)
+  *            @arg @ref HAL_TIM_BRK2_TIM1_COMP4_OUT (*)
+  * @endif
+  * @endif
   *
-  *         TIM8: combination of the following values:
+  *         TIM8: one of the following values:
   *            @arg @ref HAL_TIM_BRK_TIM8_GPIO
   *            @arg @ref HAL_TIM_BRK_TIM8_COMP1_OUT
   * @if COMP2
   *            @arg @ref HAL_TIM_BRK_TIM8_COMP2_OUT (*)
   * @endif
+  * @if COMP3
+  *            @arg @ref HAL_TIM_BRK_TIM8_COMP3_OUT (*)
+  *            @arg @ref HAL_TIM_BRK_TIM8_COMP4_OUT (*)
+  * @endif
   *
+  * @if TIM20
   *            @arg @ref HAL_TIM_BRK2_TIM8_GPIO
   *            @arg @ref HAL_TIM_BRK2_TIM8_COMP1_OUT
   * @if COMP2
   *            @arg @ref HAL_TIM_BRK2_TIM8_COMP2_OUT (*)
   * @endif
+  * @if COMP3
+  *            @arg @ref HAL_TIM_BRK2_TIM8_COMP3_OUT (*)
+  *            @arg @ref HAL_TIM_BRK2_TIM8_COMP4_OUT (*)
+  * @endif
+  * @endif
   *
-  *         TIM15: combination of the following values:
+  *         TIM15: one of the following values:
   *            @arg @ref HAL_TIM_BRK_TIM15_GPIO
   *            @arg @ref HAL_TIM_BRK_TIM15_COMP1_OUT
   * @if COMP2
   *            @arg @ref HAL_TIM_BRK_TIM15_COMP2_OUT (*)
   * @endif
+  * @if COMP3
+  *            @arg @ref HAL_TIM_BRK_TIM15_COMP3_OUT (*)
+  *            @arg @ref HAL_TIM_BRK_TIM15_COMP4_OUT (*)
+  * @endif
   *
   * @if TIM16
-  *         TIM16: combination of the following values: (**)
+  *         TIM16: one of the following values: (**)
   *            @arg @ref HAL_TIM_BRK_TIM16_GPIO
   *            @arg @ref HAL_TIM_BRK_TIM16_COMP1_OUT
+  * @if COMP3
+  *            @arg @ref HAL_TIM_BRK_TIM16_COMP2_OUT (*)
+  *            @arg @ref HAL_TIM_BRK_TIM16_COMP3_OUT (*)
+  *            @arg @ref HAL_TIM_BRK_TIM16_COMP4_OUT (*)
+  * @endif
+  * @endif
   *
-  *         TIM17: combination of the following values: (**)
+  * @if TIM17
+  *         TIM17: one of the following values: (**)
   *            @arg @ref HAL_TIM_BRK_TIM17_GPIO
   *            @arg @ref HAL_TIM_BRK_TIM17_COMP1_OUT
+  * @if COMP3
+  *            @arg @ref HAL_TIM_BRK_TIM17_COMP2_OUT (*)
+  *            @arg @ref HAL_TIM_BRK_TIM17_COMP3_OUT (*)
+  *            @arg @ref HAL_TIM_BRK_TIM17_COMP4_OUT (*)
+  * @endif
+  * @endif
+  *
+  * @if TIM20
+  *         TIM20: one of the following values: (**)
+  *            @arg @ref HAL_TIM_BRK_TIM20_GPIO
+  *            @arg @ref HAL_TIM_BRK_TIM20_COMP1_OUT
+  * @if COMP3
+  *            @arg @ref HAL_TIM_BRK_TIM20_COMP2_OUT (*)
+  *            @arg @ref HAL_TIM_BRK_TIM20_COMP3_OUT (*)
+  *            @arg @ref HAL_TIM_BRK_TIM20_COMP4_OUT (*)
+  * @endif
+  *
+  *            @arg @ref HAL_TIM_BRK2_TIM20_GPIO
+  *            @arg @ref HAL_TIM_BRK2_TIM20_COMP1_OUT
+  * @if COMP3
+  *            @arg @ref HAL_TIM_BRK2_TIM20_COMP2_OUT (*)
+  *            @arg @ref HAL_TIM_BRK2_TIM20_COMP3_OUT (*)
+  *            @arg @ref HAL_TIM_BRK2_TIM20_COMP4_OUT (*)
+  * @endif
   * @endif
   *
   *         (*)  Value not defined in all devices. \n
@@ -8316,47 +8529,102 @@ hal_status_t HAL_TIM_BREAK_SetInputSourcePolarity(hal_tim_handle_t *htim,
   * @param  brkinsrc  This parameter can be one of the following values: \n
   *         The description below summarizes "Timer Instance" and "BREAK(2) input source" possibilities:
   *
-  *         TIM1: combination of the following values:
+  *         TIM1: one of the following values:
   *            @arg @ref HAL_TIM_BRK_TIM1_GPIO
   *            @arg @ref HAL_TIM_BRK_TIM1_COMP1_OUT
   * @if COMP2
   *            @arg @ref HAL_TIM_BRK_TIM1_COMP2_OUT (*)
   * @endif
+  * @if COMP3
+  *            @arg @ref HAL_TIM_BRK_TIM1_COMP3_OUT (*)
+  *            @arg @ref HAL_TIM_BRK_TIM1_COMP4_OUT (*)
+  * @endif
   *
+  * @if TIM20
   *            @arg @ref HAL_TIM_BRK2_TIM1_GPIO
   *            @arg @ref HAL_TIM_BRK2_TIM1_COMP1_OUT
   * @if COMP2
   *            @arg @ref HAL_TIM_BRK2_TIM1_COMP2_OUT (*)
   * @endif
+  * @if COMP3
+  *            @arg @ref HAL_TIM_BRK2_TIM1_COMP3_OUT (*)
+  *            @arg @ref HAL_TIM_BRK2_TIM1_COMP4_OUT (*)
+  * @endif
+  * @endif
   *
-  *         TIM8: combination of the following values:
+  *         TIM8: one of the following values:
   *            @arg @ref HAL_TIM_BRK_TIM8_GPIO
   *            @arg @ref HAL_TIM_BRK_TIM8_COMP1_OUT
   * @if COMP2
   *            @arg @ref HAL_TIM_BRK_TIM8_COMP2_OUT (*)
   * @endif
+  * @if COMP3
+  *            @arg @ref HAL_TIM_BRK_TIM8_COMP3_OUT (*)
+  *            @arg @ref HAL_TIM_BRK_TIM8_COMP4_OUT (*)
+  * @endif
   *
+  * @if TIM20
   *            @arg @ref HAL_TIM_BRK2_TIM8_GPIO
   *            @arg @ref HAL_TIM_BRK2_TIM8_COMP1_OUT
   * @if COMP2
   *            @arg @ref HAL_TIM_BRK2_TIM8_COMP2_OUT (*)
   * @endif
+  * @if COMP3
+  *            @arg @ref HAL_TIM_BRK2_TIM8_COMP3_OUT (*)
+  *            @arg @ref HAL_TIM_BRK2_TIM8_COMP4_OUT (*)
+  * @endif
+  * @endif
   *
-  *         TIM15: combination of the following values:
+  *         TIM15: one of the following values:
   *            @arg @ref HAL_TIM_BRK_TIM15_GPIO
   *            @arg @ref HAL_TIM_BRK_TIM15_COMP1_OUT
   * @if COMP2
   *            @arg @ref HAL_TIM_BRK_TIM15_COMP2_OUT (*)
   * @endif
+  * @if COMP3
+  *            @arg @ref HAL_TIM_BRK_TIM15_COMP3_OUT (*)
+  *            @arg @ref HAL_TIM_BRK_TIM15_COMP4_OUT (*)
+  * @endif
   *
   * @if TIM16
-  *         TIM16: combination of the following values: (**)
+  *         TIM16: one of the following values: (**)
   *            @arg @ref HAL_TIM_BRK_TIM16_GPIO
   *            @arg @ref HAL_TIM_BRK_TIM16_COMP1_OUT
+  * @if COMP3
+  *            @arg @ref HAL_TIM_BRK_TIM16_COMP2_OUT (*)
+  *            @arg @ref HAL_TIM_BRK_TIM16_COMP3_OUT (*)
+  *            @arg @ref HAL_TIM_BRK_TIM16_COMP4_OUT (*)
+  * @endif
+  * @endif
   *
-  *         TIM17: combination of the following values: (**)
+  * @if TIM17
+  *         TIM17: one of the following values: (**)
   *            @arg @ref HAL_TIM_BRK_TIM17_GPIO
   *            @arg @ref HAL_TIM_BRK_TIM17_COMP1_OUT
+  * @if COMP3
+  *            @arg @ref HAL_TIM_BRK_TIM17_COMP2_OUT (*)
+  *            @arg @ref HAL_TIM_BRK_TIM17_COMP3_OUT (*)
+  *            @arg @ref HAL_TIM_BRK_TIM17_COMP4_OUT (*)
+  * @endif
+  * @endif
+  *
+  * @if TIM20
+  *         TIM20: one of the following values: (**)
+  *            @arg @ref HAL_TIM_BRK_TIM20_GPIO
+  *            @arg @ref HAL_TIM_BRK_TIM20_COMP1_OUT
+  * @if COMP3
+  *            @arg @ref HAL_TIM_BRK_TIM20_COMP2_OUT (*)
+  *            @arg @ref HAL_TIM_BRK_TIM20_COMP3_OUT (*)
+  *            @arg @ref HAL_TIM_BRK_TIM20_COMP4_OUT (*)
+  * @endif
+  *
+  *            @arg @ref HAL_TIM_BRK2_TIM20_GPIO
+  *            @arg @ref HAL_TIM_BRK2_TIM20_COMP1_OUT
+  * @if COMP3
+  *            @arg @ref HAL_TIM_BRK2_TIM20_COMP2_OUT (*)
+  *            @arg @ref HAL_TIM_BRK2_TIM20_COMP3_OUT (*)
+  *            @arg @ref HAL_TIM_BRK2_TIM20_COMP4_OUT (*)
+  * @endif
   * @endif
   *
   *         (*)  Value not defined in all devices. \n

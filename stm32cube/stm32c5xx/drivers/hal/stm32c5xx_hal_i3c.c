@@ -835,7 +835,7 @@ A set of functions that allow configuration of the I3Cx peripheral:
 
 - Own dynamic address (controller):
   - HAL_I3C_CTRL_SetConfigOwnDynamicAddress()
-  - HAL_I3C_CTRL_GetConfigOwnAddress()
+  - HAL_I3C_CTRL_GetConfigOwnDynamicAddress()
 
 - Hot-Join allowed (controller):
   - HAL_I3C_CTRL_EnableHotJoinAllowed()
@@ -3636,7 +3636,7 @@ hal_status_t HAL_I3C_CTRL_Transfer_DMA(hal_i3c_handle_t *hi3c, const hal_i3c_tra
   /*------------------------------------ I3C DMA channel for Control Data --------------------------------------------*/
   hi3c->hdma_tc->p_xfer_cplt_cb = I3C_DMAControlTransmitCplt;
   hi3c->hdma_tc->p_xfer_error_cb = I3C_DMAError;
-  hi3c->hdma_tc->p_xfer_abort_cb = NULL;
+  hi3c->hdma_tc->p_xfer_abort_cb = I3C_DMAError;
 
   control_dma_status = HAL_DMA_StartDirectXfer_IT_Opt(hi3c->hdma_tc, (uint32_t)p_ctx->p_tc_data,
                                                       (uint32_t)&p_i3cx->CR, p_ctx->tc_size_word * 4U,
@@ -3645,7 +3645,7 @@ hal_status_t HAL_I3C_CTRL_Transfer_DMA(hal_i3c_handle_t *hi3c, const hal_i3c_tra
   /*------------------------------------ I3C DMA channel for the Rx Data ---------------------------------------------*/
   if (hi3c->hdma_rx != NULL)
   {
-    hi3c->hdma_rx->p_xfer_abort_cb = NULL;
+    hi3c->hdma_rx->p_xfer_abort_cb = I3C_DMAError;
     if (p_ctx->rx_size_byte != 0U)
     {
       hi3c->hdma_rx->p_xfer_cplt_cb = I3C_DMADataReceiveCplt;
@@ -3670,7 +3670,7 @@ hal_status_t HAL_I3C_CTRL_Transfer_DMA(hal_i3c_handle_t *hi3c, const hal_i3c_tra
   /*------------------------------------ I3C DMA channel for the Tx Data ---------------------------------------------*/
   if (hi3c->hdma_tx != NULL)
   {
-    hi3c->hdma_tx->p_xfer_abort_cb = NULL;
+    hi3c->hdma_tx->p_xfer_abort_cb = I3C_DMAError;
     if (p_ctx->tx_size_byte != 0U)
     {
       hi3c->hdma_tx->p_xfer_cplt_cb = I3C_DMADataTransmitCplt;
@@ -4490,8 +4490,8 @@ hal_status_t HAL_I3C_TGT_Transmit_DMA(hal_i3c_handle_t *hi3c, const uint8_t *p_d
   /*------------------------------------ I3C DMA channel for the tx data ---------------------------------------------*/
   hi3c->hdma_tx->p_xfer_cplt_cb = I3C_DMADataTransmitCplt;
   hi3c->hdma_tx->p_xfer_error_cb = I3C_DMAError;
-  hi3c->hdma_tx->p_xfer_abort_cb = NULL;
-  hi3c->hdma_rx->p_xfer_abort_cb = NULL;
+  hi3c->hdma_tx->p_xfer_abort_cb = I3C_DMAError;
+  hi3c->hdma_rx->p_xfer_abort_cb = I3C_DMAError;
 
   /* Check on the Tx threshold to know the Tx treatment process: byte or word */
   if (LL_I3C_GetTxFIFOThreshold(p_i3cx) == LL_I3C_TXFIFO_THRESHOLD_1_8)
@@ -4815,8 +4815,8 @@ hal_status_t HAL_I3C_TGT_Receive_DMA(hal_i3c_handle_t *hi3c, uint8_t *p_data, ui
   /*------------------------------------ I3C DMA channel for the Rx Data ---------------------------------------------*/
   hi3c->hdma_rx->p_xfer_cplt_cb = I3C_DMADataReceiveCplt;
   hi3c->hdma_rx->p_xfer_error_cb = I3C_DMAError;
-  hi3c->hdma_rx->p_xfer_abort_cb = NULL;
-  hi3c->hdma_tx->p_xfer_abort_cb = NULL;
+  hi3c->hdma_rx->p_xfer_abort_cb = I3C_DMAError;
+  hi3c->hdma_tx->p_xfer_abort_cb = I3C_DMAError;
 
   /* Check on the Rx threshold to know the Rx treatment process: byte or word */
   if (LL_I3C_GetRxFIFOThreshold(p_i3cx) == LL_I3C_RXFIFO_THRESHOLD_1_8)
@@ -6635,9 +6635,9 @@ static void I3C_DMAAbort(hal_dma_handle_t *hdma)
   {
     if (hi3c->hdma_tx->instance == dma_instance)
     {
-      hi3c->hdma_tx->p_xfer_abort_cb = NULL;
+      hi3c->hdma_tx->p_xfer_abort_cb = I3C_DMAError;
     }
-    else if (hi3c->hdma_tx->p_xfer_abort_cb != NULL)
+    else if (hi3c->hdma_tx->p_xfer_abort_cb != I3C_DMAError)
     {
       no_callback++;
     }
@@ -6651,9 +6651,9 @@ static void I3C_DMAAbort(hal_dma_handle_t *hdma)
   {
     if (hi3c->hdma_rx->instance == dma_instance)
     {
-      hi3c->hdma_rx->p_xfer_abort_cb = NULL;
+      hi3c->hdma_rx->p_xfer_abort_cb = I3C_DMAError;
     }
-    else if (hi3c->hdma_rx->p_xfer_abort_cb != NULL)
+    else if (hi3c->hdma_rx->p_xfer_abort_cb != I3C_DMAError)
     {
       no_callback++;
     }
@@ -6667,9 +6667,9 @@ static void I3C_DMAAbort(hal_dma_handle_t *hdma)
   {
     if (hi3c->hdma_tc->instance == dma_instance)
     {
-      hi3c->hdma_tc->p_xfer_abort_cb = NULL;
+      hi3c->hdma_tc->p_xfer_abort_cb = I3C_DMAError;
     }
-    else if (hi3c->hdma_tc->p_xfer_abort_cb != NULL)
+    else if (hi3c->hdma_tc->p_xfer_abort_cb != I3C_DMAError)
     {
       no_callback++;
     }

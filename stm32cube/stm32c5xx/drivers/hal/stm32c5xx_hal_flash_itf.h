@@ -136,6 +136,7 @@ typedef enum
   HAL_FLASH_ITF_PROGRAM_DELAY_0  = LL_FLASH_PROGRAM_DELAY_0,  /*!< FLASH ITF 0 programming delay */
   HAL_FLASH_ITF_PROGRAM_DELAY_1  = LL_FLASH_PROGRAM_DELAY_1,  /*!< FLASH ITF 1 programming delay */
   HAL_FLASH_ITF_PROGRAM_DELAY_2  = LL_FLASH_PROGRAM_DELAY_2,  /*!< FLASH ITF 2 programming delay */
+  HAL_FLASH_ITF_PROGRAM_DELAY_3  = LL_FLASH_PROGRAM_DELAY_3,  /*!< FLASH ITF 3 programming delay */
 } hal_flash_itf_program_delay_t;
 
 /*! HAL FLASH ITF Prefetch enumeration definition */

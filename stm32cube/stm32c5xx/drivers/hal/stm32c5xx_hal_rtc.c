@@ -35,7 +35,7 @@
   * @{
   */
 
-/** @defgroup RTC_Introduction RTC Introduction
+/** @defgroup RTC_Introduction RTC introduction
   * @{
 
   - The real-time clock (RTC) peripheral provides accurate timekeeping and calendar functionality.
@@ -47,7 +47,7 @@
   * @}
   */
 
-/** @defgroup RTC_How_To_Use RTC How To Use
+/** @defgroup RTC_How_To_Use RTC how to use
   * @{
 
   * The Real-Time Clock (RTC) is an independent BCD/Binary timer/counter.
@@ -81,7 +81,7 @@
   * @}
   */
 
-/** @defgroup RTC_Configuration_Table RTC Configuration Table
+/** @defgroup RTC_Configuration_Table RTC configuration table
   * @{
 
 # Configuration inside the RTC driver
@@ -105,7 +105,7 @@ USE_HAL_CHECK_PARAM               | from hal_conf.h  |        0        | Allows 
 /* Private typedef ---------------------------------------------------------------------------------------------------*/
 /* Private define ----------------------------------------------------------------------------------------------------*/
 
-/** @defgroup RTC_Private_Constants RTC private defines
+/** @defgroup RTC_Private_Constants RTC private constants
   * @{
   */
 #define RTC_MICROSECONDS                        1000000U /*!< Number of microseconds in one second */
@@ -128,7 +128,7 @@ USE_HAL_CHECK_PARAM               | from hal_conf.h  |        0        | Allows 
   * @{
   */
 
-/** @defgroup RTC_Private_Macros_Assert_Config RTC private macros for global enumeration.
+/** @defgroup RTC_Private_Macros_Assert_Config RTC private macros for global enumerations.
   * @{
   */
 
@@ -1556,14 +1556,11 @@ hal_rtc_calibration_status_t HAL_RTC_IsEnabledCalibration(void)
   *          by @ref HAL_RTC_CALENDAR_EnableReferenceClock
   * @warning This function will not decrease the number of seconds nor overflow the subsecond register.
   * @retval  HAL_OK
-  * @retval  HAL_ERROR If the shift operation is still pending after RTC timeout duration.
-  *                    If the reference clock detection is enabled.
-  *                    In BCD mode :HAL_RTC_MODE_BCD the 15th value of the subsecond register is equal to 1.
-  *                    In mixed mode :HAL_RTC_MODE_MIX
-  *                    the fraction_sec_to_subtract [14, @ref hal_rtc_config_t::bcd_update ] must be equal to 0,
-  *                    In mixed mode :HAL_RTC_MODE_MIX
-  *                    the BCD increment value @ref hal_rtc_config_t::bcd_update
-  *                    in the subsecond register must be equal to 0.
+  * @retval  HAL_ERROR The shift operation is still pending after RTC timeout duration.
+  *                    RTC_SHIFTR must not be written when the reference clock detection is enabled.
+  *                    In BCD mode, SS[15] must be 0 before writing RTC_SHIFTR to avoid overflow.
+  *                    In mixed mode, SUBFS[14:BCDU+8] must be written with 0.
+  *                    In mixed mode, SS[BCDU+8] must be 0 before writing RTC_SHIFTR.
   */
 hal_status_t HAL_RTC_ShiftCalibration(hal_rtc_calibration_shift_second_t add_one_sec,
                                       uint32_t fraction_sec_to_subtract)
@@ -1572,8 +1569,9 @@ hal_status_t HAL_RTC_ShiftCalibration(hal_rtc_calibration_shift_second_t add_one
   ASSERT_DBG_PARAM(IS_RTC_CALIBRATION_SHIFT_FRACTIONS(fraction_sec_to_subtract));
   uint32_t value_sec_tmp;
   hal_status_t status = HAL_OK;
+  uint32_t binary_mode = LL_RTC_GetBinaryMode();
 
-  if (LL_RTC_GetBinaryMode() == LL_RTC_BINARY_NONE)
+  if (binary_mode == LL_RTC_BINARY_NONE)
   {
     /* Check if the 15th value of the subsecond register is equal to 0 or 1 in BCD mode */
     value_sec_tmp = LL_RTC_TIME_GetSubSecond();
@@ -1582,21 +1580,22 @@ hal_status_t HAL_RTC_ShiftCalibration(hal_rtc_calibration_shift_second_t add_one
 
     if (((value_sec_tmp >> 15) & 1U) == 1U)
     {
-      /* This is because of the shadow register */
+      /* In BCD mode, SS[15] must be 0 before writing RTC_SHIFTR to avoid overflow. */
       status = HAL_ERROR;
     }
     if (LL_RTC_IsEnabledRefClock() == 1U)
     {
+      /* RTC_SHIFTR must not be written when the reference clock detection is enabled. */
       status = HAL_ERROR;
     }
   }
-
-  if (LL_RTC_GetBinaryMode() == LL_RTC_BINARY_MIX)
+  else if (binary_mode == LL_RTC_BINARY_MIX)
   {
     uint32_t bcd_increment = (LL_RTC_GetBinMixBCDU() >> LL_RTC_BINARY_MIX_BCDU_SHIFT) + 8U;
 
     if ((fraction_sec_to_subtract >> bcd_increment) != 0U)
     {
+      /* In mixed mode, SUBFS[14:BCDU+8] must be written with 0. */
       status = HAL_ERROR;
     }
 
@@ -1606,26 +1605,34 @@ hal_status_t HAL_RTC_ShiftCalibration(hal_rtc_calibration_shift_second_t add_one
 
     if (((value_sec_tmp >> bcd_increment) & 1U) == 1U)
     {
+      /* In mixed mode, SS[BCDU+8] must be 0 before writing RTC_SHIFTR. */
       status = HAL_ERROR;
     }
   }
-
-  /* Check that there is no shift ongoing */
-  if (RTC_WaitSynchro_SHP() != HAL_OK)
+  else
   {
-    return HAL_ERROR;
+    /* In binary mode, no check */
   }
 
-  LL_RTC_TIME_Synchronize((uint32_t) add_one_sec, fraction_sec_to_subtract);
-
-  if (RTC_WaitSynchro_SHP() != HAL_OK)
+  if (status == HAL_OK)
   {
-    return HAL_ERROR;
-  }
+    /* Check that there is no shift ongoing */
+    if (RTC_WaitSynchro_SHP() != HAL_OK)
+    {
+      return HAL_ERROR;
+    }
 
-  if (RTC_WaitSynchro_RS() != HAL_OK)
-  {
-    return HAL_ERROR;
+    LL_RTC_TIME_Synchronize((uint32_t) add_one_sec, fraction_sec_to_subtract);
+
+    if (RTC_WaitSynchro_SHP() != HAL_OK)
+    {
+      return HAL_ERROR;
+    }
+
+    if (RTC_WaitSynchro_RS() != HAL_OK)
+    {
+      return HAL_ERROR;
+    }
   }
 
   return status;
@@ -1636,7 +1643,7 @@ hal_status_t HAL_RTC_ShiftCalibration(hal_rtc_calibration_shift_second_t add_one
   */
 
 /** @addtogroup RTC_Exported_Functions_Alarms
-  * @brief Exported alarms functions.
+  * @brief Exported alarm functions.
   * @{
   *
   * The RTC unit provides two programmable alarms. The alarms trigger when the calendar subseconds, seconds,
@@ -2127,6 +2134,7 @@ hal_rtc_timestamp_it_status_t HAL_RTC_TIMESTAMP_IsEnabledIT(void)
 
 /**
   * @brief  Retrieve the RTC timestamp time and the source of the timestamp event.
+  *         Due to register limitations, the year is forced to 0 when reading the timestamp.
   * @param  p_time pointer to an RTC timestamp time instance.
   * @param  p_date pointer to an RTC timestamp date instance.
   * @param  p_info pointer to a @ref hal_rtc_timestamp_information_t value.
@@ -2599,7 +2607,6 @@ uint32_t HAL_RTC_WAKEUP_GetAutoClear(void)
 /**
   * @}
   */
-
 /** @addtogroup RTC_Exported_Functions_IRQ
   * @brief IRQ handler exported functions.
   * @{
@@ -2716,7 +2723,7 @@ void HAL_RTC_SubSecondsUnderflow_IRQHandler(void)
   */
 
 /** @addtogroup RTC_Exported_Functions_Callback
-  * @brief Callback exported functions.
+  * @brief Exported callback functions.
   * @{
   *  Callback functions that can be overwritten for the different interrupts:
   * * Alarm A
@@ -2776,9 +2783,15 @@ __WEAK void HAL_RTC_SubSecondsUnderflowEventCallback(void)
   /* NOTE: This function must not be modified in this file. When the callback is needed,
    HAL_RTC_SubSecondsUnderflowEventCallback() can be implemented in the application file. */
 }
-
 /**
   * @}
+  */
+
+/** @addtogroup RTC_Exported_Functions_Attributes
+  * @brief This section provides functions for managing security, privilege and lock configurations
+  * @{
+  * - Call HAL_RTC_SetPrivAttr() to set the privilege attribute of specified RTC item(s).
+  * - Call HAL_RTC_GetPrivAttr() to get the privilege attribute state of specified RTC item.
   */
 
 /**
@@ -2828,6 +2841,11 @@ hal_rtc_priv_attr_t HAL_RTC_GetPrivAttr(uint32_t item)
 
   return (hal_rtc_priv_attr_t)LL_RTC_GetPrivAttr(item);
 }
+
+/**
+  * @}
+  */
+
 /**
   * @}
   */

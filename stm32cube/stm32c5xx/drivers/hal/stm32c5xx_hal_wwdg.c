@@ -427,7 +427,7 @@ hal_status_t HAL_WWDG_Start(hal_wwdg_handle_t *hwwdg, uint32_t min_time, uint32_
   * @}
   */
 
-/** @addtogroup WWDG_Exported_Functions_Group2 IO operation function
+/** @addtogroup WWDG_Exported_Functions_Group2 I/O operation function
   * @{
 This subsection provides a function to manage the refresh of the WWDG counter:
   - Call the function HAL_WWDG_Refresh() to reload WWDG counter with value defined in the reload register.
@@ -823,7 +823,8 @@ static uint32_t WWDG_CalculateMaxTime(const hal_wwdg_handle_t *hwwdg, uint8_t pr
   uint64_t tmp;
   uint64_t freq_khz;
 
-  tmp = (uint64_t)((hwwdg->reload - WWDG_MAX_STEP_NUMBER) * WWDG_INTERNAL_DIVIDER * ((uint64_t)1 << prescaler));
+  tmp = (((uint64_t)hwwdg->reload - (uint64_t)WWDG_MAX_STEP_NUMBER) * (uint64_t)WWDG_INTERNAL_DIVIDER) *
+        ((uint64_t)1 << prescaler);
 
   freq_khz = (uint64_t)hwwdg->pclk_frequency_hz / 1000U;
 
@@ -857,7 +858,7 @@ static uint32_t WWDG_CalculateMinTime(const hal_wwdg_handle_t *hwwdg, uint8_t pr
   uint64_t tmp;
   uint64_t freq_khz;
 
-  tmp = (uint64_t)((hwwdg->reload - window) * WWDG_INTERNAL_DIVIDER * ((uint64_t)1 << prescaler));
+  tmp = ((uint64_t)hwwdg->reload - (uint64_t)window) * (uint64_t)WWDG_INTERNAL_DIVIDER * ((uint64_t)1 << prescaler);
 
   freq_khz = (uint64_t)hwwdg->pclk_frequency_hz / 1000U;
 

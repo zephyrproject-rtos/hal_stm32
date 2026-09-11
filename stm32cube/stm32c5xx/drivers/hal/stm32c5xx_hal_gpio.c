@@ -125,6 +125,8 @@
 
 - To lock a GPIO pin configuration until the next reset, use HAL_GPIO_LockPin().
 
+- To get the selected GPIO hardware instance, use HAL_GPIO_GetLLInstance() function.
+
   */
 
 /**
@@ -478,6 +480,8 @@ void  HAL_GPIO_DeInit(hal_gpio_t gpiox, uint32_t pins)
   - Provide the GPIO port as a first parameter.
   - Specify the set of pins of which to lock the configuration as a second parameter.
 
+### To get the selected GPIO hardware instance, use HAL_GPIO_GetLLInstance() function.
+
 <br>
   */
 
@@ -589,6 +593,18 @@ hal_status_t  HAL_GPIO_LockPin(hal_gpio_t gpiox, uint32_t pins)
 /**
   * @}
   */
+
+/**
+  * @brief  Get the selected hardware GPIO instance.
+  * @param  gpiox HAL_GPIOx: selected GPIO port based on @ref hal_gpio_t.
+  * @retval The selected hardware GPIO instance.
+  */
+GPIO_TypeDef *HAL_GPIO_GetLLInstance(hal_gpio_t gpiox)
+{
+  ASSERT_DBG_PARAM(IS_GPIO_PORT(gpiox));
+
+  return (GPIO_GET_INSTANCE(gpiox));
+}
 
 
 /**

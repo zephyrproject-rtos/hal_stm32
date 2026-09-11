@@ -82,7 +82,7 @@ data transfers between memory-mapped peripherals and/or memories via linked list
   or circular, where the last linked list node is linked to any linked list queue node.
 
   - Linear linked list:
-    A linear linked list is a finite list where the last node (also called the tail node) points to null.
+    A linear linked list is a finite list where the last node (also called the tail node) points to NULL.
     A linear linked list transfer execution is finite and ends at the last node.
     The DMA channel fetches and executes the DMA linked list queue from the first node (head node) to the last node
     (tail node) once.
@@ -115,7 +115,7 @@ data transfers between memory-mapped peripherals and/or memories via linked list
   DMA channel once to fetch the head node from memory, then it stops. Enable the DMA channel again to execute the node.
   After that, keep enabling the DMA channel to execute each node until the end of the linked list queue. When the
   linked list queue is circular, enable the DMA channel in an infinite loop to keep the DMA channel running. This
-  feature is useful for debug purposes or asynchronously executing queue nodes.
+  feature is useful for debugging purposes or asynchronously executing queue nodes.
 
 - Each DMA channel transfer (direct or linked list), is highly configurable according to DMA channel instance
   integrated in devices. These configurations can be:
@@ -138,9 +138,14 @@ data transfers between memory-mapped peripherals and/or memories via linked list
 
 - Each DMA channel transfer (direct or linked list), when it is active, can be suspended and
   resumed at run time by the application.
-  When suspending an ongoing transfer, the DMA channel does not suspend instantly but completes the current
-  single/burst transfer, then it stops.
-  When the DMA channel is suspended, the current transfer can be resumed instantly.
+  When suspending an ongoing transfer, the DMA channel is not suspended immediately but completes the current
+  single/burst transfer, then stops.
+  When the DMA channel is suspended, the current transfer can be resumed immediately.
+
+- A DMA burst means moving several pieces of data at once, instead of one by one (single transfer).
+
+- A DMA block is a larger chunk of data that the DMA will move from one place to another. It can be made up
+  of several bursts or single transfers.
 
 # How to use the DMA HAL module driver
 
@@ -211,8 +216,8 @@ It is mandatory to reinitialize it for the next transfer.
     in memory.
     When placing the DMA linked list in SRAM, ensure compliance with the product specifications to guarantee proper
     memory access.
-    The DMA linked list node parameter address must be 32bit aligned and
-    must not exceed the 64 KByte addressable space.
+    The DMA linked list node parameter address must be 32-bit aligned and
+    must not exceed the 64 KB addressable space.
 
   - Call the function HAL_DMA_GetNodeConfig() to get the specified configuration parameter on filling node.
     This API can be used when a few parameters need to be changed to fill a new node.
@@ -274,7 +279,7 @@ It is mandatory to reinitialize it for the next transfer.
   This API returns HAL_ERROR when there is no ongoing transfer or timeout is reached when disabling the DMA channel.
   Do not call this API from an interrupt service routine.
 
-- Call the function HAL_DMA_Resume() to resume any suspended DMA transfer instantly.
+- Call the function HAL_DMA_Resume() to resume any suspended DMA transfer immediately.
 
 - Call the function HAL_DMA_Abort() to abort any ongoing DMA transfer in blocking mode.
   This API returns HAL_ERROR when there is no ongoing transfer or timeout is reached when disabling the DMA channel.
@@ -320,7 +325,7 @@ It is mandatory to reinitialize it for the next transfer.
   is generated and HAL_DMA_IRQHandler() must reset the channel and executes the transfer suspend user callbacks.
   Call this API from an interrupt service routine.
 
-- Call the function HAL_DMA_Resume() to resume any suspended DMA transfer instantly.
+- Call the function HAL_DMA_Resume() to resume any suspended DMA transfer immediately.
 
 - Call the function HAL_DMA_Abort_IT() to abort any ongoing DMA transfer in interrupt mode.
   This API suspends the DMA channel execution.
@@ -350,7 +355,7 @@ It is mandatory to reinitialize it for the next transfer.
 
 Config defines              | Description     | Default value   | Note                                                 |
 ----------------------------| --------------- | --------------- | -----------------------------------------------------|
-PRODUCT                     | from IDE        |        NA       | The selected device (eg STM32C5XXxx)               |
+PRODUCT                     | from IDE        |        NA       | The selected device (e.g., STM32C5XXxx)            |
 USE_HAL_DMA_MODULE          | from hal_conf.h |        1        | Allows to use HAL DMA module.                        |
 USE_ASSERT_DBG_PARAM        | from IDE        |      None       | Allows to use the assert check parameters.           |
 USE_ASSERT_DBG_STATE        | from IDE        |      None       | Allows to use the assert check states.               |
@@ -370,114 +375,177 @@ USE_HAL_DMA_LINKEDLIST      | from hal_conf.h |        0        | Allows to use 
   * @{
   */
 
-/*! Macro to check DMA request */
+/**
+  * @brief  Check DMA hardware request selection.
+  * @param  value DMA hardware request to check.
+  * @retval 1U if value is a valid DMA hardware request, 0U otherwise.
+  */
 #if defined (XSPI1)
 #define IS_DMA_REQUEST(value)                                                 \
-  (((value) == HAL_DMA_REQUEST_SW) || ((value) <= HAL_LPDMA2_REQUEST_XSPI1))
-#elif defined (DAC_NB_OF_CHANNEL) && (DAC_NB_OF_CHANNEL == 2)
+  (((value) == HAL_DMA_REQUEST_SW) || ((value) <= HAL_LPDMA1_REQUEST_XSPI1))
+#elif defined (DAC1) && defined (DAC_NB_OF_CHANNEL) && (DAC_NB_OF_CHANNEL == 2)
 #define IS_DMA_REQUEST(value)                                                 \
-  (((value) == HAL_DMA_REQUEST_SW) || ((value) <= HAL_LPDMA2_REQUEST_DAC1_CH2))
+  (((value) == HAL_DMA_REQUEST_SW) || ((value) <= HAL_LPDMA1_REQUEST_DAC1_CH2))
 #else
 #define IS_DMA_REQUEST(value)                                                 \
-  (((value) == HAL_DMA_REQUEST_SW) || ((value) <= HAL_LPDMA2_REQUEST_DAC1_CH1))
+  (((value) == HAL_DMA_REQUEST_SW) || ((value) <= HAL_LPDMA1_REQUEST_DAC1_CH1))
 #endif /* XSPI1 */
 
-/*! Macro to check DMA hardware request mode */
+/**
+  * @brief  Check DMA hardware request mode.
+  * @param  value DMA hardware request mode to check.
+  * @retval 1U if value is a valid DMA hardware request mode, 0U otherwise.
+  */
 #define IS_DMA_HARDWARE_REQUEST_MODE(value)               \
   (((value) == (uint32_t)HAL_DMA_HARDWARE_REQUEST_BURST ) \
    || ((value) == (uint32_t)HAL_DMA_HARDWARE_REQUEST_BLOCK))
 
-/*! Macro to check DMA flow control mode */
+/**
+  * @brief  Check DMA flow control mode.
+  * @param  value DMA flow control mode to check.
+  * @retval 1U if value is a valid DMA flow control mode, 0U otherwise.
+  */
 #define IS_DMA_FLOW_CONTROL_MODE(value)                 \
   (((value) == (uint32_t)HAL_DMA_FLOW_CONTROL_DMA)      \
    || ((value) == (uint32_t)HAL_DMA_FLOW_CONTROL_PERIPH))
-/*! Macro to check DMA direction */
+/**
+  * @brief  Check DMA transfer direction.
+  * @param  value DMA transfer direction to check.
+  * @retval 1U if value is a valid DMA transfer direction, 0U otherwise.
+  */
 #define IS_DMA_DIRECTION(value)                                 \
   (((value) == (uint32_t)HAL_DMA_DIRECTION_MEMORY_TO_MEMORY)    \
    || ((value) == (uint32_t)HAL_DMA_DIRECTION_PERIPH_TO_MEMORY) \
    || ((value) == (uint32_t)HAL_DMA_DIRECTION_MEMORY_TO_PERIPH))
 
-/*! Macro to check DMA source increment */
+/**
+  * @brief  Check DMA source address increment mode.
+  * @param  value DMA source address increment mode to check.
+  * @retval 1U if value is a valid DMA source increment mode, 0U otherwise.
+  */
 #define IS_DMA_SRC_INC(value)                            \
   (((value) == (uint32_t)HAL_DMA_SRC_ADDR_FIXED)         \
    || ((value) == (uint32_t)HAL_DMA_SRC_ADDR_INCREMENTED))
 
-/*! Macro to check DMA destination increment */
+/**
+  * @brief  Check DMA destination address increment mode.
+  * @param  value DMA destination address increment mode to check.
+  * @retval 1U if value is a valid DMA destination increment mode, 0U otherwise.
+  */
 #define IS_DMA_DEST_INC(value)                            \
   (((value) == (uint32_t)HAL_DMA_DEST_ADDR_FIXED)         \
    || ((value) == (uint32_t)HAL_DMA_DEST_ADDR_INCREMENTED))
 
-/*! Macro to check DMA source data width */
+/**
+  * @brief  Check DMA source data width.
+  * @param  value DMA source data width to check.
+  * @retval 1U if value is a valid DMA source data width, 0U otherwise.
+  */
 #define IS_DMA_SRC_DATA_WIDTH(value)                         \
   (((value) == (uint32_t)HAL_DMA_SRC_DATA_WIDTH_BYTE)        \
    || ((value) == (uint32_t)HAL_DMA_SRC_DATA_WIDTH_HALFWORD) \
    || ((value) == (uint32_t)HAL_DMA_SRC_DATA_WIDTH_WORD))
 
-/*! Macro to check DMA destination data width */
+/**
+  * @brief  Check DMA destination data width.
+  * @param  value DMA destination data width to check.
+  * @retval 1U if value is a valid DMA destination data width, 0U otherwise.
+  */
 #define IS_DMA_DEST_DATA_WIDTH(value)                         \
   (((value) == (uint32_t)HAL_DMA_DEST_DATA_WIDTH_BYTE)        \
    || ((value) == (uint32_t)HAL_DMA_DEST_DATA_WIDTH_HALFWORD) \
    || ((value) == (uint32_t)HAL_DMA_DEST_DATA_WIDTH_WORD))
 
-/*! Macro to check DMA priority */
+/**
+  * @brief  Check DMA priority.
+  * @param  value DMA priority to check.
+  * @retval 1U if value is a valid DMA priority, 0U otherwise.
+  */
 #define IS_DMA_PRIORITY(value)                                \
   (((value) == (uint32_t)HAL_DMA_PRIORITY_LOW_WEIGHT_LOW)     \
    || ((value) == (uint32_t)HAL_DMA_PRIORITY_LOW_WEIGHT_MID)  \
    || ((value) == (uint32_t)HAL_DMA_PRIORITY_LOW_WEIGHT_HIGH) \
    || ((value) == (uint32_t)HAL_DMA_PRIORITY_HIGH))
 
-/*! Macro to check DMA trigger source */
+/**
+  * @brief  Check DMA trigger source.
+  * @param  value DMA trigger source to check.
+  * @retval 1U if value is a valid DMA trigger source, 0U otherwise.
+  */
 #if defined (COMP2)
 #define IS_DMA_TRIGGER_SOURCE(value)                \
-  ((value) <= (uint32_t)HAL_LPDMA2_TRIGGER_COMP2_OUT)
+  ((value) <= (uint32_t)HAL_LPDMA1_TRIGGER_COMP2_OUT)
 #elif defined (LPDMA2_CH7)
 #define IS_DMA_TRIGGER_SOURCE(value)                    \
-  ((value) <= (uint32_t)HAL_LPDMA2_TRIGGER_LPDMA2_CH7_TC)
+  ((value) <= (uint32_t)HAL_LPDMA1_TRIGGER_LPDMA2_CH7_TC)
 #else
 #define IS_DMA_TRIGGER_SOURCE(value)                    \
-  ((value) <= (uint32_t)HAL_LPDMA2_TRIGGER_LPDMA2_CH3_TC)
+  ((value) <= (uint32_t)HAL_LPDMA1_TRIGGER_LPDMA2_CH3_TC)
 #endif /* COMP2 */
 
-/*! Macro to check DMA trigger polarity */
+/**
+  * @brief  Check DMA trigger polarity.
+  * @param  value DMA trigger polarity to check.
+  * @retval 1U if value is a valid DMA trigger polarity, 0U otherwise.
+  */
 #define IS_DMA_TRIGGER_POLARITY(value)                       \
   (((value) == (uint32_t)HAL_DMA_TRIGGER_POLARITY_MASKED)    \
    || ((value) == (uint32_t)HAL_DMA_TRIGGER_POLARITY_RISING) \
    || ((value) == (uint32_t)HAL_DMA_TRIGGER_POLARITY_FALLING))
 
-/*! Macro to check DMA trigger mode */
+/**
+  * @brief  Check DMA trigger mode.
+  * @param  value DMA trigger mode to check.
+  * @retval 1U if value is a valid DMA trigger mode, 0U otherwise.
+  */
 #define IS_DMA_TRIGGER_MODE(value)                                \
   (((value) == (uint32_t)HAL_DMA_TRIGGER_BLOCK_TRANSFER)          \
    || ((value) == (uint32_t)HAL_DMA_TRIGGER_NODE_TRANSFER)        \
    || ((value) == (uint32_t)HAL_DMA_TRIGGER_SINGLE_BURST_TRANSFER))
 
-/*! Macro to check DMA destination data truncation and padding */
+/**
+  * @brief  Check DMA destination data truncation and padding mode.
+  * @param  value DMA destination data truncation and padding mode to check.
+  * @retval 1U if value is a valid DMA destination truncation and padding mode, 0U otherwise.
+  */
 #define IS_DMA_DEST_DATA_TRUNC_PADD(value)                          \
   (((value) == (uint32_t)HAL_DMA_DEST_DATA_TRUNC_LEFT_PADD_ZERO)    \
    || ((value) == (uint32_t)HAL_DMA_DEST_DATA_TRUNC_RIGHT_PADD_SIGN))
 
-/*! Macro to check DMA event mode */
-#define IS_DMA_XFER_EVENT_MODE(value)                                \
-  (((value) == (uint32_t)HAL_DMA_DIRECT_XFER_EVENT_BLOCK)            \
-   || ((value) == (uint32_t)HAL_DMA_DIRECT_XFER_EVENT_REPEATED_BLOCK))
-
-/*! Macro to check DMA linked list event mode */
+/**
+  * @brief  Check DMA linked list transfer event mode.
+  * @param  value DMA linked list transfer event mode to check.
+  * @retval 1U if value is a valid DMA linked list transfer event mode, 0U otherwise.
+  */
 #define IS_DMA_LINKEDLIST_XFER_EVENT_MODE(value)                \
   (((value) == (uint32_t)HAL_DMA_LINKEDLIST_XFER_EVENT_BLOCK)   \
    || ((value) == (uint32_t)HAL_DMA_LINKEDLIST_XFER_EVENT_NODE) \
    || ((value) == (uint32_t)HAL_DMA_LINKEDLIST_XFER_EVENT_Q))
 
-/*! Macro to check DMA linked list execution mode */
+/**
+  * @brief  Check DMA linked list execution mode.
+  * @param  value DMA linked list execution mode to check.
+  * @retval 1U if value is a valid DMA linked list execution mode, 0U otherwise.
+  */
 #define IS_DMA_LINKEDLIST_EXEC_MODE(value)                    \
   (((value) == (uint32_t)HAL_DMA_LINKEDLIST_EXECUTION_Q)      \
    || ((value) == (uint32_t)HAL_DMA_LINKEDLIST_EXECUTION_NODE))
 
 
-/*! Macro to check DMA privilege attribute */
+/**
+  * @brief  Check DMA privilege attribute.
+  * @param  value DMA privilege attribute to check.
+  * @retval 1U if value is a valid DMA privilege attribute, 0U otherwise.
+  */
 #define IS_DMA_PRIV_ATTR(value)   \
   (((value) == HAL_DMA_NPRIV)     \
    || ((value) == HAL_DMA_PRIV))
 
-/*! Macro to check DMA optional interrupt */
+/**
+  * @brief  Check DMA optional interrupt selection.
+  * @param  value DMA optional interrupt selection to check.
+  * @retval 1U if value is a valid optional interrupt selection, 0U otherwise.
+  */
 #define IS_DMA_OPT_IT(value)              \
   (((value) == HAL_DMA_OPT_IT_NONE)       \
    || ((value) == HAL_DMA_OPT_IT_HT)      \
@@ -485,17 +553,29 @@ USE_HAL_DMA_LINKEDLIST      | from hal_conf.h |        0        | Allows to use 
    || ((value) == HAL_DMA_OPT_IT_DEFAULT) \
    || ((value) == HAL_DMA_OPT_IT_SILENT))
 
-/*! Macro to check DMA transfer level */
+/**
+  * @brief  Check DMA transfer level.
+  * @param  value DMA transfer level to check.
+  * @retval 1U if value is a valid DMA transfer level, 0U otherwise.
+  */
 #define IS_DMA_XFER_LEVEL(value)                       \
   (((value) == (uint32_t)HAL_DMA_XFER_FULL_COMPLETE)   \
    || ((value) == (uint32_t)HAL_DMA_XFER_HALF_COMPLETE))
 
 #if defined(USE_HAL_DMA_LINKEDLIST) && (USE_HAL_DMA_LINKEDLIST == 1)
-/*! Macro to get the node type of selected instance */
+/**
+  * @brief  Get the DMA node type.
+  * @param  instance DMA channel instance.
+  * @retval Linear addressing.
+  */
 #define DMA_GET_NODE_TYPE(instance)  HAL_DMA_NODE_LINEAR_ADDRESSING
 #endif /* USE_HAL_DMA_LINKEDLIST */
 
-/*! Macro to get the DMA channel instance */
+/**
+  * @brief  Get the DMA channel instance.
+  * @param  handle DMA handle.
+  * @retval DMA channel instance.
+  */
 #define DMA_CHANNEL_GET_INSTANCE(handle)                \
   ((DMA_Channel_TypeDef *)((uint32_t)(handle)->instance))
 
@@ -523,7 +603,7 @@ USE_HAL_DMA_LINKEDLIST      | from hal_conf.h |        0        | Allows to use 
 /** @defgroup DMA_Private_Constants DMA Private Constants
   * @{
   */
-#define DMA_SUSPEND_TIMEOUT (5U)          /*!< 5 ms are needed to suspend the DMA channel */
+#define DMA_SUSPEND_TIMEOUT (1U)          /*!< 1 ms is needed to suspend the DMA channel */
 
 #if defined(USE_HAL_DMA_LINKEDLIST) && (USE_HAL_DMA_LINKEDLIST == 1)
 #define HAL_DMA_FLAG_ERROR (LL_DMA_FLAG_DTE | LL_DMA_FLAG_ULE | LL_DMA_FLAG_USE) /*!< DMA Flag error */
@@ -531,16 +611,16 @@ USE_HAL_DMA_LINKEDLIST      | from hal_conf.h |        0        | Allows to use 
 #define HAL_DMA_FLAG_ERROR (LL_DMA_FLAG_DTE | LL_DMA_FLAG_USE)                   /*!< DMA Flag error */
 #endif /* USE_HAL_DMA_LINKEDLIST */
 
-#define DMA_NODE_CLLR_IDX            0x0700U                   /*!< DMA channel node CLLR index mask     */
-#define DMA_NODE_CLLR_IDX_POS        0x0008U                   /*!< DMA channel node CLLR index position */
-#define DMA_NODE_REGISTER_NUM        LL_DMA_NODE_REGISTER_NUM  /*!< DMA channel node register number     */
-#define DMA_NODE_STATIC_FORMAT       0x0000U                   /*!< DMA channel node static format       */
-#define DMA_NODE_DYNAMIC_FORMAT      0x0001U                   /*!< DMA channel node dynamic format      */
-#define DMA_UPDATE_CLLR_POSITION     0x0000U                   /*!< DMA channel update CLLR position     */
-#define DMA_UPDATE_CLLR_VALUE        0x0001U                   /*!< DMA channel update CLLR value        */
-#define DMA_LASTNODE_ISNOT_CIRCULAR  0x0000U                   /*!< Last node is not first circular node */
-#define DMA_LASTNODE_IS_CIRCULAR     0x0001U                   /*!< Last node is first circular node     */
-#define DMA_NODE_CSAR_DEFAULT_OFFSET 0x0003U                   /*!< CSAR default offset                  */
+#define DMA_NODE_CLLR_IDX            (0x0700U)                   /*!< DMA channel node CLLR index mask     */
+#define DMA_NODE_CLLR_IDX_POS        (0x0008U)                   /*!< DMA channel node CLLR index position */
+#define DMA_NODE_REGISTER_NUM        LL_DMA_NODE_REGISTER_NUM    /*!< DMA channel node register number     */
+#define DMA_NODE_STATIC_FORMAT       (0x0000U)                   /*!< DMA channel node static format       */
+#define DMA_NODE_DYNAMIC_FORMAT      (0x0001U)                   /*!< DMA channel node dynamic format      */
+#define DMA_UPDATE_CLLR_POSITION     (0x0000U)                   /*!< DMA channel update CLLR position     */
+#define DMA_UPDATE_CLLR_VALUE        (0x0001U)                   /*!< DMA channel update CLLR value        */
+#define DMA_LASTNODE_ISNOT_CIRCULAR  (0x0000U)                   /*!< Last node is not first circular node */
+#define DMA_LASTNODE_IS_CIRCULAR     (0x0001U)                   /*!< Last node is first circular node     */
+#define DMA_NODE_CSAR_DEFAULT_OFFSET (0x0003U)                   /*!< CSAR default offset                  */
 
 /**
   * @}
@@ -644,10 +724,12 @@ hal_status_t HAL_DMA_Init(hal_dma_handle_t *hdma, hal_dma_channel_t instance)
   {
     HAL_RCC_LPDMA1_EnableClock();
   }
+#if defined(LPDMA2)
   else
   {
     HAL_RCC_LPDMA2_EnableClock();
   }
+#endif /* LPDMA2 */
 #endif /* USE_HAL_DMA_CLK_ENABLE_MODEL */
 
   hdma->p_xfer_halfcplt_cb = HAL_DMA_XferHalfCpltCallback;
@@ -674,7 +756,7 @@ hal_status_t HAL_DMA_Init(hal_dma_handle_t *hdma, hal_dma_channel_t instance)
 }
 
 /**
-  * @brief Deinitialize the DMA channel handle by aborting any ongoing DMA transfer.
+  * @brief Deinitialize the DMA channel handle and the associated physical channel instance.
   * @param hdma Pointer to DMA channel handle
   */
 void HAL_DMA_DeInit(hal_dma_handle_t *hdma)
@@ -695,7 +777,7 @@ void HAL_DMA_DeInit(hal_dma_handle_t *hdma)
 }
 
 /**
-  * @brief Retrieve the HAL DMA channel instance .
+  * @brief Retrieve the HAL DMA channel instance.
   * @param hdma Pointer to DMA channel handle.
   * @retval DMA channel instance, element in @ref hal_dma_channel_t  enumeration.
   */
@@ -707,7 +789,7 @@ hal_dma_channel_t HAL_DMA_GetInstance(const hal_dma_handle_t *hdma)
 }
 
 /**
-  * @brief Retrieve the LL DMA channel instance .
+  * @brief Retrieve the LL DMA channel instance.
   * @param hdma Pointer to DMA channel handle.
   * @retval DMA channel instance.
   */
@@ -838,7 +920,7 @@ This subsection provides a set of functions to configure the DMA channel periphe
 /**
   * @brief  Set the DMA channel direct transfer configuration.
   * @param  hdma              Pointer to DMA channel handle
-  * @param  p_config          Pointer to hal_dma_direct_xfer_config_t configuration structure
+  * @param  p_config          Pointer to @ref hal_dma_direct_xfer_config_t configuration structure
   * @retval HAL_INVALID_PARAM Invalid parameter return when p_config pointer is NULL
   * @retval HAL_OK            Direct transfer is successfully configured
   */
@@ -876,7 +958,7 @@ hal_status_t HAL_DMA_SetConfigDirectXfer(hal_dma_handle_t *hdma, const hal_dma_d
 /**
   * @brief Get the DMA channel direct transfer configuration.
   * @param hdma     Pointer to DMA channel handle
-  * @param p_config Pointer to hal_dma_direct_xfer_config_t configuration structure
+  * @param p_config Pointer to @ref hal_dma_direct_xfer_config_t configuration structure
   */
 void HAL_DMA_GetConfigDirectXfer(hal_dma_handle_t *hdma, hal_dma_direct_xfer_config_t *p_config)
 {
@@ -890,7 +972,7 @@ void HAL_DMA_GetConfigDirectXfer(hal_dma_handle_t *hdma, hal_dma_direct_xfer_con
 /**
   * @brief  Set the DMA channel direct transfer hardware request mode configuration.
   * @param  hdma              Pointer to DMA channel handle
-  * @param  hw_request_mode      Element in @ref hal_dma_hardware_request_mode_t  enumeration
+  * @param  hw_request_mode   Element in @ref hal_dma_hardware_request_mode_t  enumeration
   * @retval HAL_INVALID_PARAM Invalid parameter return when transfer mode parameter is not direct
   * @retval HAL_OK            Request mode is successfully configured
   */
@@ -1009,7 +1091,7 @@ hal_dma_flow_control_mode_t HAL_DMA_GetConfigDirectXferFlowControlMode(hal_dma_h
 /**
   * @brief  Set the DMA channel direct transfer trigger configuration.
   * @param  hdma              Pointer to DMA channel handle
-  * @param  p_config          Pointer to hal_dma_trigger_config_t configuration structure
+  * @param  p_config          Pointer to @ref hal_dma_trigger_config_t configuration structure
   * @retval HAL_INVALID_PARAM Invalid parameter return when transfer mode parameter is not direct or p_config pointer is
   *                           NULL
   * @retval HAL_OK            Direct transfer trigger is successfully configured
@@ -1072,7 +1154,7 @@ hal_status_t HAL_DMA_ResetConfigDirectXferTrigger(hal_dma_handle_t *hdma)
 /**
   * @brief Get the DMA channel direct transfer trigger configuration.
   * @param hdma     Pointer to DMA channel handle
-  * @param p_config Pointer to hal_dma_trigger_config_t configuration structure
+  * @param p_config Pointer to @ref hal_dma_trigger_config_t configuration structure
   */
 void HAL_DMA_GetConfigDirectXferTrigger(hal_dma_handle_t *hdma, hal_dma_trigger_config_t *p_config)
 {
@@ -1088,7 +1170,7 @@ void HAL_DMA_GetConfigDirectXferTrigger(hal_dma_handle_t *hdma, hal_dma_trigger_
 /**
   * @brief  Set the DMA channel direct transfer data handling configuration.
   * @param  hdma              Pointer to DMA channel handle
-  * @param  p_config          Pointer to hal_dma_data_handling_config_t configuration structure
+  * @param  p_config          Pointer to @ref hal_dma_data_handling_config_t configuration structure
   * @retval HAL_INVALID_PARAM Invalid parameter return when transfer mode parameter is not direct or p_config pointer is
   *                           NULL
   * @retval HAL_OK            Direct transfer data handling is successfully configured
@@ -1150,7 +1232,7 @@ hal_status_t HAL_DMA_ResetConfigDirectXferDataHandling(hal_dma_handle_t *hdma)
 /**
   * @brief Get the DMA channel direct transfer data handling configuration.
   * @param hdma     Pointer to DMA channel handle
-  * @param p_config Pointer to hal_dma_data_handling_config_t configuration structure
+  * @param p_config Pointer to @ref hal_dma_data_handling_config_t configuration structure
   */
 void HAL_DMA_GetConfigDirectXferDataHandling(hal_dma_handle_t *hdma, hal_dma_data_handling_config_t *p_config)
 {
@@ -1237,7 +1319,7 @@ hal_dma_attr_lock_status_t HAL_DMA_IsLockedAttr(hal_dma_channel_t instance)
 /**
   * @brief  Set the DMA channel peripheral direct transfer configuration.
   * @param  hdma              Pointer to DMA channel handle
-  * @param  p_config          Pointer to hal_dma_direct_xfer_config_t configuration structure
+  * @param  p_config          Pointer to @ref hal_dma_direct_xfer_config_t configuration structure
   * @retval HAL_INVALID_PARAM Invalid parameter return when p_config pointer is NULL
   * @retval HAL_OK            Peripheral direct transfer is successfully configured
   */
@@ -1275,7 +1357,7 @@ hal_status_t HAL_DMA_SetConfigPeriphDirectXfer(hal_dma_handle_t *hdma, const hal
 /**
   * @brief Get the DMA channel peripheral direct transfer configuration.
   * @param hdma     Pointer to DMA channel handle
-  * @param p_config Pointer to hal_dma_direct_xfer_config_t configuration structure
+  * @param p_config Pointer to @ref hal_dma_direct_xfer_config_t configuration structure
   */
 void HAL_DMA_GetConfigPeriphDirectXfer(hal_dma_handle_t *hdma, hal_dma_direct_xfer_config_t *p_config)
 {
@@ -1290,7 +1372,7 @@ void HAL_DMA_GetConfigPeriphDirectXfer(hal_dma_handle_t *hdma, hal_dma_direct_xf
 /**
   * @brief  Set the DMA channel linked list transfer configuration.
   * @param  hdma              Pointer to DMA channel handle
-  * @param  p_config          Pointer to hal_dma_linkedlist_xfer_config_t configuration structure
+  * @param  p_config          Pointer to @ref hal_dma_linkedlist_xfer_config_t configuration structure
   * @retval HAL_INVALID_PARAM Invalid parameter return when p_config pointer is NULL
   * @retval HAL_OK            Linked list transfer is successfully configured
   */
@@ -1322,7 +1404,7 @@ hal_status_t HAL_DMA_SetConfigLinkedListXfer(hal_dma_handle_t *hdma,
 /**
   * @brief Get the DMA channel linked list transfer configuration.
   * @param hdma     Pointer to DMA channel handle
-  * @param p_config Pointer to hal_dma_linkedlist_xfer_config_t configuration structure
+  * @param p_config Pointer to @ref hal_dma_linkedlist_xfer_config_t configuration structure
   */
 void HAL_DMA_GetConfigLinkedListXfer(hal_dma_handle_t *hdma, hal_dma_linkedlist_xfer_config_t *p_config)
 {
@@ -1465,7 +1547,7 @@ hal_dma_priority_t HAL_DMA_GetLinkedListXferPriority(hal_dma_handle_t *hdma)
 /**
   * @brief  Set the DMA channel linked list transfer execution mode configuration.
   * @param  hdma              Pointer to DMA channel handle
-  * @param  exec_mode         Element in hal_dma_linkedlist_execution_mode_t enumeration
+  * @param  exec_mode         Element in @ref hal_dma_linkedlist_execution_mode_t enumeration
   * @retval HAL_INVALID_PARAM Invalid parameter return when transfer mode parameter is direct
   * @retval HAL_OK            Linked list transfer execution mode is successfully configured
   */
@@ -1528,8 +1610,8 @@ hal_dma_linkedlist_execution_mode_t HAL_DMA_GetLinkedListXferExecutionMode(hal_d
 /**
   * @brief  Set the DMA channel peripheral linked list circular transfer configuration.
   * @param  hdma              Pointer to DMA channel handle
-  * @param  p_node            Pointer to hal_dma_node_t structure
-  * @param  p_node_config     Pointer to hal_dma_direct_xfer_config_t structure
+  * @param  p_node            Pointer to @ref hal_dma_node_t structure
+  * @param  p_node_config     Pointer to @ref hal_dma_direct_xfer_config_t structure
   * @retval HAL_INVALID_PARAM Invalid parameter return when node or node_config pointer is NULL
   * @retval HAL_OK            Peripheral linked list circular transfer is successfully configured
   */
@@ -1583,8 +1665,8 @@ hal_status_t HAL_DMA_SetConfigPeriphLinkedListCircularXfer(hal_dma_handle_t *hdm
 /**
   * @brief Get the DMA channel peripheral linked list circular transfer configuration.
   * @param hdma          Pointer to DMA channel handle
-  * @param p_node        Pointer to hal_dma_node_t structure
-  * @param p_node_config Pointer to hal_dma_direct_xfer_config_t structure
+  * @param p_node        Pointer to @ref hal_dma_node_t structure
+  * @param p_node_config Pointer to @ref hal_dma_direct_xfer_config_t structure
   */
 void HAL_DMA_GetConfigPeriphLinkedListCircularXfer(hal_dma_handle_t *hdma, hal_dma_node_t *p_node,
                                                    hal_dma_direct_xfer_config_t *p_node_config)
@@ -1683,8 +1765,8 @@ This subsection provides a set of functions to configure the DMA channel periphe
 
 /**
   * @brief  Fill node configuration.
-  * @param  p_node            Pointer to hal_dma_node_t node structure
-  * @param  p_conf            Pointer to hal_dma_node_config_t configuration structure
+  * @param  p_node            Pointer to @ref hal_dma_node_t node structure
+  * @param  p_conf            Pointer to @ref hal_dma_node_config_t configuration structure
   * @param  node_type         Element in @ref hal_dma_node_type_t enumeration
   * @retval HAL_INVALID_PARAM Invalid parameter return when p_node or p_conf pointer is NULL
   * @retval HAL_OK            Fill node is successfully configured
@@ -1723,8 +1805,8 @@ hal_status_t HAL_DMA_FillNodeConfig(hal_dma_node_t *p_node, const hal_dma_node_c
 
 /**
   * @brief Get the configuration of node.
-  * @param p_node      Pointer to hal_dma_node_t node structure
-  * @param p_conf      Pointer to hal_dma_node_config_t configuration structure
+  * @param p_node      Pointer to @ref hal_dma_node_t node structure
+  * @param p_conf      Pointer to @ref hal_dma_node_config_t configuration structure
   * @param p_node_type Element in @ref hal_dma_node_type_t enumeration
   */
 void HAL_DMA_GetNodeConfig(const hal_dma_node_t *p_node, hal_dma_node_config_t *p_conf,
@@ -1738,8 +1820,8 @@ void HAL_DMA_GetNodeConfig(const hal_dma_node_t *p_node, hal_dma_node_config_t *
 
 /**
   * @brief  Fill node direct transfer configuration.
-  * @param  p_node            Pointer to hal_dma_node_t node structure
-  * @param  p_config          Pointer to hal_dma_direct_xfer_config_t configuration structure
+  * @param  p_node            Pointer to @ref hal_dma_node_t node structure
+  * @param  p_config          Pointer to @ref hal_dma_direct_xfer_config_t configuration structure
   * @param  node_type         Element in @ref hal_dma_node_type_t enumeration
   * @retval HAL_INVALID_PARAM Invalid parameter return when p_node or p_config pointer is NULL
   * @retval HAL_OK            Fill node direct transfer is successfully configured
@@ -1771,8 +1853,8 @@ hal_status_t HAL_DMA_FillNodeDirectXfer(hal_dma_node_t *p_node, const hal_dma_di
 
 /**
   * @brief Get the configuration of node direct transfer.
-  * @param p_node      Pointer to hal_dma_node_t node structure
-  * @param p_config    Pointer to hal_dma_direct_xfer_config_t configuration structure
+  * @param p_node      Pointer to @ref hal_dma_node_t node structure
+  * @param p_config    Pointer to @ref hal_dma_direct_xfer_config_t configuration structure
   * @param p_node_type Element in @ref hal_dma_node_type_t enumeration
   */
 void HAL_DMA_GetNodeDirectXfer(const hal_dma_node_t *p_node, hal_dma_direct_xfer_config_t *p_config,
@@ -1795,7 +1877,7 @@ void HAL_DMA_GetNodeDirectXfer(const hal_dma_node_t *p_node, hal_dma_direct_xfer
 
 /**
   * @brief  Fill node hardware request mode configuration.
-  * @param  p_node            Pointer to hal_dma_node_t node structure
+  * @param  p_node            Pointer to @ref hal_dma_node_t node structure
   * @param  hw_request_mode   Element in @ref hal_dma_hardware_request_mode_t enumeration
   * @retval HAL_INVALID_PARAM Invalid parameter return when p_node pointer is NULL
   * @retval HAL_OK            Fill node hardware request mode is successfully configured
@@ -1820,7 +1902,7 @@ hal_status_t HAL_DMA_FillNodeHardwareRequestMode(hal_dma_node_t *p_node,
 
 /**
   * @brief  Get the configuration of node hardware request mode.
-  * @param  p_node                         Pointer to hal_dma_node_t node structure
+  * @param  p_node                         Pointer to @ref hal_dma_node_t node structure
   * @retval HAL_DMA_HARDWARE_REQUEST_BURST DMA channel hardware request mode is burst
   * @retval HAL_DMA_HARDWARE_REQUEST_BLOCK DMA channel hardware request mode is block
   */
@@ -1832,7 +1914,7 @@ hal_dma_hardware_request_mode_t HAL_DMA_GetNodeHardwareRequestMode(const hal_dma
 }
 /**
   * @brief  Fill node flow control mode configuration.
-  * @param  p_node            Pointer to hal_dma_node_t node structure
+  * @param  p_node            Pointer to @ref hal_dma_node_t node structure
   * @param  flow_control_mode Element in @ref hal_dma_flow_control_mode_t enumeration
   * @retval HAL_INVALID_PARAM Invalid parameter return when p_node pointer is NULL
   * @retval HAL_OK            Fill node flow control request is successfully configured
@@ -1856,7 +1938,7 @@ hal_status_t HAL_DMA_FillNodeFlowControlMode(hal_dma_node_t *p_node, hal_dma_flo
 
 /**
   * @brief  Get the configuration of node flow control mode .
-  * @param  p_node                      Pointer to hal_dma_node_t node structure
+  * @param  p_node                      Pointer to @ref hal_dma_node_t node structure
   * @retval HAL_DMA_FLOW_CONTROL_DMA    DMA request DMA channel flow control mode
   * @retval HAL_DMA_FLOW_CONTROL_PERIPH DMA request peripheral flow control mode
   */
@@ -1869,7 +1951,7 @@ hal_dma_flow_control_mode_t HAL_DMA_GetNodeFlowControlMode(const hal_dma_node_t 
 
 /**
   * @brief  Fill node transfer event mode configuration.
-  * @param  p_node            Pointer to hal_dma_node_t node structure
+  * @param  p_node            Pointer to @ref hal_dma_node_t node structure
   * @param  xfer_event_mode   Element in @ref hal_dma_linkedlist_xfer_event_mode_t enumeration
   * @retval HAL_INVALID_PARAM Invalid parameter return when p_node is NULL
   * @retval HAL_OK            Fill node transfer event mode is successfully configured
@@ -1893,7 +1975,7 @@ hal_status_t HAL_DMA_FillNodeXferEventMode(hal_dma_node_t *p_node, hal_dma_linke
 
 /**
   * @brief Get the configuration of node transfer event mode.
-  * @param p_node  Pointer to hal_dma_node_t node structure
+  * @param p_node  Pointer to @ref hal_dma_node_t node structure
   * @retval HAL_DMA_LINKEDLIST_XFER_EVENT_BLOCK          DMA channel transfer event mode is at block level.
   * @retval HAL_DMA_LINKEDLIST_XFER_EVENT_NODE           DMA channel transfer event mode is at each linked list item.
   * @retval HAL_DMA_LINKEDLIST_XFER_EVENT_Q              DMA channel transfer event mode is at last linked list item.
@@ -1907,8 +1989,8 @@ hal_dma_linkedlist_xfer_event_mode_t HAL_DMA_GetNodeXferEventMode(const hal_dma_
 
 /**
   * @brief  Fill node trigger configuration.
-  * @param  p_node            Pointer to hal_dma_node_t node structure
-  * @param  p_config          Pointer to hal_dma_trigger_config_t configuration structure
+  * @param  p_node            Pointer to @ref hal_dma_node_t node structure
+  * @param  p_config          Pointer to @ref hal_dma_trigger_config_t configuration structure
   * @retval HAL_INVALID_PARAM Invalid parameter return when p_node or p_config pointer is NULL
   * @retval HAL_OK            Fill node trigger is successfully configured
   */
@@ -1936,8 +2018,8 @@ hal_status_t HAL_DMA_FillNodeTrigger(hal_dma_node_t *p_node, const hal_dma_trigg
 
 /**
   * @brief Get the configuration of node trigger.
-  * @param p_node   Pointer to hal_dma_node_t node structure
-  * @param p_config Pointer to hal_dma_trigger_config_t configuration structure
+  * @param p_node   Pointer to @ref hal_dma_node_t node structure
+  * @param p_config Pointer to @ref hal_dma_trigger_config_t configuration structure
   */
 void HAL_DMA_GetNodeTrigger(const hal_dma_node_t *p_node, hal_dma_trigger_config_t *p_config)
 {
@@ -1956,8 +2038,8 @@ void HAL_DMA_GetNodeTrigger(const hal_dma_node_t *p_node, hal_dma_trigger_config
 
 /**
   * @brief  Fill node data handling configuration.
-  * @param  p_node            Pointer to hal_dma_node_t node structure
-  * @param  p_config          Pointer to hal_dma_data_handling_config_t configuration structure
+  * @param  p_node            Pointer to @ref hal_dma_node_t node structure
+  * @param  p_config          Pointer to @ref hal_dma_data_handling_config_t configuration structure
   * @retval HAL_INVALID_PARAM Invalid parameter return when p_node or p_config pointer is NULL
   * @retval HAL_OK            Fill node data handling is successfully configured
   */
@@ -1983,8 +2065,8 @@ hal_status_t HAL_DMA_FillNodeDataHandling(hal_dma_node_t *p_node, const hal_dma_
 
 /**
   * @brief Get the configuration of node data handling.
-  * @param p_node   Pointer to hal_dma_node_t node structure
-  * @param p_config Pointer to hal_dma_data_handling_config_t configuration structure
+  * @param p_node   Pointer to @ref hal_dma_node_t node structure
+  * @param p_config Pointer to @ref hal_dma_data_handling_config_t configuration structure
   */
 void HAL_DMA_GetNodeDataHandling(const hal_dma_node_t *p_node, hal_dma_data_handling_config_t *p_config)
 {
@@ -1999,7 +2081,7 @@ void HAL_DMA_GetNodeDataHandling(const hal_dma_node_t *p_node, hal_dma_data_hand
 
 /**
   * @brief  Fill node data configuration.
-  * @param  p_node            Pointer to hal_dma_node_t node structure
+  * @param  p_node            Pointer to @ref hal_dma_node_t node structure
   * @param  src_addr          Source address
   * @param  dest_addr         Destination address
   * @param  size_byte         Size in byte
@@ -2025,7 +2107,7 @@ hal_status_t HAL_DMA_FillNodeData(hal_dma_node_t *p_node, uint32_t src_addr, uin
 
 /**
   * @brief Get the configuration of node data.
-  * @param p_node      Pointer to hal_dma_node_t node structure
+  * @param p_node      Pointer to @ref hal_dma_node_t node structure
   * @param p_src_addr  Source address
   * @param p_dest_addr Destination address
   * @param p_size_byte Size in byte
@@ -2128,12 +2210,12 @@ This subsection provides a set of functions to configure the DMA channel periphe
 
 - Call the function HAL_DMA_Suspend_IT() to suspend any ongoing DMA channel transfer in interrupt mode
 
-- Call the function HAL_DMA_Resume() to resume any suspended DMA channel transfer instantly.
+- Call the function HAL_DMA_Resume() to resume any suspended DMA channel transfer immediately.
 
 - Call the function HAL_DMA_PollForXfer() to poll on any finite DMA channel transfer level selected through
-  hal_dma_xfer_lvl_t
+  hal_dma_xfer_level_t
 
-- Call the function HAL_DMA_IRQHandler() to handle any DMA channel interrupt. This API must executed in handler mode
+- Call the function HAL_DMA_IRQHandler() to handle any DMA channel interrupt. This API must be executed in handler mode
   */
 
 /**
@@ -2277,6 +2359,7 @@ hal_status_t HAL_DMA_StartPeriphXfer_IT_Opt(hal_dma_handle_t *hdma, uint32_t src
   if (hdma->xfer_mode == HAL_DMA_XFER_MODE_LINKEDLIST_LINEAR)
   {
     hdma->global_state = HAL_DMA_STATE_IDLE;
+
     return HAL_ERROR;
   }
   /* Circular linked list mode is activated */
@@ -2459,6 +2542,7 @@ hal_status_t HAL_DMA_Abort(hal_dma_handle_t *hdma)
 
           hdma->global_state = HAL_DMA_STATE_IDLE;
         }
+
         /* No state change, stay in ABORT state */
         return HAL_ERROR;
       }
@@ -2543,6 +2627,7 @@ hal_status_t HAL_DMA_Suspend(hal_dma_handle_t *hdma)
   {
     /* The channel was not transmitting upon suspend request */
     hdma->global_state = HAL_DMA_STATE_IDLE;
+
     return HAL_ERROR;
   }
 
@@ -2572,6 +2657,7 @@ hal_status_t HAL_DMA_Suspend_IT(hal_dma_handle_t *hdma)
   {
     /* The channel was not transmitting upon suspend request */
     hdma->global_state = HAL_DMA_STATE_IDLE;
+
     return HAL_ERROR;
   }
 
@@ -2579,7 +2665,7 @@ hal_status_t HAL_DMA_Suspend_IT(hal_dma_handle_t *hdma)
 }
 
 /**
-  * @brief  Resume any suspended DMA channel transfer instantly.
+  * @brief  Resume any suspended DMA channel transfer immediately.
   * @param  hdma     Pointer to DMA channel handle
   * @retval HAL_BUSY DMA channel state is active when calling this API
   * @retval HAL_OK   Transfer is successfully resumed
@@ -2600,7 +2686,7 @@ hal_status_t HAL_DMA_Resume(hal_dma_handle_t *hdma)
   * @brief  Polling for transfer status for finite DMA channel silent transfers.
   * @param  hdma         Pointer to DMA channel handle
   * @param  xfer_level   DMA channel transfer level
-  * @param  timeout_ms   User timeout in milli-second
+  * @param  timeout_ms   User timeout in milliseconds
   * @retval HAL_TIMEOUT  User timeout
   * @retval HAL_ERROR    DMA channel error
   * @retval HAL_OK       Polling for transfer is successfully configured
@@ -2634,6 +2720,39 @@ hal_status_t HAL_DMA_PollForXfer(hal_dma_handle_t *hdma, hal_dma_xfer_level_t xf
     LL_DMA_ClearFlag_TO(DMA_CHANNEL_GET_INSTANCE(hdma));
   }
 
+  if ((tmp_csr & HAL_DMA_FLAG_ERROR) != 0U)
+  {
+#if defined(USE_HAL_DMA_GET_LAST_ERRORS) && (USE_HAL_DMA_GET_LAST_ERRORS == 1)
+    /* Check the data transfer error flag */
+    if ((tmp_csr & LL_DMA_FLAG_DTE) != 0U)
+    {
+      hdma->last_error_codes |= HAL_DMA_ERROR_DTE;
+    }
+
+    /* Check the user setting error flag */
+    if ((tmp_csr & LL_DMA_FLAG_USE) != 0U)
+    {
+      hdma->last_error_codes |= HAL_DMA_ERROR_USE;
+    }
+
+#if defined (USE_HAL_DMA_LINKEDLIST) && (USE_HAL_DMA_LINKEDLIST == 1)
+    /* Check the update link error flag */
+    if ((tmp_csr & LL_DMA_FLAG_ULE) != 0U)
+    {
+      hdma->last_error_codes |= HAL_DMA_ERROR_ULE;
+    }
+#endif /* USE_HAL_DMA_LINKEDLIST */
+#endif /* USE_HAL_DMA_GET_LAST_ERRORS */
+
+    LL_DMA_ClearFlag(DMA_CHANNEL_GET_INSTANCE(hdma), LL_DMA_FLAG_ALL);
+
+    LL_DMA_ResetChannel(DMA_CHANNEL_GET_INSTANCE(hdma));
+
+    hdma->global_state = HAL_DMA_STATE_IDLE;
+
+    return HAL_ERROR;
+  }
+
   /* Wait for transfer level */
   tickstart = HAL_GetTick();
   while ((LL_DMA_READ_REG((DMA_CHANNEL_GET_INSTANCE(hdma)), CSR) & (uint32_t)xfer_level) == 0U)
@@ -2649,39 +2768,6 @@ hal_status_t HAL_DMA_PollForXfer(hal_dma_handle_t *hdma, hal_dma_xfer_level_t xf
         }
       }
     }
-  }
-
-#if defined(USE_HAL_DMA_GET_LAST_ERRORS) && (USE_HAL_DMA_GET_LAST_ERRORS == 1)
-  /* Check the data transfer error flag */
-  if ((tmp_csr & LL_DMA_FLAG_DTE) != 0U)
-  {
-    hdma->last_error_codes |= HAL_DMA_ERROR_DTE;
-  }
-
-  /* Check the user setting error flag */
-  if ((tmp_csr & LL_DMA_FLAG_USE) != 0U)
-  {
-    hdma->last_error_codes |= HAL_DMA_ERROR_USE;
-  }
-
-#if defined (USE_HAL_DMA_LINKEDLIST) && (USE_HAL_DMA_LINKEDLIST == 1)
-  /* Check the update link error flag */
-  if ((tmp_csr & LL_DMA_FLAG_ULE) != 0U)
-  {
-    hdma->last_error_codes |= HAL_DMA_ERROR_ULE;
-  }
-#endif /* USE_HAL_DMA_LINKEDLIST */
-#endif /* USE_HAL_DMA_GET_LAST_ERRORS */
-
-  if ((tmp_csr & HAL_DMA_FLAG_ERROR) != 0U)
-  {
-    LL_DMA_ClearFlag(DMA_CHANNEL_GET_INSTANCE(hdma), LL_DMA_FLAG_ALL);
-
-    LL_DMA_ResetChannel(DMA_CHANNEL_GET_INSTANCE(hdma));
-
-    hdma->global_state = HAL_DMA_STATE_IDLE;
-
-    return HAL_ERROR;
   }
 
   /* Clear transfer level flags */
@@ -2720,7 +2806,7 @@ void HAL_DMA_IRQHandler(hal_dma_handle_t *hdma)
   {
     if (LL_DMA_IsActiveFlag_MIS(instance, channel) == 0U)
     {
-      return; /* the global interrupt flag for the current channel is down , nothing to do */
+      return; /* The global interrupt flag is low; nothing to handle */
     }
   }
 
@@ -3096,7 +3182,7 @@ uint32_t HAL_DMA_GetLastErrorCodes(const hal_dma_handle_t *hdma)
 /**
   * @brief Set the DMA channel transfer configuration.
   * @param hdma     Pointer to DMA channel handle
-  * @param p_config Pointer to hal_dma_direct_xfer_config_t configuration structure
+  * @param p_config Pointer to @ref hal_dma_direct_xfer_config_t configuration structure
   */
 static void DMA_SetConfigDirectXfer(hal_dma_handle_t *hdma, const hal_dma_direct_xfer_config_t *p_config)
 {
@@ -3117,7 +3203,7 @@ static void DMA_SetConfigDirectXfer(hal_dma_handle_t *hdma, const hal_dma_direct
 /**
   * @brief Get the DMA channel transfer configuration.
   * @param hdma     Pointer to DMA channel handle
-  * @param p_config Pointer to hal_dma_direct_xfer_config_t configuration structure
+  * @param p_config Pointer to @ref hal_dma_direct_xfer_config_t configuration structure
   */
 static void DMA_GetConfigDirectXfer(hal_dma_handle_t *hdma, hal_dma_direct_xfer_config_t *p_config)
 {
@@ -3134,7 +3220,7 @@ static void DMA_GetConfigDirectXfer(hal_dma_handle_t *hdma, hal_dma_direct_xfer_
 /**
   * @brief Set the DMA channel linked list transfer configuration.
   * @param hdma     Pointer to DMA channel handle
-  * @param p_config Pointer to hal_dma_linkedlist_xfer_config_t configuration structure
+  * @param p_config Pointer to @ref hal_dma_linkedlist_xfer_config_t configuration structure
   */
 static void DMA_SetConfigLinkedListXfer(hal_dma_handle_t *hdma, const hal_dma_linkedlist_xfer_config_t *p_config)
 {
@@ -3146,7 +3232,7 @@ static void DMA_SetConfigLinkedListXfer(hal_dma_handle_t *hdma, const hal_dma_li
 /**
   * @brief Get the DMA channel linked list transfer configuration.
   * @param hdma     Pointer to DMA channel handle
-  * @param p_config Pointer to hal_dma_linkedlist_xfer_config_t configuration structure
+  * @param p_config Pointer to @ref hal_dma_linkedlist_xfer_config_t configuration structure
   */
 static void DMA_GetConfigLinkedListXfer(hal_dma_handle_t *hdma, hal_dma_linkedlist_xfer_config_t *p_config)
 {
@@ -3157,8 +3243,8 @@ static void DMA_GetConfigLinkedListXfer(hal_dma_handle_t *hdma, hal_dma_linkedli
 
 /**
   * @brief Fill the DMA channel linked list node configuration.
-  * @param p_conf    Pointer to hal_q_dma_node_config_t configuration structure
-  * @param p_node    Pointer to hal_dma_node_t node structure
+  * @param p_conf    Pointer to @ref hal_dma_node_config_t configuration structure
+  * @param p_node    Pointer to @ref hal_dma_node_t node structure
   * @param node_type Element in @ref hal_dma_node_type_t enumeration
   */
 static void DMA_FillNodeConfig(hal_dma_node_t *p_node, const hal_dma_node_config_t *p_conf,
@@ -3215,8 +3301,8 @@ static void DMA_FillNodeConfig(hal_dma_node_t *p_node, const hal_dma_node_config
 
 /**
   * @brief Get node configuration of DMA channel linked list.
-  * @param p_node      Pointer to hal_dma_node_t node structure
-  * @param p_conf      Pointer to hal_q_dma_node_config_t configuration structure
+  * @param p_node      Pointer to @ref hal_dma_node_t node structure
+  * @param p_conf      Pointer to @ref hal_dma_node_config_t configuration structure
   * @param p_node_type Pointer to @ref hal_dma_node_type_t enumeration
   */
 static void DMA_GetConfigNode(const hal_dma_node_t *p_node, hal_dma_node_config_t *p_conf,
@@ -3280,8 +3366,8 @@ static void DMA_GetConfigNode(const hal_dma_node_t *p_node, hal_dma_node_config_
 
 /**
   * @brief Fill the DMA channel linked list node direct transfer.
-  * @param p_node          Pointer to hal_dma_node_t configuration structure
-  * @param p_config        Pointer to hal_dma_direct_xfer_config_t node structure
+  * @param p_node          Pointer to @ref hal_dma_node_t configuration structure
+  * @param p_config        Pointer to @ref hal_dma_direct_xfer_config_t node structure
   * @param node_type       Element in @ref hal_dma_node_type_t enumeration
   * @param xfer_event_mode Element in @ref hal_dma_linkedlist_xfer_event_mode_t enumeration
   */
@@ -3315,7 +3401,7 @@ static void DMA_FillNodeDirectXfer(hal_dma_node_t *p_node, const hal_dma_direct_
 
 /**
   * @brief Update the DMA channel linked list node.
-  * @param p_node    Pointer to hal_dma_node_t node structure
+  * @param p_node    Pointer to @ref hal_dma_node_t node structure
   * @param src_addr  Source address
   * @param dest_addr Destination address
   * @param size_byte Size in byte
@@ -3338,7 +3424,7 @@ static void DMA_ConvertQNodesToDynamic(hal_q_t *p_q)
   uint32_t currentnode_address  = 0U;
 
   uint32_t currentnode_addr;
-  hal_dma_node_t context_node;
+  hal_dma_node_t context_node = {0};
 
   cllr_offset = ((hal_dma_node_t *)(p_q->p_head_node))->info;
 
@@ -3425,7 +3511,7 @@ static void DMA_ConvertQNodesToStatic(hal_q_t *p_q)
 {
   uint32_t cllr_offset;
   uint32_t currentnode_addr;
-  hal_dma_node_t context_node;
+  hal_dma_node_t context_node = {0};
 
   currentnode_addr = (uint32_t)p_q->p_head_node;
 
@@ -3697,7 +3783,7 @@ static void DMA_List_UpdateStaticQueueNodesCLLR(hal_q_t *p_q, uint32_t operation
 
 /**
   * @brief Check nodes types compatibility.
-  * @param p_node        Pointer to a hal_dma_node_t structure that contains linked list node registers configurations
+  * @param p_node     Pointer to a @ref hal_dma_node_t structure that contains linked list node registers configurations
   * @param p_cllr_mask   Pointer to CLLR register mask value
   * @param p_cllr_offset Pointer to CLLR register offset value
   */
@@ -3716,7 +3802,7 @@ static void DMA_List_GetCLLRNodeInfo(const hal_dma_node_t *p_node, uint32_t *p_c
 
 /**
   * @brief Format the node according to unused registers.
-  * @param p_node  Pointer to a DMA_NodeTypeDef structure that contains linked list node registers configurations
+  * @param p_node  Pointer to a @ref hal_dma_node_t structure that contains linked list node registers configurations
   * @param reg_idx The first register index to be formatted
   * @param reg_nbr The number of node registers
   * @param format  The format type
@@ -3741,7 +3827,7 @@ static void DMA_List_FormatNode(hal_dma_node_t *p_node, uint32_t reg_idx, uint32
 
 /**
   * @brief Clear unused register fields.
-  * @param p_node             Pointer to a hal_dma_node_t structure that contains linked list node registers
+  * @param p_node             Pointer to a @ref hal_dma_node_t structure that contains linked list node registers
   *                           configurations
   * @param first_unused_field The first unused field to be cleared
   */
@@ -3791,7 +3877,7 @@ static void DMA_StartDirectXfer(hal_dma_handle_t *hdma, uint32_t src_addr, uint3
   * @param hdma        Pointer to DMA channel handle
   * @param p_head_node Pointer to hal_q_t node structure
   * @param interrupts  DMA optional interrupts to be enabled.
-  *                   This parameter can be one of @ref DMA_Optional_Interrupt group.
+  *                    This parameter can be one of @ref DMA_Optional_Interrupt group.
   */
 static void DMA_StartLinkedListXfer(hal_dma_handle_t *hdma, const void *p_head_node, uint32_t interrupts)
 {

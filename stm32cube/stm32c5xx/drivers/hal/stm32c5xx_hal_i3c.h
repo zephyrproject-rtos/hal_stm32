@@ -935,18 +935,16 @@ typedef struct
 
 /**
   * @brief  Target/Controller gets the Common Command Code (CCC) information updated after notifications.
-  *  |-------------------------------------|----------------------------------------------------- |
-  *  | CCC Notification                    | Updated fields in p_ccc_info                         |
-  *  |-------------------------------------|----------------------------------------------------- |
-  *  | HAL_I3C_TGT_NOTIFICATION_DAU        | dynamic_addr, dynamic_addr_valid                     |
-  *  | HAL_I3C_TGT_NOTIFICATION_SETMWL     | max_write_data_size_byte                             |
-  *  | HAL_I3C_TGT_NOTIFICATION_SETMRL     | max_read_data_size_byte                              |
-  *  | HAL_I3C_TGT_NOTIFICATION_RSTACT     | reset_action                                         |
-  *  | HAL_I3C_TGT_NOTIFICATION_ENTAS_X    | activity_state                                       |
-  *  | HAL_I3C_TGT_NOTIFICATION_ENEC_DISEC | hot_join_allowed, in_band_allowed, ctrl_role_allowed |
-  *  | HAL_I3C_CTRL_NOTIFICATION_IBI       | ibi_cr_tgt_addr, ibi_tgt_nb_payload, ibi_tgt_payload |
-  *  | HAL_I3C_CTRL_NOTIFICATION_CR        | ibi_cr_tgt_addr                                      |
-  *  |-------------------------------------|----------------------------------------------------- |
+  *   CCC Notification                    | Updated fields in p_ccc_info
+  *  -------------------------------------|-----------------------------------------------------
+  *   HAL_I3C_TGT_NOTIFICATION_DAU        | dynamic_addr, dynamic_addr_valid
+  *   HAL_I3C_TGT_NOTIFICATION_SETMWL     | max_write_data_size_byte
+  *   HAL_I3C_TGT_NOTIFICATION_SETMRL     | max_read_data_size_byte
+  *   HAL_I3C_TGT_NOTIFICATION_RSTACT     | reset_action
+  *   HAL_I3C_TGT_NOTIFICATION_ENTAS_X    | activity_state
+  *   HAL_I3C_TGT_NOTIFICATION_ENEC_DISEC | hot_join_allowed, in_band_allowed, ctrl_role_allowed
+  *   HAL_I3C_CTRL_NOTIFICATION_IBI       | ibi_cr_tgt_addr, ibi_tgt_nb_payload, ibi_tgt_payload
+  *   HAL_I3C_CTRL_NOTIFICATION_CR        | ibi_cr_tgt_addr
   */
 typedef struct
 {

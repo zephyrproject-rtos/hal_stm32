@@ -1,5 +1,5 @@
 /**
-  ******************************************************************************
+  **********************************************************************************************************************
   * @file    stm32c5xx_hal_adc.c
   * @brief   ADC HAL module driver.
   *          This file provides firmware functions to manage the following
@@ -17,10 +17,10 @@
   * in the root directory of this software component.
   * If no LICENSE file comes with this software, it is provided AS-IS.
   *
-  ******************************************************************************
+  **********************************************************************************************************************
   */
 
-/* Includes ------------------------------------------------------------------*/
+/* Includes ----------------------------------------------------------------------------------------------------------*/
 #include "stm32_hal.h"
 
 /** @addtogroup STM32C5XX_HAL_Driver
@@ -113,7 +113,7 @@
     1. Activate ADC using HAL_ADC_Start()
     2. Perform ADC calibration using HAL_ADC_Calibrate()
     3. Start ADC conversions using functions HAL_ADC_[INJ|REG|MM]_StartConv...() (refer to list above)
-    4. Process conversion data using HAL_ADC_[INJ|REG|MM]_GetValue(), IRQ handler and callback functions,
+    4. Process conversion data using HAL_ADC_[INJ|REG|MM]_ReadConversionData(), IRQ handler and callback functions,
        DMA buffers
     5. Stop ADC conversions using functions HAL_ADC_[INJ|REG|MM]_StopConv...()
        Note: With trigger SW start, conversions iterations without conversion stop operation is possible using function
@@ -169,7 +169,7 @@ ADC_MULTIMODE_SUPPORT           | from CMSIS | None | When defined, multimode fe
   * @}
   */
 
-/* Private constants ---------------------------------------------------------*/
+/* Private constants -------------------------------------------------------------------------------------------------*/
 /** @defgroup ADC_Private_Constants ADC Private Constants
   * @{
   */
@@ -215,7 +215,7 @@ ADC_MULTIMODE_SUPPORT           | from CMSIS | None | When defined, multimode fe
   * @}
   */
 
-/* Private macros -------------------------------------------------------------*/
+/* Private macros ----------------------------------------------------------------------------------------------------*/
 /** @defgroup ADC_Private_Macros ADC Private Macros
   * @{
   */
@@ -270,47 +270,48 @@ ADC_MULTIMODE_SUPPORT           | from CMSIS | None | When defined, multimode fe
 
 /*! Assert definitions of ADC group regular conversion trigger source (ADC instance specific) */
 #if defined(STM32C591xx) || defined(STM32C593xx) || defined(STM32C5A3xx)
-#define IS_ADC_REG_TRIGGER_SRC_ADC12(trigger_src)  (((trigger_src) == HAL_ADC_REG_TRIG_SOFTWARE) \
-                                                    || ((trigger_src) == HAL_ADC_REG_TRIG_EXTI11) \
-                                                    || ((trigger_src) == HAL_ADC_REG_TRIG_TIM1_OC1) \
-                                                    || ((trigger_src) == HAL_ADC_REG_TRIG_TIM1_OC2) \
-                                                    || ((trigger_src) == HAL_ADC_REG_TRIG_TIM1_OC3) \
-                                                    || ((trigger_src) == HAL_ADC_REG_TRIG_TIM1_TRGO) \
-                                                    || ((trigger_src) == HAL_ADC_REG_TRIG_TIM1_TRGO2) \
-                                                    || ((trigger_src) == HAL_ADC_REG_TRIG_TIM2_OC2) \
-                                                    || ((trigger_src) == HAL_ADC_REG_TRIG_TIM2_TRGO) \
-                                                    || ((trigger_src) == HAL_ADC_REG_TRIG_TIM3_OC4) \
-                                                    || ((trigger_src) == HAL_ADC_REG_TRIG_TIM3_TRGO) \
-                                                    || ((trigger_src) == HAL_ADC_REG_TRIG_TIM4_TRGO) \
-                                                    || ((trigger_src) == HAL_ADC_REG_TRIG_TIM4_OC4) \
-                                                    || ((trigger_src) == HAL_ADC_REG_TRIG_TIM5_OC4) \
-                                                    || ((trigger_src) == HAL_ADC_REG_TRIG_TIM5_TRGO) \
-                                                    || ((trigger_src) == HAL_ADC_REG_TRIG_TIM6_TRGO) \
-                                                    || ((trigger_src) == HAL_ADC_REG_TRIG_TIM8_TRGO) \
-                                                    || ((trigger_src) == HAL_ADC_REG_TRIG_TIM8_TRGO2) \
-                                                    || ((trigger_src) == HAL_ADC_REG_TRIG_TIM15_TRGO) \
-                                                    || ((trigger_src) == HAL_ADC_REG_TRIG_LPTIM1_OC1))
+#define IS_ADC_REG_TRIGGER_SRC_ADC123(trigger_src)  (((trigger_src) == HAL_ADC_REG_TRIG_SOFTWARE) \
+                                                     || ((trigger_src) == HAL_ADC_REG_TRIG_EXTI11) \
+                                                     || ((trigger_src) == HAL_ADC_REG_TRIG_TIM1_OC1) \
+                                                     || ((trigger_src) == HAL_ADC_REG_TRIG_TIM1_OC2) \
+                                                     || ((trigger_src) == HAL_ADC_REG_TRIG_TIM1_OC3) \
+                                                     || ((trigger_src) == HAL_ADC_REG_TRIG_TIM1_TRGO) \
+                                                     || ((trigger_src) == HAL_ADC_REG_TRIG_TIM1_TRGO2) \
+                                                     || ((trigger_src) == HAL_ADC_REG_TRIG_TIM2_OC2) \
+                                                     || ((trigger_src) == HAL_ADC_REG_TRIG_TIM2_TRGO) \
+                                                     || ((trigger_src) == HAL_ADC_REG_TRIG_TIM3_OC4) \
+                                                     || ((trigger_src) == HAL_ADC_REG_TRIG_TIM3_TRGO) \
+                                                     || ((trigger_src) == HAL_ADC_REG_TRIG_TIM4_TRGO) \
+                                                     || ((trigger_src) == HAL_ADC_REG_TRIG_TIM4_OC4) \
+                                                     || ((trigger_src) == HAL_ADC_REG_TRIG_TIM5_OC4) \
+                                                     || ((trigger_src) == HAL_ADC_REG_TRIG_TIM5_TRGO) \
+                                                     || ((trigger_src) == HAL_ADC_REG_TRIG_TIM6_TRGO) \
+                                                     || ((trigger_src) == HAL_ADC_REG_TRIG_TIM8_TRGO) \
+                                                     || ((trigger_src) == HAL_ADC_REG_TRIG_TIM8_TRGO2) \
+                                                     || ((trigger_src) == HAL_ADC_REG_TRIG_TIM15_TRGO) \
+                                                     || ((trigger_src) == HAL_ADC_REG_TRIG_LPTIM1_OC1))
 #else
-#define IS_ADC_REG_TRIGGER_SRC_ADC12(trigger_src)  (((trigger_src) == HAL_ADC_REG_TRIG_SOFTWARE) \
-                                                    || ((trigger_src) == HAL_ADC_REG_TRIG_EXTI11) \
-                                                    || ((trigger_src) == HAL_ADC_REG_TRIG_TIM1_OC1) \
-                                                    || ((trigger_src) == HAL_ADC_REG_TRIG_TIM1_OC2) \
-                                                    || ((trigger_src) == HAL_ADC_REG_TRIG_TIM1_OC3) \
-                                                    || ((trigger_src) == HAL_ADC_REG_TRIG_TIM1_TRGO) \
-                                                    || ((trigger_src) == HAL_ADC_REG_TRIG_TIM1_TRGO2) \
-                                                    || ((trigger_src) == HAL_ADC_REG_TRIG_TIM2_OC2) \
-                                                    || ((trigger_src) == HAL_ADC_REG_TRIG_TIM2_TRGO) \
-                                                    || ((trigger_src) == HAL_ADC_REG_TRIG_TIM5_OC4) \
-                                                    || ((trigger_src) == HAL_ADC_REG_TRIG_TIM5_TRGO) \
-                                                    || ((trigger_src) == HAL_ADC_REG_TRIG_TIM6_TRGO) \
-                                                    || ((trigger_src) == HAL_ADC_REG_TRIG_TIM8_TRGO) \
-                                                    || ((trigger_src) == HAL_ADC_REG_TRIG_TIM8_TRGO2) \
-                                                    || ((trigger_src) == HAL_ADC_REG_TRIG_TIM15_TRGO) \
-                                                    || ((trigger_src) == HAL_ADC_REG_TRIG_LPTIM1_OC1))
+#define IS_ADC_REG_TRIGGER_SRC_ADC123(trigger_src)  (((trigger_src) == HAL_ADC_REG_TRIG_SOFTWARE) \
+                                                     || ((trigger_src) == HAL_ADC_REG_TRIG_EXTI11) \
+                                                     || ((trigger_src) == HAL_ADC_REG_TRIG_TIM1_OC1) \
+                                                     || ((trigger_src) == HAL_ADC_REG_TRIG_TIM1_OC2) \
+                                                     || ((trigger_src) == HAL_ADC_REG_TRIG_TIM1_OC3) \
+                                                     || ((trigger_src) == HAL_ADC_REG_TRIG_TIM1_TRGO) \
+                                                     || ((trigger_src) == HAL_ADC_REG_TRIG_TIM1_TRGO2) \
+                                                     || ((trigger_src) == HAL_ADC_REG_TRIG_TIM2_OC2) \
+                                                     || ((trigger_src) == HAL_ADC_REG_TRIG_TIM2_TRGO) \
+                                                     || ((trigger_src) == HAL_ADC_REG_TRIG_TIM5_OC4) \
+                                                     || ((trigger_src) == HAL_ADC_REG_TRIG_TIM5_TRGO) \
+                                                     || ((trigger_src) == HAL_ADC_REG_TRIG_TIM6_TRGO) \
+                                                     || ((trigger_src) == HAL_ADC_REG_TRIG_TIM8_TRGO) \
+                                                     || ((trigger_src) == HAL_ADC_REG_TRIG_TIM8_TRGO2) \
+                                                     || ((trigger_src) == HAL_ADC_REG_TRIG_TIM15_TRGO) \
+                                                     || ((trigger_src) == HAL_ADC_REG_TRIG_LPTIM1_OC1))
 #endif /* STM32C591xx, STM32C593xx, STM32C5A3xx */
 
 /*! Assert definitions of ADC group regular conversion trigger source */
-#define IS_ADC_REG_TRIGGER_SRC(instance, trigger_src) (IS_ADC_REG_TRIGGER_SRC_ADC12(trigger_src))
+#define IS_ADC_REG_TRIGGER_SRC(instance, trigger_src) (IS_ADC_REG_TRIGGER_SRC_ADC123(trigger_src))
+
 
 /*! Assert definitions of ADC group regular conversion trigger edge */
 #define IS_ADC_REG_TRIGGER_EDGE(trigger_edge) (((trigger_edge) == HAL_ADC_REG_TRIG_EDGE_NONE) \
@@ -366,7 +367,6 @@ ADC_MULTIMODE_SUPPORT           | from CMSIS | None | When defined, multimode fe
                                                     || ((trigger_src) == HAL_ADC_INJ_TRIG_TIM15_TRGO) \
                                                     || ((trigger_src) == HAL_ADC_INJ_TRIG_LPTIM1_OC1) \
                                                     || ((trigger_src) == HAL_ADC_INJ_TRIG_FROM_REGULAR))
-
 #else
 #define IS_ADC_INJ_TRIGGER_SRC_ADC12(trigger_src)  (((trigger_src) == HAL_ADC_INJ_TRIG_SOFTWARE) \
                                                     || ((trigger_src) == HAL_ADC_INJ_TRIG_EXTI15) \
@@ -446,8 +446,32 @@ ADC_MULTIMODE_SUPPORT           | from CMSIS | None | When defined, multimode fe
                                       || ((channel) == HAL_ADC_CHANNEL_ALL))
 #endif /* ADC2 */
 
+#if defined(ADC3)
+/*! Assert definitions of ADC channel (specific ADC3) */
+#define IS_ADC_CHANNEL_ADC3(channel) (((channel) == HAL_ADC_CHANNEL_0) \
+                                      || ((channel) == HAL_ADC_CHANNEL_1) \
+                                      || ((channel) == HAL_ADC_CHANNEL_2) \
+                                      || ((channel) == HAL_ADC_CHANNEL_3) \
+                                      || ((channel) == HAL_ADC_CHANNEL_4) \
+                                      || ((channel) == HAL_ADC_CHANNEL_5) \
+                                      || ((channel) == HAL_ADC_CHANNEL_6) \
+                                      || ((channel) == HAL_ADC_CHANNEL_7) \
+                                      || ((channel) == HAL_ADC_CHANNEL_8) \
+                                      || ((channel) == HAL_ADC_CHANNEL_9) \
+                                      || ((channel) == HAL_ADC_CHANNEL_10) \
+                                      || ((channel) == HAL_ADC_CHANNEL_11) \
+                                      || ((channel) == HAL_ADC_CHANNEL_12) \
+                                      || ((channel) == HAL_ADC_CHANNEL_13) \
+                                      || ((channel) == HAL_ADC_CHANNEL_NONE) \
+                                      || ((channel) == HAL_ADC_CHANNEL_ALL))
+#endif /* ADC3 */
+
 /*! Assert definitions of ADC channel */
-#if defined(ADC2)
+#if defined(ADC3)
+#define IS_ADC_CHANNEL(instance, channel)  (((instance) == HAL_ADC1) ? IS_ADC_CHANNEL_ADC1(channel) : \
+                                            ((instance) == HAL_ADC2) ? IS_ADC_CHANNEL_ADC2(channel) : \
+                                            IS_ADC_CHANNEL_ADC3(channel))
+#elif defined(ADC2)
 #define IS_ADC_CHANNEL(instance, channel) (((instance) == HAL_ADC2) ? \
                                            IS_ADC_CHANNEL_ADC2(channel) :\
                                            IS_ADC_CHANNEL_ADC1(channel))
@@ -467,6 +491,7 @@ ADC_MULTIMODE_SUPPORT           | from CMSIS | None | When defined, multimode fe
 
 /*! Assert definitions of ADC channel ending mode */
 #define IS_ADC_CHANNEL_INPUT_MODE(input_mode) ((input_mode) == HAL_ADC_IN_SINGLE_ENDED)
+
 
 /*! Assert definitions of ADC multimode mode */
 #define IS_ADC_MM_MODE(mode) (((mode) == HAL_ADC_MM_INDEPENDENT) \
@@ -675,7 +700,7 @@ ADC_MULTIMODE_SUPPORT           | from CMSIS | None | When defined, multimode fe
   * @}
   */
 
-/* Private functions ---------------------------------------------------------*/
+/* Private functions -------------------------------------------------------------------------------------------------*/
 /** @defgroup ADC_Private_Functions ADC Private Functions
   * @{
   */
@@ -723,7 +748,7 @@ static hal_status_t adc_mm_check_set_state_group(hal_adc_handle_t *hadc,
   * @}
   */
 
-/* Exported functions --------------------------------------------------------*/
+/* Exported functions ------------------------------------------------------------------------------------------------*/
 /** @addtogroup ADC_Exported_Functions
   * @{
   */
@@ -1369,7 +1394,10 @@ hal_status_t HAL_ADC_SetConfigChannel(hal_adc_handle_t *hadc, hal_adc_channel_t 
   if (LL_ADC_IS_CHANNEL_INTERNAL((uint32_t)channel))
   {
     /* Channel internal */
-    LL_ADC_SetCommonPathInternalChAdd(ADC_COMMON_INSTANCE(p_instance), (uint32_t)channel);
+    if (((uint32_t)channel & LL_ADC_COMMON_PATH_INTERNAL_MASK) != 0UL)
+    {
+      LL_ADC_SetCommonPathInternalChAdd(ADC_COMMON_INSTANCE(p_instance), (uint32_t)channel);
+    }
   }
   else
   {
@@ -1824,6 +1852,7 @@ void HAL_ADC_GetConfigLowPower(const hal_adc_handle_t *hadc, hal_adc_low_power_c
 
   p_config->lp_auto_wait = (hal_adc_lp_auto_wait_state_t)LL_ADC_GetLowPowerMode(p_instance);
 }
+
 
 /**
   * @brief  Configure ADC analog watchdog.
@@ -2953,6 +2982,7 @@ __WEAK void HAL_ADC_AnalogWD_OutOfWindowCallback(hal_adc_handle_t *hadc, hal_adc
   *         the weak HAL_ADC_ErrorCallback() predefined callback.
   * @param  hadc Pointer to a hal_adc_handle_t structure.
   * @param  p_callback Pointer to the hal_adc_cb_t callback function.
+  * @retval HAL_INVALID_PARAM Invalid parameter
   * @retval HAL_OK    Register completed successfully.
   * @retval HAL_ERROR Register completed with error.
   */
@@ -2978,6 +3008,7 @@ hal_status_t HAL_ADC_RegisterErrorCallback(hal_adc_handle_t *hadc, hal_adc_cb_t 
   *         the weak HAL_ADC_REG_EndOfSamplingCallback() predefined callback.
   * @param  hadc Pointer to a hal_adc_handle_t structure.
   * @param  p_callback Pointer to the hal_adc_cb_t callback function.
+  * @retval HAL_INVALID_PARAM Invalid parameter
   * @retval HAL_OK    Register completed successfully.
   * @retval HAL_ERROR Register completed with error.
   */
@@ -3003,6 +3034,7 @@ hal_status_t HAL_ADC_RegisterRegEndOfSamplingCallback(hal_adc_handle_t *hadc, ha
   *         the weak HAL_ADC_REG_UnitaryConvCpltCallback() predefined callback.
   * @param  hadc Pointer to a hal_adc_handle_t structure.
   * @param  p_callback Pointer to the hal_adc_cb_t callback function.
+  * @retval HAL_INVALID_PARAM Invalid parameter
   * @retval HAL_OK    Register completed successfully.
   * @retval HAL_ERROR Register completed with error.
   */
@@ -3028,6 +3060,7 @@ hal_status_t HAL_ADC_RegisterRegUnitaryConvCpltCallback(hal_adc_handle_t *hadc, 
   *         the weak HAL_ADC_REG_SequenceConvCpltCallback() predefined callback.
   * @param  hadc Pointer to a hal_adc_handle_t structure.
   * @param  p_callback Pointer to the hal_adc_cb_t callback function.
+  * @retval HAL_INVALID_PARAM Invalid parameter
   * @retval HAL_OK    Register completed successfully.
   * @retval HAL_ERROR Register completed with error.
   */
@@ -3054,6 +3087,7 @@ hal_status_t HAL_ADC_RegisterRegSequenceConvCpltCallback(hal_adc_handle_t *hadc,
   *         the weak HAL_ADC_REG_DataTransferHalfCallback() predefined callback.
   * @param  hadc Pointer to a hal_adc_handle_t structure.
   * @param  p_callback Pointer to the hal_adc_cb_t callback function.
+  * @retval HAL_INVALID_PARAM Invalid parameter
   * @retval HAL_OK    Register completed successfully.
   * @retval HAL_ERROR Register completed with error.
   */
@@ -3079,6 +3113,7 @@ hal_status_t HAL_ADC_RegisterDataTransferHalfCallback(hal_adc_handle_t *hadc, ha
   *         the weak HAL_ADC_REG_DataTransferCpltCallback() predefined callback.
   * @param  hadc Pointer to a hal_adc_handle_t structure.
   * @param  p_callback Pointer to the hal_adc_cb_t callback function.
+  * @retval HAL_INVALID_PARAM Invalid parameter
   * @retval HAL_OK    Register completed successfully.
   * @retval HAL_ERROR Register completed with error.
   */
@@ -3104,6 +3139,7 @@ hal_status_t HAL_ADC_RegisterDataTransferCpltCallback(hal_adc_handle_t *hadc, ha
   *         the weak HAL_ADC_REG_DataTransferStopCallback() predefined callback.
   * @param  hadc Pointer to a hal_adc_handle_t structure.
   * @param  p_callback Pointer to the hal_adc_cb_t callback function.
+  * @retval HAL_INVALID_PARAM Invalid parameter
   * @retval HAL_OK    Register completed successfully.
   * @retval HAL_ERROR Register completed with error.
   */
@@ -3130,6 +3166,7 @@ hal_status_t HAL_ADC_RegisterDataTransferStopCallback(hal_adc_handle_t *hadc, ha
   *         the weak HAL_ADC_INJ_UnitaryConvCpltCallback() predefined callback.
   * @param  hadc Pointer to a hal_adc_handle_t structure.
   * @param  p_callback Pointer to the hal_adc_cb_t callback function.
+  * @retval HAL_INVALID_PARAM Invalid parameter
   * @retval HAL_OK    Register completed successfully.
   * @retval HAL_ERROR Register completed with error.
   */
@@ -3155,6 +3192,7 @@ hal_status_t HAL_ADC_RegisterInjUnitaryConvCpltCallback(hal_adc_handle_t *hadc, 
   *         the weak HAL_ADC_INJ_SequenceConvCpltCallback() predefined callback.
   * @param  hadc Pointer to a hal_adc_handle_t structure.
   * @param  p_callback Pointer to the hal_adc_cb_t callback function.
+  * @retval HAL_INVALID_PARAM Invalid parameter
   * @retval HAL_OK    Register completed successfully.
   * @retval HAL_ERROR Register completed with error.
   */
@@ -3180,6 +3218,7 @@ hal_status_t HAL_ADC_RegisterInjSequenceConvCpltCallback(hal_adc_handle_t *hadc,
   *         the weak HAL_ADC_AnalogWD_OutOfWindowCallback() predefined callback.
   * @param  hadc Pointer to a hal_adc_handle_t structure.
   * @param  p_callback Pointer to the hal_adc_awd_cb_t callback function.
+  * @retval HAL_INVALID_PARAM Invalid parameter
   * @retval HAL_OK    Register completed successfully.
   * @retval HAL_ERROR Register completed with error.
   */
@@ -3292,7 +3331,7 @@ uint32_t HAL_ADC_GetClockFreq(const hal_adc_handle_t *hadc)
 
 #if !defined(USE_ASSERT_DBG_STATE) && !defined(USE_ASSERT_DBG_PARAM)
   STM32_UNUSED(hadc);
-#endif /* USE_ASSERT_DBG_STATE or USE_ASSERT_DBG_PARAM*/
+#endif /* USE_ASSERT_DBG_STATE or USE_ASSERT_DBG_PARAM */
 
   return HAL_RCC_ADC_GetKernelClkFreq(ADC_GET_INSTANCE(hadc));
 }
@@ -3526,7 +3565,7 @@ hal_status_t HAL_ADC_SetCalibrationFactor(hal_adc_handle_t *hadc, const hal_adc_
   * @brief  Poll for ADC event.
   * @param  hadc Pointer to a hal_adc_handle_t structure.
   * @param  event Value of hal_adc_event_t
-  * @param  timeout_ms ADC conversion time out value (unit: ms)
+  * @param  timeout_ms ADC conversion timeout value (unit: ms)
   * @note   HAL ADC state machine is not updated by this function
   *         (on the contrary to other polling functions: HAL_ADC_REG_PollForConv(), ...)
   * @retval HAL_TIMEOUT       Operation exceeds user timeout
@@ -3988,7 +4027,7 @@ hal_status_t HAL_ADC_REG_StopConv_DMA(hal_adc_handle_t *hadc)
 /**
   * @brief  Wait for conversion on ADC group regular to be completed.
   * @param  hadc Pointer to a hal_adc_handle_t structure.
-  * @param  timeout_ms ADC conversion time out value (unit: ms)
+  * @param  timeout_ms ADC conversion timeout value (unit: ms)
   * @retval HAL_TIMEOUT       Operation exceeds user timeout
   * @retval HAL_OK            Operation completed successfully
   */
@@ -4237,7 +4276,7 @@ hal_status_t HAL_ADC_INJ_StopConv_IT(hal_adc_handle_t *hadc)
 /**
   * @brief  Wait for conversion on ADC group injected to be completed.
   * @param  hadc Pointer to a hal_adc_handle_t structure.
-  * @param  timeout_ms ADC conversion time out value (unit: ms)
+  * @param  timeout_ms ADC conversion timeout value (unit: ms)
   * @retval HAL_TIMEOUT       Operation exceeds user timeout
   * @retval HAL_OK            Operation completed successfully
   */
@@ -5194,7 +5233,7 @@ hal_status_t HAL_ADC_MM_REG_StopConv_DMA(hal_adc_handle_t *hadc)
   * @brief  Multimode operation: Wait for conversion on ADC group regular to be completed
   *         (for all ADC instances part of multimode).
   * @param  hadc Pointer to a hal_adc_handle_t structure. Must be the handle of ADC master.
-  * @param  timeout_ms ADC conversion time out value (unit: ms)
+  * @param  timeout_ms ADC conversion timeout value (unit: ms)
   * @retval HAL_TIMEOUT       Operation exceeds user timeout
   * @retval HAL_ERROR         Operation completed with error
   * @retval HAL_OK            Operation completed successfully
@@ -5529,7 +5568,7 @@ hal_status_t HAL_ADC_MM_INJ_StopConv_IT(hal_adc_handle_t *hadc)
   * @brief  Multimode operation: Wait for conversion on ADC group injected to be completed
   *         (for all ADC instances part of multimode).
   * @param  hadc Pointer to a hal_adc_handle_t structure. Must be the handle of ADC master.
-  * @param  timeout_ms ADC conversion time out value (unit: ms)
+  * @param  timeout_ms ADC conversion timeout value (unit: ms)
   * @retval HAL_TIMEOUT       Operation exceeds user timeout
   * @retval HAL_ERROR         Operation completed with error
   * @retval HAL_OK            Operation completed successfully

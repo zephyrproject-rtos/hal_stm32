@@ -27,6 +27,7 @@ extern "C" {
 #include "stm32c5xx_hal_def.h"
 #include "stm32c5xx_ll_rng.h"
 #include "stm32c5xx_ll_pka.h"
+#include "stm32c5xx_ll_tamp.h"
 /** @addtogroup STM32C5xx_HAL_Driver
   * @{
   */
@@ -419,7 +420,7 @@ hal_status_t HAL_CCB_RSA_SW_ComputeModularExp(hal_ccb_handle_t *hccb, const hal_
                                               const hal_ccb_wrapping_sw_key_context_t *p_wrapping_key_context,
                                               const uint32_t *p_in_wrapped_user_key,
                                               hal_ccb_rsa_key_blob_t *p_in_wrapped_private_key_blob,
-                                              const uint8_t *p_out_operand, uint8_t *p_out_modular_exp);
+                                              const uint8_t *p_in_operand, uint8_t *p_out_modular_exp);
 /**
   * @}
   */
@@ -479,7 +480,7 @@ hal_status_t HAL_CCB_RSA_HW_WrapPrivateKey(hal_ccb_handle_t *hccb, const hal_ccb
 hal_status_t HAL_CCB_RSA_HW_ComputeModularExp(hal_ccb_handle_t *hccb, const hal_ccb_rsa_param_t *p_in_param,
                                               hal_ccb_wrapping_hw_key_type_t wrapping_hw_key_type,
                                               hal_ccb_rsa_key_blob_t *p_in_wrapped_private_key_blob,
-                                              const uint8_t *p_out_operand, uint8_t *p_out_modular_exp);
+                                              const uint8_t *p_in_operand, uint8_t *p_out_modular_exp);
 /**
   * @}
   */
@@ -516,23 +517,11 @@ This section provides functions to manage CCB flags:
   *            @arg @ref HAL_CCB_TAMP_EVT_PKA_RAM_REG    PKA Register TAMP Event flag
   *            @arg @ref HAL_CCB_TAMP_EVT_PKA_OPR        PKA Operation TAMP Event flag
   *            @arg @ref HAL_CCB_TAMP_EVT_CCB            CCB TAMP Event flag
-  * @retval uint32_t The state or value of flag .
+  * @retval uint32_t The state or value of flag.
   */
 __STATIC_INLINE uint32_t HAL_CCB_GetFlag(const hal_ccb_handle_t *hccb, uint32_t flag)
 {
-  uint32_t status;
-
-  if ((flag == (uint32_t)HAL_CCB_FLAG_BUSY) || (flag == (uint32_t)HAL_CCB_TAMP_EVT_RNG)
-      || (flag == (uint32_t)HAL_CCB_TAMP_EVT_SAES) || (flag == (uint32_t)HAL_CCB_TAMP_EVT_PKA_RAM_REG)
-      || (flag == (uint32_t)HAL_CCB_TAMP_EVT_PKA_OPR) || (flag == (uint32_t)HAL_CCB_TAMP_EVT_CCB))
-  {
-    status = ((STM32_READ_BIT(((CCB_TypeDef *)((uint32_t)hccb->instance))->SR, flag) == flag) ? 1U : 0U);
-  }
-  else
-  {
-    status = 0;
-  }
-  return (status);
+  return (((STM32_READ_BIT(((CCB_TypeDef *)((uint32_t)hccb->instance))->SR, flag) == flag) ? 1U : 0U));
 }
 /**
   * @}

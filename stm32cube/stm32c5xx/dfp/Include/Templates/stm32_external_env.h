@@ -42,15 +42,11 @@ extern "C" {
   *        (when HSE is used as system clock source, directly or through the PSI).
   */
 #if !defined  (HSE_VALUE)
-#if defined(RCC_CR1_HSIDIV4ON)
-#define HSE_VALUE              16000000UL /*!< Value of the External oscillator in Hz */
-#else
-#if defined(AHB4PERIPH_BASE)
+#if defined (AHB4PERIPH_BASE)
 #define HSE_VALUE              48000000UL /*!< Value of the External oscillator in Hz */
 #else
 #define HSE_VALUE              24000000UL /*!< Value of the External oscillator in Hz */
 #endif /* AHB4PERIPH_BASE */
-#endif /* RCC_CR1_HSIDIV4ON */
 #endif /* HSE_VALUE */
 
 #if !defined  (HSE_STARTUP_TIMEOUT)

@@ -29,6 +29,7 @@
   */
 /** @defgroup LPTIM_Introduction LPTIM Introduction
   * @{
+  - The LPTIM hardware abstraction layer (HAL) provides a set of APIs to interface with STM32 low-power timers.
 
   - STM32 low-power timers (LPTIM) provide ultra-low-power time base generation, periodic events, pulse counting,
     and low-frequency PWM while the device operates in low-power modes. They enable energy-efficient wake-up scheduling,
@@ -307,7 +308,6 @@ typedef struct
 /**
   * @brief Mapping table translating HAL external trigger sources to LL TRIGSEL selector values.
   */
-
 static const lptim_mapping_t extrig_mapping[] =
 {
   {LL_LPTIM_TRIG_SOURCE_GPIO,          HAL_LPTIM1, {.exttrig_src = HAL_LPTIM_EXT_TRIG_GPIO}},
@@ -325,9 +325,8 @@ static const lptim_mapping_t extrig_mapping[] =
 
 
 /**
-  * @brief ICx mapping: HAL input sources to LL ICx REMAP selector values.
+  * @brief IC1 mapping: LPTIMx input capture 1 connections.
   */
-
 static const lptim_mapping_t ic1_mapping[] =
 {
   {LL_LPTIM_LPTIM1_IC1_RMP_GPIO,         HAL_LPTIM1, {.channel_src = HAL_LPTIM_INPUT_GPIO}},
@@ -339,6 +338,9 @@ static const lptim_mapping_t ic1_mapping[] =
   {.ll_value = 0xFFFFFFFFU}
 };
 
+/**
+  * @brief IC2 mapping: LPTIMx input capture 2 connections.
+  */
 static const lptim_mapping_t ic2_mapping[] =
 {
   {LL_LPTIM_LPTIM1_IC2_RMP_GPIO,         HAL_LPTIM1, {.channel_src = HAL_LPTIM_INPUT_GPIO}},
@@ -522,16 +524,33 @@ static const lptim_channel_it_t channel_it[] =
    || ((channel) == HAL_LPTIM_CHANNEL_2))
 
 /**
-  * @brief Is LPTIM Channel exist on chip
+  * @brief  Check the validity of the LPTIM1 channel sources.
+  * @param  channel   The channel to check (@ref hal_lptim_channel_t).
+  * @param  src       The channel source to check (@ref hal_lptim_ic_src_t).
+  * @retval SET (channel source is valid) or RESET (channel source is invalid).
   */
-#define IS_LPTIM_CHANNEL_SRC(src)             \
-  (((src) == HAL_LPTIM_INPUT_GPIO)            \
-   || ((src) == HAL_LPTIM_INPUT_LSI)          \
-   || ((src) == HAL_LPTIM_INPUT_LSE)          \
-   || ((src) == HAL_LPTIM_INPUT_COMP1_OUT)    \
-   || ((src) == HAL_LPTIM_INPUT_RCC_HSE_1MHZ) \
-   || ((src) == HAL_LPTIM_INPUT_EVENTOUT)     \
-   || ((src) == HAL_LPTIM_INPUT_MCO1))
+#define IS_LPTIM1_CHANNEL_SRC(channel, src) \
+  ((((channel) == HAL_LPTIM_CHANNEL_1) \
+    && (((src) == HAL_LPTIM_INPUT_GPIO) \
+        || ((src) == HAL_LPTIM_INPUT_COMP1_OUT) \
+        || ((src) == HAL_LPTIM_INPUT_EVENTOUT) \
+        || ((src) == HAL_LPTIM_INPUT_MCO1))) \
+   || (((channel) == HAL_LPTIM_CHANNEL_2) \
+       && (((src) == HAL_LPTIM_INPUT_GPIO) \
+           || ((src) == HAL_LPTIM_INPUT_LSI) \
+           || ((src) == HAL_LPTIM_INPUT_LSE) \
+           || ((src) == HAL_LPTIM_INPUT_RCC_HSE_1MHZ))))
+
+/**
+  * @brief  Check the validity of the channel sources.
+  * @param  instance  LPTIM instance.
+  * @param  channel   The channel to check (@ref hal_lptim_channel_t).
+  * @param  src       The channel source to check (@ref hal_lptim_ic_src_t).
+  * @retval SET (channel source is valid) or RESET (channel source is invalid).
+  */
+#define IS_LPTIM_CHANNEL_SRC(instance, channel, src) \
+  ((((instance) == LPTIM1) && IS_LPTIM1_CHANNEL_SRC((channel), (src))))
+
 
 /**
   * @brief  Check the validity of the input1 polarity.
@@ -3379,7 +3398,7 @@ hal_status_t HAL_LPTIM_IC_SetConfigChannel(hal_lptim_handle_t *hlptim,
 
   ASSERT_DBG_PARAM(IS_LPTIM_INPUT_CAPTURE_INSTANCE(p_lptim));
 
-  ASSERT_DBG_PARAM(IS_LPTIM_CHANNEL_SRC(p_config->source));
+  ASSERT_DBG_PARAM(IS_LPTIM_CHANNEL_SRC(p_lptim, channel, p_config->source));
   ASSERT_DBG_PARAM(IS_LPTIM_IC_POLARITY(p_config->polarity));
   ASSERT_DBG_PARAM(IS_LPTIM_FILTER(p_config->filter));
   ASSERT_DBG_PARAM(IS_LPTIM_IC_PRESCALER(p_config->prescaler));

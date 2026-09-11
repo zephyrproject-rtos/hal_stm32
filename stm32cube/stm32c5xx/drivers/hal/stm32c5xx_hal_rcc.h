@@ -324,6 +324,7 @@ typedef enum
 } hal_rcc_lse_drive_t;
 
 #endif /* LSE_VALUE */
+
 /**
   * @brief Wake-Up from STOP Clock.
   */
@@ -1415,7 +1416,6 @@ __STATIC_INLINE void HAL_RCC_GPIOH_EnableClock(void)
 {
   LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOH);
 }
-
 /**
   * @details This function enables the ADC12 clock.
   */
@@ -1565,7 +1565,6 @@ __STATIC_INLINE void HAL_RCC_GPIOH_DisableClock(void)
 {
   LL_AHB2_GRP1_DisableClock(LL_AHB2_GRP1_PERIPH_GPIOH);
 }
-
 /**
   * @details This function disables the ADC12 clock.
   */
@@ -1608,16 +1607,6 @@ __STATIC_INLINE void HAL_RCC_RNG_DisableClock(void)
   LL_AHB2_GRP1_DisableClock(LL_AHB2_GRP1_PERIPH_RNG);
 }
 
-#if defined(CCB)
-/**
-  * @details This function disables the CCB clock.
-  */
-__STATIC_INLINE void HAL_RCC_CCB_DisableClock(void)
-{
-  LL_AHB2_GRP1_DisableClock(LL_AHB2_GRP1_PERIPH_CCB);
-}
-
-#endif /* CCB */
 #if defined(PKA)
 /**
   * @details This function disables the PKA clock.
@@ -1638,6 +1627,16 @@ __STATIC_INLINE void HAL_RCC_SAES_DisableClock(void)
 }
 
 #endif /* SAES */
+#if defined(CCB)
+/**
+  * @details This function disables the CCB clock.
+  */
+__STATIC_INLINE void HAL_RCC_CCB_DisableClock(void)
+{
+  LL_AHB2_GRP1_DisableClock(LL_AHB2_GRP1_PERIPH_CCB);
+}
+
+#endif /* CCB */
 #if defined(ADC3)
 /**
   * @details This function disables the ADC3 clock.
@@ -1660,6 +1659,7 @@ __STATIC_INLINE void HAL_RCC_ADC3_DisableClock(void)
   *         using it.
   * @{
   */
+#if defined(XSPI1)
 /**
   * @details This function enables the XSPI1 clock.
   */
@@ -1668,6 +1668,8 @@ __STATIC_INLINE void HAL_RCC_XSPI1_EnableClock(void)
   LL_AHB4_GRP1_EnableClock(LL_AHB4_GRP1_PERIPH_XSPI1);
 }
 
+#endif /* XSPI1 */
+#if defined(XSPI1)
 /**
   * @details This function disables the XSPI1 clock.
   */
@@ -1675,11 +1677,13 @@ __STATIC_INLINE void HAL_RCC_XSPI1_DisableClock(void)
 {
   LL_AHB4_GRP1_DisableClock(LL_AHB4_GRP1_PERIPH_XSPI1);
 }
+
+#endif /* XSPI1 */
 /**
   * @}
   */
 
-#endif /* XSPI1 */
+#endif /* XSPI1 || XSPI2 || FMC_BASE*/
 /** @defgroup RCC_APB1_Clock_Enable_Disable APB1 Peripheral Clock Enable Disable
   * @brief  Enable or disable the APB1 peripheral clock.
   * @note   After reset, the peripheral clock (used for registers read/write access)
@@ -2270,7 +2274,6 @@ __STATIC_INLINE void HAL_RCC_LPUART1_EnableClock(void)
 {
   LL_APB3_GRP1_EnableClock(LL_APB3_GRP1_PERIPH_LPUART1);
 }
-
 #if defined(LPTIM1)
 /**
   * @details This function enables the LPTIM1 clock.
@@ -2304,7 +2307,6 @@ __STATIC_INLINE void HAL_RCC_LPUART1_DisableClock(void)
 {
   LL_APB3_GRP1_DisableClock(LL_APB3_GRP1_PERIPH_LPUART1);
 }
-
 #if defined(LPTIM1)
 /**
   * @details This function disables the LPTIM1 clock.
@@ -2551,7 +2553,6 @@ __STATIC_INLINE hal_rcc_clk_status_t HAL_RCC_GPIOH_IsEnabledClock(void)
 {
   return (hal_rcc_clk_status_t)LL_AHB2_GRP1_IsEnabledClock(LL_AHB2_GRP1_PERIPH_GPIOH);
 }
-
 /**
   * @details This function checks if the ADC12 clock is enabled.
   * @retval HAL_RCC_CLK_DISABLED ADC12 clock is disabled
@@ -2664,6 +2665,7 @@ __STATIC_INLINE hal_rcc_clk_status_t HAL_RCC_ADC3_IsEnabledClock(void)
   *         using it.
   * @{
   */
+#if defined(XSPI1)
 /**
   * @details This function checks if the XSPI1 clock is enabled.
   * @retval HAL_RCC_CLK_DISABLED XSPI1 clock is disabled
@@ -2678,6 +2680,7 @@ __STATIC_INLINE hal_rcc_clk_status_t HAL_RCC_XSPI1_IsEnabledClock(void)
   */
 
 #endif /* XSPI1 */
+#endif /* XSPI1 || XSPI2 || FMC_BASE*/
 /** @defgroup RCC_APB1_Peripheral_Clock_Enable_Status APB1 Peripheral Clock Enabled Status
   * @brief  Check whether the APB1 peripheral clock is enabled or not.
   * @note   After reset, the peripheral clock (used for registers read/write access)
@@ -3064,7 +3067,6 @@ __STATIC_INLINE hal_rcc_clk_status_t HAL_RCC_LPUART1_IsEnabledClock(void)
 {
   return (hal_rcc_clk_status_t)LL_APB3_GRP1_IsEnabledClock(LL_APB3_GRP1_PERIPH_LPUART1);
 }
-
 #if defined(LPTIM1)
 /**
   * @details This function checks if the LPTIM1 clock is enabled.
@@ -3236,7 +3238,6 @@ __STATIC_INLINE void HAL_RCC_GPIOH_Reset(void)
   LL_AHB2_GRP1_ForceReset(LL_AHB2_GRP1_PERIPH_GPIOH);
   LL_AHB2_GRP1_ReleaseReset(LL_AHB2_GRP1_PERIPH_GPIOH);
 }
-
 /**
   * @details This function resets the ADC12 peripheral.
   */
@@ -3317,6 +3318,7 @@ __STATIC_INLINE void HAL_RCC_CCB_Reset(void)
 }
 
 #endif /* CCB */
+
 #if defined(ADC3)
 /**
   * @details This function resets the ADC3 peripheral.
@@ -3337,6 +3339,7 @@ __STATIC_INLINE void HAL_RCC_ADC3_Reset(void)
   * @brief  AHB4 peripheral reset.
   * @{
   */
+#if defined(XSPI1)
 /**
   * @details This function resets the XSPI1 peripheral.
   */
@@ -3350,6 +3353,7 @@ __STATIC_INLINE void HAL_RCC_XSPI1_Reset(void)
   */
 
 #endif /* XSPI1 */
+#endif /* XSPI1 || XSPI2 || FMC_BASE*/
 /** @defgroup RCC_APB1_Reset APB1 Peripheral Reset
   * @brief  APB1 peripheral reset.
   * @{
@@ -4098,7 +4102,6 @@ __STATIC_INLINE void HAL_RCC_LP_GPIOH_EnableClockInSleepMode(void)
 {
   LL_AHB2_GRP1_EnableClockLowPower(LL_AHB2_GRP1_PERIPH_GPIOH);
 }
-
 /**
   * @details This function enables the ADC12 clock in sleep mode.
   */
@@ -4179,6 +4182,7 @@ __STATIC_INLINE void HAL_RCC_LP_CCB_EnableClockInSleepMode(void)
 }
 
 #endif /* CCB */
+
 #if defined(ADC3)
 /**
   * @details This function enables the ADC3 clock in sleep mode.
@@ -4256,7 +4260,6 @@ __STATIC_INLINE void HAL_RCC_LP_GPIOH_DisableClockInSleepMode(void)
 {
   LL_AHB2_GRP1_DisableClockLowPower(LL_AHB2_GRP1_PERIPH_GPIOH);
 }
-
 /**
   * @details This function disables the ADC12 clock in sleep mode.
   */
@@ -4360,6 +4363,7 @@ __STATIC_INLINE void HAL_RCC_LP_ADC3_DisableClockInSleepMode(void)
   * @note   By default, all peripheral clocks are enabled during SLEEP mode.
   * @{
   */
+#if defined(XSPI1)
 /**
   * @details This function enables the XSPI1 clock in sleep mode.
   */
@@ -4368,6 +4372,8 @@ __STATIC_INLINE void HAL_RCC_LP_XSPI1_EnableClockInSleepMode(void)
   LL_AHB4_GRP1_EnableClockLowPower(LL_AHB4_GRP1_PERIPH_XSPI1);
 }
 
+#endif /* XSPI1 */
+#if defined(XSPI1)
 /**
   * @details This function disables the XSPI1 clock in sleep mode.
   */
@@ -4380,6 +4386,7 @@ __STATIC_INLINE void HAL_RCC_LP_XSPI1_DisableClockInSleepMode(void)
   */
 
 #endif /* XSPI1 */
+#endif /* XSPI1 || XSPI2 || FMC_BASE */
 /** @defgroup RCC_APB1_Peripheral_Clock_Sleep_Enable_Disable APB1 Peripheral Clock Sleep Enable Disable
   * @brief  Enable or disable the APB1 peripheral clock during Low Power Sleep mode.
   * @note   Peripheral clock gating in SLEEP mode can be used to further reduce
@@ -5225,7 +5232,6 @@ __STATIC_INLINE void HAL_RCC_LP_LPUART1_EnableClockInStopMode(void)
 {
   LL_APB3_GRP1_EnableClockLowPower(LL_APB3_GRP1_PERIPH_LPUART1);
 }
-
 #if defined(LPTIM1)
 /**
   * @details This function enables the LPTIM1 clock in sleep mode.
@@ -5403,7 +5409,6 @@ hal_status_t                 HAL_RCC_EnableLSCO(hal_rcc_lsco_src_t source);
 hal_status_t                 HAL_RCC_DisableLSCO(void);
 hal_status_t                 HAL_RCC_RTC_EnableKernelClock(void);
 hal_status_t                 HAL_RCC_RTC_DisableKernelClock(void);
-
 /**
   * @}
   */

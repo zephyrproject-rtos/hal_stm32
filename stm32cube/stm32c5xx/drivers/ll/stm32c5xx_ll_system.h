@@ -48,6 +48,7 @@ extern "C" {
 #define LL_ID_PACKAGE_LQFP100          0x00000002U /*!< Package LQFP100  */
 #define LL_ID_PACKAGE_LQFP144          0x00000004U /*!< Package LQFP144  */
 #define LL_ID_PACKAGE_LQFP48           0x00000005U /*!< Package LQFP48   */
+#define LL_ID_PACKAGE_LQFP64_AP        0x00000007U /*!< Package LQFP64 Alternative Pinout */
 #define LL_ID_PACKAGE_UFQFPN32         0x00000009U /*!< Package UFQFPN32 */
 #define LL_ID_PACKAGE_UFQFPN48         0x00000010U /*!< Package UFQFPN48 */
 #define LL_ID_PACKAGE_LQFP80           0x00000012U /*!< Package LQFP80   */
@@ -125,6 +126,7 @@ __STATIC_INLINE uint32_t LL_GetUID_Word2(void)
   *         @arg @ref LL_ID_PACKAGE_LQFP100
   *         @arg @ref LL_ID_PACKAGE_LQFP144
   *         @arg @ref LL_ID_PACKAGE_LQFP48
+  *         @arg @ref LL_ID_PACKAGE_LQFP64_AP
   *         @arg @ref LL_ID_PACKAGE_UFQFPN32
   *         @arg @ref LL_ID_PACKAGE_UFQFPN48
   *         @arg @ref LL_ID_PACKAGE_LQFP80

@@ -209,7 +209,7 @@ This section provides functions to manage the ECC feature provided by the RAMCFG
 /**
   * @brief  Enable ECC monitoring with error address latching for the given RAMCFG instance.
   * @param  instance RAMCFG instance.
-  * @retval HAL_OK.
+  * @retval HAL_OK ECC monitoring enabled successfully.
   */
 hal_status_t HAL_RAMCFG_ECC_Enable(hal_ramcfg_t instance)
 {
@@ -228,7 +228,7 @@ hal_status_t HAL_RAMCFG_ECC_Enable(hal_ramcfg_t instance)
   *         @arg @ref HAL_RAMCFG_IT_ECC_SINGLE
   *         @arg @ref HAL_RAMCFG_IT_ECC_DOUBLE
   *         @arg @ref HAL_RAMCFG_IT_ECC_DOUBLE_NMI
-  * @retval HAL_OK.
+  * @retval HAL_OK ECC monitoring enabled successfully.
   */
 hal_status_t HAL_RAMCFG_ECC_Enable_IT(hal_ramcfg_t instance, uint32_t interrupt)
 {
@@ -245,7 +245,7 @@ hal_status_t HAL_RAMCFG_ECC_Enable_IT(hal_ramcfg_t instance, uint32_t interrupt)
 /**
   * @brief  Disable ECC monitoring for the given RAMCFG instance.
   * @param  instance RAMCFG instance.
-  * @retval HAL_OK.
+  * @retval HAL_OK ECC monitoring disabled successfully.
   */
 hal_status_t HAL_RAMCFG_ECC_Disable(hal_ramcfg_t instance)
 {
@@ -304,12 +304,12 @@ SRAM page protection can be disabled only by a global peripheral reset or a syst
 
 /**
   * @brief  Enable write protection for the given page(s).
-  * @param  instance    RAMCFG instance.
+  * @param  instance   RAMCFG instance.
   * @param  start_page Select the start page number.
   * @param  page_nbr   Number of pages to be protected.
   * @retval HAL_INVALID_PARAM Invalid parameter when the number of pages to protect is higher than the number of pages
-  *         available for the given SRAM.
-  * @retval HAL_OK     RAMCFG pages are successfully protected.
+  *                           available for the given SRAM.
+  * @retval HAL_OK            RAMCFG pages are successfully protected.
   */
 hal_status_t HAL_RAMCFG_EnablePageWRP(hal_ramcfg_t instance, uint32_t start_page, uint32_t page_nbr)
 {
@@ -387,7 +387,7 @@ hal_status_t HAL_RAMCFG_EnablePageWRP(hal_ramcfg_t instance, uint32_t start_page
   *          a page and size_byte does not cover an integer number of pages, the driver rounds to the first and last
   *          pages to cover the area defined by sram_addr and size_byte.
   * @retval  HAL_INVALID_PARAM Invalid parameter when sram_addr is not in the range of the given SRAM and the total
-  *                           size to be protected is larger than the given SRAM size.
+  *                            size to be protected is larger than the given SRAM size.
   * @retval  HAL_OK            RAMCFG pages are successfully protected by address.
   */
 hal_status_t HAL_RAMCFG_EnableWRPByAddr(hal_ramcfg_t instance,
@@ -470,8 +470,8 @@ hal_status_t HAL_RAMCFG_EnableWRPByAddr(hal_ramcfg_t instance,
 
 /**
   * @brief  Check the write protection status for the given page.
-  * @param  instance    RAMCFG instance.
-  * @param  page        Select the page index.
+  * @param  instance RAMCFG instance.
+  * @param  page     Select the page index.
   * @retval Return value can be one element of \ref hal_ramcfg_wrp_page_status_t enumeration.
   */
 hal_ramcfg_wrp_page_status_t HAL_RAMCFG_IsEnabledPageWRP(hal_ramcfg_t instance, uint32_t page)
@@ -575,9 +575,9 @@ This section provides a function that performs a hardware erase of a given SRAM.
 /**
   * @brief  Launch a mass erase for the given SRAM.
   * @param  instance RAMCFG instance.
-  * @param  timeout User timeout to finish the mass erase.
+  * @param  timeout  User timeout to finish the mass erase.
   * @retval HAL_TIMEOUT In case of user timeout.
-  * @retval HAL_OK SRAM is successfully erased.
+  * @retval HAL_OK      SRAM is successfully erased.
   */
 
 hal_status_t HAL_RAMCFG_MassErase(hal_ramcfg_t instance, uint32_t timeout)
@@ -644,8 +644,8 @@ void HAL_RAMCFG_IRQHandler(hal_ramcfg_t instance)
 
 /**
   * @brief  Handle RAMCFG NMI interrupt request.
-  * @param  instance RAMCFG instance.
-  * @retval HAL_OK when the NMI has been specifically treated by this IRQHandler.
+  * @param  instance  RAMCFG instance.
+  * @retval HAL_OK    when the NMI has been specifically treated by this IRQHandler.
   * @retval HAL_ERROR otherwise.
   */
 hal_status_t HAL_RAMCFG_NMI_IRQHandler(hal_ramcfg_t instance)
@@ -674,7 +674,7 @@ hal_status_t HAL_RAMCFG_NMI_IRQHandler(hal_ramcfg_t instance)
 
 /**
   * @brief  RAMCFG single or double error detection callback.
-  * @param  instance RAMCFG instance.
+  * @param  instance  RAMCFG instance.
   * @retval HAL_ERROR when the NMI has not been treated by the callback.
   */
 __WEAK hal_status_t HAL_RAMCFG_ECC_ErrorCallback(hal_ramcfg_t instance)

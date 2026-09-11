@@ -27,7 +27,8 @@
 /** @addtogroup STM32C5xx_HAL_Driver
   * @{
   */
-
+#if defined(CCB)
+#if defined(USE_HAL_CCB_MODULE) && (USE_HAL_CCB_MODULE == 1)
 /** @addtogroup CCB
   * @{
   */
@@ -79,7 +80,7 @@ using the HAL_CCB_Init() API, the driver is ready to start a process.
 - Blob creation operation:
  - Wrap a private key, either a clear text (plaintext) user-supplied key or an RNG-generated key,
   using either a hardware key or a wrapped symmetric software key to create the key blob.
--  When using a hardware key as a wrapper:
+- When using a hardware key as a wrapper:
   - Call either:
          - HAL_CCB_ECDSA_HW_WrapPrivateKey() to wrap a clear text key for ECDSA purposes.
          - HAL_CCB_ECDSA_HW_GenerateWrapPrivateKey() to wrap an RNG-generated key for ECDSA purposes.
@@ -143,8 +144,7 @@ USE_HAL_CCB_USER_DATA        | from hal_conf.h       | 0U                | Allow
 /**
   * @}
   */
-#if defined(CCB)
-#if defined(USE_HAL_CCB_MODULE) && (USE_HAL_CCB_MODULE == 1)
+
 /* Private constants--------------------------------------------------------------------------------------------------*/
 /** @defgroup CCB_Private_Constants CCB Private Constants
   * @{
@@ -181,14 +181,20 @@ USE_HAL_CCB_USER_DATA        | from hal_conf.h       | 0U                | Allow
                                                                  operation error                               */
 
 /*! CCB several values */
-#define CCB_FAKE_VALUE               0X0001UL        /*!< Fake value used for SAES_IVRs                             */
-#define CCB_MAGIC_VALUE              0X0CCBUL        /*!< Magic number used when chaining key from SAES to PKA RAM  */
-#define CCB_IV0_VALUE                0X0002UL        /*!< SAES_IVR0 that must be equal to 0x2                       */
-#define CCB_BLOCK_SIZE_WORD          0X0004UL        /*!< Block size is 128 bits (4*32 bits)                        */
-#define CCB_SYMMETRIC_KEY_SIZE_WORD  0X0008UL        /*!< Symmetric key size is always 256 (8*32 bits)              */
+#define CCB_FAKE_VALUE               (0x0001UL)        /*!< Fake value used for SAES_IVRs                             */
+#define CCB_MAGIC_VALUE              (0x0CCBUL)        /*!< Magic number used when chaining key from SAES to PKA RAM  */
+#define CCB_IV0_VALUE                (0x0002UL)        /*!< SAES_IVR0 that must be equal to 0x2                       */
+#define CCB_BLOCK_SIZE_WORD          (0x0004UL)        /*!< Block size is 128 bits (4*32 bits)                        */
+#define CCB_SYMMETRIC_KEY_SIZE_WORD  (0x0008UL)        /*!< Symmetric key size is always 256 (8*32 bits)              */
 
 /*! CCB Timeout Values */
 #define CCB_GENERAL_TIMEOUT_MS      0x1000U          /*!< General CCB operation timeout in milliseconds */
+
+#if defined (USE_HAL_CCB_RNG_RECOVERY) && (USE_HAL_CCB_RNG_RECOVERY == 1U)
+#if defined(RNG_HTSR0_RPERRX) || defined(RNG_HTSR1_ADERRX)
+#define CCB_RNG_TIMEOUT_VALUE       0x00000002U      /*!< RNG timeout value in milliseconds */
+#endif /* RNG_HTSR0_RPERRX || RNG_HTSR1_ADERRX */
+#endif /* CCB_RNG_TIMEOUT_VALUE */
 
 /*! Number of bytes in one 32-bit word */
 #define CCB_BYTES_PER_WORD    4U
@@ -220,7 +226,8 @@ typedef struct
 typedef struct
 {
   uint32_t ccb_key_type;                                   /*!< CCB key type */
-  hal_ccb_wrapping_hw_key_type_t p_wrapping_key_context;   /*!< Pointer to the hardware key context */
+  hal_ccb_wrapping_hw_key_type_t wrapping_key_context;     /*!< wrapping key context, can be a value
+                                                                of @ref hal_ccb_wrapping_hw_key_type_t */
 } ccb_hw_unwrap_key_context_t;
 /**
   * @}
@@ -285,13 +292,13 @@ static hal_status_t CCB_RNG_WaitFlag(RNG_TypeDef *p_rng_instance, uint32_t flag)
 static hal_status_t CCB_SAES_WaitFlag(AES_TypeDef *p_saes_instance, uint32_t flag, uint32_t status);
 
 /* Set parameters private function */
-static hal_status_t CCB_ECDSASign_SetPram(const hal_ccb_ecdsa_curve_param_t *p_in_curve_param);
-static hal_status_t CCB_ECCMul_SetPram(const hal_ccb_ecc_mul_curve_param_t *p_in_curve_param);
-static hal_status_t CCB_RSAModExp_SetPram(const hal_ccb_rsa_param_t *p_in_curve_param);
-static hal_status_t CCB_SetPram(uint32_t modulus_size_byte, uint32_t dst_address, const uint8_t *p_src);
+static hal_status_t CCB_ECDSASign_SetParam(const hal_ccb_ecdsa_curve_param_t *p_in_curve_param);
+static hal_status_t CCB_ECCMul_SetParam(const hal_ccb_ecc_mul_curve_param_t *p_in_curve_param);
+static hal_status_t CCB_RSAModExp_SetParam(const hal_ccb_rsa_param_t *p_in_curve_param);
+static hal_status_t CCB_SetParam(uint32_t modulus_size_byte, uint32_t dst_address, const uint8_t *p_src);
 
 /* Wrapping key private function */
-static hal_status_t CCB_Wrapping_Key_Config(void *unwrapkey_context, uint8_t ccb_operation);
+static hal_status_t CCB_Wrapping_Key_Config(void *p_unwrapkey_context, uint8_t ccb_operation);
 
 static hal_status_t CCB_WrapSymmetricKey(CCB_TypeDef *p_ccb_instance, const uint32_t *p_in_clear_user_key,
                                          uint32_t operation,
@@ -304,7 +311,7 @@ static void CCB_Memcpy_u32_to_u8(volatile uint8_t *p_dst, const volatile uint32_
 static void CCB_Memcpy_u8_to_u32(volatile uint32_t *p_dst, const volatile  uint8_t *p_src, size_t size);
 static void CCB_Memcpy_u32_to_u32(volatile uint32_t *p_dst, const volatile uint32_t *p_src, size_t size);
 static void CCB_Memcpy_u8_to_u64(volatile uint32_t *p_dst, const volatile uint8_t *p_src);
-static void CCB_Memcpy_Not_Align(volatile uint32_t *p_dst, const volatile uint8_t *p_src, size_t size);
+static void CCB_Memcpy_TailBytesToU64(volatile uint32_t *p_dst, const volatile uint8_t *p_src, size_t size);
 
 /* Blob processing private function */
 static hal_status_t CCB_BlobCreation_InitialPhase(uint32_t *p_iv, uint32_t randoms);
@@ -316,38 +323,38 @@ static hal_status_t CCB_BlobUse_FinalPhase(AES_TypeDef *p_saes_instance, uint32_
                                            uint32_t size_param);
 static hal_status_t CCB_ECDSA_SignBlobCreation(CCB_TypeDef *p_ccb_instance,
                                                const hal_ccb_ecdsa_curve_param_t *p_in_curve_param,
-                                               void *unwrapkey_context, const uint8_t *p_clear_private_key,
+                                               void *p_unwrapkey_context, const uint8_t *p_clear_private_key,
                                                uint32_t *p_iv, uint32_t *p_tag, uint32_t *p_wrapped_key,
                                                uint32_t randoms, uint8_t *p_hash, hal_ccb_ecdsa_sign_t *p_signature,
                                                uint8_t ccb_operation);
 static hal_status_t CCB_ECDSA_ComputePublicKey(CCB_TypeDef *p_ccb_instance,
                                                const hal_ccb_ecdsa_curve_param_t *p_in_curve_param,
-                                               void *unwrapkey_context, uint32_t *p_iv, uint32_t *p_tag,
+                                               void *p_unwrapkey_context, uint32_t *p_iv, uint32_t *p_tag,
                                                uint32_t *p_wrapped_key, uint32_t randoms,
                                                hal_ccb_ecc_point_t *p_output_point);
 static hal_status_t CCB_ECDSA_Sign(CCB_TypeDef *p_ccb_instance, const hal_ccb_ecdsa_curve_param_t *p_in_curve_param,
-                                   void *unwrapkey_context, hal_ccb_ecdsa_key_blob_t *p_in_ecdsa_key_blob,
+                                   void *p_unwrapkey_context, hal_ccb_ecdsa_key_blob_t *p_in_ecdsa_key_blob,
                                    const uint8_t *p_in_hash, uint8_t hash_size, hal_ccb_ecdsa_sign_t *p_out_signature);
 static hal_status_t CCB_ECC_ScalarMulBlobCreation(CCB_TypeDef *p_ccb_instance,
                                                   const hal_ccb_ecc_mul_curve_param_t *p_in_curve_param,
-                                                  void *unwrapkey_context, const uint8_t *p_clear_private_key,
+                                                  void *p_unwrapkey_context, const uint8_t *p_clear_private_key,
                                                   uint32_t *p_iv, uint32_t *p_tag, uint32_t *p_wrapped_key,
                                                   uint32_t randoms, uint32_t *scalar_mul_x_ref,
                                                   uint32_t *scalar_mul_y_ref, uint8_t ccb_operation);
 static hal_status_t CCB_RSA_ExpBlobCreation(CCB_TypeDef *p_ccb_instance, const hal_ccb_rsa_param_t *p_param,
-                                            void *unwrapkey_context,
+                                            void *p_unwrapkey_context,
                                             const hal_ccb_rsa_clear_key_t *p_rsa_clear_private_key,
                                             uint32_t *p_iv, uint32_t *p_tag, uint32_t *p_wrapped_exp,
                                             uint32_t *p_wrapped_phi, uint32_t randoms, uint8_t *p_operand,
                                             uint32_t *p_reference_modular_exp);
 static hal_status_t CCB_ECC_ComputeScalarMul(CCB_TypeDef *p_ccb_instance,
                                              const hal_ccb_ecc_mul_curve_param_t *p_in_curve_param,
-                                             void *unwrapkey_context, uint32_t *p_iv, uint32_t *p_tag,
+                                             void *p_unwrapkey_context, uint32_t *p_iv, uint32_t *p_tag,
                                              uint32_t *p_wrapped_key, uint32_t randoms,
                                              const hal_ccb_ecc_point_t *p_input_point,
                                              hal_ccb_ecc_point_t *p_output_point);
 static hal_status_t CCB_RSA_ComputeModularExp(CCB_TypeDef *p_ccb_instance, const hal_ccb_rsa_param_t *p_param,
-                                              void *unwrapkey_context, uint32_t *p_iv, uint32_t *p_tag,
+                                              void *p_unwrapkey_context, uint32_t *p_iv, uint32_t *p_tag,
                                               uint32_t *p_wrapped_exp, uint32_t *p_wrapped_phi, uint32_t randoms,
                                               const uint8_t *p_operand, uint8_t *p_modular_exp);
 static hal_status_t CCB_PKA_ECDSASetConfigVerifSignature(PKA_TypeDef *p_pka_instance,
@@ -355,21 +362,27 @@ static hal_status_t CCB_PKA_ECDSASetConfigVerifSignature(PKA_TypeDef *p_pka_inst
                                                          hal_ccb_ecc_point_t *p_public_key_out, const uint8_t *p_hash,
                                                          hal_ccb_ecdsa_sign_t *p_signature);
 static hal_status_t CCB_PKA_SetOperation(PKA_TypeDef *p_pka_instance, uint32_t operation);
-static hal_status_t CCB_SAES_SW_UnwrapKey(AES_TypeDef *p_saes_instance, const void *unwrapkey_context);
+static hal_status_t CCB_SAES_SW_UnwrapKey(AES_TypeDef *p_saes_instance, const void *p_unwrapkey_context);
 static hal_status_t CCB_RNG_GenerateRandomNumbers(RNG_TypeDef *p_rng_instance, uint16_t *p_randoms);
 static hal_status_t CCB_RNG_GenerateHashMessage(RNG_TypeDef *p_rng_instance, uint8_t *p_hash, uint32_t hash_size);
 static inline void CCB_PKA_PadEndRam(volatile uint32_t *p_pka_ram, uint32_t index);
 static inline uint32_t CCB_SAES_GetFlag(AES_TypeDef const *p_saes_instance, uint32_t flag);
 static inline void CCB_PKA_WriteClearTextData(volatile uint32_t *p_pka_ram, uint16_t dst_address, const uint8_t *p_src,
                                               uint32_t modulus_size_byte, uint32_t operand_size);
-static inline hal_status_t CCB_WriteWrappedKey(uint16_t dst_address, uint32_t *p_wrapped_key, uint32_t size_byte,
+static inline hal_status_t CCB_WriteWrappedKey(uint16_t dst_address, const uint32_t *p_wrapped_key, uint32_t size_byte,
                                                uint32_t randoms);
 static inline hal_status_t CCB_WriteKeyFromRNG(uint16_t dst_address, uint32_t operand_size);
 static inline hal_status_t CCB_ReadCipheredPrivateKey(uint16_t dst_address, uint32_t operand_size,
                                                       uint32_t *p_wrapped_key, uint32_t randoms);
 
 /* Pool buffer erase private function */
-void CCB_ErasePoolBuffer(uint8_t *p_buff, uint32_t buff_size_byte);
+static void CCB_ErasePoolBuffer(uint8_t *p_buff, uint32_t buff_size_byte);
+
+#if defined (USE_HAL_CCB_RNG_RECOVERY) && (USE_HAL_CCB_RNG_RECOVERY == 1U)
+#if defined(RNG_HTSR0_RPERRX) || defined(RNG_HTSR1_ADERRX)
+hal_status_t CCB_RNG_ResilientRecoverSeedError(void);
+#endif /* RNG_HTSR0_RPERRX || RNG_HTSR1_ADERRX */
+#endif /* USE_HAL_CCB_RNG_RECOVERY */
 /**
   * @}
   */
@@ -460,7 +473,7 @@ This subsection provides a CCB Reset API :
 
 /**
   * @brief Reset the ongoing operation and clear stored SAES and PKA data.
-  * @param  hccb       Pointer to a \ref hal_ccb_handle_t.
+  * @param  hccb              Pointer to a @ref hal_ccb_handle_t.
   */
 void HAL_CCB_Reset(hal_ccb_handle_t *hccb)
 {
@@ -490,10 +503,11 @@ This subsection provides a set of functions to wrap the clear symmetric key:
   * @param  p_in_user_key             Pointer to the clear AES key
   * @param  p_wrapping_key_context    Pointer to a @ref hal_ccb_wrapping_sw_key_context_t structure
   * @param  p_out_wrapped_user_key    Pointer to the wrapped user key
-  * @retval HAL_INVALID_PARAM         Invalid param return when the CCB handle is NULL \n
-  *                                   Invalid param return when input user key pointer is NULL \n
-  *                                   Invalid param return when wrapping key context pointer is NULL \n
-  *                                   Invalid param return when output wrapped user key pointer is NULL \n
+  * @retval HAL_INVALID_PARAM         The function return an Invalid param in the following cases: \n
+  *                                   - The CCB handle is NULL \n
+  *                                   - Input user key pointer is NULL \n
+  *                                   - Wrapping key context pointer is NULL \n
+  *                                   - Output wrapped user key pointer is NULL \n
   * @retval HAL_ERROR                 Error detected
   * @retval HAL_OK                    Operation completed successfully
   */
@@ -561,10 +575,11 @@ hal_status_t HAL_CCB_ECDSA_WrapSymmetricKey(hal_ccb_handle_t *hccb, const uint32
   * @param  p_in_user_key           Pointer to the clear AES key
   * @param  p_wrapping_key_context  Pointer to the wrapping key context
   * @param  p_out_wrapped_user_key  Pointer to the wrapped user key
-  * @retval HAL_INVALID_PARAM       Invalid param return when the CCB handle is NULL \n
-                                    Invalid param return when input user key is NULL \n
-                                    Invalid param return when wrapping key context pointer key is NULL \n
-                                    Invalid param return when output wrapped user key pointer is NULL \n
+  * @retval HAL_INVALID_PARAM       The function return an Invalid param in the following cases: \n
+                                    - The CCB handle is NULL \n
+                                    - Input user key is NULL \n
+                                    - Wrapping key context pointer key is NULL \n
+                                    - Output wrapped user key pointer is NULL \n
   * @retval HAL_ERROR               Error detected
   * @retval HAL_OK                  Operation completed successfully
   */
@@ -632,11 +647,12 @@ hal_status_t HAL_CCB_ECC_WrapSymmetricKey(hal_ccb_handle_t *hccb, const uint32_t
   * @param  p_in_user_key             Pointer to the clear AES key
   * @param  p_wrapping_key_context    Pointer to a @ref hal_ccb_wrapping_sw_key_context_t structure
   * @param  p_out_wrapped_user_key    Pointer to the wrapped user key
-  * @retval HAL_INVALID_PARAM         Invalid param return when the CCB handle is NULL \n
-                                      Invalid param return when the CCB handle is NULL \n
-                                      Invalid param return when input user key is NULL \n
-                                      Invalid param return when wrapping key context pointer key is NULL \n
-                                      Invalid param return when output wrapped user key pointer is NULL \n
+  * @retval HAL_INVALID_PARAM         The function return an Invalid param in the following cases: \n
+                                      - The CCB handle is NULL \n
+                                      - The CCB handle is NULL \n
+                                      - Input user key is NULL \n
+                                      - Wrapping key context pointer key is NULL \n
+                                      - Output wrapped user key pointer is NULL \n
   * @retval HAL_ERROR                 Error detected
   * @retval HAL_OK                    Operation completed successfully
   */
@@ -739,26 +755,25 @@ RSA operations:
   * @param  p_wrapping_key_context          Pointer to @ref hal_ccb_wrapping_sw_key_context_t structure
   * @param  p_in_wrapped_user_key           Pointer to the wrapped user key
   * @param  p_out_wrapped_private_key_blob  Pointer to @ref hal_ccb_ecdsa_key_blob_t structure
-  * @retval HAL_INVALID_PARAM               Invalid param return when the CCB handle is NULL \n
-                                            Invalid param return when input curve parameters pointer is NULL \n
-                                            Invalid param return when curve parameter abs_coef_a pointer is NULL \n
-                                            Invalid param return when curve parameter coef_b pointer is NULL \n
-                                            Invalid param return when curve parameter modulus pointer is NULL \n
-                                            Invalid param return when curve parameter prime_order pointer is NULL \n
-                                            Invalid param return when curve parameter point_x pointer is NULL \n
-                                            Invalid param return when curve parameter point_y pointer is NULL \n
-                                            Invalid param return when curve parameter prime_order_size_byte is zero \n
-                                            Invalid param return when curve parameter modulus_size_byte is zero \n
-                                            Invalid param return when curve parameter coef_sign_a is zero \n
-                                            Invalid param return when wrapping key context pointer key is NULL \n
-                                            Invalid param return when provided init vector pointer is NULL \n
-                                            Invalid param return when provided key size pointer is NULL \n
-                                            Invalid param return when input wrapped user key pointer is NULL \n
-                                            Invalid param return when output wrapped private key blob pointer is NULL \n
-                                            Invalid param return when output wrapped private key blob IV pointer is
-                                            NULL \n
-                                            Invalid param return when output wrapped private key blob tag pointer is \n
-                                            NULL
+  * @retval HAL_INVALID_PARAM               The function return an Invalid param in the following cases: \n
+                                            - The CCB handle is NULL \n
+                                            - Input curve parameters pointer is NULL \n
+                                            - Curve parameter abs_coef_a pointer is NULL \n
+                                            - Curve parameter coef_b pointer is NULL \n
+                                            - Curve parameter modulus pointer is NULL \n
+                                            - Curve parameter prime_order pointer is NULL \n
+                                            - Curve parameter point_x pointer is NULL \n
+                                            - Curve parameter point_y pointer is NULL \n
+                                            - Curve parameter prime_order_size_byte is zero \n
+                                            - Curve parameter modulus_size_byte is zero \n
+                                            - Curve parameter coef_sign_a is zero \n
+                                            - Wrapping key context pointer key is NULL \n
+                                            - Provided init vector pointer is NULL \n
+                                            - Provided key size pointer is NULL \n
+                                            - Input wrapped user key pointer is NULL \n
+                                            - Output wrapped private key blob pointer is NULL \n
+                                            - Output wrapped private key blob IV pointer is NULL \n
+                                            - Output wrapped private key blob tag pointer is NULL \n
   * @retval HAL_ERROR                       Error detected
   * @retval HAL_OK                          Operation completed successfully
   */
@@ -770,16 +785,16 @@ hal_status_t HAL_CCB_ECDSA_SW_WrapPrivateKey(hal_ccb_handle_t *hccb,
                                              hal_ccb_ecdsa_key_blob_t *p_out_wrapped_private_key_blob)
 {
 
-  uint32_t *p_temp_iv = NULL;
-  uint32_t *p_temp_tag = NULL;
-  uint32_t *p_temp_wrapped_key = NULL;
-  __IO const uint32_t *pka_ram_u32 = NULL;
+  uint32_t *p_tmp_iv = NULL;
+  uint32_t *p_tmp_tag = NULL;
+  uint32_t *p_tmp_wrapped_key = NULL;
+  __IOM const uint32_t *pka_ram_u32 = NULL;
   uint32_t operand_size = 0U;
   uint32_t cipherkey_size = 0U;
   uint32_t offset_pool_buff = 0U;
   uint32_t random32 = 0U;
   volatile uint16_t random_count = 0U;
-  uint16_t temp_random_count = 0U;
+  uint16_t tmp_random_count = 0U;
   uint16_t randoms[3] = {0U};
   uint8_t *p_base_pool_buff = NULL;
   CCB_TypeDef *p_ccb_instance = NULL;
@@ -879,16 +894,16 @@ hal_status_t HAL_CCB_ECDSA_SW_WrapPrivateKey(hal_ccb_handle_t *hccb,
   offset_pool_buff += p_in_curve_param->modulus_size_byte;
   signature.p_s_sign = &p_base_pool_buff[offset_pool_buff];
   offset_pool_buff += p_in_curve_param->modulus_size_byte;
-  p_temp_iv = (uint32_t *)(void *)&p_base_pool_buff[offset_pool_buff];
+  p_tmp_iv = (uint32_t *)(void *)&p_base_pool_buff[offset_pool_buff];
   offset_pool_buff += 4U * sizeof(uint32_t);
-  p_temp_tag = (uint32_t *)(void *)&p_base_pool_buff[offset_pool_buff];
+  p_tmp_tag = (uint32_t *)(void *)&p_base_pool_buff[offset_pool_buff];
   offset_pool_buff += 4U * sizeof(uint32_t);
-  p_temp_wrapped_key = (uint32_t *)(void *)&p_base_pool_buff[offset_pool_buff];
+  p_tmp_wrapped_key = (uint32_t *)(void *)&p_base_pool_buff[offset_pool_buff];
   offset_pool_buff += cipherkey_size * CCB_BLOCK_SIZE_WORD;
   random32 = (((uint32_t)randoms[1] << 16U) | (uint32_t)randoms[0]);
 
-  if (CCB_ECDSA_SignBlobCreation(p_ccb_instance, p_in_curve_param, &sw_ctx, p_in_clear_private_key, p_temp_iv,
-                                 p_temp_tag, p_temp_wrapped_key, random32,
+  if (CCB_ECDSA_SignBlobCreation(p_ccb_instance, p_in_curve_param, &sw_ctx, p_in_clear_private_key, p_tmp_iv,
+                                 p_tmp_tag, p_tmp_wrapped_key, random32,
                                  (uint8_t *)p_out_wrapped_private_key_blob->p_wrapped_key, &signature,
                                  CCB_ECDSA_SIGN_CPU_BLOB_CREATION) != HAL_OK)
   {
@@ -906,7 +921,7 @@ hal_status_t HAL_CCB_ECDSA_SW_WrapPrivateKey(hal_ccb_handle_t *hccb,
   offset_pool_buff += p_in_curve_param->modulus_size_byte;
   public_key_out.p_point_y = &p_base_pool_buff[offset_pool_buff];
 
-  if (CCB_ECDSA_ComputePublicKey(p_ccb_instance, p_in_curve_param, &sw_ctx, p_temp_iv, p_temp_tag, p_temp_wrapped_key,
+  if (CCB_ECDSA_ComputePublicKey(p_ccb_instance, p_in_curve_param, &sw_ctx, p_tmp_iv, p_tmp_tag, p_tmp_wrapped_key,
                                  random32, &public_key_out) != HAL_OK)
   {
     CCB_ErasePoolBuffer(p_base_pool_buff, p_in_curve_param->ecdsa_pool_buffer.buff_size_byte);
@@ -937,17 +952,18 @@ hal_status_t HAL_CCB_ECDSA_SW_WrapPrivateKey(hal_ccb_handle_t *hccb,
     return HAL_ERROR;
   }
 
-  /* Random wait */
+  /* Random wait: introduce a random-duration loop to complicate timing/fault attacks.
+     The loop count is derived from TRNG and then checked to detect potential fault injection. */
   for (uint16_t j = 0U; j < randoms[0]; ++j)
   {
     random_count++;
   }
 
-  pka_ram_u32 = (__IO uint32_t *)PKA->RAM;
-  temp_random_count = random_count;
+  pka_ram_u32 = (__IOM uint32_t *)PKA->RAM;
+  tmp_random_count = random_count;
 
   /* Check if it is valid signature and improve robustness against intrusion (intentional) */
-  if ((pka_ram_u32[PKA_ECDSA_VERIF_OUT_RESULT] != CCB_PKA_RESULT_OK) || (temp_random_count != randoms[0]))
+  if ((pka_ram_u32[PKA_ECDSA_VERIF_OUT_RESULT] != CCB_PKA_RESULT_OK) || (tmp_random_count != randoms[0]))
   {
     CCB_ErasePoolBuffer(p_base_pool_buff, p_in_curve_param->ecdsa_pool_buffer.buff_size_byte);
     hccb->global_state = HAL_CCB_STATE_IDLE;
@@ -963,16 +979,17 @@ hal_status_t HAL_CCB_ECDSA_SW_WrapPrivateKey(hal_ccb_handle_t *hccb,
     return HAL_ERROR;
   }
 
-  /* Random wait */
+  /* Random wait: introduce a random-duration loop to complicate timing/fault attacks.
+     The loop count is derived from TRNG and then checked to detect potential fault injection. */
   for (uint16_t j = 0U; j < randoms[1]; ++j)
   {
     random_count++;
   }
 
-  temp_random_count = random_count;
+  tmp_random_count = random_count;
 
   /* Check if it is valid signature and improve robustness against intrusion (intentional) */
-  if ((pka_ram_u32[PKA_ECDSA_VERIF_OUT_RESULT] != CCB_PKA_RESULT_OK) || (temp_random_count != randoms[1]))
+  if ((pka_ram_u32[PKA_ECDSA_VERIF_OUT_RESULT] != CCB_PKA_RESULT_OK) || (tmp_random_count != randoms[1]))
   {
     CCB_ErasePoolBuffer(p_base_pool_buff, p_in_curve_param->ecdsa_pool_buffer.buff_size_byte);
     hccb->global_state = HAL_CCB_STATE_IDLE;
@@ -988,16 +1005,17 @@ hal_status_t HAL_CCB_ECDSA_SW_WrapPrivateKey(hal_ccb_handle_t *hccb,
     return HAL_ERROR;
   }
 
-  /* Random wait */
+  /* Random wait: introduce a random-duration loop to complicate timing/fault attacks.
+     The loop count is derived from TRNG and then checked to detect potential fault injection. */
   for (uint16_t j = 0U; j < randoms[2]; ++j)
   {
     random_count++;
   }
 
-  temp_random_count = random_count;
+  tmp_random_count = random_count;
 
   /* Check if it is valid signature and improve robustness against intrusion (intentional) */
-  if ((pka_ram_u32[PKA_ECDSA_VERIF_OUT_RESULT] != CCB_PKA_RESULT_OK) || (temp_random_count != randoms[2]))
+  if ((pka_ram_u32[PKA_ECDSA_VERIF_OUT_RESULT] != CCB_PKA_RESULT_OK) || (tmp_random_count != randoms[2]))
   {
     CCB_ErasePoolBuffer(p_base_pool_buff, p_in_curve_param->ecdsa_pool_buffer.buff_size_byte);
     hccb->global_state = HAL_CCB_STATE_IDLE;
@@ -1009,10 +1027,10 @@ hal_status_t HAL_CCB_ECDSA_SW_WrapPrivateKey(hal_ccb_handle_t *hccb,
   {
     if (count < CCB_BLOCK_SIZE_WORD)
     {
-      p_out_wrapped_private_key_blob->p_iv[count] = (p_temp_iv[count] ^ random32);
-      p_out_wrapped_private_key_blob->p_tag[count] = (p_temp_tag[count] ^ random32);
+      p_out_wrapped_private_key_blob->p_iv[count] = (p_tmp_iv[count] ^ random32);
+      p_out_wrapped_private_key_blob->p_tag[count] = (p_tmp_tag[count] ^ random32);
     }
-    p_out_wrapped_private_key_blob->p_wrapped_key[count] = (p_temp_wrapped_key[count] ^ random32);
+    p_out_wrapped_private_key_blob->p_wrapped_key[count] = (p_tmp_wrapped_key[count] ^ random32);
   }
 
   CCB_ErasePoolBuffer(p_base_pool_buff, p_in_curve_param->ecdsa_pool_buffer.buff_size_byte);
@@ -1028,26 +1046,25 @@ hal_status_t HAL_CCB_ECDSA_SW_WrapPrivateKey(hal_ccb_handle_t *hccb,
   * @param  p_wrapping_key_context          Pointer to a @ref hal_ccb_wrapping_sw_key_context_t structure
   * @param  p_in_wrapped_user_key           Pointer to the wrapped user key
   * @param  p_out_wrapped_private_key_blob  Pointer to a @ref hal_ccb_ecdsa_key_blob_t structure
-  * @retval HAL_INVALID_PARAM               Invalid param return when the CCB handle is NULL \n
-                                            Invalid param return when input curve parameters pointer is NULL \n
-                                            Invalid param return when curve parameter abs_coef_a pointer is NULL \n
-                                            Invalid param return when curve parameter coef_b pointer is NULL \n
-                                            Invalid param return when curve parameter modulus pointer is NULL \n
-                                            Invalid param return when curve parameter prime_order pointer is NULL \n
-                                            Invalid param return when curve parameter point_x pointer is NULL \n
-                                            Invalid param return when curve parameter point_y pointer is NULL \n
-                                            Invalid param return when curve parameter prime_order_size_byte is zero \n
-                                            Invalid param return when curve parameter modulus_size_byte is zero \n
-                                            Invalid param return when curve parameter coef_sign_a is zero \n
-                                            Invalid param return when wrapping key context pointer key is NULL \n
-                                            Invalid param return when provided init vector pointer is NULL \n
-                                            Invalid param return when provided key size pointer is NULL \n
-                                            Invalid param return when input wrapped user key pointer is NULL \n
-                                            Invalid param return when output wrapped private key blob pointer is NULL \n
-                                            Invalid param return when output wrapped private key blob IV pointer is \n
-                                            NULL \n
-                                            Invalid param return when output wrapped private key blob tag pointer is \n
-                                            NULL \n
+  * @retval HAL_INVALID_PARAM               The function return an Invalid param in the following cases: \n
+                                            - The CCB handle is NULL \n
+                                            - Input curve parameters pointer is NULL \n
+                                            - Curve parameter abs_coef_a pointer is NULL \n
+                                            - Curve parameter coef_b pointer is NULL \n
+                                            - Curve parameter modulus pointer is NULL \n
+                                            - Curve parameter prime_order pointer is NULL \n
+                                            - Curve parameter point_x pointer is NULL \n
+                                            - Curve parameter point_y pointer is NULL \n
+                                            - Curve parameter prime_order_size_byte is zero \n
+                                            - Curve parameter modulus_size_byte is zero \n
+                                            - Curve parameter coef_sign_a is zero \n
+                                            - Wrapping key context pointer key is NULL \n
+                                            - Provided init vector pointer is NULL \n
+                                            - Provided key size pointer is NULL \n
+                                            - Input wrapped user key pointer is NULL \n
+                                            - Output wrapped private key blob pointer is NULL \n
+                                            - Output wrapped private key blob IV pointer is NULL \n
+                                            - Output wrapped private key blob tag pointer is NULL \n
   * @retval HAL_ERROR                       Error detected
   * @retval HAL_OK                          Operation completed successfully
   */
@@ -1058,16 +1075,16 @@ hal_status_t HAL_CCB_ECDSA_SW_GenerateWrapPrivateKey(hal_ccb_handle_t *hccb,
                                                      hal_ccb_ecdsa_key_blob_t *p_out_wrapped_private_key_blob)
 {
 
-  uint32_t *p_temp_iv = NULL;
-  uint32_t *p_temp_tag = NULL;
-  uint32_t *p_temp_wrapped_key = NULL;
-  __IO const uint32_t *pka_ram_u32 = NULL;
+  uint32_t *p_tmp_iv = NULL;
+  uint32_t *p_tmp_tag = NULL;
+  uint32_t *p_tmp_wrapped_key = NULL;
+  __IOM const uint32_t *pka_ram_u32 = NULL;
   uint32_t operand_size = 0U;
   uint32_t cipherkey_size = 0U;
   uint32_t offset_pool_buff = 0U;
   uint32_t random32 = 0U;
   volatile uint16_t random_count = 0U;
-  uint16_t temp_random_count = 0U;
+  uint16_t tmp_random_count = 0U;
   uint16_t randoms[3] = {0U};
   uint8_t *p_base_pool_buff = NULL;
   CCB_TypeDef *p_ccb_instance = NULL;
@@ -1166,16 +1183,16 @@ hal_status_t HAL_CCB_ECDSA_SW_GenerateWrapPrivateKey(hal_ccb_handle_t *hccb,
   offset_pool_buff += p_in_curve_param->modulus_size_byte;
   signature.p_s_sign = &p_base_pool_buff[offset_pool_buff];
   offset_pool_buff += p_in_curve_param->modulus_size_byte;
-  p_temp_iv = (uint32_t *)(void *)&p_base_pool_buff[offset_pool_buff];
+  p_tmp_iv = (uint32_t *)(void *)&p_base_pool_buff[offset_pool_buff];
   offset_pool_buff += 4U * sizeof(uint32_t);
-  p_temp_tag = (uint32_t *)(void *)&p_base_pool_buff[offset_pool_buff];
+  p_tmp_tag = (uint32_t *)(void *)&p_base_pool_buff[offset_pool_buff];
   offset_pool_buff += 4U * sizeof(uint32_t);
-  p_temp_wrapped_key = (uint32_t *)(void *)&p_base_pool_buff[offset_pool_buff];
+  p_tmp_wrapped_key = (uint32_t *)(void *)&p_base_pool_buff[offset_pool_buff];
   offset_pool_buff += cipherkey_size * CCB_BLOCK_SIZE_WORD;
   random32 = (((uint32_t)randoms[1] << 16U) | (uint32_t)randoms[0]);
 
-  if (CCB_ECDSA_SignBlobCreation(p_ccb_instance, p_in_curve_param, &sw_ctx, NULL, p_temp_iv, p_temp_tag,
-                                 p_temp_wrapped_key, random32,
+  if (CCB_ECDSA_SignBlobCreation(p_ccb_instance, p_in_curve_param, &sw_ctx, NULL, p_tmp_iv, p_tmp_tag,
+                                 p_tmp_wrapped_key, random32,
                                  (uint8_t *)p_out_wrapped_private_key_blob->p_wrapped_key, &signature,
                                  CCB_ECDSA_SIGN_RNG_BLOB_CREATION) != HAL_OK)
   {
@@ -1193,7 +1210,7 @@ hal_status_t HAL_CCB_ECDSA_SW_GenerateWrapPrivateKey(hal_ccb_handle_t *hccb,
   offset_pool_buff += p_in_curve_param->modulus_size_byte;
   public_key_out.p_point_y = &p_base_pool_buff[offset_pool_buff];
 
-  if (CCB_ECDSA_ComputePublicKey(p_ccb_instance, p_in_curve_param, &sw_ctx, p_temp_iv, p_temp_tag, p_temp_wrapped_key,
+  if (CCB_ECDSA_ComputePublicKey(p_ccb_instance, p_in_curve_param, &sw_ctx, p_tmp_iv, p_tmp_tag, p_tmp_wrapped_key,
                                  random32, &public_key_out) != HAL_OK)
   {
     CCB_ErasePoolBuffer(p_base_pool_buff, p_in_curve_param->ecdsa_pool_buffer.buff_size_byte);
@@ -1224,17 +1241,18 @@ hal_status_t HAL_CCB_ECDSA_SW_GenerateWrapPrivateKey(hal_ccb_handle_t *hccb,
     return HAL_ERROR;
   }
 
-  /* Random wait */
+  /* Random wait: introduce a random-duration loop to complicate timing/fault attacks.
+     The loop count is derived from TRNG and then checked to detect potential fault injection. */
   for (uint16_t j = 0U; j < randoms[0]; ++j)
   {
     random_count++;
   }
 
-  pka_ram_u32 = (__IO uint32_t *)PKA->RAM;
-  temp_random_count = random_count;
+  pka_ram_u32 = (__IOM uint32_t *)PKA->RAM;
+  tmp_random_count = random_count;
 
   /* Check if it is valid signature and improve robustness against intrusion (intentional) */
-  if ((pka_ram_u32[PKA_ECDSA_VERIF_OUT_RESULT] != CCB_PKA_RESULT_OK) || (temp_random_count != randoms[0]))
+  if ((pka_ram_u32[PKA_ECDSA_VERIF_OUT_RESULT] != CCB_PKA_RESULT_OK) || (tmp_random_count != randoms[0]))
   {
     CCB_ErasePoolBuffer(p_base_pool_buff, p_in_curve_param->ecdsa_pool_buffer.buff_size_byte);
     hccb->global_state = HAL_CCB_STATE_IDLE;
@@ -1250,16 +1268,17 @@ hal_status_t HAL_CCB_ECDSA_SW_GenerateWrapPrivateKey(hal_ccb_handle_t *hccb,
     return HAL_ERROR;
   }
 
-  /* Random wait */
+  /* Random wait: introduce a random-duration loop to complicate timing/fault attacks.
+     The loop count is derived from TRNG and then checked to detect potential fault injection. */
   for (uint16_t j = 0U; j < randoms[1]; ++j)
   {
     random_count++;
   }
 
-  temp_random_count = random_count;
+  tmp_random_count = random_count;
 
   /* Check if it is valid signature and improve robustness against intrusion (intentional) */
-  if ((pka_ram_u32[PKA_ECDSA_VERIF_OUT_RESULT] != CCB_PKA_RESULT_OK) || (temp_random_count != randoms[1]))
+  if ((pka_ram_u32[PKA_ECDSA_VERIF_OUT_RESULT] != CCB_PKA_RESULT_OK) || (tmp_random_count != randoms[1]))
   {
     CCB_ErasePoolBuffer(p_base_pool_buff, p_in_curve_param->ecdsa_pool_buffer.buff_size_byte);
     hccb->global_state = HAL_CCB_STATE_IDLE;
@@ -1275,16 +1294,17 @@ hal_status_t HAL_CCB_ECDSA_SW_GenerateWrapPrivateKey(hal_ccb_handle_t *hccb,
     return HAL_ERROR;
   }
 
-  /* Random wait */
+  /* Random wait: introduce a random-duration loop to complicate timing/fault attacks.
+     The loop count is derived from TRNG and then checked to detect potential fault injection. */
   for (uint16_t j = 0U; j < randoms[2]; ++j)
   {
     random_count++;
   }
 
-  temp_random_count = random_count;
+  tmp_random_count = random_count;
 
   /* Check if it is valid signature and improve robustness against intrusion (intentional) */
-  if ((pka_ram_u32[PKA_ECDSA_VERIF_OUT_RESULT] != CCB_PKA_RESULT_OK) || (temp_random_count != randoms[2]))
+  if ((pka_ram_u32[PKA_ECDSA_VERIF_OUT_RESULT] != CCB_PKA_RESULT_OK) || (tmp_random_count != randoms[2]))
   {
     CCB_ErasePoolBuffer(p_base_pool_buff, p_in_curve_param->ecdsa_pool_buffer.buff_size_byte);
     hccb->global_state = HAL_CCB_STATE_IDLE;
@@ -1296,10 +1316,10 @@ hal_status_t HAL_CCB_ECDSA_SW_GenerateWrapPrivateKey(hal_ccb_handle_t *hccb,
   {
     if (count < CCB_BLOCK_SIZE_WORD)
     {
-      p_out_wrapped_private_key_blob->p_iv[count] = (p_temp_iv[count] ^ random32);
-      p_out_wrapped_private_key_blob->p_tag[count] = (p_temp_tag[count] ^ random32);
+      p_out_wrapped_private_key_blob->p_iv[count] = (p_tmp_iv[count] ^ random32);
+      p_out_wrapped_private_key_blob->p_tag[count] = (p_tmp_tag[count] ^ random32);
     }
-    p_out_wrapped_private_key_blob->p_wrapped_key[count] = (p_temp_wrapped_key[count] ^ random32);
+    p_out_wrapped_private_key_blob->p_wrapped_key[count] = (p_tmp_wrapped_key[count] ^ random32);
   }
 
   CCB_ErasePoolBuffer(p_base_pool_buff, p_in_curve_param->ecdsa_pool_buffer.buff_size_byte);
@@ -1318,31 +1338,30 @@ hal_status_t HAL_CCB_ECDSA_SW_GenerateWrapPrivateKey(hal_ccb_handle_t *hccb,
   * @param  p_in_hash                      Pointer to the hash message
   * @param  hash_size                      Specify the size of the hash message
   * @param  p_out_signature                pointer to a @ref hal_ccb_ecdsa_sign_t structure
-  * @retval HAL_INVALID_PARAM              Invalid param return when the CCB handle is NULL \n
-                                           Invalid param return when input curve parameters pointer is NULL \n
-                                           Invalid param return when curve parameter abs_coef_a pointer is NULL \n
-                                           Invalid param return when curve parameter coef_b pointer is NULL \n
-                                           Invalid param return when curve parameter modulus pointer is NULL \n
-                                           Invalid param return when curve parameter prime_order pointer is NULL \n
-                                           Invalid param return when curve parameter point_x pointer is NULL \n
-                                           Invalid param return when curve parameter point_y pointer is NULL \n
-                                           Invalid param return when curve parameter prime_order_size_byte is zero \n
-                                           Invalid param return when curve parameter modulus_size_byte is zero \n
-                                           Invalid param return when curve parameter coef_sign_a is zero \n
-                                           Invalid param return when wrapping key context pointer key is NULL \n
-                                           Invalid param return when provided init vector pointer is NULL \n
-                                           Invalid param return when provided key size pointer is NULL \n
-                                           Invalid param return when input wrapped user key pointer is NULL \n
-                                           Invalid param return when input wrapped private key blob pointer is NULL \n
-                                           Invalid param return when input wrapped private key blob IV pointer is \n
-                                           NULL \n
-                                           Invalid param return when input wrapped private key blob tag pointer is \n
-                                           NULL \n
-                                           Invalid param return when input hash pointer is NULL \n
-                                           Invalid param return when hash size pointer is zero \n
-                                           Invalid param return when output signature pointer is NULL \n
-                                           Invalid param return when output signature r_sign pointer is NULL \n
-                                           Invalid param return when output signature s_sign pointer is NULL \n
+  * @retval HAL_INVALID_PARAM              The function return an Invalid param in the following cases: \n
+                                           - The CCB handle is NULL \n
+                                           - Input curve parameters pointer is NULL \n
+                                           - Curve parameter abs_coef_a pointer is NULL \n
+                                           - Curve parameter coef_b pointer is NULL \n
+                                           - Curve parameter modulus pointer is NULL \n
+                                           - Curve parameter prime_order pointer is NULL \n
+                                           - Curve parameter point_x pointer is NULL \n
+                                           - Curve parameter point_y pointer is NULL \n
+                                           - Curve parameter prime_order_size_byte is zero \n
+                                           - Curve parameter modulus_size_byte is zero \n
+                                           - Curve parameter coef_sign_a is zero \n
+                                           - Wrapping key context pointer key is NULL \n
+                                           - Provided init vector pointer is NULL \n
+                                           - Provided key size pointer is NULL \n
+                                           - Input wrapped user key pointer is NULL \n
+                                           - Input wrapped private key blob pointer is NULL \n
+                                           - Input wrapped private key blob IV pointer is NULL \n
+                                           - Input wrapped private key blob tag pointer is NULL \n
+                                           - Input hash pointer is NULL \n
+                                           - Hash size pointer is zero \n
+                                           - Output signature pointer is NULL \n
+                                           - Output signature r_sign pointer is NULL \n
+                                           - Output signature s_sign pointer is NULL \n
   * @retval HAL_ERROR                      Error detected
   * @retval HAL_OK                         Operation completed successfully
   */
@@ -1447,32 +1466,30 @@ hal_status_t HAL_CCB_ECDSA_SW_Sign(hal_ccb_handle_t *hccb, const hal_ccb_ecdsa_c
   * @param  p_in_wrapped_user_key          Pointer to the wrapped user key
   * @param  p_in_wrapped_private_key_blob  Pointer to a @ref hal_ccb_ecdsa_key_blob_t structure
   * @param  p_out_public_key               Pointer to a @ref hal_ccb_ecc_point_t structure
-  * @retval HAL_INVALID_PARAM              Invalid param return when the CCB handle is NULL \n
-                                           Invalid param return when input curve parameters pointer is NULL \n
-                                           Invalid param return when curve parameter abs_coef_a pointer is NULL \n
-                                           Invalid param return when curve parameter coef_b pointer is NULL \n
-                                           Invalid param return when curve parameter modulus pointer is NULL \n
-                                           Invalid param return when curve parameter prime_order pointer is NULL \n
-                                           Invalid param return when curve parameter point_x pointer is NULL \n
-                                           Invalid param return when curve parameter point_y pointer is NULL \n
-                                           Invalid param return when curve parameter prime_order_size_byte is zero \n
-                                           Invalid param return when curve parameter modulus_size_byte is zero \n
-                                           Invalid param return when curve parameter coef_sign_a is zero \n
-                                           Invalid param return when wrapping key context pointer key is NULL \n
-                                           Invalid param return when provided init vector pointer is NULL \n
-                                           Invalid param return when provided key size pointer is NULL \n
-                                           Invalid param return when input wrapped user key pointer is NULL \n
-                                           Invalid param return when input wrapped private key blob pointer is NULL \n
-                                           Invalid param return when input wrapped private key blob IV pointer is \n
-                                           NULL \n
-                                           Invalid param return when input wrapped private key blob tag pointer is \n
-                                           NULL \n
-                                           Invalid param return when input wrapped private key blob wrapped key \n
-                                           pointer is NULL \n
-                                           Invalid param return when input hash pointer is NULL \n
-                                           Invalid param return when output public key point_x pointer is NULL \n
-                                           Invalid param return when output public key point_y pointer is NULL \n
-                                           Invalid param return when output public key pointer is NULL \n
+  * @retval HAL_INVALID_PARAM              The function return an Invalid param in the following cases: \n
+                                           - The CCB handle is NULL \n
+                                           - Input curve parameters pointer is NULL \n
+                                           - Curve parameter abs_coef_a pointer is NULL \n
+                                           - Curve parameter coef_b pointer is NULL \n
+                                           - Curve parameter modulus pointer is NULL \n
+                                           - Curve parameter prime_order pointer is NULL \n
+                                           - Curve parameter point_x pointer is NULL \n
+                                           - Curve parameter point_y pointer is NULL \n
+                                           - Curve parameter prime_order_size_byte is zero \n
+                                           - Curve parameter modulus_size_byte is zero \n
+                                           - Curve parameter coef_sign_a is zero \n
+                                           - Wrapping key context pointer key is NULL \n
+                                           - Provided init vector pointer is NULL \n
+                                           - Provided key size pointer is NULL \n
+                                           - Input wrapped user key pointer is NULL \n
+                                           - Input wrapped private key blob pointer is NULL \n
+                                           - Input wrapped private key blob IV pointer is NULL \n
+                                           - Input wrapped private key blob tag pointer is NULL \n
+                                           - Input wrapped private key blob wrapped key pointer is NULL \n
+                                           - Input hash pointer is NULL \n
+                                           - Output public key point_x pointer is NULL \n
+                                           - Output public key point_y pointer is NULL \n
+                                           - Output public key pointer is NULL \n
   * @retval HAL_ERROR                      Error detected
   * @retval HAL_OK                         Operation completed successfully
   */
@@ -1572,24 +1589,22 @@ hal_status_t HAL_CCB_ECDSA_SW_ComputePublicKey(hal_ccb_handle_t *hccb,
   * @param  p_wrapping_key_context          Pointer to a @ref hal_ccb_wrapping_sw_key_context_t structure
   * @param  p_in_wrapped_user_key           Pointer to the wrapped user key
   * @param  p_out_wrapped_private_key_blob  Pointer to @ref hal_ccb_ecc_mul_key_blob_t structure
-  * @retval HAL_INVALID_PARAM               Invalid param return when the CCB handle is NULL \n
-                                            Invalid param return when curve parameter abs_coef_a pointer is NULL \n
-                                            Invalid param return when curve parameter coef_b pointer is NULL \n
-                                            Invalid param return when curve parameter modulus pointer is NULL \n
-                                            Invalid param return when curve parameter prime_order pointer is NULL \n
-                                            Invalid param return when curve parameter point_x pointer is NULL \n
-                                            Invalid param return when curve parameter point_y pointer is NULL \n
-                                            Invalid param return when curve parameter prime_order_size_byte is zero \n
-                                            Invalid param return when curve parameter modulus_size_byte is zero \n
-                                            Invalid param return when curve parameter coef_sign_a is zero \n
-                                            Invalid param return when input clear private key pointer is NULL \n
-                                            Invalid param return when output wrapped private key blob \n
-                                            Invalid param return when output wrapped private key blob pointer is \n
-                                            NULL \n
-                                            Invalid param return when output wrapped private key blob IV pointer is \n
-                                            NULL \n
-                                            Invalid param return when output wrapped private key blob tag pointer \n
-                                            is NULL \n
+  * @retval HAL_INVALID_PARAM               The function return an Invalid param in the following cases: \n
+                                            - The CCB handle is NULL \n
+                                            - Curve parameter abs_coef_a pointer is NULL \n
+                                            - Curve parameter coef_b pointer is NULL \n
+                                            - Curve parameter modulus pointer is NULL \n
+                                            - Curve parameter prime_order pointer is NULL \n
+                                            - Curve parameter point_x pointer is NULL \n
+                                            - Curve parameter point_y pointer is NULL \n
+                                            - Curve parameter prime_order_size_byte is zero \n
+                                            - Curve parameter modulus_size_byte is zero \n
+                                            - Curve parameter coef_sign_a is zero \n
+                                            - Input clear private key pointer is NULL \n
+                                            - Output wrapped private key blob \n
+                                            - Output wrapped private key blob pointer is NULL \n
+                                            - Output wrapped private key blob IV pointer is NULL \n
+                                            - Output wrapped private key blob tag pointer is NULL \n
   * @retval HAL_ERROR                       Error detected
   * @retval HAL_OK                          Operation completed successfully
   */
@@ -1602,18 +1617,19 @@ hal_status_t HAL_CCB_ECC_SW_WrapPrivateKey(hal_ccb_handle_t *hccb,
 {
 
   uint32_t *p_scalar_mul_y = NULL;
-  uint32_t *p_temp_iv = NULL;
-  uint32_t *p_temp_tag = NULL;
-  uint32_t *p_temp_wrapped_key = NULL;
-  __IO const uint32_t *pka_ram_u32 = NULL;
+  uint32_t *p_tmp_iv = NULL;
+  uint32_t *p_tmp_tag = NULL;
+  uint32_t *p_tmp_wrapped_key = NULL;
+  __IOM const uint32_t *pka_ram_u32 = NULL;
   uint32_t operand_size = 0U;
   uint32_t cipherkey_size = 0U;
   uint32_t offset_pool_buff = 0U;
   uint32_t random32 = 0U;
   uint32_t modulus_words_count = 0U;
   uint16_t randoms[3] = {0U};
+  uint32_t diff = 0U;
   volatile uint16_t random_count = 0U;
-  uint16_t temp_random_count = 0U;
+  uint16_t tmp_random_count = 0U;
   uint8_t *p_base_pool_buff = NULL;
   CCB_TypeDef *p_ccb_instance = NULL;
   ccb_sw_unwrap_key_context_t sw_ctx = {CCB_KEY_TYPE_SOFTWARE, p_wrapping_key_context, p_in_wrapped_user_key};
@@ -1702,15 +1718,15 @@ hal_status_t HAL_CCB_ECC_SW_WrapPrivateKey(hal_ccb_handle_t *hccb,
   cipherkey_size = ((operand_size & 3U) != 0U) ? (operand_size - 2U) : operand_size;
   p_scalar_mul_y = (uint32_t *)(void *)&p_base_pool_buff[offset_pool_buff];
   offset_pool_buff += ((p_in_curve_param->modulus_size_byte + 3U) >> 2U) * CCB_BLOCK_SIZE_WORD;
-  p_temp_iv = (uint32_t *)(void *)&p_base_pool_buff[offset_pool_buff];
+  p_tmp_iv = (uint32_t *)(void *)&p_base_pool_buff[offset_pool_buff];
   offset_pool_buff += 4U * sizeof(uint32_t);
-  p_temp_tag = (uint32_t *)(void *)&p_base_pool_buff[offset_pool_buff];
+  p_tmp_tag = (uint32_t *)(void *)&p_base_pool_buff[offset_pool_buff];
   offset_pool_buff += 4U * sizeof(uint32_t);
-  p_temp_wrapped_key = (uint32_t *)(void *)&p_base_pool_buff[offset_pool_buff];
+  p_tmp_wrapped_key = (uint32_t *)(void *)&p_base_pool_buff[offset_pool_buff];
   random32 = (((uint32_t)randoms[1] << 16U) | (uint32_t)randoms[0]);
 
-  if (CCB_ECC_ScalarMulBlobCreation(p_ccb_instance, p_in_curve_param, &sw_ctx, p_in_clear_private_key, p_temp_iv,
-                                    p_temp_tag, p_temp_wrapped_key, random32,
+  if (CCB_ECC_ScalarMulBlobCreation(p_ccb_instance, p_in_curve_param, &sw_ctx, p_in_clear_private_key, p_tmp_iv,
+                                    p_tmp_tag, p_tmp_wrapped_key, random32,
                                     p_out_wrapped_private_key_blob->p_wrapped_key, p_scalar_mul_y,
                                     CCB_ECC_SCALAR_MUL_CPU_BLOB_CREATION) != HAL_OK)
   {
@@ -1724,7 +1740,7 @@ hal_status_t HAL_CCB_ECC_SW_WrapPrivateKey(hal_ccb_handle_t *hccb,
 
   CCB_RESET(hccb);
 
-  if (CCB_ECC_ComputeScalarMul(p_ccb_instance, p_in_curve_param, &sw_ctx, p_temp_iv, p_temp_tag, p_temp_wrapped_key,
+  if (CCB_ECC_ComputeScalarMul(p_ccb_instance, p_in_curve_param, &sw_ctx, p_tmp_iv, p_tmp_tag, p_tmp_wrapped_key,
                                random32, NULL, NULL) != HAL_OK)
   {
     CCB_ErasePoolBuffer(p_base_pool_buff, p_in_curve_param->ecc_pool_buffer.buff_size_byte);
@@ -1743,38 +1759,42 @@ hal_status_t HAL_CCB_ECC_SW_WrapPrivateKey(hal_ccb_handle_t *hccb,
     return HAL_ERROR;
   }
 
-  /* Random wait */
+  /* Random wait: introduce a random-duration loop to complicate timing/fault attacks.
+     The loop count is derived from TRNG and then checked to detect potential fault injection. */
   for (uint16_t j = 0U; j < randoms[0]; ++j)
   {
     random_count++;
   }
 
-  pka_ram_u32 = (__IO uint32_t *)PKA->RAM;
-  temp_random_count = random_count;
+  pka_ram_u32 = (__IOM uint32_t *)PKA->RAM;
+  tmp_random_count = random_count;
 
   /* Check Scalar Multiplication and improve robustness against intrusion (intentional) */
   /* P coordinate x */
   for (uint32_t word_offset = 0UL; word_offset < modulus_words_count; word_offset++)
   {
-    if ((pka_ram_u32[PKA_ECC_SCALAR_MUL_OUT_RESULT_X + word_offset]
-         != p_out_wrapped_private_key_blob->p_wrapped_key[word_offset]) || (temp_random_count != randoms[0]))
-    {
-      CCB_ErasePoolBuffer(p_base_pool_buff, p_in_curve_param->ecc_pool_buffer.buff_size_byte);
-      hccb->global_state = HAL_CCB_STATE_IDLE;
-      return HAL_ERROR;
-    }
+    diff |= pka_ram_u32[PKA_ECC_SCALAR_MUL_OUT_RESULT_X + word_offset]
+            ^ p_out_wrapped_private_key_blob->p_wrapped_key[word_offset];
+  }
+
+  if ((diff != 0U) || (tmp_random_count != randoms[0]))
+  {
+    CCB_ErasePoolBuffer(p_base_pool_buff, p_in_curve_param->ecc_pool_buffer.buff_size_byte);
+    hccb->global_state = HAL_CCB_STATE_IDLE;
+    return HAL_ERROR;
   }
 
   /* P coordinate y */
   for (uint32_t word_offset = 0UL; word_offset < modulus_words_count; word_offset++)
   {
-    if ((pka_ram_u32[PKA_ECC_SCALAR_MUL_OUT_RESULT_Y + word_offset]
-         != p_scalar_mul_y[word_offset]) || (temp_random_count != randoms[0]))
-    {
-      CCB_ErasePoolBuffer(p_base_pool_buff, p_in_curve_param->ecc_pool_buffer.buff_size_byte);
-      hccb->global_state = HAL_CCB_STATE_IDLE;
-      return HAL_ERROR;
-    }
+    diff |= pka_ram_u32[PKA_ECC_SCALAR_MUL_OUT_RESULT_Y + word_offset] ^ p_scalar_mul_y[word_offset];
+  }
+
+  if ((diff != 0U) || (tmp_random_count != randoms[0]))
+  {
+    CCB_ErasePoolBuffer(p_base_pool_buff, p_in_curve_param->ecc_pool_buffer.buff_size_byte);
+    hccb->global_state = HAL_CCB_STATE_IDLE;
+    return HAL_ERROR;
   }
 
   /* Initialize random_count and Check random number */
@@ -1786,37 +1806,41 @@ hal_status_t HAL_CCB_ECC_SW_WrapPrivateKey(hal_ccb_handle_t *hccb,
     return HAL_ERROR;
   }
 
-  /* Random wait */
+  /* Random wait: introduce a random-duration loop to complicate timing/fault attacks.
+     The loop count is derived from TRNG and then checked to detect potential fault injection. */
   for (uint16_t j = 0U; j < randoms[1]; ++j)
   {
     random_count++;
   }
 
-  temp_random_count = random_count;
+  tmp_random_count = random_count;
 
   /* Check Scalar Multiplication and improve robustness against intrusion (intentional) */
   /* P coordinate x */
   for (uint32_t word_offset = 0UL; word_offset < modulus_words_count; word_offset++)
   {
-    if ((pka_ram_u32[PKA_ECC_SCALAR_MUL_OUT_RESULT_X + word_offset]
-         != p_out_wrapped_private_key_blob->p_wrapped_key[word_offset]) || (temp_random_count != randoms[1]))
-    {
-      CCB_ErasePoolBuffer(p_base_pool_buff, p_in_curve_param->ecc_pool_buffer.buff_size_byte);
-      hccb->global_state = HAL_CCB_STATE_IDLE;
-      return HAL_ERROR;
-    }
+    diff |= pka_ram_u32[PKA_ECC_SCALAR_MUL_OUT_RESULT_X + word_offset]
+            ^ p_out_wrapped_private_key_blob->p_wrapped_key[word_offset];
+  }
+
+  if ((diff != 0U) || (tmp_random_count != randoms[1]))
+  {
+    CCB_ErasePoolBuffer(p_base_pool_buff, p_in_curve_param->ecc_pool_buffer.buff_size_byte);
+    hccb->global_state = HAL_CCB_STATE_IDLE;
+    return HAL_ERROR;
   }
 
   /* P coordinate y */
   for (uint32_t word_offset = 0UL; word_offset < modulus_words_count; word_offset++)
   {
-    if ((pka_ram_u32[PKA_ECC_SCALAR_MUL_OUT_RESULT_Y + word_offset]
-         != p_scalar_mul_y[word_offset]) || (temp_random_count != randoms[1]))
-    {
-      CCB_ErasePoolBuffer(p_base_pool_buff, p_in_curve_param->ecc_pool_buffer.buff_size_byte);
-      hccb->global_state = HAL_CCB_STATE_IDLE;
-      return HAL_ERROR;
-    }
+    diff |= pka_ram_u32[PKA_ECC_SCALAR_MUL_OUT_RESULT_Y + word_offset] ^ p_scalar_mul_y[word_offset];
+  }
+
+  if ((diff != 0U) || (tmp_random_count != randoms[1]))
+  {
+    CCB_ErasePoolBuffer(p_base_pool_buff, p_in_curve_param->ecc_pool_buffer.buff_size_byte);
+    hccb->global_state = HAL_CCB_STATE_IDLE;
+    return HAL_ERROR;
   }
 
   /* Initialize random_count and Check random number */
@@ -1828,37 +1852,41 @@ hal_status_t HAL_CCB_ECC_SW_WrapPrivateKey(hal_ccb_handle_t *hccb,
     return HAL_ERROR;
   }
 
-  /* Random wait */
+  /* Random wait: introduce a random-duration loop to complicate timing/fault attacks.
+     The loop count is derived from TRNG and then checked to detect potential fault injection. */
   for (uint16_t j = 0U; j < randoms[2]; ++j)
   {
     random_count++;
   }
 
-  temp_random_count = random_count;
+  tmp_random_count = random_count;
 
   /* Check Scalar Multiplication and improve robustness against intrusion (intentional) */
   /* P coordinate x */
   for (uint32_t word_offset = 0UL; word_offset < modulus_words_count; word_offset++)
   {
-    if ((pka_ram_u32[PKA_ECC_SCALAR_MUL_OUT_RESULT_X + word_offset]
-         != p_out_wrapped_private_key_blob->p_wrapped_key[word_offset]) || (temp_random_count != randoms[2]))
-    {
-      CCB_ErasePoolBuffer(p_base_pool_buff, p_in_curve_param->ecc_pool_buffer.buff_size_byte);
-      hccb->global_state = HAL_CCB_STATE_IDLE;
-      return HAL_ERROR;
-    }
+    diff |= pka_ram_u32[PKA_ECC_SCALAR_MUL_OUT_RESULT_X + word_offset]
+            ^ p_out_wrapped_private_key_blob->p_wrapped_key[word_offset];
+  }
+
+  if ((diff != 0U) || (tmp_random_count != randoms[2]))
+  {
+    CCB_ErasePoolBuffer(p_base_pool_buff, p_in_curve_param->ecc_pool_buffer.buff_size_byte);
+    hccb->global_state = HAL_CCB_STATE_IDLE;
+    return HAL_ERROR;
   }
 
   /* P coordinate y */
   for (uint32_t word_offset = 0UL; word_offset < modulus_words_count; word_offset++)
   {
-    if ((pka_ram_u32[PKA_ECC_SCALAR_MUL_OUT_RESULT_Y + word_offset]
-         != p_scalar_mul_y[word_offset]) || (temp_random_count != randoms[2]))
-    {
-      CCB_ErasePoolBuffer(p_base_pool_buff, p_in_curve_param->ecc_pool_buffer.buff_size_byte);
-      hccb->global_state = HAL_CCB_STATE_IDLE;
-      return HAL_ERROR;
-    }
+    diff |= pka_ram_u32[PKA_ECC_SCALAR_MUL_OUT_RESULT_Y + word_offset] ^ p_scalar_mul_y[word_offset];
+  }
+
+  if ((diff != 0U) || (tmp_random_count != randoms[2]))
+  {
+    CCB_ErasePoolBuffer(p_base_pool_buff, p_in_curve_param->ecc_pool_buffer.buff_size_byte);
+    hccb->global_state = HAL_CCB_STATE_IDLE;
+    return HAL_ERROR;
   }
 
   CCB_RESET(hccb);
@@ -1868,10 +1896,10 @@ hal_status_t HAL_CCB_ECC_SW_WrapPrivateKey(hal_ccb_handle_t *hccb,
   {
     if (count < CCB_BLOCK_SIZE_WORD)
     {
-      p_out_wrapped_private_key_blob->p_iv[count] = (p_temp_iv[count] ^ random32);
-      p_out_wrapped_private_key_blob->p_tag[count] = (p_temp_tag[count] ^ random32);
+      p_out_wrapped_private_key_blob->p_iv[count] = (p_tmp_iv[count] ^ random32);
+      p_out_wrapped_private_key_blob->p_tag[count] = (p_tmp_tag[count] ^ random32);
     }
-    p_out_wrapped_private_key_blob->p_wrapped_key[count] = (p_temp_wrapped_key[count] ^ random32);
+    p_out_wrapped_private_key_blob->p_wrapped_key[count] = (p_tmp_wrapped_key[count] ^ random32);
   }
 
   CCB_ErasePoolBuffer(p_base_pool_buff, p_in_curve_param->ecc_pool_buffer.buff_size_byte);
@@ -1887,28 +1915,26 @@ hal_status_t HAL_CCB_ECC_SW_WrapPrivateKey(hal_ccb_handle_t *hccb,
   * @param  p_wrapping_key_context          Pointer a @ref hal_ccb_wrapping_sw_key_context_t structure
   * @param  p_in_wrapped_user_key           Pointer to the wrapped user key
   * @param  p_out_wrapped_private_key_blob  Pointer to @ref hal_ccb_ecc_mul_key_blob_t structure
-  * @retval HAL_INVALID_PARAM               Invalid param return when the CCB handle is NULL \n
-                                            Invalid param return when input curve parameters pointer is NULL \n
-                                            Invalid param return when curve parameter abs_coef_a pointer is NULL \n
-                                            Invalid param return when curve parameter coef_b pointer is NULL \n
-                                            Invalid param return when curve parameter modulus pointer is NULL \n
-                                            Invalid param return when curve parameter prime_order pointer is NULL \n
-                                            Invalid param return when curve parameter point_x pointer is NULL \n
-                                            Invalid param return when curve parameter point_y pointer is NULL \n
-                                            Invalid param return when curve parameter prime_order_size_byte is zero \n
-                                            Invalid param return when curve parameter modulus_size_byte is zero \n
-                                            Invalid param return when curve parameter coef_sign_a is zero \n
-                                            Invalid param return when wrapping key context pointer key is NULL \n
-                                            Invalid param return when provided init vector pointer is NULL \n
-                                            Invalid param return when provided key size pointer is NULL \n
-                                            Invalid param return when input wrapped user key pointer is NULL \n
-                                            Invalid param return when output wrapped private key blob pointer is NULL \n
-                                            Invalid param return when output wrapped private key blob IV pointer is \n
-                                            NULL \n
-                                            Invalid param return when output wrapped private key blob tag pointer is \n
-                                            NULL \n
-                                            Invalid param return when output wrapped private key blob wrapped key \n
-                                            pointer is NULL \n
+  * @retval HAL_INVALID_PARAM               The function return an Invalid param in the following cases: \n
+                                            - The CCB handle is NULL \n
+                                            - Input curve parameters pointer is NULL \n
+                                            - Curve parameter abs_coef_a pointer is NULL \n
+                                            - Curve parameter coef_b pointer is NULL \n
+                                            - Curve parameter modulus pointer is NULL \n
+                                            - Curve parameter prime_order pointer is NULL \n
+                                            - Curve parameter point_x pointer is NULL \n
+                                            - Curve parameter point_y pointer is NULL \n
+                                            - Curve parameter prime_order_size_byte is zero \n
+                                            - Curve parameter modulus_size_byte is zero \n
+                                            - Curve parameter coef_sign_a is zero \n
+                                            - Wrapping key context pointer key is NULL \n
+                                            - Provided init vector pointer is NULL \n
+                                            - Provided key size pointer is NULL \n
+                                            - Input wrapped user key pointer is NULL \n
+                                            - Output wrapped private key blob pointer is NULL \n
+                                            - Output wrapped private key blob IV pointer is NULL \n
+                                            - Output wrapped private key blob tag pointer is NULL \n
+                                            - Output wrapped private key blob wrapped key pointer is NULL \n
   * @retval HAL_ERROR                       Error detected
   * @retval HAL_OK                          Operation completed successfully
   */
@@ -1919,18 +1945,19 @@ hal_status_t HAL_CCB_ECC_SW_GenerateWrapPrivateKey(hal_ccb_handle_t *hccb,
                                                    hal_ccb_ecc_mul_key_blob_t *p_out_wrapped_private_key_blob)
 {
   uint32_t *p_scalar_mul_y = NULL;
-  uint32_t *p_temp_iv = NULL;
-  uint32_t *p_temp_tag = NULL;
-  uint32_t *p_temp_wrapped_key = NULL;
-  __IO const uint32_t *pka_ram_u32 = NULL;
+  uint32_t *p_tmp_iv = NULL;
+  uint32_t *p_tmp_tag = NULL;
+  uint32_t *p_tmp_wrapped_key = NULL;
+  __IOM const uint32_t *pka_ram_u32 = NULL;
   uint32_t operand_size = 0U;
   uint32_t cipherkey_size = 0U;
   uint32_t offset_pool_buff = 0U;
   uint32_t random32 = 0U;
   uint32_t modulus_words_count = 0U;
   uint16_t randoms[3] = {0U};
+  uint32_t diff = 0U;
   volatile uint16_t random_count = 0U;
-  uint16_t temp_random_count = 0U;
+  uint16_t tmp_random_count = 0U;
   uint8_t *p_base_pool_buff = NULL;
   CCB_TypeDef *p_ccb_instance = NULL;
   ccb_sw_unwrap_key_context_t sw_ctx = {CCB_KEY_TYPE_SOFTWARE, p_wrapping_key_context, p_in_wrapped_user_key};
@@ -2017,15 +2044,15 @@ hal_status_t HAL_CCB_ECC_SW_GenerateWrapPrivateKey(hal_ccb_handle_t *hccb,
   cipherkey_size = ((operand_size & 3U) != 0U) ? (operand_size - 2U) : operand_size;
   p_scalar_mul_y = (uint32_t *)(void *)&p_base_pool_buff[offset_pool_buff];
   offset_pool_buff += ((p_in_curve_param->modulus_size_byte + 3U) >> 2U) * CCB_BLOCK_SIZE_WORD;
-  p_temp_iv = (uint32_t *)(void *)&p_base_pool_buff[offset_pool_buff];
+  p_tmp_iv = (uint32_t *)(void *)&p_base_pool_buff[offset_pool_buff];
   offset_pool_buff += 4U * sizeof(uint32_t);
-  p_temp_tag = (uint32_t *)(void *)&p_base_pool_buff[offset_pool_buff];
+  p_tmp_tag = (uint32_t *)(void *)&p_base_pool_buff[offset_pool_buff];
   offset_pool_buff += 4U * sizeof(uint32_t);
-  p_temp_wrapped_key = (uint32_t *)(void *)&p_base_pool_buff[offset_pool_buff];
+  p_tmp_wrapped_key = (uint32_t *)(void *)&p_base_pool_buff[offset_pool_buff];
   random32 = (((uint32_t)randoms[1] << 16U) | (uint32_t)randoms[0]);
 
-  if (CCB_ECC_ScalarMulBlobCreation(p_ccb_instance, p_in_curve_param, &sw_ctx, NULL, p_temp_iv, p_temp_tag,
-                                    p_temp_wrapped_key, random32,
+  if (CCB_ECC_ScalarMulBlobCreation(p_ccb_instance, p_in_curve_param, &sw_ctx, NULL, p_tmp_iv, p_tmp_tag,
+                                    p_tmp_wrapped_key, random32,
                                     p_out_wrapped_private_key_blob->p_wrapped_key, p_scalar_mul_y,
                                     CCB_ECC_SCALAR_MUL_RNG_BLOB_CREATION) != HAL_OK)
   {
@@ -2039,7 +2066,7 @@ hal_status_t HAL_CCB_ECC_SW_GenerateWrapPrivateKey(hal_ccb_handle_t *hccb,
 
   CCB_RESET(hccb);
 
-  if (CCB_ECC_ComputeScalarMul(p_ccb_instance, p_in_curve_param, &sw_ctx, p_temp_iv, p_temp_tag, p_temp_wrapped_key,
+  if (CCB_ECC_ComputeScalarMul(p_ccb_instance, p_in_curve_param, &sw_ctx, p_tmp_iv, p_tmp_tag, p_tmp_wrapped_key,
                                random32, NULL, NULL) != HAL_OK)
   {
     CCB_ErasePoolBuffer(p_base_pool_buff, p_in_curve_param->ecc_pool_buffer.buff_size_byte);
@@ -2058,38 +2085,42 @@ hal_status_t HAL_CCB_ECC_SW_GenerateWrapPrivateKey(hal_ccb_handle_t *hccb,
     return HAL_ERROR;
   }
 
-  /* Random wait */
+  /* Random wait: introduce a random-duration loop to complicate timing/fault attacks.
+     The loop count is derived from TRNG and then checked to detect potential fault injection. */
   for (uint16_t j = 0U; j < randoms[0]; ++j)
   {
     random_count++;
   }
 
-  pka_ram_u32 = (__IO uint32_t *)PKA->RAM;
-  temp_random_count = random_count;
+  pka_ram_u32 = (__IOM uint32_t *)PKA->RAM;
+  tmp_random_count = random_count;
 
   /* Check Scalar Multiplication and improve robustness against intrusion (intentional) */
   /* P coordinate x */
   for (uint32_t word_offset = 0UL; word_offset < modulus_words_count; word_offset++)
   {
-    if ((pka_ram_u32[PKA_ECC_SCALAR_MUL_OUT_RESULT_X + word_offset]
-         != p_out_wrapped_private_key_blob->p_wrapped_key[word_offset]) || (temp_random_count != randoms[0]))
-    {
-      CCB_ErasePoolBuffer(p_base_pool_buff, p_in_curve_param->ecc_pool_buffer.buff_size_byte);
-      hccb->global_state = HAL_CCB_STATE_IDLE;
-      return HAL_ERROR;
-    }
+    diff |= pka_ram_u32[PKA_ECC_SCALAR_MUL_OUT_RESULT_X + word_offset]
+            ^ p_out_wrapped_private_key_blob->p_wrapped_key[word_offset];
+  }
+
+  if ((diff != 0U) || (tmp_random_count != randoms[0]))
+  {
+    CCB_ErasePoolBuffer(p_base_pool_buff, p_in_curve_param->ecc_pool_buffer.buff_size_byte);
+    hccb->global_state = HAL_CCB_STATE_IDLE;
+    return HAL_ERROR;
   }
 
   /* P coordinate y */
   for (uint32_t word_offset = 0UL; word_offset < modulus_words_count; word_offset++)
   {
-    if ((pka_ram_u32[PKA_ECC_SCALAR_MUL_OUT_RESULT_Y + word_offset]
-         != p_scalar_mul_y[word_offset]) || (temp_random_count != randoms[0]))
-    {
-      CCB_ErasePoolBuffer(p_base_pool_buff, p_in_curve_param->ecc_pool_buffer.buff_size_byte);
-      hccb->global_state = HAL_CCB_STATE_IDLE;
-      return HAL_ERROR;
-    }
+    diff |= pka_ram_u32[PKA_ECC_SCALAR_MUL_OUT_RESULT_Y + word_offset] ^ p_scalar_mul_y[word_offset];
+  }
+
+  if ((diff != 0U) || (tmp_random_count != randoms[0]))
+  {
+    CCB_ErasePoolBuffer(p_base_pool_buff, p_in_curve_param->ecc_pool_buffer.buff_size_byte);
+    hccb->global_state = HAL_CCB_STATE_IDLE;
+    return HAL_ERROR;
   }
 
   /* Initialize random_count and Check random number */
@@ -2101,37 +2132,41 @@ hal_status_t HAL_CCB_ECC_SW_GenerateWrapPrivateKey(hal_ccb_handle_t *hccb,
     return HAL_ERROR;
   }
 
-  /* Random wait */
+  /* Random wait: introduce a random-duration loop to complicate timing/fault attacks.
+     The loop count is derived from TRNG and then checked to detect potential fault injection. */
   for (uint16_t j = 0U; j < randoms[1]; ++j)
   {
     random_count++;
   }
 
-  temp_random_count = random_count;
+  tmp_random_count = random_count;
 
   /* Check Scalar Multiplication and improve robustness against intrusion (intentional) */
   /* P coordinate x */
   for (uint32_t word_offset = 0UL; word_offset < modulus_words_count; word_offset++)
   {
-    if ((pka_ram_u32[PKA_ECC_SCALAR_MUL_OUT_RESULT_X + word_offset]
-         != p_out_wrapped_private_key_blob->p_wrapped_key[word_offset]) || (temp_random_count != randoms[1]))
-    {
-      CCB_ErasePoolBuffer(p_base_pool_buff, p_in_curve_param->ecc_pool_buffer.buff_size_byte);
-      hccb->global_state = HAL_CCB_STATE_IDLE;
-      return HAL_ERROR;
-    }
+    diff |= pka_ram_u32[PKA_ECC_SCALAR_MUL_OUT_RESULT_X + word_offset]
+            ^ p_out_wrapped_private_key_blob->p_wrapped_key[word_offset];
+  }
+
+  if ((diff != 0U) || (tmp_random_count != randoms[1]))
+  {
+    CCB_ErasePoolBuffer(p_base_pool_buff, p_in_curve_param->ecc_pool_buffer.buff_size_byte);
+    hccb->global_state = HAL_CCB_STATE_IDLE;
+    return HAL_ERROR;
   }
 
   /* P coordinate y */
   for (uint32_t word_offset = 0UL; word_offset < modulus_words_count; word_offset++)
   {
-    if ((pka_ram_u32[PKA_ECC_SCALAR_MUL_OUT_RESULT_Y + word_offset]
-         != p_scalar_mul_y[word_offset]) || (temp_random_count != randoms[1]))
-    {
-      CCB_ErasePoolBuffer(p_base_pool_buff, p_in_curve_param->ecc_pool_buffer.buff_size_byte);
-      hccb->global_state = HAL_CCB_STATE_IDLE;
-      return HAL_ERROR;
-    }
+    diff |= pka_ram_u32[PKA_ECC_SCALAR_MUL_OUT_RESULT_Y + word_offset] ^ p_scalar_mul_y[word_offset];
+  }
+
+  if ((diff != 0U) || (tmp_random_count != randoms[1]))
+  {
+    CCB_ErasePoolBuffer(p_base_pool_buff, p_in_curve_param->ecc_pool_buffer.buff_size_byte);
+    hccb->global_state = HAL_CCB_STATE_IDLE;
+    return HAL_ERROR;
   }
 
   /* Initialize random_count and Check random number */
@@ -2143,37 +2178,41 @@ hal_status_t HAL_CCB_ECC_SW_GenerateWrapPrivateKey(hal_ccb_handle_t *hccb,
     return HAL_ERROR;
   }
 
-  /* Random wait */
+  /* Random wait: introduce a random-duration loop to complicate timing/fault attacks.
+     The loop count is derived from TRNG and then checked to detect potential fault injection. */
   for (uint16_t j = 0U; j < randoms[2]; ++j)
   {
     random_count++;
   }
 
-  temp_random_count = random_count;
+  tmp_random_count = random_count;
 
   /* Check Scalar Multiplication and improve robustness against intrusion (intentional) */
   /* P coordinate x */
   for (uint32_t word_offset = 0UL; word_offset < modulus_words_count; word_offset++)
   {
-    if ((pka_ram_u32[PKA_ECC_SCALAR_MUL_OUT_RESULT_X + word_offset]
-         != p_out_wrapped_private_key_blob->p_wrapped_key[word_offset]) || (temp_random_count != randoms[2]))
-    {
-      CCB_ErasePoolBuffer(p_base_pool_buff, p_in_curve_param->ecc_pool_buffer.buff_size_byte);
-      hccb->global_state = HAL_CCB_STATE_IDLE;
-      return HAL_ERROR;
-    }
+    diff |= pka_ram_u32[PKA_ECC_SCALAR_MUL_OUT_RESULT_X + word_offset]
+            ^ p_out_wrapped_private_key_blob->p_wrapped_key[word_offset];
+  }
+
+  if ((diff != 0U) || (tmp_random_count != randoms[2]))
+  {
+    CCB_ErasePoolBuffer(p_base_pool_buff, p_in_curve_param->ecc_pool_buffer.buff_size_byte);
+    hccb->global_state = HAL_CCB_STATE_IDLE;
+    return HAL_ERROR;
   }
 
   /* P coordinate y */
   for (uint32_t word_offset = 0UL; word_offset < modulus_words_count; word_offset++)
   {
-    if ((pka_ram_u32[PKA_ECC_SCALAR_MUL_OUT_RESULT_Y + word_offset]
-         != p_scalar_mul_y[word_offset]) || (temp_random_count != randoms[2]))
-    {
-      CCB_ErasePoolBuffer(p_base_pool_buff, p_in_curve_param->ecc_pool_buffer.buff_size_byte);
-      hccb->global_state = HAL_CCB_STATE_IDLE;
-      return HAL_ERROR;
-    }
+    diff |= pka_ram_u32[PKA_ECC_SCALAR_MUL_OUT_RESULT_Y + word_offset] ^ p_scalar_mul_y[word_offset];
+  }
+
+  if ((diff != 0U) || (tmp_random_count != randoms[2]))
+  {
+    CCB_ErasePoolBuffer(p_base_pool_buff, p_in_curve_param->ecc_pool_buffer.buff_size_byte);
+    hccb->global_state = HAL_CCB_STATE_IDLE;
+    return HAL_ERROR;
   }
 
   CCB_RESET(hccb);
@@ -2183,10 +2222,10 @@ hal_status_t HAL_CCB_ECC_SW_GenerateWrapPrivateKey(hal_ccb_handle_t *hccb,
   {
     if (count < CCB_BLOCK_SIZE_WORD)
     {
-      p_out_wrapped_private_key_blob->p_iv[count] = (p_temp_iv[count] ^ random32);
-      p_out_wrapped_private_key_blob->p_tag[count] = (p_temp_tag[count] ^ random32);
+      p_out_wrapped_private_key_blob->p_iv[count] = (p_tmp_iv[count] ^ random32);
+      p_out_wrapped_private_key_blob->p_tag[count] = (p_tmp_tag[count] ^ random32);
     }
-    p_out_wrapped_private_key_blob->p_wrapped_key[count] = (p_temp_wrapped_key[count] ^ random32);
+    p_out_wrapped_private_key_blob->p_wrapped_key[count] = (p_tmp_wrapped_key[count] ^ random32);
   }
 
   CCB_ErasePoolBuffer(p_base_pool_buff, p_in_curve_param->ecc_pool_buffer.buff_size_byte);
@@ -2204,34 +2243,32 @@ hal_status_t HAL_CCB_ECC_SW_GenerateWrapPrivateKey(hal_ccb_handle_t *hccb,
   * @param  p_in_wrapped_private_key_blob  Pointer to @ref hal_ccb_ecc_mul_key_blob_t structure
   * @param  p_in_point                     Pointer to @ref hal_ccb_ecc_point_t structure
   * @param  p_out_point                    Pointer to @ref hal_ccb_ecc_point_t structure
-  * @retval HAL_INVALID_PARAM              Invalid param return when the CCB handle is NULL
-                                           Invalid param return when input curve parameters pointer is NULL \n
-                                           Invalid param return when curve parameter abs_coef_a pointer is NULL \n
-                                           Invalid param return when curve parameter coef_b pointer is NULL \n
-                                           Invalid param return when curve parameter modulus pointer is NULL \n
-                                           Invalid param return when curve parameter prime_order pointer is NULL \n
-                                           Invalid param return when curve parameter point_x pointer is NULL \n
-                                           Invalid param return when curve parameter point_y pointer is NULL \n
-                                           Invalid param return when curve parameter prime_order_size_byte is zero \n
-                                           Invalid param return when curve parameter modulus_size_byte is zero \n
-                                           Invalid param return when curve parameter coef_sign_a is zero \n
-                                           Invalid param return when wrapping key context pointer key is NULL \n
-                                           Invalid param return when provided init vector pointer is NULL \n
-                                           Invalid param return when provided key size pointer is NULL \n
-                                           Invalid param return when input wrapped user key pointer is NULL \n
-                                           Invalid param return when input wrapped private key blob pointer is NULL \n
-                                           Invalid param return when output wrapped private key blob IV pointer is \n
-                                           NULL \n
-                                           Invalid param return when output wrapped private key blob tag pointer is \n
-                                           NULL \n
-                                           Invalid param return when output wrapped private key blob wrapped key \n
-                                           pointer is NULL \n
-                                           Invalid param return when input point pointer is NULL \n
-                                           Invalid param return when input point x pointer is NULL \n
-                                           Invalid param return when input point y pointer is NULL \n
-                                           Invalid param return when output point pointer is NULL \n
-                                           Invalid param return when input point x pointer is NULL \n
-                                           Invalid param return when input point y pointer is NULL \n
+  * @retval HAL_INVALID_PARAM              The function return an Invalid param in the following cases: \n
+                                           - The CCB handle is NULL
+                                           - Input curve parameters pointer is NULL \n
+                                           - Curve parameter abs_coef_a pointer is NULL \n
+                                           - Curve parameter coef_b pointer is NULL \n
+                                           - Curve parameter modulus pointer is NULL \n
+                                           - Curve parameter prime_order pointer is NULL \n
+                                           - Curve parameter point_x pointer is NULL \n
+                                           - Curve parameter point_y pointer is NULL \n
+                                           - Curve parameter prime_order_size_byte is zero \n
+                                           - Curve parameter modulus_size_byte is zero \n
+                                           - Curve parameter coef_sign_a is zero \n
+                                           - Wrapping key context pointer key is NULL \n
+                                           - Provided init vector pointer is NULL \n
+                                           - Provided key size pointer is NULL \n
+                                           - Input wrapped user key pointer is NULL \n
+                                           - Input wrapped private key blob pointer is NULL \n
+                                           - Output wrapped private key blob IV pointer is NULL \n
+                                           - Output wrapped private key blob tag pointer is NULL \n
+                                           - Output wrapped private key blob wrapped key pointer is NULL \n
+                                           - Input point pointer is NULL \n
+                                           - Input point x pointer is NULL \n
+                                           - Input point y pointer is NULL \n
+                                           - Output point pointer is NULL \n
+                                           - Input point x pointer is NULL \n
+                                           - Input point y pointer is NULL \n
   * @retval HAL_ERROR                      Error detected
   * @retval HAL_OK                         Operation completed successfully
   */
@@ -2334,26 +2371,23 @@ hal_status_t HAL_CCB_ECC_SW_ComputeScalarMul(hal_ccb_handle_t *hccb,
   * @param  p_wrapping_key_context          Pointer to to @ref hal_ccb_wrapping_sw_key_context_t structure
   * @param  p_in_wrapped_user_key           Pointer to the wrapped user key
   * @param  p_out_wrapped_private_key_blob  Pointer to @ref hal_ccb_rsa_key_blob_t structure
-  * @retval HAL_INVALID_PARAM               Invalid param return when the CCB handle is NULL \n
-                                            Invalid param return when input parameters pointer is NULL \n
-                                            Invalid param return when input RSA clear private key pointer key is NULL \n
-                                            Invalid param return when input parameter exp_size_byte is zero \n
-                                            Invalid param return when input parameter modulus_size_byte is zero \n
-                                            Invalid param return when input parameter modulus pointer is NULL \n
-                                            Invalid param return when input RSA clear private key exp pointer is NULL \n
-                                            Invalid param return when input RSA clear private key phi pointer is NULL \n
-                                            Invalid param return when wrapping key context pointer key is NULL \n
-                                            Invalid param return when provided init vector pointer is NULL \n
-                                            Invalid param return when provided key size pointer is NULL \n
-                                            Invalid param return when output wrapped private key blob pointer is NULL \n
-                                            Invalid param return when output wrapped private key blob IV pointer is \n
-                                            NULL \n
-                                            Invalid param return when output wrapped private key blob tag pointer is \n
-                                            NULL \n
-                                            Invalid param return when output wrapped private key blob wrapped phi \n
-                                            pointer is NULL \n
-                                            Invalid param return when output wrapped private key blob wrapped exp \n
-                                            pointer is NULL \n
+  * @retval HAL_INVALID_PARAM               The function return an Invalid param in the following cases: \n
+                                            - The CCB handle is NULL \n
+                                            - Input parameters pointer is NULL \n
+                                            - Input RSA clear private key pointer key is NULL \n
+                                            - Input parameter exp_size_byte is zero \n
+                                            - Input parameter modulus_size_byte is zero \n
+                                            - Input parameter modulus pointer is NULL \n
+                                            - Input RSA clear private key exp pointer is NULL \n
+                                            - Input RSA clear private key phi pointer is NULL \n
+                                            - Wrapping key context pointer key is NULL \n
+                                            - Provided init vector pointer is NULL \n
+                                            - Provided key size pointer is NULL \n
+                                            - Output wrapped private key blob pointer is NULL \n
+                                            - Output wrapped private key blob IV pointer is NULL \n
+                                            - Output wrapped private key blob tag pointer is NULL \n
+                                            - Output wrapped private key blob wrapped phi pointer is NULL \n
+                                            - Output wrapped private key blob wrapped exp pointer is NULL \n
   * @retval HAL_ERROR                       Error detected
   * @retval HAL_OK                          Operation completed successfully
   */
@@ -2363,19 +2397,20 @@ hal_status_t HAL_CCB_RSA_SW_WrapPrivateKey(hal_ccb_handle_t *hccb, const hal_ccb
                                            const uint32_t *p_in_wrapped_user_key,
                                            hal_ccb_rsa_key_blob_t *p_out_wrapped_private_key_blob)
 {
-  uint32_t *p_temp_iv = NULL;
-  uint32_t *p_temp_tag = NULL;
-  uint32_t *p_temp_wrapped_exp = NULL;
-  uint32_t *p_temp_wrapped_phi = NULL;
-  __IO const uint32_t *pka_ram_u32 = NULL;
+  uint32_t *p_tmp_iv = NULL;
+  uint32_t *p_tmp_tag = NULL;
+  uint32_t *p_tmp_wrapped_exp = NULL;
+  uint32_t *p_tmp_wrapped_phi = NULL;
+  __IOM const uint32_t *pka_ram_u32 = NULL;
   uint32_t modulus_words_count = 0U;
   uint32_t operand_size = 0U;
   uint32_t cipherkey_size = 0U;
   uint32_t offset_pool_buff = 0U;
   uint32_t random32 = 0U;
   uint16_t randoms[3] = {0U};
+  uint32_t diff = 0U;
   volatile uint16_t random_count = 0U;
-  uint16_t temp_random_count = 0U;
+  uint16_t tmp_random_count = 0U;
   uint8_t *p_base_pool_buff = NULL;
   CCB_TypeDef *p_ccb_instance = NULL;
   ccb_sw_unwrap_key_context_t sw_ctx = {CCB_KEY_TYPE_SOFTWARE, p_wrapping_key_context, p_in_wrapped_user_key};
@@ -2465,17 +2500,17 @@ hal_status_t HAL_CCB_RSA_SW_WrapPrivateKey(hal_ccb_handle_t *hccb, const hal_ccb
 
   operand_size = 2UL * (((p_in_param->modulus_size_byte + 7UL) >> 3UL) + 1UL);
   cipherkey_size = ((operand_size & 3U) != 0U) ? (operand_size - 2U) : operand_size;
-  p_temp_iv = (uint32_t *)(void *)&p_base_pool_buff[offset_pool_buff];
+  p_tmp_iv = (uint32_t *)(void *)&p_base_pool_buff[offset_pool_buff];
   offset_pool_buff += 4U * sizeof(uint32_t);
-  p_temp_tag = (uint32_t *)(void *)&p_base_pool_buff[offset_pool_buff];
+  p_tmp_tag = (uint32_t *)(void *)&p_base_pool_buff[offset_pool_buff];
   offset_pool_buff += 4U * sizeof(uint32_t);
-  p_temp_wrapped_exp = (uint32_t *)(void *)&p_base_pool_buff[offset_pool_buff];
+  p_tmp_wrapped_exp = (uint32_t *)(void *)&p_base_pool_buff[offset_pool_buff];
   offset_pool_buff += cipherkey_size * CCB_BLOCK_SIZE_WORD;
-  p_temp_wrapped_phi = (uint32_t *)(void *)&p_base_pool_buff[offset_pool_buff];
+  p_tmp_wrapped_phi = (uint32_t *)(void *)&p_base_pool_buff[offset_pool_buff];
   random32 = (((uint32_t)randoms[1] << 16U) | (uint32_t)randoms[0]);
 
-  if (CCB_RSA_ExpBlobCreation(p_ccb_instance, p_in_param, &sw_ctx, p_in_rsa_clear_private_key, p_temp_iv, p_temp_tag,
-                              p_temp_wrapped_exp, p_temp_wrapped_phi, random32,
+  if (CCB_RSA_ExpBlobCreation(p_ccb_instance, p_in_param, &sw_ctx, p_in_rsa_clear_private_key, p_tmp_iv, p_tmp_tag,
+                              p_tmp_wrapped_exp, p_tmp_wrapped_phi, random32,
                               (uint8_t *)p_out_wrapped_private_key_blob->p_wrapped_exp,
                               p_out_wrapped_private_key_blob->p_wrapped_phi) != HAL_OK)
   {
@@ -2489,8 +2524,8 @@ hal_status_t HAL_CCB_RSA_SW_WrapPrivateKey(hal_ccb_handle_t *hccb, const hal_ccb
 
   CCB_RESET(hccb);
 
-  if (CCB_RSA_ComputeModularExp(p_ccb_instance, p_in_param, &sw_ctx, p_temp_iv, p_temp_tag, p_temp_wrapped_exp,
-                                p_temp_wrapped_phi, random32,
+  if (CCB_RSA_ComputeModularExp(p_ccb_instance, p_in_param, &sw_ctx, p_tmp_iv, p_tmp_tag, p_tmp_wrapped_exp,
+                                p_tmp_wrapped_phi, random32,
                                 (uint8_t *)p_out_wrapped_private_key_blob->p_wrapped_exp, NULL) != HAL_OK)
   {
     CCB_ErasePoolBuffer(p_base_pool_buff, p_in_param->rsa_pool_buffer.buff_size_byte);
@@ -2509,25 +2544,28 @@ hal_status_t HAL_CCB_RSA_SW_WrapPrivateKey(hal_ccb_handle_t *hccb, const hal_ccb
     return HAL_ERROR;
   }
 
-  /* Random wait */
+  /* Random wait: introduce a random-duration loop to complicate timing/fault attacks.
+     The loop count is derived from TRNG and then checked to detect potential fault injection. */
   for (uint16_t j = 0U; j < randoms[0]; ++j)
   {
     random_count++;
   }
 
-  pka_ram_u32 = (__IO uint32_t *)PKA->RAM;
-  temp_random_count = random_count;
+  pka_ram_u32 = (__IOM uint32_t *)PKA->RAM;
+  tmp_random_count = random_count;
 
   /* Check Modular Exponentiation and improve robustness against intrusion (intentional) */
   for (uint32_t word_offset = 0UL; word_offset < modulus_words_count; word_offset++)
   {
-    if ((pka_ram_u32[PKA_MODULAR_EXP_OUT_RESULT + word_offset] !=
-         p_out_wrapped_private_key_blob->p_wrapped_phi[word_offset]) || (temp_random_count != randoms[0]))
-    {
-      CCB_ErasePoolBuffer(p_base_pool_buff, p_in_param->rsa_pool_buffer.buff_size_byte);
-      hccb->global_state = HAL_CCB_STATE_IDLE;
-      return HAL_ERROR;
-    }
+    diff |= pka_ram_u32[PKA_MODULAR_EXP_OUT_RESULT + word_offset] ^
+            p_out_wrapped_private_key_blob->p_wrapped_phi[word_offset];
+  }
+
+  if ((diff != 0U) || (tmp_random_count != randoms[0]))
+  {
+    CCB_ErasePoolBuffer(p_base_pool_buff, p_in_param->rsa_pool_buffer.buff_size_byte);
+    hccb->global_state = HAL_CCB_STATE_IDLE;
+    return HAL_ERROR;
   }
 
   /* Initialize random_count and Check random number */
@@ -2539,24 +2577,27 @@ hal_status_t HAL_CCB_RSA_SW_WrapPrivateKey(hal_ccb_handle_t *hccb, const hal_ccb
     return HAL_ERROR;
   }
 
-  /* Random wait */
+  /* Random wait: introduce a random-duration loop to complicate timing/fault attacks.
+     The loop count is derived from TRNG and then checked to detect potential fault injection. */
   for (uint16_t j = 0U; j < randoms[1]; ++j)
   {
     random_count++;
   }
 
-  temp_random_count = random_count;
+  tmp_random_count = random_count;
 
   /* Check Modular Exponentiation and improve robustness against intrusion (intentional) */
   for (uint32_t word_offset = 0UL; word_offset < modulus_words_count; word_offset++)
   {
-    if ((pka_ram_u32[PKA_MODULAR_EXP_OUT_RESULT + word_offset] !=
-         p_out_wrapped_private_key_blob->p_wrapped_phi[word_offset]) || (temp_random_count != randoms[1]))
-    {
-      CCB_ErasePoolBuffer(p_base_pool_buff, p_in_param->rsa_pool_buffer.buff_size_byte);
-      hccb->global_state = HAL_CCB_STATE_IDLE;
-      return HAL_ERROR;
-    }
+    diff |= pka_ram_u32[PKA_MODULAR_EXP_OUT_RESULT + word_offset] ^
+            p_out_wrapped_private_key_blob->p_wrapped_phi[word_offset];
+  }
+
+  if ((diff != 0U) || (tmp_random_count != randoms[1]))
+  {
+    CCB_ErasePoolBuffer(p_base_pool_buff, p_in_param->rsa_pool_buffer.buff_size_byte);
+    hccb->global_state = HAL_CCB_STATE_IDLE;
+    return HAL_ERROR;
   }
 
   /* Initialize random_count and Check random number */
@@ -2568,24 +2609,27 @@ hal_status_t HAL_CCB_RSA_SW_WrapPrivateKey(hal_ccb_handle_t *hccb, const hal_ccb
     return HAL_ERROR;
   }
 
-  /* Random wait */
+  /* Random wait: introduce a random-duration loop to complicate timing/fault attacks.
+     The loop count is derived from TRNG and then checked to detect potential fault injection. */
   for (uint16_t j = 0U; j < randoms[2]; ++j)
   {
     random_count++;
   }
 
-  temp_random_count = random_count;
+  tmp_random_count = random_count;
 
   /* Check Modular Exponentiation and improve robustness against intrusion (intentional) */
   for (uint32_t word_offset = 0UL; word_offset < modulus_words_count; word_offset++)
   {
-    if ((pka_ram_u32[PKA_MODULAR_EXP_OUT_RESULT + word_offset] !=
-         p_out_wrapped_private_key_blob->p_wrapped_phi[word_offset]) || (temp_random_count != randoms[2]))
-    {
-      CCB_ErasePoolBuffer(p_base_pool_buff, p_in_param->rsa_pool_buffer.buff_size_byte);
-      hccb->global_state = HAL_CCB_STATE_IDLE;
-      return HAL_ERROR;
-    }
+    diff |= pka_ram_u32[PKA_MODULAR_EXP_OUT_RESULT + word_offset] ^
+            p_out_wrapped_private_key_blob->p_wrapped_phi[word_offset];
+  }
+
+  if ((diff != 0U) || (tmp_random_count != randoms[2]))
+  {
+    CCB_ErasePoolBuffer(p_base_pool_buff, p_in_param->rsa_pool_buffer.buff_size_byte);
+    hccb->global_state = HAL_CCB_STATE_IDLE;
+    return HAL_ERROR;
   }
 
   CCB_RESET(hccb);
@@ -2595,11 +2639,11 @@ hal_status_t HAL_CCB_RSA_SW_WrapPrivateKey(hal_ccb_handle_t *hccb, const hal_ccb
   {
     if (count < CCB_BLOCK_SIZE_WORD)
     {
-      p_out_wrapped_private_key_blob->p_iv[count] = (p_temp_iv[count] ^ random32);
-      p_out_wrapped_private_key_blob->p_tag[count] = (p_temp_tag[count] ^ random32);
+      p_out_wrapped_private_key_blob->p_iv[count] = (p_tmp_iv[count] ^ random32);
+      p_out_wrapped_private_key_blob->p_tag[count] = (p_tmp_tag[count] ^ random32);
     }
-    p_out_wrapped_private_key_blob->p_wrapped_exp[count] = (p_temp_wrapped_exp[count] ^ random32);
-    p_out_wrapped_private_key_blob->p_wrapped_phi[count] = (p_temp_wrapped_phi[count] ^ random32);
+    p_out_wrapped_private_key_blob->p_wrapped_exp[count] = (p_tmp_wrapped_exp[count] ^ random32);
+    p_out_wrapped_private_key_blob->p_wrapped_phi[count] = (p_tmp_wrapped_phi[count] ^ random32);
   }
 
   CCB_ErasePoolBuffer(p_base_pool_buff, p_in_param->rsa_pool_buffer.buff_size_byte);
@@ -2615,27 +2659,24 @@ hal_status_t HAL_CCB_RSA_SW_WrapPrivateKey(hal_ccb_handle_t *hccb, const hal_ccb
   * @param  p_wrapping_key_context         Pointer to a @ref hal_ccb_wrapping_sw_key_context_t structure
   * @param  p_in_wrapped_user_key          Pointer to the wrapped user key
   * @param  p_in_wrapped_private_key_blob  Pointer to @ref hal_ccb_rsa_key_blob_t structure
-  * @param  p_out_operand                  Pointer to the operand
+  * @param  p_in_operand                   Pointer to the operand
   * @param  p_out_modular_exp              Pointer to the output operation
-  * @retval HAL_INVALID_PARAM              Invalid param return when the CCB handle is NULL \n
-                                           Invalid param return when input parameters pointer is NULL \n
-                                           Invalid param return when input parameter exp_size_byte is zero \n
-                                           Invalid param return when input parameter modulus_size_byte is zero \n
-                                           Invalid param return when input parameter modulus pointer is NULL \n
-                                           Invalid param return when wrapping key context pointer key is NULL \n
-                                           Invalid param return when provided init vector pointer is NULL \n
-                                           Invalid param return when provided key size pointer is NULL \n
-                                           Invalid param return when input wrapped private key blob pointer is NULL \n
-                                           Invalid param return when input wrapped private key blob IV pointer \n
-                                           is NULL \n
-                                           Invalid param return when input wrapped private key blob tag pointer \n
-                                           is NULL \n
-                                           Invalid param return when input wrapped private key blob wrapped exp \n
-                                           pointer is NULL \n
-                                           Invalid param return when input wrapped private key blob wrapped phi \n
-                                           pointer is NULL \n
-                                           Invalid param return when output operand pointer is NULL \n
-                                           Invalid param return when output modular exp pointer is NULL \n
+  * @retval HAL_INVALID_PARAM              The function return an Invalid param in the following cases: \n
+                                           - The CCB handle is NULL \n
+                                           - Input parameters pointer is NULL \n
+                                           - Input parameter exp_size_byte is zero \n
+                                           - Input parameter modulus_size_byte is zero \n
+                                           - Input parameter modulus pointer is NULL \n
+                                           - Wrapping key context pointer key is NULL \n
+                                           - Provided init vector pointer is NULL \n
+                                           - Provided key size pointer is NULL \n
+                                           - Input wrapped private key blob pointer is NULL \n
+                                           - Input wrapped private key blob IV pointer is NULL \n
+                                           - Input wrapped private key blob tag pointer is NULL \n
+                                           - Input wrapped private key blob wrapped exp pointer is NULL \n
+                                           - Input wrapped private key blob wrapped phi pointer is NULL \n
+                                           - Output operand pointer is NULL \n
+                                           - Output modular exp pointer is NULL \n
   * @retval HAL_ERROR                      Error detected
   * @retval HAL_OK                         Operation completed successfully
   */
@@ -2643,7 +2684,7 @@ hal_status_t HAL_CCB_RSA_SW_ComputeModularExp(hal_ccb_handle_t *hccb, const hal_
                                               const hal_ccb_wrapping_sw_key_context_t *p_wrapping_key_context,
                                               const uint32_t *p_in_wrapped_user_key,
                                               hal_ccb_rsa_key_blob_t *p_in_wrapped_private_key_blob,
-                                              const uint8_t *p_out_operand, uint8_t *p_out_modular_exp)
+                                              const uint8_t *p_in_operand, uint8_t *p_out_modular_exp)
 {
   CCB_TypeDef *p_ccb_instance = NULL;
   ccb_sw_unwrap_key_context_t sw_ctx = {CCB_KEY_TYPE_SOFTWARE, p_wrapping_key_context, p_in_wrapped_user_key};
@@ -2663,7 +2704,7 @@ hal_status_t HAL_CCB_RSA_SW_ComputeModularExp(hal_ccb_handle_t *hccb, const hal_
   ASSERT_DBG_PARAM(p_in_wrapped_private_key_blob->p_tag != NULL);
   ASSERT_DBG_PARAM(p_in_wrapped_private_key_blob->p_wrapped_exp != NULL);
   ASSERT_DBG_PARAM(p_in_wrapped_private_key_blob->p_wrapped_phi != NULL);
-  ASSERT_DBG_PARAM(p_out_operand != NULL);
+  ASSERT_DBG_PARAM(p_in_operand != NULL);
   ASSERT_DBG_PARAM(p_out_modular_exp != NULL);
 
   ASSERT_DBG_STATE(hccb->global_state, (uint32_t)HAL_CCB_STATE_IDLE);
@@ -2683,7 +2724,7 @@ hal_status_t HAL_CCB_RSA_SW_ComputeModularExp(hal_ccb_handle_t *hccb, const hal_
       || (p_wrapping_key_context->key_size == 0U) || (p_in_wrapped_user_key == NULL)
       || (p_in_wrapped_private_key_blob == NULL) || (p_in_wrapped_private_key_blob->p_iv == NULL)
       || (p_in_wrapped_private_key_blob->p_tag == NULL) || (p_in_wrapped_private_key_blob->p_wrapped_exp == NULL)
-      || (p_in_wrapped_private_key_blob->p_wrapped_phi == NULL) || (p_out_operand == NULL)
+      || (p_in_wrapped_private_key_blob->p_wrapped_phi == NULL) || (p_in_operand == NULL)
       || (p_out_modular_exp == NULL))
   {
     return HAL_INVALID_PARAM;
@@ -2702,7 +2743,7 @@ hal_status_t HAL_CCB_RSA_SW_ComputeModularExp(hal_ccb_handle_t *hccb, const hal_
 
   if (CCB_RSA_ComputeModularExp(p_ccb_instance, p_in_param, &sw_ctx, p_in_wrapped_private_key_blob->p_iv,
                                 p_in_wrapped_private_key_blob->p_tag, p_in_wrapped_private_key_blob->p_wrapped_exp,
-                                p_in_wrapped_private_key_blob->p_wrapped_phi, 0U, p_out_operand,
+                                p_in_wrapped_private_key_blob->p_wrapped_phi, 0U, p_in_operand,
                                 p_out_modular_exp) != HAL_OK)
   {
 #if defined(USE_HAL_CCB_GET_LAST_ERRORS) && (USE_HAL_CCB_GET_LAST_ERRORS == 1)
@@ -2757,25 +2798,23 @@ RSA operations:
   * @param  p_in_clear_private_key          Pointer to the clear private key
   * @param  wrapping_hw_key_type            Wrapping key with a **hal_ccb_wrapping_hw_key_type_t** type
   * @param  p_out_wrapped_private_key_blob  Pointer to @ref hal_ccb_ecdsa_key_blob_t structure
-  * @retval HAL_INVALID_PARAM               Invalid param return when the CCB handle is NULL \n
-                                            Invalid param return when input curve parameters pointer is NULL \n
-                                            Invalid param return when curve parameter abs_coef_a pointer is NULL \n
-                                            Invalid param return when curve parameter coef_b pointer is NULL \n
-                                            Invalid param return when curve parameter modulus pointer is NULL \n
-                                            Invalid param return when curve parameter prime_order pointer is NULL \n
-                                            Invalid param return when curve parameter point_x pointer is NULL \n
-                                            Invalid param return when curve parameter point_y pointer is NULL \n
-                                            Invalid param return when curve parameter prime_order_size_byte is zero \n
-                                            Invalid param return when curve parameter modulus_size_byte is zero \n
-                                            Invalid param return when curve parameter coef_sign_a is zero \n
-                                            Invalid param return when input clear private key pointer is NULL \n
-                                            Invalid param return when output wrapped private key blob pointer is NULL \n
-                                            Invalid param return when output wrapped private key blob IV pointer \n
-                                            is NULL \n
-                                            Invalid param return when output wrapped private key blob tag pointer \n
-                                            is NULL \n
-                                            Invalid param return when output wrapped private key blob wrapped key \n
-                                            pointer is NULL \n
+  * @retval HAL_INVALID_PARAM               The function return an Invalid param in the following cases: \n
+                                            - The CCB handle is NULL \n
+                                            - Input curve parameters pointer is NULL \n
+                                            - Curve parameter abs_coef_a pointer is NULL \n
+                                            - Curve parameter coef_b pointer is NULL \n
+                                            - Curve parameter modulus pointer is NULL \n
+                                            - Curve parameter prime_order pointer is NULL \n
+                                            - Curve parameter point_x pointer is NULL \n
+                                            - Curve parameter point_y pointer is NULL \n
+                                            - Curve parameter prime_order_size_byte is zero \n
+                                            - Curve parameter modulus_size_byte is zero \n
+                                            - Curve parameter coef_sign_a is zero \n
+                                            - Input clear private key pointer is NULL \n
+                                            - Output wrapped private key blob pointer is NULL \n
+                                            - Output wrapped private key blob IV pointer is NULL \n
+                                            - Output wrapped private key blob tag pointer is NULL \n
+                                            - Output wrapped private key blob wrapped key pointer is NULL \n
   * @retval HAL_ERROR                       Error detected
   * @retval HAL_OK                          Operation completed successfully
   */
@@ -2786,16 +2825,16 @@ hal_status_t HAL_CCB_ECDSA_HW_WrapPrivateKey(hal_ccb_handle_t *hccb,
                                              hal_ccb_wrapping_hw_key_type_t wrapping_hw_key_type,
                                              hal_ccb_ecdsa_key_blob_t *p_out_wrapped_private_key_blob)
 {
-  uint32_t *p_temp_iv = NULL;
-  uint32_t *p_temp_tag = NULL;
-  uint32_t *p_temp_wrapped_key = NULL;
-  __IO const uint32_t *pka_ram_u32 = NULL;
+  uint32_t *p_tmp_iv = NULL;
+  uint32_t *p_tmp_tag = NULL;
+  uint32_t *p_tmp_wrapped_key = NULL;
+  __IOM const uint32_t *pka_ram_u32 = NULL;
   uint32_t operand_size = 0U;
   uint32_t cipherkey_size = 0U;
   uint32_t offset_pool_buff = 0U;
   uint32_t random32 = 0U;
   volatile uint16_t random_count = 0U;
-  uint16_t temp_random_count = 0U;
+  uint16_t tmp_random_count = 0U;
   uint16_t randoms[3] = {0U};
   uint8_t *p_base_pool_buff = NULL;
   CCB_TypeDef *p_ccb_instance = NULL;
@@ -2890,16 +2929,16 @@ hal_status_t HAL_CCB_ECDSA_HW_WrapPrivateKey(hal_ccb_handle_t *hccb,
   offset_pool_buff += p_in_curve_param->modulus_size_byte;
   signature.p_s_sign = &p_base_pool_buff[offset_pool_buff];
   offset_pool_buff += p_in_curve_param->modulus_size_byte;
-  p_temp_iv = (uint32_t *)(void *)&p_base_pool_buff[offset_pool_buff];
+  p_tmp_iv = (uint32_t *)(void *)&p_base_pool_buff[offset_pool_buff];
   offset_pool_buff += 4U * sizeof(uint32_t);
-  p_temp_tag = (uint32_t *)(void *)&p_base_pool_buff[offset_pool_buff];
+  p_tmp_tag = (uint32_t *)(void *)&p_base_pool_buff[offset_pool_buff];
   offset_pool_buff += 4U * sizeof(uint32_t);
-  p_temp_wrapped_key = (uint32_t *)(void *)&p_base_pool_buff[offset_pool_buff];
+  p_tmp_wrapped_key = (uint32_t *)(void *)&p_base_pool_buff[offset_pool_buff];
   offset_pool_buff += cipherkey_size * CCB_BLOCK_SIZE_WORD;
   random32 = (((uint32_t)randoms[1] << 16U) | (uint32_t)randoms[0]);
 
-  if (CCB_ECDSA_SignBlobCreation(p_ccb_instance, p_in_curve_param, &hw_ctx, p_in_clear_private_key, p_temp_iv,
-                                 p_temp_tag, p_temp_wrapped_key, random32,
+  if (CCB_ECDSA_SignBlobCreation(p_ccb_instance, p_in_curve_param, &hw_ctx, p_in_clear_private_key, p_tmp_iv,
+                                 p_tmp_tag, p_tmp_wrapped_key, random32,
                                  (uint8_t *)p_out_wrapped_private_key_blob->p_wrapped_key, &signature,
                                  CCB_ECDSA_SIGN_CPU_BLOB_CREATION) != HAL_OK)
   {
@@ -2917,7 +2956,7 @@ hal_status_t HAL_CCB_ECDSA_HW_WrapPrivateKey(hal_ccb_handle_t *hccb,
   offset_pool_buff += p_in_curve_param->modulus_size_byte;
   public_key_out.p_point_y = &p_base_pool_buff[offset_pool_buff];
 
-  if (CCB_ECDSA_ComputePublicKey(p_ccb_instance, p_in_curve_param, &hw_ctx, p_temp_iv, p_temp_tag, p_temp_wrapped_key,
+  if (CCB_ECDSA_ComputePublicKey(p_ccb_instance, p_in_curve_param, &hw_ctx, p_tmp_iv, p_tmp_tag, p_tmp_wrapped_key,
                                  random32, &public_key_out) != HAL_OK)
   {
     CCB_ErasePoolBuffer(p_base_pool_buff, p_in_curve_param->ecdsa_pool_buffer.buff_size_byte);
@@ -2948,17 +2987,18 @@ hal_status_t HAL_CCB_ECDSA_HW_WrapPrivateKey(hal_ccb_handle_t *hccb,
     return HAL_ERROR;
   }
 
-  /* Random wait */
+  /* Random wait: introduce a random-duration loop to complicate timing/fault attacks.
+     The loop count is derived from TRNG and then checked to detect potential fault injection. */
   for (uint16_t j = 0U; j < randoms[0]; ++j)
   {
     random_count++;
   }
 
-  pka_ram_u32 = (__IO uint32_t *)PKA->RAM;
-  temp_random_count = random_count;
+  pka_ram_u32 = (__IOM uint32_t *)PKA->RAM;
+  tmp_random_count = random_count;
 
   /* Check if it is valid signature and improve robustness against intrusion (intentional) */
-  if ((pka_ram_u32[PKA_ECDSA_VERIF_OUT_RESULT] != CCB_PKA_RESULT_OK) || (temp_random_count != randoms[0]))
+  if ((pka_ram_u32[PKA_ECDSA_VERIF_OUT_RESULT] != CCB_PKA_RESULT_OK) || (tmp_random_count != randoms[0]))
   {
     CCB_ErasePoolBuffer(p_base_pool_buff, p_in_curve_param->ecdsa_pool_buffer.buff_size_byte);
     hccb->global_state = HAL_CCB_STATE_IDLE;
@@ -2974,16 +3014,17 @@ hal_status_t HAL_CCB_ECDSA_HW_WrapPrivateKey(hal_ccb_handle_t *hccb,
     return HAL_ERROR;
   }
 
-  /* Random wait */
+  /* Random wait: introduce a random-duration loop to complicate timing/fault attacks.
+     The loop count is derived from TRNG and then checked to detect potential fault injection. */
   for (uint16_t j = 0U; j < randoms[1]; ++j)
   {
     random_count++;
   }
 
-  temp_random_count = random_count;
+  tmp_random_count = random_count;
 
   /* Check if it is valid signature and improve robustness against intrusion (intentional) */
-  if ((pka_ram_u32[PKA_ECDSA_VERIF_OUT_RESULT] != CCB_PKA_RESULT_OK) || (temp_random_count != randoms[1]))
+  if ((pka_ram_u32[PKA_ECDSA_VERIF_OUT_RESULT] != CCB_PKA_RESULT_OK) || (tmp_random_count != randoms[1]))
   {
     CCB_ErasePoolBuffer(p_base_pool_buff, p_in_curve_param->ecdsa_pool_buffer.buff_size_byte);
     hccb->global_state = HAL_CCB_STATE_IDLE;
@@ -2999,16 +3040,17 @@ hal_status_t HAL_CCB_ECDSA_HW_WrapPrivateKey(hal_ccb_handle_t *hccb,
     return HAL_ERROR;
   }
 
-  /* Random wait */
+  /* Random wait: introduce a random-duration loop to complicate timing/fault attacks.
+     The loop count is derived from TRNG and then checked to detect potential fault injection. */
   for (uint16_t j = 0U; j < randoms[2]; ++j)
   {
     random_count++;
   }
 
-  temp_random_count = random_count;
+  tmp_random_count = random_count;
 
   /* Check if it is valid signature and improve robustness against intrusion (intentional) */
-  if ((pka_ram_u32[PKA_ECDSA_VERIF_OUT_RESULT] != CCB_PKA_RESULT_OK) || (temp_random_count != randoms[2]))
+  if ((pka_ram_u32[PKA_ECDSA_VERIF_OUT_RESULT] != CCB_PKA_RESULT_OK) || (tmp_random_count != randoms[2]))
   {
     CCB_ErasePoolBuffer(p_base_pool_buff, p_in_curve_param->ecdsa_pool_buffer.buff_size_byte);
     hccb->global_state = HAL_CCB_STATE_IDLE;
@@ -3020,10 +3062,10 @@ hal_status_t HAL_CCB_ECDSA_HW_WrapPrivateKey(hal_ccb_handle_t *hccb,
   {
     if (count < CCB_BLOCK_SIZE_WORD)
     {
-      p_out_wrapped_private_key_blob->p_iv[count] = (p_temp_iv[count] ^ random32);
-      p_out_wrapped_private_key_blob->p_tag[count] = (p_temp_tag[count] ^ random32);
+      p_out_wrapped_private_key_blob->p_iv[count] = (p_tmp_iv[count] ^ random32);
+      p_out_wrapped_private_key_blob->p_tag[count] = (p_tmp_tag[count] ^ random32);
     }
-    p_out_wrapped_private_key_blob->p_wrapped_key[count] = (p_temp_wrapped_key[count] ^ random32);
+    p_out_wrapped_private_key_blob->p_wrapped_key[count] = (p_tmp_wrapped_key[count] ^ random32);
   }
 
   CCB_ErasePoolBuffer(p_base_pool_buff, p_in_curve_param->ecdsa_pool_buffer.buff_size_byte);
@@ -3038,25 +3080,23 @@ hal_status_t HAL_CCB_ECDSA_HW_WrapPrivateKey(hal_ccb_handle_t *hccb,
   * @param  p_in_curve_param                Pointer to a @ref hal_ccb_ecdsa_curve_param_t structure
   * @param  wrapping_hw_key_type            Wrapping key with a **hal_ccb_wrapping_hw_key_type_t** type
   * @param  p_out_wrapped_private_key_blob  Pointer to a @ref hal_ccb_ecdsa_key_blob_t structure
-  * @retval HAL_INVALID_PARAM               Invalid param return when the CCB handle is NULL \n
-                                            Invalid param return when input curve parameters pointer is NULL \n
-                                            Invalid param return when curve parameter abs_coef_a pointer is NULL \n
-                                            Invalid param return when curve parameter coef_b pointer is NULL \n
-                                            Invalid param return when curve parameter modulus pointer is NULL \n
-                                            Invalid param return when curve parameter prime_order pointer is NULL \n
-                                            Invalid param return when curve parameter point_x pointer is NULL \n
-                                            Invalid param return when curve parameter point_y pointer is NULL \n
-                                            Invalid param return when curve parameter prime_order_size_byte is zero \n
-                                            Invalid param return when curve parameter modulus_size_byte is zero \n
-                                            Invalid param return when curve parameter coef_sign_a is zero \n
-                                            Invalid param return when input clear private key pointer is NULL \n
-                                            Invalid param return when output wrapped private key blob pointer is NULL \n
-                                            Invalid param return when output wrapped private key blob IV pointer \n
-                                            is NULL \n
-                                            Invalid param return when output wrapped private key blob tag pointer \n
-                                            is NULL \n
-                                            Invalid param return when output wrapped private key blob wrapped key \n
-                                            pointer is NULL \n
+  * @retval HAL_INVALID_PARAM               The function return an Invalid param in the following cases: \n
+                                            - The CCB handle is NULL \n
+                                            - Input curve parameters pointer is NULL \n
+                                            - Curve parameter abs_coef_a pointer is NULL \n
+                                            - Curve parameter coef_b pointer is NULL \n
+                                            - Curve parameter modulus pointer is NULL \n
+                                            - Curve parameter prime_order pointer is NULL \n
+                                            - Curve parameter point_x pointer is NULL \n
+                                            - Curve parameter point_y pointer is NULL \n
+                                            - Curve parameter prime_order_size_byte is zero \n
+                                            - Curve parameter modulus_size_byte is zero \n
+                                            - Curve parameter coef_sign_a is zero \n
+                                            - Input clear private key pointer is NULL \n
+                                            - Output wrapped private key blob pointer is NULL \n
+                                            - Output wrapped private key blob IV pointer is NULL \n
+                                            - Output wrapped private key blob tag pointer is NULL \n
+                                            - Output wrapped private key blob wrapped key pointer is NULL \n
   * @retval HAL_ERROR                       Error detected
   * @retval HAL_OK                          Operation completed successfully
   */
@@ -3065,16 +3105,16 @@ hal_status_t HAL_CCB_ECDSA_HW_GenerateWrapPrivateKey(hal_ccb_handle_t *hccb,
                                                      hal_ccb_wrapping_hw_key_type_t wrapping_hw_key_type,
                                                      hal_ccb_ecdsa_key_blob_t *p_out_wrapped_private_key_blob)
 {
-  uint32_t *p_temp_iv = NULL;
-  uint32_t *p_temp_tag = NULL;
-  uint32_t *p_temp_wrapped_key = NULL;
-  __IO const uint32_t *pka_ram_u32 = NULL;
+  uint32_t *p_tmp_iv = NULL;
+  uint32_t *p_tmp_tag = NULL;
+  uint32_t *p_tmp_wrapped_key = NULL;
+  __IOM const uint32_t *pka_ram_u32 = NULL;
   uint32_t operand_size = 0U;
   uint32_t cipherkey_size = 0U;
   uint32_t offset_pool_buff = 0U;
   uint32_t random32 = 0U;
   volatile uint16_t random_count = 0U;
-  uint16_t temp_random_count = 0U;
+  uint16_t tmp_random_count = 0U;
   uint16_t randoms[3] = {0U};
   uint8_t *p_base_pool_buff = NULL;
   CCB_TypeDef *p_ccb_instance = NULL;
@@ -3168,16 +3208,16 @@ hal_status_t HAL_CCB_ECDSA_HW_GenerateWrapPrivateKey(hal_ccb_handle_t *hccb,
   offset_pool_buff += p_in_curve_param->modulus_size_byte;
   signature.p_s_sign = &p_base_pool_buff[offset_pool_buff];
   offset_pool_buff += p_in_curve_param->modulus_size_byte;
-  p_temp_iv = (uint32_t *)(void *)&p_base_pool_buff[offset_pool_buff];
+  p_tmp_iv = (uint32_t *)(void *)&p_base_pool_buff[offset_pool_buff];
   offset_pool_buff += 4U * sizeof(uint32_t);
-  p_temp_tag = (uint32_t *)(void *)&p_base_pool_buff[offset_pool_buff];
+  p_tmp_tag = (uint32_t *)(void *)&p_base_pool_buff[offset_pool_buff];
   offset_pool_buff += 4U * sizeof(uint32_t);
-  p_temp_wrapped_key = (uint32_t *)(void *)&p_base_pool_buff[offset_pool_buff];
+  p_tmp_wrapped_key = (uint32_t *)(void *)&p_base_pool_buff[offset_pool_buff];
   offset_pool_buff += cipherkey_size * CCB_BLOCK_SIZE_WORD;
   random32 = (((uint32_t)randoms[1] << 16U) | (uint32_t)randoms[0]);
 
-  if (CCB_ECDSA_SignBlobCreation(p_ccb_instance, p_in_curve_param, &hw_ctx, NULL, p_temp_iv, p_temp_tag,
-                                 p_temp_wrapped_key, random32,
+  if (CCB_ECDSA_SignBlobCreation(p_ccb_instance, p_in_curve_param, &hw_ctx, NULL, p_tmp_iv, p_tmp_tag,
+                                 p_tmp_wrapped_key, random32,
                                  (uint8_t *)p_out_wrapped_private_key_blob->p_wrapped_key, &signature,
                                  CCB_ECDSA_SIGN_RNG_BLOB_CREATION) != HAL_OK)
   {
@@ -3195,7 +3235,7 @@ hal_status_t HAL_CCB_ECDSA_HW_GenerateWrapPrivateKey(hal_ccb_handle_t *hccb,
   offset_pool_buff += p_in_curve_param->modulus_size_byte;
   public_key_out.p_point_y = &p_base_pool_buff[offset_pool_buff];
 
-  if (CCB_ECDSA_ComputePublicKey(p_ccb_instance, p_in_curve_param, &hw_ctx, p_temp_iv, p_temp_tag, p_temp_wrapped_key,
+  if (CCB_ECDSA_ComputePublicKey(p_ccb_instance, p_in_curve_param, &hw_ctx, p_tmp_iv, p_tmp_tag, p_tmp_wrapped_key,
                                  random32, &public_key_out) != HAL_OK)
   {
     CCB_ErasePoolBuffer(p_base_pool_buff, p_in_curve_param->ecdsa_pool_buffer.buff_size_byte);
@@ -3226,17 +3266,18 @@ hal_status_t HAL_CCB_ECDSA_HW_GenerateWrapPrivateKey(hal_ccb_handle_t *hccb,
     return HAL_ERROR;
   }
 
-  /* Random wait */
+  /* Random wait: introduce a random-duration loop to complicate timing/fault attacks.
+     The loop count is derived from TRNG and then checked to detect potential fault injection. */
   for (uint16_t j = 0U; j < randoms[0]; ++j)
   {
     random_count++;
   }
 
-  pka_ram_u32 = (__IO uint32_t *)PKA->RAM;
-  temp_random_count = random_count;
+  pka_ram_u32 = (__IOM uint32_t *)PKA->RAM;
+  tmp_random_count = random_count;
 
   /* Check if it is valid signature and improve robustness against intrusion (intentional) */
-  if ((pka_ram_u32[PKA_ECDSA_VERIF_OUT_RESULT] != CCB_PKA_RESULT_OK) || (temp_random_count != randoms[0]))
+  if ((pka_ram_u32[PKA_ECDSA_VERIF_OUT_RESULT] != CCB_PKA_RESULT_OK) || (tmp_random_count != randoms[0]))
   {
     CCB_ErasePoolBuffer(p_base_pool_buff, p_in_curve_param->ecdsa_pool_buffer.buff_size_byte);
     hccb->global_state = HAL_CCB_STATE_IDLE;
@@ -3252,16 +3293,17 @@ hal_status_t HAL_CCB_ECDSA_HW_GenerateWrapPrivateKey(hal_ccb_handle_t *hccb,
     return HAL_ERROR;
   }
 
-  /* Random wait */
+  /* Random wait: introduce a random-duration loop to complicate timing/fault attacks.
+     The loop count is derived from TRNG and then checked to detect potential fault injection. */
   for (uint16_t j = 0U; j < randoms[1]; ++j)
   {
     random_count++;
   }
 
-  temp_random_count = random_count;
+  tmp_random_count = random_count;
 
   /* Check if it is valid signature and improve robustness against intrusion (intentional) */
-  if ((pka_ram_u32[PKA_ECDSA_VERIF_OUT_RESULT] != CCB_PKA_RESULT_OK) || (temp_random_count != randoms[1]))
+  if ((pka_ram_u32[PKA_ECDSA_VERIF_OUT_RESULT] != CCB_PKA_RESULT_OK) || (tmp_random_count != randoms[1]))
   {
     CCB_ErasePoolBuffer(p_base_pool_buff, p_in_curve_param->ecdsa_pool_buffer.buff_size_byte);
     hccb->global_state = HAL_CCB_STATE_IDLE;
@@ -3277,16 +3319,17 @@ hal_status_t HAL_CCB_ECDSA_HW_GenerateWrapPrivateKey(hal_ccb_handle_t *hccb,
     return HAL_ERROR;
   }
 
-  /* Random wait */
+  /* Random wait: introduce a random-duration loop to complicate timing/fault attacks.
+     The loop count is derived from TRNG and then checked to detect potential fault injection. */
   for (uint16_t j = 0U; j < randoms[2]; ++j)
   {
     random_count++;
   }
 
-  temp_random_count = random_count;
+  tmp_random_count = random_count;
 
   /* Check if it is valid signature and improve robustness against intrusion (intentional) */
-  if ((pka_ram_u32[PKA_ECDSA_VERIF_OUT_RESULT] != CCB_PKA_RESULT_OK) || (temp_random_count != randoms[2]))
+  if ((pka_ram_u32[PKA_ECDSA_VERIF_OUT_RESULT] != CCB_PKA_RESULT_OK) || (tmp_random_count != randoms[2]))
   {
     CCB_ErasePoolBuffer(p_base_pool_buff, p_in_curve_param->ecdsa_pool_buffer.buff_size_byte);
     hccb->global_state = HAL_CCB_STATE_IDLE;
@@ -3298,10 +3341,10 @@ hal_status_t HAL_CCB_ECDSA_HW_GenerateWrapPrivateKey(hal_ccb_handle_t *hccb,
   {
     if (count < CCB_BLOCK_SIZE_WORD)
     {
-      p_out_wrapped_private_key_blob->p_iv[count] = (p_temp_iv[count] ^ random32);
-      p_out_wrapped_private_key_blob->p_tag[count] = (p_temp_tag[count] ^ random32);
+      p_out_wrapped_private_key_blob->p_iv[count] = (p_tmp_iv[count] ^ random32);
+      p_out_wrapped_private_key_blob->p_tag[count] = (p_tmp_tag[count] ^ random32);
     }
-    p_out_wrapped_private_key_blob->p_wrapped_key[count] = (p_temp_wrapped_key[count] ^ random32);
+    p_out_wrapped_private_key_blob->p_wrapped_key[count] = (p_tmp_wrapped_key[count] ^ random32);
   }
 
   CCB_ErasePoolBuffer(p_base_pool_buff, p_in_curve_param->ecdsa_pool_buffer.buff_size_byte);
@@ -3319,27 +3362,26 @@ hal_status_t HAL_CCB_ECDSA_HW_GenerateWrapPrivateKey(hal_ccb_handle_t *hccb,
   * @param  p_in_hash                      Pointer to the hash message
   * @param  hash_size                      Specify the size of the hash message
   * @param  p_out_signature                Pointer to a @ref hal_ccb_ecdsa_sign_t structure
-  * @retval HAL_INVALID_PARAM              Invalid param return when the CCB handle is NULL \n
-                                           Invalid param return when input curve parameters pointer is NULL \n
-                                           Invalid param return when curve parameter abs_coef_a pointer is NULL \n
-                                           Invalid param return when curve parameter coef_b pointer is NULL \n
-                                           Invalid param return when curve parameter modulus pointer is NULL \n
-                                           Invalid param return when curve parameter prime_order pointer is NULL \n
-                                           Invalid param return when curve parameter point_x pointer is NULL \n
-                                           Invalid param return when curve parameter point_y pointer is NULL \n
-                                           Invalid param return when curve parameter prime_order_size_byte is zero \n
-                                           Invalid param return when curve parameter modulus_size_byte is zero \n
-                                           Invalid param return when curve parameter coef_sign_a is zero \n
-                                           Invalid param return when input wrapped private key blob pointer is NULL \n
-                                           Invalid param return when input wrapped private key blob IV pointer \n
-                                           is NULL \n
-                                           Invalid param return when input wrapped private key blob tag pointer \n
-                                           is NULL \n
-                                           Invalid param return when input hash pointer is NULL \n
-                                           Invalid param return when hash size is zero \n
-                                           Invalid param return when output signature pointer is NULL \n
-                                           Invalid param return when output signature r_sign pointer is NULL \n
-                                           Invalid param return when output signature s_sign pointer is NULL \n
+  * @retval HAL_INVALID_PARAM              The function return an Invalid param in the following cases: \n
+                                           - The CCB handle is NULL \n
+                                           - Input curve parameters pointer is NULL \n
+                                           - Curve parameter abs_coef_a pointer is NULL \n
+                                           - Curve parameter coef_b pointer is NULL \n
+                                           - Curve parameter modulus pointer is NULL \n
+                                           - Curve parameter prime_order pointer is NULL \n
+                                           - Curve parameter point_x pointer is NULL \n
+                                           - Curve parameter point_y pointer is NULL \n
+                                           - Curve parameter prime_order_size_byte is zero \n
+                                           - Curve parameter modulus_size_byte is zero \n
+                                           - Curve parameter coef_sign_a is zero \n
+                                           - Input wrapped private key blob pointer is NULL \n
+                                           - Input wrapped private key blob IV pointer is NULL \n
+                                           - Input wrapped private key blob tag pointer is NULL \n
+                                           - Input hash pointer is NULL \n
+                                           - Hash size is zero \n
+                                           - Output signature pointer is NULL \n
+                                           - Output signature r_sign pointer is NULL \n
+                                           - Output signature s_sign pointer is NULL \n
   * @retval HAL_ERROR                      Error detected
   * @retval HAL_OK                         Operation completed successfully
   */
@@ -3439,27 +3481,25 @@ hal_status_t HAL_CCB_ECDSA_HW_Sign(hal_ccb_handle_t *hccb, const hal_ccb_ecdsa_c
   * @param  wrapping_hw_key_type           Wrapping key with a **hal_ccb_wrapping_hw_key_type_t** type
   * @param  p_in_wrapped_private_key_blob  Pointer to a @ref hal_ccb_ecdsa_key_blob_t structure
   * @param  p_out_public_key               Pointer to a @ref hal_ccb_ecc_point_t structure
-  * @retval HAL_INVALID_PARAM              Invalid param return when the CCB handle is NULL \n
-                                           Invalid param return when input curve parameters pointer is NULL \n
-                                           Invalid param return when curve parameter abs_coef_a pointer is NULL \n
-                                           Invalid param return when curve parameter coef_b pointer is NULL \n
-                                           Invalid param return when curve parameter modulus pointer is NULL \n
-                                           Invalid param return when curve parameter prime_order pointer is NULL \n
-                                           Invalid param return when curve parameter point_x pointer is NULL \n
-                                           Invalid param return when curve parameter point_y pointer is NULL \n
-                                           Invalid param return when curve parameter prime_order_size_byte is zero \n
-                                           Invalid param return when curve parameter modulus_size_byte is zero \n
-                                           Invalid param return when curve parameter coef_sign_a is zero \n
-                                           Invalid param return when input wrapped private key blob pointer is NULL \n
-                                           Invalid param return when input wrapped private key blob IV pointer \n
-                                           is NULL \n
-                                           Invalid param return when input wrapped private key blob tag pointer \n
-                                           is NULL \n
-                                           Invalid param return when input wrapped private key blob wrapped key \n
-                                           pointer is NULL \n
-                                           Invalid param return when output public key point_x pointer is NULL \n
-                                           Invalid param return when output public key point_y pointer is NULL \n
-                                           Invalid param return when output public key pointer is NULL \n
+  * @retval HAL_INVALID_PARAM              The function return an Invalid param in the following cases: \n
+                                           - The CCB handle is NULL \n
+                                           - Input curve parameters pointer is NULL \n
+                                           - Curve parameter abs_coef_a pointer is NULL \n
+                                           - Curve parameter coef_b pointer is NULL \n
+                                           - Curve parameter modulus pointer is NULL \n
+                                           - Curve parameter prime_order pointer is NULL \n
+                                           - Curve parameter point_x pointer is NULL \n
+                                           - Curve parameter point_y pointer is NULL \n
+                                           - Curve parameter prime_order_size_byte is zero \n
+                                           - Curve parameter modulus_size_byte is zero \n
+                                           - Curve parameter coef_sign_a is zero \n
+                                           - Input wrapped private key blob pointer is NULL \n
+                                           - Input wrapped private key blob IV pointer is NULL \n
+                                           - Input wrapped private key blob tag pointer is NULL \n
+                                           - Input wrapped private key blob wrapped key pointer is NULL \n
+                                           - Output public key point_x pointer is NULL \n
+                                           - Output public key point_y pointer is NULL \n
+                                           - Output public key pointer is NULL \n
   * @retval HAL_ERROR                      Error detected
   * @retval HAL_OK                         Operation completed successfully
   */
@@ -3551,25 +3591,23 @@ hal_status_t HAL_CCB_ECDSA_HW_ComputePublicKey(hal_ccb_handle_t *hccb,
   * @param  p_in_clear_private_key          Pointer to the clear private key
   * @param  wrapping_hw_key_type            Wrapping key with a **hal_ccb_wrapping_hw_key_type_t** type
   * @param  p_out_wrapped_private_key_blob  Pointer to @ref hal_ccb_ecc_mul_key_blob_t structure
-  * @retval HAL_INVALID_PARAM               Invalid param return when the CCB handle is NULL \n
-                                            Invalid param return when input curve parameters pointer is NULL \n
-                                            Invalid param return when curve parameter abs_coef_a pointer is NULL \n
-                                            Invalid param return when curve parameter coef_b pointer is NULL \n
-                                            Invalid param return when curve parameter modulus pointer is NULL \n
-                                            Invalid param return when curve parameter prime_order pointer is NULL \n
-                                            Invalid param return when curve parameter point_x pointer is NULL \n
-                                            Invalid param return when curve parameter point_y pointer is NULL \n
-                                            Invalid param return when curve parameter prime_order_size_byte is zero \n
-                                            Invalid param return when curve parameter modulus_size_byte is zero \n
-                                            Invalid param return when curve parameter coef_sign_a is zero \n
-                                            Invalid param return when input clear private key blob pointer is NULL \n
-                                            Invalid param return when output wrapped private key blob pointer is NULL \n
-                                            Invalid param return when output wrapped private key blob IV pointer \n
-                                            is NULL \n
-                                            Invalid param return when output wrapped private key blob tag pointer \n
-                                            is NULL \n
-                                            Invalid param return when output wrapped private key blob wrapped key \n
-                                            pointer is NULL \n
+  * @retval HAL_INVALID_PARAM               The function return an Invalid param in the following cases: \n
+                                            - The CCB handle is NULL \n
+                                            - Input curve parameters pointer is NULL \n
+                                            - Curve parameter abs_coef_a pointer is NULL \n
+                                            - Curve parameter coef_b pointer is NULL \n
+                                            - Curve parameter modulus pointer is NULL \n
+                                            - Curve parameter prime_order pointer is NULL \n
+                                            - Curve parameter point_x pointer is NULL \n
+                                            - Curve parameter point_y pointer is NULL \n
+                                            - Curve parameter prime_order_size_byte is zero \n
+                                            - Curve parameter modulus_size_byte is zero \n
+                                            - Curve parameter coef_sign_a is zero \n
+                                            - Input clear private key blob pointer is NULL \n
+                                            - Output wrapped private key blob pointer is NULL \n
+                                            - Output wrapped private key blob IV pointer is NULL \n
+                                            - Output wrapped private key blob tag pointer is NULL \n
+                                            - Output wrapped private key blob wrapped key pointer is NULL \n
   * @retval HAL_ERROR                       Error detected
   * @retval HAL_OK                          Operation completed successfully
   */
@@ -3580,18 +3618,19 @@ hal_status_t HAL_CCB_ECC_HW_WrapPrivateKey(hal_ccb_handle_t *hccb,
                                            hal_ccb_ecc_mul_key_blob_t *p_out_wrapped_private_key_blob)
 {
   uint32_t *p_scalar_mul_y = NULL;
-  uint32_t *p_temp_iv = NULL;
-  uint32_t *p_temp_tag = NULL;
-  uint32_t *p_temp_wrapped_key = NULL;
-  __IO const uint32_t *pka_ram_u32 = NULL;
+  uint32_t *p_tmp_iv = NULL;
+  uint32_t *p_tmp_tag = NULL;
+  uint32_t *p_tmp_wrapped_key = NULL;
+  __IOM const uint32_t *pka_ram_u32 = NULL;
   uint32_t operand_size = 0U;
   uint32_t cipherkey_size = 0U;
   uint32_t offset_pool_buff = 0U;
   uint32_t random32 = 0U;
   uint32_t modulus_words_count = 0U;
   uint16_t randoms[3] = {0U};
+  uint32_t diff = 0U;
   volatile uint16_t random_count = 0U;
-  uint16_t temp_random_count = 0U;
+  uint16_t tmp_random_count = 0U;
   uint8_t *p_base_pool_buff = NULL;
   CCB_TypeDef *p_ccb_instance = NULL;
   ccb_hw_unwrap_key_context_t hw_ctx = {CCB_KEY_TYPE_HARDWARE, wrapping_hw_key_type};
@@ -3673,15 +3712,15 @@ hal_status_t HAL_CCB_ECC_HW_WrapPrivateKey(hal_ccb_handle_t *hccb,
   cipherkey_size = ((operand_size & 3U) != 0U) ? (operand_size - 2U) : operand_size;
   p_scalar_mul_y = (uint32_t *)(void *)&p_base_pool_buff[offset_pool_buff];
   offset_pool_buff += ((p_in_curve_param->modulus_size_byte + 3U) >> 2U) * CCB_BLOCK_SIZE_WORD;
-  p_temp_iv = (uint32_t *)(void *)&p_base_pool_buff[offset_pool_buff];
+  p_tmp_iv = (uint32_t *)(void *)&p_base_pool_buff[offset_pool_buff];
   offset_pool_buff += 4U * sizeof(uint32_t);
-  p_temp_tag = (uint32_t *)(void *)&p_base_pool_buff[offset_pool_buff];
+  p_tmp_tag = (uint32_t *)(void *)&p_base_pool_buff[offset_pool_buff];
   offset_pool_buff += 4U * sizeof(uint32_t);
-  p_temp_wrapped_key = (uint32_t *)(void *)&p_base_pool_buff[offset_pool_buff];
+  p_tmp_wrapped_key = (uint32_t *)(void *)&p_base_pool_buff[offset_pool_buff];
   random32 = (((uint32_t)randoms[1] << 16U) | (uint32_t)randoms[0]);
 
-  if (CCB_ECC_ScalarMulBlobCreation(p_ccb_instance, p_in_curve_param, &hw_ctx, p_in_clear_private_key, p_temp_iv,
-                                    p_temp_tag, p_temp_wrapped_key, random32,
+  if (CCB_ECC_ScalarMulBlobCreation(p_ccb_instance, p_in_curve_param, &hw_ctx, p_in_clear_private_key, p_tmp_iv,
+                                    p_tmp_tag, p_tmp_wrapped_key, random32,
                                     p_out_wrapped_private_key_blob->p_wrapped_key, p_scalar_mul_y,
                                     CCB_ECC_SCALAR_MUL_CPU_BLOB_CREATION) != HAL_OK)
   {
@@ -3695,7 +3734,7 @@ hal_status_t HAL_CCB_ECC_HW_WrapPrivateKey(hal_ccb_handle_t *hccb,
 
   CCB_RESET(hccb);
 
-  if (CCB_ECC_ComputeScalarMul(p_ccb_instance, p_in_curve_param, &hw_ctx, p_temp_iv, p_temp_tag, p_temp_wrapped_key,
+  if (CCB_ECC_ComputeScalarMul(p_ccb_instance, p_in_curve_param, &hw_ctx, p_tmp_iv, p_tmp_tag, p_tmp_wrapped_key,
                                random32, NULL, NULL) != HAL_OK)
   {
     CCB_ErasePoolBuffer(p_base_pool_buff, p_in_curve_param->ecc_pool_buffer.buff_size_byte);
@@ -3714,38 +3753,42 @@ hal_status_t HAL_CCB_ECC_HW_WrapPrivateKey(hal_ccb_handle_t *hccb,
     return HAL_ERROR;
   }
 
-  /* Random wait */
+  /* Random wait: introduce a random-duration loop to complicate timing/fault attacks.
+     The loop count is derived from TRNG and then checked to detect potential fault injection. */
   for (uint16_t j = 0U; j < randoms[0]; ++j)
   {
     random_count++;
   }
 
-  pka_ram_u32 = (__IO uint32_t *)PKA->RAM;
-  temp_random_count = random_count;
+  pka_ram_u32 = (__IOM uint32_t *)PKA->RAM;
+  tmp_random_count = random_count;
 
   /* Check Scalar Multiplication and improve robustness against intrusion (intentional) */
   /* P coordinate x */
   for (uint32_t word_offset = 0UL; word_offset < modulus_words_count; word_offset++)
   {
-    if ((pka_ram_u32[PKA_ECC_SCALAR_MUL_OUT_RESULT_X + word_offset]
-         != p_out_wrapped_private_key_blob->p_wrapped_key[word_offset]) || (temp_random_count != randoms[0]))
-    {
-      CCB_ErasePoolBuffer(p_base_pool_buff, p_in_curve_param->ecc_pool_buffer.buff_size_byte);
-      hccb->global_state = HAL_CCB_STATE_IDLE;
-      return HAL_ERROR;
-    }
+    diff |= pka_ram_u32[PKA_ECC_SCALAR_MUL_OUT_RESULT_X + word_offset]
+            ^ p_out_wrapped_private_key_blob->p_wrapped_key[word_offset];
+  }
+
+  if ((diff != 0U) || (tmp_random_count != randoms[0]))
+  {
+    CCB_ErasePoolBuffer(p_base_pool_buff, p_in_curve_param->ecc_pool_buffer.buff_size_byte);
+    hccb->global_state = HAL_CCB_STATE_IDLE;
+    return HAL_ERROR;
   }
 
   /* P coordinate y */
   for (uint32_t word_offset = 0UL; word_offset < modulus_words_count; word_offset++)
   {
-    if ((pka_ram_u32[PKA_ECC_SCALAR_MUL_OUT_RESULT_Y + word_offset]
-         != p_scalar_mul_y[word_offset]) || (temp_random_count != randoms[0]))
-    {
-      CCB_ErasePoolBuffer(p_base_pool_buff, p_in_curve_param->ecc_pool_buffer.buff_size_byte);
-      hccb->global_state = HAL_CCB_STATE_IDLE;
-      return HAL_ERROR;
-    }
+    diff |= pka_ram_u32[PKA_ECC_SCALAR_MUL_OUT_RESULT_Y + word_offset] ^ p_scalar_mul_y[word_offset];
+  }
+
+  if ((diff != 0U) || (tmp_random_count != randoms[0]))
+  {
+    CCB_ErasePoolBuffer(p_base_pool_buff, p_in_curve_param->ecc_pool_buffer.buff_size_byte);
+    hccb->global_state = HAL_CCB_STATE_IDLE;
+    return HAL_ERROR;
   }
 
   /* Initialize random_count and Check random number */
@@ -3757,37 +3800,41 @@ hal_status_t HAL_CCB_ECC_HW_WrapPrivateKey(hal_ccb_handle_t *hccb,
     return HAL_ERROR;
   }
 
-  /* Random wait */
+  /* Random wait: introduce a random-duration loop to complicate timing/fault attacks.
+     The loop count is derived from TRNG and then checked to detect potential fault injection. */
   for (uint16_t j = 0U; j < randoms[1]; ++j)
   {
     random_count++;
   }
 
-  temp_random_count = random_count;
+  tmp_random_count = random_count;
 
   /* Check Scalar Multiplication and improve robustness against intrusion (intentional) */
   /* P coordinate x */
   for (uint32_t word_offset = 0UL; word_offset < modulus_words_count; word_offset++)
   {
-    if ((pka_ram_u32[PKA_ECC_SCALAR_MUL_OUT_RESULT_X + word_offset]
-         != p_out_wrapped_private_key_blob->p_wrapped_key[word_offset]) || (temp_random_count != randoms[1]))
-    {
-      CCB_ErasePoolBuffer(p_base_pool_buff, p_in_curve_param->ecc_pool_buffer.buff_size_byte);
-      hccb->global_state = HAL_CCB_STATE_IDLE;
-      return HAL_ERROR;
-    }
+    diff |= pka_ram_u32[PKA_ECC_SCALAR_MUL_OUT_RESULT_X + word_offset]
+            ^ p_out_wrapped_private_key_blob->p_wrapped_key[word_offset];
+  }
+
+  if ((diff != 0U) || (tmp_random_count != randoms[1]))
+  {
+    CCB_ErasePoolBuffer(p_base_pool_buff, p_in_curve_param->ecc_pool_buffer.buff_size_byte);
+    hccb->global_state = HAL_CCB_STATE_IDLE;
+    return HAL_ERROR;
   }
 
   /* P coordinate y */
   for (uint32_t word_offset = 0UL; word_offset < modulus_words_count; word_offset++)
   {
-    if ((pka_ram_u32[PKA_ECC_SCALAR_MUL_OUT_RESULT_Y + word_offset]
-         != p_scalar_mul_y[word_offset]) || (temp_random_count != randoms[1]))
-    {
-      CCB_ErasePoolBuffer(p_base_pool_buff, p_in_curve_param->ecc_pool_buffer.buff_size_byte);
-      hccb->global_state = HAL_CCB_STATE_IDLE;
-      return HAL_ERROR;
-    }
+    diff |= pka_ram_u32[PKA_ECC_SCALAR_MUL_OUT_RESULT_Y + word_offset] ^ p_scalar_mul_y[word_offset];
+  }
+
+  if ((diff != 0U) || (tmp_random_count != randoms[1]))
+  {
+    CCB_ErasePoolBuffer(p_base_pool_buff, p_in_curve_param->ecc_pool_buffer.buff_size_byte);
+    hccb->global_state = HAL_CCB_STATE_IDLE;
+    return HAL_ERROR;
   }
 
   /* Initialize random_count and Check random number */
@@ -3799,37 +3846,41 @@ hal_status_t HAL_CCB_ECC_HW_WrapPrivateKey(hal_ccb_handle_t *hccb,
     return HAL_ERROR;
   }
 
-  /* Random wait */
+  /* Random wait: introduce a random-duration loop to complicate timing/fault attacks.
+     The loop count is derived from TRNG and then checked to detect potential fault injection. */
   for (uint16_t j = 0U; j < randoms[2]; ++j)
   {
     random_count++;
   }
 
-  temp_random_count = random_count;
+  tmp_random_count = random_count;
 
   /* Check Scalar Multiplication and improve robustness against intrusion (intentional) */
   /* P coordinate x */
   for (uint32_t word_offset = 0UL; word_offset < modulus_words_count; word_offset++)
   {
-    if ((pka_ram_u32[PKA_ECC_SCALAR_MUL_OUT_RESULT_X + word_offset]
-         != p_out_wrapped_private_key_blob->p_wrapped_key[word_offset]) || (temp_random_count != randoms[2]))
-    {
-      CCB_ErasePoolBuffer(p_base_pool_buff, p_in_curve_param->ecc_pool_buffer.buff_size_byte);
-      hccb->global_state = HAL_CCB_STATE_IDLE;
-      return HAL_ERROR;
-    }
+    diff |= pka_ram_u32[PKA_ECC_SCALAR_MUL_OUT_RESULT_X + word_offset]
+            ^ p_out_wrapped_private_key_blob->p_wrapped_key[word_offset];
+  }
+
+  if ((diff != 0U) || (tmp_random_count != randoms[2]))
+  {
+    CCB_ErasePoolBuffer(p_base_pool_buff, p_in_curve_param->ecc_pool_buffer.buff_size_byte);
+    hccb->global_state = HAL_CCB_STATE_IDLE;
+    return HAL_ERROR;
   }
 
   /* P coordinate y */
   for (uint32_t word_offset = 0UL; word_offset < modulus_words_count; word_offset++)
   {
-    if ((pka_ram_u32[PKA_ECC_SCALAR_MUL_OUT_RESULT_Y + word_offset]
-         != p_scalar_mul_y[word_offset]) || (temp_random_count != randoms[2]))
-    {
-      CCB_ErasePoolBuffer(p_base_pool_buff, p_in_curve_param->ecc_pool_buffer.buff_size_byte);
-      hccb->global_state = HAL_CCB_STATE_IDLE;
-      return HAL_ERROR;
-    }
+    diff |= pka_ram_u32[PKA_ECC_SCALAR_MUL_OUT_RESULT_Y + word_offset] ^ p_scalar_mul_y[word_offset];
+  }
+
+  if ((diff != 0U) || (tmp_random_count != randoms[2]))
+  {
+    CCB_ErasePoolBuffer(p_base_pool_buff, p_in_curve_param->ecc_pool_buffer.buff_size_byte);
+    hccb->global_state = HAL_CCB_STATE_IDLE;
+    return HAL_ERROR;
   }
 
   CCB_RESET(hccb);
@@ -3839,10 +3890,10 @@ hal_status_t HAL_CCB_ECC_HW_WrapPrivateKey(hal_ccb_handle_t *hccb,
   {
     if (count < CCB_BLOCK_SIZE_WORD)
     {
-      p_out_wrapped_private_key_blob->p_iv[count] = (p_temp_iv[count] ^ random32);
-      p_out_wrapped_private_key_blob->p_tag[count] = (p_temp_tag[count] ^ random32);
+      p_out_wrapped_private_key_blob->p_iv[count] = (p_tmp_iv[count] ^ random32);
+      p_out_wrapped_private_key_blob->p_tag[count] = (p_tmp_tag[count] ^ random32);
     }
-    p_out_wrapped_private_key_blob->p_wrapped_key[count] = (p_temp_wrapped_key[count] ^ random32);
+    p_out_wrapped_private_key_blob->p_wrapped_key[count] = (p_tmp_wrapped_key[count] ^ random32);
   }
 
   CCB_ErasePoolBuffer(p_base_pool_buff, p_in_curve_param->ecc_pool_buffer.buff_size_byte);
@@ -3857,25 +3908,22 @@ hal_status_t HAL_CCB_ECC_HW_WrapPrivateKey(hal_ccb_handle_t *hccb,
   * @param  p_in_curve_param                Pointer to a @ref hal_ccb_ecc_mul_curve_param_t structure
   * @param  wrapping_hw_key_type            Wrapping key with a **hal_ccb_wrapping_hw_key_type_t** type
   * @param  p_out_wrapped_private_key_blob  Pointer to @ref hal_ccb_ecc_mul_key_blob_t structure
-  * @retval HAL_INVALID_PARAM               Invalid param return when the CCB handle is NULL \n
-                                            Invalid param return when input curve parameters pointer is NULL \n
-                                            Invalid param return when curve parameter abs_coef_a pointer is NULL \n
-                                            Invalid param return when curve parameter coef_b pointer is NULL \n
-                                            Invalid param return when curve parameter modulus pointer is NULL \n
-                                            Invalid param return when curve parameter prime_order pointer is NULL \n
-                                            Invalid param return when curve parameter point_x pointer is NULL \n
-                                            Invalid param return when curve parameter point_y pointer is NULL \n
-                                            Invalid param return when curve parameter prime_order_size_byte is zero \n
-                                            Invalid param return when curve parameter modulus_size_byte is zero \n
-                                            Invalid param return when curve parameter coef_sign_a is zero \n
-                                            Invalid param return when output wrapped private key blob pointer \n
-                                            is NULL \n
-                                            Invalid param return when output wrapped private key blob IV pointer \n
-                                            is NULL \n
-                                            Invalid param return when output wrapped private key blob tag pointer \n
-                                            is NULL \n
-                                            Invalid param return when output wrapped private key blob wrapped key \n
-                                            pointer is NULL \n
+  * @retval HAL_INVALID_PARAM               The function return an Invalid param in the following cases: \n
+                                            - The CCB handle is NULL \n
+                                            - Input curve parameters pointer is NULL \n
+                                            - Curve parameter abs_coef_a pointer is NULL \n
+                                            - Curve parameter coef_b pointer is NULL \n
+                                            - Curve parameter modulus pointer is NULL \n
+                                            - Curve parameter prime_order pointer is NULL \n
+                                            - Curve parameter point_x pointer is NULL \n
+                                            - Curve parameter point_y pointer is NULL \n
+                                            - Curve parameter prime_order_size_byte is zero \n
+                                            - Curve parameter modulus_size_byte is zero \n
+                                            - Curve parameter coef_sign_a is zero \n
+                                            - Output wrapped private key blob pointer is NULL \n
+                                            - Output wrapped private key blob IV pointer is NULL \n
+                                            - Output wrapped private key blob tag pointer is NULL \n
+                                            - Output wrapped private key blob wrapped key pointer is NULL \n
   * @retval HAL_ERROR                       Error detected
   * @retval HAL_OK                          Operation completed successfully
   */
@@ -3885,18 +3933,19 @@ hal_status_t HAL_CCB_ECC_HW_GenerateWrapPrivateKey(hal_ccb_handle_t *hccb,
                                                    hal_ccb_ecc_mul_key_blob_t *p_out_wrapped_private_key_blob)
 {
   uint32_t *p_scalar_mul_y = NULL;
-  uint32_t *p_temp_iv = NULL;
-  uint32_t *p_temp_tag = NULL;
-  uint32_t *p_temp_wrapped_key = NULL;
-  __IO const uint32_t *pka_ram_u32 = NULL;
+  uint32_t *p_tmp_iv = NULL;
+  uint32_t *p_tmp_tag = NULL;
+  uint32_t *p_tmp_wrapped_key = NULL;
+  __IOM const uint32_t *pka_ram_u32 = NULL;
   uint32_t operand_size = 0U;
   uint32_t cipherkey_size = 0U;
   uint32_t offset_pool_buff = 0U;
   uint32_t random32 = 0U;
   uint32_t modulus_words_count = 0U;
   uint16_t randoms[3] = {0U};
+  uint32_t diff = 0U;
   volatile uint16_t random_count = 0U;
-  uint16_t temp_random_count = 0U;
+  uint16_t tmp_random_count = 0U;
   uint8_t *p_base_pool_buff = NULL;
   CCB_TypeDef *p_ccb_instance = NULL;
   ccb_hw_unwrap_key_context_t hw_ctx = {CCB_KEY_TYPE_HARDWARE, wrapping_hw_key_type};
@@ -3978,15 +4027,15 @@ hal_status_t HAL_CCB_ECC_HW_GenerateWrapPrivateKey(hal_ccb_handle_t *hccb,
   cipherkey_size = ((operand_size & 3U) != 0U) ? (operand_size - 2U) : operand_size;
   p_scalar_mul_y = (uint32_t *)(void *)&p_base_pool_buff[offset_pool_buff];
   offset_pool_buff += ((p_in_curve_param->modulus_size_byte + 3U) >> 2U) * CCB_BLOCK_SIZE_WORD;
-  p_temp_iv = (uint32_t *)(void *)&p_base_pool_buff[offset_pool_buff];
+  p_tmp_iv = (uint32_t *)(void *)&p_base_pool_buff[offset_pool_buff];
   offset_pool_buff += 4U * sizeof(uint32_t);
-  p_temp_tag = (uint32_t *)(void *)&p_base_pool_buff[offset_pool_buff];
+  p_tmp_tag = (uint32_t *)(void *)&p_base_pool_buff[offset_pool_buff];
   offset_pool_buff += 4U * sizeof(uint32_t);
-  p_temp_wrapped_key = (uint32_t *)(void *)&p_base_pool_buff[offset_pool_buff];
+  p_tmp_wrapped_key = (uint32_t *)(void *)&p_base_pool_buff[offset_pool_buff];
   random32 = (((uint32_t)randoms[1] << 16U) | (uint32_t)randoms[0]);
 
   if (CCB_ECC_ScalarMulBlobCreation(p_ccb_instance, p_in_curve_param, &hw_ctx,
-                                    NULL, p_temp_iv, p_temp_tag, p_temp_wrapped_key, random32,
+                                    NULL, p_tmp_iv, p_tmp_tag, p_tmp_wrapped_key, random32,
                                     p_out_wrapped_private_key_blob->p_wrapped_key, p_scalar_mul_y,
                                     CCB_ECC_SCALAR_MUL_RNG_BLOB_CREATION) != HAL_OK)
   {
@@ -4001,7 +4050,7 @@ hal_status_t HAL_CCB_ECC_HW_GenerateWrapPrivateKey(hal_ccb_handle_t *hccb,
   CCB_RESET(hccb);
 
   if (CCB_ECC_ComputeScalarMul(p_ccb_instance, p_in_curve_param, &hw_ctx,
-                               p_temp_iv, p_temp_tag, p_temp_wrapped_key, random32, NULL,
+                               p_tmp_iv, p_tmp_tag, p_tmp_wrapped_key, random32, NULL,
                                NULL) != HAL_OK)
   {
     CCB_ErasePoolBuffer(p_base_pool_buff, p_in_curve_param->ecc_pool_buffer.buff_size_byte);
@@ -4020,38 +4069,42 @@ hal_status_t HAL_CCB_ECC_HW_GenerateWrapPrivateKey(hal_ccb_handle_t *hccb,
     return HAL_ERROR;
   }
 
-  /* Random wait */
+  /* Random wait: introduce a random-duration loop to complicate timing/fault attacks.
+     The loop count is derived from TRNG and then checked to detect potential fault injection. */
   for (uint16_t j = 0U; j < randoms[0]; ++j)
   {
     random_count++;
   }
 
-  pka_ram_u32 = (__IO uint32_t *)PKA->RAM;
-  temp_random_count = random_count;
+  pka_ram_u32 = (__IOM uint32_t *)PKA->RAM;
+  tmp_random_count = random_count;
 
   /* Check Scalar Multiplication and improve robustness against intrusion (intentional) */
   /* P coordinate x */
   for (uint32_t word_offset = 0UL; word_offset < modulus_words_count; word_offset++)
   {
-    if ((pka_ram_u32[PKA_ECC_SCALAR_MUL_OUT_RESULT_X + word_offset]
-         != p_out_wrapped_private_key_blob->p_wrapped_key[word_offset]) || (temp_random_count != randoms[0]))
-    {
-      CCB_ErasePoolBuffer(p_base_pool_buff, p_in_curve_param->ecc_pool_buffer.buff_size_byte);
-      hccb->global_state = HAL_CCB_STATE_IDLE;
-      return HAL_ERROR;
-    }
+    diff |= pka_ram_u32[PKA_ECC_SCALAR_MUL_OUT_RESULT_X + word_offset]
+            ^ p_out_wrapped_private_key_blob->p_wrapped_key[word_offset];
+  }
+
+  if ((diff != 0U) || (tmp_random_count != randoms[0]))
+  {
+    CCB_ErasePoolBuffer(p_base_pool_buff, p_in_curve_param->ecc_pool_buffer.buff_size_byte);
+    hccb->global_state = HAL_CCB_STATE_IDLE;
+    return HAL_ERROR;
   }
 
   /* P coordinate y */
   for (uint32_t word_offset = 0UL; word_offset < modulus_words_count; word_offset++)
   {
-    if ((pka_ram_u32[PKA_ECC_SCALAR_MUL_OUT_RESULT_Y + word_offset]
-         != p_scalar_mul_y[word_offset]) || (temp_random_count != randoms[0]))
-    {
-      CCB_ErasePoolBuffer(p_base_pool_buff, p_in_curve_param->ecc_pool_buffer.buff_size_byte);
-      hccb->global_state = HAL_CCB_STATE_IDLE;
-      return HAL_ERROR;
-    }
+    diff |= pka_ram_u32[PKA_ECC_SCALAR_MUL_OUT_RESULT_Y + word_offset] ^ p_scalar_mul_y[word_offset];
+  }
+
+  if ((diff != 0U) || (tmp_random_count != randoms[0]))
+  {
+    CCB_ErasePoolBuffer(p_base_pool_buff, p_in_curve_param->ecc_pool_buffer.buff_size_byte);
+    hccb->global_state = HAL_CCB_STATE_IDLE;
+    return HAL_ERROR;
   }
 
   /* Initialize random_count and Check random number */
@@ -4063,37 +4116,41 @@ hal_status_t HAL_CCB_ECC_HW_GenerateWrapPrivateKey(hal_ccb_handle_t *hccb,
     return HAL_ERROR;
   }
 
-  /* Random wait */
+  /* Random wait: introduce a random-duration loop to complicate timing/fault attacks.
+     The loop count is derived from TRNG and then checked to detect potential fault injection. */
   for (uint16_t j = 0U; j < randoms[1]; ++j)
   {
     random_count++;
   }
 
-  temp_random_count = random_count;
+  tmp_random_count = random_count;
 
   /* Check Scalar Multiplication and improve robustness against intrusion (intentional) */
   /* P coordinate x */
   for (uint32_t word_offset = 0UL; word_offset < modulus_words_count; word_offset++)
   {
-    if ((pka_ram_u32[PKA_ECC_SCALAR_MUL_OUT_RESULT_X + word_offset]
-         != p_out_wrapped_private_key_blob->p_wrapped_key[word_offset]) || (temp_random_count != randoms[1]))
-    {
-      CCB_ErasePoolBuffer(p_base_pool_buff, p_in_curve_param->ecc_pool_buffer.buff_size_byte);
-      hccb->global_state = HAL_CCB_STATE_IDLE;
-      return HAL_ERROR;
-    }
+    diff |= pka_ram_u32[PKA_ECC_SCALAR_MUL_OUT_RESULT_X + word_offset]
+            ^ p_out_wrapped_private_key_blob->p_wrapped_key[word_offset];
+  }
+
+  if ((diff != 0U) || (tmp_random_count != randoms[1]))
+  {
+    CCB_ErasePoolBuffer(p_base_pool_buff, p_in_curve_param->ecc_pool_buffer.buff_size_byte);
+    hccb->global_state = HAL_CCB_STATE_IDLE;
+    return HAL_ERROR;
   }
 
   /* P coordinate y */
   for (uint32_t word_offset = 0UL; word_offset < modulus_words_count; word_offset++)
   {
-    if ((pka_ram_u32[PKA_ECC_SCALAR_MUL_OUT_RESULT_Y + word_offset]
-         != p_scalar_mul_y[word_offset]) || (temp_random_count != randoms[1]))
-    {
-      CCB_ErasePoolBuffer(p_base_pool_buff, p_in_curve_param->ecc_pool_buffer.buff_size_byte);
-      hccb->global_state = HAL_CCB_STATE_IDLE;
-      return HAL_ERROR;
-    }
+    diff |= pka_ram_u32[PKA_ECC_SCALAR_MUL_OUT_RESULT_Y + word_offset] ^ p_scalar_mul_y[word_offset];
+  }
+
+  if ((diff != 0U) || (tmp_random_count != randoms[1]))
+  {
+    CCB_ErasePoolBuffer(p_base_pool_buff, p_in_curve_param->ecc_pool_buffer.buff_size_byte);
+    hccb->global_state = HAL_CCB_STATE_IDLE;
+    return HAL_ERROR;
   }
 
   /* Initialize random_count and Check random number */
@@ -4105,37 +4162,41 @@ hal_status_t HAL_CCB_ECC_HW_GenerateWrapPrivateKey(hal_ccb_handle_t *hccb,
     return HAL_ERROR;
   }
 
-  /* Random wait */
+  /* Random wait: introduce a random-duration loop to complicate timing/fault attacks.
+     The loop count is derived from TRNG and then checked to detect potential fault injection. */
   for (uint16_t j = 0U; j < randoms[2]; ++j)
   {
     random_count++;
   }
 
-  temp_random_count = random_count;
+  tmp_random_count = random_count;
 
   /* Check Scalar Multiplication and improve robustness against intrusion (intentional) */
   /* P coordinate x */
   for (uint32_t word_offset = 0UL; word_offset < modulus_words_count; word_offset++)
   {
-    if ((pka_ram_u32[PKA_ECC_SCALAR_MUL_OUT_RESULT_X + word_offset]
-         != p_out_wrapped_private_key_blob->p_wrapped_key[word_offset]) || (temp_random_count != randoms[2]))
-    {
-      CCB_ErasePoolBuffer(p_base_pool_buff, p_in_curve_param->ecc_pool_buffer.buff_size_byte);
-      hccb->global_state = HAL_CCB_STATE_IDLE;
-      return HAL_ERROR;
-    }
+    diff |= pka_ram_u32[PKA_ECC_SCALAR_MUL_OUT_RESULT_X + word_offset]
+            ^ p_out_wrapped_private_key_blob->p_wrapped_key[word_offset];
+  }
+
+  if ((diff != 0U) || (tmp_random_count != randoms[2]))
+  {
+    CCB_ErasePoolBuffer(p_base_pool_buff, p_in_curve_param->ecc_pool_buffer.buff_size_byte);
+    hccb->global_state = HAL_CCB_STATE_IDLE;
+    return HAL_ERROR;
   }
 
   /* P coordinate y */
   for (uint32_t word_offset = 0UL; word_offset < modulus_words_count; word_offset++)
   {
-    if ((pka_ram_u32[PKA_ECC_SCALAR_MUL_OUT_RESULT_Y + word_offset]
-         != p_scalar_mul_y[word_offset]) || (temp_random_count != randoms[2]))
-    {
-      CCB_ErasePoolBuffer(p_base_pool_buff, p_in_curve_param->ecc_pool_buffer.buff_size_byte);
-      hccb->global_state = HAL_CCB_STATE_IDLE;
-      return HAL_ERROR;
-    }
+    diff |= pka_ram_u32[PKA_ECC_SCALAR_MUL_OUT_RESULT_Y + word_offset] ^ p_scalar_mul_y[word_offset];
+  }
+
+  if ((diff != 0U) || (tmp_random_count != randoms[2]))
+  {
+    CCB_ErasePoolBuffer(p_base_pool_buff, p_in_curve_param->ecc_pool_buffer.buff_size_byte);
+    hccb->global_state = HAL_CCB_STATE_IDLE;
+    return HAL_ERROR;
   }
 
   CCB_RESET(hccb);
@@ -4145,10 +4206,10 @@ hal_status_t HAL_CCB_ECC_HW_GenerateWrapPrivateKey(hal_ccb_handle_t *hccb,
   {
     if (count < CCB_BLOCK_SIZE_WORD)
     {
-      p_out_wrapped_private_key_blob->p_iv[count] = (p_temp_iv[count] ^ random32);
-      p_out_wrapped_private_key_blob->p_tag[count] = (p_temp_tag[count] ^ random32);
+      p_out_wrapped_private_key_blob->p_iv[count] = (p_tmp_iv[count] ^ random32);
+      p_out_wrapped_private_key_blob->p_tag[count] = (p_tmp_tag[count] ^ random32);
     }
-    p_out_wrapped_private_key_blob->p_wrapped_key[count] = (p_temp_wrapped_key[count] ^ random32);
+    p_out_wrapped_private_key_blob->p_wrapped_key[count] = (p_tmp_wrapped_key[count] ^ random32);
   }
 
   CCB_ErasePoolBuffer(p_base_pool_buff, p_in_curve_param->ecc_pool_buffer.buff_size_byte);
@@ -4165,29 +4226,27 @@ hal_status_t HAL_CCB_ECC_HW_GenerateWrapPrivateKey(hal_ccb_handle_t *hccb,
   * @param  p_in_wrapped_private_key_blob  Pointer to @ref hal_ccb_ecc_mul_key_blob_t structure
   * @param  p_in_point                     Pointer to @ref hal_ccb_ecc_point_t structure
   * @param  p_out_point                    Pointer to @ref hal_ccb_ecc_point_t structure
-  * @retval HAL_INVALID_PARAM              Invalid param return when the CCB handle is NULL \n
-                                           Invalid param return when input curve parameters pointer is NULL \n
-                                           Invalid param return when curve parameter abs_coef_a pointer is NULL \n
-                                           Invalid param return when curve parameter coef_b pointer is NULL \n
-                                           Invalid param return when curve parameter point_x pointer is NULL \n
-                                           Invalid param return when curve parameter point_y pointer is NULL \n
-                                           Invalid param return when curve parameter prime_order_size_byte is zero \n
-                                           Invalid param return when curve parameter modulus_size_byte is zero \n
-                                           Invalid param return when curve parameter coef_sign_a is zero \n
-                                           Invalid param return when input clear private key blob pointer is NULL \n
-                                           Invalid param return when input wrapped private key blob pointer is NULL \n
-                                           Invalid param return when input wrapped private key blob IV pointer \n
-                                           is NULL \n
-                                           Invalid param return when input wrapped private key blob tag pointer \n
-                                           is NULL \n
-                                           Invalid param return when input wrapped private key blob wrapped key \n
-                                           pointer is NULL \n
-                                           Invalid param return when input point pointer is NULL \n
-                                           Invalid param return when input point x pointer is NULL \n
-                                           Invalid param return when input point y pointer is NULL \n
-                                           Invalid param return when output point pointer is NULL \n
-                                           Invalid param return when output point x pointer is NULL \n
-                                           Invalid param return when output point y pointer is NULL \n
+  * @retval HAL_INVALID_PARAM              The function return an Invalid param in the following cases: \n
+                                           - The CCB handle is NULL \n
+                                           - Input curve parameters pointer is NULL \n
+                                           - Curve parameter abs_coef_a pointer is NULL \n
+                                           - Curve parameter coef_b pointer is NULL \n
+                                           - Curve parameter point_x pointer is NULL \n
+                                           - Curve parameter point_y pointer is NULL \n
+                                           - Curve parameter prime_order_size_byte is zero \n
+                                           - Curve parameter modulus_size_byte is zero \n
+                                           - Curve parameter coef_sign_a is zero \n
+                                           - Input clear private key blob pointer is NULL \n
+                                           - Input wrapped private key blob pointer is NULL \n
+                                           - Input wrapped private key blob IV pointer is NULL \n
+                                           - Input wrapped private key blob tag pointer is NULL \n
+                                           - Input wrapped private key blob wrapped key pointer is NULL \n
+                                           - Input point pointer is NULL \n
+                                           - Input point x pointer is NULL \n
+                                           - Input point y pointer is NULL \n
+                                           - Output point pointer is NULL \n
+                                           - Output point x pointer is NULL \n
+                                           - Output point y pointer is NULL \n
   * @retval HAL_ERROR                      Error detected
   * @retval HAL_OK                         Operation completed successfully
   */
@@ -4283,22 +4342,19 @@ hal_status_t HAL_CCB_ECC_HW_ComputeScalarMul(hal_ccb_handle_t *hccb,
   * @param  p_in_rsa_clear_private_key      Pointer to @ref hal_ccb_rsa_clear_key_t structure
   * @param  wrapping_hw_key_type            Wrapping key with a **hal_ccb_wrapping_hw_key_type_t** type
   * @param  p_out_wrapped_private_key_blob  Pointer to @ref hal_ccb_rsa_key_blob_t structure
-  * @retval HAL_INVALID_PARAM               Invalid param return when the CCB handle is NULL \n
-                                            Invalid param return when input parameters pointer is NULL \n
-                                            Invalid param return when input parameter exp_size_byte is zero \n
-                                            Invalid param return when input parameter modulus_size_byte is zero \n
-                                            Invalid param return when input parameter modulus pointer is NULL \n
-                                            Invalid param return when input RSA clear private key exp pointer is NULL \n
-                                            Invalid param return when input RSA clear private key phi pointer is NULL \n
-                                            Invalid param return when output wrapped private key blob pointer is NULL \n
-                                            Invalid param return when output wrapped private key blob IV pointer \n
-                                            is NULL \n
-                                            Invalid param return when output wrapped private key blob tag pointer \n
-                                            is NULL \n
-                                            Invalid param return when output wrapped private key blob wrapped exp \n
-                                            pointer is NULL \n
-                                            Invalid param return when output wrapped private key blob wrapped phi \n
-                                            pointer is NULL \n
+  * @retval HAL_INVALID_PARAM               The function return an Invalid param in the following cases: \n
+                                            - The CCB handle is NULL \n
+                                            - Input parameters pointer is NULL \n
+                                            - Input parameter exp_size_byte is zero \n
+                                            - Input parameter modulus_size_byte is zero \n
+                                            - Input parameter modulus pointer is NULL \n
+                                            - Input RSA clear private key exp pointer is NULL \n
+                                            - Input RSA clear private key phi pointer is NULL \n
+                                            - Output wrapped private key blob pointer is NULL \n
+                                            - Output wrapped private key blob IV pointer is NULL \n
+                                            - Output wrapped private key blob tag pointer is NULL \n
+                                            - Output wrapped private key blob wrapped exp pointer is NULL \n
+                                            - Output wrapped private key blob wrapped phi pointer is NULL \n
   * @retval HAL_ERROR                       Error detected
   * @retval HAL_OK                          Operation completed successfully
   */
@@ -4307,19 +4363,20 @@ hal_status_t HAL_CCB_RSA_HW_WrapPrivateKey(hal_ccb_handle_t *hccb, const hal_ccb
                                            hal_ccb_wrapping_hw_key_type_t wrapping_hw_key_type,
                                            hal_ccb_rsa_key_blob_t *p_out_wrapped_private_key_blob)
 {
-  uint32_t *p_temp_iv = NULL;
-  uint32_t *p_temp_tag = NULL;
-  uint32_t *p_temp_wrapped_exp = NULL;
-  uint32_t *p_temp_wrapped_phi = NULL;
-  __IO const uint32_t *pka_ram_u32 = NULL;
+  uint32_t *p_tmp_iv = NULL;
+  uint32_t *p_tmp_tag = NULL;
+  uint32_t *p_tmp_wrapped_exp = NULL;
+  uint32_t *p_tmp_wrapped_phi = NULL;
+  __IOM const uint32_t *pka_ram_u32 = NULL;
   uint32_t modulus_words_count = 0U;
   uint32_t operand_size = 0U;
   uint32_t cipherkey_size = 0U;
   uint32_t offset_pool_buff = 0U;
   uint32_t random32 = 0U;
   uint16_t randoms[3] = {0U};
+  uint32_t diff = 0U;
   volatile uint16_t random_count = 0U;
-  uint16_t temp_random_count = 0U;
+  uint16_t tmp_random_count = 0U;
   uint8_t *p_base_pool_buff = NULL;
   CCB_TypeDef *p_ccb_instance = NULL;
   ccb_hw_unwrap_key_context_t hw_ctx = {CCB_KEY_TYPE_HARDWARE, wrapping_hw_key_type};
@@ -4402,17 +4459,17 @@ hal_status_t HAL_CCB_RSA_HW_WrapPrivateKey(hal_ccb_handle_t *hccb, const hal_ccb
 
   operand_size = 2UL * (((p_in_param->modulus_size_byte + 7UL) >> 3UL) + 1UL);
   cipherkey_size = ((operand_size & 3U) != 0U) ? (operand_size - 2U) : operand_size;
-  p_temp_iv = (uint32_t *)(void *)&p_base_pool_buff[offset_pool_buff];
+  p_tmp_iv = (uint32_t *)(void *)&p_base_pool_buff[offset_pool_buff];
   offset_pool_buff += 4U * sizeof(uint32_t);
-  p_temp_tag = (uint32_t *)(void *)&p_base_pool_buff[offset_pool_buff];
+  p_tmp_tag = (uint32_t *)(void *)&p_base_pool_buff[offset_pool_buff];
   offset_pool_buff += 4U * sizeof(uint32_t);
-  p_temp_wrapped_exp = (uint32_t *)(void *)&p_base_pool_buff[offset_pool_buff];
+  p_tmp_wrapped_exp = (uint32_t *)(void *)&p_base_pool_buff[offset_pool_buff];
   offset_pool_buff += cipherkey_size * CCB_BLOCK_SIZE_WORD;
-  p_temp_wrapped_phi = (uint32_t *)(void *)&p_base_pool_buff[offset_pool_buff];
+  p_tmp_wrapped_phi = (uint32_t *)(void *)&p_base_pool_buff[offset_pool_buff];
   random32 = (((uint32_t)randoms[1] << 16U) | (uint32_t)randoms[0]);
 
-  if (CCB_RSA_ExpBlobCreation(p_ccb_instance, p_in_param, &hw_ctx, p_in_rsa_clear_private_key, p_temp_iv, p_temp_tag,
-                              p_temp_wrapped_exp, p_temp_wrapped_phi, random32,
+  if (CCB_RSA_ExpBlobCreation(p_ccb_instance, p_in_param, &hw_ctx, p_in_rsa_clear_private_key, p_tmp_iv, p_tmp_tag,
+                              p_tmp_wrapped_exp, p_tmp_wrapped_phi, random32,
                               (uint8_t *)p_out_wrapped_private_key_blob->p_wrapped_exp,
                               p_out_wrapped_private_key_blob->p_wrapped_phi) != HAL_OK)
   {
@@ -4426,8 +4483,8 @@ hal_status_t HAL_CCB_RSA_HW_WrapPrivateKey(hal_ccb_handle_t *hccb, const hal_ccb
 
   CCB_RESET(hccb);
 
-  if (CCB_RSA_ComputeModularExp(p_ccb_instance, p_in_param, &hw_ctx, p_temp_iv, p_temp_tag, p_temp_wrapped_exp,
-                                p_temp_wrapped_phi, random32,
+  if (CCB_RSA_ComputeModularExp(p_ccb_instance, p_in_param, &hw_ctx, p_tmp_iv, p_tmp_tag, p_tmp_wrapped_exp,
+                                p_tmp_wrapped_phi, random32,
                                 (uint8_t *)p_out_wrapped_private_key_blob->p_wrapped_exp, NULL) != HAL_OK)
   {
     CCB_ErasePoolBuffer(p_base_pool_buff, p_in_param->rsa_pool_buffer.buff_size_byte);
@@ -4446,25 +4503,28 @@ hal_status_t HAL_CCB_RSA_HW_WrapPrivateKey(hal_ccb_handle_t *hccb, const hal_ccb
     return HAL_ERROR;
   }
 
-  /* Random wait */
+  /* Random wait: introduce a random-duration loop to complicate timing/fault attacks.
+     The loop count is derived from TRNG and then checked to detect potential fault injection. */
   for (uint16_t j = 0U; j < randoms[0]; ++j)
   {
     random_count++;
   }
 
-  pka_ram_u32 = (__IO uint32_t *)PKA->RAM;
-  temp_random_count = random_count;
+  pka_ram_u32 = (__IOM uint32_t *)PKA->RAM;
+  tmp_random_count = random_count;
 
   /* Check Modular Exponentiation and improve robustness against intrusion (intentional) */
   for (uint32_t word_offset = 0UL; word_offset < modulus_words_count; word_offset++)
   {
-    if ((pka_ram_u32[PKA_MODULAR_EXP_OUT_RESULT + word_offset] !=
-         p_out_wrapped_private_key_blob->p_wrapped_phi[word_offset]) || (temp_random_count != randoms[0]))
-    {
-      CCB_ErasePoolBuffer(p_base_pool_buff, p_in_param->rsa_pool_buffer.buff_size_byte);
-      hccb->global_state = HAL_CCB_STATE_IDLE;
-      return HAL_ERROR;
-    }
+    diff |= pka_ram_u32[PKA_MODULAR_EXP_OUT_RESULT + word_offset] ^
+            p_out_wrapped_private_key_blob->p_wrapped_phi[word_offset];
+  }
+
+  if ((diff != 0U) || (tmp_random_count != randoms[0]))
+  {
+    CCB_ErasePoolBuffer(p_base_pool_buff, p_in_param->rsa_pool_buffer.buff_size_byte);
+    hccb->global_state = HAL_CCB_STATE_IDLE;
+    return HAL_ERROR;
   }
 
   /* Initialize random_count and Check random number */
@@ -4476,24 +4536,27 @@ hal_status_t HAL_CCB_RSA_HW_WrapPrivateKey(hal_ccb_handle_t *hccb, const hal_ccb
     return HAL_ERROR;
   }
 
-  /* Random wait */
+  /* Random wait: introduce a random-duration loop to complicate timing/fault attacks.
+     The loop count is derived from TRNG and then checked to detect potential fault injection. */
   for (uint16_t j = 0U; j < randoms[1]; ++j)
   {
     random_count++;
   }
 
-  temp_random_count = random_count;
+  tmp_random_count = random_count;
 
   /* Check Modular Exponentiation and improve robustness against intrusion (intentional) */
   for (uint32_t word_offset = 0UL; word_offset < modulus_words_count; word_offset++)
   {
-    if ((pka_ram_u32[PKA_MODULAR_EXP_OUT_RESULT + word_offset] !=
-         p_out_wrapped_private_key_blob->p_wrapped_phi[word_offset]) || (temp_random_count != randoms[1]))
-    {
-      CCB_ErasePoolBuffer(p_base_pool_buff, p_in_param->rsa_pool_buffer.buff_size_byte);
-      hccb->global_state = HAL_CCB_STATE_IDLE;
-      return HAL_ERROR;
-    }
+    diff |= pka_ram_u32[PKA_MODULAR_EXP_OUT_RESULT + word_offset] ^
+            p_out_wrapped_private_key_blob->p_wrapped_phi[word_offset];
+  }
+
+  if ((diff != 0U) || (tmp_random_count != randoms[1]))
+  {
+    CCB_ErasePoolBuffer(p_base_pool_buff, p_in_param->rsa_pool_buffer.buff_size_byte);
+    hccb->global_state = HAL_CCB_STATE_IDLE;
+    return HAL_ERROR;
   }
 
   /* Initialize random_count and Check random number */
@@ -4505,24 +4568,27 @@ hal_status_t HAL_CCB_RSA_HW_WrapPrivateKey(hal_ccb_handle_t *hccb, const hal_ccb
     return HAL_ERROR;
   }
 
-  /* Random wait */
+  /* Random wait: introduce a random-duration loop to complicate timing/fault attacks.
+     The loop count is derived from TRNG and then checked to detect potential fault injection. */
   for (uint16_t j = 0U; j < randoms[2]; ++j)
   {
     random_count++;
   }
 
-  temp_random_count = random_count;
+  tmp_random_count = random_count;
 
   /* Check Modular Exponentiation and improve robustness against intrusion (intentional) */
   for (uint32_t word_offset = 0UL; word_offset < modulus_words_count; word_offset++)
   {
-    if ((pka_ram_u32[PKA_MODULAR_EXP_OUT_RESULT + word_offset] !=
-         p_out_wrapped_private_key_blob->p_wrapped_phi[word_offset]) || (temp_random_count != randoms[2]))
-    {
-      CCB_ErasePoolBuffer(p_base_pool_buff, p_in_param->rsa_pool_buffer.buff_size_byte);
-      hccb->global_state = HAL_CCB_STATE_IDLE;
-      return HAL_ERROR;
-    }
+    diff |= pka_ram_u32[PKA_MODULAR_EXP_OUT_RESULT + word_offset] ^
+            p_out_wrapped_private_key_blob->p_wrapped_phi[word_offset];
+  }
+
+  if ((diff != 0U) || (tmp_random_count != randoms[2]))
+  {
+    CCB_ErasePoolBuffer(p_base_pool_buff, p_in_param->rsa_pool_buffer.buff_size_byte);
+    hccb->global_state = HAL_CCB_STATE_IDLE;
+    return HAL_ERROR;
   }
 
   CCB_RESET(hccb);
@@ -4532,11 +4598,11 @@ hal_status_t HAL_CCB_RSA_HW_WrapPrivateKey(hal_ccb_handle_t *hccb, const hal_ccb
   {
     if (count < CCB_BLOCK_SIZE_WORD)
     {
-      p_out_wrapped_private_key_blob->p_iv[count] = (p_temp_iv[count] ^ random32);
-      p_out_wrapped_private_key_blob->p_tag[count] = (p_temp_tag[count] ^ random32);
+      p_out_wrapped_private_key_blob->p_iv[count] = (p_tmp_iv[count] ^ random32);
+      p_out_wrapped_private_key_blob->p_tag[count] = (p_tmp_tag[count] ^ random32);
     }
-    p_out_wrapped_private_key_blob->p_wrapped_exp[count] = (p_temp_wrapped_exp[count] ^ random32);
-    p_out_wrapped_private_key_blob->p_wrapped_phi[count] = (p_temp_wrapped_phi[count] ^ random32);
+    p_out_wrapped_private_key_blob->p_wrapped_exp[count] = (p_tmp_wrapped_exp[count] ^ random32);
+    p_out_wrapped_private_key_blob->p_wrapped_phi[count] = (p_tmp_wrapped_phi[count] ^ random32);
   }
 
   CCB_ErasePoolBuffer(p_base_pool_buff, p_in_param->rsa_pool_buffer.buff_size_byte);
@@ -4551,31 +4617,28 @@ hal_status_t HAL_CCB_RSA_HW_WrapPrivateKey(hal_ccb_handle_t *hccb, const hal_ccb
   * @param  p_in_param                     Pointer to a @ref hal_ccb_rsa_param_t structure
   * @param  wrapping_hw_key_type           Wrapping key with a **hal_ccb_wrapping_hw_key_type_t** type
   * @param  p_in_wrapped_private_key_blob  Pointer to @ref hal_ccb_rsa_key_blob_t structure
-  * @param  p_out_operand                  Pointer to the operand
+  * @param  p_in_operand                   Pointer to the operand
   * @param  p_out_modular_exp              Pointer to the output operation
-  * @retval HAL_INVALID_PARAM              Invalid param return when the CCB handle is NULL \n
-                                           Invalid param return when input parameters pointer is NULL \n
-                                           Invalid param return when input parameter exp_size_byte is zero \n
-                                           Invalid param return when input parameter modulus_size_byte is zero \n
-                                           Invalid param return when input parameter modulus pointer is NULL \n
-                                           Invalid param return when input wrapped private key blob pointer is NULL \n
-                                           Invalid param return when input wrapped private key blob IV pointer \n
-                                            is NULL \n
-                                           Invalid param return when input wrapped private key blob tag pointer \n
-                                           is NULL \n
-                                           Invalid param return when input wrapped private key blob wrapped exp \n
-                                           pointer is NULL \n
-                                           Invalid param return when input wrapped private key blob wrapped phi \n
-                                           pointer is NULL \n
-                                           Invalid param return when output operand pointer is NULL \n
-                                           Invalid param return when output modular exp pointer is NULL \n
+  * @retval HAL_INVALID_PARAM              The function return an Invalid param in the following cases: \n
+                                           - The CCB handle is NULL \n
+                                           - Input parameters pointer is NULL \n
+                                           - Input parameter exp_size_byte is zero \n
+                                           - Input parameter modulus_size_byte is zero \n
+                                           - Input parameter modulus pointer is NULL \n
+                                           - Input wrapped private key blob pointer is NULL \n
+                                           - Input wrapped private key blob IV pointer is NULL \n
+                                           - Input wrapped private key blob tag pointer is NULL \n
+                                           - Input wrapped private key blob wrapped exp pointer is NULL \n
+                                           - Input wrapped private key blob wrapped phi pointer is NULL \n
+                                           - Output operand pointer is NULL \n
+                                           - Output modular exp pointer is NULL \n
   * @retval HAL_ERROR                      Error detected
   * @retval HAL_OK                         Operation completed successfully
   */
 hal_status_t HAL_CCB_RSA_HW_ComputeModularExp(hal_ccb_handle_t *hccb, const hal_ccb_rsa_param_t *p_in_param,
                                               hal_ccb_wrapping_hw_key_type_t wrapping_hw_key_type,
                                               hal_ccb_rsa_key_blob_t *p_in_wrapped_private_key_blob,
-                                              const uint8_t *p_out_operand, uint8_t *p_out_modular_exp)
+                                              const uint8_t *p_in_operand, uint8_t *p_out_modular_exp)
 {
   CCB_TypeDef *p_ccb_instance = NULL;
   ccb_hw_unwrap_key_context_t hw_ctx = {CCB_KEY_TYPE_HARDWARE, wrapping_hw_key_type};
@@ -4591,7 +4654,7 @@ hal_status_t HAL_CCB_RSA_HW_ComputeModularExp(hal_ccb_handle_t *hccb, const hal_
   ASSERT_DBG_PARAM(p_in_wrapped_private_key_blob->p_tag != NULL);
   ASSERT_DBG_PARAM(p_in_wrapped_private_key_blob->p_wrapped_exp != NULL);
   ASSERT_DBG_PARAM(p_in_wrapped_private_key_blob->p_wrapped_phi != NULL);
-  ASSERT_DBG_PARAM(p_out_operand != NULL);
+  ASSERT_DBG_PARAM(p_in_operand != NULL);
   ASSERT_DBG_PARAM(p_out_modular_exp != NULL);
 
   ASSERT_DBG_STATE(hccb->global_state, (uint32_t)HAL_CCB_STATE_IDLE);
@@ -4611,7 +4674,7 @@ hal_status_t HAL_CCB_RSA_HW_ComputeModularExp(hal_ccb_handle_t *hccb, const hal_
       || (p_in_wrapped_private_key_blob->p_iv == NULL) || (p_in_wrapped_private_key_blob->p_tag == NULL)
       || (p_in_wrapped_private_key_blob->p_wrapped_exp == NULL)
       || (p_in_wrapped_private_key_blob->p_wrapped_phi == NULL)
-      || (p_out_operand == NULL) || (p_out_modular_exp == NULL))
+      || (p_in_operand == NULL) || (p_out_modular_exp == NULL))
   {
     return HAL_INVALID_PARAM;
   }
@@ -4629,7 +4692,7 @@ hal_status_t HAL_CCB_RSA_HW_ComputeModularExp(hal_ccb_handle_t *hccb, const hal_
 
   if (CCB_RSA_ComputeModularExp(p_ccb_instance, p_in_param, &hw_ctx, p_in_wrapped_private_key_blob->p_iv,
                                 p_in_wrapped_private_key_blob->p_tag, p_in_wrapped_private_key_blob->p_wrapped_exp,
-                                p_in_wrapped_private_key_blob->p_wrapped_phi, 0U, p_out_operand,
+                                p_in_wrapped_private_key_blob->p_wrapped_phi, 0U, p_in_operand,
                                 p_out_modular_exp) != HAL_OK)
   {
 #if defined(USE_HAL_CCB_GET_LAST_ERRORS) && (USE_HAL_CCB_GET_LAST_ERRORS == 1)
@@ -4782,21 +4845,9 @@ static hal_status_t CCB_PKA_SetOperation(PKA_TypeDef *p_pka_instance, uint32_t o
   */
 static hal_status_t CCB_PKA_Init(PKA_TypeDef *p_pka_instance)
 {
-  uint32_t tickstart = HAL_GetTick();
-
   /* Reset the control register and enable the PKA (wait the end of PKA RAM erase) */
-  while (LL_PKA_IsEnabled(p_pka_instance) != 1U)
-  {
-    LL_PKA_Enable(p_pka_instance);
+  LL_PKA_Enable(p_pka_instance);
 
-    if ((HAL_GetTick() - tickstart) > CCB_GENERAL_TIMEOUT_MS)
-    {
-      if (LL_PKA_IsEnabled(p_pka_instance) != 1U)
-      {
-        return HAL_ERROR;
-      }
-    }
-  }
   /* Wait the INITOK flag Setting */
   if (CCB_PKA_WaitFlag(p_pka_instance, PKA_SR_INITOK) != HAL_OK)
   {
@@ -4853,12 +4904,6 @@ static hal_status_t CCB_RNG_Init(RNG_TypeDef *p_rng_instance)
 
   LL_RNG_Enable(p_rng_instance);
 
-  /* verify that no seed error */
-
-  if ((LL_RNG_IsActiveFlag_SEIS(p_rng_instance)) != 0U)
-  {
-    return HAL_ERROR;
-  }
 
   /* Check if data register contains valid random data */
   if (CCB_RNG_WaitFlag(p_rng_instance, RNG_SR_DRDY) != HAL_OK)
@@ -4934,6 +4979,23 @@ static hal_status_t CCB_PKA_WaitFlag(PKA_TypeDef *p_pka_instance, uint32_t flag)
 
   while ((LL_PKA_IsActiveFlag(p_pka_instance, flag)) == 0U)
   {
+#if defined (USE_HAL_CCB_RNG_RECOVERY) && (USE_HAL_CCB_RNG_RECOVERY == 1U)
+#if defined(RNG_HTSR0_RPERRX) || defined(RNG_HTSR1_ADERRX)
+    if ((flag == PKA_SR_INITOK) && (LL_PKA_IsActiveFlag(p_pka_instance, PKA_SR_INITOK) == 0U))
+    {
+      /*Check if there is an RNG seed error */
+      if (LL_RNG_IsActiveFlag_SECS(RNG) != 0U)
+      {
+        /* Attempt to recover from the seed error */
+        if (CCB_RNG_ResilientRecoverSeedError() != HAL_OK)
+        {
+          return HAL_ERROR;
+        }
+      }
+    }
+#endif /* RNG_HTSR0_RPERRX || RNG_HTSR1_ADERRX */
+#endif /* USE_HAL_CCB_RNG_RECOVERY */
+
     if ((HAL_GetTick() - tickstart) > CCB_GENERAL_TIMEOUT_MS)
     {
       if ((LL_PKA_IsActiveFlag(p_pka_instance, flag)) == 0U)
@@ -4961,6 +5023,20 @@ static hal_status_t CCB_RNG_WaitFlag(RNG_TypeDef *p_rng_instance, uint32_t flag)
   uint32_t tickstart = HAL_GetTick();
   while (((STM32_READ_REG(p_rng_instance->SR)) & flag) == 0U)
   {
+#if defined (USE_HAL_CCB_RNG_RECOVERY) && (USE_HAL_CCB_RNG_RECOVERY == 1U)
+#if defined(RNG_HTSR0_RPERRX) || defined(RNG_HTSR1_ADERRX)
+    /*Check if there is an RNG seed error */
+    if ((LL_RNG_IsActiveFlag_SECS(RNG) != 0U) || (LL_RNG_IsActiveFlag_SEIS(RNG) != 0U))
+    {
+      /* Attempt to recover from the seed error */
+      if (CCB_RNG_ResilientRecoverSeedError() != HAL_OK)
+      {
+        return HAL_ERROR;
+      }
+    }
+#endif /* RNG_HTSR0_RPERRX || RNG_HTSR1_ADERRX */
+#endif /* USE_HAL_CCB_RNG_RECOVERY */
+
     if ((HAL_GetTick() - tickstart) > CCB_GENERAL_TIMEOUT_MS)
     {
       if (((STM32_READ_REG(p_rng_instance->SR)) & flag) == 0U)
@@ -4987,6 +5063,23 @@ static hal_status_t CCB_SAES_WaitFlag(AES_TypeDef *p_saes_instance, uint32_t fla
 
   while (CCB_SAES_GetFlag(p_saes_instance, flag) != status)
   {
+#if defined (USE_HAL_CCB_RNG_RECOVERY) && (USE_HAL_CCB_RNG_RECOVERY == 1U)
+#if defined(RNG_HTSR0_RPERRX) || defined(RNG_HTSR1_ADERRX)
+    if ((flag == AES_SR_BUSY) && (CCB_SAES_GetFlag(p_saes_instance, AES_SR_BUSY) != status))
+    {
+      /*Check if there is an RNG seed error */
+      if (LL_RNG_IsActiveFlag_SECS(RNG) != 0U)
+      {
+        /* Attempt to recover from the seed error */
+        if (CCB_RNG_ResilientRecoverSeedError() != HAL_OK)
+        {
+          return HAL_ERROR;
+        }
+      }
+    }
+#endif /* RNG_HTSR0_RPERRX || RNG_HTSR1_ADERRX */
+#endif /* USE_HAL_CCB_RNG_RECOVERY */
+
     if ((HAL_GetTick() - tickstart) > CCB_GENERAL_TIMEOUT_MS)
     {
       if (CCB_SAES_GetFlag(p_saes_instance, flag) != status)
@@ -5008,10 +5101,10 @@ static hal_status_t CCB_SAES_WaitFlag(AES_TypeDef *p_saes_instance, uint32_t fla
   * @retval HAL_ERROR          Error detected
   * @retval HAL_OK             Operation is successfully accomplished
   */
-static hal_status_t CCB_ECDSASign_SetPram(const hal_ccb_ecdsa_curve_param_t *p_in_curve_param)
+static hal_status_t CCB_ECDSASign_SetParam(const hal_ccb_ecdsa_curve_param_t *p_in_curve_param)
 {
   AES_TypeDef *p_saes_instance = SAES;
-  __IO uint32_t *pka_ram_u32 = (__IO uint32_t *)PKA->RAM;
+  __IOM uint32_t *pka_ram_u32 = (__IOM uint32_t *)PKA->RAM;
 
   /* Get the prime order n length */
   pka_ram_u32[PKA_ECDSA_SIGN_IN_ORDER_NB_BITS]
@@ -5040,43 +5133,43 @@ static hal_status_t CCB_ECDSASign_SetPram(const hal_ccb_ecdsa_curve_param_t *p_i
   }
 
   /* Move the input parameters coefficient |a| to PKA RAM */
-  if (CCB_SetPram(p_in_curve_param->modulus_size_byte, PKA_ECDSA_SIGN_IN_A_COEFF,
-                  p_in_curve_param->p_abs_coef_a) != HAL_OK)
+  if (CCB_SetParam(p_in_curve_param->modulus_size_byte, PKA_ECDSA_SIGN_IN_A_COEFF,
+                   p_in_curve_param->p_abs_coef_a) != HAL_OK)
   {
     return HAL_ERROR;
   }
 
   /* Move the input parameters coefficient b to PKA RAM */
-  if (CCB_SetPram(p_in_curve_param->modulus_size_byte, PKA_ECDSA_SIGN_IN_B_COEFF,
-                  p_in_curve_param->p_coef_b) != HAL_OK)
+  if (CCB_SetParam(p_in_curve_param->modulus_size_byte, PKA_ECDSA_SIGN_IN_B_COEFF,
+                   p_in_curve_param->p_coef_b) != HAL_OK)
   {
     return HAL_ERROR;
   }
 
   /* Move the input parameters modulus value p to PKA RAM */
-  if (CCB_SetPram(p_in_curve_param->modulus_size_byte, PKA_ECDSA_SIGN_IN_MOD_GF,
-                  p_in_curve_param->p_modulus) != HAL_OK)
+  if (CCB_SetParam(p_in_curve_param->modulus_size_byte, PKA_ECDSA_SIGN_IN_MOD_GF,
+                   p_in_curve_param->p_modulus) != HAL_OK)
   {
     return HAL_ERROR;
   }
 
   /* Move the input parameters prime order n to PKA RAM */
-  if (CCB_SetPram(p_in_curve_param->modulus_size_byte, PKA_ECDSA_SIGN_IN_ORDER_N,
-                  p_in_curve_param->p_prime_order) != HAL_OK)
+  if (CCB_SetParam(p_in_curve_param->modulus_size_byte, PKA_ECDSA_SIGN_IN_ORDER_N,
+                   p_in_curve_param->p_prime_order) != HAL_OK)
   {
     return HAL_ERROR;
   }
 
   /* Move the input parameters base point G coordinate x to PKA RAM */
-  if (CCB_SetPram(p_in_curve_param->modulus_size_byte, PKA_ECDSA_SIGN_IN_INITIAL_POINT_X,
-                  p_in_curve_param->p_point_x) != HAL_OK)
+  if (CCB_SetParam(p_in_curve_param->modulus_size_byte, PKA_ECDSA_SIGN_IN_INITIAL_POINT_X,
+                   p_in_curve_param->p_point_x) != HAL_OK)
   {
     return HAL_ERROR;
   }
 
   /* Move the input parameters base point G coordinate y to PKA RAM */
-  if (CCB_SetPram(p_in_curve_param->modulus_size_byte, PKA_ECDSA_SIGN_IN_INITIAL_POINT_Y,
-                  p_in_curve_param->p_point_y) != HAL_OK)
+  if (CCB_SetParam(p_in_curve_param->modulus_size_byte, PKA_ECDSA_SIGN_IN_INITIAL_POINT_Y,
+                   p_in_curve_param->p_point_y) != HAL_OK)
   {
     return HAL_ERROR;
   }
@@ -5095,10 +5188,10 @@ static hal_status_t CCB_ECDSASign_SetPram(const hal_ccb_ecdsa_curve_param_t *p_i
   * @retval HAL_ERROR         Error detected
   * @retval HAL_OK            Operation is successfully accomplished
   */
-static hal_status_t CCB_ECCMul_SetPram(const hal_ccb_ecc_mul_curve_param_t *p_in_curve_param)
+static hal_status_t CCB_ECCMul_SetParam(const hal_ccb_ecc_mul_curve_param_t *p_in_curve_param)
 {
   AES_TypeDef *p_saes_instance = SAES;
-  __IO uint32_t *pka_ram_u32 = (__IO uint32_t *)PKA->RAM;
+  __IOM uint32_t *pka_ram_u32 = (__IOM uint32_t *)PKA->RAM;
 
   /* Get the prime order n length */
   pka_ram_u32[PKA_ECC_SCALAR_MUL_IN_EXP_NB_BITS]
@@ -5127,29 +5220,29 @@ static hal_status_t CCB_ECCMul_SetPram(const hal_ccb_ecc_mul_curve_param_t *p_in
   }
 
   /* Move the input parameters coefficient |a| to PKA RAM */
-  if (CCB_SetPram(p_in_curve_param->modulus_size_byte, PKA_ECC_SCALAR_MUL_IN_A_COEFF,
-                  p_in_curve_param->p_abs_coef_a) != HAL_OK)
+  if (CCB_SetParam(p_in_curve_param->modulus_size_byte, PKA_ECC_SCALAR_MUL_IN_A_COEFF,
+                   p_in_curve_param->p_abs_coef_a) != HAL_OK)
   {
     return HAL_ERROR;
   }
 
   /* Move the input parameters coefficient b to PKA RAM */
-  if (CCB_SetPram(p_in_curve_param->modulus_size_byte, PKA_ECC_SCALAR_MUL_IN_B_COEFF,
-                  p_in_curve_param->p_coef_b) != HAL_OK)
+  if (CCB_SetParam(p_in_curve_param->modulus_size_byte, PKA_ECC_SCALAR_MUL_IN_B_COEFF,
+                   p_in_curve_param->p_coef_b) != HAL_OK)
   {
     return HAL_ERROR;
   }
 
   /* Move the input parameters modulus value p to PKA RAM */
-  if (CCB_SetPram(p_in_curve_param->modulus_size_byte, PKA_ECC_SCALAR_MUL_IN_MOD_GF,
-                  p_in_curve_param->p_modulus) != HAL_OK)
+  if (CCB_SetParam(p_in_curve_param->modulus_size_byte, PKA_ECC_SCALAR_MUL_IN_MOD_GF,
+                   p_in_curve_param->p_modulus) != HAL_OK)
   {
     return HAL_ERROR;
   }
 
   /* Move the input parameters prime order n to PKA RAM */
-  if (CCB_SetPram(p_in_curve_param->modulus_size_byte, PKA_ECC_SCALAR_MUL_IN_N_PRIME_ORDER,
-                  p_in_curve_param->p_prime_order) != HAL_OK)
+  if (CCB_SetParam(p_in_curve_param->modulus_size_byte, PKA_ECC_SCALAR_MUL_IN_N_PRIME_ORDER,
+                   p_in_curve_param->p_prime_order) != HAL_OK)
   {
     return HAL_ERROR;
   }
@@ -5168,10 +5261,10 @@ static hal_status_t CCB_ECCMul_SetPram(const hal_ccb_ecc_mul_curve_param_t *p_in
   * @retval HAL_ERROR         Error detected
   * @retval HAL_OK            Operation is successfully accomplished
   */
-static hal_status_t CCB_RSAModExp_SetPram(const  hal_ccb_rsa_param_t *p_in_curve_param)
+static hal_status_t CCB_RSAModExp_SetParam(const  hal_ccb_rsa_param_t *p_in_curve_param)
 {
   AES_TypeDef *p_saes_instance = SAES;
-  __IO uint32_t *pka_ram_u32 = (__IO uint32_t *)PKA->RAM;
+  __IOM uint32_t *pka_ram_u32 = (__IOM uint32_t *)PKA->RAM;
 
 
   /* Get the exp length */
@@ -5193,8 +5286,8 @@ static hal_status_t CCB_RSAModExp_SetPram(const  hal_ccb_rsa_param_t *p_in_curve
   }
 
   /* Move the input parameters modulus to PKA RAM */
-  if (CCB_SetPram(p_in_curve_param->modulus_size_byte, PKA_MODULAR_EXP_PROTECT_IN_MODULUS,
-                  p_in_curve_param->p_mod) != HAL_OK)
+  if (CCB_SetParam(p_in_curve_param->modulus_size_byte, PKA_MODULAR_EXP_PROTECT_IN_MODULUS,
+                   p_in_curve_param->p_mod) != HAL_OK)
   {
     return HAL_ERROR;
   }
@@ -5210,15 +5303,15 @@ static hal_status_t CCB_RSAModExp_SetPram(const  hal_ccb_rsa_param_t *p_in_curve
   * @retval HAL_ERROR         Error detected
   * @retval HAL_OK            Operation is successfully accomplished
   */
-static hal_status_t CCB_SetPram(uint32_t modulus_size_byte, uint32_t dst_address, const uint8_t *p_src)
+static hal_status_t CCB_SetParam(uint32_t modulus_size_byte, uint32_t dst_address, const uint8_t *p_src)
 {
   uint32_t modulus_size_words = (modulus_size_byte + 7UL) >> 3UL;
   uint32_t operand_size = 2UL * (modulus_size_words + 1UL);
-  uint32_t remainder_bytes = (modulus_size_byte) & 7UL;
-  uint32_t max_word_offset = (remainder_bytes != 0U) ? ((operand_size) - 4UL) : ((operand_size) - 2UL);
+  const uint32_t remainder_bytes = (modulus_size_byte) & 7UL;
+  const uint32_t max_word_offset = (remainder_bytes != 0U) ? ((operand_size) - 4UL) : ((operand_size) - 2UL);
   uint32_t word_offset;
   AES_TypeDef *p_saes_instance = SAES;
-  __IO uint32_t *pka_ram_u32 = (__IO uint32_t *)PKA->RAM;
+  __IOM uint32_t *pka_ram_u32 = (__IOM uint32_t *)PKA->RAM;
 
   for (word_offset = 0U; word_offset < max_word_offset; word_offset += CCB_WORDS_PER_BLOCK)
   {
@@ -5234,8 +5327,8 @@ static hal_status_t CCB_SetPram(uint32_t modulus_size_byte, uint32_t dst_address
   if (remainder_bytes != 0U)
   {
     uint32_t src_index = modulus_size_byte - ((word_offset * CCB_BYTES_PER_WORD) + 1U);
-    CCB_Memcpy_Not_Align(&pka_ram_u32[dst_address + word_offset], &p_src[src_index],
-                         remainder_bytes);
+    CCB_Memcpy_TailBytesToU64(&pka_ram_u32[dst_address + word_offset], &p_src[src_index],
+                              remainder_bytes);
     if (CCB_SAES_WaitFlag(p_saes_instance, AES_ISR_CCF, 1U) != HAL_OK)
     {
       return HAL_ERROR;
@@ -5255,22 +5348,22 @@ static hal_status_t CCB_SetPram(uint32_t modulus_size_byte, uint32_t dst_address
 
 /**
   * @brief  CCB wrapping key configuration.
-  * @param  unwrapkey_context  Pointer to the context or parameters required by the unwrapkey
+  * @param  p_unwrapkey_context  Pointer to the context or parameters required by the unwrapkey
   * @param  ccb_operation      Operation
   * @retval HAL_ERROR          Error detected
   * @retval HAL_OK             Operation is successfully accomplished
   */
-static hal_status_t CCB_Wrapping_Key_Config(void *unwrapkey_context, uint8_t ccb_operation)
+static hal_status_t CCB_Wrapping_Key_Config(void *p_unwrapkey_context, uint8_t ccb_operation)
 {
   AES_TypeDef *p_saes_instance = SAES;
-  ccb_hw_unwrap_key_context_t const *ctx = (ccb_hw_unwrap_key_context_t *)unwrapkey_context;
+  ccb_hw_unwrap_key_context_t const *ctx = (ccb_hw_unwrap_key_context_t *)p_unwrapkey_context;
+  uint32_t key_selection = (ctx->wrapping_key_context == HAL_CCB_KEY_HSW) ? AES_CR_KEYSEL_2 : AES_CR_KEYSEL_0;
   uint32_t saes_cr_value = 0U;
-  hal_status_t status = HAL_OK;
 
   /* 1. Software Unwrap Key Path */
   if (ctx->ccb_key_type == CCB_KEY_TYPE_SOFTWARE)
   {
-    if (CCB_SAES_SW_UnwrapKey(p_saes_instance, unwrapkey_context) != HAL_OK)
+    if (CCB_SAES_SW_UnwrapKey(p_saes_instance, p_unwrapkey_context) != HAL_OK)
     {
       return HAL_ERROR;
     }
@@ -5308,12 +5401,12 @@ static hal_status_t CCB_Wrapping_Key_Config(void *unwrapkey_context, uint8_t ccb
       case CCB_ECC_SCALAR_MUL_CPU_BLOB_CREATION:
       case CCB_ECC_SCALAR_MUL_RNG_BLOB_CREATION:
       case CCB_MODULAR_EXP_CPU_BLOB_CREATION:
-        saes_cr_value = AES_CR_KEYSEL_0 | AES_CR_KEYSIZE | AES_CR_CHMOD_0
+        saes_cr_value = key_selection | AES_CR_KEYSIZE | AES_CR_CHMOD_0
                         | AES_CR_CHMOD_1;
         break;
 
       default:
-        saes_cr_value = AES_CR_KEYSEL_0 | AES_CR_KEYSIZE | AES_CR_CHMOD_0
+        saes_cr_value = key_selection | AES_CR_KEYSIZE | AES_CR_CHMOD_0
                         | AES_CR_CHMOD_1 | AES_CR_MODE_1;
         break;
     }
@@ -5325,25 +5418,25 @@ static hal_status_t CCB_Wrapping_Key_Config(void *unwrapkey_context, uint8_t ccb
 
     STM32_WRITE_REG(p_saes_instance->CR, saes_cr_value);
 
-    if (CCB_SAES_WaitFlag(p_saes_instance, AES_SR_KEYVALID, 1U) != HAL_OK)
-    {
-      return HAL_ERROR;
-    }
-
     /* HSW Key: Transfer SW Key from TAMP to SAES */
-    if (ctx->p_wrapping_key_context == HAL_CCB_KEY_HSW)
+    if (ctx->wrapping_key_context == HAL_CCB_KEY_HSW)
     {
       for (uint32_t k = 0UL; k < 8UL; k++)
       {
-        uint32_t tmp = (uint32_t)(&(TAMP->BKP0R)) + (k * 4UL);
-        if ((*(__IO uint32_t *)tmp) != 0UL)
+        uint32_t tmp = LL_TAMP_BKP_GetRegister(k);
+        if (tmp != 0UL)
         {
           return HAL_ERROR;
         }
       }
     }
+
+    if (CCB_SAES_WaitFlag(p_saes_instance, AES_SR_KEYVALID, 1U) != HAL_OK)
+    {
+      return HAL_ERROR;
+    }
   }
-  return status;
+  return HAL_OK;
 }
 
 /**
@@ -5419,11 +5512,11 @@ static hal_status_t CCB_WrapSymmetricKey(CCB_TypeDef *p_ccb_instance, const uint
 
   if (p_wrapping_key_context->aes_algorithm != HAL_CCB_AES_ECB)
   {
-    /* Set the initialization vector */
-    p_saes_instance->IVR3 = *(uint32_t *)(p_wrapping_key_context->p_init_vect);
-    p_saes_instance->IVR2 = *(uint32_t *)(p_wrapping_key_context->p_init_vect + 1U);
-    p_saes_instance->IVR1 = *(uint32_t *)(p_wrapping_key_context->p_init_vect + 2U);
-    p_saes_instance->IVR0 = *(uint32_t *)(p_wrapping_key_context->p_init_vect + 3U);
+    /* Set initialization vector from wrapping context */
+    p_saes_instance->IVR3 = p_wrapping_key_context->p_init_vect[0];
+    p_saes_instance->IVR2 = p_wrapping_key_context->p_init_vect[1];
+    p_saes_instance->IVR1 = p_wrapping_key_context->p_init_vect[2];
+    p_saes_instance->IVR0 = p_wrapping_key_context->p_init_vect[3];
   }
 
   /* Enable SAES */
@@ -5556,35 +5649,32 @@ static void CCB_Memcpy_u32_to_u32(volatile uint32_t *p_dst, const volatile uint3
   */
 static void CCB_Memcpy_u8_to_u64(volatile uint32_t *p_dst, const volatile uint8_t *p_src)
 {
-  if ((p_dst != NULL) && (p_src != NULL))
+  uint32_t word0 = 0U;
+  uint32_t word1 = 0U;
+  const volatile uint8_t *p_source = p_src;
+
+  for (uint32_t i = 0U; i < 4U; ++i)
   {
-    uint32_t word0 = 0U;
-    uint32_t word1 = 0U;
-    const volatile uint8_t *p_source = p_src;
-
-    for (uint32_t i = 0U; i < 4U; ++i)
-    {
-      word0 |= ((uint32_t)(*p_source)) << (8U * i);
-      --p_source;
-    }
-
-    for (uint32_t i = 0U; i < 4U; ++i)
-    {
-      word1 |= ((uint32_t)(*p_source)) << (8U * i);
-      --p_source;
-    }
-    p_dst[0] = word0;
-    p_dst[1] = word1;
+    word0 |= ((uint32_t)(*p_source)) << (8U * i);
+    --p_source;
   }
+
+  for (uint32_t i = 0U; i < 4U; ++i)
+  {
+    word1 |= ((uint32_t)(*p_source)) << (8U * i);
+    --p_source;
+  }
+  p_dst[0] = word0;
+  p_dst[1] = word1;
 }
 
 /**
-  * @brief  Copy uint8_t array to uint64_t array to fit number representation.
+  * @brief  Copy up to 7 bytes from a uint8_t array into two uint32_t words.
   * @param  p_dst     Pointer to destination
   * @param  p_src     Pointer to source
   * @param  size    Pointer to number of uint8_t to copy
   */
-static void CCB_Memcpy_Not_Align(volatile uint32_t *p_dst, const volatile uint8_t *p_src, size_t size)
+static void CCB_Memcpy_TailBytesToU64(volatile uint32_t *p_dst, const volatile uint8_t *p_src, size_t size)
 {
   uint32_t word0 = 0U;
   uint32_t word1 = 0U;
@@ -5741,7 +5831,7 @@ static hal_status_t CCB_BlobCreation_FinalPhase(uint32_t operation, uint32_t *p_
 {
   uint32_t last_block[4U] = {0};
   uint32_t operand_size = 2UL * (((size_param + 7UL) >> 3UL) + 1UL);
-  uint32_t cipherkey_size = ((operand_size & 3U) != 0U) ? (operand_size - 2U) : operand_size;
+  const uint32_t cipherkey_size = ((operand_size & 3U) != 0U) ? (operand_size - 2U) : operand_size;
   AES_TypeDef *p_saes_instance = SAES;
 
   CCB_CLEAR_PKA_FLAG(PKA, PKA_CLRFR_CMFC);
@@ -5803,7 +5893,7 @@ static hal_status_t CCB_BlobUse_FinalPhase(AES_TypeDef *p_saes_instance, uint32_
 {
   uint32_t last_block[4U] = {0};
   uint32_t operand_size = 2UL * (((size_param + 7UL) >> 3UL) + 1UL);
-  uint32_t cipherkey_size = ((operand_size & 3U) != 0U) ? (operand_size - 2U) : operand_size;
+  const uint32_t cipherkey_size = ((operand_size & 3U) != 0U) ? (operand_size - 2U) : operand_size;
 
   if (CCB_SAES_WaitFlag(p_saes_instance, AES_SR_BUSY, 0U) != HAL_OK)
   {
@@ -5868,7 +5958,7 @@ static hal_status_t CCB_BlobUse_FinalPhase(AES_TypeDef *p_saes_instance, uint32_
   * @brief  Blob creation for ECDSA Signature.
   * @param  p_ccb_instance        CCB instance
   * @param  p_in_curve_param      Pointer to a @ref hal_ccb_ecdsa_curve_param_t structure
-  * @param  unwrapkey_context     Pointer to the context or parameters required by the unwrapkey
+  * @param  p_unwrapkey_context     Pointer to the context or parameters required by the unwrapkey
   * @param  p_clear_private_key   Pointer to the p_clear_private_key
   * @param  p_iv                  Pointer to the initial vector
   * @param  p_tag                 Pointer to the tag
@@ -5882,7 +5972,7 @@ static hal_status_t CCB_BlobUse_FinalPhase(AES_TypeDef *p_saes_instance, uint32_
   */
 static hal_status_t CCB_ECDSA_SignBlobCreation(CCB_TypeDef *p_ccb_instance,
                                                const hal_ccb_ecdsa_curve_param_t *p_in_curve_param,
-                                               void *unwrapkey_context, const uint8_t *p_clear_private_key,
+                                               void *p_unwrapkey_context, const uint8_t *p_clear_private_key,
                                                uint32_t *p_iv, uint32_t *p_tag, uint32_t *p_wrapped_key,
                                                uint32_t randoms, uint8_t *p_hash, hal_ccb_ecdsa_sign_t *p_signature,
                                                uint8_t ccb_operation)
@@ -5890,7 +5980,7 @@ static hal_status_t CCB_ECDSA_SignBlobCreation(CCB_TypeDef *p_ccb_instance,
   uint32_t operand_size = 2UL * (((p_in_curve_param->modulus_size_byte + 7UL) >> 3UL) + 1UL);
   AES_TypeDef *p_saes_instance = SAES;
   PKA_TypeDef *p_pka_instance = PKA;
-  __IO uint32_t *pka_ram_u32 = (__IO uint32_t *)p_pka_instance->RAM;
+  __IOM uint32_t *pka_ram_u32 = (__IOM uint32_t *)p_pka_instance->RAM;
 
   if (CCB_WaitFLAG(p_ccb_instance, CCB_SR_CCB_BUSY) != HAL_OK)
   {
@@ -5920,7 +6010,7 @@ static hal_status_t CCB_ECDSA_SignBlobCreation(CCB_TypeDef *p_ccb_instance,
     return HAL_ERROR;
   }
 
-  if (CCB_Wrapping_Key_Config(unwrapkey_context, ccb_operation) != HAL_OK)
+  if (CCB_Wrapping_Key_Config(p_unwrapkey_context, ccb_operation) != HAL_OK)
   {
     return HAL_ERROR;
   }
@@ -5940,7 +6030,7 @@ static hal_status_t CCB_ECDSA_SignBlobCreation(CCB_TypeDef *p_ccb_instance,
     return HAL_ERROR;
   }
 
-  if (CCB_ECDSASign_SetPram(p_in_curve_param) != HAL_OK)
+  if (CCB_ECDSASign_SetParam(p_in_curve_param) != HAL_OK)
   {
     return HAL_ERROR;
   }
@@ -6051,11 +6141,11 @@ static hal_status_t CCB_ECDSA_SignBlobCreation(CCB_TypeDef *p_ccb_instance,
   }
 
   /* Read r part signature */
-  CCB_Memcpy_u32_to_u8(p_signature->p_r_sign, (__IO uint32_t *) &pka_ram_u32[PKA_ECDSA_SIGN_OUT_SIGNATURE_R],
+  CCB_Memcpy_u32_to_u8(p_signature->p_r_sign, (__IOM uint32_t *) &pka_ram_u32[PKA_ECDSA_SIGN_OUT_SIGNATURE_R],
                        p_in_curve_param->modulus_size_byte);
 
   /* Read s part signature */
-  CCB_Memcpy_u32_to_u8(p_signature->p_s_sign, (__IO uint32_t *)&pka_ram_u32[PKA_ECDSA_SIGN_OUT_SIGNATURE_S],
+  CCB_Memcpy_u32_to_u8(p_signature->p_s_sign, (__IOM uint32_t *)&pka_ram_u32[PKA_ECDSA_SIGN_OUT_SIGNATURE_S],
                        p_in_curve_param->modulus_size_byte);
 
   return HAL_OK;
@@ -6065,7 +6155,7 @@ static hal_status_t CCB_ECDSA_SignBlobCreation(CCB_TypeDef *p_ccb_instance,
   * @brief  Protected ECDSA compute public key.
   * @param  p_ccb_instance         CCB instance
   * @param  p_in_curve_param       Pointer to a @ref hal_ccb_ecdsa_curve_param_t structure
-  * @param  unwrapkey_context      Pointer to the context or parameters required by the unwrapkey
+  * @param  p_unwrapkey_context    Pointer to the context or parameters required by the unwrapkey
   * @param  p_iv                   Pointer to the initial vector
   * @param  p_tag                  Pointer to the tag
   * @param  p_wrapped_key          Pointer to the wrapped key
@@ -6076,13 +6166,13 @@ static hal_status_t CCB_ECDSA_SignBlobCreation(CCB_TypeDef *p_ccb_instance,
   */
 static hal_status_t CCB_ECDSA_ComputePublicKey(CCB_TypeDef *p_ccb_instance,
                                                const hal_ccb_ecdsa_curve_param_t *p_in_curve_param,
-                                               void *unwrapkey_context, uint32_t *p_iv,
+                                               void *p_unwrapkey_context, uint32_t *p_iv,
                                                uint32_t *p_tag, uint32_t *p_wrapped_key, uint32_t randoms,
                                                hal_ccb_ecc_point_t *p_output_point)
 {
   AES_TypeDef *p_saes_instance = SAES;
   PKA_TypeDef *p_pka_instance = PKA;
-  __IO uint32_t *pka_ram_u32 = (__IO uint32_t *)p_pka_instance->RAM;
+  __IOM uint32_t *pka_ram_u32 = (__IOM uint32_t *)p_pka_instance->RAM;
 
   if (CCB_WaitFLAG(p_ccb_instance, CCB_SR_CCB_BUSY) != HAL_OK)
   {
@@ -6119,7 +6209,7 @@ static hal_status_t CCB_ECDSA_ComputePublicKey(CCB_TypeDef *p_ccb_instance,
     return HAL_ERROR;
   }
 
-  if (CCB_Wrapping_Key_Config(unwrapkey_context, CCB_ECC_SCALAR_MUL_BLOB_USE) != HAL_OK)
+  if (CCB_Wrapping_Key_Config(p_unwrapkey_context, CCB_ECC_SCALAR_MUL_BLOB_USE) != HAL_OK)
   {
     return HAL_ERROR;
   }
@@ -6141,7 +6231,7 @@ static hal_status_t CCB_ECDSA_ComputePublicKey(CCB_TypeDef *p_ccb_instance,
     return HAL_ERROR;
   }
 
-  if (CCB_ECDSASign_SetPram(p_in_curve_param) != HAL_OK)
+  if (CCB_ECDSASign_SetParam(p_in_curve_param) != HAL_OK)
   {
     return HAL_ERROR;
   }
@@ -6168,7 +6258,6 @@ static hal_status_t CCB_ECDSA_ComputePublicKey(CCB_TypeDef *p_ccb_instance,
     return HAL_ERROR;
   }
 
-  /* Wait until OPSTEP is set to 0x18 */
   if (CCB_WaitOperStep(p_ccb_instance, 0x18U) != HAL_OK)
   {
     return HAL_ERROR;
@@ -6210,7 +6299,7 @@ static hal_status_t CCB_ECDSA_ComputePublicKey(CCB_TypeDef *p_ccb_instance,
   * @brief  Blob Usage: ECDSA Signature.
   * @param  p_ccb_instance      CCB instance
   * @param  p_in_curve_param    Pointer to a @ref hal_ccb_ecdsa_curve_param_t structure
-  * @param  unwrapkey_context   Pointer to the context or parameters required by the unwrapkey
+  * @param  p_unwrapkey_context   Pointer to the context or parameters required by the unwrapkey
   * @param  p_in_ecdsa_key_blob Pointer to a @ref hal_ccb_ecdsa_key_blob_t structure
   * @param  p_in_hash           Pointer to the hash
   * @param  hash_size           Specify the size of the hash message
@@ -6219,7 +6308,7 @@ static hal_status_t CCB_ECDSA_ComputePublicKey(CCB_TypeDef *p_ccb_instance,
   * @retval HAL_OK              Operation is successfully accomplished
   */
 static hal_status_t CCB_ECDSA_Sign(CCB_TypeDef *p_ccb_instance, const hal_ccb_ecdsa_curve_param_t *p_in_curve_param,
-                                   void *unwrapkey_context, hal_ccb_ecdsa_key_blob_t *p_in_ecdsa_key_blob,
+                                   void *p_unwrapkey_context, hal_ccb_ecdsa_key_blob_t *p_in_ecdsa_key_blob,
                                    const uint8_t *p_in_hash, uint8_t hash_size, hal_ccb_ecdsa_sign_t *p_out_signature)
 {
   uint32_t word_offset;
@@ -6227,7 +6316,7 @@ static hal_status_t CCB_ECDSA_Sign(CCB_TypeDef *p_ccb_instance, const hal_ccb_ec
   AES_TypeDef *p_saes_instance = SAES;
   PKA_TypeDef *p_pka_instance = PKA;
   RNG_TypeDef *p_rng_instance = RNG;
-  __IO uint32_t *pka_ram_u32 = (__IO uint32_t *)p_pka_instance->RAM;
+  __IOM uint32_t *pka_ram_u32 = (__IOM uint32_t *)p_pka_instance->RAM;
 
   if (CCB_WaitFLAG(p_ccb_instance, CCB_SR_CCB_BUSY) != HAL_OK)
   {
@@ -6253,7 +6342,7 @@ static hal_status_t CCB_ECDSA_Sign(CCB_TypeDef *p_ccb_instance, const hal_ccb_ec
     return HAL_ERROR;
   }
 
-  if (CCB_Wrapping_Key_Config(unwrapkey_context, CCB_ECDSA_SIGN_BLOB_USE) != HAL_OK)
+  if (CCB_Wrapping_Key_Config(p_unwrapkey_context, CCB_ECDSA_SIGN_BLOB_USE) != HAL_OK)
   {
     return HAL_ERROR;
   }
@@ -6278,7 +6367,7 @@ static hal_status_t CCB_ECDSA_Sign(CCB_TypeDef *p_ccb_instance, const hal_ccb_ec
     return HAL_ERROR;
   }
 
-  if (CCB_ECDSASign_SetPram(p_in_curve_param) != HAL_OK)
+  if (CCB_ECDSASign_SetParam(p_in_curve_param) != HAL_OK)
   {
     return HAL_ERROR;
   }
@@ -6345,7 +6434,6 @@ static hal_status_t CCB_ECDSA_Sign(CCB_TypeDef *p_ccb_instance, const hal_ccb_ec
     return HAL_ERROR;
   }
 
-  /* Wait until OPSTEP is set to 0x18 */
   if (CCB_WaitOperStep(p_ccb_instance, 0x18U) != HAL_OK)
   {
     return HAL_ERROR;
@@ -6371,11 +6459,11 @@ static hal_status_t CCB_ECDSA_Sign(CCB_TypeDef *p_ccb_instance, const hal_ccb_ec
     return HAL_ERROR;
   }
   /* Read r part signature */
-  CCB_Memcpy_u32_to_u8(p_out_signature->p_r_sign, (__IO uint32_t *) &pka_ram_u32[PKA_ECDSA_SIGN_OUT_SIGNATURE_R],
+  CCB_Memcpy_u32_to_u8(p_out_signature->p_r_sign, (__IOM uint32_t *) &pka_ram_u32[PKA_ECDSA_SIGN_OUT_SIGNATURE_R],
                        p_in_curve_param->modulus_size_byte);
 
   /* Read s part signature */
-  CCB_Memcpy_u32_to_u8(p_out_signature->p_s_sign, (__IO uint32_t *)&pka_ram_u32[PKA_ECDSA_SIGN_OUT_SIGNATURE_S],
+  CCB_Memcpy_u32_to_u8(p_out_signature->p_s_sign, (__IOM uint32_t *)&pka_ram_u32[PKA_ECDSA_SIGN_OUT_SIGNATURE_S],
                        p_in_curve_param->modulus_size_byte);
 
   return HAL_OK;
@@ -6385,7 +6473,7 @@ static hal_status_t CCB_ECDSA_Sign(CCB_TypeDef *p_ccb_instance, const hal_ccb_ec
   * @brief  Blob creation for ECC Scalar Multiplication.
   * @param  p_ccb_instance         CCB instance
   * @param  p_in_curve_param       Pointer to a @ref hal_ccb_ecc_mul_curve_param_t structure
-  * @param  unwrapkey_context      Pointer to the context or parameters required by the unwrapkey
+  * @param  p_unwrapkey_context    Pointer to the context or parameters required by the unwrapkey
   * @param  p_clear_private_key    Pointer to the p_clear_private_key
   * @param  p_iv                   Pointer to the initial vector
   * @param  p_tag                  Pointer to the tag
@@ -6399,7 +6487,7 @@ static hal_status_t CCB_ECDSA_Sign(CCB_TypeDef *p_ccb_instance, const hal_ccb_ec
   */
 static hal_status_t CCB_ECC_ScalarMulBlobCreation(CCB_TypeDef *p_ccb_instance,
                                                   const hal_ccb_ecc_mul_curve_param_t *p_in_curve_param,
-                                                  void *unwrapkey_context, const uint8_t *p_clear_private_key,
+                                                  void *p_unwrapkey_context, const uint8_t *p_clear_private_key,
                                                   uint32_t *p_iv, uint32_t *p_tag, uint32_t *p_wrapped_key,
                                                   uint32_t randoms, uint32_t *scalar_mul_x_ref,
                                                   uint32_t *scalar_mul_y_ref, uint8_t ccb_operation)
@@ -6407,7 +6495,7 @@ static hal_status_t CCB_ECC_ScalarMulBlobCreation(CCB_TypeDef *p_ccb_instance,
   uint32_t operand_size = 2UL * (((p_in_curve_param->prime_order_size_byte + 7UL) >> 3UL) + 1UL);
   AES_TypeDef *p_saes_instance = SAES;
   PKA_TypeDef *p_pka_instance = PKA;
-  __IO uint32_t *pka_ram_u32 = (__IO uint32_t *)p_pka_instance->RAM;
+  __IOM uint32_t *pka_ram_u32 = (__IOM uint32_t *)p_pka_instance->RAM;
 
   if (CCB_WaitFLAG(p_ccb_instance, CCB_SR_CCB_BUSY) != HAL_OK)
   {
@@ -6443,7 +6531,7 @@ static hal_status_t CCB_ECC_ScalarMulBlobCreation(CCB_TypeDef *p_ccb_instance,
     return HAL_ERROR;
   }
 
-  if (CCB_Wrapping_Key_Config(unwrapkey_context, ccb_operation) != HAL_OK)
+  if (CCB_Wrapping_Key_Config(p_unwrapkey_context, ccb_operation) != HAL_OK)
   {
     return HAL_ERROR;
   }
@@ -6465,7 +6553,7 @@ static hal_status_t CCB_ECC_ScalarMulBlobCreation(CCB_TypeDef *p_ccb_instance,
     return HAL_ERROR;
   }
 
-  if (CCB_ECCMul_SetPram(p_in_curve_param) != HAL_OK)
+  if (CCB_ECCMul_SetParam(p_in_curve_param) != HAL_OK)
   {
     return HAL_ERROR;
   }
@@ -6566,7 +6654,7 @@ static hal_status_t CCB_ECC_ScalarMulBlobCreation(CCB_TypeDef *p_ccb_instance,
   * @brief  Blob creation for RSA Modular exponentiation.
   * @param  p_ccb_instance          CCB instance
   * @param  p_param                 Pointer to a @ref hal_ccb_rsa_param_t structure
-  * @param  unwrapkey_context       Pointer to the context or parameters required by the unwrapkey
+  * @param  p_unwrapkey_context     Pointer to the context or parameters required by the unwrapkey
   * @param  p_rsa_clear_private_key Pointer to a @ref hal_ccb_rsa_clear_key_t
   * @param  p_iv                    Pointer to the initial vector
   * @param  p_tag                   Pointer to the tag
@@ -6579,7 +6667,7 @@ static hal_status_t CCB_ECC_ScalarMulBlobCreation(CCB_TypeDef *p_ccb_instance,
   * @retval HAL_OK                  Operation is successfully accomplished
   */
 static hal_status_t CCB_RSA_ExpBlobCreation(CCB_TypeDef *p_ccb_instance, const hal_ccb_rsa_param_t *p_param,
-                                            void *unwrapkey_context,
+                                            void *p_unwrapkey_context,
                                             const hal_ccb_rsa_clear_key_t *p_rsa_clear_private_key,
                                             uint32_t *p_iv, uint32_t *p_tag, uint32_t *p_wrapped_exp,
                                             uint32_t *p_wrapped_phi, uint32_t randoms, uint8_t *p_operand,
@@ -6588,7 +6676,7 @@ static hal_status_t CCB_RSA_ExpBlobCreation(CCB_TypeDef *p_ccb_instance, const h
   uint32_t operand_size = 2UL * (((p_param->modulus_size_byte + 7UL) >> 3UL) + 1UL);
   AES_TypeDef *p_saes_instance = SAES;
   PKA_TypeDef *p_pka_instance = PKA;
-  __IO uint32_t *pka_ram_u32 = (__IO uint32_t *)p_pka_instance->RAM;
+  __IOM uint32_t *pka_ram_u32 = (__IOM uint32_t *)p_pka_instance->RAM;
 
   if (CCB_WaitFLAG(p_ccb_instance, CCB_SR_CCB_BUSY) != HAL_OK)
   {
@@ -6611,7 +6699,8 @@ static hal_status_t CCB_RSA_ExpBlobCreation(CCB_TypeDef *p_ccb_instance, const h
   /* Write a constant K as operand A (base of exponentiation) in the PKA RAM */
   CCB_Memcpy_u8_to_u32(&pka_ram_u32[PKA_MODULAR_EXP_PROTECT_IN_EXPONENT_BASE ], p_operand,
                        p_param->modulus_size_byte);
-  CCB_PKA_PadEndRam(pka_ram_u32, PKA_MODULAR_EXP_PROTECT_IN_EXPONENT_BASE + (p_param->modulus_size_byte + 3UL));
+  CCB_PKA_PadEndRam(pka_ram_u32,
+                    PKA_MODULAR_EXP_PROTECT_IN_EXPONENT_BASE + ((p_param->modulus_size_byte + 3UL) >> 2UL));
 
   /* Wait for Galois Filter End of Computation */
   if (CCB_SAES_WaitFlag(p_saes_instance, AES_SR_BUSY, 0U) != HAL_OK)
@@ -6619,7 +6708,7 @@ static hal_status_t CCB_RSA_ExpBlobCreation(CCB_TypeDef *p_ccb_instance, const h
     return HAL_ERROR;
   }
 
-  if (CCB_Wrapping_Key_Config(unwrapkey_context, CCB_MODULAR_EXP_CPU_BLOB_CREATION) != HAL_OK)
+  if (CCB_Wrapping_Key_Config(p_unwrapkey_context, CCB_MODULAR_EXP_CPU_BLOB_CREATION) != HAL_OK)
   {
     return HAL_ERROR;
   }
@@ -6641,7 +6730,7 @@ static hal_status_t CCB_RSA_ExpBlobCreation(CCB_TypeDef *p_ccb_instance, const h
     return HAL_ERROR;
   }
 
-  if (CCB_RSAModExp_SetPram(p_param) != HAL_OK)
+  if (CCB_RSAModExp_SetParam(p_param) != HAL_OK)
   {
     return HAL_ERROR;
   }
@@ -6774,7 +6863,7 @@ static hal_status_t CCB_RSA_ExpBlobCreation(CCB_TypeDef *p_ccb_instance, const h
   * @brief  Protected ECC compute scalar multiplication.
   * @param  p_ccb_instance         CCB instance
   * @param  p_in_curve_param       Pointer to a @ref hal_ccb_ecdsa_curve_param_t structure
-  * @param  unwrapkey_context      Pointer to the context or parameters required by the unwrapkey
+  * @param  p_unwrapkey_context    Pointer to the context or parameters required by the unwrapkey
   * @param  p_iv                   Pointer to the initial vector
   * @param  p_tag                  Pointer to the tag
   * @param  p_wrapped_key          Pointer to the wrapped key
@@ -6786,16 +6875,16 @@ static hal_status_t CCB_RSA_ExpBlobCreation(CCB_TypeDef *p_ccb_instance, const h
   */
 static hal_status_t CCB_ECC_ComputeScalarMul(CCB_TypeDef *p_ccb_instance,
                                              const hal_ccb_ecc_mul_curve_param_t *p_in_curve_param,
-                                             void *unwrapkey_context, uint32_t *p_iv, uint32_t *p_tag,
+                                             void *p_unwrapkey_context, uint32_t *p_iv, uint32_t *p_tag,
                                              uint32_t *p_wrapped_key, uint32_t randoms,
                                              const hal_ccb_ecc_point_t *p_input_point,
                                              hal_ccb_ecc_point_t *p_output_point)
 {
-  const uint8_t *point_x = (p_input_point == NULL) ? p_in_curve_param->p_point_x : p_input_point->p_point_x;
-  const uint8_t *point_y = (p_input_point == NULL) ? p_in_curve_param->p_point_y : p_input_point->p_point_y;
+  const uint8_t *p_point_x = (p_input_point == NULL) ? p_in_curve_param->p_point_x : p_input_point->p_point_x;
+  const uint8_t *p_point_y = (p_input_point == NULL) ? p_in_curve_param->p_point_y : p_input_point->p_point_y;
   AES_TypeDef *p_saes_instance = SAES;
   PKA_TypeDef *p_pka_instance = PKA;
-  __IO uint32_t *pka_ram_u32 = (__IO uint32_t *)p_pka_instance->RAM;
+  __IOM uint32_t *pka_ram_u32 = (__IOM uint32_t *)p_pka_instance->RAM;
 
   if (CCB_WaitFLAG(p_ccb_instance, CCB_SR_CCB_BUSY) != HAL_OK)
   {
@@ -6817,12 +6906,12 @@ static hal_status_t CCB_ECC_ComputeScalarMul(CCB_TypeDef *p_ccb_instance,
 
   /* Write Customized point coordinate */
   CCB_Memcpy_u8_to_u32(&pka_ram_u32[PKA_ECC_SCALAR_MUL_IN_INITIAL_POINT_X ],
-                       point_x, p_in_curve_param->modulus_size_byte);
+                       p_point_x, p_in_curve_param->modulus_size_byte);
   CCB_PKA_PadEndRam(pka_ram_u32,
                     PKA_ECC_SCALAR_MUL_IN_INITIAL_POINT_X + ((p_in_curve_param->modulus_size_byte + 3UL) >> 2UL));
 
   CCB_Memcpy_u8_to_u32((&pka_ram_u32[PKA_ECC_SCALAR_MUL_IN_INITIAL_POINT_Y ]),
-                       point_y, p_in_curve_param->modulus_size_byte);
+                       p_point_y, p_in_curve_param->modulus_size_byte);
   CCB_PKA_PadEndRam(pka_ram_u32,
                     PKA_ECC_SCALAR_MUL_IN_INITIAL_POINT_Y + ((p_in_curve_param->modulus_size_byte + 3UL) >> 2UL));
 
@@ -6832,7 +6921,7 @@ static hal_status_t CCB_ECC_ComputeScalarMul(CCB_TypeDef *p_ccb_instance,
     return HAL_ERROR;
   }
 
-  if (CCB_Wrapping_Key_Config(unwrapkey_context, CCB_ECC_SCALAR_MUL_BLOB_USE) != HAL_OK)
+  if (CCB_Wrapping_Key_Config(p_unwrapkey_context, CCB_ECC_SCALAR_MUL_BLOB_USE) != HAL_OK)
   {
     return HAL_ERROR;
   }
@@ -6854,7 +6943,7 @@ static hal_status_t CCB_ECC_ComputeScalarMul(CCB_TypeDef *p_ccb_instance,
     return HAL_ERROR;
   }
 
-  if (CCB_ECCMul_SetPram(p_in_curve_param) != HAL_OK)
+  if (CCB_ECCMul_SetParam(p_in_curve_param) != HAL_OK)
   {
     return HAL_ERROR;
   }
@@ -6882,7 +6971,6 @@ static hal_status_t CCB_ECC_ComputeScalarMul(CCB_TypeDef *p_ccb_instance,
     return HAL_ERROR;
   }
 
-  /* Wait until OPSTEP is set to 0x18 */
   if (CCB_WaitOperStep(p_ccb_instance, 0x18U) != HAL_OK)
   {
     return HAL_ERROR;
@@ -6927,7 +7015,7 @@ static hal_status_t CCB_ECC_ComputeScalarMul(CCB_TypeDef *p_ccb_instance,
   * @brief  Blob Usage: RSA Compute Modular exponentiation.
   * @param  p_ccb_instance          CCB instance
   * @param  p_param                 Pointer to a @ref hal_ccb_rsa_param_t structure
-  * @param  unwrapkey_context       Pointer to the context or parameters required by the unwrapkey
+  * @param  p_unwrapkey_context     Pointer to the context or parameters required by the unwrapkey
   * @param  p_iv                    Pointer to the initial vector
   * @param  p_tag                   Pointer to the tag
   * @param  p_wrapped_exp           Pointer to the wrapped exp
@@ -6939,13 +7027,13 @@ static hal_status_t CCB_ECC_ComputeScalarMul(CCB_TypeDef *p_ccb_instance,
   * @retval HAL_OK                  Operation is successfully accomplished
   */
 static hal_status_t CCB_RSA_ComputeModularExp(CCB_TypeDef *p_ccb_instance, const hal_ccb_rsa_param_t *p_param,
-                                              void *unwrapkey_context, uint32_t *p_iv,
+                                              void *p_unwrapkey_context, uint32_t *p_iv,
                                               uint32_t *p_tag, uint32_t *p_wrapped_exp, uint32_t *p_wrapped_phi,
                                               uint32_t randoms, const uint8_t *p_operand, uint8_t *p_modular_exp)
 {
   AES_TypeDef *p_saes_instance = SAES;
   PKA_TypeDef *p_pka_instance = PKA;
-  __IO uint32_t *pka_ram_u32 = (__IO uint32_t *)p_pka_instance->RAM;
+  __IOM uint32_t *pka_ram_u32 = (__IOM uint32_t *)p_pka_instance->RAM;
 
   if (CCB_WaitFLAG(p_ccb_instance, CCB_SR_CCB_BUSY) != HAL_OK)
   {
@@ -6971,7 +7059,7 @@ static hal_status_t CCB_RSA_ComputeModularExp(CCB_TypeDef *p_ccb_instance, const
     return HAL_ERROR;
   }
 
-  if (CCB_Wrapping_Key_Config(unwrapkey_context, CCB_MODULAR_EXP_BLOB_USE) != HAL_OK)
+  if (CCB_Wrapping_Key_Config(p_unwrapkey_context, CCB_MODULAR_EXP_BLOB_USE) != HAL_OK)
   {
     return HAL_ERROR;
   }
@@ -6997,7 +7085,7 @@ static hal_status_t CCB_RSA_ComputeModularExp(CCB_TypeDef *p_ccb_instance, const
     return HAL_ERROR;
   }
 
-  if (CCB_RSAModExp_SetPram(p_param) != HAL_OK)
+  if (CCB_RSAModExp_SetParam(p_param) != HAL_OK)
   {
     return HAL_ERROR;
   }
@@ -7060,7 +7148,6 @@ static hal_status_t CCB_RSA_ComputeModularExp(CCB_TypeDef *p_ccb_instance, const
     return HAL_ERROR;
   }
 
-  /* Wait until OPSTEP is set to 0x18 */
   if (CCB_WaitOperStep(p_ccb_instance, 0x18U) != HAL_OK)
   {
     return HAL_ERROR;
@@ -7111,7 +7198,7 @@ static hal_status_t CCB_PKA_ECDSASetConfigVerifSignature(PKA_TypeDef *p_pka_inst
                                                          hal_ccb_ecc_point_t *p_public_key_out, const uint8_t *p_hash,
                                                          hal_ccb_ecdsa_sign_t *p_signature)
 {
-  __IO uint32_t *pka_ram_u32 = (__IO uint32_t *)p_pka_instance->RAM;
+  __IOM uint32_t *pka_ram_u32 = (__IOM uint32_t *)p_pka_instance->RAM;
 
   if (CCB_PKA_Init(p_pka_instance) != HAL_OK)
   {
@@ -7158,7 +7245,7 @@ static hal_status_t CCB_PKA_ECDSASetConfigVerifSignature(PKA_TypeDef *p_pka_inst
                        p_in_curve_param->prime_order_size_byte);
 
   /* Move the input parameters signature part s to PKA RAM */
-  CCB_Memcpy_u8_to_u32((__IO uint32_t *) & (pka_ram_u32[PKA_ECDSA_VERIF_IN_SIGNATURE_S]), p_signature->p_s_sign,
+  CCB_Memcpy_u8_to_u32((__IOM uint32_t *) & (pka_ram_u32[PKA_ECDSA_VERIF_IN_SIGNATURE_S]), p_signature->p_s_sign,
                        p_in_curve_param->prime_order_size_byte);
 
   /* Move the input parameters hash of message z to PKA RAM */
@@ -7190,14 +7277,15 @@ static hal_status_t CCB_PKA_ECDSASetConfigVerifSignature(PKA_TypeDef *p_pka_inst
 /**
   * @brief  Unwraps a software-wrapped key.
   * @param  p_saes_instance     SAES instance
-  * @param  unwrapkey_context   Pointer to a context structure containing key and algorithm information
+  * @param  p_unwrapkey_context   Pointer to a context structure containing key and algorithm information
   * @retval HAL_OK              Operation completed successfully
   * @retval HAL_ERROR           Error detected during the unwrapping process
   */
-static hal_status_t CCB_SAES_SW_UnwrapKey(AES_TypeDef *p_saes_instance, const void *unwrapkey_context)
+static hal_status_t CCB_SAES_SW_UnwrapKey(AES_TypeDef *p_saes_instance, const void *p_unwrapkey_context)
 {
   uint32_t tickstart = HAL_GetTick();
-  const ccb_sw_unwrap_key_context_t *ctx = (const ccb_sw_unwrap_key_context_t *)unwrapkey_context;
+  const ccb_sw_unwrap_key_context_t *ctx = (const ccb_sw_unwrap_key_context_t *)p_unwrapkey_context;
+  const uint32_t *p_iv = (const uint32_t *)ctx->p_wrapping_key_context->p_init_vect;
 
   if (CCB_SAES_WaitFlag(p_saes_instance, AES_SR_BUSY, 0U) != HAL_OK)
   {
@@ -7262,15 +7350,18 @@ static hal_status_t CCB_SAES_SW_UnwrapKey(AES_TypeDef *p_saes_instance, const vo
 
   if (ctx->p_wrapping_key_context->aes_algorithm != HAL_CCB_AES_ECB)
   {
-    STM32_WRITE_REG(p_saes_instance->IVR3, *(uint32_t *)(ctx->p_wrapping_key_context->p_init_vect));
-    STM32_WRITE_REG(p_saes_instance->IVR2, *(uint32_t *)(ctx->p_wrapping_key_context->p_init_vect + 1U));
-    STM32_WRITE_REG(p_saes_instance->IVR1, *(uint32_t *)(ctx->p_wrapping_key_context->p_init_vect + 2U));
-    STM32_WRITE_REG(p_saes_instance->IVR0, *(uint32_t *)(ctx->p_wrapping_key_context->p_init_vect + 3U));
+    STM32_WRITE_REG(p_saes_instance->IVR3, p_iv[0]);
+    STM32_WRITE_REG(p_saes_instance->IVR2, p_iv[1]);
+    STM32_WRITE_REG(p_saes_instance->IVR1, p_iv[2]);
+    STM32_WRITE_REG(p_saes_instance->IVR0, p_iv[3]);
   }
 
   STM32_SET_BIT(p_saes_instance->CR, AES_CR_EN);
 
-  /* Wrapped symmetric key size is always 256 */
+  /*
+  * Feed the wrapped software key (256-bit) to SAES.
+  * ctx->p_in_wrapped_user_key contains 8 words (2 blocks of 128-bit).
+  */
   for (uint32_t in_count = 0U; in_count < 8UL; in_count += 4UL)
   {
     for (uint32_t i = 0U; i < 4U; ++i)
@@ -7332,28 +7423,29 @@ static hal_status_t CCB_RNG_GenerateRandomNumbers(RNG_TypeDef *p_rng_instance, u
   */
 static hal_status_t CCB_RNG_GenerateHashMessage(RNG_TypeDef *p_rng_instance, uint8_t *p_hash, uint32_t hash_size)
 {
-  uint32_t tickstart;
-
   for (uint32_t count = 0U; count < hash_size; count++)
   {
+    /* Ensure RNG has fresh data ready */
     if (CCB_RNG_WaitFlag(p_rng_instance, RNG_SR_DRDY) != HAL_OK)
     {
       return HAL_ERROR;
     }
 
-    tickstart = HAL_GetTick();
+    uint32_t tickstart = HAL_GetTick();
+    uint8_t value = 0U;
 
-    while (p_hash[count] == 0U)
+    while (value == 0U)
     {
-      p_hash[count] = (uint8_t)(STM32_READ_REG(p_rng_instance->DR) & 0xFFU);
+      value = (uint8_t)(STM32_READ_REG(p_rng_instance->DR) & 0xFFU);
       if ((HAL_GetTick() - tickstart) > CCB_GENERAL_TIMEOUT_MS)
       {
-        if (p_hash[count] == 0U)
+        if (value == 0U)
         {
           return HAL_ERROR;
         }
       }
     }
+    p_hash[count] = value;
   }
   return HAL_OK;
 }
@@ -7411,21 +7503,21 @@ static inline uint32_t CCB_SAES_GetFlag(AES_TypeDef const *p_saes_instance, uint
 static inline void CCB_PKA_WriteClearTextData(volatile uint32_t *p_pka_ram, uint16_t dst_address, const uint8_t *p_src,
                                               uint32_t modulus_size_byte, uint32_t operand_size)
 {
-  uint32_t remainder_bytes = (modulus_size_byte) & 7UL;
-  uint32_t max_word_offset = (remainder_bytes != 0U) ? ((operand_size) - 4UL) : ((operand_size) - 2UL);
+  const uint32_t remainder_bytes = (modulus_size_byte) & 7UL;
+  const uint32_t max_word_offset = (remainder_bytes != 0U) ? ((operand_size) - 4UL) : ((operand_size) - 2UL);
   uint32_t word_offset;
 
   for (word_offset = 0U; word_offset < max_word_offset; word_offset += CCB_WORDS_PER_BLOCK)
   {
-    uint32_t src_index = modulus_size_byte - ((word_offset * CCB_BYTES_PER_WORD) + 1U);
+    const uint32_t src_index = modulus_size_byte - ((word_offset * CCB_BYTES_PER_WORD) + 1U);
     CCB_Memcpy_u8_to_u64(&p_pka_ram[dst_address + word_offset], &p_src[src_index]);
   }
 
   if (remainder_bytes != 0U)
   {
-    uint32_t src_index = modulus_size_byte - ((word_offset * CCB_BYTES_PER_WORD) + 1U);
-    CCB_Memcpy_Not_Align(&p_pka_ram[dst_address + word_offset], &p_src[src_index],
-                         remainder_bytes);
+    const uint32_t src_index = modulus_size_byte - ((word_offset * CCB_BYTES_PER_WORD) + 1U);
+    CCB_Memcpy_TailBytesToU64(&p_pka_ram[dst_address + word_offset], &p_src[src_index],
+                              remainder_bytes);
 
     word_offset += CCB_WORDS_PER_BLOCK;
   }
@@ -7442,13 +7534,18 @@ static inline void CCB_PKA_WriteClearTextData(volatile uint32_t *p_pka_ram, uint
   * @retval HAL_ERROR         Error detected during the process
   *
   */
-static inline hal_status_t CCB_WriteWrappedKey(uint16_t dst_address, uint32_t *p_wrapped_key, uint32_t size_byte,
+static inline hal_status_t CCB_WriteWrappedKey(uint16_t dst_address, const uint32_t *p_wrapped_key, uint32_t size_byte,
                                                uint32_t randoms)
 {
   AES_TypeDef *p_saes_instance = SAES;
-  __IO uint32_t *pka_ram_u32 = (__IO uint32_t *)PKA->RAM;
+  __IOM uint32_t *pka_ram_u32 = (__IOM uint32_t *)PKA->RAM;
+
+  /* Convert the key size in bytes into the number of 32-bit words required by the PKA operand format.*/
   uint32_t operand_size   = 2UL * ((uint32_t)((size_byte + 7UL) >> 3UL) + 1UL);
-  uint32_t cipherkey_size = ((operand_size & 3U) != 0U) ? (operand_size - 2U) : operand_size;
+
+  /* Derive the number of 32-bit words of actual cipher key to use */
+  const uint32_t cipherkey_size = ((operand_size & 3U) != 0U) ? (operand_size - 2U) : operand_size;
+  const uint32_t has_remainder  = (operand_size & 3U);
   uint32_t count_block = 0UL;
 
   for (uint32_t word_offset = 0UL; word_offset < cipherkey_size; word_offset++)
@@ -7474,7 +7571,7 @@ static inline hal_status_t CCB_WriteWrappedKey(uint16_t dst_address, uint32_t *p
     }
   }
 
-  if ((operand_size & 3UL) != 0UL)
+  if (has_remainder != 0UL)
   {
     CCB_PKA_PadEndRam(pka_ram_u32, (dst_address + cipherkey_size));
   }
@@ -7493,7 +7590,7 @@ static inline hal_status_t CCB_WriteKeyFromRNG(uint16_t dst_address, uint32_t op
 {
   PKA_TypeDef *p_pka_instance = PKA;
   RNG_TypeDef *p_rng_instance = RNG;
-  __IO uint32_t *pka_ram_u32 = (__IO uint32_t *)p_pka_instance->RAM;
+  __IOM uint32_t *pka_ram_u32 = (__IOM uint32_t *)p_pka_instance->RAM;
   uint32_t word_offset;
 
   for (word_offset = 0UL; word_offset < (operand_size - 2UL); word_offset++)
@@ -7534,8 +7631,9 @@ static inline hal_status_t CCB_ReadCipheredPrivateKey(uint16_t dst_address, uint
 {
   PKA_TypeDef *p_pka_instance = PKA;
   AES_TypeDef *p_saes_instance = SAES;
-  __IO uint32_t *pka_ram_u32 = (__IO uint32_t *)p_pka_instance->RAM;
-  uint32_t cipherkey_size = ((operand_size & 3U) != 0U) ? (operand_size - 2U) : operand_size;
+  __IOM uint32_t *pka_ram_u32 = (__IOM uint32_t *)p_pka_instance->RAM;
+  const uint32_t has_remainder  = (operand_size & 3U);
+  const uint32_t cipherkey_size = (has_remainder != 0U) ? (operand_size - 2U) : operand_size;
   uint32_t count_block = 0UL;
 
   for (uint32_t word_offset = 0U; word_offset < cipherkey_size; word_offset++)
@@ -7564,7 +7662,7 @@ static inline hal_status_t CCB_ReadCipheredPrivateKey(uint16_t dst_address, uint
     return HAL_ERROR;
   }
 
-  if ((operand_size & 3UL) != 0UL)
+  if (has_remainder != 0UL)
   {
     CCB_PKA_PadEndRam(pka_ram_u32, (dst_address + cipherkey_size));
   }
@@ -7582,13 +7680,200 @@ static inline hal_status_t CCB_ReadCipheredPrivateKey(uint16_t dst_address, uint
   * @param  p_buff           Pool buffer
   * @param  buff_size_byte   Pool buffer size in byte
   */
-void CCB_ErasePoolBuffer(uint8_t *p_buff, uint32_t buff_size_byte)
+static void CCB_ErasePoolBuffer(uint8_t *p_buff, uint32_t buff_size_byte)
 {
-  for (uint32_t i = 0; i < buff_size_byte; i++)
+  volatile uint32_t *p_buffer_32 = (volatile uint32_t *)p_buff;
+  uint32_t words = buff_size_byte / 4U;
+  uint32_t tail = buff_size_byte & 0x3U;
+
+  for (uint32_t i = 0U; i < words; i++)
   {
-    p_buff[i] = 0;
+    p_buffer_32[i] = 0U;
+  }
+
+  for (uint32_t i = 0U; i < tail; i++)
+  {
+    p_buff[(words * 4U) + i] = 0U;
   }
 }
+
+#if defined (USE_HAL_CCB_RNG_RECOVERY) && (USE_HAL_CCB_RNG_RECOVERY == 1U)
+#if defined(RNG_HTSR0_RPERRX) || defined(RNG_HTSR1_ADERRX)
+/**
+  * @brief  RNG sequence to resilient recover from a seed error.
+  * @retval HAL status
+  */
+hal_status_t CCB_RNG_ResilientRecoverSeedError(void)
+{
+  RNG_TypeDef *p_rng_instance = RNG;
+
+  uint32_t timeout;
+  uint32_t htsr_temp = 0U;
+  uint32_t htsr_previous_temp = 0U;
+  uint32_t htsr_count = 0U;
+  uint32_t nsmr_temp = 0U;
+  uint32_t tickstart1 = 0U;
+  uint32_t tickstart2 = 0U;
+  uint32_t tickstart3 = 0U;
+  uint32_t oscillators_count = 0U;
+  uint32_t config_b_fewer_than_6_osc_count = 0U;
+  uint8_t count = 0U;
+
+  /* timeout here is an emperic value */
+  timeout = (1UL + ((1UL << (STM32_READ_BIT(p_rng_instance->CR, RNG_CR_CLKDIV) >> 16UL))
+                    * CCB_RNG_TIMEOUT_VALUE / 8UL));
+  LL_RNG_Enable(RNG);
+
+  tickstart1 = HAL_GetTick();
+
+  /* Check if seed error current status indicates no error and auto-reset succeeded */
+  if (LL_RNG_IsActiveFlag_SECS(RNG) == 0U)
+  {
+    /* Clear SEIS flag when automatic reset is activated */
+    LL_RNG_ClearFlag_SEIS(RNG);
+  }
+
+  else  /* Sequence to fully recover from a seed error*/
+  {
+    if (LL_RNG_IsConfigLocked(RNG) == 0U)
+    {
+      do
+      {
+        if (LL_RNG_IsActiveFlag_SECS(RNG) == 0U)
+        {
+          break;
+        }
+        /* Read oscillator status registers combined */
+        htsr_temp = LL_RNG_GetHealthTestStatus(RNG, 0U);
+        htsr_temp |= LL_RNG_GetHealthTestStatus(RNG, 1U);
+        if (htsr_temp > 0U)
+        {
+          /* If any oscillator status bits overlap with previous status, increment counter */
+          if ((htsr_temp & htsr_previous_temp) != 0U)
+          {
+            htsr_count++;
+          }
+
+          if (htsr_count > 3U)
+          {
+            /* if the same repetitive or adaptative error is detected 3 times */
+            nsmr_temp = LL_RNG_GetNoiseSourceMask(RNG);
+
+            /* deactivate the same osc in each triple oscillator (Mask oscillators with the seed error by
+            clearing bits shifted right by 1) */
+            nsmr_temp = nsmr_temp & ~(htsr_temp >> 1U);
+
+            /* Count the number of active oscillators in nsmr */
+            oscillators_count = 0U;
+            for (count = 0U; count < 9U; count++)
+            {
+              if (((nsmr_temp >> count) & 0x1U) != 0U)
+              {
+                /* increment count1 for each 1 in nsmr */
+                oscillators_count++;
+              }
+            }
+
+            if (oscillators_count < 6U)
+            {
+              /* If fewer than 6 oscillators remain active, unmask all oscillators --> Reset masking */
+              nsmr_temp = LL_RNG_GetOscNoiseSrc(RNG, LL_RNG_NOISE_SRC_1 | LL_RNG_NOISE_SRC_2 | LL_RNG_NOISE_SRC_3);
+              htsr_previous_temp = 0;
+              htsr_count = 0U;
+              if ((RNG->CR  & RNG_CR_CLKDIV_Msk) < ((uint32_t)RNG_CAND_NIST_CR_VALUE & RNG_CR_CLKDIV_Msk))
+              {
+                config_b_fewer_than_6_osc_count++;
+              }
+            }
+
+            if (config_b_fewer_than_6_osc_count > 2U)
+            {
+              /* Reset RNG condition */
+              STM32_WRITE_REG(p_rng_instance->CR, (RNG_CR_CONDRST_Msk | (uint32_t)RNG_CAND_NIST_CR_VALUE));
+
+              /* Update mask register with new oscillator mask */
+              LL_RNG_SetNoiseSourceMask(RNG, nsmr_temp);
+
+              /* Clear condition reset bit to resume operation */
+              LL_RNG_DisableCondReset(RNG);
+            }
+
+            else
+            {
+              /* Reset RNG condition */
+              STM32_WRITE_REG(p_rng_instance->CR,
+                              (p_rng_instance->CR & ~RNG_CR_RNGEN_Msk) | RNG_CR_CONDRST_Msk);
+
+              /* Update mask register with new oscillator mask */
+              LL_RNG_SetNoiseSourceMask(RNG, nsmr_temp);
+
+              /* Clear condition reset bit to resume operation */
+              LL_RNG_DisableCondReset(RNG);
+            }
+          }
+
+          else
+          {
+            /* Briefly toggle conditional reset to recover RNG */
+            STM32_WRITE_REG(p_rng_instance->CR, (p_rng_instance->CR & ~RNG_CR_RNGEN_Msk) | RNG_CR_CONDRST_Msk);
+
+            /* unmask all oscillators to find another working condition */
+            LL_RNG_SetNoiseSourceMask(RNG, LL_RNG_GetOscNoiseSrc(RNG, LL_RNG_OSC_1 | LL_RNG_OSC_2 | LL_RNG_OSC_3));
+            LL_RNG_DisableCondReset(RNG);
+          }
+
+          /* Wait until RNG is not busy */
+          tickstart2 = HAL_GetTick();
+          do
+          {
+            if ((HAL_GetTick() - tickstart2) > CCB_RNG_TIMEOUT_VALUE)
+            {
+              /* New check to avoid false timeout detection in case of preemption */
+              LL_RNG_Disable(RNG);
+              return HAL_ERROR;
+            }
+          } while (STM32_IS_BIT_SET(p_rng_instance->CR, RNG_SR_BUSY));
+
+          /* No timeout --> Enable RNG */
+          LL_RNG_Enable(RNG);
+          tickstart3 = HAL_GetTick();
+          do
+          {
+            if (LL_RNG_IsActiveFlag_DRDY(RNG) != 0UL)
+            {
+              break;
+            }
+            if ((HAL_GetTick() - tickstart3) > timeout)
+            {
+              /* New check to avoid false timeout detection in case of preemption */
+              if (LL_RNG_IsActiveFlag_DRDY(RNG) == 0UL)
+              {
+                if (LL_RNG_IsActiveFlag_SECS(RNG) == 0UL)
+                {
+                  LL_RNG_Disable(RNG);
+                  return HAL_ERROR;
+                }
+              }
+            }
+          } while (LL_RNG_IsActiveFlag_SECS(RNG) == 0UL);
+
+          /* Accumulate seed error status bits */
+          htsr_previous_temp = htsr_previous_temp | htsr_temp;
+        }
+      } while ((HAL_GetTick() - tickstart1) <= timeout);
+    }
+  }
+
+  /*Check if seed error current status (SECS)is set */
+  if (LL_RNG_IsActiveFlag_SECS(RNG) != 0U)
+  {
+    return HAL_ERROR;
+  }
+
+  return HAL_OK;
+}
+#endif /* RNG_HTSR0_RPERRX || RNG_HTSR1_ADERRX */
+#endif /* USE_HAL_CCB_RNG_RECOVERY */
 /**
   * @}
   */

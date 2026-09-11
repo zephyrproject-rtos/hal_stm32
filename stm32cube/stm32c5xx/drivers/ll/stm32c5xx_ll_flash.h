@@ -143,11 +143,15 @@ extern "C" {
 /** @defgroup FLASH_ProgrammingDelay FLASH Programming Delay
   * @{
   */
-#define LL_FLASH_PROGRAM_DELAY_0 0x00000000U            /*!< Programming delay for Flash frequency at 68 MHz or less */
-#define LL_FLASH_PROGRAM_DELAY_1 FLASH_ACR_WRHIGHFREQ_0 /*!< Programming delay for Flash frequency between 68 MHz
-                                                             and 136 MHz */
-#define LL_FLASH_PROGRAM_DELAY_2 FLASH_ACR_WRHIGHFREQ_1 /*!< Programming delay for Flash frequency between 136 MHz
-                                                             and 200 MHz */
+#define LL_FLASH_PROGRAM_DELAY_0 0x00000000U                /*!< Programming delay for Flash frequency at 68 MHz or
+                                                                 less */
+#define LL_FLASH_PROGRAM_DELAY_1 FLASH_ACR_WRHIGHFREQ_0     /*!< Programming delay for Flash frequency between 68 MHz
+                                                                 and 136 MHz */
+#define LL_FLASH_PROGRAM_DELAY_2 FLASH_ACR_WRHIGHFREQ_1     /*!< Programming delay for Flash frequency between 136 MHz
+                                                                 and 170 MHz */
+#define LL_FLASH_PROGRAM_DELAY_3 (FLASH_ACR_WRHIGHFREQ_1 \
+                                  | FLASH_ACR_WRHIGHFREQ_0) /*!< Programming delay for Flash frequency at 170 MHz or
+                                                                 above */
 /**
   * @}
   */
@@ -566,6 +570,7 @@ __STATIC_INLINE uint32_t LL_FLASH_GetLatency(const FLASH_TypeDef *flashx)
   *         @arg @ref LL_FLASH_PROGRAM_DELAY_0
   *         @arg @ref LL_FLASH_PROGRAM_DELAY_1
   *         @arg @ref LL_FLASH_PROGRAM_DELAY_2
+  *         @arg @ref LL_FLASH_PROGRAM_DELAY_3
   */
 __STATIC_INLINE void LL_FLASH_SetProgrammingDelay(FLASH_TypeDef *flashx, uint32_t delay)
 {
@@ -581,6 +586,7 @@ __STATIC_INLINE void LL_FLASH_SetProgrammingDelay(FLASH_TypeDef *flashx, uint32_
   *         @arg @ref LL_FLASH_PROGRAM_DELAY_0
   *         @arg @ref LL_FLASH_PROGRAM_DELAY_1
   *         @arg @ref LL_FLASH_PROGRAM_DELAY_2
+  *         @arg @ref LL_FLASH_PROGRAM_DELAY_3
   */
 __STATIC_INLINE uint32_t LL_FLASH_GetProgrammingDelay(const FLASH_TypeDef *flashx)
 {

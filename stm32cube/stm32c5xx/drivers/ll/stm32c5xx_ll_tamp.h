@@ -1257,7 +1257,7 @@ __STATIC_INLINE void LL_TAMP_SetBackupRegProtection(uint32_t start_zone2, uint32
   * @note   Zone 2 : read non-protection  write protection
   * @note   Zone 3 : read non-protection  write non-protection
   * @rmtoll
-  *  TAMP_SECCFGR          BKPRWSEC         LL_TAMP_GetBackupRegStartZone2
+  *  TAMP_CFGR             BKPRW            LL_TAMP_GetBackupRegStartZone2
   * @retval Start index of backup zone 2
   */
 __STATIC_INLINE uint32_t LL_TAMP_GetBackupRegStartZone2(void)
@@ -1271,7 +1271,7 @@ __STATIC_INLINE uint32_t LL_TAMP_GetBackupRegStartZone2(void)
   * @note   Zone 2 : read non-protection  write protection
   * @note   Zone 3 : read non-protection  write non-protection
   * @rmtoll
-  *  TAMP_SECCFGR          BKPWSEC           LL_TAMP_GetBackupRegStartZone3
+  *  TAMP_CFGR             BKPW              LL_TAMP_GetBackupRegStartZone3
   * @retval Start index of backup zone 3
   */
 __STATIC_INLINE uint32_t LL_TAMP_GetBackupRegStartZone3(void)

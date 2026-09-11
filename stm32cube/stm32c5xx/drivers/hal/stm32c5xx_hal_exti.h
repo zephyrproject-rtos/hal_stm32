@@ -78,30 +78,40 @@ typedef enum
   HAL_EXTI_LINE_21                       = (LL_EXTI_DIRECT   | LL_EXTI_REG1 | 0x15U), /*!< EXTI Line 21 */
   HAL_EXTI_LINE_22                       = (LL_EXTI_DIRECT   | LL_EXTI_REG1 | 0x16U), /*!< EXTI Line 22 */
   HAL_EXTI_LINE_23                       = (LL_EXTI_DIRECT   | LL_EXTI_REG1 | 0x17U), /*!< EXTI Line 23 */
+#if defined(EXTI_IMR1_IM24)
   HAL_EXTI_LINE_24                       = (LL_EXTI_DIRECT   | LL_EXTI_REG1 | 0x18U), /*!< EXTI Line 24 */
+#endif /* EXTI_IMR1_IM24 */
   HAL_EXTI_LINE_25                       = (LL_EXTI_DIRECT   | LL_EXTI_REG1 | 0x19U), /*!< EXTI Line 25 */
   HAL_EXTI_LINE_26                       = (LL_EXTI_DIRECT   | LL_EXTI_REG1 | 0x1AU), /*!< EXTI Line 26 */
+#if defined(EXTI_IMR1_IM27)
   HAL_EXTI_LINE_27                       = (LL_EXTI_DIRECT   | LL_EXTI_REG1 | 0x1BU), /*!< EXTI Line 27 */
+#endif /* EXTI_IMR1_IM27 */
   HAL_EXTI_LINE_28                       = (LL_EXTI_DIRECT   | LL_EXTI_REG1 | 0x1CU), /*!< EXTI Line 28 */
   HAL_EXTI_LINE_29                       = (LL_EXTI_DIRECT   | LL_EXTI_REG1 | 0x1DU), /*!< EXTI Line 29 */
   HAL_EXTI_LINE_30                       = (LL_EXTI_DIRECT   | LL_EXTI_REG1 | 0x1EU), /*!< EXTI Line 30 */
+#if defined(EXTI_IMR1_IM31)
   HAL_EXTI_LINE_31                       = (LL_EXTI_DIRECT   | LL_EXTI_REG1 | 0x1FU), /*!< EXTI Line 31 */
+#endif /* EXTI_IMR1_IM31 */
+#if defined(EXTI_IMR2_IM32)
   HAL_EXTI_LINE_32                       = (LL_EXTI_DIRECT   | LL_EXTI_REG2 | 0x00U), /*!< EXTI Line 32 */
+#endif /* EXTI_IMR2_IM32 */
   HAL_EXTI_LINE_33                       = (LL_EXTI_DIRECT   | LL_EXTI_REG2 | 0x01U), /*!< EXTI Line 33 */
   HAL_EXTI_LINE_34                       = (LL_EXTI_CONFIG   | LL_EXTI_REG2 | 0x02U), /*!< EXTI Line 34 */
   HAL_EXTI_LINE_35                       = (LL_EXTI_DIRECT   | LL_EXTI_REG2 | 0x03U), /*!< EXTI Line 35 */
-#ifdef EXTI_IMR2_IM36
   HAL_EXTI_LINE_36                       = (LL_EXTI_CONFIG   | LL_EXTI_REG2 | 0x04U), /*!< EXTI Line 36 */
-#endif /* EXTI_IMR2_IM36 */
-#ifdef EXTI_IMR2_IM37
+#if defined(EXTI_IMR2_IM43)
   HAL_EXTI_LINE_37                       = (LL_EXTI_DIRECT   | LL_EXTI_REG2 | 0x05U), /*!< EXTI Line 37 */
-#endif /* EXTI_IMR2_IM37 */
-#ifdef EXTI_IMR2_IM38
   HAL_EXTI_LINE_38                       = (LL_EXTI_DIRECT   | LL_EXTI_REG2 | 0x06U), /*!< EXTI Line 38 */
-#endif /* EXTI_IMR2_IM38 */
-#ifdef EXTI_IMR2_IM39
   HAL_EXTI_LINE_39                       = (LL_EXTI_CONFIG   | LL_EXTI_REG2 | 0x07U), /*!< EXTI Line 39 */
-#endif /* EXTI_IMR2_IM39 */
+  HAL_EXTI_LINE_40                       = (LL_EXTI_DIRECT   | LL_EXTI_REG2 | 0x08U), /*!< EXTI Line 40 */
+  HAL_EXTI_LINE_41                       = (LL_EXTI_DIRECT   | LL_EXTI_REG2 | 0x09U), /*!< EXTI Line 41 */
+  HAL_EXTI_LINE_42                       = (LL_EXTI_DIRECT   | LL_EXTI_REG2 | 0x0AU), /*!< EXTI Line 42 */
+  HAL_EXTI_LINE_43                       = (LL_EXTI_DIRECT   | LL_EXTI_REG2 | 0x0BU), /*!< EXTI Line 43 */
+#else
+  HAL_EXTI_LINE_37                       = (LL_EXTI_DIRECT   | LL_EXTI_REG2 | 0x05U), /*!< EXTI Line 37 */
+  HAL_EXTI_LINE_38                       = (LL_EXTI_DIRECT   | LL_EXTI_REG2 | 0x06U), /*!< EXTI Line 38 */
+  HAL_EXTI_LINE_39                       = (LL_EXTI_CONFIG   | LL_EXTI_REG2 | 0x07U), /*!< EXTI Line 39 */
+#endif /* EXTI_IMR2_IM43 */
 } hal_exti_line_t;
 
 /*! EXTI Modes */
@@ -212,30 +222,40 @@ typedef enum
 #define HAL_EXTI_I3C1                    HAL_EXTI_LINE_21 /*!< EXTI I3C1 Line */
 #define HAL_EXTI_SPI1                    HAL_EXTI_LINE_22 /*!< EXTI SPI1 Line */
 #define HAL_EXTI_SPI2                    HAL_EXTI_LINE_23 /*!< EXTI SPI2 Line */
+#if defined(EXTI_IMR2_IM24)
 #define HAL_EXTI_SPI3                    HAL_EXTI_LINE_24 /*!< EXTI SPI3 Line */
+#endif /* EXTI_IMR2_IM24 */
 #define HAL_EXTI_USART1                  HAL_EXTI_LINE_25 /*!< EXTI USART1 Line */
 #define HAL_EXTI_USART2                  HAL_EXTI_LINE_26 /*!< EXTI USART2 Line */
+#if defined(EXTI_IMR2_IM27)
 #define HAL_EXTI_USART3                  HAL_EXTI_LINE_27 /*!< EXTI USART3 Line */
+#endif /* EXTI_IMR2_IM27 */
 #define HAL_EXTI_UART4                   HAL_EXTI_LINE_28 /*!< EXTI UART4 Line */
 #define HAL_EXTI_UART5                   HAL_EXTI_LINE_29 /*!< EXTI UART5 Line */
 #define HAL_EXTI_LPUART1                 HAL_EXTI_LINE_30 /*!< EXTI LPUART1 Line */
+#if defined(EXTI_IMR2_IM31)
 #define HAL_EXTI_LPTIM1                  HAL_EXTI_LINE_31 /*!< EXTI LPTIM1 Line */
+#endif /* EXTI_IMR2_IM31 */
+#if defined(EXTI_IMR2_IM32)
 #define HAL_EXTI_OT_FS                   HAL_EXTI_LINE_32 /*!< EXTI OT_FS Line */
+#endif /* EXTI_IMR2_IM32 */
 #define HAL_EXTI_I2C2                    HAL_EXTI_LINE_33 /*!< EXTI I2C2 Line */
 #define HAL_EXTI_COMP1                   HAL_EXTI_LINE_34 /*!< EXTI COMP1 Line */
 #define HAL_EXTI_IWDG                    HAL_EXTI_LINE_35 /*!< EXTI IWDG Line */
-#ifdef EXTI_IMR2_IM36
 #define HAL_EXTI_COMP2                   HAL_EXTI_LINE_36 /*!< EXTI COMP2 Line */
-#endif /* EXTI_IMR2_IM36 */
-#ifdef EXTI_IMR2_IM37
+#if defined(EXTI_IMR2_IM43)
 #define HAL_EXTI_USART6                  HAL_EXTI_LINE_37 /*!< EXTI USART6 Line */
-#endif /* EXTI_IMR2_IM37 */
-#ifdef EXTI_IMR2_IM38
 #define HAL_EXTI_UART7                   HAL_EXTI_LINE_38 /*!< EXTI UART7 Line */
-#endif /* EXTI_IMR2_IM38 */
-#ifdef EXTI_IMR2_IM39
 #define HAL_EXTI_ETH                     HAL_EXTI_LINE_39 /*!< EXTI ETH Line */
-#endif /* EXTI_IMR2_IM39 */
+#define HAL_EXTI_I2C3                    HAL_EXTI_LINE_40 /*!< EXTI I2C3 Line */
+#define HAL_EXTI_SPI4                    HAL_EXTI_LINE_41 /*!< EXTI SPI4 Line */
+#define HAL_EXTI_SPI5                    HAL_EXTI_LINE_42 /*!< EXTI SPI5 Line */
+#define HAL_EXTI_OT_HS                   HAL_EXTI_LINE_43 /*!< EXTI OT_HS Line */
+#else
+#define HAL_EXTI_USART6                  HAL_EXTI_LINE_37 /*!< EXTI USART6 Line */
+#define HAL_EXTI_UART7                   HAL_EXTI_LINE_38 /*!< EXTI UART7 Line */
+#define HAL_EXTI_ETH                     HAL_EXTI_LINE_39 /*!< EXTI ETH Line */
+#endif /* EXTI_IMR2_IM43 */
 /**
   * @}
   */
@@ -295,6 +315,9 @@ const void *HAL_EXTI_GetUserData(const hal_exti_handle_t *hexti);
   * @{
   */
 hal_exti_state_t HAL_EXTI_GetState(const hal_exti_handle_t *hexti);
+
+hal_exti_line_t HAL_EXTI_GetInstance(const hal_exti_handle_t *hexti);
+uint32_t HAL_EXTI_GetLLInstance(const hal_exti_handle_t *hexti);
 /**
   * @}
   */
