@@ -1224,4 +1224,3 @@ HAL_StatusTypeDef HAL_PWR_GetConfigAttributes(uint32_t Item, uint32_t *pAttribut
 #endif /* __cplusplus */
 
 #endif /* STM32U3xx_HAL_PWR_H */
-

@@ -1637,4 +1637,3 @@ HAL_StatusTypeDef HAL_RCC_GetConfigAttributes(uint32_t Item, uint32_t *pAttribut
 /**
   * @}
   */
-

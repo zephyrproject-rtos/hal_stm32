@@ -481,4 +481,3 @@ static ErrorStatus UTILS_SwitchSystem(uint32_t SYSCLK_Frequency,
 /**
   * @}
   */
-

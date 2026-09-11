@@ -20222,4 +20222,3 @@ typedef struct
 #endif
 
 #endif  /* STM32U366xx_H */
-

@@ -5632,4 +5632,3 @@ ErrorStatus LL_RTC_WaitForSynchro(RTC_TypeDef *RTCx);
 #endif
 
 #endif /* STM32U3xx_LL_RTC_H */
-

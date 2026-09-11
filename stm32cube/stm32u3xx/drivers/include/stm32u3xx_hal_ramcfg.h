@@ -368,4 +368,3 @@ HAL_RAMCFG_StateTypeDef HAL_RAMCFG_GetState(const RAMCFG_HandleTypeDef *hramcfg)
 
 
 #endif /* STM32U3xx_HAL_RAMCFG_H */
-

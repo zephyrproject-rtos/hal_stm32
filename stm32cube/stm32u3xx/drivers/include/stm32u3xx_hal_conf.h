@@ -379,6 +379,10 @@ vary depending on the variations in voltage and temperature.*/
 #include "stm32u3xx_hal_hcd.h"
 #endif /* HAL_HCD_MODULE_ENABLED */
 
+#ifdef HAL_HSP_MODULE_ENABLED
+#include "stm32u3xx_hal_hsp.h"
+#endif /* HAL_HSP_MODULE_ENABLED */
+
 #ifdef HAL_I2C_MODULE_ENABLED
 #include "stm32u3xx_hal_i2c.h"
 #endif /* HAL_I2C_MODULE_ENABLED */
@@ -506,4 +510,3 @@ void assert_failed(uint8_t *file, uint32_t line);
 #endif
 
 #endif /* STM32U3xx_HAL_CONF_H */
-

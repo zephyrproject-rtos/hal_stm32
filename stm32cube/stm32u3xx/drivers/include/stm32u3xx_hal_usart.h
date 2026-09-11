@@ -920,4 +920,3 @@ uint32_t               HAL_USART_GetError(const USART_HandleTypeDef *husart);
 #endif
 
 #endif /* STM32U3xx_HAL_USART_H */
-

@@ -2711,4 +2711,3 @@ HAL_StatusTypeDef HAL_RTCEx_PrivilegeModeGet(const RTC_HandleTypeDef *hrtc, RTC_
 /**
   * @}
   */
-

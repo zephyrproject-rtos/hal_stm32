@@ -239,15 +239,6 @@ typedef struct
   * @}
   */
 
-/** @defgroup RCC_LL_EC_LCD_CLKSOURCE  LCD Selection
-  * @{
-  */
-#define LL_RCC_LCD_CLKSOURCE_LSI          0U                     /*!< LSE selection for low speed clock  */
-#define LL_RCC_LCD_CLKSOURCE_LSE          RCC_BDCR_LCDSEL        /*!< LSI selection for low speed clock  */
-/**
-  * @}
-  */
-
 
 /** @defgroup RCC_LL_EC_SYS_CLKSOURCE  System clock switch
   * @{
@@ -4866,4 +4857,3 @@ uint32_t    LL_RCC_GetDACSHClockFreq(uint32_t DACSHxSource);
 #endif
 
 #endif /* STM32U3xx_LL_RCC_H */
-

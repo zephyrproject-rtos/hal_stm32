@@ -204,7 +204,7 @@ void SystemInit(void)
   *           - If SYSCLK source is HSI, SystemCoreClock will contain the HSI_VALUE(**)
   *
   *           - If SYSCLK source is HSE, SystemCoreClock will contain the HSE_VALUE(***)
-  * 
+  *
   *         (*) MSIRC0_VALUE and MSIRC1_VALUE are constant defined in stm32u3xx_hal_conf.h
   *             file (default values are respectively 96 MHz and 24 MHz)  but the real
   *             value may vary depending on the variations in voltage and temperature.
@@ -296,4 +296,3 @@ void SystemCoreClockUpdate(void)
 /**
   * @}
   */
-

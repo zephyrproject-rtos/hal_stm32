@@ -189,9 +189,9 @@ typedef struct
   * @{
   */
 #define HAL_CCB_USER_KEY_WRAPPED       (0x00000000U)    /*!< the wrapped key is a SW user key */
-#define HAL_CCB_USER_KEY_HW            AES_CR_KEYSEL_0  /*!< Hardware key : derived hardware 
+#define HAL_CCB_USER_KEY_HW            AES_CR_KEYSEL_0  /*!< Hardware key : derived hardware
                                                                       unique key (DHUK 256-bit) */
-#define HAL_CCB_USER_KEY_HSW           AES_CR_KEYSEL_2  /*!< DHUK XOR BHK Hardware unique 
+#define HAL_CCB_USER_KEY_HSW           AES_CR_KEYSEL_2  /*!< DHUK XOR BHK Hardware unique
                                                                       key XOR software key */
 
 /**

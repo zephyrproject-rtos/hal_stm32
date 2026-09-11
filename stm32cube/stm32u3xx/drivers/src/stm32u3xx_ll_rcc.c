@@ -1410,4 +1410,3 @@ static uint32_t RCC_GetMSIKClockFreq(void)
   */
 
 #endif /* USE_FULL_LL_DRIVER */
-

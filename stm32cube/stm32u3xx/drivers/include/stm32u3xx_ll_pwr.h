@@ -2549,4 +2549,3 @@ ErrorStatus LL_PWR_DeInit(void);
 #endif /* __cplusplus */
 
 #endif /* STM32U3xx_LL_PWR_H */
-

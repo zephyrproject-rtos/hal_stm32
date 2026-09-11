@@ -1024,4 +1024,3 @@ HAL_StatusTypeDef RNG_RecoverSeedError(RNG_HandleTypeDef *hrng)
 /**
   * @}
   */
-

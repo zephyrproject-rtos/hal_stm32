@@ -394,7 +394,7 @@ typedef  void (*pCRYP_CallbackTypeDef)(CRYP_HandleTypeDef *hcryp);    /*!< point
   * @{
   */
 
-#define CRYP_FLAG_BUSY       AES_SR_BUSY                   /*!< GCM process suspension forbidden also set when 
+#define CRYP_FLAG_BUSY       AES_SR_BUSY                   /*!< GCM process suspension forbidden also set when
                                                              transferring a shared key from SAES peripheral  */
 #define CRYP_FLAG_WRERR      (AES_SR_WRERR | 0x80000000U)  /*!< Write Error flag  */
 #define CRYP_FLAG_RDERR      (AES_SR_RDERR | 0x80000000U)  /*!< Read error  flag  */

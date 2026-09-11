@@ -25754,4 +25754,3 @@ typedef struct
 #endif
 
 #endif  /* STM32U3B5xx_H */
-

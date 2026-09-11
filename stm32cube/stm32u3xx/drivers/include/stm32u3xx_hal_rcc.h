@@ -327,15 +327,6 @@ typedef struct
   * @}
   */
 
-/** @defgroup RCC_LCD_Clock_Source LCD kernel clock Source
-  * @{
-  */
-#define RCC_LCDKCLKSOURCE_LSE        0x00000000U        /*!< LSE oscillator clock used as LCD kernel clock */
-#define RCC_LCDKCLKSOURCE_LSI        RCC_BDCR_LCDSEL    /*!< LSI oscillator clock used as LCD kernel clock */
-/**
-  * @}
-  */
-
 /* @cond */
 /*  32     28      20       16      0
     ---------------------------------
@@ -3326,4 +3317,3 @@ HAL_StatusTypeDef HAL_RCC_GetConfigAttributes(uint32_t Item, uint32_t *pAttribut
 #endif
 
 #endif /* __STM32U3xx_HAL_RCC_H */
-
