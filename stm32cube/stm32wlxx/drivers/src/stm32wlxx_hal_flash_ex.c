@@ -1385,4 +1385,3 @@ static uint32_t FLASH_OB_GetSecureMode(uint32_t Reg, uint32_t Bit, uint32_t Valu
 /**
   * @}
   */
-
