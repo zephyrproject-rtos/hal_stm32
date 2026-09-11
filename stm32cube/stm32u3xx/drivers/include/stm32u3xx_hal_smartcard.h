@@ -850,6 +850,27 @@ typedef  void (*pSMARTCARD_CallbackTypeDef)(SMARTCARD_HandleTypeDef *hsmartcard)
   * @param  __CLOCKSOURCE__ output variable.
   * @retval the SMARTCARD clocking source, written in __CLOCKSOURCE__.
   */
+#if defined(USART2)
+#define SMARTCARD_GETCLOCKSOURCE(__HANDLE__,__CLOCKSOURCE__)      \
+  do {                                                            \
+    if((__HANDLE__)->Instance == USART1)                          \
+    {                                                             \
+      (__CLOCKSOURCE__) = (uint32_t)RCC_PERIPHCLK_USART1;         \
+    }                                                             \
+    else if((__HANDLE__)->Instance == USART2)                     \
+    {                                                             \
+      (__CLOCKSOURCE__) = (uint32_t)RCC_PERIPHCLK_USART2;         \
+    }                                                             \
+    else if((__HANDLE__)->Instance == USART3)                     \
+    {                                                             \
+      (__CLOCKSOURCE__) = (uint32_t)RCC_PERIPHCLK_USART3;         \
+    }                                                             \
+    else                                                          \
+    {                                                             \
+      (__CLOCKSOURCE__) = 0U;                                     \
+    }                                                             \
+  } while(0U)
+#else
 #define SMARTCARD_GETCLOCKSOURCE(__HANDLE__,__CLOCKSOURCE__)      \
   do {                                                            \
     if((__HANDLE__)->Instance == USART1)                          \
@@ -865,6 +886,7 @@ typedef  void (*pSMARTCARD_CallbackTypeDef)(SMARTCARD_HandleTypeDef *hsmartcard)
       (__CLOCKSOURCE__) = 0U;                                     \
     }                                                             \
   } while(0U)
+#endif /* USART2 */
 
 
 /** @brief  Check the Baud rate range.

@@ -69,6 +69,27 @@ extern "C" {
   * @param  __CLOCKSOURCE__ output variable.
   * @retval IRDA clocking source, written in __CLOCKSOURCE__.
   */
+#if !defined(USART2) && !defined (UART5)
+#define IRDA_GETCLOCKSOURCE(__HANDLE__,__CLOCKSOURCE__)           \
+  do {                                                            \
+    if((__HANDLE__)->Instance == USART1)                          \
+    {                                                             \
+      (__CLOCKSOURCE__) = (uint32_t)RCC_PERIPHCLK_USART1;         \
+    }                                                             \
+    else if((__HANDLE__)->Instance == USART3)                     \
+    {                                                             \
+      (__CLOCKSOURCE__) = (uint32_t)RCC_PERIPHCLK_USART3;         \
+    }                                                             \
+    else if((__HANDLE__)->Instance == UART4)                      \
+    {                                                             \
+      (__CLOCKSOURCE__) = (uint32_t)RCC_PERIPHCLK_UART4;          \
+    }                                                             \
+    else                                                          \
+    {                                                             \
+      (__CLOCKSOURCE__) = 0U;                                     \
+    }                                                             \
+  } while(0U)
+#elif !defined(USART2)
 #define IRDA_GETCLOCKSOURCE(__HANDLE__,__CLOCKSOURCE__)           \
   do {                                                            \
     if((__HANDLE__)->Instance == USART1)                          \
@@ -92,7 +113,35 @@ extern "C" {
       (__CLOCKSOURCE__) = 0U;                                     \
     }                                                             \
   } while(0U)
-
+#else
+#define IRDA_GETCLOCKSOURCE(__HANDLE__,__CLOCKSOURCE__)           \
+  do {                                                            \
+    if((__HANDLE__)->Instance == USART1)                          \
+    {                                                             \
+      (__CLOCKSOURCE__) = (uint32_t)RCC_PERIPHCLK_USART1;         \
+    }                                                             \
+    else if((__HANDLE__)->Instance == USART2)                     \
+    {                                                             \
+      (__CLOCKSOURCE__) = (uint32_t)RCC_PERIPHCLK_USART2;         \
+    }                                                             \
+    else if((__HANDLE__)->Instance == USART3)                     \
+    {                                                             \
+      (__CLOCKSOURCE__) = (uint32_t)RCC_PERIPHCLK_USART3;         \
+    }                                                             \
+    else if((__HANDLE__)->Instance == UART4)                      \
+    {                                                             \
+      (__CLOCKSOURCE__) = (uint32_t)RCC_PERIPHCLK_UART4;          \
+    }                                                             \
+    else if((__HANDLE__)->Instance == UART5)                      \
+    {                                                             \
+      (__CLOCKSOURCE__) = (uint32_t)RCC_PERIPHCLK_UART5;          \
+    }                                                             \
+    else                                                          \
+    {                                                             \
+      (__CLOCKSOURCE__) = 0U;                                     \
+    }                                                             \
+  } while(0U)
+#endif /* USART2, USART5 */
 
 /** @brief  Compute the mask to apply to retrieve the received data
   *         according to the word length and to the parity bits activation.

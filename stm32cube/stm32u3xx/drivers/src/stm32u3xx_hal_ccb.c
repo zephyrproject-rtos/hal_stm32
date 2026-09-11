@@ -93,7 +93,9 @@
 #ifndef HAL_CCB_TIMEOUT_DEFAULT_VALUE
 #define HAL_CCB_TIMEOUT_DEFAULT_VALUE      0xFFFFU         /* CCB Timeout.*/
 #endif /*HAL_CCB_TIMEOUT_DEFAULT_VALUE */
-
+#if (defined(RNG_HTSR0_RPERRX) || defined(RNG_HTSR1_ADERRX))
+#define CCB_RNG_TIMEOUT_VALUE              0x00000002U
+#endif /* RNG_HTSR0_RPERRX || RNG_HTSR1_ADERRX */
 /**
   * @}
   */
@@ -291,6 +293,10 @@ static HAL_StatusTypeDef PKA_ECDSAVerif(CCB_HandleTypeDef *hccb, CCB_ECDSACurveP
                                         CCB_ECDSASignTypeDef *pSignature);
 static uint32_t PKA_ECDSAVerif_Result(CCB_HandleTypeDef *hccb);
 static void CCB_PKA_RAMReset(CCB_HandleTypeDef *hccb);
+#if (defined(RNG_HTSR0_RPERRX) || defined(RNG_HTSR1_ADERRX))
+HAL_StatusTypeDef CCB_RNG_ResilientRecoverSeedError(CCB_HandleTypeDef *hccb);
+#endif /* RNG_HTSR0_RPERRX || RNG_HTSR1_ADERRX */
+
 /** @defgroup CCB_Exported_Functions_Group1 Initialization/de-initialization functions
   *  @brief Initialization and Configuration functions
   *
@@ -847,14 +853,14 @@ HAL_StatusTypeDef HAL_CCB_ECDSA_GenerateWrapPrivateKey(CCB_HandleTypeDef *hccb,
                                                        CCB_WrappingKeyTypeDef *pWrappingKey,
                                                        CCB_ECDSAKeyBlobTypeDef *pWrappedPrivateKeyBlob)
 {
-  uint8_t  count;
+  uint32_t  count;
   uint32_t key_size;
   uint32_t iv_temp[4] = {0};
   uint32_t tag_temp[4] = {0};
   uint32_t wrapped_key_temp[80U] = {0};
 
 #if   defined (HW_SANITY_CHECK_SUPPORT)
-  uint32_t tickstart = HAL_GetTick();
+  uint32_t tickstart;
   __IO uint16_t f_count;
   uint16_t random1 = 0;
   uint16_t random2 = 0;
@@ -1117,12 +1123,22 @@ HAL_StatusTypeDef HAL_CCB_ECDSA_Sign(CCB_HandleTypeDef *hccb, CCB_ECDSACurvePara
     /*  Initialize SAES */
     if (Protect_SAES_WaitFLAG(hccb, AES_SR_BUSY, RESET, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
     {
-      /* Disable the SAES peripheral */
-      HAL_CCB_GET_SAES_INSTANCE(hccb)->CR &=  ~AES_CR_EN;
+#if (defined(RNG_HTSR0_RPERRX) || defined(RNG_HTSR1_ADERRX))
+      /*Check if there is an RNG seed error */
+      if (LL_RNG_IsActiveFlag_SECS(RNG) != 0U)
+      {
+        /* Attempt to recover from the seed error */
+        if (CCB_RNG_ResilientRecoverSeedError(hccb) != HAL_OK)
+        {
+          /* Disable the SAES peripheral */
+          HAL_CCB_GET_SAES_INSTANCE(hccb)->CR &=  ~AES_CR_EN;
 
-      /* Set state and return error */
-      hccb->State = HAL_CCB_STATE_ERROR;
-      return HAL_ERROR;
+          /* Set state and return error */
+          hccb->State = HAL_CCB_STATE_ERROR;
+          return HAL_ERROR;
+        }
+      }
+#endif /* RNG_HTSR0_RPERRX || RNG_HTSR1_ADERRX */
     }
 
     /* Update the state */
@@ -1644,8 +1660,8 @@ HAL_StatusTypeDef HAL_CCB_RSA_WrapPrivateKey(CCB_HandleTypeDef *hccb, CCB_RSAPar
 {
   uint8_t  exp_base[520U] = {0};
   uint32_t count;
-  __IO uint16_t f_count;
 #if  defined(SW_SANITY_CHECK_SUPPORT)
+  __IO uint16_t f_count;
   uint16_t random0 = 0;
 #endif /* GENERATOR_SW_SANITY_CHECK_AVAILABLE_ALL_DEVICES */
   uint32_t modular_exp_ref[520U] = {0};
@@ -2298,7 +2314,17 @@ static HAL_StatusTypeDef Protect_PKA_Init(CCB_HandleTypeDef *hccb, uint32_t Oper
   /* Wait the INITOK flag Setting */
   if (Protect_PKA_WaitFLAG(hccb, PKA_SR_INITOK, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
   {
-    return HAL_ERROR;
+#if (defined(RNG_HTSR0_RPERRX) || defined(RNG_HTSR1_ADERRX))
+    /*Check if there is an RNG seed error */
+    if (LL_RNG_IsActiveFlag_SECS(RNG) != 0U)
+    {
+      /* Attempt to recover from the seed error */
+      if (CCB_RNG_ResilientRecoverSeedError(hccb) != HAL_OK)
+      {
+        return HAL_ERROR;
+      }
+    }
+#endif /* RNG_HTSR0_RPERRX || RNG_HTSR1_ADERRX */
   }
 
   /* Reset any pending flag */
@@ -2361,7 +2387,17 @@ static HAL_StatusTypeDef Unprotected_PKA_Init(CCB_HandleTypeDef *hccb)
   /* Wait the INITOK flag Setting */
   if (Unprotect_PKA_WaitFLAG(hccb, PKA_SR_INITOK, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
   {
-    return HAL_ERROR;
+#if (defined(RNG_HTSR0_RPERRX) || defined(RNG_HTSR1_ADERRX))
+    /*Check if there is an RNG seed error */
+    if (LL_RNG_IsActiveFlag_SECS(RNG) != 0U)
+    {
+      /* Attempt to recover from the seed error */
+      if (CCB_RNG_ResilientRecoverSeedError(hccb) != HAL_OK)
+      {
+        return HAL_ERROR;
+      }
+    }
+#endif /* RNG_HTSR0_RPERRX || RNG_HTSR1_ADERRX */
   }
 
   /* Reset any pending flag */
@@ -2391,7 +2427,7 @@ static HAL_StatusTypeDef CCB_RNG_Init(CCB_HandleTypeDef *hccb)
 #endif /* defined(RNG_CR_NIST_VALUE) */
 #if defined(RNG_HTCR_NIST_VALUE)
   /* Recommended value for NIST compliance, refer to application note AN4230 */
-  WRITE_REG(HAL_CCB_GET_RNG_INSTANCE(hccb)->HTCR, RNG_HTCR_NIST_VALUE);
+  WRITE_REG(HAL_CCB_GET_RNG_INSTANCE(hccb)->HTCR[0], RNG_HTCR_NIST_VALUE);
 #endif /* defined(RNG_HTCR_NIST_VALUE) */
 #if defined(RNG_NSCR_NIST_VALUE)
   WRITE_REG(HAL_CCB_GET_RNG_INSTANCE(hccb)->NSCR, RNG_NSCR_NIST_VALUE);
@@ -2420,17 +2456,30 @@ static HAL_StatusTypeDef CCB_RNG_Init(CCB_HandleTypeDef *hccb)
   /* Enable the RNG Peripheral */
   HAL_CCB_GET_RNG_INSTANCE(hccb)->CR |=  RNG_CR_RNGEN;
 
-  /* verify that no seed error */
-  if ((HAL_CCB_GET_RNG_INSTANCE(hccb)->SR & (RNG_SR_SEIS)) != (uint32_t)RESET)
-  {
-    /* Set state and return error */
-    return HAL_ERROR;
-  }
+  tickstart = HAL_GetTick();
 
   /* Check if data register contains valid random data */
-  if (CCB_RNG_Wait_SET_FLAG(hccb, RNG_SR_DRDY, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+  while (HAL_IS_BIT_CLR(HAL_CCB_GET_RNG_INSTANCE(hccb)->SR, RNG_SR_DRDY))
   {
-    return HAL_ERROR;
+#if (defined(RNG_HTSR0_RPERRX) || defined(RNG_HTSR1_ADERRX))
+    /*Check if there is an RNG seed error */
+    if (LL_RNG_IsActiveFlag_SECS(RNG) != 0U)
+    {
+      /* Attempt to recover from the seed error */
+      if (CCB_RNG_ResilientRecoverSeedError(hccb) != HAL_OK)
+      {
+        return HAL_ERROR;
+      }
+    }
+#endif /* RNG_HTSR0_RPERRX || RNG_HTSR1_ADERRX */
+
+    if ((HAL_GetTick() - tickstart) > HAL_CCB_TIMEOUT_DEFAULT_VALUE)
+    {
+      HAL_CCB_GET_RNG_INSTANCE(hccb)->CR &= ~RNG_CR_RNGEN;
+
+      /* Set state and return error */
+      return HAL_ERROR;
+    }
   }
 
   /* Return function status */
@@ -2947,12 +2996,22 @@ static HAL_StatusTypeDef CCB_WrapSymmetricKey(CCB_HandleTypeDef *hccb, const uin
     /*  Initialize SAES */
     if (Protect_SAES_WaitFLAG(hccb, AES_SR_BUSY, RESET, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
     {
-      /* Disable the SAES peripheral clock */
-      HAL_CCB_GET_SAES_INSTANCE(hccb)->CR &=  ~AES_CR_EN;
+#if (defined(RNG_HTSR0_RPERRX) || defined(RNG_HTSR1_ADERRX))
+      /*Check if there is an RNG seed error */
+      if (LL_RNG_IsActiveFlag_SECS(RNG) != 0U)
+      {
+        /* Attempt to recover from the seed error */
+        if (CCB_RNG_ResilientRecoverSeedError(hccb) != HAL_OK)
+        {
+          /* Disable the SAES peripheral */
+          HAL_CCB_GET_SAES_INSTANCE(hccb)->CR &=  ~AES_CR_EN;
 
-      /* Set state and return error */
-      hccb->State = HAL_CCB_STATE_ERROR;
-      return HAL_ERROR;
+          /* Set state and return error */
+          hccb->State = HAL_CCB_STATE_ERROR;
+          return HAL_ERROR;
+        }
+      }
+#endif /* RNG_HTSR0_RPERRX || RNG_HTSR1_ADERRX */
     }
 
     /* Update the state */
@@ -3390,12 +3449,22 @@ static HAL_StatusTypeDef CCB_ECDSA_SignBlobCreation(CCB_HandleTypeDef *hccb, CCB
   /*  Initialize SAES */
   if (Protect_SAES_WaitFLAG(hccb, AES_SR_BUSY, RESET, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
   {
-    /* Disable the SAES peripheral clock */
-    HAL_CCB_GET_SAES_INSTANCE(hccb)->CR &=  ~AES_CR_EN;
+#if (defined(RNG_HTSR0_RPERRX) || defined(RNG_HTSR1_ADERRX))
+    /*Check if there is an RNG seed error */
+    if (LL_RNG_IsActiveFlag_SECS(RNG) != 0U)
+    {
+      /* Attempt to recover from the seed error */
+      if (CCB_RNG_ResilientRecoverSeedError(hccb) != HAL_OK)
+      {
+        /* Disable the SAES peripheral */
+        HAL_CCB_GET_SAES_INSTANCE(hccb)->CR &=  ~AES_CR_EN;
 
-    /* Set state and return error */
-    hccb->State = HAL_CCB_STATE_ERROR;
-    return HAL_ERROR;
+        /* Set state and return error */
+        hccb->State = HAL_CCB_STATE_ERROR;
+        return HAL_ERROR;
+      }
+    }
+#endif /* RNG_HTSR0_RPERRX || RNG_HTSR1_ADERRX */
   }
 
   /* Update the state */
@@ -3581,8 +3650,17 @@ static HAL_StatusTypeDef CCB_ECDSA_SignBlobCreation(CCB_HandleTypeDef *hccb, CCB
   /* Wait for Galois Filter End of Computation */
   if (Protect_SAES_WaitFLAG(hccb, AES_SR_BUSY, RESET, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
   {
-    /* return error */
-    return HAL_ERROR;
+#if (defined(RNG_HTSR0_RPERRX) || defined(RNG_HTSR1_ADERRX))
+    /*Check if there is an RNG seed error */
+    if (LL_RNG_IsActiveFlag_SECS(RNG) != 0U)
+    {
+      /* Attempt to recover from the seed error */
+      if (CCB_RNG_ResilientRecoverSeedError(hccb) != HAL_OK)
+      {
+        return HAL_ERROR;
+      }
+    }
+#endif /* RNG_HTSR0_RPERRX || RNG_HTSR1_ADERRX */
   }
   if ((operand_size % 4UL) != 0UL)
   {
@@ -3771,12 +3849,22 @@ static HAL_StatusTypeDef CCB_ECC_ScalarMulBlobCreation(CCB_HandleTypeDef *hccb,
     /*  Initialize SAES */
     if (Protect_SAES_WaitFLAG(hccb, AES_SR_BUSY, RESET, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
     {
-      /* Disable the SAES peripheral clock */
-      HAL_CCB_GET_SAES_INSTANCE(hccb)->CR &=  ~AES_CR_EN;
+#if (defined(RNG_HTSR0_RPERRX) || defined(RNG_HTSR1_ADERRX))
+      /*Check if there is an RNG seed error */
+      if (LL_RNG_IsActiveFlag_SECS(RNG) != 0U)
+      {
+        /* Attempt to recover from the seed error */
+        if (CCB_RNG_ResilientRecoverSeedError(hccb) != HAL_OK)
+        {
+          /* Disable the SAES peripheral */
+          HAL_CCB_GET_SAES_INSTANCE(hccb)->CR &=  ~AES_CR_EN;
 
-      /* Set state and return error */
-      hccb->State = HAL_CCB_STATE_ERROR;
-      return HAL_ERROR;
+          /* Set state and return error */
+          hccb->State = HAL_CCB_STATE_ERROR;
+          return HAL_ERROR;
+        }
+      }
+#endif /* RNG_HTSR0_RPERRX || RNG_HTSR1_ADERRX */
     }
 
     /* Update the state */
@@ -3950,8 +4038,17 @@ static HAL_StatusTypeDef CCB_ECC_ScalarMulBlobCreation(CCB_HandleTypeDef *hccb,
     /* Wait for Galois Filter End of Computation */
     if (Protect_SAES_WaitFLAG(hccb, AES_SR_BUSY, RESET, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
     {
-      /* return error */
-      return HAL_ERROR;
+#if (defined(RNG_HTSR0_RPERRX) || defined(RNG_HTSR1_ADERRX))
+      /*Check if there is an RNG seed error */
+      if (LL_RNG_IsActiveFlag_SECS(RNG) != 0U)
+      {
+        /* Attempt to recover from the seed error */
+        if (CCB_RNG_ResilientRecoverSeedError(hccb) != HAL_OK)
+        {
+          return HAL_ERROR;
+        }
+      }
+#endif /* RNG_HTSR0_RPERRX || RNG_HTSR1_ADERRX */
     }
 
     if ((operand_size % 4UL) != 0UL)
@@ -4196,12 +4293,22 @@ static HAL_StatusTypeDef CCB_ECC_ComputeScalarMul(CCB_HandleTypeDef *hccb, CCB_E
   /*  Initialize SAES */
   if (Protect_SAES_WaitFLAG(hccb, AES_SR_BUSY, RESET, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
   {
-    /* Disable the SAES peripheral */
-    HAL_CCB_GET_SAES_INSTANCE(hccb)->CR &=  ~AES_CR_EN;
+#if (defined(RNG_HTSR0_RPERRX) || defined(RNG_HTSR1_ADERRX))
+    /*Check if there is an RNG seed error */
+    if (LL_RNG_IsActiveFlag_SECS(RNG) != 0U)
+    {
+      /* Attempt to recover from the seed error */
+      if (CCB_RNG_ResilientRecoverSeedError(hccb) != HAL_OK)
+      {
+        /* Disable the SAES peripheral */
+        HAL_CCB_GET_SAES_INSTANCE(hccb)->CR &=  ~AES_CR_EN;
 
-    /* Set state and return error */
-    hccb->State = HAL_CCB_STATE_ERROR;
-    return HAL_ERROR;
+        /* Set state and return error */
+        hccb->State = HAL_CCB_STATE_ERROR;
+        return HAL_ERROR;
+      }
+    }
+#endif /* RNG_HTSR0_RPERRX || RNG_HTSR1_ADERRX */
   }
 
   /* Update the state */
@@ -4583,12 +4690,22 @@ static HAL_StatusTypeDef CCB_RSA_ExpBlobCreation(CCB_HandleTypeDef *hccb, CCB_RS
   /*  Initialize SAES */
   if (Protect_SAES_WaitFLAG(hccb, AES_SR_BUSY, RESET, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
   {
-    /* Disable the SAES peripheral clock */
-    HAL_CCB_GET_SAES_INSTANCE(hccb)->CR &=  ~AES_CR_EN;
+#if (defined(RNG_HTSR0_RPERRX) || defined(RNG_HTSR1_ADERRX))
+    /*Check if there is an RNG seed error */
+    if (LL_RNG_IsActiveFlag_SECS(RNG) != 0U)
+    {
+      /* Attempt to recover from the seed error */
+      if (CCB_RNG_ResilientRecoverSeedError(hccb) != HAL_OK)
+      {
+        /* Disable the SAES peripheral */
+        HAL_CCB_GET_SAES_INSTANCE(hccb)->CR &=  ~AES_CR_EN;
 
-    /* Set state, error code and return error */
-    hccb->State = HAL_CCB_STATE_ERROR;
-    return HAL_ERROR;
+        /* Set state and return error */
+        hccb->State = HAL_CCB_STATE_ERROR;
+        return HAL_ERROR;
+      }
+    }
+#endif /* RNG_HTSR0_RPERRX || RNG_HTSR1_ADERRX */
   }
 
   /* Update the state */
@@ -4770,8 +4887,17 @@ static HAL_StatusTypeDef CCB_RSA_ExpBlobCreation(CCB_HandleTypeDef *hccb, CCB_RS
   /* Wait for Galois Filter End of Computation */
   if (Protect_SAES_WaitFLAG(hccb, AES_SR_BUSY, RESET, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
   {
-    /* return error */
-    return HAL_ERROR;
+#if (defined(RNG_HTSR0_RPERRX) || defined(RNG_HTSR1_ADERRX))
+    /*Check if there is an RNG seed error */
+    if (LL_RNG_IsActiveFlag_SECS(RNG) != 0U)
+    {
+      /* Attempt to recover from the seed error */
+      if (CCB_RNG_ResilientRecoverSeedError(hccb) != HAL_OK)
+      {
+        return HAL_ERROR;
+      }
+    }
+#endif /* RNG_HTSR0_RPERRX || RNG_HTSR1_ADERRX */
   }
 
   if ((operand_size % 4UL) != 0UL)
@@ -4827,8 +4953,17 @@ static HAL_StatusTypeDef CCB_RSA_ExpBlobCreation(CCB_HandleTypeDef *hccb, CCB_RS
   /* Wait for Galois Filter End of Computation */
   if (Protect_SAES_WaitFLAG(hccb, AES_SR_BUSY, RESET, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
   {
-    /* return error */
-    return HAL_ERROR;
+#if (defined(RNG_HTSR0_RPERRX) || defined(RNG_HTSR1_ADERRX))
+    /*Check if there is an RNG seed error */
+    if (LL_RNG_IsActiveFlag_SECS(RNG) != 0U)
+    {
+      /* Attempt to recover from the seed error */
+      if (CCB_RNG_ResilientRecoverSeedError(hccb) != HAL_OK)
+      {
+        return HAL_ERROR;
+      }
+    }
+#endif /* RNG_HTSR0_RPERRX || RNG_HTSR1_ADERRX */
   }
 
   if ((operand_size % 4UL) != 0UL)
@@ -5033,12 +5168,22 @@ static HAL_StatusTypeDef CCB_RSA_ComputeModularExp(CCB_HandleTypeDef *hccb, CCB_
   /*  Initialize SAES */
   if (Protect_SAES_WaitFLAG(hccb, AES_SR_BUSY, RESET, HAL_CCB_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
   {
-    /* Disable the SAES peripheral */
-    HAL_CCB_GET_SAES_INSTANCE(hccb)->CR &=  ~AES_CR_EN;
+#if (defined(RNG_HTSR0_RPERRX) || defined(RNG_HTSR1_ADERRX))
+    /*Check if there is an RNG seed error */
+    if (LL_RNG_IsActiveFlag_SECS(RNG) != 0U)
+    {
+      /* Attempt to recover from the seed error */
+      if (CCB_RNG_ResilientRecoverSeedError(hccb) != HAL_OK)
+      {
+        /* Disable the SAES peripheral */
+        HAL_CCB_GET_SAES_INSTANCE(hccb)->CR &=  ~AES_CR_EN;
 
-    /* Set state and return error */
-    hccb->State = HAL_CCB_STATE_ERROR;
-    return HAL_ERROR;
+        /* Set state and return error */
+        hccb->State = HAL_CCB_STATE_ERROR;
+        return HAL_ERROR;
+      }
+    }
+#endif /* RNG_HTSR0_RPERRX || RNG_HTSR1_ADERRX */
   }
 
   /* Update the state */
@@ -5544,7 +5689,7 @@ static HAL_StatusTypeDef PKA_ECC_ComputeScalarMul(CCB_HandleTypeDef *hccb, CCB_E
   uint32_t tickstart;
   uint32_t timeout = HAL_CCB_TIMEOUT_DEFAULT_VALUE;
 
-  /*********************************************************************************** Set input parameter in PKA RAM */
+  /********************************************************************************** Set input parameter in PKA RAM */
   /* Get the prime order n length */
   HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[PKA_ECC_SCALAR_MUL_IN_EXP_NB_BITS]\
     = GetOptBitSize_u8(pCurveParam->primeOrderSizeByte, *(pCurveParam->pPrimeOrder));
@@ -5599,7 +5744,7 @@ static HAL_StatusTypeDef PKA_ECC_ComputeScalarMul(CCB_HandleTypeDef *hccb, CCB_E
   RAM_PARAM_END(HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM,
                 PKA_ECC_SCALAR_MUL_IN_N_PRIME_ORDER + ((pCurveParam->modulusSizeByte + 3UL) / 4UL));
 
-  /********************************************************************************************** Start the operation */
+  /******************************************************************************************** Start the operation */
   /* Init tickstart for timeout management*/
   tickstart = HAL_GetTick();
 
@@ -5875,6 +6020,188 @@ static void CCB_PKA_RAMReset(CCB_HandleTypeDef *hccb)
     HAL_CCB_GET_PKA_INSTANCE(hccb)->RAM[index] = 0UL;
   }
 }
+
+#if (defined(RNG_HTSR0_RPERRX) || defined(RNG_HTSR1_ADERRX))
+/**
+  * @brief  RNG sequence to resilient recover from a seed error
+  * @retval HAL status
+  */
+HAL_StatusTypeDef CCB_RNG_ResilientRecoverSeedError(CCB_HandleTypeDef *hccb)
+{
+  uint32_t timeout;
+  uint32_t htsr_temp = 0U;
+  uint32_t htsr_previous_temp = 0U;
+  uint32_t htsr_count = 0U;
+  uint32_t nsmr_temp = 0U;
+  uint32_t tickstart1 = 0U;
+  uint32_t tickstart2 = 0U;
+  uint32_t tickstart3 = 0U;
+  uint32_t oscillators_count = 0U;
+  uint32_t config_b_fewer_than_6_osc_count = 0U;
+  uint8_t count = 0U;
+
+  /* timeout here is an emperic value */
+  timeout = (1UL + ((1UL << (READ_BIT(HAL_CCB_GET_RNG_INSTANCE(hccb)->CR, RNG_CR_CLKDIV) >> 16UL))
+                    * CCB_RNG_TIMEOUT_VALUE / 8UL));
+  LL_RNG_Enable(HAL_CCB_GET_RNG_INSTANCE(hccb));
+
+  tickstart1 = HAL_GetTick();
+
+  /* Check if seed error current status indicates no error and auto-reset succeeded */
+  if (LL_RNG_IsActiveFlag_SECS(HAL_CCB_GET_RNG_INSTANCE(hccb)) == 0U)
+  {
+    /* Clear SEIS flag when automatic reset is activated */
+    LL_RNG_ClearFlag_SEIS(HAL_CCB_GET_RNG_INSTANCE(hccb));
+  }
+
+  else  /* Sequence to fully recover from a seed error*/
+  {
+    if (LL_RNG_IsConfigLocked(HAL_CCB_GET_RNG_INSTANCE(hccb)) == 0U)
+    {
+      do
+      {
+        if (LL_RNG_IsActiveFlag_SECS(HAL_CCB_GET_RNG_INSTANCE(hccb)) == 0U)
+        {
+          break;
+        }
+        /* Read oscillator status registers combined */
+        htsr_temp = LL_RNG_GetHealthTestStatus(HAL_CCB_GET_RNG_INSTANCE(hccb), 0U);
+        htsr_temp |= LL_RNG_GetHealthTestStatus(HAL_CCB_GET_RNG_INSTANCE(hccb), 1U);
+        if (htsr_temp > 0U)
+        {
+          /* If any oscillator status bits overlap with previous status, increment counter */
+          if ((htsr_temp & htsr_previous_temp) != 0U)
+          {
+            htsr_count++;
+          }
+
+          if (htsr_count > 3U)
+          {
+            /* if the same repetitive or adaptative error is detected 3 times */
+            nsmr_temp = LL_RNG_GetNoiseSourceMask(HAL_CCB_GET_RNG_INSTANCE(hccb));
+
+            /* deactivate the same osc in each triple oscillator (Mask oscillators with the seed error by
+            clearing bits shifted right by 1) */
+            nsmr_temp = nsmr_temp & ~(htsr_temp >> 1U);
+
+            /* Count the number of active oscillators in nsmr */
+            oscillators_count = 0U;
+            for (count = 0U; count < 9U; count++)
+            {
+              if (((nsmr_temp >> count) & 0x1U) != 0U)
+              {
+                /* increment count1 for each 1 in nsmr */
+                oscillators_count++;
+              }
+            }
+
+            if (oscillators_count < 6U)
+            {
+              /* If fewer than 6 oscillators remain active, unmask all oscillators --> Reset masking */
+              nsmr_temp = LL_RNG_GetOscNoiseSrc(HAL_CCB_GET_RNG_INSTANCE(hccb),
+                                                LL_RNG_NOISE_SRC_1 | LL_RNG_NOISE_SRC_2 | LL_RNG_NOISE_SRC_3);
+              htsr_previous_temp = 0;
+              htsr_count = 0U;
+              if ((HAL_CCB_GET_RNG_INSTANCE(hccb)->CR  & RNG_CR_CLKDIV_Msk) <
+                  ((uint32_t)RNG_CAND_NIST_CR_VALUE & RNG_CR_CLKDIV_Msk))
+              {
+                config_b_fewer_than_6_osc_count++;
+              }
+            }
+
+            if (config_b_fewer_than_6_osc_count > 2U)
+            {
+              /* Reset RNG condition */
+              WRITE_REG(HAL_CCB_GET_RNG_INSTANCE(hccb)->CR, (RNG_CR_CONDRST_Msk | (uint32_t)RNG_CAND_NIST_CR_VALUE));
+
+              /* Update mask register with new oscillator mask */
+              LL_RNG_SetNoiseSourceMask(HAL_CCB_GET_RNG_INSTANCE(hccb), nsmr_temp);
+
+              /* Clear condition reset bit to resume operation */
+              LL_RNG_DisableCondReset(HAL_CCB_GET_RNG_INSTANCE(hccb));
+            }
+
+            else
+            {
+              /* Reset RNG condition */
+              WRITE_REG(HAL_CCB_GET_RNG_INSTANCE(hccb)->CR,
+                        (HAL_CCB_GET_RNG_INSTANCE(hccb)->CR & ~RNG_CR_RNGEN_Msk) | RNG_CR_CONDRST_Msk);
+
+              /* Update mask register with new oscillator mask */
+              LL_RNG_SetNoiseSourceMask(HAL_CCB_GET_RNG_INSTANCE(hccb), nsmr_temp);
+
+              /* Clear condition reset bit to resume operation */
+              LL_RNG_DisableCondReset(HAL_CCB_GET_RNG_INSTANCE(hccb));
+            }
+          }
+
+          else
+          {
+            /* Briefly toggle conditional reset to recover RNG */
+            WRITE_REG(HAL_CCB_GET_RNG_INSTANCE(hccb)->CR,
+                      (HAL_CCB_GET_RNG_INSTANCE(hccb)->CR & ~RNG_CR_RNGEN_Msk) | RNG_CR_CONDRST_Msk);
+
+            /* unmask all oscillators to find another working condition */
+            LL_RNG_SetNoiseSourceMask(HAL_CCB_GET_RNG_INSTANCE(hccb),
+                                      LL_RNG_GetOscNoiseSrc(RNG, LL_RNG_OSC_1 | LL_RNG_OSC_2 | LL_RNG_OSC_3));
+            LL_RNG_DisableCondReset(HAL_CCB_GET_RNG_INSTANCE(hccb));
+          }
+
+          /* Wait until RNG is not busy */
+          tickstart2 = HAL_GetTick();
+          do
+          {
+            if ((HAL_GetTick() - tickstart2) > CCB_RNG_TIMEOUT_VALUE)
+            {
+              /* New check to avoid false timeout detection in case of preemption */
+              LL_RNG_Disable(HAL_CCB_GET_RNG_INSTANCE(hccb));
+              return HAL_ERROR;
+            }
+          } while (HAL_IS_BIT_SET(HAL_CCB_GET_RNG_INSTANCE(hccb)->SR, RNG_SR_BUSY));
+
+          /* No timeout --> Enable RNG */
+          LL_RNG_Enable(HAL_CCB_GET_RNG_INSTANCE(hccb));
+          tickstart3 = HAL_GetTick();
+          do
+          {
+            if (LL_RNG_IsActiveFlag_DRDY(HAL_CCB_GET_RNG_INSTANCE(hccb)) != 0UL)
+            {
+              break;
+            }
+            if ((HAL_GetTick() - tickstart3) > timeout)
+            {
+              /* New check to avoid false timeout detection in case of preemption */
+              if (LL_RNG_IsActiveFlag_DRDY(HAL_CCB_GET_RNG_INSTANCE(hccb)) == 0UL)
+              {
+                if (LL_RNG_IsActiveFlag_SECS(HAL_CCB_GET_RNG_INSTANCE(hccb)) == 0UL)
+                {
+                  LL_RNG_Disable(HAL_CCB_GET_RNG_INSTANCE(hccb));
+                  return HAL_ERROR;
+                }
+              }
+            }
+          } while (LL_RNG_IsActiveFlag_SECS(HAL_CCB_GET_RNG_INSTANCE(hccb)) == 0UL);
+
+          /* Accumulate seed error status bits */
+          htsr_previous_temp = htsr_previous_temp | htsr_temp;
+        }
+      } while ((HAL_GetTick() - tickstart1) <= timeout);
+    }
+  }
+
+  /*Check if seed error current status (SECS)is set */
+  if (LL_RNG_IsActiveFlag_SECS(HAL_CCB_GET_RNG_INSTANCE(hccb)) != 0U)
+  {
+    return HAL_ERROR;
+  }
+
+  return HAL_OK;
+}
+#endif /* RNG_HTSR0_RPERRX || RNG_HTSR1_ADERRX */
+
+/**
+  * @}
+  */
 
 /**
   * @}

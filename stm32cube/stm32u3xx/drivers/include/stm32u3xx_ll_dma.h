@@ -1014,8 +1014,10 @@ typedef struct
 #define LL_GPDMA1_REQUEST_I3C1_TX       50U    /*!< GPDMA1 HW request is I3C1_TX      */
 #define LL_GPDMA1_REQUEST_I3C1_TC       51U    /*!< GPDMA1 HW request is I3C1_TC      */
 #define LL_GPDMA1_REQUEST_I3C1_RS       52U    /*!< GPDMA1 HW request is I3C1_RS      */
-/*  Reserved                            53U                                           */
-/*  Reserved                            54U                                           */
+#if defined (GFXPAND1)
+#define LL_GPDMA1_REQUEST_GFXPAND_IN    53U    /*!< GPDMA1 HW request is GFXPAND_IN   */
+#define LL_GPDMA1_REQUEST_GFXPAND_OUT   54U    /*!< GPDMA1 HW request is GFXPAND_OUT  */
+#endif /* GFXPAND1 */
 /*  Reserved                            55U                                           */
 #define LL_GPDMA1_REQUEST_TIM2_CH1      56U    /*!< GPDMA1 HW request is TIM2_CH1     */
 #define LL_GPDMA1_REQUEST_TIM2_CH2      57U    /*!< GPDMA1 HW request is TIM2_CH2     */

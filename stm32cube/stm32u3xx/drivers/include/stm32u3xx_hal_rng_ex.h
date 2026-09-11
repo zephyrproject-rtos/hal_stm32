@@ -26,6 +26,7 @@ extern "C" {
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32u3xx_hal_def.h"
+#include "stm32u3xx_ll_rng.h"
 
 /** @addtogroup STM32U3xx_HAL_Driver
   * @{
@@ -56,7 +57,7 @@ typedef struct
   uint32_t        Config3;           /*!< Config3 must be a value between 0 and 0xF */
   uint32_t        ClockDivider;      /*!< Clock Divider factor.This parameter can
                                           be a value of @ref RNGEx_Clock_Divider_Factor   */
-  uint32_t        NistCompliance;    /*!< NIST compliance.This parameter can be a
+  uint32_t        NistCompliance;    /*!< NIST compliance configuration.This parameter can be a
                                           value of @ref RNGEx_NIST_Compliance   */
   uint32_t        AutoReset;         /*!< automatic reset When a noise source error occurs
                                           value of @ref RNGEx_Auto_Reset   */
@@ -115,8 +116,8 @@ typedef struct
 /** @defgroup RNGEx_NIST_Compliance  NIST Compliance configuration
   * @{
   */
-#define RNG_NIST_COMPLIANT     (0x00000000UL) /*!< NIST compliant configuration*/
-#define RNG_CUSTOM_NIST        (RNG_CR_NISTC) /*!< Custom NIST configuration */
+#define RNG_NIST_COMPLIANT     (0x00000000UL) /*!< Default NIST compliant configuration*/
+#define RNG_CUSTOM_NIST        (RNG_CR_NISTC) /*!< Custom NIST compliant configuration */
 
 /**
   * @}
@@ -195,6 +196,10 @@ typedef struct
 #define IS_RNG_CONFIG3(__CONFIG3__) ((__CONFIG3__) <= 0xFUL)
 #define IS_RNG_ARDIS(__ARDIS__) (((__ARDIS__) == RNG_ARDIS_ENABLE) || \
                                  ((__ARDIS__) == RNG_ARDIS_DISABLE))
+#define IS_RNG_HTCR_INDEX(__INDEX__) (((__INDEX__) == 0x01U) || \
+                                      ((__INDEX__) == 0x02U) || \
+                                      ((__INDEX__) == 0x03U))
+#define IS_RNG_HTCR_VALUE(__VALUE__) ((__VALUE__) <= 0x3FFFF)
 
 
 /**
@@ -230,6 +235,7 @@ HAL_StatusTypeDef HAL_RNGEx_LockConfig(RNG_HandleTypeDef *hrng);
   * @{
   */
 HAL_StatusTypeDef HAL_RNGEx_RecoverSeedError(RNG_HandleTypeDef *hrng);
+HAL_StatusTypeDef HAL_RNGEx_SetHealthFactorConfig(RNG_HandleTypeDef *hrng, uint32_t htcr_idx, uint32_t htcr_value);
 
 /**
   * @}

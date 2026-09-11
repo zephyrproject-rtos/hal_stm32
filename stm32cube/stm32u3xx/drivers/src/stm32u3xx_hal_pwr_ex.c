@@ -907,10 +907,12 @@ HAL_StatusTypeDef HAL_PWREx_EnableGPIOPullUp(uint32_t GPIO_Port, uint32_t GPIO_P
       CLEAR_BIT(PWR->PDCRD, GPIO_Pin);
       break;
 
+#if defined(PWR_GPIO_E)
     case PWR_GPIO_E: /* Apply Pull Up to GPIO port E */
       SET_BIT(PWR->PUCRE, GPIO_Pin);
       CLEAR_BIT(PWR->PDCRE, GPIO_Pin);
       break;
+#endif/*PWR_GPIO_E*/
 
 #if defined(PWR_GPIO_F)
     case PWR_GPIO_F: /* Apply Pull Up to GPIO port F */
@@ -980,9 +982,11 @@ HAL_StatusTypeDef HAL_PWREx_DisableGPIOPullUp(uint32_t GPIO_Port, uint32_t GPIO_
       CLEAR_BIT(PWR->PUCRD, GPIO_Pin);
       break;
 
+#if defined(PWR_GPIO_E)
     case PWR_GPIO_E: /* Disable Pull Up for GPIO port E */
       CLEAR_BIT(PWR->PUCRE, GPIO_Pin);
       break;
+#endif/*PWR_GPIO_E*/
 
 #if defined(PWR_GPIO_F)
     case PWR_GPIO_F: /* Disable Pull Up for GPIO port F */
@@ -1060,10 +1064,12 @@ HAL_StatusTypeDef HAL_PWREx_EnableGPIOPullDown(uint32_t GPIO_Port, uint32_t GPIO
       CLEAR_BIT(PWR->PUCRD, GPIO_Pin);
       break;
 
+#if defined(PWR_GPIO_E)
     case PWR_GPIO_E: /* Apply Pull Down to GPIO port E */
       SET_BIT(PWR->PDCRE, GPIO_Pin);
       CLEAR_BIT(PWR->PUCRE, GPIO_Pin);
       break;
+#endif/*PWR_GPIO_E*/
 
 #if defined(PWR_GPIO_F)
     case PWR_GPIO_F: /* Apply Pull Down to GPIO port F */
@@ -1133,9 +1139,11 @@ HAL_StatusTypeDef HAL_PWREx_DisableGPIOPullDown(uint32_t GPIO_Port, uint32_t GPI
       CLEAR_BIT(PWR->PDCRD, GPIO_Pin);
       break;
 
+#if defined(PWR_GPIO_E)
     case PWR_GPIO_E: /* Disable Pull Down for GPIO port E */
       CLEAR_BIT(PWR->PDCRE, GPIO_Pin);
       break;
+#endif/*PWR_GPIO_E*/
 
 #if defined(PWR_GPIO_F)
     case PWR_GPIO_F: /* Disable Pull Down for GPIO port F */

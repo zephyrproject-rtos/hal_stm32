@@ -56,11 +56,13 @@
    application
   */
 
-#if !defined (STM32U375xx)  && !defined (STM32U385xx) && !defined (STM32U3B5xx)  && !defined (STM32U3C5xx)
+#if !defined (STM32U375xx)  && !defined (STM32U385xx) && !defined (STM32U3B5xx)  && !defined (STM32U3C5xx) && !defined (STM32U345xx)  && !defined (STM32U335xx)
   /* #define STM32U375xx  */   /*!< STM32U37xx STM32U375EFGH Devices  */
   /* #define STM32U385xx  */   /*!< STM32U38xx STM32U385EFGH Devices  */
-  /* #define STM32U3B5xx  */   /*!< STM32UB5xx STM32U3B5EFGH Devices  */
-  /* #define STM32U3C5xx  */   /*!< STM32UC5xx STM32U3C5EFGH Devices  */
+  /* #define STM32U3B5xx  */   /*!< STM32U37xx STM32U3B5EFGH Devices  */
+  /* #define STM32U3C5xx  */   /*!< STM32U38xx STM32U3C5EFGH Devices  */
+  /* #define STM32U345xx  */   /*!< STM32U37xx STM32U345EFGH Devices  */
+  /* #define STM32U335xx  */   /*!< STM32U38xx STM32U335EFGH Devices  */
 #endif
 
 /*  Tip: To avoid modifying this file each time you need to switch between these
@@ -79,7 +81,7 @@
   * @brief CMSIS Device version number
   */
 #define __STM32U3_CMSIS_VERSION_MAIN   (0x01U) /*!< [31:24] main version */
-#define __STM32U3_CMSIS_VERSION_SUB1   (0x03U) /*!< [23:16] sub1 version */
+#define __STM32U3_CMSIS_VERSION_SUB1   (0x04U) /*!< [23:16] sub1 version */
 #define __STM32U3_CMSIS_VERSION_SUB2   (0x00U) /*!< [15:8]  sub2 version */
 #define __STM32U3_CMSIS_VERSION_RC     (0x00U) /*!< [7:0]  release candidate */
 #define __STM32U3_CMSIS_VERSION        ((__STM32U3_CMSIS_VERSION_MAIN << 24U)\
@@ -94,7 +96,19 @@
 /** @addtogroup Device_Included
   * @{
   */
-#if defined(STM32U375xx)
+#if defined(STM32U335xx)
+  #include "stm32u335xx.h"
+#elif defined(STM32U345xx)
+  #include "stm32u345xx.h"
+#elif defined(STM32U356xx)
+  #include "stm32u356xx.h"
+#elif defined(STM32U366xx)
+  #include "stm32u366xx.h"
+#elif defined(STM32U396xx)
+  #include "stm32u396xx.h"
+#elif defined(STM32U3A6xx)
+  #include "stm32u3a6xx.h"
+#elif defined(STM32U375xx)
   #include "stm32u375xx.h"
 #elif defined(STM32U385xx)
   #include "stm32u385xx.h"

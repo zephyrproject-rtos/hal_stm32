@@ -113,6 +113,26 @@
 
 /* Definitions for GTZC TZSC & TZIC ALL register values */
 /* TZSC1 / TZIC1 instances */
+#if defined(STM32U335xx) || defined(STM32U345xx)
+#define TZSC1_SECCFGR1_ALL       (0x00C6ADF7UL)
+#define TZSC1_SECCFGR2_ALL       (0x0001FA7BUL)
+#define TZSC1_SECCFGR3_ALL       (0x01D03958UL)
+
+#define TZSC1_PRIVCFGR1_ALL      (0x00C6ADF7UL)
+#define TZSC1_PRIVCFGR2_ALL      (0x0001FA7BUL)
+#define TZSC1_PRIVCFGR3_ALL      (0x01D03958UL)
+
+#define TZIC1_IER1_ALL           (0x00C6ADF7UL)
+#define TZIC1_IER2_ALL           (0x0001FA7BUL)
+#define TZIC1_IER3_ALL           (0x01D03958UL)
+#define TZIC1_IER4_ALL           (0x0F00C1FFUL)
+
+#define TZIC1_FCR1_ALL           (0x00C6ADF7UL)
+#define TZIC1_FCR2_ALL           (0x0001FA7BUL)
+#define TZIC1_FCR3_ALL           (0x01D03958UL)
+#define TZIC1_FCR4_ALL           (0x0F00C1FFUL)
+#endif /* defined(STM32U335xx) || defined(STM32U345xx) */
+
 #if defined(STM32U356xx) || defined(STM32U366xx)
 #define TZSC1_SECCFGR1_ALL       (0x01E2BDF7UL)
 #define TZSC1_SECCFGR2_ALL       (0x0003FA7BUL)
@@ -172,6 +192,26 @@
 #define TZIC1_FCR3_ALL           (0x21D3F958UL)
 #define TZIC1_FCR4_ALL           (0xFF00C1FFUL)
 #endif /* defined(STM32U3B5xx) || defined(STM32U3C5xx) */
+
+#if defined(STM32U396xx) || defined(STM32U3A6xx)
+#define TZSC1_SECCFGR1_ALL       (0x01E6FDF7UL)
+#define TZSC1_SECCFGR2_ALL       (0x0003FFFFUL)
+#define TZSC1_SECCFGR3_ALL       (0x23FFF978UL)
+
+#define TZSC1_PRIVCFGR1_ALL      (0x01E6FDF7UL)
+#define TZSC1_PRIVCFGR2_ALL      (0x0003FFFFUL)
+#define TZSC1_PRIVCFGR3_ALL      (0x23FFF978UL)
+
+#define TZIC1_IER1_ALL           (0x01E6FDF7UL)
+#define TZIC1_IER2_ALL           (0x0003FFFFUL)
+#define TZIC1_IER3_ALL           (0x23FFF978UL)
+#define TZIC1_IER4_ALL           (0xFF00C1FFUL)
+
+#define TZIC1_FCR1_ALL           (0x01E6FDF7UL)
+#define TZIC1_FCR2_ALL           (0x0003FFFFUL)
+#define TZIC1_FCR3_ALL           (0x23FFF978UL)
+#define TZIC1_FCR4_ALL           (0xFF00C1FFUL)
+#endif /* defined(STM32U396xx) || defined(STM32U3A6xx) */
 
 /**
   * @}

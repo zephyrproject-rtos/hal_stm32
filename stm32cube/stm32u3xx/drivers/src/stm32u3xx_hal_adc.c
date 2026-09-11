@@ -1457,8 +1457,7 @@ HAL_StatusTypeDef HAL_ADC_PollForConversion(ADC_HandleTypeDef *hadc, uint32_t Ti
       }
     }
 #else
-    /* Check ADC DMA mode */
-    if (LL_ADC_REG_GetDMATransfer(hadc->Instance) != LL_ADC_REG_DMA_TRANSFER_NONE)
+    if (READ_BIT(hadc->Instance->CFGR1, ADC_CFGR1_DMNGT_0) != 0UL)
     {
       SET_BIT(hadc->State, HAL_ADC_STATE_ERROR_CONFIG);
       return HAL_ERROR;
