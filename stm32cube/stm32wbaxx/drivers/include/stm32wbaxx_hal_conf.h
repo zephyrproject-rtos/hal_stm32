@@ -193,11 +193,15 @@ extern "C" {
 
 /* ################## CRYP peripheral configuration ########################## */
 
+#ifndef USE_HAL_CRYP_SUSPEND_RESUME
 #define USE_HAL_CRYP_SUSPEND_RESUME   0U
+#endif /* USE_HAL_CRYP_SUSPEND_RESUME */
 
 /* ################## HASH peripheral configuration ########################## */
 
+#ifndef USE_HAL_HASH_SUSPEND_RESUME
 #define USE_HAL_HASH_SUSPEND_RESUME   0U
+#endif /* USE_HAL_HASH_SUSPEND_RESUME */
 
 /* Includes ------------------------------------------------------------------*/
 /**
