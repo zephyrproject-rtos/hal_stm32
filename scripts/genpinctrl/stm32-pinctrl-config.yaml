@@ -45,6 +45,10 @@
 - name: ADC_VINM / ADC_VINP
   match: "^ADC(?:\\d+)?_VIN[PM]\\d+$"
 
+- name: ADF
+  match: "^ADF1_(?:CCK[0-1]|SDI[0-1])$"
+  slew-rate: very-high-speed
+
 - name: CAN_RX
   match: "^CAN\\d*_RX$"
   bias: pull-up
