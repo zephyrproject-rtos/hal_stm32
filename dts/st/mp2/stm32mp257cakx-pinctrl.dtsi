@@ -248,6 +248,42 @@
 		pinmux = <STM32_PINMUX('H', 10, ANALOG)>;
 	};
 
+	/* ADF */
+	/omit-if-no-ref/ adf1_cck0_pz2: adf1_cck0_pz2 {
+		pinmux = <STM32_PINMUX('Z', 2, AF5)>;
+		slew-rate = "very-high-speed";
+	};
+
+	/omit-if-no-ref/ adf1_sdi0_pz3: adf1_sdi0_pz3 {
+		pinmux = <STM32_PINMUX('Z', 3, AF5)>;
+		slew-rate = "very-high-speed";
+	};
+
+	/omit-if-no-ref/ adf1_cck1_pz4: adf1_cck1_pz4 {
+		pinmux = <STM32_PINMUX('Z', 4, AF5)>;
+		slew-rate = "very-high-speed";
+	};
+
+	/omit-if-no-ref/ adf1_cck0_pz5: adf1_cck0_pz5 {
+		pinmux = <STM32_PINMUX('Z', 5, AF5)>;
+		slew-rate = "very-high-speed";
+	};
+
+	/omit-if-no-ref/ adf1_sdi0_pz6: adf1_sdi0_pz6 {
+		pinmux = <STM32_PINMUX('Z', 6, AF5)>;
+		slew-rate = "very-high-speed";
+	};
+
+	/omit-if-no-ref/ adf1_cck1_pz7: adf1_cck1_pz7 {
+		pinmux = <STM32_PINMUX('Z', 7, AF5)>;
+		slew-rate = "very-high-speed";
+	};
+
+	/omit-if-no-ref/ adf1_sdi0_pz8: adf1_sdi0_pz8 {
+		pinmux = <STM32_PINMUX('Z', 8, AF5)>;
+		slew-rate = "very-high-speed";
+	};
+
 	/* Analog */
 	/omit-if-no-ref/ analog_pa0: analog_pa0 {
 		pinmux = <STM32_PINMUX('A', 0, ANALOG)>;
