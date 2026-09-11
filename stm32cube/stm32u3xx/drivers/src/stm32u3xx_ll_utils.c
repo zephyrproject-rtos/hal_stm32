@@ -191,7 +191,7 @@ void LL_mDelay(uint32_t Delay)
   /* Add this code to indicate that local variable is not used */
   ((void)tmp);
 
-  /* Add a period to guaranty minimum wait */
+  /* Add a period to guarantee minimum wait */
   if (tmpDelay < LL_MAX_DELAY)
   {
     tmpDelay++;

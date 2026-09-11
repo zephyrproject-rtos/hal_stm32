@@ -175,10 +175,12 @@ extern "C" {
   */
 #define LL_PWR_SRAM1_STOP_NO_RETENTION     (0U)              /*!< SRAM1 no retention in Stop modes (Stop 0, 1, 2, 3)  */
 #define LL_PWR_SRAM1_STOP_PAGE1_RETENTION  PWR_CR2_SRAM1PDS1 /*!< SRAM1 page 1 retention Stop modes (Stop 0, 1, 2, 3) */
+#if defined(PWR_CR2_SRAM1PDS2)
 #define LL_PWR_SRAM1_STOP_PAGE2_RETENTION  PWR_CR2_SRAM1PDS2 /*!< SRAM1 page 2 retention Stop modes (Stop 0, 1, 2, 3) */
 #define LL_PWR_SRAM1_STOP_PAGE3_RETENTION  PWR_CR2_SRAM1PDS3 /*!< SRAM1 page 3 retention Stop modes (Stop 0, 1, 2, 3) */
 #define LL_PWR_SRAM1_STOP_PAGE4_RETENTION  PWR_CR2_SRAM1PDS4 /*!< SRAM1 page 4 retention Stop modes (Stop 0, 1, 2, 3) */
 #define LL_PWR_SRAM1_STOP_PAGE5_RETENTION  PWR_CR2_SRAM1PDS5 /*!< SRAM1 page 5 retention Stop modes (Stop 0, 1, 2, 3) */
+#endif/*PWR_CR2_SRAM1PDS2*/
 #if defined(PWR_CR2_SRAM1PDS6)
 #define LL_PWR_SRAM1_STOP_PAGE6_RETENTION  PWR_CR2_SRAM1PDS6 /*!< SRAM1 page 6 retention Stop modes (Stop 0, 1, 2, 3) */
 #define LL_PWR_SRAM1_STOP_PAGE7_RETENTION  PWR_CR2_SRAM1PDS7 /*!< SRAM1 page 7 retention Stop modes (Stop 0, 1, 2, 3) */
@@ -186,9 +188,11 @@ extern "C" {
                                             PWR_CR2_SRAM1PDS4 | PWR_CR2_SRAM1PDS5 | PWR_CR2_SRAM1PDS6 |\
                                             PWR_CR2_SRAM1PDS7)
 /*!< SRAM1 all pages retention in Stop modes (Stop 0, 1, 2, 3) */
-#else
+#elif defined(PWR_CR2_SRAM1PDS2)
 #define LL_PWR_SRAM1_STOP_FULL_RETENTION   (PWR_CR2_SRAM1PDS1 | PWR_CR2_SRAM1PDS2 | PWR_CR2_SRAM1PDS3 |\
                                             PWR_CR2_SRAM1PDS4 | PWR_CR2_SRAM1PDS5)
+#else
+#define LL_PWR_SRAM1_STOP_FULL_RETENTION   PWR_CR2_SRAM1PDS1
 /*!< SRAM1 all pages retention in Stop modes (Stop 0, 1, 2, 3) */
 #endif /* PWR_CR2_SRAM1PDS6 */
 /**
@@ -360,9 +364,9 @@ extern "C" {
 #define LL_PWR_I3CPUCR1_PA7            PWR_I3CPUCR1_PA7_I3CPU                  /*!< I3C pull-up on PA7  */
 #define LL_PWR_I3CPUCR1_PB2            PWR_I3CPUCR1_PB2_I3CPU                  /*!< I3C pull-up on PB2  */
 #define LL_PWR_I3CPUCR1_PB6            PWR_I3CPUCR1_PB6_I3CPU                  /*!< I3C pull-up on PB6  */
-#if defined(RAMCFG_SRAM3)
+#if defined(PWR_I3CPUCR1_PB7_I3CPU)
 #define LL_PWR_I3CPUCR1_PB7            PWR_I3CPUCR1_PB7_I3CPU                  /*!< I3C pull-up on PB7  */
-#endif /* defined(RAMCFG_SRAM3) */
+#endif /* defined(PWR_I3CPUCR1_PB7_I3CPU) */
 #if defined(PWR_I3CPUCR1_PB8_I3CPU)
 #define LL_PWR_I3CPUCR1_PB8            PWR_I3CPUCR1_PB8_I3CPU                  /*!< I3C pull-up on PB8  */
 #define LL_PWR_I3CPUCR1_PB9            PWR_I3CPUCR1_PB9_I3CPU                  /*!< I3C pull-up on PB9  */
@@ -370,19 +374,24 @@ extern "C" {
 #define LL_PWR_I3CPUCR1_PB10           PWR_I3CPUCR1_PB10_I3CPU                 /*!< I3C pull-up on PB10 */
 #define LL_PWR_I3CPUCR1_PB12           PWR_I3CPUCR1_PB12_I3CPU                 /*!< I3C pull-up on PB12 */
 #define LL_PWR_I3CPUCR1_PB13           PWR_I3CPUCR1_PB13_I3CPU                 /*!< I3C pull-up on PB13 */
-#if defined(PWR_I3CPUCR1_PB8_I3CPU)
+#if defined(PWR_I3CPUCR1_PB14_I3CPU)
 #define LL_PWR_I3CPUCR1_PB14           PWR_I3CPUCR1_PB14_I3CPU                 /*!< I3C pull-up on PB14 */
-#endif /* PWR_I3CPUCR1_PB8_I3CPU */
-#if defined(LL_PWR_I3CPUCR1_PB7)
+#endif /* PWR_I3CPUCR1_PB14_I3CPU */
+#if defined(RAMCFG_SRAM3)
 #define LL_PWR_I3CPUCR1_ALL            (LL_PWR_I3CPUCR1_PA1  | LL_PWR_I3CPUCR1_PA6  | LL_PWR_I3CPUCR1_PA7  |\
                                         LL_PWR_I3CPUCR1_PB2  | LL_PWR_I3CPUCR1_PB6  | LL_PWR_I3CPUCR1_PB7  |\
                                         LL_PWR_I3CPUCR1_PB8  | LL_PWR_I3CPUCR1_PB9  | LL_PWR_I3CPUCR1_PB10 |\
                                         LL_PWR_I3CPUCR1_PB12 | LL_PWR_I3CPUCR1_PB13 | LL_PWR_I3CPUCR1_PB14)
-#elif defined(PWR_I3CPUCR1_PB8_I3CPU)
+#elif defined(PWR_I3CPUCR1_PB14_I3CPU)
 #define LL_PWR_I3CPUCR1_ALL            (LL_PWR_I3CPUCR1_PA1  | LL_PWR_I3CPUCR1_PA6  | LL_PWR_I3CPUCR1_PA7  |\
                                         LL_PWR_I3CPUCR1_PB2  | LL_PWR_I3CPUCR1_PB6  | LL_PWR_I3CPUCR1_PB8  |\
                                         LL_PWR_I3CPUCR1_PB9  | LL_PWR_I3CPUCR1_PB10 | LL_PWR_I3CPUCR1_PB12 |\
                                         LL_PWR_I3CPUCR1_PB13 | LL_PWR_I3CPUCR1_PB14)
+#elif defined(PWR_I3CPUCR1_PB8_I3CPU)
+#define LL_PWR_I3CPUCR1_ALL            (LL_PWR_I3CPUCR1_PA1  | LL_PWR_I3CPUCR1_PA6  | LL_PWR_I3CPUCR1_PA7  |\
+                                        LL_PWR_I3CPUCR1_PB2  | LL_PWR_I3CPUCR1_PB6  | LL_PWR_I3CPUCR1_PB7  |\
+                                        LL_PWR_I3CPUCR1_PB8  | LL_PWR_I3CPUCR1_PB9  | LL_PWR_I3CPUCR1_PB10 |\
+                                        LL_PWR_I3CPUCR1_PB12 | LL_PWR_I3CPUCR1_PB13)
 #else
 #define LL_PWR_I3CPUCR1_ALL            (LL_PWR_I3CPUCR1_PA1  | LL_PWR_I3CPUCR1_PA6  | LL_PWR_I3CPUCR1_PA7  |\
                                         LL_PWR_I3CPUCR1_PB2  | LL_PWR_I3CPUCR1_PB6  | LL_PWR_I3CPUCR1_PB10 |\
@@ -399,9 +408,11 @@ extern "C" {
 #if defined(PWR_I3CPUCR2_PC0_I3CPU)
 #define LL_PWR_I3CPUCR2_PC0            PWR_I3CPUCR2_PC0_I3CPU                  /*!< I3C pull-up on PC0  */
 #endif /* defined(PWR_I3CPUCR2_PC0_I3CPU) */
+#if defined(PWR_I3CPUCR2_PC1_I3CPU)
 #define LL_PWR_I3CPUCR2_PC1            PWR_I3CPUCR2_PC1_I3CPU                  /*!< I3C pull-up on PC1  */
 #define LL_PWR_I3CPUCR2_PD12           PWR_I3CPUCR2_PD12_I3CPU                 /*!< I3C pull-up on PD12 */
 #define LL_PWR_I3CPUCR2_PD13           PWR_I3CPUCR2_PD13_I3CPU                 /*!< I3C pull-up on PD13 */
+#endif /* defined(PWR_I3CPUCR2_PC1_I3CPU) */
 #if defined(PWR_I3CPUCR2_PC0_I3CPU)
 #define LL_PWR_I3CPUCR2_PG7            PWR_I3CPUCR2_PG7_I3CPU                  /*!< I3C pull-up on PG7  */
 #define LL_PWR_I3CPUCR2_PG8            PWR_I3CPUCR2_PG8_I3CPU                  /*!< I3C pull-up on PG8  */
@@ -413,8 +424,11 @@ extern "C" {
 #define LL_PWR_I3CPUCR2_ALL            (LL_PWR_I3CPUCR2_PC0  | LL_PWR_I3CPUCR2_PC1  | LL_PWR_I3CPUCR2_PD12 |\
                                         LL_PWR_I3CPUCR2_PD13 | LL_PWR_I3CPUCR2_PG7  | LL_PWR_I3CPUCR2_PG8  |\
                                         LL_PWR_I3CPUCR2_PG13 | LL_PWR_I3CPUCR2_PG14 | LL_PWR_I3CPUCR2_PH3)
+#elif defined(PWR_I3CPUCR2_PC1_I3CPU)
+#define LL_PWR_I3CPUCR2_ALL            (LL_PWR_I3CPUCR2_PC1  | LL_PWR_I3CPUCR2_PD12 | LL_PWR_I3CPUCR2_PD13 |\
+                                        LL_PWR_I3CPUCR2_PH3)
 #else
-#define LL_PWR_I3CPUCR2_ALL            (LL_PWR_I3CPUCR2_PC1  | LL_PWR_I3CPUCR2_PD12 | LL_PWR_I3CPUCR2_PH3)
+#define LL_PWR_I3CPUCR2_ALL            LL_PWR_I3CPUCR2_PH3
 #endif /* defined(PWR_I3CPUCR2_PC0_I3CPU) */
 /*!<  I3C pull-up all for port C-D-G-H */
 /**

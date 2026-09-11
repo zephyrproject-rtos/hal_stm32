@@ -134,6 +134,26 @@ typedef struct
   * @}
   */
 
+/** @defgroup RNG_LL_NSCR_Oscillator_Sources Oscillator Sources Defines
+  * @{
+  */
+#define LL_RNG_OSC_1 RNG_NSCR_EN_OSC1
+#define LL_RNG_OSC_2 RNG_NSCR_EN_OSC2
+#define LL_RNG_OSC_3 RNG_NSCR_EN_OSC3
+/**
+  * @}
+  */
+
+/** @defgroup RNG_LL_NSCR_Noise_Sources_Ports Noise Sources Ports Defines
+  * @{
+  */
+#define LL_RNG_NOISE_SRC_1 (0x01UL)
+#define LL_RNG_NOISE_SRC_2 (0x02UL)
+#define LL_RNG_NOISE_SRC_3 (0x04UL)
+/**
+  * @}
+  */
+
 /** @defgroup RNG_LL_EC_IT IT Defines
   * @brief    IT defines which can be used with LL_RNG_ReadReg and  LL_RNG_WriteReg macros
   * @{
@@ -674,7 +694,10 @@ __STATIC_INLINE uint32_t LL_RNG_IsEnabledArdis(const RNG_TypeDef *RNGx)
   */
 __STATIC_INLINE void LL_RNG_SetHealthConfig(RNG_TypeDef *RNGx, uint32_t HTCFG)
 {
-  WRITE_REG(RNGx->HTCR, HTCFG);
+#if defined(RNG_HTCR_NIST_VALUE)
+  /* For NIST compliance we can fin the recommended value in the application note AN4230 */
+#endif /* defined(RNG_HTCR_NIST_VALUE) */
+  WRITE_REG(RNGx->HTCR[0], HTCFG);
 }
 
 /**
@@ -685,12 +708,170 @@ __STATIC_INLINE void LL_RNG_SetHealthConfig(RNG_TypeDef *RNGx, uint32_t HTCFG)
   */
 __STATIC_INLINE uint32_t LL_RNG_GetHealthConfig(const RNG_TypeDef *RNGx)
 {
-  return (uint32_t)READ_REG(RNGx->HTCR);
+  return (uint32_t)READ_REG(RNGx->HTCR[0]);
 }
 
 /**
   * @}
   */
+
+/** @defgroup RNG Additional Health Test Control
+  * @{
+  */
+
+/**
+  * @brief  Set RNG Additional Health Test Control
+  * @rmtoll HTCR       HTCFG       LL_RNG_SetAdditionalHealthTest
+  * @param  RNGx RNG Instance
+  * @param  htcr_idx   Additional health tests registers index can be one f the following values
+  * @param  HTCFG can be values of 32 bits
+  * @retval None
+  */
+__STATIC_INLINE void LL_RNG_SetAdditionalHealthTest(RNG_TypeDef *RNGx, uint32_t htcr_idx, uint32_t HTCFG)
+{
+  WRITE_REG(RNGx->HTCR[htcr_idx], HTCFG);
+}
+
+/**
+  * @brief  Get RNG Additional Health Test Control
+  * @rmtoll HTCR         HTCFG        LL_RNG_GetAdditionalHealthTest
+  * @param  RNGx RNG Instance
+  * @param  htcr_idx   Additional health tests registers index
+  * @retval Return 32-bit RNG Health Test configuration
+  */
+__STATIC_INLINE uint32_t LL_RNG_GetAdditionalHealthTest(const RNG_TypeDef *RNGx, uint32_t htcr_idx)
+{
+  return (uint32_t)READ_REG(RNGx->HTCR[htcr_idx]);
+}
+/**
+  * @}
+  */
+
+
+/** @defgroup RNG_LL_EF_Noise_Test_Control Noise Test Control
+  * @{
+  */
+
+/**
+  * @brief  Set RNG Noise Test Control
+  * @rmtoll NSCR NOISECFG LL_RNG_SetNoiseConfig
+  * @param  RNGx RNG Instance
+  * @param  NOISECFG can be values of 32 bits
+  * @retval None
+  */
+__STATIC_INLINE void LL_RNG_SetNoiseConfig(RNG_TypeDef *RNGx, uint32_t NOISECFG)
+{
+  /* For NIST compliance we can fin the recommended value in the application note AN4230 */
+  WRITE_REG(RNGx->NSCR, NOISECFG);
+}
+
+/**
+  * @brief  Get RNG Noise Test Control
+  * @rmtoll NSCR NOISECFG LL_RNG_GetNoiseConfig
+  * @param  RNGx RNG Instance
+  * @retval Return 32-bit RNG Noise Test configuration
+  */
+__STATIC_INLINE uint32_t LL_RNG_GetNoiseConfig(const RNG_TypeDef *RNGx)
+{
+  return (uint32_t)READ_REG(RNGx->NSCR);
+}
+
+/**
+  * @}
+  */
+
+/** @defgroup RNG Health Tests Status control
+  * @{
+  */
+
+/**
+  * @brief  Get RNG Health Tests Status.
+  * @rmtoll HTSR    htsr_idx      LL_RNG_GetHealthTestStatus
+  * @param  RNGx       RNG Instance
+  * @param  htsr_idx   Health tests registers status index
+  * @retval Return 32-bit RNG Health Test Status
+  */
+__STATIC_INLINE uint32_t LL_RNG_GetHealthTestStatus(const RNG_TypeDef *RNGx, uint32_t htsr_idx)
+{
+  return (uint32_t)READ_REG(RNGx->HTSR[htsr_idx]);
+}
+
+/**
+  * @}
+  */
+
+/** @defgroup RNG noise source mask Control
+  * @{
+  */
+
+/**
+  * @brief  Set RNG noise source mask.
+  * @rmtoll NSMR    htsr_idx      LL_RNG_GetNoiseSourceMask
+  * @param  RNGx       RNG Instance
+  * @param  nsmr      can be values of 32 bits
+  */
+__STATIC_INLINE void LL_RNG_SetNoiseSourceMask(RNG_TypeDef *RNGx, uint32_t nsmr)
+{
+  WRITE_REG(RNGx->NSMR, nsmr);
+}
+
+/**
+  * @brief  Get RNG noise source mask.
+  * @rmtoll NSMR    htsr_idx      LL_RNG_GetNoiseSourceMask
+  * @param  RNGx       RNG Instance
+  * @retval Return 32-bit RNG Noise Source Mask
+  */
+__STATIC_INLINE uint32_t LL_RNG_GetNoiseSourceMask(const RNG_TypeDef *RNGx)
+{
+  return READ_REG(RNGx->NSMR);
+}
+
+/**
+  * @}
+  */
+
+/** @defgroup RNG noise source Control
+  * @{
+  */
+
+/**
+  * @brief  Set RNG Noise Source Configuration.
+  * @rmtoll
+  *  NSCR       NSCR       LL_RNG_GetOscNoiseSrc
+  * @param  RNGx RNG Instance
+  * @param  osc be one of the following values:
+  *         @arg @ref LL_RNG_OSC_1
+  *         @arg @ref LL_RNG_OSC_2
+  *         @arg @ref LL_RNG_OSC_3
+  * @retval can be one of the following values:
+  *         @arg @ref LL_RNG_NOISE_SRC_1
+  *         @arg @ref LL_RNG_NOISE_SRC_2
+  *         @arg @ref LL_RNG_NOISE_SRC_3
+  */
+__STATIC_INLINE void LL_RNG_SetOscNoiseSrc(RNG_TypeDef *RNGx, uint32_t osc)
+{
+  WRITE_REG(RNGx->NSCR, osc);
+}
+
+/**
+  * @brief  Get RNG Noise Source Configuration.
+  * @rmtoll
+  *  NSCR       NSCR       LL_RNG_GetOscNoiseSrc
+  * @param  RNGx RNG Instance
+  * @param  osc be one of the following values:
+  *         @arg @ref LL_RNG_OSC_1
+  *         @arg @ref LL_RNG_OSC_2
+  *         @arg @ref LL_RNG_OSC_3
+  * @retval can be one of the following values:
+  *         @arg @ref LL_RNG_NOISE_SRC_1
+  *         @arg @ref LL_RNG_NOISE_SRC_2
+  *         @arg @ref LL_RNG_NOISE_SRC_3
+  */
+__STATIC_INLINE uint32_t LL_RNG_GetOscNoiseSrc(const RNG_TypeDef *RNGx, uint32_t osc)
+{
+  return (READ_BIT(RNGx->NSCR, osc) >> POSITION_VAL(osc));
+}
+
 #if defined(USE_FULL_LL_DRIVER)
 /** @defgroup RNG_LL_EF_Init Initialization and de-initialization functions
   * @{

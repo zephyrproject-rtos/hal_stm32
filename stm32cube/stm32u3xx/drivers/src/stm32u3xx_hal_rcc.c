@@ -83,8 +83,13 @@
 /** @defgroup RCC_Private_Macros RCC Private Macros
   * @{
   */
+#if defined(STM32U366xx) || defined(STM32U356xx)
+#define __MCO_PORTB_CLK_ENABLE()        __HAL_RCC_GPIOB_CLK_ENABLE()
+#define MCO_GPIO_PORTB                  GPIOB
+#endif /* defined(STM32U366xx) || defined(STM32U356xx) */
 #define __MCO_CLK_ENABLE()              __HAL_RCC_GPIOA_CLK_ENABLE()
 #define MCO_GPIO_PORT                   GPIOA
+
 /**
   * @}
   */
@@ -1013,6 +1018,8 @@ HAL_StatusTypeDef  HAL_RCC_ClockConfig(const RCC_ClkInitTypeDef *RCC_ClkInitStru
   * @param  RCC_MCOx  specifies the instance of clock output and its associated pin.
   *            @arg @ref RCC_MCO1_PA8  Clock source to output on MCO1 pin(PA8)
   *            @arg @ref RCC_MCO1_PA9  Clock source to output on MCO1 pin(PA9)
+  *            @arg @ref RCC_MCO1_PB8  Clock source to output on MCO1 pin(PB8) **Only
+  *                      for STM32U356xx and STM32U366xx**
   *            @arg @ref RCC_MCO2_PA8  Clock source to output on MCO2 pin(PA8)
   *            @arg @ref RCC_MCO2_PA10  Clock source to output on MCO2 pin(PA10)
   * @param  RCC_MCOSource  specifies the clock source to output.
@@ -1059,12 +1066,25 @@ void HAL_RCC_MCOConfig(uint32_t RCC_MCOx, uint32_t RCC_MCOSource, uint32_t RCC_M
 {
   GPIO_InitTypeDef GPIO_InitStruct;
   uint32_t clearmask;
+  GPIO_TypeDef *gpio_port = MCO_GPIO_PORT;
 
   /* Check the parameters */
   assert_param(IS_RCC_MCO(RCC_MCOx));
 
-  /* MCO Clock Enable. On U3, MCO1 and MCO2 are always on GPIOA */
+  /* MCO Clock Enable and select correct GPIO port */
+#if defined(STM32U366xx) || defined(STM32U356xx)
+  if (((RCC_MCOx & RCC_MCO_GPIOPORT_MASK) >> RCC_MCO_GPIOPORT_POS) == RCC_MCO_GPIOPORTB)
+  {
+    __MCO_PORTB_CLK_ENABLE();
+    gpio_port = MCO_GPIO_PORTB;
+  }
+  else
+  {
+    __MCO_CLK_ENABLE();
+  }
+#else
   __MCO_CLK_ENABLE();
+#endif /* defined(STM32U366xx) || defined(STM32U356xx) */
 
   /* Configure the MCO1 pin in alternate function mode */
   GPIO_InitStruct.Pin = (RCC_MCOx & RCC_MCO_GPIOPIN_MASK);
@@ -1072,7 +1092,7 @@ void HAL_RCC_MCOConfig(uint32_t RCC_MCOx, uint32_t RCC_MCOSource, uint32_t RCC_M
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Alternate = ((RCC_MCOx & RCC_MCO_GPIOAF_MASK) >> RCC_MCO_GPIOAF_POS);
-  HAL_GPIO_Init(MCO_GPIO_PORT, &GPIO_InitStruct);
+  HAL_GPIO_Init(gpio_port, &GPIO_InitStruct);
 
   if ((RCC_MCOx & RCC_MCO_INDEX_MASK) != 0x00u)
   {

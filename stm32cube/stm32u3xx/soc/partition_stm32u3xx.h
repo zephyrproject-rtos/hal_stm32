@@ -41,7 +41,15 @@
 /** @addtogroup Secure_configuration_section
   * @{
   */
-#if defined(STM32U375xx)
+#if defined(STM32U356xx)
+  #include "partition_stm32u356xx.h"
+#elif defined(STM32U366xx)
+  #include "partition_stm32u366xx.h"
+#elif defined(STM32U396xx)
+  #include "partition_stm32u396xx.h"
+#elif defined(STM32U3A6xx)
+  #include "partition_stm32u3a6xx.h"
+#elif defined(STM32U375xx)
   #include "partition_stm32u375xx.h"
 #elif defined(STM32U385xx)
   #include "partition_stm32u385xx.h"
@@ -49,6 +57,10 @@
   #include "partition_stm32u3b5xx.h"
 #elif defined(STM32U3C5xx)
   #include "partition_stm32u3c5xx.h"
+#elif defined(STM32U335xx)
+  #include "partition_stm32u335xx.h"
+#elif defined(STM32U345xx)
+  #include "partition_stm32u345xx.h"
 #else
   #error "Please select first the target STM32U3xx device used in your application (in stm32u3xx.h file)"
 #endif

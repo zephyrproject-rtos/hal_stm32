@@ -567,6 +567,7 @@
   * @param  source  id of the trigger signal (@ref HAL_HSP_TRGIN_SourceTypeDef).
   * @retval SET (id is valid) or RESET (id is invalid)
   */
+#if defined(STM32U3C5xx) || defined(STM32U3B5xx)
 #define IS_HSP_TRGIN_SOURCE(source)             \
   (((source) == HAL_HSP_TRGIN_DMA1_CH1_TC)      \
    || ((source) == HAL_HSP_TRGIN_DMA1_CH2_TC)   \
@@ -588,6 +589,29 @@
    || ((source) == HAL_HSP_TRGIN_LPTIM2_CH1)    \
    || ((source) == HAL_HSP_TRGIN_LPTIM2_CH2)    \
    || ((source) == HAL_HSP_TRGIN_ADF1_SAD_DET))
+#else
+#define IS_HSP_TRGIN_SOURCE(source)             \
+  (((source) == HAL_HSP_TRGIN_DMA1_CH8_TC)      \
+   || ((source) == HAL_HSP_TRGIN_DMA1_CH9_TC)   \
+   || ((source) == HAL_HSP_TRGIN_DMA1_CH10_TC)  \
+   || ((source) == HAL_HSP_TRGIN_DMA1_CH11_TC)  \
+   || ((source) == HAL_HSP_TRGIN_EXTI0)         \
+   || ((source) == HAL_HSP_TRGIN_EXTI1)         \
+   || ((source) == HAL_HSP_TRGIN_TIM1_TRGO)     \
+   || ((source) == HAL_HSP_TRGIN_TIM1_TRGO2)    \
+   || ((source) == HAL_HSP_TRGIN_TIM2_TRGO)     \
+   || ((source) == HAL_HSP_TRGIN_TIM3_TRGO)     \
+   || ((source) == HAL_HSP_TRGIN_TIM6_TRGO)     \
+   || ((source) == HAL_HSP_TRGIN_TIM7_TRGO)     \
+   || ((source) == HAL_HSP_TRGIN_TIM8_TRGO)     \
+   || ((source) == HAL_HSP_TRGIN_TIM8_TRGO2)    \
+   || ((source) == HAL_HSP_TRGIN_TIM15_TRGO)    \
+   || ((source) == HAL_HSP_TRGIN_LPTIM1_CH1)    \
+   || ((source) == HAL_HSP_TRGIN_LPTIM1_CH2)    \
+   || ((source) == HAL_HSP_TRGIN_LPTIM2_CH1)    \
+   || ((source) == HAL_HSP_TRGIN_LPTIM2_CH2)    \
+   || ((source) == HAL_HSP_TRGIN_ADF1_SAD_DET))
+#endif /* STM32U3C5xx || STM32U3B5xx */
 
 
 /**

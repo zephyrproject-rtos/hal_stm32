@@ -68,20 +68,24 @@ extern "C" {
   */
 /* SRAM1 pages retention defines */
 #define PWR_SRAM1_PAGE1_STOP_RETENTION PWR_CR2_SRAM1PDS1  /*!< SRAM1 page 1 retention in Stop modes (Stop 0, 1, 2, 3) */
+#if defined(PWR_CR2_SRAM1PDS2)
 #define PWR_SRAM1_PAGE2_STOP_RETENTION PWR_CR2_SRAM1PDS2  /*!< SRAM1 page 2 retention in Stop modes (Stop 0, 1, 2, 3) */
 #define PWR_SRAM1_PAGE3_STOP_RETENTION PWR_CR2_SRAM1PDS3  /*!< SRAM1 page 3 retention in Stop modes (Stop 0, 1, 2, 3) */
 #define PWR_SRAM1_PAGE4_STOP_RETENTION PWR_CR2_SRAM1PDS4  /*!< SRAM1 page 4 retention in Stop modes (Stop 0, 1, 2, 3) */
 #define PWR_SRAM1_PAGE5_STOP_RETENTION PWR_CR2_SRAM1PDS5  /*!< SRAM1 page 5 retention in Stop modes (Stop 0, 1, 2, 3) */
+#endif/*PWR_CR2_SRAM1PDS2*/
 #if defined(PWR_CR2_SRAM1PDS6)
 #define PWR_SRAM1_PAGE6_STOP_RETENTION PWR_CR2_SRAM1PDS6  /*!< SRAM1 page 6 retention in Stop modes (Stop 0, 1, 2, 3) */
 #define PWR_SRAM1_PAGE7_STOP_RETENTION PWR_CR2_SRAM1PDS7  /*!< SRAM1 page 7 retention in Stop modes (Stop 0, 1, 2, 3) */
 #define PWR_SRAM1_FULL_STOP_RETENTION  (PWR_CR2_SRAM1PDS1 | PWR_CR2_SRAM1PDS2 | PWR_CR2_SRAM1PDS3 | PWR_CR2_SRAM1PDS4 |\
                                         PWR_CR2_SRAM1PDS5 | PWR_CR2_SRAM1PDS6 | PWR_CR2_SRAM1PDS7)
 /*!< SRAM1 full retention in Stop modes (Stop 0, 1, 2, 3)  */
-#else
+#elif defined(PWR_CR2_SRAM1PDS2)
 #define PWR_SRAM1_FULL_STOP_RETENTION  (PWR_CR2_SRAM1PDS1 | PWR_CR2_SRAM1PDS2 | PWR_CR2_SRAM1PDS3 | PWR_CR2_SRAM1PDS4 |\
                                         PWR_CR2_SRAM1PDS5)
 /*!< SRAM1 full retention in Stop modes (Stop 0, 1, 2, 3)  */
+#else
+#define PWR_SRAM1_FULL_STOP_RETENTION  PWR_CR2_SRAM1PDS1
 #endif /* PWR_CR2_SRAM1PDS6 */
 
 /* SRAM2 pages retention defines */
@@ -167,7 +171,9 @@ extern "C" {
 #define PWR_GPIO_B                     (1U)                                    /*!< GPIO port B */
 #define PWR_GPIO_C                     (2U)                                    /*!< GPIO port C */
 #define PWR_GPIO_D                     (3U)                                    /*!< GPIO port D */
+#if defined(PWR_PDCRE_PD15)
 #define PWR_GPIO_E                     (4U)                                    /*!< GPIO port E */
+#endif/*PWR_PDCRE_PD15*/
 #if defined(RAMCFG_SRAM3)
 #define PWR_GPIO_F                     (5U)                                    /*!< GPIO port F */
 #endif /* RAMCFG_SRAM3 */
@@ -211,9 +217,9 @@ extern "C" {
 #define PWR_I3CPU_PA7                  PWR_I3CPUCR1_PA7_I3CPU                            /*!< I3C pull-up on PA7  */
 #define PWR_I3CPU_PB2                  PWR_I3CPUCR1_PB2_I3CPU                            /*!< I3C pull-up on PB2  */
 #define PWR_I3CPU_PB6                  PWR_I3CPUCR1_PB6_I3CPU                            /*!< I3C pull-up on PB6  */
-#if defined(RAMCFG_SRAM3)
+#if defined(PWR_I3CPUCR1_PB7_I3CPU)
 #define PWR_I3CPU_PB7                  PWR_I3CPUCR1_PB7_I3CPU                            /*!< I3C pull-up on PB7  */
-#endif /* RAMCFG_SRAM3 */
+#endif /* PWR_I3CPUCR1_PB7_I3CPU */
 #if defined(PWR_I3CPUCR1_PB8_I3CPU)
 #define PWR_I3CPU_PB8                  PWR_I3CPUCR1_PB8_I3CPU                            /*!< I3C pull-up on PB8  */
 #define PWR_I3CPU_PB9                  PWR_I3CPUCR1_PB9_I3CPU                            /*!< I3C pull-up on PB9  */
@@ -221,19 +227,23 @@ extern "C" {
 #define PWR_I3CPU_PB10                 PWR_I3CPUCR1_PB10_I3CPU                           /*!< I3C pull-up on PB10 */
 #define PWR_I3CPU_PB12                 PWR_I3CPUCR1_PB12_I3CPU                           /*!< I3C pull-up on PB12 */
 #define PWR_I3CPU_PB13                 PWR_I3CPUCR1_PB13_I3CPU                           /*!< I3C pull-up on PB13 */
-#if defined(PWR_I3CPUCR1_PB8_I3CPU)
+#if defined(PWR_I3CPUCR1_PB14_I3CPU)
 #define PWR_I3CPU_PB14                 PWR_I3CPUCR1_PB14_I3CPU                           /*!< I3C pull-up on PB14 */
+#endif /* PWR_I3CPUCR1_PB14_I3CPU */
+#if defined(PWR_I3CPUCR2_PC0_I3CPU)
 #define PWR_I3CPU_PC0                  (PWR_I3CPUCR2_PC0_I3CPU  << PWR_I3CUPCR2_OFFSET)  /*!< I3C pull-up on PC0  */
-#endif /* PWR_I3CPUCR1_PB8_I3CPU */
+#endif /* PWR_I3CPUCR2_PC0_I3CPU */
+#if defined(PWR_I3CPUCR2_PC1_I3CPU)
 #define PWR_I3CPU_PC1                  (PWR_I3CPUCR2_PC1_I3CPU  << PWR_I3CUPCR2_OFFSET)  /*!< I3C pull-up on PC1  */
 #define PWR_I3CPU_PD12                 (PWR_I3CPUCR2_PD12_I3CPU << PWR_I3CUPCR2_OFFSET)  /*!< I3C pull-up on PD12 */
 #define PWR_I3CPU_PD13                 (PWR_I3CPUCR2_PD13_I3CPU << PWR_I3CUPCR2_OFFSET)  /*!< I3C pull-up on PD13 */
-#if defined(PWR_I3CPUCR1_PB8_I3CPU)
+#endif/* PWR_I3CPUCR2_PC1_I3CPU */
+#if defined(PWR_I3CPUCR2_PG7_I3CPU)
 #define PWR_I3CPU_PG7                  (PWR_I3CPUCR2_PG7_I3CPU  << PWR_I3CUPCR2_OFFSET)  /*!< I3C pull-up on PG7  */
 #define PWR_I3CPU_PG8                  (PWR_I3CPUCR2_PG8_I3CPU  << PWR_I3CUPCR2_OFFSET)  /*!< I3C pull-up on PG8  */
 #define PWR_I3CPU_PG13                 (PWR_I3CPUCR2_PG13_I3CPU << PWR_I3CUPCR2_OFFSET)  /*!< I3C pull-up on PG13 */
 #define PWR_I3CPU_PG14                 (PWR_I3CPUCR2_PG14_I3CPU << PWR_I3CUPCR2_OFFSET)  /*!< I3C pull-up on PG14 */
-#endif /* PWR_I3CPUCR1_PB8_I3CPU */
+#endif /* PWR_I3CPUCR2_PG7_I3CPU */
 #define PWR_I3CPU_PH3                  (PWR_I3CPUCR2_PH3_I3CPU  << PWR_I3CUPCR2_OFFSET)  /*!< I3C pull-up on PH3  */
 
 #if defined(RAMCFG_SRAM3)
@@ -243,16 +253,20 @@ extern "C" {
                                         PWR_I3CPU_PC0  | PWR_I3CPU_PC1  | PWR_I3CPU_PD12 | PWR_I3CPU_PD13 |\
                                         PWR_I3CPU_PG7  | PWR_I3CPU_PG8  | PWR_I3CPU_PG13 | PWR_I3CPU_PG14 |\
                                         PWR_I3CPU_PH3)
-#elif defined(PWR_I3CPUCR1_PB8_I3CPU)
+#elif defined(PWR_I3CPUCR2_PC0_I3CPU)
 #define PWR_I3CPUCR_ALL                (PWR_I3CPU_PA1  | PWR_I3CPU_PA6  | PWR_I3CPU_PA7  | PWR_I3CPU_PB2  |\
                                         PWR_I3CPU_PB6  | PWR_I3CPU_PB8  | PWR_I3CPU_PB9  | PWR_I3CPU_PB10 |\
                                         PWR_I3CPU_PB12 | PWR_I3CPU_PB13 | PWR_I3CPU_PB14 | PWR_I3CPU_PC0  |\
                                         PWR_I3CPU_PC1  | PWR_I3CPU_PD12 | PWR_I3CPU_PD13 | PWR_I3CPU_PG7  |\
                                         PWR_I3CPU_PG8  | PWR_I3CPU_PG13 | PWR_I3CPU_PG14 | PWR_I3CPU_PH3)
-#else
+#elif defined(PWR_I3CPUCR2_PC1_I3CPU)
 #define PWR_I3CPUCR_ALL                (PWR_I3CPU_PA1  | PWR_I3CPU_PA6  | PWR_I3CPU_PA7  | PWR_I3CPU_PB2  |\
                                         PWR_I3CPU_PB6  | PWR_I3CPU_PB10 | PWR_I3CPU_PB12 | PWR_I3CPU_PB13 |\
                                         PWR_I3CPU_PC1  | PWR_I3CPU_PD12 | PWR_I3CPU_PD13 | PWR_I3CPU_PH3)
+#else
+#define PWR_I3CPUCR_ALL                (PWR_I3CPU_PA1  | PWR_I3CPU_PA6  | PWR_I3CPU_PA7  | PWR_I3CPU_PB2  |\
+                                        PWR_I3CPU_PB6  | PWR_I3CPU_PB7  | PWR_I3CPU_PB8  | PWR_I3CPU_PB9  |\
+                                        PWR_I3CPU_PB10 | PWR_I3CPU_PB12 | PWR_I3CPU_PB13 | PWR_I3CPU_PH3)
 #endif /* defined(RAMCFG_SRAM3)*/
 /*!<  I3C pull-up all */
 /**
@@ -322,12 +336,18 @@ extern "C" {
                                                   ((__GPIO_PORT__) == PWR_GPIO_E) ||\
                                                   ((__GPIO_PORT__) == PWR_GPIO_G) ||\
                                                   ((__GPIO_PORT__) == PWR_GPIO_H))
-#else
+#elif defined(PWR_GPIO_E)
 #define IS_PWR_GPIO_PORT(__GPIO_PORT__)          (((__GPIO_PORT__) == PWR_GPIO_A) ||\
                                                   ((__GPIO_PORT__) == PWR_GPIO_B) ||\
                                                   ((__GPIO_PORT__) == PWR_GPIO_C) ||\
                                                   ((__GPIO_PORT__) == PWR_GPIO_D) ||\
                                                   ((__GPIO_PORT__) == PWR_GPIO_E) ||\
+                                                  ((__GPIO_PORT__) == PWR_GPIO_H))
+#else
+#define IS_PWR_GPIO_PORT(__GPIO_PORT__)          (((__GPIO_PORT__) == PWR_GPIO_A) ||\
+                                                  ((__GPIO_PORT__) == PWR_GPIO_B) ||\
+                                                  ((__GPIO_PORT__) == PWR_GPIO_C) ||\
+                                                  ((__GPIO_PORT__) == PWR_GPIO_D) ||\
                                                   ((__GPIO_PORT__) == PWR_GPIO_H))
 #endif /* PWR_GPIO_G */
 #endif /* defined(RAMCFG_SRAM3) */
@@ -348,7 +368,7 @@ extern "C" {
 #endif /* RAMCFG_SRAM3 */
 
 /* RAMs retention in Stop mode check macro */
-#if defined(RAMCFG_SRAM3) && defined(PWR_PKA_STOP_RETENTION)
+#if defined(RAMCFG_SRAM3)
 #define IS_PWR_RAM_STOP_RETENTION(__RAM__)       (((__RAM__) == PWR_SRAM1_PAGE1_STOP_RETENTION) ||\
                                                   ((__RAM__) == PWR_SRAM1_PAGE2_STOP_RETENTION) ||\
                                                   ((__RAM__) == PWR_SRAM1_PAGE3_STOP_RETENTION) ||\
@@ -371,30 +391,7 @@ extern "C" {
                                                   ((__RAM__) == PWR_ICACHE_STOP_RETENTION)      ||\
                                                   ((__RAM__) == PWR_FDCAN_USB_STOP_RETENTION)   ||\
                                                   ((__RAM__) == PWR_PKA_STOP_RETENTION))
-#elif defined(RAMCFG_SRAM3) && !defined(PWR_PKA_STOP_RETENTION)
-#define IS_PWR_RAM_STOP_RETENTION(__RAM__)       (((__RAM__) == PWR_SRAM1_PAGE1_STOP_RETENTION) ||\
-                                                  ((__RAM__) == PWR_SRAM1_PAGE2_STOP_RETENTION) ||\
-                                                  ((__RAM__) == PWR_SRAM1_PAGE3_STOP_RETENTION) ||\
-                                                  ((__RAM__) == PWR_SRAM1_PAGE4_STOP_RETENTION) ||\
-                                                  ((__RAM__) == PWR_SRAM1_PAGE5_STOP_RETENTION) ||\
-                                                  ((__RAM__) == PWR_SRAM1_PAGE6_STOP_RETENTION) ||\
-                                                  ((__RAM__) == PWR_SRAM1_PAGE7_STOP_RETENTION) ||\
-                                                  ((__RAM__) == PWR_SRAM1_FULL_STOP_RETENTION)  ||\
-                                                  ((__RAM__) == PWR_SRAM2_PAGE1_STOP_RETENTION) ||\
-                                                  ((__RAM__) == PWR_SRAM2_PAGE2_STOP_RETENTION) ||\
-                                                  ((__RAM__) == PWR_SRAM2_PAGE3_STOP_RETENTION) ||\
-                                                  ((__RAM__) == PWR_SRAM2_FULL_STOP_RETENTION)  ||\
-                                                  ((__RAM__) == PWR_SRAM3_PAGE1_STOP_RETENTION) ||\
-                                                  ((__RAM__) == PWR_SRAM3_PAGE2_STOP_RETENTION) ||\
-                                                  ((__RAM__) == PWR_SRAM3_PAGE3_STOP_RETENTION) ||\
-                                                  ((__RAM__) == PWR_SRAM3_PAGE4_STOP_RETENTION) ||\
-                                                  ((__RAM__) == PWR_SRAM3_PAGE5_STOP_RETENTION) ||\
-                                                  ((__RAM__) == PWR_SRAM3_FULL_STOP_RETENTION)  ||\
-                                                  ((__RAM__) == PWR_SRAM4_FULL_STOP_RETENTION)  ||\
-                                                  ((__RAM__) == PWR_ICACHE_STOP_RETENTION)      ||\
-                                                  ((__RAM__) == PWR_FDCAN_USB_STOP_RETENTION))
-
-#elif defined(PWR_SRAM1_PAGE6_STOP_RETENTION) && defined(PWR_PKA_STOP_RETENTION)
+#elif defined(PWR_SRAM1_PAGE6_STOP_RETENTION)
 #define IS_PWR_RAM_STOP_RETENTION(__RAM__)       (((__RAM__) == PWR_SRAM1_PAGE1_STOP_RETENTION) ||\
                                                   ((__RAM__) == PWR_SRAM1_PAGE2_STOP_RETENTION) ||\
                                                   ((__RAM__) == PWR_SRAM1_PAGE3_STOP_RETENTION) ||\
@@ -410,24 +407,7 @@ extern "C" {
                                                   ((__RAM__) == PWR_ICACHE_STOP_RETENTION)      ||\
                                                   ((__RAM__) == PWR_FDCAN_USB_STOP_RETENTION)   ||\
                                                   ((__RAM__) == PWR_PKA_STOP_RETENTION))
-
-#elif defined(PWR_SRAM1_PAGE6_STOP_RETENTION) && !defined(PWR_PKA_STOP_RETENTION)
-#define IS_PWR_RAM_STOP_RETENTION(__RAM__)       (((__RAM__) == PWR_SRAM1_PAGE1_STOP_RETENTION) ||\
-                                                  ((__RAM__) == PWR_SRAM1_PAGE2_STOP_RETENTION) ||\
-                                                  ((__RAM__) == PWR_SRAM1_PAGE3_STOP_RETENTION) ||\
-                                                  ((__RAM__) == PWR_SRAM1_PAGE4_STOP_RETENTION) ||\
-                                                  ((__RAM__) == PWR_SRAM1_PAGE5_STOP_RETENTION) ||\
-                                                  ((__RAM__) == PWR_SRAM1_PAGE6_STOP_RETENTION) ||\
-                                                  ((__RAM__) == PWR_SRAM1_PAGE7_STOP_RETENTION) ||\
-                                                  ((__RAM__) == PWR_SRAM1_FULL_STOP_RETENTION)  ||\
-                                                  ((__RAM__) == PWR_SRAM2_PAGE1_STOP_RETENTION) ||\
-                                                  ((__RAM__) == PWR_SRAM2_PAGE2_STOP_RETENTION) ||\
-                                                  ((__RAM__) == PWR_SRAM2_PAGE3_STOP_RETENTION) ||\
-                                                  ((__RAM__) == PWR_SRAM2_FULL_STOP_RETENTION)  ||\
-                                                  ((__RAM__) == PWR_ICACHE_STOP_RETENTION)      ||\
-                                                  ((__RAM__) == PWR_FDCAN_USB_STOP_RETENTION))
-
-#elif defined(PWR_PKA_STOP_RETENTION) && !defined(PWR_SRAM1_PAGE6_STOP_RETENTION) && !defined(RAMCFG_SRAM3)
+#elif defined(PWR_SRAM1_PAGE2_STOP_RETENTION)
 #define IS_PWR_RAM_STOP_RETENTION(__RAM__)       (((__RAM__) == PWR_SRAM1_PAGE1_STOP_RETENTION) ||\
                                                   ((__RAM__) == PWR_SRAM1_PAGE2_STOP_RETENTION) ||\
                                                   ((__RAM__) == PWR_SRAM1_PAGE3_STOP_RETENTION) ||\
@@ -442,12 +422,7 @@ extern "C" {
                                                   ((__RAM__) == PWR_FDCAN_USB_STOP_RETENTION)   ||\
                                                   ((__RAM__) == PWR_PKA_STOP_RETENTION))
 #else
-#define IS_PWR_RAM_STOP_RETENTION(__RAM__)       (((__RAM__) == PWR_SRAM1_PAGE1_STOP_RETENTION) ||\
-                                                  ((__RAM__) == PWR_SRAM1_PAGE2_STOP_RETENTION) ||\
-                                                  ((__RAM__) == PWR_SRAM1_PAGE3_STOP_RETENTION) ||\
-                                                  ((__RAM__) == PWR_SRAM1_PAGE4_STOP_RETENTION) ||\
-                                                  ((__RAM__) == PWR_SRAM1_PAGE5_STOP_RETENTION) ||\
-                                                  ((__RAM__) == PWR_SRAM1_FULL_STOP_RETENTION)  ||\
+#define IS_PWR_RAM_STOP_RETENTION(__RAM__)       (((__RAM__) == PWR_SRAM1_FULL_STOP_RETENTION)  ||\
                                                   ((__RAM__) == PWR_SRAM2_PAGE1_STOP_RETENTION) ||\
                                                   ((__RAM__) == PWR_SRAM2_PAGE2_STOP_RETENTION) ||\
                                                   ((__RAM__) == PWR_SRAM2_PAGE3_STOP_RETENTION) ||\
@@ -463,7 +438,7 @@ extern "C" {
                                                   ((__PAGE__) == PWR_SRAM2_FULL_STANDBY_RETENTION))
 
 /* I3C Pull-up configuration check macro */
-#if defined(PWR_I3CPU_PB7)
+#if defined(RAMCFG_SRAM3)
 #define  IS_PWR_I3C_PULLUP_GPIO(__GPIO__)        (((__GPIO__) == PWR_I3CPU_PA1)  ||\
                                                   ((__GPIO__) == PWR_I3CPU_PA6)  ||\
                                                   ((__GPIO__) == PWR_I3CPU_PA7)  ||\
@@ -486,7 +461,7 @@ extern "C" {
                                                   ((__GPIO__) == PWR_I3CPU_PG14) ||\
                                                   ((__GPIO__) == PWR_I3CPU_PH3)  ||\
                                                   ((__GPIO__) == PWR_I3CPUCR_ALL))
-#elif defined(PWR_I3CPU_PB8)
+#elif defined(PWR_I3CPU_PC0)
 #define  IS_PWR_I3C_PULLUP_GPIO(__GPIO__)        (((__GPIO__) == PWR_I3CPU_PA1)  ||\
                                                   ((__GPIO__) == PWR_I3CPU_PA6)  ||\
                                                   ((__GPIO__) == PWR_I3CPU_PA7)  ||\
@@ -508,12 +483,13 @@ extern "C" {
                                                   ((__GPIO__) == PWR_I3CPU_PG14) ||\
                                                   ((__GPIO__) == PWR_I3CPU_PH3)  ||\
                                                   ((__GPIO__) == PWR_I3CPUCR_ALL))
-#else
+#elif defined(PWR_I3CPU_PC1)
 #define  IS_PWR_I3C_PULLUP_GPIO(__GPIO__)        (((__GPIO__) == PWR_I3CPU_PA1)  ||\
                                                   ((__GPIO__) == PWR_I3CPU_PA6)  ||\
                                                   ((__GPIO__) == PWR_I3CPU_PA7)  ||\
                                                   ((__GPIO__) == PWR_I3CPU_PB2)  ||\
                                                   ((__GPIO__) == PWR_I3CPU_PB6)  ||\
+                                                  ((__GPIO__) == PWR_I3CPU_PB7)  ||\
                                                   ((__GPIO__) == PWR_I3CPU_PB10) ||\
                                                   ((__GPIO__) == PWR_I3CPU_PB12) ||\
                                                   ((__GPIO__) == PWR_I3CPU_PB13) ||\
@@ -522,7 +498,21 @@ extern "C" {
                                                   ((__GPIO__) == PWR_I3CPU_PD13) ||\
                                                   ((__GPIO__) == PWR_I3CPU_PH3)  ||\
                                                   ((__GPIO__) == PWR_I3CPUCR_ALL))
-#endif  /* defined(PWR_I3CPU_PB7) */
+#else
+#define  IS_PWR_I3C_PULLUP_GPIO(__GPIO__)        (((__GPIO__) == PWR_I3CPU_PA1)  ||\
+                                                  ((__GPIO__) == PWR_I3CPU_PA6)  ||\
+                                                  ((__GPIO__) == PWR_I3CPU_PA7)  ||\
+                                                  ((__GPIO__) == PWR_I3CPU_PB2)  ||\
+                                                  ((__GPIO__) == PWR_I3CPU_PB6)  ||\
+                                                  ((__GPIO__) == PWR_I3CPU_PB7)  ||\
+                                                  ((__GPIO__) == PWR_I3CPU_PB8)  ||\
+                                                  ((__GPIO__) == PWR_I3CPU_PB9)  ||\
+                                                  ((__GPIO__) == PWR_I3CPU_PB10) ||\
+                                                  ((__GPIO__) == PWR_I3CPU_PB12) ||\
+                                                  ((__GPIO__) == PWR_I3CPU_PB13) ||\
+                                                  ((__GPIO__) == PWR_I3CPU_PH3)  ||\
+                                                  ((__GPIO__) == PWR_I3CPUCR_ALL))
+#endif  /* defined(RAMCFG_SRAM3) */
 /**
   * @}
   */

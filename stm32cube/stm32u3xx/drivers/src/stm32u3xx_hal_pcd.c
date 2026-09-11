@@ -745,7 +745,7 @@ HAL_StatusTypeDef HAL_PCD_UnRegisterIsoInIncpltCallback(PCD_HandleTypeDef *hpcd)
     status =  HAL_ERROR;
   }
 
-   return status;
+  return status;
 }
 
 /**
@@ -1046,6 +1046,9 @@ void HAL_PCD_IRQHandler(PCD_HandleTypeDef *hpcd)
   if ((wIstr & USB_ISTR_SOF) == USB_ISTR_SOF)
   {
     __HAL_PCD_CLEAR_FLAG(hpcd, USB_ISTR_SOF);
+
+    /* store current frame number */
+    hpcd->FrameNumber = USB_GetCurrentFrame(hpcd->Instance);
 
 #if (USE_HAL_PCD_REGISTER_CALLBACKS == 1U)
     hpcd->SOFCallback(hpcd);
@@ -1640,6 +1643,9 @@ static HAL_StatusTypeDef PCD_EP_ISR_Handler(PCD_HandleTypeDef *hpcd)
   count = 0U;
 #endif /* USE_USB_DOUBLE_BUFFER */
 
+  /* store current frame number */
+  hpcd->FrameNumber = USB_GetCurrentFrame(hpcd->Instance);
+
   /* stay in loop while pending interrupts */
   while ((hpcd->Instance->ISTR & USB_ISTR_CTR) != 0U)
   {
@@ -1647,6 +1653,11 @@ static HAL_StatusTypeDef PCD_EP_ISR_Handler(PCD_HandleTypeDef *hpcd)
 
     /* extract highest priority endpoint number */
     epindex = (uint8_t)(wIstr & USB_ISTR_IDN);
+
+    if (epindex >= 8U)
+    {
+      return HAL_ERROR;
+    }
 
     if (epindex == 0U)
     {

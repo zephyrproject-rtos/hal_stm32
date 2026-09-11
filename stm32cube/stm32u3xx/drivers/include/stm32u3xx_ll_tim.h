@@ -1063,6 +1063,7 @@ typedef struct
 #define LL_TIM_TIM2_ETRSOURCE_TIM3_ETR      TIM_AF1_ETRSEL_3                                            /*!< TIM2_ETR is connected to TIM3 ETR */
 #define LL_TIM_TIM2_ETRSOURCE_TIM4_ETR      (TIM_AF1_ETRSEL_3 | TIM_AF1_ETRSEL_0)                       /*!< TIM2_ETR is connected to TIM4 ETR */
 #define LL_TIM_TIM2_ETRSOURCE_LSE           (TIM_AF1_ETRSEL_3 | TIM_AF1_ETRSEL_1 | TIM_AF1_ETRSEL_0)    /*!< TIM2_ETR is connected to LSE */
+#define LL_TIM_TIM2_ETRSOURCE_USBFS_SOF     (TIM_AF1_ETRSEL_3 | TIM_AF1_ETRSEL_2 | TIM_AF1_ETRSEL_0)    /*!< TIM2_ETR is connected to USB_SOF */
 /**
   * @}
   */
@@ -1092,6 +1093,7 @@ typedef struct
 #define LL_TIM_TIM4_ETRSOURCE_COMP2         TIM_AF1_ETRSEL_1                                            /*!< TIM4_ETR is connected to COMP2 OUT */
 #define LL_TIM_TIM4_ETRSOURCE_MSIK          (TIM_AF1_ETRSEL_1 | TIM_AF1_ETRSEL_0)                       /*!< TIM4_ETR is connected to MSIK */
 #define LL_TIM_TIM4_ETRSOURCE_HSI           TIM_AF1_ETRSEL_2                                            /*!< TIM4_ETR is connected to HSI */
+#define LL_TIM_TIM4_ETRSOURCE_MSIS          (TIM_AF1_ETRSEL_2 | TIM_AF1_ETRSEL_0)                       /*!< TIM4_ETR is connected to MSIS */
 #define LL_TIM_TIM4_ETRSOURCE_TIM3_ETR      TIM_AF1_ETRSEL_3                                            /*!< TIM4_ETR is connected to TIM3 ETR */
 /**
   * @}
@@ -3956,6 +3958,7 @@ __STATIC_INLINE void LL_TIM_ConfigETR(TIM_TypeDef *TIMx, uint32_t ETRPolarity, u
   *            @arg @ref LL_TIM_TIM2_ETRSOURCE_TIM3_ETR
   *            @arg @ref LL_TIM_TIM2_ETRSOURCE_TIM4_ETR
   *            @arg @ref LL_TIM_TIM2_ETRSOURCE_LSE
+  *            @arg @ref LL_TIM_TIM2_ETRSOURCE_USBFS_SOF
   *
   *         TIM3: any combination of ETR_RMP where
   *
@@ -3977,6 +3980,7 @@ __STATIC_INLINE void LL_TIM_ConfigETR(TIM_TypeDef *TIMx, uint32_t ETRPolarity, u
   *            @arg @ref LL_TIM_TIM4_ETRSOURCE_COMP2
   *            @arg @ref LL_TIM_TIM4_ETRSOURCE_MSIK
   *            @arg @ref LL_TIM_TIM4_ETRSOURCE_HSI
+  *            @arg @ref LL_TIM_TIM4_ETRSOURCE_MSIS
   *            @arg @ref LL_TIM_TIM4_ETRSOURCE_TIM3_ETR
   *
   *         TIM8: any combination of ETR_RMP where     (**)

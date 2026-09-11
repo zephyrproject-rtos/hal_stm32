@@ -22,6 +22,9 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32u3xx_hal_def.h"
+#if (defined(RNG_HTSR0_RPERRX) || defined(RNG_HTSR1_ADERRX))
+#include "stm32u3xx_ll_rng.h"
+#endif /* RNG_HTSR0_RPERRX) || RNG_HTSR1_ADERRX */
 
 /** @addtogroup STM32U3xx_HAL_Driver
   * @{

@@ -2469,30 +2469,30 @@ __STATIC_INLINE uint32_t LL_RCC_GetRTCClockSource(uint32_t RTCx_clksource)
 
 /**
   * @brief  Enable RTC and TAMP clock
-  * @rmtoll BDCR           RTCEN         LL_RCC_RTC_ClockEnable
+  * @rmtoll BDCR           RTCEN         LL_RCC_EnableRTC
   * @retval None
   */
-__STATIC_INLINE void LL_RCC_RTC_ClockEnable(void)
+__STATIC_INLINE void LL_RCC_EnableRTC(void)
 {
   SET_BIT(RCC->BDCR, RCC_BDCR_RTCEN);
 }
 
 /**
   * @brief  Disable RTC and TAMP clock
-  * @rmtoll BDCR           RTCEN         LL_RCC_RTC_ClockDisable
+  * @rmtoll BDCR           RTCEN         LL_RCC_DisableRTC
   * @retval None
   */
-__STATIC_INLINE void LL_RCC_RTC_ClockDisable(void)
+__STATIC_INLINE void LL_RCC_DisableRTC(void)
 {
   CLEAR_BIT(RCC->BDCR, RCC_BDCR_RTCEN);
 }
 
 /**
   * @brief  Check if RTC and TAMP clock is enabled or not
-  * @rmtoll BDCR    RTCEN        LL_RCC_RTC_IsEnabled
+  * @rmtoll BDCR    RTCEN        LL_RCC_IsEnabledRTC
   * @retval 1 or 0
   */
-__STATIC_INLINE uint32_t LL_RCC_RTC_IsEnabled(void)
+__STATIC_INLINE uint32_t LL_RCC_IsEnabledRTC(void)
 {
   return ((READ_BIT(RCC->BDCR, RCC_BDCR_RTCEN) == RCC_BDCR_RTCEN) ? 1UL : 0UL);
 }

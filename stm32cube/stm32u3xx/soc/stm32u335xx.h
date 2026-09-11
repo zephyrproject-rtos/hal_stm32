@@ -939,7 +939,10 @@ typedef struct
   __IO uint32_t SR;               /*!< RNG status register,                      Address offset: 0x04 */
   __IO uint32_t DR;               /*!< RNG data register,                        Address offset: 0x08 */
   __IO uint32_t NSCR;             /*!< RNG noise source control register,        Address offset: 0x0C */
-  __IO uint32_t HTCR;             /*!< RNG health test configuration register,   Address offset: 0x10 */
+  __IO uint32_t HTCR[4];         /*!< RNG health test configuration register,    Address offset: 0x10-0x1C */
+  __IO uint32_t HTSR[2];         /*!< RNG health test status register,           Address offset: 0x20-0x24 */
+       uint32_t RESERVED1[2];    /*!< Reserved,                                  Address offset: 0x28-0x2C */
+  __IO uint32_t NSMR;            /*!< RNG health test status register,           Address offset: 0x30      */
 } RNG_TypeDef;
 
 /**
@@ -1301,7 +1304,7 @@ typedef  XSPIM_TypeDef OCTOSPIM_TypeDef;
 #define FLASH_BASE_NS                   0x08000000UL  /*!< FLASH non-secure base address        */
 #define SYSTEM_FLASH_BASE_NS            0x0BF80000UL  /*!< System FLASH non-secure base address */
 #define SRAM1_BASE_NS                   0x20000000UL  /*!< SRAM1 non-secure base address        */
-#define SRAM2_BASE_NS                   0x20040000UL  /*!< SRAM2 non-secure base address        */
+#define SRAM2_BASE_NS                   0x20004000UL  /*!< SRAM2 non-secure base address        */
 
 #define PERIPH_BASE_NS                  0x40000000UL  /*!< Peripheral non-secure base address   */
 #define EXTRAM_BASE_NS                  0x90000000UL  /*!< External RAM base address            */
@@ -1413,6 +1416,7 @@ typedef  XSPIM_TypeDef OCTOSPIM_TypeDef;
 #define GPIOD_BASE_NS                   (AHB2PERIPH_BASE_NS + 0x00000C00UL)
 #define GPIOH_BASE_NS                   (AHB2PERIPH_BASE_NS + 0x00001C00UL)
 #define ADC1_BASE_NS                    (AHB2PERIPH_BASE_NS + 0x00008000UL)
+#define ADC1_COMMON_BASE_NS             (AHB2PERIPH_BASE_NS + 0x00008300UL)
 #define DAC1_BASE_NS                    (AHB2PERIPH_BASE_NS + 0x00008400UL)
 #define HASH_BASE_NS                    (AHB2PERIPH_BASE_NS + 0x000A0400UL)
 #define HASH_DIGEST_BASE_NS             (AHB2PERIPH_BASE_NS + 0x000A0710UL)
@@ -1425,7 +1429,7 @@ typedef  XSPIM_TypeDef OCTOSPIM_TypeDef;
 #define FLASH_BASE_S                    0x0C000000UL  /*!< FLASH secure base address        */
 #define SYSTEM_FLASH_BASE_S             0x0FF80000UL  /*!< System FLASH secure base address */
 #define SRAM1_BASE_S                    0x30000000UL  /*!< SRAM1 secure base address        */
-#define SRAM2_BASE_S                    0x30030000UL  /*!< SRAM2 secure base address        */
+#define SRAM2_BASE_S                    0x30004000UL  /*!< SRAM2 secure base address        */
 #define PERIPH_BASE_S                   0x50000000UL  /*!< Peripheral secure base address   */
 
 /*!< Peripheral memory map - secure */
@@ -1516,6 +1520,7 @@ typedef  XSPIM_TypeDef OCTOSPIM_TypeDef;
 #define GPIOD_BASE_S                    (AHB2PERIPH_BASE_S + 0x00000C00UL)
 #define GPIOH_BASE_S                    (AHB2PERIPH_BASE_S + 0x00001C00UL)
 #define ADC1_BASE_S                     (AHB2PERIPH_BASE_S + 0x00008000UL)
+#define ADC1_COMMON_BASE_S              (AHB2PERIPH_BASE_S + 0x00008300UL)
 #define DAC1_BASE_S                     (AHB2PERIPH_BASE_S + 0x00008400UL)
 #define HASH_BASE_S                     (AHB2PERIPH_BASE_S + 0x000A0400UL)
 #define HASH_DIGEST_BASE_S              (AHB2PERIPH_BASE_S + 0x000A0710UL)
@@ -1645,6 +1650,7 @@ typedef struct
 /** @addtogroup STM32U3xx_Peripheral_declaration
   * @{
   */
+#define ADC1_COMMON_NS                  ((ADC_Common_TypeDef *) ADC1_COMMON_BASE_NS)
 #define ADC1_NS                         ((ADC_TypeDef *) ADC1_BASE_NS)
 #define ADF1_NS                         ((MDF_TypeDef *) ADF1_BASE_NS)
 #define ADF1_Filter0_NS                 ((MDF_Filter_TypeDef*) ADF1_Filter0_BASE_NS)
@@ -1727,6 +1733,7 @@ typedef struct
 #define DBGMCU                          ((DBGMCU_TypeDef *) DBGMCU_BASE)
 
 #if defined (CPU_IN_SECURE_STATE)
+#define ADC1_COMMON_S                   ((ADC_Common_TypeDef *) ADC1_COMMON_BASE_S)
 #define ADC1_S                          ((ADC_TypeDef *) ADC1_BASE_S)
 #define ADF1_S                          ((MDF_TypeDef *) ADF1_BASE_S)
 #define ADF1_Filter0_S                  ((MDF_Filter_TypeDef*) ADF1_Filter0_BASE_S)
@@ -1813,6 +1820,8 @@ typedef struct
 #define SRAM2_BASE                      SRAM2_BASE_S
 
 /*!< Instance aliases and base addresses for Secure peripherals */
+#define ADC1_COMMON                     ADC1_COMMON_S
+#define ADC1_COMMON_BASE                ADC1_COMMON_BASE_S
 #define ADC1                            ADC1_S
 #define ADC1_BASE                       ADC1_BASE_S
 #define ADF1                            ADF1_S
@@ -1978,6 +1987,8 @@ typedef struct
 #define SRAM2_BASE                      SRAM2_BASE_NS
 
 /*!< Instance aliases and base addresses for Secure peripherals */
+#define ADC1_COMMON                     ADC1_COMMON_NS
+#define ADC1_COMMON_BASE                ADC1_COMMON_BASE_NS
 #define ADC1                            ADC1_NS
 #define ADC1_BASE                       ADC1_BASE_NS
 #define ADF1                            ADF1_NS
@@ -6492,10 +6503,10 @@ typedef struct
 
 /******************  Bits definition for FLASH_WRP1BR register  ***************/
 #define FLASH_WRP1BR_STRT_Pos               (0UL)
-#define FLASH_WRP1BR_STRT_Msk               (0x7FUL << FLASH_WRP1BR_STRT_Pos)       /*!< 0x0000007F */
+#define FLASH_WRP1BR_STRT_Msk               (0x1FUL << FLASH_WRP1BR_STRT_Pos)       /*!< 0x0000001F */
 #define FLASH_WRP1BR_STRT                   FLASH_WRP1BR_STRT_Msk                   /*!< Bank 1 WRP second area B start page */
 #define FLASH_WRP1BR_END_Pos                (16UL)
-#define FLASH_WRP1BR_END_Msk                (0x7FUL << FLASH_WRP1BR_END_Pos)        /*!< 0x007F0000 */
+#define FLASH_WRP1BR_END_Msk                (0x1FUL << FLASH_WRP1BR_END_Pos)        /*!< 0x001F0000 */
 #define FLASH_WRP1BR_END                    FLASH_WRP1BR_END_Msk                    /*!< Bank 1 WRP second area B end page */
 #define FLASH_WRP1BR_UNLOCK_Pos             (31UL)
 #define FLASH_WRP1BR_UNLOCK_Msk             (0x1UL << FLASH_WRP1BR_UNLOCK_Pos)      /*!< 0x80000000 */
@@ -6503,15 +6514,15 @@ typedef struct
 
 /*****************  Bits definition for FLASH_SECWM2R1 register  **************/
 #define FLASH_SECWM2R1_SECWM2_STRT_Pos      (0UL)
-#define FLASH_SECWM2R1_SECWM2_STRT_Msk      (0x7FUL << FLASH_SECWM2R1_SECWM2_STRT_Pos) /*!< 0x0000007F */
+#define FLASH_SECWM2R1_SECWM2_STRT_Msk      (0x1FUL << FLASH_SECWM2R1_SECWM2_STRT_Pos) /*!< 0x0000001F */
 #define FLASH_SECWM2R1_SECWM2_STRT          FLASH_SECWM2R1_SECWM2_STRT_Msk             /*!< Start page of second secure area */
 #define FLASH_SECWM2R1_SECWM2_END_Pos       (16UL)
-#define FLASH_SECWM2R1_SECWM2_END_Msk       (0x7FUL << FLASH_SECWM2R1_SECWM2_END_Pos)  /*!< 0x007F0000 */
+#define FLASH_SECWM2R1_SECWM2_END_Msk       (0x1FUL << FLASH_SECWM2R1_SECWM2_END_Pos)  /*!< 0x001F0000 */
 #define FLASH_SECWM2R1_SECWM2_END           FLASH_SECWM2R1_SECWM2_END_Msk              /*!< End page of second secure area */
 
 /*****************  Bits definition for FLASH_SECWM2R2 register  **************/
 #define FLASH_SECWM2R2_HDP2_END_Pos         (16UL)
-#define FLASH_SECWM2R2_HDP2_END_Msk         (0x7FUL << FLASH_SECWM2R2_HDP2_END_Pos) /*!< 0x007F0000 */
+#define FLASH_SECWM2R2_HDP2_END_Msk         (0x1FUL << FLASH_SECWM2R2_HDP2_END_Pos) /*!< 0x001F0000 */
 #define FLASH_SECWM2R2_HDP2_END             FLASH_SECWM2R2_HDP2_END_Msk             /*!< End page of hide protection second area */
 #define FLASH_SECWM2R2_HDP2EN_Pos           (24UL)
 #define FLASH_SECWM2R2_HDP2EN_Msk           (0xFFUL << FLASH_SECWM2R2_HDP2EN_Pos)   /*!< 0xFF000000 */
@@ -6519,10 +6530,10 @@ typedef struct
 
 /******************  Bits definition for FLASH_WRP2AR register  ***************/
 #define FLASH_WRP2AR_STRT_Pos               (0UL)
-#define FLASH_WRP2AR_STRT_Msk               (0x7FUL << FLASH_WRP2AR_STRT_Pos)       /*!< 0x0000007F */
+#define FLASH_WRP2AR_STRT_Msk               (0x1FUL << FLASH_WRP2AR_STRT_Pos)       /*!< 0x0000001F */
 #define FLASH_WRP2AR_STRT                   FLASH_WRP2AR_STRT_Msk                   /*!< Bank 2 WPR first area A start page */
 #define FLASH_WRP2AR_END_Pos                (16UL)
-#define FLASH_WRP2AR_END_Msk                (0x7FUL << FLASH_WRP2AR_END_Pos)        /*!< 0x007F0000 */
+#define FLASH_WRP2AR_END_Msk                (0x1FUL << FLASH_WRP2AR_END_Pos)        /*!< 0x001F0000 */
 #define FLASH_WRP2AR_END                    FLASH_WRP2AR_END_Msk                    /*!< Bank 2 WPR first area A end page */
 #define FLASH_WRP2AR_UNLOCK_Pos             (31UL)
 #define FLASH_WRP2AR_UNLOCK_Msk             (0x1UL << FLASH_WRP2AR_UNLOCK_Pos)      /*!< 0x80000000 */
@@ -6530,10 +6541,10 @@ typedef struct
 
 /******************  Bits definition for FLASH_WRP2BR register  ***************/
 #define FLASH_WRP2BR_STRT_Pos               (0UL)
-#define FLASH_WRP2BR_STRT_Msk               (0x7FUL << FLASH_WRP2BR_STRT_Pos)       /*!< 0x0000007F */
+#define FLASH_WRP2BR_STRT_Msk               (0x1FUL << FLASH_WRP2BR_STRT_Pos)       /*!< 0x0000001F */
 #define FLASH_WRP2BR_STRT                   FLASH_WRP2BR_STRT_Msk                   /*!< Bank 2 WPR second area B start page */
 #define FLASH_WRP2BR_END_Pos                (16UL)
-#define FLASH_WRP2BR_END_Msk                (0x7FUL << FLASH_WRP2BR_END_Pos)        /*!< 0x007F0000 */
+#define FLASH_WRP2BR_END_Msk                (0x1FUL << FLASH_WRP2BR_END_Pos)        /*!< 0x001F0000 */
 #define FLASH_WRP2BR_END                    FLASH_WRP2BR_END_Msk                    /*!< Bank 2 WPR second area B end page */
 #define FLASH_WRP2BR_UNLOCK_Pos             (31UL)
 #define FLASH_WRP2BR_UNLOCK_Msk             (0x1UL << FLASH_WRP2BR_UNLOCK_Pos)      /*!< 0x80000000 */
@@ -6637,299 +6648,6 @@ typedef struct
 #define FLASH_SECBB1R1_SEC31_Msk                  (0x1UL << FLASH_SECBB1R1_SEC31_Pos)           /*!< 0x80000000 */
 #define FLASH_SECBB1R1_SEC31                      FLASH_SECBB1R1_SEC31_Msk                      /*!< Page 31 in bank 1 block-based secure */
 
-/*******************  Bit definition for FLASH_SECBB1R2 register  ******************/
-#define FLASH_SECBB1R2_SEC0_Pos                   (0UL)
-#define FLASH_SECBB1R2_SEC0_Msk                   (0x1UL << FLASH_SECBB1R2_SEC0_Pos)            /*!< 0x00000001 */
-#define FLASH_SECBB1R2_SEC0                       FLASH_SECBB1R2_SEC0_Msk                       /*!< Page 32 in bank 1 block-based secure */
-#define FLASH_SECBB1R2_SEC1_Pos                   (1UL)
-#define FLASH_SECBB1R2_SEC1_Msk                   (0x1UL << FLASH_SECBB1R2_SEC1_Pos)            /*!< 0x00000002 */
-#define FLASH_SECBB1R2_SEC1                       FLASH_SECBB1R2_SEC1_Msk                       /*!< Page 33 in bank 1 block-based secure */
-#define FLASH_SECBB1R2_SEC2_Pos                   (2UL)
-#define FLASH_SECBB1R2_SEC2_Msk                   (0x1UL << FLASH_SECBB1R2_SEC2_Pos)            /*!< 0x00000004 */
-#define FLASH_SECBB1R2_SEC2                       FLASH_SECBB1R2_SEC2_Msk                       /*!< Page 34 in bank 1 block-based secure */
-#define FLASH_SECBB1R2_SEC3_Pos                   (3UL)
-#define FLASH_SECBB1R2_SEC3_Msk                   (0x1UL << FLASH_SECBB1R2_SEC3_Pos)            /*!< 0x00000008 */
-#define FLASH_SECBB1R2_SEC3                       FLASH_SECBB1R2_SEC3_Msk                       /*!< Page 35 in bank 1 block-based secure */
-#define FLASH_SECBB1R2_SEC4_Pos                   (4UL)
-#define FLASH_SECBB1R2_SEC4_Msk                   (0x1UL << FLASH_SECBB1R2_SEC4_Pos)            /*!< 0x00000010 */
-#define FLASH_SECBB1R2_SEC4                       FLASH_SECBB1R2_SEC4_Msk                       /*!< Page 36 in bank 1 block-based secure */
-#define FLASH_SECBB1R2_SEC5_Pos                   (5UL)
-#define FLASH_SECBB1R2_SEC5_Msk                   (0x1UL << FLASH_SECBB1R2_SEC5_Pos)            /*!< 0x00000020 */
-#define FLASH_SECBB1R2_SEC5                       FLASH_SECBB1R2_SEC5_Msk                       /*!< Page 37 in bank 1 block-based secure */
-#define FLASH_SECBB1R2_SEC6_Pos                   (6UL)
-#define FLASH_SECBB1R2_SEC6_Msk                   (0x1UL << FLASH_SECBB1R2_SEC6_Pos)            /*!< 0x00000040 */
-#define FLASH_SECBB1R2_SEC6                       FLASH_SECBB1R2_SEC6_Msk                       /*!< Page 38 in bank 1 block-based secure */
-#define FLASH_SECBB1R2_SEC7_Pos                   (7UL)
-#define FLASH_SECBB1R2_SEC7_Msk                   (0x1UL << FLASH_SECBB1R2_SEC7_Pos)            /*!< 0x00000080 */
-#define FLASH_SECBB1R2_SEC7                       FLASH_SECBB1R2_SEC7_Msk                       /*!< Page 39 in bank 1 block-based secure */
-#define FLASH_SECBB1R2_SEC8_Pos                   (8UL)
-#define FLASH_SECBB1R2_SEC8_Msk                   (0x1UL << FLASH_SECBB1R2_SEC8_Pos)            /*!< 0x00000100 */
-#define FLASH_SECBB1R2_SEC8                       FLASH_SECBB1R2_SEC8_Msk                       /*!< Page 40 in bank 1 block-based secure */
-#define FLASH_SECBB1R2_SEC9_Pos                   (9UL)
-#define FLASH_SECBB1R2_SEC9_Msk                   (0x1UL << FLASH_SECBB1R2_SEC9_Pos)            /*!< 0x00000200 */
-#define FLASH_SECBB1R2_SEC9                       FLASH_SECBB1R2_SEC9_Msk                       /*!< Page 41 in bank 1 block-based secure */
-#define FLASH_SECBB1R2_SEC10_Pos                  (10UL)
-#define FLASH_SECBB1R2_SEC10_Msk                  (0x1UL << FLASH_SECBB1R2_SEC10_Pos)           /*!< 0x00000400 */
-#define FLASH_SECBB1R2_SEC10                      FLASH_SECBB1R2_SEC10_Msk                      /*!< Page 42 in bank 1 block-based secure */
-#define FLASH_SECBB1R2_SEC11_Pos                  (11UL)
-#define FLASH_SECBB1R2_SEC11_Msk                  (0x1UL << FLASH_SECBB1R2_SEC11_Pos)           /*!< 0x00000800 */
-#define FLASH_SECBB1R2_SEC11                      FLASH_SECBB1R2_SEC11_Msk                      /*!< Page 43 in bank 1 block-based secure */
-#define FLASH_SECBB1R2_SEC12_Pos                  (12UL)
-#define FLASH_SECBB1R2_SEC12_Msk                  (0x1UL << FLASH_SECBB1R2_SEC12_Pos)           /*!< 0x00001000 */
-#define FLASH_SECBB1R2_SEC12                      FLASH_SECBB1R2_SEC12_Msk                      /*!< Page 44 in bank 1 block-based secure */
-#define FLASH_SECBB1R2_SEC13_Pos                  (13UL)
-#define FLASH_SECBB1R2_SEC13_Msk                  (0x1UL << FLASH_SECBB1R2_SEC13_Pos)           /*!< 0x00002000 */
-#define FLASH_SECBB1R2_SEC13                      FLASH_SECBB1R2_SEC13_Msk                      /*!< Page 45 in bank 1 block-based secure */
-#define FLASH_SECBB1R2_SEC14_Pos                  (14UL)
-#define FLASH_SECBB1R2_SEC14_Msk                  (0x1UL << FLASH_SECBB1R2_SEC14_Pos)           /*!< 0x00004000 */
-#define FLASH_SECBB1R2_SEC14                      FLASH_SECBB1R2_SEC14_Msk                      /*!< Page 46 in bank 1 block-based secure */
-#define FLASH_SECBB1R2_SEC15_Pos                  (15UL)
-#define FLASH_SECBB1R2_SEC15_Msk                  (0x1UL << FLASH_SECBB1R2_SEC15_Pos)           /*!< 0x00008000 */
-#define FLASH_SECBB1R2_SEC15                      FLASH_SECBB1R2_SEC15_Msk                      /*!< Page 47 in bank 1 block-based secure */
-#define FLASH_SECBB1R2_SEC16_Pos                  (16UL)
-#define FLASH_SECBB1R2_SEC16_Msk                  (0x1UL << FLASH_SECBB1R2_SEC16_Pos)           /*!< 0x00010000 */
-#define FLASH_SECBB1R2_SEC16                      FLASH_SECBB1R2_SEC16_Msk                      /*!< Page 48 in bank 1 block-based secure */
-#define FLASH_SECBB1R2_SEC17_Pos                  (17UL)
-#define FLASH_SECBB1R2_SEC17_Msk                  (0x1UL << FLASH_SECBB1R2_SEC17_Pos)           /*!< 0x00020000 */
-#define FLASH_SECBB1R2_SEC17                      FLASH_SECBB1R2_SEC17_Msk                      /*!< Page 49 in bank 1 block-based secure */
-#define FLASH_SECBB1R2_SEC18_Pos                  (18UL)
-#define FLASH_SECBB1R2_SEC18_Msk                  (0x1UL << FLASH_SECBB1R2_SEC18_Pos)           /*!< 0x00040000 */
-#define FLASH_SECBB1R2_SEC18                      FLASH_SECBB1R2_SEC18_Msk                      /*!< Page 50 in bank 1 block-based secure */
-#define FLASH_SECBB1R2_SEC19_Pos                  (19UL)
-#define FLASH_SECBB1R2_SEC19_Msk                  (0x1UL << FLASH_SECBB1R2_SEC19_Pos)           /*!< 0x00080000 */
-#define FLASH_SECBB1R2_SEC19                      FLASH_SECBB1R2_SEC19_Msk                      /*!< Page 51 in bank 1 block-based secure */
-#define FLASH_SECBB1R2_SEC20_Pos                  (20UL)
-#define FLASH_SECBB1R2_SEC20_Msk                  (0x1UL << FLASH_SECBB1R2_SEC20_Pos)           /*!< 0x00100000 */
-#define FLASH_SECBB1R2_SEC20                      FLASH_SECBB1R2_SEC20_Msk                      /*!< Page 52 in bank 1 block-based secure */
-#define FLASH_SECBB1R2_SEC21_Pos                  (21UL)
-#define FLASH_SECBB1R2_SEC21_Msk                  (0x1UL << FLASH_SECBB1R2_SEC21_Pos)           /*!< 0x00200000 */
-#define FLASH_SECBB1R2_SEC21                      FLASH_SECBB1R2_SEC21_Msk                      /*!< Page 53 in bank 1 block-based secure */
-#define FLASH_SECBB1R2_SEC22_Pos                  (22UL)
-#define FLASH_SECBB1R2_SEC22_Msk                  (0x1UL << FLASH_SECBB1R2_SEC22_Pos)           /*!< 0x00400000 */
-#define FLASH_SECBB1R2_SEC22                      FLASH_SECBB1R2_SEC22_Msk                      /*!< Page 54 in bank 1 block-based secure */
-#define FLASH_SECBB1R2_SEC23_Pos                  (23UL)
-#define FLASH_SECBB1R2_SEC23_Msk                  (0x1UL << FLASH_SECBB1R2_SEC23_Pos)           /*!< 0x00800000 */
-#define FLASH_SECBB1R2_SEC23                      FLASH_SECBB1R2_SEC23_Msk                      /*!< Page 55 in bank 1 block-based secure */
-#define FLASH_SECBB1R2_SEC24_Pos                  (24UL)
-#define FLASH_SECBB1R2_SEC24_Msk                  (0x1UL << FLASH_SECBB1R2_SEC24_Pos)           /*!< 0x01000000 */
-#define FLASH_SECBB1R2_SEC24                      FLASH_SECBB1R2_SEC24_Msk                      /*!< Page 56 in bank 1 block-based secure */
-#define FLASH_SECBB1R2_SEC25_Pos                  (25UL)
-#define FLASH_SECBB1R2_SEC25_Msk                  (0x1UL << FLASH_SECBB1R2_SEC25_Pos)           /*!< 0x02000000 */
-#define FLASH_SECBB1R2_SEC25                      FLASH_SECBB1R2_SEC25_Msk                      /*!< Page 57 in bank 1 block-based secure */
-#define FLASH_SECBB1R2_SEC26_Pos                  (26UL)
-#define FLASH_SECBB1R2_SEC26_Msk                  (0x1UL << FLASH_SECBB1R2_SEC26_Pos)           /*!< 0x04000000 */
-#define FLASH_SECBB1R2_SEC26                      FLASH_SECBB1R2_SEC26_Msk                      /*!< Page 58 in bank 1 block-based secure */
-#define FLASH_SECBB1R2_SEC27_Pos                  (27UL)
-#define FLASH_SECBB1R2_SEC27_Msk                  (0x1UL << FLASH_SECBB1R2_SEC27_Pos)           /*!< 0x08000000 */
-#define FLASH_SECBB1R2_SEC27                      FLASH_SECBB1R2_SEC27_Msk                      /*!< Page 59 in bank 1 block-based secure */
-#define FLASH_SECBB1R2_SEC28_Pos                  (28UL)
-#define FLASH_SECBB1R2_SEC28_Msk                  (0x1UL << FLASH_SECBB1R2_SEC28_Pos)           /*!< 0x10000000 */
-#define FLASH_SECBB1R2_SEC28                      FLASH_SECBB1R2_SEC28_Msk                      /*!< Page 60 in bank 1 block-based secure */
-#define FLASH_SECBB1R2_SEC29_Pos                  (29UL)
-#define FLASH_SECBB1R2_SEC29_Msk                  (0x1UL << FLASH_SECBB1R2_SEC29_Pos)           /*!< 0x20000000 */
-#define FLASH_SECBB1R2_SEC29                      FLASH_SECBB1R2_SEC29_Msk                      /*!< Page 61 in bank 1 block-based secure */
-#define FLASH_SECBB1R2_SEC30_Pos                  (30UL)
-#define FLASH_SECBB1R2_SEC30_Msk                  (0x1UL << FLASH_SECBB1R2_SEC30_Pos)           /*!< 0x40000000 */
-#define FLASH_SECBB1R2_SEC30                      FLASH_SECBB1R2_SEC30_Msk                      /*!< Page 62 in bank 1 block-based secure */
-#define FLASH_SECBB1R2_SEC31_Pos                  (31UL)
-#define FLASH_SECBB1R2_SEC31_Msk                  (0x1UL << FLASH_SECBB1R2_SEC31_Pos)           /*!< 0x80000000 */
-#define FLASH_SECBB1R2_SEC31                      FLASH_SECBB1R2_SEC31_Msk                      /*!< Page 63 in bank 1 block-based secure */
-
-/*******************  Bit definition for FLASH_SECBB1R3 register  ******************/
-#define FLASH_SECBB1R3_SEC0_Pos                   (0UL)
-#define FLASH_SECBB1R3_SEC0_Msk                   (0x1UL << FLASH_SECBB1R3_SEC0_Pos)            /*!< 0x00000001 */
-#define FLASH_SECBB1R3_SEC0                       FLASH_SECBB1R3_SEC0_Msk                       /*!< Page 64 in bank 1 block-based secure */
-#define FLASH_SECBB1R3_SEC1_Pos                   (1UL)
-#define FLASH_SECBB1R3_SEC1_Msk                   (0x1UL << FLASH_SECBB1R3_SEC1_Pos)            /*!< 0x00000002 */
-#define FLASH_SECBB1R3_SEC1                       FLASH_SECBB1R3_SEC1_Msk                       /*!< Page 65 in bank 1 block-based secure */
-#define FLASH_SECBB1R3_SEC2_Pos                   (2UL)
-#define FLASH_SECBB1R3_SEC2_Msk                   (0x1UL << FLASH_SECBB1R3_SEC2_Pos)            /*!< 0x00000004 */
-#define FLASH_SECBB1R3_SEC2                       FLASH_SECBB1R3_SEC2_Msk                       /*!< Page 66 in bank 1 block-based secure */
-#define FLASH_SECBB1R3_SEC3_Pos                   (3UL)
-#define FLASH_SECBB1R3_SEC3_Msk                   (0x1UL << FLASH_SECBB1R3_SEC3_Pos)            /*!< 0x00000008 */
-#define FLASH_SECBB1R3_SEC3                       FLASH_SECBB1R3_SEC3_Msk                       /*!< Page 67 in bank 1 block-based secure */
-#define FLASH_SECBB1R3_SEC4_Pos                   (4UL)
-#define FLASH_SECBB1R3_SEC4_Msk                   (0x1UL << FLASH_SECBB1R3_SEC4_Pos)            /*!< 0x00000010 */
-#define FLASH_SECBB1R3_SEC4                       FLASH_SECBB1R3_SEC4_Msk                       /*!< Page 68 in bank 1 block-based secure */
-#define FLASH_SECBB1R3_SEC5_Pos                   (5UL)
-#define FLASH_SECBB1R3_SEC5_Msk                   (0x1UL << FLASH_SECBB1R3_SEC5_Pos)            /*!< 0x00000020 */
-#define FLASH_SECBB1R3_SEC5                       FLASH_SECBB1R3_SEC5_Msk                       /*!< Page 69 in bank 1 block-based secure */
-#define FLASH_SECBB1R3_SEC6_Pos                   (6UL)
-#define FLASH_SECBB1R3_SEC6_Msk                   (0x1UL << FLASH_SECBB1R3_SEC6_Pos)            /*!< 0x00000040 */
-#define FLASH_SECBB1R3_SEC6                       FLASH_SECBB1R3_SEC6_Msk                       /*!< Page 70 in bank 1 block-based secure */
-#define FLASH_SECBB1R3_SEC7_Pos                   (7UL)
-#define FLASH_SECBB1R3_SEC7_Msk                   (0x1UL << FLASH_SECBB1R3_SEC7_Pos)            /*!< 0x00000080 */
-#define FLASH_SECBB1R3_SEC7                       FLASH_SECBB1R3_SEC7_Msk                       /*!< Page 71 in bank 1 block-based secure */
-#define FLASH_SECBB1R3_SEC8_Pos                   (8UL)
-#define FLASH_SECBB1R3_SEC8_Msk                   (0x1UL << FLASH_SECBB1R3_SEC8_Pos)            /*!< 0x00000100 */
-#define FLASH_SECBB1R3_SEC8                       FLASH_SECBB1R3_SEC8_Msk                       /*!< Page 72 in bank 1 block-based secure */
-#define FLASH_SECBB1R3_SEC9_Pos                   (9UL)
-#define FLASH_SECBB1R3_SEC9_Msk                   (0x1UL << FLASH_SECBB1R3_SEC9_Pos)            /*!< 0x00000200 */
-#define FLASH_SECBB1R3_SEC9                       FLASH_SECBB1R3_SEC9_Msk                       /*!< Page 73 in bank 1 block-based secure */
-#define FLASH_SECBB1R3_SEC10_Pos                  (10UL)
-#define FLASH_SECBB1R3_SEC10_Msk                  (0x1UL << FLASH_SECBB1R3_SEC10_Pos)           /*!< 0x00000400 */
-#define FLASH_SECBB1R3_SEC10                      FLASH_SECBB1R3_SEC10_Msk                      /*!< Page 74 in bank 1 block-based secure */
-#define FLASH_SECBB1R3_SEC11_Pos                  (11UL)
-#define FLASH_SECBB1R3_SEC11_Msk                  (0x1UL << FLASH_SECBB1R3_SEC11_Pos)           /*!< 0x00000800 */
-#define FLASH_SECBB1R3_SEC11                      FLASH_SECBB1R3_SEC11_Msk                      /*!< Page 75 in bank 1 block-based secure */
-#define FLASH_SECBB1R3_SEC12_Pos                  (12UL)
-#define FLASH_SECBB1R3_SEC12_Msk                  (0x1UL << FLASH_SECBB1R3_SEC12_Pos)           /*!< 0x00001000 */
-#define FLASH_SECBB1R3_SEC12                      FLASH_SECBB1R3_SEC12_Msk                      /*!< Page 76 in bank 1 block-based secure */
-#define FLASH_SECBB1R3_SEC13_Pos                  (13UL)
-#define FLASH_SECBB1R3_SEC13_Msk                  (0x1UL << FLASH_SECBB1R3_SEC13_Pos)           /*!< 0x00002000 */
-#define FLASH_SECBB1R3_SEC13                      FLASH_SECBB1R3_SEC13_Msk                      /*!< Page 77 in bank 1 block-based secure */
-#define FLASH_SECBB1R3_SEC14_Pos                  (14UL)
-#define FLASH_SECBB1R3_SEC14_Msk                  (0x1UL << FLASH_SECBB1R3_SEC14_Pos)           /*!< 0x00004000 */
-#define FLASH_SECBB1R3_SEC14                      FLASH_SECBB1R3_SEC14_Msk                      /*!< Page 78 in bank 1 block-based secure */
-#define FLASH_SECBB1R3_SEC15_Pos                  (15UL)
-#define FLASH_SECBB1R3_SEC15_Msk                  (0x1UL << FLASH_SECBB1R3_SEC15_Pos)           /*!< 0x00008000 */
-#define FLASH_SECBB1R3_SEC15                      FLASH_SECBB1R3_SEC15_Msk                      /*!< Page 79 in bank 1 block-based secure */
-#define FLASH_SECBB1R3_SEC16_Pos                  (16UL)
-#define FLASH_SECBB1R3_SEC16_Msk                  (0x1UL << FLASH_SECBB1R3_SEC16_Pos)           /*!< 0x00010000 */
-#define FLASH_SECBB1R3_SEC16                      FLASH_SECBB1R3_SEC16_Msk                      /*!< Page 80 in bank 1 block-based secure */
-#define FLASH_SECBB1R3_SEC17_Pos                  (17UL)
-#define FLASH_SECBB1R3_SEC17_Msk                  (0x1UL << FLASH_SECBB1R3_SEC17_Pos)           /*!< 0x00020000 */
-#define FLASH_SECBB1R3_SEC17                      FLASH_SECBB1R3_SEC17_Msk                      /*!< Page 81 in bank 1 block-based secure */
-#define FLASH_SECBB1R3_SEC18_Pos                  (18UL)
-#define FLASH_SECBB1R3_SEC18_Msk                  (0x1UL << FLASH_SECBB1R3_SEC18_Pos)           /*!< 0x00040000 */
-#define FLASH_SECBB1R3_SEC18                      FLASH_SECBB1R3_SEC18_Msk                      /*!< Page 82 in bank 1 block-based secure */
-#define FLASH_SECBB1R3_SEC19_Pos                  (19UL)
-#define FLASH_SECBB1R3_SEC19_Msk                  (0x1UL << FLASH_SECBB1R3_SEC19_Pos)           /*!< 0x00080000 */
-#define FLASH_SECBB1R3_SEC19                      FLASH_SECBB1R3_SEC19_Msk                      /*!< Page 83 in bank 1 block-based secure */
-#define FLASH_SECBB1R3_SEC20_Pos                  (20UL)
-#define FLASH_SECBB1R3_SEC20_Msk                  (0x1UL << FLASH_SECBB1R3_SEC20_Pos)           /*!< 0x00100000 */
-#define FLASH_SECBB1R3_SEC20                      FLASH_SECBB1R3_SEC20_Msk                      /*!< Page 84 in bank 1 block-based secure */
-#define FLASH_SECBB1R3_SEC21_Pos                  (21UL)
-#define FLASH_SECBB1R3_SEC21_Msk                  (0x1UL << FLASH_SECBB1R3_SEC21_Pos)           /*!< 0x00200000 */
-#define FLASH_SECBB1R3_SEC21                      FLASH_SECBB1R3_SEC21_Msk                      /*!< Page 85 in bank 1 block-based secure */
-#define FLASH_SECBB1R3_SEC22_Pos                  (22UL)
-#define FLASH_SECBB1R3_SEC22_Msk                  (0x1UL << FLASH_SECBB1R3_SEC22_Pos)           /*!< 0x00400000 */
-#define FLASH_SECBB1R3_SEC22                      FLASH_SECBB1R3_SEC22_Msk                      /*!< Page 86 in bank 1 block-based secure */
-#define FLASH_SECBB1R3_SEC23_Pos                  (23UL)
-#define FLASH_SECBB1R3_SEC23_Msk                  (0x1UL << FLASH_SECBB1R3_SEC23_Pos)           /*!< 0x00800000 */
-#define FLASH_SECBB1R3_SEC23                      FLASH_SECBB1R3_SEC23_Msk                      /*!< Page 87 in bank 1 block-based secure */
-#define FLASH_SECBB1R3_SEC24_Pos                  (24UL)
-#define FLASH_SECBB1R3_SEC24_Msk                  (0x1UL << FLASH_SECBB1R3_SEC24_Pos)           /*!< 0x01000000 */
-#define FLASH_SECBB1R3_SEC24                      FLASH_SECBB1R3_SEC24_Msk                      /*!< Page 88 in bank 1 block-based secure */
-#define FLASH_SECBB1R3_SEC25_Pos                  (25UL)
-#define FLASH_SECBB1R3_SEC25_Msk                  (0x1UL << FLASH_SECBB1R3_SEC25_Pos)           /*!< 0x02000000 */
-#define FLASH_SECBB1R3_SEC25                      FLASH_SECBB1R3_SEC25_Msk                      /*!< Page 89 in bank 1 block-based secure */
-#define FLASH_SECBB1R3_SEC26_Pos                  (26UL)
-#define FLASH_SECBB1R3_SEC26_Msk                  (0x1UL << FLASH_SECBB1R3_SEC26_Pos)           /*!< 0x04000000 */
-#define FLASH_SECBB1R3_SEC26                      FLASH_SECBB1R3_SEC26_Msk                      /*!< Page 90 in bank 1 block-based secure */
-#define FLASH_SECBB1R3_SEC27_Pos                  (27UL)
-#define FLASH_SECBB1R3_SEC27_Msk                  (0x1UL << FLASH_SECBB1R3_SEC27_Pos)           /*!< 0x08000000 */
-#define FLASH_SECBB1R3_SEC27                      FLASH_SECBB1R3_SEC27_Msk                      /*!< Page 91 in bank 1 block-based secure */
-#define FLASH_SECBB1R3_SEC28_Pos                  (28UL)
-#define FLASH_SECBB1R3_SEC28_Msk                  (0x1UL << FLASH_SECBB1R3_SEC28_Pos)           /*!< 0x10000000 */
-#define FLASH_SECBB1R3_SEC28                      FLASH_SECBB1R3_SEC28_Msk                      /*!< Page 92 in bank 1 block-based secure */
-#define FLASH_SECBB1R3_SEC29_Pos                  (29UL)
-#define FLASH_SECBB1R3_SEC29_Msk                  (0x1UL << FLASH_SECBB1R3_SEC29_Pos)           /*!< 0x20000000 */
-#define FLASH_SECBB1R3_SEC29                      FLASH_SECBB1R3_SEC29_Msk                      /*!< Page 93 in bank 1 block-based secure */
-#define FLASH_SECBB1R3_SEC30_Pos                  (30UL)
-#define FLASH_SECBB1R3_SEC30_Msk                  (0x1UL << FLASH_SECBB1R3_SEC30_Pos)           /*!< 0x40000000 */
-#define FLASH_SECBB1R3_SEC30                      FLASH_SECBB1R3_SEC30_Msk                      /*!< Page 94 in bank 1 block-based secure */
-#define FLASH_SECBB1R3_SEC31_Pos                  (31UL)
-#define FLASH_SECBB1R3_SEC31_Msk                  (0x1UL << FLASH_SECBB1R3_SEC31_Pos)           /*!< 0x80000000 */
-#define FLASH_SECBB1R3_SEC31                      FLASH_SECBB1R3_SEC31_Msk                      /*!< Page 95 in bank 1 block-based secure */
-
-/*******************  Bit definition for FLASH_SECBB1R4 register  ******************/
-#define FLASH_SECBB1R4_SEC0_Pos                   (0UL)
-#define FLASH_SECBB1R4_SEC0_Msk                   (0x1UL << FLASH_SECBB1R4_SEC0_Pos)            /*!< 0x00000001 */
-#define FLASH_SECBB1R4_SEC0                       FLASH_SECBB1R4_SEC0_Msk                       /*!< Page 96 in bank 1 block-based secure */
-#define FLASH_SECBB1R4_SEC1_Pos                   (1UL)
-#define FLASH_SECBB1R4_SEC1_Msk                   (0x1UL << FLASH_SECBB1R4_SEC1_Pos)            /*!< 0x00000002 */
-#define FLASH_SECBB1R4_SEC1                       FLASH_SECBB1R4_SEC1_Msk                       /*!< Page 97 in bank 1 block-based secure */
-#define FLASH_SECBB1R4_SEC2_Pos                   (2UL)
-#define FLASH_SECBB1R4_SEC2_Msk                   (0x1UL << FLASH_SECBB1R4_SEC2_Pos)            /*!< 0x00000004 */
-#define FLASH_SECBB1R4_SEC2                       FLASH_SECBB1R4_SEC2_Msk                       /*!< Page 98 in bank 1 block-based secure */
-#define FLASH_SECBB1R4_SEC3_Pos                   (3UL)
-#define FLASH_SECBB1R4_SEC3_Msk                   (0x1UL << FLASH_SECBB1R4_SEC3_Pos)            /*!< 0x00000008 */
-#define FLASH_SECBB1R4_SEC3                       FLASH_SECBB1R4_SEC3_Msk                       /*!< Page 99 in bank 1 block-based secure */
-#define FLASH_SECBB1R4_SEC4_Pos                   (4UL)
-#define FLASH_SECBB1R4_SEC4_Msk                   (0x1UL << FLASH_SECBB1R4_SEC4_Pos)            /*!< 0x00000010 */
-#define FLASH_SECBB1R4_SEC4                       FLASH_SECBB1R4_SEC4_Msk                       /*!< Page 100 in bank 1 block-based secure */
-#define FLASH_SECBB1R4_SEC5_Pos                   (5UL)
-#define FLASH_SECBB1R4_SEC5_Msk                   (0x1UL << FLASH_SECBB1R4_SEC5_Pos)            /*!< 0x00000020 */
-#define FLASH_SECBB1R4_SEC5                       FLASH_SECBB1R4_SEC5_Msk                       /*!< Page 101 in bank 1 block-based secure */
-#define FLASH_SECBB1R4_SEC6_Pos                   (6UL)
-#define FLASH_SECBB1R4_SEC6_Msk                   (0x1UL << FLASH_SECBB1R4_SEC6_Pos)            /*!< 0x00000040 */
-#define FLASH_SECBB1R4_SEC6                       FLASH_SECBB1R4_SEC6_Msk                       /*!< Page 102 in bank 1 block-based secure */
-#define FLASH_SECBB1R4_SEC7_Pos                   (7UL)
-#define FLASH_SECBB1R4_SEC7_Msk                   (0x1UL << FLASH_SECBB1R4_SEC7_Pos)            /*!< 0x00000080 */
-#define FLASH_SECBB1R4_SEC7                       FLASH_SECBB1R4_SEC7_Msk                       /*!< Page 103 in bank 1 block-based secure */
-#define FLASH_SECBB1R4_SEC8_Pos                   (8UL)
-#define FLASH_SECBB1R4_SEC8_Msk                   (0x1UL << FLASH_SECBB1R4_SEC8_Pos)            /*!< 0x00000100 */
-#define FLASH_SECBB1R4_SEC8                       FLASH_SECBB1R4_SEC8_Msk                       /*!< Page 104 in bank 1 block-based secure */
-#define FLASH_SECBB1R4_SEC9_Pos                   (9UL)
-#define FLASH_SECBB1R4_SEC9_Msk                   (0x1UL << FLASH_SECBB1R4_SEC9_Pos)            /*!< 0x00000200 */
-#define FLASH_SECBB1R4_SEC9                       FLASH_SECBB1R4_SEC9_Msk                       /*!< Page 105 in bank 1 block-based secure */
-#define FLASH_SECBB1R4_SEC10_Pos                  (10UL)
-#define FLASH_SECBB1R4_SEC10_Msk                  (0x1UL << FLASH_SECBB1R4_SEC10_Pos)           /*!< 0x00000400 */
-#define FLASH_SECBB1R4_SEC10                      FLASH_SECBB1R4_SEC10_Msk                      /*!< Page 106 in bank 1 block-based secure */
-#define FLASH_SECBB1R4_SEC11_Pos                  (11UL)
-#define FLASH_SECBB1R4_SEC11_Msk                  (0x1UL << FLASH_SECBB1R4_SEC11_Pos)           /*!< 0x00000800 */
-#define FLASH_SECBB1R4_SEC11                      FLASH_SECBB1R4_SEC11_Msk                      /*!< Page 107 in bank 1 block-based secure */
-#define FLASH_SECBB1R4_SEC12_Pos                  (12UL)
-#define FLASH_SECBB1R4_SEC12_Msk                  (0x1UL << FLASH_SECBB1R4_SEC12_Pos)           /*!< 0x00001000 */
-#define FLASH_SECBB1R4_SEC12                      FLASH_SECBB1R4_SEC12_Msk                      /*!< Page 108 in bank 1 block-based secure */
-#define FLASH_SECBB1R4_SEC13_Pos                  (13UL)
-#define FLASH_SECBB1R4_SEC13_Msk                  (0x1UL << FLASH_SECBB1R4_SEC13_Pos)           /*!< 0x00002000 */
-#define FLASH_SECBB1R4_SEC13                      FLASH_SECBB1R4_SEC13_Msk                      /*!< Page 109 in bank 1 block-based secure */
-#define FLASH_SECBB1R4_SEC14_Pos                  (14UL)
-#define FLASH_SECBB1R4_SEC14_Msk                  (0x1UL << FLASH_SECBB1R4_SEC14_Pos)           /*!< 0x00004000 */
-#define FLASH_SECBB1R4_SEC14                      FLASH_SECBB1R4_SEC14_Msk                      /*!< Page 110 in bank 1 block-based secure */
-#define FLASH_SECBB1R4_SEC15_Pos                  (15UL)
-#define FLASH_SECBB1R4_SEC15_Msk                  (0x1UL << FLASH_SECBB1R4_SEC15_Pos)           /*!< 0x00008000 */
-#define FLASH_SECBB1R4_SEC15                      FLASH_SECBB1R4_SEC15_Msk                      /*!< Page 111 in bank 1 block-based secure */
-#define FLASH_SECBB1R4_SEC16_Pos                  (16UL)
-#define FLASH_SECBB1R4_SEC16_Msk                  (0x1UL << FLASH_SECBB1R4_SEC16_Pos)           /*!< 0x00010000 */
-#define FLASH_SECBB1R4_SEC16                      FLASH_SECBB1R4_SEC16_Msk                      /*!< Page 112 in bank 1 block-based secure */
-#define FLASH_SECBB1R4_SEC17_Pos                  (17UL)
-#define FLASH_SECBB1R4_SEC17_Msk                  (0x1UL << FLASH_SECBB1R4_SEC17_Pos)           /*!< 0x00020000 */
-#define FLASH_SECBB1R4_SEC17                      FLASH_SECBB1R4_SEC17_Msk                      /*!< Page 113 in bank 1 block-based secure */
-#define FLASH_SECBB1R4_SEC18_Pos                  (18UL)
-#define FLASH_SECBB1R4_SEC18_Msk                  (0x1UL << FLASH_SECBB1R4_SEC18_Pos)           /*!< 0x00040000 */
-#define FLASH_SECBB1R4_SEC18                      FLASH_SECBB1R4_SEC18_Msk                      /*!< Page 114 in bank 1 block-based secure */
-#define FLASH_SECBB1R4_SEC19_Pos                  (19UL)
-#define FLASH_SECBB1R4_SEC19_Msk                  (0x1UL << FLASH_SECBB1R4_SEC19_Pos)           /*!< 0x00080000 */
-#define FLASH_SECBB1R4_SEC19                      FLASH_SECBB1R4_SEC19_Msk                      /*!< Page 115 in bank 1 block-based secure */
-#define FLASH_SECBB1R4_SEC20_Pos                  (20UL)
-#define FLASH_SECBB1R4_SEC20_Msk                  (0x1UL << FLASH_SECBB1R4_SEC20_Pos)           /*!< 0x00100000 */
-#define FLASH_SECBB1R4_SEC20                      FLASH_SECBB1R4_SEC20_Msk                      /*!< Page 116 in bank 1 block-based secure */
-#define FLASH_SECBB1R4_SEC21_Pos                  (21UL)
-#define FLASH_SECBB1R4_SEC21_Msk                  (0x1UL << FLASH_SECBB1R4_SEC21_Pos)           /*!< 0x00200000 */
-#define FLASH_SECBB1R4_SEC21                      FLASH_SECBB1R4_SEC21_Msk                      /*!< Page 117 in bank 1 block-based secure */
-#define FLASH_SECBB1R4_SEC22_Pos                  (22UL)
-#define FLASH_SECBB1R4_SEC22_Msk                  (0x1UL << FLASH_SECBB1R4_SEC22_Pos)           /*!< 0x00400000 */
-#define FLASH_SECBB1R4_SEC22                      FLASH_SECBB1R4_SEC22_Msk                      /*!< Page 118 in bank 1 block-based secure */
-#define FLASH_SECBB1R4_SEC23_Pos                  (23UL)
-#define FLASH_SECBB1R4_SEC23_Msk                  (0x1UL << FLASH_SECBB1R4_SEC23_Pos)           /*!< 0x00800000 */
-#define FLASH_SECBB1R4_SEC23                      FLASH_SECBB1R4_SEC23_Msk                      /*!< Page 119 in bank 1 block-based secure */
-#define FLASH_SECBB1R4_SEC24_Pos                  (24UL)
-#define FLASH_SECBB1R4_SEC24_Msk                  (0x1UL << FLASH_SECBB1R4_SEC24_Pos)           /*!< 0x01000000 */
-#define FLASH_SECBB1R4_SEC24                      FLASH_SECBB1R4_SEC24_Msk                      /*!< Page 120 in bank 1 block-based secure */
-#define FLASH_SECBB1R4_SEC25_Pos                  (25UL)
-#define FLASH_SECBB1R4_SEC25_Msk                  (0x1UL << FLASH_SECBB1R4_SEC25_Pos)           /*!< 0x02000000 */
-#define FLASH_SECBB1R4_SEC25                      FLASH_SECBB1R4_SEC25_Msk                      /*!< Page 121 in bank 1 block-based secure */
-#define FLASH_SECBB1R4_SEC26_Pos                  (26UL)
-#define FLASH_SECBB1R4_SEC26_Msk                  (0x1UL << FLASH_SECBB1R4_SEC26_Pos)           /*!< 0x04000000 */
-#define FLASH_SECBB1R4_SEC26                      FLASH_SECBB1R4_SEC26_Msk                      /*!< Page 122 in bank 1 block-based secure */
-#define FLASH_SECBB1R4_SEC27_Pos                  (27UL)
-#define FLASH_SECBB1R4_SEC27_Msk                  (0x1UL << FLASH_SECBB1R4_SEC27_Pos)           /*!< 0x08000000 */
-#define FLASH_SECBB1R4_SEC27                      FLASH_SECBB1R4_SEC27_Msk                      /*!< Page 123 in bank 1 block-based secure */
-#define FLASH_SECBB1R4_SEC28_Pos                  (28UL)
-#define FLASH_SECBB1R4_SEC28_Msk                  (0x1UL << FLASH_SECBB1R4_SEC28_Pos)           /*!< 0x10000000 */
-#define FLASH_SECBB1R4_SEC28                      FLASH_SECBB1R4_SEC28_Msk                      /*!< Page 124 in bank 1 block-based secure */
-#define FLASH_SECBB1R4_SEC29_Pos                  (29UL)
-#define FLASH_SECBB1R4_SEC29_Msk                  (0x1UL << FLASH_SECBB1R4_SEC29_Pos)           /*!< 0x20000000 */
-#define FLASH_SECBB1R4_SEC29                      FLASH_SECBB1R4_SEC29_Msk                      /*!< Page 125 in bank 1 block-based secure */
-#define FLASH_SECBB1R4_SEC30_Pos                  (30UL)
-#define FLASH_SECBB1R4_SEC30_Msk                  (0x1UL << FLASH_SECBB1R4_SEC30_Pos)           /*!< 0x40000000 */
-#define FLASH_SECBB1R4_SEC30                      FLASH_SECBB1R4_SEC30_Msk                      /*!< Page 126 in bank 1 block-based secure */
-#define FLASH_SECBB1R4_SEC31_Pos                  (31UL)
-#define FLASH_SECBB1R4_SEC31_Msk                  (0x1UL << FLASH_SECBB1R4_SEC31_Pos)           /*!< 0x80000000 */
-#define FLASH_SECBB1R4_SEC31                      FLASH_SECBB1R4_SEC31_Msk                      /*!< Page 127 in bank 1 block-based secure */
 
 /*******************  Bit definition for FLASH_SECBB2R1 register  ******************/
 #define FLASH_SECBB2R1_SEC0_Pos                   (0UL)
@@ -7029,299 +6747,6 @@ typedef struct
 #define FLASH_SECBB2R1_SEC31_Msk                  (0x1UL << FLASH_SECBB2R1_SEC31_Pos)           /*!< 0x80000000 */
 #define FLASH_SECBB2R1_SEC31                      FLASH_SECBB2R1_SEC31_Msk                      /*!< Page 31 in bank 2 block-based secure */
 
-/*******************  Bit definition for FLASH_SECBB2R2 register  ******************/
-#define FLASH_SECBB2R2_SEC0_Pos                   (0UL)
-#define FLASH_SECBB2R2_SEC0_Msk                   (0x1UL << FLASH_SECBB2R2_SEC0_Pos)            /*!< 0x00000001 */
-#define FLASH_SECBB2R2_SEC0                       FLASH_SECBB2R2_SEC0_Msk                       /*!< Page 32 in bank 2 block-based secure */
-#define FLASH_SECBB2R2_SEC1_Pos                   (1UL)
-#define FLASH_SECBB2R2_SEC1_Msk                   (0x1UL << FLASH_SECBB2R2_SEC1_Pos)            /*!< 0x00000002 */
-#define FLASH_SECBB2R2_SEC1                       FLASH_SECBB2R2_SEC1_Msk                       /*!< Page 33 in bank 2 block-based secure */
-#define FLASH_SECBB2R2_SEC2_Pos                   (2UL)
-#define FLASH_SECBB2R2_SEC2_Msk                   (0x1UL << FLASH_SECBB2R2_SEC2_Pos)            /*!< 0x00000004 */
-#define FLASH_SECBB2R2_SEC2                       FLASH_SECBB2R2_SEC2_Msk                       /*!< Page 34 in bank 2 block-based secure */
-#define FLASH_SECBB2R2_SEC3_Pos                   (3UL)
-#define FLASH_SECBB2R2_SEC3_Msk                   (0x1UL << FLASH_SECBB2R2_SEC3_Pos)            /*!< 0x00000008 */
-#define FLASH_SECBB2R2_SEC3                       FLASH_SECBB2R2_SEC3_Msk                       /*!< Page 35 in bank 2 block-based secure */
-#define FLASH_SECBB2R2_SEC4_Pos                   (4UL)
-#define FLASH_SECBB2R2_SEC4_Msk                   (0x1UL << FLASH_SECBB2R2_SEC4_Pos)            /*!< 0x00000010 */
-#define FLASH_SECBB2R2_SEC4                       FLASH_SECBB2R2_SEC4_Msk                       /*!< Page 36 in bank 2 block-based secure */
-#define FLASH_SECBB2R2_SEC5_Pos                   (5UL)
-#define FLASH_SECBB2R2_SEC5_Msk                   (0x1UL << FLASH_SECBB2R2_SEC5_Pos)            /*!< 0x00000020 */
-#define FLASH_SECBB2R2_SEC5                       FLASH_SECBB2R2_SEC5_Msk                       /*!< Page 37 in bank 2 block-based secure */
-#define FLASH_SECBB2R2_SEC6_Pos                   (6UL)
-#define FLASH_SECBB2R2_SEC6_Msk                   (0x1UL << FLASH_SECBB2R2_SEC6_Pos)            /*!< 0x00000040 */
-#define FLASH_SECBB2R2_SEC6                       FLASH_SECBB2R2_SEC6_Msk                       /*!< Page 38 in bank 2 block-based secure */
-#define FLASH_SECBB2R2_SEC7_Pos                   (7UL)
-#define FLASH_SECBB2R2_SEC7_Msk                   (0x1UL << FLASH_SECBB2R2_SEC7_Pos)            /*!< 0x00000080 */
-#define FLASH_SECBB2R2_SEC7                       FLASH_SECBB2R2_SEC7_Msk                       /*!< Page 39 in bank 2 block-based secure */
-#define FLASH_SECBB2R2_SEC8_Pos                   (8UL)
-#define FLASH_SECBB2R2_SEC8_Msk                   (0x1UL << FLASH_SECBB2R2_SEC8_Pos)            /*!< 0x00000100 */
-#define FLASH_SECBB2R2_SEC8                       FLASH_SECBB2R2_SEC8_Msk                       /*!< Page 40 in bank 2 block-based secure */
-#define FLASH_SECBB2R2_SEC9_Pos                   (9UL)
-#define FLASH_SECBB2R2_SEC9_Msk                   (0x1UL << FLASH_SECBB2R2_SEC9_Pos)            /*!< 0x00000200 */
-#define FLASH_SECBB2R2_SEC9                       FLASH_SECBB2R2_SEC9_Msk                       /*!< Page 41 in bank 2 block-based secure */
-#define FLASH_SECBB2R2_SEC10_Pos                  (10UL)
-#define FLASH_SECBB2R2_SEC10_Msk                  (0x1UL << FLASH_SECBB2R2_SEC10_Pos)           /*!< 0x00000400 */
-#define FLASH_SECBB2R2_SEC10                      FLASH_SECBB2R2_SEC10_Msk                      /*!< Page 42 in bank 2 block-based secure */
-#define FLASH_SECBB2R2_SEC11_Pos                  (11UL)
-#define FLASH_SECBB2R2_SEC11_Msk                  (0x1UL << FLASH_SECBB2R2_SEC11_Pos)           /*!< 0x00000800 */
-#define FLASH_SECBB2R2_SEC11                      FLASH_SECBB2R2_SEC11_Msk                      /*!< Page 43 in bank 2 block-based secure */
-#define FLASH_SECBB2R2_SEC12_Pos                  (12UL)
-#define FLASH_SECBB2R2_SEC12_Msk                  (0x1UL << FLASH_SECBB2R2_SEC12_Pos)           /*!< 0x00001000 */
-#define FLASH_SECBB2R2_SEC12                      FLASH_SECBB2R2_SEC12_Msk                      /*!< Page 44 in bank 2 block-based secure */
-#define FLASH_SECBB2R2_SEC13_Pos                  (13UL)
-#define FLASH_SECBB2R2_SEC13_Msk                  (0x1UL << FLASH_SECBB2R2_SEC13_Pos)           /*!< 0x00002000 */
-#define FLASH_SECBB2R2_SEC13                      FLASH_SECBB2R2_SEC13_Msk                      /*!< Page 45 in bank 2 block-based secure */
-#define FLASH_SECBB2R2_SEC14_Pos                  (14UL)
-#define FLASH_SECBB2R2_SEC14_Msk                  (0x1UL << FLASH_SECBB2R2_SEC14_Pos)           /*!< 0x00004000 */
-#define FLASH_SECBB2R2_SEC14                      FLASH_SECBB2R2_SEC14_Msk                      /*!< Page 46 in bank 2 block-based secure */
-#define FLASH_SECBB2R2_SEC15_Pos                  (15UL)
-#define FLASH_SECBB2R2_SEC15_Msk                  (0x1UL << FLASH_SECBB2R2_SEC15_Pos)           /*!< 0x00008000 */
-#define FLASH_SECBB2R2_SEC15                      FLASH_SECBB2R2_SEC15_Msk                      /*!< Page 47 in bank 2 block-based secure */
-#define FLASH_SECBB2R2_SEC16_Pos                  (16UL)
-#define FLASH_SECBB2R2_SEC16_Msk                  (0x1UL << FLASH_SECBB2R2_SEC16_Pos)           /*!< 0x00010000 */
-#define FLASH_SECBB2R2_SEC16                      FLASH_SECBB2R2_SEC16_Msk                      /*!< Page 48 in bank 2 block-based secure */
-#define FLASH_SECBB2R2_SEC17_Pos                  (17UL)
-#define FLASH_SECBB2R2_SEC17_Msk                  (0x1UL << FLASH_SECBB2R2_SEC17_Pos)           /*!< 0x00020000 */
-#define FLASH_SECBB2R2_SEC17                      FLASH_SECBB2R2_SEC17_Msk                      /*!< Page 49 in bank 2 block-based secure */
-#define FLASH_SECBB2R2_SEC18_Pos                  (18UL)
-#define FLASH_SECBB2R2_SEC18_Msk                  (0x1UL << FLASH_SECBB2R2_SEC18_Pos)           /*!< 0x00040000 */
-#define FLASH_SECBB2R2_SEC18                      FLASH_SECBB2R2_SEC18_Msk                      /*!< Page 50 in bank 2 block-based secure */
-#define FLASH_SECBB2R2_SEC19_Pos                  (19UL)
-#define FLASH_SECBB2R2_SEC19_Msk                  (0x1UL << FLASH_SECBB2R2_SEC19_Pos)           /*!< 0x00080000 */
-#define FLASH_SECBB2R2_SEC19                      FLASH_SECBB2R2_SEC19_Msk                      /*!< Page 51 in bank 2 block-based secure */
-#define FLASH_SECBB2R2_SEC20_Pos                  (20UL)
-#define FLASH_SECBB2R2_SEC20_Msk                  (0x1UL << FLASH_SECBB2R2_SEC20_Pos)           /*!< 0x00100000 */
-#define FLASH_SECBB2R2_SEC20                      FLASH_SECBB2R2_SEC20_Msk                      /*!< Page 52 in bank 2 block-based secure */
-#define FLASH_SECBB2R2_SEC21_Pos                  (21UL)
-#define FLASH_SECBB2R2_SEC21_Msk                  (0x1UL << FLASH_SECBB2R2_SEC21_Pos)           /*!< 0x00200000 */
-#define FLASH_SECBB2R2_SEC21                      FLASH_SECBB2R2_SEC21_Msk                      /*!< Page 53 in bank 2 block-based secure */
-#define FLASH_SECBB2R2_SEC22_Pos                  (22UL)
-#define FLASH_SECBB2R2_SEC22_Msk                  (0x1UL << FLASH_SECBB2R2_SEC22_Pos)           /*!< 0x00400000 */
-#define FLASH_SECBB2R2_SEC22                      FLASH_SECBB2R2_SEC22_Msk                      /*!< Page 54 in bank 2 block-based secure */
-#define FLASH_SECBB2R2_SEC23_Pos                  (23UL)
-#define FLASH_SECBB2R2_SEC23_Msk                  (0x1UL << FLASH_SECBB2R2_SEC23_Pos)           /*!< 0x00800000 */
-#define FLASH_SECBB2R2_SEC23                      FLASH_SECBB2R2_SEC23_Msk                      /*!< Page 55 in bank 2 block-based secure */
-#define FLASH_SECBB2R2_SEC24_Pos                  (24UL)
-#define FLASH_SECBB2R2_SEC24_Msk                  (0x1UL << FLASH_SECBB2R2_SEC24_Pos)           /*!< 0x01000000 */
-#define FLASH_SECBB2R2_SEC24                      FLASH_SECBB2R2_SEC24_Msk                      /*!< Page 56 in bank 2 block-based secure */
-#define FLASH_SECBB2R2_SEC25_Pos                  (25UL)
-#define FLASH_SECBB2R2_SEC25_Msk                  (0x1UL << FLASH_SECBB2R2_SEC25_Pos)           /*!< 0x02000000 */
-#define FLASH_SECBB2R2_SEC25                      FLASH_SECBB2R2_SEC25_Msk                      /*!< Page 57 in bank 2 block-based secure */
-#define FLASH_SECBB2R2_SEC26_Pos                  (26UL)
-#define FLASH_SECBB2R2_SEC26_Msk                  (0x1UL << FLASH_SECBB2R2_SEC26_Pos)           /*!< 0x04000000 */
-#define FLASH_SECBB2R2_SEC26                      FLASH_SECBB2R2_SEC26_Msk                      /*!< Page 58 in bank 2 block-based secure */
-#define FLASH_SECBB2R2_SEC27_Pos                  (27UL)
-#define FLASH_SECBB2R2_SEC27_Msk                  (0x1UL << FLASH_SECBB2R2_SEC27_Pos)           /*!< 0x08000000 */
-#define FLASH_SECBB2R2_SEC27                      FLASH_SECBB2R2_SEC27_Msk                      /*!< Page 59 in bank 2 block-based secure */
-#define FLASH_SECBB2R2_SEC28_Pos                  (28UL)
-#define FLASH_SECBB2R2_SEC28_Msk                  (0x1UL << FLASH_SECBB2R2_SEC28_Pos)           /*!< 0x10000000 */
-#define FLASH_SECBB2R2_SEC28                      FLASH_SECBB2R2_SEC28_Msk                      /*!< Page 60 in bank 2 block-based secure */
-#define FLASH_SECBB2R2_SEC29_Pos                  (29UL)
-#define FLASH_SECBB2R2_SEC29_Msk                  (0x1UL << FLASH_SECBB2R2_SEC29_Pos)           /*!< 0x20000000 */
-#define FLASH_SECBB2R2_SEC29                      FLASH_SECBB2R2_SEC29_Msk                      /*!< Page 61 in bank 2 block-based secure */
-#define FLASH_SECBB2R2_SEC30_Pos                  (30UL)
-#define FLASH_SECBB2R2_SEC30_Msk                  (0x1UL << FLASH_SECBB2R2_SEC30_Pos)           /*!< 0x40000000 */
-#define FLASH_SECBB2R2_SEC30                      FLASH_SECBB2R2_SEC30_Msk                      /*!< Page 62 in bank 2 block-based secure */
-#define FLASH_SECBB2R2_SEC31_Pos                  (31UL)
-#define FLASH_SECBB2R2_SEC31_Msk                  (0x1UL << FLASH_SECBB2R2_SEC31_Pos)           /*!< 0x80000000 */
-#define FLASH_SECBB2R2_SEC31                      FLASH_SECBB2R2_SEC31_Msk                      /*!< Page 63 in bank 2 block-based secure */
-
-/*******************  Bit definition for FLASH_SECBB2R3 register  ******************/
-#define FLASH_SECBB2R3_SEC0_Pos                   (0UL)
-#define FLASH_SECBB2R3_SEC0_Msk                   (0x1UL << FLASH_SECBB2R3_SEC0_Pos)            /*!< 0x00000001 */
-#define FLASH_SECBB2R3_SEC0                       FLASH_SECBB2R3_SEC0_Msk                       /*!< Page 64 in bank 2 block-based secure */
-#define FLASH_SECBB2R3_SEC1_Pos                   (1UL)
-#define FLASH_SECBB2R3_SEC1_Msk                   (0x1UL << FLASH_SECBB2R3_SEC1_Pos)            /*!< 0x00000002 */
-#define FLASH_SECBB2R3_SEC1                       FLASH_SECBB2R3_SEC1_Msk                       /*!< Page 65 in bank 2 block-based secure */
-#define FLASH_SECBB2R3_SEC2_Pos                   (2UL)
-#define FLASH_SECBB2R3_SEC2_Msk                   (0x1UL << FLASH_SECBB2R3_SEC2_Pos)            /*!< 0x00000004 */
-#define FLASH_SECBB2R3_SEC2                       FLASH_SECBB2R3_SEC2_Msk                       /*!< Page 66 in bank 2 block-based secure */
-#define FLASH_SECBB2R3_SEC3_Pos                   (3UL)
-#define FLASH_SECBB2R3_SEC3_Msk                   (0x1UL << FLASH_SECBB2R3_SEC3_Pos)            /*!< 0x00000008 */
-#define FLASH_SECBB2R3_SEC3                       FLASH_SECBB2R3_SEC3_Msk                       /*!< Page 67 in bank 2 block-based secure */
-#define FLASH_SECBB2R3_SEC4_Pos                   (4UL)
-#define FLASH_SECBB2R3_SEC4_Msk                   (0x1UL << FLASH_SECBB2R3_SEC4_Pos)            /*!< 0x00000010 */
-#define FLASH_SECBB2R3_SEC4                       FLASH_SECBB2R3_SEC4_Msk                       /*!< Page 68 in bank 2 block-based secure */
-#define FLASH_SECBB2R3_SEC5_Pos                   (5UL)
-#define FLASH_SECBB2R3_SEC5_Msk                   (0x1UL << FLASH_SECBB2R3_SEC5_Pos)            /*!< 0x00000020 */
-#define FLASH_SECBB2R3_SEC5                       FLASH_SECBB2R3_SEC5_Msk                       /*!< Page 69 in bank 2 block-based secure */
-#define FLASH_SECBB2R3_SEC6_Pos                   (6UL)
-#define FLASH_SECBB2R3_SEC6_Msk                   (0x1UL << FLASH_SECBB2R3_SEC6_Pos)            /*!< 0x00000040 */
-#define FLASH_SECBB2R3_SEC6                       FLASH_SECBB2R3_SEC6_Msk                       /*!< Page 70 in bank 2 block-based secure */
-#define FLASH_SECBB2R3_SEC7_Pos                   (7UL)
-#define FLASH_SECBB2R3_SEC7_Msk                   (0x1UL << FLASH_SECBB2R3_SEC7_Pos)            /*!< 0x00000080 */
-#define FLASH_SECBB2R3_SEC7                       FLASH_SECBB2R3_SEC7_Msk                       /*!< Page 71 in bank 2 block-based secure */
-#define FLASH_SECBB2R3_SEC8_Pos                   (8UL)
-#define FLASH_SECBB2R3_SEC8_Msk                   (0x1UL << FLASH_SECBB2R3_SEC8_Pos)            /*!< 0x00000100 */
-#define FLASH_SECBB2R3_SEC8                       FLASH_SECBB2R3_SEC8_Msk                       /*!< Page 72 in bank 2 block-based secure */
-#define FLASH_SECBB2R3_SEC9_Pos                   (9UL)
-#define FLASH_SECBB2R3_SEC9_Msk                   (0x1UL << FLASH_SECBB2R3_SEC9_Pos)            /*!< 0x00000200 */
-#define FLASH_SECBB2R3_SEC9                       FLASH_SECBB2R3_SEC9_Msk                       /*!< Page 73 in bank 2 block-based secure */
-#define FLASH_SECBB2R3_SEC10_Pos                  (10UL)
-#define FLASH_SECBB2R3_SEC10_Msk                  (0x1UL << FLASH_SECBB2R3_SEC10_Pos)           /*!< 0x00000400 */
-#define FLASH_SECBB2R3_SEC10                      FLASH_SECBB2R3_SEC10_Msk                      /*!< Page 74 in bank 2 block-based secure */
-#define FLASH_SECBB2R3_SEC11_Pos                  (11UL)
-#define FLASH_SECBB2R3_SEC11_Msk                  (0x1UL << FLASH_SECBB2R3_SEC11_Pos)           /*!< 0x00000800 */
-#define FLASH_SECBB2R3_SEC11                      FLASH_SECBB2R3_SEC11_Msk                      /*!< Page 75 in bank 2 block-based secure */
-#define FLASH_SECBB2R3_SEC12_Pos                  (12UL)
-#define FLASH_SECBB2R3_SEC12_Msk                  (0x1UL << FLASH_SECBB2R3_SEC12_Pos)           /*!< 0x00001000 */
-#define FLASH_SECBB2R3_SEC12                      FLASH_SECBB2R3_SEC12_Msk                      /*!< Page 76 in bank 2 block-based secure */
-#define FLASH_SECBB2R3_SEC13_Pos                  (13UL)
-#define FLASH_SECBB2R3_SEC13_Msk                  (0x1UL << FLASH_SECBB2R3_SEC13_Pos)           /*!< 0x00002000 */
-#define FLASH_SECBB2R3_SEC13                      FLASH_SECBB2R3_SEC13_Msk                      /*!< Page 77 in bank 2 block-based secure */
-#define FLASH_SECBB2R3_SEC14_Pos                  (14UL)
-#define FLASH_SECBB2R3_SEC14_Msk                  (0x1UL << FLASH_SECBB2R3_SEC14_Pos)           /*!< 0x00004000 */
-#define FLASH_SECBB2R3_SEC14                      FLASH_SECBB2R3_SEC14_Msk                      /*!< Page 78 in bank 2 block-based secure */
-#define FLASH_SECBB2R3_SEC15_Pos                  (15UL)
-#define FLASH_SECBB2R3_SEC15_Msk                  (0x1UL << FLASH_SECBB2R3_SEC15_Pos)           /*!< 0x00008000 */
-#define FLASH_SECBB2R3_SEC15                      FLASH_SECBB2R3_SEC15_Msk                      /*!< Page 79 in bank 2 block-based secure */
-#define FLASH_SECBB2R3_SEC16_Pos                  (16UL)
-#define FLASH_SECBB2R3_SEC16_Msk                  (0x1UL << FLASH_SECBB2R3_SEC16_Pos)           /*!< 0x00010000 */
-#define FLASH_SECBB2R3_SEC16                      FLASH_SECBB2R3_SEC16_Msk                      /*!< Page 80 in bank 2 block-based secure */
-#define FLASH_SECBB2R3_SEC17_Pos                  (17UL)
-#define FLASH_SECBB2R3_SEC17_Msk                  (0x1UL << FLASH_SECBB2R3_SEC17_Pos)           /*!< 0x00020000 */
-#define FLASH_SECBB2R3_SEC17                      FLASH_SECBB2R3_SEC17_Msk                      /*!< Page 81 in bank 2 block-based secure */
-#define FLASH_SECBB2R3_SEC18_Pos                  (18UL)
-#define FLASH_SECBB2R3_SEC18_Msk                  (0x1UL << FLASH_SECBB2R3_SEC18_Pos)           /*!< 0x00040000 */
-#define FLASH_SECBB2R3_SEC18                      FLASH_SECBB2R3_SEC18_Msk                      /*!< Page 82 in bank 2 block-based secure */
-#define FLASH_SECBB2R3_SEC19_Pos                  (19UL)
-#define FLASH_SECBB2R3_SEC19_Msk                  (0x1UL << FLASH_SECBB2R3_SEC19_Pos)           /*!< 0x00080000 */
-#define FLASH_SECBB2R3_SEC19                      FLASH_SECBB2R3_SEC19_Msk                      /*!< Page 83 in bank 2 block-based secure */
-#define FLASH_SECBB2R3_SEC20_Pos                  (20UL)
-#define FLASH_SECBB2R3_SEC20_Msk                  (0x1UL << FLASH_SECBB2R3_SEC20_Pos)           /*!< 0x00100000 */
-#define FLASH_SECBB2R3_SEC20                      FLASH_SECBB2R3_SEC20_Msk                      /*!< Page 84 in bank 2 block-based secure */
-#define FLASH_SECBB2R3_SEC21_Pos                  (21UL)
-#define FLASH_SECBB2R3_SEC21_Msk                  (0x1UL << FLASH_SECBB2R3_SEC21_Pos)           /*!< 0x00200000 */
-#define FLASH_SECBB2R3_SEC21                      FLASH_SECBB2R3_SEC21_Msk                      /*!< Page 85 in bank 2 block-based secure */
-#define FLASH_SECBB2R3_SEC22_Pos                  (22UL)
-#define FLASH_SECBB2R3_SEC22_Msk                  (0x1UL << FLASH_SECBB2R3_SEC22_Pos)           /*!< 0x00400000 */
-#define FLASH_SECBB2R3_SEC22                      FLASH_SECBB2R3_SEC22_Msk                      /*!< Page 86 in bank 2 block-based secure */
-#define FLASH_SECBB2R3_SEC23_Pos                  (23UL)
-#define FLASH_SECBB2R3_SEC23_Msk                  (0x1UL << FLASH_SECBB2R3_SEC23_Pos)           /*!< 0x00800000 */
-#define FLASH_SECBB2R3_SEC23                      FLASH_SECBB2R3_SEC23_Msk                      /*!< Page 87 in bank 2 block-based secure */
-#define FLASH_SECBB2R3_SEC24_Pos                  (24UL)
-#define FLASH_SECBB2R3_SEC24_Msk                  (0x1UL << FLASH_SECBB2R3_SEC24_Pos)           /*!< 0x01000000 */
-#define FLASH_SECBB2R3_SEC24                      FLASH_SECBB2R3_SEC24_Msk                      /*!< Page 88 in bank 2 block-based secure */
-#define FLASH_SECBB2R3_SEC25_Pos                  (25UL)
-#define FLASH_SECBB2R3_SEC25_Msk                  (0x1UL << FLASH_SECBB2R3_SEC25_Pos)           /*!< 0x02000000 */
-#define FLASH_SECBB2R3_SEC25                      FLASH_SECBB2R3_SEC25_Msk                      /*!< Page 89 in bank 2 block-based secure */
-#define FLASH_SECBB2R3_SEC26_Pos                  (26UL)
-#define FLASH_SECBB2R3_SEC26_Msk                  (0x1UL << FLASH_SECBB2R3_SEC26_Pos)           /*!< 0x04000000 */
-#define FLASH_SECBB2R3_SEC26                      FLASH_SECBB2R3_SEC26_Msk                      /*!< Page 90 in bank 2 block-based secure */
-#define FLASH_SECBB2R3_SEC27_Pos                  (27UL)
-#define FLASH_SECBB2R3_SEC27_Msk                  (0x1UL << FLASH_SECBB2R3_SEC27_Pos)           /*!< 0x08000000 */
-#define FLASH_SECBB2R3_SEC27                      FLASH_SECBB2R3_SEC27_Msk                      /*!< Page 91 in bank 2 block-based secure */
-#define FLASH_SECBB2R3_SEC28_Pos                  (28UL)
-#define FLASH_SECBB2R3_SEC28_Msk                  (0x1UL << FLASH_SECBB2R3_SEC28_Pos)           /*!< 0x10000000 */
-#define FLASH_SECBB2R3_SEC28                      FLASH_SECBB2R3_SEC28_Msk                      /*!< Page 92 in bank 2 block-based secure */
-#define FLASH_SECBB2R3_SEC29_Pos                  (29UL)
-#define FLASH_SECBB2R3_SEC29_Msk                  (0x1UL << FLASH_SECBB2R3_SEC29_Pos)           /*!< 0x20000000 */
-#define FLASH_SECBB2R3_SEC29                      FLASH_SECBB2R3_SEC29_Msk                      /*!< Page 93 in bank 2 block-based secure */
-#define FLASH_SECBB2R3_SEC30_Pos                  (30UL)
-#define FLASH_SECBB2R3_SEC30_Msk                  (0x1UL << FLASH_SECBB2R3_SEC30_Pos)           /*!< 0x40000000 */
-#define FLASH_SECBB2R3_SEC30                      FLASH_SECBB2R3_SEC30_Msk                      /*!< Page 94 in bank 2 block-based secure */
-#define FLASH_SECBB2R3_SEC31_Pos                  (31UL)
-#define FLASH_SECBB2R3_SEC31_Msk                  (0x1UL << FLASH_SECBB2R3_SEC31_Pos)           /*!< 0x80000000 */
-#define FLASH_SECBB2R3_SEC31                      FLASH_SECBB2R3_SEC31_Msk                      /*!< Page 95 in bank 2 block-based secure */
-
-/*******************  Bit definition for FLASH_SECBB2R4 register  ******************/
-#define FLASH_SECBB2R4_SEC0_Pos                   (0UL)
-#define FLASH_SECBB2R4_SEC0_Msk                   (0x1UL << FLASH_SECBB2R4_SEC0_Pos)            /*!< 0x00000001 */
-#define FLASH_SECBB2R4_SEC0                       FLASH_SECBB2R4_SEC0_Msk                       /*!< Page 96 in bank 2 block-based secure */
-#define FLASH_SECBB2R4_SEC1_Pos                   (1UL)
-#define FLASH_SECBB2R4_SEC1_Msk                   (0x1UL << FLASH_SECBB2R4_SEC1_Pos)            /*!< 0x00000002 */
-#define FLASH_SECBB2R4_SEC1                       FLASH_SECBB2R4_SEC1_Msk                       /*!< Page 97 in bank 2 block-based secure */
-#define FLASH_SECBB2R4_SEC2_Pos                   (2UL)
-#define FLASH_SECBB2R4_SEC2_Msk                   (0x1UL << FLASH_SECBB2R4_SEC2_Pos)            /*!< 0x00000004 */
-#define FLASH_SECBB2R4_SEC2                       FLASH_SECBB2R4_SEC2_Msk                       /*!< Page 98 in bank 2 block-based secure */
-#define FLASH_SECBB2R4_SEC3_Pos                   (3UL)
-#define FLASH_SECBB2R4_SEC3_Msk                   (0x1UL << FLASH_SECBB2R4_SEC3_Pos)            /*!< 0x00000008 */
-#define FLASH_SECBB2R4_SEC3                       FLASH_SECBB2R4_SEC3_Msk                       /*!< Page 99 in bank 2 block-based secure */
-#define FLASH_SECBB2R4_SEC4_Pos                   (4UL)
-#define FLASH_SECBB2R4_SEC4_Msk                   (0x1UL << FLASH_SECBB2R4_SEC4_Pos)            /*!< 0x00000010 */
-#define FLASH_SECBB2R4_SEC4                       FLASH_SECBB2R4_SEC4_Msk                       /*!< Page 100 in bank 2 block-based secure */
-#define FLASH_SECBB2R4_SEC5_Pos                   (5UL)
-#define FLASH_SECBB2R4_SEC5_Msk                   (0x1UL << FLASH_SECBB2R4_SEC5_Pos)            /*!< 0x00000020 */
-#define FLASH_SECBB2R4_SEC5                       FLASH_SECBB2R4_SEC5_Msk                       /*!< Page 101 in bank 2 block-based secure */
-#define FLASH_SECBB2R4_SEC6_Pos                   (6UL)
-#define FLASH_SECBB2R4_SEC6_Msk                   (0x1UL << FLASH_SECBB2R4_SEC6_Pos)            /*!< 0x00000040 */
-#define FLASH_SECBB2R4_SEC6                       FLASH_SECBB2R4_SEC6_Msk                       /*!< Page 102 in bank 2 block-based secure */
-#define FLASH_SECBB2R4_SEC7_Pos                   (7UL)
-#define FLASH_SECBB2R4_SEC7_Msk                   (0x1UL << FLASH_SECBB2R4_SEC7_Pos)            /*!< 0x00000080 */
-#define FLASH_SECBB2R4_SEC7                       FLASH_SECBB2R4_SEC7_Msk                       /*!< Page 103 in bank 2 block-based secure */
-#define FLASH_SECBB2R4_SEC8_Pos                   (8UL)
-#define FLASH_SECBB2R4_SEC8_Msk                   (0x1UL << FLASH_SECBB2R4_SEC8_Pos)            /*!< 0x00000100 */
-#define FLASH_SECBB2R4_SEC8                       FLASH_SECBB2R4_SEC8_Msk                       /*!< Page 104 in bank 2 block-based secure */
-#define FLASH_SECBB2R4_SEC9_Pos                   (9UL)
-#define FLASH_SECBB2R4_SEC9_Msk                   (0x1UL << FLASH_SECBB2R4_SEC9_Pos)            /*!< 0x00000200 */
-#define FLASH_SECBB2R4_SEC9                       FLASH_SECBB2R4_SEC9_Msk                       /*!< Page 105 in bank 2 block-based secure */
-#define FLASH_SECBB2R4_SEC10_Pos                  (10UL)
-#define FLASH_SECBB2R4_SEC10_Msk                  (0x1UL << FLASH_SECBB2R4_SEC10_Pos)           /*!< 0x00000400 */
-#define FLASH_SECBB2R4_SEC10                      FLASH_SECBB2R4_SEC10_Msk                      /*!< Page 106 in bank 2 block-based secure */
-#define FLASH_SECBB2R4_SEC11_Pos                  (11UL)
-#define FLASH_SECBB2R4_SEC11_Msk                  (0x1UL << FLASH_SECBB2R4_SEC11_Pos)           /*!< 0x00000800 */
-#define FLASH_SECBB2R4_SEC11                      FLASH_SECBB2R4_SEC11_Msk                      /*!< Page 107 in bank 2 block-based secure */
-#define FLASH_SECBB2R4_SEC12_Pos                  (12UL)
-#define FLASH_SECBB2R4_SEC12_Msk                  (0x1UL << FLASH_SECBB2R4_SEC12_Pos)           /*!< 0x00001000 */
-#define FLASH_SECBB2R4_SEC12                      FLASH_SECBB2R4_SEC12_Msk                      /*!< Page 108 in bank 2 block-based secure */
-#define FLASH_SECBB2R4_SEC13_Pos                  (13UL)
-#define FLASH_SECBB2R4_SEC13_Msk                  (0x1UL << FLASH_SECBB2R4_SEC13_Pos)           /*!< 0x00002000 */
-#define FLASH_SECBB2R4_SEC13                      FLASH_SECBB2R4_SEC13_Msk                      /*!< Page 109 in bank 2 block-based secure */
-#define FLASH_SECBB2R4_SEC14_Pos                  (14UL)
-#define FLASH_SECBB2R4_SEC14_Msk                  (0x1UL << FLASH_SECBB2R4_SEC14_Pos)           /*!< 0x00004000 */
-#define FLASH_SECBB2R4_SEC14                      FLASH_SECBB2R4_SEC14_Msk                      /*!< Page 110 in bank 2 block-based secure */
-#define FLASH_SECBB2R4_SEC15_Pos                  (15UL)
-#define FLASH_SECBB2R4_SEC15_Msk                  (0x1UL << FLASH_SECBB2R4_SEC15_Pos)           /*!< 0x00008000 */
-#define FLASH_SECBB2R4_SEC15                      FLASH_SECBB2R4_SEC15_Msk                      /*!< Page 111 in bank 2 block-based secure */
-#define FLASH_SECBB2R4_SEC16_Pos                  (16UL)
-#define FLASH_SECBB2R4_SEC16_Msk                  (0x1UL << FLASH_SECBB2R4_SEC16_Pos)           /*!< 0x00010000 */
-#define FLASH_SECBB2R4_SEC16                      FLASH_SECBB2R4_SEC16_Msk                      /*!< Page 112 in bank 2 block-based secure */
-#define FLASH_SECBB2R4_SEC17_Pos                  (17UL)
-#define FLASH_SECBB2R4_SEC17_Msk                  (0x1UL << FLASH_SECBB2R4_SEC17_Pos)           /*!< 0x00020000 */
-#define FLASH_SECBB2R4_SEC17                      FLASH_SECBB2R4_SEC17_Msk                      /*!< Page 113 in bank 2 block-based secure */
-#define FLASH_SECBB2R4_SEC18_Pos                  (18UL)
-#define FLASH_SECBB2R4_SEC18_Msk                  (0x1UL << FLASH_SECBB2R4_SEC18_Pos)           /*!< 0x00040000 */
-#define FLASH_SECBB2R4_SEC18                      FLASH_SECBB2R4_SEC18_Msk                      /*!< Page 114 in bank 2 block-based secure */
-#define FLASH_SECBB2R4_SEC19_Pos                  (19UL)
-#define FLASH_SECBB2R4_SEC19_Msk                  (0x1UL << FLASH_SECBB2R4_SEC19_Pos)           /*!< 0x00080000 */
-#define FLASH_SECBB2R4_SEC19                      FLASH_SECBB2R4_SEC19_Msk                      /*!< Page 115 in bank 2 block-based secure */
-#define FLASH_SECBB2R4_SEC20_Pos                  (20UL)
-#define FLASH_SECBB2R4_SEC20_Msk                  (0x1UL << FLASH_SECBB2R4_SEC20_Pos)           /*!< 0x00100000 */
-#define FLASH_SECBB2R4_SEC20                      FLASH_SECBB2R4_SEC20_Msk                      /*!< Page 116 in bank 2 block-based secure */
-#define FLASH_SECBB2R4_SEC21_Pos                  (21UL)
-#define FLASH_SECBB2R4_SEC21_Msk                  (0x1UL << FLASH_SECBB2R4_SEC21_Pos)           /*!< 0x00200000 */
-#define FLASH_SECBB2R4_SEC21                      FLASH_SECBB2R4_SEC21_Msk                      /*!< Page 117 in bank 2 block-based secure */
-#define FLASH_SECBB2R4_SEC22_Pos                  (22UL)
-#define FLASH_SECBB2R4_SEC22_Msk                  (0x1UL << FLASH_SECBB2R4_SEC22_Pos)           /*!< 0x00400000 */
-#define FLASH_SECBB2R4_SEC22                      FLASH_SECBB2R4_SEC22_Msk                      /*!< Page 118 in bank 2 block-based secure */
-#define FLASH_SECBB2R4_SEC23_Pos                  (23UL)
-#define FLASH_SECBB2R4_SEC23_Msk                  (0x1UL << FLASH_SECBB2R4_SEC23_Pos)           /*!< 0x00800000 */
-#define FLASH_SECBB2R4_SEC23                      FLASH_SECBB2R4_SEC23_Msk                      /*!< Page 119 in bank 2 block-based secure */
-#define FLASH_SECBB2R4_SEC24_Pos                  (24UL)
-#define FLASH_SECBB2R4_SEC24_Msk                  (0x1UL << FLASH_SECBB2R4_SEC24_Pos)           /*!< 0x01000000 */
-#define FLASH_SECBB2R4_SEC24                      FLASH_SECBB2R4_SEC24_Msk                      /*!< Page 120 in bank 2 block-based secure */
-#define FLASH_SECBB2R4_SEC25_Pos                  (25UL)
-#define FLASH_SECBB2R4_SEC25_Msk                  (0x1UL << FLASH_SECBB2R4_SEC25_Pos)           /*!< 0x02000000 */
-#define FLASH_SECBB2R4_SEC25                      FLASH_SECBB2R4_SEC25_Msk                      /*!< Page 121 in bank 2 block-based secure */
-#define FLASH_SECBB2R4_SEC26_Pos                  (26UL)
-#define FLASH_SECBB2R4_SEC26_Msk                  (0x1UL << FLASH_SECBB2R4_SEC26_Pos)           /*!< 0x04000000 */
-#define FLASH_SECBB2R4_SEC26                      FLASH_SECBB2R4_SEC26_Msk                      /*!< Page 122 in bank 2 block-based secure */
-#define FLASH_SECBB2R4_SEC27_Pos                  (27UL)
-#define FLASH_SECBB2R4_SEC27_Msk                  (0x1UL << FLASH_SECBB2R4_SEC27_Pos)           /*!< 0x08000000 */
-#define FLASH_SECBB2R4_SEC27                      FLASH_SECBB2R4_SEC27_Msk                      /*!< Page 123 in bank 2 block-based secure */
-#define FLASH_SECBB2R4_SEC28_Pos                  (28UL)
-#define FLASH_SECBB2R4_SEC28_Msk                  (0x1UL << FLASH_SECBB2R4_SEC28_Pos)           /*!< 0x10000000 */
-#define FLASH_SECBB2R4_SEC28                      FLASH_SECBB2R4_SEC28_Msk                      /*!< Page 124 in bank 2 block-based secure */
-#define FLASH_SECBB2R4_SEC29_Pos                  (29UL)
-#define FLASH_SECBB2R4_SEC29_Msk                  (0x1UL << FLASH_SECBB2R4_SEC29_Pos)           /*!< 0x20000000 */
-#define FLASH_SECBB2R4_SEC29                      FLASH_SECBB2R4_SEC29_Msk                      /*!< Page 125 in bank 2 block-based secure */
-#define FLASH_SECBB2R4_SEC30_Pos                  (30UL)
-#define FLASH_SECBB2R4_SEC30_Msk                  (0x1UL << FLASH_SECBB2R4_SEC30_Pos)           /*!< 0x40000000 */
-#define FLASH_SECBB2R4_SEC30                      FLASH_SECBB2R4_SEC30_Msk                      /*!< Page 126 in bank 2 block-based secure */
-#define FLASH_SECBB2R4_SEC31_Pos                  (31UL)
-#define FLASH_SECBB2R4_SEC31_Msk                  (0x1UL << FLASH_SECBB2R4_SEC31_Pos)           /*!< 0x80000000 */
-#define FLASH_SECBB2R4_SEC31                      FLASH_SECBB2R4_SEC31_Msk                      /*!< Page 127 in bank 2 block-based secure */
 
 /**********************  Bits definition for FLASH_SECHDPCR register  ***************/
 #define FLASH_SECHDPCR_HDP1_ACCDIS_Pos            (0UL)
@@ -9084,6 +8509,8 @@ typedef struct
 #define GTZC_CFGR3_TSC_Msk                  (0x01UL << GTZC_CFGR3_TSC_Pos)          /*!< 0x00000008 */
 #define GTZC_CFGR3_ICACHE_REG_Pos           (6UL)
 #define GTZC_CFGR3_ICACHE_REG_Msk           (0x01UL << GTZC_CFGR3_ICACHE_REG_Pos)   /*!< 0x00000020 */
+#define GTZC_CFGR3_ADC1_Pos                 (8UL)
+#define GTZC_CFGR3_ADC1_Msk                 (0x01UL << GTZC_CFGR3_ADC1_Pos)         /*!< 0x00000100 */
 #define GTZC_CFGR3_HASH_Pos                 (12UL)
 #define GTZC_CFGR3_HASH_Msk                 (0x01UL << GTZC_CFGR3_HASH_Pos)         /*!< 0x00001000 */
 #define GTZC_CFGR3_RNG_Pos                  (13UL)
@@ -9200,6 +8627,8 @@ typedef struct
 #define GTZC_TZSC1_SECCFGR3_TSC_Msk             GTZC_CFGR3_TSC_Msk
 #define GTZC_TZSC1_SECCFGR3_ICACHE_REG_Pos      GTZC_CFGR3_ICACHE_REG_Pos
 #define GTZC_TZSC1_SECCFGR3_ICACHE_REG_Msk      GTZC_CFGR3_ICACHE_REG_Msk
+#define GTZC_TZSC1_SECCFGR3_ADC1_Pos            GTZC_CFGR3_ADC1_Pos
+#define GTZC_TZSC1_SECCFGR3_ADC1_Msk            GTZC_CFGR3_ADC1_Msk
 #define GTZC_TZSC1_SECCFGR3_HASH_Pos            GTZC_CFGR3_HASH_Pos
 #define GTZC_TZSC1_SECCFGR3_HASH_Msk            GTZC_CFGR3_HASH_Msk
 #define GTZC_TZSC1_SECCFGR3_RNG_Pos             GTZC_CFGR3_RNG_Pos
@@ -9284,6 +8713,8 @@ typedef struct
 #define GTZC_TZSC1_PRIVCFGR3_TSC_Msk            GTZC_CFGR3_TSC_Msk
 #define GTZC_TZSC1_PRIVCFGR3_ICACHE_REG_Pos     GTZC_CFGR3_ICACHE_REG_Pos
 #define GTZC_TZSC1_PRIVCFGR3_ICACHE_REG_Msk     GTZC_CFGR3_ICACHE_REG_Msk
+#define GTZC_TZSC1_PRIVCFGR3_ADC1_Pos           GTZC_CFGR3_ADC1_Pos
+#define GTZC_TZSC1_PRIVCFGR3_ADC1_Msk           GTZC_CFGR3_ADC1_Msk
 #define GTZC_TZSC1_PRIVCFGR3_HASH_Pos           GTZC_CFGR3_HASH_Pos
 #define GTZC_TZSC1_PRIVCFGR3_HASH_Msk           GTZC_CFGR3_HASH_Msk
 #define GTZC_TZSC1_PRIVCFGR3_RNG_Pos            GTZC_CFGR3_RNG_Pos
@@ -9368,6 +8799,8 @@ typedef struct
 #define GTZC_TZIC1_IER3_TSC_Msk                 GTZC_CFGR3_TSC_Msk
 #define GTZC_TZIC1_IER3_ICACHE_REG_Pos          GTZC_CFGR3_ICACHE_REG_Pos
 #define GTZC_TZIC1_IER3_ICACHE_REG_Msk          GTZC_CFGR3_ICACHE_REG_Msk
+#define GTZC_TZIC1_IER3_ADC1_Pos                GTZC_CFGR3_ADC1_Pos
+#define GTZC_TZIC1_IER3_ADC1_Msk                GTZC_CFGR3_ADC1_Msk
 #define GTZC_TZIC1_IER3_HASH_Pos                GTZC_CFGR3_HASH_Pos
 #define GTZC_TZIC1_IER3_HASH_Msk                GTZC_CFGR3_HASH_Msk
 #define GTZC_TZIC1_IER3_RNG_Pos                 GTZC_CFGR3_RNG_Pos
@@ -9484,6 +8917,8 @@ typedef struct
 #define GTZC_TZIC1_SR3_TSC_Msk                  GTZC_CFGR3_TSC_Msk
 #define GTZC_TZIC1_SR3_ICACHE_REG_Pos           GTZC_CFGR3_ICACHE_REG_Pos
 #define GTZC_TZIC1_SR3_ICACHE_REG_Msk           GTZC_CFGR3_ICACHE_REG_Msk
+#define GTZC_TZIC1_SR3_ADC1_Pos                 GTZC_CFGR3_ADC1_Pos
+#define GTZC_TZIC1_SR3_ADC1_Msk                 GTZC_CFGR3_ADC1_Msk
 #define GTZC_TZIC1_SR3_HASH_Pos                 GTZC_CFGR3_HASH_Pos
 #define GTZC_TZIC1_SR3_HASH_Msk                 GTZC_CFGR3_HASH_Msk
 #define GTZC_TZIC1_SR3_RNG_Pos                  GTZC_CFGR3_RNG_Pos
@@ -9600,6 +9035,8 @@ typedef struct
 #define GTZC_TZIC1_FCR3_TSC_Msk                 GTZC_CFGR3_TSC_Msk
 #define GTZC_TZIC1_FCR3_ICACHE_REG_Pos          GTZC_CFGR3_ICACHE_REG_Pos
 #define GTZC_TZIC1_FCR3_ICACHE_REG_Msk          GTZC_CFGR3_ICACHE_REG_Msk
+#define GTZC_TZIC1_FCR3_ADC1_Pos                GTZC_CFGR3_ADC1_Pos
+#define GTZC_TZIC1_FCR3_ADC1_Msk                GTZC_CFGR3_ADC1_Msk
 #define GTZC_TZIC1_FCR3_HASH_Pos                GTZC_CFGR3_HASH_Pos
 #define GTZC_TZIC1_FCR3_HASH_Msk                GTZC_CFGR3_HASH_Msk
 #define GTZC_TZIC1_FCR3_RNG_Pos                 GTZC_CFGR3_RNG_Pos
@@ -11816,24 +11253,6 @@ typedef struct
 #define PWR_CR2_SRAM1PDS1_Pos               (0UL)
 #define PWR_CR2_SRAM1PDS1_Msk               (0x1UL << PWR_CR2_SRAM1PDS1_Pos)        /*!< 0x00000001 */
 #define PWR_CR2_SRAM1PDS1                   PWR_CR2_SRAM1PDS1_Msk                   /*!< SRAM1 page 1 (16 KB) power-down in Stop modes (Stop 0, 1, 2, 3)           */
-#define PWR_CR2_SRAM1PDS2_Pos               (1UL)
-#define PWR_CR2_SRAM1PDS2_Msk               (0x1UL << PWR_CR2_SRAM1PDS2_Pos)        /*!< 0x00000002 */
-#define PWR_CR2_SRAM1PDS2                   PWR_CR2_SRAM1PDS2_Msk                   /*!< SRAM1 page 2 (16 KB) power-down in Stop modes (Stop 0, 1, 2, 3)           */
-#define PWR_CR2_SRAM1PDS3_Pos               (2UL)
-#define PWR_CR2_SRAM1PDS3_Msk               (0x1UL << PWR_CR2_SRAM1PDS3_Pos)        /*!< 0x00000004 */
-#define PWR_CR2_SRAM1PDS3                   PWR_CR2_SRAM1PDS3_Msk                   /*!< SRAM1 page 3 (32 KB) power-down in Stop modes (Stop 0, 1, 2, 3)           */
-#define PWR_CR2_SRAM1PDS4_Pos               (3UL)
-#define PWR_CR2_SRAM1PDS4_Msk               (0x1UL << PWR_CR2_SRAM1PDS4_Pos)        /*!< 0x00000008 */
-#define PWR_CR2_SRAM1PDS4                   PWR_CR2_SRAM1PDS4_Msk                   /*!< SRAM1 page 4 (32 KB) power-down in Stop modes (Stop 0, 1, 2, 3)           */
-#define PWR_CR2_SRAM1PDS5_Pos               (4UL)
-#define PWR_CR2_SRAM1PDS5_Msk               (0x1UL << PWR_CR2_SRAM1PDS5_Pos)        /*!< 0x00000010 */
-#define PWR_CR2_SRAM1PDS5                   PWR_CR2_SRAM1PDS5_Msk                   /*!< SRAM1 page 5 (32 KB) power-down in Stop modes (Stop 0, 1, 2, 3)           */
-#define PWR_CR2_SRAM1PDS6_Pos               (5UL)
-#define PWR_CR2_SRAM1PDS6_Msk               (0x1UL << PWR_CR2_SRAM1PDS6_Pos)        /*!< 0x00000020 */
-#define PWR_CR2_SRAM1PDS6                   PWR_CR2_SRAM1PDS6_Msk                   /*!< SRAM1 page 6 (32 KB) power-down in Stop modes (Stop 0, 1, 2, 3)           */
-#define PWR_CR2_SRAM1PDS7_Pos               (6UL)
-#define PWR_CR2_SRAM1PDS7_Msk               (0x1UL << PWR_CR2_SRAM1PDS7_Pos)        /*!< 0x00000040 */
-#define PWR_CR2_SRAM1PDS7                   PWR_CR2_SRAM1PDS7_Msk                   /*!< SRAM1 page 7 (32 KB) power-down in Stop modes (Stop 0, 1, 2, 3)           */
 #define PWR_CR2_SRAM2PDS1_Pos               (16UL)
 #define PWR_CR2_SRAM2PDS1_Msk               (0x1UL << PWR_CR2_SRAM2PDS1_Pos)        /*!< 0x00010000 */
 #define PWR_CR2_SRAM2PDS1                   PWR_CR2_SRAM2PDS1_Msk                   /*!< SRAM2 page 1 (8 KB) power-down in Stop modes (Stop 0, 1, 2, 3)            */
@@ -12569,193 +11988,7 @@ typedef struct
 #define PWR_PDCRD_PD15_Msk                  (0x1UL << PWR_PDCRD_PD15_Pos)           /*!< 0x00008000 */
 #define PWR_PDCRD_PD15                      PWR_PDCRD_PD15_Msk                      /*!< Apply pull-down for PD15 */
 
-/********************  Bit definition for PWR_PUCRE register  *****************/
-#define PWR_PUCRE_PU0_Pos                   (0UL)
-#define PWR_PUCRE_PU0_Msk                   (0x1UL << PWR_PUCRE_PU0_Pos)            /*!< 0x00000001 */
-#define PWR_PUCRE_PU0                       PWR_PUCRE_PU0_Msk                       /*!< Apply pull-up for PE0  */
-#define PWR_PUCRE_PU1_Pos                   (1UL)
-#define PWR_PUCRE_PU1_Msk                   (0x1UL << PWR_PUCRE_PU1_Pos)            /*!< 0x00000002 */
-#define PWR_PUCRE_PU1                       PWR_PUCRE_PU1_Msk                       /*!< Apply pull-up for PE1  */
-#define PWR_PUCRE_PU2_Pos                   (2UL)
-#define PWR_PUCRE_PU2_Msk                   (0x1UL << PWR_PUCRE_PU2_Pos)            /*!< 0x00000004 */
-#define PWR_PUCRE_PU2                       PWR_PUCRE_PU2_Msk                       /*!< Apply pull-up for PE2  */
-#define PWR_PUCRE_PU3_Pos                   (3UL)
-#define PWR_PUCRE_PU3_Msk                   (0x1UL << PWR_PUCRE_PU3_Pos)            /*!< 0x00000008 */
-#define PWR_PUCRE_PU3                       PWR_PUCRE_PU3_Msk                       /*!< Apply pull-up for PE3  */
-#define PWR_PUCRE_PU4_Pos                   (4UL)
-#define PWR_PUCRE_PU4_Msk                   (0x1UL << PWR_PUCRE_PU4_Pos)            /*!< 0x00000010 */
-#define PWR_PUCRE_PU4                       PWR_PUCRE_PU4_Msk                       /*!< Apply pull-up for PE4  */
-#define PWR_PUCRE_PU5_Pos                   (5UL)
-#define PWR_PUCRE_PU5_Msk                   (0x1UL << PWR_PUCRE_PU5_Pos)            /*!< 0x00000020 */
-#define PWR_PUCRE_PU5                       PWR_PUCRE_PU5_Msk                       /*!< Apply pull-up for PE5  */
-#define PWR_PUCRE_PU6_Pos                   (6UL)
-#define PWR_PUCRE_PU6_Msk                   (0x1UL << PWR_PUCRE_PU6_Pos)            /*!< 0x00000040 */
-#define PWR_PUCRE_PU6                       PWR_PUCRE_PU6_Msk                       /*!< Apply pull-up for PE6  */
-#define PWR_PUCRE_PU7_Pos                   (7UL)
-#define PWR_PUCRE_PU7_Msk                   (0x1UL << PWR_PUCRE_PU7_Pos)            /*!< 0x00000080 */
-#define PWR_PUCRE_PU7                       PWR_PUCRE_PU7_Msk                       /*!< Apply pull-up for PE7  */
-#define PWR_PUCRE_PU8_Pos                   (8UL)
-#define PWR_PUCRE_PU8_Msk                   (0x1UL << PWR_PUCRE_PU8_Pos)            /*!< 0x00000100 */
-#define PWR_PUCRE_PU8                       PWR_PUCRE_PU8_Msk                       /*!< Apply pull-up for PE8  */
-#define PWR_PUCRE_PU9_Pos                   (9UL)
-#define PWR_PUCRE_PU9_Msk                   (0x1UL << PWR_PUCRE_PU9_Pos)            /*!< 0x00000200 */
-#define PWR_PUCRE_PU9                       PWR_PUCRE_PU9_Msk                       /*!< Apply pull-up for PE9  */
-#define PWR_PUCRE_PU10_Pos                  (10UL)
-#define PWR_PUCRE_PU10_Msk                  (0x1UL << PWR_PUCRE_PU10_Pos)           /*!< 0x00000400 */
-#define PWR_PUCRE_PU10                      PWR_PUCRE_PU10_Msk                      /*!< Apply pull-up for PE10 */
-#define PWR_PUCRE_PU11_Pos                  (11UL)
-#define PWR_PUCRE_PU11_Msk                  (0x1UL << PWR_PUCRE_PU11_Pos)           /*!< 0x00000800 */
-#define PWR_PUCRE_PU11                      PWR_PUCRE_PU11_Msk                      /*!< Apply pull-up for PE11 */
-#define PWR_PUCRE_PU12_Pos                  (12UL)
-#define PWR_PUCRE_PU12_Msk                  (0x1UL << PWR_PUCRE_PU12_Pos)           /*!< 0x00001000 */
-#define PWR_PUCRE_PU12                      PWR_PUCRE_PU12_Msk                      /*!< Apply pull-up for PE12 */
-#define PWR_PUCRE_PU13_Pos                  (13UL)
-#define PWR_PUCRE_PU13_Msk                  (0x1UL << PWR_PUCRE_PU13_Pos)           /*!< 0x00002000 */
-#define PWR_PUCRE_PU13                      PWR_PUCRE_PU13_Msk                      /*!< Apply pull-up for PE13 */
-#define PWR_PUCRE_PU14_Pos                  (14UL)
-#define PWR_PUCRE_PU14_Msk                  (0x1UL << PWR_PUCRE_PU14_Pos)           /*!< 0x00004000 */
-#define PWR_PUCRE_PU14                      PWR_PUCRE_PU14_Msk                      /*!< Apply pull-up for PE14 */
-#define PWR_PUCRE_PU15_Pos                  (15UL)
-#define PWR_PUCRE_PU15_Msk                  (0x1UL << PWR_PUCRE_PU15_Pos)           /*!< 0x00008000 */
-#define PWR_PUCRE_PU15                      PWR_PUCRE_PU15_Msk                      /*!< Apply pull-up for PE15 */
 
-/********************  Bit definition for PWR_PDCRE register  *****************/
-#define PWR_PDCRE_PD0_Pos                   (0UL)
-#define PWR_PDCRE_PD0_Msk                   (0x1UL << PWR_PDCRE_PD0_Pos)            /*!< 0x00000001 */
-#define PWR_PDCRE_PD0                       PWR_PDCRE_PD0_Msk                       /*!< Apply pull-down for PE0  */
-#define PWR_PDCRE_PD1_Pos                   (1UL)
-#define PWR_PDCRE_PD1_Msk                   (0x1UL << PWR_PDCRE_PD1_Pos)            /*!< 0x00000002 */
-#define PWR_PDCRE_PD1                       PWR_PDCRE_PD1_Msk                       /*!< Apply pull-down for PE1  */
-#define PWR_PDCRE_PD2_Pos                   (2UL)
-#define PWR_PDCRE_PD2_Msk                   (0x1UL << PWR_PDCRE_PD2_Pos)            /*!< 0x00000004 */
-#define PWR_PDCRE_PD2                       PWR_PDCRE_PD2_Msk                       /*!< Apply pull-down for PE2  */
-#define PWR_PDCRE_PD3_Pos                   (3UL)
-#define PWR_PDCRE_PD3_Msk                   (0x1UL << PWR_PDCRE_PD3_Pos)            /*!< 0x00000008 */
-#define PWR_PDCRE_PD3                       PWR_PDCRE_PD3_Msk                       /*!< Apply pull-down for PE3  */
-#define PWR_PDCRE_PD4_Pos                   (4UL)
-#define PWR_PDCRE_PD4_Msk                   (0x1UL << PWR_PDCRE_PD4_Pos)            /*!< 0x00000010 */
-#define PWR_PDCRE_PD4                       PWR_PDCRE_PD4_Msk                       /*!< Apply pull-down for PE4  */
-#define PWR_PDCRE_PD5_Pos                   (5UL)
-#define PWR_PDCRE_PD5_Msk                   (0x1UL << PWR_PDCRE_PD5_Pos)            /*!< 0x00000020 */
-#define PWR_PDCRE_PD5                       PWR_PDCRE_PD5_Msk                       /*!< Apply pull-down for PE5  */
-#define PWR_PDCRE_PD6_Pos                   (6UL)
-#define PWR_PDCRE_PD6_Msk                   (0x1UL << PWR_PDCRE_PD6_Pos)            /*!< 0x00000040 */
-#define PWR_PDCRE_PD6                       PWR_PDCRE_PD6_Msk                       /*!< Apply pull-down for PE6  */
-#define PWR_PDCRE_PD7_Pos                   (7UL)
-#define PWR_PDCRE_PD7_Msk                   (0x1UL << PWR_PDCRE_PD7_Pos)            /*!< 0x00000080 */
-#define PWR_PDCRE_PD7                       PWR_PDCRE_PD7_Msk                       /*!< Apply pull-down for PE7  */
-#define PWR_PDCRE_PD8_Pos                   (8UL)
-#define PWR_PDCRE_PD8_Msk                   (0x1UL << PWR_PDCRE_PD8_Pos)            /*!< 0x00000100 */
-#define PWR_PDCRE_PD8                       PWR_PDCRE_PD8_Msk                       /*!< Apply pull-down for PE8  */
-#define PWR_PDCRE_PD9_Pos                   (9UL)
-#define PWR_PDCRE_PD9_Msk                   (0x1UL << PWR_PDCRE_PD9_Pos)            /*!< 0x00000200 */
-#define PWR_PDCRE_PD9                       PWR_PDCRE_PD9_Msk                       /*!< Apply pull-down for PE9  */
-#define PWR_PDCRE_PD10_Pos                  (10UL)
-#define PWR_PDCRE_PD10_Msk                  (0x1UL << PWR_PDCRE_PD10_Pos)           /*!< 0x00000400 */
-#define PWR_PDCRE_PD10                      PWR_PDCRE_PD10_Msk                      /*!< Apply pull-down for PE10 */
-#define PWR_PDCRE_PD11_Pos                  (11UL)
-#define PWR_PDCRE_PD11_Msk                  (0x1UL << PWR_PDCRE_PD11_Pos)           /*!< 0x00000800 */
-#define PWR_PDCRE_PD11                      PWR_PDCRE_PD11_Msk                      /*!< Apply pull-down for PE11 */
-#define PWR_PDCRE_PD12_Pos                  (12UL)
-#define PWR_PDCRE_PD12_Msk                  (0x1UL << PWR_PDCRE_PD12_Pos)           /*!< 0x00001000 */
-#define PWR_PDCRE_PD12                      PWR_PDCRE_PD12_Msk                      /*!< Apply pull-down for PE12 */
-#define PWR_PDCRE_PD13_Pos                  (13UL)
-#define PWR_PDCRE_PD13_Msk                  (0x1UL << PWR_PDCRE_PD13_Pos)           /*!< 0x00002000 */
-#define PWR_PDCRE_PD13                      PWR_PDCRE_PD13_Msk                      /*!< Apply pull-down for PE13 */
-#define PWR_PDCRE_PD14_Pos                  (14UL)
-#define PWR_PDCRE_PD14_Msk                  (0x1UL << PWR_PDCRE_PD14_Pos)           /*!< 0x00004000 */
-#define PWR_PDCRE_PD14                      PWR_PDCRE_PD14_Msk                      /*!< Apply pull-down for PE14 */
-#define PWR_PDCRE_PD15_Pos                  (15UL)
-#define PWR_PDCRE_PD15_Msk                  (0x1UL << PWR_PDCRE_PD15_Pos)           /*!< 0x00008000 */
-#define PWR_PDCRE_PD15                      PWR_PDCRE_PD15_Msk                      /*!< Apply pull-down for PE15 */
-
-/********************  Bit definition for PWR_PUCRG register  *****************/
-#define PWR_PUCRG_PU2_Pos                   (2UL)
-#define PWR_PUCRG_PU2_Msk                   (0x1UL << PWR_PUCRG_PU2_Pos)            /*!< 0x00000004 */
-#define PWR_PUCRG_PU2                       PWR_PUCRG_PU2_Msk                       /*!< Apply pull-up for PG2  */
-#define PWR_PUCRG_PU3_Pos                   (3UL)
-#define PWR_PUCRG_PU3_Msk                   (0x1UL << PWR_PUCRG_PU3_Pos)            /*!< 0x00000008 */
-#define PWR_PUCRG_PU3                       PWR_PUCRG_PU3_Msk                       /*!< Apply pull-up for PG3  */
-#define PWR_PUCRG_PU4_Pos                   (4UL)
-#define PWR_PUCRG_PU4_Msk                   (0x1UL << PWR_PUCRG_PU4_Pos)            /*!< 0x00000010 */
-#define PWR_PUCRG_PU4                       PWR_PUCRG_PU4_Msk                       /*!< Apply pull-up for PG4  */
-#define PWR_PUCRG_PU5_Pos                   (5UL)
-#define PWR_PUCRG_PU5_Msk                   (0x1UL << PWR_PUCRG_PU5_Pos)            /*!< 0x00000020 */
-#define PWR_PUCRG_PU5                       PWR_PUCRG_PU5_Msk                       /*!< Apply pull-up for PG5  */
-#define PWR_PUCRG_PU6_Pos                   (6UL)
-#define PWR_PUCRG_PU6_Msk                   (0x1UL << PWR_PUCRG_PU6_Pos)            /*!< 0x00000040 */
-#define PWR_PUCRG_PU6                       PWR_PUCRG_PU6_Msk                       /*!< Apply pull-up for PG6  */
-#define PWR_PUCRG_PU7_Pos                   (7UL)
-#define PWR_PUCRG_PU7_Msk                   (0x1UL << PWR_PUCRG_PU7_Pos)            /*!< 0x00000080 */
-#define PWR_PUCRG_PU7                       PWR_PUCRG_PU7_Msk                       /*!< Apply pull-up for PG7  */
-#define PWR_PUCRG_PU8_Pos                   (8UL)
-#define PWR_PUCRG_PU8_Msk                   (0x1UL << PWR_PUCRG_PU8_Pos)            /*!< 0x00000100 */
-#define PWR_PUCRG_PU8                       PWR_PUCRG_PU8_Msk                       /*!< Apply pull-up for PG8  */
-#define PWR_PUCRG_PU9_Pos                   (9UL)
-#define PWR_PUCRG_PU9_Msk                   (0x1UL << PWR_PUCRG_PU9_Pos)            /*!< 0x00000200 */
-#define PWR_PUCRG_PU9                       PWR_PUCRG_PU9_Msk                       /*!< Apply pull-up for PG9  */
-#define PWR_PUCRG_PU10_Pos                  (10UL)
-#define PWR_PUCRG_PU10_Msk                  (0x1UL << PWR_PUCRG_PU10_Pos)           /*!< 0x00000400 */
-#define PWR_PUCRG_PU10                      PWR_PUCRG_PU10_Msk                      /*!< Apply pull-up for PG10 */
-#define PWR_PUCRG_PU11_Pos                  (11UL)
-#define PWR_PUCRG_PU11_Msk                  (0x1UL << PWR_PUCRG_PU11_Pos)           /*!< 0x00000800 */
-#define PWR_PUCRG_PU11                      PWR_PUCRG_PU11_Msk                      /*!< Apply pull-up for PG11 */
-#define PWR_PUCRG_PU12_Pos                  (12UL)
-#define PWR_PUCRG_PU12_Msk                  (0x1UL << PWR_PUCRG_PU12_Pos)           /*!< 0x00001000 */
-#define PWR_PUCRG_PU12                      PWR_PUCRG_PU12_Msk                      /*!< Apply pull-up for PG12 */
-#define PWR_PUCRG_PU13_Pos                  (13UL)
-#define PWR_PUCRG_PU13_Msk                  (0x1UL << PWR_PUCRG_PU13_Pos)           /*!< 0x00002000 */
-#define PWR_PUCRG_PU13                      PWR_PUCRG_PU13_Msk                      /*!< Apply pull-up for PG13 */
-#define PWR_PUCRG_PU14_Pos                  (14UL)
-#define PWR_PUCRG_PU14_Msk                  (0x1UL << PWR_PUCRG_PU14_Pos)           /*!< 0x00004000 */
-#define PWR_PUCRG_PU14                      PWR_PUCRG_PU14_Msk                      /*!< Apply pull-up for PG14 */
-#define PWR_PUCRG_PU15_Pos                  (15UL)
-#define PWR_PUCRG_PU15_Msk                  (0x1UL << PWR_PUCRG_PU15_Pos)           /*!< 0x00008000 */
-#define PWR_PUCRG_PU15                      PWR_PUCRG_PU15_Msk                      /*!< Apply pull-up for PG15 */
-
-/********************  Bit definition for PWR_PDCRG register  *****************/
-#define PWR_PDCRG_PD2_Pos                   (2UL)
-#define PWR_PDCRG_PD2_Msk                   (0x1UL << PWR_PDCRG_PD2_Pos)            /*!< 0x00000004 */
-#define PWR_PDCRG_PD2                       PWR_PDCRG_PD2_Msk                       /*!< Apply pull-down for PG2  */
-#define PWR_PDCRG_PD3_Pos                   (3UL)
-#define PWR_PDCRG_PD3_Msk                   (0x1UL << PWR_PDCRG_PD3_Pos)            /*!< 0x00000008 */
-#define PWR_PDCRG_PD3                       PWR_PDCRG_PD3_Msk                       /*!< Apply pull-down for PG3  */
-#define PWR_PDCRG_PD4_Pos                   (4UL)
-#define PWR_PDCRG_PD4_Msk                   (0x1UL << PWR_PDCRG_PD4_Pos)            /*!< 0x00000010 */
-#define PWR_PDCRG_PD4                       PWR_PDCRG_PD4_Msk                       /*!< Apply pull-down for PG4  */
-#define PWR_PDCRG_PD5_Pos                   (5UL)
-#define PWR_PDCRG_PD5_Msk                   (0x1UL << PWR_PDCRG_PD5_Pos)            /*!< 0x00000020 */
-#define PWR_PDCRG_PD5                       PWR_PDCRG_PD5_Msk                       /*!< Apply pull-down for PG5  */
-#define PWR_PDCRG_PD6_Pos                   (6UL)
-#define PWR_PDCRG_PD6_Msk                   (0x1UL << PWR_PDCRG_PD6_Pos)            /*!< 0x00000040 */
-#define PWR_PDCRG_PD6                       PWR_PDCRG_PD6_Msk                       /*!< Apply pull-down for PG6  */
-#define PWR_PDCRG_PD7_Pos                   (7UL)
-#define PWR_PDCRG_PD7_Msk                   (0x1UL << PWR_PDCRG_PD7_Pos)            /*!< 0x00000080 */
-#define PWR_PDCRG_PD7                       PWR_PDCRG_PD7_Msk                       /*!< Apply pull-down for PG7  */
-#define PWR_PDCRG_PD8_Pos                   (8UL)
-#define PWR_PDCRG_PD8_Msk                   (0x1UL << PWR_PDCRG_PD8_Pos)            /*!< 0x00000100 */
-#define PWR_PDCRG_PD8                       PWR_PDCRG_PD8_Msk                       /*!< Apply pull-down for PG8  */
-#define PWR_PDCRG_PD9_Pos                   (9UL)
-#define PWR_PDCRG_PD9_Msk                   (0x1UL << PWR_PDCRG_PD9_Pos)            /*!< 0x00000200 */
-#define PWR_PDCRG_PD9                       PWR_PDCRG_PD9_Msk                       /*!< Apply pull-down for PG9  */
-#define PWR_PDCRG_PD10_Pos                  (10UL)
-#define PWR_PDCRG_PD10_Msk                  (0x1UL << PWR_PDCRG_PD10_Pos)           /*!< 0x00000400 */
-#define PWR_PDCRG_PD10                      PWR_PDCRG_PD10_Msk                      /*!< Apply pull-down for PG10 */
-#define PWR_PDCRG_PD11_Pos                  (11UL)
-#define PWR_PDCRG_PD11_Msk                  (0x1UL << PWR_PDCRG_PD11_Pos)           /*!< 0x00000800 */
-#define PWR_PDCRG_PD11                      PWR_PDCRG_PD11_Msk                      /*!< Apply pull-down for PG11 */
-#define PWR_PDCRG_PD12_Pos                  (12UL)
-#define PWR_PDCRG_PD12_Msk                  (0x1UL << PWR_PDCRG_PD12_Pos)           /*!< 0x00001000 */
-#define PWR_PDCRG_PD12                      PWR_PDCRG_PD12_Msk                      /*!< Apply pull-down for PG12 */
-#define PWR_PDCRG_PD13_Pos                  (13UL)
-#define PWR_PDCRG_PD13_Msk                  (0x1UL << PWR_PDCRG_PD13_Pos)           /*!< 0x00002000 */
-#define PWR_PDCRG_PD13                      PWR_PDCRG_PD13_Msk                      /*!< Apply pull-down for PG13 */
-#define PWR_PDCRG_PD14_Pos                  (14UL)
-#define PWR_PDCRG_PD14_Msk                  (0x1UL << PWR_PDCRG_PD14_Pos)           /*!< 0x00004000 */
-#define PWR_PDCRG_PD14                      PWR_PDCRG_PD14_Msk                      /*!< Apply pull-down for PG14 */
-#define PWR_PDCRG_PD15_Pos                  (15UL)
-#define PWR_PDCRG_PD15_Msk                  (0x1UL << PWR_PDCRG_PD15_Pos)           /*!< 0x00008000 */
-#define PWR_PDCRG_PD15                      PWR_PDCRG_PD15_Msk                      /*!< Apply pull-down for PG15 */
 
 /********************  Bit definition for PWR_PUCRH register  *****************/
 #define PWR_PUCRH_PU0_Pos                   (0UL)
@@ -12810,35 +12043,11 @@ typedef struct
 #define PWR_I3CPUCR1_PB13_I3CPU_Pos         (10UL)
 #define PWR_I3CPUCR1_PB13_I3CPU_Msk         (0x1UL << PWR_I3CPUCR1_PB13_I3CPU_Pos)  /*!< 0x00000400 */
 #define PWR_I3CPUCR1_PB13_I3CPU             PWR_I3CPUCR1_PB13_I3CPU_Msk             /*!< Port B pin 13 I3C pull-up */
-#define PWR_I3CPUCR1_PB14_I3CPU_Pos         (11UL)
-#define PWR_I3CPUCR1_PB14_I3CPU_Msk         (0x1UL << PWR_I3CPUCR1_PB14_I3CPU_Pos)  /*!< 0x00000800 */
-#define PWR_I3CPUCR1_PB14_I3CPU             PWR_I3CPUCR1_PB14_I3CPU_Msk             /*!< Port B pin 14 I3C pull-up */
+#define PWR_I3CPUCR1_PB7_I3CPU_Pos          (12UL)
+#define PWR_I3CPUCR1_PB7_I3CPU_Msk          (0x1UL << PWR_I3CPUCR1_PB7_I3CPU_Pos)   /*!< 0x00001000 */
+#define PWR_I3CPUCR1_PB7_I3CPU              PWR_I3CPUCR1_PB7_I3CPU_Msk              /*!< Port B pin 7 I3C pull-up  */
 
 /********************  Bit definition for PWR_I3CPUCR2 register  *****************/
-#define PWR_I3CPUCR2_PC0_I3CPU_Pos          (0UL)
-#define PWR_I3CPUCR2_PC0_I3CPU_Msk          (0x1UL << PWR_I3CPUCR2_PC0_I3CPU_Pos)   /*!< 0x00000001 */
-#define PWR_I3CPUCR2_PC0_I3CPU              PWR_I3CPUCR2_PC0_I3CPU_Msk              /*!< Port C pin 0 I3C pull-up  */
-#define PWR_I3CPUCR2_PC1_I3CPU_Pos          (1UL)
-#define PWR_I3CPUCR2_PC1_I3CPU_Msk          (0x1UL << PWR_I3CPUCR2_PC1_I3CPU_Pos)   /*!< 0x00000002 */
-#define PWR_I3CPUCR2_PC1_I3CPU              PWR_I3CPUCR2_PC1_I3CPU_Msk              /*!< Port C pin 1 I3C pull-up  */
-#define PWR_I3CPUCR2_PD12_I3CPU_Pos         (3UL)
-#define PWR_I3CPUCR2_PD12_I3CPU_Msk         (0x1UL << PWR_I3CPUCR2_PD12_I3CPU_Pos)  /*!< 0x00000008 */
-#define PWR_I3CPUCR2_PD12_I3CPU             PWR_I3CPUCR2_PD12_I3CPU_Msk             /*!< Port D pin 12 I3C pull-up */
-#define PWR_I3CPUCR2_PD13_I3CPU_Pos         (4UL)
-#define PWR_I3CPUCR2_PD13_I3CPU_Msk         (0x1UL << PWR_I3CPUCR2_PD13_I3CPU_Pos)  /*!< 0x00000010 */
-#define PWR_I3CPUCR2_PD13_I3CPU             PWR_I3CPUCR2_PD13_I3CPU_Msk             /*!< Port D pin 13 I3C pull-up */
-#define PWR_I3CPUCR2_PG7_I3CPU_Pos          (6UL)
-#define PWR_I3CPUCR2_PG7_I3CPU_Msk          (0x1UL << PWR_I3CPUCR2_PG7_I3CPU_Pos)   /*!< 0x00000040 */
-#define PWR_I3CPUCR2_PG7_I3CPU              PWR_I3CPUCR2_PG7_I3CPU_Msk              /*!< Port G pin 7 I3C pull-up  */
-#define PWR_I3CPUCR2_PG8_I3CPU_Pos          (7UL)
-#define PWR_I3CPUCR2_PG8_I3CPU_Msk          (0x1UL << PWR_I3CPUCR2_PG8_I3CPU_Pos)   /*!< 0x00000080 */
-#define PWR_I3CPUCR2_PG8_I3CPU              PWR_I3CPUCR2_PG8_I3CPU_Msk              /*!< Port G pin 8 I3C pull-up  */
-#define PWR_I3CPUCR2_PG13_I3CPU_Pos         (8UL)
-#define PWR_I3CPUCR2_PG13_I3CPU_Msk         (0x1UL << PWR_I3CPUCR2_PG13_I3CPU_Pos)  /*!< 0x00000100 */
-#define PWR_I3CPUCR2_PG13_I3CPU             PWR_I3CPUCR2_PG13_I3CPU_Msk             /*!< Port G pin 13 I3C pull-up */
-#define PWR_I3CPUCR2_PG14_I3CPU_Pos         (9UL)
-#define PWR_I3CPUCR2_PG14_I3CPU_Msk         (0x1UL << PWR_I3CPUCR2_PG14_I3CPU_Pos)  /*!< 0x00000200 */
-#define PWR_I3CPUCR2_PG14_I3CPU             PWR_I3CPUCR2_PG14_I3CPU_Msk             /*!< Port G pin 14 I3C pull-up */
 #define PWR_I3CPUCR2_PH3_I3CPU_Pos          (11UL)
 #define PWR_I3CPUCR2_PH3_I3CPU_Msk          (0x1UL << PWR_I3CPUCR2_PH3_I3CPU_Pos)   /*!< 0x00000800 */
 #define PWR_I3CPUCR2_PH3_I3CPU              PWR_I3CPUCR2_PH3_I3CPU_Msk              /*!< Port H pin 3 I3C pull-up  */
@@ -13668,6 +12877,9 @@ typedef struct
 #define RCC_AHB2ENR1_GPIOHEN_Pos            (7UL)
 #define RCC_AHB2ENR1_GPIOHEN_Msk            (0x1UL << RCC_AHB2ENR1_GPIOHEN_Pos)       /*!< 0x00000080 */
 #define RCC_AHB2ENR1_GPIOHEN                RCC_AHB2ENR1_GPIOHEN_Msk                  /*!< IO port H Enable */
+#define RCC_AHB2ENR1_ADC12EN_Pos            (10UL)
+#define RCC_AHB2ENR1_ADC12EN_Msk            (0x1UL << RCC_AHB2ENR1_ADC12EN_Pos)       /*!< 0x00000400 */
+#define RCC_AHB2ENR1_ADC12EN                RCC_AHB2ENR1_ADC12EN_Msk                  /*!< ADC12 Enable */
 #define RCC_AHB2ENR1_DAC1EN_Pos             (11UL)
 #define RCC_AHB2ENR1_DAC1EN_Msk             (0x1UL << RCC_AHB2ENR1_DAC1EN_Pos)        /*!< 0x00000800 */
 #define RCC_AHB2ENR1_DAC1EN                 RCC_AHB2ENR1_DAC1EN_Msk                   /*!< DAC1 Enable */
@@ -14308,41 +13520,41 @@ typedef struct
 /********************  Bits definition for RNG_CR register  *******************/
 #define RNG_CR_RNGEN_Pos                    (2UL)
 #define RNG_CR_RNGEN_Msk                    (0x1UL << RNG_CR_RNGEN_Pos)             /*!< 0x00000004 */
-#define RNG_CR_RNGEN                        RNG_CR_RNGEN_Msk
+#define RNG_CR_RNGEN                        RNG_CR_RNGEN_Msk                        /*!< True random number generator enable */
 #define RNG_CR_IE_Pos                       (3UL)
 #define RNG_CR_IE_Msk                       (0x1UL << RNG_CR_IE_Pos)                /*!< 0x00000008 */
-#define RNG_CR_IE                           RNG_CR_IE_Msk
+#define RNG_CR_IE                           RNG_CR_IE_Msk                           /*!< Interrupt enable */
 #define RNG_CR_CED_Pos                      (5UL)
 #define RNG_CR_CED_Msk                      (0x1UL << RNG_CR_CED_Pos)               /*!< 0x00000020 */
-#define RNG_CR_CED                          RNG_CR_CED_Msk
+#define RNG_CR_CED                          RNG_CR_CED_Msk                          /*!< Clock error detection */
 #define RNG_CR_ARDIS_Pos                    (7UL)
-#define RNG_CR_ARDIS_Msk                    (0x1UL << RNG_CR_ARDIS_Pos)
-#define RNG_CR_ARDIS                        RNG_CR_ARDIS_Msk
+#define RNG_CR_ARDIS_Msk                    (0x1UL << RNG_CR_ARDIS_Pos)             /*!< 0x00000080 */
+#define RNG_CR_ARDIS                        RNG_CR_ARDIS_Msk                        /*!< Auto reset disable */
 #define RNG_CR_RNG_CONFIG3_Pos              (8UL)
-#define RNG_CR_RNG_CONFIG3_Msk              (0xFUL << RNG_CR_RNG_CONFIG3_Pos)
-#define RNG_CR_RNG_CONFIG3                  RNG_CR_RNG_CONFIG3_Msk
+#define RNG_CR_RNG_CONFIG3_Msk              (0xFUL << RNG_CR_RNG_CONFIG3_Pos)       /*!< 0x00000F00 */
+#define RNG_CR_RNG_CONFIG3                  RNG_CR_RNG_CONFIG3_Msk                  /*!< RNG configuration 3 */
 #define RNG_CR_NISTC_Pos                    (12UL)
-#define RNG_CR_NISTC_Msk                    (0x1UL << RNG_CR_NISTC_Pos)
-#define RNG_CR_NISTC                        RNG_CR_NISTC_Msk
+#define RNG_CR_NISTC_Msk                    (0x1UL << RNG_CR_NISTC_Pos)             /*!< 0x00001000 */
+#define RNG_CR_NISTC                        RNG_CR_NISTC_Msk                        /*!< NIST custom */
 #define RNG_CR_RNG_CONFIG2_Pos              (13UL)
-#define RNG_CR_RNG_CONFIG2_Msk              (0x7UL << RNG_CR_RNG_CONFIG2_Pos)
-#define RNG_CR_RNG_CONFIG2                  RNG_CR_RNG_CONFIG2_Msk
+#define RNG_CR_RNG_CONFIG2_Msk              (0x7UL << RNG_CR_RNG_CONFIG2_Pos)       /*!< 0x0000E000 */
+#define RNG_CR_RNG_CONFIG2                  RNG_CR_RNG_CONFIG2_Msk                  /*!< RNG configuration 2 */
 #define RNG_CR_CLKDIV_Pos                   (16UL)
-#define RNG_CR_CLKDIV_Msk                   (0xFUL << RNG_CR_CLKDIV_Pos)
-#define RNG_CR_CLKDIV                       RNG_CR_CLKDIV_Msk
+#define RNG_CR_CLKDIV_Msk                   (0xFUL << RNG_CR_CLKDIV_Pos)            /*!< 0x000F0000 */
+#define RNG_CR_CLKDIV                       RNG_CR_CLKDIV_Msk                       /*!< Clock divider factor */
 #define RNG_CR_CLKDIV_0                     (0x1UL << RNG_CR_CLKDIV_Pos)            /*!< 0x00010000 */
 #define RNG_CR_CLKDIV_1                     (0x2UL << RNG_CR_CLKDIV_Pos)            /*!< 0x00020000 */
 #define RNG_CR_CLKDIV_2                     (0x4UL << RNG_CR_CLKDIV_Pos)            /*!< 0x00040000 */
 #define RNG_CR_CLKDIV_3                     (0x8UL << RNG_CR_CLKDIV_Pos)            /*!< 0x00080000 */
 #define RNG_CR_RNG_CONFIG1_Pos              (20UL)
-#define RNG_CR_RNG_CONFIG1_Msk              (0x3FUL << RNG_CR_RNG_CONFIG1_Pos)
-#define RNG_CR_RNG_CONFIG1                  RNG_CR_RNG_CONFIG1_Msk
+#define RNG_CR_RNG_CONFIG1_Msk              (0xFFUL << RNG_CR_RNG_CONFIG1_Pos)      /*!< 0x0FF00000 */
+#define RNG_CR_RNG_CONFIG1                  RNG_CR_RNG_CONFIG1_Msk                  /*!< RNG configuration 1 */
 #define RNG_CR_CONDRST_Pos                  (30UL)
-#define RNG_CR_CONDRST_Msk                  (0x1UL << RNG_CR_CONDRST_Pos)
-#define RNG_CR_CONDRST                      RNG_CR_CONDRST_Msk
+#define RNG_CR_CONDRST_Msk                  (0x1UL << RNG_CR_CONDRST_Pos)           /*!< 0x40000000 */
+#define RNG_CR_CONDRST                      RNG_CR_CONDRST_Msk                      /*!< Conditioning soft reset */
 #define RNG_CR_CONFIGLOCK_Pos               (31UL)
-#define RNG_CR_CONFIGLOCK_Msk               (0x1UL << RNG_CR_CONFIGLOCK_Pos)
-#define RNG_CR_CONFIGLOCK                   RNG_CR_CONFIGLOCK_Msk
+#define RNG_CR_CONFIGLOCK_Msk               (0x1UL << RNG_CR_CONFIGLOCK_Pos)        /*!< 0x80000000 */
+#define RNG_CR_CONFIGLOCK                   RNG_CR_CONFIGLOCK_Msk                   /*!< RNG configuration lock */
 
 /********************  Bits definition for RNG_SR register  *******************/
 #define RNG_SR_DRDY_Pos                     (0UL)
@@ -14356,7 +13568,7 @@ typedef struct
 #define RNG_SR_SECS                         RNG_SR_SECS_Msk
 #define RNG_SR_BUSY_Pos                     (4UL)
 #define RNG_SR_BUSY_Msk                     (0x1UL << RNG_SR_BUSY_Pos)              /*!< 0x00000010 */
-#define RNG_SR_BUSY                         RNG_SR_BUSY_Msk
+#define RNG_SR_BUSY                         RNG_SR_BUSY_Msk                         /*!< Busy */
 #define RNG_SR_CEIS_Pos                     (5UL)
 #define RNG_SR_CEIS_Msk                     (0x1UL << RNG_SR_CEIS_Pos)              /*!< 0x00000020 */
 #define RNG_SR_CEIS                         RNG_SR_CEIS_Msk
@@ -14366,15 +13578,138 @@ typedef struct
 
 /********************  Bits definition for RNG_NSCR register  *******************/
 #define RNG_NSCR_EN_OSC1_Pos                  (0UL)
-#define RNG_NSCR_EN_OSC1_Msk                  (0x7UL << RNG_NSCR_EN_OSC1_Pos)      /*!< 0x00000007 */
+#define RNG_NSCR_EN_OSC1_Msk                  (0x7UL << RNG_NSCR_EN_OSC1_Pos)       /*!< 0x00000007 */
 #define RNG_NSCR_EN_OSC1                      RNG_NSCR_EN_OSC1_Msk
 #define RNG_NSCR_EN_OSC2_Pos                  (3UL)
-#define RNG_NSCR_EN_OSC2_Msk                  (0x7UL << RNG_NSCR_EN_OSC2_Pos)      /*!< 0x00000038 */
+#define RNG_NSCR_EN_OSC2_Msk                  (0x7UL << RNG_NSCR_EN_OSC2_Pos)       /*!< 0x00000038 */
 #define RNG_NSCR_EN_OSC2                      RNG_NSCR_EN_OSC2_Msk
-#define RNG_NSCR_EN_OSC3_Pos                  (06UL)
-#define RNG_NSCR_EN_OSC3_Msk                  (0x7UL << RNG_NSCR_EN_OSC3_Pos)      /*!< 0x000001C0 */
+#define RNG_NSCR_EN_OSC3_Pos                  (6UL)
+#define RNG_NSCR_EN_OSC3_Msk                  (0x7UL << RNG_NSCR_EN_OSC3_Pos)       /*!< 0x000001C0 */
 #define RNG_NSCR_EN_OSC3                      RNG_NSCR_EN_OSC3_Msk
 
+/********************  Bits definition for RNG_HTCR0 register  *******************/
+#define RNG_HTCR0_HTCFG_Pos                  (0UL)
+#define RNG_HTCR0_HTCFG_Msk                  (0xFFFFFFFFUL << RNG_HTCR0_HTCFG_Pos)    /*!< 0xFFFFFFFF */
+#define RNG_HTCR0_HTCFG                      RNG_HTCR0_HTCFG_Msk
+
+/********************  Bits definition for RNG_HTCR1 register  *******************/
+#define RNG_HTCR1_HTCFG_Pos                  (0UL)
+#define RNG_HTCR1_HTCFG_Msk                  (0xFFFFFFFFUL << RNG_HTCR1_HTCFG_Pos)    /*!< 0xFFFFFFFF */
+#define RNG_HTCR1_HTCFG                      RNG_HTCR1_HTCFG_Msk
+
+/********************  Bits definition for RNG_HTCR2 register  *******************/
+#define RNG_HTCR2_HTCFG_Pos                  (0UL)
+#define RNG_HTCR2_HTCFG_Msk                  (0xFFFFFFFFUL << RNG_HTCR2_HTCFG_Pos)    /*!< 0xFFFFFFFF */
+#define RNG_HTCR2_HTCFG                      RNG_HTCR2_HTCFG_Msk
+
+/********************  Bits definition for RNG_HTCR3 register  *******************/
+#define RNG_HTCR3_HTCFG_Pos                  (0UL)
+#define RNG_HTCR3_HTCFG_Msk                  (0xFFFFFFFFUL << RNG_HTCR3_HTCFG_Pos)    /*!< 0xFFFFFFFF */
+#define RNG_HTCR3_HTCFG                      RNG_HTCR3_HTCFG_Msk
+
+/*************************************  Bit definition for RNG_HTSR0 register  ************************************* */
+#define RNG_HTSR0_RPERRX_Pos                (0UL)
+#define RNG_HTSR0_RPERRX_Msk                (0x1UL << RNG_HTSR0_RPERRX_Pos)         /*!< 0x00000001 */
+#define RNG_HTSR0_RPERRX                    RNG_HTSR0_RPERRX_Msk                    /*!< Repetitive error after the XOR */
+#define RNG_HTSR0_RPERR1_Pos                (1UL)
+#define RNG_HTSR0_RPERR1_Msk                (0x1UL << RNG_HTSR0_RPERR1_Pos)         /*!< 0x00000002 */
+#define RNG_HTSR0_RPERR1                    RNG_HTSR0_RPERR1_Msk                    /*!< Repetitive error for oscillator i */
+#define RNG_HTSR0_RPERR2_Pos                (2UL)
+#define RNG_HTSR0_RPERR2_Msk                (0x1UL << RNG_HTSR0_RPERR2_Pos)         /*!< 0x00000004 */
+#define RNG_HTSR0_RPERR2                    RNG_HTSR0_RPERR2_Msk                    /*!< Repetitive error for oscillator i */
+#define RNG_HTSR0_RPERR3_Pos                (3UL)
+#define RNG_HTSR0_RPERR3_Msk                (0x1UL << RNG_HTSR0_RPERR3_Pos)         /*!< 0x00000008 */
+#define RNG_HTSR0_RPERR3                    RNG_HTSR0_RPERR3_Msk                    /*!< Repetitive error for oscillator i */
+#define RNG_HTSR0_RPERR4_Pos                (4UL)
+#define RNG_HTSR0_RPERR4_Msk                (0x1UL << RNG_HTSR0_RPERR4_Pos)         /*!< 0x00000010 */
+#define RNG_HTSR0_RPERR4                    RNG_HTSR0_RPERR4_Msk                    /*!< Repetitive error for oscillator i */
+#define RNG_HTSR0_RPERR5_Pos                (5UL)
+#define RNG_HTSR0_RPERR5_Msk                (0x1UL << RNG_HTSR0_RPERR5_Pos)         /*!< 0x00000020 */
+#define RNG_HTSR0_RPERR5                    RNG_HTSR0_RPERR5_Msk                    /*!< Repetitive error for oscillator i */
+#define RNG_HTSR0_RPERR6_Pos                (6UL)
+#define RNG_HTSR0_RPERR6_Msk                (0x1UL << RNG_HTSR0_RPERR6_Pos)         /*!< 0x00000040 */
+#define RNG_HTSR0_RPERR6                    RNG_HTSR0_RPERR6_Msk                    /*!< Repetitive error for oscillator i */
+#define RNG_HTSR0_RPERR7_Pos                (7UL)
+#define RNG_HTSR0_RPERR7_Msk                (0x1UL << RNG_HTSR0_RPERR7_Pos)         /*!< 0x00000080 */
+#define RNG_HTSR0_RPERR7                    RNG_HTSR0_RPERR7_Msk                    /*!< Repetitive error for oscillator i */
+#define RNG_HTSR0_RPERR8_Pos                (8UL)
+#define RNG_HTSR0_RPERR8_Msk                (0x1UL << RNG_HTSR0_RPERR8_Pos)         /*!< 0x00000100 */
+#define RNG_HTSR0_RPERR8                    RNG_HTSR0_RPERR8_Msk                    /*!< Repetitive error for oscillator i */
+#define RNG_HTSR0_RPERR9_Pos                (9UL)
+#define RNG_HTSR0_RPERR9_Msk                (0x1UL << RNG_HTSR0_RPERR9_Pos)         /*!< 0x00000200 */
+#define RNG_HTSR0_RPERR9                    RNG_HTSR0_RPERR9_Msk                    /*!< Repetitive error for oscillator i */
+
+/*************************************  Bit definition for RNG_HTSR1 register  **************************************/
+#define RNG_HTSR1_ADERRX_Pos                (0UL)
+#define RNG_HTSR1_ADERRX_Msk                (0x1UL << RNG_HTSR1_ADERRX_Pos)         /*!< 0x00000001 */
+#define RNG_HTSR1_ADERRX                    RNG_HTSR1_ADERRX_Msk                    /*!< Adaptative error after the XOR */
+#define RNG_HTSR1_ADERR1_Pos                (1UL)
+#define RNG_HTSR1_ADERR1_Msk                (0x1UL << RNG_HTSR1_ADERR1_Pos)         /*!< 0x00000002 */
+#define RNG_HTSR1_ADERR1                    RNG_HTSR1_ADERR1_Msk                    /*!< Adaptative error for oscillator i */
+#define RNG_HTSR1_ADERR2_Pos                (2UL)
+#define RNG_HTSR1_ADERR2_Msk                (0x1UL << RNG_HTSR1_ADERR2_Pos)         /*!< 0x00000004 */
+#define RNG_HTSR1_ADERR2                    RNG_HTSR1_ADERR2_Msk                    /*!< Adaptative error for oscillator i */
+#define RNG_HTSR1_ADERR3_Pos                (3UL)
+#define RNG_HTSR1_ADERR3_Msk                (0x1UL << RNG_HTSR1_ADERR3_Pos)         /*!< 0x00000008 */
+#define RNG_HTSR1_ADERR3                    RNG_HTSR1_ADERR3_Msk                    /*!< Adaptative error for oscillator i */
+#define RNG_HTSR1_ADERR4_Pos                (4UL)
+#define RNG_HTSR1_ADERR4_Msk                (0x1UL << RNG_HTSR1_ADERR4_Pos)         /*!< 0x00000010 */
+#define RNG_HTSR1_ADERR4                    RNG_HTSR1_ADERR4_Msk                    /*!< Adaptative error for oscillator i */
+#define RNG_HTSR1_ADERR5_Pos                (5UL)
+#define RNG_HTSR1_ADERR5_Msk                (0x1UL << RNG_HTSR1_ADERR5_Pos)         /*!< 0x00000020 */
+#define RNG_HTSR1_ADERR5                    RNG_HTSR1_ADERR5_Msk                    /*!< Adaptative error for oscillator i */
+#define RNG_HTSR1_ADERR6_Pos                (6UL)
+#define RNG_HTSR1_ADERR6_Msk                (0x1UL << RNG_HTSR1_ADERR6_Pos)         /*!< 0x00000040 */
+#define RNG_HTSR1_ADERR6                    RNG_HTSR1_ADERR6_Msk                    /*!< Adaptative error for oscillator i */
+#define RNG_HTSR1_ADERR7_Pos                (7UL)
+#define RNG_HTSR1_ADERR7_Msk                (0x1UL << RNG_HTSR1_ADERR7_Pos)         /*!< 0x00000080 */
+#define RNG_HTSR1_ADERR7                    RNG_HTSR1_ADERR7_Msk                    /*!< Adaptative error for oscillator i */
+#define RNG_HTSR1_ADERR8_Pos                (8UL)
+#define RNG_HTSR1_ADERR8_Msk                (0x1UL << RNG_HTSR1_ADERR8_Pos)         /*!< 0x00000100 */
+#define RNG_HTSR1_ADERR8                    RNG_HTSR1_ADERR8_Msk                    /*!< Adaptative error for oscillator i */
+#define RNG_HTSR1_ADERR9_Pos                (9UL)
+#define RNG_HTSR1_ADERR9_Msk                (0x1UL << RNG_HTSR1_ADERR9_Pos)         /*!< 0x00000200 */
+#define RNG_HTSR1_ADERR9                    RNG_HTSR1_ADERR9_Msk                    /*!< Adaptative error for oscillator i */
+
+/**************************************  Bit definition for RNG_NSMR register  ************************************* */
+#define RNG_NSMR_MOSC1_Pos                  (0UL)
+#define RNG_NSMR_MOSC1_Msk                  (0x1UL << RNG_NSMR_MOSC1_Pos)           /*!< 0x00000001 */
+#define RNG_NSMR_MOSC1                      RNG_NSMR_MOSC1_Msk                      /*!< Mask oscillator i */
+#define RNG_NSMR_MOSC2_Pos                  (1UL)
+#define RNG_NSMR_MOSC2_Msk                  (0x1UL << RNG_NSMR_MOSC2_Pos)           /*!< 0x00000002 */
+#define RNG_NSMR_MOSC2                      RNG_NSMR_MOSC2_Msk                      /*!< Mask oscillator i */
+#define RNG_NSMR_MOSC3_Pos                  (2UL)
+#define RNG_NSMR_MOSC3_Msk                  (0x1UL << RNG_NSMR_MOSC3_Pos)           /*!< 0x00000004 */
+#define RNG_NSMR_MOSC3                      RNG_NSMR_MOSC3_Msk                      /*!< Mask oscillator i */
+#define RNG_NSMR_MOSC4_Pos                  (3UL)
+#define RNG_NSMR_MOSC4_Msk                  (0x1UL << RNG_NSMR_MOSC4_Pos)           /*!< 0x00000008 */
+#define RNG_NSMR_MOSC4                      RNG_NSMR_MOSC4_Msk                      /*!< Mask oscillator i */
+#define RNG_NSMR_MOSC5_Pos                  (4UL)
+#define RNG_NSMR_MOSC5_Msk                  (0x1UL << RNG_NSMR_MOSC5_Pos)           /*!< 0x00000010 */
+#define RNG_NSMR_MOSC5                      RNG_NSMR_MOSC5_Msk                      /*!< Mask oscillator i */
+#define RNG_NSMR_MOSC6_Pos                  (5UL)
+#define RNG_NSMR_MOSC6_Msk                  (0x1UL << RNG_NSMR_MOSC6_Pos)           /*!< 0x00000020 */
+#define RNG_NSMR_MOSC6                      RNG_NSMR_MOSC6_Msk                      /*!< Mask oscillator i */
+#define RNG_NSMR_MOSC7_Pos                  (6UL)
+#define RNG_NSMR_MOSC7_Msk                  (0x1UL << RNG_NSMR_MOSC7_Pos)           /*!< 0x00000040 */
+#define RNG_NSMR_MOSC7                      RNG_NSMR_MOSC7_Msk                      /*!< Mask oscillator i */
+#define RNG_NSMR_MOSC8_Pos                  (7UL)
+#define RNG_NSMR_MOSC8_Msk                  (0x1UL << RNG_NSMR_MOSC8_Pos)           /*!< 0x00000080 */
+#define RNG_NSMR_MOSC8                      RNG_NSMR_MOSC8_Msk                      /*!< Mask oscillator i */
+#define RNG_NSMR_MOSC9_Pos                  (8UL)
+#define RNG_NSMR_MOSC9_Msk                  (0x1UL << RNG_NSMR_MOSC9_Pos)           /*!< 0x00000100 */
+#define RNG_NSMR_MOSC9                      RNG_NSMR_MOSC9_Msk                      /*!< Mask oscillator i */
+
+/********************  NIST candidate certification value *******************/
+#define RNG_CAND_NIST                        (0U)
+#define RNG_CAND_NIST_CR_VALUE               0x08451F00
+#define RNG_CAND_NIST_NSCR_VALUE             0x000001FF
+#define RNG_CAND_NIST_HTCR_VALUE             0x0000AAC7
+
+/********************  GermanBSI candidate certification value *******************/
+#define RNG_CAND_GermanBSI_CR_VALUE          0x08301F00
+#define RNG_CAND_GermanBSI_NSCR_VALUE        0x000001FF
+#define RNG_CAND_GermanBSI_HTCR_VALUE        0x0000AAC7
 /******************************************************************************/
 /*                                                                            */
 /*                           Real-Time Clock (RTC)                            */
@@ -18724,6 +18059,7 @@ typedef struct
 
 #define IS_ADC_MULTIMODE_MASTER_INSTANCE(INSTANCE) (((INSTANCE) == ADC1_NS) || ((INSTANCE) == ADC1_S))
 
+#define IS_ADC_COMMON_INSTANCE(INSTANCE) (((INSTANCE) == ADC1_COMMON_NS))
 
 
 
@@ -18862,6 +18198,8 @@ typedef struct
 #define IS_SPI_ALL_INSTANCE(INSTANCE) (((INSTANCE) == SPI1_NS) || ((INSTANCE) == SPI1_S) || \
                                        ((INSTANCE) == SPI2_NS) || ((INSTANCE) == SPI2_S))
 
+#define IS_SPI_LIMITED_INSTANCE(INSTANCE) (0)
+
 #define IS_SPI_FULL_INSTANCE(INSTANCE) (((INSTANCE) == SPI1_NS) || ((INSTANCE) == SPI1_S) || \
                                         ((INSTANCE) == SPI2_NS) || ((INSTANCE) == SPI2_S))
 
@@ -18869,6 +18207,7 @@ typedef struct
 #define IS_SPI_GRP1_INSTANCE(INSTANCE) (((INSTANCE) == SPI1_NS) || ((INSTANCE) == SPI1_S) || \
                                         ((INSTANCE) == SPI2_NS) || ((INSTANCE) == SPI2_S))
 
+#define IS_SPI_GRP2_INSTANCE(INSTANCE)  (0)
 
 /****************** LPTIM Instances : All supported instances *****************/
 #define IS_LPTIM_INSTANCE(INSTANCE)     (((INSTANCE) == LPTIM1_NS) || ((INSTANCE) == LPTIM1_S) ||\
@@ -19292,10 +18631,11 @@ typedef struct
 
 #else /* CPU_IN_SECURE_STATE */
 /******************************* ADC Instances ********************************/
-#define IS_ADC_ALL_INSTANCE(INSTANCE) ((INSTANCE) == ADC1_NS)
+#define IS_ADC_ALL_INSTANCE(INSTANCE) (((INSTANCE) == ADC1_NS))
 
 #define IS_ADC_MULTIMODE_MASTER_INSTANCE(INSTANCE) ((INSTANCE) == ADC1_NS)
 
+#define IS_ADC_COMMON_INSTANCE(INSTANCE) ((INSTANCE) == ADC1_COMMON_NS)
 
 /******************************* HASH Instances ********************************/
 #define IS_HASH_ALL_INSTANCE(INSTANCE) ((INSTANCE) == HASH_NS)
@@ -19426,6 +18766,8 @@ typedef struct
 #define IS_SPI_ALL_INSTANCE(INSTANCE) (((INSTANCE) == SPI1_NS) || \
                                        ((INSTANCE) == SPI2_NS))
 
+#define IS_SPI_LIMITED_INSTANCE(INSTANCE) (0)
+
 #define IS_SPI_FULL_INSTANCE(INSTANCE) (((INSTANCE) == SPI1_NS) || \
                                         ((INSTANCE) == SPI2_NS))
 
@@ -19433,6 +18775,7 @@ typedef struct
 #define IS_SPI_GRP1_INSTANCE(INSTANCE) (((INSTANCE) == SPI1_NS) || \
                                         ((INSTANCE) == SPI2_NS))
 
+#define IS_SPI_GRP2_INSTANCE(INSTANCE)  (0)
 
 /****************** LPTIM Instances : All supported instances *****************/
 #define IS_LPTIM_INSTANCE(INSTANCE)     (((INSTANCE) == LPTIM1_NS) ||\
@@ -19857,7 +19200,7 @@ typedef struct
 #define IS_PCD_ALL_INSTANCE(INSTANCE) ((INSTANCE) == USB_DRD_FS_NS)
 
 #endif /* CPU_IN_SECURE_STATE */
-/** @} */ /* End of group STM32U5xx_Peripheral_Exported_macros */
+/** @} */ /* End of group STM32U3xx_Peripheral_Exported_macros */
 
 /** @} */ /* End of group STM32U335xx */
 

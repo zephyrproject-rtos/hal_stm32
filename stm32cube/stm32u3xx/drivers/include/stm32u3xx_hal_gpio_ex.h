@@ -67,9 +67,9 @@ extern "C" {
 /**
   * @brief   AF 1 selection
   */
-#if defined(STM32U356xx) || defined(STM32U366xx) || defined(STM32U396xx) || defined(STM32U3A6xx)
+#if defined(STM32U396xx) || defined(STM32U3A6xx)
 #define GPIO_AF1_USART3           ((uint8_t)0x01)   /*!< USART3 Alternate Function mapping      */
-#endif /* defined(STM32U356xx) || defined(STM32U366xx) || defined(STM32U396xx) || defined(STM32U3A6xx) */
+#endif /* defined(STM32U396xx) || defined(STM32U3A6xx) */
 #define GPIO_AF1_IR               ((uint8_t)0x01)   /*!< IR Alternate Function mapping      */
 #define GPIO_AF1_LPTIM1           ((uint8_t)0x01)   /*!< LPTIM1 Alternate Function mapping  */
 #define GPIO_AF1_TIM1             ((uint8_t)0x01)   /*!< TIM1 Alternate Function mapping    */
@@ -168,9 +168,9 @@ extern "C" {
 #if !(defined(STM32U356xx) || defined(STM32U366xx) || defined(STM32U335xx) || defined(STM32U345xx))
 #define GPIO_AF6_I3C2             ((uint8_t)0x06)   /*!< I3C2 Alternate Function mapping                  */
 #endif /* !(defined(STM32U356xx) || defined(STM32U366xx) || defined(STM32U335xx) || defined(STM32U345xx)) */
+#define GPIO_AF6_SPI2             ((uint8_t)0x06)   /*!< SPI2 Alternate Function mapping                  */
 #if !(defined(STM32U335xx) || defined(STM32U345xx))
 #define GPIO_AF6_SPI3             ((uint8_t)0x06)   /*!< SPI3 Alternate Function mapping                  */
-#define GPIO_AF6_SPI2             ((uint8_t)0x06)   /*!< SPI2 Alternate Function mapping                  */
 #endif /* !(defined(STM32U335xx) || defined(STM32U345xx))                                                 */
 #if defined(STM32U3B5xx) || defined(STM32U3C5xx)
 #define GPIO_AF6_SPI4             ((uint8_t)0x06)   /*!< SPI4 Alternate Function mapping      */
@@ -319,16 +319,23 @@ extern "C" {
 /** @defgroup GPIOEx_Get_Port_Index GPIOEx Get Port Index
   * @{
   */
-#if defined(GPIOF)
+#if defined(GPIOA) && defined(GPIOB) && defined(GPIOC) && defined(GPIOD) && \
+    !defined(GPIOE) && !defined(GPIOF) && !defined(GPIOG) && defined(GPIOH)
+#define GPIO_GET_INDEX(__GPIOx__)    (((__GPIOx__) == (GPIOA))? 0UL :\
+                                      ((__GPIOx__) == (GPIOB))? 1UL :\
+                                      ((__GPIOx__) == (GPIOC))? 2UL :\
+                                      ((__GPIOx__) == (GPIOD))? 3UL :\
+                                      ((__GPIOx__) == (GPIOH))? 7UL : 16UL)
+#elif defined(GPIOA) && defined(GPIOB) && defined(GPIOC) && defined(GPIOD) && \
+      defined(GPIOE) && !defined(GPIOF) && !defined(GPIOG) && defined(GPIOH)
 #define GPIO_GET_INDEX(__GPIOx__)    (((__GPIOx__) == (GPIOA))? 0UL :\
                                       ((__GPIOx__) == (GPIOB))? 1UL :\
                                       ((__GPIOx__) == (GPIOC))? 2UL :\
                                       ((__GPIOx__) == (GPIOD))? 3UL :\
                                       ((__GPIOx__) == (GPIOE))? 4UL :\
-                                      ((__GPIOx__) == (GPIOF))? 5UL :\
-                                      ((__GPIOx__) == (GPIOG))? 6UL :\
                                       ((__GPIOx__) == (GPIOH))? 7UL : 16UL)
-#elif defined(GPIOG)
+#elif defined(GPIOA) && defined(GPIOB) && defined(GPIOC) && defined(GPIOD) && \
+      defined(GPIOE) && !defined(GPIOF) && defined(GPIOG) && defined(GPIOH)
 #define GPIO_GET_INDEX(__GPIOx__)    (((__GPIOx__) == (GPIOA))? 0UL :\
                                       ((__GPIOx__) == (GPIOB))? 1UL :\
                                       ((__GPIOx__) == (GPIOC))? 2UL :\
@@ -342,8 +349,11 @@ extern "C" {
                                       ((__GPIOx__) == (GPIOC))? 2UL :\
                                       ((__GPIOx__) == (GPIOD))? 3UL :\
                                       ((__GPIOx__) == (GPIOE))? 4UL :\
+                                      ((__GPIOx__) == (GPIOF))? 5UL :\
+                                      ((__GPIOx__) == (GPIOG))? 6UL :\
                                       ((__GPIOx__) == (GPIOH))? 7UL : 16UL)
-#endif /* GPIOF */
+#endif /* defined(GPIOA) && defined(GPIOB) && defined(GPIOC) && defined(GPIOD) &&
+	  !defined(GPIOE) && !defined(GPIOF) && !defined(GPIOG) && defined(GPIOH) */
 
 /**
   * @}

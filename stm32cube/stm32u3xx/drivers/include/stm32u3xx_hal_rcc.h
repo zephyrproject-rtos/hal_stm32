@@ -337,6 +337,8 @@ typedef struct
 #define RCC_MCO_GPIOPIN_MASK            (0xFFFFuL << RCC_MCO_GPIOPIN_POS)
 #define RCC_MCO_GPIOPORT_POS            16U
 #define RCC_MCO_GPIOPORT_MASK           (0xFuL << RCC_MCO_GPIOPORT_POS)
+#define RCC_MCO_GPIOPORTA               0x0uL
+#define RCC_MCO_GPIOPORTB               0x1uL
 #define RCC_MCO_GPIOAF_POS              20U
 #define RCC_MCO_GPIOAF_MASK             (0xFuL << RCC_MCO_GPIOAF_POS)
 #define RCC_MCO_INDEX_POS               28U
@@ -347,13 +349,22 @@ typedef struct
   * @{
   */
 #define RCC_MCO1_PA8                    ((0x00U << RCC_MCO_INDEX_POS) |\
+                                         (RCC_MCO_GPIOPORTA << RCC_MCO_GPIOPORT_POS) |\
                                          (GPIO_AF0_MCO << RCC_MCO_GPIOAF_POS) | GPIO_PIN_8)
+#if defined(STM32U366xx) || defined(STM32U356xx)
+#define RCC_MCO1_PB8                    ((0x00U << RCC_MCO_INDEX_POS) |\
+                                         (RCC_MCO_GPIOPORTB << RCC_MCO_GPIOPORT_POS) |\
+                                         (GPIO_AF0_MCO << RCC_MCO_GPIOAF_POS) | GPIO_PIN_8)
+#endif /* defined(STM32U366xx) || defined(STM32U356xx) */
 #define RCC_MCO1_PA9                    ((0x00U << RCC_MCO_INDEX_POS) |\
+                                         (RCC_MCO_GPIOPORTA << RCC_MCO_GPIOPORT_POS) |\
                                          (GPIO_AF0_MCO << RCC_MCO_GPIOAF_POS) | GPIO_PIN_9)
 #define RCC_MCO1                        RCC_MCO1_PA8
 #define RCC_MCO2_PA8                    ((0x01U << RCC_MCO_INDEX_POS) |\
+                                         (RCC_MCO_GPIOPORTA << RCC_MCO_GPIOPORT_POS) |\
                                          (GPIO_AF11_MCO2 << RCC_MCO_GPIOAF_POS) | GPIO_PIN_8)
 #define RCC_MCO2_PA10                   ((0x01U << RCC_MCO_INDEX_POS) |\
+                                         (RCC_MCO_GPIOPORTA << RCC_MCO_GPIOPORT_POS) |\
                                          (GPIO_AF11_MCO2 << RCC_MCO_GPIOAF_POS) | GPIO_PIN_10)
 #define RCC_MCO2                        RCC_MCO2_PA8
 #define RCC_MCO                         RCC_MCO1
@@ -645,7 +656,22 @@ typedef struct
                                                        tmpreg = READ_BIT(RCC->AHB1ENR2, RCC_AHB1ENR2_PWREN); \
                                                        UNUSED(tmpreg); \
                                                      } while(0)
-
+#if defined(GFXPAND1)
+#define __HAL_RCC_GFXPAND_CLK_ENABLE()            do { \
+                                                       __IO uint32_t tmpreg; \
+                                                       SET_BIT(RCC->AHB2ENR2, RCC_AHB2ENR2_GFXPAND1EN); \
+                                                       /* Delay after an RCC peripheral clock enabling */ \
+                                                       tmpreg = READ_BIT(RCC->AHB2ENR2, RCC_AHB2ENR2_GFXPAND1EN); \
+                                                       UNUSED(tmpreg); \
+                                                     } while(0)
+#define __HAL_RCC_GFXPAND_CLK_DISABLE()           do { \
+                                                       __IO uint32_t tmpreg; \
+                                                       CLEAR_BIT(RCC->AHB2ENR2, RCC_AHB2ENR2_GFXPAND1EN); \
+                                                       /* Delay after an RCC peripheral clock enabling */ \
+                                                       tmpreg = READ_BIT(RCC->AHB2ENR2, RCC_AHB2ENR2_GFXPAND1EN); \
+                                                       UNUSED(tmpreg); \
+                                                     } while(0)
+#endif /* GFXPAND1 */
 #define __HAL_RCC_GPDMA1_CLK_DISABLE()            CLEAR_BIT(RCC->AHB1ENR1, RCC_AHB1ENR1_GPDMA1EN)
 #if defined(ADF1)
 #define __HAL_RCC_ADF1_CLK_DISABLE()              CLEAR_BIT(RCC->AHB1ENR1, RCC_AHB1ENR1_ADF1EN)
@@ -1429,6 +1455,9 @@ typedef struct
 #if defined(OCTOSPI1)
 #define __HAL_RCC_OCTOSPI1_IS_CLK_ENABLED()       (READ_BIT(RCC->AHB2ENR2, RCC_AHB2ENR2_OCTOSPI1EN) != 0U)
 #endif /* OCTOSPI1 */
+#if defined(GFXPAND1)
+#define __HAL_RCC_GFXPAND_IS_CLK_ENABLED()        (READ_BIT(RCC->AHB2ENR2, RCC_AHB2ENR2_GFXPAND1EN) != 0U)
+#endif /* GFXPAND1 */
 /**
   * @}
   */
@@ -1596,6 +1625,9 @@ typedef struct
 #if defined(OCTOSPI1)
 #define __HAL_RCC_OCTOSPI1_FORCE_RESET()          SET_BIT(RCC->AHB2RSTR2, RCC_AHB2RSTR2_OCTOSPI1RST)
 #endif /* OCTOSPI1 */
+#if defined(GFXPAND1)
+#define __HAL_RCC_GFXPAND_FORCE_RESET()           SET_BIT(RCC->AHB2RSTR2, RCC_AHB2RSTR2_GFXPAND1RST)
+#endif /* GFXPAND1 */
 
 #define __HAL_RCC_AHB2_RELEASE_RESET()            do { \
                                                        WRITE_REG(RCC->AHB2RSTR1, 0x00000000U); \
@@ -1635,6 +1667,9 @@ typedef struct
 #if defined(OCTOSPI1)
 #define __HAL_RCC_OCTOSPI1_RELEASE_RESET()        CLEAR_BIT(RCC->AHB2RSTR2, RCC_AHB2RSTR2_OCTOSPI1RST)
 #endif /* OCTOSPI1 */
+#if defined(GFXPAND1)
+#define __HAL_RCC_GFXPAND_RELEASE_RESET()         CLEAR_BIT(RCC->AHB2RSTR2, RCC_AHB2RSTR2_GFXPAND1RST)
+#endif /* GFXPAND1 */
 /**
   * @}
   */
@@ -1898,6 +1933,9 @@ typedef struct
 #if defined(OCTOSPI1)
 #define __HAL_RCC_OCTOSPI1_CLK_SLEEP_ENABLE()     SET_BIT(RCC->AHB2SLPENR2, RCC_AHB2SLPENR2_OCTOSPI1SLPEN)
 #endif /* OCTOSPI1 */
+#if defined(GFXPAND1)
+#define __HAL_RCC_GFXPAND_CLK_SLEEP_ENABLE()      SET_BIT(RCC->AHB2SLPENR2, RCC_AHB2SLPENR2_GFXPAND1SLPEN)
+#endif /* GFXPAND1 */
 
 #define __HAL_RCC_GPIOA_CLK_SLEEP_DISABLE()       CLEAR_BIT(RCC->AHB2SLPENR1, RCC_AHB2SLPENR1_GPIOASLPEN)
 #define __HAL_RCC_GPIOB_CLK_SLEEP_DISABLE()       CLEAR_BIT(RCC->AHB2SLPENR1, RCC_AHB2SLPENR1_GPIOBSLPEN)
@@ -1921,6 +1959,9 @@ typedef struct
 #if defined(PKA)
 #define __HAL_RCC_PKA_CLK_SLEEP_DISABLE()         CLEAR_BIT(RCC->AHB2SLPENR1, RCC_AHB2SLPENR1_PKASLPEN)
 #endif /* PKA */
+#if defined(GFXPAND1)
+#define __HAL_RCC_GFXPAND_CLK_SLEEP_DISABLE()     CLEAR_BIT(RCC->AHB2SLPENR2, RCC_AHB2SLPENR2_GFXPAND1SLPEN)
+#endif /* GFXPAND1 */
 #if defined(SAES)
 #define __HAL_RCC_SAES_CLK_SLEEP_DISABLE()        CLEAR_BIT(RCC->AHB2SLPENR1, RCC_AHB2SLPENR1_SAESSLPEN)
 #endif /* SAES */
@@ -2176,6 +2217,9 @@ typedef struct
 #if defined(OCTOSPI1)
 #define __HAL_RCC_OCTOSPI1_IS_CLK_SLEEP_ENABLED() (READ_BIT(RCC->AHB2SLPENR2, RCC_AHB2SLPENR2_OCTOSPI1SLPEN) != 0U)
 #endif /* OCTOSPI1 */
+#if defined(GFXPAND1)
+#define __HAL_RCC_GFXPAND_IS_CLK_SLEEP_ENABLED()  (READ_BIT(RCC->AHB2SLPENR2, RCC_AHB2SLPENR2_GFXPAND1SLPEN) != 0U)
+#endif /* GFXPAND1 */
 /**
   * @}
   */
@@ -3093,10 +3137,10 @@ typedef struct
   * @retval The new state of __FLAG__ (TRUE or FALSE).
   */
 #define __HAL_RCC_GET_FLAG(__FLAG__) ((((((((__FLAG__) >> 5U) == 1U) ? RCC->CR :                     \
-                                        ((((__FLAG__) >> 5U) == 2U) ? RCC->BDCR :                     \
-                                        ((((__FLAG__) >> 5U) == 3U) ? RCC->CSR : RCC->CIFR)))) &  \
-                                          (1U << ((__FLAG__) & RCC_FLAG_MASK))) != 0U)               \
-                                        ? 1U : 0U)
+                                          ((((__FLAG__) >> 5U) == 2U) ? RCC->BDCR :                     \
+                                           ((((__FLAG__) >> 5U) == 3U) ? RCC->CSR : RCC->CIFR)))) &  \
+                                        (1U << ((__FLAG__) & RCC_FLAG_MASK))) != 0U)               \
+                                      ? 1U : 0U)
 /**
   * @}
   */
@@ -3189,8 +3233,14 @@ typedef struct
                                                  ((__SOURCE__) == RCC_RTCCLKSOURCE_LSI)     || \
                                                  ((__SOURCE__) == RCC_RTCCLKSOURCE_HSE_DIV32))
 
+#if defined(STM32U356xx) || defined(STM32U366xx)
+#define IS_RCC_MCO(__MCOX__)                    (((__MCOX__) == RCC_MCO1_PA8) || ((__MCOX__) == RCC_MCO1_PA9) || \
+                                                 ((__MCOX__) == RCC_MCO1_PB8) || \
+                                                 ((__MCOX__) == RCC_MCO2_PA8) || ((__MCOX__) == RCC_MCO2_PA10))
+#else
 #define IS_RCC_MCO(__MCOX__)                    (((__MCOX__) == RCC_MCO1_PA8) || ((__MCOX__) == RCC_MCO1_PA9) || \
                                                  ((__MCOX__) == RCC_MCO2_PA8) || ((__MCOX__) == RCC_MCO2_PA10))
+#endif /* defined(STM32U356xx) || defined(STM32U366xx) */
 
 #define IS_RCC_MCO1SOURCE(__SOURCE__)           (((__SOURCE__) == RCC_MCO1SOURCE_NOCLOCK)  || \
                                                  ((__SOURCE__) == RCC_MCO1SOURCE_SYSCLK)   || \

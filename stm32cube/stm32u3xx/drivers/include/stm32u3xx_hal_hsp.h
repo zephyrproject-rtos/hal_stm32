@@ -1323,10 +1323,17 @@ typedef enum
 /** Enumerate to define the Trigger Interconnect Matrix */
 typedef enum
 {
+#if defined(STM32U3C5xx) || defined(STM32U3B5xx)
   HAL_HSP_TRGIN_DMA1_CH1_TC,
   HAL_HSP_TRGIN_DMA1_CH2_TC,
   HAL_HSP_TRGIN_DMA1_CH3_TC,
   HAL_HSP_TRGIN_DMA1_CH4_TC,
+#else
+  HAL_HSP_TRGIN_DMA1_CH8_TC,
+  HAL_HSP_TRGIN_DMA1_CH9_TC,
+  HAL_HSP_TRGIN_DMA1_CH10_TC,
+  HAL_HSP_TRGIN_DMA1_CH11_TC,
+#endif /* STM32U3C5xx || STM32U3B5xx */
   HAL_HSP_TRGIN_EXTI0,
   HAL_HSP_TRGIN_EXTI1,
   HAL_HSP_TRGIN_TIM1_TRGO,
