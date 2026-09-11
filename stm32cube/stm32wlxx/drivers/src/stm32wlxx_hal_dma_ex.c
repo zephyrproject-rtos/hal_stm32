@@ -158,7 +158,7 @@ HAL_StatusTypeDef HAL_DMAEx_ConfigMuxRequestGenerator(DMA_HandleTypeDef *hdma,
   /* check if the DMA state is ready
      and DMA is using a DMAMUX request generator block
   */
-  if (hdma->DMAmuxRequestGen == 0U)
+  if (hdma->DMAmuxRequestGen == NULL)
   {
     /* Set the error code to busy */
     hdma->ErrorCode = HAL_DMA_ERROR_PARAM;

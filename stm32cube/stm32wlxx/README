@@ -6,7 +6,7 @@ Origin:
    https://www.st.com/en/embedded-software/stm32cubewl.html
 
 Status:
-   version 1.5.0
+   version 1.6.0
 
 Purpose:
    STMicroelectronics official MCU package for STM32WL series.
@@ -23,7 +23,7 @@ URL:
    https://github.com/STMicroelectronics/STM32CubeWL
 
 Commit:
-   d28c690e930d5b910665fe196eca2a74a52b26ab
+   f934cd298bf82d45f96aac2f335c0bbd26d0b946
 
 Maintained-by:
    External

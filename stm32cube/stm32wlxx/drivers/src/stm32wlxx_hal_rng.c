@@ -649,7 +649,7 @@ HAL_StatusTypeDef HAL_RNG_GenerateRandomNumber(RNG_HandleTypeDef *hrng, uint32_t
     /* Change RNG peripheral state */
     hrng->State = HAL_RNG_STATE_BUSY;
     /* Check if there is a seed error */
-    if (__HAL_RNG_GET_IT(hrng, RNG_IT_SEI) != RESET)
+    if (__HAL_RNG_GET_FLAG(hrng, RNG_FLAG_SECS) != RESET)
     {
       /* Update the error code */
       hrng->ErrorCode = HAL_RNG_ERROR_SEED;
@@ -669,6 +669,14 @@ HAL_StatusTypeDef HAL_RNG_GenerateRandomNumber(RNG_HandleTypeDef *hrng, uint32_t
     /* Check if data register contains valid random data */
     while (__HAL_RNG_GET_FLAG(hrng, RNG_FLAG_DRDY) == RESET)
     {
+      if (__HAL_RNG_GET_FLAG(hrng, RNG_FLAG_SECS) != RESET)
+      {
+        /* Update the error code */
+        hrng->ErrorCode = HAL_RNG_ERROR_RECOVERSEED;
+        hrng->State = HAL_RNG_STATE_READY;
+        return HAL_ERROR;
+      }
+
       if ((HAL_GetTick() - tickstart) > RNG_TIMEOUT_VALUE)
       {
         /* New check to avoid false timeout detection in case of preemption */

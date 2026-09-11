@@ -157,8 +157,6 @@
 #define SUBGHZ_DEFAULT_LOOP_TIME   ((SystemCoreClock*28U)>>19U)
 #define SUBGHZ_RFBUSY_LOOP_TIME    ((SystemCoreClock*24U)>>20U)
 
-/* ~150 us loop delay assuming 10 CPU cycles per iteration (> 20us as per Semtech spec) */
-#define SUBGHZ_NSS_LOOP_TIME       ((SystemCoreClock)>>16U)
 /**
   * @}
   */
@@ -169,12 +167,12 @@
 /** @defgroup SUBGHZ_Private_Functions SUBGHZ Private Functions
   * @{
   */
-void              SUBGHZSPI_Init(uint32_t BaudratePrescaler);
-void              SUBGHZSPI_DeInit(void);
-HAL_StatusTypeDef SUBGHZSPI_Transmit(SUBGHZ_HandleTypeDef *hsubghz, uint8_t Data);
-HAL_StatusTypeDef SUBGHZSPI_Receive(SUBGHZ_HandleTypeDef *hsubghz, uint8_t *pData);
-HAL_StatusTypeDef SUBGHZ_WaitOnBusy(SUBGHZ_HandleTypeDef *hsubghz);
-HAL_StatusTypeDef SUBGHZ_CheckDeviceReady(SUBGHZ_HandleTypeDef *hsubghz);
+static void              SUBGHZSPI_Init(uint32_t BaudratePrescaler);
+static void              SUBGHZSPI_DeInit(void);
+static HAL_StatusTypeDef SUBGHZSPI_Transmit(SUBGHZ_HandleTypeDef *hsubghz, uint8_t Data);
+static HAL_StatusTypeDef SUBGHZSPI_Receive(SUBGHZ_HandleTypeDef *hsubghz, uint8_t *pData);
+static HAL_StatusTypeDef SUBGHZ_WaitOnBusy(SUBGHZ_HandleTypeDef *hsubghz);
+static HAL_StatusTypeDef SUBGHZ_CheckDeviceReady(SUBGHZ_HandleTypeDef *hsubghz);
 /**
   * @}
   */
@@ -972,6 +970,8 @@ HAL_StatusTypeDef HAL_SUBGHZ_ExecSetCmd(SUBGHZ_HandleTypeDef *hsubghz,
     /* Process Locked */
     __HAL_LOCK(hsubghz);
 
+    hsubghz->State = HAL_SUBGHZ_STATE_BUSY;
+
     /* Need to wakeup Radio if already in Sleep at startup */
     (void)SUBGHZ_CheckDeviceReady(hsubghz);
 
@@ -1045,6 +1045,8 @@ HAL_StatusTypeDef HAL_SUBGHZ_ExecGetCmd(SUBGHZ_HandleTypeDef *hsubghz,
   {
     /* Process Locked */
     __HAL_LOCK(hsubghz);
+
+    hsubghz->State = HAL_SUBGHZ_STATE_BUSY;
 
     (void)SUBGHZ_CheckDeviceReady(hsubghz);
 
@@ -1560,25 +1562,39 @@ uint32_t HAL_SUBGHZ_GetError(const SUBGHZ_HandleTypeDef *hsubghz)
 }
 
 /**
-  * @brief  Return Wait busy flag low from peripheral
+  * @brief  Wait busy flag low from peripheral
   * @param  hsubghz pointer to a SUBGHZ_HandleTypeDef structure that contains
   *         the handle information for SUBGHZ module.
   * @retval HAL status
   */
 HAL_StatusTypeDef HAL_SUBGHZ_WaitOnBusy(SUBGHZ_HandleTypeDef *hsubghz)
 {
-  return SUBGHZ_WaitOnBusy(hsubghz);
+  if (hsubghz->State == HAL_SUBGHZ_STATE_READY)
+  {
+    return SUBGHZ_WaitOnBusy(hsubghz);
+  }
+  else
+  {
+    return HAL_BUSY;
+  }
 }
 
 /**
-  * @brief  Return wait busy flag low from peripheral
+  * @brief  Check if peripheral is ready
   * @param  hsubghz pointer to a SUBGHZ_HandleTypeDef structure that contains
   *         the handle information for SUBGHZ module.
   * @retval HAL status
   */
 HAL_StatusTypeDef HAL_SUBGHZ_CheckDeviceReady(SUBGHZ_HandleTypeDef *hsubghz)
 {
-  return SUBGHZ_CheckDeviceReady(hsubghz);
+  if (hsubghz->State == HAL_SUBGHZ_STATE_READY)
+  {
+    return SUBGHZ_CheckDeviceReady(hsubghz);
+  }
+  else
+  {
+    return HAL_BUSY;
+  }
 }
 
 /**
@@ -1599,7 +1615,7 @@ HAL_StatusTypeDef HAL_SUBGHZ_CheckDeviceReady(SUBGHZ_HandleTypeDef *hsubghz)
   * @param  BaudratePrescaler SPI Baudrate prescaler
   * @retval None
   */
-void SUBGHZSPI_Init(uint32_t BaudratePrescaler)
+static void SUBGHZSPI_Init(uint32_t BaudratePrescaler)
 {
   /* Check the parameters */
   assert_param(IS_SUBGHZ_ALL_INSTANCE(SUBGHZSPI));
@@ -1635,7 +1651,7 @@ void SUBGHZSPI_Init(uint32_t BaudratePrescaler)
   * @brief  DeInitializes the SUBGHZSPI peripheral
   * @retval None
   */
-void  SUBGHZSPI_DeInit(void)
+static void  SUBGHZSPI_DeInit(void)
 {
   /* Check the parameters */
   assert_param(IS_SUBGHZ_ALL_INSTANCE(SUBGHZSPI));
@@ -1651,8 +1667,8 @@ void  SUBGHZSPI_DeInit(void)
   * @param  Data  data to transmit
   * @retval HAL status
   */
-HAL_StatusTypeDef SUBGHZSPI_Transmit(SUBGHZ_HandleTypeDef *hsubghz,
-                                     uint8_t Data)
+static HAL_StatusTypeDef SUBGHZSPI_Transmit(SUBGHZ_HandleTypeDef *hsubghz,
+                                            uint8_t Data)
 {
   HAL_StatusTypeDef status = HAL_OK;
   __IO uint32_t count;
@@ -1710,8 +1726,8 @@ HAL_StatusTypeDef SUBGHZSPI_Transmit(SUBGHZ_HandleTypeDef *hsubghz,
   * @param  pData  pointer on data to receive
   * @retval HAL status
   */
-HAL_StatusTypeDef SUBGHZSPI_Receive(SUBGHZ_HandleTypeDef *hsubghz,
-                                    uint8_t *pData)
+static HAL_StatusTypeDef SUBGHZSPI_Receive(SUBGHZ_HandleTypeDef *hsubghz,
+                                           uint8_t *pData)
 {
   HAL_StatusTypeDef status = HAL_OK;
   __IO uint32_t count;
@@ -1768,29 +1784,24 @@ HAL_StatusTypeDef SUBGHZSPI_Receive(SUBGHZ_HandleTypeDef *hsubghz,
   *         the handle information for SUBGHZ module.
   * @retval HAL status
   */
-HAL_StatusTypeDef SUBGHZ_CheckDeviceReady(SUBGHZ_HandleTypeDef *hsubghz)
+static HAL_StatusTypeDef SUBGHZ_CheckDeviceReady(SUBGHZ_HandleTypeDef *hsubghz)
 {
-  __IO uint32_t count;
+  HAL_StatusTypeDef status = HAL_OK;
 
   /* Wakeup radio in case of sleep mode: Select-Unselect radio */
   if (hsubghz->DeepSleep == SUBGHZ_DEEP_SLEEP_ENABLE)
   {
-    /* Initialize NSS switch Delay */
-    count  = SUBGHZ_NSS_LOOP_TIME;
-
     /* NSS = 0; */
     LL_PWR_SelectSUBGHZSPI_NSS();
-
-    /* Wait Radio wakeup */
-    do
-    {
-      count--;
-    } while (count != 0UL);
-
+    status = SUBGHZ_WaitOnBusy(hsubghz);
     /* NSS = 1 */
     LL_PWR_UnselectSUBGHZSPI_NSS();
+    return status;
   }
-  return (SUBGHZ_WaitOnBusy(hsubghz));
+  else
+  {
+    return (SUBGHZ_WaitOnBusy(hsubghz));
+  }
 }
 
 /**
@@ -1799,20 +1810,16 @@ HAL_StatusTypeDef SUBGHZ_CheckDeviceReady(SUBGHZ_HandleTypeDef *hsubghz)
   *         the handle information for SUBGHZ module.
   * @retval HAL status
   */
-HAL_StatusTypeDef SUBGHZ_WaitOnBusy(SUBGHZ_HandleTypeDef *hsubghz)
+static HAL_StatusTypeDef SUBGHZ_WaitOnBusy(SUBGHZ_HandleTypeDef *hsubghz)
 {
   HAL_StatusTypeDef status;
   __IO uint32_t count;
-  uint32_t mask;
 
   status = HAL_OK;
   count  = SUBGHZ_DEFAULT_TIMEOUT * SUBGHZ_RFBUSY_LOOP_TIME;
 
-  /* Wait until Busy signal is set */
-  do
+  while ((LL_PWR_IsActiveFlag_RFBUSYS()) == 1UL)
   {
-    mask = LL_PWR_IsActiveFlag_RFBUSYMS();
-
     if (count == 0U)
     {
       status  = HAL_ERROR;
@@ -1820,7 +1827,7 @@ HAL_StatusTypeDef SUBGHZ_WaitOnBusy(SUBGHZ_HandleTypeDef *hsubghz)
       break;
     }
     count--;
-  } while ((LL_PWR_IsActiveFlag_RFBUSYS()& mask) == 1UL);
+  }
 
   return status;
 }
