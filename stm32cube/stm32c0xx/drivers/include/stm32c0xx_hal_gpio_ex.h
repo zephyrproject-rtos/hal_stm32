@@ -61,9 +61,9 @@ extern "C" {
 #define GPIO_AF0_OSC           ((uint8_t)0x00)  /*!< OSC (By pass and Enable) Alternate Function mapping */
 #define GPIO_AF0_TIM14         ((uint8_t)0x00)  /*!< TIM14 Alternate Function mapping */
 #endif /* !STM32C011xx */
-#if defined(STM32C031xx) || defined(STM32C071xx) || defined(STM32C091xx)  || defined(STM32C092xx)
+#if defined(STM32C031xx) || defined(STM32C051xx) || defined(STM32C071xx) || defined(STM32C091xx)  || defined(STM32C092xx)
 #define GPIO_AF0_USART2        ((uint8_t)0x00)  /*!< USART2 Alternate Function mapping */
-#endif /* STM32C031xx | STM32C071xx | STM32C091xx | STM32C092xx*/
+#endif /* STM32C031xx | STM32C051xx | STM32C071xx | STM32C091xx | STM32C092xx*/
 #if defined(SPI2)
 #define GPIO_AF0_SPI2          ((uint8_t)0x00)  /*!< SPI2 Alternate Function mapping */
 #endif  /* SPI2 */
@@ -195,6 +195,9 @@ extern "C" {
   */
 #define GPIO_AF7_EVENTOUT      ((uint8_t)0x07)  /*!< EVENTOUT Alternate Function mapping */
 #define GPIO_AF7_I2C1          ((uint8_t)0x07)  /*!< I2C1 Alternate Function mapping */
+#if defined(USART3)
+#define GPIO_AF7_USART3        ((uint8_t)0x07)  /*!< USART3 Alternate Function mapping */
+#endif /* USART3 */
 /**
   * @brief   AF 8 selection
   */
@@ -255,6 +258,9 @@ extern "C" {
   */
 #define GPIO_AF13_TIM14        ((uint8_t)0x0D)  /*!< TIM14 Alternate Function mapping */
 #define GPIO_AF13_TIM3         ((uint8_t)0x0D)  /*!< TIM3 Alternate Function mapping */
+#if defined(FDCAN1)
+#define GPIO_AF13_FDCAN1       ((uint8_t)0x0D)  /*!< FDCAN1 Alternate Function mapping */
+#endif /* FDCAN1 */
 
 /**
   * @brief   AF 14 selection

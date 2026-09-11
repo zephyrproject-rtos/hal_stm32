@@ -148,8 +148,9 @@ ErrorStatus LL_RTC_DeInit(RTC_TypeDef *RTCx)
   {
     /* Reset TR, DR and CR registers */
     WRITE_REG(RTCx->TR,       0U);
-    WRITE_REG(RTCx->DR, (RTC_DR_WDU_0 | RTC_DR_MU_0 | RTC_DR_DU_0));
+    WRITE_REG(RTCx->DR,   (RTC_DR_WDU_0 | RTC_DR_MU_0 | RTC_DR_DU_0));
     WRITE_REG(RTCx->PRER, (RTC_PRER_PREDIV_A | RTC_SYNCH_PRESC_DEFAULT));
+    WRITE_REG(RTCx->CR,       0U);
     WRITE_REG(RTCx->ALRMAR,   0U);
     WRITE_REG(RTCx->SHIFTR,   0U);
     WRITE_REG(RTCx->CALR,     0U);
