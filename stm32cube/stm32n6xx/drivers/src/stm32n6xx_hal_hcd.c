@@ -763,8 +763,6 @@ HAL_StatusTypeDef HAL_HCD_RegisterCallback(HCD_HandleTypeDef *hhcd,
     hhcd->ErrorCode |= HAL_HCD_ERROR_INVALID_CALLBACK;
     return HAL_ERROR;
   }
-  /* Process locked */
-  __HAL_LOCK(hhcd);
 
   if (hhcd->State == HAL_HCD_STATE_READY)
   {
@@ -830,12 +828,11 @@ HAL_StatusTypeDef HAL_HCD_RegisterCallback(HCD_HandleTypeDef *hhcd,
   {
     /* Update the error code */
     hhcd->ErrorCode |= HAL_HCD_ERROR_INVALID_CALLBACK;
+
     /* Return error status */
     status =  HAL_ERROR;
   }
 
-  /* Release Lock */
-  __HAL_UNLOCK(hhcd);
   return status;
 }
 
@@ -857,9 +854,6 @@ HAL_StatusTypeDef HAL_HCD_RegisterCallback(HCD_HandleTypeDef *hhcd,
 HAL_StatusTypeDef HAL_HCD_UnRegisterCallback(HCD_HandleTypeDef *hhcd, HAL_HCD_CallbackIDTypeDef CallbackID)
 {
   HAL_StatusTypeDef status = HAL_OK;
-
-  /* Process locked */
-  __HAL_LOCK(hhcd);
 
   /* Setup Legacy weak Callbacks  */
   if (hhcd->State == HAL_HCD_STATE_READY)
@@ -933,8 +927,6 @@ HAL_StatusTypeDef HAL_HCD_UnRegisterCallback(HCD_HandleTypeDef *hhcd, HAL_HCD_Ca
     status =  HAL_ERROR;
   }
 
-  /* Release Lock */
-  __HAL_UNLOCK(hhcd);
   return status;
 }
 
@@ -958,9 +950,6 @@ HAL_StatusTypeDef HAL_HCD_RegisterHC_NotifyURBChangeCallback(HCD_HandleTypeDef *
     return HAL_ERROR;
   }
 
-  /* Process locked */
-  __HAL_LOCK(hhcd);
-
   if (hhcd->State == HAL_HCD_STATE_READY)
   {
     hhcd->HC_NotifyURBChangeCallback = pCallback;
@@ -973,9 +962,6 @@ HAL_StatusTypeDef HAL_HCD_RegisterHC_NotifyURBChangeCallback(HCD_HandleTypeDef *
     /* Return error status */
     status =  HAL_ERROR;
   }
-
-  /* Release Lock */
-  __HAL_UNLOCK(hhcd);
 
   return status;
 }
@@ -991,9 +977,6 @@ HAL_StatusTypeDef HAL_HCD_UnRegisterHC_NotifyURBChangeCallback(HCD_HandleTypeDef
 {
   HAL_StatusTypeDef status = HAL_OK;
 
-  /* Process locked */
-  __HAL_LOCK(hhcd);
-
   if (hhcd->State == HAL_HCD_STATE_READY)
   {
     hhcd->HC_NotifyURBChangeCallback = HAL_HCD_HC_NotifyURBChange_Callback; /* Legacy weak DataOutStageCallback  */
@@ -1006,9 +989,6 @@ HAL_StatusTypeDef HAL_HCD_UnRegisterHC_NotifyURBChangeCallback(HCD_HandleTypeDef
     /* Return error status */
     status =  HAL_ERROR;
   }
-
-  /* Release Lock */
-  __HAL_UNLOCK(hhcd);
 
   return status;
 }

@@ -449,92 +449,92 @@ typedef struct
 /** @defgroup RCC_LL_EC_RTC_HSE_DIV  Prescaler for RTC clock
   * @{
   */
-#define LL_RCC_RTC_HSE_DIV_1               0U
-#define LL_RCC_RTC_HSE_DIV_2               RCC_CCIPR7_RTCPRE_0
-#define LL_RCC_RTC_HSE_DIV_3               RCC_CCIPR7_RTCPRE_1
-#define LL_RCC_RTC_HSE_DIV_4               (RCC_CCIPR7_RTCPRE_1 | RCC_CCIPR7_RTCPRE_0)
-#define LL_RCC_RTC_HSE_DIV_5               RCC_CCIPR7_RTCPRE_2
-#define LL_RCC_RTC_HSE_DIV_6               (RCC_CCIPR7_RTCPRE_2 | RCC_CCIPR7_RTCPRE_0)
-#define LL_RCC_RTC_HSE_DIV_7               (RCC_CCIPR7_RTCPRE_2 | RCC_CCIPR7_RTCPRE_1)
-#define LL_RCC_RTC_HSE_DIV_8               (RCC_CCIPR7_RTCPRE_2 | RCC_CCIPR7_RTCPRE_1 | RCC_CCIPR7_RTCPRE_0)
-#define LL_RCC_RTC_HSE_DIV_9               RCC_CCIPR7_RTCPRE_3
-#define LL_RCC_RTC_HSE_DIV_10              (RCC_CCIPR7_RTCPRE_3 | RCC_CCIPR7_RTCPRE_0)
-#define LL_RCC_RTC_HSE_DIV_11              (RCC_CCIPR7_RTCPRE_3 | RCC_CCIPR7_RTCPRE_1)
-#define LL_RCC_RTC_HSE_DIV_12              (RCC_CCIPR7_RTCPRE_3 | RCC_CCIPR7_RTCPRE_1 | RCC_CCIPR7_RTCPRE_0)
-#define LL_RCC_RTC_HSE_DIV_13              (RCC_CCIPR7_RTCPRE_3 | RCC_CCIPR7_RTCPRE_2)
-#define LL_RCC_RTC_HSE_DIV_14              (RCC_CCIPR7_RTCPRE_3 | RCC_CCIPR7_RTCPRE_2 | RCC_CCIPR7_RTCPRE_0)
-#define LL_RCC_RTC_HSE_DIV_15              (RCC_CCIPR7_RTCPRE_3 | RCC_CCIPR7_RTCPRE_2 | RCC_CCIPR7_RTCPRE_1)
-#define LL_RCC_RTC_HSE_DIV_16              (RCC_CCIPR7_RTCPRE_3 |\
-                                            RCC_CCIPR7_RTCPRE_2 | RCC_CCIPR7_RTCPRE_1 | RCC_CCIPR7_RTCPRE_0)
-#define LL_RCC_RTC_HSE_DIV_17              RCC_CCIPR7_RTCPRE_4
-#define LL_RCC_RTC_HSE_DIV_18              (RCC_CCIPR7_RTCPRE_4 | RCC_CCIPR7_RTCPRE_0)
-#define LL_RCC_RTC_HSE_DIV_19              (RCC_CCIPR7_RTCPRE_4 | RCC_CCIPR7_RTCPRE_1)
-#define LL_RCC_RTC_HSE_DIV_20              (RCC_CCIPR7_RTCPRE_4 | RCC_CCIPR7_RTCPRE_1 | RCC_CCIPR7_RTCPRE_0)
-#define LL_RCC_RTC_HSE_DIV_21              (RCC_CCIPR7_RTCPRE_4 | RCC_CCIPR7_RTCPRE_2)
-#define LL_RCC_RTC_HSE_DIV_22              (RCC_CCIPR7_RTCPRE_4 | RCC_CCIPR7_RTCPRE_2 | RCC_CCIPR7_RTCPRE_0)
-#define LL_RCC_RTC_HSE_DIV_23              (RCC_CCIPR7_RTCPRE_4 | RCC_CCIPR7_RTCPRE_2 | RCC_CCIPR7_RTCPRE_1)
-#define LL_RCC_RTC_HSE_DIV_24              (RCC_CCIPR7_RTCPRE_4 |\
-                                            RCC_CCIPR7_RTCPRE_2 | RCC_CCIPR7_RTCPRE_1 | RCC_CCIPR7_RTCPRE_0)
-#define LL_RCC_RTC_HSE_DIV_25              (RCC_CCIPR7_RTCPRE_4 | RCC_CCIPR7_RTCPRE_3)
-#define LL_RCC_RTC_HSE_DIV_26              (RCC_CCIPR7_RTCPRE_4 | RCC_CCIPR7_RTCPRE_3 | RCC_CCIPR7_RTCPRE_0)
-#define LL_RCC_RTC_HSE_DIV_27              (RCC_CCIPR7_RTCPRE_4 | RCC_CCIPR7_RTCPRE_3 | RCC_CCIPR7_RTCPRE_1)
-#define LL_RCC_RTC_HSE_DIV_28              (RCC_CCIPR7_RTCPRE_4 |\
-                                            RCC_CCIPR7_RTCPRE_3 | RCC_CCIPR7_RTCPRE_1 | RCC_CCIPR7_RTCPRE_0)
-#define LL_RCC_RTC_HSE_DIV_29              (RCC_CCIPR7_RTCPRE_4 | RCC_CCIPR7_RTCPRE_3 | RCC_CCIPR7_RTCPRE_2)
-#define LL_RCC_RTC_HSE_DIV_30              (RCC_CCIPR7_RTCPRE_4 |\
-                                            RCC_CCIPR7_RTCPRE_3 | RCC_CCIPR7_RTCPRE_2 | RCC_CCIPR7_RTCPRE_0)
-#define LL_RCC_RTC_HSE_DIV_31              (RCC_CCIPR7_RTCPRE_4 |\
-                                            RCC_CCIPR7_RTCPRE_3 | RCC_CCIPR7_RTCPRE_2 | RCC_CCIPR7_RTCPRE_1)
-#define LL_RCC_RTC_HSE_DIV_32              (RCC_CCIPR7_RTCPRE_4 | RCC_CCIPR7_RTCPRE_3 | RCC_CCIPR7_RTCPRE_2 |\
-                                            RCC_CCIPR7_RTCPRE_1 | RCC_CCIPR7_RTCPRE_0)
-#define LL_RCC_RTC_HSE_DIV_33              RCC_CCIPR7_RTCPRE_5
-#define LL_RCC_RTC_HSE_DIV_34              (RCC_CCIPR7_RTCPRE_5 | RCC_CCIPR7_RTCPRE_0)
-#define LL_RCC_RTC_HSE_DIV_35              (RCC_CCIPR7_RTCPRE_5 | RCC_CCIPR7_RTCPRE_1)
-#define LL_RCC_RTC_HSE_DIV_36              (RCC_CCIPR7_RTCPRE_5 | RCC_CCIPR7_RTCPRE_1 | RCC_CCIPR7_RTCPRE_0)
-#define LL_RCC_RTC_HSE_DIV_37              (RCC_CCIPR7_RTCPRE_5 | RCC_CCIPR7_RTCPRE_2)
-#define LL_RCC_RTC_HSE_DIV_38              (RCC_CCIPR7_RTCPRE_5 | RCC_CCIPR7_RTCPRE_2 | RCC_CCIPR7_RTCPRE_0)
-#define LL_RCC_RTC_HSE_DIV_39              (RCC_CCIPR7_RTCPRE_5 | RCC_CCIPR7_RTCPRE_2 | RCC_CCIPR7_RTCPRE_1)
-#define LL_RCC_RTC_HSE_DIV_40              (RCC_CCIPR7_RTCPRE_5 |\
-                                            RCC_CCIPR7_RTCPRE_2 | RCC_CCIPR7_RTCPRE_1 | RCC_CCIPR7_RTCPRE_0)
-#define LL_RCC_RTC_HSE_DIV_41              (RCC_CCIPR7_RTCPRE_5 | RCC_CCIPR7_RTCPRE_3)
-#define LL_RCC_RTC_HSE_DIV_42              (RCC_CCIPR7_RTCPRE_5 | RCC_CCIPR7_RTCPRE_3 | RCC_CCIPR7_RTCPRE_0)
-#define LL_RCC_RTC_HSE_DIV_43              (RCC_CCIPR7_RTCPRE_5 | RCC_CCIPR7_RTCPRE_3 | RCC_CCIPR7_RTCPRE_1)
-#define LL_RCC_RTC_HSE_DIV_44              (RCC_CCIPR7_RTCPRE_5 |\
-                                            RCC_CCIPR7_RTCPRE_3 | RCC_CCIPR7_RTCPRE_1 | RCC_CCIPR7_RTCPRE_0)
-#define LL_RCC_RTC_HSE_DIV_45              (RCC_CCIPR7_RTCPRE_5 | RCC_CCIPR7_RTCPRE_3 | RCC_CCIPR7_RTCPRE_2)
-#define LL_RCC_RTC_HSE_DIV_46              (RCC_CCIPR7_RTCPRE_5 |\
-                                            RCC_CCIPR7_RTCPRE_3 | RCC_CCIPR7_RTCPRE_2 | RCC_CCIPR7_RTCPRE_0)
-#define LL_RCC_RTC_HSE_DIV_47              (RCC_CCIPR7_RTCPRE_5 |\
-                                            RCC_CCIPR7_RTCPRE_3 | RCC_CCIPR7_RTCPRE_2 | RCC_CCIPR7_RTCPRE_1)
-#define LL_RCC_RTC_HSE_DIV_48              (RCC_CCIPR7_RTCPRE_5 | RCC_CCIPR7_RTCPRE_3 | RCC_CCIPR7_RTCPRE_2 |\
-                                            RCC_CCIPR7_RTCPRE_1 | RCC_CCIPR7_RTCPRE_0)
-#define LL_RCC_RTC_HSE_DIV_49              (RCC_CCIPR7_RTCPRE_5 | RCC_CCIPR7_RTCPRE_4)
-#define LL_RCC_RTC_HSE_DIV_50              (RCC_CCIPR7_RTCPRE_5 | RCC_CCIPR7_RTCPRE_4 | RCC_CCIPR7_RTCPRE_0)
-#define LL_RCC_RTC_HSE_DIV_51              (RCC_CCIPR7_RTCPRE_5 | RCC_CCIPR7_RTCPRE_4 | RCC_CCIPR7_RTCPRE_1)
-#define LL_RCC_RTC_HSE_DIV_52              (RCC_CCIPR7_RTCPRE_5 |\
-                                            RCC_CCIPR7_RTCPRE_4 | RCC_CCIPR7_RTCPRE_1 | RCC_CCIPR7_RTCPRE_0)
-#define LL_RCC_RTC_HSE_DIV_53              (RCC_CCIPR7_RTCPRE_5 | RCC_CCIPR7_RTCPRE_4 | RCC_CCIPR7_RTCPRE_2)
-#define LL_RCC_RTC_HSE_DIV_54              (RCC_CCIPR7_RTCPRE_5 |\
-                                            RCC_CCIPR7_RTCPRE_4 | RCC_CCIPR7_RTCPRE_2 | RCC_CCIPR7_RTCPRE_0)
-#define LL_RCC_RTC_HSE_DIV_55              (RCC_CCIPR7_RTCPRE_5 |\
-                                            RCC_CCIPR7_RTCPRE_4 | RCC_CCIPR7_RTCPRE_2 | RCC_CCIPR7_RTCPRE_1)
-#define LL_RCC_RTC_HSE_DIV_56              (RCC_CCIPR7_RTCPRE_5 | RCC_CCIPR7_RTCPRE_4 | RCC_CCIPR7_RTCPRE_2 |\
-                                            RCC_CCIPR7_RTCPRE_1 | RCC_CCIPR7_RTCPRE_0)
-#define LL_RCC_RTC_HSE_DIV_57              (RCC_CCIPR7_RTCPRE_5 | RCC_CCIPR7_RTCPRE_4 | RCC_CCIPR7_RTCPRE_3)
-#define LL_RCC_RTC_HSE_DIV_58              (RCC_CCIPR7_RTCPRE_5 |\
-                                            RCC_CCIPR7_RTCPRE_4 | RCC_CCIPR7_RTCPRE_3 | RCC_CCIPR7_RTCPRE_0)
-#define LL_RCC_RTC_HSE_DIV_59              (RCC_CCIPR7_RTCPRE_5 |\
-                                            RCC_CCIPR7_RTCPRE_4 | RCC_CCIPR7_RTCPRE_3 | RCC_CCIPR7_RTCPRE_1)
-#define LL_RCC_RTC_HSE_DIV_60              (RCC_CCIPR7_RTCPRE_5 | RCC_CCIPR7_RTCPRE_4 | RCC_CCIPR7_RTCPRE_3 |\
-                                            RCC_CCIPR7_RTCPRE_1 | RCC_CCIPR7_RTCPRE_0)
-#define LL_RCC_RTC_HSE_DIV_61              (RCC_CCIPR7_RTCPRE_5 |\
-                                            RCC_CCIPR7_RTCPRE_4 | RCC_CCIPR7_RTCPRE_3 | RCC_CCIPR7_RTCPRE_2)
-#define LL_RCC_RTC_HSE_DIV_62              (RCC_CCIPR7_RTCPRE_5 | RCC_CCIPR7_RTCPRE_4 | RCC_CCIPR7_RTCPRE_3 |\
-                                            RCC_CCIPR7_RTCPRE_2 | RCC_CCIPR7_RTCPRE_0)
-#define LL_RCC_RTC_HSE_DIV_63              (RCC_CCIPR7_RTCPRE_5 | RCC_CCIPR7_RTCPRE_4 | RCC_CCIPR7_RTCPRE_3 |\
-                                            RCC_CCIPR7_RTCPRE_2 | RCC_CCIPR7_RTCPRE_1)
-#define LL_RCC_RTC_HSE_DIV_64              (RCC_CCIPR7_RTCPRE_5 | RCC_CCIPR7_RTCPRE_4 | RCC_CCIPR7_RTCPRE_3 |\
-                                            RCC_CCIPR7_RTCPRE_2 | RCC_CCIPR7_RTCPRE_1 | RCC_CCIPR7_RTCPRE_0)
+#define LL_RCC_RTC_HSE_DIV_1                0U
+#define LL_RCC_RTC_HSE_DIV_4                RCC_CCIPR7_RTCPRE_0
+#define LL_RCC_RTC_HSE_DIV_9                RCC_CCIPR7_RTCPRE_1
+#define LL_RCC_RTC_HSE_DIV_16               (RCC_CCIPR7_RTCPRE_1 | RCC_CCIPR7_RTCPRE_0)
+#define LL_RCC_RTC_HSE_DIV_25               RCC_CCIPR7_RTCPRE_2
+#define LL_RCC_RTC_HSE_DIV_36               (RCC_CCIPR7_RTCPRE_2 | RCC_CCIPR7_RTCPRE_0)
+#define LL_RCC_RTC_HSE_DIV_49               (RCC_CCIPR7_RTCPRE_2 | RCC_CCIPR7_RTCPRE_1)
+#define LL_RCC_RTC_HSE_DIV_64               (RCC_CCIPR7_RTCPRE_2 | RCC_CCIPR7_RTCPRE_1 | RCC_CCIPR7_RTCPRE_0)
+#define LL_RCC_RTC_HSE_DIV_81               RCC_CCIPR7_RTCPRE_3
+#define LL_RCC_RTC_HSE_DIV_100              (RCC_CCIPR7_RTCPRE_3 | RCC_CCIPR7_RTCPRE_0)
+#define LL_RCC_RTC_HSE_DIV_121              (RCC_CCIPR7_RTCPRE_3 | RCC_CCIPR7_RTCPRE_1)
+#define LL_RCC_RTC_HSE_DIV_144              (RCC_CCIPR7_RTCPRE_3 | RCC_CCIPR7_RTCPRE_1 | RCC_CCIPR7_RTCPRE_0)
+#define LL_RCC_RTC_HSE_DIV_169              (RCC_CCIPR7_RTCPRE_3 | RCC_CCIPR7_RTCPRE_2)
+#define LL_RCC_RTC_HSE_DIV_196              (RCC_CCIPR7_RTCPRE_3 | RCC_CCIPR7_RTCPRE_2 | RCC_CCIPR7_RTCPRE_0)
+#define LL_RCC_RTC_HSE_DIV_225              (RCC_CCIPR7_RTCPRE_3 | RCC_CCIPR7_RTCPRE_2 | RCC_CCIPR7_RTCPRE_1)
+#define LL_RCC_RTC_HSE_DIV_256              (RCC_CCIPR7_RTCPRE_3 |\
+                                             RCC_CCIPR7_RTCPRE_2 | RCC_CCIPR7_RTCPRE_1 | RCC_CCIPR7_RTCPRE_0)
+#define LL_RCC_RTC_HSE_DIV_289              RCC_CCIPR7_RTCPRE_4
+#define LL_RCC_RTC_HSE_DIV_324              (RCC_CCIPR7_RTCPRE_4 | RCC_CCIPR7_RTCPRE_0)
+#define LL_RCC_RTC_HSE_DIV_361              (RCC_CCIPR7_RTCPRE_4 | RCC_CCIPR7_RTCPRE_1)
+#define LL_RCC_RTC_HSE_DIV_400              (RCC_CCIPR7_RTCPRE_4 | RCC_CCIPR7_RTCPRE_1 | RCC_CCIPR7_RTCPRE_0)
+#define LL_RCC_RTC_HSE_DIV_441              (RCC_CCIPR7_RTCPRE_4 | RCC_CCIPR7_RTCPRE_2)
+#define LL_RCC_RTC_HSE_DIV_484              (RCC_CCIPR7_RTCPRE_4 | RCC_CCIPR7_RTCPRE_2 | RCC_CCIPR7_RTCPRE_0)
+#define LL_RCC_RTC_HSE_DIV_529              (RCC_CCIPR7_RTCPRE_4 | RCC_CCIPR7_RTCPRE_2 | RCC_CCIPR7_RTCPRE_1)
+#define LL_RCC_RTC_HSE_DIV_576              (RCC_CCIPR7_RTCPRE_4 |\
+                                             RCC_CCIPR7_RTCPRE_2 | RCC_CCIPR7_RTCPRE_1 | RCC_CCIPR7_RTCPRE_0)
+#define LL_RCC_RTC_HSE_DIV_625              (RCC_CCIPR7_RTCPRE_4 | RCC_CCIPR7_RTCPRE_3)
+#define LL_RCC_RTC_HSE_DIV_676              (RCC_CCIPR7_RTCPRE_4 | RCC_CCIPR7_RTCPRE_3 | RCC_CCIPR7_RTCPRE_0)
+#define LL_RCC_RTC_HSE_DIV_729              (RCC_CCIPR7_RTCPRE_4 | RCC_CCIPR7_RTCPRE_3 | RCC_CCIPR7_RTCPRE_1)
+#define LL_RCC_RTC_HSE_DIV_784              (RCC_CCIPR7_RTCPRE_4 |\
+                                             RCC_CCIPR7_RTCPRE_3 | RCC_CCIPR7_RTCPRE_1 | RCC_CCIPR7_RTCPRE_0)
+#define LL_RCC_RTC_HSE_DIV_841              (RCC_CCIPR7_RTCPRE_4 | RCC_CCIPR7_RTCPRE_3 | RCC_CCIPR7_RTCPRE_2)
+#define LL_RCC_RTC_HSE_DIV_900              (RCC_CCIPR7_RTCPRE_4 |\
+                                             RCC_CCIPR7_RTCPRE_3 | RCC_CCIPR7_RTCPRE_2 | RCC_CCIPR7_RTCPRE_0)
+#define LL_RCC_RTC_HSE_DIV_961              (RCC_CCIPR7_RTCPRE_4 |\
+                                             RCC_CCIPR7_RTCPRE_3 | RCC_CCIPR7_RTCPRE_2 | RCC_CCIPR7_RTCPRE_1)
+#define LL_RCC_RTC_HSE_DIV_1024             (RCC_CCIPR7_RTCPRE_4 | RCC_CCIPR7_RTCPRE_3 | RCC_CCIPR7_RTCPRE_2 |\
+                                             RCC_CCIPR7_RTCPRE_1 | RCC_CCIPR7_RTCPRE_0)
+#define LL_RCC_RTC_HSE_DIV_1089             RCC_CCIPR7_RTCPRE_5
+#define LL_RCC_RTC_HSE_DIV_1156             (RCC_CCIPR7_RTCPRE_5 | RCC_CCIPR7_RTCPRE_0)
+#define LL_RCC_RTC_HSE_DIV_1225             (RCC_CCIPR7_RTCPRE_5 | RCC_CCIPR7_RTCPRE_1)
+#define LL_RCC_RTC_HSE_DIV_1296             (RCC_CCIPR7_RTCPRE_5 | RCC_CCIPR7_RTCPRE_1 | RCC_CCIPR7_RTCPRE_0)
+#define LL_RCC_RTC_HSE_DIV_1369             (RCC_CCIPR7_RTCPRE_5 | RCC_CCIPR7_RTCPRE_2)
+#define LL_RCC_RTC_HSE_DIV_1444             (RCC_CCIPR7_RTCPRE_5 | RCC_CCIPR7_RTCPRE_2 | RCC_CCIPR7_RTCPRE_0)
+#define LL_RCC_RTC_HSE_DIV_1521             (RCC_CCIPR7_RTCPRE_5 | RCC_CCIPR7_RTCPRE_2 | RCC_CCIPR7_RTCPRE_1)
+#define LL_RCC_RTC_HSE_DIV_1600             (RCC_CCIPR7_RTCPRE_5 |\
+                                             RCC_CCIPR7_RTCPRE_2 | RCC_CCIPR7_RTCPRE_1 | RCC_CCIPR7_RTCPRE_0)
+#define LL_RCC_RTC_HSE_DIV_1681             (RCC_CCIPR7_RTCPRE_5 | RCC_CCIPR7_RTCPRE_3)
+#define LL_RCC_RTC_HSE_DIV_1764             (RCC_CCIPR7_RTCPRE_5 | RCC_CCIPR7_RTCPRE_3 | RCC_CCIPR7_RTCPRE_0)
+#define LL_RCC_RTC_HSE_DIV_1849             (RCC_CCIPR7_RTCPRE_5 | RCC_CCIPR7_RTCPRE_3 | RCC_CCIPR7_RTCPRE_1)
+#define LL_RCC_RTC_HSE_DIV_1936             (RCC_CCIPR7_RTCPRE_5 |\
+                                             RCC_CCIPR7_RTCPRE_3 | RCC_CCIPR7_RTCPRE_1 | RCC_CCIPR7_RTCPRE_0)
+#define LL_RCC_RTC_HSE_DIV_2025             (RCC_CCIPR7_RTCPRE_5 | RCC_CCIPR7_RTCPRE_3 | RCC_CCIPR7_RTCPRE_2)
+#define LL_RCC_RTC_HSE_DIV_2116             (RCC_CCIPR7_RTCPRE_5 |\
+                                             RCC_CCIPR7_RTCPRE_3 | RCC_CCIPR7_RTCPRE_2 | RCC_CCIPR7_RTCPRE_0)
+#define LL_RCC_RTC_HSE_DIV_2209             (RCC_CCIPR7_RTCPRE_5 |\
+                                             RCC_CCIPR7_RTCPRE_3 | RCC_CCIPR7_RTCPRE_2 | RCC_CCIPR7_RTCPRE_1)
+#define LL_RCC_RTC_HSE_DIV_2304             (RCC_CCIPR7_RTCPRE_5 | RCC_CCIPR7_RTCPRE_3 | RCC_CCIPR7_RTCPRE_2 |\
+                                             RCC_CCIPR7_RTCPRE_1 | RCC_CCIPR7_RTCPRE_0)
+#define LL_RCC_RTC_HSE_DIV_2401             (RCC_CCIPR7_RTCPRE_5 | RCC_CCIPR7_RTCPRE_4)
+#define LL_RCC_RTC_HSE_DIV_2500             (RCC_CCIPR7_RTCPRE_5 | RCC_CCIPR7_RTCPRE_4 | RCC_CCIPR7_RTCPRE_0)
+#define LL_RCC_RTC_HSE_DIV_2601             (RCC_CCIPR7_RTCPRE_5 | RCC_CCIPR7_RTCPRE_4 | RCC_CCIPR7_RTCPRE_1)
+#define LL_RCC_RTC_HSE_DIV_2704             (RCC_CCIPR7_RTCPRE_5 |\
+                                             RCC_CCIPR7_RTCPRE_4 | RCC_CCIPR7_RTCPRE_1 | RCC_CCIPR7_RTCPRE_0)
+#define LL_RCC_RTC_HSE_DIV_2809             (RCC_CCIPR7_RTCPRE_5 | RCC_CCIPR7_RTCPRE_4 | RCC_CCIPR7_RTCPRE_2)
+#define LL_RCC_RTC_HSE_DIV_2916             (RCC_CCIPR7_RTCPRE_5 |\
+                                             RCC_CCIPR7_RTCPRE_4 | RCC_CCIPR7_RTCPRE_2 | RCC_CCIPR7_RTCPRE_0)
+#define LL_RCC_RTC_HSE_DIV_3025             (RCC_CCIPR7_RTCPRE_5 |\
+                                             RCC_CCIPR7_RTCPRE_4 | RCC_CCIPR7_RTCPRE_2 | RCC_CCIPR7_RTCPRE_1)
+#define LL_RCC_RTC_HSE_DIV_3136             (RCC_CCIPR7_RTCPRE_5 | RCC_CCIPR7_RTCPRE_4 | RCC_CCIPR7_RTCPRE_2 |\
+                                             RCC_CCIPR7_RTCPRE_1 | RCC_CCIPR7_RTCPRE_0)
+#define LL_RCC_RTC_HSE_DIV_3249             (RCC_CCIPR7_RTCPRE_5 | RCC_CCIPR7_RTCPRE_4 | RCC_CCIPR7_RTCPRE_3)
+#define LL_RCC_RTC_HSE_DIV_3364             (RCC_CCIPR7_RTCPRE_5 |\
+                                             RCC_CCIPR7_RTCPRE_4 | RCC_CCIPR7_RTCPRE_3 | RCC_CCIPR7_RTCPRE_0)
+#define LL_RCC_RTC_HSE_DIV_3481             (RCC_CCIPR7_RTCPRE_5 |\
+                                             RCC_CCIPR7_RTCPRE_4 | RCC_CCIPR7_RTCPRE_3 | RCC_CCIPR7_RTCPRE_1)
+#define LL_RCC_RTC_HSE_DIV_3600             (RCC_CCIPR7_RTCPRE_5 | RCC_CCIPR7_RTCPRE_4 | RCC_CCIPR7_RTCPRE_3 |\
+                                             RCC_CCIPR7_RTCPRE_1 | RCC_CCIPR7_RTCPRE_0)
+#define LL_RCC_RTC_HSE_DIV_3721             (RCC_CCIPR7_RTCPRE_5 |\
+                                             RCC_CCIPR7_RTCPRE_4 | RCC_CCIPR7_RTCPRE_3 | RCC_CCIPR7_RTCPRE_2)
+#define LL_RCC_RTC_HSE_DIV_3844             (RCC_CCIPR7_RTCPRE_5 | RCC_CCIPR7_RTCPRE_4 | RCC_CCIPR7_RTCPRE_3 |\
+                                             RCC_CCIPR7_RTCPRE_2 | RCC_CCIPR7_RTCPRE_0)
+#define LL_RCC_RTC_HSE_DIV_3969             (RCC_CCIPR7_RTCPRE_5 | RCC_CCIPR7_RTCPRE_4 | RCC_CCIPR7_RTCPRE_3 |\
+                                             RCC_CCIPR7_RTCPRE_2 | RCC_CCIPR7_RTCPRE_1)
+#define LL_RCC_RTC_HSE_DIV_4096             (RCC_CCIPR7_RTCPRE_5 | RCC_CCIPR7_RTCPRE_4 | RCC_CCIPR7_RTCPRE_3 |\
+                                             RCC_CCIPR7_RTCPRE_2 | RCC_CCIPR7_RTCPRE_1 | RCC_CCIPR7_RTCPRE_0)
 /**
   * @}
   */
@@ -4772,68 +4772,69 @@ __STATIC_INLINE void LL_RCC_ReleaseBackupDomainReset(void)
   * @rmtoll CCIPR7       RTCPRE        LL_RCC_SetRTC_HSEPrescaler
   * @param  Prescaler This parameter can be one of the following values:
   *         @arg @ref LL_RCC_RTC_HSE_DIV_1
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_2
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_3
   *         @arg @ref LL_RCC_RTC_HSE_DIV_4
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_5
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_6
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_7
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_8
   *         @arg @ref LL_RCC_RTC_HSE_DIV_9
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_10
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_11
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_12
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_13
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_14
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_15
   *         @arg @ref LL_RCC_RTC_HSE_DIV_16
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_17
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_18
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_19
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_20
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_21
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_22
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_23
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_24
   *         @arg @ref LL_RCC_RTC_HSE_DIV_25
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_26
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_27
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_28
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_29
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_30
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_31
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_32
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_33
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_34
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_35
   *         @arg @ref LL_RCC_RTC_HSE_DIV_36
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_37
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_38
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_39
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_40
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_41
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_42
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_43
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_44
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_45
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_46
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_47
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_48
   *         @arg @ref LL_RCC_RTC_HSE_DIV_49
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_50
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_51
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_52
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_53
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_54
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_55
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_56
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_57
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_58
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_59
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_60
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_61
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_62
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_63
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_64
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_81
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_100
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_121
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_144
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_169
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_196
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_225
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_256
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_289
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_324
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_361
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_400
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_441
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_484
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_529
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_576
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_625
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_676
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_729
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_784
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_841
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_900
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_961
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_1024
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_1089
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_1156
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_1225
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_1296
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_1369
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_1444
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_1521
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_1600
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_1681
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_1764
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_1849
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_1936
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_2025
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_2116
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_2209
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_2304
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_2401
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_2500
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_2601
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_2704
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_2809
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_2916
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_3025
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_3136
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_3249
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_3364
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_3481
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_3600
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_3721
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_3844
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_3969
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_4096
   * @retval None
   */
 __STATIC_INLINE void LL_RCC_SetRTC_HSEPrescaler(uint32_t Prescaler)
@@ -4846,68 +4847,69 @@ __STATIC_INLINE void LL_RCC_SetRTC_HSEPrescaler(uint32_t Prescaler)
   * @rmtoll CCIPR7       RTCPRE        LL_RCC_GetRTC_HSEPrescaler
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_RCC_RTC_HSE_DIV_1
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_2
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_3
   *         @arg @ref LL_RCC_RTC_HSE_DIV_4
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_5
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_6
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_7
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_8
   *         @arg @ref LL_RCC_RTC_HSE_DIV_9
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_10
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_11
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_12
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_13
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_14
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_15
   *         @arg @ref LL_RCC_RTC_HSE_DIV_16
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_17
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_18
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_19
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_20
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_21
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_22
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_23
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_24
   *         @arg @ref LL_RCC_RTC_HSE_DIV_25
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_26
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_27
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_28
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_29
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_30
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_31
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_32
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_33
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_34
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_35
   *         @arg @ref LL_RCC_RTC_HSE_DIV_36
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_37
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_38
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_39
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_40
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_41
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_42
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_43
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_44
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_45
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_46
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_47
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_48
   *         @arg @ref LL_RCC_RTC_HSE_DIV_49
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_50
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_51
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_52
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_53
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_54
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_55
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_56
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_57
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_58
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_59
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_60
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_61
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_62
-  *         @arg @ref LL_RCC_RTC_HSE_DIV_63
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_64
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_81
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_100
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_121
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_144
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_169
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_196
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_225
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_256
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_289
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_324
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_361
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_400
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_441
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_484
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_529
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_576
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_625
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_676
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_729
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_784
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_841
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_900
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_961
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_1024
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_1089
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_1156
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_1225
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_1296
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_1369
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_1444
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_1521
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_1600
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_1681
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_1764
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_1849
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_1936
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_2025
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_2116
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_2209
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_2304
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_2401
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_2500
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_2601
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_2704
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_2809
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_2916
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_3025
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_3136
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_3249
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_3364
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_3481
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_3600
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_3721
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_3844
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_3969
+  *         @arg @ref LL_RCC_RTC_HSE_DIV_4096
   */
 __STATIC_INLINE uint32_t LL_RCC_GetRTC_HSEPrescaler(void)
 {

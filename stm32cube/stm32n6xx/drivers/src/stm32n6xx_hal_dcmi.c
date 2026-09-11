@@ -785,6 +785,10 @@ void HAL_DCMI_IRQHandler(DCMI_HandleTypeDef *hdcmi)
     /* Clear the VSYNC flag */
     __HAL_DCMI_CLEAR_FLAG(hdcmi, DCMI_FLAG_VSYNCRI);
 
+    if ((hdcmi->Instance->CR & DCMI_CR_CM) == DCMI_MODE_CONTINUOUS)
+    {
+      hdcmi->XferCount = hdcmi->XferTransferNumber;
+    }
     /* VSYNC Callback */
 #if (USE_HAL_DCMI_REGISTER_CALLBACKS == 1)
     /*Call registered DCMI vsync event callback*/

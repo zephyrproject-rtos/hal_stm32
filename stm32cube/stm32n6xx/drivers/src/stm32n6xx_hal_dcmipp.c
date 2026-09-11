@@ -743,11 +743,11 @@ HAL_StatusTypeDef HAL_DCMIPP_CSI_SetConfig(const DCMIPP_HandleTypeDef *hdcmipp,
   /* Enable the D-PHY_RX lane(s) etc */
   if (pCSI_Config->NumberOfLanes == DCMIPP_CSI_ONE_DATA_LANE)
   {
-    WRITE_REG(csi_instance->PCR, CSI_PCR_DL0EN | CSI_PCR_CLEN | CSI_PCR_PWRDOWN);
+    WRITE_REG(csi_instance->PCR, CSI_PCR_DL0EN | CSI_PCR_CLEN | CSI_PCR_NPWRDOWN);
   }
   else
   {
-    WRITE_REG(csi_instance->PCR, CSI_PCR_DL0EN | CSI_PCR_DL1EN | CSI_PCR_CLEN | CSI_PCR_PWRDOWN);
+    WRITE_REG(csi_instance->PCR, CSI_PCR_DL0EN | CSI_PCR_DL1EN | CSI_PCR_CLEN | CSI_PCR_NPWRDOWN);
   }
 
 
@@ -8228,7 +8228,7 @@ static void DCMIPP_SetConfig(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe, uint3
     hdcmipp->PipeState[Pipe] = HAL_DCMIPP_PIPE_STATE_BUSY;
 
     /* Set the capture mode */
-    hdcmipp->Instance->P0FCTCR |= CaptureMode;
+    MODIFY_REG(hdcmipp->Instance->P0FCTCR, DCMIPP_P0FCTCR_CPTMODE, CaptureMode);
 
     /* Set the destination address */
     WRITE_REG(hdcmipp->Instance->P0PPM0AR1, DstAddress);
@@ -8243,7 +8243,7 @@ static void DCMIPP_SetConfig(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe, uint3
     hdcmipp->PipeState[Pipe] = HAL_DCMIPP_PIPE_STATE_BUSY;
 
     /* Set the capture mode */
-    hdcmipp->Instance->P1FCTCR |= CaptureMode;
+    MODIFY_REG(hdcmipp->Instance->P1FCTCR, DCMIPP_P1FCTCR_CPTMODE, CaptureMode);
 
     /* Set the destination address */
     WRITE_REG(hdcmipp->Instance->P1PPM0AR1, DstAddress);
@@ -8258,7 +8258,7 @@ static void DCMIPP_SetConfig(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe, uint3
     hdcmipp->PipeState[Pipe] = HAL_DCMIPP_PIPE_STATE_BUSY;
 
     /* Set the capture mode */
-    hdcmipp->Instance->P2FCTCR |= CaptureMode;
+    MODIFY_REG(hdcmipp->Instance->P2FCTCR, DCMIPP_P2FCTCR_CPTMODE, CaptureMode);
 
     /* Set the destination address */
     WRITE_REG(hdcmipp->Instance->P2PPM0AR1, DstAddress);
@@ -8286,7 +8286,7 @@ static void DCMIPP_SetDBMConfig(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe, ui
     hdcmipp->PipeState[Pipe] = HAL_DCMIPP_PIPE_STATE_BUSY;
 
     /* Set the capture mode */
-    hdcmipp->Instance->P0FCTCR |= CaptureMode;
+    MODIFY_REG(hdcmipp->Instance->P0FCTCR, DCMIPP_P0FCTCR_CPTMODE, CaptureMode);
 
     /* Set the destination address */
     WRITE_REG(hdcmipp->Instance->P0PPM0AR1, DstAddress0);
@@ -8306,7 +8306,7 @@ static void DCMIPP_SetDBMConfig(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe, ui
     hdcmipp->PipeState[Pipe] = HAL_DCMIPP_PIPE_STATE_BUSY;
 
     /* Set the capture mode */
-    hdcmipp->Instance->P1FCTCR |= CaptureMode;
+    MODIFY_REG(hdcmipp->Instance->P1FCTCR, DCMIPP_P1FCTCR_CPTMODE, CaptureMode);
 
     /* Set the destination address */
     WRITE_REG(hdcmipp->Instance->P1PPM0AR1, DstAddress0);
@@ -8326,7 +8326,7 @@ static void DCMIPP_SetDBMConfig(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe, ui
     hdcmipp->PipeState[Pipe] = HAL_DCMIPP_PIPE_STATE_BUSY;
 
     /* Set the capture mode */
-    hdcmipp->Instance->P2FCTCR |= CaptureMode;
+    MODIFY_REG(hdcmipp->Instance->P2FCTCR, DCMIPP_P2FCTCR_CPTMODE, CaptureMode);
 
     /* Set the destination address */
     WRITE_REG(hdcmipp->Instance->P2PPM0AR1, DstAddress0);

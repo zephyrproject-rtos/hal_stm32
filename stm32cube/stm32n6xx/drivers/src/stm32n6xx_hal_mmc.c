@@ -486,7 +486,7 @@ HAL_StatusTypeDef HAL_MMC_Init(MMC_HandleTypeDef *hmmc)
 HAL_StatusTypeDef HAL_MMC_InitCard(MMC_HandleTypeDef *hmmc)
 {
   uint32_t errorstate;
-  MMC_InitTypeDef Init;
+  MMC_InitTypeDef Init = {0U};
   uint32_t sdmmc_clk;
 
   /* Default SDMMC peripheral configuration for MMC card initialization */
@@ -514,7 +514,14 @@ HAL_StatusTypeDef HAL_MMC_InitCard(MMC_HandleTypeDef *hmmc)
     hmmc->ErrorCode = SDMMC_ERROR_INVALID_PARAMETER;
     return HAL_ERROR;
   }
-  Init.ClockDiv = sdmmc_clk / (2U * MMC_INIT_FREQ);
+  if (sdmmc_clk <= MMC_INIT_FREQ)
+  {
+    Init.ClockDiv = 0U;
+  }
+  else
+  {
+    Init.ClockDiv = (sdmmc_clk / (2U * MMC_INIT_FREQ)) + 1U;
+  }
 
 #if (USE_SD_TRANSCEIVER != 0U)
   Init.TranceiverPresent = SDMMC_TRANSCEIVER_NOT_PRESENT;
@@ -2432,7 +2439,7 @@ HAL_StatusTypeDef HAL_MMC_GetCardExtCSD(MMC_HandleTypeDef *hmmc, uint32_t *pExtC
 HAL_StatusTypeDef HAL_MMC_ConfigWideBusOperation(MMC_HandleTypeDef *hmmc, uint32_t WideMode)
 {
   uint32_t count;
-  SDMMC_InitTypeDef Init;
+  SDMMC_InitTypeDef Init = {0U};
   uint32_t errorstate;
   uint32_t response = 0U;
 
@@ -3610,7 +3617,7 @@ static uint32_t MMC_InitCard(MMC_HandleTypeDef *hmmc)
   HAL_MMC_CardCSDTypeDef CSD;
   uint32_t errorstate;
   uint16_t mmc_rca = 2U;
-  MMC_InitTypeDef Init;
+  MMC_InitTypeDef Init = {0U};
 
   /* Check the power State */
   if (SDMMC_GetPowerState(hmmc->Instance) == 0U)
@@ -4003,7 +4010,7 @@ static uint32_t MMC_HighSpeed(MMC_HandleTypeDef *hmmc, FunctionalState state)
   uint32_t response = 0U;
   uint32_t count;
   uint32_t sdmmc_clk;
-  SDMMC_InitTypeDef Init;
+  SDMMC_InitTypeDef Init = {0U};
 
   if (((hmmc->Instance->CLKCR & SDMMC_CLKCR_BUSSPEED) != 0U) && (state == DISABLE))
   {

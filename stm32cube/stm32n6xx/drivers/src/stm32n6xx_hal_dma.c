@@ -1616,7 +1616,6 @@ HAL_StatusTypeDef HAL_DMA_GetIsolationAttributes(DMA_HandleTypeDef const *const 
 
   return HAL_OK;
 }
-
 #if defined (CPU_IN_SECURE_STATE)
 /**
   * @brief  Lock the DMA channel security and privilege attribute(s).

@@ -1909,6 +1909,54 @@ HAL_StatusTypeDef HAL_LTDC_SetPitch(LTDC_HandleTypeDef *hltdc, uint32_t LinePitc
 }
 
 /**
+  * @brief  Function used to reconfigure the pitch for specific cases where the attached LayerIdx buffer have a width
+  *         that is larger than the one intended to be displayed on screen. Example of a buffer 800x480 attached to
+  *         layer for which we want to read and display on screen only a portion 320x240 taken in the center
+  *         of the buffer.
+  *         The pitch in pixels will be in that case 800 pixels and not 320 pixels as initially configured by previous
+  *         call to HAL_LTDC_ConfigLayer().
+  * @note   This function should be called only after a previous call to HAL_LTDC_ConfigLayer() to modify the default
+  *         pitch configured by HAL_LTDC_ConfigLayer() when required (refer to example described just above).
+  * @param  hltdc              pointer to a LTDC_HandleTypeDef structure that contains
+  *                            the configuration information for the LTDC.
+  * @param  LinePitchInBytes    New line pitch in Bytes to configure for LTDC layer 'LayerIdx'.
+  * @param  LayerIdx           LTDC layer index concerned by the modification of line pitch.
+  * @retval HAL status
+  */
+HAL_StatusTypeDef HAL_LTDC_SetPitchInBytes(LTDC_HandleTypeDef *hltdc, uint32_t LinePitchInBytes,
+                                           uint32_t LayerIdx)
+{
+  /* Check the parameters */
+  assert_param(IS_LTDC_LAYER(LayerIdx));
+
+  /* Process locked */
+  __HAL_LOCK(hltdc);
+
+  /* Change LTDC peripheral state */
+  hltdc->State = HAL_LTDC_STATE_BUSY;
+
+  /* Clear previously set standard pitch */
+  LTDC_LAYER(hltdc, LayerIdx)->CFBLR &= ~LTDC_LxCFBLR_CFBP;
+
+  /* Set the Reload type as immediate update of LTDC pitch configured above */
+  WRITE_REG(LTDC_LAYER(hltdc, LayerIdx)->RCR, LTDC_LxRCR_IMR | LTDC_LxRCR_GRMSK);
+
+  /* Set new line pitch value */
+  LTDC_LAYER(hltdc, LayerIdx)->CFBLR |= (LinePitchInBytes << 16U);
+
+  /* Set the Reload type as immediate update of LTDC pitch configured above */
+  WRITE_REG(LTDC_LAYER(hltdc, LayerIdx)->RCR, LTDC_LxRCR_IMR | LTDC_LxRCR_GRMSK);
+
+  /* Change the LTDC state*/
+  hltdc->State = HAL_LTDC_STATE_READY;
+
+  /* Process unlocked */
+  __HAL_UNLOCK(hltdc);
+
+  return HAL_OK;
+}
+
+/**
   * @brief Sets the expected CRC value for the LTDC peripheral.
   *
   * Programs the expected Cyclic Redundancy Check (CRC) value for comparison against the CRC
@@ -2489,6 +2537,49 @@ HAL_StatusTypeDef HAL_LTDC_SetPitch_NoReload(LTDC_HandleTypeDef *hltdc, uint32_t
 
   /* Set new line pitch value */
   LTDC_LAYER(hltdc, LayerIdx)->CFBLR |= pitchUpdate;
+
+  /* Change the LTDC state*/
+  hltdc->State = HAL_LTDC_STATE_READY;
+
+  /* Process unlocked */
+  __HAL_UNLOCK(hltdc);
+
+  return HAL_OK;
+}
+/**
+  * @brief  Function used to reconfigure the pitch for specific cases where the attached LayerIdx buffer have a width
+  *         that is larger than the one intended to be displayed on screen. Example of a buffer 800x480 attached to
+  *         layer for which we want to read and display on screen only a portion 320x240 taken in the center
+  *         of the buffer.
+  *         The pitch in pixels will be in that case 800 pixels and not 320 pixels as initially configured by
+  *         previous call to HAL_LTDC_ConfigLayer().
+  * @note   This function should be called only after a previous call to HAL_LTDC_ConfigLayer() to modify the default
+  *         pitch configured by HAL_LTDC_ConfigLayer() when required (refer to example described just above).
+  *         Variant of the function HAL_LTDC_SetPitch without immediate reload.
+  * @param  hltdc              pointer to a LTDC_HandleTypeDef structure that contains
+  *                            the configuration information for the LTDC.
+  * @param  LinePitchInBytes   New line pitch in pixels to configure for LTDC layer 'LayerIdx'.
+  * @param  LayerIdx           LTDC layer index concerned by the modification of line pitch.
+  * @retval HAL status
+  */
+HAL_StatusTypeDef HAL_LTDC_SetPitchInBytes_NoReload(LTDC_HandleTypeDef *hltdc, uint32_t LinePitchInBytes,
+                                                    uint32_t LayerIdx)
+{
+
+  /* Check the parameters */
+  assert_param(IS_LTDC_LAYER(LayerIdx));
+
+  /* Process locked */
+  __HAL_LOCK(hltdc);
+
+  /* Change LTDC peripheral state */
+  hltdc->State = HAL_LTDC_STATE_BUSY;
+
+  /* Clear previously set standard pitch */
+  LTDC_LAYER(hltdc, LayerIdx)->CFBLR &= ~LTDC_LxCFBLR_CFBP;
+
+  /* Set new line pitch value */
+  LTDC_LAYER(hltdc, LayerIdx)->CFBLR |= (LinePitchInBytes << 16U);
 
   /* Change the LTDC state*/
   hltdc->State = HAL_LTDC_STATE_READY;
@@ -3702,7 +3793,7 @@ static void LTDC_SetConfig(LTDC_HandleTypeDef *hltdc, uint32_t Aux0Addr, uint32_
                                             stride)  + 7U));
 
     /* Enable LTDC_Layer by setting LEN bit */
-    MODIFY_REG(LTDC_LAYER(hltdc, LayerIdx)->CR,LTDC_LxCR_HMEN, LTDC_LxCR_LEN);
+    MODIFY_REG(LTDC_LAYER(hltdc, LayerIdx)->CR, LTDC_LxCR_HMEN, LTDC_LxCR_LEN);
   }
 
   else if (Mirror == LTDC_MIRROR_HORIZONTAL)

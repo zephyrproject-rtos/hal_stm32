@@ -935,6 +935,8 @@ HAL_StatusTypeDef HAL_LTDC_SetFullPlanarAddress_NoReload(LTDC_HandleTypeDef *hlt
                                                          LTDC_LayerFlexYUVFullPlanarTypeDef *pYUVFullPlanarAddress,
                                                          uint32_t LayerIdx);
 HAL_StatusTypeDef HAL_LTDC_SetPitch(LTDC_HandleTypeDef *hltdc, uint32_t LinePitchInPixels, uint32_t LayerIdx);
+HAL_StatusTypeDef HAL_LTDC_SetPitchInBytes(LTDC_HandleTypeDef *hltdc, uint32_t LinePitchInBytes,
+                                           uint32_t LayerIdx);
 HAL_StatusTypeDef HAL_LTDC_ConfigColorKeying(LTDC_HandleTypeDef *hltdc, uint32_t RGBValue, uint32_t LayerIdx);
 HAL_StatusTypeDef HAL_LTDC_ConfigCLUT(LTDC_HandleTypeDef *hltdc, const uint32_t *pCLUT, uint32_t CLUTSize,
                                       uint32_t LayerIdx);
@@ -969,6 +971,8 @@ HAL_StatusTypeDef HAL_LTDC_SetPixelFormat_NoReload(LTDC_HandleTypeDef *hltdc, ui
 HAL_StatusTypeDef HAL_LTDC_SetAlpha_NoReload(LTDC_HandleTypeDef *hltdc, uint32_t Alpha, uint32_t LayerIdx);
 HAL_StatusTypeDef HAL_LTDC_SetAddress_NoReload(LTDC_HandleTypeDef *hltdc, uint32_t Address, uint32_t LayerIdx);
 HAL_StatusTypeDef HAL_LTDC_SetPitch_NoReload(LTDC_HandleTypeDef *hltdc, uint32_t LinePitchInPixels, uint32_t LayerIdx);
+HAL_StatusTypeDef HAL_LTDC_SetPitchInBytes_NoReload(LTDC_HandleTypeDef *hltdc, uint32_t LinePitchInBytes,
+                                                    uint32_t LayerIdx);
 HAL_StatusTypeDef HAL_LTDC_EnableColorKeying_NoReload(LTDC_HandleTypeDef *hltdc, uint32_t LayerIdx);
 HAL_StatusTypeDef HAL_LTDC_DisableColorKeying_NoReload(LTDC_HandleTypeDef *hltdc, uint32_t LayerIdx);
 HAL_StatusTypeDef HAL_LTDC_EnableCLUT_NoReload(LTDC_HandleTypeDef *hltdc, uint32_t LayerIdx);

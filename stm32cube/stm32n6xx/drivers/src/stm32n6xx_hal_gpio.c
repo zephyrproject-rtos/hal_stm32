@@ -313,7 +313,7 @@ void HAL_GPIO_DeInit(GPIO_TypeDef  *GPIOx, uint32_t GPIO_Pin)
       /* Clear the External Interrupt or Event for the current IO */
 
       tmp = EXTI->EXTICR[position >> 2u];
-      tmp &= (0x0FuL << ((position & 0x03u) * EXTI_EXTICR1_EXTI1_Pos));
+      tmp &= (0x0FUL << ((position & 0x03u) * EXTI_EXTICR1_EXTI1_Pos));
       if (tmp == (GPIO_GET_INDEX(GPIOx) << ((position & 0x03u) * EXTI_EXTICR1_EXTI1_Pos)))
       {
         /* Clear EXTI line configuration */
@@ -324,7 +324,7 @@ void HAL_GPIO_DeInit(GPIO_TypeDef  *GPIOx, uint32_t GPIO_Pin)
         EXTI->RTSR1 &= ~(iocurrent);
         EXTI->FTSR1 &= ~(iocurrent);
 
-        tmp = 0x0FuL << ((position & 0x03u) * EXTI_EXTICR1_EXTI1_Pos);
+        tmp = 0x0FUL << ((position & 0x03u) * EXTI_EXTICR1_EXTI1_Pos);
         EXTI->EXTICR[position >> 2u] &= ~tmp;
       }
 
@@ -333,7 +333,7 @@ void HAL_GPIO_DeInit(GPIO_TypeDef  *GPIOx, uint32_t GPIO_Pin)
       GPIOx->MODER |= (GPIO_MODER_MODE0 << (position * GPIO_MODER_MODE1_Pos));
 
       /* Configure the default Alternate Function in current IO */
-      GPIOx->AFR[position >> 3u] &= ~(0xFu << ((position & 0x07u) * GPIO_AFRL_AFSEL1_Pos)) ;
+      GPIOx->AFR[position >> 3u] &= ~(0xFUL << ((position & 0x07u) * GPIO_AFRL_AFSEL1_Pos)) ;
 
       /* Configure the default value for IO Speed */
       GPIOx->OSPEEDR &= ~(GPIO_OSPEEDR_OSPEED0 << (position * GPIO_OSPEEDR_OSPEED1_Pos));

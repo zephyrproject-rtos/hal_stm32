@@ -146,6 +146,15 @@
 #endif /* LSI_VALUE */                     /*!< Value of the Internal Low Speed oscillator in Hz */
 /* The real value may vary depending on the variations in voltage and temperature.*/
 
+/**
+ * @brief External clock source for digital audio interfaces: SPI/I2S, SAI and ADF
+ *        This value is used by the RCC HAL module to provide the digital audio interfaces
+ *        frequency. This clock source is inserted directly through I2S_CKIN pad.
+ */
+#if !defined(EXTERNAL_CLOCK_VALUE)
+#define EXTERNAL_CLOCK_VALUE      12288000UL /*!< Value of the external clock source in Hz */
+#endif /* EXTERNAL_CLOCK_VALUE */
+
 /* Tip: To avoid modifying this file each time you need to use different HSE,
    ===  you can define the HSE value in your toolchain compiler preprocessor. */
 

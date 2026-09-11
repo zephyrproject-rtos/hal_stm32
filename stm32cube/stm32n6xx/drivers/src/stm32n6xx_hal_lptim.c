@@ -405,10 +405,10 @@ HAL_StatusTypeDef HAL_LPTIM_Init(LPTIM_HandleTypeDef *hlptim)
   {
     if (hlptim->Instance == LPTIM3)
     {
-      /* Check LPTIM3 Input1 source */
+      /* Check LPTIM Input1 source */
       assert_param(IS_LPTIM_INPUT1_SOURCE(hlptim->Instance, hlptim->Init.Input1Source));
 
-      /* Configure LPTIM3 Input1 source */
+      /* Configure LPTIM Input1 source */
       hlptim->Instance->CFGR2 = hlptim->Init.Input1Source;
     }
   }

@@ -439,13 +439,11 @@ typedef struct
 /** @defgroup LPTIM_EC_LPTIM3_IC2_RMP LPTIM3 Input Ch2 Remap
   * @{
   */
-
 #define LL_LPTIM_LPTIM3_IC2_RMP_GPIO           0x00000000UL                            /*!< IC2 connected to GPIO */
 #define LL_LPTIM_LPTIM3_IC2_RMP_I3C2_IBIACK    LPTIM_CFGR2_IC2SEL_0                    /*!< IC2 connected to I3C2 IBI ACK */
 /**
   * @}
   */
-
 
 /**
   * @}
@@ -1654,6 +1652,7 @@ __STATIC_INLINE uint32_t LL_LPTIM_IsActiveFlag_CC2O(const LPTIM_TypeDef *LPTIMx)
 {
   return (((READ_BIT(LPTIMx->ISR, LPTIM_ISR_CC2OF) == LPTIM_ISR_CC2OF) ? 1UL : 0UL));
 }
+
 /**
   * @brief  Clear the autoreload match flag (ARRMCF)
   * @rmtoll ICR          ARRMCF        LL_LPTIM_ClearFlag_ARRM

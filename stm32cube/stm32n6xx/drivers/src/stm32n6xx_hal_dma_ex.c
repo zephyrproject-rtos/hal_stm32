@@ -541,9 +541,15 @@ static void DMA_List_BuildNode(DMA_NodeConfTypeDef const *const pNodeConfig,
                                DMA_NodeTypeDef *const pNode);
 static void DMA_List_GetNodeConfig(DMA_NodeConfTypeDef *const pNodeConfig,
                                    DMA_NodeTypeDef const *const pNode);
+#if defined ( __GNUC__ ) && !defined (__CC_ARM)
+static __attribute__((noinline)) uint32_t DMA_List_CheckNodesBaseAddresses(DMA_NodeTypeDef const *const pNode1,  \
+                                                                           DMA_NodeTypeDef const *const pNode2,  \
+                                                                           DMA_NodeTypeDef const *const pNode3);
+#else
 static uint32_t DMA_List_CheckNodesBaseAddresses(DMA_NodeTypeDef const *const pNode1,
                                                  DMA_NodeTypeDef const *const pNode2,
                                                  DMA_NodeTypeDef const *const pNode3);
+#endif /* __GNUC__ && !__CC_ARM */
 static uint32_t DMA_List_CheckNodesTypes(DMA_NodeTypeDef const *const pNode1,
                                          DMA_NodeTypeDef const *const pNode2,
                                          DMA_NodeTypeDef const *const pNode3);
@@ -2944,7 +2950,7 @@ HAL_StatusTypeDef HAL_DMAEx_List_ConvertQToDynamic(DMA_QListTypeDef *const pQLis
   uint32_t cllr_offset;
   uint32_t currentnode_addr;
   DMA_NodeTypeDef context_node;
-  DMA_NodeInQInfoTypeDef node_info;
+  DMA_NodeInQInfoTypeDef node_info = {0U};
 
   /* Check the queue parameter */
   if (pQList == NULL)
@@ -3546,7 +3552,7 @@ HAL_StatusTypeDef HAL_DMAEx_Suspend(DMA_HandleTypeDef *const hdma)
 }
 
 /**
-  * @brief  Suspend any ongoing DMA channel transfer in interrupt mode (Non-blocking mode).
+  * @brief  Suspend any ongoing DMA channel transfer in polling mode (Non-blocking mode).
   * @param  hdma : Pointer to a DMA_HandleTypeDef structure that contains the configuration information for the
   *                specified DMA Channel.
   * @retval HAL status.
@@ -4116,9 +4122,15 @@ static void DMA_List_GetNodeConfig(DMA_NodeConfTypeDef *const pNodeConfig,
   * @param  pNode3 : Pointer to a DMA_NodeTypeDef structure that contains linked-list node 3 registers configurations.
   * @retval Return 0 when nodes addresses are compatible, 1 otherwise.
   */
+#if defined ( __GNUC__ ) && !defined (__CC_ARM)
+static __attribute__((noinline)) uint32_t DMA_List_CheckNodesBaseAddresses(DMA_NodeTypeDef const *const pNode1,  \
+                                                                           DMA_NodeTypeDef const *const pNode2,  \
+                                                                           DMA_NodeTypeDef const *const pNode3)
+#else
 static uint32_t DMA_List_CheckNodesBaseAddresses(DMA_NodeTypeDef const *const pNode1,
                                                  DMA_NodeTypeDef const *const pNode2,
                                                  DMA_NodeTypeDef const *const pNode3)
+#endif /* __GNUC__ && !__CC_ARM */
 {
   uint32_t temp = (((uint32_t)pNode1 | (uint32_t)pNode2 | (uint32_t)pNode3) & DMA_CLBAR_LBA);
   uint32_t ref  = 0U;

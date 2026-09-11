@@ -3685,8 +3685,6 @@ static void CRYP_SetDMAConfig(CRYP_HandleTypeDef *hcryp, uint32_t inputaddr, uin
   */
 static void CRYP_AES_ProcessData(CRYP_HandleTypeDef *hcryp, uint32_t Timeout)
 {
-
-
   uint32_t temp[4] = {0};/* Temporary CrypOutBuff */
 #if !defined(USE_HAL_CRYP_ONLY) || (USE_HAL_CRYP_ONLY == 1)
   uint16_t incount;  /* Temporary CrypInCount Value */
@@ -3738,7 +3736,6 @@ static void CRYP_AES_ProcessData(CRYP_HandleTypeDef *hcryp, uint32_t Timeout)
 
     if (((((CRYP_TypeDef *)(hcryp->Instance))->SR & CRYP_FLAG_OFNE) != 0x0U) && (outcount < ((hcryp->Size) / 4U)))
     {
-
       /* Read the output block from the Output FIFO and put them in temporary buffer then get CrypOutBuff from
          temporary buffer  */
       for (i = 0U; i < 4U; i++)
@@ -4522,10 +4519,11 @@ static HAL_StatusTypeDef CRYP_AESGCM_Process_IT(CRYP_HandleTypeDef *hcryp)
   uint32_t headersize_in_bytes;
   uint32_t tmp;
   uint32_t npblb;
-  const uint32_t mask[12] = {0x0U, 0xFF000000U, 0xFFFF0000U, 0xFFFFFF00U,  /* 32-bit data type */
+  const uint32_t mask[16] = {0x0U, 0xFF000000U, 0xFFFF0000U, 0xFFFFFF00U,  /* 32-bit data type */
                              0x0U, 0x0000FF00U, 0x0000FFFFU, 0xFF00FFFFU,  /* 16-bit data type */
-                             0x0U, 0x000000FFU, 0x0000FFFFU, 0x00FFFFFFU
-                            }; /*  8-bit data type */
+                             0x0U, 0x000000FFU, 0x0000FFFFU, 0x00FFFFFFU,  /*  8-bit data type */
+                             0x0U, 0x000000FFU, 0x0000FFFFU, 0x00FFFFFFU   /*  1-bit data type */
+                            };
 #endif /* USE_HAL_SAES_ONLY */
 
 #if (USE_HAL_CRYP_SUSPEND_RESUME == 1U)
@@ -5756,10 +5754,11 @@ static HAL_StatusTypeDef CRYP_AESCCM_Process_IT(CRYP_HandleTypeDef *hcryp)
 #if !defined(USE_HAL_SAES_ONLY) || (USE_HAL_SAES_ONLY == 1)
   uint32_t headersize_in_bytes;
   uint32_t tmp;
-  const uint32_t mask[12] = {0x0U, 0xFF000000U, 0xFFFF0000U, 0xFFFFFF00U,  /* 32-bit data type */
+  const uint32_t mask[16] = {0x0U, 0xFF000000U, 0xFFFF0000U, 0xFFFFFF00U,  /* 32-bit data type */
                              0x0U, 0x0000FF00U, 0x0000FFFFU, 0xFF00FFFFU,  /* 16-bit data type */
-                             0x0U, 0x000000FFU, 0x0000FFFFU, 0x00FFFFFFU
-                            }; /*  8-bit data type */
+                             0x0U, 0x000000FFU, 0x0000FFFFU, 0x00FFFFFFU,  /*  8-bit data type */
+                             0x0U, 0x000000FFU, 0x0000FFFFU, 0x00FFFFFFU   /*  1-bit data type */
+                            };
 #endif /* USE_HAL_SAES_ONLY */
 
 #if (USE_HAL_CRYP_SUSPEND_RESUME == 1U)
@@ -5923,7 +5922,14 @@ static HAL_StatusTypeDef CRYP_AESCCM_Process_IT(CRYP_HandleTypeDef *hcryp)
       /* Enable the CRYP peripheral */
       __HAL_CRYP_ENABLE(hcryp);
 
-      headersize_in_bytes = hcryp->Init.HeaderSize * 4U;
+      if (hcryp->Init.HeaderWidthUnit == CRYP_HEADERWIDTHUNIT_WORD)
+      {
+        headersize_in_bytes = hcryp->Init.HeaderSize * 4U;
+      }
+      else
+      {
+        headersize_in_bytes = hcryp->Init.HeaderSize;
+      }
       if (headersize_in_bytes == 0U) /* Header phase is  skipped */
       {
         /* Set the phase */
@@ -6914,10 +6920,11 @@ static HAL_StatusTypeDef CRYP_GCMCCM_SetHeaderPhase(CRYP_HandleTypeDef *hcryp, u
 #if !defined(USE_HAL_SAES_ONLY) || (USE_HAL_SAES_ONLY == 1)
   uint32_t headersize_in_bytes;
   uint32_t tmp;
-  const uint32_t mask[12] = {0x0U, 0xFF000000U, 0xFFFF0000U, 0xFFFFFF00U,  /* 32-bit data type */
+  const uint32_t mask[16] = {0x0U, 0xFF000000U, 0xFFFF0000U, 0xFFFFFF00U,  /* 32-bit data type */
                              0x0U, 0x0000FF00U, 0x0000FFFFU, 0xFF00FFFFU,  /* 16-bit data type */
-                             0x0U, 0x000000FFU, 0x0000FFFFU, 0x00FFFFFFU
-                            }; /*  8-bit data type */
+                             0x0U, 0x000000FFU, 0x0000FFFFU, 0x00FFFFFFU,  /*  8-bit data type */
+                             0x0U, 0x000000FFU, 0x0000FFFFU, 0x00FFFFFFU   /*  1-bit data type */
+                            };
 #endif /* USE_HAL_SAES_ONLY */
 
   /***************************** Header phase for GCM/GMAC or CCM *********************************/
@@ -7183,10 +7190,11 @@ static HAL_StatusTypeDef CRYP_GCMCCM_SetHeaderPhase_DMA(CRYP_HandleTypeDef *hcry
 #if !defined(USE_HAL_SAES_ONLY) || (USE_HAL_SAES_ONLY == 1)
   uint32_t headersize_in_bytes;
   uint32_t tmp;
-  const uint32_t mask[12] = {0x0U, 0xFF000000U, 0xFFFF0000U, 0xFFFFFF00U,  /* 32-bit data type */
+  const uint32_t mask[16] = {0x0U, 0xFF000000U, 0xFFFF0000U, 0xFFFFFF00U,  /* 32-bit data type */
                              0x0U, 0x0000FF00U, 0x0000FFFFU, 0xFF00FFFFU,  /* 16-bit data type */
-                             0x0U, 0x000000FFU, 0x0000FFFFU, 0x00FFFFFFU
-                            }; /*  8-bit data type */
+                             0x0U, 0x000000FFU, 0x0000FFFFU, 0x00FFFFFFU,  /*  8-bit data type */
+                             0x0U, 0x000000FFU, 0x0000FFFFU, 0x00FFFFFFU   /*  1-bit data type */
+                            };
 #endif /* USE_HAL_SAES_ONLY */
 
   /***************************** Header phase for GCM/GMAC or CCM *********************************/
@@ -7450,10 +7458,11 @@ static void CRYP_GCMCCM_SetHeaderPhase_IT(CRYP_HandleTypeDef *hcryp)
   uint32_t mode;
   uint32_t headersize_in_bytes;
   uint32_t tmp;
-  const uint32_t mask[12] = {0x0U, 0xFF000000U, 0xFFFF0000U, 0xFFFFFF00U,  /* 32-bit data type */
+  const uint32_t mask[16] = {0x0U, 0xFF000000U, 0xFFFF0000U, 0xFFFFFF00U,  /* 32-bit data type */
                              0x0U, 0x0000FF00U, 0x0000FFFFU, 0xFF00FFFFU,  /* 16-bit data type */
-                             0x0U, 0x000000FFU, 0x0000FFFFU, 0x00FFFFFFU
-                            }; /*  8-bit data type */
+                             0x0U, 0x000000FFU, 0x0000FFFFU, 0x00FFFFFFU,  /*  8-bit data type */
+                             0x0U, 0x000000FFU, 0x0000FFFFU, 0x00FFFFFFU   /*  1-bit data type */
+                            };
 #endif /* USE_HAL_SAES_ONLY */
 
   /***************************** Header phase *********************************/
