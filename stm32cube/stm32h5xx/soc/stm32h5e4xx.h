@@ -1363,6 +1363,17 @@ typedef struct
 typedef XSPIM_TypeDef OCTOSPIM_TypeDef;
 
 /**
+  * @brief  Coupling and chaining bridge (CCB)
+  */
+typedef struct
+{
+  __IO uint32_t CR;               /*!< CCB ccontrol register,                                   Address offset: 0x00 */
+  __IO uint32_t SR;               /*!< CCB status register,                                     Address offset: 0x04 */
+       uint32_t RESERVED1[2];     /*!< Reserved,                                                Address offset: 0x08 */
+  __IO uint32_t REFTAGR[4];       /*!< CCB reference tag register,                              Address offset: 0x10 */
+} CCB_TypeDef;
+
+/**
   * @brief Programmable Logic Array (PLAY)
   */
 typedef struct
