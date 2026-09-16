@@ -231,7 +231,9 @@ in voltage and temperature.*/
 
 /* ################## CRYP peripheral configuration ########################## */
 
+#ifndef USE_HAL_CRYP_SUSPEND_RESUME
 #define USE_HAL_CRYP_SUSPEND_RESUME   1U
+#endif /* USE_HAL_CRYP_SUSPEND_RESUME */
 
 /* ################## SDMMC peripheral configuration ######################### */
 
