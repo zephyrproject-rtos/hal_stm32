@@ -112,13 +112,11 @@ extern "C" {
   * Enables STM32 HAL PSA AES AEAD module to use STM32 hardware AES crypto
   * accelerator that manages AES AEAD operations.
   *
-  * Uncomment the macro to enable the STM32 HAL PSA AES AEAD module for STM32 hardware
-  * AES crypto accelerator.
-  *
   * Requires STM32_HAL_PSA_DRIVER_ENABLED.
-  *
   */
-//#define STM32_HAL_PSA_AES_AEAD_DRIVER_ENABLED
+#if defined(USE_STM32_HAL_PSA_AES_DRIVER)
+#define STM32_HAL_PSA_AES_AEAD_DRIVER_ENABLED
+#endif
 
 #endif /* USE_STM32_HAL_PSA_RNG_DRIVER || USE_STM32_HAL_PSA_HASH_DRIVER
         * USE_STM32_HAL_PSA_AES_DRIVER

@@ -28,6 +28,7 @@ if(CONFIG_USE_STM32_HAL_PSA_CRYPTO_DRIVERS_AES OR
     USE_STM32_HAL_PSA_AES_DPA_DRIVER=1
   )
 
+  zephyr_sources(stm32_psa_transparent_drivers/core/src/stm32_hal_aead.c)
   zephyr_sources(stm32_psa_transparent_drivers/core/src/stm32_hal_aes.c)
   zephyr_sources(stm32_psa_transparent_drivers/core/src/stm32_hal_cipher.c)
   zephyr_sources(stm32_psa_transparent_drivers/interface/src/stm32_hal_psa_aead.c)

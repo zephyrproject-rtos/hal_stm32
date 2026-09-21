@@ -17,6 +17,7 @@
   ******************************************************************************
   */
 
+ /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef STM32_HAL_PSA_AEAD_H
 #define STM32_HAL_PSA_AEAD_H
 
@@ -25,10 +26,9 @@ extern "C" {
 #endif
 
 #include "psa/crypto_types.h"
-#include "psa/crypto_values.h"
-
-#include "stm32_hal_aes.h"
+#include "stm32_hal_aead.h"
 #include "stm32_hal_types.h"
+#include "stm32_hal_psa_translator.h"
 
 #ifdef STM32_HAL_PSA_AES_AEAD_DRIVER_ENABLED
 
@@ -73,10 +73,11 @@ static inline psa_status_t stm32_hal_transparent_aead_set_nonce(
   const uint8_t *nonce,
   size_t nonce_length)
 {
-  (void)operation;
-  (void)nonce;
-  (void)nonce_length;
-  return PSA_ERROR_NOT_SUPPORTED;
+  STM32_HalStatusTypeDef hal_status;
+
+  hal_status = STM32_HalAeadSetNonce(&operation->ctx, nonce, nonce_length);
+
+  return STM32_HalStatusToPsaStatus(hal_status);
 }
 
 static inline psa_status_t stm32_hal_transparent_aead_set_lengths(
@@ -84,10 +85,11 @@ static inline psa_status_t stm32_hal_transparent_aead_set_lengths(
   size_t ad_length,
   size_t plaintext_length)
 {
-  (void)operation;
-  (void)ad_length;
-  (void)plaintext_length;
-  return PSA_ERROR_NOT_SUPPORTED;
+  STM32_HalStatusTypeDef hal_status;
+
+  hal_status = STM32_HalAeadSetLengths(&operation->ctx, ad_length, plaintext_length);
+
+  return STM32_HalStatusToPsaStatus(hal_status);
 }
 
 static inline psa_status_t stm32_hal_transparent_aead_update_ad(
@@ -95,10 +97,11 @@ static inline psa_status_t stm32_hal_transparent_aead_update_ad(
   const uint8_t *input,
   size_t input_length)
 {
-  (void)operation;
-  (void)input;
-  (void)input_length;
-  return PSA_ERROR_NOT_SUPPORTED;
+  STM32_HalStatusTypeDef hal_status;
+
+  hal_status = STM32_HalAeadUpdateAd(&operation->ctx, input, input_length);
+
+  return STM32_HalStatusToPsaStatus(hal_status);
 }
 
 static inline psa_status_t stm32_hal_transparent_aead_update(
@@ -109,13 +112,12 @@ static inline psa_status_t stm32_hal_transparent_aead_update(
   size_t output_size,
   size_t *output_length)
 {
-  (void)operation;
-  (void)input;
-  (void)input_length;
-  (void)output;
-  (void)output_size;
-  (void)output_length;
-  return PSA_ERROR_NOT_SUPPORTED;
+  STM32_HalStatusTypeDef hal_status;
+
+  hal_status = STM32_HalAeadUpdate(&operation->ctx, input, input_length, output,
+                                   output_size, output_length);
+
+  return STM32_HalStatusToPsaStatus(hal_status);
 }
 
 static inline psa_status_t stm32_hal_transparent_aead_finish(
@@ -127,14 +129,12 @@ static inline psa_status_t stm32_hal_transparent_aead_finish(
   size_t tag_size,
   size_t *tag_length)
 {
-  (void)operation;
-  (void)ciphertext;
-  (void)ciphertext_size;
-  (void)ciphertext_length;
-  (void)tag;
-  (void)tag_size;
-  (void)tag_length;
-  return PSA_ERROR_NOT_SUPPORTED;
+  STM32_HalStatusTypeDef hal_status;
+
+  hal_status = STM32_HalAeadFinish(&operation->ctx, ciphertext, ciphertext_size,
+                                   ciphertext_length, tag, tag_size, tag_length);
+
+  return STM32_HalStatusToPsaStatus(hal_status);
 }
 
 static inline psa_status_t stm32_hal_transparent_aead_verify(
@@ -145,20 +145,22 @@ static inline psa_status_t stm32_hal_transparent_aead_verify(
   const uint8_t *tag,
   size_t tag_length)
 {
-  (void)operation;
-  (void)plaintext;
-  (void)plaintext_length;
-  (void)plaintext_size;
-  (void)tag;
-  (void)tag_length;
-  return PSA_ERROR_NOT_SUPPORTED;
+  STM32_HalStatusTypeDef hal_status;
+
+  hal_status = STM32_HalAeadVerify(&operation->ctx, plaintext, plaintext_size,
+                                   plaintext_length, tag, tag_length);
+
+  return STM32_HalStatusToPsaStatus(hal_status);
 }
 
 static inline psa_status_t stm32_hal_transparent_aead_abort(
   stm32_hal_transparent_driver_aead_operation_t *operation)
 {
-  (void)operation;
-  return PSA_ERROR_NOT_SUPPORTED;
+  STM32_HalStatusTypeDef hal_status;
+
+  hal_status = STM32_HalAeadAbort(&operation->ctx);
+
+  return STM32_HalStatusToPsaStatus(hal_status);
 }
 
 #endif /* STM32_HAL_PSA_AES_AEAD_DRIVER_ENABLED */
