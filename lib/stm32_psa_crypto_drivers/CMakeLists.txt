@@ -14,6 +14,8 @@ zephyr_include_directories(stm32_psa_transparent_drivers/config)
 zephyr_include_directories(stm32_psa_transparent_drivers/core/include)
 zephyr_include_directories(stm32_psa_transparent_drivers/interface/include)
 
+zephyr_sources(stm32_psa_transparent_drivers/interface/src/stm32_hal_psa_translator.c)
+
 if(CONFIG_USE_STM32_HAL_PSA_CRYPTO_DRIVERS_AES OR
    CONFIG_USE_STM32_HAL_PSA_CRYPTO_DRIVERS_CRYP OR
    CONFIG_USE_STM32_HAL_PSA_CRYPTO_DRIVERS_SAES)
