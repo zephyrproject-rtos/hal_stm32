@@ -27,7 +27,8 @@ extern "C" {
 
 
 #if defined(USE_STM32_HAL_PSA_RNG_DRIVER) || \
-    defined(USE_STM32_HAL_PSA_HASH_DRIVER)
+    defined(USE_STM32_HAL_PSA_HASH_DRIVER) || \
+    defined(USE_STM32_HAL_PSA_AES_DRIVER)
 
 /**
   * \def PSA_CRYPTO_ACCELERATOR_DRIVER_PRESENT
@@ -88,12 +89,11 @@ extern "C" {
   *
   *  Enables STM32 HAL PSA AES module to use STM32 hardware AES operations
   *
-  *  Uncomment the macro to enable the STM32 HAL PSA AES module for STM32
-  *  AES hardware accelerator
-  *
   *  Requires STM32_HAL_PSA_DRIVER_ENABLED.
   */
-//#define STM32_HAL_PSA_AES_CIPHER_DRIVER_ENABLED
+#if defined(USE_STM32_HAL_PSA_AES_DRIVER)
+#define STM32_HAL_PSA_AES_CIPHER_DRIVER_ENABLED
+#endif
 
 /**
   * \def STM32_HAL_PSA_AES_DPA_DRIVER_ENABLED Allows DPA resistance for AES modes by using secure
@@ -101,11 +101,10 @@ extern "C" {
   *        AES-ECB/CBC modes become DPA-protected.
   *
   * @note Using DPA resistance degrades the performance.
-  *
-  * Uncomment the macro to enable DPA
-  *
   */
-//#define STM32_HAL_AES_DPA_PSA_DRIVER_ENABLED
+#if defined(USE_STM32_HAL_PSA_AES_DPA_DRIVER)
+#define STM32_HAL_PSA_AES_DPA_DRIVER_ENABLED
+#endif
 
 /**
   * \def STM32_HAL_PSA_AES_AEAD_DRIVER_ENABLED
@@ -121,7 +120,9 @@ extern "C" {
   */
 //#define STM32_HAL_PSA_AES_AEAD_DRIVER_ENABLED
 
-#endif /* USE_STM32_HAL_PSA_RNG_DRIVER || USE_STM32_HAL_PSA_HASH_DRIVER */
+#endif /* USE_STM32_HAL_PSA_RNG_DRIVER || USE_STM32_HAL_PSA_HASH_DRIVER
+        * USE_STM32_HAL_PSA_AES_DRIVER
+        */
 
 #ifdef __cplusplus
 }

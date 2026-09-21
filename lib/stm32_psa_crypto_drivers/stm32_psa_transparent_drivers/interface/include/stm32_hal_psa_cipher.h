@@ -15,7 +15,7 @@
   *
   ******************************************************************************
   */
-
+ /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef STM32_HAL_PSA_CIPHER_H
 #define STM32_HAL_PSA_CIPHER_H
 
@@ -24,14 +24,12 @@ extern "C" {
 #endif
 
 #include "psa/crypto_types.h"
-#include "psa/crypto_values.h"
-
-#include "stm32_hal_aes.h"
+#include "stm32_hal_cipher.h"
 #include "stm32_hal_types.h"
+#include "stm32_hal_psa_translator.h"
 
 #ifdef STM32_HAL_PSA_AES_CIPHER_DRIVER_ENABLED
 
-/* Context used in PSA Crypto Driver primitives context */
 typedef struct stm32_hal_transparent_driver_cipher_operation_t
 {
   stm32_hal_aes_ctx_t ctx;
@@ -44,7 +42,6 @@ psa_status_t stm32_hal_transparent_cipher_encrypt(
   const uint8_t *p_iv, size_t iv_length,
   const uint8_t *p_plaintext, size_t plaintext_length,
   uint8_t *p_ciphertext, size_t ciphertext_size, size_t *p_ciphertext_length);
-
 
 psa_status_t stm32_hal_transparent_cipher_decrypt(
   const psa_key_attributes_t *p_attributes,
@@ -70,10 +67,11 @@ static inline psa_status_t stm32_hal_transparent_cipher_set_iv(
   const uint8_t *iv,
   size_t iv_length)
 {
-  (void)operation;
-  (void)iv;
-  (void)iv_length;
-  return PSA_ERROR_NOT_SUPPORTED;
+  STM32_HalStatusTypeDef hal_status = STM32_HAL_ERROR;
+
+  hal_status = STM32_HalCipherSetIV(&operation->ctx, iv, iv_length);
+
+  return STM32_HalStatusToPsaStatus(hal_status);
 }
 
 static inline psa_status_t stm32_hal_transparent_cipher_update(
@@ -84,13 +82,12 @@ static inline psa_status_t stm32_hal_transparent_cipher_update(
   size_t output_size,
   size_t *output_length)
 {
-  (void)operation;
-  (void)input;
-  (void)input_length;
-  (void)output;
-  (void)output_size;
-  (void)output_length;
-  return PSA_ERROR_NOT_SUPPORTED;
+  STM32_HalStatusTypeDef hal_status = STM32_HAL_ERROR;
+
+  hal_status = STM32_HalCipherUpdate(&operation->ctx, input, input_length,
+                                     output, output_size, output_length);
+
+  return STM32_HalStatusToPsaStatus(hal_status);
 }
 
 static inline psa_status_t stm32_hal_transparent_cipher_finish(
@@ -99,19 +96,24 @@ static inline psa_status_t stm32_hal_transparent_cipher_finish(
   size_t output_size,
   size_t *output_length)
 {
-  (void)operation;
-  (void)output;
-  (void)output_size;
-  (void)output_length;
-  return PSA_ERROR_NOT_SUPPORTED;
+  STM32_HalStatusTypeDef hal_status = STM32_HAL_ERROR;
+
+  hal_status = STM32_HalCipherFinish(&operation->ctx, output, output_size,
+                                     output_length);
+
+  return STM32_HalStatusToPsaStatus(hal_status);
 }
 
 static inline psa_status_t stm32_hal_transparent_cipher_abort(
   stm32_hal_transparent_driver_cipher_operation_t *operation )
 {
-  (void)operation;
-  return PSA_ERROR_NOT_SUPPORTED;
+  STM32_HalStatusTypeDef hal_status = STM32_HAL_ERROR;
+
+  hal_status = STM32_HalCipherAbort(&operation->ctx);
+
+  return STM32_HalStatusToPsaStatus(hal_status);
 }
+
 #endif /* STM32_HAL_PSA_AES_CIPHER_DRIVER_ENABLED */
 
 #ifdef __cplusplus
