@@ -83,12 +83,13 @@ static inline void read_u32_swapped(uint32_t *out, const uint8_t *in,
 typedef STM32_HalStatusTypeDef (*stm32_hal_aes_hal_config_func_t)(stm32_hal_aes_ctx_t *ctx);
 
 /*
- * Get access to hardware device, possibly initializing the HAL and run its
- * configuration function (callback function passed as argument) if not
- * already initialized and configured.
- * Upon successful completion, the mutex for concurrent access protection
- * on the hardware device is locked. It must be unlocked with
- * stm32_hal_aes_put_hw_context().
+ * Get access to the hardware device, possibly initializing the HAL and run its
+ * configuration function (callback function passed as argument) if not already
+ * initialized and configured.
+ * Upon successful completion, the mutex for concurrent access protection on the
+ * hardware device is locked. It must be unlocked with stm32_hal_aes_put_hw_context()
+ * once operation step is completed to allow another operation to use the hardware
+ * device.
  */
 STM32_HalStatusTypeDef stm32_hal_aes_get_hal_hw(stm32_hal_aes_ctx_t *ctx,
                                                 stm32_hal_aes_hal_config_func_t config_fn);
@@ -98,7 +99,9 @@ void stm32_hal_aes_put_hal_hw(void);
 
 /*
  * The operation context is being destroyed and will no more request access
- * to the device.
+ * to the device. This function expects the deevice access mutex is released.
+ * This function locks the mutex to process resource context release and
+ * unlocks it before returning the the caller.
  */
 void stm32_hal_aes_release_hal_hw(stm32_hal_aes_ctx_t *ctx);
 
