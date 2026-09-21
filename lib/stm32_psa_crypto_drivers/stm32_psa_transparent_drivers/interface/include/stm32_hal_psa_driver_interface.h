@@ -46,6 +46,27 @@ extern "C" {
 #include "stm32_hal_psa_aead.h"
 #endif /* STM32_HAL_PSA_AES_AEAD_DRIVER_ENABLED */
 
+/* Cipher/AEAD common device initialization function */
+#if defined(STM32_HAL_PSA_AES_CIPHER_DRIVER_ENABLED) || \
+    defined(STM32_HAL_PSA_AES_AEAD_DRIVER_ENABLED)
+static inline psa_status_t stm32_hal_transparent_aes_init(void)
+{
+  return STM32_HalAesDeviceInit();
+}
+
+static inline psa_status_t stm32_hal_transparent_aes_suspend(void)
+{
+  return STM32_HalAesDeviceSuspend();
+}
+
+static inline psa_status_t stm32_hal_transparent_aes_resume(void)
+{
+  return STM32_HalAesDeviceResume();
+}
+#endif /* STM32_HAL_PSA_AES_CIPHER_DRIVER_ENABLED) ||
+        * STM32_HAL_PSA_AES_AEAD_DRIVER_ENABLED
+        */
+
 #endif /* STM32_HAL_PSA_DRIVER_ENABLED */
 
 #ifdef __cplusplus

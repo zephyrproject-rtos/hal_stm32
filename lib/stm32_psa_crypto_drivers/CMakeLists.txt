@@ -16,12 +16,20 @@ zephyr_include_directories(stm32_psa_transparent_drivers/interface/include)
 
 # We need some USE_HAL_xxx_SUSPEND_RESUME in some HAL versions
 zephyr_compile_definitions(USE_HAL_HASH_SUSPEND_RESUME=1)
+zephyr_compile_definitions(USE_HAL_CRYP_SUSPEND_RESUME=1)
 
 zephyr_sources(stm32_psa_transparent_drivers/interface/src/stm32_hal_psa_translator.c)
 
 if(CONFIG_USE_STM32_HAL_PSA_CRYPTO_DRIVERS_AES OR
    CONFIG_USE_STM32_HAL_PSA_CRYPTO_DRIVERS_CRYP OR
    CONFIG_USE_STM32_HAL_PSA_CRYPTO_DRIVERS_SAES)
+  zephyr_compile_definitions(USE_STM32_HAL_PSA_AES_DRIVER)
+  zephyr_compile_definitions_ifdef(CONFIG_USE_STM32_HAL_PSA_CRYPTO_DRIVERS_SAES,
+    USE_STM32_HAL_PSA_AES_DPA_DRIVER=1
+  )
+
+  zephyr_sources(stm32_psa_transparent_drivers/core/src/stm32_hal_aes.c)
+  zephyr_sources(stm32_psa_transparent_drivers/core/src/stm32_hal_cipher.c)
   zephyr_sources(stm32_psa_transparent_drivers/interface/src/stm32_hal_psa_aead.c)
   zephyr_sources(stm32_psa_transparent_drivers/interface/src/stm32_hal_psa_cipher.c)
 endif()

@@ -20,8 +20,6 @@
 #ifndef STM32_HAL_AES_TYPES_H
 #define STM32_HAL_AES_TYPES_H
 
-#include "stm32_psa_crypto_drivers_config.h"
-
 #ifdef __cplusplus
 extern "C" {
 #endif
