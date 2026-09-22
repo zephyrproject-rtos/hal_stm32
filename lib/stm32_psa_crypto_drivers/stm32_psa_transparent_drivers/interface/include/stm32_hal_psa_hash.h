@@ -22,11 +22,12 @@
 extern "C" {
 #endif
 
+/* Includes ------------------------------------------------------------------*/
 #include "psa/crypto_types.h"
-#include "psa/crypto_values.h"
 
 #include "stm32_hal_hash.h"
 #include "stm32_hal_types.h"
+#include "stm32_hal_psa_translator.h"
 
 #if defined(STM32_HAL_PSA_HASH_DRIVER_ENABLED)
 
@@ -55,29 +56,37 @@ static inline psa_status_t stm32_hal_transparent_hash_update(
   stm32_hal_transparent_driver_hash_operation_t *operation,
   const uint8_t *input, size_t input_length)
 {
-  (void)operation;
-  (void)input;
-  (void)input_length;
-  return PSA_ERROR_NOT_SUPPORTED;
+  STM32_HalStatusTypeDef hal_status = STM32_HAL_ERROR;
+
+  hal_status = STM32_HalHashUpdate(&operation->ctx, input, input_length);
+
+  return STM32_HalStatusToPsaStatus(hal_status);
 }
 
 static inline psa_status_t stm32_hal_transparent_hash_finish(
   stm32_hal_transparent_driver_hash_operation_t *operation,
   uint8_t *hash, size_t hash_size, size_t *hash_length)
 {
-  (void)operation;
-  (void)hash;
-  (void)hash_size;
-  (void)hash_length;
-  return PSA_ERROR_NOT_SUPPORTED;
+  STM32_HalStatusTypeDef hal_status = STM32_HAL_ERROR;
+
+  hal_status = STM32_HalHashFinish(&operation->ctx, hash, hash_size, hash_length);
+
+  return STM32_HalStatusToPsaStatus(hal_status);
 }
 
 static inline psa_status_t stm32_hal_transparent_hash_abort(
   stm32_hal_transparent_driver_hash_operation_t *operation)
 {
-  (void)operation;
-  return PSA_ERROR_NOT_SUPPORTED;
+  STM32_HalStatusTypeDef hal_status = STM32_HAL_ERROR;
+
+  hal_status = STM32_HalHashAbort(&operation->ctx);
+
+  return STM32_HalStatusToPsaStatus(hal_status);
 }
+
+psa_status_t stm32_hal_transparent_hash_suspend(void);
+
+psa_status_t stm32_hal_transparent_hash_resume(void);
 
 #ifdef __cplusplus
 }
