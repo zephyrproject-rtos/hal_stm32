@@ -84,6 +84,12 @@ static inline psa_status_t psa_driver_wrapper_init( void )
         return( status );
 #endif
 
+#if defined(STM32_HAL_PSA_HASH_DRIVER_ENABLED)
+    status = stm32_hal_transparent_hash_init( );
+    if( status != PSA_SUCCESS )
+        return status;
+#endif
+
     (void) status;
     return( PSA_SUCCESS );
 }

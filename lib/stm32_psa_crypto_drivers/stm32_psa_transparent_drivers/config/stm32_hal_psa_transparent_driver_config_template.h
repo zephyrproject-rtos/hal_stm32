@@ -26,7 +26,8 @@ extern "C" {
 #endif
 
 
-#if defined(USE_STM32_HAL_PSA_RNG_DRIVER)
+#if defined(USE_STM32_HAL_PSA_RNG_DRIVER) || \
+    defined(USE_STM32_HAL_PSA_HASH_DRIVER)
 
 /**
   * \def PSA_CRYPTO_ACCELERATOR_DRIVER_PRESENT
@@ -60,12 +61,11 @@ extern "C" {
   * Enables STM32 HAL PSA hash module to use STM32 hardware HASH crypto
   * accelerator that manages hash operations.
   *
-  * Uncomment a macro to enable the STM32 HAL PSA hash module for STM32 hardware
-  * HASH crypto accelerator.
-  *
   * Requires STM32_HAL_PSA_DRIVER_ENABLED.
   */
-//#define STM32_HAL_PSA_HASH_DRIVER_ENABLED
+#if defined(USE_STM32_HAL_PSA_HASH_DRIVER)
+#define STM32_HAL_PSA_HASH_DRIVER_ENABLED
+#endif
 
 /**
   * \def STM32_HAL_PSA_RNG_DRIVER_ENABLED
@@ -121,7 +121,7 @@ extern "C" {
   */
 //#define STM32_HAL_PSA_AES_AEAD_DRIVER_ENABLED
 
-#endif /* USE_STM32_HAL_PSA_RNG_DRIVER */
+#endif /* USE_STM32_HAL_PSA_RNG_DRIVER || USE_STM32_HAL_PSA_HASH_DRIVER */
 
 #ifdef __cplusplus
 }
