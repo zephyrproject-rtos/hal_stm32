@@ -1191,6 +1191,7 @@ HAL_StatusTypeDef HAL_CRYP_DMAProcessSuspend(CRYP_HandleTypeDef *hcryp)
 HAL_StatusTypeDef HAL_CRYP_Suspend(CRYP_HandleTypeDef *hcryp)
 {
   HAL_CRYP_STATETypeDef state;
+#if defined(USE_HAL_DMA_MODULE) && (USE_HAL_DMA_MODULE == 1)
   uint32_t tmp_SAES_CR_DMAIN_bit;
 
   /* Request suspension */
@@ -1207,6 +1208,7 @@ HAL_StatusTypeDef HAL_CRYP_Suspend(CRYP_HandleTypeDef *hcryp)
     hcryp->SuspendedProcessing = DMA_SUSPENDED;
   }
   else
+#endif /* USE_HAL_DMA_MODULE */
   {
     HAL_CRYP_ProcessSuspend(hcryp);
     hcryp->SuspendedProcessing = IT_SUSPENDED;
@@ -1369,6 +1371,7 @@ HAL_StatusTypeDef HAL_CRYP_Resume(CRYP_HandleTypeDef *hcryp)
       hcryp->State = HAL_CRYP_STATE_READY;
     }
 
+#if defined(USE_HAL_DMA_MODULE) && (USE_HAL_DMA_MODULE == 1)
     if (hcryp->SuspendedProcessing == DMA_SUSPENDED)
     {
       if (((IS_CRYP_INSTANCE(hcryp->Instance)) && \
@@ -1392,6 +1395,7 @@ HAL_StatusTypeDef HAL_CRYP_Resume(CRYP_HandleTypeDef *hcryp)
       }
     }
     else
+#endif /* USE_HAL_DMA_MODULE */
     {
       /* Resume low-priority block processing under IT */
       hcryp->ResumingFlag = 1U;
