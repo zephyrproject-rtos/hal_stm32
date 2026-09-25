@@ -63,4 +63,14 @@ Patch List:
      - Impacted file: drivers/include/stm32h7xx_ll_system.h
      - See also: https://github.com/zephyrproject-rtos/hal_stm32/pull/381
 
+   *Fix SDMMC interrupt storm on data error during interrupt-mode transfers
+     When a data error (TXUNDERR, RXOVERR, DCRCFAIL, DTIMEOUT) occurs during an
+     interrupt-mode SD transfer, HAL_SD_IRQHandler evaluates the level-triggered
+     TXFIFOHE/RXFIFOHF branches before the error branch in its else-if chain, so
+     the error branch is never reached and the interrupt refires forever. The
+     error path also did not mask the level-triggered FIFO interrupts.
+     Impacted file:
+      stm32cube/stm32h7xx/drivers/src/stm32h7xx_hal_sd.c
+     ST Internal Reference: 3b58a19a83364710b42ee9402fda1e6b
+
    See release_note.html from STM32Cube

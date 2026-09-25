@@ -1540,7 +1540,12 @@ void HAL_SD_IRQHandler(SD_HandleTypeDef *hsd)
   uint32_t context = hsd->Context;
 
   /* Check for SDMMC interrupt flags */
-  if ((__HAL_SD_GET_FLAG(hsd, SDMMC_FLAG_RXFIFOHF) != RESET) && ((context & SD_CONTEXT_IT) != 0U))
+  /* Do not service the FIFOs while a data error flag is pending: the FIFO
+     flags are level-triggered and would otherwise keep re-entering this
+     handler, so the error branch below would never be reached */
+  if ((__HAL_SD_GET_FLAG(hsd, SDMMC_FLAG_RXFIFOHF) != RESET) && ((context & SD_CONTEXT_IT) != 0U) &&
+      (__HAL_SD_GET_FLAG(hsd, SDMMC_FLAG_DCRCFAIL | SDMMC_FLAG_DTIMEOUT | SDMMC_FLAG_RXOVERR |
+                         SDMMC_FLAG_TXUNDERR) == RESET))
   {
     SD_Read_IT(hsd);
   }
@@ -1640,7 +1645,9 @@ void HAL_SD_IRQHandler(SD_HandleTypeDef *hsd)
     }
   }
 
-  else if ((__HAL_SD_GET_FLAG(hsd, SDMMC_FLAG_TXFIFOHE) != RESET) && ((context & SD_CONTEXT_IT) != 0U))
+  else if ((__HAL_SD_GET_FLAG(hsd, SDMMC_FLAG_TXFIFOHE) != RESET) && ((context & SD_CONTEXT_IT) != 0U) &&
+           (__HAL_SD_GET_FLAG(hsd, SDMMC_FLAG_DCRCFAIL | SDMMC_FLAG_DTIMEOUT | SDMMC_FLAG_RXOVERR |
+                              SDMMC_FLAG_TXUNDERR) == RESET))
   {
     SD_Write_IT(hsd);
   }
@@ -1669,9 +1676,11 @@ void HAL_SD_IRQHandler(SD_HandleTypeDef *hsd)
     /* Clear All flags */
     __HAL_SD_CLEAR_FLAG(hsd, SDMMC_STATIC_DATA_FLAGS);
 
-    /* Disable all interrupts */
+    /* Disable all interrupts, including the level-triggered FIFO ones which
+       cannot be cleared and would otherwise keep the IRQ line asserted */
     __HAL_SD_DISABLE_IT(hsd, SDMMC_IT_DATAEND | SDMMC_IT_DCRCFAIL | SDMMC_IT_DTIMEOUT | \
-                        SDMMC_IT_TXUNDERR | SDMMC_IT_RXOVERR);
+                        SDMMC_IT_TXUNDERR | SDMMC_IT_RXOVERR | SDMMC_IT_TXFIFOHE | \
+                        SDMMC_IT_RXFIFOHF);
 
     __SDMMC_CMDTRANS_DISABLE(hsd->Instance);
     hsd->Instance->DCTRL |= SDMMC_DCTRL_FIFORST;
