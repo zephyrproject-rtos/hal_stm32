@@ -23,6 +23,7 @@
 #include "stm32_hal_aes.h"
 #include "stm32_hal_aead.h"
 #include "stm32_hal_aes_private.h"
+#include "stm32_hal_cipher.h"
 #include "stm32_hal_core_config.h"
 #include "stm32_hal_private.h"
 #include "stm32_soc_hal.h"
@@ -113,7 +114,7 @@ static STM32_HalStatusTypeDef stm32_hal_aead_set_tag_size(stm32_hal_aes_ctx_t *c
  */
 static STM32_HalStatusTypeDef prepare_ccm_b0(stm32_hal_aes_ctx_t *ctx)
 {
-  uint32_t iv_data[STM32_CIPHER_BLOCK_SIZE / sizeof(uint32_t)] = {0};
+  uint32_t iv_data[STM32_CIPHER_BLOCK_U32_SIZE] = {0};
   size_t nonce_size = ctx->aead_config.nonce_size;
   uint8_t *iv_byte_ptr = (uint8_t *)iv_data;
   size_t len_left;
@@ -513,10 +514,11 @@ static STM32_HalStatusTypeDef stm32_aead_process_buffer(stm32_hal_aes_ctx_t *ctx
 }
 
 static STM32_HalStatusTypeDef stm32_aead_generate_tag(stm32_hal_aes_ctx_t *ctx,
-                                                      uint32_t *tag)
+                                                      uint32_t tag[STM32_CIPHER_BLOCK_U32_SIZE])
 {
   stm32_hal_status_t hal_status;
   STM32_HalStatusTypeDef status;
+  size_t n;
 
   /*
    * If no data, ensure the HAL is informed (process 0 bytes).
@@ -572,6 +574,14 @@ static STM32_HalStatusTypeDef stm32_aead_generate_tag(stm32_hal_aes_ctx_t *ctx,
 
   stm32_hal_aes_put_hal_hw();
 
+  if (ctx->aead_config.ccm_tag_mask_apply)
+  {
+    for (n = 0; n < STM32_CIPHER_BLOCK_U32_SIZE; n++)
+    {
+      tag[n] = tag[n] ^ ctx->aead_config.ccm_tag_mask[n];
+    }
+  }
+
   return status;
 }
 
@@ -609,6 +619,154 @@ static void stm32_aead_release_context(stm32_hal_aes_ctx_t *ctx)
 
   free(ctx->aead_config.aad_b1);
   memset(ctx, 0, sizeof(*ctx));
+}
+
+/*
+ * Local helper to set GCM IV. When nonce size is not 12 byte, compute IV and
+ * corrective tag XOR mask.
+ */
+static STM32_HalStatusTypeDef stm32_aead_hal_generate_gcm_iv(stm32_hal_aes_ctx_t *ctx,
+                                                             const uint8_t *nonce, size_t nonce_size)
+{
+  uint32_t tag1[STM32_CIPHER_BLOCK_U32_SIZE] = {0};
+  uint32_t tag2[STM32_CIPHER_BLOCK_U32_SIZE] = {0};
+  uint32_t j0[STM32_CIPHER_BLOCK_U32_SIZE] = {0};
+  stm32_hal_aes_ctx_t temp_ctx = {0};
+  STM32_HalStatusTypeDef status;
+  uint8_t *temp_data;
+  size_t temp_len;
+  size_t n;
+
+  if (nonce_size == 12)
+  {
+#if defined(STM32_AES_HAL_V1_L4)
+    /* Set Initialization vector (IV) in big-endian format, with counter = 2 */
+    memcpy(ctx->iv, nonce, nonce_size);
+    ctx->iv[3] = 0x02000000;
+#else
+    /* Set Initialization vector (IV) in little-endian, with counter = 2*/
+    read_u32_swapped(ctx->iv, nonce, nonce_size);
+    ctx->iv[3] = 0x00000002;
+#endif /* STM32_AES_HAL_V1_L4 */
+
+    return STM32_HAL_SUCCESS;
+  }
+
+  if (((uint64_t)nonce_size >> 61) != 0)
+  {
+    return STM32_HAL_ERROR_NOT_SUPPORTED;
+  }
+
+  /* Compute GCM tag from key and [0x00, ..., 0x00, 0x02] as nonce, no AAD, no data */
+  temp_ctx.encrypt = false;
+  temp_ctx.algo_id = STM32_HAL_ALG_AES_GCM;
+  temp_ctx.key_byte_size = ctx->key_byte_size;
+  memcpy(temp_ctx.key, ctx->key, ctx->key_byte_size);
+  temp_ctx.aead_config.tag_size = STM32_CIPHER_BLOCK_SIZE;
+  temp_ctx.aead_config.nonce_size = STM32_CIPHER_BLOCK_SIZE;
+
+#if defined(STM32_AES_HAL_V1_L4)
+  temp_ctx.iv[3] = 0x02000000;
+#else
+  temp_ctx.iv[3] = 0x00000002;
+#endif /* STM32_AES_HAL_V1_L4 */
+
+  status = stm32_aead_generate_tag(&temp_ctx, tag1);
+  stm32_aead_release_context(&temp_ctx);
+
+  if (status != STM32_HAL_SUCCESS)
+  {
+    return status;
+  }
+
+  /*
+   * Compute GCM tag from key, [0x00, ..., 0x00, 0x02] as nonce, caller nonce as input data,
+   * without AAD. The call to stm32_aead_release_context() above zeroed temp_ctx content.
+   */
+  temp_ctx.encrypt = false;
+  temp_ctx.algo_id = STM32_HAL_ALG_AES_GCM;
+  temp_ctx.key_byte_size = ctx->key_byte_size;
+  memcpy(temp_ctx.key, ctx->key, ctx->key_byte_size);
+  temp_ctx.aead_config.tag_size = STM32_CIPHER_BLOCK_SIZE;
+  temp_ctx.aead_config.nonce_size = STM32_CIPHER_BLOCK_SIZE;
+
+#if defined(STM32_AES_HAL_V1_L4)
+  temp_ctx.iv[3] = 0x02000000;
+#else
+  temp_ctx.iv[3] = 0x00000002;
+#endif /* STM32_AES_HAL_V1_L4 */
+
+  temp_data = calloc(1, nonce_size);
+  if (temp_data == NULL)
+  {
+    return STM32_HAL_OUT_OF_MEMORY;
+  }
+
+  status = stm32_aead_process_buffer(&temp_ctx, nonce, temp_data, nonce_size);
+
+  free(temp_data);
+
+  if (status == STM32_HAL_SUCCESS)
+  {
+    status = stm32_aead_generate_tag(&temp_ctx, tag2);
+  }
+
+  stm32_aead_release_context(&temp_ctx);
+
+  if (status != STM32_HAL_SUCCESS)
+  {
+    return status;
+  }
+
+  /* J0 = tag1 XOR tag2 */
+  for (n = 0; n < STM32_CIPHER_BLOCK_U32_SIZE; n++)
+  {
+    j0[n] = tag1[n] ^ tag2[n];
+  }
+
+  /* Set tageet GCM operation IV */
+#if defined(STM32_AES_HAL_V1_L4)
+  memcpy(ctx->iv, j0, sizeof(j0));
+  ctx->iv[3] = SWAP_U32_ENDIANNESS(SWAP_U32_ENDIANNESS(ctx->iv[3]) + 1);
+#else
+  read_u32_swapped(ctx->iv, (uint8_t *)j0, sizeof(j0));
+  ctx->iv[3]++;
+#endif /* STM32_AES_HAL_V1_L4 */
+
+  /* XOR tag mask is ECB(J0) ^ ECB(J0 value used by HW) */
+#if defined(STM32_AES_HAL_V1_L4)
+    memcpy(temp_ctx.key, ctx->key, ctx->key_byte_size);
+#else
+    /* Key data in big-endian format */
+    read_u32_swapped(temp_ctx.key, (uint8_t *)ctx->key, ctx->key_byte_size);
+#endif /* STM32_AES_HAL_V1_L4 */
+
+  status = STM32_HalAesEncrypt(STM32_HAL_ALG_AES_ECB, (uint8_t *)temp_ctx.key, ctx->key_byte_size,
+                               NULL, 0, (uint8_t *)j0, sizeof(j0), (uint8_t *)tag1, sizeof(tag1),
+                               &temp_len);
+  if (status != STM32_HAL_SUCCESS)
+  {
+    return status;
+  }
+
+  j0[3] = SWAP_U32_ENDIANNESS(1);
+
+  status = STM32_HalAesEncrypt(STM32_HAL_ALG_AES_ECB, (uint8_t *)temp_ctx.key, ctx->key_byte_size,
+                               NULL, 0, (uint8_t *)j0, sizeof(j0), (uint8_t *)tag2, sizeof(tag2),
+                               &temp_len);
+  if (status != STM32_HAL_SUCCESS)
+  {
+    return status;
+  }
+
+  for (n = 0; n < STM32_CIPHER_BLOCK_U32_SIZE; n++)
+  {
+    ctx->aead_config.ccm_tag_mask[n] = tag1[n] ^ tag2[n];
+  }
+
+  ctx->aead_config.ccm_tag_mask_apply = true;
+
+  return STM32_HAL_SUCCESS;
 }
 
 /*
@@ -680,25 +838,18 @@ STM32_HalStatusTypeDef STM32_HalAeadDecryptSetup(stm32_hal_aes_ctx_t *ctx,
 STM32_HalStatusTypeDef STM32_HalAeadSetNonce(stm32_hal_aes_ctx_t *ctx,
                                              const uint8_t *nonce, size_t nonce_length)
 {
+  STM32_HalStatusTypeDef status;
+
   switch (ctx->algo_id)
   {
   case STM32_HAL_ALG_AES_GCM:
-    if (nonce_length != 12)
+    status = stm32_aead_hal_generate_gcm_iv(ctx, nonce, nonce_length);
+    if (status != STM32_HAL_SUCCESS)
     {
-      return STM32_HAL_ERROR_NOT_SUPPORTED;
+      return status;
     }
 
     ctx->aead_config.nonce_size = nonce_length;
-
-#if defined(STM32_AES_HAL_V1_L4)
-    /* Set Initialization vector (IV) in big-endian format, with counter = 2 */
-    memcpy(ctx->iv, nonce, nonce_length);
-    ctx->iv[3] = 0x02000000;
-#else
-    /* Set Initialization vector (IV) in little-endian, with counter = 2*/
-    read_u32_swapped(ctx->iv, nonce, nonce_length);
-    ctx->iv[3] = 0x00000002;
-#endif /* STM32_AES_HAL_V1_L4 */
     break;
 
   case STM32_HAL_ALG_AES_CCM:
@@ -1053,7 +1204,7 @@ STM32_HalStatusTypeDef STM32_HalAeadUpdate(stm32_hal_aes_ctx_t *ctx,
        ctx->aead_config.message_size))
   {
     /* Use local full block buffers to prevent HAL to overflow caller buffers */
-    uint32_t temp_out[STM32_CIPHER_BLOCK_SIZE / sizeof(uint32_t)];
+    uint32_t temp_out[STM32_CIPHER_BLOCK_U32_SIZE];
 
     memset(ctx->sbuf + ctx->sbuf_len, 0, sizeof(ctx->sbuf) - ctx->sbuf_len);
 
@@ -1080,7 +1231,7 @@ STM32_HalStatusTypeDef STM32_HalAeadFinish(stm32_hal_aes_ctx_t *ctx,
                                            uint8_t *tag, size_t tag_size,
                                            size_t *tag_length)
 {
-  uint32_t local_tag[STM32_CIPHER_BLOCK_SIZE / sizeof(uint32_t)];
+  uint32_t local_tag[STM32_CIPHER_BLOCK_U32_SIZE];
   STM32_HalStatusTypeDef status;
 
   if (tag_size < ctx->aead_config.tag_size)
@@ -1122,7 +1273,7 @@ STM32_HalStatusTypeDef STM32_HalAeadFinish(stm32_hal_aes_ctx_t *ctx,
   if (ctx->sbuf_len != 0)
   {
     /* Use local full block buffers to prevent HAL to overflow caller buffers */
-    uint32_t temp_out[STM32_CIPHER_BLOCK_SIZE / sizeof(uint32_t)];
+    uint32_t temp_out[STM32_CIPHER_BLOCK_U32_SIZE];
 
     memset(ctx->sbuf + ctx->sbuf_len, 0, sizeof(ctx->sbuf) - ctx->sbuf_len);
 
@@ -1155,7 +1306,7 @@ STM32_HalStatusTypeDef STM32_HalAeadVerify(stm32_hal_aes_ctx_t *ctx,
                                            size_t *plaintext_length,
                                            const uint8_t *tag, size_t tag_length)
 {
-  uint32_t local_tag[STM32_CIPHER_BLOCK_SIZE / sizeof(uint32_t)];
+  uint32_t local_tag[STM32_CIPHER_BLOCK_U32_SIZE];
   STM32_HalStatusTypeDef status;
 
   /* PSA Crypto specification: additional data are fed before ciphered data */
@@ -1192,7 +1343,7 @@ STM32_HalStatusTypeDef STM32_HalAeadVerify(stm32_hal_aes_ctx_t *ctx,
   if (ctx->sbuf_len != 0)
   {
     /* Use local full block buffers to prevent HAL to overflow caller buffers */
-    uint32_t temp_out[STM32_CIPHER_BLOCK_SIZE / sizeof(uint32_t)];
+    uint32_t temp_out[STM32_CIPHER_BLOCK_U32_SIZE];
 
     memset(ctx->sbuf + ctx->sbuf_len, 0, sizeof(ctx->sbuf) - ctx->sbuf_len);
 

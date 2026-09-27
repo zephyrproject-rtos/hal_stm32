@@ -56,6 +56,7 @@ extern "C" {
 #endif /* STM32_AES_HAL_V1 */
 
 #define STM32_CIPHER_BLOCK_SIZE         16
+#define STM32_CIPHER_BLOCK_U32_SIZE	(STM32_CIPHER_BLOCK_SIZE / sizeof(uint32_t))
 #define STM32_CIPHER_KEY_MAX_SIZE       32
 
 /*
@@ -82,6 +83,8 @@ struct hal_aes_aead_config {
   size_t tag_size;              /* Byte size of the authentication tag */
   bool message_size_set;        /* True only is message size was defined from SetLengths */
   bool aad_size_set;            /* True only is AAD size was defined from SetLengths */
+  bool ccm_tag_mask_apply;      /* True when ccm_tag_mask (XOR) must be applied to CCM tag */
+  uint32_t ccm_tag_mask[STM32_CIPHER_BLOCK_U32_SIZE];
 };
 
 typedef struct
@@ -96,7 +99,7 @@ typedef struct
   struct hal_aes_aead_config aead_config;
 
   uint32_t key[STM32_CIPHER_KEY_MAX_SIZE / sizeof(uint32_t)];
-  uint32_t iv[STM32_CIPHER_BLOCK_SIZE / sizeof(uint32_t)];
+  uint32_t iv[STM32_CIPHER_BLOCK_U32_SIZE];
 
   size_t key_byte_size;
   bool encrypt;                 /* true: encryption, false: decryption */
