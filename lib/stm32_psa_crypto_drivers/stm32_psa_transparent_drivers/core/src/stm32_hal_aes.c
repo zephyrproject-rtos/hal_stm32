@@ -24,9 +24,7 @@
 #include "stm32_hal_private.h"
 #include "stm32_soc_hal.h"
 
-#ifdef MBEDTLS_THREADING_C
 #include <mbedtls/threading.h>
-#endif /* MBEDTLS_THREADING_C */
 
 #include <string.h>
 #include <stdlib.h>
