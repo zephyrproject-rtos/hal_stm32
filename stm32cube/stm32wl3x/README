@@ -46,3 +46,6 @@ Patch List:
         . RAM_VR          (STM32WL3x RAM virtual registers)
     -in stm32cube/stm32wl3x/drivers/include/Legacy/stm32_hal_legacy.h
       . Guard PAGESIZE definition with #ifndef __ZEPHYR__ as it conflicts with POSIX
+    -in stm32cube/stm32wl3x/drivers/include/stm32wl3x_ll_tim.h
+      . Guard LL_TIM_CHANNEL_CH2N and LL_TIM_CHANNEL_CH3N with TIM_CCER_CC2NE and
+        TIM_CCER_CC3NE, which the STM32WL3x device headers do not define
