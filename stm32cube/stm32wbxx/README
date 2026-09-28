@@ -47,4 +47,9 @@ Patch List:
     Impacted files:
      drivers/include/Legacy/stm32_hal_legacy.h
 
+   *Do not define USE_HAL_CRYP_SUSPEND_RESUME macro when already defined,
+    for example by the build environement.
+    Impacted file:
+     stm32cube/stm32wbxx/drivers/include/stm32wbxx_hal_conf.h
+
    See release_note.html from STM32Cube
