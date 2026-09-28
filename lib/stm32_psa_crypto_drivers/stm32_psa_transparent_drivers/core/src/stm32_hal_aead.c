@@ -766,13 +766,17 @@ STM32_HalStatusTypeDef STM32_HalAeadSetLengths(stm32_hal_aes_ctx_t *ctx,
     if (ad_length > 0)
     {
       ctx->aead_config.aad_b1 = calloc(1, ad_length);
-      if (ctx->aead_config.aad_b1 == NULL)
+
+      /*
+       * If we fail to allocate the buffer now, maybe we will succeed when
+       * first AAD bytes will be provided. Moverover, this prevents failure
+       * in TF PSA Crypto test case "PSA Multipart State Checks, AES - GCM".
+       */
+      if (ctx->aead_config.aad_b1 != NULL)
       {
-        return STM32_HAL_OUT_OF_MEMORY;
+        ctx->aead_config.b1_size = ad_length;
       }
     }
-
-    ctx->aead_config.b1_size = ad_length;
     break;
 
   case STM32_HAL_ALG_AES_CCM:
@@ -844,6 +848,18 @@ STM32_HalStatusTypeDef STM32_HalAeadUpdateAd(stm32_hal_aes_ctx_t *ctx,
     }
     else
     {
+      /* If we failed to allocate the buffer from XXX, try to allocate it now */
+      if (ctx->aead_config.aad_size_set && ctx->aead_config.aad_b1 == NULL)
+      {
+        ctx->aead_config.aad_b1 = calloc(1, ctx->aead_config.aad_size);
+	if (ctx->aead_config.aad_b1 == NULL)
+	{
+          return STM32_HAL_OUT_OF_MEMORY;
+	}
+
+        ctx->aead_config.b1_size = ctx->aead_config.aad_size;
+      }
+
       aad_b1 = (uint8_t *)ctx->aead_config.aad_b1;
     }
     break;
