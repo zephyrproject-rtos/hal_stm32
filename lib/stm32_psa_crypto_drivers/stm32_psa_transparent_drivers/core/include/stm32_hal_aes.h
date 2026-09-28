@@ -24,10 +24,11 @@
 extern "C" {
 #endif
 
-#include "stm32_soc_hal.h"
 #include "stm32_hal_aes_types.h"
 #include "stm32_hal_core_config.h"
 #include "stm32_hal_types.h"
+#include "stm32_soc_hal.h"
+
 #include <stdbool.h>
 
 /*
@@ -39,10 +40,10 @@ extern "C" {
 #elif defined(STM32L4) || defined(STM32L1) || defined(STM32L0)
 #define STM32_AES_HAL_V1_L4
 #else
-#define STM32_HASH_HAL_V1
+#define STM32_AES_HAL_V1
 #endif
 
-#if defined(STM32_HASH_HAL_V1)
+#if defined(STM32_AES_HAL_V1)
 #if defined(STM32F2) || defined(STM32F4) || defined(STM32F7) || defined(STM32H7) || \
     defined(STM32MP1)
 /* A few SoC HAL drivers do not provide hardware backup/restore support */
@@ -52,7 +53,7 @@ extern "C" {
 /* Most SoCs under HAL v1 have fields in the handle to save the hardware context */
 #define STM32_AES_INTERNAL_SUSPEND_CONTEXT
 #endif
-#endif /* STM32_HASH_HAL_V1 */
+#endif /* STM32_AES_HAL_V1 */
 
 #define STM32_CIPHER_BLOCK_SIZE         16
 #define STM32_CIPHER_KEY_MAX_SIZE       32
