@@ -112,14 +112,21 @@
 
 #elif (STM32H7_DEV_ID == 0x450UL)
 
+#define UTILS_SCALE0_LATENCY0_FREQ   70000000U      /*!< HCLK frequency to set FLASH latency 0 in power scale 0  */
+#define UTILS_SCALE0_LATENCY1_FREQ  140000000U      /*!< HCLK frequency to set FLASH latency 1 in power scale 0  */
+#define UTILS_SCALE0_LATENCY2_FREQ  210000000U      /*!< HCLK frequency to set FLASH latency 2 in power scale 0  */
+#define UTILS_SCALE0_LATENCY3_FREQ  225000000U      /*!< HCLK frequency to set FLASH latency 3 in power scale 0  */
+#define UTILS_SCALE0_LATENCY4_FREQ  240000000U      /*!< HCLK frequency to set FLASH latency 4 in power scale 0  */
+
 #define UTILS_SCALE1_LATENCY0_FREQ   70000000U      /*!< HCLK frequency to set FLASH latency 0 in power scale 1  */
 #define UTILS_SCALE1_LATENCY1_FREQ  140000000U      /*!< HCLK frequency to set FLASH latency 1 in power scale 1  */
-#define UTILS_SCALE1_LATENCY2_FREQ  240000000U      /*!< HCLK frequency to set FLASH latency 2 in power scale 1  */
+#define UTILS_SCALE1_LATENCY2_FREQ  210000000U      /*!< HCLK frequency to set FLASH latency 2 in power scale 1  */
+#define UTILS_SCALE1_LATENCY3_FREQ  225000000U      /*!< HCLK frequency to set FLASH latency 3 in power scale 1  */
 
 #define UTILS_SCALE2_LATENCY0_FREQ   55000000U      /*!< HCLK frequency to set FLASH latency 0 in power scale 2  */
 #define UTILS_SCALE2_LATENCY1_FREQ  110000000U      /*!< HCLK frequency to set FLASH latency 1 in power scale 2  */
 #define UTILS_SCALE2_LATENCY2_FREQ  165000000U      /*!< HCLK frequency to set FLASH latency 2 in power scale 2  */
-#define UTILS_SCALE2_LATENCY3_FREQ  220000000U      /*!< HCLK frequency to set FLASH latency 3 in power scale 2  */
+#define UTILS_SCALE2_LATENCY3_FREQ  225000000U      /*!< HCLK frequency to set FLASH latency 3 in power scale 2  */
 
 #define UTILS_SCALE3_LATENCY0_FREQ   45000000U      /*!< HCLK frequency to set FLASH latency 0 in power scale 3  */
 #define UTILS_SCALE3_LATENCY1_FREQ   90000000U      /*!< HCLK frequency to set FLASH latency 1 in power scale 3  */
@@ -346,22 +353,22 @@ void LL_mDelay(uint32_t Delay)
   @internal
              Depending on the device voltage range, the maximum frequency should be
              adapted accordingly:
-             (++) +----------------------------------------------------------------------------+
-             (++) |  Wait states   |                           HCLK clock frequency (MHz)      |
-             (++) |                |-----------------------------------------------------------|
-             (++) |  (Latency)     |   voltage range 1 |   voltage range 2 |   voltage range 3 |
-             (++) |                |    1.15V - 1.26V  |    1.05V - 1.15V  |    0.95V - 1.05V  |
-             (++) |----------------|-------------------|-------------------|-------------------|
-             (++) |0WS(1CPU cycle) |   0 < HCLK <= 70  |   0 < HCLK <= 55  |   0 < HCLK <= 45  |
-             (++) |----------------|-------------------|-------------------|-------------------|
-             (++) |1WS(2CPU cycle) |  70 < HCLK <= 140 |  55 < HCLK <= 110 |  45 < HCLK <= 90  |
-             (++) |----------------|-------------------|-------------------|-------------------|
-             (++) |2WS(3CPU cycle) | 140 < HCLK <= 240 | 110 < HCLK <= 165 |  90 < HCLK <= 135 |
-             (++) |----------------|-------------------|-------------------|-------------------|
-             (++) |3WS(4CPU cycle) |        --         | 165 < HCLK <= 220 | 135 < HCLK <= 180 |
-             (++) |----------------|-------------------|-------------------|-------------------|
-             (++) |4WS(5CPU cycle) |        --         |        --         | 180 < HCLK <= 225 |
-             (++) +----------------------------------------------------------------------------+
+             (++) +------------------------------------------------------------------------------------------------+
+             (++) |  Wait states   |                          HCLK clock frequency (MHz)                           |
+             (++) |                |-------------------------------------------------------------------------------|
+             (++) |  (Latency)     |   voltage range 0 |   voltage range 1 |   voltage range 2 |   voltage range 3 |
+             (++) |                |    1.26V - 1.40V  |    1.15V - 1.26V  |    1.05V - 1.15V  |    0.95V - 1.05V  |
+             (++) |----------------|-------------------|-------------------|-------------------|-------------------|
+             (++) |0WS(1CPU cycle) |   0 < HCLK <= 70  |   0 < HCLK <= 70  |   0 < HCLK <= 55  |   0 < HCLK <= 45  |
+             (++) |----------------|-------------------|-------------------|-------------------|-------------------|
+             (++) |1WS(2CPU cycle) |  70 < HCLK <= 140 |  70 < HCLK <= 140 |  55 < HCLK <= 110 |  45 < HCLK <= 90  |
+             (++) |----------------|-------------------|-------------------|-------------------|-------------------|
+             (++) |2WS(3CPU cycle) | 140 < HCLK <= 210 | 140 < HCLK <= 210 | 110 < HCLK <= 165 |  90 < HCLK <= 135 |
+             (++) |----------------|-------------------|-------------------|-------------------|-------------------|
+             (++) |3WS(4CPU cycle) | 210 < HCLK <= 225 | 210 < HCLK <= 225 | 165 < HCLK <= 225 | 135 < HCLK <= 180 |
+             (++) |----------------|-------------------|-------------------|-------------------|-------------------|
+             (++) |4WS(5CPU cycle) | 225 < HCLK <= 240 |        --         |        --         | 180 < HCLK <= 225 |
+             (++) +------------------------------------------------------------------------------------------------+
 
   (*) : For stm32h74xxx and stm32h75xxx family lines and requires the board to be connected on LDO regulator not SMPS, 400MHZ otherwise.
   @endinternal
@@ -704,7 +711,41 @@ ErrorStatus LL_SetFlashLatency(uint32_t HCLK_Frequency)
   }
   else
   {
-#if (STM32H7_DEV_ID == 0x480UL) || (STM32H7_DEV_ID == 0x483UL)
+#if (STM32H7_DEV_ID == 0x450UL) && defined(SYSCFG_PWRCR_ODEN)
+    if((LL_PWR_GetRegulVoltageScaling() == LL_PWR_REGU_VOLTAGE_SCALE1) &&
+       (READ_BIT(SYSCFG->PWRCR, SYSCFG_PWRCR_ODEN) != 0U))
+    {
+      if((HCLK_Frequency > UTILS_SCALE0_LATENCY3_FREQ) && (HCLK_Frequency <= UTILS_SCALE0_LATENCY4_FREQ))
+      {
+        /* 225 < HCLK <= 240 => 4WS (5 CPU cycles) */
+        latency = LL_FLASH_LATENCY_4;
+      }
+      else if((HCLK_Frequency > UTILS_SCALE0_LATENCY2_FREQ) && (HCLK_Frequency <= UTILS_SCALE0_LATENCY3_FREQ))
+      {
+        /* 210 < HCLK <= 225 => 3WS (4 CPU cycles) */
+        latency = LL_FLASH_LATENCY_3;
+      }
+      else if((HCLK_Frequency > UTILS_SCALE0_LATENCY1_FREQ) && (HCLK_Frequency <= UTILS_SCALE0_LATENCY2_FREQ))
+      {
+        /* 140 < HCLK <= 210 => 2WS (3 CPU cycles) */
+        latency = LL_FLASH_LATENCY_2;
+      }
+      else if((HCLK_Frequency > UTILS_SCALE0_LATENCY0_FREQ) && (HCLK_Frequency <= UTILS_SCALE0_LATENCY1_FREQ))
+      {
+        /* 70 < HCLK <= 140 => 1WS (2 CPU cycles) */
+        latency = LL_FLASH_LATENCY_1;
+      }
+      else if(HCLK_Frequency <= UTILS_SCALE0_LATENCY0_FREQ)
+      {
+        /* HCLK <= 70 => 0WS (1 CPU cycles) : Do nothing keep latency to default  LL_FLASH_LATENCY_0 */
+      }
+      else
+      {
+        status = ERROR;
+      }
+    }
+    else
+#elif (STM32H7_DEV_ID == 0x480UL) || (STM32H7_DEV_ID == 0x483UL)
     if(LL_PWR_GetRegulVoltageScaling() == LL_PWR_REGU_VOLTAGE_SCALE0)
     {
 #if (STM32H7_DEV_ID == 0x480UL)
@@ -750,9 +791,11 @@ ErrorStatus LL_SetFlashLatency(uint32_t HCLK_Frequency)
         status = ERROR;
       }
     }
-#if (STM32H7_DEV_ID == 0x480UL)
-    else if(LL_PWR_GetRegulVoltageScaling() == LL_PWR_REGU_VOLTAGE_SCALE1)
+    else
+#endif /* STM32H7_DEV_ID == 0x450UL */
+    if(LL_PWR_GetRegulVoltageScaling() == LL_PWR_REGU_VOLTAGE_SCALE1)
     {
+#if (STM32H7_DEV_ID == 0x480UL)
       if((HCLK_Frequency > UTILS_SCALE1_LATENCY4_FREQ) && (HCLK_Frequency <= UTILS_SCALE1_LATENCY5_FREQ))
       {
         /* 210 < HCLK <= 225 => 5WS (6 CPU cycles) */
@@ -769,16 +812,16 @@ ErrorStatus LL_SetFlashLatency(uint32_t HCLK_Frequency)
         latency = LL_FLASH_LATENCY_3;
       }
       else if((HCLK_Frequency > UTILS_SCALE1_LATENCY1_FREQ) && (HCLK_Frequency <= UTILS_SCALE1_LATENCY2_FREQ))
+#elif (STM32H7_DEV_ID == 0x450UL)
+      if((HCLK_Frequency > UTILS_SCALE1_LATENCY2_FREQ) && (HCLK_Frequency <= UTILS_SCALE1_LATENCY3_FREQ))
+      {
+        /* 210 < HCLK <= 225 => 3WS (4 CPU cycles) */
+        latency = LL_FLASH_LATENCY_3;
+      }
+      else if((HCLK_Frequency > UTILS_SCALE1_LATENCY1_FREQ) && (HCLK_Frequency <= UTILS_SCALE1_LATENCY2_FREQ))
 #else
-    if(LL_PWR_GetRegulVoltageScaling() == LL_PWR_REGU_VOLTAGE_SCALE1)
-    {
       if((HCLK_Frequency > UTILS_SCALE1_LATENCY1_FREQ) && (HCLK_Frequency <= UTILS_SCALE1_LATENCY2_FREQ))
 #endif /* STM32H7_DEV_ID == 0x480UL */
-#else
-    if(LL_PWR_GetRegulVoltageScaling() == LL_PWR_REGU_VOLTAGE_SCALE1)
-    {
-      if((HCLK_Frequency > UTILS_SCALE1_LATENCY1_FREQ) && (HCLK_Frequency <= UTILS_SCALE1_LATENCY2_FREQ))
-#endif /* STM32H7_DEV_ID == 0x480UL || STM32H7_DEV_ID == 0x483UL */
       {
         /* 140 < HCLK <= 210 => 2WS (3 CPU cycles) */
         latency = LL_FLASH_LATENCY_2;
@@ -811,7 +854,7 @@ ErrorStatus LL_SetFlashLatency(uint32_t HCLK_Frequency)
       if((HCLK_Frequency > UTILS_SCALE2_LATENCY2_FREQ) && (HCLK_Frequency <= UTILS_SCALE2_LATENCY3_FREQ))
 #endif /* STM32H7_DEV_ID == 0x480UL */
       {
-        /* 165 < HCLK <= 220 => 3WS (4 CPU cycles) */
+        /* 165 < HCLK <= 225 => 3WS (4 CPU cycles) */
         latency = LL_FLASH_LATENCY_3;
       }
       else if((HCLK_Frequency > UTILS_SCALE2_LATENCY1_FREQ) && (HCLK_Frequency <= UTILS_SCALE2_LATENCY2_FREQ))
