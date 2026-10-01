@@ -63,4 +63,12 @@ Patch List:
      - Impacted file: drivers/include/stm32h7xx_ll_system.h
      - See also: https://github.com/zephyrproject-rtos/hal_stm32/pull/381
 
+   *Fix Flash Latency in VOS0 for STM32H74x/H75x (DEV_ID 0x450)
+      Add missing VOS0 latency definitions and SYSCFG_PWRCR_ODEN check in
+      LL_SetFlashLatency() to properly configure 4 wait states when HCLK
+      is 240 MHz in VOS0 according to RM0433 Rev 8 Table 17.
+     Impacted files:
+      stm32cube/stm32h7xx/drivers/src/stm32h7xx_ll_utils.c
+     Internal reference: HAL1-28779
+
    See release_note.html from STM32Cube
