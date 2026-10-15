@@ -65,6 +65,8 @@
 
 #ifdef STM32_HAL_AES_AEAD_DRIVER_ENABLED
 
+#define STM32_ROUND_UP(value, align) ((((value) + (align) - 1) / (align)) * (align))
+
 static STM32_HalStatusTypeDef stm32_hal_aead_set_algo_id(stm32_hal_aes_ctx_t *ctx,
                                                          STM32_HalAesAlgTypeDef alg)
 {
@@ -181,8 +183,7 @@ static STM32_HalStatusTypeDef prepare_ccm_b1_buffer(stm32_hal_aes_ctx_t *ctx)
   b1_header_size = 2;
 
   /* Round up buffer length to 32bit words */
-  b1_length = ((ad_length + b1_header_size + 3U) / 4U) * 4U;
-
+  b1_length = STM32_ROUND_UP(ad_length + b1_header_size, sizeof(uint32_t));
   b1_padded_addr = calloc(1, b1_length);
   if (b1_padded_addr == NULL)
   {
@@ -700,7 +701,7 @@ static STM32_HalStatusTypeDef stm32_aead_hal_generate_gcm_iv(stm32_hal_aes_ctx_t
   temp_ctx.iv[3] = 0x00000002;
 #endif /* STM32_AES_HAL_V1_L4 */
 
-  temp_data = calloc(1, nonce_size);
+  temp_data = calloc(1, STM32_ROUND_UP(nonce_size, sizeof(uint32_t)));
   if (temp_data == NULL)
   {
     return STM32_HAL_OUT_OF_MEMORY;
@@ -920,7 +921,7 @@ STM32_HalStatusTypeDef STM32_HalAeadSetLengths(stm32_hal_aes_ctx_t *ctx,
   case STM32_HAL_ALG_AES_GCM:
     if (ad_length > 0)
     {
-      ctx->aead_config.aad_b1 = calloc(1, ad_length);
+      ctx->aead_config.aad_b1 = calloc(1, STM32_ROUND_UP(ad_length, sizeof(uint32_t)));
 
       /*
        * If we fail to allocate the buffer now, maybe we will succeed when
@@ -990,7 +991,7 @@ STM32_HalStatusTypeDef STM32_HalAeadUpdateAd(stm32_hal_aes_ctx_t *ctx,
       }
 
       aad_size = ctx->aead_config.current_aad_size + input_length;
-      aad_b1 = realloc(ctx->aead_config.aad_b1, aad_size);
+      aad_b1 = realloc(ctx->aead_config.aad_b1, STM32_ROUND_UP(aad_size, sizeof(uint32_t)));
       if (aad_b1 == NULL)
       {
         return STM32_HAL_OUT_OF_MEMORY;
@@ -1006,7 +1007,8 @@ STM32_HalStatusTypeDef STM32_HalAeadUpdateAd(stm32_hal_aes_ctx_t *ctx,
       /* If we failed to allocate the buffer from XXX, try to allocate it now */
       if (ctx->aead_config.aad_size_set && ctx->aead_config.aad_b1 == NULL)
       {
-        ctx->aead_config.aad_b1 = calloc(1, ctx->aead_config.aad_size);
+        ctx->aead_config.aad_b1 = calloc(1, STM32_ROUND_UP(ctx->aead_config.aad_size,
+                                                           sizeof(uint32_t)));
 	if (ctx->aead_config.aad_b1 == NULL)
 	{
           return STM32_HAL_OUT_OF_MEMORY;
