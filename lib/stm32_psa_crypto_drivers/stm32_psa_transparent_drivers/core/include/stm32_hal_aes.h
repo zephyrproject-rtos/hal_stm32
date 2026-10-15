@@ -56,7 +56,7 @@ extern "C" {
 #endif /* STM32_HASH_HAL_V1 */
 
 #define STM32_CIPHER_BLOCK_SIZE         16
-#define STM32_CIPHER_BLOCK_U32_SIZE	(STM32_CIPHER_BLOCK_SIZE / sizeof(uint32_t))
+#define STM32_CIPHER_BLOCK_U32_SIZE     (STM32_CIPHER_BLOCK_SIZE / sizeof(uint32_t))
 #define STM32_CIPHER_KEY_MAX_SIZE       32
 
 /*

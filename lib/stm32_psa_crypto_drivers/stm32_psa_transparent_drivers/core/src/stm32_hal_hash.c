@@ -116,7 +116,7 @@ static void enable_hash_clock(void)
 {
 #ifdef STM32_HASH_HAL_V2
  #if defined(USE_HAL_HASH_CLK_ENABLE_MODEL) && \
-      (USE_HAL_HASH_CLK_ENABLE_MODEL == HAL_CLK_ENABLE_PERIPH_ONLY)
+     (USE_HAL_HASH_CLK_ENABLE_MODEL == HAL_CLK_ENABLE_PERIPH_ONLY)
   /*  Nothing to do, the HAL function takes care of the HASH clock */
  #else
   HAL_RCC_HASH_EnableClock();
@@ -282,7 +282,7 @@ static void load_hw_context(stm32_hal_hash_ctx_t *ctx)
  * Device must be locked when this function is called.
  */
 static STM32_HalStatusTypeDef stm32_hash_accumulate(stm32_hal_hash_ctx_t *ctx,
-                                          const uint8_t *in_buf, size_t in_len)
+                                                    const uint8_t *in_buf, size_t in_len)
 {
   stm32_hal_status_t hal_status = HAL_ERROR;
 
@@ -412,7 +412,7 @@ static STM32_HalStatusTypeDef stm32_hash_accumulate(stm32_hal_hash_ctx_t *ctx,
  * Device must be locked when this function is called.
  */
 static STM32_HalStatusTypeDef stm32_hash_finish(stm32_hal_hash_ctx_t *ctx,
-                                      uint8_t *hash_buf)
+                                                uint8_t *hash_buf)
 {
   stm32_hal_status_t hal_status = HAL_ERROR;
 

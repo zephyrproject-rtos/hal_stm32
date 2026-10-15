@@ -425,7 +425,7 @@ static void stm32_hal_aes_deinit(stm32_hal_aes_ctx_t *ctx)
 }
 
 STM32_HalStatusTypeDef stm32_hal_aes_get_hal_hw(stm32_hal_aes_ctx_t *ctx,
-                                      stm32_hal_aes_hal_config_func_t config_fn)
+                                                stm32_hal_aes_hal_config_func_t config_fn)
 {
   STM32_HalStatusTypeDef status;
 
