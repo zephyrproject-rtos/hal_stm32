@@ -1006,10 +1006,10 @@ STM32_HalStatusTypeDef STM32_HalAeadUpdateAd(stm32_hal_aes_ctx_t *ctx,
       {
         ctx->aead_config.aad_b1 = calloc(1, STM32_ROUND_UP(ctx->aead_config.aad_size,
                                                            sizeof(uint32_t)));
-	if (ctx->aead_config.aad_b1 == NULL)
-	{
+        if (ctx->aead_config.aad_b1 == NULL)
+        {
           return STM32_HAL_OUT_OF_MEMORY;
-	}
+        }
 
         ctx->aead_config.b1_size = ctx->aead_config.aad_size;
       }
