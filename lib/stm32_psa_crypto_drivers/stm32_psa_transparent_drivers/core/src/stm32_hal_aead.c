@@ -444,6 +444,10 @@ static STM32_HalStatusTypeDef stm32_aead_hal_configure(stm32_hal_aes_ctx_t *ctx)
     conf.HeaderWidthUnit = CRYP_HEADERWIDTHUNIT_WORD;
   }
 #endif /* IS_CRYP_INSTANCE */
+#elif defined(STM32MP1)
+  /* STM32MP1 gets the header size in number of 32bit words */
+  ASSERT((conf.HeaderSize % sizeof(uint32_t)) == 0);
+  conf.HeaderSize /= 4U;
 #endif /* CRYP_HEADERWIDTHUNIT_BYTE */
 
   if (HAL_CRYP_SetConfig(&ctx->hal_handle, &conf) != HAL_OK)
