@@ -54,16 +54,23 @@
 # endif /* STM32_AES_HAL_V2 */
 #endif /* STM32_HAL_AES_DPA_DRIVER_ENABLED */
 
-/* HAL_ENABLE_CLOCK() and HAL_DISABLE_CLOCK() helper macros  */
+/*
+ * HAL_ENABLE_CLOCK() and HAL_DISABLE_CLOCK() helper macros.
+ * HAL_RNG_ENABLE_CLOCK() helper for RNG clock enable is needed for SAES instances.
+ */
 #ifdef STM32_HAL_AES_DPA_DRIVER_ENABLED
  #ifdef STM32_AES_HAL_V2
-#define HAL_ENABLE_CLOCK() \
-  do { HAL_RCC_RNG_EnableClock(); HAL_RCC_SAES_EnableClock(); } while (0)
-#define HAL_DISABLE_CLOCK() \
-  do { HAL_RCC_SAES_DisableClock(); /* Leave RNG On */ } while (0)
+#define HAL_ENABLE_CLOCK()      HAL_RCC_SAES_EnableClock()
+#define HAL_DISABLE_CLOCK()     HAL_RCC_SAES_DisableClock()
+#define HAL_RNG_ENABLE_CLOCK()  HAL_RCC_RNG_EnableClock()
  #else
 #define HAL_ENABLE_CLOCK()      __HAL_RCC_SAES_CLK_ENABLE()
 #define HAL_DISABLE_CLOCK()     __HAL_RCC_SAES_CLK_DISABLE()
+  #ifdef __HAL_RCC_RNG1_CLK_ENABLE
+#define HAL_RNG_ENABLE_CLOCK()  __HAL_RCC_RNG1_CLK_ENABLE()
+  #else
+#define HAL_RNG_ENABLE_CLOCK()  __HAL_RCC_RNG_CLK_ENABLE()
+  #endif /* __HAL_RCC_RNG1_CLK_ENABLE */
  #endif /* STM32_AES_HAL_V2 */
 #else
  #ifdef STM32_AES_HAL_V2
@@ -182,6 +189,10 @@ static void stm32_hal_aes_device_enable_clock(void)
 #endif
 
   HAL_ENABLE_CLOCK();
+#ifdef STM32_HAL_AES_DPA_DRIVER_ENABLED
+  /* SAES needs the RNG clock */
+  HAL_RNG_ENABLE_CLOCK();
+#endif /* STM32_HAL_AES_DPA_DRIVER_ENABLED */
 }
 
 /*
@@ -191,6 +202,10 @@ static void stm32_hal_aes_device_enable_clock(void)
 static void stm32_hal_aes_device_disable_clock(void)
 {
   HAL_DISABLE_CLOCK();
+
+#ifdef STM32_HAL_AES_DPA_DRIVER_ENABLED
+  /* Intentionally not disabling the RNG clock */
+#endif /* STM32_HAL_AES_DPA_DRIVER_ENABLED */
 }
 
 #ifdef STM32_AES_LOCAL_SUSPEND_CONTEXT
