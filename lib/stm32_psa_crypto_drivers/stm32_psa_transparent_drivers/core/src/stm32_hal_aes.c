@@ -120,7 +120,7 @@ static struct stm32_hal_aes_device stm32_hal_aes_device_state;
  * Helper functions for the STM32 device hardware state management
  */
 
-/* Lock mutex for hash_device access */
+/* Lock mutex for AES device access */
 static void stm32_hal_aes_device_lock(void)
 {
 #ifdef MBEDTLS_THREADING_C
@@ -128,7 +128,7 @@ static void stm32_hal_aes_device_lock(void)
 #endif /* MBEDTLS_THREADING_C */
 }
 
-/* Unlock mutex for hash_device access */
+/* Unlock mutex for AES device access */
 static void stm32_hal_aes_device_unlock(void)
 {
 #ifdef MBEDTLS_THREADING_C
@@ -301,7 +301,7 @@ static void stm32_hal_aes_device_save_context(stm32_hal_aes_ctx_t *ctx)
 }
 
 /*
- * Restore STM32 device hardware state from a hash operation context.
+ * Restore STM32 device hardware state from an AES operation context.
  * Device access mutex must be locked when this function is called.
  */
 static void stm32_hal_aes_device_restore_context(stm32_hal_aes_ctx_t *ctx)
@@ -336,8 +336,8 @@ static void stm32_hal_aes_device_restore_context(stm32_hal_aes_ctx_t *ctx)
 }
 
 /*
- * Load STM32 device hardware state from a hash operation context.
- * If there was a active operation, save STM32 HASH device hardware state
+ * Load STM32 device hardware state from an AES operation context.
+ * If there was a active operation, save STM32 AES device hardware state
  * in that context before. The new operation context becomes the active one.
  * Device access mutex must be locked when this function is called.
  */
