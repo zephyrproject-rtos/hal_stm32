@@ -46,3 +46,12 @@ Patch List:
         . RAM_VR          (STM32WL3x RAM virtual registers)
     -in stm32cube/stm32wl3x/drivers/include/Legacy/stm32_hal_legacy.h
       . Guard PAGESIZE definition with #ifndef __ZEPHYR__ as it conflicts with POSIX
+
+   *Prevent build warnings in LL_DMA_*() functions due to unused arguments.
+    Impacted files:
+     stm32cube/stm32wl3x/drivers/include/stm32wl3x_ll_dma.h
+
+   *Correct names of GCM/CCM/CMAC CRYP context SoC registers in the HAL
+    suspend/resume API functions.
+    Impacted files:
+     stm32cube/stm32wl3x/drivers/src/stm32wl3x_hal_cryp.c

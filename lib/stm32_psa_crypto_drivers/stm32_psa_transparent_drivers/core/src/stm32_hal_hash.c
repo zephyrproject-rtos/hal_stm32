@@ -22,9 +22,7 @@
 #include "stm32_hal_private.h"
 #include "stm32_soc_hal.h"
 
-#ifdef MBEDTLS_THREADING_C
 #include <mbedtls/threading.h>
-#endif /* MBEDTLS_THREADING_C */
 
 #include <stdbool.h>
 #include <string.h>
@@ -118,7 +116,7 @@ static void enable_hash_clock(void)
 {
 #ifdef STM32_HASH_HAL_V2
  #if defined(USE_HAL_HASH_CLK_ENABLE_MODEL) && \
-      (USE_HAL_HASH_CLK_ENABLE_MODEL == HAL_CLK_ENABLE_PERIPH_ONLY)
+     (USE_HAL_HASH_CLK_ENABLE_MODEL == HAL_CLK_ENABLE_PERIPH_ONLY)
   /*  Nothing to do, the HAL function takes care of the HASH clock */
  #else
   HAL_RCC_HASH_EnableClock();
@@ -284,7 +282,7 @@ static void load_hw_context(stm32_hal_hash_ctx_t *ctx)
  * Device must be locked when this function is called.
  */
 static STM32_HalStatusTypeDef stm32_hash_accumulate(stm32_hal_hash_ctx_t *ctx,
-                                          const uint8_t *in_buf, size_t in_len)
+                                                    const uint8_t *in_buf, size_t in_len)
 {
   stm32_hal_status_t hal_status = HAL_ERROR;
 
@@ -296,9 +294,6 @@ static STM32_HalStatusTypeDef stm32_hash_accumulate(stm32_hal_hash_ctx_t *ctx,
 #if defined(STM32_HASH_HAL_V2)
 
   hal_status = HAL_HASH_Update(&ctx->hhash, in_buf, in_len, STM32_HASH_TIMEOUT);
-  {
-    return STM32_HAL_ERROR;
-  }
 
 #elif defined(STM32MP1) || defined(STM32MP13)
   HAL_StatusTypeDef (*handler)(HASH_HandleTypeDef *hhash, uint8_t *pInBuffer, uint32_t Size);
@@ -417,7 +412,7 @@ static STM32_HalStatusTypeDef stm32_hash_accumulate(stm32_hal_hash_ctx_t *ctx,
  * Device must be locked when this function is called.
  */
 static STM32_HalStatusTypeDef stm32_hash_finish(stm32_hal_hash_ctx_t *ctx,
-                                      uint8_t *hash_buf)
+                                                uint8_t *hash_buf)
 {
   stm32_hal_status_t hal_status = HAL_ERROR;
 
