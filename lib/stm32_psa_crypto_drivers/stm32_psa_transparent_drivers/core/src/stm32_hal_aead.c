@@ -266,11 +266,10 @@ static STM32_HalStatusTypeDef stm32_aead_hal_configure(stm32_hal_aes_ctx_t *ctx)
 #ifdef STM32_AES_HAL_V2
   /*
    * HAL2 sequence to initialize and configure the HAL driver:
-   * - Call HAL_AES_Init() with the device reference,
-   *   already done by STM32_HalAesInit() above.
-   * - Call HAL_AES_SetXxxlKey() to register target key references
-   * - Call HAL_AES_xxx_SetConfig() with the configuration data
-   * - Call HAL_AES_SetDataSwapping() last, if needed
+   * - Call HAL_AES_Init() with the device reference, already done.
+   * - Call HAL_AES_SetXxxlKey() to register target key references.
+   * - Call HAL_AES_xxx_SetConfig() with the configuration data.
+   * - Call HAL_AES_SetDataSwapping() last, if needed.
    */
   if (HAL_AES_SetNormalKey(&ctx->hal_handle, hal_key_size_id, ctx->key) != HAL_OK)
   {
@@ -311,13 +310,12 @@ static STM32_HalStatusTypeDef stm32_aead_hal_configure(stm32_hal_aes_ctx_t *ctx)
 #elif defined(STM32_AES_HAL_V1_L4)
   /*
    * HAL sequence for stm32l4/l1/l0 to initialize and configure the HAL driver:
-   * - Set .Instance field in device handle and call HAL_CRYP_DeInit(),
-   *   already done by STM32_HalAesInit() above.
-   * - Set all needed field in the .Init struct of the device handl
-   * - Set init phase ID in .Init struct and run init phase with HAL_CRYPEx_AES_Auth()
-   * - Set header phase ID in .Init struct and run header phase with HAL_CRYPEx_AES_Auth()
-   *   Needed only if thre are Authentication Additional Data
-   * - Set payload phase ID in .Init struct to be ready to process input data
+   * - Set .Instance field in device handle and call HAL_CRYP_DeInit(), already done.
+   * - Set all needed field in the .Init struct of the device handle.
+   * - Set init phase ID in .Init struct and run init phase with HAL_CRYPEx_AES_Auth().
+   * - Set header phase ID in .Init struct and run header phase with HAL_CRYPEx_AES_Auth().
+   *   Needed only if thre are Authentication Additional Data.
+   * - Set payload phase ID in .Init struct to be ready to process input data.
    */
 
   if (HAL_CRYP_DeInit(&ctx->hal_handle))
@@ -384,9 +382,8 @@ static STM32_HalStatusTypeDef stm32_aead_hal_configure(stm32_hal_aes_ctx_t *ctx)
 #else
   /*
    * HAL sequence for remaining AES/CRYP devices to initialize and configure the HAL driver:
-   * - Set .Instance field in device handle and call HAL_CRYP_Init(),
-   *   already done by STM32_HalAesInit() above.
-   * - Set configuraition with a CRYP_ConfigTypeDef struct pass to HAL_CRYP_SetConfig()
+   * - Set .Instance field in device handle and call HAL_CRYP_Init(), already done.
+   * - Set configuraition with a CRYP_ConfigTypeDef struct pass to HAL_CRYP_SetConfig().
    */
   CRYP_ConfigTypeDef conf;
 
