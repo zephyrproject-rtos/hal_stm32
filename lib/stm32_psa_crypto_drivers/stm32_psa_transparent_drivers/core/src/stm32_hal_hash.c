@@ -294,9 +294,6 @@ static STM32_HalStatusTypeDef stm32_hash_accumulate(stm32_hal_hash_ctx_t *ctx,
 #if defined(STM32_HASH_HAL_V2)
 
   hal_status = HAL_HASH_Update(&ctx->hhash, in_buf, in_len, STM32_HASH_TIMEOUT);
-  {
-    return STM32_HAL_ERROR;
-  }
 
 #elif defined(STM32MP1) || defined(STM32MP13)
   HAL_StatusTypeDef (*handler)(HASH_HandleTypeDef *hhash, uint8_t *pInBuffer, uint32_t Size);
