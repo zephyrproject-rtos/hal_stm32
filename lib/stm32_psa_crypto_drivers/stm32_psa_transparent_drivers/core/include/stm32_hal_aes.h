@@ -123,10 +123,6 @@ typedef struct
 #endif
 } stm32_hal_aes_ctx_t;
 
-STM32_HalStatusTypeDef STM32_HalAesInit(stm32_hal_aes_ctx_t *ctx);
-
-STM32_HalStatusTypeDef STM32_HalAesDeInit(stm32_hal_aes_ctx_t *ctx);
-
 STM32_HalStatusTypeDef STM32_HalAesDeviceInit(void);
 
 STM32_HalStatusTypeDef STM32_HalAesDeviceSuspend(void);

@@ -385,8 +385,44 @@ static void stm32_hal_aes_device_context_released(stm32_hal_aes_ctx_t *ctx)
 }
 
 /*
- * Device hardware context managment functions
+ * Device hardware context managment functions,
+ * including HAL initialization/de-initialization.
  */
+
+static STM32_HalStatusTypeDef stm32_hal_aes_init(stm32_hal_aes_ctx_t *ctx)
+{
+  ASSERT(ctx != NULL);
+
+  memset(&ctx->hal_handle, 0, sizeof(ctx->hal_handle));
+
+#ifdef STM32_AES_HAL_V2
+  if (HAL_AES_Init(&ctx->hal_handle, HAL_AES_DEVICE) != HAL_OK)
+  {
+    return STM32_HAL_ERROR;
+  }
+#else /* STM32_AES_HAL_V2 */
+  /* Only set the instance, HAL will be initialized when configured */
+  ctx->hal_handle.Instance = HAL_AES_DEVICE;
+#if !defined(STM32_AES_HAL_V1_L4)
+  if (HAL_CRYP_Init(&ctx->hal_handle) != HAL_OK)
+  {
+    return STM32_HAL_ERROR;
+  }
+#endif /* !STM32_AES_HAL_V1_L4 */
+#endif /* STM32_AES_HAL_V2 */
+
+  return STM32_HAL_SUCCESS;
+}
+
+static void stm32_hal_aes_deinit(stm32_hal_aes_ctx_t *ctx)
+{
+#ifdef STM32_AES_HAL_V2
+  HAL_AES_DeInit(&ctx->hal_handle);
+#elif !defined(STM32_AES_HAL_V1_L4)
+  /* Intentionally discard error */
+  (void)HAL_CRYP_DeInit(&ctx->hal_handle);
+#endif /* STM32_AES_HAL_V2 */
+}
 
 STM32_HalStatusTypeDef stm32_hal_aes_get_hal_hw(stm32_hal_aes_ctx_t *ctx,
                                       stm32_hal_aes_hal_config_func_t config_fn)
@@ -415,7 +451,7 @@ STM32_HalStatusTypeDef stm32_hal_aes_get_hal_hw(stm32_hal_aes_ctx_t *ctx,
 
   (void)memset(&ctx->hal_handle, 0, sizeof(ctx->hal_handle));
 
-  status = STM32_HalAesInit(ctx);
+  status = stm32_hal_aes_init(ctx);
   if (status != STM32_HAL_SUCCESS)
   {
     goto exit;
@@ -434,7 +470,7 @@ STM32_HalStatusTypeDef stm32_hal_aes_get_hal_hw(stm32_hal_aes_ctx_t *ctx,
 exit:
   if (status != STM32_HAL_SUCCESS)
   {
-    (void)STM32_HalAesDeInit(ctx);
+    stm32_hal_aes_deinit(ctx);
 
     if (stm32_hal_aes_device_decrement_refcount())
     {
@@ -460,7 +496,7 @@ void stm32_hal_aes_release_hal_hw(stm32_hal_aes_ctx_t *ctx)
 
     stm32_hal_aes_device_load_context(ctx);
 
-    (void)STM32_HalAesDeInit(ctx);
+    stm32_hal_aes_deinit(ctx);
 
     stm32_hal_aes_device_context_released(ctx);
 
@@ -511,49 +547,6 @@ STM32_HalStatusTypeDef STM32_HalAesDeviceResume(void)
       stm32_hal_aes_device_restore_context(stm32_hal_aes_device_state.active_context);
     }
   }
-
-  return STM32_HAL_SUCCESS;
-}
-
-/*
- * HAL init/de-init abstraction functions
- */
-
-STM32_HalStatusTypeDef STM32_HalAesInit(stm32_hal_aes_ctx_t *ctx)
-{
-  ASSERT(ctx != NULL);
-
-  memset(&ctx->hal_handle, 0, sizeof(ctx->hal_handle));
-
-#ifdef STM32_AES_HAL_V2
-  if (HAL_AES_Init(&ctx->hal_handle, HAL_AES_DEVICE) != HAL_OK)
-  {
-    return STM32_HAL_ERROR;
-  }
-#else /* STM32_AES_HAL_V2 */
-  ctx->hal_handle.Instance = HAL_AES_DEVICE;
-
-#if !defined(STM32_AES_HAL_V1_L4)
-  if (HAL_CRYP_Init(&ctx->hal_handle) != HAL_OK)
-  {
-    return STM32_HAL_ERROR;
-  }
-#endif /* !STM32_AES_HAL_V1_L4 */
-#endif /* STM32_AES_HAL_V2 */
-
-  return STM32_HAL_SUCCESS;
-}
-
-STM32_HalStatusTypeDef STM32_HalAesDeInit(stm32_hal_aes_ctx_t *ctx)
-{
-#ifdef STM32_AES_HAL_V2
-  HAL_AES_DeInit(&ctx->hal_handle);
-#elif !defined(STM32_AES_HAL_V1_L4)
-  if (HAL_CRYP_DeInit(&ctx->hal_handle) != HAL_OK)
-  {
-    return STM32_HAL_ERROR;
-  }
-#endif /* STM32_AES_HAL_V2 */
 
   return STM32_HAL_SUCCESS;
 }
