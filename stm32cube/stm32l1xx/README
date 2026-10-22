@@ -47,4 +47,14 @@ Patch List:
     Impacted files:
      drivers/include/Legacy/stm32_hal_legacy.h
 
+   *Exclude DMA resources when DMA is disabled in SD driver
+      Use USE_HAL_DMA_MODULE directive compile or not DMA related
+      implementation in stm32l1xx SD HAL API functions HAL_SD_IRQHandler().
+      This prevents build warning when DMA support is not used and an IRQ is
+      triggered.
+    Impacted files:
+      drivers/include/stm32l1xx_hal_sd.h
+      drivers/src/stm32l1xx_hal_sd.c
+    ST Internal Reference: HAL1-28821
+
    See release_note.html from STM32Cube

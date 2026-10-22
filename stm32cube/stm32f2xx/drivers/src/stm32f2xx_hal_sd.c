@@ -297,11 +297,13 @@ static uint32_t SD_FindSCR(SD_HandleTypeDef *hsd, uint32_t *pSCR);
 static void SD_PowerOFF(SD_HandleTypeDef *hsd);
 static void SD_Write_IT(SD_HandleTypeDef *hsd);
 static void SD_Read_IT(SD_HandleTypeDef *hsd);
+#if defined(USE_HAL_DMA_MODULE) && (USE_HAL_DMA_MODULE == 1)
 static void SD_DMATransmitCplt(DMA_HandleTypeDef *hdma);
 static void SD_DMAReceiveCplt(DMA_HandleTypeDef *hdma);
 static void SD_DMAError(DMA_HandleTypeDef *hdma);
 static void SD_DMATxAbort(DMA_HandleTypeDef *hdma);
 static void SD_DMARxAbort(DMA_HandleTypeDef *hdma);
+#endif /* USE_HAL_DMA_MODULE */
 /**
   * @}
   */
@@ -1129,6 +1131,7 @@ HAL_StatusTypeDef HAL_SD_WriteBlocks_IT(SD_HandleTypeDef *hsd, uint8_t *pData, u
   }
 }
 
+#if defined(USE_HAL_DMA_MODULE) && (USE_HAL_DMA_MODULE == 1)
 /**
   * @brief  Reads block(s) from a specified address in a card. The Data transfer
   *         is managed by DMA mode.
@@ -1364,6 +1367,7 @@ HAL_StatusTypeDef HAL_SD_WriteBlocks_DMA(SD_HandleTypeDef *hsd, uint8_t *pData, 
     return HAL_BUSY;
   }
 }
+#endif /* USE_HAL_DMA_MODULE */
 
 /**
   * @brief  Erases the specified memory area of the given SD card.
@@ -1535,6 +1539,7 @@ void HAL_SD_IRQHandler(SD_HandleTypeDef *hsd)
 #endif /* USE_HAL_SD_REGISTER_CALLBACKS */
       }
     }
+#if defined(USE_HAL_DMA_MODULE) && (USE_HAL_DMA_MODULE == 1)
     else if((context & SD_CONTEXT_DMA) != 0U)
     {
       if((context & SD_CONTEXT_WRITE_MULTIPLE_BLOCK) != 0U)
@@ -1565,6 +1570,7 @@ void HAL_SD_IRQHandler(SD_HandleTypeDef *hsd)
 #endif /* USE_HAL_SD_REGISTER_CALLBACKS */
       }
     }
+#endif /* USE_HAL_DMA_MODULE */
     else
     {
       /* Nothing to do */
@@ -1616,6 +1622,7 @@ void HAL_SD_IRQHandler(SD_HandleTypeDef *hsd)
       HAL_SD_ErrorCallback(hsd);
 #endif /* USE_HAL_SD_REGISTER_CALLBACKS */
     }
+#if defined(USE_HAL_DMA_MODULE) && (USE_HAL_DMA_MODULE == 1)
     else if((context & SD_CONTEXT_DMA) != 0U)
     {
       /* Abort the SD DMA channel */
@@ -1651,6 +1658,7 @@ void HAL_SD_IRQHandler(SD_HandleTypeDef *hsd)
 #endif /* USE_HAL_SD_REGISTER_CALLBACKS */
       }
     }
+#endif /* USE_HAL_DMA_MODULE */
     else
     {
       /* Nothing to do */
@@ -2295,6 +2303,7 @@ HAL_StatusTypeDef HAL_SD_Abort(SD_HandleTypeDef *hsd)
 
   CLEAR_BIT(hsd->Instance->DCTRL, SDIO_DCTRL_DTEN);
 
+#if defined(USE_HAL_DMA_MODULE) && (USE_HAL_DMA_MODULE == 1)
   if ((context & SD_CONTEXT_DMA) != 0U)
   {
     /* Disable the SD DMA request */
@@ -2321,6 +2330,7 @@ HAL_StatusTypeDef HAL_SD_Abort(SD_HandleTypeDef *hsd)
       /* Nothing to do */
     }
   }
+#endif /* USE_HAL_DMA_MODULE */
 
   hsd->State = HAL_SD_STATE_READY;
 
@@ -2358,6 +2368,7 @@ HAL_StatusTypeDef HAL_SD_Abort_IT(SD_HandleTypeDef *hsd)
 
   if ((context & SD_CONTEXT_DMA) != 0U)
   {
+#if defined(USE_HAL_DMA_MODULE) && (USE_HAL_DMA_MODULE == 1)
     /* Disable the SD DMA request */
     hsd->Instance->DCTRL &= (uint32_t)~((uint32_t)SDIO_DCTRL_DMAEN);
 
@@ -2383,6 +2394,7 @@ HAL_StatusTypeDef HAL_SD_Abort_IT(SD_HandleTypeDef *hsd)
     {
       /* Nothing to do */
     }
+#endif /* USE_HAL_DMA_MODULE */
   }
   /* No transfer ongoing on both DMA channels*/
   else
@@ -2427,6 +2439,7 @@ HAL_StatusTypeDef HAL_SD_Abort_IT(SD_HandleTypeDef *hsd)
   * @{
   */
 
+#if defined(USE_HAL_DMA_MODULE) && (USE_HAL_DMA_MODULE == 1)
 /**
   * @brief  DMA SD transmit process complete callback
   * @param  hdma: DMA handle
@@ -2603,6 +2616,7 @@ static void SD_DMARxAbort(DMA_HandleTypeDef *hdma)
 #endif
   }
 }
+#endif /* USE_HAL_DMA_MODULE */
 
 /**
   * @brief  Initializes the sd card.
