@@ -268,10 +268,12 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* Private function prototypes -----------------------------------------------*/
+#if defined(USE_HAL_MDMA_MODULE) && (USE_HAL_MDMA_MODULE == 1)
 static void QSPI_DMARxCplt(MDMA_HandleTypeDef *hmdma);
 static void QSPI_DMATxCplt(MDMA_HandleTypeDef *hmdma);
 static void QSPI_DMAError(MDMA_HandleTypeDef *hmdma);
 static void QSPI_DMAAbortCplt(MDMA_HandleTypeDef *hmdma);
+#endif /* USE_HAL_MDMA_MODULE */
 static HAL_StatusTypeDef QSPI_WaitFlagStateUntilTimeout(QSPI_HandleTypeDef *hqspi, uint32_t Flag, FlagStatus State, uint32_t Tickstart, uint32_t Timeout);
 static void QSPI_Config(QSPI_HandleTypeDef *hqspi, QSPI_CommandTypeDef *cmd, uint32_t FunctionalMode);
 
@@ -567,6 +569,7 @@ void HAL_QSPI_IRQHandler(QSPI_HandleTypeDef *hqspi)
     /* Transfer complete callback */
     if(hqspi->State == HAL_QSPI_STATE_BUSY_INDIRECT_TX)
     {
+#if defined(USE_HAL_MDMA_MODULE) && (USE_HAL_MDMA_MODULE == 1)
       if ((hqspi->Instance->CR & QUADSPI_CR_DMAEN) != 0U)
       {
         /* Disable using MDMA by clearing DMAEN, note that DMAEN bit is "reserved"
@@ -576,7 +579,7 @@ void HAL_QSPI_IRQHandler(QSPI_HandleTypeDef *hqspi)
         /* Disable the MDMA channel */
         __HAL_MDMA_DISABLE(hqspi->hmdma);
       }
-
+#endif /* USE_HAL_MDMA_MODULE */
 
       /* Change state of QSPI */
       hqspi->State = HAL_QSPI_STATE_READY;
@@ -592,12 +595,14 @@ void HAL_QSPI_IRQHandler(QSPI_HandleTypeDef *hqspi)
     {
       if ((hqspi->Instance->CR & QUADSPI_CR_DMAEN) != 0U)
       {
+#if defined(USE_HAL_MDMA_MODULE) && (USE_HAL_MDMA_MODULE == 1)
         /* Disable using MDMA by clearing DMAEN, note that DMAEN bit is "reserved"
            but no impact on H7 HW and it minimize the cost in the footprint */
         CLEAR_BIT(hqspi->Instance->CR, QUADSPI_CR_DMAEN);
 
         /* Disable the MDMA channel */
         __HAL_MDMA_DISABLE(hqspi->hmdma);
+#endif /* USE_HAL_MDMA_MODULE */
       }
       else
       {
@@ -717,6 +722,7 @@ void HAL_QSPI_IRQHandler(QSPI_HandleTypeDef *hqspi)
 
     if ((hqspi->Instance->CR & QUADSPI_CR_DMAEN) != 0U)
     {
+#if defined(USE_HAL_MDMA_MODULE) && (USE_HAL_MDMA_MODULE == 1)
       /* Disable using MDMA by clearing DMAEN, note that DMAEN bit is "reserved"
          but no impact on H7 HW and it minimize the cost in the footprint */
       CLEAR_BIT(hqspi->Instance->CR, QUADSPI_CR_DMAEN);
@@ -738,6 +744,7 @@ void HAL_QSPI_IRQHandler(QSPI_HandleTypeDef *hqspi)
         HAL_QSPI_ErrorCallback(hqspi);
 #endif
       }
+#endif /* USE_HAL_MDMA_MODULE */
     }
     else
     {
@@ -1255,6 +1262,7 @@ HAL_StatusTypeDef HAL_QSPI_Receive_IT(QSPI_HandleTypeDef *hqspi, uint8_t *pData)
   return status;
 }
 
+#if defined(USE_HAL_MDMA_MODULE) && (USE_HAL_MDMA_MODULE == 1)
 /**
   * @brief  Send an amount of data in non-blocking mode with DMA.
   * @param  hqspi QSPI handle
@@ -1487,6 +1495,7 @@ HAL_StatusTypeDef HAL_QSPI_Receive_DMA(QSPI_HandleTypeDef *hqspi, uint8_t *pData
 
   return status;
 }
+#endif /* USE_HAL_MDMA_MODULE */
 
 /**
   * @brief  Configure the QSPI Automatic Polling Mode in blocking mode.
@@ -2169,6 +2178,7 @@ HAL_StatusTypeDef HAL_QSPI_Abort(QSPI_HandleTypeDef *hqspi)
 
     if ((hqspi->Instance->CR & QUADSPI_CR_DMAEN) != 0U)
     {
+#if defined(USE_HAL_MDMA_MODULE) && (USE_HAL_MDMA_MODULE == 1)
       /* Disable using MDMA by clearing DMAEN, note that DMAEN bit is "reserved"
          but no impact on H7 HW and it minimize the cost in the footprint */
       CLEAR_BIT(hqspi->Instance->CR, QUADSPI_CR_DMAEN);
@@ -2179,6 +2189,7 @@ HAL_StatusTypeDef HAL_QSPI_Abort(QSPI_HandleTypeDef *hqspi)
       {
         hqspi->ErrorCode |= HAL_QSPI_ERROR_DMA;
       }
+#endif /* USE_HAL_MDMA_MODULE */
     }
 
     if (__HAL_QSPI_GET_FLAG(hqspi, QSPI_FLAG_BUSY) != RESET)
@@ -2239,6 +2250,7 @@ HAL_StatusTypeDef HAL_QSPI_Abort_IT(QSPI_HandleTypeDef *hqspi)
 
     if ((hqspi->Instance->CR & QUADSPI_CR_DMAEN) != 0U)
     {
+#if defined(USE_HAL_MDMA_MODULE) && (USE_HAL_MDMA_MODULE == 1)
       /* Disable using MDMA by clearing DMAEN, note that DMAEN bit is "reserved"
          but no impact on H7 HW and it minimize the cost in the footprint */
       CLEAR_BIT(hqspi->Instance->CR, QUADSPI_CR_DMAEN);
@@ -2257,6 +2269,7 @@ HAL_StatusTypeDef HAL_QSPI_Abort_IT(QSPI_HandleTypeDef *hqspi)
         HAL_QSPI_AbortCpltCallback(hqspi);
 #endif
       }
+#endif /* USE_HAL_MDMA_MODULE */
     }
     else
     {
@@ -2451,6 +2464,7 @@ uint32_t HAL_QSPI_IsEnabledFreeRunningClockMode(QSPI_HandleTypeDef *hqspi)
   * @{
   */
 
+#if defined(USE_HAL_MDMA_MODULE) && (USE_HAL_MDMA_MODULE == 1)
 /**
   * @brief  DMA QSPI receive process complete callback.
   * @param  hmdma MDMA handle
@@ -2539,6 +2553,7 @@ static void QSPI_DMAAbortCplt(MDMA_HandleTypeDef *hmdma)
 #endif
   }
 }
+#endif /* USE_HAL_MDMA_MODULE */
 
 /**
   * @brief  Wait for a flag state until timeout.
