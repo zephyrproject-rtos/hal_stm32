@@ -71,4 +71,14 @@ Patch List:
       stm32cube/stm32h7xx/drivers/src/stm32h7xx_ll_utils.c
      Internal reference: HAL1-28779
 
+   *Exclude MDMA resources when DMA is disabled in QSPI driver
+      Use USE_HAL_MDMA_MODULE directive compile or not MDMA related
+      implementation in stm32h7xx QSPI HAL API functions HAL_QSPI_IRQHandler().
+      This prevents build warning when MDMA support is not used and an IRQ is
+      triggered.
+    Impacted files:
+      drivers/include/stm32h7xx_hal_qspi.h
+      drivers/src/stm32h7xx_hal_qspi.c
+    ST Internal Reference: HAL1-28821
+
    See release_note.html from STM32Cube

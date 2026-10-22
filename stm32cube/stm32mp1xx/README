@@ -61,4 +61,14 @@ Patch List:
        drivers/src/stm32f7xx_hal_dfsdm.c
      ST Internal Reference: HAL1-27454
 
+   *Exclude MDMA resources when MDMA is disabled in QSPI driver
+      Use USE_HAL_MDMA_MODULE directive compile or not MDMA related
+      implementation in stm32mp1xx QSPI HAL API functions HAL_QSPI_IRQHandler().
+      This prevents build warning when MDMA support is not used and an IRQ is
+      triggered.
+    Impacted files:
+      drivers/include/stm32mp1xx_hal_qspi.h
+      drivers/src/stm32mp1xx_hal_qspi.c
+    ST Internal Reference: HAL1-28821
+
    See release_note.html from STM32Cube
