@@ -39,3 +39,10 @@ Patch List:
     -dos2unix applied
     -trailing white spaces removed
 
+   *Disable HAL UCPD module
+      -The HAL UCPD module depends on the HAL DMA module which is not
+       always enabled in Zephyr. Since it is never used, as the Zephyr
+       driver for UCPD uses the LL API, disable the module completely
+       to avoid build errors.
+      -Impacted files:
+         - stm32cube/stm32h7pxx/drivers/templates/common/stm32h7pxx_hal_conf.h
