@@ -116,7 +116,7 @@ foreach(series ${supported_series})
     #
     # Note that `IS_DIRECTORY` checks for existence, so it
     # is more appropriate than `EXISTS` for this usecase.
-    if (IS_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/${series}xx")
+    if(IS_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/${series}xx")
       set(cube_dir ${series}xx)
     else()
       set(cube_dir ${series}x)
