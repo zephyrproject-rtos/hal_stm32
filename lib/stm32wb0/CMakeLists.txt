@@ -199,44 +199,44 @@ if(CONFIG_BT_STM32WB0)
     set(CFG_BLE_NUM_ADV_SETS "${CONFIG_BT_EXT_ADV_MAX_ADV_SET}")
   endif()
 
-  if (CONFIG_BT_MAX_CONN)
+  if(CONFIG_BT_MAX_CONN)
     #Maximum number of simultaneous connections
     set(bt_max_conn "${CONFIG_BT_MAX_CONN}")
   endif()
 
-  if (CONFIG_BT_EATT_MAX)
+  if(CONFIG_BT_EATT_MAX)
     # Maximum number of Enhanced ATT bearers
     set(CFG_BLE_NUM_EATT_CHANNELS "${CONFIG_BT_EATT_MAX}")
   endif()
 
-  if (CONFIG_BT_ISO_MAX_BIG)
+  if(CONFIG_BT_ISO_MAX_BIG)
     # Maximum number of Broadcast Isochronous Groups (BIGs) to support
     # A BIG can be used for either transmitting or receiving, but not at the same time.
-    if (CONFIG_BT_ISO_BROADCASTER)
+    if(CONFIG_BT_ISO_BROADCASTER)
       set(CFG_BLE_NUM_BRC_BIG_MAX "${CONFIG_BT_ISO_MAX_BIG}")
     endif()
-    if (CONFIG_BT_ISO_SYNC_RECEIVER)
+    if(CONFIG_BT_ISO_SYNC_RECEIVER)
       set(CFG_BLE_NUM_SYNC_BIG_MAX "${CONFIG_BT_ISO_MAX_BIG}")
     endif()
   endif()
 
-  if (CONFIG_BT_ISO_MAX_CHAN)
+  if(CONFIG_BT_ISO_MAX_CHAN)
     # Maximum number of simultaneous Bluetooth isochronous channels supported.
-    if (CONFIG_BT_ISO_BROADCASTER)
+    if(CONFIG_BT_ISO_BROADCASTER)
       set(CFG_BLE_NUM_BRC_BIS_MAX "${CONFIG_BT_ISO_MAX_BIG}")
     endif()
-    if (CONFIG_BT_ISO_SYNC_RECEIVER)
+    if(CONFIG_BT_ISO_SYNC_RECEIVER)
       set(CFG_BLE_NUM_SYNC_BIS_MAX "${CONFIG_BT_ISO_MAX_BIG}")
     endif()
   endif()
 
-  if (CONFIG_BT_ISO_MAX_CIG)
+  if(CONFIG_BT_ISO_MAX_CIG)
     # Maximum number of CIGs that are supported by the host.
     # A CIG can be used for either transmitting or receiving.
     set(CFG_BLE_NUM_CIG_MAX "${CONFIG_BT_ISO_MAX_CIG}")
   endif()
 
-  if (CONFIG_BT_ISO_MAX_CHAN)
+  if(CONFIG_BT_ISO_MAX_CHAN)
     # Maximum number of simultaneous Bluetooth isochronous channels supported.
     set(CFG_BLE_NUM_CIS_MAX "${CONFIG_BT_ISO_MAX_CHAN}")
   endif()
@@ -281,7 +281,7 @@ if(CONFIG_BT_STM32WB0)
     MATH(EXPR tasks "${tasks} + 1")
     if(${CFG_BLE_CONTROLLER_EXT_ADV_SCAN_ENABLED})
       MATH(EXPR tasks "${tasks} + ${CFG_BLE_NUM_AUX_SCAN_SLOTS}")
-      if (${CFG_BLE_CONTROLLER_2M_CODED_PHY_ENABLED})
+      if(${CFG_BLE_CONTROLLER_2M_CODED_PHY_ENABLED})
         MATH(EXPR tasks "${tasks} + 1")
       endif()
       if(${CFG_BLE_CONTROLLER_PERIODIC_ADV_ENABLED})
