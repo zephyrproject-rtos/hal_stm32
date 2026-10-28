@@ -46,3 +46,10 @@ Patch List:
        to avoid build errors.
       -Impacted files:
          - stm32cube/stm32h7pxx/drivers/templates/common/stm32h7pxx_hal_conf.h
+
+   *Make HAL DMA usage conditional
+      -Allow the USE_HAL_DMA_MODULE configuration option to come from the
+       compiler flags (-DUSE_HAL_DMA_MODULE=0/1), and enable DMA mode in
+       all other HAL modules only if the HAL DMA module itself is enabled.
+      -Impacted files:
+         - stm32cube/stm32h7pxx/drivers/templates/common/stm32h7pxx_hal_conf.h
