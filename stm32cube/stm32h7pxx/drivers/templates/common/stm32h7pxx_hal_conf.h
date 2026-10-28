@@ -737,7 +737,7 @@ extern "C" {
   * @{
   */
 /* ########################## HAL_UCPD Config ################################### */
-#define USE_HAL_UCPD_MODULE                     1U
+#define USE_HAL_UCPD_MODULE                     0U
 #define USE_HAL_UCPD_CLK_ENABLE_MODEL           HAL_CLK_ENABLE_NO
 #define USE_HAL_UCPD_REGISTER_CALLBACKS         0U
 #define USE_HAL_UCPD_USER_DATA                  0U
