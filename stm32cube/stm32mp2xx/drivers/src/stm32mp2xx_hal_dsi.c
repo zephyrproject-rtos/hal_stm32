@@ -3034,6 +3034,49 @@ HAL_StatusTypeDef HAL_DSI_ForceDataLanesInRX(DSI_HandleTypeDef *hdsi, Functional
   return HAL_OK;
 }
 
+/**
+  * @brief  Get the PHY data rate matching a lane rate
+  * @param  LaneRateMbps  lane rate in Mbps
+  * @param  PhyDataRate  pointer to the PHY data rate, to be written to
+  *                      DSI_InitTypeDef.PhyDataRate.
+  *                      HAL_DSI_DT_2500 is set for lane rates of 2450 Mbps and above.
+  * @retval HAL status
+  */
+HAL_StatusTypeDef HAL_DSI_GetPhyDataRate(uint32_t LaneRateMbps, HAL_DSI_DataRate *PhyDataRate)
+{
+  /* Lane rate (Mbps) of each HAL_DSI_DataRate entry */
+  static const uint16_t dsi_data_rate_mbps[] =
+  {
+    80U, 90U, 100U, 110U, 120U, 130U, 140U, 150U,
+    160U, 170U, 180U, 190U, 205U, 220U, 235U, 250U,
+    275U, 300U, 325U, 350U, 400U, 450U, 500U, 550U,
+    600U, 650U, 700U, 750U, 800U, 850U, 900U, 950U,
+    1000U, 1050U, 1100U, 1150U, 1200U, 1250U, 1300U, 1350U,
+    1400U, 1450U, 1500U, 1550U, 1600U, 1650U, 1700U, 1750U,
+    1800U, 1850U, 1900U, 1950U, 2000U, 2050U, 2100U, 2150U,
+    2200U, 2250U, 2300U, 2350U, 2400U, 2450U, 2500U
+  };
+  uint32_t i;
+
+  /* Check the PHY data rate pointer */
+  if (PhyDataRate == NULL)
+  {
+    return HAL_ERROR;
+  }
+
+  for (i = 0U; i < ((sizeof(dsi_data_rate_mbps) / sizeof(dsi_data_rate_mbps[0])) - 1U); i++)
+  {
+    if (LaneRateMbps < dsi_data_rate_mbps[i])
+    {
+      break;
+    }
+  }
+
+  *PhyDataRate = (HAL_DSI_DataRate)i;
+
+  return HAL_OK;
+}
+
 
 /**
   * @}
