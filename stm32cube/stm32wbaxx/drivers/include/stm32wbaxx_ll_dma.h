@@ -2038,6 +2038,7 @@ __STATIC_INLINE uint32_t LL_DMA_GetDestBurstLength(const DMA_TypeDef *DMAx, uint
   return ((READ_BIT(((DMA_Channel_TypeDef *)(dma_base_addr + LL_DMA_CH_OFFSET_TAB[Channel]))->CTR1,
                     DMA_CTR1_DBL_1) >> DMA_CTR1_DBL_1_Pos) + 1U);
 }
+#endif /* GPDMA1 */
 
 /**
   * @brief Set destination increment mode.
@@ -2062,7 +2063,7 @@ __STATIC_INLINE void LL_DMA_SetDestIncMode(const DMA_TypeDef *DMAx, uint32_t Cha
   uint32_t dma_base_addr = (uint32_t)DMAx;
   MODIFY_REG(((DMA_Channel_TypeDef *)(dma_base_addr + LL_DMA_CH_OFFSET_TAB[Channel]))->CTR1, DMA_CTR1_DINC, DestInc);
 }
-#endif /* GPDMA1 */
+
 /**
   * @brief Get destination increment mode.
   * @note  This API is used for all available DMA channels.
@@ -4895,4 +4896,3 @@ void     LL_DMA_DisconnectNextLinkNode(LL_DMA_LinkNodeTypeDef *pLinkNode, uint32
 #endif /* __cplusplus */
 
 #endif /* STM32WBAxx_LL_DMA_H */
-

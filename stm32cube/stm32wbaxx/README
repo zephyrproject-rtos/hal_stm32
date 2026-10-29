@@ -57,4 +57,11 @@ Patch List:
     Impacted files:
      drivers/include/stm32wbaxx_hal_tsc.h
      drivers/include/stm32wbaxx_hal_wwdg.h
+
+   *Fix LL_DMA_SetDestIncMode() incorrectly gated behind GPDMA1 availability
+    preventing DMA usage on STM32WBA2x line SoCs.
+    ST Internal Reference: HAL1-28329
+    Impacted files:
+     drivers/include/stm32wbaxx_ll_dma.h
+
    See release_note.html from STM32Cube
