@@ -43,7 +43,7 @@ extern "C" {
       printf("%s:%u %s(): asserting \"%s\"",      \
             __FILE__, __LINE__, __func__, STRINGIFY(cond)); \
       do { } while (1);                           \
-     }                                            \
+    }                                             \
   })
  #else
 #define ASSERT(cond) ({ do { } while (0); })
