@@ -27,11 +27,16 @@
 #   * CONFIG_SOC_SERIES_{SERIES_NAME}: name of the STM32 series
 #     - Corresponding STM32Cube package is included in the build
 #       - Found in subfolder "{SERIES_NAME}" or "{SERIES_NAME}x"
-#     - ${supported_series} from `series_list.cmake` lists all supported series
-#       - The SERIES_NAME is lowercase in this list
-#       - The SERIES_NAME **always** ends with a single `x`
 
 zephyr_library()
+
+# Enumerated supported series based on hal_stm32 contents
+file(GLOB supported_series
+  RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
+  "${CMAKE_CURRENT_SOURCE_DIR}/stm32*"
+)
+# Strip the `x`/`xx` suffix from directory names
+list(TRANSFORM supported_series REPLACE "^(stm32[^x]+)xx?$" "\\1")
 
 # Convert the Zephyr lowercase SoC name to the value expected by STM32Cube
 # Example: "stm32f030xc" --TOUPPER--> "STM32F030XC" --REPLACE--> "STM32F030xC"
@@ -69,9 +74,6 @@ if(CONFIG_USE_STM32_HAL_DMA)
 else()
   zephyr_compile_definitions(USE_HAL_DMA_MODULE=0)
 endif()
-
-# Include list of all supported STM32 SoC series
-include(series_list.cmake)
 
 # On dual-core MCUs, we must inform Cube which CPU we are building for.
 # Provide the Cube definition based on the active CPU Kconfig symbols.
@@ -116,7 +118,7 @@ foreach(series ${supported_series})
     #
     # Note that `IS_DIRECTORY` checks for existence, so it
     # is more appropriate than `EXISTS` for this usecase.
-    if (IS_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/${series}xx")
+    if(IS_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/${series}xx")
       set(cube_dir ${series}xx)
     else()
       set(cube_dir ${series}x)
