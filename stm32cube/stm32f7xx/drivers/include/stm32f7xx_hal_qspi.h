@@ -103,7 +103,9 @@ typedef struct
   uint8_t                    *pRxBuffPtr;      /* Pointer to QSPI Rx transfer Buffer */
   __IO uint32_t              RxXferSize;       /* QSPI Rx Transfer size              */
   __IO uint32_t              RxXferCount;      /* QSPI Rx Transfer Counter           */
+#if defined(USE_HAL_DMA_MODULE) && (USE_HAL_DMA_MODULE == 1)
   DMA_HandleTypeDef          *hdma;            /* QSPI Rx/Tx DMA Handle parameters   */
+#endif
   __IO HAL_LockTypeDef       Lock;             /* Locking object                     */
   __IO HAL_QSPI_StateTypeDef State;            /* QSPI communication state           */
   __IO uint32_t              ErrorCode;        /* QSPI Error code                    */
@@ -582,8 +584,10 @@ HAL_StatusTypeDef     HAL_QSPI_Receive      (QSPI_HandleTypeDef *hqspi, uint8_t 
 HAL_StatusTypeDef     HAL_QSPI_Command_IT   (QSPI_HandleTypeDef *hqspi, QSPI_CommandTypeDef *cmd);
 HAL_StatusTypeDef     HAL_QSPI_Transmit_IT  (QSPI_HandleTypeDef *hqspi, uint8_t *pData);
 HAL_StatusTypeDef     HAL_QSPI_Receive_IT   (QSPI_HandleTypeDef *hqspi, uint8_t *pData);
+#if defined(USE_HAL_DMA_MODULE) && (USE_HAL_DMA_MODULE == 1)
 HAL_StatusTypeDef     HAL_QSPI_Transmit_DMA (QSPI_HandleTypeDef *hqspi, uint8_t *pData);
 HAL_StatusTypeDef     HAL_QSPI_Receive_DMA  (QSPI_HandleTypeDef *hqspi, uint8_t *pData);
+#endif
 
 /* QSPI status flag polling mode */
 HAL_StatusTypeDef     HAL_QSPI_AutoPolling   (QSPI_HandleTypeDef *hqspi, QSPI_CommandTypeDef *cmd, QSPI_AutoPollingTypeDef *cfg, uint32_t Timeout);

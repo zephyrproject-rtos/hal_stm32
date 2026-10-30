@@ -137,9 +137,11 @@ typedef struct
 
   __IO uint32_t                ErrorCode;        /*!< SD Card Error codes                 */
 
+#if defined(USE_HAL_DMA_MODULE) && (USE_HAL_DMA_MODULE == 1)
   DMA_HandleTypeDef            *hdmatx;          /*!< SD Tx DMA handle parameters         */
 
   DMA_HandleTypeDef            *hdmarx;          /*!< SD Rx DMA handle parameters         */
+#endif /* USE_HAL_DMA_MODULE */
 
   HAL_SD_CardInfoTypeDef       SdCard;           /*!< SD Card information                 */
 
@@ -611,9 +613,11 @@ HAL_StatusTypeDef HAL_SD_Erase(SD_HandleTypeDef *hsd, uint32_t BlockStartAdd, ui
 /* Non-Blocking mode: IT */
 HAL_StatusTypeDef HAL_SD_ReadBlocks_IT(SD_HandleTypeDef *hsd, uint8_t *pData, uint32_t BlockAdd, uint32_t NumberOfBlocks);
 HAL_StatusTypeDef HAL_SD_WriteBlocks_IT(SD_HandleTypeDef *hsd, uint8_t *pData, uint32_t BlockAdd, uint32_t NumberOfBlocks);
+#endif /* USE_HAL_DMA_MODULE */
 /* Non-Blocking mode: DMA */
 HAL_StatusTypeDef HAL_SD_ReadBlocks_DMA(SD_HandleTypeDef *hsd, uint8_t *pData, uint32_t BlockAdd, uint32_t NumberOfBlocks);
 HAL_StatusTypeDef HAL_SD_WriteBlocks_DMA(SD_HandleTypeDef *hsd, uint8_t *pData, uint32_t BlockAdd, uint32_t NumberOfBlocks);
+#endif /* USE_HAL_DMA_MODULE */
 
 void HAL_SD_IRQHandler(SD_HandleTypeDef *hsd);
 

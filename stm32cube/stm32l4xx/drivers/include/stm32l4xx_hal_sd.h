@@ -145,9 +145,11 @@ typedef struct
 
 #if !defined(STM32L4P5xx) && !defined(STM32L4Q5xx) && !defined(STM32L4R5xx) && !defined(STM32L4R7xx) && !defined(STM32L4R9xx) && !defined(STM32L4S5xx) && !defined(STM32L4S7xx) && !defined(STM32L4S9xx)
 
+#if defined(USE_HAL_DMA_MODULE) && (USE_HAL_DMA_MODULE == 1)
   DMA_HandleTypeDef            *hdmatx;          /*!< SD Tx DMA handle parameters         */
 
   DMA_HandleTypeDef            *hdmarx;          /*!< SD Rx DMA handle parameters         */
+#endif /* USE_HAL_DMA_MODULE */
 
 #endif /* !STM32L4P5xx && !STM32L4Q5xx && !STM32L4R5xx && !STM32L4R7xx && !STM32L4R9xx && !STM32L4S5xx && !STM32L4S7xx && !STM32L4S9xx */
 
@@ -163,10 +165,12 @@ typedef struct
   void (* ErrorCallback)(struct __SD_HandleTypeDef *hsd);
   void (* AbortCpltCallback)(struct __SD_HandleTypeDef *hsd);
 #if defined(STM32L4P5xx) || defined(STM32L4Q5xx) || defined(STM32L4R5xx) || defined(STM32L4R7xx) || defined(STM32L4R9xx) || defined(STM32L4S5xx) || defined(STM32L4S7xx) || defined(STM32L4S9xx)
+#if defined(USE_HAL_DMA_MODULE) && (USE_HAL_DMA_MODULE == 1)
   void (* Read_DMADblBuf0CpltCallback)(struct __SD_HandleTypeDef *hsd);
   void (* Read_DMADblBuf1CpltCallback)(struct __SD_HandleTypeDef *hsd);
   void (* Write_DMADblBuf0CpltCallback)(struct __SD_HandleTypeDef *hsd);
   void (* Write_DMADblBuf1CpltCallback)(struct __SD_HandleTypeDef *hsd);
+#endif /* USE_HAL_DMA_MODULE */
 
   void (* DriveTransceiver_1_8V_Callback)(FlagStatus status);
 #endif /* STM32L4P5xx || STM32L4Q5xx || STM32L4R5xx || STM32L4R7xx || STM32L4R9xx || STM32L4S5xx || STM32L4S7xx || STM32L4S9xx */
@@ -285,10 +289,12 @@ typedef enum
   HAL_SD_ERROR_CB_ID                   = 0x02U,  /*!< SD Error Callback ID                           */
   HAL_SD_ABORT_CB_ID                   = 0x03U,  /*!< SD Abort Callback ID                           */
 #if defined(STM32L4P5xx) || defined(STM32L4Q5xx) || defined(STM32L4R5xx) || defined(STM32L4R7xx) || defined(STM32L4R9xx) || defined(STM32L4S5xx) || defined(STM32L4S7xx) || defined(STM32L4S9xx)
+#if defined(USE_HAL_DMA_MODULE) && (USE_HAL_DMA_MODULE == 1)
   HAL_SD_READ_DMA_DBL_BUF0_CPLT_CB_ID  = 0x04U,  /*!< SD Rx DMA Double Buffer 0 Complete Callback ID */
   HAL_SD_READ_DMA_DBL_BUF1_CPLT_CB_ID  = 0x05U,  /*!< SD Rx DMA Double Buffer 1 Complete Callback ID */
   HAL_SD_WRITE_DMA_DBL_BUF0_CPLT_CB_ID = 0x06U,  /*!< SD Tx DMA Double Buffer 0 Complete Callback ID */
   HAL_SD_WRITE_DMA_DBL_BUF1_CPLT_CB_ID = 0x07U,  /*!< SD Tx DMA Double Buffer 1 Complete Callback ID */
+#endif /* USE_HAL_DMA_MODULE */
 #endif /* STM32L4P5xx || STM32L4Q5xx || STM32L4R5xx || STM32L4R7xx || STM32L4R9xx || STM32L4S5xx || STM32L4S7xx || STM32L4S9xx */
 
   HAL_SD_MSP_INIT_CB_ID                = 0x10U,  /*!< SD MspInit Callback ID                         */
@@ -714,11 +720,13 @@ HAL_StatusTypeDef HAL_SD_ReadBlocks_IT(SD_HandleTypeDef *hsd, uint8_t *pData, ui
                                        uint32_t NumberOfBlocks);
 HAL_StatusTypeDef HAL_SD_WriteBlocks_IT(SD_HandleTypeDef *hsd, uint8_t *pData, uint32_t BlockAdd,
                                         uint32_t NumberOfBlocks);
+#if defined(USE_HAL_DMA_MODULE) && (USE_HAL_DMA_MODULE == 1)
 /* Non-Blocking mode: DMA */
 HAL_StatusTypeDef HAL_SD_ReadBlocks_DMA(SD_HandleTypeDef *hsd, uint8_t *pData, uint32_t BlockAdd,
                                         uint32_t NumberOfBlocks);
 HAL_StatusTypeDef HAL_SD_WriteBlocks_DMA(SD_HandleTypeDef *hsd, uint8_t *pData, uint32_t BlockAdd,
                                          uint32_t NumberOfBlocks);
+#endif /* USE_HAL_DMA_MODULE */
 
 void HAL_SD_IRQHandler(SD_HandleTypeDef *hsd);
 

@@ -251,12 +251,14 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* Private function prototypes -----------------------------------------------*/
+#if defined(USE_HAL_DMA_MODULE) && (USE_HAL_DMA_MODULE == 1)
 static void QSPI_DMARxCplt(DMA_HandleTypeDef *hdma);
 static void QSPI_DMATxCplt(DMA_HandleTypeDef *hdma);
 static void QSPI_DMARxHalfCplt(DMA_HandleTypeDef *hdma);
 static void QSPI_DMATxHalfCplt(DMA_HandleTypeDef *hdma);
 static void QSPI_DMAError(DMA_HandleTypeDef *hdma);
 static void QSPI_DMAAbortCplt(DMA_HandleTypeDef *hdma);
+#endif /* USE_HAL_DMA_MODULE */
 static HAL_StatusTypeDef QSPI_WaitFlagStateUntilTimeout(QSPI_HandleTypeDef *hqspi, uint32_t Flag, FlagStatus State, uint32_t Tickstart, uint32_t Timeout);
 static HAL_StatusTypeDef QSPI_WaitFlagStateUntilTimeout_CPUCycle(QSPI_HandleTypeDef *hqspi, uint32_t Flag, FlagStatus State, uint32_t Timeout);
 static void QSPI_Config(QSPI_HandleTypeDef *hqspi, QSPI_CommandTypeDef *cmd, uint32_t FunctionalMode);
@@ -563,6 +565,7 @@ void HAL_QSPI_IRQHandler(QSPI_HandleTypeDef *hqspi)
     /* Transfer complete callback */
     if(hqspi->State == HAL_QSPI_STATE_BUSY_INDIRECT_TX)
     {
+#if defined(USE_HAL_DMA_MODULE) && (USE_HAL_DMA_MODULE == 1)
       if ((hqspi->Instance->CR & QUADSPI_CR_DMAEN) != 0U)
       {
         /* Disable the DMA transfer by clearing the DMAEN bit in the QSPI CR register */
@@ -571,6 +574,7 @@ void HAL_QSPI_IRQHandler(QSPI_HandleTypeDef *hqspi)
         /* Disable the DMA channel */
         __HAL_DMA_DISABLE(hqspi->hdma);
       }
+#endif /* USE_HAL_DMA_MODULE */
 
 #if  defined(QSPI1_V1_0)
       /* Clear Busy bit */
@@ -591,11 +595,13 @@ void HAL_QSPI_IRQHandler(QSPI_HandleTypeDef *hqspi)
     {
       if ((hqspi->Instance->CR & QUADSPI_CR_DMAEN) != 0U)
       {
+#if defined(USE_HAL_DMA_MODULE) && (USE_HAL_DMA_MODULE == 1)
         /* Disable the DMA transfer by clearing the DMAEN bit in the QSPI CR register */
         CLEAR_BIT(hqspi->Instance->CR, QUADSPI_CR_DMAEN);
 
         /* Disable the DMA channel */
         __HAL_DMA_DISABLE(hqspi->hdma);
+#endif /* USE_HAL_DMA_MODULE */
       }
       else
       {
@@ -719,6 +725,7 @@ void HAL_QSPI_IRQHandler(QSPI_HandleTypeDef *hqspi)
 
     if ((hqspi->Instance->CR & QUADSPI_CR_DMAEN) != 0U)
     {
+#if defined(USE_HAL_DMA_MODULE) && (USE_HAL_DMA_MODULE == 1)
       /* Disable the DMA transfer by clearing the DMAEN bit in the QSPI CR register */
       CLEAR_BIT(hqspi->Instance->CR, QUADSPI_CR_DMAEN);
 
@@ -739,6 +746,7 @@ void HAL_QSPI_IRQHandler(QSPI_HandleTypeDef *hqspi)
         HAL_QSPI_ErrorCallback(hqspi);
 #endif
       }
+#endif /* USE_HAL_DMA_MODULE */
     }
     else
     {
@@ -1263,6 +1271,7 @@ HAL_StatusTypeDef HAL_QSPI_Receive_IT(QSPI_HandleTypeDef *hqspi, uint8_t *pData)
   return status;
 }
 
+#if defined(USE_HAL_DMA_MODULE) && (USE_HAL_DMA_MODULE == 1)
 /**
   * @brief  Send an amount of data in non-blocking mode with DMA.
   * @param  hqspi QSPI handle
@@ -1561,6 +1570,7 @@ HAL_StatusTypeDef HAL_QSPI_Receive_DMA(QSPI_HandleTypeDef *hqspi, uint8_t *pData
 
   return status;
 }
+#endif /* USE_HAL_DMA_MODULE */
 
 /**
   * @brief  Configure the QSPI Automatic Polling Mode in blocking mode.
@@ -2285,6 +2295,7 @@ HAL_StatusTypeDef HAL_QSPI_Abort(QSPI_HandleTypeDef *hqspi)
     /* Process unlocked */
     __HAL_UNLOCK(hqspi);
 
+#if defined(USE_HAL_DMA_MODULE) && (USE_HAL_DMA_MODULE == 1)
     if ((hqspi->Instance->CR & QUADSPI_CR_DMAEN) != 0U)
     {
       /* Disable the DMA transfer by clearing the DMAEN bit in the QSPI CR register */
@@ -2297,6 +2308,7 @@ HAL_StatusTypeDef HAL_QSPI_Abort(QSPI_HandleTypeDef *hqspi)
         hqspi->ErrorCode |= HAL_QSPI_ERROR_DMA;
       }
     }
+#endif /* USE_HAL_DMA_MODULE */
 
     if (__HAL_QSPI_GET_FLAG(hqspi, QSPI_FLAG_BUSY) != RESET)
     {
@@ -2356,6 +2368,7 @@ HAL_StatusTypeDef HAL_QSPI_Abort_IT(QSPI_HandleTypeDef *hqspi)
 
     if ((hqspi->Instance->CR & QUADSPI_CR_DMAEN) != 0U)
     {
+#if defined(USE_HAL_DMA_MODULE) && (USE_HAL_DMA_MODULE == 1)
       /* Disable the DMA transfer by clearing the DMAEN bit in the QSPI CR register */
       CLEAR_BIT(hqspi->Instance->CR, QUADSPI_CR_DMAEN);
 
@@ -2373,6 +2386,7 @@ HAL_StatusTypeDef HAL_QSPI_Abort_IT(QSPI_HandleTypeDef *hqspi)
         HAL_QSPI_AbortCpltCallback(hqspi);
 #endif
       }
+#endif /* USE_HAL_DMA_MODULE */
     }
     else
     {
@@ -2498,6 +2512,7 @@ HAL_StatusTypeDef HAL_QSPI_SetFlashID(QSPI_HandleTypeDef *hqspi, uint32_t FlashI
   * @{
   */
 
+#if defined(USE_HAL_DMA_MODULE) && (USE_HAL_DMA_MODULE == 1)
 /**
   * @brief  DMA QSPI receive process complete callback.
   * @param  hdma DMA handle
@@ -2621,6 +2636,7 @@ static void QSPI_DMAAbortCplt(DMA_HandleTypeDef *hdma)
 #endif
   }
 }
+#endif /* USE_HAL_DMA_MODULE */
 
 /**
   * @brief  Wait for a flag state until timeout.

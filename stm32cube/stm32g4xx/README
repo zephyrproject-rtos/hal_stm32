@@ -47,4 +47,14 @@ Patch List:
     Impacted files:
      drivers/include/Legacy/stm32_hal_legacy.h
 
+   *Exclude DMA resources when DMA is disabled in QSPI driver
+      Use USE_HAL_DMA_MODULE directive compile or not DMA related
+      implementation in stm32g4xx QSPI HAL API functions HAL_QSPI_IRQHandler().
+      This prevents build warning when DMA support is not used and an IRQ is
+      triggered.
+    Impacted files:
+      drivers/include/stm32g4xx_hal_qspi.h
+      drivers/src/stm32g4xx_hal_qspi.c
+    ST Internal Reference: HAL1-28821
+
    See release_note.html from STM32Cube

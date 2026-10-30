@@ -315,11 +315,13 @@ static void SD_PowerOFF(SD_HandleTypeDef *hsd);
 static void SD_Write_IT(SD_HandleTypeDef *hsd);
 static void SD_Read_IT(SD_HandleTypeDef *hsd);
 #if !defined(STM32L4P5xx) && !defined(STM32L4Q5xx) && !defined(STM32L4R5xx) && !defined(STM32L4R7xx) && !defined(STM32L4R9xx) && !defined(STM32L4S5xx) && !defined(STM32L4S7xx) && !defined(STM32L4S9xx)
+#if defined(USE_HAL_DMA_MODULE) && (USE_HAL_DMA_MODULE == 1)
 static void     SD_DMATransmitCplt(DMA_HandleTypeDef *hdma);
 static void     SD_DMAReceiveCplt(DMA_HandleTypeDef *hdma);
 static void     SD_DMAError(DMA_HandleTypeDef *hdma);
 static void     SD_DMATxAbort(DMA_HandleTypeDef *hdma);
 static void     SD_DMARxAbort(DMA_HandleTypeDef *hdma);
+#endif /* USE_HAL_DMA_MODULE */
 #else
 static uint32_t SD_UltraHighSpeed(SD_HandleTypeDef *hsd);
 static uint32_t SD_DDR_Mode(SD_HandleTypeDef *hsd);
@@ -390,11 +392,13 @@ HAL_StatusTypeDef HAL_SD_Init(SD_HandleTypeDef *hsd)
     hsd->ErrorCallback     = HAL_SD_ErrorCallback;
     hsd->AbortCpltCallback = HAL_SD_AbortCallback;
 #if defined(STM32L4P5xx) || defined(STM32L4Q5xx) || defined(STM32L4R5xx) || defined(STM32L4R7xx) || defined(STM32L4R9xx) || defined(STM32L4S5xx) || defined(STM32L4S7xx) || defined(STM32L4S9xx)
+#if defined(USE_HAL_DMA_MODULE) && (USE_HAL_DMA_MODULE == 1)
     hsd->Read_DMADblBuf0CpltCallback = HAL_SDEx_Read_DMADoubleBuffer0CpltCallback;
     hsd->Read_DMADblBuf1CpltCallback = HAL_SDEx_Read_DMADoubleBuffer1CpltCallback;
     hsd->Write_DMADblBuf0CpltCallback = HAL_SDEx_Write_DMADoubleBuffer0CpltCallback;
     hsd->Write_DMADblBuf1CpltCallback = HAL_SDEx_Write_DMADoubleBuffer1CpltCallback;
     hsd->DriveTransceiver_1_8V_Callback = HAL_SDEx_DriveTransceiver_1_8V_Callback;
+#endif /* USE_HAL_DMA_MODULE */
 #endif
 
     if (hsd->MspInitCallback == NULL)
@@ -1331,6 +1335,7 @@ HAL_StatusTypeDef HAL_SD_WriteBlocks_IT(SD_HandleTypeDef *hsd, uint8_t *pData, u
   }
 }
 
+#if defined(USE_HAL_DMA_MODULE) && (USE_HAL_DMA_MODULE == 1)
 /**
   * @brief  Reads block(s) from a specified address in a card. The Data transfer
   *         is managed by DMA mode.
@@ -1611,6 +1616,7 @@ HAL_StatusTypeDef HAL_SD_WriteBlocks_DMA(SD_HandleTypeDef *hsd, uint8_t *pData, 
     return HAL_BUSY;
   }
 }
+#endif /* USE_HAL_DMA_MODULE */
 
 /**
   * @brief  Erases the specified memory area of the given SD card.
@@ -1743,8 +1749,10 @@ void HAL_SD_IRQHandler(SD_HandleTypeDef *hsd)
                         SDMMC_IT_RXFIFOHF);
 
 #if defined(STM32L4P5xx) || defined(STM32L4Q5xx) || defined(STM32L4R5xx) || defined(STM32L4R7xx) || defined(STM32L4R9xx) || defined(STM32L4S5xx) || defined(STM32L4S7xx) || defined(STM32L4S9xx)
+#if defined(USE_HAL_DMA_MODULE) && (USE_HAL_DMA_MODULE == 1)
     __HAL_SD_DISABLE_IT(hsd, SDMMC_IT_IDMABTC);
     __SDMMC_CMDTRANS_DISABLE(hsd->Instance);
+#endif /* USE_HAL_DMA_MODULE */
 #else
     hsd->Instance->DCTRL &= ~(SDMMC_DCTRL_DTEN);
 #endif /* STM32L4P5xx || STM32L4Q5xx || STM32L4R5xx || STM32L4R7xx || STM32L4R9xx || STM32L4S5xx || STM32L4S7xx || STM32L4S9xx */
@@ -1787,6 +1795,7 @@ void HAL_SD_IRQHandler(SD_HandleTypeDef *hsd)
 #endif /* USE_HAL_SD_REGISTER_CALLBACKS */
       }
     }
+#if defined(USE_HAL_DMA_MODULE) && (USE_HAL_DMA_MODULE == 1)
     else if ((context & SD_CONTEXT_DMA) != 0U)
     {
 #if defined(STM32L4P5xx) || defined(STM32L4Q5xx) || defined(STM32L4R5xx) || defined(STM32L4R7xx) || defined(STM32L4R9xx) || defined(STM32L4S5xx) || defined(STM32L4S7xx) || defined(STM32L4S9xx)
@@ -1857,6 +1866,7 @@ void HAL_SD_IRQHandler(SD_HandleTypeDef *hsd)
       }
 #endif /* STM32L4P5xx || STM32L4Q5xx || STM32L4R5xx || STM32L4R7xx || STM32L4R9xx || STM32L4S5xx || STM32L4S7xx || STM32L4S9xx */
     }
+#endif /* USE_HAL_DMA_MODULE */
     else
     {
       /* Nothing to do */
@@ -1919,6 +1929,7 @@ void HAL_SD_IRQHandler(SD_HandleTypeDef *hsd)
       HAL_SD_ErrorCallback(hsd);
 #endif /* USE_HAL_SD_REGISTER_CALLBACKS */
     }
+#if defined(USE_HAL_DMA_MODULE) && (USE_HAL_DMA_MODULE == 1)
     else if ((context & SD_CONTEXT_DMA) != 0U)
     {
 #if defined(STM32L4P5xx) || defined(STM32L4Q5xx) || defined(STM32L4R5xx) || defined(STM32L4R7xx) || defined(STM32L4R9xx) || defined(STM32L4S5xx) || defined(STM32L4S7xx) || defined(STM32L4S9xx)
@@ -1971,6 +1982,7 @@ void HAL_SD_IRQHandler(SD_HandleTypeDef *hsd)
       }
 #endif /* STM32L4P5xx || STM32L4Q5xx || STM32L4R5xx || STM32L4R7xx || STM32L4R9xx || STM32L4S5xx || STM32L4S7xx || STM32L4S9xx */
     }
+#endif /* USE_HAL_DMA_MODULE */
     else
     {
       /* Nothing to do */
@@ -1978,6 +1990,7 @@ void HAL_SD_IRQHandler(SD_HandleTypeDef *hsd)
   }
 
 #if defined(STM32L4P5xx) || defined(STM32L4Q5xx) || defined(STM32L4R5xx) || defined(STM32L4R7xx) || defined(STM32L4R9xx) || defined(STM32L4S5xx) || defined(STM32L4S7xx) || defined(STM32L4S9xx)
+#if defined(USE_HAL_DMA_MODULE) && (USE_HAL_DMA_MODULE == 1)
   else if (__HAL_SD_GET_FLAG(hsd, SDMMC_FLAG_IDMABTC) != RESET)
   {
     __HAL_SD_CLEAR_FLAG(hsd, SDMMC_FLAG_IDMABTC);
@@ -2022,6 +2035,7 @@ void HAL_SD_IRQHandler(SD_HandleTypeDef *hsd)
       }
     }
   }
+#endif /* USE_HAL_DMA_MODULE */
 #endif /* STM32L4P5xx || STM32L4Q5xx || STM32L4R5xx || STM32L4R7xx || STM32L4R9xx || STM32L4S5xx || STM32L4S7xx || STM32L4S9xx */
   else
   {
@@ -2162,6 +2176,7 @@ HAL_StatusTypeDef HAL_SD_RegisterCallback(SD_HandleTypeDef *hsd, HAL_SD_Callback
         hsd->AbortCpltCallback = pCallback;
         break;
 #if defined(STM32L4P5xx) || defined(STM32L4Q5xx) || defined(STM32L4R5xx) || defined(STM32L4R7xx) || defined(STM32L4R9xx) || defined(STM32L4S5xx) || defined(STM32L4S7xx) || defined(STM32L4S9xx)
+#if defined(USE_HAL_DMA_MODULE) && (USE_HAL_DMA_MODULE == 1)
       case HAL_SD_READ_DMA_DBL_BUF0_CPLT_CB_ID :
         hsd->Read_DMADblBuf0CpltCallback = pCallback;
         break;
@@ -2174,6 +2189,7 @@ HAL_StatusTypeDef HAL_SD_RegisterCallback(SD_HandleTypeDef *hsd, HAL_SD_Callback
       case HAL_SD_WRITE_DMA_DBL_BUF1_CPLT_CB_ID :
         hsd->Write_DMADblBuf1CpltCallback = pCallback;
         break;
+#endif /* USE_HAL_DMA_MODULE */
 #endif /* STM32L4P5xx || STM32L4Q5xx || STM32L4R5xx || STM32L4R7xx || STM32L4R9xx || STM32L4S5xx || STM32L4S7xx || STM32L4S9xx */
       case HAL_SD_MSP_INIT_CB_ID :
         hsd->MspInitCallback = pCallback;
@@ -2262,6 +2278,7 @@ HAL_StatusTypeDef HAL_SD_UnRegisterCallback(SD_HandleTypeDef *hsd, HAL_SD_Callba
         hsd->AbortCpltCallback = HAL_SD_AbortCallback;
         break;
 #if defined(STM32L4P5xx) || defined(STM32L4Q5xx) || defined(STM32L4R5xx) || defined(STM32L4R7xx) || defined(STM32L4R9xx) || defined(STM32L4S5xx) || defined(STM32L4S7xx) || defined(STM32L4S9xx)
+#if defined(USE_HAL_DMA_MODULE) && (USE_HAL_DMA_MODULE == 1)
       case HAL_SD_READ_DMA_DBL_BUF0_CPLT_CB_ID :
         hsd->Read_DMADblBuf0CpltCallback = HAL_SDEx_Read_DMADoubleBuffer0CpltCallback;
         break;
@@ -2274,6 +2291,7 @@ HAL_StatusTypeDef HAL_SD_UnRegisterCallback(SD_HandleTypeDef *hsd, HAL_SD_Callba
       case HAL_SD_WRITE_DMA_DBL_BUF1_CPLT_CB_ID :
         hsd->Write_DMADblBuf1CpltCallback = HAL_SDEx_Write_DMADoubleBuffer1CpltCallback;
         break;
+#endif /* USE_HAL_DMA_MODULE */
 #endif /* STM32L4P5xx || STM32L4Q5xx || STM32L4R5xx || STM32L4R7xx || STM32L4R9xx || STM32L4S5xx || STM32L4S7xx || STM32L4S9xx */
       case HAL_SD_MSP_INIT_CB_ID :
         hsd->MspInitCallback = HAL_SD_MspInit;
@@ -3072,9 +3090,11 @@ HAL_SD_CardStateTypeDef HAL_SD_GetCardState(SD_HandleTypeDef *hsd)
 HAL_StatusTypeDef HAL_SD_Abort(SD_HandleTypeDef *hsd)
 {
   HAL_SD_CardStateTypeDef CardState;
+#if defined(USE_HAL_DMA_MODULE) && (USE_HAL_DMA_MODULE == 1)
 #if !defined(STM32L4P5xx) && !defined(STM32L4Q5xx) && !defined(STM32L4R5xx) && !defined(STM32L4R7xx) && !defined(STM32L4R9xx) && !defined(STM32L4S5xx) && !defined(STM32L4S7xx) && !defined(STM32L4S9xx)
   uint32_t context = hsd->Context;
 #endif
+#endif /* USE_HAL_DMA_MODULE */
 
   /* DIsable All interrupts */
   __HAL_SD_DISABLE_IT(hsd, SDMMC_IT_DATAEND | SDMMC_IT_DCRCFAIL | SDMMC_IT_DTIMEOUT | \
@@ -3084,6 +3104,7 @@ HAL_StatusTypeDef HAL_SD_Abort(SD_HandleTypeDef *hsd)
   __HAL_SD_CLEAR_FLAG(hsd, SDMMC_STATIC_DATA_FLAGS);
 
   CLEAR_BIT(hsd->Instance->DCTRL, SDMMC_DCTRL_DTEN);
+#if defined(USE_HAL_DMA_MODULE) && (USE_HAL_DMA_MODULE == 1)
 #if defined(STM32L4P5xx) || defined(STM32L4Q5xx) || defined(STM32L4R5xx) || defined(STM32L4R7xx) || defined(STM32L4R9xx) || defined(STM32L4S5xx) || defined(STM32L4S7xx) || defined(STM32L4S9xx)
   /* If IDMA Context, disable Internal DMA */
   hsd->Instance->IDMACTRL = SDMMC_DISABLE_IDMA;
@@ -3117,6 +3138,7 @@ HAL_StatusTypeDef HAL_SD_Abort(SD_HandleTypeDef *hsd)
     }
   }
 #endif /* STM32L4P5xx || STM32L4Q5xx || STM32L4R5xx || STM32L4R7xx || STM32L4R9xx || STM32L4S5xx || STM32L4S7xx || STM32L4S9xx */
+#endif /* USE_HAL_DMA_MODULE */
 
   hsd->State = HAL_SD_STATE_READY;
 
@@ -3143,15 +3165,18 @@ HAL_StatusTypeDef HAL_SD_Abort(SD_HandleTypeDef *hsd)
   */
 HAL_StatusTypeDef HAL_SD_Abort_IT(SD_HandleTypeDef *hsd)
 {
+#if defined(USE_HAL_DMA_MODULE) && (USE_HAL_DMA_MODULE == 1)
   HAL_SD_CardStateTypeDef CardState;
 #if !defined(STM32L4P5xx) && !defined(STM32L4Q5xx) && !defined(STM32L4R5xx) && !defined(STM32L4R7xx) && !defined(STM32L4R9xx) && !defined(STM32L4S5xx) && !defined(STM32L4S7xx) && !defined(STM32L4S9xx)
   uint32_t context = hsd->Context;
 #endif
+#endif /* USE_HAL_DMA_MODULE */
 
   /* Disable All interrupts */
   __HAL_SD_DISABLE_IT(hsd, SDMMC_IT_DATAEND | SDMMC_IT_DCRCFAIL | SDMMC_IT_DTIMEOUT | \
                       SDMMC_IT_TXUNDERR | SDMMC_IT_RXOVERR);
 
+#if defined(USE_HAL_DMA_MODULE) && (USE_HAL_DMA_MODULE == 1)
 #if defined(STM32L4P5xx) || defined(STM32L4Q5xx) || defined(STM32L4R5xx) || defined(STM32L4R7xx) || defined(STM32L4R9xx) || defined(STM32L4S5xx) || defined(STM32L4S7xx) || defined(STM32L4S9xx)
   /* If IDMA Context, disable Internal DMA */
   hsd->Instance->IDMACTRL = SDMMC_DISABLE_IDMA;
@@ -3237,6 +3262,7 @@ HAL_StatusTypeDef HAL_SD_Abort_IT(SD_HandleTypeDef *hsd)
     }
   }
 #endif /* STM32L4P5xx || STM32L4Q5xx || STM32L4R5xx || STM32L4R7xx || STM32L4R9xx || STM32L4S5xx || STM32L4S7xx || STM32L4S9xx */
+#endif /* USE_HAL_DMA_MODULE */
 
   return HAL_OK;
 }
@@ -3253,6 +3279,7 @@ HAL_StatusTypeDef HAL_SD_Abort_IT(SD_HandleTypeDef *hsd)
 /** @addtogroup SD_Private_Functions
   * @{
   */
+#if defined(USE_HAL_DMA_MODULE) && (USE_HAL_DMA_MODULE == 1)
 #if !defined(STM32L4P5xx) && !defined(STM32L4Q5xx) && !defined(STM32L4R5xx) && !defined(STM32L4R7xx) && !defined(STM32L4R9xx) && !defined(STM32L4S5xx) && !defined(STM32L4S7xx) && !defined(STM32L4S9xx)
 /**
   * @brief  DMA SD transmit process complete callback
@@ -3427,6 +3454,7 @@ static void SD_DMARxAbort(DMA_HandleTypeDef *hdma)
   }
 }
 #endif /* !STM32L4P5xx && !STM32L4Q5xx && !STM32L4R5xx && !STM32L4R7xx && !STM32L4R9xx && !STM32L4S5xx && !STM32L4S7xx && !STM32L4S9xx */
+#endif /* USE_HAL_DMA_MODULE */
 
 /**
   * @brief  Initializes the sd card.

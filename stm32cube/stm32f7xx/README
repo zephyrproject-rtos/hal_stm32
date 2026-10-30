@@ -68,4 +68,24 @@ Patch List:
     ST Bug tracker ID: HAL1-27528
     See also https://github.com/zephyrproject-rtos/hal_stm32/pull/362
 
+   *Exclude DMA resources when DMA is disabled in SD driver
+      Use USE_HAL_DMA_MODULE directive compile or not DMA related
+      implementation in stm32f7xx SD HAL API functions HAL_SD_IRQHandler().
+      This prevents build warning when DMA support is not used and an IRQ is
+      triggered.
+    Impacted files:
+      drivers/include/stm32f7xx_hal_sd.h
+      drivers/src/stm32f7xx_hal_sd.c
+    ST Internal Reference: HAL1-28821
+
+   *Exclude DMA resources when DMA is disabled in QSPI driver
+      Use USE_HAL_DMA_MODULE directive compile or not DMA related
+      implementation in stm32f7xx QSPI HAL API functions HAL_QSPI_IRQHandler().
+      This prevents build warning when DMA support is not used and an IRQ is
+      triggered.
+    Impacted files:
+      drivers/include/stm32f7xx_hal_qspi.h
+      drivers/src/stm32f7xx_hal_qspi.c
+    ST Internal Reference: HAL1-28821
+
    See release_note.html from STM32Cube
