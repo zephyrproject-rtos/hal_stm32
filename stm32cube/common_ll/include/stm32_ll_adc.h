@@ -28,6 +28,8 @@
 #include <stm32g5xx_ll_adc.h>
 #elif defined(CONFIG_SOC_SERIES_STM32H5X)
 #include <stm32h5xx_ll_adc.h>
+#elif defined(CONFIG_SOC_SERIES_STM32H7PX)
+#include <stm32h7pxx_ll_adc.h>
 #elif defined(CONFIG_SOC_SERIES_STM32H7RSX)
 #include <stm32h7rsxx_ll_adc.h>
 #elif defined(CONFIG_SOC_SERIES_STM32H7X)
