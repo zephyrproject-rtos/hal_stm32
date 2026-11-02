@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<IP xmlns="http://dummy.com">
+    <GPIO_Pin PortName="PA" Name="PA9">
+        <PinSignal Name="RCC_MCO">
+            <SpecificParameter Name="GPIO_AF">
+                <PossibleValue>GPIO_AF0_MCO</PossibleValue>
+            </SpecificParameter>
+        </PinSignal>
+    </GPIO_Pin>
+    <GPIO_Pin PortName="PA" Name="PA9 [PA11]">
+    </GPIO_Pin>
+    <GPIO_Pin PortName="PA" Name="PA10">
+        <PinSignal Name="RCC_MCO2">
+            <SpecificParameter Name="GPIO_AF">
+                <PossibleValue>GPIO_AF3_MCO2</PossibleValue>
+            </SpecificParameter>
+        </PinSignal>
+    </GPIO_Pin>
+    <GPIO_Pin PortName="PA" Name="PA10 [PA12]">
+    </GPIO_Pin>
+</IP>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Mcu Family="STM32U0" RefName="STM32U0TESTREMAP" xmlns="http://dummy.com">
+    <IP Name="GPIO" Version="STM32U0TESTIP"/>
+    <Pin Name="PA9 [PA11]" Type="I/O">
+        <Signal Name="RCC_MCO"/>
+    </Pin>
+    <Pin Name="PA10 [PA12]" Type="I/O">
+        <Signal Name="RCC_MCO2"/>
+    </Pin>
+</Mcu>
