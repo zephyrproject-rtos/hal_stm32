@@ -6,4 +6,6 @@
 
 #if defined(CONFIG_SOC_SERIES_STM32G5X)
 #include <stm32g5xx_ll_vrefbuf.h>
+#elif defined(CONFIG_SOC_SERIES_STM32H7PX)
+#include <stm32h7pxx_ll_vrefbuf.h>
 #endif
