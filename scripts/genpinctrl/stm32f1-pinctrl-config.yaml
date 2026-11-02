@@ -175,11 +175,11 @@
   mode: alternate
 
 - name: RCC_MCO
-  match: "^RCC_MCO_?(\\d+)?$"
+  match: "^RCC_MCO_?\\d*$"
   mode: alternate
 
 - name: SDIO
-  match: "^SDIO_(?:CK|CMD|D[0-7])$"
+  match: "^SDIO_(CK|CMD|D[0-7])$"
   mode: alternate
   slew-rate: max-speed-50mhz
 
@@ -240,7 +240,7 @@
   variant: pwm_in
 
 - name: TSC
-  match: "^TSC_(?:G\\d+_IO\\d+|SYNC)$"
+  match: "^TSC_(G\\d+_IO\\d+|SYNC)$"
   mode: alternate
 
 - name: UART_CTS / USART_CTS
@@ -262,10 +262,9 @@
   mode: input
 
 - name: USB_OTG_FS
-  match: "^USB_OTG_FS_(?:DM)?(?:DP)?(?:SOF)?(?:ID)?(?:VBUS)?$"
+  match: "^USB_OTG_FS_(DM|DP|SOF|ID|VBUS)$"
   mode: input
 
 - name: USB
-  match: "^USB_(?:DM)?(?:DP)?$"
+  match: "^USB_(DM|DP)$"
   mode: input
-

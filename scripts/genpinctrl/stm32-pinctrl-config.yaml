@@ -40,13 +40,13 @@
   mode: analog
 
 - name: ADC_IN / ADC_INN / ADC_INP
-  match: "^ADC(?:\\d+)?_IN[NP]?\\d+$"
+  match: "^ADC(\\d+)?_IN[NP]?\\d+$"
 
 - name: ADC_VINM / ADC_VINP
-  match: "^ADC(?:\\d+)?_VIN[PM]\\d+$"
+  match: "^ADC(\\d+)?_VIN[PM]\\d+$"
 
 - name: ADF
-  match: "^ADF(?:\\d+)_(?:CCK[0-1]|SDI[0-1])$"
+  match: "^ADF(\\d+)_(CCK[0-1]|SDI[0-1])$"
   slew-rate: very-high-speed
 
 - name: CAN_RX
@@ -63,14 +63,14 @@
   match: "^COMP\\d+_OUT$"
 
 - name: DAC_OUT
-  match: "^DAC(?:\\d+)?_OUT\\d+$"
+  match: "^DAC\\d*_OUT\\d+$"
 
 - name: DCMI
-  match: "^DCMI_(?:HSYNC|PIXCLK|VSYNC|D(?:[0-9]|1[0-3]))$"
+  match: "^DCMI_(HSYNC|PIXCLK|VSYNC|D([0-9]|1[0-3]))$"
   slew-rate: very-high-speed
 
 - name: DCMIPP
-  match: "^DCMIPP_(?:HSYNC|PIXCLK|VSYNC|D(?:[0-9]|1[0-5]))$"
+  match: "^DCMIPP_(HSYNC|PIXCLK|VSYNC|D([0-9]|1[0-5]))$"
   slew-rate: very-high-speed
 
 - name: DFSDM
@@ -79,15 +79,15 @@
   mode: alternate
 
 - name: ETH
-  match: "^ETH+_(?:COL$|CRS|CRS_DV|MDC|MDIO|PPS_OUT|REF_CLK|RX_CLK|RX_DV|RX_ER||RXD[0-3]|TX_CLK|TX_EN|TXD[0-3])$"
+  match: "^ETH_(COL|CRS|CRS_DV|MDC|MDIO|PPS_OUT|REF_CLK|RX_CLK|RX_DV|RX_ER|RXD[0-3]|TX_CLK|TX_EN|TXD[0-3])$"
   slew-rate: very-high-speed
 
 - name: ETH (Extended)
-  match: "^ETH\\d+_(?:MDC|MDIO|PHY_INTN|PPS_OUT|CLK|TX_ER)$"
+  match: "^ETH\\d+_(MDC|MDIO|PHY_INTN|PPS_OUT|CLK|TX_ER)$"
   slew-rate: very-high-speed
 
 - name: ETH_MII
-  match: '^ETH\d?_MII_(?:COL|CRS|RXD[0-3]|RX_CLK|RX_DV|RX_ER|TX_EN|TXD[0-3]|TX_CLK|TX_EN)$'
+  match: "^ETH\\d?_MII_(COL|CRS|RXD[0-3]|RX_CLK|RX_DV|RX_ER|TX_EN|TXD[0-3]|TX_CLK|TX_EN)$"
   slew-rate: very-high-speed
 
 - name: ETH_STM32MP1
@@ -95,11 +95,11 @@
   slew-rate: very-high-speed
 
 - name: ETH_RGMII
-  match: "^ETH\\d+_RGMII_(?:CLK125|GTX_CLK|RXD[0-3]|RX_CLK|RX_CTL|RX_ER|TX_EN|RX_DV|TXD[0-3]|TX_CTL)$"
+  match: "^ETH\\d+_RGMII_(CLK125|GTX_CLK|RXD[0-3]|RX_CLK|RX_CTL|RX_ER|TX_EN|RX_DV|TXD[0-3]|TX_CTL)$"
   slew-rate: very-high-speed
 
 - name: ETH_RMII
-  match: '^ETH\d?_RMII_(?:CRS_DV|REF_CLK|RXD[0-3]|RX_CLK|RX_DV|RX_ER|TX_EN|TXD[0-3]|TX_CLK|TX_EN)$'
+  match: "^ETH\\d?_RMII_(CRS_DV|REF_CLK|RXD[0-3]|RX_CLK|RX_DV|RX_ER|TX_EN|TXD[0-3]|TX_CLK|TX_EN)$"
   slew-rate: very-high-speed
 
 - name: FDCAN_RX
@@ -109,7 +109,7 @@
   match: "^FDCAN\\d+_TX$"
 
 - name: FMC
-  match: "^FMC_(?:NL|NADV|CLK|NBL[0-3]|A\\d+|D\\d+|NE[1-4]|NOE|NWE|NWAIT|NCE|INT|SDCLK|SDNWE|SDCKE[0-1]|SDNE[0-1]|SDNRAS|SDNCAS|ALE|CLE)$"
+  match: "^FMC_(NL|NADV|CLK|NBL[0-3]|A\\d+|D\\d+|NE[1-4]|NOE|NWE|NWAIT|NCE|INT|SDCLK|SDNWE|SDCKE[0-1]|SDNE[0-1]|SDNRAS|SDNCAS|ALE|CLE)$"
   bias: pull-up
   slew-rate: very-high-speed
 
@@ -126,7 +126,7 @@
   match: "^HRTIM\\d+_SC(IN|OUT)$"
 
 - name: HSPI
-  match: "^HSPI(.*)(?:CLK|NCS|DQS[0-1]|IO\\d+)$"
+  match: "^HSPI(.*)(CLK|NCS|DQS[0-1]|IO\\d+)$"
   slew-rate: very-high-speed
 
 - name: I2C_SCL
@@ -181,42 +181,42 @@
   match: "^LPTIM[1-6]_(IN[1-2]|CH[1-4]|ETR|OUT)$"
 
 - name: LTDC
-  match: "^LTDC_(?:DE|CLK|HSYNC|VSYNC|R[0-7]|G[0-7]|B[0-7])$"
+  match: "^LTDC_(DE|CLK|HSYNC|VSYNC|R[0-7]|G[0-7]|B[0-7])$"
 
 - name: MDF
-  match: "^MDF1_(?:CCK[0-1]|CKI[0-7]|SDI[0-7])$"
+  match: "^MDF1_(CCK[0-1]|CKI[0-7]|SDI[0-7])$"
   slew-rate: very-high-speed
 
 - name: OCTOSPI
-  match: "^OCTOSPI(.*)(?:CLK|NCS[1-2]?|DQS|IO[0-7])$"
+  match: "^OCTOSPI(.*)(CLK|NCS[1-2]?|DQS|IO[0-7])$"
   slew-rate: very-high-speed
 
 - name: OPAMP
   match: "^OPAMP\\d+_V(IN[MP])?(OUT)?$"
 
 - name: RCC_MCO
-  match: "^RCC_MCO_?(\\d+)?$"
+  match: "^RCC_MCO_?\\d*$"
   mode: alternate
   slew-rate: very-high-speed
 
 - name: QUADSPI
-  match: "^QUADSPI(\\d+)?_(?:CLK|NCS|BK1_NCS|BK1_IO[0-3]|BK2_NCS|BK2_IO[0-3])$"
+  match: "^QUADSPI\\d*_(CLK|NCS|BK1_NCS|BK1_IO[0-3]|BK2_NCS|BK2_IO[0-3])$"
   slew-rate: very-high-speed
 
 - name: XSPI
-  match: "^XSPI(.*)(?:N?CLK|NCS\\d|DQS\\d?|IO\\d+)$"
+  match: "^XSPI(.*)(N?CLK|NCS\\d|DQS\\d?|IO\\d+)$"
   slew-rate: very-high-speed
 
 - name: SAI
-  match: "^SAI\\d+_(?:D\\d+)?(?:CK\\d+)?(?:FS_A)?(?:FS_B)?(?:MCLK_A)?(?:MCLK_B)?(?:SD_A)?(?:SD_B)?(?:SCK_A)?(?:SCK_B)?(?:EXTCLK)?$"
+  match: "^SAI\\d+_(D\\d+|CK\\d+|FS_[AB]|MCLK_[AB]|SD_[AB]|SCK_[AB]|EXTCLK)$"
 
 - name: SDMMC
-  match: "^SDMMC\\d+_(?:CK)?(?:CKIN)?(?:CDIR)?(?:CMD)?(?:D\\d+)?(?:D0DIR)?(?:D123DIR)?$"
+  match: "^SDMMC\\d+_(CK|CKIN|CDIR|CMD|D\\d+|D0DIR|D123DIR)$"
   slew-rate: very-high-speed
   bias: pull-up
 
 - name: SDIO
-  match: "^SDIO_(?:CK)?(?:CKIN)?(?:CDIR)?(?:CMD)?(?:D\\d+)?(?:D0DIR)?(?:D123DIR)?$"
+  match: "^SDIO_(CK|CKIN|CDIR|CMD|D\\d+|D0DIR|D123DIR)$"
   slew-rate: very-high-speed
   bias: pull-up
 
@@ -250,40 +250,40 @@
   match: "^TIM\\d+_CH\\d+N?$"
 
 - name: TSC
-  match: "^TSC_(?:G\\d+_IO\\d+|SYNC)$"
+  match: "^TSC_(G\\d+_IO\\d+|SYNC)$"
 
 - name: UART_CTS / USART_CTS / LPUART_CTS
-  match: "^(?:LP)?US?ART\\d+_CTS$"
+  match: "^(LP)?US?ART\\d+_CTS$"
   bias: pull-up
 
 - name: UART_RTS / USART_RTS / LPUART_RTS
-  match: "^(?:LP)?US?ART\\d+_RTS$"
+  match: "^(LP)?US?ART\\d+_RTS$"
   drive: push-pull
 
 - name: UART_DE / USART_DE / LPUART_DE
-  match: "^(?:LP)?US?ART\\d+_DE$"
+  match: "^(LP)?US?ART\\d+_DE$"
   drive: push-pull
 
 - name: UART_TX / USART_TX / LPUART_TX
-  match: "^(?:LP)?US?ART\\d+_TX$"
+  match: "^(LP)?US?ART\\d+_TX$"
   bias: pull-up
 
 - name: UART_RX / USART_RX / LPUART_RX
-  match: "^(?:LP)?US?ART\\d+_RX$"
+  match: "^(LP)?US?ART\\d+_RX$"
 
 - name: UCPD
   match: "^UCPD\\d+_CC\\d+N?$"
   mode: analog
 
 - name: USB_OTG_FS
-  match: "^USB_OTG_FS_(?:DM)?(?:DP)?(?:SOF)?(?:ID)?(?:VBUS)?$"
+  match: "^USB_OTG_FS_(DM|DP|SOF|ID|VBUS)$"
 
 - name: USB_OTG_HS
-  match: "^USB_OTG_HS_(?:DM)?(?:DP)?(?:SOF)?(?:ID)?(?:VBUS)?$"
+  match: "^USB_OTG_HS_(DM|DP|SOF|ID|VBUS)$"
 
 - name: USB_OTG_HS_ULPI
-  match: "^USB_OTG_HS_ULPI_(?:CK)?(?:DIR)?(?:STP)?(?:NXT)?(?:D\\d+)?$"
+  match: "^USB_OTG_HS_ULPI_(CK|DIR|STP|NXT|D\\d+)$"
   slew-rate: high-speed
 
 - name: USB
-  match: "^USB_(?:DM|DP|NOE|SOF)$"
+  match: "^USB_(DM|DP|NOE|SOF)$"
