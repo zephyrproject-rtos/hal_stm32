@@ -39,4 +39,10 @@ Patch List:
     -dos2unix applied
     -trailing white spaces removed
 
+   *Set value of USE_HAL_<ppp>_DMA macros to value of USE_HAL_DMA_MODULE to prevent
+    DMA usage from HAL peripheral drivers when DMA support is disabled.
+
+    Impacted files:
+     stm32cube/stm32g5xx/drivers/templates/common/stm32g5xx_hal_conf.h
+
    See release_note.html from STM32Cube
