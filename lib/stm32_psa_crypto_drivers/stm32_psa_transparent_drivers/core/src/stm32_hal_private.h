@@ -29,10 +29,10 @@
 extern "C" {
 #endif
 
-#ifndef STRINGIFY
-#define _STRINGIFY(msg) #msg
-#define STRINGIFY(msg)  _STRINGIFY(msg)
-#endif /* STRINGIFY */
+#ifndef STM32_STRINGIFY
+#define _STM32_STRINGIFY(msg) #msg
+#define STM32_STRINGIFY(msg)  _STM32_STRINGIFY(msg)
+#endif /* STM32_STRINGIFY */
 
 #if !defined(ASSERT)
  #if !defined(NDEBUG)
@@ -41,7 +41,7 @@ extern "C" {
     if (!(cond))                                  \
     {                                             \
       printf("%s:%u %s(): asserting \"%s\"",      \
-            __FILE__, __LINE__, __func__, STRINGIFY(cond)); \
+            __FILE__, __LINE__, __func__, STM32_STRINGIFY(cond)); \
       do { } while (1);                           \
     }                                             \
   })
