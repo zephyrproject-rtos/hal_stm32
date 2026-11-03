@@ -8,6 +8,8 @@
 #include <stm32c5xx_ll_cordic.h>
 #elif defined(CONFIG_SOC_SERIES_STM32G4X)
 #include <stm32g4xx_ll_cordic.h>
+#elif defined(CONFIG_SOC_SERIES_STM32G5X)
+#include <stm32g5xx_ll_cordic.h>
 #elif defined(CONFIG_SOC_SERIES_STM32H5X)
 #include <stm32h5xx_ll_cordic.h>
 #elif defined(CONFIG_SOC_SERIES_STM32H7RSX)

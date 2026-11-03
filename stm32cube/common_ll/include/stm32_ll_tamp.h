@@ -6,4 +6,6 @@
 
 #if defined(CONFIG_SOC_SERIES_STM32C5X)
 #include <stm32c5xx_ll_tamp.h>
+#elif defined(CONFIG_SOC_SERIES_STM32G5X)
+#include <stm32g5xx_ll_tamp.h>
 #endif
