@@ -38,6 +38,7 @@ PINCTRL_TEMPLATE = "pinctrl-template.j2"
 SUPPORTED_FAMILIES = [
     "stm32c5",
     "stm32g5",
+    "stm32h7p",
 ]
 """Supported SoC families."""
 
