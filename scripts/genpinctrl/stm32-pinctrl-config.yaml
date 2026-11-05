@@ -276,13 +276,13 @@
   mode: analog
 
 - name: USB_OTG_FS
-  match: "^USB_OTG_FS_(DM|DP|SOF|ID|VBUS)$"
+  match: "^(USB_)?OTG_FS_(DM|DP|SOF|ID|VBUS)$"
 
 - name: USB_OTG_HS
-  match: "^USB_OTG_HS_(DM|DP|SOF|ID|VBUS)$"
+  match: "^(USB_)?OTG_HS_(DM|DP|SOF|ID|VBUS)$"
 
 - name: USB_OTG_HS_ULPI
-  match: "^USB_OTG_HS_ULPI_(CK|DIR|STP|NXT|D\\d+)$"
+  match: "^(USB_)?OTG_HS_ULPI_(CK|DIR|STP|NXT|D\\d+)$"
   slew-rate: high-speed
 
 - name: USB
