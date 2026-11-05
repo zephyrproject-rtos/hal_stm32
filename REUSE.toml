@@ -59,7 +59,10 @@ SPDX-FileCopyrightText = "Copyright (c) STMicroelectronics"
 SPDX-License-Identifier = "Apache-2.0"
 
 # ---------------------------------------------------------------------------
-# Library components under lib/ (BSD-3-Clause, except ll_cmd_lib)
+# Library components under lib/:
+# - ll_cmd_lib (MIT)
+# - stm32_psa_crypto_drivers (Apache-2.0)
+# - everything else (BSD-3-Clause)
 # ---------------------------------------------------------------------------
 [[annotations]]
 path = [
@@ -76,6 +79,18 @@ SPDX-License-Identifier = "BSD-3-Clause"
 path = "lib/stm32wba/STM32_WPAN/link_layer/ll_cmd_lib/**"
 SPDX-FileCopyrightText = "Copyright (c) STMicroelectronics"
 SPDX-License-Identifier = "MIT"
+
+# STM32 PSA crypto driver exception
+[[annotations]]
+path = "lib/stm32_psa_crypto_drivers/**"
+SPDX-FileCopyrightText = "Copyright (c) STMicroelectronics"
+SPDX-License-Identifier = "Apache-2.0"
+
+# STM32 PSA crypto driver exception: files from TF-PSA-Crypto project
+[[annotations]]
+path = "lib/stm32_psa_crypto_drivers/dispatch/**"
+SPDX-FileCopyrightText = "Copyright The Mbed TLS Contributors"
+SPDX-License-Identifier = "Apache-2.0"
 
 # ---------------------------------------------------------------------------
 # Binary blobs — ST proprietary SLA0044
