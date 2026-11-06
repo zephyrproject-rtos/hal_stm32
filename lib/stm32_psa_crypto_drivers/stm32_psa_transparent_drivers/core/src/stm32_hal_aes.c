@@ -24,9 +24,7 @@
 #include "stm32_hal_private.h"
 #include "stm32_soc_hal.h"
 
-#ifdef MBEDTLS_THREADING_C
 #include <mbedtls/threading.h>
-#endif /* MBEDTLS_THREADING_C */
 
 #include <string.h>
 #include <stdlib.h>
@@ -56,40 +54,47 @@
 # endif /* STM32_AES_HAL_V2 */
 #endif /* STM32_HAL_AES_DPA_DRIVER_ENABLED */
 
-/* HAL_ENABLE_CLOCK() and HAL_DISABLE_CLOCK() helper macros  */
+/*
+ * HAL_AES_ENABLE_CLOCK() and HAL_AES_DISABLE_CLOCK() helper macros.
+ * HAL_RNG_ENABLE_CLOCK() helper for RNG clock enable is needed for SAES instances.
+ */
 #ifdef STM32_HAL_AES_DPA_DRIVER_ENABLED
  #ifdef STM32_AES_HAL_V2
-#define HAL_ENABLE_CLOCK() \
-  do { HAL_RCC_RNG_EnableClock(); HAL_RCC_SAES_EnableClock(); } while (0)
-#define HAL_DISABLE_CLOCK() \
-  do { HAL_RCC_SAES_DisableClock(); /* Leave RNG On */ } while (0)
+#define HAL_AES_ENABLE_CLOCK()  HAL_RCC_SAES_EnableClock()
+#define HAL_AES_DISABLE_CLOCK() HAL_RCC_SAES_DisableClock()
+#define HAL_RNG_ENABLE_CLOCK()  HAL_RCC_RNG_EnableClock()
  #else
-#define HAL_ENABLE_CLOCK()      __HAL_RCC_SAES_CLK_ENABLE()
-#define HAL_DISABLE_CLOCK()     __HAL_RCC_SAES_CLK_DISABLE()
+#define HAL_AES_ENABLE_CLOCK()  __HAL_RCC_SAES_CLK_ENABLE()
+#define HAL_AES_DISABLE_CLOCK() __HAL_RCC_SAES_CLK_DISABLE()
+  #ifdef __HAL_RCC_RNG1_CLK_ENABLE
+#define HAL_RNG_ENABLE_CLOCK()  __HAL_RCC_RNG1_CLK_ENABLE()
+  #else
+#define HAL_RNG_ENABLE_CLOCK()  __HAL_RCC_RNG_CLK_ENABLE()
+  #endif /* __HAL_RCC_RNG1_CLK_ENABLE */
  #endif /* STM32_AES_HAL_V2 */
 #else
  #ifdef STM32_AES_HAL_V2
-#define HAL_ENABLE_CLOCK()      HAL_RCC_AES_EnableClock()
-#define HAL_DISABLE_CLOCK()     HAL_RCC_AES_DisableClock()
+#define HAL_AES_ENABLE_CLOCK()  HAL_RCC_AES_EnableClock()
+#define HAL_AES_DISABLE_CLOCK() HAL_RCC_AES_DisableClock()
  #elif defined(__HAL_RCC_AES1_CLK_ENABLE)
  /* When 2 AES instances are integrated in, the SoC, only support AES1 */
-#define HAL_ENABLE_CLOCK()      __HAL_RCC_AES1_CLK_ENABLE()
-#define HAL_DISABLE_CLOCK()     __HAL_RCC_AES1_CLK_DISABLE()
+#define HAL_AES_ENABLE_CLOCK()  __HAL_RCC_AES1_CLK_ENABLE()
+#define HAL_AES_DISABLE_CLOCK() __HAL_RCC_AES1_CLK_DISABLE()
  #elif defined(__HAL_RCC_AES2_CLK_ENABLE)
-#define HAL_ENABLE_CLOCK()      __HAL_RCC_AES2_CLK_ENABLE()
-#define HAL_DISABLE_CLOCK()     __HAL_RCC_AES2_CLK_DISABLE()
+#define HAL_AES_ENABLE_CLOCK()  __HAL_RCC_AES2_CLK_ENABLE()
+#define HAL_AES_DISABLE_CLOCK() __HAL_RCC_AES2_CLK_DISABLE()
  #elif defined(__HAL_RCC_AES_CLK_ENABLE)
-#define HAL_ENABLE_CLOCK()      __HAL_RCC_AES_CLK_ENABLE()
-#define HAL_DISABLE_CLOCK()     __HAL_RCC_AES_CLK_DISABLE()
+#define HAL_AES_ENABLE_CLOCK()  __HAL_RCC_AES_CLK_ENABLE()
+#define HAL_AES_DISABLE_CLOCK() __HAL_RCC_AES_CLK_DISABLE()
  #elif defined(__HAL_RCC_CRYP1_CLK_ENABLE)
-#define HAL_ENABLE_CLOCK()      __HAL_RCC_CRYP1_CLK_ENABLE()
-#define HAL_DISABLE_CLOCK()     __HAL_RCC_CRYP1_CLK_DISABLE()
+#define HAL_AES_ENABLE_CLOCK()  __HAL_RCC_CRYP1_CLK_ENABLE()
+#define HAL_AES_DISABLE_CLOCK() __HAL_RCC_CRYP1_CLK_DISABLE()
  #elif defined(__HAL_RCC_CRYP2_CLK_ENABLE)
-#define HAL_ENABLE_CLOCK()      __HAL_RCC_CRYP2_CLK_ENABLE()
-#define HAL_DISABLE_CLOCK()     __HAL_RCC_CRYP2_CLK_DISABLE()
+#define HAL_AES_ENABLE_CLOCK()  __HAL_RCC_CRYP2_CLK_ENABLE()
+#define HAL_AES_DISABLE_CLOCK() __HAL_RCC_CRYP2_CLK_DISABLE()
  #else
-#define HAL_ENABLE_CLOCK()      __HAL_RCC_CRYP_CLK_ENABLE()
-#define HAL_DISABLE_CLOCK()     __HAL_RCC_CRYP_CLK_DISABLE()
+#define HAL_AES_ENABLE_CLOCK()  __HAL_RCC_CRYP_CLK_ENABLE()
+#define HAL_AES_DISABLE_CLOCK() __HAL_RCC_CRYP_CLK_DISABLE()
  #endif /* STM32_AES_HAL_V2 */
 #endif /* STM32_HAL_AES_DPA_DRIVER_ENABLED */
 
@@ -115,7 +120,7 @@ static struct stm32_hal_aes_device stm32_hal_aes_device_state;
  * Helper functions for the STM32 device hardware state management
  */
 
-/* Lock mutex for hash_device access */
+/* Lock mutex for AES device access */
 static void stm32_hal_aes_device_lock(void)
 {
 #ifdef MBEDTLS_THREADING_C
@@ -123,7 +128,7 @@ static void stm32_hal_aes_device_lock(void)
 #endif /* MBEDTLS_THREADING_C */
 }
 
-/* Unlock mutex for hash_device access */
+/* Unlock mutex for AES device access */
 static void stm32_hal_aes_device_unlock(void)
 {
 #ifdef MBEDTLS_THREADING_C
@@ -183,7 +188,12 @@ static void stm32_hal_aes_device_enable_clock(void)
   return;
 #endif
 
-  HAL_ENABLE_CLOCK();
+  HAL_AES_ENABLE_CLOCK();
+
+#ifdef STM32_HAL_AES_DPA_DRIVER_ENABLED
+  /* SAES needs the RNG clock */
+  HAL_RNG_ENABLE_CLOCK();
+#endif /* STM32_HAL_AES_DPA_DRIVER_ENABLED */
 }
 
 /*
@@ -192,7 +202,11 @@ static void stm32_hal_aes_device_enable_clock(void)
  */
 static void stm32_hal_aes_device_disable_clock(void)
 {
-  HAL_DISABLE_CLOCK();
+  HAL_AES_DISABLE_CLOCK();
+
+#ifdef STM32_HAL_AES_DPA_DRIVER_ENABLED
+  /* Intentionally not disabling the RNG clock */
+#endif /* STM32_HAL_AES_DPA_DRIVER_ENABLED */
 }
 
 #ifdef STM32_AES_LOCAL_SUSPEND_CONTEXT
@@ -287,7 +301,7 @@ static void stm32_hal_aes_device_save_context(stm32_hal_aes_ctx_t *ctx)
 }
 
 /*
- * Restore STM32 device hardware state from a hash operation context.
+ * Restore STM32 device hardware state from an AES operation context.
  * Device access mutex must be locked when this function is called.
  */
 static void stm32_hal_aes_device_restore_context(stm32_hal_aes_ctx_t *ctx)
@@ -322,8 +336,8 @@ static void stm32_hal_aes_device_restore_context(stm32_hal_aes_ctx_t *ctx)
 }
 
 /*
- * Load STM32 device hardware state from a hash operation context.
- * If there was a active operation, save STM32 HASH device hardware state
+ * Load STM32 device hardware state from an AES operation context.
+ * If there was a active operation, save STM32 AES device hardware state
  * in that context before. The new operation context becomes the active one.
  * Device access mutex must be locked when this function is called.
  */
@@ -371,11 +385,47 @@ static void stm32_hal_aes_device_context_released(stm32_hal_aes_ctx_t *ctx)
 }
 
 /*
- * Device hardware context managment functions
+ * Device hardware context managment functions,
+ * including HAL initialization/de-initialization.
  */
 
+static STM32_HalStatusTypeDef stm32_hal_aes_init(stm32_hal_aes_ctx_t *ctx)
+{
+  ASSERT(ctx != NULL);
+
+  memset(&ctx->hal_handle, 0, sizeof(ctx->hal_handle));
+
+#ifdef STM32_AES_HAL_V2
+  if (HAL_AES_Init(&ctx->hal_handle, HAL_AES_DEVICE) != HAL_OK)
+  {
+    return STM32_HAL_ERROR;
+  }
+#else /* STM32_AES_HAL_V2 */
+  /* Only set the instance, HAL will be initialized when configured */
+  ctx->hal_handle.Instance = HAL_AES_DEVICE;
+#if !defined(STM32_AES_HAL_V1_L4)
+  if (HAL_CRYP_Init(&ctx->hal_handle) != HAL_OK)
+  {
+    return STM32_HAL_ERROR;
+  }
+#endif /* !STM32_AES_HAL_V1_L4 */
+#endif /* STM32_AES_HAL_V2 */
+
+  return STM32_HAL_SUCCESS;
+}
+
+static void stm32_hal_aes_deinit(stm32_hal_aes_ctx_t *ctx)
+{
+#ifdef STM32_AES_HAL_V2
+  HAL_AES_DeInit(&ctx->hal_handle);
+#elif !defined(STM32_AES_HAL_V1_L4)
+  /* Intentionally discard error */
+  (void)HAL_CRYP_DeInit(&ctx->hal_handle);
+#endif /* STM32_AES_HAL_V2 */
+}
+
 STM32_HalStatusTypeDef stm32_hal_aes_get_hal_hw(stm32_hal_aes_ctx_t *ctx,
-                                      stm32_hal_aes_hal_config_func_t config_fn)
+                                                stm32_hal_aes_hal_config_func_t config_fn)
 {
   STM32_HalStatusTypeDef status;
 
@@ -401,7 +451,7 @@ STM32_HalStatusTypeDef stm32_hal_aes_get_hal_hw(stm32_hal_aes_ctx_t *ctx,
 
   (void)memset(&ctx->hal_handle, 0, sizeof(ctx->hal_handle));
 
-  status = STM32_HalAesInit(ctx);
+  status = stm32_hal_aes_init(ctx);
   if (status != STM32_HAL_SUCCESS)
   {
     goto exit;
@@ -420,7 +470,7 @@ STM32_HalStatusTypeDef stm32_hal_aes_get_hal_hw(stm32_hal_aes_ctx_t *ctx,
 exit:
   if (status != STM32_HAL_SUCCESS)
   {
-    (void)STM32_HalAesDeInit(ctx);
+    stm32_hal_aes_deinit(ctx);
 
     if (stm32_hal_aes_device_decrement_refcount())
     {
@@ -446,7 +496,7 @@ void stm32_hal_aes_release_hal_hw(stm32_hal_aes_ctx_t *ctx)
 
     stm32_hal_aes_device_load_context(ctx);
 
-    (void)STM32_HalAesDeInit(ctx);
+    stm32_hal_aes_deinit(ctx);
 
     stm32_hal_aes_device_context_released(ctx);
 
@@ -497,49 +547,6 @@ STM32_HalStatusTypeDef STM32_HalAesDeviceResume(void)
       stm32_hal_aes_device_restore_context(stm32_hal_aes_device_state.active_context);
     }
   }
-
-  return STM32_HAL_SUCCESS;
-}
-
-/*
- * HAL init/de-init abstraction functions
- */
-
-STM32_HalStatusTypeDef STM32_HalAesInit(stm32_hal_aes_ctx_t *ctx)
-{
-  ASSERT(ctx != NULL);
-
-  memset(&ctx->hal_handle, 0, sizeof(ctx->hal_handle));
-
-#ifdef STM32_AES_HAL_V2
-  if (HAL_AES_Init(&ctx->hal_handle, HAL_AES_DEVICE) != HAL_OK)
-  {
-    return STM32_HAL_ERROR;
-  }
-#else /* STM32_AES_HAL_V2 */
-  ctx->hal_handle.Instance = HAL_AES_DEVICE;
-
-#if !defined(STM32_AES_HAL_V1_L4)
-  if (HAL_CRYP_Init(&ctx->hal_handle) != HAL_OK)
-  {
-    return STM32_HAL_ERROR;
-  }
-#endif /* !STM32_AES_HAL_V1_L4 */
-#endif /* STM32_AES_HAL_V2 */
-
-  return STM32_HAL_SUCCESS;
-}
-
-STM32_HalStatusTypeDef STM32_HalAesDeInit(stm32_hal_aes_ctx_t *ctx)
-{
-#ifdef STM32_AES_HAL_V2
-  HAL_AES_DeInit(&ctx->hal_handle);
-#elif !defined(STM32_AES_HAL_V1_L4)
-  if (HAL_CRYP_DeInit(&ctx->hal_handle) != HAL_OK)
-  {
-    return STM32_HAL_ERROR;
-  }
-#endif /* STM32_AES_HAL_V2 */
 
   return STM32_HAL_SUCCESS;
 }

@@ -14,7 +14,7 @@
   *
   ******************************************************************************
   */
- /* Define to prevent recursive inclusion -------------------------------------*/
+/* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef STM32_HAL_PSA_HASH_H
 #define STM32_HAL_PSA_HASH_H
 

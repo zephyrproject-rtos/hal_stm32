@@ -641,8 +641,12 @@ uint32_t HAL_CRYP_GetError(const CRYP_HandleTypeDef *hcryp);
   * @{
   */
 
+#ifdef SAES
 #define IS_CRYP_INSTANCE(INSTANCE)(((INSTANCE) == AES)   || \
                                    ((INSTANCE) == SAES))
+#else
+#define IS_CRYP_INSTANCE(INSTANCE)((INSTANCE) == AES)
+#endif
 
 #define IS_CRYP_ALGORITHM(ALGORITHM) (((ALGORITHM) == CRYP_AES_ECB)      || \
                                       ((ALGORITHM)  == CRYP_AES_CBC)     || \
