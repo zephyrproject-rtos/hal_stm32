@@ -83,4 +83,19 @@ Patch List:
        drivers/src/stm32h7rsxx_hal_mdf.c
      ST Internal Reference: HAL1-27843
 
+   *Set USE_HAL_*_DMA macros default value to USE_HAL_DMA_MODULE to prevent
+    DMA resources are used in related HAL drivers when DMA support is disabled.
+    Impacted files:
+     stm32cube/stm32c5xx/drivers/templates/common/stm32c5xx_hal_conf.h
+
+   *Do not define USE_HAL_CRYP_SUSPEND_RESUME and USE_HAL_HASH_SUSPEND_RESUME macros
+    when already defined, for example by the build environement.
+    Impacted file:
+     stm32cube/stm32h7rsxx/drivers/include/stm32h7rsxx_hal_conf.h
+
+   *Condition DMA support in CRYP HAL suspend/resume API function to
+    USE_HAL_DMA_MODULE being enabled.
+    Impacted file:
+     stm32cube/stm32h7rsxx/drivers/src/stm32h7rsxx_hal_cryp.c
+
    See release_note.html from STM32Cube

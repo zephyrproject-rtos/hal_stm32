@@ -79,4 +79,9 @@ Patch List:
        drivers/src/stm32n6xx_hal_mdf.c
      ST Internal Reference: HAL1-27843
 
+   *Condition DMA support in CRYP HAL suspend/resume API function to
+    USE_HAL_DMA_MODULE being enabled.
+    Impacted file:
+     stm32cube/stm32n6xx/drivers/src/stm32n6xx_hal_cryp.c
+
    See release_note.html from STM32Cube
