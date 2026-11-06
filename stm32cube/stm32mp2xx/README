@@ -90,4 +90,13 @@ Patch List:
        drivers/src/stm32mp2xx_hal_mdf.c
      ST Internal Reference: HAL1-27843
 
+   *Add HAL_DSI_GetPhyDataRate
+      The HAL_DSI_DataRate enumeration only encodes the lane rate in its
+      identifiers. Add a function returning the entry matching a lane rate
+      given in Mbps, so that drivers computing the lane rate from the PLL
+      configuration do not have to duplicate the rate table.
+     Impacted files:
+       drivers/include/stm32mp2xx_hal_dsi.h
+       drivers/src/stm32mp2xx_hal_dsi.c
+
    See release_note.html from STM32Cube

@@ -1300,6 +1300,7 @@ HAL_StatusTypeDef HAL_DSI_SetPHYTimings(DSI_HandleTypeDef *hdsi, uint32_t Timing
                                         uint32_t Value);
 HAL_StatusTypeDef HAL_DSI_ForceTXStopMode(DSI_HandleTypeDef *hdsi, uint32_t Lane, FunctionalState State);
 HAL_StatusTypeDef HAL_DSI_ForceDataLanesInRX(DSI_HandleTypeDef *hdsi, FunctionalState State);
+HAL_StatusTypeDef HAL_DSI_GetPhyDataRate(uint32_t LaneRateMbps, HAL_DSI_DataRate *PhyDataRate);
 
 /**
   * @}
