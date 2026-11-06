@@ -509,10 +509,16 @@ def get_mcu_signals(data_path, gpio_ip_afs):
             pin_number = int(m.group(2))
             pin_mod = m.group(3).lower() if m.group(3) in PIN_MODS else ""
 
-            if pin_name not in gpio_ip:
+            # Name of the GPIO pin which provides the I/O function(s).
+            # The functions may be remapped to a different physical pin
+            # depending on the hardware.
+            logical_pin_name = f"P{m.group(1)}{m.group(2)}"
+
+            if pin_name not in gpio_ip and logical_pin_name not in gpio_ip:
                 continue
 
-            pin_afs = gpio_ip[pin_name]
+            pin_afs = gpio_ip.get(pin_name, {})
+            logical_pin_afs = gpio_ip.get(logical_pin_name, {})
 
             pin_signals = list()
             pin_entries.append(
@@ -537,6 +543,11 @@ def get_mcu_signals(data_path, gpio_ip_afs):
 
                 if signal_name in pin_afs:
                     pin_af = pin_afs[signal_name]
+                    if not isinstance(pin_af, list):
+                        pin_af = [pin_af]
+                    found_afs = pin_af
+                elif signal_name in logical_pin_afs:
+                    pin_af = logical_pin_afs[signal_name]
                     if not isinstance(pin_af, list):
                         pin_af = [pin_af]
                     found_afs = pin_af

@@ -182,6 +182,12 @@ def test_get_gpio_ip_afs(pindata):
                 "UART1_RX": ["UART1_REMAP1"],
             }
         },
+        "STM32U0TESTIP": {
+            "PA9": {"RCC_MCO": 0},
+            "PA9 [PA11]": {},
+            "PA10": {"RCC_MCO2": 3},
+            "PA10 [PA12]": {},
+        },
     }
 
 
@@ -229,7 +235,47 @@ def test_get_mcu_signals(pindata):
                 ],
             },
         ],
+        "STM32U0": [
+            {
+                "name": "STM32U0TESTREMAP",
+                "pins": [
+                    {
+                        "port": "a",
+                        "pin": 9,
+                        "mod": "",
+                        "signals": [{"name": "RCC_MCO", "af": 0}],
+                    },
+                    {
+                        "port": "a",
+                        "pin": 10,
+                        "mod": "",
+                        "signals": [{"name": "RCC_MCO2", "af": 3}],
+                    },
+                ],
+            },
+        ],
     }
+
+
+def test_get_mcu_signals_remapped_pins_use_logical_pin_afs(pindata):
+    """Test that remapped pins use the AFs of their logical pin names."""
+
+    signals = get_mcu_signals(pindata, get_gpio_ip_afs(pindata))
+
+    assert signals["STM32U0"][0]["pins"] == [
+        {
+            "port": "a",
+            "pin": 9,
+            "mod": "",
+            "signals": [{"name": "RCC_MCO", "af": 0}],
+        },
+        {
+            "port": "a",
+            "pin": 10,
+            "mod": "",
+            "signals": [{"name": "RCC_MCO2", "af": 3}],
+        },
+    ]
 
 
 def test_folders_missing():
