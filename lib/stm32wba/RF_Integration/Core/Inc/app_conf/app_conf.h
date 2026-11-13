@@ -405,12 +405,12 @@ typedef enum
  * HW RADIO configuration
  ******************************************************************************/
 /* Link Layer uses temperature based calibration (0 --> NO ; 1 --> YES) */
-#if defined(CONFIG_BT_STM32WBA)
-#ifndef USE_TEMPERATURE_BASED_RADIO_CALIBRATION
+#ifndef __ZEPHYR__
 #define USE_TEMPERATURE_BASED_RADIO_CALIBRATION (1)
-#endif
 #else
+#ifndef USE_TEMPERATURE_BASED_RADIO_CALIBRATION
 #define USE_TEMPERATURE_BASED_RADIO_CALIBRATION (0)
+#endif
 #endif
 
 #define RADIO_INTR_NUM                      RADIO_IRQn     /* 2.4GHz RADIO global interrupt */
