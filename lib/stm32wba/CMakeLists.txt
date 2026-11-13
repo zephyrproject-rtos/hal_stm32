@@ -33,6 +33,11 @@ zephyr_sources(Common/WPAN/Interfaces/hw_aes.c)
 
 set(STM32WBA_LIB_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../zephyr/blobs/stm32wba/lib)
 
+# Setting the right Cube define according to the Zephyr configuration
+if(NOT CONFIG_STM32WBA_USE_TEMP_BASED_RADIO_CALIB)
+  zephyr_compile_definitions( -DUSE_TEMPERATURE_BASED_RADIO_CALIBRATION=0 )
+endif()
+
 # select the type of BLE library
 if(CONFIG_BT_STM32WBA)
   if(CONFIG_BT_STM32WBA_BASIC_LIB)
@@ -54,11 +59,6 @@ if(CONFIG_BT_STM32WBA)
     set_target_properties(
       stm32wba_ble_lib PROPERTIES IMPORTED_LOCATION ${STM32WBA_LIB_DIR}/stm32wba_ble_stack_llo.a
     )
-
-    # Setting the right Cube define according to the Zephyr configuration
-    if(NOT CONFIG_BT_STM32WBA_USE_TEMP_BASED_CALIB)
-      zephyr_compile_definitions( -DUSE_TEMPERATURE_BASED_RADIO_CALIBRATION=0 )
-    endif()
 
     # Using the selected version of ble lib
     set_target_properties(stm32wba_ble_lib PROPERTIES INTERFACE_INCLUDE_DIRECTORIES ${STM32WBA_BLE_LIB_INCLUDE_DIR})
