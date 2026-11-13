@@ -405,7 +405,7 @@ typedef enum
  * HW RADIO configuration
  ******************************************************************************/
 /* Link Layer uses temperature based calibration (0 --> NO ; 1 --> YES) */
-#if defined(CONFIG_BT_STM32WBA)
+#if defined(CONFIG_BT_STM32WBA) || defined(CONFIG_IEEE802154_STM32WBA)
 #ifndef USE_TEMPERATURE_BASED_RADIO_CALIBRATION
 #define USE_TEMPERATURE_BASED_RADIO_CALIBRATION (1)
 #endif
