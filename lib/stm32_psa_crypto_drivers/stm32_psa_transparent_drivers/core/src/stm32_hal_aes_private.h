@@ -56,6 +56,12 @@ extern "C" {
 /**
  * 32-bit integer manipulation macros (big endian)
  */
+#define SWAP_U32_ENDIANNESS(val)   \
+  ((((val) & 0xff) << 24) |        \
+   (((val) & 0xff00) << 8) |       \
+   (((val) >> 8) & 0xff00) |       \
+   (((val) >> 24) & 0xff))
+
 #define READ_U32_BE(ptr, off)                          \
   (((uint32_t)((uint8_t *)(ptr))[(off)    ] << 24 ) |  \
    ((uint32_t)((uint8_t *)(ptr))[(off) + 1] << 16 ) |  \

@@ -44,8 +44,8 @@ static inline psa_status_t STM32_HalStatusToPsaStatus(STM32_HalStatusTypeDef hal
 #include "stm32_hal_ec.h"
 
 psa_status_t psa_to_stm32_hal_curve_id(
-    const psa_key_attributes_t *attributes,
-    STM32_HalEcIdTypeDef *curve_id);
+  const psa_key_attributes_t *attributes,
+  STM32_HalEcIdTypeDef *curve_id);
 
 #endif /* STM32_HAL_PSA_SIGNATURE_DRIVER_ENABLED */
 

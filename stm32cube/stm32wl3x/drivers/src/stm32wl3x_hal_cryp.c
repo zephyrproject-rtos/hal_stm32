@@ -5335,21 +5335,21 @@ static void CRYP_Read_SuspendRegisters(CRYP_HandleTypeDef *hcryp, uint32_t *Outp
   }
 
 
-  *(uint32_t *)(outputaddr) = hcryp->Instance->SUSP7R;
+  *(uint32_t *)(outputaddr) = hcryp->Instance->SUSP7;
   outputaddr += 4U;
-  *(uint32_t *)(outputaddr) = hcryp->Instance->SUSP6R;
+  *(uint32_t *)(outputaddr) = hcryp->Instance->SUSP6;
   outputaddr += 4U;
-  *(uint32_t *)(outputaddr) = hcryp->Instance->SUSP5R;
+  *(uint32_t *)(outputaddr) = hcryp->Instance->SUSP5;
   outputaddr += 4U;
-  *(uint32_t *)(outputaddr) = hcryp->Instance->SUSP4R;
+  *(uint32_t *)(outputaddr) = hcryp->Instance->SUSP4;
   outputaddr += 4U;
-  *(uint32_t *)(outputaddr) = hcryp->Instance->SUSP3R;
+  *(uint32_t *)(outputaddr) = hcryp->Instance->SUSP3;
   outputaddr += 4U;
-  *(uint32_t *)(outputaddr) = hcryp->Instance->SUSP2R;
+  *(uint32_t *)(outputaddr) = hcryp->Instance->SUSP2;
   outputaddr += 4U;
-  *(uint32_t *)(outputaddr) = hcryp->Instance->SUSP1R;
+  *(uint32_t *)(outputaddr) = hcryp->Instance->SUSP1;
   outputaddr += 4U;
-  *(uint32_t *)(outputaddr) = hcryp->Instance->SUSP0R;
+  *(uint32_t *)(outputaddr) = hcryp->Instance->SUSP0;
 }
 
 /**
@@ -5366,21 +5366,21 @@ static void CRYP_Write_SuspendRegisters(CRYP_HandleTypeDef *hcryp, uint32_t *Inp
 {
   uint32_t ivaddr = (uint32_t)Input;
 
-  hcryp->Instance->SUSP7R = *(uint32_t *)(ivaddr);
+  hcryp->Instance->SUSP7 = *(uint32_t *)(ivaddr);
   ivaddr += 4U;
-  hcryp->Instance->SUSP6R = *(uint32_t *)(ivaddr);
+  hcryp->Instance->SUSP6 = *(uint32_t *)(ivaddr);
   ivaddr += 4U;
-  hcryp->Instance->SUSP5R = *(uint32_t *)(ivaddr);
+  hcryp->Instance->SUSP5 = *(uint32_t *)(ivaddr);
   ivaddr += 4U;
-  hcryp->Instance->SUSP4R = *(uint32_t *)(ivaddr);
+  hcryp->Instance->SUSP4 = *(uint32_t *)(ivaddr);
   ivaddr += 4U;
-  hcryp->Instance->SUSP3R = *(uint32_t *)(ivaddr);
+  hcryp->Instance->SUSP3 = *(uint32_t *)(ivaddr);
   ivaddr += 4U;
-  hcryp->Instance->SUSP2R = *(uint32_t *)(ivaddr);
+  hcryp->Instance->SUSP2 = *(uint32_t *)(ivaddr);
   ivaddr += 4U;
-  hcryp->Instance->SUSP1R = *(uint32_t *)(ivaddr);
+  hcryp->Instance->SUSP1 = *(uint32_t *)(ivaddr);
   ivaddr += 4U;
-  hcryp->Instance->SUSP0R = *(uint32_t *)(ivaddr);
+  hcryp->Instance->SUSP0 = *(uint32_t *)(ivaddr);
 }
 
 /**

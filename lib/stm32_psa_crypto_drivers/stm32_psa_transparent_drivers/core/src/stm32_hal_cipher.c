@@ -79,14 +79,6 @@ static STM32_HalStatusTypeDef stm32_aes_cipher_hal_configure(stm32_hal_aes_ctx_t
   CRYP_ConfigTypeDef conf;
 #endif /* STM32_AES_HAL_V2 */
 
-  (void)memset(&ctx->hal_handle, 0, sizeof(ctx->hal_handle));
-
-  status = STM32_HalAesInit(ctx);
-  if (status != STM32_HAL_SUCCESS)
-  {
-    return status;
-  }
-
   status = stm32_hal_aes_key_size_id(ctx->key_byte_size, &hal_key_size_id);
   if (status != STM32_HAL_SUCCESS)
   {

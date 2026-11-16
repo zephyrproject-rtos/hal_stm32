@@ -57,4 +57,10 @@ Patch List:
     Impacted files:
      drivers/include/stm32wbaxx_hal_tsc.h
      drivers/include/stm32wbaxx_hal_wwdg.h
+
+   *Fix IS_CRYP_INSTANCE() macro definition for when the product line does
+    not embed an SAES instance hence when the SAES macro is not defined.
+    Impatced file:
+     stm32cube/stm32wbaxx/drivers/include/stm32wbaxx_hal_cryp.h
+
    See release_note.html from STM32Cube
