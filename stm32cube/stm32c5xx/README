@@ -41,4 +41,13 @@ Patch List:
 
    *stm32c5xx_hal_conf.h: Enable USE_HAL_ETH_REGISTER_CALLBACKS
 
+   *Set USE_HAL_*_DMA macros default value to USE_HAL_DMA_MODULE to prevent
+    DMA resources are used in related HAL drivers when DMA support is disabled.
+    Impacted files:
+     stm32cube/stm32c5xx/drivers/templates/common/stm32c5xx_hal_conf.h
+
+   *Enable by default all AES modes in AES HAL driver
+    Impacted file:
+     stm32cube/stm32c5xx/drivers/templates/common/stm32c5xx_hal_conf.h
+
    See release_note.html from STM32Cube

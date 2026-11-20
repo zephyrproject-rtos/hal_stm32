@@ -82,4 +82,9 @@ Patch List:
       stm32cube/stm32mp13xx/drivers/src/stm32mp13xx_hal_eth.c
      Internal reference: HAL1-27631
 
+   *Condition DMA support in CRYP HAL suspend/resume API function to
+    USE_HAL_DMA_MODULE being enabled.
+    Impacted file:
+     stm32cube/stm32mp13xx/drivers/src/stm32mp13xx_hal_cryp.c
+
    See release_note.html from STM32Cube
