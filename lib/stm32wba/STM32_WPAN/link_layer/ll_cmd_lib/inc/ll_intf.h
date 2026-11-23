@@ -1,29 +1,29 @@
-/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/2.00a-lca06/inc/ll_intf.h#5 $*/
+/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/1.11.0/inc/ll_intf.h#5 $*/
 /**
  ********************************************************************************
  * @file    ll_intf_cmds.h
  * @brief   This file contains all the functions prototypes for the LL interface component.
  ******************************************************************************
- * @copy
  * Synopsys MIT License:
  * Copyright (c) 2020-Present Synopsys, Inc
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of the software and
- * associated documentation files (the “Software”), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
- * of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
- * following conditions:
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of the this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without
+ * limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom
+ * the Software is furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all copies or substantial
- * portions of the Software.
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
  *
  * THIS SOFTWARE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING, BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
- * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT, OR OTHERWISE
- * ARISING FROM, OUT OF, OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
- * OTHER DEALINGS IN THE SOFTWARE.
+ * FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT, OR OTHERWISE ARISING FROM,
+ * OUT OF, OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
  *
  * */
 
@@ -55,6 +55,8 @@ typedef void * 		cs_step_data_t;
 #if SUPPORT_EXT_FEATURE_SET
 #define MAX_ALLOWED_EXT_FEATURE_SET_PAGES    		10
 #define MAX_SUPPORTED_EXT_FEATURE_SET_PAGES    		1
+/* Number of extended feature pages stored per connection context. */
+#define SUPPORTED_EXT_FEATURE_SET_PAGES                 MAX_SUPPORTED_EXT_FEATURE_SET_PAGES
 #define EXT_FEATURE_SET_BYTES_NO               		24
 #endif /* SUPPORT_EXT_FEATURE_SET */
 
@@ -113,6 +115,33 @@ typedef void * 		cs_step_data_t;
 /* Defines the minimum number of BN can be selected by the host or LL */
 #define MIN_BN							0x01
 extern const struct hci_dispatch_tbl* p_dis_tbl;
+
+#define	NO_FEATURE 0
+#define	EXTENDED_ADV     0x00000008UL /* = BLE_OPTIONS_EXTENDED_ADV */
+#define	ISO_CIS_FEATURE  0x00010000UL /* = BLE_OPTIONS_CIS */
+#define	ISO_BIS_FEATURE  0x00020000UL /* = BLE_OPTIONS_BIS */
+#define PAWR_FEATURE     0x00040000UL /* = BLE_OPTIONS_PAWR */
+#define CS_FEATURE       0x00080000UL /* = BLE_OPTIONS_CHAN_SOUNDING */
+
+/* Define the minimum range for profiling timing arrays */
+#define PROFILE_DRIFT_RANGE_MIN     20
+#define PROFILE_EXEC_RANGE_MIN      35
+
+/* Profiling timing type */
+typedef enum {
+	PROFILE_EXECUTE_TYPE,
+	PROFILE_DRIFT_TYPE
+} prof_timing_type;
+
+/**
+ * @brief  Profiling timing callback type,
+ *         the callback is called when a new max timing is observed
+ *
+ * @param  duration : [in] duration of reported timing
+ * @param  type	    : [in] type of reported timing
+ *
+ */
+typedef void (*profiming_timing_clbk)(uint32_t duration, prof_timing_type type);
 /*================================= Enumerations =====================================*/
 
 /**
@@ -2380,9 +2409,21 @@ typedef void (*hst_big_missed_evnt_cbk)(uint8_t big_hndl, uint8_t missed_intrvs,
  *
  * @retval ble_stat_t : Command status to be sent to the Host.
  */
-ble_stat_t ll_intf_init(const struct hci_dispatch_tbl* p_dispatch_tbl);
+ble_stat_t ll_intf_init(const struct hci_dispatch_tbl* p_dispatch_tbl,
+	uint8_t num_sm_needed,
+	int8_t *ll_memory_buffer,
+	uint16_t ll_memory_buffer_size,
+	uint32_t supported_feature
+	);
 
 
+
+/**
+  * @brief  Get the number of concurrent state machines for the Link Layer
+  * @param  None
+  * @retval Supported number of concurrent state machines
+  */
+uint8_t ll_intf_get_concurrent_state_machines_num(void);
 /*========================================================================================================*/
 /*============================  HCI Commands' Groups (Based on Functionality) ============================*/
 /*========================================================================================================*/
@@ -2601,6 +2642,19 @@ ble_stat_t ll_intf_le_set_random_addr(uint8_t random_addr[6]);
 /**@}
  */
 ble_stat_t ll_intf_le_set_resolvable_private_addr_timeout(uint16_t rpa_timeout);
+
+/**
+ * @brief  Set the range of time the controller uses a Resolvable Private Address before a new resolvable
+ private address is generated and starts being used.
+ *
+ * @param  rpa_min_timeout : [in] Min Resolvable Private Address timeout measured in seconds.
+ * @param  rpa_max_timeout : [in] Max Resolvable Private Address timeout measured in seconds.
+ *
+ * @retval ble_stat_t : Command status to be sent to the Host.
+ */
+/**@}
+ */
+ble_stat_t ll_intf_le_set_resolvable_private_addr_timeout_v2(uint16_t rpa_min_timeout, uint16_t rpa_max_timeout);
 
 #endif /* SUPPORT_PRIVACY */
 
@@ -5535,6 +5589,33 @@ ble_stat_t ll_intf_ctrl_rx_dtp(uint8_t rx_pckt_count, uint8_t rx_pckt_len);
 
 #endif /* SUPPORT_RX_DTP_CONTROL */
 
+#if (SUPPORT_MASTER_CONNECTION || SUPPORT_SLAVE_CONNECTION)
+/**
+ * @brief  Get the value of the sleep clock and event counter number at the last
+ *         connection event of a given connection
+ *
+ * @param  connection_handle 	: [in]  Connection Handle to identify a connection.
+ * @param  event_counter        : [out] Event counter of the last connection event.
+ * @param  anchor_point		: [out] Anchor point of the last connection event in microseconds.
+ *
+ * @retval status  : [out] 0:SUCCESS, COMMAND_DISALLOWED if no connection event
+ *                   has completed, 0xXX:ERROR_CODE otherwise.
+ */
+ble_stat_t ll_intf_le_get_last_conn_evnt_anchor_point(uint16_t connection_handle,
+                                                   uint16_t* event_counter,
+                                                   uint32_t* anchor_point);
+
+/**
+ * @brief  Get the current value of the sleep clock
+ *
+ * @param  curr_time	: [out] The current value of the sleep clock.
+ *
+ * @retval status  : [out] 0:SUCCESS, 0xXX:ERROR_CODE.
+ */
+ble_stat_t ll_intf_le_get_current_sleep_time(uint32_t *curr_time);
+
+#endif
+
 #if SUPPORT_CONFIGURABLE_GAIN_FIX
 /**
  * @brief  initialize rssi gain fix region and select resistor measured
@@ -5574,7 +5655,29 @@ void ll_intf_apply_cte_degrad_change(void);
  * @param average_drift_time [out]: Average Drift Time
  * @param reset_timing [in]: Reset all timings profiled for future profiling.
  */
-void ll_intf_get_profile_statistics(uint32_t* exec_time, uint32_t* drift_time, uint32_t* average_drift_time, uint8_t reset_timing );
+void ll_intf_get_profile_statistics(uint32_t* exec_time, uint32_t* drift_time, uint32_t* average_drift_time,
+				    uint8_t reset_timing );
+/**
+ * @brief Initialize the advanced profiling framework
+ * @param drift_values  [in]: Array contains drift values
+ * @param exec_values  [in]: Array contains exec values
+ * @param drift_size  [in]: Size drift array
+ * @param exec_size  [in]: Size exec array
+ * @param max_profiling_time_detected_cbk  [in]: callback when a new max timing is observed.
+ * @retval Return 1 if array size is not valid.
+ */
+ble_stat_t ll_intf_advanced_profile_init(uint32_t* drift_values, uint32_t* exec_values,
+			      const uint8_t drift_size, const uint8_t exec_size,
+			      profiming_timing_clbk max_profiling_time_detected_cbk);
+
+/**
+ * @brief Gets the optimized times for the execution time and drift time
+ * @param exec_time  [out]: Optimized Execution Time
+ * @param drift_time [out]: Optimized Drift Time
+ * @param reset_timing [in]: Reset all timings profiled for future profiling.
+ */
+ble_stat_t ll_intf_get_advanced_profile_statistics(uint32_t* exec_time, uint32_t* drift_time,
+				                 uint8_t reset_timing);
 #endif /* IS_INTERNAL_PROFILED_ENABLED */
 
 /**
@@ -5591,6 +5694,15 @@ void ll_intf_ADV5ms_support(uint8_t enable, uint32_t randomization);
  */
 void ll_intf_BLE5ms_interval_support(uint8_t enable);
 
+#if SUPPORT_NEAR_AUX_CR
+/**
+ * @brief Enables or disables changes mechanism to enahance the auxiliary offset
+ * of AUX_ADV_IND events.
+ * @param enable [in]: Enable/Disable near auxiliary scheduling.
+ */
+void ll_intf_near_aux_after_ext_support(uint8_t enable);
+#endif /* SUPPORT_NEAR_AUX_CR */
+
 #if (SUPPORT_BRD_ISOCHRONOUS)
 /**
  * @brief Proprietary commands to enable the mechanism to improve the BIG
@@ -5599,6 +5711,15 @@ void ll_intf_BLE5ms_interval_support(uint8_t enable);
  */
 void ll_intf_BIG_synchro_enhancement_support(uint8_t enable);
 #endif /*(SUPPORT_BRD_ISOCHRONOUS)*/
+
+#if (SUPPORT_LE_PAWR_SYNC_ROLE)
+/**
+ * @brief Proprietary commands to enable the mechanism to improve the
+ *        power consumption in PAWR synchronizer.
+ * @param enable  [in]: Enable/ Disable proprietary feature.
+ */
+void ll_intf_PAWR_power_consumed_enhancement_support(uint8_t enable);
+#endif /*(SUPPORT_LE_PAWR_SYNC_ROLE)*/
 /**@}
 */
 

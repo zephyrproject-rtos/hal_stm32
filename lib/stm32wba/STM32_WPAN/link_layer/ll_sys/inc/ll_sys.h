@@ -61,7 +61,6 @@ typedef enum
 /* Link Layer system interface general module functions  ************************************************/
 void ll_sys_init(void);
 void ll_sys_reset(void);
-void ll_sys_delay_us(uint32_t delay);
 void ll_sys_assert(uint8_t condition);
 void ll_sys_get_rng(uint8_t *ptr_rnd, uint32_t len);
 void ll_sys_radio_ack_ctrl(uint8_t enable);
@@ -99,20 +98,26 @@ ll_sys_status_t ll_sys_dp_slp_exit(void);
 ll_sys_dp_slp_state_t ll_sys_dp_slp_get_state(void);
 void ll_sys_dp_slp_wakeup_evt_clbk(void const *ptr_arg);
 
+#ifdef __ZEPHYR__
 /* Link Layer system interface temperature calibration functions  ************************************************/
 #if (USE_TEMPERATURE_BASED_RADIO_CALIBRATION == 1)
 void ll_sys_bg_temperature_measurement_init(void);
 void ll_sys_bg_temperature_measurement(void);
 #endif /* USE_TEMPERATURE_BASED_RADIO_CALIBRATION */
+#endif /* __ZEPHYR__ */
+#if (SUPPORT_PROFILE != PROFILE_DISABLED)
+ble_stat_t ll_sys_advanced_profile_init(uint32_t* drift_values, uint32_t* exec_values,
+			      const uint8_t drift_size, const uint8_t exec_size,
+			      profiming_timing_clbk max_profiling_time_detected_cbk);
 
-/**
-  * @brief  Get the number of concurrent state machines for the Link Layer
-  * @param  None
-  * @retval Supported number of concurrent state machines
-  */
-uint8_t ll_sys_get_concurrent_state_machines_num(void);
+void ll_sys_get_timing_stats( uint32_t* exec_time, uint32_t* drift_time, uint32_t* average_drift_time,
+			      uint8_t reset_timing );
 
-#if SUPPORT_BLE
+ble_stat_t ll_sys_get_advanced_timing_stats( uint32_t* exec_time, uint32_t* drift_time,
+				    uint8_t reset_timing );
+#endif
+
+#if (SUPPORT_BLE == 1)
 /**
   * @brief  Updating Link Layer BLE timings
   * @param  drift_time[in]: number of Link Layer sleep timer cycles (1 cycle = 31us) for the DRIFT TIME timing.
@@ -123,7 +128,5 @@ uint8_t ll_sys_get_concurrent_state_machines_num(void);
   */
 uint32_t ll_sys_config_BLE_schldr_timings(uint8_t drift_time, uint8_t exec_time);
 #endif /* SUPPORT_BLE */
-
-uint32_t ll_intf_cmn_get_slptmr_value(void);
 
 #endif /* LL_SYS_H */

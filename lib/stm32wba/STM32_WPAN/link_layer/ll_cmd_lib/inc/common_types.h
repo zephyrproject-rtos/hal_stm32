@@ -1,29 +1,29 @@
-/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/2.00a-lca06/inc/common_types.h#5 $*/
+/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/1.11.0/inc/common_types.h#5 $*/
 /**
  ********************************************************************************
  * @file    common_types.h
  * @brief   This file contains common includes for BLE FW LL.
  ******************************************************************************
- * @copy
  * Synopsys MIT License:
  * Copyright (c) 2020-Present Synopsys, Inc
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of the software and
- * associated documentation files (the “Software”), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
- * of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
- * following conditions:
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of the this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without
+ * limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom
+ * the Software is furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all copies or substantial
- * portions of the Software.
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
  *
  * THIS SOFTWARE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING, BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
- * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT, OR OTHERWISE
- * ARISING FROM, OUT OF, OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
- * OTHER DEALINGS IN THE SOFTWARE.
+ * FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT, OR OTHERWISE ARISING FROM,
+ * OUT OF, OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
  *
  * */
 
@@ -32,6 +32,41 @@
 #ifndef COMMON_TYPES_H_
 #define COMMON_TYPES_H_
 #include "_40nm_reg_files/DWC_ble154combo.h"
+
+/********************************************************************** */
+/****************** DEVICES MACRO Include  **************************** */
+/********************************************************************** */
+
+#if defined(STM32WBA25xx) || defined(STM32WBA20xx) || defined(STM32WBA23xx)
+#ifndef STM32WBA2xxx
+#define STM32WBA2xxx
+#endif
+#elif  defined(STM32WBA50xx) || defined(STM32WBA52xx) || defined(STM32WBA54xx) \
+    || defined(STM32WBA55xx) || defined(STM32WBA5Mxx)
+#ifndef STM32WBA5xxx
+#define STM32WBA5xxx
+#endif
+#elif defined(STM32WBA62xx) || defined(STM32WBA63xx) || defined(STM32WBA64xx) \
+     || defined(STM32WBA65xx) || defined(STM32WBA6Mxx)
+#ifndef STM32WBA6xxx
+#define STM32WBA6xxx
+#endif
+#endif
+
+/* Auto-select PHY if not already provided by project */
+#if !defined(PHY_40nm_6_00_a) && !defined(PHY_40nm_6_00_a_lca00) && \
+    !defined(PHY_40nm_3_00_a) && !defined(PHY_40nm_3_40_a) && \
+    !defined(PHY_40nm_3_60_a_tc) && !defined(PHY_40nm_3_60_a_tc_new_demod) && \
+    !defined(PHY_40nm_2_00_a_tc) && !defined(PHY_40nm_2_10_a_tc)
+
+#if defined(STM32WBA20xx) || defined(STM32WBA23xx) || defined(STM32WBA25xx)
+#define PHY_40nm_6_00_a
+#elif defined(STM32WBA5xxx) || defined(STM32WBA6xxx)
+#define PHY_40nm_3_40_a
+#endif
+
+#endif
+
 #include "bsp.h"
 #include "ll_fw_config.h"
 #include "mem_intf.h"
@@ -609,6 +644,14 @@ typedef enum {
 #define SUPPORT_EXT_FEATURE_SET 0
 #endif /* SUPPORT_EXT_FEATURE_SET */
 
+#ifndef SUPPORT_PA_SYNC_SID_FIX
+#if (USED_RTL_VER <= 7)
+#define SUPPORT_PA_SYNC_SID_FIX					1
+#else
+#define SUPPORT_PA_SYNC_SID_FIX					0
+#endif /* SUPPORT_PA_SYNC_SID_FIX */
+#endif
+
 
 #ifndef SUPPORT_CONFIGURABLE_GAIN_FIX
 #define SUPPORT_CONFIGURABLE_GAIN_FIX				0 /* Enable\Disable configurable gain fix support */
@@ -660,6 +703,12 @@ typedef enum {
 #define NEAR_AUX_AFTER_EXT_SLEEP_TIMER_SCHEDULING 	0
 #endif /* NEAR_AUX_AFTER_EXT_SLEEP_TIMER_SCHEDULING */
 
+#if SUPPORT_LE_EXTENDED_ADVERTISING
+#define SUPPORT_NEAR_AUX_CR                             1
+#else
+#define SUPPORT_NEAR_AUX_CR                             0
+#endif /* SUPPORT_LE_EXTENDED_ADVERTISING */
+
 #ifndef SUPPORT_LE_ENHANCED_CONN_UPDATE
 #define SUPPORT_LE_ENHANCED_CONN_UPDATE 0
 #endif /* SUPPORT_LE_ENHANCED_CONN_UPDATE */
@@ -669,7 +718,7 @@ typedef enum {
 #else
 #define PHY_USE_APB_TRANSPORT				0
 #endif /* PHY_40nm_6_00_a || PHY_40nm_6_00_a_lca00 */
-#if defined(RTL_VER_7)
+#if (USED_RTL_VER==7)
 #define USE_NEW_DEMODULATOR							1
 #endif /* (USED_RTL_VER >= 7) */
 

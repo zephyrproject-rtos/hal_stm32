@@ -1,29 +1,29 @@
-/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/2.00a-lca06/inc/ll_error.h#4 $*/
+/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/1.11.0/inc/ll_error.h#4 $*/
 /**
  ********************************************************************************
  * @file    error.h
  * @brief   This file contains error defines across BLE FW LL.
  ******************************************************************************
- * @copy
  * Synopsys MIT License:
  * Copyright (c) 2020-Present Synopsys, Inc
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of the software and
- * associated documentation files (the “Software”), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
- * of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
- * following conditions:
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of the this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without
+ * limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom
+ * the Software is furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all copies or substantial
- * portions of the Software.
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
  *
  * THIS SOFTWARE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING, BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
- * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT, OR OTHERWISE
- * ARISING FROM, OUT OF, OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
- * OTHER DEALINGS IN THE SOFTWARE.
+ * FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT, OR OTHERWISE ARISING FROM,
+ * OUT OF, OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
  *
  * */
 
@@ -127,11 +127,11 @@ typedef enum _HW_ERROR_CODES
 #define     INSUFFICIENT_CHANNELS                                                           0x48
 #if SUPPORT_BLE
 
-#if ((MAX_NUM_CNCRT_STAT_MCHNS > 1) && !((SUPPORT_MASTER_CONNECTION) || (SUPPORT_SLAVE_CONNECTION)||(SUPPORT_LE_EXTENDED_ADVERTISING)))
+#if ((MAX_NUM_CNCRT_STAT_MCHNS_STATIC > 1) && !((SUPPORT_MASTER_CONNECTION) || (SUPPORT_SLAVE_CONNECTION)||(SUPPORT_LE_EXTENDED_ADVERTISING)))
 #error define at least either master or slave role
 #endif
 
-#if (SUPPORT_MASTER_CONNECTION || SUPPORT_SLAVE_CONNECTION || SUPPORT_LE_EXTENDED_ADVERTISING) && (MAX_NUM_CNCRT_STAT_MCHNS == 0)
+#if (SUPPORT_MASTER_CONNECTION || SUPPORT_SLAVE_CONNECTION || SUPPORT_LE_EXTENDED_ADVERTISING) && (MAX_NUM_CNCRT_STAT_MCHNS_STATIC == 0)
 #error define at least one state machine in order to support slave or master role or extended advertising
 #endif /* SUPPORT_MASTER_CONNECTION || SUPPORT_SLAVE_CONNECTION */
 
@@ -219,9 +219,6 @@ typedef enum _HW_ERROR_CODES
 #error "Dynamic Preemphasis coefficients feature cannot be enabled while the CTE degradation API is enabled"
 #endif /* SUPPORT_DYNAMIC_PREEMPH_COEFF && CTE_DEGRADATION_API_PHY_SUPPORT */
 
-#if (defined(RTL_VER_7) ^ (defined(PHY_40nm_3_60_a_tc_new_demod) || defined(PHY_40nm_6_00_a_lca00))) && defined(snps_ble_demo)
-#error "Configuration error: RTL_VER_7 shall only be defined while either PHY_40nm_3_60_a_tc_new_demod or PHY_40nm_6_00_a_lca00 is defined"
-#endif /*(defined(RTL_VER_7) && (!defined(PHY_40nm_3_60_a_tc_new_demod) && !defined(PHY_40nm_6_00_a_lca00)))*/
 
 /* Exported macros ------------------------------------------------------------*/
 

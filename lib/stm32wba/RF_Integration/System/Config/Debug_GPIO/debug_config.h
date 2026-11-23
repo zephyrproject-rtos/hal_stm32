@@ -104,6 +104,10 @@ extern "C" {
 #define USE_RT_DEBUG_LOW_POWER_STANDBY_MODE_ACTIVE            (0)
 #define GPIO_DEBUG_LOW_POWER_STANDBY_MODE_ACTIVE              {GPIOB, LL_PWR_GPIO_PIN_15}
 
+/* Low power - Current consumption measurement */
+#define USE_RT_DEBUG_LOW_POWER_MEAS                           (0)
+#define GPIO_DEBUG_LOW_POWER_MEAS                             {GPIOA, LL_PWR_GPIO_PIN_7}
+
 #define USE_RT_DEBUG_HCI_READ_DONE                            (0)
 #define GPIO_DEBUG_HCI_READ_DONE                              {GPIOA, LL_PWR_GPIO_PIN_0}
 
@@ -619,6 +623,41 @@ extern "C" {
 
 #define USE_RT_DEBUG_APP_APPE_INIT                            (0)
 #define GPIO_DEBUG_APP_APPE_INIT                              {GPIOA, LL_PWR_GPIO_PIN_0}
+
+/* Ready-to-use user debug signals.
+   To use one, set its USE_RT_DEBUG_APP_USERx define to (1) and assign the wanted
+   GPIO to GPIO_DEBUG_APP_USERx. No other file needs to be modified.
+   CAN BE MODIFIED BY USER */
+
+#define USE_RT_DEBUG_APP_USER1                                (0)
+#define GPIO_DEBUG_APP_USER1                                  {GPIOA, LL_PWR_GPIO_PIN_0}
+
+#define USE_RT_DEBUG_APP_USER2                                (0)
+#define GPIO_DEBUG_APP_USER2                                  {GPIOA, LL_PWR_GPIO_PIN_0}
+
+#define USE_RT_DEBUG_APP_USER3                                (0)
+#define GPIO_DEBUG_APP_USER3                                  {GPIOA, LL_PWR_GPIO_PIN_0}
+
+#define USE_RT_DEBUG_APP_USER4                                (0)
+#define GPIO_DEBUG_APP_USER4                                  {GPIOA, LL_PWR_GPIO_PIN_0}
+
+#define USE_RT_DEBUG_APP_USER5                                (0)
+#define GPIO_DEBUG_APP_USER5                                  {GPIOA, LL_PWR_GPIO_PIN_0}
+
+#define USE_RT_DEBUG_APP_USER6                                (0)
+#define GPIO_DEBUG_APP_USER6                                  {GPIOA, LL_PWR_GPIO_PIN_0}
+
+#define USE_RT_DEBUG_APP_USER7                                (0)
+#define GPIO_DEBUG_APP_USER7                                  {GPIOA, LL_PWR_GPIO_PIN_0}
+
+#define USE_RT_DEBUG_APP_USER8                                (0)
+#define GPIO_DEBUG_APP_USER8                                  {GPIOA, LL_PWR_GPIO_PIN_0}
+
+#define USE_RT_DEBUG_APP_USER9                                (0)
+#define GPIO_DEBUG_APP_USER9                                  {GPIOA, LL_PWR_GPIO_PIN_0}
+
+#define USE_RT_DEBUG_APP_USER10                               (0)
+#define GPIO_DEBUG_APP_USER10                                 {GPIOA, LL_PWR_GPIO_PIN_0}
 
 /********************************/
 /** Debug configuration setup **/

@@ -1,29 +1,29 @@
-/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/2.00a-lca06/firmware/public_inc/ll_fw_config.h#1 $*/
+/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/1.11.0/firmware/public_inc/ll_fw_config.h#1 $*/
 /**
  ********************************************************************************
  * @file    ll_fw_config.h
  * @brief   This file contains the major configurations to the BLE controller.
  ******************************************************************************
- * @copy
  * Synopsys MIT License:
  * Copyright (c) 2020-Present Synopsys, Inc
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of the software and
- * associated documentation files (the “Software”), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
- * of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
- * following conditions:
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of the this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without
+ * limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom
+ * the Software is furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all copies or substantial
- * portions of the Software.
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
  *
  * THIS SOFTWARE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING, BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
- * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT, OR OTHERWISE
- * ARISING FROM, OUT OF, OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
- * OTHER DEALINGS IN THE SOFTWARE.
+ * FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT, OR OTHERWISE ARISING FROM,
+ * OUT OF, OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
  *
  * */
 #ifndef INCLUDE_LL_FW_CONFIG_H
@@ -92,7 +92,7 @@
 #endif /* SUPPORT_SLEEP_CLOCK_ACCURCY_UPDATES */
 
 #ifndef SUPPORT_CONNECTED_ISOCHRONOUS
-#if (defined(STM32WBA25xx) || defined(STM32WBA26xx)) && !defined(CFG_LL_BLE_FULL_INTERFACE)
+#if (defined(STM32WBA2xxx)) && !defined(CFG_LL_BLE_FULL_INTERFACE)
 #define SUPPORT_CONNECTED_ISOCHRONOUS               0 /* Enable\Disable Connected Isochronous Channel Feature. Enable:1 - Disable:0 */
 #else
 #define SUPPORT_CONNECTED_ISOCHRONOUS               1 /* Enable\Disable Connected Isochronous Channel Feature. Enable:1 - Disable:0 */
@@ -100,7 +100,7 @@
 #endif /* SUPPORT_CONNECTED_ISOCHRONOUS */
 
 #ifndef SUPPORT_BRD_ISOCHRONOUS
-#if (defined(STM32WBA25xx) || defined(STM32WBA26xx)) && !defined(CFG_LL_BLE_FULL_INTERFACE)
+#if (defined(STM32WBA2xxx)) && !defined(CFG_LL_BLE_FULL_INTERFACE)
 #define SUPPORT_BRD_ISOCHRONOUS                     0 /* Enable\Disable Broadcast Isochronous Channel Feature. Enable:1 - Disable:0 */
 #else
 #define SUPPORT_BRD_ISOCHRONOUS                     1 /* Enable\Disable Broadcast Isochronous Channel Feature. Enable:1 - Disable:0 */
@@ -108,7 +108,7 @@
 #endif /* SUPPORT_BRD_ISOCHRONOUS */
 
 #ifndef SUPPORT_SYNC_ISOCHRONOUS
-#if (defined(STM32WBA25xx) || defined(STM32WBA26xx)) && !defined(CFG_LL_BLE_FULL_INTERFACE)
+#if (defined(STM32WBA2xxx)) && !defined(CFG_LL_BLE_FULL_INTERFACE)
 #define SUPPORT_SYNC_ISOCHRONOUS                    0 /* Enable\Disable Broadcast Isochronous Synchronizer Channel Feature. Enable:1 - Disable:0 */
 #else
 #define SUPPORT_SYNC_ISOCHRONOUS                    1 /* Enable\Disable Broadcast Isochronous Synchronizer Channel Feature. Enable:1 - Disable:0 */
@@ -136,7 +136,7 @@
 #endif /* SUPPORT_CSSA */
 
 #ifndef SUPPORT_LE_PAWR_ADVERTISER_ROLE
-#if defined(STM32WBA25xx) || defined(STM32WBA26xx) || defined(CFG_LL_BLE_FULL_INTERFACE)
+#if defined(STM32WBA2xxx) || defined(CFG_LL_BLE_FULL_INTERFACE)
 #define SUPPORT_LE_PAWR_ADVERTISER_ROLE             1 /* Enable\Disable PAwR Advertiser role. Enable:1 - Disable:0 */
 #else
 #define SUPPORT_LE_PAWR_ADVERTISER_ROLE             0 /* Enable\Disable PAwR Advertiser role. Enable:1 - Disable:0 */
@@ -144,7 +144,7 @@
 #endif /* SUPPORT_LE_PAWR_ADVERTISER_ROLE */
 
 #ifndef SUPPORT_LE_PAWR_SYNC_ROLE
-#if defined(STM32WBA25xx) || defined(STM32WBA26xx) || defined(CFG_LL_BLE_FULL_INTERFACE)
+#if defined(STM32WBA2xxx) || defined(CFG_LL_BLE_FULL_INTERFACE)
 #define SUPPORT_LE_PAWR_SYNC_ROLE                   1 /* Enable\Disable PAwR Synchronizer role. Enable:1 - Disable:0 */
 #else
 #define SUPPORT_LE_PAWR_SYNC_ROLE                   0 /* Enable\Disable PAwR Synchronizer role. Enable:1 - Disable:0 */
@@ -161,7 +161,7 @@
 #endif
 
 #ifndef SUPPORT_FRAME_SPACE_UPDATE
-#if defined(STM32WBA25xx) || defined(STM32WBA26xx) || defined(CFG_LL_BLE_FULL_INTERFACE)
+#if defined(STM32WBA2xxx) || defined(CFG_LL_BLE_FULL_INTERFACE)
 #define SUPPORT_FRAME_SPACE_UPDATE									1 /* Enable\Disable Frame Space Update Feature. Enable:1 - Disable:0 */
 #else
 #define SUPPORT_FRAME_SPACE_UPDATE									0 /* Enable\Disable Frame Space Update Feature. Enable:1 - Disable:0 */
@@ -169,11 +169,7 @@
 #endif /* SUPPORT_FRAME_SPACE_UPDATE */
 
 #ifndef SUPPORT_EXT_FEATURE_SET
-#if defined(STM32WBA25xx) || defined(STM32WBA26xx) || defined(CFG_LL_BLE_FULL_INTERFACE)
 #define SUPPORT_EXT_FEATURE_SET                     1 /* Enable\Disable Extended Feature Set Exchange. Enable:1 - Disable:0 */
-#else
-#define SUPPORT_EXT_FEATURE_SET                     0 /* Enable\Disable Extended Feature Set Exchange. Enable:1 - Disable:0 */
-#endif
 #endif /* SUPPORT_EXT_FEATURE_SET */
 
 #ifndef SUPPORT_ISO_UNSEG_MODE
@@ -181,17 +177,14 @@
 #endif /* SUPPORT_ISO_UNSEG_MODE */
 
 #ifndef SUPPORT_LE_ADVERTISERS_MONITORING
-#if defined(STM32WBA25xx) || defined(STM32WBA26xx) || defined(CFG_LL_BLE_FULL_INTERFACE)
 #define SUPPORT_LE_ADVERTISERS_MONITORING       		1 /* Enable\Disable Advertisers Monitoring Feature. Enable:1 - Disable:0 */
-#else
-#define SUPPORT_LE_ADVERTISERS_MONITORING           0 /* Enable\Disable Advertisers Monitoring Feature. Enable:1 - Disable:0 */
-#endif
 #endif /* SUPPORT_LE_ADVERTISERS_MONITORING */
 
+
 /* Capabilities configurations */
-#ifndef MAX_NUM_CNCRT_STAT_MCHNS
-#define MAX_NUM_CNCRT_STAT_MCHNS                    8 /* Set maximum number of states the controller can support */
-#endif /* MAX_NUM_CNCRT_STAT_MCHNS */
+#ifndef MAX_NUM_CNCRT_STAT_MCHNS_STATIC
+#define MAX_NUM_CNCRT_STAT_MCHNS_STATIC                    20 /* Set maximum number of states the controller can support */
+#endif /* MAX_NUM_CNCRT_STAT_MCHNS_STATIC */
 
 #ifndef USE_NON_ACCURATE_32K_SLEEP_CLK
 #define USE_NON_ACCURATE_32K_SLEEP_CLK              1 /* Allow to drive the sleep clock by sources other than the default crystal oscillator source.*/
@@ -232,7 +225,7 @@
 #endif /* SUPPORT_PROFILE */
 
 #ifndef SUPPORT_HW_AUDIO_SYNC_SIGNAL
-#if (defined(STM32WBA25xx) || defined(STM32WBA26xx)) && !defined(CFG_LL_BLE_FULL_INTERFACE)
+#if defined(STM32WBA2xxx) && !defined(CFG_LL_BLE_FULL_INTERFACE)
 #define SUPPORT_HW_AUDIO_SYNC_SIGNAL                    0 /* Enable\Disable the HW audio synchronization signal. Enable:1 - Disable:0 */
 #else
 #define SUPPORT_HW_AUDIO_SYNC_SIGNAL                    1 /* Enable\Disable the HW audio synchronization signal. Enable:1 - Disable:0 */

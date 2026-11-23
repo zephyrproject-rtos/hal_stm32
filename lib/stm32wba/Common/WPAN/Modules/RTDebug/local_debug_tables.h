@@ -139,6 +139,12 @@ static const rt_debug_signal_t system_debug_table[] = {
   [LOW_POWER_STANDBY_MODE_ACTIVE] = RT_DEBUG_SIGNAL_UNUSED,
 #endif /* USE_RT_DEBUG_LOW_POWER_STANDBY_MODE_ACTIVE */
 
+#if (USE_RT_DEBUG_LOW_POWER_MEAS == 1)
+  [LOW_POWER_MEAS] = RT_DEBUG_LOW_POWER_MEAS,
+#else
+  [LOW_POWER_MEAS] = RT_DEBUG_SIGNAL_UNUSED,
+#endif /* USE_RT_DEBUG_LOW_POWER_MEAS */
+
 };
 
 /***********************************/

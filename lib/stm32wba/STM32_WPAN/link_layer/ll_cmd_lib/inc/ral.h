@@ -1,4 +1,4 @@
-/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/2.00a-lca06/inc/ral.h#2 $*/
+/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/1.11.0/inc/ral.h#2 $*/
 /**
  ********************************************************************************
  * @file    ral.h
@@ -8,26 +8,26 @@
  *
  *
  ******************************************************************************
- * @copy
  * Synopsys MIT License:
  * Copyright (c) 2020-Present Synopsys, Inc
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of the software and
- * associated documentation files (the ?Software?), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
- * of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
- * following conditions:
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of the this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without
+ * limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom
+ * the Software is furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all copies or substantial
- * portions of the Software.
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
  *
  * THIS SOFTWARE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING, BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
- * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT, OR OTHERWISE
- * ARISING FROM, OUT OF, OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
- * OTHER DEALINGS IN THE SOFTWARE.
+ * FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT, OR OTHERWISE ARISING FROM,
+ * OUT OF, OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
  *
  * */
  
@@ -146,16 +146,6 @@ typedef enum ral_power_state_enum {
 	RAL_POWER_ACTIVE
 } ral_power_state_enum_t;
 
-/**
- * @brief Enum defines new TX retrial type:
- *
- * CONTINUE_CSMA_RETRY: continue of CSMA retry from csma_backoff_count.
- * START_NEW_FULL_TX_RETRY: start new TX retry from frm_retries_count.
- */
-typedef enum tx_new_retry_enum {
-	CONTINUE_CSMA_RETRY,
-	START_NEW_FULL_TX_RETRY
-}tx_new_retry_enum_t;
 
 /**
  * @brief Enum defines packet source for transmission when calling ral_start_tx() to be added properly in RAL packet.
@@ -1369,22 +1359,7 @@ otError ral_set_cca_ed_threshold(int8_t threshold);
  * @retval CCA Energy Detection threshold value
  */
 int8_t ral_get_cca_ed_threshold(void);
-#if (SUPPORT_COEXISTENCE)
-/**
- * @brief	Radio CSMA error callback.
- *
- * @param[in] error : Status error returned from this transmission
- */
-void radio_coex_tx_error_cbk(uint32_t error);
-#if(SUPPORT_OPENTHREAD_1_2 && (CONFIG_MAC_CSL_RECEIVER_ENABLE))
-/**
- * @brief	Radio RX  error callback (used in CSL receive AT case).
- *
- * @param[in] error : Status error returned from this reception
- */
-void radio_coex_rx_error_cbk(uint32_t error);
-#endif /*(SUPPORT_OPENTHREAD_1_2 && (CONFIG_MAC_CSL_RECEIVER_ENABLE))*/
-#endif /*end of (SUPPORT_COEXISTENCE)*/
+
 #if (RADIO_CSMA) &&(!SUPPORT_COEXISTENCE)
 /**
  * @brief	Set maximum time to start CSMA
@@ -1405,57 +1380,7 @@ void ral_set_csma_time(
  */
 void ral_set_frm_pend_bit_for_acks(uint8_t hndle_frm_pending_bit_for_acks);
 
-#if RADIO_CSMA
-/**
- * @brief   Set CSMA enable flag
- *
- * @param[in] csma_en : Value for CSMA enable flag to be set
- */
-void radio_set_csma_en(uint8_t csma_en);
-/**
- * @brief	Get CSMA enable flag
- *
- * @retval CSMA enable flag
- */
-uint8_t radio_get_csma_en(void);
-#endif /*end of RADIO_CSMA*/
-/**
- * @brief   Set CCA enable flag
- *
- * @param[in] cca_en : Value for CCA enable flag to be set
- */
-void radio_set_cca_en(uint8_t cca_en);
-/**
- * @brief   Get CCA enable flag
- *
- * @retval CCA enable flag .
- */
-uint8_t radio_get_cca_en(void);
-/**
- * @brief   Set pending TX retry flags
- *
- * @param[in] evnt_type     : Type of new retry (CONTINUE_CSMA_RETRY, START_NEW_FULL_TX_RETRY)
- * @param[in] radio_error	: Error returned from previous TX trial
- * @param[in] is_tx_blocked	: Flag to indicate that TX event is blocked
- */
-void radio_set_tx_retry_pending(tx_new_retry_enum_t evnt_type, otError radio_error, uint8_t is_tx_blocked);
-/**
- * @brief   Handle pending TX retry event
- *
- */
-void radio_handle_pnding_tx_retry_event(void);
-/**
- * @brief   Check if there's pending TX retry waiting to be executed
- *
- * @retval TRUE if there is a pending TX retry, FALSE otherwise.
- */
-uint8_t radio_is_tx_retry_event_pending(void);
-/**
- * @brief   Set MAC implicit broadcast PIB from MAC layer to be used in filtration
- *
- * @param[in] ImplicitBroadcast: Value for MAC implicit broadcast PIB to be set
- */
-void radio_set_implicitbroadcast(uint8_t ImplicitBroadcast);
+
 /**
  * @brief   Set MAC implicit broadcast PIB from radio layer to be used in filtration
  *

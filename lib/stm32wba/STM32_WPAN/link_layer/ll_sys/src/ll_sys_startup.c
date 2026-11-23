@@ -20,7 +20,9 @@
 #include "ll_sys.h"
 #include "ll_intf.h"
 #include "ll_sys_startup.h"
+#include "ll_intf_cmn.h"
 #include "common_types.h"
+
 #if defined(CONFIG_NET_L2_CUSTOM_IEEE802154_STM32WBA)
 #if defined(MAC)
 #ifndef OPENTHREAD_CONFIG_FILE
@@ -31,33 +33,47 @@
 #endif /* CONFIG_NET_L2_CUSTOM_IEEE802154_STM32WBA */
 
 static void ll_init(void);
+
+#if SUPPORT_BLE
+static uint8_t num_sm = 0;
+static int8_t *ll_mem_buffer = NULL;
+static uint16_t ll_mem_size = 0;
+static uint32_t ll_feature_supported = 0;
+#endif /* SUPPORT_BLE */
+
 static void ll_sys_dependencies_init(void);
 #if SUPPORT_BLE
-static void ll_sys_event_missed_cb( ble_buff_hdr_t* ptr_evnt_hdr )
-{
-  if (( ptr_evnt_hdr != NULL ) && (ptr_evnt_hdr->data_size >= 2)
-      && (ptr_evnt_hdr->ble_hdr_flags == BLE_BUFF_HDR_EVNT_CMD_PCKT))
-  {
-    uint8_t *event_data = ptr_evnt_hdr->buff_start + ptr_evnt_hdr->data_offset;
-    ll_sys_handle_missed_event_cb(event_data[1],
-                                  event_data);
-  }
-}
 
 /**
   * @brief  Initialize the Link Layer IP BLE controller
   * @param  None
   * @retval None
   */
-void ll_sys_ble_cntrl_init(hst_cbk hostCallback)
+void ll_sys_ble_cntrl_init(hst_cbk hostCallback,
+                           hst_cbk_queue_full eventMissedCallback,
+                           uint8_t num_sm_needed,
+                           int8_t *ll_memory_buffer,
+                           uint16_t ll_memory_buffer_size,
+                           uint32_t supported_feature
+                           )
 {
+  num_sm = num_sm_needed;
+  ll_mem_buffer = ll_memory_buffer;
+  ll_mem_size = ll_memory_buffer_size;
+  ll_feature_supported = supported_feature;
+
+  /* Only initilize if sleep timer is not initialized*/
+  if(ll_intf_cmn_get_slptmr_state())
+    return;
+
   ll_init();
 
   ll_intf_rgstr_hst_cbk(hostCallback);
 
-  ll_intf_rgstr_hst_cbk_ll_queue_full( ll_sys_event_missed_cb );
+  ll_intf_rgstr_hst_cbk_ll_queue_full( eventMissedCallback );
 }
 #endif /* SUPPORT_BLE */
+
 #if defined(CONFIG_NET_L2_CUSTOM_IEEE802154_STM32WBA)
 #if defined(MAC)
 #ifndef OPENTHREAD_CONFIG_FILE
@@ -69,6 +85,12 @@ void ll_sys_ble_cntrl_init(hst_cbk hostCallback)
 void ll_sys_mac_cntrl_init(void)
 {
   ST_MAC_preInit();
+#if SUPPORT_BLE
+  /* Only initilize if sleep timer is not initialized*/
+  if(ll_intf_cmn_get_slptmr_state())
+    return;
+#endif
+
   ll_init();
 }
 #endif /* OPENTHREAD_CONFIG_FILE */
@@ -81,6 +103,11 @@ void ll_sys_mac_cntrl_init(void)
   */
 void ll_sys_thread_init(void)
 {
+#if SUPPORT_BLE
+  /* Only initilize if sleep timer is not initialized*/
+  if(ll_intf_cmn_get_slptmr_state())
+    return;
+#endif
   ll_init();
 }
 
@@ -93,6 +120,7 @@ void ll_sys_thread_init(void)
   */
 static void ll_sys_dependencies_init(void)
 {
+
   ll_sys_status_t dp_slp_status;
 
   /* Deep sleep feature initialization */
@@ -113,21 +141,19 @@ static void ll_sys_dependencies_init(void)
   */
 static void ll_init(void)
 {
-  static uint8_t is_ll_initialized = 0;
 #if SUPPORT_BLE
   const struct hci_dispatch_tbl* p_hci_dis_tbl = NULL;
 #endif /* SUPPORT_BLE */
 
-  /* Ensure Link Layer resources are created only once */
-  if (is_ll_initialized == 1) {
-    return;
-  }
-  is_ll_initialized = 1;
-
 #if SUPPORT_BLE
   hci_get_dis_tbl( &p_hci_dis_tbl );
+  ll_intf_init(p_hci_dis_tbl,
+    num_sm,
+    ll_mem_buffer,
+    ll_mem_size,
+    ll_feature_supported
+  );
 
-  ll_intf_init(p_hci_dis_tbl);
 #endif /* SUPPORT_BLE */
 
 

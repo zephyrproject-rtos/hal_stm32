@@ -33,16 +33,6 @@ void ll_sys_init()
 }
 
 /**
-  * @brief  Blocking delay in us
-  * @param  None
-  * @retval None
-  */
-void ll_sys_delay_us(uint32_t delay)
-{
-  LINKLAYER_PLAT_DelayUs(delay);
-}
-
-/**
   * @brief  Assert checking
   * @param  None
   * @retval None
@@ -184,15 +174,29 @@ void ll_sys_schldr_timing_update_not(Evnt_timing_t * p_evnt_timing)
   LINKLAYER_PLAT_SCHLDR_TIMING_UPDATE_NOT(p_evnt_timing);
 }
 
-/**
-  * @brief  Get the number of concurrent state machines for the Link Layer
-  * @param  None
-  * @retval Supported number of concurrent state machines
-  */
-uint8_t ll_sys_get_concurrent_state_machines_num(void)
+#if (SUPPORT_PROFILE != PROFILE_DISABLED)
+
+ble_stat_t ll_sys_advanced_profile_init(uint32_t* drift_values, uint32_t* exec_values,
+			       const uint8_t drift_size, const uint8_t exec_size,
+			       profiming_timing_clbk max_profiling_time_detected_cbk)
 {
-  return MAX_NUM_CNCRT_STAT_MCHNS;
+  return ll_intf_advanced_profile_init( drift_values, exec_values,
+			       drift_size, exec_size,
+			       max_profiling_time_detected_cbk);
 }
+
+void ll_sys_get_timing_stats( uint32_t* exec_time, uint32_t* drift_time, uint32_t* average_drift_time,
+			      uint8_t reset_timing )
+{
+  ll_intf_get_profile_statistics(exec_time, drift_time,average_drift_time, reset_timing);
+}
+
+ble_stat_t ll_sys_get_advanced_timing_stats( uint32_t* exec_time, uint32_t* drift_time,
+				         uint8_t reset_timing )
+{
+  return ll_intf_get_advanced_profile_statistics(exec_time, drift_time, reset_timing);
+}
+#endif
 
 __WEAK void HostStack_Process(void)
 {

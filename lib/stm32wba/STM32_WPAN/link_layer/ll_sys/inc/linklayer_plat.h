@@ -44,14 +44,6 @@ extern void LINKLAYER_PLAT_EnableBackupDomainAccess(void);
  */
 extern void LINKLAYER_PLAT_DisableBackupDomainAccess(void);
 #endif /* __ZEPHYR__ */
-
-/**
-  * @brief  Link Layer active waiting loop.
-  * @param  delay: delay in us
-  * @retval None
-  */
-extern void LINKLAYER_PLAT_DelayUs(uint32_t delay);
-
 /**
   * @brief  Link Layer assertion API
   * @param  condition: conditional statement to be checked.

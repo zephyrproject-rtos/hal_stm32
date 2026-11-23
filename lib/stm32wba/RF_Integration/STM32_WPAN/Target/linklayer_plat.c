@@ -21,21 +21,29 @@
 #include "stm32wbaxx_hal.h"
 #include "stm32wbaxx_hal_conf.h"
 #include "stm32wbaxx_ll_rcc.h"
-
+#ifndef __ZEPHYR__
+#include "app_entry.h"
+#endif /* __ZEPHYR__ */
 #include "app_common.h"
 #include "app_conf.h"
+#include "ll_intf_cmn.h"
 #include "linklayer_plat.h"
+#include "RTDebug.h"
+#ifndef __ZEPHYR__
+#include "scm.h"
+#endif /* __ZEPHYR__ */
 #include "log_module.h"
 
 #ifndef __ZEPHYR__
 #if (USE_TEMPERATURE_BASED_RADIO_CALIBRATION == 1)
 #include "adc_ctrl.h"
 #endif /* (USE_TEMPERATURE_BASED_RADIO_CALIBRATION == 1) */
+
 #if (CFG_LPM_LEVEL != 0)
 #include "stm32_lpm.h"
 #include "stm32_lpm_if.h"
 #endif /* (CFG_LPM_LEVEL != 0) */
-#endif
+#endif /* __ZEPHYR__ */
 
 /* USER CODE BEGIN Includes */
 
@@ -48,8 +56,10 @@
 void (*radio_callback)(void) = NULL;
 void (*low_isr_callback)(void) = NULL;
 
-/* RNG handle */
-extern RNG_HandleTypeDef hrng;
+#if (USE_TEMPERATURE_BASED_RADIO_CALIBRATION == 1)
+/* Link Layer temperature request from background */
+extern void ll_sys_bg_temperature_measurement(void);
+#endif /* (USE_TEMPERATURE_BASED_RADIO_CALIBRATION == 1) */
 
 /* Radio critical sections */
 static uint32_t primask_bit = 0;
@@ -91,70 +101,12 @@ void LINKLAYER_PLAT_ClockInit(void)
   __HAL_RCC_RADIOSLPTIM_CONFIG(RCC_RADIOSTCLKSOURCE_LSE);
 
   LINKLAYER_PLAT_DisableBackupDomainAccess();
-#endif
+#endif /* __ZEPHYR__ */
 
   /* Enable AHB5ENR peripheral clock (bus CLK) */
   __HAL_RCC_RADIO_CLK_ENABLE();
 }
 #ifndef __ZEPHYR__
-/**
-  * @brief  Link Layer active waiting loop.
-  * @param  delay: delay in us
-  * @retval None
-  */
-void LINKLAYER_PLAT_DelayUs(uint32_t delay)
-{
-  static uint8_t lock = 0;
-  uint32_t t0;
-  uint32_t primask_bit;
-
-  /* Enter critical section */
-  primask_bit= __get_PRIMASK();
-  __disable_irq();
-
-  if (lock == 0U)
-  {
-    /* Initialize counter */
-    /* Reset cycle counter to prevent overflow
-       As a us counter, it is assumed than even with re-entrancy,
-       overflow will never happen before re-initializing this counter */
-    DWT->CYCCNT = 0U;
-    /* Enable DWT by safety but should be useless (as already set) */
-    SET_BIT(DCB->DEMCR, DCB_DEMCR_TRCENA_Msk);
-    /* Enable counter */
-    SET_BIT(DWT->CTRL, DWT_CTRL_CYCCNTENA_Msk);
-  }
-  /* Increment 're-entrance' counter */
-  lock++;
-  /* Get starting time stamp */
-  t0 = DWT->CYCCNT;
-  /* Exit critical section */
- __set_PRIMASK(primask_bit);
-
-  /* Turn us into cycles */
-  delay = delay * (SystemCoreClock / 1000000U);
-  delay += t0;
-
-  /* Busy waiting loop */
-  while (DWT->CYCCNT < delay)
-  {
-  };
-
-  /* Enter critical section */
-  primask_bit= __get_PRIMASK();
-  __disable_irq();
-  if (lock == 1U)
-  {
-    /* Disable counter */
-    CLEAR_BIT(DWT->CTRL, DWT_CTRL_CYCCNTENA_Msk);
-  }
-  /* Decrement 're-entrance' counter */
-  lock--;
-  /* Exit critical section */
- __set_PRIMASK(primask_bit);
-
-}
-
 /**
   * @brief  Link Layer assertion API
   * @param  condition: conditional statement to be checked.
@@ -226,12 +178,22 @@ void LINKLAYER_PLAT_NotifyWFIExit(void)
   */
 void LINKLAYER_PLAT_AclkCtrl(uint8_t enable)
 {
-  if(enable){
+  if(enable != 0u)
+  {
+#ifndef __ZEPHYR__
+    /* SCM HSE BEGIN */
+    /* Polling on HSE32 activation */
+    SCM_HSE_WaitUntilReady();
+    /* Enable RADIO baseband clock (active CLK) */
+    HAL_RCCEx_EnableRadioBBClock();
+    /* SCM HSE END */
+#else
     /* Enable RADIO baseband clock (active CLK) */
     HAL_RCCEx_EnableRadioBBClock();
 
     /* Polling on HSE32 activation */
     while ( LL_RCC_HSE_IsReady() == 0);
+#endif /* __ZEPHYR__ */
   }
   else
   {
@@ -508,6 +470,8 @@ void LINKLAYER_PLAT_StartRadioEvt(void)
 {
   __HAL_RCC_RADIO_CLK_SLEEP_ENABLE();
   NVIC_SetPriority(RADIO_INTR_NUM, RADIO_INTR_PRIO_HIGH);
+  scm_notifyradiostate(SCM_RADIO_ACTIVE);
+  SYSTEM_DEBUG_SIGNAL_RESET(LOW_POWER_MEAS);
 }
 
 /**
@@ -519,6 +483,8 @@ void LINKLAYER_PLAT_StopRadioEvt(void)
 {
   __HAL_RCC_RADIO_CLK_SLEEP_DISABLE();
   NVIC_SetPriority(RADIO_INTR_NUM, RADIO_INTR_PRIO_LOW);
+  scm_notifyradiostate(SCM_RADIO_NOT_ACTIVE);
+  SYSTEM_DEBUG_SIGNAL_SET(LOW_POWER_MEAS);
 }
 
 /**
@@ -531,10 +497,8 @@ void LINKLAYER_PLAT_RCOStartClbr(void)
 #if (CFG_LPM_LEVEL != 0)
   UTIL_LPM_SetMaxMode(1U << CFG_LPM_LL_HW_RCO_CLBR, UTIL_LPM_IDLE_MODE);
 #endif /* (CFG_LPM_LEVEL != 0) */
-#if (CFG_SCM_SUPPORTED == 1)
   scm_setsystemclock(SCM_USER_LL_HW_RCO_CLBR, HSE_32MHZ);
   while (LL_PWR_IsActiveFlag_VOS() == 0);
-#endif /* (CFG_SCM_SUPPORTED == 1) */
 }
 
 /**
@@ -547,9 +511,7 @@ void LINKLAYER_PLAT_RCOStopClbr(void)
 #if (CFG_LPM_LEVEL != 0)
   UTIL_LPM_SetMaxMode(1U << CFG_LPM_LL_HW_RCO_CLBR, UTIL_LPM_MAX_MODE);
 #endif /* (CFG_LPM_LEVEL != 0) */
-#if (CFG_SCM_SUPPORTED == 1)
   scm_setsystemclock(SCM_USER_LL_HW_RCO_CLBR, HSE_16MHZ);
-#endif /* (CFG_SCM_SUPPORTED == 1) */
 }
 #endif /*__ZEPHYR__*/
 

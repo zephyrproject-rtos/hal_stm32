@@ -30,8 +30,6 @@ enum
 {
   BLE_SLEEPMODE_RUNNING   = 0,
   BLE_SLEEPMODE_CPU_HALT  = 1,
-  BLE_SLEEPMODE_WAKETIMER = 2,
-  BLE_SLEEPMODE_NOTIMER   = 3,
 };
 
 /*
@@ -107,6 +105,23 @@ typedef struct
    */
   uint16_t host_event_fifo_buffer_size;
 
+  /* Start address of the RAM buffer allocated for BLE Link Layer
+   * It must be a 32bit aligned RAM area.
+   */
+  uint8_t* ll_buffer;
+
+  /* Size of the RAM buffer allocated for BLE Link Layer
+   * (could be filled with BLE_LL_BUFFER_SIZE return value)
+   */
+  uint16_t ll_buffer_size;
+
+  /* Maximum number of simultaneous state machines that the Link Layer
+   * supports.
+   * Valid values are from 1 to 20 ('n_sm' used in the calculation of
+   * BLE_LL_BUFFER_SIZE).
+   */
+  uint8_t ll_sm_num;
+
   /* Maximum number of Attributes (i.e. the number of characteristic + the
    * number of characteristic values + the number of descriptors, excluding the
    * services) that can be stored in the GATT database.
@@ -139,9 +154,9 @@ typedef struct
    */
   uint16_t attrValueArrSize;
 
-  /* Maximum number of simultaneous connections that the device will support.
-   * Valid values are from 1 to 8 (NUM_LINKS used in the calculation of
-   * BLE_TOTAL_BUFFER_SIZE).
+  /* Maximum number of simultaneous ACL connections that the device supports.
+   * ('n_link' used in the calculation of BLE_TOTAL_BUFFER_SIZE).
+   * Range: 0 .. ll_sm_num
    */
   uint8_t numOfLinks;
 
@@ -180,18 +195,22 @@ typedef struct
 
   /* Options flags
    * Bitmap of the "BLE_OPTIONS_..." definitions (see ble_defs.h).
-   * - bit 0:   1: LL only                   0: LL + host
-   * - bit 1:   1: no service change desc.   0: with service change desc.
-   * - bit 2:   1: device name Read-Only     0: device name R/W
-   * - bit 3:   1: extended adv supported    0: extended adv not supported
-   * - bit 5:   1: Reduced GATT db in NVM    0: Full GATT db in NVM
-   * - bit 6:   1: GATT caching is used      0: GATT caching is not used
-   * - bit 7:   1: LE Power Class 1          0: Other LE Power Classes
-   * - bit 8:   1: appearance Writable       0: appearance Read-Only
-   * - bit 9:   1: Enhanced ATT supported    0: Enhanced ATT not supported
+   * - bit  0:   1: LL only                   0: LL + host
+   * - bit  1:   1: no service change desc.   0: with service change desc.
+   * - bit  2:   1: device name Read-Only     0: device name R/W
+   * - bit  3:   1: extended adv supported    0: extended adv not supported
+   * - bit  5:   1: Reduced GATT db in NVM    0: Full GATT db in NVM
+   * - bit  6:   1: GATT caching is used      0: GATT caching is not used
+   * - bit  7:   1: LE Power Class 1          0: Other LE Power Classes
+   * - bit  8:   1: appearance Writable       0: appearance Read-Only
+   * - bit  9:   1: Enhanced ATT supported    0: Enhanced ATT not supported
+   * - bit 16:   1: CIS supported             0: CIS not supported
+   * - bit 17:   1: BIS supported             0: BIS not supported
+   * - bit 18:   1: PAwR supported            0: PAwR not supported
+   * - bit 19:   1: Chan. sounding supported  0: Chan. sounding not supported
    * - other bits: reserved
    */
-  uint16_t options;
+  uint32_t options;
 
   /* Debug flags
    * Bitmap of the "BLE_DEBUG_..." definitions (see above).
@@ -205,13 +224,12 @@ typedef struct
  *
  * @brief The BLE Stack initialization routine
  *
- * @param[in]  Init_params_p      pointer to the const structure containing
- *                                memory and low level  hardware configuration
- *                                data for the device
+ * @param[in]  init               pointer to the const structure containing
+ *                                inialization parameters
  *
  * @return Value indicating success or error code.
  */
-extern tBleStatus BleStack_Init( const BleStack_init_t* init_params_p );
+extern tBleStatus BleStack_Init( const BleStack_init_t* init );
 
 /*
  * BleStack_Process
