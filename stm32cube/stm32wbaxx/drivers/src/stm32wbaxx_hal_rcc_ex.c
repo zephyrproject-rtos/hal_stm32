@@ -74,28 +74,18 @@
   *         contains a field PeriphClockSelection which can be a combination of the following values:
   *            @arg @ref RCC_PERIPHCLK_USART1 USART1 peripheral clock
   *            @arg @ref RCC_PERIPHCLK_USART2 USART2 peripheral clock (*)
-#if defined (USART3)
   *            @arg @ref RCC_PERIPHCLK_USART3 USART3 peripheral clock (*)
-#endif
   *            @arg @ref RCC_PERIPHCLK_I2C1 I2C1 peripheral clock (*)
-#if defined (I2C2)
   *            @arg @ref RCC_PERIPHCLK_I2C2 I2C2 peripheral clock (*)
-#endif
-#if defined (I2C4)
   *            @arg @ref RCC_PERIPHCLK_I2C4 I2C4 peripheral clock (*)
-#endif
-#if defined (SPI2)
   *            @arg @ref RCC_PERIPHCLK_SPI2 SPI2 peripheral clock (*)
-#endif
   *            @arg @ref RCC_PERIPHCLK_LPTIM2 LPTIM2 peripheral clock (*)
   *            @arg @ref RCC_PERIPHCLK_SPI1 SPI1 peripheral clock (*)
   *            @arg @ref RCC_PERIPHCLK_SYSTICK SYSTICK peripheral clock
   *            @arg @ref RCC_PERIPHCLK_TIMIC TIMIC peripheral clock
   *            @arg @ref RCC_PERIPHCLK_SAI1 SAI1 peripheral clock (*)
   *            @arg @ref RCC_PERIPHCLK_RNG RNG peripheral clock
-#if defined (USB_OTG_HS)
   *            @arg @ref RCC_PERIPHCLK_USBOTGHSPHY USBOTGHSPHY peripheral clock (*)
-#endif
   *            @arg @ref RCC_PERIPHCLK_AUDIOSYNC AUDIOSYNC peripheral clock (*)
   *            @arg @ref RCC_PERIPHCLK_LPUART1 LPUART1 peripheral clock
   *            @arg @ref RCC_PERIPHCLK_SPI3 SPI3 peripheral clock
@@ -628,28 +618,18 @@ void HAL_RCCEx_GetPeriphCLKConfig(RCC_PeriphCLKInitTypeDef  *PeriphClkInit)
   *         This parameter can be one of the following values:
   *            @arg @ref RCC_PERIPHCLK_USART1 USART1 peripheral clock
   *            @arg @ref RCC_PERIPHCLK_USART2 USART2 peripheral clock (*)
-#if defined (USART3)
   *            @arg @ref RCC_PERIPHCLK_USART3 USART3 peripheral clock (*)
-#endif
   *            @arg @ref RCC_PERIPHCLK_I2C1 I2C1 peripheral clock (*)
-#if defined (I2C2)
   *            @arg @ref RCC_PERIPHCLK_I2C2 I2C2 peripheral clock (*)
-#endif
-#if defined (I2C4)
   *            @arg @ref RCC_PERIPHCLK_I2C4 I2C4 peripheral clock (*)
-#endif
-#if defined (SPI2)
   *            @arg @ref RCC_PERIPHCLK_SPI2 SPI2 peripheral clock (*)
-#endif
   *            @arg @ref RCC_PERIPHCLK_LPTIM2 LPTIM2 peripheral clock (*)
   *            @arg @ref RCC_PERIPHCLK_SPI1 SPI1 peripheral clock (*)
   *            @arg @ref RCC_PERIPHCLK_SYSTICK SYSTICK peripheral clock
   *            @arg @ref RCC_PERIPHCLK_TIMIC TIMIC peripheral clock
   *            @arg @ref RCC_PERIPHCLK_SAI1 SAI1 peripheral clock (*)
   *            @arg @ref RCC_PERIPHCLK_RNG RNG peripheral clock
-#if defined (USB_OTG_HS)
   *            @arg @ref RCC_PERIPHCLK_USBOTGHSPHY USBOTGHSPHY peripheral clock (*)
-#endif
   *            @arg @ref RCC_PERIPHCLK_AUDIOSYNC AUDIOSYNC peripheral clock (*)
   *            @arg @ref RCC_PERIPHCLK_LPUART1 LPUART1 peripheral clock
   *            @arg @ref RCC_PERIPHCLK_SPI3 SPI3 peripheral clock

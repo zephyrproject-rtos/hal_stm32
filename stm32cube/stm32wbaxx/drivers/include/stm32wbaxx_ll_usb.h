@@ -37,9 +37,29 @@ extern "C" {
   */
 
 /* Exported types ------------------------------------------------------------*/
+/**
+  * @brief  Approximate number of CPU cycles consumed by one register-poll loop
+  *         iteration. Adjust if cycle-accurate timing matters.
+  */
+#ifndef HAL_USB_CYCLES_PER_POLL
+#define HAL_USB_CYCLES_PER_POLL                                       (4U)
+#endif /* HAL_USB_CYCLES_PER_POLL */
+
+/**
+  * @brief  USB HAL Timeout in milliseconds (used as an upper bound for
+  *         register-poll loops).
+  */
 #ifndef HAL_USB_TIMEOUT
-#define HAL_USB_TIMEOUT                                       0xF000000U
+#define HAL_USB_TIMEOUT                                              (20U)
 #endif /* define HAL_USB_TIMEOUT */
+
+/**
+  * @brief  Convert a millisecond timeout to a worst-case loop iteration count.
+  *         Uses SystemCoreClock so the bound scales with the CPU frequency.
+  *         The result is a conservative upper bound safe across all supported speeds.
+  */
+#define HAL_USB_SYSTEMCLOCK_MS(timeout_ms) \
+  (((SystemCoreClock / 1000U) / HAL_USB_CYCLES_PER_POLL) * (timeout_ms))
 
 #ifndef HAL_USB_CURRENT_MODE_MAX_DELAY_MS
 #define HAL_USB_CURRENT_MODE_MAX_DELAY_MS                           200U
@@ -68,7 +88,8 @@ typedef enum
   URB_NYET,
   URB_ERROR,
   URB_STALL,
-  URB_NAK_WAIT
+  URB_NAK_WAIT,
+  URB_NYET_WAIT
 } USB_URBStateTypeDef;
 
 /**
@@ -650,13 +671,13 @@ typedef USB_HCTypeDef       USB_DRD_HCTypeDef;
 #define USB_CNTRX_NBLK_MSK                    (0x1FUL << 26)
 #define USB_CNTRX_BLSIZE                      (0x1UL << 31)
 
-
 /*Set Channel/Endpoint to the USB Register */
-#define USB_DRD_SET_CHEP(USBx, bEpChNum, wRegValue)  (*(__IO uint32_t *)\
-                                                      (&(USBx)->CHEP0R + (bEpChNum)) = (uint32_t)(wRegValue))
+#define USB_DRD_SET_CHEP(USBx, bEpChNum, wRegValue) \
+  (((__IO uint32_t *)(void *)(USBx))[(bEpChNum)] = \
+                                                   (uint32_t)(wRegValue))
 
 /*Get Channel/Endpoint from the USB Register */
-#define USB_DRD_GET_CHEP(USBx, bEpChNum)             (*(__IO uint32_t *)(&(USBx)->CHEP0R + (bEpChNum)))
+#define USB_DRD_GET_CHEP(USBx, bEpChNum)           (((__IO uint32_t *)(void *)(USBx))[(bEpChNum)])
 
 
 /**
@@ -926,7 +947,9 @@ typedef USB_HCTypeDef       USB_DRD_HCTypeDef;
     uint32_t _wRegVal; \
     \
     /*Read the USB->CHEPx into _wRegVal, Reset(DTOGRX/STRX/DTOGTX/STTX) and set the EpAddress*/ \
-    _wRegVal = (USB_DRD_GET_CHEP((USBx), (bEpChNum)) & USB_CHEP_REG_MASK) | (bAddr); \
+    _wRegVal = (USB_DRD_GET_CHEP((USBx), (bEpChNum)) & USB_CHEP_REG_MASK); \
+    _wRegVal &= ~USB_CHEP_ADDR; \
+    _wRegVal |= ((uint32_t)(bAddr) & EP_ADDR_MSK); \
     \
     /*Set _wRegVal in USB->CHEPx and set Transmit/Receive Valid Transfer  (x=bEpChNum)*/ \
     USB_DRD_SET_CHEP((USBx), (bEpChNum), (_wRegVal | USB_CHEP_VTRX | USB_CHEP_VTTX)); \
@@ -1193,7 +1216,7 @@ HAL_StatusTypeDef USB_ActivateSetup(const USB_OTG_GlobalTypeDef *USBx);
 HAL_StatusTypeDef USB_EP0_OutStart(const USB_OTG_GlobalTypeDef *USBx, uint8_t dma, const uint8_t *psetup);
 uint8_t           USB_GetDevSpeed(const USB_OTG_GlobalTypeDef *USBx);
 uint32_t          USB_GetMode(const USB_OTG_GlobalTypeDef *USBx);
-uint32_t          USB_ReadInterrupts(USB_OTG_GlobalTypeDef const *USBx);
+uint32_t          USB_ReadInterrupts(const USB_OTG_GlobalTypeDef *USBx);
 uint32_t          USB_ReadChInterrupts(const USB_OTG_GlobalTypeDef *USBx, uint8_t chnum);
 uint32_t          USB_ReadDevAllOutEpInterrupt(const USB_OTG_GlobalTypeDef *USBx);
 uint32_t          USB_ReadDevOutEPInterrupt(const USB_OTG_GlobalTypeDef *USBx, uint8_t epnum);
@@ -1205,8 +1228,8 @@ HAL_StatusTypeDef USB_InitFSLSPClkSel(const USB_OTG_GlobalTypeDef *USBx, uint8_t
 HAL_StatusTypeDef USB_HostInit(USB_OTG_GlobalTypeDef *USBx, USB_OTG_CfgTypeDef cfg);
 HAL_StatusTypeDef USB_ResetPort(const USB_OTG_GlobalTypeDef *USBx);
 HAL_StatusTypeDef USB_DriveVbus(const USB_OTG_GlobalTypeDef *USBx, uint8_t state);
-uint32_t          USB_GetHostSpeed(USB_OTG_GlobalTypeDef const *USBx);
-uint32_t          USB_GetCurrentFrame(USB_OTG_GlobalTypeDef const *USBx);
+uint32_t          USB_GetHostSpeed(const USB_OTG_GlobalTypeDef *USBx);
+uint32_t          USB_GetCurrentFrame(const USB_OTG_GlobalTypeDef *USBx);
 HAL_StatusTypeDef USB_DoPing(const USB_OTG_GlobalTypeDef *USBx, uint8_t ch_num);
 HAL_StatusTypeDef USB_StopHost(USB_OTG_GlobalTypeDef *USBx);
 
@@ -1233,8 +1256,8 @@ HAL_StatusTypeDef USB_EnableGlobalInt(USB_DRD_TypeDef *USBx);
 HAL_StatusTypeDef USB_DisableGlobalInt(USB_DRD_TypeDef *USBx);
 HAL_StatusTypeDef USB_SetCurrentMode(USB_DRD_TypeDef *USBx, USB_DRD_ModeTypeDef mode);
 
-HAL_StatusTypeDef USB_FlushRxFifo(USB_DRD_TypeDef const *USBx);
-HAL_StatusTypeDef USB_FlushTxFifo(USB_DRD_TypeDef const *USBx, uint32_t num);
+HAL_StatusTypeDef USB_FlushRxFifo(const USB_DRD_TypeDef *USBx);
+HAL_StatusTypeDef USB_FlushTxFifo(const USB_DRD_TypeDef *USBx, uint32_t num);
 
 #if defined (HAL_PCD_MODULE_ENABLED)
 HAL_StatusTypeDef USB_ActivateEndpoint(USB_DRD_TypeDef *USBx, USB_DRD_EPTypeDef *ep);
@@ -1249,7 +1272,7 @@ HAL_StatusTypeDef USB_SetDevAddress(USB_DRD_TypeDef *USBx, uint8_t address);
 HAL_StatusTypeDef USB_DevConnect(USB_DRD_TypeDef *USBx);
 HAL_StatusTypeDef USB_DevDisconnect(USB_DRD_TypeDef *USBx);
 HAL_StatusTypeDef USB_StopDevice(USB_DRD_TypeDef *USBx);
-uint32_t          USB_ReadInterrupts(USB_DRD_TypeDef const *USBx);
+uint32_t          USB_ReadInterrupts(const USB_DRD_TypeDef *USBx);
 
 HAL_StatusTypeDef USB_ResetPort(USB_DRD_TypeDef *USBx);
 HAL_StatusTypeDef USB_HostInit(USB_DRD_TypeDef *USBx, USB_DRD_CfgTypeDef cfg);
@@ -1265,7 +1288,7 @@ HAL_StatusTypeDef USB_HC_Init(USB_DRD_TypeDef *USBx, uint8_t phy_ch_num, uint8_t
 HAL_StatusTypeDef USB_HC_Activate(USB_DRD_TypeDef *USBx, uint8_t phy_ch_num, uint8_t ch_dir);
 #endif /* defined (HAL_HCD_MODULE_ENABLED) */
 
-uint32_t          USB_GetHostSpeed(USB_DRD_TypeDef const *USBx);
+uint32_t          USB_GetHostSpeed(const USB_DRD_TypeDef *USBx);
 HAL_StatusTypeDef USB_StopHost(USB_DRD_TypeDef *USBx);
 
 uint32_t          USB_GetCurrentFrame(USB_DRD_TypeDef const *USBx);
@@ -1273,10 +1296,10 @@ uint32_t          USB_GetCurrentFrame(USB_DRD_TypeDef const *USBx);
 HAL_StatusTypeDef USB_ActivateRemoteWakeup(USB_DRD_TypeDef *USBx);
 HAL_StatusTypeDef USB_DeActivateRemoteWakeup(USB_DRD_TypeDef *USBx);
 
-void              USB_WritePMA(USB_DRD_TypeDef const *USBx, uint8_t *pbUsrBuf,
+void              USB_WritePMA(const USB_DRD_TypeDef *USBx, uint8_t *pbUsrBuf,
                                uint16_t wPMABufAddr, uint16_t wNBytes);
 
-void              USB_ReadPMA(USB_DRD_TypeDef const *USBx, uint8_t *pbUsrBuf,
+void              USB_ReadPMA(const USB_DRD_TypeDef *USBx, uint8_t *pbUsrBuf,
                               uint16_t wPMABufAddr, uint16_t wNBytes);
 #endif /* defined (USB_DRD_FS) */
 /**

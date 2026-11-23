@@ -498,9 +498,15 @@ static void DMA_List_BuildNode(DMA_NodeConfTypeDef const *const pNodeConfig,
                                DMA_NodeTypeDef *const pNode);
 static void DMA_List_GetNodeConfig(DMA_NodeConfTypeDef *const pNodeConfig,
                                    DMA_NodeTypeDef const *const pNode);
+#if defined ( __GNUC__ ) && !defined (__CC_ARM) && ((__GNUC__ >= 11) && (__GNUC__ <= 12))
+static __attribute__((noinline)) uint32_t DMA_List_CheckNodesBaseAddresses(DMA_NodeTypeDef const *const pNode1,
+                                                                           DMA_NodeTypeDef const *const pNode2,
+                                                                           DMA_NodeTypeDef const *const pNode3);
+#else
 static uint32_t DMA_List_CheckNodesBaseAddresses(DMA_NodeTypeDef const *const pNode1,
                                                  DMA_NodeTypeDef const *const pNode2,
                                                  DMA_NodeTypeDef const *const pNode3);
+#endif /* __GNUC__ && !__CC_ARM && GCC v11-12 */
 static uint32_t DMA_List_CheckNodesTypes(DMA_NodeTypeDef const *const pNode1,
                                          DMA_NodeTypeDef const *const pNode2,
                                          DMA_NodeTypeDef const *const pNode3);
@@ -517,13 +523,13 @@ static void DMA_List_FillNode(DMA_NodeTypeDef const *const pSrcNode,
 static void DMA_List_ConvertNodeToDynamic(uint32_t ContextNodeAddr,
                                           uint32_t CurrentNodeAddr,
                                           uint32_t RegisterNumber);
-static void DMA_List_ConvertNodeToStatic(uint32_t ContextNodeAddr,
-                                         uint32_t CurrentNodeAddr,
-                                         uint32_t RegisterNumber);
-static void DMA_List_UpdateDynamicQueueNodesCLLR(DMA_QListTypeDef const *const pQList,
-                                                 uint32_t LastNode_IsCircular);
-static void DMA_List_UpdateStaticQueueNodesCLLR(DMA_QListTypeDef const *const pQList,
-                                                uint32_t operation);
+static HAL_StatusTypeDef DMA_List_ConvertNodeToStatic(uint32_t ContextNodeAddr,
+                                                      uint32_t CurrentNodeAddr,
+                                                      uint32_t RegisterNumber);
+static HAL_StatusTypeDef DMA_List_UpdateDynamicQueueNodesCLLR(DMA_QListTypeDef const *const pQList,
+                                                              uint32_t LastNode_IsCircular);
+static HAL_StatusTypeDef DMA_List_UpdateStaticQueueNodesCLLR(DMA_QListTypeDef const *const pQList,
+                                                             uint32_t operation);
 static void DMA_List_FormatNode(DMA_NodeTypeDef *const pNode,
                                 uint32_t RegisterIdx,
                                 uint32_t RegisterNumber,
@@ -2944,12 +2950,22 @@ HAL_StatusTypeDef HAL_DMAEx_List_ConvertQToDynamic(DMA_QListTypeDef *const pQLis
       ((uint32_t)pQList->FirstCircularNode != node_info.currentnode_addr))
   {
     /* Update all queue nodes CLLR */
-    DMA_List_UpdateDynamicQueueNodesCLLR(pQList, LASTNODE_ISNOT_CIRCULAR);
+    if (DMA_List_UpdateDynamicQueueNodesCLLR(pQList, LASTNODE_ISNOT_CIRCULAR) != HAL_OK)
+    {
+      pQList->ErrorCode = HAL_DMA_QUEUE_ERROR_OUTOFRANGE;
+
+      return HAL_ERROR;
+    }
   }
   else
   {
     /* Update all queue nodes CLLR */
-    DMA_List_UpdateDynamicQueueNodesCLLR(pQList, LASTNODE_IS_CIRCULAR);
+    if (DMA_List_UpdateDynamicQueueNodesCLLR(pQList, LASTNODE_IS_CIRCULAR) != HAL_OK)
+    {
+      pQList->ErrorCode = HAL_DMA_QUEUE_ERROR_OUTOFRANGE;
+
+      return HAL_ERROR;
+    }
   }
 
   /* Set queue type */
@@ -3009,7 +3025,12 @@ HAL_StatusTypeDef HAL_DMAEx_List_ConvertQToStatic(DMA_QListTypeDef *const pQList
   DMA_List_GetCLLRNodeInfo(pQList->Head, NULL, &cllr_offset);
 
   /* Set all CLLR queue nodes to their default positions */
-  DMA_List_UpdateStaticQueueNodesCLLR(pQList, UPDATE_CLLR_POSITION);
+  if (DMA_List_UpdateStaticQueueNodesCLLR(pQList, UPDATE_CLLR_POSITION) != HAL_OK)
+  {
+    pQList->ErrorCode = HAL_DMA_QUEUE_ERROR_OUTOFRANGE;
+
+    return HAL_ERROR;
+  }
 
   /* Convert all nodes to static (Bypass head node) */
   for (uint32_t node_count = 1U; node_count < pQList->NodeNumber; node_count++)
@@ -3021,11 +3042,21 @@ HAL_StatusTypeDef HAL_DMAEx_List_ConvertQToStatic(DMA_QListTypeDef *const pQList
     MODIFY_REG(currentnode_addr, DMA_CLLR_LA, (context_node.LinkRegisters[cllr_offset] & DMA_CLLR_LA));
 
     /* Convert current node to static */
-    DMA_List_ConvertNodeToStatic((uint32_t)&context_node, currentnode_addr, (cllr_offset + 1U));
+    if (DMA_List_ConvertNodeToStatic((uint32_t)&context_node, currentnode_addr, (cllr_offset + 1U)) != HAL_OK)
+    {
+      pQList->ErrorCode = HAL_DMA_QUEUE_ERROR_OUTOFRANGE;
+
+      return HAL_ERROR;
+    }
   }
 
   /* Set all CLLR queue nodes to their default values */
-  DMA_List_UpdateStaticQueueNodesCLLR(pQList, UPDATE_CLLR_VALUE);
+  if (DMA_List_UpdateStaticQueueNodesCLLR(pQList, UPDATE_CLLR_VALUE) != HAL_OK)
+  {
+    pQList->ErrorCode = HAL_DMA_QUEUE_ERROR_OUTOFRANGE;
+
+    return HAL_ERROR;
+  }
 
   /* Set queue type */
   pQList->Type = QUEUE_TYPE_STATIC;
@@ -3762,6 +3793,22 @@ static uint32_t DMA_List_CheckNodesBaseAddresses(DMA_NodeTypeDef const *const pN
   uint32_t temp = (((uint32_t)pNode1 | (uint32_t)pNode2 | (uint32_t)pNode3) & DMA_CLBAR_LBA);
   uint32_t ref  = 0U;
 
+  /* Check that each DMA node register block remains within the 64-Kbyte linked-list window. */
+  if (pNode1 != NULL)
+  {
+    assert_param((((uint32_t)pNode1 & 0xFFFFU) <= 0xFFE0U));
+  }
+
+  if (pNode2 != NULL)
+  {
+    assert_param((((uint32_t)pNode2 & 0xFFFFU) <= 0xFFE0U));
+  }
+
+  if (pNode3 != NULL)
+  {
+    assert_param((((uint32_t)pNode3 & 0xFFFFU) <= 0xFFE0U));
+  }
+
   /* Check node 1 address */
   if ((uint32_t)pNode1 != 0U)
   {
@@ -4102,9 +4149,9 @@ static void DMA_List_ConvertNodeToDynamic(uint32_t ContextNodeAddr,
   * @param  RegisterNumber  : The register number to be converted.
   * @retval None.
   */
-static void DMA_List_ConvertNodeToStatic(uint32_t ContextNodeAddr,
-                                         uint32_t CurrentNodeAddr,
-                                         uint32_t RegisterNumber)
+static HAL_StatusTypeDef DMA_List_ConvertNodeToStatic(uint32_t ContextNodeAddr,
+                                                      uint32_t CurrentNodeAddr,
+                                                      uint32_t RegisterNumber)
 {
   uint32_t contextnode_reg_counter = 0U;
   uint32_t cllr_idx;
@@ -4120,6 +4167,13 @@ static void DMA_List_ConvertNodeToStatic(uint32_t ContextNodeAddr,
 
   /* Get context node CLLR information */
   cllr_idx  = (context_node->NodeInfo & NODE_CLLR_IDX) >> NODE_CLLR_IDX_POS;
+
+  /* Keep the decoded cllr_idx within LinkRegisters[] bounds */
+  if (cllr_idx >= NODE_MAXIMUM_SIZE)
+  {
+    return HAL_ERROR;
+  }
+
   cllr_mask = context_node->LinkRegisters[cllr_idx];
 
   /* Repeat for all node registers */
@@ -4141,6 +4195,8 @@ static void DMA_List_ConvertNodeToStatic(uint32_t ContextNodeAddr,
 
   /* Update node information */
   MODIFY_REG(current_node->NodeInfo, NODE_CLLR_IDX, ((RegisterNumber - 1U) << NODE_CLLR_IDX_POS));
+
+  return HAL_OK;
 }
 
 /**
@@ -4198,8 +4254,8 @@ static void DMA_List_ClearUnusedFields(DMA_NodeTypeDef *const pNode,
   * @param  LastNode_IsCircular : The first circular node is the last queue node or not.
   * @retval None.
   */
-static void DMA_List_UpdateDynamicQueueNodesCLLR(DMA_QListTypeDef const *const pQList,
-                                                 uint32_t LastNode_IsCircular)
+static HAL_StatusTypeDef DMA_List_UpdateDynamicQueueNodesCLLR(DMA_QListTypeDef const *const pQList,
+                                                              uint32_t LastNode_IsCircular)
 {
   uint32_t previous_cllr_offset;
   uint32_t current_cllr_offset = 0U;
@@ -4216,6 +4272,12 @@ static void DMA_List_UpdateDynamicQueueNodesCLLR(DMA_QListTypeDef const *const p
     {
       /* Get current node information */
       current_cllr_offset = (((DMA_NodeTypeDef *)currentnode_addr)->NodeInfo & NODE_CLLR_IDX) >> NODE_CLLR_IDX_POS;
+
+      /* Keep the decoded CLLR offset within LinkRegisters[] bounds */
+      if (current_cllr_offset >= NODE_MAXIMUM_SIZE)
+      {
+        return HAL_ERROR;
+      }
     }
     /* Calculate nodes addresses */
     else
@@ -4228,6 +4290,12 @@ static void DMA_List_UpdateDynamicQueueNodesCLLR(DMA_QListTypeDef const *const p
       currentnode_addr = (((DMA_NodeTypeDef *)(previousnode_addr))->LinkRegisters[previous_cllr_offset] & DMA_CLLR_LA) +
                          ((uint32_t)pQList->Head & DMA_CLBAR_LBA);
       current_cllr_offset = (((DMA_NodeTypeDef *)currentnode_addr)->NodeInfo & NODE_CLLR_IDX) >> NODE_CLLR_IDX_POS;
+
+      /* Keep the decoded CLLR offset within LinkRegisters[] bounds */
+      if (current_cllr_offset >= NODE_MAXIMUM_SIZE)
+      {
+        return HAL_ERROR;
+      }
 
       /* Calculate CLLR register value to be updated */
       cllr_mask = (((DMA_NodeTypeDef *)currentnode_addr)->LinkRegisters[current_cllr_offset] & ~DMA_CLLR_LA) |
@@ -4266,6 +4334,8 @@ static void DMA_List_UpdateDynamicQueueNodesCLLR(DMA_QListTypeDef const *const p
     /* Clear CLLR register for last node */
     ((DMA_NodeTypeDef *)currentnode_addr)->LinkRegisters[current_cllr_offset] = 0U;
   }
+
+  return HAL_OK;
 }
 
 /**
@@ -4274,8 +4344,8 @@ static void DMA_List_UpdateDynamicQueueNodesCLLR(DMA_QListTypeDef const *const p
   * @param  operation : The operation type.
   * @retval None.
   */
-static void DMA_List_UpdateStaticQueueNodesCLLR(DMA_QListTypeDef const *const pQList,
-                                                uint32_t operation)
+static HAL_StatusTypeDef DMA_List_UpdateStaticQueueNodesCLLR(DMA_QListTypeDef const *const pQList,
+                                                             uint32_t operation)
 {
   uint32_t currentnode_addr = (uint32_t)pQList->Head;
   uint32_t current_cllr_offset = ((uint32_t)pQList->Head->NodeInfo & NODE_CLLR_IDX) >> NODE_CLLR_IDX_POS;
@@ -4286,6 +4356,11 @@ static void DMA_List_UpdateStaticQueueNodesCLLR(DMA_QListTypeDef const *const pQ
 
   /* Get CLLR node information */
   DMA_List_GetCLLRNodeInfo(pQList->Head, &cllr_default_mask, &cllr_default_offset);
+  /* Keep the decoded CLLR offset within LinkRegisters[] bounds */
+  if (current_cllr_offset >= NODE_MAXIMUM_SIZE)
+  {
+    return HAL_ERROR;
+  }
 
   /*  Repeat for all register nodes (Bypass last queue node) */
   while (node_idx < pQList->NodeNumber)
@@ -4318,9 +4393,17 @@ static void DMA_List_UpdateStaticQueueNodesCLLR(DMA_QListTypeDef const *const pQ
     /* Update current CLLR offset with next CLLR offset */
     current_cllr_offset = (((DMA_NodeTypeDef *)currentnode_addr)->NodeInfo & NODE_CLLR_IDX) >> NODE_CLLR_IDX_POS;
 
+    /* Keep the decoded CLLR offset within LinkRegisters[] bounds */
+    if (current_cllr_offset >= NODE_MAXIMUM_SIZE)
+    {
+      return HAL_ERROR;
+    }
+
     /* Increment node index */
     node_idx++;
   }
+
+  return HAL_OK;
 }
 
 /**

@@ -6,7 +6,7 @@ Origin:
    https://www.st.com/en/embedded-software/stm32cubewba.html
 
 Status:
-   version 1.10.0
+   version v1.11.0
 
 Purpose:
    STMicroelectronics official MCU package for STM32WBA series.
@@ -23,7 +23,7 @@ URL:
    https://github.com/STMicroelectronics/STM32CubeWBA
 
 Commit:
-   e455b860ceb52aaa0332a98f1e7a10bbd7014fc9
+   48288f7dc7a95216622fa778ee1523f850311568
 
 Maintained-by:
    External
@@ -35,6 +35,7 @@ License Link:
    https://opensource.org/licenses/BSD-3-Clause
 
 Patch List:
+
    *Changes from official delivery:
     -dos2unix applied
     -trailing white spaces removed
@@ -63,5 +64,10 @@ Patch List:
     ST Internal Reference: HAL1-28329
     Impacted files:
      drivers/include/stm32wbaxx_ll_dma.h
+
+   *Remove unused templates
+    -Removed unused stm32cube/stm32wbaxx/drivers/src/stm32wbaxx_hal_msp_template.c
+    -Removed unused stm32cube/stm32wbaxx/drivers/src/stm32wbaxx_hal_timebase_rtc_wakeup_template.c
+    -Removed unused stm32cube/stm32wbaxx/drivers/src/stm32wbaxx_hal_timebase_tim_template.c
 
    See release_note.html from STM32Cube

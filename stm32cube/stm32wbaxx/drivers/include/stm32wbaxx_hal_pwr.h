@@ -365,14 +365,12 @@ typedef struct
   *                                                   Indicates that the Vcore level at or above VOS selected level.
   *                    @arg @ref PWR_FLAG_STOPF     : Stop flag.
   *                                                   Indicates that the device was resumed from Stop mode.
-#if defined(PWR_STOP2_SUPPORT)
-  *                    @arg @ref PWR_FLAG_STOP2F    : Stop 2 flag.
+  *                    @arg @ref PWR_FLAG_STOP2F    : Stop 2 flag.(*)
   *                                                   Indicates that the device was resumed from Stop 2 mode.
-  *                    @arg @ref PWR_FLAG_VDD11USBRDY : USB OTG_HS VDD11USB ready flag.
+  *                    @arg @ref PWR_FLAG_VDD11USBRDY : USB OTG_HS VDD11USB ready flag. (*)
   *                                                   Indicates that the USB OTG_HS VDD11 is ready.
-  *                    @arg @ref PWR_FLAG_USBBOOSTRDY : USB OTG_HS power booster ready flag.
+  *                    @arg @ref PWR_FLAG_USBBOOSTRDY : USB OTG_HS power booster ready flag. (*)
   *                                                   Indicates that the USB OTG_HS power booster is ready.
-#endif
   *                    @arg @ref PWR_FLAG_SBF       : Standby flag.
   *                                                   Indicates that the device was resumed from Standby mode.
   *                    @arg @ref PWR_FLAG_ACTVOSRDY : Currently applied VOS ready flag.
@@ -388,7 +386,7 @@ typedef struct
   *                                                         Indicates VDDHPA voltage level is ready.
   *                    @arg @ref PWR_FLAG_REGPARDYV11     : Ready bit for VDDHPA voltage level when selecting VDD11
   *                                                         input.
-  *                                                         Indicates VDDHPA voltage level is ready.(*)
+  *                                                         Indicates VDDHPA voltage level is ready.(**)
   *                    @arg @ref PWR_WAKEUP_FLAG1   : Wakeup flag 1.
   *                                                   Indicates that a wakeup event was received from the WKUP line 1.
   *                    @arg @ref PWR_WAKEUP_FLAG2   : Wakeup flag 2.
@@ -397,17 +395,16 @@ typedef struct
   *                                                   Indicates that a wakeup event was received from the WKUP line 3.
   *                    @arg @ref PWR_WAKEUP_FLAG4   : Wakeup flag 4.
   *                                                   Indicates that a wakeup event was received from the WKUP line 4.
-#if !defined(PWR_STOP3_SUPPORT)
-  *                    @arg @ref PWR_WAKEUP_FLAG5   : Wakeup flag 5.
+  *                    @arg @ref PWR_WAKEUP_FLAG5   : Wakeup flag 5. (*)
   *                                                   Indicates that a wakeup event was received from the WKUP line 5.
-#endif
   *                    @arg @ref PWR_WAKEUP_FLAG6   : Wakeup flag 6.
   *                                                   Indicates that a wakeup event was received from the WKUP line 6.
   *                    @arg @ref PWR_WAKEUP_FLAG7   : Wakeup flag 7.
   *                                                   Indicates that a wakeup event was received from the WKUP line 7.
   *                    @arg @ref PWR_WAKEUP_FLAG8   : Wakeup flag 8.
   *                                                   Indicates that a wakeup event was received from the WKUP line 8.
-  * (*) Feature not available on all devices of the family
+  * @note   (*) Stop Mode not available on all devices
+  * @note   (**) Feature not available on all devices of the family
   * @retval The state of __FLAG__ (TRUE or FALSE).
   */
 #if defined(PWR_STOP2_SUPPORT) && defined(USB_OTG_HS) && defined(PWR_FLAG_REGS)
@@ -675,10 +672,8 @@ typedef struct
   *                    This parameter can be one of the following values when available:
   *                    @arg @ref PWR_FLAG_STOPF      : Stop flag.
   *                                                    Indicates that the device was resumed from Stop mode.
-#if defined(PWR_STOP2_SUPPORT)
-  *                    @arg @ref PWR_FLAG_STOP2F     : Stop 2 flag.
+  *                    @arg @ref PWR_FLAG_STOP2F     : Stop 2 flag.(*)
   *                                                    Indicates that the device was resumed from Stop 2 mode.
-#endif
   *                    @arg @ref PWR_FLAG_SBF        : Standby flag.
   *                                                    Indicates that the device was resumed from Standby mode.
   *                    @arg @ref PWR_WAKEUP_FLAG1    : Wakeup flag 1.
@@ -698,6 +693,7 @@ typedef struct
   *                    @arg @ref PWR_WAKEUP_FLAG8    : Wakeup flag 8.
   *                                                    Indicates that a wakeup event was received from the WKUP line 8.
   *                    @arg @ref PWR_WAKEUP_ALL_FLAG : all Wakeup flags.
+  * @note   (*) Stop Mode not available on all devices
   * @retval None.
   */
 #if defined(PWR_STOP2_SUPPORT)
@@ -978,8 +974,8 @@ typedef struct
 
 
 /* Wake up pins check macro */
-#if defined(STM32WBA20xx) || defined (STM32WBA23xx) || defined (STM32WBA25xx)
-#if defined(STM32WBA20xx) || defined (STM32WBA23xx)
+#if defined(STM32WBA20xx) || defined (STM32WBA23xx) || defined STM32WBA25xx
+#if defined(STM32WBA20xx) || defined STM32WBA23xx
 #define IS_PWR_WAKEUP_PIN(PIN) (((PIN) == PWR_WAKEUP_PIN1_HIGH_0)  ||\
                                 ((PIN) == PWR_WAKEUP_PIN1_HIGH_1)  ||\
                                 ((PIN) == PWR_WAKEUP_PIN2_HIGH_1)  ||\
@@ -1016,7 +1012,7 @@ typedef struct
                                 ((PIN) == PWR_WAKEUP_PIN7)         ||\
                                 ((PIN) == PWR_WAKEUP_PIN8))
 #endif /* defined(STM32WBA20xx) || defined (STM32WBA23xx) */
-#if defined (STM32WBA25xx)
+#if defined STM32WBA25xx
 #define IS_PWR_WAKEUP_PIN(PIN) (((PIN) == PWR_WAKEUP_PIN1_HIGH_1)  ||\
                                 ((PIN) == PWR_WAKEUP_PIN2_HIGH_1)  ||\
                                 ((PIN) == PWR_WAKEUP_PIN3_HIGH_1)  ||\

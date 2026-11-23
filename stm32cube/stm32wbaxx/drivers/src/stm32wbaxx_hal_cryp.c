@@ -4262,8 +4262,7 @@ static HAL_StatusTypeDef CRYP_AESGCM_Process(CRYP_HandleTypeDef *hcryp, uint32_t
     }
     for (index = 0U; index < lastoutputwordsize; index++)
     {
-      if ((index == (lastoutputwordsize - 1U)) && ((npblb % 4U) != 0U)
-          && (hcryp->Init.Algorithm == CRYP_AES_CCM))
+      if ((index == (lastoutputwordsize - 1U)) && ((npblb % 4U) != 0U))
       {
         nolastpaddingbytes = npblb % 4U;
         CRYP_CopyPartialOutputWord(hcryp->pCrypOutBuffPtr + hcryp->CrypOutCount, temp[index],

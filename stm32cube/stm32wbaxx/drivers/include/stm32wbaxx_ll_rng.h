@@ -726,7 +726,7 @@ __STATIC_INLINE uint32_t LL_RNG_GetHealthConfig(const RNG_TypeDef *RNGx)
   */
 #if defined(RNG_HTCR3_HTCFG)
 
-/** @defgroup RNG Additional Health Test Control
+/** @defgroup RNG_LL_EF_Additional_Health_Test_Control Additional Health Test Control
   * @{
   */
 
@@ -795,7 +795,7 @@ __STATIC_INLINE uint32_t LL_RNG_GetNoiseConfig(const RNG_TypeDef *RNGx)
 
 #endif /* defined(RNG_NSCR_NIST_VALUE) */
 #if defined(RNG_HTCR3_HTCFG)
-/** @defgroup RNG Health Tests Status control
+/** @defgroup RNG_LL_EF_Health_Tests_Status_Control Health Tests Status control
   * @{
   */
 
@@ -817,7 +817,7 @@ __STATIC_INLINE uint32_t LL_RNG_GetHealthTestStatus(const RNG_TypeDef *RNGx, uin
 
 #endif /* defined(RNG_HTCR0_HTCFG) || defined(RNG_HTCR1_HTCFG) || defined(RNG_HTCR2_HTCFG) */
 #if defined(RNG_NSMR_MOSC1)
-/** @defgroup RNG noise source mask Control
+/** @defgroup RNG_LL_EF_Noise_Source_Mask_Control noise source mask Control
   * @{
   */
 
@@ -849,7 +849,7 @@ __STATIC_INLINE uint32_t LL_RNG_GetNoiseSourceMask(const RNG_TypeDef *RNGx)
 
 #endif /* RNG_NSMR_MOSC1 */
 #if (defined(RNG_NSCR_EN_OSC1) || defined(RNG_NSCR_EN_OSC2) || defined(RNG_NSCR_EN_OSC3))
-/** @defgroup RNG noise source Control
+/** @defgroup RNG_LL_EF_Noise_Source_Control noise source Control
   * @{
   */
 
@@ -890,6 +890,10 @@ __STATIC_INLINE uint32_t LL_RNG_GetOscNoiseSrc(const RNG_TypeDef *RNGx, uint32_t
 {
   return (READ_BIT(RNGx->NSCR, osc) >> POSITION_VAL(osc));
 }
+
+/**
+  * @}
+  */
 
 #endif /* defined(defined(RNG_NSCR_EN_OSC1) || RNG_NSCR_EN_OSC2 ||RNG_NSCR_EN_OSC3) */
 #if defined(USE_FULL_LL_DRIVER)

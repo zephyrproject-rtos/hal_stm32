@@ -103,7 +103,7 @@ typedef struct
   uint16_t                  phy_chin_state[8];  /*!< Physical Channel in State (Used/Free) */
   uint16_t                  phy_chout_state[8]; /*!< Physical Channel out State (Used/Free)*/
   uint32_t                  PMALookupTable[PMA_BLOCKS]; /*PMA LookUp Table */
-  HCD_HostStateTypeDef      HostState; /*!< USB current state DICONNECT/CONNECT/RUN/SUSPEND/RESUME */
+  __IO HCD_HostStateTypeDef HostState; /*!< USB current state DICONNECT/CONNECT/RUN/SUSPEND/RESUME */
 #endif /* defined (USB_DRD_FS) */
   HAL_LockTypeDef           Lock;       /*!< HCD peripheral status    */
   __IO HCD_StateTypeDef     State;      /*!< HCD communication state  */
@@ -137,6 +137,9 @@ typedef struct
 #ifndef HAL_HCD_CHANNEL_NAK_COUNT
 #define HAL_HCD_CHANNEL_NAK_COUNT           2U
 #endif /* HAL_HCD_CHANNEL_NAK_COUNT */
+#ifndef HAL_HCD_CHANNEL_NYET_COUNT
+#define HAL_HCD_CHANNEL_NYET_COUNT          2U
+#endif /* HAL_HCD_CHANNEL_NYET_COUNT */
 
 /** @defgroup HCD_Speed HCD Speed
   * @{
@@ -345,10 +348,10 @@ HAL_StatusTypeDef HAL_HCD_ResumePort(HCD_HandleTypeDef *hhcd);
 /** @addtogroup HCD_Exported_Functions_Group4 Peripheral State functions
   * @{
   */
-HCD_StateTypeDef        HAL_HCD_GetState(HCD_HandleTypeDef const *hhcd);
-HCD_URBStateTypeDef     HAL_HCD_HC_GetURBState(HCD_HandleTypeDef const *hhcd, uint8_t chnum);
-HCD_HCStateTypeDef      HAL_HCD_HC_GetState(HCD_HandleTypeDef const *hhcd, uint8_t chnum);
-uint32_t                HAL_HCD_HC_GetXferCount(HCD_HandleTypeDef const *hhcd, uint8_t chnum);
+HCD_StateTypeDef        HAL_HCD_GetState(const HCD_HandleTypeDef *hhcd);
+HCD_URBStateTypeDef     HAL_HCD_HC_GetURBState(const HCD_HandleTypeDef *hhcd, uint8_t chnum);
+HCD_HCStateTypeDef      HAL_HCD_HC_GetState(const HCD_HandleTypeDef *hhcd, uint8_t chnum);
+uint32_t                HAL_HCD_HC_GetXferCount(const HCD_HandleTypeDef *hhcd, uint8_t chnum);
 uint32_t                HAL_HCD_GetCurrentFrame(HCD_HandleTypeDef *hhcd);
 uint32_t                HAL_HCD_GetCurrentSpeed(HCD_HandleTypeDef *hhcd);
 
@@ -540,7 +543,7 @@ __STATIC_INLINE uint16_t HCD_GET_CH_RX_CNT(HCD_TypeDef *Instance, uint16_t bChNu
   /* Count depends on device LS */
   if ((HostCoreSpeed == USB_DRD_SPEED_LS) || ((ep_reg & USB_CHEP_LSEP) == USB_CHEP_LSEP))
   {
-    count = (70U * (HAL_RCC_GetHCLKFreq() / 1000000U)) / 100U;
+    count = (75U * (HAL_RCC_GetHCLKFreq() / 1000000U)) / 100U;
   }
 
   if (count > 15U)

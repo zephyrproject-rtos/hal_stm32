@@ -191,7 +191,11 @@ typedef struct
 #define IS_RNG_NIST_COMPLIANCE(__NIST_COMPLIANCE__) (((__NIST_COMPLIANCE__) == RNG_NIST_COMPLIANT) || \
                                                      ((__NIST_COMPLIANCE__) == RNG_CUSTOM_NIST))
 
+#if (defined(RNG_HTSR0_RPERRX) || defined(RNG_HTSR1_ADERRX))
+#define IS_RNG_CONFIG1(__CONFIG1__) ((__CONFIG1__) <= 0xFFUL)
+#else
 #define IS_RNG_CONFIG1(__CONFIG1__) ((__CONFIG1__) <= 0x3FUL)
+#endif /* RNG_HTSR0_RPERRX || RNG_HTSR1_ADERRX) */
 
 #define IS_RNG_CONFIG2(__CONFIG2__) ((__CONFIG2__) <= 0x07UL)
 

@@ -364,7 +364,7 @@ HAL_StatusTypeDef HAL_PCD_DeActivateRemoteWakeup(PCD_HandleTypeDef *hpcd);
 HAL_StatusTypeDef HAL_PCD_SetTestMode(const PCD_HandleTypeDef *hpcd, uint8_t testmode);
 #endif /* defined (USB_OTG_HS) */
 
-uint32_t          HAL_PCD_EP_GetRxCount(PCD_HandleTypeDef const *hpcd, uint8_t ep_addr);
+uint32_t          HAL_PCD_EP_GetRxCount(const PCD_HandleTypeDef *hpcd, uint8_t ep_addr);
 /**
   * @}
   */
@@ -373,7 +373,7 @@ uint32_t          HAL_PCD_EP_GetRxCount(PCD_HandleTypeDef const *hpcd, uint8_t e
 /** @addtogroup PCD_Exported_Functions_Group4 Peripheral State functions
   * @{
   */
-PCD_StateTypeDef HAL_PCD_GetState(PCD_HandleTypeDef const *hpcd);
+PCD_StateTypeDef HAL_PCD_GetState(const PCD_HandleTypeDef *hpcd);
 /**
   * @}
   */
@@ -459,13 +459,13 @@ PCD_StateTypeDef HAL_PCD_GetState(PCD_HandleTypeDef const *hpcd);
 #if defined (USB_DRD_FS)
 /* PMA RX counter */
 #ifndef PCD_RX_PMA_CNT
-#define PCD_RX_PMA_CNT                                               10U
+#define PCD_RX_PMA_CNT                         ((8U * (SystemCoreClock / 1000000U)) / 100U)
 #endif /* PCD_RX_PMA_CNT */
 
 /* SetENDPOINT */
 #define PCD_SET_ENDPOINT                       USB_DRD_SET_CHEP
 
-/* GetENDPOINT Register value*/
+/* GetENDPOINT Register value */
 #define PCD_GET_ENDPOINT                       USB_DRD_GET_CHEP
 
 
@@ -587,7 +587,12 @@ PCD_StateTypeDef HAL_PCD_GetState(PCD_HandleTypeDef const *hpcd);
 __STATIC_INLINE uint16_t PCD_GET_EP_RX_CNT(const PCD_TypeDef *Instance, uint16_t bEpNum)
 {
   UNUSED(Instance);
-  __IO uint32_t count = PCD_RX_PMA_CNT;
+  __IO uint32_t count = 10U;
+
+  if (count < PCD_RX_PMA_CNT)
+  {
+    count = PCD_RX_PMA_CNT;
+  }
 
   /* WA: few cycles for RX PMA descriptor to update */
   while (count > 0U)
@@ -630,7 +635,12 @@ __STATIC_INLINE uint16_t PCD_GET_EP_RX_CNT(const PCD_TypeDef *Instance, uint16_t
 __STATIC_INLINE uint16_t PCD_GET_EP_DBUF0_CNT(const PCD_TypeDef *Instance, uint16_t bEpNum)
 {
   UNUSED(Instance);
-  __IO uint32_t count = PCD_RX_PMA_CNT;
+  __IO uint32_t count = 10U;
+
+  if (count < PCD_RX_PMA_CNT)
+  {
+    count = PCD_RX_PMA_CNT;
+  }
 
   /* WA: few cycles for RX PMA descriptor to update */
   while (count > 0U)
@@ -650,7 +660,12 @@ __STATIC_INLINE uint16_t PCD_GET_EP_DBUF0_CNT(const PCD_TypeDef *Instance, uint1
 __STATIC_INLINE uint16_t PCD_GET_EP_DBUF1_CNT(const PCD_TypeDef *Instance, uint16_t bEpNum)
 {
   UNUSED(Instance);
-  __IO uint32_t count = PCD_RX_PMA_CNT;
+  __IO uint32_t count = 10U;
+
+  if (count < PCD_RX_PMA_CNT)
+  {
+    count = PCD_RX_PMA_CNT;
+  }
 
   /* WA: few cycles for RX PMA descriptor to update */
   while (count > 0U)

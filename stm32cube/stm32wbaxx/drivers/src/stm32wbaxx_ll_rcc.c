@@ -336,11 +336,11 @@ void LL_RCC_GetSystemClocksFreq(LL_RCC_ClocksTypeDef *RCC_Clocks)
   * @param  USARTxSource This parameter can be one of the following values:
   *         @arg @ref LL_RCC_USART1_CLKSOURCE
   *         @arg @ref LL_RCC_USART2_CLKSOURCE
-#if defined(USART3)
+  * if USART3 is defined
   *         @arg @ref LL_RCC_USART3_CLKSOURCE (*)
   *
   *         (*) value not defined in all devices.
-#endif
+  *
   * @retval USART clock frequency (in Hz)
   *         - @ref  LL_RCC_PERIPH_FREQUENCY_NO indicates that oscillator (HSI or LSE) is not ready
   */
@@ -463,14 +463,14 @@ uint32_t LL_RCC_GetUSARTClockFreq(uint32_t USARTxSource)
   * @brief  Return SPIx clock frequency
   * @param  SPIxSource This parameter can be one of the following values:
   *         @arg @ref LL_RCC_SPI1_CLKSOURCE
-#if defined(SPI2)
+  * if SPI2 is defined
   *         @arg @ref LL_RCC_SPI2_CLKSOURCE (*)
-#endif
+  *
   *         @arg @ref LL_RCC_SPI3_CLKSOURCE
-#if defined(SPI2)
+  * if SPI2 is defined
   *
   *         (*) value not defined in all devices.
-#endif
+  *
   * @retval SPI clock frequency (in Hz)
   *         - @ref  LL_RCC_PERIPH_FREQUENCY_NO indicates that oscillator (HSI) is not ready
   */
@@ -572,15 +572,15 @@ uint32_t LL_RCC_GetSPIClockFreq(uint32_t SPIxSource)
   * @brief  Return I2Cx clock frequency
   * @param  I2CxSource This parameter can be one of the following values:
   *         @arg @ref LL_RCC_I2C1_CLKSOURCE
-#if defined(I2C2)
+  * if I2C2 is defined
   *         @arg @ref LL_RCC_I2C2_CLKSOURCE (*)
-#endif
+  *
   *         @arg @ref LL_RCC_I2C3_CLKSOURCE
-#if defined(I2C4)
+  * if I2C4 is defined
   *         @arg @ref LL_RCC_I2C4_CLKSOURCE (*)
   *
   *         (*) value not defined in all devices.
-#endif
+  *
   * @retval I2C clock frequency (in Hz)
   *         - @ref  LL_RCC_PERIPH_FREQUENCY_NO indicates that oscillator (HSI) is not ready
   */
@@ -1329,7 +1329,7 @@ uint32_t RCC_PLL1Q_GetFreqDomain(void)
 
 /**
   * @brief  Helper function to calculate the PLL1 frequency output
-  * @note ex: @ref LL_RCC_CalcPLLClockFreq (HSE_VALUE, @ref LL_RCC_PLL1_GetM (),
+  * @note ex: LL_RCC_CalcPLLClockFreq (HSE_VALUE, LL_RCC_PLL1_GetM (),
   *           @ref LL_RCC_PLL1_GetN (), @ref LL_RCC_PLL1_GetFRACN (), @ref LL_RCC_PLL1_GetP ());
   * @param  PLLInputFreq PLL Input frequency (based on HSE/(HSI/HSIDIV)/CSI)
   * @param  M      Between 1 and 63

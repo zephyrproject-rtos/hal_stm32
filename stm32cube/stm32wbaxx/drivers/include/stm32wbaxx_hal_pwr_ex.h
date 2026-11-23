@@ -82,7 +82,7 @@ extern "C" {
 #if defined(USB_OTG_HS)
 /* USB_OTG_HS SRAM power-down in Stop modes */
 #define PWR_USB_OTG_HS_SRAM_STOP_RETENTION   PWR_CR2_PRAMPDS      /*!< USB_OTG_HS SRAM content retained in Stop modes */
-#elif defined(PWR_STOP3_SUPPORT) && defined (STM32WBA25xx)
+#elif defined(PWR_STOP3_SUPPORT) && defined STM32WBA25xx
 #define PWR_USB_SRAM_STOP_RETENTION          PWR_CR2_PRAMPDS      /*!< USB SRAM content retained in Stop modes */
 #endif /* defined(USB_OTG_HS) */
 
@@ -136,7 +136,7 @@ extern "C" {
 /** @defgroup PWREx_Regulator_Voltage_Scale PWR Extended Regulator Voltage Scale
   * @{
   */
-#if defined(PWR_STOP3_SUPPORT)
+#if defined(PWR_VOSR_VOS_1)
 #define PWR_REGULATOR_VOLTAGE_SCALE1     PWR_VOSR_VOS_0     /*!< Voltage scaling range 1    */
 #define PWR_REGULATOR_VOLTAGE_SCALE1_5   PWR_VOSR_VOS_1     /*!< Voltage scaling range 1.5  */
 #define PWR_REGULATOR_VOLTAGE_SCALE2     (0U)               /*!< Voltage scaling range 2    */
@@ -326,7 +326,7 @@ extern "C" {
 #endif /* defined(PWR_CR3_REGSEL) */
 
 /* Voltage scaling range check macro */
-#if defined(PWR_STOP3_SUPPORT)
+#if defined(PWR_VOSR_VOS_1)
 #define IS_PWR_VOLTAGE_SCALING_RANGE(RANGE)      (((RANGE) == PWR_REGULATOR_VOLTAGE_SCALE1)   ||\
                                                   ((RANGE) == PWR_REGULATOR_VOLTAGE_SCALE1_5) ||\
                                                   ((RANGE) == PWR_REGULATOR_VOLTAGE_SCALE2))
@@ -422,7 +422,7 @@ extern "C" {
                                                   ((RAMCONTENT) == PWR_USB_OTG_HS_SRAM_STOP_RETENTION)   ||\
                                                   ((RAMCONTENT) == PWR_PKA_SRAM_STOP_RETENTION))
 #else
-#if defined(PWR_STOP3_SUPPORT) && defined (STM32WBA25xx)
+#if defined(PWR_STOP3_SUPPORT) && defined STM32WBA25xx
 #define IS_PWR_RAM_STOP_RETENTION(RAMCONTENT)    (((RAMCONTENT) == PWR_SRAM1_FULL_STOP_RETENTION)    ||\
                                                   ((RAMCONTENT) == PWR_SRAM2_PAGE1_STOP_RETENTION)   ||\
                                                   ((RAMCONTENT) == PWR_SRAM2_PAGE2_STOP_RETENTION)   ||\

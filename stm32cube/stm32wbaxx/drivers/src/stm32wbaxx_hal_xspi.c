@@ -93,8 +93,6 @@
      for the operation type in regular mode :
      (+) Operation type equals to read configuration : the command configuration
          applies to read access in memory-mapped mode
-     (+) Operation type equals to write configuration : the command configuration
-         applies to write access in memory-mapped mode
      (+) Both read and write configuration should be performed before activating
          memory-mapped mode
     [..]
@@ -249,10 +247,12 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* Private function prototypes -----------------------------------------------*/
+#if defined(HAL_DMA_MODULE_ENABLED)
 static void              XSPI_DMACplt(DMA_HandleTypeDef *hdma);
 static void              XSPI_DMAHalfCplt(DMA_HandleTypeDef *hdma);
 static void              XSPI_DMAError(DMA_HandleTypeDef *hdma);
 static void              XSPI_DMAAbortCplt(DMA_HandleTypeDef *hdma);
+#endif /* HAL_DMA_MODULE_ENABLED */
 static HAL_StatusTypeDef XSPI_WaitFlagStateUntilTimeout(XSPI_HandleTypeDef *hxspi, uint32_t Flag, FlagStatus State,
                                                         uint32_t Tickstart, uint32_t Timeout);
 static HAL_StatusTypeDef XSPI_ConfigCmd(XSPI_HandleTypeDef *hxspi, const XSPI_RegularCmdTypeDef *pCmd);
@@ -652,6 +652,7 @@ void HAL_XSPI_IRQHandler(XSPI_HandleTypeDef *hxspi)
       /* Disable the DMA transfer on the XSPI side */
       CLEAR_BIT(hxspi->Instance->CR, XSPI_CR_DMAEN);
 
+#if defined(HAL_DMA_MODULE_ENABLED)
       /* Disable the DMA transmit on the DMA side */
       hxspi->hdmatx->XferAbortCallback = XSPI_DMAAbortCplt;
       if (HAL_DMA_Abort_IT(hxspi->hdmatx) != HAL_OK)
@@ -679,6 +680,7 @@ void HAL_XSPI_IRQHandler(XSPI_HandleTypeDef *hxspi)
         HAL_XSPI_ErrorCallback(hxspi);
 #endif /* (USE_HAL_XSPI_REGISTER_CALLBACKS) && (USE_HAL_XSPI_REGISTER_CALLBACKS == 1U) */
       }
+#endif /* HAL_DMA_MODULE_ENABLED */
     }
     else
     {
@@ -1179,6 +1181,7 @@ HAL_StatusTypeDef HAL_XSPI_Receive_IT(XSPI_HandleTypeDef *hxspi, uint8_t *pData)
   return status;
 }
 
+#if defined(HAL_DMA_MODULE_ENABLED)
 /**
   * @brief  Send an amount of data in non-blocking mode with DMA.
   * @param  hxspi : XSPI handle
@@ -1295,7 +1298,7 @@ HAL_StatusTypeDef HAL_XSPI_Transmit_DMA(XSPI_HandleTypeDef *hxspi, const uint8_t
         /* Enable the transmit DMA Channel */
         if ((hxspi->hdmatx->Mode & DMA_LINKEDLIST) == DMA_LINKEDLIST)
         {
-          if (hxspi->hdmatx->LinkedListQueue != NULL)
+          if (p_queue != NULL)
           {
             /* Enable the DMA channel */
             MODIFY_REG(p_queue->Head->LinkRegisters[NODE_CTR1_DEFAULT_OFFSET], \
@@ -1479,7 +1482,7 @@ HAL_StatusTypeDef HAL_XSPI_Receive_DMA(XSPI_HandleTypeDef *hxspi, uint8_t *pData
         /* Enable the receive DMA Channel */
         if ((hxspi->hdmarx->Mode & DMA_LINKEDLIST) == DMA_LINKEDLIST)
         {
-          if (hxspi->hdmarx->LinkedListQueue != NULL)
+          if (p_queue != NULL)
           {
             /* Enable the DMA channel */
             MODIFY_REG(p_queue->Head->LinkRegisters[NODE_CTR1_DEFAULT_OFFSET], \
@@ -1553,6 +1556,7 @@ HAL_StatusTypeDef HAL_XSPI_Receive_DMA(XSPI_HandleTypeDef *hxspi, uint8_t *pData
 
   return status;
 }
+#endif /* HAL_DMA_MODULE_ENABLED */
 
 /**
   * @brief  Configure the Memory Mapped mode.
@@ -2009,6 +2013,7 @@ HAL_StatusTypeDef HAL_XSPI_Abort(XSPI_HandleTypeDef *hxspi)
   /* Check if the state is not in reset state */
   if (hxspi->State != HAL_XSPI_STATE_RESET)
   {
+#if defined(HAL_DMA_MODULE_ENABLED)
     /* Check if the DMA is enabled */
     if ((hxspi->Instance->CR & XSPI_CR_DMAEN) != 0U)
     {
@@ -2029,7 +2034,7 @@ HAL_StatusTypeDef HAL_XSPI_Abort(XSPI_HandleTypeDef *hxspi)
         hxspi->ErrorCode = HAL_XSPI_ERROR_DMA;
       }
     }
-
+#endif /* HAL_DMA_MODULE_ENABLED */
     if (HAL_XSPI_GET_FLAG(hxspi, HAL_XSPI_FLAG_BUSY) != RESET)
     {
       /* Perform an abort of the XSPI */
@@ -2095,6 +2100,7 @@ HAL_StatusTypeDef HAL_XSPI_Abort_IT(XSPI_HandleTypeDef *hxspi)
       /* Disable the DMA transfer on the XSPI side */
       CLEAR_BIT(hxspi->Instance->CR, XSPI_CR_DMAEN);
 
+#if defined(HAL_DMA_MODULE_ENABLED)
       /* Disable the DMA transmit on the DMA side */
       hxspi->hdmatx->XferAbortCallback = XSPI_DMAAbortCplt;
       if (HAL_DMA_Abort_IT(hxspi->hdmatx) != HAL_OK)
@@ -2122,6 +2128,7 @@ HAL_StatusTypeDef HAL_XSPI_Abort_IT(XSPI_HandleTypeDef *hxspi)
         HAL_XSPI_AbortCpltCallback(hxspi);
 #endif /* (USE_HAL_XSPI_REGISTER_CALLBACKS) && (USE_HAL_XSPI_REGISTER_CALLBACKS == 1U) */
       }
+#endif /*HAL_DMA_MODULE_ENABLED*/
     }
     else
     {
@@ -2451,6 +2458,7 @@ HAL_StatusTypeDef HAL_XSPI_DLYB_GetClockPeriod(XSPI_HandleTypeDef *hxspi, HAL_XS
 /**
   @cond 0
   */
+#if defined(HAL_DMA_MODULE_ENABLED)
 /**
   * @brief  DMA XSPI process complete callback.
   * @param  hdma : DMA handle
@@ -2577,6 +2585,7 @@ static void XSPI_DMAAbortCplt(DMA_HandleTypeDef *hdma)
 #endif /* defined (USE_HAL_XSPI_REGISTER_CALLBACKS) && (USE_HAL_XSPI_REGISTER_CALLBACKS == 1U) */
   }
 }
+#endif /* HAL_DMA_MODULE_ENABLED */
 
 /**
   * @brief  Wait for a flag state until timeout.
