@@ -71,4 +71,13 @@ Patch List:
       stm32cube/stm32h7xx/drivers/src/stm32h7xx_ll_utils.c
      Internal reference: HAL1-28779
 
+   *Fix incorrect handling of the ETH RX timestamp context descriptor
+      HAL_ETH_ReadData() read the RX timestamp from a context descriptor still
+      owned by the DMA (its CTXT test passes on a descriptor in read format,
+      where that bit is IOC), returning a buffer address and stale data.
+      Modifications applied from stm32h7xx-hal-driver repository:
+      https://github.com/STMicroelectronics/stm32h7xx-hal-driver/commit/d881add45bab
+     - Impacted file: drivers/src/stm32h7xx_hal_eth.c
+     ST Internal Reference: 683183939fd90b986d0d8626d624ab85
+
    See release_note.html from STM32Cube
