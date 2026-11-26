@@ -74,4 +74,9 @@ Patch List:
     ST Bug tracker ID: HAL1-27528
     See also https://github.com/zephyrproject-rtos/hal_stm32/pull/362
 
+   *Add missing FSMC -> FMC alias for the NOR/SRAM bank check
+    IS_FMC_NORSRAM_BANK, used by Zephyr's memc driver
+    Impacted files:
+     drivers/include/stm32f4xx_ll_fsmc.h
+
    See release_note.html from STM32Cube
