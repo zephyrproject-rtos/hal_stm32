@@ -677,12 +677,13 @@ typedef struct
 
 
 /*
-These 4 defines are a patch to make Zephyr MEMC driver work with FSMC
+These defines are a patch to make Zephyr MEMC driver work with FSMC
 */
 #define FMC_EXTENDED_MODE_ENABLE FSMC_EXTENDED_MODE_ENABLE
 #define FMC_MEMORY_TYPE_NOR      FSMC_MEMORY_TYPE_NOR
 #define FMC_MEMORY_TYPE_PSRAM    FSMC_MEMORY_TYPE_PSRAM
 #define FMC_MEMORY_TYPE_SRAM     FSMC_MEMORY_TYPE_SRAM
+#define IS_FMC_NORSRAM_BANK      IS_FSMC_NORSRAM_BANK
 
 
 #define __FMC_NORSRAM_ENABLE                  __FSMC_NORSRAM_ENABLE
