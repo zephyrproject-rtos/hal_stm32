@@ -34,7 +34,7 @@ zephyr_sources(Common/WPAN/Interfaces/hw_aes.c)
 set(STM32WBA_LIB_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../zephyr/blobs/stm32wba/lib)
 
 # Setting the right Cube define according to the Zephyr configuration
-if(CONFIG_STM32WBA_USE_TEMP_BASED_RADIO_CALIB)
+if(CONFIG_SOC_SERIES_STM32WBAX_LL_USE_TEMP_BASED_RADIO_CALIB)
   zephyr_compile_definitions(USE_TEMPERATURE_BASED_RADIO_CALIBRATION=1)
 else()
   zephyr_compile_definitions(USE_TEMPERATURE_BASED_RADIO_CALIBRATION=0)
