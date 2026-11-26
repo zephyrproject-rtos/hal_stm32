@@ -1,0 +1,6 @@
+west-commands:
+  - file: west/stm32_westcmd_core.py
+    commands:
+      - name: stm32
+        class: WestSTM32RootCommand
+        help: STM32 tools for west framework
