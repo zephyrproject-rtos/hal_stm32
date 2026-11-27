@@ -7,7 +7,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2024 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -17,16 +17,29 @@
   ******************************************************************************
   */
 /* USER CODE END Header */
+#ifndef __ZEPHYR__
+#include "main.h"
+#include "app_common.h"
+#include "app_conf.h"
+#include "log_module.h"
+#else
 #include <zephyr/logging/log.h>
 #include "ll_intf.h"
+#endif /*__ZEPHYR__*/
 #include "ll_intf_cmn.h"
 #include "ll_sys.h"
 #include "ll_sys_if.h"
+#ifndef __ZEPHYR__
+#include "stm32_rtos.h"
+#endif /*__ZEPHYR__*/
 #include "utilities_common.h"
 #ifndef __ZEPHYR__
 #if (USE_TEMPERATURE_BASED_RADIO_CALIBRATION == 1)
 #include "temp_measurement.h"
 #endif /* (USE_TEMPERATURE_BASED_RADIO_CALIBRATION == 1) */
+#if (CFG_LPM_STANDBY_SUPPORTED == 0)
+extern void profile_reset(void);
+#endif
 #endif /*__ZEPHYR__*/
 /* Private defines -----------------------------------------------------------*/
 /* Radio event scheduling method - must be set at 1 */
@@ -64,6 +77,9 @@
 /* Private functions prototypes-----------------------------------------------*/
 #if (USE_TEMPERATURE_BASED_RADIO_CALIBRATION == 1)
 void ll_sys_bg_temperature_measurement_init(void);
+#ifndef __ZEPHYR__
+static void ll_sys_bg_temperature_measurement_deinit(void);
+#endif /* __ZEPHYR__ */
 #endif /* USE_TEMPERATURE_BASED_RADIO_CALIBRATION */
 static void ll_sys_sleep_clock_source_selection(void);
 #if defined(CONFIG_BT_STM32WBA)
@@ -83,6 +99,7 @@ void ll_sys_reset(void);
 
 #ifndef __ZEPHYR__
 /* Functions Definition ------------------------------------------------------*/
+void ll_sys_bg_process_deinit(void);
 
 /**
   * @brief  Link Layer background process initialization
@@ -93,6 +110,20 @@ void ll_sys_bg_process_init(void)
 {
   /* Register Link Layer task */
   UTIL_SEQ_RegTask(1U << CFG_TASK_LINK_LAYER, UTIL_SEQ_RFU, ll_sys_bg_process);
+}
+
+/**
+  * @brief  Link Layer background process de-initialization
+  * @param  None
+  * @retval None
+  */
+void ll_sys_bg_process_deinit(void)
+{
+  /* no background process de-initialization required */
+
+#if (USE_TEMPERATURE_BASED_RADIO_CALIBRATION == 1)
+  ll_sys_bg_temperature_measurement_deinit();
+#endif /* USE_TEMPERATURE_BASED_RADIO_CALIBRATION */
 }
 
 /**
@@ -168,6 +199,16 @@ void ll_sys_bg_temperature_measurement_init(void)
 {
   /* Register Temperature Measurement task */
   UTIL_SEQ_RegTask(1U << CFG_TASK_TEMP_MEAS, UTIL_SEQ_RFU, TEMPMEAS_RequestTemperatureMeasurement);
+}
+
+/**
+  * @brief  Link Layer temperature request background process de-initialization
+  * @param  None
+  * @retval None
+  */
+void ll_sys_bg_temperature_measurement_deinit(void)
+{
+  /* no temperature measurement background process de-initialization required */
 }
 
 /**
@@ -290,7 +331,7 @@ void ll_sys_reset(void)
   if(LL_RCC_RADIO_GetSleepTimerClockSource() == LL_RCC_RADIOSLEEPSOURCE_LSI)
   {
     /* Configure RCO calibration */
-    ll_intf_le_set_rco_clbr_evnt_params(LSI_RCO_CALIB_DURATION_CYCLE, LSI_RCO_CALIB_PERIOD_MS);
+    ll_intf_cmn_le_set_rco_clbr_evnt_params(LSI_RCO_CALIB_DURATION_CYCLE, LSI_RCO_CALIB_PERIOD_MS);
   }
 
   /* Update link layer timings depending on selected configuration */

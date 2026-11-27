@@ -1080,6 +1080,9 @@ typedef struct
 #define SRAM6_SIZE                      0x00002800UL  /*!< 2.4 GHz RADIO TXRX SRAM 10 Kbytes   */
 #define SEQSRAM_SIZE                    0x00000200UL  /*!< SRAM Sequence / retention 512 bytes */
 
+/* External memories base addresses - Not aliased */
+#define XSPI1_BASE                      (0x90000000UL) /*!< XSPI1 memories accessible over AHB base address */
+
 /*!< OTP, Engineering bytes, Option bytes defines */
 #define FLASH_OTP_BASE                  (SYSTEM_FLASH_BASE_NS + 0x00008000UL)
 #define FLASH_OTP_SIZE                  0x00000200U  /*!< 512 bytes OTP (one-time programmable)          */
@@ -1154,7 +1157,7 @@ typedef struct
 #define OTFDEC1_REGION3_BASE_NS         (OTFDEC1_BASE_NS + 0x80UL)
 #define OTFDEC1_REGION4_BASE_NS         (OTFDEC1_BASE_NS + 0xB0UL)
 #define DLYB1_BASE_NS                   (AHB2PERIPH_BASE_NS + 0xAF000UL)
-#define XSPI1_BASE_NS                   (AHB2PERIPH_BASE_NS + 0xB1400UL)
+#define XSPI1_R_BASE_NS                 (AHB2PERIPH_BASE_NS + 0xB1400UL)
 
 /*!< APB7 Non secure peripherals */
 #define SYSCFG_BASE_NS                  (APB7PERIPH_BASE_NS + 0x0400UL)
@@ -1252,7 +1255,7 @@ typedef struct
 #define OTFDEC1_REGION3_BASE_S          (OTFDEC1_BASE_S + 0x80UL)
 #define OTFDEC1_REGION4_BASE_S          (OTFDEC1_BASE_S + 0xB0UL)
 #define DLYB1_BASE_S                    (AHB2PERIPH_BASE_S + 0xAF000UL)
-#define XSPI1_BASE_S                    (AHB2PERIPH_BASE_S + 0xB1400UL)
+#define XSPI1_R_BASE_S                  (AHB2PERIPH_BASE_S + 0xB1400UL)
 
 /*!< APB7 Secure peripherals */
 #define SYSCFG_BASE_S                   (APB7PERIPH_BASE_S + 0x0400UL)
@@ -1418,7 +1421,7 @@ typedef struct
 #define USART1_NS                       ((USART_TypeDef *) USART1_BASE_NS)
 #define USB_DRD_FS_NS                   ((USB_DRD_TypeDef *) USB_DRD_BASE_NS)
 #define USB_DRD_PMA_BUFF_NS             ((USB_DRD_PMABuffDescTypeDef *) USB_DRD_SRAM_BASE_NS)
-#define XSPI1_NS                        ((XSPI_TypeDef *) XSPI1_BASE_NS)
+#define XSPI1_NS                        ((XSPI_TypeDef *) XSPI1_R_BASE_NS)
 
 /*!< Memory & Instance aliases and base addresses for Non-Secure/Secure peripherals */
 #if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
@@ -1480,7 +1483,7 @@ typedef struct
 #define USART1_S                        ((USART_TypeDef *) USART1_BASE_S)
 #define USB_DRD_FS_S                    ((USB_DRD_TypeDef *) USB_DRD_BASE_S)
 #define USB_DRD_PMA_BUFF_S              ((USB_DRD_PMABuffDescTypeDef *) USB_DRD_SRAM_BASE_S)
-#define XSPI1_S                         ((XSPI_TypeDef *) XSPI1_BASE_S)
+#define XSPI1_S                         ((XSPI_TypeDef *) XSPI1_R_BASE_S)
 
 
 /*!< Memory base addresses for Secure peripherals */
@@ -1611,7 +1614,7 @@ typedef struct
 #define USB_DRD_PMAADDR                 USB_DRD_SRAM_BASE_S
 #define USB_DRD_PMA_BUFF                USB_DRD_PMA_BUFF_S
 #define XSPI1                           XSPI1_S
-#define XSPI1_BASE                      XSPI1_BASE_S
+#define XSPI1_R_BASE                    XSPI1_R_BASE_S
 
 #else
 /*!< Memory base addresses for Non secure peripherals */
@@ -1740,7 +1743,7 @@ typedef struct
 #define USB_DRD_PMAADDR                 USB_DRD_SRAM_BASE_NS
 #define USB_DRD_PMA_BUFF                USB_DRD_PMA_BUFF_NS
 #define XSPI1                           XSPI1_NS
-#define XSPI1_BASE                      XSPI1_BASE_NS
+#define XSPI1_R_BASE                    XSPI1_R_BASE_NS
 #endif
 
 
@@ -6255,9 +6258,9 @@ typedef struct
 #define GTZC_TZIC_FCR2_CSAI1F_Pos         (7UL)
 #define GTZC_TZIC_FCR2_CSAI1F_Msk         (0x01UL << GTZC_TZIC_FCR2_CSAI1F_Pos)
 #define GTZC_TZIC_FCR2_CSAI1F             GTZC_TZIC_FCR2_CSAI1F_Msk                 /*!<  clear the illegal access flag for SAI1 */
-#define GTZC_TZSC_FCR2_CUSB1F_Pos         (15UL)
-#define GTZC_TZSC_FCR2_CUSB1F_Msk         (0x01UL << GTZC_TZSC_FCR2_CUSB1F_Pos)
-#define GTZC_TZSC_FCR2_CUSB1F             GTZC_TZSC_FCR2_CUSB1F_Msk                 /*!<  clear the illegal access flag for USB */
+#define GTZC_TZIC_FCR2_CUSB1F_Pos         (15UL)
+#define GTZC_TZIC_FCR2_CUSB1F_Msk         (0x01UL << GTZC_TZIC_FCR2_CUSB1F_Pos)
+#define GTZC_TZIC_FCR2_CUSB1F             GTZC_TZIC_FCR2_CUSB1F_Msk                 /*!<  clear the illegal access flag for USB */
 #define GTZC_TZIC_FCR2_CSPI3F_Pos         (16UL)
 #define GTZC_TZIC_FCR2_CSPI3F_Msk         (0x01UL << GTZC_TZIC_FCR2_CSPI3F_Pos)
 #define GTZC_TZIC_FCR2_CSPI3F             GTZC_TZIC_FCR2_CSPI3F_Msk                 /*!<  clear the illegal access flag for SPI3 */

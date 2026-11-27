@@ -644,7 +644,9 @@ typedef struct
 #endif /* GPDMA1 */
 #define __HAL_RCC_FLASH_CLK_DISABLE()          CLEAR_BIT(RCC->AHB1ENR, RCC_AHB1ENR_FLASHEN)
 #define __HAL_RCC_CRC_CLK_DISABLE()            CLEAR_BIT(RCC->AHB1ENR, RCC_AHB1ENR_CRCEN)
+#if defined(TSC)
 #define __HAL_RCC_TSC_CLK_DISABLE()            CLEAR_BIT(RCC->AHB1ENR, RCC_AHB1ENR_TSCEN)
+#endif /*TSC*/
 #define __HAL_RCC_RAMCFG_CLK_DISABLE()         CLEAR_BIT(RCC->AHB1ENR, RCC_AHB1ENR_RAMCFGEN)
 #if defined(GTZC_TZSC)
 #define __HAL_RCC_GTZC1_CLK_DISABLE()          CLEAR_BIT(RCC->AHB1ENR, RCC_AHB1ENR_GTZC1EN)
@@ -1264,7 +1266,9 @@ typedef struct
 #endif /* GPDMA1 */
 #define __HAL_RCC_FLASH_IS_CLK_ENABLED()       (READ_BIT(RCC->AHB1ENR, RCC_AHB1ENR_FLASHEN) != 0U)
 #define __HAL_RCC_CRC_IS_CLK_ENABLED()         (READ_BIT(RCC->AHB1ENR, RCC_AHB1ENR_CRCEN) != 0U)
+#if defined (TSC)
 #define __HAL_RCC_TSC_IS_CLK_ENABLED()         (READ_BIT(RCC->AHB1ENR, RCC_AHB1ENR_TSCEN) != 0U)
+#endif /*TSC*/
 #define __HAL_RCC_RAMCFG_IS_CLK_ENABLED()      (READ_BIT(RCC->AHB1ENR, RCC_AHB1ENR_RAMCFGEN) != 0U)
 #if defined(GTZC_TZSC)
 #define __HAL_RCC_GTZC1_IS_CLK_ENABLED()       (READ_BIT(RCC->AHB1ENR, RCC_AHB1ENR_GTZC1EN) != 0U)
@@ -1432,8 +1436,9 @@ typedef struct
 #define __HAL_RCC_GPDMA1_FORCE_RESET()         SET_BIT(RCC->AHB1RSTR, RCC_AHB1RSTR_GPDMA1RST)
 #endif /* GPDMA1 */
 #define __HAL_RCC_CRC_FORCE_RESET()            SET_BIT(RCC->AHB1RSTR, RCC_AHB1RSTR_CRCRST)
+#if defined (TSC)
 #define __HAL_RCC_TSC_FORCE_RESET()            SET_BIT(RCC->AHB1RSTR, RCC_AHB1RSTR_TSCRST)
-
+#endif /*TSC*/
 #define __HAL_RCC_AHB1_RELEASE_RESET()         WRITE_REG(RCC->AHB1RSTR, 0x00000000U)
 #if defined(LPDMA1)
 #define __HAL_RCC_LPDMA1_RELEASE_RESET()       CLEAR_BIT(RCC->AHB1RSTR, RCC_AHB1RSTR_LPDMA1RST)
@@ -1442,7 +1447,9 @@ typedef struct
 #define __HAL_RCC_GPDMA1_RELEASE_RESET()       CLEAR_BIT(RCC->AHB1RSTR, RCC_AHB1RSTR_GPDMA1RST)
 #endif /* GPDMA1 */
 #define __HAL_RCC_CRC_RELEASE_RESET()          CLEAR_BIT(RCC->AHB1RSTR, RCC_AHB1RSTR_CRCRST)
+#if defined (TSC)
 #define __HAL_RCC_TSC_RELEASE_RESET()          CLEAR_BIT(RCC->AHB1RSTR, RCC_AHB1RSTR_TSCRST)
+#endif /*TSC*/
 /**
   * @}
   */
@@ -1715,7 +1722,9 @@ typedef struct
 #endif /* GPDMA1 */
 #define __HAL_RCC_FLASH_CLK_SLEEP_ENABLE()     SET_BIT(RCC->AHB1SMENR, RCC_AHB1SMENR_FLASHSMEN)
 #define __HAL_RCC_CRC_CLK_SLEEP_ENABLE()       SET_BIT(RCC->AHB1SMENR, RCC_AHB1SMENR_CRCSMEN)
+#if defined(TSC)
 #define __HAL_RCC_TSC_CLK_SLEEP_ENABLE()       SET_BIT(RCC->AHB1SMENR, RCC_AHB1SMENR_TSCSMEN)
+#endif /*TSC*/
 #define __HAL_RCC_RAMCFG_CLK_SLEEP_ENABLE()    SET_BIT(RCC->AHB1SMENR, RCC_AHB1SMENR_RAMCFGSMEN)
 #if defined(GTZC_TZSC)
 #define __HAL_RCC_GTZC1_CLK_SLEEP_ENABLE()     SET_BIT(RCC->AHB1SMENR, RCC_AHB1SMENR_GTZC1SMEN)
@@ -1731,7 +1740,9 @@ typedef struct
 #endif /* GPDMA1 */
 #define __HAL_RCC_FLASH_CLK_SLEEP_DISABLE()    CLEAR_BIT(RCC->AHB1SMENR, RCC_AHB1SMENR_FLASHSMEN)
 #define __HAL_RCC_CRC_CLK_SLEEP_DISABLE()      CLEAR_BIT(RCC->AHB1SMENR, RCC_AHB1SMENR_CRCSMEN)
+#if defined(TSC)
 #define __HAL_RCC_TSC_CLK_SLEEP_DISABLE()      CLEAR_BIT(RCC->AHB1SMENR, RCC_AHB1SMENR_TSCSMEN)
+#endif /*TSC*/
 #define __HAL_RCC_RAMCFG_CLK_SLEEP_DISABLE()   CLEAR_BIT(RCC->AHB1SMENR, RCC_AHB1SMENR_RAMCFGSMEN)
 #if defined(GTZC_TZSC)
 #define __HAL_RCC_GTZC1_CLK_SLEEP_DISABLE()    CLEAR_BIT(RCC->AHB1SMENR, RCC_AHB1SMENR_GTZC1SMEN)
@@ -2024,7 +2035,9 @@ typedef struct
 #endif /* GPDMA1 */
 #define __HAL_RCC_FLASH_IS_CLK_SLEEP_ENABLED()       (READ_BIT(RCC->AHB1SMENR, RCC_AHB1SMENR_FLASHSMEN) != 0U)
 #define __HAL_RCC_CRC_IS_CLK_SLEEP_ENABLED()         (READ_BIT(RCC->AHB1SMENR, RCC_AHB1SMENR_CRCSMEN) != 0U)
+#if defined(TSC)
 #define __HAL_RCC_TSC_IS_CLK_SLEEP_ENABLED()         (READ_BIT(RCC->AHB1SMENR, RCC_AHB1SMENR_TSCSMEN) != 0U)
+#endif /*TSC*/
 #define __HAL_RCC_RAMCFG_IS_CLK_SLEEP_ENABLED()      (READ_BIT(RCC->AHB1SMENR, RCC_AHB1SMENR_RAMCFGSMEN) != 0U)
 #if defined(GTZC_TZSC)
 #define __HAL_RCC_GTZC1_IS_CLK_SLEEP_ENABLED()       (READ_BIT(RCC->AHB1SMENR, RCC_AHB1SMENR_GTZC1SMEN) != 0U)
@@ -2610,12 +2623,10 @@ typedef struct
   *            @arg @ref RCC_IT_PLL1RDY         PLL1 ready interrupt
   *            @arg @ref RCC_IT_CSS             HSE32 Clock Security System Interrupt
   *            @arg @ref RCC_IT_LSI2RDY         LSI2 ready interrupt(*)
-#if defined(RCC_CCIPR2_ASSEL)
   *            @arg @ref RCC_IT_CAPTURE_ERROR   Capture Error Interrupt flag(*)
   *            @arg @ref RCC_IT_COMPARER        Comparer Interrupt flag(*)
   *            @arg @ref RCC_IT_CAPTURE_TRIGGER Capture Trigger Interrupt flag(*)
-#endif
-  * (*) Feature not available on all devices of the family
+  * @note (*) Feature not available on all devices of the family
   * @retval None
   */
 #if defined(RCC_CCIPR2_ASSEL)
@@ -2638,12 +2649,10 @@ typedef struct
   *            @arg @ref RCC_IT_PLL1RDY         PLL1 ready interrupt
   *            @arg @ref RCC_IT_CSS             HSE32 Clock Security System Interrupt
   *            @arg @ref RCC_IT_LSI2RDY         LSI2 ready interrupt(*)
-#if defined(RCC_CCIPR2_ASSEL)
   *            @arg @ref RCC_IT_CAPTURE_ERROR   Capture Error Interrupt flag(*)
   *            @arg @ref RCC_IT_COMPARER        Comparer Interrupt flag(*)
   *            @arg @ref RCC_IT_CAPTURE_TRIGGER Capture Trigger Interrupt flag(*)
-#endif
-  * (*) Feature not available on all devices of the family
+  * @note (*) Feature not available on all devices of the family
   * @retval None
   */
 #if defined(RCC_CCIPR2_ASSEL)
@@ -2666,12 +2675,10 @@ typedef struct
   *            @arg @ref RCC_IT_PLL1RDY         PLL1 ready interrupt
   *            @arg @ref RCC_IT_CSS             HSE32 Clock Security System Interrupt
   *            @arg @ref RCC_IT_LSI2RDY         LSI2 ready interrupt(*)
-#if defined(RCC_CCIPR2_ASSEL)
   *            @arg @ref RCC_IT_CAPTURE_ERROR   Capture Error Interrupt flag(*)
   *            @arg @ref RCC_IT_COMPARER        Comparer Interrupt flag(*)
   *            @arg @ref RCC_IT_CAPTURE_TRIGGER Capture Trigger Interrupt flag(*)
-#endif
-  * (*) Feature not available on all devices of the family
+  * @note (*) Feature not available on all devices of the family
   * @retval None
   */
 #if defined(RCC_CCIPR2_ASSEL)
@@ -2692,12 +2699,10 @@ typedef struct
   *            @arg @ref RCC_IT_PLL1RDY         PLL1 ready interrupt
   *            @arg @ref RCC_IT_CSS             HSE32 Clock Security System Interrupt
   *            @arg @ref RCC_IT_LSI2RDY         LSI2 ready interrupt(*)
-#if defined(RCC_CCIPR2_ASSEL)
   *            @arg @ref RCC_IT_CAPTURE_ERROR   Capture Error Interrupt flag(*)
   *            @arg @ref RCC_IT_COMPARER        Comparer Interrupt flag(*)
   *            @arg @ref RCC_IT_CAPTURE_TRIGGER Capture Trigger Interrupt flag(*)
-#endif
-  * (*) Feature not available on all devices of the family
+  * @note (*) Feature not available on all devices of the family
   * @retval The new state of __INTERRUPT__ (TRUE or FALSE).
   */
 #if defined(RCC_CCIPR2_ASSEL)

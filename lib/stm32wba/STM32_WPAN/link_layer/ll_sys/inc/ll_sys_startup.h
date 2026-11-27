@@ -21,8 +21,14 @@
 
 /* Link Layer system interface startup module functions  ************************************************/
 #if SUPPORT_BLE
-void ll_sys_ble_cntrl_init(hst_cbk hostCallback);
-#endif /* SUPPORT_BLE */
+void ll_sys_ble_cntrl_init(hst_cbk hostCallback,
+                           hst_cbk_queue_full eventMissedCallback,
+                           uint8_t num_sm_needed,
+                           int8_t *ll_memory_buffer,
+                           uint16_t ll_memory_buffer_size,
+                           uint32_t supported_feature
+                           );
+#endif
 void ll_sys_mac_cntrl_init(void);
 void ll_sys_thread_init(void);
 void ll_sys_handle_missed_event_cb(uint16_t length, uint8_t* data);

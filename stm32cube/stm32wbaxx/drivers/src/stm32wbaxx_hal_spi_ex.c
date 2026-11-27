@@ -58,7 +58,6 @@
 
     (#) SPIEx function:
         (++) HAL_SPIEx_FlushRxFifo()
-        (++) HAL_SPIEx_FlushRxFifo()
         (++) HAL_SPIEx_EnableLockConfiguration()
         (++) HAL_SPIEx_ConfigureUnderrun()
 
@@ -213,7 +212,7 @@ HAL_StatusTypeDef HAL_SPIEx_ConfigureUnderrun(SPI_HandleTypeDef *hspi, uint32_t 
   * @brief  Set Autonomous Mode configuration
   * @param  hspi Pointer to a SPI_HandleTypeDef structure that contains
   *                the configuration information for the specified SPIx peripheral.
-  * @param  sConfig Pointer to a SPI_HandleTypeDef structure that contains
+  * @param  sConfig Pointer to a SPI_AutonomousModeConfTypeDef structure that contains
   *                the configuration information of the autonomous mode for the specified SPIx peripheral.
   * @retval HAL status
   */

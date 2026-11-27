@@ -43,7 +43,7 @@
 
 #include <ll_sys.h>
 #include <ll_sys_startup.h>
-#include <stm32wba_802154_callbacks.h>
+#include <st_802154_ral_callbacks.h>
 
 #ifdef __cplusplus
 extern "C" {

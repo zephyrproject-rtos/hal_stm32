@@ -1,4 +1,4 @@
-/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/2.00a-lca06/inc/ot_inc/toolchain.h#4 $*/
+/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/1.11.0/inc/ot_inc/toolchain.h#4 $*/
 /*
  *  Copyright (c) 2016, The OpenThread Authors.
  *  All rights reserved.

@@ -1876,9 +1876,7 @@ __STATIC_INLINE void LL_RCC_ConfigMCO(uint32_t MCOxSource, uint32_t MCOxPrescale
   * @brief  Configure USARTx clock source
   * @rmtoll CCIPR1       USART1SEL     LL_RCC_SetUSARTClockSource\n
   *         CCIPR1       USART2SEL     LL_RCC_SetUSARTClockSource\n
-#if defined(USART3)
   *         CCIPR1       USART3SEL     LL_RCC_SetUSARTClockSource
-#endif
   * @param  USARTxSource This parameter can be one of the following values:
   *         @arg @ref LL_RCC_USART1_CLKSOURCE_PCLK2
   *         @arg @ref LL_RCC_USART1_CLKSOURCE_SYSCLK
@@ -1888,14 +1886,13 @@ __STATIC_INLINE void LL_RCC_ConfigMCO(uint32_t MCOxSource, uint32_t MCOxPrescale
   *         @arg @ref LL_RCC_USART2_CLKSOURCE_SYSCLK
   *         @arg @ref LL_RCC_USART2_CLKSOURCE_HSI
   *         @arg @ref LL_RCC_USART2_CLKSOURCE_LSE
-#if defined(USART3)
   *         @arg @ref LL_RCC_USART3_CLKSOURCE_PCLK1 (*)
   *         @arg @ref LL_RCC_USART3_CLKSOURCE_SYSCLK (*)
   *         @arg @ref LL_RCC_USART3_CLKSOURCE_HSI (*)
   *         @arg @ref LL_RCC_USART3_CLKSOURCE_LSE (*)
   *
-  *         (*) value not defined in all devices.
-#endif
+  * @note   (*) value not defined in all devices.
+  *
   * @retval None
   */
 __STATIC_INLINE void LL_RCC_SetUSARTClockSource(uint32_t USARTxSource)
@@ -1921,32 +1918,25 @@ __STATIC_INLINE void LL_RCC_SetLPUARTClockSource(uint32_t LPUARTxSource)
 /**
   * @brief  Configure I2Cx clock source
   * @rmtoll CCIPR1       I2C1SEL       LL_RCC_SetI2CClockSource\n
-#if defined(I2C2)
   *         CCIPR1       I2C2SEL       LL_RCC_SetI2CClockSource\n
-#endif
   *         CCIPR3       I2C3SEL       LL_RCC_SetI2CClockSource\n
-#if defined(I2C4)
   *         CCIPR1       I2C4SEL       LL_RCC_SetI2CClockSource
-#endif
   * @param  I2CxSource This parameter can be one of the following values:
   *         @arg @ref LL_RCC_I2C1_CLKSOURCE_PCLK1
   *         @arg @ref LL_RCC_I2C1_CLKSOURCE_SYSCLK
   *         @arg @ref LL_RCC_I2C1_CLKSOURCE_HSI
-#if defined(I2C2)
   *         @arg @ref LL_RCC_I2C2_CLKSOURCE_PCLK1 (*)
   *         @arg @ref LL_RCC_I2C2_CLKSOURCE_SYSCLK (*)
   *         @arg @ref LL_RCC_I2C2_CLKSOURCE_HSI (*)
-#endif
   *         @arg @ref LL_RCC_I2C3_CLKSOURCE_PCLK7
   *         @arg @ref LL_RCC_I2C3_CLKSOURCE_SYSCLK
   *         @arg @ref LL_RCC_I2C3_CLKSOURCE_HSI
-#if defined(I2C4)
   *         @arg @ref LL_RCC_I2C4_CLKSOURCE_PCLK1 (*)
   *         @arg @ref LL_RCC_I2C4_CLKSOURCE_SYSCLK (*)
   *         @arg @ref LL_RCC_I2C4_CLKSOURCE_HSI (*)
   *
-  *         (*) value not defined in all devices.
-#endif
+  * @note   (*) value not defined in all devices.
+  *
   * @retval None
   */
 __STATIC_INLINE void LL_RCC_SetI2CClockSource(uint32_t I2CxSource)
@@ -1958,26 +1948,21 @@ __STATIC_INLINE void LL_RCC_SetI2CClockSource(uint32_t I2CxSource)
 /**
   * @brief  Configure SPIx clock source
   * @rmtoll CCIPR1       SPI1SEL       LL_RCC_SetSPIClockSource\n
-#if defined(SPI2)
   *         CCIPR1       SPI2SEL       LL_RCC_SetSPIClockSource
-#endif
   *         CCIPR3       SPI3SEL       LL_RCC_SetSPIClockSource\n
   * @param  SPIxSource This parameter can be one of the following values:
   *         @arg @ref LL_RCC_SPI1_CLKSOURCE_PCLK2
   *         @arg @ref LL_RCC_SPI1_CLKSOURCE_SYSCLK
   *         @arg @ref LL_RCC_SPI1_CLKSOURCE_HSI
-#if defined(SPI2)
   *         @arg @ref LL_RCC_SPI2_CLKSOURCE_PCLK1 (*)
   *         @arg @ref LL_RCC_SPI2_CLKSOURCE_SYSCLK (*)
   *         @arg @ref LL_RCC_SPI2_CLKSOURCE_HSI (*)
-#endif
   *         @arg @ref LL_RCC_SPI3_CLKSOURCE_PCLK7
   *         @arg @ref LL_RCC_SPI3_CLKSOURCE_SYSCLK
   *         @arg @ref LL_RCC_SPI3_CLKSOURCE_HSI
-#if defined(SPI2)
   *
-  *         (*) value not defined in all devices.
-#endif
+  * @note   (*) value not defined in all devices.
+  *
   * @retval None
   */
 __STATIC_INLINE void LL_RCC_SetSPIClockSource(uint32_t SPIxSource)
@@ -2017,7 +2002,7 @@ __STATIC_INLINE void LL_RCC_SetLPTIMClockSource(uint32_t LPTIMxSource)
   *         @arg @ref LL_RCC_SAI1_CLKSOURCE_SYSCLK(*)
   *         @arg @ref LL_RCC_SAI1_CLKSOURCE_PIN(*)
   *         @arg @ref LL_RCC_SAI1_CLKSOURCE_HSI(*)
-  * (*) Feature not available on all devices of the family
+  * @note  (*) Feature not available on all devices of the family
   * @retval None
   */
 __STATIC_INLINE void LL_RCC_SetSAIClockSource(uint32_t SAIxSource)
@@ -2077,15 +2062,13 @@ __STATIC_INLINE void LL_RCC_SetOTGHSClockSource(uint32_t OTGHSxSource)
   * @brief  Get USARTx clock source
   * @rmtoll CCIPR1       USART1SEL     LL_RCC_GetUSARTClockSource\n
   *         CCIPR1       USART2SEL     LL_RCC_GetUSARTClockSource\n
-#if defined(USART3)
   *         CCIPR1       USART3SEL     LL_RCC_GetUSARTClockSource\n
-#endif
+  *
   * @param  USARTx This parameter can be one of the following values:
   *         @arg @ref LL_RCC_USART1_CLKSOURCE
   *         @arg @ref LL_RCC_USART2_CLKSOURCE
-#if defined(USART3)
-  *         @arg @ref LL_RCC_USART3_CLKSOURCE
-#endif
+  *         @arg @ref LL_RCC_USART3_CLKSOURCE (*)
+  *
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_RCC_USART1_CLKSOURCE_PCLK2
   *         @arg @ref LL_RCC_USART1_CLKSOURCE_SYSCLK
@@ -2095,14 +2078,13 @@ __STATIC_INLINE void LL_RCC_SetOTGHSClockSource(uint32_t OTGHSxSource)
   *         @arg @ref LL_RCC_USART2_CLKSOURCE_SYSCLK
   *         @arg @ref LL_RCC_USART2_CLKSOURCE_HSI
   *         @arg @ref LL_RCC_USART2_CLKSOURCE_LSE
-#if defined(USART3)
   *         @arg @ref LL_RCC_USART3_CLKSOURCE_PCLK1 (*)
   *         @arg @ref LL_RCC_USART3_CLKSOURCE_SYSCLK (*)
   *         @arg @ref LL_RCC_USART3_CLKSOURCE_HSI (*)
   *         @arg @ref LL_RCC_USART3_CLKSOURCE_LSE (*)
   *
-  *         (*) value not defined in all devices.
-#endif
+  *@note    (*) value not defined in all devices.
+  *
   */
 __STATIC_INLINE uint32_t LL_RCC_GetUSARTClockSource(uint32_t USARTx)
 {
@@ -2128,41 +2110,32 @@ __STATIC_INLINE uint32_t LL_RCC_GetLPUARTClockSource(uint32_t LPUARTx)
 /**
   * @brief  Get I2Cx clock source
   * @rmtoll CCIPR1       I2C1SEL       LL_RCC_GetI2CClockSource\n
-#if defined(I2C2)
   *         CCIPR1       I2C2SEL       LL_RCC_GetI2CClockSource\n
-#endif
   *         CCIPR3       I2C3SEL       LL_RCC_GetI2CClockSource\n
-#if defined(I2C4)
   *         CCIPR1       I2C4SEL       LL_RCC_GetI2CClockSource\n
-#endif
+  *
   * @param  I2Cx This parameter can be one of the following values:
   *         @arg @ref LL_RCC_I2C1_CLKSOURCE
-#if defined(I2C2)
-  *         @arg @ref LL_RCC_I2C2_CLKSOURCE
-#endif
+  *         @arg @ref LL_RCC_I2C2_CLKSOURCE (*)
   *         @arg @ref LL_RCC_I2C3_CLKSOURCE
-#if defined(I2C4)
-  *         @arg @ref LL_RCC_I2C4_CLKSOURCE
-#endif
+  *         @arg @ref LL_RCC_I2C4_CLKSOURCE (*)
+  *
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_RCC_I2C1_CLKSOURCE_PCLK1
   *         @arg @ref LL_RCC_I2C1_CLKSOURCE_SYSCLK
   *         @arg @ref LL_RCC_I2C1_CLKSOURCE_HSI
-#if defined(I2C2)
   *         @arg @ref LL_RCC_I2C2_CLKSOURCE_PCLK1 (*)
   *         @arg @ref LL_RCC_I2C2_CLKSOURCE_SYSCLK (*)
   *         @arg @ref LL_RCC_I2C2_CLKSOURCE_HSI (*)
-#endif
   *         @arg @ref LL_RCC_I2C3_CLKSOURCE_PCLK7
   *         @arg @ref LL_RCC_I2C3_CLKSOURCE_SYSCLK
   *         @arg @ref LL_RCC_I2C3_CLKSOURCE_HSI
-#if defined(I2C4)
   *         @arg @ref LL_RCC_I2C4_CLKSOURCE_PCLK1 (*)
   *         @arg @ref LL_RCC_I2C4_CLKSOURCE_SYSCLK (*)
   *         @arg @ref LL_RCC_I2C4_CLKSOURCE_HSI (*)
   *
-  *         (*) value not defined in all devices.
-#endif
+  * @note   (*) value not defined in all devices.
+  *
  */
 __STATIC_INLINE uint32_t LL_RCC_GetI2CClockSource(uint32_t I2Cx)
 {
@@ -2173,32 +2146,25 @@ __STATIC_INLINE uint32_t LL_RCC_GetI2CClockSource(uint32_t I2Cx)
 /**
   * @brief  Get SPIx clock source
   * @rmtoll CCIPR1       SPI1SEL       LL_RCC_GetSPIClockSource\n
-#if defined(SPI2)
   *         CCIPR1       SPI2SEL       LL_RCC_GetSPIClockSource
-#endif
   *         CCIPR3       SPI3SEL       LL_RCC_GetSPIClockSource
   * @param  SPIx This parameter can be one of the following values:
   *         @arg @ref LL_RCC_SPI1_CLKSOURCE
-#if defined(SPI2)
-  *         @arg @ref LL_RCC_SPI2_CLKSOURCE
-#endif
+  *         @arg @ref LL_RCC_SPI2_CLKSOURCE (*)
   *         @arg @ref LL_RCC_SPI3_CLKSOURCE
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_RCC_SPI1_CLKSOURCE_PCLK2
   *         @arg @ref LL_RCC_SPI1_CLKSOURCE_SYSCLK
   *         @arg @ref LL_RCC_SPI1_CLKSOURCE_HSI
-#if defined(SPI2)
   *         @arg @ref LL_RCC_SPI2_CLKSOURCE_PCLK1 (*)
   *         @arg @ref LL_RCC_SPI2_CLKSOURCE_SYSCLK (*)
   *         @arg @ref LL_RCC_SPI2_CLKSOURCE_HSI (*)
-#endif
   *         @arg @ref LL_RCC_SPI3_CLKSOURCE_PCLK7
   *         @arg @ref LL_RCC_SPI3_CLKSOURCE_SYSCLK
   *         @arg @ref LL_RCC_SPI3_CLKSOURCE_HSI
-#if defined(SPI2)
   *
-  *         (*) value not defined in all devices.
-#endif
+  *@note    (*) value not defined in all devices.
+  *
  */
 __STATIC_INLINE uint32_t LL_RCC_GetSPIClockSource(uint32_t SPIx)
 {

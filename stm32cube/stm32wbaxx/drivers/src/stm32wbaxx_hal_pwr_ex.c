@@ -55,10 +55,8 @@
              (++) SRAM1
              (++) SRAM2
              (++) ICACHE
-#if defined(PWR_STOP2_SUPPORT)
-             (++) PKA SRAM
-             (++) USB_OTG_HS SRAM
-#endif
+             (++) PKA SRAM (*)
+             (++) USB_OTG_HS SRAM (*)
 
    (#) Call HAL_PWREx_EnableFlashFastWakeUp() and
        HAL_PWREx_DisableFlashFastWakeUp() to enable / disable the flash memory
@@ -88,11 +86,10 @@
 
    (#) Call HAL_PWREx_EnableREGVDDHPABypass and HAL_PWREx_DisableREGVDDHPABypass
        to enable / disable regulator REG_VDDHPA bypass
-#if defined(PWR_STOP2_SUPPORT)
-   (#) Call HAL_PWREx_EnableVddUSB() and HAL_PWREx_DisableVddUSB()
-       functions to enable and disable the VDDUSB supply valid.
-#endif
 
+   (#) Call HAL_PWREx_EnableVddUSB() and HAL_PWREx_DisableVddUSB()
+       functions to enable and disable the VDDUSB supply valid. (*)
+   (*) value not defined in all devices.
   @endverbatim
   ******************************************************************************
   */
@@ -222,13 +219,12 @@
           has been entered from the SMPS regulator, after exiting standby with the LDO,
           the regulator is subsequently switched to SMPS regulator.
 
-#if defined(PWR_STOP2_SUPPORT)
       (+) When exiting from Stop 0 modes the voltage range is the same as on entering Stop 0
-          mode. When exiting from Stop 1, Stop2 or Standby modes the voltage range 2 is used.
-#else
+          mode. When exiting from Stop 1, Stop2 or Standby modes the voltage range 2 is used. (*)
+
       (+) When exiting from Stop 0 modes the voltage range is the same as on entering Stop 0
           mode. When exiting from Stop 1 and Standby modes the voltage range 2 is used.
-#endif
+      (*) Stop2 not defined in all devices.
 
       (+) When the 2.4 GHz RADIO is active the regulator and range can not be changed. Any
           requested regulator or range change while the 2.4 GHz RADIO is active is suspended
@@ -632,10 +628,9 @@ void HAL_PWREx_DisableUltraLowPowerMode(void)
              (++) SRAM1
              (++) SRAM2
              (++) ICACHE
-#if defined(PWR_STOP2_SUPPORT)
-             (++) PKA SRAM
-             (++) USB_OTG_HS SRAM
-#endif
+             (++) PKA SRAM       (*)
+             (++) USB_OTG_HS SRAM (*)
+       (*) value not defined in all devices, depends on stop2 mode.
 
     [..]
       Several STM32WBA devices RAMs are configurable to retain or lose RAMs content
@@ -650,22 +645,18 @@ void HAL_PWREx_DisableUltraLowPowerMode(void)
 
 /**
   * @brief  Enable SRAM1 content retention in Standby mode.
-#if defined(PWR_STOP2_SUPPORT)
-  * @note   Each bit is used to keep a SRAM1 64 KB page content in Standby retention mode.
-#else
+  * @note   Each bit is used to keep a SRAM1 64 KB page content in Standby retention mode. (*)
   * @note   When R1RSB1 bit is set, SRAM1 is powered by the low-power regulator in
   *         Standby mode and its content is kept.
-#endif
   * @param  SRAM1Pages : Specifies the SRAM1 area
   *                      This parameter can be combination of the following values :
-#if defined(PWR_STOP2_SUPPORT)
-  *                      @arg PWR_SRAM1_PAGE1_STANDBY_RETENTION : SRAM1 page 1 retention.
-  *                      @arg PWR_SRAM1_PAGE2_STANDBY_RETENTION : SRAM1 page 2 retention.
-  *                      @arg PWR_SRAM1_PAGE3_STANDBY_RETENTION : SRAM1 page 3 retention.
-  *                      @arg PWR_SRAM1_PAGE4_STANDBY_RETENTION : SRAM1 page 4 retention.
-  *                      @arg PWR_SRAM1_PAGE567_STANDBY_RETENTION : SRAM1 page 5-6-7 retention.
-#endif
+  *                      @arg PWR_SRAM1_PAGE1_STANDBY_RETENTION : SRAM1 page 1 retention.      (*)
+  *                      @arg PWR_SRAM1_PAGE2_STANDBY_RETENTION : SRAM1 page 2 retention.      (*)
+  *                      @arg PWR_SRAM1_PAGE3_STANDBY_RETENTION : SRAM1 page 3 retention.      (*)
+  *                      @arg PWR_SRAM1_PAGE4_STANDBY_RETENTION : SRAM1 page 4 retention.      (*)
+  *                      @arg PWR_SRAM1_PAGE567_STANDBY_RETENTION : SRAM1 page 5-6-7 retention.(*)
   *                      @arg PWR_SRAM1_FULL_STANDBY_RETENTION  : full SRAM1 retention.
+  * @note   (*) param not supported in all devices, depends on stop2 mode.
   * @retval None.
   */
 void HAL_PWREx_EnableSRAM1ContentStandbyRetention(uint32_t SRAM1Pages)
@@ -754,39 +745,29 @@ void HAL_PWREx_DisableRadioSRAMClockStandbyRetention(void)
   * @brief  Enable RAMs content retention in Stop modes.
   * @note   When enabling content retention for a given ram, memory is kept powered
   *         on in Stop mode. (Consumption is not optimized)
-#if defined(PWR_STOP2_SUPPORT)
-#else
   * @note   On Silicon Cut 1.0, it is mandatory to disable the ICACHE before going into
   *         stop modes otherwise an hard fault may occur when waking up from stop modes.
-#endif
   * @param RAMSelection: Specifies RAMs content to be retained in Stop mode.
   *                      This parameter can be one or a combination of the values:
-#if defined(PWR_STOP2_SUPPORT) && !defined(PWR_STOP3_SUPPORT)
-  *                      @arg PWR_SRAM1_PAGE1_STOP_RETENTION     : SRAM1 Page 1 retention.
-  *                      @arg PWR_SRAM1_PAGE2_STOP_RETENTION     : SRAM1 Page 2 retention.
-  *                      @arg PWR_SRAM1_PAGE3_STOP_RETENTION     : SRAM1 Page 3 retention.
-  *                      @arg PWR_SRAM1_PAGE4_STOP_RETENTION     : SRAM1 Page 4 retention.
-  *                      @arg PWR_SRAM1_PAGE567_STOP_RETENTION   : SRAM1 Page 5-6-7 retention.
-  *                      @arg PWR_SRAM1_FULL_STOP_RETENTION      : full SRAM1 retention.
-  *                      @arg PWR_SRAM2_FULL_STOP_RETENTION      : full SRAM2 retention.
-  *                      @arg PWR_ICACHE_FULL_STOP_RETENTION     : I-CACHE SRAM retention.
-  *                      @arg PWR_USB_OTG_HS_SRAM_STOP_RETENTION : USB_OTG_HS SRAM retention.(*)
-  *                      @arg PWR_PKA_SRAM_STOP_RETENTION        : PKA SRAM retention.
-  * (*) Feature not available on all devices of the family
-#else
+  *                      @arg PWR_SRAM1_PAGE1_STOP_RETENTION     : SRAM1 Page 1 retention.    (*)
+  *                      @arg PWR_SRAM1_PAGE2_STOP_RETENTION     : SRAM1 Page 2 retention.    (*)
+  *                      @arg PWR_SRAM1_PAGE3_STOP_RETENTION     : SRAM1 Page 3 retention.    (*)
+  *                      @arg PWR_SRAM1_PAGE4_STOP_RETENTION     : SRAM1 Page 4 retention.    (*)
+  *                      @arg PWR_SRAM1_PAGE567_STOP_RETENTION   : SRAM1 Page 5-6-7 retention.(*)
+  *                      @arg PWR_SRAM1_FULL_STOP_RETENTION      : full SRAM1 retention.      (*)
+  *                      @arg PWR_SRAM2_FULL_STOP_RETENTION      : full SRAM2 retention.      (*)
+  *                      @arg PWR_ICACHE_FULL_STOP_RETENTION     : I-CACHE SRAM retention.    (*)
+  *                      @arg PWR_USB_OTG_HS_SRAM_STOP_RETENTION : USB_OTG_HS SRAM retention.(**)(*)
+  *                      @arg PWR_PKA_SRAM_STOP_RETENTION        : PKA SRAM retention. (*)
   *                      @arg PWR_SRAM1_FULL_STOP_RETENTION   : full SRAM1 retention.
-#if defined(PWR_STOP3_SUPPORT)
-  *                      @arg PWR_SRAM2_PAGE1_STOP_RETENTION  : SRAM2 Page 1 retention.
-  *                      @arg PWR_SRAM2_PAGE2_STOP_RETENTION  : SRAM2 Page 2 retention.
-#endif
+  *                      @arg PWR_SRAM2_PAGE1_STOP_RETENTION  : SRAM2 Page 1 retention. (*)
+  *                      @arg PWR_SRAM2_PAGE2_STOP_RETENTION  : SRAM2 Page 2 retention. (*)
   *                      @arg PWR_SRAM2_FULL_STOP_RETENTION   : full SRAM2 retention.
   *                      @arg PWR_ICACHE_FULL_STOP_RETENTION  : I-CACHE SRAM retention.
-#if defined(PWR_STOP3_SUPPORT) && defined (STM32WBA25xx)
-  *                      @arg PWR_USB_SRAM_STOP_RETENTION     : USB SRAM retention.(*)
-#elif defined(PWR_STOP3_SUPPORT)
-  *                      @arg PWR_PKA_SRAM_STOP_RETENTION     : PKA SRAM retention.
-#endif
-#endif
+  *                      @arg PWR_USB_SRAM_STOP_RETENTION     : USB SRAM retention.(**)
+  *                      @arg PWR_PKA_SRAM_STOP_RETENTION     : PKA SRAM retention. (*)
+  * @note  (**) Feature not available on all devices of the family
+  * @note  (*) param not defined in all devices, depends on stop 3 mode.
   * @retval None.
   */
 void HAL_PWREx_EnableRAMsContentStopRetention(uint32_t RAMSelection)
@@ -804,32 +785,25 @@ void HAL_PWREx_EnableRAMsContentStopRetention(uint32_t RAMSelection)
   *        powered down in Stop mode. (Consumption is optimized)
   * @param RAMSelection: Specifies RAMs content to be lost in Stop mode.
   *                      This parameter can be one or a combination of the values:
-#if defined(PWR_STOP2_SUPPORT) && !defined(PWR_STOP3_SUPPORT)
-  *                      @arg PWR_SRAM1_PAGE1_STOP_RETENTION     : SRAM1 Page 1 retention.
-  *                      @arg PWR_SRAM1_PAGE2_STOP_RETENTION     : SRAM1 Page 2 retention.
-  *                      @arg PWR_SRAM1_PAGE3_STOP_RETENTION     : SRAM1 Page 3 retention.
-  *                      @arg PWR_SRAM1_PAGE4_STOP_RETENTION     : SRAM1 Page 4 retention.
-  *                      @arg PWR_SRAM1_PAGE567_STOP_RETENTION   : SRAM1 Page 5-6-7 retention.
-  *                      @arg PWR_SRAM1_FULL_STOP_RETENTION      : full SRAM1 retention.
-  *                      @arg PWR_SRAM2_FULL_STOP_RETENTION      : full SRAM2 retention.
-  *                      @arg PWR_ICACHE_FULL_STOP_RETENTION     : I-CACHE SRAM retention.
-  *                      @arg PWR_USB_OTG_HS_SRAM_STOP_RETENTION : USB_OTG_HS SRAM retention.(*)
-  *                      @arg PWR_PKA_SRAM_STOP_RETENTION        : PKA SRAM retention.
-  * (*) Feature not available on all devices of the family
-#else
+  *                      @arg PWR_SRAM1_PAGE1_STOP_RETENTION     : SRAM1 Page 1 retention.    (*)
+  *                      @arg PWR_SRAM1_PAGE2_STOP_RETENTION     : SRAM1 Page 2 retention.    (*)
+  *                      @arg PWR_SRAM1_PAGE3_STOP_RETENTION     : SRAM1 Page 3 retention.    (*)
+  *                      @arg PWR_SRAM1_PAGE4_STOP_RETENTION     : SRAM1 Page 4 retention.    (*)
+  *                      @arg PWR_SRAM1_PAGE567_STOP_RETENTION   : SRAM1 Page 5-6-7 retention.(*)
+  *                      @arg PWR_SRAM1_FULL_STOP_RETENTION      : full SRAM1 retention.      (*)
+  *                      @arg PWR_SRAM2_FULL_STOP_RETENTION      : full SRAM2 retention.      (*)
+  *                      @arg PWR_ICACHE_FULL_STOP_RETENTION     : I-CACHE SRAM retention.    (*)
+  *                      @arg PWR_USB_OTG_HS_SRAM_STOP_RETENTION : USB_OTG_HS SRAM retention.(**)(*)
+  *                      @arg PWR_PKA_SRAM_STOP_RETENTION        : PKA SRAM retention.(*)
   *                      @arg PWR_SRAM1_FULL_STOP_RETENTION   : full SRAM1 retention.
-#if defined(PWR_STOP3_SUPPORT)
-  *                      @arg PWR_SRAM2_PAGE1_STOP_RETENTION  : SRAM2 Page 1 retention.
-  *                      @arg PWR_SRAM2_PAGE2_STOP_RETENTION  : SRAM2 Page 2 retention.
-#endif
+  *                      @arg PWR_SRAM2_PAGE1_STOP_RETENTION  : SRAM2 Page 1 retention.(*)
+  *                      @arg PWR_SRAM2_PAGE2_STOP_RETENTION  : SRAM2 Page 2 retention.(*)
   *                      @arg PWR_SRAM2_FULL_STOP_RETENTION   : full SRAM2 retention.
   *                      @arg PWR_ICACHE_FULL_STOP_RETENTION  : I-CACHE SRAM retention.
-#if defined(PWR_STOP3_SUPPORT) && defined (STM32WBA25xx)
-  *                      @arg PWR_USB_SRAM_STOP_RETENTION     : USB SRAM retention.(*)
-#elif defined(PWR_STOP3_SUPPORT)
-  *                      @arg PWR_PKA_SRAM_STOP_RETENTION     : PKA SRAM retention.
-#endif
-#endif
+  *                      @arg PWR_USB_SRAM_STOP_RETENTION     : USB SRAM retention.(**)
+  *                      @arg PWR_PKA_SRAM_STOP_RETENTION     : PKA SRAM retention. (*)
+  * @note  (**) Feature not available on all devices of the family
+  * @note  (*) param not defined in all devices, depends on stop 3 mode.
   * @retval None.
   */
 void HAL_PWREx_DisableRAMsContentStopRetention(uint32_t RAMSelection)
@@ -896,11 +870,10 @@ void HAL_PWREx_DisableFlashFastWakeUp(void)
       The GPIO Standby retention enable information in PWR_IORETENRx is lost and has to be reconfigured
       for sub-sequent entering into Standby mode.
 
-#if defined(PWR_STOP2_SUPPORT)
     [..]
       When PWR_S2RETR_PTASREN bit is set, the GPIOs state of PTA output signals are retained during and after
-      exiting from Stop 2 mode until PWR_S2RETR_PTASREN_PTASR bit is cleared by software.
-#endif
+      exiting from Stop 2 mode until PWR_S2RETR_PTASREN_PTASR bit is cleared by software. (*)
+      (*) value not defined in all devices, depends on stop2 mode.
 @endverbatim
   * @{
   */

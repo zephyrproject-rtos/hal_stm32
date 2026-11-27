@@ -144,7 +144,7 @@
 /* ------------------------------------------------------------------------- */
 
 /* BLE stack options (Options)
- * (ACI_RESET)
+ * (Stack initialization, ACI_RESET)
  */
 #define BLE_OPTIONS_LL_ONLY                      0x00000001UL
 #define BLE_OPTIONS_NO_SVC_CHANGE_DESC           0x00000002UL
@@ -156,6 +156,11 @@
 #define BLE_OPTIONS_POWER_CLASS_1                0x00000080UL
 #define BLE_OPTIONS_APPEARANCE_WRITABLE          0x00000100UL
 #define BLE_OPTIONS_ENHANCED_ATT                 0x00000200UL
+#define BLE_OPTIONS_NO_NRPA_TIMEOUT              0x00000400UL
+#define BLE_OPTIONS_CIS                          0x00010000UL
+#define BLE_OPTIONS_BIS                          0x00020000UL
+#define BLE_OPTIONS_PAWR                         0x00040000UL
+#define BLE_OPTIONS_CHAN_SOUNDING                0x00080000UL
 
 /* ------------------------------------------------------------------------- */
 
@@ -469,6 +474,7 @@
 #define WARNING_COC_ALREADY_ASSIGNED_DCID            0x05U
 #define WARNING_SMP_UNEXPECTED_LTK_REQUEST           0x06U
 #define WARNING_GATT_BEARER_NOT_ALLOCATED            0x07U
+#define WARNING_GATT_DATABASE_SAVING_ISSUE           0x08U
 
 /* ------------------------------------------------------------------------- */
 
@@ -486,7 +492,7 @@
 #define CONFIG_DATA_LL_RSSI_GOLDEN_RANGE_OFFSET    0xC2U
 #define CONFIG_DATA_LL_RPA_MODE_OFFSET             0xC3U
 #define CONFIG_DATA_LL_RX_ACL_CTRL_OFFSET          0xC4U
-#define CONFIG_DATA_LL_ISO_SCHED_MODE_OFFSET       0xC5U
+#define CONFIG_DATA_LL_OPTION_FLAGS_OFFSET         0xC5U
 #define CONFIG_DATA_LL_MAX_DATA_EXT_OFFSET         0xD1U
 
 /* Length for configuration values (see ACI_HAL_WRITE_CONFIG_DATA)
@@ -503,7 +509,7 @@
 #define CONFIG_DATA_LL_RSSI_GOLDEN_RANGE_LEN        2
 #define CONFIG_DATA_LL_RPA_MODE_LEN                 1
 #define CONFIG_DATA_LL_RX_ACL_CTRL_LEN              2
-#define CONFIG_DATA_LL_ISO_SCHED_MODE_LEN           1
+#define CONFIG_DATA_LL_OPTION_FLAGS_LEN             1
 #define CONFIG_DATA_LL_MAX_DATA_EXT_LEN             8
 
 /* ------------------------------------------------------------------------- */

@@ -157,7 +157,7 @@ typedef struct
 /** @defgroup UTILS_EC_PACKAGETYPE PACKAGE TYPE
   * @{
   */
-#if defined(STM32WBA52xx) || defined(STM32WBA54xx) || defined(STM32WBA55xx) || defined(STM32WBA5Mxx)
+#if defined(STM32WBA50xx) || defined(STM32WBA52xx) || defined(STM32WBA54xx) || defined(STM32WBA55xx) || defined(STM32WBA5Mxx)
 #define LL_UTILS_PACKAGETYPE_UFQFPN32           0x00000000U /*!< UFQFPN32 package type                               */
 #define LL_UTILS_PACKAGETYPE_UFQFPN48           0x00000002U /*!< UFQFPN48 package type                               */
 #define LL_UTILS_PACKAGETYPE_WLCSP41_SMPS       0x00000009U /*!< WLCSP41 with internal SMPS package type             */
@@ -243,13 +243,13 @@ __STATIC_INLINE uint32_t LL_GetFlashSize(void)
 /**
   * @brief  Get Package type
   * @retval Returned value can be one of the following values:
-#if defined(STM32WBA52xx) || defined(STM32WBA54xx) || defined(STM32WBA55xx) || defined(STM32WBA5Mxx)
+  * @if defined(STM32WBA52xx) || defined(STM32WBA54xx) || defined(STM32WBA55xx) || defined(STM32WBA5Mxx)
   *         @arg @ref LL_UTILS_PACKAGETYPE_UFQFPN32
   *         @arg @ref LL_UTILS_PACKAGETYPE_UFQFPN48
   *         @arg @ref LL_UTILS_PACKAGETYPE_WLCSP41_SMPS
   *         @arg @ref LL_UTILS_PACKAGETYPE_UFQFPN48_SMPS
   *         @arg @ref LL_UTILS_PACKAGETYPE_UFBGA59
-#elif defined(STM32WBA62xx) || defined(STM32WBA63xx) || defined(STM32WBA64xx) || defined(STM32WBA65xx) || defined (STM32WBA6Mxx)
+  * @elseif defined(STM32WBA62xx) || defined(STM32WBA63xx) || defined(STM32WBA64xx) || defined(STM32WBA65xx) || defined (STM32WBA6Mxx)
   *         @arg @ref LL_UTILS_PACKAGETYPE_UFQFPN48_USB
   *         @arg @ref LL_UTILS_PACKAGETYPE_WLCSP88_USB
   *         @arg @ref LL_UTILS_PACKAGETYPE_UFBGA121_USB
@@ -258,7 +258,7 @@ __STATIC_INLINE uint32_t LL_GetFlashSize(void)
   *         @arg @ref LL_UTILS_PACKAGETYPE_VFQFPN68_SMPS_USB
   *         @arg @ref LL_UTILS_PACKAGETYPE_WLCSP88_SMPS_USB
   *         @arg @ref LL_UTILS_PACKAGETYPE_UFBGA121_SMPS_USB
-#elif defined(STM32WBA20xx) || defined(STM32WBA23xx) || defined(STM32WBA25xx)
+  * @elseif defined(STM32WBA20xx) || defined(STM32WBA23xx) || defined(STM32WBA25xx)
   *         @arg @ref LL_UTILS_PACKAGETYPE_UFQFPN32
   *         @arg @ref LL_UTILS_PACKAGETYPE_UFQFPN48
   *         @arg @ref LL_UTILS_PACKAGETYPE_WLCSP37
@@ -268,7 +268,7 @@ __STATIC_INLINE uint32_t LL_GetFlashSize(void)
   *         @arg @ref LL_UTILS_PACKAGETYPE_UFQFPN48_SMPS
   *         @arg @ref LL_UTILS_PACKAGETYPE_WLCSP37_SMPS_USB
   *         @arg @ref LL_UTILS_PACKAGETYPE_UFQFPN48_SMPS_USB
-#endif
+  * @endif
   */
 __STATIC_INLINE uint32_t LL_GetPackageType(void)
 {

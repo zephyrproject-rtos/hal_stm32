@@ -6,7 +6,7 @@ Origin:
    https://github.com/STMicroelectronics/STM32CubeWBA
 
 Status:
-   version v1.10.0
+   version v1.11.0
 
 Purpose:
    This library is used on STM32WBA series to port BLE and IEEE802154 controller libraries in
@@ -39,6 +39,9 @@ Description:
       - Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/ral.h
       - Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/ll_intf_cmn.h
       - Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/rfd_dev_config.h
+      - Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/st_802154_ral.h
+      - Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/st_802154_ral_callbacks.h
+      - Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/st_radio.h
       - Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/ot_inc/crypto.h
       - Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/ot_inc/error.h
       - Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/ot_inc/instance.h
@@ -114,7 +117,7 @@ URL:
    https://github.com/STMicroelectronics/STM32CubeWBA
 
 Commit:
-   e455b860ceb52aaa0332a98f1e7a10bbd7014fc9
+   48288f7dc7a95216622fa778ee1523f850311568
 
 Maintained-by:
    External
@@ -128,6 +131,7 @@ License Link:
   * opensource.org/license/mit
 
 Patch List:
+
   * Discard "static" implementation of ll_sys_bg_temperature_measurement_init to allow specific zephyr implementation. Impacted files:
          * ll_sys_if.c
          * ll_sys.h
@@ -183,6 +187,7 @@ Patch List:
          * app_conf.h
          * ll_sys_if.h
          * linklayer_plat.h
+         * ll_sys_startup.c
 
   * Brought back CFG_LPM_STDBY_WAKEUP_TIME macro to avoid including multiple files. Impacted file:
          * app_conf.h
@@ -192,4 +197,3 @@ Patch List:
 
   * IEEE 802.15.4 feature support in Zephyr architecture requires :
          * specific libraries accessible in https://github.com/stm32-hotspot/STM32WBA-Zephyr-custom-binaries
-         * additionnal files "stm32wba_802154.h" and "stm32wba_802154_callbacks.h" in hal/stm32/lib/stm32wba/STM32WPAN/ieee802154 folder

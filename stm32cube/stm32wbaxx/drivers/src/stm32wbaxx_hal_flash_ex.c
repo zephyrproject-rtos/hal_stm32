@@ -666,11 +666,10 @@ void HAL_FLASHEx_GetConfigBBAttributes(FLASH_BBAttributesTypeDef *pBBAttributes)
   * @param  Banks indicate the bank concerned by the activation
   *          This parameter can be one of the following values:
   *            @arg FLASH_BANK_1: Bank1 to be protected
-#if defined(FLASH_DBANK_SUPPORT)
-  *            @arg FLASH_BANK_2: Bank2 to be protected
-  *            @arg FLASH_BANK_BOTH: Bank1 and Bank2 to be protected
-#endif
+  *            @arg FLASH_BANK_2: Bank2 to be protected (*)
+  *            @arg FLASH_BANK_BOTH: Bank1 and Bank2 to be protected (*)
   *
+  * @note   (*) value not defined in all devices.
   * @retval None
   */
 void HAL_FLASHEx_EnableSecHideProtection(uint32_t Banks)
@@ -978,13 +977,12 @@ uint32_t HAL_FLASHEx_GetSecInversion(void)
 
 /**
   * @brief  Enable the Power-down Mode for Flash Banks
-#if defined(FLASH_DBANK_SUPPORT)
-  * @param  Banks indicate which bank to put in power-down mode
+  * @param  Banks indicate which bank to put in power-down mode (*)
   *          This parameter can be one of the following values:
   *            @arg FLASH_BANK_1: Flash Bank 1
   *            @arg FLASH_BANK_2: Flash Bank 2
   *            @arg FLASH_BANK_BOTH: Flash Bank 1 and Bank 2
-#endif
+  * @note      (*) value not defined in all devices.
   * @retval HAL Status
   */
 #if defined(FLASH_DBANK_SUPPORT)
@@ -1313,13 +1311,12 @@ __weak void HAL_FLASHEx_EccDetectionCallback(void)
   */
 /**
   * @brief  Mass erase of FLASH memory.
-#if defined(FLASH_DBANK_SUPPORT)
-  * @param  Banks Banks to be erased
+  * @param  Banks Banks to be erased (*)
   *          This parameter can be one of the following values:
   *            @arg @ref FLASH_BANK_1 Bank1 to be erased
   *            @arg @ref FLASH_BANK_2 Bank2 to be erased
   *            @arg @ref FLASH_BANK_BOTH Bank1 and Bank2 to be erased
-#endif
+  * @note   (*) value not defined in all devices.
   * @retval None
   */
 #if defined(FLASH_DBANK_SUPPORT)
@@ -1358,12 +1355,11 @@ static void FLASH_MassErase()
   * @brief  Erase the specified FLASH memory page.
   * @param  Page FLASH page to erase
   *         This parameter must be a value between 0 and (max number of pages in the bank - 1)
-#if defined(FLASH_DBANK_SUPPORT)
   * @param  Banks Bank(s) where the page will be erased
   *          This parameter can be one of the following values:
-  *            @arg @ref FLASH_BANK_1 Page in bank 1 to be erased
-  *            @arg @ref FLASH_BANK_2 Page in bank 2 to be erased
-#endif
+  *            @arg @ref FLASH_BANK_1 Page in bank 1 to be erased (*)
+  *            @arg @ref FLASH_BANK_2 Page in bank 2 to be erased (*)
+  * @note  (*) value not defined in all devices.
   * @retval None
   */
 #if defined(FLASH_DBANK_SUPPORT)
@@ -1422,10 +1418,9 @@ void FLASH_PageErase(uint32_t Page)
   *          This parameter can be one of the following values:
   *            @arg @ref OB_WRPAREA_BANK1_AREAA Flash Bank 1 Area A
   *            @arg @ref OB_WRPAREA_BANK1_AREAB Flash Bank 1 Area B
-#if defined(FLASH_DBANK_SUPPORT)
-  *            @arg @ref OB_WRPAREA_BANK2_AREAA Flash Bank 2 Area A
-  *            @arg @ref OB_WRPAREA_BANK2_AREAB Flash Bank 2 Area B
-#endif
+  *            @arg @ref OB_WRPAREA_BANK2_AREAA Flash Bank 2 Area A (*)
+  *            @arg @ref OB_WRPAREA_BANK2_AREAB Flash Bank 2 Area B (*)
+  * @note   (*) value not defined in all devices.
   *
   * @param  WRPStartOffset Specifies the start page of the write protected area
   *          This parameter can be page number between 0 and (max number of pages in the Flash - 1)
@@ -1527,10 +1522,9 @@ static void FLASH_OB_RDPConfig(uint32_t RDPLevel)
   *            @arg @ref OB_RDP_KEY_OEM2 OEM2 key
   * @param  RDPKey1 Specifies the RDP key bits[0:31].
   * @param  RDPKey2 Specifies the RDP key bits[32:63].
-#if defined(FLASH_OEM1KEYR3_OEM1KEY)
-  * @param  RDPKey3 Specifies the RDP key bits[64:95].
-  * @param  RDPKey4 Specifies the RDP key bits[96:127].
-#endif
+  * @param  RDPKey3 Specifies the RDP key bits[64:95](*)
+  * @param  RDPKey4 Specifies the RDP key bits[96:127](*)
+  * @note  (*) value not defined in all devices.
   * @retval None
   */
 #if defined(FLASH_OEM1KEYR3_OEM1KEY)
@@ -1976,10 +1970,9 @@ static void FLASH_OB_BootAddrConfig(uint32_t BootAddrConfig, uint32_t BootAddr)
   *              This parameter can be one of the following values:
   *              @arg @ref OB_WRPAREA_BANK1_AREAA Flash Bank 1 Area A
   *              @arg @ref OB_WRPAREA_BANK1_AREAB Flash Bank 1 Area B
-#if defined(FLASH_DBANK_SUPPORT)
-  *              @arg @ref OB_WRPAREA_BANK2_AREAA Flash Bank 2 Area A
-  *              @arg @ref OB_WRPAREA_BANK2_AREAB Flash Bank 2 Area B
-#endif
+  *              @arg @ref OB_WRPAREA_BANK2_AREAA Flash Bank 2 Area A (*)
+  *              @arg @ref OB_WRPAREA_BANK2_AREAB Flash Bank 2 Area B (*)
+  * @note       (*) value not defined in all devices.
   *
   * @param[out]  WRPStartOffset Specifies the address where to copied the start page
   *                             of the write protected area

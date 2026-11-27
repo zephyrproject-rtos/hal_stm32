@@ -430,8 +430,8 @@ HAL_StatusTypeDef   HAL_RNGEx_SetHealthFactorConfig(RNG_HandleTypeDef *hrng, uin
 
 #if (defined(RNG_HTSR0_RPERRX) || defined(RNG_HTSR1_ADERRX))
 /* Private functions -------------------------------------------------------------------------------------------------*/
-/** @defgroup RNG_Private_Functions RNG Private Functions
-  * @brief    RNG Private Functions
+/** @defgroup RNGEx_Private_Functions RNGEx Private Functions
+  * @brief    RNGEx Private Functions
   * @{
   */
 

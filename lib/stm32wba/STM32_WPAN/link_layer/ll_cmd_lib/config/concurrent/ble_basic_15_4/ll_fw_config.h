@@ -1,29 +1,29 @@
-/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/2.00a-lca06/firmware/public_inc/ll_fw_config.h#1 $*/
+/*$Id: //dwh/bluetooth/DWC_ble154combo/firmware/rel/1.11.0/firmware/public_inc/ll_fw_config.h#1 $*/
 /**
  ********************************************************************************
  * @file    ll_fw_config.h
  * @brief   This file contains the major configurations to the BLE controller.
  ******************************************************************************
- * @copy
  * Synopsys MIT License:
  * Copyright (c) 2020-Present Synopsys, Inc
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of the software and
- * associated documentation files (the “Software”), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
- * of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
- * following conditions:
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of the this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without
+ * limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom
+ * the Software is furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all copies or substantial
- * portions of the Software.
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
  *
  * THIS SOFTWARE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING, BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
- * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT, OR OTHERWISE
- * ARISING FROM, OUT OF, OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
- * OTHER DEALINGS IN THE SOFTWARE.
+ * FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT, OR OTHERWISE ARISING FROM,
+ * OUT OF, OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
  *
  * */
 #ifndef INCLUDE_LL_FW_CONFIG_H
@@ -152,9 +152,9 @@
 #endif /* SUPPORT_LE_ADVERTISERS_MONITORING */
 
 /* Capabilities configurations */
-#ifndef MAX_NUM_CNCRT_STAT_MCHNS
-#define MAX_NUM_CNCRT_STAT_MCHNS                    8 /* Set maximum number of states the controller can support */
-#endif /* MAX_NUM_CNCRT_STAT_MCHNS */
+#ifndef MAX_NUM_CNCRT_STAT_MCHNS_STATIC
+#define MAX_NUM_CNCRT_STAT_MCHNS_STATIC                    8 /* Set maximum number of states the controller can support */
+#endif /* MAX_NUM_CNCRT_STAT_MCHNS_STATIC */
 
 #ifndef USE_NON_ACCURATE_32K_SLEEP_CLK
 #define USE_NON_ACCURATE_32K_SLEEP_CLK              1 /* Allow to drive the sleep clock by sources other than the default crystal oscillator source.*/

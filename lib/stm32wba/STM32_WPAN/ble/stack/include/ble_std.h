@@ -267,6 +267,7 @@
 #define BLE_CORE_6_0                                   14
 #define BLE_CORE_6_1                                   15
 #define BLE_CORE_6_2                                   16
+#define BLE_CORE_6_3                                   17
 
 /* AD types for advertising data and scan response data
  */
@@ -301,6 +302,10 @@
 #define FLAG_BIT_BR_EDR_NOT_SUPPORTED                  0x04U
 #define FLAG_BIT_LE_BR_EDR_CONTROLLER                  0x08U
 #define FLAG_BIT_LE_BR_EDR_HOST                        0x10U
+
+/* Security Manager MTU (when LE Secure Connections is supported)
+ */
+#define SM_MTU                                         65
 
 /* Appearance values
  */

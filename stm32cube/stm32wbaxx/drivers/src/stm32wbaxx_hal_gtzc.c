@@ -143,12 +143,12 @@
 #define TZSC1_SECCFGR2_ALL       (0x018F00EBUL)
 #define TZSC1_SECCFGR3_ALL       (0x01C17C58UL)
 #define TZIC1_IER4_ALL           (0xC3C0EF87UL)
-#elif defined (STM32WBA23xx)
+#elif defined STM32WBA23xx
 #define TZSC1_SECCFGR1_ALL       (0x00022081UL)
 #define TZSC1_SECCFGR2_ALL       (0x010F00E8UL)
 #define TZSC1_SECCFGR3_ALL       (0x01C17848UL)
 #define TZIC1_IER4_ALL           (0x03C0EF87UL)
-#elif defined (STM32WBA25xx)
+#elif defined STM32WBA25xx
 #define TZSC1_SECCFGR1_ALL       (0x00022081UL)
 #define TZSC1_SECCFGR2_ALL       (0x010F80E8UL)
 #define TZSC1_SECCFGR3_ALL       (0x01D17848UL)

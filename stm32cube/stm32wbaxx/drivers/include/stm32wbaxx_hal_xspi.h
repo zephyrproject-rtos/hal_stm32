@@ -97,8 +97,10 @@ typedef struct
   uint8_t                    *pBuffPtr;     /*!< Address of the XSPI buffer for transfer               */
   __IO uint32_t              XferSize;      /*!< Number of data to transfer                            */
   __IO uint32_t              XferCount;     /*!< Counter of data transferred                           */
+#if defined(HAL_DMA_MODULE_ENABLED)
   DMA_HandleTypeDef          *hdmatx;       /*!< Handle of the DMA channel used for transmit           */
   DMA_HandleTypeDef          *hdmarx;       /*!< Handle of the DMA channel used for receive            */
+#endif /* HAL_DMA_MODULE_ENABLED */
   __IO uint32_t              State;         /*!< Internal state of the XSPI HAL driver                 */
   __IO uint32_t              ErrorCode;     /*!< Error code in case of HAL driver internal error       */
   uint32_t                   Timeout;       /*!< Timeout used for the XSPI external device access      */
@@ -197,7 +199,6 @@ typedef enum
   HAL_XSPI_TX_CPLT_CB_ID        = 0x05U,  /*!< XSPI Tx Complete Callback ID      */
   HAL_XSPI_RX_HALF_CPLT_CB_ID   = 0x06U,  /*!< XSPI Rx Half Complete Callback ID */
   HAL_XSPI_TX_HALF_CPLT_CB_ID   = 0x07U,  /*!< XSPI Tx Half Complete Callback ID */
-  HAL_XSPI_STATUS_MATCH_CB_ID   = 0x08U,  /*!< XSPI Status Match Callback ID     */
   HAL_XSPI_TIMEOUT_CB_ID        = 0x09U,  /*!< XSPI Timeout Callback ID          */
   HAL_XSPI_MSP_INIT_CB_ID       = 0x0AU,  /*!< XSPI MspInit Callback ID          */
   HAL_XSPI_MSP_DEINIT_CB_ID     = 0x0BU   /*!< XSPI MspDeInit Callback ID        */
@@ -344,45 +345,6 @@ typedef void (*pXSPI_CallbackTypeDef)(XSPI_HandleTypeDef *hxspi);
   */
 #define HAL_XSPI_DHQC_DISABLE                (0x00000000U)              /*!< No Delay                         */
 #define HAL_XSPI_DHQC_ENABLE                 ((uint32_t)XSPI_TCR_DHQC)  /*!< Delay Hold 1/4 cycle             */
-/**
-  * @}
-  */
-
-/** @defgroup XSPI_ChipSelectBoundary XSPI Chip Select Boundary
-  * @{
-  */
-#define HAL_XSPI_BONDARYOF_NONE              (0x00000000U)  /*!     CS boundary disabled         */
-#define HAL_XSPI_BONDARYOF_16B               (0x00000001U)  /*!<  16 bits  (  2  Bytes = 2^(1))  */
-#define HAL_XSPI_BONDARYOF_32B               (0x00000002U)  /*!<  32 bits  (  4  Bytes = 2^(2))  */
-#define HAL_XSPI_BONDARYOF_64B               (0x00000003U)  /*!<  64 bits  (  8  Bytes = 2^(3))  */
-#define HAL_XSPI_BONDARYOF_128B              (0x00000004U)  /*!< 128 bits  ( 16  Bytes = 2^(4))  */
-#define HAL_XSPI_BONDARYOF_256B              (0x00000005U)  /*!< 256 bits  ( 32  Bytes = 2^(5))  */
-#define HAL_XSPI_BONDARYOF_512B              (0x00000006U)  /*!< 512 bits  ( 64  Bytes = 2^(6))  */
-#define HAL_XSPI_BONDARYOF_1KB               (0x00000007U)  /*!<   1 Kbits (128  Bytes = 2^(7))  */
-#define HAL_XSPI_BONDARYOF_2KB               (0x00000008U)  /*!<   2 Kbits (256  Bytes = 2^(8))  */
-#define HAL_XSPI_BONDARYOF_4KB               (0x00000009U)  /*!<   4 Kbits (512  Bytes = 2^(9))  */
-#define HAL_XSPI_BONDARYOF_8KB               (0x0000000AU)  /*!<   8 Kbits (  1 KBytes = 2^(10)) */
-#define HAL_XSPI_BONDARYOF_16KB              (0x0000000BU)  /*!<  16 Kbits (  2 KBytes = 2^(11)) */
-#define HAL_XSPI_BONDARYOF_32KB              (0x0000000CU)  /*!<  32 Kbits (  4 KBytes = 2^(12)) */
-#define HAL_XSPI_BONDARYOF_64KB              (0x0000000DU)  /*!<  64 Kbits (  8 KBytes = 2^(13)) */
-#define HAL_XSPI_BONDARYOF_128KB             (0x0000000EU)  /*!< 128 Kbits ( 16 KBytes = 2^(14)) */
-#define HAL_XSPI_BONDARYOF_256KB             (0x0000000FU)  /*!< 256 Kbits ( 32 KBytes = 2^(15)) */
-#define HAL_XSPI_BONDARYOF_512KB             (0x00000010U)  /*!< 512 Kbits ( 64 KBytes = 2^(16)) */
-#define HAL_XSPI_BONDARYOF_1MB               (0x00000011U)  /*!<   1 Mbits (128 KBytes = 2^(17)) */
-#define HAL_XSPI_BONDARYOF_2MB               (0x00000012U)  /*!<   2 Mbits (256 KBytes = 2^(18)) */
-#define HAL_XSPI_BONDARYOF_4MB               (0x00000013U)  /*!<   4 Mbits (512 KBytes = 2^(19)) */
-#define HAL_XSPI_BONDARYOF_8MB               (0x00000014U)  /*!<   8 Mbits (  1 MBytes = 2^(20)) */
-#define HAL_XSPI_BONDARYOF_16MB              (0x00000015U)  /*!<  16 Mbits (  2 MBytes = 2^(21)) */
-#define HAL_XSPI_BONDARYOF_32MB              (0x00000016U)  /*!<  32 Mbits (  4 MBytes = 2^(22)) */
-#define HAL_XSPI_BONDARYOF_64MB              (0x00000017U)  /*!<  64 Mbits (  8 MBytes = 2^(23)) */
-#define HAL_XSPI_BONDARYOF_128MB             (0x00000018U)  /*!< 128 Mbits ( 16 MBytes = 2^(24)) */
-#define HAL_XSPI_BONDARYOF_256MB             (0x00000019U)  /*!< 256 Mbits ( 32 MBytes = 2^(25)) */
-#define HAL_XSPI_BONDARYOF_512MB             (0x0000001AU)  /*!< 512 Mbits ( 64 MBytes = 2^(26)) */
-#define HAL_XSPI_BONDARYOF_1GB               (0x0000001BU)  /*!<   1 Gbits (128 MBytes = 2^(27)) */
-#define HAL_XSPI_BONDARYOF_2GB               (0x0000001CU)  /*!<   2 Gbits (256 MBytes = 2^(28)) */
-#define HAL_XSPI_BONDARYOF_4GB               (0x0000001DU)  /*!<   4 Gbits (512 MBytes = 2^(29)) */
-#define HAL_XSPI_BONDARYOF_8GB               (0x0000001EU)  /*!<   8 Gbits (  1 GBytes = 2^(30)) */
-#define HAL_XSPI_BONDARYOF_16GB              (0x0000001FU)  /*!<  16 Gbits (  2 GBytes = 2^(31)) */
 /**
   * @}
   */
@@ -639,7 +601,6 @@ typedef void (*pXSPI_CallbackTypeDef)(XSPI_HandleTypeDef *hxspi);
   * @param  __INTERRUPT__ specifies the XSPI interrupt source to enable.
   *          This parameter can be one of the following values:
   *            @arg HAL_XSPI_IT_TO: XSPI Timeout interrupt
-  *            @arg HAL_XSPI_IT_SM: XSPI Status match interrupt
   *            @arg HAL_XSPI_IT_FT: XSPI FIFO threshold interrupt
   *            @arg HAL_XSPI_IT_TC: XSPI Transfer complete interrupt
   *            @arg HAL_XSPI_IT_TE: XSPI Transfer error interrupt
@@ -652,7 +613,6 @@ typedef void (*pXSPI_CallbackTypeDef)(XSPI_HandleTypeDef *hxspi);
   * @param  __INTERRUPT__ specifies the XSPI interrupt source to disable.
   *          This parameter can be one of the following values:
   *            @arg HAL_XSPI_IT_TO: XSPI Timeout interrupt
-  *            @arg HAL_XSPI_IT_SM: XSPI Status match interrupt
   *            @arg HAL_XSPI_IT_FT: XSPI FIFO threshold interrupt
   *            @arg HAL_XSPI_IT_TC: XSPI Transfer complete interrupt
   *            @arg HAL_XSPI_IT_TE: XSPI Transfer error interrupt
@@ -665,7 +625,6 @@ typedef void (*pXSPI_CallbackTypeDef)(XSPI_HandleTypeDef *hxspi);
   * @param  __INTERRUPT__ specifies the XSPI interrupt source to check.
   *          This parameter can be one of the following values:
   *            @arg HAL_XSPI_IT_TO: XSPI Timeout interrupt
-  *            @arg HAL_XSPI_IT_SM: XSPI Status match interrupt
   *            @arg HAL_XSPI_IT_FT: XSPI FIFO threshold interrupt
   *            @arg HAL_XSPI_IT_TC: XSPI Transfer complete interrupt
   *            @arg HAL_XSPI_IT_TE: XSPI Transfer error interrupt
@@ -681,7 +640,6 @@ typedef void (*pXSPI_CallbackTypeDef)(XSPI_HandleTypeDef *hxspi);
   *          This parameter can be one of the following values:
   *            @arg HAL_XSPI_FLAG_BUSY: XSPI Busy flag
   *            @arg HAL_XSPI_FLAG_TO:   XSPI Timeout flag
-  *            @arg HAL_XSPI_FLAG_SM:   XSPI Status match flag
   *            @arg HAL_XSPI_FLAG_FT:   XSPI FIFO threshold flag
   *            @arg HAL_XSPI_FLAG_TC:   XSPI Transfer complete flag
   *            @arg HAL_XSPI_FLAG_TE:   XSPI Transfer error flag
@@ -695,7 +653,6 @@ typedef void (*pXSPI_CallbackTypeDef)(XSPI_HandleTypeDef *hxspi);
   * @param  __FLAG__ specifies the XSPI clear register flag that needs to be set
   *          This parameter can be one of the following values:
   *            @arg HAL_XSPI_FLAG_TO:   XSPI Timeout flag
-  *            @arg HAL_XSPI_FLAG_SM:   XSPI Status match flag
   *            @arg HAL_XSPI_FLAG_TC:   XSPI Transfer complete flag
   *            @arg HAL_XSPI_FLAG_TE:   XSPI Transfer error flag
   * @retval None
@@ -759,9 +716,6 @@ void                  HAL_XSPI_RxCpltCallback(XSPI_HandleTypeDef *hxspi);
 void                  HAL_XSPI_TxCpltCallback(XSPI_HandleTypeDef *hxspi);
 void                  HAL_XSPI_RxHalfCpltCallback(XSPI_HandleTypeDef *hxspi);
 void                  HAL_XSPI_TxHalfCpltCallback(XSPI_HandleTypeDef *hxspi);
-
-/* XSPI status flag polling mode functions */
-void                  HAL_XSPI_StatusMatchCallback(XSPI_HandleTypeDef *hxspi);
 
 /* XSPI memory-mapped mode functions */
 void                  HAL_XSPI_TimeOutCallback(XSPI_HandleTypeDef *hxspi);

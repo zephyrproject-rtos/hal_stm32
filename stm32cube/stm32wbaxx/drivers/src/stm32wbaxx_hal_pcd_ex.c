@@ -299,7 +299,7 @@ HAL_StatusTypeDef  HAL_PCDEx_PMAConfig(PCD_HandleTypeDef *hpcd, uint16_t ep_addr
   }
   else
   {
-    ep = &hpcd->OUT_ep[ep_addr];
+    ep = &hpcd->OUT_ep[ep_addr & EP_ADDR_MSK];
   }
 
   /* Here we check if the endpoint is single or double Buffer*/

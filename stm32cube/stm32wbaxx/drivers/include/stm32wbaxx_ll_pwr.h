@@ -292,7 +292,7 @@ extern "C" {
 /** @defgroup PWR_LL_EC_VOLTAGE_SCALING_RANGE_SELECTION PWR Voltage scaling range selection
   * @{
   */
-#if defined(PWR_STOP3_SUPPORT)
+#if defined(PWR_VOSR_VOS_1)
 #define LL_PWR_REGU_VOLTAGE_SCALE1    PWR_VOSR_VOS_0 /*!< Voltage scaling range 1 (highest frequency)                 */
 #define LL_PWR_REGU_VOLTAGE_SCALE1_5  PWR_VOSR_VOS_1 /*!< Voltage scaling range 1.5 (highest frequency, lower power)  */
 #define LL_PWR_REGU_VOLTAGE_SCALE2    0U             /*!< Voltage scaling range 2 (lowest power)                      */
@@ -489,13 +489,10 @@ extern "C" {
   * @param  Mode  This parameter can be one of the following values:
   *         @arg @ref LL_PWR_MODE_STOP0
   *         @arg @ref LL_PWR_MODE_STOP1
-#if defined(PWR_STOP2_SUPPORT)
-  *         @arg @ref LL_PWR_MODE_STOP2
-#endif
-#if defined(PWR_STOP3_SUPPORT)
-  *         @arg @ref LL_PWR_MODE_STOP3
-#endif
+  *         @arg @ref LL_PWR_MODE_STOP2 (*)
+  *         @arg @ref LL_PWR_MODE_STOP3 (*)
   *         @arg @ref LL_PWR_MODE_STANDBY
+  * @note   (*) Power Mode not defined in all devices.
   * @retval None
   */
 __STATIC_INLINE void LL_PWR_SetPowerMode(uint32_t Mode)
@@ -509,13 +506,10 @@ __STATIC_INLINE void LL_PWR_SetPowerMode(uint32_t Mode)
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_PWR_MODE_STOP0
   *         @arg @ref LL_PWR_MODE_STOP1
-#if defined(PWR_STOP2_SUPPORT)
-  *         @arg @ref LL_PWR_MODE_STOP2
-#endif
-#if defined(PWR_STOP3_SUPPORT)
-  *         @arg @ref LL_PWR_MODE_STOP3
-#endif
+  *         @arg @ref LL_PWR_MODE_STOP2 (*)
+  *         @arg @ref LL_PWR_MODE_STOP3 (*)
   *         @arg @ref LL_PWR_MODE_STANDBY
+  * @note   (*) Power Mode not defined in all devices.
   */
 __STATIC_INLINE uint32_t LL_PWR_GetPowerMode(void)
 {
@@ -525,16 +519,14 @@ __STATIC_INLINE uint32_t LL_PWR_GetPowerMode(void)
 /**
   * @brief  Set the SRAM2 page(s) retention in Standby mode.
   * @rmtoll CR1           R2RSB1          LL_PWR_SetSRAM2SBRetention
-#if defined(PWR_STOP3_SUPPORT)
-  * @rmtoll CR1           R2RSB2          LL_PWR_SetSRAM2SBRetention
-#endif
+  * @rmtoll CR1           R2RSB2          LL_PWR_SetSRAM2SBRetention(*)
+  *
   * @param  SRAM2PageRetention  This parameter can be one of the following values:
   *                              @arg @ref LL_PWR_SRAM2_SB_NO_RETENTION
-#if defined(PWR_STOP3_SUPPORT)
-  *                              @arg @ref LL_PWR_SRAM2_SB_PAGE1_RETENTION
-  *                              @arg @ref LL_PWR_SRAM2_SB_PAGE2_RETENTION
-#endif
+  *                              @arg @ref LL_PWR_SRAM2_SB_PAGE1_RETENTION (*)
+  *                              @arg @ref LL_PWR_SRAM2_SB_PAGE2_RETENTION (*)
   *                              @arg @ref LL_PWR_SRAM2_SB_FULL_RETENTION
+  * @note   (*) Param not defined in all devices, depends on Stop3 mode.
   * @retval None
   */
 __STATIC_INLINE void LL_PWR_SetSRAM2SBRetention(uint32_t SRAM2PageRetention)
@@ -549,16 +541,14 @@ __STATIC_INLINE void LL_PWR_SetSRAM2SBRetention(uint32_t SRAM2PageRetention)
 /**
   * @brief  Get the SRAM2 page(s) retention in Standby mode.
   * @rmtoll CR1           R2RSB1          LL_PWR_GetSRAM2SBRetention
-#if defined(PWR_STOP3_SUPPORT)
   * @rmtoll CR1           R2RSB2          LL_PWR_SetSRAM2SBRetention
-#endif
+  *
   * @retval Returned value can be one of the following values:
   *                              @arg @ref LL_PWR_SRAM2_SB_NO_RETENTION
-#if defined(PWR_STOP3_SUPPORT)
-  *                              @arg @ref LL_PWR_SRAM2_SB_PAGE1_RETENTION
-  *                              @arg @ref LL_PWR_SRAM2_SB_PAGE2_RETENTION
-#endif
+  *                              @arg @ref LL_PWR_SRAM2_SB_PAGE1_RETENTION(*)
+  *                              @arg @ref LL_PWR_SRAM2_SB_PAGE2_RETENTION(*)
   *                              @arg @ref LL_PWR_SRAM2_SB_FULL_RETENTION
+  * @note   (*) Param not defined in all devices, depends on Stop3 mode.
   */
 __STATIC_INLINE uint32_t LL_PWR_GetSRAM2SBRetention(void)
 {
@@ -572,26 +562,22 @@ __STATIC_INLINE uint32_t LL_PWR_GetSRAM2SBRetention(void)
 /**
   * @brief  Set the SRAM1 page(s) retention in Standby mode.
   * @rmtoll CR1           R1RSB1          LL_PWR_SetSRAM1SBRetention
-#if defined(PWR_STOP2_SUPPORT) && !defined(PWR_STOP3_SUPPORT)
-  * @rmtoll CR1    R1RSB2       LL_PWR_SetSRAM1SBRetention
-  * @rmtoll CR1    R1RSB3       LL_PWR_SetSRAM1SBRetention
-  * @rmtoll CR1    R1RSB4       LL_PWR_SetSRAM1SBRetention
-  * @rmtoll CR1    R1RSB5       LL_PWR_SetSRAM1SBRetention
-  * @rmtoll CR1    R1RSB6       LL_PWR_SetSRAM1SBRetention
-  * @rmtoll CR1    R1RSB7       LL_PWR_SetSRAM1SBRetention
-#endif
+  * @rmtoll CR1    R1RSB2       LL_PWR_SetSRAM1SBRetention (*)
+  * @rmtoll CR1    R1RSB3       LL_PWR_SetSRAM1SBRetention (*)
+  * @rmtoll CR1    R1RSB4       LL_PWR_SetSRAM1SBRetention (*)
+  * @rmtoll CR1    R1RSB5       LL_PWR_SetSRAM1SBRetention (*)
+  * @rmtoll CR1    R1RSB6       LL_PWR_SetSRAM1SBRetention (*)
+  * @rmtoll CR1    R1RSB7       LL_PWR_SetSRAM1SBRetention (*)
+  *
   * @param  SRAM1PageRetention  This parameter can be one of the following values:
   *                              @arg @ref LL_PWR_SRAM1_SB_NO_RETENTION
-#if defined(PWR_STOP2_SUPPORT)
-                                 @arg @ref LL_PWR_SRAM1_SB_PAGE1_RETENTION
-#if !defined(PWR_STOP3_SUPPORT)
-                                 @arg @ref LL_PWR_SRAM1_SB_PAGE2_RETENTION
-                                 @arg @ref LL_PWR_SRAM1_SB_PAGE3_RETENTION
-                                 @arg @ref LL_PWR_SRAM1_SB_PAGE4_RETENTION
-                                 @arg @ref LL_PWR_SRAM1_SB_PAGE567_RETENTION
-#endif
-#endif
+                                 @arg @ref LL_PWR_SRAM1_SB_PAGE1_RETENTION (*)
+                                 @arg @ref LL_PWR_SRAM1_SB_PAGE2_RETENTION (*)
+                                 @arg @ref LL_PWR_SRAM1_SB_PAGE3_RETENTION (*)
+                                 @arg @ref LL_PWR_SRAM1_SB_PAGE4_RETENTION (*)
+                                 @arg @ref LL_PWR_SRAM1_SB_PAGE567_RETENTION (*)
   *                              @arg @ref LL_PWR_SRAM1_SB_FULL_RETENTION
+  * @note   (*) Power Mode not defined in all devices.
   * @retval None
   */
 __STATIC_INLINE void LL_PWR_SetSRAM1SBRetention(uint32_t SRAM1PageRetention)
@@ -607,28 +593,23 @@ __STATIC_INLINE void LL_PWR_SetSRAM1SBRetention(uint32_t SRAM1PageRetention)
 /**
   * @brief  Get the SRAM1 page(s) retention in Standby mode.
   * @rmtoll CR1           R1RSB1          LL_PWR_GetSRAM1SBRetention
-#if defined(PWR_STOP2_SUPPORT) && !defined(PWR_STOP3_SUPPORT)
-  * @rmtoll CR1    R1RSB2       LL_PWR_GetSRAM1SBRetention
-  * @rmtoll CR1    R1RSB3       LL_PWR_GetSRAM1SBRetention
-  * @rmtoll CR1    R1RSB4       LL_PWR_GetSRAM1SBRetention
-  * @rmtoll CR1    R1RSB5       LL_PWR_GetSRAM1SBRetention
-  * @rmtoll CR1    R1RSB6       LL_PWR_GetSRAM1SBRetention
-  * @rmtoll CR1    R1RSB7       LL_PWR_GetSRAM1SBRetention
-#endif
+  * @rmtoll CR1    R1RSB2       LL_PWR_GetSRAM1SBRetention(*)
+  * @rmtoll CR1    R1RSB3       LL_PWR_GetSRAM1SBRetention(*)
+  * @rmtoll CR1    R1RSB4       LL_PWR_GetSRAM1SBRetention(*)
+  * @rmtoll CR1    R1RSB5       LL_PWR_GetSRAM1SBRetention(*)
+  * @rmtoll CR1    R1RSB6       LL_PWR_GetSRAM1SBRetention(*)
+  * @rmtoll CR1    R1RSB7       LL_PWR_GetSRAM1SBRetention(*)
+  *
   * @retval Returned value can be one of the following values:
   *                              @arg @ref LL_PWR_SRAM1_SB_NO_RETENTION
-#if defined(PWR_STOP2_SUPPORT)
-                                 @arg @ref LL_PWR_SRAM1_SB_PAGE1_RETENTION
-#if !defined(PWR_STOP3_SUPPORT)
-                                 @arg @ref LL_PWR_SRAM1_SB_PAGE2_RETENTION
-                                 @arg @ref LL_PWR_SRAM1_SB_PAGE3_RETENTION
-                                 @arg @ref LL_PWR_SRAM1_SB_PAGE4_RETENTION
-                                 @arg @ref LL_PWR_SRAM1_SB_PAGE567_RETENTION
-#endif
-#endif
-#if !defined(PWR_STOP3_SUPPORT)
-  *                              @arg @ref LL_PWR_SRAM1_SB_FULL_RETENTION
-#endif
+                                 @arg @ref LL_PWR_SRAM1_SB_PAGE1_RETENTION (*)
+                                 @arg @ref LL_PWR_SRAM1_SB_PAGE2_RETENTION  (*)
+                                 @arg @ref LL_PWR_SRAM1_SB_PAGE3_RETENTION  (*)
+                                 @arg @ref LL_PWR_SRAM1_SB_PAGE4_RETENTION  (*)
+                                 @arg @ref LL_PWR_SRAM1_SB_PAGE567_RETENTION(*)
+  *                              @arg @ref LL_PWR_SRAM1_SB_FULL_RETENTION (*)
+  * @note   (*) Power Mode not defined in all devices.
+  *
   */
 __STATIC_INLINE uint32_t LL_PWR_GetSRAM1SBRetention(void)
 {
@@ -725,24 +706,20 @@ __STATIC_INLINE uint32_t LL_PWR_IsEnabledUltraLowPowerMode(void)
 /**
   * @brief  Set the SRAM1 page(s) retention in Stop mode.
   * @rmtoll CR2           SRAM1PDS1       LL_PWR_SetSRAM1StopRetention
-#if defined(PWR_STOP2_SUPPORT) && !defined(PWR_STOP3_SUPPORT)
-  * @rmtoll CR2           SRAM1PDS2       LL_PWR_SetSRAM1StopRetention
-  * @rmtoll CR2           SRAM1PDS3       LL_PWR_SetSRAM1StopRetention
-  * @rmtoll CR2           SRAM1PDS4       LL_PWR_SetSRAM1StopRetention
-  * @rmtoll CR2           SRAM1PDS567     LL_PWR_SetSRAM1StopRetention
-#endif
+  * @rmtoll CR2           SRAM1PDS2       LL_PWR_SetSRAM1StopRetention(*)
+  * @rmtoll CR2           SRAM1PDS3       LL_PWR_SetSRAM1StopRetention(*)
+  * @rmtoll CR2           SRAM1PDS4       LL_PWR_SetSRAM1StopRetention(*)
+  * @rmtoll CR2           SRAM1PDS567     LL_PWR_SetSRAM1StopRetention(*)
+  *
   * @param  SRAM1PageRetention  This parameter can be one of the following values:
   *         @arg @ref LL_PWR_SRAM1_STOP_NO_RETENTION
-#if defined(PWR_STOP2_SUPPORT)
-            @arg @ref LL_PWR_SRAM1_STOP_PAGE1_RETENTION
-#if !defined(PWR_STOP3_SUPPORT)
-            @arg @ref LL_PWR_SRAM1_STOP_PAGE2_RETENTION
-            @arg @ref LL_PWR_SRAM1_STOP_PAGE3_RETENTION
-            @arg @ref LL_PWR_SRAM1_STOP_PAGE4_RETENTION
-            @arg @ref LL_PWR_SRAM1_STOP_PAGE567_RETENTION
-#endif
-#endif
+  *         @arg @ref LL_PWR_SRAM1_STOP_PAGE1_RETENTION (*)
+  *         @arg @ref LL_PWR_SRAM1_STOP_PAGE2_RETENTION  (*)
+  *         @arg @ref LL_PWR_SRAM1_STOP_PAGE3_RETENTION  (*)
+  *         @arg @ref LL_PWR_SRAM1_STOP_PAGE4_RETENTION  (*)
+  *         @arg @ref LL_PWR_SRAM1_STOP_PAGE567_RETENTION(*)
   *         @arg @ref LL_PWR_SRAM1_STOP_FULL_RETENTION
+  * @note   (*) Power Mode not defined in all devices.
   * @retval None
   */
 __STATIC_INLINE void LL_PWR_SetSRAM1StopRetention(uint32_t SRAM1PageRetention)
@@ -760,24 +737,20 @@ __STATIC_INLINE void LL_PWR_SetSRAM1StopRetention(uint32_t SRAM1PageRetention)
 /**
   * @brief  Get the SRAM1 page(s) retention in Stop mode.
   * @rmtoll CR2           SRAM1PDS1       LL_PWR_GetSRAM1StopRetention
-#if defined(PWR_STOP2_SUPPORT) && !defined(PWR_STOP3_SUPPORT)
-  * @rmtoll CR2           SRAM1PDS2       LL_PWR_GetSRAM1StopRetention
-  * @rmtoll CR2           SRAM1PDS3       LL_PWR_GetSRAM1StopRetention
-  * @rmtoll CR2           SRAM1PDS4       LL_PWR_GetSRAM1StopRetention
-  * @rmtoll CR2           SRAM1PDS567     LL_PWR_GetSRAM1StopRetention
-#endif
+  * @rmtoll CR2           SRAM1PDS2       LL_PWR_GetSRAM1StopRetention(*)
+  * @rmtoll CR2           SRAM1PDS3       LL_PWR_GetSRAM1StopRetention(*)
+  * @rmtoll CR2           SRAM1PDS4       LL_PWR_GetSRAM1StopRetention(*)
+  * @rmtoll CR2           SRAM1PDS567     LL_PWR_GetSRAM1StopRetention(*)
+  *
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_PWR_SRAM1_STOP_NO_RETENTION
-#if defined(PWR_STOP2_SUPPORT)
-            @arg @ref LL_PWR_SRAM1_STOP_PAGE1_RETENTION
-#if !defined(PWR_STOP3_SUPPORT)
-            @arg @ref LL_PWR_SRAM1_STOP_PAGE2_RETENTION
-            @arg @ref LL_PWR_SRAM1_STOP_PAGE3_RETENTION
-            @arg @ref LL_PWR_SRAM1_STOP_PAGE4_RETENTION
-            @arg @ref LL_PWR_SRAM1_STOP_PAGE567_RETENTION
-#endif
-#endif
+  *         @arg @ref LL_PWR_SRAM1_STOP_PAGE1_RETENTION(*)
+  *         @arg @ref LL_PWR_SRAM1_STOP_PAGE2_RETENTION  (*)
+  *         @arg @ref LL_PWR_SRAM1_STOP_PAGE3_RETENTION  (*)
+  *         @arg @ref LL_PWR_SRAM1_STOP_PAGE4_RETENTION  (*)
+  *         @arg @ref LL_PWR_SRAM1_STOP_PAGE567_RETENTION(*)
   *         @arg @ref LL_PWR_SRAM1_STOP_FULL_RETENTION
+  * @note   (*) Power Mode not defined in all devices.
   */
 __STATIC_INLINE uint32_t LL_PWR_GetSRAM1StopRetention(void)
 {
@@ -794,16 +767,13 @@ __STATIC_INLINE uint32_t LL_PWR_GetSRAM1StopRetention(void)
 /**
   * @brief  Set the SRAM2 page(s) retention in Stop mode.
   * @rmtoll CR2           SRAM2PDS1       LL_PWR_SetSRAM2StopRetention
-#if defined(PWR_STOP3_SUPPORT)
-  * @rmtoll CR2           SRAM2PDS2       LL_PWR_SetSRAM2StopRetention
-#endif
+  * @rmtoll CR2           SRAM2PDS2       LL_PWR_SetSRAM2StopRetention (*)
   * @param  SRAM2PageRetention  This parameter can be one of the following values:
   *         @arg @ref LL_PWR_SRAM2_STOP_NO_RETENTION
-#if defined(PWR_STOP3_SUPPORT)
-  *         @arg @ref LL_PWR_SRAM2_STOP_PAGE1_RETENTION
-  *         @arg @ref LL_PWR_SRAM2_STOP_PAGE2_RETENTION
-#endif
+  *         @arg @ref LL_PWR_SRAM2_STOP_PAGE1_RETENTION (*)
+  *         @arg @ref LL_PWR_SRAM2_STOP_PAGE2_RETENTION (*)
   *         @arg @ref LL_PWR_SRAM2_STOP_FULL_RETENTION
+  * @note   (*) Power Mode not defined in all devices.
   * @retval None
   */
 __STATIC_INLINE void LL_PWR_SetSRAM2StopRetention(uint32_t SRAM2PageRetention)
@@ -821,11 +791,10 @@ __STATIC_INLINE void LL_PWR_SetSRAM2StopRetention(uint32_t SRAM2PageRetention)
   * @rmtoll CR2           SRAM2PDS1       LL_PWR_GetSRAM2StopRetention
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_PWR_SRAM2_STOP_NO_RETENTION
-#if defined(PWR_STOP3_SUPPORT)
-  *         @arg @ref LL_PWR_SRAM2_STOP_PAGE1_RETENTION
-  *         @arg @ref LL_PWR_SRAM2_STOP_PAGE2_RETENTION
-#endif
+  *         @arg @ref LL_PWR_SRAM2_STOP_PAGE1_RETENTION (*)
+  *         @arg @ref LL_PWR_SRAM2_STOP_PAGE2_RETENTION (*)
   *         @arg @ref LL_PWR_SRAM2_STOP_FULL_RETENTION
+  * @note   (*) Power Mode not defined in all devices.
   */
 __STATIC_INLINE uint32_t LL_PWR_GetSRAM2StopRetention(void)
 {
@@ -840,10 +809,10 @@ __STATIC_INLINE uint32_t LL_PWR_GetSRAM2StopRetention(void)
 /**
   * @brief  Set the ICACHE SRAM page(s) retention in Stop mode.
   * @rmtoll CR2           ICRAMPDS        LL_PWR_SetICacheRAMStopRetention
-#if defined(STM32WBAXX_SI_CUT1_0)
+  * @if STM32WBAXX_SI_CUT1_0
   * @note   On Silicon Cut 1.0, it is mandatory to disable the ICACHE before going into
   *         stop modes otherwise an hard fault may occur when waking up from stop modes.
-#endif
+  * @endif
   * @param  ICRAMPageRetention  This parameter can be one of the following values:
   *         @arg @ref LL_PWR_ICACHERAM_STOP_NO_RETENTION
   *         @arg @ref LL_PWR_ICACHERAM_STOP_FULL_RETENTION
@@ -1073,10 +1042,9 @@ __STATIC_INLINE uint32_t LL_PWR_IsEnabledFastSoftStart(void)
   * @rmtoll VOSR          VOS             LL_PWR_SetRegulVoltageScaling
   * @param  VoltageScaling This parameter can be one of the following values:
   *         @arg @ref LL_PWR_REGU_VOLTAGE_SCALE1
-#if defined(PWR_STOP3_SUPPORT)
-  *         @arg @ref LL_PWR_REGU_VOLTAGE_SCALE1_5
-#endif
+  *         @arg @ref LL_PWR_REGU_VOLTAGE_SCALE1_5 (*)
   *         @arg @ref LL_PWR_REGU_VOLTAGE_SCALE2
+  * @note   (*) Power Mode not defined in all devices.
   * @retval None
   */
 __STATIC_INLINE void LL_PWR_SetRegulVoltageScaling(uint32_t VoltageScaling)
@@ -1089,10 +1057,9 @@ __STATIC_INLINE void LL_PWR_SetRegulVoltageScaling(uint32_t VoltageScaling)
   * @rmtoll VOSR          VOS             LL_PWR_GetRegulVoltageScaling
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_PWR_REGU_VOLTAGE_SCALE1
-#if defined(PWR_STOP3_SUPPORT)
-  *         @arg @ref LL_PWR_REGU_VOLTAGE_SCALE1_5
-#endif
+  *         @arg @ref LL_PWR_REGU_VOLTAGE_SCALE1_5 (*)
   *         @arg @ref LL_PWR_REGU_VOLTAGE_SCALE2
+  * @note   (*) Power Mode not defined in all devices.
   */
 __STATIC_INLINE uint32_t LL_PWR_GetRegulVoltageScaling(void)
 {
@@ -1317,9 +1284,8 @@ __STATIC_INLINE uint32_t LL_PWR_IsEnabledVddIO2(void)
   *         @arg @ref LL_PWR_PVDLEVEL_4
   *         @arg @ref LL_PWR_PVDLEVEL_5
   *         @arg @ref LL_PWR_PVDLEVEL_6
-#if !defined(PWR_STOP3_SUPPORT)
-  *         @arg @ref LL_PWR_PVDLEVEL_7
-#endif
+  *         @arg @ref LL_PWR_PVDLEVEL_7 (*)
+  * @note   (*) Param not defined in all devices, depends on Stop3 mode.
   * @retval None
   */
 __STATIC_INLINE void LL_PWR_SetPVDLevel(uint32_t PVDLevel)
@@ -1338,9 +1304,9 @@ __STATIC_INLINE void LL_PWR_SetPVDLevel(uint32_t PVDLevel)
   *         @arg @ref LL_PWR_PVDLEVEL_4
   *         @arg @ref LL_PWR_PVDLEVEL_5
   *         @arg @ref LL_PWR_PVDLEVEL_6
-#if !defined(PWR_STOP3_SUPPORT)
-  *         @arg @ref LL_PWR_PVDLEVEL_7
-#endif
+  *         @arg @ref LL_PWR_PVDLEVEL_7 (*)
+  * @note   (*) Value not defined in all devices, depends on Stop3 mode.
+  *
   */
 __STATIC_INLINE uint32_t LL_PWR_GetPVDLevel(void)
 {
@@ -1385,12 +1351,11 @@ __STATIC_INLINE uint32_t LL_PWR_IsEnabledPVD(void)
   *         @arg @ref LL_PWR_WAKEUP_PIN2
   *         @arg @ref LL_PWR_WAKEUP_PIN3
   *         @arg @ref LL_PWR_WAKEUP_PIN4
-#if !defined(PWR_STOP3_SUPPORT)
-  *         @arg @ref LL_PWR_WAKEUP_PIN5
-#endif
+  *         @arg @ref LL_PWR_WAKEUP_PIN5 (*)
   *         @arg @ref LL_PWR_WAKEUP_PIN6
   *         @arg @ref LL_PWR_WAKEUP_PIN7
   *         @arg @ref LL_PWR_WAKEUP_PIN8
+  * @note   (*) Power Mode not defined in all devices.
   * @retval None
   */
 __STATIC_INLINE void LL_PWR_EnableWakeUpPin(uint32_t WakeUpPin)
@@ -1406,12 +1371,11 @@ __STATIC_INLINE void LL_PWR_EnableWakeUpPin(uint32_t WakeUpPin)
   *         @arg @ref LL_PWR_WAKEUP_PIN2
   *         @arg @ref LL_PWR_WAKEUP_PIN3
   *         @arg @ref LL_PWR_WAKEUP_PIN4
-#if !defined(PWR_STOP3_SUPPORT)
-  *         @arg @ref LL_PWR_WAKEUP_PIN5
-#endif
+  *         @arg @ref LL_PWR_WAKEUP_PIN5 (*)
   *         @arg @ref LL_PWR_WAKEUP_PIN6
   *         @arg @ref LL_PWR_WAKEUP_PIN7
   *         @arg @ref LL_PWR_WAKEUP_PIN8
+  * @note   (*) Power Mode not defined in all devices.
   * @retval None
   */
 __STATIC_INLINE void LL_PWR_DisableWakeUpPin(uint32_t WakeUpPin)
@@ -1427,12 +1391,11 @@ __STATIC_INLINE void LL_PWR_DisableWakeUpPin(uint32_t WakeUpPin)
   *         @arg @ref LL_PWR_WAKEUP_PIN2
   *         @arg @ref LL_PWR_WAKEUP_PIN3
   *         @arg @ref LL_PWR_WAKEUP_PIN4
-#if !defined(PWR_STOP3_SUPPORT)
-  *         @arg @ref LL_PWR_WAKEUP_PIN5
-#endif
+  *         @arg @ref LL_PWR_WAKEUP_PIN5 (*)
   *         @arg @ref LL_PWR_WAKEUP_PIN6
   *         @arg @ref LL_PWR_WAKEUP_PIN7
   *         @arg @ref LL_PWR_WAKEUP_PIN8
+  * @note   (*) Power Mode not defined in all devices.
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_PWR_IsEnabledWakeUpPin(uint32_t WakeUpPin)
@@ -1448,12 +1411,11 @@ __STATIC_INLINE uint32_t LL_PWR_IsEnabledWakeUpPin(uint32_t WakeUpPin)
   *         @arg @ref LL_PWR_WAKEUP_PIN2
   *         @arg @ref LL_PWR_WAKEUP_PIN3
   *         @arg @ref LL_PWR_WAKEUP_PIN4
-#if !defined(PWR_STOP3_SUPPORT)
-  *         @arg @ref LL_PWR_WAKEUP_PIN5
-#endif
+  *         @arg @ref LL_PWR_WAKEUP_PIN5 (*)
   *         @arg @ref LL_PWR_WAKEUP_PIN6
   *         @arg @ref LL_PWR_WAKEUP_PIN7
   *         @arg @ref LL_PWR_WAKEUP_PIN8
+  * @note   (*) Power Mode not defined in all devices.
   * @retval None
   */
 __STATIC_INLINE void LL_PWR_SetWakeUpPinPolarityLow(uint32_t WakeUpPin)
@@ -1469,12 +1431,11 @@ __STATIC_INLINE void LL_PWR_SetWakeUpPinPolarityLow(uint32_t WakeUpPin)
   *         @arg @ref LL_PWR_WAKEUP_PIN2
   *         @arg @ref LL_PWR_WAKEUP_PIN3
   *         @arg @ref LL_PWR_WAKEUP_PIN4
-#if !defined(PWR_STOP3_SUPPORT)
-  *         @arg @ref LL_PWR_WAKEUP_PIN5
-#endif
+  *         @arg @ref LL_PWR_WAKEUP_PIN5 (*)
   *         @arg @ref LL_PWR_WAKEUP_PIN6
   *         @arg @ref LL_PWR_WAKEUP_PIN7
   *         @arg @ref LL_PWR_WAKEUP_PIN8
+  * @note   (*) Power Mode not defined in all devices.
   * @retval None
   */
 __STATIC_INLINE void LL_PWR_SetWakeUpPinPolarityHigh(uint32_t WakeUpPin)
@@ -1490,12 +1451,11 @@ __STATIC_INLINE void LL_PWR_SetWakeUpPinPolarityHigh(uint32_t WakeUpPin)
   *         @arg @ref LL_PWR_WAKEUP_PIN2
   *         @arg @ref LL_PWR_WAKEUP_PIN3
   *         @arg @ref LL_PWR_WAKEUP_PIN4
-#if !defined(PWR_STOP3_SUPPORT)
-  *         @arg @ref LL_PWR_WAKEUP_PIN5
-#endif
+  *         @arg @ref LL_PWR_WAKEUP_PIN5 (*)
   *         @arg @ref LL_PWR_WAKEUP_PIN6
   *         @arg @ref LL_PWR_WAKEUP_PIN7
   *         @arg @ref LL_PWR_WAKEUP_PIN8
+  * @note   (*) Power Mode not defined in all devices.
   * @retval State of bit (1 : polarity or 0 : polarity high).
   */
 __STATIC_INLINE uint32_t LL_PWR_GetWakeUpPinPolarity(uint32_t WakeUpPin)
@@ -1511,12 +1471,11 @@ __STATIC_INLINE uint32_t LL_PWR_GetWakeUpPinPolarity(uint32_t WakeUpPin)
   *         @arg @ref LL_PWR_WAKEUP_PIN2
   *         @arg @ref LL_PWR_WAKEUP_PIN3
   *         @arg @ref LL_PWR_WAKEUP_PIN4
-#if !defined(PWR_STOP3_SUPPORT)
-  *         @arg @ref LL_PWR_WAKEUP_PIN5
-#endif
+  *         @arg @ref LL_PWR_WAKEUP_PIN5 (*)
   *         @arg @ref LL_PWR_WAKEUP_PIN6
   *         @arg @ref LL_PWR_WAKEUP_PIN7
   *         @arg @ref LL_PWR_WAKEUP_PIN8
+  * @note   (*) Power Mode not defined in all devices.
   * @retval None
   */
 __STATIC_INLINE void LL_PWR_SetWakeUpPinSignal0Selection(uint32_t WakeUpPin)
@@ -1533,12 +1492,11 @@ __STATIC_INLINE void LL_PWR_SetWakeUpPinSignal0Selection(uint32_t WakeUpPin)
   *         @arg @ref LL_PWR_WAKEUP_PIN2
   *         @arg @ref LL_PWR_WAKEUP_PIN3
   *         @arg @ref LL_PWR_WAKEUP_PIN4
-#if !defined(PWR_STOP3_SUPPORT)
-  *         @arg @ref LL_PWR_WAKEUP_PIN5
-#endif
+  *         @arg @ref LL_PWR_WAKEUP_PIN5 (*)
   *         @arg @ref LL_PWR_WAKEUP_PIN6
   *         @arg @ref LL_PWR_WAKEUP_PIN7
   *         @arg @ref LL_PWR_WAKEUP_PIN8
+  * @note   (*) Power Mode not defined in all devices.
   * @retval None
   */
 __STATIC_INLINE void LL_PWR_SetWakeUpPinSignal1Selection(uint32_t WakeUpPin)
@@ -1555,12 +1513,11 @@ __STATIC_INLINE void LL_PWR_SetWakeUpPinSignal1Selection(uint32_t WakeUpPin)
   *         @arg @ref LL_PWR_WAKEUP_PIN2
   *         @arg @ref LL_PWR_WAKEUP_PIN3
   *         @arg @ref LL_PWR_WAKEUP_PIN4
-#if !defined(PWR_STOP3_SUPPORT)
-  *         @arg @ref LL_PWR_WAKEUP_PIN5
-#endif
+  *         @arg @ref LL_PWR_WAKEUP_PIN5 (*)
   *         @arg @ref LL_PWR_WAKEUP_PIN6
   *         @arg @ref LL_PWR_WAKEUP_PIN7
   *         @arg @ref LL_PWR_WAKEUP_PIN8
+  * @note   (*) Power Mode not defined in all devices.
   * @retval None
   */
 __STATIC_INLINE void LL_PWR_SetWakeUpPinSignal2Selection(uint32_t WakeUpPin)
@@ -1577,12 +1534,11 @@ __STATIC_INLINE void LL_PWR_SetWakeUpPinSignal2Selection(uint32_t WakeUpPin)
   *         @arg @ref LL_PWR_WAKEUP_PIN2
   *         @arg @ref LL_PWR_WAKEUP_PIN3
   *         @arg @ref LL_PWR_WAKEUP_PIN4
-#if !defined(PWR_STOP3_SUPPORT)
-  *         @arg @ref LL_PWR_WAKEUP_PIN5
-#endif
+  *         @arg @ref LL_PWR_WAKEUP_PIN5 (*)
   *         @arg @ref LL_PWR_WAKEUP_PIN6
   *         @arg @ref LL_PWR_WAKEUP_PIN7
   *         @arg @ref LL_PWR_WAKEUP_PIN8
+  * @note   (*) Power Mode not defined in all devices.
   * @retval None
   */
 __STATIC_INLINE void LL_PWR_SetWakeUpPinSignal3Selection(uint32_t WakeUpPin)
@@ -1599,12 +1555,11 @@ __STATIC_INLINE void LL_PWR_SetWakeUpPinSignal3Selection(uint32_t WakeUpPin)
   *         @arg @ref LL_PWR_WAKEUP_PIN2
   *         @arg @ref LL_PWR_WAKEUP_PIN3
   *         @arg @ref LL_PWR_WAKEUP_PIN4
-#if !defined(PWR_STOP3_SUPPORT)
-  *         @arg @ref LL_PWR_WAKEUP_PIN5
-#endif
+  *         @arg @ref LL_PWR_WAKEUP_PIN5 (*)
   *         @arg @ref LL_PWR_WAKEUP_PIN6
   *         @arg @ref LL_PWR_WAKEUP_PIN7
   *         @arg @ref LL_PWR_WAKEUP_PIN8
+  * @note   (*) Power Mode not defined in all devices.
   */
 __STATIC_INLINE uint32_t LL_PWR_GetWakeUpPinSignalSelection(uint32_t WakeUpPin)
 {
@@ -1648,11 +1603,9 @@ __STATIC_INLINE uint32_t LL_PWR_IsEnabledBkUpAccess(void)
   *         @arg @ref LL_PWR_GPIO_STATE_RETENTION_ENABLE_PORTA
   *         @arg @ref LL_PWR_GPIO_STATE_RETENTION_ENABLE_PORTB
   *         @arg @ref LL_PWR_GPIO_STATE_RETENTION_ENABLE_PORTC
-#if defined(PWR_STOP2_SUPPORT)
-  *         @arg @ref LL_PWR_GPIO_STATE_RETENTION_ENABLE_PORTD
-  *         @arg @ref LL_PWR_GPIO_STATE_RETENTION_ENABLE_PORTE
-  *         @arg @ref LL_PWR_GPIO_STATE_RETENTION_ENABLE_PORTG
-#endif
+  *         @arg @ref LL_PWR_GPIO_STATE_RETENTION_ENABLE_PORTD (*)
+  *         @arg @ref LL_PWR_GPIO_STATE_RETENTION_ENABLE_PORTE (*)
+  *         @arg @ref LL_PWR_GPIO_STATE_RETENTION_ENABLE_PORTG (*)
   *         @arg @ref LL_PWR_GPIO_STATE_RETENTION_ENABLE_PORTH
   * @param  GPIOPin This parameter can be a combination of the following values:
   *         @arg @ref LL_PWR_GPIO_PIN_0
@@ -1671,6 +1624,7 @@ __STATIC_INLINE uint32_t LL_PWR_IsEnabledBkUpAccess(void)
   *         @arg @ref LL_PWR_GPIO_PIN_13
   *         @arg @ref LL_PWR_GPIO_PIN_14
   *         @arg @ref LL_PWR_GPIO_PIN_15
+  * @note   (*) Param not supported in all devices, depends on stop2 mode
   * @retval None.
   */
 __STATIC_INLINE void LL_PWR_EnableGPIOStandbyRetention(uint32_t GPIOPort, uint32_t GPIOPin)
@@ -1685,11 +1639,9 @@ __STATIC_INLINE void LL_PWR_EnableGPIOStandbyRetention(uint32_t GPIOPort, uint32
   *         @arg @ref LL_PWR_GPIO_STATE_RETENTION_ENABLE_PORTA
   *         @arg @ref LL_PWR_GPIO_STATE_RETENTION_ENABLE_PORTB
   *         @arg @ref LL_PWR_GPIO_STATE_RETENTION_ENABLE_PORTC
-#if defined(PWR_STOP2_SUPPORT)
-  *         @arg @ref LL_PWR_GPIO_STATE_RETENTION_ENABLE_PORTD
-  *         @arg @ref LL_PWR_GPIO_STATE_RETENTION_ENABLE_PORTE
-  *         @arg @ref LL_PWR_GPIO_STATE_RETENTION_ENABLE_PORTG
-#endif
+  *         @arg @ref LL_PWR_GPIO_STATE_RETENTION_ENABLE_PORTD (*)
+  *         @arg @ref LL_PWR_GPIO_STATE_RETENTION_ENABLE_PORTE (*)
+  *         @arg @ref LL_PWR_GPIO_STATE_RETENTION_ENABLE_PORTG (*)
   *         @arg @ref LL_PWR_GPIO_STATE_RETENTION_ENABLE_PORTH
   * @param  GPIOPin This parameter can be a combinat+ion of the following values:
   *         @arg @ref LL_PWR_GPIO_PIN_0
@@ -1708,6 +1660,7 @@ __STATIC_INLINE void LL_PWR_EnableGPIOStandbyRetention(uint32_t GPIOPort, uint32
   *         @arg @ref LL_PWR_GPIO_PIN_13
   *         @arg @ref LL_PWR_GPIO_PIN_14
   *         @arg @ref LL_PWR_GPIO_PIN_15
+  * @note   (*) Param not supported in all devices, depends on stop2 mode
   * @retval None.
   */
 __STATIC_INLINE void LL_PWR_DisableGPIOStandbyRetention(uint32_t GPIOPort, uint32_t GPIOPin)
@@ -1722,11 +1675,9 @@ __STATIC_INLINE void LL_PWR_DisableGPIOStandbyRetention(uint32_t GPIOPort, uint3
   *         @arg @ref LL_PWR_GPIO_STATE_RETENTION_ENABLE_PORTA
   *         @arg @ref LL_PWR_GPIO_STATE_RETENTION_ENABLE_PORTB
   *         @arg @ref LL_PWR_GPIO_STATE_RETENTION_ENABLE_PORTC
-#if defined(PWR_STOP2_SUPPORT)
-  *         @arg @ref LL_PWR_GPIO_STATE_RETENTION_ENABLE_PORTD
-  *         @arg @ref LL_PWR_GPIO_STATE_RETENTION_ENABLE_PORTE
-  *         @arg @ref LL_PWR_GPIO_STATE_RETENTION_ENABLE_PORTG
-#endif
+  *         @arg @ref LL_PWR_GPIO_STATE_RETENTION_ENABLE_PORTD(*)
+  *         @arg @ref LL_PWR_GPIO_STATE_RETENTION_ENABLE_PORTE(*)
+  *         @arg @ref LL_PWR_GPIO_STATE_RETENTION_ENABLE_PORTG(*)
   *         @arg @ref LL_PWR_GPIO_STATE_RETENTION_ENABLE_PORTH
   * @param  GPIOPin This parameter can be one of the following values:
   *         @arg @ref LL_PWR_GPIO_PIN_0
@@ -1745,6 +1696,7 @@ __STATIC_INLINE void LL_PWR_DisableGPIOStandbyRetention(uint32_t GPIOPort, uint3
   *         @arg @ref LL_PWR_GPIO_PIN_13
   *         @arg @ref LL_PWR_GPIO_PIN_14
   *         @arg @ref LL_PWR_GPIO_PIN_15
+  * @note   (*) Param not supported in all devices, depends on stop2 mode
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_PWR_IsEnabledGPIOStandbyRetention(uint32_t GPIOPort, uint32_t GPIOPin)
@@ -1759,11 +1711,9 @@ __STATIC_INLINE uint32_t LL_PWR_IsEnabledGPIOStandbyRetention(uint32_t GPIOPort,
   *         @arg @ref LL_PWR_GPIO_STATE_RETENTION_STATUS_PORTA
   *         @arg @ref LL_PWR_GPIO_STATE_RETENTION_STATUS_PORTB
   *         @arg @ref LL_PWR_GPIO_STATE_RETENTION_STATUS_PORTC
-#if defined(PWR_STOP2_SUPPORT)
-  *         @arg @ref LL_PWR_GPIO_STATE_RETENTION_STATUS_PORTD
-  *         @arg @ref LL_PWR_GPIO_STATE_RETENTION_STATUS_PORTE
-  *         @arg @ref LL_PWR_GPIO_STATE_RETENTION_STATUS_PORTG
-#endif
+  *         @arg @ref LL_PWR_GPIO_STATE_RETENTION_STATUS_PORTD(*)
+  *         @arg @ref LL_PWR_GPIO_STATE_RETENTION_STATUS_PORTE(*)
+  *         @arg @ref LL_PWR_GPIO_STATE_RETENTION_STATUS_PORTG(*)
   *         @arg @ref LL_PWR_GPIO_STATE_RETENTION_STATUS_PORTH
   * @param  GPIOPin This parameter can be one of the following values:
   *         @arg @ref LL_PWR_GPIO_PIN_0
@@ -1782,6 +1732,7 @@ __STATIC_INLINE uint32_t LL_PWR_IsEnabledGPIOStandbyRetention(uint32_t GPIOPort,
   *         @arg @ref LL_PWR_GPIO_PIN_13
   *         @arg @ref LL_PWR_GPIO_PIN_14
   *         @arg @ref LL_PWR_GPIO_PIN_15
+  * @note   (*) Param not supported in all devices, depends on stop2 mode
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_PWR_IsGPIOStandbyStateRetained(uint32_t GPIOPort, uint32_t GPIOPin)
@@ -1796,11 +1747,9 @@ __STATIC_INLINE uint32_t LL_PWR_IsGPIOStandbyStateRetained(uint32_t GPIOPort, ui
   *         @arg @ref LL_PWR_GPIO_STATE_RETENTION_STATUS_PORTA
   *         @arg @ref LL_PWR_GPIO_STATE_RETENTION_STATUS_PORTB
   *         @arg @ref LL_PWR_GPIO_STATE_RETENTION_STATUS_PORTC
-#if defined(PWR_STOP2_SUPPORT)
-  *         @arg @ref LL_PWR_GPIO_STATE_RETENTION_STATUS_PORTD
-  *         @arg @ref LL_PWR_GPIO_STATE_RETENTION_STATUS_PORTE
-  *         @arg @ref LL_PWR_GPIO_STATE_RETENTION_STATUS_PORTG
-#endif
+  *         @arg @ref LL_PWR_GPIO_STATE_RETENTION_STATUS_PORTD(*)
+  *         @arg @ref LL_PWR_GPIO_STATE_RETENTION_STATUS_PORTE(*)
+  *         @arg @ref LL_PWR_GPIO_STATE_RETENTION_STATUS_PORTG(*)
   *         @arg @ref LL_PWR_GPIO_STATE_RETENTION_STATUS_PORTH
   * @param  GPIOPin This parameter can be one of the following values:
   *         @arg @ref LL_PWR_GPIO_PIN_0
@@ -1819,6 +1768,7 @@ __STATIC_INLINE uint32_t LL_PWR_IsGPIOStandbyStateRetained(uint32_t GPIOPort, ui
   *         @arg @ref LL_PWR_GPIO_PIN_13
   *         @arg @ref LL_PWR_GPIO_PIN_14
   *         @arg @ref LL_PWR_GPIO_PIN_15
+  * @note   (*) Param not supported in all devices, depends on stop2 mode
   * @retval None.
   */
 __STATIC_INLINE void LL_PWR_ClearGPIOStandbyRetentionStatus(uint32_t GPIOPort, uint32_t GPIOPin)
@@ -1831,10 +1781,9 @@ __STATIC_INLINE void LL_PWR_ClearGPIOStandbyRetentionStatus(uint32_t GPIOPort, u
   * @rmtoll SVMSR         ACTVOS          LL_PWR_GetRegulCurrentVOS
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_PWR_REGU_VOLTAGE_SCALE1
-#if defined(PWR_STOP3_SUPPORT)
-  *         @arg @ref LL_PWR_REGU_VOLTAGE_SCALE1_5
-#endif
+  *         @arg @ref LL_PWR_REGU_VOLTAGE_SCALE1_5 (*)
   *         @arg @ref LL_PWR_REGU_VOLTAGE_SCALE2
+  * @note   (*) Param not supported in all devices, depends on stop3 mode
   */
 __STATIC_INLINE uint32_t LL_PWR_GetRegulCurrentVOS(void)
 {

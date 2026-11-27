@@ -70,6 +70,9 @@ file_list_wba = {
         "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/pta.h",
         "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/ral.h",
         "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/rfd_dev_config.h",
+        "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/st_802154_ral.h",
+        "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/st_802154_ral_callbacks.h",
+        "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/inc/st_radio.h",
         "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/config/ble_full/"
         + "ll_fw_config.h",
         "Middlewares/ST/STM32_WPAN/link_layer/ll_cmd_lib/config/ble_basic/"

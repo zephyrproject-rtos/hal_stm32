@@ -60,11 +60,11 @@ typedef struct FM_FlashOpConfig
 
 /* Private defines -----------------------------------------------------------*/
 #define FLASH_PAGE_NBR    (FLASH_SIZE / FLASH_PAGE_SIZE)
-#if defined(STM32WBA25xx) || defined(STM32WBA23xx)
+#if defined(FLASH_DOUBLEWORD_SUPPORT)
 #define FLASH_WRITE_BLOCK_SIZE  2U
 #else
 #define FLASH_WRITE_BLOCK_SIZE  4U
-#endif /* defined(STM32WBA25xx) || defined(STM32WBA23xx)  */
+#endif /* defined(FLASH_DOUBLEWORD_SUPPORT)  */
 #define ALIGNMENT_32   0x00000003
 #define ALIGNMENT_64   0x00000007
 #define ALIGNMENT_128  0x0000000F

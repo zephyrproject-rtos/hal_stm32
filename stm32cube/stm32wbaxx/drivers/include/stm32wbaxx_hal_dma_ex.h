@@ -509,36 +509,36 @@ typedef struct
   * @brief    DMAEx Private Constants
   * @{
   */
-#define DMA_LINKEDLIST                  (0x0080U ) /* DMA channel linked-list mode          */
+#define DMA_LINKEDLIST                  (0x0080UL ) /* DMA channel linked-list mode          */
 
-#define DMA_CHANNEL_TYPE_LINEAR_ADDR    (0x0001U) /* DMA channel linear addressing mode    */
+#define DMA_CHANNEL_TYPE_LINEAR_ADDR    (0x0001UL) /* DMA channel linear addressing mode    */
 #if defined(GPDMA1)
-#define DMA_CHANNEL_TYPE_2D_ADDR        (0x0002U) /* DMA channel 2D addressing mode        */
+#define DMA_CHANNEL_TYPE_2D_ADDR        (0x0002UL) /* DMA channel 2D addressing mode        */
 #endif /* GPDMA1 */
 #if defined(LPDMA1)
-#define DMA_CHANNEL_TYPE_LPDMA          (0x0010U) /* LPDMA channel node                    */
+#define DMA_CHANNEL_TYPE_LPDMA          (0x0010UL) /* LPDMA channel node                    */
 #endif /* LPDMA1 */
 #if defined(GPDMA1)
-#define DMA_CHANNEL_TYPE_GPDMA          (0x0020U) /* GPDMA channel node                    */
+#define DMA_CHANNEL_TYPE_GPDMA          (0x0020UL) /* GPDMA channel node                    */
 #endif /* GPDMA1 */
 
-#define NODE_TYPE_MASK                  (0x00FFU) /* DMA channel node type                 */
-#define NODE_CLLR_IDX                   (0x0700U) /* DMA channel node CLLR index mask      */
-#define NODE_CLLR_IDX_POS               (0x0008U) /* DMA channel node CLLR index position  */
+#define NODE_TYPE_MASK                  (0x00FFUL) /* DMA channel node type                 */
+#define NODE_CLLR_IDX                   (0x0700UL) /* DMA channel node CLLR index mask      */
+#define NODE_CLLR_IDX_POS               (0x0008UL) /* DMA channel node CLLR index position  */
 
-#define NODE_MAXIMUM_SIZE               (0x0006U) /* Amount of registers of the node       */
+#define NODE_MAXIMUM_SIZE               (0x0006UL) /* Amount of registers of the node       */
 
-#define NODE_STATIC_FORMAT              (0x0000U) /* DMA channel node static format        */
-#define NODE_DYNAMIC_FORMAT             (0x0001U) /* DMA channel node dynamic format       */
+#define NODE_STATIC_FORMAT              (0x0000UL) /* DMA channel node static format        */
+#define NODE_DYNAMIC_FORMAT             (0x0001UL) /* DMA channel node dynamic format       */
 
-#define UPDATE_CLLR_POSITION            (0x0000U) /* DMA channel update CLLR position      */
-#define UPDATE_CLLR_VALUE               (0x0001U) /* DMA channel update CLLR value         */
+#define UPDATE_CLLR_POSITION            (0x0000UL) /* DMA channel update CLLR position      */
+#define UPDATE_CLLR_VALUE               (0x0001UL) /* DMA channel update CLLR value         */
 
-#define LASTNODE_ISNOT_CIRCULAR         (0x0000U) /* Last node is not first circular node  */
-#define LASTNODE_IS_CIRCULAR            (0x0001U) /* Last node is first circular node      */
+#define LASTNODE_ISNOT_CIRCULAR         (0x0000UL) /* Last node is not first circular node  */
+#define LASTNODE_IS_CIRCULAR            (0x0001UL) /* Last node is first circular node      */
 
-#define QUEUE_TYPE_STATIC               (0x0000U) /* DMA channel static queue              */
-#define QUEUE_TYPE_DYNAMIC              (0x0001U) /* DMA channel dynamic queue             */
+#define QUEUE_TYPE_STATIC               (0x0000UL) /* DMA channel static queue              */
+#define QUEUE_TYPE_DYNAMIC              (0x0001UL) /* DMA channel dynamic queue             */
 
 #define NODE_CTR1_DEFAULT_OFFSET        (0x0000UL) /* CTR1 default offset                   */
 #define NODE_CTR2_DEFAULT_OFFSET        (0x0001UL) /* CTR2 default offset                   */

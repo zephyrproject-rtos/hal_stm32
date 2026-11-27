@@ -52,6 +52,18 @@
 #define STM32WBA
 #endif /* !STM32WBA */
 
+#if (defined (STM32WBA50xx) || defined(STM32WBA52xx) || defined(STM32WBA54xx) || defined(STM32WBA55xx) || defined(STM32WBA5Mxx))
+#define STM32WBA5xxx
+#endif
+
+#if (defined(STM32WBA62xx) || defined(STM32WBA63xx) || defined(STM32WBA64xx) || defined(STM32WBA65xx) || defined (STM32WBA6Mxx))
+#define STM32WBA6xxx
+#endif
+
+#if (defined(STM32WBA20xx) || defined(STM32WBA23xx) || defined(STM32WBA25xx))
+#define STM32WBA2xxx
+#endif
+
 /* Uncomment the line below according to the target STM32WBA device used in your
    application
   */
@@ -91,7 +103,7 @@
   * @brief CMSIS Device version number
   */
 #define __STM32WBA_CMSIS_VERSION_MAIN   (0x01U) /*!< [31:24] main version */
-#define __STM32WBA_CMSIS_VERSION_SUB1   (0x0AU) /*!< [23:16] sub1 version */
+#define __STM32WBA_CMSIS_VERSION_SUB1   (0x0BU) /*!< [23:16] sub1 version */
 #define __STM32WBA_CMSIS_VERSION_SUB2   (0x00U) /*!< [15:8]  sub2 version */
 #define __STM32WBA_CMSIS_VERSION_RC     (0x00U) /*!< [7:0]  release candidate */
 #define __STM32WBA_CMSIS_VERSION       ((__STM32WBA_CMSIS_VERSION_MAIN << 24U)\

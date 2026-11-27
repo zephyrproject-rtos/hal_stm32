@@ -1921,7 +1921,7 @@ HAL_StatusTypeDef HAL_PCD_EP_Receive(PCD_HandleTypeDef *hpcd, uint8_t ep_addr, u
   * @param  ep_addr endpoint address
   * @retval Data Size
   */
-uint32_t HAL_PCD_EP_GetRxCount(PCD_HandleTypeDef const *hpcd, uint8_t ep_addr)
+uint32_t HAL_PCD_EP_GetRxCount(const PCD_HandleTypeDef *hpcd, uint8_t ep_addr)
 {
   return hpcd->OUT_ep[ep_addr & EP_ADDR_MSK].xfer_count;
 }
@@ -1986,7 +1986,7 @@ HAL_StatusTypeDef HAL_PCD_EP_SetStall(PCD_HandleTypeDef *hpcd, uint8_t ep_addr)
   }
   else
   {
-    ep = &hpcd->OUT_ep[ep_addr];
+    ep = &hpcd->OUT_ep[ep_addr & EP_ADDR_MSK];
     ep->is_in = 0U;
   }
 
@@ -2019,7 +2019,7 @@ HAL_StatusTypeDef HAL_PCD_EP_ClrStall(PCD_HandleTypeDef *hpcd, uint8_t ep_addr)
 {
   PCD_EPTypeDef *ep;
 
-  if (((uint32_t)ep_addr & 0x0FU) > hpcd->Init.dev_endpoints)
+  if (((uint32_t)ep_addr & EP_ADDR_MSK) > hpcd->Init.dev_endpoints)
   {
     return HAL_ERROR;
   }
@@ -2139,7 +2139,7 @@ HAL_StatusTypeDef HAL_PCD_DeActivateRemoteWakeup(PCD_HandleTypeDef *hpcd)
   * @param  hpcd PCD handle
   * @retval HAL state
   */
-PCD_StateTypeDef HAL_PCD_GetState(PCD_HandleTypeDef const *hpcd)
+PCD_StateTypeDef HAL_PCD_GetState(const PCD_HandleTypeDef *hpcd)
 {
   return hpcd->State;
 }
@@ -2622,6 +2622,9 @@ static HAL_StatusTypeDef PCD_EP_ISR_Handler(PCD_HandleTypeDef *hpcd)
 #if (USE_USB_DOUBLE_BUFFER == 1U)
           if (ep->doublebuffer != 0U)
           {
+            /* Re-read the endpoint register right before using it below. */
+            wEPVal = (uint16_t)PCD_GET_ENDPOINT(hpcd->Instance, epindex);
+
             if ((wEPVal & USB_EP_DTOG_TX) != 0U)
             {
               PCD_SET_EP_DBUF0_CNT(hpcd->Instance, ep->num, ep->is_in, 0U);
@@ -2642,6 +2645,9 @@ static HAL_StatusTypeDef PCD_EP_ISR_Handler(PCD_HandleTypeDef *hpcd)
         }
         else
         {
+          /* Re-read the endpoint register right before using it below. */
+          wEPVal = (uint16_t)PCD_GET_ENDPOINT(hpcd->Instance, epindex);
+
           /* Manage Single Buffer Transaction */
           if ((wEPVal & USB_EP_KIND) == 0U)
           {

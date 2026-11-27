@@ -6361,12 +6361,13 @@ __weak void HAL_TIM_ErrorCallback(TIM_HandleTypeDef *htim)
   *          @arg @ref HAL_TIM_COMMUTATION_HALF_CB_ID Commutation half complete Callback ID
   *          @arg @ref HAL_TIM_BREAK_CB_ID Break Callback ID
 #if defined(TIM_BDTR_BK2E)
-  *          @arg @ref HAL_TIM_BREAK2_CB_ID Break2 Callback ID
+  *          @arg @ref HAL_TIM_BREAK2_CB_ID Break2 Callback ID(*)
 #endif
   *          @arg @ref HAL_TIM_ENCODER_INDEX_CB_ID Encoder Index Callback ID
   *          @arg @ref HAL_TIM_DIRECTION_CHANGE_CB_ID Direction Change Callback ID
   *          @arg @ref HAL_TIM_INDEX_ERROR_CB_ID Index Error Callback ID
   *          @arg @ref HAL_TIM_TRANSITION_ERROR_CB_ID Transition Error Callback ID
+  * @note (*) Feature not available on all devices of the family
   *          @param pCallback pointer to the callback function
   *          @retval status
   */
@@ -6629,12 +6630,13 @@ HAL_StatusTypeDef HAL_TIM_RegisterCallback(TIM_HandleTypeDef *htim, HAL_TIM_Call
   *          @arg @ref HAL_TIM_COMMUTATION_HALF_CB_ID Commutation half complete Callback ID
   *          @arg @ref HAL_TIM_BREAK_CB_ID Break Callback ID
 #if defined(TIM_BDTR_BK2E)
-  *          @arg @ref HAL_TIM_BREAK2_CB_ID Break2 Callback ID
+  *          @arg @ref HAL_TIM_BREAK2_CB_ID Break2 Callback ID(*)
 #endif
   *          @arg @ref HAL_TIM_ENCODER_INDEX_CB_ID Encoder Index Callback ID
   *          @arg @ref HAL_TIM_DIRECTION_CHANGE_CB_ID Direction Change Callback ID
   *          @arg @ref HAL_TIM_INDEX_ERROR_CB_ID Index Error Callback ID
   *          @arg @ref HAL_TIM_TRANSITION_ERROR_CB_ID Transition Error Callback ID
+  * @note (*) Feature not available on all devices of the family
   *          @retval status
   */
 HAL_StatusTypeDef HAL_TIM_UnRegisterCallback(TIM_HandleTypeDef *htim, HAL_TIM_CallbackIDTypeDef CallbackID)
